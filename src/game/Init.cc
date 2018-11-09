@@ -120,7 +120,7 @@ void ShutdownJA2(void)
 {
 	UINT32 uiIndex;
 
-	FRAME_BUFFER->Fill(Get16BPPColor(FROMRGB(0, 0, 0)));
+	FRAME_BUFFER->Fill(0x000000FF);
 	InvalidateScreen( );
 	// Remove cursor....
 	SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );

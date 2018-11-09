@@ -220,10 +220,10 @@ void InitTacticalPlacementGUI()
 }
 
 
-static void DrawBar(SGPVSurface* const buf, INT32 const x, INT32 const y, INT32 const h, UINT32 const colour1, UINT32 const colour2)
+static void DrawBar(SGPVSurface* const buf, INT32 const x, INT32 const y, INT32 const h, UINT32 const color1, UINT32 const color2)
 {
-	ColorFillVideoSurfaceArea(buf, x,     y - h, x + 1, y, Get16BPPColor(colour1));
-	ColorFillVideoSurfaceArea(buf, x + 1, y - h, x + 2, y, Get16BPPColor(colour2));
+	ColorFillVideoSurfaceArea(buf, x,     y - h, x + 1, y, color1);
+	ColorFillVideoSurfaceArea(buf, x + 1, y - h, x + 2, y, color2);
 }
 
 
@@ -272,11 +272,11 @@ static void RenderTacticalPlacementGUI()
 			SOLDIERTYPE const& s = *m.pSoldier;
 			if (s.bLife == 0) continue;
 
-			DrawBar(buf, x + 36, y + 29, s.bLifeMax   * 27 / 100, FROMRGB(107, 107,  57), FROMRGB(222, 181, 115)); // Yellow one for bleeding
-			DrawBar(buf, x + 36, y + 29, s.bBleeding  * 27 / 100, FROMRGB(156,  57,  57), FROMRGB(222, 132, 132)); // Pink one for bandaged
-			DrawBar(buf, x + 36, y + 29, s.bLife      * 27 / 100, FROMRGB(107,   8,   8), FROMRGB(206,   0,   0)); // Red one for actual health
-			DrawBar(buf, x + 39, y + 29, s.bBreathMax * 27 / 100, FROMRGB(  8,   8, 132), FROMRGB(  8,   8, 107)); // Breath bar
-			DrawBar(buf, x + 42, y + 29, s.bMorale    * 27 / 100, FROMRGB(  8, 156,   8), FROMRGB(  8, 107,   8)); // Morale bar
+			DrawBar(buf, x + 36, y + 29, s.bLifeMax   * 27 / 100, RGB(107, 107,  57), RGB(222, 181, 115)); // Yellow one for bleeding
+			DrawBar(buf, x + 36, y + 29, s.bBleeding  * 27 / 100, RGB(156,  57,  57), RGB(222, 132, 132)); // Pink one for bandaged
+			DrawBar(buf, x + 36, y + 29, s.bLife      * 27 / 100, RGB(107,   8,   8), RGB(206,   0,   0)); // Red one for actual health
+			DrawBar(buf, x + 39, y + 29, s.bBreathMax * 27 / 100, RGB(  8,   8, 132), RGB(  8,   8, 107)); // Breath bar
+			DrawBar(buf, x + 42, y + 29, s.bMorale    * 27 / 100, RGB(  8, 156,   8), RGB(  8, 107,   8)); // Morale bar
 		}
 
 		SetFontAttributes(BLOCKFONT, FONT_BEIGE);
@@ -293,9 +293,9 @@ static void RenderTacticalPlacementGUI()
 		BlitBufferToBuffer(guiSAVEBUFFER, buf, STD_SCREEN_X + 4, STD_SCREEN_Y + 4, 636, 320);
 		InvalidateRegion(STD_SCREEN_X + 4, STD_SCREEN_Y + 4, STD_SCREEN_X + 636, STD_SCREEN_Y + 320);
 
-		UINT16 const hatch_colour =
+		const UINT32 hatch_color =
 			DayTime() ? 0 :                     // 6AM to 9PM is black
-			Get16BPPColor(FROMRGB(63, 31, 31)); // 9PM to 6AM is gray (black is too dark to distinguish)
+			RGB(63, 31, 31); // 9PM to 6AM is gray (black is too dark to distinguish)
 		SGPRect clip = { (UINT16)(STD_SCREEN_X + 4), (UINT16)(STD_SCREEN_Y + 4), (UINT16)(STD_SCREEN_X + 636), (UINT16)(STD_SCREEN_Y + 320) };
 		if (gbCursorMercID == -1)
 		{
@@ -317,9 +317,9 @@ static void RenderTacticalPlacementGUI()
 		SGPVSurface::Lock l(buf);
 		UINT16* const pDestBuf         = l.Buffer<UINT16>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
-		Blt16BPPBufferLooseHatchRectWithColor(pDestBuf, uiDestPitchBYTES, &clip, hatch_colour);
+		Blt16BPPBufferLooseHatchRectWithColor(pDestBuf, uiDestPitchBYTES, &clip, hatch_color);
 		SetClippingRegionAndImageWidth(uiDestPitchBYTES, STD_SCREEN_X + 0, STD_SCREEN_Y + 0, 640, 480);
-		RectangleDraw(TRUE, clip.iLeft, clip.iTop, clip.iRight, clip.iBottom, hatch_colour, pDestBuf);
+		RectangleDraw(TRUE, clip.iLeft, clip.iTop, clip.iRight, clip.iBottom, hatch_color, pDestBuf);
 	}
 
 	bool const is_group = gubDefaultButton == GROUP_BUTTON;
@@ -330,11 +330,11 @@ static void RenderTacticalPlacementGUI()
 
 		MERCPLACEMENT const& m     = gMercPlacement[i];
 		SOLDIERTYPE   const& s     = *m.pSoldier;
-		UINT8         const colour =
+		UINT32         const color =
 			(is_group ? s.ubGroupID == gubSelectedGroupID  : i == gbSelectedMercID)  ? FONT_YELLOW :
 			(is_group ? s.ubGroupID == gubHilightedGroupID : i == gbHilightedMercID) ? FONT_WHITE  :
 			FONT_GRAY3;
-		SetFontAttributes(BLOCKFONT, colour);
+		SetFontAttributes(BLOCKFONT, color);
 		INT32 const w  = StringPixLength(s.name, BLOCKFONT);
 		INT32 const nx = x + (48 - w) / 2;
 		INT32 const ny = y + 33;

@@ -98,7 +98,7 @@
 #define MAP_FONT BLOCKFONT2
 
 // index color
-#define MAP_INDEX_COLOR 32*4-9
+#define MAP_INDEX_COLOR RGB(139, 106,  57)
 
 // max number of sectors viewable
 #define MAX_VIEW_SECTORS      16
@@ -286,11 +286,11 @@ static SGPVObject* guiBULLSEYE;
 static GUIButtonRef giMapMilitiaButton[5];
 
 
-static INT16 const gsMilitiaSectorButtonColors[] =
+static UINT32 const gsMilitiaSectorButtonColors[] =
 {
 	FONT_LTGREEN,
 	FONT_LTBLUE,
-	16
+	FONT_BLACK
 };
 
 // track number of townspeople picked up
@@ -389,7 +389,7 @@ static INT16 sSectorMilitiaMapSectorOutline = -1;
 // have any nodes in the current path list been deleted?
 BOOLEAN fDeletedNode = FALSE;
 
-static UINT16 gusUndergroundNearBlack;
+static UINT32 gusUndergroundNearBlack;
 
 BOOLEAN gfMilitiaPopupCreated = FALSE;
 
@@ -433,31 +433,31 @@ void DrawMapIndexBigMap(BOOLEAN fSelectedCursorIsYellow)
 	// this procedure will draw the coord indexes on the zoomed out map
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFont(MAP_FONT);
-	SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 
 	bool  const draw_cursors  = CanDrawSectorCursor();
 	bool  const sel_candidate = bSelectedDestChar == -1 && !fPlotForHelicopter;
-	UINT8 const sel_colour    = fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE;
+	UINT32 const sel_color    = fSelectedCursorIsYellow ? FONT_YELLOW : FONT_WHITE;
 	for (INT32 i = 1; i <= MAX_VIEW_SECTORS; ++i)
 	{
 		INT16 usX;
 		INT16 usY;
 
-		UINT8 const colour_x =
+		const UINT32 color_x =
 			!draw_cursors                  ? MAP_INDEX_COLOR :
-			i == sSelMap.x && sel_candidate ? sel_colour      :
+			i == sSelMap.x && sel_candidate ? sel_color      :
 			i == gsHighlightSector.x       ? FONT_WHITE      :
 			MAP_INDEX_COLOR;
-		SetFontForeground(colour_x);
+		SetFontForeground(color_x);
 		FindFontCenterCoordinates(MAP_HORT_INDEX_X + (i - 1) * MAP_GRID_X, MAP_HORT_INDEX_Y, MAP_GRID_X, MAP_HORT_HEIGHT, pMapHortIndex[i], MAP_FONT, &usX, &usY);
 		MPrint(usX, usY, pMapHortIndex[i]);
 
-		UINT8 const colour_y =
+		const UINT32 color_y =
 			!draw_cursors                  ? MAP_INDEX_COLOR :
-			i == sSelMap.y && sel_candidate ? sel_colour      :
+			i == sSelMap.y && sel_candidate ? sel_color      :
 			i == gsHighlightSector.y       ? FONT_WHITE      :
 			MAP_INDEX_COLOR;
-		SetFontForeground(colour_y);
+		SetFontForeground(color_y);
 		FindFontCenterCoordinates(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y + (i - 1) * MAP_GRID_Y, MAP_HORT_HEIGHT, MAP_GRID_Y, pMapVertIndex[i], MAP_FONT, &usX, &usY);
 		MPrint(usX, usY, pMapVertIndex[i]);
 	}
@@ -626,7 +626,7 @@ void GetScreenXYFromMapXY(const SGPSector& sMap, INT16 *psX, INT16 *psY)
 static void ShowTownText(void)
 {
 	SetFont(MAP_FONT);
-	SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 	SetFontDestBuffer(guiSAVEBUFFER, MapScreenRect.iLeft + 2, MapScreenRect.iTop, MapScreenRect.iRight, MapScreenRect.iBottom);
 	ClipBlitsToMapViewRegion();
 
@@ -648,11 +648,11 @@ static void ShowTownText(void)
 		if (gTownLoyalty[town].fStarted && gfTownUsesLoyalty[town])
 		{
 			// if loyalty is too low to train militia, and militia training is allowed here
-			UINT8 const colour =
+			UINT32 const color =
 				gTownLoyalty[town].ubRating < MIN_RATING_TO_TRAIN_TOWN &&
 				MilitiaTrainingAllowedInTown(town) ?
 					FONT_MCOLOR_RED : FONT_MCOLOR_LTGREEN;
-			SetFontForeground(colour);
+			SetFontForeground(color);
 
 			ST::string loyalty_str = st_format_printf(gsLoyalString, gTownLoyalty[town].ubRating);
 
@@ -2551,7 +2551,7 @@ static void BlitTownGridMarkers(void)
 	ClipBlitsToMapViewRegionForRectangleAndABit(pitch);
 
 	// Go through list of towns and place on screen
-	UINT16 const color = Get16BPPColor(FROMRGB(100, 100, 100));
+	UINT32 const color = RGB(100, 100, 100);
 	FOR_EACH_TOWN_SECTOR(i)
 	{
 		// skip Orta/Tixa until found
@@ -2601,7 +2601,7 @@ static void BlitMineGridMarkers(void)
 
 	ClipBlitsToMapViewRegionForRectangleAndABit(pitch);
 
-	UINT16 const color = Get16BPPColor(FROMRGB(100, 100, 100));
+	UINT32 const color = RGB(100, 100, 100);
 	for (auto m : GCM->getMines())
 	{
 		INT16                     x;
@@ -2796,7 +2796,7 @@ void DrawMilitiaPopUpBox()
 	RenderIconsPerSectorForSelectedTown( );
 
 	// shade any sectors not under our control
-	RenderShadingForUnControlledSectors( );
+	RenderShadingForUnControlledSectors( ); // maxrd2 FIXME
 
 	// display anyone picked up
 	DisplayUnallocatedMilitia( );
@@ -3318,7 +3318,7 @@ static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const ST::string& 
 {
 	GUIButtonRef const btn = QuickCreateButtonImg(INTERFACEDIR "/militia.sti", 1, 2, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giMapMilitiaButton[idx] = btn;
-	btn->SpecifyGeneralTextAttributes(text, FONT10ARIAL, FONT_BLACK, FONT_BLACK);
+	btn->SpecifyGeneralTextAttributes(text, FONT10ARIAL, FONT_WHITE, FONT_BLACK);
 }
 
 
@@ -3479,7 +3479,7 @@ static void HideExistenceOfUndergroundMapSector(const SGPSector& sSector);
 static void ShadeSubLevelsNotVisited(void)
 {
 	// Obtain the 16-bit version of the same color used in the mine STIs
-	gusUndergroundNearBlack = Get16BPPColor(FROMRGB(2, 2, 0));
+	gusUndergroundNearBlack = RGB(2, 2, 0);
 
 	// Run through all (real & possible) underground sectors
 	for (UNDERGROUND_SECTORINFO const* i = gpUndergroundSectorInfoHead; i; i = i->next)
@@ -3724,7 +3724,7 @@ static void ShowSAMSitesOnStrategicMap()
 
 static void BlitSAMGridMarkers()
 {
-	UINT16 const colour = Get16BPPColor(FROMRGB(100, 100, 100));
+	UINT32 const color = RGB(100, 100, 100);
 
 	SGPVSurface::Lock l(guiSAVEBUFFER);
 	UINT32 const uiDestPitchBYTES = l.Pitch();
@@ -3746,7 +3746,7 @@ static void BlitSAMGridMarkers()
 		w = MAP_GRID_X;
 		h = MAP_GRID_Y;
 
-		RectangleDraw(TRUE, x, y - 1, x + w, y + h - 1, colour, l.Buffer<UINT16>());
+		RectangleDraw(TRUE, x, y - 1, x + w, y + h - 1, color, l.Buffer<UINT16>());
 	}
 
 	RestoreClipRegionToFullScreenForRectangle(uiDestPitchBYTES);

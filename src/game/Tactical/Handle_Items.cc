@@ -83,7 +83,7 @@ struct ITEM_POOL_LOCATOR
 {
 	ITEM_POOL*             pItemPool;
 	UINT8                  ubFlags;
-	INT8                   bFlashColor;
+	UINT32                 bFlashColor;
 	INT8                   bRadioFrame;
 	UINT32                 uiLastFrameUpdate;
 	ITEM_POOL_LOCATOR_HOOK Callback;

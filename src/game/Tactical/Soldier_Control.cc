@@ -7501,7 +7501,7 @@ static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT
 		UINT8 r = std::max(rscale, static_cast<UINT32>(pPalette[cnt].r));
 		UINT8 g = std::max(gscale, static_cast<UINT32>(pPalette[cnt].g));
 		UINT8 b = pPalette[cnt].b;
-		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
+		p16BPPPalette[cnt] = RGB(r, g, b);
 	}
 	return p16BPPPalette;
 }
@@ -7526,7 +7526,7 @@ static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, 
 		UINT8 r = std::min(rmod, 255U);
 		UINT8 g = std::min(gmod, 255U);
 		UINT8 b = std::min(bmod, 255U);
-		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
+		p16BPPPalette[cnt] = RGB(r, g, b);
 	}
 	return p16BPPPalette;
 }

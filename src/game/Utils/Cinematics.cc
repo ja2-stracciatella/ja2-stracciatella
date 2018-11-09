@@ -288,19 +288,19 @@ static void SmkBlitVideoFrame(SMKFLIC* const sf, SGPVSurface* surface)
 	if (smk_info_video(sf->smacker, &src_width, &src_height, nullptr) < 0) return;
 
 	// convert palette
-	UINT16 palette[256];
+	UINT32 palette[256];
 	for (int i = 0; i < 256; i++)
 	{
 		unsigned char* rgb = src_palette + i * 3;
-		palette[i] = Get16BPPColor(FROMRGB(rgb[0], rgb[1], rgb[2]));
+		palette[i] = RGB(rgb[0], rgb[1], rgb[2]);
 	}
 
 	// get surface (destination)
 	SGPVSurface::Lock lock(surface);
-	UINT16* dst = lock.Buffer<UINT16>();
+	UINT32* dst = lock.Buffer<UINT32>();
 	Assert(lock.Pitch() % 2 == 0);
-	Assert(surface->BPP() == 16);
-	UINT32 dst_pitch = lock.Pitch() / 2; // pitch in pixels
+	Assert(surface->BPP() == 32);
+	UINT32 dst_pitch = lock.Pitch() / 4; // pitch in pixels
 	UINT16 dst_height = surface->Height();
 
 	// blit the intersection

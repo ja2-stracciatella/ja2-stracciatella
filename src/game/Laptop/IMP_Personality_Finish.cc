@@ -150,8 +150,8 @@ static void MakeButton(UINT idx, const ST::string& text, INT16 x, GUI_CALLBACK c
 {
 	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/button_5.sti", 0, 1);
 	giIMPPersonalityFinishButtonImage[idx] = img;
-	const INT16 text_col   = FONT_WHITE;
-	const INT16 shadow_col = DEFAULT_SHADOW;
+	const UINT32 text_col   = FONT_WHITE;
+	const UINT32 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, LAPTOP_SCREEN_UL_Y + 224, MSYS_PRIORITY_HIGH, click);
 	giIMPPersonalityFinishButton[idx] = btn;
 	btn->SetCursor(CURSOR_WWW);

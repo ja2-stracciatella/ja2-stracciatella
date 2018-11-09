@@ -22,19 +22,19 @@ struct TextInputColors
 {
 	//internal values that contain all of the colors for the text editing fields.
 	SGPFont usFont;
-	UINT16 usTextFieldColor;
-	UINT8 ubForeColor, ubShadowColor;
-	UINT8 ubHiForeColor, ubHiShadowColor, ubHiBackColor;
+	UINT32 usTextFieldColor;
+	UINT32 ubForeColor, ubShadowColor;
+	UINT32 ubHiForeColor, ubHiShadowColor, ubHiBackColor;
 	//optional -- no bevelling by default
 	BOOLEAN	fBevelling;
-	UINT16 usBrighterColor, usDarkerColor;
+	UINT32 usBrighterColor, usDarkerColor;
 	//optional -- cursor color defaults to black
-	UINT16 usCursorColor;
+	UINT32 usCursorColor;
 	//optional colors for disabled fields (defaults to 25% darker shading)
 	BOOLEAN fUseDisabledAutoShade;
-	UINT8	ubDisabledForeColor;
-	UINT8	ubDisabledShadowColor;
-	UINT16 usDisabledTextFieldColor;
+	UINT32	ubDisabledForeColor;
+	UINT32	ubDisabledShadowColor;
+	UINT32 usDisabledTextFieldColor;
 };
 
 static TextInputColors* pColors = NULL;
@@ -179,8 +179,8 @@ void InitTextInputModeWithScheme( UINT8 ubSchemeID )
 	{
 		case DEFAULT_SCHEME:  //yellow boxes with black text, with bluish bevelling
 			SetTextInputFont(FONT12POINT1);
-			Set16BPPTextFieldColor( Get16BPPColor(FROMRGB(250, 240, 188) ) );
-			SetBevelColors( Get16BPPColor(FROMRGB(136, 138, 135)), Get16BPPColor(FROMRGB(24, 61, 81)) );
+			Set16BPPTextFieldColor( RGB(250, 240, 188) );
+			SetBevelColors( RGB(136, 138, 135), RGB(24, 61, 81) );
 			SetTextInputRegularColors( FONT_BLACK, FONT_BLACK );
 			SetTextInputHilitedColors( FONT_GRAY2, FONT_GRAY2, FONT_METALGRAY );
 			break;
@@ -516,32 +516,32 @@ void SetTextInputFont(SGPFont const font)
 }
 
 
-void Set16BPPTextFieldColor( UINT16 usTextFieldColor )
+void Set16BPPTextFieldColor( UINT32 usTextFieldColor )
 {
 	pColors->usTextFieldColor = usTextFieldColor;
 }
 
-void SetTextInputRegularColors( UINT8 ubForeColor, UINT8 ubShadowColor )
+void SetTextInputRegularColors( UINT32 ubForeColor, UINT32 ubShadowColor )
 {
 	pColors->ubForeColor = ubForeColor;
 	pColors->ubShadowColor = ubShadowColor;
 }
 
-void SetTextInputHilitedColors( UINT8 ubForeColor, UINT8 ubShadowColor, UINT8 ubBackColor )
+void SetTextInputHilitedColors( UINT32 ubForeColor, UINT32 ubShadowColor, UINT32 ubBackColor )
 {
 	pColors->ubHiForeColor = ubForeColor;
 	pColors->ubHiShadowColor = ubShadowColor;
 	pColors->ubHiBackColor = ubBackColor;
 }
 
-void SetBevelColors( UINT16 usBrighterColor, UINT16 usDarkerColor )
+void SetBevelColors( UINT32 usBrighterColor, UINT32 usDarkerColor )
 {
 	pColors->fBevelling = TRUE;
 	pColors->usBrighterColor = usBrighterColor;
 	pColors->usDarkerColor = usDarkerColor;
 }
 
-void SetCursorColor( UINT16 usCursorColor )
+void SetCursorColor( UINT32 usCursorColor )
 {
 	pColors->usCursorColor = usCursorColor;
 }
@@ -953,10 +953,10 @@ static void RenderBackgroundField(TEXTINPUTNODE const* const n)
 		ColorFillVideoSurfaceArea(FRAME_BUFFER,	tlx + 1, tly + 1, brx, bry, clrs.usBrighterColor);
 	}
 
-	UINT16 const colour = n->fEnabled || clrs.fUseDisabledAutoShade ?
+	UINT32 const color = n->fEnabled || clrs.fUseDisabledAutoShade ?
 		clrs.usTextFieldColor :
 		clrs.usDisabledTextFieldColor;
-	ColorFillVideoSurfaceArea(FRAME_BUFFER,	tlx + 1, tly + 1, brx - 1, bry - 1, colour);
+	ColorFillVideoSurfaceArea(FRAME_BUFFER,	tlx + 1, tly + 1, brx - 1, bry - 1, color);
 
 	InvalidateRegion(tlx, tly, brx, bry);
 }

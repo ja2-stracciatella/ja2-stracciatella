@@ -47,8 +47,8 @@
 #include <vector>
 
 // status bar colors
-#define DESC_STATUS_BAR FROMRGB( 201, 172,  133 )
-#define DESC_STATUS_BAR_SHADOW FROMRGB( 140, 136,  119 )
+#define DESC_STATUS_BAR RGB(201, 172, 133)
+#define DESC_STATUS_BAR_SHADOW RGB(140, 136, 119)
 
 // delay for flash of item
 #define DELAY_FOR_HIGHLIGHT_ITEM_FLASH 200
@@ -201,12 +201,12 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 
 	SetFontDestBuffer(guiSAVEBUFFER);
 	const SGPBox* const item_box = &g_sector_inv_item_box;
-	const UINT16        outline  = fMapInventoryItemCompatable[iCurrentSlot] ? Get16BPPColor(FROMRGB(255, 255, 255)) : SGP_TRANSPARENT;
+	const UINT32        outline  = fMapInventoryItemCompatable[iCurrentSlot] ? RGB(255, 255, 255) : SGP_TRANSPARENT;
 	INVRenderItem(guiSAVEBUFFER, NULL, item.o, dx + item_box->x, dy + item_box->y, item_box->w, item_box->h, DIRTYLEVEL2, 0, outline);
 
 	// draw bar for condition
-	const UINT16 col0 = Get16BPPColor(DESC_STATUS_BAR);
-	const UINT16 col1 = Get16BPPColor(DESC_STATUS_BAR_SHADOW);
+	const UINT32 col0 = DESC_STATUS_BAR;
+	const UINT32 col1 = DESC_STATUS_BAR_SHADOW;
 	const SGPBox* const bar_box = &g_sector_inv_bar_box;
 	DrawItemUIBarEx(item.o, 0, dx + bar_box->x, dy + bar_box->y + bar_box->h - 1, bar_box->h, col0, col1, guiSAVEBUFFER);
 
@@ -978,7 +978,7 @@ static void DisplayPagesForMapInventoryPool(void)
 	ST::string sString;
 	INT16 sX, sY;
 
-	SetFontAttributes(COMPFONT, 183);
+	SetFontAttributes(COMPFONT, RGB(  0, 255,   0));
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// grab current and last pages
@@ -1041,7 +1041,7 @@ static void DrawNumberOfIventoryPoolItems(void)
 	Assert(numObjects <= INT_MAX);
 	sString = ST::format("{}", numObjects);
 
-	SetFontAttributes(COMPFONT, 183);
+	SetFontAttributes(COMPFONT, RGB(  0, 255,   0));
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// grab centered coords
@@ -1076,7 +1076,7 @@ static void DisplayCurrentSector(void)
 
 	sString = ST::format("{}{}{}", pMapVertIndex[ sSelMap.y ], pMapHortIndex[ sSelMap.x ], pMapDepthIndex[ iCurrentMapSectorZ ]);
 
-	SetFontAttributes(COMPFONT, 183);
+	SetFontAttributes(COMPFONT, RGB(  0, 255,   0));
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// grab centered coords
@@ -1117,14 +1117,14 @@ static void DrawTextOnMapInventoryBackground(void)
 	int yPos = STD_SCREEN_Y + 342;
 
 	//Calculate the height of the string, as it needs to be vertically centered.
-	usStringHeight = DisplayWrappedString(xPos, yPos, 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[0], FONT_BLACK, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT);
-	DisplayWrappedString(xPos, yPos - (usStringHeight / 2), 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[0], FONT_BLACK, RIGHT_JUSTIFIED);
+	usStringHeight = DisplayWrappedString(xPos, yPos, 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[0], FONT_MCOLOR_TRANSPARENT, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT);
+	DisplayWrappedString(xPos, yPos - (usStringHeight / 2), 53, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[0], FONT_MCOLOR_TRANSPARENT, RIGHT_JUSTIFIED);
 
 	xPos = STD_SCREEN_X + 369;
 
 	//Calculate the height of the string, as it needs to be vertically centered.
-	usStringHeight = DisplayWrappedString(xPos, yPos, 65, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[1], FONT_BLACK, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT);
-	DisplayWrappedString( xPos, yPos - (usStringHeight / 2), 65, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[1], FONT_BLACK, RIGHT_JUSTIFIED);
+	usStringHeight = DisplayWrappedString(xPos, yPos, 65, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[1], FONT_MCOLOR_TRANSPARENT, RIGHT_JUSTIFIED | DONT_DISPLAY_TEXT);
+	DisplayWrappedString( xPos, yPos - (usStringHeight / 2), 65, 1, MAP_IVEN_FONT, FONT_BEIGE, pMapInventoryStrings[1], FONT_MCOLOR_TRANSPARENT, RIGHT_JUSTIFIED);
 
 	DrawTextOnSectorInventory( );
 

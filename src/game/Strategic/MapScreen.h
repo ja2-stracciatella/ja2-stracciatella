@@ -77,7 +77,7 @@ bool MapCharacterHasAccessibleInventory(SOLDIERTYPE const&);
 ST::string GetMapscreenMercAssignmentString(SOLDIERTYPE const& s);
 ST::string GetMapscreenMercLocationString(SOLDIERTYPE const& s);
 ST::string GetMapscreenMercDestinationString(SOLDIERTYPE const& s);
-ST::string GetMapscreenMercDepartureString(SOLDIERTYPE const& s, UINT8* text_colour);
+ST::string GetMapscreenMercDepartureString(SOLDIERTYPE const& s, UINT32* text_color);
 
 // mapscreen wrapper to init the item description box
 void MAPInternalInitItemDescriptionBox(OBJECTTYPE* pObject, UINT8 ubStatusIndex, SOLDIERTYPE* pSoldier);

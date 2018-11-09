@@ -2,34 +2,34 @@
 #define FONT_H
 
 #include "Types.h"
+#include "VObject.h"
 
 #include <map>
 #include <string_theory/string>
 
 
-#define DEFAULT_SHADOW		2
-#define MILITARY_SHADOW	67
-#define NO_SHADOW		0
+#define DEFAULT_SHADOW		RGB(  0,   0,   0) // 2
+#define MILITARY_SHADOW	RGB( 17, 178, 216) // 67
+#define NO_SHADOW		0x00000000
 
 // these are bogus! No palette is set yet!
 // font foreground color symbols
-#define FONT_FCOLOR_WHITE	208
-#define FONT_FCOLOR_RED	162
-#define FONT_FCOLOR_NICERED	164
-#define FONT_FCOLOR_BLUE	203
-#define FONT_FCOLOR_GREEN	184
-#define FONT_FCOLOR_YELLOW	144
-#define FONT_FCOLOR_BROWN	184
-#define FONT_FCOLOR_ORANGE	76
-#define FONT_FCOLOR_PURPLE	160
-
+#define FONT_FCOLOR_WHITE	RGB(255, 255, 255)
+#define FONT_FCOLOR_RED	RGB(255,  64,  64)
+#define FONT_FCOLOR_NICERED	RGB(205,   0,   0)
+#define FONT_FCOLOR_BLUE	RGB(  0,   0, 255)
+#define FONT_FCOLOR_GREEN	RGB(  0, 206,   0)
+#define FONT_FCOLOR_YELLOW	RGB(255, 215,  63)
+#define FONT_FCOLOR_BROWN	RGB(  0, 206,   0) // this ain't right
+#define FONT_FCOLOR_ORANGE	RGB(240, 116,  45)
+#define FONT_FCOLOR_PURPLE	RGB(255, 193, 193)
 
 extern SGPFont FontDefault;
 
-void SetFontColors(UINT16 usColors);
-void SetFontForeground(UINT8 ubForeground);
-void SetFontBackground(UINT8 ubBackground);
-void SetFontShadow(UINT8 ubBackground);
+void SetFontColors(UINT32 uForeground, UINT32 uBackground);
+void SetFontForeground(UINT32 uForeground);
+void SetFontBackground(UINT32 uBackground);
+void SetFontShadow(UINT32 uBackground);
 
 /* Print to the currently selected destination buffer, at the X/Y coordinates
  * specified, using the currently selected font. */
@@ -63,7 +63,7 @@ void SetFontDestBuffer(SGPVSurface* dst);
 
 void SetFont(SGPFont);
 
-void SetFontAttributes(SGPFont, UINT8 foreground, UINT8 shadow = DEFAULT_SHADOW, UINT8 background = 0);
+void SetFontAttributes(SGPFont, const UINT32 foreground, const UINT32 shadow = DEFAULT_SHADOW, const UINT32 background = 0);
 
 SGPFont LoadFontFile(const char* filename);
 UINT16  GetFontHeight(SGPFont);

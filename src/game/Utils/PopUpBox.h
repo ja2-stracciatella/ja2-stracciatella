@@ -26,10 +26,10 @@ SGPBox const& GetBoxArea(PopUpBox const*);
 void AddMonoString(PopUpBox* box, const ST::string& str);
 void SetBoxFont(PopUpBox*, SGPFont);
 SGPFont GetBoxFont(const PopUpBox*);
-void SetBoxForeground(PopUpBox*, UINT8 colour);
-void SetBoxBackground(PopUpBox*, UINT8 colour);
-void SetBoxHighLight(PopUpBox*, UINT8 colour);
-void SetBoxShade(PopUpBox*, UINT8 colour);
+void SetBoxForeground(PopUpBox*, UINT32 color);
+void SetBoxBackground(PopUpBox*, UINT32 color);
+void SetBoxHighLight(PopUpBox*, UINT32 color);
+void SetBoxShade(PopUpBox*, UINT32 color);
 
 void ShadeStringInBox(PopUpBox*, INT32 line, bool shade);
 
@@ -66,7 +66,7 @@ BOOLEAN IsBoxShown(const PopUpBox*);
 BOOLEAN GetBoxShadeFlag(const PopUpBox*, INT32 iLineNumber);
 
 // set boxes foreground color
-void SetBoxLineForeground(PopUpBox*, INT32 iStringValue, UINT8 ubColor);
+void SetBoxLineForeground(PopUpBox*, INT32 iStringValue, UINT32 ubColor);
 
 // hide all visible boxes
 void HideAllBoxes( void );
@@ -78,13 +78,13 @@ void AddSecondColumnMonoString(PopUpBox* box, const ST::string& str);
 void SetBoxSecondColumnMinimumOffset(PopUpBox*, UINT32 uiWidth);
 
 // now on a box wide basis, one if recomened to use this function after adding all the strings..rather than on an individual basis
-void SetBoxSecondColumnForeground(PopUpBox*, UINT8 colour);
-void SetBoxSecondColumnBackground(PopUpBox*, UINT8 colour);
-void SetBoxSecondColumnHighLight(PopUpBox*, UINT8 colour);
-void SetBoxSecondColumnShade(PopUpBox*, UINT8 colour);
+void SetBoxSecondColumnForeground(PopUpBox*, UINT32 color);
+void SetBoxSecondColumnBackground(PopUpBox*, UINT32 color);
+void SetBoxSecondColumnHighLight(PopUpBox*, UINT32 color);
+void SetBoxSecondColumnShade(PopUpBox*, UINT32 color);
 
 // secondary shades for boxes
-void SetBoxSecondaryShade(PopUpBox*, UINT8 colour);
+void SetBoxSecondaryShade(PopUpBox*, UINT32 color);
 
 // min width for box
 void SpecifyBoxMinWidth(PopUpBox*, INT32 iMinWidth);

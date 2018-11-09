@@ -21,21 +21,21 @@
 #include <string_theory/string>
 
 
-#define LIFE_BAR_SHADOW		FROMRGB(108, 12, 12)
-#define LIFE_BAR			FROMRGB(200, 0, 0)
-#define BANDAGE_BAR_SHADOW		FROMRGB(156, 60, 60)
-#define BANDAGE_BAR			FROMRGB(222, 132, 132)
-#define BLEEDING_BAR_SHADOW		FROMRGB(128, 128, 60)
-#define BLEEDING_BAR			FROMRGB(240,  240, 20)
-#define CURR_BREATH_BAR_SHADOW		FROMRGB(8, 12, 118) // the MAX max breatth, always at 100%
-#define CURR_BREATH_BAR		FROMRGB(8, 12, 160)
-#define CURR_MAX_BREATH		FROMRGB(0, 0, 0) // the current max breath, black
-#define CURR_MAX_BREATH_SHADOW		FROMRGB(0, 0, 0)
-#define MORALE_BAR_SHADOW		FROMRGB(8, 112, 12)
-#define MORALE_BAR			FROMRGB(8, 180, 12)
-#define BREATH_BAR_SHADOW		FROMRGB(60, 108, 108) // the lt blue current breath
-#define BREATH_BAR			FROMRGB(113, 178, 218)
-#define BREATH_BAR_SHAD_BACK		FROMRGB(1, 1, 1)
+#define LIFE_BAR_SHADOW		RGB(108, 12, 12)
+#define LIFE_BAR			RGB(200, 0, 0)
+#define BANDAGE_BAR_SHADOW		RGB(156, 60, 60)
+#define BANDAGE_BAR			RGB(222, 132, 132)
+#define BLEEDING_BAR_SHADOW		RGB(128, 128, 60)
+#define BLEEDING_BAR			RGB(240,  240, 20)
+#define CURR_BREATH_BAR_SHADOW		RGB(8, 12, 118) // the MAX max breatth, always at 100%
+#define CURR_BREATH_BAR		RGB(8, 12, 160)
+#define CURR_MAX_BREATH		RGB(0, 0, 0) // the current max breath, black
+#define CURR_MAX_BREATH_SHADOW		RGB(0, 0, 0)
+#define MORALE_BAR_SHADOW		RGB(8, 112, 12)
+#define MORALE_BAR			RGB(8, 180, 12)
+#define BREATH_BAR_SHADOW		RGB(60, 108, 108) // the lt blue current breath
+#define BREATH_BAR			RGB(113, 178, 218)
+#define BREATH_BAR_SHAD_BACK		RGB(1, 1, 1)
 #define FACE_WIDTH			48
 #define FACE_HEIGHT			43
 
@@ -89,7 +89,7 @@ void UnLoadCarPortraits(void)
 }
 
 
-static void DrawBar(UINT32 const XPos, UINT32 const YPos, UINT32 const Height, UINT16 const Color, UINT16 const ShadowColor, UINT16* const DestBuf)
+static void DrawBar(UINT32 const XPos, UINT32 const YPos, UINT32 const Height, UINT32 const Color, UINT32 const ShadowColor, UINT16* const DestBuf)
 {
 	LineDraw(TRUE, XPos + 0, YPos, XPos + 0, YPos - Height, ShadowColor, DestBuf);
 	LineDraw(TRUE, XPos + 1, YPos, XPos + 1, YPos - Height, Color,       DestBuf);
@@ -103,7 +103,7 @@ static void DrawLifeUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 YPos, 
 
 	// FIRST DO MAX LIFE
 	Height = MaxHeight * s.bLife / 100;
-	DrawBar(XPos, YPos, Height, Get16BPPColor(LIFE_BAR), Get16BPPColor(LIFE_BAR_SHADOW), pDestBuf);
+	DrawBar(XPos, YPos, Height, LIFE_BAR, LIFE_BAR_SHADOW, pDestBuf);
 
 	// NOW DO BANDAGE
 	// Calculate bandage
@@ -112,7 +112,7 @@ static void DrawLifeUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 YPos, 
 	{
 		YPos   -= Height;
 		Height  = MaxHeight * Bandage / 100;
-		DrawBar(XPos, YPos, Height, Get16BPPColor(BANDAGE_BAR), Get16BPPColor(BANDAGE_BAR_SHADOW), pDestBuf);
+		DrawBar(XPos, YPos, Height, BANDAGE_BAR, BANDAGE_BAR_SHADOW, pDestBuf);
 	}
 
 	// NOW DO BLEEDING
@@ -120,7 +120,7 @@ static void DrawLifeUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 YPos, 
 	{
 		YPos   -= Height;
 		Height  = MaxHeight * s.bBleeding / 100;
-		DrawBar(XPos, YPos, Height, Get16BPPColor(BLEEDING_BAR), Get16BPPColor(BLEEDING_BAR_SHADOW), pDestBuf);
+		DrawBar(XPos, YPos, Height, BLEEDING_BAR, BLEEDING_BAR_SHADOW, pDestBuf);
 	}
 }
 
@@ -133,22 +133,22 @@ static void DrawBreathUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 cons
 	{
 		Height = MaxHeight * (s.bBreathMax + 3) / 100;
 		// the old background colors for breath max diff
-		DrawBar(XPos, sYPos, Height, Get16BPPColor(BREATH_BAR_SHAD_BACK), Get16BPPColor(BREATH_BAR_SHAD_BACK), pDestBuf);
+		DrawBar(XPos, sYPos, Height, BREATH_BAR_SHAD_BACK, BREATH_BAR_SHAD_BACK, pDestBuf);
 	}
 
 	Height = MaxHeight * s.bBreathMax / 100;
-	DrawBar(XPos, sYPos, Height, Get16BPPColor(CURR_MAX_BREATH), Get16BPPColor(CURR_MAX_BREATH_SHADOW), pDestBuf);
+	DrawBar(XPos, sYPos, Height, CURR_MAX_BREATH, CURR_MAX_BREATH_SHADOW, pDestBuf);
 
 	// NOW DO BREATH
 	Height = MaxHeight * s.bBreath / 100;
-	DrawBar(XPos, sYPos, Height, Get16BPPColor(CURR_BREATH_BAR), Get16BPPColor(CURR_BREATH_BAR_SHADOW), pDestBuf);
+	DrawBar(XPos, sYPos, Height, CURR_BREATH_BAR, CURR_BREATH_BAR_SHADOW, pDestBuf);
 }
 
 
 static void DrawMoraleUIBar(SOLDIERTYPE const& s, UINT32 const XPos, UINT32 const YPos, UINT32 const MaxHeight, UINT16* const pDestBuf)
 {
 	UINT32 const Height = MaxHeight * s.bMorale / 100;
-	DrawBar(XPos, YPos, Height, Get16BPPColor(MORALE_BAR), Get16BPPColor(MORALE_BAR_SHADOW), pDestBuf);
+	DrawBar(XPos, YPos, Height, MORALE_BAR, MORALE_BAR_SHADOW, pDestBuf);
 }
 
 
@@ -202,7 +202,7 @@ void DrawSoldierUIBars(SOLDIERTYPE const& s, INT16 const sXPos, INT16 const sYPo
 }
 
 
-void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, const INT16 y, INT16 max_h, const INT16 sColor1, const INT16 sColor2, SGPVSurface* const uiBuffer)
+void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, const INT16 y, INT16 max_h, const UINT32 sColor1, const UINT32 sColor2, SGPVSurface* const uiBuffer)
 {
 	INT16 value;
 	// Adjust for ammo, other things

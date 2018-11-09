@@ -349,7 +349,7 @@ try
 catch (...) { return 0; }
 
 
-VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT8 foreground, UINT8 background, const ST::utf32_buffer& codepoints)
+VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK const callback, INT16 const x, INT16 const y, SGPFont const font, UINT32 const foreground, UINT32 const background, const ST::utf32_buffer& codepoints)
 {
 	INT16          const w = StringPixLength(codepoints, font);
 	INT16          const h = GetFontHeight(font);

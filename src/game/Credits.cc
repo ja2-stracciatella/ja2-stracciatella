@@ -18,6 +18,7 @@
 #include "Video.h"
 #include "WordWrap.h"
 #include "UILayout.h"
+#include "FontCompat.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -149,8 +150,8 @@ static INT32 giCurrentlySelectedFace;
 
 static SGPFont guiCreditScreenActiveFont;  // the font that is used
 static SGPFont guiCreditScreenTitleFont;   // the font that is used
-static UINT8 gubCreditScreenActiveColor; // color of the font
-static UINT8 gubCreditScreenTitleColor;  // color of a Title node
+static UINT32 gubCreditScreenActiveColor; // color of the font
+static UINT32 gubCreditScreenTitleColor;  // color of a Title node
 
 static UINT32 guiCrdtNodeScrollSpeed;      // speed credits go up at
 static UINT32 guiCrdtLastTimeUpdatingNode; // the last time a node was read from the file
@@ -287,9 +288,15 @@ static void HandleCreditScreen(void)
 
 	if (giCurrentlySelectedFace != -1)
 	{
-		DrawTextToScreen(gzCreditNames[giCurrentlySelectedFace],     CRDT_NAME_LOC_X, CRDT_NAME_LOC_Y,       CRDT_NAME_LOC_WIDTH, CRDT_NAME_FONT, FONT_MCOLOR_WHITE, 0, INVALIDATE_TEXT | CENTER_JUSTIFIED);
-		DrawTextToScreen(gzCreditNameTitle[giCurrentlySelectedFace], CRDT_NAME_LOC_X, CRDT_NAME_TITLE_LOC_Y, CRDT_NAME_LOC_WIDTH, CRDT_NAME_FONT, FONT_MCOLOR_WHITE, 0, INVALIDATE_TEXT | CENTER_JUSTIFIED);
-		DrawTextToScreen(gzCreditNameFunny[giCurrentlySelectedFace], CRDT_NAME_LOC_X, CRDT_NAME_FUNNY_LOC_Y, CRDT_NAME_LOC_WIDTH, CRDT_NAME_FONT, FONT_MCOLOR_WHITE, 0, INVALIDATE_TEXT | CENTER_JUSTIFIED);
+		DrawTextToScreen(gzCreditNames[giCurrentlySelectedFace],
+			CRDT_NAME_LOC_X, CRDT_NAME_LOC_Y, CRDT_NAME_LOC_WIDTH,
+			CRDT_NAME_FONT, FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, INVALIDATE_TEXT | CENTER_JUSTIFIED);
+		DrawTextToScreen(gzCreditNameTitle[giCurrentlySelectedFace],
+			CRDT_NAME_LOC_X, CRDT_NAME_TITLE_LOC_Y, CRDT_NAME_LOC_WIDTH,
+			CRDT_NAME_FONT, FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, INVALIDATE_TEXT | CENTER_JUSTIFIED);
+		DrawTextToScreen(gzCreditNameFunny[giCurrentlySelectedFace],
+			CRDT_NAME_LOC_X, CRDT_NAME_FUNNY_LOC_Y, CRDT_NAME_LOC_WIDTH,
+			CRDT_NAME_FONT, FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, INVALIDATE_TEXT | CENTER_JUSTIFIED);
 	}
 }
 
@@ -334,7 +341,7 @@ static void AddCreditNode(UINT32 uiFlags, const ST::string& pString)
 
 	//Determine the font and the color to use
 	SGPFont  uiFontToUse;
-	UINT8 uiColorToUse;
+	UINT32 uiColorToUse;
 	if (uiFlags & CRDT_FLAG__TITLE)
 	{
 		uiFontToUse  = guiCreditScreenTitleFont;
@@ -347,16 +354,13 @@ static void AddCreditNode(UINT32 uiFlags, const ST::string& pString)
 	}
 
 	//Calculate the height of the string
-	pNodeToAdd->sHeightOfString = DisplayWrappedString(0, 0, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pString, 0, DONT_DISPLAY_TEXT) + 1;
+	pNodeToAdd->sHeightOfString = DisplayWrappedString(0, 0, CRDT_WIDTH_OF_TEXT_AREA, 2, uiFontToUse, uiColorToUse, pString, FONT_MCOLOR_TRANSPARENT, DONT_DISPLAY_TEXT) + 1;
 
 	//starting y position on the screen
 	pNodeToAdd->sPosY = CRDT_START_POS_Y;
 
 	SGPVSurface* const vs = AddVideoSurface(CRDT_WIDTH_OF_TEXT_AREA, pNodeToAdd->sHeightOfString, PIXEL_DEPTH);
 	pNodeToAdd->uiVideoSurfaceImage = vs;
-
-	vs->SetTransparency(0);
-	vs->Fill(0);
 
 	//write the string onto the surface
 	SetFontDestBuffer(vs);
@@ -437,6 +441,12 @@ static UINT32 GetNumber(const char* string)
 	return v;
 }
 
+static UINT32 GetColor(const char* const string)
+{
+	const unsigned int v = GetNumber(string);
+	return v < 256 ? gColorFromPalette[v] : RGB(255, 0, 0);
+}
+
 
 static void HandleCreditFlags(UINT32 uiFlags);
 
@@ -467,8 +477,8 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 				case CRDT_DELAY_BN_STRINGS_CODE:  guiGapBetweenCreditNodes    = GetNumber(s); break;
 				case CRDT_DELAY_BN_SECTIONS_CODE: guiGapBetweenCreditSections = GetNumber(s); break;
 				case CRDT_SCROLL_SPEED:           guiCrdtNodeScrollSpeed      = GetNumber(s); break;
-				case CRDT_TITLE_FONT_COLOR:       gubCreditScreenTitleColor   = GetNumber(s); break;
-				case CRDT_ACTIVE_FONT_COLOR:      gubCreditScreenActiveColor  = GetNumber(s); break;
+				case CRDT_TITLE_FONT_COLOR:       gubCreditScreenTitleColor   = GetColor(s); break;
+				case CRDT_ACTIVE_FONT_COLOR:      gubCreditScreenActiveColor  = GetColor(s); break;
 
 				case CRDT_FONT_JUSTIFICATION:
 					switch (GetNumber(s))

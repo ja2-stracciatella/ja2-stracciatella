@@ -84,7 +84,7 @@ static HVOBJECT GenericButtonOffNormal;
 static HVOBJECT GenericButtonOffHilite;
 static HVOBJECT GenericButtonOnNormal;
 static HVOBJECT GenericButtonOnHilite;
-static UINT16   GenericButtonFillColors;
+static UINT32   GenericButtonFillColors;
 
 static HVOBJECT GenericButtonIcons[MAX_BUTTON_ICONS];
 
@@ -298,8 +298,13 @@ static void InitializeButtonImageManager(void)
 	}
 	catch (...) { /* see comment above */ }
 
-	UINT8 const Pix = GenericButtonOffNormal->GetETRLEPixelValue(8, 0, 0);
-	GenericButtonFillColors = GenericButtonOffNormal->Palette16()[Pix];
+	if(GenericButtonOffNormal->BPP() == 32) { // FIXME: maxrd2 it's always 32
+		const ETRLEObject &etrle = GenericButtonOffNormal->SubregionProperties(0);
+		GenericButtonFillColors = reinterpret_cast<const UINT32 *>(GenericButtonOffNormal->PixData(etrle))[0];
+	} else {
+		UINT8 const Pix = GenericButtonOffNormal->GetETRLEPixelValue(8, 0, 0);
+		GenericButtonFillColors = GenericButtonOffNormal->Palette16()[Pix];
+	}
 }
 
 
@@ -532,7 +537,7 @@ GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 ylo
 }
 
 
-GUIButtonRef CreateTextButton(const ST::string& str, SGPFont font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateTextButton(const ST::string& str, SGPFont font, UINT32 sForeColor, UINT32 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
@@ -600,7 +605,7 @@ GUIButtonRef QuickCreateButtonImg(char const* const gfx, INT32 const off_normal,
 }
 
 
-GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const ST::string& str, SGPFont font, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const ST::string& str, SGPFont font, UINT32 sForeColor, UINT32 sShadowColor, UINT32 sForeColorDown, UINT32 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	GUIButtonRef const b = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
 	b->codepoints       = str.to_utf32();
@@ -613,7 +618,7 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const ST::string& str, 
 }
 
 
-GUIButtonRef CreateLabel(const ST::string& str, SGPFont font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
+GUIButtonRef CreateLabel(const ST::string& str, SGPFont font, UINT32 forecolor, UINT32 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
 {
 	GUIButtonRef const btn = CreateTextButton(str, font, forecolor, shadowcolor, x, y, w, h, priority, MSYS_NO_CALLBACK);
 	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
@@ -629,18 +634,18 @@ void GUI_BUTTON::SpecifyText(const ST::string& str)
 }
 
 
-void GUI_BUTTON::SpecifyDownTextColors(INT16 const fore_colour_down, INT16 const shadow_colour_down)
+void GUI_BUTTON::SpecifyDownTextColors(UINT32 const fore_color_down, UINT32 const shadow_color_down)
 {
-	sForeColorDown    = fore_colour_down;
-	sShadowColorDown  = shadow_colour_down;
+	sForeColorDown    = fore_color_down;
+	sShadowColorDown  = shadow_color_down;
 	uiFlags          |= BUTTON_DIRTY;
 }
 
 
-void GUI_BUTTON::SpecifyHilitedTextColors(INT16 const fore_colour_highlighted, INT16 const shadow_colour_highlighted)
+void GUI_BUTTON::SpecifyHilitedTextColors(UINT32 const fore_color_highlighted, UINT32 const shadow_color_highlighted)
 {
-	sForeColorHilited    = fore_colour_highlighted;
-	sShadowColorHilited  = shadow_colour_highlighted;
+	sForeColorHilited    = fore_color_highlighted;
+	sShadowColorHilited  = shadow_color_highlighted;
 	uiFlags             |= BUTTON_DIRTY;
 }
 
@@ -652,12 +657,12 @@ void GUI_BUTTON::SpecifyTextJustification(Justification const j)
 }
 
 
-void GUI_BUTTON::SpecifyGeneralTextAttributes(const ST::string& str, SGPFont font, INT16 fore_colour, INT16 shadow_colour)
+void GUI_BUTTON::SpecifyGeneralTextAttributes(const ST::string& str, SGPFont font, UINT32 fore_color, UINT32 shadow_color)
 {
 	SpecifyText(str);
 	usFont        = font;
-	sForeColor    = fore_colour;
-	sShadowColor  = shadow_colour;
+	sForeColor    = fore_color;
+	sShadowColor  = shadow_color;
 	uiFlags      |= BUTTON_DIRTY;
 }
 
@@ -1353,7 +1358,7 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 	// print the text
 
 	//Override the colors if necessary.
-	INT16 sForeColor;
+	UINT32 sForeColor;
 	if (b->Enabled() && b->Area.uiFlags & MSYS_MOUSE_IN_AREA && b->sForeColorHilited != -1)
 	{
 		sForeColor = b->sForeColorHilited;
@@ -1652,7 +1657,7 @@ void ShowButton(GUIButtonRef const b)
 }
 
 
-UINT16 GetGenericButtonFillColor(void)
+UINT32 GetGenericButtonFillColor(void)
 {
 	return GenericButtonFillColors;
 }

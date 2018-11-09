@@ -98,7 +98,7 @@ ScreenID MainMenuScreenHandle(void)
 		}
 		else if (guiSplashFrameFade > 1)
 		{
-			FRAME_BUFFER->Fill(0);
+			FRAME_BUFFER->Fill(0x000000FF);
 		}
 		else
 		{
@@ -281,7 +281,7 @@ static void HandleMainMenuInput(void)
 
 void ClearMainMenu(void)
 {
-	FRAME_BUFFER->Fill(0);
+	FRAME_BUFFER->Fill(0x000000FF);
 	InvalidateScreen();
 }
 

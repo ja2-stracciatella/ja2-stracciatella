@@ -2004,10 +2004,10 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 {
 	ST::string buf;
 
-	UINT16 outline;
+	UINT32 outline;
 	if (IsGunOrAmmoOfSameTypeSelected(item_o))
 	{
-		outline = Get16BPPColor(FROMRGB(255, 255, 255));
+		outline = RGB(255, 255, 255);
 	}
 	else if (gubSkiDirtyLevel != SKI_DIRTY_LEVEL0)
 	{
@@ -2039,8 +2039,8 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 
 	{
 		// Display the status of the item
-		UINT16 const colour = Get16BPPColor(FROMRGB(140, 136, 119));
-		DrawItemUIBarEx(item_o, 0, x + 2, y + 21, 20, colour, colour, FRAME_BUFFER);
+		UINT32 const color = RGB(140, 136, 119);
+		DrawItemUIBarEx(item_o, 0, x + 2, y + 21, 20, color, color, FRAME_BUFFER);
 	}
 
 	// Display the item's cost
@@ -2120,7 +2120,7 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 	if (ItemHasAttachments(item_o))
 	{
 		// Display the '*' in the bottom right corner of the square
-		UINT8 attachmentHintColor = GetAttachmentHintColor(&item_o);
+		UINT32 attachmentHintColor = GetAttachmentHintColor(&item_o);
 		DrawTextToScreen("*", x + SKI_ATTACHMENT_SYMBOL_X_OFFSET, y + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, attachmentHintColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 

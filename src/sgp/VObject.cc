@@ -113,7 +113,10 @@ UINT8 SGPVObject::GetETRLEPixelValue(UINT16 const usETRLEIndex, UINT16 const usX
 	}
 
 	// Assuming everything's okay, go ahead and look...
-	UINT8 const* pCurrent = PixData(pETRLEObject);
+	const UINT8 *pCurrent = PixData(pETRLEObject);
+
+	if(bit_depth_ == 32)
+		return reinterpret_cast<const UINT32 *>(pCurrent)[usY * pETRLEObject.usWidth + usX];
 
 	// Skip past all uninteresting scanlines
 	for (UINT16 usLoopY = 0; usLoopY < usY; usLoopY++)
@@ -230,7 +233,7 @@ SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile)
 void BltVideoObject(SGPVSurface* const dst, SGPVObject const* const src, UINT16 const usRegionIndex, INT32 const iDestX, INT32 const iDestY)
 {
 	Assert(src->BPP() ==  8);
-	Assert(dst->BPP() == 16);
+	Assert(dst->BPP() == 32);
 
 	SGPVSurface::Lock l(dst);
 	UINT16* const pBuffer = l.Buffer<UINT16>();
@@ -247,7 +250,7 @@ void BltVideoObject(SGPVSurface* const dst, SGPVObject const* const src, UINT16 
 }
 
 
-void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcVObject, UINT16 const usIndex, INT32 const iDestX, INT32 const iDestY, INT16 const s16BPPColor)
+void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcVObject, UINT16 const usIndex, INT32 const iDestX, INT32 const iDestY, UINT32 const s16BPPColor)
 {
 	SGPVSurface::Lock l(dst);
 	UINT16* const pBuffer = l.Buffer<UINT16>();

@@ -35,7 +35,7 @@ static const INT32 iIMPQuestionLengths[25] =
 #define QTN_SECOND_COLUMN_X 320
 
 
-static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT16 sIMPTextRecordNumber, SGPFont const font, UINT8 ubColor, BOOLEAN fShadow, UINT32 uiFlags)
+static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLength, INT16 sIMPTextRecordNumber, SGPFont const font, UINT32 ubColor, BOOLEAN fShadow, UINT32 uiFlags)
 {
 	// this procedure will load and display to the screen starting at postion X, Y relative to the start of the laptop screen
 	// it will access record sIMPTextRecordNumber and go until all records following it but before the next IMP record are displayed in the specified font

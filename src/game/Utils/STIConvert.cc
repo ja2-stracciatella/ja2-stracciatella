@@ -83,9 +83,9 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 	Header.fFlags |= STCI_INDEXED;
 	if (Header.ubDepth == 8)
 	{
-		// assume 8-bit pixels indexing into 256 colour palette with 24 bit values in
+		// assume 8-bit pixels indexing into 256 color palette with 24 bit values in
 		// the palette
-		Header.Indexed.uiNumberOfColours = 256;
+		Header.Indexed.uiNumberOfColors = 256;
 		Header.Indexed.ubRedDepth = 8;
 		Header.Indexed.ubGreenDepth = 8;
 		Header.Indexed.ubBlueDepth = 8;

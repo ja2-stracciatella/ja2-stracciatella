@@ -238,7 +238,7 @@ void RenderRadarScreen()
 				RADAR_WINDOW_TM_Y + std::max(double(0), round((gsTopLeftWorldY - SCROLL_TOP_PADDING) * gdScaleY)),
 				RADAR_WINDOW_X + std::min(round((gsBottomRightWorldX - SCROLL_RIGHT_PADDING - SCROLL_LEFT_PADDING) * gdScaleX - 1.0), double(RADAR_WINDOW_WIDTH - 1)),
 				RADAR_WINDOW_TM_Y + std::min(round((gsBottomRightWorldY - SCROLL_BOTTOM_PADDING - SCROLL_TOP_PADDING) * gdScaleY - 1.0), double(RADAR_WINDOW_HEIGHT - 1)),
-				Get16BPPColor(FROMRGB(0, 255, 0)), pDestBuf);
+				RGB(0, 255, 0), pDestBuf);
 
 			// Re-render radar
 			FOR_EACH_MERC(i)
@@ -266,18 +266,18 @@ void RenderRadarScreen()
 				const INT16 x = floor(DOUBLE(sXSoldScreen) * gdScaleX) + RADAR_WINDOW_X;
 				const INT16 y = floor(DOUBLE(sYSoldScreen) * gdScaleY) + RADAR_WINDOW_TM_Y;
 
-				UINT32 const line_colour =
+				const UINT32 line_color =
 					/* flash selected merc */
 					s == GetSelectedMan() && gfRadarCurrentGuyFlash                 ? 0                      :
 					/* on roof */
-					s->bTeam == OUR_TEAM && s->bLevel > 0                        ? FROMRGB(150, 150,   0) :
+					s->bTeam == OUR_TEAM && s->bLevel > 0                        ? RGB(150, 150,   0) :
 					/* unconscious enemy */
-					s->bTeam != OUR_TEAM && s->bLife < OKLIFE                    ? FROMRGB(128, 128, 128) :
+					s->bTeam != OUR_TEAM && s->bLife < OKLIFE                    ? RGB(128, 128, 128) :
 					/* hostile civilian */
-					s->bTeam == CIV_TEAM && !s->bNeutral && s->bSide != OUR_TEAM ? FROMRGB(255,   0,   0) :
+					s->bTeam == CIV_TEAM && !s->bNeutral && s->bSide != OUR_TEAM ? RGB(255,   0,   0) :
 					gTacticalStatus.Team[s->bTeam].RadarColor;
 
-				RectangleDraw(TRUE, x, y, x + 1, y + 1, Get16BPPColor(line_colour), pDestBuf);
+				RectangleDraw(TRUE, x, y, x + 1, y + 1, line_color, pDestBuf);
 			}
 		}
 		else if (fShowMapInventoryPool)
@@ -296,11 +296,11 @@ void RenderRadarScreen()
 					INT16  const x = sXSoldScreen * gdScaleX + RADAR_WINDOW_X;
 					INT16  const y = sYSoldScreen * gdScaleY + RADAR_WINDOW_TM_Y;
 
-					UINT16 const line_colour = fFlashHighLightInventoryItemOnradarMap ?
-						Get16BPPColor(FROMRGB(  0, 255,   0)) :
-						Get16BPPColor(FROMRGB(255, 255, 255));
+					UINT32 const line_color = fFlashHighLightInventoryItemOnradarMap ?
+						RGB(0, 255, 0) :
+						RGB(255, 255, 255);
 
-					RectangleDraw(TRUE, x, y, x + 1, y + 1, line_colour, pDestBuf);
+					RectangleDraw(TRUE, x, y, x + 1, y + 1, line_color, pDestBuf);
 				}
 			}
 			InvalidateRegion(RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, RADAR_WINDOW_X + RADAR_WINDOW_WIDTH, RADAR_WINDOW_TM_Y + RADAR_WINDOW_HEIGHT);
@@ -428,19 +428,19 @@ static void RenderSquadList(void)
 	INT16 const dy = RADAR_WINDOW_TM_Y;
 
 	RestoreExternBackgroundRect(dx, dy, RADAR_WINDOW_WIDTH, SQUAD_REGION_HEIGHT);
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, dx, dy, dx + RADAR_WINDOW_WIDTH, dy + SQUAD_REGION_HEIGHT, Get16BPPColor(FROMRGB(0, 0, 0)));
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, dx, dy, dx + RADAR_WINDOW_WIDTH, dy + SQUAD_REGION_HEIGHT, RGB(0, 0, 0));
 
 	SetFont(SQUAD_FONT);
-	SetFontBackground(FONT_BLACK);
+	SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 
-	for (INT16 i = 0; i < NUMBER_OF_SQUADS; ++i)
+	for (UINT i = 0; i < NUMBER_OF_SQUADS; ++i)
 	{
-		const UINT8 colour =
-			sSelectedSquadLine == i         ? FONT_WHITE   : // highlight line?
+		const UINT32 color =
+			sSelectedSquadLine == INT16(i)  ? FONT_WHITE   : // highlight line?
 			!IsSquadOnCurrentTacticalMap(i) ? FONT_BLACK   :
-			CurrentSquad() == i             ? FONT_LTGREEN :
-			                                  FONT_DKGREEN;
-		SetFontForeground(colour);
+			CurrentSquad() == (INT32)i      ? FONT_LTGREEN :
+								FONT_DKGREEN;
+		SetFontForeground(color);
 
 		INT16 sX;
 		INT16 sY;

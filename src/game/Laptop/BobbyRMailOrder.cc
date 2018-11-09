@@ -888,7 +888,7 @@ static void DrawShippingSpeedLights(UINT8 ubSelected)
 		} else {
 			green = 0;
 		}
-		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[2*i], gShippingSpeedAreas[2*i+1], gShippingSpeedAreas[2*i]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[2*i+1]+SHIPPING_SPEED_LIGHT_HEIGHT, Get16BPPColor( FROMRGB( 0, green, 0 ) ) );
+		ColorFillVideoSurfaceArea( FRAME_BUFFER, gShippingSpeedAreas[2*i], gShippingSpeedAreas[2*i+1], gShippingSpeedAreas[2*i]+SHIPPING_SPEED_LIGHT_WIDTH,	gShippingSpeedAreas[2*i+1]+SHIPPING_SPEED_LIGHT_HEIGHT, RGB(0, green, 0) );
 	}
 
 	InvalidateRegion(STD_SCREEN_X + 585, STD_SCREEN_Y + 218, STD_SCREEN_X + 594, STD_SCREEN_Y + 287);
@@ -1032,7 +1032,7 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 				MSYS_RemoveRegion( &gSelectedScrollAreaDropDownRegion[i]);
 
 			//display the name on the title bar
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SHIPPING_LOC_AREA_L_X, BOBBYR_SHIPPING_LOC_AREA_T_Y, BOBBYR_SHIPPING_LOC_AREA_L_X+175,	BOBBYR_SHIPPING_LOC_AREA_T_Y+BOBBYR_DROP_DOWN_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+			ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SHIPPING_LOC_AREA_L_X, BOBBYR_SHIPPING_LOC_AREA_T_Y, BOBBYR_SHIPPING_LOC_AREA_L_X+175,	BOBBYR_SHIPPING_LOC_AREA_T_Y+BOBBYR_DROP_DOWN_HEIGHT, RGB(0, 0, 0) );
 
 			if( gbSelectedCity == -1 )
 				DrawTextToScreen(BobbyROrderFormText[BOBBYR_SELECT_DEST], BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -1057,7 +1057,7 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			UINT16 usPosY, usPosX;
 
 			//Display the background for the drop down window
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_CITY_START_LOCATION_X, BOBBYR_CITY_START_LOCATION_Y, BOBBYR_CITY_START_LOCATION_X+BOBBYR_DROP_DOWN_WIDTH,	BOBBYR_CITY_START_LOCATION_Y+BOBBYR_SCROLL_AREA_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+			ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_CITY_START_LOCATION_X, BOBBYR_CITY_START_LOCATION_Y, BOBBYR_CITY_START_LOCATION_X+BOBBYR_DROP_DOWN_WIDTH,	BOBBYR_CITY_START_LOCATION_Y+BOBBYR_SCROLL_AREA_HEIGHT, RGB(0, 0, 0) );
 
 			//
 			// Place the border around the background
@@ -1099,7 +1099,7 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 
 
 			//display the scroll bars regions
-			ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SCROLL_AREA_X, BOBBYR_SCROLL_AREA_Y, BOBBYR_SCROLL_AREA_X+BOBBYR_SCROLL_AREA_WIDTH,	BOBBYR_SCROLL_AREA_Y+BOBBYR_SCROLL_AREA_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+			ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SCROLL_AREA_X, BOBBYR_SCROLL_AREA_Y, BOBBYR_SCROLL_AREA_X+BOBBYR_SCROLL_AREA_WIDTH,	BOBBYR_SCROLL_AREA_Y+BOBBYR_SCROLL_AREA_HEIGHT, RGB(0, 0, 0) );
 
 			//blt right bar of scroll area
 			usPosX = 0;
@@ -1213,7 +1213,7 @@ static void DrawSelectedCity(UINT8 ubCityNumber)
 
 
 	//display the name in the list
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_CITY_START_LOCATION_X+4, usPosY+4, BOBBYR_CITY_START_LOCATION_X+BOBBYR_DROP_DOWN_WIDTH-4,	usPosY+usFontHeight+6, Get16BPPColor( FROMRGB( 200, 169, 87 ) ) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_CITY_START_LOCATION_X+4, usPosY+4, BOBBYR_CITY_START_LOCATION_X+BOBBYR_DROP_DOWN_WIDTH-4,	usPosY+usFontHeight+6, RGB(200, 169, 87) );
 
 	SetFontShadow(NO_SHADOW);
 	ST::string city = *(GCM->getShippingDestinationName(ubCityNumber == 255 ? 0 : ubCityNumber));
@@ -1237,7 +1237,7 @@ static void DisplayShippingLocationCity(void)
 	UINT16 usPosY;
 
 	//display the name on the title bar
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SHIPPING_LOC_AREA_L_X, BOBBYR_SHIPPING_LOC_AREA_T_Y, BOBBYR_SHIPPING_LOC_AREA_L_X+175,	BOBBYR_SHIPPING_LOC_AREA_T_Y+BOBBYR_DROP_DOWN_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SHIPPING_LOC_AREA_L_X, BOBBYR_SHIPPING_LOC_AREA_T_Y, BOBBYR_SHIPPING_LOC_AREA_L_X+175,	BOBBYR_SHIPPING_LOC_AREA_T_Y+BOBBYR_DROP_DOWN_HEIGHT, RGB(0, 0, 0) );
 
 	//if there is no city selected
 	ST::string dest = (gbSelectedCity == -1 ? BobbyROrderFormText[BOBBYR_SELECT_DEST] : *(GCM->getShippingDestinationName(gbSelectedCity)));
@@ -1464,7 +1464,7 @@ static void DrawGoldRectangle(INT8 bCityNum)
 	if( usPosY >= temp )
 		usPosY = BOBBYR_SCROLL_AREA_Y + BOBBYR_SCROLL_AREA_HEIGHT - BOBBYR_SCROLL_ARROW_HEIGHT - usHeight - 5;
 
-	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SCROLL_AREA_X, usPosY, BOBBYR_SCROLL_AREA_X+usWidth,	usPosY+usHeight, Get16BPPColor( FROMRGB( 186, 165, 68 ) ) );
+	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SCROLL_AREA_X, usPosY, BOBBYR_SCROLL_AREA_X+usWidth,	usPosY+usHeight, RGB(186, 165, 68) );
 
 	//display the line
 	SGPVSurface::Lock l(FRAME_BUFFER);
@@ -1472,12 +1472,12 @@ static void DrawGoldRectangle(INT8 bCityNum)
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	// draw the gold highlite line on the top and left
-	LineDraw(FALSE, usPosX, usPosY, usPosX+usWidth, usPosY, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
-	LineDraw(FALSE, usPosX, usPosY, usPosX, usPosY+usHeight, Get16BPPColor( FROMRGB( 235, 222, 171 ) ), pDestBuf);
+	LineDraw(FALSE, usPosX, usPosY, usPosX+usWidth, usPosY, RGB(235, 222, 171), pDestBuf);
+	LineDraw(FALSE, usPosX, usPosY, usPosX, usPosY+usHeight, RGB(235, 222, 171), pDestBuf);
 
 	// draw the shadow line on the bottom and right
-	LineDraw(FALSE, usPosX, usPosY+usHeight, usPosX+usWidth, usPosY+usHeight, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
-	LineDraw(FALSE, usPosX+usWidth, usPosY, usPosX+usWidth, usPosY+usHeight, Get16BPPColor( FROMRGB( 65, 49, 6 ) ), pDestBuf);
+	LineDraw(FALSE, usPosX, usPosY+usHeight, usPosX+usWidth, usPosY+usHeight, RGB(65, 49, 6), pDestBuf);
+	LineDraw(FALSE, usPosX+usWidth, usPosY, usPosX+usWidth, usPosY+usHeight, RGB(65, 49, 6), pDestBuf);
 }
 
 

@@ -107,8 +107,8 @@
 #define SM_SELMERC_PLATE_WIDTH			83
 
 
-#define STATS_TITLE_FONT_COLOR			6
-#define STATS_TEXT_FONT_COLOR			5
+#define STATS_TITLE_FONT_COLOR			RGB(173, 148, 115)
+#define STATS_TEXT_FONT_COLOR			RGB(214, 201, 156)
 
 
 #define SM_TALKB_X				155
@@ -1132,13 +1132,13 @@ static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 co
 
 	INT8  const ap         = GetUIApsToDisplay(s);
 	UINT8 const min_ap     = MinAPsToAttack(s, s->sLastTarget, TRUE);
-	UINT8 const foreground =
+	const UINT32 foreground =
 		!EnoughPoints(s, min_ap, 0, FALSE) ? FONT_MCOLOR_DKRED    :
 		ap < 0                             ? FONT_MCOLOR_DKRED    :
 		MercUnderTheInfluence(s)           ? FONT_MCOLOR_LTBLUE   :
 		s->bStealthMode                    ? FONT_MCOLOR_LTYELLOW :
 		FONT_MCOLOR_LTGRAY;
-	SetFontAttributes(TINYFONT1, foreground);
+	SetFontAttributes(TINYFONT1, foreground, DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 
 	RestoreExternBackgroundRect(x, y, w, h);
 	ST::string buf = ST::format("{}", ap);
@@ -1172,34 +1172,21 @@ static void SetStatsHelp(MOUSE_REGION& r, SOLDIERTYPE const& s)
 	r.SetFastHelpText(help);
 }
 
-void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight, const UINT32 rgb, const UINT8 scale_rgb)
+void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight, const UINT32 fill_color, const UINT32 scale_color)
 {
 	SGPVSurface::Lock l(guiSAVEBUFFER);
 
-	#define s(a)				((a) / 2) + ((a) / 2) * (scale_rgb) / 100
-
-	const int r = s(0xff & rgb >> 16);
-	const int g = s(0xff & rgb >> 8);
-	const int b = s(0xff & rgb);
-
-	const UINT16 fill_color = Get16BPPColor((b << 16) + (g << 8) + r);
-
-	UINT16* const dst = l.Buffer<UINT16>();
+	UINT32* const dst = l.Buffer<UINT32>();
 
 	for (int y = 0; y < sHeight; ++y)
-	{
 		for(int x = 0; x < sWidth; ++x)
-		{
-			dst[(y + sTop)*l.Pitch() / 2 + sLeft + x] = fill_color;
-		}
-	}
+			dst[(y + sTop) * l.Pitch() / 4 + sLeft + x] = fill_color;
 }
 
 static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 const stat_val, INT16 const x, INT16 const y, INT32 const progress)
 {
-	SOLDIERTYPE const& s  = *gpSMCurrentMerc;
-
-	UINT8       const  fg =
+	const SOLDIERTYPE &s = *gpSMCurrentMerc;
+	const UINT32 fg =
 		s.bLife < OKLIFE                                             ? FONT_MCOLOR_DKGRAY    :
 		GetJA2Clock() >= CHANGE_STAT_RECENTLY_DURATION + change_time ? STATS_TEXT_FONT_COLOR :
 		change_time == 0                                             ? STATS_TEXT_FONT_COLOR :
@@ -1211,7 +1198,7 @@ static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 cons
 	ST::string str = ST::format("{3d}", stat_val);
 	if (gamepolicy(gui_extras))
 	{
-		ProgressBarBackgroundRect(x + 16, y - 2, 15 * progress / 100, 10, 0x514A05, progress);
+		ProgressBarBackgroundRect(x + 16, y - 2, 15 * progress / 100, 10, RGB(0x51, 0x4A, 0x05), progress);
 	}
 
 	DrawStringRight(str, x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, BLOCKFONT2);
@@ -1342,8 +1329,8 @@ no_plate:
 		}
 
 		// Render name
-		UINT8 const fg = s.bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
-		SetFontAttributes(BLOCKFONT2, fg);
+		const UINT32 fg = s.bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
+		SetFontAttributes(BLOCKFONT2, fg, DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 
 		INT16 const x = SM_SELMERCNAME_X + dx;
 		INT16 const y = SM_SELMERCNAME_Y + dy;
@@ -2430,8 +2417,8 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				// Restore AP/LIFE POSIITONS
 
 				// Render name!
-				UINT8 const foreground = s->bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
-				SetFontAttributes(BLOCKFONT2, foreground);
+				const UINT32 foreground = s->bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
+				SetFontAttributes(BLOCKFONT2, foreground, DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 
 				// RENDER ON SAVE BUFFER!
 				SetFontDestBuffer(guiSAVEBUFFER);
@@ -3192,7 +3179,7 @@ void RenderTownIDString(void)
 	INT16 sFontX, sFontY;
 
 	// Render town, position
-	SetFontAttributes(COMPFONT, 183);
+	SetFontAttributes(COMPFONT, RGB(  0, 255,   0));
 	ST::string zTownIDString = GetSectorIDString(gWorldSector, TRUE);
 	zTownIDString = ReduceStringLength(zTownIDString, 80, COMPFONT);
 	FindFontCenterCoordinates(INTERFACE_START_X + g_ui.m_teamPanelSlotsTotalWidth + 50, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);

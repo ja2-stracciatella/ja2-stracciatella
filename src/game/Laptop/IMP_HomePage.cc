@@ -36,10 +36,10 @@ static void InitImpHomepageTextInputBoxes(void) {
 	InitTextInputMode();
 
 	SetTextInputFont(FONT14ARIAL);
-	Set16BPPTextFieldColor( Get16BPPColor(FROMRGB( 0, 0, 0) ) );
+	Set16BPPTextFieldColor( RGB(0, 0, 0) );
 	SetTextInputRegularColors( FONT_LTGREEN, FONT_BLACK );
 	SetTextInputHilitedColors( FONT_BLACK, FONT_LTGREEN, FONT_LTGREEN  );
-	SetCursorColor( Get16BPPColor(FROMRGB(0, 255, 0) ) );
+	SetCursorColor( RGB(0, 255, 0) );
 
 	AddTextInputField(
 		IMP_PLAYER_ACTIVATION_STRING_X,

@@ -165,7 +165,7 @@ class SGPFile;
 typedef SGPFile* HWFILE;
 
 
-#define SGP_TRANSPARENT ((UINT16)0)
+#define SGP_TRANSPARENT ((UINT32)0)
 
 
 #ifdef __cplusplus

@@ -18,9 +18,8 @@ struct ZStripInfo
 	UINT8 ubNumberOfZChanges; // number of strips (after the first)
 };
 
-// This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
-// From RGB to COLORVAL
-#define FROMRGB(r, g ,b)  ((UINT32) (((UINT8) (r) | ((UINT16) (g) << 8)) | (((UINT32) (UINT8) (b)) << 16)))
+#define RGBA(r, g, b, a)  (UINT32(r) << 24 | UINT32(g) << 16 | UINT32(b) << 8 | UINT32(a))
+#define RGB(r, g, b)  (UINT32(r) << 24 | UINT32(g) << 16 | UINT32(b) << 8 | 0xFF)
 
 // This structure is a video object.
 // The video object contains different data based on it's type, compressed or not
@@ -109,7 +108,7 @@ static inline void DeleteVideoObject(SGPVObject* const vo)
 void BltVideoObject(SGPVSurface* dst, SGPVObject const* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
 
 
-void BltVideoObjectOutline(SGPVSurface* dst, SGPVObject const* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor);
+void BltVideoObjectOutline(SGPVSurface* dst, SGPVObject const* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, UINT32 s16BPPColor);
 void BltVideoObjectOutlineShadow(SGPVSurface* dst, SGPVObject const* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
 
 /* Loads a video object, blits it once and frees it */

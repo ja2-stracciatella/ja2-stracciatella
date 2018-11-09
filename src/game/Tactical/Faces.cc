@@ -498,14 +498,14 @@ static void BlinkAutoFace(FACETYPE& f)
 }
 
 
-static void DrawFaceRect(FACETYPE const& f, SGPVSurface* const buffer, const INT16 x, const INT16 y, const UINT32 colour)
+static void DrawFaceRect(FACETYPE const& f, SGPVSurface* const buffer, const INT16 x, const INT16 y, const UINT32 color)
 {
 	SGPVSurface::Lock l(buffer);
 	UINT32 const uiDestPitchBYTES = l.Pitch();
 
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, x - 2, y - 1, f.usFaceWidth + 4, f.usFaceHeight + 4);
 
-	const UINT16 usLineColor = Get16BPPColor(colour);
+	const UINT32 usLineColor = color;
 	RectangleDraw(TRUE, x - 2, y - 1, x + f.usFaceWidth + 1, y + f.usFaceHeight, usLineColor, l.Buffer<UINT16>());
 
 	SetClippingRegionAndImageWidth(uiDestPitchBYTES, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -521,27 +521,27 @@ static void HandleFaceHilights(FACETYPE const& f, SGPVSurface* const uiBuffer, c
 		// If we are highlighted, do this now!
 		if (f.uiFlags & FACE_SHOW_WHITE_HILIGHT)
 		{
-			DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, FROMRGB(255, 255, 255));
+			DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, RGB(255, 255, 255));
 		}
 		else if (f.uiFlags & FACE_SHOW_MOVING_HILIGHT)
 		{
 			SOLDIERTYPE const* const s = f.soldier;
 			if (s != NULL && s->bLife >= OKLIFE)
 			{
-				const UINT32 color = (s->bStealthMode ? FROMRGB(158, 158, 12) : FROMRGB(8, 12, 118));
+				const UINT32 color = (s->bStealthMode ? RGB(158, 158, 12) : RGB(8, 12, 118));
 				DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, color);
 			}
 		}
 		else
 		{
 			// ATE: Zero out any highlight boxzes....
-			DrawFaceRect(f, f.uiAutoDisplayBuffer, f.usFaceX, f.usFaceY, FROMRGB(0, 0, 0));
+			DrawFaceRect(f, f.uiAutoDisplayBuffer, f.usFaceX, f.usFaceY, RGB(0, 0, 0));
 		}
 	}
 
 	if (f.fCompatibleItems)
 	{
-		DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, FROMRGB(255, 0, 0));
+		DrawFaceRect(f, uiBuffer, sFaceX, sFaceY, RGB(255, 0, 0));
 	}
 }
 
@@ -781,7 +781,7 @@ static void HandleRenderFaceAdjustments(FACETYPE& f, BOOLEAN const fDisplayBuffe
 				SGPVSurface::Lock l(uiRenderBuffer);
 				SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 
-				const UINT16 usLineColor = Get16BPPColor(FROMRGB(105, 8, 9));
+				const UINT32 usLineColor = RGB(105, 8, 9);
 				RectangleDraw(TRUE, sX1, sY1, sX2, sY2, usLineColor, l.Buffer<UINT16>());
 			}
 

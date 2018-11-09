@@ -301,7 +301,7 @@ static void EnterOptionsScreen(void)
 		{
 			//Get how many lines will be used to display the string, without displaying the string
 			usTextWidth = OPT_TOGGLE_BOX_TEXT_WIDTH;
-			height = DisplayWrappedString(0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[cnt], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT);
+			height = DisplayWrappedString(0, 0, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_HIGHLIGHT_COLOR, zOptionsToggleText[cnt], FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED | DONT_DISPLAY_TEXT);
 		}
 		else
 		{
@@ -474,9 +474,9 @@ static void RenderOptionsScreen(void)
 
 		//if the string is going to wrap, move the string up a bit
 		if( usWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
-			DisplayWrappedString(pos_x, pos_y, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[cnt], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DisplayWrappedString(pos_x, pos_y, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsToggleText[cnt], FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 		else
-			DrawTextToScreen(zOptionsToggleText[cnt], pos_x, pos_y, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(zOptionsToggleText[cnt], pos_x, pos_y, 0, OPT_MAIN_FONT, OPT_MAIN_COLOR, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 		pos_y += OPT_GAP_BETWEEN_TOGGLE_BOXES;
 	}
@@ -486,13 +486,13 @@ static void RenderOptionsScreen(void)
 	//
 
 	//Display the Sound Fx text
-	DisplayWrappedString(OPT_SOUND_FX_TEXT_X, OPT_SOUND_FX_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_SOUND_FX], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DisplayWrappedString(OPT_SOUND_FX_TEXT_X, OPT_SOUND_FX_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_SOUND_FX], FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 	//Display the Speech text
-	DisplayWrappedString(OPT_SPEECH_TEXT_X, OPT_SPEECH_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_SPEECH], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DisplayWrappedString(OPT_SPEECH_TEXT_X, OPT_SPEECH_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_SPEECH], FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 	//Display the Music text
-	DisplayWrappedString(OPT_MUSIC_TEXT_X, OPT_MUSIC_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_MUSIC], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DisplayWrappedString(OPT_MUSIC_TEXT_X, OPT_MUSIC_TEXT_Y, OPT_SLIDER_TEXT_WIDTH, 2, OPT_MAIN_FONT, OPT_MAIN_COLOR, zOptionsText[OPT_MUSIC], FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 
 	InvalidateRegion( OPTIONS__TOP_LEFT_X, OPTIONS__TOP_LEFT_Y, OPTIONS__BOTTOM_RIGHT_X, OPTIONS__BOTTOM_RIGHT_Y);
@@ -850,14 +850,14 @@ static void HandleHighLightedText(BOOLEAN fHighLight)
 		usWidth = StringPixLength( zOptionsToggleText[ bHighLight ], OPT_MAIN_FONT );
 
 		//if the string is going to wrap, move the string up a bit
-		UINT8 color = fHighLight ? OPT_HIGHLIGHT_COLOR : OPT_MAIN_COLOR;
+		UINT32 color = fHighLight ? OPT_HIGHLIGHT_COLOR : OPT_MAIN_COLOR;
 		if( usWidth > OPT_TOGGLE_BOX_TEXT_WIDTH )
 		{
-			DisplayWrappedString(usPosX, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, color, zOptionsToggleText[bHighLight], FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | MARK_DIRTY);
+			DisplayWrappedString(usPosX, usPosY, OPT_TOGGLE_BOX_TEXT_WIDTH, 2, OPT_MAIN_FONT, color, zOptionsToggleText[bHighLight], FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED | MARK_DIRTY);
 		}
 		else
 		{
-			DrawTextToScreen(zOptionsToggleText[bHighLight], usPosX, usPosY, 0, OPT_MAIN_FONT, color, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | MARK_DIRTY);
+			DrawTextToScreen(zOptionsToggleText[bHighLight], usPosX, usPosY, 0, OPT_MAIN_FONT, color, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED | MARK_DIRTY);
 		}
 	}
 }

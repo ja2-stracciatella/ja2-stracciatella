@@ -31,7 +31,7 @@ struct ScrollStringSt
 {
 	ST::string pString;
 	VIDEO_OVERLAY* video_overlay;
-	UINT16  usColor;
+	UINT32  usColor;
 	BOOLEAN fBeginningOfNewString;
 	UINT32  uiTimeOfLastUpdate;
 	ScrollStringSt* pNext;
@@ -72,7 +72,7 @@ static BOOLEAN fScrollMessagesHidden = FALSE;
 static UINT32  uiStartOfPauseTime = 0;
 
 
-static ScrollStringSt* AddString(const ST::string& str, UINT16 usColor, BOOLEAN fStartOfNewString)
+static ScrollStringSt* AddString(const ST::string& str, UINT32 usColor, BOOLEAN fStartOfNewString)
 {
 	ScrollStringSt* const i = new ScrollStringSt{};
 	i->pString = str;
@@ -295,11 +295,11 @@ void UnHideMessagesDuringNPCDialogue(void)
 }
 
 
-static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const ST::string& str);
+static void TacticalScreenMsg(UINT32 usColor, UINT8 ubPriority, const ST::string& str);
 
 
 // new screen message
-void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
+void ScreenMsg(UINT32 usColor, UINT8 ubPriority, const ST::string& str)
 {
 	// pass onto tactical message and mapscreen message
 	TacticalScreenMsg(usColor, ubPriority, str);
@@ -330,7 +330,7 @@ static void ClearWrappedStrings(WRAPPED_STRING* pStringWrapperHead)
 
 
 // this function sets up the string into several single line structures
-static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const ST::string& str)
+static void TacticalScreenMsg(UINT32 color, UINT8 const priority, const ST::string& str)
 {
 	if (IsTimeBeingCompressed()) return;
 
@@ -338,8 +338,8 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const ST::str
 
 	switch (priority)
 	{
-		case MSG_DIALOG:    colour = DIALOGUE_COLOR;  break;
-		case MSG_INTERFACE: colour = INTERFACE_COLOR; break;
+		case MSG_DIALOG:    color = DIALOGUE_COLOR;  break;
+		case MSG_INTERFACE: color = INTERFACE_COLOR; break;
 	}
 
 	WRAPPED_STRING* const head = LineWrap(TINYFONT1, LINE_WIDTH, msg);
@@ -350,7 +350,7 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const ST::str
 	BOOLEAN new_string = TRUE;
 	for (WRAPPED_STRING* i = head; i; i = i->pNextWrappedString)
 	{
-		ScrollStringSt* const tmp = AddString(i->codepoints, colour, new_string);
+		ScrollStringSt* const tmp = AddString(i->codepoints, color, new_string);
 		*anchor    = tmp;
 		anchor     = &tmp->pNext;
 		new_string = FALSE;
@@ -360,11 +360,11 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const ST::str
 }
 
 
-static void AddStringToMapScreenMessageList(const ST::string& pString, UINT16 usColor, BOOLEAN fStartOfNewString);
+static void AddStringToMapScreenMessageList(const ST::string& pString, UINT32 usColor, BOOLEAN fStartOfNewString);
 
 
 // this function sets up the string into several single line structures
-void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
+void MapScreenMessage(UINT32 usColor, UINT8 ubPriority, const ST::string& str)
 {
 	ST::string DestString = str;
 
@@ -411,7 +411,7 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
 
 
 // add string to the map screen message list
-static void AddStringToMapScreenMessageList(const ST::string& pString, UINT16 usColor, BOOLEAN fStartOfNewString)
+static void AddStringToMapScreenMessageList(const ST::string& pString, UINT32 usColor, BOOLEAN fStartOfNewString)
 {
 	ScrollStringSt* const pStringSt = AddString(pString, usColor, fStartOfNewString);
 
@@ -448,7 +448,7 @@ void DisplayStringsInMapScreenMessageList(void)
 	SetFontDestBuffer(FRAME_BUFFER, STD_SCREEN_X + 17, STD_SCREEN_Y + 360 + 6, STD_SCREEN_X + 407, STD_SCREEN_Y + 360 + 101);
 
 	SetFont(MAP_SCREEN_MESSAGE_FONT);
-	SetFontBackground(FONT_BLACK);
+	SetFontBackground(FONT_MCOLOR_BLACK);
 	SetFontShadow(DEFAULT_SHADOW);
 
 	UINT8 ubCurrentStringIndex = gubCurrentMapMessageString;
@@ -511,7 +511,7 @@ static void PlayNewMessageSound(void)
 }
 
 
-static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLinuxFormat)
+static ScrollStringSt* ExtractScrollStringFromFile(const HWFILE f, bool stracLinuxFormat, const UINT32 version)
 {
 	UINT32 size;
 	f->read(&size, sizeof(size));
@@ -540,8 +540,18 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLin
 	DataReader d{data};
 	EXTR_SKIP(d, 4)
 	EXTR_U32(d, s->uiTimeOfLastUpdate)
-	EXTR_SKIP(d, 16)
-	EXTR_U16(d, s->usColor)
+	EXTR_SKIP(d, 14)
+	if(version < 101) {
+		EXTR_SKIP(d, 2)
+		EXTR_U16(d, s->usColor)
+		switch(s->usColor) {
+			case 0x91: s->usColor = FONT_YELLOW; break;
+			case 0xd0: s->usColor = FONT_WHITE; break;
+			default: s->usColor = FONT_RED; break;
+		}
+	} else {
+		EXTR_U32(d, s->usColor)
+	}
 	EXTR_BOOL(d, s->fBeginningOfNewString)
 	EXTR_SKIP(d, 1)
 	Assert(d.getConsumed() == lengthof(data));
@@ -568,8 +578,8 @@ static void InjectScrollStringIntoFile(HWFILE const f, ScrollStringSt const* con
 	DataWriter d{data};
 	INJ_SKIP(d, 4)
 	INJ_U32(d, s->uiTimeOfLastUpdate)
-	INJ_SKIP(d, 16)
-	INJ_U16(d, s->usColor)
+	INJ_SKIP(d, 14)
+	INJ_U32(d, s->usColor)
 	INJ_BOOL(d, s->fBeginningOfNewString)
 	INJ_SKIP(d, 1)
 	Assert(d.getConsumed() == lengthof(data));
@@ -596,7 +606,7 @@ void SaveMapScreenMessagesToSaveGameFile(HWFILE const hFile)
 }
 
 
-void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile, bool stracLinuxFormat)
+void LoadMapScreenMessagesFromSaveGameFile(const HWFILE hFile, bool stracLinuxFormat, const UINT32 version)
 {
 	// clear tactical message queue
 	ClearTacticalMessageQueue();
@@ -617,7 +627,7 @@ void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile, bool stracLinuxFo
 	//Loopthrough all the messages
 	FOR_EACH(ScrollStringSt*, i, gMapScreenMessageList)
 	{
-		ScrollStringSt* const s = ExtractScrollStringFromFile(hFile, stracLinuxFormat);
+		ScrollStringSt* const s = ExtractScrollStringFromFile(hFile, stracLinuxFormat, version);
 
 		ScrollStringSt* const old = *i;
 		if (old)

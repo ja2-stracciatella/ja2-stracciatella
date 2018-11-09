@@ -99,10 +99,10 @@ void InitImpBeginScreeenTextInputBoxes() {
 	InitTextInputMode();
 
 	SetTextInputFont(FONT14ARIAL);
-	Set16BPPTextFieldColor( Get16BPPColor(FROMRGB( 0, 0, 0) ) );
+	Set16BPPTextFieldColor( RGB(0, 0, 0) );
 	SetTextInputRegularColors( FONT_LTGREEN, FONT_BLACK );
 	SetTextInputHilitedColors( FONT_BLACK, FONT_LTGREEN, FONT_LTGREEN  );
-	SetCursorColor( Get16BPPColor(FROMRGB(0, 255, 0) ) );
+	SetCursorColor( RGB(0, 255, 0) );
 
 	AddTextInputField(
 		FULL_NAME_INPUT_X,
@@ -343,7 +343,7 @@ static void GetPlayerKeyBoardInputForIMPBeginScreen(void)
 
 static void DisplayCheckboxFocus(INT32 x)
 {
-	UINT16 currentColor = Get16BPPColor(GetJA2Clock() % 1000 < TEXT_CURSOR_BLINK_INTERVAL ? FROMRGB(0, 255, 0) : FROMRGB(0, 0, 0));
+	UINT32 currentColor = GetJA2Clock() % 1000 < TEXT_CURSOR_BLINK_INTERVAL ? RGB(0, 255, 0) : RGB(0, 0, 0);
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw(TRUE, x, MALE_BOX_Y, x + MALE_BOX_WIDTH, MALE_BOX_Y + MALE_BOX_HEIGHT, currentColor, l.Buffer<UINT16>());

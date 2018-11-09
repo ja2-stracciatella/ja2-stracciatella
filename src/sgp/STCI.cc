@@ -55,38 +55,6 @@ static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader c
 		f->read(img_data, header->uiStoredSize);
 
 		img->fFlags |= IMAGE_BITMAPDATA;
-
-		if (header->ubDepth == 16)
-		{
-			// ASSUMPTION: file data is 565 R,G,B
-			if (gusRedMask   != (UINT16)header->RGB.uiRedMask   ||
-					gusGreenMask != (UINT16)header->RGB.uiGreenMask ||
-					gusBlueMask  != (UINT16)header->RGB.uiBlueMask)
-			{
-				// colour distribution of the file is different from hardware!  We have to change it!
-				SLOGD("Converting to current RGB distribution!");
-				// Convert the image to the current hardware's specifications
-				UINT32  const size = header->usWidth * header->usHeight;
-				UINT16* const data = (UINT16*)(UINT8*)img->pImageData;
-				if (gusRedMask == 0x7C00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
-				{
-					ConvertRGBDistribution565To555(data, size);
-				}
-				else if (gusRedMask == 0xFC00 && gusGreenMask == 0x03E0 && gusBlueMask == 0x001F)
-				{
-					ConvertRGBDistribution565To655(data, size);
-				}
-				else if (gusRedMask == 0xF800 && gusGreenMask == 0x07C0 && gusBlueMask == 0x003F)
-				{
-					ConvertRGBDistribution565To556(data, size);
-				}
-				else
-				{
-					// take the long route
-					ConvertRGBDistribution565ToAny(data, size);
-				}
-			}
-		}
 	}
 	return img.release();
 }
@@ -97,7 +65,7 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 	AutoSGPImage img(new SGPImage(header->usWidth, header->usHeight, header->ubDepth));
 	if (contents & IMAGE_PALETTE)
 	{ // Allocate memory for reading in the palette
-		if (header->Indexed.uiNumberOfColours != 256)
+		if (header->Indexed.uiNumberOfColors != 256)
 		{
 			throw std::runtime_error("Palettized image has bad palette size.");
 		}
@@ -113,14 +81,14 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 			palette[i].r      = pSTCIPalette[i].ubRed;
 			palette[i].g      = pSTCIPalette[i].ubGreen;
 			palette[i].b      = pSTCIPalette[i].ubBlue;
-			palette[i].a      = 0;
+			palette[i].a      = 255;
 		}
 
 		img->fFlags |= IMAGE_PALETTE;
 	}
 	else if (contents & (IMAGE_BITMAPDATA | IMAGE_APPDATA))
 	{ // seek past the palette
-		f->seek(sizeof(STCIPaletteElement) * header->Indexed.uiNumberOfColours, FILE_SEEK_FROM_CURRENT);
+		f->seek(sizeof(STCIPaletteElement) * header->Indexed.uiNumberOfColors, FILE_SEEK_FROM_CURRENT);
 	}
 
 	if (contents & IMAGE_BITMAPDATA)

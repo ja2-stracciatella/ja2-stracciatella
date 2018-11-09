@@ -59,17 +59,17 @@ constexpr int NUM_SAVE_GAMES = 11;
 #define SAVE_LOAD_TITLE_COLOR				FONT_MCOLOR_WHITE
 
 #define SAVE_LOAD_NORMAL_FONT				FONT12ARIAL
-#define SAVE_LOAD_NORMAL_COLOR				2//FONT_MCOLOR_DKWHITE//2//FONT_MCOLOR_WHITE
-#define SAVE_LOAD_NORMAL_SHADOW_COLOR			118//121//118//125
+#define SAVE_LOAD_NORMAL_COLOR				FONT_MCOLOR_BLACK //  maxrd2: was 2
+#define SAVE_LOAD_NORMAL_SHADOW_COLOR			RGB(144, 107,  35) // maxrd2: was 118
 
-#define SAVE_LOAD_EMPTYSLOT_COLOR			2//125//FONT_MCOLOR_WHITE
-#define SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR		121//118
+#define SAVE_LOAD_EMPTYSLOT_COLOR			FONT_MCOLOR_BLACK // 2
+#define SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR		RGB(166, 126,  53) // 121
 
 #define SAVE_LOAD_HIGHLIGHTED_COLOR			FONT_MCOLOR_WHITE
-#define SAVE_LOAD_HIGHLIGHTED_SHADOW_COLOR		2
+#define SAVE_LOAD_HIGHLIGHTED_SHADOW_COLOR		FONT_MCOLOR_BLACK // 2
 
-#define SAVE_LOAD_SELECTED_COLOR			2//145//FONT_MCOLOR_WHITE
-#define SAVE_LOAD_SELECTED_SHADOW_COLOR		130//2
+#define SAVE_LOAD_SELECTED_COLOR			FONT_MCOLOR_BLACK // 2
+#define SAVE_LOAD_SELECTED_SHADOW_COLOR		RGB(201, 197, 143)
 
 #define SLG_SAVELOCATION_WIDTH				575
 #define SLG_SAVELOCATION_HEIGHT			30//46
@@ -479,7 +479,7 @@ static void EnterSaveLoadScreen()
 	{
 		guiSlgCancelBtn->uiFlags   |= BUTTON_FORCE_UNDIRTY;
 		guiSlgSaveLoadBtn->uiFlags |= BUTTON_FORCE_UNDIRTY;
-		FRAME_BUFFER->Fill(0);
+		FRAME_BUFFER->Fill(0x000000FF);
 	}
 
 	gfGettingNameFromSaveLoadScreen = FALSE;
@@ -842,8 +842,8 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 	BltVideoObject(FRAME_BUFFER, guiSlgAddonsStracciatella, gfx, bx, by);
 
 	SGPFont  font = SAVE_LOAD_NORMAL_FONT;
-	UINT8 foreground;
-	UINT8 shadow;
+	UINT32 foreground;
+	UINT32 shadow;
 	if (gfSaveGame && isNewSave) {
 		// The new save game slot
 		foreground = SAVE_LOAD_EMPTYSLOT_COLOR;
@@ -869,7 +869,7 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 	if (isNewSave) {
 		if (!gfUserInTextInputMode) {
 			// If this is the new save slot
-			DrawTextToScreen(pMessageStrings[MSG_NEW_SAVE], bx, by + SLG_DATE_OFFSET_Y, 609, font, foreground, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+			DrawTextToScreen(pMessageStrings[MSG_NEW_SAVE], bx, by + SLG_DATE_OFFSET_Y, 609, font, foreground, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 		}
 	} else {
 		auto &header = (*entry).header();
@@ -919,7 +919,7 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 		// Display the Saved game information
 		// The date
 		ST::string date = ST::format("{} {}, {02d}:{02d}", pMessageStrings[MSG_DAY], header.uiDay, header.ubHour, header.ubMin);
-		DrawTextToScreen(date, x + SLG_DATE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(date, x + SLG_DATE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 		// The sector
 		ST::string location;
@@ -938,7 +938,7 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 			location = gzLateLocalizedString[STR_LATE_14];
 		}
 		location = ReduceStringLength(location, SLG_SECTOR_WIDTH, font);
-		DrawTextToScreen(location, x + SLG_SECTOR_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(location, x + SLG_SECTOR_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 		// Number of mercs on the team
 		// If only 1 merc is on the team use "merc" else "mercs"
@@ -947,15 +947,15 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 			MercAccountText[MERC_ACCOUNT_MERC] :
 			pMessageStrings[MSG_MERCS];
 		ST::string merc_count = ST::format("{} {}", n_mercs, merc);
-		DrawTextToScreen(merc_count, x + SLG_NUM_MERCS_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(merc_count, x + SLG_NUM_MERCS_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 		// The balance
-		DrawTextToScreen(SPrintMoney(header.iCurrentBalance), x + SLG_BALANCE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(SPrintMoney(header.iCurrentBalance), x + SLG_BALANCE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 		if (!(gfSaveGame && gfUserInTextInputMode && isSelected))
 		{
 			// The saved game description
-			DrawTextToScreen(header.sSavedGameDesc, x + SLG_SAVE_GAME_DESC_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(header.sSavedGameDesc, x + SLG_SAVE_GAME_DESC_X, y, 0, font, foreground, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 		}
 
 		if (header.sInitialGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
@@ -1116,11 +1116,11 @@ static void InitSaveLoadScreenTextInputBoxes(void)
 	InitTextInputMode();
 	SetTextInputCursor(CUROSR_IBEAM_WHITE);
 	SetTextInputFont(FONT12ARIALFIXEDWIDTH);
-	Set16BPPTextFieldColor(Get16BPPColor(FROMRGB(0, 0, 0)));
-	SetBevelColors(Get16BPPColor(FROMRGB(136, 138, 135)), Get16BPPColor(FROMRGB(24, 61, 81)));
+	Set16BPPTextFieldColor(RGB(0, 0, 0)); // maxrd2: refactor func name
+	SetBevelColors(RGB(136, 138, 135), RGB(24, 61, 81));
 	SetTextInputRegularColors(FONT_WHITE, 2);
 	SetTextInputHilitedColors(2, FONT_WHITE, FONT_WHITE);
-	SetCursorColor(Get16BPPColor(FROMRGB(255, 255, 255)));
+	SetCursorColor(RGB(255, 255, 255));
 
 	AddUserInputField(NULL);
 

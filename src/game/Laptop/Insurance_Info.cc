@@ -91,8 +91,8 @@ void EnterInitInsuranceInfo()
 
 static GUIButtonRef MakeButtonBig(BUTTON_PICS* img, const ST::string& text, INT16 x, GUI_CALLBACK click, INT8 offset_x)
 {
-	const INT16 text_col   = INS_FONT_COLOR;
-	const INT16 shadow_col = INS_FONT_SHADOW;
+	const UINT32 text_col   = INS_FONT_COLOR;
+	const UINT32 shadow_col = INS_FONT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, INS_FONT_BIG, text_col, shadow_col, text_col, shadow_col, x, INS_INFO_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	btn->SetCursor(CURSOR_WWW);
 	btn->SpecifyTextOffsets(offset_x, 16, FALSE);

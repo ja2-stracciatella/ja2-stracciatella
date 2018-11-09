@@ -55,6 +55,7 @@
 #include "VObject.h"
 #include "VSurface.h"
 #include "WordWrap.h"
+#include "VSurface.h"
 #include <algorithm>
 #include <iterator>
 #include <string_theory/format>
@@ -1797,8 +1798,8 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		UINT16* const pDestBuf = l.Buffer<UINT16>();
-		RectangleDraw(TRUE, iX + 1, iY + 1, iX + iW - 1, iY + iH - 1, Get16BPPColor(FROMRGB( 65,  57, 15)), pDestBuf);
-		RectangleDraw(TRUE, iX,     iY,     iX + iW - 2, iY + iH - 2, Get16BPPColor(FROMRGB(227, 198, 88)), pDestBuf);
+		RectangleDraw(TRUE, iX + 1, iY + 1, iX + iW - 1, iY + iH - 1, RGB(65, 57, 15), pDestBuf);
+		RectangleDraw(TRUE, iX,     iY,     iX + iW - 2, iY + iH - 2, RGB(227, 198, 88), pDestBuf);
 	}
 	FRAME_BUFFER->ShadowRect(iX + 2, iY + 2, iX + iW - 3, iY + iH - 3);
 	FRAME_BUFFER->ShadowRect(iX + 2, iY + 2, iX + iW - 3, iY + iH - 3);
@@ -2282,7 +2283,7 @@ static void CreatePopUpBoxForMovementBox(void)
 	SetBoxFont(      box, MAP_SCREEN_FONT);
 	SetBoxHighLight( box, FONT_WHITE);
 	SetBoxForeground(box, FONT_LTGREEN);
-	SetBoxBackground(box, FONT_BLACK);
+	SetBoxBackground(box, FONT_MCOLOR_TRANSPARENT);
 	SetBoxShade(     box, FONT_BLACK);
 
 	// make the header line WHITE
@@ -3535,28 +3536,28 @@ static void RenderSoldierSmallFaceForUpdatePanel(INT32 iIndex, INT32 iX, INT32 i
 
 	//yellow one for bleeding
 	iStartY = iY + 29 - 27*pSoldier->bLifeMax/100;
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+36, iStartY, iX+37, iY+29, Get16BPPColor( FROMRGB( 107, 107, 57 ) ) );
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+37, iStartY, iX+38, iY+29, Get16BPPColor( FROMRGB( 222, 181, 115 ) ) );
+	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+36, iStartY, iX+37, iY+29, RGB(107, 107, 57) );
+	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+37, iStartY, iX+38, iY+29, RGB(222, 181, 115) );
 
 	//pink one for bandaged.
 	iStartY += 27*pSoldier->bBleeding/100;
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+36, iStartY, iX+37, iY+29, Get16BPPColor( FROMRGB( 156, 57, 57 ) ) );
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+37, iStartY, iX+38, iY+29, Get16BPPColor( FROMRGB( 222, 132, 132 ) ) );
+	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+36, iStartY, iX+37, iY+29, RGB(156, 57, 57) );
+	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+37, iStartY, iX+38, iY+29, RGB(222, 132, 132) );
 
 	//red one for actual health
 	iStartY = iY + 29 - 27*pSoldier->bLife/100;
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+36, iStartY, iX+37, iY+29, Get16BPPColor( FROMRGB( 107, 8, 8 ) ) );
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+37, iStartY, iX+38, iY+29, Get16BPPColor( FROMRGB( 206, 0, 0 ) ) );
+	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+36, iStartY, iX+37, iY+29, RGB(107, 8, 8) );
+	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+37, iStartY, iX+38, iY+29, RGB(206, 0, 0) );
 
 	//BREATH BAR
 	iStartY = iY + 29 - 27*pSoldier->bBreathMax/100;
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+39, iStartY, iX+40, iY+29, Get16BPPColor( FROMRGB( 8, 8, 132 ) ) );
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+40, iStartY, iX+41, iY+29, Get16BPPColor( FROMRGB( 8, 8, 107 ) ) );
+	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+39, iStartY, iX+40, iY+29, RGB(8, 8, 132) );
+	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+40, iStartY, iX+41, iY+29, RGB(8, 8, 107) );
 
 	//MORALE BAR
 	iStartY = iY + 29 - 27*pSoldier->bMorale/100;
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+42, iStartY, iX+43, iY+29, Get16BPPColor( FROMRGB( 8, 156, 8 ) ) );
-	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+43, iStartY, iX+44, iY+29, Get16BPPColor( FROMRGB( 8, 107, 8 ) ) );
+	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+42, iStartY, iX+43, iY+29, RGB(8, 156, 8) );
+	ColorFillVideoSurfaceArea( guiSAVEBUFFER, iX+43, iStartY, iX+44, iY+29, RGB(8, 107, 8) );
 }
 
 

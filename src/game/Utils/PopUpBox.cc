@@ -18,11 +18,11 @@
 struct PopUpString
 {
 	ST::utf32_buffer codepoints;
-	UINT8 ubForegroundColor;
-	UINT8 ubBackgroundColor;
-	UINT8 ubHighLight;
-	UINT8 ubShade;
-	UINT8 ubSecondaryShade;
+	UINT32 ubForegroundColor;
+	UINT32 ubBackgroundColor;
+	UINT32 ubHighLight;
+	UINT32 ubShade;
+	UINT32 ubSecondaryShade;
 	BOOLEAN fHighLightFlag;
 	BOOLEAN fShadeFlag;
 	BOOLEAN fSecondaryShadeFlag;
@@ -256,98 +256,98 @@ SGPFont GetBoxFont(const PopUpBox* const box)
 
 
 // set the foreground color of this string in this pop up box
-void SetBoxLineForeground(PopUpBox* const box, const INT32 iStringValue, const UINT8 ubColor)
+void SetBoxLineForeground(PopUpBox* const box, const INT32 iStringValue, const UINT32 ubColor)
 {
 	box->Text[iStringValue]->ubForegroundColor = ubColor;
 }
 
 
-void SetBoxSecondaryShade(PopUpBox* const box, UINT8 const colour)
+void SetBoxSecondaryShade(PopUpBox* const box, UINT32 const color)
 {
 	FOR_EACH(PopUpString*, i, box->Text)
 	{
 		PopUpString* const p = *i;
-		if (p) p->ubSecondaryShade = colour;
+		if (p) p->ubSecondaryShade = color;
 	}
 }
 
 
-void SetBoxForeground(PopUpBox* const box, UINT8 const colour)
+void SetBoxForeground(PopUpBox* const box, UINT32 const color)
 {
 	FOR_EACH(PopUpString*, i, box->Text)
 	{
 		PopUpString* const p = *i;
-		if (p) p->ubForegroundColor = colour;
+		if (p) p->ubForegroundColor = color;
 	}
 }
 
 
-void SetBoxBackground(PopUpBox* const box, UINT8 const colour)
+void SetBoxBackground(PopUpBox* const box, UINT32 const color)
 {
 	FOR_EACH(PopUpString*, i, box->Text)
 	{
 		PopUpString* const p = *i;
-		if (p) p->ubBackgroundColor = colour;
+		if (p) p->ubBackgroundColor = color;
 	}
 }
 
 
-void SetBoxHighLight(PopUpBox* const box, UINT8 const colour)
+void SetBoxHighLight(PopUpBox* const box, UINT32 const color)
 {
 	FOR_EACH(PopUpString*, i, box->Text)
 	{
 		PopUpString* const p = *i;
-		if (p) p->ubHighLight = colour;
+		if (p) p->ubHighLight = color;
 	}
 }
 
 
-void SetBoxShade(PopUpBox* const box, UINT8 const colour)
+void SetBoxShade(PopUpBox* const box, UINT32 const color)
 {
 	FOR_EACH(PopUpString*, i, box->Text)
 	{
 		PopUpString* const p = *i;
-		if (p) p->ubShade = colour;
+		if (p) p->ubShade = color;
 	}
 }
 
 
-void SetBoxSecondColumnForeground(PopUpBox* const box, UINT8 const colour)
+void SetBoxSecondColumnForeground(PopUpBox* const box, UINT32 const color)
 {
 	FOR_EACH(PopUpString*, i, box->pSecondColumnString)
 	{
 		PopUpString* const p = *i;
-		if (p) p->ubForegroundColor = colour;
+		if (p) p->ubForegroundColor = color;
 	}
 }
 
 
-void SetBoxSecondColumnBackground(PopUpBox* const box, UINT8 const colour)
+void SetBoxSecondColumnBackground(PopUpBox* const box, UINT32 const color)
 {
 	FOR_EACH(PopUpString*, i, box->pSecondColumnString)
 	{
 		PopUpString* const p = *i;
-		if (p) p->ubBackgroundColor = colour;
+		if (p) p->ubBackgroundColor = color;
 	}
 }
 
 
-void SetBoxSecondColumnHighLight(PopUpBox* const box, UINT8 const colour)
+void SetBoxSecondColumnHighLight(PopUpBox* const box, UINT32 const color)
 {
 	FOR_EACH(PopUpString*, i, box->pSecondColumnString)
 	{
 		PopUpString* const p = *i;
-		if (p) p->ubHighLight = colour;
+		if (p) p->ubHighLight = color;
 	}
 }
 
 
-void SetBoxSecondColumnShade(PopUpBox* const box, UINT8 const colour)
+void SetBoxSecondColumnShade(PopUpBox* const box, UINT32 const color)
 {
 	FOR_EACH(PopUpString*, i, box->pSecondColumnString)
 	{
 		PopUpString* const p = *i;
-		if (p) p->ubShade = colour;
+		if (p) p->ubShade = color;
 	}
 }
 

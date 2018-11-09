@@ -41,7 +41,7 @@ catch (...) { return FALSE; }
 
 void DisplayPaletteRep(const ST::string& aPalRep, UINT8 ubXPos, UINT8 ubYPos, SGPVSurface* dst)
 {
-	UINT16 us16BPPColor;
+	UINT32 usColor;
 	UINT32 cnt1;
 	INT16  sTLX, sTLY, sBRX, sBRY;
 
@@ -64,9 +64,9 @@ void DisplayPaletteRep(const ST::string& aPalRep, UINT8 ubXPos, UINT8 ubYPos, SG
 		sBRY = sTLY + 20;
 
 		auto const * const Clr = &gpPalRep[*ubPaletteRep].rgb[cnt1];
-		us16BPPColor = Get16BPPColor(FROMRGB(Clr->r, Clr->g, Clr->b));
+		usColor = RGB(Clr->r, Clr->g, Clr->b);
 
-		ColorFillVideoSurfaceArea(dst, sTLX, sTLY, sBRX, sBRY, us16BPPColor);
+		ColorFillVideoSurfaceArea(dst, sTLX, sTLY, sBRX, sBRY, usColor);
 	}
 
 	GPrint(ubXPos + 16 * 20, ubYPos, gpPalRep[*ubPaletteRep].ID);

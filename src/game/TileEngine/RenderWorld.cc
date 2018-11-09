@@ -96,17 +96,16 @@ enum RenderLayerID
 
 #define NUM_ITEM_CYCLE_COLORS 20
 
-
 #define MIN_SCROLL_OFFSET_X 20
 #define MIN_SCROLL_OFFSET_Y 20
 
-static UINT16 us16BPPItemCycleWhiteColors[NUM_ITEM_CYCLE_COLORS];
-static UINT16 us16BPPItemCycleRedColors[NUM_ITEM_CYCLE_COLORS];
-static UINT16 us16BPPItemCycleYellowColors[NUM_ITEM_CYCLE_COLORS];
+static UINT32 usItemCycleWhiteColors[NUM_ITEM_CYCLE_COLORS];
+static UINT32 usItemCycleRedColors[NUM_ITEM_CYCLE_COLORS];
+static UINT32 usItemCycleYellowColors[NUM_ITEM_CYCLE_COLORS];
 
 
-static INT16 gusNormalItemOutlineColor;
-static INT16 gusYellowItemOutlineColor;
+static UINT32 gusNormalItemOutlineColor;
+static UINT32 gusYellowItemOutlineColor;
 
 INT16   gsRenderHeight = 0;
 BOOLEAN gfRenderFullThisFrame = 0;
@@ -1124,7 +1123,7 @@ zlevel_topmost:
 
 								if (!(uiFlags & TILES_DIRTY) && s.fForceShade)
 								{
-									pShadeTable = s.pForcedShade;
+									pShadeTable = (UINT16*)s.pForcedShade;
 								}
 
 								hVObject = gAnimSurfaceDatabase[usAnimSurface].hVideoObject;
@@ -1206,7 +1205,7 @@ zlevel_topmost:
 							sXPos += pTrav.sOffsetX;
 							sYPos += pTrav.sOffsetY;
 
-							UINT8 const foreground = gfUIDisplayActionPointsBlack ? FONT_MCOLOR_BLACK : FONT_MCOLOR_WHITE;
+							const UINT32 foreground = gfUIDisplayActionPointsBlack ? FONT_MCOLOR_BLACK : FONT_MCOLOR_WHITE;
 							SetFontAttributes(TINYFONT1, foreground);
 							SetFontDestBuffer(guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y);
 							ST::string buf = ST::format("{}", pNode->uiAPCost);
@@ -1218,19 +1217,19 @@ zlevel_topmost:
 						}
 						else if (uiLevelNodeFlags & LEVELNODE_ITEM)
 						{
-							UINT16     outline_colour;
+							UINT32     outline_color;
 							bool const on_roof = uiRowFlags == TILES_STATIC_ONROOF || uiRowFlags == TILES_DYNAMIC_ONROOF;
 							if (gGameSettings.fOptions[TOPTION_GLOW_ITEMS])
 							{
-								UINT16 const *palette =
-									on_roof                                    ? us16BPPItemCycleYellowColors :
-									gTacticalStatus.uiFlags & RED_ITEM_GLOW_ON ? us16BPPItemCycleRedColors    :
-									us16BPPItemCycleWhiteColors;
-								outline_colour = palette[gsCurrentItemGlowFrame];
+								UINT32 const *palette =
+									on_roof                                    ? usItemCycleYellowColors :
+									gTacticalStatus.uiFlags & RED_ITEM_GLOW_ON ? usItemCycleRedColors    :
+									usItemCycleWhiteColors;
+								outline_color = palette[gsCurrentItemGlowFrame];
 							}
 							else
 							{
-								outline_colour =
+								outline_color =
 									on_roof ? gusYellowItemOutlineColor :
 									gusNormalItemOutlineColor;
 							}
@@ -1240,22 +1239,22 @@ zlevel_topmost:
 							{
 								if (fObscuredBlitter)
 								{
-									Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_colour);
+									Blt8BPPDataTo16BPPBufferOutlineZPixelateObscured(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_color);
 								}
 								else
 								{
-									Blt8BPPDataTo16BPPBufferOutlineZ(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_colour);
+									Blt8BPPDataTo16BPPBufferOutlineZ(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_color);
 								}
 							}
 							else if (bBlitClipVal == TRUE)
 							{
 								if (fObscuredBlitter)
 								{
-									Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_colour, &gClippingRect);
+									Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_color, &gClippingRect);
 								}
 								else
 								{
-									Blt8BPPDataTo16BPPBufferOutlineZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_colour, &gClippingRect);
+									Blt8BPPDataTo16BPPBufferOutlineZClip(pDestBuf, uiDestPitchBYTES, gpZBuffer, sZLevel, hVObject, sXPos, sYPos, usImageIndex, outline_color, &gClippingRect);
 								}
 							}
 						}
@@ -1593,7 +1592,7 @@ next_node:
 						 * taskbar. */
 						if (iTempPosY_S < 360)
 						{
-							ColorFillVideoSurfaceArea(FRAME_BUFFER, iTempPosX_S, iTempPosY_S, iTempPosX_S + 40, std::min(iTempPosY_S + 20, 360), Get16BPPColor(FROMRGB(0, 0, 0)));
+							ColorFillVideoSurfaceArea(FRAME_BUFFER, iTempPosX_S, iTempPosY_S, iTempPosX_S + 40, std::min(iTempPosY_S + 20, 360), RGB(0, 0, 0));
 						}
 					}
 				}
@@ -1671,7 +1670,7 @@ void RenderWorld(void)
 	// If we are testing renderer, set background to pink!
 	if (gTacticalStatus.uiFlags & DEBUGCLIFFS)
 	{
-		ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y, Get16BPPColor(FROMRGB(0, 255, 0)));
+		ColorFillVideoSurfaceArea(FRAME_BUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y, RGB(0, 255, 0));
 		SetRenderFlags(RENDER_FLAG_FULL);
 	}
 
@@ -2269,13 +2268,13 @@ void InitRenderParams(UINT8 ubRestrictionID)
 	for (UINT32 i = 0; i < n; ++i)
 	{
 		const UINT32 l = (i < n / 2 ? i + 1 : n - i) * (250 / (n / 2));
-		us16BPPItemCycleWhiteColors[i]  = Get16BPPColor(FROMRGB(l, l, l));
-		us16BPPItemCycleRedColors[i]    = Get16BPPColor(FROMRGB(l, 0, 0));
-		us16BPPItemCycleYellowColors[i] = Get16BPPColor(FROMRGB(l, l, 0));
+		usItemCycleWhiteColors[i]  = RGB(l, l, l);
+		usItemCycleRedColors[i]    = RGB(l, 0, 0);
+		usItemCycleYellowColors[i] = RGB(l, l, 0);
 	}
 
-	gusNormalItemOutlineColor = Get16BPPColor(FROMRGB(255, 255, 255));
-	gusYellowItemOutlineColor = Get16BPPColor(FROMRGB(255, 255,   0));
+	gusNormalItemOutlineColor = RGB(255, 255, 255);
+	gusYellowItemOutlineColor = RGB(255, 255, 0);
 }
 
 /** This function checks whether the render screen can be moved to new position. */

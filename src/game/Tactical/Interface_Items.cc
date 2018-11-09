@@ -82,20 +82,20 @@
 #include <iterator>
 
 #define ITEMDESC_FONT					BLOCKFONT2
-#define ITEMDESC_FONTSHADOW2				32
+#define ITEMDESC_FONTSHADOW2				RGB(201, 172, 133)
 
-#define ITEMDESC_FONTAPFORE				218
-#define ITEMDESC_FONTHPFORE				24
-#define ITEMDESC_FONTBSFORE				125
-#define ITEMDESC_FONTHEFORE				75
-#define ITEMDESC_FONTHEAPFORE				76
+#define ITEMDESC_FONTAPFORE				RGB(178,  15,  15)
+#define ITEMDESC_FONTHPFORE				RGB( 57,  79, 225)
+#define ITEMDESC_FONTBSFORE				RGB(190, 157, 103)
+#define ITEMDESC_FONTHEFORE				RGB(255, 206,  30)
+#define ITEMDESC_FONTHEAPFORE				RGB(240, 116,  45)
 
-#define ITEMDESC_AMMO_FORE				209
+#define ITEMDESC_AMMO_FORE				RGB(222, 222, 222)
 
 #define ITEMDESC_FONTHIGHLIGHT				FONT_MCOLOR_WHITE
 
-#define STATUS_BAR_SHADOW				FROMRGB( 140, 136,  119 )
-#define STATUS_BAR					FROMRGB( 201, 172,  133 )
+#define STATUS_BAR_SHADOW				RGB( 140, 136,  119 )
+#define STATUS_BAR					RGB( 201, 172,  133 )
 #define DESC_STATUS_BAR_SHADOW				STATUS_BAR_SHADOW
 #define DESC_STATUS_BAR				STATUS_BAR
 
@@ -408,7 +408,7 @@ static MOUSE_REGION gKeyRingPanel;
 static MOUSE_REGION gSMInvCamoRegion;
 static INT8 gbCompatibleAmmo[NUM_INV_SLOTS];
 INT8 gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
-static UINT16 us16BPPItemCyclePlacedItemColors[20];
+static UINT32 usItemCyclePlacedItemColors[20];
 static SGPVObject* guiBodyInvVO[4][2];
 static SGPVObject* guiGoldKeyVO;
 INT8 gbCompatibleApplyItem = FALSE;
@@ -785,7 +785,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 	MOUSE_REGION&     r      = gSMInvRegion[pocket];
 
 	bool   hatch_out = false;
-	UINT16 outline   = SGP_TRANSPARENT;
+	UINT32 outline   = SGP_TRANSPARENT;
 	if (dirty_level == DIRTYLEVEL2)
 	{
 		ST::string buf = GetHelpTextForItem(o);
@@ -810,7 +810,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 		}
 
 		// Check for compatibility with magazines
-		if (gbCompatibleAmmo[pocket]) outline = Get16BPPColor(FROMRGB(255, 255, 255));
+		if (gbCompatibleAmmo[pocket]) outline = RGB(255, 255, 255);
 	}
 
 	INT16 const x = r.X();
@@ -850,8 +850,8 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 	if (o.usItem != NOTHING)
 	{
 		// Add item status bar
-		DrawItemUIBarEx(o, 0, x - INV_BAR_DX, y + INV_BAR_DY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR),
-				Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+		DrawItemUIBarEx(o, 0, x - INV_BAR_DX, y + INV_BAR_DY, ITEM_BAR_HEIGHT, STATUS_BAR,
+				STATUS_BAR_SHADOW, guiSAVEBUFFER);
 	}
 }
 
@@ -1476,8 +1476,8 @@ void HandleNewlyAddedItems(SOLDIERTYPE& s, DirtyLevel* const dirty_level)
 		OBJECTTYPE const& o        = s.inv[i];
 		if (o.usItem == NOTHING) continue;
 		MOUSE_REGION const& r      = gSMInvRegion[i];
-		UINT16       const  colour = us16BPPItemCyclePlacedItemColors[s.bNewItemCycleCount[i]];
-		INVRenderItem(guiSAVEBUFFER, &s, o, r.X(), r.Y(), r.W(), r.H(), DIRTYLEVEL2, 0, colour);
+		UINT32       const  color = usItemCyclePlacedItemColors[s.bNewItemCycleCount[i]];
+		INVRenderItem(guiSAVEBUFFER, &s, o, r.X(), r.Y(), r.W(), r.H(), DIRTYLEVEL2, 0, color);
 	}
 }
 
@@ -1534,12 +1534,12 @@ void DegradeNewlyAddedItems( )
 	}
 }
 
-UINT8 GetAttachmentHintColor(const OBJECTTYPE* o) {
+UINT32 GetAttachmentHintColor(const OBJECTTYPE* o) {
 	return FindAttachmentByClass(o, IC_LAUNCHER) == NO_SLOT ? FONT_GREEN : FONT_YELLOW;
 }
 
 
-void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECTTYPE const& o, INT16 const sX, INT16 const sY, INT16 const sWidth, INT16 const sHeight, DirtyLevel const dirty_level, UINT8 const ubStatusIndex, INT16 const outline_colour)
+void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECTTYPE const& o, INT16 const sX, INT16 const sY, INT16 const sWidth, INT16 const sHeight, DirtyLevel const dirty_level, UINT8 const ubStatusIndex, UINT32 const outline_color)
 {
 	if (o.usItem    == NOTHING)     return;
 	if (dirty_level == DIRTYLEVEL0) return;
@@ -1562,7 +1562,7 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 		{
 			BltVideoObjectOutlineShadow(buffer, item_vo, gfx_idx, cx - 2, cy + 2);
 		}
-		BltVideoObjectOutline(buffer, item_vo, gfx_idx, cx,     cy, outline_colour);
+		BltVideoObjectOutline(buffer, item_vo, gfx_idx, cx,     cy, outline_color);
 
 		if (buffer == FRAME_BUFFER)
 		{
@@ -1577,23 +1577,23 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 	if (ubStatusIndex < RENDER_ITEM_ATTACHMENT1)
 	{
 		SetFont(ITEM_FONT);
-		SetFontBackground(FONT_MCOLOR_BLACK);
+		SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 
 		if (item->getItemClass() == IC_GUN && o.usItem != ROCKET_LAUNCHER)
 		{
 			// Display free rounds remianing
-			UINT8 colour;
+			UINT32 color;
 			switch (o.ubGunAmmoType)
 			{
 				case AMMO_AP:
-				case AMMO_SUPER_AP: colour = ITEMDESC_FONTAPFORE;   break;
-				case AMMO_HP:       colour = ITEMDESC_FONTHPFORE;   break;
-				case AMMO_BUCKSHOT: colour = ITEMDESC_FONTBSFORE;   break;
-				case AMMO_HE:       colour = ITEMDESC_FONTHEFORE;   break;
-				case AMMO_HEAT:     colour = ITEMDESC_FONTHEAPFORE; break;
-				default:            colour = FONT_MCOLOR_DKGRAY;    break;
+				case AMMO_SUPER_AP: color = ITEMDESC_FONTAPFORE;   break;
+				case AMMO_HP:       color = ITEMDESC_FONTHPFORE;   break;
+				case AMMO_BUCKSHOT: color = ITEMDESC_FONTBSFORE;   break;
+				case AMMO_HE:       color = ITEMDESC_FONTHEFORE;   break;
+				case AMMO_HEAT:     color = ITEMDESC_FONTHEAPFORE; break;
+				default:            color = FONT_MCOLOR_DKGRAY;    break;
 			}
-			SetFontForeground(colour);
+			SetFontForeground(color);
 
 			const INT16 sNewX = sX + 1;
 			const INT16 sNewY = sY + sHeight - 10;
@@ -1801,9 +1801,10 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		const SGPBox* const xy = (in_map ? &g_desc_item_box_map: &g_desc_item_box);
 		const INT16         x  = gsInvDescX + xy->x;
 		const INT16         y  = gsInvDescY + xy->y + xy->h - h; // align with bottom
-		const INT16         text_col   = ITEMDESC_AMMO_FORE;
-		const INT16         shadow_col = FONT_MCOLOR_BLACK;
-		GUIButtonRef  const ammo_btn   = CreateIconAndTextButton(ammo_img, pStr, TINYFONT1, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
+		const UINT32        text_col   = ITEMDESC_AMMO_FORE;
+		const UINT32        shadow_col = FONT_MCOLOR_BLACK;
+		const GUIButtonRef ammo_btn   = CreateIconAndTextButton(ammo_img, pStr, TINYFONT1,
+			text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
 		giItemDescAmmoButton = ammo_btn;
 
 		// Disable the eject button, if we are being init from the shop keeper
@@ -1897,8 +1898,8 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		{
 			guiMoneyButtonBtn[i] = CreateIconAndTextButton(
 				guiMoneyButtonImage, gzMoneyAmounts[i], BLOCKFONT2,
-				5, DEFAULT_SHADOW,
-				5, DEFAULT_SHADOW,
+				RGB(214, 201, 156), DEFAULT_SHADOW,
+				RGB(214, 201, 156), DEFAULT_SHADOW,
 				loc->x + gMoneyButtonOffsets[i].x, loc->y + gMoneyButtonOffsets[i].y, MSYS_PRIORITY_HIGHEST,
 				btnMoneyButtonCallback
 			);
@@ -2193,7 +2194,7 @@ static ST::string GetObjectImprint(OBJECTTYPE const& o)
 
 static void HighlightIf(const BOOLEAN cond)
 {
-	SetFontForeground(cond ? ITEMDESC_FONTHIGHLIGHT : 5);
+	SetFontForeground(cond ? ITEMDESC_FONTHIGHLIGHT : RGB(214, 201, 156));
 }
 
 
@@ -2242,7 +2243,7 @@ void RenderItemDescriptionBox(void)
 		INT16  const  x   = box.x + dx;
 		INT16  const  y   = box.y + dy;
 		INT16  const  h   = box.h;
-		DrawItemUIBarEx(obj, gubItemDescStatusIndex, x, y, h, Get16BPPColor(DESC_STATUS_BAR), Get16BPPColor(DESC_STATUS_BAR_SHADOW), guiSAVEBUFFER);
+		DrawItemUIBarEx(obj, gubItemDescStatusIndex, x, y, h, DESC_STATUS_BAR, DESC_STATUS_BAR_SHADOW, guiSAVEBUFFER);
 	}
 
 	bool hatch_out_attachments = gfItemDescObjectIsAttachment; // if examining attachment, always hatch out attachment slots
@@ -2276,7 +2277,7 @@ void RenderItemDescriptionBox(void)
 				INT16 const bar_x = agi.bar_box.x + x;
 				INT16 const bar_h = agi.bar_box.h;
 				INT16 const bar_y = agi.bar_box.y + y + bar_h - 1;
-				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_h, STATUS_BAR, STATUS_BAR_SHADOW, guiSAVEBUFFER);
 			}
 
 			if (hatch_out_attachments)
@@ -2331,7 +2332,7 @@ void RenderItemDescriptionBox(void)
 
 	{
 		SGPBox const& box = in_map ? g_map_itemdesc_desc_box : g_itemdesc_desc_box;
-		DisplayWrappedString(dx + box.x, dy + box.y, box.w, 2, ITEMDESC_FONT, FONT_BLACK, gzItemDesc, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DisplayWrappedString(dx + box.x, dy + box.y, box.w, 2, ITEMDESC_FONT, FONT_BLACK, gzItemDesc, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 	}
 
 	if (ITEM_PROS_AND_CONS(obj.usItem))
@@ -2393,7 +2394,7 @@ void RenderItemDescriptionBox(void)
 	// Render, stat  name
 	if (item->isWeapon())
 	{
-		SetFontForeground(6);
+		SetFontForeground(RGB(173, 148, 115));
 
 		INV_DESC_STATS const* const ids = in_map ? gMapWeaponStats : gWeaponStats;
 
@@ -2421,7 +2422,7 @@ void RenderItemDescriptionBox(void)
 		}
 
 		//Status
-		SetFontForeground(5);
+		SetFontForeground(RGB(214, 201, 156));
 		pStr = ST::format("{2d}%", obj.bGunStatus);
 		FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
@@ -2481,13 +2482,13 @@ void RenderItemDescriptionBox(void)
 
 		{
 			// Display the 'Separate' text
-			SetFontForeground(in_map ? 5 : 6);
+			SetFontForeground(in_map ? RGB(214, 201, 156) : RGB(173, 148, 115));
 			MoneyLoc const&       xy    = in_map ? gMapMoneyButtonLoc : gMoneyButtonLoc;
 			ST::string label = !in_map && gfAddingMoneyToMercFromPlayersAccount ? gzMoneyAmounts[5] : gzMoneyAmounts[4];
 			MPrint(xy.x + gMoneyButtonOffsets[4].x, xy.y + gMoneyButtonOffsets[4].y, label);
 		}
 
-		SetFontForeground(6);
+		SetFontForeground(RGB(173, 148, 115));
 
 		INV_DESC_STATS const* const xy = in_map ? gMapMoneyStats : gMoneyStats;
 
@@ -2506,7 +2507,7 @@ void RenderItemDescriptionBox(void)
 			MPrint(dx + xy[3].sX, dy + xy[3].sY, gMoneyStatsDesc[MONEY_DESC_TO_SPLIT]);       // ... to split
 		}
 
-		SetFontForeground(5);
+		SetFontForeground(RGB(214, 201, 156));
 
 		// Get length of string
 		UINT16 const uiRightLength = 35;
@@ -2550,7 +2551,7 @@ void RenderItemDescriptionBox(void)
 	else
 	{
 		//Labels
-		SetFontForeground(6);
+		SetFontForeground(RGB(173, 148, 115));
 
 		INV_DESC_STATS const* const ids = in_map ? gMapWeaponStats : gWeaponStats;
 
@@ -2562,7 +2563,7 @@ void RenderItemDescriptionBox(void)
 		MPrint(dx + ids[0].sX, dy + ids[0].sY, st_format_printf(gWeaponStatsDesc[0], GetWeightUnitString()));
 
 		// Values
-		SetFontForeground(5);
+		SetFontForeground(RGB(214, 201, 156));
 
 		if (item->isAmmo())
 		{
@@ -2586,7 +2587,7 @@ void RenderItemDescriptionBox(void)
 
 		if (InKeyRingPopup() || item->isKey())
 		{
-			SetFontForeground(6);
+			SetFontForeground(RGB(173, 148, 115));
 
 			INT32 const x  = dx + ids[3].sX;
 			INT32 const y0 = dy + ids[3].sY;
@@ -2598,7 +2599,7 @@ void RenderItemDescriptionBox(void)
 
 			KEY const& key = KeyTable[obj.ubKeyID];
 
-			SetFontForeground(5);
+			SetFontForeground(RGB(214, 201, 156));
 			ST::string sTempString = SGPSector(key.usSectorFound).AsShortString();
 			FindFontRightCoordinates(x, y0, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, sTempString);
@@ -3874,7 +3875,7 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 			// Do status bar here...
 			INT16 sNewX = gsItemPopupX + col * usWidth + 7;
 			INT16 sNewY = gsItemPopupY + row * usHeight + INV_BAR_DY + 3;
-			DrawItemUIBarEx(*gpItemPopupObject, cnt, sNewX, sNewY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
+			DrawItemUIBarEx(*gpItemPopupObject, cnt, sNewX, sNewY, ITEM_BAR_HEIGHT, STATUS_BAR, STATUS_BAR_SHADOW, FRAME_BUFFER);
 		}
 	}
 
@@ -4050,7 +4051,7 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 		}
 		o.usItem            = item->getItemIndex();
 
-		DrawItemUIBarEx(o, 0, x + 7, y + 24, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
+		DrawItemUIBarEx(o, 0, x + 7, y + 24, ITEM_BAR_HEIGHT, STATUS_BAR, STATUS_BAR_SHADOW, FRAME_BUFFER);
 		INVRenderItem(FRAME_BUFFER, NULL, o, x + 8, y, box_w - 8, box_h - 2, DIRTYLEVEL2, 0, SGP_TRANSPARENT);
 	}
 
@@ -4687,7 +4688,7 @@ void RenderItemPickupMenu()
 	sY = menu.sY + ITEMPICK_GRAPHIC_Y;
 
 	SetFont(ITEMDESC_FONT);
-	SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 	SetFontShadow(ITEMDESC_FONTSHADOW2);
 
 	{
@@ -4695,7 +4696,6 @@ void RenderItemPickupMenu()
 		UINT16* const pDestBuf         = l.Buffer<UINT16>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
 
-		UINT16 const outline_col = Get16BPPColor(FROMRGB(255, 255, 0));
 		for (INT32 cnt = 0; cnt < menu.bNumSlotsPerPage; ++cnt)
 		{
 			INT32 const world_item = menu.items[cnt];
@@ -4711,7 +4711,7 @@ void RenderItemPickupMenu()
 			// ATE: Adjust to basic shade.....
 			te->hTileSurface->CurrentShade(4);
 
-			UINT16 const outline = menu.pfSelectedArray[cnt + menu.ubScrollAnchor] ? outline_col : SGP_TRANSPARENT;
+			const UINT32 outline = menu.pfSelectedArray[cnt + menu.ubScrollAnchor] ? FONT_MCOLOR_WHITE : SGP_TRANSPARENT;
 			Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sX, sY, te->usRegionIndex, outline);
 
 			if (o.ubNumberOfObjects > 1)
@@ -5352,14 +5352,14 @@ void LoadInterfaceItemsGraphics()
 		}
 	}
 
-	// Build a sawtooth black-white-black colour gradient
-	size_t const length = lengthof(us16BPPItemCyclePlacedItemColors);
+	// Build a sawtooth black-white-black color gradient
+	size_t const length = lengthof(usItemCyclePlacedItemColors);
 	for (INT32 i = 0; i != length / 2; ++i)
 	{
 		UINT32 const l = 25 * (i + 1);
-		UINT16 const c = Get16BPPColor(FROMRGB(l, l, l));
-		us16BPPItemCyclePlacedItemColors[i]              = c;
-		us16BPPItemCyclePlacedItemColors[length - i - 1] = c;
+		UINT32 const c = RGB(l, l, l);
+		usItemCyclePlacedItemColors[i]              = c;
+		usItemCyclePlacedItemColors[length - i - 1] = c;
 	}
 }
 

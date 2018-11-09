@@ -108,7 +108,7 @@ void RenderMercPopUpBox(MercPopUpBox const* const box, INT16 const sDestX, INT16
 }
 
 
-static std::pair<UINT8, UINT8> GetMercPopupBoxFontColors(UINT8 ubBackgroundIndex);
+static std::pair<UINT32, UINT32> GetMercPopupBoxFontColors(UINT8 ubBackgroundIndex);
 
 
 MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackgroundIndex, MercPopUpBorder ubBorderIndex, const ST::utf32_buffer& codepoints, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight, MercPopupBoxFlags flags)
@@ -188,8 +188,8 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 	{
 		// Zero with yellow,
 		// Set source transparcenty
-		vs->SetTransparency(FROMRGB(255, 255, 0));
-		vs->Fill(Get16BPPColor(FROMRGB(255, 255, 0)));
+		vs->SetTransparency(RGB(255, 255, 0));
+		vs->Fill(RGB(255, 255, 0)); // FIXME: maxrd2 probably just set alpha here
 	}
 	else
 	{
@@ -251,7 +251,7 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 		sDispTextXPos += 30;
 	}
 
-	IanDisplayWrappedString(sDispTextXPos, MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y + usMarginTopY, usTextWidth, 2, MERC_TEXT_FONT, ubFontColor, codepoints, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	IanDisplayWrappedString(sDispTextXPos, MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y + usMarginTopY, usTextWidth, 2, MERC_TEXT_FONT, ubFontColor, codepoints, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontShadow(DEFAULT_SHADOW);
@@ -269,7 +269,7 @@ void RemoveMercPopupBox(MercPopUpBox* const box)
 
 
 //Pass in the background index, and you will get back the font and shadow color
-static std::pair<UINT8, UINT8> GetMercPopupBoxFontColors(UINT8 const ubBackgroundIndex)
+static std::pair<UINT32, UINT32> GetMercPopupBoxFontColors(UINT8 const ubBackgroundIndex)
 {
 	switch( ubBackgroundIndex )
 	{

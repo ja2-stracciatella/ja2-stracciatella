@@ -99,7 +99,7 @@ static void DrawVerticalRun(UINT16** ScreenPtr, int XAdvance, int RunLength, int
 
 
 /* Draws a line between the specified endpoints in color Color. */
-void LineDraw(BOOLEAN const fClip, int XStart, int YStart, int XEnd, int YEnd, short const Color, UINT16* ScreenPtr)
+void LineDraw(BOOLEAN const fClip, int XStart, int YStart, int XEnd, int YEnd, UINT32 const Color, UINT16* ScreenPtr)
 {
 	if (fClip && !Clip2D(&XStart, &YStart, &XEnd, &YEnd)) return;
 
@@ -294,7 +294,7 @@ void LineDraw(BOOLEAN const fClip, int XStart, int YStart, int XEnd, int YEnd, s
 
 
 // Draws a pixel in the specified color
-void PixelDraw(const BOOLEAN fClip, const INT32 xp, const INT32 yp, const INT16 sColor, UINT16* const pScreen)
+void PixelDraw(const BOOLEAN fClip, const INT32 xp, const INT32 yp, const UINT32 sColor, UINT16* const pScreen)
 {
 	if (fClip && !ClipPoint(xp, yp)) return;
 
@@ -338,7 +338,7 @@ static void DrawVerticalRun(UINT16** const ScreenPtr, int const XAdvance, int co
 
 
 /* Draws a rectangle between the specified endpoints in color Color. */
-void RectangleDraw(BOOLEAN const fClip, int const XStart, int const YStart, int const XEnd, int const YEnd, short const Color, UINT16* const ScreenPtr)
+void RectangleDraw(const BOOLEAN fClip, const int XStart, const int YStart, const int XEnd, const int YEnd, const UINT32 Color, UINT16 *ScreenPtr)
 {
 	LineDraw(fClip, XStart, YStart, XEnd,   YStart, Color, ScreenPtr);
 	LineDraw(fClip, XStart, YEnd,   XEnd,   YEnd,   Color, ScreenPtr);

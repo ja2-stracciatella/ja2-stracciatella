@@ -126,8 +126,8 @@ static void MakeButton(UINT idx, const char* img_file, INT32 off_normal, INT32 o
 {
 	BUTTON_PICS* const img = LoadButtonImage(img_file, off_normal, on_normal);
 	giIMPPortraitButtonImage[idx] = img;
-	const INT16 text_col   = FONT_WHITE;
-	const INT16 shadow_col = DEFAULT_SHADOW;
+	const UINT32 text_col   = FONT_WHITE;
+	const UINT32 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
 	giIMPPortraitButton[idx] = btn;
 	btn->SetCursor(CURSOR_WWW);

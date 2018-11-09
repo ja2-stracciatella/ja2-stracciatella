@@ -258,20 +258,20 @@ static void RenderPopupMenu(void)
 	CurrentPopupMenuInformation const& p = gPopup;
 
 	// Draw the menu
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, p.usLeft, p.usTop, p.usRight, p.usBottom, Get16BPPColor(FROMRGB(128, 128, 128)));
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, p.usLeft, p.usTop, p.usRight, p.usBottom, RGB(128, 128, 128));
 
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 		UINT16* const pDestBuf = l.Buffer<UINT16>();
 		UINT32  const pitch    = l.Pitch();
 		SetClippingRegionAndImageWidth(pitch, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		UINT16 const line_colour = Get16BPPColor(FROMRGB(64, 64, 64));
-		RectangleDraw(TRUE, p.usLeft, p.usTop, p.usRight - 1, p.usBottom - 1, line_colour, pDestBuf);
+		UINT32 const line_color = RGB(64, 64, 64);
+		RectangleDraw(TRUE, p.usLeft, p.usTop, p.usRight - 1, p.usBottom - 1, line_color, pDestBuf);
 		// Draw a vertical line between each column
 		UINT16 x = p.usLeft;
 		for (UINT8 column = 1; column < p.ubColumns; ++column)
 		{
 			x += p.ubColumnWidth[column - 1];
-			LineDraw(TRUE, x, p.usTop, x, p.usBottom, line_colour, pDestBuf);
+			LineDraw(TRUE, x, p.usTop, x, p.usBottom, line_color, pDestBuf);
 		}
 	}
 

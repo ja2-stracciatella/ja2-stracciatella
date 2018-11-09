@@ -216,7 +216,7 @@ static void DisplayHiredMercs(void)
 	UINT16	usPosY;
 	UINT32	uiContractCharge;
 	ST::string sTemp;
-	UINT8	ubFontColor;
+	UINT32	ubFontColor;
 
 	giMercTotalContractCharge = 0;
 

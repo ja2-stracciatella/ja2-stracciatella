@@ -38,8 +38,8 @@ struct VIDEO_OVERLAY
 	SGPFont          uiFontID;
 	INT16            sX;
 	INT16            sY;
-	UINT8            ubFontBack;
-	UINT8            ubFontFore;
+	UINT32           ubFontBack;
+	UINT32           ubFontFore;
 	ST::utf32_buffer codepoints;
 	SGPVSurface*     uiDestBuff;
 	OVERLAY_CALLBACK BltCallback;
@@ -83,8 +83,8 @@ inline void GPrintInvalidate(INT16 x, INT16 y, const ST::string& str)
 
 // VIDEO OVERLAY STUFF
 VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, INT16 w, INT16 h);
-VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT8 foreground, UINT8 background, const ST::utf32_buffer& codepoints);
-inline VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT8 foreground, UINT8 background, const ST::string& str)
+VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT32 foreground, UINT32 background, const ST::utf32_buffer& codepoints);
+inline VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT32 foreground, UINT32 background, const ST::string& str)
 {
 	return RegisterVideoOverlay(callback, x, y, font, foreground, background, str.to_utf32());
 }

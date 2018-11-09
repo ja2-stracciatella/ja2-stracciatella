@@ -589,7 +589,7 @@ struct SOLDIERTYPE
 	INT16 sWalkToAttackWalkToCost;
 
 	BOOLEAN fForceShade;
-	UINT16 *pForcedShade;
+	UINT32 *pForcedShade; // TODO: maxrd2 drop this
 
 	INT8 bDisplayDamageCount;
 	INT8 fDisplayDamage;

@@ -204,7 +204,7 @@ struct TeamInfo
 	UINT8    size;
 	INT8     side;
 	bool     human;
-	COLORVAL colour;
+	COLORVAL color;
 };
 
 
@@ -214,12 +214,12 @@ struct TeamInfo
 // Rest hostile (enemies, or civilians; civs are potentially hostile but neutral)
 static TeamInfo const g_default_team_info[] =
 {
-	{ 20,                 0, true,  FROMRGB(255, 255,   0) }, // Us
-	{ 32,                 1, false, FROMRGB(255,   0,   0) }, // Enemy
-	{ 32,                 3, false, FROMRGB(255,   0, 255) }, // Creature
-	{ 32,                 0, false, FROMRGB(  0, 255,   0) }, // Rebels (our guys)
-	{ 32,                 1, false, FROMRGB(255, 255, 255) }, // Civilians
-	{ NUM_PLANNING_MERCS, 0, true,  FROMRGB(  0,   0, 255) }  // Planning soldiers
+	{ 20,                 0, true,  RGB(255, 255,   0) }, // Us
+	{ 32,                 1, false, RGB(255,   0,   0) }, // Enemy
+	{ 32,                 3, false, RGB(255,   0, 255) }, // Creature
+	{ 32,                 0, false, RGB(  0, 255,   0) }, // Rebels (our guys)
+	{ 32,                 1, false, RGB(255, 255, 255) }, // Civilians
+	{ NUM_PLANNING_MERCS, 0, true,  RGB(  0,   0, 255) }  // Planning soldiers
 };
 
 
@@ -430,7 +430,7 @@ void InitOverhead()
 		team.bFirstID           = team_start;
 		team_start += info.size;
 		team.bLastID            = team_start - 1;
-		team.RadarColor         = info.colour;
+		team.RadarColor         = info.color;
 		team.bSide              = info.side;
 		team.bAwareOfOpposition = FALSE;
 		team.bHuman             = info.human;

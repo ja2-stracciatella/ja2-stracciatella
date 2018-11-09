@@ -17,8 +17,8 @@
 #define TEXT_CODE_NEWCOLOR	180
 #define TEXT_CODE_DEFCOLOR	181
 
-UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SGPFont font, UINT8 foreground, const ST::utf32_buffer& codepoints, UINT8 background, UINT32 flags);
-inline UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SGPFont font, UINT8 foreground, const ST::string& str, UINT8 background, UINT32 flags)
+UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SGPFont font, UINT32 foreground, const ST::utf32_buffer& codepoints, UINT32 background, UINT32 flags);
+inline UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SGPFont font, UINT32 foreground, const ST::string& str, UINT32 background, UINT32 flags)
 {
 	return IanDisplayWrappedString(sx, sy, max_w, gap, font, foreground, str.to_utf32(), background, flags);
 }
@@ -50,8 +50,8 @@ inline WRAPPED_STRING* LineWrap(SGPFont font, UINT16 usLineWidthPixels, const ST
 {
 	return LineWrap(font, usLineWidthPixels, str.to_utf32());
 }
-UINT16 DisplayWrappedString(UINT16 x, UINT16 y, UINT16 w, UINT8 gap, SGPFont font, UINT8 foreground, const ST::utf32_buffer& codepoints, UINT8 background, UINT32 flags);
-inline UINT16 DisplayWrappedString(UINT16 x, UINT16 y, UINT16 w, UINT8 gap, SGPFont font, UINT8 foreground, const ST::string& str, UINT8 background, UINT32 flags)
+UINT16 DisplayWrappedString(UINT16 x, UINT16 y, UINT16 w, UINT8 gap, SGPFont font, UINT32 foreground, const ST::utf32_buffer& codepoints, UINT32 background, UINT32 flags);
+inline UINT16 DisplayWrappedString(UINT16 x, UINT16 y, UINT16 w, UINT8 gap, SGPFont font, UINT32 foreground, const ST::string& str, UINT32 background, UINT32 flags)
 {
 	return DisplayWrappedString(x, y, w, gap, font, foreground, str.to_utf32(), background, flags);
 }
@@ -60,8 +60,8 @@ inline ST::string CleanOutControlCodesFromString(const ST::string& str)
 {
 	return CleanOutControlCodesFromString(str.to_utf32());
 }
-void DrawTextToScreen(const ST::utf32_buffer& codepoints, UINT16 x, UINT16 y, UINT16 max_w, SGPFont font, UINT8 foreground, UINT8 background, UINT32 flags);
-inline void DrawTextToScreen(const ST::string& str, UINT16 x, UINT16 y, UINT16 max_w, SGPFont font, UINT8 foreground, UINT8 background, UINT32 flags)
+void DrawTextToScreen(const ST::utf32_buffer& codepoints, UINT16 x, UINT16 y, UINT16 max_w, SGPFont font, UINT32 foreground, UINT32 background, UINT32 flags);
+inline void DrawTextToScreen(const ST::string& str, UINT16 x, UINT16 y, UINT16 max_w, SGPFont font, UINT32 foreground, UINT32 background, UINT32 flags)
 {
 	DrawTextToScreen(str.to_utf32(), x, y, max_w, font, foreground, background, flags);
 }

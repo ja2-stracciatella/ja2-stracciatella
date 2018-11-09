@@ -79,7 +79,7 @@
 // delay for paused flash
 #define PAUSE_GAME_TIMER 500
 
-#define MAP_BOTTOM_FONT_COLOR ( 32 * 4 - 9 )
+#define MAP_BOTTOM_FONT_COLOR RGB(139, 106,  57)
 
 // button enums
 enum{
@@ -344,7 +344,7 @@ static void DrawNameOfLoadedSector()
 {
 	SetFontDestBuffer(FRAME_BUFFER);
 	SGPFont const font = COMPFONT;
-	SetFontAttributes(font, 183);
+	SetFontAttributes(font, RGB(  0, 255,   0), DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 
 	ST::string buf = GetSectorIDString(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ), TRUE);
 	buf = ReduceStringLength(buf, 80, font);
@@ -524,7 +524,7 @@ static void EnableDisableMessageScrollButtonsAndRegions(void)
 static void DisplayCompressMode(void)
 {
 	INT16 sX, sY;
-	static UINT8 usColor = FONT_LTGREEN;
+	static UINT32 usColor = FONT_LTGREEN;
 
 	// get compress speed
 	ST::string Time;
@@ -901,7 +901,7 @@ static void DisplayCurrentBalanceForMapBottom(void)
 	INT16 sFontX, sFontY;
 
 	SetFontDestBuffer(FRAME_BUFFER);
-	SetFontAttributes(COMPFONT, 183);
+	SetFontAttributes(COMPFONT, RGB(  0, 255,   0), DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 	ST::string sString = SPrintMoney(LaptopSaveInfo.iCurrentBalance);
 	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 387 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);
@@ -961,7 +961,7 @@ static void DisplayProjectedDailyMineIncome(void)
 	}
 
 	SetFontDestBuffer(FRAME_BUFFER);
-	SetFontAttributes(COMPFONT, 183);
+	SetFontAttributes(COMPFONT, RGB(  0, 255,   0), DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 	ST::string sString = SPrintMoney(iRate);
 	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 433 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);

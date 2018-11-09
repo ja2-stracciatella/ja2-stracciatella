@@ -153,8 +153,8 @@ static void SetNumberOfDisplayedInsuranceMercs(void)
 
 static GUIButtonRef MakeButtonBig(BUTTON_PICS* img, const ST::string& text, INT16 x, const GUI_CALLBACK click, INT8 offset_x)
 {
-	const INT16 text_col   = INS_FONT_COLOR;
-	const INT16 shadow_col = INS_FONT_SHADOW;
+	const UINT32 text_col   = INS_FONT_COLOR;
+	const UINT32 shadow_col = INS_FONT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, INS_FONT_BIG, text_col, shadow_col, text_col, shadow_col, x, INS_INFO_ARROW_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
 	btn->SetCursor(CURSOR_WWW);
 	btn->SpecifyTextOffsets(offset_x, 16, FALSE);
@@ -466,8 +466,8 @@ try
 			sText = GetInsuranceText(INS_SNGL_NOCONTRACT);
 			fDisplayMercContractStateTextColorInRed = TRUE;
 		}
-		const UINT8 colour = (fDisplayMercContractStateTextColorInRed ? INS_FONT_COLOR_RED : INS_FONT_COLOR);
-		DisplayWrappedString(dx + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_X, dy + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_Y, INS_CTRCT_CONTRACT_STATUS_TEXT_WIDTH, 2, INS_FONT_SMALL, colour, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		const UINT32 color = (fDisplayMercContractStateTextColorInRed ? INS_FONT_COLOR_RED : INS_FONT_COLOR);
+		DisplayWrappedString(dx + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_X, dy + INS_CTRCT_OG_HAS_CONTRACT_OFFSET_Y, INS_CTRCT_CONTRACT_STATUS_TEXT_WIDTH, 2, INS_FONT_SMALL, color, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
 
@@ -633,8 +633,8 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 		guiInsuranceAcceptClearFormButtonImage = LoadButtonImage(LAPTOPDIR "/acceptclearbox.sti", 0, 1);
 
 		ST::string text = InsContractText[INS_CONTRACT_ACCEPT];
-		const INT16          text_col   = INS_FONT_BTN_COLOR;
-		const INT16          shadow_col = INS_FONT_BTN_SHADOW_COLOR;
+		const UINT32          text_col   = INS_FONT_BTN_COLOR;
+		const UINT32          shadow_col = INS_FONT_BTN_SHADOW_COLOR;
 		const INT16          y          = INS_CTRCT_ORDER_GRID_Y + INS_CTRCT_ACCEPT_BTN_Y;
 		for (UINT i = 0; i != gubNumberofDisplayedInsuranceGrids; ++i)
 		{

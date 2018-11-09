@@ -176,7 +176,7 @@ void EntryInitEditorItemsInfo()
 }
 
 
-static void DrawItemCentered(const ItemModel * item, SGPVSurface* const vs, INT32 x, INT32 const y, INT16 const outline)
+static void DrawItemCentered(const ItemModel * item, SGPVSurface* const vs, INT32 x, INT32 const y, UINT32 const outline)
 {
 	// Calculate the center position of the graphic in a 60 pixel wide area.
 	auto graphic = GetSmallInventoryGraphicForItem(item);
@@ -484,7 +484,7 @@ void DetermineItemsScrolling()
 static UINT16 CountNumberOfEditorPlacementsInWorld(UINT16 usEInfoIndex, UINT16* pusQuantity);
 
 
-static void drawItemWithOutline(INT16 min_idx, INT16 end_idx, INT16 scroll_idx, INT16 itemIndex, INT16 const outline)
+static void drawItemWithOutline(INT16 min_idx, INT16 end_idx, INT16 scroll_idx, INT16 itemIndex, UINT32 const outline)
 {
 	if (min_idx <= itemIndex && itemIndex < end_idx)
 	{
@@ -519,8 +519,8 @@ void RenderEditorItemsInfo()
 	// Draw the hilighted and selected items if applicable.
 	if (eInfo.pusItemIndex)
 	{
-		drawItemWithOutline(min_idx, end_idx, scroll_idx, eInfo.sHilitedItemIndex, Get16BPPColor(FROMRGB(250, 250, 0)));
-		drawItemWithOutline(min_idx, end_idx, scroll_idx, eInfo.sSelItemIndex,     Get16BPPColor(FROMRGB(250, 0, 0)));
+		drawItemWithOutline(min_idx, end_idx, scroll_idx, eInfo.sHilitedItemIndex, RGB(250, 250, 0));
+		drawItemWithOutline(min_idx, end_idx, scroll_idx, eInfo.sSelItemIndex,     RGB(250, 0, 0));
 	}
 
 	// Draw the numbers of each visible item that currently resides in the world.

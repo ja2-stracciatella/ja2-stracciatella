@@ -81,12 +81,12 @@ void RenderTerrainTileButtons()
 	// If needed, display the ground tile images
 	if(gfShowTerrainTileButtons)
 	{
-		UINT16 usFillColorDark, usFillColorLight, usFillColorRed;
+		UINT32 usFillColorDark, usFillColorLight, usFillColorRed;
 		UINT16 x, usX, usX2, usY, usY2;
 
-		usFillColorDark = Get16BPPColor(FROMRGB(24, 61, 81));
-		usFillColorLight = Get16BPPColor(FROMRGB(136, 138, 135));
-		usFillColorRed = Get16BPPColor(FROMRGB(255, 0, 0));
+		usFillColorDark = RGB(24, 61, 81);
+		usFillColorLight = RGB(136, 138, 135);
+		usFillColorRed = RGB(255, 0, 0);
 
 		usY = EDITOR_TASKBAR_POS_Y + 9;
 		usY2 = EDITOR_TASKBAR_POS_Y + 31;

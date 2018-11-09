@@ -239,7 +239,7 @@ void BeginLoadScreen( )
 			RefreshScreen();
 		}
 	}
-	FRAME_BUFFER->Fill(Get16BPPColor(FROMRGB(0, 0, 0)));
+	FRAME_BUFFER->Fill(0x000000FF);
 	InvalidateScreen( );
 	RefreshScreen();
 

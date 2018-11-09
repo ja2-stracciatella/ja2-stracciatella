@@ -804,7 +804,7 @@ void LoadSavedGame(const ST::string &saveName)
 	LoadOppListInfoFromSavedGame(f);
 
 	BAR(1, "MapScreen Messages...");
-	LoadMapScreenMessagesFromSaveGameFile(f, stracLinuxFormat);
+	LoadMapScreenMessagesFromSaveGameFile(f, stracLinuxFormat, version);
 
 	BAR(1, "NPC Info...");
 	LoadNPCInfoFromSavedGameFile(f, version);

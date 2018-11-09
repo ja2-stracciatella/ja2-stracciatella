@@ -1167,8 +1167,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPos, INT16 sWidth, INT16 sHeight)
 {
 	FLOAT  dWidth, dPercentage;
-	//UINT16 usLineColor;
-	UINT16 usLineColor;
+	UINT32 usLineColor;
 	INT8   bBandage;
 
 	// Draw breath points
@@ -1188,7 +1187,7 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 	{
 		dPercentage = (FLOAT)( pSoldier->bBleeding +  pSoldier->bLife + bBandage )/ (FLOAT)100;
 		dWidth = dPercentage * sWidth;
-		usLineColor = Get16BPPColor(FROMRGB(240, 240, 20));
+		usLineColor = RGB(240, 240, 20);
 		RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 	}
 
@@ -1196,30 +1195,30 @@ static void DrawBarsInUIBox(const SOLDIERTYPE* pSoldier, INT16 sXPos, INT16 sYPo
 	{
 		dPercentage = (FLOAT)( pSoldier->bLife + bBandage ) / (FLOAT)100;
 		dWidth = dPercentage * sWidth;
-		usLineColor = Get16BPPColor( FROMRGB( 222, 132, 132 ) );
+		usLineColor = RGB(222, 132, 132);
 		RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 	}
 
 	dPercentage = (FLOAT)pSoldier->bLife / (FLOAT)100;
 	dWidth = dPercentage * sWidth;
-	usLineColor = Get16BPPColor(FROMRGB(200, 0, 0));
+	usLineColor = RGB(200, 0, 0);
 	RectangleDraw(TRUE, sXPos + 3, sYPos + 1, (INT32)(sXPos + dWidth + 3), sYPos + 1, usLineColor, pDestBuf);
 
 	dPercentage = (FLOAT)( pSoldier->bBreathMax ) / (FLOAT)100;
 	dWidth = dPercentage * sWidth;
-	usLineColor = Get16BPPColor(FROMRGB(20, 20, 150));
+	usLineColor = RGB(20, 20, 150);
 	RectangleDraw(TRUE, sXPos + 3, sYPos + 4, (INT32)(sXPos + dWidth + 3), sYPos + 4, usLineColor, pDestBuf);
 
 	dPercentage = (FLOAT)( pSoldier->bBreath ) / (FLOAT)100;
 	dWidth = dPercentage * sWidth;
-	usLineColor = Get16BPPColor(FROMRGB(100, 100, 220));
+	usLineColor = RGB(100, 100, 220);
 	RectangleDraw(TRUE, sXPos + 3, sYPos + 4, (INT32)(sXPos + dWidth + 3), sYPos + 4, usLineColor, pDestBuf);
 
 	/*
 	// morale
 	dPercentage = (FLOAT)pSoldier->bMorale / (FLOAT)100;
 	dWidth = dPercentage * sWidth;
-	usLineColor = Get16BPPColor(FROMRGB(0, 250, 0));
+	usLineColor = RGB(0, 250, 0);
 	RectangleDraw(TRUE, sXPos + 1, sYPos + 7, (INT32)(sXPos + dWidth + 1), sYPos + 7, usLineColor, pDestBuf);*/
 }
 
@@ -1745,8 +1744,8 @@ static void CreateTopMessage(void)
 	const char* bar_file;
 	UINT16      bar_gfx     = 0;
 	BOOLEAN     fDoLimitBar = FALSE;
-	UINT8       foreground;
-	UINT8       shadow;
+	UINT32      foreground;
+	UINT32      shadow;
 	switch (ts->ubTopMessageType)
 	{
 		case COMPUTER_TURN_MESSAGE:

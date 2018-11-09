@@ -133,12 +133,12 @@ no_mine:
 		SetBoxFont(                     box, BLOCKFONT2);
 		SetBoxHighLight(                box, FONT_WHITE);
 		SetBoxSecondColumnForeground(   box, FONT_WHITE);
-		SetBoxSecondColumnBackground(   box, FONT_BLACK);
+		SetBoxSecondColumnBackground(   box, FONT_MCOLOR_TRANSPARENT);
 		SetBoxSecondColumnHighLight(    box, FONT_WHITE);
 		SetBoxSecondColumnShade(        box, FONT_BLACK);
 		SetBoxSecondColumnMinimumOffset(box, 20);
 		SetBoxForeground(               box, FONT_YELLOW);
-		SetBoxBackground(               box, FONT_BLACK);
+		SetBoxBackground(               box, FONT_MCOLOR_TRANSPARENT);
 		SetBoxShade(                    box, FONT_BLACK);
 
 		// give title line (0) different color from the rest

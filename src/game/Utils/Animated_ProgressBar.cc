@@ -33,13 +33,13 @@ struct PROGRESSBAR
 	ProgressBarFlags flags;
 	SGPBox           pos;
 	UINT16 usPanelLeft, usPanelTop, usPanelRight, usPanelBottom;
-	UINT16 usColor, usLtColor, usDkColor;
+	UINT32 usColor, usLtColor, usDkColor;
 	ST::string title;
 	SGPFont usTitleFont;
-	UINT8 ubTitleFontForeColor, ubTitleFontShadowColor;
+	UINT32 ubTitleFontForeColor, ubTitleFontShadowColor;
 	SGPFont usMsgFont;
-	UINT8 ubMsgFontForeColor, ubMsgFontShadowColor;
-	UINT32 fill_colour;
+	UINT32 ubMsgFontForeColor, ubMsgFontShadowColor;
+	UINT32 fill_color;
 	double rStart, rEnd;
 	double rLastActual;
 };
@@ -82,7 +82,7 @@ void CreateProgressBar(const UINT8 ubProgressBarID, const UINT16 x, const UINT16
 	pNew->title.clear();
 
 	//Default the progress bar's color to be red
-	pNew->fill_colour = FROMRGB(150, 0, 0);
+	pNew->fill_color = RGB(150, 0, 0);
 }
 
 
@@ -102,17 +102,17 @@ void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
 	pCurr->usPanelTop = usTop;
 	pCurr->usPanelRight = usRight;
 	pCurr->usPanelBottom = usBottom;
-	pCurr->usColor = Get16BPPColor( FROMRGB( r, g, b ) );
+	pCurr->usColor = RGB(r, g, b);
 	//Calculate the slightly lighter and darker versions of the same rgb color
-	pCurr->usLtColor = Get16BPPColor(FROMRGB((UINT8) std::min(255, (int) (r * 1.33)),
-						(UINT8) std::min(255, (int) (g * 1.33)),
-						(UINT8) std::min(255, (int) (b * 1.33))));
-	pCurr->usDkColor = Get16BPPColor( FROMRGB( (UINT8)(r*0.75), (UINT8)(g*0.75), (UINT8)(b*0.75) ) );
+	pCurr->usLtColor = RGB((UINT8) std::min(255, (int) (r * 1.33)),
+				(UINT8) std::min(255, (int) (g * 1.33)),
+				(UINT8) std::min(255, (int) (b * 1.33)));
+	pCurr->usDkColor = RGB( (UINT8)(r*0.75), (UINT8)(g*0.75), (UINT8)(b*0.75) );
 }
 
 //Assigning a title for the panel will automatically position the text horizontally centered on the
 //panel and vertically centered from the top of the panel, to the top of the progress bar.
-void SetProgressBarTitle(UINT32 ubID, const ST::string& str, SGPFont font, UINT8 ubForeColor, UINT8 ubShadowColor)
+void SetProgressBarTitle(UINT32 ubID, const ST::string& str, SGPFont const font, UINT32 ubForeColor, UINT32 ubShadowColor)
 {
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
@@ -127,7 +127,7 @@ void SetProgressBarTitle(UINT32 ubID, const ST::string& str, SGPFont font, UINT8
 
 //Unless you set up the attributes, any text you pass to SetRelativeStartAndEndPercentage will
 //default to FONT12POINT1 in a black color.
-void SetProgressBarMsgAttributes(UINT32 ubID, SGPFont const font, UINT8 ubForeColor, UINT8 ubShadowColor)
+void SetProgressBarMsgAttributes(UINT32 ubID, SGPFont const font, UINT32 ubForeColor, UINT32 ubShadowColor)
 {
 	PROGRESSBAR *pCurr;
 	Assert( ubID < MAX_PROGRESSBARS );
@@ -244,19 +244,19 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 		if (end < x + 2 || x + w - 2 < end) return;
 		if (pCurr->flags & PROGRESS_LOAD_BAR)
 		{
-			ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, end, y + h, Get16BPPColor(pCurr->fill_colour));
+			ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, end, y + h, pCurr->fill_color);
 		}
 		else
 		{
 			//Border edge of the progress bar itself in gray
 			ColorFillVideoSurfaceArea( FRAME_BUFFER,
 				x, y, x + w, y + h,
-				Get16BPPColor(FROMRGB(160, 160, 160)) );
+				RGB(160, 160, 160) );
 			//Interior of progress bar in black
 			ColorFillVideoSurfaceArea( FRAME_BUFFER,
 				x + 2, y + 2, x + w - 2, y + h - 2,
-				Get16BPPColor(FROMRGB(  0,   0,   0)) );
-			ColorFillVideoSurfaceArea(FRAME_BUFFER,	x + 2, y + 2, end, y + h - 2, Get16BPPColor(FROMRGB(72 , 155, 24)));
+				RGB(0, 0, 0) );
+			ColorFillVideoSurfaceArea(FRAME_BUFFER,	x + 2, y + 2, end, y + h - 2, RGB(72, 155, 24));
 		}
 		InvalidateRegion(x, y, x + w, y + h);
 		RefreshScreen();
@@ -270,7 +270,7 @@ void RenderProgressBar( UINT8 ubID, UINT32 uiPercentage )
 	}
 }
 
-void SetProgressBarColor( UINT8 ubID, UINT8 ubColorFillRed, UINT8 ubColorFillGreen, UINT8 ubColorFillBlue )
+void SetProgressBarColor( UINT8 ubID, UINT8 ubRed, UINT8 ubGreen, UINT8 ubBlue )
 {
 	PROGRESSBAR *pCurr=NULL;
 
@@ -280,7 +280,7 @@ void SetProgressBarColor( UINT8 ubID, UINT8 ubColorFillRed, UINT8 ubColorFillGre
 	if( pCurr == NULL )
 		return;
 
-	pCurr->fill_colour = FROMRGB(ubColorFillRed, ubColorFillGreen, ubColorFillBlue);
+	pCurr->fill_color = RGB(ubRed, ubGreen, ubBlue);
 }
 
 

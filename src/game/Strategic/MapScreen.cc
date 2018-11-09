@@ -93,10 +93,10 @@ struct PopUpBox;
 #define ETA_FONT BLOCKFONT2
 
 // Colors
-#define FONT_MAP_DKYELLOW 170
+#define FONT_MAP_DKYELLOW RGB(231, 204,  86)
 
-#define CHAR_TITLE_FONT_COLOR 6
-#define CHAR_TEXT_FONT_COLOR 5
+#define CHAR_TITLE_FONT_COLOR RGB(173, 148, 115)
+#define CHAR_TEXT_FONT_COLOR RGB(214, 201, 156)
 
 #define STARTING_COLOR_NUM 5
 
@@ -151,7 +151,7 @@ struct PopUpBox;
 #define MAP_CAMO_W        28
 #define MAP_CAMO_H        10
 
-#define MAP_INV_STATS_TITLE_FONT_COLOR 6
+#define MAP_INV_STATS_TITLE_FONT_COLOR RGB(173, 148, 115)
 
 #define PLAYER_INFO_FACE_START_X    (STD_SCREEN_X + 9)
 #define PLAYER_INFO_FACE_START_Y    (STD_SCREEN_Y + 17)
@@ -238,9 +238,8 @@ struct PopUpBox;
 #define CLOCK_Y (STD_SCREEN_Y + 459)
 
 
-#define RGB_WHITE	( FROMRGB( 255, 255, 255 ) )
-#define RGB_YELLOW	( FROMRGB( 255, 255,   0 ) )
-#define RGB_NEAR_BLACK	( FROMRGB(   0,   0,   1 ) )
+#define RGB_WHITE      RGB( 255, 255, 255 )
+#define RGB_YELLOW     RGB( 255, 255,   0 )
 
 
 // ARM: NOTE that these map "events" are never actually saved in a player's game in any way
@@ -253,10 +252,10 @@ enum MapEvent
 };
 
 
-static inline UINT16 GlowColor(UINT i)
+static inline UINT32 GlowColor(UINT i)
 {
 	Assert(i <= 10);
-	return Get16BPPColor(FROMRGB(25 * i, 0, 0));
+	return RGB(25 * i, 0, 0);
 }
 
 
@@ -467,7 +466,7 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 	usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE) + sYAdd );
 
 	// glow contract box
-	UINT16 usColor = GlowColor(iColorNum);
+	UINT32 usColor = GlowColor(iColorNum);
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw(TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight(MAP_SCREEN_FONT) + 2, usColor, l.Buffer<UINT16>());
@@ -526,7 +525,7 @@ static void GlowItem(void)
 	}
 
 	// glow contract box
-	UINT16 usColor = GlowColor(iColorNum);
+	UINT32 usColor = GlowColor(iColorNum);
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	RectangleDraw(TRUE, STD_SCREEN_X + 3, STD_SCREEN_Y + 80, STD_SCREEN_X + 64, STD_SCREEN_Y + 104, usColor, l.Buffer<UINT16>());
@@ -563,7 +562,7 @@ static void GlowTrashCan(void)
 	fOldTrashCanGlow = TRUE;
 
 	// glow contract box
-	UINT16 usColor = GlowColor(iColorNum);
+	UINT32 usColor = GlowColor(iColorNum);
 	{ SGPVSurface::Lock l(FRAME_BUFFER);
 		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		RectangleDraw(TRUE, TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT, usColor, l.Buffer<UINT16>());
@@ -645,18 +644,18 @@ static void RenderIconsForUpperLeftCornerPiece(const SOLDIERTYPE* const s)
 
 static void PrintStat(UINT32 change_time, UINT16 const stat_gone_up_bit, INT8 stat_val, INT16 x, INT16 y, INT16 w, INT32 progress)
 {
-	UINT8 const colour =
+	UINT32 const color =
 		change_time == 0 ||
 		GetJA2Clock() >= CHANGE_STAT_RECENTLY_DURATION + change_time ? CHAR_TEXT_FONT_COLOR :
 		stat_gone_up_bit != 0                                        ? FONT_LTGREEN         :
 		FONT_RED;
 
-	SetFontForeground(colour);
+	SetFontForeground(color);
 
 	ST::string str = ST::format("{3d}", stat_val);
 	if (gamepolicy(gui_extras))
 	{
-		ProgressBarBackgroundRect(x + 1, y - 2, w * progress / 100, 10, 0x514A05, progress);
+		ProgressBarBackgroundRect(x + 1, y - 2, w * progress / 100, 10, 0x514A05FF, RGB(progress, progress, progress));
 	}
 
 	DrawStringRight(str, x, y, STAT_WID, STAT_HEI, CHAR_FONT);
@@ -701,12 +700,12 @@ static void DrawCharHealth(SOLDIERTYPE const& s)
 
 		// How is character's life?
 		UINT32 const health_percent = life_max > 0 ? 100 * life / life_max : 0;
-		UINT8  const cur_colour     =
+		UINT32  const cur_color     =
 			health_percent ==  0 ? FONT_METALGRAY : // Dead
 			health_percent <  25 ? FONT_RED       : // Very bad
 			health_percent <  50 ? FONT_YELLOW    : // Not good
 			CHAR_TEXT_FONT_COLOR;                   // Ok
-		SetFontForeground(cur_colour);
+		SetFontForeground(cur_color);
 
 		if (gamepolicy(gui_extras))
 		{
@@ -728,11 +727,11 @@ static void DrawCharHealth(SOLDIERTYPE const& s)
 		bool  const recent_change =
 			GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + s.uiChangeHealthTime &&
 			s.uiChangeHealthTime != 0;
-		UINT8 const max_colour =
+		UINT32 const max_color =
 			!recent_change                    ? CHAR_TEXT_FONT_COLOR :
 			s.usValueGoneUp & HEALTH_INCREASE ? FONT_LTGREEN         :
 			FONT_RED;
-		SetFontForeground(max_colour);
+		SetFontForeground(max_color);
 
 		// Maximum life
 		buf = ST::format("{}", life_max);
@@ -1092,7 +1091,7 @@ static void DisplayGroundEta(void)
 
 struct HighLightState
 {
-	INT32 colour_idx;
+	INT32 color_idx;
 	bool  delta;
 	INT32 old_highlight;
 };
@@ -1114,18 +1113,18 @@ static void HighLightSelection(HighLightState& state, INT32 const line, UINT16 c
 	if (state.old_highlight != line)
 	{
 		state.old_highlight = line;
-		state.colour_idx    = STARTING_COLOR_NUM;
+		state.color_idx    = STARTING_COLOR_NUM;
 		state.delta         = false;
 	}
 
-	if (state.colour_idx == 0 || state.colour_idx == 10) state.delta = !state.delta;
-	state.colour_idx += state.delta ? -1 : +1;
+	if (state.color_idx == 0 || state.color_idx == 10) state.delta = !state.delta;
+	state.color_idx += state.delta ? -1 : +1;
 
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 	UINT16* const pDestBuf = l.Buffer<UINT16>();
 
-	UINT16 const colour = GlowColor(state.colour_idx);
+	UINT32 const color = GlowColor(state.color_idx);
 	INT32  const h      = Y_SIZE + Y_OFFSET;
 	for (INT16 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
@@ -1136,14 +1135,14 @@ static void HighLightSelection(HighLightState& state, INT32 const line, UINT16 c
 
 		if (i == 0 || !predicate(i - 1) || i == FIRST_VEHICLE)
 		{
-			LineDraw(TRUE, x, y, x + w, y, colour, pDestBuf);
+			LineDraw(TRUE, x, y, x + w, y, color, pDestBuf);
 		}
 		if (i == MAX_CHARACTER_COUNT - 1 || !predicate(i + 1) || i == FIRST_VEHICLE - 1)
 		{
-			LineDraw(TRUE, x, y + h, x + w, y + h, colour, pDestBuf);
+			LineDraw(TRUE, x, y + h, x + w, y + h, color, pDestBuf);
 		}
-		LineDraw(TRUE, x,     y, x,     y + h, colour, pDestBuf);
-		LineDraw(TRUE, x + w, y, x + w, y + h, colour, pDestBuf);
+		LineDraw(TRUE, x,     y, x,     y + h, color, pDestBuf);
+		LineDraw(TRUE, x + w, y, x + w, y + h, color, pDestBuf);
 
 		InvalidateRegion(x, y, x + w + 1, y + h + 1);
 	}
@@ -1243,14 +1242,14 @@ static void DisplayCharacterList(void)
 		if (!gCharactersList[i].merc) continue;
 		SOLDIERTYPE const& s = *gCharactersList[i].merc;
 
-		UINT8 foreground =
+		UINT32 foreground =
 			i == (INT16)giHighLine           ? FONT_WHITE     :
 			s.bLife == 0                     ? FONT_METALGRAY :
 			CharacterIsGettingPathPlotted(i) ? FONT_LTBLUE    :
 			/* Not in current sector? */
 			s.sSector.x != sSelMap.x ||
 			s.sSector.x != sSelMap.y ||
-			s.sSector.z != iCurrentMapSectorZ ? 5              :
+			s.sSector.z != iCurrentMapSectorZ ? RGB(214, 201, 156) :
 			/* Mobile? */
 			s.bAssignment < ON_DUTY ||
 			s.bAssignment == VEHICLE         ? FONT_YELLOW    :
@@ -1285,7 +1284,7 @@ static void DisplayCharacterList(void)
 		DrawStringCentered(assignment, ASSIGN_X + 1, y, ASSIGN_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
 		// Remaining contract time
-		str = GetMapscreenMercDepartureString(s, foreground != FONT_WHITE ? &foreground : 0);
+		str = GetMapscreenMercDepartureString(s, foreground != FONT_WHITE ? &foreground : NULL);
 		SetFontForeground(foreground);
 		DrawStringCentered(str, TIME_REMAINING_X + 1, y, TIME_REMAINING_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 	}
@@ -1576,8 +1575,8 @@ ScreenID MapScreenHandle(void)
 		// create merc remove box
 		CreateMercRemoveAssignBox( );
 
-		guiSAVEBUFFER->Fill(Get16BPPColor(RGB_NEAR_BLACK));
-		FRAME_BUFFER->Fill( Get16BPPColor(RGB_NEAR_BLACK));
+		guiSAVEBUFFER->Fill(0x000000FF);
+		FRAME_BUFFER->Fill(0x000000FF);
 
 		if( gpCurrentTalkingFace != NULL )
 		{
@@ -2105,7 +2104,7 @@ void DrawStringRight(const ST::string& str, UINT16 x, UINT16 y, UINT16 w, UINT16
 }
 
 
-static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor, BOOLEAN fStationary);
+static void RenderMapHighlight(const SGPSector& sMap, UINT32 usLineColor, BOOLEAN fStationary);
 static void RestoreMapSectorCursor(const SGPSector& sMap);
 
 
@@ -2113,7 +2112,7 @@ static void RenderMapCursorsIndexesAnims(void)
 {
 	BOOLEAN fSelectedSectorHighlighted = FALSE;
 	BOOLEAN fSelectedCursorIsYellow = TRUE;
-	UINT16 usCursorColor;
+	UINT32 usCursorColor;
 	UINT32 uiDeltaTime;
 	static SGPSector sPrevHighlightedMap(-1, -1);
 	static SGPSector sPrevSelectedMap(-1, -1);
@@ -2145,7 +2144,7 @@ static void RenderMapCursorsIndexesAnims(void)
 			}
 
 			// draw WHITE highlight rectangle
-			RenderMapHighlight(gsHighlightSector, Get16BPPColor(RGB_WHITE), FALSE);
+			RenderMapHighlight(gsHighlightSector, RGB_WHITE, FALSE);
 
 			sPrevHighlightedMap = gsHighlightSector;
 			fHighlightChanged = TRUE;
@@ -2185,12 +2184,12 @@ static void RenderMapCursorsIndexesAnims(void)
 		if ( !fSelectedSectorHighlighted || fFlashCursorIsYellow )
 		{
 			// draw YELLOW highlight rectangle
-			usCursorColor = Get16BPPColor( RGB_YELLOW );
+			usCursorColor = RGB_YELLOW;
 		}
 		else
 		{
 			// draw WHITE highlight rectangle
-			usCursorColor = Get16BPPColor( RGB_WHITE );
+			usCursorColor = RGB_WHITE;
 
 			// index letters will also be white instead of yellow so that they flash in synch with the cursor
 			fSelectedCursorIsYellow = FALSE;
@@ -3262,7 +3261,7 @@ static SGPSector GetSectorAtXY(INT16 relX, INT16 relY)
 }
 
 
-static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor, BOOLEAN fStationary)
+static void RenderMapHighlight(const SGPSector& sMap, UINT32 usLineColor, BOOLEAN fStationary)
 {
 	Assert(sMap.IsValid());
 
@@ -7693,7 +7692,7 @@ no_destination:
 }
 
 
-ST::string GetMapscreenMercDepartureString(SOLDIERTYPE const& s, UINT8* text_colour)
+ST::string GetMapscreenMercDepartureString(SOLDIERTYPE const& s, UINT32 *text_color)
 {
 	if ((s.ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC && s.ubProfile != SLAY) ||
 			s.bLife == 0)
@@ -7714,7 +7713,7 @@ ST::string GetMapscreenMercDepartureString(SOLDIERTYPE const& s, UINT8* text_col
 	if (mins_remaining >= MAP_TIME_UNDER_THIS_DISPLAY_AS_HOURS)
 	{ // 3 or more days remain
 		INT32 const days_remaining = mins_remaining / (24*60);
-		if (text_colour) *text_colour = FONT_LTGREEN;
+		if (text_color) *text_color = FONT_LTGREEN;
 		return ST::format("{}{}", days_remaining, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
 	}
 
@@ -7722,9 +7721,9 @@ ST::string GetMapscreenMercDepartureString(SOLDIERTYPE const& s, UINT8* text_col
 	INT32 const hours_remaining = mins_remaining > 5 ?  (mins_remaining + 59) / 60 : 0;
 
 	// last 3 days is Red, last 4 hours start flashing red/white!
-	if (text_colour)
+	if (text_color)
 	{
-		*text_colour = mins_remaining <= MINS_TO_FLASH_CONTRACT_TIME && fFlashContractFlag ?
+		*text_color = mins_remaining <= MINS_TO_FLASH_CONTRACT_TIME && fFlashContractFlag ?
 			FONT_WHITE : FONT_RED;
 	}
 	return ST::format("{}{}", hours_remaining, gpStrategicString[STR_PB_HOURS_ABBREVIATION]);

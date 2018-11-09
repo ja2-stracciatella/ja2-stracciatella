@@ -71,7 +71,7 @@ void ResetAllMercPositions(void);
 void EraseMercWaypoint(void);
 void AddMercWaypoint( UINT32 iMapIndex );
 
-void SetEnemyColorCode( UINT8 ubColorCode );
+void SetEnemyColorCode( UINT8 ubSoldierClass );
 
 void SpecifyEntryPoint( UINT32 iMapIndex );
 

@@ -37,7 +37,7 @@ struct SLIDER
 
 	UINT16                 usCurrentIncrement;
 
-	UINT16                 usBackGroundColor;
+	UINT32                 usBackGroundColor;
 
 	MOUSE_REGION           ScrollAreaMouseRegion;
 
@@ -106,7 +106,7 @@ SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, 
 	s->usNumberOfIncrements = usNumberOfIncrements;
 	s->SliderChangeCallback = SliderChangeCallback;
 	s->usCurrentIncrement   = 0;
-	s->usBackGroundColor    = Get16BPPColor(FROMRGB(255, 255, 255));
+	s->usBackGroundColor    = RGB(255, 255, 255);
 
 	UINT16 x = usPosX;
 	UINT16 y = usPosY;
@@ -187,7 +187,7 @@ void RenderAllSliderBars(void)
 }
 
 
-static void OptDisplayLine(UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY, INT16 iColor);
+static void OptDisplayLine(UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY, UINT32 iColor);
 static void RenderSliderBox(SLIDER* s);
 
 
@@ -365,7 +365,7 @@ static void CalculateNewSliderIncrement(SLIDER* s, UINT16 usPos)
 }
 
 
-static void OptDisplayLine(UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY, INT16 iColor)
+static void OptDisplayLine(UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY, UINT32 iColor)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);

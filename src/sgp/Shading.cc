@@ -5,9 +5,9 @@
 #include <algorithm>
 #include <iterator>
 
-UINT16 IntensityTable[65536];
-UINT16 ShadeTable[65536];
-UINT16 White16BPPPalette[256];
+UINT32 IntensityTable[65536];
+UINT32 ShadeTable[65536];
+UINT32 White16BPPPalette[256];
 static float guiShadePercent = 0.48f;
 
 
@@ -27,8 +27,8 @@ void BuildShadeTable(void)
 		{
 			for (UINT16 blue = 0; blue < 256; blue += 4)
 			{
-				UINT16 index = Get16BPPColor(FROMRGB(red, green, blue));
-				ShadeTable[index] = Get16BPPColor(FROMRGB(red * guiShadePercent, green * guiShadePercent, blue * guiShadePercent));
+				UINT16 index = (red >> 3) << 11 | (green >> 2) << 5 | blue >> 3;
+				ShadeTable[index] = RGB(red * guiShadePercent, green * guiShadePercent, blue * guiShadePercent);
 			}
 		}
 	}
@@ -52,8 +52,8 @@ void BuildIntensityTable(void)
 		{
 			for (UINT16 blue = 0; blue < 256; blue += 4)
 			{
-				UINT16 index = Get16BPPColor(FROMRGB(red, green, blue));
-				IntensityTable[index] = Get16BPPColor(FROMRGB(red * dShadedPercent, green * dShadedPercent, blue * dShadedPercent));
+				UINT16 index = (red >> 3) << 11 | (green >> 2) << 5 | blue >> 3;
+				IntensityTable[index] = RGB(red * dShadedPercent, green * dShadedPercent, blue * dShadedPercent);
 			}
 		}
 	}

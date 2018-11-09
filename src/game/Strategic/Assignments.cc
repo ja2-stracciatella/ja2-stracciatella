@@ -3043,7 +3043,7 @@ static void SetBoxTextAttrs(PopUpBox* const box)
 	SetBoxFont(box, MAP_SCREEN_FONT);
 	SetBoxHighLight(box, FONT_WHITE);
 	SetBoxForeground(box, FONT_LTGREEN);
-	SetBoxBackground(box, FONT_BLACK);
+	SetBoxBackground(box, FONT_MCOLOR_TRANSPARENT);
 	SetBoxShade(box, FONT_GRAY7);
 	SetBoxSecondaryShade(box, FONT_YELLOW);
 }

@@ -709,7 +709,7 @@ void RenderOverheadMap(INT16 const sStartPointX_M, INT16 const sStartPointY_M, I
 	// OK, blacken out edges of smaller maps...
 	if (gMapInformation.ubRestrictedScrollID != 0)
 	{
-		UINT16 const black = Get16BPPColor(FROMRGB(0, 0, 0));
+		const UINT32 black = RGB(0, 0, 0);
 		INT16 sX1;
 		INT16 sX2;
 		INT16 sY1;
@@ -823,22 +823,22 @@ static void RenderOverheadOverlays(void)
 			UINT32 col;
 			if (gsOveritemPoolGridNo == wi.sGridNo)
 			{
-				col = FROMRGB(255, 0, 0);
+				col = RGB(255, 0, 0);
 			}
 			else if (gfRadarCurrentGuyFlash)
 			{
-				col = FROMRGB(0, 0, 0);
+				col = RGB(0, 0, 0);
 			}
 			else switch (wi.bVisible)
 			{
-				case HIDDEN_ITEM:      col = FROMRGB(  0,   0, 255); break;
-				case BURIED:           col = FROMRGB(255,   0,   0); break;
-				case HIDDEN_IN_OBJECT: col = FROMRGB(  0,   0, 255); break;
-				case INVISIBLE:        col = FROMRGB(  0, 255,   0); break;
-				case VISIBLE:          col = FROMRGB(255, 255, 255); break;
+				case HIDDEN_ITEM:      col = RGB(  0,   0, 255); break;
+				case BURIED:           col = RGB(255,   0,   0); break;
+				case HIDDEN_IN_OBJECT: col = RGB(  0,   0, 255); break;
+				case INVISIBLE:        col = RGB(  0, 255,   0); break;
+				case VISIBLE:          col = RGB(255, 255, 255); break;
 				default:               abort();
 			}
-			PixelDraw(FALSE, sX, sY, Get16BPPColor(col), pDestBuf);
+			PixelDraw(FALSE, sX, sY, col, pDestBuf);
 			InvalidateRegion(sX, sY, sX + 1, sY + 1);
 		}
 	}

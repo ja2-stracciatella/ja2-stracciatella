@@ -22,10 +22,10 @@
 
 #define MAX_DIRTY_REGIONS 128
 
-#define RED_MASK 0xF800
-#define GREEN_MASK 0x07E0
-#define BLUE_MASK 0x001F
-#define ALPHA_MASK 0
+#define RED_MASK 0xFF000000 // TODO: maxrd2 we don't need these
+#define GREEN_MASK 0x00FF0000
+#define BLUE_MASK 0x0000FF00
+#define ALPHA_MASK 0x000000FF
 
 #define OVERSAMPLING_SCALE 4
 
@@ -182,7 +182,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	{
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 		ScaledScreenTexture = SDL_CreateTexture(GameRenderer,
-			SDL_PIXELFORMAT_RGB565,
+			SDL_PIXELFORMAT_RGBA8888,
 			SDL_TEXTUREACCESS_TARGET,
 			SCREEN_WIDTH * OVERSAMPLING_SCALE, SCREEN_HEIGHT * OVERSAMPLING_SCALE);
 
@@ -199,7 +199,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	}
 
 	ScreenTexture = SDL_CreateTexture(GameRenderer,
-					SDL_PIXELFORMAT_RGB565,
+					SDL_PIXELFORMAT_RGBA8888,
 					SDL_TEXTUREACCESS_STREAMING,
 					SCREEN_WIDTH, SCREEN_HEIGHT);
 
