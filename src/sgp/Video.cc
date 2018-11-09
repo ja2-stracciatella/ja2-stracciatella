@@ -215,7 +215,7 @@ void InitializeVideoManager(const VideoScaleQuality quality,
 	}
 
 	MouseCursor = SDL_CreateRGBSurface(
-		0, MAX_CURSOR_WIDTH, MAX_CURSOR_HEIGHT, PIXEL_DEPTH,
+		0, MAX_CURSOR_WIDTH * g_ui.m_stdScreenScale, MAX_CURSOR_HEIGHT * g_ui.m_stdScreenScale, PIXEL_DEPTH,
 		RED_MASK, GREEN_MASK, BLUE_MASK, ALPHA_MASK
 	);
 	SDL_SetColorKey(MouseCursor, SDL_TRUE, 0);

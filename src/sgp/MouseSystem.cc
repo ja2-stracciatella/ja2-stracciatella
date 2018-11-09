@@ -805,16 +805,16 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 {
 	if (!(r->uiFlags & MSYS_FASTHELP)) return;
 
-	INT32 const w = GetWidthOfString(r->FastHelpText) + 10;
-	INT32 const h = GetNumberOfLinesInHeight(r->FastHelpText) * (GetFontHeight(FONT10ARIAL) + 1) + 8;
+	INT32 const w = GetWidthOfString(r->FastHelpText) + g_ui.m_stdScreenScale * 10;
+	INT32 const h = GetNumberOfLinesInHeight(r->FastHelpText) * (GetFontHeight(FONT10ARIAL) + 1) + g_ui.m_stdScreenScale * 8;
 
-	INT32 x = r->RegionTopLeftX + 10;
+	INT32 x = r->RegionTopLeftX + g_ui.m_stdScreenScale * 10;
 	if (x <  0)                x = 0;
-	if (x >= SCREEN_WIDTH - w) x = SCREEN_WIDTH - w - 4;
+	if (x >= SCREEN_WIDTH - w) x = SCREEN_WIDTH - w - g_ui.m_stdScreenScale * 4;
 
 	INT32 y = r->RegionTopLeftY - h * 3 / 4;
 	if (y <  0)                 y = 0;
-	if (y >= SCREEN_HEIGHT - h) y = SCREEN_HEIGHT - h - 15;
+	if (y >= SCREEN_HEIGHT - h) y = SCREEN_HEIGHT - h - g_ui.m_stdScreenScale * 15;
 
 	if (!r->HasFastHelp())
 	{
@@ -832,7 +832,7 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 		FRAME_BUFFER->ShadowRect(x + 2, y + 2, x + w - 3, y + h - 3);
 		FRAME_BUFFER->ShadowRect(x + 2, y + 2, x + w - 3, y + h - 3);
 
-		DisplayHelpTokenizedString(r->FastHelpText, x + 5, y + 5);
+		DisplayHelpTokenizedString(r->FastHelpText, x + g_ui.m_stdScreenScale * 5, y + g_ui.m_stdScreenScale * 5);
 		InvalidateRegion(x, y, x + w, y + h);
 	}
 }

@@ -56,7 +56,7 @@ UINT16 UILayout::get_INV_INTERFACE_START_Y() const { return m_screenHeight - INV
 
 void UILayout::recalculatePositions()
 {
-	m_stdScreenScale = 1.0;
+	m_stdScreenScale = std::min(DOUBLE(m_screenWidth) / MIN_INTERFACE_WIDTH, DOUBLE(m_screenHeight) / MIN_INTERFACE_HEIGHT);
 	m_scaledInterfaceWidth  = m_stdScreenScale * MIN_INTERFACE_WIDTH;
 	m_scaledInterfaceHeight = m_stdScreenScale * MIN_INTERFACE_HEIGHT;
 
@@ -72,8 +72,8 @@ void UILayout::recalculatePositions()
 	// FIXME: maxrd2: it should match m_stdScreenScale for now since resources are scaled for that
 	m_tacticalScreenScale = m_stdScreenScale; //(m_stdScreenScale + 1.) / 2.;
 
-	m_stdScreenOffsetX = (m_screenWidth  - m_stdScreenScale * MIN_INTERFACE_WIDTH)  / 2;
-	m_stdScreenOffsetY = (m_screenHeight - m_stdScreenScale * MIN_INTERFACE_HEIGHT) / 2;
+	m_stdScreenOffsetX = (m_screenWidth  - m_scaledInterfaceWidth)  / 2;
+	m_stdScreenOffsetY = (m_screenHeight - m_scaledInterfaceHeight) / 2;
 
 	// tactical screen inventory position
 	m_invSlotPositionTac[HELMETPOS           ].set(startX + 344, startInvY +   6);
