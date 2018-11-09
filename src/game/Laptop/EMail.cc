@@ -29,8 +29,8 @@
 
 #define MAX_MESSAGES_PAGE 18 // max number of messages per page
 
-#define VIEWER_X (155 + STD_SCREEN_X)
-#define VIEWER_Y (70 + 21 + STD_SCREEN_Y)
+#define VIEWER_X (155 * g_ui.m_stdScreenScale + STD_SCREEN_X)
+#define VIEWER_Y (70 * g_ui.m_stdScreenScale + 21 * g_ui.m_stdScreenScale + STD_SCREEN_Y)
 #define MAIL_STRING_SIZE 320
 
 
@@ -85,45 +85,45 @@ static INT32 giMessagePage = -1;
 static INT32 giNumberOfPagesToCurrentEmail = -1;
 SGPVObject* guiEmailWarning;
 
-#define EMAIL_TOP_BAR_HEIGHT 22
+#define EMAIL_TOP_BAR_HEIGHT 22 * g_ui.m_stdScreenScale
 
-#define MIDDLE_X 0+LAPTOP_SCREEN_UL_X
-#define MIDDLE_Y (72 + EMAIL_TOP_BAR_HEIGHT + STD_SCREEN_Y)
-#define MIDDLE_WIDTH 19
+#define MIDDLE_X 0 + LAPTOP_SCREEN_UL_X
+#define MIDDLE_Y (72 * g_ui.m_stdScreenScale + EMAIL_TOP_BAR_HEIGHT + STD_SCREEN_Y)
+#define MIDDLE_WIDTH 19 * g_ui.m_stdScreenScale
 
 
 // new graphics
-#define EMAIL_LIST_WINDOW_Y 22
+#define EMAIL_LIST_WINDOW_Y (22 * g_ui.m_stdScreenScale)
 
 // email columns
-#define SENDER_X LAPTOP_SCREEN_UL_X+65
+#define SENDER_X (LAPTOP_SCREEN_UL_X + 65 * g_ui.m_stdScreenScale)
 
-#define DATE_X LAPTOP_SCREEN_UL_X+428
+#define DATE_X (LAPTOP_SCREEN_UL_X + 428 * g_ui.m_stdScreenScale)
 
-#define SUBJECT_X LAPTOP_SCREEN_UL_X+175
-#define SUBJECT_WIDTH					254	//526-245
-#define INDIC_X (128 + STD_SCREEN_X)
+#define SUBJECT_X (LAPTOP_SCREEN_UL_X + 175 * g_ui.m_stdScreenScale)
+#define SUBJECT_WIDTH					(254 * g_ui.m_stdScreenScale)	//526-245
+#define INDIC_X (128 * g_ui.m_stdScreenScale + STD_SCREEN_X)
 
-#define LINE_WIDTH 592-121
+#define LINE_WIDTH ((592 - 121) * g_ui.m_stdScreenScale)
 
-#define MESSAGE_X 5 //17
-#define MESSAGE_WIDTH 528-125//150
+#define MESSAGE_X (5 * g_ui.m_stdScreenScale) //17
+#define MESSAGE_WIDTH ((528 - 125) * g_ui.m_stdScreenScale)//150
 #define MESSAGE_COLOR FONT_BLACK
-#define MESSAGE_GAP 2
+#define MESSAGE_GAP (2 * g_ui.m_stdScreenScale)
 
 
-#define MESSAGE_HEADER_WIDTH 209-151
-#define MESSAGE_HEADER_X VIEWER_X+4
+#define MESSAGE_HEADER_WIDTH ((209 - 151) * g_ui.m_stdScreenScale)
+#define MESSAGE_HEADER_X (VIEWER_X + 4 * g_ui.m_stdScreenScale)
 
 
-#define EMAIL_WARNING_X (210 + STD_SCREEN_X)
-#define EMAIL_WARNING_Y (140 + STD_SCREEN_Y)
-#define EMAIL_WARNING_WIDTH 254
-#define EMAIL_WARNING_HEIGHT 138
+#define EMAIL_WARNING_X (210 * g_ui.m_stdScreenScale + STD_SCREEN_X)
+#define EMAIL_WARNING_Y (140 * g_ui.m_stdScreenScale + STD_SCREEN_Y)
+#define EMAIL_WARNING_WIDTH (254 * g_ui.m_stdScreenScale)
+#define EMAIL_WARNING_HEIGHT (138 * g_ui.m_stdScreenScale)
 
 
-#define NEW_BTN_X EMAIL_WARNING_X +(338-245)
-#define NEW_BTN_Y EMAIL_WARNING_Y +(278-195)
+#define NEW_BTN_X (EMAIL_WARNING_X + (338 - 245) * g_ui.m_stdScreenScale)
+#define NEW_BTN_Y (EMAIL_WARNING_Y + (278 - 195) * g_ui.m_stdScreenScale)
 
 #define EMAIL_TEXT_FONT			FONT10ARIAL
 #define MESSAGE_FONT			EMAIL_TEXT_FONT
@@ -134,62 +134,59 @@ SGPVObject* guiEmailWarning;
 // the max number of pages to an email
 #define MAX_NUMBER_EMAIL_PAGES 100
 
-#define NEXT_PAGE_X LAPTOP_UL_X + 562
-#define NEXT_PAGE_Y (51 + STD_SCREEN_Y)
+#define NEXT_PAGE_X (LAPTOP_UL_X + 562 * g_ui.m_stdScreenScale)
+#define NEXT_PAGE_Y (51 * g_ui.m_stdScreenScale + STD_SCREEN_Y)
 
-#define PREVIOUS_PAGE_X NEXT_PAGE_X - 21
+#define PREVIOUS_PAGE_X (NEXT_PAGE_X - 21 * g_ui.m_stdScreenScale)
 
-#define ENVELOPE_BOX_X (116 + STD_SCREEN_X)
+#define ENVELOPE_BOX_X (116 * g_ui.m_stdScreenScale + STD_SCREEN_X)
 
-#define FROM_BOX_X (166 + STD_SCREEN_X)
+#define FROM_BOX_X (166 * g_ui.m_stdScreenScale + STD_SCREEN_X)
 
-#define SUBJECT_BOX_X (276 + STD_SCREEN_X)
+#define SUBJECT_BOX_X (276 * g_ui.m_stdScreenScale + STD_SCREEN_X)
 
-#define DATE_BOX_X (530 + STD_SCREEN_X)
+#define DATE_BOX_X (530 * g_ui.m_stdScreenScale + STD_SCREEN_X)
 
-#define FROM_BOX_Y (51 + EMAIL_TOP_BAR_HEIGHT + STD_SCREEN_Y)
+#define FROM_BOX_Y (51 * g_ui.m_stdScreenScale + EMAIL_TOP_BAR_HEIGHT + STD_SCREEN_Y)
 
 #define EMAIL_TITLE_FONT FONT14ARIAL
-#define EMAIL_TITLE_X (140 + STD_SCREEN_X)
-#define EMAIL_TITLE_Y (33 + STD_SCREEN_Y)
-#define VIEWER_MESSAGE_BODY_START_Y VIEWER_Y+72
+#define EMAIL_TITLE_X (140 * g_ui.m_stdScreenScale + STD_SCREEN_X)
+#define EMAIL_TITLE_Y (33 * g_ui.m_stdScreenScale + STD_SCREEN_Y)
+#define VIEWER_MESSAGE_BODY_START_Y (VIEWER_Y + 72 * g_ui.m_stdScreenScale)
 #define MIN_MESSAGE_HEIGHT_IN_LINES 5
 
 
-#define INDENT_Y_OFFSET 310
-#define INDENT_X_OFFSET 325
-#define INDENT_X_WIDTH ( 544 - 481 )
-
 // the position of the page number being displayed in the email program
-#define PAGE_NUMBER_X (516 + STD_SCREEN_X)
-#define PAGE_NUMBER_Y (58 + STD_SCREEN_Y)
+#define PAGE_NUMBER_X (516 * g_ui.m_stdScreenScale + STD_SCREEN_X)
+#define PAGE_NUMBER_Y (58 * g_ui.m_stdScreenScale + STD_SCREEN_Y)
 
 // defines for location of message 'title'/'headers'
 
-#define MESSAGE_FROM_Y VIEWER_Y+28
+#define MESSAGE_FROM_Y (VIEWER_Y + 28 * g_ui.m_stdScreenScale)
 
 #define MESSAGE_DATE_Y MESSAGE_FROM_Y
 
-#define MESSAGE_SUBJECT_Y MESSAGE_DATE_Y+16
+#define MESSAGE_SUBJECT_Y (MESSAGE_DATE_Y + 16 * g_ui.m_stdScreenScale)
 
 
-#define SUBJECT_LINE_X VIEWER_X+47
-#define SUBJECT_LINE_Y VIEWER_Y+42
-#define SUBJECT_LINE_WIDTH 278-47
+#define SUBJECT_LINE_X (VIEWER_X + 47 * g_ui.m_stdScreenScale)
+#define SUBJECT_LINE_Y (VIEWER_Y + 42 * g_ui.m_stdScreenScale)
+#define SUBJECT_LINE_WIDTH ((278 - 47) * g_ui.m_stdScreenScale)
 
 
 // maximum size of a email message page, so not to overrun the bottom of the screen
-#define MAX_EMAIL_MESSAGE_PAGE_SIZE ( GetFontHeight( MESSAGE_FONT ) + MESSAGE_GAP ) * 20
+#define MAX_EMAIL_MESSAGES_PER_PAGE 20
+#define MAX_EMAIL_MESSAGE_PAGE_SIZE (GetFontHeight(MESSAGE_FONT) + MESSAGE_GAP) * MAX_EMAIL_MESSAGES_PER_PAGE
 
 
 // X button position
-#define BUTTON_X VIEWER_X + 396
-#define BUTTON_Y VIEWER_Y + 3 // was + 25
-#define BUTTON_LOWER_Y BUTTON_Y + 22
-#define PREVIOUS_PAGE_BUTTON_X VIEWER_X + 302
-#define NEXT_PAGE_BUTTON_X VIEWER_X +395
+#define BUTTON_X (VIEWER_X + 396 * g_ui.m_stdScreenScale)
+#define BUTTON_Y (VIEWER_Y + 3 * g_ui.m_stdScreenScale) // was + 25
+#define BUTTON_LOWER_Y (BUTTON_Y + 22 * g_ui.m_stdScreenScale)
+#define PREVIOUS_PAGE_BUTTON_X (VIEWER_X + 302 * g_ui.m_stdScreenScale)
+#define NEXT_PAGE_BUTTON_X (VIEWER_X + 395 * g_ui.m_stdScreenScale)
 #define DELETE_BUTTON_X NEXT_PAGE_BUTTON_X
-#define LOWER_BUTTON_Y BUTTON_Y + 299
+#define LOWER_BUTTON_Y (BUTTON_Y + MAX_EMAIL_MESSAGE_PAGE_SIZE + 75 * g_ui.m_stdScreenScale + 4)
 
 
 static BOOLEAN fSortDateUpwards = FALSE;
@@ -471,7 +468,7 @@ static void ReDisplayBoxes(void);
 void RenderEmail( void )
 {
 	BltVideoObject(FRAME_BUFFER, guiEmailBackground, 0, LAPTOP_SCREEN_UL_X, EMAIL_LIST_WINDOW_Y + LAPTOP_SCREEN_UL_Y);
-	BltVideoObject(FRAME_BUFFER, guiEmailTitle,      0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2);
+	BltVideoObject(FRAME_BUFFER, guiEmailTitle,      0, LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y - 2 * g_ui.m_stdScreenScale);
 
 	// show text on titlebar
 	DisplayTextOnTitleBar( );
@@ -481,7 +478,7 @@ void RenderEmail( void )
 	// redraw line dividers
 	DrawLineDividers( );
 
-	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0, STD_SCREEN_X + 108, STD_SCREEN_Y + 23);
+	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0, STD_SCREEN_X + 108 * g_ui.m_stdScreenScale, STD_SCREEN_Y + 23 * g_ui.m_stdScreenScale);
 
 	ReDisplayBoxes( );
 
@@ -742,12 +739,12 @@ static void DrawEmailSummary(INT32 y, const Email* e)
 	SetFont(font);
 
 	ST::string pTempSubject = e->pSubject;
-	pTempSubject = ReduceStringLength(pTempSubject, SUBJECT_WIDTH - 10, font);
-	MPrint(SUBJECT_X, y + 4, pTempSubject);
-	MPrint(SENDER_X,  y + 4, pSenderNameList[e->ubSender]);
+	pTempSubject = ReduceStringLength(pTempSubject, SUBJECT_WIDTH - 10 * g_ui.m_stdScreenScale, font);
+	MPrint(SUBJECT_X, y + 4 * g_ui.m_stdScreenScale, pTempSubject);
+	MPrint(SENDER_X,  y + 4 * g_ui.m_stdScreenScale, pSenderNameList[e->ubSender]);
 
 	// draw date of message being displayed in mail viewer
-	MPrint(DATE_X, y + 4, ST::format("{} {}", pDayStrings, e->iDate / (24 * 60)));
+	MPrint(DATE_X, y + 4 * g_ui.m_stdScreenScale, ST::format("{} {}", pDayStrings, e->iDate / (24 * 60)));
 }
 
 
@@ -774,7 +771,7 @@ static void DisplayEmailList(void)
 
 	// now we have current page, display it
 	SetFontForeground(FONT_BLACK);
-	SetFontBackground(FONT_BLACK);
+	SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 	SetFontShadow(NO_SHADOW);
 
 	// draw each line of the list for this page
@@ -786,7 +783,7 @@ static void DisplayEmailList(void)
 		y += MIDDLE_WIDTH;
 	}
 
-	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_LR_Y);
+	InvalidateRegion(LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_LR_X, LAPTOP_SCREEN_LR_Y);
 
 	SetFontShadow(DEFAULT_SHADOW);
 }
@@ -1006,8 +1003,12 @@ static INT32 DisplayEmailMessage(Email* const m)
 
 	INT32 const by = iViewerPositionY;
 
-	BltVideoObject(FRAME_BUFFER, guiEmailMessage,  0, VIEWER_X,     VIEWER_Y + by);
-	BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, VIEWER_X + 5, VIEWER_Y + by + 2);
+	BltVideoObject(FRAME_BUFFER, guiEmailMessage,  0,
+		       VIEWER_X,
+		       VIEWER_Y + by);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0,
+		       VIEWER_X + 5 * g_ui.m_stdScreenScale,
+		       VIEWER_Y + by + 2 * g_ui.m_stdScreenScale);
 
 	DisplayEmailMessageSubjectDateFromLines(m, by);
 	DrawEmailMessageDisplayTitleText(by);
@@ -1036,7 +1037,9 @@ static INT32 DisplayEmailMessage(Email* const m)
 	{
 		for (INT32 y = VIEWER_MESSAGE_BODY_START_Y + by + h;;)
 		{
-			y += IanDisplayWrappedString(VIEWER_X + MESSAGE_X + 4, y, MESSAGE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, i->pRecord, 0, IAN_WRAP_NO_SHADOW);
+			y += IanDisplayWrappedString(VIEWER_X + MESSAGE_X + 4 * g_ui.m_stdScreenScale, y,
+						     MESSAGE_WIDTH, MESSAGE_GAP,
+						     MESSAGE_FONT, MESSAGE_COLOR, i->pRecord, 0, IAN_WRAP_NO_SHADOW);
 
 			i = i->Next;
 			if (!i) break;
@@ -1121,22 +1124,24 @@ static void AddDeleteRegionsToMessageRegion(INT32 iViewerY)
 		fOldDisplayMessageFlag=TRUE;
 
 		// add X button
-		giMessageButton = QuickCreateButtonImg(LAPTOPDIR "/x.sti", 0, 1, BUTTON_X + 2, BUTTON_Y + iViewerY + 1, MSYS_PRIORITY_HIGHEST - 1, BtnMessageXCallback);
+		giMessageButton = QuickCreateButtonImg(LAPTOPDIR "/x.sti", 0, 1,
+						       BUTTON_X + 2 * g_ui.m_stdScreenScale, BUTTON_Y + iViewerY + 1,
+						       MSYS_PRIORITY_HIGHEST - 1, BtnMessageXCallback);
 		giMessageButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 
 		if( giNumberOfPagesToCurrentEmail > 2 )
 		{
 			// add next and previous mail page buttons
 			{
-				INT16 const y = LOWER_BUTTON_Y + iViewerY + 2;
+				INT16 const y = LOWER_BUTTON_Y + iViewerY + 2 * g_ui.m_stdScreenScale;
 				giMailMessageButtons[0] = MakeButtonNewMail(0, PREVIOUS_PAGE_BUTTON_X, y, BtnPreviousEmailPageCallback);
 				giMailMessageButtons[1] = MakeButtonNewMail(1, NEXT_PAGE_BUTTON_X,     y, BtnNextEmailPageCallback);
 			}
 			{
 				UINT16 const x = VIEWER_X + MESSAGE_X + 1;
 				UINT16 const y = VIEWER_MESSAGE_BODY_START_Y + iViewerPositionY;
-				UINT16 const w = MESSAGE_WIDTH + 3;
-				UINT16 const h = 227;
+				UINT16 const w = MESSAGE_WIDTH + 3 * g_ui.m_stdScreenScale;
+				UINT16 const h = 227 * g_ui.m_stdScreenScale;
 				MSYS_DefineRegion(&g_mail_scroll_region, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST - 2, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MailScrollRegionCallback);
 			}
 			gfPageButtonsWereCreated = TRUE;
@@ -1194,7 +1199,7 @@ void CreateDestroyNewMailButton()
 		// set old flag (stating button has been created)
 		fOldNewMailFlag=TRUE;
 
-		giNewMailButton = MakeButtonYesNo(0, NEW_BTN_X + 10, BtnNewOkback);
+		giNewMailButton = MakeButtonYesNo(0, NEW_BTN_X + 10 * g_ui.m_stdScreenScale, BtnNewOkback);
 
 		// set up screen mask region
 		MSYS_DefineRegion(&pScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
@@ -1228,27 +1233,27 @@ void DisplayNewMailBox(void)
 	// not even set, leave NOW!
 	if (!fNewMailFlag) return;
 
-	BltVideoObject(FRAME_BUFFER, guiEmailWarning,  0, EMAIL_WARNING_X,     EMAIL_WARNING_Y);
-	BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, EMAIL_WARNING_X + 5, EMAIL_WARNING_Y + 2);
+	BltVideoObject(FRAME_BUFFER, guiEmailWarning,  0, EMAIL_WARNING_X, EMAIL_WARNING_Y);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, EMAIL_WARNING_X + 5 * g_ui.m_stdScreenScale, EMAIL_WARNING_Y + 2 * g_ui.m_stdScreenScale);
 
 	SetFontAttributes(EMAIL_HEADER_FONT, FONT_WHITE);
 
 	// print warning
-	MPrint(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
+	MPrint(EMAIL_WARNING_X + 30 * g_ui.m_stdScreenScale, EMAIL_WARNING_Y + 8 * g_ui.m_stdScreenScale, pEmailTitleText);
 
 	SetFontAttributes(EMAIL_WARNING_FONT, FONT_BLACK, NO_SHADOW);
 
 	// printf warning string
-	MPrint(EMAIL_WARNING_X + 60, EMAIL_WARNING_Y + 63, pNewMailStrings);
+	MPrint(EMAIL_WARNING_X + 60 * g_ui.m_stdScreenScale, EMAIL_WARNING_Y + 63 * g_ui.m_stdScreenScale, pNewMailStrings);
 
 	// invalidate region
-	InvalidateRegion( EMAIL_WARNING_X, EMAIL_WARNING_Y, EMAIL_WARNING_X + 270, EMAIL_WARNING_Y + 200 );
+	InvalidateRegion(EMAIL_WARNING_X, EMAIL_WARNING_Y, EMAIL_WARNING_X + 270 * g_ui.m_stdScreenScale, EMAIL_WARNING_Y + 200 * g_ui.m_stdScreenScale);
 
 	// mark button
 	MarkAButtonDirty(giNewMailButton);
 
 	// reset shadow
-	SetFontShadow( DEFAULT_SHADOW );
+	SetFontShadow(DEFAULT_SHADOW);
 }
 
 
@@ -1329,8 +1334,8 @@ void CreateDestroyDeleteNoticeMailButton()
 
 		// YES/NO buttons
 		fOldDeleteMailFlag=TRUE;
-		giDeleteMailButton[0] = MakeButtonYesNo(0, NEW_BTN_X +  1, BtnDeleteYesback);
-		giDeleteMailButton[1] = MakeButtonYesNo(2, NEW_BTN_X + 40, BtnDeleteNoback);
+		giDeleteMailButton[0] = MakeButtonYesNo(0, NEW_BTN_X +  1 * g_ui.m_stdScreenScale, BtnDeleteYesback);
+		giDeleteMailButton[1] = MakeButtonYesNo(2, NEW_BTN_X + 40 * g_ui.m_stdScreenScale, BtnDeleteNoback);
 
 		// set up screen mask to prevent other actions while delete mail box is destroyed
 		MSYS_DefineRegion(&pDeleteScreenMask, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, LapTopScreenCallBack);
@@ -1374,18 +1379,18 @@ static BOOLEAN DisplayDeleteNotice(Email* pMail)
 
 	SetFontAttributes(EMAIL_HEADER_FONT, FONT_WHITE);
 
-	BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, EMAIL_WARNING_X + 5, EMAIL_WARNING_Y + 2);
+	BltVideoObject(FRAME_BUFFER, guiTITLEBARICONS, 0, EMAIL_WARNING_X + 5 * g_ui.m_stdScreenScale, EMAIL_WARNING_Y + 2 * g_ui.m_stdScreenScale);
 
 	// title
-	MPrint(EMAIL_WARNING_X + 30, EMAIL_WARNING_Y + 8, pEmailTitleText);
+	MPrint(EMAIL_WARNING_X + 30 * g_ui.m_stdScreenScale, EMAIL_WARNING_Y + 8 * g_ui.m_stdScreenScale, pEmailTitleText);
 
 	SetFontAttributes(EMAIL_WARNING_FONT, FONT_BLACK, NO_SHADOW);
 
 	// draw text based on mail being read or not
 	if((pMail->fRead))
-		MPrint(EMAIL_WARNING_X + 95, EMAIL_WARNING_Y + 65, pDeleteMailStrings[0]);
+		MPrint(EMAIL_WARNING_X + 95 * g_ui.m_stdScreenScale, EMAIL_WARNING_Y + 65 * g_ui.m_stdScreenScale, pDeleteMailStrings[0]);
 	else
-		MPrint(EMAIL_WARNING_X + 70, EMAIL_WARNING_Y + 65, pDeleteMailStrings[1]);
+		MPrint(EMAIL_WARNING_X + 70 * g_ui.m_stdScreenScale, EMAIL_WARNING_Y + 65 * g_ui.m_stdScreenScale, pDeleteMailStrings[1]);
 
 
 	// invalidate screen area, for refresh
@@ -1491,7 +1496,7 @@ static void ReadCallback(GUI_BUTTON *btn, UINT32 iReason)
 static void DisplayTextOnTitleBar(void)
 {
 	// draw email screen title text
-	SetFontAttributes(EMAIL_TITLE_FONT, FONT_WHITE);
+	SetFontAttributes(EMAIL_TITLE_FONT, FONT_WHITE, NO_SHADOW);
 	MPrint(EMAIL_TITLE_X, EMAIL_TITLE_Y, pEmailTitleText);
 }
 
@@ -1542,26 +1547,30 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 	INT16 usY;
 
 	// print from
-	FindFontRightCoordinates(MESSAGE_HEADER_X - 20, MESSAGE_FROM_Y + iViewerY, MESSAGE_HEADER_WIDTH, MESSAGE_FROM_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[0], MESSAGE_FONT, &usX, &usY);
+	FindFontRightCoordinates(MESSAGE_HEADER_X - 20 * g_ui.m_stdScreenScale, MESSAGE_FROM_Y + iViewerY,
+				 MESSAGE_HEADER_WIDTH, MESSAGE_FROM_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[0], MESSAGE_FONT, &usX, &usY);
 	MPrint(usX, MESSAGE_FROM_Y + iViewerY, pEmailHeaders[0]);
 
 	// the actual from info
-	MPrint( MESSAGE_HEADER_X+MESSAGE_HEADER_WIDTH-13, MESSAGE_FROM_Y + iViewerY, pSenderNameList[pMail->ubSender]);
+	MPrint(MESSAGE_HEADER_X + MESSAGE_HEADER_WIDTH - 13 * g_ui.m_stdScreenScale, MESSAGE_FROM_Y + iViewerY, pSenderNameList[pMail->ubSender]);
 
 
 	// print date
-	FindFontRightCoordinates(MESSAGE_HEADER_X + 168, MESSAGE_DATE_Y + iViewerY, MESSAGE_HEADER_WIDTH, MESSAGE_DATE_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[2], MESSAGE_FONT, &usX, &usY);
+	FindFontRightCoordinates(MESSAGE_HEADER_X + 168 * g_ui.m_stdScreenScale, MESSAGE_DATE_Y + iViewerY,
+				 MESSAGE_HEADER_WIDTH, MESSAGE_DATE_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[2], MESSAGE_FONT, &usX, &usY);
 	MPrint(usX, MESSAGE_DATE_Y + iViewerY, pEmailHeaders[2]);
 
 	// the actual date info
-	MPrint(MESSAGE_HEADER_X + 235, MESSAGE_DATE_Y + iViewerY, ST::format("{}", pMail->iDate / (24 * 60)));
+	MPrint(MESSAGE_HEADER_X + 235 * g_ui.m_stdScreenScale, MESSAGE_DATE_Y + iViewerY, ST::format("{}", pMail->iDate / (24 * 60)));
 
 	// print subject
-	FindFontRightCoordinates(MESSAGE_HEADER_X - 20, MESSAGE_SUBJECT_Y, MESSAGE_HEADER_WIDTH, MESSAGE_SUBJECT_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[1], MESSAGE_FONT, &usX, &usY);
+	FindFontRightCoordinates(MESSAGE_HEADER_X - 20 * g_ui.m_stdScreenScale, MESSAGE_SUBJECT_Y,
+				 MESSAGE_HEADER_WIDTH, MESSAGE_SUBJECT_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[1], MESSAGE_FONT, &usX, &usY);
 	MPrint(usX, MESSAGE_SUBJECT_Y + iViewerY, pEmailHeaders[1]);
 
  	// the actual subject info
-	IanDisplayWrappedString(SUBJECT_LINE_X + 2, SUBJECT_LINE_Y + 2 + iViewerY, SUBJECT_LINE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pMail->pSubject, 0, 0);
+	IanDisplayWrappedString(SUBJECT_LINE_X + 2 * g_ui.m_stdScreenScale, SUBJECT_LINE_Y + 2 * g_ui.m_stdScreenScale + iViewerY,
+				SUBJECT_LINE_WIDTH, MESSAGE_GAP, MESSAGE_FONT, MESSAGE_COLOR, pMail->pSubject, 0, 0);
 
 	// reset shadow
 	SetFontShadow(DEFAULT_SHADOW);
@@ -1572,7 +1581,7 @@ static void DrawEmailMessageDisplayTitleText(INT32 iViewerY)
 {
 	// this procedure will display the title of the email message display box
 	SetFontAttributes(EMAIL_HEADER_FONT, FONT_WHITE);
-	MPrint(VIEWER_X + 30, VIEWER_Y + 8 + iViewerY, pEmailTitleText);
+	MPrint(VIEWER_X + 30 * g_ui.m_stdScreenScale, VIEWER_Y + 8 * g_ui.m_stdScreenScale + iViewerY, pEmailTitleText);
 }
 
 
@@ -1583,7 +1592,7 @@ static void DrawLineDividers(void)
 
 	for(iCounter=1; iCounter < 19; iCounter++)
 	{
-		BltVideoObject(FRAME_BUFFER, guiMAILDIVIDER, 0, INDIC_X - 10, MIDDLE_Y + iCounter * MIDDLE_WIDTH - 1);
+		BltVideoObject(FRAME_BUFFER, guiMAILDIVIDER, 0, INDIC_X - 10 * g_ui.m_stdScreenScale, MIDDLE_Y + iCounter * MIDDLE_WIDTH - 1);
 	}
 }
 
@@ -2270,8 +2279,12 @@ static void DisplayNumberOfPagesToThisEmail(INT32 const iViewerY)
 	ST::string str = ST::format("{} / {}", giMessagePage + 1, giNumberOfPagesToCurrentEmail - 1);
 	INT16 sX;
 	INT16 sY;
-	FindFontCenterCoordinates(VIEWER_X + INDENT_X_OFFSET, 0, INDENT_X_WIDTH, 0, str, FONT12ARIAL, &sX, &sY);
-	MPrint(sX, VIEWER_Y + iViewerY + INDENT_Y_OFFSET - 2, str);
+
+	FindFontCenterCoordinates(VIEWER_X + 325 * g_ui.m_stdScreenScale, 0,
+				  (544 - 481) * g_ui.m_stdScreenScale, 0, str, FONT12ARIAL, &sX, &sY);
+	MPrint(sX, VIEWER_Y + iViewerY
+	       + (GetFontHeight(MESSAGE_FONT) + MESSAGE_GAP) * MAX_EMAIL_MESSAGES_PER_PAGE
+	       + 88 * g_ui.m_stdScreenScale, str);
 
 	SetFontShadow(DEFAULT_SHADOW);
 }
@@ -2347,7 +2360,7 @@ static void PreProcessEmail(Email* const m)
 	}
 
 	// set iViewerY so to center the viewer
-	iViewerPositionY = (LAPTOP_SCREEN_LR_Y - 2 * VIEWER_Y - 2 * VIEWER_MESSAGE_BODY_START_Y  - h) / 2;
+	iViewerPositionY = (LAPTOP_SCREEN_LR_Y - 2 * g_ui.m_stdScreenScale * VIEWER_Y - 2 * g_ui.m_stdScreenScale * VIEWER_MESSAGE_BODY_START_Y  - h) / 2;
 	if (iViewerPositionY < 0) iViewerPositionY = 0;
 
 	UINT16 const line_h = GetFontHeight(MESSAGE_FONT);

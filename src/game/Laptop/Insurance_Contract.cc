@@ -407,16 +407,8 @@ try
 		// load the mercs face graphic and add it
 		AutoSGPVObject uiInsMercFaceImage(LoadSmallPortrait(p));
 
-		//if the merc is dead, shade the face red
-		if (is_dead)
-		{
-			//if the merc is dead
-			//shade the face red, (to signify that he is dead)
-			uiInsMercFaceImage->pShades[0] = RGBA(255, 55, 55, 0x7f); // TESTME: maxrd2 - Create16BPPPaletteShaded(uiInsMercFaceImage->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-
-			//set the red pallete to the face
-			uiInsMercFaceImage->CurrentShade(0);
-		}
+		if (is_dead) // shade the face red, (to signify that he is dead)
+			uiInsMercFaceImage->SetShadeColor(DEAD_MERC_SHADE);
 
 		//Get and display the mercs face
 		BltVideoObject(FRAME_BUFFER, uiInsMercFaceImage.get(), 0, dx + INS_CTRCT_OG_FACE_OFFSET_X, dy + INS_CTRCT_OG_FACE_OFFSET_Y);

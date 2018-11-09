@@ -63,9 +63,9 @@
 
 #define AIM_M_FONT_PREV_NEXT_CONTACT		FONT14ARIAL
 #define AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_UP	FONT_MCOLOR_DKWHITE
-#define AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN	138
+#define AIM_M_FONT_PREV_NEXT_CONTACT_COLOR_DOWN	FONT_COLOR_P138
 #define AIM_M_FONT_STATIC_TEXT			FONT12ARIAL
-#define AIM_M_COLOR_STATIC_TEXT			146//75
+#define AIM_M_COLOR_STATIC_TEXT			FONT_COLOR_P146//75
 #define AIM_M_FONT_DYNAMIC_TEXT			FONT10ARIAL
 #define AIM_M_COLOR_DYNAMIC_TEXT		FONT_MCOLOR_WHITE
 #define AIM_M_WEAPON_TEXT_FONT			FONT10ARIAL
@@ -79,7 +79,7 @@
 
 
 #define AIM_M_VIDEO_CONTRACT_AMOUNT_FONT	FONT10ARIAL
-#define AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR	183
+#define AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR	FONT_COLOR_P183
 
 #define AIM_POPUP_BOX_FONT			FONT12ARIAL
 #define AIM_POPUP_BOX_COLOR			FONT_MCOLOR_BLACK
@@ -95,37 +95,37 @@
 #define NUMBER_HATED_MERCS_ONTEAM		3
 
 
-#define STATS_X					IMAGE_OFFSET_X + 121
-#define STATS_Y					IMAGE_OFFSET_Y + 66//69
+#define STATS_X					IMAGE_OFFSET_X + 121 * g_ui.m_stdScreenScale
+#define STATS_Y					IMAGE_OFFSET_Y + 66 * g_ui.m_stdScreenScale//69
 
-#define PRICE_X					IMAGE_OFFSET_X + 377
+#define PRICE_X					IMAGE_OFFSET_X + 377 * g_ui.m_stdScreenScale
 #define PRICE_Y					STATS_Y
-#define PRICE_WIDTH				116
+#define PRICE_WIDTH				116 * g_ui.m_stdScreenScale
 
-#define PORTRAIT_X				IMAGE_OFFSET_X + 8
+#define PORTRAIT_X				IMAGE_OFFSET_X + 8 * g_ui.m_stdScreenScale
 #define PORTRAIT_Y				STATS_Y
-#define PORTRAIT_WIDTH				110
-#define PORTRAIT_HEIGHT				126
+#define PORTRAIT_WIDTH				110 * g_ui.m_stdScreenScale
+#define PORTRAIT_HEIGHT				126 * g_ui.m_stdScreenScale
 
-#define FACE_X					PORTRAIT_X + 2
-#define FACE_Y					PORTRAIT_Y + 2
-#define FACE_WIDTH				106
-#define FACE_HEIGHT				122
+#define FACE_X					PORTRAIT_X + 2 * g_ui.m_stdScreenScale
+#define FACE_Y					PORTRAIT_Y + 2 * g_ui.m_stdScreenScale
+#define FACE_WIDTH				106 * g_ui.m_stdScreenScale
+#define FACE_HEIGHT				122 * g_ui.m_stdScreenScale
 
 
-#define WEAPONBOX_X				IMAGE_OFFSET_X + 6
-#define WEAPONBOX_Y				IMAGE_OFFSET_Y + 296//299
-#define WEAPONBOX_SIZE_X			61
-#define WEAPONBOX_SIZE_Y			31
+#define WEAPONBOX_X				IMAGE_OFFSET_X + 6 * g_ui.m_stdScreenScale
+#define WEAPONBOX_Y				IMAGE_OFFSET_Y + 296 * g_ui.m_stdScreenScale//299
+#define WEAPONBOX_SIZE_X			61 * g_ui.m_stdScreenScale
+#define WEAPONBOX_SIZE_Y			31 * g_ui.m_stdScreenScale
 #define WEAPONBOX_NUMBER			8
 
-#define SPACE_BN_LINES				15//13
-#define STATS_FIRST_COL				STATS_X + 9
-#define STATS_SECOND_COL			STATS_FIRST_COL + 129
-#define STAT_NAME_WIDTH				87
-#define STAT_VALUE_DX				102
+#define SPACE_BN_LINES				15 * g_ui.m_stdScreenScale//13
+#define STATS_FIRST_COL				STATS_X + 9 * g_ui.m_stdScreenScale
+#define STATS_SECOND_COL			STATS_FIRST_COL + 129 * g_ui.m_stdScreenScale
+#define STAT_NAME_WIDTH				87 * g_ui.m_stdScreenScale
+#define STAT_VALUE_DX				102 * g_ui.m_stdScreenScale
 
-#define HEALTH_Y				STATS_Y + 34
+#define HEALTH_Y				STATS_Y + 34 * g_ui.m_stdScreenScale
 #define AGILITY_Y				HEALTH_Y	+ SPACE_BN_LINES
 #define DEXTERITY_Y				AGILITY_Y + SPACE_BN_LINES
 #define STRENGTH_Y				DEXTERITY_Y + SPACE_BN_LINES
@@ -139,115 +139,115 @@
 #define MEDICAL_Y				LEADERSHIP_Y
 
 #define NAME_X					STATS_FIRST_COL
-#define NAME_Y					STATS_Y + 7
+#define NAME_Y					STATS_Y + 7 * g_ui.m_stdScreenScale
 
-#define FEE_X					PRICE_X + 7
+#define FEE_X					PRICE_X + 7 * g_ui.m_stdScreenScale
 #define FEE_Y					NAME_Y
-#define FEE_WIDTH				37  //33
+#define FEE_WIDTH				37 * g_ui.m_stdScreenScale  //33
 
-#define AIM_CONTRACT_X				PRICE_X + 51
+#define AIM_CONTRACT_X				PRICE_X + 51 * g_ui.m_stdScreenScale
 #define AIM_CONTRACT_Y				FEE_Y
-#define AIM_CONTRACT_WIDTH			59
+#define AIM_CONTRACT_WIDTH			59 * g_ui.m_stdScreenScale
 
 #define ONEDAY_X				AIM_CONTRACT_X
 #define ONEWEEK_X				AIM_CONTRACT_X
 #define TWOWEEK_X				AIM_CONTRACT_X
 
-#define PREVIOUS_X				(STD_SCREEN_X + 224)
-#define CONTACT_X				(STD_SCREEN_X + 331)
-#define NEXT_X					(STD_SCREEN_X + 431)
-#define BTN_BOX_Y				(STD_SCREEN_Y + 386 + LAPTOP_SCREEN_WEB_DELTA_Y - 4)
+#define PREVIOUS_X				(STD_SCREEN_X + 224 * g_ui.m_stdScreenScale)
+#define CONTACT_X				(STD_SCREEN_X + 331 * g_ui.m_stdScreenScale)
+#define NEXT_X					(STD_SCREEN_X + 431 * g_ui.m_stdScreenScale)
+#define BTN_BOX_Y				(STD_SCREEN_Y + 386 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y - 4 * g_ui.m_stdScreenScale)
 
-#define AIM_MERC_INFO_X				(STD_SCREEN_X + 124)
-#define AIM_MERC_INFO_Y				(STD_SCREEN_Y + 223 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define AIM_MERC_INFO_X				(STD_SCREEN_X + 124 * g_ui.m_stdScreenScale)
+#define AIM_MERC_INFO_Y				(STD_SCREEN_Y + 223 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y)
 
 #define AIM_MERC_ADD_X				AIM_MERC_ADD_INFO_X
-#define AIM_MERC_ADD_Y				(STD_SCREEN_Y + 269 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define AIM_MERC_ADD_Y				(STD_SCREEN_Y + 269 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y)
 
 #define AIM_MERC_ADD_INFO_X			AIM_MERC_INFO_X
-#define AIM_MERC_ADD_INFO_Y			AIM_MERC_ADD_Y + 15
-#define AIM_MERC_INFO_WIDTH			470
+#define AIM_MERC_ADD_INFO_Y			AIM_MERC_ADD_Y + 15 * g_ui.m_stdScreenScale
+#define AIM_MERC_INFO_WIDTH			470 * g_ui.m_stdScreenScale
 
-#define AIM_MEDICAL_DEPOSIT_X			PRICE_X + 5
+#define AIM_MEDICAL_DEPOSIT_X			PRICE_X + 5 * g_ui.m_stdScreenScale
 #define AIM_MEDICAL_DEPOSIT_Y			LEADERSHIP_Y
-#define AIM_MEDICAL_DEPOSIT_WIDTH		PRICE_WIDTH - 6
+#define AIM_MEDICAL_DEPOSIT_WIDTH		PRICE_WIDTH - 6 * g_ui.m_stdScreenScale
 
-#define AIM_MEMBER_ACTIVE_TEXT_X		IMAGE_OFFSET_X + 149
-#define AIM_MEMBER_ACTIVE_TEXT_Y		AIM_SYMBOL_Y + AIM_SYMBOL_SIZE_Y	- 1	// + 1
+#define AIM_MEMBER_ACTIVE_TEXT_X		IMAGE_OFFSET_X + 149 * g_ui.m_stdScreenScale
+#define AIM_MEMBER_ACTIVE_TEXT_Y		AIM_SYMBOL_Y + AIM_SYMBOL_SIZE_Y	- 1 * g_ui.m_stdScreenScale	// + 1
 #define AIM_MEMBER_ACTIVE_TEXT_WIDTH		AIM_SYMBOL_WIDTH
 
 #define AIM_MEMBER_OPTIONAL_GEAR_X		AIM_MERC_INFO_X
-#define AIM_MEMBER_OPTIONAL_GEAR_Y		WEAPONBOX_Y - 13
+#define AIM_MEMBER_OPTIONAL_GEAR_Y		WEAPONBOX_Y - 13 * g_ui.m_stdScreenScale
 
-#define AIM_MEMBER_WEAPON_NAME_Y		WEAPONBOX_Y + WEAPONBOX_SIZE_Y + 1
-#define AIM_MEMBER_WEAPON_NAME_WIDTH		WEAPONBOX_SIZE_X - 2
+#define AIM_MEMBER_WEAPON_NAME_Y		WEAPONBOX_Y + WEAPONBOX_SIZE_Y + 1 * g_ui.m_stdScreenScale
+#define AIM_MEMBER_WEAPON_NAME_WIDTH		WEAPONBOX_SIZE_X - 2 * g_ui.m_stdScreenScale
 
 //video Conferencing Info
-#define AIM_MEMBER_VIDEO_CONF_TERMINAL_X	(STD_SCREEN_X + 125)
-#define AIM_MEMBER_VIDEO_CONF_TERMINAL_Y	(STD_SCREEN_Y + 97 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define AIM_MEMBER_VIDEO_CONF_TERMINAL_X	(STD_SCREEN_X + 125 * g_ui.m_stdScreenScale)
+#define AIM_MEMBER_VIDEO_CONF_TERMINAL_Y	(STD_SCREEN_Y + 97 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y)
 
-#define AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH	368
-#define AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT	21
+#define AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH	UINT16(368 * g_ui.m_stdScreenScale)
+#define AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT	UINT16(21 * g_ui.m_stdScreenScale)
 #define AIM_MEMBER_VIDEO_TITLE_ITERATIONS	18
-#define AIM_MEMBER_VIDEO_TITLE_START_Y		(STD_SCREEN_Y + 382 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define AIM_MEMBER_VIDEO_TITLE_START_Y		(STD_SCREEN_Y + 382 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y)
 
 
-#define AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_X	AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 6
-#define AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_Y	AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 130
+#define AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_X	AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 6 * g_ui.m_stdScreenScale
+#define AIM_MEMBER_VIDEO_CONF_CONTRACT_IMAGE_Y	AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 130 * g_ui.m_stdScreenScale
 
-#define AIM_MEMBER_VIDEO_CONF_XCLOSE_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 348
-#define AIM_MEMBER_VIDEO_CONF_XCLOSE_Y		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 3
+#define AIM_MEMBER_VIDEO_CONF_XCLOSE_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 348 * g_ui.m_stdScreenScale
+#define AIM_MEMBER_VIDEO_CONF_XCLOSE_Y		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 3 * g_ui.m_stdScreenScale
 
-#define AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y	20
+#define AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y	20 * g_ui.m_stdScreenScale
 
-#define AIM_MEMBER_BUY_CONTRACT_LENGTH_X	AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 113
-#define AIM_MEMBER_BUY_CONTRACT_LENGTH_Y	AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 15
+#define AIM_MEMBER_BUY_CONTRACT_LENGTH_X	AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 113 * g_ui.m_stdScreenScale
+#define AIM_MEMBER_BUY_CONTRACT_LENGTH_Y	AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 15 * g_ui.m_stdScreenScale
 
-#define AIM_MEMBER_BUY_EQUIPMENT_GAP		23
+#define AIM_MEMBER_BUY_EQUIPMENT_GAP		23 * g_ui.m_stdScreenScale
 
-#define AIM_MEMBER_BUY_EQUIPMENT_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 235
+#define AIM_MEMBER_BUY_EQUIPMENT_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 235 * g_ui.m_stdScreenScale
 
-#define AIM_MEMBER_AUTHORIZE_PAY_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 113
-#define AIM_MEMBER_AUTHORIZE_PAY_Y		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 92
-#define AIM_MEMBER_AUTHORIZE_PAY_GAP		122
+#define AIM_MEMBER_AUTHORIZE_PAY_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 113 * g_ui.m_stdScreenScale
+#define AIM_MEMBER_AUTHORIZE_PAY_Y		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 92 * g_ui.m_stdScreenScale
+#define AIM_MEMBER_AUTHORIZE_PAY_GAP		122 * g_ui.m_stdScreenScale
 
-#define AIM_MEMBER_VIDEO_FACE_X			AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7 + 1
-#define AIM_MEMBER_VIDEO_FACE_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 6 + 1
+#define AIM_MEMBER_VIDEO_FACE_X			AIM_MEMBER_VIDEO_CONF_TERMINAL_X + (7 + 1) * g_ui.m_stdScreenScale
+#define AIM_MEMBER_VIDEO_FACE_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + (6 + 1) * g_ui.m_stdScreenScale
 
-#define AIM_MEMBER_VIDEO_FACE_WIDTH		96
-#define AIM_MEMBER_VIDEO_FACE_HEIGHT		86
+#define AIM_MEMBER_VIDEO_FACE_WIDTH		96 * g_ui.m_stdScreenScale
+#define AIM_MEMBER_VIDEO_FACE_HEIGHT		86 * g_ui.m_stdScreenScale
 
-#define AIM_MEMBER_VIDEO_NAME_X			AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7
-#define AIM_MEMBER_VIDEO_NAME_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 5
+#define AIM_MEMBER_VIDEO_NAME_X			AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7 * g_ui.m_stdScreenScale
+#define AIM_MEMBER_VIDEO_NAME_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + 5 * g_ui.m_stdScreenScale
 
 #define AIM_CONTRACT_CHARGE_X			AIM_MEMBER_VIDEO_NAME_X
-#define AIM_CONTRACT_CHARGE_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 98
+#define AIM_CONTRACT_CHARGE_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 98 * g_ui.m_stdScreenScale
 
 #define AIM_CONTRACT_LENGTH_ONE_DAY		0
 #define AIM_CONTRACT_LENGTH_ONE_WEEK		1
 #define AIM_CONTRACT_LENGTH_TWO_WEEKS		2
 
-#define AIM_SELECT_LIGHT_ON_X			105
-#define AIM_SELECT_LIGHT_ON_Y			8
+#define AIM_SELECT_LIGHT_ON_X			105 * g_ui.m_stdScreenScale
+#define AIM_SELECT_LIGHT_ON_Y			8 * g_ui.m_stdScreenScale
 
-#define AIM_SELECT_LIGHT_OFF_X			105
-#define AIM_SELECT_LIGHT_OFF_Y			7
+#define AIM_SELECT_LIGHT_OFF_X			105 * g_ui.m_stdScreenScale
+#define AIM_SELECT_LIGHT_OFF_Y			7 * g_ui.m_stdScreenScale
 
-#define AIM_CONTRACT_CHARGE_AMOUNNT_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7//8
-#define AIM_CONTRACT_CHARGE_AMOUNNT_Y		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 111//114
+#define AIM_CONTRACT_CHARGE_AMOUNNT_X		AIM_MEMBER_VIDEO_CONF_TERMINAL_X + 7 * g_ui.m_stdScreenScale//8
+#define AIM_CONTRACT_CHARGE_AMOUNNT_Y		AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 111 * g_ui.m_stdScreenScale//114
 
-#define AIM_POPUP_BOX_X				(STD_SCREEN_X + 260)
-#define AIM_POPUP_BOX_Y				(STD_SCREEN_Y + 140 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define AIM_POPUP_BOX_X				(STD_SCREEN_X + 260 * g_ui.m_stdScreenScale)
+#define AIM_POPUP_BOX_Y				(STD_SCREEN_Y + 140 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y)
 
-#define AIM_POPUP_BOX_WIDTH			162
-#define AIM_POPUP_BOX_STRING1_Y			6
-#define AIM_POPUP_BOX_BUTTON_OFFSET_X		20
-#define AIM_POPUP_BOX_BUTTON_OFFSET_Y		62
+#define AIM_POPUP_BOX_WIDTH			162 * g_ui.m_stdScreenScale
+#define AIM_POPUP_BOX_STRING1_Y			6 * g_ui.m_stdScreenScale
+#define AIM_POPUP_BOX_BUTTON_OFFSET_X		20 * g_ui.m_stdScreenScale
+#define AIM_POPUP_BOX_BUTTON_OFFSET_Y		62 * g_ui.m_stdScreenScale
 #define AIM_POPUP_BOX_SUCCESS			0
 #define AIM_POPUP_BOX_FAILURE			1
 
-#define AIM_MEMBER_HANG_UP_X			(STD_SCREEN_X + 290)
-#define AIM_MEMBER_HANG_UP_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 42
+#define AIM_MEMBER_HANG_UP_X			(STD_SCREEN_X + 290 * g_ui.m_stdScreenScale)
+#define AIM_MEMBER_HANG_UP_Y			AIM_MEMBER_VIDEO_CONF_TERMINAL_Y + AIM_MEMBER_VIDEO_CONF_TITLE_BAR_HEIGHT_Y + 42 * g_ui.m_stdScreenScale
 
 #define VC_CONTACT_STATIC_TIME			30
 #define VC_CONTACT_FUZZY_LINE_TIME		100
@@ -268,7 +268,7 @@
 #define QUOTE_DELAY_NO_ACTION			5
 #define QUOTE_MERC_BUSY	6
 
-#define TEXT_POPUP_WINDOW_Y			(STD_SCREEN_Y + 255 + LAPTOP_SCREEN_WEB_DELTA_Y)
+#define TEXT_POPUP_WINDOW_Y			(STD_SCREEN_Y + 255 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_DELTA_Y)
 #define TEXT_POPUP_STRING_SIZE			512
 
 #define MINIMUM_TALKING_TIME_FOR_MERC		1500
@@ -710,23 +710,23 @@ void RenderAIMMembers()
 	UpdateMercInfo();
 
 	//Draw fee & contract
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_FEE],      FEE_X,          FEE_Y,          0,                  AIM_M_FONT_PREV_NEXT_CONTACT, AIM_M_FEE_CONTRACT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_CONTRACT], AIM_CONTRACT_X, AIM_CONTRACT_Y, AIM_CONTRACT_WIDTH, AIM_M_FONT_PREV_NEXT_CONTACT, AIM_M_FEE_CONTRACT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(CharacterInfo[AIM_MEMBER_FEE],      FEE_X,          FEE_Y,          0,                  AIM_M_FONT_PREV_NEXT_CONTACT, AIM_M_FEE_CONTRACT_COLOR, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
+	DrawTextToScreen(CharacterInfo[AIM_MEMBER_CONTRACT], AIM_CONTRACT_X, AIM_CONTRACT_Y, AIM_CONTRACT_WIDTH, AIM_M_FONT_PREV_NEXT_CONTACT, AIM_M_FEE_CONTRACT_COLOR, FONT_MCOLOR_TRANSPARENT, RIGHT_JUSTIFIED);
 
 	//Draw pay period (day, week, 2 week)
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_1_DAY],   ONEDAY_X,  EXPLEVEL_Y,    AIM_CONTRACT_WIDTH, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_1_WEEK],  ONEWEEK_X, MARKSMAN_Y,    AIM_CONTRACT_WIDTH, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_2_WEEKS], TWOWEEK_X, MECHANAICAL_Y, AIM_CONTRACT_WIDTH, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(CharacterInfo[AIM_MEMBER_1_DAY],   ONEDAY_X,  EXPLEVEL_Y,    AIM_CONTRACT_WIDTH, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_TRANSPARENT, RIGHT_JUSTIFIED);
+	DrawTextToScreen(CharacterInfo[AIM_MEMBER_1_WEEK],  ONEWEEK_X, MARKSMAN_Y,    AIM_CONTRACT_WIDTH, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_TRANSPARENT, RIGHT_JUSTIFIED);
+	DrawTextToScreen(CharacterInfo[AIM_MEMBER_2_WEEKS], TWOWEEK_X, MECHANAICAL_Y, AIM_CONTRACT_WIDTH, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_TRANSPARENT, RIGHT_JUSTIFIED);
 
 	//Display AIM Member text
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_ACTIVE_MEMBERS], AIM_MEMBER_ACTIVE_TEXT_X, AIM_MEMBER_ACTIVE_TEXT_Y, AIM_MEMBER_ACTIVE_TEXT_WIDTH, AIM_MAINTITLE_FONT, AIM_M_ACTIVE_MEMBER_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(CharacterInfo[AIM_MEMBER_ACTIVE_MEMBERS], AIM_MEMBER_ACTIVE_TEXT_X, AIM_MEMBER_ACTIVE_TEXT_Y, AIM_MEMBER_ACTIVE_TEXT_WIDTH, AIM_MAINTITLE_FONT, AIM_M_ACTIVE_MEMBER_TITLE_COLOR, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 	//Display Option Gear Cost text
-	DrawTextToScreen(CharacterInfo[AIM_MEMBER_OPTIONAL_GEAR], AIM_MEMBER_OPTIONAL_GEAR_X, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(CharacterInfo[AIM_MEMBER_OPTIONAL_GEAR], AIM_MEMBER_OPTIONAL_GEAR_X, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 	MERCPROFILESTRUCT const& p = GetProfile(gbCurrentSoldier);
 	uiPosX = AIM_MEMBER_OPTIONAL_GEAR_X + StringPixLength( CharacterInfo[AIM_MEMBER_OPTIONAL_GEAR], AIM_M_FONT_STATIC_TEXT) + 5;
-	DrawTextToScreen(SPrintMoney(p.usOptionalGearCost), uiPosX, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(SPrintMoney(p.usOptionalGearCost), uiPosX, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 	DisableAimButton();
 
@@ -770,13 +770,13 @@ void RenderAIMMembers()
 void DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, SGPFont const font, UINT32 ubColor)
 {
 	ST::string sStr = ST::format("{}", iNumber);
-	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, font, ubColor, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, font, ubColor, FONT_MCOLOR_TRANSPARENT, RIGHT_JUSTIFIED);
 }
 
 
 static void DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, SGPFont const font, UINT32 ubColor)
 {
-	DrawTextToScreen(SPrintMoney(iNumber), usLocX, usLocY, bWidth, font, ubColor, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(SPrintMoney(iNumber), usLocX, usLocY, bWidth, font, ubColor, FONT_MCOLOR_TRANSPARENT, RIGHT_JUSTIFIED);
 }
 
 static void SelectFaceRegionCallBackPrimary(MOUSE_REGION* pRegion, UINT32 iReason)
@@ -830,12 +830,15 @@ static void UpdateMercInfo(void)
 		sMedicalString = ST::format("{} {}", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ]);
 
 		// If the string will be displayed in more then 2 lines, recenter the string
-		if (DisplayWrappedString(0, 0, AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, sMedicalString, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT) / GetFontHeight(AIM_FONT12ARIAL) > 2)
+		if (DisplayWrappedString(0, 0, AIM_MEDICAL_DEPOSIT_WIDTH, 2 * g_ui.m_stdScreenScale,
+					 AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, sMedicalString, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT) / GetFontHeight(AIM_FONT12ARIAL) > 2)
 		{
-			DisplayWrappedString(AIM_MEDICAL_DEPOSIT_X, AIM_MEDICAL_DEPOSIT_Y - GetFontHeight(AIM_FONT12ARIAL), AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, sMedicalString, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+			DisplayWrappedString(AIM_MEDICAL_DEPOSIT_X, AIM_MEDICAL_DEPOSIT_Y - GetFontHeight(AIM_FONT12ARIAL),
+					     AIM_MEDICAL_DEPOSIT_WIDTH, 2 * g_ui.m_stdScreenScale, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, sMedicalString, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 		}
 		else
-			DisplayWrappedString(AIM_MEDICAL_DEPOSIT_X, AIM_MEDICAL_DEPOSIT_Y, AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, sMedicalString, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+			DisplayWrappedString(AIM_MEDICAL_DEPOSIT_X, AIM_MEDICAL_DEPOSIT_Y,
+					     AIM_MEDICAL_DEPOSIT_WIDTH, 2 * g_ui.m_stdScreenScale, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, sMedicalString, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 	}
 
 	ST::string MercInfoString;
@@ -843,12 +846,14 @@ static void UpdateMercInfo(void)
 	LoadMercBioInfo( gbCurrentSoldier, MercInfoString, AdditionalInfoString);
 	if( MercInfoString[0] != 0)
 	{
-		DisplayWrappedString(AIM_MERC_INFO_X, AIM_MERC_INFO_Y, AIM_MERC_INFO_WIDTH, 2, AIM_M_FONT_DYNAMIC_TEXT, AIM_FONT_MCOLOR_WHITE, MercInfoString, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DisplayWrappedString(AIM_MERC_INFO_X, AIM_MERC_INFO_Y,
+				     AIM_MERC_INFO_WIDTH, 2 * g_ui.m_stdScreenScale, AIM_M_FONT_DYNAMIC_TEXT, AIM_FONT_MCOLOR_WHITE, MercInfoString, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 	}
 	if( AdditionalInfoString[0] != 0)
 	{
-		DrawTextToScreen(CharacterInfo[AIM_MEMBER_ADDTNL_INFO], AIM_MERC_ADD_X, AIM_MERC_ADD_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-		DisplayWrappedString(AIM_MERC_ADD_INFO_X, AIM_MERC_ADD_INFO_Y, AIM_MERC_INFO_WIDTH, 2, AIM_M_FONT_DYNAMIC_TEXT, AIM_FONT_MCOLOR_WHITE, AdditionalInfoString, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(CharacterInfo[AIM_MEMBER_ADDTNL_INFO], AIM_MERC_ADD_X, AIM_MERC_ADD_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
+		DisplayWrappedString(AIM_MERC_ADD_INFO_X, AIM_MERC_ADD_INFO_Y,
+				     AIM_MERC_INFO_WIDTH, 2 * g_ui.m_stdScreenScale, AIM_M_FONT_DYNAMIC_TEXT, AIM_FONT_MCOLOR_WHITE, AdditionalInfoString, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 	}
 }
 
@@ -866,7 +871,7 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 	// If the merc's inventory has already been purchased, don't display the inventory
 	if (p.ubMiscFlags & PROFILE_MISC_FLAG_ALREADY_USED_ITEMS) return;
 
-	INT16       x       = WEAPONBOX_X + 3; // + 3 (1 to take care of the shadow, +2 to get past the weapon box border)
+	INT16       x       = WEAPONBOX_X + 3 * g_ui.m_stdScreenScale; // + 3 (1 to take care of the shadow, +2 to get past the weapon box border)
 	INT16 const y       = WEAPONBOX_Y;
 	UINT8       n_items = 0;
 	for (UINT8 i = 0; i < NUM_INV_SLOTS; ++i)
@@ -885,7 +890,7 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		if (gamepolicy(f_draw_item_shadow))
 		{
 			// Blt the shadow of the item
-			BltVideoObjectOutlineShadow(FRAME_BUFFER, item_vo, index, sCenX - 2, sCenY + 2);
+			BltVideoObjectOutlineShadow(FRAME_BUFFER, item_vo, index, sCenX - g_ui.m_stdScreenScale * 2, sCenY + g_ui.m_stdScreenScale * 2);
 		}
 
 		// Blt the item
@@ -896,24 +901,24 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		if (p.bInvNumber[i] > 1)
 		{
 			ST::string buf = ST::format("x{}", p.bInvNumber[i]);
-			DrawTextToScreen(buf, x - 1, y + 20, AIM_MEMBER_WEAPON_NAME_WIDTH, AIM_M_FONT_DYNAMIC_TEXT, AIM_M_WEAPON_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+			DrawTextToScreen(buf, x - 1, y + 20, AIM_MEMBER_WEAPON_NAME_WIDTH, AIM_M_FONT_DYNAMIC_TEXT, AIM_M_WEAPON_TEXT_COLOR, FONT_MCOLOR_TRANSPARENT, RIGHT_JUSTIFIED);
 		}
 
 		// If this will only be a single line, center it in the box
 		auto& item_name = GCM->getItem(usItem)->getShortName();
-		UINT16  const        tx        = x - 1;
+		UINT16  const        tx        = x - 1 * g_ui.m_stdScreenScale;
 		UINT16  const        ty        = AIM_MEMBER_WEAPON_NAME_Y;
 		UINT16  const        tw        = AIM_MEMBER_WEAPON_NAME_WIDTH;
 		SGPFont const        tf        = AIM_M_WEAPON_TEXT_FONT;
 		UINT32  const        tc        = AIM_M_WEAPON_TEXT_COLOR;
-		UINT32  const        tb        = FONT_MCOLOR_BLACK;
+		UINT32  const        tb        = FONT_MCOLOR_TRANSPARENT;
 		if (DisplayWrappedString(tx, ty, tw, 2, tf, tc, item_name, tb, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT) / GetFontHeight(tf) == 1)
 		{
-			DisplayWrappedString(tx, ty + GetFontHeight(tf) / 2, tw, 2, tf, tc, item_name, tb, CENTER_JUSTIFIED);
+			DisplayWrappedString(tx, ty + GetFontHeight(tf) / 2, tw, 2 * g_ui.m_stdScreenScale, tf, tc, item_name, tb, CENTER_JUSTIFIED);
 		}
 		else
 		{
-			DisplayWrappedString(tx, ty, tw, 2, tf, tc, item_name, tb, CENTER_JUSTIFIED);
+			DisplayWrappedString(tx, ty, tw, 2 * g_ui.m_stdScreenScale, tf, tc, item_name, tb, CENTER_JUSTIFIED);
 		}
 
 		if (++n_items >= WEAPONBOX_NUMBER) break;
@@ -990,8 +995,7 @@ try
 	if (IsMercDead(p))
 	{
 		// the merc is dead, so shade the face red
-		face->pShades[0] = RGBA(255, 55, 55, 0x7f); // TESTME: maxrd2 - Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
-		face->CurrentShade(0);
+		face->SetShadeColor(DEAD_MERC_SHADE);
 		shaded = FALSE;
 		text   = AimPopUpText[AIM_MEMBER_DEAD];
 	}
@@ -1028,7 +1032,7 @@ try
 
 	if (!text.empty())
 	{
-		DrawTextToScreen(text, FACE_X + 1, FACE_Y + 107, FACE_WIDTH, FONT14ARIAL, 145, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		DrawTextToScreen(text, FACE_X + 1 * g_ui.m_stdScreenScale, FACE_Y + 107 * g_ui.m_stdScreenScale, FACE_WIDTH, FONT14ARIAL, FONT_COLOR_P145, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 	}
 }
 catch (...) { /* XXX ignore */ }
@@ -1039,7 +1043,7 @@ static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const ST
 
 static void DrawStatColored(const UINT16 x, const UINT16 y, const ST::string stat, const INT32 val, const UINT32 color)
 {
-	DrawTextToScreen(stat, x, y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(stat, x, y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 	DisplayDots(x, y, x + STAT_NAME_WIDTH, stat);
 	DrawNumeralsToScreen(val, 3, x + STAT_VALUE_DX, y, AIM_M_NUMBER_FONT, color);
 }
@@ -1055,7 +1059,7 @@ static void DrawStat(UINT16 x, UINT16 y, const ST::string& stat, INT32 val)
 static void DisplayMercStats(MERCPROFILESTRUCT const& p)
 {
 	//Name
-	DrawTextToScreen(p.zName, NAME_X, NAME_Y, 0, FONT14ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(p.zName, NAME_X, NAME_Y, 0, FONT14ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 
 	//First column in stats box.  Health, Agility, dexterity, strength, leadership, wisdom
 	const UINT16 x1 = STATS_FIRST_COL;
@@ -1086,7 +1090,7 @@ static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const ST
 	usPosX = usStatX;
 	for(i=usNameX + usStringLength; i <= usPosX; usPosX-=7)
 	{
-		DrawTextToScreen(".", usPosX, usNameY, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(".", usPosX, usNameY, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 	}
 }
 
@@ -1285,12 +1289,12 @@ static void DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const& p)
 	if( gubVideoConferencingMode == AIM_VIDEO_INIT_MODE)
 	{
 		sMercName = VideoConfercingText[AIM_MEMBER_CONNECTING];
-		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 	}
 	else
 	{
 		sMercName = ST::format("{} {}", VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], p.zName);
-		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 	}
 
 	//Display Contract charge text
@@ -1298,7 +1302,7 @@ static void DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const& p)
 	{
 		// Display the contract charge
 		SetFontShadow(AIM_M_VIDEO_NAME_SHADOWCOLOR);
-		DrawTextToScreen(VideoConfercingText[AIM_MEMBER_CONTRACT_CHARGE], AIM_CONTRACT_CHARGE_X, AIM_CONTRACT_CHARGE_Y, 0, FONT12ARIAL, AIM_M_VIDEO_NAME_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(VideoConfercingText[AIM_MEMBER_CONTRACT_CHARGE], AIM_CONTRACT_CHARGE_X, AIM_CONTRACT_CHARGE_Y, 0, FONT12ARIAL, AIM_M_VIDEO_NAME_COLOR, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 		SetFontShadow(DEFAULT_SHADOW);
 	}
 
@@ -1329,8 +1333,8 @@ static void DisplayMercsVideoFace(void)
 	INT32       const  h = e.usHeight;
 
 	// Draw a drop shadow
-	FRAME_BUFFER->ShadowRect(x + 3, y + h, x + w,     y + h + 3); // Horizontal
-	FRAME_BUFFER->ShadowRect(x + w, y + 3, x + w + 3, y + h);     // Vertical
+	FRAME_BUFFER->ShadowRect(x + 3 * g_ui.m_stdScreenScale, y + h, x + w,     y + h + 3 * g_ui.m_stdScreenScale); // Horizontal
+	FRAME_BUFFER->ShadowRect(x + w, y + 3 * g_ui.m_stdScreenScale, x + w + 3 * g_ui.m_stdScreenScale, y + h);     // Vertical
 
 	BltVideoObject(FRAME_BUFFER, guiVideoConfTerminal, 0, x, y);
 
@@ -1355,7 +1359,7 @@ static void DrawButtonSelection(GUI_BUTTON const* const btn, bool const selected
 		y += AIM_SELECT_LIGHT_OFF_Y;
 	}
 	UINT32 const fill_color = selected ? RGB(0, 255, 0) : RGB(0, 0, 0);
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + 8, y + 8, fill_color);
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + 8 * g_ui.m_stdScreenScale, y + 8 * g_ui.m_stdScreenScale, fill_color);
 }
 
 
@@ -1424,7 +1428,8 @@ static void DisplayMercChargeAmount(void)
 	{
 		wTemp = wDollarTemp;
 	}
-	DrawTextToScreen(wTemp, AIM_CONTRACT_CHARGE_AMOUNNT_X + 1, AIM_CONTRACT_CHARGE_AMOUNNT_Y + 3, 0, AIM_M_VIDEO_CONTRACT_AMOUNT_FONT, AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(wTemp, AIM_CONTRACT_CHARGE_AMOUNNT_X + 1 * g_ui.m_stdScreenScale, AIM_CONTRACT_CHARGE_AMOUNNT_Y + 3 * g_ui.m_stdScreenScale,
+			 0, AIM_M_VIDEO_CONTRACT_AMOUNT_FONT, AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 }
 
 
@@ -1490,8 +1495,12 @@ static BOOLEAN DisplayAimPopUpBox()
 	SetFontShadow(AIM_M_VIDEO_NAME_SHADOWCOLOR);
 
 	y += AIM_POPUP_BOX_STRING1_Y;
-	if (sPopUpString1[0] != '\0') y += DisplayWrappedString(usPopUpBoxPosX, y,     AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString1, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-	if (sPopUpString2[0] != '\0')      DisplayWrappedString(usPopUpBoxPosX, y + 4, AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString2, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	if (sPopUpString1[0] != '\0') y += DisplayWrappedString(usPopUpBoxPosX, y,
+								AIM_POPUP_BOX_WIDTH, 2 * g_ui.m_stdScreenScale,
+								AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString1, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
+	if (sPopUpString2[0] != '\0')      DisplayWrappedString(usPopUpBoxPosX, y + 4 * g_ui.m_stdScreenScale,
+								AIM_POPUP_BOX_WIDTH, 2 * g_ui.m_stdScreenScale,
+								AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString2, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
 	SetFontShadow(DEFAULT_SHADOW);
 	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
@@ -1680,14 +1689,14 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 	//if( !gfIsAnsweringMachineActive )
 	{
 		//Test
-		SGPBox const SrcRect = { 0, 0, 48, 43 };
+		SGPBox const SrcRect = { 0, 0, UINT16(48 * g_ui.m_stdScreenScale), UINT16(43 * g_ui.m_stdScreenScale) };
 
 		SGPBox const DestRect =
 		{
-			(UINT16)(AIM_MEMBER_VIDEO_FACE_X),
-			(UINT16)(AIM_MEMBER_VIDEO_FACE_Y),
-			AIM_MEMBER_VIDEO_FACE_WIDTH,
-			AIM_MEMBER_VIDEO_FACE_HEIGHT
+			UINT16(AIM_MEMBER_VIDEO_FACE_X),
+			UINT16(AIM_MEMBER_VIDEO_FACE_Y),
+			UINT16(AIM_MEMBER_VIDEO_FACE_WIDTH),
+			UINT16(AIM_MEMBER_VIDEO_FACE_HEIGHT)
 		};
 
 		//Blt the face surface to the video background surface
@@ -1695,14 +1704,15 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 
 		//if the merc is not at home and the players is leaving a message, shade the players face
 		if( gfIsAnsweringMachineActive )
-			FRAME_BUFFER->ShadowRect(DestRect.x, DestRect.y, DestRect.x + DestRect.w - 1, DestRect.y + DestRect.h - 1);
+			FRAME_BUFFER->ShadowRect(DestRect.x, DestRect.y, DestRect.x + DestRect.w - 1 * g_ui.m_stdScreenScale, DestRect.y + DestRect.h - 1 * g_ui.m_stdScreenScale);
 
 
 		//If the answering machine graphics is up, place a message on the screen
 		if( gfIsAnsweringMachineActive )
 		{
 			//display a message over the mercs face
-			DisplayWrappedString(AIM_MEMBER_VIDEO_FACE_X, AIM_MEMBER_VIDEO_FACE_Y + 20, AIM_MEMBER_VIDEO_FACE_WIDTH, 2, FONT14ARIAL, 145, AimPopUpText[AIM_MEMBER_PRERECORDED_MESSAGE], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+			DisplayWrappedString(AIM_MEMBER_VIDEO_FACE_X, AIM_MEMBER_VIDEO_FACE_Y + 20 * g_ui.m_stdScreenScale,
+					     AIM_MEMBER_VIDEO_FACE_WIDTH, 2 * g_ui.m_stdScreenScale, FONT14ARIAL, 145, AimPopUpText[AIM_MEMBER_PRERECORDED_MESSAGE], FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 		}
 
 
@@ -2288,9 +2298,9 @@ static void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn, UINT32 reason)
 
 static GUIButtonRef MakeButtonVideo(BUTTON_PICS* img, const ST::string& text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
-	const INT16 txt_col    = AIM_M_VIDEO_NAME_COLOR;
-	const INT16 shadow_col = AIM_M_VIDEO_NAME_SHADOWCOLOR;
-	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, txt_col, shadow_col, txt_col, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL,
+							 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR,
+							 AIM_M_VIDEO_NAME_COLOR, AIM_M_VIDEO_NAME_SHADOWCOLOR, x, y, MSYS_PRIORITY_HIGH, click);
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 	return btn;
 }
@@ -2763,9 +2773,9 @@ static BOOLEAN DisplayMovingTitleBar(BOOLEAN fForward)
 		ubCount = (fForward ? 1 : AIM_MEMBER_VIDEO_TITLE_ITERATIONS - 1);
 	}
 
-	UINT16 const usPosX      = STD_SCREEN_X + Interpolate(331, 125, ubCount);
-	UINT16 const usPosRightX = STD_SCREEN_X + Interpolate(405, 490, ubCount);
-	UINT16 const usPosY      = Interpolate(AIM_MEMBER_VIDEO_TITLE_START_Y, STD_SCREEN_Y + 96, ubCount);
+	UINT16 const usPosX      = STD_SCREEN_X + Interpolate(331 * g_ui.m_stdScreenScale, 125 * g_ui.m_stdScreenScale, ubCount);
+	UINT16 const usPosRightX = STD_SCREEN_X + Interpolate(405 * g_ui.m_stdScreenScale, 490 * g_ui.m_stdScreenScale, ubCount);
+	UINT16 const usPosY      = Interpolate(AIM_MEMBER_VIDEO_TITLE_START_Y, STD_SCREEN_Y + 96 * g_ui.m_stdScreenScale, ubCount);
 	SGPBox const SrcRect     = { 0,      0,      AIM_MEMBER_VIDEO_TITLE_BAR_WIDTH, AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT };
 	SGPBox const DestRect    = { usPosX, usPosY, (UINT16)(usPosRightX - usPosX),             AIM_MEMBER_VIDEO_TITLE_BAR_HEIGHT };
 
@@ -2948,9 +2958,9 @@ static void DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack(MessageB
 static void DisplayAimMemberClickOnFaceHelpText(void)
 {
 	//display the 'left and right click' onscreen help msg
-	DrawTextToScreen(AimMemberText[0], AIM_FI_LEFT_CLICK_TEXT_X, AIM_FI_LEFT_CLICK_TEXT_Y,                                   AIM_FI_CLICK_TEXT_WIDTH, AIM_FI_HELP_TITLE_FONT, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-	DrawTextToScreen(AimMemberText[1], AIM_FI_LEFT_CLICK_TEXT_X, AIM_FI_LEFT_CLICK_TEXT_Y + AIM_FI_CLICK_DESC_TEXT_Y_OFFSET, AIM_FI_CLICK_TEXT_WIDTH, AIM_FI_HELP_FONT,       AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(AimMemberText[0], AIM_FI_LEFT_CLICK_TEXT_X, AIM_FI_LEFT_CLICK_TEXT_Y,                                   AIM_FI_CLICK_TEXT_WIDTH, AIM_FI_HELP_TITLE_FONT, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
+	DrawTextToScreen(AimMemberText[1], AIM_FI_LEFT_CLICK_TEXT_X, AIM_FI_LEFT_CLICK_TEXT_Y + AIM_FI_CLICK_DESC_TEXT_Y_OFFSET, AIM_FI_CLICK_TEXT_WIDTH, AIM_FI_HELP_FONT,       AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 
-	DrawTextToScreen(AimMemberText[2], AIM_FI_RIGHT_CLICK_TEXT_X, AIM_FI_LEFT_CLICK_TEXT_Y,                                   AIM_FI_CLICK_TEXT_WIDTH, AIM_FI_HELP_TITLE_FONT, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-	DrawTextToScreen(AimMemberText[3], AIM_FI_RIGHT_CLICK_TEXT_X, AIM_FI_LEFT_CLICK_TEXT_Y + AIM_FI_CLICK_DESC_TEXT_Y_OFFSET, AIM_FI_CLICK_TEXT_WIDTH, AIM_FI_HELP_FONT,       AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	DrawTextToScreen(AimMemberText[2], AIM_FI_RIGHT_CLICK_TEXT_X, AIM_FI_LEFT_CLICK_TEXT_Y,                                   AIM_FI_CLICK_TEXT_WIDTH, AIM_FI_HELP_TITLE_FONT, AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
+	DrawTextToScreen(AimMemberText[3], AIM_FI_RIGHT_CLICK_TEXT_X, AIM_FI_LEFT_CLICK_TEXT_Y + AIM_FI_CLICK_DESC_TEXT_Y_OFFSET, AIM_FI_CLICK_TEXT_WIDTH, AIM_FI_HELP_FONT,       AIM_FONT_MCOLOR_WHITE, FONT_MCOLOR_TRANSPARENT, CENTER_JUSTIFIED);
 }

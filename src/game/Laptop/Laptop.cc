@@ -110,11 +110,11 @@ enum
 #define DOWNLOAD_FONT FONT12ARIAL
 
 
-#define BOOK_X      (111 + STD_SCREEN_X)
-#define BOOK_TOP_Y  ( 79 + STD_SCREEN_Y)
-#define BOOK_HEIGHT  12
-#define DOWN_HEIGHT  19
-#define BOOK_WIDTH  100
+#define BOOK_X      (g_ui.m_stdScreenScale * 111 + STD_SCREEN_X)
+#define BOOK_TOP_Y  (g_ui.m_stdScreenScale *  79 + STD_SCREEN_Y)
+#define BOOK_HEIGHT  (g_ui.m_stdScreenScale * 12)
+#define DOWN_HEIGHT  (g_ui.m_stdScreenScale * 19)
+#define BOOK_WIDTH  (g_ui.m_stdScreenScale * 100)
 
 
 #define LONG_UNIT_TIME        120
@@ -122,17 +122,17 @@ enum
 #define FAST_UNIT_TIME          3
 #define FASTEST_UNIT_TIME       2
 #define ALMOST_FAST_UNIT_TIME  25
-#define DOWNLOAD_X            (300 + STD_SCREEN_X)
-#define DOWNLOAD_Y            (200 + STD_SCREEN_Y)
-#define LAPTOP_WINDOW_X       DOWNLOAD_X + 12
-#define LAPTOP_WINDOW_Y       DOWNLOAD_Y + 25
-#define LAPTOP_BAR_Y          LAPTOP_WINDOW_Y + 2
-#define LAPTOP_BAR_X          LAPTOP_WINDOW_X + 1
-#define UNIT_WIDTH              4
-#define DOWN_STRING_X         DOWNLOAD_X + 47
-#define DOWN_STRING_Y         DOWNLOAD_Y +  5
-#define LAPTOP_TITLE_ICONS_X  (113 + STD_SCREEN_X)
-#define LAPTOP_TITLE_ICONS_Y  ( 27 + STD_SCREEN_Y)
+#define DOWNLOAD_X            (g_ui.m_stdScreenScale * 300 + STD_SCREEN_X)
+#define DOWNLOAD_Y            (g_ui.m_stdScreenScale * 200 + STD_SCREEN_Y)
+#define LAPTOP_WINDOW_X       (DOWNLOAD_X + g_ui.m_stdScreenScale * 12)
+#define LAPTOP_WINDOW_Y       (DOWNLOAD_Y + g_ui.m_stdScreenScale * 25)
+#define LAPTOP_BAR_Y          (LAPTOP_WINDOW_Y + g_ui.m_stdScreenScale * 2)
+#define LAPTOP_BAR_X          (LAPTOP_WINDOW_X + g_ui.m_stdScreenScale * 1)
+#define UNIT_WIDTH              (g_ui.m_stdScreenScale * 4)
+#define DOWN_STRING_X         (DOWNLOAD_X + g_ui.m_stdScreenScale * 47)
+#define DOWN_STRING_Y         (DOWNLOAD_Y + g_ui.m_stdScreenScale *  5)
+#define LAPTOP_TITLE_ICONS_X  (g_ui.m_stdScreenScale * 113 + STD_SCREEN_X)
+#define LAPTOP_TITLE_ICONS_Y  (g_ui.m_stdScreenScale *  27 + STD_SCREEN_Y)
 
 // HD flicker times
 #define HD_FLICKER_TIME 3000
@@ -140,22 +140,22 @@ enum
 
 
 #define NUMBER_OF_LAPTOP_TITLEBAR_ITERATIONS  18
-#define LAPTOP_TITLE_BAR_WIDTH               500
-#define LAPTOP_TITLE_BAR_HEIGHT               24
+#define LAPTOP_TITLE_BAR_WIDTH               (g_ui.m_stdScreenScale * 500)
+#define LAPTOP_TITLE_BAR_HEIGHT              (g_ui.m_stdScreenScale * 24)
 
-#define LAPTOP_TITLE_BAR_TOP_LEFT_X          (111 + STD_SCREEN_X)
-#define LAPTOP_TITLE_BAR_TOP_LEFT_Y          ( 25 + STD_SCREEN_Y)
-#define LAPTOP_TITLE_BAR_TOP_RIGHT_X         (610 + STD_SCREEN_X)
+#define LAPTOP_TITLE_BAR_TOP_LEFT_X          (g_ui.m_stdScreenScale * 111 + STD_SCREEN_X)
+#define LAPTOP_TITLE_BAR_TOP_LEFT_Y          (g_ui.m_stdScreenScale *  25 + STD_SCREEN_Y)
+#define LAPTOP_TITLE_BAR_TOP_RIGHT_X         (g_ui.m_stdScreenScale * 610 + STD_SCREEN_X)
 
-#define LAPTOP_TITLE_BAR_ICON_OFFSET_X         (5 + STD_SCREEN_X)
-#define LAPTOP_TITLE_BAR_ICON_OFFSET_Y         (2 + STD_SCREEN_Y)
-#define LAPTOP_TITLE_BAR_TEXT_OFFSET_X        (29 + STD_SCREEN_X)
-#define LAPTOP_TITLE_BAR_TEXT_OFFSET_Y         (8 + STD_SCREEN_Y)
+#define LAPTOP_TITLE_BAR_ICON_OFFSET_X         (g_ui.m_stdScreenScale * 5 + STD_SCREEN_X)
+#define LAPTOP_TITLE_BAR_ICON_OFFSET_Y         (g_ui.m_stdScreenScale * 2 + STD_SCREEN_Y)
+#define LAPTOP_TITLE_BAR_TEXT_OFFSET_X        (g_ui.m_stdScreenScale * 29 + STD_SCREEN_X)
+#define LAPTOP_TITLE_BAR_TEXT_OFFSET_Y         (g_ui.m_stdScreenScale * 8 + STD_SCREEN_Y)
 
 #define LAPTOP_PROGRAM_ICON_X      LAPTOP_TITLE_BAR_TOP_LEFT_X
 #define LAPTOP_PROGRAM_ICON_Y      LAPTOP_TITLE_BAR_TOP_LEFT_Y
-#define LAPTOP_PROGRAM_ICON_WIDTH  20
-#define LAPTOP_PROGRAM_ICON_HEIGHT 20
+#define LAPTOP_PROGRAM_ICON_WIDTH  (g_ui.m_stdScreenScale * 20)
+#define LAPTOP_PROGRAM_ICON_HEIGHT (g_ui.m_stdScreenScale * 20)
 #define DISPLAY_TIME_FOR_WEB_BOOKMARK_NOTIFY 2000
 
 // the wait time for closing of laptop animation/delay
@@ -164,10 +164,10 @@ enum
 static SGPVSurface* guiTitleBarSurface;
 static BOOLEAN gfTitleBarSurfaceAlreadyActive = FALSE;
 
-#define LAPTOP__NEW_FILE_ICON_X  (83 + STD_SCREEN_X)
-#define LAPTOP__NEW_FILE_ICON_Y (412 + STD_SCREEN_Y)
+#define LAPTOP__NEW_FILE_ICON_X  (g_ui.m_stdScreenScale * 83 + STD_SCREEN_X)
+#define LAPTOP__NEW_FILE_ICON_Y (g_ui.m_stdScreenScale * 412 + STD_SCREEN_Y)
 
-#define LAPTOP__NEW_EMAIL_ICON_X ((83 - 16) + STD_SCREEN_X)
+#define LAPTOP__NEW_EMAIL_ICON_X (g_ui.m_stdScreenScale * (83 - 16) + STD_SCREEN_X)
 #define LAPTOP__NEW_EMAIL_ICON_Y LAPTOP__NEW_FILE_ICON_Y
 
 
@@ -289,7 +289,7 @@ static BOOLEAN fHardDriveLightOn = FALSE;
 static BOOLEAN fFlickerHD = FALSE;
 
 // the screens limiting rect
-static const SGPRect LaptopScreenRect = { LAPTOP_UL_X, (UINT16)(LAPTOP_UL_Y - 5), (UINT16)(LAPTOP_SCREEN_LR_X + 2), (UINT16)(LAPTOP_SCREEN_LR_Y + 5 + 19) };
+static SGPRect LaptopScreenRect = {0};
 
 
 // the sub pages vistsed or not status within the web browser
@@ -348,6 +348,13 @@ static void InitBookMarkList(void);
 //This is called only once at game initialization.
 void LaptopScreenInit(void)
 {
+	LaptopScreenRect = {
+		LAPTOP_UL_X,
+		(UINT16)(LAPTOP_UL_Y - 5 * g_ui.m_stdScreenScale),
+		(UINT16)(LAPTOP_SCREEN_LR_X + 2 * g_ui.m_stdScreenScale),
+		(UINT16)(LAPTOP_SCREEN_LR_Y + 5 * g_ui.m_stdScreenScale + 19 * g_ui.m_stdScreenScale)
+	};
+
 	//Memset the whole structure, to make sure of no 'JUNK'
 	LaptopSaveInfo = LaptopSaveInfoStruct{};
 
@@ -644,8 +651,12 @@ static void RenderLapTopImage(void)
 {
 	if (fMaximizingProgram || fMinizingProgram) return;
 
-	BltVideoObject(FRAME_BUFFER, guiLAPTOP,           0, LAPTOP_X,      LAPTOP_Y);
-	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 1, LAPTOP_X + 25, LAPTOP_Y + 23);
+	BltVideoObject(FRAME_BUFFER, guiLAPTOP,           0,
+		       LAPTOP_X,
+		       LAPTOP_Y);
+	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 1,
+		       LAPTOP_X + 25 * g_ui.m_stdScreenScale,
+		       LAPTOP_Y + 23 * g_ui.m_stdScreenScale);
 
 	MarkButtonsDirty();
 }
@@ -1301,11 +1312,14 @@ static void ExitLaptopMode(LaptopMode uiMode)
 
 static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const ST::string& text, const ST::string& help_text)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/buttonsforlaptop.sti", idx, idx + 8, (29 + STD_SCREEN_X), (y + STD_SCREEN_Y), MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/buttonsforlaptop.sti", idx, idx + 8,
+						      29 * g_ui.m_stdScreenScale + STD_SCREEN_X,
+						      y + STD_SCREEN_Y,
+						      MSYS_PRIORITY_HIGH, click);
 	gLaptopButton[idx] = btn;
 	btn->SetFastHelpText(help_text);
-	btn->SpecifyTextOffsets(off_x, 11, TRUE);
-	btn->SpecifyGeneralTextAttributes(text, FONT10ARIAL, 2, 0);
+	btn->SpecifyTextOffsets(off_x, 11 * g_ui.m_stdScreenScale, TRUE);
+	btn->SpecifyGeneralTextAttributes(text, FONT10ARIAL, FONT_MCOLOR_BLACK, FONT_MCOLOR_TRANSPARENT);
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
@@ -1322,13 +1336,20 @@ static void WWWRegionButtonCallbackSecondary(GUI_BUTTON* btn, UINT32 reason);
 
 static void CreateLaptopButtons(void)
 {
-	MakeButton(0,  66, EmailRegionButtonCallback,     30, pLaptopIcons[0], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_EMAIL]);
-	MakeButton(1,  98, ButtonCallbackPrimarySecondary(WWWRegionButtonCallbackPrimary, WWWRegionButtonCallbackSecondary), 30, pLaptopIcons[1], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_BROWSE_VARIOUS_WEB_SITES]);
-	MakeButton(2, 130, FilesRegionButtonCallback,     30, pLaptopIcons[5], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_FILES_AND_EMAIL_ATTACHMENTS]);
-	MakeButton(3, 194, PersonnelRegionButtonCallback, 30, pLaptopIcons[3], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_TEAM_INFO]);
-	MakeButton(4, 162, HistoryRegionButtonCallback,   30, pLaptopIcons[4], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_READ_LOG_OF_EVENTS]);
-	MakeButton(5, 241, FinancialRegionButtonCallback, 30, pLaptopIcons[2], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_FINANCIAL_SUMMARY_AND_HISTORY]);
-	MakeButton(6, 378, BtnOnCallback,                 25, pLaptopIcons[6], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_CLOSE_LAPTOP]);
+	MakeButton(0,  66 * g_ui.m_stdScreenScale, EmailRegionButtonCallback,
+		   30 * g_ui.m_stdScreenScale, pLaptopIcons[0], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_EMAIL]);
+	MakeButton(1,  98 * g_ui.m_stdScreenScale, ButtonCallbackPrimarySecondary(WWWRegionButtonCallbackPrimary, WWWRegionButtonCallbackSecondary),
+		   30 * g_ui.m_stdScreenScale, pLaptopIcons[1], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_BROWSE_VARIOUS_WEB_SITES]);
+	MakeButton(2, 130 * g_ui.m_stdScreenScale, FilesRegionButtonCallback,
+		   30 * g_ui.m_stdScreenScale, pLaptopIcons[5], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_FILES_AND_EMAIL_ATTACHMENTS]);
+	MakeButton(3, 194 * g_ui.m_stdScreenScale, PersonnelRegionButtonCallback,
+		   30 * g_ui.m_stdScreenScale, pLaptopIcons[3], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_TEAM_INFO]);
+	MakeButton(4, 162 * g_ui.m_stdScreenScale, HistoryRegionButtonCallback,
+		   30 * g_ui.m_stdScreenScale, pLaptopIcons[4], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_READ_LOG_OF_EVENTS]);
+	MakeButton(5, 241 * g_ui.m_stdScreenScale, FinancialRegionButtonCallback,
+		   30 * g_ui.m_stdScreenScale, pLaptopIcons[2], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_VIEW_FINANCIAL_SUMMARY_AND_HISTORY]);
+	MakeButton(6, 378 * g_ui.m_stdScreenScale, BtnOnCallback,
+		   25 * g_ui.m_stdScreenScale, pLaptopIcons[6], gzLaptopHelpText[LAPTOP_BN_HLP_TXT_CLOSE_LAPTOP]);
 }
 
 
@@ -1648,14 +1669,14 @@ static void DisplayBookMarks(void)
 	if (fMaximizingProgram || fMinizingProgram) return;
 
 	SetFont(BOOK_FONT);
-	SetFontBackground(FONT_BLACK);
+	SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 	SetFontShadow(NO_SHADOW);
 
 	SetFontDestBuffer(FRAME_BUFFER, BOOK_X, BOOK_TOP_Y, BOOK_X + BOOK_WIDTH - 10, SCREEN_HEIGHT);
 
 	// blt in book mark background
-	INT32 const h  = BOOK_HEIGHT + 6;
-	INT32 const sy = BOOK_TOP_Y + 6 + h;
+	INT32 const h  = BOOK_HEIGHT + 6 * g_ui.m_stdScreenScale;
+	INT32 const sy = BOOK_TOP_Y + 6 * g_ui.m_stdScreenScale + h;
 	INT32       y  = sy;
 	for (INT32 i = 0;; ++i)
 	{
@@ -1668,7 +1689,9 @@ static void DisplayBookMarks(void)
 		ST::string txt = pBookMarkStrings[idx != -1 ? idx : CANCEL_STRING];
 		INT16                sX;
 		INT16                sY;
-		FindFontCenterCoordinates(BOOK_X + 3, y + 2, BOOK_WIDTH - 3, h, txt, BOOK_FONT, &sX, &sY);
+		FindFontCenterCoordinates(BOOK_X + 3 * g_ui.m_stdScreenScale, y + 2 * g_ui.m_stdScreenScale,
+					  BOOK_WIDTH - 3 * g_ui.m_stdScreenScale, h,
+					  txt, BOOK_FONT, &sX, &sY);
 		MPrint(sX, sY, txt);
 		y += h;
 		if (idx == -1) break;
@@ -1700,7 +1723,7 @@ static void CreateBookMarkMouseRegions(void)
 	// creates regions based on number of entries
 	for (INT32 i = 0;; ++i)
 	{
-		UINT16        const y = BOOK_TOP_Y + (i + 1) * (BOOK_HEIGHT + 6) + 6;
+		UINT16        const y = BOOK_TOP_Y + (i + 1) * (BOOK_HEIGHT + 6 * g_ui.m_stdScreenScale) + 6 * g_ui.m_stdScreenScale;
 		MOUSE_REGION* const r = &gBookmarkMouseRegions[i];
 		MSYS_DefineRegion(r, BOOK_X, y, BOOK_X + BOOK_WIDTH, y + BOOK_HEIGHT + 6, MSYS_PRIORITY_HIGHEST - 2, CURSOR_LAPTOP_SCREEN, BookmarkMvtCallBack, BookmarkCallBack);
 		MSYS_SetRegionUserData(r, 0, i);
@@ -1959,7 +1982,9 @@ static void DisplayLoadPending(void)
 	ST::string str = (fFastLoadFlag ? pDownloadString[1] : pDownloadString[0]);
 	INT16 sXPosition = 0;
 	INT16 sYPosition = 0;
-	FindFontCenterCoordinates(328, 0, 446 - 328, 0, str, DOWNLOAD_FONT, &sXPosition, &sYPosition);
+	FindFontCenterCoordinates(328 * g_ui.m_stdScreenScale, 0,
+				  (446 - 328)  * g_ui.m_stdScreenScale, 0,
+				  str, DOWNLOAD_FONT, &sXPosition, &sYPosition);
 	MPrint(STD_SCREEN_X + sXPosition, DOWN_STRING_Y, str);
 
 	BltVideoObject(FRAME_BUFFER, guiGRAPHWINDOW, 0, LAPTOP_WINDOW_X, LAPTOP_WINDOW_Y);
@@ -1973,7 +1998,7 @@ static void DisplayLoadPending(void)
 		if (uiUnitTime > uiTempTime) break; // prevent underflow
 	}
 
-	InvalidateRegion(DOWNLOAD_X, DOWNLOAD_Y, DOWNLOAD_X + 150, DOWNLOAD_Y + 100);
+	InvalidateRegion(DOWNLOAD_X, DOWNLOAD_Y, DOWNLOAD_X + 150 * g_ui.m_stdScreenScale, DOWNLOAD_Y + 100 * g_ui.m_stdScreenScale);
 
 	// re draw screen and new mail warning box
 	SetFontShadow(DEFAULT_SHADOW);
@@ -2246,7 +2271,7 @@ static BOOLEAN DisplayTitleBarMaximizeGraphic(BOOLEAN fForward, BOOLEAN fInit, U
 
 	const INT16 sPosBottomY = LAPTOP_TITLE_BAR_HEIGHT;
 
-	SGPBox const SrcRect = { 0, 0, LAPTOP_TITLE_BAR_WIDTH, LAPTOP_TITLE_BAR_HEIGHT };
+	SGPBox const SrcRect = { 0, 0, UINT16(LAPTOP_TITLE_BAR_WIDTH), UINT16(LAPTOP_TITLE_BAR_HEIGHT) };
 
 	//if its the last fram, bit the tittle bar to the final position
 	SGPBox DestRect;
@@ -2345,16 +2370,18 @@ static void HandleSlidingTitleBar(void)
 		UINT16 y;
 		switch (bProgramBeingMaximized)
 		{
-			case LAPTOP_PROGRAM_MAILER:      y = STD_SCREEN_Y +  66; break;
-			case LAPTOP_PROGRAM_FILES:       y = STD_SCREEN_Y + 120; break;
-			case LAPTOP_PROGRAM_FINANCES:    y = STD_SCREEN_Y + 226; break;
-			case LAPTOP_PROGRAM_PERSONNEL:   y = STD_SCREEN_Y + 194; break;
-			case LAPTOP_PROGRAM_HISTORY:     y = STD_SCREEN_Y + 162; break;
-			case LAPTOP_PROGRAM_WEB_BROWSER: y = STD_SCREEN_Y +  99; break;
+			case LAPTOP_PROGRAM_MAILER:      y = STD_SCREEN_Y +  66 * g_ui.m_stdScreenScale; break;
+			case LAPTOP_PROGRAM_FILES:       y = STD_SCREEN_Y + 120 * g_ui.m_stdScreenScale; break;
+			case LAPTOP_PROGRAM_FINANCES:    y = STD_SCREEN_Y + 226 * g_ui.m_stdScreenScale; break;
+			case LAPTOP_PROGRAM_PERSONNEL:   y = STD_SCREEN_Y + 194 * g_ui.m_stdScreenScale; break;
+			case LAPTOP_PROGRAM_HISTORY:     y = STD_SCREEN_Y + 162 * g_ui.m_stdScreenScale; break;
+			case LAPTOP_PROGRAM_WEB_BROWSER: y = STD_SCREEN_Y +  99 * g_ui.m_stdScreenScale; break;
 			default: goto no_display_max;
 		}
 
-		fMaximizingProgram = !DisplayTitleBarMaximizeGraphic(TRUE, fInitTitle, STD_SCREEN_X + 29, y, STD_SCREEN_X + 29 + 20);
+		fMaximizingProgram = !DisplayTitleBarMaximizeGraphic(TRUE, fInitTitle,
+								     STD_SCREEN_X + 29 * g_ui.m_stdScreenScale, y,
+								     STD_SCREEN_X + 29 * g_ui.m_stdScreenScale + 20 * g_ui.m_stdScreenScale);
 		if (!fMaximizingProgram)
 		{
 			RemoveTitleBarMaximizeGraphics();
@@ -2373,16 +2400,18 @@ no_display_max:
 		UINT16 y;
 		switch (bProgramBeingMaximized)
 		{
-			case LAPTOP_PROGRAM_MAILER:      y = STD_SCREEN_Y +  66; break;
-			case LAPTOP_PROGRAM_FILES:       y = STD_SCREEN_Y + 130; break; // XXX only difference to max case
-			case LAPTOP_PROGRAM_FINANCES:    y = STD_SCREEN_Y + 226; break;
-			case LAPTOP_PROGRAM_PERSONNEL:   y = STD_SCREEN_Y + 194; break;
-			case LAPTOP_PROGRAM_HISTORY:     y = STD_SCREEN_Y + 162; break;
-			case LAPTOP_PROGRAM_WEB_BROWSER: y = STD_SCREEN_Y +  99; break;
+			case LAPTOP_PROGRAM_MAILER:      y = STD_SCREEN_Y +  66 * g_ui.m_stdScreenScale; break;
+			case LAPTOP_PROGRAM_FILES:       y = STD_SCREEN_Y + 130 * g_ui.m_stdScreenScale; break; // XXX only difference to max case
+			case LAPTOP_PROGRAM_FINANCES:    y = STD_SCREEN_Y + 226 * g_ui.m_stdScreenScale; break;
+			case LAPTOP_PROGRAM_PERSONNEL:   y = STD_SCREEN_Y + 194 * g_ui.m_stdScreenScale; break;
+			case LAPTOP_PROGRAM_HISTORY:     y = STD_SCREEN_Y + 162 * g_ui.m_stdScreenScale; break;
+			case LAPTOP_PROGRAM_WEB_BROWSER: y = STD_SCREEN_Y +  99 * g_ui.m_stdScreenScale; break;
 			default: goto no_display_min;
 		}
 
-		fMinizingProgram = !DisplayTitleBarMaximizeGraphic(FALSE, fInitTitle, STD_SCREEN_X + 29, y, STD_SCREEN_X + 29 + 20);
+		fMinizingProgram = !DisplayTitleBarMaximizeGraphic(FALSE, fInitTitle,
+								   STD_SCREEN_X + 29 * g_ui.m_stdScreenScale, y,
+								   STD_SCREEN_X + 29 * g_ui.m_stdScreenScale + 20 * g_ui.m_stdScreenScale);
 		if (!fMinizingProgram)
 		{
 			RemoveTitleBarMaximizeGraphics();
@@ -2406,8 +2435,10 @@ no_display_min:;
 static void ShowLights(void)
 {
 	// will show lights depending on state
-	BltVideoObject(FRAME_BUFFER, guiLIGHTS, fPowerLightOn     ? 0 : 1, STD_SCREEN_X + 44, STD_SCREEN_Y + 466);
-	BltVideoObject(FRAME_BUFFER, guiLIGHTS, fHardDriveLightOn ? 0 : 1, STD_SCREEN_X + 88, STD_SCREEN_Y + 466);
+	BltVideoObject(FRAME_BUFFER, guiLIGHTS, fPowerLightOn     ? 0 : 1,
+		       STD_SCREEN_X + 44 * g_ui.m_stdScreenScale, STD_SCREEN_Y + 466 * g_ui.m_stdScreenScale);
+	BltVideoObject(FRAME_BUFFER, guiLIGHTS, fHardDriveLightOn ? 0 : 1,
+		       STD_SCREEN_X + 88 * g_ui.m_stdScreenScale, STD_SCREEN_Y + 466 * g_ui.m_stdScreenScale);
 }
 
 
@@ -2430,7 +2461,7 @@ static void FlickerHDLight(void)
 		uiBaseTime         = 0;
 		uiTotalDifference  = 0;
 		fFlickerHD        = FALSE;
-		InvalidateRegion(88, 466, 102, 477);
+		InvalidateRegion(88 * g_ui.m_stdScreenScale, 466 * g_ui.m_stdScreenScale, 102 * g_ui.m_stdScreenScale, 477 * g_ui.m_stdScreenScale);
 		return;
 	}
 
@@ -2441,7 +2472,7 @@ static void FlickerHDLight(void)
 		if (fLoadPendingFlag) uiTotalDifference = 0;
 
 		fHardDriveLightOn = (Random(2) == 0);
-		InvalidateRegion(88, 466, 102, 477);
+		InvalidateRegion(88 * g_ui.m_stdScreenScale, 466 * g_ui.m_stdScreenScale, 102 * g_ui.m_stdScreenScale, 477 * g_ui.m_stdScreenScale);
 	}
 }
 
@@ -2460,7 +2491,7 @@ static BOOLEAN ExitLaptopDone(void)
 
 	fPowerLightOn = FALSE;
 
-	InvalidateRegion(44, 466, 58, 477);
+	InvalidateRegion(44 * g_ui.m_stdScreenScale, 466 * g_ui.m_stdScreenScale, 58 * g_ui.m_stdScreenScale, 477 * g_ui.m_stdScreenScale);
 	// get the current difference
 	const UINT32 iDifference = GetJA2Clock() - uiBaseTime;
 
@@ -2535,7 +2566,9 @@ static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON* btn, UINT32 reason);
 static void CreateMinimizeButtonForCurrentMode(void)
 {
 	// create minimize button
-	gLaptopMinButton = QuickCreateButtonImg(LAPTOPDIR "/x.sti", 0, 1, STD_SCREEN_X + 590, STD_SCREEN_Y + 30, MSYS_PRIORITY_HIGH, LaptopMinimizeProgramButtonCallback);
+	gLaptopMinButton = QuickCreateButtonImg(LAPTOPDIR "/x.sti", 0, 1,
+						STD_SCREEN_X + 590 * g_ui.m_stdScreenScale, STD_SCREEN_Y + 30 * g_ui.m_stdScreenScale,
+						MSYS_PRIORITY_HIGH, LaptopMinimizeProgramButtonCallback);
 	gLaptopMinButton->SetCursor(CURSOR_LAPTOP_SCREEN);
 }
 
@@ -2695,7 +2728,10 @@ void BlitTitleBarIcons(void)
 
 static void DrawDeskTopBackground(void)
 {
-	BltVideoSurface(FRAME_BUFFER, guiDESKTOP, LAPTOP_SCREEN_UL_X - 2, LAPTOP_SCREEN_UL_Y - 4, NULL);
+	BltVideoSurface(FRAME_BUFFER, guiDESKTOP,
+			LAPTOP_SCREEN_UL_X - 2 * g_ui.m_stdScreenScale,
+			LAPTOP_SCREEN_UL_Y - 4 * g_ui.m_stdScreenScale,
+			NULL);
 }
 
 
@@ -2718,10 +2754,9 @@ void PrintBalance(void)
 
 	ST::string pString = SPrintMoney(LaptopSaveInfo.iCurrentBalance);
 
-	INT32 x = STD_SCREEN_X + 47;
-	INT32 y = STD_SCREEN_Y + 257 + 15;
-	if (gLaptopButton[5]->Clicked())
-	{
+	INT32 x = STD_SCREEN_X + 47 * g_ui.m_stdScreenScale;
+	INT32 y = STD_SCREEN_Y + 257 * g_ui.m_stdScreenScale + 15 * g_ui.m_stdScreenScale;
+	if (gLaptopButton[5]->Clicked()) {
 		++x;
 		++y;
 	}
@@ -2737,10 +2772,9 @@ void PrintNumberOnTeam(void)
 
 	const INT32 iCounter = NumberOfMercsOnPlayerTeam();
 
-	UINT16 usPosX = STD_SCREEN_X + 47;
-	UINT16 usPosY = STD_SCREEN_Y + 194 + 30;
-	if (gLaptopButton[3]->Clicked())
-	{
+	UINT16 usPosX = STD_SCREEN_X + 47 * g_ui.m_stdScreenScale;
+	UINT16 usPosY = STD_SCREEN_Y + 194 * g_ui.m_stdScreenScale + 30 * g_ui.m_stdScreenScale;
+	if (gLaptopButton[3]->Clicked()) {
 		++usPosX;
 		++usPosY;
 	}
@@ -2753,7 +2787,9 @@ void PrintNumberOnTeam(void)
 void PrintDate(void)
 {
 	SetFontAttributes(FONT10ARIAL, FONT_BLACK, NO_SHADOW);
-	MPrint(STD_SCREEN_X + 30 + (70 - StringPixLength(WORLDTIMESTR, FONT10ARIAL)) / 2, (433 + STD_SCREEN_Y), WORLDTIMESTR);
+	MPrint(STD_SCREEN_X + 30 * g_ui.m_stdScreenScale + (70 * g_ui.m_stdScreenScale - StringPixLength(WORLDTIMESTR, FONT10ARIAL)) / 2,
+	       433 * g_ui.m_stdScreenScale + STD_SCREEN_Y,
+	       WORLDTIMESTR);
 	SetFontShadow(DEFAULT_SHADOW);
 }
 
@@ -2862,12 +2898,14 @@ void RenderWWWProgramTitleBar(void)
 
 	if (guiCurrentLaptopMode == LAPTOP_MODE_WWW)
 	{
-		MPrint(STD_SCREEN_X + 140, STD_SCREEN_Y + 33, pWebTitle);
+		MPrint(STD_SCREEN_X + 140 * g_ui.m_stdScreenScale, STD_SCREEN_Y + 33 * g_ui.m_stdScreenScale,
+		       pWebTitle);
 	}
 	else
 	{
-		const INT32 iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW-1;
-		MPrint(STD_SCREEN_X + 140, STD_SCREEN_Y + 33, ST::format("{}  -  {}", pWebTitle, pWebPagesTitles[iIndex]));
+		const INT32 iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW - 1;
+		MPrint(STD_SCREEN_X + 140 * g_ui.m_stdScreenScale, STD_SCREEN_Y + 33 * g_ui.m_stdScreenScale,
+			ST::format("{}  -  {}", pWebTitle, pWebPagesTitles[iIndex]));
 	}
 
 	BlitTitleBarIcons();
@@ -2953,12 +2991,16 @@ static void LaptopProgramIconMinimizeCallback(MOUSE_REGION* pRegion, UINT32 iRea
 void DisplayProgramBoundingBox(BOOLEAN fMarkButtons)
 {
 	// the border for the program
-	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 1, STD_SCREEN_X + 25, STD_SCREEN_Y + 23);
+	BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 1,
+		       STD_SCREEN_X + 25 * g_ui.m_stdScreenScale,
+		       STD_SCREEN_Y + 23 * g_ui.m_stdScreenScale);
 
 	// no laptop mode, no border around the program
 	if (guiCurrentLaptopMode != LAPTOP_MODE_NONE)
 	{
-		BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0, STD_SCREEN_X + 108, STD_SCREEN_Y + 23);
+		BltVideoObject(FRAME_BUFFER, guiLaptopBACKGROUND, 0,
+			       STD_SCREEN_X + 108 * g_ui.m_stdScreenScale,
+			       STD_SCREEN_Y + 23 * g_ui.m_stdScreenScale);
 	}
 
 	if (fMarkButtons || fLoadPendingFlag)
@@ -2989,14 +3031,20 @@ static void CreateDestroyMouseRegionForNewMailIcon(void)
 		{
 			const UINT16 x = LAPTOP__NEW_EMAIL_ICON_X;
 			const UINT16 y = LAPTOP__NEW_EMAIL_ICON_Y;
-			MSYS_DefineRegion(&gNewMailIconRegion, x, y + 5,  x + 16,  y + 16, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, NewEmailIconCallback);
+			MSYS_DefineRegion(&gNewMailIconRegion,
+					  x, y + 5 * g_ui.m_stdScreenScale,
+					  x + 16 * g_ui.m_stdScreenScale,  y + 16 * g_ui.m_stdScreenScale,
+					  MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, NewEmailIconCallback);
 			CreateFileAndNewEmailIconFastHelpText(LAPTOP_BN_HLP_TXT_YOU_HAVE_NEW_MAIL, fUnReadMailFlag == 0);
 		}
 
 		{
 			const UINT16 x = LAPTOP__NEW_FILE_ICON_X;
 			const UINT16 y = LAPTOP__NEW_FILE_ICON_Y;
-			MSYS_DefineRegion(&gNewFileIconRegion, x, y + 5,  x + 16,  y + 16, MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, NewFileIconCallback);
+			MSYS_DefineRegion(&gNewFileIconRegion,
+					  x, y + 5 * g_ui.m_stdScreenScale,
+					  x + 16 * g_ui.m_stdScreenScale,  y + 16 * g_ui.m_stdScreenScale,
+					  MSYS_PRIORITY_HIGHEST - 3, CURSOR_LAPTOP_SCREEN, MSYS_NO_CALLBACK, NewFileIconCallback);
 			CreateFileAndNewEmailIconFastHelpText(LAPTOP_BN_HLP_TXT_YOU_HAVE_NEW_FILE, fNewFilesInFileViewer == 0);
 		}
 	}
@@ -3174,10 +3222,12 @@ static void DisplayWebBookMarkNotify(void)
 		MPrint(DOWN_STRING_X, DOWN_STRING_Y, pShowBookmarkString[0]);
 
 		// now draw the message
-		DisplayWrappedString(DOWN_STRING_X - 42, DOWN_STRING_Y + 20, BOOK_WIDTH + 45, 2, BOOK_FONT, FONT_BLACK, pShowBookmarkString[1], FONT_BLACK, CENTER_JUSTIFIED);
+		DisplayWrappedString(DOWN_STRING_X - 42 * g_ui.m_stdScreenScale, DOWN_STRING_Y + 20 * g_ui.m_stdScreenScale,
+				     BOOK_WIDTH + 45 * g_ui.m_stdScreenScale, 2 * g_ui.m_stdScreenScale,
+				     BOOK_FONT, FONT_BLACK, pShowBookmarkString[1], FONT_BLACK, CENTER_JUSTIFIED);
 
 		// invalidate region
-		InvalidateRegion(DOWNLOAD_X, DOWNLOAD_Y, DOWNLOAD_X + 150, DOWNLOAD_Y + 100);
+		InvalidateRegion(DOWNLOAD_X, DOWNLOAD_Y, DOWNLOAD_X + 150 * g_ui.m_stdScreenScale, DOWNLOAD_Y + 100 * g_ui.m_stdScreenScale);
 
 		SetFontShadow(DEFAULT_SHADOW);
 	}

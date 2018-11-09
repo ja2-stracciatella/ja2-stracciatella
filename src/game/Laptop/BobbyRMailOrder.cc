@@ -494,7 +494,7 @@ void HandleBobbyRMailOrder()
 	if(gfDrawConfirmOrderGrpahic)
 	{
 		// Bobbyray title
-		BltVideoObjectOutlineShadow(FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X + 3, BOBBYR_CONFIRM_ORDER_Y + 3);
+		BltVideoObjectOutlineShadow(FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X + g_ui.m_stdScreenScale * 3, BOBBYR_CONFIRM_ORDER_Y + g_ui.m_stdScreenScale * 3);
 		BltVideoObject(FRAME_BUFFER, guiConfirmGraphic, 0, BOBBYR_CONFIRM_ORDER_X,     BOBBYR_CONFIRM_ORDER_Y);
 		InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
 
