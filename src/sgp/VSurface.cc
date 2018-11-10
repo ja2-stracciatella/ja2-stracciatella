@@ -4,9 +4,9 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "Logger.h"
-#include "Local.h"
 #include "VideoScale.h"
 #include "UILayout.h"
+#include "VObject.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -70,14 +70,13 @@ SGPVSurface::~SGPVSurface()
 		*anchor = next_;
 		break;
 	}
-
-	if (p16BPPPalette) delete[] p16BPPPalette;
 }
 
 
 void SGPVSurface::SetPalette(const SGPPaletteEntry* const src_pal)
 {
 	// Create palette object if not already done so
+	// TODO: FIXME: maxrd2 there is no palette
 	if (!palette_) palette_.Allocate(256);
 	SGPPaletteEntry* const p = palette_;
 	for (UINT32 i = 0; i < 256; i++)
@@ -85,8 +84,7 @@ void SGPVSurface::SetPalette(const SGPPaletteEntry* const src_pal)
 		p[i] = src_pal[i];
 	}
 
-	if (p16BPPPalette != NULL) delete[] p16BPPPalette;
-	p16BPPPalette = Create16BPPPalette(src_pal);
+	p16BPPPalette = SHADE_NONE;
 }
 
 
@@ -200,7 +198,11 @@ void BltVideoSurfaceHalf(SGPVSurface* const dst, SGPVSurface* const src, INT32 c
 		srcRect.h = src->Height();
 	}
 	SDL_Rect dstRect = { DestX, DestY, srcRect.w / 2, srcRect.h / 2 };
+	if(src->p16BPPPalette & 0xFF)
+		SDL_SetSurfaceColorMod(src->surface_.get(), src->p16BPPPalette >> 24 & 0xFF, src->p16BPPPalette >> 16 & 0xFF, src->p16BPPPalette >> 8 & 0xFF);
 	SDL_BlitScaled(src->surface_.get(), &srcRect, dst->surface_.get(), &dstRect);
+	if(src->p16BPPPalette & 0xFF)
+		SDL_SetSurfaceColorMod(src->surface_.get(), 255, 255, 255);
 }
 
 
@@ -245,7 +247,11 @@ void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const
 		src_rect = { src_box->x, src_box->y, src_box->w, src_box->h };
 
 	SDL_Rect dst_rect = { iDestX, iDestY, 0, 0 };
+	if(src->p16BPPPalette & 0xFF)
+		SDL_SetSurfaceColorMod(src->surface_.get(), src->p16BPPPalette >> 24 & 0xFF, src->p16BPPPalette >> 16 & 0xFF, src->p16BPPPalette >> 8 & 0xFF);
 	SDL_BlitSurface(src->surface_.get(), src_box ? &src_rect : nullptr, dst->surface_.get(), &dst_rect);
+	if(src->p16BPPPalette & 0xFF)
+		SDL_SetSurfaceColorMod(src->surface_.get(), 255, 255, 255);
 }
 
 

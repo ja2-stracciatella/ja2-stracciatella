@@ -20,6 +20,9 @@ struct ZStripInfo
 
 #define RGBA(r, g, b, a)  (UINT32(r) << 24 | UINT32(g) << 16 | UINT32(b) << 8 | UINT32(a))
 #define RGB(r, g, b)  (UINT32(r) << 24 | UINT32(g) << 16 | UINT32(b) << 8 | 0xFF)
+#define SHADE_NONE RGBA(0, 0, 0, 0)
+#define SHADE_MONO(r, g, b) RGBA(r, g, b, 1)
+#define SHADE_STD(r, g, b) RGBA(r, g, b, 2)
 
 // This structure is a video object.
 // The video object contains different data based on it's type, compressed or not
@@ -34,12 +37,11 @@ class SGPVObject
 
 		SGPPaletteEntry const* Palette() const { return palette_.get(); }
 
-		UINT16 const* Palette16() const { return palette16_; }
-
-		UINT16 const* CurrentShade() const { return current_shade_; }
+		UINT32 CurrentShade() const { return current_shade_; }
 
 		// Set the current object shade table
 		void CurrentShade(size_t idx);
+		void SetShadeColor(UINT32 rgba) { current_shade_ = rgba; }
 
 		UINT16 SubregionCount() const { return subregion_count_; }
 
@@ -66,14 +68,13 @@ class SGPVObject
 	private:
 		Flags                        flags_;                         // Special flags
 		std::unique_ptr<SGPPaletteEntry const []> palette_;          // 8BPP Palette
-		UINT16*                      palette16_;                     // A 16BPP palette used for 8->16 blits
 
 		std::unique_ptr<UINT8 const []> pix_data_;                   // ETRLE pixel data
 		std::unique_ptr<ETRLEObject const []> etrle_object_;         // Object offset data etc
 	public:
-		UINT16*                      pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
+		UINT32                       pShades[HVOBJECT_SHADE_TABLES]; // Shading values
 	private:
-		UINT16 const*                current_shade_;
+		UINT32                       current_shade_;
 	public:
 		// Smart pointer to an array of smart pointers to ZStripInfo structs.
 		std::unique_ptr<std::unique_ptr<ZStripInfo> []> ppZStripInfo;// Z-value strip info arrays

@@ -298,13 +298,9 @@ static void InitializeButtonImageManager(void)
 	}
 	catch (...) { /* see comment above */ }
 
-	if(GenericButtonOffNormal->BPP() == 32) { // FIXME: maxrd2 it's always 32
-		const ETRLEObject &etrle = GenericButtonOffNormal->SubregionProperties(0);
-		GenericButtonFillColors = reinterpret_cast<const UINT32 *>(GenericButtonOffNormal->PixData(etrle))[0];
-	} else {
-		UINT8 const Pix = GenericButtonOffNormal->GetETRLEPixelValue(8, 0, 0);
-		GenericButtonFillColors = GenericButtonOffNormal->Palette16()[Pix];
-	}
+	Assert(GenericButtonOffNormal->BPP() == 32);
+	const ETRLEObject &etrle = GenericButtonOffNormal->SubregionProperties(0);
+	GenericButtonFillColors = reinterpret_cast<const UINT32 *>(GenericButtonOffNormal->PixData(etrle))[0];
 }
 
 

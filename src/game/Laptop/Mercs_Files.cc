@@ -294,7 +294,7 @@ try
 	if (IsMercDead(p))
 	{
 		// The merc is dead, shade the face red and put text over top saying the merc is dead
-		face->pShades[0] = Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		face->pShades[0] = RGBA(255, 55, 55, 0x7f); // TESTME: maxrd2 - Create16BPPPaletteShaded(face->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 		face->CurrentShade(0);
 		shaded = FALSE;
 		text   = MercInfo[MERC_FILES_MERC_IS_DEAD];

@@ -474,7 +474,7 @@ try
 	{ AutoSGPVObject guiFACE(LoadBigPortrait(p));
 		if (!alive)
 		{
-			guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+			guiFACE->pShades[0] = RGBA(255, 55, 55, 0x7f); // TESTME: maxrd2 - Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 			//set the red pallete to the face
 			guiFACE->CurrentShade(0);
 		}
@@ -950,7 +950,7 @@ try
 		{ AutoSGPVObject guiFACE(LoadSmallPortrait(GetProfile(s->ubProfile)));
 			if (s->bLife <= 0)
 			{
-				guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+				guiFACE->pShades[0] = RGBA(255, 55, 55, 0x7f); // TESTME: maxrd2 - Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 				//set the red pallete to the face
 				guiFACE->CurrentShade(0);
 			}
@@ -1860,7 +1860,7 @@ try
 
 	if (fDead)
 	{
-		guiFACE->pShades[0] = Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+		guiFACE->pShades[0] = RGBA(255, 55, 55, 0x7f); // TESTME: maxrd2 - Create16BPPPaletteShaded(guiFACE->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 		//set the red pallete to the face
 		guiFACE->CurrentShade(0);
 	}

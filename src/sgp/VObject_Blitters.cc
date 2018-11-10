@@ -25,7 +25,7 @@ SGPRect	ClippingRect;
 
 // BLT32_BLEND_COPY - blits all pixels, this and all other modes blend opacity
 #define BLT32_BLEND_COPY			1
-// BLT32_BLEND_SHADE - darkens destination pixels by 50% black using - considers source opacity
+// BLT32_BLEND_SHADE - darkens destination pixels by coShadow (50% black default) using - considers source opacity
 #define BLT32_BLEND_SHADE			2
 // BLT32_BLEND_OBSCURED - blits all pixels, if blit is under z-level - blit is semi-transparent
 #define BLT32_BLEND_OBSCURED			3
@@ -220,8 +220,21 @@ Blt32_Texture(
 		const UINT8 alpha = src[0]; // semi transparent shadow
 		pixelCopyAlpha(dst, reinterpret_cast<const UINT8 *>(&shade), alpha);
 	};
+	auto pixelShadeMono = [](UINT8 *dst, const UINT8 *src) {
+		const uint32_t lumin = (dst[3] * 299 + dst[2] * 587 + dst[1] * 114) / 1000;
+		dst[3] = std::min(src[3] * lumin / 256, 255U);
+		dst[2] = std::min(src[2] * lumin / 256, 255U);
+		dst[1] = std::min(src[1] * lumin / 256, 255U);
+	};
+	auto pixelShadeStd = [](UINT8 *dst, const UINT8 *src) {
+		dst[3] = src[3] * dst[3] / 255;
+		dst[2] = src[2] * dst[2] / 255;
+		dst[1] = src[1] * dst[1] / 255;
+	};
 
 	bool borderLine = true;
+	const int shadeMode = srcObj->CurrentShade() & 0x000000FF;
+	const UINT32 &currentShade = srcObj->CurrentShade();
 	while(blitHeight-- > 0) {
 		UINT32 w = blitWidth;
 		bool borderRow = true;
@@ -301,7 +314,7 @@ Blt32_Texture(
 					if(!zDst || *zDst < zVal) {
 						if(zDst && zBufWrite)
 							*zDst = zVal;
-						static const UINT32 coShadow = 0x0000007F; // black w/ 50% opacity
+						static const UINT32 coShadow = 0x0000007F;
 						pixelCopyAlpha(dst, reinterpret_cast<const UINT8 *>(&coShadow), (coShadow & 0xFF) * src[0] / 255);
 					}
 				} else if(blendType == BLT32_BLEND_COPY) {
@@ -327,6 +340,11 @@ Blt32_Texture(
 							*zDst = zVal;
 						pixelCopy(dst, src);
 					}
+
+					if(shadeMode == 1)
+						pixelShadeMono(dst, reinterpret_cast<const UINT8 *>(&currentShade));
+					else if(shadeMode == 2)
+						pixelShadeStd(dst, reinterpret_cast<const UINT8 *>(&currentShade));
 				} else {
 					AssertMsg(FALSE, "Unuspported blit blending mode.");
 				}
@@ -1079,22 +1097,22 @@ void Blt32BPPBufferLooseHatchRectWithColor(UINT32 *buf, UINT32 bufPitch, SGPRect
 
 void Blt32BPPDataTo32BPPBufferTransparent(UINT32 *buf, const UINT32 bufPitch, const SGPVObject *srcObj, const INT32 srcX, const INT32 srcY, const UINT16 srcIndex)
 {
-	// maxrd2 - FIXME - uses srcObj->CurrentShade();
 	Blt32_Texture(buf, bufPitch, srcObj, srcX, srcY, srcIndex,
 		BLT32_Z_NONE, nullptr, 0,
 		BLT32_CLIP_NONE,
 		BLT32_OUTLINE_NONE,
-		BLT32_BLEND_COPY);
+		BLT32_BLEND_COPY,
+		FALSE, -1);
 }
 
 void Blt32BPPDataTo32BPPBufferTransparentClip(UINT32 *buf, const UINT32 bufPitch, const SGPVObject *srcObj, const INT32 srcX, const INT32 srcY, const UINT16 srcIndex, const SGPRect *clipRect)
 {
-	// maxrd2 - FIXME - uses srcObj->CurrentShade();
 	Blt32_Texture(buf, bufPitch, srcObj, srcX, srcY, srcIndex,
 		BLT32_Z_NONE, nullptr, 0,
 		BLT32_CLIP(clipRect),
 		BLT32_OUTLINE_NONE,
-		BLT32_BLEND_COPY);
+		BLT32_BLEND_COPY,
+		FALSE, -1);
 }
 
 

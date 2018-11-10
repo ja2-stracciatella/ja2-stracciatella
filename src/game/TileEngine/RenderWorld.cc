@@ -669,7 +669,8 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 
 									if (!(uiFlags & TILES_DIRTY))
 									{
-										hVObject->CurrentShade(pNode->ubShadeLevel);
+										// FIXME: maxrd2: we don't use shades anymore
+//										hVObject->CurrentShade(pNode->ubShadeLevel);
 									}
 								}
 

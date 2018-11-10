@@ -156,30 +156,31 @@ FACETYPE& InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 	f.sMouthFrame           = 0;
 	f.uiVideoObject         = vo;
 
-	// Set palette
-	SGPPaletteEntry pal[256];
-	// Build a grayscale palette! (for testing different looks)
-	for (UINT32 i = 0; i < 256; ++i)
-	{
-		pal[i].r = 255;
-		pal[i].g = 255;
-		pal[i].b = 255;
-	}
+	// FIXME: TESTME: maxrd2 shading here
+//	// Set palette
+//	SGPPaletteEntry pal[256];
+//	// Build a grayscale palette! (for testing different looks)
+//	for (UINT32 i = 0; i < 256; ++i)
+//	{
+//		pal[i].r = 255;
+//		pal[i].g = 255;
+//		pal[i].b = 255;
+//	}
 
-	const SGPPaletteEntry* const vo_pal = vo->Palette();
-	vo->pShades[FLASH_PORTRAIT_NOSHADE   ] = Create16BPPPaletteShaded(vo_pal, 255, 255, 255, FALSE);
-	vo->pShades[FLASH_PORTRAIT_STARTSHADE] = Create16BPPPaletteShaded(pal,    255, 255, 255, FALSE);
-	vo->pShades[FLASH_PORTRAIT_ENDSHADE  ] = Create16BPPPaletteShaded(vo_pal, 250,  25,  25, TRUE );
-	vo->pShades[FLASH_PORTRAIT_DARKSHADE ] = Create16BPPPaletteShaded(vo_pal, 100, 100, 100, TRUE );
-	vo->pShades[FLASH_PORTRAIT_LITESHADE ] = Create16BPPPaletteShaded(vo_pal, 100, 100, 100, FALSE);
+//	const SGPPaletteEntry* const vo_pal = vo->Palette();
+	vo->pShades[FLASH_PORTRAIT_NOSHADE   ] = SHADE_NONE; //SHADE_STD(255, 255, 255);
+	vo->pShades[FLASH_PORTRAIT_STARTSHADE] = SHADE_MONO(255, 255, 255);
+	vo->pShades[FLASH_PORTRAIT_ENDSHADE  ] = SHADE_MONO(250,  25,  25);
+	vo->pShades[FLASH_PORTRAIT_DARKSHADE ] = SHADE_MONO(100, 100, 100);
+	vo->pShades[FLASH_PORTRAIT_LITESHADE ] = SHADE_STD(100, 100, 100);
 
-	for (UINT32 i = 0; i < 256; ++i)
-	{
-		pal[i].r = i % 128 + 128;
-		pal[i].g = i % 128 + 128;
-		pal[i].b = i % 128 + 128;
-	}
-	vo->pShades[FLASH_PORTRAIT_GRAYSHADE] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+//	for (UINT32 i = 0; i < 256; ++i)
+//	{
+//		pal[i].r = i % 128 + 128;
+//		pal[i].g = i % 128 + 128;
+//		pal[i].b = i % 128 + 128;
+//	}
+	vo->pShades[FLASH_PORTRAIT_GRAYSHADE] = SHADE_MONO(255, 255, 255); // 255, 255, 255
 
 	// Get FACE height, width
 	ETRLEObject const& face_gfx = vo->SubregionProperties(0);
@@ -672,7 +673,8 @@ static void SetFaceShade(FACETYPE const& f, BOOLEAN const fExternBlit)
 	{
 		shade = FLASH_PORTRAIT_NOSHADE; // Set to default
 	}
-	f.uiVideoObject->CurrentShade(shade);
+	// FIXME: maxrd2: we don't have shades anymore
+//	f.uiVideoObject->CurrentShade(shade);
 }
 
 

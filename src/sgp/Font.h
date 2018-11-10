@@ -10,7 +10,7 @@
 
 #define DEFAULT_SHADOW		RGB(  0,   0,   0) // 2
 #define MILITARY_SHADOW	RGB( 17, 178, 216) // 67
-#define NO_SHADOW		0x00000000
+#define NO_SHADOW		RGBA(255, 255, 255, 0)
 
 // these are bogus! No palette is set yet!
 // font foreground color symbols

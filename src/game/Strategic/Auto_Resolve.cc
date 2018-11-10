@@ -1502,8 +1502,8 @@ static void CreateAutoResolveInterface(void)
 	SGPVObject* const faces = AddVideoObjectFromFile(INTERFACEDIR "/smfaces.sti");
 	ar->iFaces = faces;
 	SGPPaletteEntry const* const pal = faces->Palette();
-	faces->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-	faces->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
+	faces->pShades[0] = RGBA(255, 255, 255, 0x7f); // TESTME: maxrd2 - Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+	faces->pShades[1] = RGBA(250, 25, 25, 0x7f); // TESTME: maxrd2 - Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
 
 	// Add the battle over panels
 	ar->iIndent = AddVideoObjectFromFile(INTERFACEDIR "/indent.sti");
@@ -1514,9 +1514,9 @@ static void CreateAutoResolveInterface(void)
 		//Load the face
 		SGPVObject* const face = Load65Portrait(GetProfile(cell->pSoldier->ubProfile));
 		cell->uiVObjectID = face;
-		SGPPaletteEntry const* const pal = face->Palette();
-		face->pShades[0] = Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
-		face->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
+		//SGPPaletteEntry const* const pal = face->Palette();
+		face->pShades[0] = RGBA(255, 255, 255, 0x7f); // TESTME: maxrd2 - Create16BPPPaletteShaded(pal, 255, 255, 255, FALSE);
+		face->pShades[1] = RGBA(250, 25, 25, 0x7f); // TESTME: maxrd2 - Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
 	}
 
 	UINT8 n_militia_elite = MilitiaInSectorOfRank(ar->ubSector, ELITE_MILITIA);

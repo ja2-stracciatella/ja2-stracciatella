@@ -35,7 +35,6 @@ static SGPVObject* gpVObjectHead = 0;
 
 SGPVObject::SGPVObject(SGPImage * const img) :
 	flags_(),
-	palette16_(),
 	pix_data_{ img->pImageData.moveToUnique() },
 	etrle_object_{ img->pETRLEObject.moveToUnique() },
 	current_shade_(),
@@ -43,7 +42,7 @@ SGPVObject::SGPVObject(SGPImage * const img) :
 	bit_depth_{ img->ubBitDepth },
 	next_(gpVObjectHead)
 {
-	std::fill(std::begin(pShades), std::end(pShades), nullptr);
+	std::fill(std::begin(pShades), std::end(pShades), RGBA(0, 0, 0, 0));
 
 	if (!(img->fFlags & IMAGE_TRLECOMPRESSED))
 	{
@@ -56,8 +55,7 @@ SGPVObject::SGPVObject(SGPImage * const img) :
 		palette_ = img->pPalette.moveToUnique();
 		Assert(palette_);
 
-		palette16_     = Create16BPPPalette(palette_.get());
-		current_shade_ = palette16_;
+		current_shade_ = RGBA(0, 0, 0, 0); // no shade - transparent
 	}
 
 	gpVObjectHead = this;
@@ -79,7 +77,7 @@ SGPVObject::~SGPVObject()
 
 void SGPVObject::CurrentShade(size_t const idx)
 {
-	if (idx >= lengthof(pShades) || !pShades[idx])
+	if (idx >= lengthof(pShades) /*|| !pShades[idx]*/)
 	{
 		throw std::logic_error("Tried to set invalid video object shade");
 	}
@@ -175,22 +173,6 @@ UINT8 SGPVObject::GetETRLEPixelValue(UINT16 const usETRLEIndex, UINT16 const usX
  * new tables are calculated, or things WILL go boom. */
 void SGPVObject::DestroyPalettes()
 {
-	FOR_EACH(UINT16*, i, pShades)
-	{
-		if (flags_ & SHADETABLE_SHARED) continue;
-		UINT16* const p = *i;
-		if (!p)                         continue;
-		if (palette16_ == p) palette16_ = 0;
-		*i = 0;
-		delete[] p;
-	}
-
-	if (UINT16* const p = palette16_)
-	{
-		palette16_ = 0;
-		delete[] p;
-	}
-
 	current_shade_ = 0;
 }
 

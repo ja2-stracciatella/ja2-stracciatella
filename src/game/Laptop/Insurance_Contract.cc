@@ -412,7 +412,7 @@ try
 		{
 			//if the merc is dead
 			//shade the face red, (to signify that he is dead)
-			uiInsMercFaceImage->pShades[0] = Create16BPPPaletteShaded(uiInsMercFaceImage->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
+			uiInsMercFaceImage->pShades[0] = RGBA(255, 55, 55, 0x7f); // TESTME: maxrd2 - Create16BPPPaletteShaded(uiInsMercFaceImage->Palette(), DEAD_MERC_COLOR_RED, DEAD_MERC_COLOR_GREEN, DEAD_MERC_COLOR_BLUE, TRUE);
 
 			//set the red pallete to the face
 			uiInsMercFaceImage->CurrentShade(0);

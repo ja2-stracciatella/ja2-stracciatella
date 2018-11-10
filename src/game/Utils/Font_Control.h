@@ -45,7 +45,7 @@ extern SGPFont gpHugeFont;
 
 #define HUGEFONT		((GameMode::getInstance()->isEditorMode() && isEnglishVersion()) ? gpHugeFont : gp16PointArial)
 
-#define FONT_MCOLOR_TRANSPARENT 0x00000000
+#define FONT_MCOLOR_TRANSPARENT RGBA(255, 255, 255, 0)
 #define FONT_MCOLOR_BLACK	0x000000FF
 #define FONT_MCOLOR_WHITE	0xFFFFFFFF
 #define FONT_MCOLOR_DKWHITE	0xBEBEBEFF

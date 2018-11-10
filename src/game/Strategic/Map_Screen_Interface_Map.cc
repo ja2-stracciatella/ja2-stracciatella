@@ -800,7 +800,7 @@ static void ShadeMapElem(const SGPSector& sMap, const INT32 iColor)
 	// non-airspace
 	if (iColor == MAP_SHADE_BLACK) sScreenY -= 1;
 
-	UINT16* pal;
+	UINT32 pal;
 	switch (iColor)
 	{
 	case MAP_SHADE_BLACK:
@@ -808,10 +808,10 @@ static void ShadeMapElem(const SGPSector& sMap, const INT32 iColor)
 		guiSAVEBUFFER->ShadowRect(sScreenX, sScreenY, sScreenX + MAP_GRID_X - 1, sScreenY + MAP_GRID_Y - 1);
 		return;
 
-//	case MAP_SHADE_LT_GREEN: pal = pMapLTGreenPalette; break;
-//	case MAP_SHADE_DK_GREEN: pal = pMapDKGreenPalette; break;
-//	case MAP_SHADE_LT_RED:   pal = pMapLTRedPalette;   break;
-//	case MAP_SHADE_DK_RED:   pal = pMapDKRedPalette;   break;
+	case MAP_SHADE_LT_GREEN: pal = SHADE_STD(0, 0xff, 0); break;
+	case MAP_SHADE_DK_GREEN: pal = SHADE_STD(0, 0x80, 0); break;
+	case MAP_SHADE_LT_RED:   pal = SHADE_STD(0xff, 0, 0); break;
+	case MAP_SHADE_DK_RED:   pal = SHADE_STD(0x80, 0, 0); break;
 
 	default: return;
 	}
@@ -819,7 +819,7 @@ static void ShadeMapElem(const SGPSector& sMap, const INT32 iColor)
 	// get original video surface palette
 	SGPVSurface* const map = guiBIGMAP;
 
-	UINT16* const org_pal = map->p16BPPPalette;
+	const UINT32 org_pal = map->p16BPPPalette;
 	map->p16BPPPalette = pal;
 	BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
 	map->p16BPPPalette = org_pal;
@@ -2096,7 +2096,7 @@ static void ShowPeopleInMotion(const SGPSector& sSector)
 		BltVideoObject(guiSAVEBUFFER, hIconHandle, dir, iX, iY);
 
 		// blit the text
-		UINT8 const foreground = fAboutToEnter ? FONT_BLACK : FONT_WHITE;
+		const UINT32 foreground = fAboutToEnter ? FONT_BLACK : FONT_WHITE;
 		SetFontAttributes(MAP_MVT_ICON_FONT, foreground);
 		SetFontDestBuffer(guiSAVEBUFFER);
 
