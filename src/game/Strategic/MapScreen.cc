@@ -562,10 +562,11 @@ static void GlowTrashCan(void)
 
 	// glow contract box
 	UINT32 usColor = GlowColor(iColorNum);
-	{ SGPVSurface::Lock l(FRAME_BUFFER);
+	{
+		SGPVSurface::Lock l(FRAME_BUFFER);
 		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		RectangleDraw(TRUE, TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT, usColor, l.Buffer<UINT32>());
-		InvalidateRegion( TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH + 1, TRASH_CAN_Y + TRASH_CAN_HEIGHT + 1 );
+		InvalidateRegion(TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH + 1, TRASH_CAN_Y + TRASH_CAN_HEIGHT + 1);
 	}
 
 	// restore background
@@ -1270,15 +1271,11 @@ static void DisplayCharacterList(void)
 		// Destination
 		str = GetMapscreenMercDestinationString(s);
 		if (str[0] != '\0')
-		{
 			DrawStringCentered(str, DEST_ETA_X + 1, y, DEST_ETA_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
-		}
 
 		// Assignment
 		if (fFlashAssignDone && s.fDoneAssignmentAndNothingToDoFlag)
-		{
 			SetFontForeground(FONT_RED);
-		}
 		ST::string assignment = GetMapscreenMercAssignmentString(s);
 		DrawStringCentered(assignment, ASSIGN_X + 1, y, ASSIGN_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
@@ -1478,12 +1475,10 @@ ScreenID MapScreenHandle(void)
 		// Refreshing the whole screen, otherwise user could see remnants of
 		// the tactical screen.
 		if(g_ui.isBigScreen())
-		{
 			InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		}
 
 		// dirty map
-		fMapPanelDirty=TRUE;
+		fMapPanelDirty = TRUE;
 
 		// dirty team region
 		fTeamPanelDirty = TRUE;
@@ -1498,7 +1493,7 @@ ScreenID MapScreenHandle(void)
 		fOkToBeepNewMessage = FALSE;
 
 		// not in laptop, not about to go there either
-		fLapTop=FALSE;
+		fLapTop = FALSE;
 
 		// reset show aircraft flag
 		//fShowAircraftFlag = FALSE;
@@ -1518,21 +1513,30 @@ ScreenID MapScreenHandle(void)
 
 		MOUSE_CALLBACK mapViewRegionCallback = MouseCallbackPrimarySecondary(MapViewRegionPrimaryCallback, MapViewRegionSecondaryCallback);
 		// set up regions
-		MSYS_DefineRegion( &gMapViewRegion, MAP_VIEW_START_X + MAP_GRID_X, MAP_VIEW_START_Y + MAP_GRID_Y,MAP_VIEW_START_X + MAP_VIEW_WIDTH+MAP_GRID_X-1, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT-1 + 8, MSYS_PRIORITY_HIGH - 3,
-					MSYS_NO_CURSOR, MapViewRegionMovementCallback, mapViewRegionCallback );
+		MSYS_DefineRegion(&gMapViewRegion,
+			MAP_VIEW_START_X + MAP_GRID_X,
+			MAP_VIEW_START_Y + MAP_GRID_Y,
+			MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X - 1,
+			MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - 1 + 8,
+			MSYS_PRIORITY_HIGH - 3, MSYS_NO_CURSOR,
+			MapViewRegionMovementCallback, mapViewRegionCallback);
 
-		MSYS_DefineRegion( &gCharInfoHandRegion,
-					PLAYER_INFO_HAND_START_X, PLAYER_INFO_HAND_START_Y,
-					PLAYER_INFO_HAND_END_X, PLAYER_INFO_HAND_END_Y,
-					MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR,
-					ItemRegionMvtCallback , ItemRegionBtnCallback );
+		MSYS_DefineRegion(&gCharInfoHandRegion,
+			PLAYER_INFO_HAND_START_X, PLAYER_INFO_HAND_START_Y,
+			PLAYER_INFO_HAND_END_X, PLAYER_INFO_HAND_END_Y,
+			MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, ItemRegionMvtCallback, ItemRegionBtnCallback);
 
-		MSYS_DefineRegion( &gCharInfoFaceRegion, (INT16) PLAYER_INFO_FACE_START_X, (INT16) PLAYER_INFO_FACE_START_Y, (INT16) PLAYER_INFO_FACE_END_X, (INT16) PLAYER_INFO_FACE_END_Y, MSYS_PRIORITY_HIGH,
-					MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MouseCallbackPrimarySecondary(FaceRegionBtnCallbackPrimary, FaceRegionBtnCallbackSecondary) );
+		MSYS_DefineRegion(&gCharInfoFaceRegion,
+			(INT16)PLAYER_INFO_FACE_START_X, (INT16)PLAYER_INFO_FACE_START_Y,
+			(INT16)PLAYER_INFO_FACE_END_X, (INT16)PLAYER_INFO_FACE_END_Y,
+			MSYS_PRIORITY_HIGH,
+			MSYS_NO_CURSOR, MSYS_NO_CALLBACK,
+			MouseCallbackPrimarySecondary(FaceRegionBtnCallbackPrimary, FaceRegionBtnCallbackSecondary));
 
-		MSYS_DefineRegion(&gMPanelRegion, INV_REGION_X, INV_REGION_Y, INV_REGION_X + INV_REGION_WIDTH, INV_REGION_Y + INV_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 		// screen mask for animated cursors
-		MSYS_DefineRegion(&gMapScreenMaskRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_LOW, CURSOR_NORMAL, MSYS_NO_CALLBACK, MapScreenMarkRegionBtnCallback);
+		MSYS_DefineRegion(&gMapScreenMaskRegion,
+			0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+			MSYS_PRIORITY_LOW, CURSOR_NORMAL, MSYS_NO_CALLBACK, MapScreenMarkRegionBtnCallback);
 
 		// set help text for item glow region
 		gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[0]);
@@ -1540,7 +1544,8 @@ ScreenID MapScreenHandle(void)
 		// init the timer menus
 		InitTimersForMoveMenuMouseRegions( );
 
-		giMapContractButton = QuickCreateButtonImg(INTERFACEDIR "/contractbutton.sti", 0, 1, CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
+		giMapContractButton = QuickCreateButtonImg(INTERFACEDIR "/contractbutton.sti", 0, 1,
+			CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
 		giMapContractButton->SpecifyGeneralTextAttributes(pContractButtonString, MAP_SCREEN_FONT, CHAR_TEXT_FONT_COLOR, FONT_BLACK);
 		giMapContractButton->SpecifyTextSubOffsets(0, 0, TRUE);
 		giMapContractButton->SpecifyHilitedTextColors(FONT_MCOLOR_WHITE, DEFAULT_SHADOW);
@@ -1830,8 +1835,7 @@ ScreenID MapScreenHandle(void)
 		ReBuildMoveBox( );
 	}
 
-	if (!fDisableDueToBattleRoster &&
-		(fShowAssignmentMenu || fShowContractMenu))
+	if (!fDisableDueToBattleRoster && (fShowAssignmentMenu || fShowContractMenu))
 	{
 		// highlight lines?
 		HandleHighLightingOfLinesInTeamPanel( );
@@ -1853,7 +1857,6 @@ ScreenID MapScreenHandle(void)
 		HandleTalkingAutoFaces( );
 
 		//GlowItem( );
-
 	}
 
 
@@ -2000,7 +2003,7 @@ ScreenID MapScreenHandle(void)
 
 	if ( InItemStackPopup( ) )
 	{
-		RenderItemStackPopup( FALSE );
+		RenderItemStackPopup(FALSE);
 	}
 
 	if( InKeyRingPopup() )
@@ -5017,7 +5020,7 @@ static void RenderCharacterInfoBackground(void)
 	if (!fDisableDueToBattleRoster)
 	{
 		DisplayCharacterInfo();
-		RenderAttributeStringsForUpperLeftHandCorner( guiSAVEBUFFER );
+		RenderAttributeStringsForUpperLeftHandCorner(guiSAVEBUFFER);
 	}
 
 	// reset dirty flag
@@ -5904,22 +5907,25 @@ static void CreateDestroyTrashCanRegion(void)
 
 	if (fShowInventoryFlag && !fCreated)
 	{
-
 		fCreated = TRUE;
 
 		// trash can
-		MSYS_DefineRegion( &gTrashCanRegion, 	TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT , MSYS_PRIORITY_HIGHEST - 4 ,
-					MSYS_NO_CURSOR, TrashCanMoveCallback, TrashCanBtnCallback );
+		MSYS_DefineRegion(&gTrashCanRegion,
+			TRASH_CAN_X, TRASH_CAN_Y,
+			TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT,
+			MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, TrashCanMoveCallback, TrashCanBtnCallback);
 
 		// done inventory button define
-		giMapInvDoneButton = QuickCreateButtonImg(INTERFACEDIR "/done_button2.sti", 0, 1, INV_BTN_X, INV_BTN_Y, MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
+		giMapInvDoneButton = QuickCreateButtonImg(INTERFACEDIR "/done_button2.sti", 0, 1,
+			INV_BTN_X, INV_BTN_Y,
+			MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
 		giMapInvDoneButton->SetFastHelpText(pMiscMapScreenMouseRegionHelpText[2]);
 
 		gTrashCanRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[1]);
 
 		InitMapKeyRingInterface( KeyRingItemPanelButtonCallback );
 
-			// reset the compatable item array at this point
+		// reset the compatable item array at this point
 		ResetCompatibleItemArray( );
 
 	}

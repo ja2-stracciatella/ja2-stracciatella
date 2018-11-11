@@ -539,21 +539,15 @@ static void DisplayCompressMode(void)
 	if( GetJA2Clock() - guiCompressionStringBaseTime >= PAUSE_GAME_TIMER )
 	{
 		if( usColor == FONT_LTGREEN )
-		{
 			usColor = FONT_WHITE;
-		}
 		else
-		{
 			usColor = FONT_LTGREEN;
-		}
 
 		guiCompressionStringBaseTime = GetJA2Clock();
 	}
 
 	if (giTimeCompressMode != 0 && !GamePaused())
-	{
 		usColor = FONT_LTGREEN;
-	}
 
 	SetFontAttributes(COMPFONT, usColor);
 	FindFontCenterCoordinates(STD_SCREEN_X + 489, STD_SCREEN_Y + 457, 522 - 489, 467 - 454, Time, COMPFONT, &sX, &sY);

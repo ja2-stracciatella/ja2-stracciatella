@@ -1197,9 +1197,7 @@ static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 cons
 
 	ST::string str = ST::format("{3d}", stat_val);
 	if (gamepolicy(gui_extras))
-	{
 		ProgressBarBackgroundRect(x + 16, y - 2, 15 * progress / 100, 10, RGB(0x51, 0x4A, 0x05), progress);
-	}
 
 	DrawStringRight(str, x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, BLOCKFONT2);
 }

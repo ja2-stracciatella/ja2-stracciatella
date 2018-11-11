@@ -37,7 +37,7 @@ BOOLEAN HandleItemPickupMenu(void);
 
 
 // FUNCTIONS FOR INTERFACEING WITH ITEM PANEL STUFF
-void InitInvSlotInterface(INV_REGION_DESC const* pRegionDesc, INV_REGION_DESC const* pCamoRegion, MOUSE_CALLBACK INVMoveCallback, MOUSE_CALLBACK INVClickCallback, MOUSE_CALLBACK INVMoveCamoCallback, MOUSE_CALLBACK INVClickCamoCallback);
+void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_DESC const* const pCamoRegion, MOUSE_CALLBACK const INVMoveCallback, MOUSE_CALLBACK const INVClickCallback, MOUSE_CALLBACK const INVMoveCamoCallback, MOUSE_CALLBACK const INVClickCamoCallback);
 void ShutdownInvSlotInterface();
 void HandleRenderInvSlots(SOLDIERTYPE const&, DirtyLevel);
 void HandleNewlyAddedItems(SOLDIERTYPE&, DirtyLevel*);
@@ -60,14 +60,14 @@ BOOLEAN HandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, INT8 bInvPos, BOOLEA
 //              if == DIRTYLEVEL1 will render bullets and status only
 //
 //  Last parameter used mainly for when mouse is over item
-void INVRenderItem(SGPVSurface* uiBuffer, SOLDIERTYPE const* pSoldier, OBJECTTYPE const&, INT16 sX, INT16 sY, INT16 sWidth, INT16 sHeight, DirtyLevel, UINT8 ubStatusIndex, UINT32 sOutlineColor);
+void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECTTYPE const& o, INT16 const sX, INT16 const sY, INT16 const sWidth, INT16 const sHeight, DirtyLevel const dirty_level, UINT8 const ubStatusIndex, UINT32 const outline_color);
 
 
 extern BOOLEAN gfInItemDescBox;
 
 BOOLEAN InItemDescriptionBox(void);
 void InitItemDescriptionBox(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sX, INT16 sY, UINT8 ubStatusIndex);
-void InternalInitItemDescriptionBox(OBJECTTYPE* pObject, INT16 sX, INT16 sY, UINT8 ubStatusIndex, SOLDIERTYPE* pSoldier);
+void InternalInitItemDescriptionBox(OBJECTTYPE *o, const INT16 sX, const INT16 sY, const UINT8 ubStatusIndex, SOLDIERTYPE *s);
 void InitKeyItemDescriptionBox(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sX, INT16 sY);
 void RenderItemDescriptionBox(void);
 void HandleItemDescriptionBox(DirtyLevel*);
@@ -75,12 +75,12 @@ void DeleteItemDescriptionBox(void);
 
 
 BOOLEAN InItemStackPopup(void);
-void    InitItemStackPopup(SOLDIERTYPE* pSoldier, UINT8 ubPosition, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight);
+void InitItemStackPopup(SOLDIERTYPE *pSoldier, const UINT8 ubPosition, const INT16 sInvX, const INT16 sInvY, const INT16 sInvWidth, const INT16 sInvHeight);
 void RenderItemStackPopup( BOOLEAN fFullRender );
 
 
 // keyring handlers
-void InitKeyRingPopup(SOLDIERTYPE* pSoldier, INT16 sInvX, INT16 sInvY, INT16 sInvWidth, INT16 sInvHeight);
+void InitKeyRingPopup(SOLDIERTYPE *pSoldier, const INT16 sInvX, const INT16 sInvY, const INT16 sInvWidth, const INT16 sInvHeight);
 void RenderKeyRingPopup( BOOLEAN fFullRender );
 void InitKeyRingInterface( MOUSE_CALLBACK KeyRingClickCallback );
 void InitMapKeyRingInterface( MOUSE_CALLBACK KeyRingClickCallback );

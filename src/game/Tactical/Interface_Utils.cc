@@ -161,9 +161,7 @@ void DrawSoldierUIBars(SOLDIERTYPE const& s, INT16 const sXPos, INT16 const sYPo
 
 	// Erase what was there
 	if (fErase)
-	{
 		RestoreExternBackgroundRect(sXPos, sYPos - BarHeight, MoraleOff + BarWidth, BarHeight + 1);
-	}
 
 	if (s.bLife == 0) return;
 
@@ -172,17 +170,10 @@ void DrawSoldierUIBars(SOLDIERTYPE const& s, INT16 const sXPos, INT16 const sYPo
 		// DO MAX BREATH
 		// brown guy
 		UINT16 Region;
-		if (guiCurrentScreen != MAP_SCREEN &&
-			GetSelectedMan() == &s &&
-			gTacticalStatus.ubCurrentTeam == OUR_TEAM &&
-			OK_INTERRUPT_MERC(&s))
-		{
+		if (guiCurrentScreen != MAP_SCREEN && GetSelectedMan() == &s && gTacticalStatus.ubCurrentTeam == OUR_TEAM && OK_INTERRUPT_MERC(&s))
 			Region = 1; // gold, the second entry in the .sti
-		}
 		else
-		{
 			Region = 0; // brown, first entry
-		}
 		BltVideoObject(uiBuffer, guiBrownBackgroundForTeamPanel, Region, sXPos + BreathOff, sYPos - BarHeight);
 	}
 

@@ -85,7 +85,7 @@ void SpecifyBoxMinWidth(PopUpBox* const box, INT32 iMinWidth)
 }
 
 
-PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface* const buffer, const SGPVObject* const border, SGPVSurface* const background, const UINT32 margin_l, const UINT32 margin_t, const UINT32 margin_b, const UINT32 margin_r, const UINT32 line_space)
+PopUpBox * CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurface *buffer, const SGPVObject *border, SGPVSurface *background, const UINT32 margin_l, const UINT32 margin_t, const UINT32 margin_b, const UINT32 margin_r, const UINT32 line_space)
 {
 	// find first free box
 	FOR_EACH(PopUpBox*, i, PopUpBoxList)

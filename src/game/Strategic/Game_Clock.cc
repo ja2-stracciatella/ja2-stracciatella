@@ -759,8 +759,7 @@ void CreateMouseRegionForPauseOfClock(void)
 		MSYS_DefineRegion(
 			&gClockMouseRegion,
 			CLOCK_X, CLOCK_Y, CLOCK_X + CLOCK_WIDTH, CLOCK_Y + CLOCK_HEIGHT,
-			MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, PauseOfClockBtnCallback
-		);
+			MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, PauseOfClockBtnCallback);
 
 		fClockMouseRegionCreated = TRUE;
 
