@@ -144,14 +144,14 @@
 #define MAP_Y_ICON_OFFSET   1
 
 // Arrow Offsets
-#define UP_X                13
-#define UP_Y                 7
-#define DOWN_X               0
-#define DOWN_Y              -2
-#define RIGHT_X             -2
-#define RIGHT_Y             11
-#define LEFT_X               2
-#define LEFT_Y               5
+//#define UP_X                13
+//#define UP_Y                 7
+//#define DOWN_X               0
+//#define DOWN_Y              -2
+//#define RIGHT_X             -2
+//#define RIGHT_Y             11
+//#define LEFT_X               2
+//#define LEFT_Y               5
 
 
 // The Path Lines
