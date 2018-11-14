@@ -1053,8 +1053,8 @@ static void SynchronizeDoorStatusToStructureData(DOOR_STATUS const& d)
 	if (door_open == struct_open) return;
 
 	// Swap!
-	STRUCTURE* const base = FindBaseStructure(s);
-	SwapStructureForPartner(base);
+	STRUCTURE *base = FindBaseStructure(s);
+	base = SwapStructureForPartner(base);
 	RecompileLocalMovementCosts(base->sGridNo);
 }
 
