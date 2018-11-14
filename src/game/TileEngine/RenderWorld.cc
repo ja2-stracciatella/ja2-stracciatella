@@ -39,6 +39,7 @@
 #include "slog/slog.h"
 
 UINT16* gpZBuffer = NULL;
+UINT16  gZBufferPitch = 0;
 
 static INT16 gsCurrentGlowFrame     = 0;
 static INT16 gsCurrentItemGlowFrame = 0;
