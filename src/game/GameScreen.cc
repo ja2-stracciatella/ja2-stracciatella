@@ -105,7 +105,10 @@ static void BlitMFont(VIDEO_OVERLAY* const ovr)
 
 void MainGameScreenInit(void)
 {
-	gpZBuffer = InitZBuffer(SCREEN_WIDTH, SCREEN_HEIGHT);
+	// all blit functions expect z-buffer pitch to match framebuffer pitch
+	gZBufferPitch = FRAME_BUFFER->surface_->pitch / FRAME_BUFFER->surface_->format->BytesPerPixel;
+	gpZBuffer = InitZBuffer(gZBufferPitch, SCREEN_HEIGHT);
+	gZBufferPitch *= sizeof(*gpZBuffer);
 	InitializeBackgroundRects();
 
 	//EnvSetTimeInHours(ENV_TIME_12);

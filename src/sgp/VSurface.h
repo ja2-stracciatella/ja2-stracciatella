@@ -60,6 +60,9 @@ class SGPVSurface
 		 * If the 2 images are not 16 Bpp, it returns false. */
 		friend void BltStretchVideoSurface(SGPVSurface* dst, SGPVSurface const* src, SGPBox const* src_rect, SGPBox const* dst_rect);
 
+		// needs read access to *surface_ to initalize z-buffer properly
+		friend void MainGameScreenInit(void);
+
 	protected:
 		SDL_Surface*                               surface_;
 		SGP::Buffer<SGPPaletteEntry>               palette_;
