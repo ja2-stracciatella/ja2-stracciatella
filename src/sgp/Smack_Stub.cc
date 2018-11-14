@@ -6,6 +6,7 @@
 #include "Sound_Control.h"
 #include "SoundMan.h"
 #include "FileMan.h"
+#include "MemMan.h"
 
 extern "C" {
 #include "smacker.h"
@@ -232,6 +233,7 @@ void SmackClose(Smack* Smk)
 		printf("Error in SmackClose SoundStop\n");
 	free(Smk->SmackerInMemory);
 	smk_close(Smk->Smacker); // closes and frees Smacker Object and file
+	MemFree(Smk);
 }
 
 void SmackToBuffer(Smack* Smk, UINT32 Left, UINT32 Top, UINT32 Pitch, UINT32 DestHeight, UINT32 DestWidth, void* Buf, UINT32 Flags)
