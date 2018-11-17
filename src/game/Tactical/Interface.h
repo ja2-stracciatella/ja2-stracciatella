@@ -46,6 +46,11 @@
 
 #define ROOF_LEVEL_HEIGHT		50
 
+#define SCROLL_LEFT_PADDING -30
+#define SCROLL_RIGHT_PADDING 10
+#define SCROLL_TOP_PADDING -50
+#define SCROLL_BOTTOM_PADDING -20
+
 
 // Interface level enums
 enum

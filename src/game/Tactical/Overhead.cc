@@ -3054,7 +3054,8 @@ static bool IsDestinationBlocked(GridNo const grid_no, INT8 const level, SOLDIER
 // NB if making changes don't forget to update NewOKDestinationAndDirection
 INT16 NewOKDestination(const SOLDIERTYPE* pCurrSoldier, INT16 sGridNo, BOOLEAN fPeopleToo, INT8 bLevel)
 {
-	if (!GridNoOnVisibleWorldTile(sGridNo)) return TRUE;
+	if (!GridNoOnVisibleWorldTile(sGridNo)) // grid is outside visible world.. it's NOT OK
+		return FALSE;
 
 	if (fPeopleToo)
 	{

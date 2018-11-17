@@ -38,6 +38,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <cmath>
+
 extern INT32 iCurrentMapSectorZ;
 
 // the squad list font
@@ -224,9 +226,10 @@ void RenderRadarScreen()
 	// First delete what's there
 	RestoreExternBackgroundRect(RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, RADAR_WINDOW_WIDTH + 1, RADAR_WINDOW_HEIGHT + 1);
 
-	{ SGPVSurface::Lock l(FRAME_BUFFER);
+	{
+		SGPVSurface::Lock l(FRAME_BUFFER);
 
-		SetClippingRegionAndImageWidth(l.Pitch(), RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, RADAR_WINDOW_WIDTH - 1, RADAR_WINDOW_HEIGHT - 1);
+		SetClippingRegionAndImageWidth(l.Pitch(), RADAR_WINDOW_X, RADAR_WINDOW_TM_Y, RADAR_WINDOW_WIDTH, RADAR_WINDOW_HEIGHT);
 		UINT16* const pDestBuf = l.Buffer<UINT16>();
 
 		// Cycle fFlash variable
@@ -238,44 +241,12 @@ void RenderRadarScreen()
 
 		if (!fInMapMode)
 		{
-			// Find the diustance from render center to true world center
-			INT16 const sDistToCenterX = gsRenderCenterX - gCenterWorldX;
-			INT16 const sDistToCenterY = gsRenderCenterY - gCenterWorldY;
-
-			// From render center in world coords, convert to render center in "screen" coords
-			INT16 sScreenCenterX;
-			INT16 sScreenCenterY;
-			FromCellToScreenCoordinates(sDistToCenterX, sDistToCenterY, &sScreenCenterX, &sScreenCenterY);
-
-			// Subtract screen center
-			sScreenCenterX += gsCX;
-			sScreenCenterY += gsCY;
-
-			// Get corners in screen coords
-			// TOP LEFT
-			INT16 const sX_S = g_ui.m_tacticalMapCenterX;
-			INT16 const sY_S = g_ui.m_tacticalMapCenterY;
-
-			INT16 const sTopLeftWorldX     = sScreenCenterX - sX_S;
-			INT16 const sTopLeftWorldY     = sScreenCenterY - sY_S;
-			INT16 const sBottomRightWorldX = sScreenCenterX + sX_S;
-			INT16 const sBottomRightWorldY = sScreenCenterY + sY_S;
-
-			// Determine radar coordinates
-			INT16 const sRadarCX = gsCX * gdScaleX;
-			INT16 const sRadarCY = gsCY * gdScaleY;
-
-			INT16 const sWidth  = RADAR_WINDOW_WIDTH;
-			INT16 const sHeight = RADAR_WINDOW_HEIGHT;
-			INT16 const sX      = RADAR_WINDOW_X;
-
-			INT16 const sRadarTLX = sTopLeftWorldX     * gdScaleX - sRadarCX + sX + sWidth / 2;
-			INT16 const sRadarTLY = sTopLeftWorldY     * gdScaleY - sRadarCY + RADAR_WINDOW_TM_Y + sHeight / 2;
-			INT16 const sRadarBRX = sBottomRightWorldX * gdScaleX - sRadarCX + sX + sWidth / 2;
-			INT16 const sRadarBRY = sBottomRightWorldY * gdScaleY - sRadarCY + RADAR_WINDOW_TM_Y + sHeight / 2;
-
-			UINT16 const line_colour = Get16BPPColor(FROMRGB(0, 255, 0));
-			RectangleDraw(TRUE, sRadarTLX, sRadarTLY, sRadarBRX, sRadarBRY - 1, line_colour, pDestBuf);
+			RectangleDraw(TRUE,
+				RADAR_WINDOW_X + MAX(0, round((gsTopLeftWorldX - SCROLL_LEFT_PADDING) * gdScaleX)),
+				RADAR_WINDOW_TM_Y + MAX(0, round((gsTopLeftWorldY - SCROLL_TOP_PADDING) * gdScaleY)),
+				RADAR_WINDOW_X + MIN(round((gsBottomRightWorldX - SCROLL_RIGHT_PADDING - SCROLL_LEFT_PADDING) * gdScaleX - 1.0), RADAR_WINDOW_WIDTH - 1),
+				RADAR_WINDOW_TM_Y + MIN(round((gsBottomRightWorldY - SCROLL_BOTTOM_PADDING - SCROLL_TOP_PADDING) * gdScaleY - 1.0), RADAR_WINDOW_HEIGHT - 1),
+				Get16BPPColor(FROMRGB(0, 255, 0)), pDestBuf);
 
 			// Re-render radar
 			FOR_EACH_MERC(i)
@@ -295,13 +266,13 @@ void RenderRadarScreen()
 				if (!GridNoOnVisibleWorldTile(s->sGridNo)) continue;
 
 				// Get fullscreen coordinate for guy's position
-				INT16	sXSoldScreen;
+				INT16 sXSoldScreen;
 				INT16 sYSoldScreen;
 				GetAbsoluteScreenXYFromMapPos(s->sGridNo, &sXSoldScreen, &sYSoldScreen);
 
 				// Get radar x and y postion and add starting relative to interface
-				INT16 const x = sXSoldScreen * gdScaleX + RADAR_WINDOW_X;
-				INT16 const y = sYSoldScreen * gdScaleY + RADAR_WINDOW_TM_Y;
+				const INT16 x = floor(DOUBLE(sXSoldScreen) * gdScaleX) + RADAR_WINDOW_X;
+				const INT16 y = floor(DOUBLE(sYSoldScreen) * gdScaleY) + RADAR_WINDOW_TM_Y;
 
 				UINT32 const line_colour =
 					/* flash selected merc */
