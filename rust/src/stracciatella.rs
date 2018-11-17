@@ -6,12 +6,7 @@ extern crate serde;
 extern crate serde_json;
 #[macro_use]
 extern crate serde_derive;
-#[cfg(windows)]
-extern crate winapi;
-#[cfg(windows)]
-extern crate user32;
-#[cfg(windows)]
-extern crate shell32;
+extern crate dirs;
 
 use std::slice;
 use std::str;
@@ -316,7 +311,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: Vec<String>) -> Option<S
                     Err(s) => return Some(s)
                 }
             }
-            
+
             if let Some(s) = m.opt_str("brightness") {
                 match s.parse::<f32>() {
                     Ok(val) => {
@@ -412,44 +407,23 @@ pub fn write_json_config(engine_options: &EngineOptions) -> Result<(), String> {
     f.write_all(json.as_bytes()).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))
 }
 
-#[cfg(not(windows))]
 pub fn find_stracciatella_home() -> Result<PathBuf, String> {
-    use std::env;
+    #[cfg(not(windows))]
+    let base = dirs::home_dir();
+    #[cfg(windows)]
+    let base = dirs::document_dir();
+    #[cfg(not(windows))]
+    let dir = ".ja2";
+    #[cfg(windows)]
+    let dir = "JA2";
 
-    match env::home_dir() {
+    match base {
         Some(mut path) => {
-            path.push(".ja2");
+            path.push(dir);
             return Ok(path);
         },
         None => Err(String::from("Could not find home directory")),
     }
-}
-
-#[cfg(windows)]
-pub fn find_stracciatella_home() -> Result<PathBuf, String> {
-    use shell32::SHGetFolderPathW;
-    use winapi::shlobj::{CSIDL_PERSONAL, CSIDL_FLAG_CREATE};
-    use winapi::minwindef::MAX_PATH;
-    use std::ffi::OsString;
-    use std::os::windows::ffi::OsStringExt;
-
-    let mut home: [u16; MAX_PATH] = [0; MAX_PATH];
-
-    return match unsafe { SHGetFolderPathW(ptr::null_mut(), CSIDL_PERSONAL | CSIDL_FLAG_CREATE, ptr::null_mut(), 0, home.as_mut_ptr()) } {
-        0 => {
-            let home_trimmed: Vec<u16> = home.iter().take_while(|x| **x != 0).map(|x| *x).collect();
-
-            return match OsString::from_wide(&home_trimmed).to_str() {
-                Some(s) => {
-                    let mut buf = PathBuf::from(s);
-                    buf.push("JA2");
-                    return Ok(buf);
-                },
-                None => Err(format!("Could not decode documents folder string."))
-            }
-        },
-        i => Err(format!("Could not get documents folder: {}", i))
-    };
 }
 
 pub fn build_engine_options_from_env_and_args(args: Vec<String>) -> Result<EngineOptions, String> {
