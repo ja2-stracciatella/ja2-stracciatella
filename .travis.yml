@@ -3,10 +3,10 @@ language: cpp
 jobs:
   include:
     - os: linux
-      dist: trusty
+      dist: xenial
       sudo: required
     - os: linux
-      dist: trusty
+      dist: xenial
       sudo: required
       env:
         TRAVIS_MINGW=true
