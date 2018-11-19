@@ -4,7 +4,6 @@ extern crate getopts;
 extern crate libc;
 extern crate serde;
 extern crate serde_json;
-#[macro_use]
 extern crate serde_derive;
 extern crate dirs;
 
@@ -80,14 +79,14 @@ impl FromStr for ResourceVersion {
 impl Display for ResourceVersion {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", match self {
-            &ResourceVersion::DUTCH => "Dutch",
-            &ResourceVersion::ENGLISH => "English",
-            &ResourceVersion::FRENCH => "French",
-            &ResourceVersion::GERMAN => "German",
-            &ResourceVersion::ITALIAN => "Italian",
-            &ResourceVersion::POLISH => "Polish",
-            &ResourceVersion::RUSSIAN => "Russian",
-            &ResourceVersion::RUSSIAN_GOLD => "Russian (Gold)",
+            ResourceVersion::DUTCH => "Dutch",
+            ResourceVersion::ENGLISH => "English",
+            ResourceVersion::FRENCH => "French",
+            ResourceVersion::GERMAN => "German",
+            ResourceVersion::ITALIAN => "Italian",
+            ResourceVersion::POLISH => "Polish",
+            ResourceVersion::RUSSIAN => "Russian",
+            ResourceVersion::RUSSIAN_GOLD => "Russian (Gold)",
         })
     }
 }
@@ -117,15 +116,15 @@ impl FromStr for ScalingQuality {
 impl Display for ScalingQuality {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", match self {
-            &ScalingQuality::LINEAR => "Linear Interpolation",
-            &ScalingQuality::NEAR_PERFECT => "Near perfect with oversampling",
-            &ScalingQuality::PERFECT => "Pixel perfect centered",
+            ScalingQuality::LINEAR => "Linear Interpolation",
+            ScalingQuality::NEAR_PERFECT => "Near perfect with oversampling",
+            ScalingQuality::PERFECT => "Pixel perfect centered",
         })
     }
 }
 
 fn parse_resolution(resolution_str: &str) -> Result<(u16, u16), String> {
-    let mut resolutions = resolution_str.split("x").filter_map(|r_str| r_str.parse::<u16>().ok());
+    let mut resolutions = resolution_str.split('x').filter_map(|r_str| r_str.parse::<u16>().ok());
 
     match (resolutions.next(), resolutions.next()) {
         (Some(x), Some(y)) => Ok((x, y)),
@@ -138,7 +137,7 @@ where
     D: Deserializer<'de>,
 {
     let res = String::deserialize(deserializer)?;
-    parse_resolution(&res).map_err(|s| serde::de::Error::custom(s))
+    parse_resolution(&res).map_err(serde::de::Error::custom)
 }
 
 fn serialize_resolution<S>(&(x, y): &(u16, u16), serializer: S) -> Result<S::Ok, S::Error>
@@ -271,7 +270,7 @@ pub fn get_command_line_options() -> Options {
         "print this help menu"
     );
 
-    return opts;
+    opts
 }
 
 fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<String> {
@@ -279,7 +278,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
 
     match opts.parse(&args[1..]) {
         Ok(m) => {
-            if m.free.len() > 0 {
+            if !m.free.is_empty() {
                 return Some(format!("Unknown arguments: '{}'.", m.free.join(" ")));
             }
 
@@ -290,7 +289,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
                         // remove UNC path prefix (Windows)
                         if temp.starts_with("\\\\") {
                             temp.drain(..2);
-                            let pos = temp.find("\\").unwrap() + 1;
+                            let pos = temp.find('\\').unwrap() + 1;
                             temp.drain(..pos);
                         }
                         engine_options.vanilla_data_dir = PathBuf::from(temp)
@@ -299,7 +298,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
                 };
             }
 
-            if m.opt_strs("mod").len() > 0 {
+            if !m.opt_strs("mod").is_empty() {
                 engine_options.mods = m.opt_strs("mod");
             }
 
@@ -359,7 +358,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
                 engine_options.start_in_debug_mode = true;
             }
 
-            return None;
+            None
         }
         Err(f) => Some(f.to_string())
     }
@@ -368,7 +367,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
 fn build_json_config_location(stracciatella_home: &PathBuf) -> PathBuf {
     let mut path = PathBuf::from(stracciatella_home);
     path.push("ja2.json");
-    return path;
+    path
 }
 
 pub fn ensure_json_config_existence(stracciatella_home: &PathBuf) -> Result<(), String> {
@@ -385,18 +384,20 @@ pub fn ensure_json_config_existence(stracciatella_home: &PathBuf) -> Result<(), 
         try!(make_string_err!(f.write_all(DEFAULT_JSON_CONTENT.as_bytes())));
     }
 
-    return Ok(());
+    Ok(())
 }
 
 
 pub fn parse_json_config(stracciatella_home: &PathBuf) -> Result<EngineOptions, String> {
     let path = build_json_config_location(&stracciatella_home);
-    return File::open(path).map_err(|s| format!("Error reading ja2.json config file: {}", s.description()))
-        .and_then(|f| serde_json::from_reader(f).map_err(|s| format!("Error parsing ja2.json config file: {}", s)))
+    File::open(path)
+        .map_err(|s| format!("Error reading ja2.json config file: {}", s.description()))
+        .and_then(|f| serde_json::from_reader(f)
+        .map_err(|s| format!("Error parsing ja2.json config file: {}", s)))
         .map(|mut engine_options: EngineOptions| {
             engine_options.stracciatella_home = stracciatella_home.clone();
             engine_options
-        });
+        })
 }
 
 pub fn write_json_config(engine_options: &EngineOptions) -> Result<(), String> {
@@ -420,7 +421,7 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     match base {
         Some(mut path) => {
             path.push(dir);
-            return Ok(path);
+            Ok(path)
         },
         None => Err(String::from("Could not find home directory")),
     }
@@ -466,20 +467,20 @@ pub extern fn create_engine_options(array: *const *const c_char, length: size_t)
         .map(|bs| String::from(str::from_utf8(bs).unwrap()))   // iterator of &str
         .collect();
 
-    return match build_engine_options_from_env_and_args(&args) {
+    match build_engine_options_from_env_and_args(&args) {
         Ok(engine_options) => {
             if engine_options.show_help {
                 let opts = get_command_line_options();
-                let brief = format!("Usage: ja2 [options]");
+                let brief = "Usage: ja2 [options]".to_string();
                 print!("{}", opts.usage(&brief));
             }
             Box::into_raw(Box::new(engine_options))
         },
         Err(msg) => {
             println!("{}", msg);
-            return ptr::null_mut();
+            ptr::null_mut()
         }
-    };
+    }
 }
 
 #[no_mangle]
@@ -514,7 +515,7 @@ pub extern fn set_vanilla_data_dir(ptr: *mut EngineOptions, data_dir_ptr: *const
 
 #[no_mangle]
 pub extern fn get_number_of_mods(ptr: *const EngineOptions) -> u32 {
-    return unsafe_from_ptr!(ptr).mods.len() as u32
+    unsafe_from_ptr!(ptr).mods.len() as u32
 }
 
 #[no_mangle]
