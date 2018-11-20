@@ -125,14 +125,16 @@ UINT8 const gPurpendicularDirection[NUM_WORLD_DIRECTIONS][NUM_WORLD_DIRECTIONS] 
 
 void FromCellToScreenCoordinates( INT16 sCellX, INT16 sCellY, INT16 *psScreenX, INT16 *psScreenY )
 {
-	*psScreenX = ( 2 * sCellX ) - ( 2 * sCellY );
-	*psScreenY = sCellX + sCellY;
+	// cartesian to isometric
+	*psScreenX = (sCellX - sCellY) * HALF_TILE_WIDTH;
+	*psScreenY = (sCellX + sCellY) * HALF_TILE_HEIGHT;
 }
 
 void FromScreenToCellCoordinates( INT16 sScreenX, INT16 sScreenY, INT16 *psCellX, INT16 *psCellY )
 {
-	*psCellX = ( ( sScreenX + ( 2 * sScreenY ) ) / 4 );
-	*psCellY = ( ( 2 * sScreenY ) - sScreenX ) / 4;
+	// isometric to cartesian
+	*psCellX = floor((FLOAT(sScreenX) / HALF_TILE_WIDTH + FLOAT(sScreenY) / HALF_TILE_HEIGHT) / 2.0f);
+	*psCellY = floor((FLOAT(sScreenY) / HALF_TILE_HEIGHT - FLOAT(sScreenX) / HALF_TILE_WIDTH) / 2.0f);
 }
 
 // These two functions take into account that our world is projected and attached
