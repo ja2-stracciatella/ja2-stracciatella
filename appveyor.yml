@@ -78,7 +78,9 @@ build_script:
   - ps: cmake --build c:\projects\ja2-stracciatella\ci-build --target ALL_BUILD --config ${env:BUILD_TYPE}
 
 test_script:
-  - cmd: cmake --build c:\projects\ja2-stracciatella\ci-build --target rust-unit-tests
+  - cmd: cd ..\rust
+  - cmd: cargo test
+  - cmd: cd ..\ci-build
   - cmd: cd %BUILD_TYPE%
   - cmd: ja2.exe -unittests
   - cmd: ja2-launcher.exe -help

@@ -92,7 +92,7 @@ static SDL_Surface* ScreenBuffer;
 static SDL_Texture* ScreenTexture;
 static SDL_Texture* ScaledScreenTexture;
 static Uint32       g_window_flags = 0;
-static VideoScaleQuality ScaleQuality = VIDEO_SCALE_QUALITY_LINEAR;
+static VideoScaleQuality ScaleQuality = VideoScaleQuality::LINEAR;
 
 static void RecreateBackBuffer();
 static void DeletePrimaryVideoSurfaces(void);
@@ -134,7 +134,7 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 {
 	SLOGD(DEBUG_TAG_VIDEO, "Initializing the video manager");
 	SDL_SetHint(SDL_HINT_RENDER_DRIVER, "opengl");
-	
+
 	ScaleQuality = quality;
 	g_window_flags |= SDL_WINDOW_RESIZABLE;
 
@@ -176,15 +176,15 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 	}
 
 
-	if (ScaleQuality == VIDEO_SCALE_QUALITY_PERFECT) {
+	if (ScaleQuality == VideoScaleQuality::PERFECT) {
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 #if SDL_VERSION_ATLEAST(2,0,5)
 		SDL_RenderSetIntegerScale(GameRenderer, SDL_TRUE);
 #else
-		ScaleQuality = VIDEO_SCALE_QUALITY_NEAR_PERFECT;
-#endif		
+		ScaleQuality = VideoScaleQuality::NEAR_PERFECT;
+#endif
 	}
-	else if (ScaleQuality == VIDEO_SCALE_QUALITY_NEAR_PERFECT) {
+	else if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) {
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 	}
 	else {
@@ -200,7 +200,7 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 		SLOGE(DEBUG_TAG_VIDEO, "SDL_CreateTexture for ScreenTexture failed: %s\n", SDL_GetError());
 	}
 
-	if (ScaleQuality == VIDEO_SCALE_QUALITY_NEAR_PERFECT) {
+	if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) {
 		int scale = 4;
 
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
@@ -689,10 +689,10 @@ void RefreshScreen(void)
 	MouseBackground = dst;
 
 	SDL_UpdateTexture(ScreenTexture, NULL, ScreenBuffer->pixels, ScreenBuffer->pitch);
-	
+
 	SDL_RenderClear(GameRenderer);
-	
-	if (ScaleQuality == VIDEO_SCALE_QUALITY_NEAR_PERFECT) {
+
+	if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) {
 		SDL_SetRenderTarget(GameRenderer, ScaledScreenTexture);
 		SDL_RenderCopy(GameRenderer, ScreenTexture, nullptr, nullptr);
 
@@ -702,7 +702,7 @@ void RefreshScreen(void)
 	else {
 		SDL_RenderCopy(GameRenderer, ScreenTexture, NULL, NULL);
 	}
-	
+
 	SDL_RenderPresent(GameRenderer);
 
 	gfForceFullScreenRefresh = FALSE;

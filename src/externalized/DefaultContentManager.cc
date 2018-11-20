@@ -857,14 +857,14 @@ void DefaultContentManager::loadStringRes(const char *name, std::vector<const UT
 
 	switch(m_gameVersion)
 	{
-	case GV_DUTCH:        fullName += "-dut";   break;
-	case GV_ENGLISH:      fullName += "-eng";   break;
-	case GV_FRENCH:       fullName += "-fr";    break;
-	case GV_GERMAN:       fullName += "-ger";   break;
-	case GV_ITALIAN:      fullName += "-it";    break;
-	case GV_POLISH:       fullName += "-pl";    break;
-	case GV_RUSSIAN:
-	case GV_RUSSIAN_GOLD: fullName += "-rus";   break;
+	case GameVersion::DUTCH:        fullName += "-dut";   break;
+	case GameVersion::ENGLISH:      fullName += "-eng";   break;
+	case GameVersion::FRENCH:       fullName += "-fr";    break;
+	case GameVersion::GERMAN:       fullName += "-ger";   break;
+	case GameVersion::ITALIAN:      fullName += "-it";    break;
+	case GameVersion::POLISH:       fullName += "-pl";    break;
+	case GameVersion::RUSSIAN:
+	case GameVersion::RUSSIAN_GOLD: fullName += "-rus";   break;
 	default:
 	{
 		throw std::runtime_error(FormattedString("unknown game version %d", m_gameVersion));

@@ -6,14 +6,14 @@
 
 class Launcher : public StracciatellaLauncher {
 public:
-	Launcher(std::string exePath, engine_options_t* engine_options);
+	Launcher(std::string exePath, EngineOptions* engine_options);
 
 	void show();
 	void initializeInputsFromDefaults();
 	int writeJsonFile();
 private:
 	std::string exePath;
-	engine_options_t* engine_options;
+	EngineOptions* engine_options;
 
 	void populateChoices();
 	void enablePredefinedResolutions();

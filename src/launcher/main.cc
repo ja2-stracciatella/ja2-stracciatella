@@ -13,7 +13,7 @@ int main(int argc, char* argv[]) {
 	std::string exePath = std::string(rustExePath);
 	free_rust_string(rustExePath);
 
-	engine_options_t* params = create_engine_options(argv, argc);
+	EngineOptions* params = create_engine_options(argv, argc);
 
 	if (params == NULL) {
 		return EXIT_FAILURE;

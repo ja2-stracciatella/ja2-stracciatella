@@ -16,7 +16,7 @@ DefaultContentManager * createDefaultCMForTesting()
 
 	DefaultContentManager *cm;
 
-	cm = new DefaultContentManager(GV_ENGLISH,
+	cm = new DefaultContentManager(GameVersion::ENGLISH,
 					configFolderPath,
 					gameResRootPath, externalizedDataPath);
 

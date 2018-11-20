@@ -25,3 +25,7 @@ dirs = "1"
 [dev-dependencies]
 regex = "0.1"
 tempdir = "0.3"
+
+[build-dependencies]
+cbindgen = "0.6"
+

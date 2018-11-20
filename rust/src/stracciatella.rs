@@ -4,7 +4,6 @@ extern crate getopts;
 extern crate libc;
 extern crate serde;
 extern crate serde_json;
-#[macro_use]
 extern crate serde_derive;
 extern crate dirs;
 
@@ -80,14 +79,14 @@ impl FromStr for ResourceVersion {
 impl Display for ResourceVersion {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", match self {
-            &ResourceVersion::DUTCH => "Dutch",
-            &ResourceVersion::ENGLISH => "English",
-            &ResourceVersion::FRENCH => "French",
-            &ResourceVersion::GERMAN => "German",
-            &ResourceVersion::ITALIAN => "Italian",
-            &ResourceVersion::POLISH => "Polish",
-            &ResourceVersion::RUSSIAN => "Russian",
-            &ResourceVersion::RUSSIAN_GOLD => "Russian (Gold)",
+            ResourceVersion::DUTCH => "Dutch",
+            ResourceVersion::ENGLISH => "English",
+            ResourceVersion::FRENCH => "French",
+            ResourceVersion::GERMAN => "German",
+            ResourceVersion::ITALIAN => "Italian",
+            ResourceVersion::POLISH => "Polish",
+            ResourceVersion::RUSSIAN => "Russian",
+            ResourceVersion::RUSSIAN_GOLD => "Russian (Gold)",
         })
     }
 }
@@ -117,15 +116,15 @@ impl FromStr for ScalingQuality {
 impl Display for ScalingQuality {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", match self {
-            &ScalingQuality::LINEAR => "Linear Interpolation",
-            &ScalingQuality::NEAR_PERFECT => "Near perfect with oversampling",
-            &ScalingQuality::PERFECT => "Pixel perfect centered",
+            ScalingQuality::LINEAR => "Linear Interpolation",
+            ScalingQuality::NEAR_PERFECT => "Near perfect with oversampling",
+            ScalingQuality::PERFECT => "Pixel perfect centered",
         })
     }
 }
 
 fn parse_resolution(resolution_str: &str) -> Result<(u16, u16), String> {
-    let mut resolutions = resolution_str.split("x").filter_map(|r_str| r_str.parse::<u16>().ok());
+    let mut resolutions = resolution_str.split('x').filter_map(|r_str| r_str.parse::<u16>().ok());
 
     match (resolutions.next(), resolutions.next()) {
         (Some(x), Some(y)) => Ok((x, y)),
@@ -138,7 +137,7 @@ where
     D: Deserializer<'de>,
 {
     let res = String::deserialize(deserializer)?;
-    parse_resolution(&res).map_err(|s| serde::de::Error::custom(s))
+    parse_resolution(&res).map_err(serde::de::Error::custom)
 }
 
 fn serialize_resolution<S>(&(x, y): &(u16, u16), serializer: S) -> Result<S::Ok, S::Error>
@@ -271,7 +270,7 @@ pub fn get_command_line_options() -> Options {
         "print this help menu"
     );
 
-    return opts;
+    opts
 }
 
 fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<String> {
@@ -279,7 +278,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
 
     match opts.parse(&args[1..]) {
         Ok(m) => {
-            if m.free.len() > 0 {
+            if !m.free.is_empty() {
                 return Some(format!("Unknown arguments: '{}'.", m.free.join(" ")));
             }
 
@@ -290,7 +289,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
                         // remove UNC path prefix (Windows)
                         if temp.starts_with("\\\\") {
                             temp.drain(..2);
-                            let pos = temp.find("\\").unwrap() + 1;
+                            let pos = temp.find('\\').unwrap() + 1;
                             temp.drain(..pos);
                         }
                         engine_options.vanilla_data_dir = PathBuf::from(temp)
@@ -299,7 +298,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
                 };
             }
 
-            if m.opt_strs("mod").len() > 0 {
+            if !m.opt_strs("mod").is_empty() {
                 engine_options.mods = m.opt_strs("mod");
             }
 
@@ -359,7 +358,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
                 engine_options.start_in_debug_mode = true;
             }
 
-            return None;
+            None
         }
         Err(f) => Some(f.to_string())
     }
@@ -368,7 +367,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
 fn build_json_config_location(stracciatella_home: &PathBuf) -> PathBuf {
     let mut path = PathBuf::from(stracciatella_home);
     path.push("ja2.json");
-    return path;
+    path
 }
 
 pub fn ensure_json_config_existence(stracciatella_home: &PathBuf) -> Result<(), String> {
@@ -385,18 +384,20 @@ pub fn ensure_json_config_existence(stracciatella_home: &PathBuf) -> Result<(), 
         try!(make_string_err!(f.write_all(DEFAULT_JSON_CONTENT.as_bytes())));
     }
 
-    return Ok(());
+    Ok(())
 }
 
 
 pub fn parse_json_config(stracciatella_home: &PathBuf) -> Result<EngineOptions, String> {
     let path = build_json_config_location(&stracciatella_home);
-    return File::open(path).map_err(|s| format!("Error reading ja2.json config file: {}", s.description()))
-        .and_then(|f| serde_json::from_reader(f).map_err(|s| format!("Error parsing ja2.json config file: {}", s)))
+    File::open(path)
+        .map_err(|s| format!("Error reading ja2.json config file: {}", s.description()))
+        .and_then(|f| serde_json::from_reader(f)
+        .map_err(|s| format!("Error parsing ja2.json config file: {}", s)))
         .map(|mut engine_options: EngineOptions| {
             engine_options.stracciatella_home = stracciatella_home.clone();
             engine_options
-        });
+        })
 }
 
 pub fn write_json_config(engine_options: &EngineOptions) -> Result<(), String> {
@@ -420,7 +421,7 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     match base {
         Some(mut path) => {
             path.push(dir);
-            return Ok(path);
+            Ok(path)
         },
         None => Err(String::from("Could not find home directory")),
     }
@@ -458,7 +459,7 @@ macro_rules! unsafe_from_ptr_mut {
 }
 
 #[no_mangle]
-pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mut EngineOptions {
+pub extern fn create_engine_options(array: *const *const c_char, length: size_t) -> *mut EngineOptions {
     let values = unsafe { slice::from_raw_parts(array, length as usize) };
     let args: Vec<String> = values.iter()
         .map(|&p| unsafe { CStr::from_ptr(p) })  // iterator of &CStr
@@ -466,30 +467,30 @@ pub fn create_engine_options(array: *const *const c_char, length: size_t) -> *mu
         .map(|bs| String::from(str::from_utf8(bs).unwrap()))   // iterator of &str
         .collect();
 
-    return match build_engine_options_from_env_and_args(&args) {
+    match build_engine_options_from_env_and_args(&args) {
         Ok(engine_options) => {
             if engine_options.show_help {
                 let opts = get_command_line_options();
-                let brief = format!("Usage: ja2 [options]");
+                let brief = "Usage: ja2 [options]".to_string();
                 print!("{}", opts.usage(&brief));
             }
             Box::into_raw(Box::new(engine_options))
         },
         Err(msg) => {
             println!("{}", msg);
-            return ptr::null_mut();
+            ptr::null_mut()
         }
-    };
+    }
 }
 
 #[no_mangle]
-pub fn write_engine_options(ptr: *mut EngineOptions) -> bool {
+pub extern fn write_engine_options(ptr: *mut EngineOptions) -> bool {
     let engine_options = unsafe_from_ptr!(ptr);
     write_json_config(engine_options).is_ok()
 }
 
 #[no_mangle]
-pub fn free_engine_options(ptr: *mut EngineOptions) {
+pub extern fn free_engine_options(ptr: *mut EngineOptions) {
     if ptr.is_null() { return }
     unsafe { Box::from_raw(ptr); }
 }
@@ -514,7 +515,7 @@ pub extern fn set_vanilla_data_dir(ptr: *mut EngineOptions, data_dir_ptr: *const
 
 #[no_mangle]
 pub extern fn get_number_of_mods(ptr: *const EngineOptions) -> u32 {
-    return unsafe_from_ptr!(ptr).mods.len() as u32
+    unsafe_from_ptr!(ptr).mods.len() as u32
 }
 
 #[no_mangle]
@@ -563,27 +564,27 @@ pub extern fn set_resource_version(ptr: *mut EngineOptions, res: ResourceVersion
 }
 
 #[no_mangle]
-pub fn should_run_unittests(ptr: *const EngineOptions) -> bool {
+pub extern fn should_run_unittests(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).run_unittests
 }
 
 #[no_mangle]
-pub fn should_show_help(ptr: *const EngineOptions) -> bool {
+pub extern fn should_show_help(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).show_help
 }
 
 #[no_mangle]
-pub fn should_run_editor(ptr: *const EngineOptions) -> bool {
+pub extern fn should_run_editor(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).run_editor
 }
 
 #[no_mangle]
-pub fn should_start_in_fullscreen(ptr: *const EngineOptions) -> bool {
+pub extern fn should_start_in_fullscreen(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_in_fullscreen
 }
 
 #[no_mangle]
-pub fn get_scaling_quality(ptr: *const EngineOptions) -> ScalingQuality {
+pub extern fn get_scaling_quality(ptr: *const EngineOptions) -> ScalingQuality {
     unsafe_from_ptr!(ptr).scaling_quality
 }
 
@@ -594,33 +595,33 @@ pub extern fn get_scaling_quality_string(quality: ScalingQuality) -> *mut c_char
 }
 
 #[no_mangle]
-pub fn set_scaling_quality(ptr: *mut EngineOptions, scaling_quality: ScalingQuality) -> () {
+pub extern fn set_scaling_quality(ptr: *mut EngineOptions, scaling_quality: ScalingQuality) -> () {
         unsafe_from_ptr_mut!(ptr).scaling_quality = scaling_quality
 }
 
 
 #[no_mangle]
-pub fn set_start_in_fullscreen(ptr: *mut EngineOptions, val: bool) -> () {
+pub extern fn set_start_in_fullscreen(ptr: *mut EngineOptions, val: bool) -> () {
     unsafe_from_ptr_mut!(ptr).start_in_fullscreen = val
 }
 
 #[no_mangle]
-pub fn should_start_in_window(ptr: *const EngineOptions) -> bool {
+pub extern fn should_start_in_window(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_in_window
 }
 
 #[no_mangle]
-pub fn should_start_in_debug_mode(ptr: *const EngineOptions) -> bool {
+pub extern fn should_start_in_debug_mode(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_in_debug_mode
 }
 
 #[no_mangle]
-pub fn should_start_without_sound(ptr: *const EngineOptions) -> bool {
+pub extern fn should_start_without_sound(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_without_sound
 }
 
 #[no_mangle]
-pub fn set_start_without_sound(ptr: *mut EngineOptions, val: bool) -> () {
+pub extern fn set_start_without_sound(ptr: *mut EngineOptions, val: bool) -> () {
     unsafe_from_ptr_mut!(ptr).start_without_sound = val
 }
 
@@ -631,7 +632,7 @@ pub extern fn get_resource_version_string(version: ResourceVersion) -> *mut c_ch
 }
 
 #[no_mangle]
-pub extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *const c_char {
+pub extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *mut c_char {
     let launcher_path = unsafe { CStr::from_ptr(launcher_path_ptr).to_string_lossy() };
     let is_exe = launcher_path.to_lowercase().ends_with(".exe");
     let end_of_executable_slice = launcher_path.len() - if is_exe { 13 } else { 9 };
@@ -645,7 +646,7 @@ pub extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *const c_
 }
 
 #[no_mangle]
-pub fn free_rust_string(s: *mut c_char) {
+pub extern fn free_rust_string(s: *mut c_char) {
     unsafe {
         if s.is_null() { return }
         CString::from_raw(s)

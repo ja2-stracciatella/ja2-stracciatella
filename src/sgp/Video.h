@@ -3,6 +3,7 @@
 
 #include <SDL_video.h>
 #include "Types.h"
+#include "stracciatella.h"
 
 
 #define VIDEO_NO_CURSOR 0xFFFF
@@ -10,11 +11,7 @@
 
 extern SDL_Window* g_game_window;
 
-enum VideoScaleQuality {
-	VIDEO_SCALE_QUALITY_LINEAR,
-	VIDEO_SCALE_QUALITY_NEAR_PERFECT,
-	VIDEO_SCALE_QUALITY_PERFECT,
-};
+using VideoScaleQuality = ScalingQuality;
 
 void         VideoSetFullScreen(BOOLEAN enable);
 void         InitializeVideoManager(VideoScaleQuality quality);
