@@ -23,45 +23,8 @@ pub use config::VanillaVersion;
 use config::Resolution;
 use config::Ja2Json;
 use config::Cli;
-
-#[derive(Debug, PartialEq)]
-pub struct EngineOptions {
-    stracciatella_home: PathBuf,
-    vanilla_data_dir: PathBuf,
-    mods: Vec<String>,
-    resolution: Resolution,
-    brightness: f32,
-    resource_version: VanillaVersion,
-    show_help: bool,
-    run_unittests: bool,
-    run_editor: bool,
-    start_in_fullscreen: bool,
-    start_in_window: bool,
-	scaling_quality: ScalingQuality,
-    start_in_debug_mode: bool,
-    start_without_sound: bool,
-}
-
-impl Default for EngineOptions {
-    fn default() -> EngineOptions {
-        EngineOptions {
-            stracciatella_home: PathBuf::from(""),
-            vanilla_data_dir: PathBuf::from(""),
-            mods: vec!(),
-            resolution: Resolution::default(),
-            brightness: 1.0,
-            resource_version: VanillaVersion::ENGLISH,
-            show_help: false,
-            run_unittests: false,
-            run_editor: false,
-            start_in_fullscreen: false,
-            start_in_window: true,
-			scaling_quality: ScalingQuality::default(),
-            start_in_debug_mode: false,
-            start_without_sound: false,
-        }
-    }
-}
+use config::EngineOptions;
+use config::find_stracciatella_home;
 
 fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<String> {
     let cli = Cli::from_args(args);
@@ -89,48 +52,9 @@ pub fn write_json_config(engine_options: &EngineOptions) -> Result<(), String> {
     ja2_json.write(&engine_options)
 }
 
-pub fn find_stracciatella_home() -> Result<PathBuf, String> {
-    #[cfg(not(windows))]
-    let base = dirs::home_dir();
-    #[cfg(windows)]
-    let base = dirs::document_dir();
-    #[cfg(not(windows))]
-    let dir = ".ja2";
-    #[cfg(windows)]
-    let dir = "JA2";
-
-    match base {
-        Some(mut path) => {
-            path.push(dir);
-            Ok(path)
-        },
-        None => Err(String::from("Could not find home directory")),
-    }
-}
-
-pub fn build_engine_options_from_home_and_args(stracciatella_home: &PathBuf, args: &[String]) -> Result<EngineOptions, String> {
-    ensure_json_config_existence(stracciatella_home)?;
-
-    let mut engine_options = parse_json_config(&stracciatella_home)?;
-
-    engine_options.stracciatella_home = stracciatella_home.clone();
-
-    match parse_args(&mut engine_options, args) {
-        None => Ok(()),
-        Some(str) => Err(str)
-    }?;
-
-    if engine_options.vanilla_data_dir == PathBuf::from("") {
-        return Err(String::from("Vanilla data directory has to be set either in config file or per command line switch"))
-    }
-
-    Ok(engine_options)
-}
-
 pub fn build_engine_options_from_env_and_args(args: &[String]) -> Result<EngineOptions, String> {
     let home_dir = find_stracciatella_home()?;
-
-    build_engine_options_from_home_and_args(&home_dir, args)
+    EngineOptions::from_home_and_args(&home_dir, args)
 }
 
 macro_rules! unsafe_from_ptr {
@@ -692,7 +616,7 @@ mod tests {
         let args = vec!(String::from("ja2"), String::from("--res"), String::from("1100x480"));
         let home = temp_dir.path().join(".ja2");
 
-        let engine_options = super::build_engine_options_from_home_and_args(&home, &args).unwrap();
+        let engine_options = super::EngineOptions::from_home_and_args(&home, &args).unwrap();
 
         assert_eq!(super::get_resolution_x(&engine_options), 1100);
         assert_eq!(super::get_resolution_y(&engine_options), 480);
@@ -706,7 +630,7 @@ mod tests {
         let home = temp_dir.path().join(".ja2");
         let expected_error_message = "Vanilla data directory has to be set either in config file or per command line switch";
 
-        let engine_options_res = super::build_engine_options_from_home_and_args(&home, &args);
+        let engine_options_res = super::EngineOptions::from_home_and_args(&home, &args);
 
         assert_eq!(engine_options_res, Err(String::from(expected_error_message)));
     }
