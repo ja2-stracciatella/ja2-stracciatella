@@ -15,9 +15,6 @@ use std::fs;
 use std::ffi::{CStr, CString};
 use std::path::PathBuf;
 use std::default::Default;
-use std::io::prelude::*;
-use std::fs::File;
-use std::error::Error;
 use serde::Deserialize;
 use serde::Serialize;
 
@@ -29,52 +26,29 @@ mod config;
 pub use config::ScalingQuality;
 pub use config::VanillaVersion;
 pub use config::Resolution;
+pub use config::Ja2Json;
 
 #[cfg(not(windows))]
 static DATA_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";
-#[cfg(not(windows))]
-static DEFAULT_JSON_CONTENT: &'static str = r##"{
-    "help": "Put the directory to your original ja2 installation into the line below",
-    "data_dir": "/some/place/where/the/data/is"
-}"##;
 
 #[cfg(windows)]
 static DATA_DIR_OPTION_EXAMPLE: &'static str = "C:\\JA2";
-#[cfg(windows)]
-static DEFAULT_JSON_CONTENT: &'static str = r##"{
-   "help": "Put the directory to your original ja2 installation into the line below. Make sure to use double backslashes.",
-   "data_dir": "C:\\Program Files\\Jagged Alliance 2"
-}"##;
 
-fn default_window() -> bool { false }
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[serde(default)]
+#[derive(Debug, PartialEq)]
 pub struct EngineOptions {
-    #[serde(skip)]
     stracciatella_home: PathBuf,
-    #[serde(rename = "data_dir")]
     vanilla_data_dir: PathBuf,
     mods: Vec<String>,
-    #[serde(rename ="res")]
     resolution: Resolution,
     brightness: f32,
-    #[serde(rename = "resversion")]
     resource_version: VanillaVersion,
-    #[serde(skip)]
     show_help: bool,
-    #[serde(skip)]
     run_unittests: bool,
-    #[serde(skip)]
     run_editor: bool,
-    #[serde(rename = "fullscreen")]
     start_in_fullscreen: bool,
-    #[serde(skip, default = "default_window")]
     start_in_window: bool,
-	#[serde(rename = "scaling")]
 	scaling_quality: ScalingQuality,
-    #[serde(rename = "debug")]
     start_in_debug_mode: bool,
-    #[serde(rename = "nosound")]
     start_without_sound: bool,
 }
 
@@ -263,48 +237,25 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
     }
 }
 
-fn build_json_config_location(stracciatella_home: &PathBuf) -> PathBuf {
-    let mut path = PathBuf::from(stracciatella_home);
-    path.push("ja2.json");
-    path
-}
-
 pub fn ensure_json_config_existence(stracciatella_home: &PathBuf) -> Result<(), String> {
-    macro_rules! make_string_err { ($msg:expr) => { $msg.map_err(|why| format!("! {:?}", why.kind())) }; }
-
-    let path = build_json_config_location(stracciatella_home);
-
-    if !stracciatella_home.exists() {
-        try!(make_string_err!(fs::create_dir_all(stracciatella_home)));
-    }
-
-    if !path.is_file() {
-        let mut f = try!(make_string_err!(File::create(path)));
-        try!(make_string_err!(f.write_all(DEFAULT_JSON_CONTENT.as_bytes())));
-    }
-
-    Ok(())
+    let ja2_json = Ja2Json::from_stracciatella_home(stracciatella_home);
+    ja2_json.ensure_existence()
 }
 
 
 pub fn parse_json_config(stracciatella_home: &PathBuf) -> Result<EngineOptions, String> {
-    let path = build_json_config_location(&stracciatella_home);
-    File::open(path)
-        .map_err(|s| format!("Error reading ja2.json config file: {}", s.description()))
-        .and_then(|f| serde_json::from_reader(f)
-        .map_err(|s| format!("Error parsing ja2.json config file: {}", s)))
-        .map(|mut engine_options: EngineOptions| {
-            engine_options.stracciatella_home = stracciatella_home.clone();
-            engine_options
-        })
+    let mut engine_options = EngineOptions::default();
+    let ja2_json = Ja2Json::from_stracciatella_home(stracciatella_home);
+
+    ja2_json.apply_to_engine_options(&mut engine_options)?;
+
+    Ok(engine_options)
 }
 
 pub fn write_json_config(engine_options: &EngineOptions) -> Result<(), String> {
-    let json = serde_json::to_string_pretty(engine_options).map_err(|s| format!("Error creating contents of ja2.json config file: {}", s.description()))?;
-    let path = build_json_config_location(&engine_options.stracciatella_home);
-    let mut f = File::create(path).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))?;
+    let ja2_json = Ja2Json::from_stracciatella_home(&engine_options.stracciatella_home);
 
-    f.write_all(json.as_bytes()).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))
+    ja2_json.write(&engine_options)
 }
 
 pub fn find_stracciatella_home() -> Result<PathBuf, String> {
@@ -330,6 +281,8 @@ pub fn build_engine_options_from_home_and_args(stracciatella_home: &PathBuf, arg
     ensure_json_config_existence(stracciatella_home)?;
 
     let mut engine_options = parse_json_config(&stracciatella_home)?;
+
+    engine_options.stracciatella_home = stracciatella_home.clone();
 
     match parse_args(&mut engine_options, args) {
         None => Ok(()),
@@ -775,24 +728,6 @@ mod tests {
     }
 
     #[test]
-    fn parse_json_config_should_set_stracciatella_home() {
-        let temp_dir = write_temp_folder_with_ja2_json(b"{}");
-        let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
-        let engine_options = super::parse_json_config(&stracciatella_home).unwrap();
-
-        assert_eq!(engine_options.stracciatella_home, stracciatella_home);
-    }
-
-    #[test]
-    fn parse_json_config_should_not_be_able_to_set_stracciatella_home() {
-        let temp_dir = write_temp_folder_with_ja2_json(b"{ \"stracciatella_home\": \"/aaa\" }");
-        let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
-        let engine_options = super::parse_json_config(&stracciatella_home).unwrap();
-
-        assert_eq!(engine_options.stracciatella_home, stracciatella_home);
-    }
-
-    #[test]
     fn parse_json_config_should_be_able_to_change_data_dir() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"data_dir\": \"/dd\" }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
@@ -846,14 +781,6 @@ mod tests {
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
         assert!(!super::should_run_editor(&engine_options));
-    }
-
-    #[test]
-    fn parse_json_config_should_not_be_able_start_in_window_explicitly() {
-        let temp_dir = write_temp_folder_with_ja2_json(b"{ \"window\": true, \"start_in_window\": true }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
-
-        assert!(!super::should_start_in_window(&engine_options));
     }
 
     #[test]
