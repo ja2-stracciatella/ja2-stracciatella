@@ -28,6 +28,10 @@ use serde::Serialize;
 use getopts::Options;
 use libc::{size_t, c_char};
 
+mod config;
+
+pub use config::ScalingQuality;
+
 #[cfg(not(windows))]
 static DATA_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";
 #[cfg(not(windows))]
@@ -87,38 +91,6 @@ impl Display for ResourceVersion {
             ResourceVersion::POLISH => "Polish",
             ResourceVersion::RUSSIAN => "Russian",
             ResourceVersion::RUSSIAN_GOLD => "Russian (Gold)",
-        })
-    }
-}
-
-#[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
-#[repr(C)]
-#[allow(non_camel_case_types)]
-pub enum ScalingQuality {
-    LINEAR,
-    NEAR_PERFECT,
-    PERFECT,
-}
-
-impl FromStr for ScalingQuality {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "LINEAR" => Ok(ScalingQuality::LINEAR),
-            "NEAR_PERFECT" => Ok(ScalingQuality::NEAR_PERFECT),
-            "PERFECT" => Ok(ScalingQuality::PERFECT),
-            _ => Err(format!("Scaling quality {} is unknown", s))
-        }
-    }
-}
-
-impl Display for ScalingQuality {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", match self {
-            ScalingQuality::LINEAR => "Linear Interpolation",
-            ScalingQuality::NEAR_PERFECT => "Near perfect with oversampling",
-            ScalingQuality::PERFECT => "Pixel perfect centered",
         })
     }
 }
@@ -193,7 +165,7 @@ impl Default for EngineOptions {
             run_editor: false,
             start_in_fullscreen: false,
             start_in_window: true,
-			scaling_quality: ScalingQuality::PERFECT,
+			scaling_quality: ScalingQuality::default(),
             start_in_debug_mode: false,
             start_without_sound: false,
         }
