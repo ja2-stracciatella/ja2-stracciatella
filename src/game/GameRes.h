@@ -12,7 +12,7 @@
 #include "StringEncodingTypes.h"
 
 /** List of supported game versions (localizations). */
-using GameVersion = ResourceVersion;
+using GameVersion = VanillaVersion;
 
 enum MultiLanguageGraphic
 {

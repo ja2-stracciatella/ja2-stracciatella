@@ -11,8 +11,6 @@ use std::slice;
 use std::str;
 use std::str::FromStr;
 use std::ptr;
-use std::fmt;
-use std::fmt::Display;
 use std::fs;
 use std::ffi::{CStr, CString};
 use std::path::PathBuf;
@@ -31,6 +29,7 @@ use libc::{size_t, c_char};
 mod config;
 
 pub use config::ScalingQuality;
+pub use config::VanillaVersion;
 
 #[cfg(not(windows))]
 static DATA_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";
@@ -47,53 +46,6 @@ static DEFAULT_JSON_CONTENT: &'static str = r##"{
    "help": "Put the directory to your original ja2 installation into the line below. Make sure to use double backslashes.",
    "data_dir": "C:\\Program Files\\Jagged Alliance 2"
 }"##;
-
-#[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
-#[repr(C)]
-#[allow(non_camel_case_types)]
-pub enum ResourceVersion {
-    DUTCH,
-    ENGLISH,
-    FRENCH,
-    GERMAN,
-    ITALIAN,
-    POLISH,
-    RUSSIAN,
-    RUSSIAN_GOLD,
-}
-
-impl FromStr for ResourceVersion {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "DUTCH" => Ok(ResourceVersion::DUTCH),
-            "ENGLISH" => Ok(ResourceVersion::ENGLISH),
-            "FRENCH" => Ok(ResourceVersion::FRENCH),
-            "GERMAN" => Ok(ResourceVersion::GERMAN),
-            "ITALIAN" => Ok(ResourceVersion::ITALIAN),
-            "POLISH" => Ok(ResourceVersion::POLISH),
-            "RUSSIAN" => Ok(ResourceVersion::RUSSIAN),
-            "RUSSIAN_GOLD" => Ok(ResourceVersion::RUSSIAN_GOLD),
-            _ => Err(format!("Resource version {} is unknown", s))
-        }
-    }
-}
-
-impl Display for ResourceVersion {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", match self {
-            ResourceVersion::DUTCH => "Dutch",
-            ResourceVersion::ENGLISH => "English",
-            ResourceVersion::FRENCH => "French",
-            ResourceVersion::GERMAN => "German",
-            ResourceVersion::ITALIAN => "Italian",
-            ResourceVersion::POLISH => "Polish",
-            ResourceVersion::RUSSIAN => "Russian",
-            ResourceVersion::RUSSIAN_GOLD => "Russian (Gold)",
-        })
-    }
-}
 
 fn parse_resolution(resolution_str: &str) -> Result<(u16, u16), String> {
     let mut resolutions = resolution_str.split('x').filter_map(|r_str| r_str.parse::<u16>().ok());
@@ -132,7 +84,7 @@ pub struct EngineOptions {
     resolution: (u16, u16),
     brightness: f32,
     #[serde(rename = "resversion")]
-    resource_version: ResourceVersion,
+    resource_version: VanillaVersion,
     #[serde(skip)]
     show_help: bool,
     #[serde(skip)]
@@ -159,7 +111,7 @@ impl Default for EngineOptions {
             mods: vec!(),
             resolution: (640, 480),
             brightness: 1.0,
-            resource_version: ResourceVersion::ENGLISH,
+            resource_version: VanillaVersion::ENGLISH,
             show_help: false,
             run_unittests: false,
             run_editor: false,
@@ -293,7 +245,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
             }
 
             if let Some(s) = m.opt_str("resversion") {
-                match ResourceVersion::from_str(&s) {
+                match VanillaVersion::from_str(&s) {
                     Ok(resource_version) => {
                         engine_options.resource_version = resource_version
                     },
@@ -526,12 +478,12 @@ pub extern fn set_brightness(ptr: *mut EngineOptions, brightness: f32) -> () {
 }
 
 #[no_mangle]
-pub extern fn get_resource_version(ptr: *const EngineOptions) -> ResourceVersion {
+pub extern fn get_resource_version(ptr: *const EngineOptions) -> VanillaVersion {
     unsafe_from_ptr!(ptr).resource_version
 }
 
 #[no_mangle]
-pub extern fn set_resource_version(ptr: *mut EngineOptions, res: ResourceVersion) -> () {
+pub extern fn set_resource_version(ptr: *mut EngineOptions, res: VanillaVersion) -> () {
     unsafe_from_ptr_mut!(ptr).resource_version = res;
 }
 
@@ -598,7 +550,7 @@ pub extern fn set_start_without_sound(ptr: *mut EngineOptions, val: bool) -> () 
 }
 
 #[no_mangle]
-pub extern fn get_resource_version_string(version: ResourceVersion) -> *mut c_char {
+pub extern fn get_resource_version_string(version: VanillaVersion) -> *mut c_char {
     let c_str_home = CString::new(version.to_string()).unwrap();
     c_str_home.into_raw()
 }
@@ -708,7 +660,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("-resversion"), String::from("RUSSIAN"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::RUSSIAN);
+        assert!(super::get_resource_version(&engine_options) == super::VanillaVersion::RUSSIAN);
     }
 
     #[test]
@@ -716,7 +668,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("-resversion"), String::from("ITALIAN"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::ITALIAN);
+        assert!(super::get_resource_version(&engine_options) == super::VanillaVersion::ITALIAN);
     }
 
     #[test]
@@ -959,7 +911,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"resversion\": \"RUSSIAN\" }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert_eq!(super::get_resource_version(&engine_options), super::ResourceVersion::RUSSIAN);
+        assert_eq!(super::get_resource_version(&engine_options), super::VanillaVersion::RUSSIAN);
     }
 
     #[test]
@@ -967,7 +919,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"resversion\": \"ITALIAN\" }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert_eq!(super::get_resource_version(&engine_options), super::ResourceVersion::ITALIAN);
+        assert_eq!(super::get_resource_version(&engine_options), super::VanillaVersion::ITALIAN);
     }
 
     #[test]
@@ -1075,14 +1027,14 @@ r##"{
 
     #[test]
     fn get_resource_version_string_should_return_the_correct_resource_version_string() {
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::DUTCH), "Dutch");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::ENGLISH), "English");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::FRENCH), "French");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::GERMAN), "German");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::ITALIAN), "Italian");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::POLISH), "Polish");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN), "Russian");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN_GOLD), "Russian (Gold)");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::DUTCH), "Dutch");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::ENGLISH), "English");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::FRENCH), "French");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::GERMAN), "German");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::ITALIAN), "Italian");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::POLISH), "Polish");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::RUSSIAN), "Russian");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::RUSSIAN_GOLD), "Russian (Gold)");
 
     }
 
