@@ -18,9 +18,7 @@ use std::default::Default;
 use std::io::prelude::*;
 use std::fs::File;
 use std::error::Error;
-use serde::Deserializer;
 use serde::Deserialize;
-use serde::Serializer;
 use serde::Serialize;
 
 use getopts::Options;
@@ -30,6 +28,7 @@ mod config;
 
 pub use config::ScalingQuality;
 pub use config::VanillaVersion;
+pub use config::Resolution;
 
 #[cfg(not(windows))]
 static DATA_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";
@@ -47,30 +46,6 @@ static DEFAULT_JSON_CONTENT: &'static str = r##"{
    "data_dir": "C:\\Program Files\\Jagged Alliance 2"
 }"##;
 
-fn parse_resolution(resolution_str: &str) -> Result<(u16, u16), String> {
-    let mut resolutions = resolution_str.split('x').filter_map(|r_str| r_str.parse::<u16>().ok());
-
-    match (resolutions.next(), resolutions.next()) {
-        (Some(x), Some(y)) => Ok((x, y)),
-        _ => Err(String::from("Incorrect resolution format, should be WIDTHxHEIGHT."))
-    }
-}
-
-fn deserialize_resolution<'de, D>(deserializer: D) -> Result<(u16, u16), D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let res = String::deserialize(deserializer)?;
-    parse_resolution(&res).map_err(serde::de::Error::custom)
-}
-
-fn serialize_resolution<S>(&(x, y): &(u16, u16), serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    String::serialize(&format!("{}x{}", x, y), serializer)
-}
-
 fn default_window() -> bool { false }
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(default)]
@@ -80,8 +55,8 @@ pub struct EngineOptions {
     #[serde(rename = "data_dir")]
     vanilla_data_dir: PathBuf,
     mods: Vec<String>,
-    #[serde(rename ="res", serialize_with = "serialize_resolution", deserialize_with = "deserialize_resolution")]
-    resolution: (u16, u16),
+    #[serde(rename ="res")]
+    resolution: Resolution,
     brightness: f32,
     #[serde(rename = "resversion")]
     resource_version: VanillaVersion,
@@ -109,7 +84,7 @@ impl Default for EngineOptions {
             stracciatella_home: PathBuf::from(""),
             vanilla_data_dir: PathBuf::from(""),
             mods: vec!(),
-            resolution: (640, 480),
+            resolution: Resolution::default(),
             brightness: 1.0,
             resource_version: VanillaVersion::ENGLISH,
             show_help: false,
@@ -227,7 +202,7 @@ fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<Str
             }
 
             if let Some(s) = m.opt_str("res") {
-                match parse_resolution(&s) {
+                match Resolution::from_str(&s) {
                     Ok(res) => {
                         engine_options.resolution = res;
                     },
@@ -464,7 +439,7 @@ pub extern fn get_resolution_y(ptr: *const EngineOptions) -> u16 {
 
 #[no_mangle]
 pub extern fn set_resolution(ptr: *mut EngineOptions, x: u16, y: u16) -> () {
-    unsafe_from_ptr_mut!(ptr).resolution = (x, y)
+    unsafe_from_ptr_mut!(ptr).resolution = Resolution(x, y)
 }
 
 #[no_mangle]
@@ -987,7 +962,7 @@ mod tests {
         let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
 
         engine_options.stracciatella_home = stracciatella_home.clone();
-        engine_options.resolution = (100, 100);
+        engine_options.resolution = super::Resolution(100, 100);
 
         super::write_engine_options(&mut engine_options);
 
@@ -1004,7 +979,7 @@ mod tests {
         let stracciatella_json = PathBuf::from(temp_dir.path().join(".ja2/ja2.json"));
 
         engine_options.stracciatella_home = stracciatella_home.clone();
-        engine_options.resolution = (100, 100);
+        engine_options.resolution = super::Resolution(100, 100);
 
         super::write_engine_options(&mut engine_options);
 
