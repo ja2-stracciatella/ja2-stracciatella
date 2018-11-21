@@ -272,8 +272,8 @@ void GetAbsoluteScreenXYFromMapPos(const GridNo pos, INT16* const psWorldScreenX
 	sScreenCenterY = sDistToCenterX + sDistToCenterY;
 
 	// Subtract screen center
-	*psWorldScreenX = sScreenCenterX + gsCX - gsTLX;
-	*psWorldScreenY = sScreenCenterY + gsCY - gsTLY;
+	*psWorldScreenX = sScreenCenterX + gsCX - gsLeftX;
+	*psWorldScreenY = sScreenCenterY + gsCY - gsTopY;
 
 }
 
@@ -284,8 +284,8 @@ GridNo GetMapPosFromAbsoluteScreenXY(const INT16 sWorldScreenX, const INT16 sWor
 	INT16 sDistToCenterY, sDistToCenterX;
 
 	// Subtract screen center
-	sDistToCenterX = sWorldScreenX - gsCX + gsTLX;
-	sDistToCenterY = sWorldScreenY - gsCY + gsTLY;
+	sDistToCenterX = sWorldScreenX - gsCX + gsLeftX;
+	sDistToCenterY = sWorldScreenY - gsCY + gsTopY;
 
 	// From render center in world coords, convert to render center in "screen" coords
 
@@ -697,8 +697,8 @@ BOOLEAN GridNoOnVisibleWorldTile( INT16 sGridNo )
 	INT16 sWorldY;
 	GetAbsoluteScreenXYFromMapPos(sGridNo, &sWorldX, &sWorldY);
 
-	if (sWorldX > 0 && sWorldX < (gsTRX - gsTLX - 20) &&
-		sWorldY > 20 && sWorldY < (gsBLY - gsTLY - 20))
+	if (sWorldX > 0 && sWorldX < (gsRightX - gsLeftX - 20) &&
+		sWorldY > 20 && sWorldY < (gsBottomY - gsTopY - 20))
 	{
 		return( TRUE );
 	}

@@ -2115,7 +2115,7 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 	{
 		case EAST_STRATEGIC_MOVE:
 
-			if ( sWorldX < ( ( gsTRX - gsTLX ) - CHECK_DIR_X_DELTA ) )
+			if ( sWorldX < ( ( gsRightX - gsLeftX ) - CHECK_DIR_X_DELTA ) )
 			{
 				// NOT OK, return FALSE
 				return( FALSE );
@@ -2133,7 +2133,7 @@ static BOOLEAN SoldierOKForSectorExit(SOLDIERTYPE* pSoldier, INT8 bExitDirection
 
 		case SOUTH_STRATEGIC_MOVE:
 
-			if ( sWorldY < ( ( gsBLY - gsTRY ) - CHECK_DIR_Y_DELTA ) )
+			if ( sWorldY < ( ( gsBottomY - gsTopY ) - CHECK_DIR_Y_DELTA ) )
 			{
 				// NOT OK, return FALSE
 				return( FALSE );
