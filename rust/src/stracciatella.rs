@@ -9,445 +9,52 @@ extern crate dirs;
 
 use std::slice;
 use std::str;
-use std::str::FromStr;
 use std::ptr;
-use std::fmt;
-use std::fmt::Display;
-use std::fs;
 use std::ffi::{CStr, CString};
 use std::path::PathBuf;
 use std::default::Default;
-use std::io::prelude::*;
-use std::fs::File;
-use std::error::Error;
-use serde::Deserializer;
-use serde::Deserialize;
-use serde::Serializer;
-use serde::Serialize;
 
-use getopts::Options;
 use libc::{size_t, c_char};
 
-#[cfg(not(windows))]
-static DATA_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";
-#[cfg(not(windows))]
-static DEFAULT_JSON_CONTENT: &'static str = r##"{
-    "help": "Put the directory to your original ja2 installation into the line below",
-    "data_dir": "/some/place/where/the/data/is"
-}"##;
+mod config;
 
-#[cfg(windows)]
-static DATA_DIR_OPTION_EXAMPLE: &'static str = "C:\\JA2";
-#[cfg(windows)]
-static DEFAULT_JSON_CONTENT: &'static str = r##"{
-   "help": "Put the directory to your original ja2 installation into the line below. Make sure to use double backslashes.",
-   "data_dir": "C:\\Program Files\\Jagged Alliance 2"
-}"##;
-
-#[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
-#[repr(C)]
-#[allow(non_camel_case_types)]
-pub enum ResourceVersion {
-    DUTCH,
-    ENGLISH,
-    FRENCH,
-    GERMAN,
-    ITALIAN,
-    POLISH,
-    RUSSIAN,
-    RUSSIAN_GOLD,
-}
-
-impl FromStr for ResourceVersion {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "DUTCH" => Ok(ResourceVersion::DUTCH),
-            "ENGLISH" => Ok(ResourceVersion::ENGLISH),
-            "FRENCH" => Ok(ResourceVersion::FRENCH),
-            "GERMAN" => Ok(ResourceVersion::GERMAN),
-            "ITALIAN" => Ok(ResourceVersion::ITALIAN),
-            "POLISH" => Ok(ResourceVersion::POLISH),
-            "RUSSIAN" => Ok(ResourceVersion::RUSSIAN),
-            "RUSSIAN_GOLD" => Ok(ResourceVersion::RUSSIAN_GOLD),
-            _ => Err(format!("Resource version {} is unknown", s))
-        }
-    }
-}
-
-impl Display for ResourceVersion {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", match self {
-            ResourceVersion::DUTCH => "Dutch",
-            ResourceVersion::ENGLISH => "English",
-            ResourceVersion::FRENCH => "French",
-            ResourceVersion::GERMAN => "German",
-            ResourceVersion::ITALIAN => "Italian",
-            ResourceVersion::POLISH => "Polish",
-            ResourceVersion::RUSSIAN => "Russian",
-            ResourceVersion::RUSSIAN_GOLD => "Russian (Gold)",
-        })
-    }
-}
-
-#[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
-#[repr(C)]
-#[allow(non_camel_case_types)]
-pub enum ScalingQuality {
-    LINEAR,
-    NEAR_PERFECT,
-    PERFECT,
-}
-
-impl FromStr for ScalingQuality {
-    type Err = String;
-
-    fn from_str(s: &str) -> Result<Self, Self::Err> {
-        match s {
-            "LINEAR" => Ok(ScalingQuality::LINEAR),
-            "NEAR_PERFECT" => Ok(ScalingQuality::NEAR_PERFECT),
-            "PERFECT" => Ok(ScalingQuality::PERFECT),
-            _ => Err(format!("Scaling quality {} is unknown", s))
-        }
-    }
-}
-
-impl Display for ScalingQuality {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", match self {
-            ScalingQuality::LINEAR => "Linear Interpolation",
-            ScalingQuality::NEAR_PERFECT => "Near perfect with oversampling",
-            ScalingQuality::PERFECT => "Pixel perfect centered",
-        })
-    }
-}
-
-fn parse_resolution(resolution_str: &str) -> Result<(u16, u16), String> {
-    let mut resolutions = resolution_str.split('x').filter_map(|r_str| r_str.parse::<u16>().ok());
-
-    match (resolutions.next(), resolutions.next()) {
-        (Some(x), Some(y)) => Ok((x, y)),
-        _ => Err(String::from("Incorrect resolution format, should be WIDTHxHEIGHT."))
-    }
-}
-
-fn deserialize_resolution<'de, D>(deserializer: D) -> Result<(u16, u16), D::Error>
-where
-    D: Deserializer<'de>,
-{
-    let res = String::deserialize(deserializer)?;
-    parse_resolution(&res).map_err(serde::de::Error::custom)
-}
-
-fn serialize_resolution<S>(&(x, y): &(u16, u16), serializer: S) -> Result<S::Ok, S::Error>
-where
-    S: Serializer,
-{
-    String::serialize(&format!("{}x{}", x, y), serializer)
-}
-
-fn default_window() -> bool { false }
-#[derive(Debug, PartialEq, Serialize, Deserialize)]
-#[serde(default)]
-pub struct EngineOptions {
-    #[serde(skip)]
-    stracciatella_home: PathBuf,
-    #[serde(rename = "data_dir")]
-    vanilla_data_dir: PathBuf,
-    mods: Vec<String>,
-    #[serde(rename ="res", serialize_with = "serialize_resolution", deserialize_with = "deserialize_resolution")]
-    resolution: (u16, u16),
-    brightness: f32,
-    #[serde(rename = "resversion")]
-    resource_version: ResourceVersion,
-    #[serde(skip)]
-    show_help: bool,
-    #[serde(skip)]
-    run_unittests: bool,
-    #[serde(skip)]
-    run_editor: bool,
-    #[serde(rename = "fullscreen")]
-    start_in_fullscreen: bool,
-    #[serde(skip, default = "default_window")]
-    start_in_window: bool,
-	#[serde(rename = "scaling")]
-	scaling_quality: ScalingQuality,
-    #[serde(rename = "debug")]
-    start_in_debug_mode: bool,
-    #[serde(rename = "nosound")]
-    start_without_sound: bool,
-}
-
-impl Default for EngineOptions {
-    fn default() -> EngineOptions {
-        EngineOptions {
-            stracciatella_home: PathBuf::from(""),
-            vanilla_data_dir: PathBuf::from(""),
-            mods: vec!(),
-            resolution: (640, 480),
-            brightness: 1.0,
-            resource_version: ResourceVersion::ENGLISH,
-            show_help: false,
-            run_unittests: false,
-            run_editor: false,
-            start_in_fullscreen: false,
-            start_in_window: true,
-			scaling_quality: ScalingQuality::PERFECT,
-            start_in_debug_mode: false,
-            start_without_sound: false,
-        }
-    }
-}
-
-pub fn get_command_line_options() -> Options {
-    let mut opts = Options::new();
-
-    opts.long_only(true);
-
-    opts.optmulti(
-        "",
-        "datadir",
-        "Set path for data directory",
-        DATA_DIR_OPTION_EXAMPLE
-    );
-    opts.optmulti(
-        "",
-        "mod",
-        "Start one of the game modifications. MOD_NAME is the name of modification, e.g. 'from-russia-with-love. See mods folder for possible options'.",
-        "MOD_NAME"
-    );
-    opts.optopt(
-        "",
-        "res",
-        "Screen resolution, e.g. 800x600. Default value is 640x480",
-        "WIDTHxHEIGHT"
-    );
-    opts.optopt(
-        "",
-        "brightness",
-        "Screen brightness (gamma multiplier) value to set where 0.0 is completely dark and 1.0 is normal brightness. Default value is 1.0",
-        "GAMMA_VALUE"
-    );
-    opts.optopt(
-        "",
-        "resversion",
-        "Version of the game resources. Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD. Default value is ENGLISH. RUSSIAN is for BUKA Agonia Vlasty release. RUSSIAN_GOLD is for Gold release",
-        "RUSSIAN_GOLD"
-    );
-    opts.optflag(
-        "",
-        "unittests",
-        "Perform unit tests. E.g. 'ja2.exe -unittests --gtest_output=\"xml:report.xml\" --gtest_repeat=2'");
-    opts.optflag(
-        "",
-        "editor",
-        "Start the map editor (Editor.slf is required)"
-    );
-    opts.optflag(
-        "",
-        "fullscreen",
-        "Start the game in the fullscreen mode"
-    );
-    opts.optflag(
-        "",
-        "nosound",
-        "Turn the sound and music off"
-    );
-    opts.optflag(
-        "",
-        "window",
-        "Start the game in a window"
-    );
-    opts.optflag(
-        "",
-        "debug",
-        "Enable Debug Mode"
-    );
-    opts.optflag(
-        "",
-        "help",
-        "print this help menu"
-    );
-
-    opts
-}
+pub use config::ScalingQuality;
+pub use config::VanillaVersion;
+use config::Resolution;
+use config::Ja2Json;
+use config::Cli;
+use config::EngineOptions;
+use config::find_stracciatella_home;
 
 fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<String> {
-    let opts = get_command_line_options();
-
-    match opts.parse(&args[1..]) {
-        Ok(m) => {
-            if !m.free.is_empty() {
-                return Some(format!("Unknown arguments: '{}'.", m.free.join(" ")));
-            }
-
-            if let Some(s) = m.opt_str("datadir") {
-                match fs::canonicalize(PathBuf::from(s)) {
-                    Ok(s) => {
-                        let mut temp = String::from(s.to_str().expect("Should not happen"));
-                        // remove UNC path prefix (Windows)
-                        if temp.starts_with("\\\\") {
-                            temp.drain(..2);
-                            let pos = temp.find('\\').unwrap() + 1;
-                            temp.drain(..pos);
-                        }
-                        engine_options.vanilla_data_dir = PathBuf::from(temp)
-                    },
-                    Err(_) => return Some(String::from("Please specify an existing datadir."))
-                };
-            }
-
-            if !m.opt_strs("mod").is_empty() {
-                engine_options.mods = m.opt_strs("mod");
-            }
-
-            if let Some(s) = m.opt_str("res") {
-                match parse_resolution(&s) {
-                    Ok(res) => {
-                        engine_options.resolution = res;
-                    },
-                    Err(s) => return Some(s)
-                }
-            }
-
-            if let Some(s) = m.opt_str("brightness") {
-                match s.parse::<f32>() {
-                    Ok(val) => {
-                        engine_options.brightness = val;
-                    },
-                    Err(_e) => return Some(String::from("Incorrect brightness value."))
-                }
-            }
-
-            if let Some(s) = m.opt_str("resversion") {
-                match ResourceVersion::from_str(&s) {
-                    Ok(resource_version) => {
-                        engine_options.resource_version = resource_version
-                    },
-                    Err(str) => return Some(str)
-                }
-            }
-
-            if m.opt_present("help") {
-                engine_options.show_help = true;
-            }
-
-
-            if m.opt_present("unittests") {
-                engine_options.run_unittests = true;
-            }
-
-            if m.opt_present("editor") {
-                engine_options.run_editor = true;
-            }
-
-            if m.opt_present("fullscreen") {
-                engine_options.start_in_fullscreen = true;
-            }
-
-            if m.opt_present("nosound") {
-                engine_options.start_without_sound = true;
-            }
-
-            if m.opt_present("window") {
-                engine_options.start_in_window = true;
-            }
-
-            if m.opt_present("debug") {
-                engine_options.start_in_debug_mode = true;
-            }
-
-            None
-        }
-        Err(f) => Some(f.to_string())
-    }
-}
-
-fn build_json_config_location(stracciatella_home: &PathBuf) -> PathBuf {
-    let mut path = PathBuf::from(stracciatella_home);
-    path.push("ja2.json");
-    path
+    let cli = Cli::from_args(args);
+    cli.apply_to_engine_options(engine_options).err()
 }
 
 pub fn ensure_json_config_existence(stracciatella_home: &PathBuf) -> Result<(), String> {
-    macro_rules! make_string_err { ($msg:expr) => { $msg.map_err(|why| format!("! {:?}", why.kind())) }; }
-
-    let path = build_json_config_location(stracciatella_home);
-
-    if !stracciatella_home.exists() {
-        try!(make_string_err!(fs::create_dir_all(stracciatella_home)));
-    }
-
-    if !path.is_file() {
-        let mut f = try!(make_string_err!(File::create(path)));
-        try!(make_string_err!(f.write_all(DEFAULT_JSON_CONTENT.as_bytes())));
-    }
-
-    Ok(())
+    let ja2_json = Ja2Json::from_stracciatella_home(stracciatella_home);
+    ja2_json.ensure_existence()
 }
 
 
 pub fn parse_json_config(stracciatella_home: &PathBuf) -> Result<EngineOptions, String> {
-    let path = build_json_config_location(&stracciatella_home);
-    File::open(path)
-        .map_err(|s| format!("Error reading ja2.json config file: {}", s.description()))
-        .and_then(|f| serde_json::from_reader(f)
-        .map_err(|s| format!("Error parsing ja2.json config file: {}", s)))
-        .map(|mut engine_options: EngineOptions| {
-            engine_options.stracciatella_home = stracciatella_home.clone();
-            engine_options
-        })
-}
+    let mut engine_options = EngineOptions::default();
+    let ja2_json = Ja2Json::from_stracciatella_home(stracciatella_home);
 
-pub fn write_json_config(engine_options: &EngineOptions) -> Result<(), String> {
-    let json = serde_json::to_string_pretty(engine_options).map_err(|s| format!("Error creating contents of ja2.json config file: {}", s.description()))?;
-    let path = build_json_config_location(&engine_options.stracciatella_home);
-    let mut f = File::create(path).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))?;
-
-    f.write_all(json.as_bytes()).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))
-}
-
-pub fn find_stracciatella_home() -> Result<PathBuf, String> {
-    #[cfg(not(windows))]
-    let base = dirs::home_dir();
-    #[cfg(windows)]
-    let base = dirs::document_dir();
-    #[cfg(not(windows))]
-    let dir = ".ja2";
-    #[cfg(windows)]
-    let dir = "JA2";
-
-    match base {
-        Some(mut path) => {
-            path.push(dir);
-            Ok(path)
-        },
-        None => Err(String::from("Could not find home directory")),
-    }
-}
-
-pub fn build_engine_options_from_home_and_args(stracciatella_home: &PathBuf, args: &[String]) -> Result<EngineOptions, String> {
-    ensure_json_config_existence(stracciatella_home)?;
-
-    let mut engine_options = parse_json_config(&stracciatella_home)?;
-
-    match parse_args(&mut engine_options, args) {
-        None => Ok(()),
-        Some(str) => Err(str)
-    }?;
-
-    if engine_options.vanilla_data_dir == PathBuf::from("") {
-        return Err(String::from("Vanilla data directory has to be set either in config file or per command line switch"))
-    }
+    ja2_json.apply_to_engine_options(&mut engine_options)?;
 
     Ok(engine_options)
 }
 
+pub fn write_json_config(engine_options: &EngineOptions) -> Result<(), String> {
+    let ja2_json = Ja2Json::from_stracciatella_home(&engine_options.stracciatella_home);
+
+    ja2_json.write(&engine_options)
+}
+
 pub fn build_engine_options_from_env_and_args(args: &[String]) -> Result<EngineOptions, String> {
     let home_dir = find_stracciatella_home()?;
-
-    build_engine_options_from_home_and_args(&home_dir, args)
+    EngineOptions::from_home_and_args(&home_dir, args)
 }
 
 macro_rules! unsafe_from_ptr {
@@ -470,9 +77,7 @@ pub extern fn create_engine_options(array: *const *const c_char, length: size_t)
     match build_engine_options_from_env_and_args(&args) {
         Ok(engine_options) => {
             if engine_options.show_help {
-                let opts = get_command_line_options();
-                let brief = "Usage: ja2 [options]".to_string();
-                print!("{}", opts.usage(&brief));
+                print!("{}", Cli::usage());
             }
             Box::into_raw(Box::new(engine_options))
         },
@@ -540,7 +145,7 @@ pub extern fn get_resolution_y(ptr: *const EngineOptions) -> u16 {
 
 #[no_mangle]
 pub extern fn set_resolution(ptr: *mut EngineOptions, x: u16, y: u16) -> () {
-    unsafe_from_ptr_mut!(ptr).resolution = (x, y)
+    unsafe_from_ptr_mut!(ptr).resolution = Resolution(x, y)
 }
 
 #[no_mangle]
@@ -554,12 +159,12 @@ pub extern fn set_brightness(ptr: *mut EngineOptions, brightness: f32) -> () {
 }
 
 #[no_mangle]
-pub extern fn get_resource_version(ptr: *const EngineOptions) -> ResourceVersion {
+pub extern fn get_resource_version(ptr: *const EngineOptions) -> VanillaVersion {
     unsafe_from_ptr!(ptr).resource_version
 }
 
 #[no_mangle]
-pub extern fn set_resource_version(ptr: *mut EngineOptions, res: ResourceVersion) -> () {
+pub extern fn set_resource_version(ptr: *mut EngineOptions, res: VanillaVersion) -> () {
     unsafe_from_ptr_mut!(ptr).resource_version = res;
 }
 
@@ -626,7 +231,7 @@ pub extern fn set_start_without_sound(ptr: *mut EngineOptions, val: bool) -> () 
 }
 
 #[no_mangle]
-pub extern fn get_resource_version_string(version: ResourceVersion) -> *mut c_char {
+pub extern fn get_resource_version_string(version: VanillaVersion) -> *mut c_char {
     let c_str_home = CString::new(version.to_string()).unwrap();
     c_str_home.into_raw()
 }
@@ -736,7 +341,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("-resversion"), String::from("RUSSIAN"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::RUSSIAN);
+        assert!(super::get_resource_version(&engine_options) == super::VanillaVersion::RUSSIAN);
     }
 
     #[test]
@@ -744,7 +349,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("-resversion"), String::from("ITALIAN"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(super::get_resource_version(&engine_options) == super::ResourceVersion::ITALIAN);
+        assert!(super::get_resource_version(&engine_options) == super::VanillaVersion::ITALIAN);
     }
 
     #[test]
@@ -876,24 +481,6 @@ mod tests {
     }
 
     #[test]
-    fn parse_json_config_should_set_stracciatella_home() {
-        let temp_dir = write_temp_folder_with_ja2_json(b"{}");
-        let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
-        let engine_options = super::parse_json_config(&stracciatella_home).unwrap();
-
-        assert_eq!(engine_options.stracciatella_home, stracciatella_home);
-    }
-
-    #[test]
-    fn parse_json_config_should_not_be_able_to_set_stracciatella_home() {
-        let temp_dir = write_temp_folder_with_ja2_json(b"{ \"stracciatella_home\": \"/aaa\" }");
-        let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
-        let engine_options = super::parse_json_config(&stracciatella_home).unwrap();
-
-        assert_eq!(engine_options.stracciatella_home, stracciatella_home);
-    }
-
-    #[test]
     fn parse_json_config_should_be_able_to_change_data_dir() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"data_dir\": \"/dd\" }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
@@ -950,14 +537,6 @@ mod tests {
     }
 
     #[test]
-    fn parse_json_config_should_not_be_able_start_in_window_explicitly() {
-        let temp_dir = write_temp_folder_with_ja2_json(b"{ \"window\": true, \"start_in_window\": true }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
-
-        assert!(!super::should_start_in_window(&engine_options));
-    }
-
-    #[test]
     fn parse_json_config_should_fail_with_invalid_mod() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"mods\": [ \"a\", true ] }");
         let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
@@ -987,7 +566,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"resversion\": \"RUSSIAN\" }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert_eq!(super::get_resource_version(&engine_options), super::ResourceVersion::RUSSIAN);
+        assert_eq!(super::get_resource_version(&engine_options), super::VanillaVersion::RUSSIAN);
     }
 
     #[test]
@@ -995,7 +574,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"resversion\": \"ITALIAN\" }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert_eq!(super::get_resource_version(&engine_options), super::ResourceVersion::ITALIAN);
+        assert_eq!(super::get_resource_version(&engine_options), super::VanillaVersion::ITALIAN);
     }
 
     #[test]
@@ -1037,7 +616,7 @@ mod tests {
         let args = vec!(String::from("ja2"), String::from("--res"), String::from("1100x480"));
         let home = temp_dir.path().join(".ja2");
 
-        let engine_options = super::build_engine_options_from_home_and_args(&home, &args).unwrap();
+        let engine_options = super::EngineOptions::from_home_and_args(&home, &args).unwrap();
 
         assert_eq!(super::get_resolution_x(&engine_options), 1100);
         assert_eq!(super::get_resolution_y(&engine_options), 480);
@@ -1051,7 +630,7 @@ mod tests {
         let home = temp_dir.path().join(".ja2");
         let expected_error_message = "Vanilla data directory has to be set either in config file or per command line switch";
 
-        let engine_options_res = super::build_engine_options_from_home_and_args(&home, &args);
+        let engine_options_res = super::EngineOptions::from_home_and_args(&home, &args);
 
         assert_eq!(engine_options_res, Err(String::from(expected_error_message)));
     }
@@ -1063,7 +642,7 @@ mod tests {
         let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
 
         engine_options.stracciatella_home = stracciatella_home.clone();
-        engine_options.resolution = (100, 100);
+        engine_options.resolution = super::Resolution(100, 100);
 
         super::write_engine_options(&mut engine_options);
 
@@ -1080,7 +659,7 @@ mod tests {
         let stracciatella_json = PathBuf::from(temp_dir.path().join(".ja2/ja2.json"));
 
         engine_options.stracciatella_home = stracciatella_home.clone();
-        engine_options.resolution = (100, 100);
+        engine_options.resolution = super::Resolution(100, 100);
 
         super::write_engine_options(&mut engine_options);
 
@@ -1103,14 +682,14 @@ r##"{
 
     #[test]
     fn get_resource_version_string_should_return_the_correct_resource_version_string() {
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::DUTCH), "Dutch");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::ENGLISH), "English");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::FRENCH), "French");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::GERMAN), "German");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::ITALIAN), "Italian");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::POLISH), "Polish");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN), "Russian");
-        assert_chars_eq!(super::get_resource_version_string(super::ResourceVersion::RUSSIAN_GOLD), "Russian (Gold)");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::DUTCH), "Dutch");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::ENGLISH), "English");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::FRENCH), "French");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::GERMAN), "German");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::ITALIAN), "Italian");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::POLISH), "Polish");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::RUSSIAN), "Russian");
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::RUSSIAN_GOLD), "Russian (Gold)");
 
     }
 
