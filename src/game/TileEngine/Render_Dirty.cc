@@ -207,7 +207,7 @@ void RestoreBackgroundRects(void)
 			}
 			else if (b->pZSaveArea != NULL)
 			{
-				Blt16BPPTo16BPP(gpZBuffer, gZBufferPitch, b->pZSaveArea, b->sWidth * sizeof(b->pZSaveArea), b->sLeft, b->sTop, 0, 0, b->sWidth, b->sHeight);
+				Blt16BPPTo16BPP(gpZBuffer, gZBufferPitch, b->pZSaveArea, b->sWidth * sizeof(*b->pZSaveArea), b->sLeft, b->sTop, 0, 0, b->sWidth, b->sHeight);
 			}
 			else
 			{
@@ -277,7 +277,7 @@ void SaveBackgroundRects(void)
 		}
 		else if (b->pZSaveArea != NULL)
 		{
-			Blt16BPPTo16BPP(b->pZSaveArea, b->sWidth * sizeof(b->pZSaveArea), gpZBuffer, gZBufferPitch, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
+			Blt16BPPTo16BPP(b->pZSaveArea, b->sWidth * sizeof(*b->pZSaveArea), gpZBuffer, gZBufferPitch, 0, 0, b->sLeft, b->sTop, b->sWidth, b->sHeight);
 		}
 		else
 		{
