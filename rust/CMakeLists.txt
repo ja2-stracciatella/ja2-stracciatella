@@ -3,8 +3,9 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake
 
 set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
 
-find_package(Cargo 0.20.0 REQUIRED)
-find_package(Rustc 1.19.0 REQUIRED)
+file(READ "${CMAKE_SOURCE_DIR}/../rust-toolchain" MIN_RUST_VERSION)
+find_package(Cargo ${MIN_RUST_VERSION} REQUIRED)
+find_package(Rustc ${MIN_RUST_VERSION} REQUIRED)
 
 set(LIBSTRACCIATELLA_BUILD_SWITCHES "")
 set(LIBSTRACCIATELLA_BUILD_TYPE "debug")
