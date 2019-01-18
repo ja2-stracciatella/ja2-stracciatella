@@ -8,10 +8,10 @@ environment:
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       CMAKE_GENERATOR_NAME: Visual Studio 14 2015
-      RUST_TOOLCHAIN: stable-i686-pc-windows-msvc
+      RUST_TARGET: i686-pc-windows-msvc
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       CMAKE_GENERATOR_NAME: Visual Studio 15 2017 Win64
-      RUST_TOOLCHAIN: stable-x86_64-pc-windows-msvc
+      RUST_TARGET: x86_64-pc-windows-msvc
 
 branches:
   only:
@@ -53,7 +53,6 @@ init:
 
   - ps: $env:BUILD_SWITCHES = "-DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DVERSION_TAG=%VERSION_TAG% -DCPACK_GENERATOR=ZIP;NSIS -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake"
 
-  - cmd: echo "%RUST_TOOLCHAIN%"
   - cmd: echo "%CMAKE_GENERATOR_NAME%"
 
   - cmd: echo "%PUBLISH_BINARY%"
@@ -61,10 +60,14 @@ init:
   - cmd: echo "%BUILD_SWITCHES%"
 
 install:
+  - ps: $rustVersion = Get-Content .\rust-toolchain -Raw
+  - ps: $env:RUSTUP_TOOLCHAIN = "${rustVersion}-${env:RUST_TARGET}";
+
   - cmd: curl -sSf -o rustup-init.exe https://win.rustup.rs/
-  - cmd: rustup-init.exe -y --default-toolchain %RUST_TOOLCHAIN%
+  - cmd: rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
   - cmd: set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
 
+  - cmd: echo "%RUSTUP_TOOLCHAIN%"
   - cmd: rustc -V
   - cmd: cargo -V
   - cmd: cmake --version
