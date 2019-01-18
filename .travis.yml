@@ -59,7 +59,7 @@ before_install:
   - echo "$PUBLISH_DIR"
   - echo "$BUILD_SWITCHES"
 
-  - curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=stable -y
+  - curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=$(cat ./rust-toolchain) -y
   - export PATH=$PATH:$HOME/.cargo/bin
   - if [[ "$TRAVIS_MINGW" == "true" ]]; then
       rustup target add x86_64-pc-windows-gnu;
