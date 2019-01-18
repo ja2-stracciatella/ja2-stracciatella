@@ -23,7 +23,11 @@ mkdir _bin && cd _bin
 
 We suggest to install Rust and Cargo using [rustup](http://rustup.rs/). This way you will get the most recent version
 installed in your home directory. As rust is a rapidly developing language the binaries provided by your distribution
-might be too old to build ja2-stracciatella and its dependencies.
+might be too old to build ja2-stracciatella and its dependencies. When using rustup the correct version of rust should
+be automatically selected.
+
+If you don't want to use rustup, you can always look up the currently required version in the
+[rust-toolchain file](https://github.com/ja2-stracciatella/ja2-stracciatella/blob/master/rust-toolchain)
 
 ## Build on Linux or freeBSD/openBSD
 
