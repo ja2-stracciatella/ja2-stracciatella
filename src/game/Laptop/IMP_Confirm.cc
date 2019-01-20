@@ -364,11 +364,6 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 	{
 		MakeProfileInvItemAnySlot(p, COMBAT_KNIFE, 100, 1);
 	}
-
-	if (HasSkillTrait(p, CAMOUFLAGED))
-	{
-		MakeProfileInvItemAnySlot(p, CAMOUFLAGEKIT, 100, 1);
-	}
 }
 
 
