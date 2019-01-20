@@ -491,7 +491,7 @@ static void CompileQuestionsInStatsAndWhatNot(void)
 	switch (iQuizAnswerList[8])
 	{
 		case 0: AddAPersonalityToPersonalityList(FORGETFUL); break;
-		case 1: // none // XXX TODO0006 fallthrough? code and comment disagree
+		case 1: break; // none
 		case 2: AddAnAttitudeToAttitudeList(ATT_PESSIMIST);  break;
 		case 3: AddAPersonalityToPersonalityList(NERVOUS);   break;
 	}
