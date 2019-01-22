@@ -1809,7 +1809,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 		if (bSlot == NO_SLOT)
 		{
 			// Add item
-			CreateItem( THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object );
+			CreateItem( BLOODY_THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object );
 
 			AddItemToPool(tgt.sGridNo, &Object, INVISIBLE, tgt.bLevel, 0, 0);
 
@@ -3301,6 +3301,8 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 	else if ( GCM->getItem(usHandItem)->getItemClass() == IC_THROWING_KNIFE )
 	{
 		usBulletFlags |= BULLET_FLAG_KNIFE;
+		if ( GCM->getItem(usHandItem)->getItemIndex() == BLOODY_THROWING_KNIFE )
+			usBulletFlags |= BULLET_FLAG_BLOODY;
 	}
 	else if ( usHandItem == ROCKET_LAUNCHER )
 	{
@@ -4075,7 +4077,11 @@ void MoveBullet(BULLET* const pBullet)
 												OBJECTTYPE Object;
 												INT32 iKnifeGridNo;
 
-												CreateItem( THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object );
+												// Add item
+												if (pBullet->usFlags & BULLET_FLAG_BLOODY)
+													CreateItem( BLOODY_THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object );
+												else
+													CreateItem( THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object );
 
 												// by default knife at same tile as window
 												iKnifeGridNo = (INT16) iGridNo;
