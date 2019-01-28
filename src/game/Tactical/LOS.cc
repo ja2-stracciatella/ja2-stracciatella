@@ -1809,7 +1809,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 		if (bSlot == NO_SLOT)
 		{
 			// Add item
-			CreateItem( THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object );
+			CreateItem(BLOODY_THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object);
 
 			AddItemToPool(tgt.sGridNo, &Object, INVISIBLE, tgt.bLevel, 0, 0);
 
@@ -3294,33 +3294,35 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 	ubShots = 1;
 
 	// Check if we have spit as a weapon!
-	if ( GCM->getWeapon( usHandItem )->calibre->monsterWeapon )
+	if (GCM->getWeapon( usHandItem )->calibre->monsterWeapon)
 	{
 		usBulletFlags |= BULLET_FLAG_CREATURE_SPIT;
 	}
-	else if ( GCM->getItem(usHandItem)->getItemClass() == IC_THROWING_KNIFE )
+	else if (GCM->getItem(usHandItem)->getItemClass() == IC_THROWING_KNIFE)
 	{
 		usBulletFlags |= BULLET_FLAG_KNIFE;
+		if (GCM->getItem(usHandItem)->getItemIndex() == BLOODY_THROWING_KNIFE)
+			usBulletFlags |= BULLET_FLAG_BLOODY;
 	}
-	else if ( usHandItem == ROCKET_LAUNCHER )
+	else if (usHandItem == ROCKET_LAUNCHER)
 	{
 		usBulletFlags |= BULLET_FLAG_MISSILE;
 	}
-	else if ( usHandItem == TANK_CANNON )
+	else if (usHandItem == TANK_CANNON)
 	{
 		usBulletFlags |= BULLET_FLAG_TANK_CANNON;
 	}
-	else if ( usHandItem == ROCKET_RIFLE || usHandItem == AUTO_ROCKET_RIFLE )
+	else if (usHandItem == ROCKET_RIFLE || usHandItem == AUTO_ROCKET_RIFLE)
 	{
 		usBulletFlags |= BULLET_FLAG_SMALL_MISSILE;
 	}
-	else if ( usHandItem == FLAMETHROWER )
+	else if (usHandItem == FLAMETHROWER)
 	{
 		usBulletFlags |= BULLET_FLAG_FLAME;
 		ubSpreadIndex = 2;
 	}
 
-	ubImpact = GCM->getWeapon( usHandItem )->ubImpact;
+	ubImpact = GCM->getWeapon(usHandItem)->ubImpact;
 	//if (!fFake)
 	{
 		if (fBuckshot)
@@ -4075,7 +4077,11 @@ void MoveBullet(BULLET* const pBullet)
 												OBJECTTYPE Object;
 												INT32 iKnifeGridNo;
 
-												CreateItem( THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object );
+												// Add item
+												if ((pBullet->usFlags & BULLET_FLAG_BLOODY))
+													CreateItem(BLOODY_THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object);
+												else
+													CreateItem(THROWING_KNIFE, (INT8) pBullet->ubItemStatus, &Object);
 
 												// by default knife at same tile as window
 												iKnifeGridNo = (INT16) iGridNo;

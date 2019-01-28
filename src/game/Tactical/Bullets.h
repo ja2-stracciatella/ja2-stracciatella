@@ -7,14 +7,15 @@
 #include "Tile_Animation.h"
 
 
-#define BULLET_FLAG_CREATURE_SPIT	0x0001
-#define BULLET_FLAG_KNIFE		0x0002
-#define BULLET_FLAG_MISSILE		0x0004
-#define BULLET_FLAG_SMALL_MISSILE	0x0008
-#define BULLET_STOPPED			0x0010
-#define BULLET_FLAG_TANK_CANNON	0x0020
-#define BULLET_FLAG_BUCKSHOT		0x0040
-#define BULLET_FLAG_FLAME		0x0080
+#define BULLET_FLAG_CREATURE_SPIT      0x0001
+#define BULLET_FLAG_KNIFE              0x0002
+#define BULLET_FLAG_MISSILE            0x0004
+#define BULLET_FLAG_SMALL_MISSILE      0x0008
+#define BULLET_STOPPED                 0x0010
+#define BULLET_FLAG_TANK_CANNON        0x0020
+#define BULLET_FLAG_BUCKSHOT           0x0040
+#define BULLET_FLAG_FLAME              0x0080
+#define BULLET_FLAG_BLOODY             0x0100 // bloody knives have both bloody and knife flags
 
 struct BULLET
 {
