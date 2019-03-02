@@ -4897,8 +4897,8 @@ bool MercSeesCreature(SOLDIERTYPE const& s)
 	CFOR_EACH_IN_TEAM(i, CREATURE_TEAM)
 	{
 		SOLDIERTYPE const& tgt = *i;
-		if (!tgt.uiStatusFlags & SOLDIER_MONSTER) continue;
-		if (!s.bOppList[tgt.ubID])                continue;
+		if (!(tgt.uiStatusFlags & SOLDIER_MONSTER)) continue;
+		if (!s.bOppList[tgt.ubID])                  continue;
 		return true;
 	}
 	return false;
