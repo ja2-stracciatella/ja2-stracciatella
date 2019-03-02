@@ -60,11 +60,11 @@ pub fn build_engine_options_from_env_and_args(args: &[String]) -> Result<EngineO
 }
 
 macro_rules! unsafe_from_ptr {
-    ($ptr:expr) => { unsafe { assert!(!$ptr.is_null()); &*$ptr } }
+    ($ptr:expr) => { { assert!(!$ptr.is_null()); unsafe { &*$ptr } } }
 }
 
 macro_rules! unsafe_from_ptr_mut {
-    ($ptr:expr) => { unsafe { assert!(!$ptr.is_null()); &mut *$ptr } }
+    ($ptr:expr) => { { assert!(!$ptr.is_null()); unsafe { &mut *$ptr } } }
 }
 
 #[no_mangle]
@@ -203,7 +203,7 @@ pub extern fn get_scaling_quality_string(quality: ScalingQuality) -> *mut c_char
 
 #[no_mangle]
 pub unsafe extern fn set_scaling_quality(ptr: *mut EngineOptions, scaling_quality: ScalingQuality) {
-        unsafe_from_ptr_mut!(ptr).scaling_quality = scaling_quality
+    unsafe_from_ptr_mut!(ptr).scaling_quality = scaling_quality
 }
 
 
@@ -240,7 +240,7 @@ pub extern fn get_resource_version_string(version: VanillaVersion) -> *mut c_cha
 
 #[no_mangle]
 pub unsafe extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *mut c_char {
-    let launcher_path = unsafe { CStr::from_ptr(launcher_path_ptr).to_string_lossy() };
+    let launcher_path = unsafe { CStr::from_ptr(launcher_path_ptr) }.to_string_lossy();
     let is_exe = launcher_path.to_lowercase().ends_with(".exe");
     let end_of_executable_slice = launcher_path.len() - if is_exe { 13 } else { 9 };
     let mut executable_path = String::from(&launcher_path[0..end_of_executable_slice]);
@@ -254,8 +254,8 @@ pub unsafe extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *m
 
 #[no_mangle]
 pub extern fn free_rust_string(s: *mut c_char) {
+    if s.is_null() { return }
     unsafe {
-        if s.is_null() { return }
         CString::from_raw(s)
     };
 }
@@ -275,9 +275,7 @@ mod tests {
     use std::env;
 
     macro_rules! assert_chars_eq { ($got:expr, $expected:expr) => {
-        unsafe {
-            assert_eq!(str::from_utf8(CStr::from_ptr($got).to_bytes()).unwrap(), $expected);
-        }
+        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr($got) }.to_bytes()).unwrap(), $expected);
     } }
 
     #[test]
@@ -323,12 +321,10 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("-debug"), String::from("-mod"), String::from("a"), String::from("--mod"), String::from("ö"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        unsafe {
-            assert!(super::should_start_in_debug_mode(&engine_options));
-            assert_eq!(super::get_number_of_mods(&engine_options), 2);
-            assert_eq!(CString::from_raw(super::get_mod(&engine_options, 0)), CString::new("a").unwrap());
-            assert_eq!(CString::from_raw(super::get_mod(&engine_options, 1)), CString::new("ö").unwrap());
-        }
+        assert!(unsafe { super::should_start_in_debug_mode(&engine_options) });
+        assert_eq!(unsafe { super::get_number_of_mods(&engine_options) }, 2);
+        assert_eq!(unsafe { CString::from_raw(super::get_mod(&engine_options, 0)) }, CString::new("a").unwrap());
+        assert_eq!(unsafe { CString::from_raw(super::get_mod(&engine_options, 1)) }, CString::new("ö").unwrap());
     }
 
     #[test]
@@ -375,13 +371,11 @@ mod tests {
         let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
 
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        unsafe {
-            let comp = str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap();
-            let temp = fs::canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
-            let base = temp.to_str().unwrap();
+        let comp = str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)) }.to_bytes()).unwrap();
+        let temp = fs::canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
+        let base = temp.to_str().unwrap();
 
-            assert_eq!(comp, base);
-        }
+        assert_eq!(comp, base);
     }
 
     #[test]
@@ -396,9 +390,7 @@ mod tests {
         let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
 
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        unsafe {
-            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
-        }
+        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)) }.to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
     }
 
     #[test]
@@ -413,9 +405,7 @@ mod tests {
         let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().to_str().unwrap()));
 
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        unsafe {
-            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
-        }
+        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)) }.to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
     }
 
     #[test]
@@ -594,9 +584,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         engine_options.stracciatella_home = super::find_stracciatella_home().unwrap();
 
-        unsafe {
-            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_stracciatella_home(&engine_options)).to_bytes()).unwrap(), format!("{}/.ja2", env::var("HOME").unwrap()));
-        }
+        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(super::get_stracciatella_home(&engine_options)) }.to_bytes()).unwrap(), format!("{}/.ja2", env::var("HOME").unwrap()));
     }
 
     #[test]
@@ -607,7 +595,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         engine_options.stracciatella_home = super::find_stracciatella_home().unwrap();
 
-        let result = unsafe { str::from_utf8(CStr::from_ptr(super::get_stracciatella_home(&engine_options)).to_bytes()).unwrap() };
+        let result = str::from_utf8(unsafe { CStr::from_ptr(super::get_stracciatella_home(&engine_options)) }.to_bytes()).unwrap();
         let regex = Regex::new(r"^[A-Z]:\\(.*)+\\JA2").unwrap();
         assert!(regex.is_match(result), "{} is not a valid home dir for windows", result);
     }
