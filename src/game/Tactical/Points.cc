@@ -1678,7 +1678,10 @@ INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_
 	const ItemModel *item = GCM->getItem(in_hand);
 	// Gennady: This is a very strange piece of code.
 	//          Be very careful with it.
-	if (!item->getItemClass() & IC_GRENADE)
+	//          The added parenthesis is just to silence a compiler warning (https://github.com/ja2-stracciatella/ja2-stracciatella/issues/791),
+	//          it does not necessarily indicate desired behavior - it just conserves present behavior.
+	//          For more discussion around it, see https://github.com/ja2-stracciatella/ja2-stracciatella/pull/287.
+	if ((!item->getItemClass()) & IC_GRENADE)
 	{
 		SLOGI(DEBUG_TAG_POINTS, "MinAPsToThrow - Called when in-hand item is %s",
 					item->getInternalName().c_str());
