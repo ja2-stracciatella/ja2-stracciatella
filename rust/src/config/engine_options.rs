@@ -1,8 +1,8 @@
 use std::path::PathBuf;
 
-use Resolution;
-use ScalingQuality;
-use VanillaVersion;
+use crate::Resolution;
+use crate::ScalingQuality;
+use crate::VanillaVersion;
 
 #[derive(Debug, PartialEq)]
 pub struct EngineOptions {
@@ -45,9 +45,9 @@ impl Default for EngineOptions {
 
 impl EngineOptions {
     pub fn from_home_and_args(stracciatella_home: &PathBuf, args: &[String]) -> Result<EngineOptions, String> {
-        use ensure_json_config_existence;
-        use parse_json_config;
-        use parse_args;
+        use crate::ensure_json_config_existence;
+        use crate::parse_json_config;
+        use crate::parse_args;
 
         ensure_json_config_existence(stracciatella_home)?;
 

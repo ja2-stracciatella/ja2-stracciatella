@@ -7,10 +7,10 @@ use std::path::PathBuf;
 use serde::Deserialize;
 use serde::Serialize;
 
-use Resolution;
-use VanillaVersion;
-use ScalingQuality;
-use EngineOptions;
+use crate::Resolution;
+use crate::VanillaVersion;
+use crate::ScalingQuality;
+use crate::EngineOptions;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Ja2JsonContent {
@@ -38,7 +38,7 @@ fn build_json_config_location(stracciatella_home: &PathBuf) -> PathBuf {
 impl Ja2Json {
     pub fn from_stracciatella_home(stracciatella_home: &PathBuf) -> Self {
         let path = build_json_config_location(stracciatella_home);
-        return Ja2Json { path: path };
+        Ja2Json { path }
     }
 
     pub fn get_content(&self) -> Result<Ja2JsonContent, String> {
