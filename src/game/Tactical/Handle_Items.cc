@@ -1321,6 +1321,11 @@ void SoldierGetItemFromWorld(SOLDIERTYPE* const s, const INT32 iItemIndex, const
 		}
 	}
 
+	if (!gfDontChargeAPsToPickup)
+	{
+		DeductPoints(s, AP_PICKUP_ITEM, 0);
+	}
+
 	gpTempSoldier = s;
 	gsTempGridno  = sGridNo;
 	SetCustomizableTimerCallbackAndDelay(1000, CheckForPickedOwnership, TRUE);
