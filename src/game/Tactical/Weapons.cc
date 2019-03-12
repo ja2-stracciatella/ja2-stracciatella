@@ -1,3 +1,5 @@
+#include <math.h> // floorf
+
 #include "Directories.h"
 #include "Font_Control.h"
 #include "Handle_Items.h"
@@ -316,22 +318,32 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 
 static void AdjustImpactByHitLocation(INT32 iImpact, UINT8 ubHitLocation, INT32* piNewImpact, INT32* piImpactForCrits)
 {
-	UINT32 critical_damage_to_head = gamepolicy(critical_damage_head_multiplier);
-	UINT32 critical_damage_to_legs = gamepolicy(critical_damage_legs_multiplier);
-
 	switch( ubHitLocation )
 	{
 		case AIM_SHOT_HEAD:
+		{
 			// vanilla was: 1.5x damage from successful hits to the head!
-			*piImpactForCrits = critical_damage_to_head * iImpact;
+			float critical_damage_to_head = gamepolicy(critical_damage_head_multiplier);
+			float impactForCrits = floorf(critical_damage_to_head * (float)iImpact);
+			*piImpactForCrits = (INT32)impactForCrits;
 			*piNewImpact = *piImpactForCrits;
 			break;
+		}
 		case AIM_SHOT_LEGS:
+		{
+			// for vanilla:
 			// half damage for determining critical hits
 			// quarter actual damage
-			*piImpactForCrits = critical_damage_to_legs * iImpact;
-			*piNewImpact = critical_damage_to_legs * *piImpactForCrits;
+			float critical_damage_to_legs = gamepolicy(critical_damage_legs_multiplier);
+			float impactForCrits = floorf(critical_damage_to_legs * (float)iImpact);
+			float newImpact = floorf(critical_damage_to_legs * impactForCrits);
+			// NOTE: to calculate new impact, multiplying by crit damage multiplier twice might be overkill
+			// might be better to halve the multiplier:
+			// float newImpact = floor(0.5f * critical_damage_to_legs * (float)iImpact);
+			*piImpactForCrits = (INT32)impactForCrits;
+			*piNewImpact = (INT32)newImpact;
 			break;
+		}
 		default:
 			*piImpactForCrits = iImpact;
 			*piNewImpact = iImpact;
