@@ -680,7 +680,6 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 	SDL_AudioSpec wavSpec;
 	Uint32 wavLength;
 	Uint8 *wavBuffer;
-	SDL_AudioCVT cvt;
 
 	if (SDL_LoadWAV_RW(rwOps, 0,  &wavSpec, &wavBuffer, &wavLength) == NULL) {
 		SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk Error: Error loading file \"%s\"- %s", pFilename, SDL_GetError());

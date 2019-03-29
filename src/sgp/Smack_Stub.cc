@@ -48,7 +48,6 @@ void SmackPrintFlickInfo(unsigned long width, unsigned long height, UCHAR8 scale
 UINT32 SmackGetAudio(const smk SmkObj, UCHAR8** audiobuffer)
 {
 	UINT32 audiolen = 0;
-	UINT32 i, index;
 	UCHAR8* paudio;
 
 	if (!audiobuffer)
@@ -154,7 +153,7 @@ Smack* SmackOpen(SGPFile* FileHandle, UINT32 Flags, UINT32 ExtraFlag)
 	flickinfo->FramesPerSecond = usf;
 	audiobuffer = NULL;
 	audiolen = SmackGetAudio(flickinfo->Smacker, &audiobuffer);
-	if (audiobuffer != NULL);
+	if (audiobuffer != NULL)
 	{
 		//SmackWriteAudio( audiobuffer, audiolen); // are getting right audio data?
 		// shoot and forget... audiobuffer should be freed by SoundMan
