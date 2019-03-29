@@ -191,32 +191,31 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 	return SoundStartSample(sample, channel, volume, pan, loop, end_callback, data);
 }
 
-static SAMPLETAG* SoundGetEmptySample(void);
+static SAMPLETAG* SoundLoadBuffer(SDL_AudioFormat format, UINT8 channels, int freq, UINT8* pbuffer, UINT32 size);
 static BOOLEAN    SoundCleanCache(void);
 static SAMPLETAG* SoundGetEmptySample(void);
 
-UINT32 SoundPlayFromBuffer(INT16* pbuffer, UINT32 size, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
+UINT32 SoundPlayFromSmackBuff(UINT8 channels, UINT8 depth, UINT32 rate, UINT8* pbuffer, UINT32 size, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
+	SDL_AudioFormat format;
 
-	//SoundCleanCache();
-	SAMPLETAG* buffertag = SoundGetEmptySample();
-	if (buffertag == NULL)
-	{
-		SoundCleanCache();
-		buffertag = SoundGetEmptySample();
-	}
-	sprintf(buffertag->pName, "SmackBuff %p - SampleSize %u", pbuffer, size);
-	buffertag->n_samples = size;
-	buffertag->pData = pbuffer;
-	buffertag->uiFlags =  SAMPLE_STEREO | SAMPLE_ALLOCATED;
-	buffertag->uiPanMax        = 64;
-	buffertag->uiMaxInstances  = 1;
-	IncreaseSoundMemoryUsedBySample(buffertag);
+	if (pbuffer == NULL) return SOUND_ERROR;
+	if (size == 0) return SOUND_ERROR;
+
+	if (depth == 16) format = AUDIO_S16LSB;
+	else return SOUND_ERROR;
+
+	SAMPLETAG* s = SoundLoadBuffer(format, channels, rate, pbuffer, size);
+	if (s == NULL) return SOUND_ERROR;
+
+	sprintf(s->pName, "SmackBuff %p - SampleSize %u", pbuffer, size);
+	s->uiPanMax        = 64;
+	s->uiMaxInstances  = 1;
 
 	SOUNDTAG* const channel = SoundGetFreeChannel();
 	if (channel == NULL) return SOUND_ERROR;
 
-	return SoundStartSample(buffertag, channel, volume, pan, loop, end_callback, data);
+	return SoundStartSample(s, channel, volume, pan, loop, end_callback, data);
 }
 
 UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
@@ -540,6 +539,111 @@ static size_t GetSampleSize(const SAMPLETAG* const s)
 	return 2u * (s->uiFlags & SAMPLE_STEREO ? 2 : 1);
 }
 
+/* Loads a sound from a buffer into the cache, allocating memory and a slot for storage.
+ *
+ * Returns: The sample if successful, NULL otherwise. */
+static SAMPLETAG* SoundLoadBuffer(SDL_AudioFormat format, UINT8 channels, int freq, UINT8* buffer, UINT32 size)
+{
+	SDL_AudioCVT cvt;
+	int ret;
+	UINT8* sampledata = NULL;
+	UINT32 samplesize = 0;
+	UINT8  samplechannels;
+
+	if (buffer == NULL || size == 0)
+	{
+		SLOGE(DEBUG_TAG_SOUND, "SoundLoadBuffer Error: buffer is empty - Buffer: %p, Size: %u", buffer, size);
+		return NULL;
+	}
+
+	samplechannels = __min(channels, gTargetAudioSpec.channels);
+	ret = SDL_BuildAudioCVT(&cvt, format, channels, freq, gTargetAudioSpec.format, samplechannels, gTargetAudioSpec.freq);
+	if (ret == -1)
+	{
+		SLOGE(DEBUG_TAG_SOUND, "SoundLoadBuffer Error: unsupported audio conversion - %s", SDL_GetError());
+		return NULL;
+	}
+
+	if (cvt.needed)
+	{
+		UINT32 bufsize = size * cvt.len_mult;
+		UINT32 cvtsize = size * cvt.len_ratio;
+
+		Assert(bufsize >= size);
+		cvt.len = size;
+		cvt.buf = MALLOCN(UINT8, bufsize);
+		memcpy(cvt.buf, buffer, size);
+
+		if (SDL_ConvertAudio(&cvt) == -1) {
+			SLOGE(DEBUG_TAG_SOUND, "SoundLoadBuffer Error: error converting audio - %s", SDL_GetError());
+			MemFree(cvt.buf);
+			return NULL;
+		}
+
+		if (cvtsize == bufsize)
+		{
+			Assert(cvtsize == cvt.len_cvt);
+			sampledata = cvt.buf;
+			samplesize = cvtsize;
+		}
+		else// if (cvtsize < bufsize)
+		{
+			Assert(cvtsize < bufsize);
+			sampledata = MALLOCN(UINT8, cvtsize);
+			memcpy(sampledata, cvt.buf, cvtsize);
+			samplesize = cvtsize;
+			MemFree(cvt.buf);
+		}
+	}
+	else// if (!cvt.needed)
+	{
+		sampledata = MALLOCN(UINT8, size);
+		memcpy(sampledata, buffer, size);
+		samplesize = size;
+	}
+	// cvt is invalid from this point forward
+
+	// if insufficient memory, start unloading old samples until either
+	// there's nothing left to unload, or we fit
+	while (samplesize + guiSoundMemoryUsed > guiSoundMemoryLimit)
+	{
+		if (!SoundCleanCache())
+		{
+			SLOGE(DEBUG_TAG_SOUND, "SoundLoadBuffer Error: not enough memory - Size: %u, Used: %u, Max: %u", samplesize, guiSoundMemoryUsed, guiSoundMemoryLimit);
+			MemFree(sampledata);
+			return NULL;
+		}
+	}
+
+	// if all the sample slots are full, unloading one
+	SAMPLETAG* s = SoundGetEmptySample();
+	if (s == NULL)
+	{
+		SoundCleanCache();
+		s = SoundGetEmptySample();
+	}
+
+	// if we still don't have a sample slot
+	if (s == NULL)
+	{
+		SLOGE(DEBUG_TAG_SOUND, "SoundLoadBuffer Error: sound channels are full");
+		MemFree(sampledata);
+		return NULL;
+	}
+
+	s->pData = sampledata;
+	s->uiFlags |= SAMPLE_ALLOCATED;
+	if (samplechannels != 1) {
+		Assert(samplechannels == 2);
+		s->uiFlags |= SAMPLE_STEREO;
+	}
+	s->n_samples = UINT32(samplesize / GetSampleSize(s));
+
+	IncreaseSoundMemoryUsedBySample(s);
+
+	return s;
+}
+
 /* Loads a sound file from disk into the cache, allocating memory and a slot
  * for storage.
  *
@@ -566,38 +670,6 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		return NULL;
 	}
 
-	// A pessimistic approach as we dont know the decoded size yet
-	UINT32 uiSize = FileGetSize(hFile) * 2;
-
-	// if insufficient memory, start unloading old samples until either
-	// there's nothing left to unload, or we fit
-	while (uiSize + guiSoundMemoryUsed > guiSoundMemoryLimit)
-	{
-		if (!SoundCleanCache())
-		{
-			SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk: trying to play %s, not enough memory\nSize: %u, Used: %u, Max: %u",
-				pFilename, uiSize, guiSoundMemoryUsed, guiSoundMemoryLimit);
-			return NULL;
-		}
-	}
-
-	// if all the sample slots are full, unloading one
-	SAMPLETAG* s = SoundGetEmptySample();
-	if (s == NULL)
-	{
-		SoundCleanCache();
-		s = SoundGetEmptySample();
-	}
-
-	// if we still don't have a sample slot
-	if (s == NULL)
-	{
-		SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk: Trying to play %s, sound channels are full", pFilename);
-		return NULL;
-	}
-
-	memset(s, 0, sizeof(*s));
-
 	SDL_RWops* rwOps = FileGetRWOps(hFile);
 	SDL_AudioSpec wavSpec;
 	Uint32 wavLength;
@@ -605,40 +677,22 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 	SDL_AudioCVT cvt;
 
 	if (SDL_LoadWAV_RW(rwOps, 0,  &wavSpec, &wavBuffer, &wavLength) == NULL) {
-		SLOGE(DEBUG_TAG_SOUND, "Error loading sound file: %s", SDL_GetError());
+		SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk Error: Error loading file \"%s\"- %s", pFilename, SDL_GetError());
 		return NULL;
 	}
 
-	SDL_BuildAudioCVT(&cvt, wavSpec.format, wavSpec.channels, wavSpec.freq, gTargetAudioSpec.format, wavSpec.channels, gTargetAudioSpec.freq);
-	cvt.len = wavLength;
-	cvt.buf = MALLOCN(UINT8, cvt.len * cvt.len_mult);
-	memcpy(cvt.buf, wavBuffer, wavLength);
+	SAMPLETAG* s = SoundLoadBuffer(wavSpec.format, wavSpec.channels, wavSpec.freq, wavBuffer, wavLength);
+
 	SDL_FreeWAV(wavBuffer);
 	SDL_FreeRW(rwOps);
 
-	if (cvt.needed) {
-		if (SDL_ConvertAudio(&cvt) != 0) {
-			SLOGE(DEBUG_TAG_SOUND, "Error converting sound file: %s", SDL_GetError());
-			return NULL;
-		};
+	if (s == NULL)
+	{
+		SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk: Error converting sound file \"%s\"", pFilename);
+		return NULL;
 	}
-
-	UINT32 convertedSize = cvt.len * cvt.len_ratio;
 
 	strcpy(s->pName, pFilename);
-	s->n_samples = UINT32(convertedSize / (wavSpec.channels * 2));
-	s->uiFlags     |= SAMPLE_ALLOCATED;
-	if (wavSpec.channels != 1) {
-		s->uiFlags |= SAMPLE_STEREO;
-	}
-
-	s->uiInstances  = 0;
-	s->pData = MALLOCN(UINT8, convertedSize);
-	memcpy(s->pData, cvt.buf, convertedSize);
-
-	free(cvt.buf);
-
-	IncreaseSoundMemoryUsedBySample(s);
 
 	return s;
 }

@@ -2,6 +2,7 @@
 #if !defined(_MSC_VER)
 	#include <strings.h>
 #endif
+#include "Debug.h"
 #include "Smack_Stub.h"
 #include "Sound_Control.h"
 #include "SoundMan.h"
@@ -37,38 +38,51 @@ BOOLEAN SmkAudioSwitch(smk SmkObj, BOOLEAN sw)
 }
 
 void SmackPrintFlickInfo(unsigned long width, unsigned long height, UCHAR8 scale, unsigned long framecount, 
-			DOUBLE usf, UCHAR8 a_channels, UCHAR8 a_depth, UCHAR8 a_rate)
+			DOUBLE usf, UCHAR8 a_channels, UCHAR8 a_depth, unsigned long a_rate)
 {
 	printf ("Video -- Frames: %lu Width: %lu Height: %lu Scale: %d \n", framecount, width, height, scale);
-	printf ("Audio -- FPS: %2.2f  Channels: %d Depth: %d Rate %d\n", usf/1000, a_channels, a_depth, a_rate);
+	printf ("Audio -- FPS: %2.2f  Channels: %u Depth: %u Rate %lu\n", usf/1000, a_channels, a_depth, a_rate);
 }
 
-// read all smackaudio and convert it to 22050Hz on the fly (44100 originally)
-UINT32 SmackGetAudio(const smk SmkObj, const INT16* audiobuffer)
+// read all smackaudio
+UINT32 SmackGetAudio(const smk SmkObj, UCHAR8** audiobuffer)
 {
-	UINT32 n_samples = 0;
+	UINT32 audiolen = 0;
 	UINT32 i, index;
-	INT16 *paudio = (INT16*) audiobuffer;
+	UCHAR8* paudio;
+
 	if (!audiobuffer)
 		return 0;
+
 	SmkAudioSwitch(SmkObj, ENABLE);
+
+	// create buffer
 	smk_first(SmkObj);
 	do
 	{
-		const UINT32 smacklen = smk_get_audio_size (SmkObj, SMKTRACK);
-		const INT16 *smackaudio = (INT16*) smk_get_audio (SmkObj, SMKTRACK);
-
-		memcpy(paudio, smackaudio, smacklen);
-		paudio += smacklen / 2;
-
-		n_samples += smacklen / 2;
+		audiolen += smk_get_audio_size(SmkObj, SMKTRACK);
 	}
 	while(smk_next(SmkObj) != SMK_DONE);
+
+	// read to buffer
+	paudio = *audiobuffer = MALLOCN(UCHAR8, audiolen);
+	smk_first(SmkObj);
+	do
+	{
+		const UINT32 smacklen = smk_get_audio_size(SmkObj, SMKTRACK);
+		const UCHAR8* smackaudio = (UCHAR8*) smk_get_audio(SmkObj, SMKTRACK);
+
+		memcpy(paudio, smackaudio, smacklen);
+		paudio += smacklen;
+	}
+	while(smk_next(SmkObj) != SMK_DONE);
+	Assert( paudio == *audiobuffer + audiolen );
+
 	SmkAudioSwitch(SmkObj, DISABLE);
-	return n_samples;
+	return audiolen;
 }
 
-void SmackWriteAudio(INT16* abuffer, UINT32 size)
+void SmackWriteAudio(UCHAR8* abuffer, UINT32 size)
 {
 	FILE* fp = fopen("/tmp/smk.raw", "wb");
 	fwrite(abuffer, size, 1, fp);
@@ -99,8 +113,8 @@ Smack* SmackOpen(SGPFile* FileHandle, UINT32 Flags, UINT32 ExtraFlag)
 	/* arrays for audio track metadata */
 	UCHAR8 a_depth[7], a_channels[7];
 	unsigned long a_rate[7];
-	unsigned long audiolen, audiosamples;
-	INT16* audiobuffer;
+	unsigned long audiolen;
+	UCHAR8* audiobuffer;
 	UCHAR8* smackloaded;
 	UINT32 smacksize = FileGetSize(FileHandle);
 	flickinfo = (Smack*) malloc(sizeof(Smack));
@@ -130,6 +144,7 @@ Smack* SmackOpen(SGPFile* FileHandle, UINT32 Flags, UINT32 ExtraFlag)
 	SmackCheckStatus(smkstatus);
 	smkstatus = smk_info_audio(flickinfo->Smacker, NULL, a_channels, a_depth, a_rate);
 	SmackCheckStatus(smkstatus);
+	//SmackPrintFlickInfo(width, height, scale, framecount, usf, a_channels[SMKTRACK], a_depth[SMKTRACK], a_rate[SMKTRACK]);
 
 	SmkVideoSwitch(flickinfo->Smacker, DISABLE);
 
@@ -137,20 +152,15 @@ Smack* SmackOpen(SGPFile* FileHandle, UINT32 Flags, UINT32 ExtraFlag)
 	flickinfo->Height=height;
 	flickinfo->Width=width;
 	flickinfo->FramesPerSecond = usf;
-	// calculated audio memory for downsampling 44100->22050
-	audiosamples = ((flickinfo->Frames / (usf/1000)) * (a_rate[SMKTRACK]) * 16 *  a_channels[SMKTRACK]);
-	audiobuffer = (INT16*) malloc(audiosamples);
-	if (!audiobuffer)
+	audiobuffer = NULL;
+	audiolen = SmackGetAudio(flickinfo->Smacker, &audiobuffer);
+	if (audiobuffer != NULL);
 	{
-		free(flickinfo);
-		return NULL;
+		//SmackWriteAudio( audiobuffer, audiolen); // are getting right audio data?
+		// shoot and forget... audiobuffer should be freed by SoundMan
+		flickinfo->SoundTag = SoundPlayFromSmackBuff(a_channels[SMKTRACK], a_depth[SMKTRACK], a_rate[SMKTRACK], audiobuffer, audiolen, MAXVOLUME, 64, 1, NULL, NULL);
+		MemFree(audiobuffer);
 	}
-	audiolen = SmackGetAudio(flickinfo->Smacker, audiobuffer);
-	//SmackWriteAudio( audiobuffer, audiolen); // are getting right audio data?
-	// shoot and forget... audiobuffer should be freed by SoundMan
-	if (audiolen > 0)
-		flickinfo->SoundTag = SoundPlayFromBuffer(audiobuffer, audiolen, MAXVOLUME, 64, 1, NULL, NULL);
-	else free(audiobuffer), audiobuffer = NULL;
 	SmkVideoSwitch  (flickinfo->Smacker, ENABLE);
 	if ((smk_first(flickinfo->Smacker) < 0))
 	{
