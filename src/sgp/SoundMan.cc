@@ -64,6 +64,12 @@ enum
 #define SOUND_DEFAULT_THRESH ( 2 * 1024 * 1024) // size for sample to be double-buffered
 #define SOUND_DEFAULT_STREAM (64 * 1024)        // double-buffered buffer size
 
+// The audio device will be opened with the following values
+#define SOUND_FREQ      44100
+#define SOUND_FORMAT    AUDIO_S16SYS
+#define SOUND_CHANNELS  2
+#define SOUND_SAMPLES   1024
+
 // Struct definition for sample slots in the cache
 // Holds the regular sample data, as well as the data for the random samples
 struct SAMPLETAG
@@ -777,7 +783,7 @@ static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID)
 
 static void SoundCallback(void* userdata, Uint8* stream, int len)
 {
-	INT32  mix[ gTargetAudioSpec.samples ];
+	INT32  mix[ SOUND_SAMPLES ];
 
 	Assert(len * 2 == sizeof(mix));
 
@@ -863,10 +869,10 @@ static BOOLEAN SoundInitHardware(void)
 {
 	SDL_InitSubSystem(SDL_INIT_AUDIO);
 
-	gTargetAudioSpec.freq     = 44100;
-	gTargetAudioSpec.format   = AUDIO_S16SYS;
-	gTargetAudioSpec.channels = 2;
-	gTargetAudioSpec.samples  = 1024;
+	gTargetAudioSpec.freq     = SOUND_FREQ;
+	gTargetAudioSpec.format   = SOUND_FORMAT;
+	gTargetAudioSpec.channels = SOUND_CHANNELS;
+	gTargetAudioSpec.samples  = SOUND_SAMPLES;
 	gTargetAudioSpec.callback = SoundCallback;
 	gTargetAudioSpec.userdata = NULL;
 
