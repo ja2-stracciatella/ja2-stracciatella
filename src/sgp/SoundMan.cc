@@ -723,11 +723,13 @@ static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID)
 
 static void SoundCallback(void* userdata, Uint8* stream, int len)
 {
-	SDL_memset(stream, 0, len);
+	INT32  mix[ gTargetAudioSpec.samples ];
 
-	UINT16* Stream = (UINT16*)stream;
+	Assert(len * 2 == sizeof(mix));
 
-	// XXX TODO proper mixing, mainly clipping
+	SDL_memset(mix, 0, sizeof(mix));
+
+	// Mix sounds
 	for (UINT32 i = 0; i < lengthof(pSoundList); i++)
 	{
 		SOUNDTAG* Sound = &pSoundList[i];
@@ -758,8 +760,8 @@ mixing:
 					const INT16* const src = (const INT16*)s->pData + Sound->pos * 2;
 					for (UINT32 i = 0; i < amount; ++i)
 					{
-						Stream[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
-						Stream[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
+						mix[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
+						mix[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
 					}
 				}
 				else
@@ -768,8 +770,8 @@ mixing:
 					for (UINT32 i = 0; i < amount; i++)
 					{
 						const INT data = src[i];
-						Stream[2 * i + 0] += data * vol_l >> 7;
-						Stream[2 * i + 1] += data * vol_r >> 7;
+						mix[2 * i + 0] += data * vol_l >> 7;
+						mix[2 * i + 1] += data * vol_r >> 7;
 					}
 				}
 
@@ -790,6 +792,15 @@ mixing:
 				}
 			}
 		}
+	}
+
+	// Clip sounds
+	INT16* Stream = (INT16*)stream;
+	for (UINT32 i = 0; i < lengthof(mix); ++i)
+	{
+		if (mix[i] >= INT16_MAX)     Stream[i] = INT16_MAX;
+		else if(mix[i] <= INT16_MIN) Stream[i] = INT16_MIN;
+		else                         Stream[i] = (INT16)mix[i];
 	}
 }
 
