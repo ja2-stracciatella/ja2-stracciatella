@@ -160,6 +160,10 @@ Smack* SmackOpen(SGPFile* FileHandle, UINT32 Flags, UINT32 ExtraFlag)
 		flickinfo->SoundTag = SoundPlayFromSmackBuff(a_channels[SMKTRACK], a_depth[SMKTRACK], a_rate[SMKTRACK], audiobuffer, audiolen, MAXVOLUME, 64, 1, NULL, NULL);
 		MemFree(audiobuffer);
 	}
+	else
+	{
+		flickinfo->SoundTag = SOUND_ERROR;
+	}
 	SmkVideoSwitch  (flickinfo->Smacker, ENABLE);
 	if ((smk_first(flickinfo->Smacker) < 0))
 	{
@@ -238,7 +242,7 @@ void SmackClose(Smack* Smk)
 {
 	if(!Smk)
 		return;
-	if(!SoundStop(Smk->SoundTag))
+	if(Smk->SoundTag != SOUND_ERROR && !SoundStop(Smk->SoundTag))
 		printf("Error in SmackClose SoundStop\n");
 	free(Smk->SmackerInMemory);
 	smk_close(Smk->Smacker); // closes and frees Smacker Object and file
