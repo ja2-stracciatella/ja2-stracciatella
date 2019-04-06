@@ -24,6 +24,7 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Timer_Control.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/WordWrap.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/_ChineseText.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/_DutchText.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/_EnglishText.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/_FrenchText.cc

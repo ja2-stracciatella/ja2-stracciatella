@@ -8,6 +8,7 @@ use serde::Serialize;
 #[repr(C)]
 #[allow(non_camel_case_types)]
 pub enum VanillaVersion {
+    CHINESE,
     DUTCH,
     ENGLISH,
     FRENCH,
@@ -23,6 +24,7 @@ impl FromStr for VanillaVersion {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
+            "CHINESE" => Ok(VanillaVersion::CHINESE),
             "DUTCH" => Ok(VanillaVersion::DUTCH),
             "ENGLISH" => Ok(VanillaVersion::ENGLISH),
             "FRENCH" => Ok(VanillaVersion::FRENCH),
@@ -39,6 +41,7 @@ impl FromStr for VanillaVersion {
 impl Display for VanillaVersion {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", match self {
+            VanillaVersion::CHINESE => "Chinese",
             VanillaVersion::DUTCH => "Dutch",
             VanillaVersion::ENGLISH => "English",
             VanillaVersion::FRENCH => "French",

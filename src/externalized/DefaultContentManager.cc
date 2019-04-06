@@ -857,6 +857,7 @@ void DefaultContentManager::loadStringRes(const char *name, std::vector<const UT
 
 	switch(m_gameVersion)
 	{
+	case GameVersion::CHINESE:      fullName += "-cn";   break;
 	case GameVersion::DUTCH:        fullName += "-dut";   break;
 	case GameVersion::ENGLISH:      fullName += "-eng";   break;
 	case GameVersion::FRENCH:       fullName += "-fr";    break;

@@ -15,6 +15,7 @@
 
 #include "slog/slog.h"
 
+extern LanguageRes g_LanguageResChinese;
 extern LanguageRes g_LanguageResDutch;
 extern LanguageRes g_LanguageResEnglish;
 extern LanguageRes g_LanguageResFrench;
@@ -37,7 +38,7 @@ unsigned char const *TranslationTable = g_en_TranslationTable->m_table;
 
 wchar_t getZeroGlyphChar()
 {
-	if(s_gameVersion == GameVersion::RUSSIAN)
+	if(s_gameVersion == GameVersion::RUSSIAN) // FIXME: also chinese?
 	{
 		return L' ';
 	}
@@ -62,6 +63,7 @@ void setGameVersion(GameVersion ver)
 	s_gameVersion = ver;
 	switch(s_gameVersion)
 	{
+		case GameVersion::CHINESE:      setResources(&g_LanguageResChinese,           g_en_TranslationTable     ); break; // TODO: hopefully the data doesn't need any translation table
 		case GameVersion::DUTCH:        setResources(&g_LanguageResDutch,             g_en_TranslationTable     ); break;
 		case GameVersion::ENGLISH:      setResources(&g_LanguageResEnglish,           g_en_TranslationTable     ); break;
 		case GameVersion::FRENCH:       setResources(&g_LanguageResFrench,            g_fr_TranslationTable     ); break;
@@ -114,6 +116,11 @@ bool isRussianGoldVersion()
 	return s_gameVersion == GameVersion::RUSSIAN_GOLD;
 }
 
+/** Check if this is the Chinese version of the game. */
+bool isChineseVersion()
+{
+	return s_gameVersion == GameVersion::CHINESE;
+}
 
 /**
  * Get encoding corrector for strings in data files.
@@ -155,7 +162,7 @@ std::vector<std::string> GetResourceLibraries(const std::string &dataDir)
 
 char const* GetMLGFilename(MultiLanguageGraphic const id)
 {
-	if((s_gameVersion == GameVersion::ENGLISH) || (s_gameVersion == GameVersion::FRENCH) || (s_gameVersion == GameVersion::RUSSIAN_GOLD))
+	if((s_gameVersion == GameVersion::ENGLISH) || (s_gameVersion == GameVersion::FRENCH) || (s_gameVersion == GameVersion::RUSSIAN_GOLD) || (s_gameVersion == GameVersion::CHINESE))
 	{
 		switch (id)
 		{
@@ -419,5 +426,6 @@ STRING_ENC_TYPE getStringEncType()
 	{
 		return SE_ENGLISH;
 	}
+	// FIXME: no need for CHINESE?
 	return SE_NORMAL;
 }

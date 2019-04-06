@@ -558,7 +558,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"resversion\": \"TESTUNKNOWN\" }");
         let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
 
-        assert_eq!(super::parse_json_config(&stracciatella_home), Err(String::from("Error parsing ja2.json config file: unknown variant `TESTUNKNOWN`, expected one of `DUTCH`, `ENGLISH`, `FRENCH`, `GERMAN`, `ITALIAN`, `POLISH`, `RUSSIAN`, `RUSSIAN_GOLD` at line 1 column 29")));
+        assert_eq!(super::parse_json_config(&stracciatella_home), Err(String::from("Error parsing ja2.json config file: unknown variant `TESTUNKNOWN`, expected one of `CHINESE`, `DUTCH`, `ENGLISH`, `FRENCH`, `GERMAN`, `ITALIAN`, `POLISH`, `RUSSIAN`, `RUSSIAN_GOLD` at line 1 column 29")));
     }
 
     #[test]
@@ -682,6 +682,7 @@ r##"{
 
     #[test]
     fn get_resource_version_string_should_return_the_correct_resource_version_string() {
+        assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::CHINESE), "Chinese");
         assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::DUTCH), "Dutch");
         assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::ENGLISH), "English");
         assert_chars_eq!(super::get_resource_version_string(super::VanillaVersion::FRENCH), "French");

@@ -16,6 +16,7 @@
 const char* defaultResolution = "640x480";
 
 const std::vector<GameVersion> predefinedVersions = {
+	GameVersion::CHINESE,
 	GameVersion::DUTCH,
 	GameVersion::ENGLISH,
 	GameVersion::FRENCH,
