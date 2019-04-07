@@ -898,8 +898,8 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const IN
 
 	do
 	{
-		sX = (UINT16)Random( ubRadius );
-		sY = (UINT16)Random( ubRadius );
+		sX = Random( ubRadius * 2 + 1 ) - ubRadius;
+		sY = Random( ubRadius * 2 + 1 ) - ubRadius;
 
 		leftmost = ( ( sSweetGridNo + ( WORLD_COLS * sY ) )/ WORLD_COLS ) * WORLD_COLS;
 
