@@ -294,6 +294,7 @@ INT16 ActionPointCost(const SOLDIERTYPE* const pSoldier, const INT16 sGridNo, co
 				sPoints = (sTileCost + WALKCOST);
 				break;
 
+			case CROW_WALK:
 			case START_SWAT:
 			case SWAT_BACKWARDS:
 			case SWATTING:
@@ -367,6 +368,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 				sPoints = (sTileCost + WALKCOST);
 				break;
 
+			case CROW_WALK:
 			case START_SWAT:
 			case SWAT_BACKWARDS:
 			case SWATTING:
