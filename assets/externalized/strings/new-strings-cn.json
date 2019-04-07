@@ -1,6 +1,6 @@
 [
-        "%ls equips %ls",
-        "%ls removes %ls",
+        "%ls装备%ls",
+        "%ls取下%ls",
 
         "__last_one"
 ]
