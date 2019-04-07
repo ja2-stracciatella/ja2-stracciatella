@@ -824,6 +824,12 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 	SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(MercCreateStruct);
 	if (pSoldier != NULL)
 	{
+		// Setup action data to point back to corpse....
+		pSoldier->uiPendingActionData1 = CORPSE2ID(pCorpse);
+		pSoldier->sPendingActionData2 = pCorpse->def.sGridNo;
+
+		pCorpse->def.bNumServicingCrows++;
+
 		const INT16 sGridNo = FindRandomGridNoFromSweetSpot(pSoldier, pCorpse->def.sGridNo, 2);
 		if ( sGridNo != NOWHERE )
 		{
@@ -839,12 +845,10 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 			//sGridNo = FindRandomGridNoFromSweetSpot(pSoldier, pCorpse->def.sGridNo, 5);
 			//pSoldier->usUIMovementMode = CROW_FLY;
 			//EVENT_GetNewSoldierPath( pSoldier, sGridNo, pSoldier->usUIMovementMode );
-
-			// Setup action data to point back to corpse....
-			pSoldier->uiPendingActionData1 = CORPSE2ID(pCorpse);
-			pSoldier->sPendingActionData2 = pCorpse->def.sGridNo;
-
-			pCorpse->def.bNumServicingCrows++;
+		}
+		else
+		{
+			TacticalRemoveSoldier(*pSoldier);
 		}
 
 	}
