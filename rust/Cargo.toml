@@ -6,9 +6,12 @@ edition = "2018"
 
 [profile.dev]
 rpath = true
+panic = "abort"
+
 [profile.release]
 rpath = true
 debug = true
+panic = "abort"
 
 [lib]
 crate-type = ["staticlib"]
