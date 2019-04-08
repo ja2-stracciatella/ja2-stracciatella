@@ -1,4 +1,6 @@
 #![crate_type = "lib"]
+//https://github.com/rust-lang/rfcs/pull/2585
+#![allow(unused_unsafe)]
 
 extern crate getopts;
 extern crate libc;
@@ -18,13 +20,13 @@ use libc::{size_t, c_char};
 
 mod config;
 
-pub use config::ScalingQuality;
-pub use config::VanillaVersion;
-use config::Resolution;
-use config::Ja2Json;
-use config::Cli;
-use config::EngineOptions;
-use config::find_stracciatella_home;
+pub use crate::config::ScalingQuality;
+pub use crate::config::VanillaVersion;
+use crate::config::Resolution;
+use crate::config::Ja2Json;
+use crate::config::Cli;
+use crate::config::EngineOptions;
+use crate::config::find_stracciatella_home;
 
 fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<String> {
     let cli = Cli::from_args(args);
@@ -58,15 +60,15 @@ pub fn build_engine_options_from_env_and_args(args: &[String]) -> Result<EngineO
 }
 
 macro_rules! unsafe_from_ptr {
-    ($ptr:expr) => { unsafe { assert!(!$ptr.is_null()); &*$ptr } }
+    ($ptr:expr) => { { assert!(!$ptr.is_null()); unsafe { &*$ptr } } }
 }
 
 macro_rules! unsafe_from_ptr_mut {
-    ($ptr:expr) => { unsafe { assert!(!$ptr.is_null()); &mut *$ptr } }
+    ($ptr:expr) => { { assert!(!$ptr.is_null()); unsafe { &mut *$ptr } } }
 }
 
 #[no_mangle]
-pub extern fn create_engine_options(array: *const *const c_char, length: size_t) -> *mut EngineOptions {
+pub unsafe extern fn create_engine_options(array: *const *const c_char, length: size_t) -> *mut EngineOptions {
     let values = unsafe { slice::from_raw_parts(array, length as usize) };
     let args: Vec<String> = values.iter()
         .map(|&p| unsafe { CStr::from_ptr(p) })  // iterator of &CStr
@@ -89,42 +91,42 @@ pub extern fn create_engine_options(array: *const *const c_char, length: size_t)
 }
 
 #[no_mangle]
-pub extern fn write_engine_options(ptr: *mut EngineOptions) -> bool {
+pub unsafe extern fn write_engine_options(ptr: *mut EngineOptions) -> bool {
     let engine_options = unsafe_from_ptr!(ptr);
     write_json_config(engine_options).is_ok()
 }
 
 #[no_mangle]
-pub extern fn free_engine_options(ptr: *mut EngineOptions) {
+pub unsafe extern fn free_engine_options(ptr: *mut EngineOptions) {
     if ptr.is_null() { return }
     unsafe { Box::from_raw(ptr); }
 }
 
 #[no_mangle]
-pub extern fn get_stracciatella_home(ptr: *const EngineOptions) -> *mut c_char {
+pub unsafe extern fn get_stracciatella_home(ptr: *const EngineOptions) -> *mut c_char {
     let c_str_home = CString::new(unsafe_from_ptr!(ptr).stracciatella_home.to_str().unwrap()).unwrap();
     c_str_home.into_raw()
 }
 
 #[no_mangle]
-pub extern fn get_vanilla_data_dir(ptr: *const EngineOptions) -> *mut c_char {
+pub unsafe extern fn get_vanilla_data_dir(ptr: *const EngineOptions) -> *mut c_char {
     let c_str_home = CString::new(unsafe_from_ptr!(ptr).vanilla_data_dir.to_str().unwrap()).unwrap();
     c_str_home.into_raw()
 }
 
 #[no_mangle]
-pub extern fn set_vanilla_data_dir(ptr: *mut EngineOptions, data_dir_ptr: *const c_char) -> () {
+pub unsafe extern fn set_vanilla_data_dir(ptr: *mut EngineOptions, data_dir_ptr: *const c_char) {
     let c_str = unsafe { CStr::from_ptr(data_dir_ptr) };
     unsafe_from_ptr_mut!(ptr).vanilla_data_dir = PathBuf::from(c_str.to_string_lossy().into_owned());
 }
 
 #[no_mangle]
-pub extern fn get_number_of_mods(ptr: *const EngineOptions) -> u32 {
+pub unsafe extern fn get_number_of_mods(ptr: *const EngineOptions) -> u32 {
     unsafe_from_ptr!(ptr).mods.len() as u32
 }
 
 #[no_mangle]
-pub extern fn get_mod(ptr: *const EngineOptions, index: u32) -> *mut c_char {
+pub unsafe extern fn get_mod(ptr: *const EngineOptions, index: u32) -> *mut c_char {
     let str_mod = match unsafe_from_ptr!(ptr).mods.get(index as usize) {
         Some(m) => m,
         None => panic!("Invalid mod index for game options {}", index)
@@ -134,62 +136,62 @@ pub extern fn get_mod(ptr: *const EngineOptions, index: u32) -> *mut c_char {
 }
 
 #[no_mangle]
-pub extern fn get_resolution_x(ptr: *const EngineOptions) -> u16 {
+pub unsafe extern fn get_resolution_x(ptr: *const EngineOptions) -> u16 {
     unsafe_from_ptr!(ptr).resolution.0
 }
 
 #[no_mangle]
-pub extern fn get_resolution_y(ptr: *const EngineOptions) -> u16 {
+pub unsafe extern fn get_resolution_y(ptr: *const EngineOptions) -> u16 {
     unsafe_from_ptr!(ptr).resolution.1
 }
 
 #[no_mangle]
-pub extern fn set_resolution(ptr: *mut EngineOptions, x: u16, y: u16) -> () {
+pub unsafe extern fn set_resolution(ptr: *mut EngineOptions, x: u16, y: u16) {
     unsafe_from_ptr_mut!(ptr).resolution = Resolution(x, y)
 }
 
 #[no_mangle]
-pub extern fn get_brightness(ptr: *const EngineOptions) -> f32 {
+pub unsafe extern fn get_brightness(ptr: *const EngineOptions) -> f32 {
     unsafe_from_ptr!(ptr).brightness
 }
 
 #[no_mangle]
-pub extern fn set_brightness(ptr: *mut EngineOptions, brightness: f32) -> () {
+pub unsafe extern fn set_brightness(ptr: *mut EngineOptions, brightness: f32) {
     unsafe_from_ptr_mut!(ptr).brightness = brightness
 }
 
 #[no_mangle]
-pub extern fn get_resource_version(ptr: *const EngineOptions) -> VanillaVersion {
+pub unsafe extern fn get_resource_version(ptr: *const EngineOptions) -> VanillaVersion {
     unsafe_from_ptr!(ptr).resource_version
 }
 
 #[no_mangle]
-pub extern fn set_resource_version(ptr: *mut EngineOptions, res: VanillaVersion) -> () {
+pub unsafe extern fn set_resource_version(ptr: *mut EngineOptions, res: VanillaVersion) {
     unsafe_from_ptr_mut!(ptr).resource_version = res;
 }
 
 #[no_mangle]
-pub extern fn should_run_unittests(ptr: *const EngineOptions) -> bool {
+pub unsafe extern fn should_run_unittests(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).run_unittests
 }
 
 #[no_mangle]
-pub extern fn should_show_help(ptr: *const EngineOptions) -> bool {
+pub unsafe extern fn should_show_help(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).show_help
 }
 
 #[no_mangle]
-pub extern fn should_run_editor(ptr: *const EngineOptions) -> bool {
+pub unsafe extern fn should_run_editor(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).run_editor
 }
 
 #[no_mangle]
-pub extern fn should_start_in_fullscreen(ptr: *const EngineOptions) -> bool {
+pub unsafe extern fn should_start_in_fullscreen(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_in_fullscreen
 }
 
 #[no_mangle]
-pub extern fn get_scaling_quality(ptr: *const EngineOptions) -> ScalingQuality {
+pub unsafe extern fn get_scaling_quality(ptr: *const EngineOptions) -> ScalingQuality {
     unsafe_from_ptr!(ptr).scaling_quality
 }
 
@@ -200,33 +202,33 @@ pub extern fn get_scaling_quality_string(quality: ScalingQuality) -> *mut c_char
 }
 
 #[no_mangle]
-pub extern fn set_scaling_quality(ptr: *mut EngineOptions, scaling_quality: ScalingQuality) -> () {
-        unsafe_from_ptr_mut!(ptr).scaling_quality = scaling_quality
+pub unsafe extern fn set_scaling_quality(ptr: *mut EngineOptions, scaling_quality: ScalingQuality) {
+    unsafe_from_ptr_mut!(ptr).scaling_quality = scaling_quality
 }
 
 
 #[no_mangle]
-pub extern fn set_start_in_fullscreen(ptr: *mut EngineOptions, val: bool) -> () {
+pub unsafe extern fn set_start_in_fullscreen(ptr: *mut EngineOptions, val: bool) {
     unsafe_from_ptr_mut!(ptr).start_in_fullscreen = val
 }
 
 #[no_mangle]
-pub extern fn should_start_in_window(ptr: *const EngineOptions) -> bool {
+pub unsafe extern fn should_start_in_window(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_in_window
 }
 
 #[no_mangle]
-pub extern fn should_start_in_debug_mode(ptr: *const EngineOptions) -> bool {
+pub unsafe extern fn should_start_in_debug_mode(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_in_debug_mode
 }
 
 #[no_mangle]
-pub extern fn should_start_without_sound(ptr: *const EngineOptions) -> bool {
+pub unsafe extern fn should_start_without_sound(ptr: *const EngineOptions) -> bool {
     unsafe_from_ptr!(ptr).start_without_sound
 }
 
 #[no_mangle]
-pub extern fn set_start_without_sound(ptr: *mut EngineOptions, val: bool) -> () {
+pub unsafe extern fn set_start_without_sound(ptr: *mut EngineOptions, val: bool) {
     unsafe_from_ptr_mut!(ptr).start_without_sound = val
 }
 
@@ -237,8 +239,8 @@ pub extern fn get_resource_version_string(version: VanillaVersion) -> *mut c_cha
 }
 
 #[no_mangle]
-pub extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *mut c_char {
-    let launcher_path = unsafe { CStr::from_ptr(launcher_path_ptr).to_string_lossy() };
+pub unsafe extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *mut c_char {
+    let launcher_path = unsafe { CStr::from_ptr(launcher_path_ptr) }.to_string_lossy();
     let is_exe = launcher_path.to_lowercase().ends_with(".exe");
     let end_of_executable_slice = launcher_path.len() - if is_exe { 13 } else { 9 };
     let mut executable_path = String::from(&launcher_path[0..end_of_executable_slice]);
@@ -252,8 +254,8 @@ pub extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *mut c_ch
 
 #[no_mangle]
 pub extern fn free_rust_string(s: *mut c_char) {
+    if s.is_null() { return }
     unsafe {
-        if s.is_null() { return }
         CString::from_raw(s)
     };
 }
@@ -273,9 +275,7 @@ mod tests {
     use std::env;
 
     macro_rules! assert_chars_eq { ($got:expr, $expected:expr) => {
-        unsafe {
-            assert_eq!(str::from_utf8(CStr::from_ptr($got).to_bytes()).unwrap(), $expected);
-        }
+        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr($got) }.to_bytes()).unwrap(), $expected);
     } }
 
     #[test]
@@ -297,7 +297,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(!super::should_start_in_fullscreen(&engine_options));
+        assert!(!unsafe { super::should_start_in_fullscreen(&engine_options) });
     }
 
     #[test]
@@ -305,7 +305,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("-fullscreen"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(super::should_start_in_fullscreen(&engine_options));
+        assert!(unsafe { super::should_start_in_fullscreen(&engine_options) });
     }
 
     #[test]
@@ -313,7 +313,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("-help"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(super::should_show_help(&engine_options));
+        assert!(unsafe { super::should_show_help(&engine_options) });
     }
 
     #[test]
@@ -321,12 +321,10 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("-debug"), String::from("-mod"), String::from("a"), String::from("--mod"), String::from("ö"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(super::should_start_in_debug_mode(&engine_options));
-        assert_eq!(super::get_number_of_mods(&engine_options), 2);
-        unsafe {
-            assert_eq!(CString::from_raw(super::get_mod(&engine_options, 0)), CString::new("a").unwrap());
-            assert_eq!(CString::from_raw(super::get_mod(&engine_options, 1)), CString::new("ö").unwrap());
-        }
+        assert!(unsafe { super::should_start_in_debug_mode(&engine_options) });
+        assert_eq!(unsafe { super::get_number_of_mods(&engine_options) }, 2);
+        assert_eq!(unsafe { CString::from_raw(super::get_mod(&engine_options, 0)) }, CString::new("a").unwrap());
+        assert_eq!(unsafe { CString::from_raw(super::get_mod(&engine_options, 1)) }, CString::new("ö").unwrap());
     }
 
     #[test]
@@ -341,7 +339,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("-resversion"), String::from("RUSSIAN"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(super::get_resource_version(&engine_options) == super::VanillaVersion::RUSSIAN);
+        assert!(unsafe { super::get_resource_version(&engine_options) } == super::VanillaVersion::RUSSIAN);
     }
 
     #[test]
@@ -349,7 +347,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("-resversion"), String::from("ITALIAN"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(super::get_resource_version(&engine_options) == super::VanillaVersion::ITALIAN);
+        assert!(unsafe { super::get_resource_version(&engine_options) } == super::VanillaVersion::ITALIAN);
     }
 
     #[test]
@@ -357,8 +355,8 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--res"), String::from("1120x960"));
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert_eq!(super::get_resolution_x(&engine_options), 1120);
-        assert_eq!(super::get_resolution_y(&engine_options), 960);
+        assert_eq!(unsafe { super::get_resolution_x(&engine_options) }, 1120);
+        assert_eq!(unsafe { super::get_resolution_y(&engine_options) }, 960);
     }
 
     #[test]
@@ -373,13 +371,11 @@ mod tests {
         let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
 
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        unsafe {
-            let comp = str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap();
-            let temp = fs::canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
-            let base = temp.to_str().unwrap();
+        let comp = str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)) }.to_bytes()).unwrap();
+        let temp = fs::canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
+        let base = temp.to_str().unwrap();
 
-            assert_eq!(comp, base);
-        }
+        assert_eq!(comp, base);
     }
 
     #[test]
@@ -394,9 +390,7 @@ mod tests {
         let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
 
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        unsafe {
-            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
-        }
+        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)) }.to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
     }
 
     #[test]
@@ -411,9 +405,7 @@ mod tests {
         let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().to_str().unwrap()));
 
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        unsafe {
-            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)).to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
-        }
+        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)) }.to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
     }
 
     #[test]
@@ -493,7 +485,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"fullscreen\": true }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert!(super::should_start_in_fullscreen(&engine_options));
+        assert!(unsafe { super::should_start_in_fullscreen(&engine_options) });
     }
 
     #[test]
@@ -501,7 +493,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"debug\": true }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert!(super::should_start_in_debug_mode(&engine_options));
+        assert!(unsafe { super::should_start_in_debug_mode(&engine_options) });
     }
 
     #[test]
@@ -509,7 +501,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"nosound\": true }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert!(super::should_start_without_sound(&engine_options));
+        assert!(unsafe { super::should_start_without_sound(&engine_options) });
     }
 
     #[test]
@@ -517,7 +509,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"help\": true, \"show_help\": true }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert!(!super::should_show_help(&engine_options));
+        assert!(!unsafe { super::should_show_help(&engine_options) });
     }
 
     #[test]
@@ -525,7 +517,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"unittests\": true, \"run_unittests\": true }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert!(!super::should_run_unittests(&engine_options));
+        assert!(!unsafe { super::should_run_unittests(&engine_options) });
     }
 
     #[test]
@@ -533,7 +525,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"editor\": true, \"run_editor\": true }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert!(!super::should_run_editor(&engine_options));
+        assert!(!unsafe { super::should_run_editor(&engine_options) });
     }
 
     #[test]
@@ -549,8 +541,8 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"debug\": true, \"mods\": [ \"m1\", \"a2\" ] }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert!(super::should_start_in_debug_mode(&engine_options));
-        assert!(super::get_number_of_mods(&engine_options) == 2);
+        assert!(unsafe { super::should_start_in_debug_mode(&engine_options) });
+        assert!(unsafe { super::get_number_of_mods(&engine_options) } == 2);
     }
 
     #[test]
@@ -566,7 +558,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"resversion\": \"RUSSIAN\" }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert_eq!(super::get_resource_version(&engine_options), super::VanillaVersion::RUSSIAN);
+        assert_eq!(unsafe { super::get_resource_version(&engine_options) }, super::VanillaVersion::RUSSIAN);
     }
 
     #[test]
@@ -574,7 +566,7 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"resversion\": \"ITALIAN\" }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert_eq!(super::get_resource_version(&engine_options), super::VanillaVersion::ITALIAN);
+        assert_eq!(unsafe { super::get_resource_version(&engine_options) }, super::VanillaVersion::ITALIAN);
     }
 
     #[test]
@@ -582,8 +574,8 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"res\": \"1024x768\" }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert_eq!(super::get_resolution_x(&engine_options), 1024);
-        assert_eq!(super::get_resolution_y(&engine_options), 768);
+        assert_eq!(unsafe { super::get_resolution_x(&engine_options) }, 1024);
+        assert_eq!(unsafe { super::get_resolution_y(&engine_options) }, 768);
     }
 
     #[test]
@@ -592,9 +584,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         engine_options.stracciatella_home = super::find_stracciatella_home().unwrap();
 
-        unsafe {
-            assert_eq!(str::from_utf8(CStr::from_ptr(super::get_stracciatella_home(&engine_options)).to_bytes()).unwrap(), format!("{}/.ja2", env::var("HOME").unwrap()));
-        }
+        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(super::get_stracciatella_home(&engine_options)) }.to_bytes()).unwrap(), format!("{}/.ja2", env::var("HOME").unwrap()));
     }
 
     #[test]
@@ -605,7 +595,7 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         engine_options.stracciatella_home = super::find_stracciatella_home().unwrap();
 
-        let result = unsafe { str::from_utf8(CStr::from_ptr(super::get_stracciatella_home(&engine_options)).to_bytes()).unwrap() };
+        let result = str::from_utf8(unsafe { CStr::from_ptr(super::get_stracciatella_home(&engine_options)) }.to_bytes()).unwrap();
         let regex = Regex::new(r"^[A-Z]:\\(.*)+\\JA2").unwrap();
         assert!(regex.is_match(result), "{} is not a valid home dir for windows", result);
     }
@@ -618,9 +608,9 @@ mod tests {
 
         let engine_options = super::EngineOptions::from_home_and_args(&home, &args).unwrap();
 
-        assert_eq!(super::get_resolution_x(&engine_options), 1100);
-        assert_eq!(super::get_resolution_y(&engine_options), 480);
-        assert_eq!(super::should_start_in_fullscreen(&engine_options), true);
+        assert_eq!(unsafe { super::get_resolution_x(&engine_options) }, 1100);
+        assert_eq!(unsafe { super::get_resolution_y(&engine_options) }, 480);
+        assert_eq!(unsafe { super::should_start_in_fullscreen(&engine_options) }, true);
     }
 
     #[test]
@@ -644,7 +634,7 @@ mod tests {
         engine_options.stracciatella_home = stracciatella_home.clone();
         engine_options.resolution = super::Resolution(100, 100);
 
-        super::write_engine_options(&mut engine_options);
+        unsafe { super::write_engine_options(&mut engine_options) };
 
         let got_engine_options = super::parse_json_config(&stracciatella_home).unwrap();
 
@@ -661,7 +651,7 @@ mod tests {
         engine_options.stracciatella_home = stracciatella_home.clone();
         engine_options.resolution = super::Resolution(100, 100);
 
-        super::write_engine_options(&mut engine_options);
+        unsafe { super::write_engine_options(&mut engine_options) };
 
         let mut config_file_contents = String::from("");
         File::open(stracciatella_json).unwrap().read_to_string(&mut config_file_contents).unwrap();

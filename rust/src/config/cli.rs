@@ -4,9 +4,9 @@ use std::str::FromStr;
 
 use getopts::Options;
 
-use EngineOptions;
-use Resolution;
-use VanillaVersion;
+use crate::EngineOptions;
+use crate::Resolution;
+use crate::VanillaVersion;
 
 #[cfg(not(windows))]
 static DATA_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";
