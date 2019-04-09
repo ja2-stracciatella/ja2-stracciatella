@@ -156,7 +156,7 @@ Smack* SmackOpen(SGPFile* FileHandle, UINT32 Flags, UINT32 ExtraFlag)
 	if (audiobuffer != NULL)
 	{
 		//SmackWriteAudio( audiobuffer, audiolen); // are getting right audio data?
-		// shoot and forget... audiobuffer should be freed by SoundMan
+		// shoot and forget...
 		flickinfo->SoundTag = SoundPlayFromSmackBuff(a_channels[SMKTRACK], a_depth[SMKTRACK], a_rate[SMKTRACK], audiobuffer, audiolen, MAXVOLUME, 64, 1, NULL, NULL);
 		MemFree(audiobuffer);
 	}
