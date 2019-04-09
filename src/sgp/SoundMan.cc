@@ -122,6 +122,8 @@ static void DecreaseSoundMemoryUsedBySample(SAMPLETAG *sample) { guiSoundMemoryU
 
 static BOOLEAN fSoundSystemInit = FALSE; // Startup called
 static BOOLEAN gfEnableStartup  = TRUE;  // Allow hardware to start up
+static INT32*  gMixBuffer = NULL;
+static UINT32  guiMixLength = 0;
 
 SDL_AudioSpec gTargetAudioSpec;
 
@@ -167,6 +169,12 @@ void ShutdownSoundManager(void)
 	SoundEmptyCache();
 	SoundShutdownHardware();
 	fSoundSystemInit = FALSE;
+	if (gMixBuffer != NULL)
+	{
+		MemFree(gMixBuffer);
+		gMixBuffer = NULL;
+		guiMixLength = 0;
+	}
 }
 
 
@@ -782,11 +790,13 @@ static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID)
 
 static void SoundCallback(void* userdata, Uint8* stream, int len)
 {
-	INT32  mix[ SOUND_SAMPLES ];
+	if ( guiMixLength < len * 2 )
+	{
+		guiMixLength = len * 2;
+		gMixBuffer = REALLOC(gMixBuffer, INT32, guiMixLength);
+	}
 
-	Assert(len * 2 == sizeof(mix));
-
-	SDL_memset(mix, 0, sizeof(mix));
+	SDL_memset(gMixBuffer, 0, guiMixLength);
 
 	// Mix sounds
 	for (UINT32 i = 0; i < lengthof(pSoundList); i++)
@@ -819,8 +829,8 @@ mixing:
 					const INT16* const src = (const INT16*)s->pData + Sound->pos * 2;
 					for (UINT32 i = 0; i < amount; ++i)
 					{
-						mix[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
-						mix[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
+						gMixBuffer[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
+						gMixBuffer[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
 					}
 				}
 				else
@@ -829,8 +839,8 @@ mixing:
 					for (UINT32 i = 0; i < amount; i++)
 					{
 						const INT data = src[i];
-						mix[2 * i + 0] += data * vol_l >> 7;
-						mix[2 * i + 1] += data * vol_r >> 7;
+						gMixBuffer[2 * i + 0] += data * vol_l >> 7;
+						gMixBuffer[2 * i + 1] += data * vol_r >> 7;
 					}
 				}
 
@@ -855,11 +865,12 @@ mixing:
 
 	// Clip sounds
 	INT16* Stream = (INT16*)stream;
-	for (UINT32 i = 0; i < lengthof(mix); ++i)
+	UINT32 uiEnd = guiMixLength / sizeof(gMixBuffer[0]);
+	for (UINT32 i = 0; i < uiEnd; ++i)
 	{
-		if (mix[i] >= INT16_MAX)     Stream[i] = INT16_MAX;
-		else if(mix[i] <= INT16_MIN) Stream[i] = INT16_MIN;
-		else                         Stream[i] = (INT16)mix[i];
+		if (gMixBuffer[i] >= INT16_MAX)     Stream[i] = INT16_MAX;
+		else if(gMixBuffer[i] <= INT16_MIN) Stream[i] = INT16_MIN;
+		else                                Stream[i] = (INT16)gMixBuffer[i];
 	}
 }
 
