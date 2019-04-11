@@ -216,7 +216,11 @@ UINT32 SoundPlayFromSmackBuff(UINT8 channels, UINT8 depth, UINT32 rate, UINT8* p
 	if (pbuffer == NULL) return SOUND_ERROR;
 	if (size == 0) return SOUND_ERROR;
 
-	if (depth == 16) format = AUDIO_S16LSB;
+	//Originaly Sound Blaster could only play mono unsigned 8-bit PCM data.
+	//Later it became capable of playing 16-bit audio data, but needed to be signed and LSB.
+	//They were the de facto standard so I'm assuming smacker uses the same.
+	if (depth == 8) format = AUDIO_U8;
+	else if (depth == 16) format = AUDIO_S16LSB;
 	else return SOUND_ERROR;
 
 	SAMPLETAG* s = SoundLoadBuffer(format, channels, rate, pbuffer, size);
