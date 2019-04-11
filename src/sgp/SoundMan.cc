@@ -794,6 +794,7 @@ static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID)
 
 static void SoundCallback(void* userdata, Uint8* stream, int len)
 {
+	// INT16 data is being mixed as INT32, so it needs to be double the length of the stream
 	if ( guiMixLength < len * 2 )
 	{
 		guiMixLength = len * 2;
@@ -867,9 +868,9 @@ mixing:
 		}
 	}
 
-	// Clip sounds
+	// Clip sounds and fill the stream
 	INT16* Stream = (INT16*)stream;
-	UINT32 uiEnd = guiMixLength / sizeof(gMixBuffer[0]);
+	UINT32 uiEnd = len / sizeof(Stream[0]);
 	for (UINT32 i = 0; i < uiEnd; ++i)
 	{
 		if (gMixBuffer[i] >= INT16_MAX)     Stream[i] = INT16_MAX;
