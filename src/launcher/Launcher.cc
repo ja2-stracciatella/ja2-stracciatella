@@ -189,6 +189,7 @@ void Launcher::openDataDirectorySelector(Fl_Widget *btn, void *userdata) {
 	Fl_Native_File_Chooser fnfc;
 	fnfc.title("Select the original Jagged Alliance 2 install directory");
 	fnfc.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
+	fnfc.directory(window->dataDirectoryInput->value());
 
 	switch ( fnfc.show() ) {
 		case -1:
