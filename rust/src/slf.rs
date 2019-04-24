@@ -271,6 +271,7 @@ impl SlfEntry
 
 
     // Convert the file time of the entry to system time.
+    #[allow(dead_code)]
     pub fn to_system_time(&self) -> Option<SystemTime>
     {
         // Unix epoch is 1 Jan 1970.
