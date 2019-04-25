@@ -100,7 +100,7 @@ impl ResourcePack {
             resource.path = my_path;
             // include slf contents
             if self.properties.get("with_archive_slf") == Some(&json!(true)) {
-                if uppercase_extension(&path)? == "SLF" {
+                if uppercase_extension(&path) == "SLF" {
                     resource.properties.insert("archive_slf".to_string(), json!(true));
                     let num_resources = self.add_slf(&path, &resource.path)?;
                     resource.properties.insert("archive_slf_num_resources".to_string(), json!(num_resources));
@@ -175,12 +175,13 @@ impl fmt::Display for ResourceError
 
 
 // Gets the extension of the path in uppercase.
-fn uppercase_extension(path: &Path) -> Result<String,Box<Error>>
+// Assumes the extension only contains valid utf8.
+fn uppercase_extension(path: &Path) -> String
 {
     if let Some(extension) = path.extension() {
-        return Ok(extension.to_str().unwrap().to_uppercase());
+        return extension.to_str().unwrap().to_uppercase();
     }
-    return Ok("".to_string());
+    return "".to_string();
 }
 
 
