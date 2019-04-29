@@ -1,23 +1,22 @@
 // This file contains code to handle SLF archives.
 
-use ::std::io::Cursor;
-use ::std::io::Error;
-use ::std::io::ErrorKind::InvalidData;
-use ::std::io::Read;
-use ::std::io::Result;
-use ::std::io::SeekFrom;
-use ::std::io::Write;
+use std::io::Cursor;
+use std::io::Error;
+use std::io::ErrorKind::InvalidData;
+use std::io::Read;
+use std::io::Result;
+use std::io::SeekFrom;
+use std::io::Write;
 
-use ::std::mem::size_of;
+use std::mem::size_of;
 
-use ::std::time::Duration;
-use ::std::time::SystemTime;
-use ::std::time::UNIX_EPOCH;
+use std::time::Duration;
+use std::time::SystemTime;
+use std::time::UNIX_EPOCH;
 
-use ::byteorder::LittleEndian;
-use ::byteorder::ReadBytesExt; // extends ::std::io::Read
-use ::byteorder::WriteBytesExt; // extends ::std::io::Write
-
+use byteorder::LittleEndian;
+use byteorder::ReadBytesExt; // extends ::std::io::Read
+use byteorder::WriteBytesExt; // extends ::std::io::Write
 
 // File representation of SlfHeader.
 #[repr(C, packed)]
@@ -30,9 +29,8 @@ struct LIBHEADER {
     pub iSort: u16,
     pub iVersion: u16,
     pub fContainsSubDirectories: i32,
-    pub iReserved: i32
+    pub iReserved: i32,
 }
-
 
 // File representation of SlfEntry.
 #[repr(C, packed)]
@@ -46,9 +44,8 @@ struct DIRENTRY {
     _padding: [u8; 2], //< structure is aligned to 4 bytes
     pub sFileTime: i64,
     pub usReserved2: u16,
-    _padding2: [u8; 2] //< structure is aligned to 4 bytes
+    _padding2: [u8; 2], //< structure is aligned to 4 bytes
 }
-
 
 // Header of the archive.
 // The entries are at the end of the archive.
@@ -67,9 +64,8 @@ pub struct SlfHeader {
     // TODO 0x0200
     pub version: u16,
     // TODO 1
-    pub contains_subdirectories: i32
+    pub contains_subdirectories: i32,
 }
-
 
 // Entry of the archive.
 #[derive(Debug)]
@@ -83,9 +79,8 @@ pub struct SlfEntry {
     // State of the entry.
     pub state: SlfEntryState,
     // FILETIME, the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
-    pub file_time: i64
+    pub file_time: i64,
 }
-
 
 // State of an entry of the archive.
 #[derive(Debug)]
@@ -99,35 +94,30 @@ pub enum SlfEntryState {
     // TODO
     DoesNotExist,
     // Unknown state.
-    Unknown(u8)
+    Unknown(u8),
 }
-
 
 // Data starts after the header.
 #[allow(dead_code)]
-pub fn start_of_data() -> SeekFrom
-{
+pub fn start_of_data() -> SeekFrom {
     return SeekFrom::Start(size_of::<LIBHEADER>() as u64);
 }
 
-
 // Entries are at the end fo the file.
 #[allow(dead_code)]
-pub fn start_of_entries(num_entries: i32) -> SeekFrom
-{
+pub fn start_of_entries(num_entries: i32) -> SeekFrom {
     if num_entries <= 0 {
         return SeekFrom::End(0);
     }
     return SeekFrom::End(-(num_entries as i64 * size_of::<DIRENTRY>() as i64));
 }
 
-
-impl SlfHeader
-{
+impl SlfHeader {
     // Create an archive header from the input.
     #[allow(dead_code)]
     pub fn from_input<T>(input: &mut T) -> Result<Self>
-    where T: Read
+    where
+        T: Read,
     {
         const NUM_BYTES: usize = size_of::<LIBHEADER>();
         debug_assert_eq!(NUM_BYTES, 532);
@@ -155,15 +145,15 @@ impl SlfHeader
             used,
             sort,
             version,
-            contains_subdirectories
-        })
+            contains_subdirectories,
+        });
     }
-
 
     // Write the archive header to output.
     #[allow(dead_code)]
     pub fn to_output<T>(&self, output: &mut T) -> Result<&Self>
-    where T: Write
+    where
+        T: Write,
     {
         const NUM_BYTES: usize = size_of::<LIBHEADER>();
         debug_assert_eq!(NUM_BYTES, 532);
@@ -186,32 +176,31 @@ impl SlfHeader
         // write data
         output.write_all(&buffer)?;
 
-        return Ok(&self)
+        return Ok(&self);
     }
-
 
     // Read the entries from the input.
     // The input must be in the correct position.
     #[allow(dead_code)]
     pub fn read_entries_from<T>(&self, input: &mut T) -> Result<Vec<SlfEntry>>
-    where T: Read
+    where
+        T: Read,
     {
         // TODO use local buffer
         let mut entries: Vec<SlfEntry> = Vec::new();
         for _ in 0..self.number_of_entries {
             entries.push(SlfEntry::from_input(input)?);
         }
-        return Ok(entries)
+        return Ok(entries);
     }
 }
 
-
-impl SlfEntry
-{
-    // Create an archive entry from input. 
+impl SlfEntry {
+    // Create an archive entry from input.
     #[allow(dead_code)]
     pub fn from_input<T>(input: &mut T) -> Result<Self>
-    where T: Read
+    where
+        T: Read,
     {
         const NUM_BYTES: usize = size_of::<DIRENTRY>();
         debug_assert_eq!(NUM_BYTES, 280);
@@ -236,15 +225,15 @@ impl SlfEntry
             offset,
             length,
             state,
-            file_time
-        })
+            file_time,
+        });
     }
-
 
     // Write the archive entry to output.
     #[allow(dead_code)]
     pub fn to_output<T>(&self, output: &mut T) -> Result<&Self>
-    where T: Write
+    where
+        T: Write,
     {
         const NUM_BYTES: usize = size_of::<DIRENTRY>();
         debug_assert_eq!(NUM_BYTES, 280);
@@ -266,14 +255,12 @@ impl SlfEntry
         // write data
         output.write_all(&buffer)?;
 
-        return Ok(&self)
+        return Ok(&self);
     }
-
 
     // Convert the file time of the entry to system time.
     #[allow(dead_code)]
-    pub fn to_system_time(&self) -> Option<SystemTime>
-    {
+    pub fn to_system_time(&self) -> Option<SystemTime> {
         // Unix epoch is 1 Jan 1970.
         // FILETIME is the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
         const UNIX_EPOCH_AS_FILETIME: i64 = 11_644_473_600_000_000_0; // 100-nanoseconds
@@ -290,142 +277,135 @@ impl SlfEntry
         return Some(UNIX_EPOCH + Duration::from_secs(secs) + Duration::from_nanos(nanos));
     }
 
-
     // Data starts after the specified offset.
     #[allow(dead_code)]
-    pub fn start_of_data(&self) -> SeekFrom
-    {
+    pub fn start_of_data(&self) -> SeekFrom {
         return SeekFrom::Start(self.offset as u64);
     }
 }
 
-
-impl SlfEntryState
-{
+impl SlfEntryState {
     // TODO ::std::convert::Into, ::std::convert::From?
 
     // Create an archive entry state from a raw state.
-    pub fn from_u8(value: u8) -> Self
-    {
+    pub fn from_u8(value: u8) -> Self {
         return match value {
             0x00 => SlfEntryState::Ok,
             0xFF => SlfEntryState::Deleted,
             0x01 => SlfEntryState::Old,
             0xFE => SlfEntryState::DoesNotExist,
-            _ => SlfEntryState::Unknown(value)
-        }
+            _ => SlfEntryState::Unknown(value),
+        };
     }
 
-
     // Get the raw state of an archive entry state.
-    pub fn into_u8(&self) -> u8
-    {
+    pub fn into_u8(&self) -> u8 {
         return match self {
             SlfEntryState::Ok => 0x00,
             SlfEntryState::Deleted => 0xFF,
             SlfEntryState::Old => 0x01,
             SlfEntryState::DoesNotExist => 0xFE,
-            SlfEntryState::Unknown(value) => *value
-        }
+            SlfEntryState::Unknown(value) => *value,
+        };
     }
 }
 
-
 fn read_unused<T>(input: &mut T, num_bytes: usize) -> Result<()>
-where T: Read
+where
+    T: Read,
 {
     let mut buffer = vec![0u8; num_bytes];
     input.read_exact(&mut buffer)?;
-    return Ok(())
+    return Ok(());
 }
 
-
 fn write_unused<T>(output: &mut T, num_bytes: usize) -> Result<()>
-where T: Write
+where
+    T: Write,
 {
     let mut buffer = vec![0u8; num_bytes];
     output.write_all(&mut buffer)?;
-    return Ok(())
+    return Ok(());
 }
 
-
 fn read_u8<T>(input: &mut T) -> Result<u8>
-where T: Read
+where
+    T: Read,
 {
     return input.read_u8();
 }
 
-
 fn write_u8<T>(output: &mut T, value: u8) -> Result<()>
-where T: Write
+where
+    T: Write,
 {
     output.write_u8(value)?;
-    return Ok(())
+    return Ok(());
 }
 
-
 fn read_u16<T>(input: &mut T) -> Result<u16>
-where T: Read
+where
+    T: Read,
 {
     return input.read_u16::<LittleEndian>();
 }
 
-
 fn write_u16<T>(output: &mut T, value: u16) -> Result<()>
-where T: Write
+where
+    T: Write,
 {
     output.write_u16::<LittleEndian>(value)?;
-    return Ok(())
+    return Ok(());
 }
 
-
 fn read_i32<T>(input: &mut T) -> Result<i32>
-where T: Read
+where
+    T: Read,
 {
     return input.read_i32::<LittleEndian>();
 }
 
-
 fn write_i32<T>(output: &mut T, value: i32) -> Result<()>
-where T: Write
+where
+    T: Write,
 {
     output.write_i32::<LittleEndian>(value)?;
-    return Ok(())
+    return Ok(());
 }
 
-
 fn read_u32<T>(input: &mut T) -> Result<u32>
-where T: Read
+where
+    T: Read,
 {
     return input.read_u32::<LittleEndian>();
 }
 
-
 fn write_u32<T>(output: &mut T, value: u32) -> Result<()>
-where T: Write
+where
+    T: Write,
 {
     output.write_u32::<LittleEndian>(value)?;
-    return Ok(())
+    return Ok(());
 }
 
-
 fn read_i64<T>(input: &mut T) -> Result<i64>
-where T: Read
+where
+    T: Read,
 {
     return input.read_i64::<LittleEndian>();
 }
 
-
 fn write_i64<T>(output: &mut T, value: i64) -> Result<()>
-where T: Write
+where
+    T: Write,
 {
     output.write_i64::<LittleEndian>(value)?;
-    return Ok(())
+    return Ok(());
 }
 
-
 fn read_string<T>(input: &mut T, num_bytes: usize) -> Result<String>
-where T: Read
+where
+    T: Read,
 {
     let mut buffer = vec![0u8; num_bytes];
     input.read_exact(&mut buffer)?;
@@ -433,15 +413,15 @@ where T: Read
     return match buffer.iter().position(|&byte| byte == 0) {
         Some(position) => match ::std::str::from_utf8(&buffer[..position]) {
             Ok(s) => Ok(s.to_string()),
-            Err(e) => Err(Error::new(InvalidData, e))
+            Err(e) => Err(Error::new(InvalidData, e)),
         },
-        None => Err(Error::new(InvalidData, "string is not nul terminated"))
-    }
+        None => Err(Error::new(InvalidData, "string is not nul terminated")),
+    };
 }
 
-
 fn write_string<T>(output: &mut T, num_bytes: usize, string: &String) -> Result<()>
-where T: Write
+where
+    T: Write,
 {
     let mut buffer = vec![0u8; num_bytes];
     let string_bytes = string.as_bytes();
@@ -450,5 +430,5 @@ where T: Write
     }
     buffer[..string_bytes.len()].copy_from_slice(&string_bytes);
     output.write_all(&buffer)?;
-    return Ok(())
+    return Ok(());
 }
