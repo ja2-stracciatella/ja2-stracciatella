@@ -1,4 +1,60 @@
-// This file contains code to handle SLF archives.
+//! This file contains code to read and write SLF files.
+//!
+//! SLF is a file format that holds a collection of files and has the file extension `.slf`.
+//!
+//! I'm calling it "Sir-tech Library File" based on the name of STCI/STI.
+//!
+//!
+//! # File Structure
+//!
+//! Based on "src/sgp/LibraryDatabase.cc", the file has the following structure:
+//!
+//!  * header - 532 bytes, always at the start of the file
+//!  * data - any size, contains the data of the entries
+//!  * entries - 280 bytes per entry, always at the end of the file
+//!
+//! Each entry represents a file.
+//!
+//! Numeric values are in little endian.
+//!
+//! Strings are '\0' terminated and have unused bytes zeroed.
+//!
+//! The paths are case-insensitive and use the '\\' character as a directory separator.
+//! Probably the special names for current directory "." and parent directory ".." are not supported.
+//! The header contains a library path, it is a path relative to the default directory (Data dir).
+//! Each entry contains a file path, it is a path relative to the library path.
+//! The encoding of the paths is unknown, but so far I've only seen ASCII.
+//!
+//!
+//! # Header Structure
+//!
+//! Based on LIBHEADER in "src/sgp/LibraryDatabase.cc", the header has the following structure (532 bytes):
+//!
+//!  * 256 byte string with the library name
+//!  * 256 byte string with the library path (empty or terminated by '\\', relative to Data dir)
+//!  * 4 byte signed number with the total number of entries
+//!  * 4 byte signed number with the total number of entries that have state FILE_OK 0x00
+//!  * 2 byte unsigned number with name iSort (not used, only saw 0xFFFF, probably means it's sorted)
+//!  * 2 byte unsigned number with name iVersion (not used, only saw 0x0200, probably means v2.0)
+//!  * 1 byte unsigned number with name fContainsSubDirectories (not used, saw 0 and 1)
+//!  * 3 byte padding (4 byte alignment)
+//!  * 4 byte signed number with name iReserved (not used)
+//!
+//!
+//! # Entry Structure
+//!
+//! Based on DIRENTRY in "src/sgp/LibraryDatabase.cc", the header has the following structure (280 bytes):
+//!
+//!  * 256 byte string with the file path (relative to the library path)
+//!  * 4 byte unsigned number with the offset of the file data in the library file
+//!  * 4 byte unsigned number with the length of the file data in the library file
+//!  * 1 byte unsigned number with the state of the entry (saw FILE_OK 0x00 and FILE_OLD 0x01)
+//!  * 1 byte unsigned number with name ubReserved (not used)
+//!  * 2 byte padding (4 byte alignment)
+//!  * 8 byte FILETIME (not used, from windows, the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601)
+//!  * 2 byte unsigned number with name usReserved2 (not used)
+//!  * 2 byte padding (4 byte alignment)
+//!
 
 use std::io::Cursor;
 use std::io::Error;
@@ -51,33 +107,50 @@ struct DIRENTRY {
 // The entries are at the end of the archive.
 #[derive(Debug)]
 pub struct SlfHeader {
-    // Name of the library (filename in uppercase?).
+    // Name of the library.
+    //
+    // Usually it's the name of the library file in uppercase.
+    // Nul terminated string of 256 bytes, unused bytes are zeroed, unknown encoding (saw ASCII).
     pub library_name: String,
-    // Base directory of the files in the archive.
+
+    // Base path of the files in the library.
+    //
+    // Empty or terminated by '\\'.
+    // Nul terminated string of 256 bytes, unused bytes are zeroed, unknown encoding (saw ASCII).
     pub library_path: String,
-    // Number of entries at the end of the archive.
+
+    // Number of entries that are available.
     pub number_of_entries: i32,
-    // Number of entries that are being used.
+
+    // Number of entries that have state Ok.
     pub used: i32,
-    // TODO 0xFFFF
+
+    // TODO 0xFFFF probably means the entries are sorted by file path first, and by state second (Old < Ok)
     pub sort: u16,
-    // TODO 0x0200
+
+    // TODO 0x0200 probably means v2.0
     pub version: u16,
-    // TODO 1
+
+    // TODO 0 when there are 0 '\\' characters in library_path (0 '\\' characters in the file names either, do they count?)
+    //      1 when there is 1 '\\' character in library_path (0-2 '\\' characters in the file names)
     pub contains_subdirectories: u8,
 }
 
 // Entry of the archive.
 #[derive(Debug)]
 pub struct SlfEntry {
-    // Name of the file (in uppercase?).
+    // Path of the file from the library path.
     pub file_name: String,
-    // Start offset of the file data in the archive.
+
+    // Start offset of the file data in the library.
     pub offset: u32,
-    // Length of the file data in the archive.
+
+    // Length of the file data in the library.
     pub length: u32,
+
     // State of the entry.
     pub state: SlfEntryState,
+
     // FILETIME, the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
     pub file_time: i64,
 }
@@ -85,11 +158,17 @@ pub struct SlfEntry {
 // State of an entry of the archive.
 #[derive(Debug)]
 pub enum SlfEntryState {
-    // The entry is valid.
+    // Contains data and the data is up to date.
+    //
+    // Only entries with this state are used in the game.
     Ok,
+
     // TODO
     Deleted,
-    // TODO
+
+    // Contains data and the data is old.
+    //
+    // There should be an entry with the same path and state Ok next to this entry.
     Old,
 
     // TODO
