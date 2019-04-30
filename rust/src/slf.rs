@@ -71,7 +71,7 @@ pub const ENTRY_BYTES: u32 = 280;
 
 // Unix epoch is 1 Jan 1970.
 // FILETIME is the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
-pub const UNIX_EPOCH_AS_FILETIME: i64 = 11_644_473_600_000_000_0; // 100-nanoseconds
+pub const UNIX_EPOCH_AS_FILETIME: u64 = 11_644_473_600_000_000_0; // 100-nanoseconds
 
 // Header of the archive.
 // The entries are at the end of the archive.
@@ -122,7 +122,7 @@ pub struct SlfEntry {
     pub state: SlfEntryState,
 
     // FILETIME, the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
-    pub file_time: i64,
+    pub file_time: u64,
 }
 
 // State of an entry of the archive.
@@ -226,7 +226,7 @@ impl SlfHeader {
             let length = handle.read_u32::<LE>()?;
             let state: SlfEntryState = handle.read_u8()?.into();
             handle.read_unused(3)?;
-            let file_time = handle.read_i64::<LE>()?;
+            let file_time = handle.read_u64::<LE>()?;
             handle.read_unused(4)?;
 
             entries.push(SlfEntry {
@@ -268,7 +268,7 @@ impl SlfHeader {
             cursor.write_u32::<LE>(entry.length)?;
             cursor.write_u8(entry.state.into())?;
             cursor.write_unused(3)?;
-            cursor.write_i64::<LE>(entry.file_time)?;
+            cursor.write_u64::<LE>(entry.file_time)?;
             cursor.write_unused(4)?;
         }
         assert_eq!(buffer.len(), num_bytes as usize);
@@ -297,7 +297,6 @@ impl SlfEntry {
     pub fn to_system_time(&self) -> Option<SystemTime> {
         if self.file_time < UNIX_EPOCH_AS_FILETIME {
             // TODO windows can also represent [0,UNIX_EPOCH_AS_FILETIME) but unix cannot, what should happen?
-            // TODO file_time is signed, what to do with negative values?
             return None;
         }
 
