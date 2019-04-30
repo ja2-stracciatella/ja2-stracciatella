@@ -69,6 +69,10 @@ pub const HEADER_BYTES: u32 = 532;
 // Number of bytes of an entry in the library file.
 pub const ENTRY_BYTES: u32 = 280;
 
+// Unix epoch is 1 Jan 1970.
+// FILETIME is the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
+pub const UNIX_EPOCH_AS_FILETIME: i64 = 11_644_473_600_000_000_0; // 100-nanoseconds
+
 // Header of the archive.
 // The entries are at the end of the archive.
 #[derive(Debug)]
@@ -291,10 +295,6 @@ impl SlfEntry {
     // Convert the file time of the entry to system time.
     #[allow(dead_code)]
     pub fn to_system_time(&self) -> Option<SystemTime> {
-        // Unix epoch is 1 Jan 1970.
-        // FILETIME is the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
-        const UNIX_EPOCH_AS_FILETIME: i64 = 11_644_473_600_000_000_0; // 100-nanoseconds
-
         if self.file_time < UNIX_EPOCH_AS_FILETIME {
             // TODO windows can also represent [0,UNIX_EPOCH_AS_FILETIME) but unix cannot, what should happen?
             // TODO file_time is signed, what to do with negative values?
@@ -305,6 +305,45 @@ impl SlfEntry {
         let secs = unix / 1_000_000_0; //  seconds
         let nanos = (unix % 1_000_000_0) * 100; // nanoseconds
         return Some(UNIX_EPOCH + Duration::from_secs(secs) + Duration::from_nanos(nanos));
+    }
+
+    // Read the entry data from the input.
+    #[allow(dead_code)]
+    pub fn data_from_input<T>(&self, input: &mut T) -> Result<Vec<u8>>
+    where
+        T: Read + Seek,
+    {
+        input.seek(SeekFrom::Start(self.offset as u64))?;
+
+        let mut data = vec![0u8; self.length as usize];
+        input.read_exact(&mut data)?;
+
+        return Ok(data);
+    }
+
+    // Write the entry data to output.
+    #[allow(dead_code)]
+    pub fn data_to_output<T>(&self, output: &mut T, data: &[u8]) -> Result<()>
+    where
+        T: Write + Seek,
+    {
+        if self.offset < HEADER_BYTES {
+            return Err(Error::new(
+                InvalidInput,
+                format!("unexpected data offset {}", self.offset),
+            ));
+        }
+        if self.length as usize != data.len() {
+            return Err(Error::new(
+                InvalidInput,
+                format!("unexpected data length {} != {}", self.length, data.len()),
+            ));
+        }
+
+        output.seek(SeekFrom::Start(self.offset as u64))?;
+        output.write_all(&data)?;
+
+        return Ok(());
     }
 }
 
