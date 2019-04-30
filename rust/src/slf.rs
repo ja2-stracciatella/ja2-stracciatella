@@ -131,7 +131,7 @@ pub struct SlfEntry {
 }
 
 // State of an entry of the archive.
-#[derive(Debug, Eq, PartialEq)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum SlfEntryState {
     // Contains data and the data is up to date.
     //
@@ -261,7 +261,7 @@ impl SlfEntry {
         let file_name = read_string(&mut cursor, 256)?;
         let offset = read_u32(&mut cursor)?;
         let length = read_u32(&mut cursor)?;
-        let state = SlfEntryState::from_u8(read_u8(&mut cursor)?);
+        let state: SlfEntryState = read_u8(&mut cursor)?.into();
         read_unused(&mut cursor, 3)?;
         let file_time = read_i64(&mut cursor)?;
         read_unused(&mut cursor, 4)?;
@@ -290,7 +290,7 @@ impl SlfEntry {
         write_string(&mut cursor, 256, &self.file_name)?;
         write_u32(&mut cursor, self.offset)?;
         write_u32(&mut cursor, self.length)?;
-        write_u8(&mut cursor, self.state.into_u8())?;
+        write_u8(&mut cursor, self.state.into())?;
         write_unused(&mut cursor, 3)?;
         write_i64(&mut cursor, self.file_time)?;
         write_unused(&mut cursor, 4)?;
@@ -328,28 +328,28 @@ impl SlfEntry {
     }
 }
 
-impl SlfEntryState {
-    // TODO ::std::convert::Into, ::std::convert::From?
+impl From<SlfEntryState> for u8 {
+    // All states map to a u8 value.
+    fn from(state: SlfEntryState) -> Self {
+        return match state {
+            SlfEntryState::Ok => 0x00,
+            SlfEntryState::Deleted => 0xFF,
+            SlfEntryState::Old => 0x01,
+            SlfEntryState::DoesNotExist => 0xFE,
+            SlfEntryState::Unknown(value) => value,
+        };
+    }
+}
 
-    // Create an archive entry state from a raw state.
-    pub fn from_u8(value: u8) -> Self {
+impl From<u8> for SlfEntryState {
+    // All u8 values map to a state.
+    fn from(value: u8) -> Self {
         return match value {
             0x00 => SlfEntryState::Ok,
             0xFF => SlfEntryState::Deleted,
             0x01 => SlfEntryState::Old,
             0xFE => SlfEntryState::DoesNotExist,
-            _ => SlfEntryState::Unknown(value),
-        };
-    }
-
-    // Get the raw state of an archive entry state.
-    pub fn into_u8(&self) -> u8 {
-        return match self {
-            SlfEntryState::Ok => 0x00,
-            SlfEntryState::Deleted => 0xFF,
-            SlfEntryState::Old => 0x01,
-            SlfEntryState::DoesNotExist => 0xFE,
-            SlfEntryState::Unknown(value) => *value,
+            value => SlfEntryState::Unknown(value),
         };
     }
 }
