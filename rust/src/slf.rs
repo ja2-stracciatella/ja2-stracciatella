@@ -64,8 +64,6 @@ use std::io::Result;
 use std::io::SeekFrom;
 use std::io::Write;
 
-use std::mem::size_of;
-
 use std::time::Duration;
 use std::time::SystemTime;
 use std::time::UNIX_EPOCH;
@@ -74,34 +72,11 @@ use byteorder::LittleEndian;
 use byteorder::ReadBytesExt; // extends ::std::io::Read
 use byteorder::WriteBytesExt; // extends ::std::io::Write
 
-// File representation of SlfHeader.
-#[repr(C, packed)]
-#[allow(non_snake_case)]
-struct LIBHEADER {
-    pub sLibName: [u8; 256],
-    pub sPathToLibrary: [u8; 256],
-    pub iEntries: i32,
-    pub iUsed: i32,
-    pub iSort: u16,
-    pub iVersion: u16,
-    pub fContainsSubDirectories: i32,
-    pub iReserved: i32,
-}
+// Number of bytes of the header in the library file.
+const HEADER_BYTES: usize = 532;
 
-// File representation of SlfEntry.
-#[repr(C, packed)]
-#[allow(non_snake_case)]
-struct DIRENTRY {
-    pub sFileName: [u8; 256],
-    pub uiOffset: u32,
-    pub uiLength: u32,
-    pub ubState: u8,
-    pub ubReserved: u8,
-    _padding: [u8; 2], //< structure is aligned to 4 bytes
-    pub sFileTime: i64,
-    pub usReserved2: u16,
-    _padding2: [u8; 2], //< structure is aligned to 4 bytes
-}
+// Number of bytes of an entry in the library file.
+const ENTRY_BYTES: usize = 280;
 
 // Header of the archive.
 // The entries are at the end of the archive.
@@ -181,7 +156,7 @@ pub enum SlfEntryState {
 // Data starts after the header.
 #[allow(dead_code)]
 pub fn start_of_data() -> SeekFrom {
-    return SeekFrom::Start(size_of::<LIBHEADER>() as u64);
+    return SeekFrom::Start(HEADER_BYTES as u64);
 }
 
 // Entries are at the end fo the file.
@@ -190,7 +165,7 @@ pub fn start_of_entries(num_entries: i32) -> SeekFrom {
     if num_entries <= 0 {
         return SeekFrom::End(0);
     }
-    return SeekFrom::End(-(num_entries as i64 * size_of::<DIRENTRY>() as i64));
+    return SeekFrom::End(-(num_entries as i64 * ENTRY_BYTES as i64));
 }
 
 impl SlfHeader {
@@ -200,11 +175,8 @@ impl SlfHeader {
     where
         T: Read,
     {
-        const NUM_BYTES: usize = size_of::<LIBHEADER>();
-        debug_assert_eq!(NUM_BYTES, 532);
-
         // use local buffer
-        let mut buffer: [u8; NUM_BYTES] = [0u8; NUM_BYTES];
+        let mut buffer: [u8; HEADER_BYTES] = [0u8; HEADER_BYTES];
         input.read_exact(&mut buffer)?;
         let mut cursor = Cursor::new(&buffer[..]);
 
@@ -217,7 +189,7 @@ impl SlfHeader {
         let version = read_u16(&mut cursor)?;
         let contains_subdirectories = read_u8(&mut cursor)?;
         read_unused(&mut cursor, 7)?;
-        debug_assert_eq!(cursor.position() as usize, NUM_BYTES);
+        debug_assert_eq!(cursor.position() as usize, HEADER_BYTES);
 
         return Ok(SlfHeader {
             library_name,
@@ -236,11 +208,8 @@ impl SlfHeader {
     where
         T: Write,
     {
-        const NUM_BYTES: usize = size_of::<LIBHEADER>();
-        debug_assert_eq!(NUM_BYTES, 532);
-
         // use local buffer
-        let mut buffer: [u8; NUM_BYTES] = [0u8; NUM_BYTES];
+        let mut buffer: [u8; HEADER_BYTES] = [0u8; HEADER_BYTES];
         let mut cursor = Cursor::new(&mut buffer[..]);
 
         // write to buffer
@@ -252,7 +221,7 @@ impl SlfHeader {
         write_u16(&mut cursor, self.version)?;
         write_u8(&mut cursor, self.contains_subdirectories)?;
         write_unused(&mut cursor, 7)?;
-        debug_assert_eq!(cursor.position() as usize, NUM_BYTES);
+        debug_assert_eq!(cursor.position() as usize, HEADER_BYTES);
 
         // write data
         output.write_all(&buffer)?;
@@ -283,11 +252,8 @@ impl SlfEntry {
     where
         T: Read,
     {
-        const NUM_BYTES: usize = size_of::<DIRENTRY>();
-        debug_assert_eq!(NUM_BYTES, 280);
-
         // use local buffer
-        let mut buffer: [u8; NUM_BYTES] = [0u8; NUM_BYTES];
+        let mut buffer: [u8; ENTRY_BYTES] = [0u8; ENTRY_BYTES];
         input.read_exact(&mut buffer)?;
         let mut cursor = Cursor::new(&buffer[..]);
 
@@ -299,7 +265,7 @@ impl SlfEntry {
         read_unused(&mut cursor, 3)?;
         let file_time = read_i64(&mut cursor)?;
         read_unused(&mut cursor, 4)?;
-        debug_assert_eq!(cursor.position() as usize, NUM_BYTES);
+        debug_assert_eq!(cursor.position() as usize, ENTRY_BYTES);
 
         return Ok(SlfEntry {
             file_name,
@@ -316,11 +282,8 @@ impl SlfEntry {
     where
         T: Write,
     {
-        const NUM_BYTES: usize = size_of::<DIRENTRY>();
-        debug_assert_eq!(NUM_BYTES, 280);
-
         // use local buffer
-        let mut buffer: [u8; NUM_BYTES] = [0u8; NUM_BYTES];
+        let mut buffer: [u8; ENTRY_BYTES] = [0u8; ENTRY_BYTES];
         let mut cursor = Cursor::new(&mut buffer[..]);
 
         // write to buffer
@@ -331,7 +294,7 @@ impl SlfEntry {
         write_unused(&mut cursor, 3)?;
         write_i64(&mut cursor, self.file_time)?;
         write_unused(&mut cursor, 4)?;
-        debug_assert_eq!(cursor.position() as usize, NUM_BYTES);
+        debug_assert_eq!(cursor.position() as usize, ENTRY_BYTES);
 
         // write data
         output.write_all(&buffer)?;
