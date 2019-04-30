@@ -64,7 +64,7 @@ pub struct SlfHeader {
     // TODO 0x0200
     pub version: u16,
     // TODO 1
-    pub contains_subdirectories: i32,
+    pub contains_subdirectories: u8,
 }
 
 // Entry of the archive.
@@ -91,8 +91,10 @@ pub enum SlfEntryState {
     Deleted,
     // TODO
     Old,
+
     // TODO
     DoesNotExist,
+
     // Unknown state.
     Unknown(u8),
 }
@@ -134,8 +136,8 @@ impl SlfHeader {
         let used = read_i32(&mut cursor)?;
         let sort = read_u16(&mut cursor)?;
         let version = read_u16(&mut cursor)?;
-        let contains_subdirectories = read_i32(&mut cursor)?;
-        read_unused(&mut cursor, 4)?;
+        let contains_subdirectories = read_u8(&mut cursor)?;
+        read_unused(&mut cursor, 7)?;
         debug_assert_eq!(cursor.position() as usize, NUM_BYTES);
 
         return Ok(SlfHeader {
@@ -169,8 +171,8 @@ impl SlfHeader {
         write_i32(&mut cursor, self.used)?;
         write_u16(&mut cursor, self.sort)?;
         write_u16(&mut cursor, self.version)?;
-        write_i32(&mut cursor, self.contains_subdirectories)?;
-        write_unused(&mut cursor, 4)?;
+        write_u8(&mut cursor, self.contains_subdirectories)?;
+        write_unused(&mut cursor, 7)?;
         debug_assert_eq!(cursor.position() as usize, NUM_BYTES);
 
         // write data
