@@ -131,7 +131,7 @@ pub struct SlfEntry {
 }
 
 // State of an entry of the archive.
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq)]
 pub enum SlfEntryState {
     // Contains data and the data is up to date.
     //
