@@ -1,13 +1,12 @@
 use ::std::error::Error;
 use ::std::fmt;
 use ::std::fs::File;
-use ::std::io::Seek;
 use ::std::path::Path;
 
 use ::serde::{Deserialize, Serialize};
 use ::serde_json::{json, Map, Value};
 
-use crate::slf::{start_of_entries, SlfHeader, SlfEntryState};
+use crate::slf::{SlfHeader, SlfEntryState};
 
 
 // A pack of game resources.
@@ -124,9 +123,8 @@ impl ResourcePack {
     {
         let mut f = File::open(path)?;
         let header = SlfHeader::from_input(&mut f)?;
-        f.seek(start_of_entries(header.number_of_entries))?;
         let mut num_resources = 0;
-        for entry in header.read_entries_from(&mut f)? {
+        for entry in header.entries_from_input(&mut f)? {
             match entry.state {
                 SlfEntryState::Ok => {
                     let mut resource = Resource::default();

@@ -59,8 +59,10 @@
 use std::io::Cursor;
 use std::io::Error;
 use std::io::ErrorKind::InvalidData;
+use std::io::ErrorKind::InvalidInput;
 use std::io::Read;
 use std::io::Result;
+use std::io::Seek;
 use std::io::SeekFrom;
 use std::io::Write;
 
@@ -73,10 +75,10 @@ use byteorder::ReadBytesExt; // extends ::std::io::Read
 use byteorder::WriteBytesExt; // extends ::std::io::Write
 
 // Number of bytes of the header in the library file.
-const HEADER_BYTES: usize = 532;
+pub const HEADER_BYTES: u32 = 532;
 
 // Number of bytes of an entry in the library file.
-const ENTRY_BYTES: usize = 280;
+pub const ENTRY_BYTES: u32 = 280;
 
 // Header of the archive.
 // The entries are at the end of the archive.
@@ -153,45 +155,27 @@ pub enum SlfEntryState {
     Unknown(u8),
 }
 
-// Data starts after the header.
-#[allow(dead_code)]
-pub fn start_of_data() -> SeekFrom {
-    return SeekFrom::Start(HEADER_BYTES as u64);
-}
-
-// Entries are at the end fo the file.
-#[allow(dead_code)]
-pub fn start_of_entries(num_entries: i32) -> SeekFrom {
-    if num_entries <= 0 {
-        return SeekFrom::End(0);
-    }
-    return SeekFrom::End(-(num_entries as i64 * ENTRY_BYTES as i64));
-}
-
 impl SlfHeader {
-    // Create an archive header from the input.
+    // Read the header from input.
     #[allow(dead_code)]
     pub fn from_input<T>(input: &mut T) -> Result<Self>
     where
-        T: Read,
+        T: Read + Seek,
     {
-        // use local buffer
-        let mut buffer: [u8; HEADER_BYTES] = [0u8; HEADER_BYTES];
-        input.read_exact(&mut buffer)?;
-        let mut cursor = Cursor::new(&buffer[..]);
+        input.seek(SeekFrom::Start(0))?;
 
-        // read data
-        let library_name = read_string(&mut cursor, 256)?;
-        let library_path = read_string(&mut cursor, 256)?;
-        let number_of_entries = read_i32(&mut cursor)?;
-        let used = read_i32(&mut cursor)?;
-        let sort = read_u16(&mut cursor)?;
-        let version = read_u16(&mut cursor)?;
-        let contains_subdirectories = read_u8(&mut cursor)?;
-        read_unused(&mut cursor, 7)?;
-        debug_assert_eq!(cursor.position() as usize, HEADER_BYTES);
+        let mut handle = input.take(HEADER_BYTES as u64);
+        let library_name = read_string(&mut handle, 256)?;
+        let library_path = read_string(&mut handle, 256)?;
+        let number_of_entries = read_i32(&mut handle)?;
+        let used = read_i32(&mut handle)?;
+        let sort = read_u16(&mut handle)?;
+        let version = read_u16(&mut handle)?;
+        let contains_subdirectories = read_u8(&mut handle)?;
+        read_unused(&mut handle, 7)?;
+        assert_eq!(handle.limit(), 0);
 
-        return Ok(SlfHeader {
+        return Ok(Self {
             library_name,
             library_path,
             number_of_entries,
@@ -202,17 +186,14 @@ impl SlfHeader {
         });
     }
 
-    // Write the archive header to output.
+    // Write this header to output.
     #[allow(dead_code)]
-    pub fn to_output<T>(&self, output: &mut T) -> Result<&Self>
+    pub fn to_output<T>(&self, output: &mut T) -> Result<()>
     where
-        T: Write,
+        T: Write + Seek,
     {
-        // use local buffer
-        let mut buffer: [u8; HEADER_BYTES] = [0u8; HEADER_BYTES];
-        let mut cursor = Cursor::new(&mut buffer[..]);
-
-        // write to buffer
+        let mut buffer = Vec::with_capacity(HEADER_BYTES as usize);
+        let mut cursor = Cursor::new(&mut buffer);
         write_string(&mut cursor, 256, &self.library_name)?;
         write_string(&mut cursor, 256, &self.library_path)?;
         write_i32(&mut cursor, self.number_of_entries)?;
@@ -221,87 +202,103 @@ impl SlfHeader {
         write_u16(&mut cursor, self.version)?;
         write_u8(&mut cursor, self.contains_subdirectories)?;
         write_unused(&mut cursor, 7)?;
-        debug_assert_eq!(cursor.position() as usize, HEADER_BYTES);
+        assert_eq!(buffer.len(), HEADER_BYTES as usize);
 
-        // write data
+        output.seek(SeekFrom::Start(0))?;
         output.write_all(&buffer)?;
 
-        return Ok(&self);
+        return Ok(());
     }
 
     // Read the entries from the input.
-    // The input must be in the correct position.
     #[allow(dead_code)]
-    pub fn read_entries_from<T>(&self, input: &mut T) -> Result<Vec<SlfEntry>>
+    pub fn entries_from_input<T>(&self, input: &mut T) -> Result<Vec<SlfEntry>>
     where
-        T: Read,
+        T: Read + Seek,
     {
-        // TODO use local buffer
-        let mut entries: Vec<SlfEntry> = Vec::new();
-        for _ in 0..self.number_of_entries {
-            entries.push(SlfEntry::from_input(input)?);
+        // TODO what should happen with a negative number of entries?
+        if self.number_of_entries <= 0 {
+            return Ok(Vec::new());
         }
+
+        let num_entries = self.number_of_entries as u32;
+        let num_bytes = num_entries * ENTRY_BYTES;
+        input.seek(SeekFrom::End(-(num_bytes as i64)))?;
+
+        let mut handle = input.take(num_bytes as u64);
+        let mut entries = Vec::new();
+        for _ in 0..num_entries {
+            let file_name = read_string(&mut handle, 256)?;
+            let offset = read_u32(&mut handle)?;
+            let length = read_u32(&mut handle)?;
+            let state: SlfEntryState = read_u8(&mut handle)?.into();
+            read_unused(&mut handle, 3)?;
+            let file_time = read_i64(&mut handle)?;
+            read_unused(&mut handle, 4)?;
+
+            entries.push(SlfEntry {
+                file_name,
+                offset,
+                length,
+                state,
+                file_time,
+            });
+        }
+        assert_eq!(handle.limit(), 0);
+
         return Ok(entries);
+    }
+
+    // Write the entries to output.
+    #[allow(dead_code)]
+    pub fn entries_to_output<T>(&self, output: &mut T, entries: &[SlfEntry]) -> Result<()>
+    where
+        T: Write + Seek,
+    {
+        if self.number_of_entries < 0 || self.number_of_entries as usize != entries.len() {
+            return Err(Error::new(
+                InvalidInput,
+                format!(
+                    "unexpected number of entries {} != {}",
+                    self.number_of_entries,
+                    entries.len()
+                ),
+            ));
+        }
+
+        let num_bytes = self.number_of_entries as u32 * ENTRY_BYTES;
+        let mut buffer = Vec::with_capacity(num_bytes as usize);
+        for entry in entries {
+            let mut cursor = Cursor::new(&mut buffer);
+            write_string(&mut cursor, 256, &entry.file_name)?;
+            write_u32(&mut cursor, entry.offset)?;
+            write_u32(&mut cursor, entry.length)?;
+            write_u8(&mut cursor, entry.state.into())?;
+            write_unused(&mut cursor, 3)?;
+            write_i64(&mut cursor, entry.file_time)?;
+            write_unused(&mut cursor, 4)?;
+        }
+        assert_eq!(buffer.len(), num_bytes as usize);
+
+        let mut end_of_data = HEADER_BYTES;
+        for entry in entries {
+            let end_of_entry = entry.offset + entry.length;
+            if end_of_data < end_of_entry {
+                end_of_data = end_of_entry;
+            }
+        }
+
+        if end_of_data as u64 > output.seek(SeekFrom::End(-(num_bytes as i64)))? {
+            // will increase the size of output
+            output.seek(SeekFrom::Start(end_of_data as u64))?;
+        }
+        output.write_all(&buffer)?;
+
+        return Ok(());
     }
 }
 
 impl SlfEntry {
-    // Create an archive entry from input.
-    #[allow(dead_code)]
-    pub fn from_input<T>(input: &mut T) -> Result<Self>
-    where
-        T: Read,
-    {
-        // use local buffer
-        let mut buffer: [u8; ENTRY_BYTES] = [0u8; ENTRY_BYTES];
-        input.read_exact(&mut buffer)?;
-        let mut cursor = Cursor::new(&buffer[..]);
-
-        // read data
-        let file_name = read_string(&mut cursor, 256)?;
-        let offset = read_u32(&mut cursor)?;
-        let length = read_u32(&mut cursor)?;
-        let state: SlfEntryState = read_u8(&mut cursor)?.into();
-        read_unused(&mut cursor, 3)?;
-        let file_time = read_i64(&mut cursor)?;
-        read_unused(&mut cursor, 4)?;
-        debug_assert_eq!(cursor.position() as usize, ENTRY_BYTES);
-
-        return Ok(SlfEntry {
-            file_name,
-            offset,
-            length,
-            state,
-            file_time,
-        });
-    }
-
-    // Write the archive entry to output.
-    #[allow(dead_code)]
-    pub fn to_output<T>(&self, output: &mut T) -> Result<&Self>
-    where
-        T: Write,
-    {
-        // use local buffer
-        let mut buffer: [u8; ENTRY_BYTES] = [0u8; ENTRY_BYTES];
-        let mut cursor = Cursor::new(&mut buffer[..]);
-
-        // write to buffer
-        write_string(&mut cursor, 256, &self.file_name)?;
-        write_u32(&mut cursor, self.offset)?;
-        write_u32(&mut cursor, self.length)?;
-        write_u8(&mut cursor, self.state.into())?;
-        write_unused(&mut cursor, 3)?;
-        write_i64(&mut cursor, self.file_time)?;
-        write_unused(&mut cursor, 4)?;
-        debug_assert_eq!(cursor.position() as usize, ENTRY_BYTES);
-
-        // write data
-        output.write_all(&buffer)?;
-
-        return Ok(&self);
-    }
-
     // Convert the file time of the entry to system time.
     #[allow(dead_code)]
     pub fn to_system_time(&self) -> Option<SystemTime> {
@@ -319,12 +316,6 @@ impl SlfEntry {
         let secs = unix / 1_000_000_0; //  seconds
         let nanos = (unix % 1_000_000_0) * 100; // nanoseconds
         return Some(UNIX_EPOCH + Duration::from_secs(secs) + Duration::from_nanos(nanos));
-    }
-
-    // Data starts after the specified offset.
-    #[allow(dead_code)]
-    pub fn start_of_data(&self) -> SeekFrom {
-        return SeekFrom::Start(self.offset as u64);
     }
 }
 
