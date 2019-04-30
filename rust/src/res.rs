@@ -128,7 +128,7 @@ impl ResourcePack {
             match entry.state {
                 SlfEntryState::Ok => {
                     let mut resource = Resource::default();
-                    let path = header.library_path.clone() + &entry.file_name;
+                    let path = header.library_path.clone() + &entry.file_path;
                     resource.path = path.replace("\\", "/");
                     resource.properties.insert("archive_path".to_string(), json!(archive_path));
                     // TODO include archive inside archive?

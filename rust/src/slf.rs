@@ -90,10 +90,10 @@ pub struct SlfHeader {
     pub library_path: String,
 
     // Number of entries that are available.
-    pub number_of_entries: i32,
+    pub num_entries: i32,
 
-    // Number of entries that have state Ok.
-    pub used: i32,
+    // Number of entries that have state Ok and are used by the game.
+    pub ok_entries: i32,
 
     // TODO 0xFFFF probably means the entries are sorted by file path first, and by state second (Old < Ok)
     pub sort: u16,
@@ -110,7 +110,7 @@ pub struct SlfHeader {
 #[derive(Debug, Default, Eq, PartialEq)]
 pub struct SlfEntry {
     // Path of the file from the library path.
-    pub file_name: String,
+    pub file_path: String,
 
     // Start offset of the file data in the library.
     pub offset: u32,
@@ -133,7 +133,9 @@ pub enum SlfEntryState {
     // Only entries with this state are used in the game.
     Ok,
 
-    // TODO
+    // The default state, this entry is empty.
+    //
+    // Not used in the game, probably used in datalib98 for empty entries.
     Deleted,
 
     // Contains data and the data is old.
@@ -141,7 +143,7 @@ pub enum SlfEntryState {
     // There should be an entry with the same path and state Ok next to this entry.
     Old,
 
-    // TODO
+    // Not used here or in the game, probably used in datalib98 during path searches.
     DoesNotExist,
 
     // Unknown state.
@@ -160,8 +162,8 @@ impl SlfHeader {
         let mut handle = input.take(HEADER_BYTES as u64);
         let library_name = handle.read_fixed_string(256)?;
         let library_path = handle.read_fixed_string(256)?;
-        let number_of_entries = handle.read_i32::<LE>()?;
-        let used = handle.read_i32::<LE>()?;
+        let num_entries = handle.read_i32::<LE>()?;
+        let ok_entries = handle.read_i32::<LE>()?;
         let sort = handle.read_u16::<LE>()?;
         let version = handle.read_u16::<LE>()?;
         let contains_subdirectories = handle.read_u8()?;
@@ -171,8 +173,8 @@ impl SlfHeader {
         return Ok(Self {
             library_name,
             library_path,
-            number_of_entries,
-            used,
+            num_entries,
+            ok_entries,
             sort,
             version,
             contains_subdirectories,
@@ -189,8 +191,8 @@ impl SlfHeader {
         let mut cursor = Cursor::new(&mut buffer);
         cursor.write_fixed_string(256, &self.library_name)?;
         cursor.write_fixed_string(256, &self.library_path)?;
-        cursor.write_i32::<LE>(self.number_of_entries)?;
-        cursor.write_i32::<LE>(self.used)?;
+        cursor.write_i32::<LE>(self.num_entries)?;
+        cursor.write_i32::<LE>(self.ok_entries)?;
         cursor.write_u16::<LE>(self.sort)?;
         cursor.write_u16::<LE>(self.version)?;
         cursor.write_u8(self.contains_subdirectories)?;
@@ -209,19 +211,21 @@ impl SlfHeader {
     where
         T: Read + Seek,
     {
-        // TODO what should happen with a negative number of entries?
-        if self.number_of_entries <= 0 {
-            return Ok(Vec::new());
+        if self.num_entries <= 0 {
+            return Err(Error::new(
+                InvalidInput,
+                format!("unexpected number of entries {}", self.num_entries),
+            ));
         }
 
-        let num_entries = self.number_of_entries as u32;
+        let num_entries = self.num_entries as u32;
         let num_bytes = num_entries * ENTRY_BYTES;
         input.seek(SeekFrom::End(-(num_bytes as i64)))?;
 
         let mut handle = input.take(num_bytes as u64);
         let mut entries = Vec::new();
         for _ in 0..num_entries {
-            let file_name = handle.read_fixed_string(256)?;
+            let file_path = handle.read_fixed_string(256)?;
             let offset = handle.read_u32::<LE>()?;
             let length = handle.read_u32::<LE>()?;
             let state: SlfEntryState = handle.read_u8()?.into();
@@ -230,7 +234,7 @@ impl SlfHeader {
             handle.read_unused(4)?;
 
             entries.push(SlfEntry {
-                file_name,
+                file_path,
                 offset,
                 length,
                 state,
@@ -248,22 +252,22 @@ impl SlfHeader {
     where
         T: Write + Seek,
     {
-        if self.number_of_entries < 0 || self.number_of_entries as usize != entries.len() {
+        if self.num_entries < 0 || self.num_entries as usize != entries.len() {
             return Err(Error::new(
                 InvalidInput,
                 format!(
                     "unexpected number of entries {} != {}",
-                    self.number_of_entries,
+                    self.num_entries,
                     entries.len()
                 ),
             ));
         }
 
-        let num_bytes = self.number_of_entries as u32 * ENTRY_BYTES;
+        let num_bytes = self.num_entries as u32 * ENTRY_BYTES;
         let mut buffer = Vec::with_capacity(num_bytes as usize);
         let mut cursor = Cursor::new(&mut buffer);
         for entry in entries {
-            cursor.write_fixed_string(256, &entry.file_name)?;
+            cursor.write_fixed_string(256, &entry.file_path)?;
             cursor.write_u32::<LE>(entry.offset)?;
             cursor.write_u32::<LE>(entry.length)?;
             cursor.write_u8(entry.state.into())?;
@@ -296,14 +300,14 @@ impl SlfEntry {
     #[allow(dead_code)]
     pub fn to_system_time(&self) -> Option<SystemTime> {
         if self.file_time < UNIX_EPOCH_AS_FILETIME {
-            // TODO windows can also represent [0,UNIX_EPOCH_AS_FILETIME) but unix cannot, what should happen?
+            // TODO use SystemTime.checked_sub when the toolchain becomes 1.34.0+
             return None;
         }
 
         let unix = (self.file_time - UNIX_EPOCH_AS_FILETIME) as u64; // 100-nanoseconds
-        let secs = unix / 1_000_000_0; //  seconds
-        let nanos = (unix % 1_000_000_0) * 100; // nanoseconds
-        return Some(UNIX_EPOCH + Duration::from_secs(secs) + Duration::from_nanos(nanos));
+        let secs = Duration::from_secs(unix / 1_000_000_0);
+        let nanos = Duration::from_nanos((unix % 1_000_000_0) * 100);
+        return Some(UNIX_EPOCH + secs + nanos);
     }
 
     // Read the entry data from the input.
@@ -449,8 +453,8 @@ mod tests {
         let test_header = SlfHeader {
             library_name: "test library".to_string(),
             library_path: "libdir\\".to_string(),
-            number_of_entries: 1,
-            used: 1,
+            num_entries: 1,
+            ok_entries: 1,
             sort: 0xFFFF,
             version: 0x0200,
             contains_subdirectories: 1,
@@ -458,7 +462,7 @@ mod tests {
         let test_data = "file contents\n".as_bytes().to_vec();
         let test_data_len = test_data.len() as u32;
         let test_entries = vec![SlfEntry {
-            file_name: "file.ext".to_string(),
+            file_path: "file.ext".to_string(),
             offset: HEADER_BYTES,
             length: test_data_len,
             state: SlfEntryState::Ok,
