@@ -56,23 +56,12 @@
 //!  * 2 byte padding (4 byte alignment)
 //!
 
-use std::io::Cursor;
-use std::io::Error;
-use std::io::ErrorKind::InvalidData;
-use std::io::ErrorKind::InvalidInput;
-use std::io::Read;
-use std::io::Result;
-use std::io::Seek;
-use std::io::SeekFrom;
-use std::io::Write;
+use std::io::ErrorKind::{InvalidData, InvalidInput};
+use std::io::{Cursor, Error, Read, Result, Seek, SeekFrom, Write};
 
-use std::time::Duration;
-use std::time::SystemTime;
-use std::time::UNIX_EPOCH;
+use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
-use byteorder::LittleEndian;
-use byteorder::ReadBytesExt; // extends ::std::io::Read
-use byteorder::WriteBytesExt; // extends ::std::io::Write
+use byteorder::{ReadBytesExt, WriteBytesExt, LE};
 
 // Number of bytes of the header in the library file.
 pub const HEADER_BYTES: u32 = 532;
@@ -165,14 +154,14 @@ impl SlfHeader {
         input.seek(SeekFrom::Start(0))?;
 
         let mut handle = input.take(HEADER_BYTES as u64);
-        let library_name = read_string(&mut handle, 256)?;
-        let library_path = read_string(&mut handle, 256)?;
-        let number_of_entries = read_i32(&mut handle)?;
-        let used = read_i32(&mut handle)?;
-        let sort = read_u16(&mut handle)?;
-        let version = read_u16(&mut handle)?;
-        let contains_subdirectories = read_u8(&mut handle)?;
-        read_unused(&mut handle, 7)?;
+        let library_name = handle.read_fixed_string(256)?;
+        let library_path = handle.read_fixed_string(256)?;
+        let number_of_entries = handle.read_i32::<LE>()?;
+        let used = handle.read_i32::<LE>()?;
+        let sort = handle.read_u16::<LE>()?;
+        let version = handle.read_u16::<LE>()?;
+        let contains_subdirectories = handle.read_u8()?;
+        handle.read_unused(7)?;
         assert_eq!(handle.limit(), 0);
 
         return Ok(Self {
@@ -194,14 +183,14 @@ impl SlfHeader {
     {
         let mut buffer = Vec::with_capacity(HEADER_BYTES as usize);
         let mut cursor = Cursor::new(&mut buffer);
-        write_string(&mut cursor, 256, &self.library_name)?;
-        write_string(&mut cursor, 256, &self.library_path)?;
-        write_i32(&mut cursor, self.number_of_entries)?;
-        write_i32(&mut cursor, self.used)?;
-        write_u16(&mut cursor, self.sort)?;
-        write_u16(&mut cursor, self.version)?;
-        write_u8(&mut cursor, self.contains_subdirectories)?;
-        write_unused(&mut cursor, 7)?;
+        cursor.write_fixed_string(256, &self.library_name)?;
+        cursor.write_fixed_string(256, &self.library_path)?;
+        cursor.write_i32::<LE>(self.number_of_entries)?;
+        cursor.write_i32::<LE>(self.used)?;
+        cursor.write_u16::<LE>(self.sort)?;
+        cursor.write_u16::<LE>(self.version)?;
+        cursor.write_u8(self.contains_subdirectories)?;
+        cursor.write_unused(7)?;
         assert_eq!(buffer.len(), HEADER_BYTES as usize);
 
         output.seek(SeekFrom::Start(0))?;
@@ -228,13 +217,13 @@ impl SlfHeader {
         let mut handle = input.take(num_bytes as u64);
         let mut entries = Vec::new();
         for _ in 0..num_entries {
-            let file_name = read_string(&mut handle, 256)?;
-            let offset = read_u32(&mut handle)?;
-            let length = read_u32(&mut handle)?;
-            let state: SlfEntryState = read_u8(&mut handle)?.into();
-            read_unused(&mut handle, 3)?;
-            let file_time = read_i64(&mut handle)?;
-            read_unused(&mut handle, 4)?;
+            let file_name = handle.read_fixed_string(256)?;
+            let offset = handle.read_u32::<LE>()?;
+            let length = handle.read_u32::<LE>()?;
+            let state: SlfEntryState = handle.read_u8()?.into();
+            handle.read_unused(3)?;
+            let file_time = handle.read_i64::<LE>()?;
+            handle.read_unused(4)?;
 
             entries.push(SlfEntry {
                 file_name,
@@ -268,15 +257,15 @@ impl SlfHeader {
 
         let num_bytes = self.number_of_entries as u32 * ENTRY_BYTES;
         let mut buffer = Vec::with_capacity(num_bytes as usize);
+        let mut cursor = Cursor::new(&mut buffer);
         for entry in entries {
-            let mut cursor = Cursor::new(&mut buffer);
-            write_string(&mut cursor, 256, &entry.file_name)?;
-            write_u32(&mut cursor, entry.offset)?;
-            write_u32(&mut cursor, entry.length)?;
-            write_u8(&mut cursor, entry.state.into())?;
-            write_unused(&mut cursor, 3)?;
-            write_i64(&mut cursor, entry.file_time)?;
-            write_unused(&mut cursor, 4)?;
+            cursor.write_fixed_string(256, &entry.file_name)?;
+            cursor.write_u32::<LE>(entry.offset)?;
+            cursor.write_u32::<LE>(entry.length)?;
+            cursor.write_u8(entry.state.into())?;
+            cursor.write_unused(3)?;
+            cursor.write_i64::<LE>(entry.file_time)?;
+            cursor.write_unused(4)?;
         }
         assert_eq!(buffer.len(), num_bytes as usize);
 
@@ -345,125 +334,52 @@ impl From<u8> for SlfEntryState {
     }
 }
 
-fn read_unused<T>(input: &mut T, num_bytes: usize) -> Result<()>
-where
-    T: Read,
-{
-    let mut buffer = vec![0u8; num_bytes];
-    input.read_exact(&mut buffer)?;
-    return Ok(());
-}
-
-fn write_unused<T>(output: &mut T, num_bytes: usize) -> Result<()>
-where
-    T: Write,
-{
-    let mut buffer = vec![0u8; num_bytes];
-    output.write_all(&mut buffer)?;
-    return Ok(());
-}
-
-fn read_u8<T>(input: &mut T) -> Result<u8>
-where
-    T: Read,
-{
-    return input.read_u8();
-}
-
-fn write_u8<T>(output: &mut T, value: u8) -> Result<()>
-where
-    T: Write,
-{
-    output.write_u8(value)?;
-    return Ok(());
-}
-
-fn read_u16<T>(input: &mut T) -> Result<u16>
-where
-    T: Read,
-{
-    return input.read_u16::<LittleEndian>();
-}
-
-fn write_u16<T>(output: &mut T, value: u16) -> Result<()>
-where
-    T: Write,
-{
-    output.write_u16::<LittleEndian>(value)?;
-    return Ok(());
-}
-
-fn read_i32<T>(input: &mut T) -> Result<i32>
-where
-    T: Read,
-{
-    return input.read_i32::<LittleEndian>();
-}
-
-fn write_i32<T>(output: &mut T, value: i32) -> Result<()>
-where
-    T: Write,
-{
-    output.write_i32::<LittleEndian>(value)?;
-    return Ok(());
-}
-
-fn read_u32<T>(input: &mut T) -> Result<u32>
-where
-    T: Read,
-{
-    return input.read_u32::<LittleEndian>();
-}
-
-fn write_u32<T>(output: &mut T, value: u32) -> Result<()>
-where
-    T: Write,
-{
-    output.write_u32::<LittleEndian>(value)?;
-    return Ok(());
-}
-
-fn read_i64<T>(input: &mut T) -> Result<i64>
-where
-    T: Read,
-{
-    return input.read_i64::<LittleEndian>();
-}
-
-fn write_i64<T>(output: &mut T, value: i64) -> Result<()>
-where
-    T: Write,
-{
-    output.write_i64::<LittleEndian>(value)?;
-    return Ok(());
-}
-
-fn read_string<T>(input: &mut T, num_bytes: usize) -> Result<String>
-where
-    T: Read,
-{
-    let mut buffer = vec![0u8; num_bytes];
-    input.read_exact(&mut buffer)?;
-    // must be nul terminated and valid utf8
-    return match buffer.iter().position(|&byte| byte == 0) {
-        Some(position) => match ::std::str::from_utf8(&buffer[..position]) {
-            Ok(s) => Ok(s.to_string()),
-            Err(e) => Err(Error::new(InvalidData, e)),
-        },
-        None => Err(Error::new(InvalidData, "string is not nul terminated")),
-    };
-}
-
-fn write_string<T>(output: &mut T, num_bytes: usize, string: &String) -> Result<()>
-where
-    T: Write,
-{
-    let mut buffer = vec![0u8; num_bytes];
-    let string_bytes = string.as_bytes();
-    if string_bytes.len() >= buffer.len() {
-        return Err(Error::new(InvalidData, "string is too long"));
+trait SlfReadExt: Read {
+    // Reads and discards unused bytes.
+    fn read_unused(&mut self, num_bytes: usize) -> Result<()> {
+        let mut buffer = vec![0u8; num_bytes];
+        self.read_exact(&mut buffer)?;
+        return Ok(());
     }
-    buffer[..string_bytes.len()].copy_from_slice(&string_bytes);
-    output.write_all(&buffer)?;
-    return Ok(());
+
+    // Reads a nul terminated fixed size string.
+    fn read_fixed_string(&mut self, num_bytes: usize) -> Result<String> {
+        let mut buffer = vec![0u8; num_bytes];
+        self.read_exact(&mut buffer)?;
+        // must be nul terminated and valid utf8
+        return match buffer.iter().position(|&byte| byte == 0) {
+            Some(position) => match ::std::str::from_utf8(&buffer[..position]) {
+                Ok(s) => Ok(s.to_string()),
+                Err(e) => Err(Error::new(InvalidData, e)),
+            },
+            None => Err(Error::new(InvalidData, "string is not nul terminated")),
+        };
+    }
 }
+
+trait SlfWriteExt: Write {
+    // Writes zeroed unused bytes.
+    fn write_unused(&mut self, num_bytes: usize) -> Result<()> {
+        let mut buffer = vec![0u8; num_bytes];
+        self.write_all(&mut buffer)?;
+        return Ok(());
+    }
+
+    // Write a nul terminated fixed size string, unused space is zeroed.
+    fn write_fixed_string(&mut self, num_bytes: usize, string: &String) -> Result<()> {
+        let mut buffer = vec![0u8; num_bytes];
+        let string_bytes = string.as_bytes();
+        if string_bytes.len() >= buffer.len() {
+            return Err(Error::new(InvalidData, "string is too long"));
+        }
+        buffer[..string_bytes.len()].copy_from_slice(&string_bytes);
+        self.write_all(&buffer)?;
+        return Ok(());
+    }
+}
+
+// Everything that implements Read gets SlfReadExt for free.
+impl<T: Read + ?Sized> SlfReadExt for T {}
+
+// Everything that implements Write gets SlfWriteExt for free.
+impl<T: Write + ?Sized> SlfWriteExt for T {}
