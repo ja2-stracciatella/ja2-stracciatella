@@ -75,7 +75,7 @@ pub const UNIX_EPOCH_AS_FILETIME: i64 = 11_644_473_600_000_000_0; // 100-nanosec
 
 // Header of the archive.
 // The entries are at the end of the archive.
-#[derive(Debug)]
+#[derive(Debug, Default, Eq, PartialEq)]
 pub struct SlfHeader {
     // Name of the library.
     //
@@ -107,7 +107,7 @@ pub struct SlfHeader {
 }
 
 // Entry of the archive.
-#[derive(Debug)]
+#[derive(Debug, Default, Eq, PartialEq)]
 pub struct SlfEntry {
     // Path of the file from the library path.
     pub file_name: String,
@@ -347,6 +347,13 @@ impl SlfEntry {
     }
 }
 
+impl Default for SlfEntryState {
+    // Default value of SlfEntryState
+    fn default() -> Self {
+        SlfEntryState::Deleted
+    }
+}
+
 impl From<SlfEntryState> for u8 {
     // All states map to a u8 value.
     fn from(state: SlfEntryState) -> Self {
@@ -422,3 +429,71 @@ impl<T: Read + ?Sized> SlfReadExt for T {}
 
 // Everything that implements Write gets SlfWriteExt for free.
 impl<T: Write + ?Sized> SlfWriteExt for T {}
+
+#[cfg(test)]
+mod tests {
+    use std::fmt::Debug;
+    use std::io::Cursor;
+
+    use super::{
+        SlfEntry, SlfEntryState, SlfHeader, ENTRY_BYTES, HEADER_BYTES, UNIX_EPOCH_AS_FILETIME,
+    };
+
+    #[inline]
+    fn assert_ok<OK, ERR: Debug>(result: Result<OK, ERR>) -> OK {
+        assert!(result.is_ok());
+        return result.unwrap();
+    }
+
+    #[test]
+    fn write_and_read_in_memory() {
+        let test_header = SlfHeader {
+            library_name: "test library".to_string(),
+            library_path: "libdir\\".to_string(),
+            number_of_entries: 1,
+            used: 1,
+            sort: 0xFFFF,
+            version: 0x0200,
+            contains_subdirectories: 1,
+        };
+        let test_data = "file contents\n".as_bytes().to_vec();
+        let test_data_len = test_data.len() as u32;
+        let test_entries = vec![SlfEntry {
+            file_name: "file.ext".to_string(),
+            offset: HEADER_BYTES,
+            length: test_data_len,
+            state: SlfEntryState::Ok,
+            file_time: UNIX_EPOCH_AS_FILETIME,
+        }];
+        let after_header_pos = HEADER_BYTES as u64;
+        let after_data_pos = after_header_pos + test_data_len as u64;
+        let after_entries_pos = after_data_pos + ENTRY_BYTES as u64;
+        let mut buf: Vec<u8> = Vec::new();
+        let mut f = Cursor::new(&mut buf);
+
+        // write
+        assert_ok(test_header.to_output(&mut f));
+        assert_eq!(f.position(), after_header_pos);
+        for entry in &test_entries {
+            let after_entry_data_pos = (entry.offset + entry.length) as u64;
+            assert_ok(entry.data_to_output(&mut f, &test_data));
+            assert_eq!(f.position(), after_entry_data_pos);
+        }
+        assert_ok(test_header.entries_to_output(&mut f, &test_entries));
+        assert_eq!(f.position(), after_entries_pos);
+
+        // read
+        let header = assert_ok(SlfHeader::from_input(&mut f));
+        assert_eq!(f.position(), after_header_pos);
+        assert_eq!(test_header, header);
+        let entries = assert_ok(header.entries_from_input(&mut f));
+        assert_eq!(f.position(), after_entries_pos);
+        assert_eq!(test_entries, entries);
+        for entry in &entries {
+            let after_entry_data_pos = (entry.offset + entry.length) as u64;
+            let data = assert_ok(entry.data_from_input(&mut f));
+            assert_eq!(f.position(), after_entry_data_pos);
+            assert_eq!(test_data, data);
+        }
+    }
+}
