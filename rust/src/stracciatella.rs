@@ -18,9 +18,9 @@ use std::default::Default;
 
 use libc::{size_t, c_char};
 
-mod config;
-mod res;
-mod slf;
+pub mod config;
+pub mod res;
+pub mod slf;
 
 pub use crate::config::ScalingQuality;
 pub use crate::config::VanillaVersion;
