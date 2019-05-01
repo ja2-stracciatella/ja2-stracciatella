@@ -26,6 +26,16 @@
 //!
 //! NOTE archives inside others archives are not supported, they are treated as regular files
 //!
+//!
+//! # `with_file_size` (bool, default = false)
+//!
+//! Files have data.
+//!
+//! When this pack property is set to `true`, the resources include the size of the file data.
+//!
+//! Resource properties:
+//!  * `file_size` (integer) - size of the file data.
+//!
 
 use std::error::Error;
 use std::fmt;
@@ -113,6 +123,10 @@ impl ResourcePack {
         } else if path.is_file() {
             let mut resource = Resource::default();
             resource.path = my_path;
+            // record file size
+            if self.get_bool("with_file_size").unwrap_or(false) {
+                resource.set_property("file_size", path.metadata()?.len());
+            }
             // include slf contents
             if self.get_bool("with_archive_slf").unwrap_or(false) {
                 if uppercase_extension(&path) == "SLF" {
@@ -148,6 +162,10 @@ impl ResourcePack {
                     let path = header.library_path.clone() + &entry.file_path;
                     resource.path = path.replace("\\", "/");
                     resource.set_property("archive_path", archive_path);
+                    // record file size
+                    if self.get_bool("with_file_size").unwrap_or(false) {
+                        resource.set_property("file_size", entry.length);
+                    }
                     // TODO include archive inside archive?
                     self.resources.push(resource);
                     num_resources += 1;
