@@ -37,38 +37,38 @@ use serde_json::{json, Map, Value};
 
 use crate::slf::{SlfEntryState, SlfHeader};
 
-// A pack of game resources.
+/// A pack of game resources.
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct ResourcePack {
-    // A friendly name of the resource pack for display purposes.
+    /// A friendly name of the resource pack for display purposes.
     pub name: String,
 
-    // The properties of the resource.
-    //
-    // # Properties
-    //
-    //  * with_archive_slf (bool, default = false) - the contents of SLF archives are included
+    /// The properties of the resource.
+    ///
+    /// # Properties
+    ///
+    ///  * with_archive_slf (bool, default = false) - the contents of SLF archives are included
     pub properties: Map<String, Value>,
 
-    // The resources in this pack.
+    /// The resources in this pack.
     pub resources: Vec<Resource>,
 }
 
-// A resource in the pack.
-//
-// A resource always maps to raw data, which can be a file or data inside an archive.
+/// A resource in the pack.
+///
+/// A resource always maps to raw data, which can be a file or data inside an archive.
 #[derive(Debug, Default, Deserialize, Serialize)]
 pub struct Resource {
-    // The identity of the resource as a relative path.
+    /// The identity of the resource as a relative path.
     pub path: String,
 
-    // The properties of the resource.
-    //
-    // # Properties
-    //
-    //  * archive_path (string) - the resource path of the archive that contains this resource
-    //  * archive_slf (bool) - true if the resource is a SLF archive
-    //  * archive_slf_num_resources (number) - number of resources inside the SLF archive
+    /// The properties of the resource.
+    ///
+    /// # Properties
+    ///
+    ///  * archive_path (string) - the resource path of the archive that contains this resource
+    ///  * archive_slf (bool) - true if the resource is a SLF archive
+    ///  * archive_slf_num_resources (number) - number of resources inside the SLF archive
     pub properties: Map<String, Value>,
 }
 
@@ -78,11 +78,11 @@ struct ResourceError {
 }
 
 impl ResourcePack {
-    // Adds resources to the pack.
-    //
-    // The contents of the directory will be added (recursive).
-    // The resource paths will be relative to the directory.
-    // This should be called with the path to the "Data" directory of the game.
+    /// Adds resources to the pack.
+    ///
+    /// The contents of the directory will be added (recursive).
+    /// The resource paths will be relative to the directory.
+    /// This should be called with the path to the "Data" directory of the game.
     #[allow(dead_code)]
     pub fn add_dir(&mut self, dir: &Path) -> Result<(), Box<Error>> {
         if !dir.is_dir() {
@@ -95,11 +95,11 @@ impl ResourcePack {
         return Ok(());
     }
 
-    // Adds resources to the pack.
-    //
-    // If the path points to a directory, the contents will be added (recursive).
-    // If the path points to a file, the file will be added.
-    // The resource paths will be relative to base.
+    /// Adds resources to the pack.
+    ///
+    /// If the path points to a directory, the contents will be added (recursive).
+    /// If the path points to a file, the file will be added.
+    /// The resource paths will be relative to base.
     #[allow(dead_code)]
     pub fn add_sub_path(&mut self, base: &Path, path: &Path) -> Result<(), Box<Error>> {
         // must have a valid resource path
@@ -131,11 +131,11 @@ impl ResourcePack {
         return Ok(());
     }
 
-    // Adds resources to the pack.
-    //
-    // The Ok entries of the SLF archive will be added as resources.
-    // The resources will have the archive_path property set.
-    // Returns the number of resources added.
+    /// Adds resources to the pack.
+    ///
+    /// The Ok entries of the SLF archive will be added as resources.
+    /// The resources will have the archive_path property set.
+    /// Returns the number of resources added.
     #[allow(dead_code)]
     fn add_slf(&mut self, path: &Path, archive_path: &str) -> Result<i32, Box<Error>> {
         let mut f = File::open(path)?;
@@ -177,8 +177,8 @@ impl fmt::Display for ResourceError {
     }
 }
 
-// Gets the extension of the path in uppercase.
-// Assumes the extension only contains valid utf8.
+/// Gets the extension of the path in uppercase.
+/// Assumes the extension only contains valid utf8.
 fn uppercase_extension(path: &Path) -> String {
     if let Some(extension) = path.extension() {
         return extension.to_str().unwrap().to_uppercase();
@@ -186,7 +186,7 @@ fn uppercase_extension(path: &Path) -> String {
     return "".to_string();
 }
 
-// Converts an OS path to a resource path.
+/// Converts an OS path to a resource path.
 fn resource_path(base: &Path, path: &Path) -> Result<String, Box<Error>> {
     let sub_path = path.strip_prefix(base)?;
     return match sub_path.to_str() {
@@ -198,50 +198,50 @@ fn resource_path(base: &Path, path: &Path) -> Result<String, Box<Error>> {
     };
 }
 
-// Trait the adds shortcuts for properties.
+/// Trait the adds shortcuts for properties.
 pub trait Properties {
-    // Gets a reference to the properties container.
+    /// Gets a reference to the properties container.
     fn properties(&self) -> &Map<String, Value>;
 
-    // Gets a mutable reference to the properties container.
+    /// Gets a mutable reference to the properties container.
     fn properties_mut(&mut self) -> &mut Map<String, Value>;
 
-    // Removes a property and returns the old value.
+    /// Removes a property and returns the old value.
     fn remove_property(&mut self, name: &str) -> Option<Value> {
         return self.properties_mut().remove(name);
     }
 
-    // Sets the value of a property and returns the old value.
+    /// Sets the value of a property and returns the old value.
     fn set_property<T: Serialize>(&mut self, name: &str, value: T) -> Option<Value> {
         return self.properties_mut().insert(name.to_owned(), json!(value));
     }
 
-    // Gets a property value.
+    /// Gets a property value.
     fn get_property(&self, name: &str) -> Option<&Value> {
         return self.properties().get(name);
     }
 
-    // Gets a bool property value.
+    /// Gets a bool property value.
     fn get_bool(&self, name: &str) -> Option<bool> {
         return self.get_property(name).and_then(|v| v.as_bool());
     }
 
-    // Gets a string property value.
+    /// Gets a string property value.
     fn get_str(&self, name: &str) -> Option<&str> {
         return self.get_property(name).and_then(|v| v.as_str());
     }
 
-    // Gets a signed integer property value.
+    /// Gets a signed integer property value.
     fn get_i64(&self, name: &str) -> Option<i64> {
         return self.get_property(name).and_then(|v| v.as_i64());
     }
 
-    // Gets an unsigned integer property value.
+    /// Gets an unsigned integer property value.
     fn get_u64(&self, name: &str) -> Option<u64> {
         return self.get_property(name).and_then(|v| v.as_u64());
     }
 
-    // Gets a floating-point property value.
+    /// Gets a floating-point property value.
     fn get_f64(&self, name: &str) -> Option<f64> {
         return self.get_property(name).and_then(|v| v.as_f64());
     }

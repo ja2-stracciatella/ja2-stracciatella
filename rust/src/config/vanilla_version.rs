@@ -23,7 +23,7 @@ pub enum VanillaVersion {
 }
 
 impl VanillaVersion {
-    // Guess the version from the contents of the game dir.
+    /// Guess the version from the contents of the game dir.
     pub fn from_game_dir(dir: &Path) -> Result<Self, String> {
         // find data dir (best effort)
         for entry in dir.read_dir().map_err(|err| format!("Error reading game dir: {}", err.description()))? {
@@ -50,7 +50,7 @@ impl VanillaVersion {
         return Err(format!("Data dir not found"))
     }
 
-    // Guess the version from the resource path.
+    /// Guess the version from the resource path.
     pub fn from_resource_path(resource_path: &str) -> Option<Self> {
         let resource_path = resource_path.to_uppercase().replace("\\", "/");
         if resource_path.starts_with("GERMAN/") {

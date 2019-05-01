@@ -63,87 +63,87 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use byteorder::{ReadBytesExt, WriteBytesExt, LE};
 
-// Number of bytes of the header in the library file.
+/// Number of bytes of the header in the library file.
 pub const HEADER_BYTES: u32 = 532;
 
-// Number of bytes of an entry in the library file.
+/// Number of bytes of an entry in the library file.
 pub const ENTRY_BYTES: u32 = 280;
 
-// Unix epoch is 1 Jan 1970.
-// FILETIME is the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
+/// Unix epoch is 1 Jan 1970.
+/// FILETIME is the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
 pub const UNIX_EPOCH_AS_FILETIME: u64 = 11_644_473_600_000_000_0; // 100-nanoseconds
 
-// Header of the archive.
-// The entries are at the end of the archive.
+/// Header of the archive.
+/// The entries are at the end of the archive.
 #[derive(Debug, Default, Eq, PartialEq)]
 pub struct SlfHeader {
-    // Name of the library.
-    //
-    // Usually it's the name of the library file in uppercase.
-    // Nul terminated string of 256 bytes, unused bytes are zeroed, unknown encoding (saw ASCII).
+    /// Name of the library.
+    ///
+    /// Usually it's the name of the library file in uppercase.
+    /// Nul terminated string of 256 bytes, unused bytes are zeroed, unknown encoding (saw ASCII).
     pub library_name: String,
 
-    // Base path of the files in the library.
-    //
-    // Empty or terminated by '\\'.
-    // Nul terminated string of 256 bytes, unused bytes are zeroed, unknown encoding (saw ASCII).
+    /// Base path of the files in the library.
+    ///
+    /// Empty or terminated by '\\'.
+    /// Nul terminated string of 256 bytes, unused bytes are zeroed, unknown encoding (saw ASCII).
     pub library_path: String,
 
-    // Number of entries that are available.
+    /// Number of entries that are available.
     pub num_entries: i32,
 
-    // Number of entries that have state Ok and are used by the game.
+    /// Number of entries that have state Ok and are used by the game.
     pub ok_entries: i32,
 
-    // TODO 0xFFFF probably means the entries are sorted by file path first, and by state second (Old < Ok)
+    /// TODO 0xFFFF probably means the entries are sorted by file path first, and by state second (Old < Ok)
     pub sort: u16,
 
-    // TODO 0x0200 probably means v2.0
+    /// TODO 0x0200 probably means v2.0
     pub version: u16,
 
-    // TODO 0 when there are 0 '\\' characters in library_path (0 '\\' characters in the file names either, do they count?)
-    //      1 when there is 1 '\\' character in library_path (0-2 '\\' characters in the file names)
+    /// TODO 0 when there are 0 '\\' characters in library_path (0 '\\' characters in the file names either, do they count?)
+    ///      1 when there is 1 '\\' character in library_path (0-2 '\\' characters in the file names)
     pub contains_subdirectories: u8,
 }
 
-// Entry of the archive.
+/// Entry of the archive.
 #[derive(Debug, Default, Eq, PartialEq)]
 pub struct SlfEntry {
-    // Path of the file from the library path.
+    /// Path of the file from the library path.
     pub file_path: String,
 
-    // Start offset of the file data in the library.
+    /// Start offset of the file data in the library.
     pub offset: u32,
 
-    // Length of the file data in the library.
+    /// Length of the file data in the library.
     pub length: u32,
 
-    // State of the entry.
+    /// State of the entry.
     pub state: SlfEntryState,
 
-    // FILETIME, the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
+    /// FILETIME, the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
     pub file_time: u64,
 }
 
-// State of an entry of the archive.
+/// State of an entry of the archive.
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
 pub enum SlfEntryState {
-    // Contains data and the data is up to date.
-    //
-    // Only entries with this state are used in the game.
+    /// Contains data and the data is up to date.
+    ///
+    /// Only entries with this state are used in the game.
     Ok,
 
-    // The default state, this entry is empty.
-    //
-    // Not used in the game, probably used in datalib98 for empty entries.
+    /// The default state, this entry is empty.
+    ///
+    /// Not used in the game, probably used in datalib98 for empty entries.
     Deleted,
 
-    // Contains data and the data is old.
-    //
-    // There should be an entry with the same path and state Ok next to this entry.
+    /// Contains data and the data is old.
+    ///
+    /// There should be an entry with the same path and state Ok next to this entry.
     Old,
 
-    // Not used here or in the game, probably used in datalib98 during path searches.
+    /// Not used here or in the game, probably used in datalib98 during path searches.
     DoesNotExist,
 
     // Unknown state.
@@ -151,7 +151,7 @@ pub enum SlfEntryState {
 }
 
 impl SlfHeader {
-    // Read the header from input.
+    /// Read the header from input.
     #[allow(dead_code)]
     pub fn from_input<T>(input: &mut T) -> Result<Self>
     where
@@ -181,7 +181,7 @@ impl SlfHeader {
         });
     }
 
-    // Write this header to output.
+    /// Write this header to output.
     #[allow(dead_code)]
     pub fn to_output<T>(&self, output: &mut T) -> Result<()>
     where
@@ -205,7 +205,7 @@ impl SlfHeader {
         return Ok(());
     }
 
-    // Read the entries from the input.
+    /// Read the entries from the input.
     #[allow(dead_code)]
     pub fn entries_from_input<T>(&self, input: &mut T) -> Result<Vec<SlfEntry>>
     where
@@ -246,7 +246,7 @@ impl SlfHeader {
         return Ok(entries);
     }
 
-    // Write the entries to output.
+    /// Write the entries to output.
     #[allow(dead_code)]
     pub fn entries_to_output<T>(&self, output: &mut T, entries: &[SlfEntry]) -> Result<()>
     where
@@ -296,7 +296,7 @@ impl SlfHeader {
 }
 
 impl SlfEntry {
-    // Convert the file time of the entry to system time.
+    /// Convert the file time of the entry to system time.
     #[allow(dead_code)]
     pub fn to_system_time(&self) -> Option<SystemTime> {
         if self.file_time < UNIX_EPOCH_AS_FILETIME {
@@ -310,7 +310,7 @@ impl SlfEntry {
         return Some(UNIX_EPOCH + secs + nanos);
     }
 
-    // Read the entry data from the input.
+    /// Read the entry data from the input.
     #[allow(dead_code)]
     pub fn data_from_input<T>(&self, input: &mut T) -> Result<Vec<u8>>
     where
@@ -324,7 +324,7 @@ impl SlfEntry {
         return Ok(data);
     }
 
-    // Write the entry data to output.
+    /// Write the entry data to output.
     #[allow(dead_code)]
     pub fn data_to_output<T>(&self, output: &mut T, data: &[u8]) -> Result<()>
     where
@@ -351,14 +351,14 @@ impl SlfEntry {
 }
 
 impl Default for SlfEntryState {
-    // Default value of SlfEntryState
+    /// Default value of SlfEntryState
     fn default() -> Self {
         SlfEntryState::Deleted
     }
 }
 
 impl From<SlfEntryState> for u8 {
-    // All states map to a u8 value.
+    /// All states map to a u8 value.
     fn from(state: SlfEntryState) -> Self {
         return match state {
             SlfEntryState::Ok => 0x00,
@@ -371,7 +371,7 @@ impl From<SlfEntryState> for u8 {
 }
 
 impl From<u8> for SlfEntryState {
-    // All u8 values map to a state.
+    /// All u8 values map to a state.
     fn from(value: u8) -> Self {
         return match value {
             0x00 => SlfEntryState::Ok,
@@ -384,14 +384,14 @@ impl From<u8> for SlfEntryState {
 }
 
 trait SlfReadExt: Read {
-    // Reads and discards unused bytes.
+    /// Reads and discards unused bytes.
     fn read_unused(&mut self, num_bytes: usize) -> Result<()> {
         let mut buffer = vec![0u8; num_bytes];
         self.read_exact(&mut buffer)?;
         return Ok(());
     }
 
-    // Reads a nul terminated fixed size string.
+    /// Reads a nul terminated fixed size string.
     fn read_fixed_string(&mut self, num_bytes: usize) -> Result<String> {
         let mut buffer = vec![0u8; num_bytes];
         self.read_exact(&mut buffer)?;
@@ -407,14 +407,14 @@ trait SlfReadExt: Read {
 }
 
 trait SlfWriteExt: Write {
-    // Writes zeroed unused bytes.
+    /// Writes zeroed unused bytes.
     fn write_unused(&mut self, num_bytes: usize) -> Result<()> {
         let mut buffer = vec![0u8; num_bytes];
         self.write_all(&mut buffer)?;
         return Ok(());
     }
 
-    // Write a nul terminated fixed size string, unused space is zeroed.
+    /// Write a nul terminated fixed size string, unused space is zeroed.
     fn write_fixed_string(&mut self, num_bytes: usize, string: &String) -> Result<()> {
         let mut buffer = vec![0u8; num_bytes];
         let string_bytes = string.as_bytes();
@@ -427,10 +427,10 @@ trait SlfWriteExt: Write {
     }
 }
 
-// Everything that implements Read gets SlfReadExt for free.
+/// Everything that implements Read gets SlfReadExt for free.
 impl<T: Read + ?Sized> SlfReadExt for T {}
 
-// Everything that implements Write gets SlfWriteExt for free.
+/// Everything that implements Write gets SlfWriteExt for free.
 impl<T: Write + ?Sized> SlfWriteExt for T {}
 
 #[cfg(test)]
