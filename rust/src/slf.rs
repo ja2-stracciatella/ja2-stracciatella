@@ -383,7 +383,8 @@ impl From<u8> for SlfEntryState {
     }
 }
 
-trait SlfReadExt: Read {
+/// Trait that adds extra functions to Read.
+pub trait SlfReadExt: Read {
     /// Reads and discards unused bytes.
     fn read_unused(&mut self, num_bytes: usize) -> Result<()> {
         let mut buffer = vec![0u8; num_bytes];
@@ -406,7 +407,8 @@ trait SlfReadExt: Read {
     }
 }
 
-trait SlfWriteExt: Write {
+/// Trait that adds extra functions to Write.
+pub trait SlfWriteExt: Write {
     /// Writes zeroed unused bytes.
     fn write_unused(&mut self, num_bytes: usize) -> Result<()> {
         let mut buffer = vec![0u8; num_bytes];
