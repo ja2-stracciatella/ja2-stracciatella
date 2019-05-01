@@ -1,3 +1,32 @@
+//! This file contains code to generate resource packs.
+//!
+//! A resource pack identifies the resources in a particular game version/mod.
+//!
+//! Required data lives directly in the structs, the rest is optional and goes in the properties.
+//!
+//! The properties are arbitrary on purpose. It is the only place where whoever manages the file can
+//! place additional information like an author, an url, a revision, a license, any valid json really.
+//!
+//! Some properties have specific meanings.
+//!
+//!
+//! # `with_archive_{format}` (bool, default = false)
+//!
+//! An archive is a file that holds a collection of files inside it.
+//!
+//! When this pack property is set to `true`, the resource pack includes the files inside that type of archive as resources.
+//!
+//! Supported formats:
+//!  * `slf` - SLF files from the Jagged Alliance 2 series or mods
+//!
+//! Resource properties:
+//!  * `archive_{format}` (bool) - `true` on resources that represent archives of the specified format
+//!  * `archive_{format}_num_resources` (integer) - number of resources that were included from inside the archive
+//!  * `archive_path` (string) - path of the archive resource that contains this file
+//!
+//! NOTE archives inside others archives are not supported, they are treated as regular files
+//!
+
 use std::error::Error;
 use std::fmt;
 use std::fs::File;
