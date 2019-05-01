@@ -237,3 +237,62 @@ impl Properties for Resource {
         return &mut self.properties;
     }
 }
+
+#[cfg(test)]
+mod tests {
+
+    use super::{Properties, Resource};
+
+    #[test]
+    fn property_value_compatibility() {
+        let mut resource = Resource::default();
+        // boolean
+        resource.set_property("p", true);
+        assert!(resource.get_bool("p").is_some());
+        assert!(resource.get_str("p").is_none());
+        assert!(resource.get_i64("p").is_none());
+        assert!(resource.get_u64("p").is_none());
+        assert!(resource.get_f64("p").is_none());
+        assert_eq!(resource.get_bool("p").unwrap(), true);
+        // string
+        resource.set_property("p", "foo");
+        assert!(resource.get_bool("p").is_none());
+        assert!(resource.get_str("p").is_some());
+        assert!(resource.get_i64("p").is_none());
+        assert!(resource.get_u64("p").is_none());
+        assert!(resource.get_f64("p").is_none());
+        assert_eq!(resource.get_str("p").unwrap(), "foo");
+        // universal number
+        resource.set_property("p", 0);
+        assert!(resource.get_bool("p").is_none());
+        assert!(resource.get_str("p").is_none());
+        assert!(resource.get_i64("p").is_some());
+        assert!(resource.get_u64("p").is_some());
+        assert!(resource.get_f64("p").is_some());
+        assert_eq!(resource.get_i64("p").unwrap(), 0);
+        // floating point number
+        resource.set_property("p", 0.5);
+        assert!(resource.get_bool("p").is_none());
+        assert!(resource.get_str("p").is_none());
+        assert!(resource.get_i64("p").is_none());
+        assert!(resource.get_u64("p").is_none());
+        assert!(resource.get_f64("p").is_some());
+        assert_eq!(resource.get_f64("p").unwrap(), 0.5);
+        // negative number
+        resource.set_property("p", -1);
+        assert!(resource.get_bool("p").is_none());
+        assert!(resource.get_str("p").is_none());
+        assert!(resource.get_i64("p").is_some());
+        assert!(resource.get_u64("p").is_none());
+        assert!(resource.get_f64("p").is_some());
+        assert_eq!(resource.get_i64("p").unwrap(), -1);
+        // big number
+        resource.set_property("p", u64::max_value());
+        assert!(resource.get_bool("p").is_none());
+        assert!(resource.get_str("p").is_none());
+        assert!(resource.get_i64("p").is_none());
+        assert!(resource.get_u64("p").is_some());
+        assert!(resource.get_f64("p").is_some());
+        assert_eq!(resource.get_u64("p").unwrap(), u64::max_value());
+    }
+}
