@@ -6,7 +6,7 @@ use std::fmt::Display;
 use serde::Deserialize;
 use serde::Serialize;
 
-use crate::res::ResourcePack;
+use crate::res::{Properties, ResourcePack};
 
 #[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
 #[repr(C)]

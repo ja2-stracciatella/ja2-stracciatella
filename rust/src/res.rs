@@ -49,15 +49,6 @@ struct ResourceError {
 }
 
 impl ResourcePack {
-    // Sets a property.
-    #[allow(dead_code)]
-    pub fn set_property<T>(&mut self, prop: &str, value: T)
-    where
-        T: Serialize,
-    {
-        self.properties.insert(prop.to_string(), json!(value));
-    }
-
     // Adds resources to the pack.
     //
     // The contents of the directory will be added (recursive).
@@ -94,16 +85,11 @@ impl ResourcePack {
             let mut resource = Resource::default();
             resource.path = my_path;
             // include slf contents
-            if self.properties.get("with_archive_slf") == Some(&json!(true)) {
+            if self.get_bool("with_archive_slf").unwrap_or(false) {
                 if uppercase_extension(&path) == "SLF" {
-                    resource
-                        .properties
-                        .insert("archive_slf".to_string(), json!(true));
+                    resource.set_property("archive_slf", true);
                     let num_resources = self.add_slf(&path, &resource.path)?;
-                    resource.properties.insert(
-                        "archive_slf_num_resources".to_string(),
-                        json!(num_resources),
-                    );
+                    resource.set_property("archive_slf_num_resources", num_resources);
                 }
             }
             self.resources.push(resource);
@@ -132,9 +118,7 @@ impl ResourcePack {
                     let mut resource = Resource::default();
                     let path = header.library_path.clone() + &entry.file_path;
                     resource.path = path.replace("\\", "/");
-                    resource
-                        .properties
-                        .insert("archive_path".to_string(), json!(archive_path));
+                    resource.set_property("archive_path", archive_path);
                     // TODO include archive inside archive?
                     self.resources.push(resource);
                     num_resources += 1;
@@ -183,4 +167,73 @@ fn resource_path(base: &Path, path: &Path) -> Result<String, Box<Error>> {
             sub_path
         )))),
     };
+}
+
+// Trait the adds shortcuts for properties.
+pub trait Properties {
+    // Gets a reference to the properties container.
+    fn properties(&self) -> &Map<String, Value>;
+
+    // Gets a mutable reference to the properties container.
+    fn properties_mut(&mut self) -> &mut Map<String, Value>;
+
+    // Removes a property and returns the old value.
+    fn remove_property(&mut self, name: &str) -> Option<Value> {
+        return self.properties_mut().remove(name);
+    }
+
+    // Sets the value of a property and returns the old value.
+    fn set_property<T: Serialize>(&mut self, name: &str, value: T) -> Option<Value> {
+        return self.properties_mut().insert(name.to_owned(), json!(value));
+    }
+
+    // Gets a property value.
+    fn get_property(&self, name: &str) -> Option<&Value> {
+        return self.properties().get(name);
+    }
+
+    // Gets a bool property value.
+    fn get_bool(&self, name: &str) -> Option<bool> {
+        return self.get_property(name).and_then(|v| v.as_bool());
+    }
+
+    // Gets a string property value.
+    fn get_str(&self, name: &str) -> Option<&str> {
+        return self.get_property(name).and_then(|v| v.as_str());
+    }
+
+    // Gets a signed integer property value.
+    fn get_i64(&self, name: &str) -> Option<i64> {
+        return self.get_property(name).and_then(|v| v.as_i64());
+    }
+
+    // Gets an unsigned integer property value.
+    fn get_u64(&self, name: &str) -> Option<u64> {
+        return self.get_property(name).and_then(|v| v.as_u64());
+    }
+
+    // Gets a floating-point property value.
+    fn get_f64(&self, name: &str) -> Option<f64> {
+        return self.get_property(name).and_then(|v| v.as_f64());
+    }
+}
+
+impl Properties for ResourcePack {
+    fn properties(&self) -> &Map<String, Value> {
+        return &self.properties;
+    }
+
+    fn properties_mut(&mut self) -> &mut Map<String, Value> {
+        return &mut self.properties;
+    }
+}
+
+impl Properties for Resource {
+    fn properties(&self) -> &Map<String, Value> {
+        return &self.properties;
+    }
+
+    fn properties_mut(&mut self) -> &mut Map<String, Value> {
+        return &mut self.properties;
+    }
 }
