@@ -37,10 +37,11 @@
 //!  * `file_size` (integer) - size of the file data.
 //!
 
+use std::collections::VecDeque;
 use std::error::Error;
 use std::fmt;
 use std::fs::File;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
@@ -115,16 +116,9 @@ impl ResourcePackBuilder {
     #[allow(dead_code)]
     pub fn add_sub_path(&mut self, base: &Path, path: &Path) -> Result<(), Box<Error>> {
         // must have a valid resource path
-        let my_path = resource_path(base, path)?;
-        if path.is_dir() {
-            for entry in path.read_dir()? {
-                if let Ok(entry) = entry {
-                    self.add_sub_path(base, &entry.path())?;
-                }
-            }
-        } else if path.is_file() {
+        for path in FSIterator::new(path) {
             let mut resource = Resource::default();
-            resource.path = my_path;
+            resource.path = resource_path(base, &path)?;
             // record file size
             if self.with_file_size {
                 resource.set_property("file_size", path.metadata()?.len());
@@ -138,11 +132,6 @@ impl ResourcePackBuilder {
                 }
             }
             self.pack.resources.push(resource);
-        } else {
-            return Err(Box::new(ResourceError::new(format!(
-                "{:?} in not an accessible directory or file",
-                path
-            ))));
         }
         return Ok(());
     }
@@ -194,6 +183,55 @@ impl Error for ResourceError {
 impl fmt::Display for ResourceError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "ResourceError({:?})", self.desc)
+    }
+}
+
+/// Iterator that returns the paths of all the filesystem files in breadth-first order, files before dirs.
+#[derive(Debug, Default)]
+struct FSIterator {
+    files: VecDeque<PathBuf>,
+    dirs: VecDeque<PathBuf>,
+}
+
+impl FSIterator {
+    fn new(path: &Path) -> Self {
+        let mut all_files = Self::default();
+        all_files.with(path.to_owned());
+        return all_files;
+    }
+
+    /// Adds a path to the iterator.
+    fn with(&mut self, path: PathBuf) {
+        if path.is_file() {
+            self.files.push_back(path);
+        } else if path.is_dir() {
+            self.dirs.push_back(path);
+        }
+    }
+}
+
+impl Iterator for FSIterator {
+    type Item = PathBuf;
+
+    /// Get the next file path while ignoring errors.
+    fn next(&mut self) -> Option<Self::Item> {
+        loop {
+            if let Some(file) = self.files.pop_front() {
+                return Some(file);
+            } else if let Some(dir) = self.dirs.pop_front() {
+                // TODO detect and skip circles
+                if let Ok(iter) = dir.read_dir() {
+                    for entry in iter {
+                        if let Ok(path) = entry.map(|entry| entry.path()) {
+                            self.with(path);
+                        }
+                    }
+                }
+            } else {
+                // we're done
+                return None;
+            }
+        }
     }
 }
 
