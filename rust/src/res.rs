@@ -31,7 +31,7 @@
 //!
 //! Files have data.
 //!
-//! When this pack property is set to `true`, the resources include the size of the file data.
+//! When this pack property is set to `true`, the resource properties include the size of the file data.
 //!
 //! Resource properties:
 //!  * `file_size` (integer) - size of the file data.
@@ -53,11 +53,7 @@ pub struct ResourcePack {
     /// A friendly name of the resource pack for display purposes.
     pub name: String,
 
-    /// The properties of the resource.
-    ///
-    /// # Properties
-    ///
-    ///  * with_archive_slf (bool, default = false) - the contents of SLF archives are included
+    /// The properties of the resource pack.
     pub properties: Map<String, Value>,
 
     /// The resources in this pack.
@@ -73,12 +69,6 @@ pub struct Resource {
     pub path: String,
 
     /// The properties of the resource.
-    ///
-    /// # Properties
-    ///
-    ///  * archive_path (string) - the resource path of the archive that contains this resource
-    ///  * archive_slf (bool) - true if the resource is a SLF archive
-    ///  * archive_slf_num_resources (number) - number of resources inside the SLF archive
     pub properties: Map<String, Value>,
 }
 
@@ -87,7 +77,19 @@ struct ResourceError {
     desc: String,
 }
 
-impl ResourcePack {
+#[derive(Debug, Default)]
+pub struct ResourcePackBuilder {
+    pub with_archive_slf: bool,
+    pub with_file_size: bool,
+    pack: ResourcePack,
+}
+
+impl ResourcePackBuilder {
+    /// Returns a reference to the underlying resource pack.
+    pub fn as_pack(&self) -> &ResourcePack {
+        return &self.pack;
+    }
+
     /// Adds resources to the pack.
     ///
     /// The contents of the directory will be added (recursive).
@@ -124,18 +126,18 @@ impl ResourcePack {
             let mut resource = Resource::default();
             resource.path = my_path;
             // record file size
-            if self.get_bool("with_file_size").unwrap_or(false) {
+            if self.with_file_size {
                 resource.set_property("file_size", path.metadata()?.len());
             }
             // include slf contents
-            if self.get_bool("with_archive_slf").unwrap_or(false) {
+            if self.with_archive_slf {
                 if uppercase_extension(&path) == "SLF" {
                     resource.set_property("archive_slf", true);
                     let num_resources = self.add_slf(&path, &resource.path)?;
                     resource.set_property("archive_slf_num_resources", num_resources);
                 }
             }
-            self.resources.push(resource);
+            self.pack.resources.push(resource);
         } else {
             return Err(Box::new(ResourceError::new(format!(
                 "{:?} in not an accessible directory or file",
@@ -163,11 +165,11 @@ impl ResourcePack {
                     resource.path = path.replace("\\", "/");
                     resource.set_property("archive_path", archive_path);
                     // record file size
-                    if self.get_bool("with_file_size").unwrap_or(false) {
+                    if self.with_file_size {
                         resource.set_property("file_size", entry.length);
                     }
                     // TODO include archive inside archive?
-                    self.resources.push(resource);
+                    self.pack.resources.push(resource);
                     num_resources += 1;
                 }
                 _ => {}
@@ -234,32 +236,47 @@ pub trait Properties {
         return self.properties_mut().insert(name.to_owned(), json!(value));
     }
 
-    /// Gets a property value.
+    /// Gets the value of a property.
     fn get_property(&self, name: &str) -> Option<&Value> {
         return self.properties().get(name);
     }
 
-    /// Gets a bool property value.
+    /// Gets the value of a bool property.
     fn get_bool(&self, name: &str) -> Option<bool> {
         return self.get_property(name).and_then(|v| v.as_bool());
     }
 
-    /// Gets a string property value.
+    /// Gets the value of a string property.
     fn get_str(&self, name: &str) -> Option<&str> {
         return self.get_property(name).and_then(|v| v.as_str());
     }
 
-    /// Gets a signed integer property value.
+    /// Gets the value of an array of strings property.
+    fn get_vec_of_str(&self, name: &str) -> Option<Vec<&str>> {
+        if let Some(array) = self.get_property(name).and_then(|v| v.as_array()) {
+            let mut strings = Vec::new();
+            for value in array {
+                if !value.is_string() {
+                    return None;
+                }
+                strings.push(value.as_str().unwrap());
+            }
+            return Some(strings);
+        }
+        return None;
+    }
+
+    /// Gets the signed integer value of a number property.
     fn get_i64(&self, name: &str) -> Option<i64> {
         return self.get_property(name).and_then(|v| v.as_i64());
     }
 
-    /// Gets an unsigned integer property value.
+    /// Gets the unsigned integer value of a number property.
     fn get_u64(&self, name: &str) -> Option<u64> {
         return self.get_property(name).and_then(|v| v.as_u64());
     }
 
-    /// Gets a floating-point property value.
+    /// Gets the floating-point value of a number property.
     fn get_f64(&self, name: &str) -> Option<f64> {
         return self.get_property(name).and_then(|v| v.as_f64());
     }

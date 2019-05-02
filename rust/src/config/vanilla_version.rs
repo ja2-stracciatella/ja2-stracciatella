@@ -6,7 +6,7 @@ use std::fmt::Display;
 use serde::Deserialize;
 use serde::Serialize;
 
-use crate::res::{Properties, ResourcePack};
+use crate::res::ResourcePackBuilder;
 
 #[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
 #[repr(C)]
@@ -33,9 +33,10 @@ impl VanillaVersion {
                 if let Some(file_name) = path.file_name() {
                     if file_name.to_string_lossy().to_uppercase() == "DATA" {
                         // generate resource pack of data dir and try to guess
-                        let mut pack = ResourcePack::default();
-                        pack.set_property("with_archive_slf", true);
-                        pack.add_dir(&path).map_err(|err| format!("Error reading data dir: {}", err.description()))?;
+                        let mut builder = ResourcePackBuilder::default();
+                        builder.with_archive_slf = true;
+                        builder.add_dir(&path).map_err(|err| format!("Error reading data dir: {}", err.description()))?;
+                        let pack = builder.as_pack();
                         for resource in pack.resources.iter() {
                             // guess version from the resource path
                             if let Some(version) = Self::from_resource_path(&resource.path) {
