@@ -458,4 +458,74 @@ mod tests {
         assert!(resource.get_f64("p").is_some());
         assert_eq!(resource.get_u64("p").unwrap(), u64::max_value());
     }
+
+    // Since #[bench] isn't stable, these simple timed tests are ignored and print the times by themselves.
+    // Execute them with `cargo test -- --nocapture --ignored`
+    mod timed {
+        use std::time::{Duration, SystemTime};
+
+        use blake2::{Blake2b, Blake2s};
+        use digest::Digest;
+        use hex;
+        use md5::Md5;
+        use sha1::Sha1;
+
+        fn data_for_hasher() -> Vec<u8> {
+            return "A quick brown fox jumps over the lazy dog"
+                .repeat(1_000_000)
+                .as_bytes()
+                .to_vec();
+        }
+
+        fn print_hasher_result(name: &str, time: Duration, size: usize, hash: &[u8]) {
+            let secs = time.as_secs() as f64 + time.subsec_nanos() as f64 / 1_000_000_000f64;
+            let mib = size as f64 / 1_000_000f64;
+            let speed = mib / secs;
+            let hash = hex::encode(hash);
+            println!(
+                "{}: {} bytes in {:?} {:.3}MiB/s {:?}",
+                name, size, time, speed, hash
+            );
+        }
+
+        #[test]
+        #[ignore]
+        fn hasher_md5() {
+            let data = data_for_hasher();
+            let start = SystemTime::now();
+            let hash = Md5::digest(&data);
+            let elapsed = start.elapsed().unwrap();
+            print_hasher_result("hasher_md5", elapsed, data.len(), &hash);
+        }
+
+        #[test]
+        #[ignore]
+        fn hasher_sha1() {
+            let data = data_for_hasher();
+            let start = SystemTime::now();
+            let hash = Sha1::digest(&data);
+            let elapsed = start.elapsed().unwrap();
+            print_hasher_result("hasher_sha1", elapsed, data.len(), &hash);
+        }
+
+        #[test]
+        #[ignore]
+        fn hasher_blake2s() {
+            let data = data_for_hasher();
+            let start = SystemTime::now();
+            let hash = Blake2s::digest(&data);
+            let elapsed = start.elapsed().unwrap();
+            print_hasher_result("hasher_blake2s", elapsed, data.len(), &hash);
+        }
+
+        #[test]
+        #[ignore]
+        fn hasher_blake2b() {
+            let data = data_for_hasher();
+            let start = SystemTime::now();
+            let hash = Blake2b::digest(&data);
+            let elapsed = start.elapsed().unwrap();
+            print_hasher_result("hasher_blake2b", elapsed, data.len(), &hash);
+        }
+    }
 }
