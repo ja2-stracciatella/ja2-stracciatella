@@ -1,10 +1,10 @@
 use std::error::Error;
-use std::path::Path;
-use std::str::FromStr;
 use std::fmt;
 use std::fmt::Display;
-use serde::Deserialize;
-use serde::Serialize;
+use std::path::Path;
+use std::str::FromStr;
+
+use serde::{Deserialize, Serialize};
 
 use crate::res::ResourcePackBuilder;
 
@@ -26,8 +26,12 @@ impl VanillaVersion {
     /// Guess the version from the contents of the game dir.
     pub fn from_game_dir(dir: &Path) -> Result<Self, String> {
         // find data dir (best effort)
-        for entry in dir.read_dir().map_err(|err| format!("Error reading game dir: {}", err.description()))? {
-            let entry = entry.map_err(|err| format!("Error reading game dir entry: {}", err.description()))?;
+        for entry in dir
+            .read_dir()
+            .map_err(|err| format!("Error reading game dir: {}", err.description()))?
+        {
+            let entry = entry
+                .map_err(|err| format!("Error reading game dir entry: {}", err.description()))?;
             let path = entry.path();
             if path.is_dir() {
                 if let Some(file_name) = path.file_name() {
@@ -35,7 +39,9 @@ impl VanillaVersion {
                         // generate resource pack of data dir and try to guess
                         let mut builder = ResourcePackBuilder::default();
                         builder.with_archive_slf = true;
-                        builder.add_dir(&path).map_err(|err| format!("Error reading data dir: {}", err.description()))?;
+                        builder.add_dir(&path).map_err(|err| {
+                            format!("Error reading data dir: {}", err.description())
+                        })?;
                         let pack = builder.as_pack();
                         for resource in pack.resources.iter() {
                             // guess version from the resource path
@@ -48,7 +54,7 @@ impl VanillaVersion {
                 }
             }
         }
-        return Err(format!("Data dir not found"))
+        return Err(format!("Data dir not found"));
     }
 
     /// Guess the version from the resource path.
@@ -86,14 +92,14 @@ impl FromStr for VanillaVersion {
             "POLISH" => Ok(VanillaVersion::POLISH),
             "RUSSIAN" => Ok(VanillaVersion::RUSSIAN),
             "RUSSIAN_GOLD" => Ok(VanillaVersion::RUSSIAN_GOLD),
-            _ => Err(format!("Resource version {} is unknown", s))
+            _ => Err(format!("Resource version {} is unknown", s)),
         }
     }
 }
 
 impl Display for VanillaVersion {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", match self {
+        let display = match self {
             VanillaVersion::DUTCH => "Dutch",
             VanillaVersion::ENGLISH => "English",
             VanillaVersion::FRENCH => "French",
@@ -102,6 +108,7 @@ impl Display for VanillaVersion {
             VanillaVersion::POLISH => "Polish",
             VanillaVersion::RUSSIAN => "Russian",
             VanillaVersion::RUSSIAN_GOLD => "Russian (Gold)",
-        })
+        };
+        write!(f, "{}", display)
     }
 }
