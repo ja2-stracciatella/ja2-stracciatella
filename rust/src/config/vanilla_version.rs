@@ -1,4 +1,3 @@
-use std::error::Error;
 use std::fmt;
 use std::fmt::Display;
 use std::path::Path;
@@ -25,26 +24,25 @@ pub enum VanillaVersion {
 impl VanillaVersion {
     /// Guess the version from the contents of the game dir.
     pub fn from_game_dir(dir: &Path) -> Result<Self, String> {
-        // find data dir (best effort)
-        for entry in dir
-            .read_dir()
-            .map_err(|err| format!("Error reading game dir: {}", err.description()))?
-        {
-            let entry = entry
-                .map_err(|err| format!("Error reading game dir entry: {}", err.description()))?;
-            let path = entry.path();
-            if path.is_dir() {
-                if let Some(file_name) = path.file_name() {
-                    if file_name.to_string_lossy().to_uppercase() == "DATA" {
-                        return Self::from_data_dir(&path);
+        if !dir.is_dir() {
+            return Err(format!("{:?} is not a directory", dir));
+        }
+        for entry in dir.read_dir().map_err(|e| e.to_string())? {
+            // ignore errors (best effort)
+            if let Ok(path) = entry.map(|e| e.path()) {
+                if path.is_dir() {
+                    if let Some(file_name) = path.file_name() {
+                        if file_name.to_string_lossy().to_uppercase() == "DATA" {
+                            return Self::from_data_dir(&path);
+                        }
                     }
                 }
             }
         }
-        return Err(format!("Data dir not found"));
+        return Err("data directory not found".into());
     }
 
-    /// Guess the version from the contents of the data dir.
+    /// Guess the version from the contents of the data directory.
     pub fn from_data_dir(dir: &Path) -> Result<Self, String> {
         if !dir.is_dir() {
             return Err(format!("{:?} is not a directory", dir));
@@ -52,9 +50,7 @@ impl VanillaVersion {
         // generate resource pack of data dir and try to guess
         let mut builder = ResourcePackBuilder::default();
         builder.with_archive_slf = true;
-        builder
-            .add_dir(&dir)
-            .map_err(|err| format!("Error reading data dir: {}", err.description()))?;
+        builder.add_dir(&dir).map_err(|e| e.to_string())?;
         let pack = builder.as_pack();
         for resource in pack.resources.iter() {
             // guess version from the resource path
