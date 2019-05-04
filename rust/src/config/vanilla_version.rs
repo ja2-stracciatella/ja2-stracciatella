@@ -36,25 +36,33 @@ impl VanillaVersion {
             if path.is_dir() {
                 if let Some(file_name) = path.file_name() {
                     if file_name.to_string_lossy().to_uppercase() == "DATA" {
-                        // generate resource pack of data dir and try to guess
-                        let mut builder = ResourcePackBuilder::default();
-                        builder.with_archive_slf = true;
-                        builder.add_dir(&path).map_err(|err| {
-                            format!("Error reading data dir: {}", err.description())
-                        })?;
-                        let pack = builder.as_pack();
-                        for resource in pack.resources.iter() {
-                            // guess version from the resource path
-                            if let Some(version) = Self::from_resource_path(&resource.path) {
-                                return Ok(version);
-                            }
-                        }
-                        break;
+                        return Self::from_data_dir(&path);
                     }
                 }
             }
         }
         return Err(format!("Data dir not found"));
+    }
+
+    /// Guess the version from the contents of the data dir.
+    pub fn from_data_dir(dir: &Path) -> Result<Self, String> {
+        if !dir.is_dir() {
+            return Err(format!("{:?} is not a directory", dir));
+        }
+        // generate resource pack of data dir and try to guess
+        let mut builder = ResourcePackBuilder::default();
+        builder.with_archive_slf = true;
+        builder
+            .add_dir(&dir)
+            .map_err(|err| format!("Error reading data dir: {}", err.description()))?;
+        let pack = builder.as_pack();
+        for resource in pack.resources.iter() {
+            // guess version from the resource path
+            if let Some(version) = Self::from_resource_path(&resource.path) {
+                return Ok(version);
+            }
+        }
+        return Err(format!("unable to detect version of {:?}", dir));
     }
 
     /// Guess the version from the resource path.
