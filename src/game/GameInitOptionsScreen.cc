@@ -177,7 +177,7 @@ static void GetGIOScreenUserInput(void);
 static void RestoreGIOButtonBackGrounds(void);
 static void DoneFadeOutForExitGameInitOptionScreen(void);
 static void DisplayMessageToUserAboutGameDifficulty(void);
-static void DisplayMessageToUserAboutDeadIsDeadSaveScreen(const wchar_t, MSGBOX_CALLBACK);
+static void DisplayMessageToUserAboutDeadIsDeadSaveScreen(const wchar_t*, MSGBOX_CALLBACK);
 static void ConfirmGioDifSettingMessageBoxCallBack(MessageBoxReturnValue);
 static BOOLEAN DisplayMessageToUserAboutIronManMode(void);
 static void ConfirmGioIronManMessageBoxCallBack(MessageBoxReturnValue);

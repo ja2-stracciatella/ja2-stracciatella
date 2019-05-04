@@ -327,25 +327,6 @@ static char const* const szAmbientEffects[NUM_AMBIENTS] =
 	SOUNDSDIR "/night_bird3.wav"
 };
 
-static UINT8 const AmbientVols[NUM_AMBIENTS] =
-{
-	25,		// lightning 1
-	25,		// lightning 2
-	10,		// rain 1
-	25,		// bird 1
-	25,		// bird 2
-	10,		// crickets 1
-	10,		// crickets 2
-	25,		// cricket 1
-	25,		// cricket 2
-	25,		// owl 1
-	25,		// owl 2
-	25,		// owl 3
-	25,		// night bird 1
-	25		// night bird 2
-};
-
-
 void ShutdownJA2Sound(void)
 {
 	SoundStopAll();
