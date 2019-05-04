@@ -36,15 +36,39 @@
 //! Resource properties:
 //!  * `file_size` (integer) - size of the file data.
 //!
+//!
+//! # `with_hashes` (`["{algorithm}", ...]`, default = `[]`)
+//!
+//! File data can be hashed.
+//! A hasher digests the data into a small fixed size and the same input produces the same output.
+//!
+//! When this pack property is an array of strings, the resource properties include the hash of the data in the specified algorithms.
+//!
+//! | Algorithms        | Notes |
+//! |-------------------|-------|
+//! | md5               | 128 bits, MD5, output of md5sum |
+//! | sha1              | 160 bits, SHA-1, output of sha1sum |
+//! | blake2s           | 256 bits, BLAKE2s |
+//! | blake2b           | 512 bits, BLAKE2b, default output of b2sum |
+//!
+//! Resource properties:
+//!  * `hashes` (`{"{algorithm}": "{hash}", ...}`) - hash of the specified algorithms
+//!
 
-use std::collections::VecDeque;
+use std::collections::{HashMap, VecDeque};
 use std::error::Error;
 use std::fmt;
-use std::fs::File;
+use std::io::Cursor;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
+
+use blake2::{Blake2b, Blake2s};
+use digest::Digest;
+use hex;
+use md5::Md5;
+use sha1::Sha1;
 
 use crate::slf::{SlfEntryState, SlfHeader};
 
@@ -80,8 +104,15 @@ struct ResourceError {
 
 #[derive(Debug, Default)]
 pub struct ResourcePackBuilder {
+    /// Include SLF contents as resources.
     pub with_archive_slf: bool,
+
+    /// Add file size to the resource properties.
     pub with_file_size: bool,
+
+    /// Add hashes of the data to the resource properties.
+    pub with_hashes: Vec<String>,
+
     pack: ResourcePack,
 }
 
@@ -123,12 +154,16 @@ impl ResourcePackBuilder {
             if self.with_file_size {
                 resource.set_property("file_size", path.metadata()?.len());
             }
-            // include slf contents
-            if self.with_archive_slf {
-                if uppercase_extension(&path) == "SLF" {
-                    resource.set_property("archive_slf", true);
-                    let num_resources = self.add_slf(&path, &resource.path)?;
-                    resource.set_property("archive_slf_num_resources", num_resources);
+            let wants_slf = self.with_archive_slf && uppercase_extension(&path) == "SLF";
+            let wants_hashes = self.with_hashes.len() > 0;
+            let needs_data = wants_slf || wants_hashes;
+            if needs_data {
+                let data = std::fs::read(path)?;
+                if wants_slf {
+                    self.slf_contents(&mut resource, &data)?;
+                }
+                if wants_hashes {
+                    self.hashes(&mut resource, &data)?;
                 }
             }
             self.pack.resources.push(resource);
@@ -142,29 +177,55 @@ impl ResourcePackBuilder {
     /// The resources will have the archive_path property set.
     /// Returns the number of resources added.
     #[allow(dead_code)]
-    fn add_slf(&mut self, path: &Path, archive_path: &str) -> Result<i32, Box<Error>> {
-        let mut f = File::open(path)?;
-        let header = SlfHeader::from_input(&mut f)?;
+    fn slf_contents(&mut self, slf: &mut Resource, data: &[u8]) -> Result<(), Box<Error>> {
+        slf.set_property("archive_slf", true);
         let mut num_resources = 0;
-        for entry in header.entries_from_input(&mut f)? {
-            match entry.state {
-                SlfEntryState::Ok => {
-                    let mut resource = Resource::default();
-                    let path = header.library_path.clone() + &entry.file_path;
-                    resource.path = path.replace("\\", "/");
-                    resource.set_property("archive_path", archive_path);
-                    // record file size
-                    if self.with_file_size {
-                        resource.set_property("file_size", entry.length);
-                    }
-                    // TODO include archive inside archive?
-                    self.pack.resources.push(resource);
-                    num_resources += 1;
+        let mut input = Cursor::new(&data);
+        let header = SlfHeader::from_input(&mut input)?;
+        for entry in header.entries_from_input(&mut input)? {
+            if entry.state == SlfEntryState::Ok {
+                let mut resource = Resource::default();
+                let path = header.library_path.clone() + &entry.file_path;
+                resource.path = path.replace("\\", "/");
+                resource.set_property("archive_path", &slf.path);
+                // record file size
+                if self.with_file_size {
+                    resource.set_property("file_size", entry.length);
                 }
-                _ => {}
+                // TODO include archive inside archive?
+                let wants_hashes = self.with_hashes.len() > 0;
+                if wants_hashes {
+                    let from = entry.offset as usize;
+                    let to = from + entry.length as usize;
+                    self.hashes(&mut resource, &data[from..to])?;
+                }
+                self.pack.resources.push(resource);
+                num_resources += 1;
             }
         }
-        return Ok(num_resources);
+        slf.set_property("archive_slf_num_resources", num_resources);
+        return Ok(());
+    }
+
+    fn hashes(&mut self, resource: &mut Resource, data: &[u8]) -> Result<(), Box<Error>> {
+        let mut hashes: HashMap<String, String> = HashMap::new();
+        for algorithm in &self.with_hashes {
+            let hash = match algorithm.as_str() {
+                "md5" => hex::encode(Md5::digest(&data)),
+                "sha1" => hex::encode(Sha1::digest(&data)),
+                "blake2s" => hex::encode(Blake2s::digest(&data)),
+                "blake2b" => hex::encode(Blake2b::digest(&data)),
+                _ => {
+                    return Err(Box::new(ResourceError::new(format!(
+                        "invalid hash algorithm {:?}",
+                        &algorithm
+                    ))));
+                }
+            };
+            hashes.insert(algorithm.to_owned(), hash);
+        }
+        resource.set_property("hashes", hashes);
+        return Ok(());
     }
 }
 
