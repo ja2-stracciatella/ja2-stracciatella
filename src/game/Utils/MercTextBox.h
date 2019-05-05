@@ -12,7 +12,6 @@ enum MercPopupBoxFlags
 	MERC_POPUP_PREPARE_FLAGS_STOPICON   = 1U << 1,
 	MERC_POPUP_PREPARE_FLAGS_SKULLICON  = 1U << 2
 };
-ENUM_BITSET(MercPopupBoxFlags)
 
 void InitMercPopupBox(void);
 

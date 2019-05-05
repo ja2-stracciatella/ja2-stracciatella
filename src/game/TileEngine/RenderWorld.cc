@@ -60,7 +60,6 @@ enum RenderTilesFlags
 	TILES_MARKED                    = 0x10000000,
 	TILES_OBSCURED                  = 0x01000000
 };
-ENUM_BITSET(RenderTilesFlags)
 
 
 #define MAX_RENDERED_ITEMS 2
