@@ -59,7 +59,7 @@ use std::collections::{HashMap, VecDeque};
 use std::convert::From;
 use std::error::Error;
 use std::fmt;
-use std::io::Cursor;
+use std::io;
 use std::path::{Path, PathBuf};
 
 use serde::{Deserialize, Serialize};
@@ -101,79 +101,126 @@ pub struct Resource {
 #[derive(Debug, Default)]
 pub struct ResourcePackBuilder {
     /// Include SLF contents as resources.
-    pub with_archive_slf: bool,
+    with_archive_slf: bool,
 
     /// Add file size to the resource properties.
-    pub with_file_size: bool,
+    with_file_size: bool,
 
     /// Add hashes of the data to the resource properties.
-    pub with_hashes: Vec<String>,
+    with_hashes: Vec<String>,
 
+    /// Add paths to the pack (base, path).
+    with_paths: VecDeque<(PathBuf, PathBuf)>,
+
+    /// Resource being built.
     pack: ResourcePack,
 }
 
 impl ResourcePackBuilder {
-    /// Returns a reference to the underlying resource pack.
-    pub fn as_pack(&self) -> &ResourcePack {
-        return &self.pack;
+    // Constructor.
+    pub fn new() -> Self {
+        return Self::default();
     }
 
-    /// Adds resources to the pack.
-    ///
-    /// The contents of the directory will be added (recursive).
-    /// The resource paths will be relative to the directory.
-    /// This should be called with the path to the "Data" directory of the game.
-    #[allow(dead_code)]
-    pub fn add_dir(&mut self, dir: &Path) -> Result<(), ResourceError> {
-        if !dir.is_dir() {
-            return Err(format!("{:?} is not an accessible directory", dir).into());
+    /// Adds SLF archive contents.
+    pub fn with_archive_slf(mut self) -> Self {
+        self.with_archive_slf = true;
+        return self;
+    }
+
+    /// Adds file sizes.
+    pub fn with_file_size(mut self) -> Self {
+        self.with_file_size = true;
+        return self;
+    }
+
+    /// Adds a hash algorithm.
+    pub fn with_hash(mut self, algorithm: &str) -> Self {
+        for a in &self.with_hashes {
+            if a == algorithm {
+                return self; // avoid duplicates
+            }
         }
-        self.add_sub_path(dir, dir)?;
+        self.with_hashes.push(algorithm.to_owned());
+        return self;
+    }
+
+    /// Adds a directory or an archive.
+    pub fn with_path(mut self, base: &Path, path: &Path) -> Self {
+        for (b, p) in &self.with_paths {
+            if b == base && p == path {
+                return self; // avoid duplicates
+            }
+        }
+        let tuple = (base.to_owned(), path.to_owned());
+        self.with_paths.push_back(tuple);
+        return self;
+    }
+
+    /// Consumes the builder and returns a resource pack or an error.
+    pub fn execute(mut self, name: &str) -> Result<ResourcePack, ResourceError> {
+        self.pack.name = name.to_owned();
+        if self.with_archive_slf {
+            self.pack.set_property("with_archive_slf", true);
+        }
+        if self.with_file_size {
+            self.pack.set_property("with_file_size", true);
+        }
+        self.with_hashes.sort();
+        self.with_hashes.dedup();
+        if self.with_hashes.len() > 0 {
+            self.pack.set_property("with_hashes", &self.with_hashes);
+        }
+        // Adds
+        while self.with_paths.len() > 0 {
+            let (base, path) = self.with_paths.pop_front().unwrap();
+            let metadata = path.metadata()?;
+            if metadata.is_file() {
+                self.add_file(&base, &path)?;
+            } else if metadata.is_dir() {
+                self.add_dir_contents(&base, &path)?;
+            }
+        }
+        return Ok(self.pack);
+    }
+
+    /// Adds the contents of an OS directory.
+    fn add_dir_contents(&mut self, base: &Path, dir: &Path) -> Result<(), ResourceError> {
+        for path in FSIterator::new(dir) {
+            self.add_file(&base, &path)?;
+        }
         return Ok(());
     }
 
-    /// Adds resources to the pack.
-    ///
-    /// If the path points to a directory, the contents will be added (recursive).
-    /// If the path points to a file, the file will be added.
-    /// The resource paths will be relative to base.
-    #[allow(dead_code)]
-    pub fn add_sub_path(&mut self, base: &Path, path: &Path) -> Result<(), ResourceError> {
+    /// Adds an OS file as a resource.
+    fn add_file(&mut self, base: &Path, path: &Path) -> Result<(), ResourceError> {
+        let mut resource = Resource::default();
         // must have a valid resource path
-        for path in FSIterator::new(path) {
-            let mut resource = Resource::default();
-            resource.path = resource_path(base, &path)?;
-            // record file size
-            if self.with_file_size {
-                resource.set_property("file_size", path.metadata()?.len());
-            }
-            let wants_slf = self.with_archive_slf && uppercase_extension(&path) == "SLF";
-            let wants_hashes = self.with_hashes.len() > 0;
-            let needs_data = wants_slf || wants_hashes;
-            if needs_data {
-                let data = std::fs::read(path)?;
-                if wants_slf {
-                    self.slf_contents(&mut resource, &data)?;
-                }
-                if wants_hashes {
-                    self.hashes(&mut resource, &data)?;
-                }
-            }
-            self.pack.resources.push(resource);
+        resource.path = resource_path(base, path)?;
+        if self.with_file_size {
+            resource.set_property("file_size", path.metadata()?.len());
         }
+        let wants_slf = self.with_archive_slf && path_has_slf_extension(&path);
+        let wants_hashes = self.with_hashes.len() > 0;
+        let needs_data = wants_slf || wants_hashes;
+        if needs_data {
+            let data = std::fs::read(path)?;
+            if wants_slf {
+                self.add_slf_contents(&mut resource, &data)?;
+            }
+            if wants_hashes {
+                self.add_hashes(&mut resource, &data)?;
+            }
+        }
+        self.pack.resources.push(resource);
         return Ok(());
     }
 
-    /// Adds resources to the pack.
-    ///
-    /// The Ok entries of the SLF archive will be added as resources.
-    /// The resources will have the archive_path property set.
-    /// Returns the number of resources added.
-    #[allow(dead_code)]
-    fn slf_contents(&mut self, slf: &mut Resource, data: &[u8]) -> Result<(), ResourceError> {
+    // Adds the contents of a SLF archive.
+    fn add_slf_contents(&mut self, slf: &mut Resource, data: &[u8]) -> Result<(), ResourceError> {
         slf.set_property("archive_slf", true);
         let mut num_resources = 0;
-        let mut input = Cursor::new(&data);
+        let mut input = io::Cursor::new(&data);
         let header = SlfHeader::from_input(&mut input)?;
         for entry in header.entries_from_input(&mut input)? {
             if entry.state == SlfEntryState::Ok {
@@ -190,7 +237,7 @@ impl ResourcePackBuilder {
                 if wants_hashes {
                     let from = entry.offset as usize;
                     let to = from + entry.length as usize;
-                    self.hashes(&mut resource, &data[from..to])?;
+                    self.add_hashes(&mut resource, &data[from..to])?;
                 }
                 self.pack.resources.push(resource);
                 num_resources += 1;
@@ -200,7 +247,8 @@ impl ResourcePackBuilder {
         return Ok(());
     }
 
-    fn hashes(&mut self, resource: &mut Resource, data: &[u8]) -> Result<(), ResourceError> {
+    /// Adds hashes of the resource data.
+    fn add_hashes(&mut self, resource: &mut Resource, data: &[u8]) -> Result<(), ResourceError> {
         let mut hashes: HashMap<String, String> = HashMap::new();
         for algorithm in &self.with_hashes {
             let hash = match algorithm.as_str() {
@@ -209,7 +257,7 @@ impl ResourcePackBuilder {
                 "blake2s" => hex::encode(Blake2s::digest(&data)),
                 "blake2b" => hex::encode(Blake2b::digest(&data)),
                 _ => {
-                    return Err(format!("invalid hash algorithm {:?}", &algorithm).into());
+                    return Err(format!("hash algorithm {:?} is not supported", &algorithm).into());
                 }
             };
             hashes.insert(algorithm.to_owned(), hash);
@@ -219,18 +267,19 @@ impl ResourcePackBuilder {
     }
 }
 
+/// Error that originates from this module.
 #[derive(Debug)]
 pub enum ResourceError {
+    /// Simple text error.
     Text(String),
-    PathStripPrefixError(std::path::StripPrefixError),
-    IoError(std::io::Error),
+    /// Original error was an IO error.
+    IoError(io::Error),
 }
 
 impl Error for ResourceError {
     fn description(&self) -> &str {
         return match self {
             ResourceError::Text(desc) => desc,
-            ResourceError::PathStripPrefixError(err) => err.description(),
             ResourceError::IoError(err) => err.description(),
         };
     }
@@ -238,7 +287,7 @@ impl Error for ResourceError {
 
 impl fmt::Display for ResourceError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{:?}", self)
+        write!(f, "{}", self.description())
     }
 }
 
@@ -248,14 +297,8 @@ impl From<String> for ResourceError {
     }
 }
 
-impl From<std::path::StripPrefixError> for ResourceError {
-    fn from(err: std::path::StripPrefixError) -> ResourceError {
-        ResourceError::PathStripPrefixError(err)
-    }
-}
-
-impl From<std::io::Error> for ResourceError {
-    fn from(err: std::io::Error) -> ResourceError {
+impl From<io::Error> for ResourceError {
+    fn from(err: io::Error) -> ResourceError {
         ResourceError::IoError(err)
     }
 }
@@ -309,22 +352,28 @@ impl Iterator for FSIterator {
     }
 }
 
-/// Gets the extension of the path in uppercase.
-/// Assumes the extension only contains valid utf8.
-fn uppercase_extension(path: &Path) -> String {
-    if let Some(extension) = path.extension() {
-        return extension.to_str().unwrap().to_uppercase();
+/// Returns true if the path has a SLF extension (case insensitive).
+fn path_has_slf_extension(path: &Path) -> bool {
+    if let Some(os_ext) = path.extension() {
+        if let Some(ext) = os_ext.to_str() {
+            if ext.to_ascii_uppercase() == "SLF" {
+                return true;
+            }
+        }
     }
-    return "".to_string();
+    return false;
 }
 
 /// Converts an OS path to a resource path.
 fn resource_path(base: &Path, path: &Path) -> Result<String, ResourceError> {
-    let sub_path = path.strip_prefix(base)?;
-    return match sub_path.to_str() {
-        Some(s) => Ok(s.replace("\\", "/")),
-        None => Err(format!("{:?} contains invalid utf8", sub_path).into()),
-    };
+    if let Ok(resource_path) = path.strip_prefix(base) {
+        // there can be invalid utf8 in the prefix, but not in the resource path
+        if let Some(utf8) = resource_path.to_str() {
+            return Ok(utf8.replace("\\", "/"));
+        }
+        return Err(format!("{:?} contains invalid utf8", resource_path).into());
+    }
+    return Err(format!("{:?} is not a prefix of {:?}", base, path).into());
 }
 
 /// Trait the adds shortcuts for properties.
