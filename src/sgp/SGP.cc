@@ -496,7 +496,7 @@ int main(int argc, char* argv[])
 	return EXIT_SUCCESS;
 }
 
-static void convertDialogQuotesToJson(const DefaultContentManager *cm,
+/*static void convertDialogQuotesToJson(const DefaultContentManager *cm,
 					STRING_ENC_TYPE encType,
 					const char *dialogFile, const char *outputFile)
 {
@@ -510,4 +510,4 @@ static void convertDialogQuotesToJson(const DefaultContentManager *cm,
 		quotes[i] = NULL;
 	}
 	JsonUtility::writeToFile(outputFile, quotes_str);
-}
+}*/

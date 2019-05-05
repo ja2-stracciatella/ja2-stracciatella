@@ -93,7 +93,6 @@ void ShutdownFonts(void)
 // Set shades for fonts
 void SetFontShade(SGPFont const font, FontShade const shade)
 {
-	CHECKV(0 <= shade && shade < 16);
 	font->CurrentShade(shade);
 }
 

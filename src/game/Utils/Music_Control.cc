@@ -306,6 +306,8 @@ static void StartMusicBasedOnMode(void)
 				next = MUSIC_TACTICAL_CREATURE_BATTLE;
 			}
 			break;
+		default: // ignore other modes
+			break;
 	}
 
 	switch (gubMusicMode) {
@@ -318,6 +320,8 @@ static void StartMusicBasedOnMode(void)
 			break;
 		case MUSIC_TACTICAL_DEFEAT:
 			gbDeathSongCount++;
+			break;
+		default: // ignore other modes
 			break;
 	}
 

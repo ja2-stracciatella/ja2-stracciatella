@@ -100,9 +100,6 @@ BOOLEAN                      gfExplosionQueueActive      = FALSE;
 static BOOLEAN      gfExplosionQueueMayHaveChangedSight = FALSE;
 static SOLDIERTYPE* gPersonToSetOffExplosions           = 0;
 
-static INT16 gsTempActionGridNo = NOWHERE;
-
-
 #define NUM_EXPLOSION_SLOTS 100
 static EXPLOSIONTYPE gExplosionData[NUM_EXPLOSION_SLOTS];
 

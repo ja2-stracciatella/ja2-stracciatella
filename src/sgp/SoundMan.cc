@@ -113,10 +113,9 @@ struct SOUNDTAG
 };
 
 static size_t GetSampleSize(const SAMPLETAG* const s);
-static const UINT32 guiSoundDefaultVolume  = MAXVOLUME;
 static const UINT32 guiSoundMemoryLimit    = SOUND_DEFAULT_MEMORY; // Maximum memory used for sounds
 static       UINT32 guiSoundMemoryUsed     = 0;                    // Memory currently in use
-static const UINT32 guiSoundCacheThreshold = SOUND_DEFAULT_THRESH; // Double-buffered threshold
+//static const UINT32 guiSoundCacheThreshold = SOUND_DEFAULT_THRESH; // Double-buffered threshold
 static void IncreaseSoundMemoryUsedBySample(SAMPLETAG *sample) { guiSoundMemoryUsed += sample->n_samples * GetSampleSize(sample); }
 static void DecreaseSoundMemoryUsedBySample(SAMPLETAG *sample) { guiSoundMemoryUsed -= sample->n_samples * GetSampleSize(sample); }
 

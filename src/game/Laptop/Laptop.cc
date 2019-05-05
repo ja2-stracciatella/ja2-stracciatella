@@ -1294,6 +1294,9 @@ static void ExitLaptopMode(LaptopMode uiMode)
 		case LAPTOP_MODE_FILES:                    ExitFiles();             break;
 		case LAPTOP_MODE_EMAIL:                    ExitEmail();             break;
 		case LAPTOP_MODE_BROKEN_LINK:              ExitBrokenLink();        break;
+
+		// nothing to do for other subwindows
+		default: break;
 	}
 
 	if (uiMode != LAPTOP_MODE_NONE && uiMode < LAPTOP_MODE_WWW)
