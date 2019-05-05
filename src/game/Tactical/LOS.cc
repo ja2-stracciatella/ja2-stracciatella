@@ -3465,12 +3465,6 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 		}
 		else
 		{
-			if (ubLoop + 1 > pFirer->bBulletsLeft)
-			{
-				// this is an error!!
-				// FIXME
-				ubLoop = ubLoop;
-			}
 			FireBullet(pBullet, FALSE);
 		}
 	}
