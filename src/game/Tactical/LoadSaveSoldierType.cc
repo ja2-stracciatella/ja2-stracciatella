@@ -732,6 +732,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	// pathing info takes up 16 bit in the savegame but 8 bit in the engine
 	usPathDataSize = s->ubPathDataSize > MAX_PATH_LIST_SIZE ? (UINT16)MAX_PATH_LIST_SIZE : (UINT16)s->ubPathDataSize;
 	usPathIndex = (UINT16)s->ubPathIndex;
+	memset(usPathingData, 0, MAX_PATH_LIST_SIZE);
 	for (UINT8 i = 0; i < usPathDataSize; i++) {
 		usPathingData[i] = (UINT16)s->ubPathingData[i];
 	}
