@@ -56,6 +56,7 @@
 //!
 
 use std::collections::{HashMap, VecDeque};
+use std::convert::From;
 use std::error::Error;
 use std::fmt;
 use std::io::Cursor;
@@ -97,11 +98,6 @@ pub struct Resource {
     pub properties: Map<String, Value>,
 }
 
-#[derive(Debug)]
-struct ResourceError {
-    desc: String,
-}
-
 #[derive(Debug, Default)]
 pub struct ResourcePackBuilder {
     /// Include SLF contents as resources.
@@ -128,12 +124,9 @@ impl ResourcePackBuilder {
     /// The resource paths will be relative to the directory.
     /// This should be called with the path to the "Data" directory of the game.
     #[allow(dead_code)]
-    pub fn add_dir(&mut self, dir: &Path) -> Result<(), Box<Error>> {
+    pub fn add_dir(&mut self, dir: &Path) -> Result<(), ResourceError> {
         if !dir.is_dir() {
-            return Err(Box::new(ResourceError::new(format!(
-                "{:?} is not an accessible directory",
-                dir
-            ))));
+            return Err(format!("{:?} is not an accessible directory", dir).into());
         }
         self.add_sub_path(dir, dir)?;
         return Ok(());
@@ -145,7 +138,7 @@ impl ResourcePackBuilder {
     /// If the path points to a file, the file will be added.
     /// The resource paths will be relative to base.
     #[allow(dead_code)]
-    pub fn add_sub_path(&mut self, base: &Path, path: &Path) -> Result<(), Box<Error>> {
+    pub fn add_sub_path(&mut self, base: &Path, path: &Path) -> Result<(), ResourceError> {
         // must have a valid resource path
         for path in FSIterator::new(path) {
             let mut resource = Resource::default();
@@ -177,7 +170,7 @@ impl ResourcePackBuilder {
     /// The resources will have the archive_path property set.
     /// Returns the number of resources added.
     #[allow(dead_code)]
-    fn slf_contents(&mut self, slf: &mut Resource, data: &[u8]) -> Result<(), Box<Error>> {
+    fn slf_contents(&mut self, slf: &mut Resource, data: &[u8]) -> Result<(), ResourceError> {
         slf.set_property("archive_slf", true);
         let mut num_resources = 0;
         let mut input = Cursor::new(&data);
@@ -207,7 +200,7 @@ impl ResourcePackBuilder {
         return Ok(());
     }
 
-    fn hashes(&mut self, resource: &mut Resource, data: &[u8]) -> Result<(), Box<Error>> {
+    fn hashes(&mut self, resource: &mut Resource, data: &[u8]) -> Result<(), ResourceError> {
         let mut hashes: HashMap<String, String> = HashMap::new();
         for algorithm in &self.with_hashes {
             let hash = match algorithm.as_str() {
@@ -216,10 +209,7 @@ impl ResourcePackBuilder {
                 "blake2s" => hex::encode(Blake2s::digest(&data)),
                 "blake2b" => hex::encode(Blake2b::digest(&data)),
                 _ => {
-                    return Err(Box::new(ResourceError::new(format!(
-                        "invalid hash algorithm {:?}",
-                        &algorithm
-                    ))));
+                    return Err(format!("invalid hash algorithm {:?}", &algorithm).into());
                 }
             };
             hashes.insert(algorithm.to_owned(), hash);
@@ -229,21 +219,44 @@ impl ResourcePackBuilder {
     }
 }
 
-impl ResourceError {
-    fn new(desc: String) -> Self {
-        return ResourceError { desc };
-    }
+#[derive(Debug)]
+pub enum ResourceError {
+    Text(String),
+    PathStripPrefixError(std::path::StripPrefixError),
+    IoError(std::io::Error),
 }
 
 impl Error for ResourceError {
     fn description(&self) -> &str {
-        return self.desc.as_str();
+        return match self {
+            ResourceError::Text(desc) => desc,
+            ResourceError::PathStripPrefixError(err) => err.description(),
+            ResourceError::IoError(err) => err.description(),
+        };
     }
 }
 
 impl fmt::Display for ResourceError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "ResourceError({:?})", self.desc)
+        write!(f, "{:?}", self)
+    }
+}
+
+impl From<String> for ResourceError {
+    fn from(desc: String) -> ResourceError {
+        ResourceError::Text(desc)
+    }
+}
+
+impl From<std::path::StripPrefixError> for ResourceError {
+    fn from(err: std::path::StripPrefixError) -> ResourceError {
+        ResourceError::PathStripPrefixError(err)
+    }
+}
+
+impl From<std::io::Error> for ResourceError {
+    fn from(err: std::io::Error) -> ResourceError {
+        ResourceError::IoError(err)
     }
 }
 
@@ -306,14 +319,11 @@ fn uppercase_extension(path: &Path) -> String {
 }
 
 /// Converts an OS path to a resource path.
-fn resource_path(base: &Path, path: &Path) -> Result<String, Box<Error>> {
+fn resource_path(base: &Path, path: &Path) -> Result<String, ResourceError> {
     let sub_path = path.strip_prefix(base)?;
     return match sub_path.to_str() {
         Some(s) => Ok(s.replace("\\", "/")),
-        None => Err(Box::new(ResourceError::new(format!(
-            "{:?} contains invalid utf8",
-            sub_path
-        )))),
+        None => Err(format!("{:?} contains invalid utf8", sub_path).into()),
     };
 }
 
