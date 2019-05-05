@@ -358,6 +358,7 @@ void CheckForDisabledForGiveItem(void)
 {
 	const SOLDIERTYPE* const cur = gpSMCurrentMerc;
 	Assert(cur != NULL);
+	Assert(cur->sGridNo != NOWHERE);
 
 	if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 	{
