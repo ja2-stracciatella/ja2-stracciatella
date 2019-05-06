@@ -37,12 +37,12 @@
 //!  * `file_size` (integer) - size of the file data.
 //!
 //!
-//! # `with_hashes` (`["{algorithm}", ...]`, default = `[]`)
+//! # `with_hash_{algorithm}` (bool, default = false)
 //!
 //! File data can be hashed.
 //! A hasher digests the data into a small fixed size and the same input produces the same output.
 //!
-//! When this pack property is an array of strings, the resource properties include the hash of the data in the specified algorithms.
+//! When this pack property is true, the resource properties include the hash of the data in the specified algorithm.
 //!
 //! | Algorithms        | Notes |
 //! |-------------------|-------|
@@ -52,10 +52,10 @@
 //! | blake2b           | 512 bits, BLAKE2b, default output of b2sum |
 //!
 //! Resource properties:
-//!  * `hashes` (`{"{algorithm}": "{hash}", ...}`) - hash of the specified algorithms
+//!  * `hash_{algorithm}` (string) - hash of the specified algorithm
 //!
 
-use std::collections::{HashMap, VecDeque};
+use std::collections::VecDeque;
 use std::convert::From;
 use std::error::Error;
 use std::fmt;
@@ -136,11 +136,6 @@ impl ResourcePackBuilder {
 
     /// Adds a hash algorithm.
     pub fn with_hash(mut self, algorithm: &str) -> Self {
-        for a in &self.with_hashes {
-            if a == algorithm {
-                return self; // avoid duplicates
-            }
-        }
         self.with_hashes.push(algorithm.to_owned());
         return self;
     }
@@ -168,10 +163,10 @@ impl ResourcePackBuilder {
         }
         self.with_hashes.sort();
         self.with_hashes.dedup();
-        if self.with_hashes.len() > 0 {
-            self.pack.set_property("with_hashes", &self.with_hashes);
+        for algorithm in &self.with_hashes {
+            let prop = "with_hash_".to_owned() + algorithm;
+            self.pack.set_property(&prop, true);
         }
-        // Adds
         while self.with_paths.len() > 0 {
             let (base, path) = self.with_paths.pop_front().unwrap();
             let metadata = path.metadata()?;
@@ -249,7 +244,6 @@ impl ResourcePackBuilder {
 
     /// Adds hashes of the resource data.
     fn add_hashes(&mut self, resource: &mut Resource, data: &[u8]) -> Result<(), ResourceError> {
-        let mut hashes: HashMap<String, String> = HashMap::new();
         for algorithm in &self.with_hashes {
             let hash = match algorithm.as_str() {
                 "md5" => hex::encode(Md5::digest(&data)),
@@ -260,9 +254,9 @@ impl ResourcePackBuilder {
                     return Err(format!("hash algorithm {:?} is not supported", &algorithm).into());
                 }
             };
-            hashes.insert(algorithm.to_owned(), hash);
+            let prop = "hash_".to_owned() + algorithm;
+            resource.set_property(&prop, hash);
         }
-        resource.set_property("hashes", hashes);
         return Ok(());
     }
 }
