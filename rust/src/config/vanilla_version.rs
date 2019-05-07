@@ -49,7 +49,7 @@ impl VanillaVersion {
         }
         // generate resource pack of data dir and try to guess
         let pack = ResourcePackBuilder::new()
-            .with_archive_slf()
+            .with_archive("slf")
             .with_path(&dir, &dir)
             .execute("from_data_dir")
             .map_err(|e| e.to_string())?;

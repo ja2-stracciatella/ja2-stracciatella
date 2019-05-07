@@ -100,8 +100,8 @@ pub struct Resource {
 
 #[derive(Debug, Default)]
 pub struct ResourcePackBuilder {
-    /// Include SLF contents as resources.
-    with_archive_slf: bool,
+    /// Include archive contents as resources.
+    with_archives: Vec<String>,
 
     /// Add file size to the resource properties.
     with_file_size: bool,
@@ -122,9 +122,9 @@ impl ResourcePackBuilder {
         return Self::default();
     }
 
-    /// Adds SLF archive contents.
-    pub fn with_archive_slf(mut self) -> Self {
-        self.with_archive_slf = true;
+    /// Adds archive contents.
+    pub fn with_archive(mut self, extension: &str) -> Self {
+        self.with_archives.push(extension.to_owned());
         return self;
     }
 
@@ -155,8 +155,17 @@ impl ResourcePackBuilder {
     /// Consumes the builder and returns a resource pack or an error.
     pub fn execute(mut self, name: &str) -> Result<ResourcePack, ResourceError> {
         self.pack.name = name.to_owned();
-        if self.with_archive_slf {
-            self.pack.set_property("with_archive_slf", true);
+        self.with_archives.sort();
+        self.with_archives.dedup();
+        for extension in &self.with_archives {
+            match extension.as_str() {
+                "slf" => {}
+                _ => {
+                    return Err(format!("{:?} archives are not supported", extension).into());
+                }
+            }
+            let prop = "with_archive_".to_owned() + extension;
+            self.pack.set_property(&prop, true);
         }
         if self.with_file_size {
             self.pack.set_property("with_file_size", true);
@@ -164,6 +173,10 @@ impl ResourcePackBuilder {
         self.with_hashes.sort();
         self.with_hashes.dedup();
         for algorithm in &self.with_hashes {
+            match algorithm.as_str() {
+                "md5" | "sha1" | "blake2s" | "blake2b" => {}
+                _ => return Err(format!("{:?} hashes are not supported", algorithm).into()),
+            }
             let prop = "with_hash_".to_owned() + algorithm;
             self.pack.set_property(&prop, true);
         }
@@ -195,13 +208,16 @@ impl ResourcePackBuilder {
         if self.with_file_size {
             resource.set_property("file_size", path.metadata()?.len());
         }
-        let wants_slf = self.with_archive_slf && path_has_slf_extension(&path);
+        let extension = lowercase_extension(path);
+        let wants_archive = self.with_archives.binary_search(&extension).is_ok();
         let wants_hashes = self.with_hashes.len() > 0;
-        let needs_data = wants_slf || wants_hashes;
-        if needs_data {
+        if wants_archive || wants_hashes {
             let data = std::fs::read(path)?;
-            if wants_slf {
-                self.add_slf_contents(&mut resource, &data)?;
+            if wants_archive {
+                match extension.as_str() {
+                    "slf" => self.add_slf_contents(&mut resource, &data)?,
+                    _ => panic!(), // execute() must be fixed
+                }
             }
             if wants_hashes {
                 self.add_hashes(&mut resource, &data)?;
@@ -250,9 +266,7 @@ impl ResourcePackBuilder {
                 "sha1" => hex::encode(Sha1::digest(&data)),
                 "blake2s" => hex::encode(Blake2s::digest(&data)),
                 "blake2b" => hex::encode(Blake2b::digest(&data)),
-                _ => {
-                    return Err(format!("hash algorithm {:?} is not supported", &algorithm).into());
-                }
+                _ => panic!(), // execute() must be fixed
             };
             let prop = "hash_".to_owned() + algorithm;
             resource.set_property(&prop, hash);
@@ -346,16 +360,15 @@ impl Iterator for FSIterator {
     }
 }
 
-/// Returns true if the path has a SLF extension (case insensitive).
-fn path_has_slf_extension(path: &Path) -> bool {
+/// Returns the lowercase extension.
+fn lowercase_extension(path: &Path) -> String {
     if let Some(os_ext) = path.extension() {
         if let Some(ext) = os_ext.to_str() {
-            if ext.to_ascii_uppercase() == "SLF" {
-                return true;
-            }
+            // supported extensions are all ASCII
+            return ext.to_ascii_lowercase();
         }
     }
-    return false;
+    return "".to_owned();
 }
 
 /// Converts an OS path to a resource path.
