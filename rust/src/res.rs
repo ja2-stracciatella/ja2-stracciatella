@@ -74,7 +74,7 @@ use sha1::Sha1;
 use crate::slf::{SlfEntryState, SlfHeader};
 
 /// A pack of game resources.
-#[derive(Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct ResourcePack {
     /// A friendly name of the resource pack for display purposes.
     pub name: String,
@@ -89,7 +89,7 @@ pub struct ResourcePack {
 /// A resource in the pack.
 ///
 /// A resource always maps to raw data, which can be a file or data inside an archive.
-#[derive(Debug, Default, Deserialize, Serialize)]
+#[derive(Clone, Debug, Default, Deserialize, Serialize)]
 pub struct Resource {
     /// The identity of the resource as a relative path.
     pub path: String,
@@ -98,7 +98,7 @@ pub struct Resource {
     pub properties: Map<String, Value>,
 }
 
-#[derive(Debug, Default)]
+#[derive(Clone, Debug, Default)]
 pub struct ResourcePackBuilder {
     /// Include archive contents as resources.
     with_archives: Vec<String>,
@@ -116,32 +116,57 @@ pub struct ResourcePackBuilder {
     pack: ResourcePack,
 }
 
+impl ResourcePack {
+    // Constructor.
+    #[allow(dead_code)]
+    fn new(name: &str) -> Self {
+        let mut pack = ResourcePack::default();
+        pack.name = name.to_owned();
+        return pack;
+    }
+}
+
+impl Resource {
+    // Constructor.
+    #[allow(dead_code)]
+    fn new(path: &str) -> Self {
+        let mut resource = Resource::default();
+        resource.path = path.to_owned();
+        return resource;
+    }
+}
+
 impl ResourcePackBuilder {
     // Constructor.
+    #[allow(dead_code)]
     pub fn new() -> Self {
         return Self::default();
     }
 
     /// Adds archive contents.
-    pub fn with_archive(mut self, extension: &str) -> Self {
+    #[allow(dead_code)]
+    pub fn with_archive(&mut self, extension: &str) -> &mut Self {
         self.with_archives.push(extension.to_owned());
         return self;
     }
 
     /// Adds file sizes.
-    pub fn with_file_size(mut self) -> Self {
+    #[allow(dead_code)]
+    pub fn with_file_size(&mut self) -> &mut Self {
         self.with_file_size = true;
         return self;
     }
 
     /// Adds a hash algorithm.
-    pub fn with_hash(mut self, algorithm: &str) -> Self {
+    #[allow(dead_code)]
+    pub fn with_hash(&mut self, algorithm: &str) -> &mut Self {
         self.with_hashes.push(algorithm.to_owned());
         return self;
     }
 
     /// Adds a directory or an archive.
-    pub fn with_path(mut self, base: &Path, path: &Path) -> Self {
+    #[allow(dead_code)]
+    pub fn with_path(&mut self, base: &Path, path: &Path) -> &mut Self {
         for (b, p) in &self.with_paths {
             if b == base && p == path {
                 return self; // avoid duplicates
@@ -152,9 +177,10 @@ impl ResourcePackBuilder {
         return self;
     }
 
-    /// Consumes the builder and returns a resource pack or an error.
-    pub fn execute(mut self, name: &str) -> Result<ResourcePack, ResourceError> {
-        self.pack.name = name.to_owned();
+    /// Returns a resource pack or an error.
+    #[allow(dead_code)]
+    pub fn execute(&mut self, name: &str) -> Result<ResourcePack, ResourceError> {
+        self.pack = ResourcePack::new(name);
         self.with_archives.sort();
         self.with_archives.dedup();
         for extension in &self.with_archives {
@@ -189,7 +215,9 @@ impl ResourcePackBuilder {
                 self.add_dir_contents(&base, &path)?;
             }
         }
-        return Ok(self.pack);
+        let pack = self.pack.to_owned();
+        self.pack = ResourcePack::default();
+        return Ok(pack);
     }
 
     /// Adds the contents of an OS directory.
@@ -202,9 +230,9 @@ impl ResourcePackBuilder {
 
     /// Adds an OS file as a resource.
     fn add_file(&mut self, base: &Path, path: &Path) -> Result<(), ResourceError> {
-        let mut resource = Resource::default();
         // must have a valid resource path
-        resource.path = resource_path(base, path)?;
+        let resource_path = resource_path(base, path)?;
+        let mut resource = Resource::new(&resource_path);
         if self.with_file_size {
             resource.set_property("file_size", path.metadata()?.len());
         }
@@ -384,7 +412,7 @@ fn resource_path(base: &Path, path: &Path) -> Result<String, ResourceError> {
 }
 
 /// Trait the adds shortcuts for properties.
-pub trait Properties {
+pub trait ResourcePropertiesExt {
     /// Gets a reference to the properties container.
     fn properties(&self) -> &Map<String, Value>;
 
@@ -447,7 +475,7 @@ pub trait Properties {
     }
 }
 
-impl Properties for ResourcePack {
+impl ResourcePropertiesExt for ResourcePack {
     fn properties(&self) -> &Map<String, Value> {
         return &self.properties;
     }
@@ -457,7 +485,7 @@ impl Properties for ResourcePack {
     }
 }
 
-impl Properties for Resource {
+impl ResourcePropertiesExt for Resource {
     fn properties(&self) -> &Map<String, Value> {
         return &self.properties;
     }
