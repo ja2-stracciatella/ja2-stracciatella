@@ -497,8 +497,7 @@ impl ResourcePropertiesExt for Resource {
 
 #[cfg(test)]
 mod tests {
-
-    use super::{Properties, Resource};
+    use super::{Resource, ResourcePropertiesExt};
 
     #[test]
     fn property_value_compatibility() {
