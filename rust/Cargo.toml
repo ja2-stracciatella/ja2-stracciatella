@@ -18,6 +18,11 @@ crate-type = ["staticlib"]
 name = "stracciatella"
 path = "src/stracciatella.rs"
 
+[[bin]]
+name = "resource-pack"
+path = "src/bin_resource_pack.rs"
+required-features = ["bin"]
+
 [dependencies]
 getopts = "0.2.15"
 libc = "0.2"
@@ -32,6 +37,11 @@ md-5 = "0.8.0"
 sha-1 = "0.8.1"
 blake2 = "0.8.0"
 
+[dependencies.clap]
+optional = true
+version = "~2.33"
+default-features = false
+
 [dev-dependencies]
 regex = "0.1"
 tempdir = "0.3"
@@ -39,3 +49,6 @@ tempdir = "0.3"
 [build-dependencies]
 cbindgen = "0.6"
 
+[features]
+default = ["bin"]
+bin = ["clap"]
