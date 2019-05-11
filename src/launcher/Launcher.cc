@@ -50,6 +50,7 @@ void Launcher::show() {
 	customResolutionButton->callback( (Fl_Callback*)enableCustomResolutionSelection, (void*)(this) );
 	playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
 	editorButton->callback( (Fl_Callback*)startEditor, (void*)(this) );
+	guessVersionButton->callback( (Fl_Callback*)guessVersion, (void*)(this) );
 
 	populateChoices();
 	initializeInputsFromDefaults();
@@ -244,3 +245,28 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 	window->writeJsonFile();
 	window->startExecutable(true);
 }
+
+void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+    auto choice = fl_choice("Comparing resources packs can take a long time.\nAre you sure you want to continue?", "Stop", "Continue", 0);
+    if (choice != 1)
+        return;
+
+    char* log = NULL;
+    if (guess_resource_version(window->engine_options, &log)) {
+        auto rustResVersion = get_resource_version(window->engine_options);
+        auto resourceVersionIndex = 0;
+        for (auto version : predefinedVersions) {
+            if (version == rustResVersion) {
+	            break;
+            }
+            resourceVersionIndex += 1;
+        }
+        window->gameVersionInput->value(resourceVersionIndex);
+        fl_message("Success!\n%s", log);
+    } else {
+        fl_alert("Failure!\n%s", log);
+    }
+    free_rust_string(log);
+}
+

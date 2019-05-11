@@ -61,6 +61,8 @@ StracciatellaLauncher::StracciatellaLauncher() {
         } // Fl_Button* playButton
         { editorButton = new Fl_Button(270, 229, 185, 25, "Start Map Editor");
         } // Fl_Button* editorButton
+        { guessVersionButton = new Fl_Button(270, 195, 185, 25, "Guess Game Version");
+        } // Fl_Button* guessVersionButton
         o->end();
       } // Fl_Group* o
       o->end();

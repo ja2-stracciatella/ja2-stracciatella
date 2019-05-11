@@ -82,6 +82,10 @@ class StracciatellaLauncher {open
             label {Start Map Editor}
             xywh {270 229 185 25}
           }
+          Fl_Button guessVersionButton {
+            label {Guess Game Version}
+            xywh {270 195 185 25}
+          }
         }
       }
     }

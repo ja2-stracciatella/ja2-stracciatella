@@ -24,6 +24,7 @@ private:
 	static void enableCustomResolutionSelection(Fl_Widget* btn, void* userdata);
 	static void startGame(Fl_Widget* btn, void* userdata);
 	static void startEditor(Fl_Widget* btn, void* userdata);
+	static void guessVersion(Fl_Widget* btn, void* userdata);
 };
 
 #endif //JA2_LAUNCHER_H_H
