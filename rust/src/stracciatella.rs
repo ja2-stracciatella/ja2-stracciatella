@@ -19,6 +19,7 @@ use std::default::Default;
 use libc::{size_t, c_char};
 
 pub mod config;
+pub mod guess;
 pub mod res;
 pub mod slf;
 
@@ -260,6 +261,30 @@ pub extern fn free_rust_string(s: *mut c_char) {
     unsafe {
         CString::from_raw(s)
     };
+}
+
+/// Guesses the resource version value and updates the engine options.
+/// Returns true if it was sucessful, false otherwise.
+#[no_mangle]
+pub unsafe extern "C" fn guess_resource_version(
+    ptr: *mut EngineOptions,
+    log_ptr: *mut *mut c_char,
+) -> bool {
+    let mut engine_options = unsafe_from_ptr_mut!(ptr);
+    let logged = crate::guess::logged_guess_vanilla_version(&engine_options);
+    let mut result = false;
+    if let Some(version) = logged.vanilla_version {
+        engine_options.resource_version = version;
+        result = true;
+    }
+    // optional log
+    if !log_ptr.is_null() {
+        let c_log = CString::new(logged.log).unwrap().into_raw();
+        unsafe {
+            *log_ptr = c_log;
+        }
+    }
+    return result;
 }
 
 
