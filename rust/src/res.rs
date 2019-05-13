@@ -323,7 +323,7 @@ impl Error for ResourceError {
 
 impl fmt::Display for ResourceError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.description())
+        write!(f, "ResourceError({})", self.description())
     }
 }
 
