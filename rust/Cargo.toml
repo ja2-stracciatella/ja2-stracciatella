@@ -19,7 +19,7 @@ name = "stracciatella"
 path = "src/stracciatella.rs"
 
 [[bin]]
-name = "resource-pack"
+name = "ja2-resource-pack"
 path = "src/bin_resource_pack.rs"
 required-features = ["bin"]
 
