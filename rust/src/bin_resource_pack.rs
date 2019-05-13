@@ -146,19 +146,13 @@ fn subcommand_create(matches: &ArgMatches) {
         builder.execute(matches.value_of("name").unwrap()),
     );
 
-    if let Some(values) = matches.values_of("property") {
-        let mut name: Option<String> = None;
-        for value in values {
-            if name.is_none() {
-                name = Some(value.to_owned());
-                continue;
-            }
-            let prop = name.unwrap();
-            if pack.get_property(&prop).is_some() {
+    if let Some(mut iter) = matches.values_of("property") {
+        while let Some(prop) = iter.next() {
+            let value = iter.next().unwrap();
+            if pack.get_property(prop).is_some() {
                 graceful_error(&format!("Property '{}' already exists", prop));
             }
-            pack.set_property(&prop, value);
-            name = None;
+            pack.set_property(prop, value);
         }
     }
 
