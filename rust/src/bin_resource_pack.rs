@@ -20,6 +20,7 @@ use clap::{crate_version, App, Arg, ArgMatches, SubCommand};
 use serde_json;
 use std::fmt::Debug;
 use std::fs;
+use std::path::PathBuf;
 use std::process;
 
 /// Entry point of the resource-pack executable.
@@ -121,23 +122,28 @@ fn subcommand_create(matches: &ArgMatches) {
 
     if let Some(values) = matches.values_of_os("datadir") {
         for datadir in values {
-            let mut found = false;
-            for entry in graceful_unwrap("Reading datadir", fs::read_dir(datadir)) {
-                let entry = graceful_unwrap("Finding data dir", entry);
-                let path = entry.path();
-                if path.is_dir() {
-                    if let Some(file_name) = entry.file_name().to_str() {
-                        if file_name.to_ascii_lowercase() == "data" {
-                            found = true;
-                            builder.with_path(&path, &path);
-                            break;
+            let mut paths: Vec<PathBuf> = graceful_unwrap("Reading datadir", fs::read_dir(datadir))
+                .filter_map(|x| {
+                    let entry = graceful_unwrap("Finding data dir", x);
+                    let path = entry.path();
+                    if path.is_dir() {
+                        if let Some(file_name) = entry.file_name().to_str() {
+                            if file_name.to_ascii_lowercase() == "data" {
+                                return Some(path);
+                            }
                         }
                     }
-                }
+                    None
+                })
+                .collect();
+            if paths.len() > 1 {
+                graceful_error(&format!("Too many data dirs found {:?}", paths));
             }
-            if !found {
+            if paths.len() == 0 {
                 graceful_error(&format!("Data dir not found in {:?}", datadir));
             }
+            let path = paths.remove(0);
+            builder.with_path(&path, &path);
         }
     }
 
