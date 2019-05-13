@@ -271,7 +271,6 @@ impl ResourcePackBuilder {
                 if self.with_file_size {
                     resource.set_property("file_size", entry.length);
                 }
-                // TODO include archive inside archive?
                 let wants_hashes = self.with_hashes.len() > 0;
                 if wants_hashes {
                     let from = entry.offset as usize;
