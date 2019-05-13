@@ -1,7 +1,9 @@
 //! This module contains code to guess Vanillaversion with resource packs.
 
 use std::convert::From;
+use std::error::Error;
 use std::ffi::OsString;
+use std::fmt;
 use std::fs::File;
 use std::io;
 use std::path::{Path, PathBuf};
@@ -341,8 +343,21 @@ fn sorted_resources(mut resources: Vec<Resource>) -> Vec<Resource> {
     return resources;
 }
 
+#[derive(Debug)]
 struct GuessError {
     desc: String,
+}
+
+impl Error for GuessError {
+    fn description(&self) -> &str {
+        return &self.desc;
+    }
+}
+
+impl fmt::Display for GuessError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "GuessError({})", self.description())
+    }
 }
 
 impl From<String> for GuessError {
