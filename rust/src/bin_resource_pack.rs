@@ -60,7 +60,7 @@ fn main() {
                 .help("Adds the hash of the file data to the resource properties")
                 .long("hash")
                 .value_name("TYPE")
-                .possible_values(&["md5", "sha1", "blake2s", "blake2b"])
+                .possible_values(&["md5"])
                 .takes_value(true)
                 .multiple(true),
         )

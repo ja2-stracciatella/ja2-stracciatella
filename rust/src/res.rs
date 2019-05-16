@@ -47,9 +47,6 @@
 //! | Algorithms        | Notes |
 //! |-------------------|-------|
 //! | md5               | 128 bits, MD5, output of md5sum |
-//! | sha1              | 160 bits, SHA-1, output of sha1sum |
-//! | blake2s           | 256 bits, BLAKE2s |
-//! | blake2b           | 512 bits, BLAKE2b, default output of b2sum |
 //!
 //! Resource properties:
 //!  * `hash_{algorithm}` (string) - hash of the specified algorithm
@@ -65,11 +62,9 @@ use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
 
-use blake2::{Blake2b, Blake2s};
 use digest::Digest;
 use hex;
 use md5::Md5;
-use sha1::Sha1;
 
 use crate::slf::{SlfEntryState, SlfHeader};
 
@@ -200,7 +195,7 @@ impl ResourcePackBuilder {
         self.with_hashes.dedup();
         for algorithm in &self.with_hashes {
             match algorithm.as_str() {
-                "md5" | "sha1" | "blake2s" | "blake2b" => {}
+                "md5" => {}
                 _ => return Err(format!("{:?} hashes are not supported", algorithm).into()),
             }
             let prop = "with_hash_".to_owned() + algorithm;
@@ -290,9 +285,6 @@ impl ResourcePackBuilder {
         for algorithm in &self.with_hashes {
             let hash = match algorithm.as_str() {
                 "md5" => hex::encode(Md5::digest(&data)),
-                "sha1" => hex::encode(Sha1::digest(&data)),
-                "blake2s" => hex::encode(Blake2s::digest(&data)),
-                "blake2b" => hex::encode(Blake2b::digest(&data)),
                 _ => panic!(), // execute() must be fixed
             };
             let prop = "hash_".to_owned() + algorithm;
@@ -556,11 +548,9 @@ mod tests {
     mod timed {
         use std::time::{Duration, SystemTime};
 
-        use blake2::{Blake2b, Blake2s};
         use digest::Digest;
         use hex;
         use md5::Md5;
-        use sha1::Sha1;
 
         fn data_for_hasher() -> Vec<u8> {
             return "A quick brown fox jumps over the lazy dog"
@@ -588,36 +578,6 @@ mod tests {
             let hash = Md5::digest(&data);
             let elapsed = start.elapsed().unwrap();
             print_hasher_result("hasher_md5", elapsed, data.len(), &hash);
-        }
-
-        #[test]
-        #[ignore]
-        fn hasher_sha1() {
-            let data = data_for_hasher();
-            let start = SystemTime::now();
-            let hash = Sha1::digest(&data);
-            let elapsed = start.elapsed().unwrap();
-            print_hasher_result("hasher_sha1", elapsed, data.len(), &hash);
-        }
-
-        #[test]
-        #[ignore]
-        fn hasher_blake2s() {
-            let data = data_for_hasher();
-            let start = SystemTime::now();
-            let hash = Blake2s::digest(&data);
-            let elapsed = start.elapsed().unwrap();
-            print_hasher_result("hasher_blake2s", elapsed, data.len(), &hash);
-        }
-
-        #[test]
-        #[ignore]
-        fn hasher_blake2b() {
-            let data = data_for_hasher();
-            let start = SystemTime::now();
-            let hash = Blake2b::digest(&data);
-            let elapsed = start.elapsed().unwrap();
-            print_hasher_result("hasher_blake2b", elapsed, data.len(), &hash);
         }
     }
 }
