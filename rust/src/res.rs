@@ -227,6 +227,10 @@ impl ResourcePackBuilder {
     fn add_file(&mut self, base: &Path, path: &Path) -> Result<(), ResourceError> {
         // must have a valid resource path
         let resource_path = resource_path(base, path)?;
+        if resource_path.to_ascii_lowercase().starts_with("temp/") {
+            // the game can create/modify/remove files in the temp folder, ignore it
+            return Ok(());
+        }
         let mut resource = Resource::new(&resource_path);
         if self.with_file_size {
             resource.set_property("file_size", path.metadata()?.len());
