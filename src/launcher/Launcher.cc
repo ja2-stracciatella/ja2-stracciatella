@@ -248,26 +248,30 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 
 void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
-    auto choice = fl_choice("Comparing resources packs can take a long time.\nAre you sure you want to continue?", "Stop", "Continue", 0);
-    if (choice != 1)
-        return;
+	fl_message_title(window->guessVersionButton->label());
+	auto choice = fl_choice("Comparing resources packs can take a long time.\nAre you sure you want to continue?", "Stop", "Continue", 0);
+	if (choice != 1) {
+		return;
+	}
 
-    char* log = NULL;
-    auto gamedir = window->dataDirectoryInput->value();
-    auto guessedVersion = guess_resource_version(gamedir, &log);
-    if (guessedVersion != -1) {
-        auto resourceVersionIndex = 0;
-        for (auto version : predefinedVersions) {
-            if (version == (VanillaVersion) guessedVersion) {
-	            break;
-            }
-            resourceVersionIndex += 1;
-        }
-        window->gameVersionInput->value(resourceVersionIndex);
-        fl_message("Success!\n%s", log);
-    } else {
-        fl_alert("Failure!\n%s", log);
-    }
-    free_rust_string(log);
+	char* log = NULL;
+	auto gamedir = window->dataDirectoryInput->value();
+	auto guessedVersion = guess_resource_version(gamedir, &log);
+	if (guessedVersion != -1) {
+		auto resourceVersionIndex = 0;
+		for (auto version : predefinedVersions) {
+			if (version == (VanillaVersion) guessedVersion) {
+				break;
+			}
+			resourceVersionIndex += 1;
+		}
+		window->gameVersionInput->value(resourceVersionIndex);
+		fl_message_title(window->guessVersionButton->label());
+		fl_message("Success!\n%s", log);
+	} else {
+		fl_message_title(window->guessVersionButton->label());
+		fl_alert("Failure!\n%s", log);
+	}
+	free_rust_string(log);
 }
 
