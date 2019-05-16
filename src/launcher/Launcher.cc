@@ -253,11 +253,12 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
         return;
 
     char* log = NULL;
-    if (guess_resource_version(window->engine_options, &log)) {
-        auto rustResVersion = get_resource_version(window->engine_options);
+    auto gamedir = window->dataDirectoryInput->value();
+    auto guessedVersion = guess_resource_version(gamedir, &log);
+    if (guessedVersion != -1) {
         auto resourceVersionIndex = 0;
         for (auto version : predefinedVersions) {
-            if (version == rustResVersion) {
+            if (version == (VanillaVersion) guessedVersion) {
 	            break;
             }
             resourceVersionIndex += 1;

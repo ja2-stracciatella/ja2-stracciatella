@@ -11,15 +11,16 @@ use std::str::FromStr;
 
 use serde_json;
 
-use crate::config::{EngineOptions, VanillaVersion};
+use crate::config::VanillaVersion;
 use crate::res::{
     Resource, ResourceError, ResourcePack, ResourcePackBuilder, ResourcePropertiesExt,
 };
 
-/// Guess the vanilla version of the resources in the data dir.
-pub fn logged_guess_vanilla_version(options: &EngineOptions) -> LoggedGuess {
+/// Guess the vanilla version of the resources in the game dir.
+pub fn logged_guess_vanilla_version(gamedir: &str) -> LoggedGuess {
+    let path = Path::new(gamedir);
     let mut logged = LoggedGuess::default();
-    if let Err(err) = logged.guess_vanilla_version(&options.vanilla_data_dir) {
+    if let Err(err) = logged.guess_vanilla_version(&path) {
         logged.log += &format!("Error: {}\n", err.desc);
     }
     logged
