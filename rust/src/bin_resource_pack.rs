@@ -48,9 +48,9 @@ fn main() {
                 .multiple(true),
         )
         .arg(
-            Arg::with_name("datadir")
-                .help("Adds the PATH/data directory (case-insensitive) as resources")
-                .long("datadir")
+            Arg::with_name("gamedir")
+                .help("Adds the PATH/data directory (case-insensitive) as resources, PATH/data/temp is ignored")
+                .long("gamedir")
                 .value_name("PATH")
                 .takes_value(true)
                 .multiple(true),
@@ -120,9 +120,9 @@ fn subcommand_create(matches: &ArgMatches) {
         }
     }
 
-    if let Some(values) = matches.values_of_os("datadir") {
-        for datadir in values {
-            let mut paths: Vec<PathBuf> = graceful_unwrap("Reading datadir", fs::read_dir(datadir))
+    if let Some(values) = matches.values_of_os("gamedir") {
+        for gamedir in values {
+            let mut paths: Vec<PathBuf> = graceful_unwrap("Reading gamedir", fs::read_dir(gamedir))
                 .filter_map(|x| {
                     let entry = graceful_unwrap("Finding data dir", x);
                     let path = entry.path();
@@ -140,7 +140,7 @@ fn subcommand_create(matches: &ArgMatches) {
                 graceful_error(&format!("Too many data dirs found {:?}", paths));
             }
             if paths.len() == 0 {
-                graceful_error(&format!("Data dir not found in {:?}", datadir));
+                graceful_error(&format!("Data dir not found in {:?}", gamedir));
             }
             let path = paths.remove(0);
             builder.with_path(&path, &path);
