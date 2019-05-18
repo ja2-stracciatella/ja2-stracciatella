@@ -12,7 +12,7 @@
 //!
 
 mod res;
-mod slf;
+mod file_formats;
 
 use res::{ResourcePackBuilder, ResourcePropertiesExt};
 
