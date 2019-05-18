@@ -32,7 +32,7 @@ extern "C"
 {
 #endif
 
-#define NUMBER_OF_TOPICS  63
+#define NUMBER_OF_TOPICS  64
 #define TAG_LENGTH        15
 
 typedef enum
@@ -99,7 +99,8 @@ typedef enum
   DEBUG_TAG_AUTORESOLVE,
   DEBUG_TAG_CORPSES, // 60
   DEBUG_TAG_FIXME,
-  DEBUG_TAG_LAUNCHER
+  DEBUG_TAG_LAUNCHER,
+  DEBUG_TAG_RUST
 }
 SLOGTopics;
 
