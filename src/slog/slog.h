@@ -27,15 +27,12 @@
 
 #pragma once
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+#include <cstdint>
 
 #define NUMBER_OF_TOPICS  64
 #define TAG_LENGTH        15
 
-typedef enum
+enum SLOGTopics : uint16_t
 {
   DEBUG_TAG_GAMELOOP, // 0
   DEBUG_TAG_SMAP,
@@ -101,8 +98,7 @@ typedef enum
   DEBUG_TAG_FIXME,
   DEBUG_TAG_LAUNCHER,
   DEBUG_TAG_RUST
-}
-SLOGTopics;
+};
 
 /** @brief Console logging destinations. */
 typedef enum
@@ -115,14 +111,13 @@ SLOGConsole;
 
 
 /** @brief Logging levels. */
-typedef enum
+enum SLOGLevel : uint8_t
 {
   SLOG_DEBUG,
   SLOG_INFO,
   SLOG_WARNING,
   SLOG_ERROR
-}
-SLOGLevel;
+};
 
 /** @brief Library initialization.
  *
@@ -149,49 +144,25 @@ void SLOG_EnableTopic (SLOGTopics topic);
 /** @brief disable logging for a specific SLOGTopic */
 void SLOG_DisableTopic (SLOGTopics topic);
 
-#ifndef SLOG_DISABLED
-
-  /** @brief Main logging function.
-   *
-   * This function should not be used directly.
-   * Use SLOG* macroses instead.
-   *
-   * @param level  Severity level of the message.
-   * @param tag    Tag of the message, e.g. subsystem name.
-   * @param format Format string (the same as for printf) */
-  void SLOG_LogMessage(SLOGLevel level, SLOGTopics topic, const char *format, ...);
+/** @brief Main logging function.
+  *
+  * This function should not be used directly.
+  * Use SLOG* macroses instead.
+  *
+  * @param level  Severity level of the message.
+  * @param tag    Tag of the message, e.g. subsystem name.
+  * @param format Format string (the same as for printf) */
+void SLOG_LogMessage(SLOGLevel level, SLOGTopics topic, const char *format, ...);
 
 
-  /** Print debug message macro. */
-  #define SLOGD(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_DEBUG, TAG, FORMAT "\n", ##__VA_ARGS__)
+/** Print debug message macro. */
+#define SLOGD(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_DEBUG, TAG, FORMAT "\n", ##__VA_ARGS__)
 
-  /** Print info message macro. */
-  #define SLOGI(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_INFO,  TAG, FORMAT "\n", ##__VA_ARGS__)
+/** Print info message macro. */
+#define SLOGI(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_INFO,  TAG, FORMAT "\n", ##__VA_ARGS__)
 
-  /** Print warning message macro. */
-  #define SLOGW(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_WARNING, TAG, FORMAT "\n", ##__VA_ARGS__)
+/** Print warning message macro. */
+#define SLOGW(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_WARNING, TAG, FORMAT "\n", ##__VA_ARGS__)
 
-  /** Print error message macro. */
-  #define SLOGE(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_ERROR, TAG, FORMAT "\n", ##__VA_ARGS__)
-
-#else
-
-  /* logging disabled */
-
-  /** Empty debug message macro. */
-  #define SLOGD(TAG, FORMAT, ...)
-
-  /** Empty info message macro. */
-  #define SLOGI(TAG, FORMAT, ...)
-
-  /** Empty warning message macro. */
-  #define SLOGW(TAG, FORMAT, ...)
-
-  /** Empty error message macro. */
-  #define SLOGE(TAG, FORMAT, ...)
-
-#endif
-
-#ifdef __cplusplus
-} /* extern "C" */
-#endif
+/** Print error message macro. */
+#define SLOGE(TAG, FORMAT, ...) SLOG_LogMessage(SLOG_ERROR, TAG, FORMAT "\n", ##__VA_ARGS__)

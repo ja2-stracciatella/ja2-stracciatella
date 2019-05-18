@@ -4,9 +4,9 @@ This is a simple logging library for C and C++.
 
 ## Usage
 
-* add files slog.h and slog.c into your project;
-* initialize the library on program start, for example in main function;
-* use macroses SLOG* for logging.
+- add files slog.h and slog.c into your project;
+- initialize the library on program start, for example in main function;
+- use macroses SLOG\* for logging.
 
 ### Example
 
@@ -39,6 +39,7 @@ int main(void)
 ```
 
 Output of the program:
+
 ```
 2013/03/14 00:42:56 DEBUG   [test            ] debug message
 2013/03/14 00:42:56 INFO    [test            ] info
@@ -49,24 +50,20 @@ Output of the program:
 
 ## Design goals
 
-* simple in usage and implementation;
-* fast compilation;
-* logging to console and/or into a file;
-* suitable for C and C++;
-* printf-like formatting;
-* no overhead when logging is disabled;
-* cross-platform (Unix, Windows);
-* suitable for open-source and commercial products;
+- simple in usage and implementation;
+- fast compilation;
+- logging to console and/or into a file;
+- suitable for C and C++;
+- printf-like formatting;
+- no overhead when logging is disabled;
+- cross-platform (Unix, Windows);
+- suitable for open-source and commercial products;
 
 ## License
 
-*The MIT License (MIT)*
+_The MIT License (MIT)_
 
-You can use this library in commercial and open-source projects.  No attribution is required.  Please see the full text of the license in LICENSE.txt
-
-## Additional usage notes
-
-Logging can be completely disabled when the program is compiled with define SLOG_DISABLED.
+You can use this library in commercial and open-source projects. No attribution is required. Please see the full text of the license in LICENSE.txt
 
 ## Resources
 
