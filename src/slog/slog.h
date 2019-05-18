@@ -101,13 +101,12 @@ enum SLOGTopics : uint16_t
 };
 
 /** @brief Console logging destinations. */
-typedef enum
+enum SLOGConsole : uint8_t
 {
   SLOG_STDOUT,          /**< Print to STDOUT */
   SLOG_STDERR,          /**< Print to STDERR */
   SLOG_NONE             /**< Don't print to console. */
-}
-SLOGConsole;
+};
 
 
 /** @brief Logging levels. */

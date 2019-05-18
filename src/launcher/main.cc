@@ -5,9 +5,15 @@
 #include <Launcher.h>
 #include "RustInterface.h"
 
+void log_rust_message(uint8_t level, uint16_t topic, const char* message) {
+	SLOG_LogMessage((SLOGLevel)level, (SLOGTopics)topic, message);
+}
+
 int main(int argc, char* argv[]) {
 	SLOG_Init(SLOG_STDERR, "stracciatella-launcher.log");
-	SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
+	SLOG_SetLevel(SLOG_INFO, SLOG_INFO);
+
+	setup_rust_slog_logger(log_rust_message);
 
 	char* rustExePath = find_ja2_executable(argv[0]);
 	std::string exePath = std::string(rustExePath);

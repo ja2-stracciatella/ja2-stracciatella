@@ -22,6 +22,7 @@ pub mod config;
 pub mod guess;
 pub mod res;
 pub mod file_formats;
+pub mod slog;
 
 pub use crate::config::ScalingQuality;
 pub use crate::config::VanillaVersion;
@@ -263,13 +264,27 @@ pub extern fn free_rust_string(s: *mut c_char) {
     };
 }
 
+static mut SLOG_LOGGER: Option<slog::SlogLogger> = None;
+
+#[no_mangle]
+pub unsafe extern fn setup_rust_slog_logger(slog_fn: extern "C" fn(u8, u16, *const c_char) -> ()) -> ()  {
+    if SLOG_LOGGER.is_none() {
+        SLOG_LOGGER = Some(slog::SlogLogger::new(slog_fn));
+    }
+
+    if let Some(l) = SLOG_LOGGER.as_ref() {
+        log::set_logger(l)
+            .map(|()| log::set_max_level(log::LevelFilter::Trace))
+            .unwrap();
+    }
+}
+
 /// Guesses the resource version from the contents of the game directory.
 /// Returns a VanillaVersion value if it was sucessful, -1 otherwise.
 /// If log_ptr is not null, it will receive a rust string with the log of the guess attempt.
 #[no_mangle]
 pub unsafe extern "C" fn guess_resource_version(
-    gamedir: *const c_char,
-    log_ptr: *mut *mut c_char,
+    gamedir: *const c_char
 ) -> c_int {
     let gamedir = CStr::from_ptr(unsafe_from_ptr!(gamedir));
     let path = String::from_utf8_lossy(gamedir.to_bytes()); // best effort
@@ -277,13 +292,6 @@ pub unsafe extern "C" fn guess_resource_version(
     let mut result = -1;
     if let Some(version) = logged.vanilla_version {
         result = version as c_int;
-    }
-    // optional log
-    if !log_ptr.is_null() {
-        let c_log = CString::new(logged.log).unwrap().into_raw();
-        unsafe {
-            *log_ptr = c_log;
-        }
     }
     return result;
 }

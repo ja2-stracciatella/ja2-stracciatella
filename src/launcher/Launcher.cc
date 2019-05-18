@@ -255,10 +255,8 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 		return;
 	}
 
-	char* log = NULL;
 	auto gamedir = window->dataDirectoryInput->value();
-	auto guessedVersion = guess_resource_version(gamedir, &log);
-	printf("%s", log);
+	auto guessedVersion = guess_resource_version(gamedir);
 	if (guessedVersion != -1) {
 		auto resourceVersionIndex = 0;
 		for (auto version : predefinedVersions) {
@@ -274,6 +272,5 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 		fl_message_title(window->guessVersionButton->label());
 		fl_alert("Failure!");
 	}
-	free_rust_string(log);
 }
 
