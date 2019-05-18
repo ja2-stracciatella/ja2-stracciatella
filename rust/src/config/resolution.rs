@@ -7,6 +7,7 @@ use serde::Deserializer;
 use serde::Serialize;
 use serde::Serializer;
 
+/// Struct that contains a specific resolution for the game
 #[derive(Debug, PartialEq, Copy, Clone)]
 pub struct Resolution(pub u16, pub u16);
 

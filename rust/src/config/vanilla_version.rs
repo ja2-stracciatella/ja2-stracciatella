@@ -4,17 +4,26 @@ use std::fmt::Display;
 use serde::Deserialize;
 use serde::Serialize;
 
+/// Enum for the vanilla game version that is used to run the game
 #[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
 #[repr(C)]
 #[allow(non_camel_case_types)]
 pub enum VanillaVersion {
+    // Dutch Version
     DUTCH,
+    // English Version
     ENGLISH,
+    // French Version
     FRENCH,
+    // German Version
     GERMAN,
+    // Italian Version
     ITALIAN,
+    // Polish Version
     POLISH,
+    // Russian Version (“BUKA Agonia Vlasty” release)
     RUSSIAN,
+    // Russian Version ("Gold" release)
     RUSSIAN_GOLD,
 }
 

@@ -1,6 +1,7 @@
 use dirs;
 use std::path::PathBuf;
 
+/// Find ja2 stracciatella configuration directory inside the user's home directory
 pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     #[cfg(not(windows))]
     let base = dirs::home_dir();

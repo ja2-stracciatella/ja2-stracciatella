@@ -1,3 +1,5 @@
+//! This module contains code to read command line arguments for the ja2 executable
+
 use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
@@ -14,12 +16,17 @@ static DATA_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";
 #[cfg(windows)]
 static DATA_DIR_OPTION_EXAMPLE: &'static str = "C:\\JA2";
 
+/// Handles command line parameters for executables
+///
+/// Encapsulates the Cli arguments definition and the actual Cli arguments
+/// passed to the executable
 pub struct Cli {
     args: Vec<String>,
     options: Options
 }
 
 impl Cli {
+    /// Constructor to create Cli instance from command line arguments
     pub fn from_args(args: &[String]) -> Self {
         let mut opts = Options::new();
 
@@ -95,6 +102,7 @@ impl Cli {
         }
     }
 
+    /// Apply current arguments to EngineOptions struct
     pub fn apply_to_engine_options(&self, engine_options: &mut EngineOptions) -> Result<(), String> {
         match self.options.parse(&self.args[1..]) {
             Ok(m) => {
@@ -184,6 +192,7 @@ impl Cli {
         }
     }
 
+    /// Get command line usage string
     pub fn usage() -> String {
         let cli = Cli::from_args(&[]);
         cli.options.usage("Usage: ja2 [options]")

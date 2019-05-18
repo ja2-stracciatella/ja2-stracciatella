@@ -4,21 +4,36 @@ use crate::Resolution;
 use crate::ScalingQuality;
 use crate::VanillaVersion;
 
+/// Struct that is used to store the engines configuration parameters
 #[derive(Debug, PartialEq)]
 pub struct EngineOptions {
+    /// Path to configuration directory in the user's home directory
     pub stracciatella_home: PathBuf,
+    /// Path to the vanilla game directory
     pub vanilla_data_dir: PathBuf,
+    /// List of enabled mods
     pub mods: Vec<String>,
+    /// Resolution the game will start in
     pub resolution: Resolution,
+    /// Gamma correction parameter
     pub brightness: f32,
+    /// Vanilla game version that the user is in posession of
     pub resource_version: VanillaVersion,
+    /// Whether to show help on startup and exit
     pub show_help: bool,
+    /// Whether to run unittests on startup and exit
     pub run_unittests: bool,
+    /// Wether to run the editor instead of the game itself
     pub run_editor: bool,
+    /// Whether to start the game in fullscreen
     pub start_in_fullscreen: bool,
+    /// Whether to start the game in windowed mode
     pub start_in_window: bool,
+    /// Scaling quality that is used when scaling up game resources
 	pub scaling_quality: ScalingQuality,
+    /// Whether to start in debug mode
     pub start_in_debug_mode: bool,
+    /// Whether to enable sound
     pub start_without_sound: bool,
 }
 
@@ -44,6 +59,10 @@ impl Default for EngineOptions {
 }
 
 impl EngineOptions {
+    /// Construct an EngineOptions instance from home directory and Cli arguments
+    ///
+    /// Takes Cli arguments and JSON configuration file into account. It will also
+    /// create a default JSON configuration file if it does not exist yet.
     pub fn from_home_and_args(stracciatella_home: &PathBuf, args: &[String]) -> Result<EngineOptions, String> {
         use crate::ensure_json_config_existence;
         use crate::parse_json_config;

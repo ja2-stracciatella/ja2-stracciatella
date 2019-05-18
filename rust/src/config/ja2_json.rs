@@ -25,6 +25,7 @@ pub struct Ja2JsonContent {
     nosound: Option<bool>,
 }
 
+/// Struct to handle interactions with the JSON configuration file
 pub struct Ja2Json {
     path: PathBuf
 }
@@ -36,17 +37,19 @@ fn build_json_config_location(stracciatella_home: &PathBuf) -> PathBuf {
 }
 
 impl Ja2Json {
+    /// Construct a Ja2Json instance from the stracciatella home directory
     pub fn from_stracciatella_home(stracciatella_home: &PathBuf) -> Self {
         let path = build_json_config_location(stracciatella_home);
         Ja2Json { path }
     }
 
-    pub fn get_content(&self) -> Result<Ja2JsonContent, String> {
+    fn get_content(&self) -> Result<Ja2JsonContent, String> {
         File::open(&self.path)
             .map_err(|s| format!("Error reading ja2.json config file: {}", s.description()))
             .and_then(|f| serde_json::from_reader(f).map_err(|s| format!("Error parsing ja2.json config file: {}", s)))
     }
 
+    /// Apply current JSON file contents to EngineOptions struct
     pub fn apply_to_engine_options(&self, engine_options: &mut EngineOptions) -> Result<(), String> {
         macro_rules! copy_to {
             ($from: expr, $to: expr) => { if let Some(v) = $from { $to = v; } }
@@ -67,6 +70,7 @@ impl Ja2Json {
         Ok(())
     }
 
+    /// Write current contents of EngineOptions to JSON configuration file
     pub fn write(&self, engine_options: &EngineOptions) -> Result<(), String> {
         macro_rules! copy_to {
             ($from: expr, $to: expr) => { $to = Some($from.clone()); }
@@ -101,6 +105,7 @@ impl Ja2Json {
         f.write_all(json.as_bytes()).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))
     }
 
+    /// Ensures that the JSON configuration file exists and write a default one if it doesn't
     pub fn ensure_existence(&self) -> Result<(), String> {
         #[cfg(not(windows))]
         static DEFAULT_JSON_CONTENT: &'static str = r##"{
