@@ -7,7 +7,7 @@ use crate::VanillaVersion;
 /// Struct that is used to store the engines configuration parameters
 #[derive(Debug, PartialEq)]
 pub struct EngineOptions {
-    /// Path to configuration directory in the users home directory
+    /// Path to configuration directory in the user's home directory
     pub stracciatella_home: PathBuf,
     /// Path to the vanilla game directory
     pub vanilla_data_dir: PathBuf,
