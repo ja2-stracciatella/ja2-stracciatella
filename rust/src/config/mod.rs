@@ -1,3 +1,5 @@
+//! This module contains code to configure the ja2-stracciatella engine
+
 mod scaling_quality;
 mod vanilla_version;
 mod resolution;
