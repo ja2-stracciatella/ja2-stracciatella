@@ -21,7 +21,7 @@ use libc::{c_char, c_int, size_t};
 pub mod config;
 pub mod guess;
 pub mod res;
-pub mod slf;
+pub mod file_formats;
 
 pub use crate::config::ScalingQuality;
 pub use crate::config::VanillaVersion;

@@ -66,7 +66,7 @@ use digest::Digest;
 use hex;
 use md5::Md5;
 
-use crate::slf::{SlfEntryState, SlfHeader};
+use crate::file_formats::slf::{SlfEntryState, SlfHeader};
 
 /// A pack of game resources.
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
