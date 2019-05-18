@@ -16,9 +16,12 @@ use std::ffi::{CStr, CString};
 use std::path::PathBuf;
 use std::default::Default;
 
-use libc::{size_t, c_char};
+use libc::{c_char, c_int, size_t};
 
-mod config;
+pub mod config;
+pub mod guess;
+pub mod res;
+pub mod slf;
 
 pub use crate::config::ScalingQuality;
 pub use crate::config::VanillaVersion;
@@ -258,6 +261,31 @@ pub extern fn free_rust_string(s: *mut c_char) {
     unsafe {
         CString::from_raw(s)
     };
+}
+
+/// Guesses the resource version from the contents of the game directory.
+/// Returns a VanillaVersion value if it was sucessful, -1 otherwise.
+/// If log_ptr is not null, it will receive a rust string with the log of the guess attempt.
+#[no_mangle]
+pub unsafe extern "C" fn guess_resource_version(
+    gamedir: *const c_char,
+    log_ptr: *mut *mut c_char,
+) -> c_int {
+    let gamedir = CStr::from_ptr(unsafe_from_ptr!(gamedir));
+    let path = String::from_utf8_lossy(gamedir.to_bytes()); // best effort
+    let logged = crate::guess::logged_guess_vanilla_version(&path);
+    let mut result = -1;
+    if let Some(version) = logged.vanilla_version {
+        result = version as c_int;
+    }
+    // optional log
+    if !log_ptr.is_null() {
+        let c_log = CString::new(logged.log).unwrap().into_raw();
+        unsafe {
+            *log_ptr = c_log;
+        }
+    }
+    return result;
 }
 
 

@@ -31,5 +31,6 @@ public:
   Fl_Check_Button *playSoundsCheckbox;
   Fl_Button *playButton;
   Fl_Button *editorButton;
+  Fl_Button *guessVersionButton;
 };
 #endif
