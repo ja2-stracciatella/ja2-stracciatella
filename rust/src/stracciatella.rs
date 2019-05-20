@@ -9,6 +9,7 @@ extern crate serde_json;
 extern crate serde_derive;
 extern crate dirs;
 
+use std::env;
 use std::slice;
 use std::str;
 use std::ptr;
@@ -288,6 +289,22 @@ pub unsafe extern "C" fn guess_resource_version(
     return result;
 }
 
+/// Returns the path to game.json.
+#[no_mangle]
+pub unsafe extern "C" fn get_game_json_path() -> *mut c_char {
+    let mut path = PathBuf::new();
+    let extra_data_dir = option_env!("EXTRA_DATA_DIR");
+    if extra_data_dir.is_some() && extra_data_dir.unwrap().len() > 0 {
+        // use dir defined at compile time
+        path.push(extra_data_dir.unwrap());
+    } else if let Ok(dir) = env::current_dir() {
+        // use the current directory
+        path.push(dir);
+    }
+    path.push("externalized/game.json");
+    let path: String = path.to_string_lossy().into();
+    return CString::new(path).unwrap().into_raw();
+}
 
 #[cfg(test)]
 mod tests {

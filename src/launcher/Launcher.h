@@ -16,15 +16,12 @@ private:
 	EngineOptions* engine_options;
 
 	void populateChoices();
-	void enablePredefinedResolutions();
-	void enableCustomResolutions();
 	void startExecutable(bool asEditor);
 	static void openDataDirectorySelector(Fl_Widget *btn, void *userdata);
-	static void enablePredefinedResolutionSelection(Fl_Widget* btn, void* userdata);
-	static void enableCustomResolutionSelection(Fl_Widget* btn, void* userdata);
 	static void startGame(Fl_Widget* btn, void* userdata);
 	static void startEditor(Fl_Widget* btn, void* userdata);
 	static void guessVersion(Fl_Widget* btn, void* userdata);
+	static void setPredefinedResolution(Fl_Widget* btn, void* userdata);
 };
 
 #endif //JA2_LAUNCHER_H_H
