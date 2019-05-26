@@ -8,7 +8,7 @@ class StracciatellaLauncher {open
   } {
     Fl_Window stracciatellaLauncher {
       label {JA2 Stracciatella Launcher} open
-      xywh {57 103 465 300} type Double resizable size_range {465 300 0 0} visible
+      xywh {540 551 465 325} type Double resizable size_range {465 325 0 0} visible
     } {
       Fl_Tabs {} {open
         xywh {0 0 465 300} align 9 resizable
@@ -123,6 +123,9 @@ class StracciatellaLauncher {open
             xywh {10 260 445 30} labeltype NO_LABEL align 17 resizable
           } {}
         }
+      }
+      Fl_Output ja2JsonPathOutput {
+        tooltip {ja2.json contains the stracciatella engine options} xywh {0 300 465 25} color 49 align 20
       }
     }
   }

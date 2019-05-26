@@ -32,5 +32,6 @@ public:
   Fl_Menu_Button *predefinedResolutionMenuButton;
   Fl_Check_Button *fullscreenCheckbox;
   Fl_Check_Button *playSoundsCheckbox;
+  Fl_Output *ja2JsonPathOutput;
 };
 #endif

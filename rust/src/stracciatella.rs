@@ -308,6 +308,35 @@ pub unsafe extern "C" fn get_game_json_path() -> *mut c_char {
     return CString::new(path).unwrap().into_raw();
 }
 
+/// Finds a path relative to the stracciatella home directory.
+/// If path is null, it finds the stracciatella home directory.
+/// If test_exists is true, it makes sure the path exists.
+#[no_mangle]
+pub extern "C" fn find_path_from_stracciatella_home(
+    path: *const c_char,
+    test_exists: bool,
+) -> *mut c_char {
+    if let Ok(mut path_buf) = find_stracciatella_home() {
+        if !path.is_null() {
+            let c_s = unsafe { CStr::from_ptr(unsafe_from_ptr!(path)) };
+            let s = String::from_utf8_lossy(c_s.to_bytes());
+            path_buf.push(s.as_ref());
+        }
+        if test_exists && !path_buf.exists() {
+            return ptr::null_mut(); // path not found
+        } else {
+            match path_buf.canonicalize() {
+                Ok(p) => path_buf = p,
+                _ => {}
+            }
+            let s: String = path_buf.to_string_lossy().into();
+            return CString::new(s).unwrap().into_raw(); // path found
+        }
+    } else {
+        return ptr::null_mut(); // no home
+    }
+}
+
 #[cfg(test)]
 mod tests {
     extern crate regex;

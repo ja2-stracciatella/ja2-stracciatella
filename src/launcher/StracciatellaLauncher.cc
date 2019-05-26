@@ -3,7 +3,7 @@
 #include "StracciatellaLauncher.h"
 
 StracciatellaLauncher::StracciatellaLauncher() {
-  { stracciatellaLauncher = new Fl_Double_Window(465, 300, "JA2 Stracciatella Launcher");
+  { stracciatellaLauncher = new Fl_Double_Window(465, 325, "JA2 Stracciatella Launcher");
     stracciatellaLauncher->user_data((void*)(this));
     { Fl_Tabs* o = new Fl_Tabs(0, 0, 465, 300);
       o->align(Fl_Align(FL_ALIGN_TOP_RIGHT));
@@ -118,7 +118,12 @@ StracciatellaLauncher::StracciatellaLauncher() {
       o->end();
       Fl_Group::current()->resizable(o);
     } // Fl_Tabs* o
-    stracciatellaLauncher->size_range(465, 300);
+    { ja2JsonPathOutput = new Fl_Output(0, 300, 465, 25);
+      ja2JsonPathOutput->tooltip("ja2.json contains the stracciatella engine options");
+      ja2JsonPathOutput->color(FL_BACKGROUND_COLOR);
+      ja2JsonPathOutput->align(Fl_Align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE));
+    } // Fl_Output* ja2JsonPathOutput
+    stracciatellaLauncher->size_range(465, 325);
     stracciatellaLauncher->end();
   } // Fl_Double_Window* stracciatellaLauncher
 }
