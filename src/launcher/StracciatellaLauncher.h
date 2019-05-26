@@ -30,6 +30,7 @@ public:
   Fl_Value_Input *resolutionXInput;
   Fl_Value_Input *resolutionYInput;
   Fl_Menu_Button *predefinedResolutionMenuButton;
+  Fl_Box *invalidResolutionLabel;
   Fl_Check_Button *fullscreenCheckbox;
   Fl_Check_Button *playSoundsCheckbox;
   Fl_Output *ja2JsonPathOutput;

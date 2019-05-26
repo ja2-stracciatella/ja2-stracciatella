@@ -49,6 +49,8 @@ void Launcher::show() {
 	playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
 	editorButton->callback( (Fl_Callback*)startEditor, (void*)(this) );
 	guessVersionButton->callback( (Fl_Callback*)guessVersion, (void*)(this) );
+	resolutionXInput->callback( (Fl_Callback*)inspectResolution, (void*)(this) );
+	resolutionYInput->callback( (Fl_Callback*)inspectResolution, (void*)(this) );
 	auto game_json_path = get_game_json_path();
 	gameSettingsOutput->value(game_json_path);
 	free_rust_string(game_json_path);
@@ -85,6 +87,7 @@ void Launcher::initializeInputsFromDefaults() {
 
 	resolutionXInput->value(x);
 	resolutionYInput->value(y);
+	inspectResolution(nullptr, (void*)(this));
 
 	VideoScaleQuality quality = get_scaling_quality(this->engine_options);
 	auto scalingModeIndex = 0;
@@ -166,8 +169,7 @@ void Launcher::openDataDirectorySelector(Fl_Widget *btn, void *userdata) {
 
 void Launcher::startExecutable(bool asEditor) {
 	// check minimal resolution:
-	if (resolutionXInput->value() < 640 ||
-		resolutionYInput->value() < 480) {
+	if (resolutionIsInvalid()) {
 		fl_alert("Invalid custom resolution %dx%d.\nJA2 Stracciatella needs a resolution of at least 640x480.",
 			(int) resolutionXInput->value(),
 			(int) resolutionYInput->value());
@@ -181,6 +183,10 @@ void Launcher::startExecutable(bool asEditor) {
 	}
 
 	system(cmd.c_str());
+}
+
+bool Launcher::resolutionIsInvalid() {
+	return resolutionXInput->value() < 640 || resolutionYInput->value() < 480;
 }
 
 void Launcher::startGame(Fl_Widget* btn, void* userdata) {
@@ -236,4 +242,13 @@ void Launcher::setPredefinedResolution(Fl_Widget* btn, void* userdata) {
 	int y = atoi(res.substr(split_index+1, res.length()).c_str());
 	window->resolutionXInput->value(x);
 	window->resolutionYInput->value(y);
+}
+
+void Launcher::inspectResolution(Fl_Widget* btn, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+	if (window->resolutionIsInvalid()) {
+		window->invalidResolutionLabel->show();
+	} else {
+		window->invalidResolutionLabel->hide();
+	}
 }

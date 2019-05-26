@@ -89,6 +89,12 @@ StracciatellaLauncher::StracciatellaLauncher() {
             o->end();
             Fl_Group::current()->resizable(o);
           } // Fl_Group* o
+          { invalidResolutionLabel = new Fl_Box(340, 175, 65, 25, "invalid!");
+            invalidResolutionLabel->tooltip("the resolution must be at least 640x480, the original game resolution");
+            invalidResolutionLabel->labelfont(1);
+            invalidResolutionLabel->labelcolor((Fl_Color)1);
+            invalidResolutionLabel->align(Fl_Align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE));
+          } // Fl_Box* invalidResolutionLabel
           o->end();
         } // Fl_Group* o
         { Fl_Group* o = new Fl_Group(10, 210, 445, 50);

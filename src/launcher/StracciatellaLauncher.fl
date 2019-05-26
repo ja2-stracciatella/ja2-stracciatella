@@ -101,6 +101,10 @@ class StracciatellaLauncher {open
               label resizable open
               xywh {415 170 30 30} labeltype NO_LABEL align 17 resizable
             } {}
+            Fl_Box invalidResolutionLabel {
+              label {invalid!}
+              tooltip {the resolution must be at least 640x480, the original game resolution} xywh {340 175 65 25} labelfont 1 labelcolor 1 align 20
+            }
           }
           Fl_Group {} {
             xywh {10 210 445 50}
