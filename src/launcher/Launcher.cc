@@ -56,8 +56,12 @@ void Launcher::show() {
 	free_rust_string(game_json_path);
 
 	auto ja2_json_path = find_path_from_stracciatella_home("ja2.json", false);
-	ja2JsonPathOutput->value(ja2_json_path);
-	free_rust_string(ja2_json_path);
+	if (ja2_json_path) {
+		ja2JsonPathOutput->value(ja2_json_path);
+		free_rust_string(ja2_json_path);
+	} else {
+		ja2JsonPathOutput->value("failed to find path to ja2.json");
+	}
 
 	populateChoices();
 	initializeInputsFromDefaults();
