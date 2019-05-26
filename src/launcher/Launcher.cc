@@ -170,6 +170,7 @@ void Launcher::openDataDirectorySelector(Fl_Widget *btn, void *userdata) {
 void Launcher::startExecutable(bool asEditor) {
 	// check minimal resolution:
 	if (resolutionIsInvalid()) {
+		fl_message_title("Invalid resolution");
 		fl_alert("Invalid custom resolution %dx%d.\nJA2 Stracciatella needs a resolution of at least 640x480.",
 			(int) resolutionXInput->value(),
 			(int) resolutionYInput->value());
