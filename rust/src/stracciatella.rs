@@ -14,7 +14,7 @@ use std::slice;
 use std::str;
 use std::ptr;
 use std::ffi::{CStr, CString};
-use std::path::PathBuf;
+use std::path::{Component, PathBuf};
 use std::default::Default;
 
 use libc::{c_char, c_int, size_t};
@@ -335,6 +335,42 @@ pub extern "C" fn find_path_from_stracciatella_home(
     } else {
         return ptr::null_mut(); // no home
     }
+}
+
+/// Returns true if it was able to find path relative to base.
+/// Makes caseless searches one component at a time.
+#[no_mangle]
+pub extern "C" fn check_if_relative_path_exists(
+    base: *const c_char,
+    path: *const c_char,
+    caseless: bool,
+) -> bool {
+    let base: PathBuf = unsafe { CStr::from_ptr(unsafe_from_ptr!(base)) }.to_string_lossy().into_owned().into();
+    let path: PathBuf = unsafe { CStr::from_ptr(unsafe_from_ptr!(path)) }.to_string_lossy().into_owned().into();
+    let mut buf = base;
+    'outer: for component in path.components() {
+        match component {
+            Component::Normal(os_str) => {
+                if caseless {
+                    let target = os_str.to_string_lossy().to_ascii_lowercase();
+                    let result = buf.read_dir();
+                    if let Ok(entries) = result {
+                        for result in entries {
+                            if let Ok(entry) = result {
+                                if entry.file_name().to_string_lossy().to_ascii_lowercase() == target {
+                                    buf.push(os_str);
+                                    continue 'outer;
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            _ => {},
+        }
+        buf.push(component);
+    }
+    return buf.exists();
 }
 
 #[cfg(test)]

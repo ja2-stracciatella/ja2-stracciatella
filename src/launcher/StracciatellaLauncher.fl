@@ -14,9 +14,13 @@ class StracciatellaLauncher {open
         xywh {0 0 465 300} align 9 resizable
       } {
         Fl_Group {} {
-          label {@> Play  }
+          label {@> Play  } open
           xywh {0 50 465 250} labelcolor 24
         } {
+          Fl_Box editorSlfNotFound {
+            label {Editor.slf no found!}
+            xywh {130 94 200 16} labelfont 1 labelcolor 1
+          }
           Fl_Button editorButton {
             label {Start Map Editor}
             xywh {130 120 200 25}
@@ -24,6 +28,10 @@ class StracciatellaLauncher {open
           Fl_Button playButton {
             label {Play Ja2 Stracciatella}
             xywh {130 155 200 55}
+          }
+          Fl_Box dataDirNotFound {
+            label {Data dir not found!}
+            xywh {130 220 200 16} labelfont 1 labelcolor 1
           }
         }
         Fl_Group {} {

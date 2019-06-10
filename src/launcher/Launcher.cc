@@ -231,11 +231,28 @@ bool Launcher::resolutionIsInvalid() {
 }
 
 void Launcher::update(bool changed, Fl_Widget *widget) {
+	// not found warnings
+	if (check_if_relative_path_exists(dataDirectoryInput->value(), "Data", true)) {
+		dataDirNotFound->hide();
+		if (check_if_relative_path_exists(dataDirectoryInput->value(), "Data/Editor.slf", true)) {
+			// XXX check editor resources instead of editor.slf?
+			editorSlfNotFound->hide();
+		} else {
+			editorSlfNotFound->show();
+		}
+	} else {
+		dataDirNotFound->show();
+		editorSlfNotFound->show();
+	}
+
+	// invalid resolution warning
 	if (resolutionIsInvalid()) {
 		invalidResolutionLabel->show();
 	} else {
 		invalidResolutionLabel->hide();
 	}
+
+	// something changed indicator
 	if (changed && ja2JsonPathOutput->value()[0] != '*') {
 		std::string tmp("*"); // add '*'
 		tmp += ja2JsonPathOutput->value();

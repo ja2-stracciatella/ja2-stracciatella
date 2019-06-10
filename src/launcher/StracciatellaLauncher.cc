@@ -9,10 +9,18 @@ StracciatellaLauncher::StracciatellaLauncher() {
       o->align(Fl_Align(FL_ALIGN_TOP_RIGHT));
       { Fl_Group* o = new Fl_Group(0, 50, 465, 250, "@> Play  ");
         o->labelcolor((Fl_Color)24);
+        { editorSlfNotFound = new Fl_Box(130, 94, 200, 16, "Editor.slf no found!");
+          editorSlfNotFound->labelfont(1);
+          editorSlfNotFound->labelcolor((Fl_Color)1);
+        } // Fl_Box* editorSlfNotFound
         { editorButton = new Fl_Button(130, 120, 200, 25, "Start Map Editor");
         } // Fl_Button* editorButton
         { playButton = new Fl_Button(130, 155, 200, 55, "Play Ja2 Stracciatella");
         } // Fl_Button* playButton
+        { dataDirNotFound = new Fl_Box(130, 220, 200, 16, "Data dir not found!");
+          dataDirNotFound->labelfont(1);
+          dataDirNotFound->labelcolor((Fl_Color)1);
+        } // Fl_Box* dataDirNotFound
         o->end();
       } // Fl_Group* o
       { Fl_Group* o = new Fl_Group(0, 50, 465, 250, "@filenew Data ");
