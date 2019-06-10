@@ -39,9 +39,37 @@ const std::vector<VideoScaleQuality> scalingModes = {
 	VideoScaleQuality::PERFECT,
 };
 
-Launcher::Launcher(const std::string exePath, EngineOptions* engine_options) : StracciatellaLauncher() {
-	this->exePath = exePath;
-	this->engine_options = engine_options;
+Launcher::Launcher(int argc, char* argv[]) : StracciatellaLauncher() {
+	this->argc = argc;
+	this->argv = argv;
+	this->exePath;
+	this->engine_options = nullptr;
+}
+
+Launcher::~Launcher() {
+	if (this->engine_options) {
+		free_engine_options(this->engine_options);
+		this->engine_options = nullptr;
+	}
+}
+
+void Launcher::loadJa2Json() {
+	char* rustExePath = find_ja2_executable(argv[0]);
+	this->exePath = std::string(rustExePath);
+	free_rust_string(rustExePath);
+
+	if (this->engine_options) {
+		free_engine_options(this->engine_options);
+		this->engine_options = nullptr;
+	}
+	this->engine_options = create_engine_options(argv, argc);
+
+	if (this->engine_options == NULL) {
+		exit(EXIT_FAILURE);
+	}
+	if (should_show_help(this->engine_options)) {
+		exit(EXIT_SUCCESS);
+	}
 }
 
 void Launcher::show() {
@@ -66,10 +94,11 @@ void Launcher::show() {
 	} else {
 		ja2JsonPathOutput->value("failed to find path to ja2.json");
 	}
+	ja2JsonReloadBtn->callback( (Fl_Callback*)reloadJa2Json, (void*)(this) );
+	ja2JsonSaveBtn->callback( (Fl_Callback*)saveJa2Json, (void*)(this) );
 
 	populateChoices();
 	initializeInputsFromDefaults();
-	update(false, nullptr);
 
 	const Fl_PNG_Image icon("logo32.png", logo32_png, 1374);
 	stracciatellaLauncher->icon(&icon);
@@ -109,6 +138,7 @@ void Launcher::initializeInputsFromDefaults() {
 
 	fullscreenCheckbox->value(should_start_in_fullscreen(this->engine_options) ? 1 : 0);
 	playSoundsCheckbox->value(should_start_without_sound(this->engine_options) ? 0 : 1);
+	update(false, nullptr);
 }
 
 int Launcher::writeJsonFile() {
@@ -276,4 +306,15 @@ void Launcher::setPredefinedResolution(Fl_Widget* btn, void* userdata) {
 void Launcher::widgetChanged(Fl_Widget* widget, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 	window->update(true, widget);
+}
+
+void Launcher::reloadJa2Json(Fl_Widget* widget, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+	window->loadJa2Json();
+	window->initializeInputsFromDefaults();
+}
+
+void Launcher::saveJa2Json(Fl_Widget* widget, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+	window->writeJsonFile();
 }

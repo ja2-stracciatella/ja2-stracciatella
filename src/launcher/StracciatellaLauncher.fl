@@ -128,8 +128,20 @@ class StracciatellaLauncher {open
           } {}
         }
       }
-      Fl_Output ja2JsonPathOutput {
-        tooltip {ja2.json contains the stracciatella engine options} xywh {0 300 465 25} color 49 align 20
+      Fl_Group {} {open
+        xywh {0 300 465 25}
+      } {
+        Fl_Output ja2JsonPathOutput {
+          tooltip {Path to stracciatella engine options} xywh {0 300 405 25} color 49 align 20 resizable
+        }
+        Fl_Button ja2JsonReloadBtn {
+          label {@reload}
+          tooltip {Reload stracciatella engine options} xywh {405 300 30 25} box THIN_UP_BOX labelcolor 8
+        }
+        Fl_Button ja2JsonSaveBtn {
+          label {@filesave}
+          tooltip {Save stracciatella engine options} xywh {435 300 30 25} box THIN_UP_BOX labelcolor 8
+        }
       }
     }
   }

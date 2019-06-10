@@ -34,5 +34,7 @@ public:
   Fl_Check_Button *fullscreenCheckbox;
   Fl_Check_Button *playSoundsCheckbox;
   Fl_Output *ja2JsonPathOutput;
+  Fl_Button *ja2JsonReloadBtn;
+  Fl_Button *ja2JsonSaveBtn;
 };
 #endif

@@ -124,11 +124,25 @@ StracciatellaLauncher::StracciatellaLauncher() {
       o->end();
       Fl_Group::current()->resizable(o);
     } // Fl_Tabs* o
-    { ja2JsonPathOutput = new Fl_Output(0, 300, 465, 25);
-      ja2JsonPathOutput->tooltip("ja2.json contains the stracciatella engine options");
-      ja2JsonPathOutput->color(FL_BACKGROUND_COLOR);
-      ja2JsonPathOutput->align(Fl_Align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE));
-    } // Fl_Output* ja2JsonPathOutput
+    { Fl_Group* o = new Fl_Group(0, 300, 465, 25);
+      { ja2JsonPathOutput = new Fl_Output(0, 300, 405, 25);
+        ja2JsonPathOutput->tooltip("Path to stracciatella engine options");
+        ja2JsonPathOutput->color(FL_BACKGROUND_COLOR);
+        ja2JsonPathOutput->align(Fl_Align(FL_ALIGN_LEFT|FL_ALIGN_INSIDE));
+        Fl_Group::current()->resizable(ja2JsonPathOutput);
+      } // Fl_Output* ja2JsonPathOutput
+      { ja2JsonReloadBtn = new Fl_Button(405, 300, 30, 25, "@reload");
+        ja2JsonReloadBtn->tooltip("Reload stracciatella engine options");
+        ja2JsonReloadBtn->box(FL_THIN_UP_BOX);
+        ja2JsonReloadBtn->labelcolor(FL_INACTIVE_COLOR);
+      } // Fl_Button* ja2JsonReloadBtn
+      { ja2JsonSaveBtn = new Fl_Button(435, 300, 30, 25, "@filesave");
+        ja2JsonSaveBtn->tooltip("Save stracciatella engine options");
+        ja2JsonSaveBtn->box(FL_THIN_UP_BOX);
+        ja2JsonSaveBtn->labelcolor(FL_INACTIVE_COLOR);
+      } // Fl_Button* ja2JsonSaveBtn
+      o->end();
+    } // Fl_Group* o
     stracciatellaLauncher->size_range(465, 325);
     stracciatellaLauncher->end();
   } // Fl_Double_Window* stracciatellaLauncher
