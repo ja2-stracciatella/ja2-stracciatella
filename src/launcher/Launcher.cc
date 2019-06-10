@@ -232,7 +232,7 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 
 void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
-	fl_message_title(window->guessVersionButton->label());
+	fl_message_title("Guess Game Version");
 	auto choice = fl_choice("Comparing resources packs can take a long time.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 	if (choice != 1) {
 		return;
