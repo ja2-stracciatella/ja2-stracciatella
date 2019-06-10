@@ -45,16 +45,20 @@ Launcher::Launcher(const std::string exePath, EngineOptions* engine_options) : S
 }
 
 void Launcher::show() {
-	browseJa2DirectoryButton->callback((Fl_Callback *) openDataDirectorySelector, (void *) (this));
-	playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
 	editorButton->callback( (Fl_Callback*)startEditor, (void*)(this) );
+	playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
+	dataDirectoryInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	browseJa2DirectoryButton->callback((Fl_Callback *) openDataDirectorySelector, (void *) (this));
+	gameVersionInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	guessVersionButton->callback( (Fl_Callback*)guessVersion, (void*)(this) );
-	resolutionXInput->callback( (Fl_Callback*)inspectResolution, (void*)(this) );
-	resolutionYInput->callback( (Fl_Callback*)inspectResolution, (void*)(this) );
+	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	resolutionXInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	resolutionYInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	auto game_json_path = get_game_json_path();
 	gameSettingsOutput->value(game_json_path);
 	free_rust_string(game_json_path);
-
+	fullscreenCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	playSoundsCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	auto ja2_json_path = find_path_from_stracciatella_home("ja2.json", false);
 	if (ja2_json_path) {
 		ja2JsonPathOutput->value(ja2_json_path);
@@ -65,6 +69,7 @@ void Launcher::show() {
 
 	populateChoices();
 	initializeInputsFromDefaults();
+	update(false, nullptr);
 
 	const Fl_PNG_Image icon("logo32.png", logo32_png, 1374);
 	stracciatellaLauncher->icon(&icon);
@@ -91,7 +96,6 @@ void Launcher::initializeInputsFromDefaults() {
 
 	resolutionXInput->value(x);
 	resolutionYInput->value(y);
-	inspectResolution(nullptr, (void*)(this));
 
 	VideoScaleQuality quality = get_scaling_quality(this->engine_options);
 	auto scalingModeIndex = 0;
@@ -127,6 +131,7 @@ int Launcher::writeJsonFile() {
 	bool success = write_engine_options(this->engine_options);
 
 	if (success) {
+		update(false, nullptr);
 		SLOGD(LAUNCHER_TOPIC, "Succeeded writing config file");
 		return 0;
 	}
@@ -167,6 +172,7 @@ void Launcher::openDataDirectorySelector(Fl_Widget *btn, void *userdata) {
 			break; // CANCEL
 		default:
 			window->dataDirectoryInput->value(fnfc.filename());
+			window->update(true, window->dataDirectoryInput);
 			break; // FILE CHOSEN
 	}
 }
@@ -192,6 +198,22 @@ void Launcher::startExecutable(bool asEditor) {
 
 bool Launcher::resolutionIsInvalid() {
 	return resolutionXInput->value() < 640 || resolutionYInput->value() < 480;
+}
+
+void Launcher::update(bool changed, Fl_Widget *widget) {
+	if (resolutionIsInvalid()) {
+		invalidResolutionLabel->show();
+	} else {
+		invalidResolutionLabel->hide();
+	}
+	if (changed && ja2JsonPathOutput->value()[0] != '*') {
+		std::string tmp("*"); // add '*'
+		tmp += ja2JsonPathOutput->value();
+		ja2JsonPathOutput->value(tmp.c_str());
+	} else if (!changed && ja2JsonPathOutput->value()[0] == '*') {
+		std::string tmp(ja2JsonPathOutput->value() + 1); // remove '*'
+		ja2JsonPathOutput->value(tmp.c_str());
+	}
 }
 
 void Launcher::startGame(Fl_Widget* btn, void* userdata) {
@@ -229,6 +251,7 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 			resourceVersionIndex += 1;
 		}
 		window->gameVersionInput->value(resourceVersionIndex);
+		window->update(true, window->gameVersionInput);
 		fl_message_title(window->guessVersionButton->label());
 		fl_message("Success!");
 	} else {
@@ -247,13 +270,10 @@ void Launcher::setPredefinedResolution(Fl_Widget* btn, void* userdata) {
 	int y = atoi(res.substr(split_index+1, res.length()).c_str());
 	window->resolutionXInput->value(x);
 	window->resolutionYInput->value(y);
+	window->update(true, btn);
 }
 
-void Launcher::inspectResolution(Fl_Widget* btn, void* userdata) {
+void Launcher::widgetChanged(Fl_Widget* widget, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
-	if (window->resolutionIsInvalid()) {
-		window->invalidResolutionLabel->show();
-	} else {
-		window->invalidResolutionLabel->hide();
-	}
+	window->update(true, widget);
 }
