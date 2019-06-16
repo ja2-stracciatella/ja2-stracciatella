@@ -352,13 +352,15 @@ pub extern "C" fn check_if_relative_path_exists(
         match component {
             Component::Normal(os_str) => {
                 if caseless {
-                    let target = os_str.to_string_lossy().to_ascii_lowercase();
+                    let want_ascii_lowercase = os_str.to_string_lossy().to_ascii_lowercase();
                     let result = buf.read_dir();
                     if let Ok(entries) = result {
                         for result in entries {
                             if let Ok(entry) = result {
-                                if entry.file_name().to_string_lossy().to_ascii_lowercase() == target {
-                                    buf.push(os_str);
+                                let file_name = entry.file_name();
+                                let have_ascii_lowercase = file_name.to_string_lossy().to_ascii_lowercase();
+                                if want_ascii_lowercase == have_ascii_lowercase {
+                                    buf.push(file_name);
                                     continue 'outer;
                                 }
                             }
@@ -802,5 +804,30 @@ r##"{
         assert_chars_eq!(super::find_ja2_executable(CString::new("ja2-launcher").unwrap().as_ptr()), "ja2");
         assert_chars_eq!(super::find_ja2_executable(CString::new("ja2-launcher.exe").unwrap().as_ptr()), "ja2.exe");
         assert_chars_eq!(super::find_ja2_executable(CString::new("JA2-LAUNCHER.EXE").unwrap().as_ptr()), "JA2.exe");
+    }
+
+    #[test]
+    fn check_if_relative_path_exists() {
+        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        fs::create_dir_all(temp_dir.path().join("foo/bar")).unwrap();
+
+        let base = CString::new(temp_dir.path().to_str().unwrap()).unwrap();
+        let path = CString::new("baz").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), false), false);
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), false);
+        let path = CString::new("foo").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), false), true);
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
+        let path = CString::new("foo/bar").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), false), true);
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
+        let path = CString::new("foo/BAR").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
+        let path = CString::new("FOO/BAR").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
+        let path = CString::new("FOO/bar").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
+        let path = CString::new("FOO").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
     }
 }
