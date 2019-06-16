@@ -231,20 +231,6 @@ bool Launcher::resolutionIsInvalid() {
 }
 
 void Launcher::update(bool changed, Fl_Widget *widget) {
-	// not found warnings
-	if (check_if_relative_path_exists(dataDirectoryInput->value(), "Data", true)) {
-		dataDirNotFound->hide();
-		if (check_if_relative_path_exists(dataDirectoryInput->value(), "Data/Editor.slf", true)) {
-			// XXX check editor resources instead of editor.slf?
-			editorSlfNotFound->hide();
-		} else {
-			editorSlfNotFound->show();
-		}
-	} else {
-		dataDirNotFound->show();
-		editorSlfNotFound->show();
-	}
-
 	// invalid resolution warning
 	if (resolutionIsInvalid()) {
 		invalidResolutionLabel->show();
@@ -267,6 +253,13 @@ void Launcher::startGame(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
+	if (!check_if_relative_path_exists(window->dataDirectoryInput->value(), "Data", true)) {
+		fl_message_title(window->playButton->label());
+		auto choice = fl_choice("Data dir not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
+		if (choice != 1) {
+			return;
+		}
+	}
 	window->startExecutable(false);
 }
 
@@ -274,6 +267,13 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
+	if (!check_if_relative_path_exists(window->dataDirectoryInput->value(), "Data/Editor.slf", true)) {
+		fl_message_title(window->editorButton->label());
+		auto choice = fl_choice("Editor.slf not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
+		if (choice != 1) {
+			return;
+		}
+	}
 	window->startExecutable(true);
 }
 

@@ -6,12 +6,12 @@
 #include <FL/Fl_Double_Window.H>
 #include <FL/Fl_Tabs.H>
 #include <FL/Fl_Group.H>
-#include <FL/Fl_Box.H>
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Value_Input.H>
+#include <FL/Fl_Box.H>
 #include <FL/Fl_Menu_Button.H>
 #include <FL/Fl_Check_Button.H>
 
@@ -19,10 +19,8 @@ class StracciatellaLauncher {
 public:
   StracciatellaLauncher();
   Fl_Double_Window *stracciatellaLauncher;
-  Fl_Box *editorSlfNotFound;
   Fl_Button *editorButton;
   Fl_Button *playButton;
-  Fl_Box *dataDirNotFound;
   Fl_Input *dataDirectoryInput;
   Fl_Button *browseJa2DirectoryButton;
   Fl_Choice *gameVersionInput;
