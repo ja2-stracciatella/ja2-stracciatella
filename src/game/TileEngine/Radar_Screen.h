@@ -2,6 +2,7 @@
 #define __RADAR_SCREEN_H
 
 #include "Types.h"
+#include "UILayout.h"
 
 
 void LoadRadarScreenBitmap(const char* filename);
