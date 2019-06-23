@@ -52,6 +52,7 @@
 #include "Debug.h"
 #include "Video.h"
 #include "Items.h"
+#include "GameScreen.h"
 
 #include "UILayout.h"
 
@@ -337,6 +338,11 @@ void CreateCurrentTacticalPanelButtons(void)
 
 void SetCurrentInterfacePanel(InterfacePanelKind const ubNewPanel)
 {
+	if(gfEnteringMapScreen)
+		return;
+	if(gfPanelAllocated && gsCurInterfacePanel == ubNewPanel)
+		return;
+
 	ShutdownCurrentPanel( );
 
 	// INit new panel

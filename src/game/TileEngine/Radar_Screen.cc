@@ -115,16 +115,11 @@ void MoveRadarScreen( )
 	// check if we are allowed to do anything?
 	if (!fRenderRadarScreen) return;
 
-	// Remove old region
-	MSYS_RemoveRegion( &gRadarRegion );
+	gRadarRegion.RegionTopLeftX     = RADAR_WINDOW_X;
+	gRadarRegion.RegionTopLeftY     = RADAR_WINDOW_TM_Y;
+	gRadarRegion.RegionBottomRightX = RADAR_WINDOW_X + RADAR_WINDOW_WIDTH;
+	gRadarRegion.RegionBottomRightY = RADAR_WINDOW_TM_Y + RADAR_WINDOW_HEIGHT;
 
-	// Add region for radar
-	MSYS_DefineRegion(&gRadarRegion, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y,
-				RADAR_WINDOW_X + RADAR_WINDOW_WIDTH,
-				(UINT16)(RADAR_WINDOW_TM_Y + RADAR_WINDOW_HEIGHT),
-				MSYS_PRIORITY_HIGHEST, 0,
-				RadarRegionMoveCallback,
-				RadarRegionButtonCallback);
 }
 
 
