@@ -26,7 +26,7 @@ pub(crate) mod common {
 
     pub use libc::{c_char, c_int, size_t};
     use std::cell::RefCell;
-    use std::ffi::{CStr, CString, OsStr};
+    use std::ffi::{CStr, CString};
     use std::path::Path;
     use std::slice;
 
@@ -104,11 +104,11 @@ pub(crate) mod common {
         #[cfg(unix)]
         {
             use std::os::unix::ffi::OsStrExt;
-            Path::new(OsStr::from_bytes(&bytes))
+            Path::new(std::ffi::OsStr::from_bytes(&bytes))
         }
         #[cfg(not(unix))]
         {
-            match str::from_utf8(&bytes) {
+            match std::str::from_utf8(&bytes) {
                 Ok(s) => Path::new(s),
                 Err(e) => panic!("Converting {:?} to Path: {:?}", &bytes, e),
             }
