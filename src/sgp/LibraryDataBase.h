@@ -1,6 +1,9 @@
 #ifndef _LIBRARY_DATABASE_H
 #define _LIBRARY_DATABASE_H
 
+#include "stracciatella.h"
+
+#if 0 // rustified
 #include <string>
 #include <vector>
 
@@ -66,5 +69,6 @@ protected:
 void    CloseLibraryFile(LibraryFile*);
 BOOLEAN LoadDataFromLibrary(LibraryFile*, void* pData, UINT32 uiBytesToRead);
 BOOLEAN LibraryFileSeek(LibraryFile*, INT32 distance, FileSeekMode);
+#endif // rustified
 
 #endif

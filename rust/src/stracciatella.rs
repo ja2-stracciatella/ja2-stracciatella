@@ -22,6 +22,8 @@ pub mod config;
 pub mod guess;
 pub mod res;
 pub mod file_formats;
+pub mod librarydb;
+pub mod c;
 
 pub use crate::config::ScalingQuality;
 pub use crate::config::VanillaVersion;

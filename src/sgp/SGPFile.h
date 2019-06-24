@@ -16,6 +16,9 @@ enum SGPFileFlags
 	SGPFILE_REAL = 1U << 0
 };
 
+struct LibraryFile;
+
+#if 0 // rustified
 struct LibraryHeaderStruct;
 struct FileHeaderStruct;
 
@@ -25,6 +28,7 @@ struct LibraryFile
 	LibraryHeaderStruct*    lib;
 	const FileHeaderStruct* pFileHeader;
 };
+#endif // rustified
 
 struct SGPFile
 {
@@ -32,7 +36,7 @@ struct SGPFile
 	union
 	{
 		FILE*       file;
-		LibraryFile lib;
+		LibraryFile* lib;
 	} u;
 };
 

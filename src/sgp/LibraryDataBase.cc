@@ -1,3 +1,4 @@
+#if 0 // rustified
 #include <cstdlib>
 #include <stdexcept>
 
@@ -354,3 +355,4 @@ TEST(LibraryDatabase, asserts)
 }
 
 #endif
+#endif // rustified
