@@ -72,7 +72,7 @@ pub(crate) mod common {
         unsafe { &*ptr }
     }
 
-    /// Gets a CStr from a C character pointer.
+    /// Gets a CStr from a const C character pointer.
     pub fn unsafe_c_str<'a>(ptr: *const c_char) -> &'a CStr {
         assert!(!ptr.is_null());
         unsafe { CStr::from_ptr(ptr) }
@@ -84,7 +84,7 @@ pub(crate) mod common {
         unsafe { slice::from_raw_parts(ptr, len) }
     }
 
-    /// Gets a slice from a const C pointer and length.
+    /// Gets a mutable slice from a mutable C pointer and length.
     pub fn unsafe_slice_mut<'a, T>(ptr: *mut T, len: usize) -> &'a mut [T] {
         assert!(!ptr.is_null());
         unsafe { slice::from_raw_parts_mut(ptr, len) }
@@ -110,7 +110,7 @@ pub(crate) mod common {
         {
             match std::str::from_utf8(&bytes) {
                 Ok(s) => Path::new(s),
-                Err(e) => panic!("Converting {:?} to Path: {:?}", &bytes, e),
+                Err(e) => panic!("Converting {:?} to Path: {:?}", &c_str, e),
             }
         }
     }

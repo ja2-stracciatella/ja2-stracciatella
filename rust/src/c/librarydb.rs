@@ -1,4 +1,6 @@
-//! This module contains the C interface for `crate::librarydb`.
+//! This module contains the C interface for [`stracciatella::librarydb`].
+//!
+//! [`stracciatella::librarydb`]: ../../librarydb/index.html
 
 use std::io::{self, Read, Seek, SeekFrom};
 

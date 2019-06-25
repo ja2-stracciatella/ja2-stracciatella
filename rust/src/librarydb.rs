@@ -1,11 +1,28 @@
 //! This module implements a thread safe library database.
 //!
-//! Rustified version of `src/sgp/LibraryDataBase.cc` and `src/sgp/LibraryDataBase.h`.
+//! A library database contains a collection of libraries.
+//! A library contains a collection of file entries.
+//! Libraries that contain multiple ok entries with the same case-insensitive file path are rejected.
 //!
-//! The mains differences are:
+//! The order of the libraries matters.
+//! When a file path matches multiple entries, the first entry shadows the other entries.
+//!
+//!
+//! # Rustified
+//!
+//! This module is a rustified version of `src/sgp/LibraryDataBase.cc` and `src/sgp/LibraryDataBase.h`.
+//!
+//! The main differences are:
 //!  * it is thread safe
 //!  * shadowing respects library order and uses the full file path,
-//!    the original shadowed whole libraries based on the longest base path
+//!    the original shadowed libraries based on the longest base path
+//!
+//!
+//! # FFI
+//!
+//! [`stracciatella::c::librarydb`] contains a C interface for this module.
+//!
+//! [`stracciatella::c::librarydb`]: ../c/librarydb/index.html
 
 use std::cmp;
 use std::collections::HashSet;
@@ -27,11 +44,13 @@ pub struct LibraryDB {
 /// Library database.
 #[derive(Debug)]
 pub struct LibraryDBInner {
-    /// List of thread safe libraries.
+    /// Thread safe libraries.
     arc_libraries: Vec<Arc<RwLock<Library>>>,
 }
 
-/// Library open for reading.
+/// Library.
+/// Keeps the library file open for reading and a list of entries that are ok.
+/// The library file contains the data of each entry.
 #[derive(Debug)]
 pub struct Library {
     /// Real path of the library file for display purposes.
@@ -44,7 +63,8 @@ pub struct Library {
     entries: Vec<LibraryEntry>,
 }
 
-/// File entry in a library open for reading.
+/// Library entry.
+/// Represents a file in a library.
 #[derive(Debug)]
 pub struct LibraryEntry {
     /// File path without the base path of the library.
@@ -55,7 +75,8 @@ pub struct LibraryEntry {
     data_end: u64,
 }
 
-/// Library file handle that implements Read and Seek.
+/// Library file.
+/// Provides access to the data of a library entry through Read and Seek.
 #[derive(Debug)]
 pub struct LibraryFile {
     /// The index of the entry of this file.
@@ -67,6 +88,7 @@ pub struct LibraryFile {
 }
 
 impl LibraryDB {
+    /// Constructor.
     pub fn new() -> Self {
         Self {
             inner: Mutex::new(LibraryDBInner::new()),
@@ -79,25 +101,27 @@ impl LibraryDB {
         self.inner.lock().unwrap()
     }
 
-    /// Adds a library to the library database.
+    /// Opens and adds a library at the end of library database.
     pub fn add_library(&mut self, data_dir: &Path, library: &Path) -> io::Result<()> {
         self.locked().add_library(data_dir, library)
     }
 
     /// Opens a library file for reading.
+    /// The file must be dropped before the library database is dropped.
     pub fn open_file(&self, path: &str) -> io::Result<LibraryFile> {
         self.locked().open_file(path)
     }
 }
 
 impl LibraryDBInner {
+    /// Constructor.
     fn new() -> Self {
         Self {
             arc_libraries: Vec::new(),
         }
     }
 
-    /// Adds a library to the library database.
+    /// Opens and adds a library at the end of library database.
     pub fn add_library(&mut self, data_dir: &Path, library: &Path) -> io::Result<()> {
         let library = Library::open_library(&data_dir, &library)?;
         self.arc_libraries.push(Arc::new(RwLock::new(library)));
@@ -105,6 +129,7 @@ impl LibraryDBInner {
     }
 
     /// Opens a library file for reading.
+    /// The file must be dropped before the library database is dropped.
     pub fn open_file(&self, path: &str) -> io::Result<LibraryFile> {
         let path = case_insensitive_path(&path);
         for arc_library in &self.arc_libraries {
@@ -192,35 +217,39 @@ impl LibraryFile {
     }
 }
 
+/// Panics if a library file is still open during the destruction of LibraryDBInner.
 impl ops::Drop for LibraryDBInner {
     fn drop(&mut self) {
-        // make sure there are no pending references.
         for arc_library in &self.arc_libraries {
             let library = arc_library.read().unwrap();
             let n = Arc::strong_count(&arc_library) + Arc::weak_count(&arc_library);
-            assert!(n == 1, "{} is shared ({} != 1)", &library, n);
+            assert!(n == 1, "{} is being shared ({} != 1)", &library, n);
         }
     }
 }
 
+/// Library only displays the path by default.
 impl fmt::Display for Library {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "Library {{ {:?} }}", &self.library_path)
     }
 }
 
+/// Library entries are ordered by file path.
 impl cmp::Ord for LibraryEntry {
     fn cmp(&self, other: &Self) -> cmp::Ordering {
         self.file_path.cmp(&other.file_path)
     }
 }
 
+/// Library entries are ordered by file path.
 impl cmp::PartialOrd for LibraryEntry {
     fn partial_cmp(&self, other: &Self) -> Option<cmp::Ordering> {
         Some(self.cmp(other))
     }
 }
 
+/// Library entries are ordered by file path.
 impl cmp::PartialEq for LibraryEntry {
     fn eq(&self, other: &Self) -> bool {
         self.file_path.eq(&other.file_path)
@@ -229,6 +258,7 @@ impl cmp::PartialEq for LibraryEntry {
 
 impl cmp::Eq for LibraryEntry {}
 
+/// LibraryFile seeks the data of a library entry.
 impl io::Seek for LibraryFile {
     fn seek(&mut self, pos: SeekFrom) -> io::Result<u64> {
         let library = self.arc_library.read().unwrap();
@@ -249,6 +279,7 @@ impl io::Seek for LibraryFile {
     }
 }
 
+/// LibraryFile reads the data of a library entry.
 impl io::Read for LibraryFile {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         let mut library = self.arc_library.write().unwrap();
