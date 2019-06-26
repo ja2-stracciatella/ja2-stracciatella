@@ -261,7 +261,7 @@ impl cmp::Eq for LibraryEntry {}
 /// LibraryFile seeks the data of a library entry.
 impl io::Seek for LibraryFile {
     fn seek(&mut self, pos: SeekFrom) -> io::Result<u64> {
-        let library = self.arc_library.read().unwrap();
+        let library = self.arc_library.write().unwrap();
         let entry = &library.entries[self.index];
         let checked_position = match pos {
             SeekFrom::Start(n) => entry.data_start.checked_add(n),
