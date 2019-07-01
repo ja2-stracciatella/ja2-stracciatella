@@ -125,7 +125,7 @@ impl LibraryDBInner {
     pub fn add_library(&mut self, data_dir: &Path, library: &Path) -> io::Result<()> {
         let library = Library::open_library(&data_dir, &library)?;
         self.arc_libraries.push(Arc::new(RwLock::new(library)));
-        return Ok(());
+        Ok(())
     }
 
     /// Opens a library file for reading.
@@ -142,7 +142,7 @@ impl LibraryDBInner {
                 });
             }
         }
-        return Err(io::ErrorKind::NotFound.into());
+        Err(io::ErrorKind::NotFound.into())
     }
 }
 
@@ -159,8 +159,8 @@ impl Library {
             .filter_map(|slf_entry| match slf_entry.state {
                 SlfEntryState::Ok => Some(LibraryEntry {
                     file_path: case_insensitive_path(&slf_entry.file_path),
-                    data_start: slf_entry.offset as u64,
-                    data_end: slf_entry.offset as u64 + slf_entry.length as u64,
+                    data_start: u64::from(slf_entry.offset),
+                    data_end: u64::from(slf_entry.offset) + u64::from(slf_entry.length),
                 }),
                 _ => None,
             }) // LibraryEntry
@@ -179,12 +179,12 @@ impl Library {
                 ));
             }
         }
-        return Ok(Library {
+        Ok(Library {
             library_path,
             library_file,
             base_path,
             entries,
-        });
+        })
     }
 
     /// Finds the file entry that matches the case-insensitive path.
@@ -197,7 +197,7 @@ impl Library {
                 .binary_search_by(|x| x.file_path.as_str().cmp(file_path))
                 .ok();
         }
-        return None;
+        None
     }
 }
 
@@ -214,6 +214,12 @@ impl LibraryFile {
         let library = self.arc_library.read().unwrap();
         let entry = &library.entries[self.index];
         entry.data_end - entry.data_start
+    }
+}
+
+impl Default for LibraryDB {
+    fn default() -> Self {
+        Self::new()
     }
 }
 
@@ -275,7 +281,7 @@ impl io::Seek for LibraryFile {
             }
         }
         // must never become negative or overflow
-        return Err(io::ErrorKind::InvalidInput.into());
+        Err(io::ErrorKind::InvalidInput.into())
     }
 }
 
@@ -337,7 +343,7 @@ fn find_file(dir_path: &Path, file_name: &Path) -> io::Result<PathBuf> {
                             _ => None,
                         }) // (OsString,FileType)
                         .collect();
-                    if found.len() > 0 {
+                    if !found.is_empty() {
                         if found.iter().any(|x| &x.0 == os_str) {
                             path.push(os_str); // perfect match
                             continue;
@@ -350,7 +356,7 @@ fn find_file(dir_path: &Path, file_name: &Path) -> io::Result<PathBuf> {
                             .filter_map(|x| x.0.to_str()) // &str
                             .filter(|x| x.to_ascii_uppercase() == want_ascii_uppercase)
                             .collect();
-                        if have.len() > 0 {
+                        if !have.is_empty() {
                             have.sort();
                             path.push(have[0]); // natural order case insensitive match
                             continue;
@@ -367,5 +373,5 @@ fn find_file(dir_path: &Path, file_name: &Path) -> io::Result<PathBuf> {
     if !path.is_file() {
         return Err(io::ErrorKind::NotFound.into());
     }
-    return Ok(path);
+    Ok(path)
 }

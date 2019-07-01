@@ -11,8 +11,7 @@ use crate::librarydb::{LibraryDB, LibraryFile};
 /// The caller is responsible for the memory of the library database.
 #[no_mangle]
 pub extern "C" fn LibraryDB_New() -> *mut LibraryDB {
-    let ldb = into_ptr(LibraryDB::new());
-    return ldb;
+    into_ptr(LibraryDB::new())
 }
 
 /// Destructor.
@@ -34,12 +33,16 @@ pub extern "C" fn LibraryDB_AddLibrary(
     let ldb = unsafe_mut(ldb);
     let data_dir = path_from_c_str_or_panic(unsafe_c_str(data_dir));
     let library = path_from_c_str_or_panic(unsafe_c_str(library));
-    if let Err(e) = ldb.add_library(data_dir, library) {
-        remember_rust_error(format!("{:?}", e));
-        return false;
+    match ldb.add_library(data_dir, library) {
+        Err(err) => {
+            remember_rust_error(format!("{:?}", err));
+            false
+        }
+        Ok(_) => {
+            forget_rust_error();
+            true
+        }
     }
-    forget_rust_error();
-    return true;
 }
 
 /// Opens a library database file for reading.
@@ -47,20 +50,19 @@ pub extern "C" fn LibraryDB_AddLibrary(
 /// The caller is responsible for the library file memory.
 /// Sets the rust error.
 #[no_mangle]
-pub extern "C" fn LibraryFile_Open(
-    ldb: *mut LibraryDB,
-    path: *const c_char,
-) -> *mut LibraryFile {
+pub extern "C" fn LibraryFile_Open(ldb: *mut LibraryDB, path: *const c_char) -> *mut LibraryFile {
     let ldb = unsafe_mut(ldb);
     let path = str_from_c_str_or_panic(unsafe_c_str(path));
-    let open_result = ldb.open_file(&path);
-    if let Err(e) = open_result {
-        remember_rust_error(format!("{:?}", e));
-        return std::ptr::null_mut();
+    match ldb.open_file(&path) {
+        Err(err) => {
+            remember_rust_error(format!("{:?}", err));
+            std::ptr::null_mut()
+        }
+        Ok(file) => {
+            forget_rust_error();
+            into_ptr(file)
+        }
     }
-    forget_rust_error();
-    let file = into_ptr(open_result.unwrap());
-    return file;
 }
 
 /// Closes a library database file.
@@ -82,12 +84,16 @@ pub extern "C" fn LibraryFile_Seek(file: *mut LibraryFile, distance: i64, from: 
         2 => file.seek(SeekFrom::End(distance)),
         _ => Err(io::ErrorKind::InvalidInput.into()),
     };
-    if let Err(e) = seek_result {
-        remember_rust_error(format!("{:?}", e));
-        return false;
+    match seek_result {
+        Err(err) => {
+            remember_rust_error(format!("{:?}", err));
+            false
+        }
+        Ok(_) => {
+            forget_rust_error();
+            true
+        }
     }
-    forget_rust_error();
-    return true;
 }
 
 /// Reads from a library database file.
@@ -100,24 +106,28 @@ pub extern "C" fn LibraryFile_Read(
 ) -> bool {
     let file = unsafe_mut(file);
     let buffer = unsafe_slice_mut(buffer, buffer_length);
-    if let Err(e) = file.read_exact(buffer) {
-        remember_rust_error(format!("{:?}", e));
-        return false;
+    match file.read_exact(buffer) {
+        Err(err) => {
+            remember_rust_error(format!("{:?}", err));
+            false
+        }
+        Ok(_) => {
+            forget_rust_error();
+            true
+        }
     }
-    forget_rust_error();
-    return true;
 }
 
 /// Gets the current position in a library database file.
 #[no_mangle]
 pub extern "C" fn LibraryFile_GetPos(file: *mut LibraryFile) -> u64 {
     let file = unsafe_mut(file);
-    return file.current_position();
+    file.current_position()
 }
 
 /// Gets the size of a library database file.
 #[no_mangle]
 pub extern "C" fn LibraryFile_GetSize(file: *mut LibraryFile) -> u64 {
     let file = unsafe_mut(file);
-    return file.file_size();
+    file.file_size()
 }

@@ -11,12 +11,12 @@ pub mod error {
     /// The caller is responsible for the memory.
     #[no_mangle]
     pub extern "C" fn get_rust_error() -> *mut c_char {
-        return RUST_ERROR.with(|x| {
+        RUST_ERROR.with(|x| {
             if let Some(ref error) = *x.borrow() {
                 return error.clone().into_raw();
             }
-            return std::ptr::null_mut();
-        });
+            std::ptr::null_mut()
+        })
     }
 }
 
