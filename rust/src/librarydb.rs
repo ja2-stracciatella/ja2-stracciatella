@@ -375,3 +375,130 @@ fn find_file(dir_path: &Path, file_name: &Path) -> io::Result<PathBuf> {
     }
     Ok(path)
 }
+
+#[cfg(test)]
+mod tests {
+    use std::fs::OpenOptions;
+    use std::io::{Read, Seek, SeekFrom, Write};
+    use std::path::{Path, PathBuf};
+
+    use tempdir::TempDir;
+
+    use super::*;
+    use crate::file_formats::slf::{SlfEntry, SlfEntryState, SlfHeader};
+
+    fn make_data_slf(dir: &Path) -> PathBuf {
+        let name = "data.slf";
+        let library_path = "";
+        let entry_paths = ["foo.txt"];
+        make_slf(&dir, &name, &library_path, &entry_paths)
+    }
+
+    fn make_foo_slf(dir: &Path) -> PathBuf {
+        let name = "foo.slf";
+        let library_path = "foo\\";
+        let entry_paths = ["bar.txt", "bar\\baz.txt"];
+        make_slf(&dir, &name, &library_path, &entry_paths)
+    }
+
+    fn make_foobar_slf(dir: &Path) -> PathBuf {
+        let name = "foobar.slf";
+        let library_path = "foo\\bar\\";
+        let entry_paths = ["baz.txt"];
+        make_slf(&dir, &name, &library_path, &entry_paths)
+    }
+
+    fn make_slf(dir: &Path, name: &str, library_path: &str, entry_paths: &[&str]) -> PathBuf {
+        let header = SlfHeader {
+            library_name: name.to_owned(),
+            library_path: library_path.to_owned(),
+            num_entries: entry_paths.len() as i32,
+            ok_entries: entry_paths.len() as i32,
+            sort: 0xFFFF,
+            version: 0x200,
+            contains_subdirectories: if library_path.is_empty() { 0 } else { 1 },
+        };
+        let path = dir.join(&name);
+        let mut file = OpenOptions::new()
+            .write(true)
+            .create_new(true)
+            .open(&path)
+            .unwrap();
+        header.to_output(&mut file).unwrap();
+        let mut entries = entry_paths
+            .iter()
+            .map(|&entry_path| {
+                let offset = file.seek(SeekFrom::Current(0)).unwrap();
+                let data = name.as_bytes();
+                file.write_all(&data).unwrap();
+                SlfEntry {
+                    file_path: entry_path.to_owned(),
+                    offset: offset as u32,
+                    length: data.len() as u32,
+                    state: SlfEntryState::Ok,
+                    file_time: 0,
+                }
+            })
+            .collect::<Vec<SlfEntry>>();
+        entries.sort_by(|a, b| a.file_path.cmp(&b.file_path));
+        header.entries_to_output(&mut file, &entries).unwrap();
+        file.sync_all().unwrap();
+        path
+    }
+
+    fn library_file_data(ldb: &LibraryDB, path: &str) -> Vec<u8> {
+        let mut file = ldb.open_file(&path).unwrap();
+        let mut data = Vec::new();
+        file.read_to_end(&mut data).unwrap();
+        data
+    }
+
+    #[test]
+    fn reading() {
+        let dir = TempDir::new("librarydb").unwrap();
+        let data_dir = dir.path();
+        make_data_slf(&data_dir);
+        make_foo_slf(&data_dir);
+        make_foobar_slf(&data_dir);
+
+        // relative path of library is case insensitive, read works, seek works
+        for library in &["data.slf", "DATA.SLF"] {
+            let mut ldb = LibraryDB::new();
+            ldb.add_library(&data_dir, &Path::new(library)).unwrap();
+            let mut file = ldb.open_file("foo.txt").unwrap();
+            let mut data = Vec::new();
+            file.read_to_end(&mut data).unwrap();
+            assert_eq!(&data, b"data.slf");
+            assert_eq!(file.seek(SeekFrom::Start(0)).unwrap(), 0);
+            assert_eq!(file.seek(SeekFrom::End(0)).unwrap(), 8);
+            assert_eq!(file.seek(SeekFrom::Current(-4)).unwrap(), 4);
+            let mut data = Vec::new();
+            file.read_to_end(&mut data).unwrap();
+            assert_eq!(&data, b".slf");
+        }
+
+        // library order matters, file paths are case insensitive, allow both path separators
+        {
+            let mut ldb = LibraryDB::new();
+            ldb.add_library(&data_dir, &Path::new("foo.slf")).unwrap();
+            ldb.add_library(&data_dir, &Path::new("foobar.slf"))
+                .unwrap();
+            let data = library_file_data(&ldb, "foo/bar.txt");
+            assert_eq!(&data, b"foo.slf");
+            let data = library_file_data(&ldb, "foo/BAR/baz.txt");
+            assert_eq!(&data, b"foo.slf");
+
+            let mut ldb = LibraryDB::new();
+            ldb.add_library(&data_dir, &Path::new("foobar.slf"))
+                .unwrap();
+            ldb.add_library(&data_dir, &Path::new("foo.slf")).unwrap();
+            let data = library_file_data(&ldb, "foo/BAR.TXT");
+            assert_eq!(&data, b"foo.slf");
+            let data = library_file_data(&ldb, "foo\\bar/baz.txt");
+            assert_eq!(&data, b"foobar.slf");
+        }
+
+        dir.close().unwrap();
+    }
+
+}
