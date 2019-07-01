@@ -285,9 +285,12 @@ impl SlfHeader {
             }
         }
 
-        if end_of_data as u64 > output.seek(SeekFrom::End(-(num_bytes as i64)))? {
-            // will increase the size of output
-            output.seek(SeekFrom::Start(end_of_data as u64))?;
+        match output.seek(SeekFrom::End(-(num_bytes as i64))) {
+            Ok(position) if position >= end_of_data as u64 => {}
+            _ => {
+                // will increase the size of output
+                output.seek(SeekFrom::Start(end_of_data as u64))?;
+            }
         }
         output.write_all(&buffer)?;
 
