@@ -124,3 +124,111 @@ pub(crate) mod common {
         unsafe { CString::from_vec_unchecked(bytes.to_vec()) }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::c::common::*;
+    use crate::c::error::*;
+    use crate::free_rust_string;
+    use std::cell::RefCell;
+    use std::ffi::{CStr, CString};
+    use std::path::Path;
+
+    #[test]
+    fn test_pointers() {
+        // struct
+        let mut outer: RefCell<u8> = RefCell::new(1);
+        struct PointerTest<'a> {
+            inner: &'a mut RefCell<u8>,
+        }
+        impl<'a> Drop for PointerTest<'a> {
+            fn drop(&mut self) {
+                *self.inner.borrow_mut() = 99;
+            }
+        }
+        let value1;
+        let value2;
+        let value99;
+        // into pointer, must manage the memory
+        let ptr = into_ptr(PointerTest { inner: &mut outer });
+        {
+            // pointer as immutable reference
+            value1 = *unsafe_ref(ptr).inner.borrow();
+        }
+        {
+            // pointer as mutable reference
+            *unsafe_mut(ptr).inner.borrow_mut() = 2;
+        }
+        {
+            // from pointer, rust manages the memory
+            let drop_me = from_ptr(ptr);
+            value2 = *drop_me.inner.borrow();
+        }
+        value99 = *outer.borrow();
+        assert_eq!(value1, 1); // immutable
+        assert_eq!(value2, 2); // mutable
+        assert_eq!(value99, 99); // drop
+
+        // C string
+        let data = "123\0nope";
+        let ptr = data.as_ptr() as *const c_char;
+        assert_eq!(unsafe_c_str(ptr).to_bytes(), b"123");
+
+        // slice
+        let mut data = [1, 2];
+        assert_eq!(unsafe_slice(data.as_ptr(), 2), data);
+        assert_eq!(unsafe_slice_mut(data.as_mut_ptr(), 2), data);
+    }
+
+    #[test]
+    fn test_conversions() {
+        let c_str = CStr::from_bytes_with_nul(b"123\0").unwrap();
+        assert_eq!(str_from_c_str_or_panic(&c_str), "123");
+        assert_eq!(path_from_c_str_or_panic(&c_str), Path::new("123"));
+        assert_eq!(c_string_from_str("123").to_bytes(), b"123");
+        assert_eq!(c_string_from_str("123\0nope").to_bytes(), b"123");
+        #[cfg(unix)]
+        {
+            // Path supports invalid utf8 on unix
+            let c_str = CStr::from_bytes_with_nul(b"123\xe1\0").unwrap();
+            assert_eq!(path_from_c_str_or_panic(&c_str).as_os_str().len(), 4);
+        }
+    }
+
+    #[test]
+    #[should_panic]
+    fn test_str_from_c_str_panic() {
+        if let Ok(c_str) = CStr::from_bytes_with_nul(b"123\xe1\0") {
+            // panics, str only supports valid utf8
+            str_from_c_str_or_panic(&c_str);
+        }
+    }
+
+    #[test]
+    #[should_panic]
+    #[cfg(not(unix))]
+    fn test_path_from_c_str_panic_not_unix() {
+        if let Ok(c_str) = CStr::from_bytes_with_nul(b"123\xe1\0") {
+            // panics, Path only supports invalid utf8 on unix
+            path_from_c_str_or_panic(&c_str);
+        }
+    }
+
+    #[test]
+    fn test_rust_error() {
+        fn error() -> Option<CString> {
+            let ptr = get_rust_error(); // get copy
+            if ptr.is_null() {
+                None
+            } else {
+                let c_string = unsafe_c_str(ptr).to_owned();
+                free_rust_string(ptr); // free copy
+                Some(c_string)
+            }
+        }
+        remember_rust_error("rust error"); // set
+        assert_eq!(error(), Some(CString::new("rust error").unwrap()));
+        forget_rust_error(); // unset
+        assert_eq!(error(), None);
+    }
+}
