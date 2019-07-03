@@ -80,8 +80,8 @@ pub extern "C" fn LibraryFile_Seek(file: *mut LibraryFile, distance: i64, from: 
     let file = unsafe_mut(file);
     let seek_result = match from {
         0 if distance >= 0 => file.seek(SeekFrom::Start(distance as u64)),
-        1 => file.seek(SeekFrom::Current(distance)),
-        2 => file.seek(SeekFrom::End(distance)),
+        1 => file.seek(SeekFrom::End(distance)),
+        2 => file.seek(SeekFrom::Current(distance)),
         _ => Err(io::ErrorKind::InvalidInput.into()),
     };
     match seek_result {
