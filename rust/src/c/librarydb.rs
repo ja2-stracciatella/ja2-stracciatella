@@ -131,3 +131,101 @@ pub extern "C" fn LibraryFile_GetSize(file: *mut LibraryFile) -> u64 {
     let file = unsafe_mut(file);
     file.file_size()
 }
+
+#[cfg(test)]
+mod tests {
+    use crate::c::common::*;
+    use crate::c::librarydb::*;
+    use crate::librarydb::tests::{make_data_slf, make_foo_slf, make_foobar_slf};
+    use tempdir::TempDir;
+
+    // FileSeekMode values (see src/sgp/SGPFile.h)
+    const FILE_SEEK_FROM_START: c_int = 0;
+    const FILE_SEEK_FROM_END: c_int = 1;
+    const FILE_SEEK_FROM_CURRENT: c_int = 2;
+
+    fn read_to_end(c_file: *mut LibraryFile) -> Vec<u8> {
+        let size = LibraryFile_GetSize(c_file) as usize;
+        let pos = LibraryFile_GetPos(c_file) as usize;
+        let mut data = vec![0u8; size - pos];
+        assert!(LibraryFile_Read(c_file, data.as_mut_ptr(), size - pos));
+        data
+    }
+
+    fn library_file_data(c_ldb: *mut LibraryDB, path: &str) -> Vec<u8> {
+        let c_path = c_string_from_str(&path);
+        let c_file = LibraryFile_Open(c_ldb, c_path.as_ptr()); // must manage the memory
+        assert_ne!(c_file, std::ptr::null_mut());
+        assert_eq!(LibraryFile_GetPos(c_file), 0);
+        let data = read_to_end(c_file);
+        LibraryFile_Close(c_file); // rust manages the memory
+        data
+    }
+
+    #[test]
+    fn reading() {
+        let dir = TempDir::new("c_librarydb").unwrap();
+        let data_dir = dir.path();
+        make_data_slf(&data_dir);
+        make_foo_slf(&data_dir);
+        make_foobar_slf(&data_dir);
+
+        // relative path of library is case insensitive, read works, seek works
+        for library in &["data.slf", "DATA.SLF"] {
+            let c_data_dir = c_string_from_str(&data_dir.to_str().unwrap());
+            let c_data_dir = c_data_dir.as_ptr();
+            let c_library = c_string_from_str(&library);
+            let c_library = c_library.as_ptr();
+            let c_foo_txt = c_string_from_str("foo.txt");
+            let c_foo_txt = c_foo_txt.as_ptr();
+
+            let c_ldb = LibraryDB_New(); // must manage the memory
+            assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_library));
+            let c_file = LibraryFile_Open(c_ldb, c_foo_txt); // must manage the memory
+            assert_ne!(c_file, std::ptr::null_mut());
+            assert_eq!(LibraryFile_GetPos(c_file), 0);
+            let data = read_to_end(c_file);
+            assert_eq!(&data, b"data.slf");
+            assert!(LibraryFile_Seek(c_file, 0, FILE_SEEK_FROM_START));
+            assert_eq!(LibraryFile_GetPos(c_file), 0);
+            assert!(LibraryFile_Seek(c_file, 0, FILE_SEEK_FROM_END));
+            assert_eq!(LibraryFile_GetPos(c_file), 8);
+            assert!(LibraryFile_Seek(c_file, -4, FILE_SEEK_FROM_CURRENT));
+            assert_eq!(LibraryFile_GetPos(c_file), 4);
+            let data = read_to_end(c_file);
+            assert_eq!(&data, b".slf");
+            LibraryFile_Close(c_file); // rust manages the memory
+            LibraryDB_Delete(c_ldb); // rust manages the memory
+        }
+
+        // library order matters, file paths are case insensitive, allow both path separators
+        {
+            let c_data_dir = c_string_from_str(&data_dir.to_str().unwrap());
+            let c_data_dir = c_data_dir.as_ptr();
+            let c_foo_slf = c_string_from_str("foo.slf");
+            let c_foo_slf = c_foo_slf.as_ptr();
+            let c_foobar_slf = c_string_from_str("foobar.slf");
+            let c_foobar_slf = c_foobar_slf.as_ptr();
+
+            let c_ldb = LibraryDB_New(); // must manage the memory
+            assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foo_slf));
+            assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foobar_slf));
+            let data = library_file_data(c_ldb, "foo/bar.txt");
+            assert_eq!(&data, b"foo.slf");
+            let data = library_file_data(c_ldb, "foo/BAR/baz.txt");
+            assert_eq!(&data, b"foo.slf");
+            LibraryDB_Delete(c_ldb); // rust manages the memory
+
+            let c_ldb = LibraryDB_New(); // must manage the memory
+            assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foobar_slf));
+            assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foo_slf));
+            let data = library_file_data(c_ldb, "foo/BAR.TXT");
+            assert_eq!(&data, b"foo.slf");
+            let data = library_file_data(c_ldb, "foo\\bar/baz.txt");
+            assert_eq!(&data, b"foobar.slf");
+            LibraryDB_Delete(c_ldb); // rust manages the memory
+        }
+
+        dir.close().unwrap();
+    }
+}

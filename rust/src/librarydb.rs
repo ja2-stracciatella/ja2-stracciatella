@@ -377,7 +377,7 @@ fn find_file(dir_path: &Path, file_name: &Path) -> io::Result<PathBuf> {
 }
 
 #[cfg(test)]
-mod tests {
+pub mod tests {
     use std::fs::OpenOptions;
     use std::io::{Read, Seek, SeekFrom, Write};
     use std::path::{Path, PathBuf};
@@ -387,21 +387,21 @@ mod tests {
     use super::*;
     use crate::file_formats::slf::{SlfEntry, SlfEntryState, SlfHeader};
 
-    fn make_data_slf(dir: &Path) -> PathBuf {
+    pub fn make_data_slf(dir: &Path) -> PathBuf {
         let name = "data.slf";
         let library_path = "";
         let entry_paths = ["foo.txt"];
         make_slf(&dir, &name, &library_path, &entry_paths)
     }
 
-    fn make_foo_slf(dir: &Path) -> PathBuf {
+    pub fn make_foo_slf(dir: &Path) -> PathBuf {
         let name = "foo.slf";
         let library_path = "foo\\";
         let entry_paths = ["bar.txt", "bar\\baz.txt"];
         make_slf(&dir, &name, &library_path, &entry_paths)
     }
 
-    fn make_foobar_slf(dir: &Path) -> PathBuf {
+    pub fn make_foobar_slf(dir: &Path) -> PathBuf {
         let name = "foobar.slf";
         let library_path = "foo\\bar\\";
         let entry_paths = ["baz.txt"];
