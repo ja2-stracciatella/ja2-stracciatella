@@ -30,8 +30,10 @@ pub(crate) mod common {
     use std::path::Path;
     use std::slice;
 
-    /// A thread local error for C.
-    thread_local!(pub static RUST_ERROR: RefCell<Option<CString>> = RefCell::new(None));
+    thread_local!(
+        /// A thread local error for C.
+        pub static RUST_ERROR: RefCell<Option<CString>> = RefCell::new(None)
+    );
 
     /// Sets the thread local error string for C.
     pub fn remember_rust_error<T: AsRef<str>>(msg: T) {
