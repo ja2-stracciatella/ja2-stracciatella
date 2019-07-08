@@ -9,11 +9,12 @@ extern crate serde_json;
 extern crate serde_derive;
 extern crate dirs;
 
+use std::env;
 use std::slice;
 use std::str;
 use std::ptr;
 use std::ffi::{CStr, CString};
-use std::path::PathBuf;
+use std::path::{Component, PathBuf};
 use std::default::Default;
 
 use libc::{c_char, c_int, size_t};
@@ -288,6 +289,91 @@ pub unsafe extern "C" fn guess_resource_version(
     return result;
 }
 
+/// Returns the path to game.json.
+#[no_mangle]
+pub unsafe extern "C" fn get_game_json_path() -> *mut c_char {
+    let mut path = PathBuf::new();
+    let extra_data_dir = option_env!("EXTRA_DATA_DIR");
+    if extra_data_dir.is_some() && extra_data_dir.unwrap().len() > 0 {
+        // use dir defined at compile time
+        path.push(extra_data_dir.unwrap());
+    } else if let Ok(exe) = env::current_exe() {
+        if let Some(dir) = exe.parent() {
+            // use the directory of the executable
+            path.push(dir);
+        }
+    }
+    path.push("externalized/game.json");
+    let path: String = path.to_string_lossy().into();
+    return CString::new(path).unwrap().into_raw();
+}
+
+/// Finds a path relative to the stracciatella home directory.
+/// If path is null, it finds the stracciatella home directory.
+/// If test_exists is true, it makes sure the path exists.
+#[no_mangle]
+pub extern "C" fn find_path_from_stracciatella_home(
+    path: *const c_char,
+    test_exists: bool,
+) -> *mut c_char {
+    if let Ok(mut path_buf) = find_stracciatella_home() {
+        if !path.is_null() {
+            let c_s = unsafe { CStr::from_ptr(unsafe_from_ptr!(path)) };
+            let s = String::from_utf8_lossy(c_s.to_bytes());
+            path_buf.push(s.as_ref());
+        }
+        if test_exists && !path_buf.exists() {
+            return ptr::null_mut(); // path not found
+        } else {
+            match path_buf.canonicalize() {
+                Ok(p) => path_buf = p,
+                _ => {}
+            }
+            let s: String = path_buf.to_string_lossy().into();
+            return CString::new(s).unwrap().into_raw(); // path found
+        }
+    } else {
+        return ptr::null_mut(); // no home
+    }
+}
+
+/// Returns true if it was able to find path relative to base.
+/// Makes caseless searches one component at a time.
+#[no_mangle]
+pub extern "C" fn check_if_relative_path_exists(
+    base: *const c_char,
+    path: *const c_char,
+    caseless: bool,
+) -> bool {
+    let base: PathBuf = unsafe { CStr::from_ptr(unsafe_from_ptr!(base)) }.to_string_lossy().into_owned().into();
+    let path: PathBuf = unsafe { CStr::from_ptr(unsafe_from_ptr!(path)) }.to_string_lossy().into_owned().into();
+    let mut buf = base;
+    'outer: for component in path.components() {
+        match component {
+            Component::Normal(os_str) => {
+                if caseless {
+                    let want_ascii_lowercase = os_str.to_string_lossy().to_ascii_lowercase();
+                    let result = buf.read_dir();
+                    if let Ok(entries) = result {
+                        for result in entries {
+                            if let Ok(entry) = result {
+                                let file_name = entry.file_name();
+                                let have_ascii_lowercase = file_name.to_string_lossy().to_ascii_lowercase();
+                                if want_ascii_lowercase == have_ascii_lowercase {
+                                    buf.push(file_name);
+                                    continue 'outer;
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            _ => {},
+        }
+        buf.push(component);
+    }
+    return buf.exists();
+}
 
 #[cfg(test)]
 mod tests {
@@ -718,5 +804,30 @@ r##"{
         assert_chars_eq!(super::find_ja2_executable(CString::new("ja2-launcher").unwrap().as_ptr()), "ja2");
         assert_chars_eq!(super::find_ja2_executable(CString::new("ja2-launcher.exe").unwrap().as_ptr()), "ja2.exe");
         assert_chars_eq!(super::find_ja2_executable(CString::new("JA2-LAUNCHER.EXE").unwrap().as_ptr()), "JA2.exe");
+    }
+
+    #[test]
+    fn check_if_relative_path_exists() {
+        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        fs::create_dir_all(temp_dir.path().join("foo/bar")).unwrap();
+
+        let base = CString::new(temp_dir.path().to_str().unwrap()).unwrap();
+        let path = CString::new("baz").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), false), false);
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), false);
+        let path = CString::new("foo").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), false), true);
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
+        let path = CString::new("foo/bar").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), false), true);
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
+        let path = CString::new("foo/BAR").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
+        let path = CString::new("FOO/BAR").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
+        let path = CString::new("FOO/bar").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
+        let path = CString::new("FOO").unwrap();
+        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
     }
 }

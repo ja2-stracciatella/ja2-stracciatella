@@ -6,3 +6,5 @@ TAGS
 .cproject
 .project
 .idea
+.vscode
+rust/.vscode

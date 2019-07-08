@@ -39,18 +39,63 @@ const std::vector<VideoScaleQuality> scalingModes = {
 	VideoScaleQuality::PERFECT,
 };
 
-Launcher::Launcher(const std::string exePath, EngineOptions* engine_options) : StracciatellaLauncher() {
-	this->exePath = exePath;
-	this->engine_options = engine_options;
+Launcher::Launcher(int argc, char* argv[]) : StracciatellaLauncher() {
+	this->argc = argc;
+	this->argv = argv;
+	this->exePath;
+	this->engine_options = nullptr;
+}
+
+Launcher::~Launcher() {
+	if (this->engine_options) {
+		free_engine_options(this->engine_options);
+		this->engine_options = nullptr;
+	}
+}
+
+void Launcher::loadJa2Json() {
+	char* rustExePath = find_ja2_executable(argv[0]);
+	this->exePath = std::string(rustExePath);
+	free_rust_string(rustExePath);
+
+	if (this->engine_options) {
+		free_engine_options(this->engine_options);
+		this->engine_options = nullptr;
+	}
+	this->engine_options = create_engine_options(argv, argc);
+
+	if (this->engine_options == NULL) {
+		exit(EXIT_FAILURE);
+	}
+	if (should_show_help(this->engine_options)) {
+		exit(EXIT_SUCCESS);
+	}
 }
 
 void Launcher::show() {
-	browseJa2DirectoryButton->callback((Fl_Callback *) openDataDirectorySelector, (void *) (this));
-	predefinedResolutionButton->callback( (Fl_Callback*)enablePredefinedResolutionSelection, (void*)(this) );
-	customResolutionButton->callback( (Fl_Callback*)enableCustomResolutionSelection, (void*)(this) );
-	playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
 	editorButton->callback( (Fl_Callback*)startEditor, (void*)(this) );
+	playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
+	dataDirectoryInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	browseJa2DirectoryButton->callback((Fl_Callback *) openDataDirectorySelector, (void *) (this));
+	gameVersionInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	guessVersionButton->callback( (Fl_Callback*)guessVersion, (void*)(this) );
+	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	resolutionXInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	resolutionYInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	auto game_json_path = get_game_json_path();
+	gameSettingsOutput->value(game_json_path);
+	free_rust_string(game_json_path);
+	fullscreenCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	playSoundsCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	auto ja2_json_path = find_path_from_stracciatella_home("ja2.json", false);
+	if (ja2_json_path) {
+		ja2JsonPathOutput->value(ja2_json_path);
+		free_rust_string(ja2_json_path);
+	} else {
+		ja2JsonPathOutput->value("failed to find path to ja2.json");
+	}
+	ja2JsonReloadBtn->callback( (Fl_Callback*)reloadJa2Json, (void*)(this) );
+	ja2JsonSaveBtn->callback( (Fl_Callback*)saveJa2Json, (void*)(this) );
 
 	populateChoices();
 	initializeInputsFromDefaults();
@@ -77,27 +122,9 @@ void Launcher::initializeInputsFromDefaults() {
 
 	int x = get_resolution_x(this->engine_options);
 	int y = get_resolution_y(this->engine_options);
-	std::pair<int, int> currentResolution = std::make_pair(x, y);
 
-	char resolutionString[255];
-	sprintf(resolutionString, "%dx%d", x, y);
-
-	std::pair<int, int>* predefinedResolution = NULL;
-	for (auto res : predefinedResolutions) {
-		if (res == currentResolution) {
-			predefinedResolution = &res;
-		}
-	}
-
-	customResolutionXInput->value(x);
-	customResolutionYInput->value(y);
-	if (predefinedResolution != NULL) {
-		predefinedResolutionInput->value(resolutionString);
-		enablePredefinedResolutions();
-	} else {
-		predefinedResolutionInput->value(defaultResolution);
-		enableCustomResolutions();
-	}
+	resolutionXInput->value(x);
+	resolutionYInput->value(y);
 
 	VideoScaleQuality quality = get_scaling_quality(this->engine_options);
 	auto scalingModeIndex = 0;
@@ -111,6 +138,7 @@ void Launcher::initializeInputsFromDefaults() {
 
 	fullscreenCheckbox->value(should_start_in_fullscreen(this->engine_options) ? 1 : 0);
 	playSoundsCheckbox->value(should_start_without_sound(this->engine_options) ? 0 : 1);
+	update(false, nullptr);
 }
 
 int Launcher::writeJsonFile() {
@@ -119,17 +147,9 @@ int Launcher::writeJsonFile() {
 
 	set_vanilla_data_dir(this->engine_options, dataDirectoryInput->value());
 
-	if (customResolutionButton->value()) {
-		set_resolution(this->engine_options,
-						(int)customResolutionXInput->value(),
-						(int)customResolutionYInput->value());
-	} else {
-		std::string res = predefinedResolutionInput->value();
-		int split_index = res.find(RESOLUTION_SEPARATOR);
-		int x = atoi(res.substr(0, split_index).c_str());
-		int y = atoi(res.substr(split_index+1, res.length()).c_str());
-		set_resolution(this->engine_options, x, y);
-	}
+	int x = (int)resolutionXInput->value();
+	int y = (int)resolutionYInput->value();
+	set_resolution(this->engine_options, x, y);
 
 	auto currentResourceVersionIndex = gameVersionInput->value();
 	auto currentResourceVersion = predefinedVersions.at(currentResourceVersionIndex);
@@ -141,6 +161,7 @@ int Launcher::writeJsonFile() {
 	bool success = write_engine_options(this->engine_options);
 
 	if (success) {
+		update(false, nullptr);
 		SLOGD(LAUNCHER_TOPIC, "Succeeded writing config file");
 		return 0;
 	}
@@ -157,7 +178,7 @@ void Launcher::populateChoices() {
 	for (auto res : predefinedResolutions) {
 		char resolutionString[255];
 		sprintf(resolutionString, "%dx%d", res.first, res.second);
-		predefinedResolutionInput->add(resolutionString);
+		predefinedResolutionMenuButton->insert(-1, resolutionString, 0, setPredefinedResolution, this, 0);
 	}
 
 	for (auto scalingMode : scalingModes) {
@@ -165,24 +186,6 @@ void Launcher::populateChoices() {
 		this->scalingModeChoice->add(scalingModeString);
 		free_rust_string(scalingModeString);
 	}
-}
-
-void Launcher::enablePredefinedResolutions() {
-	predefinedResolutionButton->value(1);
-	customResolutionButton->value(0);
-	customResolutionXInput->deactivate();
-	customResolutionYInput->deactivate();
-
-	predefinedResolutionInput->activate();
-}
-
-void Launcher::enableCustomResolutions() {
-	customResolutionButton->value(1);
-	predefinedResolutionButton->value(0);
-	predefinedResolutionInput->deactivate();
-
-	customResolutionXInput->activate();
-	customResolutionYInput->activate();
 }
 
 void Launcher::openDataDirectorySelector(Fl_Widget *btn, void *userdata) {
@@ -199,28 +202,18 @@ void Launcher::openDataDirectorySelector(Fl_Widget *btn, void *userdata) {
 			break; // CANCEL
 		default:
 			window->dataDirectoryInput->value(fnfc.filename());
+			window->update(true, window->dataDirectoryInput);
 			break; // FILE CHOSEN
 	}
 }
 
-void Launcher::enablePredefinedResolutionSelection(Fl_Widget* btn, void* userdata) {
-	Launcher* window = static_cast< Launcher* >( userdata );
-	window->enablePredefinedResolutions();
-}
-
-void Launcher::enableCustomResolutionSelection(Fl_Widget* btn, void* userdata) {
-	Launcher* window = static_cast< Launcher* >( userdata );
-	window->enableCustomResolutions();
-}
-
 void Launcher::startExecutable(bool asEditor) {
 	// check minimal resolution:
-	if (customResolutionButton->value() &&
-		(customResolutionXInput->value() < 640 ||
-		customResolutionYInput->value() < 480)) {
+	if (resolutionIsInvalid()) {
+		fl_message_title("Invalid resolution");
 		fl_alert("Invalid custom resolution %dx%d.\nJA2 Stracciatella needs a resolution of at least 640x480.",
-			(int) customResolutionXInput->value(),
-			(int) customResolutionYInput->value());
+			(int) resolutionXInput->value(),
+			(int) resolutionYInput->value());
 		return;
 	}
 
@@ -233,10 +226,40 @@ void Launcher::startExecutable(bool asEditor) {
 	system(cmd.c_str());
 }
 
+bool Launcher::resolutionIsInvalid() {
+	return resolutionXInput->value() < 640 || resolutionYInput->value() < 480;
+}
+
+void Launcher::update(bool changed, Fl_Widget *widget) {
+	// invalid resolution warning
+	if (resolutionIsInvalid()) {
+		invalidResolutionLabel->show();
+	} else {
+		invalidResolutionLabel->hide();
+	}
+
+	// something changed indicator
+	if (changed && ja2JsonPathOutput->value()[0] != '*') {
+		std::string tmp("*"); // add '*'
+		tmp += ja2JsonPathOutput->value();
+		ja2JsonPathOutput->value(tmp.c_str());
+	} else if (!changed && ja2JsonPathOutput->value()[0] == '*') {
+		std::string tmp(ja2JsonPathOutput->value() + 1); // remove '*'
+		ja2JsonPathOutput->value(tmp.c_str());
+	}
+}
+
 void Launcher::startGame(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
+	if (!check_if_relative_path_exists(window->dataDirectoryInput->value(), "Data", true)) {
+		fl_message_title(window->playButton->label());
+		auto choice = fl_choice("Data dir not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
+		if (choice != 1) {
+			return;
+		}
+	}
 	window->startExecutable(false);
 }
 
@@ -244,12 +267,19 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
+	if (!check_if_relative_path_exists(window->dataDirectoryInput->value(), "Data/Editor.slf", true)) {
+		fl_message_title(window->editorButton->label());
+		auto choice = fl_choice("Editor.slf not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
+		if (choice != 1) {
+			return;
+		}
+	}
 	window->startExecutable(true);
 }
 
 void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
-	fl_message_title(window->guessVersionButton->label());
+	fl_message_title("Guess Game Version");
 	auto choice = fl_choice("Comparing resources packs can take a long time.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 	if (choice != 1) {
 		return;
@@ -268,6 +298,7 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 			resourceVersionIndex += 1;
 		}
 		window->gameVersionInput->value(resourceVersionIndex);
+		window->update(true, window->gameVersionInput);
 		fl_message_title(window->guessVersionButton->label());
 		fl_message("Success!");
 	} else {
@@ -277,3 +308,30 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 	free_rust_string(log);
 }
 
+void Launcher::setPredefinedResolution(Fl_Widget* btn, void* userdata) {
+	Fl_Menu_Button* menuBtn = static_cast< Fl_Menu_Button* >( btn );
+	Launcher* window = static_cast< Launcher* >( userdata );
+	std::string res = menuBtn->mvalue()->label();
+	int split_index = res.find(RESOLUTION_SEPARATOR);
+	int x = atoi(res.substr(0, split_index).c_str());
+	int y = atoi(res.substr(split_index+1, res.length()).c_str());
+	window->resolutionXInput->value(x);
+	window->resolutionYInput->value(y);
+	window->update(true, btn);
+}
+
+void Launcher::widgetChanged(Fl_Widget* widget, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+	window->update(true, widget);
+}
+
+void Launcher::reloadJa2Json(Fl_Widget* widget, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+	window->loadJa2Json();
+	window->initializeInputsFromDefaults();
+}
+
+void Launcher::saveJa2Json(Fl_Widget* widget, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+	window->writeJsonFile();
+}
