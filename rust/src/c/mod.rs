@@ -22,6 +22,11 @@ pub mod error {
 
 pub(crate) mod common {
     //! This module contains common rust code to work with C.
+    //!
+    //! All pointers that come from C are unsafe.
+    //! C can send a pointer that has already been freed.
+    //! C can send a pointer that is being used in a different thread.
+    //! Only null pointers can be detected safely, the rest can't be checked in rust.
     #![allow(dead_code)]
 
     pub use libc::{c_char, c_int, size_t};
