@@ -7,6 +7,7 @@ use std::path::PathBuf;
 use serde::Deserialize;
 use serde::Serialize;
 
+use crate::json;
 use crate::Resolution;
 use crate::VanillaVersion;
 use crate::ScalingQuality;
@@ -44,9 +45,9 @@ impl Ja2Json {
     }
 
     fn get_content(&self) -> Result<Ja2JsonContent, String> {
-        File::open(&self.path)
-            .map_err(|s| format!("Error reading ja2.json config file: {}", s.description()))
-            .and_then(|f| serde_json::from_reader(f).map_err(|s| format!("Error parsing ja2.json config file: {}", s)))
+        let s = fs::read_to_string(&self.path)
+            .map_err(|x| format!("Error reading ja2.json config file: {}", x.description()))?;
+        json::de::from_string(&s).map_err(|x| format!("Error parsing ja2.json config file: {}", x))
     }
 
     /// Apply current JSON file contents to EngineOptions struct
@@ -98,8 +99,7 @@ impl Ja2Json {
         copy_to!(engine_options.start_in_debug_mode, content.debug);
         copy_to!(engine_options.start_without_sound, content.nosound);
 
-
-        let json = serde_json::to_string_pretty(&content).map_err(|s| format!("Error creating contents of ja2.json config file: {}", s.description()))?;
+        let json = json::ser::to_string(&content).map_err(|x| format!("Error creating contents of ja2.json config file: {}", x))?;
         let mut f = File::create(&self.path).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))?;
 
         f.write_all(json.as_bytes()).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))
