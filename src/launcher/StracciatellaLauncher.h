@@ -21,7 +21,7 @@ public:
   Fl_Double_Window *stracciatellaLauncher;
   Fl_Button *editorButton;
   Fl_Button *playButton;
-  Fl_Input *dataDirectoryInput;
+  Fl_Input *gameDirectoryInput;
   Fl_Button *browseJa2DirectoryButton;
   Fl_Choice *gameVersionInput;
   Fl_Button *guessVersionButton;

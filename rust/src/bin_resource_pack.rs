@@ -7,7 +7,7 @@
 //!
 //! Example:
 //! ```
-//! resource-pack create --name "My resource pack" --pretty --file-size --hash md5 --datadir /path/to/game/dir --property vanilla_version ENGLISH --output pack.json
+//! resource-pack create --name "My resource pack" --pretty --file-size --hash md5 --gamedir /path/to/game/dir --property vanilla_version ENGLISH --output pack.json
 //! ```
 //!
 

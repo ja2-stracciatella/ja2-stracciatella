@@ -23,7 +23,7 @@ private:
 	void startExecutable(bool asEditor);
 	bool resolutionIsInvalid();
 	void update(bool changed, Fl_Widget *widget);
-	static void openDataDirectorySelector(Fl_Widget *btn, void *userdata);
+	static void openGameDirectorySelector(Fl_Widget *btn, void *userdata);
 	static void startGame(Fl_Widget* btn, void* userdata);
 	static void startEditor(Fl_Widget* btn, void* userdata);
 	static void guessVersion(Fl_Widget* btn, void* userdata);

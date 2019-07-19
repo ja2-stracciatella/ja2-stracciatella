@@ -27,7 +27,7 @@ required-features = ["bin"]
 getopts = "0.2.15"
 libc = "0.2"
 serde = "1"
-serde_derive = "1"
+serde_derive = "1, ~1.0.85"
 serde_json = { version = "1", features = ["preserve_order"] }
 json_comments = "0.2"
 dirs = "1"
@@ -46,7 +46,7 @@ regex = "0.1"
 tempdir = "0.3"
 
 [build-dependencies]
-cbindgen = "0.6"
+cbindgen = "0.9"
 
 [features]
 default = ["bin"]

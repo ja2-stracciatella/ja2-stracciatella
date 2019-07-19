@@ -114,15 +114,15 @@ pub unsafe extern fn get_stracciatella_home(ptr: *const EngineOptions) -> *mut c
 }
 
 #[no_mangle]
-pub unsafe extern fn get_vanilla_data_dir(ptr: *const EngineOptions) -> *mut c_char {
-    let c_str_home = CString::new(unsafe_from_ptr!(ptr).vanilla_data_dir.to_str().unwrap()).unwrap();
+pub unsafe extern fn get_vanilla_game_dir(ptr: *const EngineOptions) -> *mut c_char {
+    let c_str_home = CString::new(unsafe_from_ptr!(ptr).vanilla_game_dir.to_str().unwrap()).unwrap();
     c_str_home.into_raw()
 }
 
 #[no_mangle]
-pub unsafe extern fn set_vanilla_data_dir(ptr: *mut EngineOptions, data_dir_ptr: *const c_char) {
-    let c_str = unsafe { CStr::from_ptr(data_dir_ptr) };
-    unsafe_from_ptr_mut!(ptr).vanilla_data_dir = PathBuf::from(c_str.to_string_lossy().into_owned());
+pub unsafe extern fn set_vanilla_game_dir(ptr: *mut EngineOptions, game_dir_ptr: *const c_char) {
+    let c_str = unsafe { CStr::from_ptr(game_dir_ptr) };
+    unsafe_from_ptr_mut!(ptr).vanilla_game_dir = PathBuf::from(c_str.to_string_lossy().into_owned());
 }
 
 #[no_mangle]
@@ -476,17 +476,17 @@ mod tests {
 
     #[test]
     #[cfg(target_os = "macos")]
-    fn parse_args_should_return_the_correct_canonical_data_dir_on_mac() {
+    fn parse_args_should_return_the_correct_canonical_game_dir_on_mac() {
         let mut engine_options: super::EngineOptions = Default::default();
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let dir_path = temp_dir.path().join("foo");
 
         fs::create_dir_all(dir_path).unwrap();
 
-        let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
+        let input = vec!(String::from("ja2"), String::from("--gamedir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
 
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        let comp = str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)) }.to_bytes()).unwrap();
+        let comp = str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_game_dir(&engine_options)) }.to_bytes()).unwrap();
         let temp = fs::canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
         let base = temp.to_str().unwrap();
 
@@ -495,40 +495,40 @@ mod tests {
 
     #[test]
     #[cfg(all(not(windows), not(target_os = "macos")))]
-    fn parse_args_should_return_the_correct_canonical_data_dir_on_linux() {
+    fn parse_args_should_return_the_correct_canonical_game_dir_on_linux() {
         let mut engine_options: super::EngineOptions = Default::default();
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let dir_path = temp_dir.path().join("foo");
 
         fs::create_dir_all(dir_path).unwrap();
 
-        let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
+        let input = vec!(String::from("ja2"), String::from("--gamedir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
 
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)) }.to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
+        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_game_dir(&engine_options)) }.to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
     }
 
     #[test]
     #[cfg(windows)]
-    fn parse_args_should_return_the_correct_canonical_data_dir_on_windows() {
+    fn parse_args_should_return_the_correct_canonical_game_dir_on_windows() {
         let mut engine_options: super::EngineOptions = Default::default();
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let dir_path = temp_dir.path().join("foo");
 
         fs::create_dir_all(dir_path).unwrap();
 
-        let input = vec!(String::from("ja2"), String::from("--datadir"), String::from(temp_dir.path().to_str().unwrap()));
+        let input = vec!(String::from("ja2"), String::from("--gamedir"), String::from(temp_dir.path().to_str().unwrap()));
 
         assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_data_dir(&engine_options)) }.to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
+        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(super::get_vanilla_game_dir(&engine_options)) }.to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
     }
 
     #[test]
     fn parse_args_should_fail_with_non_existing_directory() {
         let mut engine_options: super::EngineOptions = Default::default();
-        let input = vec!(String::from("ja2"), String::from("--datadir"), String::from("somethingelse"));
+        let input = vec!(String::from("ja2"), String::from("--gamedir"), String::from("somethingelse"));
 
-        assert_eq!(super::parse_args(&mut engine_options, &input), Some(String::from("Please specify an existing datadir.")));
+        assert_eq!(super::parse_args(&mut engine_options, &input), Some(String::from("Please specify an existing gamedir.")));
     }
 
     fn write_temp_folder_with_ja2_json(contents: &[u8]) -> tempdir::TempDir {
@@ -588,11 +588,20 @@ mod tests {
     }
 
     #[test]
-    fn parse_json_config_should_be_able_to_change_data_dir() {
+    fn parse_json_config_should_be_able_to_change_game_dir() {
+        let temp_dir = write_temp_folder_with_ja2_json(b"{ \"game_dir\": \"/dd\" }");
+        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+
+        assert_chars_eq!(super::get_vanilla_game_dir(&engine_options), "/dd");
+    }
+
+    #[test]
+    fn parse_json_config_should_be_able_to_change_game_dir_with_data_dir() {
+        // data_dir is an alias to game_dir
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"data_dir\": \"/dd\" }");
         let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
 
-        assert_chars_eq!(super::get_vanilla_data_dir(&engine_options), "/dd");
+        assert_chars_eq!(super::get_vanilla_game_dir(&engine_options), "/dd");
     }
 
     #[test]
@@ -717,7 +726,7 @@ mod tests {
 
     #[test]
     fn build_engine_options_from_home_and_args_should_overwrite_json_with_command_line_args() {
-        let temp_dir = write_temp_folder_with_ja2_json(b"{ \"data_dir\": \"/some/place/where/the/data/is\", \"res\": \"1024x768\", \"fullscreen\": true }");
+        let temp_dir = write_temp_folder_with_ja2_json(b"{ \"game_dir\": \"/some/place/where/the/data/is\", \"res\": \"1024x768\", \"fullscreen\": true }");
         let args = vec!(String::from("ja2"), String::from("--res"), String::from("1100x480"));
         let home = temp_dir.path().join(".ja2");
 
@@ -773,7 +782,7 @@ mod tests {
 
         assert_eq!(config_file_contents,
 r##"{
-  "data_dir": "",
+  "game_dir": "",
   "mods": [],
   "res": "100x100",
   "brightness": 1.0,
