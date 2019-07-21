@@ -141,6 +141,18 @@ pub unsafe extern fn get_mod(ptr: *const EngineOptions, index: u32) -> *mut c_ch
 }
 
 #[no_mangle]
+pub unsafe extern fn clear_mods(ptr: *mut EngineOptions) {
+    unsafe_from_ptr_mut!(ptr).mods.clear();
+}
+
+#[no_mangle]
+pub unsafe extern fn push_mod(ptr: *mut EngineOptions, name: *const c_char) {
+    assert!(!name.is_null());
+    let name = unsafe { CStr::from_ptr(name) }.to_str().unwrap().to_owned();
+    unsafe_from_ptr_mut!(ptr).mods.push(name);
+}
+
+#[no_mangle]
 pub unsafe extern fn get_resolution_x(ptr: *const EngineOptions) -> u16 {
     unsafe_from_ptr!(ptr).resolution.0
 }
