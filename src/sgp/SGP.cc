@@ -380,12 +380,21 @@ int main(int argc, char* argv[])
 
 	if(get_number_of_mods(params) > 0)
 	{
-		char* rustModName = get_mod(params, 0);
-		std::string modName = std::string(rustModName);
-		free_rust_string(rustModName);
-		std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName), "data");
+		std::vector<std::string> modNames;
+		std::vector<std::string> modResFolders;
+		auto n = get_number_of_mods(params);
+		printf("%d\n", n);
+		for (auto i = 0; i < n; ++i)
+		{
+			char* rustModName = get_mod(params, i);
+			std::string modName(rustModName);
+			free_rust_string(rustModName);
+			std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName), "data");
+			modNames.emplace_back(modName);
+			modResFolders.emplace_back(modResFolder);
+		}
 		cm = new ModPackContentManager(version,
-						modName, modResFolder, configFolderPath,
+						modNames, modResFolders, configFolderPath,
 						gameResRootPath, externalizedDataPath);
 		SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
 		SLOGI(DEBUG_TAG_SGP,"JA2 Home Dir:                  '%s'", configFolderPath.c_str());
@@ -395,9 +404,12 @@ int main(int argc, char* argv[])
 		SLOGI(DEBUG_TAG_SGP,"Tilecache directory:           '%s'", cm->getTileDir().c_str());
 		SLOGI(DEBUG_TAG_SGP,"Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
 		SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
-		SLOGI(DEBUG_TAG_SGP,"MOD name:                      '%s'", modName.c_str());
-		SLOGI(DEBUG_TAG_SGP,"MOD resource directory:        '%s'", modResFolder.c_str());
-		SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
+		for (auto i = 0; i < n; ++i)
+		{
+			SLOGI(DEBUG_TAG_SGP,"MOD name:                      '%s'", modNames[i].c_str());
+			SLOGI(DEBUG_TAG_SGP,"MOD resource directory:        '%s'", modResFolders[i].c_str());
+			SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
+		}
 	}
 	else
 	{
