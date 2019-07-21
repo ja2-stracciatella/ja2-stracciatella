@@ -39,7 +39,21 @@ StracciatellaLauncher::StracciatellaLauncher() {
           } // Fl_Button* guessVersionButton
           o->end();
         } // Fl_Group* o
-        { Fl_Group* o = new Fl_Group(10, 160, 445, 130, "resizable");
+        { Fl_Group* o = new Fl_Group(10, 160, 445, 105);
+          { modsCheckBrowser = new Fl_Check_Browser(20, 175, 315, 80, "Mods:");
+            modsCheckBrowser->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+          } // Fl_Check_Browser* modsCheckBrowser
+          { addModMenuButton = new Fl_Menu_Button(345, 175, 100, 20, "Add");
+          } // Fl_Menu_Button* addModMenuButton
+          { moveDownModsButton = new Fl_Button(345, 215, 100, 20, "Move down");
+          } // Fl_Button* moveDownModsButton
+          { moveUpModsButton = new Fl_Button(345, 195, 100, 20, "Move up");
+          } // Fl_Button* moveUpModsButton
+          { removeModsButton = new Fl_Button(345, 235, 100, 20, "Remove");
+          } // Fl_Button* removeModsButton
+          o->end();
+        } // Fl_Group* o
+        { Fl_Group* o = new Fl_Group(10, 265, 445, 25, "resizable");
           o->labeltype(FL_NO_LABEL);
           o->align(Fl_Align(FL_ALIGN_TOP|FL_ALIGN_INSIDE));
           o->end();
