@@ -31,6 +31,10 @@ private:
 	static void widgetChanged(Fl_Widget* widget, void* userdata);
 	static void reloadJa2Json(Fl_Widget* widget, void* userdata);
 	static void saveJa2Json(Fl_Widget* widget, void* userdata);
+	static void addMod(Fl_Widget* widget, void* userdata);
+	static void moveUpMods(Fl_Widget* widget, void* userdata);
+	static void moveDownMods(Fl_Widget* widget, void* userdata);
+	static void removeMods(Fl_Widget* widget, void* userdata);
 };
 
 #endif //JA2_LAUNCHER_H_H

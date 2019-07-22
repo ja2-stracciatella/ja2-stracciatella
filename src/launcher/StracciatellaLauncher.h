@@ -9,10 +9,11 @@
 #include <FL/Fl_Button.H>
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Choice.H>
+#include <FL/Fl_Check_Browser.H>
+#include <FL/Fl_Menu_Button.H>
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Box.H>
-#include <FL/Fl_Menu_Button.H>
 #include <FL/Fl_Check_Button.H>
 
 class StracciatellaLauncher {
@@ -25,6 +26,11 @@ public:
   Fl_Button *browseJa2DirectoryButton;
   Fl_Choice *gameVersionInput;
   Fl_Button *guessVersionButton;
+  Fl_Check_Browser *modsCheckBrowser;
+  Fl_Menu_Button *addModMenuButton;
+  Fl_Button *moveDownModsButton;
+  Fl_Button *moveUpModsButton;
+  Fl_Button *removeModsButton;
   Fl_Output *gameSettingsOutput;
   Fl_Choice *scalingModeChoice;
   Fl_Value_Input *resolutionXInput;

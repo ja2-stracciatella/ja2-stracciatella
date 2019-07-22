@@ -9,15 +9,15 @@
 #define DEBUG_PRINT_OPENING_FILES (1)
 
 ModPackContentManager::ModPackContentManager(GameVersion gameVersion,
-						const std::string &modName,
-						const std::string &modResFolder,
+						const std::vector<std::string> &modNames,
+						const std::vector<std::string> &modResFolders,
 						const std::string &configFolder,
 						const std::string &gameResRootPath,
 						const std::string &externalizedDataPath)
 	:DefaultContentManager(gameVersion, configFolder, gameResRootPath, externalizedDataPath)
 {
-	m_modName = modName;
-	m_modResFolder = modResFolder;
+	m_modNames = modNames;
+	m_modResFolders = modResFolders;
 }
 
 ModPackContentManager::~ModPackContentManager()
@@ -27,14 +27,14 @@ ModPackContentManager::~ModPackContentManager()
 /* Checks if a game resource exists. */
 bool ModPackContentManager::doesGameResExists(char const* fileName) const
 {
-	if(FileMan::checkFileExistance(m_modResFolder.c_str(), fileName))
+	for (const auto& folder : m_modResFolders)
 	{
-		return true;
+		if (FileMan::checkFileExistance(folder.c_str(), fileName))
+		{
+			return true;
+		}
 	}
-	else
-	{
-		return DefaultContentManager::doesGameResExists(fileName);
-	}
+	return DefaultContentManager::doesGameResExists(fileName);
 }
 
 /* Open a game resource file for reading.
@@ -46,16 +46,15 @@ SGPFile* ModPackContentManager::openGameResForReading(const char* filename) cons
 	int mode;
 	const char* fmode = GetFileOpenModeForReading(&mode);
 
-	int d = FileMan::openFileCaseInsensitive(m_modResFolder, filename, mode);
-	if (d < 0)
+	for (const auto& folder : m_modResFolders)
 	{
-		return DefaultContentManager::openGameResForReading(filename);
+		int d = FileMan::openFileCaseInsensitive(folder, filename, mode);
+		if (d >= 0) {
+			SLOGI(DEBUG_TAG_MODPACK, "opening mod's resource: %s", filename);
+			return FileMan::getSGPFileFromFD(d, filename, fmode);
+		}
 	}
-	else
-	{
-		SLOGI(DEBUG_TAG_MODPACK, "opening mod's resource: %s", filename);
-		return FileMan::getSGPFileFromFD(d, filename, fmode);
-	}
+	return DefaultContentManager::openGameResForReading(filename);
 }
 
 SGPFile* ModPackContentManager::openGameResForReading(const std::string& filename) const
@@ -66,7 +65,12 @@ SGPFile* ModPackContentManager::openGameResForReading(const std::string& filenam
 /** Get folder for saved games. */
 std::string ModPackContentManager::getSavedGamesFolder() const
 {
-	std::string folderName = std::string("SavedGames-") + m_modName;
+	std::string folderName("SavedGames");
+	for (const auto& name : m_modNames)
+	{
+		folderName.push_back('-');
+		folderName.append(name);
+	}
 	return FileMan::joinPaths(m_configFolder, folderName);
 }
 

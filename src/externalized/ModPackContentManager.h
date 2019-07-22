@@ -10,8 +10,8 @@ class ModPackContentManager : public DefaultContentManager
 {
 public:
 	ModPackContentManager(GameVersion gameVersion,
-				const std::string &modName,
-				const std::string &modResFolder,
+				const std::vector<std::string> &modNames,
+				const std::vector<std::string> &modResFolders,
 				const std::string &configFolder,
 				const std::string &gameResRootPath,
 				const std::string &externalizedDataPath);
@@ -31,7 +31,7 @@ public:
 	virtual UTF8String* loadDialogQuoteFromFile(const char* filename, int quote_number);
 
 protected:
-	std::string m_modName;
-	std::string m_modResFolder;
+	std::vector<std::string> m_modNames;
+	std::vector<std::string> m_modResFolders;
 	std::map<std::string, std::vector<std::string> > m_dialogQuotesMap;
 };

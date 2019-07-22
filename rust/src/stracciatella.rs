@@ -141,6 +141,18 @@ pub unsafe extern fn get_mod(ptr: *const EngineOptions, index: u32) -> *mut c_ch
 }
 
 #[no_mangle]
+pub unsafe extern fn clear_mods(ptr: *mut EngineOptions) {
+    unsafe_from_ptr_mut!(ptr).mods.clear();
+}
+
+#[no_mangle]
+pub unsafe extern fn push_mod(ptr: *mut EngineOptions, name: *const c_char) {
+    assert!(!name.is_null());
+    let name = unsafe { CStr::from_ptr(name) }.to_str().unwrap().to_owned();
+    unsafe_from_ptr_mut!(ptr).mods.push(name);
+}
+
+#[no_mangle]
 pub unsafe extern fn get_resolution_x(ptr: *const EngineOptions) -> u16 {
     unsafe_from_ptr!(ptr).resolution.0
 }
@@ -293,17 +305,7 @@ pub unsafe extern "C" fn guess_resource_version(
 /// Returns the path to game.json.
 #[no_mangle]
 pub unsafe extern "C" fn get_game_json_path() -> *mut c_char {
-    let mut path = PathBuf::new();
-    let extra_data_dir = option_env!("EXTRA_DATA_DIR");
-    if extra_data_dir.is_some() && extra_data_dir.unwrap().len() > 0 {
-        // use dir defined at compile time
-        path.push(extra_data_dir.unwrap());
-    } else if let Ok(exe) = env::current_exe() {
-        if let Some(dir) = exe.parent() {
-            // use the directory of the executable
-            path.push(dir);
-        }
-    }
+    let mut path = get_assets_dir();
     path.push("externalized/game.json");
     let path: String = path.to_string_lossy().into();
     return CString::new(path).unwrap().into_raw();
@@ -374,6 +376,79 @@ pub extern "C" fn check_if_relative_path_exists(
         buf.push(component);
     }
     return buf.exists();
+}
+
+/// Returns a list of available mods.
+#[no_mangle]
+pub extern "C" fn get_available_mods() -> *mut VecCString {
+    let mut path = get_assets_dir();
+    path.push("mods");
+    if let Ok(entries) = path.read_dir() {
+        let mods: Vec<_> = entries
+            .filter_map(|x| x.ok()) // DirEntry
+            .filter_map(|x| {
+                if let Ok(metadata) = x.metadata() {
+                    if metadata.is_dir() {
+                        return x.file_name().into_string().ok();
+                    }
+                }
+                None
+            }) // String
+            .filter_map(|x| CString::new(x.as_bytes().to_owned()).ok()) // CString
+            .collect();
+        VecCString::from_vec(mods).into_ptr()
+    } else {
+        VecCString::new().into_ptr()
+    }
+}
+
+pub struct VecCString {
+    inner: Vec<CString>
+}
+
+impl VecCString {
+    pub fn new() -> Self {
+        Self { inner: Vec::new() }
+    }
+    pub fn from_vec(vec: Vec<CString>) -> Self {
+        Self { inner: vec }
+    }
+    pub fn into_ptr(self) -> *mut VecCString {
+        Box::into_raw(Box::new(self))
+    }
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn vec_c_string_delete(vec: *mut VecCString) {
+    assert!(!vec.is_null());
+    unsafe { Box::from_raw(vec) };
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn vec_c_string_len(vec: *mut VecCString) -> size_t {
+    unsafe_from_ptr!(vec).inner.len()
+}
+
+#[no_mangle]
+pub unsafe extern "C" fn vec_c_string_get(vec: *mut VecCString, index: size_t) -> *mut c_char {
+    unsafe_from_ptr!(vec).inner[index].clone().into_raw()
+}
+
+/// Returns the path to the assets directory.
+/// It contains mods and externalized subdirectories.
+fn get_assets_dir() -> PathBuf {
+    let mut path = PathBuf::new();
+    let extra_data_dir = option_env!("EXTRA_DATA_DIR");
+    if extra_data_dir.is_some() && extra_data_dir.unwrap().len() > 0 {
+        // use dir defined at compile time
+        path.push(extra_data_dir.unwrap());
+    } else if let Ok(exe) = env::current_exe() {
+        if let Some(dir) = exe.parent() {
+            // use the directory of the executable
+            path.push(dir);
+        }
+    }
+    path
 }
 
 #[cfg(test)]
