@@ -378,12 +378,11 @@ int main(int argc, char* argv[])
 
 	DefaultContentManager *cm;
 
-	if(get_number_of_mods(params) > 0)
+	auto n = get_number_of_mods(params);
+	if(n > 0)
 	{
 		std::vector<std::string> modNames;
 		std::vector<std::string> modResFolders;
-		auto n = get_number_of_mods(params);
-		printf("%d\n", n);
 		for (auto i = 0; i < n; ++i)
 		{
 			char* rustModName = get_mod(params, i);
