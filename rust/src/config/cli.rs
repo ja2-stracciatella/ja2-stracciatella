@@ -33,6 +33,12 @@ impl Cli {
         opts.long_only(true);
         opts.optmulti(
             "",
+            "datadir", // TODO remove this deprecated option in version >= 0.18
+            "Set path for the vanilla game directory. DEPRECATED use -gamedir instead.",
+            GAME_DIR_OPTION_EXAMPLE
+        );
+        opts.optmulti(
+            "",
             "gamedir",
             "Set path for the vanilla game directory",
             GAME_DIR_OPTION_EXAMPLE
@@ -110,7 +116,7 @@ impl Cli {
                     return Err(format!("Unknown arguments: '{}'.", m.free.join(" ")));
                 }
 
-                if let Some(s) = m.opt_str("gamedir") {
+                if let Some(s) = m.opts_str(&["gamedir".to_owned(), "datadir".to_owned()]) {
                     match fs::canonicalize(PathBuf::from(s)) {
                         Ok(s) => {
                             let mut temp = String::from(s.to_str().expect("Should not happen"));
