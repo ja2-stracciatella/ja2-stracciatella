@@ -77,8 +77,8 @@ void Launcher::loadJa2Json() {
 void Launcher::show() {
 	editorButton->callback( (Fl_Callback*)startEditor, (void*)(this) );
 	playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
-	dataDirectoryInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	browseJa2DirectoryButton->callback((Fl_Callback *) openDataDirectorySelector, (void *) (this));
+	gameDirectoryInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	browseJa2DirectoryButton->callback((Fl_Callback *) openGameDirectorySelector, (void *) (this));
 	gameVersionInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	guessVersionButton->callback( (Fl_Callback*)guessVersion, (void*)(this) );
 	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
@@ -112,8 +112,8 @@ void Launcher::show() {
 }
 
 void Launcher::initializeInputsFromDefaults() {
-	char* rustResRootPath = get_vanilla_data_dir(this->engine_options);
-	dataDirectoryInput->value(rustResRootPath);
+	char* rustResRootPath = get_vanilla_game_dir(this->engine_options);
+	gameDirectoryInput->value(rustResRootPath);
 	free_rust_string(rustResRootPath);
 
 	auto n = get_number_of_mods(this->engine_options);
@@ -157,7 +157,7 @@ int Launcher::writeJsonFile() {
 	set_start_in_fullscreen(this->engine_options, fullscreenCheckbox->value());
 	set_start_without_sound(this->engine_options, !playSoundsCheckbox->value());
 
-	set_vanilla_data_dir(this->engine_options, dataDirectoryInput->value());
+	set_vanilla_game_dir(this->engine_options, gameDirectoryInput->value());
 
 	clear_mods(this->engine_options);
 	auto nitems = modsCheckBrowser->nitems();
@@ -215,12 +215,12 @@ void Launcher::populateChoices() {
 	}
 }
 
-void Launcher::openDataDirectorySelector(Fl_Widget *btn, void *userdata) {
+void Launcher::openGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 	Fl_Native_File_Chooser fnfc;
 	fnfc.title("Select the original Jagged Alliance 2 install directory");
 	fnfc.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
-	fnfc.directory(window->dataDirectoryInput->value());
+	fnfc.directory(window->gameDirectoryInput->value());
 
 	switch ( fnfc.show() ) {
 		case -1:
@@ -228,8 +228,8 @@ void Launcher::openDataDirectorySelector(Fl_Widget *btn, void *userdata) {
 		case  1:
 			break; // CANCEL
 		default:
-			window->dataDirectoryInput->value(fnfc.filename());
-			window->update(true, window->dataDirectoryInput);
+			window->gameDirectoryInput->value(fnfc.filename());
+			window->update(true, window->gameDirectoryInput);
 			break; // FILE CHOSEN
 	}
 }
@@ -280,7 +280,7 @@ void Launcher::startGame(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
-	if (!check_if_relative_path_exists(window->dataDirectoryInput->value(), "Data", true)) {
+	if (!check_if_relative_path_exists(window->gameDirectoryInput->value(), "Data", true)) {
 		fl_message_title(window->playButton->label());
 		auto choice = fl_choice("Data dir not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 		if (choice != 1) {
@@ -294,7 +294,7 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
-	if (!check_if_relative_path_exists(window->dataDirectoryInput->value(), "Data/Editor.slf", true)) {
+	if (!check_if_relative_path_exists(window->gameDirectoryInput->value(), "Data/Editor.slf", true)) {
 		fl_message_title(window->editorButton->label());
 		auto choice = fl_choice("Editor.slf not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 		if (choice != 1) {
@@ -313,7 +313,7 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 	}
 
 	char* log = NULL;
-	auto gamedir = window->dataDirectoryInput->value();
+	auto gamedir = window->gameDirectoryInput->value();
 	auto guessedVersion = guess_resource_version(gamedir, &log);
 	printf("%s", log);
 	if (guessedVersion != -1) {

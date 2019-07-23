@@ -11,10 +11,10 @@ use crate::Resolution;
 use crate::VanillaVersion;
 
 #[cfg(not(windows))]
-static DATA_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";
+static GAME_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";
 
 #[cfg(windows)]
-static DATA_DIR_OPTION_EXAMPLE: &'static str = "C:\\JA2";
+static GAME_DIR_OPTION_EXAMPLE: &'static str = "C:\\JA2";
 
 /// Handles command line parameters for executables
 ///
@@ -33,9 +33,15 @@ impl Cli {
         opts.long_only(true);
         opts.optmulti(
             "",
-            "datadir",
-            "Set path for data directory",
-            DATA_DIR_OPTION_EXAMPLE
+            "datadir", // TODO remove this deprecated option in version >= 0.18
+            "Set path for the vanilla game directory. DEPRECATED use -gamedir instead.",
+            GAME_DIR_OPTION_EXAMPLE
+        );
+        opts.optmulti(
+            "",
+            "gamedir",
+            "Set path for the vanilla game directory",
+            GAME_DIR_OPTION_EXAMPLE
         );
         opts.optmulti(
             "",
@@ -110,7 +116,7 @@ impl Cli {
                     return Err(format!("Unknown arguments: '{}'.", m.free.join(" ")));
                 }
 
-                if let Some(s) = m.opt_str("datadir") {
+                if let Some(s) = m.opts_str(&["gamedir".to_owned(), "datadir".to_owned()]) {
                     match fs::canonicalize(PathBuf::from(s)) {
                         Ok(s) => {
                             let mut temp = String::from(s.to_str().expect("Should not happen"));
@@ -120,9 +126,9 @@ impl Cli {
                                 let pos = temp.find('\\').unwrap() + 1;
                                 temp.drain(..pos);
                             }
-                            engine_options.vanilla_data_dir = PathBuf::from(temp)
+                            engine_options.vanilla_game_dir = PathBuf::from(temp)
                         },
-                        Err(_) => return Err(String::from("Please specify an existing datadir."))
+                        Err(_) => return Err(String::from("Please specify an existing gamedir."))
                     };
                 }
 

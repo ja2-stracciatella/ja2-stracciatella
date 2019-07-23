@@ -33,7 +33,7 @@ class StracciatellaLauncher {open
           Fl_Group {} {
             xywh {10 60 445 50}
           } {
-            Fl_Input dataDirectoryInput {
+            Fl_Input gameDirectoryInput {
               label {JA2 Game Directory:}
               xywh {20 75 385 25} align 5 resizable
             }

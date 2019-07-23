@@ -10,7 +10,7 @@ pub struct EngineOptions {
     /// Path to configuration directory in the user's home directory
     pub stracciatella_home: PathBuf,
     /// Path to the vanilla game directory
-    pub vanilla_data_dir: PathBuf,
+    pub vanilla_game_dir: PathBuf,
     /// List of enabled mods
     pub mods: Vec<String>,
     /// Resolution the game will start in
@@ -41,7 +41,7 @@ impl Default for EngineOptions {
     fn default() -> EngineOptions {
         EngineOptions {
             stracciatella_home: PathBuf::from(""),
-            vanilla_data_dir: PathBuf::from(""),
+            vanilla_game_dir: PathBuf::from(""),
             mods: vec!(),
             resolution: Resolution::default(),
             brightness: 1.0,
@@ -79,7 +79,7 @@ impl EngineOptions {
             Some(str) => Err(str)
         }?;
 
-        if engine_options.vanilla_data_dir == PathBuf::from("") {
+        if engine_options.vanilla_game_dir == PathBuf::from("") {
             return Err(String::from("Vanilla data directory has to be set either in config file or per command line switch"))
         }
 

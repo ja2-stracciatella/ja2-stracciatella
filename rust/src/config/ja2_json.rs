@@ -15,7 +15,8 @@ use crate::EngineOptions;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Ja2JsonContent {
-    data_dir: Option<PathBuf>,
+    #[serde(alias = "data_dir")]
+    game_dir: Option<PathBuf>,
     mods: Option<Vec<String>>,
     res: Option<Resolution>,
     brightness: Option<f32>,
@@ -58,7 +59,7 @@ impl Ja2Json {
 
         let content = self.get_content()?;
 
-        copy_to!(content.data_dir, engine_options.vanilla_data_dir);
+        copy_to!(content.game_dir, engine_options.vanilla_game_dir);
         copy_to!(content.mods, engine_options.mods);
         copy_to!(content.res, engine_options.resolution);
         copy_to!(content.brightness, engine_options.brightness);
@@ -78,7 +79,7 @@ impl Ja2Json {
         }
 
         let mut content = Ja2JsonContent {
-            data_dir: None,
+            game_dir: None,
             mods: None,
             res: None,
             brightness: None,
@@ -89,7 +90,7 @@ impl Ja2Json {
             nosound: None,
         };
 
-        copy_to!(engine_options.vanilla_data_dir, content.data_dir);
+        copy_to!(engine_options.vanilla_game_dir, content.game_dir);
         copy_to!(engine_options.mods, content.mods);
         copy_to!(engine_options.resolution, content.res);
         copy_to!(engine_options.brightness, content.brightness);
@@ -110,12 +111,12 @@ impl Ja2Json {
         #[cfg(not(windows))]
         static DEFAULT_JSON_CONTENT: &'static str = r##"{
             // Put the directory to your original ja2 installation into the line below.
-            "data_dir": "/some/place/where/the/data/is"
+            "game_dir": "/some/place/where/the/data/is"
         }"##;
         #[cfg(windows)]
         static DEFAULT_JSON_CONTENT: &'static str = r##"{
             // Put the directory to your original ja2 installation into the line below. Make sure to use double backslashes.
-            "data_dir": "C:\\Program Files\\Jagged Alliance 2"
+            "game_dir": "C:\\Program Files\\Jagged Alliance 2"
         }"##;
 
         let parent = self.path.parent();

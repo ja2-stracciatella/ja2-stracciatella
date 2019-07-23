@@ -19,10 +19,10 @@ StracciatellaLauncher::StracciatellaLauncher() {
         o->labelcolor((Fl_Color)24);
         o->hide();
         { Fl_Group* o = new Fl_Group(10, 60, 445, 50);
-          { dataDirectoryInput = new Fl_Input(20, 75, 385, 25, "JA2 Game Directory:");
-            dataDirectoryInput->align(Fl_Align(FL_ALIGN_TOP_LEFT));
-            Fl_Group::current()->resizable(dataDirectoryInput);
-          } // Fl_Input* dataDirectoryInput
+          { gameDirectoryInput = new Fl_Input(20, 75, 385, 25, "JA2 Game Directory:");
+            gameDirectoryInput->align(Fl_Align(FL_ALIGN_TOP_LEFT));
+            Fl_Group::current()->resizable(gameDirectoryInput);
+          } // Fl_Input* gameDirectoryInput
           { browseJa2DirectoryButton = new Fl_Button(415, 75, 30, 25, "@fileopen");
             browseJa2DirectoryButton->tooltip("Choose JA2 game directory.");
           } // Fl_Button* browseJa2DirectoryButton

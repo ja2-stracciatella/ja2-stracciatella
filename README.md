@@ -27,7 +27,7 @@ To get in touch with the developers you can use the [#ja2-stracciatella IRC chan
 ### Without the optional launcher
 3. Start the game the first time.  It will create the configuration file %USERPROFILE%\Documents\JA2\ja2.json on Windows or ~/.ja2/ja2.json on Unix-like systems.
 
-4. Edit the configuration file and set parameter data_dir to point to the directory where the original game was installed during step 1.  For example, D:\games\ja2\ (on Windows) or /home/user/games/ja2-installed (on Linux).
+4. Edit the configuration file and set parameter game_dir to point to the directory where the original game was installed during step 1.  For example, D:\games\ja2\ (on Windows) or /home/user/games/ja2-installed (on Linux).
 
 5. If you installed not English version of the original game, but one of the localized varieties (e.g. French or Russian), you need to start ja2.exe with parameter telling which version of the game you are using.  For example: ```ja2.exe -resversion FRENCH```
 
