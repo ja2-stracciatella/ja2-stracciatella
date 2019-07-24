@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "FileMan.h"
-#include "LibraryDataBase.h"
+#include "RustInterface.h"
 #include "MemMan.h"
 #include "PODObj.h"
 

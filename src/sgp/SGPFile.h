@@ -18,18 +18,6 @@ enum SGPFileFlags
 
 struct LibraryFile;
 
-#if 0 // rustified
-struct LibraryHeaderStruct;
-struct FileHeaderStruct;
-
-struct LibraryFile
-{
-	uint32_t                uiFilePosInFile; // current position in the file
-	LibraryHeaderStruct*    lib;
-	const FileHeaderStruct* pFileHeader;
-};
-#endif // rustified
-
 struct SGPFile
 {
 	SGPFileFlags flags;

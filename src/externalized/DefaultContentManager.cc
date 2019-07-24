@@ -16,7 +16,6 @@
 #include "game/GameState.h"
 
 #include "sgp/FileMan.h"
-#include "sgp/LibraryDataBase.h"
 #include "sgp/MemMan.h"
 #include "sgp/StrUtils.h"
 #include "sgp/UTF8String.h"
@@ -28,6 +27,7 @@
 #include "JsonObject.h"
 #include "JsonUtility.h"
 #include "MagazineModel.h"
+#include "RustInterface.h"
 #include "WeaponModels.h"
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
