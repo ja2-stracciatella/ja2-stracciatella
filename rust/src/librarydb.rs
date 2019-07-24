@@ -123,7 +123,7 @@ impl LibraryDBInner {
 
     /// Opens and adds a library at the end of library database.
     pub fn add_library(&mut self, data_dir: &Path, library: &Path) -> io::Result<()> {
-        let library = Library::open_library(&data_dir, &library)?;
+        let library = Library::open(&data_dir, &library)?;
         self.arc_libraries.push(Arc::new(RwLock::new(library)));
         Ok(())
     }
@@ -148,7 +148,7 @@ impl LibraryDBInner {
 
 impl Library {
     /// Opens a library for reading.
-    fn open_library(data_dir: &Path, library: &Path) -> io::Result<Self> {
+    fn open(data_dir: &Path, library: &Path) -> io::Result<Self> {
         let library_path = find_file(&data_dir, &library)?;
         let mut library_file = File::open(&library_path)?;
         let header = SlfHeader::from_input(&mut library_file)?;
