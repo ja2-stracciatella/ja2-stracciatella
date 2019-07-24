@@ -397,27 +397,6 @@ pub mod tests {
     use super::*;
     use crate::file_formats::slf::{SlfEntry, SlfEntryState, SlfHeader};
 
-    pub fn make_data_slf(dir: &Path) -> PathBuf {
-        let name = "data.slf";
-        let library_path = "";
-        let entry_paths = ["foo.txt"];
-        make_slf(&dir, &name, &library_path, &entry_paths)
-    }
-
-    pub fn make_foo_slf(dir: &Path) -> PathBuf {
-        let name = "foo.slf";
-        let library_path = "foo\\";
-        let entry_paths = ["bar.txt", "bar\\baz.txt"];
-        make_slf(&dir, &name, &library_path, &entry_paths)
-    }
-
-    pub fn make_foobar_slf(dir: &Path) -> PathBuf {
-        let name = "foobar.slf";
-        let library_path = "foo\\bar\\";
-        let entry_paths = ["baz.txt"];
-        make_slf(&dir, &name, &library_path, &entry_paths)
-    }
-
     fn make_slf(dir: &Path, name: &str, library_path: &str, entry_paths: &[&str]) -> PathBuf {
         let header = SlfHeader {
             library_name: name.to_owned(),
@@ -463,52 +442,121 @@ pub mod tests {
         data
     }
 
-    #[test]
-    fn reading() {
-        let dir = TempDir::new("librarydb").unwrap();
-        let data_dir = dir.path();
-        make_data_slf(&data_dir);
-        make_foo_slf(&data_dir);
-        make_foobar_slf(&data_dir);
-
-        // relative path of library is case insensitive, read works, seek works
-        for library in &["data.slf", "DATA.SLF"] {
-            let mut ldb = LibraryDB::new();
-            ldb.add_library(&data_dir, &Path::new(library)).unwrap();
-            let mut file = ldb.open_file("foo.txt").unwrap();
-            let mut data = Vec::new();
-            file.read_to_end(&mut data).unwrap();
-            assert_eq!(&data, b"data.slf");
-            assert_eq!(file.seek(SeekFrom::Start(0)).unwrap(), 0);
-            assert_eq!(file.seek(SeekFrom::End(0)).unwrap(), 8);
-            assert_eq!(file.seek(SeekFrom::Current(-4)).unwrap(), 4);
-            let mut data = Vec::new();
-            file.read_to_end(&mut data).unwrap();
-            assert_eq!(&data, b".slf");
-        }
-
-        // library order matters, file paths are case insensitive, allow both path separators
-        {
-            let mut ldb = LibraryDB::new();
-            ldb.add_library(&data_dir, &Path::new("foo.slf")).unwrap();
-            ldb.add_library(&data_dir, &Path::new("foobar.slf"))
-                .unwrap();
-            let data = library_file_data(&ldb, "foo/bar.txt");
-            assert_eq!(&data, b"foo.slf");
-            let data = library_file_data(&ldb, "foo/BAR/baz.txt");
-            assert_eq!(&data, b"foo.slf");
-
-            let mut ldb = LibraryDB::new();
-            ldb.add_library(&data_dir, &Path::new("foobar.slf"))
-                .unwrap();
-            ldb.add_library(&data_dir, &Path::new("foo.slf")).unwrap();
-            let data = library_file_data(&ldb, "foo/BAR.TXT");
-            assert_eq!(&data, b"foo.slf");
-            let data = library_file_data(&ldb, "foo\\bar/baz.txt");
-            assert_eq!(&data, b"foobar.slf");
-        }
-
-        dir.close().unwrap();
+    /// Creates a temporary data dir that is removed when TempDir is closed or goes out of scope.
+    pub fn data_dir() -> (TempDir, PathBuf) {
+        let tmp = TempDir::new("librarydb").unwrap();
+        let dir = tmp.path().to_owned();
+        // data.slf contains foo.txt
+        let name = "data.slf";
+        let library_path = "";
+        let entry_paths = ["foo.txt"];
+        make_slf(&dir, &name, &library_path, &entry_paths);
+        // foo.slf contains foo/bar.txt and foo/bar/baz.txt
+        let name = "foo.slf";
+        let library_path = "foo\\";
+        let entry_paths = ["bar.txt", "bar\\baz.txt"];
+        make_slf(&dir, &name, &library_path, &entry_paths);
+        // foobar.slf contains foo/bar/baz.txt
+        let name = "foobar.slf";
+        let library_path = "foo\\bar\\";
+        let entry_paths = ["baz.txt"];
+        make_slf(&dir, &name, &library_path, &entry_paths);
+        (tmp, dir)
     }
 
+    #[test]
+    fn open_and_read() {
+        let (tmp, dir) = data_dir();
+
+        let mut ldb = LibraryDB::new();
+        ldb.add_library(&dir, Path::new("data.slf")).unwrap();
+        let data = library_file_data(&ldb, "foo.txt");
+        assert_eq!(&data, b"data.slf");
+
+        tmp.close().unwrap();
+    }
+
+    #[test]
+    fn open_and_read_case_insensitive() {
+        let (tmp, dir) = data_dir();
+
+        let mut ldb = LibraryDB::new();
+        ldb.add_library(&dir, Path::new("DATA.slf")).unwrap();
+        let data = library_file_data(&ldb, "FOO.txt");
+        assert_eq!(&data, b"data.slf");
+
+        tmp.close().unwrap();
+    }
+
+    #[test]
+    fn seek() {
+        let (tmp, dir) = data_dir();
+
+        let mut ldb = LibraryDB::new();
+        ldb.add_library(&dir, Path::new("data.slf")).unwrap();
+        let mut file = ldb.open_file("foo.txt").unwrap();
+
+        assert_eq!(file.seek(SeekFrom::End(0)).unwrap(), 8);
+        assert_eq!(file.seek(SeekFrom::Current(4)).unwrap(), 12);
+        assert_eq!(file.seek(SeekFrom::Current(-8)).unwrap(), 4);
+        assert!(file.seek(SeekFrom::Current(-5)).is_err());
+        assert_eq!(file.seek(SeekFrom::Start(0)).unwrap(), 0);
+
+        tmp.close().unwrap();
+    }
+
+    #[test]
+    fn library_order_matters() {
+        let (tmp, dir) = data_dir();
+
+        let mut ldb = LibraryDB::new();
+        ldb.add_library(&dir, Path::new("foo.slf")).unwrap();
+        ldb.add_library(&dir, Path::new("foobar.slf")).unwrap();
+        let data = library_file_data(&ldb, "foo/bar/baz.txt");
+        assert_eq!(&data, b"foo.slf");
+
+        let mut ldb = LibraryDB::new();
+        ldb.add_library(&dir, Path::new("foobar.slf")).unwrap();
+        ldb.add_library(&dir, Path::new("foo.slf")).unwrap();
+        let data = library_file_data(&ldb, "foo/bar/baz.txt");
+        assert_eq!(&data, b"foobar.slf");
+
+        tmp.close().unwrap();
+    }
+
+    #[test]
+    fn case_insensitive_file_paths() {
+        let (tmp, dir) = data_dir();
+
+        let mut ldb = LibraryDB::new();
+        ldb.add_library(&dir, &Path::new("foo.slf")).unwrap();
+        let data = library_file_data(&ldb, "FOO/bar.txt");
+        assert_eq!(&data, b"foo.slf");
+        let data = library_file_data(&ldb, "foo/BAR.TXT");
+        assert_eq!(&data, b"foo.slf");
+        let data = library_file_data(&ldb, "foo/BAR/baz.txt");
+        assert_eq!(&data, b"foo.slf");
+        let data = library_file_data(&ldb, "foo/bar/BAZ.TXT");
+        assert_eq!(&data, b"foo.slf");
+
+        tmp.close().unwrap();
+    }
+
+    #[test]
+    fn allow_both_seprators() {
+        let (tmp, dir) = data_dir();
+
+        let mut ldb = LibraryDB::new();
+        ldb.add_library(&dir, &Path::new("foo.slf")).unwrap();
+        let data = library_file_data(&ldb, "foo/bar/baz.txt");
+        assert_eq!(&data, b"foo.slf");
+        let data = library_file_data(&ldb, "foo/bar\\baz.txt");
+        assert_eq!(&data, b"foo.slf");
+        let data = library_file_data(&ldb, "foo\\bar\\baz.txt");
+        assert_eq!(&data, b"foo.slf");
+        let data = library_file_data(&ldb, "foo\\bar/baz.txt");
+        assert_eq!(&data, b"foo.slf");
+
+        tmp.close().unwrap();
+    }
 }

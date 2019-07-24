@@ -136,8 +136,6 @@ pub extern "C" fn LibraryFile_GetSize(file: *mut LibraryFile) -> u64 {
 mod tests {
     use crate::c::common::*;
     use crate::c::librarydb::*;
-    use crate::librarydb::tests::{make_data_slf, make_foo_slf, make_foobar_slf};
-    use tempdir::TempDir;
 
     // FileSeekMode values (see src/sgp/SGPFile.h)
     const FILE_SEEK_FROM_START: c_int = 0;
@@ -164,11 +162,8 @@ mod tests {
 
     #[test]
     fn reading() {
-        let dir = TempDir::new("c_librarydb").unwrap();
-        let data_dir = dir.path();
-        make_data_slf(&data_dir);
-        make_foo_slf(&data_dir);
-        make_foobar_slf(&data_dir);
+        // TODO move to C++ unittests and split into individual tests
+        let (dir, data_dir) = crate::librarydb::tests::data_dir();
 
         // relative path of library is case insensitive, read works, seek works
         for library in &["data.slf", "DATA.SLF"] {
