@@ -328,12 +328,15 @@ fn case_insensitive_path(path: &str) -> String {
 /// Finds a filesystem file.
 /// dir_path is an absolute path or a path relative to the current directory.
 /// file_name is a path relative to dir_path, the normal components are searched case-insensitive (perfect match takes precedence).
+/// file_name cannot exit dir_path
 fn find_file(dir_path: &Path, file_name: &Path) -> io::Result<PathBuf> {
     let mut path = dir_path.to_owned();
     let components: Vec<_> = file_name.components().collect();
+    let mut depth = 0;
     for (i, component) in components.iter().enumerate() {
         match component {
             Component::Normal(os_str) => {
+                depth += 1;
                 if let Some(want) = os_str.to_str() {
                     let found: Vec<_> = path
                         .read_dir()?
@@ -366,7 +369,14 @@ fn find_file(dir_path: &Path, file_name: &Path) -> io::Result<PathBuf> {
                 }
                 path.push(component);
             }
-            Component::CurDir | Component::ParentDir => path.push(component),
+            Component::CurDir => {}
+            Component::ParentDir => {
+                if depth == 0 {
+                    return Err(io::ErrorKind::InvalidInput.into());
+                }
+                depth -= 1;
+                path.pop();
+            }
             _ => return Err(io::ErrorKind::InvalidInput.into()),
         }
     }
