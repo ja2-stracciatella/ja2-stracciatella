@@ -134,7 +134,7 @@ impl LibraryDBInner {
         let path = case_insensitive_path(&path);
         for arc_library in &self.arc_libraries {
             let library = arc_library.read().unwrap();
-            if let Some(index) = library.find_with_case_insensitive(&path) {
+            if let Some(index) = library.find(&path) {
                 return Ok(LibraryFile {
                     index,
                     arc_library: arc_library.to_owned(),
@@ -187,9 +187,11 @@ impl Library {
         })
     }
 
-    /// Finds the file entry that matches the case-insensitive path.
+    /// Finds the file entry identified by path.
     /// Returns the entry index or None.
-    fn find_with_case_insensitive(&self, path: &str) -> Option<usize> {
+    /// Expects path to have the same case insensitive transformation as the entries.
+    /// Expects the entries to be sorted.
+    fn find(&self, path: &str) -> Option<usize> {
         if path.starts_with(&self.base_path) {
             let file_path = path.split_at(self.base_path.len()).1;
             return self
