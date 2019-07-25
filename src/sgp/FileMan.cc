@@ -6,7 +6,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include "FileMan.h"
-#include "LibraryDataBase.h"
+#include "RustInterface.h"
 #include "MemMan.h"
 #include "PODObj.h"
 
@@ -202,7 +202,7 @@ void FileClose(SGPFile* f)
 	}
 	else
 	{
-		CloseLibraryFile(&f->u.lib);
+		LibraryFile_Close(f->u.lib);
 	}
 	MemFree(f);
 }
@@ -216,7 +216,7 @@ void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 	}
 	else
 	{
-		ret = LoadDataFromLibrary(&f->u.lib, pDest, (UINT32)uiBytesToRead);
+		ret = LibraryFile_Read(f->u.lib, static_cast<uint8_t *>(pDest), uiBytesToRead);
 	}
 
 	if (!ret) throw std::runtime_error("Reading from file failed");
@@ -321,7 +321,7 @@ void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 	}
 	else
 	{
-		success = LibraryFileSeek(&f->u.lib, distance, how);
+		success = LibraryFile_Seek(f->u.lib, distance, how);
 	}
 	if (!success) throw std::runtime_error("Seek in file failed");
 }
@@ -329,7 +329,7 @@ void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 
 INT32 FileGetPos(const SGPFile* f)
 {
-	return f->flags & SGPFILE_REAL ? (INT32)ftell(f->u.file) : f->u.lib.uiFilePosInFile;
+	return f->flags & SGPFILE_REAL ? (INT32)ftell(f->u.file) : (INT32)LibraryFile_GetPos(f->u.lib);
 }
 
 
@@ -346,7 +346,7 @@ UINT32 FileGetSize(const SGPFile* f)
 	}
 	else
 	{
-		return f->u.lib.pFileHeader->uiFileLength;
+		return (UINT32)LibraryFile_GetSize(f->u.lib);
 	}
 }
 
@@ -459,7 +459,7 @@ INT32 CompareSGPFileTimes(const time_t* const pFirstFileTime, const time_t* cons
 
 FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
 {
-	return f->flags & SGPFILE_REAL ? f->u.file : f->u.lib.lib->hLibraryHandle;
+	return f->flags & SGPFILE_REAL ? f->u.file : nullptr;
 }
 
 uintmax_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)

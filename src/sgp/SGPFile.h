@@ -16,15 +16,7 @@ enum SGPFileFlags
 	SGPFILE_REAL = 1U << 0
 };
 
-struct LibraryHeaderStruct;
-struct FileHeaderStruct;
-
-struct LibraryFile
-{
-	uint32_t                uiFilePosInFile; // current position in the file
-	LibraryHeaderStruct*    lib;
-	const FileHeaderStruct* pFileHeader;
-};
+struct LibraryFile;
 
 struct SGPFile
 {
@@ -32,7 +24,7 @@ struct SGPFile
 	union
 	{
 		FILE*       file;
-		LibraryFile lib;
+		LibraryFile* lib;
 	} u;
 };
 

@@ -16,7 +16,6 @@
 #include "game/GameState.h"
 
 #include "sgp/FileMan.h"
-#include "sgp/LibraryDataBase.h"
 #include "sgp/MemMan.h"
 #include "sgp/StrUtils.h"
 #include "sgp/UTF8String.h"
@@ -28,6 +27,7 @@
 #include "JsonObject.h"
 #include "JsonUtility.h"
 #include "MagazineModel.h"
+#include "RustInterface.h"
 #include "WeaponModels.h"
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
@@ -178,7 +178,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	}
 #endif
 
-	m_libraryDB = new LibraryDB();
+	m_libraryDB = LibraryDB_New();
 
 	m_bobbyRayNewInventory = NULL;
 	m_bobbyRayUsedInventory = NULL;
@@ -195,13 +195,15 @@ std::vector<std::string> DefaultContentManager::getListOfGameResources() const
 
 void DefaultContentManager::initGameResouces(const std::string &stracciatellaHomeDir, const std::vector<std::string> &libraries)
 {
-	const char *failedLib = m_libraryDB->InitializeFileDatabase(m_dataDir, libraries);
-	if(failedLib)
+	for (auto it = libraries.begin(); it != libraries.end(); ++it)
 	{
-		std::string message = FormattedString(
-			"Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s/ja2.json'.\n",
-			failedLib, m_dataDir.c_str(), m_gameResRootPath.c_str(), stracciatellaHomeDir.c_str());
-		throw LibraryFileNotFoundException(message);
+		if (!LibraryDB_AddLibrary(m_libraryDB, m_dataDir.c_str(), it->c_str()))
+		{
+			std::string message = FormattedString(
+				"Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s/ja2.json'.\n",
+				it->c_str(), m_dataDir.c_str(), m_gameResRootPath.c_str(), stracciatellaHomeDir.c_str());
+			throw LibraryFileNotFoundException(message);
+		}
 	}
 }
 
@@ -209,8 +211,8 @@ DefaultContentManager::~DefaultContentManager()
 {
 	if(m_libraryDB)
 	{
-		m_libraryDB->ShutDownFileDatabase();
-		delete m_libraryDB;
+		LibraryDB_Delete(m_libraryDB);
+		m_libraryDB = nullptr;
 	}
 
 	for (const ItemModel* item : m_items)
@@ -409,17 +411,11 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
 			d = FileMan::openFileCaseInsensitive(m_dataDir, filename, mode);
 			if (d < 0)
 			{
-				LibraryFile libFile;
-				memset(&libFile, 0, sizeof(libFile));
-
 				// failed to open in the data dir
 				// let's try libraries
 
-				// XXX: need to optimize this
-				// XXX: the whole LibraryDataBase thing requires refactoring
-				std::string _filename(filename);
-				FileMan::slashifyPath(_filename);
-				if (m_libraryDB->FindFileInTheLibrarry(_filename, &libFile))
+				LibraryFile* libFile = LibraryFile_Open(m_libraryDB, filename);
+				if (libFile)
 				{
 					SLOGD(DEBUG_TAG_DEFAULTCM, "Opened file (from library ): %s", filename);
 					SGPFile *file = MALLOCZ(SGPFile);
@@ -472,7 +468,16 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 			char path[512];
 			snprintf(path, lengthof(path), "%s/%s", m_dataDir.c_str(), filename);
 			file = fopen(path, "rb");
-			if (!file) return m_libraryDB->CheckIfFileExistInLibrary(filename);
+			if (!file)
+			{
+				LibraryFile* libFile = LibraryFile_Open(m_libraryDB, filename);
+				if (libFile)
+				{
+					LibraryFile_Close(libFile);
+					return true;
+				}
+				return false;
+			}
 		}
 
 		fclose(file);
