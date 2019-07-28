@@ -34,6 +34,7 @@ use std::path::{Component, Path, PathBuf};
 use std::sync::{Arc, Mutex, MutexGuard, RwLock};
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
+use crate::unicode::Nfc;
 
 /// Thread safe library database.
 #[derive(Debug)]
@@ -57,8 +58,8 @@ pub struct Library {
     library_path: PathBuf,
     /// Library file open for reading.
     library_file: File,
-    /// Base path of the entries in the library.
-    base_path: String,
+    /// Caseless base path of the entries in the library.
+    base_path: Nfc,
     /// List of ok entries in the library.
     entries: Vec<LibraryEntry>,
 }
@@ -67,8 +68,8 @@ pub struct Library {
 /// Represents a file in a library.
 #[derive(Debug)]
 pub struct LibraryEntry {
-    /// File path without the base path of the library.
-    file_path: String,
+    /// Caseless file path without the base path of the library.
+    file_path: Nfc,
     /// Start of the file data in the library file.
     data_start: u64,
     /// End of the file data in the library file.
@@ -131,7 +132,7 @@ impl LibraryDBInner {
     /// Opens a library file for reading.
     /// The file must be dropped before the library database is dropped.
     pub fn open_file(&self, path: &str) -> io::Result<LibraryFile> {
-        let path = case_insensitive_path(&path);
+        let path = Nfc::caseless_path(&path);
         for arc_library in &self.arc_libraries {
             let library = arc_library.read().unwrap();
             if let Some(index) = library.find(&path) {
@@ -152,13 +153,13 @@ impl Library {
         let library_path = find_file(&data_dir, &library)?;
         let mut library_file = File::open(&library_path)?;
         let header = SlfHeader::from_input(&mut library_file)?;
-        let base_path = case_insensitive_path(&header.library_path);
+        let base_path = Nfc::caseless_path(&header.library_path);
         let mut entries: Vec<_> = header
             .entries_from_input(&mut library_file)?
             .iter()
             .filter_map(|slf_entry| match slf_entry.state {
                 SlfEntryState::Ok => Some(LibraryEntry {
-                    file_path: case_insensitive_path(&slf_entry.file_path),
+                    file_path: Nfc::caseless_path(&slf_entry.file_path),
                     data_start: u64::from(slf_entry.offset),
                     data_end: u64::from(slf_entry.offset) + u64::from(slf_entry.length),
                 }),
@@ -189,10 +190,10 @@ impl Library {
 
     /// Finds the file entry identified by path.
     /// Returns the entry index or None.
-    /// Expects path to have the same case insensitive transformation as the entries.
+    /// Expects path to be a caseless path.
     /// Expects the entries to be sorted.
-    fn find(&self, path: &str) -> Option<usize> {
-        if path.starts_with(&self.base_path) {
+    fn find(&self, path: &Nfc) -> Option<usize> {
+        if path.starts_with(&self.base_path.as_str()) {
             let file_path = path.split_at(self.base_path.len()).1;
             return self
                 .entries
@@ -322,11 +323,6 @@ fn checked_add_u64_i64(a: u64, b: i64) -> Option<u64> {
     }
 }
 
-/// Gets the case insensitive representation of a path in the library database.
-fn case_insensitive_path(path: &str) -> String {
-    path.to_ascii_uppercase().replace('\\', "/")
-}
-
 /// Finds a filesystem file.
 /// dir_path is an absolute path or a path relative to the current directory.
 /// file_name is a path relative to dir_path, the normal components are searched case-insensitive (perfect match takes precedence).
@@ -339,7 +335,7 @@ fn find_file(dir_path: &Path, file_name: &Path) -> io::Result<PathBuf> {
         match component {
             Component::Normal(os_str) => {
                 depth += 1;
-                if let Some(want) = os_str.to_str() {
+                if let Some(want_caseless) = os_str.to_str().map(|x| Nfc::caseless(x)) {
                     let found: Vec<_> = path
                         .read_dir()?
                         .filter_map(|x| x.ok()) // DirEntry
@@ -353,17 +349,16 @@ fn find_file(dir_path: &Path, file_name: &Path) -> io::Result<PathBuf> {
                             path.push(os_str); // perfect match
                             continue;
                         }
-                        let want_ascii_uppercase = want.to_ascii_uppercase();
                         let want_dir = i < components.len() - 1;
                         let mut have: Vec<_> = found
                             .iter()
                             .filter(|x| x.1.is_dir() == want_dir)
                             .filter_map(|x| x.0.to_str()) // &str
-                            .filter(|x| x.to_ascii_uppercase() == want_ascii_uppercase)
+                            .filter(|x| Nfc::caseless(x) == want_caseless)
                             .collect();
                         if !have.is_empty() {
                             have.sort();
-                            path.push(have[0]); // natural order case insensitive match
+                            path.push(have[0]); // natural order caseless match
                             continue;
                         }
                     }
