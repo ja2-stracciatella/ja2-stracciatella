@@ -6,14 +6,14 @@
 //!
 //! [`stracciatella::c::logger`]: ../c/logger/index.html
 
+use lazy_static::lazy_static;
 use log::*;
 use simplelog::*;
+use std::default::Default;
 use std::fs::File;
 use std::path::Path;
-use std::sync::{Arc, atomic};
 use std::sync::atomic::Ordering;
-use std::default::Default;
-use lazy_static::lazy_static;
+use std::sync::{atomic, Arc};
 
 lazy_static! {
     /// Global log level used to filter messages at runtime
@@ -32,7 +32,7 @@ pub enum LogLevel {
     Warn = 1,
     Info = 2,
     Debug = 3,
-    Trace = 4
+    Trace = 4,
 }
 
 impl Default for LogLevel {
@@ -67,7 +67,7 @@ impl From<usize> for LogLevel {
             2 => LogLevel::Info,
             3 => LogLevel::Debug,
             4 => LogLevel::Trace,
-            _ => panic!("Unexpected log level: {}", other)
+            _ => panic!("Unexpected log level: {}", other),
         }
     }
 }
@@ -82,9 +82,7 @@ struct RuntimeLevelFilter {
 
 impl RuntimeLevelFilter {
     fn init(logger: Box<CombinedLogger>) {
-        let filter = RuntimeLevelFilter {
-            logger
-        };
+        let filter = RuntimeLevelFilter { logger };
 
         set_max_level(LevelFilter::max());
         set_boxed_logger(Box::new(filter)).unwrap();
@@ -125,12 +123,10 @@ impl Logger {
         let mut config = Config::default();
         config.target = Some(Level::Error);
         config.thread = None;
-        let logger = CombinedLogger::new(
-            vec![
-                TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed).unwrap(),
-                WriteLogger::new(LevelFilter::max(), config, File::create(log_file).unwrap())
-            ]
-        );
+        let logger = CombinedLogger::new(vec![
+            TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed).unwrap(),
+            WriteLogger::new(LevelFilter::max(), config, File::create(log_file).unwrap()),
+        ]);
         RuntimeLevelFilter::init(logger);
     }
 
@@ -145,10 +141,12 @@ impl Logger {
     pub fn log_with_custom_metadata(level: LogLevel, message: &str, target: &str) {
         let level = level.into();
 
-        logger().log(&Record::builder()
-            .level(level)
-            .target(target)
-            .args(format_args!("{}", message))
-            .build());
+        logger().log(
+            &Record::builder()
+                .level(level)
+                .target(target)
+                .args(format_args!("{}", message))
+                .build(),
+        );
     }
 }

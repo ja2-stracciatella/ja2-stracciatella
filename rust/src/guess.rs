@@ -1,6 +1,6 @@
 //! This module contains code to guess Vanillaversion with resource packs.
 
-use log::{info, error};
+use log::{error, info};
 use std::convert::From;
 use std::error::Error;
 use std::ffi::OsString;
