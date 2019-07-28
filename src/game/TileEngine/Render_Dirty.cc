@@ -113,7 +113,7 @@ static BACKGROUND_SAVE* GetFreeBackgroundBuffer(void)
 		// out of back saves capacity
 		// let's add some more
 		const int increment = 100;
-		SLOGI(DEBUG_TAG_RENDERWORLD, "Increasing background slots to %d", gBackSaves.size() + increment);
+		SLOGD(DEBUG_TAG_RENDERWORLD, "Increasing background slots to %d", gBackSaves.size() + increment);
 		for(int i = 0; i < increment; i++) {
 			gBackSaves.push_back(new BACKGROUND_SAVE());
 		}

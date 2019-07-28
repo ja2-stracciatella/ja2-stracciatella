@@ -37,7 +37,7 @@ pub enum LogLevel {
 
 impl Default for LogLevel {
     fn default() -> Self {
-        LogLevel::Warn
+        LogLevel::Info
     }
 }
 
