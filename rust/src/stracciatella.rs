@@ -26,6 +26,7 @@ pub mod res;
 pub mod file_formats;
 pub mod librarydb;
 pub mod c;
+pub mod unicode;
 
 pub use crate::config::ScalingQuality;
 pub use crate::config::VanillaVersion;
