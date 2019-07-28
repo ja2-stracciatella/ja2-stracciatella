@@ -16,6 +16,7 @@ use crate::EngineOptions;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Ja2JsonContent {
+    #[serde(skip_serializing)]
     data_dir: Option<PathBuf>,
     game_dir: Option<PathBuf>,
     mods: Option<Vec<String>>,
