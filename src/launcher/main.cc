@@ -1,6 +1,5 @@
 #include <string>
 #include <FL/Fl.H>
-#include <slog/slog.h>
 
 #include <Launcher.h>
 #include "RustInterface.h"

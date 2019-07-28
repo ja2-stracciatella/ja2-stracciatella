@@ -2,9 +2,6 @@
 
 #include "RustInterface.h"
 
-#define NUMBER_OF_TOPICS  63
-#define TAG_LENGTH        15
-
 #define __FILENAME__ (__FILE__ + SOURCE_PATH_SIZE)
 
 void LogMessage(LogLevel level, const char *file, const char *format, ...);

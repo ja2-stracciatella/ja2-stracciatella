@@ -16,6 +16,7 @@ use std::default::Default;
 use lazy_static::lazy_static;
 
 lazy_static! {
+    /// Global log level used to filter messages at runtime
     static ref GLOBAL_LOG_LEVEL: Arc<atomic::AtomicUsize> = {
         let default_level = LogLevel::default();
         let default_level = default_level as usize;
@@ -25,7 +26,7 @@ lazy_static! {
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 #[repr(C)]
-// Enum to represent log levels in the application
+/// Enum to represent log levels in the application
 pub enum LogLevel {
     Error = 0,
     Warn = 1,
@@ -71,6 +72,10 @@ impl From<usize> for LogLevel {
     }
 }
 
+/// Runtime level filter to filter messages based on a global variable
+///
+/// Other log levels should be set to max level in order for the filter
+/// to work properly
 struct RuntimeLevelFilter {
     logger: Box<CombinedLogger>,
 }
@@ -108,12 +113,14 @@ impl Log for RuntimeLevelFilter {
     }
 }
 
+/// Convenience struct to group logging functionality
 pub struct Logger;
 
 impl Logger {
-    // Initializes the logging system
-    //
-    // Needs to be called once at start of the game engine before any log messages are sent
+    /// Initializes the logging system
+    ///
+    /// Needs to be called once at start of the game engine. Any log messages send
+    /// before will be discarded.
     pub fn init(log_file: &Path) {
         let mut config = Config::default();
         config.target = Some(Level::Error);
@@ -126,14 +133,14 @@ impl Logger {
         RuntimeLevelFilter::init(logger);
     }
 
-    // Sets the log level to a specific value
+    /// Sets the global log level to a specific value
     pub fn set_level(level: LogLevel) {
         GLOBAL_LOG_LEVEL.store(level.into(), Ordering::Relaxed);
     }
 
-    // Logs message with specific metadata
-    //
-    // Can be used e.g. in C++ or scripting
+    /// Logs message with specific metadata
+    ///
+    /// Can be used e.g. in C++ or scripting
     pub fn log_with_custom_metadata(level: LogLevel, message: &str, target: &str) {
         let level = level.into();
 
