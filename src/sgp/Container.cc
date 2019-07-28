@@ -22,7 +22,7 @@
 #include "Debug.h"
 #include "MemMan.h"
 #include "Types.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 struct ListHeader
 {

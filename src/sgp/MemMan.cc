@@ -12,7 +12,7 @@
 #include <stdlib.h>
 #include "MemMan.h"
 #include "Debug.h"
-#include "slog/slog.h"
+#include "Logger.h"
 #include "MouseSystem.h"
 #include "MessageBoxScreen.h"
 

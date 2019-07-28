@@ -61,7 +61,7 @@
 #include "UILayout.h"
 #include "GameState.h"
 #include "EditScreen.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 

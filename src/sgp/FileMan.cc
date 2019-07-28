@@ -12,7 +12,7 @@
 
 #include "boost/filesystem.hpp"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 #if _WIN32
 #include <shlobj.h>

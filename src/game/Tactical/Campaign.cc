@@ -27,7 +27,7 @@
 #include "Town_Militia.h"
 #include "Types.h"
 #include "EMail.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 // Convert hired mercs' stats subpoint changes into actual point changes where warranted
 static void ProcessUpdateStats(MERCPROFILESTRUCT&, SOLDIERTYPE*);

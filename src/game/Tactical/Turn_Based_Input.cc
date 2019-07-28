@@ -92,7 +92,7 @@
 #include "GameState.h"
 #include "Game_Init.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Soldier.h"

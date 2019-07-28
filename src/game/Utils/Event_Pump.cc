@@ -8,7 +8,7 @@
 #include "Weapons.h"
 #include "OppList.h"
 #include "Debug.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 static void AddGameEventToQueue(UINT32 uiEvent, UINT16 usDelay, PTR pEventData, EventQueueID ubQueueID);
 

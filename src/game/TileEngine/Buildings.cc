@@ -12,7 +12,7 @@
 #include "StrategicMap.h"
 #include "Sys_Globals.h"
 #include "WorldMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define ROOF_LOCATION_CHANCE 8
 

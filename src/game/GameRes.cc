@@ -13,7 +13,7 @@
 #include "EncodingCorrectors.h"
 #include "StrUtils.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 extern LanguageRes g_LanguageResDutch;
 extern LanguageRes g_LanguageResEnglish;

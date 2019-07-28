@@ -46,7 +46,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define MAX_LIGHT_TEMPLATES 32 // maximum number of light types
 

@@ -37,7 +37,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define STEPS_FOR_BULLET_MOVE_TRAILS				10
 #define STEPS_FOR_BULLET_MOVE_SMALL_TRAILS			5

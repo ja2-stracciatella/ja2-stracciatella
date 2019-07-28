@@ -4,7 +4,7 @@
 #include "LoadSaveData.h"
 #include "LoadSaveObjectType.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 UINT16 CalcSoldierCreateCheckSum(const SOLDIERCREATE_STRUCT* const s)
 {

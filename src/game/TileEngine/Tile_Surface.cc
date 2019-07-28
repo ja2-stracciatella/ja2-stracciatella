@@ -20,7 +20,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 

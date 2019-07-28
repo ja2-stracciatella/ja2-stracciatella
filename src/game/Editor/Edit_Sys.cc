@@ -22,7 +22,7 @@
 #include "Simple_Render_Utils.h"
 #include "Road_Smoothing.h"
 #include "MemMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 UINT16			CurrentPaste = NO_TILE;
 

@@ -53,7 +53,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 static BOOLEAN gfWasInMeanwhile = FALSE;
 

@@ -8,7 +8,7 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "SGP.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 extern SGPVSurface* gpVSurfaceHead;
 

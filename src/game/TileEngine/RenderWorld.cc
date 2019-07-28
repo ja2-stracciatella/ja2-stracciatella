@@ -36,7 +36,7 @@
 #include <math.h>
 #include "UILayout.h"
 #include "GameState.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 UINT16* gpZBuffer = NULL;
 UINT16  gZBufferPitch = 0;

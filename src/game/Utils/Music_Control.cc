@@ -10,7 +10,7 @@
 #include "ContentMusic.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"

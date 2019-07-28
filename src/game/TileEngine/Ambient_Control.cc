@@ -10,7 +10,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];
 INT16									gsNumAmbData = 0;

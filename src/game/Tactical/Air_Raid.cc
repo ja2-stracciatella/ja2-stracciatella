@@ -32,7 +32,7 @@
 #include "SoundMan.h"
 #include "Debug.h"
 #include "FileMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define SCRIPT_DELAY				10
 #define AIR_RAID_SAY_QUOTE_TIME		3000

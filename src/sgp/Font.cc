@@ -11,7 +11,7 @@
 #include "VObject_Blitters.h"
 #include "UILayout.h"
 #include "GameRes.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 typedef UINT8 GlyphIdx;
 

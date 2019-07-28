@@ -19,7 +19,7 @@
 #include "content/npcs.h"
 #include "internals/enums.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 /** Get soldier object from the structure. */
 std::shared_ptr<Soldier> GetSoldier(struct SOLDIERTYPE* s)

@@ -32,7 +32,7 @@
 #include "UILayout.h"
 #include "GameState.h"
 #include "sgp/FileMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 ScreenID guiCurrentScreen = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
 ScreenID guiPendingScreen = NO_PENDING_SCREEN;

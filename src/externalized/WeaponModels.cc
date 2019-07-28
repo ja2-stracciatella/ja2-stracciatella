@@ -8,7 +8,7 @@
 #include "JsonObject.h"
 #include "MagazineModel.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 // exact gun types
 // used as an index in WeaponType[] string array

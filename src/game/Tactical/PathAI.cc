@@ -32,7 +32,7 @@
 #include "Keys.h"
 #include "GameSettings.h"
 #include "Buildings.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 // skiplist has extra level of pointers every 4 elements, so a level 5is optimized for
 // 4 to the power of 5 elements, or 2 to the power of 10, 1024
@@ -49,7 +49,7 @@ BOOLEAN gfDisplayCoverValues = TRUE;
 static BOOLEAN gfDrawPathPoints = FALSE;
 #endif
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 BOOLEAN gfPlotPathToExitGrid = FALSE;
 BOOLEAN gfRecalculatingExistingPathCost = FALSE;

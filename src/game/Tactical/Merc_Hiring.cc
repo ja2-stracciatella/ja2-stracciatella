@@ -41,7 +41,7 @@
 #include "Auto_Resolve.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Quests.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define MIN_FLIGHT_PREP_TIME 6
 

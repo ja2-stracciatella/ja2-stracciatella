@@ -28,7 +28,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define BUFFER_READY      0x00
 #define BUFFER_DIRTY      0x02

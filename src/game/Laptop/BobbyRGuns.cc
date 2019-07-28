@@ -33,7 +33,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define BOBBYR_GRID_PIC_WIDTH		118
 #define BOBBYR_GRID_PIC_HEIGHT		69

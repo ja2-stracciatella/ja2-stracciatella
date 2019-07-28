@@ -6,6 +6,7 @@ use std::path::PathBuf;
 
 use serde::Deserialize;
 use serde::Serialize;
+use log::warn;
 
 use crate::json;
 use crate::Resolution;
@@ -15,7 +16,7 @@ use crate::EngineOptions;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Ja2JsonContent {
-    #[serde(alias = "data_dir")]
+    data_dir: Option<PathBuf>,
     game_dir: Option<PathBuf>,
     mods: Option<Vec<String>>,
     res: Option<Resolution>,
@@ -59,6 +60,11 @@ impl Ja2Json {
 
         let content = self.get_content()?;
 
+        if let Some(data_dir) = content.data_dir {
+            warn!("`data_dir` option in ja2.json is deprecated, use `game_version` instead");
+            engine_options.vanilla_game_dir = data_dir;
+        }
+
         copy_to!(content.game_dir, engine_options.vanilla_game_dir);
         copy_to!(content.mods, engine_options.mods);
         copy_to!(content.res, engine_options.resolution);
@@ -79,6 +85,7 @@ impl Ja2Json {
         }
 
         let mut content = Ja2JsonContent {
+            data_dir: None,
             game_dir: None,
             mods: None,
             res: None,

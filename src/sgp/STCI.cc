@@ -10,7 +10,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 static SGPImage* STCILoadIndexed(UINT16 contents, HWFILE, STCIHeader const*);
 static SGPImage* STCILoadRGB(    UINT16 contents, HWFILE, STCIHeader const*);

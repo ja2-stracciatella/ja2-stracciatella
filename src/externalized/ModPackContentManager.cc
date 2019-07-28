@@ -4,7 +4,7 @@
 #include "sgp/FileMan.h"
 #include "sgp/UTF8String.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define DEBUG_PRINT_OPENING_FILES (1)
 

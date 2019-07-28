@@ -5,8 +5,11 @@
 #include <FL/Fl_PNG_Image.H>
 #include <FL/fl_ask.H>
 #include "logo32.png.h"
-#include "slog/slog.h"
+#include "Logger.h"
 #include "RustInterface.h"
+#include "Types.h"
+#include "GameRes.h"
+#include "Video.h"
 
 #include "Launcher.h"
 

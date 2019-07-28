@@ -40,7 +40,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define NUM_DAYS_TILL_UNPAID_RPC_QUITS 3
 

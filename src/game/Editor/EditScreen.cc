@@ -77,7 +77,7 @@
 #include "Video.h"
 #include "VObject_Blitters.h"
 #include "UILayout.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 
 #include "ContentManager.h"

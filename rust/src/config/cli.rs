@@ -4,6 +4,7 @@ use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
 
+use log::warn;
 use getopts::Options;
 
 use crate::EngineOptions;
@@ -114,6 +115,10 @@ impl Cli {
             Ok(m) => {
                 if !m.free.is_empty() {
                     return Err(format!("Unknown arguments: '{}'.", m.free.join(" ")));
+                }
+
+                if m.opt_str("datadir").is_some() {
+                    warn!("The `datadir` command line argument is deprecated, use `gamedir` instead");
                 }
 
                 if let Some(s) = m.opts_str(&["gamedir".to_owned(), "datadir".to_owned()]) {

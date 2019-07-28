@@ -39,7 +39,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 static DOOR_STATUS* gpDoorStatus     = NULL;
 static UINT8        gubNumDoorStatus = 0;

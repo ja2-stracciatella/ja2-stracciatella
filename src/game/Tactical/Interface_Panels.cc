@@ -71,7 +71,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #include "policy/GamePolicy.h"
 #include "HImage.h"

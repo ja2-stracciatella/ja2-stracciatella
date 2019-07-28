@@ -39,7 +39,7 @@
 #include "MemMan.h"
 #include "FileMan.h"
 #include "Vehicles.h"
-#include "slog/slog.h"
+#include "Logger.h"
 #include "JAScreens.h"
 
 //The sector information required for the strategic AI.  Contains the number of enemy troops,

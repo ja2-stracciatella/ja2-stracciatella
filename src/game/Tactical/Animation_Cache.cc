@@ -4,7 +4,7 @@
 #include "Animation_Data.h"
 #include "Animation_Control.h"
 #include "MemMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define EMPTY_CACHE_ENTRY 65000
 

@@ -30,7 +30,7 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "FileMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 // the max loyalty rating for any given town
 #define MAX_LOYALTY_VALUE 100

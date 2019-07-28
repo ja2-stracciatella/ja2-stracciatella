@@ -9,7 +9,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 {

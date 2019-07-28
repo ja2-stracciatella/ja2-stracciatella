@@ -17,7 +17,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define EMPTY_SLOT					-1
 #define TO_INIT					0

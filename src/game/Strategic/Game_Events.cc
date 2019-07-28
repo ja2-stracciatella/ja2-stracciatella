@@ -8,7 +8,7 @@
 #include "Message.h"
 #include "Text.h"
 #include "FileMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 STRATEGICEVENT									*gpEventList = NULL;
 

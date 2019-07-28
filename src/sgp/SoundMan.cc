@@ -18,7 +18,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 
 // Uncomment this to disable the startup of sound hardware

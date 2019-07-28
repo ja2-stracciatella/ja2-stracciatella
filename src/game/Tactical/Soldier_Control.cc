@@ -90,7 +90,7 @@
 #include "GameInstance.h"
 #include "Soldier.h"
 #include "WeaponModels.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define PALETTEFILENAME			BINARYDATADIR "/ja2pal.dat"
 

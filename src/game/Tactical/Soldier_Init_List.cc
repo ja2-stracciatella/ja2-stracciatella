@@ -32,7 +32,7 @@
 #include "Scheduling.h"
 #include "MemMan.h"
 #include "FileMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 BOOLEAN gfOriginalList = TRUE;
 

@@ -41,7 +41,7 @@
 #include "NPC.h"
 #include "Debug.h"
 #include "Items.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 // for that single policy check :|
 #include "GamePolicy.h"

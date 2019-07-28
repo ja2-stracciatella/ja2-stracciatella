@@ -80,7 +80,7 @@
 #include "Soldier.h"
 #include "WeaponModels.h"
 #include "policy/GamePolicy.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define ITEMDESC_FONT					BLOCKFONT2
 #define ITEMDESC_FONTSHADOW2				32

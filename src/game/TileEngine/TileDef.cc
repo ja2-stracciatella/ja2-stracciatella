@@ -11,7 +11,7 @@
 #include "PathAI.h"
 #include "Tile_Surface.h"
 #include "MemMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 // GLobals
 TILE_ELEMENT		gTileDatabase[ NUMBEROFTILES ];

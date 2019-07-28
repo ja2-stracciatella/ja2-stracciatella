@@ -28,7 +28,7 @@
 #include "MemMan.h"
 #include "ScreenIDs.h"
 #include "GameState.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
 

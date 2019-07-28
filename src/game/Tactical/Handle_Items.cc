@@ -70,7 +70,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Soldier.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define NUM_ITEMS_LISTED		8
 #define NUM_ITEM_FLASH_SLOTS		50

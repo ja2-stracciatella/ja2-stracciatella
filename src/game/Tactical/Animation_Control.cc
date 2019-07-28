@@ -13,7 +13,7 @@
 #include "Points.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 // Defines for Anim inst reading, taken from orig Jagged
 #define ANIMFILENAME						BINARYDATADIR "/ja2bin.dat"

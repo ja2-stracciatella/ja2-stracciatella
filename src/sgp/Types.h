@@ -7,7 +7,7 @@
 
 #include "Platform.h"
 #include "SGPStrings.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define UNIMPLEMENTED \
 	SLOGE(DEBUG_TAG_ASSERTS, "===> %s:%d: %s() is not implemented", __FILE__, __LINE__, __func__);

@@ -32,7 +32,7 @@
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno, const INT8 bDir, const INT8 bLevel)
 {

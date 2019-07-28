@@ -44,7 +44,7 @@
 #include "sgp/UTF8String.h"
 #include "RustInterface.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
@@ -275,7 +275,6 @@ int main(int argc, char* argv[])
 
 	// init logging
 	Logger_Init("ja2.log");
-	Logger_SetLevel(LogLevel::Warn);
 
 	EngineOptions* params = create_engine_options(argv, argc);
 	if (params == NULL) {
@@ -498,8 +497,6 @@ int main(int argc, char* argv[])
 		 * themselves */
 		MainLoop(gamepolicy(ms_per_game_cycle));
 	}
-
-	SLOG_Deinit();
 
 	delete cm;
 	GCM = NULL;

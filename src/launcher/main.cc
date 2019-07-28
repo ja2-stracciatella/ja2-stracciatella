@@ -7,7 +7,6 @@
 
 int main(int argc, char* argv[]) {
 	Logger_Init("stracciatella-launcher.log");
-	Logger_SetLevel(LogLevel::Warn);
 
 	Launcher launcher(argc, argv);
 	launcher.loadJa2Json();

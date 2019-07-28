@@ -106,7 +106,7 @@
 #include "ScreenIDs.h"
 #include "Items.h"
 #include "UILayout.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 //Used by PickGridNoToWalkIn
 #define MAX_ATTEMPTS 200

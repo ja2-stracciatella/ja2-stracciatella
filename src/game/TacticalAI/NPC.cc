@@ -45,7 +45,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define NUM_NPC_QUOTE_RECORDS  50
 #define NUM_CIVQUOTE_SECTORS   20

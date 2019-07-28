@@ -6,20 +6,38 @@
 //!
 //! [`stracciatella::c::logger`]: ../c/logger/index.html
 
+use log::*;
 use simplelog::*;
-use log::{logger, Level, Record, set_max_level};
 use std::fs::File;
 use std::path::Path;
+use std::sync::{Arc, atomic};
+use std::sync::atomic::Ordering;
+use std::default::Default;
+use lazy_static::lazy_static;
+
+lazy_static! {
+    static ref GLOBAL_LOG_LEVEL: Arc<atomic::AtomicUsize> = {
+        let default_level = LogLevel::default();
+        let default_level = default_level as usize;
+        Arc::new(atomic::AtomicUsize::new(default_level))
+    };
+}
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 #[repr(C)]
 // Enum to represent log levels in the application
 pub enum LogLevel {
-    Error,
-    Warn,
-    Info,
-    Debug,
-    Trace
+    Error = 0,
+    Warn = 1,
+    Info = 2,
+    Debug = 3,
+    Trace = 4
+}
+
+impl Default for LogLevel {
+    fn default() -> Self {
+        LogLevel::Warn
+    }
 }
 
 impl From<LogLevel> for Level {
@@ -29,20 +47,64 @@ impl From<LogLevel> for Level {
             LogLevel::Error => Level::Error,
             LogLevel::Info => Level::Info,
             LogLevel::Trace => Level::Trace,
-            LogLevel::Warn => Level::Warn
+            LogLevel::Warn => Level::Warn,
         }
     }
 }
 
-impl From<LogLevel> for LevelFilter {
-    fn from(other: LogLevel) -> LevelFilter {
+impl From<LogLevel> for usize {
+    fn from(other: LogLevel) -> usize {
+        other as usize
+    }
+}
+
+impl From<usize> for LogLevel {
+    fn from(other: usize) -> LogLevel {
         match other {
-            LogLevel::Debug => LevelFilter::Debug,
-            LogLevel::Error => LevelFilter::Error,
-            LogLevel::Info => LevelFilter::Info,
-            LogLevel::Trace => LevelFilter::Trace,
-            LogLevel::Warn => LevelFilter::Warn
+            0 => LogLevel::Error,
+            1 => LogLevel::Warn,
+            2 => LogLevel::Info,
+            3 => LogLevel::Debug,
+            4 => LogLevel::Trace,
+            _ => panic!("Unexpected log level: {}", other)
         }
+    }
+}
+
+struct RuntimeLevelFilter {
+    logger: Box<CombinedLogger>,
+}
+
+impl RuntimeLevelFilter {
+    fn init(logger: Box<CombinedLogger>) {
+        let filter = RuntimeLevelFilter {
+            logger
+        };
+
+        set_max_level(LevelFilter::max());
+        set_boxed_logger(Box::new(filter)).unwrap();
+    }
+
+    fn get_global_log_level() -> Level {
+        let current_level = GLOBAL_LOG_LEVEL.load(Ordering::Relaxed);
+        LogLevel::from(current_level).into()
+    }
+}
+
+impl Log for RuntimeLevelFilter {
+    fn enabled(&self, metadata: &Metadata) -> bool {
+        let current_level = Self::get_global_log_level();
+        metadata.level() <= current_level
+    }
+
+    fn log(&self, record: &Record) {
+        if self.enabled(record.metadata()) {
+            self.logger.log(record);
+        }
+    }
+
+    fn flush(&self) {
+        self.logger.flush()
     }
 }
 
@@ -53,18 +115,18 @@ impl Logger {
     //
     // Needs to be called once at start of the game engine before any log messages are sent
     pub fn init(log_file: &Path) {
-        CombinedLogger::init(
+        let logger = CombinedLogger::new(
             vec![
-                TermLogger::new(LevelFilter::Trace, Config::default(), TerminalMode::Mixed).unwrap(),
-                WriteLogger::new(LevelFilter::Trace, Config::default(), File::create(log_file).unwrap()),
+                TermLogger::new(LevelFilter::max(), Config::default(), TerminalMode::Mixed).unwrap(),
+                WriteLogger::new(LevelFilter::max(), Config::default(), File::create(log_file).unwrap())
             ]
-        ).unwrap();
-        Self::set_level(LogLevel::Warn);
-
+        );
+        RuntimeLevelFilter::init(logger);
     }
 
+    // Sets the log level to a specific value
     pub fn set_level(level: LogLevel) {
-        set_max_level(level.into())
+        GLOBAL_LOG_LEVEL.store(level.into(), Ordering::Relaxed);
     }
 
     // Logs message with specific metadata
@@ -72,6 +134,7 @@ impl Logger {
     // Can be used e.g. in C++ or scripting
     pub fn log_with_custom_metadata(level: LogLevel, message: &str) {
         let level = level.into();
+
         logger().log(&Record::builder()
             .level(level)
             .args(format_args!("{}", message))

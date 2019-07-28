@@ -50,7 +50,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
-#include "slog/slog.h"
+#include "Logger.h"
 #include "policy/GamePolicy.h"
 
 // NB this is arbitrary, chances in DG ranged from 1 in 6 to 1 in 20

@@ -40,7 +40,7 @@
 #include "Debug.h"
 #include "UILayout.h"
 #include "Timer.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define MAX_DEBUG_PAGES 4
 

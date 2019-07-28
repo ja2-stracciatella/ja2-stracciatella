@@ -101,7 +101,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Soldier.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define RT_DELAY_BETWEEN_AI_HANDLING	50
 #define RT_AI_TIMESLICE			10

@@ -14,7 +14,7 @@
 #include "GameSettings.h"
 #include "FileMan.h"
 #include "Debug.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define NUM_BULLET_SLOTS 50
 

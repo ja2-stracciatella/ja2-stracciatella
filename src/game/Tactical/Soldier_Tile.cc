@@ -35,7 +35,7 @@
 #include "Message.h"
 #include "Text.h"
 #include "NPC.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define NEXT_TILE_CHECK_DELAY 700
 

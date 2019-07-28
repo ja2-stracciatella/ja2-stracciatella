@@ -32,7 +32,7 @@
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define BASEDATADIR    "data"
 

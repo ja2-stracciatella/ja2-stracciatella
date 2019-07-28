@@ -62,7 +62,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 extern INT8 gbSAMGraphicList[NUMBER_OF_SAMS];
 

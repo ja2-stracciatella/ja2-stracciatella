@@ -40,7 +40,7 @@
 
 #include "EditScreen.h"
 #include "JAScreens.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game

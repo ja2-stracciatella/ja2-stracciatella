@@ -16,7 +16,7 @@
 
 #include <vector>
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define BACKGROUND_BUFFERS 500
 

@@ -11,7 +11,7 @@
 #include "VObject.h"
 #include "MemMan.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 // This is the color substituted to keep a 24bpp -> 16bpp color
 // from going transparent (0x0000) -- DB

@@ -33,7 +33,7 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "FileMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define SAI_VERSION		29
 

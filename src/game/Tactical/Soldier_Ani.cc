@@ -69,7 +69,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define NO_JUMP			0
 #define MAX_ANIFRAMES_PER_FLASH	2
