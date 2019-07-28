@@ -124,6 +124,7 @@ impl Logger {
     pub fn init(log_file: &Path) {
         let mut config = Config::default();
         config.target = Some(Level::Error);
+        config.thread = None;
         let logger = CombinedLogger::new(
             vec![
                 TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed).unwrap(),
