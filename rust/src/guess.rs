@@ -1,5 +1,6 @@
 //! This module contains code to guess Vanillaversion with resource packs.
 
+use log::{info, error};
 use std::convert::From;
 use std::error::Error;
 use std::ffi::OsString;
@@ -18,24 +19,23 @@ use crate::res::{
 use crate::unicode::Nfc;
 
 /// Guess the vanilla version of the resources in the game dir.
-pub fn logged_guess_vanilla_version(gamedir: &str) -> LoggedGuess {
+pub fn guess_vanilla_version(gamedir: &str) -> Guess {
     let path = Path::new(gamedir);
-    let mut logged = LoggedGuess::default();
+    let mut logged = Guess::default();
     if let Err(err) = logged.guess_vanilla_version(&path) {
-        logged.log += &format!("Error: {}\n", err.desc);
+        error!("Error: {}", err.desc);
     }
     logged
 }
 
 #[derive(Default)]
-pub struct LoggedGuess {
-    pub log: String,
+pub struct Guess {
     pub vanilla_version: Option<VanillaVersion>,
 }
 
 type GuessResult<T> = Result<T, GuessError>;
 
-impl LoggedGuess {
+impl Guess {
     fn guess_vanilla_version(&mut self, gamedir: &Path) -> GuessResult<()> {
         let datadir = self.get_datadir(gamedir)?;
         let mut best_version = None;
@@ -44,49 +44,48 @@ impl LoggedGuess {
             match self.compare_pack(&datadir, &path) {
                 Ok((version, extras)) => {
                     if extras.len() == 0 {
-                        self.log +=
-                            &format!("Found perfect match with vanilla_version {:?}\n", version);
+                        info!("Found perfect match with vanilla_version {:?}", version);
                         self.vanilla_version = Some(version);
                         return Ok(());
                     }
-                    self.log += &format!("Found match with vanilla_version {:?}\n", version);
+                    info!("Found match with vanilla_version {:?}", version);
                     for resource in &extras {
                         if let Some(archive_path) = resource.get_str("archive_path") {
-                            self.log += &format!(
-                                "Extra resource: {:?} inside of {:?}\n",
+                            info!(
+                                "Extra resource: {:?} inside of {:?}",
                                 &resource.path, archive_path
                             );
                         } else {
-                            self.log += &format!("Extra resource: {:?}\n", &resource.path);
+                            info!("Extra resource: {:?}", &resource.path);
                         }
                     }
                     if best_version.is_none() || best_extras.len() > extras.len() {
-                        self.log += &format!("New best match\n");
+                        info!("New best match");
                         best_version = Some(version);
                         best_extras = extras;
                     }
                 }
                 Err(err) => {
-                    self.log += &format!("Error: {}\n", err.desc);
+                    info!("Error: {}", err.desc);
                 }
             }
         }
-        self.log += "No more resource packs\n";
+        info!("No more resource packs");
         if best_version.is_some() {
             // TODO inspect the extra resources? how to handle mod files inside datadir?
             let version = best_version.unwrap();
-            self.log += &format!("Using best match with vanilla_version {:?}\n", version);
+            info!("Using best match with vanilla_version {:?}", version);
             self.vanilla_version = best_version;
             return Ok(());
         }
         // Last ditch effort with resource paths.
-        self.log += "Getting resources\nwith_archive_slf\n";
+        info!("Getting resources with_archive_slf");
         let resources = ResourcePackBuilder::new()
             .with_path(&datadir, &datadir)
             .with_archive("slf")
             .execute("paths")?
             .resources;
-        self.log += "Inspecting resource paths\n";
+        info!("Inspecting resource paths");
         let mut num_dutch = 0;
         let mut num_german = 0;
         let mut num_italian = 0;
@@ -108,35 +107,35 @@ impl LoggedGuess {
         }
         let mut best_num = 0;
         if num_dutch > 0 {
-            self.log += &format!("Found {} dutch resources\n", num_dutch);
+            info!("Found {} dutch resources", num_dutch);
             if best_num < num_dutch {
                 best_num = num_dutch;
                 best_version = Some(VanillaVersion::DUTCH);
             }
         }
         if num_german > 0 {
-            self.log += &format!("Found {} german resources\n", num_german);
+            info!("Found {} german resources", num_german);
             if best_num < num_german {
                 best_num = num_german;
                 best_version = Some(VanillaVersion::GERMAN);
             }
         }
         if num_italian > 0 {
-            self.log += &format!("Found {} italian resources\n", num_italian);
+            info!("Found {} italian resources", num_italian);
             if best_num < num_italian {
                 best_num = num_italian;
                 best_version = Some(VanillaVersion::ITALIAN);
             }
         }
         if num_polish > 0 {
-            self.log += &format!("Found {} polish resources\n", num_polish);
+            info!("Found {} polish resources", num_polish);
             if best_num < num_polish {
                 best_num = num_polish;
                 best_version = Some(VanillaVersion::POLISH);
             }
         }
         if num_russian > 0 {
-            self.log += &format!("Found {} russian resources\n", num_russian);
+            info!("Found {} russian resources", num_russian);
             if best_num < num_russian {
                 best_num = num_russian;
                 best_version = Some(VanillaVersion::RUSSIAN);
@@ -144,7 +143,7 @@ impl LoggedGuess {
         }
         if best_num > 0 {
             let version = best_version.unwrap();
-            self.log += &format!("Assuming vanilla_version {:?}\n", version);
+            info!("Assuming vanilla_version {:?}", version);
             self.vanilla_version = best_version;
             Ok(())
         } else {
@@ -164,7 +163,7 @@ impl LoggedGuess {
     }
 
     fn get_datadir(&mut self, gamedir: &Path) -> GuessResult<PathBuf> {
-        self.log += &format!("Looking for data dir in {:?}\n", &gamedir);
+        info!("Looking for data dir in {:?}", &gamedir);
         let data_caseless = Nfc::caseless("data");
         let mut paths: Vec<PathBuf> = gamedir
             .read_dir()?
@@ -189,20 +188,20 @@ impl LoggedGuess {
             return Err("Data dir not found".to_owned().into());
         }
         let path = paths.remove(0);
-        self.log += &format!("Found {:?}\n", &path);
+        info!("Found {:?}", &path);
         Ok(path)
     }
 
     fn get_pack_paths(&mut self) -> GuessResult<Vec<PathBuf>> {
         let dir = Path::new("externalized/resource_packs");
-        self.log += &format!("Searching for resource packs in {:?}\n", &dir);
+        info!("Searching for resource packs in {:?}", &dir);
         let paths: Vec<PathBuf> = dir
             .read_dir()?
             .filter_map(|x| {
                 if let Ok(entry) = x {
                     let path = entry.path();
                     if is_json_file(&path) {
-                        self.log += &format!("Found {:?}\n", &path);
+                        info!("Found {:?}", &path);
                         return Some(path);
                     }
                 }
@@ -213,18 +212,18 @@ impl LoggedGuess {
     }
 
     fn get_pack(&mut self, path: &Path) -> GuessResult<ResourcePack> {
-        self.log += &format!("Reading {:?}\n", &path);
+        info!("Reading {:?}", &path);
         let f = File::open(&path)?;
         let mut pack: ResourcePack = serde_json::from_reader(f)?;
         pack.resources = sorted_resources(pack.resources);
-        self.log += &format!("Got resource pack {:?}\n", &pack.name);
+        info!("Got resource pack {:?}", &pack.name);
         Ok(pack)
     }
 
     fn get_version(&mut self, pack: &ResourcePack) -> GuessResult<VanillaVersion> {
         if let Some(version) = pack.get_str("vanilla_version") {
             let version = VanillaVersion::from_str(version)?;
-            self.log += &format!("Found vanilla_version {:?}\n", &version);
+            info!("Found vanilla_version {:?}", &version);
             return Ok(version);
         }
         Err("vanilla_version is missing".to_owned().into())
@@ -236,7 +235,7 @@ impl LoggedGuess {
         datadir: &Path,
     ) -> GuessResult<Vec<Resource>> {
         // Compare without hashes (fast)
-        self.log += &format!("Getting resources (no hashes)\n");
+        info!("Getting resources (no hashes)");
         let mut builder = ResourcePackBuilder::new();
         builder.with_path(&datadir, &datadir);
         let mut hashes = Vec::new();
@@ -245,18 +244,18 @@ impl LoggedGuess {
                 continue;
             }
             if k == "with_file_size" {
-                self.log += "with_file_size\n";
+                info!("with_file_size");
                 builder.with_file_size();
             } else if k.starts_with("with_archive_") {
-                self.log += &format!("{}\n", &k);
+                info!("{}", &k);
                 builder.with_archive(&k["with_archive_".len()..]);
             } else if k.starts_with("with_hash_") {
                 hashes.push(k["with_hash_".len()..].to_owned());
             }
         }
         let resources = sorted_resources(builder.clone().execute("no hashes")?.resources);
-        self.log += &format!("Found {} resources (no hashes)\n", resources.len());
-        self.log += "Comparing resources (no hashes)\n";
+        info!("Found {} resources (no hashes)", resources.len());
+        info!("Comparing resources (no hashes)");
         let mut available = resources.iter().fuse().peekable();
         let mut extras: Vec<Resource> = Vec::new();
         for want in pack.resources.iter() {
@@ -280,19 +279,19 @@ impl LoggedGuess {
             while let Some(have) = available.next() {
                 extras.push(have.to_owned());
             }
-            self.log += &format!("Passed (no hashes) with {} extra resources\n", extras.len());
+            info!("Passed (no hashes) with {} extra resources", extras.len());
             return Ok(extras);
         }
-        self.log += "Passed (no hashes), repeating with hashes\n";
+        info!("Passed (no hashes), repeating with hashes");
         // Compare with hashes (slow)
-        self.log += &format!("Getting resources\n");
+        info!("Getting resources");
         for hash in &hashes {
-            self.log += &format!("with_hash_{}\n", &hash);
+            info!("with_hash_{}", &hash);
             builder.with_hash(hash);
         }
         let resources = sorted_resources(builder.execute("hashes")?.resources);
-        self.log += &format!("Found {} resources\n", resources.len());
-        self.log += "Comparing resources\n";
+        info!("Found {} resources", resources.len());
+        info!("Comparing resources");
         let mut available = resources.iter().fuse().peekable();
         for want in pack.resources.iter() {
             let mut found = false;
@@ -316,7 +315,7 @@ impl LoggedGuess {
         while let Some(have) = available.next() {
             extras.push(have.to_owned());
         }
-        self.log += &format!("Passed with {} extra resources\n", extras.len());
+        info!("Passed with {} extra resources", extras.len());
         return Ok(extras);
     }
 }
