@@ -11,10 +11,12 @@
 //! ```
 //!
 
-mod res;
 mod file_formats;
+mod res;
+mod unicode;
 
 use res::{ResourcePackBuilder, ResourcePropertiesExt};
+use unicode::Nfc;
 
 use clap::{crate_version, App, Arg, ArgMatches, SubCommand};
 use serde_json;
@@ -128,7 +130,7 @@ fn subcommand_create(matches: &ArgMatches) {
                     let path = entry.path();
                     if path.is_dir() {
                         if let Some(file_name) = entry.file_name().to_str() {
-                            if file_name.to_ascii_lowercase() == "data" {
+                            if Nfc::caseless(file_name) == Nfc::caseless("data") {
                                 return Some(path);
                             }
                         }
@@ -162,17 +164,18 @@ fn subcommand_create(matches: &ArgMatches) {
         }
     }
 
-    let json = graceful_unwrap(
+    let json: Nfc = graceful_unwrap(
         "Serializing to json",
         if matches.is_present("pretty") {
             serde_json::to_string_pretty(&pack)
         } else {
             serde_json::to_string(&pack)
         },
-    );
+    )
+    .into();
 
     if let Some(path) = matches.value_of_os("output") {
-        graceful_unwrap("Writing to output", fs::write(path, json));
+        graceful_unwrap("Writing to output", fs::write(path, json.as_str()));
     } else {
         println!("{}", json);
     }
