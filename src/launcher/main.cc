@@ -6,8 +6,8 @@
 #include "RustInterface.h"
 
 int main(int argc, char* argv[]) {
-	SLOG_Init(SLOG_STDERR, "stracciatella-launcher.log");
-	SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
+	Logger_Init("stracciatella-launcher.log");
+	Logger_SetLevel(LogLevel::Warn);
 
 	Launcher launcher(argc, argv);
 	launcher.loadJa2Json();

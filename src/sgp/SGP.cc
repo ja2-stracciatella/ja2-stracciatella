@@ -274,8 +274,8 @@ int main(int argc, char* argv[])
 #endif
 
 	// init logging
-	SLOG_Init(SLOG_STDERR, "ja2.log");
-	SLOG_SetLevel(SLOG_WARNING, SLOG_WARNING);
+	Logger_Init("ja2.log");
+	Logger_SetLevel(LogLevel::Warn);
 
 	EngineOptions* params = create_engine_options(argv, argc);
 	if (params == NULL) {
@@ -307,7 +307,7 @@ int main(int argc, char* argv[])
 	}
 
 	if (should_start_in_debug_mode(params)) {
-		SLOG_SetLevel(SLOG_DEBUG, SLOG_DEBUG);
+		Logger_SetLevel(LogLevel::Debug);
 		GameState::getInstance()->setDebugging(true);
 	}
 

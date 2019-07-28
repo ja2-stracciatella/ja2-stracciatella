@@ -22,6 +22,7 @@ use libc::{c_char, c_int, size_t};
 pub mod config;
 pub mod guess;
 pub mod json;
+pub mod logger;
 pub mod res;
 pub mod file_formats;
 pub mod librarydb;
