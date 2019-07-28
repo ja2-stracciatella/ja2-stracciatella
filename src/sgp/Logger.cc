@@ -12,82 +12,14 @@
   #include <unistd.h>
 #endif
 
-static char SLOGTags[NUMBER_OF_TOPICS][TAG_LENGTH + 1] =
-{
-  "Game Loop",
-  "Strategic Map",
-  "AI",
-  "Scheduler",
-  "Path AI",
-  "Animations",
-  "Gap",
-  "Weapons",
-  "Overhead",
-  "Keys",
-  "Points",
-  "Morale",
-  "Merc Hire",
-  "Opp List",
-  "Lighting",
-  "Render World",
-  "Tiles",
-  "Explosion",
-  "Physics",
-  "Ambient",
-  "Save/Load",
-  "Music Control",
-  "Smacker",
-  "Event Pump",
-  "Quests",
-  "Editor",
-  "Resources",
-  "JA2 Screens",
-  "Init",
-  "Font",
-  "SGP",
-  "STCI",
-  "Container",
-  "Video",
-  "VSurface",
-  "Sound",
-  "Memory Manager",
-  "Game Screen",
-  "Bobby Ray",
-  "Strategic AI",
-  "Air Raid",
-  "Bullets",
-  "Handle Items",
-  "Interface",
-  "Line of Sight",
-  "Tactical Save",
-  "Team Turns",
-  "World Def",
-  "Himage",
-  "Library DB",
-  "File Man",
-  "Mod Pack",
-  "Default CM",
-  "Soldier",
-  "Asserts",
-  "Queen Command",
-  "NPC",
-  "Campaign",
-  "Loyalty",
-  "Auto Resolve",
-  "Corpses",
-  "Fixme",
-  "Launcher"
-};
-
-void LogMessage(LogLevel level, SLOGTopics tag, const char *format, ...) {
-  char buf[256];
+void LogMessage(LogLevel level, const char *file, const char *format, ...) {
+  char message[256];
   va_list args;
-
   va_start(args, format);
-  vsnprintf(buf, 256, format, args);
+  vsnprintf(message, 256, format, args);
   va_end(args);
 
-  Logger_LogWithCustomMetadata(level, buf);
+  Logger_LogWithCustomMetadata(level, message, file);
 
   #ifdef ENABLE_ASSERTS
     if (tag == DEBUG_TAG_ASSERTS)

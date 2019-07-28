@@ -115,10 +115,12 @@ impl Logger {
     //
     // Needs to be called once at start of the game engine before any log messages are sent
     pub fn init(log_file: &Path) {
+        let mut config = Config::default();
+        config.target = Some(Level::Error);
         let logger = CombinedLogger::new(
             vec![
-                TermLogger::new(LevelFilter::max(), Config::default(), TerminalMode::Mixed).unwrap(),
-                WriteLogger::new(LevelFilter::max(), Config::default(), File::create(log_file).unwrap())
+                TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed).unwrap(),
+                WriteLogger::new(LevelFilter::max(), config, File::create(log_file).unwrap())
             ]
         );
         RuntimeLevelFilter::init(logger);
@@ -132,11 +134,12 @@ impl Logger {
     // Logs message with specific metadata
     //
     // Can be used e.g. in C++ or scripting
-    pub fn log_with_custom_metadata(level: LogLevel, message: &str) {
+    pub fn log_with_custom_metadata(level: LogLevel, message: &str, target: &str) {
         let level = level.into();
 
         logger().log(&Record::builder()
             .level(level)
+            .target(target)
             .args(format_args!("{}", message))
             .build());
     }
