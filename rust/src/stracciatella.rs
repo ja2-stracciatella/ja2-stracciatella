@@ -26,6 +26,7 @@ pub mod res;
 pub mod file_formats;
 pub mod librarydb;
 pub mod c;
+pub mod unicode;
 
 pub use crate::config::ScalingQuality;
 pub use crate::config::VanillaVersion;
@@ -34,6 +35,7 @@ use crate::config::Ja2Json;
 use crate::config::Cli;
 use crate::config::EngineOptions;
 use crate::config::find_stracciatella_home;
+use crate::unicode::Nfc;
 
 fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<String> {
     let cli = Cli::from_args(args);
@@ -353,18 +355,19 @@ pub extern "C" fn check_if_relative_path_exists(
     let base: PathBuf = unsafe { CStr::from_ptr(unsafe_from_ptr!(base)) }.to_string_lossy().into_owned().into();
     let path: PathBuf = unsafe { CStr::from_ptr(unsafe_from_ptr!(path)) }.to_string_lossy().into_owned().into();
     let mut buf = base;
+    if !caseless {
+        buf.push(path);
+        return buf.exists();
+    }
     'outer: for component in path.components() {
         match component {
             Component::Normal(os_str) => {
-                if caseless {
-                    let want_ascii_lowercase = os_str.to_string_lossy().to_ascii_lowercase();
-                    let result = buf.read_dir();
-                    if let Ok(entries) = result {
-                        for result in entries {
-                            if let Ok(entry) = result {
-                                let file_name = entry.file_name();
-                                let have_ascii_lowercase = file_name.to_string_lossy().to_ascii_lowercase();
-                                if want_ascii_lowercase == have_ascii_lowercase {
+                if let Some(want_caseless) = os_str.to_str().map(|x| Nfc::caseless(x)) {
+                    if let Ok(entries) = buf.read_dir() {
+                        for entry in entries.filter_map(|x| x.ok()) {
+                            let file_name = entry.file_name();
+                            if let Some(have_caseless) = file_name.to_str().map(|x| Nfc::caseless(x)) {
+                                if want_caseless == have_caseless {
                                     buf.push(file_name);
                                     continue 'outer;
                                 }

@@ -15,6 +15,7 @@ use crate::config::VanillaVersion;
 use crate::res::{
     Resource, ResourceError, ResourcePack, ResourcePackBuilder, ResourcePropertiesExt,
 };
+use crate::unicode::Nfc;
 
 /// Guess the vanilla version of the resources in the game dir.
 pub fn logged_guess_vanilla_version(gamedir: &str) -> LoggedGuess {
@@ -164,14 +165,17 @@ impl LoggedGuess {
 
     fn get_datadir(&mut self, gamedir: &Path) -> GuessResult<PathBuf> {
         self.log += &format!("Looking for data dir in {:?}\n", &gamedir);
+        let data_caseless = Nfc::caseless("data");
         let mut paths: Vec<PathBuf> = gamedir
             .read_dir()?
             .filter_map(|x| {
                 if let Ok(entry) = x {
-                    if is_lowercase_equal(entry.file_name(), "data") {
-                        let path = entry.path();
-                        if path.is_dir() {
-                            return Some(path);
+                    if let Some(file_name) = entry.file_name().to_str() {
+                        if Nfc::caseless(file_name) == data_caseless {
+                            let path = entry.path();
+                            if path.is_dir() {
+                                return Some(path);
+                            }
                         }
                     }
                 }
@@ -315,13 +319,6 @@ impl LoggedGuess {
         self.log += &format!("Passed with {} extra resources\n", extras.len());
         return Ok(extras);
     }
-}
-
-fn is_lowercase_equal(string_os: OsString, target: &str) -> bool {
-    if let Some(string) = string_os.to_str() {
-        return string.to_ascii_lowercase() == target;
-    }
-    return false;
 }
 
 fn is_json_file(path: &Path) -> bool {

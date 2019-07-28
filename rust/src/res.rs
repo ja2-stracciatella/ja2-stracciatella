@@ -67,6 +67,7 @@ use hex;
 use md5::Md5;
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
+use crate::unicode::Nfc;
 
 /// A pack of game resources.
 #[derive(Clone, Debug, Default, Deserialize, Serialize)]
@@ -96,13 +97,13 @@ pub struct Resource {
 #[derive(Clone, Debug, Default)]
 pub struct ResourcePackBuilder {
     /// Include archive contents as resources.
-    with_archives: Vec<String>,
+    with_archives: Vec<Nfc>,
 
     /// Add file size to the resource properties.
     with_file_size: bool,
 
     /// Add hashes of the data to the resource properties.
-    with_hashes: Vec<String>,
+    with_hashes: Vec<Nfc>,
 
     /// Add paths to the pack (base, path).
     with_paths: VecDeque<(PathBuf, PathBuf)>,
@@ -141,7 +142,7 @@ impl ResourcePackBuilder {
     /// Adds archive contents.
     #[allow(dead_code)]
     pub fn with_archive(&mut self, extension: &str) -> &mut Self {
-        self.with_archives.push(extension.to_owned());
+        self.with_archives.push(extension.into());
         return self;
     }
 
@@ -155,7 +156,7 @@ impl ResourcePackBuilder {
     /// Adds a hash algorithm.
     #[allow(dead_code)]
     pub fn with_hash(&mut self, algorithm: &str) -> &mut Self {
-        self.with_hashes.push(algorithm.to_owned());
+        self.with_hashes.push(algorithm.into());
         return self;
     }
 
@@ -384,24 +385,21 @@ impl Iterator for FSIterator {
 }
 
 /// Returns the lowercase extension.
-fn lowercase_extension(path: &Path) -> String {
-    if let Some(os_ext) = path.extension() {
-        if let Some(ext) = os_ext.to_str() {
-            // supported extensions are all ASCII
-            return ext.to_ascii_lowercase();
-        }
-    }
-    return "".to_owned();
+fn lowercase_extension(path: &Path) -> Nfc {
+    path.extension()
+        .and_then(|x| x.to_str())
+        .map(|x| x.to_lowercase())
+        .unwrap_or_default()
+        .into()
 }
 
 /// Converts an OS path to a resource path.
-fn resource_path(base: &Path, path: &Path) -> Result<String, ResourceError> {
+fn resource_path(base: &Path, path: &Path) -> Result<Nfc, ResourceError> {
     if let Ok(resource_path) = path.strip_prefix(base) {
-        // there can be invalid utf8 in the prefix, but not in the resource path
-        if let Some(utf8) = resource_path.to_str() {
-            return Ok(utf8.replace("\\", "/"));
-        }
-        return Err(format!("{:?} contains invalid utf8", resource_path).into());
+        return match resource_path.to_str() {
+            Some(utf8) => Ok(Nfc::path(utf8)),
+            None => Err(format!("{:?} contains invalid utf8", resource_path).into()),
+        };
     }
     return Err(format!("{:?} is not a prefix of {:?}", base, path).into());
 }
