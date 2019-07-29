@@ -686,11 +686,6 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 									sYPos += pNode->sRelativeY;
 								}
 
-								if (uiLevelNodeFlags & LEVELNODE_USEZ)
-								{
-									sYPos -= pNode->sRelativeZ;
-								}
-
 								//ADJUST FOR ABSOLUTE POSITIONING
 								if (uiLevelNodeFlags & LEVELNODE_USEABSOLUTEPOS)
 								{
@@ -711,6 +706,10 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 									sXPos -= gsRenderWorldOffsetX;
 									sYPos -= gsRenderWorldOffsetY;
 
+									sYPos -= pNode->sRelativeZ;
+								}
+								else if (uiLevelNodeFlags & LEVELNODE_USEZ)
+								{
 									sYPos -= pNode->sRelativeZ;
 								}
 							}
