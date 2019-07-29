@@ -27,7 +27,7 @@ try
 {
 	// Add tile surface
 	AutoSGPImage img(CreateImage(cFilename, IMAGE_ALLDATA | IMAGE_HACK254));
-	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale, g_ui.m_stdScreenScale));
+	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_tacticalScreenScale, g_ui.m_tacticalScreenScale));
 	AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage.get()));
 
 	// Load structure data, if any.

@@ -66,8 +66,8 @@ void UILayout::recalculatePositions()
 	m_teamPanelPosition.set(tpXOffset, tpYOffset);
 	m_teamPanelWidth = std::max(UINT16(m_teamPanelSlotsTotalWidth + TEAMPANEL_BUTTONSBOX_WIDTH), m_screenWidth);
 
-	// FIXME: maxrd2: it should match m_stdScreenScale for now since resources are scaled for that
-	m_tacticalScreenScale = m_stdScreenScale; //(m_stdScreenScale + 1.) / 2.;
+	m_tacticalScreenScale = std::min(1.2, m_stdScreenScale);
+	m_cursorScreenScale = 1.0;
 
 	m_stdScreenOffsetX = (m_screenWidth  - m_scaledInterfaceWidth)  / 2;
 	m_stdScreenOffsetY = (m_screenHeight - m_scaledInterfaceHeight) / 2;
