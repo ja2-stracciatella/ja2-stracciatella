@@ -83,8 +83,6 @@ extern INT16 gsRenderHeight;
 
 extern INT16 gsRenderCenterX;
 extern INT16 gsRenderCenterY;
-extern INT16 gsRenderWorldOffsetX;
-extern INT16 gsRenderWorldOffsetY;
 
 // CURRENT VIEWPORT IN WORLD COORDS
 extern INT16 gsTopLeftWorldX;

@@ -2230,8 +2230,6 @@ void RenderTopmostFlashingItems(void)
 		INT16 sYPos = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S - gpWorldLevelData[wi.sGridNo].sHeight;
 
 		// Adjust for offset position on screen
-		sXPos -= gsRenderWorldOffsetX;
-		sYPos -= gsRenderWorldOffsetY;
 		sYPos -= wi.bRenderZHeightAboveLevel;
 
 		// Adjust for render height

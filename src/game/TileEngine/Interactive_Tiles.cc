@@ -271,9 +271,7 @@ static void GetLevelNodeScreenRect(LEVELNODE const& n, SGPRect& rect, INT16 cons
 	INT16 sScreenY = (g_ui.m_tacticalMapCenterY) + (INT16)sTempY_S;
 
 	// Adjust for offset position on screen
-	sScreenX -= gsRenderWorldOffsetX;
-	sScreenY -= gsRenderWorldOffsetY;
-	sScreenY -=	gpWorldLevelData[gridno].sHeight;
+	sScreenY -= gpWorldLevelData[gridno].sHeight;
 
 	// Adjust based on interface level
 	if (gsInterfaceLevel > 0)

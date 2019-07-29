@@ -167,10 +167,8 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 		return( FALSE );
 	}
 
-	SGPPoint cursorPosition;
-	GetCursorPos(cursorPosition);
-	sOffsetX = cursorPosition.iX - ( g_ui.m_tacticalMapCenterX ); // + gsRenderWorldOffsetX;
-	sOffsetY = cursorPosition.iY - ( g_ui.m_tacticalMapCenterY ) + 10;// + gsRenderWorldOffsetY;
+	sOffsetX = gViewportRegion.MouseXPos - g_ui.m_tacticalMapCenterX;
+	sOffsetY = gViewportRegion.MouseYPos - g_ui.m_tacticalMapCenterY + 10;
 
 	// OK, Let's offset by a value if our interfac level is changed!
 	if ( gsInterfaceLevel != 0 )

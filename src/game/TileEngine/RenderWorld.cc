@@ -193,8 +193,6 @@ static RenderFlags gRenderFlags = RENDER_FLAG_NONE;
 static SGPRect gOldClipRect;
 INT16   gsRenderCenterX;
 INT16   gsRenderCenterY;
-INT16   gsRenderWorldOffsetX = 0;
-INT16   gsRenderWorldOffsetY = 10;//CELL_Y_SIZE;
 
 
 struct RenderFXType
@@ -368,8 +366,8 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 
 	INT32 iAnchorPosX_M = iStartPointX_M;
 	INT32 iAnchorPosY_M = iStartPointY_M;
-	INT32 iAnchorPosX_S = iStartPointX_S;
-	INT32 iAnchorPosY_S = iStartPointY_S;
+	INT32 iAnchorPosX_S = iStartPointX_S; //*/floor(double(iStartPointX_S) / double(WORLD_TILE_X / 2)) * (WORLD_TILE_X / 2);
+	INT32 iAnchorPosY_S = iStartPointY_S; //*/floor(double(iStartPointY_S) / double(WORLD_TILE_Y / 2)) * (WORLD_TILE_Y / 2);
 
 	UINT32                uiDestPitchBYTES = 0;
 	UINT32*               pDestBuf         = 0;
@@ -652,10 +650,6 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 
 									sXPos = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
 									sYPos = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S - sTileHeight;
-
-									// Adjust for offset position on screen
-									sXPos -= gsRenderWorldOffsetX;
-									sYPos -= gsRenderWorldOffsetY;
 								}
 								else
 								{
@@ -701,10 +695,6 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 
 									sXPos = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
 									sYPos = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S;
-
-									// Adjust for offset position on screen
-									sXPos -= gsRenderWorldOffsetX;
-									sYPos -= gsRenderWorldOffsetY;
 
 									sYPos -= pNode->sRelativeZ;
 								}
@@ -1007,12 +997,16 @@ zlevel_topmost:
 								sXPos = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
 								sYPos = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S - sTileHeight;
 
-								// Adjust for offset position on screen
-								sXPos -= gsRenderWorldOffsetX;
-								sYPos -= gsRenderWorldOffsetY;
-
 								// Adjust for soldier height
 								sYPos -= s.sHeightAdjustment;
+//								SLOGW(DEBUG_TAG_RENDERWORLD, "Soldier %d at (%f, %f) -> (%d, %d), rc:(%d, %d), mc:(%d, %d), th:%d, ha:%d",
+//								      s.ubID,
+//								      s.dXPos, s.dYPos,
+//								      sXPos, sYPos,
+//								      gsRenderCenterX, gsRenderCenterY,
+//								      g_ui.m_tacticalMapCenterX, g_ui.m_tacticalMapCenterY,
+//								      sTileHeight,
+//								      s.sHeightAdjustment);
 
 								// Handle shade stuff....
 								if (!s.fBeginFade)

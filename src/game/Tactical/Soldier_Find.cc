@@ -355,10 +355,6 @@ void GetSoldierTRUEScreenPos(const SOLDIERTYPE* const s, INT16* const psScreenX,
 	INT16 sMercScreenX = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
 	INT16 sMercScreenY = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S;
 
-	// Adjust starting screen coordinates
-	sMercScreenX -= gsRenderWorldOffsetX;
-	sMercScreenY -= gsRenderWorldOffsetY;
-
 	// Adjust for render height
 	sMercScreenY += gsRenderHeight;
 	sMercScreenY -= gpWorldLevelData[s->sGridNo].sHeight;
@@ -519,10 +515,6 @@ void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *
 
 	sScreenX = ( g_ui.m_tacticalMapCenterX ) + (INT16)dTempX_S;
 	sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)dTempY_S;
-
-	// Adjust starting screen coordinates
-	sScreenX -= gsRenderWorldOffsetX;
-	sScreenY -= gsRenderWorldOffsetY;
 
 	sScreenY += gsRenderHeight;
 
