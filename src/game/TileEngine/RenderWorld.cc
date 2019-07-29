@@ -2282,8 +2282,8 @@ static BOOLEAN ApplyScrolling(INT16 sTempRenderCenterX, INT16 sTempRenderCenterY
 				ScrollType scrollType)
 {
 	// Make sure it's a multiple of 5
-	sTempRenderCenterX = sTempRenderCenterX / CELL_X_SIZE * CELL_X_SIZE + CELL_X_SIZE / 2;
-	sTempRenderCenterY = sTempRenderCenterY / CELL_X_SIZE * CELL_Y_SIZE + CELL_Y_SIZE / 2;
+	sTempRenderCenterX = floor(double(sTempRenderCenterX) / CELL_X_SIZE) * CELL_X_SIZE + CELL_X_SIZE / 2;
+	sTempRenderCenterY = floor(double(sTempRenderCenterY) / CELL_X_SIZE) * CELL_Y_SIZE + CELL_Y_SIZE / 2;
 
 	// From render center in world coords, convert to render center in "screen" coords
 	INT16 sScreenCenterX;
@@ -2859,19 +2859,18 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 
 	// STEP THREE - determine starting point in world coords
 	// a) Determine where in screen coords to start rendering
-	gsStartPointX_S = g_ui.m_tacticalMapCenterX - (sLeft - VIEWPORT_XOFFSET_S);
-	gsStartPointY_S = g_ui.m_tacticalMapCenterY - (sTop  - VIEWPORT_YOFFSET_S);
+	gsStartPointX_S = floor(DOUBLE(sLeft - VIEWPORT_XOFFSET_S) / DOUBLE(CELL_X_SIZE)) * CELL_X_SIZE;
+	gsStartPointY_S = floor(DOUBLE(sTop  - VIEWPORT_YOFFSET_S) / DOUBLE(CELL_Y_SIZE)) * CELL_Y_SIZE;
 
 	// b) Convert these distances into world distances
-	FromScreenToCellCoordinates(gsStartPointX_S, gsStartPointY_S, &sTempPosX_W, &sTempPosY_W);
+	FromScreenToCellCoordinates(
+		g_ui.m_tacticalMapCenterX - gsStartPointX_S,
+		g_ui.m_tacticalMapCenterY - gsStartPointY_S,
+		&sTempPosX_W, &sTempPosY_W);
 
 	// c) World start point is Render center minus this distance
 	const INT16 sStartPointX_W = sRenderCenterX_W - sTempPosX_W + CELL_X_SIZE;
 	const INT16 sStartPointY_W = sRenderCenterY_W - sTempPosY_W;
-
-	// d) screen start point is screen distances minus screen center
-	gsStartPointX_S = sLeft - VIEWPORT_XOFFSET_S;
-	gsStartPointY_S = sTop  - VIEWPORT_YOFFSET_S;
 
 	// STEP FOUR - Determine Start block
 	// a) Find start block
@@ -2880,15 +2879,15 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 
 	// STEP 5 - Determine offsets for tile center and convert to screen values
 	// Make sure these coordinates are multiples of scroll steps
-	const INT16 sOffsetX_W = sStartPointX_W - gsStartPointX_M * CELL_X_SIZE;
-	const INT16 sOffsetY_W = sStartPointY_W - gsStartPointY_M * CELL_Y_SIZE;
+//	const INT16 sOffsetX_W = sStartPointX_W - gsStartPointX_M * CELL_X_SIZE;
+//	const INT16 sOffsetY_W = sStartPointY_W - gsStartPointY_M * CELL_Y_SIZE;
 
-	INT16 sOffsetX_S;
-	INT16 sOffsetY_S;
-	FromCellToScreenCoordinates(sOffsetX_W, sOffsetY_W, &sOffsetX_S, &sOffsetY_S);
+//	INT16 sOffsetX_S;
+//	INT16 sOffsetY_S;
+//	FromCellToScreenCoordinates(sOffsetX_W, sOffsetY_W, &sOffsetX_S, &sOffsetY_S);
 
-	gsStartPointX_S -= sOffsetX_S;
-	gsStartPointY_S -= sOffsetY_S;
+//	gsStartPointX_S -= sOffsetX_S;
+//	gsStartPointY_S -= sOffsetY_S;
 
 	/////////////////////////////////////////
 	//ATE: CALCULATE LARGER OFFSET VALUES
@@ -2897,19 +2896,18 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 
 	// STEP THREE - determine starting point in world coords
 	// a) Determine where in screen coords to start rendering
-	gsLStartPointX_S = g_ui.m_tacticalMapCenterX - (sLeft - LARGER_VIEWPORT_XOFFSET_S);
-	gsLStartPointY_S = g_ui.m_tacticalMapCenterY - (sTop  - LARGER_VIEWPORT_YOFFSET_S);
+	gsLStartPointX_S = floor(DOUBLE(sLeft - LARGER_VIEWPORT_XOFFSET_S) / DOUBLE(CELL_X_SIZE)) * CELL_X_SIZE;
+	gsLStartPointY_S = floor(DOUBLE(sTop  - LARGER_VIEWPORT_YOFFSET_S) / DOUBLE(CELL_Y_SIZE)) * CELL_Y_SIZE;
 
 	// b) Convert these distances into world distances
-	FromScreenToCellCoordinates(gsLStartPointX_S, gsLStartPointY_S, &sTempPosX_W, &sTempPosY_W);
+	FromScreenToCellCoordinates(
+		g_ui.m_tacticalMapCenterX - gsLStartPointX_S,
+		g_ui.m_tacticalMapCenterY - gsLStartPointY_S,
+		&sTempPosX_W, &sTempPosY_W);
 
 	// c) World start point is Render center minus this distance
 	const INT16 sLStartPointX_W = sRenderCenterX_W - sTempPosX_W + CELL_X_SIZE;
 	const INT16 sLStartPointY_W = sRenderCenterY_W - sTempPosY_W;
-
-	// d) screen start point is screen distances minus screen center
-	gsLStartPointX_S = sLeft - LARGER_VIEWPORT_XOFFSET_S;
-	gsLStartPointY_S = sTop  - LARGER_VIEWPORT_YOFFSET_S;
 
 	// STEP FOUR - Determine Start block
 	// a) Find start block
@@ -2917,8 +2915,8 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 	gsLStartPointY_M = floor(DOUBLE(sLStartPointY_W) / DOUBLE(CELL_Y_SIZE));
 
 	// STEP 5 - Adjust screen coordinates to tile center, so it matches small viewport
-	gsLStartPointX_S -= sOffsetX_S;
-	gsLStartPointY_S -= sOffsetY_S;
+//	gsLStartPointX_S -= sOffsetX_S;
+//	gsLStartPointY_S -= sOffsetY_S;
 }
 
 
