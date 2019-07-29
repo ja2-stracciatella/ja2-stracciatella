@@ -2218,13 +2218,13 @@ void RenderTopmostFlashingItems(void)
 		INT16 sY;
 		ConvertGridNoToCenterCellXY(wi.sGridNo, &sX, &sY);
 
-		const FLOAT dOffsetX = sX - gsRenderCenterX;
-		const FLOAT dOffsetY = sY - gsRenderCenterY;
+		const INT16 dOffsetX = sX - gsRenderCenterX;
+		const INT16 dOffsetY = sY - gsRenderCenterY;
 
 		// Calculate guy's position
-		FLOAT dTempX_S;
-		FLOAT dTempY_S;
-		FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
+		INT16 dTempX_S;
+		INT16 dTempY_S;
+		FromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
 		INT16 sXPos = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
 		INT16 sYPos = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S - gpWorldLevelData[wi.sGridNo].sHeight;

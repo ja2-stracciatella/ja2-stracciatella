@@ -345,12 +345,12 @@ void GetSoldierTRUEScreenPos(const SOLDIERTYPE* const s, INT16* const psScreenX,
 	}
 
 	// Get 'TRUE' merc position
-	FLOAT const dOffsetX = s->dXPos - gsRenderCenterX;
-	FLOAT const dOffsetY = s->dYPos - gsRenderCenterY;
+	INT16 const dOffsetX = s->dXPos - gsRenderCenterX;
+	INT16 const dOffsetY = s->dYPos - gsRenderCenterY;
 
-	FLOAT dTempX_S;
-	FLOAT dTempY_S;
-	FloatFromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
+	INT16 dTempX_S;
+	INT16 dTempY_S;
+	FromCellToScreenCoordinates(dOffsetX, dOffsetY, &dTempX_S, &dTempY_S);
 
 	INT16 sMercScreenX = g_ui.m_tacticalMapCenterX + (INT16)dTempX_S;
 	INT16 sMercScreenY = g_ui.m_tacticalMapCenterY + (INT16)dTempY_S;
@@ -505,8 +505,8 @@ UINT16 FindRelativeSoldierPosition(const SOLDIERTYPE* const pSoldier, const INT1
 void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *psScreenY )
 {
 	INT16 sScreenX, sScreenY;
-	FLOAT dOffsetX, dOffsetY;
-	FLOAT dTempX_S, dTempY_S;
+	INT16 dOffsetX, dOffsetY;
+	INT16 dTempX_S, dTempY_S;
 
 	// Get 'TRUE' merc position
 	dOffsetX = (FLOAT)( CenterX( sGridNo ) - gsRenderCenterX );
@@ -515,7 +515,7 @@ void GetGridNoScreenPos( INT16 sGridNo, UINT8 ubLevel, INT16 *psScreenX, INT16 *
 	// OK, DONT'T ASK... CONVERSION TO PROPER Y NEEDS THIS...
 	dOffsetX -= CELL_Y_SIZE;
 
-	FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
+	FromCellToScreenCoordinates( dOffsetX, dOffsetY, &dTempX_S, &dTempY_S );
 
 	sScreenX = ( g_ui.m_tacticalMapCenterX ) + (INT16)dTempX_S;
 	sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)dTempY_S;

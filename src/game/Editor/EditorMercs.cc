@@ -739,7 +739,7 @@ void DisplayWayPoints(void)
 	INT16 sX,sY;
 	INT16	sXMapPos,sYMapPos;
 	INT16 sScreenX,sScreenY;
-	FLOAT ScrnX,ScrnY,dOffsetX,dOffsetY;
+	INT16 ScrnX,ScrnY,dOffsetX,dOffsetY;
 	INT8	bPoint;
 
 	const SOLDIERTYPE* const pSoldier = g_selected_merc;
@@ -765,7 +765,7 @@ void DisplayWayPoints(void)
 		dOffsetX = (FLOAT)(sXMapPos * CELL_X_SIZE) - gsRenderCenterX;
 		dOffsetY = (FLOAT)(sYMapPos * CELL_Y_SIZE) - gsRenderCenterY;
 
-		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
+		FromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
 
 		sScreenX = ( g_ui.m_tacticalMapCenterX ) + (INT16)ScrnX;
 		sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)ScrnY;
@@ -2797,8 +2797,8 @@ void ClearCurrentSchedule()
 
 static void RenderCurrentSchedule(void)
 {
-	FLOAT dOffsetX, dOffsetY;
-	FLOAT ScrnX, ScrnY;
+	INT16 dOffsetX, dOffsetY;
+	INT16 ScrnX, ScrnY;
 	INT32 i;
 	INT32 iMapIndex;
 	INT16 sXMapPos, sYMapPos;
@@ -2820,7 +2820,7 @@ static void RenderCurrentSchedule(void)
 		dOffsetX = (FLOAT)(sXMapPos * CELL_X_SIZE) - gsRenderCenterX;
 		dOffsetY = (FLOAT)(sYMapPos * CELL_Y_SIZE) - gsRenderCenterY;
 
-		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
+		FromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
 
 		sScreenX = ( g_ui.m_tacticalMapCenterX ) + (INT16)ScrnX;
 		sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)ScrnY;

@@ -134,22 +134,6 @@ void FromScreenToCellCoordinates( INT16 sScreenX, INT16 sScreenY, INT16 *psCellX
 	*psCellY = floor((FLOAT(sScreenY) / HALF_TILE_HEIGHT - FLOAT(sScreenX) / HALF_TILE_WIDTH) / 2.0f);
 }
 
-// These two functions take into account that our world is projected and attached
-// to the screen (0,0) in a specific way, and we MUSt take that into account then
-// determining screen coords
-
-void FloatFromCellToScreenCoordinates( FLOAT dCellX, FLOAT dCellY, FLOAT *pdScreenX, FLOAT *pdScreenY )
-{
-	FLOAT dScreenX, dScreenY;
-
-	dScreenX = ( 2 * dCellX ) - ( 2 * dCellY );
-	dScreenY = dCellX + dCellY;
-
-	*pdScreenX = dScreenX;
-	*pdScreenY = dScreenY;
-}
-
-
 BOOLEAN GetMouseXY( INT16 *psMouseX, INT16 *psMouseY )
 {
 	INT16 sWorldX, sWorldY;
