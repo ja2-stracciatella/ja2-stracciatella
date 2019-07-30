@@ -380,9 +380,7 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 	}
 
 	bool check_for_mouse_detections = false;
-	if (uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE &&
-			ShouldCheckForMouseDetections())
-	{
+	if(uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE && ShouldCheckForMouseDetections()) {
 		BeginCurInteractiveTileCheck();
 		// If we are in edit mode, don't do this
 		check_for_mouse_detections = !gfEditMode;
@@ -443,13 +441,12 @@ static void RenderTiles(RenderTilesFlags const uiFlags, INT32 const iStartPointX
 					MAP_ELEMENT const& me = gpWorldLevelData[uiTileIndex];
 
 					/* OK, we're searching through this loop anyway, might as well check
-					 * for mouse position over objects. Experimental! */
-					if (check_for_mouse_detections && me.pStructHead)
-					{
+					 * for mouse position over objects. */
+					if(check_for_mouse_detections && me.pStructHead)
 						LogMouseOverInteractiveTile(uiTileIndex);
-					}
 
-					if (uiFlags & TILES_MARKED && !(me.uiFlags & MAPELEMENT_REDRAW)) goto next_tile;
+					if (uiFlags & TILES_MARKED && !(me.uiFlags & MAPELEMENT_REDRAW))
+						goto next_tile;
 
 					INT8             n_visible_items = 0;
 					ITEM_POOL const* item_pool       = 0;
@@ -1613,7 +1610,8 @@ next_tile:
 	}
 	while (iAnchorPosY_S < iEndYS);
 
-	if (uiFlags & TILES_DYNAMIC_CHECKFOR_INT_TILE) EndCurInteractiveTileCheck();
+	if(check_for_mouse_detections)
+		EndCurInteractiveTileCheck();
 }
 
 

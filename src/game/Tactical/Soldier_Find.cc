@@ -167,12 +167,10 @@ SOLDIERTYPE* FindSoldier(GridNo const gridno, UINT32 flags)
 				UINT16 const anim_surface = GetSoldierAnimationSurface(&s);
 				if (anim_surface != INVALID_ANIMATION_SURFACE)
 				{
-					INT32 const merc_screen_x =   screen_x - soldier_rect.iLeft;
-					INT32 const merc_screen_y = -(screen_y - soldier_rect.iBottom);
+					INT32 const merc_screen_x = screen_x - soldier_rect.iLeft;
+					INT32 const merc_screen_y = screen_y - soldier_rect.iTop;
 					if (!CheckVideoObjectScreenCoordinateInData(gAnimSurfaceDatabase[anim_surface].hVideoObject, s.usAniFrame, merc_screen_x, merc_screen_y))
-					{
 						continue;
-					}
 				}
 			}
 
