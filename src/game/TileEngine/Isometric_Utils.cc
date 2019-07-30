@@ -168,7 +168,7 @@ BOOLEAN GetMouseWorldCoords( INT16 *psMouseX, INT16 *psMouseY )
 	}
 
 	sOffsetX = gViewportRegion.MouseXPos - g_ui.m_tacticalMapCenterX;
-	sOffsetY = gViewportRegion.MouseYPos - g_ui.m_tacticalMapCenterY + 10;
+	sOffsetY = gViewportRegion.MouseYPos - g_ui.m_tacticalMapCenterY;
 
 	// OK, Let's offset by a value if our interfac level is changed!
 	if ( gsInterfaceLevel != 0 )
