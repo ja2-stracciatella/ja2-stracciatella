@@ -27,6 +27,7 @@ pub(crate) mod common {
     //! All pointers that come from C are unsafe.
     //! C can send a pointer that has already been freed.
     //! C can send a pointer that is being used in a different thread.
+    //! C can send a pointer that is a different type of data (another struct or a number).
     //! Only null pointers can be detected safely, the rest can't be checked in rust.
     //!
     //! When you declare a function unsafe you automatically get an unsafe body (disables safety checks).
