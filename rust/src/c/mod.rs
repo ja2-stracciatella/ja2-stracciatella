@@ -28,6 +28,12 @@ pub(crate) mod common {
     //! C can send a pointer that has already been freed.
     //! C can send a pointer that is being used in a different thread.
     //! Only null pointers can be detected safely, the rest can't be checked in rust.
+    //!
+    //! When you declare a function unsafe you automatically get an unsafe body (disables safety checks).
+    //! All `pub extern "C"` functions that receive a pointer from C are unsafe.
+    //! We want the safety checks so we DO NOT declare them unsafe.
+    //! Hopefully in the future there will be a way for unsafe functions to get a safe body.
+    //! See https://github.com/rust-lang/rfcs/pull/2585
     #![allow(dead_code)]
 
     pub use libc::{c_char, c_int, size_t};
