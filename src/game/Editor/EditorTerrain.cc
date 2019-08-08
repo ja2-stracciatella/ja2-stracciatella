@@ -21,6 +21,7 @@
 #include "Cursor_Modes.h"
 #include "English.h"
 #include "UILayout.h"
+#include "Random.h"
 
 
 BOOLEAN gfShowTerrainTileButtons;
@@ -187,7 +188,7 @@ void ChooseWeightedTerrainTile()
 	{ //Not in the weighted mode.  CurrentPaste will already contain the selected tile.
 		return;
 	}
-	sRandomNum = rand() % usTotalWeight;
+	sRandomNum = Random(usTotalWeight);
 	for( x = 0; x < NUM_TERRAIN_TILE_REGIONS; x++ )
 	{
 		usWeight = ubTerrainTileButtonWeight[ x ];

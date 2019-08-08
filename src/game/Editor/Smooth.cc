@@ -6,6 +6,7 @@
 #include "Structure_Wrap.h"
 #include "Exit_Grids.h"
 #include "Editor_Undo.h"
+#include "Random.h"
 
 
 INT16 gbSmoothStruct[] =
@@ -198,7 +199,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 					*piNewTile = NO_TILE;
 					return;
 				}
-				uiTempIndex = rand() % pSmoothStruct[ cnt + 1 ];
+				uiTempIndex = Random(pSmoothStruct[ cnt + 1 ]);
 				land = pSmoothStruct[ cnt + 2 + uiTempIndex ];
 				fFound = TRUE;
 			} while( FALSE );
@@ -216,7 +217,7 @@ void SmoothTerrain(int gridno, int origType, UINT16 *piNewTile, BOOLEAN fForceSm
 		}
 		// this is a "full" tile, so randomize between the
 		// five available tiles
-		land = (rand( ) % 10 ) + 1;
+		land = Random(10) + 1;
 	}
 	*piNewTile = GetTileIndexFromTypeSubIndex(origType, land);
 }
@@ -479,7 +480,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 					*piNewTile = NO_TILE;
 					return;
 				}
-				uiTempIndex = rand() % pSmoothStruct[ cnt + 1 ];
+				uiTempIndex = Random(pSmoothStruct[ cnt + 1 ]);
 				land = pSmoothStruct[ cnt + 2 + uiTempIndex ];
 				fFound = TRUE;
 			} while( FALSE );
@@ -495,7 +496,7 @@ static void SmoothWaterTerrain(int gridno, int origType, UINT16* piNewTile, BOOL
 				*piNewTile = NO_TILE;
 				return;
 			}
-			land = (rand( ) % 10 ) + 1;
+			land = Random(10) + 1;
 	}
 	*piNewTile = GetTileIndexFromTypeSubIndex(origType, land);
 }

@@ -416,7 +416,7 @@ UINT16 GetRandomIndexByRange( UINT16 usRangeStart, UINT16 usRangeEnd )
 			usNumInPickList++;
 		}
 	}
-	return ( usNumInPickList ) ? usPickList[ rand() % usNumInPickList ] : 0xffff;
+	return ( usNumInPickList ) ? usPickList[ Random(usNumInPickList) ] : 0xffff;
 }
 
 
@@ -700,7 +700,7 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 	DeleteAllLandLayers( iMapIndex );
 
 	// ADD BASE LAND AT LEAST!
-	usNewIndex = (UINT16)(rand( ) % 10 );
+	usNewIndex = (UINT16)Random(10);
 
 	// Adjust for type
 	usNewIndex += gTileTypeStartIndex[ gCurrentBackground ];
@@ -773,7 +773,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 						AddToUndoList( iMapIndex );
 
 						// Force middle one to NOT smooth, and set to random 'full' tile
-						usTemp = ( rand( ) % 10 ) + 1;
+						usTemp = Random(10) + 1;
 						UINT16 NewTile = GetTileIndexFromTypeSubIndex(uiNewType, usTemp);
 						SetLandIndex(iNewIndex, NewTile, uiNewType);
 					}
@@ -782,7 +782,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 						AddToUndoList( iMapIndex );
 
 						// Force middle one to NOT smooth, and set to random 'full' tile
-						usTemp = ( rand( ) % 10 ) + 1;
+						usTemp = Random(10) + 1;
 						UINT16 NewTile = GetTileIndexFromTypeSubIndex(uiNewType, usTemp);
 						SetLandIndex(iNewIndex, NewTile, uiNewType);
 					}

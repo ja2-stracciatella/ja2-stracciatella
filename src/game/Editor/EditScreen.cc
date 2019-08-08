@@ -495,7 +495,7 @@ static void SetBackgroundTexture(void)
 		RemoveAllLandsOfTypeRange( cnt, FIRSTTEXTURE, DEEPWATERTEXTURE );
 
 		// Add level
-		usIndex = (UINT16)(rand( ) % 10 );
+		usIndex = (UINT16)Random(10);
 
 		// Adjust for type
 		usIndex += gTileTypeStartIndex[ gCurrentBackground ];
@@ -1441,7 +1441,7 @@ static void HandleKeyboardShortcuts(void)
 								RemoveAllRoofsOfTypeRange( i, FIRSTTEXTURE, LASTITEM );
 								RemoveAllOnRoofsOfTypeRange( i, FIRSTTEXTURE, LASTITEM );
 								RemoveAllShadowsOfTypeRange( i, FIRSTROOF, LASTSLANTROOF );
-								usRoofIndex = 9 + ( rand() % 3 );
+								usRoofIndex = 9 + Random(3);
 								UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(usRoofType, usRoofIndex);
 								AddRoofToHead( i, usTileIndex );
 							}

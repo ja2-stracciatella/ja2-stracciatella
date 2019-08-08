@@ -2451,7 +2451,7 @@ void NewWorld()
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
 	{
 		// Set land index
-		UINT16 const idx = rand() % 10;
+		UINT16 const idx = Random(10);
 		AddLandToHead(cnt, idx);
 	}
 

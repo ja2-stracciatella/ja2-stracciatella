@@ -378,7 +378,7 @@ UINT16 PickAWallPiece( UINT16 usWallPieceType )
 	if (usWallPieceType < NUM_WALL_TYPES)
 	{
 		usVariants = gbWallTileLUT[ usWallPieceType ][ 0 ];
-		usVariantChosen = ( rand() % usVariants ) + 1;
+		usVariantChosen = Random(usVariants) + 1;
 		usWallPieceChosen = gbWallTileLUT[ usWallPieceType ][ usVariantChosen ];
 	}
 	return usWallPieceChosen;
@@ -591,7 +591,7 @@ void RebuildRoofUsingFloorInfo(INT32 const map_idx, UINT16 roof_type)
 		bottom          ? BOTTOM_ROOF_INDEX      :
 		left            ? LEFT_ROOF_INDEX        :
 		right           ? RIGHT_ROOF_INDEX       :
-		CENTER_ROOF_BASE_INDEX + rand() % CENTER_ROOF_VARIANTS;
+		CENTER_ROOF_BASE_INDEX + Random(CENTER_ROOF_VARIANTS);
 	UINT16 const tile_idx = GetTileIndexFromTypeSubIndex(roof_type, roof_idx);
 	AddRoofToHead(map_idx, tile_idx);
 	// If the editor view roofs is off, then the new roofs need to be hidden.
@@ -628,7 +628,7 @@ void RebuildRoof(UINT32 const map_idx, UINT16 roof_type)
 		bottom           ? BOTTOM_ROOF_INDEX      :
 		left             ? LEFT_ROOF_INDEX        :
 		right            ? RIGHT_ROOF_INDEX       :
-		CENTER_ROOF_BASE_INDEX + rand() % CENTER_ROOF_VARIANTS;
+		CENTER_ROOF_BASE_INDEX + Random(CENTER_ROOF_VARIANTS);
 	UINT16 const tile_idx = GetTileIndexFromTypeSubIndex(roof_type, roof_idx);
 	AddRoofToHead(map_idx, tile_idx);
 	// If the editor view roofs is off, then the new roofs need to be hidden.
