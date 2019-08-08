@@ -108,6 +108,7 @@ impl Logger {
         let mut config = Config::default();
         config.target = Some(Level::Error);
         config.thread = None;
+        config.time_format = Some("%FT%T");
         let logger = CombinedLogger::new(vec![
             TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed).unwrap(),
             WriteLogger::new(LevelFilter::max(), config, File::create(log_file).unwrap()),
