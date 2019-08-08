@@ -1383,7 +1383,7 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(ItemModel const* con
 
 static void ReportBobbyROrderError(UINT16 usItemNumber, UINT8 ubPurchaseNum, UINT8 ubQtyOnHand, UINT8 ubNumPurchasing)
 {
-	SLOGE(DEBUG_TAG_BOBBYRAY, "**** Bobby Rays Ordering Error ****\n\
+	SLOGE("**** Bobby Rays Ordering Error ****\n\
 		usItemNumber = %d\n\
 		ubPurchaseNum = %d\n\
 		ubQtyOnHand = %d\n\

@@ -656,7 +656,7 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 			{
 				if ((INT16) PreRandom(100) < iChance)
 				{
-					SLOGD(DEBUG_TAG_AI, "%ls decides to call an alert!", pSoldier->name);
+					SLOGD("%ls decides to call an alert!", pSoldier->name);
 					pSoldier->usActionData = CALL_1_PREY;
 					return(AI_ACTION_CREATURE_CALL);
 				}
@@ -1216,7 +1216,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 			{
 				pSoldier->bAimShotLocation = AIM_SHOT_RANDOM;
 			}
-			SLOGD(DEBUG_TAG_AI, "%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
+			SLOGD("%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
 				pSoldier->ubID, pSoldier->name,
 				(ubBestAttackAction == AI_ACTION_FIRE_GUN)?"SHOOTS":((ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE)?"TOSSES AT":"STABS"),
 				BestAttack.opponent, BestAttack.opponent->name,
@@ -1327,7 +1327,7 @@ INT8 CreatureDecideAction( SOLDIERTYPE *pSoldier )
 			bAction = CreatureDecideActionBlack(pSoldier);
 			break;
 	}
-	SLOGD(DEBUG_TAG_AI, "DecideAction: selected action %d, actionData %d\n\n",
+	SLOGD("DecideAction: selected action %d, actionData %d\n\n",
 		bAction, pSoldier->usActionData);
 	return(bAction);
 }

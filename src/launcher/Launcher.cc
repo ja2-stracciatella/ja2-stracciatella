@@ -13,8 +13,6 @@
 
 #include "Launcher.h"
 
-#define LAUNCHER_TOPIC DEBUG_TAG_LAUNCHER
-
 #define RESOLUTION_SEPARATOR "x"
 
 
@@ -183,10 +181,10 @@ int Launcher::writeJsonFile() {
 
 	if (success) {
 		update(false, nullptr);
-		SLOGD(LAUNCHER_TOPIC, "Succeeded writing config file");
+		SLOGD("Succeeded writing config file");
 		return 0;
 	}
-	SLOGD(LAUNCHER_TOPIC, "Failed writing config file");
+	SLOGD("Failed writing config file");
 	return 1;
 }
 

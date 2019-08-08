@@ -2992,11 +2992,11 @@ static void HandleModCtrl(UINT const key)
 				gfAutoAmbush ^= 1;
 				if(gfAutoAmbush)
 				{
-					SLOGD(DEBUG_TAG_SMAP, "Enemy ambush test mode enabled.");
+					SLOGD("Enemy ambush test mode enabled.");
 				}
 				else
 				{
-					SLOGD(DEBUG_TAG_SMAP, "Enemy ambush test mode disabled.");
+					SLOGD("Enemy ambush test mode disabled.");
 				}
 			}
 			break;
@@ -3037,11 +3037,11 @@ static void HandleModCtrl(UINT const key)
 				gfAutoAIAware ^= 1;
 				if(gfAutoAIAware)
 				{
-					SLOGD(DEBUG_TAG_SMAP, "Strategic AI awareness maxed.");
+					SLOGD("Strategic AI awareness maxed.");
 				}
 				else
 				{
-					SLOGD(DEBUG_TAG_SMAP, "Strategic AI awareness normal.");
+					SLOGD("Strategic AI awareness normal.");
 				}
 			}
 			break;
@@ -6589,7 +6589,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 	// if we're locked into paused time compression by some event that enforces that
 	if ( PauseStateLocked() )
 	{
-		SLOGW(DEBUG_TAG_SMAP, "Can't compress time, pause state locked (reason %d). OK unless permanent.\n\
+		SLOGW("Can't compress time, pause state locked (reason %d). OK unless permanent.\n\
 			If permanent, take screenshot now, send with *previous* save & describe what happened since.",
 			guiLockPauseStateLastReasonId);
 	}
@@ -6610,19 +6610,19 @@ void TellPlayerWhyHeCantCompressTime( void )
 	}
 	else if ( gfContractRenewalSquenceOn )
 	{
-		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while contract renewal sequence is on.");
+		SLOGD("Can't compress time while contract renewal sequence is on.");
 	}
 	else if( fDisableMapInterfaceDueToBattle )
 	{
-		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while disabled due to battle.");
+		SLOGD("Can't compress time while disabled due to battle.");
 	}
 	else if( fDisableDueToBattleRoster )
 	{
-		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while in battle roster.");
+		SLOGD("Can't compress time while in battle roster.");
 	}
 	else if ( fMapInventoryItem )
 	{
-		SLOGD(DEBUG_TAG_SMAP, "Can't compress time while still holding an inventory item.");
+		SLOGD("Can't compress time while still holding an inventory item.");
 	}
 	else if( fShowMapInventoryPool )
 	{
@@ -6838,7 +6838,7 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 				break;
 
 			default:
-				SLOGE(DEBUG_TAG_ASSERTS, "Invalid sorting mode for Merc List");
+				SLOGA("Invalid sorting mode for Merc List");
 				return;
 		}
 	}
@@ -8179,7 +8179,7 @@ static void RestorePreviousPaths(void)
 			else
 			{
 				// invalid pSoldier - that guy can't possibly be moving, he's on a non-vehicle assignment!
-				SLOGE(DEBUG_TAG_ASSERTS, "RestorePreviousPaths: invalid pSoldier: %d", pSoldier->ubID);
+				SLOGA("RestorePreviousPaths: invalid pSoldier: %d", pSoldier->ubID);
 				continue;
 			}
 

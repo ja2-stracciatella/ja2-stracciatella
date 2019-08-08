@@ -508,7 +508,7 @@ ScreenID MainGameScreenHandle(void)
 	}
 	else if (gfIntendOnEnteringEditor && GameState::getInstance()->isEditorMode())
 	{
-		SLOGI(DEBUG_TAG_GAMESCREEN, "Aborting normal game mode and entering editor mode...");
+		SLOGI("Aborting normal game mode and entering editor mode...");
 		SetPendingNewScreen(NO_PENDING_SCREEN);
 		return EDIT_SCREEN;
 	}

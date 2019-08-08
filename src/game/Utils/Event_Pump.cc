@@ -17,12 +17,12 @@ void AddGameEvent(GameEvent const uiEvent, UINT16 const usDelay, PTR const pEven
 {
 	if (usDelay == DEMAND_EVENT_DELAY)
 	{
-		SLOGD(DEBUG_TAG_EVENTPUMP, "AddGameEvent: Sending Local #%d", uiEvent);
+		SLOGD("AddGameEvent: Sending Local #%d", uiEvent);
 		AddGameEventToQueue(uiEvent, 0, pEventData, DEMAND_EVENT_QUEUE);
 	}
 	else
 	{
-		SLOGD(DEBUG_TAG_EVENTPUMP, "AddGameEvent: Sending Local #%d", uiEvent);
+		SLOGD("AddGameEvent: Sending Local #%d", uiEvent);
 		AddGameEventToQueue(uiEvent, usDelay, pEventData, PRIMARY_EVENT_QUEUE);
 	}
 }
@@ -164,7 +164,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			if (pSoldier == NULL)
 			{
 				// Handle Error?
-				SLOGE(DEBUG_TAG_EVENTPUMP, "Invalid Soldier ID");
+				SLOGE("Invalid Soldier ID");
 				break;
 			}
 
@@ -174,7 +174,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				break;
 			}
 			// Call soldier function
-			SLOGD(DEBUG_TAG_EVENTPUMP, "GetNewPath");
+			SLOGD("GetNewPath");
 			EVENT_GetNewSoldierPath(pSoldier, SGetNewPath.sDestGridNo, SGetNewPath.usMovementAnim);
 			break;
 		}
@@ -188,7 +188,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			if (pSoldier == NULL)
 			{
 				// Handle Error?
-				SLOGE(DEBUG_TAG_EVENTPUMP, "Invalid Soldier ID");
+				SLOGE("Invalid Soldier ID");
 				break;
 			}
 
@@ -199,7 +199,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			}
 
 			// Call soldier function
-			SLOGD(DEBUG_TAG_EVENTPUMP, "SetDesiredDirection: Dir( %d )", SSetDesiredDirection.usDesiredDirection);
+			SLOGD("SetDesiredDirection: Dir( %d )", SSetDesiredDirection.usDesiredDirection);
 			EVENT_SetSoldierDesiredDirection(pSoldier, SSetDesiredDirection.usDesiredDirection);
 			break;
 		}
@@ -215,7 +215,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 				pSoldier = NULL;
 				break;
 				// Handle Error?
-				SLOGE(DEBUG_TAG_EVENTPUMP, "Invalid Soldier ID");
+				SLOGE("Invalid Soldier ID");
 			}
 
 			// check for error
@@ -225,7 +225,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			}
 
 			// Call soldier function
-			SLOGD(DEBUG_TAG_EVENTPUMP, "Begin Fire Weapon");
+			SLOGD("Begin Fire Weapon");
 			pSoldier->sTargetGridNo    = SBeginFireWeapon.sTargetGridNo;
 			pSoldier->bTargetLevel     = SBeginFireWeapon.bTargetLevel;
 			pSoldier->bTargetCubeLevel = SBeginFireWeapon.bTargetCubeLevel;
@@ -242,7 +242,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 			if (pSoldier == NULL)
 			{
 				// Handle Error?
-				SLOGE(DEBUG_TAG_EVENTPUMP, "Invalid Soldier ID");
+				SLOGE("Invalid Soldier ID");
 				break;
 			}
 
@@ -254,7 +254,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 
 
 			// Call soldier function
-			SLOGD(DEBUG_TAG_EVENTPUMP, "FireWeapon");
+			SLOGD("FireWeapon");
 			pSoldier->sTargetGridNo    = SFireWeapon.sTargetGridNo;
 			pSoldier->bTargetLevel     = SFireWeapon.bTargetLevel;
 			pSoldier->bTargetCubeLevel = SFireWeapon.bTargetCubeLevel;
@@ -266,7 +266,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 		{
 			EV_S_WEAPONHIT SWeaponHit;
 			memcpy(&SWeaponHit, pEvent->Data, pEvent->uiDataSize);
-			SLOGD(DEBUG_TAG_EVENTPUMP, "WeaponHit %d Damage", SWeaponHit.sDamage);
+			SLOGD("WeaponHit %d Damage", SWeaponHit.sDamage);
 			WeaponHit(&GetMan(SWeaponHit.usSoldierID), SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, &GetMan(SWeaponHit.ubAttackerID), SWeaponHit.ubSpecial, SWeaponHit.ubLocation);
 			break;
 		}
@@ -275,7 +275,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 		{
 			EV_S_NOISE SNoise;
 			memcpy(&SNoise, pEvent->Data, pEvent->uiDataSize);
-			SLOGD(DEBUG_TAG_EVENTPUMP, "Noise from %d at %d/%d, type %d volume %d",
+			SLOGD("Noise from %d at %d/%d, type %d volume %d",
 						SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel,
 						SNoise.ubNoiseType, SNoise.ubVolume);
 			OurNoise(ID2SOLDIER(SNoise.ubNoiseMaker), SNoise.sGridNo, SNoise.bLevel, SNoise.ubVolume, static_cast<NoiseKind>(SNoise.ubNoiseType));
@@ -283,7 +283,7 @@ static BOOLEAN ExecuteGameEvent(EVENT* pEvent)
 		}
 
 		default:
-			SLOGE(DEBUG_TAG_EVENTPUMP, "Invalid Event Received");
+			SLOGE("Invalid Event Received");
 			return FALSE;
 	}
 

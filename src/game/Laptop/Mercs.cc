@@ -708,7 +708,7 @@ UINT8 GetMercIDFromMERCArray(UINT8 ubMercID)
 	//else its an error
 	else
 	{
-		SLOGE(DEBUG_TAG_ASSERTS, "GetMercIDFromMercArray: invalid MercID");
+		SLOGA("GetMercIDFromMercArray: invalid MercID");
 		return( TRUE );
 	}
 }
@@ -1184,7 +1184,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 						StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_ON_AFTER_OTHER_TAGS_4 );
 						break;
 					default:
-						SLOGE(DEBUG_TAG_ASSERTS, "GetSpeckConditionalOpening: Problem with random");
+						SLOGA("GetSpeckConditionalOpening: Problem with random");
 				}
 			}
 		}

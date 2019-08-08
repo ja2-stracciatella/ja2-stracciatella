@@ -190,7 +190,7 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 	if (SoundPlayStreamed(pFilename))
 	{
 		//Trying to play a sound which is bigger then the 'guiSoundCacheThreshold'
-		SLOGE(DEBUG_TAG_SOUND, "Trying to play %s sound is too large to load into cache, use SoundPlayStreamedFile() instead", pFilename));
+		SLOGE("Trying to play %s sound is too large to load into cache, use SoundPlayStreamedFile() instead", pFilename));
 		return SOUND_ERROR;
 	}
 #endif
@@ -260,7 +260,7 @@ try
 	FILE* hRealFileHandle = GetRealFileHandleFromFileManFileHandle(hFile);
 	if (hRealFileHandle == NULL)
 	{
-		SLOGE(DEBUG_TAG_SOUND, "SoundPlayStreamedFile(): Couldnt get a real file handle for '%s' in SoundPlayStreamedFile()", pFilename );
+		SLOGE("SoundPlayStreamedFile(): Couldnt get a real file handle for '%s' in SoundPlayStreamedFile()", pFilename );
 		return SOUND_ERROR;
 	}
 
@@ -282,14 +282,14 @@ try
 }
 catch (...)
 {
-	SLOGE(DEBUG_TAG_SOUND, "SoundPlayStreamedFile(): Failed to play '%s'", pFilename);
+	SLOGE("SoundPlayStreamedFile(): Failed to play '%s'", pFilename);
 	return SOUND_ERROR;
 }
 
 
 UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max, UINT32 max_instances)
 {
-	SLOGD(DEBUG_TAG_SOUND, "playing random Sound: \"%s\"", pFilename);
+	SLOGD("playing random Sound: \"%s\"", pFilename);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
@@ -476,7 +476,7 @@ void SoundServiceStreams(void)
 		SOUNDTAG* Sound = &pSoundList[i];
 		if (Sound->State == CHANNEL_DEAD)
 		{
-			SLOGD(DEBUG_TAG_SOUND, "DEAD channel %u file \"%s\" (refcount %u)", i, Sound->pSample->pName, Sound->pSample->uiInstances);
+			SLOGD("DEAD channel %u file \"%s\" (refcount %u)", i, Sound->pSample->pName, Sound->pSample->uiInstances);
 			if (Sound->EOSCallback != NULL) Sound->EOSCallback(Sound->pCallbackData);
 			assert(Sound->pSample->uiInstances != 0);
 			Sound->pSample->uiInstances--;
@@ -569,7 +569,7 @@ static SAMPLETAG* SoundLoadBuffer(SDL_AudioFormat format, UINT8 channels, int fr
 
 	if (buffer == NULL || size == 0)
 	{
-		SLOGE(DEBUG_TAG_SOUND, "SoundLoadBuffer Error: buffer is empty - Buffer: %p, Size: %u", buffer, size);
+		SLOGE("SoundLoadBuffer Error: buffer is empty - Buffer: %p, Size: %u", buffer, size);
 		return NULL;
 	}
 
@@ -577,7 +577,7 @@ static SAMPLETAG* SoundLoadBuffer(SDL_AudioFormat format, UINT8 channels, int fr
 	ret = SDL_BuildAudioCVT(&cvt, format, channels, freq, gTargetAudioSpec.format, samplechannels, gTargetAudioSpec.freq);
 	if (ret == -1)
 	{
-		SLOGE(DEBUG_TAG_SOUND, "SoundLoadBuffer Error: unsupported audio conversion - %s", SDL_GetError());
+		SLOGE("SoundLoadBuffer Error: unsupported audio conversion - %s", SDL_GetError());
 		return NULL;
 	}
 
@@ -592,7 +592,7 @@ static SAMPLETAG* SoundLoadBuffer(SDL_AudioFormat format, UINT8 channels, int fr
 		memcpy(cvt.buf, buffer, size);
 
 		if (SDL_ConvertAudio(&cvt) == -1) {
-			SLOGE(DEBUG_TAG_SOUND, "SoundLoadBuffer Error: error converting audio - %s", SDL_GetError());
+			SLOGE("SoundLoadBuffer Error: error converting audio - %s", SDL_GetError());
 			MemFree(cvt.buf);
 			return NULL;
 		}
@@ -626,7 +626,7 @@ static SAMPLETAG* SoundLoadBuffer(SDL_AudioFormat format, UINT8 channels, int fr
 	{
 		if (!SoundCleanCache())
 		{
-			SLOGE(DEBUG_TAG_SOUND, "SoundLoadBuffer Error: not enough memory - Size: %u, Used: %u, Max: %u", samplesize, guiSoundMemoryUsed, guiSoundMemoryLimit);
+			SLOGE("SoundLoadBuffer Error: not enough memory - Size: %u, Used: %u, Max: %u", samplesize, guiSoundMemoryUsed, guiSoundMemoryLimit);
 			MemFree(sampledata);
 			return NULL;
 		}
@@ -643,7 +643,7 @@ static SAMPLETAG* SoundLoadBuffer(SDL_AudioFormat format, UINT8 channels, int fr
 	// if we still don't have a sample slot
 	if (s == NULL)
 	{
-		SLOGE(DEBUG_TAG_SOUND, "SoundLoadBuffer Error: sound channels are full");
+		SLOGE("SoundLoadBuffer Error: sound channels are full");
 		MemFree(sampledata);
 		return NULL;
 	}
@@ -671,7 +671,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 	Assert(pFilename != NULL);
 
 	if(pFilename[0] == '\0') {
-		SLOGE(DEBUG_TAG_ASSERTS, "SoundLoadDisk Error: pFilename is an empty string.");
+		SLOGA("SoundLoadDisk Error: pFilename is an empty string.");
 		return NULL;
 	}
 
@@ -683,7 +683,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 	}
 	catch (const std::runtime_error& err)
 	{
-		SLOGE(DEBUG_TAG_ASSERTS, "SoundLoadDisk Error: %s", err.what());
+		SLOGA("SoundLoadDisk Error: %s", err.what());
 		return NULL;
 	}
 
@@ -693,7 +693,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 	Uint8 *wavBuffer;
 
 	if (SDL_LoadWAV_RW(rwOps, 0,  &wavSpec, &wavBuffer, &wavLength) == NULL) {
-		SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk Error: Error loading file \"%s\"- %s", pFilename, SDL_GetError());
+		SLOGE("SoundLoadDisk Error: Error loading file \"%s\"- %s", pFilename, SDL_GetError());
 		return NULL;
 	}
 
@@ -704,7 +704,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 
 	if (s == NULL)
 	{
-		SLOGE(DEBUG_TAG_SOUND, "SoundLoadDisk: Error converting sound file \"%s\"", pFilename);
+		SLOGE("SoundLoadDisk: Error converting sound file \"%s\"", pFilename);
 		return NULL;
 	}
 
@@ -740,7 +740,7 @@ static BOOLEAN SoundCleanCache(void)
 
 	if (candidate != NULL)
 	{
-		SLOGD(DEBUG_TAG_SOUND, "freeing sample %u \"%s\" with %u hits", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
+		SLOGD("freeing sample %u \"%s\" with %u hits", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
 		SoundFreeSample(candidate);
 		return TRUE;
 	}
@@ -928,7 +928,7 @@ static UINT32 SoundGetUniqueID(void);
  * Returns: Unique sound ID if successful, SOUND_ERROR if not. */
 static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
-	SLOGD(DEBUG_TAG_SOUND, "playing channel %u sample %u file \"%s\"", channel - pSoundList, sample - pSampleList, sample->pName);
+	SLOGD("playing channel %u sample %u file \"%s\"", channel - pSoundList, sample - pSampleList, sample->pName);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
@@ -974,7 +974,7 @@ static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 
 	if (channel->pSample == NULL) return FALSE;
 
-	SLOGD(DEBUG_TAG_SOUND, "stopping channel channel %u", channel - pSoundList);
+	SLOGD("stopping channel channel %u", channel - pSoundList);
 	channel->State = CHANNEL_STOP;
 	return TRUE;
 }

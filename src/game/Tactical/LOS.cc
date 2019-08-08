@@ -2461,14 +2461,14 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 	FIXEDPT qWindowBottomHeight;
 	FIXEDPT qWindowTopHeight;
 
-	SLOGD(DEBUG_TAG_LOS, "Starting CalcChanceToGetThrough" );
+	SLOGD("Starting CalcChanceToGetThrough" );
 
 	do
 	{
 		// check a particular tile
 		// retrieve values from world for this particular tile
 		iGridNo = pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS;
-		SLOGD(DEBUG_TAG_LOS, "CTGT now at %ld", iGridNo);
+		SLOGD("CTGT now at %ld", iGridNo);
 		pMapElement = &(gpWorldLevelData[ iGridNo ] );
 		qLandHeight = INT32_TO_FIXEDPT( CONVERT_PIXELS_TO_HEIGHTUNITS( pMapElement->sHeight ) );
 		qWallHeight = gqStandardWallHeight + qLandHeight;
@@ -2710,7 +2710,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 				pBullet->bLOSIndexX = FIXEDPT_TO_LOS_INDEX( pBullet->qCurrX );
 				pBullet->bLOSIndexY = FIXEDPT_TO_LOS_INDEX( pBullet->qCurrY );
 
-				SLOGD(DEBUG_TAG_LOS, "CTGT at %ld %ld after traversing empty tile",
+				SLOGD("CTGT at %ld %ld after traversing empty tile",
 					pBullet->bLOSIndexX, pBullet->bLOSIndexY);
 			}
 			else
@@ -2824,7 +2824,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 				}
 				while( (pBullet->bLOSIndexX == bOldLOSIndexX) && (pBullet->bLOSIndexY == bOldLOSIndexY) && (pBullet->iCurrCubesZ == iOldCubesZ));
 
-				SLOGD(DEBUG_TAG_LOS, "CTGT at %ld %ld %ld after moving in nonempty tile from %ld %ld %ld",
+				SLOGD("CTGT at %ld %ld %ld after moving in nonempty tile from %ld %ld %ld",
 					pBullet->bLOSIndexX, pBullet->bLOSIndexY, pBullet->iCurrCubesZ,
 					bOldLOSIndexX, bOldLOSIndexY, iOldCubesZ);
 				pBullet->iCurrTileX = FIXEDPT_TO_INT32( pBullet->qCurrX ) / CELL_X_SIZE;
@@ -3353,7 +3353,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 		BULLET* const pBullet = CreateBullet(pFirer, fFake, usBulletFlags);
 		if (pBullet == NULL)
 		{
-			SLOGW(DEBUG_TAG_LOS, "Failed to create bullet");
+			SLOGW("Failed to create bullet");
 			return FALSE;
 		}
 		pBullet->sHitBy	= sHitBy;
@@ -4175,7 +4175,7 @@ void MoveBullet(BULLET* const pBullet)
 												RemoveBullet(pBullet);
 
 												CorpseHit( (INT16)pBullet->sGridNo, pStructure->usStructureID );
-												SLOGD(DEBUG_TAG_LOS, "Reducing attacker busy count..., CORPSE HIT");
+												SLOGD("Reducing attacker busy count..., CORPSE HIT");
 
 												FreeUpAttacker(pBullet->pFirer);
 												return;

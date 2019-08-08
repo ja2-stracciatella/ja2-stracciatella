@@ -98,7 +98,7 @@ std::string FileMan::switchTmpFolder(std::string home)
 	std::string tmpPath = FileMan::joinPaths(home, LOCAL_CURRENT_DIR);
 	if (mkdir(tmpPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
-		SLOGE(DEBUG_TAG_FILEMAN, "Unable to create tmp directory '%s'", tmpPath.c_str());
+		SLOGE("Unable to create tmp directory '%s'", tmpPath.c_str());
 		throw std::runtime_error("Unable to create tmp directory");
 	}
 	else
@@ -563,7 +563,7 @@ bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name,
 		}
 	}
 
-	// SLOGI(DEBUG_TAG_FILEMAN,"Looking for %s/[ %s ] : %s", directory, name, result ? "success" : "failure");
+	// SLOGI("Looking for %s/[ %s ] : %s", directory, name, result ? "success" : "failure");
 	return result;
 }
 #endif

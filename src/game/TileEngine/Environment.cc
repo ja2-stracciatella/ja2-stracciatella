@@ -397,7 +397,7 @@ void EnvBeginRainStorm( UINT8 ubIntensity )
 	if( !gfBasement && !gfCaves )
 	{
 		gfDoLighting = TRUE;
-		SLOGD(DEBUG_TAG_RENDERWORLD, "Starting Rain...."  );
+		SLOGD("Starting Rain...."  );
 
 		if ( ubIntensity == 1 )
 		{
@@ -415,7 +415,7 @@ void EnvBeginRainStorm( UINT8 ubIntensity )
 void EnvEndRainStorm( )
 {
 	gfDoLighting = TRUE;
-	SLOGD(DEBUG_TAG_RENDERWORLD, "Ending Rain...."  );
+	SLOGD("Ending Rain...."  );
 
 	guiEnvWeather	&= (~WEATHER_FORECAST_THUNDERSHOWERS );
 	guiEnvWeather	&= (~WEATHER_FORECAST_SHOWERS );

@@ -995,12 +995,12 @@ void CorpseHit( INT16 sGridNo, UINT16 usStructureID )
 
 	if ( pCorpse == NULL )
 	{
-		SLOGD(DEBUG_TAG_CORPSES, "Bullet hit corpse but corpse cannot be found at: %d", sBaseGridNo );
+		SLOGD("Bullet hit corpse but corpse cannot be found at: %d", sBaseGridNo );
 		return;
 	}
 
 	// Twitch the bugger...
-	SLOGD(DEBUG_TAG_CORPSES, "Corpse hit" );
+	SLOGD("Corpse hit" );
 
 	if ( GridNoOnScreen( sBaseGridNo ) )
 	{
@@ -1041,7 +1041,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 
 	if ( pCorpse == NULL )
 	{
-		SLOGW(DEBUG_TAG_CORPSES, "Vaporize corpse but corpse cannot be found at: %d", sBaseGridNo );
+		SLOGW("Vaporize corpse but corpse cannot be found at: %d", sBaseGridNo );
 		return;
 	}
 

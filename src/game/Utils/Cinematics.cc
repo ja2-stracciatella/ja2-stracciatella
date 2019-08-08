@@ -135,7 +135,7 @@ try
 	SMKFLIC* const sf = SmkGetFreeFlic();
 	if (!sf)
 	{
-		SLOGE(DEBUG_TAG_SMK, "Out of flic slots, cannot open another");
+		SLOGE("Out of flic slots, cannot open another");
 		return NULL;
 	}
 
@@ -149,14 +149,14 @@ try
 	sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
 	if (sf->SmackBuffer == NULL)
 	{
-		SLOGE(DEBUG_TAG_SMK, "Can't allocate a Smacker decompression buffer");
+		SLOGE("Can't allocate a Smacker decompression buffer");
 		return NULL;
 	}
 	*/
 	sf->SmackerObject = SmackOpen( file , SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
 	if (!sf->SmackerObject)
 	{
-		SLOGE(DEBUG_TAG_SMK, "Smacker won't open the SMK file");
+		SLOGE("Smacker won't open the SMK file");
 		return NULL;
 	}
 

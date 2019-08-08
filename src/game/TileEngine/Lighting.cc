@@ -1089,7 +1089,7 @@ static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const I
 	if((XDelta==0) && (YDelta==0))
 		return(FALSE);
 
-	SLOGD(DEBUG_TAG_LIGHTING, "Drawing (%d,%d) to (%d,%d)", iXPos, iYPos, iEndX, iEndY);
+	SLOGD("Drawing (%d,%d) to (%d,%d)", iXPos, iYPos, iEndX, iEndY);
 	LightAddNode(t, 32767, 32767, 32767, 32767, 0, LIGHT_NEW_RAY);
 	if (fInsertNodes) usCurNode = t->n_rays;
 	/* Special-case horizontal, vertical, and diagonal lines, for speed

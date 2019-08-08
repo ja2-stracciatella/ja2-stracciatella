@@ -525,13 +525,13 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 	if (iOrigination < 0 || iOrigination > WORLD_MAX)
 	{
-		SLOGE(DEBUG_TAG_AI, "Trying to calculate path from off-world gridno %d to %d",
+		SLOGE("Trying to calculate path from off-world gridno %d to %d",
 			iOrigination, sDestination );
 		return( 0 );
 	}
 	else if (!GridNoOnVisibleWorldTile( (INT16) iOrigination ) )
 	{
-		SLOGE(DEBUG_TAG_AI, "Trying to calculate path from non-visible gridno %d to %d",
+		SLOGE("Trying to calculate path from non-visible gridno %d to %d",
 			iOrigination, sDestination );
 		return( 0 );
 	}
@@ -1726,7 +1726,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						SLOGD(DEBUG_TAG_PATHAI, zTempString );
+						SLOGD(zTempString );
 
 
 						zTempString[0] = '\0';
@@ -1743,7 +1743,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						SLOGD(DEBUG_TAG_PATHAI, zTempString );
+						SLOGD(zTempString );
 
 						zTempString[0] = '\0';
 						bTemp = pQueueHead->bLevel;
@@ -1765,8 +1765,8 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 								break;
 							}
 						}
-						SLOGD(DEBUG_TAG_PATHAI, zTempString );
-						SLOGD(DEBUG_TAG_PATHAI, "------" );
+						SLOGD(zTempString );
+						SLOGD("------" );
 					}
 #endif
 

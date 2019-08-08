@@ -94,7 +94,7 @@ BOOLEAN DeleteQueue(HQUEUE hQueue)
 {
 	if (hQueue == NULL)
 	{
-		SLOGD(DEBUG_TAG_CONTAINER, "Attempted to delete an invalid pointer to a queue");
+		SLOGD("Attempted to delete an invalid pointer to a queue");
 		return FALSE;
 	}
 	MemFree(hQueue);
@@ -106,7 +106,7 @@ BOOLEAN DeleteList(HLIST hList)
 {
 	if (hList == NULL)
 	{
-		SLOGD(DEBUG_TAG_CONTAINER, "Attempted to delete an invalid pointer to a list");
+		SLOGD("Attempted to delete an invalid pointer to a list");
 		return FALSE;
 	}
 	MemFree(hList);
@@ -226,7 +226,7 @@ UINT32 QueueSize(HQUEUE hQueue)
 {
 	if (hQueue == NULL)
 	{
-		SLOGD(DEBUG_TAG_CONTAINER, "Queue pointer is NULL");
+		SLOGD("Queue pointer is NULL");
 		return 0;
 	}
 	return hQueue->uiTotal_items;
@@ -240,7 +240,7 @@ UINT32 ListSize(HLIST hList)
 {
 	if (hList == NULL)
 	{
-		SLOGD(DEBUG_TAG_CONTAINER, "List pointer is NULL");
+		SLOGD("List pointer is NULL");
 		return 0;
 	}
 	return hList->uiTotal_items;
@@ -258,20 +258,20 @@ HLIST AddtoList(HLIST l, void const* pdata, UINT32 const uiPos)
 	// check for invalid handle = 0
 	if (!l)
 	{
-		SLOGD(DEBUG_TAG_CONTAINER, "This is not a valid handle to the list");
+		SLOGD("This is not a valid handle to the list");
 		return NULL;
 	}
 
 	// check for data = NULL
 	if (pdata == NULL)
 	{
-		SLOGD(DEBUG_TAG_CONTAINER, "Data to be pushed onto list is NULL");
+		SLOGD("Data to be pushed onto list is NULL");
 		return NULL;
 	}
 
 	if (uiPos > l->uiTotal_items)
 	{
-		SLOGD(DEBUG_TAG_CONTAINER, "There are not enough elements in the list");
+		SLOGD("There are not enough elements in the list");
 		return NULL;
 	}
 
@@ -346,7 +346,7 @@ HLIST AddtoList(HLIST l, void const* pdata, UINT32 const uiPos)
 	// finally insert data at position uiFinalLoc
 	if (uiFinalLoc == 0)
 	{
-		SLOGE(DEBUG_TAG_CONTAINER, "This should never happen! report this problem!");
+		SLOGE("This should never happen! report this problem!");
 		return NULL;
 	}
 

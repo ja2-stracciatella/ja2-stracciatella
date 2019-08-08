@@ -114,7 +114,7 @@ ScreenID ErrorScreenHandle(void)
 
 	if ( !fFirstTime )
 	{
-		SLOGE(DEBUG_TAG_JA2SCREENS, "Runtime Error: %s ", gubErrorText );
+		SLOGE("Runtime Error: %s ", gubErrorText );
 		fFirstTime = TRUE;
 	}
 

@@ -419,13 +419,13 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 	// Those that do need it have Asserts on a case by case basis below
 	if (pSoldier == NULL)
 	{
-		SLOGD(DEBUG_TAG_MORALE,
+		SLOGD(
 			"Handling morale event %d at X=%d, Y=%d,Z=%d",
 			bMoraleEvent, sMapX, sMapY, bMapZ);
 	}
 	else
 	{
-		SLOGD(DEBUG_TAG_MORALE,
+		SLOGD(
 			"Handling morale event %d for %ls at X=%d, Y=%d, Z=%d",
 			bMoraleEvent, pSoldier->name, sMapX, sMapY, bMapZ);
 	}
@@ -627,7 +627,7 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 
 		default:
 			// debug message
-			SLOGI(DEBUG_TAG_MORALE, "Invalid morale event type = %d.", bMoraleEvent);
+			SLOGI("Invalid morale event type = %d.", bMoraleEvent);
 			break;
 	}
 

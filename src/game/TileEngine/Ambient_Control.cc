@@ -62,7 +62,7 @@ void HandleNewSectorAmbience( UINT8 ubAmbientID )
 		}
 		else
 		{
-			SLOGW(DEBUG_TAG_AMBIENT, "Cannot load Ambient data for tileset");
+			SLOGW("Cannot load Ambient data for tileset");
 		}
 	}
 }

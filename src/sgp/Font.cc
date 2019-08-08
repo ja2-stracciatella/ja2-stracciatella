@@ -180,7 +180,7 @@ static GlyphIdx GetGlyphIndex(wchar_t const c)
 		GlyphIdx const idx = TranslationTable[c];
 		if (idx != 0 || c == getZeroGlyphChar()) return idx;
 	}
-	SLOGE(DEBUG_TAG_FONT, "Invalid character given U+%04X", c);
+	SLOGE("Invalid character given U+%04X", c);
 	return TranslationTable[L'?'];
 }
 

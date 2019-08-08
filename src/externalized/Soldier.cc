@@ -43,7 +43,7 @@ void Soldier::removePendingAction()
 {
 	if(mSoldier->ubPendingAction != NO_PENDING_ACTION)
 	{
-		SLOGI(DEBUG_TAG_SOLDIER, "%s: remove pending action %s",
+		SLOGI("%s: remove pending action %s",
 			getPofileName(),
 			Internals::getActionName(mSoldier->ubPendingAction));
 
@@ -66,7 +66,7 @@ bool Soldier::hasPendingAction() const
 
 void Soldier::setPendingAction(UINT8 action)
 {
-	SLOGI(DEBUG_TAG_SOLDIER, "%s: set pending action %s (previous %s)",
+	SLOGI("%s: set pending action %s (previous %s)",
 		getPofileName(),
 		Internals::getActionName(action),
 		Internals::getActionName(mSoldier->ubPendingAction));

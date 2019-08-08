@@ -93,7 +93,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);
 	if (s == NULL)
 	{
-		SLOGW(DEBUG_TAG_MERCHIRE, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
+		SLOGW("TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
 		return MERC_HIRE_FAILED;
 	}
 

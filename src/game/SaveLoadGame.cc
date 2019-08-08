@@ -1022,7 +1022,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	if (gTacticalStatus.uiFlags & INCOMBAT)
 	{
-		SLOGD(DEBUG_TAG_SAVELOAD, "Setting attack busy count to 0 from load");
+		SLOGD("Setting attack busy count to 0 from load");
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 

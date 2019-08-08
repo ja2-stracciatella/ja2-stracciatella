@@ -109,7 +109,7 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 	STRUCTURE* const structure = FindStructure(grid_no, STRUCTURE_OPENABLE);
 	if (!structure)
 	{
-		SLOGW(DEBUG_TAG_TILES, "Told to handle struct that does not exist at %d.", grid_no);
+		SLOGW("Told to handle struct that does not exist at %d.", grid_no);
 		return;
 	}
 

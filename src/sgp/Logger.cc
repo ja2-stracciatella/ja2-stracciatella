@@ -12,7 +12,7 @@
   #include <unistd.h>
 #endif
 
-void LogMessage(LogLevel level, const char *file, const char *format, ...) {
+void LogMessage(bool isAssert, LogLevel level, const char *file, const char *format, ...) {
   char message[256];
   va_list args;
   va_start(args, format);
@@ -22,7 +22,7 @@ void LogMessage(LogLevel level, const char *file, const char *format, ...) {
   Logger_LogWithCustomMetadata(level, message, file);
 
   #ifdef ENABLE_ASSERTS
-    if (tag == DEBUG_TAG_ASSERTS)
+    if (isAssert)
     {
       abort();
     }

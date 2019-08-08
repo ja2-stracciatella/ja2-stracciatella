@@ -584,7 +584,7 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 	}
 	else
 	{
-		SLOGD(DEBUG_TAG_SOLDIER,
+		SLOGD(
 			"Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
 		return false;
 	}
@@ -913,7 +913,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 				ubTotalAdmin--;
 			}
 			else
-				SLOGE(DEBUG_TAG_ASSERTS, "AddSoldierInitListEnemyDefenceSoldiers: something wrong with random");
+				SLOGA("AddSoldierInitListEnemyDefenceSoldiers: something wrong with random");
 			if( AddPlacementToWorld( curr ) )
 			{
 				ubMaxNum--;
@@ -1020,7 +1020,7 @@ void AddSoldierInitListEnemyDefenceSoldiers( UINT8 ubTotalAdmin, UINT8 ubTotalTr
 					ubTotalAdmin--;
 				}
 				else
-					SLOGE(DEBUG_TAG_ASSERTS, "AddSoldierInitListEnemyDefenceSoldiers: something wrong with random");
+					SLOGA("AddSoldierInitListEnemyDefenceSoldiers: something wrong with random");
 				/* DISABLE THE OVERRIDE FOR NOW...
 				if( curr->pDetailedPlacement )
 				{ //delete the detailed placement information.
@@ -1255,7 +1255,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 					ubNumGreen--;
 				}
 				else
-					SLOGE(DEBUG_TAG_ASSERTS,
+					SLOGE(
 						"AddSoldierInitListMilitia: something wrong with random");
 				curr->pBasicPlacement->bTeam = MILITIA_TEAM;
 				curr->pBasicPlacement->bOrders = STATIONARY;
@@ -1312,7 +1312,7 @@ void AddSoldierInitListCreatures(BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumI
 		}
 		if( !fQueen )
 		{
-			SLOGE(DEBUG_TAG_SOLDIER, "Couldn't place the queen.");
+			SLOGE("Couldn't place the queen.");
 		}
 	}
 
@@ -1405,7 +1405,7 @@ void AddSoldierInitListCreatures(BOOLEAN fQueen, UINT8 ubNumLarvae, UINT8 ubNumI
 					curr->pBasicPlacement->bBodyType = ADULTFEMALEMONSTER;
 				}
 				else
-					SLOGE(DEBUG_TAG_ASSERTS, "AddSoldierInitListCreatures: something wrong with random");
+					SLOGA("AddSoldierInitListCreatures: something wrong with random");
 				if( curr->pDetailedPlacement )
 				{ //delete the detailed placement information.
 					MemFree( curr->pDetailedPlacement );

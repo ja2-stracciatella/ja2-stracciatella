@@ -2595,7 +2595,7 @@ void LoadMapTileset(TileSetID const id)
 	}
 	else
 	{
-		SLOGD(DEBUG_TAG_WORLDDEF, "Tileset %d has no callback function for movement costs. Using default.", id);
+		SLOGD("Tileset %d has no callback function for movement costs. Using default.", id);
 		SetTilesetOneTerrainValues();
 	}
 

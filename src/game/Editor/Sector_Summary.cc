@@ -1745,7 +1745,7 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
  * valid coordinate name, analyses it, and builds a new global summary file. */
 static void CreateGlobalSummary(void)
 {
-	SLOGD(DEBUG_TAG_EDITOR, "Generating GlobalSummary Information...");
+	SLOGD("Generating GlobalSummary Information...");
 
 	gfGlobalSummaryExists = FALSE;
 
@@ -1765,7 +1765,7 @@ static void CreateGlobalSummary(void)
 	RegenerateSummaryInfoForAllOutdatedMaps();
 	gfRenderSummary = TRUE;
 
-	SLOGD(DEBUG_TAG_EDITOR, "GlobalSummary Information generated successfully.");
+	SLOGD("GlobalSummary Information generated successfully.");
 }
 
 
@@ -2113,7 +2113,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 
 static void LoadGlobalSummary(void)
 {
-	SLOGD(DEBUG_TAG_EDITOR, "Executing LoadGlobalSummary()...");
+	SLOGD("Executing LoadGlobalSummary()...");
 
 	gfMustForceUpdateAllMaps        = FALSE;
 	gusNumberOfMapsToBeForceUpdated = 0;
@@ -2122,7 +2122,7 @@ static void LoadGlobalSummary(void)
 	gfGlobalSummaryExists = attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY;
 	if (!gfGlobalSummaryExists)
 	{
-		SLOGW(DEBUG_TAG_EDITOR, "LoadGlobalSummary() aborted -- doesn't exist on this local computer.");
+		SLOGW("LoadGlobalSummary() aborted -- doesn't exist on this local computer.");
 		return;
 	}
 
@@ -2146,15 +2146,15 @@ static void LoadGlobalSummary(void)
 			if (LoadSummary(x, y, 7, "_b3_a"))  sector_levels |= ALTERNATE_B3_MASK;     // alternate B2 level
 			gbSectorLevels[x][y] = sector_levels;
 		}
-		SLOGD(DEBUG_TAG_EDITOR, "Sector Row %c complete...", y + 'A');
+		SLOGD("Sector Row %c complete...", y + 'A');
 	}
 
 	if (gfMustForceUpdateAllMaps)
 	{
-		SLOGW(DEBUG_TAG_EDITOR, "A MAJOR MAP UPDATE EVENT HAS BEEN DETECTED FOR %d MAPS!", gusNumberOfMapsToBeForceUpdated);
+		SLOGW("A MAJOR MAP UPDATE EVENT HAS BEEN DETECTED FOR %d MAPS!", gusNumberOfMapsToBeForceUpdated);
 	}
 
-	SLOGD(DEBUG_TAG_EDITOR, "LoadGlobalSummary() finished...");
+	SLOGD("LoadGlobalSummary() finished...");
 }
 
 

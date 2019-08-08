@@ -214,7 +214,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	// ATE: If in realtime, set attacker count to 0...
 	if (!(gTacticalStatus.uiFlags & INCOMBAT))
 	{
-		SLOGD(DEBUG_TAG_HANDLEITEMS, "Setting attack busy count to 0 due to no combat");
+		SLOGD("Setting attack busy count to 0 due to no combat");
 		gTacticalStatus.ubAttackBusyCount = 0;
 	}
 
@@ -859,7 +859,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	if (item->getItemClass() == IC_TENTACLES)
 	{
 		gTacticalStatus.ubAttackBusyCount++;
-		SLOGD(DEBUG_TAG_HANDLEITEMS,
+		SLOGD(
 			"Starting swipe attack, incrementing a.b.c in HandleItems to %d",
 			gTacticalStatus.ubAttackBusyCount);
 		const INT16 sAPCost = CalcTotalAPsToAttack(s, sGridNo, FALSE, s->bAimTime);
@@ -1471,7 +1471,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 	if (*psGridNo == NOWHERE)
 	{
 		// Display warning.....
-		SLOGE(DEBUG_TAG_HANDLEITEMS,
+		SLOGE(
 			"Item %d was given invalid grid location %d for item pool. Please Report.",
 			pObject->usItem, *psGridNo);
 		*psGridNo = gMapInformation.sCenterGridNo;
@@ -2343,7 +2343,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 
 	// Get objectype and delete
 	if (!pSoldier->pTempObject) {
-		SLOGD(DEBUG_TAG_HANDLEITEMS, "Attempted to give nonexisting item.");
+		SLOGD("Attempted to give nonexisting item.");
 		return;
 	}
 	TempObject = *pSoldier->pTempObject;

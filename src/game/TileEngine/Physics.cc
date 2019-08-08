@@ -175,7 +175,7 @@ REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, float const 
 		o->EndedWithCollisionPosition.z += h;
 	}
 
-	SLOGD(DEBUG_TAG_PHYSICS, "NewPhysics Object");
+	SLOGD("NewPhysics Object");
 	return o;
 }
 
@@ -475,13 +475,13 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime)
 
 	if ( pObject->fPotentialForDebug )
 	{
-		SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Force		%f %f %f",  REALOBJ2ID(pObject),
+		SLOGD("Object %d: Force		%f %f %f",  REALOBJ2ID(pObject),
 			pObject->Force.x, pObject->Force.y, pObject->Force.z);
-		SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Velocity %f %f %f",  REALOBJ2ID(pObject),
+		SLOGD("Object %d: Velocity %f %f %f",  REALOBJ2ID(pObject),
 			pObject->Velocity.x, pObject->Velocity.y, pObject->Velocity.z);
-		SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Position %f %f %f",  REALOBJ2ID(pObject),
+		SLOGD("Object %d: Position %f %f %f",  REALOBJ2ID(pObject),
 			pObject->Position.x, pObject->Position.y, pObject->Position.z);
-		SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Delta Pos %f %f %f", REALOBJ2ID(pObject),
+		SLOGD("Object %d: Delta Pos %f %f %f", REALOBJ2ID(pObject),
 			pObject->OldPosition.x - pObject->Position.x, pObject->OldPosition.y - pObject->Position.y,
 			pObject->OldPosition.z - pObject->Position.z);
 	}
@@ -831,7 +831,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 			if ( !pObject->fTestObject )
 			{
 				// Break window!
-				SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision Window", REALOBJ2ID(pObject));
+				SLOGD("Object %d: Collision Window", REALOBJ2ID(pObject));
 
 				sGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
 
@@ -1033,12 +1033,12 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 
 			if ( pObject->fPotentialForDebug )
 			{
-				SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision %d", REALOBJ2ID(pObject), iCollisionCode);
-				SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision Normal %f %f %f", REALOBJ2ID(pObject),
+				SLOGD("Object %d: Collision %d", REALOBJ2ID(pObject), iCollisionCode);
+				SLOGD("Object %d: Collision Normal %f %f %f", REALOBJ2ID(pObject),
 					vTemp.x, vTemp.y, vTemp.z);
-				SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision OldPos %f %f %f", REALOBJ2ID(pObject),
+				SLOGD("Object %d: Collision OldPos %f %f %f", REALOBJ2ID(pObject),
 					pObject->Position.x, pObject->Position.y, pObject->Position.z);
-				SLOGD(DEBUG_TAG_PHYSICS, "Object %d: Collision Velocity %f %f %f", REALOBJ2ID(pObject),
+				SLOGD("Object %d: Collision Velocity %f %f %f", REALOBJ2ID(pObject),
 					pObject->CollisionVelocity.x, pObject->CollisionVelocity.y, pObject->CollisionVelocity.z);
 			}
 		}
@@ -1195,7 +1195,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 
 		if ( pObject->fPotentialForDebug )
 		{
-			SLOGD(DEBUG_TAG_PHYSICS, "Object %d: uiNumTilesMoved: %d", REALOBJ2ID(pObject), pObject->uiNumTilesMoved);
+			SLOGD("Object %d: uiNumTilesMoved: %d", REALOBJ2ID(pObject), pObject->uiNumTilesMoved);
 		}
 	}
 
@@ -1311,7 +1311,7 @@ static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT1
 	{
 		(*pdMagForce) = dForce;
 	}
-	SLOGD(DEBUG_TAG_PHYSICS, "Number of integration: %d", iNumChecks );
+	SLOGD("Number of integration: %d", iNumChecks );
 
 	return( vForce );
 }
@@ -1633,7 +1633,7 @@ static void CalculateLaunchItemBasicParams(const SOLDIERTYPE* pSoldier, const OB
 	if ( sInterGridNo != NOWHERE )
 	{
 		// IF so, adjust target height, gridno....
-		SLOGD(DEBUG_TAG_PHYSICS, "Through a window!" );
+		SLOGD("Through a window!" );
 
 		fThroughIntermediateGridNo = TRUE;
 	}
@@ -1865,7 +1865,7 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridN
 		}
 
 		// Adjust position, force, angle
-		SLOGD(DEBUG_TAG_PHYSICS, "Throw miss by: %d", bMissBy );
+		SLOGD("Throw miss by: %d", bMissBy );
 
 		// Default to max radius...
 		bMaxRadius = 5;
@@ -2056,7 +2056,7 @@ static BOOLEAN AttemptToCatchObject(REAL_OBJECT* pObject)
 	// base it on...? CC? Dexterity?
 	ubChanceToCatch = 50 + EffectiveDexterity(pObject->target) / 2;
 
-	SLOGD(DEBUG_TAG_PHYSICS, "Chance To Catch: %d", ubChanceToCatch );
+	SLOGD("Chance To Catch: %d", ubChanceToCatch );
 
 	pObject->fCatchCheckDone = TRUE;
 

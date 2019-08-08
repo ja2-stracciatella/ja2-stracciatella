@@ -53,7 +53,7 @@ void StatChange(SOLDIERTYPE& s, StatKind const stat, UINT16 const n_chances, Sta
 
 	if (s.bAssignment == ASSIGNMENT_POW)
 	{
-		SLOGE(DEBUG_TAG_CAMPAIGN, "StatChange: %ls improving stats while POW! stat %d", s.name, stat);
+		SLOGE("StatChange: %ls improving stats while POW! stat %d", s.name, stat);
 		return;
 	}
 
@@ -179,7 +179,7 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 			break;
 
 		default:
-			SLOGE(DEBUG_TAG_CAMPAIGN, "ProcessStatChange: Rcvd unknown ubStat %d", ubStat);
+			SLOGE("ProcessStatChange: Rcvd unknown ubStat %d", ubStat);
 			return;
 	}
 
@@ -1025,7 +1025,7 @@ static UINT16 SubpointsPerPoint(StatKind const ubStat, INT8 const bExpLevel)
 			break;
 
 		default:
-			SLOGE(DEBUG_TAG_CAMPAIGN, "SubpointsPerPoint: Unknown ubStat %d", ubStat);
+			SLOGE("SubpointsPerPoint: Unknown ubStat %d", ubStat);
 			return(100);
 	}
 
@@ -1301,7 +1301,7 @@ void HourlyProgressUpdate(void)
 		gStrategicStatus.ubHighestProgress = ubCurrentProgress;
 
 		// debug message
-		SLOGD(DEBUG_TAG_CAMPAIGN, "New player progress record: %d%%", gStrategicStatus.ubHighestProgress );
+		SLOGD("New player progress record: %d%%", gStrategicStatus.ubHighestProgress );
 	}
 }
 

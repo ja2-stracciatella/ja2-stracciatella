@@ -400,7 +400,7 @@ static INT32 QsortCompare(const void* pNum1, const void* pNum2)
 		/* Explosives   */ case 4: v1 = p1.bExplosive;     v2 = p2.bExplosive;     break;
 		/* Mechanical   */ case 5: v1 = p1.bMechanical;    v2 = p2.bMechanical;    break;
 
-		default: SLOGE(DEBUG_TAG_ASSERTS, "QsortCompare: invalid sort mode"); return 0;
+		default: SLOGA("QsortCompare: invalid sort mode"); return 0;
 	}
 	const INT32 ret = (v1 > v2) - (v1 < v2);
 	return gubCurrentListMode == AIM_ASCEND ? ret : -ret;

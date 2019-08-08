@@ -330,17 +330,17 @@ static void UpdateOldVersionMap(void)
 	{
 		if( gfEditMode )
 		{
-			SLOGE(DEBUG_TAG_SAVELOAD, "Currently loaded map is corrupt! Allowing the map to load anyway!" );
+			SLOGE("Currently loaded map is corrupt! Allowing the map to load anyway!" );
 		}
 		else
 		{
 			if( gbWorldSectorZ )
 			{
-				SLOGE(DEBUG_TAG_ASSERTS, "Currently loaded map (%c%d_b%d.dat) is invalid -- less than the minimum supported version.", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ);
+				SLOGA("Currently loaded map (%c%d_b%d.dat) is invalid -- less than the minimum supported version.", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ);
 			}
 			else if( !gbWorldSectorZ )
 			{
-				SLOGE(DEBUG_TAG_ASSERTS, "Currently loaded map (%c%d.dat) is invalid -- less than the minimum supported version.", gWorldSectorY + 'A' - 1, gWorldSectorX);
+				SLOGA("Currently loaded map (%c%d.dat) is invalid -- less than the minimum supported version.", gWorldSectorY + 'A' - 1, gWorldSectorX);
 			}
 		}
 	}
@@ -551,7 +551,7 @@ void ValidateAndUpdateMapVersionIfNecessary()
 	else if( gMapInformation.ubMapVersion > MINOR_MAP_VERSION )
 	{
 		//we may have a problem...
-		SLOGE(DEBUG_TAG_ASSERTS, "Map version is greater than the current version (old ja2.exe?)" );
+		SLOGA("Map version is greater than the current version (old ja2.exe?)" );
 	}
 	AutoCalculateItemNoOverwriteStatus() ;
 }

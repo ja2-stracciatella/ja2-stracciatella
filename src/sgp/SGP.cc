@@ -140,7 +140,7 @@ static BOOLEAN gfGameInitialized = FALSE;
 /** Deinitialize the game an exit. */
 static void deinitGameAndExit()
 {
-	SLOGD(DEBUG_TAG_SGP, "Deinitializing Game");
+	SLOGD("Deinitializing Game");
 	// If we are in Dead is Dead mode, save before exit
 	// Does this code also fire on crash? Let's hope not!
 	DoDeadIsDeadSaveIfNecessary();
@@ -151,30 +151,30 @@ static void deinitGameAndExit()
 	{
 		ShutdownGame();
 	}
-	SLOGD(DEBUG_TAG_SGP, "Shutting Down Button System");
+	SLOGD("Shutting Down Button System");
 	ShutdownButtonSystem();
 	MSYS_Shutdown();
 
 #ifndef UTIL
-	SLOGD(DEBUG_TAG_SGP, "Shutting Down Sound Manager");
+	SLOGD("Shutting Down Sound Manager");
 	ShutdownSoundManager();
 #endif
 
 #ifdef SGP_VIDEO_DEBUGGING
-	SLOGD(DEBUG_TAG_SGP, "Dumping Video Info");
+	SLOGD("Dumping Video Info");
 	PerformVideoInfoDumpIntoFile( "SGPVideoShutdownDump.txt", FALSE );
 #endif
 
-	SLOGD(DEBUG_TAG_SGP, "Shutting Down Video Surface Manager");
+	SLOGD("Shutting Down Video Surface Manager");
 	ShutdownVideoSurfaceManager();
-	SLOGD(DEBUG_TAG_SGP, "Shutting Down Video Object Manager");
+	SLOGD("Shutting Down Video Object Manager");
 	ShutdownVideoObjectManager();
-	SLOGD(DEBUG_TAG_SGP, "Shutting Down Video Manager");
+	SLOGD("Shutting Down Video Manager");
 	ShutdownVideoManager();
-	SLOGD(DEBUG_TAG_SGP, "Shutting Down Memory Manager");
+	SLOGD("Shutting Down Memory Manager");
 	ShutdownMemoryManager();  // must go last, for MemDebugCounter to work right...
 
-	SLOGD(DEBUG_TAG_SGP, "Shutting Down SDL");
+	SLOGD("Shutting Down SDL");
 	SDL_Quit();
 
 	exit(0);
@@ -299,7 +299,7 @@ int main(int argc, char* argv[])
 	SDL_version sdl_version_linked;
 	SDL_GetVersion(&sdl_version_linked);
 	if (sdl_version_linked.major == 2 && sdl_version_linked.minor == 0 && sdl_version_linked.patch == 6) {
-		SLOGE(DEBUG_TAG_SGP, "Detected SDL2 2.0.6. Disabled sound.\n"
+		SLOGE("Detected SDL2 2.0.6. Disabled sound.\n"
 							 "This version of SDL2 has a fatal bug in the audio conversion routines.\n"
 							 "Either downgrade to version 2.0.5 or upgrade to version 2.0.7 or later.");
 		SoundEnableSound(FALSE);
@@ -317,7 +317,7 @@ int main(int argc, char* argv[])
 	bool result = g_ui.setScreenSize(get_resolution_x(params), get_resolution_y(params));
 	if(!result)
 	{
-		SLOGE(DEBUG_TAG_SGP, "Failed to set screen resolution %d x %d", get_resolution_x(params), get_resolution_y(params));
+		SLOGE("Failed to set screen resolution %d x %d", get_resolution_x(params), get_resolution_y(params));
 		return EXIT_FAILURE;
 	}
 
@@ -326,7 +326,7 @@ int main(int argc, char* argv[])
 		testing::InitGoogleTest(&argc, argv);
 		return RUN_ALL_TESTS();
 #else
-		SLOGW(DEBUG_TAG_SGP, "This executable does not include unit tests.");
+		SLOGW("This executable does not include unit tests.");
 #endif
 	}
 
@@ -353,10 +353,10 @@ int main(int argc, char* argv[])
 #endif
 
 	// this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
-	SLOGD(DEBUG_TAG_SGP, "Initializing Memory Manager");
+	SLOGD("Initializing Memory Manager");
 	InitializeMemoryManager();
 
-	SLOGD(DEBUG_TAG_SGP, "Initializing Game Resources");
+	SLOGD("Initializing Game Resources");
 	char* rustConfigFolderPath = get_stracciatella_home(params);
 	char* rustResRootPath = get_vanilla_game_dir(params);
 	std::string configFolderPath = std::string(rustConfigFolderPath);
@@ -394,19 +394,19 @@ int main(int argc, char* argv[])
 		cm = new ModPackContentManager(version,
 						modNames, modResFolders, configFolderPath,
 						gameResRootPath, externalizedDataPath);
-		SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
-		SLOGI(DEBUG_TAG_SGP,"JA2 Home Dir:                  '%s'", configFolderPath.c_str());
-		SLOGI(DEBUG_TAG_SGP,"Root game resources directory: '%s'", gameResRootPath.c_str());
-		SLOGI(DEBUG_TAG_SGP,"Extra data directory:          '%s'", extraDataDir.c_str());
-		SLOGI(DEBUG_TAG_SGP,"Data directory:                '%s'", cm->getDataDir().c_str());
-		SLOGI(DEBUG_TAG_SGP,"Tilecache directory:           '%s'", cm->getTileDir().c_str());
-		SLOGI(DEBUG_TAG_SGP,"Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
-		SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
+		SLOGI("------------------------------------------------------------------------------");
+		SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.c_str());
+		SLOGI("Root game resources directory: '%s'", gameResRootPath.c_str());
+		SLOGI("Extra data directory:          '%s'", extraDataDir.c_str());
+		SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
+		SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
+		SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
+		SLOGI("------------------------------------------------------------------------------");
 		for (auto i = 0; i < n; ++i)
 		{
-			SLOGI(DEBUG_TAG_SGP,"MOD name:                      '%s'", modNames[i].c_str());
-			SLOGI(DEBUG_TAG_SGP,"MOD resource directory:        '%s'", modResFolders[i].c_str());
-			SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
+			SLOGI("MOD name:                      '%s'", modNames[i].c_str());
+			SLOGI("MOD resource directory:        '%s'", modResFolders[i].c_str());
+			SLOGI("------------------------------------------------------------------------------");
 		}
 	}
 	else
@@ -414,14 +414,14 @@ int main(int argc, char* argv[])
 		cm = new DefaultContentManager(version,
 						configFolderPath,
 						gameResRootPath, externalizedDataPath);
-		SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
-		SLOGI(DEBUG_TAG_SGP,"JA2 Home Dir:                  '%s'", configFolderPath.c_str());
-		SLOGI(DEBUG_TAG_SGP,"Root game resources directory: '%s'", gameResRootPath.c_str());
-		SLOGI(DEBUG_TAG_SGP,"Extra data directory:          '%s'", extraDataDir.c_str());
-		SLOGI(DEBUG_TAG_SGP,"Data directory:                '%s'", cm->getDataDir().c_str());
-		SLOGI(DEBUG_TAG_SGP,"Tilecache directory:           '%s'", cm->getTileDir().c_str());
-		SLOGI(DEBUG_TAG_SGP,"Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
-		SLOGI(DEBUG_TAG_SGP,"------------------------------------------------------------------------------");
+		SLOGI("------------------------------------------------------------------------------");
+		SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.c_str());
+		SLOGI("Root game resources directory: '%s'", gameResRootPath.c_str());
+		SLOGI("Extra data directory:          '%s'", extraDataDir.c_str());
+		SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
+		SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
+		SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
+		SLOGI("------------------------------------------------------------------------------");
 	}
 
 	free_engine_options(params);
@@ -431,40 +431,40 @@ int main(int argc, char* argv[])
 
 	if(!cm->loadGameData())
 	{
-		SLOGI(DEBUG_TAG_SGP,"Failed to load the game data.");
+		SLOGI("Failed to load the game data.");
 	}
 	else
 	{
 
 		GCM = cm;
 
-		SLOGD(DEBUG_TAG_SGP, "Initializing Video Manager");
+		SLOGD("Initializing Video Manager");
 		InitializeVideoManager(scalingQuality);
 		VideoSetBrightness(brightness);
 
-		SLOGD(DEBUG_TAG_SGP, "Initializing Video Object Manager");
+		SLOGD("Initializing Video Object Manager");
 		InitializeVideoObjectManager();
 
-		SLOGD(DEBUG_TAG_SGP, "Initializing Video Surface Manager");
+		SLOGD("Initializing Video Surface Manager");
 		InitializeVideoSurfaceManager();
 
 		InitJA2SplashScreen();
 
 		// Initialize Font Manager
-		SLOGD(DEBUG_TAG_SGP, "Initializing the Font Manager");
+		SLOGD("Initializing the Font Manager");
 		// Init the manager and copy the TransTable stuff into it.
 		InitializeFontManager();
 
-		SLOGD(DEBUG_TAG_SGP, "Initializing Sound Manager");
+		SLOGD("Initializing Sound Manager");
 #ifndef UTIL
 		InitializeSoundManager();
 #endif
 
-		SLOGD(DEBUG_TAG_SGP, "Initializing Random");
+		SLOGD("Initializing Random");
 		// Initialize random number generator
 		InitializeRandom(); // no Shutdown
 
-		SLOGD(DEBUG_TAG_SGP, "Initializing Game Manager");
+		SLOGD("Initializing Game Manager");
 		// Initialize the Game
 		InitializeGame();
 
@@ -490,7 +490,7 @@ int main(int argc, char* argv[])
 			SetIntroType(INTRO_SPLASH);
 		}
 
-		SLOGD(DEBUG_TAG_SGP, "Running Game");
+		SLOGD("Running Game");
 
 		/* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
 		 * are available. All we need to do is attend to the gaming mechanics

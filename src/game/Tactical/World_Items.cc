@@ -193,7 +193,7 @@ INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8
 	if (sGridNo == NOWHERE)
 	{
 		// Display warning.....
-		SLOGW(DEBUG_TAG_HANDLEITEMS, "Item %d was given invalid grid location %d. Please report", pObject->usItem, sGridNo);
+		SLOGW("Item %d was given invalid grid location %d. Please report", pObject->usItem, sGridNo);
 		return -1;
 	}
 

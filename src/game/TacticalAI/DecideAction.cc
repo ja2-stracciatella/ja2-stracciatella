@@ -177,7 +177,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 							}
 							else
 							{
-								SLOGW(DEBUG_TAG_AI, "Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
+								SLOGW("Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
 								fDoUseDoor = FALSE;
 							}
 						}
@@ -297,7 +297,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 									else
 									{
 										// WTF?  Warning time!
-										SLOGW(DEBUG_TAG_AI, "Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
+										SLOGW("Schedule involved locked door at %d but there's no lock there!", usGridNo1 );
 										fDoUseDoor = FALSE;
 									}
 								}
@@ -392,7 +392,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 
 					if (pSoldier->usActionData == NOWHERE)
 					{
-						SLOGD(DEBUG_TAG_AI, "Civilian could not find path to map edge!" );
+						SLOGD("Civilian could not find path to map edge!" );
 						DoneScheduleAction( pSoldier );
 						return( AI_ACTION_NONE );
 					}
@@ -3041,7 +3041,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			if ( ( (pSoldier->bTeam == MILITIA_TEAM) && (PreRandom( 20 ) > BestAttack.ubChanceToReallyHit) )
 				|| ( (pSoldier->bTeam != MILITIA_TEAM) && (PreRandom( 40 ) > BestAttack.ubChanceToReallyHit) ) )
 			{
-				SLOGD(DEBUG_TAG_AI, "AI %d allowing cover check, chance to hit is only %d, at range %d", BestAttack.ubChanceToReallyHit, PythSpacesAway( pSoldier->sGridNo, BestAttack.sTarget ) );
+				SLOGD("AI %d allowing cover check, chance to hit is only %d, at range %d", BestAttack.ubChanceToReallyHit, PythSpacesAway( pSoldier->sGridNo, BestAttack.sTarget ) );
 				// maybe taking cover would be better!
 				fAllowCoverCheck = TRUE;
 				if ( PreRandom( 10 ) > BestAttack.ubChanceToReallyHit )
@@ -3132,7 +3132,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			case AGGRESSIVE:		iOffense += 20; break;
 			case ATTACKSLAYONLY:iOffense += 30; break;
 		}
-		SLOGD(DEBUG_TAG_AI, "%s - CHOICE: iOffense = %d, iDefense = %d\n",
+		SLOGD("%s - CHOICE: iOffense = %d, iDefense = %d\n",
 			pSoldier->name,iOffense,iDefense);
 
 		// if his defensive instincts win out, forget all about the attack
@@ -3334,7 +3334,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			pSoldier->usActionData = BestAttack.sTarget;
 			pSoldier->bTargetLevel = BestAttack.bTargetLevel;
 
-			SLOGD(DEBUG_TAG_AI, "%d(%s) %s %d(%s)",
+			SLOGD("%d(%s) %s %d(%s)",
 				pSoldier->ubID, pSoldier->name,
 				ubBestAttackAction == AI_ACTION_FIRE_GUN ? "SHOOTS" : (ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE ? "TOSSES AT" : "STABS"),
 				BestAttack.opponent->ubID, BestAttack.opponent->name );
@@ -3382,7 +3382,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 
 	if (sBestCover != NOWHERE)
 	{
-		SLOGD(DEBUG_TAG_AI, "%s - taking cover at gridno %d (%d%% better)",
+		SLOGD("%s - taking cover at gridno %d (%d%% better)",
 			pSoldier->name, sBestCover, iCoverPercentBetter);
 		pSoldier->usActionData = sBestCover;
 		return(AI_ACTION_TAKE_COVER);
@@ -3684,7 +3684,7 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 				break;
 		}
 	}
-	SLOGD(DEBUG_TAG_AI, "DecideAction: selected action %d, actionData %d\n\n",
+	SLOGD("DecideAction: selected action %d, actionData %d\n\n",
 		bAction, pSoldier->usActionData);
 	return(bAction);
 }

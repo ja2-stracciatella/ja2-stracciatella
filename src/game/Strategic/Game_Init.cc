@@ -95,7 +95,7 @@ static void InitNPCs(void)
 				p.bSectorZ = 0;
 				break;
 		}
-		SLOGD(DEBUG_TAG_INIT, "Skyrider in %c %d", 'A' + p.sSectorY - 1, p.sSectorX);
+		SLOGD("Skyrider in %c %d", 'A' + p.sSectorY - 1, p.sSectorX);
 		// use alternate map, with Skyrider's shack, in this sector
 		SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
 	}
@@ -150,7 +150,7 @@ static void InitNPCs(void)
 				p.bSectorZ = 0;
 				break;
 		}
-		SLOGD(DEBUG_TAG_INIT, "%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
+		SLOGD("%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
 
 		// use alternate map in this sector
 		//SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
@@ -183,7 +183,7 @@ static void InitNPCs(void)
 					p.bSectorZ = 0;
 					break;
 			}
-			SLOGD(DEBUG_TAG_INIT, "%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
+			SLOGD("%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
 
 			// use alternate map in this sector
 			SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;

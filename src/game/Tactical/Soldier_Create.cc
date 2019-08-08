@@ -623,7 +623,7 @@ static INT32 ChooseHairColor(SOLDIERTYPE* pSoldier, INT32 skin)
 			}
 			break;
 		default:
-			SLOGE(DEBUG_TAG_ASSERTS, "Skin type not accounted for." );
+			SLOGA("Skin type not accounted for." );
 			break;
 	}
 	if( pSoldier->ubBodyType == CRIPPLECIV )
@@ -660,7 +660,7 @@ static void GeneratePaletteForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubSoldierClas
 			SET_PALETTEREP_ID( pSoldier->SkinPal,  "BLACKSKIN" );
 			break;
 		default:
-			SLOGE(DEBUG_TAG_ASSERTS, "Skin type not accounted for." );
+			SLOGA("Skin type not accounted for." );
 			break;
 	}
 
@@ -674,7 +674,7 @@ static void GeneratePaletteForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubSoldierClas
 		case BLONDEHEAD:SET_PALETTEREP_ID( pSoldier->HeadPal, "BLONDHEAD" ); break;
 		case REDHEAD:   SET_PALETTEREP_ID( pSoldier->HeadPal, "REDHEAD"   ); break;
 		default:
-			SLOGE(DEBUG_TAG_ASSERTS, "Hair type not accounted for.");
+			SLOGA("Hair type not accounted for.");
 			break;
 	}
 

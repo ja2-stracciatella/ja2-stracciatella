@@ -148,17 +148,17 @@ BOOLEAN CopyImageToBuffer(SGPImage const* const img, UINT32 const fBufferType, B
 	if (img->ubBitDepth == 8 && fBufferType == BUFFER_8BPP)
 	{
 		// Default do here
-		SLOGD(DEBUG_TAG_HIMAGE, "Copying 8 BPP Imagery.");
+		SLOGD("Copying 8 BPP Imagery.");
 		return Copy8BPPImageTo8BPPBuffer(img, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 	}
 	else if (img->ubBitDepth == 8 && fBufferType == BUFFER_16BPP)
 	{
-		SLOGD(DEBUG_TAG_HIMAGE, "Copying 8 BPP Imagery to 16BPP Buffer.");
+		SLOGD("Copying 8 BPP Imagery to 16BPP Buffer.");
 		return Copy8BPPImageTo16BPPBuffer(img, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 	}
 	else if (img->ubBitDepth == 16 && fBufferType == BUFFER_16BPP)
 	{
-		SLOGD(DEBUG_TAG_HIMAGE, "Automatically Copying 16 BPP Imagery.");
+		SLOGD("Automatically Copying 16 BPP Imagery.");
 		return Copy16BPPImageTo16BPPBuffer(img, pDestBuf, usDestWidth, usDestHeight, usX, usY, src_box);
 	}
 

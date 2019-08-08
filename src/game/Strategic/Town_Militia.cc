@@ -308,7 +308,7 @@ static void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
 					uiChanceToDefect = 90;
 					break;
 				default:
-					SLOGE(DEBUG_TAG_ASSERTS, "HandleMilitiaDefections: invalid Rank");
+					SLOGA("HandleMilitiaDefections: invalid Rank");
 					return;
 			}
 

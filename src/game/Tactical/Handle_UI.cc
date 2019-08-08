@@ -921,11 +921,11 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 
 		if( bReturnCode == MERC_HIRE_FAILED )
 		{
-			SLOGD(DEBUG_TAG_MERCHIRE, "Merc hire failed:  Either already hired or dislikes you." );
+			SLOGD("Merc hire failed:  Either already hired or dislikes you." );
 		}
 		else if( bReturnCode == MERC_HIRE_OVER_20_MERCS_HIRED )
 		{
-			SLOGD(DEBUG_TAG_MERCHIRE, "Can't hire more than 20 mercs." );
+			SLOGD("Can't hire more than 20 mercs." );
 		}
 		else
 		{
@@ -5078,7 +5078,7 @@ void SetInterfaceHeightLevel( )
 		sGridNo = gMapInformation.sWestGridNo;
 	else
 	{
-		SLOGE(DEBUG_TAG_ASSERTS, "SetInterfaceHeightLevel: MapInformation seems corrupted");
+		SLOGA("SetInterfaceHeightLevel: MapInformation seems corrupted");
 		return;
 	}
 
