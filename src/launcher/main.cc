@@ -5,7 +5,7 @@
 #include "RustInterface.h"
 
 int main(int argc, char* argv[]) {
-	Logger_Init("stracciatella-launcher.log");
+	Logger_Init("ja2-launcher.log");
 
 	Launcher launcher(argc, argv);
 	launcher.loadJa2Json();
