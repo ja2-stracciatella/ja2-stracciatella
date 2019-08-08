@@ -6,23 +6,14 @@
 //!
 //! [`stracciatella::c::logger`]: ../c/logger/index.html
 
-use lazy_static::lazy_static;
 use log::{Log, Metadata, Level, set_max_level, LevelFilter, Record, logger, set_boxed_logger};
 use simplelog::{CombinedLogger, TermLogger, WriteLogger, Config, TerminalMode};
-use std::default::Default;
 use std::fs::File;
 use std::path::Path;
 use std::sync::atomic::Ordering;
-use std::sync::{atomic, Arc};
+use std::sync::atomic::AtomicUsize;
 
-lazy_static! {
-    /// Global log level used to filter messages at runtime
-    static ref GLOBAL_LOG_LEVEL: Arc<atomic::AtomicUsize> = {
-        let default_level = LogLevel::default();
-        let default_level = default_level as usize;
-        Arc::new(atomic::AtomicUsize::new(default_level))
-    };
-}
+static GLOBAL_LOG_LEVEL: AtomicUsize = AtomicUsize::new(LogLevel::Info as usize);
 
 #[derive(Debug, PartialEq, Copy, Clone)]
 #[repr(C)]
@@ -33,12 +24,6 @@ pub enum LogLevel {
     Info = 2,
     Debug = 3,
     Trace = 4,
-}
-
-impl Default for LogLevel {
-    fn default() -> Self {
-        LogLevel::Info
-    }
 }
 
 impl From<LogLevel> for Level {
