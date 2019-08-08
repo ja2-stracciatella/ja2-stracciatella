@@ -7,8 +7,8 @@
 //! [`stracciatella::c::logger`]: ../c/logger/index.html
 
 use lazy_static::lazy_static;
-use log::*;
-use simplelog::*;
+use log::{Log, Metadata, Level, set_max_level, LevelFilter, Record, logger, set_boxed_logger};
+use simplelog::{CombinedLogger, TermLogger, WriteLogger, Config, TerminalMode};
 use std::default::Default;
 use std::fs::File;
 use std::path::Path;
