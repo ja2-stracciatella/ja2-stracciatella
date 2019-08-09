@@ -1749,7 +1749,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 			return(AI_ACTION_TOSS_PROJECTILE);
 		}
-		else		// toss/throw/launch not possible
+		else if (BestThrow.bWeaponIn != NO_SLOT)		// toss/throw/launch not possible
 		{
 			// if this dude has a longe-range weapon on him (longer than normal
 			// sight range), and there's at least one other team-mate around, and
