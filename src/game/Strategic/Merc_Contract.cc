@@ -293,7 +293,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 
 		HandleImportantMercQuote(s, QUOTE_ACCEPT_CONTRACT_RENEWAL);
 
-		if (iCostOfInsurance > LaptopSaveInfo.iCurrentBalance)
+		if (iCostOfInsurance > LaptopSaveInfo.iCurrentBalance - contract_charge)
 		{
 			HandleNotifyPlayerCantAffordInsurance();
 
