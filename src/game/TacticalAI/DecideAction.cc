@@ -1749,13 +1749,14 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 
 			return(AI_ACTION_TOSS_PROJECTILE);
 		}
-		else if (BestThrow.bWeaponIn != NO_SLOT)		// toss/throw/launch not possible
+		else		// toss/throw/launch not possible
 		{
 			// if this dude has a longe-range weapon on him (longer than normal
 			// sight range), and there's at least one other team-mate around, and
 			// spotters haven't already been called for, then DO SO!
 
-			if ( ( CalcMaxTossRange( pSoldier, pSoldier->inv[BestThrow.bWeaponIn].usItem, TRUE ) > MaxDistanceVisible() ) &&
+			if ( BestThrow.bWeaponIn != NO_SLOT &&
+				( CalcMaxTossRange( pSoldier, pSoldier->inv[BestThrow.bWeaponIn].usItem, TRUE ) > MaxDistanceVisible() ) &&
 				(gTacticalStatus.Team[pSoldier->bTeam].bMenInSector > 1) &&
 				(gTacticalStatus.ubSpottersCalledForBy == NOBODY))
 			{
