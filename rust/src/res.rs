@@ -66,6 +66,8 @@ use digest::Digest;
 use hex;
 use md5::Md5;
 
+use rayon::prelude::*;
+
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
 use crate::unicode::Nfc;
 
@@ -205,7 +207,7 @@ impl ResourcePackBuilder {
 
         let resources: Result<Vec<Vec<Resource>>, ResourceError> = self
             .with_paths
-            .iter()
+            .par_iter()
             .map(|paths| {
                 let (base, path) = paths;
                 let metadata = path.metadata()?;
@@ -232,7 +234,9 @@ impl ResourcePackBuilder {
         base: &Path,
         dir: &Path,
     ) -> Result<Vec<Resource>, ResourceError> {
-        let resources: Result<Vec<Vec<Resource>>, _> = FSIterator::new(dir)
+        let files: Vec<_> = FSIterator::new(dir).collect();
+        let resources: Result<Vec<Vec<Resource>>, _> = files
+            .par_iter()
             .map(|file| self.get_resources_for_file(base, &file))
             .collect();
         Ok(resources?.into_iter().flat_map(|r| r).collect())
@@ -288,7 +292,7 @@ impl ResourcePackBuilder {
         let header = SlfHeader::from_input(&mut input)?;
         let entries = header.entries_from_input(&mut input)?;
         let resources: Result<Vec<Resource>, ResourceError> = entries
-            .iter()
+            .par_iter()
             .filter(|entry| entry.state == SlfEntryState::Ok)
             .map(|entry| {
                 let mut resource = Resource::default();
