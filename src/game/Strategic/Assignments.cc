@@ -657,7 +657,7 @@ static INT8 GetTrainingStatValue(const SOLDIERTYPE* const s, const INT8 stat)
 		// NOTE: Wisdom can't be trained!
 
 		default:
-			SLOGE(DEBUG_TAG_SOLDIER, "Unknown training stat %d", stat);
+			SLOGE("Unknown training stat %d", stat);
 			return 0;
 	}
 }
@@ -2303,7 +2303,7 @@ INT16 GetBonusTrainingPtsDueToInstructor(const SOLDIERTYPE* pInstructor, const S
 		// NOTE: Wisdom can't be trained!
 		default:
 			// BETA message
-			SLOGE(DEBUG_TAG_SOLDIER, "GetBonusTrainingPtsDueToInstructor: Unknown bTrainStat %d", bTrainStat);
+			SLOGE("GetBonusTrainingPtsDueToInstructor: Unknown bTrainStat %d", bTrainStat);
 			return(0);
 	}
 
@@ -2531,7 +2531,7 @@ static void TrainSoldierWithPts(SOLDIERTYPE* const s, const INT16 train_pts)
 		// NOTE: Wisdom can't be trained!
 		default:
 			// BETA message
-			SLOGE(DEBUG_TAG_SOLDIER, "TrainSoldierWithPts: Unknown bTrainStat %d", s->bTrainStat);
+			SLOGE("TrainSoldierWithPts: Unknown bTrainStat %d", s->bTrainStat);
 			return;
 	}
 

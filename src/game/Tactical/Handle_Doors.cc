@@ -41,7 +41,7 @@ void HandleDoorChangeFromGridNo(SOLDIERTYPE* const s, INT16 const grid_no, BOOLE
 	STRUCTURE* const structure = FindStructure(grid_no, STRUCTURE_ANYDOOR);
 	if (!structure)
 	{
-		SLOGE(DEBUG_TAG_INTERFACE, "Told to handle door that does not exist at %d.", grid_no);
+		SLOGE("Told to handle door that does not exist at %d.", grid_no);
 		return;
 	}
 
@@ -55,7 +55,7 @@ void HandleDoorChangeFromGridNo(SOLDIERTYPE* const s, INT16 const grid_no, BOOLE
 	DOOR_STATUS* const door_status = GetDoorStatus(grid_no);
 	if (!door_status)
 	{
-		SLOGE(DEBUG_TAG_INTERFACE, "Told to set door busy but can't get door status at %d!", grid_no);
+		SLOGE("Told to set door busy but can't get door status at %d!", grid_no);
 		return;
 	}
 

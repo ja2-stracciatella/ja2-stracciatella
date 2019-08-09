@@ -10,7 +10,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];
 INT16									gsNumAmbData = 0;
@@ -62,7 +62,7 @@ void HandleNewSectorAmbience( UINT8 ubAmbientID )
 		}
 		else
 		{
-			SLOGW(DEBUG_TAG_AMBIENT, "Cannot load Ambient data for tileset");
+			SLOGW("Cannot load Ambient data for tileset");
 		}
 	}
 }

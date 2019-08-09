@@ -948,7 +948,7 @@ UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 			usArraySize = gus1stWestEdgepointArraySize;
 			break;
 		default:
-			SLOGE(DEBUG_TAG_ASSERTS, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code." );
+			SLOGA("ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code." );
 			break;
 	}
 	if( !usArraySize )
@@ -990,7 +990,7 @@ void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 
 			break;
 
 		default:
-			SLOGE(DEBUG_TAG_ASSERTS, "ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code.");
+			SLOGA("ChooseMapEdgepoints:  Failed to pass a valid strategic insertion code.");
 			psArray     = NULL;
 			usArraySize = 0;
 			break;
@@ -1089,7 +1089,7 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 
 	if( gsReservedIndex >= 20 )
 	{ //Everything is reserved.
-		SLOGE(DEBUG_TAG_ASSERTS, "All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
+		SLOGA("All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
 	}
 	switch( ubInsertionCode )
 	{
@@ -1208,7 +1208,7 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 
 	if( gsReservedIndex >= 20 )
 	{ //Everything is reserved.
-		SLOGE(DEBUG_TAG_ASSERTS, "All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
+		SLOGA("All closest map edgepoints have been reserved.  We should only have 20 soldiers maximum...");
 	}
 	switch( ubInsertionCode )
 	{
@@ -1570,13 +1570,13 @@ void ShowMapEdgepoints()
 
 	if (n_illegal1 == 0 && n_illegal2 == 0)
 	{
-		SLOGD(DEBUG_TAG_SMAP, "Showing display of map edgepoints");
+		SLOGD("Showing display of map edgepoints");
 	}
 	else
 	{
-		SLOGD(DEBUG_TAG_SMAP, "Showing display of map edgepoints (%d illegal primary, %d illegal secondary)", n_illegal1, n_illegal2);
+		SLOGD("Showing display of map edgepoints (%d illegal primary, %d illegal secondary)", n_illegal1, n_illegal2);
 	}
-	SLOGD(DEBUG_TAG_SMAP, "N:%d:%d E:%d:%d S:%d:%d W:%d:%d",
+	SLOGD("N:%d:%d E:%d:%d S:%d:%d W:%d:%d",
 		gus1stNorthEdgepointArraySize, gus2ndNorthEdgepointArraySize,
 		gus1stEastEdgepointArraySize,  gus2ndEastEdgepointArraySize,
 		gus1stSouthEdgepointArraySize, gus2ndSouthEdgepointArraySize,
@@ -1597,7 +1597,7 @@ static void HideMapEdgepoint(UINT16 const n, INT16 const* const array)
 
 void HideMapEdgepoints()
 {
-	SLOGD(DEBUG_TAG_SMAP, "Removing display of map edgepoints");
+	SLOGD("Removing display of map edgepoints");
 
 	HideMapEdgepoint(gus1stNorthEdgepointArraySize, gps1stNorthEdgepointArray);
 	HideMapEdgepoint(gus1stEastEdgepointArraySize,  gps1stEastEdgepointArray);

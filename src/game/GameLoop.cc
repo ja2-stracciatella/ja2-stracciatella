@@ -32,7 +32,7 @@
 #include "UILayout.h"
 #include "GameState.h"
 #include "sgp/FileMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 ScreenID guiCurrentScreen = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
 ScreenID guiPendingScreen = NO_PENDING_SCREEN;
@@ -56,8 +56,8 @@ void InitializeGame(void)
 
 	InitTacticalSave();
 
-	SLOGI(DEBUG_TAG_GAMELOOP, "Version Label: %s", g_version_label);
-	SLOGI(DEBUG_TAG_GAMELOOP, "Version #:     %s", g_version_number);
+	SLOGI("Version Label: %s", g_version_label);
+	SLOGI("Version #:     %s", g_version_number);
 
 	// Initialize Game Screens.
 	for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)
@@ -269,7 +269,7 @@ static void HandleNewScreenChange(UINT32 uiNewScreen, UINT32 uiOldScreen)
 
 void HandleShortCutExitState()
 {
-	SLOGI(DEBUG_TAG_GAMELOOP, "User pressed ESCape, TERMINATING");
+	SLOGI("User pressed ESCape, TERMINATING");
 
 	// Use YES/NO pop up box, setup for particular screen
 	switch (guiCurrentScreen)

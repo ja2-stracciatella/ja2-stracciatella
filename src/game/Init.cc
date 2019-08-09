@@ -40,7 +40,7 @@
 
 #include "EditScreen.h"
 #include "JAScreens.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
@@ -107,12 +107,12 @@ try
 	switch (GameState::getInstance()->getMode())
 	{
 		case GAME_MODE_EDITOR:
-			SLOGI(DEBUG_TAG_INIT, "Beginning JA2 using -editor commandline argument...");
+			SLOGI("Beginning JA2 using -editor commandline argument...");
 			gfAutoLoadA9 = FALSE;
 			goto editor;
 
 		case GAME_MODE_EDITOR_AUTO:
-			SLOGI(DEBUG_TAG_INIT, "Beginning JA2 using -editorauto commandline argument...");
+			SLOGI("Beginning JA2 using -editorauto commandline argument...");
 			gfAutoLoadA9 = TRUE;
 editor:
 			//For editor purposes, need to know the default map file.

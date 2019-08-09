@@ -544,7 +544,7 @@ try
 	if( iCostOfContract < 0 )
 	{
 		//shouldnt get in here now since we can longer give refunds
-		SLOGE(DEBUG_TAG_ASSERTS, "DisplayOrderGrid: negative contract cost");
+		SLOGA("DisplayOrderGrid: negative contract cost");
 	}
 	else
 	{
@@ -1118,7 +1118,7 @@ void PurchaseOrExtendInsuranceForSoldier( SOLDIERTYPE *pSoldier, UINT32 uiInsura
 		if( iAmountOfMoneyTransfer > 0 )
 			AddTransactionToPlayersBook(	EXTENDED_INSURANCE, pSoldier->ubProfile, GetWorldTotalMin(), -( iAmountOfMoneyTransfer ) );
 		else
-			SLOGE(DEBUG_TAG_ASSERTS, "negative Cost of Life Insurance, something went horribly wrong");
+			SLOGA("negative Cost of Life Insurance, something went horribly wrong");
 	}
 	else
 	{

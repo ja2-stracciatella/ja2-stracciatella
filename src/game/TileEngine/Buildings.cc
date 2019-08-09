@@ -12,7 +12,7 @@
 #include "StrategicMap.h"
 #include "Sys_Globals.h"
 #include "WorldMan.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define ROOF_LOCATION_CHANCE 8
 
@@ -184,7 +184,7 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 			gsCoverValue[sCurrGridNo]++;
 		}
 
-		SLOGD(DEBUG_TAG_AI, "Roof code visits %d", sCurrGridNo);
+		SLOGD("Roof code visits %d", sCurrGridNo);
 #endif
 
 		if (sCurrGridNo == sStartGridNo)

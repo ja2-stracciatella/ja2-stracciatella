@@ -32,7 +32,7 @@
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 #include "policy/IMPPolicy.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define IMP_MERC_FILE "imp.dat"
 

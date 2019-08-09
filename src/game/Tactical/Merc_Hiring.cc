@@ -41,7 +41,7 @@
 #include "Auto_Resolve.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "Quests.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define MIN_FLIGHT_PREP_TIME 6
 
@@ -93,7 +93,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);
 	if (s == NULL)
 	{
-		SLOGW(DEBUG_TAG_MERCHIRE, "TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
+		SLOGW("TacticalCreateSoldier in HireMerc():  Failed to Add Merc");
 		return MERC_HIRE_FAILED;
 	}
 

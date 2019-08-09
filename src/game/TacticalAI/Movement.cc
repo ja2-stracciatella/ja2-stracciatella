@@ -104,7 +104,7 @@ int TryToResumeMovement(SOLDIERTYPE *pSoldier, INT16 sGridno)
 	// have occupied the destination gridno in the meantime!)
 	if (LegalNPCDestination(pSoldier,sGridno,ENSURE_PATH,WATEROK,0))
 	{
-		SLOGD(DEBUG_TAG_AI, "%d continues movement to gridno %d...",
+		SLOGD("%d continues movement to gridno %d...",
 			pSoldier->ubID, sGridno);
 
 		pSoldier->bPathStored = TRUE;	// optimization - Ian
@@ -290,7 +290,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 
 
 	// passed all tests - start moving towards next patrol point
-	SLOGD(DEBUG_TAG_AI, "%s - POINT PATROL to grid %d",
+	SLOGD("%s - POINT PATROL to grid %d",
 		pSoldier->name, pSoldier->usActionData);
 	return(TRUE);
 }
@@ -382,7 +382,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 	// first step: try to find an OK destination at or near the desired gridno
 	if (!LegalNPCDestination(pSoldier,sDesGrid,ENSURE_PATH,NOWATER,fPathFlags))
 	{
-		SLOGD(DEBUG_TAG_AI, "destination Grid # itself not valid, looking around it");
+		SLOGD("destination Grid # itself not valid, looking around it");
 		if ( CREATURE_OR_BLOODCAT( pSoldier ) )
 		{
 			// we tried to get close, failed; abort!
@@ -566,7 +566,7 @@ INT16 InternalGoAsFarAsPossibleTowards(SOLDIERTYPE *pSoldier, INT16 sDesGrid, IN
 			pSoldier->ubPathDataSize = sLoop + 1;
 		}
 
-		SLOGD(DEBUG_TAG_AI, "%d to %d with %d APs left", pSoldier->ubID,
+		SLOGD("%d to %d with %d APs left", pSoldier->ubID,
 					sGoToGrid, pSoldier->bActionPoints );
 		return( sGoToGrid );
 	}
@@ -623,7 +623,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 	else
 	{
 		CancelAIAction(pSoldier);
-		SLOGD(DEBUG_TAG_AI, "Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID);
+		SLOGD("Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID);
 	}
 
 	usNewGridNo = NewGridNo( (UINT16)pSoldier->sGridNo, DirectionInc( pSoldier->ubPathingData[ pSoldier->ubPathIndex ] ) );
@@ -637,12 +637,12 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 		NewDest(pSoldier,usNewGridNo);
 		// maybe we didn't actually start the action last turn...
 		pSoldier->bActionInProgress = TRUE;
-		SLOGD(DEBUG_TAG_AI, "Soldier (%d) continues along path",pSoldier->ubID);
+		SLOGD("Soldier (%d) continues along path",pSoldier->ubID);
 	}
 	else
 	{
 		CancelAIAction(pSoldier);
-		SLOGD(DEBUG_TAG_AI, "Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID);
+		SLOGD("Soldier (%d) HAS NOT ENOUGH AP to continue along path",pSoldier->ubID);
 	}
 }
 
@@ -656,12 +656,12 @@ void HaltMoveForSoldierOutOfPoints(SOLDIERTYPE& s)
 	AdjustNoAPToFinishMove(&s, TRUE);
 
 	// We'll keep his action intact though
-	SLOGD(DEBUG_TAG_AI, "NO AP TO FINISH MOVE for %d (%d APs left)", s.ubID, s.bActionPoints);
+	SLOGD("NO AP TO FINISH MOVE for %d (%d APs left)", s.ubID, s.bActionPoints);
 
 	// If this dude is under AI right now, then pass the baton to someone else
 	if (s.uiStatusFlags & SOLDIER_UNDERAICONTROL)
 	{
-		SLOGD(DEBUG_TAG_AI, "Ending turn for %d because out of APs for movement", s.ubID);
+		SLOGD("Ending turn for %d because out of APs for movement", s.ubID);
 		EndAIGuysTurn(s);
 	}
 }

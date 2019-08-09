@@ -1132,7 +1132,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface(const INT16 sGridNo, SOLDIERTYPE* co
 	bool const success = AddStructureToWorld(sGridNo, s->bLevel, sr, n);
 	if (!success)
 	{
-		SLOGD(DEBUG_TAG_WORLDDEF, "add struct info for merc %d (%ls), at %d direction %d failed",
+		SLOGD("add struct info for merc %d (%ls), at %d direction %d failed",
 					s->ubID, s->name, sGridNo, s->bDirection);
 	}
 

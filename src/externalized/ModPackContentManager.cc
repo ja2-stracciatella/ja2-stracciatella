@@ -4,7 +4,7 @@
 #include "sgp/FileMan.h"
 #include "sgp/UTF8String.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define DEBUG_PRINT_OPENING_FILES (1)
 
@@ -50,7 +50,7 @@ SGPFile* ModPackContentManager::openGameResForReading(const char* filename) cons
 	{
 		int d = FileMan::openFileCaseInsensitive(folder, filename, mode);
 		if (d >= 0) {
-			SLOGI(DEBUG_TAG_MODPACK, "opening mod's resource: %s", filename);
+			SLOGI("opening mod's resource: %s", filename);
 			return FileMan::getSGPFileFromFD(d, filename, fmode);
 		}
 	}
@@ -81,7 +81,7 @@ UTF8String* ModPackContentManager::loadDialogQuoteFromFile(const char* filename,
 	std::map<std::string, std::vector<std::string> >::iterator it = m_dialogQuotesMap.find(jsonFileName);
 	if(it != m_dialogQuotesMap.end())
 	{
-		SLOGD(DEBUG_TAG_MODPACK, "cached quote %d %s", quote_number, jsonFileName.c_str());
+		SLOGD("cached quote %d %s", quote_number, jsonFileName.c_str());
 		return new UTF8String(it->second[quote_number].c_str());
 	}
 	else

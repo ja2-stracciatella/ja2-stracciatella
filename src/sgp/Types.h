@@ -7,14 +7,14 @@
 
 #include "Platform.h"
 #include "SGPStrings.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define UNIMPLEMENTED \
-	SLOGE(DEBUG_TAG_ASSERTS, "===> %s:%d: %s() is not implemented", __FILE__, __LINE__, __func__);
+	SLOGA("===> %s:%d: %s() is not implemented", __FILE__, __LINE__, __func__);
 
 #ifdef WITH_FIXMES
 	#define FIXME \
-		SLOGE(DEBUG_TAG_FIXME, "===> %s:%d: %s() FIXME", __FILE__, __LINE__, __func__);
+		SLOGE("===> %s:%d: %s() FIXME", __FILE__, __LINE__, __func__);
 #else
 	#define FIXME (void)0;
 #endif

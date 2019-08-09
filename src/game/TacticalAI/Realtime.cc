@@ -28,7 +28,7 @@ static INT8 RTPlayerDecideAction(SOLDIERTYPE* pSoldier)
 	{
 		bAction = DecideAction( pSoldier );
 	}
-	SLOGD(DEBUG_TAG_AI, "DecideAction: selected action %d, actionData %d\n\n",
+	SLOGD("DecideAction: selected action %d, actionData %d\n\n",
 				bAction, pSoldier->usActionData);
 
 	return(bAction);

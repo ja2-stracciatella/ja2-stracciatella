@@ -33,7 +33,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define BOBBYR_GRID_PIC_WIDTH		118
 #define BOBBYR_GRID_PIC_HEIGHT		69
@@ -1383,7 +1383,7 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(ItemModel const* con
 
 static void ReportBobbyROrderError(UINT16 usItemNumber, UINT8 ubPurchaseNum, UINT8 ubQtyOnHand, UINT8 ubNumPurchasing)
 {
-	SLOGE(DEBUG_TAG_BOBBYRAY, "**** Bobby Rays Ordering Error ****\n\
+	SLOGE("**** Bobby Rays Ordering Error ****\n\
 		usItemNumber = %d\n\
 		ubPurchaseNum = %d\n\
 		ubQtyOnHand = %d\n\

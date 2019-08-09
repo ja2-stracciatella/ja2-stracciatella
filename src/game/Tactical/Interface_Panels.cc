@@ -71,7 +71,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #include "policy/GamePolicy.h"
 #include "HImage.h"
@@ -932,7 +932,7 @@ try
 }
 catch (...)
 {
-	SLOGE(DEBUG_TAG_INTERFACE, "Cannot create Interface button");
+	SLOGE("Cannot create Interface button");
 	throw;
 }
 
@@ -946,7 +946,7 @@ try
 }
 catch (...)
 {
-	SLOGE(DEBUG_TAG_INTERFACE, "Cannot create Interface button");
+	SLOGE("Cannot create Interface button");
 	throw;
 }
 
@@ -2504,7 +2504,7 @@ try
 }
 catch (...)
 {
-	SLOGE(DEBUG_TAG_INTERFACE, "Cannot create Interface button");
+	SLOGE("Cannot create Interface button");
 	throw;
 }
 

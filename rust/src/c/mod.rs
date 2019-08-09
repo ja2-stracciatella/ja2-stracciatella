@@ -1,6 +1,7 @@
 //! This module and it's submodules contains code for C.
 
 pub mod librarydb;
+pub mod logger;
 
 pub mod error {
     //! This module contains error handling code for C.

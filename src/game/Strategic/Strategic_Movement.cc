@@ -567,7 +567,7 @@ static void RemoveGroupFromList(GROUP* const g)
 		MemFree(g);
 		return;
 	}
-	SLOGE(DEBUG_TAG_ASSERTS, "Trying to remove a strategic group that isn't in the list!");
+	SLOGA("Trying to remove a strategic group that isn't in the list!");
 }
 
 
@@ -632,7 +632,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 
 	if( fDisableMapInterfaceDueToBattle )
 	{
-		SLOGE(DEBUG_TAG_ASSERTS, "fDisableMapInterfaceDueToBattle is set before attempting to bring up PBI.\
+		SLOGA("fDisableMapInterfaceDueToBattle is set before attempting to bring up PBI.\
 			Please send PRIOR save if possible and details on anything that just happened before this battle." );
 		return;
 	}
@@ -1123,7 +1123,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		{
 			if (!g.pPlayerList)
 			{ // Nobody here, better just get out now
-				SLOGE(DEBUG_TAG_ASSERTS, "Player group %d arrived in sector empty.", g.ubGroupID);
+				SLOGA("Player group %d arrived in sector empty.", g.ubGroupID);
 				return;
 			}
 		}
@@ -1163,7 +1163,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		}
 
 		if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
-			SLOGE(DEBUG_TAG_ASSERTS, "Failed to add movement event.");
+			SLOGA("Failed to add movement event.");
 
 		if (g.fPlayer && g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin())
 		{
@@ -1258,7 +1258,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		}
 		else
 		{
-			SLOGE(DEBUG_TAG_ASSERTS, "GroupArrivedAtSector: group arrives in sector where it already has been");
+			SLOGA("GroupArrivedAtSector: group arrives in sector where it already has been");
 			return;
 		}
 
@@ -1678,7 +1678,7 @@ static void DelayEnemyGroupsIfPathsCross(GROUP& player_group)
 		 * values to figure out how far along its route a group is! */
 		SetGroupArrivalTime(g, player_group.uiArrivalTime + 1 + Random(10));
 		if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
-			SLOGE(DEBUG_TAG_ASSERTS, "Failed to add movement event.");
+			SLOGA("Failed to add movement event.");
 	}
 }
 
@@ -1708,7 +1708,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	dy = wp->y - pGroup->ubSectorY;
 	if( dx && dy )
 	{ //Can't move diagonally!
-		SLOGE(DEBUG_TAG_ASSERTS, "Attempting to move to waypoint in a diagonal direction from sector %d,%d to sector %d,%d",
+		SLOGA("Attempting to move to waypoint in a diagonal direction from sector %d,%d to sector %d,%d",
 			pGroup->ubSectorX, pGroup->ubSectorY, wp->x, wp->y );
 	}
 	//Clip dx/dy value so that the move is for only one sector.
@@ -1734,7 +1734,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	}
 	else
 	{
-		SLOGE(DEBUG_TAG_ASSERTS, "InitiateGroupMovementToNextSector: Attempting to move to waypoint %d, %d that you are already at!", wp->x, wp->y);
+		SLOGA("InitiateGroupMovementToNextSector: Attempting to move to waypoint %d, %d that you are already at!", wp->x, wp->y);
 		return;
 	}
 	//All conditions for moving to the next waypoint are now good.
@@ -1824,7 +1824,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 
 	//Post the event!
 	if( !AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID ) )
-		SLOGE(DEBUG_TAG_ASSERTS, "Failed to add movement event.");
+		SLOGA("Failed to add movement event.");
 
 	//For the case of player groups, we need to update the information of the soldiers.
 	if( pGroup->fPlayer )
@@ -2790,7 +2790,7 @@ void CalculateGroupRetreatSector( GROUP *pGroup )
 	}
 	else
 	{
-		SLOGE(DEBUG_TAG_ASSERTS, "Player group cannot retreat from sector %c%d ", pGroup->ubSectorY+'A'-1, pGroup->ubSectorX);
+		SLOGA("Player group cannot retreat from sector %c%d ", pGroup->ubSectorY+'A'-1, pGroup->ubSectorX);
 		return;
 	}
 	if( pGroup->fPlayer )
@@ -2823,7 +2823,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 		else if (dx == -1 && dy ==  0) direction = WEST_STRATEGIC_MOVE;
 		else
 		{
-			SLOGE(DEBUG_TAG_ASSERTS, "Player group attempting illegal retreat from %c%d to %c%d.", g.ubSectorY + 'A' - 1, g.ubSectorX, g.ubNextY + 'A' - 1, g.ubNextX);
+			SLOGA("Player group attempting illegal retreat from %c%d to %c%d.", g.ubSectorY + 'A' - 1, g.ubSectorX, g.ubNextY + 'A' - 1, g.ubNextX);
 		}
 	}
 	else
@@ -2852,7 +2852,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 	}
 
 	if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
-		SLOGE(DEBUG_TAG_ASSERTS, "Failed to add movement event.");
+		SLOGA("Failed to add movement event.");
 
 	// For the case of player groups, we need to update the information of the soldiers.
 	if (g.fPlayer)
@@ -3112,7 +3112,7 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 			dy = wp->y - pGroup->ubSectorY;
 			if( dx && dy )
 			{ //Can't move diagonally!
-				SLOGE(DEBUG_TAG_ASSERTS, "GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector %c%d to sector %c%d for group at sector %c%d",
+				SLOGA("GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector %c%d to sector %c%d for group at sector %c%d",
 					pGroup->ubSectorY + 'A', pGroup->ubSectorX, wp->y + 'A' - 1, wp->x, ubOrigY + 'A' - 1, ubOrigX);
 				pGroup->ubSectorX = ubOrigX;
 				pGroup->ubSectorY = ubOrigY;
@@ -3120,7 +3120,7 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 			}
 			if( !dx && !dy ) //Can't move to position currently at!
 			{
-				SLOGE(DEBUG_TAG_ASSERTS, "GroupWillMoveThroughSector() -- Attempting to process same waypoint at %c%d for group at %c%d",
+				SLOGA("GroupWillMoveThroughSector() -- Attempting to process same waypoint at %c%d for group at %c%d",
 					wp->y + 'A' - 1, wp->x, ubOrigY + 'A' - 1, ubOrigX);
 				pGroup->ubSectorX = ubOrigX;
 				pGroup->ubSectorY = ubOrigY;

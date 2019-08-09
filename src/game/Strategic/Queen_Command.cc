@@ -39,7 +39,7 @@
 #include "MemMan.h"
 #include "FileMan.h"
 #include "Vehicles.h"
-#include "slog/slog.h"
+#include "Logger.h"
 #include "JAScreens.h"
 
 //The sector information required for the strategic AI.  Contains the number of enemy troops,
@@ -422,7 +422,7 @@ void PrepareEnemyForSectorBattle()
 	UINT8 const n_stationary_enemies = total_admins + total_troops + total_elites;
 	if (n_stationary_enemies > 32)
 	{
-		SLOGE(DEBUG_TAG_QUEENCMD,"The total stationary enemy forces in sector %c%d is %d. (max %d)",
+		SLOGE("The total stationary enemy forces in sector %c%d is %d. (max %d)",
 					y + 'A' - 1, x, total_admins + total_troops + total_elites, 32);
 		total_admins = MIN(total_admins, 32);
 		total_troops = MIN(total_troops, 32 - total_admins);
@@ -438,7 +438,7 @@ void PrepareEnemyForSectorBattle()
 	//Test:  All slots should be free at this point!
 	if (n_slots != gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1)
 	{
-		SLOGE(DEBUG_TAG_QUEENCMD, "All enemy slots should be free at this point.  Only %d of %d are available.\n\
+		SLOGE("All enemy slots should be free at this point.  Only %d of %d are available.\n\
 			Trying to add %d admins, %d troops, and %d elites.",
 			n_slots, gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1,
 			total_admins, total_troops, total_elites);
@@ -643,12 +643,12 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		pGroup = GetGroup( pSoldier->ubGroupID );
 		if( !pGroup )
 		{
-			SLOGW(DEBUG_TAG_QUEENCMD, "Enemy soldier killed with ubGroupID of %d, and the group doesn't exist!", pSoldier->ubGroupID);
+			SLOGW("Enemy soldier killed with ubGroupID of %d, and the group doesn't exist!", pSoldier->ubGroupID);
 			return;
 		}
 		if( pGroup->fPlayer )
 		{
-			SLOGW(DEBUG_TAG_QUEENCMD, "Attempting to process player group thinking it's an enemy group in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID);
+			SLOGW("Attempting to process player group thinking it's an enemy group in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID);
 			return;
 		}
 		switch( pSoldier->ubSoldierClass )
@@ -656,7 +656,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			case SOLDIER_CLASS_ELITE:
 				if( !pGroup->pEnemyGroup->ubNumElites )
 				{
-					SLOGW(DEBUG_TAG_QUEENCMD, "Enemy elite killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID);
+					SLOGW("Enemy elite killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID);
 					break;
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
@@ -664,7 +664,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 					if( (pGroup->ubGroupSize <= MAX_STRATEGIC_TEAM_SIZE && pGroup->pEnemyGroup->ubNumElites != pGroup->pEnemyGroup->ubElitesInBattle && !gfPendingEnemies) ||
 						pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE || pGroup->pEnemyGroup->ubNumElites > 50 || pGroup->pEnemyGroup->ubElitesInBattle > 50 )
 					{
-						SLOGW(DEBUG_TAG_QUEENCMD, "Group elite counters are bad. What were the last 2-3 things you did, and how?\n\
+						SLOGW("Group elite counters are bad. What were the last 2-3 things you did, and how?\n\
 							Pleas save the game and file a bug.");
 					}
 				}
@@ -680,7 +680,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			case SOLDIER_CLASS_ARMY:
 				if( !pGroup->pEnemyGroup->ubNumTroops )
 				{
-					SLOGW(DEBUG_TAG_QUEENCMD, "Enemy troop killed with ubGroupID of %d, but the group doesn't contain troops!", pGroup->ubGroupID);
+					SLOGW("Enemy troop killed with ubGroupID of %d, but the group doesn't contain troops!", pGroup->ubGroupID);
 					break;
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
@@ -688,7 +688,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 					if( (pGroup->ubGroupSize <= MAX_STRATEGIC_TEAM_SIZE && pGroup->pEnemyGroup->ubNumTroops != pGroup->pEnemyGroup->ubTroopsInBattle && !gfPendingEnemies) ||
 						pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE || pGroup->pEnemyGroup->ubNumTroops > 50 || pGroup->pEnemyGroup->ubTroopsInBattle > 50 )
 					{
-						SLOGW(DEBUG_TAG_QUEENCMD, "Group troop counters are bad. What were the last 2-3 things you did, and how?\n\
+						SLOGW("Group troop counters are bad. What were the last 2-3 things you did, and how?\n\
 							Please save the game and file a bug.");
 					}
 				}
@@ -704,14 +704,14 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			case SOLDIER_CLASS_ADMINISTRATOR:
 				if( !pGroup->pEnemyGroup->ubNumAdmins )
 				{
-					SLOGW(DEBUG_TAG_QUEENCMD, "Enemy administrator killed with ubGroupID of %d, but the group doesn't contain administrators!", pGroup->ubGroupID);
+					SLOGW("Enemy administrator killed with ubGroupID of %d, but the group doesn't contain administrators!", pGroup->ubGroupID);
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
 				{
 					if( (pGroup->ubGroupSize <= MAX_STRATEGIC_TEAM_SIZE && pGroup->pEnemyGroup->ubNumAdmins != pGroup->pEnemyGroup->ubAdminsInBattle && !gfPendingEnemies) ||
 					pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE || pGroup->pEnemyGroup->ubNumAdmins > 50 || pGroup->pEnemyGroup->ubAdminsInBattle > 50 )
 					{
-						SLOGW(DEBUG_TAG_QUEENCMD, "Group admin counters are bad. What were the last 2-3 things you did, and how?\n\
+						SLOGW("Group admin counters are bad. What were the last 2-3 things you did, and how?\n\
 							Please save the game and file a bug.");
 					}
 				}
@@ -760,7 +760,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 							!pSector->ubNumAdmins || !pSector->ubAdminsInBattle ||
 							pSector->ubNumAdmins > 100 || pSector->ubAdminsInBattle > 32 )
 						{
-							SLOGW(DEBUG_TAG_QUEENCMD, "Sector admin counters are bad. What were the last 2-3 things you did, and how?\n\
+							SLOGW("Sector admin counters are bad. What were the last 2-3 things you did, and how?\n\
 								Please save the game and file a bug.");
 						}
 					}
@@ -780,7 +780,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 							!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
 							pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > 32 )
 						{
-							SLOGW(DEBUG_TAG_QUEENCMD, "Sector troop counters are bad. What were the last 2-3 things you did, and how?\n\
+							SLOGW("Sector troop counters are bad. What were the last 2-3 things you did, and how?\n\
 								Please save the game and file a bug.");
 						}
 					}
@@ -800,7 +800,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 							!pSector->ubNumElites || !pSector->ubElitesInBattle ||
 							pSector->ubNumElites > 100 || pSector->ubElitesInBattle > 32 )
 						{
-							SLOGW(DEBUG_TAG_QUEENCMD, "Sector elite counters are bad. What were the last 2-3 things you did, and how?\n\
+							SLOGW("Sector elite counters are bad. What were the last 2-3 things you did, and how?\n\
 								Please save the game and file a bug");
 						}
 					}
@@ -822,7 +822,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 								!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
 								pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
 							{
-								SLOGW(DEBUG_TAG_QUEENCMD, "Sector creature counters are bad. What were the last 2-3 things you did, and how?\n\
+								SLOGW("Sector creature counters are bad. What were the last 2-3 things you did, and how?\n\
 									Please save game and file a bug.");
 							}
 						}
@@ -860,7 +860,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 							!pSector->ubNumAdmins || !pSector->ubAdminsInBattle ||
 							pSector->ubNumAdmins > 100 || pSector->ubAdminsInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
-							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector admin counters are bad. What were the last 2-3 things you did, and how?\n\
+							SLOGW("Underground sector admin counters are bad. What were the last 2-3 things you did, and how?\n\
 								Please save game and file a bug.");
 						}
 						if( pSector->ubNumAdmins )
@@ -877,7 +877,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 							!pSector->ubNumTroops || !pSector->ubTroopsInBattle ||
 							pSector->ubNumTroops > 100 || pSector->ubTroopsInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
-							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector troop counters are bad. What were the last 2-3 things you did, and how?\n\
+							SLOGW("Underground sector troop counters are bad. What were the last 2-3 things you did, and how?\n\
 								Please save game and file a bug.");
 						}
 						if( pSector->ubNumTroops )
@@ -894,7 +894,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 							!pSector->ubNumElites || !pSector->ubElitesInBattle ||
 							pSector->ubNumElites > 100 || pSector->ubElitesInBattle > MAX_STRATEGIC_TEAM_SIZE )
 						{
-							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector elite counters are bad. What were the last 2-3 things you did, and how?\n\
+							SLOGW("Underground sector elite counters are bad. What were the last 2-3 things you did, and how?\n\
 								Please save game and file a bug.");
 						}
 						if( pSector->ubNumElites )
@@ -911,7 +911,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 							!pSector->ubNumCreatures || !pSector->ubCreaturesInBattle ||
 							pSector->ubNumCreatures > 50 || pSector->ubCreaturesInBattle > 50 )
 						{
-							SLOGW(DEBUG_TAG_QUEENCMD, "Underground sector creature counters are bad. What were the last 2-3 things you did, and how?\n\
+							SLOGW("Underground sector creature counters are bad. What were the last 2-3 things you did, and how?\n\
 								Please save game and file a bug.");
 						}
 						if( pSector->ubNumCreatures )
@@ -1048,7 +1048,7 @@ void AddPossiblePendingEnemiesToBattle()
 
 static void AddEnemiesToBattle(GROUP const& g, UINT8 const strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites)
 {
-	SLOGD(DEBUG_TAG_QUEENCMD, "Enemy reinforcements have arrived! (%d admins, %d troops, %d elite)",
+	SLOGD("Enemy reinforcements have arrived! (%d admins, %d troops, %d elite)",
 				n_admins, n_troops, n_elites);
 
 	UINT8 desired_direction;

@@ -220,7 +220,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 				break;
 
 			default:
-				SLOGE(DEBUG_TAG_ASSERTS, "Map Type not in switch when loading map changes from temp file");
+				SLOGA("Map Type not in switch when loading map changes from temp file");
 				break;
 		}
 
@@ -583,7 +583,7 @@ void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSect
 
 	if (!ApplyMapChangesToMapTempFile::IsActive())
 	{
-		SLOGD(DEBUG_TAG_SAVELOAD, "Called AddExitGridToMapTempFile() without holding ApplyMapChangesToMapTempFile");
+		SLOGD("Called AddExitGridToMapTempFile() without holding ApplyMapChangesToMapTempFile");
 		return;
 	}
 
@@ -703,7 +703,7 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 
 	if( pStructure == NULL )
 	{
-		SLOGD(DEBUG_TAG_SAVELOAD, "SetOpenableStructStatusFromMapTempFile( %d, %d ) failed to find the openable struct.", uiMapIndex, fOpened );
+		SLOGD("SetOpenableStructStatusFromMapTempFile( %d, %d ) failed to find the openable struct.", uiMapIndex, fOpened );
 		return;
 	}
 

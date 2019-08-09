@@ -13,7 +13,7 @@
 #include "Points.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 // Defines for Anim inst reading, taken from orig Jagged
 #define ANIMFILENAME						BINARYDATADIR "/ja2bin.dat"
@@ -2612,7 +2612,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 	if ( usAnimSurface == INVALID_ANIMATION	)
 	{
 		// WE SHOULD NOT BE USING THIS ANIMATION
-		SLOGW(DEBUG_TAG_ANIMATIONS, "Invalid Animation File for Body %d, animation %hs.", pSoldier->ubBodyType, gAnimControl[usAnimState].zAnimStr);
+		SLOGW( "Invalid Animation File for Body %d, animation %hs.", pSoldier->ubBodyType, gAnimControl[usAnimState].zAnimStr);
 		// Set index to FOUND_INVALID_ANIMATION
 		gubAnimSurfaceIndex[pSoldier->ubBodyType][usAnimState] = FOUND_INVALID_ANIMATION;
 		return( INVALID_ANIMATION_SURFACE );
@@ -2833,8 +2833,7 @@ UINT16 GetSoldierAnimationSurface(SOLDIERTYPE const* const pSoldier)
 		// Ensure that it's loaded!
 		if ( gAnimSurfaceDatabase[usAnimSurface].hVideoObject == NULL )
 		{
-			SLOGW(DEBUG_TAG_ANIMATIONS,
-				"Animation Surface for Body %d, animation %hs, surface %d not loaded.",
+			SLOGW("Animation Surface for Body %d, animation %hs, surface %d not loaded.",
 				pSoldier->ubBodyType, gAnimControl[pSoldier->usAnimState].zAnimStr, usAnimSurface);
 			usAnimSurface = INVALID_ANIMATION_SURFACE;
 		}

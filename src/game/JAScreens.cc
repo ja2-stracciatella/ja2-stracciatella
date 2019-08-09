@@ -40,7 +40,7 @@
 #include "Debug.h"
 #include "UILayout.h"
 #include "Timer.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define MAX_DEBUG_PAGES 4
 
@@ -114,7 +114,7 @@ ScreenID ErrorScreenHandle(void)
 
 	if ( !fFirstTime )
 	{
-		SLOGE(DEBUG_TAG_JA2SCREENS, "Runtime Error: %s ", gubErrorText );
+		SLOGE("Runtime Error: %s ", gubErrorText );
 		fFirstTime = TRUE;
 	}
 

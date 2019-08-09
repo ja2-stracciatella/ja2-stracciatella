@@ -5,12 +5,13 @@
 #include <FL/Fl_PNG_Image.H>
 #include <FL/fl_ask.H>
 #include "logo32.png.h"
-#include "slog/slog.h"
+#include "Logger.h"
 #include "RustInterface.h"
+#include "Types.h"
+#include "GameRes.h"
+#include "Video.h"
 
 #include "Launcher.h"
-
-#define LAUNCHER_TOPIC DEBUG_TAG_LAUNCHER
 
 #define RESOLUTION_SEPARATOR "x"
 
@@ -180,10 +181,10 @@ int Launcher::writeJsonFile() {
 
 	if (success) {
 		update(false, nullptr);
-		SLOGD(LAUNCHER_TOPIC, "Succeeded writing config file");
+		SLOGD("Succeeded writing config file");
 		return 0;
 	}
-	SLOGD(LAUNCHER_TOPIC, "Failed writing config file");
+	SLOGD("Failed writing config file");
 	return 1;
 }
 
@@ -312,10 +313,8 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 		return;
 	}
 
-	char* log = NULL;
 	auto gamedir = window->gameDirectoryInput->value();
-	auto guessedVersion = guess_resource_version(gamedir, &log);
-	printf("%s", log);
+	auto guessedVersion = guess_resource_version(gamedir);
 	if (guessedVersion != -1) {
 		auto resourceVersionIndex = 0;
 		for (auto version : predefinedVersions) {
@@ -332,7 +331,6 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 		fl_message_title(window->guessVersionButton->label());
 		fl_alert("Failure!");
 	}
-	free_rust_string(log);
 }
 
 void Launcher::setPredefinedResolution(Fl_Widget* btn, void* userdata) {

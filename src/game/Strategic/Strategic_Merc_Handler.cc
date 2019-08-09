@@ -40,7 +40,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 #define NUM_DAYS_TILL_UNPAID_RPC_QUITS 3
 
@@ -131,7 +131,7 @@ void MercDailyUpdate()
 	// if its the first day, leave
 	if (GetWorldDay() == 1) return;
 
-	SLOGD(DEBUG_TAG_SOLDIER, "%ls - Doing MercDailyUpdate", WORLDTIMESTR);
+	SLOGD("%ls - Doing MercDailyUpdate", WORLDTIMESTR);
 
 	/* if the death rate is very low (this is independent of mercs' personal
 	 * deathrate tolerances) */

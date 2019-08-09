@@ -380,7 +380,7 @@ void TextInput(const SDL_TextInputEvent* TextEv) {
 		static bool warn = true;
 		if (warn)
 		{
-			SLOGW(DEBUG_TAG_SGP, "Received invalid utf-8 character.");
+			SLOGW("Received invalid utf-8 character.");
 			warn = false;
 		}
 	}

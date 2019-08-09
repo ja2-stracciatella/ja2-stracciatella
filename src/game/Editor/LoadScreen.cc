@@ -257,7 +257,7 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 		RemoveFileDialog();
 		return EDIT_SCREEN ;
 	}
-	SLOGE(DEBUG_TAG_ASSERTS, "ProcessLoadSaveScreenMessageBoxResult: none of the global flags set");
+	SLOGA("ProcessLoadSaveScreenMessageBoxResult: none of the global flags set");
 	return LOADSAVE_SCREEN;
 }
 
@@ -890,7 +890,7 @@ static ScreenID ProcessFileIO(void)
 				return EDIT_SCREEN;
 			}
 			if( gMapInformation.ubMapVersion != gubMinorMapVersion )
-				SLOGE(DEBUG_TAG_EDITOR, "Map data has just been corrupted!!! What did you just do? KM : 0");
+				SLOGE("Map data has just been corrupted!!! What did you just do? KM : 0");
 			return EDIT_SCREEN;
 		case INITIATE_MAP_LOAD: //draw load message
 			SaveFontSettings();

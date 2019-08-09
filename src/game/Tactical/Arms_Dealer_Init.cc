@@ -1404,7 +1404,7 @@ static void AddAmmoToArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16
 	// Ammo only, please!!!
 	if (GCM->getItem(usItemIndex)->getItemClass() != IC_AMMO )
 	{
-		SLOGE(DEBUG_TAG_ASSERTS, "AddAmmoToArmsDealerInventory: Item isn't Ammo");
+		SLOGA("AddAmmoToArmsDealerInventory: Item isn't Ammo");
 		return;
 	}
 
@@ -1856,7 +1856,7 @@ void GiveObjectToArmsDealerForRepair(ArmsDealerID const ubArmsDealer, OBJECTTYPE
 			// If the attachment is detachable
 			if (! (GCM->getItem(pObject->usAttachItem[ubCnt])->getFlags() & ITEM_INSEPARABLE ) )
 			{
-				SLOGE(DEBUG_TAG_ASSERTS, "GiveObjectToArmsDealerForRepair: something wrong with attachments");
+				SLOGA("GiveObjectToArmsDealerForRepair: something wrong with attachments");
 			}
 		}
 	}*/

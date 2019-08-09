@@ -4,7 +4,7 @@
 #include "LoadSaveData.h"
 #include "LoadSaveObjectType.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 UINT16 CalcSoldierCreateCheckSum(const SOLDIERCREATE_STRUCT* const s)
 {
@@ -143,7 +143,7 @@ void ExtractSoldierCreateFromFileWithChecksumAndGuess(HWFILE f, SOLDIERCREATE_ST
 	UINT16 const fresh_checksum = CalcSoldierCreateCheckSum(c);
 	if(*checksum != fresh_checksum)
 	{
-		SLOGI(DEBUG_TAG_SAVELOAD, "trying SOLDIERCREATE_STRUCT in linux format");
+		SLOGI("trying SOLDIERCREATE_STRUCT in linux format");
 
 		// trying linux format
 		// not validating the checksum - it will be the job of the caller

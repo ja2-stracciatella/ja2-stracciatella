@@ -13,7 +13,7 @@
 #include "EncodingCorrectors.h"
 #include "StrUtils.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 
 extern LanguageRes g_LanguageResDutch;
 extern LanguageRes g_LanguageResEnglish;
@@ -72,7 +72,7 @@ void setGameVersion(GameVersion ver)
 		case GameVersion::RUSSIAN_GOLD: setResources(&g_LanguageResRussianGold,       g_rusGold_TranslationTable); break;
 		default:
 		{
-			SLOGW(DEBUG_TAG_RESOURCES, "Unknown version. Using ENGLISH by defaul");
+			SLOGW("Unknown version. Using ENGLISH by defaul");
 			s_gameVersion = GameVersion::ENGLISH;
 			setResources(&g_LanguageResEnglish, g_en_TranslationTable);
 		}
@@ -142,7 +142,7 @@ std::vector<std::string> GetResourceLibraries(const std::string &dataDir)
 
 	// for (int i = 0; i < libraries.size(); i++)
 	// {
-	//   SLOGW(DEBUG_TAG_RESOURCES, "%s", libraries[i].c_str());
+	//   SLOGW("%s", libraries[i].c_str());
 	// }
 
 	return libraries;

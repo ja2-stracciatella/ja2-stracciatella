@@ -92,7 +92,7 @@
 #include "GameState.h"
 #include "Game_Init.h"
 
-#include "slog/slog.h"
+#include "Logger.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Soldier.h"
@@ -1506,7 +1506,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case 'y':
 			if (INFORMATION_CHEAT_LEVEL()) {
-				SLOGD(DEBUG_TAG_INTERFACE, "Entering LOS Debug Mode");
+				SLOGD("Entering LOS Debug Mode");
 				*new_event = I_LOSDEBUG;
 			}
 			break;
@@ -1571,7 +1571,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		case SDLK_F11:
 			if (DEBUG_CHEAT_LEVEL())
 			{
-				SLOGD(DEBUG_TAG_INTERFACE, "Entering Quest Debug Mode");
+				SLOGD("Entering Quest Debug Mode");
 				gsQdsEnteringGridNo = GetMouseMapPos();
 				LeaveTacticalScreen(QUEST_DEBUG_SCREEN);
 			}
@@ -1656,7 +1656,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 			if (INFORMATION_CHEAT_LEVEL())
 			{
 				// Toggle frame rate display
-				SLOGD(DEBUG_TAG_INTERFACE, "Toggle FPS Overlay");
+				SLOGD("Toggle FPS Overlay");
 				gbFPSDisplay = !gbFPSDisplay;
 				EnableFPSOverlay(gbFPSDisplay);
 				if (!gbFPSDisplay)
@@ -1757,7 +1757,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 			break;
 
 		case 'z':
-			SLOGD(DEBUG_TAG_INTERFACE, "Toggling ZBuffer");
+			SLOGD("Toggling ZBuffer");
 			if (INFORMATION_CHEAT_LEVEL()) ToggleZBuffer();
 			break;
 
@@ -1853,7 +1853,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		case 'm':
 			if (INFORMATION_CHEAT_LEVEL())
 			{
-				SLOGD(DEBUG_TAG_INTERFACE, "Entering Level Node Debug Mode");
+				SLOGD("Entering Level Node Debug Mode");
 				*new_event = I_LEVELNODEDEBUG;
 				CountLevelNodes();
 			}
@@ -1863,7 +1863,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			if (INFORMATION_CHEAT_LEVEL() && gUIFullTarget)
 			{
 				static UINT16 gQuoteNum = 0;
-				SLOGD(DEBUG_TAG_INTERFACE, "Playing Quote %d", gQuoteNum);
+				SLOGD("Playing Quote %d", gQuoteNum);
 				TacticalCharacterDialogue(gUIFullTarget, gQuoteNum++);
 			}
 			break;
@@ -2260,7 +2260,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			{
 				if ( INFORMATION_CHEAT_LEVEL( ) )
 				{
-					SLOGD(DEBUG_TAG_INTERFACE, "Entering Soldier and Land Debug Mode");
+					SLOGD("Entering Soldier and Land Debug Mode");
 					*puiNewEvent = I_SOLDIERDEBUG;
 				}
 			}
@@ -2767,7 +2767,7 @@ static void SwitchHeadGear(bool dayGear)
 
 static void ObliterateSector()
 {
-	SLOGD(DEBUG_TAG_INTERFACE, "Obliterating Sector!");
+	SLOGD("Obliterating Sector!");
 	FOR_EACH_NON_PLAYER_SOLDIER(s)
 	{
 		// bloodcats and civilians are neutral
@@ -2817,12 +2817,12 @@ static void ToggleCliffDebug()
 	gTacticalStatus.uiFlags ^= DEBUGCLIFFS;
 	if (gTacticalStatus.uiFlags & DEBUGCLIFFS)
 	{
-		SLOGD(DEBUG_TAG_INTERFACE, "Cliff debug ON.");
+		SLOGD("Cliff debug ON.");
 	}
 	else
 	{
 		SetRenderFlags(RENDER_FLAG_FULL);
-		SLOGD(DEBUG_TAG_INTERFACE, "Cliff debug OFF.");
+		SLOGD("Cliff debug OFF.");
 	}
 }
 

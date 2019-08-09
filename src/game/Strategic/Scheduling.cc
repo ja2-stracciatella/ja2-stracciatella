@@ -28,7 +28,7 @@
 #include "MemMan.h"
 #include "ScreenIDs.h"
 #include "GameState.h"
-#include "slog/slog.h"
+#include "Logger.h"
 
 extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
 
@@ -65,7 +65,7 @@ void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode )
 		OptimizeSchedules();
 		if( gubScheduleID > 32 )
 		{
-			SLOGW(DEBUG_TAG_SCHEDULER, "too many Schedules posted." );
+			SLOGW("too many Schedules posted." );
 		}
 	}
 }
@@ -122,7 +122,7 @@ void DeleteSchedule( UINT8 ubScheduleID )
 
 	if (!gpScheduleList)
 	{
-		SLOGW(DEBUG_TAG_SCHEDULER, "Attempting to delete schedule that doesn't exist");
+		SLOGW("Attempting to delete schedule that doesn't exist");
 		return;
 	}
 
@@ -164,14 +164,14 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	pSchedule = GetSchedule( ubScheduleID );
 	if( !pSchedule )
 	{
-		SLOGW(DEBUG_TAG_SCHEDULER, "Schedule callback:  Schedule ID of %d not found.", ubScheduleID );
+		SLOGW("Schedule callback:  Schedule ID of %d not found.", ubScheduleID );
 		return;
 	}
 	//Attempt to access the soldier involved
 	SOLDIERTYPE* const pSoldier = pSchedule->soldier;
 	if (pSoldier == NULL)
 	{
-		SLOGW(DEBUG_TAG_SCHEDULER, "Schedule callback:  Illegal NULL soldier.");
+		SLOGW("Schedule callback:  Illegal NULL soldier.");
 		return;
 	}
 
@@ -184,7 +184,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 
 	if ( !pSoldier->bActive )
 	{
-		SLOGW(DEBUG_TAG_SCHEDULER, "Schedule callback:  Soldier isn't active.  Name is %ls.", pSoldier->name);
+		SLOGW("Schedule callback:  Soldier isn't active.  Name is %ls.", pSoldier->name);
 	}
 
 	//Okay, now we have good pointers to the soldier and the schedule.
@@ -192,7 +192,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	fAutoProcess = FALSE;
 	if( guiCurrentScreen != GAME_SCREEN )
 	{
-		SLOGW(DEBUG_TAG_SCHEDULER, "Schedule callback occurred outside of tactical -- Auto processing!" );
+		SLOGW("Schedule callback occurred outside of tactical -- Auto processing!" );
 		fAutoProcess = TRUE;
 	}
 	else
@@ -201,14 +201,14 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 		{
 			if( pSchedule->usTime[ iScheduleIndex ] == GetWorldMinutesInDay() )
 			{
-				SLOGD(DEBUG_TAG_SCHEDULER, "Processing schedule on time -- AI processing!" );
+				SLOGD("Processing schedule on time -- AI processing!" );
 				break;
 			}
 		}
 		if( iScheduleIndex == MAX_SCHEDULE_ACTIONS )
 		{
 			fAutoProcess = TRUE;
-			SLOGD(DEBUG_TAG_SCHEDULER, "Possible timewarp causing schedule callback to occur late -- Auto processing!" );
+			SLOGD("Possible timewarp causing schedule callback to occur late -- Auto processing!" );
 		}
 	}
 	if ( fAutoProcess )
@@ -588,7 +588,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 	{
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
-				SLOGD(DEBUG_TAG_SCHEDULER, "Autoprocessing schedule action %ls for %ls (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
+				SLOGD("Autoprocessing schedule action %ls for %ls (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
 				gszScheduleActions[ pSchedule->ubAction[ index ] ],
 				pSoldier->name,
 				pSoldier->ubID,
@@ -600,7 +600,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 		}
 		else
 		{
-			SLOGD(DEBUG_TAG_SCHEDULER, "Autoprocessing schedule action %ls for civ (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
+			SLOGD("Autoprocessing schedule action %ls for civ (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
 				gszScheduleActions[ pSchedule->ubAction[ index ] ],
 				pSoldier->ubID,
 				GetWorldHour(),
@@ -916,7 +916,7 @@ static void PostDefaultSchedule(SOLDIERTYPE* pSoldier)
 		OptimizeSchedules();
 		if( gubScheduleID == 255 )
 		{
-			SLOGE(DEBUG_TAG_ASSERTS, "Too many schedules posted" );
+			SLOGA("Too many schedules posted" );
 		}
 	}
 
