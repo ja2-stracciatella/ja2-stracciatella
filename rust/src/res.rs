@@ -52,7 +52,7 @@
 //!  * `hash_{algorithm}` (string) - hash of the specified algorithm
 //!
 
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
 use std::convert::From;
 use std::error::Error;
 use std::fmt;
@@ -82,6 +82,34 @@ pub struct ResourcePack {
 
     /// The resources in this pack.
     pub resources: Vec<Resource>,
+}
+
+impl ResourcePack {
+    fn get_enabled_properties(&self) -> impl Iterator<Item = &String> {
+        self.properties
+            .iter()
+            .filter(|(_, v)| v.as_bool() == Some(true))
+            .map(|(k, _)| k)
+    }
+
+    pub fn has_file_size(&self) -> bool {
+        self.get_enabled_properties()
+            .any(|k| k.as_str() == "with_file_size")
+    }
+
+    pub fn get_hashes(&self) -> HashSet<String> {
+        self.get_enabled_properties()
+            .filter(|k| k.starts_with("with_hash_"))
+            .map(|k| k["with_hash_".len()..].to_owned())
+            .collect()
+    }
+
+    pub fn get_archives(&self) -> HashSet<String> {
+        self.get_enabled_properties()
+            .filter(|k| k.starts_with("with_archive_"))
+            .map(|k| k["with_archive_".len()..].to_owned())
+            .collect()
+    }
 }
 
 /// A resource in the pack.
