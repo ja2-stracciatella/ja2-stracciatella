@@ -141,7 +141,7 @@ fn subcommand_create(matches: &ArgMatches) {
             if paths.len() > 1 {
                 graceful_error(&format!("Too many data dirs found {:?}", paths));
             }
-            if paths.len() == 0 {
+            if paths.is_empty() {
                 graceful_error(&format!("Data dir not found in {:?}", gamedir));
             }
             let path = paths.remove(0);
