@@ -2686,6 +2686,12 @@ void HandleVictoryInNPCSector(INT16 const x, INT16 const y, INT16 const z)
 	switch (SECTOR(x, y))
 	{
 		case SEC_F10:
+			FOR_EACH_IN_TEAM(s, CIV_TEAM)
+			{
+				// hillbilies are still alive?..leave
+				if (s->ubCivilianGroup == HICKS_CIV_GROUP) return;
+			}
+
 			// we won over the hillbillies
 			// set fact they are dead
 			if (!CheckFact(FACT_HILLBILLIES_KILLED, KEITH))
