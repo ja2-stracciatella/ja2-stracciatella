@@ -1,5 +1,6 @@
 //! This module and it's submodules contains code for C.
 
+pub mod config;
 pub mod librarydb;
 pub mod logger;
 
