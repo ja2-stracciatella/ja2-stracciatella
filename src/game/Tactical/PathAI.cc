@@ -42,6 +42,8 @@
 //#define PATHAI_SKIPLIST_DEBUG
 
 #ifdef PATHAI_VISIBLE_DEBUG
+#include "JAScreens.h"
+#include "RenderWorld.h"
 #include "Video.h"
 
 extern INT16 gsCoverValue[WORLD_MAX];
