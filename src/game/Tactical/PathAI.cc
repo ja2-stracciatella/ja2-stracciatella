@@ -62,12 +62,12 @@ UINT8 gubBuildingInfoToSet;
 // ABSOLUTE maximums
 #define ABSMAX_SKIPLIST_LEVEL			6
 #define ABSMAX_TRAIL_TREE			(65536)
-#define ABSMAX_PATHQ				(512)
+#define ABSMAX_PATHQ				(1024)
 
 // STANDARD maximums... configurable!
 #define MAX_SKIPLIST_LEVEL			6
 #define MAX_TRAIL_TREE				(16384)
-#define MAX_PATHQ				(512)
+#define MAX_PATHQ				(1024)
 
 INT32 iMaxSkipListLevel = MAX_SKIPLIST_LEVEL;
 INT32 iMaxTrailTree = MAX_TRAIL_TREE;
