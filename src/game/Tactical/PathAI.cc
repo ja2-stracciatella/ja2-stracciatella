@@ -58,8 +58,8 @@ UINT8 gubGlobalPathFlags = 0;
 UINT8 gubBuildingInfoToSet;
 
 // ABSOLUTE maximums
-#define ABSMAX_SKIPLIST_LEVEL			5
-#define ABSMAX_TRAIL_TREE			(16384)
+#define ABSMAX_SKIPLIST_LEVEL			6
+#define ABSMAX_TRAIL_TREE			(65536)
 #define ABSMAX_PATHQ				(512)
 
 // STANDARD maximums... configurable!
@@ -115,7 +115,7 @@ static INT32  queRequests;
 static INT32  iSkipListSize;
 static INT32  iClosedListSize;
 static INT8   bSkipListLevel;
-static INT32  iSkipListLevelLimit[8] = {0, 4, 16, 64, 256, 1024, 4192, 16384 };
+static INT32  iSkipListLevelLimit[9] = {0, 4, 16, 64, 256, 1024, 4096, 16384, 65536};
 
 // The estimated cost must never exceed the real cost, otherwise you lose the
 // guarantee that you're getting the least-cost path from start to goal. (issue #375)
