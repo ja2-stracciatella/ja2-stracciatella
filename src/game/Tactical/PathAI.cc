@@ -117,12 +117,15 @@ static INT32  iClosedListSize;
 static INT8   bSkipListLevel;
 static INT32  iSkipListLevelLimit[8] = {0, 4, 16, 64, 256, 1024, 4192, 16384 };
 
-#define ESTIMATE0				((dx>dy) ?       (dx)      :       (dy))
-#define ESTIMATE1				((dx<dy) ? ((dx*14)/10+dy) : ((dy*14)/10+dx) )
-#define ESTIMATE2				FLATCOST*( (dx<dy) ? ((dx*14)/10+dy) : ((dy*14)/10+dx) )
-#define ESTIMATEn				((int)(FLATCOST*sqrt(dx*dx+dy*dy)))
-#define ESTIMATEC				( ( (dx<dy) ? (TRAVELCOST_BUMPY * (dx * 14 + dy * 10) / 10) : ( TRAVELCOST_BUMPY * (dy * 14 + dx * 10) / 10 ) ) )
-//#define ESTIMATEC 				(((dx<dy) ? ( (TRAVELCOST_FLAT * dx * 14) / 10 + dy) : (TRAVELCOST_FLAT * dy * 14 ) / 10 + dx) ) )
+// The estimated cost must never exceed the real cost, otherwise you lose the
+// guarantee that you're getting the least-cost path from start to goal. (issue #375)
+#define LOWESTCOST				(EASYWATERCOST)
+
+#define ESTIMATE0				( (dx>dy) ?       (dx)      :       (dy) )
+#define ESTIMATE1				( (dx<dy) ? (dx+(dy*10)/14) : (dy+(dx*10)/14) )
+#define ESTIMATE2				LOWESTCOST*( (dx<dy) ? (dx+(dy*10)/14) : (dy+(dx*10)/14) )
+#define ESTIMATEn				((int)(LOWESTCOST*sqrt(dx*dx+dy*dy)))
+#define ESTIMATEC				( (dx<dy) ? (LOWESTCOST * (dx * 14 + dy * 10) / 14) : (LOWESTCOST * (dy * 14 + dx * 10) / 14) )
 #define ESTIMATE				ESTIMATEC
 
 #define MAXCOST				(9990)
