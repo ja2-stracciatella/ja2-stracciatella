@@ -428,9 +428,9 @@ void ShutDownPathAI( void )
 static void ReconfigurePathAI(INT32 iNewMaxSkipListLevel, INT32 iNewMaxTrailTree, INT32 iNewMaxPathQ)
 {
 	// make sure the specified parameters are reasonable
-	iNewMaxSkipListLevel = __max( iNewMaxSkipListLevel, ABSMAX_SKIPLIST_LEVEL );
-	iNewMaxTrailTree = __max( iNewMaxTrailTree, ABSMAX_TRAIL_TREE );
-	iNewMaxPathQ = __max( iNewMaxPathQ, ABSMAX_PATHQ );
+	iNewMaxSkipListLevel = __max( 0, __min( iNewMaxSkipListLevel, ABSMAX_SKIPLIST_LEVEL ) );
+	iNewMaxTrailTree = __max( 0, __min( iNewMaxTrailTree, ABSMAX_TRAIL_TREE ) );
+	iNewMaxPathQ = __max( 0, __min( iNewMaxPathQ, ABSMAX_PATHQ ) );
 	// assign them
 	iMaxSkipListLevel = iNewMaxSkipListLevel;
 	iMaxTrailTree = iNewMaxTrailTree;
