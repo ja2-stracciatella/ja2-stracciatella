@@ -1854,7 +1854,7 @@ ENDOFLOOP:
 
 			z=_z;
 
-			for (ubCnt=0; z != 0; ubCnt++)
+			for (ubCnt=0; z != 0 && ubCnt < lengthof(guiPathingData); ubCnt++)
 			{
 				guiPathingData[ ubCnt ] = trailTree[z].stepDir;
 
@@ -2309,9 +2309,8 @@ INT16 PlotPath(SOLDIERTYPE* const pSold, const INT16 sDestGridno, const INT8 bCo
 
 			//if (gTacticalStatus.uiFlags & INCOMBAT) // OR USER OPTION "show paths" ON... ***
 			{
-				if (bPlot && iCnt < iLastGrid - 1)
+				if (bPlot && iCnt < iLastGrid - 1 && giPlotCnt < lengthof(guiPlottedPath))
 				{
-					Assert(giPlotCnt < lengthof(guiPlottedPath)); // XXX TODO001C
 					guiPlottedPath[giPlotCnt++] = sTempGrid;
 
 					// we need a footstep graphic ENTERING the next tile
