@@ -11,12 +11,8 @@ extern crate dirs;
 
 use std::env;
 use std::str;
-use std::ptr;
-use std::ffi::{CStr, CString};
-use std::path::{Component, PathBuf};
+use std::path::{PathBuf};
 use std::default::Default;
-
-use libc::{c_char, c_int, size_t};
 
 pub mod config;
 pub mod guess;
@@ -35,7 +31,6 @@ use crate::config::Ja2Json;
 use crate::config::Cli;
 use crate::config::EngineOptions;
 use crate::config::find_stracciatella_home;
-use crate::unicode::Nfc;
 
 fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<String> {
     let cli = Cli::from_args(args);
@@ -55,182 +50,6 @@ pub fn parse_json_config(stracciatella_home: &PathBuf) -> Result<EngineOptions, 
     ja2_json.apply_to_engine_options(&mut engine_options)?;
 
     Ok(engine_options)
-}
-
-macro_rules! unsafe_from_ptr {
-    ($ptr:expr) => { { assert!(!$ptr.is_null()); unsafe { &*$ptr } } }
-}
-
-#[no_mangle]
-pub unsafe extern fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *mut c_char {
-    let launcher_path = unsafe { CStr::from_ptr(launcher_path_ptr) }.to_string_lossy();
-    let is_exe = launcher_path.to_lowercase().ends_with(".exe");
-    let end_of_executable_slice = launcher_path.len() - if is_exe { 13 } else { 9 };
-    let mut executable_path = String::from(&launcher_path[0..end_of_executable_slice]);
-
-    if is_exe {
-        executable_path.push_str(if is_exe { ".exe" } else { "" });
-    }
-
-    CString::new(executable_path).unwrap().into_raw()
-}
-
-#[no_mangle]
-pub extern fn free_rust_string(s: *mut c_char) {
-    if s.is_null() { return }
-    unsafe {
-        CString::from_raw(s)
-    };
-}
-
-/// Guesses the resource version from the contents of the game directory.
-/// Returns a VanillaVersion value if it was sucessful, -1 otherwise.
-/// If log_ptr is not null, it will receive a rust string with the log of the guess attempt.
-#[no_mangle]
-pub unsafe extern "C" fn guess_resource_version(
-    gamedir: *const c_char,
-) -> c_int {
-    let gamedir = CStr::from_ptr(unsafe_from_ptr!(gamedir));
-    let path = String::from_utf8_lossy(gamedir.to_bytes()); // best effort
-    let logged = crate::guess::guess_vanilla_version(&path);
-    let mut result = -1;
-    if let Some(version) = logged.vanilla_version {
-        result = version as c_int;
-    }
-    return result;
-}
-
-/// Returns the path to game.json.
-#[no_mangle]
-pub unsafe extern "C" fn get_game_json_path() -> *mut c_char {
-    let mut path = get_assets_dir();
-    path.push("externalized/game.json");
-    let path: String = path.to_string_lossy().into();
-    return CString::new(path).unwrap().into_raw();
-}
-
-/// Finds a path relative to the stracciatella home directory.
-/// If path is null, it finds the stracciatella home directory.
-/// If test_exists is true, it makes sure the path exists.
-#[no_mangle]
-pub extern "C" fn find_path_from_stracciatella_home(
-    path: *const c_char,
-    test_exists: bool,
-) -> *mut c_char {
-    if let Ok(mut path_buf) = find_stracciatella_home() {
-        if !path.is_null() {
-            let c_s = unsafe { CStr::from_ptr(unsafe_from_ptr!(path)) };
-            let s = String::from_utf8_lossy(c_s.to_bytes());
-            path_buf.push(s.as_ref());
-        }
-        if test_exists && !path_buf.exists() {
-            return ptr::null_mut(); // path not found
-        } else {
-            match path_buf.canonicalize() {
-                Ok(p) => path_buf = p,
-                _ => {}
-            }
-            let s: String = path_buf.to_string_lossy().into();
-            return CString::new(s).unwrap().into_raw(); // path found
-        }
-    } else {
-        return ptr::null_mut(); // no home
-    }
-}
-
-/// Returns true if it was able to find path relative to base.
-/// Makes caseless searches one component at a time.
-#[no_mangle]
-pub extern "C" fn check_if_relative_path_exists(
-    base: *const c_char,
-    path: *const c_char,
-    caseless: bool,
-) -> bool {
-    let base: PathBuf = unsafe { CStr::from_ptr(unsafe_from_ptr!(base)) }.to_string_lossy().into_owned().into();
-    let path: PathBuf = unsafe { CStr::from_ptr(unsafe_from_ptr!(path)) }.to_string_lossy().into_owned().into();
-    let mut buf = base;
-    if !caseless {
-        buf.push(path);
-        return buf.exists();
-    }
-    'outer: for component in path.components() {
-        match component {
-            Component::Normal(os_str) => {
-                if let Some(want_caseless) = os_str.to_str().map(|x| Nfc::caseless(x)) {
-                    if let Ok(entries) = buf.read_dir() {
-                        for entry in entries.filter_map(|x| x.ok()) {
-                            let file_name = entry.file_name();
-                            if let Some(have_caseless) = file_name.to_str().map(|x| Nfc::caseless(x)) {
-                                if want_caseless == have_caseless {
-                                    buf.push(file_name);
-                                    continue 'outer;
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            _ => {},
-        }
-        buf.push(component);
-    }
-    return buf.exists();
-}
-
-/// Returns a list of available mods.
-#[no_mangle]
-pub extern "C" fn get_available_mods() -> *mut VecCString {
-    let mut path = get_assets_dir();
-    path.push("mods");
-    if let Ok(entries) = path.read_dir() {
-        let mods: Vec<_> = entries
-            .filter_map(|x| x.ok()) // DirEntry
-            .filter_map(|x| {
-                if let Ok(metadata) = x.metadata() {
-                    if metadata.is_dir() {
-                        return x.file_name().into_string().ok();
-                    }
-                }
-                None
-            }) // String
-            .filter_map(|x| CString::new(x.as_bytes().to_owned()).ok()) // CString
-            .collect();
-        VecCString::from_vec(mods).into_ptr()
-    } else {
-        VecCString::new().into_ptr()
-    }
-}
-
-pub struct VecCString {
-    inner: Vec<CString>
-}
-
-impl VecCString {
-    pub fn new() -> Self {
-        Self { inner: Vec::new() }
-    }
-    pub fn from_vec(vec: Vec<CString>) -> Self {
-        Self { inner: vec }
-    }
-    pub fn into_ptr(self) -> *mut VecCString {
-        Box::into_raw(Box::new(self))
-    }
-}
-
-#[no_mangle]
-pub unsafe extern "C" fn vec_c_string_delete(vec: *mut VecCString) {
-    assert!(!vec.is_null());
-    unsafe { Box::from_raw(vec) };
-}
-
-#[no_mangle]
-pub unsafe extern "C" fn vec_c_string_len(vec: *mut VecCString) -> size_t {
-    unsafe_from_ptr!(vec).inner.len()
-}
-
-#[no_mangle]
-pub unsafe extern "C" fn vec_c_string_get(vec: *mut VecCString, index: size_t) -> *mut c_char {
-    unsafe_from_ptr!(vec).inner[index].clone().into_raw()
 }
 
 /// Returns the path to the assets directory.
@@ -681,39 +500,5 @@ r##"{
         assert_chars_eq!(get_resource_version_string(super::VanillaVersion::RUSSIAN), "Russian");
         assert_chars_eq!(get_resource_version_string(super::VanillaVersion::RUSSIAN_GOLD), "Russian (Gold)");
 
-    }
-
-    #[test]
-    fn find_ja2_executable_should_determine_game_path_from_launcher_path() {
-        assert_chars_eq!(super::find_ja2_executable(CString::new("/home/test/ja2-launcher").unwrap().as_ptr()), "/home/test/ja2");
-        assert_chars_eq!(super::find_ja2_executable(CString::new("C:\\\\home\\\\test\\\\ja2-launcher.exe").unwrap().as_ptr()), "C:\\\\home\\\\test\\\\ja2.exe");
-        assert_chars_eq!(super::find_ja2_executable(CString::new("ja2-launcher").unwrap().as_ptr()), "ja2");
-        assert_chars_eq!(super::find_ja2_executable(CString::new("ja2-launcher.exe").unwrap().as_ptr()), "ja2.exe");
-        assert_chars_eq!(super::find_ja2_executable(CString::new("JA2-LAUNCHER.EXE").unwrap().as_ptr()), "JA2.exe");
-    }
-
-    #[test]
-    fn check_if_relative_path_exists() {
-        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
-        fs::create_dir_all(temp_dir.path().join("foo/bar")).unwrap();
-
-        let base = CString::new(temp_dir.path().to_str().unwrap()).unwrap();
-        let path = CString::new("baz").unwrap();
-        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), false), false);
-        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), false);
-        let path = CString::new("foo").unwrap();
-        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), false), true);
-        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
-        let path = CString::new("foo/bar").unwrap();
-        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), false), true);
-        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
-        let path = CString::new("foo/BAR").unwrap();
-        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
-        let path = CString::new("FOO/BAR").unwrap();
-        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
-        let path = CString::new("FOO/bar").unwrap();
-        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
-        let path = CString::new("FOO").unwrap();
-        assert_eq!(super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), true), true);
     }
 }

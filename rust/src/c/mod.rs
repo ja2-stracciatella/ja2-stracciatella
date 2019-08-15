@@ -3,6 +3,7 @@
 pub mod config;
 pub mod librarydb;
 pub mod logger;
+pub mod misc;
 
 pub mod error {
     //! This module contains error handling code for C.
@@ -167,7 +168,7 @@ pub(crate) mod common {
 mod tests {
     use crate::c::common::*;
     use crate::c::error::*;
-    use crate::free_rust_string;
+    use crate::c::misc::free_rust_string;
     use std::cell::RefCell;
     use std::ffi::{CStr, CString};
     use std::path::Path;
