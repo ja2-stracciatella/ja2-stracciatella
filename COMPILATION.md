@@ -45,6 +45,12 @@ cmake -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake path/to/source
 make
 ```
 
+If you are using rustup, you might need to add the x86_64-pc-windows-gnu target to the rust toolchain before compiling.
+
+```
+rustup target add x86_64-pc-windows-gnu
+```
+
 ## Build on macOS
 
 ```
