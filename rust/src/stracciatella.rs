@@ -74,105 +74,99 @@ mod tests {
     extern crate regex;
     extern crate tempdir;
 
-    use std::path::{PathBuf};
-    use std::str;
-    use std::ffi::{CStr, CString};
+    use std::path::Path;
     use std::fs;
     use std::fs::File;
     use std::io::prelude::*;
     use std::env;
 
-    use crate::c::config::*;
-
-    macro_rules! assert_chars_eq { ($got:expr, $expected:expr) => {
-        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr($got) }.to_bytes()).unwrap(), $expected);
-    } }
+    use super::*;
 
     #[test]
     fn parse_args_should_abort_on_unknown_arguments() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let input = vec!(String::from("ja2"), String::from("testunknown"));
-        assert_eq!(super::parse_args(&mut engine_options, &input).unwrap(), "Unknown arguments: 'testunknown'.");
+        assert_eq!(parse_args(&mut engine_options, &input).unwrap(), "Unknown arguments: 'testunknown'.");
     }
 
     #[test]
     fn parse_args_should_abort_on_unknown_switch() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let input = vec!(String::from("ja2"), String::from("--testunknown"));
-        assert_eq!(super::parse_args(&mut engine_options, &input).unwrap(), "Unrecognized option: 'testunknown'");
+        assert_eq!(parse_args(&mut engine_options, &input).unwrap(), "Unrecognized option: 'testunknown'");
     }
 
     #[test]
     fn parse_args_should_have_correct_fullscreen_default_value() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let input = vec!(String::from("ja2"));
-        assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(!should_start_in_fullscreen(&engine_options));
+        assert_eq!(parse_args(&mut engine_options, &input), None);
+        assert_eq!(engine_options.start_in_fullscreen, false);
     }
 
     #[test]
     fn parse_args_should_be_able_to_change_fullscreen_value() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let input = vec!(String::from("ja2"), String::from("-fullscreen"));
-        assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(should_start_in_fullscreen(&engine_options));
+        assert_eq!(parse_args(&mut engine_options, &input), None);
+        assert_eq!(engine_options.start_in_fullscreen, true);
     }
 
     #[test]
     fn parse_args_should_be_able_to_show_help() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let input = vec!(String::from("ja2"), String::from("-help"));
-        assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(should_show_help(&engine_options));
+        assert_eq!(parse_args(&mut engine_options, &input), None);
+        assert_eq!(engine_options.show_help, true);
     }
 
     #[test]
     fn parse_args_should_continue_with_multiple_known_switches() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let input = vec!(String::from("ja2"), String::from("-debug"), String::from("-mod"), String::from("a"), String::from("--mod"), String::from("ö"));
-        assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(should_start_in_debug_mode(&engine_options));
-        assert_eq!(get_number_of_mods(&engine_options), 2);
-        assert_eq!(unsafe { CString::from_raw(get_mod(&engine_options, 0)) }, CString::new("a").unwrap());
-        assert_eq!(unsafe { CString::from_raw(get_mod(&engine_options, 1)) }, CString::new("ö").unwrap());
+        assert_eq!(parse_args(&mut engine_options, &input), None);
+        assert_eq!(engine_options.start_in_debug_mode, true);
+        assert_eq!(engine_options.mods.len(), 2);
+        assert_eq!(engine_options.mods[0], "a");
+        assert_eq!(engine_options.mods[1], "ö");
     }
 
     #[test]
     fn parse_args_should_fail_with_unknown_resversion() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let input = vec!(String::from("ja2"), String::from("--resversion"), String::from("TESTUNKNOWN"));
-        assert_eq!(super::parse_args(&mut engine_options, &input).unwrap(), "Resource version TESTUNKNOWN is unknown");
+        assert_eq!(parse_args(&mut engine_options, &input).unwrap(), "Resource version TESTUNKNOWN is unknown");
     }
 
     #[test]
     fn parse_args_should_return_the_correct_resversion_for_russian() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let input = vec!(String::from("ja2"), String::from("-resversion"), String::from("RUSSIAN"));
-        assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(get_resource_version(&engine_options) == super::VanillaVersion::RUSSIAN);
+        assert_eq!(parse_args(&mut engine_options, &input), None);
+        assert_eq!(engine_options.resource_version, VanillaVersion::RUSSIAN);
     }
 
     #[test]
     fn parse_args_should_return_the_correct_resversion_for_italian() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let input = vec!(String::from("ja2"), String::from("-resversion"), String::from("ITALIAN"));
-        assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert!(get_resource_version(&engine_options) == super::VanillaVersion::ITALIAN);
+        assert_eq!(parse_args(&mut engine_options, &input), None);
+        assert_eq!(engine_options.resource_version, VanillaVersion::ITALIAN);
     }
 
     #[test]
     fn parse_args_should_return_the_correct_resolution() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let input = vec!(String::from("ja2"), String::from("--res"), String::from("1120x960"));
-        assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert_eq!(get_resolution_x(&engine_options), 1120);
-        assert_eq!(get_resolution_y(&engine_options), 960);
+        assert_eq!(parse_args(&mut engine_options, &input), None);
+        assert_eq!(engine_options.resolution.0, 1120);
+        assert_eq!(engine_options.resolution.1, 960);
     }
 
     #[test]
     #[cfg(target_os = "macos")]
     fn parse_args_should_return_the_correct_canonical_game_dir_on_mac() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let dir_path = temp_dir.path().join("foo");
 
@@ -180,10 +174,9 @@ mod tests {
 
         let input = vec!(String::from("ja2"), String::from("--gamedir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
 
-        assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        let comp = str::from_utf8(unsafe { CStr::from_ptr(get_vanilla_game_dir(&engine_options)) }.to_bytes()).unwrap();
-        let temp = fs::canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
-        let base = temp.to_str().unwrap();
+        assert_eq!(parse_args(&mut engine_options, &input), None);
+        let comp = engine_options.vanilla_game_dir;
+        let base = fs::canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
 
         assert_eq!(comp, base);
     }
@@ -191,7 +184,7 @@ mod tests {
     #[test]
     #[cfg(all(not(windows), not(target_os = "macos")))]
     fn parse_args_should_return_the_correct_canonical_game_dir_on_linux() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let dir_path = temp_dir.path().join("foo");
 
@@ -199,14 +192,14 @@ mod tests {
 
         let input = vec!(String::from("ja2"), String::from("--gamedir"), String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()));
 
-        assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(get_vanilla_game_dir(&engine_options)) }.to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
+        assert_eq!(parse_args(&mut engine_options, &input), None);
+        assert_eq!(engine_options.vanilla_game_dir, temp_dir.path());
     }
 
     #[test]
     #[cfg(windows)]
     fn parse_args_should_return_the_correct_canonical_game_dir_on_windows() {
-        let mut engine_options: super::EngineOptions = Default::default();
+        let mut engine_options = EngineOptions::default();
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
         let dir_path = temp_dir.path().join("foo");
 
@@ -214,8 +207,8 @@ mod tests {
 
         let input = vec!(String::from("ja2"), String::from("--gamedir"), String::from(temp_dir.path().to_str().unwrap()));
 
-        assert_eq!(super::parse_args(&mut engine_options, &input), None);
-        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(get_vanilla_game_dir(&engine_options)) }.to_bytes()).unwrap(), temp_dir.path().to_str().unwrap());
+        assert_eq!(parse_args(&mut engine_options, &input), None);
+        assert_eq!(engine_options.vanilla_game_dir, temp_dir.path());
     }
 
     #[test]
@@ -223,10 +216,10 @@ mod tests {
         let mut engine_options: super::EngineOptions = Default::default();
         let input = vec!(String::from("ja2"), String::from("--gamedir"), String::from("somethingelse"));
 
-        assert_eq!(super::parse_args(&mut engine_options, &input), Some(String::from("Please specify an existing gamedir.")));
+        assert_eq!(parse_args(&mut engine_options, &input), Some(String::from("Please specify an existing gamedir.")));
     }
 
-    fn write_temp_folder_with_ja2_json(contents: &[u8]) -> tempdir::TempDir {
+    pub fn write_temp_folder_with_ja2_json(contents: &[u8]) -> tempdir::TempDir {
         let dir = tempdir::TempDir::new("ja2-test").unwrap();
         let ja2_home_dir = dir.path().join(".ja2");
         let file_path = ja2_home_dir.join("ja2.json");
@@ -245,7 +238,7 @@ mod tests {
         let home_path = dir.path().join("ja2_home");
         let ja2json_path = home_path.join("ja2.json");
 
-        super::ensure_json_config_existence(&home_path).unwrap();
+        ensure_json_config_existence(&home_path).unwrap();
 
         assert!(home_path.exists());
         assert!(ja2json_path.is_file());
@@ -256,7 +249,7 @@ mod tests {
         let dir = write_temp_folder_with_ja2_json(b"Test");
         let ja2json_path = dir.path().join(".ja2/ja2.json");
 
-        super::ensure_json_config_existence(&PathBuf::from(dir.path())).unwrap();
+        ensure_json_config_existence(&dir.path().to_owned()).unwrap();
 
         let mut f = File::open(ja2json_path.clone()).unwrap();
         let mut content: Vec<u8> = vec!();
@@ -269,141 +262,143 @@ mod tests {
     #[test]
     fn parse_json_config_should_fail_with_missing_file() {
         let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
-        let stracciatella_home = PathBuf::from(temp_dir.path());
+        let stracciatella_home = temp_dir.path().to_owned();
+        let expected = Err("Error reading ja2.json config file: entity not found".to_owned());
 
-        assert_eq!(super::parse_json_config(&stracciatella_home), Err(String::from("Error reading ja2.json config file: entity not found")));
+        assert_eq!(parse_json_config(&stracciatella_home), expected);
     }
 
     #[test]
     fn parse_json_config_should_fail_with_invalid_json() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ not json }");
-        let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
+        let stracciatella_home = temp_dir.path().join(".ja2");
 
-        assert_eq!(super::parse_json_config(&stracciatella_home), Err(String::from("Error parsing ja2.json config file: key must be a string at line 1 column 3")));
+        assert_eq!(parse_json_config(&stracciatella_home), Err(String::from("Error parsing ja2.json config file: key must be a string at line 1 column 3")));
     }
 
     #[test]
     fn parse_json_config_should_be_able_to_change_game_dir() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"game_dir\": \"/dd\" }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert_chars_eq!(get_vanilla_game_dir(&engine_options), "/dd");
+        assert_eq!(engine_options.vanilla_game_dir, Path::new("/dd"));
     }
 
     #[test]
     fn parse_json_config_should_be_able_to_change_game_dir_with_data_dir() {
         // data_dir is an alias to game_dir
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"data_dir\": \"/dd\" }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert_chars_eq!(get_vanilla_game_dir(&engine_options), "/dd");
+        assert_eq!(engine_options.vanilla_game_dir, Path::new("/dd"));
     }
 
     #[test]
     fn parse_json_config_should_be_able_to_change_fullscreen_value() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"fullscreen\": true }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert!(should_start_in_fullscreen(&engine_options));
+        assert_eq!(engine_options.start_in_fullscreen, true);
     }
 
     #[test]
     fn parse_json_config_should_be_able_to_change_debug_value() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"debug\": true }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert!(should_start_in_debug_mode(&engine_options));
+        assert_eq!(engine_options.start_in_debug_mode, true);
     }
 
     #[test]
     fn parse_json_config_should_be_able_to_start_without_sound() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"nosound\": true }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert!(should_start_without_sound(&engine_options));
+        assert_eq!(engine_options.start_without_sound, true);
     }
 
     #[test]
     fn parse_json_config_should_not_be_able_to_run_help() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"help\": true, \"show_help\": true }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert!(!should_show_help(&engine_options));
+        assert_eq!(engine_options.show_help, false);
     }
 
     #[test]
     fn parse_json_config_should_not_be_able_to_run_unittests() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"unittests\": true, \"run_unittests\": true }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert!(!should_run_unittests(&engine_options));
+        assert_eq!(engine_options.run_unittests, false);
     }
 
     #[test]
     fn parse_json_config_should_not_be_able_to_run_editor() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"editor\": true, \"run_editor\": true }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert!(!should_run_editor(&engine_options));
+        assert_eq!(engine_options.run_editor, false);
     }
 
     #[test]
     fn parse_json_config_should_fail_with_invalid_mod() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"mods\": [ \"a\", true ] }");
-        let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
+        let stracciatella_home = temp_dir.path().join(".ja2");
 
-        assert_eq!(super::parse_json_config(&stracciatella_home), Err(String::from("Error parsing ja2.json config file: invalid type: boolean `true`, expected a string at line 1 column 21")));
+        assert_eq!(parse_json_config(&stracciatella_home), Err(String::from("Error parsing ja2.json config file: invalid type: boolean `true`, expected a string at line 1 column 21")));
     }
 
     #[test]
     fn parse_json_config_should_continue_with_multiple_known_switches() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"debug\": true, \"mods\": [ \"m1\", \"a2\" ] }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert!(should_start_in_debug_mode(&engine_options));
-        assert!(get_number_of_mods(&engine_options) == 2);
+        assert_eq!(engine_options.start_in_debug_mode, true);
+        assert_eq!(engine_options.mods.len(), 2);
     }
 
     #[test]
     fn parse_json_config_should_fail_with_unknown_resversion() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"resversion\": \"TESTUNKNOWN\" }");
-        let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
+        let stracciatella_home = temp_dir.path().join(".ja2");
 
-        assert_eq!(super::parse_json_config(&stracciatella_home), Err(String::from("Error parsing ja2.json config file: unknown variant `TESTUNKNOWN`, expected one of `DUTCH`, `ENGLISH`, `FRENCH`, `GERMAN`, `ITALIAN`, `POLISH`, `RUSSIAN`, `RUSSIAN_GOLD` at line 1 column 29")));
+        assert_eq!(parse_json_config(&stracciatella_home), Err(String::from("Error parsing ja2.json config file: unknown variant `TESTUNKNOWN`, expected one of `DUTCH`, `ENGLISH`, `FRENCH`, `GERMAN`, `ITALIAN`, `POLISH`, `RUSSIAN`, `RUSSIAN_GOLD` at line 1 column 29")));
     }
 
     #[test]
     fn parse_json_config_should_return_the_correct_resversion_for_russian() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"resversion\": \"RUSSIAN\" }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert_eq!(get_resource_version(&engine_options), super::VanillaVersion::RUSSIAN);
+        assert_eq!(engine_options.resource_version, VanillaVersion::RUSSIAN);
     }
 
     #[test]
     fn parse_json_config_should_return_the_correct_resversion_for_italian() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"resversion\": \"ITALIAN\" }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert_eq!(get_resource_version(&engine_options), super::VanillaVersion::ITALIAN);
+        assert_eq!(engine_options.resource_version, VanillaVersion::ITALIAN);
     }
 
     #[test]
     fn parse_json_config_should_return_the_correct_resolution() {
         let temp_dir = write_temp_folder_with_ja2_json(b"{ \"res\": \"1024x768\" }");
-        let engine_options = super::parse_json_config(&PathBuf::from(temp_dir.path().join(".ja2"))).unwrap();
+        let engine_options = parse_json_config(&temp_dir.path().join(".ja2")).unwrap();
 
-        assert_eq!(get_resolution_x(&engine_options), 1024);
-        assert_eq!(get_resolution_y(&engine_options), 768);
+        assert_eq!(engine_options.resolution.0, 1024);
+        assert_eq!(engine_options.resolution.1, 768);
     }
 
     #[test]
     #[cfg(not(windows))]
     fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_unixlike() {
-        let mut engine_options: super::EngineOptions = Default::default();
-        engine_options.stracciatella_home = super::find_stracciatella_home().unwrap();
+        let mut engine_options = EngineOptions::default();
+        engine_options.stracciatella_home = find_stracciatella_home().unwrap();
+        let expected = format!("{}/.ja2", env::var("HOME").unwrap());
 
-        assert_eq!(str::from_utf8(unsafe { CStr::from_ptr(get_stracciatella_home(&engine_options)) }.to_bytes()).unwrap(), format!("{}/.ja2", env::var("HOME").unwrap()));
+        assert_eq!(engine_options.stracciatella_home, Path::new(&expected));
     }
 
     #[test]
@@ -411,10 +406,10 @@ mod tests {
     fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_windows() {
         use self::regex::Regex;
 
-        let mut engine_options: super::EngineOptions = Default::default();
-        engine_options.stracciatella_home = super::find_stracciatella_home().unwrap();
+        let mut engine_options = EngineOptions::default();
+        engine_options.stracciatella_home = find_stracciatella_home().unwrap();
 
-        let result = str::from_utf8(unsafe { CStr::from_ptr(get_stracciatella_home(&engine_options)) }.to_bytes()).unwrap();
+        let result = engine_options.stracciatella_home.to_str().unwrap();
         let regex = Regex::new(r"^[A-Z]:\\(.*)+\\JA2").unwrap();
         assert!(regex.is_match(result), "{} is not a valid home dir for windows", result);
     }
@@ -425,11 +420,11 @@ mod tests {
         let args = vec!(String::from("ja2"), String::from("--res"), String::from("1100x480"));
         let home = temp_dir.path().join(".ja2");
 
-        let engine_options = super::EngineOptions::from_home_and_args(&home, &args).unwrap();
+        let engine_options = EngineOptions::from_home_and_args(&home, &args).unwrap();
 
-        assert_eq!(get_resolution_x(&engine_options), 1100);
-        assert_eq!(get_resolution_y(&engine_options), 480);
-        assert_eq!(should_start_in_fullscreen(&engine_options), true);
+        assert_eq!(engine_options.resolution.0, 1100);
+        assert_eq!(engine_options.resolution.1, 480);
+        assert_eq!(engine_options.start_in_fullscreen, true);
     }
 
     #[test]
@@ -439,66 +434,8 @@ mod tests {
         let home = temp_dir.path().join(".ja2");
         let expected_error_message = "Vanilla data directory has to be set either in config file or per command line switch";
 
-        let engine_options_res = super::EngineOptions::from_home_and_args(&home, &args);
+        let engine_options_res = EngineOptions::from_home_and_args(&home, &args);
 
         assert_eq!(engine_options_res, Err(String::from(expected_error_message)));
-    }
-
-    #[test]
-    fn write_engine_options_should_write_a_json_file_that_can_be_serialized_again() {
-        let mut engine_options = super::EngineOptions::default();
-        let temp_dir = write_temp_folder_with_ja2_json(b"Invalid JSON");
-        let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
-
-        engine_options.stracciatella_home = stracciatella_home.clone();
-        engine_options.resolution = super::Resolution(100, 100);
-
-        write_engine_options(&mut engine_options);
-
-        let got_engine_options = super::parse_json_config(&stracciatella_home).unwrap();
-
-        assert_eq!(got_engine_options.resolution, engine_options.resolution);
-    }
-
-    #[test]
-    fn write_engine_options_should_write_a_pretty_json_file() {
-        let mut engine_options = super::EngineOptions::default();
-        let temp_dir = write_temp_folder_with_ja2_json(b"Invalid JSON");
-        let stracciatella_home = PathBuf::from(temp_dir.path().join(".ja2"));
-        let stracciatella_json = PathBuf::from(temp_dir.path().join(".ja2/ja2.json"));
-
-        engine_options.stracciatella_home = stracciatella_home.clone();
-        engine_options.resolution = super::Resolution(100, 100);
-
-        write_engine_options(&mut engine_options);
-
-        let mut config_file_contents = String::from("");
-        File::open(stracciatella_json).unwrap().read_to_string(&mut config_file_contents).unwrap();
-
-        assert_eq!(config_file_contents,
-r##"{
-  "game_dir": "",
-  "mods": [],
-  "res": "100x100",
-  "brightness": 1.0,
-  "resversion": "ENGLISH",
-  "fullscreen": false,
-  "scaling": "PERFECT",
-  "debug": false,
-  "nosound": false
-}"##);
-    }
-
-    #[test]
-    fn get_resource_version_string_should_return_the_correct_resource_version_string() {
-        assert_chars_eq!(get_resource_version_string(super::VanillaVersion::DUTCH), "Dutch");
-        assert_chars_eq!(get_resource_version_string(super::VanillaVersion::ENGLISH), "English");
-        assert_chars_eq!(get_resource_version_string(super::VanillaVersion::FRENCH), "French");
-        assert_chars_eq!(get_resource_version_string(super::VanillaVersion::GERMAN), "German");
-        assert_chars_eq!(get_resource_version_string(super::VanillaVersion::ITALIAN), "Italian");
-        assert_chars_eq!(get_resource_version_string(super::VanillaVersion::POLISH), "Polish");
-        assert_chars_eq!(get_resource_version_string(super::VanillaVersion::RUSSIAN), "Russian");
-        assert_chars_eq!(get_resource_version_string(super::VanillaVersion::RUSSIAN_GOLD), "Russian (Gold)");
-
     }
 }

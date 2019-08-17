@@ -258,3 +258,80 @@ pub extern "C" fn get_resource_version_string(version: VanillaVersion) -> *mut c
     let c_string = c_string_from_str(&version.to_string());
     c_string.into_raw()
 }
+
+#[cfg(test)]
+mod tests {
+    use std::fs;
+
+    use crate::c::common::*;
+    use crate::c::config::*;
+    use crate::c::misc::free_rust_string;
+    use crate::config::{EngineOptions, Resolution};
+    use crate::parse_json_config;
+    use crate::tests::write_temp_folder_with_ja2_json;
+
+    #[test]
+    fn write_engine_options_should_write_a_json_file_that_can_be_serialized_again() {
+        let mut engine_options = EngineOptions::default();
+        let temp_dir = write_temp_folder_with_ja2_json(b"Invalid JSON");
+        let stracciatella_home = temp_dir.path().join(".ja2");
+
+        engine_options.stracciatella_home = stracciatella_home.clone();
+        engine_options.resolution = Resolution(100, 100);
+
+        assert_eq!(write_engine_options(&mut engine_options), true);
+
+        let got_engine_options = parse_json_config(&stracciatella_home).unwrap();
+
+        assert_eq!(got_engine_options.resolution, engine_options.resolution);
+    }
+
+    #[test]
+    fn write_engine_options_should_write_a_pretty_json_file() {
+        let mut engine_options = EngineOptions::default();
+        let temp_dir = write_temp_folder_with_ja2_json(b"Invalid JSON");
+        let stracciatella_home = temp_dir.path().join(".ja2");
+        let stracciatella_json = temp_dir.path().join(".ja2/ja2.json");
+
+        engine_options.stracciatella_home = stracciatella_home.clone();
+        engine_options.resolution = Resolution(100, 100);
+
+        write_engine_options(&mut engine_options);
+
+        let config_file_contents = fs::read_to_string(stracciatella_json).unwrap();
+
+        assert_eq!(
+            config_file_contents,
+            r##"{
+  "game_dir": "",
+  "mods": [],
+  "res": "100x100",
+  "brightness": 1.0,
+  "resversion": "ENGLISH",
+  "fullscreen": false,
+  "scaling": "PERFECT",
+  "debug": false,
+  "nosound": false
+}"##
+        );
+    }
+
+    #[test]
+    fn get_resource_version_string_should_return_the_correct_resource_version_string() {
+        macro_rules! t {
+            ($version:expr, $expected:expr) => {
+                let got = get_resource_version_string($version);
+                assert_eq!(str_from_c_str_or_panic(unsafe_c_str(got)), $expected);
+                free_rust_string(got);
+            };
+        }
+        t!(VanillaVersion::DUTCH, "Dutch");
+        t!(VanillaVersion::ENGLISH, "English");
+        t!(VanillaVersion::FRENCH, "French");
+        t!(VanillaVersion::GERMAN, "German");
+        t!(VanillaVersion::ITALIAN, "Italian");
+        t!(VanillaVersion::POLISH, "Polish");
+        t!(VanillaVersion::RUSSIAN, "Russian");
+        t!(VanillaVersion::RUSSIAN_GOLD, "Russian (Gold)");
+    }
+}
