@@ -84,34 +84,6 @@ pub struct ResourcePack {
     pub resources: Vec<Resource>,
 }
 
-impl ResourcePack {
-    fn get_enabled_properties(&self) -> impl Iterator<Item = &String> {
-        self.properties
-            .iter()
-            .filter(|(_, v)| v.as_bool() == Some(true))
-            .map(|(k, _)| k)
-    }
-
-    pub fn has_file_size(&self) -> bool {
-        self.get_enabled_properties()
-            .any(|k| k.as_str() == "with_file_size")
-    }
-
-    pub fn get_hashes(&self) -> HashSet<String> {
-        self.get_enabled_properties()
-            .filter(|k| k.starts_with("with_hash_"))
-            .map(|k| k["with_hash_".len()..].to_owned())
-            .collect()
-    }
-
-    pub fn get_archives(&self) -> HashSet<String> {
-        self.get_enabled_properties()
-            .filter(|k| k.starts_with("with_archive_"))
-            .map(|k| k["with_archive_".len()..].to_owned())
-            .collect()
-    }
-}
-
 /// A resource in the pack.
 ///
 /// A resource always maps to raw data, which can be a file or data inside an archive.
@@ -143,12 +115,46 @@ pub struct ResourcePackBuilder {
 }
 
 impl ResourcePack {
-    // Constructor.
+    /// Constructor.
     #[allow(dead_code)]
     fn new(name: &str) -> Self {
         let mut pack = ResourcePack::default();
         pack.name = name.to_owned();
-        return pack;
+        pack
+    }
+
+    /// Get properties that are enabled (true)
+    #[allow(dead_code)]
+    fn get_enabled_properties(&self) -> impl Iterator<Item = &String> {
+        self.properties
+            .iter()
+            .filter(|(_, v)| v.as_bool() == Some(true))
+            .map(|(k, _)| k)
+    }
+
+    /// Returns wether the resource pack has been built with file sizes
+    #[allow(dead_code)]
+    pub fn has_file_size(&self) -> bool {
+        self.get_enabled_properties()
+            .any(|k| k.as_str() == "with_file_size")
+    }
+
+    /// Returns the hashes that are used in the resource pack
+    #[allow(dead_code)]
+    pub fn get_hashes(&self) -> HashSet<String> {
+        self.get_enabled_properties()
+            .filter(|k| k.starts_with("with_hash_"))
+            .map(|k| k["with_hash_".len()..].to_owned())
+            .collect()
+    }
+
+    /// Returns which archives were inspected when building the resource pack
+    #[allow(dead_code)]
+    pub fn get_archives(&self) -> HashSet<String> {
+        self.get_enabled_properties()
+            .filter(|k| k.starts_with("with_archive_"))
+            .map(|k| k["with_archive_".len()..].to_owned())
+            .collect()
     }
 }
 

@@ -31,20 +31,23 @@ pub fn guess_vanilla_version(gamedir: &str) -> Guess {
     logged
 }
 
+/// A difference that was detected in resource packs
 #[derive(Debug)]
 enum Difference {
-    OnlyExistsInDataDir(String),
-    OnlyExistsInPack(String),
+    OnlyExistsInDataDir(Option<String>, String),
+    OnlyExistsInPack(Option<String>, String),
     FileSizeMismatch(String, Option<i64>, Option<i64>),
     HashMismatch(String, String, Option<String>, Option<String>),
 }
 
+/// The result of matching a resource pack
 #[derive(Debug)]
 struct MatchResourcesResult {
     number_of_resources: usize,
     differences: Vec<Difference>,
 }
 
+/// Percentages of differences in resource packs
 struct Percentages {
     only_exists_in_data_dir: f64,
     only_exists_in_pack: f64,
@@ -54,6 +57,7 @@ struct Percentages {
 }
 
 impl Percentages {
+    /// Log percentages with log level info
     fn log(&self) {
         info!(
             "Percentage of resources only in game dir: {}",
@@ -76,17 +80,18 @@ impl Percentages {
 }
 
 impl From<&MatchResourcesResult> for Percentages {
-    fn from(other: &MatchResourcesResult) -> Self {
-        let number_of_resources = other.number_of_resources;
-        let count_differences =
-            |filter: Box<Fn(&&Difference) -> bool>| other.differences.iter().filter(filter).count();
+    fn from(result: &MatchResourcesResult) -> Self {
+        let number_of_resources = result.number_of_resources;
+        let count_differences = |filter: Box<Fn(&&Difference) -> bool>| {
+            result.differences.iter().filter(filter).count()
+        };
         let num_only_in_datadir = count_differences(Box::new(|d| match d {
-            Difference::OnlyExistsInDataDir(_) => true,
+            Difference::OnlyExistsInDataDir(_, _) => true,
             _ => false,
         }));
         let percentage_only_in_datadir = num_only_in_datadir as f64 / number_of_resources as f64;
         let num_only_in_pack = count_differences(Box::new(|d| match d {
-            Difference::OnlyExistsInPack(_) => true,
+            Difference::OnlyExistsInPack(_, _) => true,
             _ => false,
         }));
         let percentage_only_in_pack = num_only_in_pack as f64 / number_of_resources as f64;
@@ -116,6 +121,7 @@ impl From<&MatchResourcesResult> for Percentages {
     }
 }
 
+/// The result of guessing game version for data directory
 #[derive(Default)]
 pub struct Guess {
     pub vanilla_version: Option<VanillaVersion>,
@@ -124,6 +130,7 @@ pub struct Guess {
 type GuessResult<T> = Result<T, GuessError>;
 
 impl Guess {
+    /// Guess version by inspecting archives for language specific paths
     fn guess_by_language_specific_resources(
         &self,
         datadir: &Path,
@@ -175,6 +182,8 @@ impl Guess {
         Ok(version)
     }
 
+    /// Guess version by building resource pack and comparing it to other resource
+    /// packs in externalized directory
     fn guess_by_resource_matching(&self, datadir: &Path) -> GuessResult<Option<VanillaVersion>> {
         let results = self
             .get_pack_paths()?
@@ -210,6 +219,7 @@ impl Guess {
         }))
     }
 
+    /// Guess vanilla version for game directory
     fn guess_vanilla_version(&mut self, gamedir: &Path) -> GuessResult<()> {
         let datadir = self.get_datadir(gamedir)?;
 
@@ -226,17 +236,19 @@ impl Guess {
         Err("Give up".to_owned().into())
     }
 
+    /// Compare resource pack and data directory
     fn compare_pack(
         &self,
         datadir: &Path,
-        path: &Path,
+        pack_path: &Path,
     ) -> GuessResult<(VanillaVersion, MatchResourcesResult)> {
-        let pack = self.get_pack(&path)?;
+        let pack = self.get_pack(&pack_path)?;
         let version = self.get_version(&pack)?;
         let match_resources = self.match_resources(&pack, &datadir)?;
         Ok((version, match_resources))
     }
 
+    /// Find data directory within game directory
     fn get_datadir(&self, gamedir: &Path) -> GuessResult<PathBuf> {
         info!("Looking for data dir in {:?}", &gamedir);
         let data_caseless = Nfc::caseless("data");
@@ -267,6 +279,7 @@ impl Guess {
         Ok(path)
     }
 
+    /// Find all resource packs in externalized directory
     fn get_pack_paths(&self) -> GuessResult<Vec<PathBuf>> {
         let dir = Path::new("externalized/resource_packs");
         info!("Searching for resource packs in {:?}", &dir);
@@ -286,6 +299,7 @@ impl Guess {
         Ok(paths)
     }
 
+    /// Read resource pack json
     fn get_pack(&self, path: &Path) -> GuessResult<ResourcePack> {
         let f = File::open(&path)?;
         let mut pack: ResourcePack = serde_json::from_reader(f)?;
@@ -293,6 +307,7 @@ impl Guess {
         Ok(pack)
     }
 
+    /// Get vanilla version from resource pack
     fn get_version(&self, pack: &ResourcePack) -> GuessResult<VanillaVersion> {
         if let Some(version) = pack.get_str("vanilla_version") {
             let version = VanillaVersion::from_str(version)?;
@@ -301,12 +316,12 @@ impl Guess {
         Err("vanilla_version is missing".to_owned().into())
     }
 
+    /// Match resources in pack with data directory
     fn match_resources(
         &self,
         pack: &ResourcePack,
         datadir: &Path,
     ) -> GuessResult<MatchResourcesResult> {
-        // Compare without hashes (fast)
         let mut builder = ResourcePackBuilder::new();
         builder.with_path(&datadir, &datadir);
         if pack.has_file_size() {
@@ -320,29 +335,33 @@ impl Guess {
             builder.with_hash(hash);
         }
         let resources = builder.clone().execute("guess")?.resources;
+        let get_compared_path = |resource: &Resource| {
+            (
+                resource.get_str("archive_path").map(|p| p.to_string()),
+                resource.path.to_lowercase(),
+            )
+        };
 
         info!("Comparing resource pack paths for \"{}\"", &pack.name);
-        // TODO have.get_str("archive_path") == want.get_str("archive_path")
-        let datadir_paths: HashSet<_> = resources
-            .iter()
-            .map(|resource| resource.path.to_lowercase())
-            .collect();
-        let pack_paths: HashSet<_> = pack
-            .resources
-            .iter()
-            .map(|resource| resource.path.to_lowercase())
-            .collect();
+        let datadir_paths: HashSet<_> = resources.iter().map(get_compared_path).collect();
+        let pack_paths: HashSet<_> = pack.resources.iter().map(get_compared_path).collect();
         let all_paths: HashSet<_> = datadir_paths.union(&pack_paths).collect();
-        let additional_paths_datadir = datadir_paths
-            .difference(&pack_paths)
-            .map(|path| Difference::OnlyExistsInDataDir(path.to_string()));
-        let addional_paths_pack = pack_paths
-            .difference(&datadir_paths)
-            .map(|path| Difference::OnlyExistsInPack(path.to_string()));
+        let additional_paths_datadir =
+            datadir_paths
+                .difference(&pack_paths)
+                .map(|(archive_path, path)| {
+                    Difference::OnlyExistsInDataDir(archive_path.to_owned(), path.to_string())
+                });
+        let addional_paths_pack =
+            pack_paths
+                .difference(&datadir_paths)
+                .map(|(archive_path, path)| {
+                    Difference::OnlyExistsInPack(archive_path.to_owned(), path.to_string())
+                });
         let common_paths: HashSet<_> = datadir_paths.intersection(&pack_paths).collect();
         let resources: Vec<_> = resources
             .into_iter()
-            .filter(move |r| common_paths.contains(&r.path.to_lowercase()))
+            .filter(move |r| common_paths.contains(&get_compared_path(r)))
             .collect();
         let resources = sorted_resources(resources);
 
