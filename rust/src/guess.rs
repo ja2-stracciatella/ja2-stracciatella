@@ -34,10 +34,10 @@ pub fn guess_vanilla_version(gamedir: &str) -> Guess {
 /// A difference that was detected in resource packs
 #[derive(Debug)]
 enum Difference {
-    OnlyExistsInDataDir(Option<String>, String),
-    OnlyExistsInPack(Option<String>, String),
-    FileSizeMismatch(String, Option<i64>, Option<i64>),
-    HashMismatch(String, String, Option<String>, Option<String>),
+    OnlyExistsInDataDir(Option<Nfc>, Nfc),
+    OnlyExistsInPack(Option<Nfc>, Nfc),
+    FileSizeMismatch(Nfc, Option<i64>, Option<i64>),
+    HashMismatch(Nfc, String, Option<String>, Option<String>),
 }
 
 /// The result of matching a resource pack
@@ -148,7 +148,7 @@ impl Guess {
         let mut num_polish = 0;
         let mut num_russian = 0;
         for resource in resources {
-            let p = resource.path.to_lowercase().replace("\\", "/");
+            let p = Nfc::caseless(&resource.path);
             if p.starts_with("dutch/") {
                 num_dutch += 1;
             } else if p.starts_with("german/") {
@@ -337,8 +337,8 @@ impl Guess {
         let resources = builder.clone().execute("guess")?.resources;
         let get_compared_path = |resource: &Resource| {
             (
-                resource.get_str("archive_path").map(|p| p.to_string()),
-                resource.path.to_lowercase(),
+                resource.get_str("archive_path").map(Nfc::caseless),
+                Nfc::caseless(&resource.path),
             )
         };
 
@@ -350,13 +350,13 @@ impl Guess {
             datadir_paths
                 .difference(&pack_paths)
                 .map(|(archive_path, path)| {
-                    Difference::OnlyExistsInDataDir(archive_path.to_owned(), path.to_string())
+                    Difference::OnlyExistsInDataDir(archive_path.to_owned(), path.clone())
                 });
         let addional_paths_pack =
             pack_paths
                 .difference(&datadir_paths)
                 .map(|(archive_path, path)| {
-                    Difference::OnlyExistsInPack(archive_path.to_owned(), path.to_string())
+                    Difference::OnlyExistsInPack(archive_path.to_owned(), path.clone())
                 });
         let common_paths: HashSet<_> = datadir_paths.intersection(&pack_paths).collect();
         let resources: Vec<_> = resources
@@ -369,14 +369,14 @@ impl Guess {
             let pack_resource = pack
                 .resources
                 .iter()
-                .find(|r| r.path.to_lowercase() == resource.path.to_lowercase())
+                .find(|r| Nfc::caseless(&r.path) == Nfc::caseless(&resource.path))
                 .expect("was in intersection of resources");
 
             let resource_file_size = resource.get_i64("file_size");
             let pack_file_size = pack_resource.get_i64("file_size");
             if resource_file_size != pack_file_size {
                 return vec![Difference::FileSizeMismatch(
-                    resource.path.clone(),
+                    Nfc::caseless(&resource.path),
                     resource_file_size,
                     pack_file_size,
                 )];
@@ -391,7 +391,7 @@ impl Guess {
 
                     if resource_hash != pack_hash {
                         return Some(Difference::HashMismatch(
-                            resource.path.clone(),
+                            Nfc::caseless(&resource.path),
                             hash.clone(),
                             resource_hash.map(|s| s.to_string()),
                             pack_hash.map(|s| s.to_string()),
