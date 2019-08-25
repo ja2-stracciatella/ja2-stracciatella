@@ -302,8 +302,7 @@ impl Guess {
     /// Read resource pack json
     fn get_pack(&self, path: &Path) -> GuessResult<ResourcePack> {
         let f = File::open(&path)?;
-        let mut pack: ResourcePack = serde_json::from_reader(f)?;
-        pack.resources = sorted_resources(pack.resources);
+        let pack: ResourcePack = serde_json::from_reader(f)?;
         Ok(pack)
     }
 
@@ -363,7 +362,6 @@ impl Guess {
             .into_iter()
             .filter(move |r| common_paths.contains(&get_compared_path(r)))
             .collect();
-        let resources = sorted_resources(resources);
 
         let file_comparison_result = resources.iter().flat_map(|resource| {
             let pack_resource = pack
@@ -417,19 +415,6 @@ fn is_json_file(path: &Path) -> bool {
         return false;
     }
     path.extension().unwrap_or(&OsString::new()).to_str() == Some("json")
-}
-
-fn sorted_resources(mut resources: Vec<Resource>) -> Vec<Resource> {
-    resources.sort_unstable_by(|a, b| {
-        if a.path == b.path {
-            let a_path = a.get_str("archive_path").unwrap_or("");
-            let b_path = b.get_str("archive_path").unwrap_or("");
-            a_path.cmp(b_path)
-        } else {
-            a.path.cmp(&b.path)
-        }
-    });
-    resources
 }
 
 #[derive(Debug)]
