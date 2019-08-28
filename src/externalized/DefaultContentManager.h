@@ -14,7 +14,7 @@
 
 #include "rapidjson/document.h"
 
-class LibraryDB;
+struct LibraryDB;
 
 class DefaultContentManager : public ContentManager, public IGameDataLoader
 {
