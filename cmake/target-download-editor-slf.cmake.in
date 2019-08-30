@@ -1,0 +1,46 @@
+# downloads editor.slf to the target file location
+
+include("@CMAKE_SOURCE_DIR@/cmake/CurlFunctions.cmake")
+
+set(EDITORSLF_FILE "@EDITORSLF_FILE@")
+set(EDITORSLF_URL "@EDITORSLF_URL@")
+set(EDITORSLF_MD5_URL "@EDITORSLF_MD5_URL@")
+message("-- Target file: ${EDITORSLF_FILE}")
+
+# get md5
+curl_download(
+    URL "${EDITORSLF_MD5_URL}"
+    FILE "${EDITORSLF_FILE}.md5"
+    VAR EDITORSLF_MD5
+)
+string(STRIP "${EDITORSLF_MD5}" EDITORSLF_MD5)
+string(LENGTH "${EDITORSLF_MD5}" length)
+if(NOT ${length} EQUAL 32)
+    message(FATAL_ERROR "Not a md5 hash: ${EDITORSLF_MD5}")
+endif()
+message("-- Expect md5: ${EDITORSLF_MD5}")
+
+
+# check existing editor.slf
+if(EXISTS "${EDITORSLF_FILE}")
+    file(MD5 "${EDITORSLF_FILE}" md5)
+    message("-- Found md5: ${md5}")
+    if(NOT md5 STREQUAL EDITORSLF_MD5)
+        file(REMOVE "${EDITORSLF_FILE}")
+    endif()
+endif()
+
+
+# download new editor.slf if needed
+if(NOT EXISTS "${EDITORSLF_FILE}")
+    curl_download(
+        URL "${EDITORSLF_URL}"
+        FILE "${EDITORSLF_FILE}"
+    )
+    file(MD5 "${EDITORSLF_FILE}" md5)
+    message("-- Found md5: ${md5}")
+
+    if(NOT md5 STREQUAL EDITORSLF_MD5)
+        message(FATAL_ERROR "wrong md5")
+    endif()
+endif()
