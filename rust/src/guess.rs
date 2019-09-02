@@ -462,3 +462,168 @@ impl From<serde_json::Error> for GuessError {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    use std::io::Write;
+    use tempdir::TempDir;
+
+    fn build_data_dir_with_resources(resources: Vec<(PathBuf, Vec<u8>)>) -> TempDir {
+        let tmp_dir = TempDir::new("ja2-test-guess").unwrap();
+        let data_dir = tmp_dir.path().join("data");
+
+        for (resource_path, resource_content) in resources {
+            let resource_dir = resource_path.as_path().parent();
+            if let Some(resource_dir) = resource_dir {
+                let resource_dir = data_dir.join(resource_dir);
+                fs::create_dir_all(resource_dir).unwrap();
+            }
+            let resource_path = data_dir.join(resource_path);
+            let mut file = fs::File::create(resource_path).unwrap();
+            file.write_all(&resource_content).unwrap();
+        }
+
+        tmp_dir
+    }
+
+    #[test]
+    fn test_language_specific_resources_not_present() {
+        let data_dir = build_data_dir_with_resources(vec![(
+            PathBuf::from("other/data.txt"),
+            Vec::from("data"),
+        )]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, None);
+    }
+
+    #[test]
+    fn test_language_specific_resources_multiple_languages() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("polish/test.txt"), Vec::from("test")),
+            (PathBuf::from("polish/test2.txt"), Vec::from("test")),
+            (PathBuf::from("german/test3.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, None);
+    }
+
+    #[test]
+    fn test_language_specific_resources_dutch() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("dutch/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::DUTCH));
+    }
+
+    #[test]
+    fn test_language_specific_resources_german() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("german/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::GERMAN));
+    }
+
+    #[test]
+    fn test_language_specific_resources_italian() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("italian/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::ITALIAN));
+    }
+
+    #[test]
+    fn test_language_specific_resources_polish() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("polish/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::POLISH));
+    }
+
+    #[test]
+    fn test_language_specific_resources_russian() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("russian/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::RUSSIAN));
+    }
+
+    #[test]
+    fn test_language_specific_resources_caseless() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("Russian/test.txt"), Vec::from("test")),
+            (PathBuf::from("RUSSIAN/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::RUSSIAN));
+    }
+}
