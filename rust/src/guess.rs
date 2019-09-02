@@ -161,6 +161,14 @@ impl Guess {
             }
         }
 
+        info!(
+            "Number of language specific files: {} Dutch, {} German, {} Italian, {} Polish, {} Russian",
+            num_dutch,
+            num_german,
+            num_italian,
+            num_polish,
+            num_russian
+        );
         let version = match (num_dutch, num_german, num_italian, num_polish, num_russian) {
             (n, 0, 0, 0, 0) if n > 0 => Some(VanillaVersion::DUTCH),
             (0, n, 0, 0, 0) if n > 0 => Some(VanillaVersion::GERMAN),
