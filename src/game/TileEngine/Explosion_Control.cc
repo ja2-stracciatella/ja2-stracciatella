@@ -554,7 +554,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 					ReplaceWall(NewGridNo(base_grid_no, DirectionInc(SOUTH)), orientation, orientation == OUTSIDE_TOP_RIGHT ? 50 : 54);
 
 					// looking for attached structures to remove in base tile
-					RemoveOnWall(base_grid_no, STRUCTURE_ON_RIGHT_WALL, 0); // XXX no next_current on base tile?
+					*ppNextCurrent = RemoveOnWall(base_grid_no, STRUCTURE_ON_RIGHT_WALL, *ppNextCurrent);
 
 					// Move in EAST, looking for attached structures to remove
 					RemoveOnWall(NewGridNo(base_grid_no, DirectionInc(EAST)), STRUCTURE_ON_RIGHT_WALL, 0);
