@@ -45,7 +45,6 @@ enum FileOpenFlags
 	FILE_ACCESS_READWRITE = FILE_ACCESS_READ | FILE_ACCESS_WRITE,
 	FILE_ACCESS_APPEND    = 1U << 2
 };
-ENUM_BITSET(FileOpenFlags)
 
 
 static void SetFileManCurrentDirectory(char const* const pcDirectory);

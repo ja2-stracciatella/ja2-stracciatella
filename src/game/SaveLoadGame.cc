@@ -1173,6 +1173,7 @@ static void SaveSoldierStructure(HWFILE const f)
 
 		// Save the soldier structure
 		BYTE data[2328];
+		memset(data, 0, 2328);
 		InjectSoldierType(data, &s);
 		writer(f, data, sizeof(data));
 

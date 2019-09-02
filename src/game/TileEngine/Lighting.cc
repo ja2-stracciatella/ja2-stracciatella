@@ -235,7 +235,7 @@ void InitLightingSystem(void)
 // THIS MUST BE CALLED ONCE ALL SURFACE VIDEO OBJECTS HAVE BEEN LOADED!
 void SetDefaultWorldLightingColors(void)
 {
-	static const SGPPaletteEntry pPal = { 0, 0, 0 };
+	static const SGPPaletteEntry pPal = { 0, 0, 0, 0 };
 	LightSetColor(&pPal);
 }
 
