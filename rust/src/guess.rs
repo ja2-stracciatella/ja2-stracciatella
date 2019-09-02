@@ -1,8 +1,7 @@
 //! This module contains code to guess Vanillaversion with resource packs.
 
 use log::{error, info};
-use rayon::iter::IntoParallelRefIterator;
-use rayon::iter::ParallelIterator;
+use rayon::prelude::*;
 use std::collections::HashSet;
 use std::convert::From;
 use std::error::Error;
