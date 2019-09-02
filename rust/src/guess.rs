@@ -196,6 +196,7 @@ impl Guess {
             .get_pack_paths()?
             .par_iter()
             .map(|path| self.compare_pack(datadir, path))
+            // Collect results and bail on first error found
             .collect::<Result<Vec<_>, _>>()?;
 
         let (best_version, best_difference) = results.iter().fold(
