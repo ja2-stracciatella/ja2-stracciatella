@@ -52,7 +52,7 @@
 //!  * `hash_{algorithm}` (string) - hash of the specified algorithm
 //!
 
-use std::collections::VecDeque;
+use std::collections::{HashSet, VecDeque};
 use std::convert::From;
 use std::error::Error;
 use std::fmt;
@@ -65,6 +65,8 @@ use serde_json::{json, Map, Value};
 use digest::Digest;
 use hex;
 use md5::Md5;
+
+use rayon::prelude::*;
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
 use crate::unicode::Nfc;
@@ -113,12 +115,46 @@ pub struct ResourcePackBuilder {
 }
 
 impl ResourcePack {
-    // Constructor.
+    /// Constructor.
     #[allow(dead_code)]
     fn new(name: &str) -> Self {
         let mut pack = ResourcePack::default();
         pack.name = name.to_owned();
-        return pack;
+        pack
+    }
+
+    /// Get properties that are enabled (true)
+    #[allow(dead_code)]
+    fn get_enabled_properties(&self) -> impl Iterator<Item = &String> {
+        self.properties
+            .iter()
+            .filter(|(_, v)| v.as_bool() == Some(true))
+            .map(|(k, _)| k)
+    }
+
+    /// Returns wether the resource pack has been built with file sizes
+    #[allow(dead_code)]
+    pub fn has_file_size(&self) -> bool {
+        self.get_enabled_properties()
+            .any(|k| k.as_str() == "with_file_size")
+    }
+
+    /// Returns the hashes that are used in the resource pack
+    #[allow(dead_code)]
+    pub fn get_hashes(&self) -> HashSet<String> {
+        self.get_enabled_properties()
+            .filter(|k| k.starts_with("with_hash_"))
+            .map(|k| k["with_hash_".len()..].to_owned())
+            .collect()
+    }
+
+    /// Returns which archives were inspected when building the resource pack
+    #[allow(dead_code)]
+    pub fn get_archives(&self) -> HashSet<String> {
+        self.get_enabled_properties()
+            .filter(|k| k.starts_with("with_archive_"))
+            .map(|k| k["with_archive_".len()..].to_owned())
+            .collect()
     }
 }
 
@@ -202,35 +238,56 @@ impl ResourcePackBuilder {
             let prop = "with_hash_".to_owned() + algorithm;
             self.pack.set_property(&prop, true);
         }
-        while self.with_paths.len() > 0 {
-            let (base, path) = self.with_paths.pop_front().unwrap();
-            let metadata = path.metadata()?;
-            if metadata.is_file() {
-                self.add_file(&base, &path)?;
-            } else if metadata.is_dir() {
-                self.add_dir_contents(&base, &path)?;
-            }
-        }
+
+        let resources: Result<Vec<Vec<Resource>>, ResourceError> = self
+            .with_paths
+            .par_iter()
+            .map(|paths| {
+                let (base, path) = paths;
+                let metadata = path.metadata()?;
+                if metadata.is_file() {
+                    self.get_resources_for_file(&base, &path)
+                } else if metadata.is_dir() {
+                    self.get_resources_for_dir(&base, &path)
+                } else {
+                    Ok(vec![])
+                }
+            })
+            .collect();
+        let mut resources: Vec<_> = resources?.into_iter().flat_map(|r| r).collect();
+        self.pack.resources.append(&mut resources);
+
         let pack = self.pack.to_owned();
         self.pack = ResourcePack::default();
         return Ok(pack);
     }
 
     /// Adds the contents of an OS directory.
-    fn add_dir_contents(&mut self, base: &Path, dir: &Path) -> Result<(), ResourceError> {
-        for path in FSIterator::new(dir) {
-            self.add_file(&base, &path)?;
-        }
-        return Ok(());
+    fn get_resources_for_dir(
+        &self,
+        base: &Path,
+        dir: &Path,
+    ) -> Result<Vec<Resource>, ResourceError> {
+        let files: Vec<_> = FSIterator::new(dir).collect();
+        let resources: Result<Vec<Vec<Resource>>, _> = files
+            .par_iter()
+            .map(|file| self.get_resources_for_file(base, &file))
+            .collect();
+        Ok(resources?.into_iter().flat_map(|r| r).collect())
     }
 
     /// Adds an OS file as a resource.
-    fn add_file(&mut self, base: &Path, path: &Path) -> Result<(), ResourceError> {
+    fn get_resources_for_file(
+        &self,
+        base: &Path,
+        path: &Path,
+    ) -> Result<Vec<Resource>, ResourceError> {
         // must have a valid resource path
+        let mut resources = vec![];
         let resource_path = resource_path(base, path)?;
         if resource_path.to_ascii_lowercase().starts_with("temp/") {
             // the game can create/modify/remove files in the temp folder, ignore it
-            return Ok(());
+            return Ok(resources);
         }
         let mut resource = Resource::new(&resource_path);
         if self.with_file_size {
@@ -243,7 +300,10 @@ impl ResourcePackBuilder {
             let data = std::fs::read(path)?;
             if wants_archive {
                 match extension.as_str() {
-                    "slf" => self.add_slf_contents(&mut resource, &data)?,
+                    "slf" => {
+                        let mut slf_resources = self.get_resources_for_slf(&mut resource, &data)?;
+                        resources.append(&mut slf_resources);
+                    }
                     _ => panic!(), // execute() must be fixed
                 }
             }
@@ -251,18 +311,24 @@ impl ResourcePackBuilder {
                 self.add_hashes(&mut resource, &data)?;
             }
         }
-        self.pack.resources.push(resource);
-        return Ok(());
+        resources.push(resource);
+        return Ok(resources);
     }
 
     // Adds the contents of a SLF archive.
-    fn add_slf_contents(&mut self, slf: &mut Resource, data: &[u8]) -> Result<(), ResourceError> {
+    fn get_resources_for_slf(
+        &self,
+        slf: &mut Resource,
+        data: &[u8],
+    ) -> Result<Vec<Resource>, ResourceError> {
         slf.set_property("archive_slf", true);
-        let mut num_resources = 0;
         let mut input = io::Cursor::new(&data);
         let header = SlfHeader::from_input(&mut input)?;
-        for entry in header.entries_from_input(&mut input)? {
-            if entry.state == SlfEntryState::Ok {
+        let entries = header.entries_from_input(&mut input)?;
+        let resources: Result<Vec<Resource>, ResourceError> = entries
+            .par_iter()
+            .filter(|entry| entry.state == SlfEntryState::Ok)
+            .map(|entry| {
                 let mut resource = Resource::default();
                 let path = header.library_path.clone() + &entry.file_path;
                 resource.path = path.replace("\\", "/");
@@ -277,16 +343,16 @@ impl ResourcePackBuilder {
                     let to = from + entry.length as usize;
                     self.add_hashes(&mut resource, &data[from..to])?;
                 }
-                self.pack.resources.push(resource);
-                num_resources += 1;
-            }
-        }
-        slf.set_property("archive_slf_num_resources", num_resources);
-        return Ok(());
+                Ok(resource)
+            })
+            .collect();
+        let resources = resources?;
+        slf.set_property("archive_slf_num_resources", resources.len());
+        return Ok(resources);
     }
 
     /// Adds hashes of the resource data.
-    fn add_hashes(&mut self, resource: &mut Resource, data: &[u8]) -> Result<(), ResourceError> {
+    fn add_hashes(&self, resource: &mut Resource, data: &[u8]) -> Result<(), ResourceError> {
         for algorithm in &self.with_hashes {
             let hash = match algorithm.as_str() {
                 "md5" => hex::encode(Md5::digest(&data)),

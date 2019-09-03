@@ -1,6 +1,8 @@
 //! This module contains code to guess Vanillaversion with resource packs.
 
 use log::{error, info};
+use rayon::prelude::*;
+use std::collections::HashSet;
 use std::convert::From;
 use std::error::Error;
 use std::ffi::OsString;
@@ -28,6 +30,97 @@ pub fn guess_vanilla_version(gamedir: &str) -> Guess {
     logged
 }
 
+/// A difference that was detected in resource packs
+#[derive(Debug)]
+enum Difference {
+    OnlyExistsInDataDir(Option<Nfc>, Nfc),
+    OnlyExistsInPack(Option<Nfc>, Nfc),
+    FileSizeMismatch(Nfc, Option<i64>, Option<i64>),
+    HashMismatch(Nfc, String, Option<String>, Option<String>),
+}
+
+/// The result of matching a resource pack
+#[derive(Debug)]
+struct MatchResourcesResult {
+    number_of_resources: usize,
+    differences: Vec<Difference>,
+}
+
+/// Percentages of differences in resource packs
+struct Percentages {
+    only_exists_in_data_dir: f64,
+    only_exists_in_pack: f64,
+    file_size_mismatch: f64,
+    hash_mismatch: f64,
+    total: f64,
+}
+
+impl Percentages {
+    /// Log percentages with log level info
+    fn log(&self) {
+        info!(
+            "Percentage of resources only in game dir: {}",
+            self.only_exists_in_data_dir
+        );
+        info!(
+            "Percentage of resources only in pack: {}",
+            self.only_exists_in_pack
+        );
+        info!(
+            "Percentage of resources with file size mismatch: {}",
+            self.file_size_mismatch
+        );
+        info!(
+            "Percentage of resources with hash mismatch: {}",
+            self.hash_mismatch
+        );
+        info!("Accumulated difference: {}", self.total);
+    }
+}
+
+impl From<&MatchResourcesResult> for Percentages {
+    fn from(result: &MatchResourcesResult) -> Self {
+        let number_of_resources = result.number_of_resources;
+        let count_differences = |filter: &Fn(&&Difference) -> bool| {
+            result.differences.iter().filter(filter).count()
+        };
+        let num_only_in_datadir = count_differences(&|d| match d {
+            Difference::OnlyExistsInDataDir(_, _) => true,
+            _ => false,
+        });
+        let percentage_only_in_datadir = num_only_in_datadir as f64 / number_of_resources as f64;
+        let num_only_in_pack = count_differences(&|d| match d {
+            Difference::OnlyExistsInPack(_, _) => true,
+            _ => false,
+        });
+        let percentage_only_in_pack = num_only_in_pack as f64 / number_of_resources as f64;
+        let num_file_size_mismatch = count_differences(&|d| match d {
+            Difference::FileSizeMismatch(_, _, _) => true,
+            _ => false,
+        });
+        let percentage_file_size_mismatch =
+            num_file_size_mismatch as f64 / number_of_resources as f64;
+        let num_hash_mismatch = count_differences(&|d| match d {
+            Difference::HashMismatch(_, _, _, _) => true,
+            _ => false,
+        });
+        let percentage_hash_mismatch = num_hash_mismatch as f64 / number_of_resources as f64;
+        let total = percentage_only_in_datadir
+            + percentage_only_in_pack
+            + percentage_file_size_mismatch
+            + percentage_hash_mismatch;
+
+        Percentages {
+            only_exists_in_data_dir: percentage_only_in_datadir,
+            only_exists_in_pack: percentage_only_in_pack,
+            file_size_mismatch: percentage_file_size_mismatch,
+            hash_mismatch: percentage_hash_mismatch,
+            total,
+        }
+    }
+}
+
+/// The result of guessing game version for data directory
 #[derive(Default)]
 pub struct Guess {
     pub vanilla_version: Option<VanillaVersion>,
@@ -36,63 +129,25 @@ pub struct Guess {
 type GuessResult<T> = Result<T, GuessError>;
 
 impl Guess {
-    fn guess_vanilla_version(&mut self, gamedir: &Path) -> GuessResult<()> {
-        let datadir = self.get_datadir(gamedir)?;
-        let mut best_version = None;
-        let mut best_extras = Vec::new();
-        for path in self.get_pack_paths()? {
-            match self.compare_pack(&datadir, &path) {
-                Ok((version, extras)) => {
-                    if extras.len() == 0 {
-                        info!("Found perfect match with vanilla_version {:?}", version);
-                        self.vanilla_version = Some(version);
-                        return Ok(());
-                    }
-                    info!("Found match with vanilla_version {:?}", version);
-                    for resource in &extras {
-                        if let Some(archive_path) = resource.get_str("archive_path") {
-                            info!(
-                                "Extra resource: {:?} inside of {:?}",
-                                &resource.path, archive_path
-                            );
-                        } else {
-                            info!("Extra resource: {:?}", &resource.path);
-                        }
-                    }
-                    if best_version.is_none() || best_extras.len() > extras.len() {
-                        info!("New best match");
-                        best_version = Some(version);
-                        best_extras = extras;
-                    }
-                }
-                Err(err) => {
-                    info!("Error: {}", err.desc);
-                }
-            }
-        }
-        info!("No more resource packs");
-        if best_version.is_some() {
-            // TODO inspect the extra resources? how to handle mod files inside datadir?
-            let version = best_version.unwrap();
-            info!("Using best match with vanilla_version {:?}", version);
-            self.vanilla_version = best_version;
-            return Ok(());
-        }
-        // Last ditch effort with resource paths.
+    /// Guess version by inspecting archives for language specific paths
+    fn guess_by_language_specific_resources(
+        &self,
+        datadir: &Path,
+    ) -> GuessResult<Option<VanillaVersion>> {
         info!("Getting resources with_archive_slf");
         let resources = ResourcePackBuilder::new()
             .with_path(&datadir, &datadir)
             .with_archive("slf")
             .execute("paths")?
             .resources;
-        info!("Inspecting resource paths");
+        info!("Inspecting resource paths for language specific files");
         let mut num_dutch = 0;
         let mut num_german = 0;
         let mut num_italian = 0;
         let mut num_polish = 0;
         let mut num_russian = 0;
         for resource in resources {
-            let p = resource.path.to_lowercase().replace("\\", "/");
+            let p = Nfc::caseless(&resource.path);
             if p.starts_with("dutch/") {
                 num_dutch += 1;
             } else if p.starts_with("german/") {
@@ -105,64 +160,104 @@ impl Guess {
                 num_russian += 1;
             }
         }
-        let mut best_num = 0;
-        if num_dutch > 0 {
-            info!("Found {} dutch resources", num_dutch);
-            if best_num < num_dutch {
-                best_num = num_dutch;
-                best_version = Some(VanillaVersion::DUTCH);
-            }
+
+        info!(
+            "Number of language specific files: {} Dutch, {} German, {} Italian, {} Polish, {} Russian",
+            num_dutch,
+            num_german,
+            num_italian,
+            num_polish,
+            num_russian
+        );
+        let version = match (num_dutch, num_german, num_italian, num_polish, num_russian) {
+            (n, 0, 0, 0, 0) if n > 0 => Some(VanillaVersion::DUTCH),
+            (0, n, 0, 0, 0) if n > 0 => Some(VanillaVersion::GERMAN),
+            (0, 0, n, 0, 0) if n > 0 => Some(VanillaVersion::ITALIAN),
+            (0, 0, 0, n, 0) if n > 0 => Some(VanillaVersion::POLISH),
+            (0, 0, 0, 0, n) if n > 0 => Some(VanillaVersion::RUSSIAN),
+            _ => None,
+        };
+
+        match version {
+            Some(version) => info!(
+                "Detected exclusively language specific files for language {:?}",
+                version
+            ),
+            None => info!("Detected no language specific files or multiple different languages"),
         }
-        if num_german > 0 {
-            info!("Found {} german resources", num_german);
-            if best_num < num_german {
-                best_num = num_german;
-                best_version = Some(VanillaVersion::GERMAN);
-            }
-        }
-        if num_italian > 0 {
-            info!("Found {} italian resources", num_italian);
-            if best_num < num_italian {
-                best_num = num_italian;
-                best_version = Some(VanillaVersion::ITALIAN);
-            }
-        }
-        if num_polish > 0 {
-            info!("Found {} polish resources", num_polish);
-            if best_num < num_polish {
-                best_num = num_polish;
-                best_version = Some(VanillaVersion::POLISH);
-            }
-        }
-        if num_russian > 0 {
-            info!("Found {} russian resources", num_russian);
-            if best_num < num_russian {
-                best_num = num_russian;
-                best_version = Some(VanillaVersion::RUSSIAN);
-            }
-        }
-        if best_num > 0 {
-            let version = best_version.unwrap();
-            info!("Assuming vanilla_version {:?}", version);
-            self.vanilla_version = best_version;
-            Ok(())
-        } else {
-            Err("Give up".to_owned().into())
-        }
+
+        Ok(version)
     }
 
+    /// Guess version by building resource pack and comparing it to other resource
+    /// packs in externalized directory
+    fn guess_by_resource_matching(&self, datadir: &Path) -> GuessResult<Option<VanillaVersion>> {
+        let results = self
+            .get_pack_paths()?
+            .par_iter()
+            .map(|path| self.compare_pack(datadir, path))
+            // Collect results and bail on first error found
+            .collect::<Result<Vec<_>, _>>()?;
+
+        let (best_version, best_difference) = results.iter().fold(
+            (None, std::f64::MAX),
+            |(best_version, best_difference), (version, match_resources)| {
+                info!("Match statistics with vanilla_version {:?}", version);
+                let percentages: Percentages = match_resources.into();
+                percentages.log();
+
+                if percentages.total < best_difference {
+                    (Some(version), percentages.total)
+                } else {
+                    (best_version, best_difference)
+                }
+            },
+        );
+
+        Ok(best_version.map(|version| {
+            if best_difference == 0. {
+                info!("Found perfect match with vanilla_version {:?}", version);
+            } else {
+                info!(
+                    "Using vanilla_version {:?} with least difference {}",
+                    version, best_difference
+                );
+            }
+            *version
+        }))
+    }
+
+    /// Guess vanilla version for game directory
+    fn guess_vanilla_version(&mut self, gamedir: &Path) -> GuessResult<()> {
+        let datadir = self.get_datadir(gamedir)?;
+
+        if let Some(version) = self.guess_by_language_specific_resources(&datadir)? {
+            self.vanilla_version = Some(version);
+            return Ok(());
+        }
+
+        if let Some(version) = self.guess_by_resource_matching(&datadir)? {
+            self.vanilla_version = Some(version);
+            return Ok(());
+        }
+
+        Err("Give up".to_owned().into())
+    }
+
+    /// Compare resource pack and data directory
     fn compare_pack(
-        &mut self,
+        &self,
         datadir: &Path,
-        path: &Path,
-    ) -> GuessResult<(VanillaVersion, Vec<Resource>)> {
-        let pack = self.get_pack(&path)?;
+        pack_path: &Path,
+    ) -> GuessResult<(VanillaVersion, MatchResourcesResult)> {
+        let pack = self.get_pack(&pack_path)?;
         let version = self.get_version(&pack)?;
-        let extra = self.match_resources(&pack, &datadir)?;
-        Ok((version, extra))
+        let match_resources = self.match_resources(&pack, &datadir)?;
+        Ok((version, match_resources))
     }
 
-    fn get_datadir(&mut self, gamedir: &Path) -> GuessResult<PathBuf> {
+    /// Find data directory within game directory
+    fn get_datadir(&self, gamedir: &Path) -> GuessResult<PathBuf> {
         info!("Looking for data dir in {:?}", &gamedir);
         let data_caseless = Nfc::caseless("data");
         let mut paths: Vec<PathBuf> = gamedir
@@ -184,7 +279,7 @@ impl Guess {
         if paths.len() > 1 {
             return Err(format!("Too many data dirs: {:?}", paths).into());
         }
-        if paths.len() == 0 {
+        if paths.is_empty() {
             return Err("Data dir not found".to_owned().into());
         }
         let path = paths.remove(0);
@@ -192,7 +287,8 @@ impl Guess {
         Ok(path)
     }
 
-    fn get_pack_paths(&mut self) -> GuessResult<Vec<PathBuf>> {
+    /// Find all resource packs in externalized directory
+    fn get_pack_paths(&self) -> GuessResult<Vec<PathBuf>> {
         let dir = Path::new("externalized/resource_packs");
         info!("Searching for resource packs in {:?}", &dir);
         let paths: Vec<PathBuf> = dir
@@ -211,112 +307,114 @@ impl Guess {
         Ok(paths)
     }
 
-    fn get_pack(&mut self, path: &Path) -> GuessResult<ResourcePack> {
-        info!("Reading {:?}", &path);
+    /// Read resource pack json
+    fn get_pack(&self, path: &Path) -> GuessResult<ResourcePack> {
         let f = File::open(&path)?;
-        let mut pack: ResourcePack = serde_json::from_reader(f)?;
-        pack.resources = sorted_resources(pack.resources);
-        info!("Got resource pack {:?}", &pack.name);
+        let pack: ResourcePack = serde_json::from_reader(f)?;
         Ok(pack)
     }
 
-    fn get_version(&mut self, pack: &ResourcePack) -> GuessResult<VanillaVersion> {
+    /// Get vanilla version from resource pack
+    fn get_version(&self, pack: &ResourcePack) -> GuessResult<VanillaVersion> {
         if let Some(version) = pack.get_str("vanilla_version") {
             let version = VanillaVersion::from_str(version)?;
-            info!("Found vanilla_version {:?}", &version);
             return Ok(version);
         }
         Err("vanilla_version is missing".to_owned().into())
     }
 
+    /// Match resources in pack with data directory
     fn match_resources(
-        &mut self,
+        &self,
         pack: &ResourcePack,
         datadir: &Path,
-    ) -> GuessResult<Vec<Resource>> {
-        // Compare without hashes (fast)
-        info!("Getting resources (no hashes)");
+    ) -> GuessResult<MatchResourcesResult> {
         let mut builder = ResourcePackBuilder::new();
         builder.with_path(&datadir, &datadir);
-        let mut hashes = Vec::new();
-        for (k, v) in pack.properties().iter() {
-            if v.as_bool() != Some(true) {
-                continue;
-            }
-            if k == "with_file_size" {
-                info!("with_file_size");
-                builder.with_file_size();
-            } else if k.starts_with("with_archive_") {
-                info!("{}", &k);
-                builder.with_archive(&k["with_archive_".len()..]);
-            } else if k.starts_with("with_hash_") {
-                hashes.push(k["with_hash_".len()..].to_owned());
-            }
+        if pack.has_file_size() {
+            builder.with_file_size();
         }
-        let resources = sorted_resources(builder.clone().execute("no hashes")?.resources);
-        info!("Found {} resources (no hashes)", resources.len());
-        info!("Comparing resources (no hashes)");
-        let mut available = resources.iter().fuse().peekable();
-        let mut extras: Vec<Resource> = Vec::new();
-        for want in pack.resources.iter() {
-            let mut found = false;
-            while let Some(have) = available.next() {
-                found = have.path == want.path
-                    && have.get_str("archive_path") == want.get_str("archive_path")
-                    && have.get_i64("file_size") == want.get_i64("file_size");
-                if found {
-                    break;
-                }
-                if hashes.len() == 0 {
-                    extras.push(have.to_owned());
-                }
-            }
-            if !found && available.peek().is_none() {
-                return Err(format!("resource {:?} not found", want.path).into());
-            }
+        for archive in pack.get_archives() {
+            builder.with_archive(&archive);
         }
-        if hashes.len() == 0 {
-            while let Some(have) = available.next() {
-                extras.push(have.to_owned());
-            }
-            info!("Passed (no hashes) with {} extra resources", extras.len());
-            return Ok(extras);
-        }
-        info!("Passed (no hashes), repeating with hashes");
-        // Compare with hashes (slow)
-        info!("Getting resources");
+        let hashes = pack.get_hashes();
         for hash in &hashes {
-            info!("with_hash_{}", &hash);
             builder.with_hash(hash);
         }
-        let resources = sorted_resources(builder.execute("hashes")?.resources);
-        info!("Found {} resources", resources.len());
-        info!("Comparing resources");
-        let mut available = resources.iter().fuse().peekable();
-        for want in pack.resources.iter() {
-            let mut found = false;
-            while let Some(have) = available.next() {
-                found = have.path == want.path
-                    && have.get_str("archive_path") == want.get_str("archive_path")
-                    && have.get_i64("file_size") == want.get_i64("file_size");
-                for hash in &hashes {
+        let resources = builder.clone().execute("guess")?.resources;
+        let get_compared_path = |resource: &Resource| {
+            (
+                resource.get_str("archive_path").map(Nfc::caseless),
+                Nfc::caseless(&resource.path),
+            )
+        };
+
+        info!("Comparing resource pack paths for \"{}\"", &pack.name);
+        let datadir_paths: HashSet<_> = resources.iter().map(get_compared_path).collect();
+        let pack_paths: HashSet<_> = pack.resources.iter().map(get_compared_path).collect();
+        let all_paths: HashSet<_> = datadir_paths.union(&pack_paths).collect();
+        let additional_paths_datadir =
+            datadir_paths
+                .difference(&pack_paths)
+                .map(|(archive_path, path)| {
+                    Difference::OnlyExistsInDataDir(archive_path.to_owned(), path.clone())
+                });
+        let addional_paths_pack =
+            pack_paths
+                .difference(&datadir_paths)
+                .map(|(archive_path, path)| {
+                    Difference::OnlyExistsInPack(archive_path.to_owned(), path.clone())
+                });
+        let common_paths: HashSet<_> = datadir_paths.intersection(&pack_paths).collect();
+        let resources: Vec<_> = resources
+            .into_iter()
+            .filter(move |r| common_paths.contains(&get_compared_path(r)))
+            .collect();
+
+        let file_comparison_result = resources.iter().flat_map(|resource| {
+            let pack_resource = pack
+                .resources
+                .iter()
+                .find(|r| Nfc::caseless(&r.path) == Nfc::caseless(&resource.path))
+                .expect("was in intersection of resources");
+
+            let resource_file_size = resource.get_i64("file_size");
+            let pack_file_size = pack_resource.get_i64("file_size");
+            if resource_file_size != pack_file_size {
+                return vec![Difference::FileSizeMismatch(
+                    Nfc::caseless(&resource.path),
+                    resource_file_size,
+                    pack_file_size,
+                )];
+            }
+
+            hashes
+                .iter()
+                .filter_map(|hash| {
                     let prop = "hash_".to_owned() + hash;
-                    found = found && have.get_str(&prop) == want.get_str(&prop);
-                }
-                if found {
-                    break;
-                }
-                extras.push(have.to_owned());
-            }
-            if !found && available.peek().is_none() {
-                return Err(format!("resource {:?} not found", want.path).into());
-            }
-        }
-        while let Some(have) = available.next() {
-            extras.push(have.to_owned());
-        }
-        info!("Passed with {} extra resources", extras.len());
-        return Ok(extras);
+                    let resource_hash = resource.get_str(&prop);
+                    let pack_hash = pack_resource.get_str(&prop);
+
+                    if resource_hash != pack_hash {
+                        return Some(Difference::HashMismatch(
+                            Nfc::caseless(&resource.path),
+                            hash.clone(),
+                            resource_hash.map(|s| s.to_string()),
+                            pack_hash.map(|s| s.to_string()),
+                        ));
+                    }
+                    None
+                })
+                .collect()
+        });
+
+        Ok(MatchResourcesResult {
+            number_of_resources: all_paths.len(),
+            differences: additional_paths_datadir
+                .chain(addional_paths_pack)
+                .chain(file_comparison_result)
+                .collect(),
+        })
     }
 }
 
@@ -324,20 +422,7 @@ fn is_json_file(path: &Path) -> bool {
     if !path.is_file() {
         return false;
     }
-    return path.extension().unwrap_or(&OsString::new()).to_str() == Some("json");
-}
-
-fn sorted_resources(mut resources: Vec<Resource>) -> Vec<Resource> {
-    resources.sort_unstable_by(|a, b| {
-        if a.path == b.path {
-            let a_path = a.get_str("archive_path").unwrap_or("");
-            let b_path = b.get_str("archive_path").unwrap_or("");
-            a_path.cmp(b_path)
-        } else {
-            a.path.cmp(&b.path)
-        }
-    });
-    return resources;
+    path.extension().unwrap_or(&OsString::new()).to_str() == Some("json")
 }
 
 #[derive(Debug)]
@@ -347,7 +432,7 @@ struct GuessError {
 
 impl Error for GuessError {
     fn description(&self) -> &str {
-        return &self.desc;
+        &self.desc
     }
 }
 
@@ -384,5 +469,170 @@ impl From<serde_json::Error> for GuessError {
         GuessError {
             desc: format!("{:?}", err),
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    use std::io::Write;
+    use tempdir::TempDir;
+
+    fn build_data_dir_with_resources(resources: Vec<(PathBuf, Vec<u8>)>) -> TempDir {
+        let tmp_dir = TempDir::new("ja2-test-guess").unwrap();
+        let data_dir = tmp_dir.path().join("data");
+
+        for (resource_path, resource_content) in resources {
+            let resource_dir = resource_path.as_path().parent();
+            if let Some(resource_dir) = resource_dir {
+                let resource_dir = data_dir.join(resource_dir);
+                fs::create_dir_all(resource_dir).unwrap();
+            }
+            let resource_path = data_dir.join(resource_path);
+            let mut file = fs::File::create(resource_path).unwrap();
+            file.write_all(&resource_content).unwrap();
+        }
+
+        tmp_dir
+    }
+
+    #[test]
+    fn test_language_specific_resources_not_present() {
+        let data_dir = build_data_dir_with_resources(vec![(
+            PathBuf::from("other/data.txt"),
+            Vec::from("data"),
+        )]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, None);
+    }
+
+    #[test]
+    fn test_language_specific_resources_multiple_languages() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("polish/test.txt"), Vec::from("test")),
+            (PathBuf::from("polish/test2.txt"), Vec::from("test")),
+            (PathBuf::from("german/test3.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, None);
+    }
+
+    #[test]
+    fn test_language_specific_resources_dutch() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("dutch/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::DUTCH));
+    }
+
+    #[test]
+    fn test_language_specific_resources_german() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("german/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::GERMAN));
+    }
+
+    #[test]
+    fn test_language_specific_resources_italian() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("italian/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::ITALIAN));
+    }
+
+    #[test]
+    fn test_language_specific_resources_polish() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("polish/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::POLISH));
+    }
+
+    #[test]
+    fn test_language_specific_resources_russian() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("russian/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::RUSSIAN));
+    }
+
+    #[test]
+    fn test_language_specific_resources_caseless() {
+        let data_dir = build_data_dir_with_resources(vec![
+            (PathBuf::from("Russian/test.txt"), Vec::from("test")),
+            (PathBuf::from("RUSSIAN/test.txt"), Vec::from("test")),
+            (PathBuf::from("other/data.txt"), Vec::from("data")),
+        ]);
+        let guess = Guess {
+            vanilla_version: None,
+        };
+
+        let version = guess
+            .guess_by_language_specific_resources(&data_dir.path().join("data"))
+            .unwrap();
+
+        assert_eq!(version, Some(VanillaVersion::RUSSIAN));
     }
 }
