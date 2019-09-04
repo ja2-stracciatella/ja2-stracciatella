@@ -32,6 +32,7 @@ pub extern "C" fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *mut 
 /// Deletes a CString.
 /// The caller is no longer responsible for the memory.
 #[no_mangle]
+#[allow(clippy::not_unsafe_ptr_arg_deref)]
 pub extern "C" fn free_rust_string(s: *mut c_char) {
     if s.is_null() {
         return;
@@ -49,7 +50,7 @@ pub extern "C" fn guess_resource_version(gamedir: *const c_char) -> c_int {
     if let Some(version) = logged.vanilla_version {
         result = version as c_int;
     }
-    return result;
+    result
 }
 
 /// Returns the path to game.json.
@@ -59,7 +60,7 @@ pub extern "C" fn get_game_json_path() -> *mut c_char {
     let mut path = get_assets_dir();
     path.push("externalized/game.json");
     let path: String = path.to_string_lossy().into();
-    return CString::new(path).unwrap().into_raw();
+    CString::new(path).unwrap().into_raw()
 }
 
 /// Finds a path relative to the stracciatella home directory.
@@ -79,9 +80,8 @@ pub extern "C" fn find_path_from_stracciatella_home(
         if test_exists && !path_buf.exists() {
             return ptr::null_mut(); // path not found
         } else {
-            match path_buf.canonicalize() {
-                Ok(p) => path_buf = p,
-                _ => {}
+            if let Ok(p) = path_buf.canonicalize() {
+                path_buf = p;
             }
             let s: String = path_buf.to_string_lossy().into();
             return CString::new(s).unwrap().into_raw(); // path found
@@ -107,29 +107,26 @@ pub extern "C" fn check_if_relative_path_exists(
         return buf.exists();
     }
     'outer: for component in path.components() {
-        match component {
-            Component::Normal(os_str) => {
-                if let Some(want_caseless) = os_str.to_str().map(|x| Nfc::caseless(x)) {
-                    if let Ok(entries) = buf.read_dir() {
-                        for entry in entries.filter_map(|x| x.ok()) {
-                            let file_name = entry.file_name();
-                            if let Some(have_caseless) =
-                                file_name.to_str().map(|x| Nfc::caseless(x))
-                            {
-                                if want_caseless == have_caseless {
-                                    buf.push(file_name);
-                                    continue 'outer;
-                                }
+        if let Component::Normal(os_str) = component {
+            if let Some(want_caseless) = os_str.to_str().map(|x| Nfc::caseless(x)) {
+                if let Ok(entries) = buf.read_dir() {
+                    for entry in entries.filter_map(|x| x.ok()) {
+                        let file_name = entry.file_name();
+                        if let Some(have_caseless) =
+                            file_name.to_str().map(|x| Nfc::caseless(x))
+                        {
+                            if want_caseless == have_caseless {
+                                buf.push(file_name);
+                                continue 'outer;
                             }
                         }
                     }
                 }
             }
-            _ => {}
         }
         buf.push(component);
     }
-    return buf.exists();
+    buf.exists()
 }
 
 /// Returns a list of available mods.
@@ -158,6 +155,7 @@ pub extern "C" fn get_available_mods() -> *mut VecCString {
 }
 
 /// A wrapper around `Vec<CString>` for C.
+#[derive(Default)]
 pub struct VecCString {
     inner: Vec<CString>,
 }
