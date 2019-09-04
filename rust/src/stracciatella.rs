@@ -30,7 +30,6 @@ use crate::config::Resolution;
 use crate::config::Ja2Json;
 use crate::config::Cli;
 use crate::config::EngineOptions;
-use crate::config::find_stracciatella_home;
 
 fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<String> {
     let cli = Cli::from_args(args);
@@ -57,7 +56,7 @@ pub fn parse_json_config(stracciatella_home: &PathBuf) -> Result<EngineOptions, 
 fn get_assets_dir() -> PathBuf {
     let mut path = PathBuf::new();
     let extra_data_dir = option_env!("EXTRA_DATA_DIR");
-    if extra_data_dir.is_some() && extra_data_dir.unwrap().len() > 0 {
+    if extra_data_dir.is_some() && !extra_data_dir.unwrap().is_empty() {
         // use dir defined at compile time
         path.push(extra_data_dir.unwrap());
     } else if let Ok(exe) = env::current_exe() {
@@ -80,6 +79,7 @@ mod tests {
     use std::io::prelude::*;
     use std::env;
 
+    use crate::config::find_stracciatella_home;
     use super::*;
 
     #[test]
