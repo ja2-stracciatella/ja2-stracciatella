@@ -24,9 +24,6 @@ pub mod librarydb;
 pub mod c;
 pub mod unicode;
 
-pub use crate::config::ScalingQuality;
-pub use crate::config::VanillaVersion;
-use crate::config::Resolution;
 use crate::config::Ja2Json;
 use crate::config::Cli;
 use crate::config::EngineOptions;
@@ -80,6 +77,7 @@ mod tests {
     use std::env;
 
     use crate::config::find_stracciatella_home;
+    use crate::config::VanillaVersion;
     use super::*;
 
     #[test]

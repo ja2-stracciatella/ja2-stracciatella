@@ -1,8 +1,8 @@
 use std::path::PathBuf;
 
-use crate::Resolution;
-use crate::ScalingQuality;
-use crate::VanillaVersion;
+use crate::config::Resolution;
+use crate::config::ScalingQuality;
+use crate::config::VanillaVersion;
 
 /// Struct that is used to store the engines configuration parameters
 #[derive(Debug, PartialEq)]

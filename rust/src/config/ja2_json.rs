@@ -9,10 +9,10 @@ use serde::Serialize;
 use log::warn;
 
 use crate::json;
-use crate::Resolution;
-use crate::VanillaVersion;
-use crate::ScalingQuality;
-use crate::EngineOptions;
+use crate::config::Resolution;
+use crate::config::VanillaVersion;
+use crate::config::ScalingQuality;
+use crate::config::EngineOptions;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Ja2JsonContent {
