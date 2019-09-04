@@ -5,6 +5,8 @@ environment:
     secure: "uBUgFeI9sHRv0IiMPpA9rg=="
   SFTP_PASSWORD:
     secure: "gXqhlT/yjiLd/jTpvg4kcZtBRCZ8RnoOJ3zRTSF5voA="
+  GITHUB_ACCESS_TOKEN:
+    secure: "fcDy5AgkBH9bKqdsbwv9piWbN6ksoUKk+iky/DQmk3YG3UNl68BegfkYUzSF3rJ7"
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       CMAKE_GENERATOR_NAME: Visual Studio 14 2015
