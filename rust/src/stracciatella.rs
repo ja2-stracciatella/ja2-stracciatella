@@ -54,7 +54,6 @@ fn get_assets_dir() -> PathBuf {
 
 #[cfg(test)]
 mod tests {
-    use std::env;
     use std::fs;
     use std::fs::File;
     use std::io::prelude::*;
@@ -439,7 +438,7 @@ mod tests {
     fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_unixlike() {
         let mut engine_options = EngineOptions::default();
         engine_options.stracciatella_home = find_stracciatella_home().unwrap();
-        let expected = format!("{}/.ja2", env::var("HOME").unwrap());
+        let expected = format!("{}/.ja2", std::env::var("HOME").unwrap());
 
         assert_eq!(engine_options.stracciatella_home, Path::new(&expected));
     }
