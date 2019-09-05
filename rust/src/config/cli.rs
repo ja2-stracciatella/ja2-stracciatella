@@ -4,8 +4,8 @@ use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
 
-use log::warn;
 use getopts::Options;
+use log::warn;
 
 use crate::config::EngineOptions;
 use crate::config::Resolution;
@@ -23,7 +23,7 @@ static GAME_DIR_OPTION_EXAMPLE: &'static str = "C:\\JA2";
 /// passed to the executable
 pub struct Cli {
     args: Vec<String>,
-    options: Options
+    options: Options,
 }
 
 impl Cli {
@@ -36,13 +36,13 @@ impl Cli {
             "",
             "datadir", // TODO remove this deprecated option in version >= 0.18
             "Set path for the vanilla game directory. DEPRECATED use -gamedir instead.",
-            GAME_DIR_OPTION_EXAMPLE
+            GAME_DIR_OPTION_EXAMPLE,
         );
         opts.optmulti(
             "",
             "gamedir",
             "Set path for the vanilla game directory",
-            GAME_DIR_OPTION_EXAMPLE
+            GAME_DIR_OPTION_EXAMPLE,
         );
         opts.optmulti(
             "",
@@ -54,7 +54,7 @@ impl Cli {
             "",
             "res",
             "Screen resolution, e.g. 800x600. Default value is 640x480",
-            "WIDTHxHEIGHT"
+            "WIDTHxHEIGHT",
         );
         opts.optopt(
             "",
@@ -75,42 +75,25 @@ impl Cli {
         opts.optflag(
             "",
             "editor",
-            "Start the map editor (Editor.slf is required)"
+            "Start the map editor (Editor.slf is required)",
         );
-        opts.optflag(
-            "",
-            "fullscreen",
-            "Start the game in the fullscreen mode"
-        );
-        opts.optflag(
-            "",
-            "nosound",
-            "Turn the sound and music off"
-        );
-        opts.optflag(
-            "",
-            "window",
-            "Start the game in a window"
-        );
-        opts.optflag(
-            "",
-            "debug",
-            "Enable Debug Mode"
-        );
-        opts.optflag(
-            "",
-            "help",
-            "print this help menu"
-        );
+        opts.optflag("", "fullscreen", "Start the game in the fullscreen mode");
+        opts.optflag("", "nosound", "Turn the sound and music off");
+        opts.optflag("", "window", "Start the game in a window");
+        opts.optflag("", "debug", "Enable Debug Mode");
+        opts.optflag("", "help", "print this help menu");
 
         Cli {
             args: args.to_vec(),
-            options: opts
+            options: opts,
         }
     }
 
     /// Apply current arguments to EngineOptions struct
-    pub fn apply_to_engine_options(&self, engine_options: &mut EngineOptions) -> Result<(), String> {
+    pub fn apply_to_engine_options(
+        &self,
+        engine_options: &mut EngineOptions,
+    ) -> Result<(), String> {
         match self.options.parse(&self.args[1..]) {
             Ok(m) => {
                 if !m.free.is_empty() {
@@ -118,7 +101,9 @@ impl Cli {
                 }
 
                 if m.opt_str("datadir").is_some() {
-                    warn!("The `datadir` command line argument is deprecated, use `gamedir` instead");
+                    warn!(
+                        "The `datadir` command line argument is deprecated, use `gamedir` instead"
+                    );
                 }
 
                 if let Some(s) = m.opts_str(&["gamedir".to_owned(), "datadir".to_owned()]) {
@@ -132,8 +117,8 @@ impl Cli {
                                 temp.drain(..pos);
                             }
                             engine_options.vanilla_game_dir = PathBuf::from(temp)
-                        },
-                        Err(_) => return Err(String::from("Please specify an existing gamedir."))
+                        }
+                        Err(_) => return Err(String::from("Please specify an existing gamedir.")),
                     };
                 }
 
@@ -145,8 +130,8 @@ impl Cli {
                     match Resolution::from_str(&s) {
                         Ok(res) => {
                             engine_options.resolution = res;
-                        },
-                        Err(s) => return Err(s)
+                        }
+                        Err(s) => return Err(s),
                     }
                 }
 
@@ -154,24 +139,21 @@ impl Cli {
                     match s.parse::<f32>() {
                         Ok(val) => {
                             engine_options.brightness = val;
-                        },
-                        Err(_e) => return Err(String::from("Incorrect brightness value."))
+                        }
+                        Err(_e) => return Err(String::from("Incorrect brightness value.")),
                     }
                 }
 
                 if let Some(s) = m.opt_str("resversion") {
                     match VanillaVersion::from_str(&s) {
-                        Ok(resource_version) => {
-                            engine_options.resource_version = resource_version
-                        },
-                        Err(s) => return Err(s)
+                        Ok(resource_version) => engine_options.resource_version = resource_version,
+                        Err(s) => return Err(s),
                     }
                 }
 
                 if m.opt_present("help") {
                     engine_options.show_help = true;
                 }
-
 
                 if m.opt_present("unittests") {
                     engine_options.run_unittests = true;
@@ -199,7 +181,7 @@ impl Cli {
 
                 Ok(())
             }
-            Err(f) => Err(f.to_string())
+            Err(f) => Err(f.to_string()),
         }
     }
 

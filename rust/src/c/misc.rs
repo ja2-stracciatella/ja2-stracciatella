@@ -112,9 +112,7 @@ pub extern "C" fn check_if_relative_path_exists(
                 if let Ok(entries) = buf.read_dir() {
                     for entry in entries.filter_map(|x| x.ok()) {
                         let file_name = entry.file_name();
-                        if let Some(have_caseless) =
-                            file_name.to_str().map(|x| Nfc::caseless(x))
-                        {
+                        if let Some(have_caseless) = file_name.to_str().map(|x| Nfc::caseless(x)) {
                             if want_caseless == have_caseless {
                                 buf.push(file_name);
                                 continue 'outer;

@@ -1,8 +1,8 @@
-use std::str::FromStr;
-use std::fmt;
-use std::fmt::Display;
 use serde::Deserialize;
 use serde::Serialize;
+use std::fmt;
+use std::fmt::Display;
+use std::str::FromStr;
 
 /// Enum for the vanilla game version that is used to run the game
 #[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]
@@ -40,22 +40,26 @@ impl FromStr for VanillaVersion {
             "POLISH" => Ok(VanillaVersion::POLISH),
             "RUSSIAN" => Ok(VanillaVersion::RUSSIAN),
             "RUSSIAN_GOLD" => Ok(VanillaVersion::RUSSIAN_GOLD),
-            _ => Err(format!("Resource version {} is unknown", s))
+            _ => Err(format!("Resource version {} is unknown", s)),
         }
     }
 }
 
 impl Display for VanillaVersion {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", match self {
-            VanillaVersion::DUTCH => "Dutch",
-            VanillaVersion::ENGLISH => "English",
-            VanillaVersion::FRENCH => "French",
-            VanillaVersion::GERMAN => "German",
-            VanillaVersion::ITALIAN => "Italian",
-            VanillaVersion::POLISH => "Polish",
-            VanillaVersion::RUSSIAN => "Russian",
-            VanillaVersion::RUSSIAN_GOLD => "Russian (Gold)",
-        })
+        write!(
+            f,
+            "{}",
+            match self {
+                VanillaVersion::DUTCH => "Dutch",
+                VanillaVersion::ENGLISH => "English",
+                VanillaVersion::FRENCH => "French",
+                VanillaVersion::GERMAN => "German",
+                VanillaVersion::ITALIAN => "Italian",
+                VanillaVersion::POLISH => "Polish",
+                VanillaVersion::RUSSIAN => "Russian",
+                VanillaVersion::RUSSIAN_GOLD => "Russian (Gold)",
+            }
+        )
     }
 }

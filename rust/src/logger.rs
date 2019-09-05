@@ -6,12 +6,12 @@
 //!
 //! [`stracciatella::c::logger`]: ../c/logger/index.html
 
-use log::{Log, Metadata, Level, set_max_level, LevelFilter, Record, logger, set_boxed_logger};
-use simplelog::{CombinedLogger, TermLogger, WriteLogger, Config, TerminalMode};
+use log::{logger, set_boxed_logger, set_max_level, Level, LevelFilter, Log, Metadata, Record};
+use simplelog::{CombinedLogger, Config, TermLogger, TerminalMode, WriteLogger};
 use std::fs::File;
 use std::path::Path;
-use std::sync::atomic::Ordering;
 use std::sync::atomic::AtomicUsize;
+use std::sync::atomic::Ordering;
 
 static GLOBAL_LOG_LEVEL: AtomicUsize = AtomicUsize::new(LogLevel::Info as usize);
 

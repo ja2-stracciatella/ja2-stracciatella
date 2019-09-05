@@ -16,7 +16,7 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
         Some(mut path) => {
             path.push(dir);
             Ok(path)
-        },
+        }
         None => Err(String::from("Could not find home directory")),
     }
 }
