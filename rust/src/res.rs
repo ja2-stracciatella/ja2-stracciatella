@@ -557,9 +557,8 @@ mod tests {
     use crate::res::{Resource, ResourcePropertiesExt};
 
     #[test]
-    fn property_value_compatibility() {
+    fn property_value_compatibility_boolean() {
         let mut resource = Resource::default();
-        // boolean
         resource.set_property("p", true);
         assert!(resource.get_bool("p").is_some());
         assert!(resource.get_str("p").is_none());
@@ -567,7 +566,11 @@ mod tests {
         assert!(resource.get_u64("p").is_none());
         assert!(resource.get_f64("p").is_none());
         assert_eq!(resource.get_bool("p").unwrap(), true);
-        // string
+    }
+
+    #[test]
+    fn property_value_compatibility_string() {
+        let mut resource = Resource::default();
         resource.set_property("p", "foo");
         assert!(resource.get_bool("p").is_none());
         assert!(resource.get_str("p").is_some());
@@ -575,7 +578,11 @@ mod tests {
         assert!(resource.get_u64("p").is_none());
         assert!(resource.get_f64("p").is_none());
         assert_eq!(resource.get_str("p").unwrap(), "foo");
-        // universal number
+    }
+
+    #[test]
+    fn property_value_compatibility_universal_number() {
+        let mut resource = Resource::default();
         resource.set_property("p", 0);
         assert!(resource.get_bool("p").is_none());
         assert!(resource.get_str("p").is_none());
@@ -583,7 +590,12 @@ mod tests {
         assert!(resource.get_u64("p").is_some());
         assert!(resource.get_f64("p").is_some());
         assert_eq!(resource.get_i64("p").unwrap(), 0);
-        // floating point number
+    }
+
+    #[test]
+    #[allow(clippy::float_cmp)]
+    fn property_value_compatibility_floating_point_number() {
+        let mut resource = Resource::default();
         resource.set_property("p", 0.5);
         assert!(resource.get_bool("p").is_none());
         assert!(resource.get_str("p").is_none());
@@ -591,7 +603,11 @@ mod tests {
         assert!(resource.get_u64("p").is_none());
         assert!(resource.get_f64("p").is_some());
         assert_eq!(resource.get_f64("p").unwrap(), 0.5);
-        // negative number
+    }
+
+    #[test]
+    fn property_value_compatibility_negative_number() {
+        let mut resource = Resource::default();
         resource.set_property("p", -1);
         assert!(resource.get_bool("p").is_none());
         assert!(resource.get_str("p").is_none());
@@ -599,7 +615,11 @@ mod tests {
         assert!(resource.get_u64("p").is_none());
         assert!(resource.get_f64("p").is_some());
         assert_eq!(resource.get_i64("p").unwrap(), -1);
-        // big number
+    }
+
+    #[test]
+    fn property_value_compatibility_big_number() {
+        let mut resource = Resource::default();
         resource.set_property("p", u64::max_value());
         assert!(resource.get_bool("p").is_none());
         assert!(resource.get_str("p").is_none());
@@ -619,12 +639,13 @@ mod tests {
         use md5::Md5;
 
         fn data_for_hasher() -> Vec<u8> {
-            return "A quick brown fox jumps over the lazy dog"
+            "A quick brown fox jumps over the lazy dog"
                 .repeat(1_000_000)
                 .as_bytes()
-                .to_vec();
+                .to_vec()
         }
 
+        #[allow(clippy::cast_lossless)]
         fn print_hasher_result(name: &str, time: Duration, size: usize, hash: &[u8]) {
             let secs = time.as_secs() as f64 + time.subsec_nanos() as f64 / 1_000_000_000f64;
             let mib = size as f64 / 1_000_000f64;

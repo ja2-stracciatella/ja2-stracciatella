@@ -263,7 +263,7 @@ mod tests {
         f.write_all(contents).unwrap();
         f.sync_all().unwrap();
 
-        return dir;
+        dir
     }
 
     #[test]
