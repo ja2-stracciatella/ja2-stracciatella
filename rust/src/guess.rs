@@ -79,6 +79,7 @@ impl Percentages {
 }
 
 impl From<&MatchResourcesResult> for Percentages {
+    #[allow(clippy::cast_lossless)]
     fn from(result: &MatchResourcesResult) -> Self {
         let number_of_resources = result.number_of_resources;
         let count_differences =
