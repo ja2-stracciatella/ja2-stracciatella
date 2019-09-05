@@ -1,11 +1,9 @@
-use serde::Deserialize;
-use serde::Deserializer;
-use serde::Serialize;
-use serde::Serializer;
 use std::default::Default;
 use std::fmt;
 use std::fmt::Display;
 use std::str::FromStr;
+
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// Struct that contains a specific resolution for the game
 #[derive(Debug, PartialEq, Copy, Clone)]

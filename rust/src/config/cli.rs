@@ -7,9 +7,7 @@ use std::str::FromStr;
 use getopts::Options;
 use log::warn;
 
-use crate::config::EngineOptions;
-use crate::config::Resolution;
-use crate::config::VanillaVersion;
+use crate::config::{EngineOptions, Resolution, VanillaVersion};
 
 #[cfg(not(windows))]
 static GAME_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";

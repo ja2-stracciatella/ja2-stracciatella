@@ -58,7 +58,6 @@
 
 use std::io::ErrorKind::{InvalidData, InvalidInput};
 use std::io::{Cursor, Error, Read, Result, Seek, SeekFrom, Write};
-
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use byteorder::{ReadBytesExt, WriteBytesExt, LE};
@@ -442,7 +441,7 @@ mod tests {
     use std::fmt::Debug;
     use std::io::Cursor;
 
-    use super::{
+    use crate::file_formats::slf::{
         SlfEntry, SlfEntryState, SlfHeader, ENTRY_BYTES, HEADER_BYTES, UNIX_EPOCH_AS_FILETIME,
     };
 

@@ -59,14 +59,12 @@ use std::fmt;
 use std::io;
 use std::path::{Path, PathBuf};
 
-use serde::{Deserialize, Serialize};
-use serde_json::{json, Map, Value};
-
 use digest::Digest;
 use hex;
 use md5::Md5;
-
 use rayon::prelude::*;
+use serde::{Deserialize, Serialize};
+use serde_json::{json, Map, Value};
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
 use crate::unicode::Nfc;
@@ -556,7 +554,7 @@ impl ResourcePropertiesExt for Resource {
 
 #[cfg(test)]
 mod tests {
-    use super::{Resource, ResourcePropertiesExt};
+    use crate::res::{Resource, ResourcePropertiesExt};
 
     #[test]
     fn property_value_compatibility() {

@@ -3,9 +3,8 @@
 //! [`stracciatella::logger`]: ../../logger/index.html
 
 use crate::c::common::*;
-use crate::logger::Logger;
-
 pub use crate::logger::LogLevel;
+use crate::logger::Logger;
 
 /// Initializes the logger
 #[no_mangle]

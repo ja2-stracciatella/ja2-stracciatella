@@ -2,7 +2,8 @@
 //!
 //! [`stracciatella::librarydb`]: ../../librarydb/index.html
 
-use std::io::{self, Read, Seek, SeekFrom};
+use std::io;
+use std::io::{Read, Seek, SeekFrom};
 
 use crate::c::common::*;
 use crate::librarydb::{LibraryDB, LibraryFile};

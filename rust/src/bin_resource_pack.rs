@@ -15,15 +15,16 @@ mod file_formats;
 mod res;
 mod unicode;
 
-use res::{ResourcePackBuilder, ResourcePropertiesExt};
-use unicode::Nfc;
-
-use clap::{crate_version, App, Arg, ArgMatches, SubCommand};
-use serde_json;
 use std::fmt::Debug;
 use std::fs;
 use std::path::PathBuf;
 use std::process;
+
+use clap::{crate_version, App, Arg, ArgMatches, SubCommand};
+use serde_json;
+
+use crate::res::{ResourcePackBuilder, ResourcePropertiesExt};
+use crate::unicode::Nfc;
 
 /// Entry point of the resource-pack executable.
 fn main() {

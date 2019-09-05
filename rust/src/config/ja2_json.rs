@@ -5,13 +5,9 @@ use std::io::Write;
 use std::path::PathBuf;
 
 use log::warn;
-use serde::Deserialize;
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
-use crate::config::EngineOptions;
-use crate::config::Resolution;
-use crate::config::ScalingQuality;
-use crate::config::VanillaVersion;
+use crate::config::{EngineOptions, Resolution, ScalingQuality, VanillaVersion};
 use crate::json;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]

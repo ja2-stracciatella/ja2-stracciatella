@@ -41,9 +41,11 @@ pub mod ser {
     //!
     //! [`serde_json`]: https://crates.io/crates/serde_json
 
-    use super::skip;
     use serde::Serialize;
-    use serde_json::{self, Value};
+    use serde_json;
+    use serde_json::Value;
+
+    use crate::json::skip;
 
     /// Converts a value to a string containing json.
     ///
@@ -258,7 +260,7 @@ pub mod skip {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    use crate::json::*;
 
     #[test]
     fn test_json_with_comments() {

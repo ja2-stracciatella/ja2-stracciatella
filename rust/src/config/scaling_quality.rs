@@ -1,9 +1,9 @@
-use serde::Deserialize;
-use serde::Serialize;
 use std::default::Default;
 use std::fmt;
 use std::fmt::Display;
 use std::str::FromStr;
+
+use serde::{Deserialize, Serialize};
 
 /// Enum used to specify scaling quality for scaling up graphics
 #[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]

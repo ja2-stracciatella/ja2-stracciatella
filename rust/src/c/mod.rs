@@ -39,11 +39,12 @@ pub(crate) mod common {
     //! See https://github.com/rust-lang/rfcs/pull/2585
     #![allow(dead_code)]
 
-    pub use libc::{c_char, c_int, size_t};
     use std::cell::RefCell;
     use std::ffi::{CStr, CString};
     use std::path::Path;
     use std::slice;
+
+    pub use libc::{c_char, c_int, size_t};
 
     thread_local!(
         /// A thread local error for C.
@@ -166,12 +167,13 @@ pub(crate) mod common {
 
 #[cfg(test)]
 mod tests {
-    use crate::c::common::*;
-    use crate::c::error::*;
-    use crate::c::misc::free_rust_string;
     use std::cell::RefCell;
     use std::ffi::{CStr, CString};
     use std::path::Path;
+
+    use crate::c::common::*;
+    use crate::c::error::*;
+    use crate::c::misc::free_rust_string;
 
     #[test]
     fn test_pointers() {

@@ -1,8 +1,7 @@
 use std::path::PathBuf;
 
-use crate::config::Resolution;
-use crate::config::ScalingQuality;
-use crate::config::VanillaVersion;
+use crate::config::{Resolution, ScalingQuality, VanillaVersion};
+use crate::{ensure_json_config_existence, parse_args, parse_json_config};
 
 /// Struct that is used to store the engines configuration parameters
 #[derive(Debug, PartialEq)]
@@ -67,10 +66,6 @@ impl EngineOptions {
         stracciatella_home: &PathBuf,
         args: &[String],
     ) -> Result<EngineOptions, String> {
-        use crate::ensure_json_config_existence;
-        use crate::parse_args;
-        use crate::parse_json_config;
-
         ensure_json_config_existence(stracciatella_home)?;
 
         let mut engine_options = parse_json_config(&stracciatella_home)?;

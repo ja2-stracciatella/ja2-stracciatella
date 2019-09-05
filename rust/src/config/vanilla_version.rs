@@ -1,8 +1,8 @@
-use serde::Deserialize;
-use serde::Serialize;
 use std::fmt;
 use std::fmt::Display;
 use std::str::FromStr;
+
+use serde::{Deserialize, Serialize};
 
 /// Enum for the vanilla game version that is used to run the game
 #[derive(Debug, PartialEq, Copy, Clone, Serialize, Deserialize)]

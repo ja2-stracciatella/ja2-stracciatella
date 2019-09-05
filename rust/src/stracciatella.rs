@@ -1,18 +1,4 @@
 #![crate_type = "lib"]
-//https://github.com/rust-lang/rfcs/pull/2585
-#![allow(unused_unsafe)]
-
-extern crate dirs;
-extern crate getopts;
-extern crate libc;
-extern crate serde;
-extern crate serde_derive;
-extern crate serde_json;
-
-use std::default::Default;
-use std::env;
-use std::path::PathBuf;
-use std::str;
 
 pub mod c;
 pub mod config;
@@ -24,9 +10,11 @@ pub mod logger;
 pub mod res;
 pub mod unicode;
 
-use crate::config::Cli;
-use crate::config::EngineOptions;
-use crate::config::Ja2Json;
+use std::default::Default;
+use std::path::PathBuf;
+use std::str;
+
+use crate::config::{Cli, EngineOptions, Ja2Json};
 
 fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<String> {
     let cli = Cli::from_args(args);
@@ -55,7 +43,7 @@ fn get_assets_dir() -> PathBuf {
     if extra_data_dir.is_some() && !extra_data_dir.unwrap().is_empty() {
         // use dir defined at compile time
         path.push(extra_data_dir.unwrap());
-    } else if let Ok(exe) = env::current_exe() {
+    } else if let Ok(exe) = std::env::current_exe() {
         if let Some(dir) = exe.parent() {
             // use the directory of the executable
             path.push(dir);
@@ -66,18 +54,16 @@ fn get_assets_dir() -> PathBuf {
 
 #[cfg(test)]
 mod tests {
-    extern crate regex;
-    extern crate tempdir;
-
     use std::env;
     use std::fs;
     use std::fs::File;
     use std::io::prelude::*;
     use std::path::Path;
 
-    use super::*;
-    use crate::config::find_stracciatella_home;
-    use crate::config::VanillaVersion;
+    use tempdir;
+
+    use crate::config::{find_stracciatella_home, VanillaVersion};
+    use crate::*;
 
     #[test]
     fn parse_args_should_abort_on_unknown_arguments() {
@@ -461,7 +447,7 @@ mod tests {
     #[test]
     #[cfg(windows)]
     fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_windows() {
-        use self::regex::Regex;
+        use regex::Regex;
 
         let mut engine_options = EngineOptions::default();
         engine_options.stracciatella_home = find_stracciatella_home().unwrap();
