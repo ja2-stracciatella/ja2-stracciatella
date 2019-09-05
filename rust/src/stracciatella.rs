@@ -12,7 +12,6 @@ pub mod unicode;
 
 use std::default::Default;
 use std::path::PathBuf;
-use std::str;
 
 use crate::config::{Cli, EngineOptions, Ja2Json};
 
