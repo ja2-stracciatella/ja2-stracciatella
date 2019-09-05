@@ -66,10 +66,12 @@ install:
   - cmd: curl -sSf -o rustup-init.exe https://win.rustup.rs/
   - cmd: rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
   - cmd: set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
+  - cmd: rustup.exe component add rustfmt
 
   - cmd: echo "%RUSTUP_TOOLCHAIN%"
   - cmd: rustc -V
   - cmd: cargo -V
+  - cmd: cargo fmt -- -V
   - cmd: cmake --version
 
 before_build:
@@ -82,6 +84,7 @@ build_script:
 
 test_script:
   - cmd: cd ..\rust
+  - cmd: cargo fmt -- --check
   - cmd: cargo test
   - cmd: cd ..\ci-build
   - cmd: cd %BUILD_TYPE%
