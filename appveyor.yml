@@ -67,11 +67,13 @@ install:
   - cmd: rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
   - cmd: set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
   - cmd: rustup.exe component add rustfmt
+  - cmd: rustup.exe component add clippy
 
   - cmd: echo "%RUSTUP_TOOLCHAIN%"
   - cmd: rustc -V
   - cmd: cargo -V
   - cmd: cargo fmt -- -V
+  - cmd: cargo clippy -- -V
   - cmd: cmake --version
 
 before_build:
@@ -85,6 +87,7 @@ build_script:
 test_script:
   - cmd: cd ..\rust
   - cmd: cargo fmt -- --check
+  - cmd: cargo clippy --all-targets --all-features -- -D warnings
   - cmd: cargo test
   - cmd: cd ..\ci-build
   - cmd: cd %BUILD_TYPE%

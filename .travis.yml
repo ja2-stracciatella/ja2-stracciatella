@@ -65,10 +65,12 @@ before_install:
       rustup target add x86_64-pc-windows-gnu;
     fi
   - rustup component add rustfmt
+  - rustup component add clippy
 
   - cargo -V
   - rustc -V
   - cargo fmt -- -V
+  - cargo clippy -- -V
   - cmake --version
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       fakeroot -v;
@@ -83,6 +85,7 @@ script:
     fi
   - cd ../rust
   - cargo fmt -- --check;
+  - cargo clippy --all-targets --all-features -- -D warnings;
   - if [ "$TRAVIS_MINGW" != "true" ]; then
       cargo test;
     fi
