@@ -1,11 +1,9 @@
-use std::str::FromStr;
+use std::default::Default;
 use std::fmt;
 use std::fmt::Display;
-use std::default::Default;
-use serde::Deserialize;
-use serde::Deserializer;
-use serde::Serialize;
-use serde::Serializer;
+use std::str::FromStr;
+
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
 /// Struct that contains a specific resolution for the game
 #[derive(Debug, PartialEq, Copy, Clone)]
@@ -19,7 +17,9 @@ impl FromStr for Resolution {
 
         match (resolutions.next(), resolutions.next()) {
             (Some(x), Some(y)) => Ok(Resolution(x, y)),
-            _ => Err(String::from("Incorrect resolution format, should be WIDTHxHEIGHT."))
+            _ => Err(String::from(
+                "Incorrect resolution format, should be WIDTHxHEIGHT.",
+            )),
         }
     }
 }

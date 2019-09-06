@@ -1,8 +1,7 @@
 use std::path::PathBuf;
 
-use crate::Resolution;
-use crate::ScalingQuality;
-use crate::VanillaVersion;
+use crate::config::{Resolution, ScalingQuality, VanillaVersion};
+use crate::{ensure_json_config_existence, parse_args, parse_json_config};
 
 /// Struct that is used to store the engines configuration parameters
 #[derive(Debug, PartialEq)]
@@ -30,7 +29,7 @@ pub struct EngineOptions {
     /// Whether to start the game in windowed mode
     pub start_in_window: bool,
     /// Scaling quality that is used when scaling up game resources
-	pub scaling_quality: ScalingQuality,
+    pub scaling_quality: ScalingQuality,
     /// Whether to start in debug mode
     pub start_in_debug_mode: bool,
     /// Whether to enable sound
@@ -42,7 +41,7 @@ impl Default for EngineOptions {
         EngineOptions {
             stracciatella_home: PathBuf::from(""),
             vanilla_game_dir: PathBuf::from(""),
-            mods: vec!(),
+            mods: vec![],
             resolution: Resolution::default(),
             brightness: 1.0,
             resource_version: VanillaVersion::ENGLISH,
@@ -51,7 +50,7 @@ impl Default for EngineOptions {
             run_editor: false,
             start_in_fullscreen: false,
             start_in_window: true,
-			scaling_quality: ScalingQuality::default(),
+            scaling_quality: ScalingQuality::default(),
             start_in_debug_mode: false,
             start_without_sound: false,
         }
@@ -63,11 +62,10 @@ impl EngineOptions {
     ///
     /// Takes Cli arguments and JSON configuration file into account. It will also
     /// create a default JSON configuration file if it does not exist yet.
-    pub fn from_home_and_args(stracciatella_home: &PathBuf, args: &[String]) -> Result<EngineOptions, String> {
-        use crate::ensure_json_config_existence;
-        use crate::parse_json_config;
-        use crate::parse_args;
-
+    pub fn from_home_and_args(
+        stracciatella_home: &PathBuf,
+        args: &[String],
+    ) -> Result<EngineOptions, String> {
         ensure_json_config_existence(stracciatella_home)?;
 
         let mut engine_options = parse_json_config(&stracciatella_home)?;
@@ -76,11 +74,11 @@ impl EngineOptions {
 
         match parse_args(&mut engine_options, args) {
             None => Ok(()),
-            Some(str) => Err(str)
+            Some(str) => Err(str),
         }?;
 
         if engine_options.vanilla_game_dir == PathBuf::from("") {
-            return Err(String::from("Vanilla data directory has to be set either in config file or per command line switch"))
+            return Err(String::from("Vanilla data directory has to be set either in config file or per command line switch"));
         }
 
         Ok(engine_options)

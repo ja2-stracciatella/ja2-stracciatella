@@ -1,7 +1,9 @@
 //! This module and it's submodules contains code for C.
 
+pub mod config;
 pub mod librarydb;
 pub mod logger;
+pub mod misc;
 
 pub mod error {
     //! This module contains error handling code for C.
@@ -27,14 +29,22 @@ pub(crate) mod common {
     //! All pointers that come from C are unsafe.
     //! C can send a pointer that has already been freed.
     //! C can send a pointer that is being used in a different thread.
+    //! C can send a pointer that is a different type of data (another struct or a number).
     //! Only null pointers can be detected safely, the rest can't be checked in rust.
+    //!
+    //! When you declare a function unsafe you automatically get an unsafe body (disables safety checks).
+    //! All `pub extern "C"` functions that receive a pointer from C are unsafe.
+    //! We want the safety checks so we DO NOT declare them unsafe.
+    //! Hopefully in the future there will be a way for unsafe functions to get a safe body.
+    //! See https://github.com/rust-lang/rfcs/pull/2585
     #![allow(dead_code)]
 
-    pub use libc::{c_char, c_int, size_t};
     use std::cell::RefCell;
     use std::ffi::{CStr, CString};
     use std::path::Path;
     use std::slice;
+
+    pub use libc::{c_char, c_int, size_t};
 
     thread_local!(
         /// A thread local error for C.
@@ -123,6 +133,28 @@ pub(crate) mod common {
         }
     }
 
+    // Converts a Path to a CString. Discards characters starting with the first nul character.
+    pub fn c_string_from_path_or_panic(path: &Path) -> CString {
+        #[cfg(unix)]
+        {
+            use std::os::unix::ffi::OsStrExt;
+            let bytes = path
+                .as_os_str()
+                .as_bytes()
+                .split(|x| *x == 0)
+                .next()
+                .unwrap();
+            unsafe { CString::from_vec_unchecked(bytes.to_vec()) }
+        }
+        #[cfg(not(unix))]
+        {
+            match path.to_str() {
+                Some(s) => c_string_from_str(s),
+                None => panic!("Converting Path {:?} to CString: not utf8", &path),
+            }
+        }
+    }
+
     /// Converts a str to a CString. Discards characters starting with the first nul character.
     pub fn c_string_from_str(s: &str) -> CString {
         let bytes = match s.find('\0') {
@@ -135,12 +167,13 @@ pub(crate) mod common {
 
 #[cfg(test)]
 mod tests {
-    use crate::c::common::*;
-    use crate::c::error::*;
-    use crate::free_rust_string;
     use std::cell::RefCell;
     use std::ffi::{CStr, CString};
     use std::path::Path;
+
+    use crate::c::common::*;
+    use crate::c::error::*;
+    use crate::c::misc::free_rust_string;
 
     #[test]
     fn test_pointers() {
@@ -193,13 +226,23 @@ mod tests {
         let c_str = CStr::from_bytes_with_nul(b"123\0").unwrap();
         assert_eq!(str_from_c_str_or_panic(&c_str), "123");
         assert_eq!(path_from_c_str_or_panic(&c_str), Path::new("123"));
+        assert_eq!(
+            c_string_from_path_or_panic(Path::new("123")).to_bytes(),
+            b"123"
+        );
+        assert_eq!(
+            c_string_from_path_or_panic(Path::new("123\0nope")).to_bytes(),
+            b"123"
+        );
         assert_eq!(c_string_from_str("123").to_bytes(), b"123");
         assert_eq!(c_string_from_str("123\0nope").to_bytes(), b"123");
         #[cfg(unix)]
         {
             // Path supports invalid utf8 on unix
             let c_str = CStr::from_bytes_with_nul(b"123\xe1\0").unwrap();
-            assert_eq!(path_from_c_str_or_panic(&c_str).as_os_str().len(), 4);
+            let path = path_from_c_str_or_panic(&c_str);
+            assert_eq!(path.as_os_str().len(), 4);
+            assert_eq!(c_string_from_path_or_panic(&path).as_ref(), c_str);
         }
     }
 

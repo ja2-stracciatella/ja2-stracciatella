@@ -59,14 +59,12 @@ use std::fmt;
 use std::io;
 use std::path::{Path, PathBuf};
 
-use serde::{Deserialize, Serialize};
-use serde_json::{json, Map, Value};
-
 use digest::Digest;
 use hex;
 use md5::Md5;
-
 use rayon::prelude::*;
+use serde::{Deserialize, Serialize};
+use serde_json::{json, Map, Value};
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
 use crate::unicode::Nfc;
@@ -164,7 +162,7 @@ impl Resource {
     fn new(path: &str) -> Self {
         let mut resource = Resource::default();
         resource.path = path.to_owned();
-        return resource;
+        resource
     }
 }
 
@@ -172,28 +170,28 @@ impl ResourcePackBuilder {
     // Constructor.
     #[allow(dead_code)]
     pub fn new() -> Self {
-        return Self::default();
+        Self::default()
     }
 
     /// Adds archive contents.
     #[allow(dead_code)]
     pub fn with_archive(&mut self, extension: &str) -> &mut Self {
         self.with_archives.push(extension.into());
-        return self;
+        self
     }
 
     /// Adds file sizes.
     #[allow(dead_code)]
     pub fn with_file_size(&mut self) -> &mut Self {
         self.with_file_size = true;
-        return self;
+        self
     }
 
     /// Adds a hash algorithm.
     #[allow(dead_code)]
     pub fn with_hash(&mut self, algorithm: &str) -> &mut Self {
         self.with_hashes.push(algorithm.into());
-        return self;
+        self
     }
 
     /// Adds a directory or an archive.
@@ -206,7 +204,7 @@ impl ResourcePackBuilder {
         }
         let tuple = (base.to_owned(), path.to_owned());
         self.with_paths.push_back(tuple);
-        return self;
+        self
     }
 
     /// Returns a resource pack or an error.
@@ -259,7 +257,7 @@ impl ResourcePackBuilder {
 
         let pack = self.pack.to_owned();
         self.pack = ResourcePack::default();
-        return Ok(pack);
+        Ok(pack)
     }
 
     /// Adds the contents of an OS directory.
@@ -295,7 +293,7 @@ impl ResourcePackBuilder {
         }
         let extension = lowercase_extension(path);
         let wants_archive = self.with_archives.binary_search(&extension).is_ok();
-        let wants_hashes = self.with_hashes.len() > 0;
+        let wants_hashes = !self.with_hashes.is_empty();
         if wants_archive || wants_hashes {
             let data = std::fs::read(path)?;
             if wants_archive {
@@ -312,7 +310,7 @@ impl ResourcePackBuilder {
             }
         }
         resources.push(resource);
-        return Ok(resources);
+        Ok(resources)
     }
 
     // Adds the contents of a SLF archive.
@@ -337,7 +335,7 @@ impl ResourcePackBuilder {
                 if self.with_file_size {
                     resource.set_property("file_size", entry.length);
                 }
-                let wants_hashes = self.with_hashes.len() > 0;
+                let wants_hashes = !self.with_hashes.is_empty();
                 if wants_hashes {
                     let from = entry.offset as usize;
                     let to = from + entry.length as usize;
@@ -348,7 +346,7 @@ impl ResourcePackBuilder {
             .collect();
         let resources = resources?;
         slf.set_property("archive_slf_num_resources", resources.len());
-        return Ok(resources);
+        Ok(resources)
     }
 
     /// Adds hashes of the resource data.
@@ -361,7 +359,7 @@ impl ResourcePackBuilder {
             let prop = "hash_".to_owned() + algorithm;
             resource.set_property(&prop, hash);
         }
-        return Ok(());
+        Ok(())
     }
 }
 
@@ -376,10 +374,10 @@ pub enum ResourceError {
 
 impl Error for ResourceError {
     fn description(&self) -> &str {
-        return match self {
+        match self {
             ResourceError::Text(desc) => desc,
             ResourceError::IoError(err) => err.description(),
-        };
+        }
     }
 }
 
@@ -412,7 +410,7 @@ impl FSIterator {
     fn new(path: &Path) -> Self {
         let mut all_files = Self::default();
         all_files.with(path.to_owned());
-        return all_files;
+        all_files
     }
 
     /// Adds a path to the iterator.
@@ -467,7 +465,7 @@ fn resource_path(base: &Path, path: &Path) -> Result<Nfc, ResourceError> {
             None => Err(format!("{:?} contains invalid utf8", resource_path).into()),
         };
     }
-    return Err(format!("{:?} is not a prefix of {:?}", base, path).into());
+    Err(format!("{:?} is not a prefix of {:?}", base, path).into())
 }
 
 /// Trait the adds shortcuts for properties.
@@ -480,27 +478,27 @@ pub trait ResourcePropertiesExt {
 
     /// Removes a property and returns the old value.
     fn remove_property(&mut self, name: &str) -> Option<Value> {
-        return self.properties_mut().remove(name);
+        self.properties_mut().remove(name)
     }
 
     /// Sets the value of a property and returns the old value.
     fn set_property<T: Serialize>(&mut self, name: &str, value: T) -> Option<Value> {
-        return self.properties_mut().insert(name.to_owned(), json!(value));
+        self.properties_mut().insert(name.to_owned(), json!(value))
     }
 
     /// Gets the value of a property.
     fn get_property(&self, name: &str) -> Option<&Value> {
-        return self.properties().get(name);
+        self.properties().get(name)
     }
 
     /// Gets the value of a bool property.
     fn get_bool(&self, name: &str) -> Option<bool> {
-        return self.get_property(name).and_then(|v| v.as_bool());
+        self.get_property(name).and_then(|v| v.as_bool())
     }
 
     /// Gets the value of a string property.
     fn get_str(&self, name: &str) -> Option<&str> {
-        return self.get_property(name).and_then(|v| v.as_str());
+        self.get_property(name).and_then(|v| v.as_str())
     }
 
     /// Gets the value of an array of strings property.
@@ -515,53 +513,52 @@ pub trait ResourcePropertiesExt {
             }
             return Some(strings);
         }
-        return None;
+        None
     }
 
     /// Gets the signed integer value of a number property.
     fn get_i64(&self, name: &str) -> Option<i64> {
-        return self.get_property(name).and_then(|v| v.as_i64());
+        self.get_property(name).and_then(|v| v.as_i64())
     }
 
     /// Gets the unsigned integer value of a number property.
     fn get_u64(&self, name: &str) -> Option<u64> {
-        return self.get_property(name).and_then(|v| v.as_u64());
+        self.get_property(name).and_then(|v| v.as_u64())
     }
 
     /// Gets the floating-point value of a number property.
     fn get_f64(&self, name: &str) -> Option<f64> {
-        return self.get_property(name).and_then(|v| v.as_f64());
+        self.get_property(name).and_then(|v| v.as_f64())
     }
 }
 
 impl ResourcePropertiesExt for ResourcePack {
     fn properties(&self) -> &Map<String, Value> {
-        return &self.properties;
+        &self.properties
     }
 
     fn properties_mut(&mut self) -> &mut Map<String, Value> {
-        return &mut self.properties;
+        &mut self.properties
     }
 }
 
 impl ResourcePropertiesExt for Resource {
     fn properties(&self) -> &Map<String, Value> {
-        return &self.properties;
+        &self.properties
     }
 
     fn properties_mut(&mut self) -> &mut Map<String, Value> {
-        return &mut self.properties;
+        &mut self.properties
     }
 }
 
 #[cfg(test)]
 mod tests {
-    use super::{Resource, ResourcePropertiesExt};
+    use crate::res::{Resource, ResourcePropertiesExt};
 
     #[test]
-    fn property_value_compatibility() {
+    fn property_value_compatibility_boolean() {
         let mut resource = Resource::default();
-        // boolean
         resource.set_property("p", true);
         assert!(resource.get_bool("p").is_some());
         assert!(resource.get_str("p").is_none());
@@ -569,7 +566,11 @@ mod tests {
         assert!(resource.get_u64("p").is_none());
         assert!(resource.get_f64("p").is_none());
         assert_eq!(resource.get_bool("p").unwrap(), true);
-        // string
+    }
+
+    #[test]
+    fn property_value_compatibility_string() {
+        let mut resource = Resource::default();
         resource.set_property("p", "foo");
         assert!(resource.get_bool("p").is_none());
         assert!(resource.get_str("p").is_some());
@@ -577,7 +578,11 @@ mod tests {
         assert!(resource.get_u64("p").is_none());
         assert!(resource.get_f64("p").is_none());
         assert_eq!(resource.get_str("p").unwrap(), "foo");
-        // universal number
+    }
+
+    #[test]
+    fn property_value_compatibility_universal_number() {
+        let mut resource = Resource::default();
         resource.set_property("p", 0);
         assert!(resource.get_bool("p").is_none());
         assert!(resource.get_str("p").is_none());
@@ -585,7 +590,12 @@ mod tests {
         assert!(resource.get_u64("p").is_some());
         assert!(resource.get_f64("p").is_some());
         assert_eq!(resource.get_i64("p").unwrap(), 0);
-        // floating point number
+    }
+
+    #[test]
+    #[allow(clippy::float_cmp)]
+    fn property_value_compatibility_floating_point_number() {
+        let mut resource = Resource::default();
         resource.set_property("p", 0.5);
         assert!(resource.get_bool("p").is_none());
         assert!(resource.get_str("p").is_none());
@@ -593,7 +603,11 @@ mod tests {
         assert!(resource.get_u64("p").is_none());
         assert!(resource.get_f64("p").is_some());
         assert_eq!(resource.get_f64("p").unwrap(), 0.5);
-        // negative number
+    }
+
+    #[test]
+    fn property_value_compatibility_negative_number() {
+        let mut resource = Resource::default();
         resource.set_property("p", -1);
         assert!(resource.get_bool("p").is_none());
         assert!(resource.get_str("p").is_none());
@@ -601,7 +615,11 @@ mod tests {
         assert!(resource.get_u64("p").is_none());
         assert!(resource.get_f64("p").is_some());
         assert_eq!(resource.get_i64("p").unwrap(), -1);
-        // big number
+    }
+
+    #[test]
+    fn property_value_compatibility_big_number() {
+        let mut resource = Resource::default();
         resource.set_property("p", u64::max_value());
         assert!(resource.get_bool("p").is_none());
         assert!(resource.get_str("p").is_none());
@@ -621,12 +639,13 @@ mod tests {
         use md5::Md5;
 
         fn data_for_hasher() -> Vec<u8> {
-            return "A quick brown fox jumps over the lazy dog"
+            "A quick brown fox jumps over the lazy dog"
                 .repeat(1_000_000)
                 .as_bytes()
-                .to_vec();
+                .to_vec()
         }
 
+        #[allow(clippy::cast_lossless)]
         fn print_hasher_result(name: &str, time: Duration, size: usize, hash: &[u8]) {
             let secs = time.as_secs() as f64 + time.subsec_nanos() as f64 / 1_000_000_000f64;
             let mib = size as f64 / 1_000_000f64;

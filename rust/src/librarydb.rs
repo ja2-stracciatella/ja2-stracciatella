@@ -28,7 +28,8 @@ use std::cmp;
 use std::collections::HashSet;
 use std::fmt;
 use std::fs::File;
-use std::io::{self, Seek, SeekFrom};
+use std::io;
+use std::io::{Seek, SeekFrom};
 use std::ops;
 use std::path::{Component, Path, PathBuf};
 use std::sync::{Arc, Mutex, MutexGuard, RwLock};
@@ -391,8 +392,8 @@ pub mod tests {
 
     use tempdir::TempDir;
 
-    use super::*;
     use crate::file_formats::slf::{SlfEntry, SlfEntryState, SlfHeader};
+    use crate::librarydb::*;
 
     fn make_slf(dir: &Path, name: &str, library_path: &str, entry_paths: &[&str]) -> PathBuf {
         let header = SlfHeader {

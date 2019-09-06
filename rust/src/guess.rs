@@ -1,7 +1,5 @@
 //! This module contains code to guess Vanillaversion with resource packs.
 
-use log::{error, info};
-use rayon::prelude::*;
 use std::collections::HashSet;
 use std::convert::From;
 use std::error::Error;
@@ -12,6 +10,8 @@ use std::io;
 use std::path::{Path, PathBuf};
 use std::str::FromStr;
 
+use log::{error, info};
+use rayon::prelude::*;
 use serde_json;
 
 use crate::config::VanillaVersion;
@@ -79,11 +79,11 @@ impl Percentages {
 }
 
 impl From<&MatchResourcesResult> for Percentages {
+    #[allow(clippy::cast_lossless)]
     fn from(result: &MatchResourcesResult) -> Self {
         let number_of_resources = result.number_of_resources;
-        let count_differences = |filter: &Fn(&&Difference) -> bool| {
-            result.differences.iter().filter(filter).count()
-        };
+        let count_differences =
+            |filter: &Fn(&&Difference) -> bool| result.differences.iter().filter(filter).count();
         let num_only_in_datadir = count_differences(&|d| match d {
             Difference::OnlyExistsInDataDir(_, _) => true,
             _ => false,
@@ -474,10 +474,12 @@ impl From<serde_json::Error> for GuessError {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::fs;
     use std::io::Write;
+
     use tempdir::TempDir;
+
+    use crate::guess::*;
 
     fn build_data_dir_with_resources(resources: Vec<(PathBuf, Vec<u8>)>) -> TempDir {
         let tmp_dir = TempDir::new("ja2-test-guess").unwrap();

@@ -58,7 +58,6 @@
 
 use std::io::ErrorKind::{InvalidData, InvalidInput};
 use std::io::{Cursor, Error, Read, Result, Seek, SeekFrom, Write};
-
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use byteorder::{ReadBytesExt, WriteBytesExt, LE};
@@ -71,7 +70,7 @@ pub const ENTRY_BYTES: u32 = 280;
 
 /// Unix epoch is 1 Jan 1970.
 /// FILETIME is the number of 10^-7 seconds (100-nanosecond intervals) from 1 Jan 1601.
-pub const UNIX_EPOCH_AS_FILETIME: u64 = 11_644_473_600_000_000_0; // 100-nanoseconds
+pub const UNIX_EPOCH_AS_FILETIME: u64 = 116_444_736_000_000_000; // 100-nanoseconds
 
 /// Header of the archive.
 /// The entries are at the end of the archive.
@@ -159,7 +158,7 @@ impl SlfHeader {
     {
         input.seek(SeekFrom::Start(0))?;
 
-        let mut handle = input.take(HEADER_BYTES as u64);
+        let mut handle = input.take(u64::from(HEADER_BYTES));
         let library_name = handle.read_fixed_string(256)?;
         let library_path = handle.read_fixed_string(256)?;
         let num_entries = handle.read_i32::<LE>()?;
@@ -170,7 +169,7 @@ impl SlfHeader {
         handle.read_unused(7)?;
         assert_eq!(handle.limit(), 0);
 
-        return Ok(Self {
+        Ok(Self {
             library_name,
             library_path,
             num_entries,
@@ -178,7 +177,7 @@ impl SlfHeader {
             sort,
             version,
             contains_subdirectories,
-        });
+        })
     }
 
     /// Write this header to output.
@@ -202,7 +201,7 @@ impl SlfHeader {
         output.seek(SeekFrom::Start(0))?;
         output.write_all(&buffer)?;
 
-        return Ok(());
+        Ok(())
     }
 
     /// Read the entries from the input.
@@ -220,9 +219,9 @@ impl SlfHeader {
 
         let num_entries = self.num_entries as u32;
         let num_bytes = num_entries * ENTRY_BYTES;
-        input.seek(SeekFrom::End(-(num_bytes as i64)))?;
+        input.seek(SeekFrom::End(-(i64::from(num_bytes))))?;
 
-        let mut handle = input.take(num_bytes as u64);
+        let mut handle = input.take(u64::from(num_bytes));
         let mut entries = Vec::new();
         for _ in 0..num_entries {
             let file_path = handle.read_fixed_string(256)?;
@@ -243,7 +242,7 @@ impl SlfHeader {
         }
         assert_eq!(handle.limit(), 0);
 
-        return Ok(entries);
+        Ok(entries)
     }
 
     /// Write the entries to output.
@@ -285,16 +284,16 @@ impl SlfHeader {
             }
         }
 
-        match output.seek(SeekFrom::End(-(num_bytes as i64))) {
-            Ok(position) if position >= end_of_data as u64 => {}
+        match output.seek(SeekFrom::End(-(i64::from(num_bytes)))) {
+            Ok(position) if position >= u64::from(end_of_data) => {}
             _ => {
                 // will increase the size of output
-                output.seek(SeekFrom::Start(end_of_data as u64))?;
+                output.seek(SeekFrom::Start(u64::from(end_of_data)))?;
             }
         }
         output.write_all(&buffer)?;
 
-        return Ok(());
+        Ok(())
     }
 }
 
@@ -308,9 +307,9 @@ impl SlfEntry {
         }
 
         let unix = (self.file_time - UNIX_EPOCH_AS_FILETIME) as u64; // 100-nanoseconds
-        let secs = Duration::from_secs(unix / 1_000_000_0);
-        let nanos = Duration::from_nanos((unix % 1_000_000_0) * 100);
-        return Some(UNIX_EPOCH + secs + nanos);
+        let secs = Duration::from_secs(unix / 10_000_000);
+        let nanos = Duration::from_nanos((unix % 10_000_000) * 100);
+        Some(UNIX_EPOCH + secs + nanos)
     }
 
     /// Read the entry data from the input.
@@ -319,12 +318,12 @@ impl SlfEntry {
     where
         T: Read + Seek,
     {
-        input.seek(SeekFrom::Start(self.offset as u64))?;
+        input.seek(SeekFrom::Start(u64::from(self.offset)))?;
 
         let mut data = vec![0u8; self.length as usize];
         input.read_exact(&mut data)?;
 
-        return Ok(data);
+        Ok(data)
     }
 
     /// Write the entry data to output.
@@ -346,10 +345,10 @@ impl SlfEntry {
             ));
         }
 
-        output.seek(SeekFrom::Start(self.offset as u64))?;
+        output.seek(SeekFrom::Start(u64::from(self.offset)))?;
         output.write_all(&data)?;
 
-        return Ok(());
+        Ok(())
     }
 }
 
@@ -363,26 +362,26 @@ impl Default for SlfEntryState {
 impl From<SlfEntryState> for u8 {
     /// All states map to a u8 value.
     fn from(state: SlfEntryState) -> Self {
-        return match state {
+        match state {
             SlfEntryState::Ok => 0x00,
             SlfEntryState::Deleted => 0xFF,
             SlfEntryState::Old => 0x01,
             SlfEntryState::DoesNotExist => 0xFE,
             SlfEntryState::Unknown(value) => value,
-        };
+        }
     }
 }
 
 impl From<u8> for SlfEntryState {
     /// All u8 values map to a state.
     fn from(value: u8) -> Self {
-        return match value {
+        match value {
             0x00 => SlfEntryState::Ok,
             0xFF => SlfEntryState::Deleted,
             0x01 => SlfEntryState::Old,
             0xFE => SlfEntryState::DoesNotExist,
             value => SlfEntryState::Unknown(value),
-        };
+        }
     }
 }
 
@@ -392,7 +391,7 @@ pub trait SlfReadExt: Read {
     fn read_unused(&mut self, num_bytes: usize) -> Result<()> {
         let mut buffer = vec![0u8; num_bytes];
         self.read_exact(&mut buffer)?;
-        return Ok(());
+        Ok(())
     }
 
     /// Reads a nul terminated fixed size string.
@@ -400,13 +399,13 @@ pub trait SlfReadExt: Read {
         let mut buffer = vec![0u8; num_bytes];
         self.read_exact(&mut buffer)?;
         // must be nul terminated and valid utf8
-        return match buffer.iter().position(|&byte| byte == 0) {
+        match buffer.iter().position(|&byte| byte == 0) {
             Some(position) => match ::std::str::from_utf8(&buffer[..position]) {
                 Ok(s) => Ok(s.to_string()),
                 Err(e) => Err(Error::new(InvalidData, e)),
             },
             None => Err(Error::new(InvalidData, "string is not nul terminated")),
-        };
+        }
     }
 }
 
@@ -414,13 +413,12 @@ pub trait SlfReadExt: Read {
 pub trait SlfWriteExt: Write {
     /// Writes zeroed unused bytes.
     fn write_unused(&mut self, num_bytes: usize) -> Result<()> {
-        let mut buffer = vec![0u8; num_bytes];
-        self.write_all(&mut buffer)?;
-        return Ok(());
+        let buffer = vec![0u8; num_bytes];
+        self.write_all(&buffer)
     }
 
     /// Write a nul terminated fixed size string, unused space is zeroed.
-    fn write_fixed_string(&mut self, num_bytes: usize, string: &String) -> Result<()> {
+    fn write_fixed_string(&mut self, num_bytes: usize, string: &str) -> Result<()> {
         let mut buffer = vec![0u8; num_bytes];
         let string_bytes = string.as_bytes();
         if string_bytes.len() >= buffer.len() {
@@ -428,7 +426,7 @@ pub trait SlfWriteExt: Write {
         }
         buffer[..string_bytes.len()].copy_from_slice(&string_bytes);
         self.write_all(&buffer)?;
-        return Ok(());
+        Ok(())
     }
 }
 
@@ -443,14 +441,14 @@ mod tests {
     use std::fmt::Debug;
     use std::io::Cursor;
 
-    use super::{
+    use crate::file_formats::slf::{
         SlfEntry, SlfEntryState, SlfHeader, ENTRY_BYTES, HEADER_BYTES, UNIX_EPOCH_AS_FILETIME,
     };
 
     #[inline]
     fn assert_ok<OK, ERR: Debug>(result: Result<OK, ERR>) -> OK {
         assert!(result.is_ok());
-        return result.unwrap();
+        result.unwrap()
     }
 
     #[test]
@@ -473,9 +471,9 @@ mod tests {
             state: SlfEntryState::Ok,
             file_time: UNIX_EPOCH_AS_FILETIME,
         }];
-        let after_header_pos = HEADER_BYTES as u64;
-        let after_data_pos = after_header_pos + test_data_len as u64;
-        let after_entries_pos = after_data_pos + ENTRY_BYTES as u64;
+        let after_header_pos = u64::from(HEADER_BYTES);
+        let after_data_pos = after_header_pos + u64::from(test_data_len);
+        let after_entries_pos = after_data_pos + u64::from(ENTRY_BYTES);
         let mut buf: Vec<u8> = Vec::new();
         let mut f = Cursor::new(&mut buf);
 
@@ -483,7 +481,7 @@ mod tests {
         assert_ok(test_header.to_output(&mut f));
         assert_eq!(f.position(), after_header_pos);
         for entry in &test_entries {
-            let after_entry_data_pos = (entry.offset + entry.length) as u64;
+            let after_entry_data_pos = u64::from(entry.offset + entry.length);
             assert_ok(entry.data_to_output(&mut f, &test_data));
             assert_eq!(f.position(), after_entry_data_pos);
         }
@@ -498,7 +496,7 @@ mod tests {
         assert_eq!(f.position(), after_entries_pos);
         assert_eq!(test_entries, entries);
         for entry in &entries {
-            let after_entry_data_pos = (entry.offset + entry.length) as u64;
+            let after_entry_data_pos = u64::from(entry.offset + entry.length);
             let data = assert_ok(entry.data_from_input(&mut f));
             assert_eq!(f.position(), after_entry_data_pos);
             assert_eq!(test_data, data);

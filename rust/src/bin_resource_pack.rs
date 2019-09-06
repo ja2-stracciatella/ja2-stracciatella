@@ -15,15 +15,16 @@ mod file_formats;
 mod res;
 mod unicode;
 
-use res::{ResourcePackBuilder, ResourcePropertiesExt};
-use unicode::Nfc;
-
-use clap::{crate_version, App, Arg, ArgMatches, SubCommand};
-use serde_json;
 use std::fmt::Debug;
 use std::fs;
 use std::path::PathBuf;
 use std::process;
+
+use clap::{crate_version, App, Arg, ArgMatches, SubCommand};
+use serde_json;
+
+use crate::res::{ResourcePackBuilder, ResourcePropertiesExt};
+use crate::unicode::Nfc;
 
 /// Entry point of the resource-pack executable.
 fn main() {
@@ -141,7 +142,7 @@ fn subcommand_create(matches: &ArgMatches) {
             if paths.len() > 1 {
                 graceful_error(&format!("Too many data dirs found {:?}", paths));
             }
-            if paths.len() == 0 {
+            if paths.is_empty() {
                 graceful_error(&format!("Data dir not found in {:?}", gamedir));
             }
             let path = paths.remove(0);

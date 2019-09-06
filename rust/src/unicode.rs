@@ -70,17 +70,6 @@ pub struct Nfc {
 }
 
 impl Nfc {
-    /// Creates a normalized string.
-    pub fn from_str(s: &str) -> Self {
-        if is_nfc(s) {
-            let string = s.to_owned();
-            Self { inner: string }
-        } else {
-            let string = s.chars().nfc().collect();
-            Self { inner: string }
-        }
-    }
-
     /// Creates a normalized caseless string.
     pub fn caseless(s: &str) -> Self {
         let string = s.chars().nfc().default_case_fold().nfc().collect();
@@ -134,10 +123,15 @@ impl AsRef<str> for Nfc {
     }
 }
 
-/// Converts to a normalized string.
 impl From<&str> for Nfc {
     fn from(s: &str) -> Self {
-        Nfc::from_str(s)
+        if is_nfc(s) {
+            let string = s.to_owned();
+            Self { inner: string }
+        } else {
+            let string = s.chars().nfc().collect();
+            Self { inner: string }
+        }
     }
 }
 

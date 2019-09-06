@@ -4,15 +4,11 @@ use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
 
-use serde::Deserialize;
-use serde::Serialize;
 use log::warn;
+use serde::{Deserialize, Serialize};
 
+use crate::config::{EngineOptions, Resolution, ScalingQuality, VanillaVersion};
 use crate::json;
-use crate::Resolution;
-use crate::VanillaVersion;
-use crate::ScalingQuality;
-use crate::EngineOptions;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct Ja2JsonContent {
@@ -31,7 +27,7 @@ pub struct Ja2JsonContent {
 
 /// Struct to handle interactions with the JSON configuration file
 pub struct Ja2Json {
-    path: PathBuf
+    path: PathBuf,
 }
 
 fn build_json_config_location(stracciatella_home: &PathBuf) -> PathBuf {
@@ -54,9 +50,16 @@ impl Ja2Json {
     }
 
     /// Apply current JSON file contents to EngineOptions struct
-    pub fn apply_to_engine_options(&self, engine_options: &mut EngineOptions) -> Result<(), String> {
+    pub fn apply_to_engine_options(
+        &self,
+        engine_options: &mut EngineOptions,
+    ) -> Result<(), String> {
         macro_rules! copy_to {
-            ($from: expr, $to: expr) => { if let Some(v) = $from { $to = v; } }
+            ($from: expr, $to: expr) => {
+                if let Some(v) = $from {
+                    $to = v;
+                }
+            };
         }
 
         let content = self.get_content()?;
@@ -82,7 +85,9 @@ impl Ja2Json {
     /// Write current contents of EngineOptions to JSON configuration file
     pub fn write(&self, engine_options: &EngineOptions) -> Result<(), String> {
         macro_rules! copy_to {
-            ($from: expr, $to: expr) => { $to = Some($from.clone()); }
+            ($from: expr, $to: expr) => {
+                $to = Some($from.clone());
+            };
         }
 
         let mut content = Ja2JsonContent {
@@ -108,10 +113,13 @@ impl Ja2Json {
         copy_to!(engine_options.start_in_debug_mode, content.debug);
         copy_to!(engine_options.start_without_sound, content.nosound);
 
-        let json = json::ser::to_string(&content).map_err(|x| format!("Error creating contents of ja2.json config file: {}", x))?;
-        let mut f = File::create(&self.path).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))?;
+        let json = json::ser::to_string(&content)
+            .map_err(|x| format!("Error creating contents of ja2.json config file: {}", x))?;
+        let mut f = File::create(&self.path)
+            .map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))?;
 
-        f.write_all(json.as_bytes()).map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))
+        f.write_all(json.as_bytes())
+            .map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))
     }
 
     /// Ensures that the JSON configuration file exists and write a default one if it doesn't
@@ -130,13 +138,16 @@ impl Ja2Json {
         let parent = self.path.parent();
         if let Some(p) = parent {
             if !p.exists() {
-                fs::create_dir_all(p).map_err(|why| format!("Error creating {:?}: {:?}", p, why.kind()))?;
+                fs::create_dir_all(p)
+                    .map_err(|why| format!("Error creating {:?}: {:?}", p, why.kind()))?;
             }
         }
 
         if !self.path.exists() {
-            let mut f = File::create(&self.path).map_err(|why| format!("Error creating {:?}: {:?}", self.path, why.kind()))?;
-            f.write_all(DEFAULT_JSON_CONTENT.as_bytes()).map_err(|why| format!("Error writing {:?}: {:?}", self.path, why.kind()))?;
+            let mut f = File::create(&self.path)
+                .map_err(|why| format!("Error creating {:?}: {:?}", self.path, why.kind()))?;
+            f.write_all(DEFAULT_JSON_CONTENT.as_bytes())
+                .map_err(|why| format!("Error writing {:?}: {:?}", self.path, why.kind()))?;
         }
 
         Ok(())
