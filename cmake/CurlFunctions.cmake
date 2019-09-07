@@ -1,4 +1,4 @@
-find_program(CURL_EXECUTABLE "curl${CMAKE_EXECUTABLE_SUFFIX}")
+find_program(CURL_EXECUTABLE curl)
 if(CURL_EXECUTABLE STREQUAL "CURL_EXECUTABLE-NOT_FOUND")
     message(FATAL_ERROR "curl is not available")
 endif()
