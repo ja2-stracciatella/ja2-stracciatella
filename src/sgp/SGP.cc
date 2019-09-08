@@ -424,10 +424,25 @@ int main(int argc, char* argv[])
 		SLOGI("------------------------------------------------------------------------------");
 	}
 
-	free_engine_options(params);
-
 	std::vector<std::string> libraries = cm->getListOfGameResources();
 	cm->initGameResouces(configFolderPath, libraries);
+
+	// free editor.slf has the lowest priority (last library) and is optional
+	if(should_run_editor(params))
+	{
+		try
+		{
+			cm->addExtraResources(extraDataDir, "editor.slf");
+			SLOGI("Free editor.slf loaded from '%s'", extraDataDir.c_str());
+		}
+		catch(const LibraryFileNotFoundException& ex)
+		{
+			SLOGI("%s", ex.what());
+		}
+	}
+
+	free_engine_options(params);
+	params = nullptr;
 
 	if(!cm->loadGameData())
 	{
