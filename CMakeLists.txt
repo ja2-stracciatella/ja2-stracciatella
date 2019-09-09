@@ -48,7 +48,7 @@ option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 option(BUILD_LAUNCHER "Build the ja2 launcher application" ON)
-option(WITH_EDITOR_SLF "Include the latest free editor.slf" ON)
+option(WITH_EDITOR_SLF "Include the latest free editor.slf" OFF)
 
 set(EXTERNAL_PROJECT_CMAKE_ARGS
     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
