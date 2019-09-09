@@ -103,6 +103,7 @@ cmake. The supported options are:
 | `WITH_UNITTESTS` | Build with unittests | `ON` |
 | `WITH_FIXMES` | Build with fixme messages | `OFF` |
 | `WITH_MAEMO` | Build with right click mapped to F4 (menu button) | `OFF` |
+| `WITH_EDITOR_SLF` | Download the latest free editor.slf during build | `OFF` |
 
 Example:
 
