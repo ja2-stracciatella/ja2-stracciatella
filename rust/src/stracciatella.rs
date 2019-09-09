@@ -55,7 +55,10 @@ fn get_assets_dir() -> PathBuf {
             }
         }
         Err(err) => {
-            warn!("Defaulting assets dir to the current directory. Reason: {:?}", err);
+            warn!(
+                "Defaulting assets dir to the current directory. Reason: {:?}",
+                err
+            );
             ".".into()
         }
     }
