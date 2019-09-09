@@ -53,14 +53,23 @@ pub extern "C" fn guess_resource_version(gamedir: *const c_char) -> c_int {
     result
 }
 
-/// Returns the path to game.json.
+/// Finds a path relative to the assets directory.
+/// If path is null, it returns the assets directory.
+/// If test_exists is true and the path does not exist, it returns null.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn get_game_json_path() -> *mut c_char {
-    let mut path = get_assets_dir();
-    path.push("externalized/game.json");
-    let path: String = path.to_string_lossy().into();
-    CString::new(path).unwrap().into_raw()
+pub extern "C" fn find_path_from_assets_dir(path: *const c_char, test_exists: bool) -> *mut c_char {
+    let mut path_buf = get_assets_dir();
+    if !path.is_null() {
+        let path = path_from_c_str_or_panic(unsafe_c_str(path));
+        path_buf.push(&path);
+    }
+    if test_exists && !path_buf.exists() {
+        ptr::null_mut()
+    } else {
+        let c_string = c_string_from_path_or_panic(&path_buf);
+        c_string.into_raw()
+    }
 }
 
 /// Finds a path relative to the stracciatella home directory.

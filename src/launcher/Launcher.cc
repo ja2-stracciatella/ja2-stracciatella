@@ -85,9 +85,13 @@ void Launcher::show() {
 	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	resolutionXInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	resolutionYInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	auto game_json_path = get_game_json_path();
-	gameSettingsOutput->value(game_json_path);
-	free_rust_string(game_json_path);
+	auto game_json_path = find_path_from_assets_dir("externalized/game.json", true);
+	if (game_json_path) {
+		gameSettingsOutput->value(game_json_path);
+		free_rust_string(game_json_path);
+	} else {
+		gameSettingsOutput->value("failed to find path to game.json");
+	}
 	fullscreenCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	playSoundsCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	auto ja2_json_path = find_path_from_stracciatella_home("ja2.json", false);
