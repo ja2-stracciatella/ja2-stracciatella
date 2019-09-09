@@ -55,6 +55,9 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [ "$TRAVIS_MINGW" == "true" ]; then
       export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP";
     fi
+  - if [[ "$BUILD_TYPE" == "Release" ]]; then
+      export BUILD_SWITCHES="$BUILD_SWITCHES -DWITH_EDITOR_SLF=ON";
+    fi
   - echo "$PUBLISH_BINARY"
   - echo "$PUBLISH_DIR"
   - echo "$BUILD_SWITCHES"
