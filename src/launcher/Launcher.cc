@@ -85,9 +85,13 @@ void Launcher::show() {
 	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	resolutionXInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	resolutionYInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	auto game_json_path = get_game_json_path();
-	gameSettingsOutput->value(game_json_path);
-	free_rust_string(game_json_path);
+	auto game_json_path = find_path_from_assets_dir("externalized/game.json", true);
+	if (game_json_path) {
+		gameSettingsOutput->value(game_json_path);
+		free_rust_string(game_json_path);
+	} else {
+		gameSettingsOutput->value("failed to find path to game.json");
+	}
 	fullscreenCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	playSoundsCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	auto ja2_json_path = find_path_from_stracciatella_home("ja2.json", false);
@@ -295,7 +299,16 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
-	if (!check_if_relative_path_exists(window->gameDirectoryInput->value(), "Data/Editor.slf", true)) {
+	bool has_editor_slf = check_if_relative_path_exists(window->gameDirectoryInput->value(), "Data/Editor.slf", true);
+	if (!has_editor_slf) {
+		auto assets_dir = find_path_from_assets_dir(nullptr, false);
+		if (assets_dir) {
+			// free editor.slf
+			has_editor_slf = check_if_relative_path_exists(assets_dir, "editor.slf", true);
+			free_rust_string(assets_dir);
+		}
+	}
+	if (!has_editor_slf) {
 		fl_message_title(window->editorButton->label());
 		auto choice = fl_choice("Editor.slf not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 		if (choice != 1) {

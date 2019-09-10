@@ -1,4 +1,4 @@
-cmake_minimum_required (VERSION 2.8)
+cmake_minimum_required (VERSION 3.1)
 
 ## Some macros
 
@@ -48,6 +48,7 @@ option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 option(BUILD_LAUNCHER "Build the ja2 launcher application" ON)
+option(WITH_EDITOR_SLF "Include the latest free editor.slf" OFF)
 
 set(EXTERNAL_PROJECT_CMAKE_ARGS
     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -232,6 +233,12 @@ copy_assets_dir_to_ja2_binary_after_build("externalized")
 copy_assets_dir_to_ja2_binary_after_build("unittests")
 copy_assets_dir_to_ja2_binary_after_build("mods")
 
+if(WITH_EDITOR_SLF)
+    set(EDITORSLF_FILE "${CMAKE_CURRENT_BINARY_DIR}/editor.slf")
+    find_package(EditorSlf REQUIRED)
+    add_custom_templated_target(download-editor-slf)
+    add_dependencies(${JA2_BINARY} download-editor-slf)
+endif()
 
 if (MSVC)
     string(REPLACE "SDL2main.lib" "SDL2.dll" SDL_DLL ${SDL2MAIN_LIBRARY})
@@ -249,7 +256,6 @@ if (APPLE)
             ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
             "$<TARGET_FILE:${LAUNCHER_BINARY}>")
 endif()
-
 
 ## Installing and Packaging
 
@@ -314,6 +320,9 @@ if (UNIX AND NOT MINGW AND NOT APPLE)
     endif()
     install(PROGRAMS "${CMAKE_BINARY_DIR}/lib-stracciatella/bin/ja2-resource-pack${CMAKE_EXECUTABLE_SUFFIX}" DESTINATION bin)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/assets/externalized assets/mods assets/unittests DESTINATION share/ja2)
+    if(WITH_EDITOR_SLF)
+        install(FILES "${EDITORSLF_FILE}" DESTINATION share/ja2)
+    endif()
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-linux/ja2-stracciatella.desktop DESTINATION share/applications)
     install(
         FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.svg
@@ -331,6 +340,9 @@ else()
     endif()
     install(PROGRAMS "${CMAKE_BINARY_DIR}/lib-stracciatella/bin/ja2-resource-pack${CMAKE_EXECUTABLE_SUFFIX}" DESTINATION .)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/assets/externalized assets/mods assets/unittests DESTINATION .)
+    if(WITH_EDITOR_SLF)
+        install(FILES "${EDITORSLF_FILE}" DESTINATION .)
+    endif()
     install(FILES changes.md DESTINATION .)
 endif()
 

@@ -207,6 +207,18 @@ void DefaultContentManager::initGameResouces(const std::string &stracciatellaHom
 	}
 }
 
+void DefaultContentManager::addExtraResources(const std::string &baseDir, const std::string &library)
+{
+	if (!LibraryDB_AddLibrary(m_libraryDB, baseDir.c_str(), library.c_str())) {
+		auto error = get_rust_error();
+		std::string message = FormattedString(
+			"Library '%s' is not found in folder '%s': %s",
+			library.c_str(), baseDir.c_str(), error);
+		free_rust_string(error);
+		throw LibraryFileNotFoundException(message);
+	}
+}
+
 DefaultContentManager::~DefaultContentManager()
 {
 	if(m_libraryDB)

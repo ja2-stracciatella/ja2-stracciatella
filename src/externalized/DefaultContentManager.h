@@ -32,6 +32,7 @@ public:
 
 	/** Initialize game resources. */
 	virtual void initGameResouces(const std::string &stracciatellaHomeDir, const std::vector<std::string> &libraries);
+	virtual void addExtraResources(const std::string &baseDir, const std::string &library);
 
 	/** Load the game data. */
 	bool loadGameData();

@@ -13,6 +13,8 @@ pub mod unicode;
 use std::default::Default;
 use std::path::PathBuf;
 
+use log::warn;
+
 use crate::config::{Cli, EngineOptions, Ja2Json};
 
 fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<String> {
@@ -37,18 +39,29 @@ pub fn parse_json_config(stracciatella_home: &PathBuf) -> Result<EngineOptions, 
 /// Returns the path to the assets directory.
 /// It contains mods and externalized subdirectories.
 fn get_assets_dir() -> PathBuf {
-    let mut path = PathBuf::new();
-    let extra_data_dir = option_env!("EXTRA_DATA_DIR");
-    if extra_data_dir.is_some() && !extra_data_dir.unwrap().is_empty() {
-        // use dir defined at compile time
-        path.push(extra_data_dir.unwrap());
-    } else if let Ok(exe) = std::env::current_exe() {
-        if let Some(dir) = exe.parent() {
-            // use the directory of the executable
-            path.push(dir);
+    if let Some(extra_data_dir) = option_env!("EXTRA_DATA_DIR") {
+        if !extra_data_dir.is_empty() {
+            // use directory defined at compile time
+            return extra_data_dir.into();
         }
     }
-    path
+    match std::env::current_exe().and_then(|x| x.canonicalize()) {
+        Ok(exe) => {
+            // use directory of the executable
+            if let Some(dir) = exe.parent() {
+                dir.into()
+            } else {
+                ".".into()
+            }
+        }
+        Err(err) => {
+            warn!(
+                "Defaulting assets dir to the current directory. Reason: {:?}",
+                err
+            );
+            ".".into()
+        }
+    }
 }
 
 #[cfg(test)]
