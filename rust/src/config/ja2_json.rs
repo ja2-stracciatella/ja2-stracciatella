@@ -125,12 +125,12 @@ impl Ja2Json {
     /// Ensures that the JSON configuration file exists and write a default one if it doesn't
     pub fn ensure_existence(&self) -> Result<(), String> {
         #[cfg(not(windows))]
-        static DEFAULT_JSON_CONTENT: &'static str = r##"{
+        static DEFAULT_JSON_CONTENT: &str = r##"{
             // Put the directory to your original ja2 installation into the line below.
             "game_dir": "/some/place/where/the/data/is"
         }"##;
         #[cfg(windows)]
-        static DEFAULT_JSON_CONTENT: &'static str = r##"{
+        static DEFAULT_JSON_CONTENT: &str = r##"{
             // Put the directory to your original ja2 installation into the line below. Make sure to use double backslashes.
             "game_dir": "C:\\Program Files\\Jagged Alliance 2"
         }"##;
