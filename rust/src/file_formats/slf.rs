@@ -302,14 +302,20 @@ impl SlfEntry {
     #[allow(dead_code)]
     pub fn to_system_time(&self) -> Option<SystemTime> {
         if self.file_time < UNIX_EPOCH_AS_FILETIME {
-            // TODO use SystemTime.checked_sub when the toolchain becomes 1.34.0+
-            return None;
+            let n = UNIX_EPOCH_AS_FILETIME - self.file_time; // 100-nanoseconds
+            let secs = Duration::from_secs(n / 10_000_000);
+            let nanos = Duration::from_nanos((n % 10_000_000) * 100);
+            UNIX_EPOCH
+                .checked_sub(secs)
+                .and_then(|x| x.checked_sub(nanos))
+        } else {
+            let n = self.file_time - UNIX_EPOCH_AS_FILETIME; // 100-nanoseconds
+            let secs = Duration::from_secs(n / 10_000_000);
+            let nanos = Duration::from_nanos((n % 10_000_000) * 100);
+            UNIX_EPOCH
+                .checked_add(secs)
+                .and_then(|x| x.checked_add(nanos))
         }
-
-        let unix = (self.file_time - UNIX_EPOCH_AS_FILETIME) as u64; // 100-nanoseconds
-        let secs = Duration::from_secs(unix / 10_000_000);
-        let nanos = Duration::from_nanos((unix % 10_000_000) * 100);
-        Some(UNIX_EPOCH + secs + nanos)
     }
 
     /// Read the entry data from the input.
