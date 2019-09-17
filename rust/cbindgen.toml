@@ -1,2 +1,4 @@
+autogen_warning = "/* DO NOT MODIFY MANUALLY! Changes will be discarded during build. */"
 include_guard = "stracciatella_h"
+include_version = true
 language = "C++"
