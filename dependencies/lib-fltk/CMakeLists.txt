@@ -1,15 +1,25 @@
 include(ExternalProject)
 
+configure_file(
+    "${CMAKE_SOURCE_DIR}/cmake/external-project-cache.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/external-project-cache.cmake"
+    @ONLY
+)
+
 externalproject_add(fltk-internal
     URL "http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-2-source.tar.gz"
     INSTALL_DIR "${CMAKE_BINARY_DIR}/lib-fltk"
     CMAKE_ARGS
-        ${EXTERNAL_PROJECT_CMAKE_ARGS}
-        -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib-fltk
+        "-C${CMAKE_CURRENT_BINARY_DIR}/external-project-cache.cmake"
+        "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib-fltk"
         -DOPTION_USE_GL=OFF -DOPTION_USE_SYSTEM_ZLIB=OFF -DOPTION_USE_SYSTEM_LIBJPEG=OFF
         -DOPTION_USE_SYSTEM_LIBPNG=OFF -DOPTION_USE_XINERAMA=OFF -DOPTION_USE_XFIXES=OFF
         -DOPTION_USE_XCURSOR=OFF -DOPTION_USE_XFT=OFF -DOPTION_USE_XRENDER=OFF
         -DOPTION_USE_XDBE=OFF -DOPTION_BUILD_EXAMPLES=OFF
+    BUILD_COMMAND ""
+    # NOTE this will always use the initial config in multi-config projects
+    INSTALL_COMMAND "${CMAKE_COMMAND}" --build . --target install --config "${CMAKE_BUILD_TYPE}"
+    BUILD_ALWAYS 1
 )
 
 set(FLTK_BASE_DIR "${CMAKE_BINARY_DIR}/lib-fltk")
