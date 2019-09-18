@@ -1,27 +1,23 @@
 use std::env;
-use std::fs;
 use std::path::PathBuf;
 
-use cbindgen::{Builder, Config};
+use cbindgen;
 
-fn main() {
-    let crate_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
-    let default_header_path = crate_dir
-        .join("stracciatella.h")
-        .into_os_string()
-        .into_string()
-        .unwrap();
-    let header_env = env::var("HEADER_LOCATION").unwrap_or(default_header_path);
-    let header_path = PathBuf::from(&header_env);
-    let header_dir = header_path.parent().unwrap();
-    let config = Config::from_file("cbindgen.toml").expect("Failed to read `cbindgen.toml`!");
+/// Generates the `stracciatella.h` header according to `cbindgen.toml`.
+/// The header file will only be updated if the generated text is different from the existing text.
+fn stracciatella_h() {
+    let crate_dir: PathBuf = env::var_os("CARGO_MANIFEST_DIR").unwrap().into();
+    let header_path: PathBuf = if let Some(location) = env::var_os("HEADER_LOCATION") {
+        location.into() // path from env
+    } else {
+        crate_dir.join("stracciatella.h") // default path
+    };
 
-    fs::create_dir_all(&header_dir).unwrap();
-
-    Builder::new()
-        .with_crate(crate_dir)
-        .with_config(config)
-        .generate()
+    cbindgen::generate(&crate_dir)
         .expect("Unable to generate bindings")
         .write_to_file(&header_path);
+}
+
+fn main() {
+    stracciatella_h();
 }
