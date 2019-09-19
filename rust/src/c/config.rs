@@ -14,11 +14,11 @@ use crate::config::{
 /// Loads values from `(stracciatella_home)/ja2.json`, creating it if it does not exist.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn create_engine_options(
-    array: *const *const c_char,
+pub extern "C" fn EngineOptions_create(
+    args: *const *const c_char,
     length: size_t,
 ) -> *mut EngineOptions {
-    let args: Vec<String> = unsafe_slice(array, length)
+    let args: Vec<String> = unsafe_slice(args, length)
         .iter()
         .map(|&x| str_from_c_str_or_panic(unsafe_c_str(x)).to_owned())
         .collect();

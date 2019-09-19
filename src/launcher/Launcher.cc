@@ -65,7 +65,7 @@ void Launcher::loadJa2Json() {
 		free_engine_options(this->engine_options);
 		this->engine_options = nullptr;
 	}
-	this->engine_options = create_engine_options(argv, argc);
+	this->engine_options = EngineOptions_create(argv, argc);
 
 	if (this->engine_options == NULL) {
 		exit(EXIT_FAILURE);

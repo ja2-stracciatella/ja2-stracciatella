@@ -276,7 +276,7 @@ int main(int argc, char* argv[])
 	// init logging
 	Logger_Init("ja2.log");
 
-	EngineOptions* params = create_engine_options(argv, argc);
+	EngineOptions* params = EngineOptions_create(argv, argc);
 	if (params == NULL) {
 		return EXIT_FAILURE;
 	}
