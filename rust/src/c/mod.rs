@@ -16,7 +16,7 @@ pub mod error {
     /// Returns a copy of the thread local rust error or null.
     /// The caller is responsible for the memory.
     #[no_mangle]
-    pub extern "C" fn get_rust_error() -> *mut c_char {
+    pub extern "C" fn getRustError() -> *mut c_char {
         RUST_ERROR.with(|x| {
             if let Some(ref error) = *x.borrow() {
                 return error.clone().into_raw();
@@ -271,7 +271,7 @@ mod tests {
     #[test]
     fn test_rust_error() {
         fn error() -> Option<CString> {
-            let ptr = get_rust_error(); // get copy
+            let ptr = getRustError(); // get copy
             if ptr.is_null() {
                 None
             } else {
