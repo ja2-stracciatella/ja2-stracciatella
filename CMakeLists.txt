@@ -61,6 +61,11 @@ set(EXTERNAL_PROJECT_CMAKE_ARGS
     -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=${CMAKE_FIND_ROOT_PATH_MODE_INCLUDE}
 )
 
+if(MSVC)
+	# set the source and execution charset
+	add_compile_options("/utf-8")
+endif()
+
 ## Build
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
