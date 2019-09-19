@@ -55,7 +55,7 @@ pub extern "C" fn EngineOptions_destroy(ptr: *mut EngineOptions) {
 /// Gets the `EngineOptions.stracciatella_home` path.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn get_stracciatella_home(ptr: *const EngineOptions) -> *mut c_char {
+pub extern "C" fn EngineOptions_getStracciatellaHome(ptr: *const EngineOptions) -> *mut c_char {
     let engine_options = unsafe_ref(ptr);
     let stracciatella_home = c_string_from_path_or_panic(&engine_options.stracciatella_home);
     stracciatella_home.into_raw()
