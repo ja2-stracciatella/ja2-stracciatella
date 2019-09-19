@@ -48,7 +48,7 @@ pub extern "C" fn EngineOptions_write(ptr: *mut EngineOptions) -> bool {
 
 /// Deletes `EngineOptions`.
 #[no_mangle]
-pub extern "C" fn free_engine_options(ptr: *mut EngineOptions) {
+pub extern "C" fn EngineOptions_destroy(ptr: *mut EngineOptions) {
     let _drop_me = from_ptr(ptr);
 }
 

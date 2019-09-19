@@ -51,7 +51,7 @@ Launcher::Launcher(int argc, char* argv[]) : StracciatellaLauncher() {
 
 Launcher::~Launcher() {
 	if (this->engine_options) {
-		free_engine_options(this->engine_options);
+		EngineOptions_destroy(this->engine_options);
 		this->engine_options = nullptr;
 	}
 }
@@ -62,7 +62,7 @@ void Launcher::loadJa2Json() {
 	free_rust_string(rustExePath);
 
 	if (this->engine_options) {
-		free_engine_options(this->engine_options);
+		EngineOptions_destroy(this->engine_options);
 		this->engine_options = nullptr;
 	}
 	this->engine_options = EngineOptions_create(argv, argc);

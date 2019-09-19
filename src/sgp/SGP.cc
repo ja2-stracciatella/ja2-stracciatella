@@ -441,7 +441,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	free_engine_options(params);
+	EngineOptions_destroy(params);
 	params = nullptr;
 
 	if(!cm->loadGameData())
