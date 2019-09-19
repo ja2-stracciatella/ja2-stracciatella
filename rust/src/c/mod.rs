@@ -1,4 +1,7 @@
 //! This module and it's submodules contains code for C.
+//!
+//! The C-rust interface should follow the naming style in:
+//! http://geosoft.no/development/cppstyle.html
 
 pub mod config;
 pub mod librarydb;
