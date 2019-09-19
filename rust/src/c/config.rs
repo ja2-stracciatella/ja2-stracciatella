@@ -40,7 +40,7 @@ pub extern "C" fn EngineOptions_create(
 /// Writes `EngineOptions` to `(stracciatella_home)/ja2.json`.
 /// Returns true on success, false otherwise.
 #[no_mangle]
-pub extern "C" fn write_engine_options(ptr: *mut EngineOptions) -> bool {
+pub extern "C" fn EngineOptions_write(ptr: *mut EngineOptions) -> bool {
     let engine_options = unsafe_mut(ptr);
     let ja2_json = Ja2Json::from_stracciatella_home(&engine_options.stracciatella_home);
     ja2_json.write(&engine_options).is_ok()
@@ -279,7 +279,7 @@ mod tests {
         engine_options.stracciatella_home = stracciatella_home.clone();
         engine_options.resolution = Resolution(100, 100);
 
-        assert_eq!(write_engine_options(&mut engine_options), true);
+        assert_eq!(EngineOptions_write(&mut engine_options), true);
 
         let got_engine_options = parse_json_config(&stracciatella_home).unwrap();
 
@@ -296,7 +296,7 @@ mod tests {
         engine_options.stracciatella_home = stracciatella_home.clone();
         engine_options.resolution = Resolution(100, 100);
 
-        write_engine_options(&mut engine_options);
+        EngineOptions_write(&mut engine_options);
 
         let config_file_contents = fs::read_to_string(stracciatella_json).unwrap();
 
