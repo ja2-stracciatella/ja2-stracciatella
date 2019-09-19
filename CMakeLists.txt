@@ -355,7 +355,6 @@ else()
 endif()
 
 if(MSVC OR MINGW)
-    set(CMAKE_INSTALL_DEBUG_LIBRARIES TRUE)
     set(CMAKE_INSTALL_SYSTEM_RUNTIME_DESTINATION .)
     set(CMAKE_INSTALL_UCRT_LIBRARIES TRUE)
     include(InstallRequiredSystemLibraries)
