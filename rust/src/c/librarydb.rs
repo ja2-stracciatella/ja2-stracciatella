@@ -18,7 +18,7 @@ pub extern "C" fn LibraryDB_create() -> *mut LibraryDB {
 /// Destructor.
 /// The caller is no longer responsible for the memory of the library database.
 #[no_mangle]
-pub extern "C" fn LibraryDB_Delete(ldb: *mut LibraryDB) {
+pub extern "C" fn LibraryDB_destroy(ldb: *mut LibraryDB) {
     let _drop_me = from_ptr(ldb);
 }
 
@@ -191,7 +191,7 @@ mod tests {
             let data = read_to_end(c_file);
             assert_eq!(&data, b".slf");
             LibraryFile_Close(c_file); // rust manages the memory
-            LibraryDB_Delete(c_ldb); // rust manages the memory
+            LibraryDB_destroy(c_ldb); // rust manages the memory
         }
 
         // library order matters, file paths are case insensitive, allow both path separators
@@ -210,7 +210,7 @@ mod tests {
             assert_eq!(&data, b"foo.slf");
             let data = library_file_data(c_ldb, "foo/BAR/baz.txt");
             assert_eq!(&data, b"foo.slf");
-            LibraryDB_Delete(c_ldb); // rust manages the memory
+            LibraryDB_destroy(c_ldb); // rust manages the memory
 
             let c_ldb = LibraryDB_create(); // must manage the memory
             assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foobar_slf));
@@ -219,7 +219,7 @@ mod tests {
             assert_eq!(&data, b"foo.slf");
             let data = library_file_data(c_ldb, "foo\\bar/baz.txt");
             assert_eq!(&data, b"foobar.slf");
-            LibraryDB_Delete(c_ldb); // rust manages the memory
+            LibraryDB_destroy(c_ldb); // rust manages the memory
         }
 
         dir.close().unwrap();

@@ -223,7 +223,7 @@ DefaultContentManager::~DefaultContentManager()
 {
 	if(m_libraryDB)
 	{
-		LibraryDB_Delete(m_libraryDB);
+		LibraryDB_destroy(m_libraryDB);
 		m_libraryDB = nullptr;
 	}
 
