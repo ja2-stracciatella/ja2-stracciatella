@@ -147,7 +147,7 @@ pub extern "C" fn EngineOptions_getBrightness(ptr: *const EngineOptions) -> f32 
 
 /// Sets `EngineOptions.brightness`.
 #[no_mangle]
-pub extern "C" fn set_brightness(ptr: *mut EngineOptions, brightness: f32) {
+pub extern "C" fn EngineOptions_setBrightness(ptr: *mut EngineOptions, brightness: f32) {
     let engine_options = unsafe_mut(ptr);
     engine_options.brightness = brightness
 }
