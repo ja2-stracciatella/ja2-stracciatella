@@ -77,7 +77,7 @@ pub extern "C" fn findPathFromAssetsDir(path: *const c_char, test_exists: bool) 
 /// If test_exists is true, it makes sure the path exists.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn find_path_from_stracciatella_home(
+pub extern "C" fn findPathFromStracciatellaHome(
     path: *const c_char,
     test_exists: bool,
 ) -> *mut c_char {

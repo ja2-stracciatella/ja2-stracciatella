@@ -94,7 +94,7 @@ void Launcher::show() {
 	}
 	fullscreenCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	playSoundsCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	auto ja2_json_path = find_path_from_stracciatella_home("ja2.json", false);
+	auto ja2_json_path = findPathFromStracciatellaHome("ja2.json", false);
 	if (ja2_json_path) {
 		ja2JsonPathOutput->value(ja2_json_path);
 		CString_destroy(ja2_json_path);
