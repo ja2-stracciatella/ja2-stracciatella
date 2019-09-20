@@ -203,7 +203,7 @@ void Launcher::populateChoices() {
 	vec_c_string_delete(mods);
 
 	for(GameVersion version : predefinedVersions) {
-		auto resourceVersionString = get_resource_version_string(version);
+		auto resourceVersionString = VanillaVersion_toString(version);
 		gameVersionInput->add(resourceVersionString);
 		free_rust_string(resourceVersionString);
     }

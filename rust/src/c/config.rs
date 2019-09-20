@@ -254,7 +254,7 @@ pub extern "C" fn ScalingQuality_toString(quality: ScalingQuality) -> *mut c_cha
 /// Gets the string represntation of the `VanillaVersion` value.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn get_resource_version_string(version: VanillaVersion) -> *mut c_char {
+pub extern "C" fn VanillaVersion_toString(version: VanillaVersion) -> *mut c_char {
     let c_string = c_string_from_str(&version.to_string());
     c_string.into_raw()
 }
@@ -317,10 +317,10 @@ mod tests {
     }
 
     #[test]
-    fn get_resource_version_string_should_return_the_correct_resource_version_string() {
+    fn vanilla_version_to_string_should_return_the_correct_resource_version_string() {
         macro_rules! t {
             ($version:expr, $expected:expr) => {
-                let got = get_resource_version_string($version);
+                let got = VanillaVersion_toString($version);
                 assert_eq!(str_from_c_str_or_panic(unsafe_c_str(got)), $expected);
                 free_rust_string(got);
             };
