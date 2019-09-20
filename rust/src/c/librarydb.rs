@@ -11,7 +11,7 @@ use crate::librarydb::{LibraryDB, LibraryFile};
 /// Constructor.
 /// The caller is responsible for the memory of the library database.
 #[no_mangle]
-pub extern "C" fn LibraryDB_New() -> *mut LibraryDB {
+pub extern "C" fn LibraryDB_create() -> *mut LibraryDB {
     into_ptr(LibraryDB::new())
 }
 
@@ -175,7 +175,7 @@ mod tests {
             let c_foo_txt = c_string_from_str("foo.txt");
             let c_foo_txt = c_foo_txt.as_ptr();
 
-            let c_ldb = LibraryDB_New(); // must manage the memory
+            let c_ldb = LibraryDB_create(); // must manage the memory
             assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_library));
             let c_file = LibraryFile_Open(c_ldb, c_foo_txt); // must manage the memory
             assert_ne!(c_file, std::ptr::null_mut());
@@ -203,7 +203,7 @@ mod tests {
             let c_foobar_slf = c_string_from_str("foobar.slf");
             let c_foobar_slf = c_foobar_slf.as_ptr();
 
-            let c_ldb = LibraryDB_New(); // must manage the memory
+            let c_ldb = LibraryDB_create(); // must manage the memory
             assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foo_slf));
             assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foobar_slf));
             let data = library_file_data(c_ldb, "foo/bar.txt");
@@ -212,7 +212,7 @@ mod tests {
             assert_eq!(&data, b"foo.slf");
             LibraryDB_Delete(c_ldb); // rust manages the memory
 
-            let c_ldb = LibraryDB_New(); // must manage the memory
+            let c_ldb = LibraryDB_create(); // must manage the memory
             assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foobar_slf));
             assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foo_slf));
             let data = library_file_data(c_ldb, "foo/BAR.TXT");

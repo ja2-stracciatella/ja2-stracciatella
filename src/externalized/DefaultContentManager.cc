@@ -178,7 +178,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	}
 #endif
 
-	m_libraryDB = LibraryDB_New();
+	m_libraryDB = LibraryDB_create();
 
 	m_bobbyRayNewInventory = NULL;
 	m_bobbyRayUsedInventory = NULL;
