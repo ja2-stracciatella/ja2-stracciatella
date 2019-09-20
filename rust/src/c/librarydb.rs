@@ -26,7 +26,7 @@ pub extern "C" fn LibraryDB_destroy(ldb: *mut LibraryDB) {
 /// Returns true is successful, false otherwise.
 /// Sets the rust error.
 #[no_mangle]
-pub extern "C" fn LibraryDB_AddLibrary(
+pub extern "C" fn LibraryDB_push(
     ldb: *mut LibraryDB,
     data_dir: *const c_char,
     library: *const c_char,
@@ -176,7 +176,7 @@ mod tests {
             let c_foo_txt = c_foo_txt.as_ptr();
 
             let c_ldb = LibraryDB_create(); // must manage the memory
-            assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_library));
+            assert!(LibraryDB_push(c_ldb, c_data_dir, c_library));
             let c_file = LibraryFile_Open(c_ldb, c_foo_txt); // must manage the memory
             assert_ne!(c_file, std::ptr::null_mut());
             assert_eq!(LibraryFile_GetPos(c_file), 0);
@@ -204,8 +204,8 @@ mod tests {
             let c_foobar_slf = c_foobar_slf.as_ptr();
 
             let c_ldb = LibraryDB_create(); // must manage the memory
-            assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foo_slf));
-            assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foobar_slf));
+            assert!(LibraryDB_push(c_ldb, c_data_dir, c_foo_slf));
+            assert!(LibraryDB_push(c_ldb, c_data_dir, c_foobar_slf));
             let data = library_file_data(c_ldb, "foo/bar.txt");
             assert_eq!(&data, b"foo.slf");
             let data = library_file_data(c_ldb, "foo/BAR/baz.txt");
@@ -213,8 +213,8 @@ mod tests {
             LibraryDB_destroy(c_ldb); // rust manages the memory
 
             let c_ldb = LibraryDB_create(); // must manage the memory
-            assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foobar_slf));
-            assert!(LibraryDB_AddLibrary(c_ldb, c_data_dir, c_foo_slf));
+            assert!(LibraryDB_push(c_ldb, c_data_dir, c_foobar_slf));
+            assert!(LibraryDB_push(c_ldb, c_data_dir, c_foo_slf));
             let data = library_file_data(c_ldb, "foo/BAR.TXT");
             assert_eq!(&data, b"foo.slf");
             let data = library_file_data(c_ldb, "foo\\bar/baz.txt");
