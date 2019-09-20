@@ -314,10 +314,10 @@ int main(int argc, char* argv[])
 		GameState::getInstance()->setEditorMode(false);
 	}
 
-	bool result = g_ui.setScreenSize(get_resolution_x(params), get_resolution_y(params));
+	bool result = g_ui.setScreenSize(EngineOptions_getResolutionX(params), get_resolution_y(params));
 	if(!result)
 	{
-		SLOGE("Failed to set screen resolution %d x %d", get_resolution_x(params), get_resolution_y(params));
+		SLOGE("Failed to set screen resolution %d x %d", EngineOptions_getResolutionX(params), get_resolution_y(params));
 		return EXIT_FAILURE;
 	}
 

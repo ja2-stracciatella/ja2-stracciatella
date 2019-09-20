@@ -137,7 +137,7 @@ void Launcher::initializeInputsFromDefaults() {
 	}
 	gameVersionInput->value(resourceVersionIndex);
 
-	int x = get_resolution_x(this->engine_options);
+	int x = EngineOptions_getResolutionX(this->engine_options);
 	int y = get_resolution_y(this->engine_options);
 
 	resolutionXInput->value(x);
