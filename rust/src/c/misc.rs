@@ -192,7 +192,7 @@ pub extern "C" fn VecCString_length(vec: *mut VecCString) -> size_t {
 /// Returns the string at the target index.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn vec_c_string_get(vec: *mut VecCString, index: size_t) -> *mut c_char {
+pub extern "C" fn VecCString_get(vec: *mut VecCString, index: size_t) -> *mut c_char {
     let vec = unsafe_ref(vec);
     vec.inner[index].clone().into_raw()
 }
