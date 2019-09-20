@@ -154,7 +154,7 @@ void Launcher::initializeInputsFromDefaults() {
 	this->scalingModeChoice->value(scalingModeIndex);
 
 	fullscreenCheckbox->value(EngineOptions_shouldStartInFullscreen(this->engine_options) ? 1 : 0);
-	playSoundsCheckbox->value(should_start_without_sound(this->engine_options) ? 0 : 1);
+	playSoundsCheckbox->value(EngineOptions_shouldStartWithoutSound(this->engine_options) ? 0 : 1);
 	update(false, nullptr);
 }
 

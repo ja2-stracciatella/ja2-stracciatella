@@ -291,7 +291,7 @@ int main(int argc, char* argv[])
 		VideoSetFullScreen(FALSE);
 	}
 
-	if (should_start_without_sound(params)) {
+	if (EngineOptions_shouldStartWithoutSound(params)) {
 		SoundEnableSound(FALSE);
 	}
 
