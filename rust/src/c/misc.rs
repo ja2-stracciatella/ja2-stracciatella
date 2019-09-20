@@ -58,7 +58,7 @@ pub extern "C" fn guessResourceVersion(gamedir: *const c_char) -> c_int {
 /// If test_exists is true and the path does not exist, it returns null.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn find_path_from_assets_dir(path: *const c_char, test_exists: bool) -> *mut c_char {
+pub extern "C" fn findPathFromAssetsDir(path: *const c_char, test_exists: bool) -> *mut c_char {
     let mut path_buf = get_assets_dir();
     if !path.is_null() {
         let path = path_from_c_str_or_panic(unsafe_c_str(path));

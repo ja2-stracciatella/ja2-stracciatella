@@ -85,7 +85,7 @@ void Launcher::show() {
 	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	resolutionXInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	resolutionYInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	auto game_json_path = find_path_from_assets_dir("externalized/game.json", true);
+	auto game_json_path = findPathFromAssetsDir("externalized/game.json", true);
 	if (game_json_path) {
 		gameSettingsOutput->value(game_json_path);
 		CString_destroy(game_json_path);
@@ -301,7 +301,7 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 	window->writeJsonFile();
 	bool has_editor_slf = check_if_relative_path_exists(window->gameDirectoryInput->value(), "Data/Editor.slf", true);
 	if (!has_editor_slf) {
-		auto assets_dir = find_path_from_assets_dir(nullptr, false);
+		auto assets_dir = findPathFromAssetsDir(nullptr, false);
 		if (assets_dir) {
 			// free editor.slf
 			has_editor_slf = check_if_relative_path_exists(assets_dir, "editor.slf", true);
