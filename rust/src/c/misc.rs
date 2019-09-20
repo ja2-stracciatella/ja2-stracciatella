@@ -103,7 +103,7 @@ pub extern "C" fn findPathFromStracciatellaHome(
 /// Returns true if it was able to find path relative to base.
 /// Makes caseless searches one component at a time.
 #[no_mangle]
-pub extern "C" fn check_if_relative_path_exists(
+pub extern "C" fn checkIfRelativePathExists(
     base: *const c_char,
     path: *const c_char,
     caseless: bool,
@@ -235,7 +235,7 @@ mod tests {
                 let base = CString::new(temp_dir.path().to_str().unwrap()).unwrap();
                 let path = CString::new($path).unwrap();
                 assert_eq!(
-                    super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), $caseless),
+                    super::checkIfRelativePathExists(base.as_ptr(), path.as_ptr(), $caseless),
                     $expected
                 );
             };

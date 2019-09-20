@@ -285,7 +285,7 @@ void Launcher::startGame(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
-	if (!check_if_relative_path_exists(window->gameDirectoryInput->value(), "Data", true)) {
+	if (!checkIfRelativePathExists(window->gameDirectoryInput->value(), "Data", true)) {
 		fl_message_title(window->playButton->label());
 		auto choice = fl_choice("Data dir not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 		if (choice != 1) {
@@ -299,12 +299,12 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
-	bool has_editor_slf = check_if_relative_path_exists(window->gameDirectoryInput->value(), "Data/Editor.slf", true);
+	bool has_editor_slf = checkIfRelativePathExists(window->gameDirectoryInput->value(), "Data/Editor.slf", true);
 	if (!has_editor_slf) {
 		auto assets_dir = findPathFromAssetsDir(nullptr, false);
 		if (assets_dir) {
 			// free editor.slf
-			has_editor_slf = check_if_relative_path_exists(assets_dir, "editor.slf", true);
+			has_editor_slf = checkIfRelativePathExists(assets_dir, "editor.slf", true);
 			CString_destroy(assets_dir);
 		}
 	}
