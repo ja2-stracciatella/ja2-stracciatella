@@ -77,7 +77,7 @@ pub extern "C" fn LibraryFile_close(file: *mut LibraryFile) {
 /// `from` expects FileSeekMode values (see src/sgp/SGPFile.h)
 /// Sets the rust error.
 #[no_mangle]
-pub extern "C" fn LibraryFile_Seek(file: *mut LibraryFile, distance: i64, from: c_int) -> bool {
+pub extern "C" fn LibraryFile_seek(file: *mut LibraryFile, distance: i64, from: c_int) -> bool {
     let file = unsafe_mut(file);
     let seek_result = match from {
         0 if distance >= 0 => file.seek(SeekFrom::Start(distance as u64)),
@@ -182,11 +182,11 @@ mod tests {
             assert_eq!(LibraryFile_GetPos(c_file), 0);
             let data = read_to_end(c_file);
             assert_eq!(&data, b"data.slf");
-            assert!(LibraryFile_Seek(c_file, 0, FILE_SEEK_FROM_START));
+            assert!(LibraryFile_seek(c_file, 0, FILE_SEEK_FROM_START));
             assert_eq!(LibraryFile_GetPos(c_file), 0);
-            assert!(LibraryFile_Seek(c_file, 0, FILE_SEEK_FROM_END));
+            assert!(LibraryFile_seek(c_file, 0, FILE_SEEK_FROM_END));
             assert_eq!(LibraryFile_GetPos(c_file), 8);
-            assert!(LibraryFile_Seek(c_file, -4, FILE_SEEK_FROM_CURRENT));
+            assert!(LibraryFile_seek(c_file, -4, FILE_SEEK_FROM_CURRENT));
             assert_eq!(LibraryFile_GetPos(c_file), 4);
             let data = read_to_end(c_file);
             assert_eq!(&data, b".slf");

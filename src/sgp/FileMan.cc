@@ -320,7 +320,7 @@ void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 	}
 	else
 	{
-		success = LibraryFile_Seek(f->u.lib, distance, how);
+		success = LibraryFile_seek(f->u.lib, distance, how);
 	}
 	if (!success) throw std::runtime_error("Seek in file failed");
 }
