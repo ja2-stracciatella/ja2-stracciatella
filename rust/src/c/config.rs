@@ -140,7 +140,7 @@ pub extern "C" fn EngineOptions_setResolution(ptr: *mut EngineOptions, x: u16, y
 
 /// Gets `EngineOptions.brightness`.
 #[no_mangle]
-pub extern "C" fn get_brightness(ptr: *const EngineOptions) -> f32 {
+pub extern "C" fn EngineOptions_getBrightness(ptr: *const EngineOptions) -> f32 {
     let engine_options = unsafe_ref(ptr);
     engine_options.brightness
 }

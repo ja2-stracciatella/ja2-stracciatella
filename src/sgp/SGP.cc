@@ -335,7 +335,7 @@ int main(int argc, char* argv[])
 
 	VideoScaleQuality scalingQuality = get_scaling_quality(params);
 
-	FLOAT brightness = get_brightness(params);
+	FLOAT brightness = EngineOptions_getBrightness(params);
 
 	////////////////////////////////////////////////////////////
 
