@@ -203,7 +203,7 @@ pub extern "C" fn EngineOptions_setStartInFullscreen(ptr: *mut EngineOptions, va
 
 /// Gets `EngineOptions.scaling_quality`.
 #[no_mangle]
-pub extern "C" fn get_scaling_quality(ptr: *const EngineOptions) -> ScalingQuality {
+pub extern "C" fn EngineOptions_getScalingQuality(ptr: *const EngineOptions) -> ScalingQuality {
     let engine_options = unsafe_ref(ptr);
     engine_options.scaling_quality
 }

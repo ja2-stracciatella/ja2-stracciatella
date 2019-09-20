@@ -333,7 +333,7 @@ int main(int argc, char* argv[])
 	GameVersion version = EngineOptions_getResourceVersion(params);
 	setGameVersion(version);
 
-	VideoScaleQuality scalingQuality = get_scaling_quality(params);
+	VideoScaleQuality scalingQuality = EngineOptions_getScalingQuality(params);
 
 	FLOAT brightness = EngineOptions_getBrightness(params);
 

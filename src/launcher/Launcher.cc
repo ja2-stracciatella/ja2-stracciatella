@@ -143,7 +143,7 @@ void Launcher::initializeInputsFromDefaults() {
 	resolutionXInput->value(x);
 	resolutionYInput->value(y);
 
-	VideoScaleQuality quality = get_scaling_quality(this->engine_options);
+	VideoScaleQuality quality = EngineOptions_getScalingQuality(this->engine_options);
 	auto scalingModeIndex = 0;
 	for (auto scalingMode : scalingModes) {
 		if (scalingMode == quality) {
