@@ -179,7 +179,7 @@ int Launcher::writeJsonFile() {
 	EngineOptions_setResourceVersion(this->engine_options, currentResourceVersion);
 
 	auto currentScalingMode = scalingModes[this->scalingModeChoice->value()];
-	set_scaling_quality(this->engine_options, currentScalingMode);
+	EngineOptions_setScalingQuality(this->engine_options, currentScalingMode);
 
 	bool success = EngineOptions_write(this->engine_options);
 

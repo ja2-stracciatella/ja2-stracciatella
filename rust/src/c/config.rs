@@ -210,7 +210,7 @@ pub extern "C" fn EngineOptions_getScalingQuality(ptr: *const EngineOptions) -> 
 
 /// Sets `EngineOptions.scaling_quality`.
 #[no_mangle]
-pub extern "C" fn set_scaling_quality(ptr: *mut EngineOptions, scaling_quality: ScalingQuality) {
+pub extern "C" fn EngineOptions_setScalingQuality(ptr: *mut EngineOptions, scaling_quality: ScalingQuality) {
     let engine_options = unsafe_mut(ptr);
     engine_options.scaling_quality = scaling_quality
 }
