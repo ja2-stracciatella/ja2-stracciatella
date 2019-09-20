@@ -306,7 +306,7 @@ int main(int argc, char* argv[])
 	}
 
 	if (EngineOptions_shouldStartInDebugMode(params)) {
-		Logger_SetLevel(LogLevel::Debug);
+		Logger_setLevel(LogLevel::Debug);
 		GameState::getInstance()->setDebugging(true);
 	}
 

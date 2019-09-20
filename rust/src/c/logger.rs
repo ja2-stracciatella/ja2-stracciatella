@@ -15,7 +15,7 @@ pub extern "C" fn Logger_initialize(log_file: *const c_char) {
 
 /// Set log level
 #[no_mangle]
-pub extern "C" fn Logger_SetLevel(level: LogLevel) {
+pub extern "C" fn Logger_setLevel(level: LogLevel) {
     Logger::set_level(level)
 }
 
