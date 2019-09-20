@@ -162,7 +162,7 @@ int Launcher::writeJsonFile() {
 	set_start_in_fullscreen(this->engine_options, fullscreenCheckbox->value());
 	set_start_without_sound(this->engine_options, !playSoundsCheckbox->value());
 
-	set_vanilla_game_dir(this->engine_options, gameDirectoryInput->value());
+	EngineOptions_setVanillaGameDir(this->engine_options, gameDirectoryInput->value());
 
 	clear_mods(this->engine_options);
 	auto nitems = modsCheckBrowser->nitems();

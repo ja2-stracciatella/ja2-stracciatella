@@ -72,7 +72,7 @@ pub extern "C" fn EngineOptions_getVanillaGameDir(ptr: *const EngineOptions) -> 
 
 /// Sets the `EngineOptions.vanilla_game_dir` path.
 #[no_mangle]
-pub extern "C" fn set_vanilla_game_dir(ptr: *mut EngineOptions, game_dir_ptr: *const c_char) {
+pub extern "C" fn EngineOptions_setVanillaGameDir(ptr: *mut EngineOptions, game_dir_ptr: *const c_char) {
     let engine_options = unsafe_mut(ptr);
     let vanilla_game_dir = path_from_c_str_or_panic(unsafe_c_str(game_dir_ptr));
     engine_options.vanilla_game_dir = vanilla_game_dir.to_owned();
