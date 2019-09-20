@@ -194,7 +194,7 @@ int Launcher::writeJsonFile() {
 
 void Launcher::populateChoices() {
 	auto mods = findAvailableMods();
-	auto nmods = vec_c_string_len(mods);
+	auto nmods = VecCString_length(mods);
 	for (auto i = 0; i < nmods; ++i) {
 		auto mod = vec_c_string_get(mods, i);
 		addModMenuButton->insert(-1, mod, 0, addMod, this, 0);

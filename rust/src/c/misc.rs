@@ -184,7 +184,7 @@ pub extern "C" fn VecCString_destroy(vec: *mut VecCString) {
 
 /// Returns the vector length.
 #[no_mangle]
-pub extern "C" fn vec_c_string_len(vec: *mut VecCString) -> size_t {
+pub extern "C" fn VecCString_length(vec: *mut VecCString) -> size_t {
     let vec = unsafe_ref(vec);
     vec.inner.len()
 }
