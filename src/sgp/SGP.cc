@@ -330,7 +330,7 @@ int main(int argc, char* argv[])
 #endif
 	}
 
-	GameVersion version = get_resource_version(params);
+	GameVersion version = EngineOptions_getResourceVersion(params);
 	setGameVersion(version);
 
 	VideoScaleQuality scalingQuality = get_scaling_quality(params);

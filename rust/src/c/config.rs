@@ -154,7 +154,7 @@ pub extern "C" fn EngineOptions_setBrightness(ptr: *mut EngineOptions, brightnes
 
 /// Gets `EngineOptions.resource_version`.
 #[no_mangle]
-pub extern "C" fn get_resource_version(ptr: *const EngineOptions) -> VanillaVersion {
+pub extern "C" fn EngineOptions_getResourceVersion(ptr: *const EngineOptions) -> VanillaVersion {
     let engine_options = unsafe_ref(ptr);
     engine_options.resource_version
 }

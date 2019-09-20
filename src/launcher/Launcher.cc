@@ -127,7 +127,7 @@ void Launcher::initializeInputsFromDefaults() {
 		modsCheckBrowser->add(EngineOptions_getMod(this->engine_options, i));
 	}
 
-	auto rustResVersion = get_resource_version(this->engine_options);
+	auto rustResVersion = EngineOptions_getResourceVersion(this->engine_options);
 	auto resourceVersionIndex = 0;
 	for (auto version : predefinedVersions) {
 		if (version == rustResVersion) {
