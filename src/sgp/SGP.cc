@@ -358,7 +358,7 @@ int main(int argc, char* argv[])
 
 	SLOGD("Initializing Game Resources");
 	char* rustConfigFolderPath = EngineOptions_getStracciatellaHome(params);
-	char* rustResRootPath = get_vanilla_game_dir(params);
+	char* rustResRootPath = EngineOptions_getVanillaGameDir(params);
 	std::string configFolderPath = std::string(rustConfigFolderPath);
 	std::string gameResRootPath = std::string(rustResRootPath);
 	free_rust_string(rustConfigFolderPath);

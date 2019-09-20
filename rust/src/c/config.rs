@@ -64,7 +64,7 @@ pub extern "C" fn EngineOptions_getStracciatellaHome(ptr: *const EngineOptions) 
 /// Gets the `EngineOptions.vanilla_game_dir` path.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn get_vanilla_game_dir(ptr: *const EngineOptions) -> *mut c_char {
+pub extern "C" fn EngineOptions_getVanillaGameDir(ptr: *const EngineOptions) -> *mut c_char {
     let engine_options = unsafe_ref(ptr);
     let vanilla_game_dir = c_string_from_path_or_panic(&engine_options.vanilla_game_dir);
     vanilla_game_dir.into_raw()

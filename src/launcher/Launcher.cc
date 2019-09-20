@@ -117,7 +117,7 @@ void Launcher::show() {
 }
 
 void Launcher::initializeInputsFromDefaults() {
-	char* rustResRootPath = get_vanilla_game_dir(this->engine_options);
+	char* rustResRootPath = EngineOptions_getVanillaGameDir(this->engine_options);
 	gameDirectoryInput->value(rustResRootPath);
 	free_rust_string(rustResRootPath);
 
