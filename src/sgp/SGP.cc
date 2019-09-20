@@ -274,7 +274,7 @@ int main(int argc, char* argv[])
 #endif
 
 	// init logging
-	Logger_Init("ja2.log");
+	Logger_initialize("ja2.log");
 
 	EngineOptions* params = EngineOptions_create(argv, argc);
 	if (params == NULL) {
