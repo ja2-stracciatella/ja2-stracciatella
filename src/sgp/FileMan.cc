@@ -215,7 +215,7 @@ void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 	}
 	else
 	{
-		ret = LibraryFile_Read(f->u.lib, static_cast<uint8_t *>(pDest), uiBytesToRead);
+		ret = LibraryFile_read(f->u.lib, static_cast<uint8_t *>(pDest), uiBytesToRead);
 	}
 
 	if (!ret) throw std::runtime_error("Reading from file failed");

@@ -100,7 +100,7 @@ pub extern "C" fn LibraryFile_seek(file: *mut LibraryFile, distance: i64, from: 
 /// Reads from a library database file.
 /// Sets the rust error.
 #[no_mangle]
-pub extern "C" fn LibraryFile_Read(
+pub extern "C" fn LibraryFile_read(
     file: *mut LibraryFile,
     buffer: *mut u8,
     buffer_length: size_t,
@@ -147,7 +147,7 @@ mod tests {
         let size = LibraryFile_GetSize(c_file) as usize;
         let pos = LibraryFile_GetPos(c_file) as usize;
         let mut data = vec![0u8; size - pos];
-        assert!(LibraryFile_Read(c_file, data.as_mut_ptr(), size - pos));
+        assert!(LibraryFile_read(c_file, data.as_mut_ptr(), size - pos));
         data
     }
 
