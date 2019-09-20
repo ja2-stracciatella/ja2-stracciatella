@@ -72,7 +72,10 @@ pub extern "C" fn EngineOptions_getVanillaGameDir(ptr: *const EngineOptions) -> 
 
 /// Sets the `EngineOptions.vanilla_game_dir` path.
 #[no_mangle]
-pub extern "C" fn EngineOptions_setVanillaGameDir(ptr: *mut EngineOptions, game_dir_ptr: *const c_char) {
+pub extern "C" fn EngineOptions_setVanillaGameDir(
+    ptr: *mut EngineOptions,
+    game_dir_ptr: *const c_char,
+) {
     let engine_options = unsafe_mut(ptr);
     let vanilla_game_dir = path_from_c_str_or_panic(unsafe_c_str(game_dir_ptr));
     engine_options.vanilla_game_dir = vanilla_game_dir.to_owned();
@@ -210,7 +213,10 @@ pub extern "C" fn EngineOptions_getScalingQuality(ptr: *const EngineOptions) -> 
 
 /// Sets `EngineOptions.scaling_quality`.
 #[no_mangle]
-pub extern "C" fn EngineOptions_setScalingQuality(ptr: *mut EngineOptions, scaling_quality: ScalingQuality) {
+pub extern "C" fn EngineOptions_setScalingQuality(
+    ptr: *mut EngineOptions,
+    scaling_quality: ScalingQuality,
+) {
     let engine_options = unsafe_mut(ptr);
     engine_options.scaling_quality = scaling_quality
 }

@@ -21,11 +21,7 @@ pub extern "C" fn Logger_setLevel(level: LogLevel) {
 
 /// Log with custom metadata
 #[no_mangle]
-pub extern "C" fn Logger_log(
-    level: LogLevel,
-    message: *const c_char,
-    target: *const c_char,
-) {
+pub extern "C" fn Logger_log(level: LogLevel, message: *const c_char, target: *const c_char) {
     let message = str_from_c_str_or_panic(unsafe_c_str(message));
     let target = str_from_c_str_or_panic(unsafe_c_str(target));
 
