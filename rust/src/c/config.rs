@@ -175,7 +175,7 @@ pub extern "C" fn EngineOptions_shouldRunUnittests(ptr: *const EngineOptions) ->
 
 /// Gets `EngineOptions.show_help`.
 #[no_mangle]
-pub extern "C" fn should_show_help(ptr: *const EngineOptions) -> bool {
+pub extern "C" fn EngineOptions_shouldShowHelp(ptr: *const EngineOptions) -> bool {
     let engine_options = unsafe_ref(ptr);
     engine_options.show_help
 }

@@ -70,7 +70,7 @@ void Launcher::loadJa2Json() {
 	if (this->engine_options == NULL) {
 		exit(EXIT_FAILURE);
 	}
-	if (should_show_help(this->engine_options)) {
+	if (EngineOptions_shouldShowHelp(this->engine_options)) {
 		exit(EXIT_SUCCESS);
 	}
 }

@@ -281,7 +281,7 @@ int main(int argc, char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	if (should_show_help(params)) {
+	if (EngineOptions_shouldShowHelp(params)) {
 		return EXIT_SUCCESS;
 	}
 
