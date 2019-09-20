@@ -224,7 +224,7 @@ pub extern "C" fn EngineOptions_shouldStartInWindow(ptr: *const EngineOptions) -
 
 /// Gets `EngineOptions.start_in_debug_mode`.
 #[no_mangle]
-pub extern "C" fn should_start_in_debug_mode(ptr: *const EngineOptions) -> bool {
+pub extern "C" fn EngineOptions_shouldStartInDebugMode(ptr: *const EngineOptions) -> bool {
     let engine_options = unsafe_ref(ptr);
     engine_options.start_in_debug_mode
 }

@@ -305,7 +305,7 @@ int main(int argc, char* argv[])
 		SoundEnableSound(FALSE);
 	}
 
-	if (should_start_in_debug_mode(params)) {
+	if (EngineOptions_shouldStartInDebugMode(params)) {
 		Logger_SetLevel(LogLevel::Debug);
 		GameState::getInstance()->setDebugging(true);
 	}
