@@ -164,7 +164,7 @@ int Launcher::writeJsonFile() {
 
 	EngineOptions_setVanillaGameDir(this->engine_options, gameDirectoryInput->value());
 
-	clear_mods(this->engine_options);
+	EngineOptions_clearMods(this->engine_options);
 	auto nitems = modsCheckBrowser->nitems();
 	for (auto item = 1; item <= nitems; ++item) {
 		push_mod(this->engine_options, modsCheckBrowser->text(item));

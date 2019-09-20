@@ -104,7 +104,7 @@ pub extern "C" fn EngineOptions_getMod(ptr: *const EngineOptions, index: u32) ->
 
 /// Clears `EngineOptions.mods`.
 #[no_mangle]
-pub extern "C" fn clear_mods(ptr: *mut EngineOptions) {
+pub extern "C" fn EngineOptions_clearMods(ptr: *mut EngineOptions) {
     let engine_options = unsafe_mut(ptr);
     engine_options.mods.clear();
 }
