@@ -310,7 +310,7 @@ int main(int argc, char* argv[])
 		GameState::getInstance()->setDebugging(true);
 	}
 
-	if (should_run_editor(params)) {
+	if (EngineOptions_shouldRunEditor(params)) {
 		GameState::getInstance()->setEditorMode(false);
 	}
 
@@ -428,7 +428,7 @@ int main(int argc, char* argv[])
 	cm->initGameResouces(configFolderPath, libraries);
 
 	// free editor.slf has the lowest priority (last library) and is optional
-	if(should_run_editor(params))
+	if(EngineOptions_shouldRunEditor(params))
 	{
 		try
 		{

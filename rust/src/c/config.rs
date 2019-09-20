@@ -182,7 +182,7 @@ pub extern "C" fn EngineOptions_shouldShowHelp(ptr: *const EngineOptions) -> boo
 
 /// Gets `EngineOptions.run_editor`.
 #[no_mangle]
-pub extern "C" fn should_run_editor(ptr: *const EngineOptions) -> bool {
+pub extern "C" fn EngineOptions_shouldRunEditor(ptr: *const EngineOptions) -> bool {
     let engine_options = unsafe_ref(ptr);
     engine_options.run_editor
 }
