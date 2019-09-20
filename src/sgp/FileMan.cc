@@ -345,7 +345,7 @@ UINT32 FileGetSize(const SGPFile* f)
 	}
 	else
 	{
-		return (UINT32)LibraryFile_GetSize(f->u.lib);
+		return (UINT32)LibraryFile_getSize(f->u.lib);
 	}
 }
 

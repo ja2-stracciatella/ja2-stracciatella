@@ -128,7 +128,7 @@ pub extern "C" fn LibraryFile_getPosition(file: *mut LibraryFile) -> u64 {
 
 /// Gets the size of a library database file.
 #[no_mangle]
-pub extern "C" fn LibraryFile_GetSize(file: *mut LibraryFile) -> u64 {
+pub extern "C" fn LibraryFile_getSize(file: *mut LibraryFile) -> u64 {
     let file = unsafe_mut(file);
     file.file_size()
 }
@@ -144,7 +144,7 @@ mod tests {
     const FILE_SEEK_FROM_CURRENT: c_int = 2;
 
     fn read_to_end(c_file: *mut LibraryFile) -> Vec<u8> {
-        let size = LibraryFile_GetSize(c_file) as usize;
+        let size = LibraryFile_getSize(c_file) as usize;
         let pos = LibraryFile_getPosition(c_file) as usize;
         let mut data = vec![0u8; size - pos];
         assert!(LibraryFile_read(c_file, data.as_mut_ptr(), size - pos));
