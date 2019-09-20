@@ -321,7 +321,7 @@ int main(int argc, char* argv[])
 		return EXIT_FAILURE;
 	}
 
-	if (should_run_unittests(params)) {
+	if (EngineOptions_shouldRunUnittests(params)) {
 #ifdef WITH_UNITTESTS
 		testing::InitGoogleTest(&argc, argv);
 		return RUN_ALL_TESTS();

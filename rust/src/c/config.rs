@@ -168,7 +168,7 @@ pub extern "C" fn EngineOptions_setResourceVersion(ptr: *mut EngineOptions, res:
 
 /// Gets `EngineOptions.run_unittests`.
 #[no_mangle]
-pub extern "C" fn should_run_unittests(ptr: *const EngineOptions) -> bool {
+pub extern "C" fn EngineOptions_shouldRunUnittests(ptr: *const EngineOptions) -> bool {
     let engine_options = unsafe_ref(ptr);
     engine_options.run_unittests
 }
