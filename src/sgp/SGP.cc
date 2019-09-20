@@ -361,8 +361,8 @@ int main(int argc, char* argv[])
 	char* rustResRootPath = EngineOptions_getVanillaGameDir(params);
 	std::string configFolderPath = std::string(rustConfigFolderPath);
 	std::string gameResRootPath = std::string(rustResRootPath);
-	free_rust_string(rustConfigFolderPath);
-	free_rust_string(rustResRootPath);
+	CString_destroy(rustConfigFolderPath);
+	CString_destroy(rustResRootPath);
 
 	std::string extraDataDir = EXTRA_DATA_DIR;
 	if(extraDataDir.empty())
@@ -386,7 +386,7 @@ int main(int argc, char* argv[])
 		{
 			char* rustModName = EngineOptions_getMod(params, i);
 			std::string modName(rustModName);
-			free_rust_string(rustModName);
+			CString_destroy(rustModName);
 			std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName), "data");
 			modNames.emplace_back(modName);
 			modResFolders.emplace_back(modResFolder);

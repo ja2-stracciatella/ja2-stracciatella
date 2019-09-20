@@ -265,7 +265,7 @@ mod tests {
 
     use crate::c::common::*;
     use crate::c::config::*;
-    use crate::c::misc::free_rust_string;
+    use crate::c::misc::CString_destroy;
     use crate::config::{EngineOptions, Resolution};
     use crate::parse_json_config;
     use crate::tests::write_temp_folder_with_ja2_json;
@@ -322,7 +322,7 @@ mod tests {
             ($version:expr, $expected:expr) => {
                 let got = VanillaVersion_toString($version);
                 assert_eq!(str_from_c_str_or_panic(unsafe_c_str(got)), $expected);
-                free_rust_string(got);
+                CString_destroy(got);
             };
         }
         t!(VanillaVersion::DUTCH, "Dutch");

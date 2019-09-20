@@ -214,7 +214,7 @@ void DefaultContentManager::addExtraResources(const std::string &baseDir, const 
 		std::string message = FormattedString(
 			"Library '%s' is not found in folder '%s': %s",
 			library.c_str(), baseDir.c_str(), error);
-		free_rust_string(error);
+		CString_destroy(error);
 		throw LibraryFileNotFoundException(message);
 	}
 }

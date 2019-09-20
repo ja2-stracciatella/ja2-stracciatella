@@ -33,7 +33,7 @@ pub extern "C" fn findJa2Executable(launcher_path_ptr: *const c_char) -> *mut c_
 /// The caller is no longer responsible for the memory.
 #[no_mangle]
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
-pub extern "C" fn free_rust_string(s: *mut c_char) {
+pub extern "C" fn CString_destroy(s: *mut c_char) {
     if s.is_null() {
         return;
     }
@@ -203,7 +203,7 @@ mod tests {
     use std::fs;
 
     use crate::c::common::*;
-    use crate::c::misc::free_rust_string;
+    use crate::c::misc::CString_destroy;
 
     #[test]
     fn find_ja2_executable_should_determine_game_path_from_launcher_path() {
@@ -212,7 +212,7 @@ mod tests {
                 let path = c_string_from_str($path);
                 let got = super::findJa2Executable(path.as_ptr());
                 assert_eq!(str_from_c_str_or_panic(unsafe_c_str(got)), $expected);
-                free_rust_string(got);
+                CString_destroy(got);
             };
         }
         t!("/home/test/ja2-launcher", "/home/test/ja2");

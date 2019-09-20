@@ -176,7 +176,7 @@ mod tests {
 
     use crate::c::common::*;
     use crate::c::error::*;
-    use crate::c::misc::free_rust_string;
+    use crate::c::misc::CString_destroy;
 
     #[test]
     fn test_pointers() {
@@ -276,7 +276,7 @@ mod tests {
                 None
             } else {
                 let c_string = unsafe_c_str(ptr).to_owned();
-                free_rust_string(ptr); // free copy
+                CString_destroy(ptr); // free copy
                 Some(c_string)
             }
         }

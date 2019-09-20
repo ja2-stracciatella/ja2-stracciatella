@@ -59,7 +59,7 @@ Launcher::~Launcher() {
 void Launcher::loadJa2Json() {
 	char* rustExePath = findJa2Executable(argv[0]);
 	this->exePath = std::string(rustExePath);
-	free_rust_string(rustExePath);
+	CString_destroy(rustExePath);
 
 	if (this->engine_options) {
 		EngineOptions_destroy(this->engine_options);
@@ -88,7 +88,7 @@ void Launcher::show() {
 	auto game_json_path = find_path_from_assets_dir("externalized/game.json", true);
 	if (game_json_path) {
 		gameSettingsOutput->value(game_json_path);
-		free_rust_string(game_json_path);
+		CString_destroy(game_json_path);
 	} else {
 		gameSettingsOutput->value("failed to find path to game.json");
 	}
@@ -97,7 +97,7 @@ void Launcher::show() {
 	auto ja2_json_path = find_path_from_stracciatella_home("ja2.json", false);
 	if (ja2_json_path) {
 		ja2JsonPathOutput->value(ja2_json_path);
-		free_rust_string(ja2_json_path);
+		CString_destroy(ja2_json_path);
 	} else {
 		ja2JsonPathOutput->value("failed to find path to ja2.json");
 	}
@@ -119,7 +119,7 @@ void Launcher::show() {
 void Launcher::initializeInputsFromDefaults() {
 	char* rustResRootPath = EngineOptions_getVanillaGameDir(this->engine_options);
 	gameDirectoryInput->value(rustResRootPath);
-	free_rust_string(rustResRootPath);
+	CString_destroy(rustResRootPath);
 
 	auto n = EngineOptions_getModsLength(this->engine_options);
 	modsCheckBrowser->clear();
@@ -198,14 +198,14 @@ void Launcher::populateChoices() {
 	for (auto i = 0; i < nmods; ++i) {
 		auto mod = vec_c_string_get(mods, i);
 		addModMenuButton->insert(-1, mod, 0, addMod, this, 0);
-		free_rust_string(mod);
+		CString_destroy(mod);
 	}
 	vec_c_string_delete(mods);
 
 	for(GameVersion version : predefinedVersions) {
 		auto resourceVersionString = VanillaVersion_toString(version);
 		gameVersionInput->add(resourceVersionString);
-		free_rust_string(resourceVersionString);
+		CString_destroy(resourceVersionString);
     }
 	for (auto res : predefinedResolutions) {
 		char resolutionString[255];
@@ -216,7 +216,7 @@ void Launcher::populateChoices() {
 	for (auto scalingMode : scalingModes) {
 		auto scalingModeString = ScalingQuality_toString(scalingMode);
 		this->scalingModeChoice->add(scalingModeString);
-		free_rust_string(scalingModeString);
+		CString_destroy(scalingModeString);
 	}
 }
 
@@ -305,7 +305,7 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 		if (assets_dir) {
 			// free editor.slf
 			has_editor_slf = check_if_relative_path_exists(assets_dir, "editor.slf", true);
-			free_rust_string(assets_dir);
+			CString_destroy(assets_dir);
 		}
 	}
 	if (!has_editor_slf) {
