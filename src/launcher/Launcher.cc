@@ -193,7 +193,7 @@ int Launcher::writeJsonFile() {
 }
 
 void Launcher::populateChoices() {
-	auto mods = get_available_mods();
+	auto mods = findAvailableMods();
 	auto nmods = vec_c_string_len(mods);
 	for (auto i = 0; i < nmods; ++i) {
 		auto mod = vec_c_string_get(mods, i);

@@ -139,7 +139,7 @@ pub extern "C" fn checkIfRelativePathExists(
 /// Returns a list of available mods.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn get_available_mods() -> *mut VecCString {
+pub extern "C" fn findAvailableMods() -> *mut VecCString {
     let mut path = get_assets_dir();
     path.push("mods");
     if let Ok(entries) = path.read_dir() {
