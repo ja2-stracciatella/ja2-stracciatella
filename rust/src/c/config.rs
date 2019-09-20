@@ -246,7 +246,7 @@ pub extern "C" fn EngineOptions_setStartWithoutSound(ptr: *mut EngineOptions, va
 /// Gets the string representation of the `ScalingQuality` value.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn get_scaling_quality_string(quality: ScalingQuality) -> *mut c_char {
+pub extern "C" fn ScalingQuality_toString(quality: ScalingQuality) -> *mut c_char {
     let c_string = c_string_from_str(&quality.to_string());
     c_string.into_raw()
 }

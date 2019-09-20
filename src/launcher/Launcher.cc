@@ -214,7 +214,7 @@ void Launcher::populateChoices() {
 	}
 
 	for (auto scalingMode : scalingModes) {
-		auto scalingModeString = get_scaling_quality_string(scalingMode);
+		auto scalingModeString = ScalingQuality_toString(scalingMode);
 		this->scalingModeChoice->add(scalingModeString);
 		free_rust_string(scalingModeString);
 	}
