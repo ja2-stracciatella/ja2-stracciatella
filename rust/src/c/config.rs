@@ -238,7 +238,7 @@ pub extern "C" fn EngineOptions_shouldStartWithoutSound(ptr: *const EngineOption
 
 /// Sets `EngineOptions.start_without_sound`.
 #[no_mangle]
-pub extern "C" fn set_start_without_sound(ptr: *mut EngineOptions, val: bool) {
+pub extern "C" fn EngineOptions_setStartWithoutSound(ptr: *mut EngineOptions, val: bool) {
     let engine_options = unsafe_mut(ptr);
     engine_options.start_without_sound = val
 }

@@ -160,7 +160,7 @@ void Launcher::initializeInputsFromDefaults() {
 
 int Launcher::writeJsonFile() {
 	EngineOptions_setStartInFullscreen(this->engine_options, fullscreenCheckbox->value());
-	set_start_without_sound(this->engine_options, !playSoundsCheckbox->value());
+	EngineOptions_setStartWithoutSound(this->engine_options, !playSoundsCheckbox->value());
 
 	EngineOptions_setVanillaGameDir(this->engine_options, gameDirectoryInput->value());
 
