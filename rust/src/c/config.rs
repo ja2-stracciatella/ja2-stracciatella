@@ -133,7 +133,7 @@ pub extern "C" fn EngineOptions_getResolutionY(ptr: *const EngineOptions) -> u16
 
 /// Sets `EngineOptions.resolution`.
 #[no_mangle]
-pub extern "C" fn set_resolution(ptr: *mut EngineOptions, x: u16, y: u16) {
+pub extern "C" fn EngineOptions_setResolution(ptr: *mut EngineOptions, x: u16, y: u16) {
     let engine_options = unsafe_mut(ptr);
     engine_options.resolution = Resolution(x, y);
 }

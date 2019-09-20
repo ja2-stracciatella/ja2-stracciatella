@@ -172,7 +172,7 @@ int Launcher::writeJsonFile() {
 
 	int x = (int)resolutionXInput->value();
 	int y = (int)resolutionYInput->value();
-	set_resolution(this->engine_options, x, y);
+	EngineOptions_setResolution(this->engine_options, x, y);
 
 	auto currentResourceVersionIndex = gameVersionInput->value();
 	auto currentResourceVersion = predefinedVersions.at(currentResourceVersionIndex);
