@@ -15,7 +15,7 @@ use crate::unicode::Nfc;
 /// The executable is assumed to be in the same directory as the launcher.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *mut c_char {
+pub extern "C" fn findJa2Executable(launcher_path_ptr: *const c_char) -> *mut c_char {
     let launcher_path = str_from_c_str_or_panic(unsafe_c_str(launcher_path_ptr));
     let is_exe = launcher_path.to_lowercase().ends_with(".exe");
     let end_of_executable_slice = launcher_path.len() - if is_exe { 13 } else { 9 };
@@ -210,7 +210,7 @@ mod tests {
         macro_rules! t {
             ($path:expr, $expected:expr) => {
                 let path = c_string_from_str($path);
-                let got = super::find_ja2_executable(path.as_ptr());
+                let got = super::findJa2Executable(path.as_ptr());
                 assert_eq!(str_from_c_str_or_panic(unsafe_c_str(got)), $expected);
                 free_rust_string(got);
             };

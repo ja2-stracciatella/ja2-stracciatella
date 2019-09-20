@@ -57,7 +57,7 @@ Launcher::~Launcher() {
 }
 
 void Launcher::loadJa2Json() {
-	char* rustExePath = find_ja2_executable(argv[0]);
+	char* rustExePath = findJa2Executable(argv[0]);
 	this->exePath = std::string(rustExePath);
 	free_rust_string(rustExePath);
 
