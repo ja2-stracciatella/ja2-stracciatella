@@ -19,7 +19,7 @@ void LogMessage(bool isAssert, LogLevel level, const char *file, const char *for
   vsnprintf(message, 256, format, args);
   va_end(args);
 
-  Logger_LogWithCustomMetadata(level, message, file);
+  Logger_log(level, message, file);
 
   #ifdef ENABLE_ASSERTS
     if (isAssert)
