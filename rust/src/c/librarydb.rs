@@ -121,7 +121,7 @@ pub extern "C" fn LibraryFile_read(
 
 /// Gets the current position in a library database file.
 #[no_mangle]
-pub extern "C" fn LibraryFile_GetPos(file: *mut LibraryFile) -> u64 {
+pub extern "C" fn LibraryFile_getPosition(file: *mut LibraryFile) -> u64 {
     let file = unsafe_mut(file);
     file.current_position()
 }
@@ -145,7 +145,7 @@ mod tests {
 
     fn read_to_end(c_file: *mut LibraryFile) -> Vec<u8> {
         let size = LibraryFile_GetSize(c_file) as usize;
-        let pos = LibraryFile_GetPos(c_file) as usize;
+        let pos = LibraryFile_getPosition(c_file) as usize;
         let mut data = vec![0u8; size - pos];
         assert!(LibraryFile_read(c_file, data.as_mut_ptr(), size - pos));
         data
@@ -155,7 +155,7 @@ mod tests {
         let c_path = c_string_from_str(&path);
         let c_file = LibraryFile_open(c_ldb, c_path.as_ptr()); // must manage the memory
         assert_ne!(c_file, std::ptr::null_mut());
-        assert_eq!(LibraryFile_GetPos(c_file), 0);
+        assert_eq!(LibraryFile_getPosition(c_file), 0);
         let data = read_to_end(c_file);
         LibraryFile_close(c_file); // rust manages the memory
         data
@@ -179,15 +179,15 @@ mod tests {
             assert!(LibraryDB_push(c_ldb, c_data_dir, c_library));
             let c_file = LibraryFile_open(c_ldb, c_foo_txt); // must manage the memory
             assert_ne!(c_file, std::ptr::null_mut());
-            assert_eq!(LibraryFile_GetPos(c_file), 0);
+            assert_eq!(LibraryFile_getPosition(c_file), 0);
             let data = read_to_end(c_file);
             assert_eq!(&data, b"data.slf");
             assert!(LibraryFile_seek(c_file, 0, FILE_SEEK_FROM_START));
-            assert_eq!(LibraryFile_GetPos(c_file), 0);
+            assert_eq!(LibraryFile_getPosition(c_file), 0);
             assert!(LibraryFile_seek(c_file, 0, FILE_SEEK_FROM_END));
-            assert_eq!(LibraryFile_GetPos(c_file), 8);
+            assert_eq!(LibraryFile_getPosition(c_file), 8);
             assert!(LibraryFile_seek(c_file, -4, FILE_SEEK_FROM_CURRENT));
-            assert_eq!(LibraryFile_GetPos(c_file), 4);
+            assert_eq!(LibraryFile_getPosition(c_file), 4);
             let data = read_to_end(c_file);
             assert_eq!(&data, b".slf");
             LibraryFile_close(c_file); // rust manages the memory

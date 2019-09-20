@@ -328,7 +328,7 @@ void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 
 INT32 FileGetPos(const SGPFile* f)
 {
-	return f->flags & SGPFILE_REAL ? (INT32)ftell(f->u.file) : (INT32)LibraryFile_GetPos(f->u.lib);
+	return f->flags & SGPFILE_REAL ? (INT32)ftell(f->u.file) : (INT32)LibraryFile_getPosition(f->u.lib);
 }
 
 
