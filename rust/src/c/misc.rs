@@ -178,7 +178,7 @@ impl VecCString {
 
 /// Deletes the vector.
 #[no_mangle]
-pub extern "C" fn vec_c_string_delete(vec: *mut VecCString) {
+pub extern "C" fn VecCString_destroy(vec: *mut VecCString) {
     let _drop_me = from_ptr(vec);
 }
 

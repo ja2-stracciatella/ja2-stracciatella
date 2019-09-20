@@ -200,7 +200,7 @@ void Launcher::populateChoices() {
 		addModMenuButton->insert(-1, mod, 0, addMod, this, 0);
 		CString_destroy(mod);
 	}
-	vec_c_string_delete(mods);
+	VecCString_destroy(mods);
 
 	for(GameVersion version : predefinedVersions) {
 		auto resourceVersionString = VanillaVersion_toString(version);
