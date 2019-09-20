@@ -217,7 +217,7 @@ pub extern "C" fn EngineOptions_setScalingQuality(ptr: *mut EngineOptions, scali
 
 /// Gets `EngineOptions.start_in_window`.
 #[no_mangle]
-pub extern "C" fn should_start_in_window(ptr: *const EngineOptions) -> bool {
+pub extern "C" fn EngineOptions_shouldStartInWindow(ptr: *const EngineOptions) -> bool {
     let engine_options = unsafe_ref(ptr);
     engine_options.start_in_window
 }

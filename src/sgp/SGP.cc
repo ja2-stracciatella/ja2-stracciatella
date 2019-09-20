@@ -287,7 +287,7 @@ int main(int argc, char* argv[])
 
 	if (EngineOptions_shouldStartInFullscreen(params)) {
 		VideoSetFullScreen(TRUE);
-	} else if (should_start_in_window(params)) {
+	} else if (EngineOptions_shouldStartInWindow(params)) {
 		VideoSetFullScreen(FALSE);
 	}
 
