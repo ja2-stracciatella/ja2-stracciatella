@@ -126,7 +126,7 @@ pub extern "C" fn EngineOptions_getResolutionX(ptr: *const EngineOptions) -> u16
 
 /// Gets the height of `EngineOptions.resolution`.
 #[no_mangle]
-pub extern "C" fn get_resolution_y(ptr: *const EngineOptions) -> u16 {
+pub extern "C" fn EngineOptions_getResolutionY(ptr: *const EngineOptions) -> u16 {
     let engine_options = unsafe_ref(ptr);
     engine_options.resolution.1
 }
