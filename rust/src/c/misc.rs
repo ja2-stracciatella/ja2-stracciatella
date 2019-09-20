@@ -43,7 +43,7 @@ pub extern "C" fn CString_destroy(s: *mut c_char) {
 /// Guesses the resource version from the contents of the game directory.
 /// Returns a VanillaVersion value if it was sucessful, -1 otherwise.
 #[no_mangle]
-pub extern "C" fn guess_resource_version(gamedir: *const c_char) -> c_int {
+pub extern "C" fn guessResourceVersion(gamedir: *const c_char) -> c_int {
     let path = str_from_c_str_or_panic(unsafe_c_str(gamedir));
     let logged = crate::guess::guess_vanilla_version(&path);
     let mut result = -1;

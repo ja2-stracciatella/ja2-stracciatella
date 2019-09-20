@@ -327,7 +327,7 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 	}
 
 	auto gamedir = window->gameDirectoryInput->value();
-	auto guessedVersion = guess_resource_version(gamedir);
+	auto guessedVersion = guessResourceVersion(gamedir);
 	if (guessedVersion != -1) {
 		auto resourceVersionIndex = 0;
 		for (auto version : predefinedVersions) {
