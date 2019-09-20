@@ -176,7 +176,7 @@ int Launcher::writeJsonFile() {
 
 	auto currentResourceVersionIndex = gameVersionInput->value();
 	auto currentResourceVersion = predefinedVersions.at(currentResourceVersionIndex);
-	set_resource_version(this->engine_options, currentResourceVersion);
+	EngineOptions_setResourceVersion(this->engine_options, currentResourceVersion);
 
 	auto currentScalingMode = scalingModes[this->scalingModeChoice->value()];
 	set_scaling_quality(this->engine_options, currentScalingMode);

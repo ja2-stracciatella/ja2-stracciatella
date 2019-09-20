@@ -161,7 +161,7 @@ pub extern "C" fn EngineOptions_getResourceVersion(ptr: *const EngineOptions) ->
 
 /// Sets `EngineOptions.resource_version`.
 #[no_mangle]
-pub extern "C" fn set_resource_version(ptr: *mut EngineOptions, res: VanillaVersion) {
+pub extern "C" fn EngineOptions_setResourceVersion(ptr: *mut EngineOptions, res: VanillaVersion) {
     let engine_options = unsafe_mut(ptr);
     engine_options.resource_version = res;
 }
