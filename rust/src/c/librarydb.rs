@@ -69,7 +69,7 @@ pub extern "C" fn LibraryFile_open(ldb: *mut LibraryDB, path: *const c_char) -> 
 /// Closes a library database file.
 /// The caller is no longer responsible for the library file memory.
 #[no_mangle]
-pub extern "C" fn LibraryFile_Close(file: *mut LibraryFile) {
+pub extern "C" fn LibraryFile_close(file: *mut LibraryFile) {
     let _drop_me = from_ptr(file);
 }
 
@@ -157,7 +157,7 @@ mod tests {
         assert_ne!(c_file, std::ptr::null_mut());
         assert_eq!(LibraryFile_GetPos(c_file), 0);
         let data = read_to_end(c_file);
-        LibraryFile_Close(c_file); // rust manages the memory
+        LibraryFile_close(c_file); // rust manages the memory
         data
     }
 
@@ -190,7 +190,7 @@ mod tests {
             assert_eq!(LibraryFile_GetPos(c_file), 4);
             let data = read_to_end(c_file);
             assert_eq!(&data, b".slf");
-            LibraryFile_Close(c_file); // rust manages the memory
+            LibraryFile_close(c_file); // rust manages the memory
             LibraryDB_destroy(c_ldb); // rust manages the memory
         }
 

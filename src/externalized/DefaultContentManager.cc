@@ -485,7 +485,7 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 				LibraryFile* libFile = LibraryFile_open(m_libraryDB, filename);
 				if (libFile)
 				{
-					LibraryFile_Close(libFile);
+					LibraryFile_close(libFile);
 					return true;
 				}
 				return false;

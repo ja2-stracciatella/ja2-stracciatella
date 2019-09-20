@@ -201,7 +201,7 @@ void FileClose(SGPFile* f)
 	}
 	else
 	{
-		LibraryFile_Close(f->u.lib);
+		LibraryFile_close(f->u.lib);
 	}
 	MemFree(f);
 }
