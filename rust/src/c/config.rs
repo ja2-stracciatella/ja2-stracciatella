@@ -196,7 +196,7 @@ pub extern "C" fn EngineOptions_shouldStartInFullscreen(ptr: *const EngineOption
 
 /// Sets `EngineOptions.start_in_fullscreen`.
 #[no_mangle]
-pub extern "C" fn set_start_in_fullscreen(ptr: *mut EngineOptions, val: bool) {
+pub extern "C" fn EngineOptions_setStartInFullscreen(ptr: *mut EngineOptions, val: bool) {
     let engine_options = unsafe_mut(ptr);
     engine_options.start_in_fullscreen = val
 }
