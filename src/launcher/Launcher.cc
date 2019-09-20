@@ -124,7 +124,7 @@ void Launcher::initializeInputsFromDefaults() {
 	auto n = EngineOptions_getModsLength(this->engine_options);
 	modsCheckBrowser->clear();
 	for (auto i = 0; i < n; ++i) {
-		modsCheckBrowser->add(get_mod(this->engine_options, i));
+		modsCheckBrowser->add(EngineOptions_getMod(this->engine_options, i));
 	}
 
 	auto rustResVersion = get_resource_version(this->engine_options);

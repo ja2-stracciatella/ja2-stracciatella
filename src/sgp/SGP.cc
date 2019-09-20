@@ -384,7 +384,7 @@ int main(int argc, char* argv[])
 		std::vector<std::string> modResFolders;
 		for (auto i = 0; i < n; ++i)
 		{
-			char* rustModName = get_mod(params, i);
+			char* rustModName = EngineOptions_getMod(params, i);
 			std::string modName(rustModName);
 			free_rust_string(rustModName);
 			std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName), "data");

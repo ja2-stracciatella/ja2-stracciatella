@@ -88,7 +88,7 @@ pub extern "C" fn EngineOptions_getModsLength(ptr: *const EngineOptions) -> u32 
 /// Gets the target index of `EngineOptions.mods`.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn get_mod(ptr: *const EngineOptions, index: u32) -> *mut c_char {
+pub extern "C" fn EngineOptions_getMod(ptr: *const EngineOptions, index: u32) -> *mut c_char {
     let engine_options = unsafe_ref(ptr);
     match engine_options.mods.get(index as usize) {
         Some(str_mod) => {
