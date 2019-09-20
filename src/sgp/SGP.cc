@@ -377,7 +377,7 @@ int main(int argc, char* argv[])
 
 	DefaultContentManager *cm;
 
-	auto n = get_number_of_mods(params);
+	auto n = EngineOptions_getModsLength(params);
 	if(n > 0)
 	{
 		std::vector<std::string> modNames;

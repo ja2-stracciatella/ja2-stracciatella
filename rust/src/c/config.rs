@@ -80,7 +80,7 @@ pub extern "C" fn EngineOptions_setVanillaGameDir(ptr: *mut EngineOptions, game_
 
 /// Gets the length of `EngineOptions.mods`.
 #[no_mangle]
-pub extern "C" fn get_number_of_mods(ptr: *const EngineOptions) -> u32 {
+pub extern "C" fn EngineOptions_getModsLength(ptr: *const EngineOptions) -> u32 {
     let engine_options = unsafe_ref(ptr);
     engine_options.mods.len() as u32
 }

@@ -121,7 +121,7 @@ void Launcher::initializeInputsFromDefaults() {
 	gameDirectoryInput->value(rustResRootPath);
 	free_rust_string(rustResRootPath);
 
-	auto n = get_number_of_mods(this->engine_options);
+	auto n = EngineOptions_getModsLength(this->engine_options);
 	modsCheckBrowser->clear();
 	for (auto i = 0; i < n; ++i) {
 		modsCheckBrowser->add(get_mod(this->engine_options, i));
