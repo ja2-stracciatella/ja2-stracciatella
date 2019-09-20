@@ -111,7 +111,7 @@ pub extern "C" fn EngineOptions_clearMods(ptr: *mut EngineOptions) {
 
 /// Adds a mod to `EngineOptions.mods`.
 #[no_mangle]
-pub extern "C" fn push_mod(ptr: *mut EngineOptions, name: *const c_char) {
+pub extern "C" fn EngineOptions_pushMod(ptr: *mut EngineOptions, name: *const c_char) {
     let engine_options = unsafe_mut(ptr);
     let name = str_from_c_str_or_panic(unsafe_c_str(name)).to_owned();
     engine_options.mods.push(name);

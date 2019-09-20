@@ -167,7 +167,7 @@ int Launcher::writeJsonFile() {
 	EngineOptions_clearMods(this->engine_options);
 	auto nitems = modsCheckBrowser->nitems();
 	for (auto item = 1; item <= nitems; ++item) {
-		push_mod(this->engine_options, modsCheckBrowser->text(item));
+		EngineOptions_pushMod(this->engine_options, modsCheckBrowser->text(item));
 	}
 
 	int x = (int)resolutionXInput->value();
