@@ -426,7 +426,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
 				// failed to open in the data dir
 				// let's try libraries
 
-				LibraryFile* libFile = LibraryFile_Open(m_libraryDB, filename);
+				LibraryFile* libFile = LibraryFile_open(m_libraryDB, filename);
 				if (libFile)
 				{
 					SLOGD("Opened file (from library ): %s", filename);
@@ -482,7 +482,7 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 			file = fopen(path, "rb");
 			if (!file)
 			{
-				LibraryFile* libFile = LibraryFile_Open(m_libraryDB, filename);
+				LibraryFile* libFile = LibraryFile_open(m_libraryDB, filename);
 				if (libFile)
 				{
 					LibraryFile_Close(libFile);

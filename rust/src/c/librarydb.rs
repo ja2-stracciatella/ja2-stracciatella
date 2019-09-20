@@ -51,7 +51,7 @@ pub extern "C" fn LibraryDB_push(
 /// The caller is responsible for the library file memory.
 /// Sets the rust error.
 #[no_mangle]
-pub extern "C" fn LibraryFile_Open(ldb: *mut LibraryDB, path: *const c_char) -> *mut LibraryFile {
+pub extern "C" fn LibraryFile_open(ldb: *mut LibraryDB, path: *const c_char) -> *mut LibraryFile {
     let ldb = unsafe_mut(ldb);
     let path = str_from_c_str_or_panic(unsafe_c_str(path));
     match ldb.open_file(&path) {
@@ -153,7 +153,7 @@ mod tests {
 
     fn library_file_data(c_ldb: *mut LibraryDB, path: &str) -> Vec<u8> {
         let c_path = c_string_from_str(&path);
-        let c_file = LibraryFile_Open(c_ldb, c_path.as_ptr()); // must manage the memory
+        let c_file = LibraryFile_open(c_ldb, c_path.as_ptr()); // must manage the memory
         assert_ne!(c_file, std::ptr::null_mut());
         assert_eq!(LibraryFile_GetPos(c_file), 0);
         let data = read_to_end(c_file);
@@ -177,7 +177,7 @@ mod tests {
 
             let c_ldb = LibraryDB_create(); // must manage the memory
             assert!(LibraryDB_push(c_ldb, c_data_dir, c_library));
-            let c_file = LibraryFile_Open(c_ldb, c_foo_txt); // must manage the memory
+            let c_file = LibraryFile_open(c_ldb, c_foo_txt); // must manage the memory
             assert_ne!(c_file, std::ptr::null_mut());
             assert_eq!(LibraryFile_GetPos(c_file), 0);
             let data = read_to_end(c_file);
