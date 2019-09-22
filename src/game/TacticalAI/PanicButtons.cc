@@ -174,7 +174,6 @@ void PossiblyMakeThisEnemyChosenOne( SOLDIERTYPE * pSoldier )
 		return;
 	}
 
-
 	bPanicTrigger = ClosestPanicTrigger( pSoldier );
 	if (bPanicTrigger == -1)
 	{
@@ -365,6 +364,12 @@ INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier )
 	INT8		bClosestTrigger = -1;
 	UINT32	uiPercentEnemiesKilled;
 
+	if (pSoldier->bTeam != ENEMY_TEAM)
+	{
+		// uiPercentEnemiesKilled assumes we're fighting the army (see #851)
+		return( -1 );
+	}
+
 	uiPercentEnemiesKilled = (UINT32)( 100 * (UINT32)(gTacticalStatus.ubArmyGuysKilled) / (UINT32)( gTacticalStatus.Team[ ENEMY_TEAM ].bMenInSector + gTacticalStatus.ubArmyGuysKilled ) );
 
 	for ( bLoop = 0; bLoop < NUM_PANIC_TRIGGERS; bLoop++ )
@@ -418,7 +423,11 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 		return( FALSE );
 	}
 
-	if (!IsTeamActive(ENEMY_TEAM)) return FALSE;
+	if (!IsTeamActive(ENEMY_TEAM))
+	{
+		// uiPercentEnemiesKilled assumes we're fighting the army (see #851)
+		return( FALSE );
+	}
 
 	if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y )
 	{
