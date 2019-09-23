@@ -51,26 +51,26 @@ Launcher::Launcher(int argc, char* argv[]) : StracciatellaLauncher() {
 
 Launcher::~Launcher() {
 	if (this->engine_options) {
-		free_engine_options(this->engine_options);
+		EngineOptions_destroy(this->engine_options);
 		this->engine_options = nullptr;
 	}
 }
 
 void Launcher::loadJa2Json() {
-	char* rustExePath = find_ja2_executable(argv[0]);
+	char* rustExePath = findJa2Executable(argv[0]);
 	this->exePath = std::string(rustExePath);
-	free_rust_string(rustExePath);
+	CString_destroy(rustExePath);
 
 	if (this->engine_options) {
-		free_engine_options(this->engine_options);
+		EngineOptions_destroy(this->engine_options);
 		this->engine_options = nullptr;
 	}
-	this->engine_options = create_engine_options(argv, argc);
+	this->engine_options = EngineOptions_create(argv, argc);
 
 	if (this->engine_options == NULL) {
 		exit(EXIT_FAILURE);
 	}
-	if (should_show_help(this->engine_options)) {
+	if (EngineOptions_shouldShowHelp(this->engine_options)) {
 		exit(EXIT_SUCCESS);
 	}
 }
@@ -85,19 +85,19 @@ void Launcher::show() {
 	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	resolutionXInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	resolutionYInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	auto game_json_path = find_path_from_assets_dir("externalized/game.json", true);
+	auto game_json_path = findPathFromAssetsDir("externalized/game.json", true);
 	if (game_json_path) {
 		gameSettingsOutput->value(game_json_path);
-		free_rust_string(game_json_path);
+		CString_destroy(game_json_path);
 	} else {
 		gameSettingsOutput->value("failed to find path to game.json");
 	}
 	fullscreenCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	playSoundsCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	auto ja2_json_path = find_path_from_stracciatella_home("ja2.json", false);
+	auto ja2_json_path = findPathFromStracciatellaHome("ja2.json", false);
 	if (ja2_json_path) {
 		ja2JsonPathOutput->value(ja2_json_path);
-		free_rust_string(ja2_json_path);
+		CString_destroy(ja2_json_path);
 	} else {
 		ja2JsonPathOutput->value("failed to find path to ja2.json");
 	}
@@ -117,17 +117,17 @@ void Launcher::show() {
 }
 
 void Launcher::initializeInputsFromDefaults() {
-	char* rustResRootPath = get_vanilla_game_dir(this->engine_options);
+	char* rustResRootPath = EngineOptions_getVanillaGameDir(this->engine_options);
 	gameDirectoryInput->value(rustResRootPath);
-	free_rust_string(rustResRootPath);
+	CString_destroy(rustResRootPath);
 
-	auto n = get_number_of_mods(this->engine_options);
+	auto n = EngineOptions_getModsLength(this->engine_options);
 	modsCheckBrowser->clear();
 	for (auto i = 0; i < n; ++i) {
-		modsCheckBrowser->add(get_mod(this->engine_options, i));
+		modsCheckBrowser->add(EngineOptions_getMod(this->engine_options, i));
 	}
 
-	auto rustResVersion = get_resource_version(this->engine_options);
+	auto rustResVersion = EngineOptions_getResourceVersion(this->engine_options);
 	auto resourceVersionIndex = 0;
 	for (auto version : predefinedVersions) {
 		if (version == rustResVersion) {
@@ -137,13 +137,13 @@ void Launcher::initializeInputsFromDefaults() {
 	}
 	gameVersionInput->value(resourceVersionIndex);
 
-	int x = get_resolution_x(this->engine_options);
-	int y = get_resolution_y(this->engine_options);
+	int x = EngineOptions_getResolutionX(this->engine_options);
+	int y = EngineOptions_getResolutionY(this->engine_options);
 
 	resolutionXInput->value(x);
 	resolutionYInput->value(y);
 
-	VideoScaleQuality quality = get_scaling_quality(this->engine_options);
+	VideoScaleQuality quality = EngineOptions_getScalingQuality(this->engine_options);
 	auto scalingModeIndex = 0;
 	for (auto scalingMode : scalingModes) {
 		if (scalingMode == quality) {
@@ -153,35 +153,35 @@ void Launcher::initializeInputsFromDefaults() {
 	}
 	this->scalingModeChoice->value(scalingModeIndex);
 
-	fullscreenCheckbox->value(should_start_in_fullscreen(this->engine_options) ? 1 : 0);
-	playSoundsCheckbox->value(should_start_without_sound(this->engine_options) ? 0 : 1);
+	fullscreenCheckbox->value(EngineOptions_shouldStartInFullscreen(this->engine_options) ? 1 : 0);
+	playSoundsCheckbox->value(EngineOptions_shouldStartWithoutSound(this->engine_options) ? 0 : 1);
 	update(false, nullptr);
 }
 
 int Launcher::writeJsonFile() {
-	set_start_in_fullscreen(this->engine_options, fullscreenCheckbox->value());
-	set_start_without_sound(this->engine_options, !playSoundsCheckbox->value());
+	EngineOptions_setStartInFullscreen(this->engine_options, fullscreenCheckbox->value());
+	EngineOptions_setStartWithoutSound(this->engine_options, !playSoundsCheckbox->value());
 
-	set_vanilla_game_dir(this->engine_options, gameDirectoryInput->value());
+	EngineOptions_setVanillaGameDir(this->engine_options, gameDirectoryInput->value());
 
-	clear_mods(this->engine_options);
+	EngineOptions_clearMods(this->engine_options);
 	auto nitems = modsCheckBrowser->nitems();
 	for (auto item = 1; item <= nitems; ++item) {
-		push_mod(this->engine_options, modsCheckBrowser->text(item));
+		EngineOptions_pushMod(this->engine_options, modsCheckBrowser->text(item));
 	}
 
 	int x = (int)resolutionXInput->value();
 	int y = (int)resolutionYInput->value();
-	set_resolution(this->engine_options, x, y);
+	EngineOptions_setResolution(this->engine_options, x, y);
 
 	auto currentResourceVersionIndex = gameVersionInput->value();
 	auto currentResourceVersion = predefinedVersions.at(currentResourceVersionIndex);
-	set_resource_version(this->engine_options, currentResourceVersion);
+	EngineOptions_setResourceVersion(this->engine_options, currentResourceVersion);
 
 	auto currentScalingMode = scalingModes[this->scalingModeChoice->value()];
-	set_scaling_quality(this->engine_options, currentScalingMode);
+	EngineOptions_setScalingQuality(this->engine_options, currentScalingMode);
 
-	bool success = write_engine_options(this->engine_options);
+	bool success = EngineOptions_write(this->engine_options);
 
 	if (success) {
 		update(false, nullptr);
@@ -193,19 +193,19 @@ int Launcher::writeJsonFile() {
 }
 
 void Launcher::populateChoices() {
-	auto mods = get_available_mods();
-	auto nmods = vec_c_string_len(mods);
+	auto mods = findAvailableMods();
+	auto nmods = VecCString_length(mods);
 	for (auto i = 0; i < nmods; ++i) {
-		auto mod = vec_c_string_get(mods, i);
+		auto mod = VecCString_get(mods, i);
 		addModMenuButton->insert(-1, mod, 0, addMod, this, 0);
-		free_rust_string(mod);
+		CString_destroy(mod);
 	}
-	vec_c_string_delete(mods);
+	VecCString_destroy(mods);
 
 	for(GameVersion version : predefinedVersions) {
-		auto resourceVersionString = get_resource_version_string(version);
+		auto resourceVersionString = VanillaVersion_toString(version);
 		gameVersionInput->add(resourceVersionString);
-		free_rust_string(resourceVersionString);
+		CString_destroy(resourceVersionString);
     }
 	for (auto res : predefinedResolutions) {
 		char resolutionString[255];
@@ -214,9 +214,9 @@ void Launcher::populateChoices() {
 	}
 
 	for (auto scalingMode : scalingModes) {
-		auto scalingModeString = get_scaling_quality_string(scalingMode);
+		auto scalingModeString = ScalingQuality_toString(scalingMode);
 		this->scalingModeChoice->add(scalingModeString);
-		free_rust_string(scalingModeString);
+		CString_destroy(scalingModeString);
 	}
 }
 
@@ -285,7 +285,7 @@ void Launcher::startGame(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
-	if (!check_if_relative_path_exists(window->gameDirectoryInput->value(), "Data", true)) {
+	if (!checkIfRelativePathExists(window->gameDirectoryInput->value(), "Data", true)) {
 		fl_message_title(window->playButton->label());
 		auto choice = fl_choice("Data dir not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 		if (choice != 1) {
@@ -299,13 +299,13 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
 	window->writeJsonFile();
-	bool has_editor_slf = check_if_relative_path_exists(window->gameDirectoryInput->value(), "Data/Editor.slf", true);
+	bool has_editor_slf = checkIfRelativePathExists(window->gameDirectoryInput->value(), "Data/Editor.slf", true);
 	if (!has_editor_slf) {
-		auto assets_dir = find_path_from_assets_dir(nullptr, false);
+		auto assets_dir = findPathFromAssetsDir(nullptr, false);
 		if (assets_dir) {
 			// free editor.slf
-			has_editor_slf = check_if_relative_path_exists(assets_dir, "editor.slf", true);
-			free_rust_string(assets_dir);
+			has_editor_slf = checkIfRelativePathExists(assets_dir, "editor.slf", true);
+			CString_destroy(assets_dir);
 		}
 	}
 	if (!has_editor_slf) {
@@ -327,7 +327,7 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 	}
 
 	auto gamedir = window->gameDirectoryInput->value();
-	auto guessedVersion = guess_resource_version(gamedir);
+	auto guessedVersion = guessResourceVersion(gamedir);
 	if (guessedVersion != -1) {
 		auto resourceVersionIndex = 0;
 		for (auto version : predefinedVersions) {

@@ -178,7 +178,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	}
 #endif
 
-	m_libraryDB = LibraryDB_New();
+	m_libraryDB = LibraryDB_create();
 
 	m_bobbyRayNewInventory = NULL;
 	m_bobbyRayUsedInventory = NULL;
@@ -197,7 +197,7 @@ void DefaultContentManager::initGameResouces(const std::string &stracciatellaHom
 {
 	for (auto it = libraries.begin(); it != libraries.end(); ++it)
 	{
-		if (!LibraryDB_AddLibrary(m_libraryDB, m_dataDir.c_str(), it->c_str()))
+		if (!LibraryDB_push(m_libraryDB, m_dataDir.c_str(), it->c_str()))
 		{
 			std::string message = FormattedString(
 				"Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s/ja2.json'.\n",
@@ -209,12 +209,12 @@ void DefaultContentManager::initGameResouces(const std::string &stracciatellaHom
 
 void DefaultContentManager::addExtraResources(const std::string &baseDir, const std::string &library)
 {
-	if (!LibraryDB_AddLibrary(m_libraryDB, baseDir.c_str(), library.c_str())) {
-		auto error = get_rust_error();
+	if (!LibraryDB_push(m_libraryDB, baseDir.c_str(), library.c_str())) {
+		auto error = getRustError();
 		std::string message = FormattedString(
 			"Library '%s' is not found in folder '%s': %s",
 			library.c_str(), baseDir.c_str(), error);
-		free_rust_string(error);
+		CString_destroy(error);
 		throw LibraryFileNotFoundException(message);
 	}
 }
@@ -223,7 +223,7 @@ DefaultContentManager::~DefaultContentManager()
 {
 	if(m_libraryDB)
 	{
-		LibraryDB_Delete(m_libraryDB);
+		LibraryDB_destroy(m_libraryDB);
 		m_libraryDB = nullptr;
 	}
 
@@ -426,7 +426,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
 				// failed to open in the data dir
 				// let's try libraries
 
-				LibraryFile* libFile = LibraryFile_Open(m_libraryDB, filename);
+				LibraryFile* libFile = LibraryFile_open(m_libraryDB, filename);
 				if (libFile)
 				{
 					SLOGD("Opened file (from library ): %s", filename);
@@ -482,10 +482,10 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 			file = fopen(path, "rb");
 			if (!file)
 			{
-				LibraryFile* libFile = LibraryFile_Open(m_libraryDB, filename);
+				LibraryFile* libFile = LibraryFile_open(m_libraryDB, filename);
 				if (libFile)
 				{
-					LibraryFile_Close(libFile);
+					LibraryFile_close(libFile);
 					return true;
 				}
 				return false;

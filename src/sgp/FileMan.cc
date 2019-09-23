@@ -201,7 +201,7 @@ void FileClose(SGPFile* f)
 	}
 	else
 	{
-		LibraryFile_Close(f->u.lib);
+		LibraryFile_close(f->u.lib);
 	}
 	MemFree(f);
 }
@@ -215,7 +215,7 @@ void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 	}
 	else
 	{
-		ret = LibraryFile_Read(f->u.lib, static_cast<uint8_t *>(pDest), uiBytesToRead);
+		ret = LibraryFile_read(f->u.lib, static_cast<uint8_t *>(pDest), uiBytesToRead);
 	}
 
 	if (!ret) throw std::runtime_error("Reading from file failed");
@@ -320,7 +320,7 @@ void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 	}
 	else
 	{
-		success = LibraryFile_Seek(f->u.lib, distance, how);
+		success = LibraryFile_seek(f->u.lib, distance, how);
 	}
 	if (!success) throw std::runtime_error("Seek in file failed");
 }
@@ -328,7 +328,7 @@ void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 
 INT32 FileGetPos(const SGPFile* f)
 {
-	return f->flags & SGPFILE_REAL ? (INT32)ftell(f->u.file) : (INT32)LibraryFile_GetPos(f->u.lib);
+	return f->flags & SGPFILE_REAL ? (INT32)ftell(f->u.file) : (INT32)LibraryFile_getPosition(f->u.lib);
 }
 
 
@@ -345,7 +345,7 @@ UINT32 FileGetSize(const SGPFile* f)
 	}
 	else
 	{
-		return (UINT32)LibraryFile_GetSize(f->u.lib);
+		return (UINT32)LibraryFile_getSize(f->u.lib);
 	}
 }
 

@@ -1,4 +1,7 @@
 //! This module and it's submodules contains code for C.
+//!
+//! The C-rust interface should follow the naming style in:
+//! http://geosoft.no/development/cppstyle.html
 
 pub mod config;
 pub mod librarydb;
@@ -13,7 +16,7 @@ pub mod error {
     /// Returns a copy of the thread local rust error or null.
     /// The caller is responsible for the memory.
     #[no_mangle]
-    pub extern "C" fn get_rust_error() -> *mut c_char {
+    pub extern "C" fn getRustError() -> *mut c_char {
         RUST_ERROR.with(|x| {
             if let Some(ref error) = *x.borrow() {
                 return error.clone().into_raw();
@@ -173,7 +176,7 @@ mod tests {
 
     use crate::c::common::*;
     use crate::c::error::*;
-    use crate::c::misc::free_rust_string;
+    use crate::c::misc::CString_destroy;
 
     #[test]
     fn test_pointers() {
@@ -268,12 +271,12 @@ mod tests {
     #[test]
     fn test_rust_error() {
         fn error() -> Option<CString> {
-            let ptr = get_rust_error(); // get copy
+            let ptr = getRustError(); // get copy
             if ptr.is_null() {
                 None
             } else {
                 let c_string = unsafe_c_str(ptr).to_owned();
-                free_rust_string(ptr); // free copy
+                CString_destroy(ptr); // free copy
                 Some(c_string)
             }
         }

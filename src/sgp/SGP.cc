@@ -274,24 +274,24 @@ int main(int argc, char* argv[])
 #endif
 
 	// init logging
-	Logger_Init("ja2.log");
+	Logger_initialize("ja2.log");
 
-	EngineOptions* params = create_engine_options(argv, argc);
+	EngineOptions* params = EngineOptions_create(argv, argc);
 	if (params == NULL) {
 		return EXIT_FAILURE;
 	}
 
-	if (should_show_help(params)) {
+	if (EngineOptions_shouldShowHelp(params)) {
 		return EXIT_SUCCESS;
 	}
 
-	if (should_start_in_fullscreen(params)) {
+	if (EngineOptions_shouldStartInFullscreen(params)) {
 		VideoSetFullScreen(TRUE);
-	} else if (should_start_in_window(params)) {
+	} else if (EngineOptions_shouldStartInWindow(params)) {
 		VideoSetFullScreen(FALSE);
 	}
 
-	if (should_start_without_sound(params)) {
+	if (EngineOptions_shouldStartWithoutSound(params)) {
 		SoundEnableSound(FALSE);
 	}
 
@@ -305,23 +305,23 @@ int main(int argc, char* argv[])
 		SoundEnableSound(FALSE);
 	}
 
-	if (should_start_in_debug_mode(params)) {
-		Logger_SetLevel(LogLevel::Debug);
+	if (EngineOptions_shouldStartInDebugMode(params)) {
+		Logger_setLevel(LogLevel::Debug);
 		GameState::getInstance()->setDebugging(true);
 	}
 
-	if (should_run_editor(params)) {
+	if (EngineOptions_shouldRunEditor(params)) {
 		GameState::getInstance()->setEditorMode(false);
 	}
 
-	bool result = g_ui.setScreenSize(get_resolution_x(params), get_resolution_y(params));
+	bool result = g_ui.setScreenSize(EngineOptions_getResolutionX(params), EngineOptions_getResolutionY(params));
 	if(!result)
 	{
-		SLOGE("Failed to set screen resolution %d x %d", get_resolution_x(params), get_resolution_y(params));
+		SLOGE("Failed to set screen resolution %d x %d", EngineOptions_getResolutionX(params), EngineOptions_getResolutionY(params));
 		return EXIT_FAILURE;
 	}
 
-	if (should_run_unittests(params)) {
+	if (EngineOptions_shouldRunUnittests(params)) {
 #ifdef WITH_UNITTESTS
 		testing::InitGoogleTest(&argc, argv);
 		return RUN_ALL_TESTS();
@@ -330,12 +330,12 @@ int main(int argc, char* argv[])
 #endif
 	}
 
-	GameVersion version = get_resource_version(params);
+	GameVersion version = EngineOptions_getResourceVersion(params);
 	setGameVersion(version);
 
-	VideoScaleQuality scalingQuality = get_scaling_quality(params);
+	VideoScaleQuality scalingQuality = EngineOptions_getScalingQuality(params);
 
-	FLOAT brightness = get_brightness(params);
+	FLOAT brightness = EngineOptions_getBrightness(params);
 
 	////////////////////////////////////////////////////////////
 
@@ -357,12 +357,12 @@ int main(int argc, char* argv[])
 	InitializeMemoryManager();
 
 	SLOGD("Initializing Game Resources");
-	char* rustConfigFolderPath = get_stracciatella_home(params);
-	char* rustResRootPath = get_vanilla_game_dir(params);
+	char* rustConfigFolderPath = EngineOptions_getStracciatellaHome(params);
+	char* rustResRootPath = EngineOptions_getVanillaGameDir(params);
 	std::string configFolderPath = std::string(rustConfigFolderPath);
 	std::string gameResRootPath = std::string(rustResRootPath);
-	free_rust_string(rustConfigFolderPath);
-	free_rust_string(rustResRootPath);
+	CString_destroy(rustConfigFolderPath);
+	CString_destroy(rustResRootPath);
 
 	std::string extraDataDir = EXTRA_DATA_DIR;
 	if(extraDataDir.empty())
@@ -377,16 +377,16 @@ int main(int argc, char* argv[])
 
 	DefaultContentManager *cm;
 
-	auto n = get_number_of_mods(params);
+	auto n = EngineOptions_getModsLength(params);
 	if(n > 0)
 	{
 		std::vector<std::string> modNames;
 		std::vector<std::string> modResFolders;
 		for (auto i = 0; i < n; ++i)
 		{
-			char* rustModName = get_mod(params, i);
+			char* rustModName = EngineOptions_getMod(params, i);
 			std::string modName(rustModName);
-			free_rust_string(rustModName);
+			CString_destroy(rustModName);
 			std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName), "data");
 			modNames.emplace_back(modName);
 			modResFolders.emplace_back(modResFolder);
@@ -428,7 +428,7 @@ int main(int argc, char* argv[])
 	cm->initGameResouces(configFolderPath, libraries);
 
 	// free editor.slf has the lowest priority (last library) and is optional
-	if(should_run_editor(params))
+	if(EngineOptions_shouldRunEditor(params))
 	{
 		try
 		{
@@ -441,7 +441,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	free_engine_options(params);
+	EngineOptions_destroy(params);
 	params = nullptr;
 
 	if(!cm->loadGameData())

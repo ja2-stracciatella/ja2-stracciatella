@@ -15,7 +15,7 @@ use crate::unicode::Nfc;
 /// The executable is assumed to be in the same directory as the launcher.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *mut c_char {
+pub extern "C" fn findJa2Executable(launcher_path_ptr: *const c_char) -> *mut c_char {
     let launcher_path = str_from_c_str_or_panic(unsafe_c_str(launcher_path_ptr));
     let is_exe = launcher_path.to_lowercase().ends_with(".exe");
     let end_of_executable_slice = launcher_path.len() - if is_exe { 13 } else { 9 };
@@ -33,7 +33,7 @@ pub extern "C" fn find_ja2_executable(launcher_path_ptr: *const c_char) -> *mut 
 /// The caller is no longer responsible for the memory.
 #[no_mangle]
 #[allow(clippy::not_unsafe_ptr_arg_deref)]
-pub extern "C" fn free_rust_string(s: *mut c_char) {
+pub extern "C" fn CString_destroy(s: *mut c_char) {
     if s.is_null() {
         return;
     }
@@ -43,7 +43,7 @@ pub extern "C" fn free_rust_string(s: *mut c_char) {
 /// Guesses the resource version from the contents of the game directory.
 /// Returns a VanillaVersion value if it was sucessful, -1 otherwise.
 #[no_mangle]
-pub extern "C" fn guess_resource_version(gamedir: *const c_char) -> c_int {
+pub extern "C" fn guessResourceVersion(gamedir: *const c_char) -> c_int {
     let path = str_from_c_str_or_panic(unsafe_c_str(gamedir));
     let logged = crate::guess::guess_vanilla_version(&path);
     let mut result = -1;
@@ -58,7 +58,7 @@ pub extern "C" fn guess_resource_version(gamedir: *const c_char) -> c_int {
 /// If test_exists is true and the path does not exist, it returns null.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn find_path_from_assets_dir(path: *const c_char, test_exists: bool) -> *mut c_char {
+pub extern "C" fn findPathFromAssetsDir(path: *const c_char, test_exists: bool) -> *mut c_char {
     let mut path_buf = get_assets_dir();
     if !path.is_null() {
         let path = path_from_c_str_or_panic(unsafe_c_str(path));
@@ -77,7 +77,7 @@ pub extern "C" fn find_path_from_assets_dir(path: *const c_char, test_exists: bo
 /// If test_exists is true, it makes sure the path exists.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn find_path_from_stracciatella_home(
+pub extern "C" fn findPathFromStracciatellaHome(
     path: *const c_char,
     test_exists: bool,
 ) -> *mut c_char {
@@ -103,7 +103,7 @@ pub extern "C" fn find_path_from_stracciatella_home(
 /// Returns true if it was able to find path relative to base.
 /// Makes caseless searches one component at a time.
 #[no_mangle]
-pub extern "C" fn check_if_relative_path_exists(
+pub extern "C" fn checkIfRelativePathExists(
     base: *const c_char,
     path: *const c_char,
     caseless: bool,
@@ -139,7 +139,7 @@ pub extern "C" fn check_if_relative_path_exists(
 /// Returns a list of available mods.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn get_available_mods() -> *mut VecCString {
+pub extern "C" fn findAvailableMods() -> *mut VecCString {
     let mut path = get_assets_dir();
     path.push("mods");
     if let Ok(entries) = path.read_dir() {
@@ -178,13 +178,13 @@ impl VecCString {
 
 /// Deletes the vector.
 #[no_mangle]
-pub extern "C" fn vec_c_string_delete(vec: *mut VecCString) {
+pub extern "C" fn VecCString_destroy(vec: *mut VecCString) {
     let _drop_me = from_ptr(vec);
 }
 
 /// Returns the vector length.
 #[no_mangle]
-pub extern "C" fn vec_c_string_len(vec: *mut VecCString) -> size_t {
+pub extern "C" fn VecCString_length(vec: *mut VecCString) -> size_t {
     let vec = unsafe_ref(vec);
     vec.inner.len()
 }
@@ -192,7 +192,7 @@ pub extern "C" fn vec_c_string_len(vec: *mut VecCString) -> size_t {
 /// Returns the string at the target index.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn vec_c_string_get(vec: *mut VecCString, index: size_t) -> *mut c_char {
+pub extern "C" fn VecCString_get(vec: *mut VecCString, index: size_t) -> *mut c_char {
     let vec = unsafe_ref(vec);
     vec.inner[index].clone().into_raw()
 }
@@ -203,16 +203,16 @@ mod tests {
     use std::fs;
 
     use crate::c::common::*;
-    use crate::c::misc::free_rust_string;
+    use crate::c::misc::CString_destroy;
 
     #[test]
     fn find_ja2_executable_should_determine_game_path_from_launcher_path() {
         macro_rules! t {
             ($path:expr, $expected:expr) => {
                 let path = c_string_from_str($path);
-                let got = super::find_ja2_executable(path.as_ptr());
+                let got = super::findJa2Executable(path.as_ptr());
                 assert_eq!(str_from_c_str_or_panic(unsafe_c_str(got)), $expected);
-                free_rust_string(got);
+                CString_destroy(got);
             };
         }
         t!("/home/test/ja2-launcher", "/home/test/ja2");
@@ -235,7 +235,7 @@ mod tests {
                 let base = CString::new(temp_dir.path().to_str().unwrap()).unwrap();
                 let path = CString::new($path).unwrap();
                 assert_eq!(
-                    super::check_if_relative_path_exists(base.as_ptr(), path.as_ptr(), $caseless),
+                    super::checkIfRelativePathExists(base.as_ptr(), path.as_ptr(), $caseless),
                     $expected
                 );
             };
