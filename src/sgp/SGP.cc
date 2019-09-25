@@ -1,14 +1,4 @@
-/* The implementation of swprintf() is broken on FreeBSD and sometimes fails if
- * LC_TYPE is not set to UTF-8.  This happens when characters, which cannot be
- * represented by the current LC_CTYPE, are printed. */
-#if defined __FreeBSD__
-#	define BROKEN_SWPRINTF
-#endif
-
-#if defined BROKEN_SWPRINTF
-#	include <locale.h>
-#endif
-
+#include <clocale>
 #include <exception>
 #include <new>
 
@@ -262,16 +252,53 @@ ContentManager *GCM = NULL;
 
 ////////////////////////////////////////////////////////////
 
+/// Sets C locale to something that supports unicode.
+/// The C++ locale is unchanged (VS2015 hangs for unknown reasons).
+///
+/// There is no way to query available locales so this is the most portable
+/// way to get a locale that supports unicode.
+void SetUnicodeLocale()
+{
+	static const char* LOCALES[] = {
+		// custom locale set at configure time
+#if defined WITH_CUSTOM_LOCALE
+		WITH_CUSTOM_LOCALE,
+#endif
+		// the preferred locale with UTF-8 encoding
+		".UTF8", ".UTF-8",
+		// a specific locale with UTF-8 encoding
+		"C.UTF-8", "en_US.UTF8", "en_US.UTF-8", "English_US.UTF8", "en_GB.UTF-8",
+		// give up
+		nullptr
+	};
+
+	for (const char* name : LOCALES)
+	{
+		if (name == nullptr)
+		{
+			if (setlocale(LC_ALL, "C") != nullptr)
+			{
+				fprintf(stderr, "WARNING: Failed to set a unicode locale, using the C locale (might accept only ASCII).\n");
+			}
+			else
+			{
+				fprintf(stderr, "WARNING: Failed to set a unicode locale and the C locale...\n");
+			}
+			return;
+		}
+		if (setlocale(LC_ALL, name) != nullptr)
+		{
+			return;
+		}
+		// try next locale
+	}
+}
+
 int main(int argc, char* argv[])
 {
-	std::string exeFolder = FileMan::getParentPath(argv[0], true);
+	SetUnicodeLocale();
 
-#if defined BROKEN_SWPRINTF
-	if (setlocale(LC_CTYPE, "UTF-8") == NULL)
-	{
-		fprintf(stderr, "WARNING: Failed to set LC_CTYPE to UTF-8. Some strings might get garbled.\n");
-	}
-#endif
+	std::string exeFolder = FileMan::getParentPath(argv[0], true);
 
 	// init logging
 	Logger_initialize("ja2.log");
