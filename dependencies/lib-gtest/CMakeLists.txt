@@ -1,13 +1,23 @@
 include(ExternalProject)
 
+configure_file(
+    "${CMAKE_SOURCE_DIR}/cmake/external-project-cache.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/external-project-cache.cmake"
+    @ONLY
+)
+
 externalproject_add(gtest-internal
     URL "https://github.com/google/googletest/archive/release-1.8.1.tar.gz"
     INSTALL_DIR "${CMAKE_BINARY_DIR}/lib-gtest"
     CMAKE_ARGS
-        ${EXTERNAL_PROJECT_CMAKE_ARGS}
-        -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib-gtest
+        "-C${CMAKE_CURRENT_BINARY_DIR}/external-project-cache.cmake"
+        "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib-gtest"
         -Dgtest_force_shared_crt=TRUE
         -Dgtest_disable_pthreads=TRUE
+    BUILD_COMMAND ""
+    # NOTE this will always use the initial config in multi-config projects
+    INSTALL_COMMAND "${CMAKE_COMMAND}" --build . --target install --config "${CMAKE_BUILD_TYPE}"
+    BUILD_ALWAYS 1
 )
 
 
