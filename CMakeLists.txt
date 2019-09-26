@@ -49,6 +49,7 @@ option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 option(BUILD_LAUNCHER "Build the ja2 launcher application" ON)
 option(WITH_EDITOR_SLF "Include the latest free editor.slf" OFF)
+set(WITH_CUSTOM_LOCALE "" CACHE STRING "Set a custom locale at the start, leave empty to disable")
 
 set(EXTERNAL_PROJECT_CMAKE_ARGS
     -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
@@ -61,12 +62,16 @@ set(EXTERNAL_PROJECT_CMAKE_ARGS
     -DCMAKE_FIND_ROOT_PATH_MODE_INCLUDE=${CMAKE_FIND_ROOT_PATH_MODE_INCLUDE}
 )
 
+## Build
+
 if(MSVC)
 	# set the source and execution charset
 	add_compile_options("/utf-8")
 endif()
 
-## Build
+if(NOT "${WITH_CUSTOM_LOCALE}" STREQUAL "")
+    add_definitions("-DWITH_CUSTOM_LOCALE=\"${WITH_CUSTOM_LOCALE}\"")
+endif()
 
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
 
