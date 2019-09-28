@@ -87,16 +87,16 @@ pub extern "C" fn findPathFromStracciatellaHome(
             path_buf.push(&s);
         }
         if test_exists && !path_buf.exists() {
-            return ptr::null_mut(); // path not found
+            ptr::null_mut() // path not found
         } else {
             if let Ok(p) = path_buf.canonicalize() {
                 path_buf = p;
             }
             let s: String = path_buf.to_string_lossy().into();
-            return CString::new(s).unwrap().into_raw(); // path found
+            CString::new(s).unwrap().into_raw() // path found
         }
     } else {
-        return ptr::null_mut(); // no home
+        ptr::null_mut() // no home
     }
 }
 

@@ -10,10 +10,10 @@ use log::warn;
 use crate::config::{EngineOptions, Resolution, VanillaVersion};
 
 #[cfg(not(windows))]
-static GAME_DIR_OPTION_EXAMPLE: &'static str = "/opt/ja2";
+static GAME_DIR_OPTION_EXAMPLE: &str = "/opt/ja2";
 
 #[cfg(windows)]
-static GAME_DIR_OPTION_EXAMPLE: &'static str = "C:\\JA2";
+static GAME_DIR_OPTION_EXAMPLE: &str = "C:\\JA2";
 
 /// Handles command line parameters for executables
 ///

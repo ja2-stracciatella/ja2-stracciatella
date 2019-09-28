@@ -82,8 +82,9 @@ impl From<&MatchResourcesResult> for Percentages {
     #[allow(clippy::cast_lossless)]
     fn from(result: &MatchResourcesResult) -> Self {
         let number_of_resources = result.number_of_resources;
-        let count_differences =
-            |filter: &Fn(&&Difference) -> bool| result.differences.iter().filter(filter).count();
+        let count_differences = |filter: &dyn Fn(&&Difference) -> bool| {
+            result.differences.iter().filter(filter).count()
+        };
         let num_only_in_datadir = count_differences(&|d| match d {
             Difference::OnlyExistsInDataDir(_, _) => true,
             _ => false,

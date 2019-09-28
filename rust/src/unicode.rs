@@ -177,7 +177,7 @@ impl ops::Add<&str> for Nfc {
 /// Matches the inner string.
 impl fmt::Display for Nfc {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let display: &fmt::Display = &self.inner;
+        let display: &dyn fmt::Display = &self.inner;
         display.fmt(f)
     }
 }
@@ -185,7 +185,7 @@ impl fmt::Display for Nfc {
 /// Matches the inner string.
 impl fmt::Debug for Nfc {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let debug: &fmt::Debug = &self.inner;
+        let debug: &dyn fmt::Debug = &self.inner;
         debug.fmt(f)
     }
 }
