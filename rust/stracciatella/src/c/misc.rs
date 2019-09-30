@@ -202,6 +202,8 @@ mod tests {
     use std::ffi::CString;
     use std::fs;
 
+    use tempfile::TempDir;
+
     use crate::c::common::*;
     use crate::c::misc::CString_destroy;
 
@@ -227,7 +229,7 @@ mod tests {
 
     #[test]
     fn check_if_relative_path_exists() {
-        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let temp_dir = TempDir::new().unwrap();
         fs::create_dir_all(temp_dir.path().join("foo/bar")).unwrap();
 
         macro_rules! t {

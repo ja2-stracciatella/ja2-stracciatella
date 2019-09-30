@@ -390,7 +390,7 @@ pub mod tests {
     use std::io::{Read, Seek, SeekFrom, Write};
     use std::path::{Path, PathBuf};
 
-    use tempdir::TempDir;
+    use tempfile::TempDir;
 
     use crate::file_formats::slf::{SlfEntry, SlfEntryState, SlfHeader};
     use crate::librarydb::*;
@@ -442,7 +442,7 @@ pub mod tests {
 
     /// Creates a temporary data dir that is removed when TempDir is closed or goes out of scope.
     pub fn data_dir() -> (TempDir, PathBuf) {
-        let tmp = TempDir::new("librarydb").unwrap();
+        let tmp = TempDir::new().unwrap();
         let dir = tmp.path().to_owned();
         // data.slf contains foo.txt
         let name = "data.slf";
