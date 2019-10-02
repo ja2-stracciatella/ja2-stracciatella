@@ -1,6 +1,9 @@
-#![crate_type = "lib"]
+//! This crate contains the rust code of ja2-stracciatella.
+//!
+//! The crate [stracciatella_c_api] contains the C API of this crate.
+//!
+//! [stracciatella_c_api]: ../stracciatella_c_api/index.html
 
-pub mod c;
 pub mod config;
 pub mod file_formats;
 pub mod guess;
@@ -38,7 +41,7 @@ pub fn parse_json_config(stracciatella_home: &PathBuf) -> Result<EngineOptions, 
 
 /// Returns the path to the assets directory.
 /// It contains mods and externalized subdirectories.
-fn get_assets_dir() -> PathBuf {
+pub fn get_assets_dir() -> PathBuf {
     if let Some(extra_data_dir) = option_env!("EXTRA_DATA_DIR") {
         if !extra_data_dir.is_empty() {
             // use directory defined at compile time

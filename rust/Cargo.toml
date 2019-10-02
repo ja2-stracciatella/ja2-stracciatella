@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "stracciatella",
+    "stracciatella_c_api",
 ]
 
 [profile.dev]

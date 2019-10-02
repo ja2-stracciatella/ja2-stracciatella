@@ -1,14 +1,15 @@
 //! This module contains the C interface for [`stracciatella::config`].
 //!
-//! [`stracciatella::config`]: ../../config/index.html
+//! [`stracciatella::config`]: ../../stracciatella/config/index.html
 
 use std::ptr;
 
-use crate::c::common::*;
-use crate::config::{
+use stracciatella::config::{
     find_stracciatella_home, Cli, EngineOptions, Ja2Json, Resolution, ScalingQuality,
     VanillaVersion,
 };
+
+use crate::c::common::*;
 
 /// Creates `EngineOptions` with the provided command line arguments.
 /// Loads values from `(stracciatella_home)/ja2.json`, creating it if it does not exist.
@@ -269,12 +270,24 @@ pub extern "C" fn VanillaVersion_toString(version: VanillaVersion) -> *mut c_cha
 mod tests {
     use std::fs;
 
+    use stracciatella::config::{EngineOptions, Resolution};
+    use stracciatella::parse_json_config;
+    use tempfile::TempDir;
+
     use crate::c::common::*;
     use crate::c::config::*;
     use crate::c::misc::CString_destroy;
-    use crate::config::{EngineOptions, Resolution};
-    use crate::parse_json_config;
-    use crate::tests::write_temp_folder_with_ja2_json;
+
+    fn write_temp_folder_with_ja2_json(contents: &[u8]) -> TempDir {
+        let dir = TempDir::new().unwrap();
+        let ja2_home_dir = dir.path().join(".ja2");
+        let file_path = ja2_home_dir.join("ja2.json");
+
+        fs::create_dir(ja2_home_dir).unwrap();
+        fs::write(file_path, contents).unwrap();
+
+        dir
+    }
 
     #[test]
     fn write_engine_options_should_write_a_json_file_that_can_be_serialized_again() {

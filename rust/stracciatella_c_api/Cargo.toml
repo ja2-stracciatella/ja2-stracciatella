@@ -1,0 +1,19 @@
+[package]
+name = "stracciatella_c_api"
+version = "0.1.0"
+authors = ["Stefan Lau <github@stefanlau.com>"]
+edition = "2018"
+workspace = ".."
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+libc = "0.2"
+stracciatella = { path = "../stracciatella" }
+
+[dev-dependencies]
+tempfile = "3.0"
+
+[build-dependencies]
+cbindgen = "0.9"

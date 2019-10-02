@@ -1,10 +1,11 @@
 //! This module contains the C interface for [`stracciatella::logger`].
 //!
-//! [`stracciatella::logger`]: ../../logger/index.html
+//! [`stracciatella::logger`]: ../../../stracciatella/logger/index.html
+
+pub use stracciatella::logger::LogLevel;
+use stracciatella::logger::Logger;
 
 use crate::c::common::*;
-pub use crate::logger::LogLevel;
-use crate::logger::Logger;
 
 /// Initializes the logger
 #[no_mangle]

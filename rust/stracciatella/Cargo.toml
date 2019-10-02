@@ -6,7 +6,7 @@ edition = "2018"
 workspace = ".."
 
 [lib]
-crate-type = ["staticlib"]
+crate-type = ["rlib"]
 name = "stracciatella"
 path = "src/stracciatella.rs"
 
@@ -18,7 +18,7 @@ required-features = ["bin"]
 [dependencies]
 getopts = "0.2.15"
 libc = "0.2"
-serde = "1"
+serde = { version = "1", features = ["derive"] }
 serde_derive = "1, ~1.0.85"
 serde_json = { version = "1", features = ["preserve_order"] }
 json_comments = "0.2"
@@ -42,9 +42,7 @@ default-features = false
 regex = "1.0"
 tempfile = "3.0"
 
-[build-dependencies]
-cbindgen = "0.9"
-
 [features]
 default = ["bin"]
 bin = ["clap"]
+
