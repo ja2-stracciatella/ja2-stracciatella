@@ -6,10 +6,12 @@ use std::ffi::CString;
 use std::path::{Component, PathBuf};
 use std::ptr;
 
+use stracciatella::config::find_stracciatella_home;
+use stracciatella::get_assets_dir;
+use stracciatella::guess::guess_vanilla_version;
+use stracciatella::unicode::Nfc;
+
 use crate::c::common::*;
-use crate::config::find_stracciatella_home;
-use crate::get_assets_dir;
-use crate::unicode::Nfc;
 
 /// Converts the launcher executable path to the game executable path.
 /// The executable is assumed to be in the same directory as the launcher.
@@ -45,7 +47,7 @@ pub extern "C" fn CString_destroy(s: *mut c_char) {
 #[no_mangle]
 pub extern "C" fn guessResourceVersion(gamedir: *const c_char) -> c_int {
     let path = str_from_c_str_or_panic(unsafe_c_str(gamedir));
-    let logged = crate::guess::guess_vanilla_version(&path);
+    let logged = guess_vanilla_version(&path);
     let mut result = -1;
     if let Some(version) = logged.vanilla_version {
         result = version as c_int;
@@ -202,6 +204,8 @@ mod tests {
     use std::ffi::CString;
     use std::fs;
 
+    use tempfile::TempDir;
+
     use crate::c::common::*;
     use crate::c::misc::CString_destroy;
 
@@ -227,7 +231,7 @@ mod tests {
 
     #[test]
     fn check_if_relative_path_exists() {
-        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let temp_dir = TempDir::new().unwrap();
         fs::create_dir_all(temp_dir.path().join("foo/bar")).unwrap();
 
         macro_rules! t {

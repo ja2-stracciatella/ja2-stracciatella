@@ -2,9 +2,9 @@
 //!
 //! # FFI
 //!
-//! [`stracciatella::c::logger`] contains a C interface for this module.
+//! [`stracciatella_c_api::c::logger`] contains a C interface for this module.
 //!
-//! [`stracciatella::c::logger`]: ../c/logger/index.html
+//! [`stracciatella_c_api::c::logger`]: ../../stracciatella_c_api/c/logger/index.html
 
 use std::fs::File;
 use std::path::Path;

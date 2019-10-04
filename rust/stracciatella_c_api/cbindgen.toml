@@ -3,6 +3,10 @@ include_guard = "stracciatella_h"
 include_version = true
 language = "C++"
 
+[parse]
+parse_deps = true
+include = ["stracciatella"]
+
 [export]
 exclude = [
     "ENTRY_BYTES",

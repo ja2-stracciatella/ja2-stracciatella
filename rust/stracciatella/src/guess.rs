@@ -478,12 +478,12 @@ mod tests {
     use std::fs;
     use std::io::Write;
 
-    use tempdir::TempDir;
+    use tempfile::TempDir;
 
     use crate::guess::*;
 
     fn build_data_dir_with_resources(resources: Vec<(PathBuf, Vec<u8>)>) -> TempDir {
-        let tmp_dir = TempDir::new("ja2-test-guess").unwrap();
+        let tmp_dir = TempDir::new().unwrap();
         let data_dir = tmp_dir.path().join("data");
 
         for (resource_path, resource_content) in resources {

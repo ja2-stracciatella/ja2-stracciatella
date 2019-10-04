@@ -1,8 +1,8 @@
-[package]
-name = "stracciatella"
-version = "0.1.0"
-authors = ["Stefan Lau <github@stefanlau.com>"]
-edition = "2018"
+[workspace]
+members = [
+    "stracciatella",
+    "stracciatella_c_api",
+]
 
 [profile.dev]
 rpath = true
@@ -13,46 +13,3 @@ rpath = true
 debug = true
 panic = "abort"
 
-[lib]
-crate-type = ["staticlib"]
-name = "stracciatella"
-path = "src/stracciatella.rs"
-
-[[bin]]
-name = "ja2-resource-pack"
-path = "src/bin_resource_pack.rs"
-required-features = ["bin"]
-
-[dependencies]
-getopts = "0.2.15"
-libc = "0.2"
-serde = "1"
-serde_derive = "1, ~1.0.85"
-serde_json = { version = "1", features = ["preserve_order"] }
-json_comments = "0.2"
-dirs = "1"
-byteorder = "1.3.1"
-hex = "0.3.2"
-digest = "0.8.0"
-md-5 = "0.8.0"
-unicode-normalization = "0.1"
-caseless = "0.2"
-log = "0.4"
-simplelog = "0.6"
-rayon = "1.1.0"
-
-[dependencies.clap]
-optional = true
-version = "~2.33"
-default-features = false
-
-[dev-dependencies]
-regex = "0.1"
-tempdir = "0.3"
-
-[build-dependencies]
-cbindgen = "0.9"
-
-[features]
-default = ["bin"]
-bin = ["clap"]

@@ -1,6 +1,9 @@
-#![crate_type = "lib"]
+//! This crate contains the rust code of ja2-stracciatella.
+//!
+//! The crate [stracciatella_c_api] contains the C API of this crate.
+//!
+//! [stracciatella_c_api]: ../stracciatella_c_api/index.html
 
-pub mod c;
 pub mod config;
 pub mod file_formats;
 pub mod guess;
@@ -38,7 +41,7 @@ pub fn parse_json_config(stracciatella_home: &PathBuf) -> Result<EngineOptions, 
 
 /// Returns the path to the assets directory.
 /// It contains mods and externalized subdirectories.
-fn get_assets_dir() -> PathBuf {
+pub fn get_assets_dir() -> PathBuf {
     if let Some(extra_data_dir) = option_env!("EXTRA_DATA_DIR") {
         if !extra_data_dir.is_empty() {
             // use directory defined at compile time
@@ -71,7 +74,7 @@ mod tests {
     use std::io::prelude::*;
     use std::path::Path;
 
-    use tempdir;
+    use tempfile::TempDir;
 
     use crate::config::{find_stracciatella_home, VanillaVersion};
     use crate::*;
@@ -193,7 +196,7 @@ mod tests {
     #[cfg(target_os = "macos")]
     fn parse_args_should_return_the_correct_canonical_game_dir_on_mac() {
         let mut engine_options = EngineOptions::default();
-        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let temp_dir = TempDir::new().unwrap();
         let dir_path = temp_dir.path().join("foo");
 
         fs::create_dir_all(dir_path).unwrap();
@@ -216,7 +219,7 @@ mod tests {
     #[cfg(all(not(windows), not(target_os = "macos")))]
     fn parse_args_should_return_the_correct_canonical_game_dir_on_linux() {
         let mut engine_options = EngineOptions::default();
-        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let temp_dir = TempDir::new().unwrap();
         let dir_path = temp_dir.path().join("foo");
 
         fs::create_dir_all(dir_path).unwrap();
@@ -235,7 +238,7 @@ mod tests {
     #[cfg(windows)]
     fn parse_args_should_return_the_correct_canonical_game_dir_on_windows() {
         let mut engine_options = EngineOptions::default();
-        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let temp_dir = TempDir::new().unwrap();
         let dir_path = temp_dir.path().join("foo");
 
         fs::create_dir_all(dir_path).unwrap();
@@ -265,8 +268,8 @@ mod tests {
         );
     }
 
-    pub fn write_temp_folder_with_ja2_json(contents: &[u8]) -> tempdir::TempDir {
-        let dir = tempdir::TempDir::new("ja2-test").unwrap();
+    pub fn write_temp_folder_with_ja2_json(contents: &[u8]) -> TempDir {
+        let dir = TempDir::new().unwrap();
         let ja2_home_dir = dir.path().join(".ja2");
         let file_path = ja2_home_dir.join("ja2.json");
 
@@ -280,7 +283,7 @@ mod tests {
 
     #[test]
     fn ensure_json_config_existence_should_ensure_existence_of_config_dir() {
-        let dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let dir = TempDir::new().unwrap();
         let home_path = dir.path().join("ja2_home");
         let ja2json_path = home_path.join("ja2.json");
 
@@ -307,7 +310,7 @@ mod tests {
 
     #[test]
     fn parse_json_config_should_fail_with_missing_file() {
-        let temp_dir = tempdir::TempDir::new("ja2-tests").unwrap();
+        let temp_dir = TempDir::new().unwrap();
         let stracciatella_home = temp_dir.path().to_owned();
         let expected = Err("Error reading ja2.json config file: entity not found".to_owned());
 

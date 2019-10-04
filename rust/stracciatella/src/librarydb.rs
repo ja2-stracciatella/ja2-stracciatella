@@ -20,9 +20,9 @@
 //!
 //! # FFI
 //!
-//! [`stracciatella::c::librarydb`] contains a C interface for this module.
+//! [`stracciatella_c_api::c::librarydb`] contains a C interface for this module.
 //!
-//! [`stracciatella::c::librarydb`]: ../c/librarydb/index.html
+//! [`stracciatella_c_api::c::librarydb`]: ../../stracciatella_c_api/c/librarydb/index.html
 
 use std::cmp;
 use std::collections::HashSet;
@@ -390,7 +390,7 @@ pub mod tests {
     use std::io::{Read, Seek, SeekFrom, Write};
     use std::path::{Path, PathBuf};
 
-    use tempdir::TempDir;
+    use tempfile::TempDir;
 
     use crate::file_formats::slf::{SlfEntry, SlfEntryState, SlfHeader};
     use crate::librarydb::*;
@@ -442,7 +442,7 @@ pub mod tests {
 
     /// Creates a temporary data dir that is removed when TempDir is closed or goes out of scope.
     pub fn data_dir() -> (TempDir, PathBuf) {
-        let tmp = TempDir::new("librarydb").unwrap();
+        let tmp = TempDir::new().unwrap();
         let dir = tmp.path().to_owned();
         // data.slf contains foo.txt
         let name = "data.slf";
