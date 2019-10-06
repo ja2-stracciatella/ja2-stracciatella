@@ -1,0 +1,16 @@
+name: Nightly builds
+
+on:
+  schedule:
+    - cron:  '0 23 * * *'
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+      with:
+        ref: nightly
+    - name: Run a one-line script
+      run: echo Hello, world!
