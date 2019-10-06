@@ -146,7 +146,8 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	:m_gameVersion(gameVersion),
 	mNormalGunChoice(ARMY_GUN_LEVELS),
 	mExtendedGunChoice(ARMY_GUN_LEVELS),
-	m_dealersInventory(NUM_ARMS_DEALERS)
+	m_dealersInventory(NUM_ARMS_DEALERS),
+	m_libraryDB(LibraryDB_create())
 {
 	/*
 	 * Searching actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
@@ -178,8 +179,6 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	}
 #endif
 
-	m_libraryDB = LibraryDB_create();
-
 	m_bobbyRayNewInventory = NULL;
 	m_bobbyRayUsedInventory = NULL;
 	m_impPolicy = NULL;
@@ -197,7 +196,7 @@ void DefaultContentManager::initGameResouces(const std::string &stracciatellaHom
 {
 	for (auto it = libraries.begin(); it != libraries.end(); ++it)
 	{
-		if (!LibraryDB_push(m_libraryDB, m_dataDir.c_str(), it->c_str()))
+		if (!LibraryDB_push(m_libraryDB.get(), m_dataDir.c_str(), it->c_str()))
 		{
 			std::string message = FormattedString(
 				"Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s/ja2.json'.\n",
@@ -209,23 +208,18 @@ void DefaultContentManager::initGameResouces(const std::string &stracciatellaHom
 
 void DefaultContentManager::addExtraResources(const std::string &baseDir, const std::string &library)
 {
-	if (!LibraryDB_push(m_libraryDB, baseDir.c_str(), library.c_str())) {
-		auto error = getRustError();
+	if (!LibraryDB_push(m_libraryDB.get(), baseDir.c_str(), library.c_str())) {
+		RustPointer<char> error(getRustError());
 		std::string message = FormattedString(
 			"Library '%s' is not found in folder '%s': %s",
-			library.c_str(), baseDir.c_str(), error);
-		CString_destroy(error);
+			library.c_str(), baseDir.c_str(), error.get());
 		throw LibraryFileNotFoundException(message);
 	}
 }
 
 DefaultContentManager::~DefaultContentManager()
 {
-	if(m_libraryDB)
-	{
-		LibraryDB_destroy(m_libraryDB);
-		m_libraryDB = nullptr;
-	}
+	m_libraryDB.reset(nullptr);
 
 	for (const ItemModel* item : m_items)
 	{
@@ -426,13 +420,13 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
 				// failed to open in the data dir
 				// let's try libraries
 
-				LibraryFile* libFile = LibraryFile_open(m_libraryDB, filename);
+				RustPointer<LibraryFile> libFile(LibraryFile_open(m_libraryDB.get(), filename));
 				if (libFile)
 				{
 					SLOGD("Opened file (from library ): %s", filename);
 					SGPFile *file = MALLOCZ(SGPFile);
 					file->flags = SGPFILE_NONE;
-					file->u.lib = libFile;
+					file->u.lib = libFile.release();
 					return file;
 				}
 			}
@@ -482,13 +476,8 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 			file = fopen(path, "rb");
 			if (!file)
 			{
-				LibraryFile* libFile = LibraryFile_open(m_libraryDB, filename);
-				if (libFile)
-				{
-					LibraryFile_close(libFile);
-					return true;
-				}
-				return false;
+				RustPointer<LibraryFile> libFile(LibraryFile_open(m_libraryDB.get(), filename));
+				return static_cast<bool>(libFile);
 			}
 		}
 

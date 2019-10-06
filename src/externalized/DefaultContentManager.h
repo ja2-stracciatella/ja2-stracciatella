@@ -179,7 +179,7 @@ protected:
 	const IMPPolicy *m_impPolicy;
 	const GamePolicy *m_gamePolicy;
 
-	LibraryDB *m_libraryDB;
+	RustPointer<LibraryDB> m_libraryDB;
 
 	bool loadWeapons();
 	bool loadMagazines();
