@@ -20,5 +20,5 @@ jobs:
         ls -la
         # merge master into nightly and push
         cd /home/runner/work/ja2-stracciatella/ja2-stracciatella
-        git merge master
+        git merge origin/master --ff-only
         git push
