@@ -10,15 +10,19 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v1
+    - name: Checkout nightly
+      uses: actions/checkout@v1
       with:
         ref: nightly
-    - name: Update nightly branch
+    - name: Update nightly
       run: |
-        # where do we start?
-        pwd
-        ls -la
-        # merge master into nightly and push
-        cd /home/runner/work/ja2-stracciatella/ja2-stracciatella
+        # user and email are required for pushing
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        # fast forward to current master
         git merge origin/master --ff-only
-        git push
+    - name: Push nightly
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: nightly
