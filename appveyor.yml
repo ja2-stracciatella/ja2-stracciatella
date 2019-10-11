@@ -18,6 +18,7 @@ environment:
 branches:
   only:
     - master
+    - nightly
 
 matrix:
   fast_finish: true
@@ -37,11 +38,11 @@ init:
         }
         true;
   - ps: >
-        if (Test-Path Env:\NIGHTLY_VERSION) {
+        if ("$env:APPVEYOR_REPO_BRANCH" -eq "nightly") {
           $env:BUILD_TYPE = "Release";
           $env:PUBLISH_BINARY = "true";
           $env:PUBLISH_DIR = "nightlies";
-          $env:VERSION_TAG = "${env:NIGHTLY_VERSION}";
+          $env:VERSION_TAG = "$(Get-Date -UFormat "%Y%m%d")";
         }
         true;
   - ps: >

@@ -15,6 +15,7 @@ jobs:
 branches:
   only:
     - master
+    - nightly
 
 before_install:
   - export PUBLISH_BINARY="false"
@@ -26,11 +27,11 @@ before_install:
       export PUBLISH_DIR="pull-requests/$TRAVIS_PULL_REQUEST";
       export VERSION_TAG="${TRAVIS_PULL_REQUEST}pullrequest";
     fi
-  - if [[ "$NIGHTLY_VERSION" != "" ]]; then
+  - if [[ "$TRAVIS_BRANCH" = "nightly" ]]; then
       export BUILD_TYPE="Release";
       export PUBLISH_BINARY="true";
       export PUBLISH_DIR="nightlies";
-      export VERSION_TAG="$NIGHTLY_VERSION";
+      export VERSION_TAG="$(date +%Y%m%d)";
     fi
   - if [[ "$TRAVIS_TAG" != "" ]]; then
       export BUILD_TYPE="Release";
