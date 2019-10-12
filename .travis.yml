@@ -16,6 +16,7 @@ branches:
   only:
     - master
     - nightly
+    - coverity
 
 before_install:
   - export PUBLISH_BINARY="false"
@@ -128,7 +129,7 @@ addons:
     notification_email: github@stefanlau.com
     build_command_prepend: "mkdir coverage-build && cd coverage-build && cmake .."
     build_command:   "make"
-    branch_pattern: coverity-via-travis
+    branch_pattern: coverity
 
 env:
   global:
