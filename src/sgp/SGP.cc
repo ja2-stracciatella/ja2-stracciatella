@@ -303,22 +303,22 @@ int main(int argc, char* argv[])
 	// init logging
 	Logger_initialize("ja2.log");
 
-	EngineOptions* params = EngineOptions_create(argv, argc);
+	RustPointer<EngineOptions> params(EngineOptions_create(argv, argc));
 	if (params == NULL) {
 		return EXIT_FAILURE;
 	}
 
-	if (EngineOptions_shouldShowHelp(params)) {
+	if (EngineOptions_shouldShowHelp(params.get())) {
 		return EXIT_SUCCESS;
 	}
 
-	if (EngineOptions_shouldStartInFullscreen(params)) {
+	if (EngineOptions_shouldStartInFullscreen(params.get())) {
 		VideoSetFullScreen(TRUE);
-	} else if (EngineOptions_shouldStartInWindow(params)) {
+	} else if (EngineOptions_shouldStartInWindow(params.get())) {
 		VideoSetFullScreen(FALSE);
 	}
 
-	if (EngineOptions_shouldStartWithoutSound(params)) {
+	if (EngineOptions_shouldStartWithoutSound(params.get())) {
 		SoundEnableSound(FALSE);
 	}
 
@@ -332,23 +332,25 @@ int main(int argc, char* argv[])
 		SoundEnableSound(FALSE);
 	}
 
-	if (EngineOptions_shouldStartInDebugMode(params)) {
+	if (EngineOptions_shouldStartInDebugMode(params.get())) {
 		Logger_setLevel(LogLevel::Debug);
 		GameState::getInstance()->setDebugging(true);
 	}
 
-	if (EngineOptions_shouldRunEditor(params)) {
+	if (EngineOptions_shouldRunEditor(params.get())) {
 		GameState::getInstance()->setEditorMode(false);
 	}
 
-	bool result = g_ui.setScreenSize(EngineOptions_getResolutionX(params), EngineOptions_getResolutionY(params));
+	auto width = EngineOptions_getResolutionX(params.get());
+	auto height = EngineOptions_getResolutionY(params.get());
+	bool result = g_ui.setScreenSize(width, height);
 	if(!result)
 	{
-		SLOGE("Failed to set screen resolution %d x %d", EngineOptions_getResolutionX(params), EngineOptions_getResolutionY(params));
+		SLOGE("Failed to set screen resolution %d x %d", width, height);
 		return EXIT_FAILURE;
 	}
 
-	if (EngineOptions_shouldRunUnittests(params)) {
+	if (EngineOptions_shouldRunUnittests(params.get())) {
 #ifdef WITH_UNITTESTS
 		testing::InitGoogleTest(&argc, argv);
 		return RUN_ALL_TESTS();
@@ -357,12 +359,12 @@ int main(int argc, char* argv[])
 #endif
 	}
 
-	GameVersion version = EngineOptions_getResourceVersion(params);
+	GameVersion version = EngineOptions_getResourceVersion(params.get());
 	setGameVersion(version);
 
-	VideoScaleQuality scalingQuality = EngineOptions_getScalingQuality(params);
+	VideoScaleQuality scalingQuality = EngineOptions_getScalingQuality(params.get());
 
-	FLOAT brightness = EngineOptions_getBrightness(params);
+	FLOAT brightness = EngineOptions_getBrightness(params.get());
 
 	////////////////////////////////////////////////////////////
 
@@ -384,12 +386,8 @@ int main(int argc, char* argv[])
 	InitializeMemoryManager();
 
 	SLOGD("Initializing Game Resources");
-	char* rustConfigFolderPath = EngineOptions_getStracciatellaHome(params);
-	char* rustResRootPath = EngineOptions_getVanillaGameDir(params);
-	std::string configFolderPath = std::string(rustConfigFolderPath);
-	std::string gameResRootPath = std::string(rustResRootPath);
-	CString_destroy(rustConfigFolderPath);
-	CString_destroy(rustResRootPath);
+	RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome(params.get()));
+	RustPointer<char> gameResRootPath(EngineOptions_getVanillaGameDir(params.get()));
 
 	std::string extraDataDir = EXTRA_DATA_DIR;
 	if(extraDataDir.empty())
@@ -400,30 +398,28 @@ int main(int argc, char* argv[])
 
 	std::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
 
-	FileMan::switchTmpFolder(configFolderPath);
+	FileMan::switchTmpFolder(configFolderPath.get());
 
 	DefaultContentManager *cm;
 
-	auto n = EngineOptions_getModsLength(params);
+	auto n = EngineOptions_getModsLength(params.get());
 	if(n > 0)
 	{
 		std::vector<std::string> modNames;
 		std::vector<std::string> modResFolders;
 		for (auto i = 0; i < n; ++i)
 		{
-			char* rustModName = EngineOptions_getMod(params, i);
-			std::string modName(rustModName);
-			CString_destroy(rustModName);
-			std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName), "data");
-			modNames.emplace_back(modName);
+			RustPointer<char> modName(EngineOptions_getMod(params.get(), i));
+			std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName.get()), "data");
+			modNames.emplace_back(modName.get());
 			modResFolders.emplace_back(modResFolder);
 		}
 		cm = new ModPackContentManager(version,
-						modNames, modResFolders, configFolderPath,
-						gameResRootPath, externalizedDataPath);
+						modNames, modResFolders, configFolderPath.get(),
+						gameResRootPath.get(), externalizedDataPath);
 		SLOGI("------------------------------------------------------------------------------");
-		SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.c_str());
-		SLOGI("Root game resources directory: '%s'", gameResRootPath.c_str());
+		SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.get());
+		SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
 		SLOGI("Extra data directory:          '%s'", extraDataDir.c_str());
 		SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
 		SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
@@ -439,11 +435,11 @@ int main(int argc, char* argv[])
 	else
 	{
 		cm = new DefaultContentManager(version,
-						configFolderPath,
-						gameResRootPath, externalizedDataPath);
+						configFolderPath.get(),
+						gameResRootPath.get(), externalizedDataPath);
 		SLOGI("------------------------------------------------------------------------------");
-		SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.c_str());
-		SLOGI("Root game resources directory: '%s'", gameResRootPath.c_str());
+		SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.get());
+		SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
 		SLOGI("Extra data directory:          '%s'", extraDataDir.c_str());
 		SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
 		SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
@@ -452,10 +448,10 @@ int main(int argc, char* argv[])
 	}
 
 	std::vector<std::string> libraries = cm->getListOfGameResources();
-	cm->initGameResouces(configFolderPath, libraries);
+	cm->initGameResouces(configFolderPath.get(), libraries);
 
 	// free editor.slf has the lowest priority (last library) and is optional
-	if(EngineOptions_shouldRunEditor(params))
+	if(EngineOptions_shouldRunEditor(params.get()))
 	{
 		try
 		{
@@ -467,9 +463,6 @@ int main(int argc, char* argv[])
 			SLOGI("%s", ex.what());
 		}
 	}
-
-	EngineOptions_destroy(params);
-	params = nullptr;
 
 	if(!cm->loadGameData())
 	{
