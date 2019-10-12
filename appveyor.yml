@@ -108,7 +108,7 @@ after_test:
           if ("$env:PUBLISH_BINARY" -eq "true" -and (Test-Path Env:\SFTP_PASSWORD)) {
             $binary_paths = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*;
             foreach ($file in $binary_paths) {
-              iex "curl.exe --ftp-create-dirs -T ${file} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
+              iex "curl.exe --retry 3 --ftp-create-dirs -T ${file} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
             }
           }
 
