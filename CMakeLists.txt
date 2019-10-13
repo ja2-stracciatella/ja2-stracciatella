@@ -96,9 +96,6 @@ add_definitions(-DEXTRA_DATA_DIR="${EXTRA_DATA_DIR}")
 message(STATUS "Setting directory for libraries to" "${INSTALL_LIB_DIR}")
 add_definitions(-DINSTALL_LIB_DIR="${INSTALL_LIB_DIR}")
 
-string(LENGTH "${CMAKE_SOURCE_DIR}/src/" SOURCE_PATH_SIZE)
-add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
-
 if (WITH_FIXMES)
     message(STATUS "Building with fixme messages" )
     add_definitions(-DWITH_FIXMES)
