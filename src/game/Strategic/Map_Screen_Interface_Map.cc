@@ -617,7 +617,7 @@ void DrawMap(void)
 			UINT16 const src_w = guiBIGMAP->Width();
 			UINT16 const src_h = guiBIGMAP->Height();
 			if (w > src_w - x) w = src_w - x;
-			if (h > src_h - x) h = src_h - y;
+			if (h > src_h - y) h = src_h - y;
 			SGPBox const clip = { x, y, w, h };
 			BltVideoSurface(guiSAVEBUFFER, guiBIGMAP, MAP_VIEW_START_X + MAP_GRID_X, MAP_VIEW_START_Y + MAP_GRID_Y - 2, &clip);
 		}
