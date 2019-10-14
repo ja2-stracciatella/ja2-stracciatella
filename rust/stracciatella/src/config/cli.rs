@@ -1,6 +1,5 @@
 //! This module contains code to read command line arguments for the ja2 executable
 
-use std::fs;
 use std::path::PathBuf;
 use std::str::FromStr;
 
@@ -8,6 +7,7 @@ use getopts::Options;
 use log::warn;
 
 use crate::config::{EngineOptions, Resolution, VanillaVersion};
+use crate::fs::canonicalize;
 
 #[cfg(not(windows))]
 static GAME_DIR_OPTION_EXAMPLE: &str = "/opt/ja2";
@@ -105,7 +105,7 @@ impl Cli {
                 }
 
                 if let Some(s) = m.opts_str(&["gamedir".to_owned(), "datadir".to_owned()]) {
-                    match fs::canonicalize(PathBuf::from(s)) {
+                    match canonicalize(PathBuf::from(s)) {
                         Ok(s) => {
                             let mut temp = String::from(s.to_str().expect("Should not happen"));
                             // remove UNC path prefix (Windows)

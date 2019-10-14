@@ -6,6 +6,7 @@
 
 pub mod config;
 pub mod file_formats;
+pub mod fs;
 pub mod guess;
 pub mod json;
 pub mod librarydb;
@@ -19,6 +20,7 @@ use std::path::PathBuf;
 use log::warn;
 
 use crate::config::{Cli, EngineOptions, Ja2Json};
+use crate::fs::canonicalize;
 
 fn parse_args(engine_options: &mut EngineOptions, args: &[String]) -> Option<String> {
     let cli = Cli::from_args(args);
@@ -48,7 +50,7 @@ pub fn get_assets_dir() -> PathBuf {
             return extra_data_dir.into();
         }
     }
-    match std::env::current_exe().and_then(|x| x.canonicalize()) {
+    match std::env::current_exe().and_then(canonicalize) {
         Ok(exe) => {
             // use directory of the executable
             if let Some(dir) = exe.parent() {
@@ -210,7 +212,7 @@ mod tests {
         assert_eq!(parse_args(&mut engine_options, &input), None);
         let comp = engine_options.vanilla_game_dir;
         let base =
-            fs::canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
+            canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
 
         assert_eq!(comp, base);
     }

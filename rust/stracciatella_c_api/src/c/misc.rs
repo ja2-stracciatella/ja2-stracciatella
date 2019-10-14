@@ -7,6 +7,7 @@ use std::path::{Component, PathBuf};
 use std::ptr;
 
 use stracciatella::config::find_stracciatella_home;
+use stracciatella::fs::canonicalize;
 use stracciatella::get_assets_dir;
 use stracciatella::guess::guess_vanilla_version;
 use stracciatella::unicode::Nfc;
@@ -91,7 +92,7 @@ pub extern "C" fn findPathFromStracciatellaHome(
         if test_exists && !path_buf.exists() {
             ptr::null_mut() // path not found
         } else {
-            if let Ok(p) = path_buf.canonicalize() {
+            if let Ok(p) = canonicalize(&path_buf) {
                 path_buf = p;
             }
             let s: String = path_buf.to_string_lossy().into();
