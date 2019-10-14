@@ -886,10 +886,11 @@ static void HandleTalkingSpeck(void)
 				gsSpeckDialogueTextPopUp[0] = '\0';
 
 				//Start speck talking
-				if( gusMercVideoSpeckSpeech != MERC_VIDEO_SPECK_SPEECH_NOT_TALKING || 	gusMercVideoSpeckSpeech != MERC_VIDEO_SPECK_HAS_TO_TALK_BUT_QUOTE_NOT_CHOSEN_YET )
-					StartSpeckTalking( gusMercVideoSpeckSpeech );
+				if( !StartSpeckTalking( gusMercVideoSpeckSpeech ) )
+				{
+					gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
+				}
 
-				gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 				gubCurrentMercVideoMode = MERC_VIDEO_VIDEO_MODE;
 			}
 			break;
