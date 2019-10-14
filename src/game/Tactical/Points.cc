@@ -1447,12 +1447,16 @@ INT8 GetAPsToAutoReload( SOLDIERTYPE * pSoldier )
 	if (GCM->getItem(pObj->usItem)->getItemClass() == IC_GUN || GCM->getItem(pObj->usItem)->getItemClass() == IC_LAUNCHER)
 	{
 		bSlot = FindAmmoToReload( pSoldier, HANDPOS, NO_SLOT );
-		if (bSlot != NO_SLOT)
+		if (bSlot == NO_SLOT)
 		{
-			// we would reload using this ammo!
-			bAPCost += GetAPsToReloadGunWithAmmo( pObj, &(pSoldier->inv[bSlot] ) );
+			// we would not reload
+			return( 0 );
 		}
 
+		// we would reload using this ammo!
+		bAPCost += GetAPsToReloadGunWithAmmo( pObj, &(pSoldier->inv[bSlot] ) );
+		// if we are valid for two-pistol shooting (reloading) and we have enough APs still
+		// then we would do a reload of both guns!
 		if ( IsValidSecondHandShotForReloadingPurposes( pSoldier ) )
 		{
 			pObj = &(pSoldier->inv[SECONDHANDPOS]);
