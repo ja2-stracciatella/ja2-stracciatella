@@ -134,11 +134,11 @@ static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8
 	{
 		SLOGA("Could not find underground sector node (%c%db_%d) that should exist.",
 			ubSectorY + 'A' - 1, ubSectorX, ubSectorZ);
+		MemFree(curr);
 		return 0;
 	}
 
 	curr->pLevel->ubCreatureHabitat = ubCreatureHabitat;
-	Assert( curr->pLevel );
 	curr->next = NULL;
 	return curr;
 }
