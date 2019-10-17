@@ -250,6 +250,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "dunce"
+version = "1.0.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+
+[[package]]
 name = "either"
 version = "1.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -661,6 +666,7 @@ dependencies = [
  "clap 2.33.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "digest 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "dirs 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)",
+ "dunce 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "getopts 0.2.19 (registry+https://github.com/rust-lang/crates.io-index)",
  "hex 0.3.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "json_comments 0.2.0 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -857,6 +863,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 "checksum crossbeam-utils 0.6.6 (registry+https://github.com/rust-lang/crates.io-index)" = "04973fa96e96579258a5091af6003abde64af786b860f18622b82e026cca60e6"
 "checksum digest 0.8.1 (registry+https://github.com/rust-lang/crates.io-index)" = "f3d0c8c8752312f9713efd397ff63acb9f85585afbf179282e720e7704954dd5"
 "checksum dirs 1.0.5 (registry+https://github.com/rust-lang/crates.io-index)" = "3fd78930633bd1c6e35c4b42b1df7b0cbc6bc191146e512bb3bedf243fcc3901"
+"checksum dunce 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)" = "d0ad6bf6a88548d1126045c413548df1453d9be094a8ab9fd59bf1fdd338da4f"
 "checksum either 1.5.2 (registry+https://github.com/rust-lang/crates.io-index)" = "5527cfe0d098f36e3f8839852688e63c8fff1c90b2b405aef730615f9a7bcf7b"
 "checksum failure 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)" = "795bd83d3abeb9220f257e597aa0080a508b27533824adf336529648f6abf7e2"
 "checksum failure_derive 0.1.5 (registry+https://github.com/rust-lang/crates.io-index)" = "ea1063915fd7ef4309e222a5a07cf9c319fb9c7836b1f89b85458672dbb127e1"

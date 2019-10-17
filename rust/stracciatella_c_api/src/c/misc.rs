@@ -7,6 +7,7 @@ use std::path::{Component, PathBuf};
 use std::ptr;
 
 use stracciatella::config::find_stracciatella_home;
+use stracciatella::fs::canonicalize;
 use stracciatella::get_assets_dir;
 use stracciatella::guess::guess_vanilla_version;
 use stracciatella::unicode::Nfc;
@@ -64,7 +65,7 @@ pub extern "C" fn findPathFromAssetsDir(path: *const c_char, test_exists: bool) 
     let mut path_buf = get_assets_dir();
     if !path.is_null() {
         let path = path_from_c_str_or_panic(unsafe_c_str(path));
-        path_buf.push(&path);
+        path.components().for_each(|x| path_buf.push(x));
     }
     if test_exists && !path_buf.exists() {
         ptr::null_mut()
@@ -85,13 +86,13 @@ pub extern "C" fn findPathFromStracciatellaHome(
 ) -> *mut c_char {
     if let Ok(mut path_buf) = find_stracciatella_home() {
         if !path.is_null() {
-            let s = str_from_c_str_or_panic(unsafe_c_str(path));
-            path_buf.push(&s);
+            let path = path_from_c_str_or_panic(unsafe_c_str(path));
+            path.components().for_each(|x| path_buf.push(x));
         }
         if test_exists && !path_buf.exists() {
             ptr::null_mut() // path not found
         } else {
-            if let Ok(p) = path_buf.canonicalize() {
+            if let Ok(p) = canonicalize(&path_buf) {
                 path_buf = p;
             }
             let s: String = path_buf.to_string_lossy().into();
@@ -114,7 +115,7 @@ pub extern "C" fn checkIfRelativePathExists(
     let path: PathBuf = path_from_c_str_or_panic(unsafe_c_str(path)).to_owned();
     let mut buf = base;
     if !caseless {
-        buf.push(path);
+        path.components().for_each(|x| buf.push(x));
         return buf.exists();
     }
     'outer: for component in path.components() {
