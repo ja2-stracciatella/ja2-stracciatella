@@ -154,7 +154,10 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 	{
 		MemFree( pOutputBuffer );
 	}
-
+	if( pSubImageBuffer != NULL )
+	{
+		MemFree( pOutputBuffer );
+	}
 }
 
 
@@ -174,6 +177,8 @@ static BOOLEAN GoPastWall(INT16* psNewX, INT16* psNewY, UINT16 usWidth, UINT16 u
 static BOOLEAN GoToNextSubImage(INT16* psNewX, INT16* psNewY, UINT8* p8BPPBuffer, UINT16 usWidth, UINT16 usHeight, INT16 sOrigX, INT16 sOrigY);
 
 
+/// Converts an indexed image to ETRLE subimages.
+/// The caller is responsible for the memory left in *ppDest and *ppSubImageBuffer.
 static BOOLEAN ConvertToETRLE(UINT8** const ppDest, UINT32* const puiDestLen, STCISubImage** const ppSubImageBuffer, UINT16* const pusNumberOfSubImages, UINT8* const p8BPPBuffer, const UINT16 usWidth, const UINT16 usHeight, const UINT32 fFlags)
 try
 {
@@ -315,10 +320,6 @@ try
 	}
 	if (!fOk)
 	{
-		if (*ppSubImageBuffer != NULL)
-		{
-			MemFree( *ppSubImageBuffer );
-		}
 		return( FALSE );
 	}
 
