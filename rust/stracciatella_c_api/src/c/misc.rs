@@ -3,14 +3,13 @@
 //! The code in this module is not associated with any module in particular.
 
 use std::ffi::CString;
-use std::path::{Component, PathBuf};
+use std::path::PathBuf;
 use std::ptr;
 
 use stracciatella::config::find_stracciatella_home;
-use stracciatella::fs::canonicalize;
+use stracciatella::fs::{canonicalize, resolve_existing_components};
 use stracciatella::get_assets_dir;
 use stracciatella::guess::guess_vanilla_version;
-use stracciatella::unicode::Nfc;
 
 use crate::c::common::*;
 
@@ -61,16 +60,22 @@ pub extern "C" fn guessResourceVersion(gamedir: *const c_char) -> c_int {
 /// If test_exists is true and the path does not exist, it returns null.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn findPathFromAssetsDir(path: *const c_char, test_exists: bool) -> *mut c_char {
-    let mut path_buf = get_assets_dir();
-    if !path.is_null() {
+pub extern "C" fn findPathFromAssetsDir(
+    path: *const c_char,
+    test_exists: bool,
+    caseless: bool,
+) -> *mut c_char {
+    let assets_dir = get_assets_dir();
+    let path = if !path.is_null() {
         let path = path_from_c_str_or_panic(unsafe_c_str(path));
-        path.components().for_each(|x| path_buf.push(x));
-    }
-    if test_exists && !path_buf.exists() {
+        resolve_existing_components(path, Some(&assets_dir), caseless)
+    } else {
+        assets_dir
+    };
+    if test_exists && !path.exists() {
         ptr::null_mut()
     } else {
-        let c_string = c_string_from_path_or_panic(&path_buf);
+        let c_string = c_string_from_path_or_panic(&path);
         c_string.into_raw()
     }
 }
@@ -83,11 +88,13 @@ pub extern "C" fn findPathFromAssetsDir(path: *const c_char, test_exists: bool) 
 pub extern "C" fn findPathFromStracciatellaHome(
     path: *const c_char,
     test_exists: bool,
+    caseless: bool,
 ) -> *mut c_char {
     if let Ok(mut path_buf) = find_stracciatella_home() {
         if !path.is_null() {
             let path = path_from_c_str_or_panic(unsafe_c_str(path));
-            path.components().for_each(|x| path_buf.push(x));
+            let path = resolve_existing_components(path, Some(&path_buf), caseless);
+            path_buf = path;
         }
         if test_exists && !path_buf.exists() {
             ptr::null_mut() // path not found
@@ -113,30 +120,8 @@ pub extern "C" fn checkIfRelativePathExists(
 ) -> bool {
     let base: PathBuf = path_from_c_str_or_panic(unsafe_c_str(base)).to_owned();
     let path: PathBuf = path_from_c_str_or_panic(unsafe_c_str(path)).to_owned();
-    let mut buf = base;
-    if !caseless {
-        path.components().for_each(|x| buf.push(x));
-        return buf.exists();
-    }
-    'outer: for component in path.components() {
-        if let Component::Normal(os_str) = component {
-            if let Some(want_caseless) = os_str.to_str().map(|x| Nfc::caseless(x)) {
-                if let Ok(entries) = buf.read_dir() {
-                    for entry in entries.filter_map(|x| x.ok()) {
-                        let file_name = entry.file_name();
-                        if let Some(have_caseless) = file_name.to_str().map(|x| Nfc::caseless(x)) {
-                            if want_caseless == have_caseless {
-                                buf.push(file_name);
-                                continue 'outer;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        buf.push(component);
-    }
-    buf.exists()
+    let path = resolve_existing_components(&path, Some(&base), caseless);
+    path.exists()
 }
 
 /// Returns a list of available mods.
@@ -202,6 +187,8 @@ pub extern "C" fn VecCString_get(vec: *mut VecCString, index: size_t) -> *mut c_
 
 #[cfg(test)]
 mod tests {
+    #![allow(clippy::complexity)]
+
     use std::ffi::CString;
     use std::fs;
 
@@ -234,10 +221,12 @@ mod tests {
     fn check_if_relative_path_exists() {
         let temp_dir = TempDir::new().unwrap();
         fs::create_dir_all(temp_dir.path().join("foo/bar")).unwrap();
+        fs::create_dir_all(temp_dir.path().join("with space/inner")).unwrap();
+        fs::create_dir_all(temp_dir.path().join("utf8-gedöns/inner")).unwrap();
 
         macro_rules! t {
-            ($path:expr, $caseless:expr, $expected:expr) => {
-                let base = CString::new(temp_dir.path().to_str().unwrap()).unwrap();
+            ($base: expr, $path:expr, $caseless:expr, $expected:expr) => {
+                let base = CString::new($base.to_str().unwrap()).unwrap();
                 let path = CString::new($path).unwrap();
                 assert_eq!(
                     super::checkIfRelativePathExists(base.as_ptr(), path.as_ptr(), $caseless),
@@ -245,15 +234,46 @@ mod tests {
                 );
             };
         }
-        t!("baz", false, false);
-        t!("baz", true, false);
-        t!("foo", false, true);
-        t!("foo", true, true);
-        t!("foo/bar", false, true);
-        t!("foo/bar", true, true);
-        t!("foo/BAR", true, true);
-        t!("FOO/BAR", true, true);
-        t!("FOO/bar", true, true);
-        t!("FOO", true, true);
+
+        t!(temp_dir.path(), "baz", false, false);
+        t!(temp_dir.path(), "baz", true, false);
+
+        t!(temp_dir.path(), "foo", false, true);
+        t!(temp_dir.path(), "foo", true, true);
+        t!(temp_dir.path(), "FOO", false, false);
+        t!(temp_dir.path(), "FOO", true, true);
+
+        t!(temp_dir.path(), "foo/bar", false, true);
+        t!(temp_dir.path(), "foo/bar", true, true);
+        t!(temp_dir.path(), "foo/BAR", true, true);
+        t!(temp_dir.path(), "FOO/BAR", true, true);
+        t!(temp_dir.path(), "FOO/bar", true, true);
+
+        t!(temp_dir.path(), "withspace", false, false);
+        t!(temp_dir.path(), "withspace", true, false);
+        t!(temp_dir.path(), "with space", false, true);
+        t!(temp_dir.path(), "with space", true, true);
+        t!(temp_dir.path(), "with SPACE", false, false);
+        t!(temp_dir.path(), "with SPACE", true, true);
+
+        t!(temp_dir.path().join("with space"), "inner", false, true);
+        t!(temp_dir.path().join("with SPACE"), "inner", false, false);
+        t!(temp_dir.path().join("with space"), "INNER", false, false);
+        t!(temp_dir.path().join("with SPACE"), "inner", true, true);
+        t!(temp_dir.path().join("with SPACE"), "INNER", true, true);
+        t!(temp_dir.path().join("with space"), "INNER", true, true);
+
+        t!(temp_dir.path().join("utf8-gedöns"), "inner", false, true);
+        t!(temp_dir.path().join("utf8-gedöns"), "inner", true, true);
+        t!(temp_dir.path().join("utf8-gedöns"), "other", false, false);
+        t!(temp_dir.path().join("utf8-GEDÖNS"), "inner", false, false);
+        t!(temp_dir.path().join("utf8-GEDÖNS"), "inner", true, true);
+
+        // The following are different representations of the umlaut ö in utf-8
+        // than the one that was used to create the directory
+        t!(temp_dir.path().join("utf8-gedöns"), "inner", false, true);
+        t!(temp_dir.path().join("utf8-gedöns"), "inner", true, true);
+        t!(temp_dir.path().join("utf8-gedÖns"), "inner", false, false);
+        t!(temp_dir.path().join("utf8-gedÖns"), "inner", true, true);
     }
 }

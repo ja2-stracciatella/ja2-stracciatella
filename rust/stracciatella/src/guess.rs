@@ -15,6 +15,7 @@ use rayon::prelude::*;
 use serde_json;
 
 use crate::config::VanillaVersion;
+use crate::fs::resolve_existing_components;
 use crate::res::{
     Resource, ResourceError, ResourcePack, ResourcePackBuilder, ResourcePropertiesExt,
 };
@@ -260,32 +261,13 @@ impl Guess {
     /// Find data directory within game directory
     fn get_datadir(&self, gamedir: &Path) -> GuessResult<PathBuf> {
         info!("Looking for data dir in {:?}", &gamedir);
-        let data_caseless = Nfc::caseless("data");
-        let mut paths: Vec<PathBuf> = gamedir
-            .read_dir()?
-            .filter_map(|x| {
-                if let Ok(entry) = x {
-                    if let Some(file_name) = entry.file_name().to_str() {
-                        if Nfc::caseless(file_name) == data_caseless {
-                            let path = entry.path();
-                            if path.is_dir() {
-                                return Some(path);
-                            }
-                        }
-                    }
-                }
-                None
-            })
-            .collect();
-        if paths.len() > 1 {
-            return Err(format!("Too many data dirs: {:?}", paths).into());
+        let path = resolve_existing_components(Path::new("data"), Some(Path::new(gamedir)), true);
+        if path.exists() {
+            info!("Found {:?}", &path);
+            Ok(path)
+        } else {
+            Err("Data dir not found".to_owned().into())
         }
-        if paths.is_empty() {
-            return Err("Data dir not found".to_owned().into());
-        }
-        let path = paths.remove(0);
-        info!("Found {:?}", &path);
-        Ok(path)
     }
 
     /// Find all resource packs in externalized directory

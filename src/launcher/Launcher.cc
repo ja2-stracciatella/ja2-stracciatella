@@ -75,7 +75,7 @@ void Launcher::show() {
 	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	resolutionXInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	resolutionYInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	RustPointer<char> game_json_path(findPathFromAssetsDir("externalized/game.json", true));
+	RustPointer<char> game_json_path(findPathFromAssetsDir("externalized/game.json", true, true));
 	if (game_json_path) {
 		gameSettingsOutput->value(game_json_path.get());
 	} else {
@@ -83,7 +83,7 @@ void Launcher::show() {
 	}
 	fullscreenCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	playSoundsCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	RustPointer<char> ja2_json_path(findPathFromStracciatellaHome("ja2.json", false));
+	RustPointer<char> ja2_json_path(findPathFromStracciatellaHome("ja2.json", false, true));
 	if (ja2_json_path) {
 		ja2JsonPathOutput->value(ja2_json_path.get());
 	} else {
@@ -284,7 +284,7 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 	window->writeJsonFile();
 	bool has_editor_slf = checkIfRelativePathExists(window->gameDirectoryInput->value(), "Data/Editor.slf", true);
 	if (!has_editor_slf) {
-		RustPointer<char> assets_dir(findPathFromAssetsDir(nullptr, false));
+		RustPointer<char> assets_dir(findPathFromAssetsDir(nullptr, false, false));
 		if (assets_dir) {
 			// free editor.slf
 			has_editor_slf = checkIfRelativePathExists(assets_dir.get(), "editor.slf", true);
