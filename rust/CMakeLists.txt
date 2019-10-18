@@ -1,4 +1,5 @@
 # This is an external project, it should never be included directly.
+# It is used in dependencies/lib-stracciatella/CMakeLists.txt
 
 cmake_minimum_required(VERSION 3.1)
 
