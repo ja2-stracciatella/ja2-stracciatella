@@ -360,12 +360,12 @@ static BOOLEAN LightTileBlocked(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 	usTileNo=MAPROWCOLTOPOS(iY, iX);
 	usSrcTileNo=MAPROWCOLTOPOS(iSrcY, iSrcX);
 
-	if ( usTileNo >= NOWHERE )
+	if ( usTileNo >= GRIDSIZE )
 	{
 		return( FALSE );
 	}
 
-	if ( usSrcTileNo >= NOWHERE )
+	if ( usSrcTileNo >= GRIDSIZE )
 	{
 		return( FALSE );
 	}
@@ -418,12 +418,12 @@ static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 	//	int i = 0;
 	//}
 
-	if ( usTileNo >= NOWHERE )
+	if ( usTileNo >= GRIDSIZE )
 	{
 		return( FALSE );
 	}
 
-	if ( usSrcTileNo >= NOWHERE )
+	if ( usSrcTileNo >= GRIDSIZE )
 	{
 		return( FALSE );
 	}
@@ -661,7 +661,7 @@ static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX
 
 	uiTile= MAPROWCOLTOPOS( iY, iX );
 
-	if ( uiTile >= NOWHERE )
+	if ( uiTile >= GRIDSIZE )
 	{
 		return( FALSE );
 	}
@@ -796,7 +796,7 @@ static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT
 
 	uiTile= MAPROWCOLTOPOS( iY, iX );
 
-	if ( uiTile >= NOWHERE )
+	if ( uiTile >= GRIDSIZE )
 	{
 		return( FALSE );
 	}

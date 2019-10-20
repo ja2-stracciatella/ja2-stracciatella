@@ -592,7 +592,7 @@ void SoldierTriesToContinueAlongPath(SOLDIERTYPE *pSoldier)
 		return;
 	}
 
-	if (pSoldier->usActionData >= NOWHERE)
+	if (pSoldier->usActionData >= GRIDSIZE)
 	{
 		CancelAIAction(pSoldier);
 		return;
