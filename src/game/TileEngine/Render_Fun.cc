@@ -78,12 +78,12 @@ void SetGridNoRevealedFlag(UINT16 const grid_no)
 		SetStructAframeFlags(grid_no, LEVELNODE_HIDDEN);
 
 		// Find gridno one east as well
-		if (grid_no + WORLD_COLS < NOWHERE)
+		if (grid_no + WORLD_COLS < GRIDSIZE)
 		{
 			SetStructAframeFlags(grid_no + WORLD_COLS, LEVELNODE_HIDDEN);
 		}
 
-		if (grid_no + 1 < NOWHERE)
+		if (grid_no + 1 < GRIDSIZE)
 		{
 			SetStructAframeFlags(grid_no + 1, LEVELNODE_HIDDEN);
 		}
