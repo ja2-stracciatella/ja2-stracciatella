@@ -16,7 +16,6 @@ branches:
   only:
     - master
     - nightly
-    - coverity
 
 before_install:
   - export PUBLISH_BINARY="false"
