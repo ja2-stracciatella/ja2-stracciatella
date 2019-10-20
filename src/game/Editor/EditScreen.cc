@@ -1762,6 +1762,7 @@ static void HandleKeyboardShortcuts(void)
 					if( gusPreserveSelectionWidth > 8 )
 						gusPreserveSelectionWidth = 1;
 					gfRenderTaskbar = TRUE;
+					break;
 				default:
 					iCurrentAction = ACTION_NULL;
 					break;
