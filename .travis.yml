@@ -1,16 +1,47 @@
 language: cpp
+os: linux
 
 jobs:
   include:
-    - os: linux
+    - name: Linux x64
       dist: xenial
-      sudo: required
-    - os: linux
+
+    - name: Mingw x64 (cross compile)
       dist: xenial
-      sudo: required
       env:
         TRAVIS_MINGW=true
-    - os: osx
+
+    - name: Mac
+      os: osx
+
+    - name: Coverity scan
+      dist: xenial
+      branches:
+        only:
+          - nightly
+      addons:
+        # must copy apt
+        apt:
+          packages:
+            - cmake
+            - make
+            - g++
+            - libsdl2-dev
+            - libboost-all-dev
+            - fluid
+            - libfltk1.3-dev
+            - fakeroot
+        coverity_scan:
+          project:
+            name: ja2-stracciatella/ja2-stracciatella
+            description: Build submitted via Travis CI
+          notification_email: github@stefanlau.com
+          build_command_prepend: mkdir coverage-build && cd coverage-build && cmake $BUILD_SWITCHES ..
+          build_command: make
+          branch_pattern: nightly
+      # must replace scripts (before_install is left unchanged)
+      script: cat "${TRAVIS_HOME}/coverage-build/cov-int/scm_log.txt
+      after_success: true
 
 branches:
   only:
@@ -106,7 +137,7 @@ script:
 
 after_success:
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$SFTP_PASSWORD" != "" ]; then
-      curl -v --retry 3 --connect-timeout 60 --max-time 150 --ftp-create-dirs -T $(echo ja2-stracciatella_*) -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/;
+      travis_retry curl -v --connect-timeout 60 --max-time 150 --ftp-create-dirs -T $(echo ja2-stracciatella_*) -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/;
     fi
 
 addons:
@@ -121,14 +152,6 @@ addons:
     - libfltk1.3-dev
     - fakeroot
     - mingw-w64
-  coverity_scan:
-    project:
-      name: "ja2-stracciatella/ja2-stracciatella"
-      description: "Build submitted via Travis CI"
-    notification_email: github@stefanlau.com
-    build_command_prepend: "mkdir coverage-build && cd coverage-build && cmake .."
-    build_command:   "make"
-    branch_pattern: coverity
 
 env:
   global:
