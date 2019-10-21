@@ -2834,6 +2834,7 @@ static void GrenadeTest1(void)
 	if ( GetMouseXY( &sX, &sY ) )
 	{
 		OBJECTTYPE Object;
+		DeleteObj(&Object);
 		Object.usItem = MUSTARD_GRENADE;
 		Object.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
@@ -2849,6 +2850,7 @@ static void GrenadeTest2(void)
 	if ( GetMouseXY( &sX, &sY ) )
 	{
 		OBJECTTYPE Object;
+		DeleteObj(&Object);
 		Object.usItem = HAND_GRENADE;
 		Object.bStatus[ 0 ] = 100;
 		Object.ubNumberOfObjects = 1;
