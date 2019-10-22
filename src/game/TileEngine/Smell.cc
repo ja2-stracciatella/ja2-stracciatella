@@ -61,15 +61,15 @@
 #define BLOOD_STRENGTH_MAX		7
 #define BLOOD_DELAY_MAX       3
 
-#define SMELL_TYPE_BITS( s )	(s & 0x03)
+#define SMELL_TYPE_BITS( s )	((s) & 0x03)
 
-#define BLOOD_ROOF_TYPE( s )  (s & 0x02)
-#define BLOOD_FLOOR_TYPE( s )	(s & 0x01)
+#define BLOOD_ROOF_TYPE( s )  ((s) & 0x02)
+#define BLOOD_FLOOR_TYPE( s )	((s) & 0x01)
 
-#define BLOOD_ROOF_STRENGTH( b )    (b & 0xE0)
-#define BLOOD_FLOOR_STRENGTH( b )		( (b & 0x1C) >> 2 )
-#define BLOOD_DELAY_TIME( b )				(b & 0x03)
-#define NO_BLOOD_STRENGTH( b )			((b & 0xFC) == 0)
+#define BLOOD_ROOF_STRENGTH( b )    ((b) & 0xE0)
+#define BLOOD_FLOOR_STRENGTH( b )		( ((b) & 0x1C) >> 2 )
+#define BLOOD_DELAY_TIME( b )				((b) & 0x03)
+#define NO_BLOOD_STRENGTH( b )			(((b) & 0xFC) == 0)
 
 #define DECAY_SMELL_STRENGTH( s ) \
 { \
@@ -86,7 +86,7 @@
 // preserve the type value for the blood on the roof
 #define SET_SMELL( s, ns, ntf ) \
 { \
-	(s) = (BLOOD_ROOF_TYPE( s )) | SMELL_TYPE( ntf ) | (ns << SMELL_TYPE_NUM_BITS); \
+	(s) = (BLOOD_ROOF_TYPE( (s) )) | SMELL_TYPE( (ntf) ) | ((ns) << SMELL_TYPE_NUM_BITS); \
 }
 
 #define DECAY_BLOOD_DELAY_TIME( b ) \
@@ -109,7 +109,7 @@
 	UINT8 ubFloorStrength; \
 	ubFloorStrength = BLOOD_FLOOR_STRENGTH( (b) ); \
 	ubFloorStrength--; \
-	SET_BLOOD_FLOOR_STRENGTH( b, ubFloorStrength ); \
+	SET_BLOOD_FLOOR_STRENGTH( (b), ubFloorStrength ); \
 }
 
 #define DECAY_BLOOD_ROOF_STRENGTH( b ) \
@@ -117,22 +117,22 @@
 	UINT8 ubRoofStrength; \
 	ubRoofStrength = BLOOD_ROOF_STRENGTH( (b) ); \
 	ubRoofStrength--; \
-	SET_BLOOD_FLOOR_STRENGTH( b, ubRoofStrength ); \
+	SET_BLOOD_FLOOR_STRENGTH( (b), ubRoofStrength ); \
 }
 
 #define SET_BLOOD_DELAY_TIME( b ) \
 { \
-	(b) = BLOOD_DELAY_TIME( (UINT8) Random( BLOOD_DELAY_MAX ) + 1 ) | (b & 0xFC); \
+	(b) = BLOOD_DELAY_TIME( (UINT8) Random( BLOOD_DELAY_MAX ) + 1 ) | ((b) & 0xFC); \
 }
 
 #define SET_BLOOD_FLOOR_TYPE( s, ntg ) \
 { \
-	(s) = BLOOD_FLOOR_TYPE( ntg ) | (s & 0xFE); \
+	(s) = BLOOD_FLOOR_TYPE( (ntg) ) | ((s) & 0xFE); \
 }
 
 #define SET_BLOOD_ROOF_TYPE( s, ntr ) \
 { \
-	(s) = BLOOD_ROOF_TYPE( ntr ) | (s & 0xFD); \
+	(s) = BLOOD_ROOF_TYPE( (ntr) ) | ((s) & 0xFD); \
 }
 
 
