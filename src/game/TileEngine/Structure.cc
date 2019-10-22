@@ -1243,6 +1243,7 @@ void DebugStructurePage1()
 	GridNo const grid_no = GetMouseMapPos();
 	if (grid_no == NOWHERE) {
 		MPageHeader(L"DEBUG STRUCTURES PAGE ONE");
+		return;
 	} else {
 		MPageHeader(L"DEBUG STRUCTURES PAGE ONE, GRIDNO %d", grid_no);
 	}
@@ -1291,7 +1292,7 @@ void DebugStructurePage1()
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Type:");
 		if (s->fFlags & STRUCTURE_GENERIC)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Generic structure no %d", s->fFlags, s->pDBStructureRef->pDBStructure->usStructureNumber);
+			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Generic structure no %d", s->pDBStructureRef->pDBStructure->usStructureNumber);
 		}
 		else if (s->fFlags & STRUCTURE_TREE)
 		{
