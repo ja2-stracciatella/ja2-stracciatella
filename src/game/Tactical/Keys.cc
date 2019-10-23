@@ -628,6 +628,7 @@ BOOLEAN AttemptToBlowUpLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 			// Get Z position, based on orientation....
 			sZ = 20;
 
+			memset(&AniParams, 0, sizeof(AniParams));
 			AniParams.sGridNo = sGridNo;
 			AniParams.ubLevelID = ANI_TOPMOST_LEVEL;
 			AniParams.sDelay = (INT16)( 100 );
