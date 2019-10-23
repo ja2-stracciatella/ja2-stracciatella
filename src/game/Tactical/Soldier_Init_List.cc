@@ -239,7 +239,7 @@ void LoadSoldiersFromMap(HWFILE const f, bool stracLinuxFormat)
 	if (cow_in_sector)
 	{
 		char str[40];
-		sprintf(str, SOUNDSDIR "/cowmoo%d.wav", Random(3) + 1);
+		sprintf(str, SOUNDSDIR "/cowmoo%u.wav", Random(3) + 1);
 		PlayJA2SampleFromFile(str, MIDVOLUME, 1, MIDDLEPAN);
 	}
 }

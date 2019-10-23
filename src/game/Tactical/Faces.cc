@@ -150,31 +150,28 @@ FACETYPE& InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 
 	FACETYPE& f = GetFreeFace();
 
-	const char* face_file;
+	std::string prefix = "";
+	std::string suffix = "";
 	// Check if we are a big-face....
 	if (uiInitFlags & FACE_BIGFACE)
 	{
-		face_file = FACESDIR "/b%02d.sti";
-		// ATE: Check for profile - if elliot, use special face :)
+		prefix = "b";
+		// Check for profile - if elliot, use special face :)
 		if (id == ELLIOT && p.bNPCData > 3)
 		{
-			if      (p.bNPCData <   7) face_file = FACESDIR "/b%02da.sti";
-			else if (p.bNPCData <  10) face_file = FACESDIR "/b%02db.sti";
-			else if (p.bNPCData <  13) face_file = FACESDIR "/b%02dc.sti";
-			else if (p.bNPCData <  16) face_file = FACESDIR "/b%02dd.sti";
-			else if (p.bNPCData == 17) face_file = FACESDIR "/b%02de.sti";
+			if      (p.bNPCData <   7) suffix = "a";
+			else if (p.bNPCData <  10) suffix = "b";
+			else if (p.bNPCData <  13) suffix = "c";
+			else if (p.bNPCData <  16) suffix = "d";
+			else if (p.bNPCData == 17) suffix = "e";
 		}
-	}
-	else
-	{
-		face_file = FACESDIR "/%02d.sti";
 	}
 
 	// HERVE, PETER, ALBERTO and CARLO all use HERVE's portrait
 	INT32 const face_id = HERVE <= id && id <= CARLO ? HERVE : p.ubFaceIndex;
 
 	SGPFILENAME ImageFile;
-	sprintf(ImageFile, face_file, face_id);
+	sprintf(ImageFile, "%s/%s%02d%s.sti", FACESDIR, prefix.c_str(), face_id, suffix.c_str());
 	SGPVObject* const vo = AddVideoObjectFromFile(ImageFile);
 
 	memset(&f, 0, sizeof(f));

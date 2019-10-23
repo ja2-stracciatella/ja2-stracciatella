@@ -1556,7 +1556,7 @@ void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzN
 		}
 
 		case SAVE__END_TURN_NUM:
-			sprintf(pzNewFileName, "%s/Auto%02d.%s", dir.c_str(), guiLastSaveGameNum, ext);
+			sprintf(pzNewFileName, "%s/Auto%02u.%s", dir.c_str(), guiLastSaveGameNum, ext);
 			guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
 			break;
 

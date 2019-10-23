@@ -535,7 +535,7 @@ static FILE* CreateScreenshotFile(void)
 	do
 	{
 		char filename[2048];
-		sprintf(filename, "%s/SCREEN%03d.TGA", exec_dir.c_str(), guiPrintFrameBufferIndex++);
+		sprintf(filename, "%s/SCREEN%03u.TGA", exec_dir.c_str(), guiPrintFrameBufferIndex++);
 #ifndef _WIN32
 #	define O_BINARY 0
 #endif
@@ -806,7 +806,7 @@ static void RefreshMovieCache(void)
 	for (INT32 cnt = 0; cnt < giNumFrames; cnt++)
 	{
 		CHAR8 cFilename[2048];
-		sprintf(cFilename, "%s/JA%5.5d.TGA", exec_dir.c_str(), uiPicNum++);
+		sprintf(cFilename, "%s/JA%5.5u.TGA", exec_dir.c_str(), uiPicNum++);
 
 		FILE* disk = fopen(cFilename, "wb");
 		if (disk == NULL) return;

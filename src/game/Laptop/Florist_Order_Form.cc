@@ -283,7 +283,7 @@ void EnterFloristOrderForm()
 
 	// load the currently selected flower bouquet
 	char sTemp[40];
-	sprintf(sTemp, LAPTOPDIR "/flower_%d.sti", guiCurrentlySelectedFlower);
+	sprintf(sTemp, LAPTOPDIR "/flower_%u.sti", guiCurrentlySelectedFlower);
 	guiCurrentlySelectedFlowerImage = AddVideoObjectFromFile(sTemp);
 
 	guiDropDownBorder = AddVideoObjectFromFile(INTERFACEDIR "/tactpopup.sti");

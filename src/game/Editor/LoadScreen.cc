@@ -856,7 +856,7 @@ static ScreenID ProcessFileIO(void)
 			gbCurrentFileIOStatus = SAVING_MAP;
 			return LOADSAVE_SCREEN;
 		case SAVING_MAP: //save map
-			sprintf( ubNewFilename, "%ls", gzFilename );
+			sprintf( ubNewFilename, "%.49ls", gzFilename );
 			RaiseWorldLand();
 			if( gfShowPits )
 				RemoveAllPits();
@@ -901,7 +901,7 @@ static ScreenID ProcessFileIO(void)
 			return LOADSAVE_SCREEN;
 		case LOADING_MAP: //load map
 			DisableUndo();
-			sprintf( ubNewFilename, "%ls", gzFilename );
+			sprintf( ubNewFilename, "%.49ls", gzFilename );
 
 			RemoveMercsInSector( );
 
