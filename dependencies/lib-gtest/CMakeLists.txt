@@ -14,10 +14,9 @@ externalproject_add(gtest-internal
         "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib-gtest"
         -Dgtest_force_shared_crt=TRUE
         -Dgtest_disable_pthreads=TRUE
-    BUILD_COMMAND ""
     # NOTE this will always use the initial config in multi-config projects
+    BUILD_COMMAND "${CMAKE_COMMAND}" --build . --config "${CMAKE_BUILD_TYPE}"
     INSTALL_COMMAND "${CMAKE_COMMAND}" --build . --target install --config "${CMAKE_BUILD_TYPE}"
-    BUILD_ALWAYS 1
 )
 
 

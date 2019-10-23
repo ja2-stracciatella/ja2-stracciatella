@@ -1,0 +1,29 @@
+set(GLOB_RECURSE_SOURCES @STAMP_GLOB_RECURSE_SOURCES@)
+set(MD5_FILE "@STAMP_MD5_FILE@")
+set(UPDATE_FILE "@STAMP_UPDATE_FILE@")
+
+# get a list of source files
+file(GLOB_RECURSE SOURCE_FILES ${GLOB_RECURSE_SOURCES})
+
+# record the md5 checksum and path of each source file
+set(NEW_MD5_DATA "")
+foreach(FILE_PATH ${SOURCE_FILES})
+    file(MD5 "${FILE_PATH}" FILE_MD5)
+    set(NEW_MD5_DATA "${NEW_MD5_DATA}${FILE_MD5} ${FILE_PATH}\n")
+endforeach()
+
+# read the old md5 data
+set(OLD_MD5_DATA "NOT_FOUND")
+if(EXISTS "${MD5_FILE}")
+    file(READ "${MD5_FILE}" OLD_MD5_DATA)
+endif()
+
+# update if md5 data is different
+if(NOT "${OLD_MD5_DATA}" STREQUAL "${NEW_MD5_DATA}")
+    file(WRITE "${MD5_FILE}" "${NEW_MD5_DATA}")
+    # XXX can be replaced with file(TOUCH_NOCREATE "${UPDATE_FILE}") in cmake 3.12
+    if(EXISTS "${UPDATE_FILE}")
+        file(WRITE "${UPDATE_FILE}" "")
+    endif()
+endif()
+

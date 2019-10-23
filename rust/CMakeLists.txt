@@ -1,4 +1,10 @@
+# This is an external project, it should never be included directly.
+# It is used in dependencies/lib-stracciatella/CMakeLists.txt
+
 cmake_minimum_required(VERSION 3.1)
+
+project(stracciatella)
+
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/../cmake")
 
 set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
@@ -50,3 +56,4 @@ add_custom_target(rust-build ALL
 install(FILES ${LIBRARY_LOCATION} DESTINATION lib RENAME "${CMAKE_STATIC_LIBRARY_PREFIX}stracciatella${CMAKE_STATIC_LIBRARY_SUFFIX}")
 install(FILES ${HEADER_LOCATION} DESTINATION include)
 install(PROGRAMS ${RESOURCEPACK_LOCATION} DESTINATION bin)
+
