@@ -1113,7 +1113,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 				if ( sNewGridNo != pObject->sGridNo )
 				{
 					ANITILE_PARAMS	AniParams;
-
+					memset(&AniParams, 0, sizeof(AniParams));
 					AniParams.sGridNo = (INT16)sNewGridNo;
 					AniParams.ubLevelID = ANI_STRUCT_LEVEL;
 					AniParams.sDelay = (INT16)( 100 + PreRandom( 100 ) );
