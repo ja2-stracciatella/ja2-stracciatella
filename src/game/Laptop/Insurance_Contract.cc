@@ -852,7 +852,7 @@ void AddLifeInsurancePayout(SOLDIERTYPE* const pSoldier)
 		memset( &LaptopSaveInfo.pLifeInsurancePayouts[ LaptopSaveInfo.ubNumberLifeInsurancePayouts - 1 ], 0, sizeof( LIFE_INSURANCE_PAYOUT ) );
 	}
 
-	for( ubPayoutID = 0; ubPayoutID < LaptopSaveInfo.ubNumberLifeInsurancePayouts; ubPayoutID++ )
+	for( ubPayoutID = 0; ubPayoutID < LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed; ubPayoutID++ )
 	{
 		//get an empty element in the array
 		if( !LaptopSaveInfo.pLifeInsurancePayouts[ ubPayoutID ].fActive )
