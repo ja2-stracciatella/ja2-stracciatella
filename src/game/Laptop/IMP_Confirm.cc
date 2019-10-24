@@ -437,9 +437,8 @@ static void WriteOutCurrentImpCharacter(INT32 iProfileId)
 
 void ResetIMPCharactersEyesAndMouthOffsets(const UINT8 ubMercProfileID)
 {
-	// ATE: Check boundary conditions!
 	MERCPROFILESTRUCT& p = GetProfile(ubMercProfileID);
-	if (p.ubFaceIndex - 200 > 16 || ubMercProfileID >= PROF_HUMMER) return;
+	if (p.ubFaceIndex < 200 || p.ubFaceIndex >= 200 + lengthof(g_face_info) || ubMercProfileID >= PROF_HUMMER) return;
 
 	const FacePosInfo* const fi = &g_face_info[p.ubFaceIndex - 200];
 	p.usEyesX  = fi->eye_x;
