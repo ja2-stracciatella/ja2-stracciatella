@@ -34,7 +34,7 @@ UINT16			CurrentPaste = NO_TILE;
 //
 void QuickEraseMapTile( UINT32 iMapIndex )
 {
-	if ( iMapIndex >= 0x8000 )
+	if ( iMapIndex >= GRIDSIZE )
 		return;
 	AddToUndoList( iMapIndex );
 	DeleteStuffFromMapTile( iMapIndex );
@@ -77,7 +77,7 @@ void DeleteStuffFromMapTile( UINT32 iMapIndex )
 void EraseMapTile( UINT32 iMapIndex )
 {
 	INT32			iEraseMode;
-	if ( iMapIndex >= 0x8000 )
+	if ( iMapIndex >= GRIDSIZE )
 		return;
 
 	// Figure out what it is we are trying to erase
@@ -208,7 +208,7 @@ void PasteDebris( UINT32 iMapIndex )
 	pSelList = SelDebris;
 	pNumSelList = &iNumDebrisSelected;
 
-	if ( iMapIndex < 0x8000 )
+	if ( iMapIndex < GRIDSIZE )
 	{
 		AddToUndoList( iMapIndex );
 
@@ -309,7 +309,7 @@ try
 	pSelList    = sel_list;
 	pNumSelList = &n_sel_list;
 
-	if (map_idx >= 0x8000) return;
+	if (map_idx >= GRIDSIZE) return;
 
 	AddToUndoList(map_idx);
 
@@ -467,7 +467,7 @@ void PasteStructure2( UINT32 iMapIndex )
 //	each use different selection lists. Other than that, they are COMPLETELY identical.
 static void PasteStructureCommon(const UINT32 iMapIndex)
 {
-	if (iMapIndex >= 0x8000) return;
+	if (iMapIndex >= GRIDSIZE) return;
 
 	const INT32 iRandSelIndex = GetRandomSelection();
 	if (iRandSelIndex == -1) return;
@@ -503,7 +503,7 @@ void PasteBanks(UINT32 const iMapIndex, BOOLEAN const fReplace)
 	usUseIndex = pSelList[ iCurBank ].usIndex;
 	usUseObjIndex = (UINT16)pSelList[ iCurBank ].uiObject;
 
-	if ( iMapIndex < 0x8000 )
+	if ( iMapIndex < GRIDSIZE )
 	{
 		fDoPaste = TRUE;
 
@@ -582,7 +582,7 @@ void PasteTextureCommon(UINT32 const map_idx)
 {
 	UINT16 const paste = CurrentPaste;
 	if (paste   == NO_TILE) return;
-	if (map_idx >= 0x8000)  return;
+	if (map_idx >= GRIDSIZE)  return;
 
 	// Set undo, then set new
 	AddToUndoList(map_idx);
@@ -633,13 +633,13 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 	// - Add a 3 by 3 square of new type at head
 	// - Smooth World with new type
 
-	//if (iMapIndex < 0x8000 && TypeRangeExistsInLandLayer(iMapIndex, FIRSTFLOOR, LASTFLOOR))
+	//if (iMapIndex < GRIDSIZE && TypeRangeExistsInLandLayer(iMapIndex, FIRSTFLOOR, LASTFLOOR))
 	//ATE: DONOT DO THIS!!!!!!! - I know what was intended - not to draw over floors - this
 	// I don't know is the right way to do it!
 		//return;
 
 
-	if ( iMapIndex < 0x8000 && AnyHeigherLand( iMapIndex, fNewType, &ubLastHighLevel ))
+	if ( iMapIndex < GRIDSIZE && AnyHeigherLand( iMapIndex, fNewType, &ubLastHighLevel ))
 	{
 		AddToUndoList( iMapIndex );
 
@@ -658,7 +658,7 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 		MemFree( puiDeletedTypes );
 
 	}
-	else if ( iMapIndex < 0x8000 )
+	else if ( iMapIndex < GRIDSIZE )
 	{
 		AddToUndoList( iMapIndex );
 
@@ -687,7 +687,7 @@ static BOOLEAN PasteExistingTexture(UINT32 iMapIndex, UINT16 usIndex)
 	// - remove what was top-most
 	// - re-adjust the world to reflect missing top-most peice
 
-	if ( iMapIndex >= 0x8000 )
+	if ( iMapIndex >= GRIDSIZE )
 		return ( FALSE );
 
 	//if (TypeRangeExistsInLandLayer(iMapIndex, FIRSTFLOOR, LASTFLOOR))
@@ -737,7 +737,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
 
-	if ( iMapIndex >= 0x8000 )
+	if ( iMapIndex >= GRIDSIZE )
 		return ( FALSE );
 
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )

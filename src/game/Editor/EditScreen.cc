@@ -551,7 +551,7 @@ static BOOLEAN DoWindowSelection(void)
 //in the world.
 static void RemoveTempMouseCursorObject(void)
 {
-	if ( iCurBankMapIndex < 0x8000 )
+	if ( iCurBankMapIndex < GRIDSIZE )
 	{
 		ForceRemoveStructFromTail( iCurBankMapIndex );
 		gCursorNode = NULL;
@@ -642,7 +642,7 @@ static BOOLEAN DrawTempMouseCursorObject(void)
 	if (pos == NOWHERE) return FALSE;
 
 	iCurBankMapIndex = pos;
-	if (iCurBankMapIndex >= 0x8000) return FALSE;
+	if (iCurBankMapIndex >= GRIDSIZE) return FALSE;
 
 	//Hook into the smart methods to override the selection window methods.
 	switch (iDrawMode)
@@ -1809,7 +1809,7 @@ static ScreenID PerformSelectedAction(void)
 			if (gViewportRegion.uiFlags & MSYS_MOUSE_IN_AREA)
 			{
 				const UINT32 pos = GetMouseMapPos();
-				if (pos != NOWHERE && pos < 0x8000)
+				if (pos != NOWHERE && pos < GRIDSIZE)
 				{
 					QuickEraseMapTile(pos);
 				}
