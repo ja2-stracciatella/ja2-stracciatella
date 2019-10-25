@@ -1228,7 +1228,6 @@ BOOLEAN IsValidDecapitationCorpse(const ROTTING_CORPSE* const c)
 ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo, INT8 bLevel )
 {
 	STRUCTURE *pStructure, *pBaseStructure;
-	INT16 sBaseGridNo;
 
 	pStructure = FindStructure( sGridNo, STRUCTURE_CORPSE );
 
@@ -1237,12 +1236,9 @@ ROTTING_CORPSE *GetCorpseAtGridNo( INT16 sGridNo, INT8 bLevel )
 		// Get base....
 		pBaseStructure = FindBaseStructure( pStructure );
 
-		// Find base gridno...
-		sBaseGridNo = pBaseStructure->sGridNo;
-
 		if ( pBaseStructure != NULL )
 		{
-			return( FindCorpseBasedOnStructure( sBaseGridNo, pBaseStructure ) );
+			return( FindCorpseBasedOnStructure( pBaseStructure->sGridNo, pBaseStructure ) );
 		}
 	}
 
