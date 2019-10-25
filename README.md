@@ -2,6 +2,7 @@
 
 [![Build Status Travis](https://img.shields.io/travis/ja2-stracciatella/ja2-stracciatella/master.svg?style=flat-square)](https://travis-ci.org/ja2-stracciatella/ja2-stracciatella)
 [![Build Status Appveyor](https://img.shields.io/appveyor/ci/ja2-stracciatella/ja2-stracciatella/master.svg?style=flat-square)](https://ci.appveyor.com/project/ja2-stracciatella/ja2-stracciatella)
+[![Build Status Coverity Scan](https://img.shields.io/coverity/scan/8431.svg?style=flat-square)](https://scan.coverity.com/projects/ja2-stracciatella-ja2-stracciatella)
 
 This is continuation of venerable JA2-Stracciatella project.
 
