@@ -1223,7 +1223,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 		}
 
 		//loop through all the mercs and see if any are dead and the quote is not said
-		for(ubCnt=MERC_FIRST_MERC ; ubCnt<MERC_LAST_MERC; ubCnt++ )
+		for(ubCnt=MERC_FIRST_MERC ; ubCnt<=MERC_LAST_MERC; ubCnt++ )
 		{
 			MERCPROFILESTRUCT& p = GetProfile(ubCnt);
 			if (!IsMercDead(p)) continue;
