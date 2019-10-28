@@ -3495,6 +3495,7 @@ static void DisableAllDealersOfferSlots(void);
 
 void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerFirst )
 {
+	BOOLEAN fRestrictMouseToRect = FALSE;
 	SGPRect Rect;
 	OBJECTTYPE TempObject;
 
@@ -3527,6 +3528,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			Rect.iTop = SKI_DEALER_OFFER_AREA_Y;
 			Rect.iRight = SKI_ITEM_MOVEMENT_AREA_X + SKI_ITEM_MOVEMENT_AREA_WIDTH;
 			Rect.iBottom = SKI_ITEM_MOVEMENT_AREA_Y + SKI_ITEM_MOVEMENT_AREA_HEIGHT;
+			fRestrictMouseToRect = TRUE;
 
 			SOLDIERTYPE* const owner = GetMovingItemOwner();
 			SetItemPointer(&gMoveingItem.ItemObject, owner);
@@ -3563,6 +3565,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 			Rect.iTop = SKI_ITEM_MOVEMENT_AREA_Y;
 			Rect.iRight = SKI_ITEM_MOVEMENT_AREA_X + SKI_ITEM_MOVEMENT_AREA_WIDTH;
 			Rect.iBottom = SKI_ITEM_MOVEMENT_AREA_Y + SKI_ITEM_MOVEMENT_AREA_HEIGHT;
+			fRestrictMouseToRect = TRUE;
 
 			SOLDIERTYPE* const owner = GetMovingItemOwner();
 			SetItemPointer(&gMoveingItem.ItemObject, owner);
@@ -3618,6 +3621,7 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 				Rect.iTop = SKI_ITEM_MOVEMENT_AREA_Y;
 				Rect.iRight = SKI_ITEM_MOVEMENT_AREA_X + SKI_ITEM_MOVEMENT_AREA_WIDTH;
 				Rect.iBottom = SKI_ITEM_MOVEMENT_AREA_Y + SKI_ITEM_MOVEMENT_AREA_HEIGHT;
+				fRestrictMouseToRect = TRUE;
 
 				SetItemPointer(&gMoveingItem.ItemObject, gpSMCurrentMerc);
 			}
@@ -3637,7 +3641,10 @@ void BeginSkiItemPointer( UINT8 ubSource, INT8 bSlotNum, BOOLEAN fOfferToDealerF
 		//Enable the region that limits the movement of the cursor with the item
 		gSkiInventoryMovementAreaMouseRegions.Enable();
 
-		RestrictMouseCursor( &Rect );
+		if ( fRestrictMouseToRect )
+		{
+			RestrictMouseCursor( &Rect );
+		}
 
 		DisableAllDealersInventorySlots();
 
