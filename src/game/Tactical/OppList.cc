@@ -1345,12 +1345,12 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 
 
 	/*
-	if (ptr->guynum >= NOBODY)
+	if (ptr->guynum >= MAX_NUM_SOLDIERS)
 	{
 		return(success);
 	}
 
-	if (oppPtr->guynum >= NOBODY)
+	if (oppPtr->guynum >= MAX_NUM_SOLDIERS)
 	{
 		return(success);
 	}*/
@@ -1518,8 +1518,8 @@ static void UpdatePersonal(SOLDIERTYPE* pSoldier, UINT8 ubID, INT8 bNewOpplist, 
 
 static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller2)
 {
-	if (s.ubID        >= NOBODY) return;
-	if (opponent.ubID >= NOBODY) return;
+	if (s.ubID        >= MAX_NUM_SOLDIERS) return;
+	if (opponent.ubID >= MAX_NUM_SOLDIERS) return;
 
 	// if we're somehow looking while inactive, at base, dying or already dead
 	if (!s.bActive)       return;

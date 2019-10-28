@@ -4206,7 +4206,7 @@ static BOOLEAN WeSawSomeoneThisTurn(void)
 		const SOLDIERTYPE* const s = *i;
 		if (s->bTeam != OUR_TEAM) continue;
 
-		for (UINT32 uiLoop2 = gTacticalStatus.Team[ENEMY_TEAM].bFirstID; uiLoop2 < TOTAL_SOLDIERS; ++uiLoop2)
+		for (UINT32 uiLoop2 = gTacticalStatus.Team[ENEMY_TEAM].bFirstID; uiLoop2 < MAX_NUM_SOLDIERS; ++uiLoop2)
 		{
 			if (s->bOppList[uiLoop2] == SEEN_THIS_TURN) return TRUE;
 		}
