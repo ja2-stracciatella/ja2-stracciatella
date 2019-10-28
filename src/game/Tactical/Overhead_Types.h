@@ -223,7 +223,7 @@ enum WorldDirections
 
 // ENUMERATION OF SOLDIER POSIITONS IN GLOBAL SOLDIER LIST
 #define MAX_NUM_SOLDIERS				148
-#define NUM_PLANNING_MERCS				8
+#define NUM_PLANNING_MERCS				8 // XXX this is a remnant of the planning mode, see issue #902
 #define TOTAL_SOLDIERS					( NUM_PLANNING_MERCS + MAX_NUM_SOLDIERS )
 
 // DEFINE TEAMS

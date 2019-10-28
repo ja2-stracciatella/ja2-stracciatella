@@ -1646,7 +1646,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 					}
 				}
 
-				if (ubSmallestSlot < NOBODY)
+				if (ubSmallestSlot < MAX_NUM_SOLDIERS)
 				{
 					// add this guy to everyone's interrupt queue
 					AddToIntList(IntList[ubSmallestSlot], TRUE, TRUE);
