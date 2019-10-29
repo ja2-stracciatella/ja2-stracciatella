@@ -183,7 +183,7 @@ UINT32 SmackDoFrame(Smack* Smk)
 	UINT16 millisecondspassed = SDL_GetTicks() - Smk->LastTick;
 	UINT16 skiptime;
 	UINT16 delay, skipframes = 0;
-	DOUBLE framerate = Smk->FramesPerSecond/1000;
+	DOUBLE framerate = Smk->FramesPerSecond/1000.0;
 
 	if(framerate > millisecondspassed)
 	{
