@@ -7,200 +7,313 @@
 //
 //------------------------------------------------------------------------------
 
-#include "Cinematics.h"
-#include "Debug.h"
-#include "FileMan.h"
-#include "Intro.h"
-#include "Local.h"
-//#include "Smack.h" // XXX
+#include <cmath>
+#include <vector>
 
-#include "Smack_Stub.h" // XXX
-#include "SoundMan.h"
-#include "Types.h"
-#include "VSurface.h"
-#include "HImage.h"
-#include "Video.h"
-#include "UILayout.h"
+#include <SDL.h>
+extern "C" {
+#include "smacker.h"
+}
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-#include "Logger.h"
+#include "externalized/ContentManager.h"
+#include "externalized/GameInstance.h"
+#include "game/Utils/Cinematics.h"
+#include "sgp/Debug.h"
+#include "sgp/FileMan.h"
+#include "sgp/HImage.h"
+#include "sgp/VObject.h"
+#include "sgp/VSurface.h"
+#include "sgp/SoundMan.h"
 
 struct SMKFLIC
 {
-	HWFILE hFileHandle;
-	Smack  *SmackerObject;
-	CHAR8  SmackerStatus;
-	SDL_Surface *SmackBuffer;
-	UINT32 uiFlags;
-	UINT32 uiLeft;
-	UINT32 uiTop;
+	unsigned char* file_in_memory;
+	smk smacker; // object pointer type for libsmacker
+	UINT32 sounds[7];
+	UINT32 flags;
+	UINT32 left;
+	UINT32 top;
+	UINT32 start_tick;
+	UINT32 frame_no;
+	double milliseconds_per_frame;
+	char status;
 };
 
 
-// SMKFLIC uiFlags
+// SMKFLIC flags
 #define SMK_FLIC_OPEN      0x00000001 // Flic is open
 #define SMK_FLIC_PLAYING   0x00000002 // Flic is playing
 #define SMK_FLIC_AUTOCLOSE 0x00000008 // Close when done
 
-static SMKFLIC SmkList[4];
-static UINT32  guiSmackPixelFormat = SMACKBUFFER565;
+
+static SMKFLIC gSmkList[4];
+
+
+static SMKFLIC* SmkOpenFlic(const char* filename);
+static SMKFLIC* SmkGetFreeFlic(void);
+static void SmkSkipFrames(SMKFLIC* sf);
+static void SmkBlitVideoFrame(SMKFLIC* const sf, SGPVSurface* surface);
 
 
 BOOLEAN SmkPollFlics(void)
 {
-	BOOLEAN fFlicStatus = FALSE;
-	FOR_EACH(SMKFLIC, i, SmkList)
+	BOOLEAN is_playing = FALSE;
+	FOR_EACH(SMKFLIC, sf, gSmkList)
 	{
-		if (!(i->uiFlags & SMK_FLIC_PLAYING)) continue;
-		fFlicStatus = TRUE;
+		if (!(sf->flags & SMK_FLIC_PLAYING)) continue;
 
-		Smack* const smkobj = i->SmackerObject;
+		SmkSkipFrames(sf);
 
-
-		if (SmackWait(smkobj)) continue;
-
-		//if (SmackSkipFrames(smkobj)) continue;
-
+		if (sf->status == SMK_DONE || sf->status == SMK_ERROR)
 		{
-			SGPVSurface::Lock l(FRAME_BUFFER);
-			SmackToBuffer(smkobj, i->uiLeft, i->uiTop, l.Pitch(), smkobj->Height, smkobj->Width, l.Buffer<UINT16>(), guiSmackPixelFormat);
-			SmackDoFrame(smkobj);
-		}
-
-		// Check to see if the flic is done the last frame
-		//printf ("smk->FrameNum %u\n", smk->FrameNum);
-		// if (smk->FrameNum == smk->Frames - 1)
-		if (i->SmackerStatus == SMK_LAST )
-		{
-			if (i->uiFlags & SMK_FLIC_AUTOCLOSE) SmkCloseFlic(i);
+			if (sf->flags & SMK_FLIC_AUTOCLOSE)
+			{
+				SmkCloseFlic(sf);
+			}
+			else
+			{
+				sf->status &= ~SMK_FLIC_PLAYING;
+			}
 		}
 		else
 		{
-			i->SmackerStatus = SmackNextFrame(smkobj);
+			is_playing = TRUE;
+			SmkBlitVideoFrame(sf, FRAME_BUFFER);
 		}
 	}
 
-	return fFlicStatus;
+	return is_playing;
 }
 
 
 void SmkInitialize(void)
 {
-	// Wipe the flic list clean
-	memset(SmkList, 0, sizeof(SmkList));
-
-	// Use MMX acceleration, if available
-	SmackUseMMX(1);
+	// assume the list contains garbage
+	FOR_EACH(SMKFLIC, sf, gSmkList)
+	{
+		sf->file_in_memory = nullptr;
+		sf->smacker = nullptr;
+		FOR_EACH(UINT32, sound, sf->sounds)
+		{
+			*sound = NO_SAMPLE;
+		}
+		sf->flags = 0;
+	}
 }
 
 
 void SmkShutdown(void)
 {
-	// Close and deallocate any open flics
-	FOR_EACH(SMKFLIC, i, SmkList)
+	FOR_EACH(SMKFLIC, sf, gSmkList)
 	{
-		if (i->uiFlags & SMK_FLIC_OPEN) SmkCloseFlic(i);
+		SmkCloseFlic(sf);
 	}
 }
-
-
-static SMKFLIC* SmkOpenFlic(const char* filename);
 
 
 SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32 top, const BOOLEAN auto_close)
 {
+	char status;
 	SMKFLIC* const sf = SmkOpenFlic(filename);
-	if (sf == NULL) return NULL;
+	if (sf == nullptr) return nullptr;
 
 	// Set the blitting position on the screen
-	sf->uiLeft = left;
-	sf->uiTop  = top;
+	sf->left = left;
+	sf->top  = top;
+
+	// Get all the audio data
+	unsigned char audio_tracks;
+	unsigned char audio_channels[7];
+	unsigned char audio_depth[7];
+	unsigned long audio_rate[7];
+	std::vector<unsigned char> audio[7];
+	if (smk_info_audio(sf->smacker, &audio_tracks, audio_channels, audio_depth, audio_rate) == 0 && audio_tracks != 0)
+	{
+		status = smk_enable_all(sf->smacker, audio_tracks);
+		Assert(status == 0);
+
+		for (sf->status = smk_first(sf->smacker); sf->status != SMK_DONE; sf->status = smk_next(sf->smacker))
+		{
+			if (sf->status == SMK_ERROR)
+			{
+				SLOGW("smacker failed to decode audio data");
+				break;
+			}
+			for (auto i = 0; i < 7; i++)
+			{
+				if (!(audio_tracks & (1 << i))) continue;
+				unsigned long audio_size = smk_get_audio_size(sf->smacker, i);
+				if (audio_size > 0)
+				{
+					unsigned char* audio_data = smk_get_audio(sf->smacker, i);
+					audio[i].insert(audio[i].end(), audio_data, audio_data + audio_size);
+				}
+			}
+		}
+	}
+
+	// get play speed
+	// the video is too slow using microsecond resolution, speed it up by rounding down to milliseconds
+	double microseconds_per_frame;
+	status = smk_info_all(sf->smacker, nullptr, nullptr, &microseconds_per_frame);
+	Assert(status == 0);
+	sf->milliseconds_per_frame = microseconds_per_frame / 1000.0;
+
+
+	// Start playing
+	status = smk_enable_all(sf->smacker, SMK_VIDEO_TRACK);
+	Assert(status == 0);
+	sf->status = smk_first(sf->smacker);
+	sf->start_tick = SDL_GetTicks();
+	sf->frame_no = 0;
+	for (auto i = 0; i < 7; i++)
+	{
+		if (audio[i].empty())
+		{
+			sf->sounds[i] = NO_SAMPLE;
+		}
+		else
+		{
+			UINT32 bytes = MIN(audio[i].size(), UINT32_MAX);
+			sf->sounds[i] = SoundPlayFromSmackBuff(audio_channels[i], audio_depth[i], audio_rate[i], audio[i].data(), bytes, MAXVOLUME, 64, 1, nullptr, nullptr);
+		}
+	}
 
 	// We're now playing, flag the flic for the poller to update
-	sf->uiFlags |= SMK_FLIC_PLAYING;
-	if (auto_close) sf->uiFlags |= SMK_FLIC_AUTOCLOSE;
+	sf->flags |= SMK_FLIC_PLAYING;
+	if (auto_close) sf->flags |= SMK_FLIC_AUTOCLOSE;
 
 	return sf;
 }
-
-
-static SMKFLIC* SmkGetFreeFlic(void);
-static void SmkSetupVideo(void);
 
 
 static SMKFLIC* SmkOpenFlic(const char* const filename)
-try
 {
+	Assert(filename != nullptr);
 	SMKFLIC* const sf = SmkGetFreeFlic();
-	if (!sf)
+
+	try
 	{
-		SLOGE("Out of flic slots, cannot open another");
-		return NULL;
+		if (!sf) throw new std::runtime_error("no free slots");
+
+		Assert(sf->file_in_memory == nullptr);
+		Assert(sf->smacker == nullptr);
+
+		// read file to memory
+		AutoSGPFile file(GCM->openGameResForReading(filename));
+		unsigned long bytes = FileGetSize(file);
+		if (bytes == 0) throw new std::runtime_error("empty file");
+		sf->file_in_memory = MALLOCN(unsigned char, bytes);
+		FileRead(file, sf->file_in_memory, bytes);
+
+		// open with smacker
+		sf->smacker = smk_open_memory(sf->file_in_memory, bytes);
+		if (sf->smacker == nullptr) throw new std::runtime_error("smk_open_memory failed");
+		sf->flags |= SMK_FLIC_OPEN;
+		return sf;
 	}
-
-	AutoSGPFile file(GCM->openGameResForReading(filename));
-
-	//FILE* const f = GetRealFileHandleFromFileManFileHandle(file);
-
-	//printf("File Size: %u\n", FileGetSize(file));
-	// Allocate a Smacker buffer for video decompression
-	/*
-	sf->SmackBuffer = SmackBufferOpen(SMACKAUTOBLIT, SCREEN_WIDTH, SCREEN_HEIGHT, 0, 0);
-	if (sf->SmackBuffer == NULL)
+	catch (const std::runtime_error& ex)
 	{
-		SLOGE("Can't allocate a Smacker decompression buffer");
-		return NULL;
-	}
-	*/
-	sf->SmackerObject = SmackOpen( file , SMACKFILEHANDLE | SMACKTRACKS, SMACKAUTOEXTRA);
-	if (!sf->SmackerObject)
-	{
-		SLOGE("Smacker won't open the SMK file");
-		return NULL;
-	}
 
-	// Make sure we have a video surface
-	SmkSetupVideo();
-
-	sf->hFileHandle  = file.Release();
-	sf->uiFlags     |= SMK_FLIC_OPEN;
+		SLOGE("Failed to open '%s': %s", filename, ex.what());
+		if (sf != nullptr) SmkCloseFlic(sf);
+		return nullptr;
+	}
 	return sf;
 }
-catch (...) { return 0; }
 
 
 void SmkCloseFlic(SMKFLIC* const sf)
 {
-	SmackClose(sf->SmackerObject);
-	//FileClose(sf->hFileHandle);
-	// reenable for blitting SmackBufferClose(sf->SmackBuffer);
-	memset(sf, 0, sizeof(*sf));
+	Assert(sf != nullptr);
+	FOR_EACH(UINT32, sound, sf->sounds)
+	{
+		if (*sound != NO_SAMPLE)
+		{
+			SoundStop(*sound);
+			*sound = NO_SAMPLE;
+		}
+	}
+	if (sf->smacker != nullptr)
+	{
+		smk_close(sf->smacker);
+		sf->smacker = nullptr;
+	}
+	if (sf->file_in_memory != nullptr)
+	{
+		MemFree(sf->file_in_memory);
+		sf->file_in_memory = nullptr;
+	}
+	sf->flags = 0;
 }
 
 
 static SMKFLIC* SmkGetFreeFlic(void)
 {
-	FOR_EACH(SMKFLIC, i, SmkList)
+	FOR_EACH(SMKFLIC, sf, gSmkList)
 	{
-		if (!(i->uiFlags & SMK_FLIC_OPEN)) return i;
+		if (!(sf->flags & SMK_FLIC_OPEN)) return sf;
 	}
-	return NULL;
+	return nullptr;
 }
 
 
-static void SmkSetupVideo(void)
+static void SmkSkipFrames(SMKFLIC* sf)
 {
-	UINT32 red;
-	UINT32 green;
-	UINT32 blue;
-	GetPrimaryRGBDistributionMasks(&red, &green, &blue);
-	if (red == 0xf800 && green == 0x07e0 && blue == 0x001f)
+	// get target frame
+	UINT32 milliseconds = SDL_GetTicks() - sf->start_tick;
+	UINT32 frame_no = static_cast<UINT32>(milliseconds / sf->milliseconds_per_frame);
+
+	// skip until the target frame (video repeats if there is a ring frame)
+	while (sf->status != SMK_ERROR && sf->status != SMK_DONE && sf->frame_no != frame_no)
 	{
-		guiSmackPixelFormat = SMACKBUFFER565;
+		sf->status = smk_next(sf->smacker);
+		sf->frame_no++;
 	}
-	else
+}
+
+
+static void SmkBlitVideoFrame(SMKFLIC* const sf, SGPVSurface* surface)
+{
+	// get frame (source)
+	// TODO handle flags SMK_FLAG_Y_* (I need a sample of each case)
+	unsigned char* src;
+	unsigned char* src_palette;
+	unsigned long src_width;
+	unsigned long src_height;
+	src = smk_get_video(sf->smacker);
+	if (src == nullptr) return;
+	src_palette = smk_get_palette(sf->smacker);
+	if (src_palette == nullptr) return;
+	if (smk_info_video(sf->smacker, &src_width, &src_height, nullptr) < 0) return;
+
+	// convert palette
+	UINT16 palette[256];
+	for (auto i = 0; i < 256; i++)
 	{
-		guiSmackPixelFormat = SMACKBUFFER555;
+		unsigned char* rgb = src_palette + i * 3;
+		palette[i] = Get16BPPColor(FROMRGB(rgb[0], rgb[1], rgb[2]));
+	}
+
+	// get surface (destination)
+	SGPVSurface::Lock lock(surface);
+	UINT16* dst = lock.Buffer<UINT16>();
+	Assert(lock.Pitch() % 2 == 0);
+	Assert(surface->BPP() == 16);
+	UINT32 dst_pitch = lock.Pitch() / 2; // pitch in pixels
+	UINT16 dst_height = surface->Height();
+
+	// blit the intersection
+	unsigned long y_end = sf->top >= dst_height ? 0 : MIN(src_height, dst_height - sf->top);
+	unsigned long x_end = sf->left >= dst_pitch ? 0 : MIN(src_width, dst_pitch - sf->left);
+	dst += sf->left + sf->top * dst_pitch;
+	for (unsigned long y = 0; y < y_end; y++)
+	{
+		for (unsigned long x = 0; x < x_end; x++)
+		{
+			dst[x] = palette[src[x]];
+		}
+		dst += dst_pitch;
+		src += src_width;
 	}
 }
