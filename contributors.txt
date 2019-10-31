@@ -21,7 +21,7 @@ JAsmine-ja2 (https://bitbucket.org/JAsmine-ja2)
 Manuel K
 mgl from The Bear's Pit Forum
 Michał Janiszewski
-Misanthropos <misanthropos@gmx.net>
+Richard Fröhning <misanthropos@gmx.net>
 Momoko Hanasaki
 Nils Reuße <n.reusse@hxgn.net>
 Nils R <ml@hxgn.net>
