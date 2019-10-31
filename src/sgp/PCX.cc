@@ -86,11 +86,11 @@ SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 
 static void BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 const w, UINT16 const h)
 {
-	for (size_t n = w * h; n != 0;)
+	for (UINT32 n = static_cast<UINT32>(w) * h; n != 0;)
 	{
 		if (*src >= 0xC0)
 		{
-			size_t      n_px   = *src++ & 0x3F;
+			UINT32      n_px   = *src++ & 0x3F;
 			UINT8 const colour = *src++;
 			if (n_px > n) n_px = n;
 			n -= n_px;
