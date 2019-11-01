@@ -193,6 +193,7 @@ static void HandleIntroScreen(void)
 		if( iNextVideoToPlay != -1 )
 		{
 			StartPlayingIntroFlic( iNextVideoToPlay );
+			fFlicStillPlaying = SmkPollFlics();
 		}
 		else
 		{
