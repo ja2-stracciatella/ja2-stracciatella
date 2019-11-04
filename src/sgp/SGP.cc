@@ -31,7 +31,6 @@
 #include "JsonUtility.h"
 #include "ModPackContentManager.h"
 #include "policy/GamePolicy.h"
-#include "sgp/UTF8String.h"
 #include "RustInterface.h"
 
 #include "Logger.h"

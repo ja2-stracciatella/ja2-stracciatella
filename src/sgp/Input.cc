@@ -1,7 +1,6 @@
 #include <bitset>
 #include <string_theory/string>
 
-#include "UTF8String.h"
 #include "Types.h"
 #include "Input.h"
 #include "MemMan.h"

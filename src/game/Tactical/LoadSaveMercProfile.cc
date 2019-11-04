@@ -5,7 +5,6 @@
 #include "LoadSaveData.h"
 #include "LoadSaveMercProfile.h"
 #include "Tactical_Save.h"
-#include "UTF8String.h"
 
 /** Calculates soldier profile checksum. */
 UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p)

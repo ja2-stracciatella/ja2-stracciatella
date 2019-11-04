@@ -1,5 +1,4 @@
 #include "LoadSaveData.h"
-#include "UTF8String.h"
 
 
 /** Encode wchar_t into UTF-16 and write to the buffer.

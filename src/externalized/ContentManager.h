@@ -14,7 +14,6 @@
 class DealerInventory;
 class GamePolicy;
 class IMPPolicy;
-class UTF8String;
 struct AmmoTypeModel;
 struct CalibreModel;
 struct MagazineModel;

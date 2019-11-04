@@ -4,7 +4,6 @@
 
 #include "game/Utils/Text.h"
 #include "sgp/StrUtils.h"
-#include "sgp/UTF8String.h"
 
 #include "JsonObject.h"
 

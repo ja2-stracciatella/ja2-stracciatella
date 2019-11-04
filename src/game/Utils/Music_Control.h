@@ -4,7 +4,6 @@
 #include <string_theory/string>
 
 #include "SoundMan.h"
-#include "UTF8String.h"
 #include "ContentMusic.h"
 
 extern MusicMode gubMusicMode;

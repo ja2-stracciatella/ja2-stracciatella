@@ -105,7 +105,6 @@
 #include "BobbyRMailOrder.h"
 #include "Mercs.h"
 #include "UILayout.h"
-#include "UTF8String.h"
 #include "GameRes.h"
 
 #include "ContentManager.h"

@@ -2,7 +2,6 @@
 
 #include "JsonUtility.h"
 #include "sgp/FileMan.h"
-#include "sgp/UTF8String.h"
 
 #include "Logger.h"
 

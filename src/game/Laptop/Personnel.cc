@@ -34,8 +34,6 @@
 #include "EMail.h"
 #include "Soldier_Macros.h"
 
-#include "sgp/UTF8String.h"
-
 #include "CalibreModel.h"
 #include "ContentManager.h"
 #include "GameInstance.h"

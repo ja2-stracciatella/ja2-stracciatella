@@ -11,7 +11,6 @@
 #include "game/Utils/Font_Control.h"
 #include "game/Utils/Message.h"
 #include "game/Utils/Text.h"
-#include "sgp/UTF8String.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"

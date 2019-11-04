@@ -18,7 +18,6 @@
 #include "sgp/FileMan.h"
 #include "sgp/MemMan.h"
 #include "sgp/StrUtils.h"
-#include "sgp/UTF8String.h"
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
