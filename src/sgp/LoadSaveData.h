@@ -42,7 +42,7 @@
  * @param string        String to encode
  * @param outputBuf     Output buffer for the encoded string
  * @param charsToWrite  Number of characters to write (at least one trailing 0x0000 will be written) */
-void wchar_to_utf16(const wchar_t *string, void *outputBuf, int charsToWrite);
+void wchar_to_utf16(const wchar_t *string, void *outputBuf, size_t charsToWrite);
 
 /** Class for serializing data (writing them into stream of bytes). */
 class DataWriter
@@ -59,7 +59,7 @@ public:
 	 *
 	 * @param string      String to write
 	 * @param numChars    Number of characters to write. */
-	void writeStringAsUTF16(const wchar_t *string, int numChars);
+	void writeStringAsUTF16(const wchar_t *string, size_t numChars);
 
 	void writeU8 (uint8_t  value);        /**< Write uint8_t */
 	void writeU16(uint16_t value);        /**< Write uint16_t */

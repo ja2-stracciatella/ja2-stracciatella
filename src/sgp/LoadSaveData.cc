@@ -6,28 +6,14 @@
  * @param string        String to encode
  * @param outputBuf     Output buffer for the encoded string
  * @param charsToWrite  Number of characters to write (at least one trailing 0x0000 will be written) */
-void wchar_to_utf16(const wchar_t *string, void *outputBuf, int charsToWrite)
+void wchar_to_utf16(const wchar_t *string, void *outputBuf, size_t charsToWrite)
 {
 	if(charsToWrite > 0)
 	{
-#ifdef _WIN32
-		// Windows.
-		// wchar_t is already encoded in utf-16
-		const uint16_t *utf16_string = (const uint16_t*)string;
-		size_t stringLen = wcslen(string);
-#else
-		// Linux or Mac OS.
-		// Let's convert to utf-8 and then to utf-16
-		UTF8String str((const uint32_t*)string);
-		std::vector<uint16_t> utf16_data = str.getUTF16();
-		const uint16_t *utf16_string = utf16_data.data();
-		size_t stringLen = utf16_data.size();
-#endif
-
-		// calculating number of characters to copy
-		int charsToCopy = MIN(charsToWrite, stringLen);
-		memcpy(outputBuf, utf16_string, charsToCopy * 2);
-		if(charsToCopy < charsToWrite)
+		ST::utf16_buffer data = ST::string::from_wchar(string).to_utf16();
+		size_t charsToCopy = std::min<size_t>(charsToWrite, data.size());
+		memcpy(outputBuf, data.c_str(), charsToCopy * 2);
+		if(charsToCopy < charsToWrite) // might not terminate with '\0'
 		{
 			memset(((char*)outputBuf) + charsToCopy * 2, 0, (charsToWrite-charsToCopy)*2);
 		}
@@ -58,7 +44,7 @@ DataWriter::DataWriter(void *buf)
  *
  * @param string      String to write
  * @param numChars    Number of characters to write. */
-void DataWriter::writeStringAsUTF16(const wchar_t *string, int numChars)
+void DataWriter::writeStringAsUTF16(const wchar_t *string, size_t numChars)
 {
 	wchar_to_utf16(string, m_buf, numChars);
 	move(2*numChars);
