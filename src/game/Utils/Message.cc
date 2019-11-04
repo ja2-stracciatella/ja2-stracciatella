@@ -585,11 +585,10 @@ static void InjectScrollStringIntoFile(HWFILE const f, ScrollStringSt const* con
 		return;
 	}
 
-	UTF8String str(s->pString);
-	std::vector<uint16_t> utf16data = str.getUTF16();
-	UINT32 const size = 2 * utf16data.size();
+	ST::utf16_buffer utf16data = ST::string::from_wchar(s->pString).to_utf16();
+	UINT32 const size = 2 * (utf16data.size() + 1);
 	FileWrite(f, &size, sizeof(size));
-	FileWrite(f, utf16data.data(), size);
+	FileWrite(f, utf16data.c_str(), size);
 
 	BYTE data[28];
 	BYTE* d = data;
