@@ -75,6 +75,8 @@ endif()
 if(MSVC)
 	# set the source and execution charset
 	add_compile_options("/utf-8")
+	# suppress the min and max macro definitions
+	add_definitions("-DNOMINMAX")
 endif()
 
 if(NOT "${WITH_CUSTOM_LOCALE}" STREQUAL "")
