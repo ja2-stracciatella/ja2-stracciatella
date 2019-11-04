@@ -1,7 +1,7 @@
 #ifndef LOADSAVEDATA_H
 #define LOADSAVEDATA_H
 
-#include <string>
+#include <string_theory/string>
 
 #include "Types.h"
 #include "UTF8String.h"
@@ -98,7 +98,7 @@ public:
 
 	/** Read UTF-32 encoded string.
 	 * @param numChars Number of characters to read. */
-	UTF8String readUTF32(int numChars);
+	ST::string readUTF32(size_t numChars);
 
 	/** Read UTF-16 encoded string into wide string buffer.
 	 * @param buffer Buffer to read data in.
@@ -109,7 +109,7 @@ public:
 	/** Read UTF-32 encoded string into wide string buffer.
 	 * @param buffer Buffer to read data in.
 	 * @param numChars Number of characters to read. */
-	void readUTF32(wchar_t *buffer, int numChars);
+	void readUTF32(wchar_t *buffer, size_t numChars);
 
 	uint8_t  readU8();            /**< Read uint8_t */
 	uint16_t readU16();           /**< Read uint16_t */

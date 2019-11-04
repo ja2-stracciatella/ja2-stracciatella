@@ -126,15 +126,16 @@ UTF8String DataReader::readUTF16(int numChars, const IEncodingCorrector *fixer)
 
 /** Read UTF-32 encoded string.
  * @param numChars Number of characters to read. */
-UTF8String DataReader::readUTF32(int numChars)
+ST::string DataReader::readUTF32(size_t numChars)
 {
-	std::vector<uint32_t> data;
-	while(numChars-- > 0)
+	if (numChars == 0) return ST::null;
+	ST::utf32_buffer data;
+	data.allocate(numChars);
+	for (size_t i = 0; i < numChars; i++)
 	{
-		data.push_back(readU32());
+		data[i] = readU32();
 	}
-	data.push_back(0);
-	return UTF8String(data.data());
+	return ST::string::from_utf32(data.c_str()); // can throw ST::unicode_error
 }
 
 /** Read UTF-16 encoded string into wide string buffer.
@@ -152,12 +153,12 @@ void DataReader::readUTF16(wchar_t *buffer, int numChars, const IEncodingCorrect
 /** Read UTF-32 encoded string into wide string buffer.
  * @param buffer Buffer to read data in.
  * @param numChars Number of characters to read. */
-void DataReader::readUTF32(wchar_t *buffer, int numChars)
+void DataReader::readUTF32(wchar_t *buffer, size_t numChars)
 {
-	UTF8String str = readUTF32(numChars);
-	std::vector<wchar_t> wstr = str.getWCHAR();
-	int charsToCopy = MIN(wstr.size(), numChars);
-	memcpy(buffer, wstr.data(), charsToCopy * sizeof(wchar_t));
+	if (numChars == 0) return;
+	ST::wchar_buffer wstr = readUTF32(numChars).to_wchar();
+	size_t const charsToCopy = std::min<size_t>(wstr.size() + 1, numChars);
+	memcpy(buffer, wstr.c_str(), charsToCopy * sizeof(wchar_t)); // might not terminate with '\0'
 }
 
 uint8_t DataReader::readU8()
