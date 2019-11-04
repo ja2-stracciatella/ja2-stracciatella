@@ -1,4 +1,6 @@
 #include <bitset>
+#include <string_theory/string>
+
 #include "UTF8String.h"
 #include "Types.h"
 #include "Input.h"
@@ -371,10 +373,10 @@ void KeyUp(const SDL_Keysym* KeySym)
 
 void TextInput(const SDL_TextInputEvent* TextEv) {
 	try {
-		UTF8String utf8String = UTF8String(TextEv->text);
-		QueueKeyEvent(TEXT_INPUT, SDLK_UNKNOWN, KMOD_NONE, utf8String.getUTF16()[0]);
+		ST::utf16_buffer str = ST::string(TextEv->text).to_utf16();
+		QueueKeyEvent(TEXT_INPUT, SDLK_UNKNOWN, KMOD_NONE, str.c_str()[0]); // expects a wchar_t but a char16_t is sent, might have more characters
 	}
-	catch (const InvalidEncodingException&)
+	catch (const ST::unicode_error&)
 	{
 		// ignore invalid inputs
 		static bool warn = true;
