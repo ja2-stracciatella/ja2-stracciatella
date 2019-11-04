@@ -28,7 +28,7 @@ public:
 	std::string getSavedGamesFolder() const;
 
 	/** Load dialogue quote from file. */
-	virtual UTF8String* loadDialogQuoteFromFile(const char* filename, int quote_number);
+	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number);
 
 protected:
 	std::vector<std::string> m_modNames;

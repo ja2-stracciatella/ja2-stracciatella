@@ -78,7 +78,7 @@ public:
 	virtual void loadEncryptedString(SGPFile* const File, wchar_t* DestString, uint32_t const seek_chars, uint32_t const read_chars) const = 0;
 
 	/** Load dialogue quote from file. */
-	virtual UTF8String* loadDialogQuoteFromFile(const char* filename, int quote_number) = 0;
+	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number) = 0;
 
 	/** Get weapons with the give index. */
 	virtual const WeaponModel* getWeapon(uint16_t index) = 0;

@@ -520,13 +520,13 @@ void DefaultContentManager::loadEncryptedString(SGPFile* const File, wchar_t* De
 }
 
 /** Load dialogue quote from file. */
-UTF8String* DefaultContentManager::loadDialogQuoteFromFile(const char* fileName, int quote_number)
+ST::string* DefaultContentManager::loadDialogQuoteFromFile(const char* fileName, int quote_number)
 {
 	AutoSGPFile File(openGameResForReading(fileName));
 
 	wchar_t quote[DIALOGUESIZE];
 	LoadEncryptedData(getStringEncType(), File, quote, quote_number * DIALOGUESIZE, DIALOGUESIZE);
-	return new UTF8String(quote);
+	return new ST::string(quote);
 }
 
 /** Load all dialogue quotes for a character. */

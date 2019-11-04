@@ -106,7 +106,7 @@ public:
 	virtual void loadEncryptedString(SGPFile* const File, wchar_t* DestString, uint32_t const seek_chars, uint32_t const read_chars) const;
 
 	/** Load dialogue quote from file. */
-	virtual UTF8String* loadDialogQuoteFromFile(const char* filename, int quote_number);
+	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number);
 
 	/** Load all dialogue quotes for a character. */
 	void loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* filename, std::vector<ST::string*> &quotes) const;

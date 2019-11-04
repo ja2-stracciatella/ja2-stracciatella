@@ -75,14 +75,14 @@ std::string ModPackContentManager::getSavedGamesFolder() const
 }
 
 /** Load dialogue quote from file. */
-UTF8String* ModPackContentManager::loadDialogQuoteFromFile(const char* filename, int quote_number)
+ST::string* ModPackContentManager::loadDialogQuoteFromFile(const char* filename, int quote_number)
 {
 	std::string jsonFileName = std::string(filename) + ".json";
 	std::map<std::string, std::vector<std::string> >::iterator it = m_dialogQuotesMap.find(jsonFileName);
 	if(it != m_dialogQuotesMap.end())
 	{
 		SLOGD("cached quote %d %s", quote_number, jsonFileName.c_str());
-		return new UTF8String(it->second[quote_number].c_str());
+		return new ST::string(it->second[quote_number].c_str());
 	}
 	else
 	{
@@ -93,7 +93,7 @@ UTF8String* ModPackContentManager::loadDialogQuoteFromFile(const char* filename,
 			std::vector<std::string> quotes;
 			JsonUtility::parseJsonToListStrings(jsonQuotes.c_str(), quotes);
 			m_dialogQuotesMap[jsonFileName] = quotes;
-			return new UTF8String(quotes[quote_number].c_str());
+			return new ST::string(quotes[quote_number].c_str());
 		}
 		else
 		{
