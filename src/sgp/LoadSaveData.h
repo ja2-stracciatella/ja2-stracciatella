@@ -94,7 +94,7 @@ public:
 	/** Read UTF-16 encoded string.
 	 * @param numChars Number of characters to read.
 	 * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text. */
-	UTF8String readUTF16(int numChars, const IEncodingCorrector *fixer=NULL);
+	ST::string readUTF16(size_t numChars, const IEncodingCorrector *fixer=NULL);
 
 	/** Read UTF-32 encoded string.
 	 * @param numChars Number of characters to read. */
@@ -104,7 +104,7 @@ public:
 	 * @param buffer Buffer to read data in.
 	 * @param numChars Number of characters to read.
 	 * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text. */
-	void readUTF16(wchar_t *buffer, int numChars, const IEncodingCorrector *fixer=NULL);
+	void readUTF16(wchar_t *buffer, size_t numChars, const IEncodingCorrector *fixer=NULL);
 
 	/** Read UTF-32 encoded string into wide string buffer.
 	 * @param buffer Buffer to read data in.

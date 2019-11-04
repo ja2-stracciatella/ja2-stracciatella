@@ -108,20 +108,26 @@ DataReader::DataReader(const void *buf)
 
 /** Read UTF-16 encoded string.
  * @param numChars Number of characters to read. */
-UTF8String DataReader::readUTF16(int numChars, const IEncodingCorrector *fixer)
+ST::string DataReader::readUTF16(size_t numChars, const IEncodingCorrector *fixer)
 {
-	std::vector<uint16_t> data;
-	while(numChars-- > 0)
+	if (numChars == 0) return ST::null;
+	ST::utf16_buffer data;
+	data.allocate(numChars);
+	if (fixer)
 	{
-		uint16_t codePoint = readU16();
-		if(fixer)
+		for (size_t i = 0; i < numChars; i++)
 		{
-			codePoint = fixer->fix(codePoint);
+			data[i] = fixer->fix(readU16());
 		}
-		data.push_back(codePoint);
 	}
-	data.push_back(0);
-	return UTF8String(data.data());
+	else
+	{
+		for (size_t i = 0; i < numChars; i++)
+		{
+			data[i] = readU16();
+		}
+	}
+	return ST::string::from_utf16(data.c_str()); // can throw ST::unicode_error
 }
 
 /** Read UTF-32 encoded string.
@@ -142,12 +148,12 @@ ST::string DataReader::readUTF32(size_t numChars)
  * @param buffer Buffer to read data in.
  * @param numChars Number of characters to read.
  * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text. */
-void DataReader::readUTF16(wchar_t *buffer, int numChars, const IEncodingCorrector *fixer)
+void DataReader::readUTF16(wchar_t *buffer, size_t numChars, const IEncodingCorrector *fixer)
 {
-	UTF8String str = readUTF16(numChars, fixer);
-	std::vector<wchar_t> wstr = str.getWCHAR();
-	int charsToCopy = MIN(wstr.size(), numChars);
-	memcpy(buffer, wstr.data(), charsToCopy * sizeof(wchar_t));
+	if (numChars == 0) return;
+	ST::wchar_buffer wstr = readUTF16(numChars, fixer).to_wchar();
+	size_t const charsToCopy = std::min<size_t>(wstr.size() + 1, numChars);
+	memcpy(buffer, wstr.c_str(), charsToCopy * sizeof(wchar_t)); // might not terminate with '\0'
 }
 
 /** Read UTF-32 encoded string into wide string buffer.
