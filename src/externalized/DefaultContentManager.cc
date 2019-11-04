@@ -324,8 +324,8 @@ std::string DefaultContentManager::getMapPath(const wchar_t *mapName) const
 	// But it is just a hack to make the code compile.
 	// XXX: This method should be removed altogether
 
-	UTF8String str(mapName);
-	return getMapPath(str.getUTF8());
+	ST::string str(mapName);
+	return getMapPath(str.c_str());
 }
 
 /** Open map for reading. */
