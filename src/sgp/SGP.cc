@@ -543,14 +543,14 @@ int main(int argc, char* argv[])
 					STRING_ENC_TYPE encType,
 					const char *dialogFile, const char *outputFile)
 {
-	std::vector<UTF8String*> quotes;
+	std::vector<ST::string*> quotes;
 	std::vector<std::string> quotes_str;
 	cm->loadAllDialogQuotes(encType, dialogFile, quotes);
 	for(int i = 0; i < quotes.size(); i++)
 	{
-		quotes_str.push_back(std::string(quotes[i]->getUTF8()));
+		quotes_str.push_back(quotes[i]->to_std_string());
 		delete quotes[i];
-		quotes[i] = NULL;
+		quotes[i] = nullptr;
 	}
 	JsonUtility::writeToFile(outputFile, quotes_str);
 }*/

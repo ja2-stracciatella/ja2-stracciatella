@@ -109,7 +109,7 @@ public:
 	virtual UTF8String* loadDialogQuoteFromFile(const char* filename, int quote_number);
 
 	/** Load all dialogue quotes for a character. */
-	void loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* filename, std::vector<UTF8String*> &quotes) const;
+	void loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* filename, std::vector<ST::string*> &quotes) const;
 
 	/** Get weapons with the give index. */
 	virtual const WeaponModel* getWeapon(uint16_t index);

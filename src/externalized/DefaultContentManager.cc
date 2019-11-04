@@ -530,7 +530,7 @@ UTF8String* DefaultContentManager::loadDialogQuoteFromFile(const char* fileName,
 }
 
 /** Load all dialogue quotes for a character. */
-void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* fileName, std::vector<UTF8String*> &quotes) const
+void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* fileName, std::vector<ST::string*> &quotes) const
 {
 	AutoSGPFile File(openGameResForReading(fileName));
 	uint32_t fileSize = FileGetSize(File);
@@ -540,7 +540,7 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const c
 	{
 		wchar_t quote[DIALOGUESIZE];
 		LoadEncryptedData(encType, File, quote, i * DIALOGUESIZE, DIALOGUESIZE);
-		quotes.push_back(new UTF8String(quote));
+		quotes.push_back(new ST::string(quote));
 	}
 }
 
