@@ -862,7 +862,8 @@ static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 
 	// ammo or gun?
 	const CalibreModel *calibre = item->getItemClass() == IC_AMMO ? item->asAmmo()->calibre : item->asWeapon()->calibre;
-	wcslcpy(zTemp, &GCM->getCalibreNameForBobbyRay(calibre->index)->getWCHAR()[0], lengthof(zTemp));
+	ST::wchar_buffer name = GCM->getCalibreNameForBobbyRay(calibre->index)->to_wchar();;
+	wcslcpy(zTemp, name.c_str(), lengthof(zTemp)); // might not terminate with '\0'
 
 	ReduceStringLength(zTemp, lengthof(zTemp), BOBBYR_GRID_PIC_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT);
 	DrawTextToScreen(zTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);

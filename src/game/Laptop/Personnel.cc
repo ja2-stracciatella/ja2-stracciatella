@@ -1179,7 +1179,8 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 
 		if (item->isGun())
 		{
-			wcslcpy(sString, item->asWeapon()->calibre->getName(), lengthof(sString));
+			ST::wchar_buffer name = item->asWeapon()->calibre->getName()->to_wchar();
+			wcslcpy(sString, name.c_str(), lengthof(sString)); // might not terminate with '\0'
 			ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
 			MPrint(PosX + 65, PosY + 15, sString);
 		}

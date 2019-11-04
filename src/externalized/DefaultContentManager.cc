@@ -255,15 +255,15 @@ DefaultContentManager::~DefaultContentManager()
 	delete m_impPolicy;
 	delete m_gamePolicy;
 
-	for (const UTF8String *str : m_newStrings)
+	for (const ST::string *str : m_newStrings)
 	{
 		delete str;
 	}
-	for (const UTF8String *str : m_calibreNames)
+	for (const ST::string *str : m_calibreNames)
 	{
 		delete str;
 	}
-	for (const UTF8String *str : m_calibreNamesBobbyRay)
+	for (const ST::string *str : m_calibreNamesBobbyRay)
 	{
 		delete str;
 	}
@@ -586,12 +586,12 @@ const CalibreModel* DefaultContentManager::getCalibre(uint8_t index)
 	return m_calibres[index];
 }
 
-const UTF8String* DefaultContentManager::getCalibreName(uint8_t index) const
+const ST::string* DefaultContentManager::getCalibreName(uint8_t index) const
 {
 	return m_calibreNames[index];
 }
 
-const UTF8String* DefaultContentManager::getCalibreNameForBobbyRay(uint8_t index) const
+const ST::string* DefaultContentManager::getCalibreNameForBobbyRay(uint8_t index) const
 {
 	return m_calibreNamesBobbyRay[index];
 }
@@ -857,7 +857,7 @@ bool DefaultContentManager::loadArmyGunChoice()
 		&& readWeaponTable("army-gun-choice-extended.json", mExtendedGunChoice);
 }
 
-void DefaultContentManager::loadStringRes(const char *name, std::vector<const UTF8String*> &strings) const
+void DefaultContentManager::loadStringRes(const char *name, std::vector<const ST::string*> &strings) const
 {
 	std::string fullName(name);
 
@@ -883,7 +883,7 @@ void DefaultContentManager::loadStringRes(const char *name, std::vector<const UT
 	JsonUtility::parseListStrings(*json, utf8_encoded);
 	for (const std::string &str : utf8_encoded)
 	{
-		strings.push_back(new UTF8String(str.c_str()));
+		strings.push_back(new ST::string(str));
 	}
 }
 
@@ -1007,7 +1007,7 @@ const GamePolicy* DefaultContentManager::getGamePolicy() const
 	return m_gamePolicy;
 }
 
-const UTF8String* DefaultContentManager::getNewString(int stringId) const
+const ST::string* DefaultContentManager::getNewString(int stringId) const
 {
 	if(stringId >= m_newStrings.size())
 	{

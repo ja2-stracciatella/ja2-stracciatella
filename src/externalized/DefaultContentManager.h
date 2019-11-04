@@ -120,8 +120,8 @@ public:
 	virtual const std::vector<const MagazineModel*>& getMagazines() const;
 
 	virtual const CalibreModel* getCalibre(uint8_t index);
-	virtual const UTF8String* getCalibreName(uint8_t index) const;
-	virtual const UTF8String* getCalibreNameForBobbyRay(uint8_t index) const;
+	virtual const ST::string* getCalibreName(uint8_t index) const;
+	virtual const ST::string* getCalibreNameForBobbyRay(uint8_t index) const;
 
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index);
 
@@ -140,7 +140,7 @@ public:
 	virtual const GamePolicy* getGamePolicy() const;
 	virtual const IMPPolicy* getIMPPolicy() const;
 
-	virtual const UTF8String* getNewString(int stringId) const;
+	virtual const ST::string* getNewString(int stringId) const;
 
 protected:
 	std::string m_dataDir;
@@ -151,14 +151,14 @@ protected:
 
 	const GameVersion m_gameVersion;
 
-	std::vector<const UTF8String*> m_newStrings;
+	std::vector<const ST::string*> m_newStrings;
 
 	std::vector<const ItemModel*> m_items;
 	std::vector<const MagazineModel*> m_magazines;
 
 	std::vector<const CalibreModel*> m_calibres;
-	std::vector<const UTF8String*> m_calibreNames;
-	std::vector<const UTF8String*> m_calibreNamesBobbyRay;
+	std::vector<const ST::string*> m_calibreNames;
+	std::vector<const ST::string*> m_calibreNamesBobbyRay;
 
 	std::vector<AmmoTypeModel*> m_ammoTypes;
 
@@ -191,7 +191,7 @@ protected:
 
 	const DealerInventory * loadDealerInventory(const char *fileName);
 	bool loadAllDealersInventory();
-	void loadStringRes(const char *name, std::vector<const UTF8String*> &strings) const;
+	void loadStringRes(const char *name, std::vector<const ST::string*> &strings) const;
 
 	bool readWeaponTable(
 		const char *fileName,

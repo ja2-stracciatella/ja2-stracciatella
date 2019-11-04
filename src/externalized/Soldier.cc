@@ -242,16 +242,14 @@ static bool isHeadPosition(int8_t pos)
 
 static void showGearEquipMessage(const SOLDIERTYPE* s, uint16_t usItem)
 {
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
-			GCM->getNewString(NS_SOLDIER_EQUIPS_ITEM)->getWCHAR().data(),
-			s->name, ItemNames[usItem]);
+	ST::wchar_buffer msg = GCM->getNewString(NS_SOLDIER_EQUIPS_ITEM)->to_wchar();
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg.c_str(), s->name, ItemNames[usItem]);
 }
 
 static void showGearRemoveMessage(const SOLDIERTYPE* s, uint16_t usItem)
 {
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
-			GCM->getNewString(NS_SOLDIER_REMOVES_ITEM)->getWCHAR().data(),
-			s->name, ItemNames[usItem]);
+	ST::wchar_buffer msg = GCM->getNewString(NS_SOLDIER_REMOVES_ITEM)->to_wchar();
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg.c_str(), s->name, ItemNames[usItem]);
 }
 
 void Soldier::putNightHeadGear()
