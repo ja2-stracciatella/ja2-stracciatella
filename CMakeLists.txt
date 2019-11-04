@@ -179,7 +179,6 @@ include_directories(
     ${SDL2_INCLUDE_DIR}
     ${STRACCIATELLA_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
-    ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-utf8cpp/source
 )
 
 if(BUILD_LAUNCHER)
