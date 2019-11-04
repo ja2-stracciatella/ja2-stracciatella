@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <string>
+#include <string_theory/string>
 #include <vector>
 
 /* XXX */
@@ -102,7 +103,7 @@ public:
 	virtual const DealerInventory* getBobbyRayNewInventory() const = 0;
 	virtual const DealerInventory* getBobbyRayUsedInventory() const = 0;
 
-	virtual const UTF8String* getMusicForMode(MusicMode mode) const = 0;
+	virtual const ST::string* getMusicForMode(MusicMode mode) const = 0;
 
 	virtual const GamePolicy* getGamePolicy() const = 0;
 	virtual const IMPPolicy* getIMPPolicy() const = 0;

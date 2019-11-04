@@ -754,13 +754,13 @@ bool DefaultContentManager::loadAmmoTypes()
 
 bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::Value &array)
 {
-	std::vector<const UTF8String*>* musicModeList = new std::vector<const UTF8String*>();
+	std::vector<const ST::string*>* musicModeList = new std::vector<const ST::string*>();
 
 	std::vector<std::string> utf8_encoded;
 	JsonUtility::parseListStrings(array, utf8_encoded);
 	for (const std::string &str : utf8_encoded)
 	{
-		musicModeList->push_back(new UTF8String(str.c_str()));
+		musicModeList->push_back(new ST::string(str));
 		SLOGD("Loaded music %s", str.c_str());
 	}
 
@@ -989,11 +989,11 @@ const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) c
 	return m_dealersInventory[dealerId];
 }
 
-const UTF8String* DefaultContentManager::getMusicForMode(MusicMode mode) const {
+const ST::string* DefaultContentManager::getMusicForMode(MusicMode mode) const {
 	const uint32_t index = Random((uint32_t)m_musicMap.find(mode)->second->size());
-	const UTF8String* chosen = m_musicMap.find(mode)->second->at(index);
+	const ST::string* chosen = m_musicMap.find(mode)->second->at(index);
 
-	SLOGD("Choosing music index %d of %d for: '%s'", index, m_musicMap.find(mode)->second->size(), chosen->getUTF8());
+	SLOGD("Choosing music index %d of %d for: '%s'", index, m_musicMap.find(mode)->second->size(), chosen->c_str());
 	return chosen;
 }
 
