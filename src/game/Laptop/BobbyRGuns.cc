@@ -487,6 +487,7 @@ void DisplayItemInfo(UINT32 uiItemClass)
 	}
 
 	const ItemModel* items[BOBBYR_NUM_WEAPONS_ON_PAGE];
+	memset(items, 0, sizeof(items));
 	for(i=gusCurWeaponIndex; ((i<=gusLastItemIndex) && (ubCount < 4)); i++)
 	{
 		if( uiItemClass == BOBBYR_USED_ITEMS )
