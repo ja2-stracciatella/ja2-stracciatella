@@ -53,3 +53,15 @@ set(STRACCIATELLA_EXECUTABLES
     PARENT_SCOPE
 )
 
+# convenience targets for development and testing
+macro(convenience_target name)
+    add_custom_target(${name}
+        COMMAND "${CMAKE_COMMAND}" --build . --target ${name}
+        DEPENDS stracciatella
+        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/stracciatella-prefix/src/stracciatella-build"
+    )
+endmacro()
+convenience_target(cargo-fmt)
+convenience_target(cargo-test)
+convenience_target(cargo-fmt-test)
+convenience_target(cargo-clippy-test)
