@@ -119,7 +119,9 @@ script:
       sudo make install;
     fi
   - make cargo-fmt-test;
-  - make cargo-clippy-test;
+  - if [ "$TRAVIS_MINGW" != "true" ]; then
+      make cargo-clippy-test;
+    fi
   - if [ "$TRAVIS_MINGW" != "true" ]; then
       make cargo-test;
     fi
