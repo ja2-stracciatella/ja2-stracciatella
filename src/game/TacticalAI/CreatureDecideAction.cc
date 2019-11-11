@@ -88,7 +88,12 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 			ubCallerType = CALLER_FEMALE;
 			break;
 	}
-	if (pCaller->bHunting) // which should only be set for females outside of the hive
+	if (pCaller->usActionData >= NUM_CREATURE_CALLS)
+	{
+		SLOGW("unexpected action data %u, defaulting call priority to 0", pCaller->usActionData);
+		bFullPriority = 0;
+	}
+	else if (pCaller->bHunting) // which should only be set for females outside of the hive
 	{
 		bFullPriority = gbHuntCallPriority[pCaller->usActionData];
 	}
