@@ -647,7 +647,7 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 	BOOLEAN   fMultiStructSpecialFlag = FALSE;
 	BOOLEAN   fExplodeDamageReturn = FALSE;
 
-	DB_STRUCTURE_TILE** ppTile          = NULL;    // XXX HACK000E
+	std::vector<DB_STRUCTURE_TILE*> ppTile;
 	GridNo              sBaseGridNo     = NOWHERE; // XXX HACK000E
 	UINT8               ubNumberOfTiles = 0;       // XXX HACK000E
 
@@ -668,8 +668,7 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 			sBaseGridNo = pBaseStructure->sGridNo;
 			ubNumberOfTiles = pBaseStructure->pDBStructureRef->pDBStructure->ubNumberOfTiles;
 			fMultiStructure = ( ( pBaseStructure->fFlags & STRUCTURE_MULTI ) != 0 );
-			ppTile = MALLOCN(DB_STRUCTURE_TILE*, ubNumberOfTiles);
-			memcpy(ppTile, pBaseStructure->pDBStructureRef->ppTile, sizeof(*ppTile) * ubNumberOfTiles);
+			ppTile.assign(pBaseStructure->pDBStructureRef->ppTile, pBaseStructure->pDBStructureRef->ppTile + ubNumberOfTiles);
 
 			if ( bMultiStructSpecialFlag == -1 )
 			{
@@ -708,10 +707,6 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 			// ATE: Don't after first attack...
 			if ( uiDist > 1 )
 			{
-				if ( pBaseStructure )
-				{
-					MemFree( ppTile );
-				}
 				return;
 			}
 
@@ -754,7 +749,7 @@ static void ExplosiveDamageGridNo(const INT16 sGridNo, const INT16 sWoundAmt, co
 
 		if ( pBaseStructure )
 		{
-			MemFree( ppTile );
+			ppTile.clear();
 		}
 
 		pCurrent = pNextCurrent;
