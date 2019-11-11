@@ -69,7 +69,7 @@ add_custom_target(cargo-fmt
 )
 
 add_custom_target(cargo-test
-    COMMAND ${CARGO_COMMAND} fmt
+    COMMAND ${CARGO_COMMAND} test
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     USES_TERMINAL
     COMMENT "Testing the rust code"
