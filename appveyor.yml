@@ -93,11 +93,9 @@ build_script:
   - ps: cmake --build c:\projects\ja2-stracciatella\ci-build --target ALL_BUILD --config ${env:BUILD_TYPE}
 
 test_script:
-  - cmd: cd ..\rust
-  - cmd: cargo fmt -- --check
-  - cmd: cargo clippy --all-targets --all-features -- -D warnings
-  - cmd: cargo test
-  - cmd: cd ..\ci-build
+  - cmd: cmake --build . --target cargo-fmt-test
+  - cmd: cmake --build . --target cargo-clippy-test
+  - cmd: cmake --build . --target cargo-test
   - cmd: cd %BUILD_TYPE%
   - cmd: ja2.exe -unittests
   - cmd: ja2-launcher.exe -help

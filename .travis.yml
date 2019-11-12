@@ -118,13 +118,13 @@ script:
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
       sudo make install;
     fi
-  - cd ../rust
-  - cargo fmt -- --check;
-  - cargo clippy --all-targets --all-features -- -D warnings;
+  - make cargo-fmt-test;
   - if [ "$TRAVIS_MINGW" != "true" ]; then
-      cargo test;
+      make cargo-clippy-test;
     fi
-  - cd ../ci-build
+  - if [ "$TRAVIS_MINGW" != "true" ]; then
+      make cargo-test;
+    fi
   - if [ "$TRAVIS_MINGW" != "true" ]; then
       ./ja2 -unittests && ./ja2-launcher -help;
     fi
