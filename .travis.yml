@@ -40,7 +40,9 @@ jobs:
           build_command: make
           branch_pattern: nightly
       # must replace scripts (before_install is left unchanged)
-      script: cat "${TRAVIS_BUILD_DIR}/coverage-build/cov-int/scm_log.txt" || true
+      script:
+        - cat "${TRAVIS_BUILD_DIR}/coverage-build/cov-int/build-log.txt" || true
+        - cat "${TRAVIS_BUILD_DIR}/coverage-build/cov-int/scm_log.txt" || true
       after_success: true
 
 branches:
