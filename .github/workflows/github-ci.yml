@@ -1,0 +1,98 @@
+name: GitHub CI
+
+on: push
+
+jobs:
+  ci-build:
+    strategy:
+      matrix:
+        cfg:
+        - { name: 'Ubuntu xenial x64', os: 'ubuntu-16.04' }
+    name: ${{ matrix.cfg.name }}
+    runs-on: ${{ matrix.cfg.os }}
+    steps:
+    - name: Dump context
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+      run: ''
+    - name: Install rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: stable
+        components: rustfmt, clippy
+    - name: Checkout
+      uses: actions/checkout@v1
+    - name: Do it
+      shell: bash
+      run: |
+        set -x
+        
+        # decide what to do
+        export BUILD_TYPE="Debug";
+        export PUBLISH_BINARY="false";
+        export VERSION_TAG=""
+        if [[ "$GITHUB_REF" == *"/nightly" ]]; then
+          echo "-- NIGHTLY RELEASE --";
+          export BUILD_TYPE="RelWithDebInfo";
+          export PUBLISH_BINARY="true";
+          export PUBLISH_DIR="nightlies";
+          export VERSION_TAG="$(date +%Y%m%d)";
+        elif [[ "$GITHUB_REF" == *"/tags/"* ]]; then
+          echo "-- RELEASE --";
+          export BUILD_TYPE="RelWithDebInfo";
+          export PUBLISH_BINARY="true";
+          export PUBLISH_DIR="releases";
+        else
+          # TODO pull request
+          echo "-- QUICK BUILD --";
+        fi
+        if [[ "$SFTP_PASSWORD" == "" ]]; then
+          export PUBLISH_BINARY="false";
+        fi
+        export BUILD_SWITCHES="-DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
+        if [[ "$BUILD_TYPE" != "Debug" ]]; then
+          export BUILD_SWITCHES="$BUILD_SWITCHES -DWITH_EDITOR_SLF=ON";
+        fi
+        env | sort
+        
+        # install dependencies
+        sudo apt update
+        sudo apt install cmake make g++ libsdl2-dev fluid libfltk1.3-dev
+        cmake --version
+        gcc --version
+        curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=$(cat ./rust-toolchain) -y
+        export PATH=$PATH:$HOME/.cargo/bin
+        rustup component add rustfmt
+        rustup component add clippy
+        cargo -V
+        rustc -V
+        cargo fmt -- -V
+        cargo clippy -- -V
+        
+        # configure
+        mkdir ci-build
+        cd ci-build
+        cmake "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" ${BUILD_SWITCHES} ..
+        
+        # build
+        cmake --build . --config "${BUILD_TYPE}"
+        
+        # test
+        sudo cmake --build . --config "${BUILD_TYPE}" --target install
+        cmake --build . --config "${BUILD_TYPE}" --target cargo-fmt-test
+        cmake --build . --config "${BUILD_TYPE}" --target cargo-clippy-test
+        cmake --build . --config "${BUILD_TYPE}" --target cargo-test
+        RUST_BACKTRACE=1 ./ja2 -unittests || true
+        RUST_BACKTRACE=1 ./ja2-launcher -help || true
+        sudo cmake --build . --config "${BUILD_TYPE}" --target uninstall
+        cmake --build . --config "${BUILD_TYPE}" --target package
+        for file in ja2-stracciatella_*; do
+          echo "$file";
+          dpkg -c "$file";
+        done
+        
+        # publish
+        if [[ "$PUBLISH_BINARY" == "true" ]]; then
+          curl -v --retry 3 --connect-timeout 60 --max-time 150 --ftp-create-dirs -T $(echo ja2-stracciatella_*) -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/;
+        fi
