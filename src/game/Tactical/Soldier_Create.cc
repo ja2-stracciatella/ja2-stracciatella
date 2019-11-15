@@ -580,7 +580,6 @@ static INT32 ChooseHairColor(SOLDIERTYPE* pSoldier, INT32 skin)
 					hair = Random( NUMHEADS - 1 ) + 1;
 				}
 			}
-			hair = Random( NUMHEADS );
 			break;
 		case DARKSKIN:
 			if( iRandom < 35 )
