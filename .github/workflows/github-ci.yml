@@ -11,22 +11,21 @@ jobs:
 
         - name: Linux x64
           os: ubuntu-16.04
-          build_switches: -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB
+          target: linux
 
         - name: Mingw x64 (cross compile)
           os: ubuntu-latest
-          build_switches: -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP
-          mingw: true
+          target: mingw
 
         - name: Mac
           os: macos-latest
-          build_switches: -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle
+          target: mac
 
     name: ${{ matrix.cfg.name }}
     runs-on: ${{ matrix.cfg.os }}
     steps:
 
-    - name: Dump context
+    - name: Context in env
       env:
         GITHUB_CONTEXT: ${{ toJson(github) }}
         JOB_CONTEXT: ${{ toJson(job) }}
@@ -37,9 +36,8 @@ jobs:
 
     - name: Build with bash
       shell: bash
-      run: ${{ github.workspace }}/.github/scripts/ci-build.sh
+      run: ${{ github.workspace }}/.github/scripts/ci-build.sh 2>&1
       env:
         CI_NAME: ${{ matrix.cfg.name }}
         CI_OS: ${{ matrix.cfg.os }}
-        CI_BUILD_SWITCHES: ${{ matrix.cfg.build_switches }}
-        CI_MINGW: ${{ matrix.cfg.mingw }}
+        CI_TARGET: ${{ matrix.cfg.target }}
