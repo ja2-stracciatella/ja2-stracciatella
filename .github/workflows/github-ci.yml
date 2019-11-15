@@ -5,8 +5,8 @@ on: push
 jobs:
   ci-build:
     strategy:
+      fail-fast: false
       matrix:
-        fail-fast: false
         cfg:
 
         - name: Linux x64
