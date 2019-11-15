@@ -3,7 +3,7 @@
 set -x
 set -e
 
-echo "#\n# prepare environment\n#"
+echo "## prepare environment ##"
 if [[ "${GITHUB_REF}" == "refs/heads/nightly" ]]; then
   echo "-- NIGHTLY --"
   export PUBLISH_BINARY="true"
@@ -25,28 +25,28 @@ elif [[ "${GITHUB_REF}" == "refs/pull/"* ]]; then
 else
   echo "-- QUICK BUILD --"
   export PUBLISH_BINARY="false"
-  export BUILD_SWITCHES=""
   export BUILD_TYPE="Debug"
 fi
-export BUILD_SWITCHES="-DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DVERSION_TAG=${VERSION_TAG}"
+export BUILD_CMD="cmake --build . --config $BUILD_TYPE"
+export CONFIGURE_CMD="cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DVERSION_TAG=${VERSION_TAG}"
 if [[ "${BUILD_TYPE}" != "Debug" ]]; then
-   export BUILD_SWITCHES="${BUILD_SWITCHES} -DWITH_EDITOR_SLF=ON"
+   export CONFIGURE_CMD="${CONFIGURE_CMD} -DWITH_EDITOR_SLF=ON"
 fi
 if [[ "${SFTP_PASSWORD}" == "" ]]; then
   export PUBLISH_BINARY="false"
 fi
-if [[ "$CI_target" == "linux" ]]; then
+if [[ "$CI_TARGET" == "linux" ]]; then
   sudo apt update
   sudo apt install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
-  export BUILD_SWITCHES="${BUILD_SWITCHES} -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
+  export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
 elif [[ "$CI_TARGET" == "mingw" ]]; then
   sudo apt update
   sudo apt install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot mingw-w64
-  export BUILD_SWITCHES="${BUILD_SWITCHES} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP"
+  export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP"
 elif [[ "$CI_TARGET" == "mac" ]]; then
-  sudo brew update
-  sudo brew install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
-  export BUILD_SWITCHES="${BUILD_SWITCHES} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle"
+  brew update
+  brew install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
+  export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle"
 else
   echo "unexpected target ${CI_TARGET}"
   exit 1
@@ -61,19 +61,19 @@ else
   cargo clippy -- -V
   cargo fmt -- -V
 fi
-export BUILD_CMD="cmake --build . --config $BUILD_TYPE"
-echo "$PUBLISH_BINARY"
-echo "$PUBLISH_DIR"
-echo "$BUILD_SWITCHES"
+echo "PUBLISH_BINARY=${PUBLISH_BINARY}"
+echo "PUBLISH_DIR=${PUBLISH_DIR}"
+echo "BUILD_CMD=${BUILD_CMD}"
+echo "CONFIGURE_CMD=${CONFIGURE_CMD}"
 rustc -V
 cargo -V
 cmake --version
 fakeroot -v
 
-echo "#\n# configure, build, test\n#"
+echo "## configure, build, test ##"
 mkdir ci-build
 cd ci-build
-cmake $BUILD_SWITCHES ..
+$CONFIGURE_CMD ..
 cat ./CMakeCache.txt
 $BUILD_CMD
 if [[ "$CI_TARGET" != "mingw" ]]; then
@@ -86,7 +86,7 @@ if [[ "$CI_TARGET" != "mingw" ]]; then
   sudo $BUILD_CMD --target uninstall
 fi
 
-echo "#\n# package, publish\n#"
+echo "## package, publish ##"
 $BUILD_CMD --target package
 for file in ja2-stracciatella_*; do
   echo "$file"
@@ -102,4 +102,4 @@ for file in ja2-stracciatella_*; do
   fi
 done
 
-echo "#\n# done\n#"
+echo "## done ##"
