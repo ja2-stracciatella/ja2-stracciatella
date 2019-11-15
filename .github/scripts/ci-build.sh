@@ -40,16 +40,18 @@ export DEP_MANAGER="apt"
 sudo $DEP_MANAGER update
 sudo $DEP_MANAGER install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
 [[ "$CI_MINGW" == "true" ]] && sudo $DEP_MANAGER install mingw-w64
-export DEFAULT_TOOLCHAIN="$(cat ./rust-toolchain)"
-[[ "$CI_MINGW" == "true" ]] && export DEFAULT_TOOLCHAIN="${DEFAULT_TOOLCHAIN}-x86_64-pc-windows-gnu"
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain=$DEFAULT_TOOLCHAIN -y
-rustup component add rustfmt
-rustup component add clippy
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain=$(cat ./rust-toolchain) -y --profile minimal
 export PATH=$PATH:$HOME/.cargo/bin
+if [[ "$CI_MINGW" == "true" ]]; then
+  rustup target add x86_64-pc-windows-gnu
+else
+  rustup component add rustfmt
+  rustup component add clippy
+  cargo clippy -- -V
+  cargo fmt -- -V
+fi
 rustc -V
 cargo -V
-cargo clippy -- -V
-cargo fmt -- -V
 cmake --version
 fakeroot -v
 
