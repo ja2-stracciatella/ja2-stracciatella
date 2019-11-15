@@ -10,8 +10,12 @@ use std::fs::File;
 use std::path::Path;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
-use log::{logger, set_boxed_logger, set_max_level, Level, LevelFilter, Log, Metadata, Record};
-use simplelog::{CombinedLogger, Config, TermLogger, TerminalMode, WriteLogger};
+use log::{
+    logger, set_boxed_logger, set_max_level, warn, Level, LevelFilter, Log, Metadata, Record,
+};
+use simplelog::{
+    CombinedLogger, Config, SharedLogger, SimpleLogger, TermLogger, TerminalMode, WriteLogger,
+};
 
 static GLOBAL_LOG_LEVEL: AtomicUsize = AtomicUsize::new(LogLevel::Info as usize);
 
@@ -109,11 +113,22 @@ impl Logger {
         config.target = Some(Level::Error);
         config.thread = None;
         config.time_format = Some("%FT%T");
-        let logger = CombinedLogger::new(vec![
-            TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed).unwrap(),
-            WriteLogger::new(LevelFilter::max(), config, File::create(log_file).unwrap()),
-        ]);
-        RuntimeLevelFilter::init(logger);
+        let logger: Box<dyn SharedLogger>;
+        if let Some(termlogger) = TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed) {
+            logger = termlogger;
+        } else {
+            logger = SimpleLogger::new(LevelFilter::max(), config); // no colors
+        }
+        match File::create(&log_file) {
+            Ok(f) => RuntimeLevelFilter::init(CombinedLogger::new(vec![
+                logger,
+                WriteLogger::new(LevelFilter::max(), config, f),
+            ])),
+            Err(err) => {
+                RuntimeLevelFilter::init(CombinedLogger::new(vec![logger]));
+                warn!("Failed to log to {:?}: {}", &log_file, err);
+            }
+        }
     }
 
     /// Sets the global log level to a specific value
