@@ -19,7 +19,7 @@ jobs:
       uses: actions-rs/toolchain@v1
       with:
         profile: minimal
-        toolchain: stable
+        toolchain: stable-1.36.0
         components: rustfmt, clippy
     - name: Checkout
       uses: actions/checkout@v1
