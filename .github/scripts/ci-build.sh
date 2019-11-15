@@ -37,12 +37,11 @@ if [[ "${SFTP_PASSWORD}" == "" ]]; then
 fi
 if [[ "$CI_TARGET" == "linux" ]]; then
   sudo apt update
-  sudo apt install libsdl2-dev
-  #cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
-  export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
+  sudo apt install build-essential libsdl2-dev libfltk1.3-dev libboost-filesystem-dev libboost-system-dev
+  export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB"
 elif [[ "$CI_TARGET" == "mingw" ]]; then
   sudo apt update
-  sudo apt install mingw-w64
+  sudo apt install build-essential mingw-w64
   #cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot mingw-w64
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP"
 elif [[ "$CI_TARGET" == "mac" ]]; then
@@ -71,12 +70,15 @@ rustc -V
 cargo -V
 cmake --version
 
-echo "## configure, build, test ##"
+echo "## configure, build, package ##"
 mkdir ci-build
 cd ci-build
 $CONFIGURE_CMD ..
 cat ./CMakeCache.txt
 $BUILD_CMD
+$BUILD_CMD --target package
+
+echo "## test ##"
 if [[ "$CI_TARGET" != "mingw" ]]; then
   sudo $BUILD_CMD --target install
   $BUILD_CMD --target cargo-fmt-test
@@ -87,8 +89,7 @@ if [[ "$CI_TARGET" != "mingw" ]]; then
   sudo $BUILD_CMD --target uninstall
 fi
 
-echo "## package, publish ##"
-$BUILD_CMD --target package
+echo "## publish ##"
 for file in ja2-stracciatella_*; do
   echo "$file"
   if [[ "$file" == *".deb" ]]; then
