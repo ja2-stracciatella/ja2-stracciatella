@@ -36,7 +36,9 @@ jobs:
 
     - name: Build with bash
       shell: bash
-      run: ${{ github.workspace }}/.github/scripts/ci-build.sh
+      run: |
+        set -x
+        ${{ github.workspace }}/.github/scripts/ci-build.sh
       env:
         CI_NAME: ${{ matrix.cfg.name }}
         CI_OS: ${{ matrix.cfg.os }}

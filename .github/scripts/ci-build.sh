@@ -35,15 +35,15 @@ echo "$PUBLISH_DIR"
 echo "$BUILD_SWITCHES"
 
 echo "# install dependencies"
+export DEP_MANAGER="apt"
+[[ "$CI_OS" == "macos-latest" ]] && export DEP_MANAGER="brew"
 which apt || alias apt="brew"
-sudo apt update
-sudo apt install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
-if [[ "$CI_MINGW" == "true" ]]; then
-  sudo apt install mingw-w64
-  export DEFAULT_HOST_ARG=--default-host x86_64-pc-windows-gnu
-fi
-export DEFAULT_TOOLCHAIN_ARG=--default-toolchain=$(cat ./rust-toolchain)
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- ${DEFAULT_HOST_ARG} ${DEFAULT_TOOLCHAIN_ARG} -y --profile minimal --component clippy rustfmt
+sudo $DEP_MANAGER update
+sudo $DEP_MANAGER install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
+[[ "$CI_MINGW" == "true" ]] && sudo $DEP_MANAGER install mingw-w64
+export RUSTUP_INIT_ARGS="--default-toolchain=$(cat ./rust-toolchain) -y --profile minimal --component clippy rustfmt"
+[[ "$CI_MINGW" == "true" ]] && export RUSTUP_INIT_ARGS="--default-host x86_64-pc-windows-gnu $RUSTUP_INIT_ARGS"
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- $RUSTUP_INIT_ARGS
 export PATH=$PATH:$HOME/.cargo/bin
 rustc -V
 cargo -V
