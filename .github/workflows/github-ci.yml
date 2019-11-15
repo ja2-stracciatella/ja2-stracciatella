@@ -15,14 +15,14 @@ jobs:
       env:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: ''
+    - name: Checkout
+      uses: actions/checkout@v1
     - name: Install rust toolchain
       uses: actions-rs/toolchain@v1
       with:
         profile: minimal
-        toolchain: stable-1.36.0
+        toolchain: 1.36.0
         components: rustfmt, clippy
-    - name: Checkout
-      uses: actions/checkout@v1
     - name: Do it
       shell: bash
       run: |
