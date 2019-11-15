@@ -1,3 +1,5 @@
+test-pr
+
 # JA2-Stracciatella Continued
 
 [![Travis CI](https://img.shields.io/travis/ja2-stracciatella/ja2-stracciatella/nightly.svg?style=flat-square&logo=travis&label=Travis%20CI)](https://travis-ci.org/ja2-stracciatella/ja2-stracciatella)
