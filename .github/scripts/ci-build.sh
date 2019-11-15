@@ -3,14 +3,7 @@
 set -x
 
 echo "# set up environment"
-if [[ "$GITHUB_REF" == "refs/pull/"* ]]; then
-  export PULL_REQUEST=$(echo "$GITHUB_REF" | cut -d '/' -f 3)
-  echo "-- PULL REQUEST ${PULL_REQUEST} --"
-  export PUBLISH_BINARY="true"
-  export PUBLISH_DIR="pull-requests/${PULL_REQUEST}"
-  export VERSION_TAG="${PULL_REQUEST}pullrequest"
-  export BUILD_TYPE="Debug"
-elif [[ "$GITHUB_REF" == "refs/heads/nightly" ]]; then
+if [[ "$GITHUB_REF" == "refs/heads/nightly" ]]; then
   echo "-- NIGHTLY --"
   export PUBLISH_BINARY="true"
   export PUBLISH_DIR="nightlies"
@@ -21,6 +14,13 @@ elif [[ "$GITHUB_REF" == "refs/tags/"* ]]; then
   export PUBLISH_BINARY="true"
   export PUBLISH_DIR="releases"
   export BUILD_TYPE="ReleaseWithDebInfo"
+elif [[ "$GITHUB_REF" == "refs/pull/"* ]]; then
+  export PULL_REQUEST=$(echo "$GITHUB_REF" | cut -d '/' -f 3)
+  echo "-- PULL REQUEST ${PULL_REQUEST} --"
+  export PUBLISH_BINARY="true"
+  export PUBLISH_DIR="pull-requests/${PULL_REQUEST}"
+  export VERSION_TAG="${PULL_REQUEST}pullrequest"
+  export BUILD_TYPE="Debug"
 else
   echo "-- QUICK BUILD --"
   export PUBLISH_BINARY="false"
@@ -79,3 +79,5 @@ echo "$file"
 [[ "$file" == *".dmg" ]] && echo "TODO list contents"
 [[ "$PUBLISH_BINARY" == "true" ]] && curl -v --retry 3 --connect-timeout 60 --max-time 150 --ftp-create-dirs -T "$file" -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/
 done
+
+echo "# done"
