@@ -36,16 +36,16 @@ if [[ "${SFTP_PASSWORD}" == "" ]]; then
   export PUBLISH_BINARY="false"
 fi
 if [[ "$CI_TARGET" == "linux" ]]; then
-  sudo apt update
-  sudo apt install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
+  #sudo apt update
+  #sudo apt install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
 elif [[ "$CI_TARGET" == "mingw" ]]; then
-  sudo apt update
-  sudo apt install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot mingw-w64
+  #sudo apt update
+  #sudo apt install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot mingw-w64
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP"
 elif [[ "$CI_TARGET" == "mac" ]]; then
-  brew update
-  brew install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
+  #brew update
+  #brew install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle"
 else
   echo "unexpected target ${CI_TARGET}"
