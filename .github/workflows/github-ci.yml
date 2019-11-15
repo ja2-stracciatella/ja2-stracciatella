@@ -19,7 +19,7 @@ jobs:
 
         - name: Mac
           os: macos-latest
-          build_switches: '-DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle
+          build_switches: -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle
 
     name: ${{ matrix.cfg.name }}
     runs-on: ${{ matrix.cfg.os }}
