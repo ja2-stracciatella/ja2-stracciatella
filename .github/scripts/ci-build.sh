@@ -37,13 +37,14 @@ echo "$BUILD_SWITCHES"
 echo "# install dependencies"
 export DEP_MANAGER="apt"
 [[ "$CI_OS" == "macos-latest" ]] && export DEP_MANAGER="brew"
-which apt || alias apt="brew"
 sudo $DEP_MANAGER update
 sudo $DEP_MANAGER install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
 [[ "$CI_MINGW" == "true" ]] && sudo $DEP_MANAGER install mingw-w64
-export RUSTUP_INIT_ARGS="--default-toolchain=$(cat ./rust-toolchain) -y --profile minimal --component clippy rustfmt"
-[[ "$CI_MINGW" == "true" ]] && export RUSTUP_INIT_ARGS="--default-host x86_64-pc-windows-gnu $RUSTUP_INIT_ARGS"
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- $RUSTUP_INIT_ARGS
+export DEFAULT_TOOLCHAIN="$(cat ./rust-toolchain)"
+[[ "$CI_MINGW" == "true" ]] && export DEFAULT_TOOLCHAIN="${DEFAULT_TOOLCHAIN}-x86_64-pc-windows-gnu"
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain=$DEFAULT_TOOLCHAIN -y
+rustup component add rustfmt
+rustup component add clippy
 export PATH=$PATH:$HOME/.cargo/bin
 rustc -V
 cargo -V
