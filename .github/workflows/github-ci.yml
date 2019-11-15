@@ -18,7 +18,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v1
     - name: Install dependencies
-      use: mstksg/get-package@v1
+      uses: mstksg/get-package@v1
       with:
         apt-get: cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot mingw-w64
     - name: Install rust toolchain
