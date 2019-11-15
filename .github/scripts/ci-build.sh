@@ -2,7 +2,7 @@
 
 set -x
 
-# set up environment
+echo "# set up environment"
 if [[ "$GITHUB_REF" == "refs/pull/"* ]]; then
   export PULL_REQUEST=$(echo "$GITHUB_REF" | cut -d '/' -f 3)
   echo "-- PULL REQUEST ${PULL_REQUEST} --"
@@ -34,23 +34,25 @@ echo "$PUBLISH_BINARY"
 echo "$PUBLISH_DIR"
 echo "$BUILD_SWITCHES"
 
-# install dependencies
+echo "# install dependencies"
+which apt || alias apt="brew"
 sudo apt update
 sudo apt install cmake make g++ libsdl2-dev libboost-all-dev fluid libfltk1.3-dev fakeroot
-[[ "$CI_MINGW" == "true" ]] && sudo apt install mingw-w64
-curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain=$(cat ./rust-toolchain) -y
+if [[ "$CI_MINGW" == "true" ]]; then
+  sudo apt install mingw-w64
+  export DEFAULT_HOST_ARG=--default-host x86_64-pc-windows-gnu
+fi
+export DEFAULT_TOOLCHAIN_ARG=--default-toolchain=$(cat ./rust-toolchain)
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- ${DEFAULT_HOST_ARG} ${DEFAULT_TOOLCHAIN_ARG} -y --profile minimal --component clippy rustfmt
 export PATH=$PATH:$HOME/.cargo/bin
-[[ "$CI_MINGW" == "true" ]] && rustup target add x86_64-pc-windows-gnu
-rustup component add rustfmt
-rustup component add clippy
-cargo -V
 rustc -V
-cargo fmt -- -V
+cargo -V
 cargo clippy -- -V
+cargo fmt -- -V
 cmake --version
 fakeroot -v
 
-# configure, build, test
+echo "# configure, build, test"
 mkdir ci-build
 cd ci-build
 cmake $BUILD_SWITCHES ..
@@ -65,14 +67,12 @@ if [[ "$CI_MINGW" != "true" ]]; then
   sudo make uninstall;
 fi
 
-# publish
-if [[ "$PUBLISH_BINARY" == "true" ]]; then
-  make package
-  for file in ja2-stracciatella_*; do
-    echo "$file"
-    [[ "$file" == *".deb" ]] && dpkg -c "$file"
-    [[ "$file" == *".zip" ]] && unzip -l "$file"
-    [[ "$file" == *".dmg" ]] && echo "TODO list files in bundle"
-    curl -v --retry 3 --connect-timeout 60 --max-time 150 --ftp-create-dirs -T "$file" -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/
-  done
-fi
+echo "# package, publish"
+make package
+for file in ja2-stracciatella_*; do
+echo "$file"
+[[ "$file" == *".deb" ]] && dpkg -c "$file"
+[[ "$file" == *".zip" ]] && unzip -l "$file"
+[[ "$file" == *".dmg" ]] && echo "TODO list contents"
+[[ "$PUBLISH_BINARY" == "true" ]] && curl -v --retry 3 --connect-timeout 60 --max-time 150 --ftp-create-dirs -T "$file" -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/
+done
