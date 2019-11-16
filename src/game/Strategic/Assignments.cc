@@ -4619,6 +4619,7 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 		/* Can the character join this squad?  If already in it, accept that as a
 			* legal choice and exit menu */
 		SOLDIERTYPE& s = *GetSelectedAssignSoldier(FALSE);
+		wchar_t buf[128] = { L'\0' };
 		switch (CanCharacterSquad(s, value))
 		{
 			case CHARACTER_CAN_JOIN_SQUAD: // able to add, do it
@@ -4640,24 +4641,25 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 				gfRenderPBInterface      = TRUE;
 				break;
 
-				wchar_t buf[128];
 			case CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING:
 				swprintf(buf, lengthof(buf), pMapErrorString[36], s.name, pLongAssignmentStrings[value]);
-				goto show_error;
+				break;
 			case CHARACTER_CANT_JOIN_SQUAD_VEHICLE:
 				swprintf(buf, lengthof(buf), pMapErrorString[37], s.name);
-				goto show_error;
+				break;
 			case CHARACTER_CANT_JOIN_SQUAD_TOO_FAR:
 				swprintf(buf, lengthof(buf), pMapErrorString[20], s.name, pLongAssignmentStrings[value]);
-				goto show_error;
+				break;
 			case CHARACTER_CANT_JOIN_SQUAD_FULL:
 				swprintf(buf, lengthof(buf), pMapErrorString[19], s.name, pLongAssignmentStrings[value]);
-				goto show_error;
+				break;
 			default: // generic "you can't join this squad" msg
 				swprintf(buf, lengthof(buf), pMapErrorString[38], s.name, pLongAssignmentStrings[value]);
-show_error:
-				DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, NULL);
 				break;
+		}
+		if (buf[0] != L'\0')
+		{
+			DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, NULL);
 		}
 
 		SetAssignmentForList(value, 0);
