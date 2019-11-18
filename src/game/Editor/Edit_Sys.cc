@@ -257,7 +257,7 @@ void PasteSingleRoof( UINT32 iMapIndex )
 
 void PasteRoomNumber( UINT32 iMapIndex, UINT8 ubRoomNumber )
 {
-	if( gubWorldRoomInfo[ iMapIndex ] != ubRoomNumber )
+	if( iMapIndex < lengthof(gubWorldRoomInfo) && gubWorldRoomInfo[ iMapIndex ] != ubRoomNumber )
 	{
 		AddToUndoList( iMapIndex );
 		gubWorldRoomInfo[ iMapIndex ] = ubRoomNumber;
