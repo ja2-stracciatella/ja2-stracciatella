@@ -8,7 +8,7 @@ on:
     types: [ opened, synchronize, reopened ]
   issue_comment:
     types: [ created, edited ]
-# hmm, will this work after merging to master?
+# pr test
 
 jobs:
   ci-build:
