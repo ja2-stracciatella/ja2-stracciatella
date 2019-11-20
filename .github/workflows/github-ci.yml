@@ -6,6 +6,8 @@ on:
     tags: [ '**' ]
   pull_request:
     types: [ opened, synchronize, reopened ]
+  issue_comment:
+    types: [ created, edited ]
 
 jobs:
   ci-build:
@@ -34,6 +36,10 @@ jobs:
       env:
         GITHUB_CONTEXT: ${{ toJson(github) }}
         JOB_CONTEXT: ${{ toJson(job) }}
+        STEPS_CONTEXT: ${{ toJson(steps) }}
+        RUNNER_CONTEXT: ${{ toJson(runner) }}
+        STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        MATRIX_CONTEXT: ${{ toJson(matrix) }}
       run: ''
 
     - name: Checkout
