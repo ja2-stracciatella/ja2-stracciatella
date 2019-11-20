@@ -575,6 +575,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 	if(!wep)
 	{
 		SLOGE("Weapon type '%s' is not found", internalType);
+		return wep;
 	}
 
 	wep->ubGraphicType    = obj.GetInt("ubGraphicType");
