@@ -8,6 +8,7 @@ on:
     types: [ opened, synchronize, reopened ]
   issue_comment:
     types: [ created, edited ]
+# hmm, will this work after merging to master?
 
 jobs:
   ci-build:
@@ -53,3 +54,4 @@ jobs:
         CI_OS: ${{ matrix.cfg.os }}
         CI_TARGET: ${{ matrix.cfg.target }}
         CI_REF: ${{ github.ref }}
+
