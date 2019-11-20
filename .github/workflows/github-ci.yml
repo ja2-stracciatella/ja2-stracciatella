@@ -51,3 +51,5 @@ jobs:
         CI_OS: ${{ matrix.cfg.os }}
         CI_TARGET: ${{ matrix.cfg.target }}
         CI_REF: ${{ github.ref }}
+        SFTP_USER: ${{ secrets.SFTP_USER }}
+        SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
