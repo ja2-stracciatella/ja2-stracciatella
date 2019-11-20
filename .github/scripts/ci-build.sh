@@ -5,11 +5,11 @@
 # Requires the following environment variables:
 #   CI_REF - full reference of the current branch, tag, or pull request
 #   CI_TARGET - target we are building for: linux/mingw/mac
-# Unused or optional environment variables:
-#   CI_NAME - name of the job
-#   CI_OS - host runner image: https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners
 #   SFTP_USER - ftp username for uploads (secret)
 #   SFTP_PASSWORD - ftp password for uploads (secret)
+# Unused environment variables:
+#   CI_NAME - name of the job
+#   CI_OS - host runner image: https://help.github.com/en/actions/automating-your-workflow-with-github-actions/virtual-environments-for-github-hosted-runners
 
 set -e
 set -x
@@ -44,9 +44,9 @@ export CONFIGURE_CMD="cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DVERSION_TAG=${VER
 if [[ "${BUILD_TYPE}" != "Debug" ]]; then
    export CONFIGURE_CMD="${CONFIGURE_CMD} -DWITH_EDITOR_SLF=ON"
 fi
-if [[ "${SFTP_PASSWORD}" == "" ]]; then
+if [[ "${PUBLISH_BINARY}" == "true" && "${SFTP_PASSWORD}" == "" ]]; then
   echo "Upload credentials are not set up"
-  export PUBLISH_BINARY="false"
+  exit 1
 fi
 if [[ "$CI_TARGET" == "linux" ]]; then
   sudo apt update
