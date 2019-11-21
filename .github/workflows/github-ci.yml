@@ -68,5 +68,6 @@ jobs:
     - name: Upload artifacts
       if: startsWith('${{ github.ref }}', 'refs/pull/')
       uses: actions/upload-artifact@v1
+      with:
         name: artifacts
         path: ${{ github.workspace }}/artifacts
