@@ -28,7 +28,16 @@ enum
 WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor, uint16_t itemIndex, const char* internalName, const char* internalType)
 	:ItemModel(itemIndex, internalName, itemClass, itemIndex, (ItemCursor)cursor),
 	sound(NO_WEAPON_SOUND_STR),
-	burstSound(NO_WEAPON_SOUND_STR)//Wreorder
+	burstSound(NO_WEAPON_SOUND_STR),
+	attachSilencer(false),
+	attachSniperScope(false),
+	attachLaserScope(false),
+	attachBipod(false),
+	attachDuckbill(false),
+	attachUnderGLauncher(false),
+	attachSpringAndBoltUpgrade(false),
+	attachGunBarrelExtender(false),
+	m_rateOfFire(0)
 {
 	strncpy(this->internalType, internalType, sizeof(this->internalType));
 	this->internalType[sizeof(this->internalType) - 1] = '\0';
