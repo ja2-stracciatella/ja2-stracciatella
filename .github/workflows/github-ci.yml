@@ -55,7 +55,6 @@ jobs:
         SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
 
     - name: Collect artifacts
-      if: startsWith(${{ github.ref }}, 'refs/pull/')
       shell: bash
       run: |
         set -e
@@ -66,7 +65,6 @@ jobs:
         done
 
     - name: Upload artifacts
-      if: startsWith(${{ github.ref }}, 'refs/pull/')
       uses: actions/upload-artifact@v1
       with:
         name: artifacts
