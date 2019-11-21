@@ -53,3 +53,20 @@ jobs:
         CI_REF: ${{ github.ref }}
         SFTP_USER: ${{ secrets.SFTP_USER }}
         SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+
+    - name: Collect artifacts
+      if: startsWith(${{ github.ref }}, 'refs/pull/')
+      shell: bash
+      run: |
+        set -e
+        set -x
+        mkdir artifacts
+        for file in ci-build/ja2-stracciatella_*; do
+          cp "${file}" artifacts/
+        done
+
+    - name: Upload artifacts
+      if: startsWith(${{ github.ref }}, 'refs/pull/')
+      uses: actions/upload-artifact@v1
+        name: artifacts
+        path: ${{ github.workspace }}/artifacts

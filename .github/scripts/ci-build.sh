@@ -5,6 +5,7 @@
 # Requires the following environment variables:
 #   CI_REF - full reference of the current branch, tag, or pull request
 #   CI_TARGET - target we are building for: linux/mingw/mac
+# Required for publishing (nightly and releases):
 #   SFTP_USER - ftp username for uploads (secret)
 #   SFTP_PASSWORD - ftp password for uploads (secret)
 # Unused environment variables:
@@ -30,7 +31,7 @@ elif [[ "${CI_REF}" == "refs/tags/"* ]]; then
 elif [[ "${CI_REF}" == "refs/pull/"* ]]; then
   export PULL_REQUEST=$(echo "${CI_REF}" | cut -d '/' -f 3)
   echo "-- PULL REQUEST ${PULL_REQUEST} --"
-  export PUBLISH_BINARY="true"
+  export PUBLISH_BINARY="false" # secrets are not available in pull requests
   export PUBLISH_DIR="pull-requests/${PULL_REQUEST}"
   export VERSION_TAG="${PULL_REQUEST}pullrequest"
   export BUILD_TYPE="Debug"
