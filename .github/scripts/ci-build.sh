@@ -112,14 +112,18 @@ for file in ja2-stracciatella_*; do
   elif [[ "$file" == *".dmg" ]]; then
     # based on https://ss64.com/osx/hdiutil.html
     hdiutil verify "$file"
+    device=""
     while IFS=$'\n' read -r line; do
       echo "$line"
       IFS=$'\t' read -ra arr <<< "$line"
+      if [[ "$device" == "" ]]; then
+        device="${arr[0]}"
+      fi
       if [[ "${arr[2]}" != "" ]]; then
         ls -laR "${arr[2]}"
       fi
-    done <<< "$(hdiutil attach \"$file\")"
-    hdiutil detach "$file"
+    done <<< "$(hdiutil attach \"$(pwd)/$file\")"
+    hdiutil detach "$device"
   else
     echo "TODO list contents"
   fi
