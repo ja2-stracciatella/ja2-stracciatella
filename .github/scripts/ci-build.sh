@@ -109,6 +109,17 @@ for file in ja2-stracciatella_*; do
     dpkg -c "$file"
   elif [[ "$file" == *".zip" ]]; then
     unzip -l "$file"
+  elif [[ "$file" == *".dmg" ]]; then
+    # based on https://ss64.com/osx/hdiutil.html
+    hdiutil verify "$file"
+    while IFS=$'\n' read -r line; do
+      echo "$line"
+      IFS=$'\t' read -ra arr <<< "$line"
+      if [[ "${arr[2]}" != "" ]]; then
+        ls -laR "${arr[2]}"
+      fi
+    done <<< "$(hdiutil attach \"$file\")"
+    hdiutil detach "$file"
   else
     echo "TODO list contents"
   fi
