@@ -122,7 +122,7 @@ for file in ja2-stracciatella_*; do
       if [[ "${arr[2]}" != "" ]]; then
         ls -laR "${arr[2]}"
       fi
-    done <<< "$(hdiutil attach \"$(pwd)/$file\")"
+    done <<< "$(hdiutil attach "$file")"
     hdiutil detach "$device"
   else
     echo "TODO list contents"
