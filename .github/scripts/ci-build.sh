@@ -115,6 +115,9 @@ for file in ja2-stracciatella_*; do
     device=""
     while IFS=$'\n' read -r line; do
       echo "$line"
+      if [[ "$line" != "/dev/"* ]]; then
+        continue # expected <dev node><tab><content hint><tab><mount point>
+      fi
       IFS=$'\t' read -ra arr <<< "$line"
       if [[ "$device" == "" ]]; then
         device="${arr[0]}"
