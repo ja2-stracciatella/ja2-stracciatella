@@ -120,7 +120,7 @@ for file in ja2-stracciatella_*; do
       fi
       IFS=$'\t' read -ra arr <<< "$line"
       if [[ "$device" == "" ]]; then
-        device="${arr[0]}"
+        device="${arr[0]%"${arr[0]##*[![:space:]]}"}" # remove trailing whitespace
       fi
       if [[ "${arr[2]}" != "" ]]; then
         ls -laR "${arr[2]}"
