@@ -1161,14 +1161,6 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 	// if the quote is quest-specific, is the player on that quest?
 	if (pNPCQuoteInfo->ubQuest != NO_QUEST)
 	{
-		if (ubApproach != NPC_INITIATING_CONV)
-		{
-			SLOGD("Quest(%d:'%ls') Must be in Progress, status is %d. %s",
-						pNPCQuoteInfo->ubQuest, QuestDescText[ pNPCQuoteInfo->ubQuest ],
-						gubQuest[pNPCQuoteInfo->ubQuest],
-						(gubQuest[pNPCQuoteInfo->ubQuest] != QUESTINPROGRESS) ? "False, return" : "True" );
-		}
-
 		if (pNPCQuoteInfo->ubQuest > QUEST_DONE_NUM)
 		{
 			if (gubQuest[pNPCQuoteInfo->ubQuest - QUEST_DONE_NUM] != QUESTDONE)
