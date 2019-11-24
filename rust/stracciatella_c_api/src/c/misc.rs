@@ -219,10 +219,18 @@ mod tests {
 
     #[test]
     fn check_if_relative_path_exists() {
+        // The case sensitivity of the filesystem is always unknown.
+        // Even parts of the path can have different case sensitivity.
+        // Make sure the expected result never depends on the case sensitivity of the filesystem!
+        //
+        // Different representations of the umlaut ö in utf-8:
+        // "utf8-gedöns" can be "utf8-ged\u{00F6}ns" or "utf8-gedo\u{0308}ns"
+        // "utf8-GEDÖNS" can be "utf8-GED\u{00D6}NS" or "utf8-GEDO\u{0308}NS"
+
         let temp_dir = TempDir::new().unwrap();
         fs::create_dir_all(temp_dir.path().join("foo/bar")).unwrap();
         fs::create_dir_all(temp_dir.path().join("with space/inner")).unwrap();
-        fs::create_dir_all(temp_dir.path().join("utf8-gedöns/inner")).unwrap();
+        fs::create_dir_all(temp_dir.path().join("utf8-ged\u{00F6}ns/inner")).unwrap();
 
         macro_rules! t {
             ($base: expr, $path:expr, $caseless:expr, $expected:expr) => {
@@ -240,7 +248,6 @@ mod tests {
 
         t!(temp_dir.path(), "foo", false, true);
         t!(temp_dir.path(), "foo", true, true);
-        t!(temp_dir.path(), "FOO", false, false);
         t!(temp_dir.path(), "FOO", true, true);
 
         t!(temp_dir.path(), "foo/bar", false, true);
@@ -253,27 +260,18 @@ mod tests {
         t!(temp_dir.path(), "withspace", true, false);
         t!(temp_dir.path(), "with space", false, true);
         t!(temp_dir.path(), "with space", true, true);
-        t!(temp_dir.path(), "with SPACE", false, false);
         t!(temp_dir.path(), "with SPACE", true, true);
 
-        t!(temp_dir.path().join("with space"), "inner", false, true);
-        t!(temp_dir.path().join("with SPACE"), "inner", false, false);
-        t!(temp_dir.path().join("with space"), "INNER", false, false);
-        t!(temp_dir.path().join("with SPACE"), "inner", true, true);
-        t!(temp_dir.path().join("with SPACE"), "INNER", true, true);
-        t!(temp_dir.path().join("with space"), "INNER", true, true);
+        t!(temp_dir.path(), "with space/inner", false, true);
+        t!(temp_dir.path(), "with SPACE/inner", true, true);
+        t!(temp_dir.path(), "with SPACE/INNER", true, true);
+        t!(temp_dir.path(), "with space/INNER", true, true);
 
-        t!(temp_dir.path().join("utf8-gedöns"), "inner", false, true);
-        t!(temp_dir.path().join("utf8-gedöns"), "inner", true, true);
-        t!(temp_dir.path().join("utf8-gedöns"), "other", false, false);
-        t!(temp_dir.path().join("utf8-GEDÖNS"), "inner", false, false);
-        t!(temp_dir.path().join("utf8-GEDÖNS"), "inner", true, true);
-
-        // The following are different representations of the umlaut ö in utf-8
-        // than the one that was used to create the directory
-        t!(temp_dir.path().join("utf8-gedöns"), "inner", false, true);
-        t!(temp_dir.path().join("utf8-gedöns"), "inner", true, true);
-        t!(temp_dir.path().join("utf8-gedÖns"), "inner", false, false);
-        t!(temp_dir.path().join("utf8-gedÖns"), "inner", true, true);
+        t!(temp_dir.path(), "utf8-ged\u{00F6}ns/inner", false, true);
+        t!(temp_dir.path(), "utf8-ged\u{00F6}ns/inner", true, true);
+        t!(temp_dir.path(), "utf8-ged\u{00F6}ns/other", false, false);
+        t!(temp_dir.path(), "utf8-gedo\u{0308}ns/inner", true, true);
+        t!(temp_dir.path(), "utf8-GED\u{00D6}NS/inner", true, true);
+        t!(temp_dir.path(), "utf8-GEDO\u{0308}NS/inner", true, true);
     }
 }
