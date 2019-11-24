@@ -10,46 +10,64 @@ use std::path::{Component, Path, PathBuf};
 /// On windows, UNC paths are converted to normal paths when possible.
 pub use dunce::canonicalize;
 
-/// Resolves all components of a path to their existing variant using unicode normalization.
-/// Can be run in caseless mode.
-/// The return value of the function has all components of the path that exist
-/// in the file system replaced by their (correctly cased) variant.
+/// Returns path joined with base.
+/// The path separators are normalized and path components are resolved only when needed.
+/// The returned path might or might not exist.
+///
+/// Variants are found by comparing caseless unicode in the NFC form.
+/// Path components are replaced by their (correctly cased) variant when:
+///  1) they are not part of base
+///  2) caseless is true (respect the filesystem)
+///  3) they don't exist (respect the filesystem)
+///  4) a variant was found
+///
+/// Otherwise path components are copied without changes.
 pub fn resolve_existing_components(path: &Path, base: Option<&Path>, caseless: bool) -> PathBuf {
-    let to_nfc = |x: &str| {
-        if caseless {
-            Nfc::caseless(x)
-        } else {
-            Nfc::from(x)
+    let joined_path;
+    let mut copy = 0;
+    if let Some(b) = base {
+        joined_path = b.join(path);
+        if joined_path.starts_with(&b) {
+            // copy base components
+            copy = b.components().count();
         }
-    };
-    let path = if let Some(b) = base {
-        b.join(path)
     } else {
-        path.to_owned()
+        joined_path = path.to_owned();
     };
-    path.components()
+    if !caseless {
+        // respect the filesystem, copy all components
+        copy = joined_path.components().count();
+    }
+    // normalize separators, copy and resolve the path components
+    joined_path
+        .components()
         .fold(PathBuf::new(), |mut current, component| {
-            let next = match component {
-                Component::CurDir => Component::CurDir.as_os_str().to_owned(),
-                Component::ParentDir => Component::ParentDir.as_os_str().to_owned(),
-                Component::Normal(os_str) => {
-                    let existing = os_str.to_str().map(to_nfc).and_then(|want_caseless| {
-                        current.read_dir().ok().and_then(|entries| {
-                            entries
-                                .filter_map(|x| x.ok())
-                                .map(|entry| entry.file_name())
-                                .find(|file_name| {
-                                    file_name.to_str().map(to_nfc).map(|f| f == want_caseless)
-                                        == Some(true)
-                                })
-                        })
-                    });
-                    existing.unwrap_or_else(|| os_str.to_owned())
+            if copy > 0 {
+                copy -= 1;
+                current.push(&component);
+                return current; // copied
+            }
+            current.push(&component);
+            if current.exists() {
+                return current; // respect the filesystem, copied
+            }
+            current.pop();
+            if let Component::Normal(os_str) = component {
+                // find caseless match (unicode in NFC form)
+                let found = os_str.to_str().map(Nfc::caseless).and_then(|want| {
+                    current.read_dir().ok().and_then(|entries| {
+                        entries
+                            .filter_map(|x| x.ok())
+                            .map(|e| e.file_name())
+                            .find(|f| f.to_str().map(|x| Nfc::caseless(x) == want) == Some(true))
+                    })
+                });
+                if let Some(file_name) = found {
+                    current.push(&file_name);
+                    return current; // replaced with variant
                 }
-                Component::Prefix(e) => Component::Prefix(e).as_os_str().to_owned(),
-                Component::RootDir => Component::RootDir.as_os_str().to_owned(),
-            };
-            current.push(next.as_os_str());
-            current
+            }
+            current.push(&component);
+            current // give up, copied
         })
 }
