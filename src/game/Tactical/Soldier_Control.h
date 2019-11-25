@@ -937,6 +937,7 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier );
 void  CreateSoldierPalettes(SOLDIERTYPE&);
 std::optional<UINT8> GetPaletteRepIndexFromID(const ST::string& pal_rep);
 void SetPaletteReplacement(SGPPaletteEntry* p8BPPPalette, const ST::string& aPalRep);
+void SetPaletteReplacement(SGPPaletteEntry* p8BPPPalette, UINT8 aPalRep);
 void  LoadPaletteData(void);
 void  DeletePaletteData(void);
 

@@ -16,7 +16,7 @@ class AnimationSurfaceCacheType
 
 public:
 	// Load an animation surface if it is not already cached.
-	void cache(UINT16 usSurfaceIndex, UINT16 usCurrentAnimation);
+	void cache(UINT16 usSurfaceIndex, UINT16 usCurrentAnimation, UINT8 head, UINT8 pants, UINT8 vest, UINT8 skin);
 	// Init the animation cache for the specified soldier.
 	void init(UINT8 usSoldierID);
 	// Unload all cached animation surfaces.

@@ -16,7 +16,7 @@ void AnimationSurfaceCacheType::init(UINT8 const pid)
 }
 
 
-void AnimationSurfaceCacheType::cache(UINT16 const usSurfaceIndex, UINT16 const usCurrentAnimation)
+void AnimationSurfaceCacheType::cache(UINT16 const usSurfaceIndex, UINT16 const usCurrentAnimation, UINT8 head, UINT8 pants, UINT8 vest, UINT8 skin)
 {
 	// This function assumes a cache size of at least 3. If you choose a smaller
 	// cache size (why?) you must adjust this function.
@@ -28,6 +28,10 @@ void AnimationSurfaceCacheType::cache(UINT16 const usSurfaceIndex, UINT16 const 
 	{
 		if ( usCachedSurfaces[ cnt ] == usSurfaceIndex )
 		{
+			AnimationSurfaceType *a = &gAnimSurfaceDatabase[usSurfaceIndex];
+			if(a->head != head || a->pants != pants || a->vest != vest || a->skin != skin)
+				continue;
+
 			// Found surface, return
 			SLOGD("Anim Cache: Hit {} ( Soldier {} )", usSurfaceIndex, mPid);
 			sCacheHits[cnt]++;
@@ -87,7 +91,7 @@ void AnimationSurfaceCacheType::cache(UINT16 const usSurfaceIndex, UINT16 const 
 	SLOGD("Anim Cache: Loading Surface {} ( Soldier {} )", usSurfaceIndex, mPid);
 
 	// Insert here
-	LoadAnimationSurface( mPid, usSurfaceIndex, usCurrentAnimation );
+	LoadAnimationSurface( mPid, usSurfaceIndex, usCurrentAnimation, head, pants, vest, skin);
 	sCacheHits[ freeSlot ] = 0;
 	usCachedSurfaces[ freeSlot ] = usSurfaceIndex;
 }

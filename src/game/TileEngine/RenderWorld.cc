@@ -1114,7 +1114,14 @@ zlevel_topmost:
 									pShadeTable = s.pForcedShade;
 								}
 
-								hVObject = gAnimSurfaceDatabase[usAnimSurface].hVideoObject;
+								const AnimationSurfaceType *as = &gAnimSurfaceDatabase[usAnimSurface];
+								const UINT8 head = GetPaletteRepIndexFromID(s.HeadPal);
+								const UINT8 pants = GetPaletteRepIndexFromID(s.PantsPal);
+								const UINT8 vest = GetPaletteRepIndexFromID(s.VestPal);
+								const UINT8 skin = GetPaletteRepIndexFromID(s.SkinPal);
+								if (as->head != head || as->pants != pants || as->vest != vest || as->skin != skin)
+									LoadAnimationSurface(s.ubID, usAnimSurface, s.usAnimState, head, pants, vest, skin);
+								hVObject = as->hVideoObject;
 								if (!hVObject) goto next_node;
 
 								// ATE: If we are in a gridno that we should not use obscure blitter, set!

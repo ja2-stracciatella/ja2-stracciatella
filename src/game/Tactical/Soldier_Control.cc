@@ -5033,20 +5033,17 @@ void LoadPaletteData()
 
 void SetPaletteReplacement(SGPPaletteEntry* p8BPPPalette, const ST::string& aPalRep)
 {
-	UINT32 cnt2;
+	SetPaletteReplacement(p8BPPPalette, GetPaletteRepIndexFromID(aPalRep));
+}
 
-	auto const ubPalIndex = GetPaletteRepIndexFromID(aPalRep);
-	if (!ubPalIndex)
-	{
-		return;
-	}
-
+void  SetPaletteReplacement(SGPPaletteEntry* p8BPPPalette, UINT8 ubPalIndex)
+{
 	// Get range type
-	auto const ubType = gpPalRep[*ubPalIndex].ubType;
+	UINT8 ubType = gpPalRep[ ubPalIndex ].ubType;
 
-	for ( cnt2 = gpPaletteSubRanges[ ubType ].ubStart; cnt2 <= gpPaletteSubRanges[ ubType ].ubEnd; cnt2++ )
-	{
-		p8BPPPalette[cnt2] = gpPalRep[*ubPalIndex].rgb[cnt2 - gpPaletteSubRanges[ubType].ubStart];
+	for (UINT32 cnt2 = gpPaletteSubRanges[ubType].ubStart; cnt2 <= gpPaletteSubRanges[ubType].ubEnd; cnt2++) {
+		p8BPPPalette[cnt2] = gpPalRep[ubPalIndex].rgb[cnt2 - gpPaletteSubRanges[ubType].ubStart];
+		p8BPPPalette[cnt2].a = 255;
 	}
 }
 
