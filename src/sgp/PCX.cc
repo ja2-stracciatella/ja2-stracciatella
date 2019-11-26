@@ -63,7 +63,7 @@ SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
 	// Read and allocate bitmap block if requested
 	if (contents & IMAGE_BITMAPDATA)
 	{
-		UINT8* const img_data = img->pImageData.Allocate(w * h);
+		UINT8* const img_data = img->pImageData.Allocate(static_cast<UINT32>(w) * h);
 		BlitPcxToBuffer(pcx_buffer, img_data, w, h);
 	}
 
