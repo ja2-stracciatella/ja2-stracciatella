@@ -10,7 +10,6 @@ message(STATUS "<string_theory>")
 set(CMAKE_BUILD_TYPE Release)
 set(CACHE_FILE "${CMAKE_CURRENT_BINARY_DIR}/external-project-cache.cmake")
 set(INSTALL_PREFIX "${CMAKE_BINARY_DIR}/lib-string_theory")
-set(CMAKELISTS_PATCHED_FILE "${CMAKE_CURRENT_SOURCE_DIR}/patch/CMakeLists.txt")
 
 configure_file(
 	"${CMAKE_SOURCE_DIR}/cmake/external-project-cache.cmake.in"
