@@ -57,7 +57,6 @@
 #include "GameInstance.h"
 #include "MercProfile.h"
 #include "content/Dialogs.h"
-#include "sgp/UTF8String.h"
 
 #define QUOTE_MESSAGE_SIZE			520
 
@@ -886,10 +885,11 @@ static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, wchar_
 		bool success = false;
 		try
 		{
-			UTF8String* quote = GCM->loadDialogQuoteFromFile(pFilename, usQuoteNum);
+			ST::string* quote = GCM->loadDialogQuoteFromFile(pFilename, usQuoteNum);
 			if(quote)
 			{
-				wcsncpy(zDialogueText, quote->getWCHAR().data(), Length);
+				ST::wchar_buffer buf = quote->to_wchar();
+				wcsncpy(zDialogueText, buf.c_str(), Length); // might not terminate with '\0'
 				delete quote;
 				success = zDialogueText[0] != L'\0';
 			}

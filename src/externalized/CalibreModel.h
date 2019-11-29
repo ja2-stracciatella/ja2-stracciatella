@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <stdint.h>
 #include <string>
+#include <string_theory/string>
 
 #include "sgp/StrUtils.h"
 
@@ -25,7 +26,7 @@ struct CalibreModel
 	// This could be default in C++11
 	virtual ~CalibreModel();
 
-	const wchar_t* getName() const;
+	const ST::string* getName() const;
 
 	virtual void serializeTo(JsonObject &obj) const;
 	static CalibreModel* deserialize(JsonObjectReader &obj);

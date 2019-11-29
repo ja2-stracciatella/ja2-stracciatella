@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <string>
+#include <string_theory/string>
 #include <vector>
 
 /* XXX */
@@ -13,7 +14,6 @@
 class DealerInventory;
 class GamePolicy;
 class IMPPolicy;
-class UTF8String;
 struct AmmoTypeModel;
 struct CalibreModel;
 struct MagazineModel;
@@ -77,7 +77,7 @@ public:
 	virtual void loadEncryptedString(SGPFile* const File, wchar_t* DestString, uint32_t const seek_chars, uint32_t const read_chars) const = 0;
 
 	/** Load dialogue quote from file. */
-	virtual UTF8String* loadDialogQuoteFromFile(const char* filename, int quote_number) = 0;
+	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number) = 0;
 
 	/** Get weapons with the give index. */
 	virtual const WeaponModel* getWeapon(uint16_t index) = 0;
@@ -88,8 +88,8 @@ public:
 	virtual const std::vector<const MagazineModel*>& getMagazines() const = 0;
 
 	virtual const CalibreModel* getCalibre(uint8_t index) = 0;
-	virtual const UTF8String* getCalibreName(uint8_t index) const = 0;
-	virtual const UTF8String* getCalibreNameForBobbyRay(uint8_t index) const = 0;
+	virtual const ST::string* getCalibreName(uint8_t index) const = 0;
+	virtual const ST::string* getCalibreNameForBobbyRay(uint8_t index) const = 0;
 
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index) = 0;
 
@@ -102,12 +102,12 @@ public:
 	virtual const DealerInventory* getBobbyRayNewInventory() const = 0;
 	virtual const DealerInventory* getBobbyRayUsedInventory() const = 0;
 
-	virtual const UTF8String* getMusicForMode(MusicMode mode) const = 0;
+	virtual const ST::string* getMusicForMode(MusicMode mode) const = 0;
 
 	virtual const GamePolicy* getGamePolicy() const = 0;
 	virtual const IMPPolicy* getIMPPolicy() const = 0;
 
-	virtual const UTF8String* getNewString(int stringId) const = 0;
+	virtual const ST::string* getNewString(int stringId) const = 0;
 
 	/** Open temporary file for writing. */
 	virtual SGPFile* openTempFileForWriting(const char* filename, bool truncate) const = 0;

@@ -1,8 +1,9 @@
 #ifndef _MUSIC_CONTROL_H_
 #define _MUSIC_CONTROL_H_
 
+#include <string_theory/string>
+
 #include "SoundMan.h"
-#include "UTF8String.h"
 #include "ContentMusic.h"
 
 extern MusicMode gubMusicMode;
@@ -12,7 +13,7 @@ extern BOOLEAN	gfForceMusicToTense;
 void SetMusicMode(MusicMode ubMusicMode);
 
 /* Starts up one of the tunes in the music list. */
-void MusicPlay(const UTF8String* pFilename);
+void MusicPlay(const ST::string* pFilename);
 
 void MusicSetVolume(UINT32 uiVolume);
 UINT32 MusicGetVolume(void);

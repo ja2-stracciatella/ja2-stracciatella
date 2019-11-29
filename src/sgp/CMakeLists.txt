@@ -24,7 +24,6 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/SoundMan.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/StrUtils.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/TranslationTable.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/UTF8String.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/VObject.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/VObject_Blitters.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/VSurface.cc
@@ -36,7 +35,6 @@ if (WITH_UNITTESTS)
         ${LOCAL_JA2_SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/FileMan_unittest.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveData_unittest.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/UTF8String_unittest.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/wchar_unittest.cc
     )
 endif()

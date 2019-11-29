@@ -106,10 +106,10 @@ public:
 	virtual void loadEncryptedString(SGPFile* const File, wchar_t* DestString, uint32_t const seek_chars, uint32_t const read_chars) const;
 
 	/** Load dialogue quote from file. */
-	virtual UTF8String* loadDialogQuoteFromFile(const char* filename, int quote_number);
+	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number);
 
 	/** Load all dialogue quotes for a character. */
-	void loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* filename, std::vector<UTF8String*> &quotes) const;
+	void loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* filename, std::vector<ST::string*> &quotes) const;
 
 	/** Get weapons with the give index. */
 	virtual const WeaponModel* getWeapon(uint16_t index);
@@ -120,8 +120,8 @@ public:
 	virtual const std::vector<const MagazineModel*>& getMagazines() const;
 
 	virtual const CalibreModel* getCalibre(uint8_t index);
-	virtual const UTF8String* getCalibreName(uint8_t index) const;
-	virtual const UTF8String* getCalibreNameForBobbyRay(uint8_t index) const;
+	virtual const ST::string* getCalibreName(uint8_t index) const;
+	virtual const ST::string* getCalibreNameForBobbyRay(uint8_t index) const;
 
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index);
 
@@ -135,12 +135,12 @@ public:
 	virtual const DealerInventory* getBobbyRayNewInventory() const;
 	virtual const DealerInventory* getBobbyRayUsedInventory() const;
 
-	virtual const UTF8String* getMusicForMode(MusicMode mode) const;
+	virtual const ST::string* getMusicForMode(MusicMode mode) const;
 
 	virtual const GamePolicy* getGamePolicy() const;
 	virtual const IMPPolicy* getIMPPolicy() const;
 
-	virtual const UTF8String* getNewString(int stringId) const;
+	virtual const ST::string* getNewString(int stringId) const;
 
 protected:
 	std::string m_dataDir;
@@ -151,14 +151,14 @@ protected:
 
 	const GameVersion m_gameVersion;
 
-	std::vector<const UTF8String*> m_newStrings;
+	std::vector<const ST::string*> m_newStrings;
 
 	std::vector<const ItemModel*> m_items;
 	std::vector<const MagazineModel*> m_magazines;
 
 	std::vector<const CalibreModel*> m_calibres;
-	std::vector<const UTF8String*> m_calibreNames;
-	std::vector<const UTF8String*> m_calibreNamesBobbyRay;
+	std::vector<const ST::string*> m_calibreNames;
+	std::vector<const ST::string*> m_calibreNamesBobbyRay;
 
 	std::vector<AmmoTypeModel*> m_ammoTypes;
 
@@ -168,7 +168,7 @@ protected:
 	std::map<std::string, const MagazineModel*> m_magazineMap;
 	std::map<std::string, const WeaponModel*> m_weaponMap;
 	std::map<std::string, const ItemModel*> m_itemMap;
-	std::map<MusicMode, const std::vector<const UTF8String*>*> m_musicMap;
+	std::map<MusicMode, const std::vector<const ST::string*>*> m_musicMap;
 
 	std::vector<std::vector<const WeaponModel*> > mNormalGunChoice;
 	std::vector<std::vector<const WeaponModel*> > mExtendedGunChoice;
@@ -191,7 +191,7 @@ protected:
 
 	const DealerInventory * loadDealerInventory(const char *fileName);
 	bool loadAllDealersInventory();
-	void loadStringRes(const char *name, std::vector<const UTF8String*> &strings) const;
+	void loadStringRes(const char *name, std::vector<const ST::string*> &strings) const;
 
 	bool readWeaponTable(
 		const char *fileName,

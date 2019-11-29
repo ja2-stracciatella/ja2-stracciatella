@@ -18,7 +18,6 @@
 #include "sgp/FileMan.h"
 #include "sgp/MemMan.h"
 #include "sgp/StrUtils.h"
-#include "sgp/UTF8String.h"
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
@@ -255,15 +254,15 @@ DefaultContentManager::~DefaultContentManager()
 	delete m_impPolicy;
 	delete m_gamePolicy;
 
-	for (const UTF8String *str : m_newStrings)
+	for (const ST::string *str : m_newStrings)
 	{
 		delete str;
 	}
-	for (const UTF8String *str : m_calibreNames)
+	for (const ST::string *str : m_calibreNames)
 	{
 		delete str;
 	}
-	for (const UTF8String *str : m_calibreNamesBobbyRay)
+	for (const ST::string *str : m_calibreNamesBobbyRay)
 	{
 		delete str;
 	}
@@ -324,8 +323,8 @@ std::string DefaultContentManager::getMapPath(const wchar_t *mapName) const
 	// But it is just a hack to make the code compile.
 	// XXX: This method should be removed altogether
 
-	UTF8String str(mapName);
-	return getMapPath(str.getUTF8());
+	ST::string str(mapName);
+	return getMapPath(str.c_str());
 }
 
 /** Open map for reading. */
@@ -520,17 +519,17 @@ void DefaultContentManager::loadEncryptedString(SGPFile* const File, wchar_t* De
 }
 
 /** Load dialogue quote from file. */
-UTF8String* DefaultContentManager::loadDialogQuoteFromFile(const char* fileName, int quote_number)
+ST::string* DefaultContentManager::loadDialogQuoteFromFile(const char* fileName, int quote_number)
 {
 	AutoSGPFile File(openGameResForReading(fileName));
 
 	wchar_t quote[DIALOGUESIZE];
 	LoadEncryptedData(getStringEncType(), File, quote, quote_number * DIALOGUESIZE, DIALOGUESIZE);
-	return new UTF8String(quote);
+	return new ST::string(quote);
 }
 
 /** Load all dialogue quotes for a character. */
-void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* fileName, std::vector<UTF8String*> &quotes) const
+void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* fileName, std::vector<ST::string*> &quotes) const
 {
 	AutoSGPFile File(openGameResForReading(fileName));
 	uint32_t fileSize = FileGetSize(File);
@@ -540,7 +539,7 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const c
 	{
 		wchar_t quote[DIALOGUESIZE];
 		LoadEncryptedData(encType, File, quote, i * DIALOGUESIZE, DIALOGUESIZE);
-		quotes.push_back(new UTF8String(quote));
+		quotes.push_back(new ST::string(quote));
 	}
 }
 
@@ -586,12 +585,12 @@ const CalibreModel* DefaultContentManager::getCalibre(uint8_t index)
 	return m_calibres[index];
 }
 
-const UTF8String* DefaultContentManager::getCalibreName(uint8_t index) const
+const ST::string* DefaultContentManager::getCalibreName(uint8_t index) const
 {
 	return m_calibreNames[index];
 }
 
-const UTF8String* DefaultContentManager::getCalibreNameForBobbyRay(uint8_t index) const
+const ST::string* DefaultContentManager::getCalibreNameForBobbyRay(uint8_t index) const
 {
 	return m_calibreNamesBobbyRay[index];
 }
@@ -754,13 +753,13 @@ bool DefaultContentManager::loadAmmoTypes()
 
 bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::Value &array)
 {
-	std::vector<const UTF8String*>* musicModeList = new std::vector<const UTF8String*>();
+	std::vector<const ST::string*>* musicModeList = new std::vector<const ST::string*>();
 
 	std::vector<std::string> utf8_encoded;
 	JsonUtility::parseListStrings(array, utf8_encoded);
 	for (const std::string &str : utf8_encoded)
 	{
-		musicModeList->push_back(new UTF8String(str.c_str()));
+		musicModeList->push_back(new ST::string(str));
 		SLOGD("Loaded music %s", str.c_str());
 	}
 
@@ -857,7 +856,7 @@ bool DefaultContentManager::loadArmyGunChoice()
 		&& readWeaponTable("army-gun-choice-extended.json", mExtendedGunChoice);
 }
 
-void DefaultContentManager::loadStringRes(const char *name, std::vector<const UTF8String*> &strings) const
+void DefaultContentManager::loadStringRes(const char *name, std::vector<const ST::string*> &strings) const
 {
 	std::string fullName(name);
 
@@ -883,7 +882,7 @@ void DefaultContentManager::loadStringRes(const char *name, std::vector<const UT
 	JsonUtility::parseListStrings(*json, utf8_encoded);
 	for (const std::string &str : utf8_encoded)
 	{
-		strings.push_back(new UTF8String(str.c_str()));
+		strings.push_back(new ST::string(str));
 	}
 }
 
@@ -989,11 +988,11 @@ const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) c
 	return m_dealersInventory[dealerId];
 }
 
-const UTF8String* DefaultContentManager::getMusicForMode(MusicMode mode) const {
+const ST::string* DefaultContentManager::getMusicForMode(MusicMode mode) const {
 	const uint32_t index = Random((uint32_t)m_musicMap.find(mode)->second->size());
-	const UTF8String* chosen = m_musicMap.find(mode)->second->at(index);
+	const ST::string* chosen = m_musicMap.find(mode)->second->at(index);
 
-	SLOGD("Choosing music index %d of %d for: '%s'", index, m_musicMap.find(mode)->second->size(), chosen->getUTF8());
+	SLOGD("Choosing music index %d of %d for: '%s'", index, m_musicMap.find(mode)->second->size(), chosen->c_str());
 	return chosen;
 }
 
@@ -1007,7 +1006,7 @@ const GamePolicy* DefaultContentManager::getGamePolicy() const
 	return m_gamePolicy;
 }
 
-const UTF8String* DefaultContentManager::getNewString(int stringId) const
+const ST::string* DefaultContentManager::getNewString(int stringId) const
 {
 	if(stringId >= m_newStrings.size())
 	{

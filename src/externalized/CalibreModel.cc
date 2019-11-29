@@ -4,7 +4,6 @@
 
 #include "game/Utils/Text.h"
 #include "sgp/StrUtils.h"
-#include "sgp/UTF8String.h"
 
 #include "JsonObject.h"
 
@@ -49,9 +48,9 @@ CalibreModel* CalibreModel::deserialize(JsonObjectReader &obj)
 );
 }
 
-const wchar_t* CalibreModel::getName() const
+const ST::string* CalibreModel::getName() const
 {
-	return &GCM->getCalibreName(index)->getWCHAR()[0];
+	return GCM->getCalibreName(index);
 }
 
 const CalibreModel* CalibreModel::getNoCalibreObject()
