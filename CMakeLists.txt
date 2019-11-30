@@ -382,9 +382,8 @@ if (MSVC)
 endif()
 
 if (MINGW)
-    file(GLOB WIN_MINGW_DIST_DLLS "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-win-mingw/*.dll")
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.8-mingw/i686-w64-mingw32/bin/SDL2.dll DESTINATION .)
-    install(FILES ${WIN_MINGW_DIST_DLLS} DESTINATION .)
+    configure_file("${CMAKE_SOURCE_DIR}/cmake/install-dlls-mingw.cmake.in" "${CMAKE_CURRENT_BINARY_DIR}/install-dlls-mingw.cmake" @ONLY)
+    install(SCRIPT "${CMAKE_CURRENT_BINARY_DIR}/install-dlls-mingw.cmake")
 endif()
 
 if(APPLE)
