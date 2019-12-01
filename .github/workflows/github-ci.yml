@@ -1,0 +1,71 @@
+name: GitHub CI
+
+on:
+  push:
+    branches: [ master, nightly ]
+    tags: [ '**' ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  ci-build:
+    strategy:
+      fail-fast: false
+      matrix:
+        cfg:
+
+        - name: Linux
+          os: ubuntu-16.04
+          target: linux
+
+        - name: Mingw
+          os: ubuntu-latest
+          target: mingw
+
+        - name: Mac
+          os: macos-latest
+          target: mac
+
+    name: ${{ matrix.cfg.name }} ${{ github.ref }}
+    runs-on: ${{ matrix.cfg.os }}
+    steps:
+
+    - name: Context in env
+      env:
+        GITHUB_CONTEXT: ${{ toJson(github) }}
+        JOB_CONTEXT: ${{ toJson(job) }}
+        STEPS_CONTEXT: ${{ toJson(steps) }}
+        RUNNER_CONTEXT: ${{ toJson(runner) }}
+        STRATEGY_CONTEXT: ${{ toJson(strategy) }}
+        MATRIX_CONTEXT: ${{ toJson(matrix) }}
+      run: ''
+
+    - name: Checkout
+      uses: actions/checkout@v1
+
+    - name: Build with bash
+      shell: bash
+      run: ${{ github.workspace }}/.github/scripts/ci-build.sh 2>&1
+      env:
+        CI_NAME: ${{ matrix.cfg.name }}
+        CI_OS: ${{ matrix.cfg.os }}
+        CI_TARGET: ${{ matrix.cfg.target }}
+        CI_REF: ${{ github.ref }}
+        SFTP_USER: ${{ secrets.SFTP_USER }}
+        SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+
+    - name: Collect artifacts
+      shell: bash
+      run: |
+        set -e
+        set -x
+        mkdir artifacts
+        for file in ci-build/ja2-stracciatella_*; do
+          cp "${file}" artifacts/
+        done
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v1
+      with:
+        name: artifacts
+        path: ${{ github.workspace }}/artifacts
