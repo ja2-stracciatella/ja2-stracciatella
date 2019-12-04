@@ -18,9 +18,9 @@ jobs:
           os: ubuntu-16.04
           target: linux
 
-        - name: Mingw
+        - name: Linux mingw64
           os: ubuntu-latest
-          target: mingw
+          target: linux-mingw64
 
         - name: Mac
           os: macos-latest
