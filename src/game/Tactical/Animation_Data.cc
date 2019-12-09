@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Directories.h"
 #include "HImage.h"
 #include "Overhead.h"
@@ -18,6 +16,10 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"
+
+#include <algorithm>
+#include <iterator>
+#include <stdexcept>
 
 #define EMPTY_SLOT					-1
 #define TO_INIT					0
@@ -834,5 +836,8 @@ void ZeroAnimSurfaceCounts( )
 		gAnimSurfaceDatabase[ cnt ].hVideoObject  = NULL;
 	}
 
-	memset( gbAnimUsageHistory, 0, sizeof( gbAnimUsageHistory ) );
+	for (auto& i : gbAnimUsageHistory)
+	{
+		std::fill(std::begin(i), std::end(i), 0);
+	}
 }
