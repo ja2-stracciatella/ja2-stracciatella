@@ -1356,7 +1356,7 @@ UINT32 CalculateCarriedWeight(SOLDIERTYPE const* const s)
 
 void DeleteObj(OBJECTTYPE * pObj )
 {
-	memset( pObj, 0, sizeof(OBJECTTYPE) );
+	*pObj = OBJECTTYPE{};
 }
 
 
@@ -1617,7 +1617,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 		else
 		{
 			// record old ammo
-			memset( &OldAmmo, 0, sizeof( OBJECTTYPE ));
+			OldAmmo = OBJECTTYPE{};
 			OldAmmo.usItem = pGun->usGunAmmoItem;
 			OldAmmo.ubNumberOfObjects = 1;
 			OldAmmo.ubShotsLeft[0] = pGun->ubGunShotsLeft;
@@ -1857,7 +1857,7 @@ BOOLEAN ReloadLauncher( OBJECTTYPE * pLauncher, OBJECTTYPE * pAmmo )
 			return( FALSE );
 		}
 		// otherwise temporarily store the launcher's old ammo
-		memset( &OldAmmo, 0, sizeof( OBJECTTYPE ));
+		OldAmmo = OBJECTTYPE{};
 		fOldAmmo = TRUE;
 		OldAmmo.usItem = pLauncher->usGunAmmoItem;
 		OldAmmo.ubNumberOfObjects = 1;
@@ -3159,7 +3159,7 @@ static void CreateMagazine(UINT16 usItem, OBJECTTYPE* pObj)
 
 void CreateItem(UINT16 const usItem, INT8 const bStatus, OBJECTTYPE* const pObj)
 {
-	memset( pObj, 0, sizeof( OBJECTTYPE ) );
+	*pObj = OBJECTTYPE{};
 	if (usItem >= MAXITEMS)
 	{
 		throw std::logic_error("Tried to create item with invalid ID");
@@ -3597,7 +3597,7 @@ static void RemoveInvObject(SOLDIERTYPE* pSoldier, UINT16 usItem)
 	{
 
 		// Erase!
-		memset( &(pSoldier->inv[ bInvPos ]), 0, sizeof( OBJECTTYPE ) );
+		pSoldier->inv[ bInvPos ] = OBJECTTYPE{};
 
 		//Dirty!
 		DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
