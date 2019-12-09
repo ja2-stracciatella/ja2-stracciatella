@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Buffer.h"
 #include "Directories.h"
 #include "Font.h"
@@ -110,6 +108,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"
+
+#include <algorithm>
+#include <stdexcept>
 
 static const char g_quicksave_name[] = "QuickSave";
 static const char g_savegame_name[]  = "SaveGame";
@@ -238,7 +239,7 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		SaveCurrentSectorsInformationToTempItemFile();
 
 		SAVED_GAME_HEADER header;
-		memset(&header, 0, sizeof(header));
+		header = SAVED_GAME_HEADER{};
 
 		wchar_t (& desc)[lengthof(header.sSavedGameDesc)] = header.sSavedGameDesc;
 		if (ubSaveGameID == 0)
@@ -1172,7 +1173,7 @@ static void SaveSoldierStructure(HWFILE const f)
 
 		// Save the soldier structure
 		BYTE data[2328];
-		memset(data, 0, 2328);
+		std::fill_n(data, 2328, 0);
 		InjectSoldierType(data, &s);
 		writer(f, data, sizeof(data));
 
@@ -1966,7 +1967,7 @@ static void LoadMeanwhileDefsFromSaveGameFile(HWFILE const f, UINT32 const saveg
 	MEANWHILE_DEFINITION const* end;
 	if (savegame_version < 72)
 	{
-		memset(&gMeanwhileDef[NUM_MEANWHILES - 1], 0, sizeof(gMeanwhileDef[NUM_MEANWHILES - 1]));
+		gMeanwhileDef[NUM_MEANWHILES - 1] = MEANWHILE_DEFINITION{};
 		end = gMeanwhileDef + NUM_MEANWHILES - 1;
 	}
 	else
