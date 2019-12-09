@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
@@ -107,6 +105,10 @@
 #include "Items.h"
 #include "UILayout.h"
 #include "Logger.h"
+
+#include <algorithm>
+#include <iterator>
+#include <stdexcept>
 
 //Used by PickGridNoToWalkIn
 #define MAX_ATTEMPTS 200
@@ -391,7 +393,7 @@ static void InitializeStrategicMapSectorTownNames(void);
 
 static void InitializeMapStructure(void)
 {
-	memset(StrategicMap, 0, sizeof(StrategicMap));
+	std::fill(std::begin(StrategicMap), std::end(StrategicMap), StrategicMapElement{});
 
 	InitializeStrategicMapSectorTownNames( );
 }
