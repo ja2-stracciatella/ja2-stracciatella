@@ -36,7 +36,6 @@
 #include "AI.h"
 #include "Strategic_Mines.h"
 #include "MapScreen.h"
-#include <math.h>
 #include "JAScreens.h"
 #include "SoundMan.h"
 #include "MemMan.h"
@@ -48,6 +47,9 @@
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 
+#include <algorithm>
+#include <iterator>
+#include <math.h>
 
 // THESE 3 DIFFICULTY FACTORS MUST ALWAYS ADD UP TO 100% EXACTLY!!!
 #define DIFF_FACTOR_PLAYER_PROGRESS		50
@@ -308,12 +310,12 @@ try
 				// positions filled.
 				second_face_item = true;
 				s->inv[HEAD1POS] = o;
-				memset(&o, 0, sizeof(o));
+				o = OBJECTTYPE{};
 			}
 			else if (CompatibleFaceItem(s->inv[HEAD1POS].usItem, o.usItem))
 			{
 				s->inv[HEAD2POS] = o;
-				memset(&o, 0, sizeof(o));
+				o = OBJECTTYPE{};
 				break;
 			}
 		}
@@ -914,7 +916,7 @@ no_name:
 
 static void InitSoldierStruct(SOLDIERTYPE& s)
 {
-	memset(&s, 0, sizeof(s));
+	s = SOLDIERTYPE{};
 	s.bVisible                  = -1;
 	s.face                      = 0;
 	s.bMorale                   = DEFAULT_MORALE;
@@ -1393,7 +1395,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	INT32 i;
 	if( !spp || !bp )
 		return;
-	memset( spp, 0, sizeof( SOLDIERCREATE_STRUCT ) );
+	*spp = SOLDIERCREATE_STRUCT{};
 	spp->fStatic = TRUE;
 	spp->ubProfile = NO_PROFILE;
 	spp->sInsertionGridNo = bp->usStartingGridNo;
@@ -1443,7 +1445,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	//Starts with nothing
 	for( i = 0; i < NUM_INV_SLOTS; i++ )
 	{
-		memset( &(spp->Inv[ i ]), 0, sizeof( OBJECTTYPE ) );
+		spp->Inv[ i ] = OBJECTTYPE{};
 		spp->Inv[ i ].usItem = NOTHING;
 		spp->Inv[ i ].fFlags |= OBJECT_UNDROPPABLE;
 	}
@@ -1457,7 +1459,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 {
 	INT32 i;
 
-	memset( pp, 0, sizeof( SOLDIERCREATE_STRUCT ) );
+	*pp = SOLDIERCREATE_STRUCT{};
 	pp->fOnRoof = spp->fOnRoof = bp->fOnRoof;
 	pp->fStatic = FALSE;
 	pp->ubSoldierClass = bp->ubSoldierClass;
@@ -1693,7 +1695,7 @@ void ForceSoldierProfileID( SOLDIERTYPE *pSoldier, UINT8 ubProfileID )
 {
 	SOLDIERCREATE_STRUCT CreateStruct;
 
-	memset( &CreateStruct, 0, sizeof( CreateStruct ) );
+	CreateStruct = SOLDIERCREATE_STRUCT{};
 	CreateStruct.ubProfile = ubProfileID;
 	TacticalCopySoldierFromProfile(*pSoldier, CreateStruct);
 
@@ -1755,7 +1757,7 @@ SOLDIERTYPE* TacticalCreateEnemySoldier(SoldierClass const sc)
 	}
 
 	BASIC_SOLDIERCREATE_STRUCT bp;
-	memset(&bp, 0, sizeof(bp));
+	bp = BASIC_SOLDIERCREATE_STRUCT{};
 	RandomizeRelativeLevel(&bp.bRelativeAttributeLevel, sc);
 	RandomizeRelativeLevel(&bp.bRelativeEquipmentLevel, sc);
 	bp.bTeam          = ENEMY_TEAM;
@@ -1765,7 +1767,7 @@ SOLDIERTYPE* TacticalCreateEnemySoldier(SoldierClass const sc)
 	bp.ubSoldierClass = sc;
 
 	SOLDIERCREATE_STRUCT pp;
-	memset(&pp, 0, sizeof(pp));
+	pp = SOLDIERCREATE_STRUCT{};
 	CreateDetailedPlacementGivenBasicPlacementInfo(&pp, &bp);
 
 	if (sc == SOLDIER_CLASS_ELITE)
@@ -1797,8 +1799,8 @@ SOLDIERTYPE* TacticalCreateMilitia( UINT8 ubMilitiaClass )
 	BASIC_SOLDIERCREATE_STRUCT bp;
 	SOLDIERCREATE_STRUCT pp;
 
-	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
-	memset( &pp, 0, sizeof( SOLDIERCREATE_STRUCT ) );
+	bp = BASIC_SOLDIERCREATE_STRUCT{};
+	pp = SOLDIERCREATE_STRUCT{};
 	RandomizeRelativeLevel( &( bp.bRelativeAttributeLevel ), ubMilitiaClass );
 	RandomizeRelativeLevel( &( bp.bRelativeEquipmentLevel ), ubMilitiaClass );
 	bp.bTeam = MILITIA_TEAM;
@@ -1821,8 +1823,8 @@ SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType )
 		return ReserveTacticalSoldierForAutoresolve( SOLDIER_CLASS_CREATURE );
 	}
 
-	memset( &bp, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
-	memset( &pp, 0, sizeof( SOLDIERCREATE_STRUCT ) );
+	bp = BASIC_SOLDIERCREATE_STRUCT{};
+	pp = SOLDIERCREATE_STRUCT{};
 	RandomizeRelativeLevel( &( bp.bRelativeAttributeLevel ), SOLDIER_CLASS_CREATURE );
 	RandomizeRelativeLevel( &( bp.bRelativeEquipmentLevel ), SOLDIER_CLASS_CREATURE );
 	bp.bTeam = CREATURE_TEAM;
@@ -1941,7 +1943,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	if (pos == NOWHERE) return;
 
 	SOLDIERCREATE_STRUCT MercCreateStruct;
-	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
+	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam            = bTeam;
 	MercCreateStruct.ubProfile        = ubProfileID;
 	MercCreateStruct.sSectorX         = gWorldSectorX;
@@ -2005,12 +2007,12 @@ static void CopyProfileItems(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 							case BREWSTER: CreateKeyObject(slot, count, 19); break;
 							case SKIPPER:  CreateKeyObject(slot, count, 11); break;
 							case DOREEN:   CreateKeyObject(slot, count, 32); break;
-							default:       memset(slot, 0, sizeof(*slot));   break;
+							default:       *slot = OBJECTTYPE{};             break;
 						}
 					}
 					else
 					{
-						memset(slot, 0, sizeof(*slot));
+						*slot = OBJECTTYPE{};
 					}
 				}
 				else
@@ -2028,7 +2030,7 @@ static void CopyProfileItems(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 			}
 			else
 			{
-				memset(slot, 0, sizeof(*slot));
+				*slot = OBJECTTYPE{};
 			}
 		}
 
@@ -2048,7 +2050,7 @@ static void CopyProfileItems(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 	{
 		// do some special coding to put stuff in the profile in better-looking
 		// spots
-		memset(s.inv, 0, sizeof(s.inv));
+		std::fill(std::begin(s.inv), std::end(s.inv), OBJECTTYPE{});
 		for (UINT32 i = 0; i != NUM_INV_SLOTS; ++i)
 		{
 			if (p.inv[i] == NOTHING) continue;
