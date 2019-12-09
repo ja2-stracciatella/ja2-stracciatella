@@ -968,7 +968,7 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 
 	// Convert the soldier into a rotting corpse
 	ROTTING_CORPSE_DEFINITION c;
-	memset(&c, 0, sizeof(c));
+	c = ROTTING_CORPSE_DEFINITION{};
 	c.ubBodyType        = s->ubBodyType;
 	c.sGridNo           = grid_no;
 	c.sHeightAdjustment = s->sHeightAdjustment;
