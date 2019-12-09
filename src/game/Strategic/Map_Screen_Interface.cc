@@ -69,6 +69,8 @@
 #include "Items.h"
 #include "UILayout.h"
 
+#include <algorithm>
+#include <iterator>
 
 // number of LINKED LISTS for sets of leave items (each slot holds an unlimited # of items)
 #define NUM_LEAVE_LIST_SLOTS 20
@@ -263,7 +265,7 @@ BOOLEAN gfAtLeastOneMercWasHired = FALSE;
 void InitalizeVehicleAndCharacterList( void )
 {
 	// will init the vehicle and character lists to zero
-	memset(&gCharactersList, 0, sizeof( gCharactersList ));
+	std::fill(std::begin(gCharactersList), std::end(gCharactersList), MapScreenCharacterSt{});
 }
 
 
@@ -1202,9 +1204,9 @@ static INT32 SetUpDropItemListForMerc(SOLDIERTYPE& s)
 
 	// Zero out profiles
 	MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
-	memset(p.bInvStatus, 0, sizeof(p.bInvStatus));
-	memset(p.bInvNumber, 0, sizeof(p.bInvNumber));
-	memset(p.inv,        0, sizeof(p.inv));
+	std::fill(std::begin(p.bInvStatus), std::end(p.bInvStatus), 0);
+	std::fill(std::begin(p.bInvNumber), std::end(p.bInvNumber), 0);
+	std::fill(std::begin(p.inv), std::end(p.inv), 0);
 
 	return slot;
 }
