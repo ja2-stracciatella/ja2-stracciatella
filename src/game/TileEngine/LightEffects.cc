@@ -19,6 +19,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <algorithm>
+
 #define NUM_LIGHT_EFFECT_SLOTS 25
 
 
@@ -87,7 +89,7 @@ LIGHTEFFECT* NewLightEffect(const INT16 sGridNo, const INT8 bType)
 	LIGHTEFFECT* const l = GetFreeLightEffect();
 	if (l == NULL) return NULL;
 
-	memset(l, 0, sizeof(*l));
+	*l = LIGHTEFFECT{};
 
 	// Set some values...
 	l->sGridNo            = sGridNo;
@@ -170,7 +172,7 @@ void DecayLightEffects( UINT32 uiTime )
 
 void LoadLightEffectsFromLoadGameFile(HWFILE const hFile)
 {
-	memset( gLightEffectData, 0, sizeof( LIGHTEFFECT ) *  NUM_LIGHT_EFFECT_SLOTS );
+	std::fill_n(gLightEffectData, NUM_LIGHT_EFFECT_SLOTS, LIGHTEFFECT{});
 
 	//Load the Number of Light Effects
 	FileRead(hFile, &guiNumLightEffects, sizeof(UINT32));
@@ -265,6 +267,6 @@ void LoadLightEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 void ResetLightEffects()
 {
 	//Clear out the old list
-	memset( gLightEffectData, 0, sizeof( LIGHTEFFECT ) * NUM_LIGHT_EFFECT_SLOTS );
+	std::fill_n(gLightEffectData, NUM_LIGHT_EFFECT_SLOTS, LIGHTEFFECT{});
 	guiNumLightEffects = 0;
 }
