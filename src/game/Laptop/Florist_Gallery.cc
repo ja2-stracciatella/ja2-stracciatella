@@ -13,6 +13,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <algorithm>
+
 #define FLOR_GALLERY_TITLE_FONT			FONT10ARIAL
 #define FLOR_GALLERY_TITLE_COLOR		FONT_MCOLOR_WHITE
 
@@ -79,7 +81,7 @@ GUIButtonRef guiFloralGalleryButton[2];
 
 void EnterInitFloristGallery()
 {
-	memset( &FloristGallerySubPagesVisitedFlag, 0, 4);
+	std::fill_n(FloristGallerySubPagesVisitedFlag, 4, 0);
 }
 
 
