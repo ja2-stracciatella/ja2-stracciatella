@@ -32,6 +32,9 @@
 #include "Video.h"
 #endif
 
+#include <algorithm>
+#include <iterator>
+
 /* view directions */
 #define DLEFT           0
 #define DRIGHT          1
@@ -298,7 +301,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 	if ( gubGridNoValue == 255 )
 	{
 		//Reset!
-		memset( gubGridNoMarkers, 0, sizeof( gubGridNoMarkers ) );
+		std::fill(std::begin(gubGridNoMarkers), std::end(gubGridNoMarkers), 0);
 		gubGridNoValue = 1;
 	}
 
@@ -351,7 +354,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 #ifdef _DEBUG
 		if (_KeyDown(SDLK_NUMLOCKCLEAR))
 		{
-			memset( gubFOVDebugInfoInfo, 0, sizeof( gubFOVDebugInfoInfo ) );
+			std::fill(std::begin(gubFOVDebugInfoInfo), std::end(gubFOVDebugInfoInfo), 0);
 			SetRenderFlags( RENDER_FLAG_FULL );
 			RenderWorld( );
 		}
