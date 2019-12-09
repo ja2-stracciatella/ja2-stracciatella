@@ -65,7 +65,7 @@ UINT16 FindGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const INT16 sS
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	memset( &soldier, 0, sizeof( SOLDIERTYPE ) );
+	soldier = SOLDIERTYPE{};
 	soldier.bLevel = 0;
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
@@ -157,7 +157,7 @@ UINT16 FindGridNoFromSweetSpotThroughPeople(const SOLDIERTYPE* const pSoldier, c
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	memset( &soldier, 0, sizeof( SOLDIERTYPE ) );
+	soldier = SOLDIERTYPE{};
 	soldier.bLevel = 0;
 	soldier.bTeam = pSoldier->bTeam;
 	soldier.sGridNo = sSweetGridNo;
@@ -249,7 +249,7 @@ UINT16 FindGridNoFromSweetSpotWithStructData( SOLDIERTYPE *pSoldier, UINT16 usAn
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	memset( &soldier, 0, sizeof( SOLDIERTYPE ) );
+	soldier = SOLDIERTYPE{};
 	soldier.bLevel = 0;
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
@@ -408,7 +408,7 @@ static UINT16 FindGridNoFromSweetSpotWithStructDataUsingGivenDirectionFirst(SOLD
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	memset( &soldier, 0, sizeof( SOLDIERTYPE ) );
+	soldier = SOLDIERTYPE{};
 	soldier.bLevel = 0;
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
@@ -580,7 +580,7 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	memset( &soldier, 0, sizeof( SOLDIERTYPE ) );
+	soldier = SOLDIERTYPE{};
 	soldier.bLevel = 0;
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
@@ -867,7 +867,7 @@ UINT16 FindRandomGridNoFromSweetSpot(const SOLDIERTYPE* const pSoldier, const IN
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	memset( &soldier, 0, sizeof( SOLDIERTYPE ) );
+	soldier = SOLDIERTYPE{};
 	soldier.bLevel = 0;
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
