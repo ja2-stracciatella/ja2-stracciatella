@@ -540,7 +540,7 @@ void ExtractAndUpdateDoorInfo()
 	BOOLEAN fCursor = FALSE;
 	BOOLEAN fCursorExists = FALSE;
 
-	memset( &door, 0, sizeof( DOOR ) );
+	door = DOOR{};
 
 	door.sGridNo = (INT16)iDoorMapIndex;
 
