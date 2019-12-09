@@ -877,7 +877,7 @@ try
 			ModifyDoorStatus( sGridNo, DONTSETDOORSTATUS, TRUE );
 
 			ANITILE_PARAMS AniParams;
-			memset(&AniParams, 0, sizeof(AniParams));
+			AniParams = ANITILE_PARAMS{};
 			AniParams.uiFlags         = ANITILE_DOOR | ANITILE_EXISTINGTILE | (fOpenedGraphic ? ANITILE_FORWARD : ANITILE_BACKWARD);
 			AniParams.ubLevelID       = ANI_STRUCT_LEVEL;
 			AniParams.sStartFrame     = pNode->sCurrentFrame;
@@ -997,7 +997,7 @@ try
 			}
 
 			ANITILE_PARAMS AniParams;
-			memset(&AniParams, 0, sizeof(AniParams));
+			AniParams = ANITILE_PARAMS{};
 			AniParams.uiFlags         = ANITILE_DOOR | ANITILE_EXISTINGTILE | (fOpenedGraphic ? ANITILE_BACKWARD : ANITILE_FORWARD);
 			AniParams.ubLevelID       = ANI_STRUCT_LEVEL;
 			AniParams.sStartFrame     = pNode->sCurrentFrame;
