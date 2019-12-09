@@ -44,6 +44,8 @@
 #include "GameInstance.h"
 #include "Logger.h"
 
+#include <algorithm>
+
 #define DEVINFO_DIR "../DevInfo"
 
 
@@ -601,10 +603,10 @@ static void RenderItemDetails(void)
 	xp = 5;
 	if (gubSummaryItemMode != ITEMMODE_ENEMY)
 	{
-		memset( uiTriggerQuantity, 0, 32 );
-		memset( uiActionQuantity, 0, 32 );
-		memset( uiTriggerExistChance, 0, 32 );
-		memset( uiActionExistChance, 0, 32 );
+		std::fill_n(uiTriggerQuantity, 32, 0);
+		std::fill_n(uiActionQuantity, 32, 0);
+		std::fill_n(uiTriggerExistChance, 32, 0);
+		std::fill_n(uiActionExistChance, 32, 0);
 		for( index = 1; index < MAXITEMS; index++ )
 		{
 			uiQuantity = 0;
