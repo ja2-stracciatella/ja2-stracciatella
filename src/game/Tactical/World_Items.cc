@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Items.h"
 #include "Handle_Items.h"
 #include "Overhead.h"
@@ -27,6 +25,9 @@
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 
+#include <algorithm>
+#include <stdexcept>
+
 //Global dynamic array of all of the items in a loaded map.
 WORLDITEM *gWorldItems = NULL;
 UINT32    guiNumWorldItems = 0;
@@ -52,8 +53,7 @@ static INT32 GetFreeWorldBombIndex(void)
 	newWorldBombs = REALLOC(gWorldBombs, WORLDBOMB, guiNumWorldBombs);
 
 	//Clear the rest of the new array
-	memset( &newWorldBombs[ uiOldNumWorldBombs ], 0,
-		sizeof( WORLDBOMB ) * ( guiNumWorldBombs - uiOldNumWorldBombs ) );
+	std::fill_n(newWorldBombs + uiOldNumWorldBombs, guiNumWorldBombs - uiOldNumWorldBombs, WORLDBOMB{});
 	gWorldBombs = newWorldBombs;
 
 	// Return uiCount.....
@@ -170,8 +170,7 @@ static INT32 GetFreeWorldItemIndex(void)
 	newWorldItems = REALLOC(gWorldItems, WORLDITEM, guiNumWorldItems);
 
 	//Clear the rest of the new array
-	memset( &newWorldItems[ uiOldNumWorldItems ], 0,
-		sizeof( WORLDITEM ) * ( guiNumWorldItems - uiOldNumWorldItems ) );
+	std::fill_n(newWorldItems + uiOldNumWorldItems, guiNumWorldItems - uiOldNumWorldItems, WORLDITEM{});
 	gWorldItems = newWorldItems;
 
 	// Return uiCount.....
