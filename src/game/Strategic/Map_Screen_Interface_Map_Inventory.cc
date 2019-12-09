@@ -45,6 +45,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <algorithm>
 
 // status bar colors
 #define DESC_STATUS_BAR FROMRGB( 201, 172,  133 )
@@ -793,7 +794,7 @@ static void ReSizeStashListByThisAmount(INT32 iNumberOfItems)
 	const INT32 count    = iTotalNumberOfSlots;
 	iTotalNumberOfSlots += iNumberOfItems;
 	pInventoryPoolList = REALLOC(pInventoryPoolList, WORLDITEM, iTotalNumberOfSlots);
-	memset(pInventoryPoolList + count, 0, sizeof(*pInventoryPoolList) * iNumberOfItems);
+	std::fill_n(pInventoryPoolList + count, iNumberOfItems, WORLDITEM{});
 }
 
 
