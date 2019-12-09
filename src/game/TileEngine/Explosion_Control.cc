@@ -201,7 +201,7 @@ static void GenerateExplosionFromExplosionPointer(EXPLOSIONTYPE* pExplosion)
 	const ExplosionInfo* inf = &explosion_info[pExplosion->ubTypeID];
 
 	// Setup explosion!
-	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
+	AniParams = ANITILE_PARAMS{};
 
 	AniParams.sGridNo							= sGridNo;
 	AniParams.ubLevelID						= ANI_TOPMOST_LEVEL;
