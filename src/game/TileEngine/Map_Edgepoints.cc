@@ -145,7 +145,7 @@ static void ValidateMapEdge(SOLDIERTYPE& s, UINT16& n, UINT16& middle_idx, INT16
 static void ValidateEdgepoints()
 {
 	SOLDIERTYPE s;
-	memset(&s, 0, sizeof(s));
+	s = SOLDIERTYPE{};
 	s.bTeam = ENEMY_TEAM;
 
 	ValidateMapEdge(s, gus1stNorthEdgepointArraySize, gus1stNorthEdgepointMiddleIndex, gps1stNorthEdgepointArray);
@@ -313,7 +313,7 @@ static void ClassifyEdgepoints(void)
 	SOLDIERTYPE Soldier;
 	INT16 sGridNo = -1;
 
-	memset( &Soldier, 0, sizeof( SOLDIERTYPE ) );
+	Soldier = SOLDIERTYPE{};
 	Soldier.bTeam = 1;
 
 	//north
@@ -1446,7 +1446,7 @@ UINT8 CalcMapEdgepointClassInsertionCode( INT16 sGridNo )
 	INT16			sClosestSpot2 = NOWHERE, sClosestDist2 = 0x7FFF;
 	BOOLEAN		fPrimaryValid = FALSE, fSecondaryValid = FALSE;
 
-	memset( &Soldier, 0, sizeof( SOLDIERTYPE ) );
+	Soldier = SOLDIERTYPE{};
 	Soldier.bTeam = 1;
 	Soldier.sGridNo = sGridNo;
 
