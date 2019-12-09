@@ -15,6 +15,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <algorithm>
 
 #define NUM_AIM_POLICY_PAGES			11
 #define NUM_AIM_POLICY_TOC_BUTTONS		9
@@ -158,7 +159,7 @@ static BOOLEAN     AimPoliciesSubPagesVisitedFlag[NUM_AIM_POLICY_PAGES];
 
 void EnterInitAimPolicies()
 {
-	memset( &AimPoliciesSubPagesVisitedFlag, 0, NUM_AIM_POLICY_PAGES);
+	std::fill_n(AimPoliciesSubPagesVisitedFlag, NUM_AIM_POLICY_PAGES, 0);
 }
 
 
