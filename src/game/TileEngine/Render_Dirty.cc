@@ -153,7 +153,7 @@ BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags const uiFlags, INT16 sLe
 	sBottom -= uiBottomSkip;
 
 	BACKGROUND_SAVE* const b = GetFreeBackgroundBuffer();
-	memset(b, 0, sizeof(*b));
+	*b = BACKGROUND_SAVE{};
 
 	const UINT32 uiBufSize = (sRight - sLeft) * (sBottom - sTop);
 	if (uiBufSize == 0) return NO_BGND_RECT;
