@@ -33,6 +33,9 @@
 #include "policy/GamePolicy.h"
 #include "Logger.h"
 
+#include <algorithm>
+#include <iterator>
+
 #define BOBBYR_GRID_PIC_WIDTH		118
 #define BOBBYR_GRID_PIC_HEIGHT		69
 
@@ -203,7 +206,7 @@ static MOUSE_REGION gSelectedTitleImageLinkRegion;
 
 void GameInitBobbyRGuns()
 {
-	memset(&BobbyRayPurchases, 0, MAX_PURCHASE_AMOUNT);
+	std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
 }
 
 
@@ -485,7 +488,7 @@ void DisplayItemInfo(UINT32 uiItemClass)
 	}
 
 	const ItemModel* items[BOBBYR_NUM_WEAPONS_ON_PAGE];
-	memset(items, 0, sizeof(items));
+	std::fill(std::begin(items), std::end(items), nullptr);
 	for(i=gusCurWeaponIndex; ((i<=gusLastItemIndex) && (ubCount < 4)); i++)
 	{
 		if( uiItemClass == BOBBYR_USED_ITEMS )
