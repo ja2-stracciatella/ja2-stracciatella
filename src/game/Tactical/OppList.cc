@@ -54,6 +54,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <algorithm>
+#include <iterator>
+
 #define WE_SEE_WHAT_MILITIA_SEES_AND_VICE_VERSA
 
 
@@ -587,7 +590,7 @@ void CheckHostileOrSayQuoteList( void )
 			// unpause all AI
 			UnPauseAI();
 			// reset the list
-			memset(gShouldBecomeHostileOrSayQuote, 0, sizeof(gShouldBecomeHostileOrSayQuote));
+			std::fill(std::begin(gShouldBecomeHostileOrSayQuote), std::end(gShouldBecomeHostileOrSayQuote), nullptr);
 			gubNumShouldBecomeHostileOrSayQuote = 0;
 			//and return/go into combat
 			if ( !(gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -2238,8 +2241,14 @@ void InitOpponentKnowledgeSystem(void)
 {
 	INT32 iTeam, cnt, cnt2;
 
-	memset(gbSeenOpponents,0,sizeof(gbSeenOpponents));
-	memset(gbPublicOpplist,NOT_HEARD_OR_SEEN,sizeof(gbPublicOpplist));
+	for (auto& i : gbSeenOpponents)
+	{
+		std::fill(std::begin(i), std::end(i), 0);
+	}
+	for (auto& i : gbPublicOpplist)
+	{
+		std::fill(std::begin(i), std::end(i), NOT_HEARD_OR_SEEN);
+	}
 
 	for (iTeam=0; iTeam < MAXTEAMS; iTeam++)
 	{
@@ -2275,10 +2284,10 @@ void InitOpponentKnowledgeSystem(void)
 
 void InitSoldierOppList(SOLDIERTYPE& s)
 {
-	memset(s.bOppList, NOT_HEARD_OR_SEEN, sizeof(s.bOppList));
+	std::fill(std::begin(s.bOppList), std::end(s.bOppList), NOT_HEARD_OR_SEEN);
 	s.bOppCnt = 0;
 	ResetLastKnownLocs(s);
-	memset(gbSeenOpponents[s.ubID], 0, MAXMERCS);
+	std::fill_n(gbSeenOpponents[s.ubID], MAXMERCS, 0);
 }
 
 
@@ -4335,7 +4344,7 @@ void VerifyAndDecayOpplist(SOLDIERTYPE *pSoldier)
 	// if soldier is unconscious, make sure his opplist is wiped out & bail out
 	if (pSoldier->bLife < OKLIFE)
 	{
-		memset(pSoldier->bOppList,NOT_HEARD_OR_SEEN,sizeof(pSoldier->bOppList));
+		std::fill(std::begin(pSoldier->bOppList), std::end(pSoldier->bOppList), NOT_HEARD_OR_SEEN);
 		pSoldier->bOppCnt = 0;
 		return;
 	}
@@ -4434,7 +4443,7 @@ void DecayIndividualOpplist(SOLDIERTYPE *pSoldier)
 			}
 		}
 
-		memset(pSoldier->bOppList,NOT_HEARD_OR_SEEN,sizeof(pSoldier->bOppList));
+		std::fill(std::begin(pSoldier->bOppList), std::end(pSoldier->bOppList), NOT_HEARD_OR_SEEN);
 		pSoldier->bOppCnt = 0;
 		return;
 	}
