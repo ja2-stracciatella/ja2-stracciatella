@@ -517,7 +517,7 @@ void QuestDebugScreenInit()
 	//
 	//Set the Npc List box
 	//
-	memset( &gNpcListBox, 0, sizeof( SCROLL_BOX ) );
+	gNpcListBox = SCROLL_BOX{};
 	gNpcListBox.DisplayFunction								= DisplaySelectedNPC;													//	The function to display the entries
 
 	gNpcListBox.usScrollPosX									= QUEST_DBS_SELECTED_NPC_BUTN_X;
@@ -542,7 +542,7 @@ void QuestDebugScreenInit()
 	//
 	//Set the Item List box
 	//
-	memset( &gItemListBox, 0, sizeof( SCROLL_BOX ) );
+	gItemListBox = SCROLL_BOX{};
 	gItemListBox.DisplayFunction									= DisplaySelectedItem;													//	The function to display the entries
 
 	gItemListBox.usScrollPosX										= QUEST_DBS_SELECTED_ITEM_BUTN_X;
@@ -2420,7 +2420,7 @@ static void AddNPCToGridNo(INT32 iGridNo)
 {
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 
-	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
+	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam				= CIV_TEAM;
 	MercCreateStruct.ubProfile		= (UINT8)gpActiveListBox->sCurSelectedItem;
 	MercCreateStruct.sSectorX			= gWorldSectorX;
@@ -2847,7 +2847,7 @@ static void RefreshAllNPCInventory(void)
 			for ( usItemCnt = 0; usItemCnt< NUM_INV_SLOTS; usItemCnt++ )
 			{
 				//null out the items in the npc inventory
-				memset(&s->inv[usItemCnt], 0, sizeof(s->inv[usItemCnt]));
+				s->inv[usItemCnt] = OBJECTTYPE{};
 
 				MERCPROFILESTRUCT const& p = GetProfile(s->ubProfile);
 				if (p.inv[usItemCnt] != NOTHING)
