@@ -177,7 +177,7 @@ FACETYPE& InitFace(const ProfileID id, SOLDIERTYPE* const s, const UINT32 uiInit
 	sprintf(ImageFile, face_file, face_id);
 	SGPVObject* const vo = AddVideoObjectFromFile(ImageFile);
 
-	memset(&f, 0, sizeof(f));
+	f = FACETYPE{};
 	f.uiFlags               = uiInitFlags;
 	f.fAllocated            = TRUE;
 	f.fDisabled             = TRUE; // default to off!
