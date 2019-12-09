@@ -38,6 +38,9 @@
 
 #include "Soldier.h"
 
+#include <algorithm>
+#include <iterator>
+
 // max number of merc faces per row in autobandage box
 #define NUMBER_MERC_FACES_AUTOBANDAGE_BOX 4
 
@@ -829,7 +832,7 @@ static void AddFacesToAutoBandageBox(void)
 	INT32 iNumberOfDoctors = 0;
 
 	// reset
-	memset(&giAutoBandagesSoldierFaces, 0, sizeof(giAutoBandagesSoldierFaces));
+	std::fill(std::begin(giAutoBandagesSoldierFaces), std::end(giAutoBandagesSoldierFaces), nullptr);
 
 	for( iCounter = 0; iCounter < MAX_CHARACTER_COUNT; iCounter++ )
 	{
