@@ -3462,7 +3462,7 @@ INT16 FindNearestAvailableGridNoForItem( INT16 sSweetGridNo, INT8 ubRadius )
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	memset( &soldier, 0, sizeof( SOLDIERTYPE ) );
+	soldier = SOLDIERTYPE{};
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
