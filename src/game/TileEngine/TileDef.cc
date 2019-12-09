@@ -65,7 +65,7 @@ void CreateTileDatabase()
 		for (cnt2 = 0; cnt2 < NumRegions; ++cnt2)
 		{
 			TILE_ELEMENT TileElement;
-			memset(&TileElement, 0, sizeof(TileElement));
+			TileElement = TILE_ELEMENT{};
 			TileElement.usRegionIndex = (UINT16)cnt2;
 			TileElement.hTileSurface	= TileSurf->vo;
 			TileElement.sBuddyNum			= -1;
@@ -126,7 +126,7 @@ void CreateTileDatabase()
 		for (; cnt2 < gNumTilesPerType[cnt1]; ++cnt2)
 		{
 			TILE_ELEMENT TileElement;
-			memset(&TileElement, 0, sizeof(TileElement));
+			TileElement = TILE_ELEMENT{};
 			TileElement.usRegionIndex  = 0;
 			TileElement.hTileSurface   = TileSurf->vo;
 			TileElement.fType          = (UINT16)TileSurf->fType;
