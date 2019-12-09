@@ -758,7 +758,7 @@ void StartCivQuote( SOLDIERTYPE *pCiv )
 
 void InitCivQuoteSystem( )
 {
-	memset( &gCivQuoteData, 0, sizeof( gCivQuoteData ) );
+	gCivQuoteData = QUOTE_SYSTEM_STRUCT{};
 	gCivQuoteData.bActive = FALSE;
 	gCivQuoteData.video_overlay = NULL;
 	gCivQuoteData.dialogue_box  = 0;
