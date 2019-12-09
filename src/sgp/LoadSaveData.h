@@ -1,10 +1,12 @@
 #ifndef LOADSAVEDATA_H
 #define LOADSAVEDATA_H
 
-#include <string_theory/string>
-
 #include "Types.h"
 #include "IEncodingCorrector.h"
+
+#include <string_theory/string>
+
+#include <algorithm>
 
 #define EXTR_STR(S, D, Size)  memcpy((D), (S), Size); (S) += (Size);
 #define EXTR_BOOLA(S, D, Size) memcpy((D), (S), Size); (S) += (Size);
@@ -146,10 +148,10 @@ protected:
 #define INJ_FLOAT(D, S)  *(  FLOAT*)(D) = (S); (D) += sizeof(FLOAT);
 #define INJ_DOUBLE(D, S) *( DOUBLE*)(D) = (S); (D) += sizeof(DOUBLE);
 #define INJ_PTR(D, S) INJ_SKIP(D, 4)
-#define INJ_SKIP(D, Size) memset(D, 0, Size); (D) += Size;
-#define INJ_SKIP_I16(D)   memset(D, 0, 2);    (D) += 2;
-#define INJ_SKIP_I32(D)   memset(D, 0, 4);    (D) += 4;
-#define INJ_SKIP_U8(D)    memset(D, 0, 1);    (D) += 1;
+#define INJ_SKIP(D, Size) std::fill_n(D, Size, 0); (D) += Size;
+#define INJ_SKIP_I16(D)   std::fill_n(D, 2, 0);    (D) += 2;
+#define INJ_SKIP_I32(D)   std::fill_n(D, 4, 0);    (D) += 4;
+#define INJ_SKIP_U8(D)    std::fill_n(D, 1, 0);    (D) += 1;
 #define INJ_SOLDIER(D, S) *(SoldierID*)(D) = Soldier2ID((S)); (D) += sizeof(SoldierID);
 #define INJ_VEC3(D, S) INJ_FLOAT(D, (S).x); INJ_FLOAT(D, (S).y); INJ_FLOAT(D, (S).z);
 
