@@ -20,6 +20,9 @@
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 
+#include <algorithm>
+#include <iterator>
+
 // To reduce memory fragmentation from frequent MemRealloc(), we allocate memory for more than one special slot each
 // time we run out of space.  Odds are that if we need one, we'll need another soon.
 #define SPECIAL_ITEMS_ALLOCED_AT_ONCE			3
@@ -84,10 +87,13 @@ static void InitializeOneArmsDealer(ArmsDealerID);
 void InitAllArmsDealers()
 {
 	//Memset all dealers' status tables to zeroes
-	memset( gArmsDealerStatus, 0, sizeof( gArmsDealerStatus ) );
+	std::fill(std::begin(gArmsDealerStatus), std::end(gArmsDealerStatus), ARMS_DEALER_STATUS{});
 
 	//Memset all dealers' inventory tables to zeroes
-	memset( gArmsDealersInventory, 0, sizeof( gArmsDealersInventory ) );
+	for (auto& inventory : gArmsDealersInventory)
+	{
+		std::fill(std::begin(inventory), std::end(inventory), DEALER_ITEM_HEADER{});
+	}
 
 	//Initialize the initial status & inventory for each of the arms dealers
 	for (ArmsDealerID ubArmsDealer = ARMS_DEALER_FIRST; ubArmsDealer < NUM_ARMS_DEALERS; ++ubArmsDealer)
@@ -109,8 +115,8 @@ static void InitializeOneArmsDealer(ArmsDealerID const ubArmsDealer)
 	UINT8  ubNumItems=0;
 
 
-	memset( &( gArmsDealerStatus[ ubArmsDealer ] ), 0, sizeof( ARMS_DEALER_STATUS ) );
-	memset( &( gArmsDealersInventory[ ubArmsDealer ] ), 0, sizeof( DEALER_ITEM_HEADER ) * MAXITEMS );
+	gArmsDealerStatus[ ubArmsDealer ] = ARMS_DEALER_STATUS{};
+	std::fill_n(gArmsDealersInventory[ ubArmsDealer ], MAXITEMS, DEALER_ITEM_HEADER{});
 
 
 	//Reset the arms dealers cash on hand to the default initial value
@@ -1080,7 +1086,7 @@ static void ResizeSpecialItemArray(DEALER_ITEM_HEADER* const pDealerItem, UINT8 
 	if ( ubElementsNeeded > pDealerItem->ubElementsAlloced)
 	{
 		// zero them out (they're inactive until an item is actually added)
-		memset( &(pDealerItem->SpecialItem[pDealerItem->ubElementsAlloced]), 0, sizeof( DEALER_SPECIAL_ITEM ) * ( ubElementsNeeded - pDealerItem->ubElementsAlloced) );
+		std::fill_n(pDealerItem->SpecialItem + pDealerItem->ubElementsAlloced, ubElementsNeeded - pDealerItem->ubElementsAlloced, DEALER_SPECIAL_ITEM{});
 	}
 
 	pDealerItem->ubElementsAlloced = ubElementsNeeded;
@@ -1389,7 +1395,7 @@ void AddObjectToArmsDealerInventory(ArmsDealerID const ubArmsDealer, OBJECTTYPE*
 
 
 	// nuke the original object to prevent any possible item duplication
-	memset( pObject, 0, sizeof( OBJECTTYPE ) );
+	*pObject = OBJECTTYPE{};
 }
 
 
@@ -1676,7 +1682,7 @@ void RemoveSpecialItemFromArmsDealerInventoryAtElement(ArmsDealerID const ubArms
 	Assert(gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[ubElement].fActive);
 
 	// wipe it out (turning off fActive)
-	memset( &( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ] ), 0, sizeof( DEALER_SPECIAL_ITEM ) );
+	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ] = DEALER_SPECIAL_ITEM{};
 
 	// one fewer item remains...
 	gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems--;
@@ -2128,7 +2134,7 @@ void SetSpecialItemInfoToDefaults( SPECIAL_ITEM_INFO *pSpclItemInfo )
 {
 	UINT8 ubCnt;
 
-	memset( pSpclItemInfo, 0, sizeof( SPECIAL_ITEM_INFO ) );
+	*pSpclItemInfo = SPECIAL_ITEM_INFO{};
 
 	pSpclItemInfo->bItemCondition = 100;
 	pSpclItemInfo->ubImprintID = NO_PROFILE;
@@ -2146,7 +2152,7 @@ void SetSpecialItemInfoFromObject(SPECIAL_ITEM_INFO* pSpclItemInfo, const OBJECT
 	UINT8 ubCnt;
 
 
-	memset(pSpclItemInfo, 0, sizeof( SPECIAL_ITEM_INFO ) );
+	*pSpclItemInfo = SPECIAL_ITEM_INFO{};
 
 
 	if( GCM->getItem(pObject->usItem)->getItemClass() == IC_AMMO )
