@@ -16,7 +16,7 @@ STRATEGIC_STATUS gStrategicStatus;
 
 void InitStrategicStatus(void)
 {
-	memset( &gStrategicStatus, 0, sizeof( STRATEGIC_STATUS ) );
+	gStrategicStatus = STRATEGIC_STATUS{};
 	//Add special non-zero start conditions here...
 
 	InitArmyGunTypes();
