@@ -159,7 +159,7 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 
 	HandleMercStatsForChangesInFace( );
 
-	memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
+	HireMercStruct = MERC_HIRE_STRUCT{};
 
 	HireMercStruct.ubProfileID = ( UINT8 )( PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId ) ;
 
