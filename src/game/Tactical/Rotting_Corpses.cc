@@ -460,7 +460,7 @@ try
 	AnimationLevel const ubLevelID = (c->def.bLevel == 0 ? ANI_STRUCT_LEVEL : ANI_ONROOF_LEVEL);
 
 	ANITILE_PARAMS AniParams;
-	memset(&AniParams, 0, sizeof(AniParams));
+	AniParams = ANITILE_PARAMS{};
 	AniParams.sGridNo        = c->def.sGridNo;
 	AniParams.ubLevelID      = ubLevelID;
 	AniParams.sDelay         = 150;
@@ -627,7 +627,7 @@ BOOLEAN TurnSoldierIntoCorpse(SOLDIERTYPE& s)
 	}
 
 	// Setup some values!
-	memset( &Corpse, 0, sizeof( Corpse ) );
+	Corpse = ROTTING_CORPSE_DEFINITION{};
 	Corpse.ubBodyType = s.ubBodyType;
 	Corpse.sGridNo    = s.sGridNo;
 	Corpse.bLevel     = s.bLevel;
@@ -810,7 +810,7 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 	if (GetRoom(pCorpse->def.sGridNo) != NO_ROOM) return;
 
 	// Put him flying over corpse pisition
-	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
+	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile = NO_PROFILE;
 	MercCreateStruct.sSectorX = gWorldSectorX;
 	MercCreateStruct.sSectorY = gWorldSectorY;
@@ -1053,7 +1053,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 	if ( GridNoOnScreen( sBaseGridNo ) )
 	{
 		// Add explosion
-		memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
+		AniParams = ANITILE_PARAMS{};
 		AniParams.sGridNo = sBaseGridNo;
 		AniParams.ubLevelID = ANI_STRUCT_LEVEL;
 		AniParams.sDelay = (INT16)( 80 );
@@ -1118,7 +1118,7 @@ INT16 FindNearestAvailableGridNoForCorpse( ROTTING_CORPSE_DEFINITION *pDef, INT8
 
 	//create dummy soldier, and use the pathing to determine which nearby slots are
 	//reachable.
-	memset( &soldier, 0, sizeof( SOLDIERTYPE ) );
+	soldier = SOLDIERTYPE{};
 	soldier.bTeam = 1;
 	soldier.sGridNo = sSweetGridNo;
 
