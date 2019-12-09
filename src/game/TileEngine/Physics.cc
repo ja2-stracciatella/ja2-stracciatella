@@ -1,6 +1,3 @@
-#include <math.h>
-#include <stdexcept>
-
 #include "Directories.h"
 #include "Font_Control.h"
 #include "Handle_Items.h"
@@ -42,6 +39,10 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"
+
+#include <algorithm>
+#include <math.h>
+#include <stdexcept>
 
 #define NO_TEST_OBJECT				0
 #define TEST_OBJECT_NO_COLLISIONS		1
@@ -132,7 +133,7 @@ static void RecountObjectSlots(void)
 REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, float const dLifeLength, float const xPos, float const yPos, float const zPos, float const xForce, float const yForce, float const zForce, SOLDIERTYPE* const owner, UINT8 const ubActionCode, SOLDIERTYPE* const target)
 {
 	REAL_OBJECT* const o = GetFreeObjectSlot();
-	memset(o, 0, sizeof(*o));
+	*o = REAL_OBJECT{};
 
 	o->Obj = *pGameObj;
 
@@ -901,7 +902,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 					pObject->fInWater = TRUE;
 
 					// Make ripple
-					memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
+					AniParams = ANITILE_PARAMS{};
 					AniParams.sGridNo = sGridNo;
 					AniParams.ubLevelID = ANI_STRUCT_LEVEL;
 					AniParams.usTileIndex = THIRDMISS1;
@@ -1112,8 +1113,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 			{
 				if ( sNewGridNo != pObject->sGridNo )
 				{
-					ANITILE_PARAMS	AniParams;
-					memset(&AniParams, 0, sizeof(AniParams));
+					ANITILE_PARAMS	AniParams{};
 					AniParams.sGridNo = (INT16)sNewGridNo;
 					AniParams.ubLevelID = ANI_STRUCT_LEVEL;
 					AniParams.sDelay = (INT16)( 100 + PreRandom( 100 ) );
@@ -2280,7 +2280,7 @@ void LoadPhysicsTableFromSavedGameFile(HWFILE const hFile)
 	UINT16 usCnt=0;
 
 	//make sure the objects are not allocated
-	memset( ObjectSlots, 0, NUM_OBJECT_SLOTS * sizeof( REAL_OBJECT ) );
+	std::fill_n(ObjectSlots, NUM_OBJECT_SLOTS, REAL_OBJECT{});
 
 	//Load the number of REAL_OBJECTs in the array
 	FileRead(hFile, &guiNumObjectSlots, sizeof(UINT32));
