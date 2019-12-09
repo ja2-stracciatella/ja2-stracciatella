@@ -151,7 +151,7 @@ TEST(SaveLoadGameTest, savedGameHeaderValidityCheck)
 	SAVED_GAME_HEADER header;
 
 	// empty header is not valid
-	memset(&header, 0, sizeof(header));
+	header = SAVED_GAME_HEADER{};
 	EXPECT_EQ(isValidSavedGameHeader(header), false);
 
 	// parse vanilla header with vanilla parser; should be valid
