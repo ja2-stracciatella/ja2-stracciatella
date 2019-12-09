@@ -70,7 +70,7 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 
 	//UINT16							usLoop;
 
-	memset(&Header, 0, sizeof(Header));
+	Header = STCIHeader{};
 
 	uiOriginalSize = sWidth * sHeight * (8 / 8);
 
