@@ -225,7 +225,7 @@ void GameInitEditorMercsInfo()
 	//Initialize the placement list
 	InitSoldierInitList();
 	gMapInformation.ubNumIndividuals = 0;
-	memset( &gCurrSchedule, 0, sizeof( SCHEDULENODE ) );
+	gCurrSchedule = SCHEDULENODE{};
 	for( i = 0; i < 4; i++ )
 	{
 		gCurrSchedule.usTime[i] = 0xffff;
@@ -326,7 +326,7 @@ void AddMercToWorld( INT32 iMapIndex )
 {
 	INT32 i;
 
-	memset( &gTempBasicPlacement, 0, sizeof( BASIC_SOLDIERCREATE_STRUCT ) );
+	gTempBasicPlacement = BASIC_SOLDIERCREATE_STRUCT{};
 
 	//calculate specific information based on the team.
 	SoldierBodyType body = BODY_RANDOM;
@@ -1272,7 +1272,7 @@ void ExtractAndUpdateMercSchedule()
 	if( !gpSelected )
 		return;
 	//extract all of the fields into a temp schedulenode.
-	//memset( &gScheduleNode, 0, sizeof( SCHEDULENODE ) );
+	//gScheduleNode = SCHEDULENODE{};
 	for( i = 0; i < 4; i++ )
 	{
 		gCurrSchedule.usTime[i]	= GetExclusive24HourTimeValueFromField( (UINT8)(i+1) );
@@ -2776,7 +2776,7 @@ void FindScheduleGridNo( UINT8 ubScheduleData )
 void ClearCurrentSchedule()
 {
 	UINT8 i;
-	memset( &gCurrSchedule, 0, sizeof( SCHEDULENODE ) );
+	gCurrSchedule = SCHEDULENODE{};
 	for( i = 0; i < 4; i++ )
 	{
 		iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SetUserData(0);
