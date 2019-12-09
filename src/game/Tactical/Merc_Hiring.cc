@@ -83,7 +83,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 	}
 
 	SOLDIERCREATE_STRUCT MercCreateStruct;
-	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
+	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile             = pid;
 	MercCreateStruct.sSectorX              = h.sSectorX;
 	MercCreateStruct.sSectorY              = h.sSectorY;
@@ -104,7 +104,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 		{
 			// OK, give this item to our merc!
 			OBJECTTYPE o;
-			memset(&o, 0, sizeof(o));
+			o = OBJECTTYPE{};
 			o.usItem            = LETTER;
 			o.ubNumberOfObjects = 1;
 			o.bStatus[0]        = 100;
