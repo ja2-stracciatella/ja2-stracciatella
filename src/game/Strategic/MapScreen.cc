@@ -96,6 +96,9 @@
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 
+#include <algorithm>
+#include <iterator>
+
 #define MAX_SORT_METHODS					6
 
 // Cursors
@@ -5913,7 +5916,7 @@ static void RebuildWayPointsForAllSelectedCharsGroups(void)
 	UINT8 ubGroupId;
 
 
-	memset( fGroupIDRebuilt, FALSE, sizeof( fGroupIDRebuilt ) );
+	std::fill(std::begin(fGroupIDRebuilt), std::end(fGroupIDRebuilt), FALSE);
 
 	CFOR_EACH_SELECTED_IN_CHAR_LIST(c)
 	{
