@@ -73,6 +73,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <algorithm>
+#include <iterator>
 
 // various reason an assignment can be aborted before completion
 enum AssignmentAbortReason
@@ -255,7 +257,10 @@ BOOLEAN IsSoldierCloseEnoughToSAMControlPanel( SOLDIERTYPE *pSoldier );
 void InitSectorsWithSoldiersList( void )
 {
 	// init list of sectors
-	memset( &fSectorsWithSoldiers, 0, sizeof( fSectorsWithSoldiers ) );
+	for (auto& i : fSectorsWithSoldiers)
+	{
+		std::fill(std::begin(i), std::end(i), 0);
+	}
 }
 
 
@@ -2086,7 +2091,7 @@ static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const I
 
 	// init trainer list
 	const SOLDIERTYPE* pStatTrainerList[NUM_TRAINABLE_STATS]; // can't have more "best" trainers than trainable stats
-	memset( pStatTrainerList, 0, sizeof( pStatTrainerList ) );
+	std::fill(std::begin(pStatTrainerList), std::end(pStatTrainerList), nullptr);
 
 	// build list of teammate trainers in this sector.
 
@@ -2176,7 +2181,7 @@ static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const I
 	if (CanSectorContainMilita(sMapX, sMapY, bZ))
 	{
 		// init town trainer list
-		memset( TownTrainer, 0, sizeof( TownTrainer ) );
+		std::fill(std::begin(TownTrainer), std::end(TownTrainer), TOWN_TRAINER_TYPE{});
 		ubTownTrainers = 0;
 
 		// build list of all the town trainers in this sector and their training pts
