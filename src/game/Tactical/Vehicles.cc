@@ -117,7 +117,7 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 	VEHICLETYPE* const v = &pVehicleList[vid];
 
 	// found a slot
-	memset(v, 0, sizeof(*v));
+	*v = VEHICLETYPE{};
 	v->ubMovementGroup = 0;
 	v->sSectorX        = sMapX;
 	v->sSectorY        = sMapY;
@@ -151,7 +151,7 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 void RemoveVehicleFromList(VEHICLETYPE& v)
 {
 	v.pMercPath = ClearStrategicPathList(v.pMercPath, 0);
-	memset(&v, 0, sizeof(v));
+	v = VEHICLETYPE{};
 }
 
 
