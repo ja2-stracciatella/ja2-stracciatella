@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Animation_Data.h"
 #include "Buffer.h"
 #include "Directories.h"
@@ -63,6 +61,10 @@
 #include "GameInstance.h"
 #include "Logger.h"
 
+#include <algorithm>
+#include <iterator>
+#include <stdexcept>
+
 #define SET_MOVEMENTCOST( a, b, c, d )		( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
 #define FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
 #define SET_CURRMOVEMENTCOST( a, b )		SET_MOVEMENTCOST( usGridNo, a, 0, b )
@@ -90,7 +92,7 @@ static INT8 gbNewTileSurfaceLoaded[NUMBEROFTILETYPES];
 
 void SetAllNewTileSurfacesLoaded( BOOLEAN fNew )
 {
-	memset( gbNewTileSurfaceLoaded, fNew, sizeof( gbNewTileSurfaceLoaded ) );
+	std::fill(std::begin(gbNewTileSurfaceLoaded), std::end(gbNewTileSurfaceLoaded), fNew);
 }
 
 
@@ -157,16 +159,16 @@ void InitializeWorld()
 	//ProcessTilesetNamesForBPP();
 
 	// ATE: MEMSET LOG HEIGHT VALUES
-	memset( gTileTypeLogicalHeight, 1, sizeof( gTileTypeLogicalHeight ) );
+	std::fill(std::begin(gTileTypeLogicalHeight), std::end(gTileTypeLogicalHeight), 1);
 
 	// Memset tile database
-	memset( gTileDatabase, 0, sizeof( gTileDatabase ) );
+	std::fill(std::begin(gTileDatabase), std::end(gTileDatabase), TILE_ELEMENT{});
 
 	// Init surface list
-	memset( gTileSurfaceArray, 0, sizeof( gTileSurfaceArray ) );
+	std::fill(std::begin(gTileSurfaceArray), std::end(gTileSurfaceArray), nullptr);
 
 	// Init default surface list
-	memset( gbDefaultSurfaceUsed, 0, sizeof( gbDefaultSurfaceUsed ) );
+	std::fill(std::begin(gbDefaultSurfaceUsed), std::end(gbDefaultSurfaceUsed), 0);
 
 
 	// Initialize world data
@@ -270,7 +272,7 @@ void BuildTileShadeTables()
 	{ /* Because we're tweaking the RGB values in the text file, always force
 		 * rebuild the shadetables so that the user can tweak them in the same exe
 		 * session. */
-		memset(gbNewTileSurfaceLoaded, 1, sizeof(gbNewTileSurfaceLoaded));
+		std::fill(std::begin(gbNewTileSurfaceLoaded), std::end(gbNewTileSurfaceLoaded), 1);
 	}
 
 	for (UINT32 i = 0; i != NUMBEROFTILETYPES; ++i)
@@ -1076,8 +1078,6 @@ void RecompileLocalMovementCosts( INT16 sCentreGridNo )
 		for( sGridX = sCentreGridX - LOCAL_RADIUS; sGridX < sCentreGridX + LOCAL_RADIUS; sGridX++ )
 		{
 			usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-			// times 2 for 2 levels, times 2 for UINT16s
-//			memset( &(gubWorldMovementCosts[usGridNo]), 0, MAXDIR * 2 * 2 );
 			if (isValidGridNo(usGridNo))
 			{
 				for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
@@ -1127,8 +1127,6 @@ void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius )
 			for( sGridX = sCentreGridX - bRadius; sGridX < sCentreGridX + bRadius; sGridX++ )
 			{
 				usGridNo = MAPROWCOLTOPOS( sGridY, sGridX );
-				// times 2 for 2 levels, times 2 for UINT16s
-	//			memset( &(gubWorldMovementCosts[usGridNo]), 0, MAXDIR * 2 * 2 );
 				if (isValidGridNo(usGridNo))
 				{
 					for( bDirLoop = 0; bDirLoop < MAXDIR; bDirLoop++)
@@ -1278,7 +1276,13 @@ void CompileWorldMovementCosts( )
 {
 	UINT16					usGridNo;
 
-	memset( gubWorldMovementCosts, 0, sizeof( gubWorldMovementCosts ) );
+	for (auto& i : gubWorldMovementCosts)
+	{
+		for (auto& j : i)
+		{
+			std::fill(std::begin(j), std::end(j), 0);
+		}
+	}
 
 	CompileWorldTerrainIDs();
  	for( usGridNo = 0; usGridNo < WORLD_MAX; usGridNo++ )
@@ -2303,7 +2307,7 @@ try
 		gubMaxRoomNumber = max_room_no;
 	}
 
-	memset(gubWorldRoomHidden, TRUE, sizeof(gubWorldRoomHidden));
+	std::fill(std::begin(gubWorldRoomHidden), std::end(gubWorldRoomHidden), TRUE);
 
 	SetRelativeStartAndEndPercentage(0, 59, 61, L"Loading items...");
 	RenderProgressBar(0, 100);
@@ -2533,7 +2537,7 @@ void TrashWorld(void)
 	}
 
 	// Zero world
-	memset(gpWorldLevelData, 0, WORLD_MAX * sizeof(*gpWorldLevelData));
+	std::fill_n(gpWorldLevelData, WORLD_MAX, MAP_ELEMENT{});
 
 	// Set some default flags
 	FOR_EACH_WORLD_TILE(i)
@@ -2581,7 +2585,7 @@ void LoadMapTileset(TileSetID const id)
 	}
 
 	// Init tile surface used values
-	memset(gbNewTileSurfaceLoaded, 0, sizeof(gbNewTileSurfaceLoaded));
+	std::fill(std::begin(gbNewTileSurfaceLoaded), std::end(gbNewTileSurfaceLoaded), 0);
 
 	if (id == giCurrentTilesetID) return;
 
