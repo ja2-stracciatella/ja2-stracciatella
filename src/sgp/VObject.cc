@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Debug.h"
 #include "HImage.h"
 #include "MemMan.h"
@@ -7,6 +5,9 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 
+#include <algorithm>
+#include <iterator>
+#include <stdexcept>
 
 // ******************************************************************************
 //
@@ -37,7 +38,7 @@ SGPVObject::SGPVObject(SGPImage const* const img) :
 #endif
 	next_(gpVObjectHead)
 {
-	memset(&pShades[0], 0, sizeof(pShades));
+	std::fill(std::begin(pShades), std::end(pShades), nullptr);
 
 	if (!(img->fFlags & IMAGE_TRLECOMPRESSED))
 	{
