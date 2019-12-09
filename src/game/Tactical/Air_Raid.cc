@@ -266,7 +266,7 @@ BOOLEAN BeginAirRaid( )
 	gfAirRaidHasHadTurn = FALSE;
 
 	SOLDIERTYPE& s = GetMan(MAX_NUM_SOLDIERS - 1);
-	memset(&s, 0, sizeof(s));
+	s = SOLDIERTYPE{};
 	s.bLevel              = 0;
 	s.bTeam               = 1;
 	s.bSide               = 1;
