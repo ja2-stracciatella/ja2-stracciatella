@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Campaign_Types.h"
 #include "Directories.h"
 #include "Font.h"
@@ -39,6 +37,10 @@
 #include "GameInstance.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
+
+#include <algorithm>
+#include <iterator>
+#include <stdexcept>
 
 #define INVENTORY_BOX_X (399 + STD_SCREEN_X)
 #define INVENTORY_BOX_Y (205 + STD_SCREEN_Y)
@@ -1602,9 +1604,9 @@ static INT32 GetNumberOfPastMercsOnPlayersTeam(void)
 static void InitPastCharactersList(void)
 {
 	// inits the past characters list
-	memset(&LaptopSaveInfo.ubDeadCharactersList,  -1, sizeof(LaptopSaveInfo.ubDeadCharactersList));
-	memset(&LaptopSaveInfo.ubLeftCharactersList,  -1, sizeof(LaptopSaveInfo.ubLeftCharactersList));
-	memset(&LaptopSaveInfo.ubOtherCharactersList, -1, sizeof(LaptopSaveInfo.ubOtherCharactersList));
+	std::fill(std::begin(LaptopSaveInfo.ubDeadCharactersList), std::end(LaptopSaveInfo.ubDeadCharactersList), -1);
+	std::fill(std::begin(LaptopSaveInfo.ubLeftCharactersList), std::end(LaptopSaveInfo.ubLeftCharactersList), -1);
+	std::fill(std::begin(LaptopSaveInfo.ubOtherCharactersList), std::end(LaptopSaveInfo.ubOtherCharactersList), -1);
 }
 
 
