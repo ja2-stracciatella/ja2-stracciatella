@@ -1,5 +1,6 @@
 #include "LoadSaveData.h"
 
+#include <algorithm>
 
 /** Encode wchar_t into UTF-16 and write to the buffer.
  * @param string        String to encode
@@ -14,7 +15,7 @@ void wchar_to_utf16(const wchar_t *string, void *outputBuf, size_t charsToWrite)
 		memcpy(outputBuf, data.c_str(), charsToCopy * 2);
 		if(charsToCopy < charsToWrite) // might not terminate with '\0'
 		{
-			memset(((char*)outputBuf) + charsToCopy * 2, 0, (charsToWrite-charsToCopy)*2);
+			std::fill_n(static_cast<char16_t*>(outputBuf) + charsToCopy, charsToWrite-charsToCopy, u'\0');
 		}
 	}
 }
