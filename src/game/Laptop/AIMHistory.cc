@@ -15,6 +15,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <algorithm>
+
 // Defines
 
 #define NUM_AIM_HISTORY_PAGES			5
@@ -95,7 +97,7 @@ enum AimHistoryTextLocations
 
 void EnterInitAimHistory()
 {
-	memset( &AimHistorySubPagesVisitedFlag, 0, NUM_AIM_HISTORY_PAGES);
+	std::fill_n(AimHistorySubPagesVisitedFlag, NUM_AIM_HISTORY_PAGES, 0);
 }
 
 
