@@ -2656,7 +2656,7 @@ static void ChangeSoldiersBodyType(SoldierBodyType const ubBodyType, BOOLEAN con
 			case INFANT_MONSTER:
 			case QUEENMONSTER:
 				sel->uiStatusFlags |= SOLDIER_MONSTER;
-				std::fill_n(sel->inv, NUM_INV_SLOTS, OBJECTTYPE{});
+				std::fill_n(sel->inv, static_cast<size_t>(NUM_INV_SLOTS), OBJECTTYPE{});
 				AssignCreatureInventory(sel);
 				CreateItem(CREATURE_YOUNG_MALE_SPIT, 100, &sel->inv[HANDPOS]);
 				break;

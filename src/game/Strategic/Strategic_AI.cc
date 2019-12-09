@@ -2896,8 +2896,8 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 	//are controlled by her, the desired number will be increased as well as the priority.  On the other
 	//hand, if she doesn't own those sectors, the values will be decreased instead.  All values are based off of
 	//the originals.
-	std::fill_n(ubOwned, NUM_ARMY_COMPOSITIONS, 0);
-	std::fill_n(ubTotal, NUM_ARMY_COMPOSITIONS, 0);
+	std::fill_n(ubOwned, static_cast<size_t>(NUM_ARMY_COMPOSITIONS), 0);
+	std::fill_n(ubTotal, static_cast<size_t>(NUM_ARMY_COMPOSITIONS), 0);
 
 	//Record the values required to calculate the percentage of each composition type that the queen controls.
 	for( i = 0; i < giGarrisonArraySize; i++ )

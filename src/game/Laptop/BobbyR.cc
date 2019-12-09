@@ -446,7 +446,7 @@ static void InitBobbyRayNewInventory(void)
 	UINT16	usBobbyrIndex = 0;
 
 
-	std::fill_n(LaptopSaveInfo.BobbyRayInventory, MAXITEMS, STORE_INVENTORY{});
+	std::fill_n(LaptopSaveInfo.BobbyRayInventory, static_cast<size_t>(MAXITEMS), STORE_INVENTORY{});
 
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
 	for( i = 0; i < MAXITEMS; i++ )

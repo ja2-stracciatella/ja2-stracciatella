@@ -116,7 +116,7 @@ static void InitializeOneArmsDealer(ArmsDealerID const ubArmsDealer)
 
 
 	gArmsDealerStatus[ ubArmsDealer ] = ARMS_DEALER_STATUS{};
-	std::fill_n(gArmsDealersInventory[ ubArmsDealer ], MAXITEMS, DEALER_ITEM_HEADER{});
+	std::fill_n(gArmsDealersInventory[ ubArmsDealer ], static_cast<size_t>(MAXITEMS), DEALER_ITEM_HEADER{});
 
 
 	//Reset the arms dealers cash on hand to the default initial value
