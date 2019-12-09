@@ -103,6 +103,9 @@
 #include "Soldier.h"
 #include "Logger.h"
 
+#include <algorithm>
+#include <iterator>
+
 #define RT_DELAY_BETWEEN_AI_HANDLING	50
 #define RT_AI_TIMESLICE			10
 
@@ -402,12 +405,12 @@ void ShutdownTacticalEngine(void)
 
 void InitOverhead()
 {
-	memset(MercSlots, 0, sizeof(MercSlots));
-	memset(AwaySlots, 0, sizeof(AwaySlots));
-	memset(Menptr,    0, sizeof(Menptr));
+	std::fill(std::begin(MercSlots), std::end(MercSlots), nullptr);
+	std::fill(std::begin(AwaySlots), std::end(AwaySlots), nullptr);
+	std::fill(std::begin(Menptr), std::end(Menptr), SOLDIERTYPE{});
 
 	TacticalStatusType& t = gTacticalStatus;
-	memset(&t, 0, sizeof(TacticalStatusType));
+	t = TacticalStatusType{};
 	t.uiFlags                 = 0x000000004; // TURNBASED, for save game compatibility
 	t.sSlideTarget            = NOWHERE;
 	t.uiTimeOfLastInput       = GetJA2Clock();
@@ -440,7 +443,7 @@ void InitOverhead()
 	// Reset cursor
 	gpItemPointer        = 0;
 	gpItemPointerSoldier = 0;
-	memset(gbInvalidPlacementSlot, 0, sizeof(gbInvalidPlacementSlot));
+	std::fill(std::begin(gbInvalidPlacementSlot), std::end(gbInvalidPlacementSlot), 0);
 
 	InitCivQuoteSystem();
 	ZeroAnimSurfaceCounts();
@@ -3902,7 +3905,7 @@ void CommonEnterCombatModeCode( )
 	//gTacticalStatus.ubAttackBusyCount = 0;
 
 	// Reset num enemies fought flag...
-	memset( &(gTacticalStatus.bNumFoughtInBattle), 0, MAXTEAMS );
+	std::fill_n(gTacticalStatus.bNumFoughtInBattle, MAXTEAMS, 0);
 	gTacticalStatus.ubLastBattleSectorX = (UINT8) gWorldSectorX;
 	gTacticalStatus.ubLastBattleSectorY = (UINT8) gWorldSectorY;
 	gTacticalStatus.fLastBattleWon      = FALSE;
