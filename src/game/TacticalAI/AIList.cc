@@ -9,8 +9,6 @@
  * (BLACK, then RED, then YELLOW, then GREEN)
  *
  */
-#include <stdexcept>
-
 #include "AIList.h"
 #include "Animation_Data.h"
 #include "Overhead.h"
@@ -19,6 +17,10 @@
 #include "AI.h"
 #include "OppList.h"
 #include "Interface.h"
+
+#include <algorithm>
+#include <iterator>
+#include <stdexcept>
 
 
 #define MAX_AI_PRIORITY 100
@@ -46,7 +48,7 @@ static void DeleteAIListEntry(AILIST* pEntry)
 
 static void ClearAIList()
 {
-	memset(gAIList, 0, sizeof(gAIList));
+	std::fill(std::begin(gAIList), std::end(gAIList), AILIST{});
 	gpFirstAIListEntry = 0;
 }
 
