@@ -586,7 +586,7 @@ SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE* const old_s, UINT8 const team)
 
 	// Create a new one.
 	SOLDIERCREATE_STRUCT c;
-	memset(&c, 0, sizeof(c));
+	c = SOLDIERCREATE_STRUCT{};
 	c.bTeam            = team;
 	c.ubProfile        = old_s->ubProfile;
 	c.bBodyType        = old_s->ubBodyType;
