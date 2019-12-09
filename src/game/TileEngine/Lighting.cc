@@ -14,8 +14,6 @@
 * Written by Derek Beland, April 14, 1997
 *
 ***************************************************************************************/
-#include <stdexcept>
-
 #include "Buffer.h"
 #include "HImage.h"
 #include "Overhead.h"
@@ -47,6 +45,10 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"
+
+#include <algorithm>
+#include <iterator>
+#include <stdexcept>
 
 #define MAX_LIGHT_TEMPLATES 32 // maximum number of light types
 
@@ -223,10 +225,10 @@ void InitLightingSystem(void)
 	LoadShadeTablesFromTextFile();
 
 	// init all light lists
-	memset(g_light_templates, 0, sizeof(g_light_templates));
+	std::fill(std::begin(g_light_templates), std::end(g_light_templates), LightTemplate{});
 
 	// init all light sprites
-	memset(LightSprites, 0, sizeof(LightSprites));
+	std::fill(std::begin(LightSprites), std::end(LightSprites), LIGHT_SPRITE{});
 
 	LightLoad("TRANSLUC.LHT");
 }
@@ -275,7 +277,7 @@ void LightReset(void)
 	}
 
 	// init all light sprites
-	memset(LightSprites, 0, sizeof(LightSprites));
+	std::fill(std::begin(LightSprites), std::end(LightSprites), LIGHT_SPRITE{});
 
 	LightLoad("TRANSLUC.LHT");
 
@@ -1947,7 +1949,7 @@ try
 {
 	LIGHT_SPRITE* const l = LightSpriteGetFree();
 
-	memset(l, 0, sizeof(LIGHT_SPRITE));
+	*l = LIGHT_SPRITE{};
 	l->iX          = WORLD_COLS + 1;
 	l->iY          = WORLD_ROWS + 1;
 
