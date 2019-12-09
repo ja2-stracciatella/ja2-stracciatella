@@ -104,6 +104,7 @@
 	#include "VObject.h"
 #endif
 
+#include <algorithm>
 
 static BOOLEAN gfFirstCycleMovementStarted = FALSE;
 
@@ -2655,7 +2656,7 @@ static void ChangeSoldiersBodyType(SoldierBodyType const ubBodyType, BOOLEAN con
 			case INFANT_MONSTER:
 			case QUEENMONSTER:
 				sel->uiStatusFlags |= SOLDIER_MONSTER;
-				memset(&sel->inv, 0, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
+				std::fill_n(sel->inv, NUM_INV_SLOTS, OBJECTTYPE{});
 				AssignCreatureInventory(sel);
 				CreateItem(CREATURE_YOUNG_MALE_SPIT, 100, &sel->inv[HANDPOS]);
 				break;
@@ -2787,7 +2788,7 @@ static void CreateNextCivType(void)
 	if (usMapPos == NOWHERE) return;
 
 	SOLDIERCREATE_STRUCT MercCreateStruct;
-	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
+	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile  = NO_PROFILE;
 	MercCreateStruct.sSectorX   = gWorldSectorX;
 	MercCreateStruct.sSectorY   = gWorldSectorY;
@@ -2865,7 +2866,7 @@ static void CreatePlayerControlledMonster(void)
 	if (usMapPos == NOWHERE) return;
 
 	SOLDIERCREATE_STRUCT MercCreateStruct;
-	memset(&MercCreateStruct, 0, sizeof(MercCreateStruct));
+	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile        = NO_PROFILE;
 	MercCreateStruct.sSectorX         = gWorldSectorX;
 	MercCreateStruct.sSectorY         = gWorldSectorY;
@@ -3309,7 +3310,7 @@ void HandleTBSwapHands()
 		if(pSoldier->inv[SECONDHANDPOS].usItem==NOTHING)
 		{
 			pSoldier->inv[SECONDHANDPOS]=pSoldier->inv[HANDPOS];
-			memset(&pSoldier->inv[HANDPOS], 0, sizeof(OBJECTTYPE));
+			pSoldier->inv[HANDPOS] = OBJECTTYPE{};
 		}
 		else SwapHandItems( pSoldier );
 		ReLoadSoldierAnimationDueToHandItemChange(pSoldier, usOldItem, pSoldier->inv[HANDPOS].usItem);
