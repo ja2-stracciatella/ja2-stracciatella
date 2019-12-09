@@ -313,7 +313,7 @@ static GUIButtonRef giHelpScreenScrollArrows[2];
 void InitHelpScreenSystem()
 {
 	//set some values
-	memset( &gHelpScreen, 0, sizeof( gHelpScreen ) );
+	gHelpScreen = HELP_SCREEN_STRUCT{};
 
 	//set it up so we can enter the screen
 	gfHelpScreenEntry = TRUE;
