@@ -40,6 +40,8 @@
 #include "Queen_Command.h"
 #include "Debug.h"
 
+#include <algorithm>
+
 #define AI_DELAY 100
 
 
@@ -69,7 +71,7 @@ void InitAI(void)
 #ifdef _DEBUG
 	if (gfDisplayCoverValues)
 	{
-		memset( gsCoverValue, 0x7F, sizeof( INT16 ) * WORLD_MAX );
+		std::fill_n(gsCoverValue, WORLD_MAX, 0x7F7F);
 	}
 #endif
 
