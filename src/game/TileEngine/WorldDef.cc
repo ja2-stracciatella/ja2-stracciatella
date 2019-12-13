@@ -2037,19 +2037,21 @@ try
 	FLOAT dMajorMapVersion;
 	FileRead(f, &dMajorMapVersion, sizeof(dMajorMapVersion));
 
-	if(isRussianVersion() && (dMajorMapVersion != 6.00))
-	{
-		throw std::runtime_error("Incompatible major map version");
-	}
-
 	UINT8 ubMinorMapVersion;
 	if (dMajorMapVersion >= 4.00)
 	{
+		// major version 4 probably started in minor version 15 since
+		// this value is needed to detect the change in the object layer
 		FileRead(f, &ubMinorMapVersion, sizeof(ubMinorMapVersion));
 	}
 	else
 	{
 		ubMinorMapVersion = 0;
+	}
+
+	if (dMajorMapVersion > 6.00 || ubMinorMapVersion > 26)
+	{
+		throw std::runtime_error("newer versions are not supported");
 	}
 
 	// Read flags for world
@@ -2281,8 +2283,9 @@ try
 		}
 	}
 
-	if(isRussianVersion())
+	if(dMajorMapVersion == 6.00 && ubMinorMapVersion == 26)
 	{
+		// the data appears to be 37 INT32/UINT32 numbers and is present in russian ja2 maps
 		FileSeek(f, 148, FILE_SEEK_FROM_CURRENT);
 	}
 
@@ -2350,6 +2353,11 @@ try
 
 	LoadMapInformation(f);
 
+	if (dMajorMapVersion >= 4.00 && gMapInformation.ubMapVersion != ubMinorMapVersion)
+	{
+		throw new std::runtime_error("map version must match minor version");
+	}
+
 	if (uiFlags & MAP_FULLSOLDIER_SAVED)
 	{
 		SetRelativeStartAndEndPercentage(0, 86, 87, L"Loading placements...");
@@ -2385,6 +2393,27 @@ try
 		SetRelativeStartAndEndPercentage(0, 91, 92, L"Loading NPC schedules...");
 		RenderProgressBar(0, 0);
 		LoadSchedules(f);
+	}
+
+	// check unexpected versions
+	if (dMajorMapVersion == 6.00 && ubMinorMapVersion == 26)
+	{
+		// the unknown data is skipped
+		SLOGD("%s is a russian ja2 map", filename);
+	}
+	else if (dMajorMapVersion == 5.00 && ubMinorMapVersion >= 24 && ubMinorMapVersion <= 25)
+	{
+		SLOGD("%s is a non-russian ja2 map", filename);
+	}
+	else if (dMajorMapVersion == 5.00 && ubMinorMapVersion == 26)
+	{
+		// file structure is the same but the game has different items
+		SLOGW("%s is a ja2 wildfire map, expect problems", filename);
+	}
+	else
+	{
+		// ja2 demo has 3.13
+		SLOGW("% has an unexpected version (%f %u), expect problems", filename, dMajorMapVersion, gMapInformation.ubMapVersion);
 	}
 
 	ValidateAndUpdateMapVersionIfNecessary();
@@ -2435,9 +2464,9 @@ try
 	RenderProgressBar(0, 100);
 	DequeueAllKeyBoardEvents();
 }
-catch (...)
+catch (const std::runtime_error& err)
 {
-	SET_ERROR("Could not load map file %s", filename);
+	SET_ERROR("Could not load map file '%s': %s", filename, err.what());
 	throw;
 }
 
