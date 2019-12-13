@@ -1460,6 +1460,13 @@ try
 		FileWrite(f, &ubCombine, sizeof(ubCombine));
 	}
 
+	if(getMajorMapVersion() == 6.00 && gubMinorMapVersion == 26)
+	{
+		// the data appears to be 37 INT32/UINT32 numbers and is present in russian ja2 maps
+		UINT8 data[148] = {0};
+		FileWrite(f, &data, sizeof(data));
+	}
+
 	UINT8 const test[] = { 1, 1 };
 	FOR_EACH_WORLD_TILE(e)
 	{ // Write land layers
