@@ -17,14 +17,15 @@ mod unicode;
 
 use std::fmt::Debug;
 use std::fs;
-use std::path::PathBuf;
+use std::path::Path;
 use std::process;
 
 use clap::{crate_version, App, Arg, ArgMatches, SubCommand};
 use serde_json;
 
-use crate::res::{ResourcePackBuilder, ResourcePropertiesExt};
-use crate::unicode::Nfc;
+use stracciatella::fs::resolve_existing_components;
+use stracciatella::res::{ResourcePackBuilder, ResourcePropertiesExt};
+use stracciatella::unicode::Nfc;
 
 /// Entry point of the resource-pack executable.
 fn main() {
@@ -125,28 +126,13 @@ fn subcommand_create(matches: &ArgMatches) {
 
     if let Some(values) = matches.values_of_os("gamedir") {
         for gamedir in values {
-            let mut paths: Vec<PathBuf> = graceful_unwrap("Reading gamedir", fs::read_dir(gamedir))
-                .filter_map(|x| {
-                    let entry = graceful_unwrap("Finding data dir", x);
-                    let path = entry.path();
-                    if path.is_dir() {
-                        if let Some(file_name) = entry.file_name().to_str() {
-                            if Nfc::caseless(file_name) == Nfc::caseless("data") {
-                                return Some(path);
-                            }
-                        }
-                    }
-                    None
-                })
-                .collect();
-            if paths.len() > 1 {
-                graceful_error(&format!("Too many data dirs found {:?}", paths));
-            }
-            if paths.is_empty() {
+            let path =
+                resolve_existing_components(Path::new("data"), Some(Path::new(gamedir)), true);
+            if path.exists() {
+                builder.with_path(&path, &path);
+            } else {
                 graceful_error(&format!("Data dir not found in {:?}", gamedir));
             }
-            let path = paths.remove(0);
-            builder.with_path(&path, &path);
         }
     }
 

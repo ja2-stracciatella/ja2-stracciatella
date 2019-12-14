@@ -6,8 +6,10 @@ use std::path::PathBuf;
 
 use log::warn;
 use serde::{Deserialize, Serialize};
+use std::path::Path;
 
 use crate::config::{EngineOptions, Resolution, ScalingQuality, VanillaVersion};
+use crate::fs::resolve_existing_components;
 use crate::json;
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -31,9 +33,7 @@ pub struct Ja2Json {
 }
 
 fn build_json_config_location(stracciatella_home: &PathBuf) -> PathBuf {
-    let mut path = PathBuf::from(stracciatella_home);
-    path.push("ja2.json");
-    path
+    resolve_existing_components(&Path::new("ja2.json"), Some(&stracciatella_home), true)
 }
 
 impl Ja2Json {
@@ -70,6 +70,8 @@ impl Ja2Json {
         }
 
         copy_to!(content.game_dir, engine_options.vanilla_game_dir);
+        engine_options.vanilla_game_dir =
+            resolve_existing_components(&engine_options.vanilla_game_dir, None, true);
         copy_to!(content.mods, engine_options.mods);
         copy_to!(content.res, engine_options.resolution);
         copy_to!(content.brightness, engine_options.brightness);
