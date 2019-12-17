@@ -316,6 +316,17 @@ if(UNIX AND NOT MINGW AND NOT APPLE)
     endif()
 elseif(MINGW)
     set(PACKAGE_ARCH "win-mingw")
+    if(CMAKE_SIZEOF_VOID_P EQUAL 8)
+        set(PACKAGE_ARCH "${PACKAGE_ARCH}64")
+    elseif(CMAKE_SIZEOF_VOID_P EQUAL 4)
+        set(PACKAGE_ARCH "${PACKAGE_ARCH}32")
+    endif()
+    # build environment:
+    if(MSYS)
+        set(PACKAGE_ARCH "${PACKAGE_ARCH}-msys2") # MSYS Makefiles, assuming msys2 shell
+    elseif(CMAKE_HOST_UNIX)
+        set(PACKAGE_ARCH "${PACKAGE_ARCH}-cross") # cross compiling
+    endif()
 elseif(MSVC)
     set(PACKAGE_ARCH "win-msvc")
     if("${CMAKE_GENERATOR}" MATCHES "(Win64|IA64)")
