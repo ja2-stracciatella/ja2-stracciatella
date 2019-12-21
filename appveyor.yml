@@ -1,3 +1,5 @@
+# validator: https://ci.appveyor.com/tools/validate-yaml
+
 version: "{build}"
 
 environment:
@@ -8,6 +10,8 @@ environment:
   GITHUB_ACCESS_TOKEN:
     secure: "fcDy5AgkBH9bKqdsbwv9piWbN6ksoUKk+iky/DQmk3YG3UNl68BegfkYUzSF3rJ7"
   matrix:
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      CI_TARGET: msys2-mingw32
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       CMAKE_GENERATOR_NAME: Visual Studio 14 2015
       RUST_TARGET: i686-pc-windows-msvc
@@ -25,6 +29,29 @@ matrix:
 
 clone_folder: c:\projects\ja2-stracciatella
 clone_depth: 1
+
+for:
+  -
+    matrix:
+      only:
+        - CI_TARGET: msys2-mingw32
+
+    init:
+      - cmd: rem init override
+    install:
+      - cmd: rem install override
+    before_build:
+      - cmd: rem before_build override
+    build_script:
+      - cmd: |
+          rem update msys2 runtime
+          C:\msys64\msys2_shell.cmd -defterm -no-start -c "pacman -Syu --noconfirm --needed"
+          rem build, package, test, publish in msys2
+          C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .github/scripts/ci-build.sh"
+    test_script:
+      - cmd: rem test_script override
+    after_test:
+      - cmd: rem after_test override
 
 init:
   - ps: $env:PUBLISH_BINARY = "false";

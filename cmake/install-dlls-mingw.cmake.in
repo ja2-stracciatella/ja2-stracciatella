@@ -4,7 +4,8 @@ set(CMAKE_CXX_COMPILER "@CMAKE_CXX_COMPILER@")
 set(SDL2MAIN_LIBRARY "@SDL2MAIN_LIBRARY@")
 
 # XXX add more core dlls when needed
-set(WINDOWS_CORE_DLLS
+# these dlls will never be installed
+set(MINGW_CORE_DLLS
     "advapi32.dll"
     "comctl32.dll"
     "comdlg32.dll"
@@ -14,6 +15,7 @@ set(WINDOWS_CORE_DLLS
     "msvcrt.dll"
     "ole32.dll"
     "oleaut32.dll"
+    "setupapi.dll"
     "shell32.dll"
     "user32.dll"
     "userenv.dll"
@@ -26,24 +28,19 @@ set(WINDOWS_CORE_DLLS
 # get search directories
 #
 
-set(search_dirs)
-
-macro (append_search_dirs dirs)
-    foreach (dir IN LISTS dirs)
-        if ("${dir}" MATCHES "^/.*")
-            get_filename_component(dir "${dir}" ABSOLUTE)
-            list(FIND search_dirs "${dir}" index)
-            if ("${index}" STREQUAL "-1")
-                list(APPEND search_dirs "${dir}")
-            endif()
+set(MINGW_SEARCH_DIRS)
+macro (search_dirs)
+    foreach (_dir IN ITEMS ${ARGN})
+        get_filename_component(_dir "${_dir}" ABSOLUTE)
+        list(FIND MINGW_CORE_DLLS "${_dir}" _index)
+        if (_index STREQUAL "-1")
+            list(APPEND MINGW_SEARCH_DIRS "${_dir}")
         endif()
     endforeach()
 endmacro()
 
-get_filename_component(dir "${SDL2MAIN_LIBRARY}" DIRECTORY)
-list(APPEND search_dirs "${dir}") # sdl2 lib dir
-get_filename_component(dir "${dir}" DIRECTORY)
-list(APPEND search_dirs "${dir}/bin") # sdl2 bin dir
+get_filename_component(SDL2_LIB_DIR "${SDL2MAIN_LIBRARY}" DIRECTORY)
+search_dirs("${SDL2_LIB_DIR}" "${SDL2_LIB_DIR}/../bin")# sdl2 lib and bin dirs
 
 execute_process(
     COMMAND "${CMAKE_CXX_COMPILER}" -print-search-dirs
@@ -52,53 +49,55 @@ execute_process(
 
 string(REGEX MATCH "install: [^\n]+" dirs "${output}")
 string(REGEX REPLACE "^install: " "" dirs "${dirs}")
-string(REPLACE ":" ";" dirs "${dirs}")
-append_search_dirs(dirs) # gcc install dir
+file(TO_CMAKE_PATH "${dirs}" dirs)
+search_dirs(${dirs}) # gcc install dir
 
-string(REGEX MATCH "libraries: [^\n]+" dirs "${output}")
-string(REGEX REPLACE "^libraries: " "" dirs "${dirs}")
-string(REPLACE ":" ";" dirs "${dirs}")
-append_search_dirs(dirs) # gcc library dirs
+string(REGEX MATCH "libraries: =[^\n]+" dirs "${output}")
+string(REGEX REPLACE "^libraries: =" "" dirs "${dirs}")
+file(TO_CMAKE_PATH "${dirs}" dirs)
+search_dirs(${dirs}) # gcc library dirs
 
-string(REGEX MATCH "programs: [^\n]+" dirs "${output}")
-string(REGEX REPLACE "^programs: " "" dirs "${dirs}")
-string(REPLACE ":" ";" dirs "${dirs}")
-append_search_dirs(dirs) # gcc program dirs
+string(REGEX MATCH "programs: =[^\n]+" dirs "${output}")
+string(REGEX REPLACE "^programs: =" "" dirs "${dirs}")
+file(TO_CMAKE_PATH "${dirs}" dirs)
+search_dirs(${dirs}) # gcc program dirs
 
 #
 # use BundleUtilities (and GetPrerequisites) to copy dlls
 #
 
-function (gp_resolve_item_override context item exepath dirs resolved_item_var resolved_var)
-    if (NOT ${resolved_var})
-        string(TOLOWER "${item}" dll)
-        list(FIND WINDOWS_CORE_DLLS "${dll}" index)
-        if (NOT "${index}" STREQUAL "-1")
-            set(${resolved_item_var} "/c/Windows/System32/${item}" PARENT_SCOPE) # missing core dll (cross compiling)
-            set(${resolved_var} 1 PARENT_SCOPE)
+macro (gp_resolve_item_override _context _item _exepath _dirs _resolved_item_var _resolved_var)
+    if (NOT ${_resolved_var})
+        string(TOLOWER "${_item}" _item_lower)
+        list(FIND MINGW_CORE_DLLS "${_item_lower}" _index)
+        if (NOT _index STREQUAL "-1")
+            set(${_resolved_item_var} "/c/Windows/System32/${_item}" PARENT_SCOPE) # missing core dll (cross compiling)
+            set(${_resolved_var} 1 PARENT_SCOPE)
         endif()
     endif()
-endfunction()
+endmacro()
 
-function (gp_resolved_file_type_override resolved_file type_var)
-    get_filename_component(dll "${resolved_file}" NAME)
-    string(TOLOWER "${dll}" dll_lower)
-    if (NOT "${dll_lower}" MATCHES ".*\\.dll")
-        return() # only dlls
-    endif()
-    if ("${${type_var}}" STREQUAL "other")
-        list(FIND WINDOWS_CORE_DLLS "${dll_lower}" index)
-        if (NOT "${index}" STREQUAL "-1")
-            set(${type_var} "system" PARENT_SCOPE) # ignore missing core dlls
+macro (gp_resolved_file_type_override _resolved_file _type_var)
+    get_filename_component(_item "${_resolved_file}" NAME)
+    string(TOLOWER "${_item}" _item_lower)
+    if (_item_lower MATCHES ".*\\.dll")
+        if (${_type_var} STREQUAL "other")
+            list(FIND MINGW_CORE_DLLS "${_item_lower}" _index)
+            if (NOT _index STREQUAL "-1")
+                set(${_type_var} "system") # ignore missing core dlls
+             endif()
+        elseif (${_type_var} STREQUAL "system")
+            list(FIND MINGW_CORE_DLLS "${_item_lower}" _index)
+            if (_index STREQUAL "-1")
+                set(${_type_var} "other") # copy non-core system dlls
+            endif()
         endif()
-    elseif ("${${type_var}}" STREQUAL "system")
-        list(FIND WINDOWS_CORE_DLLS "${dll_lower}" index)
-        if ("${index}" STREQUAL "-1")
-            set(${type_var} "other" PARENT_SCOPE) # copy non-core system dlls
-        endif()
     endif()
-endfunction()
+    if (NOT ${_type_var} STREQUAL "system")
+        message(STATUS "dll file: ${_resolved_file} -> ${_item}")
+    endif()
+endmacro()
 
 include(BundleUtilities)
 set(gp_tool "objdump")
-fixup_bundle("${CMAKE_INSTALL_PREFIX}/ja2.exe" "" "${search_dirs}") # includes other exes in the same directory
+fixup_bundle("${CMAKE_INSTALL_PREFIX}/ja2.exe" "" "${MINGW_SEARCH_DIRS}") # processes all exes in the same directory and subdirectories

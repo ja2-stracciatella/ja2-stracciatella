@@ -49,37 +49,50 @@ if [[ "${PUBLISH_BINARY}" == "true" && "${SFTP_PASSWORD}" == "" ]]; then
   echo "Upload credentials are not set up"
   exit 1
 fi
+export RUN_TESTS=true
+export RUN_INSTALL_TEST=true
+export RUSTUP_INIT_ARGS="--default-toolchain=$(cat ./rust-toolchain) -y"
 if [[ "$CI_TARGET" == "linux" ]]; then
   sudo apt update
   sudo apt install build-essential libsdl2-dev libfltk1.3-dev
   # FIXME tests fail with the boost in ubuntu-16.04 (libboost-filesystem-dev libboost-system-dev)
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
-elif [[ "$CI_TARGET" == "mingw" ]]; then
+elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
+  # cross compiling
   sudo apt update
   sudo apt install build-essential mingw-w64
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP"
+  export RUSTUP_INIT_ARGS="$RUSTUP_INIT_ARGS --default-host x86_64-pc-windows-gnu"
+  export RUN_TESTS=false
+elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
+  pacman -Syu --noconfirm --needed # assumes the runtime has already been updated
+  pacman -S --noconfirm --needed base-devel unzip
+  pacman -S --noconfirm --needed mingw-w64-i686-toolchain mingw-w64-i686-cmake mingw-w64-i686-SDL2 mingw-w64-i686-boost mingw-w64-i686-fltk
+  export CMAKE_GENERATOR="MSYS Makefiles"
+  export CONFIGURE_CMD="${CONFIGURE_CMD} -DCPACK_GENERATOR=ZIP"
+  export RUSTUP_HOME="$(cygpath -w ~/.rustup)"
+  export CARGO_HOME="$(cygpath -w ~/.cargo)"
+  export RUSTUP_INIT_ARGS="$RUSTUP_INIT_ARGS --default-host i686-pc-windows-gnu --no-modify-path"
+  export RUN_INSTALL_TEST=false # no sudo
 elif [[ "$CI_TARGET" == "mac" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle"
 else
   echo "unexpected target ${CI_TARGET}"
   exit 1
 fi
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain=$(cat ./rust-toolchain) -y --profile minimal
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- ${RUSTUP_INIT_ARGS}
 export PATH=$PATH:$HOME/.cargo/bin
-if [[ "$CI_TARGET" == "mingw" ]]; then
-  rustup target add x86_64-pc-windows-gnu
-else
-  rustup component add rustfmt
-  rustup component add clippy
-  cargo clippy -- -V
-  cargo fmt -- -V
+if [[ "$CI_TARGET" == "linux-mingw64" ]]; then
+  rustup target add x86_64-pc-windows-gnu # cross compiling
 fi
-echo "PUBLISH_BINARY=${PUBLISH_BINARY}"
-echo "PUBLISH_DIR=${PUBLISH_DIR}"
-echo "BUILD_CMD=${BUILD_CMD}"
-echo "CONFIGURE_CMD=${CONFIGURE_CMD}"
+env
+which rustc
 rustc -V
+which cargo
 cargo -V
+cargo clippy -- -V
+cargo fmt -- -V
+which cmake
 cmake --version
 
 echo "## configure, build, package ##"
@@ -91,15 +104,18 @@ $BUILD_CMD
 $BUILD_CMD --target package
 
 echo "## test ##"
-if [[ "$CI_TARGET" != "mingw" ]]; then
-  echo "not cross compiling, can perform tests"
-  sudo $BUILD_CMD --target install
+if [[ "$RUN_TESTS" == "true" ]]; then
+  if [[ "$RUN_INSTALL_TEST" == "true" ]]; then
+    sudo $BUILD_CMD --target install
+  fi
   $BUILD_CMD --target cargo-fmt-test
   $BUILD_CMD --target cargo-clippy-test
   $BUILD_CMD --target cargo-test
   ./ja2 -unittests
   ./ja2-launcher -help
-  sudo $BUILD_CMD --target uninstall
+  if [[ "$RUN_INSTALL_TEST" == "true" ]]; then
+    sudo $BUILD_CMD --target uninstall
+  fi
 fi
 
 echo "## publish ##"

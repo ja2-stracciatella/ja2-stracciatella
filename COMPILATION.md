@@ -66,6 +66,40 @@ cmake -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake path/to/source
 make
 ```
 
+## Build on Windows using MSYS2
+
+Install [msys2](https://www.msys2.org/).
+
+Open the msys2 shell.
+Use "MSYS MinGW 64-bit" to build 64-bit and "MSYS MinGW 32-bit" to build 32-bit.
+
+Update msys2, you might have to restart the msys2 shell and run the command again:
+```
+pacman -Syu
+```
+
+Install the build environment and dependencies:
+```
+pacman -S base-devel
+```
+to build 64-bit:
+```
+pacman -S mingw-w64-x86_64-toolchain mingw-w64-x86_64-rust mingw-w64-x86_64-cmake mingw-w64-x86_64-SDL2 mingw-w64-x86_64-boost mingw-w64-x86_64-fltk
+```
+to build 32-bit:
+```
+pacman -S mingw-w64-i686-toolchain mingw-w64-i686-rust mingw-w64-i686-cmake mingw-w64-i686-SDL2 mingw-w64-i686-boost mingw-w64-i686-fltk
+```
+
+Get ja2-stracciatella, cd into it, and build the package:
+```
+mkdir _bin && cd _bin
+cmake .. "-GMSYS Makefiles" -DCPACK_GENERATOR=ZIP
+make package
+```
+
+You now have a zip file with the game, including the dll dependencies.
+
 ## Generate Visual Studio Solution
 
 If you are most familiar using Visual Studio for development you can generate a solution from the sources.
