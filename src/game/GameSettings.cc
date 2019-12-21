@@ -179,7 +179,7 @@ static void InitGameSettings(void)
 
 void InitGameOptions()
 {
-	memset( &gGameOptions, 0, sizeof( GAME_OPTIONS ) );
+	gGameOptions = GAME_OPTIONS{};
 
 	//Init the game options
 	gGameOptions.fGunNut           = FALSE;

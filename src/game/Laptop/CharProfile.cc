@@ -26,6 +26,8 @@
 #include "Text.h"
 #include "Soldier_Profile_Type.h"
 
+#include <algorithm>
+#include <iterator>
 
 BOOLEAN fReDrawCharProfile = FALSE;
 BOOLEAN fButtonPendingFlag = FALSE;
@@ -467,8 +469,8 @@ void ResetCharacterStats( void )
 	iAttitude = 0;
 
 	// names
-	memset( &pFullName, 0 , sizeof( pFullName) );
-	memset( &pNickName, 0 , sizeof( pNickName) );
+	std::fill(std::begin(pFullName), std::end(pFullName), L'\0');
+	std::fill(std::begin(pNickName), std::end(pNickName), L'\0');
 }
 
 

@@ -30,6 +30,8 @@
 #include "Items.h"
 #include "BobbyRMailOrder.h"
 
+#include <algorithm>
+#include <iterator>
 
 #define TESTQUESTS
 
@@ -1152,8 +1154,8 @@ void InternalEndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fU
 
 void InitQuestEngine()
 {
-	memset(gubQuest, 0, sizeof(gubQuest));
-	memset(gubFact,  0, sizeof(gubFact));
+	std::fill(std::begin(gubQuest), std::end(gubQuest), 0);
+	std::fill(std::begin(gubFact), std::end(gubFact), 0);
 
 	// semi-hack to make the letter quest start right away
 	CheckForQuests( 1 );

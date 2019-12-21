@@ -415,7 +415,7 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 	MERC_HIRE_STRUCT HireMercStruct;
 	INT8	bReturnCode;
 
-	memset(&HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
+	HireMercStruct = MERC_HIRE_STRUCT{};
 	MERCPROFILESTRUCT& p = GetProfile(ubMercID);
 
 	//if the ALT key is down

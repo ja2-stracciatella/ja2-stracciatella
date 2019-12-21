@@ -35,6 +35,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <algorithm>
+
 struct BobbyROrderLocationStruct
 {
 	UINT16 usOverNightExpress;
@@ -624,7 +626,7 @@ static void BtnBobbyRClearOrderCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		memset(&BobbyRayPurchases, 0, sizeof(BobbyRayPurchaseStruct) * MAX_PURCHASE_AMOUNT);
+		std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
 		gubSelectedLight = 0;
 		gfReDrawBobbyOrder = TRUE;
 		gbSelectedCity = -1;
@@ -689,7 +691,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 					{
 						LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
 						LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
-						memset( &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ], 0, sizeof( BobbyRayOrderStruct ) );
+						LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ] = BobbyRayOrderStruct{};
 					}
 
 					for( cnt =0; cnt< LaptopSaveInfo.usNumberOfBobbyRayOrderItems; cnt++ )
@@ -1028,7 +1030,7 @@ static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 		RemovePurchasedItemsFromBobbyRayInventory();
 
 		//delete the order
-		memset(&BobbyRayPurchases, 0, sizeof(BobbyRayPurchaseStruct) * MAX_PURCHASE_AMOUNT);
+		std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
 		gubSelectedLight = 0;
 		gfDestroyConfirmGrphiArea = TRUE;
 
@@ -1042,7 +1044,7 @@ static void SelectConfirmOrderRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 		RemovePurchasedItemsFromBobbyRayInventory();
 
 		//delete the order
-		memset(&BobbyRayPurchases, 0, sizeof(BobbyRayPurchaseStruct) * MAX_PURCHASE_AMOUNT);
+		std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
 		gubSelectedLight = 0;
 		gfDestroyConfirmGrphiArea = TRUE;
 
@@ -1751,7 +1753,7 @@ static void PurchaseBobbyOrder(void)
 		{
 			LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
 			LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
-			memset( &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ], 0, sizeof( BobbyRayOrderStruct ) );
+			LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ] = BobbyRayOrderStruct{};
 		}
 
 		for( cnt =0; cnt< LaptopSaveInfo.usNumberOfBobbyRayOrderItems; cnt++ )
@@ -1819,7 +1821,7 @@ void AddJohnsGunShipment()
 	INT8 bDaysAhead;
 
 	//clear out the memory
-	memset( Temp, 0, sizeof( BobbyRayPurchaseStruct ) * MAX_PURCHASE_AMOUNT );
+	std::fill_n(Temp, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
 
 	/*
 	//if we need to add more array elements for the Order Array
@@ -1827,7 +1829,7 @@ void AddJohnsGunShipment()
 	{
 		LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
 		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
-		memset( &LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ], 0, sizeof( BobbyRayOrderStruct ) );
+		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ] = BobbyRayOrderStruct{};
 	}
 
 	for( cnt =0; cnt< LaptopSaveInfo.usNumberOfBobbyRayOrderItems; cnt++ )
@@ -1880,7 +1882,7 @@ static void ConfirmBobbyRPurchaseMessageBoxCallBack(MessageBoxReturnValue const 
 
 void EnterInitBobbyRayOrder()
 {
-	memset(&BobbyRayPurchases, 0, sizeof(BobbyRayPurchaseStruct) * MAX_PURCHASE_AMOUNT);
+	std::fill_n(BobbyRayPurchases, MAX_PURCHASE_AMOUNT, BobbyRayPurchaseStruct{});
 	gubSelectedLight = 0;
 	gfReDrawBobbyOrder = TRUE;
 	gbSelectedCity = -1;
@@ -1997,7 +1999,7 @@ static void AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UINT8 
 	}
 
 	//memset the memory
-	memset( &gpNewBobbyrShipments[ iFoundSpot ], 0, sizeof( NewBobbyRayOrderStruct ) );
+	gpNewBobbyrShipments[ iFoundSpot ] = NewBobbyRayOrderStruct{};
 
 	gpNewBobbyrShipments[ iFoundSpot ].fActive = TRUE;
 	gpNewBobbyrShipments[ iFoundSpot ].ubDeliveryLoc = ubDeliveryLoc;

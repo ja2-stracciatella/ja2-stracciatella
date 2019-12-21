@@ -715,7 +715,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 	ddHorizAngle = atan2( dDeltaY, dDeltaX );
 
 	#ifdef LOS_DEBUG
-	memset( &gLOSTestResults, 0, sizeof( LOSResults ) );
+	gLOSTestResults = LOSResults{};
 	gLOSTestResults.fLOSTestPerformed = TRUE;
 	gLOSTestResults.iStartX = (INT32) dStartX;
 	gLOSTestResults.iStartY = (INT32) dStartY;

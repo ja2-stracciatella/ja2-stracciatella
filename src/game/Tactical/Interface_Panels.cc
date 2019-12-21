@@ -76,6 +76,9 @@
 #include "policy/GamePolicy.h"
 #include "HImage.h"
 
+#include <algorithm>
+#include <iterator>
+
 // DEFINES FOR VARIOUS PANELS
 #define SM_ITEMDESC_START_X			214
 #define SM_ITEMDESC_START_Y			1 + INV_INTERFACE_START_Y
@@ -1002,7 +1005,7 @@ void CreateSMPanelButtons(void)
 	// Create buttons
 
 	// SET BUTTONS TO -1
-	memset( iSMPanelButtons, -1, sizeof( iSMPanelButtons ) );
+	std::fill(std::begin(iSMPanelButtons), std::end(iSMPanelButtons), GUIButtonRef::NoButton());
 
 	const INT32 dy = INV_INTERFACE_START_Y;
 
@@ -1733,7 +1736,7 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						if( gpItemPointer == NULL )
 						{
 							// clean up
-							memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
+							gMoveingItem = INVENTORY_IN_SLOT{};
 							SetSkiCursor( CURSOR_NORMAL );
 						}
 						else
@@ -3362,11 +3365,11 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			if( gMoveingItem.sItemIndex == 0 )
 			{
 				//Delete the contents of the item cursor
-				memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
+				gMoveingItem = INVENTORY_IN_SLOT{};
 			}
 			else
 			{
-				memset( &InvSlot, 0, sizeof( INVENTORY_IN_SLOT ) );
+				InvSlot = INVENTORY_IN_SLOT{};
 
 				// Return if empty
 				//if ( gpSMCurrentMerc->inv[ uiHandPos ].usItem == NOTHING )
@@ -3690,7 +3693,7 @@ static void ConfirmationToDepositMoneyToPlayersAccount(MessageBoxReturnValue con
 		EndItemPointer( );
 		// remove contents of the moving item because object still is money and usable
 		// you could add endlessly money to your bank account if not reset properly
-		memset( &gMoveingItem, 0, sizeof( INVENTORY_IN_SLOT ) );
+		gMoveingItem = INVENTORY_IN_SLOT{};
 		SetSkiCursor( CURSOR_NORMAL );
 		// dirty shopkeeper
 		gubSkiDirtyLevel = SKI_DIRTY_LEVEL2;

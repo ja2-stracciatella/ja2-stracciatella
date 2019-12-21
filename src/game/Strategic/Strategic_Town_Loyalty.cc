@@ -32,6 +32,9 @@
 #include "FileMan.h"
 #include "Logger.h"
 
+#include <algorithm>
+#include <iterator>
+
 // the max loyalty rating for any given town
 #define MAX_LOYALTY_VALUE 100
 
@@ -678,7 +681,7 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 
 void BuildListOfTownSectors()
 {
-	memset(g_town_sectors, 0, sizeof(g_town_sectors));
+	std::fill(std::begin(g_town_sectors), std::end(g_town_sectors), TownSectorInfo{});
 
 	TownSectorInfo* i = g_town_sectors;
 	for (INT32 x = 1; x != MAP_WORLD_X - 1; ++x)

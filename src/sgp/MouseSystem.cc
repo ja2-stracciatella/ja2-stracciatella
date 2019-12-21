@@ -614,7 +614,7 @@ void MSYS_RemoveRegion(MOUSE_REGION* const r)
 	if (g_clicked_region == r) g_clicked_region = 0;
 
 	gfRefreshUpdate = TRUE;
-	memset(r, 0, sizeof(*r));
+	*r = MOUSE_REGION{};
 }
 
 

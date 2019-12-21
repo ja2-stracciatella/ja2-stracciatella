@@ -2,6 +2,9 @@
 #include "Shading.h"
 #include "VObject.h"
 
+#include <algorithm>
+#include <iterator>
+
 UINT16 IntensityTable[65536];
 UINT16 ShadeTable[65536];
 UINT16 White16BPPPalette[256];
@@ -30,7 +33,7 @@ void BuildShadeTable(void)
 		}
 	}
 
-	memset(White16BPPPalette, 255, sizeof(White16BPPPalette));
+	std::fill(std::begin(White16BPPPalette), std::end(White16BPPPalette), UINT16_MAX);
 }
 
 

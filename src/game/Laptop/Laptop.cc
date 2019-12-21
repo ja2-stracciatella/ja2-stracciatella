@@ -88,6 +88,9 @@
 #include "JAScreens.h"
 #include "UILayout.h"
 
+#include <algorithm>
+#include <iterator>
+
 // laptop programs
 enum
 {
@@ -353,7 +356,7 @@ static void InitBookMarkList(void);
 void LaptopScreenInit(void)
 {
 	//Memset the whole structure, to make sure of no 'JUNK'
-	memset(&LaptopSaveInfo, 0, sizeof(LaptopSaveInfoStruct));
+	LaptopSaveInfo = LaptopSaveInfoStruct{};
 
 	LaptopSaveInfo.gfNewGameLaptop = TRUE;
 
@@ -381,7 +384,7 @@ void LaptopScreenInit(void)
 	GameInitPersonnel();
 
 	// init program states
-	memset(&gLaptopProgramStates, LAPTOP_PROGRAM_MINIMIZED, sizeof(gLaptopProgramStates));
+	std::fill(std::begin(gLaptopProgramStates), std::end(gLaptopProgramStates), LAPTOP_PROGRAM_MINIMIZED);
 
 	gfAtLeastOneMercWasHired = FALSE;
 
@@ -505,10 +508,10 @@ static void EnterLaptop(void)
 	fFirstTimeInLaptop = TRUE;
 
 	// reset all bookmark visits
-	memset(&LaptopSaveInfo.fVisitedBookmarkAlready, 0, sizeof(LaptopSaveInfo.fVisitedBookmarkAlready));
+	std::fill(std::begin(LaptopSaveInfo.fVisitedBookmarkAlready), std::end(LaptopSaveInfo.fVisitedBookmarkAlready), 0);
 
 	// init program states
-	memset(&gLaptopProgramStates, LAPTOP_PROGRAM_MINIMIZED, sizeof(gLaptopProgramStates));
+	std::fill(std::begin(gLaptopProgramStates), std::end(gLaptopProgramStates), LAPTOP_PROGRAM_MINIMIZED);
 
 	// turn the power on
 	fPowerLightOn = TRUE;
@@ -1626,7 +1629,7 @@ static void FilesRegionButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static void InitBookMarkList(void)
 {
 	// sets bookmark list to -1
-	memset(LaptopSaveInfo.iBookMarkList, -1, sizeof(LaptopSaveInfo.iBookMarkList));
+	std::fill(std::begin(LaptopSaveInfo.iBookMarkList), std::end(LaptopSaveInfo.iBookMarkList), -1);
 }
 
 

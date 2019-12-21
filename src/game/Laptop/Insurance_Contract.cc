@@ -849,7 +849,7 @@ void AddLifeInsurancePayout(SOLDIERTYPE* const pSoldier)
 	{
 		LaptopSaveInfo.ubNumberLifeInsurancePayouts++;
 		LaptopSaveInfo.pLifeInsurancePayouts = REALLOC(LaptopSaveInfo.pLifeInsurancePayouts, LIFE_INSURANCE_PAYOUT, LaptopSaveInfo.ubNumberLifeInsurancePayouts);
-		memset( &LaptopSaveInfo.pLifeInsurancePayouts[ LaptopSaveInfo.ubNumberLifeInsurancePayouts - 1 ], 0, sizeof( LIFE_INSURANCE_PAYOUT ) );
+		LaptopSaveInfo.pLifeInsurancePayouts[ LaptopSaveInfo.ubNumberLifeInsurancePayouts - 1 ] = LIFE_INSURANCE_PAYOUT{};
 	}
 
 	for( ubPayoutID = 0; ubPayoutID < LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed; ubPayoutID++ )

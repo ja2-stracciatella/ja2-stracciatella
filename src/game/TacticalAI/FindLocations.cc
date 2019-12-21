@@ -34,6 +34,8 @@
 #include "GameInstance.h"
 #include "WeaponModels.h"
 
+#include <algorithm>
+
 #ifdef _DEBUG
 	INT16 gsCoverValue[WORLD_MAX];
 	INT16 gsBestCover;
@@ -552,7 +554,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 #if defined( _DEBUG ) && !defined( PATHAI_VISIBLE_DEBUG )
 	if (gfDisplayCoverValues)
 	{
-		memset( gsCoverValue, 0x7F, sizeof( INT16 ) * WORLD_MAX );
+		std::fill_n(gsCoverValue, WORLD_MAX, 0x7F7F);
 	}
 #endif
 

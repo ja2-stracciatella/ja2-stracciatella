@@ -106,7 +106,7 @@ void InitializeMines( void )
 	{
 		pMineStatus = &(gMineStatus[ ubMineIndex ]);
 
-		memset( pMineStatus, 0, sizeof( *pMineStatus ) );
+		*pMineStatus = MINE_STATUS_TYPE{};
 
 		pMineStatus->ubMineType = gubMineTypes[ ubMineIndex ];
 		pMineStatus->uiMaxRemovalRate = guiMinimumMineProduction[ ubMineIndex ];

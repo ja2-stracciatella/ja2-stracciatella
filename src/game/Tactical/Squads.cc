@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Interface_Panels.h"
 #include "LoadSaveData.h"
 #include "Types.h"
@@ -20,6 +18,8 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 
+#include <algorithm>
+#include <stdexcept>
 
 // squad array
 SOLDIERTYPE *Squad[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
@@ -54,7 +54,10 @@ void InitSquads( void )
 		SquadMovementGroups[iCounter] = g->ubGroupID;
 	}
 
-	memset( sDeadMercs, -1, sizeof( INT16 ) * NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD );
+	for (auto i = 0; i < NUMBER_OF_SQUADS; ++i)
+	{
+		std::fill_n(sDeadMercs[i], NUMBER_OF_SOLDIERS_PER_SQUAD, -1);
+	}
 }
 
 BOOLEAN IsThisSquadFull( INT8 bSquadValue )
@@ -805,7 +808,7 @@ BOOLEAN SoldierIsDeadAndWasOnSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
 
 void ResetDeadSquadMemberList(INT32 const iSquadValue)
 {
-	memset( sDeadMercs[ iSquadValue ], -1, sizeof( INT16 ) * NUMBER_OF_SOLDIERS_PER_SQUAD );
+	std::fill_n(sDeadMercs[ iSquadValue ], NUMBER_OF_SOLDIERS_PER_SQUAD, -1);
 }
 
 

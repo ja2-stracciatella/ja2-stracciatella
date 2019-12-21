@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "LoadSaveData.h"
 #include "Map_Screen_Interface_Bottom.h"
 #include "MessageBoxScreen.h"
@@ -52,6 +50,9 @@
 #include "FileMan.h"
 #include "Items.h"
 
+#include <algorithm>
+#include <iterator>
+#include <stdexcept>
 
 // the delay for a group about to arrive
 #define ABOUT_TO_ARRIVE_DELAY 5
@@ -1050,7 +1051,7 @@ static void AwardExperienceForTravelling(GROUP& g)
 static void AddCorpsesToBloodcatLair(INT16 sSectorX, INT16 sSectorY)
 {
 	ROTTING_CORPSE_DEFINITION		Corpse;
-	memset( &Corpse, 0, sizeof( ROTTING_CORPSE_DEFINITION ) );
+	Corpse = ROTTING_CORPSE_DEFINITION{};
 
 	// Setup some values!
 	Corpse.ubBodyType        = REGMALE;
@@ -2599,7 +2600,7 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 
 	//@@@ TEMP!
 	//Rebuild the uniqueIDMask as a very old bug broke the uniqueID assignments in extremely rare cases.
-	memset(uniqueIDMask, 0, sizeof(uniqueIDMask));
+	std::fill(std::begin(uniqueIDMask), std::end(uniqueIDMask), 0);
 	CFOR_EACH_GROUP(g)
 	{
 		const UINT32 index = g->ubGroupID / 32;

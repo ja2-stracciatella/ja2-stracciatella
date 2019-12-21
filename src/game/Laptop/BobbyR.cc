@@ -27,6 +27,8 @@
 #include "DealerInventory.h"
 #include "GameInstance.h"
 
+#include <algorithm>
+
 #define BOBBIES_SIGN_FONT			FONT14ARIAL
 #define BOBBIES_SIGN_COLOR			2
 #define BOBBIES_SIGN_BACKCOLOR			FONT_MCOLOR_BLACK
@@ -444,7 +446,7 @@ static void InitBobbyRayNewInventory(void)
 	UINT16	usBobbyrIndex = 0;
 
 
-	memset( LaptopSaveInfo.BobbyRayInventory, 0, sizeof(STORE_INVENTORY) * MAXITEMS);
+	std::fill_n(LaptopSaveInfo.BobbyRayInventory, static_cast<size_t>(MAXITEMS), STORE_INVENTORY{});
 
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
 	for( i = 0; i < MAXITEMS; i++ )
@@ -478,7 +480,7 @@ static void InitBobbyRayUsedInventory(void)
 	UINT16	usBobbyrIndex = 0;
 
 
-	memset( LaptopSaveInfo.BobbyRayUsedInventory, 0, sizeof(STORE_INVENTORY) * MAXITEMS);
+	std::fill_n(LaptopSaveInfo.BobbyRayUsedInventory, static_cast<size_t>(MAXITEMS), STORE_INVENTORY{});
 
 	// add all the NEW items he can ever sell into his possible inventory list, for now in order by item #
 	for( i = 0; i < MAXITEMS; i++ )

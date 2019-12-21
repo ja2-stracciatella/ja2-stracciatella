@@ -12,13 +12,17 @@
 #include "Random.h"
 #include "SoundMan.h"
 #include "Timer.h"
-#include <SDL.h>
-#include <assert.h>
-#include <stdexcept>
 
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"
+
+#include <SDL.h>
+
+#include <algorithm>
+#include <assert.h>
+#include <iterator>
+#include <stdexcept>
 
 
 // Uncomment this to disable the startup of sound hardware
@@ -112,7 +116,7 @@ struct SOUNDTAG
 	UINT32        Pan;
 };
 
-static size_t GetSampleSize(const SAMPLETAG* const s);
+static UINT32 GetSampleSize(const SAMPLETAG* const s);
 static const UINT32 guiSoundMemoryLimit    = SOUND_DEFAULT_MEMORY; // Maximum memory used for sounds
 static       UINT32 guiSoundMemoryUsed     = 0;                    // Memory currently in use
 //static const UINT32 guiSoundCacheThreshold = SOUND_DEFAULT_THRESH; // Double-buffered threshold
@@ -146,7 +150,7 @@ void InitializeSoundManager(void)
 {
 	if (fSoundSystemInit) ShutdownSoundManager();
 
-	memset(pSoundList, 0, sizeof(pSoundList));
+	std::fill(std::begin(pSoundList), std::end(pSoundList), SOUNDTAG{});
 
 #ifndef SOUND_DISABLE
 	if (gfEnableStartup && SoundInitHardware()) fSoundSystemInit = TRUE;
@@ -503,7 +507,7 @@ UINT32 SoundGetPosition(UINT32 uiSoundID)
 // Zeros out the structures of the sample list.
 static void SoundInitCache(void)
 {
-	memset(pSampleList, 0, sizeof(pSampleList));
+	std::fill(std::begin(pSampleList), std::end(pSampleList), SAMPLETAG{});
 }
 
 
@@ -551,9 +555,9 @@ static SAMPLETAG* SoundGetCached(const char* pFilename)
 	return NULL;
 }
 
-static size_t GetSampleSize(const SAMPLETAG* const s)
+static UINT32 GetSampleSize(const SAMPLETAG* const s)
 {
-	return 2u * (s->uiFlags & SAMPLE_STEREO ? 2 : 1);
+	return 2 * (s->uiFlags & SAMPLE_STEREO ? 2 : 1);
 }
 
 /* Loads a sound from a buffer into the cache, allocating memory and a slot for storage.
@@ -772,7 +776,7 @@ static void SoundFreeSample(SAMPLETAG* s)
 
 	DecreaseSoundMemoryUsedBySample(s);
 	MemFree(s->pData);
-	memset(s, 0, sizeof(*s));
+	*s = SAMPLETAG{};
 }
 
 
@@ -793,14 +797,25 @@ static SOUNDTAG* SoundGetChannelByID(UINT32 uiSoundID)
 
 static void SoundCallback(void* userdata, Uint8* stream, int len)
 {
-	// INT16 data is being mixed as INT32, so it needs to be double the length of the stream
-	if ( guiMixLength < len * 2 )
+	if (len < 0)
 	{
-		guiMixLength = len * 2;
+		SLOGA("SoundCallback: unexpected negative len %d", len);
+		return;
+	}
+
+	// 16-bit stereo = 2 bytes per value, 2 values per sample
+	UINT32 want_bytes = static_cast<UINT32>(len);
+	UINT32 want_values = want_bytes / sizeof(INT16);
+	UINT32 want_samples = want_values / 2;
+
+	// INT16 data is being mixed as INT32, so it needs to be double the length of the stream
+	if (guiMixLength < want_values)
+	{
+		guiMixLength = want_values;
 		gMixBuffer = REALLOC(gMixBuffer, INT32, guiMixLength);
 	}
 
-	SDL_memset(gMixBuffer, 0, guiMixLength);
+	std::fill_n(gMixBuffer, want_values, 0);
 
 	// Mix sounds
 	for (UINT32 i = 0; i < lengthof(pSoundList); i++)
@@ -823,8 +838,8 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 				const SAMPLETAG* const s = Sound->pSample;
 				const INT vol_l   = Sound->uiFadeVolume * (127 - Sound->Pan) / MAXVOLUME;
 				const INT vol_r   = Sound->uiFadeVolume * (  0 + Sound->Pan) / MAXVOLUME;
-				size_t    samples = len / 4;
-				size_t    amount;
+				UINT32    samples = want_samples;
+				UINT32    amount;
 
 mixing:
 				amount = MIN(samples, s->n_samples - Sound->pos);
@@ -869,13 +884,17 @@ mixing:
 
 	// Clip sounds and fill the stream
 	INT16* Stream = (INT16*)stream;
-	UINT32 uiEnd = len / sizeof(Stream[0]);
-	for (UINT32 i = 0; i < uiEnd; ++i)
+	for (UINT32 i = 0; i < want_values; ++i)
 	{
 		if (gMixBuffer[i] >= INT16_MAX)     Stream[i] = INT16_MAX;
 		else if(gMixBuffer[i] <= INT16_MIN) Stream[i] = INT16_MIN;
 		else                                Stream[i] = (INT16)gMixBuffer[i];
 	}
+
+	// "The callback must completely initialize the buffer"
+	// see: https://wiki.libsdl.org/SDL_AudioSpec
+	UINT32 have_bytes = want_values * sizeof(INT16);
+	std::fill_n(stream + have_bytes, want_bytes - have_bytes, 0);
 }
 
 
@@ -892,7 +911,7 @@ static BOOLEAN SoundInitHardware(void)
 
 	if (SDL_OpenAudio(&gTargetAudioSpec, NULL) != 0) return FALSE;
 
-	memset(pSoundList, 0, sizeof(pSoundList));
+	std::fill(std::begin(pSoundList), std::end(pSoundList), SOUNDTAG{});
 	SDL_PauseAudio(0);
 	return TRUE;
 }

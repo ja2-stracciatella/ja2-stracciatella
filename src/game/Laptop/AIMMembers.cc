@@ -1211,7 +1211,7 @@ static INT8 AimMemberHireMerc(void)
 	ProfileID const pid = AimMercArray[gbCurrentIndex];
 
 	MERC_HIRE_STRUCT h;
-	memset(&h, 0, sizeof(h));
+	h = MERC_HIRE_STRUCT{};
 	h.ubProfileID               = pid;
 	h.sSectorX                  = SECTORX(g_merc_arrive_sector);
 	h.sSectorY                  = SECTORY(g_merc_arrive_sector);

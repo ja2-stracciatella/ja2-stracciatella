@@ -15,6 +15,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <algorithm>
+
 #define AIM_ALUMNI_NAME_FILE		BINARYDATADIR "/alumname.edt"
 #define AIM_ALUMNI_FILE			BINARYDATADIR "/alumni.edt"
 
@@ -124,7 +126,7 @@ void EnterInitAimArchives()
 	gfDrawPopUpBox=FALSE;
 	gfDestroyPopUpBox = FALSE;
 
-	memset( &AimArchivesSubPagesVisitedFlag, 0, 3);
+	std::fill_n(AimArchivesSubPagesVisitedFlag, 3, 0);
 	AimArchivesSubPagesVisitedFlag[0] = TRUE;
 }
 

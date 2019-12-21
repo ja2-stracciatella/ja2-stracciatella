@@ -20,6 +20,8 @@
 #include "Debug.h"
 #include "MemMan.h"
 
+#include <algorithm>
+#include <iterator>
 
 static UINT16  gusMapPathingData[256];
 static BOOLEAN gfPlotToAvoidPlayerInfuencedSectors = FALSE;
@@ -211,13 +213,13 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 	queRequests = 2;
 
 	//initialize the ai data structures
-	memset(trailStratTreeB,0,sizeof(trailStratTreeB));
-	memset(trailCostB,255,sizeof(trailCostB));
+	std::fill(std::begin(trailStratTreeB), std::end(trailStratTreeB), trail_t{});
+	std::fill(std::begin(trailCostB), std::end(trailCostB), 255);
 
-	memset(pathQB,0,sizeof(pathQB));
+	std::fill(std::begin(pathQB), std::end(pathQB), path_t{});
 
 	// FOLLOWING LINE COMMENTED OUT ON MARCH 7/97 BY IC
-	memset(gusMapPathingData,((UINT16)sStart), sizeof(gusMapPathingData));
+	std::fill(std::begin(gusMapPathingData), std::end(gusMapPathingData), ((UINT16)sStart));
 	trailStratTreedxB=0;
 
 	//set up common info

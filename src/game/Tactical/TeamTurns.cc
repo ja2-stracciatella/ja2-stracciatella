@@ -48,6 +48,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <algorithm>
+#include <iterator>
+
 static SOLDIERTYPE* gOutOfTurnOrder[MAXMERCS];
 UINT8 gubOutOfTurnPersons = 0;
 
@@ -71,7 +74,7 @@ extern SightFlags gubSightFlags;
 
 void ClearIntList( void )
 {
-	memset(gOutOfTurnOrder, 0, sizeof(gOutOfTurnOrder));
+	std::fill(std::begin(gOutOfTurnOrder), std::end(gOutOfTurnOrder), nullptr);
 	gubOutOfTurnPersons = 0;
 }
 

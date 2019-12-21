@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Directories.h"
 #include "Font_Control.h"
 #include "HImage.h"
@@ -91,6 +89,9 @@
 #include "Soldier.h"
 #include "WeaponModels.h"
 #include "Logger.h"
+
+#include <algorithm>
+#include <stdexcept>
 
 #define PALETTEFILENAME			BINARYDATADIR "/ja2pal.dat"
 
@@ -267,7 +268,7 @@ static void HandleCrowShadowNewGridNo(SOLDIERTYPE& s)
 	if (s.usAnimState != CROW_FLY) return;
 
 	ANITILE_PARAMS a;
-	memset(&a, 0, sizeof(a));
+	a = ANITILE_PARAMS{};
 	a.sGridNo        = s.sGridNo;
 	a.ubLevelID      = ANI_SHADOW_LEVEL;
 	a.sDelay         = s.sAniDelay;
@@ -4682,7 +4683,7 @@ void CreateSoldierPalettes(SOLDIERTYPE& s)
 	}
 
 	SGPPaletteEntry tmp_pal[256];
-	memset(tmp_pal, 0, sizeof(*tmp_pal) * 256);
+	std::fill_n(tmp_pal, 256, SGPPaletteEntry{});
 
 	SGPPaletteEntry const*       pal;
 	char            const* const substitution = GetBodyTypePaletteSubstitution(&s, s.ubBodyType);

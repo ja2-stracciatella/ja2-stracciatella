@@ -1137,7 +1137,7 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 
 		gbSaveGameArray[bEntry] = FALSE;
 	}
-	memset(header, 0, sizeof(*header));
+	*header = SAVED_GAME_HEADER{};
 	return FALSE;
 }
 

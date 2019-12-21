@@ -243,7 +243,7 @@ static void AddToMapTempFile(UINT32 const uiMapIndex, UINT16 const usIndex, UINT
 	UINT16 const usSubIndex = GetSubIndexFromTileIndex(usIndex);
 
 	MODIFY_MAP m;
-	memset(&m, 0, sizeof(m));
+	m = MODIFY_MAP{};
 	m.usGridNo        = uiMapIndex;
 	m.usImageType     = uiType;
 	m.usSubImageIndex = usSubIndex;
@@ -306,7 +306,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 		//if there is either blood or a smell on the tile, save it
 		if( gpWorldLevelData[cnt].ubBloodInfo || gpWorldLevelData[cnt].ubSmellInfo )
 		{
-			memset( &Map, 0, sizeof( MODIFY_MAP ) );
+			Map = MODIFY_MAP{};
 
 
 			// Save the BloodInfo in the bottom byte and the smell info in the upper byte
@@ -344,7 +344,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 					if( pCurrent->sCubeOffset != 0 )
 						ubLevel |= ubBitToSet;
 
-					memset( &Map, 0, sizeof( MODIFY_MAP ) );
+					Map = MODIFY_MAP{};
 
 					// Save the Damaged value
 					Map.usGridNo	= cnt;
@@ -540,7 +540,7 @@ void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 	const UINT32 uiType     = GetTileType(usIndex);
 	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
 
-	memset( &Map, 0, sizeof( MODIFY_MAP ) );
+	Map = MODIFY_MAP{};
 
 	Map.usGridNo = (UINT16)uiMapIndex;
 //	Map.usIndex		= usIndex;
@@ -564,7 +564,7 @@ void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT
 	const UINT32 uiType     = GetTileType(usIndex);
 	const UINT16 usSubIndex = GetSubIndexFromTileIndex(usIndex);
 
-	memset( &Map, 0, sizeof( MODIFY_MAP ) );
+	Map = MODIFY_MAP{};
 
 	Map.usGridNo	= (UINT16)uiMapIndex;
 //	Map.usIndex			= usIndex;
@@ -590,7 +590,7 @@ void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSect
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		return;
 
-	memset( &Map, 0, sizeof( MODIFY_MAP ) );
+	Map = MODIFY_MAP{};
 
 	Map.usGridNo = usGridNo;
 //	Map.usIndex		= pExitGrid->ubGotoSectorX;
@@ -660,7 +660,7 @@ static void AddOpenableStructStatusToMapTempFile(UINT32 uiMapIndex, BOOLEAN fOpe
 {
 	MODIFY_MAP Map;
 
-	memset( &Map, 0, sizeof( MODIFY_MAP ) );
+	Map = MODIFY_MAP{};
 
 	Map.usGridNo = (UINT16)uiMapIndex;
 	Map.usImageType = fOpened;
@@ -674,7 +674,7 @@ void AddWindowHitToMapTempFile( UINT32 uiMapIndex )
 {
 	MODIFY_MAP Map;
 
-	memset( &Map, 0, sizeof( MODIFY_MAP ) );
+	Map = MODIFY_MAP{};
 
 	Map.usGridNo = (UINT16)uiMapIndex;
 	Map.ubType = SLM_WINDOW_HIT;

@@ -178,6 +178,8 @@ class GUIButtonRef
 
 		operator GUI_BUTTON*() const { return ButtonList[btn_id_]; }
 
+		static GUIButtonRef NoButton() { GUIButtonRef b; b.btn_id_ = -1; return b; };
+
 	private:
 		INT32 btn_id_;
 };

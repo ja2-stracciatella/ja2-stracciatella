@@ -553,3 +553,61 @@ int main(int argc, char* argv[])
 	}
 	JsonUtility::writeToFile(outputFile, quotes_str);
 }*/
+
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+
+struct TestStruct {
+	int a;
+	int b;
+	int c[2];
+};
+
+TEST(cpp_language, list_initialization)
+{
+	// since C++11: https://en.cppreference.com/w/cpp/language/list_initialization
+	{
+		TestStruct tmp{};
+		EXPECT_EQ(tmp.a, 0);
+		EXPECT_EQ(tmp.b, 0);
+		EXPECT_EQ(tmp.c[0], 0);
+		EXPECT_EQ(tmp.c[1], 0);
+	}
+	{
+		TestStruct tmp{1, 2, {3, 4}};
+		EXPECT_EQ(tmp.a, 1);
+		EXPECT_EQ(tmp.b, 2);
+		EXPECT_EQ(tmp.c[0], 3);
+		EXPECT_EQ(tmp.c[1], 4);
+	}
+	{
+		TestStruct tmp = TestStruct{};
+		EXPECT_EQ(tmp.a, 0);
+		EXPECT_EQ(tmp.b, 0);
+		EXPECT_EQ(tmp.c[0], 0);
+		EXPECT_EQ(tmp.c[1], 0);
+	}
+	{
+		TestStruct tmp = TestStruct{1, 2, {3, 4}};
+		EXPECT_EQ(tmp.a, 1);
+		EXPECT_EQ(tmp.b, 2);
+		EXPECT_EQ(tmp.c[0], 3);
+		EXPECT_EQ(tmp.c[1], 4);
+	}
+	{
+		TestStruct tmp = {};
+		EXPECT_EQ(tmp.a, 0);
+		EXPECT_EQ(tmp.b, 0);
+		EXPECT_EQ(tmp.c[0], 0);
+		EXPECT_EQ(tmp.c[1], 0);
+	}
+	{
+		TestStruct tmp = {1, 2, {3, 4}};
+		EXPECT_EQ(tmp.a, 1);
+		EXPECT_EQ(tmp.b, 2);
+		EXPECT_EQ(tmp.c[0], 3);
+		EXPECT_EQ(tmp.c[1], 4);
+	}
+}
+
+#endif // WITH_UNITTESTS

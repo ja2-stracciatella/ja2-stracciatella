@@ -2,6 +2,8 @@
 #include "MemMan.h"
 #include "Quantize.h"
 
+#include <algorithm>
+
 
 #define COLOUR_BITS   6
 #define MAX_COLOURS 255
@@ -188,7 +190,7 @@ void QuantizeImage(UINT8* const pDest, const SGPPaletteEntry* const pSrc, const 
 	FOR_EACH(NODE*, i, g_reducible_nodes) *i = 0;
 	NODE* const tree = ProcessImage(pSrc, sWidth, sHeight);
 
-	memset(pPalette, 0,  sizeof(*pPalette) * 256);
+	std::fill_n(pPalette, 256, SGPPaletteEntry{});
 	GetPaletteColors(tree, pPalette, 0);
 	DeleteTree(tree);
 

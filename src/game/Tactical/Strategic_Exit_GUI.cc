@@ -131,7 +131,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	BOOLEAN OkExitCode;
 
 	//STEP 1:  Calculate the information for the exit gui
-	memset( &gExitDialog, 0, sizeof( EXIT_DIALOG_STRUCT ) );
+	gExitDialog = EXIT_DIALOG_STRUCT{};
 
 	// OK, bring up dialogue... first determine some logic here...
 	switch( ubDirection )

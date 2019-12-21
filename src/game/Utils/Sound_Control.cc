@@ -669,7 +669,7 @@ INT32 NewPositionSnd(INT16 const sGridNo, SOLDIERTYPE const* const SoundSource, 
 	if (idx == -1) return -1;
 
 	POSITIONSND& p = gPositionSndData[idx];
-	memset(&p, 0, sizeof(p));
+	p = POSITIONSND{};
 	p.fInActive      = !gfPositionSoundsActive;
 	p.sGridNo        = sGridNo;
 	p.SoundSource    = SoundSource;

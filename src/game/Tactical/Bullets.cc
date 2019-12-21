@@ -16,6 +16,9 @@
 #include "Debug.h"
 #include "Logger.h"
 
+#include <algorithm>
+#include <iterator>
+
 #define NUM_BULLET_SLOTS 50
 
 
@@ -57,7 +60,7 @@ BULLET* CreateBullet(SOLDIERTYPE* const firer, const BOOLEAN fFake, const UINT16
 	BULLET* const b = GetFreeBullet();
 	if (b == NULL) return NULL;
 
-	memset(b, 0, sizeof(*b));
+	*b = BULLET{};
 	b->fAllocated = TRUE;
 	b->fLocated = FALSE;
 	b->pFirer = firer;
@@ -75,7 +78,7 @@ void HandleBulletSpecialFlags(BULLET* pBullet)
 	FLOAT          dX, dY;
 	UINT8          ubDirection;
 
-	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
+	AniParams = ANITILE_PARAMS{};
 
 	if ( pBullet->fReal )
 	{
@@ -328,7 +331,7 @@ void AddMissileTrail( BULLET *pBullet, FIXEDPT qCurrX, FIXEDPT qCurrY, FIXEDPT q
 	}
 
 
-	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
+	AniParams = ANITILE_PARAMS{};
 	AniParams.sGridNo = (INT16)pBullet->sGridNo;
 	AniParams.ubLevelID = ANI_STRUCT_LEVEL;
 	AniParams.sDelay = (INT16)( 100 + Random( 100 ) );
@@ -400,7 +403,7 @@ void SaveBulletStructureToSaveGameFile(HWFILE const hFile)
 void LoadBulletStructureFromSavedGameFile(HWFILE const hFile)
 {
 	//make sure the bullets are not allocated
-	memset(gBullets, 0, sizeof(gBullets));
+	std::fill(std::begin(gBullets), std::end(gBullets), BULLET{});
 
 	//Load the number of Bullets in the array
 	FileRead(hFile, &guiNumBullets, sizeof(UINT32));

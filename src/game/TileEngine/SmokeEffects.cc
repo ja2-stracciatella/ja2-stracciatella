@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Directories.h"
 #include "LoadSaveSmokeEffect.h"
 #include "Overhead.h"
@@ -25,6 +23,9 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+
+#include <algorithm>
+#include <stdexcept>
 
 #define NUM_SMOKE_EFFECT_SLOTS 25
 
@@ -126,7 +127,7 @@ void NewSmokeEffect(const INT16 sGridNo, const UINT16 usItem, const INT8 bLevel,
 	SMOKEEFFECT* const pSmoke = GetFreeSmokeEffect();
 	if (pSmoke == NULL) return;
 
-	memset(pSmoke, 0, sizeof(*pSmoke));
+	*pSmoke = SMOKEEFFECT{};
 
 	// Set some values...
 	pSmoke->sGridNo									= sGridNo;
@@ -276,7 +277,7 @@ void AddSmokeEffectToTile(SMOKEEFFECT const* const smoke, SmokeEffectKind const 
 	}
 
 	ANITILE_PARAMS	ani_params;
-	memset(&ani_params, 0, sizeof(ani_params));
+	ani_params = ANITILE_PARAMS{};
 	ani_params.uiFlags     = ani_flags;
 	ani_params.zCachedFile = cached_file;
 	ani_params.sStartFrame = start_frame;
@@ -454,7 +455,7 @@ void LoadSmokeEffectsFromLoadGameFile(HWFILE const hFile, UINT32 const savegame_
 	UINT32	uiCnt=0;
 
 	//Clear out the old list
-	memset( gSmokeEffectData, 0, sizeof( SMOKEEFFECT ) * NUM_SMOKE_EFFECT_SLOTS );
+	std::fill_n(gSmokeEffectData, NUM_SMOKE_EFFECT_SLOTS, SMOKEEFFECT{});
 
 	//Load the Number of Smoke Effects
 	FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32));
@@ -554,7 +555,7 @@ void LoadSmokeEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 void ResetSmokeEffects()
 {
 	//Clear out the old list
-	memset( gSmokeEffectData, 0, sizeof( SMOKEEFFECT ) * NUM_SMOKE_EFFECT_SLOTS );
+	std::fill_n(gSmokeEffectData, NUM_SMOKE_EFFECT_SLOTS, SMOKEEFFECT{});
 	guiNumSmokeEffects = 0;
 }
 

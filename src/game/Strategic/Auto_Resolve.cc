@@ -1819,7 +1819,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			}
 		}
 		TacticalRemoveSoldier(s);
-		memset(&gpCivs[i], 0, sizeof(SOLDIERCELL));
+		gpCivs[i] = SOLDIERCELL{};
 	}
 
 	if (delete_for_good)
@@ -1861,7 +1861,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		SOLDIERCELL& slot = gpEnemies[i];
 		if (!slot.pSoldier) continue;
 		TacticalRemoveSoldier(*slot.pSoldier);
-		memset(&slot, 0, sizeof(slot));
+		slot = SOLDIERCELL{};
 	}
 
 	for (INT32 i = 0; i != NUM_AR_BUTTONS; ++i)
@@ -2577,7 +2577,7 @@ static void CreateTempPlayerMerc(void)
 	SOLDIERCREATE_STRUCT		MercCreateStruct;
 
 	//Init the merc create structure with basic information
-	memset( &MercCreateStruct, 0, sizeof( MercCreateStruct ) );
+	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam									= OUR_TEAM;
 	MercCreateStruct.ubProfile							= GetUnusedMercProfileID();
 	MercCreateStruct.sSectorX								= gpAR->ubSectorX;

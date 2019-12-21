@@ -1,10 +1,12 @@
 #include "TranslationTable.h"
 
+#include <algorithm>
+#include <iterator>
 #include <string.h>
 
 CTranslationTable::CTranslationTable()
 {
-	memset(m_table, 0, sizeof(m_table));
+	std::fill(std::begin(m_table), std::end(m_table), 0);
 }
 
 /** Translation table for the English version of the game. */

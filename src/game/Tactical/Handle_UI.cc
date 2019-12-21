@@ -78,6 +78,9 @@
 #include "GameInstance.h"
 #include "Soldier.h"
 
+#include <algorithm>
+#include <iterator>
+
 #define MAX_ON_DUTY_SOLDIERS 6
 
 /////////////////////////////////////////////////////////////////////////////////////
@@ -867,7 +870,7 @@ void SetUIKeyboardHook( UIKEYBOARD_HOOK KeyboardHookFnc )
 
 static void ClearEvent(UI_EVENT* pUIEvent)
 {
-	memset( pUIEvent->uiParams, 0, sizeof( pUIEvent->uiParams ) );
+	std::fill(std::begin(pUIEvent->uiParams), std::end(pUIEvent->uiParams), 0);
 	pUIEvent->fDoneMenu = FALSE;
 	pUIEvent->fFirstTime = TRUE;
 	pUIEvent->uiMenuPreviousMode = DONT_CHANGEMODE;
@@ -900,7 +903,7 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 	{
 		ubTemp+= 2;
 
-		memset( &HireMercStruct, 0, sizeof(MERC_HIRE_STRUCT));
+		HireMercStruct = MERC_HIRE_STRUCT{};
 
 		HireMercStruct.ubProfileID = ubTemp;
 

@@ -423,7 +423,7 @@ static void SortSoldierInitList(void)
 bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 {
 	SOLDIERCREATE_STRUCT dp;
-	memset(&dp, 0, sizeof(dp));
+	dp = SOLDIERCREATE_STRUCT{};
 
 	// First check if this guy has a profile and if so check his location such that it matches
 	if (SOLDIERCREATE_STRUCT* const init_dp = init->pDetailedPlacement)
@@ -1720,7 +1720,7 @@ void AddProfilesUsingProfileInsertionData()
 		{
 			// Create a new soldier, as this one doesn't exist
 			SOLDIERCREATE_STRUCT c;
-			memset(&c, 0, sizeof(c));
+			c = SOLDIERCREATE_STRUCT{};
 			c.bTeam     = CIV_TEAM;
 			c.ubProfile = i;
 			c.sSectorX  = gWorldSectorX;

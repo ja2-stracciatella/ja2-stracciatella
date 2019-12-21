@@ -15,6 +15,7 @@
 #include "Tactical_Save.h"
 #include "MemMan.h"
 
+#include <algorithm>
 
 UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail = NULL;
 
@@ -249,7 +250,7 @@ void InitNewCampaign()
 {
 	//First clear all the sector information of all enemy existance.  Conveniently, the
 	//ubGroupType is also cleared, which is perceived to be an empty group.
-	memset( &SectorInfo, 0, sizeof( SECTORINFO ) * 256 );
+	std::fill_n(SectorInfo, 256, SECTORINFO{});
 	InitStrategicMovementCosts();
 	RemoveAllGroups();
 

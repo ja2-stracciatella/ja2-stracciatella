@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Font.h"
 #include "Font_Control.h"
 #include "MapScreen.h"
@@ -34,6 +32,9 @@
 #include "Debug.h"
 #include "FileMan.h"
 #include "Logger.h"
+
+#include <algorithm>
+#include <stdexcept>
 
 #define SAI_VERSION		29
 
@@ -2384,8 +2385,8 @@ void SaveStrategicAI(HWFILE const hFile)
 	ARMY_COMPOSITION gTempArmyComp;
 	INT32 i;
 
-	memset( &gTempPatrolGroup, 0, sizeof( PATROL_GROUP ) );
-	memset( &gTempArmyComp, 0, sizeof( ARMY_COMPOSITION ) );
+	gTempPatrolGroup = PATROL_GROUP{};
+	gTempArmyComp = ARMY_COMPOSITION{};
 
 	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
 	FileWrite(hFile, &gfExtraElites,                      1);
@@ -2423,7 +2424,7 @@ void SaveStrategicAI(HWFILE const hFile)
 		FileWrite(hFile, &gTempPatrolGroup, sizeof(PATROL_GROUP));
 	}
 	//Save the garrison information!
-	memset( &gTempGarrisonGroup, 0, sizeof( GARRISON_GROUP ) );
+	gTempGarrisonGroup = GARRISON_GROUP{};
 	if (giGarrisonArraySize != 0) FileWrite(hFile, gGarrisonGroup, giGarrisonArraySize * sizeof(GARRISON_GROUP));
 	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
 	while( i-- )
@@ -2895,8 +2896,8 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 	//are controlled by her, the desired number will be increased as well as the priority.  On the other
 	//hand, if she doesn't own those sectors, the values will be decreased instead.  All values are based off of
 	//the originals.
-	memset( ubOwned, 0, NUM_ARMY_COMPOSITIONS );
-	memset( ubTotal, 0, NUM_ARMY_COMPOSITIONS );
+	std::fill_n(ubOwned, static_cast<size_t>(NUM_ARMY_COMPOSITIONS), 0);
+	std::fill_n(ubTotal, static_cast<size_t>(NUM_ARMY_COMPOSITIONS), 0);
 
 	//Record the values required to calculate the percentage of each composition type that the queen controls.
 	for( i = 0; i < giGarrisonArraySize; i++ )

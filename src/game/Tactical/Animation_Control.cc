@@ -465,7 +465,10 @@ void InitAnimationSurfacesPerBodytype( )
 			gubAnimSurfaceCorpseID[cnt1][cnt2] = NO_CORPSE;
 		}
 	}
-	memset( gRandomAnimDefs, 0, sizeof( gRandomAnimDefs ) );
+	for (auto& i : gRandomAnimDefs)
+	{
+		std::fill(std::begin(i), std::end(i), RANDOM_ANI_DEF{});
+	}
 
 
 	// REGULAR MALE GUY

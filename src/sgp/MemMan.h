@@ -7,6 +7,8 @@
 #define _MEMMAN_H
 
 #include "Types.h"
+
+#include <algorithm>
 #include <stdlib.h>
 
 #define MemAlloc(size)        XMalloc((size))
@@ -21,7 +23,7 @@ void* XRealloc(void* ptr, size_t size);
 static inline void* MallocZ(const size_t n)
 {
 	void* const p = MemAlloc(n);
-	memset(p, 0, n);
+	std::fill_n(static_cast<uint8_t*>(p), n, 0);
 	return p;
 }
 

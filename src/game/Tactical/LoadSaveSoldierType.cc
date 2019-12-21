@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Debug.h"
 #include "LoadSaveData.h"
 #include "LoadSaveObjectType.h"
@@ -7,6 +5,9 @@
 #include "Overhead.h"
 #include "Tactical_Save.h"
 #include "Types.h"
+
+#include <algorithm>
+#include <stdexcept>
 
 static UINT32 MercChecksum(SOLDIERTYPE const& s)
 {
@@ -40,7 +41,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	UINT16 usPathDataSize;
 	UINT16 usPathIndex;
 
-	memset(s, 0, sizeof(*s));
+	*s = SOLDIERTYPE{};
 
 	const BYTE* d = data;
 	EXTR_U8(d, s->ubID)
@@ -732,7 +733,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	// pathing info takes up 16 bit in the savegame but 8 bit in the engine
 	usPathDataSize = s->ubPathDataSize > MAX_PATH_LIST_SIZE ? (UINT16)MAX_PATH_LIST_SIZE : (UINT16)s->ubPathDataSize;
 	usPathIndex = (UINT16)s->ubPathIndex;
-	memset(usPathingData, 0, MAX_PATH_LIST_SIZE);
+	std::fill_n(usPathingData, MAX_PATH_LIST_SIZE, 0);
 	for (UINT8 i = 0; i < usPathDataSize; i++) {
 		usPathingData[i] = (UINT16)s->ubPathingData[i];
 	}

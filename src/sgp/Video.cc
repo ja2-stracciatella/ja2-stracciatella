@@ -1,7 +1,3 @@
-#include <algorithm>
-#include <ctime>
-#include <stdexcept>
-
 #include "Debug.h"
 #include "Fade_Screen.h"
 #include "FileMan.h"
@@ -17,9 +13,6 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "Video.h"
-#include <errno.h>
-#include <fcntl.h>
-#include <stdarg.h>
 #include "UILayout.h"
 #include "PlatformIO.h"
 #include "Font.h"
@@ -29,6 +22,13 @@
 #include "GameInstance.h"
 
 #include "Logger.h"
+
+#include <algorithm>
+#include <ctime>
+#include <errno.h>
+#include <fcntl.h>
+#include <stdarg.h>
+#include <stdexcept>
 
 #define BUFFER_READY      0x00
 #define BUFFER_DIRTY      0x02
@@ -463,7 +463,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 		UINT h = StripRegions[i].h;
 		for (UINT j = y; j < y + h; ++j)
 		{
-			memset(gpZBuffer + j * SCREEN_WIDTH + x, 0, w * sizeof(*gpZBuffer));
+			std::fill_n(gpZBuffer + j * SCREEN_WIDTH + x, w, 0);
 		}
 
 		RenderStaticWorldRect(x, y, x + w, y + h, TRUE);

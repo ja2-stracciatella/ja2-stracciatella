@@ -15,6 +15,7 @@
 #include "Font_Control.h"
 #include "UILayout.h"
 
+#include <algorithm>
 
 #define INS_INFO_FRAUD_TEXT_COLOR		FONT_MCOLOR_RED
 
@@ -83,7 +84,7 @@ static MOUSE_REGION gSelectedInsuranceInfoHomeLinkRegion;
 
 void EnterInitInsuranceInfo()
 {
-	memset( &InsuranceInfoSubPagesVisitedFlag, 0, INS_INFO_LAST_PAGE-1);
+	std::fill_n(InsuranceInfoSubPagesVisitedFlag, INS_INFO_LAST_PAGE-1, 0);
 }
 
 

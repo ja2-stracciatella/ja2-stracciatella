@@ -3026,7 +3026,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 
 			default:
 				// set to empty
-				memset( &BestAttack, 0, sizeof( BestAttack ) );
+				BestAttack = ATTACKTYPE{};
 				break;
 		}
 	}

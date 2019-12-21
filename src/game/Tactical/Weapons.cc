@@ -1123,7 +1123,7 @@ static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 			}
 
 			// Send event for getting hit
-			memset( &(SWeaponHit), 0, sizeof( SWeaponHit ) );
+			SWeaponHit = EV_S_WEAPONHIT{};
 			SWeaponHit.usSoldierID = pTargetSoldier->ubID;
 			SWeaponHit.usWeaponIndex = pSoldier->usAttackingWeapon;
 			SWeaponHit.sDamage = (INT16) iImpact;
@@ -1374,7 +1374,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 				iImpact = HTHImpact( pSoldier, pTargetSoldier, (iHitChance - iDiceRoll), FALSE );
 
 				// Send event for getting hit
-				memset( &(SWeaponHit), 0, sizeof( SWeaponHit ) );
+				SWeaponHit = EV_S_WEAPONHIT{};
 				SWeaponHit.usSoldierID = pTargetSoldier->ubID;
 				SWeaponHit.usWeaponIndex = pSoldier->usAttackingWeapon;
 				SWeaponHit.sDamage = (INT16) iImpact;
@@ -1585,7 +1585,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 	ubAmmoType = attacker->inv[attacker->ubAttackingHand].ubGunAmmoType;
 	usItem     = attacker->inv[attacker->ubAttackingHand].usItem;
 
-	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
+	AniParams = ANITILE_PARAMS{};
 
 	if ( ubAmmoType == AMMO_HE || ubAmmoType == AMMO_HEAT )
 	{
@@ -1859,7 +1859,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 					usMissTileIndex = SECONDMISS1;
 
 					// Add ripple
-					memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
+					AniParams = ANITILE_PARAMS{};
 					AniParams.sGridNo = sGridNo;
 					AniParams.ubLevelID = ANI_STRUCT_LEVEL;
 					AniParams.usTileIndex = THIRDMISS1;
@@ -1877,7 +1877,7 @@ void StructureHit(BULLET* const pBullet, const INT16 sXPos, const INT16 sYPos, c
 
 				}
 
-				memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
+				AniParams = ANITILE_PARAMS{};
 				AniParams.sGridNo = sGridNo;
 				AniParams.ubLevelID = ANI_STRUCT_LEVEL;
 				AniParams.usTileIndex = usMissTileIndex;
@@ -2025,7 +2025,7 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 		}
 	}
 
-	memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
+	AniParams = ANITILE_PARAMS{};
 	AniParams.sGridNo = sShatterGridNo;
 	AniParams.ubLevelID = ANI_STRUCT_LEVEL;
 	AniParams.usTileIndex = usTileIndex;

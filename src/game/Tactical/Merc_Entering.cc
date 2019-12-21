@@ -692,7 +692,7 @@ void HandleHeliDrop( )
 				case HELI_SHOW_HELI:
 
 					// Start animation
-					memset( &AniParams, 0, sizeof( ANITILE_PARAMS ) );
+					AniParams = ANITILE_PARAMS{};
 					AniParams.sGridNo = gsGridNoSweetSpot;
 					AniParams.ubLevelID = ANI_SHADOW_LEVEL;
 					AniParams.sDelay = 90;

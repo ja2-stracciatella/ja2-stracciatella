@@ -118,7 +118,7 @@ void EntryInitEditorItemsInfo()
 	eInfo.pusItemIndex = NULL;
 	if( eInfo.fGameInit )
 	{ //This only gets called one time in game execution.
-		memset( &eInfo, 0, sizeof( EditorItemsInfo ) );
+		eInfo = EditorItemsInfo{};
 		eInfo.sHilitedItemIndex = -1;
 		eInfo.uiItemType = TBAR_MODE_ITEM_WEAPONS;
 		//Pre-calculate the number of each item type.
