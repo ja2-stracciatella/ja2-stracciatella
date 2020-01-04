@@ -969,6 +969,10 @@ bool DefaultContentManager::loadAllDealersInventory()
 
 const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex) const
 {
+	if(itemIndex >= m_items.size())
+	{
+		return nullptr;
+	}
 	return m_items[itemIndex];
 }
 
