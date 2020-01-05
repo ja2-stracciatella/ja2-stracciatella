@@ -2364,7 +2364,8 @@ void RenderItemDescriptionBox(void)
 			size_t            n = 0;
 			if (w->calibre->index != NOAMMO)
 			{
-				n += swprintf(pStr, lengthof(pStr), L"%ls ", w->calibre->getName());
+				ST::wchar_buffer name = w->calibre->getName()->to_wchar();
+				n += swprintf(pStr, lengthof(pStr), L"%ls ", name.c_str());
 			}
 			n += swprintf(pStr + n, lengthof(pStr) - n, L"%ls", WeaponType[w->ubWeaponType]);
 			if (wchar_t const* const imprint = GetObjectImprint(obj))
@@ -3267,7 +3268,8 @@ static bool IsValidAmmoToReloadRobot(SOLDIERTYPE const& s, OBJECTTYPE const& amm
 	OBJECTTYPE const& weapon = s.inv[HANDPOS];
 	if (!CompatibleAmmoForGun(&ammo, &weapon))
 	{
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], GCM->getWeapon(weapon.usItem)->calibre->getName());
+		ST::wchar_buffer name = GCM->getWeapon(weapon.usItem)->calibre->getName()->to_wchar();
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], name.c_str());
 		return false;
 	}
 	return true;
@@ -5267,7 +5269,8 @@ void GetHelpTextForItem(wchar_t* const dst, size_t const length, OBJECTTYPE cons
 			const CalibreModel * calibre = GCM->getWeapon(usItem)->calibre;
 			if (calibre->showInHelpText)
 			{
-				n += swprintf(dst + n, length - n, L" (%ls)", calibre->getName());
+				ST::wchar_buffer name = calibre->getName()->to_wchar();
+				n += swprintf(dst + n, length - n, L" (%ls)", name.c_str());
 			}
 		}
 
