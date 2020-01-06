@@ -81,6 +81,10 @@ else
   exit 1
 fi
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- $RUSTUP_INIT_ARGS
+if [[ "$CI_TARGET" == "linux-mingw64" ]]; then
+  # XXX currently rustup-init fails to add the target, so add it manually
+  rustup target add x86_64-pc-windows-gnu
+fi
 export PATH=$PATH:$HOME/.cargo/bin
 rustup show
 env
