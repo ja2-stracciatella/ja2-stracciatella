@@ -82,6 +82,7 @@ else
 fi
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- $RUSTUP_INIT_ARGS
 export PATH=$PATH:$HOME/.cargo/bin
+rustup show
 env
 which rustc
 rustc -V
