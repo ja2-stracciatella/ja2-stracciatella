@@ -51,7 +51,7 @@ if [[ "${PUBLISH_BINARY}" == "true" && "${SFTP_PASSWORD}" == "" ]]; then
 fi
 export RUN_TESTS=true
 export RUN_INSTALL_TEST=true
-export RUSTUP_DEFAULT_TOOLCHAIN=$(cat ./rust-toolchain)
+export RUSTUP_INIT_CMD="curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --no-modify-path --default-toolchain=$(cat ./rust-toolchain)"
 if [[ "$CI_TARGET" == "linux" ]]; then
   sudo apt update
   sudo apt install build-essential libsdl2-dev libfltk1.3-dev
@@ -62,7 +62,7 @@ elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
   sudo apt update
   sudo apt install build-essential mingw-w64
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP"
-  export RUSTUP_DEFAULT_TOOLCHAIN="$(cat ./rust-toolchain)-x86_64-pc-windows-gnu"
+  export RUSTUP_INIT_CMD="${RUSTUP_INIT_CMD}-x86_64-pc-windows-gnu"
   export RUN_TESTS=false
 elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
   pacman -Syu --noconfirm --needed # assumes the runtime has already been updated
@@ -72,7 +72,7 @@ elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCPACK_GENERATOR=ZIP"
   export RUSTUP_HOME="$(cygpath -w ~/.rustup)"
   export CARGO_HOME="$(cygpath -w ~/.cargo)"
-  export RUSTUP_DEFAULT_TOOLCHAIN="$(cat ./rust-toolchain)-i686-pc-windows-gnu"
+  export RUSTUP_INIT_CMD="${RUSTUP_INIT_CMD}-i686-pc-windows-gnu --default-host=i686-pc-windows-gnu"
   export RUN_INSTALL_TEST=false # no sudo
 elif [[ "$CI_TARGET" == "mac" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle"
@@ -80,11 +80,8 @@ else
   echo "unexpected target ${CI_TARGET}"
   exit 1
 fi
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain=$RUSTUP_DEFAULT_TOOLCHAIN -y --no-modify-path
+$RUSTUP_INIT_CMD
 export PATH=$PATH:$HOME/.cargo/bin
-if [[ "$CI_TARGET" == "linux-mingw64" ]]; then
-  rustup target add x86_64-pc-windows-gnu # cross compiling
-fi
 env
 which rustc
 rustc -V
