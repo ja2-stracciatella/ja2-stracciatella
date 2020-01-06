@@ -62,7 +62,7 @@ elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
   sudo apt update
   sudo apt install build-essential mingw-w64
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP"
-  export RUSTUP_INIT_ARGS="${RUSTUP_INIT_ARGS}-x86_64-pc-windows-gnu"
+  export RUSTUP_INIT_ARGS="${RUSTUP_INIT_ARGS} --target=x86_64-pc-windows-gnu"
   export RUN_TESTS=false
 elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
   pacman -Syu --noconfirm --needed # assumes the runtime has already been updated
