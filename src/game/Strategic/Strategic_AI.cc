@@ -2207,7 +2207,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 		iReinforcementsApproved = MIN( iReinforcementsRequested, giReinforcementPool );
 		if( !iReinforcementsApproved )
 		{
-			AssertMsg(ReinforcementsApproved, "Trying to create empty reinforcements group!");
+			AssertMsg(FALSE, "Trying to create empty reinforcements group!");
 			return;
 		}
 		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, (UINT8)iReinforcementsApproved, 0 );
