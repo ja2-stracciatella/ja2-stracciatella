@@ -47,7 +47,7 @@ DataWriter::DataWriter(void *buf)
 void DataWriter::writeStringAsUTF16(const wchar_t *string, size_t numChars)
 {
 	wchar_to_utf16(string, m_buf, numChars);
-	move(2*numChars);
+	move(static_cast<int>(2*numChars));
 }
 
 void DataWriter::writeU8 (uint8_t  value)

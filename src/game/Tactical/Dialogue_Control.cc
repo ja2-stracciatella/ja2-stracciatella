@@ -1630,7 +1630,7 @@ UINT8 GetQuoteBitNumberFromQuoteID(UINT32 const uiQuoteID)
 	for (size_t i = 0; i != lengthof(gubMercValidPrecedentQuoteID); ++i)
 	{
 		if (gubMercValidPrecedentQuoteID[i] == uiQuoteID)
-			return i;
+			return static_cast<UINT8>(i);
 	}
 	return 0;
 }

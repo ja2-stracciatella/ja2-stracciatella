@@ -264,7 +264,7 @@ void AddTextInputField(INT16 const sLeft, INT16 const sTop, INT16 const sWidth, 
 	n->szString   = MALLOCN(wchar_t, ubMaxChars + 1);
 	if (szInitText)
 	{
-		n->ubStrLen = wcslen(szInitText);
+		n->ubStrLen = static_cast<UINT8>(wcslen(szInitText));
 		Assert(n->ubStrLen <= ubMaxChars);
 		wcslcpy(n->szString, szInitText, ubMaxChars + 1);
 	}
@@ -857,7 +857,7 @@ static void RemoveChars(size_t const pos, size_t const n)
 {
 	TEXTINPUTNODE& t = *gpActive;
 	Assert(pos + n <= t.ubStrLen);
-	t.ubStrLen -= n;
+	t.ubStrLen -= static_cast<UINT8>(n);
 	for (wchar_t* str = t.szString + pos; (*str = str[n]) != L'\0'; ++str) {}
 }
 
@@ -914,7 +914,7 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* const reg, INT32 const 
 		}
 		else
 		{
-			gubCursorPos = CalculateCursorPos(gusMouseXPos - reg->RegionTopLeftX);
+			gubCursorPos = static_cast<UINT8>(CalculateCursorPos(gusMouseXPos - reg->RegionTopLeftX));
 		}
 	}
 }
@@ -928,7 +928,7 @@ static void MouseClickedInTextRegionCallback(MOUSE_REGION* const reg, INT32 cons
 		SetActiveFieldMouse(reg);
 		//Signifies that we are typing text now.
 		SetEditingStatus(TRUE);
-		size_t const pos = CalculateCursorPos(gusMouseXPos - reg->RegionTopLeftX);
+		UINT8 const pos = static_cast<UINT8>(CalculateCursorPos(gusMouseXPos - reg->RegionTopLeftX));
 		gubCursorPos   = pos;
 		gubStartHilite = pos;
 	}

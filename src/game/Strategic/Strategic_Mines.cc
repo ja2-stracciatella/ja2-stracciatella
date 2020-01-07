@@ -631,7 +631,7 @@ INT8 GetMineIndexForSector(UINT8 const sector)
 	for (size_t i = 0; i != lengthof(gMineLocation); ++i)
 	{
 		MINE_LOCATION_TYPE const& m = gMineLocation[i];
-		if (m.sector == sector) return i;
+		if (m.sector == sector) return static_cast<INT8>(i);
 	}
 	return -1;
 }

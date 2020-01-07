@@ -74,7 +74,7 @@ void InjectLightSpriteIntoFile(HWFILE const file, LIGHT_SPRITE const* const l)
 	FileWrite(file, data, sizeof(data));
 
 	const char* const light_name = LightSpriteGetTypeName(l);
-	const UINT8       str_len    = strlen(light_name) + 1;
+	const UINT8       str_len    = static_cast<UINT8>(strlen(light_name) + 1);
 	FileWrite(file, &str_len,   sizeof(str_len));
 	FileWrite(file, light_name, str_len);
 }

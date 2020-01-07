@@ -332,7 +332,7 @@ void Launcher::setPredefinedResolution(Fl_Widget* btn, void* userdata) {
 	Fl_Menu_Button* menuBtn = static_cast< Fl_Menu_Button* >( btn );
 	Launcher* window = static_cast< Launcher* >( userdata );
 	std::string res = menuBtn->mvalue()->label();
-	int split_index = res.find(RESOLUTION_SEPARATOR);
+	size_t split_index = res.find(RESOLUTION_SEPARATOR);
 	int x = atoi(res.substr(0, split_index).c_str());
 	int y = atoi(res.substr(split_index+1, res.length()).c_str());
 	window->resolutionXInput->value(x);

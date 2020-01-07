@@ -174,7 +174,7 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 		}
 		else
 		{
-			UINT32 bytes = MIN(audio[i].size(), UINT32_MAX);
+			UINT32 bytes = MIN(static_cast<UINT32>(audio[i].size()), UINT32_MAX);
 			sf->sounds[i] = SoundPlayFromSmackBuff(audio_channels[i], audio_depth[i], audio_rate[i], audio[i].data(), bytes, MAXVOLUME, 64, 1, nullptr, nullptr);
 		}
 	}

@@ -388,8 +388,8 @@ static void InitAlumniFaceRegions(void)
 	UINT16 const h        = AIM_ALUMNI_ALUMNI_FACE_HEIGHT;
 	for (size_t i = 0; i != n_faces; ++i, ++face_idx)
 	{
-		UINT16        const x = i % AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_X + AIM_ALUMNI_START_GRID_X;
-		UINT16        const y = i / AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_Y + AIM_ALUMNI_START_GRID_Y;
+		UINT16        const x = static_cast<UINT16>(i % AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_X + AIM_ALUMNI_START_GRID_X);
+		UINT16        const y = static_cast<UINT16>(i / AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_Y + AIM_ALUMNI_START_GRID_Y);
 		MOUSE_REGION* const r = &gMercAlumniFaceMouseRegions[i];
 		MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGH, CURSOR_WWW, MSYS_NO_CALLBACK, SelectAlumniFaceRegionCallBack);
 		MSYS_SetRegionUserData(r, 0, face_idx);

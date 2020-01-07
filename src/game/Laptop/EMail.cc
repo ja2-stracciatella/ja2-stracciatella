@@ -2501,7 +2501,7 @@ static void ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, con
 			wcsncat( pFinishedString, &pTempString[ iCurLocInSourceString ], iLength );
 
 			//increment the source string counter by how far in the keyword is and by the length of the keyword
-			iCurLocInSourceString+= iLength + wcslen( sSearchString );
+			iCurLocInSourceString += static_cast<INT32>(iLength + wcslen( sSearchString ));
 
 			if( fReplacingMercName )
 			{
@@ -2522,7 +2522,7 @@ static void ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, con
 			//add the rest of the string
 			wcscat( pFinishedString, &pTempString[ iCurLocInSourceString ] );
 
-			iCurLocInSourceString += wcslen( &pTempString[ iCurLocInSourceString ] );
+			iCurLocInSourceString += static_cast<INT32>(wcslen( &pTempString[ iCurLocInSourceString ] ));
 		}
 	}
 }
