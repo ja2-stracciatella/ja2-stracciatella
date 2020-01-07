@@ -1682,15 +1682,14 @@ INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_
 	// Make sure the guy's actually got a throwable item in his hand
 	UINT16 const in_hand = s.inv[HANDPOS].usItem;
 	const ItemModel *item = GCM->getItem(in_hand);
-	// Gennady: This is a very strange piece of code.
-	//          Be very careful with it.
-	//          The added parenthesis is just to silence a compiler warning (https://github.com/ja2-stracciatella/ja2-stracciatella/issues/791),
-	//          it does not necessarily indicate desired behavior - it just conserves present behavior.
-	//          For more discussion around it, see https://github.com/ja2-stracciatella/ja2-stracciatella/pull/287.
-	if ((!item->getItemClass()) & IC_GRENADE)
+	if (!item)
 	{
-		SLOGI("MinAPsToThrow - Called when in-hand item is %s",
-					item->getInternalName().c_str());
+		SLOGW("MinAPsToThrow - in-hand item is missing");
+		return 0;
+	}
+	else if (!(item->getItemClass() & (IC_GRENADE | IC_THROWN))) // match MinAPsToAttack
+	{
+		SLOGW("MinAPsToThrow - in-hand item '%s' has unexpected item class 0x%x", item->getInternalName().c_str(), item->getItemClass());
 		return 0;
 	}
 
