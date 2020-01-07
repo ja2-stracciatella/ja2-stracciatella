@@ -107,7 +107,7 @@ static void PopTextInputLevel(void)
 
 
 //flags for determining various editing modes.
-static BOOLEAN gfEditingText = FALSE;
+static bool gfEditingText = false;
 static BOOLEAN gfTextInputMode = FALSE;
 
 void SetEditingStatus(bool bIsEditing)
