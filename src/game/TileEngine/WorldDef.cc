@@ -2424,7 +2424,7 @@ try
 	else
 	{
 		// ja2 demo has 3.13
-		SLOGW("% has an unexpected version (%f %u), expect problems", filename, dMajorMapVersion, gMapInformation.ubMapVersion);
+		SLOGW("%s has an unexpected version (%f %u), expect problems", filename, dMajorMapVersion, gMapInformation.ubMapVersion);
 	}
 
 	ValidateAndUpdateMapVersionIfNecessary();
