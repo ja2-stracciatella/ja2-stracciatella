@@ -791,8 +791,8 @@ int FileMan::openFileForReading(const char *filename, int mode)
 /** Replace all \ with / */
 void FileMan::slashifyPath(std::string &path)
 {
-	int len = path.size();
-	for(int i = 0; i < len; i++)
+	size_t len = path.size();
+	for(size_t i = 0; i < len; i++)
 	{
 		if(path[i] == '\\')
 		{

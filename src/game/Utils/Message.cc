@@ -586,7 +586,7 @@ static void InjectScrollStringIntoFile(HWFILE const f, ScrollStringSt const* con
 	}
 
 	ST::utf16_buffer utf16data = ST::string::from_wchar(s->pString).to_utf16();
-	UINT32 const size = 2 * (utf16data.size() + 1);
+	UINT32 const size = static_cast<UINT32>(2 * (utf16data.size() + 1));
 	FileWrite(f, &size, sizeof(size));
 	FileWrite(f, utf16data.c_str(), size);
 

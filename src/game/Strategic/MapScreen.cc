@@ -6854,7 +6854,7 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 			const SOLDIERTYPE* const s = gCharactersList[i].merc;
 			if (s == NULL || !s->bActive) continue;
 
-			if (prev_selected_char == s) ChangeSelectedInfoChar(i, FALSE);
+			if (prev_selected_char == s) ChangeSelectedInfoChar(static_cast<INT8>(i), FALSE);
 		}
 	}
 	else

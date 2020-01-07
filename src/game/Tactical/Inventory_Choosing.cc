@@ -1972,7 +1972,7 @@ static UINT16 SelectStandardArmyGun(UINT8 uiGunLevel)
 	}
 
 	// choose one the of the possible gun choices
-	uiChoice = Random(gunChoice->at(uiGunLevel).size());
+	uiChoice = Random(static_cast<UINT32>(gunChoice->at(uiGunLevel).size()));
 	usGunIndex = (gunChoice->at(uiGunLevel)[uiChoice])->getItemIndex();
 
 	Assert(usGunIndex);

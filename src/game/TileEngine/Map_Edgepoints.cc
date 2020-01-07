@@ -1017,7 +1017,7 @@ void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 
 
 	if (ubNumDesiredPoints >= n_usable)
 	{ //We don't have enough points for everyone, return them all.
-		pMapEdgepointInfo->ubNumPoints = n_usable;
+		pMapEdgepointInfo->ubNumPoints = static_cast<UINT8>(n_usable);
 		for (INT32 i = 0; i < n_usable; ++i)
 		{
 			pMapEdgepointInfo->sGridNo[i] = psTempArray[i];
@@ -1026,7 +1026,7 @@ void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 
 	}
 
 	// We have more points, so choose them randomly.
-	UINT16 usSlots    = n_usable;
+	UINT16 usSlots    = static_cast<UINT16>(n_usable);
 	UINT16 usCurrSlot = 0;
 	pMapEdgepointInfo->ubNumPoints = ubNumDesiredPoints;
 	for (INT32 i = 0; i < n_usable; ++i)
