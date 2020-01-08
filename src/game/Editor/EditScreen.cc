@@ -3007,11 +3007,13 @@ static BOOLEAN DoIRenderASpecialMouseCursor(void)
 			case DRAW_MODE_OSTRUCTS2:
 				if(CheckForFences())
 					fDontUseRandom = TRUE;
+				// fallthrough
 			case DRAW_MODE_DEBRIS:							// These only show if you first hit PGUP/PGDOWN keys
 			case DRAW_MODE_OSTRUCTS:
 			case DRAW_MODE_OSTRUCTS1:
 				if(!fDontUseRandom)
 					break;
+				// fallthrough
 			case DRAW_MODE_BANKS:
 			case DRAW_MODE_ROADS:
 			case DRAW_MODE_WALLS:
