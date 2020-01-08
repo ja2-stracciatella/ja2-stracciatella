@@ -45,7 +45,6 @@ const std::vector<VideoScaleQuality> scalingModes = {
 Launcher::Launcher(int argc, char* argv[]) : StracciatellaLauncher() {
 	this->argc = argc;
 	this->argv = argv;
-	this->exePath;
 }
 
 Launcher::~Launcher() {
