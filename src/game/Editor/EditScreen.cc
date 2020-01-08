@@ -1818,6 +1818,7 @@ static ScreenID PerformSelectedAction(void)
 
 		case ACTION_QUIT_GAME:
 			requestGameExit();
+			break;
 		case ACTION_EXIT_EDITOR:
 			if( EditModeShutdown( ) )
 			{
