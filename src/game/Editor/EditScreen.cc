@@ -2405,6 +2405,7 @@ static ScreenID WaitForSelectionWindowResponse(void)
 
 				case SDLK_ESCAPE:
 					RestoreSelectionList();
+					// fallthrough
 				case SDLK_RETURN:
 					fAllDone = TRUE;
 					break;
