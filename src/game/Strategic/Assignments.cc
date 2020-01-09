@@ -6918,7 +6918,8 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 
 						// able to add, do it
 						AddCharacterToSquad(&s, bAssignment);
-						/* FALLTHROUGH */
+						fItWorked = TRUE;
+						break;
 					}
 
 					// if already in it, don't report that as an error
