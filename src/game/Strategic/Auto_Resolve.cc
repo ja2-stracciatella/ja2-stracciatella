@@ -2229,8 +2229,10 @@ static void ResetAutoResolveInterface(void)
 	{
 		switch( PreRandom( 5 ) )
 		{
-			case 0:					if( gpAR->ubElites ) { gpAR->ubElites--; break; }
+			case 0:         if( gpAR->ubElites ) { gpAR->ubElites--; break; }
+			// fallthrough
 			case 1: case 2: if( gpAR->ubAdmins ) { gpAR->ubAdmins--; break; }
+			// fallthrough
 			case 3: case 4: if( gpAR->ubTroops ) { gpAR->ubTroops--; break; }
 		}
 	}
