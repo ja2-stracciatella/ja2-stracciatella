@@ -420,7 +420,8 @@ void SpecifyItemToEdit( OBJECTTYPE *pItem, INT32 iMapIndex )
 				SetupEquipGUI();
 				break;
 			}
-			// else fall through and act as nothing
+			// else act as nothing
+			// fallthrough
 		case IC_NONE:
 			gbEditingMode = EDITING_NOTHING;
 			if( !(gpItem->fFlags & OBJECT_UNDROPPABLE) )
