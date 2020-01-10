@@ -509,8 +509,6 @@ static void BlinkAutoFace(FACETYPE& f)
 		NewEye(f);
 
 		INT16 sFrame = f.sEyeFrame;
-		if (sFrame > 4) sFrame = 4;
-
 		if (sFrame > 0)
 		{
 			// Blit Accordingly!
@@ -1053,8 +1051,7 @@ static void NewEye(FACETYPE& f)
 {
 	switch(f.sEyeFrame)
 	{
-		case 0 :
-			//f.sEyeFrame = (INT16)Random(2); // normal - can blink or frown
+		case 0: // normal
 			if ( f.ubExpression == ANGRY )
 			{
 				f.ubEyeWait = 0;
@@ -1066,78 +1063,35 @@ static void NewEye(FACETYPE& f)
 				f.sEyeFrame = 4;
 			}
 			else
-			//if (f.sEyeFrame && Talk.talking && Talk.expression != DYING)
-			///    f.sEyeFrame = 3;
-			//else
 				f.sEyeFrame = 1;
 			break;
-		case 1 :
-			// starting to blink  - has to finish unless dying
-			//if (Talk.expression == DYING)
-			//    f.sEyeFrame = 1;
-			//else
+
+		case 1 : // blink (eyelid down)
 			f.sEyeFrame = 2;
 			break;
-		case 2 :
-			//f.sEyeFrame = (INT16)Random(2); // finishing blink - can go normal or frown
-			//if (f.sEyeFrame && Talk.talking)
-			//    f.sEyeFrame = 3;
-			//else
-			//   if (Talk.expression == ANGRY)
-				// f.sEyeFrame = 3;
-			//   else
+		case 2 : // blink (eyelid up)
 			f.sEyeFrame = 0;
 			break;
 
-		case 3 : //f.sEyeFrame = 4; break; // frown
-
+		case 3 : // frown (eyebrown down)
 			f.ubEyeWait++;
-
 			if ( f.ubEyeWait > 6 )
 			{
 				f.sEyeFrame = 0;
 			}
 			break;
 
-		case 4 :
-
+		case 4 : // surprise (eyebrow up)
 			f.ubEyeWait++;
-
 			if ( f.ubEyeWait > 6 )
 			{
 				f.sEyeFrame = 0;
 			}
 			break;
 
-		case 5 :
-			f.sEyeFrame = 6;
+		default:
+			SLOGW("unexpected eye frame (%d)", f.sEyeFrame);
 			f.sEyeFrame = 0;
-			break;
-
-		case 6 :
-			f.sEyeFrame = 7;
-			break;
-		case 7 :
-			f.sEyeFrame = (INT16)Random(2); // can stop frowning or continue
-		//if (f.sEyeFrame && Talk.expression != DYING)
-		//   f.sEyeFrame = 8;
-		//else
-		//    f.sEyeFrame = 0;
-		//break;
-		case 8 :
-			f.sEyeFrame =  9;
-			break;
-		case 9 :
-			f.sEyeFrame = 10;
-			break;
-		case 10:
-			f.sEyeFrame = 11;
-			break;
-		case 11:
-			f.sEyeFrame = 12;
-			break;
-		case 12:
-			f.sEyeFrame =  0;
 			break;
 	}
 }
