@@ -2680,6 +2680,7 @@ void LoadStrategicAI(HWFILE const hFile)
 			case DIF_LEVEL_MEDIUM: //75%
 				SectorInfo[ SEC_N5	].bBloodCatPlacements = 8;
 				SectorInfo[ SEC_N5	].bBloodCats = 10;
+				break;
 			case DIF_LEVEL_HARD: //100%
 				SectorInfo[ SEC_N5	].bBloodCatPlacements = 8;
 				SectorInfo[ SEC_N5	].bBloodCats = 10;
