@@ -1592,15 +1592,15 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 		case AI_ACTION_TOSS_PROJECTILE:       // throw grenade at/near opponent(s)
 			LoadWeaponIfNeeded(pSoldier);
-			// drop through here...
+			// fallthrough
 
 		case AI_ACTION_KNIFE_MOVE:            // preparing to stab opponent
 			if (pSoldier->bAction == AI_ACTION_KNIFE_MOVE) // if statement because toss falls through
 			{
 				pSoldier->usUIMovementMode = DetermineMovementMode( pSoldier, AI_ACTION_KNIFE_MOVE );
 			}
+			// fallthrough
 
-			// fall through
 		case AI_ACTION_FIRE_GUN:              // shoot at nearby opponent
 		case AI_ACTION_THROW_KNIFE:						// throw knife at nearby opponent
 		{
@@ -1685,7 +1685,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				HandleInitialRedAlert(pSoldier->bTeam);
 			}
 			SLOGD("AI radios your position!" );
-			// DROP THROUGH HERE!
+			// fallthrough
 		case AI_ACTION_YELLOW_ALERT:          // tell friends opponent(s) heard
 			SLOGD("Debug: AI radios about a noise!" );
 			DeductPoints(pSoldier,AP_RADIO,BP_RADIO);// pay for it!

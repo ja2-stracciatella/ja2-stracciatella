@@ -1824,7 +1824,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_RECRUIT:
 				// gonna work for free!
 				gMercProfiles[ ubTargetNPC ].sSalary = 0;
-				// and fall through
+				// fallthrough
 
 			case NPC_ACTION_RECRUIT_WITH_SALARY:
 
@@ -2038,8 +2038,9 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					const INT16 sGridNo = pSoldier->sGridNo + DirectionInc(pSoldier->bDirection);
 					SoldierReadyWeapon(pSoldier, sGridNo, FALSE);
 				}
-				// fall through so that the person faces the nearest merc!
+				// and face the nearest merc!
 			}
+				// fallthrough
 
 			case NPC_ACTION_TURN_TO_FACE_NEAREST_MERC:
 			{
@@ -2133,7 +2134,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_REDUCE_CONRAD_SALARY_CONDITIONS:
 				gMercProfiles[ CONRAD ].sSalary = 3300;
-				// and fall through
+				// fallthrough
 			case NPC_ACTION_ASK_ABOUT_ESCORTING_EPC:
 				// Confirm if we want to start escorting or not....
 			case NPC_ACTION_ASK_ABOUT_PAYING_RPC:
@@ -2337,7 +2338,8 @@ unlock:
 					TriggerNPCRecord( MADAME, 28 );
 					break;
 				}
-				// else fall through
+				// else
+				// fallthrough
 			case NPC_ACTION_LAYLAS_NEXT_LINE_AFTER_CARLA:
 				if ( CheckFact( FACT_CINDY_AVAILABLE, 0 ) )
 				{
@@ -2345,24 +2347,27 @@ unlock:
 					TriggerNPCRecord( MADAME, 29 );
 					break;
 				}
+				// else
+				// fallthrough
 			case NPC_ACTION_LAYLAS_NEXT_LINE_AFTER_CINDY:
-				// else fall through
 				if ( CheckFact( FACT_BAMBI_AVAILABLE, 0 ) )
 				{
 					// Mention Bambi
 					TriggerNPCRecord( MADAME, 30 );
 					break;
 				}
+				// else
+				// fallthrough
 			case NPC_ACTION_LAYLAS_NEXT_LINE_AFTER_BAMBI:
-				// else fall through
 				if ( gubQuest[ QUEST_RESCUE_MARIA ] == QUESTINPROGRESS )
 				{
 					// Mention Maria
 					TriggerNPCRecord( MADAME, 31);
 					break;
 				}
+				// else
+				// fallthrough
 			case NPC_ACTION_LAYLAS_NEXT_LINE_AFTER_MARIA:
-				// else fall through
 				if ( CheckFact( FACT_MULTIPLE_MERCS_CLOSE, MADAME ) )
 				{
 					// if more than 1 merc nearby, say comment about 2 guys pergirl
@@ -3745,7 +3750,8 @@ action_punch_pc:
 				{
 					TriggerNPCRecord( DARREN, 25 );
 				}
-				// else FALL THROUGH to check for Kingpin being impressed
+				// else check for Kingpin being impressed
+				// fallthrough
 			case NPC_ACTION_TRIGGER_KINGPIN_IMPRESSED:
 				if ( gfLastBoxingMatchWonByPlayer && !BoxerAvailable() )
 				{

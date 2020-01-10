@@ -7548,8 +7548,8 @@ void ReLoadSoldierAnimationDueToHandItemChange(SOLDIERTYPE* const s, UINT16 cons
 				EVENT_InitNewSoldierAnim(s, RAISE_RIFLE, 0, FALSE);
 				break;
 			}
-			/* FALLTHROUGH */
 		}
+			// fallthrough
 
 		case ANIM_CROUCH:
 		case ANIM_PRONE:
