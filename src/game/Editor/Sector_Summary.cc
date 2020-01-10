@@ -1654,6 +1654,7 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 					gfOverheadMapDirty = TRUE;
 					return FALSE;
 				}
+				break;
 			case SDLK_RETURN:
 				if( GetActiveFieldID() == 1 )
 					SelectNextField();
