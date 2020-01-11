@@ -613,11 +613,11 @@ void UpdateClock()
 	UINT32 uiThousandthsOfThisSecondProcessed;
 	UINT32 uiTimeSlice;
 	UINT32 uiNewTimeProcessed;
-	UINT32 uiAmountToAdvanceTime;
 	static UINT8 ubLastResolution = 1;
 	static UINT32 uiLastSecondTime = 0;
 	static UINT32 uiLastTimeProcessed = 0;
 #ifdef DEBUG_GAME_CLOCK
+	UINT32 uiAmountToAdvanceTime;
 	UINT32 uiOrigNewTime;
 	UINT32 uiOrigLastSecondTime;
 	UINT32 uiOrigThousandthsOfThisSecondProcessed;
@@ -688,9 +688,9 @@ void UpdateClock()
 
 			uiNewTimeProcessed = MAX( uiNewTimeProcessed, uiLastTimeProcessed );
 
+			#ifdef DEBUG_GAME_CLOCK
 			uiAmountToAdvanceTime = uiNewTimeProcessed - uiLastTimeProcessed;
 
-			#ifdef DEBUG_GAME_CLOCK
 				if( uiAmountToAdvanceTime > 0x80000000 || guiGameClock + uiAmountToAdvanceTime < guiPreviousGameClock )
 				{
 					uiNewTimeProcessed = uiNewTimeProcessed;
