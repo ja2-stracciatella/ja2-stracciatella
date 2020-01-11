@@ -1373,7 +1373,7 @@ static void LeaveLapTopScreen(void)
 		if (gfAtLeastOneMercWasHired)
 		{
 			if (LaptopSaveInfo.gfNewGameLaptop)
-	{
+			{
 				LaptopSaveInfo.gfNewGameLaptop = FALSE;
 				fExitingLaptopFlag = TRUE;
 				InitNewGame();
@@ -1404,7 +1404,7 @@ static void LeaveLapTopScreen(void)
 
 			//Step 2:  The mapscreen image is in the EXTRABUFFER, and laptop is in the SAVEBUFFER
 			//         Start transitioning the screen.
-			SGPBox const DstRect = { STD_SCREEN_X, STD_SCREEN_Y, MAP_SCREEN_WIDTH, MAP_SCREEN_HEIGHT };
+			SGPBox const SrcRect = { STD_SCREEN_X, STD_SCREEN_Y, MAP_SCREEN_WIDTH, MAP_SCREEN_HEIGHT };
 			const UINT32 uiTimeRange = 1000;
 			INT32 iPercentage     = 100;
 			INT32 iRealPercentage = 100;
@@ -1433,13 +1433,7 @@ static void LeaveLapTopScreen(void)
 					iPercentage += (100-iPercentage) * iFactor * 0.01 + 0.5;
 				}
 
-				//Mapscreen source rect
-				SGPRect SrcRect1;
-				SrcRect1.iLeft   =                 464 * iPercentage / 100;
-				SrcRect1.iRight  = SCREEN_WIDTH  - 163 * iPercentage / 100;
-				SrcRect1.iTop    =                 417 * iPercentage / 100;
-				SrcRect1.iBottom = SCREEN_HEIGHT -  55 * iPercentage / 100;
-				//Laptop source rect
+				//Scaled laptop
 				INT32 iScalePercentage;
 				if (iPercentage < 99)
 				{
@@ -1454,9 +1448,9 @@ static void LeaveLapTopScreen(void)
 				const UINT16 uX = 472 - (472 - 320) * iScalePercentage / 5333;
 				const UINT16 uY = 424 - (424 - 240) * iScalePercentage / 5333;
 
-				SGPBox const SrcRect2 = { (UINT16)(STD_SCREEN_X + uX - uWidth / 2), (UINT16)(STD_SCREEN_Y + uY - uHeight / 2), uWidth, uHeight };
+				SGPBox const DstRect = { (UINT16)(STD_SCREEN_X + uX - uWidth / 2), (UINT16)(STD_SCREEN_Y + uY - uHeight / 2), uWidth, uHeight };
 
-				BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &DstRect, &SrcRect2);
+				BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &SrcRect, &DstRect);
 				InvalidateScreen();
 				RefreshScreen();
 			}
