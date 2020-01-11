@@ -1779,12 +1779,7 @@ static void DisplayFastHelpRegions(FASTHELPREGION* pRegion, INT32 iSize)
 // show one region
 static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 {
-	UINT16 usFillColor;
 	INT32 iX,iY,iW,iH;
-
-	// grab the color for the background region
-	usFillColor = Get16BPPColor(FROMRGB(250, 240, 188));
-
 
 	iX = pRegion->iX;
 	iY = pRegion->iY;
@@ -1822,10 +1817,6 @@ static void DisplayUserDefineHelpTextRegions(FASTHELPREGION* pRegion)
 	}
 	FRAME_BUFFER->ShadowRect(iX + 2, iY + 2, iX + iW - 3, iY + iH - 3);
 	FRAME_BUFFER->ShadowRect(iX + 2, iY + 2, iX + iW - 3, iY + iH - 3);
-
-	// fillt he video surface areas
-	//ColorFillVideoSurfaceArea(FRAME_BUFFER, iX, iY, (iX + iW), (iY + iH), 0);
-	//ColorFillVideoSurfaceArea(FRAME_BUFFER, (iX + 1), (iY + 1), (iX + iW - 1), (iY + iH - 1), usFillColor);
 
 	iH = DisplayWrappedString(iX + 10, iY + 6, pRegion->iW, 0, FONT10ARIAL, FONT_BEIGE, pRegion->FastHelpText, FONT_NEARBLACK, MARK_DIRTY);
 
