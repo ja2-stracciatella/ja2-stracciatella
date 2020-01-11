@@ -273,7 +273,6 @@ void BeginLoadScreen( )
 	UINT32 uiStartTime, uiCurrTime;
 	INT32 iPercentage, iFactor;
 	UINT32 uiTimeRange;
-	INT32 iLastShadePercentage;
 
 	SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );
 
@@ -282,7 +281,6 @@ void BeginLoadScreen( )
 		SGPBox const DstRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
 		uiTimeRange = 2000;
 		iPercentage = 0;
-		iLastShadePercentage = 0;
 		uiStartTime = GetClock();
 		BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 		PlayJA2SampleFromFile(SOUNDSDIR "/final psionic blast 01 (16-44).wav", HIGHVOLUME, 1, MIDDLEPAN);
@@ -301,19 +299,7 @@ void BeginLoadScreen( )
 
 			if( iPercentage > 50 )
 			{
-				//iFactor = (iPercentage - 50) * 2;
-				//if( iFactor > iLastShadePercentage )
-			//	{
-					//Calculate the difference from last shade % to the new one.  Ex:  Going from
-					//50% shade value to 60% shade value requires applying 20% to the 50% to achieve 60%.
-					//if( iLastShadePercentage )
-					//	iReqShadePercentage = 100 - (iFactor * 100 / iLastShadePercentage);
-					//else
-					//	iReqShadePercentage = iFactor;
-					//Record the new final shade percentage.
-					//iLastShadePercentage = iFactor;
-					guiSAVEBUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			//	}
+				guiSAVEBUFFER->ShadowRectUsingLowPercentTable(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			}
 
 			SGPBox const SrcRect =
