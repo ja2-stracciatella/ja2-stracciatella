@@ -2090,7 +2090,11 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		/* Even if the info is outdated (but existing), allocate the structure, but
 		 * indicate that the info is bad. */
 		SUMMARYFILE* const sum = MALLOC(SUMMARYFILE);
-		fread(sum, sizeof(SUMMARYFILE), 1, f_sum);
+		if (fread(sum, sizeof(SUMMARYFILE), 1, f_sum) != 1)
+		{
+			// failed, initialize and force update
+			*sum = SUMMARYFILE{};
+		}
 		fclose(f_sum);
 
 		if (sum->ubSummaryVersion < MINIMUMVERSION ||
