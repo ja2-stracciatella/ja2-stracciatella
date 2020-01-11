@@ -729,18 +729,10 @@ static void DisplayBigItemImage(const ItemModel* item, const UINT16 PosY)
 
 static void DisplayArmourInfo(UINT16 usIndex, UINT16 usTextPosY, BOOLEAN fUsed, UINT16 usBobbyIndex)
 {
-	UINT16	usHeight;
-	UINT16 usFontHeight;
-	usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
-
-	//Display Items Name
-	//DisplayItemNameAndInfo(usTextPosY, usIndex, fUsed);
-
-	usHeight = usTextPosY;
-	//Display the weight, caliber, mag, rng, dam, rof text
+	UINT16 usFontHeight = GetFontHeight(BOBBYR_ITEM_DESC_TEXT_FONT);
 
 	//Display the Cost and the qty bought and on hand
-	usHeight = DisplayCostAndQty(usTextPosY, usIndex, usFontHeight, usBobbyIndex, fUsed);
+	DisplayCostAndQty(usTextPosY, usIndex, usFontHeight, usBobbyIndex, fUsed);
 }
 
 
