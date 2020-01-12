@@ -237,7 +237,11 @@ void Launcher::startExecutable(bool asEditor) {
 		cmd += std::string(" -editor");
 	}
 
-	system(cmd.c_str());
+	int ret = system(cmd.c_str());
+	if (ret != 0)
+	{
+		SLOGW("There was an error while running '%s' (%d)", cmd.c_str(), ret);
+	}
 }
 
 bool Launcher::resolutionIsInvalid() {
