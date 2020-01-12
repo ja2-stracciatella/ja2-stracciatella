@@ -296,8 +296,7 @@ static void BuildListFile(void)
 	while( fgets( currFilename, 128, infoFile ) != nullptr )
 	{
 		// Remove newline
-		currFilename[ strlen( currFilename ) -1 ] = '\0';
-		currFilename[ strlen( currFilename ) -1 ] = '\0';
+		currFilename[ strcspn( currFilename, "\r\n" ) ] = '\0';
 
 		usState = GetAnimStateFromName( currFilename );
 
