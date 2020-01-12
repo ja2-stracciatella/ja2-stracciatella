@@ -4312,8 +4312,8 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	STRUCTURE * pStructure, *pTempStructure;
 
 	SOLDIERTYPE * pTarget;
-	FLOAT dTargetX;
-	FLOAT dTargetY;
+	//FLOAT dTargetX;
+	//FLOAT dTargetY;
 	FLOAT dTargetZMin;
 	FLOAT dTargetZMax;
 
@@ -4367,8 +4367,8 @@ INT32 CheckForCollision(FLOAT dX, FLOAT dY, FLOAT dZ, FLOAT dDeltaX, FLOAT dDelt
 	{
 		// a merc! that isn't us :-)
 		pTarget = pMapElement->pMercHead->pSoldier;
-		dTargetX = pTarget->dXPos;
-		dTargetY = pTarget->dYPos;
+		//dTargetX = pTarget->dXPos;
+		//dTargetY = pTarget->dYPos;
 		dTargetZMin = 0.0f;
 		CalculateSoldierZPos( pTarget, HEIGHT, &dTargetZMax );
 		if (pTarget->bLevel > 0)
