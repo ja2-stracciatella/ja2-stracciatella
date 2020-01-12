@@ -1238,7 +1238,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 {
 	BOOLEAN fFound = FALSE;
 	INT32 cnt;
-	BOOLEAN fFoundAttachment = FALSE;
+	//BOOLEAN fFoundAttachment = FALSE;
 
 	// ATE: If pTest object is NULL, test only for existence of syringes, etc...
 	if ( pTestObject == NULL )
@@ -1304,7 +1304,7 @@ BOOLEAN InternalHandleCompatibleAmmoUI(const SOLDIERTYPE* pSoldier, const OBJECT
 			ValidLaunchable(b, a) ||
 			ValidLaunchable(a, b) )
 		{
-			fFoundAttachment = TRUE;
+			//fFoundAttachment = TRUE;
 
 			if ( fOn != gbCompatibleAmmo[ cnt ] )
 			{
