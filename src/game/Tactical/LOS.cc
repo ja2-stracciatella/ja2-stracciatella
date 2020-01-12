@@ -2373,7 +2373,7 @@ static INT32 CTGTHandleBulletStructureInteraction(BULLET* pBullet, STRUCTURE* pS
 {
 	// returns reduction in impact for summing in CTGT
 
-	INT32 iCurrImpact;
+	//INT32 iCurrImpact;
 	INT32 iImpactReduction;
 
 	if (pBullet->usFlags & BULLET_FLAG_KNIFE || pBullet->usFlags & BULLET_FLAG_MISSILE || pBullet->usFlags & BULLET_FLAG_FLAME || pBullet->usFlags & BULLET_FLAG_TANK_CANNON )
@@ -2400,7 +2400,7 @@ static INT32 CTGTHandleBulletStructureInteraction(BULLET* pBullet, STRUCTURE* pS
 	//   scratch at each collision with an obstacle
 	//   reduction due to range is 25% per "max range"
 	//iCurrImpact = BulletImpactReducedByRange( pBullet->iImpact, pBullet->iLoop, pBullet->iRange );
-	iCurrImpact = pBullet->iImpact;
+	//iCurrImpact = pBullet->iImpact;
 	// multiply impact reduction by 100 to retain fractions for a bit...
 	iImpactReduction = gubMaterialArmour[ pStructure->pDBStructureRef->pDBStructure->ubArmour ] * pStructure->pDBStructureRef->pDBStructure->ubDensity / 100;
 	iImpactReduction = StructureResistanceIncreasedByRange( iImpactReduction, pBullet->iRange, pBullet->iLoop );
