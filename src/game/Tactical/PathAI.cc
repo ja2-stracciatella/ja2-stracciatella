@@ -475,7 +475,8 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	#ifdef VEHICLE
 		//BOOLEAN fTurnSlow = FALSE;
 		//BOOLEAN fReverse = FALSE; // stuff for vehicles turning
-		BOOLEAN fMultiTile, fVehicle;
+		BOOLEAN fMultiTile;
+		//BOOLEAN fVehicle;
 		//INT32 ubLastDir, iPrevToLastDir;
 		//INT8 bVehicleCheckDir;
 		//UINT16 adjLoc;
@@ -501,7 +502,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	BOOLEAN fVisitSpotsOnlyOnce;
 	INT32 iOriginationX, iOriginationY, iX, iY;
 
-	BOOLEAN fTurnBased;
+	//BOOLEAN fTurnBased;
 	BOOLEAN fPathingForPlayer;
 	INT32   iDoorGridNo=-1;
 	BOOLEAN fDoorIsObstacleIfClosed= 0; // if false, door is obstacle if it is open
@@ -526,7 +527,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	UINT16 usCounter = 0;
 #endif
 
-	fVehicle = FALSE;
+	//fVehicle = FALSE;
 	iOriginationX = iOriginationY = 0;
 	iOrigination = (INT32) s->sGridNo;
 
@@ -553,7 +554,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 		fFlags |= gubGlobalPathFlags;
 	}
 
-	fTurnBased = (gTacticalStatus.uiFlags & INCOMBAT);
+	//fTurnBased = (gTacticalStatus.uiFlags & INCOMBAT);
 
 	fPathingForPlayer = ( (s->bTeam == OUR_TEAM) && (!gTacticalStatus.fAutoBandageMode) && !(s->uiStatusFlags & SOLDIER_PCUNDERAICONTROL) );
 	fNonFenceJumper = !( IS_MERC_BODY_TYPE( s ) );
@@ -667,7 +668,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 		if ( pStructureFileRef )
 		{
-			fVehicle = ( (s->uiStatusFlags & SOLDIER_VEHICLE) != 0 );
+			//fVehicle = ( (s->uiStatusFlags & SOLDIER_VEHICLE) != 0 );
 
 			fContinuousTurnNeeded = ( ( s->uiStatusFlags & (SOLDIER_MONSTER | SOLDIER_ANIMAL | SOLDIER_VEHICLE) ) != 0 );
 
