@@ -281,11 +281,8 @@ static void BuildListFile(void)
 		return;
 	}
 	//count STIs inside header and verify each one's existance.
-	while( !feof( infoFile ) )
+	while( fgets( currFilename, 128, infoFile ) != nullptr )
 	{
-		fgets( currFilename, 128, infoFile );
-		//valid entry in header, continue on...
-
 		numEntries++;
 	}
 	fseek( infoFile, 0, SEEK_SET ); //reset header file
@@ -296,10 +293,8 @@ static void BuildListFile(void)
 	fOKFiles = TRUE;
 
 	cnt = 0;
-	while( !feof( infoFile ) )
+	while( fgets( currFilename, 128, infoFile ) != nullptr )
 	{
-		fgets( currFilename, 128, infoFile );
-
 		// Remove newline
 		currFilename[ strlen( currFilename ) -1 ] = '\0';
 		currFilename[ strlen( currFilename ) -1 ] = '\0';
