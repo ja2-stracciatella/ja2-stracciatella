@@ -240,7 +240,7 @@ void Launcher::startExecutable(bool asEditor) {
 	int ret = system(cmd.c_str());
 	if (ret != 0)
 	{
-		SLOGW("there was an error while running '%s' (%d)", cmd.c_str(), ret);
+		SLOGW("There was an error while running '%s' (%d)", cmd.c_str(), ret);
 	}
 }
 
