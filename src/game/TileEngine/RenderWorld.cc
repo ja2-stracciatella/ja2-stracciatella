@@ -2194,12 +2194,10 @@ void ScrollWorld(void)
 
 void InitRenderParams(UINT8 ubRestrictionID)
 {
+	// FIXME incorrect use of CELL_X_SIZE/CELL_Y_SIZE and WORLD_ROWS/WORLD_COLS
+	//       it only works as intended because they have the same value as the counterpart
 	INT16 gTopLeftWorldLimitX;     // XXX HACK000E
 	INT16 gTopLeftWorldLimitY;     // XXX HACK000E
-	INT16 gTopRightWorldLimitX;    // XXX HACK000E
-	INT16 gTopRightWorldLimitY;    // XXX HACK000E
-	INT16 gBottomLeftWorldLimitX;  // XXX HACK000E
-	INT16 gBottomLeftWorldLimitY;  // XXX HACK000E
 	INT16 gBottomRightWorldLimitX; // XXX HACK000E
 	INT16 gBottomRightWorldLimitY; // XXX HACK000E
 	switch (ubRestrictionID)
@@ -2208,12 +2206,6 @@ void InitRenderParams(UINT8 ubRestrictionID)
 			gTopLeftWorldLimitX = CELL_X_SIZE;
 			gTopLeftWorldLimitY = CELL_X_SIZE * WORLD_ROWS / 2;
 
-			gTopRightWorldLimitX = CELL_Y_SIZE * WORLD_COLS / 2;
-			gTopRightWorldLimitY = CELL_X_SIZE;
-
-			gBottomLeftWorldLimitX = CELL_Y_SIZE * WORLD_COLS / 2;
-			gBottomLeftWorldLimitY = CELL_Y_SIZE * WORLD_ROWS;
-
 			gBottomRightWorldLimitX = CELL_Y_SIZE * WORLD_COLS;
 			gBottomRightWorldLimitY = CELL_X_SIZE * WORLD_ROWS / 2;
 			break;
@@ -2221,12 +2213,6 @@ void InitRenderParams(UINT8 ubRestrictionID)
 		case 1: // BAEMENT LEVEL 1
 			gTopLeftWorldLimitX = CELL_X_SIZE * WORLD_ROWS * 3 / 10;
 			gTopLeftWorldLimitY = CELL_X_SIZE * WORLD_ROWS     /  2;
-
-			gTopRightWorldLimitX = CELL_X_SIZE * WORLD_ROWS     /  2;
-			gTopRightWorldLimitY = CELL_X_SIZE * WORLD_COLS * 3 / 10;
-
-			gBottomLeftWorldLimitX = CELL_X_SIZE * WORLD_ROWS     /  2;
-			gBottomLeftWorldLimitY = CELL_X_SIZE * WORLD_COLS * 7 / 10;
 
 			gBottomRightWorldLimitX = CELL_X_SIZE * WORLD_ROWS * 7 / 10;
 			gBottomRightWorldLimitY = CELL_X_SIZE * WORLD_ROWS     /  2;

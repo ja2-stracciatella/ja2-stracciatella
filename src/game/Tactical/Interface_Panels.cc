@@ -1549,7 +1549,6 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	UINT16 usItemPrevInItemPointer;
 	BOOLEAN fNewItem = FALSE;
 	static BOOLEAN fRightDown = FALSE;
-	static BOOLEAN fLeftDown = FALSE;
 
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
@@ -1570,15 +1569,8 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	}
 
 
-	//if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	//{
-	//	fLeftDown = TRUE;
-	//}
-	//else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLeftDown )
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		fLeftDown = FALSE;
-
 		// If we do not have an item in hand, start moving it
 		if ( gpItemPointer == NULL )
 		{
@@ -1843,7 +1835,6 @@ static void SMInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		fRightDown = FALSE;
-		fLeftDown = FALSE;
 	}
 
 }
@@ -3344,19 +3335,11 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	// Copyies of values
 	UINT16 usOldItemIndex;
 	static BOOLEAN fRightDown = FALSE;
-	static BOOLEAN fLeftDown = FALSE;
 
 	uiKeyRing = MSYS_GetRegionUserData( pRegion, 0 );
 
-	//if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
-	//{
-	//	fLeftDown = TRUE;
-	//}
-	//else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP && fLeftDown )
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN )
 	{
-		fLeftDown = FALSE;
-
 		//if we are in the shop keeper interface
 		if (guiCurrentScreen == SHOPKEEPER_SCREEN)
 		{
@@ -3575,7 +3558,6 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
 		fRightDown = FALSE;
-		fLeftDown = FALSE;
 	}
 
 }

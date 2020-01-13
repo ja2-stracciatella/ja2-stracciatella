@@ -765,7 +765,6 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCTURE* pStructure, BOOLEAN fNoAnimations)
 try
 {
-	LEVELNODE *pShadowNode;
 	INT32 cnt;
 	BOOLEAN fOpenedGraphic = FALSE;
 	BOOLEAN fDoAnimation = TRUE;
@@ -814,9 +813,6 @@ try
 			}
 		}
 	}
-
-
-	pShadowNode = gpWorldLevelData[ sGridNo ].pShadowHead;
 
 
 	// Check the graphic which is down!
@@ -887,17 +883,6 @@ try
 			AniParams.pGivenLevelNode = pNode;
 			CreateAnimationTile(&AniParams);
 		}
-
-		// SHADOW STUFF HERE
-		//if ( pShadowNode != NULL )
-		//{
-		//	pShadowNode->uiFlags |= LEVELNODE_ANIMATION;
-		//	pShadowNode->uiFlags |= LEVELNODE_ANIMATION_PLAYONCE;
-		//	pShadowNode->uiFlags |= LEVELNODE_ANIMATION_FORWARD;
-		//	if ( pShadowNode->uiFlags & LEVELNODE_ANIMATION_BACKWARD )
-		//		pShadowNode->uiFlags ^= LEVELNODE_ANIMATION_BACKWARD;
-		//	pShadowNode->sDelay		= INTTILE_DOOR_OPENSPEED;
-		//}
 
 		if ( fDoAnimation && pSoldier && pSoldier->ubDoorOpeningNoise)
 		{
@@ -1010,16 +995,6 @@ try
 			AniParams.v.sound         = uiSoundID;
 			CreateAnimationTile( &AniParams );
 		}
-
-		//if ( pShadowNode != NULL )
-		//{
-		//	pShadowNode->uiFlags |= LEVELNODE_ANIMATION;
-		//	pShadowNode->uiFlags |= LEVELNODE_ANIMATION_PLAYONCE;
-		//	pShadowNode->uiFlags |= LEVELNODE_ANIMATION_BACKWARD;
-		//	if ( pShadowNode->uiFlags & LEVELNODE_ANIMATION_FORWARD )
-		//		pShadowNode->uiFlags ^= LEVELNODE_ANIMATION_FORWARD;
-		//	pShadowNode->sDelay		= INTTILE_DOOR_OPENSPEED;
-		//}
 
 	}
 

@@ -500,42 +500,34 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 		return;
 	}
 
-	bool used_tempfile = false;
-
 	if (flags & SF_ITEM_TEMP_FILE_EXISTS)
 	{
 		LoadAndAddWorldItemsFromTempFile(x, y, z);
-		used_tempfile = true;
 	}
 
 	if (flags & SF_ROTTING_CORPSE_TEMP_FILE_EXISTS)
 	{
 		LoadRottingCorpsesFromTempCorpseFile(x, y, z);
-		used_tempfile = true;
 	}
 
 	if (flags & SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS)
 	{
 		LoadAllMapChangesFromMapTempFileAndApplyThem();
-		used_tempfile = true;
 	}
 
 	if (flags & SF_DOOR_TABLE_TEMP_FILES_EXISTS)
 	{
 		LoadDoorTableFromDoorTableTempFile();
-		used_tempfile = true;
 	}
 
 	if (flags & SF_REVEALED_STATUS_TEMP_FILE_EXISTS)
 	{
 		LoadRevealedStatusArrayFromRevealedTempFile();
-		used_tempfile = true;
 	}
 
 	if (flags & SF_DOOR_STATUS_TEMP_FILE_EXISTS)
 	{
 		LoadDoorStatusArrayFromDoorStatusTempFile();
-		used_tempfile = true;
 	}
 
 	// if the save is an older version, use the old way of loading it up
@@ -544,7 +536,6 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 		if (flags & SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS)
 		{
 			LoadEnemySoldiersFromTempFile();
-			used_tempfile = true;
 		}
 	}
 	else
@@ -553,35 +544,27 @@ void LoadCurrentSectorsInformationFromTempItemsFile()
 		if (flags & SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS)
 		{
 			NewWayOfLoadingEnemySoldiersFromTempFile();
-			used_tempfile = true;
 		}
 		if (flags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS)
 		{
 			NewWayOfLoadingCiviliansFromTempFile();
-			used_tempfile = true;
 		}
 	}
 
 	if (flags & SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS)
 	{
 		LoadSmokeEffectsFromMapTempFile(x, y, z);
-		used_tempfile = true;
 	}
 
 	if (flags & SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS)
 	{
 		LoadLightEffectsFromMapTempFile(x, y, z);
-		used_tempfile = true;
 	}
 
 	// Init the world since we have modified the map
 	InitLoadedWorld();
 
 	guiTimeCurrentSectorWasLastLoaded = GetLastTimePlayerWasInSector();
-
-#if 0 // XXX was commented out
-	if (used_tempfile) ValidateSoldierInitLinks(3);
-#endif
 
 	StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated();
 }
