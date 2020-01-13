@@ -2338,8 +2338,6 @@ static void TriggerClosestMercWhoCanSeeNPC(UINT8 ubNPC, NPCQuoteInfo* pQuotePtr)
 
 BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 {
-	// Check if we have a quote to trigger...
-	NPCQuoteInfo	*pQuotePtr;
 	UINT8					ubLoop;
 
 	NPCQuoteInfo* const pNPCQuoteInfoArray = EnsureQuoteFileLoaded(ubTriggerNPC);
@@ -2347,12 +2345,9 @@ BOOLEAN TriggerNPCWithIHateYouQuote( UINT8 ubTriggerNPC )
 
 	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
 	{
-		pQuotePtr = &(pNPCQuoteInfoArray[ubLoop]);
 		if ( NPCConsiderQuote( ubTriggerNPC, 0, APPROACH_DECLARATION_OF_HOSTILITY, ubLoop, 0, pNPCQuoteInfoArray ) )
 		{
 			// trigger this quote!
-			// reset approach required value so that we can trigger it
-			//pQuotePtr->ubApproachRequired = TRIGGER_NPC;
 			NPCTriggerNPC(ubTriggerNPC, ubLoop, APPROACH_DECLARATION_OF_HOSTILITY, true);
 			gMercProfiles[ ubTriggerNPC ].ubMiscFlags |= PROFILE_MISC_FLAG_SAID_HOSTILE_QUOTE;
 			return( TRUE );

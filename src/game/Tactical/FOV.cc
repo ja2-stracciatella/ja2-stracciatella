@@ -263,7 +263,6 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 	UINT8   dir,range,Path2;
 	UINT8   ubRoomNo;
 	UINT8   ubMovementCost;
-	BOOLEAN fCheckForRooms = FALSE;
 	BOOLEAN fTravelCostObs;
 	BOOLEAN fGoneThroughDoor = FALSE;
 	BOOLEAN fThroughWindow = FALSE;
@@ -367,7 +366,6 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 			prevmarker = marker;
 
 			nextDir = 99;
-			fCheckForRooms = FALSE;
 			fTravelCostObs = FALSE;
 			if ( fStopRevealingItemsAfterThisTile )
 			{
@@ -678,17 +676,6 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 						break;
 					}
 
-					//if ( Blocking == NOTHING_BLOCKING || Blocking == BLOCKING_NEXT_TILE )
-					if ( Blocking == NOTHING_BLOCKING )
-					{
-						fCheckForRooms = TRUE;
-					}
-
-					if ( ubLevel != 0 )
-					{
-						fCheckForRooms = FALSE;
-					}
-
 					// CHECK FOR SLANT ROOF!
 					{
 						STRUCTURE* pStructure;
@@ -724,7 +711,6 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 						}
 
 						// CHECK FOR ROOMS
-						//if ( fCheckForRooms )
 						{
 							if ( InAHiddenRoom( (INT16)marker, &ubRoomNo ) )
 							{

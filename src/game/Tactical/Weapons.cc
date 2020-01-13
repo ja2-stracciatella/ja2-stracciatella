@@ -1921,7 +1921,6 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 	DB_STRUCTURE   *pWallAndWindowInDB;
 	INT16          sShatterGridNo;
 	UINT16         usTileIndex;
-	ANITILE        *pNode;
 	ANITILE_PARAMS AniParams;
 
 
@@ -2033,7 +2032,7 @@ void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowSouth, B
 	AniParams.sStartFrame = 0;
 	AniParams.uiFlags = ANITILE_FORWARD;
 
-	pNode = CreateAnimationTile( &AniParams );
+	CreateAnimationTile( &AniParams );
 
 	PlayJA2Sample(SoundRange<GLASS_SHATTER1, GLASS_SHATTER2>(), MIDVOLUME, 1, SoundDir(sGridNo));
 }
