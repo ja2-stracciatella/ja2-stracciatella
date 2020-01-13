@@ -419,8 +419,8 @@ static void RefreshNPCScriptRecord(UINT8 const ubNPC, UINT8 const record)
 		}
 		for (UINT8 i = FIRST_RPC; i != FIRST_NPC; ++i)
 		{
-			if (!(GetProfile(ubNPC).ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)) continue;
-			if (!gpBackupNPCQuoteInfoArray[ubNPC]) continue;
+			if (!(GetProfile(i).ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)) continue;
+			if (!gpBackupNPCQuoteInfoArray[i]) continue;
 			RefreshNPCScriptRecord(i, record);
 		}
 		return;
