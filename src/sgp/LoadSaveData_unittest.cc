@@ -196,7 +196,7 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 	{
 		char buf[100];
 		FILE *floats = fopen(floatsPath.c_str(), "rb");
-		fread(buf, sizeof(float), 5, floats);
+		EXPECT_EQ(fread(buf, sizeof(float), 5, floats), 5);
 		fclose(floats);
 		float f;
 
@@ -211,7 +211,7 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 	{
 		char buf[100];
 		FILE *doubles = fopen(doublesPath.c_str(), "rb");
-		fread(buf, sizeof(double), 5, doubles);
+		EXPECT_EQ(fread(buf, sizeof(double), 5, doubles), 5);
 		fclose(doubles);
 		double d;
 
