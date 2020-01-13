@@ -200,9 +200,14 @@ void LoadShadeTablesFromTextFile()
 				for( j = 0; j < 3; j++ )
 				{
 					char str[10];
-					fscanf( fp, "%s", str );
-					sscanf( str, "%d", &num );
-					gusShadeLevels[i][j] = (UINT16)num;
+					if (fscanf( fp, "%s", str ) == 1 && sscanf( str, "%d", &num ) == 1)
+					{
+						gusShadeLevels[i][j] = (UINT16)num;
+					}
+					else
+					{
+						gusShadeLevels[i][j] = 0;
+					}
 				}
 			}
 			fclose( fp );
