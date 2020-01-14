@@ -54,7 +54,7 @@ void InitSquads( void )
 		SquadMovementGroups[iCounter] = g->ubGroupID;
 	}
 
-	for (auto i = 0; i < NUMBER_OF_SQUADS; ++i)
+	for (int i = 0; i < NUMBER_OF_SQUADS; ++i)
 	{
 		std::fill_n(sDeadMercs[i], NUMBER_OF_SOLDIERS_PER_SQUAD, -1);
 	}

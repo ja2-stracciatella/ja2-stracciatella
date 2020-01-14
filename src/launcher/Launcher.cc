@@ -107,15 +107,15 @@ void Launcher::initializeInputsFromDefaults() {
 	RustPointer<char> rustResRootPath(EngineOptions_getVanillaGameDir(this->engine_options.get()));
 	gameDirectoryInput->value(rustResRootPath.get());
 
-	auto n = EngineOptions_getModsLength(this->engine_options.get());
+	uint32_t n = EngineOptions_getModsLength(this->engine_options.get());
 	modsCheckBrowser->clear();
-	for (auto i = 0; i < n; ++i) {
+	for (uint32_t i = 0; i < n; ++i) {
 		modsCheckBrowser->add(EngineOptions_getMod(this->engine_options.get(), i));
 	}
 
-	auto rustResVersion = EngineOptions_getResourceVersion(this->engine_options.get());
-	auto resourceVersionIndex = 0;
-	for (auto version : predefinedVersions) {
+	GameVersion rustResVersion = EngineOptions_getResourceVersion(this->engine_options.get());
+	int resourceVersionIndex = 0;
+	for (GameVersion version : predefinedVersions) {
 		if (version == rustResVersion) {
 			break;
 		}
@@ -130,8 +130,8 @@ void Launcher::initializeInputsFromDefaults() {
 	resolutionYInput->value(y);
 
 	VideoScaleQuality quality = EngineOptions_getScalingQuality(this->engine_options.get());
-	auto scalingModeIndex = 0;
-	for (auto scalingMode : scalingModes) {
+	int scalingModeIndex = 0;
+	for (VideoScaleQuality scalingMode : scalingModes) {
 		if (scalingMode == quality) {
 			break;
 		}
@@ -151,8 +151,8 @@ int Launcher::writeJsonFile() {
 	EngineOptions_setVanillaGameDir(this->engine_options.get(), gameDirectoryInput->value());
 
 	EngineOptions_clearMods(this->engine_options.get());
-	auto nitems = modsCheckBrowser->nitems();
-	for (auto item = 1; item <= nitems; ++item) {
+	int nitems = modsCheckBrowser->nitems();
+	for (int item = 1; item <= nitems; ++item) {
 		EngineOptions_pushMod(this->engine_options.get(), modsCheckBrowser->text(item));
 	}
 
@@ -160,11 +160,11 @@ int Launcher::writeJsonFile() {
 	int y = (int)resolutionYInput->value();
 	EngineOptions_setResolution(this->engine_options.get(), x, y);
 
-	auto currentResourceVersionIndex = gameVersionInput->value();
-	auto currentResourceVersion = predefinedVersions.at(currentResourceVersionIndex);
+	int currentResourceVersionIndex = gameVersionInput->value();
+	GameVersion currentResourceVersion = predefinedVersions.at(currentResourceVersionIndex);
 	EngineOptions_setResourceVersion(this->engine_options.get(), currentResourceVersion);
 
-	auto currentScalingMode = scalingModes[this->scalingModeChoice->value()];
+	VideoScaleQuality currentScalingMode = scalingModes[this->scalingModeChoice->value()];
 	EngineOptions_setScalingQuality(this->engine_options.get(), currentScalingMode);
 
 	bool success = EngineOptions_write(this->engine_options.get());
@@ -180,8 +180,8 @@ int Launcher::writeJsonFile() {
 
 void Launcher::populateChoices() {
 	RustPointer<VecCString> mods(findAvailableMods());
-	auto nmods = VecCString_length(mods.get());
-	for (auto i = 0; i < nmods; ++i) {
+	size_t nmods = VecCString_length(mods.get());
+	for (size_t i = 0; i < nmods; ++i) {
 		RustPointer<char> mod(VecCString_get(mods.get(), i));
 		addModMenuButton->insert(-1, mod.get(), 0, addMod, this, 0);
 	}
@@ -189,14 +189,14 @@ void Launcher::populateChoices() {
 	for(GameVersion version : predefinedVersions) {
 		RustPointer<char> resourceVersionString(VanillaVersion_toString(version));
 		gameVersionInput->add(resourceVersionString.get());
-    }
-	for (auto res : predefinedResolutions) {
+	}
+	for (std::pair<int,int> res : predefinedResolutions) {
 		char resolutionString[255];
 		sprintf(resolutionString, "%dx%d", res.first, res.second);
 		predefinedResolutionMenuButton->insert(-1, resolutionString, 0, setPredefinedResolution, this, 0);
 	}
 
-	for (auto scalingMode : scalingModes) {
+	for (VideoScaleQuality scalingMode : scalingModes) {
 		RustPointer<char> scalingModeString(ScalingQuality_toString(scalingMode));
 		this->scalingModeChoice->add(scalingModeString.get());
 	}
@@ -273,7 +273,7 @@ void Launcher::startGame(Fl_Widget* btn, void* userdata) {
 	window->writeJsonFile();
 	if (!checkIfRelativePathExists(window->gameDirectoryInput->value(), "Data", true)) {
 		fl_message_title(window->playButton->label());
-		auto choice = fl_choice("Data dir not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
+		int choice = fl_choice("Data dir not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 		if (choice != 1) {
 			return;
 		}
@@ -295,7 +295,7 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 	}
 	if (!has_editor_slf) {
 		fl_message_title(window->editorButton->label());
-		auto choice = fl_choice("Editor.slf not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
+		int choice = fl_choice("Editor.slf not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 		if (choice != 1) {
 			return;
 		}
@@ -306,17 +306,17 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 	fl_message_title("Guess Game Version");
-	auto choice = fl_choice("Comparing resources packs can take a long time.\nAre you sure you want to continue?", "Stop", "Continue", 0);
+	int choice = fl_choice("Comparing resources packs can take a long time.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 	if (choice != 1) {
 		return;
 	}
 
-	auto gamedir = window->gameDirectoryInput->value();
-	auto guessedVersion = guessResourceVersion(gamedir);
+	const char* gamedir = window->gameDirectoryInput->value();
+	int guessedVersion = guessResourceVersion(gamedir);
 	if (guessedVersion != -1) {
-		auto resourceVersionIndex = 0;
-		for (auto version : predefinedVersions) {
-			if (version == (VanillaVersion) guessedVersion) {
+		int resourceVersionIndex = 0;
+		for (GameVersion version : predefinedVersions) {
+			if (static_cast<int>(version) == guessedVersion) {
 				break;
 			}
 			resourceVersionIndex += 1;
@@ -363,7 +363,7 @@ void Launcher::addMod(Fl_Widget* widget, void* userdata) {
 	Fl_Menu_Button* menuButton = static_cast< Fl_Menu_Button* >( widget );
 	Launcher* window = static_cast< Launcher* >( userdata );
 
-	auto mod = menuButton->mvalue()->label();
+	const char* mod = menuButton->mvalue()->label();
 	window->modsCheckBrowser->add(mod);
 	window->modsCheckBrowser->redraw();
 	window->update(true, widget);
@@ -371,14 +371,14 @@ void Launcher::addMod(Fl_Widget* widget, void* userdata) {
 
 void Launcher::moveUpMods(Fl_Widget* widget, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
-	auto nitems = window->modsCheckBrowser->nitems();
-	auto nchecked = window->modsCheckBrowser->nchecked();
+	int nitems = window->modsCheckBrowser->nitems();
+	int nchecked = window->modsCheckBrowser->nchecked();
 	if (nchecked == 0 || nchecked == nitems) {
 		return; // nothing to do
 	}
 
 	std::vector<int> order;
-	for (auto item = 1; item <= nitems; ++item) {
+	for (int item = 1; item <= nitems; ++item) {
 		if (window->modsCheckBrowser->checked(item)) {
 			if (!order.empty() && !window->modsCheckBrowser->checked(order.back())) {
 				order.insert(order.end() - 1, item); // move up
@@ -390,13 +390,13 @@ void Launcher::moveUpMods(Fl_Widget* widget, void* userdata) {
 
 	std::vector<std::string> text;
 	std::vector<int> checked;
-	for (auto item : order) {
+	for (int item : order) {
 		text.emplace_back(window->modsCheckBrowser->text(item));
 		checked.emplace_back(window->modsCheckBrowser->checked(item));
 	}
 
 	window->modsCheckBrowser->clear();
-	for (auto i = 0; i < nitems; ++i) {
+	for (int i = 0; i < nitems; ++i) {
 		window->modsCheckBrowser->add(text[i].c_str(), checked[i]);
 	}
 	window->update(true, widget);
@@ -404,14 +404,14 @@ void Launcher::moveUpMods(Fl_Widget* widget, void* userdata) {
 
 void Launcher::moveDownMods(Fl_Widget* widget, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
-	auto nitems = window->modsCheckBrowser->nitems();
-	auto nchecked = window->modsCheckBrowser->nchecked();
+	int nitems = window->modsCheckBrowser->nitems();
+	int nchecked = window->modsCheckBrowser->nchecked();
 	if (nchecked == 0 || nchecked == nitems) {
 		return; // nothing to do
 	}
 
 	std::vector<int> order;
-	for (auto item = nitems; item >= 1; --item) {
+	for (int item = nitems; item >= 1; --item) {
 		if (window->modsCheckBrowser->checked(item)) {
 			if (!order.empty() && !window->modsCheckBrowser->checked(order.back())) {
 				order.insert(order.end() - 1, item); // move down
@@ -424,13 +424,13 @@ void Launcher::moveDownMods(Fl_Widget* widget, void* userdata) {
 
 	std::vector<std::string> text;
 	std::vector<int> checked;
-	for (auto item : order) {
+	for (int item : order) {
 		text.emplace_back(window->modsCheckBrowser->text(item));
 		checked.emplace_back(window->modsCheckBrowser->checked(item));
 	}
 
 	window->modsCheckBrowser->clear();
-	for (auto i = 0; i < nitems; ++i) {
+	for (int i = 0; i < nitems; ++i) {
 		window->modsCheckBrowser->add(text[i].c_str(), checked[i]);
 	}
 	window->update(true, widget);
@@ -438,21 +438,21 @@ void Launcher::moveDownMods(Fl_Widget* widget, void* userdata) {
 
 void Launcher::removeMods(Fl_Widget* widget, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
-	auto nchecked = window->modsCheckBrowser->nchecked();
+	int nchecked = window->modsCheckBrowser->nchecked();
 	if (nchecked == 0) {
 		return; // nothing to do
 	}
 
 	std::vector<std::string> text;
-	auto nitems = window->modsCheckBrowser->nitems();
-	for (auto item = 1; item <= nitems; ++item) {
+	int nitems = window->modsCheckBrowser->nitems();
+	for (int item = 1; item <= nitems; ++item) {
 		if (!window->modsCheckBrowser->checked(item)) {
 			text.emplace_back(window->modsCheckBrowser->text(item));
 		}
 	}
 
 	window->modsCheckBrowser->clear();
-	for (auto i = 0; i < text.size(); ++i) {
+	for (size_t i = 0; i < text.size(); ++i) {
 		window->modsCheckBrowser->add(text[i].c_str());
 	}
 	window->update(true, widget);
