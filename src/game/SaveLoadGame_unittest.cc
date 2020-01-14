@@ -83,8 +83,8 @@ const uint8_t s_savedGameHeaderStracLinux[] = {
 
 TEST(SaveLoadGameTest, structSizes)
 {
-	EXPECT_EQ(sizeof(s_savedGameHeaderVanilla),    SAVED_GAME_HEADER_ON_DISK_SIZE);
-	EXPECT_EQ(sizeof(s_savedGameHeaderStracLinux), SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN);
+	EXPECT_EQ(sizeof(s_savedGameHeaderVanilla),    static_cast<size_t>(SAVED_GAME_HEADER_ON_DISK_SIZE));
+	EXPECT_EQ(sizeof(s_savedGameHeaderStracLinux), static_cast<size_t>(SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN));
 }
 
 
@@ -94,10 +94,10 @@ TEST(SaveLoadGameTest, structParsers)
 	{
 		SAVED_GAME_HEADER header;
 		ParseSavedGameHeader(s_savedGameHeaderVanilla, header, false);
-		EXPECT_EQ(header.uiSavedGameVersion,          0x63);
+		EXPECT_EQ(header.uiSavedGameVersion,          0x63u);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 04.12.02");
 		EXPECT_STREQ(header.sSavedGameDesc,           L"9");
-		EXPECT_EQ(header.uiDay,                       2);
+		EXPECT_EQ(header.uiDay,                       2u);
 		EXPECT_EQ(header.ubHour,                      9);
 		EXPECT_EQ(header.ubMin,                       51);
 		EXPECT_EQ(header.sSectorX,                    15);
@@ -121,10 +121,10 @@ TEST(SaveLoadGameTest, structParsers)
 	{
 		SAVED_GAME_HEADER header;
 		ParseSavedGameHeader(s_savedGameHeaderStracLinux, header, true);
-		EXPECT_EQ(header.uiSavedGameVersion,          0x63);
+		EXPECT_EQ(header.uiSavedGameVersion,          0x63u);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 04.12.02");
 		EXPECT_STREQ(header.sSavedGameDesc,           L"1");
-		EXPECT_EQ(header.uiDay,                       1);
+		EXPECT_EQ(header.uiDay,                       1u);
 		EXPECT_EQ(header.ubHour,                      1);
 		EXPECT_EQ(header.ubMin,                       0);
 		EXPECT_EQ(header.sSectorX,                    9);
@@ -181,10 +181,10 @@ TEST(SaveLoadGameTest, parseHeaderLinux)
 		ExtractSavedGameHeaderFromFile(f, header, &stracLinuxFormat);
 		ASSERT_EQ(stracLinuxFormat, true);
 		ASSERT_EQ(isValidSavedGameHeader(header), true);
-		EXPECT_EQ(header.uiSavedGameVersion,          0x63);
+		EXPECT_EQ(header.uiSavedGameVersion,          0x63u);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 04.12.02");
 		EXPECT_STREQ(header.sSavedGameDesc,           L"1");
-		EXPECT_EQ(header.uiDay,                       1);
+		EXPECT_EQ(header.uiDay,                       1u);
 		EXPECT_EQ(header.ubHour,                      1);
 		EXPECT_EQ(header.ubMin,                       0);
 		EXPECT_EQ(header.sSectorX,                    9);
@@ -210,10 +210,10 @@ TEST(SaveLoadGameTest, parseHeaderWin)
 		ExtractSavedGameHeaderFromFile(f, header, &stracLinuxFormat);
 		ASSERT_EQ(stracLinuxFormat, false);
 		ASSERT_EQ(isValidSavedGameHeader(header), true);
-		EXPECT_EQ(header.uiSavedGameVersion,          0x63);
+		EXPECT_EQ(header.uiSavedGameVersion,          0x63u);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 04.12.02");
 		EXPECT_STREQ(header.sSavedGameDesc,           L"9");
-		EXPECT_EQ(header.uiDay,                       2);
+		EXPECT_EQ(header.uiDay,                       2u);
 		EXPECT_EQ(header.ubHour,                      9);
 		EXPECT_EQ(header.ubMin,                       51);
 		EXPECT_EQ(header.sSectorX,                    15);
@@ -234,10 +234,10 @@ TEST(SaveLoadGameTest, parseHeaderWin)
 		ExtractSavedGameHeaderFromFile(f, header, &stracLinuxFormat);
 		ASSERT_EQ(stracLinuxFormat, false);
 		ASSERT_EQ(isValidSavedGameHeader(header), true);
-		EXPECT_EQ(header.uiSavedGameVersion,          0x5e);
+		EXPECT_EQ(header.uiSavedGameVersion,          0x5eu);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 99.06.25");
 		EXPECT_STREQ(header.sSavedGameDesc,           L"6");
-		EXPECT_EQ(header.uiDay,                       1);
+		EXPECT_EQ(header.uiDay,                       1u);
 		EXPECT_EQ(header.ubHour,                      1);
 		EXPECT_EQ(header.ubMin,                       0);
 		EXPECT_EQ(header.sSectorX,                    9);
@@ -263,10 +263,10 @@ TEST(SaveLoadGameTest, parseHeaderMac)
 		ExtractSavedGameHeaderFromFile(f, header, &stracLinuxFormat);
 		ASSERT_EQ(stracLinuxFormat, true);
 		ASSERT_EQ(isValidSavedGameHeader(header), true);
-		EXPECT_EQ(header.uiSavedGameVersion,          0x63);
+		EXPECT_EQ(header.uiSavedGameVersion,          0x63u);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 04.12.02");
 		EXPECT_STREQ(header.sSavedGameDesc,           L"very long description long long long long long");
-		EXPECT_EQ(header.uiDay,                       1);
+		EXPECT_EQ(header.uiDay,                       1u);
 		EXPECT_EQ(header.ubHour,                      1);
 		EXPECT_EQ(header.ubMin,                       0);
 		EXPECT_EQ(header.sSectorX,                    9);

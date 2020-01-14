@@ -2545,9 +2545,9 @@ UINT32 CalculateMinutesClosedBetween(ArmsDealerID const ubArmsDealer, UINT32 uiS
 
 TEST(ArmsDealerInit, asserts)
 {
-	EXPECT_EQ(sizeof(ARMS_DEALER_STATUS), 20);
-	EXPECT_EQ(sizeof(SPECIAL_ITEM_INFO), 16);
-	EXPECT_EQ(sizeof(DEALER_SPECIAL_ITEM), 28);
+	EXPECT_EQ(sizeof(ARMS_DEALER_STATUS), 20u);
+	EXPECT_EQ(sizeof(SPECIAL_ITEM_INFO), 16u);
+	EXPECT_EQ(sizeof(DEALER_SPECIAL_ITEM), 28u);
 }
 
 #endif

@@ -349,10 +349,10 @@ void ConvertRGBDistribution565ToAny(UINT16* const p16BPPData, UINT32 const uiNum
 
 TEST(HImage, asserts)
 {
-	EXPECT_EQ(sizeof(AuxObjectData), 16);
-	EXPECT_EQ(sizeof(RelTileLoc), 2);
-	EXPECT_EQ(sizeof(ETRLEObject), 16);
-	EXPECT_EQ(sizeof(SGPPaletteEntry), 4);
+	EXPECT_EQ(sizeof(AuxObjectData), 16u);
+	EXPECT_EQ(sizeof(RelTileLoc), 2u);
+	EXPECT_EQ(sizeof(ETRLEObject), 16u);
+	EXPECT_EQ(sizeof(SGPPaletteEntry), 4u);
 }
 
 #endif

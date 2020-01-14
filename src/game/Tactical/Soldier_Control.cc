@@ -9092,8 +9092,8 @@ static void SetSoldierPersonalLightLevel(SOLDIERTYPE* const s)
 
 TEST(SoldierControl, asserts)
 {
-	EXPECT_EQ(lengthof(gubMaxActionPoints), TOTALBODYTYPES);
-	EXPECT_EQ(sizeof(KEY_ON_RING), 2);
+	EXPECT_EQ(lengthof(gubMaxActionPoints), static_cast<size_t>(TOTALBODYTYPES));
+	EXPECT_EQ(sizeof(KEY_ON_RING), 2u);
 }
 
 #endif

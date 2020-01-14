@@ -480,7 +480,7 @@ void RefreshWorldItemsIntoItemPools(const WORLDITEM* const items, const INT32 it
 
 TEST(WorldItems, asserts)
 {
-	EXPECT_EQ(sizeof(WORLDITEM), 52);
+	EXPECT_EQ(sizeof(WORLDITEM), 52u);
 }
 
 #endif

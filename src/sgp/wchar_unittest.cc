@@ -5,7 +5,7 @@
 TEST(wcharTest, English)
 {
 	const wchar_t str[] = L"test";
-	EXPECT_EQ(ARR_SIZE(str), 5);
+	EXPECT_EQ(ARR_SIZE(str), 5u);
 	EXPECT_EQ(str[0], 0x74);
 	EXPECT_EQ(str[1], 0x65);
 	EXPECT_EQ(str[2], 0x73);
@@ -16,7 +16,7 @@ TEST(wcharTest, English)
 TEST(wcharTest, RussianWithUnicodeConsts)
 {
 	const wchar_t str[] = L"\u0442\u0435\u0441\u0442";
-	EXPECT_EQ(ARR_SIZE(str), 5);
+	EXPECT_EQ(ARR_SIZE(str), 5u);
 	EXPECT_EQ(str[0], 0x0442);
 	EXPECT_EQ(str[1], 0x0435);
 	EXPECT_EQ(str[2], 0x0441);
@@ -30,7 +30,7 @@ TEST(wcharTest, Russian)
 	// have byte-order mark.
 
 	const wchar_t str[] = L"тест";
-	ASSERT_EQ(ARR_SIZE(str), 5) << "Russian string check fails.  If Visual Studio, make sure the source file has the byte-order mark";
+	ASSERT_EQ(ARR_SIZE(str), 5u) << "Russian string check fails.  If Visual Studio, make sure the source file has the byte-order mark";
 	EXPECT_EQ(str[0], 0x0442);
 	EXPECT_EQ(str[1], 0x0435);
 	EXPECT_EQ(str[2], 0x0441);
@@ -44,7 +44,7 @@ TEST(wcharTest, Chinese)
 	// have byte-order mark.
 
 	const wchar_t str[] = L"测试";
-	ASSERT_EQ(ARR_SIZE(str), 3);
+	ASSERT_EQ(ARR_SIZE(str), 3u);
 	EXPECT_EQ(str[0], 0x6d4b);
 	EXPECT_EQ(str[1], 0x8bd5);
 	EXPECT_EQ(str[2], 0x00);
@@ -56,7 +56,7 @@ TEST(wcharTest, Greek)
 	// have byte-order mark.
 
 	const wchar_t str[] = L"δοκιμή";
-	ASSERT_EQ(ARR_SIZE(str), 7);
+	ASSERT_EQ(ARR_SIZE(str), 7u);
 	EXPECT_EQ(str[0], 0x03b4);
 	EXPECT_EQ(str[1], 0x03bf);
 	EXPECT_EQ(str[2], 0x03ba);

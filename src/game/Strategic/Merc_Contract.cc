@@ -1044,7 +1044,7 @@ static BOOLEAN ContractIsGoingToExpireSoon(SOLDIERTYPE* pSoldier)
 
 TEST(MercContract, asserts)
 {
-	EXPECT_EQ(sizeof(CONTRACT_NEWAL_LIST_NODE), 4);
+	EXPECT_EQ(sizeof(CONTRACT_NEWAL_LIST_NODE), 4u);
 }
 
 #endif

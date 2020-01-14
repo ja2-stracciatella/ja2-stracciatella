@@ -851,7 +851,7 @@ void HandleFirstMeanWhileSetUpWithTrashWorld( void )
 
 TEST(Meanwhile, asserts)
 {
-	EXPECT_EQ(sizeof(MEANWHILE_DEFINITION), 8);
+	EXPECT_EQ(sizeof(MEANWHILE_DEFINITION), 8u);
 }
 
 #endif

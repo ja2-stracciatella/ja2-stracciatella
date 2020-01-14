@@ -1341,8 +1341,8 @@ void EndAirRaid( )
 
 TEST(AirRaid, asserts)
 {
-	EXPECT_EQ(sizeof(AIR_RAID_SAVE_STRUCT), 132);
-	EXPECT_EQ(sizeof(AIR_RAID_DEFINITION), 24);
+	EXPECT_EQ(sizeof(AIR_RAID_SAVE_STRUCT), 132u);
+	EXPECT_EQ(sizeof(AIR_RAID_DEFINITION), 24u);
 }
 
 #endif

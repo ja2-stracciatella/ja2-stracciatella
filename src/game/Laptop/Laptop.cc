@@ -3533,9 +3533,9 @@ void CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHe
 
 TEST(Laptop, asserts)
 {
-	EXPECT_EQ(sizeof(LIFE_INSURANCE_PAYOUT), 8);
-	EXPECT_EQ(sizeof(BobbyRayPurchaseStruct), 8);
-	EXPECT_EQ(sizeof(BobbyRayOrderStruct), 84);
+	EXPECT_EQ(sizeof(LIFE_INSURANCE_PAYOUT), 8u);
+	EXPECT_EQ(sizeof(BobbyRayPurchaseStruct), 8u);
+	EXPECT_EQ(sizeof(BobbyRayOrderStruct), 84u);
 }
 
 #endif

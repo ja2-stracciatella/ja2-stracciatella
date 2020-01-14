@@ -366,7 +366,7 @@ UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadi
 
 TEST(ExitGrids, asserts)
 {
-	EXPECT_EQ(sizeof(EXITGRID), 6);
+	EXPECT_EQ(sizeof(EXITGRID), 6u);
 }
 
 #endif
