@@ -340,8 +340,8 @@ int main(int argc, char* argv[])
 		GameState::getInstance()->setEditorMode(false);
 	}
 
-	auto width = EngineOptions_getResolutionX(params.get());
-	auto height = EngineOptions_getResolutionY(params.get());
+	uint16_t width = EngineOptions_getResolutionX(params.get());
+	uint16_t height = EngineOptions_getResolutionY(params.get());
 	bool result = g_ui.setScreenSize(width, height);
 	if(!result)
 	{
@@ -401,12 +401,12 @@ int main(int argc, char* argv[])
 
 	DefaultContentManager *cm;
 
-	auto n = EngineOptions_getModsLength(params.get());
+	uint32_t n = EngineOptions_getModsLength(params.get());
 	if(n > 0)
 	{
 		std::vector<std::string> modNames;
 		std::vector<std::string> modResFolders;
-		for (auto i = 0; i < n; ++i)
+		for (uint32_t i = 0; i < n; ++i)
 		{
 			RustPointer<char> modName(EngineOptions_getMod(params.get(), i));
 			std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName.get()), "data");
@@ -424,7 +424,7 @@ int main(int argc, char* argv[])
 		SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
 		SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
 		SLOGI("------------------------------------------------------------------------------");
-		for (auto i = 0; i < n; ++i)
+		for (uint32_t i = 0; i < n; ++i)
 		{
 			SLOGI("MOD name:                      '%s'", modNames[i].c_str());
 			SLOGI("MOD resource directory:        '%s'", modResFolders[i].c_str());

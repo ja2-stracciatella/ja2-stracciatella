@@ -139,7 +139,7 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 				SLOGW("smacker failed to decode audio data");
 				break;
 			}
-			for (auto i = 0; i < 7; i++)
+			for (uint8_t i = 0; i < 7; i++)
 			{
 				if (!(audio_tracks & (1 << i))) continue;
 				unsigned long audio_size = smk_get_audio_size(sf->smacker, i);
@@ -166,7 +166,7 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 	sf->status = smk_first(sf->smacker);
 	sf->start_tick = SDL_GetTicks();
 	sf->frame_no = 0;
-	for (auto i = 0; i < 7; i++)
+	for (uint8_t i = 0; i < 7; i++)
 	{
 		if (audio[i].empty())
 		{
@@ -289,7 +289,7 @@ static void SmkBlitVideoFrame(SMKFLIC* const sf, SGPVSurface* surface)
 
 	// convert palette
 	UINT16 palette[256];
-	for (auto i = 0; i < 256; i++)
+	for (int i = 0; i < 256; i++)
 	{
 		unsigned char* rgb = src_palette + i * 3;
 		palette[i] = Get16BPPColor(FROMRGB(rgb[0], rgb[1], rgb[2]));

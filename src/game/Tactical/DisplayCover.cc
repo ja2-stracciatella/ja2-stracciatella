@@ -499,7 +499,7 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSea
 	BOOLEAN fRoof=FALSE;
 
 	//clear out the struct
-	for (auto i = 0; i < DC__SOLDIER_VISIBLE_RANGE; ++i)
+	for (int i = 0; i < DC__SOLDIER_VISIBLE_RANGE; ++i)
 	{
 		std::fill_n(gVisibleToSoldierStruct[i], DC__SOLDIER_VISIBLE_RANGE, VISIBLE_TO_SOLDIER_STRUCT{});
 	}
