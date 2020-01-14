@@ -6219,7 +6219,7 @@ void MakeCharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE& s, GridNo con
 
 TEST(Overhead, asserts)
 {
-	EXPECT_EQ(lengthof(g_default_team_info), MAXTEAMS);
+	EXPECT_EQ(lengthof(g_default_team_info), static_cast<size_t>(MAXTEAMS));
 }
 
 #endif

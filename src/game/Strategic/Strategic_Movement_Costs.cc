@@ -201,10 +201,10 @@ bool SectorIsPassable(INT16 const sSector)
 
 TEST(StrategicMovementCostsTest, asserts)
 {
-	EXPECT_EQ(lengthof(g_traverse_we), 16);
-	EXPECT_EQ(lengthof(g_traverse_ns), 17);
-	EXPECT_EQ(lengthof(g_traverse_through), 16);
-	EXPECT_EQ(lengthof(g_travel_rating), 16);
+	EXPECT_EQ(lengthof(g_traverse_we), 16u);
+	EXPECT_EQ(lengthof(g_traverse_ns), 17u);
+	EXPECT_EQ(lengthof(g_traverse_through), 16u);
+	EXPECT_EQ(lengthof(g_travel_rating), 16u);
 }
 
 #endif

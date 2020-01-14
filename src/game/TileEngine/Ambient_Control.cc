@@ -88,7 +88,7 @@ UINT32 SetupNewAmbientSound( UINT32 uiAmbientID )
 
 TEST(AmbientControl, asserts)
 {
-	EXPECT_EQ(sizeof(AMBIENTDATA_STRUCT), 116);
+	EXPECT_EQ(sizeof(AMBIENTDATA_STRUCT), 116u);
 }
 
 #endif

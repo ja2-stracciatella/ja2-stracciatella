@@ -32,7 +32,7 @@ const UINT32 guiSavedGameVersion = SAVE_GAME_VERSION;
 
 TEST(GameVersion, asserts)
 {
-	EXPECT_EQ(lengthof(g_version_number), 16);
+	EXPECT_EQ(lengthof(g_version_number), 16u);
 }
 
 #endif

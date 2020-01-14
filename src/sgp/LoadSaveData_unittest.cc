@@ -22,8 +22,8 @@ TEST(LoadSaveData, integers)
 		EXPECT_EQ(reader.readU8(), 0x00);
 		EXPECT_EQ(reader.readU8(), 0xff);
 
-		EXPECT_EQ(reader.getConsumed(), 3);
-		EXPECT_EQ(writer.getConsumed(), 3);
+		EXPECT_EQ(reader.getConsumed(), 3u);
+		EXPECT_EQ(writer.getConsumed(), 3u);
 	}
 
 	{
@@ -37,8 +37,8 @@ TEST(LoadSaveData, integers)
 		EXPECT_EQ(reader.readU16(), 0x0000);
 		EXPECT_EQ(reader.readU16(), 0xffff);
 
-		EXPECT_EQ(reader.getConsumed(), 6);
-		EXPECT_EQ(writer.getConsumed(), 6);
+		EXPECT_EQ(reader.getConsumed(), 6u);
+		EXPECT_EQ(writer.getConsumed(), 6u);
 	}
 
 	{
@@ -48,12 +48,12 @@ TEST(LoadSaveData, integers)
 		writer.writeU32(0xffffffff);
 
 		DataReader reader(buf);
-		EXPECT_EQ(reader.readU32(), 0x01234567);
-		EXPECT_EQ(reader.readU32(), 0x00000000);
-		EXPECT_EQ(reader.readU32(), 0xffffffff);
+		EXPECT_EQ(reader.readU32(), 0x01234567u);
+		EXPECT_EQ(reader.readU32(), 0x00000000u);
+		EXPECT_EQ(reader.readU32(), 0xffffffffu);
 
-		EXPECT_EQ(reader.getConsumed(), 12);
-		EXPECT_EQ(writer.getConsumed(), 12);
+		EXPECT_EQ(reader.getConsumed(), 12u);
+		EXPECT_EQ(writer.getConsumed(), 12u);
 	}
 }
 
@@ -73,8 +73,8 @@ TEST(LoadSaveData, wcharToUTF16English)
 		EXPECT_EQ(reader.readU16(), 't');
 		EXPECT_EQ(reader.readU16(), 0x0000);
 
-		EXPECT_EQ(reader.getConsumed(), 10);
-		EXPECT_EQ(writer.getConsumed(), 10);
+		EXPECT_EQ(reader.getConsumed(), 10u);
+		EXPECT_EQ(writer.getConsumed(), 10u);
 	}
 }
 
@@ -111,8 +111,8 @@ TEST(LoadSaveData, utf16ToWideString)
 		DataReader reader(buf);
 		EXPECT_EQ(reader.readUTF16(5), "тест"_st);
 
-		EXPECT_EQ(reader.getConsumed(), 10);
-		EXPECT_EQ(writer.getConsumed(), 10);
+		EXPECT_EQ(reader.getConsumed(), 10u);
+		EXPECT_EQ(writer.getConsumed(), 10u);
 	}
 
 	{
@@ -121,8 +121,8 @@ TEST(LoadSaveData, utf16ToWideString)
 		reader.readUTF16(wideBuf, 5);
 		EXPECT_STREQ(wideBuf, L"тест");
 
-		EXPECT_EQ(reader.getConsumed(), 10);
-		EXPECT_EQ(writer.getConsumed(), 10);
+		EXPECT_EQ(reader.getConsumed(), 10u);
+		EXPECT_EQ(writer.getConsumed(), 10u);
 	}
 }
 
@@ -141,8 +141,8 @@ TEST(LoadSaveData, utf32ToWideString)
 		DataReader reader(buf);
 		EXPECT_EQ(reader.readUTF32(5), "тест"_st);
 
-		EXPECT_EQ(reader.getConsumed(), 20);
-		EXPECT_EQ(writer.getConsumed(), 20);
+		EXPECT_EQ(reader.getConsumed(), 20u);
+		EXPECT_EQ(writer.getConsumed(), 20u);
 	}
 
 	{
@@ -151,8 +151,8 @@ TEST(LoadSaveData, utf32ToWideString)
 		reader.readUTF32(wideBuf, 5);
 		EXPECT_STREQ(wideBuf, L"тест");
 
-		EXPECT_EQ(reader.getConsumed(), 20);
-		EXPECT_EQ(writer.getConsumed(), 20);
+		EXPECT_EQ(reader.getConsumed(), 20u);
+		EXPECT_EQ(writer.getConsumed(), 20u);
 	}
 }
 
@@ -190,13 +190,13 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 	//   printf("double size: %d\n", sizeof(double));
 	// }
 
-	ASSERT_EQ(sizeof(float),  4);
-	ASSERT_EQ(sizeof(double), 8);
+	ASSERT_EQ(sizeof(float),  4u);
+	ASSERT_EQ(sizeof(double), 8u);
 
 	{
 		char buf[100];
 		FILE *floats = fopen(floatsPath.c_str(), "rb");
-		EXPECT_EQ(fread(buf, sizeof(float), 5, floats), 5);
+		EXPECT_EQ(fread(buf, sizeof(float), 5, floats), 5u);
 		fclose(floats);
 		float f;
 
@@ -211,7 +211,7 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 	{
 		char buf[100];
 		FILE *doubles = fopen(doublesPath.c_str(), "rb");
-		EXPECT_EQ(fread(buf, sizeof(double), 5, doubles), 5);
+		EXPECT_EQ(fread(buf, sizeof(double), 5, doubles), 5u);
 		fclose(doubles);
 		double d;
 

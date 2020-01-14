@@ -23,7 +23,7 @@ TEST(TempFiles, createFile)
 	}
 
 	std::vector<std::string> results = FindFilesInDir(TMPDIR, ".txt", false, false);
-	ASSERT_EQ(results.size(), 1);
+	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), TMPDIR PS "foo.txt");
 
 	boost::filesystem::remove_all(TMPDIR);
@@ -44,13 +44,13 @@ TEST(TempFiles, writeToFile)
 	// open for writing, but don't truncate
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", false));
-		ASSERT_EQ(FileGetSize(file), 5);
+		ASSERT_EQ(FileGetSize(file), 5u);
 	}
 
 	// open with truncate and check that it is empty
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
-		ASSERT_EQ(FileGetSize(file), 0);
+		ASSERT_EQ(FileGetSize(file), 0u);
 	}
 
 	// // void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
@@ -100,7 +100,7 @@ TEST(TempFiles, append)
 
 	{
 		AutoSGPFile file(cm->openTempFileForReading("foo.txt"));
-		ASSERT_EQ(FileGetSize(file), 10);
+		ASSERT_EQ(FileGetSize(file), 10u);
 	}
 
 	boost::filesystem::remove_all(TMPDIR);
@@ -118,12 +118,12 @@ TEST(TempFiles, deleteFile)
 	}
 
 	std::vector<std::string> results = FindFilesInDir(TMPDIR, ".txt", false, false);
-	ASSERT_EQ(results.size(), 1);
+	ASSERT_EQ(results.size(), 1u);
 
 	cm->deleteTempFile("foo.txt");
 
 	results = FindFilesInDir(TMPDIR, ".txt", false, false);
-	ASSERT_EQ(results.size(), 0);
+	ASSERT_EQ(results.size(), 0u);
 
 	boost::filesystem::remove_all(TMPDIR);
 	delete cm;

@@ -3739,7 +3739,7 @@ TEST(WideStringEncodingTest, FrenchTextFile)
 	// to correctly identify file encoding.  Failed test means that the compiler
 	// cannot correctly interpret the string literals.
 	const wchar_t str[] = L"тест";
-	ASSERT_EQ(ARR_SIZE(str), 5) << "Compiler cannot correctly interpret wide string literals";
+	ASSERT_EQ(ARR_SIZE(str), 5u) << "Compiler cannot correctly interpret wide string literals";
 	EXPECT_EQ(str[0], 0x0442);
 	EXPECT_EQ(str[1], 0x0435);
 	EXPECT_EQ(str[2], 0x0441);

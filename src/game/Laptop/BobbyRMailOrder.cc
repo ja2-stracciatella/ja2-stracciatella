@@ -2120,7 +2120,7 @@ void NewWayOfLoadingBobbyRMailOrdersToSaveGameFile(HWFILE const hFile)
 
 TEST(BobbyRMailOrder, asserts)
 {
-	EXPECT_EQ(sizeof(NewBobbyRayOrderStruct), 104);
+	EXPECT_EQ(sizeof(NewBobbyRayOrderStruct), 104u);
 }
 
 #endif

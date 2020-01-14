@@ -585,7 +585,7 @@ void UpdateSummaryInfo( SUMMARYFILE *pSummary )
 
 TEST(MapInformation, asserts)
 {
-	EXPECT_EQ(sizeof(MAPCREATE_STRUCT), 100);
+	EXPECT_EQ(sizeof(MAPCREATE_STRUCT), 100u);
 }
 
 #endif

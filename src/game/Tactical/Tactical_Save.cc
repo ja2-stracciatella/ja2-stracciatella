@@ -3500,7 +3500,7 @@ static UINT8 const* GetRotationArray()
 
 TEST(TacticalSave, asserts)
 {
-	EXPECT_EQ(lengthof(g_encryption_array), BASE_NUMBER_OF_ROTATION_ARRAYS * 12);
+	EXPECT_EQ(lengthof(g_encryption_array), static_cast<size_t>(BASE_NUMBER_OF_ROTATION_ARRAYS * 12));
 }
 
 #endif

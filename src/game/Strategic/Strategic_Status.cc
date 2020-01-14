@@ -390,7 +390,7 @@ UINT8 RankIndexToSoldierClass( UINT8 ubRankIndex )
 
 TEST(StrategicStatus, asserts)
 {
-	EXPECT_EQ(sizeof(STRATEGIC_STATUS), 192);
+	EXPECT_EQ(sizeof(STRATEGIC_STATUS), 192u);
 }
 
 #endif
