@@ -2540,7 +2540,6 @@ Blt8BPPDataTo16BPPBuffer
 **********************************************************************************************/
 void Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPVSurface* hSrcVSurface, UINT8 *pSrcBuffer, INT32 iX, INT32 iY)
 {
-	UINT32 LineSkip;
 	INT32  iTempX, iTempY;
 
 	// Assertions
@@ -2563,7 +2562,6 @@ void Blt8BPPDataTo16BPPBuffer( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, SGPVSur
 	UINT8*  SrcPtr        = pSrcBuffer;
 	UINT16* DestPtr       = pBuffer + uiDestPitchBYTES / 2 * iTempY + iTempX;
 	UINT16* p16BPPPalette = hSrcVSurface->p16BPPPalette;
-	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
 	for (size_t h = usHeight; h != 0; --h)
 	{
@@ -3932,6 +3930,9 @@ void Blt8BPPDataTo16BPPBufferOutlineShadow(UINT16* const pBuffer, const UINT32 u
 
 void Blt8BPPDataTo16BPPBufferOutlineShadowClip(UINT16* const pBuffer, const UINT32 uiDestPitchBYTES, const SGPVObject* const hSrcVObject, const INT32 iX, const INT32 iY, const UINT16 usIndex, const SGPRect* const clipregion)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED
+#else
 	UINT8  *DestPtr;
 	UINT32 LineSkip;
 	INT32  LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
@@ -3987,10 +3988,6 @@ void Blt8BPPDataTo16BPPBufferOutlineShadowClip(UINT16* const pBuffer, const UINT
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
-#if 1 // XXX TODO
-	(void)SrcPtr;
-	UNIMPLEMENTED
-#else
 	UINT32 Unblitted;
 	__asm {
 
@@ -4633,6 +4630,9 @@ Blt8BPPDataTo16BPPBufferIntensityZ
 **********************************************************************************************/
 void Blt8BPPDataTo16BPPBufferIntensityZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED
+#else
 	UINT8  *DestPtr, *ZPtr;
 	UINT32 LineSkip;
 
@@ -4658,11 +4658,6 @@ void Blt8BPPDataTo16BPPBufferIntensityZ( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
-#if 1 // XXX TODO
-	(void)SrcPtr;
-	(void)usHeight;
-	UNIMPLEMENTED
-#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -4742,6 +4737,9 @@ Blt8BPPDataTo16BPPBufferIntensityZClip
 **********************************************************************************************/
 void Blt8BPPDataTo16BPPBufferIntensityZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED
+#else
 	UINT8  *DestPtr, *ZPtr;
 	UINT32 LineSkip;
 	INT32  LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
@@ -4798,10 +4796,6 @@ void Blt8BPPDataTo16BPPBufferIntensityZClip( UINT16 *pBuffer, UINT32 uiDestPitch
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
-#if 1 // XXX TODO
-	(void)SrcPtr;
-	UNIMPLEMENTED
-#else
 	UINT32 Unblitted;
 	INT32  LSCount;
 	__asm {
@@ -4991,6 +4985,9 @@ Blt8BPPDataTo16BPPBufferIntensityZNB
 **********************************************************************************************/
 void Blt8BPPDataTo16BPPBufferIntensityZNB( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, UINT16 *pZBuffer, UINT16 usZValue, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex )
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED
+#else
 	UINT8  *DestPtr, *ZPtr;
 	UINT32 LineSkip;
 
@@ -5016,11 +5013,6 @@ void Blt8BPPDataTo16BPPBufferIntensityZNB( UINT16 *pBuffer, UINT32 uiDestPitchBY
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
-#if 1 // XXX TODO
-	(void)SrcPtr;
-	(void)usHeight;
-	UNIMPLEMENTED
-#else
 	__asm {
 
 		mov		esi, SrcPtr
@@ -5096,6 +5088,9 @@ Blt8BPPDataTo16BPPBufferIntensityClip
 **********************************************************************************************/
 void Blt8BPPDataTo16BPPBufferIntensityClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex, SGPRect *clipregion)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED
+#else
 	UINT8  *DestPtr;
 	UINT32 LineSkip;
 	INT32  LeftSkip, RightSkip, TopSkip, BottomSkip, BlitLength, BlitHeight;
@@ -5151,10 +5146,6 @@ void Blt8BPPDataTo16BPPBufferIntensityClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
-#if 1 // XXX TODO
-	(void)SrcPtr;
-	UNIMPLEMENTED
-#else
 	UINT32 Unblitted;
 	__asm {
 
@@ -5373,6 +5364,9 @@ Blt8BPPDataTo16BPPBufferIntensity
 **********************************************************************************************/
 void Blt8BPPDataTo16BPPBufferIntensity( UINT16 *pBuffer, UINT32 uiDestPitchBYTES, HVOBJECT hSrcVObject, INT32 iX, INT32 iY, UINT16 usIndex)
 {
+#if 1 // XXX TODO
+	UNIMPLEMENTED
+#else
 	UINT8  *DestPtr;
 	UINT32 LineSkip;
 
@@ -5397,11 +5391,6 @@ void Blt8BPPDataTo16BPPBufferIntensity( UINT16 *pBuffer, UINT32 uiDestPitchBYTES
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*iTempY) + (iTempX*2);
 	LineSkip=(uiDestPitchBYTES-(usWidth*2));
 
-#if 1 // XXX TODO
-	(void)SrcPtr;
-	(void)usHeight;
-	UNIMPLEMENTED
-#else
 	__asm {
 
 		mov		esi, SrcPtr
