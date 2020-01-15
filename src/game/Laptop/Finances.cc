@@ -951,7 +951,7 @@ static void LoadPreviousPage(void)
 
 static void LoadNextPage(void)
 {
-	if (iCurrentPage > guiLastPageInRecordsList) return;
+	if (static_cast<UINT32>(iCurrentPage) > guiLastPageInRecordsList) return;
 	LoadInRecords(iCurrentPage + 1);
 }
 
@@ -1060,7 +1060,7 @@ static INT32 GetPreviousDaysBalance(void)
 	INT32 balance = 0;
 	// start at the end, move back until Date / 24 * 60 on the record equals date_in_days - 2
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	for (INT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
 		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
@@ -1100,7 +1100,7 @@ static INT32 GetTodaysBalance(void)
 
 	INT32 balance = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	for (INT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
 		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
@@ -1141,7 +1141,7 @@ static INT32 GetPreviousDaysIncome(void)
 	// start at the end, move back until Date / 24 * 60 on the record is = date_in_days - 2
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (INT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
 		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
@@ -1186,7 +1186,7 @@ static INT32 GetTodaysDaysIncome(void)
 	INT32 iTotalIncome = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (INT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
 		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
@@ -1230,7 +1230,7 @@ static void SetFinanceButtonStates(void)
 	EnableButton(giFinanceButton[PREV_PAGE_BUTTON],  has_prev);
 	EnableButton(giFinanceButton[FIRST_PAGE_BUTTON], has_prev);
 
-	bool const has_next = iCurrentPage <= guiLastPageInRecordsList;
+	bool const has_next = iCurrentPage <= static_cast<INT32>(guiLastPageInRecordsList);
 	EnableButton(giFinanceButton[NEXT_PAGE_BUTTON], has_next);
 	EnableButton(giFinanceButton[LAST_PAGE_BUTTON], has_next);
 }
@@ -1247,7 +1247,7 @@ static INT32 GetTodaysOtherDeposits(void)
 	INT32 iTotalIncome = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (INT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
 		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
@@ -1296,7 +1296,7 @@ static INT32 GetYesterdaysOtherDeposits(void)
 	// start at the end, move back until Date / 24 * 60 on the record is =  date_in_days - 2
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (INT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
 		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
