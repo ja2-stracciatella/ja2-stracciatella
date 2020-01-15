@@ -158,4 +158,5 @@ void BltVideoSurfaceOnceWithStretch(SGPVSurface* const dst, const char* const fi
 /** Fill video surface with another one with stretch. */
 void FillVideoSurfaceWithStretch(SGPVSurface* const dst, SGPVSurface* const src);
 
+void ColorFillVideoSurfaceArea(SGPVSurface* const dst, INT32 iDestX1, INT32 iDestY1, INT32 iDestX2, INT32 iDestY2, const UINT32 Color);
 #endif
