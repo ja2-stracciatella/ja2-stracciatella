@@ -4155,7 +4155,7 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 
 	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
-		INT32 const sector    = i->sector;
+		UINT8 const sector    = i->sector;
 		if (!SectorOursAndPeaceful(SECTORX(sector), SECTORY(sector), 0)) continue;
 		SECTORINFO& si        = SectorInfo[sector];
 		UINT8&      n_green   = si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
@@ -4243,7 +4243,7 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 
 	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
-		INT32 const sector = i->sector;
+		UINT8 const sector = i->sector;
 		if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].fEnemyControlled) continue;
 		if (NumHostilesInSector(SECTORX(sector), SECTORY(sector), 0) != 0)         continue;
 

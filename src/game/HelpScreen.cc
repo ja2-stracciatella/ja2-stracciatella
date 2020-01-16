@@ -1898,7 +1898,7 @@ static void ChangeTopLineInTextBufferByAmount(INT32 const delta)
 	if (new_top > max_top) new_top = max_top;
 	if (new_top < 0)       new_top = 0;
 
-	if (new_top == top) return;
+	if (static_cast<UINT32>(new_top) == top) return;
 
 	top                   = new_top;
 	hlp.ubHelpScreenDirty = HLP_SCRN_DRTY_LVL_REFRESH_TEXT;

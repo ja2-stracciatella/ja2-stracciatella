@@ -386,7 +386,7 @@ static void InitAlumniFaceRegions(void)
 	INT32       face_idx = start;
 	UINT16 const w        = AIM_ALUMNI_ALUMNI_FACE_WIDTH;
 	UINT16 const h        = AIM_ALUMNI_ALUMNI_FACE_HEIGHT;
-	for (size_t i = 0; i != n_faces; ++i, ++face_idx)
+	for (INT32 i = 0; i != n_faces; ++i, ++face_idx)
 	{
 		UINT16        const x = static_cast<UINT16>(i % AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_X + AIM_ALUMNI_START_GRID_X);
 		UINT16        const y = static_cast<UINT16>(i / AIM_ALUMNI_NUM_FACE_COLS * AIM_ALUMNI_GRID_OFFSET_Y + AIM_ALUMNI_START_GRID_Y);

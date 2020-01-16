@@ -390,7 +390,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 			{
 				// ATE: Make sure we are going through the same direction!
 				// THis is to solve the drassen SAM problem with seeing through walls
-				if ( Dir[markerDir] == bThroughWindowDirection)
+				if ( static_cast<INT8>(Dir[markerDir]) == bThroughWindowDirection)
 				{
 					fThroughWindow = 2;
 				}

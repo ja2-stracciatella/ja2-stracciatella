@@ -434,7 +434,7 @@ void InjectMercProfileIntoFile(HWFILE const f, MERCPROFILESTRUCT const& p)
 * @param profiles Array for storing profile data */
 void LoadRawMercProfiles(HWFILE const f, int numProfiles, MERCPROFILESTRUCT *profiles, const IEncodingCorrector *fixer)
 {
-	for (UINT32 i = 0; i != numProfiles; ++i)
+	for (int i = 0; i != numProfiles; ++i)
 	{
 		BYTE data[MERC_PROFILE_SIZE];
 		JA2EncryptedFileRead(f, data, sizeof(data));

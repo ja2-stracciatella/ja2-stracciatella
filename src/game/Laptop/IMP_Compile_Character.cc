@@ -147,7 +147,7 @@ void AddSkillToSkillList( INT8 bSkill )
 
 static void RemoveSkillFromSkillsList(INT32 const Skill)
 {
-	for (size_t i = 0; i != iLastElementInSkillsList;)
+	for (INT32 i = 0; i != iLastElementInSkillsList;)
 	{
 		if (SkillsList[i] == Skill)
 		{
@@ -357,7 +357,7 @@ static void SetMercSkinAndHairColors(void)
 		{ TANSKIN,   BLONDHEAD }
 	};
 
-	Assert(iPortraitNumber < lengthof(Colors));
+	Assert(iPortraitNumber < static_cast<INT32>(lengthof(Colors)));
 	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
 	strcpy(p.HAIR, Colors[iPortraitNumber].Hair);
 	strcpy(p.SKIN, Colors[iPortraitNumber].Skin);

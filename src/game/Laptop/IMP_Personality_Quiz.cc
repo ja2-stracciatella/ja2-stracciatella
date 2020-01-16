@@ -297,7 +297,7 @@ static void BtnQuizAnswerCallback(GUI_BUTTON*, INT32 reason);
 static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 {
 	// will add iNumberofbuttons to the answer button list
-	for (UINT32 i = 0; i < iNumberOfButtons; i++)
+	for (INT32 i = 0; i < iNumberOfButtons; i++)
 	{
 		INT32 XLoc = LAPTOP_SCREEN_UL_X + (i < 4 ? BTN_FIRST_COLUMN_X : BTN_SECOND_COLUMN_X);
 		INT32 YLoc = LAPTOP_SCREEN_WEB_UL_Y + 97 + i % 4 * 50;

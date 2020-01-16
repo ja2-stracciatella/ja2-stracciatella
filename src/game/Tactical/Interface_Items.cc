@@ -5104,7 +5104,7 @@ static void BtnMoneyButtonCallback(GUI_BUTTON* const btn, INT32 const reason)
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		INT32       amount   = 0;
+		UINT32      amount   = 0;
 		UINT8 const ubButton = btn->GetUserData();
 		switch (ubButton)
 		{
@@ -5143,7 +5143,7 @@ static void BtnMoneyButtonCallback(GUI_BUTTON* const btn, INT32 const reason)
 	{
 		btn->uiFlags &= ~BUTTON_CLICKED_ON;
 
-		INT32       amount   = 0;
+		UINT32      amount   = 0;
 		UINT8 const ubButton = btn->GetUserData();
 		switch (ubButton)
 		{

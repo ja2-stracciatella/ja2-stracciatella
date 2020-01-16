@@ -2276,7 +2276,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 			{
 				if (gubCheatLevel < strlen(getCheatCode()))
 				{
-					if (key == getCheatCode()[gubCheatLevel])
+					if (key == static_cast<UINT32>(getCheatCode()[gubCheatLevel]))
 					{
 						if (++gubCheatLevel == strlen(getCheatCode()))
 						{
