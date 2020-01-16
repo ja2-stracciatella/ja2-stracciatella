@@ -54,6 +54,7 @@ struct trail_t
 //#define NOPASS (TRAVELCOST_OBSTACLE)
 //#define VEINCOST TRAVELCOST_FLAT     //actual cost for bridges and doors and such
 #define TRAILCELLTYPE UINT32
+#define TRAILCELLMAX 0xFFFFFFFF
 
 static path_t        pathQB[MAXpathQ];
 static TRAILCELLTYPE trailCostB[MAP_LENGTH];
@@ -214,7 +215,7 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 
 	//initialize the ai data structures
 	std::fill(std::begin(trailStratTreeB), std::end(trailStratTreeB), trail_t{});
-	std::fill(std::begin(trailCostB), std::end(trailCostB), 255);
+	std::fill(std::begin(trailCostB), std::end(trailCostB), TRAILCELLMAX);
 
 	std::fill(std::begin(pathQB), std::end(pathQB), path_t{});
 
