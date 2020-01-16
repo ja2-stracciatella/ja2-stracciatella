@@ -3173,9 +3173,6 @@ void DisplayPositionOfHelicopter( void )
 		{
 			const GROUP* const pGroup = GetGroup(v.ubMovementGroup);
 
-			// this came up in one bug report!
-			Assert( pGroup->uiTraverseTime != -1 );
-
 			if (pGroup->uiTraverseTime > 0 && pGroup->uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE)
 			{
 				flRatio = ( ( pGroup->uiTraverseTime + GetWorldTotalMin() ) - pGroup->uiArrivalTime ) / ( float ) pGroup->uiTraverseTime;
@@ -3338,9 +3335,6 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 
 	if ( pGroup->fBetweenSectors )
 	{
-		// this came up in one bug report!
-		Assert( pGroup->uiTraverseTime != -1 );
-
 		if (pGroup->uiTraverseTime > 0 && pGroup->uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE)
 		{
 			flRatio = ( pGroup->uiTraverseTime - pGroup->uiArrivalTime + GetWorldTotalMin() ) / ( float ) pGroup->uiTraverseTime;
