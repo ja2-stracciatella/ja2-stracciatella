@@ -227,7 +227,7 @@ static void MainLoop(int msPerGameCycle)
 				GameLoop();
 				gameCycleMS = GetClock() - gameCycleMS;
 
-				if(gameCycleMS < msPerGameCycle)
+				if(static_cast<int>(gameCycleMS) < msPerGameCycle)
 				{
 					SDL_Delay(msPerGameCycle - gameCycleMS);
 				}
