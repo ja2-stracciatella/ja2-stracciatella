@@ -2119,7 +2119,7 @@ INT32 FindTravelTimeBetweenWaypoints(WAYPOINT const* const pSource, WAYPOINT con
 		// find diff between current and next
 		iThisCostInTime = GetSectorMvtTimeForGroup( ubCurrentSector, ubDirection, pGroup );
 
-		AssertMsg(iThisCostInTime != TRAVERSE_TIME_IMPOSSIBLE, String("Group %d (%s) attempting illegal move from sector %d, dir %d (%s).",
+		AssertMsg(iThisCostInTime != static_cast<INT32>(TRAVERSE_TIME_IMPOSSIBLE), String("Group %d (%s) attempting illegal move from sector %d, dir %d (%s).",
 					pGroup->ubGroupID, ( pGroup->fPlayer ) ? "Player" : "AI",
 					ubCurrentSector, ubDirection,
 					gszTerrain[SectorInfo[ubCurrentSector].ubTraversability[ubDirection]] ) );

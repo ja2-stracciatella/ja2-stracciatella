@@ -4259,7 +4259,7 @@ static void DialogueMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 						// Mary might be alive, and if so we need to ensure two places
 						pSoldier = FindSoldierByProfileID(MARY);
 						if (pSoldier != NULL &&
-								NumberOfMercsOnPlayerTeam() > gTacticalStatus.Team[OUR_TEAM].bLastID - 3)
+								NumberOfMercsOnPlayerTeam() > gTacticalStatus.Team[OUR_TEAM].bLastID - 3u)
 						{
 							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ CANNOT_RECRUIT_TEAM_FULL ] );
 							break;

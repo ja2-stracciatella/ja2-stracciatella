@@ -465,7 +465,7 @@ uintmax_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 {
 	using namespace boost::filesystem;
 	space_info si = space(current_path());
-	if (si.available == -1)
+	if (si.available == static_cast<uintmax_t>(-1))
 	{
 		/* something is wrong, tell everyone no space available */
 		return 0;

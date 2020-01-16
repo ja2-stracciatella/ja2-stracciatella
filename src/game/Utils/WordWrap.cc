@@ -463,7 +463,7 @@ UINT16 IanWrappedStringHeight(UINT16 const max_w, UINT8 const gap, SGPFont const
 void ReduceStringLength(wchar_t* pString, size_t Length, UINT32 uiWidthToFitIn, SGPFont const font)
 {
 	//if the string is wider then the loaction
-	if (StringPixLength(pString, font) <= uiWidthToFitIn) return;
+	if (static_cast<UINT32>(StringPixLength(pString, font)) <= uiWidthToFitIn) return;
 
 	const wchar_t* const Dots = L"...";
 	UINT32 RestWidth = uiWidthToFitIn - StringPixLength(Dots, font);

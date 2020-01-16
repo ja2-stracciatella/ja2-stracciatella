@@ -93,7 +93,7 @@ void Blt8BPPDataTo16BPPBufferTransZNBClipTranslucent(UINT16* const buf, UINT32 c
 			if (px_count & 0x80)
 			{
 				px_count &= 0x7F;
-				if (px_count > ls_count)
+				if (px_count > static_cast<UINT32>(ls_count))
 				{
 					px_count -= ls_count;
 					ls_count  = blit_length;
@@ -102,7 +102,7 @@ void Blt8BPPDataTo16BPPBufferTransZNBClipTranslucent(UINT16* const buf, UINT32 c
 			}
 			else
 			{
-				if (px_count > ls_count)
+				if (px_count > static_cast<UINT32>(ls_count))
 				{
 					src      += ls_count;
 					px_count -= ls_count;
@@ -121,7 +121,7 @@ void Blt8BPPDataTo16BPPBufferTransZNBClipTranslucent(UINT16* const buf, UINT32 c
 			{ // Skip transparent pixels.
 				px_count &= 0x7F;
 BlitTransparent:
-				if (px_count > ls_count) px_count = ls_count;
+				if (px_count > static_cast<UINT32>(ls_count)) px_count = ls_count;
 				ls_count -= px_count;
 				dst      += px_count;
 				zdst     += px_count;
@@ -130,7 +130,7 @@ BlitTransparent:
 			{ // Blit non-transparent pixels.
 BlitNonTransLoop:
 				UINT32 unblitted = 0;
-				if (px_count > ls_count)
+				if (px_count > static_cast<UINT32>(ls_count))
 				{
 					unblitted = px_count - ls_count;
 					px_count  = ls_count;
@@ -395,7 +395,7 @@ void Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPitch
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -404,7 +404,7 @@ void Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPitch
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -423,7 +423,7 @@ void Blt8BPPDataTo16BPPBufferMonoShadowClip( UINT16 *pBuffer, UINT32 uiDestPitch
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				if (usBackground == 0)
 				{
@@ -441,7 +441,7 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					Unblitted = PxCount - LSCount;
 					PxCount = LSCount;
@@ -1138,7 +1138,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitc
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -1169,7 +1169,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitc
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7f;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 					PxCount = LSCount;
 
 				LSCount -= PxCount;
@@ -1179,7 +1179,7 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					Unblitted = PxCount;
@@ -1306,7 +1306,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowClip(UINT16* pBuffer, UINT32 uiDestPitch
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -1337,7 +1337,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowClip(UINT16* pBuffer, UINT32 uiDestPitch
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7f;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 					PxCount = LSCount;
 
 				LSCount -= PxCount;
@@ -1346,7 +1346,7 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					Unblitted = PxCount;
@@ -1465,7 +1465,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZNBClip(UINT16* pBuffer, UINT32 uiDestPi
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -1474,7 +1474,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZNBClip(UINT16* pBuffer, UINT32 uiDestPi
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -1493,7 +1493,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZNBClip(UINT16* pBuffer, UINT32 uiDestPi
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 				ZPtr    += 2 * PxCount;
@@ -1501,7 +1501,7 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					Unblitted = PxCount - LSCount;
 					PxCount = LSCount;
@@ -1640,7 +1640,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip(UINT16* pBuffer, UINT32 
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -1649,7 +1649,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip(UINT16* pBuffer, UINT32 
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -1668,7 +1668,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZNBObscuredClip(UINT16* pBuffer, UINT32 
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 				ZPtr    += 2 * PxCount;
@@ -1676,7 +1676,7 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					Unblitted = PxCount - LSCount;
 					PxCount = LSCount;
@@ -1884,7 +1884,7 @@ void Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -1893,7 +1893,7 @@ void Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -1912,7 +1912,7 @@ void Blt8BPPDataTo16BPPBufferShadowZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYT
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 				ZPtr    += 2 * PxCount;
@@ -1921,7 +1921,7 @@ BlitTransparent: // skip transparent pixels
 			{
 BlitNonTransLoop: // blit non-transparent pixels
 				SrcPtr += PxCount;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 
 				do
@@ -2104,7 +2104,7 @@ void Blt8BPPDataTo16BPPBufferShadowZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -2113,7 +2113,7 @@ void Blt8BPPDataTo16BPPBufferShadowZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -2132,7 +2132,7 @@ void Blt8BPPDataTo16BPPBufferShadowZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchB
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 				ZPtr    += 2 * PxCount;
@@ -2140,7 +2140,7 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					Unblitted = PxCount - LSCount;
 					PxCount = LSCount;
@@ -2263,7 +2263,7 @@ void Blt8BPPDataTo16BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -2272,7 +2272,7 @@ void Blt8BPPDataTo16BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -2291,7 +2291,7 @@ void Blt8BPPDataTo16BPPBufferTransZClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 				ZPtr    += 2 * PxCount;
@@ -2299,7 +2299,7 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					Unblitted = PxCount - LSCount;
 					PxCount = LSCount;
@@ -2425,7 +2425,7 @@ void Blt8BPPDataTo16BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchBY
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -2434,7 +2434,7 @@ void Blt8BPPDataTo16BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchBY
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -2453,7 +2453,7 @@ void Blt8BPPDataTo16BPPBufferTransZNBClip( UINT16 *pBuffer, UINT32 uiDestPitchBY
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 				ZPtr    += 2 * PxCount;
@@ -2461,7 +2461,7 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					Unblitted = PxCount - LSCount;
 					PxCount = LSCount;
@@ -2946,7 +2946,7 @@ void Blt8BPPDataTo16BPPBufferTransparentClip(UINT16* const pBuffer, const UINT32
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -2955,7 +2955,7 @@ void Blt8BPPDataTo16BPPBufferTransparentClip(UINT16* const pBuffer, const UINT32
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -2974,14 +2974,14 @@ void Blt8BPPDataTo16BPPBufferTransparentClip(UINT16* const pBuffer, const UINT32
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 			}
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					Unblitted = PxCount - LSCount;
 					PxCount = LSCount;
@@ -3153,7 +3153,7 @@ void Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -3162,7 +3162,7 @@ void Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -3181,7 +3181,7 @@ void Blt8BPPDataTo16BPPBufferShadowClip( UINT16 *pBuffer, UINT32 uiDestPitchBYTE
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 			}
@@ -3189,7 +3189,7 @@ BlitTransparent: // skip transparent pixels
 			{
 BlitNonTransLoop: // blit non-transparent pixels
 				SrcPtr += PxCount;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 
 				do
@@ -3464,7 +3464,7 @@ void Blt8BPPDataTo16BPPBufferOutlineClip(UINT16* const pBuffer, const UINT32 uiD
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -3473,7 +3473,7 @@ void Blt8BPPDataTo16BPPBufferOutlineClip(UINT16* const pBuffer, const UINT32 uiD
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -3492,14 +3492,14 @@ void Blt8BPPDataTo16BPPBufferOutlineClip(UINT16* const pBuffer, const UINT32 uiD
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 			}
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					Unblitted = PxCount - LSCount;
 					PxCount = LSCount;
@@ -3619,7 +3619,7 @@ void Blt8BPPDataTo16BPPBufferOutlineZClip(UINT16* const pBuffer, const UINT32 ui
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -3628,7 +3628,7 @@ void Blt8BPPDataTo16BPPBufferOutlineZClip(UINT16* const pBuffer, const UINT32 ui
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -3647,7 +3647,7 @@ void Blt8BPPDataTo16BPPBufferOutlineZClip(UINT16* const pBuffer, const UINT32 ui
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 				ZPtr    += 2 * PxCount;
@@ -3655,7 +3655,7 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					Unblitted = PxCount - LSCount;
 					PxCount = LSCount;
@@ -3787,7 +3787,7 @@ void Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(UINT16* const pBuffer,
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -3796,7 +3796,7 @@ void Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(UINT16* const pBuffer,
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -3815,7 +3815,7 @@ void Blt8BPPDataTo16BPPBufferOutlineZPixelateObscuredClip(UINT16* const pBuffer,
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 				ZPtr    += 2 * PxCount;
@@ -3823,7 +3823,7 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					Unblitted = PxCount - LSCount;
 					PxCount = LSCount;
@@ -5590,7 +5590,7 @@ void Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured( UINT16 *pBuffer, UINT32
 			if (PxCount & 0x80)
 			{
 				PxCount &= 0x7F;
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					PxCount -= LSCount;
 					LSCount = BlitLength;
@@ -5599,7 +5599,7 @@ void Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured( UINT16 *pBuffer, UINT32
 			}
 			else
 			{
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					SrcPtr += LSCount;
 					PxCount -= LSCount;
@@ -5618,7 +5618,7 @@ void Blt8BPPDataTo16BPPBufferTransZClipPixelateObscured( UINT16 *pBuffer, UINT32
 			{
 BlitTransparent: // skip transparent pixels
 				PxCount &= 0x7F;
-				if (PxCount > LSCount) PxCount = LSCount;
+				if (PxCount > static_cast<UINT32>(LSCount)) PxCount = LSCount;
 				LSCount -= PxCount;
 				DestPtr += 2 * PxCount;
 				ZPtr    += 2 * PxCount;
@@ -5626,7 +5626,7 @@ BlitTransparent: // skip transparent pixels
 			else
 			{
 BlitNonTransLoop: // blit non-transparent pixels
-				if (PxCount > LSCount)
+				if (PxCount > static_cast<UINT32>(LSCount))
 				{
 					Unblitted = PxCount - LSCount;
 					PxCount = LSCount;

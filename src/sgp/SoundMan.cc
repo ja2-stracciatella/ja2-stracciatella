@@ -603,7 +603,7 @@ static SAMPLETAG* SoundLoadBuffer(SDL_AudioFormat format, UINT8 channels, int fr
 
 		if (cvtsize == bufsize)
 		{
-			Assert(cvtsize == cvt.len_cvt);
+			Assert(cvtsize == static_cast<UINT32>(cvt.len_cvt));
 			sampledata = cvt.buf;
 			samplesize = cvtsize;
 		}

@@ -535,7 +535,7 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const c
 	uint32_t fileSize = FileGetSize(File);
 	uint32_t numQuotes = fileSize / DIALOGUESIZE / 2;
 	// SLOGI("%d quotes in dialog %s", numQuotes, fileName);
-	for(int i = 0; i < numQuotes; i++)
+	for(uint32_t i = 0; i < numQuotes; i++)
 	{
 		wchar_t quote[DIALOGUESIZE];
 		LoadEncryptedData(encType, File, quote, i * DIALOGUESIZE, DIALOGUESIZE);
