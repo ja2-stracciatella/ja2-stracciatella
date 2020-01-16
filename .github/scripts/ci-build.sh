@@ -65,7 +65,8 @@ elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
   export RUSTUP_INIT_ARGS="${RUSTUP_INIT_ARGS} --target=x86_64-pc-windows-gnu"
   export RUN_TESTS=false
 elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
-  pacman -Syu --noconfirm --needed # assumes the runtime has already been updated
+  # FIXME upgrades disabled until there is a fix for https://github.com/msys2/MSYS2-packages/issues/1141
+  #pacman -Syu --noconfirm --needed # assumes the runtime has already been updated
   pacman -S --noconfirm --needed base-devel unzip
   pacman -S --noconfirm --needed mingw-w64-i686-toolchain mingw-w64-i686-cmake mingw-w64-i686-SDL2 mingw-w64-i686-boost mingw-w64-i686-fltk
   export CMAKE_GENERATOR="MSYS Makefiles"
