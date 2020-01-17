@@ -592,7 +592,7 @@ try
 	s.uiTimeSameBattleSndDone   = 0;
 	// ATE: Reset every time.....
 	s.fSoldierWasMoving         = TRUE;
-	s.iTuringSoundID            = NO_SAMPLE;
+	s.uiTuringSoundID           = NO_SAMPLE;
 	s.uiTimeSinceLastBleedGrunt = 0;
 
 	if (s.ubBodyType == QUEENMONSTER)
@@ -4342,10 +4342,10 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 	{
 		if ( pSoldier->ubBodyType == TANK_NW || pSoldier->ubBodyType == TANK_NE )
 		{
-			if ( pSoldier->iTuringSoundID != NO_SAMPLE )
+			if ( pSoldier->uiTuringSoundID != NO_SAMPLE )
 			{
-				SoundStop( pSoldier->iTuringSoundID );
-				pSoldier->iTuringSoundID = NO_SAMPLE;
+				SoundStop( pSoldier->uiTuringSoundID );
+				pSoldier->uiTuringSoundID = NO_SAMPLE;
 
 				PlaySoldierJA2Sample(pSoldier, TURRET_STOP, HIGHVOLUME, 1, TRUE);
 			}
@@ -4457,9 +4457,9 @@ void TurnSoldier( SOLDIERTYPE *pSoldier)
 
 		if ( pSoldier->ubBodyType == TANK_NW || pSoldier->ubBodyType == TANK_NE )
 		{
-			if ( pSoldier->iTuringSoundID == NO_SAMPLE )
+			if ( pSoldier->uiTuringSoundID == NO_SAMPLE )
 			{
-			pSoldier->iTuringSoundID = PlaySoldierJA2Sample(pSoldier, TURRET_MOVE, HIGHVOLUME, 100, TRUE);
+			pSoldier->uiTuringSoundID = PlaySoldierJA2Sample(pSoldier, TURRET_MOVE, HIGHVOLUME, 100, TRUE);
 			}
 		}
 

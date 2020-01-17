@@ -667,9 +667,9 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 							pSoldier->bBulletsLeft = 0;
 
 							// OK, Stop burst sound...
-							if ( pSoldier->iBurstSoundID != NO_SAMPLE )
+							if ( pSoldier->uiBurstSoundID != NO_SAMPLE )
 							{
-								SoundStop( pSoldier->iBurstSoundID );
+								SoundStop( pSoldier->uiBurstSoundID );
 							}
 
 							if (pSoldier->bTeam == OUR_TEAM)

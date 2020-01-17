@@ -732,7 +732,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 					sprintf( zBurstString, SOUNDSDIR "/weapons/silencer burst %d.wav", pSoldier->bBulletsLeft );
 
 					// Try playing sound...
-					pSoldier->iBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);
+					pSoldier->uiBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);
 				}
 				else
 				{
@@ -742,13 +742,13 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 							pSoldier->bBulletsLeft);
 
 					// Try playing sound...
-					pSoldier->iBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);
+					pSoldier->uiBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);
 				}
 
-				if ( pSoldier->iBurstSoundID == NO_SAMPLE )
+				if ( pSoldier->uiBurstSoundID == NO_SAMPLE )
 				{
 					// If failed, play normal default....
-					pSoldier->iBurstSoundID = PlayLocationJA2Sample(pSoldier->sGridNo, GCM->getWeapon(usItemNum)->burstSound, HIGHVOLUME, 1);
+					pSoldier->uiBurstSoundID = PlayLocationJA2Sample(pSoldier->sGridNo, GCM->getWeapon(usItemNum)->burstSound, HIGHVOLUME, 1);
 				}
 			}
 

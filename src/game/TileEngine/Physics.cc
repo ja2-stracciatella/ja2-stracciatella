@@ -148,7 +148,7 @@ REAL_OBJECT* CreatePhysicalObject(OBJECTTYPE const* const pGameObj, float const 
 	o->fAllocated              = TRUE;
 	o->fAlive                  = TRUE;
 	o->fApplyFriction          = FALSE;
-	o->iSoundID                = NO_SAMPLE;
+	o->uiSoundID               = NO_SAMPLE;
 	o->OneOverMass             = 1 / mass;
 	o->Position.x              = xPos;
 	o->Position.y              = yPos;
@@ -370,9 +370,9 @@ static BOOLEAN PhysicsUpdateLife(REAL_OBJECT* pObject, float DeltaTime)
 
 		if ( !pObject->fTestObject )
 		{
-			if ( pObject->iSoundID != NO_SAMPLE )
+			if ( pObject->uiSoundID != NO_SAMPLE )
 			{
-				SoundStop( pObject->iSoundID );
+				SoundStop( pObject->uiSoundID );
 			}
 
 			if ( pObject->ubActionCode == THROW_ARM_ITEM && !pObject->fInWater )
@@ -492,9 +492,9 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime)
 		// Start soud if we have reached our max height
 		if ( pObject->OldVelocity.z >= 0 && pObject->Velocity.z < 0 )
 		{
-			if ( pObject->iSoundID == NO_SAMPLE )
+			if ( pObject->uiSoundID == NO_SAMPLE )
 			{
-				pObject->iSoundID =	PlayJA2Sample(MORTAR_WHISTLE, HIGHVOLUME, 1, MIDDLEPAN);
+				pObject->uiSoundID =	PlayJA2Sample(MORTAR_WHISTLE, HIGHVOLUME, 1, MIDDLEPAN);
 			}
 		}
 	}

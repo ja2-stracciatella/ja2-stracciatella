@@ -620,7 +620,7 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 struct POSITIONSND
 {
 	INT16         sGridNo;
-	INT32         iSoundSampleID;
+	UINT32        uiSoundSampleID;
 	SoundID       iSoundToPlay;
 	const SOLDIERTYPE* SoundSource;
 	BOOLEAN       fAllocated;
@@ -675,7 +675,7 @@ INT32 NewPositionSnd(INT16 const sGridNo, SOLDIERTYPE const* const SoundSource, 
 	p.SoundSource    = SoundSource;
 	p.fAllocated     = TRUE;
 	p.iSoundToPlay   = iSoundToPlay;
-	p.iSoundSampleID = NO_SAMPLE;
+	p.uiSoundSampleID = NO_SAMPLE;
 
 	return idx;
 }
@@ -692,9 +692,9 @@ void DeletePositionSnd( INT32 iPositionSndIndex )
 		pPositionSnd->fInActive = TRUE;
 
 		// End sound...
-		if ( pPositionSnd->iSoundSampleID != NO_SAMPLE )
+		if ( pPositionSnd->uiSoundSampleID != NO_SAMPLE )
 		{
-			SoundStop( pPositionSnd->iSoundSampleID );
+			SoundStop( pPositionSnd->uiSoundSampleID );
 		}
 
 		pPositionSnd->fAllocated = FALSE;
@@ -729,7 +729,7 @@ void SetPositionSndsActive(void)
 
 		p.fInActive      = FALSE;
 		// Begin sound effect, Volume 0
-		p.iSoundSampleID = PlayJA2Sample(p.iSoundToPlay, 0, 0, MIDDLEPAN);
+		p.uiSoundSampleID = PlayJA2Sample(p.iSoundToPlay, 0, 0, MIDDLEPAN);
 	}
 }
 
@@ -744,11 +744,11 @@ void SetPositionSndsInActive(void)
 
 		p.fInActive = TRUE;
 
-		if (p.iSoundSampleID == NO_SAMPLE) continue;
+		if (p.uiSoundSampleID == NO_SAMPLE) continue;
 
 		// End sound
-		SoundStop(p.iSoundSampleID);
-		p.iSoundSampleID = NO_SAMPLE;
+		SoundStop(p.uiSoundSampleID);
+		p.uiSoundSampleID = NO_SAMPLE;
 	}
 }
 
@@ -846,16 +846,16 @@ void SetPositionSndsVolumeAndPanning(void)
 		POSITIONSND const& p = gPositionSndData[i];
 		if (!p.fAllocated)                 continue;
 		if (p.fInActive)                   continue;
-		if (p.iSoundSampleID == NO_SAMPLE) continue;
+		if (p.uiSoundSampleID == NO_SAMPLE) continue;
 
 		INT8 volume = PositionSoundVolume(15, p.sGridNo);
 		if (p.SoundSource && p.SoundSource->bVisible == -1)
 		{ // Limit volume
 			if (volume > 10) volume = 10;
 		}
-		SoundSetVolume(p.iSoundSampleID, volume);
+		SoundSetVolume(p.uiSoundSampleID, volume);
 
 		INT8 const pan = PositionSoundDir(p.sGridNo);
-		SoundSetPan(p.iSoundSampleID, pan);
+		SoundSetPan(p.uiSoundSampleID, pan);
 	}
 }
