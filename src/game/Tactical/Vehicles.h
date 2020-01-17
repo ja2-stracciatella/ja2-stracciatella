@@ -32,7 +32,7 @@ struct VEHICLETYPE
 	INT16   sGridNo; // location in tactical
 	SOLDIERTYPE *pPassengers[ 10 ];
 	BOOLEAN fDestroyed;
-	INT32   iMovementSoundID;
+	UINT32  uiMovementSoundID;
 	BOOLEAN fValid;
 };
 

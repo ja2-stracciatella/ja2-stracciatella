@@ -62,7 +62,7 @@ struct REAL_OBJECT
 	BOOLEAN      fHaveHitGround;
 	BOOLEAN      fPotentialForDebug;
 	INT16        sLevelNodeGridNo;
-	INT32        iSoundID;
+	UINT32       uiSoundID;
 	UINT8        ubLastTargetTakenDamage;
 };
 

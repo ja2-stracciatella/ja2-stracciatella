@@ -706,7 +706,7 @@ struct SOLDIERTYPE
 	UINT32 uiTimeSameBattleSndDone;
 	INT8 bOldBattleSnd;
 	BOOLEAN fContractPriceHasIncreased;
-	INT32 iBurstSoundID;
+	UINT32 uiBurstSoundID;
 	BOOLEAN fFixingSAMSite;
 	BOOLEAN fFixingRobot;
 	INT8 bSlotItemTakenFrom;
@@ -794,7 +794,7 @@ struct SOLDIERTYPE
 	BOOLEAN fDoingExternalDeath;
 	INT8 bCorpseQuoteTolerance;
 	INT32 iPositionSndID;
-	INT32 iTuringSoundID;
+	UINT32 uiTuringSoundID;
 	UINT8 ubLastDamageReason;
 	BOOLEAN fComplainedThatTired;
 	INT16 sLastTwoLocations[2];

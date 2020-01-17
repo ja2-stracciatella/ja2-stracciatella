@@ -1058,17 +1058,17 @@ void HandleVehicleMovementSound(const SOLDIERTYPE* const s, const BOOLEAN fOn)
 	VEHICLETYPE* const v = &pVehicleList[s->bVehicleID];
 	if (fOn)
 	{
-		if (v->iMovementSoundID == NO_SAMPLE)
+		if (v->uiMovementSoundID == NO_SAMPLE)
 		{
-			v->iMovementSoundID = PlayLocationJA2Sample(s->sGridNo, g_vehicle_type_info[v->ubVehicleType].move_sound, HIGHVOLUME, 1);
+			v->uiMovementSoundID = PlayLocationJA2Sample(s->sGridNo, g_vehicle_type_info[v->ubVehicleType].move_sound, HIGHVOLUME, 1);
 		}
 	}
 	else
 	{
-		if (v->iMovementSoundID != NO_SAMPLE)
+		if (v->uiMovementSoundID != NO_SAMPLE)
 		{
-			SoundStop(v->iMovementSoundID);
-			v->iMovementSoundID = NO_SAMPLE;
+			SoundStop(v->uiMovementSoundID);
+			v->uiMovementSoundID = NO_SAMPLE;
 		}
 	}
 }
