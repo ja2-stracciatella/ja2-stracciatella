@@ -1440,7 +1440,7 @@ void SayQuoteFromNearbyMercInSector(GridNo const gridno, INT8 const distance, UI
 			continue;
 		if (!SoldierTo3DLocationLineOfSightTest(&s, gridno, 0, 0, MaxDistanceVisible(), TRUE))
 			continue;
-		if (quote_id == QUOTE_STUFF_MISSING_DRASSEN && Random(100) > EffectiveWisdom(&s))
+		if (quote_id == QUOTE_STUFF_MISSING_DRASSEN && static_cast<INT8>(Random(100)) > EffectiveWisdom(&s))
 			continue;
 		mercs_in_sector[n_mercs++] = &s;
 	}
