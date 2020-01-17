@@ -1945,13 +1945,13 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 				// lucky bastard was facing away!
 			}
 			else if ((tgt.inv[HEAD1POS].usItem == NIGHTGOGGLES || tgt.inv[HEAD1POS].usItem == SUNGOGGLES ||
-				tgt.inv[HEAD1POS].usItem == GASMASK) && PreRandom(100) < tgt.inv[HEAD1POS].bStatus[0])
+				tgt.inv[HEAD1POS].usItem == GASMASK) && static_cast<INT8>(PreRandom(100)) < tgt.inv[HEAD1POS].bStatus[0])
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD1POS;
 			}
 			else if ((tgt.inv[HEAD2POS].usItem == NIGHTGOGGLES || tgt.inv[HEAD2POS].usItem == SUNGOGGLES ||
-				tgt.inv[HEAD2POS].usItem == GASMASK) && PreRandom(100) < tgt.inv[HEAD2POS].bStatus[0])
+				tgt.inv[HEAD2POS].usItem == GASMASK) && static_cast<INT8>(PreRandom(100)) < tgt.inv[HEAD2POS].bStatus[0])
 			{
 				// lucky bastard was wearing protective stuff
 				bHeadSlot = HEAD2POS;
