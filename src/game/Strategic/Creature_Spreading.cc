@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Campaign_Init.h"
 #include "Overhead.h"
 #include "FileMan.h"
@@ -33,6 +31,10 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
+
+#include <algorithm>
+#include <stdexcept>
+#include <vector>
 
 //GAME BALANCING DEFINITIONS FOR CREATURE SPREADING
 //Hopefully, adjusting these following definitions will ease the balancing of the
@@ -551,16 +553,16 @@ static void AddCreaturesToBattle(UINT8 n_young_males, UINT8 n_young_females, UIN
 		ChooseMapEdgepoints(&edgepoint_info, insertion_code, n_young_males + n_young_females + n_adult_males + n_adult_females);
 	}
 
-	UINT8 slot = 0;
-	while (n_young_males + n_young_females + n_adult_males + n_adult_females != 0)
-	{
-		UINT32          const roll = Random(n_young_males + n_young_females + n_adult_males + n_adult_females);
-		SoldierBodyType const body =
-			roll < n_young_males                                   ? --n_young_males,   YAM_MONSTER :
-			roll < n_young_males + n_young_females                 ? --n_young_females, YAF_MONSTER :
-			roll < n_young_males + n_young_females + n_adult_males ? --n_adult_males,   AM_MONSTER  :
-			(--n_adult_females, ADULTFEMALEMONSTER);
+	std::vector<SoldierBodyType> bodies;
+	bodies.insert(bodies.end(), n_young_males, YAM_MONSTER);
+	bodies.insert(bodies.end(), n_young_females, YAF_MONSTER);
+	bodies.insert(bodies.end(), n_adult_males, AM_MONSTER);
+	bodies.insert(bodies.end(), n_adult_females, ADULTFEMALEMONSTER);
+	std::random_shuffle(bodies.begin(), bodies.end(), Random);
 
+	UINT8 slot = 0;
+	for (SoldierBodyType const body : bodies)
+	{
 		SOLDIERTYPE* const s = TacticalCreateCreature(body);
 		s->bHunting                 = TRUE;
 		s->ubInsertionDirection     = desired_direction;
