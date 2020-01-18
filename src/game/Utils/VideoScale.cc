@@ -18,7 +18,7 @@ template <class PixelType>
 static inline PixelType pixelFromPalette(const SGPPaletteEntry *pal, const UINT8 src);
 
 
-SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation)
+SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation, ScaleCallback callback)
 {
 	AutoSGPImage scaled(new SGPImage(std::ceil(factor * image->usWidth), std::ceil(factor * image->usHeight), 32));
 
@@ -63,6 +63,8 @@ SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation)
 			for(int i = 0; i < scaled->usNumberOfObjects; i++) {
 				const ETRLEObject *dst = &scaled->pETRLEObject[i];
 				const ETRLEObject *src = &pETRLEObject[i];
+				if(callback)
+					callback(i, src->usWidth, src->usHeight, &pImageData[src->uiDataOffset]);
 				ScaleImage<UINT32>(&scaled->pImageData[dst->uiDataOffset], dst->usWidth, dst->usHeight,
 						&pImageData[src->uiDataOffset], src->usWidth, src->usHeight, yInterpolation);
 			}
@@ -94,6 +96,8 @@ SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation)
 				Assert(FALSE); // we shouldn't end up here
 			}
 
+			if(callback)
+				callback(0, image->usWidth, image->usHeight, pImageData);
 			ScaleImage<UINT32>(scaled->pImageData, scaled->usWidth, scaled->usHeight, pImageData, image->usWidth, image->usHeight, yInterpolation);
 		}
 	}

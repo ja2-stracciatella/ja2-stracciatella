@@ -3,6 +3,7 @@
 
 #include "Buffer.h"
 #include "Types.h"
+#include "VideoScale.h"
 #include <memory>
 #include <SDL.h>
 
@@ -133,7 +134,7 @@ inline SGPVSurface* AddVideoSurface(UINT16 Width, UINT16 Height, UINT8 BitDepth)
 	return new SGPVSurface(Width, Height, BitDepth);
 }
 
-SGPVSurface* AddVideoSurfaceFromFile(const char* Filename);
+SGPVSurface* AddVideoSurfaceFromFile(const char* Filename, ScaleCallback *callback=nullptr);
 
 void BltVideoSurface(SGPVSurface* const dst, SGPVSurface* const src, INT32 const iDestX, INT32 const iDestY, SGPBox const* const src_box);
 

@@ -3,7 +3,9 @@
 
 #include "HImage.h"
 
-SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation = true);
+typedef void ScaleCallback(int i, int w, int h, UINT8 *buf);
+
+SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation = true, ScaleCallback callback=nullptr);
 SGPImage * ScaleAlphaImage(SGPImage *image, DOUBLE factor, bool yInterpolation = true);
 
 #endif /*__VIDEOSCALE_H_*/

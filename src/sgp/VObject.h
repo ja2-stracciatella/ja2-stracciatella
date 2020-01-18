@@ -2,6 +2,7 @@
 #define __VOBJECT_H
 
 #include "Types.h"
+#include "VideoScale.h"
 #include <memory>
 
 
@@ -96,8 +97,8 @@ void InitializeVideoObjectManager(void);
 void ShutdownVideoObjectManager(void);
 
 // Creates and adds a video object to list
-SGPVObject* AddVideoObjectFromHImage(SGPImage*);
-SGPVObject* AddScaledVideoObjectFromFile(const ST::string& ImageFile);
+SGPVObject* AddVideoObjectFromHImage(SGPImage *img);
+SGPVObject* AddScaledVideoObjectFromFile(const ST::string& ImageFile, ScaleCallback *callback=nullptr);
 SGPVObject* AddScaledOutlineVideoObjectFromFile(const ST::string& ImageFile);
 SGPVObject* AddScaledAlphaVideoObjectFromFile(const ST::string& ImageFile);
 
@@ -107,7 +108,7 @@ inline SGPVObject* AddVideoObjectFromFile(const ST::string& ImageFile)
 }
 
 // Removes a video object
-static inline void DeleteVideoObject(SGPVObject* const vo)
+inline void DeleteVideoObject(SGPVObject* const vo)
 {
 	delete vo;
 }

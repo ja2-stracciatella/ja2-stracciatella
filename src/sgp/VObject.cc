@@ -4,7 +4,6 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "VideoScale.h"
-#include "Local.h"
 
 #include "UILayout.h"
 
@@ -209,10 +208,10 @@ SGPVObject* AddVideoObjectFromHImage(SGPImage *img)
 	return new SGPVObject(img);
 }
 
-SGPVObject* AddScaledVideoObjectFromFile(const ST::string& ImageFile)
+SGPVObject* AddScaledVideoObjectFromFile(const ST::string& ImageFile, ScaleCallback *callback)
 {
 	AutoSGPImage img(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
-	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale));
+	AutoSGPImage hImage(ScaleImage(img.get(), g_ui.m_stdScreenScale, true, callback));
 	return AddVideoObjectFromHImage(hImage.get());
 }
 

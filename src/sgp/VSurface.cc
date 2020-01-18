@@ -4,7 +4,6 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 #include "Logger.h"
-#include "VideoScale.h"
 #include "UILayout.h"
 #include "VObject.h"
 
@@ -148,11 +147,10 @@ void SGPVSurface::ShadowRectUsingLowPercentTable(INT32 const x1, INT32 const y1,
 	InternalShadowVideoSurfaceRect(this, x1, y1, x2, y2, gIntensityShadePercent);
 }
 
-
-SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename)
+SGPVSurface* AddVideoSurfaceFromFile(const char* const Filename, ScaleCallback *callback)
 {
 	AutoSGPImage imgOrig(CreateImage(Filename, IMAGE_ALLIMAGEDATA));
-	AutoSGPImage img(ScaleImage(imgOrig.get(), g_ui.m_stdScreenScale));
+	AutoSGPImage img(ScaleImage(imgOrig.get(), g_ui.m_stdScreenScale, true, callback));
 
 	auto vs = std::make_unique<SGPVSurface>(img->usWidth, img->usHeight, img->ubBitDepth);
 
