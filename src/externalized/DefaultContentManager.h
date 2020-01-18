@@ -140,7 +140,7 @@ public:
 	virtual const GamePolicy* getGamePolicy() const;
 	virtual const IMPPolicy* getIMPPolicy() const;
 
-	virtual const ST::string* getNewString(int stringId) const;
+	virtual const ST::string* getNewString(size_t stringId) const;
 
 protected:
 	std::string m_dataDir;

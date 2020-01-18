@@ -107,7 +107,7 @@ public:
 	virtual const GamePolicy* getGamePolicy() const = 0;
 	virtual const IMPPolicy* getIMPPolicy() const = 0;
 
-	virtual const ST::string* getNewString(int stringId) const = 0;
+	virtual const ST::string* getNewString(size_t stringId) const = 0;
 
 	/** Open temporary file for writing. */
 	virtual SGPFile* openTempFileForWriting(const char* filename, bool truncate) const = 0;
