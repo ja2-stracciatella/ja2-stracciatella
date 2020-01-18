@@ -9,7 +9,7 @@ template <class PixelType>
 static inline void DecodeTRLE8(const ETRLEObject *dstEtrle, UINT8 *dstBuf, const SGPImage *srcImage);
 
 template <class PixelType>
-static void ScaleImage(UINT8 *dstBuf, UINT16 dstWidth, UINT16 dstHeight, const UINT8 *srcBuf, UINT16 srcWidth, UINT16 srcHeight);
+static void ScaleImage(UINT8 *dstBuf, UINT16 dstWidth, UINT16 dstHeight, const UINT8 *srcBuf, UINT16 srcWidth, UINT16 srcHeight, bool yInterpolation);
 
 template <class PixelType>
 static inline void pixelInterpolate(PixelType *dst, const PixelType *src, FLOAT fract, bool set);
@@ -18,7 +18,7 @@ template <class PixelType>
 static inline PixelType pixelFromPalette(const SGPPaletteEntry *pal, const UINT8 src);
 
 
-SGPImage * ScaleImage(SGPImage *image, DOUBLE factor)
+SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation)
 {
 	AutoSGPImage scaled(new SGPImage(std::ceil(factor * image->usWidth), std::ceil(factor * image->usHeight), 32));
 
@@ -40,10 +40,10 @@ SGPImage * ScaleImage(SGPImage *image, DOUBLE factor)
 			for(int i = 0; i < scaled->usNumberOfObjects; i++) {
 				ETRLEObject *dst = &scaled->pETRLEObject[i];
 				const ETRLEObject *src = &image->pETRLEObject[i];
-				dst->sOffsetX = factor * src->sOffsetX;
-				dst->sOffsetY = factor * src->sOffsetY;
-				dst->usWidth = factor * src->usWidth;
-				dst->usHeight = factor * src->usHeight;
+				dst->sOffsetX = std::floor(factor * src->sOffsetX);
+				dst->sOffsetY = std::floor(factor * src->sOffsetY);
+				dst->usWidth = std::ceil(factor * src->usWidth);
+				dst->usHeight = std::ceil(factor * src->usHeight);
 				dst->uiDataOffset = scaled->uiSizePixData;
 				dst->uiDataLength = dst->usWidth * dst->usHeight * sizeof(UINT32);
 				scaled->uiSizePixData += dst->uiDataLength;
@@ -64,7 +64,7 @@ SGPImage * ScaleImage(SGPImage *image, DOUBLE factor)
 				const ETRLEObject *dst = &scaled->pETRLEObject[i];
 				const ETRLEObject *src = &pETRLEObject[i];
 				ScaleImage<UINT32>(&scaled->pImageData[dst->uiDataOffset], dst->usWidth, dst->usHeight,
-						&pImageData[src->uiDataOffset], src->usWidth, src->usHeight);
+						&pImageData[src->uiDataOffset], src->usWidth, src->usHeight, yInterpolation);
 			}
 
 			scaled->fFlags |= IMAGE_TRLECOMPRESSED;
@@ -94,7 +94,7 @@ SGPImage * ScaleImage(SGPImage *image, DOUBLE factor)
 				Assert(FALSE); // we shouldn't end up here
 			}
 
-			ScaleImage<UINT32>(scaled->pImageData, scaled->usWidth, scaled->usHeight, pImageData, image->usWidth, image->usHeight);
+			ScaleImage<UINT32>(scaled->pImageData, scaled->usWidth, scaled->usHeight, pImageData, image->usWidth, image->usHeight, yInterpolation);
 		}
 	}
 
@@ -109,7 +109,7 @@ SGPImage * ScaleImage(SGPImage *image, DOUBLE factor)
 	return scaled.release();
 }
 
-SGPImage * ScaleAlphaImage(SGPImage *image, DOUBLE factor)
+SGPImage * ScaleAlphaImage(SGPImage *image, DOUBLE factor, bool yInterpolation)
 {
 	Assert(image->ubBitDepth == 8);
 
@@ -165,14 +165,14 @@ SGPImage * ScaleAlphaImage(SGPImage *image, DOUBLE factor)
 				const ETRLEObject *dst = &scaled->pETRLEObject[i];
 				const ETRLEObject *src = &pETRLEObject[i];
 				ScaleImage<UINT8>(&scaled->pImageData[dst->uiDataOffset], dst->usWidth, dst->usHeight,
-						&pImageData[src->uiDataOffset], src->usWidth, src->usHeight);
+						&pImageData[src->uiDataOffset], src->usWidth, src->usHeight, yInterpolation);
 			}
 
 			scaled->fFlags |= IMAGE_TRLECOMPRESSED;
 		} else {
 			scaled->pImageData.Allocate(scaled->usWidth * scaled->usHeight * sizeof(UINT8));
 			uiSizePixData = image->usWidth * image->usHeight * sizeof(UINT8);
-			ScaleImage<UINT8>(scaled->pImageData, scaled->usWidth, scaled->usHeight, image->pImageData, image->usWidth, image->usHeight);
+			ScaleImage<UINT8>(scaled->pImageData, scaled->usWidth, scaled->usHeight, image->pImageData, image->usWidth, image->usHeight, yInterpolation);
 		}
 	}
 
@@ -223,7 +223,7 @@ inline void DecodeTRLE8(const ETRLEObject *dstEtrle, UINT8 *dstBuf, const SGPIma
 }
 
 template <class PixelType>
-void ScaleImage(UINT8 *dstBuf, UINT16 dstWidth, UINT16 dstHeight, const UINT8 *srcBuf, UINT16 srcWidth, UINT16 srcHeight)
+void ScaleImage(UINT8 *dstBuf, UINT16 dstWidth, UINT16 dstHeight, const UINT8 *srcBuf, UINT16 srcWidth, UINT16 srcHeight, bool yInterpolation)
 {
 	const FLOAT ratioX = FLOAT(dstWidth) / FLOAT(srcWidth);// * 10.0f;
 	const FLOAT ratioY = FLOAT(dstHeight) / FLOAT(srcHeight);
@@ -254,7 +254,7 @@ void ScaleImage(UINT8 *dstBuf, UINT16 dstWidth, UINT16 dstHeight, const UINT8 *s
 			continue;
 		}
 
-		FLOAT ratioLine = yDstRatio < 1.0f ? yDstRatio : ySrcRatio;
+		FLOAT ratioLine = yInterpolation ? (yDstRatio < 1.0f ? yDstRatio : ySrcRatio) : 1.0f;
 		if(ratioLine > 1.0f)
 			ratioLine = 1.0f;
 
@@ -288,18 +288,18 @@ void ScaleImage(UINT8 *dstBuf, UINT16 dstWidth, UINT16 dstHeight, const UINT8 *s
 		}
 
 		if(yDstRatio < 1.0f) {
-			ratioLine = yDstRatio;
+			ratioLine = yInterpolation ? yDstRatio : 1.0f;
 			ySrcRatio -= yDstRatio;
 			yDstRatio = 1.0; // ratioY when downscaling
 			yDst++;
 			dst += dstWidth;
 		} else if(ySrcRatio >= 1.0f) {
-			ratioLine = ySrcRatio;
+			ratioLine = yInterpolation ? ySrcRatio : 1.0f;
 			yDst++;
 			dst += dstWidth;
 			ySrcRatio -= 1.0f;
 		} else if(ySrcRatio > 0.001f) { // 0 < xSrcRatio < 1
-			ratioLine = ySrcRatio;
+			ratioLine = yInterpolation ? ySrcRatio : 1.0f;
 			yDstRatio = 1.0f - ySrcRatio;
 			ySrcRatio = ratioY;
 			ySrc++;
@@ -326,12 +326,14 @@ inline void pixelInterpolate<UINT32>(UINT32 *dstPtr, const UINT32 *srcPtr, FLOAT
 	UINT8 *dst = reinterpret_cast<UINT8 *>(dstPtr);
 	const UINT8 *src = reinterpret_cast<const UINT8 *>(srcPtr);
 	if(set) {
-		*dst++ = FLOAT(*src++) * fract;
+		const FLOAT alpha = FLOAT(*src++) * fract * 1.1;
+		*dst++ = alpha > 225. ? 255 : alpha;
 		*dst++ = FLOAT(*src++) * fract;
 		*dst++ = FLOAT(*src++) * fract;
 		*dst = FLOAT(*src) * fract;
 	} else {
-		*dst++ += FLOAT(*src++) * fract;
+		const FLOAT alpha = (FLOAT(*dst) + FLOAT(*src++) * fract) * 1.1;
+		*dst++ = alpha > 225. ? 255 : alpha;
 		*dst++ += FLOAT(*src++) * fract;
 		*dst++ += FLOAT(*src++) * fract;
 		*dst += FLOAT(*src) * fract;

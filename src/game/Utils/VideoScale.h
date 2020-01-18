@@ -3,7 +3,7 @@
 
 #include "HImage.h"
 
-SGPImage * ScaleImage(SGPImage *image, DOUBLE factor);
-SGPImage * ScaleAlphaImage(SGPImage *image, DOUBLE factor);
+SGPImage * ScaleImage(SGPImage *image, DOUBLE factor, bool yInterpolation = true);
+SGPImage * ScaleAlphaImage(SGPImage *image, DOUBLE factor, bool yInterpolation = true);
 
 #endif /*__VIDEOSCALE_H_*/
