@@ -69,13 +69,13 @@ void RenderIMPVoices( void )
 	RenderProfileBackGround( );
 
 	// the Voices frame
-	RenderPortraitFrame( 191, 167 );
+	RenderPortraitFrame( 191 * g_ui.m_stdScreenScale, 167 * g_ui.m_stdScreenScale );
 
 	// the sillouette
-	RenderLargeSilhouette( 200, 176 );
+	RenderLargeSilhouette( 200 * g_ui.m_stdScreenScale, 176 * g_ui.m_stdScreenScale );
 
 	// indent for the text
-	RenderAttrib1IndentFrame( 128, 65);
+	RenderAttrib1IndentFrame( 128 * g_ui.m_stdScreenScale, 65 * g_ui.m_stdScreenScale);
 
 	// render voice index value
 	RenderVoiceIndex( );
@@ -159,9 +159,15 @@ static void CreateIMPVoicesButtons(void)
 	// will create buttons need for the IMP Voices screen
 	const INT16 dx = LAPTOP_SCREEN_UL_X;
 	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
-	MakeButton(0, LAPTOPDIR "/voicearrows.sti", 1, 3, pImpButtonText[13], dx + 343, dy + 205, BtnIMPVoicesNextCallback);     // Next button
-	MakeButton(1, LAPTOPDIR "/voicearrows.sti", 0, 2, pImpButtonText[12], dx +  93, dy + 205, BtnIMPVoicesPreviousCallback); // Previous button
-	MakeButton(2, LAPTOPDIR "/button_5.sti",    0, 1, pImpButtonText[11], dx + 187, dy + 330, BtnIMPVoicesDoneCallback);     // Done button
+	MakeButton(0, LAPTOPDIR "/voicearrows.sti", 1, 3, pImpButtonText[13],
+			dx + 343 * g_ui.m_stdScreenScale, dy + 205 * g_ui.m_stdScreenScale,
+			BtnIMPVoicesNextCallback);     // Next button
+	MakeButton(1, LAPTOPDIR "/voicearrows.sti", 0, 2, pImpButtonText[12],
+			dx +  93 * g_ui.m_stdScreenScale, dy + 205 * g_ui.m_stdScreenScale,
+			BtnIMPVoicesPreviousCallback); // Previous button
+	MakeButton(2, LAPTOPDIR "/button_5.sti",    0, 1, pImpButtonText[11],
+			dx + 187 * g_ui.m_stdScreenScale, dy + 330 * g_ui.m_stdScreenScale,
+			BtnIMPVoicesDoneCallback);     // Done button
 }
 
 
@@ -273,9 +279,9 @@ static void IMPPortraitRegionButtonCallback(MOUSE_REGION* pRegion, UINT32 iReaso
 static void CreateIMPVoiceMouseRegions(void)
 {
 	// will create mouse regions needed for the IMP voices page
-	MSYS_DefineRegion( &gVoicePortraitRegion, LAPTOP_SCREEN_UL_X + 200, LAPTOP_SCREEN_WEB_UL_Y + 176 ,
-				LAPTOP_SCREEN_UL_X + 200 + 100, LAPTOP_SCREEN_WEB_UL_Y + 176 + 100,MSYS_PRIORITY_HIGH,
-				MSYS_NO_CURSOR, MSYS_NO_CALLBACK, IMPPortraitRegionButtonCallback );
+	MSYS_DefineRegion(&gVoicePortraitRegion, LAPTOP_SCREEN_UL_X + 200 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + 176 * g_ui.m_stdScreenScale,
+			  LAPTOP_SCREEN_UL_X + (200 + 100) * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + (176 + 100) * g_ui.m_stdScreenScale,
+			  MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, IMPPortraitRegionButtonCallback);
 }
 
 
@@ -305,7 +311,9 @@ static void RenderVoiceIndex(void)
 
 	// render the voice index value on the the blank portrait
 	ST::string sString = ST::format("{} {}", pIMPVoicesStrings, iCurrentVoices + 1);
-	FindFontCenterCoordinates( 290 + LAPTOP_UL_X, 0, 100, 0, sString, FONT12ARIAL, &sX, &sY );
+	FindFontCenterCoordinates(290 * g_ui.m_stdScreenScale + LAPTOP_UL_X, 0,
+				100 * g_ui.m_stdScreenScale, 0,
+				sString, FONT12ARIAL, &sX, &sY );
 	SetFontAttributes(FONT12ARIAL, FONT_WHITE);
-	MPrint(sX, 320, sString);
+	MPrint(sX, 320 * g_ui.m_stdScreenScale, sString);
 }

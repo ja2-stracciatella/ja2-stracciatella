@@ -61,7 +61,7 @@ void RenderIMPPersonalityFinish( void )
 	RenderProfileBackGround( );
 
 		// indent for text
-	RenderBeginIndent( 110, 93 );
+	RenderBeginIndent( 110 * g_ui.m_stdScreenScale, 93 * g_ui.m_stdScreenScale );
 
 	// check confirm flag to decide if we have to display appropriate response to button action
 	if( fConfirmHasBeenSelectedFlag )
@@ -152,7 +152,8 @@ static void MakeButton(UINT idx, const ST::string& text, INT16 x, GUI_CALLBACK c
 	giIMPPersonalityFinishButtonImage[idx] = img;
 	const UINT32 text_col   = FONT_WHITE;
 	const UINT32 shadow_col = DEFAULT_SHADOW;
-	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col, x, LAPTOP_SCREEN_UL_Y + 224, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = CreateIconAndTextButton(img, text, FONT12ARIAL, text_col, shadow_col, text_col, shadow_col,
+							 x, LAPTOP_SCREEN_UL_Y + 224 * g_ui.m_stdScreenScale, MSYS_PRIORITY_HIGH, click);
 	giIMPPersonalityFinishButton[idx] = btn;
 	btn->SetCursor(CURSOR_WWW);
 }
@@ -161,8 +162,8 @@ static void MakeButton(UINT idx, const ST::string& text, INT16 x, GUI_CALLBACK c
 static void CreateIMPPersonalityFinishButtons(void)
 {
 	// this function will create the buttons needed for the IMP personality Finish Page
-	MakeButton(0, pImpButtonText[ 9], LAPTOP_SCREEN_UL_X +  90, BtnIMPPersonalityFinishYesCallback); // Yes button
-	MakeButton(1, pImpButtonText[10], LAPTOP_SCREEN_UL_X + 276, BtnIMPPersonalityFinishNoCallback);  // No button
+	MakeButton(0, pImpButtonText[ 9], LAPTOP_SCREEN_UL_X +  90 * g_ui.m_stdScreenScale, BtnIMPPersonalityFinishYesCallback); // Yes button
+	MakeButton(1, pImpButtonText[10], LAPTOP_SCREEN_UL_X + 276 * g_ui.m_stdScreenScale, BtnIMPPersonalityFinishNoCallback);  // No button
 }
 
 
@@ -242,7 +243,7 @@ static void BtnIMPPersonalityFinishNoCallback(GUI_BUTTON *btn, UINT32 reason)
 static void CreatePersonalityFinishOkButton(void)
 {
 	// create personality button finish button
-	MakeButton(0, pImpButtonText[24], LAPTOP_SCREEN_UL_X + 186, BtnIMPPersonalityFinishOkCallback);
+	MakeButton(0, pImpButtonText[24], LAPTOP_SCREEN_UL_X + 186 * g_ui.m_stdScreenScale, BtnIMPPersonalityFinishOkCallback);
 }
 
 

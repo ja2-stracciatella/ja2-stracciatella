@@ -22,11 +22,11 @@
 static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, UINT32 reason);
 
 // position defines
-#define IMP_PLAYER_ACTIVATION_STRING_X LAPTOP_SCREEN_UL_X + 259
-#define IMP_PLAYER_ACTIVATION_STRING_Y LAPTOP_SCREEN_WEB_UL_Y + 330
-#define IMP_PLAYER_ACTIVATION_STRING_WIDTH 99
-#define IMP_PLAYER_ACTIVATION_STRING_HEIGHT 23
-#define IMP_PLAYER_ACTIVATION_STRING_LENGTH 6
+#define IMP_PLAYER_ACTIVATION_STRING_X LAPTOP_SCREEN_UL_X + 259 * g_ui.m_stdScreenScale
+#define IMP_PLAYER_ACTIVATION_STRING_Y LAPTOP_SCREEN_WEB_UL_Y + 330 * g_ui.m_stdScreenScale
+#define IMP_PLAYER_ACTIVATION_STRING_WIDTH 99 * g_ui.m_stdScreenScale
+#define IMP_PLAYER_ACTIVATION_STRING_HEIGHT 23 * g_ui.m_stdScreenScale
+#define IMP_PLAYER_ACTIVATION_STRING_LENGTH 6 * g_ui.m_stdScreenScale
 
 // IMP homepage buttons
 GUIButtonRef giIMPHomePageButton[1];
@@ -114,8 +114,8 @@ static void CreateIMPHomePageButtons(void)
 					pImpButtonText[ 0 ], FONT12ARIAL,
 					FONT_WHITE, DEFAULT_SHADOW,
 					FONT_WHITE, DEFAULT_SHADOW,
-					LAPTOP_SCREEN_UL_X + 286 - 106,
-					LAPTOP_SCREEN_WEB_UL_Y + 248 - 48,
+					LAPTOP_SCREEN_UL_X + (286 - 106) * g_ui.m_stdScreenScale,
+					LAPTOP_SCREEN_WEB_UL_Y + (248 - 48) * g_ui.m_stdScreenScale,
 					MSYS_PRIORITY_HIGH,
 					BtnIMPAboutUsCallback);
 
@@ -159,19 +159,19 @@ void RenderImpHomePage( void )
 	RenderProfileBackGround( );
 
 	// the IMP symbol
-	RenderIMPSymbol( 107, 45 );
+	RenderIMPSymbol( 107 * g_ui.m_stdScreenScale, 45 * g_ui.m_stdScreenScale );
 
 	// the second button image
-	RenderButton2Image( 134, 314);
+	RenderButton2Image( 134 * g_ui.m_stdScreenScale, 314 * g_ui.m_stdScreenScale);
 
 	// render the indents
 
 	//activation indents
-	RenderActivationIndent( 257, 328 );
+	RenderActivationIndent( 257 * g_ui.m_stdScreenScale, 328 * g_ui.m_stdScreenScale );
 
 	// the two font page indents
-	RenderFrontPageIndent( 3, 64 );
-	RenderFrontPageIndent( 396,64 );
+	RenderFrontPageIndent( 3 * g_ui.m_stdScreenScale, 64 * g_ui.m_stdScreenScale );
+	RenderFrontPageIndent( 396 * g_ui.m_stdScreenScale, 64 * g_ui.m_stdScreenScale );
 
 	RenderAllTextFields();
 }

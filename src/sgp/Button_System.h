@@ -98,7 +98,7 @@ struct GUI_BUTTON
 	 * If fShiftImage is true, then the image will shift down one pixel and right
 	 * one pixel just like the text does.
 	 */
-	void SpecifyIcon(SGPVObject const* icon, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
+	void SpecifyIcon(SGPVObject const* const icon_, UINT16 const usVideoObjectIndex, INT8 const bXOffset, INT8 const bYOffset, BOOLEAN const);
 
 	// will simply set the cursor for the mouse region the button occupies
 	void SetCursor(UINT16 const cursor) { Area.ChangeCursor(cursor); }

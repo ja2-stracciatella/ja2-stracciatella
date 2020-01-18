@@ -108,14 +108,14 @@ extern BOOLEAN     fReDrawBookMarkInfo;
 #define LAPTOP_Y (0 + STD_SCREEN_Y)
 
 
-#define LAPTOP_SCREEN_UL_X		(UINT16)(111 * g_ui.m_stdScreenScale + STD_SCREEN_X)
-#define LAPTOP_SCREEN_UL_Y		(UINT16)( 27 * g_ui.m_stdScreenScale + STD_SCREEN_Y)
-#define LAPTOP_SCREEN_LR_X		(UINT16)(613 * g_ui.m_stdScreenScale + STD_SCREEN_X)
-#define LAPTOP_SCREEN_LR_Y		(UINT16)(427 * g_ui.m_stdScreenScale + STD_SCREEN_Y)
-#define LAPTOP_UL_X 			(UINT16)(24  * g_ui.m_stdScreenScale + STD_SCREEN_X)
-#define LAPTOP_UL_Y			(UINT16)(27  * g_ui.m_stdScreenScale + STD_SCREEN_Y)
-#define LAPTOP_SCREEN_WIDTH		(UINT16)(LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X)
-#define LAPTOP_SCREEN_HEIGHT		(UINT16)(LAPTOP_SCREEN_LR_Y - LAPTOP_SCREEN_UL_Y)
+#define LAPTOP_SCREEN_UL_X		UINT16(111 * g_ui.m_stdScreenScale + STD_SCREEN_X)
+#define LAPTOP_SCREEN_UL_Y		UINT16( 27 * g_ui.m_stdScreenScale + STD_SCREEN_Y)
+#define LAPTOP_SCREEN_LR_X		UINT16(613 * g_ui.m_stdScreenScale + STD_SCREEN_X)
+#define LAPTOP_SCREEN_LR_Y		UINT16(427 * g_ui.m_stdScreenScale + STD_SCREEN_Y)
+#define LAPTOP_UL_X 			UINT16(24  * g_ui.m_stdScreenScale + STD_SCREEN_X)
+#define LAPTOP_UL_Y			UINT16(27  * g_ui.m_stdScreenScale + STD_SCREEN_Y)
+#define LAPTOP_SCREEN_WIDTH		UINT16(LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X)
+#define LAPTOP_SCREEN_HEIGHT		UINT16(LAPTOP_SCREEN_LR_Y - LAPTOP_SCREEN_UL_Y)
 
 // new positions for web browser
 #define LAPTOP_SCREEN_WEB_UL_Y		LAPTOP_SCREEN_UL_Y + 19 * g_ui.m_stdScreenScale

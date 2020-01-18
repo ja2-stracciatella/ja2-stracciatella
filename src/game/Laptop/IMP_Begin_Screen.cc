@@ -23,6 +23,8 @@
 #include "Timer_Control.h"
 #include "Video.h"
 #include "VSurface.h"
+#include "Font_Control.h"
+#include "FontCompat.h"
 
 #include "policy/GamePolicy.h"
 #include "sgp/VObject.h"
@@ -30,18 +32,18 @@
 #include <string_theory/string>
 
 
-#define FULL_NAME_INPUT_X LAPTOP_SCREEN_UL_X + 196
-#define FULL_NAME_INPUT_Y LAPTOP_SCREEN_UL_Y + 153
-#define FULL_NAME_INPUT_WIDTH 229
+#define FULL_NAME_INPUT_X LAPTOP_SCREEN_UL_X + 196 * g_ui.m_stdScreenScale
+#define FULL_NAME_INPUT_Y LAPTOP_SCREEN_UL_Y + 153 * g_ui.m_stdScreenScale
+#define FULL_NAME_INPUT_WIDTH 229 * g_ui.m_stdScreenScale
 #define NICK_NAME_INPUT_X FULL_NAME_INPUT_X
-#define NICK_NAME_INPUT_Y LAPTOP_SCREEN_UL_Y + 213
-#define NICK_NAME_INPUT_WIDTH 110
-#define NAMES_INPUT_HEIGHT 23
-#define MALE_BOX_X 2 + 192 + LAPTOP_SCREEN_UL_X
-#define MALE_BOX_Y 254 + LAPTOP_SCREEN_WEB_UL_Y
-#define MALE_BOX_WIDTH 24 - 2
-#define MALE_BOX_HEIGHT 24 - 2
-#define FEMALE_BOX_X  2 + 302 + LAPTOP_SCREEN_UL_X
+#define NICK_NAME_INPUT_Y LAPTOP_SCREEN_UL_Y + 213 * g_ui.m_stdScreenScale
+#define NICK_NAME_INPUT_WIDTH 110 * g_ui.m_stdScreenScale
+#define NAMES_INPUT_HEIGHT 23 * g_ui.m_stdScreenScale
+#define MALE_BOX_X (2 + 192) * g_ui.m_stdScreenScale + LAPTOP_SCREEN_UL_X
+#define MALE_BOX_Y 254 * g_ui.m_stdScreenScale + LAPTOP_SCREEN_WEB_UL_Y
+#define MALE_BOX_WIDTH (24 - 2) * g_ui.m_stdScreenScale
+#define MALE_BOX_HEIGHT (24 - 2) * g_ui.m_stdScreenScale
+#define FEMALE_BOX_X  (2 + 302) * g_ui.m_stdScreenScale + LAPTOP_SCREEN_UL_X
 constexpr std::size_t MAX_NICKNAME_LENGTH = 8;
 
 // genders
@@ -78,8 +80,8 @@ static void CreateIMPBeginScreenButtons(void);
 static void CreateIMPBeginScreenMouseRegions(void);
 
 static void InvalidateCheckboxes() {
-	InvalidateRegion(MALE_BOX_X, MALE_BOX_Y,  MALE_BOX_X + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
-	InvalidateRegion(FEMALE_BOX_X, MALE_BOX_Y,  FEMALE_BOX_X + MALE_BOX_WIDTH + 1, MALE_BOX_Y + MALE_BOX_HEIGHT + 1);
+	InvalidateRegion(MALE_BOX_X, MALE_BOX_Y,  MALE_BOX_X + MALE_BOX_WIDTH + 1 * g_ui.m_stdScreenScale, MALE_BOX_Y + MALE_BOX_HEIGHT + 1 * g_ui.m_stdScreenScale);
+	InvalidateRegion(FEMALE_BOX_X, MALE_BOX_Y,  FEMALE_BOX_X + MALE_BOX_WIDTH + 1 * g_ui.m_stdScreenScale, MALE_BOX_Y + MALE_BOX_HEIGHT + 1 * g_ui.m_stdScreenScale);
 
 }
 
@@ -161,18 +163,18 @@ void RenderIMPBeginScreen( void )
 	RenderProfileBackGround( );
 
 	// fourth button image 3X
-	RenderButton4Image( 64, 118 );
-	RenderButton4Image( 64, 178 );
-	RenderButton4Image( 64, 238 );
+	RenderButton4Image( 64 * g_ui.m_stdScreenScale, 118 * g_ui.m_stdScreenScale );
+	RenderButton4Image( 64 * g_ui.m_stdScreenScale, 178 * g_ui.m_stdScreenScale );
+	RenderButton4Image( 64 * g_ui.m_stdScreenScale, 238 * g_ui.m_stdScreenScale );
 
 	// the begin screen indents
-	RenderBeginIndent( 105, 58);
+	RenderBeginIndent( 105 * g_ui.m_stdScreenScale, 58 * g_ui.m_stdScreenScale);
 
 	// full name indent
-	RenderNameIndent( 194, 132);
+	RenderNameIndent( 194 * g_ui.m_stdScreenScale, 132 * g_ui.m_stdScreenScale);
 
 	// nick name
-	RenderNickNameIndent( 194, 192);
+	RenderNickNameIndent( 194 * g_ui.m_stdScreenScale, 192 * g_ui.m_stdScreenScale);
 
 	// render warning string
 	Print8CharacterOnlyString();
@@ -243,7 +245,7 @@ static void CreateIMPBeginScreenButtons(void)
 								pImpButtonText[ 6 ], FONT12ARIAL,
 								FONT_WHITE, DEFAULT_SHADOW,
 								FONT_WHITE, DEFAULT_SHADOW,
-								LAPTOP_SCREEN_UL_X + 134, LAPTOP_SCREEN_WEB_UL_Y + 314,
+								LAPTOP_SCREEN_UL_X + 134 * g_ui.m_stdScreenScale, LAPTOP_SCREEN_WEB_UL_Y + 314 * g_ui.m_stdScreenScale,
 								MSYS_PRIORITY_HIGH,
 								BtnIMPBeginScreenDoneCallback);
 
@@ -424,8 +426,8 @@ static void SelectFemaleRegionCallBack(MOUSE_REGION* pRegion, UINT32 iReason)
 static void RenderGender(void)
 {
 	// this procedure will render the gender of the character int he appropriate box
-	RenderGenderIndent(192, 252);
-	RenderGenderIndent(302, 252);
+	RenderGenderIndent(192 * g_ui.m_stdScreenScale, 252 * g_ui.m_stdScreenScale);
+	RenderGenderIndent(302 * g_ui.m_stdScreenScale, 252 * g_ui.m_stdScreenScale);
 
 	INT32 x;
 	switch (bGenderFlag)
@@ -435,15 +437,15 @@ static void RenderGender(void)
 		default:         return; // none selected yet
 	}
 	SetFontBackground(FONT_BLACK);
-	SetFontAttributes(FONT14ARIAL, 184);
-	MPrint(x, MALE_BOX_Y + 6, "X");
+	SetFontAttributes(FONT14ARIAL, FONT_COLOR_P184);
+	MPrint(x, MALE_BOX_Y + 6 * g_ui.m_stdScreenScale, "X");
 }
 
 
 static void Print8CharacterOnlyString(void)
 {
 	SetFontAttributes(FONT12ARIAL, FONT_BLACK, NO_SHADOW);
-	MPrint(STD_SCREEN_X + 430, STD_SCREEN_Y + LAPTOP_SCREEN_WEB_DELTA_Y + 228, pIMPBeginScreenStrings);
+	MPrint(STD_SCREEN_X + 430 * g_ui.m_stdScreenScale, STD_SCREEN_Y + LAPTOP_SCREEN_WEB_DELTA_Y + 228 * g_ui.m_stdScreenScale, pIMPBeginScreenStrings);
 	SetFontShadow(DEFAULT_SHADOW);
 }
 

@@ -22,6 +22,7 @@
 #include "Meanwhile.h"
 #include "StrategicMap.h"
 #include "MapScreen.h"
+#include "FontCompat.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -912,7 +913,7 @@ static void InitFlowerOrderTextInputBoxes(void)
 	Set16BPPTextFieldColor( RGB(255, 255, 255) );
 	SetBevelColors( RGB(136, 138, 135), RGB(24, 61, 81) );
 	SetTextInputRegularColors( 2, FONT_WHITE );
-	SetTextInputHilitedColors( FONT_WHITE, 2, 141  );
+	SetTextInputHilitedColors( FONT_WHITE, FONT_COLOR_P2, FONT_COLOR_P141  );
 	SetCursorColor( RGB(0, 0, 0) );
 
 	AddUserInputField(NULL);

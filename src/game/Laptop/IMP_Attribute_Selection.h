@@ -15,8 +15,8 @@ extern BOOLEAN fFirstIMPAttribTime;
 extern BOOLEAN fReturnStatus;
 
 // starting point of skill boxes on bar
-#define SKILL_SLIDE_START_X 186
-#define SKILL_SLIDE_START_Y 100
-#define SKILL_SLIDE_HEIGHT   20
+#define SKILL_SLIDE_START_X 186 * g_ui.m_stdScreenScale
+#define SKILL_SLIDE_START_Y 100 * g_ui.m_stdScreenScale
+#define SKILL_SLIDE_HEIGHT   20 * g_ui.m_stdScreenScale
 
 #endif

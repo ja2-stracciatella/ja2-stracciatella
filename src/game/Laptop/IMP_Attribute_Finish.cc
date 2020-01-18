@@ -45,7 +45,7 @@ void RenderIMPAttributeFinish( void )
 	RenderProfileBackGround( );
 
 	// indent for text
-	RenderBeginIndent( 110, 93 );
+	RenderBeginIndent( 110 * g_ui.m_stdScreenScale, 93 * g_ui.m_stdScreenScale );
 }
 
 
@@ -79,8 +79,8 @@ static void CreateAttributeFinishButtons(void)
 {
 	// this procedure will create the buttons needed for the attribute finish screen
 	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
-	MakeButton(0, pImpButtonText[20], dy + 180, BtnIMPAttributeFinishYesCallback); // Yes button
-	MakeButton(1, pImpButtonText[21], dy + 264, BtnIMPAttributeFinishNoCallback);  // No button
+	MakeButton(0, pImpButtonText[20], dy + 180 * g_ui.m_stdScreenScale, BtnIMPAttributeFinishYesCallback); // Yes button
+	MakeButton(1, pImpButtonText[21], dy + 264 * g_ui.m_stdScreenScale, BtnIMPAttributeFinishNoCallback);  // No button
 }
 
 

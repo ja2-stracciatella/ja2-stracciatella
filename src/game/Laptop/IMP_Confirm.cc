@@ -86,7 +86,7 @@ void RenderIMPConfirm( void )
 	RenderProfileBackGround( );
 
 	// indent
-	RenderAvgMercIndentFrame(90, 40 );
+	RenderAvgMercIndentFrame(90 * g_ui.m_stdScreenScale, 40 * g_ui.m_stdScreenScale);
 
 	// highlight answer
 	PrintImpText( );
@@ -123,8 +123,8 @@ static void CreateConfirmButtons(void)
 {
 	// create buttons for confirm screen
 	const INT16 dy = LAPTOP_SCREEN_WEB_UL_Y;
-	MakeButton(0, pImpButtonText[16], dy + 254, BtnIMPConfirmYes);
-	MakeButton(1, pImpButtonText[17], dy + 314, BtnIMPConfirmNo);
+	MakeButton(0, pImpButtonText[16], dy + 254 * g_ui.m_stdScreenScale, BtnIMPConfirmYes);
+	MakeButton(1, pImpButtonText[17], dy + 314 * g_ui.m_stdScreenScale, BtnIMPConfirmNo);
 }
 
 

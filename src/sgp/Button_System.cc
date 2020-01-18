@@ -468,7 +468,7 @@ GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, IN
 	codepoints(),
 	usFont(0),
 	sForeColor(0),
-	sShadowColor(-1),
+	sShadowColor(-1), // FIXME: maxrd2
 	sForeColorDown(-1),
 	sShadowColorDown(-1),
 	sForeColorHilited(-1),
