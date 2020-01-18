@@ -9,7 +9,7 @@ void ExitInsuranceContract(void);
 void HandleInsuranceContract(void);
 void RenderInsuranceContract(void);
 
-extern INT16 gsCurrentInsuranceMercIndex;
+extern UINT16 gusCurrentInsuranceMercIndex;
 
 // determines if a merc will run out of there insurance contract
 void DailyUpdateOfInsuredMercs(void);
