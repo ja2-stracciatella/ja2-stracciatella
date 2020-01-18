@@ -124,7 +124,7 @@ void EnterInsurance()
 	RenderInsurance();
 
 	// reset the current merc index on the insurance contract page
-	gsCurrentInsuranceMercIndex = 0;
+	gusCurrentInsuranceMercIndex = 0;
 }
 
 
