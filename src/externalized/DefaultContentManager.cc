@@ -1010,7 +1010,7 @@ const GamePolicy* DefaultContentManager::getGamePolicy() const
 	return m_gamePolicy;
 }
 
-const ST::string* DefaultContentManager::getNewString(int stringId) const
+const ST::string* DefaultContentManager::getNewString(size_t stringId) const
 {
 	if(stringId >= m_newStrings.size())
 	{
