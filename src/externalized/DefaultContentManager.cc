@@ -1,8 +1,5 @@
 #include "DefaultContentManager.h"
 
-#include <memory>
-#include <stdexcept>
-
 #include "game/Directories.h"
 #include "game/Strategic/Strategic_Status.h"
 #include "game/Tactical/Arms_Dealer.h"
@@ -32,6 +29,11 @@
 #include "policy/DefaultIMPPolicy.h"
 
 #include "Logger.h"
+
+#include <string_theory/format>
+
+#include <memory>
+#include <stdexcept>
 
 #define BASEDATADIR    "data"
 
@@ -1014,8 +1016,9 @@ const ST::string* DefaultContentManager::getNewString(size_t stringId) const
 {
 	if(stringId >= m_newStrings.size())
 	{
-		SLOGE("new string %d is not found", stringId);
-		throw std::runtime_error(FormattedString("new string %d is not found", stringId));
+		ST::string message = ST::format("new string {} is not found", stringId);
+		SLOGE(message.c_str());
+		throw std::runtime_error(message.c_str());
 	}
 	else
 	{
