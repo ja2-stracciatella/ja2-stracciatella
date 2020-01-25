@@ -100,33 +100,36 @@ TEST(FileManTest, FindFilesInDir)
 
 TEST(FileManTest, RemoveAllFilesInDir)
 {
-	boost::filesystem::path tmpDir = boost::filesystem::temp_directory_path();
-	tmpDir /= boost::filesystem::unique_path();
-	boost::filesystem::path subDir = tmpDir / "subdir";
-	ASSERT_EQ(boost::filesystem::create_directory(tmpDir), true);
-	ASSERT_EQ(boost::filesystem::create_directory(subDir), true);
+	RustPointer<TempDir> tempDir(Fs_createTempDir());
+	ASSERT_NE(tempDir.get(), nullptr);
+	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
+	ASSERT_NE(tempPath.get(), nullptr);
+	std::string subDir = FileMan::joinPaths(tempPath.get(), "subdir");
+	ASSERT_EQ(Fs_createDir(subDir.c_str()), true);
 
-	boost::filesystem::path pathA = tmpDir / "foo.txt";
-	boost::filesystem::path pathB = tmpDir / "bar.txt";
+	std::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
+	std::string pathB = FileMan::joinPaths(tempPath.get(), "bar.txt");
 
-	boost::filesystem::ofstream fileA(pathA);
-	boost::filesystem::ofstream fileB(pathB);
+	SGPFile* fileA = FileMan::openForWriting(pathA.c_str());
+	ASSERT_NE(fileA, nullptr);
+	SGPFile* fileB = FileMan::openForWriting(pathB.c_str());
+	ASSERT_NE(fileB, nullptr);
 
-	fileA << "foo";
-	fileB << "bar";
+	FileWrite(fileA, "foo", 3);
+	FileWrite(fileB, "bar", 3);
 
-	fileA.close();
-	fileB.close();
+	FileClose(fileA);
+	FileClose(fileB);
 
-	std::vector<std::string> results = FindAllFilesInDir(tmpDir.string(), true);
+	std::vector<std::string> results = FindAllFilesInDir(tempPath.get(), true);
 	ASSERT_EQ(results.size(), 2u);
 
-	EraseDirectory(tmpDir.string().c_str());
+	EraseDirectory(tempPath.get());
 
 	// check that the subdirectory is still there
-	ASSERT_EQ(boost::filesystem::is_directory(subDir), true);
+	ASSERT_EQ(Fs_isDir(subDir.c_str()), true);
 
-	results = FindAllFilesInDir(tmpDir.string(), true);
+	results = FindAllFilesInDir(tempPath.get(), true);
 	ASSERT_EQ(results.size(), 0u);
 }
 
