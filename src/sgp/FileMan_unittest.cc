@@ -135,16 +135,22 @@ TEST(FileManTest, RemoveAllFilesInDir)
 
 TEST(FileManTest, ReadTextFile)
 {
-	boost::filesystem::path tmpDir = boost::filesystem::temp_directory_path();
-	boost::filesystem::path pathA = tmpDir / "foo.txt";
+	RustPointer<TempDir> tempDir(Fs_createTempDir());
+	ASSERT_NE(tempDir.get(), nullptr);
+	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
+	ASSERT_NE(tempPath.get(), nullptr);
+	std::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
 
-	boost::filesystem::ofstream fileA(pathA);
-	fileA << "foo bar baz";
-	fileA.close();
+	SGPFile* fileA = FileMan::openForWriting(pathA.c_str());
+	ASSERT_NE(fileA, nullptr);
+	FileWrite(fileA, "foo bar baz", 11);
+	FileClose(fileA);
 
-	SGPFile* forReading = FileMan::openForReading(pathA.string().c_str());
+	SGPFile* forReading = FileMan::openForReading(pathA.c_str());
+	ASSERT_NE(forReading, nullptr);
 	std::string content = FileMan::fileReadText(forReading);
 	ASSERT_STREQ(content.c_str(), "foo bar baz");
+	FileClose(forReading);
 }
 
 TEST(FileManTest, GetFileName)
