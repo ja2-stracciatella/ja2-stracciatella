@@ -62,6 +62,13 @@ pub extern "C" fn Fs_exists(path: *const c_char) -> bool {
     fs::metadata(&path).is_ok()
 }
 
+/// Checks if the path points to a directory.
+#[no_mangle]
+pub extern "C" fn Fs_isDir(path: *const c_char) -> bool {
+    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    fs::metadata(&path).map(|x| x.is_dir()).unwrap_or(false)
+}
+
 /// Checks if the path points to a file.
 #[no_mangle]
 pub extern "C" fn Fs_isFile(path: *const c_char) -> bool {
