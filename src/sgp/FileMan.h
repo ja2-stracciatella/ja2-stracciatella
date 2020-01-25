@@ -52,8 +52,6 @@ BOOLEAN FileClearAttributes(const char* filename);
 BOOLEAN FileClearAttributes(const std::string &filename);
 
 
-BOOLEAN GetFileManFileTime(const char* fileName, time_t* pLastWriteTime);
-
 /* returns
  * - -1 if the First file time is less than second file time. (first file is older)
  * -  0 First file time is equal to second file time.

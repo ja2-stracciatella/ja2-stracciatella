@@ -430,18 +430,6 @@ BOOLEAN FileClearAttributes(const char* const filename)
 }
 
 
-BOOLEAN GetFileManFileTime(const char* fileName, time_t* const pLastWriteTime)
-{
-	using namespace boost::filesystem;
-	*pLastWriteTime = last_write_time(fileName);
-	if(*pLastWriteTime == -1)
-	{
-		return FALSE;
-	}
-	return TRUE;
-}
-
-
 INT32 CompareSGPFileTimes(const time_t* const pFirstFileTime, const time_t* const pSecondFileTime)
 {
 	if ( *pFirstFileTime < *pSecondFileTime )
