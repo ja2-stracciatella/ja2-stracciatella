@@ -2,7 +2,9 @@
 //!
 //! [`stracciatella::fs`]: ../../stracciatella/fs/index.html
 
+use std::f64;
 use std::ptr;
+use std::time;
 
 use stracciatella::fs;
 
@@ -47,6 +49,37 @@ pub extern "C" fn Fs_readDirPaths(
             into_ptr(c_vec)
         }
     }
+}
+
+/// Gets the modified time in seconds since the unix epoch.
+/// On error the modified time will be the minimum value.
+/// Sets the rust error.
+#[no_mangle]
+pub extern "C" fn Fs_modifiedSecs(path: *const c_char, modified_secs: *mut f64) -> bool {
+    forget_rust_error();
+    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let modified_secs = unsafe_mut(modified_secs);
+    // FIXME use Duration.as_secs_f64 with rust 1.38.0+
+    let as_secs_f64 = |duration: time::Duration| {
+        const NANOSECOND: f64 = 0.000_000_001;
+        duration.as_secs() as f64 + f64::from(duration.subsec_nanos()) * NANOSECOND
+    };
+    let secs_result = fs::metadata(&path).and_then(|x| x.modified()).map(|x| {
+        match x.duration_since(time::UNIX_EPOCH) {
+            Ok(duration) => as_secs_f64(duration),
+            Err(err) => -as_secs_f64(err.duration()),
+        }
+    });
+    match secs_result {
+        Err(err) => {
+            remember_rust_error(format!("Fs_modifiedSecs {:?}: {}", path, err));
+            *modified_secs = f64::MIN;
+        }
+        Ok(secs) => {
+            *modified_secs = secs;
+        }
+    }
+    no_rust_error()
 }
 
 /// Removes a directory and all it's contents.
