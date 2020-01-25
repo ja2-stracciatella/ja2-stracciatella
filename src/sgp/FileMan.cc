@@ -435,19 +435,23 @@ FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
 	return f->flags & SGPFILE_REAL ? f->u.file : nullptr;
 }
 
-uintmax_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
+uint64_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 {
-	using namespace boost::filesystem;
-	space_info si = space(current_path());
-	if (si.available == static_cast<uintmax_t>(-1))
+	RustPointer<char> path(Env_currentDir());
+	if (!path)
 	{
-		/* something is wrong, tell everyone no space available */
+		RustPointer<char> msg(getRustError());
+		SLOGW("%s", msg.get());
 		return 0;
 	}
-	else
+	uint64_t bytes;
+	if (!Fs_freeSpace(path.get(), &bytes))
 	{
-		return si.available;
+		RustPointer<char> msg(getRustError());
+		SLOGW("%s", msg.get());
+		return 0;
 	}
+	return bytes;
 }
 
 /** Join two path components. */

@@ -57,7 +57,7 @@ BOOLEAN FileClearAttributes(const std::string &filename);
 FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* hFile);
 
 //Gets the amount of free space on the hard drive that the main executeablt is runnning from
-uintmax_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
+uint64_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 
 /***
  * New file manager.
