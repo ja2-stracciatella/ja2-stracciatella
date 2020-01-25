@@ -722,20 +722,24 @@ FindFilesInDir(const std::string &dirPath,
 	return paths;
 }
 
-/**
- * Find all files in a directory.
- * @return List of paths (dir + filename). */
 std::vector<std::string>
 FindAllFilesInDir(const std::string &dirPath, bool sortResults)
 {
 	std::vector<std::string> paths;
-	boost::filesystem::path path(dirPath);
-	boost::filesystem::directory_iterator end;
-	for(boost::filesystem::directory_iterator it(path); it != end; it++)
+	RustPointer<VecCString> vec(Fs_readDirPaths(dirPath.c_str(), false));
+	if (!vec)
 	{
-		if(boost::filesystem::is_regular_file(it->status()))
+		RustPointer<char> msg(getRustError());
+		SLOGW("%s", msg.get());
+		return paths;
+	}
+	size_t len = VecCString_length(vec.get());
+	for (size_t i = 0; i < len; i++)
+	{
+		RustPointer<char> path(VecCString_get(vec.get(), i));
+		if (Fs_isFile(path.get()))
 		{
-			paths.push_back(it->path().string());
+			paths.emplace_back(path.get());
 		}
 	}
 	if(sortResults)
