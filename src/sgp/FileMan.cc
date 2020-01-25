@@ -823,7 +823,9 @@ bool FileMan::checkFileExistance(const char *folder, const char *fileName)
 
 void FileMan::moveFile(const char *from, const char *to)
 {
-	boost::filesystem::path fromPath(from);
-	boost::filesystem::path toPath(to);
-	boost::filesystem::rename(fromPath, toPath);
+	if (!Fs_rename(from, to))
+	{
+		RustPointer<char> msg(getRustError());
+		throw new std::runtime_error(msg.get());
+	}
 }
