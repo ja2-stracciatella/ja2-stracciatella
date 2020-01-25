@@ -33,6 +33,7 @@ log = "0.4"
 simplelog = "0.6"
 rayon = "1.1.0"
 dunce = "1"
+remove_dir_all = "0.5"
 
 [dependencies.clap]
 optional = true

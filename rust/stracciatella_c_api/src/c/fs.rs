@@ -49,6 +49,19 @@ pub extern "C" fn Fs_readDirPaths(
     }
 }
 
+/// Removes a directory and all it's contents.
+/// Sets the rust error.
+/// @see https://doc.rust-lang.org/std/fs/fn.remove_dir_all.html
+#[no_mangle]
+pub extern "C" fn Fs_removeDirAll(dir: *const c_char) -> bool {
+    forget_rust_error();
+    let dir = path_from_c_str_or_panic(unsafe_c_str(dir));
+    if let Err(err) = fs::remove_dir_all(&dir) {
+        remember_rust_error(format!("Fs_removeDirAll {:?}: {}", dir, err));
+    }
+    no_rust_error()
+}
+
 /// Renames a file or directory.
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/fs/fn.rename.html

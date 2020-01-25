@@ -24,6 +24,10 @@ pub use std::fs::rename;
 // replacements
 //--------------
 
+/// A reliable implementation of remove_dir_all for Windows.
+/// For other systems it re-exports std::fs::remove_dir_all.
+pub use remove_dir_all::remove_dir_all;
+
 /// Returns the canonical, absolute form of a path with all intermediate
 /// components normalized and symbolic links resolved.
 ///
