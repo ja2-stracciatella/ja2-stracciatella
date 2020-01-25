@@ -766,10 +766,14 @@ std::string FileMan::getParentPath(const std::string &_path, bool absolute)
 }
 
 /** Get filename from the path. */
-std::string FileMan::getFileName(const std::string &_path)
+std::string FileMan::getFileName(const std::string &path)
 {
-	boost::filesystem::path path(_path);
-	return path.filename().string();
+	RustPointer<char> filename(Path_filename(path.c_str()));
+	if (!filename)
+	{
+		return std::string();
+	}
+	return std::string(filename.get());
 }
 
 /** Get filename from the path without extension. */
