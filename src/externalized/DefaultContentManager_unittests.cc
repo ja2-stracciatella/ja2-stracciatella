@@ -15,7 +15,7 @@
 TEST(TempFiles, createFile)
 {
 	DefaultContentManager * cm = createDefaultCMForTesting();
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
 	{
@@ -26,14 +26,14 @@ TEST(TempFiles, createFile)
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), TMPDIR PS "foo.txt");
 
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, writeToFile)
 {
 	DefaultContentManager * cm = createDefaultCMForTesting();
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
 	{
@@ -55,14 +55,14 @@ TEST(TempFiles, writeToFile)
 
 	// // void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, writeAndRead)
 {
 	DefaultContentManager * cm = createDefaultCMForTesting();
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
 	{
@@ -78,14 +78,14 @@ TEST(TempFiles, writeAndRead)
 		ASSERT_STREQ(buf, "hello");
 	}
 
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, append)
 {
 	DefaultContentManager * cm = createDefaultCMForTesting();
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
 	{
@@ -103,14 +103,14 @@ TEST(TempFiles, append)
 		ASSERT_EQ(FileGetSize(file), 10u);
 	}
 
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, deleteFile)
 {
 	DefaultContentManager * cm = createDefaultCMForTesting();
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
 	{
@@ -125,7 +125,7 @@ TEST(TempFiles, deleteFile)
 	results = FindFilesInDir(TMPDIR, "txt", false, false);
 	ASSERT_EQ(results.size(), 0u);
 
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
