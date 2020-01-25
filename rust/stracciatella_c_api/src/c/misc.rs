@@ -2,6 +2,7 @@
 //!
 //! The code in this module is not associated with any module in particular.
 
+use std::env;
 use std::ffi::CString;
 use std::path::PathBuf;
 use std::ptr;
@@ -146,6 +147,24 @@ pub extern "C" fn findAvailableMods() -> *mut VecCString {
         into_ptr(VecCString::from_vec(mods))
     } else {
         into_ptr(VecCString::new())
+    }
+}
+
+/// Gets the path to the current directory.
+/// On error it returns null.
+/// Sets the rust error.
+#[no_mangle]
+pub extern "C" fn Env_currentDir() -> *mut c_char {
+    forget_rust_error();
+    match env::current_dir() {
+        Ok(path) => {
+            let c_path = c_string_from_path_or_panic(&path);
+            c_path.into_raw()
+        }
+        Err(err) => {
+            remember_rust_error(format!("Env_currentDir: {}", err));
+            ptr::null_mut()
+        }
     }
 }
 
