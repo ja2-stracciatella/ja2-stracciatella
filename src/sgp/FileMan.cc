@@ -816,9 +816,8 @@ std::string FileMan::fileReadText(SGPFile* file)
 /** Check file existance. */
 bool FileMan::checkFileExistance(const char *folder, const char *fileName)
 {
-	boost::filesystem::path path(folder);
-	path /= fileName;
-	return boost::filesystem::exists(path);
+	std::string path = joinPaths(folder, fileName);
+	return Fs_exists(path.c_str());
 }
 
 void FileMan::moveFile(const char *from, const char *to)
