@@ -5,6 +5,7 @@
 //!
 //! [`std::fs`]: https://doc.rust-lang.org/std/fs/index.html
 
+use std::io;
 use std::path::{Component, Path, PathBuf};
 
 use dunce;
@@ -16,6 +17,7 @@ use crate::unicode::Nfc;
 //------------
 
 pub use std::fs::metadata;
+pub use std::fs::read_dir;
 pub use std::fs::rename;
 
 //--------------
@@ -92,4 +94,22 @@ pub fn resolve_existing_components(path: &Path, base: Option<&Path>, caseless: b
             current.push(&component);
             current // give up, copied
         })
+}
+
+/// Gets the paths of the directory entries.
+pub fn read_dir_paths(dir: &Path, ignore_entry_errors: bool) -> io::Result<Vec<PathBuf>> {
+    let mut vec = Vec::new();
+    for entry_result in read_dir(&dir)? {
+        match entry_result {
+            Ok(entry) => {
+                vec.push(entry.path());
+            }
+            Err(err) => {
+                if !ignore_entry_errors {
+                    return Err(err);
+                }
+            }
+        }
+    }
+    Ok(vec)
 }
