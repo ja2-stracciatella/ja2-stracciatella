@@ -672,11 +672,6 @@ FILE* FileMan::openForReadingCaseInsensitive(const std::string &folderPath, cons
 	return NULL;
 }
 
-/**
- * Find all files with the given extension in the given directory.
- * @param dirPath Path to the directory
- * @param extension Extension with dot (e.g. ".txt")
- * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems. * * @return List of paths (dir + filename). */
 std::vector<std::string>
 FindFilesInDir(const std::string &dirPath,
 		const std::string &ext,
@@ -684,42 +679,45 @@ FindFilesInDir(const std::string &dirPath,
 		bool returnOnlyNames,
 		bool sortResults)
 {
-	std::string ext_copy = ext;
-	if(caseIncensitive)
+	std::vector<std::string> ret;
+	std::vector<std::string> paths = FindAllFilesInDir(dirPath, sortResults);
+	for (std::string& path : paths)
 	{
-		std::transform(ext_copy.begin(), ext_copy.end(), ext_copy.begin(), ::tolower);
-	}
-
-	std::vector<std::string> paths;
-	boost::filesystem::path path(dirPath);
-	boost::filesystem::directory_iterator end;
-	for(boost::filesystem::directory_iterator it(path); it != end; it++)
-	{
-		if(boost::filesystem::is_regular_file(it->status()))
+		RustPointer<char> path_ext(Path_extension(path.c_str()));
+		bool same_ext;
+		if (!path_ext)
 		{
-			std::string file_ext = it->path().extension().string();
-			if(caseIncensitive)
+			same_ext = ext.empty();
+		}
+		else if (caseIncensitive)
+		{
+			same_ext = std::equal(ext.begin(), ext.end(), path_ext.get(), [](unsigned char a, unsigned char b) {
+				return ::tolower(a) == ::tolower(b);
+			});
+		}
+		else
+		{
+			same_ext = (ext == path_ext.get());
+		}
+		if (!same_ext)
+		{
+			continue;
+		}
+		if (returnOnlyNames)
+		{
+			RustPointer<char> filename(Path_filename(path.c_str()));
+			if (!filename)
 			{
-				std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), ::tolower);
+				throw new std::logic_error("expected a filename");
 			}
-			if(file_ext.compare(ext_copy) == 0)
-			{
-				if(returnOnlyNames)
-				{
-					paths.push_back(it->path().filename().string());
-				}
-				else
-				{
-					paths.push_back(it->path().string());
-				}
-			}
+			ret.emplace_back(filename.get());
+		}
+		else
+		{
+			ret.emplace_back(std::move(path));
 		}
 	}
-	if(sortResults)
-	{
-		std::sort(paths.begin(), paths.end());
-	}
-	return paths;
+	return ret;
 }
 
 std::vector<std::string>

@@ -168,9 +168,9 @@ private:
 /**
  * Find all files with the given extension in the given directory.
  * @param dirPath Path to the directory
- * @param extension Extension with dot (e.g. ".txt")
+ * @param extension Extension (e.g. "txt")
  * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems.
- * @param returnOnlyNames When True, return only names (without the director path)
+ * @param returnOnlyNames When True, return only names (without the directory path)
  * @param sortResults When True, sort found paths.
  * @return List of paths (dir + filename). */
 std::vector<std::string>

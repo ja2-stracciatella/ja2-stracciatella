@@ -349,13 +349,13 @@ std::string DefaultContentManager::getNewMapFolder() const
 /** Get all available maps. */
 std::vector<std::string> DefaultContentManager::getAllMaps() const
 {
-	return FindFilesInDir(MAPSDIR, ".dat", true, true, true);
+	return FindFilesInDir(MAPSDIR, "dat", true, true, true);
 }
 
 /** Get all available tilecache. */
 std::vector<std::string> DefaultContentManager::getAllTilecache() const
 {
-	return FindFilesInDir(m_tileDir, ".jsd", true, false);
+	return FindFilesInDir(m_tileDir, "jsd", true, false);
 }
 
 /** Open temporary file for writing. */

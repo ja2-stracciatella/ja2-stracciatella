@@ -46,7 +46,7 @@ TEST(FileManTest, joinPaths)
 }
 
 
-TEST(FileManTest, FindFilesWithBoost)
+TEST(FileManTest, FindFilesInDir)
 {
 #define PS PATH_SEPARATOR_STR
 
@@ -56,34 +56,34 @@ TEST(FileManTest, FindFilesWithBoost)
 
 	std::string testDir = FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files");
 
-	std::vector<std::string> results = FindFilesInDir(testDir, ".txt", false, false);
+	std::vector<std::string> results = FindFilesInDir(testDir, "txt", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 
-	results = FindFilesInDir(FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files"), ".txt", false, false);
+	results = FindFilesInDir(FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files"), "txt", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files" PS "lowercase-ext.txt").c_str());
 
-	results = FindFilesInDir(testDir, ".TXT", false, false);
+	results = FindFilesInDir(testDir, "TXT", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
-	results = FindFilesInDir(testDir, ".TXT", false, true);
+	results = FindFilesInDir(testDir, "TXT", false, true);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), "uppercase-ext.TXT");
 
-	results = FindFilesInDir(testDir, ".tXt", true, false);
+	results = FindFilesInDir(testDir, "tXt", true, false);
 	std::sort(results.begin(), results.end());
 	ASSERT_EQ(results.size(), 2u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 	EXPECT_STREQ(results[1].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
-	results = FindFilesInDir(testDir, ".tXt", true, false, true);
+	results = FindFilesInDir(testDir, "tXt", true, false, true);
 	ASSERT_EQ(results.size(), 2u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 	EXPECT_STREQ(results[1].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
-	results = FindFilesInDir(testDir, ".tXt", true, true, true);
+	results = FindFilesInDir(testDir, "tXt", true, true, true);
 	ASSERT_EQ(results.size(), 2u);
 	EXPECT_STREQ(results[0].c_str(), "lowercase-ext.txt");
 	EXPECT_STREQ(results[1].c_str(), "uppercase-ext.TXT");

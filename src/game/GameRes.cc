@@ -138,7 +138,7 @@ FLOAT getMajorMapVersion()
 /** Get list of resource libraries. */
 std::vector<std::string> GetResourceLibraries(const std::string &dataDir)
 {
-	std::vector<std::string> libraries = FindFilesInDir(dataDir, ".slf", true, true);
+	std::vector<std::string> libraries = FindFilesInDir(dataDir, "slf", true, true);
 
 	// for (int i = 0; i < libraries.size(); i++)
 	// {
