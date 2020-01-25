@@ -39,6 +39,18 @@ pub extern "C" fn TempDir_path(tempdir: *mut TempDir) -> *mut c_char {
     c_path.into_raw()
 }
 
+/// Creates a directory.
+/// Sets the rust error.
+#[no_mangle]
+pub extern "C" fn Fs_createDir(path: *const c_char) -> bool {
+    forget_rust_error();
+    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    if let Err(err) = fs::create_dir(&path) {
+        remember_rust_error(format!("Fs_createDir {:?}: {}", path, err));
+    }
+    no_rust_error()
+}
+
 /// Attempts to create a temporary directory inside the temporary directory of the operating system.
 /// Returns null on error.
 /// Sets the rust error.

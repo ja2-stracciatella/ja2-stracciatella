@@ -16,6 +16,7 @@ use crate::unicode::Nfc;
 // re-exports
 //------------
 
+pub use std::fs::create_dir;
 pub use std::fs::metadata;
 pub use std::fs::read_dir;
 pub use std::fs::rename;
