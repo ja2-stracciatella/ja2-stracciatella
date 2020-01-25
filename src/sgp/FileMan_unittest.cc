@@ -211,3 +211,8 @@ TEST(FileManTest, SlashifyPath)
 	FileMan::slashifyPath(test);
 	EXPECT_STREQ(test.c_str(), "foo/bar/baz");
 }
+
+TEST(FileManTest, FreeSpace)
+{
+	EXPECT_NE(GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(), 0u);
+}
