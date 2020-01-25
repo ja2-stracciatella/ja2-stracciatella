@@ -4,6 +4,7 @@
 //! http://geosoft.no/development/cppstyle.html
 
 pub mod config;
+pub mod fs;
 pub mod librarydb;
 pub mod logger;
 pub mod misc;

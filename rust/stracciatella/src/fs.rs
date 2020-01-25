@@ -1,14 +1,35 @@
 //! This module contains code to interact with the filesystem.
+//!
+//! Use this module instead of [`std::fs`].
+//! It will make it easy to replace functions when needed.
+//!
+//! [`std::fs`]: https://doc.rust-lang.org/std/fs/index.html
+
+use std::path::{Component, Path, PathBuf};
+
+use dunce;
 
 use crate::unicode::Nfc;
-use dunce;
-use std::path::{Component, Path, PathBuf};
+
+//------------
+// re-exports
+//------------
+
+pub use std::fs::rename;
+
+//--------------
+// replacements
+//--------------
 
 /// Returns the canonical, absolute form of a path with all intermediate
 /// components normalized and symbolic links resolved.
 ///
 /// On windows, UNC paths are converted to normal paths when possible.
 pub use dunce::canonicalize;
+
+//-------
+// other
+//-------
 
 /// Returns path joined with base.
 /// The path separators are normalized and path components are resolved only when needed.
