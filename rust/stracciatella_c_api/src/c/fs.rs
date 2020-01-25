@@ -6,6 +6,13 @@ use stracciatella::fs;
 
 use crate::c::common::*;
 
+/// Checks if the path exists.
+#[no_mangle]
+pub extern "C" fn Fs_exists(path: *const c_char) -> bool {
+    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    fs::metadata(&path).is_ok()
+}
+
 /// Renames a file or directory.
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/fs/fn.rename.html
