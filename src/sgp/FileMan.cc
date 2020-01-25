@@ -430,20 +430,6 @@ BOOLEAN FileClearAttributes(const char* const filename)
 }
 
 
-INT32 CompareSGPFileTimes(const time_t* const pFirstFileTime, const time_t* const pSecondFileTime)
-{
-	if ( *pFirstFileTime < *pSecondFileTime )
-	{
-		return -1;
-	}
-	if ( *pFirstFileTime > *pSecondFileTime )
-	{
-		return 1;
-	}
-	return 0;
-}
-
-
 FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
 {
 	return f->flags & SGPFILE_REAL ? f->u.file : nullptr;

@@ -51,13 +51,6 @@ FileAttributes FileGetAttributes(const char* filename);
 BOOLEAN FileClearAttributes(const char* filename);
 BOOLEAN FileClearAttributes(const std::string &filename);
 
-
-/* returns
- * - -1 if the First file time is less than second file time. (first file is older)
- * -  0 First file time is equal to second file time.
- * - +1 First file time is greater than second file time (first file is newer). */
-INT32 CompareSGPFileTimes(const time_t* const pFirstFileTime, const time_t* const pSecondFileTime);
-
 /* Pass in the Fileman file handle of an OPEN file and it will return..
  * - if its a Real File, the return will be the handle of the REAL file
  * - if its a LIBRARY file, the return will be the handle of the LIBRARY */
