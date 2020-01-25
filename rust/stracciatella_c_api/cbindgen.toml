@@ -19,6 +19,7 @@ struct RustDelete
 	void operator()(EngineOptions* ptr) const { EngineOptions_destroy(ptr); }
 	void operator()(LibraryDB* ptr) const { LibraryDB_destroy(ptr); }
 	void operator()(LibraryFile* ptr) const { LibraryFile_close(ptr); }
+	void operator()(TempDir* ptr) const { TempDir_destroy(ptr); }
 	void operator()(VecCString* ptr) const { VecCString_destroy(ptr); }
 };
 

@@ -20,6 +20,8 @@ pub use std::fs::metadata;
 pub use std::fs::read_dir;
 pub use std::fs::rename;
 
+pub use tempfile::TempDir;
+
 //--------------
 // replacements
 //--------------
