@@ -74,6 +74,25 @@ pub extern "C" fn Fs_exists(path: *const c_char) -> bool {
     fs::metadata(&path).is_ok()
 }
 
+/// Gets the free space in the target path.
+/// On error the free space will be 0.
+/// Sets the rust error.
+#[no_mangle]
+pub extern "C" fn Fs_freeSpace(path: *const c_char, bytes: *mut u64) -> bool {
+    forget_rust_error();
+    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let bytes = unsafe_mut(bytes);
+    let free_space = match fs::free_space(&path) {
+        Err(err) => {
+            remember_rust_error(format!("Fs_freeSpace {:?}: {}", path, err));
+            0
+        }
+        Ok(n) => n,
+    };
+    *bytes = free_space;
+    no_rust_error()
+}
+
 /// Checks if the path points to a directory.
 #[no_mangle]
 pub extern "C" fn Fs_isDir(path: *const c_char) -> bool {

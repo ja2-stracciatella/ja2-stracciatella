@@ -120,3 +120,55 @@ pub fn read_dir_paths(dir: &Path, ignore_entry_errors: bool) -> io::Result<Vec<P
     }
     Ok(vec)
 }
+
+/// Gets the amount of bytes available as space in the target path.
+#[allow(unreachable_code)]
+pub fn free_space(path: &Path) -> io::Result<u64> {
+    // I did not find a crate with this functionality.
+    // This is a "best effort" implementation.
+    // It might not compile or be unimplemented on some targets.
+    #[cfg(windows)]
+    {
+        // use GetDiskFreeSpaceExW in the windows family (msvc/msys2)
+        use std::os::windows::ffi::OsStrExt;
+
+        use winapi::um::fileapi::GetDiskFreeSpaceExW;
+        use winapi::um::winnt::ULARGE_INTEGER;
+
+        let wpath: Vec<u16> = path
+            .as_os_str()
+            .encode_wide()
+            .chain(std::iter::once(0))
+            .collect();
+        let mut free_bytes: ULARGE_INTEGER = unsafe { std::mem::zeroed() };
+        let result = unsafe {
+            GetDiskFreeSpaceExW(
+                wpath.as_ptr(),
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+                &mut free_bytes,
+            )
+        };
+        return match result {
+            0 => Err(io::Error::last_os_error()),
+            _ => Ok(*unsafe { free_bytes.QuadPart() }),
+        };
+    }
+    #[cfg(unix)]
+    #[allow(clippy::cast_lossless)]
+    {
+        // use statvfs in unix family
+        // TODO determine which of statvfs64/statfs64/statvfs/statfs are available
+        use std::os::unix::ffi::OsStrExt;
+
+        let mut bytes = path.as_os_str().as_bytes().to_vec();
+        bytes.push(0);
+        let mut data: libc::statvfs = unsafe { std::mem::zeroed() };
+        let result = unsafe { libc::statvfs(bytes.as_ptr() as *const libc::c_char, &mut data) };
+        return match result {
+            0 => Ok(data.f_bfree as u64 * data.f_bsize as u64),
+            _ => Err(io::Error::last_os_error()),
+        };
+    }
+    Err(io::Error::new(io::ErrorKind::Other, "not implemented"))
+}
