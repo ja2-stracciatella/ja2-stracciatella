@@ -48,8 +48,6 @@ enum FileAttributes
 ENUM_BITSET(FileAttributes)
 
 FileAttributes FileGetAttributes(const char* filename);
-BOOLEAN FileClearAttributes(const char* filename);
-BOOLEAN FileClearAttributes(const std::string &filename);
 
 /* Pass in the Fileman file handle of an OPEN file and it will return..
  * - if its a Real File, the return will be the handle of the REAL file

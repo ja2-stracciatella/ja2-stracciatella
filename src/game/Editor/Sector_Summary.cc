@@ -1981,7 +1981,12 @@ static void SummarySaveMapCallback(GUI_BUTTON* btn, INT32 reason)
 		{
 			if( gubOverrideStatus == READONLY )
 			{
-				FileClearAttributes(GCM->getMapPath(gszDisplayName));
+				std::string path = GCM->getMapPath(gszDisplayName);
+				if (!Fs_setReadOnly(path.c_str(), false))
+				{
+					RustPointer<char> msg(getRustError());
+					SLOGW("%s", msg.get());
+				}
 			}
 			if(	ExternalSaveMap( gszDisplayName ) )
 			{

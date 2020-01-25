@@ -416,20 +416,6 @@ FileAttributes FileGetAttributes(const char* const filename)
 }
 
 
-BOOLEAN FileClearAttributes(const std::string &filename)
-{
-	return FileClearAttributes(filename.c_str());
-}
-
-BOOLEAN FileClearAttributes(const char* const filename)
-{
-	using namespace boost::filesystem;
-
-	permissions(filename, ( add_perms | owner_read | owner_write | group_read | group_write ));
-	return true;
-}
-
-
 FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
 {
 	return f->flags & SGPFILE_REAL ? f->u.file : nullptr;
