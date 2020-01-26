@@ -31,3 +31,16 @@ pub extern "C" fn Path_filename(path: *const c_char) -> *mut c_char {
         ptr::null_mut()
     }
 }
+
+/// Gets the parent path of the path.
+/// Returns null if there is no parent path.
+#[no_mangle]
+pub extern "C" fn Path_parent(path: *const c_char) -> *mut c_char {
+    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    if let Some(parent) = path.parent() {
+        let c_parent = c_string_from_path_or_panic(parent);
+        c_parent.into_raw()
+    } else {
+        ptr::null_mut()
+    }
+}
