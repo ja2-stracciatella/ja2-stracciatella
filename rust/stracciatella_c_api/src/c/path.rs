@@ -32,6 +32,13 @@ pub extern "C" fn Path_filename(path: *const c_char) -> *mut c_char {
     }
 }
 
+/// Checks if the path is absolute.
+#[no_mangle]
+pub extern "C" fn Path_isAbsolute(path: *const c_char) -> bool {
+    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    path.is_absolute()
+}
+
 /// Gets the parent path of the path.
 /// Returns null if there is no parent path.
 #[no_mangle]
