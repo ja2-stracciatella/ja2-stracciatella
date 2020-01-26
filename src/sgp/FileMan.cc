@@ -711,12 +711,29 @@ FindAllFilesInDir(const std::string &dirPath, bool sortResults)
 	return paths;
 }
 
-/** Replace extension of a file. */
-std::string FileMan::replaceExtension(const std::string &_path, const char *newExtensionWithDot)
+std::string FileMan::replaceExtension(const std::string &path, const char *newExtensionWithDot)
 {
-	boost::filesystem::path path(_path);
-	boost::filesystem::path foo = boost::filesystem::path(newExtensionWithDot);
-	return path.replace_extension(newExtensionWithDot).string();
+	// TODO switch to rust path extensions (treats the dot in a different way)
+	std::string filename = getFileName(path);
+	size_t n = filename.length();
+
+	if (filename != "." && filename != "..")
+	{
+		size_t dot = filename.find_last_of('.');
+		if (dot != std::string::npos)
+		{
+			filename.erase(dot);
+		}
+	}
+	if (newExtensionWithDot[0] != '\0' && newExtensionWithDot[0] != '.')
+	{
+		filename.push_back('.');
+	}
+	filename += newExtensionWithDot;
+
+	std::string newPath = path.substr(0, path.length() - n);
+	newPath += filename;
+	return newPath;
 }
 
 /** Get parent path (e.g. directory path from the full path). */
