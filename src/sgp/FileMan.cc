@@ -736,16 +736,25 @@ std::string FileMan::replaceExtension(const std::string &path, const char *newEx
 	return newPath;
 }
 
-/** Get parent path (e.g. directory path from the full path). */
-std::string FileMan::getParentPath(const std::string &_path, bool absolute)
+std::string FileMan::getParentPath(const std::string &path, bool absolute)
 {
-	boost::filesystem::path path(_path);
-	boost::filesystem::path parent = path.parent_path();
-	if(absolute)
+	RustPointer<char> parent(Path_parent(path.c_str()));
+	if (!parent)
 	{
-		parent = boost::filesystem::absolute(parent);
+		return std::string();
 	}
-	return parent.string();
+	if (absolute && !Path_isAbsolute(path.c_str()))
+	{
+		RustPointer<char> dir(Env_currentDir());
+		if (!dir)
+		{
+			RustPointer<char> msg(getRustError());
+			SLOGW("%s", msg.get());
+			throw new std::runtime_error("expected the current directory");
+		}
+		return joinPaths(dir.get(), parent.get());
+	}
+	return parent.get();
 }
 
 /** Get filename from the path. */
