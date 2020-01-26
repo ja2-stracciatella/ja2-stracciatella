@@ -1,8 +1,6 @@
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
 
-#include "boost/filesystem.hpp"
-
 #include "sgp/FileMan.h"
 
 #include "DefaultContentManager.h"

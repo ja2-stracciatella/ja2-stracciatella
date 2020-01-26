@@ -10,8 +10,6 @@
 #include "MemMan.h"
 #include "PODObj.h"
 
-#include "boost/filesystem.hpp"
-
 #include "Logger.h"
 
 #if _WIN32

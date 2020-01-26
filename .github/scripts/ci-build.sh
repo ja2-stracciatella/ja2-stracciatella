@@ -55,8 +55,7 @@ export RUSTUP_INIT_ARGS="-y --no-modify-path --default-toolchain=$(cat ./rust-to
 if [[ "$CI_TARGET" == "linux" ]]; then
   sudo apt update
   sudo apt install build-essential libsdl2-dev libfltk1.3-dev
-  # FIXME tests fail with the boost in ubuntu-16.04 (libboost-filesystem-dev libboost-system-dev)
-  export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON -DCPACK_GENERATOR=DEB"
+  export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB"
 elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
   # cross compiling
   sudo apt update
@@ -68,7 +67,7 @@ elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
   # FIXME upgrades disabled until there is a fix for https://github.com/msys2/MSYS2-packages/issues/1141
   #pacman -Syu --noconfirm --needed # assumes the runtime has already been updated
   pacman -S --noconfirm --needed base-devel unzip
-  pacman -S --noconfirm --needed mingw-w64-i686-toolchain mingw-w64-i686-cmake mingw-w64-i686-SDL2 mingw-w64-i686-boost mingw-w64-i686-fltk
+  pacman -S --noconfirm --needed mingw-w64-i686-toolchain mingw-w64-i686-cmake mingw-w64-i686-SDL2 mingw-w64-i686-fltk
   export CMAKE_GENERATOR="MSYS Makefiles"
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCPACK_GENERATOR=ZIP"
   export RUSTUP_HOME="$(cygpath -w ~/.rustup)"

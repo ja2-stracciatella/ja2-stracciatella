@@ -1,8 +1,6 @@
 #include "gtest/gtest.h"
 
 #include "FileMan.h"
-#include "boost/filesystem.hpp"
-#include "boost/filesystem/fstream.hpp"
 
 #include "externalized/TestUtils.h"
 
