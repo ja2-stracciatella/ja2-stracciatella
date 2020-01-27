@@ -2833,6 +2833,8 @@ void Blt8BPPDataTo16BPPBufferTransparent(UINT16* const buf, UINT32 const uiDestP
 	UINT16 const* const pal       = hSrcVObject->CurrentShade();
 	UINT32              line_skip = pitch - width;
 
+	if (src == 0) return; //hack: bugfix: bypass hSrcVObject->PixData(e) == 0;
+
 	for (;;)
 	{
 		UINT8 data = *src++;
