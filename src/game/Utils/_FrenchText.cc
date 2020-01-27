@@ -726,7 +726,7 @@ static const wchar_t *s_fr_gpStrategicString[gpStrategicString_SIZE] =
 	//These are the labels for the different types of enemies we fight in autoresolve.
 
 	L"Mort",							//STR_AR_MILITIA_NAME,
-	L"Mort",								//STR_AR_ELITE_NAME,
+	L"Élite",								//STR_AR_ELITE_NAME,
 	L"Mort",								//STR_AR_TROOP_NAME,
 	L"Admin",								//STR_AR_ADMINISTRATOR_NAME,
 	L"Créature",								//STR_AR_CREATURE_NAME,

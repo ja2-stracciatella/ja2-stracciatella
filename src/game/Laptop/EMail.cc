@@ -27,6 +27,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "Soldier_Control.h"
 
 #define MAX_MESSAGES_PAGE 18 // max number of messages per page
 
@@ -1885,7 +1886,7 @@ static void AddIMPResultText(UINT32 Offset)
 
 static void AddSkillTraitText(MERCPROFILESTRUCT const& imp, SkillTrait const Skill, UINT32 const Offset)
 {
-	if (HasSkillTrait(imp, Skill)) AddIMPResultText(Offset);
+	if (HAS_SKILL_TRAIT(&imp, Skill)) AddIMPResultText(Offset);
 }
 
 
