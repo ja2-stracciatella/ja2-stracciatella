@@ -2966,7 +2966,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 				{
 					gMercProfiles[assister->ubProfile].usAssists++;
 				}
-				else if (assister->bTeam == MILITIA_TEAM)
+				else if (assister->bTeam == MILITIA_TEAM || assister->ubWhatKindOfMercAmI == MERC_TYPE__MILITA)
 				{
 					// get an assist - 1 points
 					assister->ubMilitiaKills += 1;

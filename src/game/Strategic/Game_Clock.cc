@@ -31,6 +31,9 @@
 #include "FileMan.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 //#define DEBUG_GAME_CLOCK
 

@@ -201,7 +201,7 @@ SOLDIERTYPE* FindSoldierByProfileIDOnPlayerTeam(ProfileID);
 BOOLEAN RecruitRPC( UINT8 ubCharNum );
 
 BOOLEAN RecruitEPC( UINT8 ubCharNum );
-BOOLEAN UnRecruitEPC(ProfileID);
+BOOLEAN UnRecruitEPC(ProfileID const pid);
 
 INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy );
 INT8 WhichHated( UINT8 ubCharNum, UINT8 ubHated );
@@ -227,5 +227,11 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier );
 BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 
 UINT32 SoldierCombatRating(SOLDIERTYPE* const pSoldier, bool normalize);
+
+SOLDIERTYPE* SoldierFindByTeamSideBestMarksmanship(UINT8 bTeam, UINT8 bSide);
+SOLDIERTYPE* SoldierFindBestCombatRatingInLoadedSectorByTeamSide(UINT8 bTeam, UINT8 bSide);
+#define mercprofileID_militia1 NPC165
+SOLDIERTYPE* const RecruitMilitaSoldier( SOLDIERTYPE* const pSoldier, ProfileID const pid );
+void UnRecruitMilitiaSoldier(ProfileID const pid);
 
 #endif
