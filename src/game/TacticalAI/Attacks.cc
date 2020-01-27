@@ -907,7 +907,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				}
 
 				// calculate the maximum possible aiming time
-				ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
+				ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK, pSoldier->bActionPoints - ubMinAPcost);
 
 				// calc next attack's minimum AP cost (excludes readying & turning)
 
@@ -941,14 +941,20 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 					}
 				}
 
-				iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / (ubRawAPCost + ubMaxPossibleAimTime);
-
 				// calculate chance to REALLY hit: throw accurately AND get past cover
 				ubChanceToReallyHit = (ubChanceToHit * ubChanceToGetThrough) / 100;
 
 				// if we can't REALLY hit at all
 				if (ubChanceToReallyHit == 0)
 					continue;              // next gridno
+				
+				INT32 iMaxTotalAPCost = (ubRawAPCost + ubMaxPossibleAimTime);
+
+				// hack: bypass:  divide-by-zero
+				if (iMaxTotalAPCost == 0)
+					iMaxTotalAPCost = 1;
+
+				iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / iMaxTotalAPCost;
 
 				// calculate the combined "attack value" for this opponent
 				// maximum possible attack value here should be about 140 million
