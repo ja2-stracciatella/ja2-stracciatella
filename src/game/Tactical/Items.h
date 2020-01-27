@@ -148,7 +148,7 @@ UINT16 FindReplacementMagazineIfNecessary(const WeaponModel *old_gun, UINT16 con
 
 BOOLEAN DamageItemOnGround(OBJECTTYPE* pObject, INT16 sGridNo, INT8 bLevel, INT32 iDamage, SOLDIERTYPE* owner);
 
-BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs );
+BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs, BOOLEAN in_combat );
 BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs );
 
 BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 );
@@ -177,5 +177,11 @@ bool HasObjectImprint(OBJECTTYPE const&);
 
 // Fill the vector with all hardcoded item models.
 void createAllHardcodedItemModels(std::vector<const ItemModel*> &items);
+
+void ItemFromStackRemoveTop(OBJECTTYPE* const object, OBJECTTYPE* const newobject);
+void ItemFromStackRemoveBest(OBJECTTYPE* const object, OBJECTTYPE* const newobject);
+void ItemFromStackRemoveWorst(OBJECTTYPE* const object, OBJECTTYPE* const newobject);
+bool ItemRemoveAttachment(OBJECTTYPE* const object, OBJECTTYPE* const newobject, UINT16 const usItem);
+bool ItemAttach(OBJECTTYPE* const object, OBJECTTYPE* const attachment);
 
 #endif

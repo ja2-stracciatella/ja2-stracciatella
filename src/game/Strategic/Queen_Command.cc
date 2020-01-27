@@ -520,6 +520,7 @@ void PrepareEnemyForSectorBattle()
 	if (total_admins == 0 && total_troops == 0 && total_elites == 0) return;
 
 	AddSoldierInitListEnemyDefenceSoldiers(total_admins, total_troops, total_elites);
+	EnemyExtraEquipFromSectorInventory();
 
 	/* Now, we have to go through all of the enemies in the new map and assign
 	 * their respective groups if in a mobile group, but only for the ones that
@@ -589,6 +590,7 @@ static void PrepareEnemyForUndergroundBattle()
 	u->ubTroopsInBattle += ubTotalTroops;
 	u->ubElitesInBattle += ubTotalElites;
 	AddSoldierInitListEnemyDefenceSoldiers(u->ubNumAdmins, u->ubNumTroops, u->ubNumElites);
+	EnemyExtraEquipFromSectorInventory();
 }
 
 
