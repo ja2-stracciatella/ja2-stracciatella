@@ -72,6 +72,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #include <algorithm>
 #include <iterator>
@@ -785,7 +786,7 @@ static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 	return true;
 
 cannot_sleep:
-	if (explain_why_not)
+	if (explain_why_not && !gamepolicy(skip_sleep_explanation))
 	{
 		wchar_t buf[128];
 		swprintf(buf, lengthof(buf), why, s.name);

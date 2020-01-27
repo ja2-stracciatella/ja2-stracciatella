@@ -33,6 +33,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	enemy_elite_minimum_level = (*json)["enemy_elite_minimum_level"].GetInt();
 	enemy_elite_maximum_level = (*json)["enemy_elite_maximum_level"].GetInt();
 
+	skip_sleep_explanation    = (*json)["skip_sleep_explanation"].GetBool();
+
 	militia_control           = (*json)["take_control_of_militia"].GetBool();
 	militiamerc_salary        = (*json)["controlled_militia_salary"].GetInt();
 
