@@ -177,6 +177,15 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 		}
 	}
 
+	INT16 maxREFINE_AIM = REFINE_AIM_5;
+	maxREFINE_AIM += 2 * (AP_MAX_AIM_SCOPE_EXTRA) * UniqueAttachmentStatusGet(&(s->inv[HANDPOS]), SNIPERSCOPE) / 100;
+
+	if( gAnimControl[ s->usAnimState ].ubEndHeight == ANIM_PRONE )
+	{
+		maxREFINE_AIM += (2 * (AP_MAX_AIM_BIPOD_EXTRA) * UniqueAttachmentStatusGet(&(s->inv[HANDPOS]), BIPOD)) / 100;
+		maxREFINE_AIM += (2 * (AP_MAX_AIM_BIPOD_SCOPE_COMBINED_EXTRA) * (UniqueAttachmentStatusGet(&(s->inv[HANDPOS]), BIPOD) * UniqueAttachmentStatusGet(&(s->inv[HANDPOS]), SNIPERSCOPE))) / 10000;
+	}
+
 	// Determine where we are shooting/aiming
 	DetermineCursorBodyLocation(s, TRUE, TRUE);
 
@@ -197,7 +206,7 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 		else
 		{
 			UINT8 const future_aim = s->bShownAimTime + 2;
-			if (future_aim <= REFINE_AIM_5)
+			if (future_aim <= maxREFINE_AIM)
 			{
 				INT16 const AP_costs = MinAPsToAttack(s, map_pos, TRUE) + future_aim / 2;
 				if (!EnoughPoints(s, AP_costs, 0, FALSE))
@@ -219,9 +228,9 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 		else
 		{
 			++s->bShownAimTime;
-			if (s->bShownAimTime > REFINE_AIM_5)
+			if (s->bShownAimTime > maxREFINE_AIM)
 			{
-				s->bShownAimTime = REFINE_AIM_5;
+				s->bShownAimTime = maxREFINE_AIM;
 			}
 			else if (s->bShownAimTime % 2 != 0)
 			{
@@ -335,6 +344,10 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			case REFINE_AIM_MID2: cursor = ACTION_TARGETAIM4_UICURSOR; break;
 			case REFINE_AIM_MID3: cursor = ACTION_TARGETAIM6_UICURSOR; break;
 			case REFINE_AIM_MID4: cursor = ACTION_TARGETAIM8_UICURSOR; break;
+
+			default: 
+				// for extended aim - bypassed in "accurate aim circle mod"
+				cursor = gfDisplayFullCountRing ? ACTION_TARGETAIMFULL_UICURSOR : enough_points ? ACTION_TARGETAIM9_UICURSOR : ACTION_TARGETAIMCANT5_UICURSOR; break;
 		}
 	}
 
@@ -1006,7 +1019,16 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 				bFutureAim = (INT8)( pSoldier->bShownAimTime + 2 );
 
-				if ( bFutureAim <= REFINE_AIM_5 )
+				INT16 maxREFINE_AIM = REFINE_AIM_5;
+				maxREFINE_AIM += (2 * (AP_MAX_AIM_SCOPE_EXTRA) * UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), SNIPERSCOPE)) / 100;
+
+				if( gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE )
+				{
+					maxREFINE_AIM += (2 * (AP_MAX_AIM_BIPOD_EXTRA) * UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), BIPOD)) / 100;
+					maxREFINE_AIM += (2 * (AP_MAX_AIM_BIPOD_SCOPE_COMBINED_EXTRA) * (UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), BIPOD) * UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), SNIPERSCOPE)) / 10000);
+				}
+
+				if ( bFutureAim <= maxREFINE_AIM )
 				{
 					sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(bFutureAim / 2) );
 
@@ -1014,9 +1036,9 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 					if ( EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) )
 					{
 						pSoldier->bShownAimTime+= 2;
-						if ( pSoldier->bShownAimTime > REFINE_AIM_5 )
+						if ( pSoldier->bShownAimTime > maxREFINE_AIM )
 						{
-							pSoldier->bShownAimTime = REFINE_AIM_5;
+							pSoldier->bShownAimTime = maxREFINE_AIM;
 						}
 					}
 					// Else - goto first level!

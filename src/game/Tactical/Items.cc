@@ -958,6 +958,22 @@ INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem)
 	return( ITEM_NOT_FOUND );
 }
 
+INT8 UniqueAttachmentStatusGet(const OBJECTTYPE* pObj, UINT16 usItem)
+{
+	INT8 bLoop;
+	INT8 bAttachStatus = 0;
+
+	for (bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
+	{
+		if (pObj->usAttachItem[bLoop] == usItem)
+		{
+			bAttachStatus = pObj->bAttachStatus[bLoop];
+			break;
+		}
+	}
+
+	return bAttachStatus;
+}
 
 INT8 FindAttachmentByClass(OBJECTTYPE const* const pObj, UINT32 const uiItemClass)
 {
