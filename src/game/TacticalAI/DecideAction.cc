@@ -1624,6 +1624,13 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	// WHEN IN THE LIGHT, GET OUT OF THERE!
 	////////////////////////////////////////////////////////////////////////////
 	bool in_light_at_night = InLightAtNight( pSoldier->sGridNo, pSoldier->bLevel );
+
+	if(gbWorldSectorZ == 0)
+	{
+		SECTORINFO const* const pSector = &SectorInfo[ (gWorldSectorY - 1) * 16 + gWorldSectorX - 1 ];
+		in_light_at_night = !(((pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites) == 0) && (pSector->ubNumCreatures != 0));
+	}
+
 	if ( ubCanMove && in_light_at_night && pSoldier->bOrders != STATIONARY )
 	{
 		pSoldier->usActionData = FindNearbyDarkerSpot( pSoldier );
