@@ -7,6 +7,10 @@
 #include "StrategicMap.h"
 #include "PreBattle_Interface.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
+
 
 BOOLEAN gfStrategicMilitiaChangesMade = FALSE;
 
@@ -18,6 +22,7 @@ void ResetMilitia()
 {
 	if( gfStrategicMilitiaChangesMade || gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 	{
+		if gamepolicy(militia_use_sector_inventory) TeamDropAll(MILITIA_TEAM, OUR_TEAM);
 		gfStrategicMilitiaChangesMade = FALSE;
 		RemoveMilitiaFromTactical();
 		PrepareMilitiaForTactical();
@@ -54,6 +59,7 @@ void PrepareMilitiaForTactical()
 	ubRegs = pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ];
 	ubElites = pSector->ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
 	AddSoldierInitListMilitia( ubGreen, ubRegs, ubElites );
+	MilitiaEquipFromLoadedSectorInventory(true);
 }
 
 
@@ -64,9 +70,10 @@ void HandleMilitiaPromotions()
 	gbRegToElitePromotions   = 0;
 	gbMilitiaPromotions      = 0;
 
-	FOR_EACH_IN_TEAM(i, MILITIA_TEAM)
+	FOR_EACH_SOLDIER(i)
 	{
 		SOLDIERTYPE& s = *i;
+		if (s.bTeam != MILITIA_TEAM && s.ubWhatKindOfMercAmI != MERC_TYPE__MILITA) continue;
 		if (!s.bInSector)          continue;
 		if (s.bLife <= 0)          continue;
 		if (s.ubMilitiaKills == 0) continue;

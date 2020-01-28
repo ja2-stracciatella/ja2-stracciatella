@@ -81,8 +81,13 @@
 #define SOLDIER_TRAIT_MARTIALARTS			0x0800
 #define SOLDIER_TRAIT_KNIFING				0x1000
 */
-#define HAS_SKILL_TRAIT(s, t)				((s)->ubSkillTrait1 == (t) || (s)->ubSkillTrait2 == (t))
-#define NUM_SKILL_TRAITS(s, t)				(((s)->ubSkillTrait1 == (t)) + ((s)->ubSkillTrait2 == (t)))
+
+bool MercGetsAllTraits(MERCPROFILESTRUCT const* const s);
+bool SoldierGetsAllTraits(SOLDIERTYPE const* const s);
+BOOLEAN HAS_SKILL_TRAIT(SOLDIERTYPE const* const s, INT32 const trait);
+UINT8 NUM_SKILL_TRAITS(SOLDIERTYPE const* const s, INT32 const trait);
+BOOLEAN HAS_SKILL_TRAIT(MERCPROFILESTRUCT const* const s, INT32 const trait);
+UINT8 NUM_SKILL_TRAITS(MERCPROFILESTRUCT const* const s, INT32 const trait);
 
 #define SOLDIER_QUOTE_SAID_IN_SHIT			0x0001
 #define SOLDIER_QUOTE_SAID_LOW_BREATH			0x0002
@@ -117,6 +122,7 @@
 
 
 #define SOLDIER_MISC_HEARD_GUNSHOT			0x01
+
 // make sure soldiers (esp tanks) are not hurt multiple times by explosions
 #define SOLDIER_MISC_HURT_BY_EXPLOSION			0x02
 // should be revealed due to xrays
@@ -203,6 +209,7 @@ enum
 	MERC_TYPE__EPC,
 	MERC_TYPE__NPC_WITH_UNEXTENDABLE_CONTRACT,
 	MERC_TYPE__VEHICLE,
+	MERC_TYPE__MILITA, // * Militia control mod, maybe unused
 };
 
 // I don't care if this isn't intuitive!  The hand positions go right
@@ -808,7 +815,7 @@ struct SOLDIERTYPE
 #define CFOR_EACH_SOLDIER_INV_SLOT(iter, soldier) \
 	BASE_FOR_EACH_SOLDIER_INV_SLOT(OBJECTTYPE const, iter, soldier)
 
-#define HEALTH_INCREASE				0x0001
+#define HEALTH_INCREASE					0x0001
 #define STRENGTH_INCREASE				0x0002
 #define DEX_INCREASE					0x0004
 #define AGIL_INCREASE					0x0008
@@ -1055,5 +1062,30 @@ static inline bool IsWearingHeadGear(SOLDIERTYPE const& s, UINT16 const item)
 {
 	return s.inv[HEAD1POS].usItem == item || s.inv[HEAD2POS].usItem == item;
 }
+
+static inline bool IsNotWearingThisHeadGear(SOLDIERTYPE const& s, UINT16 const item)
+{
+	return s.inv[HEAD1POS].usItem != item && s.inv[HEAD2POS].usItem != item;
+}
+
+static inline bool IsNotWearingAnyFaceGear(SOLDIERTYPE const& s)
+{
+	return IsNotWearingThisHeadGear(s, NIGHTGOGGLES) && IsNotWearingThisHeadGear(s, UVGOGGLES) && IsNotWearingThisHeadGear(s, SUNGOGGLES) && IsNotWearingThisHeadGear(s, GASMASK);
+}
+
+bool hasVehicleInventory(SOLDIERTYPE const* const s);
+void SoldierDropFromSlot(SOLDIERTYPE* const pSoldier, UINT8 const slot, bool const stack, bool const cleanup);
+void SoldierDropAll(SOLDIERTYPE* const pSoldier, bool const cleanup);
+void SoldierDropAllWithAnimation(SOLDIERTYPE* const pSoldier, bool const cleanup);
+void EnemyExtraEquipFromSectorInventory();
+void MilitiaEquipFromLoadedSectorInventory(bool const wipe);
+void TeamEquipAll(UINT8 bTeam, UINT8 bSide, bool const full_access);
+void TeamDropAll(UINT8 bTeam, UINT8 bSide);
+void SoldierWipeInventory(SOLDIERTYPE* pSoldier);
+void TeamWipeInventory(UINT8 bTeam, UINT8 bSide);
+void SoldierEquipFromLoadedSector(SOLDIERTYPE* const pSoldier, bool const full_access);
+bool SoldierFindFirstItemAttemptAutoPlace(SOLDIERTYPE* const pSoldier, UINT16 const usItem);
+bool SoldierAutoSwitchGoggles(SOLDIERTYPE* const pSoldier);
+bool SoldierItemAutoAttachPlace(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const object, bool const stack, bool fNewItem);
 
 #endif

@@ -55,6 +55,9 @@
 #include "VSurface.h"
 #include "UILayout.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 extern BOOLEAN gfDelayAutoResolveStart;
 
@@ -1498,7 +1501,7 @@ void HandlePreBattleInterfaceStates()
 	else if( gfDelayAutoResolveStart && gfPreBattleInterfaceActive )
 	{
 		gfDelayAutoResolveStart = FALSE;
-		gfAutomaticallyStartAutoResolve = TRUE;
+		if (! gamepolicy(militia_control)) gfAutomaticallyStartAutoResolve = TRUE;
 	}
 	else if( gfAutomaticallyStartAutoResolve )
 	{

@@ -57,12 +57,12 @@
 #define BASIC_DEPRECIATE_CHANCE	15
 
 #define NORMAL_RANGE		90 // # world units considered an 'avg' shot
-#define MIN_SCOPE_RANGE	60 // # world units after which scope's useful
+#define MIN_SCOPE_RANGE		60 // # world units after which scope's useful
 
 #define MIN_TANK_RANGE		120 // range at which tank starts really having trouble aiming
 
 // percent reduction in sight range per point of aiming
-#define SNIPERSCOPE_AIM_BONUS	20
+#define SNIPERSCOPE_AIM_BONUS	gamepolicy(aim_bonus_sniperscope)
 // bonus to hit with working laser scope
 #define LASERSCOPE_BONUS	20
 
@@ -178,13 +178,14 @@ UINT16 GunRange(OBJECTTYPE const& o)
 	// return a minimal value of 1 tile
 	if (!(GCM->getItem(o.usItem)->isWeapon())) return CELL_X_SIZE;
 
-	INT8   const attach_pos = FindAttachment(&o, GUN_BARREL_EXTENDER);
-	UINT16       range      = GCM->getWeapon(o.usItem)->usRange;
-	if (attach_pos != ITEM_NOT_FOUND)
-	{
-		range += GUN_BARREL_RANGE_BONUS * WEAPON_STATUS_MOD(o.bAttachStatus[attach_pos]) / 100;
-	}
-	return range;
+	int       range      = GCM->getWeapon(o.usItem)->usRange;
+	range += GUN_BARREL_RANGE_BONUS * UniqueAttachmentStatusGet(&o, GUN_BARREL_EXTENDER) / 100;
+
+	range += SILENCER_RANGE_BONUS * UniqueAttachmentStatusGet(&o, SILENCER) / 100;
+
+	if(range < 0) range = CELL_X_SIZE; // minimal value
+
+	return (UINT16)range;
 }
 
 
@@ -705,7 +706,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	UINT16  usItemNum;
 	BOOLEAN fBuckshot;
 	UINT8   ubVolume;
-	INT8    bSilencerPos;
 	char    zBurstString[50];
 	UINT8   ubDirection;
 	INT16   sNewGridNo;
@@ -797,7 +797,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	}
 	else
 	{
-		uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, pSoldier->bAimTime, pSoldier->bAimShotLocation );
+		uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, pSoldier->bAimTime, pSoldier->bAimShotLocation, true );
 	}
 
 	//ATE: Added if we are in meanwhile, we always hit...
@@ -996,12 +996,10 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	else
 	{
 		// if the weapon has a silencer attached
-		bSilencerPos = FindAttachment( &(pSoldier->inv[HANDPOS]), SILENCER );
-		if (bSilencerPos != -1)
-		{
-			// reduce volume by a percentage equal to silencer's work %age (min 1)
-			ubVolume = 1 + ((100 - WEAPON_STATUS_MOD(pSoldier->inv[HANDPOS].bAttachStatus[bSilencerPos])) / (100 / (ubVolume - 1)));
-		}
+		// reduce volume by a percentage equal to silencer's work %age (min 1)
+		UINT8 const bAttachStatus = UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), SILENCER);
+		if (bAttachStatus > 0)
+			ubVolume = 1 + ((100 - bAttachStatus) / (100 / (ubVolume - 1)));
 	}
 
 	MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, ubVolume, NOISE_GUNFIRE);
@@ -1104,9 +1102,9 @@ static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 			}
 
 			// any successful hit does at LEAST 1 pt minimum damage
-			if (iImpact < 1)
+			if (iImpact < gamepolicy(damage_minimum))
 			{
-				iImpact = 1;
+				iImpact = gamepolicy(damage_minimum);
 			}
 
 			if ( pSoldier->inv[ pSoldier->ubAttackingHand ].bStatus[ 0 ] > USABLE )
@@ -2071,7 +2069,7 @@ BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	return( FALSE );
 }
 
-UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
+UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos, BOOLEAN fModify )
 {
 	INT32 iChance, iRange, iSightRange, iMaxRange, iScopeBonus, iBonus; //, minRange;
 	INT32 iGunCondition, iMarksmanship;
@@ -2164,12 +2162,10 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 			{
 				iBonus = AIM_BONUS_PRONE;
 			}
-			bAttachPos = FindAttachment( pInHand, BIPOD );
-			if (bAttachPos != ITEM_NOT_FOUND)
-			{
-				// extra bonus to hit for a bipod, up to half the prone bonus itself
-				iBonus += (iBonus * WEAPON_STATUS_MOD(pInHand->bAttachStatus[bAttachPos]) / 100) / 2;
-			}
+
+			// extra bonus to hit for a bipod, up to half the prone bonus itself
+			iBonus += (iBonus * UniqueAttachmentStatusGet(pInHand, BIPOD) / 100) / 2;
+
 			iChance += iBonus;
 		}
 	}
@@ -2259,7 +2255,15 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 
 	// if shooter spent some extra time aiming and can see the target
 	if (iSightRange > 0 && ubAimTime && !pSoldier->bDoBurst)
-		iChance += (AIM_BONUS_PER_AP * ubAimTime); // bonus for every pt of aiming
+	{
+		if(ubAimTime > 4)
+		{
+			iChance += (AIM_BONUS_PER_AP * 4); // bonus for every pt of std aiming
+			iChance += (AIM_BONUS_PER_AP_EXTRA * (ubAimTime - 4)); // bonus for every extra pt of aiming
+		}
+		else
+			iChance += (AIM_BONUS_PER_AP * ubAimTime); // bonus for every pt of aiming
+	}
 
 	if ( !(pSoldier->uiStatusFlags & SOLDIER_PC ) ) // if this is a computer AI controlled enemy
 	{
@@ -2294,7 +2298,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	if ( GCM->getItem(usInHand)->getItemClass() == IC_GUN )
 	{
 		bAttachPos = FindAttachment( pInHand, GUN_BARREL_EXTENDER );
-		if ( bAttachPos != ITEM_NOT_FOUND )
+		if ( bAttachPos != ITEM_NOT_FOUND && fModify)
 		{
 			// reduce status and see if it falls off
 			pInHand->bAttachStatus[ bAttachPos ] -= (INT8) Random( 2 );
@@ -2654,7 +2658,7 @@ UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTi
 	// same as CCTHG but fakes the attacker always standing
 	usTrueState = pSoldier->usAnimState;
 	pSoldier->usAnimState = STANDING;
-	uiChance = CalcChanceToHitGun( pSoldier, sGridNo, ubAimTime, ubAimPos );
+	uiChance = CalcChanceToHitGun( pSoldier, sGridNo, ubAimTime, ubAimPos, false );
 	pSoldier->usAnimState = usTrueState;
 	return( uiChance );
 }
@@ -3365,7 +3369,13 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 	{
 		// use only HALF of the normal aiming bonus for knife aiming.
 		// since there's no range penalty, the bonus is otherwise too generous
-		iAttRating += ((AIM_BONUS_PER_AP * ubAimTime) / 2);    //bonus for aiming
+		if(ubAimTime > 4)
+		{
+			iAttRating += ((AIM_BONUS_PER_AP * 4) / 2);    //bonus for aiming
+			iAttRating += ((AIM_BONUS_PER_AP_EXTRA * (ubAimTime - 4) / 2));    //bonus for extra aiming
+		}
+		else
+			iAttRating += ((AIM_BONUS_PER_AP * ubAimTime) / 2);    //bonus for aiming
 	}
 
 	if (! (pAttacker->uiStatusFlags & SOLDIER_PC) )   // if attacker is a computer AI controlled enemy
@@ -3408,7 +3418,15 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 		else
 		{
 			// add bonuses for hand-to-hand and martial arts
-			iAttRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pAttacker, MARTIALARTS);
+			if(SoldierGetsAllTraits(pAttacker))
+			{
+				iAttRating += gbSkillTraitBonus[MARTIALARTS] * 2;
+			}
+			else
+			{
+				iAttRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pAttacker, MARTIALARTS);
+			}
+
 			iAttRating += gbSkillTraitBonus[HANDTOHAND]  * NUM_SKILL_TRAITS(pAttacker, HANDTOHAND);
 		}
 	}
@@ -3512,14 +3530,28 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 				// good with knives, got one, so we're good at parrying
 				iDefRating += gbSkillTraitBonus[KNIFING] * NUM_SKILL_TRAITS(pDefender, KNIFING);
 				// the knife gets in the way but we're still better than nobody
-				iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS) / 3;
+				if(SoldierGetsAllTraits(pDefender))
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS] * 2 / 3;
+				}
+				else
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS) / 3;
+				}
 			}
 			else
 			{
 				// good with knives, don't have one, but we know a bit about dodging
 				iDefRating += gbSkillTraitBonus[KNIFING]     * NUM_SKILL_TRAITS(pDefender, KNIFING)     / 3;
 				// bonus for dodging knives
-				iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS) / 2;
+				if(SoldierGetsAllTraits(pDefender))
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS];
+				}
+				else
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS) / 2;
+				}
 			}
 		}
 		else
@@ -3531,7 +3563,15 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 			}
 			else
 			{
-				iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS);
+				if(SoldierGetsAllTraits(pDefender))
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS] * 2;
+				}
+				else
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS);
+				}
+
 				iDefRating += gbSkillTraitBonus[HANDTOHAND]  * NUM_SKILL_TRAITS(pDefender, HANDTOHAND);
 			}
 		}
@@ -3719,7 +3759,13 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	// ADJUST FOR EXTRA AIMING TIME
 	if (ubAimTime)
 	{
-		iChance += (AIM_BONUS_PER_AP * ubAimTime); // bonus for every pt of aiming
+		if(ubAimTime > 4)
+		{
+			iChance += (AIM_BONUS_PER_AP * 4); // bonus for every pt of std aiming
+			iChance += (AIM_BONUS_PER_AP_EXTRA * (ubAimTime - 4)); // bonus for every extra pt of aiming
+		}
+		else
+			iChance += (AIM_BONUS_PER_AP * ubAimTime); // bonus for every pt of aiming
 	}
 
 	// if shooter is being affected by gas

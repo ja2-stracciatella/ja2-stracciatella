@@ -49,6 +49,7 @@
 #include "ItemModel.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
+#include "policy/GamePolicy.h"
 
 #define ANY_MAGSIZE 255
 
@@ -958,6 +959,22 @@ INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem)
 	return( ITEM_NOT_FOUND );
 }
 
+INT8 UniqueAttachmentStatusGet(const OBJECTTYPE* pObj, UINT16 usItem)
+{
+	INT8 bLoop;
+	INT8 bAttachStatus = 0;
+
+	for (bLoop = 0; bLoop < MAX_ATTACHMENTS; bLoop++)
+	{
+		if (pObj->usAttachItem[bLoop] == usItem)
+		{
+			bAttachStatus = pObj->bAttachStatus[bLoop];
+			break;
+		}
+	}
+
+	return bAttachStatus;
+}
 
 INT8 FindAttachmentByClass(OBJECTTYPE const* const pObj, UINT32 const uiItemClass)
 {
@@ -1952,15 +1969,17 @@ INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExclu
 BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 {
 	OBJECTTYPE *pObj;
-	INT8    bSlot, bAPCost;
+	INT8    bSlot, bAPCost, invpos;
 	BOOLEAN fRet;
 
 	CHECKF( pSoldier );
-	pObj = &(pSoldier->inv[HANDPOS]);
+	invpos = HANDPOS;
+
+	pObj = &(pSoldier->inv[invpos]);
 
 	if (GCM->getItem(pObj->usItem)->getItemClass() == IC_GUN || GCM->getItem(pObj->usItem)->getItemClass() == IC_LAUNCHER)
 	{
-		bSlot = FindAmmoToReload( pSoldier, HANDPOS, NO_SLOT );
+		bSlot = FindAmmoToReload( pSoldier, invpos, NO_SLOT );
 		if (bSlot != NO_SLOT)
 		{
 			// reload using this ammo!
@@ -2267,6 +2286,11 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 	UINT8 ubSlotLimit;
 	INT8  bNewPos;
 
+	if(hasVehicleInventory(pSoldier))
+	{
+		return true;
+	}
+
 	switch( bPos )
 	{
 		case SECONDHANDPOS:
@@ -2402,6 +2426,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		return( FALSE );
 	}
 
+	if(!(hasVehicleInventory(pSoldier)))
+	{
 	// If the position is either head slot, then the item must be IC_FACE (checked in
 	// CanItemFitInPosition).
 	if ( bPos == HEAD1POS )
@@ -2422,10 +2448,37 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 			return( FALSE );
 		}
 	}
+	}
 
 	if (GCM->getItem(pObj->usItem)->getItemClass() == IC_KEY) CollectKey(*pSoldier, *pObj);
 
 	ubSlotLimit = ItemSlotLimit( pObj->usItem, bPos );
+
+	if((hasVehicleInventory(pSoldier)) && GCM->getItem(pObj->usItem)->isStackable())
+	{
+		ubSlotLimit=1;
+		bool no_attachments=true;
+		for(int i=0; i<MAX_ATTACHMENTS; i++)
+		{
+			if(pObj->usAttachItem[i]!=NOTHING)
+			{
+				no_attachments=false;
+				break;
+			}
+		}
+		if(pSoldier->inv[bPos].usItem==pObj->usItem && no_attachments)
+		{
+			for(int i=0; i<MAX_ATTACHMENTS; i++)
+			{
+				if(pSoldier->inv[bPos].usAttachItem[i]!=NOTHING)
+				{
+					no_attachments=false;
+					break;
+				}
+			}
+		}
+		if(no_attachments) ubSlotLimit=MAX_OBJECTS_PER_SLOT;
+	}
 
 	pInSlot = &(pSoldier->inv[bPos]);
 
@@ -2703,6 +2756,28 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 				}
 			}
 			break;
+
+		case IC_AMMO:
+		{
+			INT8 bLoop;
+
+			for (bLoop = HANDPOS; bLoop < NUM_INV_SLOTS; bLoop++)
+			{
+				if(pSoldier->inv[bLoop].usItem != NOTHING && GCM->getItem(pSoldier->inv[bLoop].usItem)->getItemClass() == IC_GUN)
+				{
+					if(pSoldier->inv[bLoop].ubGunShotsLeft != 0)
+						continue;
+
+					ReloadGun(pSoldier, &pSoldier->inv[bLoop], pObj);
+
+					if (pObj->ubNumberOfObjects == 0)
+						return( TRUE );
+
+					continue;
+				}
+			}
+		}
+
 		default:
 			break;
 	}
@@ -3989,7 +4064,7 @@ BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* 
 	return( TRUE );
 }
 
-BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs )
+BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs, BOOLEAN in_combat )
 {
 	INT16  sPointsToUse;
 	UINT16 usTotalKitPoints;
@@ -4031,7 +4106,14 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
 	// CJC Feb 9.  Canteens don't seem effective enough, so doubled return from them
 	DeductPoints( pSoldier, AP_DRINK, (INT16) (2 * sPointsToUse * -(100 - pSoldier->bBreath) ) );
 
-	UseKitPoints(*pObj, sPointsToUse, *pSoldier);
+	if(in_combat || !GCM->getGamePolicy()->ime_refill_canteens)
+	{
+		UseKitPoints(*pObj, sPointsToUse, *pSoldier);
+	}
+	else
+	{
+		pObj->bStatus[0]=100; // Automatic refill in peace time
+	}
 
 	return( TRUE );
 }
@@ -4166,4 +4248,113 @@ bool HasObjectImprint(OBJECTTYPE const& o)
 {
 	return (o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
 		o.ubImprintID != NO_PROFILE;
+}
+
+void ItemFromStackRemoveTop(OBJECTTYPE* const object, OBJECTTYPE* const newobject)
+{
+	if(!object || !newobject) return;
+
+	if(object->ubNumberOfObjects==1)
+	{
+		*newobject=*object;
+		RemoveObjs(object, 1);
+		return;
+	}
+
+	CreateItem(object->usItem, object->bStatus[0], newobject);
+	RemoveObjs(object, 1);
+}
+
+void ItemFromStackRemoveWorst(OBJECTTYPE* const object, OBJECTTYPE* const newobject)
+{
+	if(!object || !newobject) return;
+
+	if(object->ubNumberOfObjects==1)
+	{
+		*newobject=*object;
+		RemoveObjs(object, 1);
+		return;
+	}
+
+	UINT8 index=0;
+	INT8 bStatus=100;
+
+	for(int i = 0; i < object->ubNumberOfObjects; i++)
+	{
+		if(object->bStatus[i] < bStatus)
+		{
+			bStatus=object->bStatus[i];
+			index=i;
+		}
+	}
+
+	CreateItem(object->usItem, bStatus, newobject);
+	RemoveObjFrom(object, index);
+}
+
+void ItemFromStackRemoveBest(OBJECTTYPE* const object, OBJECTTYPE* const newobject)
+{
+	if(!object || !newobject) return;
+
+	if(object->ubNumberOfObjects==1)
+	{
+		*newobject=*object;
+		RemoveObjs(object, 1);
+		return;
+	}
+
+	UINT8 index=0;
+	INT8 bStatus=0;
+
+	for(int i = 0; i < object->ubNumberOfObjects; i++)
+	{
+		if(object->bStatus[i] > bStatus)
+		{
+			bStatus=object->bStatus[i];
+			index=i;
+		}
+	}
+
+	CreateItem(object->usItem, bStatus, newobject);
+	RemoveObjFrom(object, index);
+}
+
+bool ItemRemoveAttachment(OBJECTTYPE* const object, OBJECTTYPE* const newobject, UINT16 const usItem)
+{
+	if(!object || !newobject || usItem == NOTHING) return false;
+
+	for(int i = 0; i < MAX_ATTACHMENTS; i++)
+	{
+		if(object->usAttachItem[i]==usItem)
+		{
+			CreateItem(object->usAttachItem[i], object->bAttachStatus[i], newobject);
+			object->usAttachItem[i]=NOTHING;
+			object->bAttachStatus[i]=0;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool ItemAttach(OBJECTTYPE* const object, OBJECTTYPE* const attachment)
+{
+	if(!object || !attachment) return false;
+
+	if(ValidAttachment(attachment->usItem, object->usItem) && FindAttachment(object, attachment->usItem) == ITEM_NOT_FOUND)
+	{
+		for(int i = 0; i < MAX_ATTACHMENTS; i++)
+		{
+			if(object->usAttachItem[i] == NOTHING)
+			{
+				OBJECTTYPE newattachment;
+				ItemFromStackRemoveBest(attachment, &newattachment);
+				object->usAttachItem[i] = newattachment.usItem;
+				object->bAttachStatus[i] = newattachment.bStatus[0];
+				return true;
+			}
+		}
+	}
+
+	return false;
 }

@@ -28,7 +28,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
-
+#include "policy/GamePolicy.h"
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING
 static UICursorID HandleActivatedTargetCursor(   SOLDIERTYPE*, GridNo map_pos, BOOLEAN recalc);
@@ -162,6 +162,34 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 
 static void DetermineCursorBodyLocation(SOLDIERTYPE*, BOOLEAN fDisplay, BOOLEAN fRecalc);
 
+static UINT8 ChanceToHit(SOLDIERTYPE* pSoldier, GridNo const map_pos)
+{
+	bool const is_throwing_knife = GCM->getItem(pSoldier->inv[HANDPOS].usItem)->getItemClass() == IC_THROWING_KNIFE;
+	SOLDIERTYPE const* const target = gUIFullTarget;
+	UINT8 chance_to_hit, chance_to_clear, chance_on_target;
+
+	if (!target)
+	{
+		chance_to_hit = SoldierToLocationChanceToGetThrough(pSoldier, map_pos, gsInterfaceLevel, pSoldier->bTargetCubeLevel, 0);
+	}
+	else
+	{
+		chance_to_clear = SoldierToSoldierBodyPartChanceToGetThrough(pSoldier, target, pSoldier->bAimShotLocation);
+
+		if (is_throwing_knife)
+		{
+			chance_on_target = CalcThrownChanceToHit( pSoldier, target->sGridNo, pSoldier->bShownAimTime / 2, pSoldier->bAimShotLocation );
+		}
+		else
+		{
+			chance_on_target = CalcChanceToHitGun( pSoldier, target->sGridNo, pSoldier->bShownAimTime / 2, pSoldier->bAimShotLocation, false );
+		}
+
+		chance_to_hit = chance_to_clear * chance_on_target / 100;
+	}
+
+	return chance_to_hit ;
+}
 
 static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const recalc)
 {
@@ -175,6 +203,15 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 		{
 			guiPendingOverrideEvent = CA_MERC_SHOOT;
 		}
+	}
+
+	INT16 maxREFINE_AIM = REFINE_AIM_5;
+	maxREFINE_AIM += 2 * (AP_MAX_AIM_SCOPE_EXTRA) * UniqueAttachmentStatusGet(&(s->inv[HANDPOS]), SNIPERSCOPE) / 100;
+
+	if( gAnimControl[ s->usAnimState ].ubEndHeight == ANIM_PRONE )
+	{
+		maxREFINE_AIM += (2 * (AP_MAX_AIM_BIPOD_EXTRA) * UniqueAttachmentStatusGet(&(s->inv[HANDPOS]), BIPOD)) / 100;
+		maxREFINE_AIM += (2 * (AP_MAX_AIM_BIPOD_SCOPE_COMBINED_EXTRA) * (UniqueAttachmentStatusGet(&(s->inv[HANDPOS]), BIPOD) * UniqueAttachmentStatusGet(&(s->inv[HANDPOS]), SNIPERSCOPE))) / 10000;
 	}
 
 	// Determine where we are shooting/aiming
@@ -197,7 +234,7 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 		else
 		{
 			UINT8 const future_aim = s->bShownAimTime + 2;
-			if (future_aim <= REFINE_AIM_5)
+			if (future_aim <= maxREFINE_AIM)
 			{
 				INT16 const AP_costs = MinAPsToAttack(s, map_pos, TRUE) + future_aim / 2;
 				if (!EnoughPoints(s, AP_costs, 0, FALSE))
@@ -219,9 +256,9 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 		else
 		{
 			++s->bShownAimTime;
-			if (s->bShownAimTime > REFINE_AIM_5)
+			if (s->bShownAimTime > maxREFINE_AIM)
 			{
-				s->bShownAimTime = REFINE_AIM_5;
+				s->bShownAimTime = maxREFINE_AIM;
 			}
 			else if (s->bShownAimTime % 2 != 0)
 			{
@@ -251,6 +288,21 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 	{
 		cursor = s->fDoSpread ? ACTION_TARGETREDBURST_UICURSOR :
 			ACTION_TARGETCONFIRMBURST_UICURSOR;
+	}
+	else if (gamepolicy(accurate_aim_circle))
+	{
+		UINT8 const chance_to_hit = ChanceToHit(s, map_pos);
+		UINT8 target_circle;
+		UICursorID const table_circle_target[] = {ACTION_TARGETAIMYELLOW1_UICURSOR,ACTION_TARGETAIM1_UICURSOR,ACTION_TARGETAIM1_UICURSOR,ACTION_TARGETAIM1_UICURSOR,ACTION_TARGETAIM2_UICURSOR,ACTION_TARGETAIM2_UICURSOR,ACTION_TARGETAIM3_UICURSOR,ACTION_TARGETAIM4_UICURSOR,ACTION_TARGETAIM5_UICURSOR,ACTION_TARGETAIM6_UICURSOR,ACTION_TARGETAIM7_UICURSOR,ACTION_TARGETAIM8_UICURSOR,ACTION_TARGETAIM9_UICURSOR,ACTION_TARGETAIMFULL_UICURSOR};
+		UICursorID const table_circle_thrown[] = {ACTION_THROWAIMYELLOW1_UICURSOR, ACTION_THROWAIM1_UICURSOR, ACTION_THROWAIM1_UICURSOR, ACTION_THROWAIM1_UICURSOR, ACTION_THROWAIM2_UICURSOR, ACTION_THROWAIM2_UICURSOR, ACTION_THROWAIM3_UICURSOR, ACTION_THROWAIM4_UICURSOR, ACTION_THROWAIM5_UICURSOR, ACTION_THROWAIM6_UICURSOR, ACTION_THROWAIM7_UICURSOR, ACTION_THROWAIM8_UICURSOR, ACTION_THROWAIM9_UICURSOR, ACTION_THROWAIMFULL_UICURSOR};
+		UINT8 const table_cursor_elements = lengthof(table_circle_target);
+
+		target_circle = chance_to_hit * (table_cursor_elements - 1) / MAXCHANCETOHIT;
+		if (chance_to_hit <= MINCHANCETOHIT) target_circle = 0;			// First item is worst circle
+		if (target_circle >= table_cursor_elements) target_circle = table_cursor_elements - 1;
+
+		if(is_throwing_knife) cursor = table_circle_thrown[target_circle];
+		else cursor = table_circle_target[target_circle];
 	}
 	else
 	{
@@ -335,6 +387,10 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			case REFINE_AIM_MID2: cursor = ACTION_TARGETAIM4_UICURSOR; break;
 			case REFINE_AIM_MID3: cursor = ACTION_TARGETAIM6_UICURSOR; break;
 			case REFINE_AIM_MID4: cursor = ACTION_TARGETAIM8_UICURSOR; break;
+
+			default: 
+				// for extended aim - bypassed in "accurate aim circle mod"
+				cursor = gfDisplayFullCountRing ? ACTION_TARGETAIMFULL_UICURSOR : enough_points ? ACTION_TARGETAIM9_UICURSOR : ACTION_TARGETAIMCANT5_UICURSOR; break;
 		}
 	}
 
@@ -1006,7 +1062,16 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 
 				bFutureAim = (INT8)( pSoldier->bShownAimTime + 2 );
 
-				if ( bFutureAim <= REFINE_AIM_5 )
+				INT16 maxREFINE_AIM = REFINE_AIM_5;
+				maxREFINE_AIM += (2 * (AP_MAX_AIM_SCOPE_EXTRA) * UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), SNIPERSCOPE)) / 100;
+
+				if( gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE )
+				{
+					maxREFINE_AIM += (2 * (AP_MAX_AIM_BIPOD_EXTRA) * UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), BIPOD)) / 100;
+					maxREFINE_AIM += (2 * (AP_MAX_AIM_BIPOD_SCOPE_COMBINED_EXTRA) * (UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), BIPOD) * UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), SNIPERSCOPE)) / 10000);
+				}
+
+				if ( bFutureAim <= maxREFINE_AIM )
 				{
 					sAPCosts = CalcTotalAPsToAttack( pSoldier, usMapPos, TRUE, (INT8)(bFutureAim / 2) );
 
@@ -1014,9 +1079,9 @@ void HandleRightClickAdjustCursor( SOLDIERTYPE *pSoldier, INT16 usMapPos )
 					if ( EnoughPoints( pSoldier, sAPCosts, 0, FALSE ) )
 					{
 						pSoldier->bShownAimTime+= 2;
-						if ( pSoldier->bShownAimTime > REFINE_AIM_5 )
+						if ( pSoldier->bShownAimTime > maxREFINE_AIM )
 						{
-							pSoldier->bShownAimTime = REFINE_AIM_5;
+							pSoldier->bShownAimTime = maxREFINE_AIM;
 						}
 					}
 					// Else - goto first level!

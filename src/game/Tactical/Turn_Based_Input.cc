@@ -97,6 +97,7 @@
 #include "GameInstance.h"
 #include "Soldier.h"
 #include "policy/GamePolicy.h"
+#include "Map_Screen_Interface_Map_Inventory.h"
 
 #define DEBUG_CONSOLE_TOPIC "Debug Console"
 
@@ -114,6 +115,8 @@ const SOLDIERTYPE* gUITargetSoldier = NULL;
 static void QueryTBLeftButton(UIEventKind*);
 static void QueryTBRightButton(UIEventKind*);
 static void QueryTBMiddleButton(UIEventKind*);
+
+static void GroupAutoSwitchHeadGear();
 static void SwitchHeadGear(bool dayGear);
 
 void HandleTBReload( void );
@@ -1445,6 +1448,62 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case 'p': HandleStanceChangeFromUIKeys(ANIM_PRONE); break;
 
+		case 'q':
+			if (GCM->getGamePolicy()->militia_control)
+			{
+				SOLDIERTYPE* const target = gUIFullTarget;
+				if(!target)
+				{
+					SOLDIERTYPE* const pBestSoldier = SoldierFindBestCombatRatingInLoadedSectorByTeamSide(MILITIA_TEAM, OUR_TEAM);
+					if (pBestSoldier)
+					{
+						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"scr: %d", SoldierCombatRating(pBestSoldier, true));
+						RecruitMilitaSoldier(pBestSoldier, mercprofileID_militia1 );
+						if(pBestSoldier && IsOwnedMerc(*pBestSoldier))
+						{
+							SelectSoldier(pBestSoldier, SELSOLDIER_FORCE_RESELECT);
+						}
+					}
+					break;
+				}
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"scr: %d", SoldierCombatRating(target, true));
+				if(! target->bSide == OUR_TEAM) break;
+				if(target->ubProfile != NO_PROFILE && target->ubWhatKindOfMercAmI == MERC_TYPE__MILITA)
+				{
+					static int press_to_unrecruit_militia=2;
+					bool simple_unrecruit = !gTacticalStatus.fEnemyInSector;
+
+					CFOR_EACH_IN_TEAM(s, OUR_TEAM)
+					{ //If we have a live and valid soldier
+						if(s==target) continue;
+						if (s->bLife != 0 && !s->fBetweenSectors && !IsMechanical(*s) && !AM_AN_EPC(s) &&
+						s->sSectorX == gWorldSectorX && s->sSectorY == gWorldSectorY && s->bSectorZ == gbWorldSectorZ)
+						{
+							simple_unrecruit = true;
+							break;
+						}
+					}
+
+					if(simple_unrecruit || press_to_unrecruit_militia>0)
+					{
+						UnRecruitMilitiaSoldier(target->ubProfile);
+						press_to_unrecruit_militia=2;
+					}
+					else
+					{
+						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"un-recruiting militia will force auto-resolve");
+						press_to_unrecruit_militia--;
+					}
+					break;
+				}
+				if(!(target->bTeam == MILITIA_TEAM)) break;
+				if(!(target->ubSoldierClass==SOLDIER_CLASS_GREEN_MILITIA) && !(target->ubSoldierClass==SOLDIER_CLASS_REG_MILITIA) && !(target->ubSoldierClass==SOLDIER_CLASS_ELITE_MILITIA)) break;
+
+				SOLDIERTYPE* const pMilitiaSoldier = RecruitMilitaSoldier(target, mercprofileID_militia1);
+				if(pMilitiaSoldier && IsOwnedMerc(*pMilitiaSoldier)) SelectSoldier(pMilitiaSoldier, SELSOLDIER_FORCE_RESELECT);//*new_event = I_SELECT_MERC;
+			}
+			break;
+
 		case 'r':
 		{
 			SOLDIERTYPE* const sel = GetSelectedMan();
@@ -1618,10 +1677,75 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 			}
 			break;
 
+	case 'e':
+		{
+			if (gTacticalStatus.fEnemyInSector) break;
+			if gamepolicy(inventory_management_extras) SoldierDropAllWithAnimation(GetSelectedMan(), true);
+		}
+		break;
+
+	case 'f':
+		{
+			if (!gamepolicy(inventory_management_extras)) break;
+			if (gTacticalStatus.fEnemyInSector) break;
+			SOLDIERTYPE* const pSoldier = GetSelectedMan();
+			if(pSoldier)
+			{
+				SectorInventoryDetach	(pSoldier->sGridNo, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+				SectorInventoryStack	(pSoldier->sGridNo, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+				SectorInventoryPlaceAllAtGridNo	(pSoldier->sGridNo, pSoldier->bLevel, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+			}
+			else
+			{
+				SectorInventoryDetach	(-1, gWorldSectorX, gWorldSectorX, gbWorldSectorZ);
+				SectorInventoryStack	(-1, gWorldSectorX, gWorldSectorX, gbWorldSectorZ);
+			}
+		}
+		break;
+
+	case 'g':
+		{
+			if (gamepolicy(inventory_management_extras)  && !gTacticalStatus.fEnemyInSector)
+			{
+				TeamDropAll(MILITIA_TEAM, OUR_TEAM);
+				TeamEquipAll(MILITIA_TEAM, OUR_TEAM, false);
+			}
+			break;
+		}
+
+	case 'h':
+		{
+			if (gamepolicy(inventory_management_extras)  && !gTacticalStatus.fEnemyInSector)
+			{
+				TeamDropAll(MILITIA_TEAM, OUR_TEAM);
+			}
+			break;
+		}
+
+	case 'i':
+		{
+			if (gamepolicy(inventory_management_extras) && !gTacticalStatus.fEnemyInSector)
+			{
+				SOLDIERTYPE* const pSoldier = GetSelectedMan();
+				if (!pSoldier) break;
+				SoldierEquipFromLoadedSector(pSoldier, false);
+			}
+			break;
+		}
+
 	case 'j':
 		if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'j')))
 		{
 			HandleTBClimbWindow();
+		}
+		break;
+
+	case 'n':
+		if gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'n'))
+		{
+			SOLDIERTYPE* const pSoldier = GetSelectedMan();
+			if (!pSoldier) break;
+			SoldierAutoSwitchGoggles(pSoldier);
 		}
 		break;
 
@@ -1682,13 +1806,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'n':
 			if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'n')))
 			{
-				static BOOLEAN bHeadGearDirection = true;
-				if (bHeadGearDirection) {
-					SwitchHeadGear(true);
-				} else {
-					SwitchHeadGear(false);
-				}
-				bHeadGearDirection = !bHeadGearDirection;
+				GroupAutoSwitchHeadGear();
 			}
 			break;
 
@@ -1703,6 +1821,28 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 's':
 			if (!fDisableMapInterfaceDueToBattle && !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
 			{
+				bool will_militia_reset_if_we_leave_tactical_screen = true;
+
+				FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
+				{
+					if (OkControllableMerc(pSoldier))
+					{
+						will_militia_reset_if_we_leave_tactical_screen = false;
+						break;
+					}
+				}
+
+				if (will_militia_reset_if_we_leave_tactical_screen)
+				{
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Use Quicksave: Leaving screen will reset militia");
+
+					/* Cannot save in savescreen if viewing sector without a controllable merc (militia_view mod).
+					 * Quicksave is fine because we do not leave the screen.
+					 */
+
+					break;
+				}
+
 				if (CanGameBeSaved() &&  gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD )
 				{
 					gfSaveGame              = TRUE;
@@ -2724,6 +2864,25 @@ static void SetBurstMode(void)
 {
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel != NULL) ChangeWeaponMode(sel);
+}
+
+static void GroupAutoSwitchHeadGear()
+{
+ // modified from SwitchHeadGear
+ 
+	SOLDIERTYPE* const selectedSoldier = GetSelectedMan();
+	if (selectedSoldier == NULL) return;
+
+	FOR_EACH_IN_SQUAD(k, selectedSoldier->bAssignment)
+	{
+		SOLDIERTYPE* s = *k;
+
+		if(s == NULL) continue;
+		if(s->bAssignment == ASSIGNMENT_DEAD) continue;
+		if(s->uiStatusFlags & SOLDIER_VEHICLE) continue;
+
+		SoldierAutoSwitchGoggles(s);
+	}
 }
 
 static void SwitchHeadGear(bool dayGear)

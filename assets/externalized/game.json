@@ -80,9 +80,54 @@
     //  Enables extra attachments: boosters and break lights on leggings, goggles on helmets.
     "extra_attachments": false,
 
-    //  Enables middle mouse button to trigger a look into cursor direction.
+    //  Load an IMP merc from a previous save game by typing in same nickname on IMP form.
+    //  Setting must be enabled during save to enable later load.
+    "imp_load_saved_merc_by_nickname": false,
+    "imp_load_keep_inventory": true,
+    //  Load NPC progress and inventory from a previous save game.
+    //  Setting must be enabled during save to enable later load.
+    "load_saved_npc": false,
+    "load_saved_npc_inventory": false,
+
+
+    //  Press 'shift+n' to auto switch the selected soldier's head gear. Considers "extra_attachments".
+    "tactical_hotkey_shift_n": true,
+
+    "inventory_management_extras": false,
+    "ime_detach_ammo": false,
+    "ime_detach_attachments": false,
+    "ime_refill_canteens": false,
+
+    "militia_use_sector_inventory": false,
+    "enemy_defenders_use_sector_inventory": false,
+
+    "vehicle_inventory": false,
+
+    "take_control_of_militia": false,
+    "controlled_militia_salary": 0,
+
+    "perpetual_corpse_queen_crepitus": false,
+
+    "tactical_realtime_save_allowed": false,
+
+    "skip_sleep_explanation": false,
+
+    //  Enables middle mouse button to trigger a look into cursor direction
     //  vanilla_setting: false
     "middle_mouse_look": true,
+    
+    //  Size of aim cricle reflects chance to hit letting the player know
+    //  when enough time units have been spent and which shots are unlikely.
+    "accurate_aim_circle": false,
+
+    //  Increase difficulty by giving enemy elite all skill trait advantages (enemy_elite_all_traits)
+    //  Set lower requirements to allow any merc to get all advantages after enough skill grinding.
+    //  vanilla_setting: false
+    "all_skilltraits_mode": false,
+    "all_skilltraits_just_ours": false,
+    "all_skilltraits_required_wisdom": 100,
+    "all_skilltraits_required_level": 10,
+    "enemy_elite_all_traits": true,
 
     //  Press d in realtime mode to manually start turn based mode.
     //  vanilla_setting: false
@@ -98,6 +143,28 @@
     "chance_to_hit_maximum": 99,
     "tactical_head_damage_multiplier": 1.5,
     "tactical_legs_damage_multiplier": 0.5,
+    
+    //  vanilla_setting: 1
+    "damage_minimum": 1,
+    //  (%) vanilla_setting: 10
+    "aim_bonus_per_std_ap": 10,
+    //  (%) vanilla_setting: 20
+    "aim_bonus_sniperscope": 20,
+    // range bonus, negative for penalty, for attached silencer (due to assumed sub-sonic rounds). 10 per 1 tile.
+    // vanilla_setting: 0
+    "range_bonus_silencer": 0,
+    //  (%) vanilla_setting: n/a
+    "aim_bonus_per_extra_ap": 5,
+    //  Extra AP that can be spent for having an attached sniper scope at 100% condition.
+    //  vanilla_setting: 0
+    "extra_ap_max_sniperscope": 0,
+    //  Extra AP that can be spent for having an attached bipod at 100% condition while prone.
+    //  vanilla_setting: 0
+    "extra_ap_max_bipod": 0,
+    //  Extra AP that can be spent for having attached both scope and bipod at 100% condition while prone.
+    //  vanilla_setting: 0
+    "extra_ap_max_bipod_scope_combined": 0,
+
 
     //  IMP attribute point defaults:
     //  Warning: Setting min attribute points to a value less than 15 allows

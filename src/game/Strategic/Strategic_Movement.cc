@@ -771,6 +771,9 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 						CFOR_EACH_PLAYER_IN_GROUP(pPlayer, &g)
 						{
 							pSoldier = pPlayer->pSoldier;
+
+							if(pSoldier == 0) continue; //  move to group cleanup
+
 							if( !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) )
 							{
 								if( !AM_A_ROBOT( pSoldier ) &&
@@ -2272,6 +2275,7 @@ UINT8 PlayerMercsInSector(UINT8 const x, UINT8 const y, UINT8 const z)
 		 * members. */
 		CFOR_EACH_PLAYER_IN_GROUP(p, g)
 		{
+			if (p->pSoldier == 0) continue; // soldier removed from group but entry not compacted
 			SOLDIERTYPE const* const s = p->pSoldier;
 			if (s->bLife == 0)                      continue;
 			// Robots count as mercs here, because they can fight, but vehicles don't
@@ -2619,13 +2623,14 @@ static void SavePlayerGroupList(HWFILE const f, GROUP const* const g)
 {
 	// Save the number of nodes in the list
 	UINT32 uiNumberOfNodesInList = 0;
-	CFOR_EACH_PLAYER_IN_GROUP(p, g) ++uiNumberOfNodesInList;
+	CFOR_EACH_PLAYER_IN_GROUP(p, g) if(p->pSoldier) ++uiNumberOfNodesInList;
 	FileWrite(f, &uiNumberOfNodesInList, sizeof(UINT32));
 
 	// Loop through and save only the players profile id
 	CFOR_EACH_PLAYER_IN_GROUP(p, g)
 	{
 		// Save the ubProfile ID for this node
+		if(!p->pSoldier) continue; //! soldier was deleted but group not properly updated
 		const UINT32 uiProfileID = p->pSoldier->ubProfile;
 		FileWrite(f, &uiProfileID, sizeof(UINT32));
 	}

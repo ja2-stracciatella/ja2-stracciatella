@@ -34,6 +34,9 @@
 #include "policy/IMPPolicy.h"
 #include "Logger.h"
 
+#include "SaveLoadGame.h"
+#include "Items.h"
+
 #define IMP_MERC_FILE "imp.dat"
 
 static BUTTON_PICS* giIMPConfirmButtonImage[2];
@@ -217,12 +220,45 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason)
 		}
 
 		// line moved by CJC Nov 28 2002 to AFTER the check for money
-		LaptopSaveInfo.fIMPCompletedFlag = TRUE;
+		LaptopSaveInfo.fIMPCompletedFlag = AddCharacterToPlayersTeam();
+		if (!LaptopSaveInfo.fIMPCompletedFlag) return; // * only if merc hire failed: no charge, get another go.
 
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+		if(!pSoldier) return;
+
+		if(fLoadingCharacterForPreviousImpProfile)
+		{
+			IMPSavedProfileLoadInventory(gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].zNickname, pSoldier);
+		}
+
+		if(pSoldier->ubID == 0 && FindObj(pSoldier, LETTER) == NO_SLOT)
+		{
+			// there was no letter autoplacement because inventory overwritten: find free slot.
+			if(pSoldier->inv[HANDPOS].usItem != NOTHING) SwapHandItems(pSoldier);
+			if(pSoldier->inv[HANDPOS].usItem == NOTHING)
+			{
+				pSoldier->inv[HANDPOS].usItem = LETTER;
+				pSoldier->inv[HANDPOS].ubNumberOfObjects = 1;
+				pSoldier->inv[HANDPOS].bStatus[0] = 100;
+			}
+			else if(pSoldier->inv[HELMETPOS].usItem !=NOTHING)
+			{
+				// just place letter as helmet attachment.
+				pSoldier->inv[HELMETPOS].usAttachItem[MAX_ATTACHMENTS - 1] = LETTER;
+				pSoldier->inv[HELMETPOS].bAttachStatus[MAX_ATTACHMENTS - 1] = 100;
+			}
+			else
+			{
+				// the letter is important so hide it under wig/hairpiece
+				pSoldier->inv[HELMETPOS].usItem = LETTER;
+				pSoldier->inv[HELMETPOS].ubNumberOfObjects = 1;
+				pSoldier->inv[HELMETPOS].bStatus[0] = 100;
+			}
+		}
+ 
 		// charge the player
 		AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin(), -COST_OF_PROFILE);
 		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), -1, -1);
-		AddCharacterToPlayersTeam();
 
 		// write the created imp merc
 		WriteOutCurrentImpCharacter((UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId));
@@ -330,39 +366,44 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 
 
 	// check for special skills
-	if (HasSkillTrait(p, LOCKPICKING) && iMechanical)
+	if (HAS_SKILL_TRAIT(&p, LOCKPICKING) && iMechanical)
 	{
 		MakeProfileInvItemAnySlot(p, LOCKSMITHKIT, 100, 1);
 	}
 
-	if (HasSkillTrait(p, HANDTOHAND))
+	if (HAS_SKILL_TRAIT(&p, HANDTOHAND))
 	{
 		MakeProfileInvItemAnySlot(p, BRASS_KNUCKLES, 100, 1);
 	}
 
-	if (HasSkillTrait(p, ELECTRONICS) && iMechanical)
+	if (HAS_SKILL_TRAIT(&p, ELECTRONICS) && iMechanical)
 	{
 		MakeProfileInvItemAnySlot(p, METALDETECTOR, 100, 1);
 	}
 
-	if (HasSkillTrait(p, NIGHTOPS))
+	if (HAS_SKILL_TRAIT(&p, NIGHTOPS))
 	{
 		MakeProfileInvItemAnySlot(p, BREAK_LIGHT, 100, 2);
 	}
 
-	if (HasSkillTrait(p, THROWING))
+	if (HAS_SKILL_TRAIT(&p, THROWING))
 	{
 		MakeProfileInvItemAnySlot(p, THROWING_KNIFE, 100, 1);
 	}
 
-	if (HasSkillTrait(p, STEALTHY))
+	if (HAS_SKILL_TRAIT(&p, STEALTHY))
 	{
 		MakeProfileInvItemAnySlot(p, SILENCER, 100, 1);
 	}
 
-	if (HasSkillTrait(p, KNIFING))
+	if (HAS_SKILL_TRAIT(&p, KNIFING))
 	{
 		MakeProfileInvItemAnySlot(p, COMBAT_KNIFE, 100, 1);
+	}
+
+	if (HAS_SKILL_TRAIT(&p, CAMOUFLAGED))
+	{
+		MakeProfileInvItemAnySlot(p, CAMOUFLAGEKIT, 100, 1);
 	}
 }
 

@@ -2216,6 +2216,7 @@ void HandleExplosionQueue()
 		ExplosionQueueElement& e = gExplosionQueue[i];
 		if (!e.fExists)          continue;
 		if (now < e.uiTimeStamp) continue;
+		if (gWorldBombs == 0) continue;
 
 		// Set off this bomb now.
 		WORLDITEM&  wi     = GetWorldItem(gWorldBombs[e.uiWorldBombIndex].iItemIndex);

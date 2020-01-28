@@ -1624,6 +1624,13 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	// WHEN IN THE LIGHT, GET OUT OF THERE!
 	////////////////////////////////////////////////////////////////////////////
 	bool in_light_at_night = InLightAtNight( pSoldier->sGridNo, pSoldier->bLevel );
+
+	if(gbWorldSectorZ == 0)
+	{
+		SECTORINFO const* const pSector = &SectorInfo[ (gWorldSectorY - 1) * 16 + gWorldSectorX - 1 ];
+		in_light_at_night = !(((pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites) == 0) && (pSector->ubNumCreatures != 0));
+	}
+
 	if ( ubCanMove && in_light_at_night && pSoldier->bOrders != STATIONARY )
 	{
 		pSoldier->usActionData = FindNearbyDarkerSpot( pSoldier );
@@ -3621,6 +3628,12 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 
 	// turn off cautious flag
 	pSoldier->fAIFlags &= (~AI_CAUTIOUS);
+
+	if ( !(gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y && pSoldier->bTeam != MILITIA_TEAM) && (pSoldier->bBreath > 5))
+	{
+		// Ensure that soldier uses best face gear on hand, updated at every turn in case given gear or situation change.
+		SoldierAutoSwitchGoggles(pSoldier); 
+	}
 
 	// if status over-ride is set, bypass RED/YELLOW and go directly to GREEN!
 	if ((pSoldier->bBypassToGreen) && (pSoldier->bAlertStatus < STATUS_BLACK))

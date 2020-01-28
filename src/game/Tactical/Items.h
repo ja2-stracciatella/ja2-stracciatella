@@ -21,6 +21,7 @@ INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem);
 INT8 FindAmmo(const SOLDIERTYPE*, const CalibreModel *, UINT8 ubMagSize, INT8 bExcludeSlot);
 
 INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem);
+INT8 UniqueAttachmentStatusGet(const OBJECTTYPE* pObj, UINT16 usItem);
 INT8 FindObjClass(const SOLDIERTYPE* s, UINT32 usItemClass);
 extern INT8 FindAIUsableObjClass( const SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
 extern INT8 FindAIUsableObjClassWithin( const SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper );
@@ -147,7 +148,7 @@ UINT16 FindReplacementMagazineIfNecessary(const WeaponModel *old_gun, UINT16 con
 
 BOOLEAN DamageItemOnGround(OBJECTTYPE* pObject, INT16 sGridNo, INT8 bLevel, INT32 iDamage, SOLDIERTYPE* owner);
 
-BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs );
+BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs, BOOLEAN in_combat );
 BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs );
 
 BOOLEAN CompatibleFaceItem( UINT16 usItem1, UINT16 usItem2 );
@@ -176,5 +177,11 @@ bool HasObjectImprint(OBJECTTYPE const&);
 
 // Fill the vector with all hardcoded item models.
 void createAllHardcodedItemModels(std::vector<const ItemModel*> &items);
+
+void ItemFromStackRemoveTop(OBJECTTYPE* const object, OBJECTTYPE* const newobject);
+void ItemFromStackRemoveBest(OBJECTTYPE* const object, OBJECTTYPE* const newobject);
+void ItemFromStackRemoveWorst(OBJECTTYPE* const object, OBJECTTYPE* const newobject);
+bool ItemRemoveAttachment(OBJECTTYPE* const object, OBJECTTYPE* const newobject, UINT16 const usItem);
+bool ItemAttach(OBJECTTYPE* const object, OBJECTTYPE* const attachment);
 
 #endif

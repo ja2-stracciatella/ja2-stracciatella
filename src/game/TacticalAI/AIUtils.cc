@@ -22,6 +22,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
+#include "Soldier_Control.h"
 
 //
 // CJC's DG->JA2 conversion notes
@@ -244,7 +245,7 @@ UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 b
 				break;
 		}
 
-		uiChanceOfDamage = SoldierToLocationChanceToGetThrough(pSoldier, pAttack->sTarget, pSoldier->bTargetLevel, pSoldier->bTargetCubeLevel, pAttack->opponent) * CalcChanceToHitGun(pSoldier, pAttack->sTarget, pAttack->ubAimTime, AIM_SHOT_TORSO) / 100;
+		uiChanceOfDamage = SoldierToLocationChanceToGetThrough(pSoldier, pAttack->sTarget, pSoldier->bTargetLevel, pSoldier->bTargetCubeLevel, pAttack->opponent) * CalcChanceToHitGun(pSoldier, pAttack->sTarget, pAttack->ubAimTime, AIM_SHOT_TORSO, false) / 100;
 		if (uiChanceOfDamage > 0)
 		{
 			uiStanceBonus = 0;
@@ -1542,16 +1543,7 @@ bool InGas(SOLDIERTYPE const* const s, GridNo const grid_no)
 
 bool WearGasMaskIfAvailable(SOLDIERTYPE* const s)
 {
-	INT8 const slot = FindObj(s, GASMASK);
-	if (slot == NO_SLOT || slot == HEAD1POS || slot == HEAD2POS) return false;
-
-	INT8 const new_slot =
-		s->inv[HEAD1POS].usItem == NOTHING ? HEAD1POS :
-		s->inv[HEAD2POS].usItem == NOTHING ? HEAD2POS :
-		HEAD1POS; // Screw it, going in position 1 anyhow
-
-	RearrangePocket(s, slot, new_slot, TRUE);
-	return true;
+	return SoldierFindFirstItemAttemptAutoPlace(s, GASMASK); // This replacement implementation should not delete offending faceitem
 }
 
 

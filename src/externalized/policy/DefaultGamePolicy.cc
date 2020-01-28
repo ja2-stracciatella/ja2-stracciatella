@@ -33,12 +33,56 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	enemy_elite_minimum_level = (*json)["enemy_elite_minimum_level"].GetInt();
 	enemy_elite_maximum_level = (*json)["enemy_elite_maximum_level"].GetInt();
 
+	skip_sleep_explanation    = (*json)["skip_sleep_explanation"].GetBool();
+
+	militia_control           = (*json)["take_control_of_militia"].GetBool();
+	militiamerc_salary        = (*json)["controlled_militia_salary"].GetInt();
+
+	inventory_management_extras    = (*json)["inventory_management_extras"].GetBool();
+	ime_detach_ammo                = (*json)["ime_detach_ammo"].GetBool();
+	ime_detach_attachments         = (*json)["ime_detach_attachments"].GetBool();
+	ime_refill_canteens            = (*json)["ime_refill_canteens"].GetBool();
+	vehicle_inventory              = (*json)["vehicle_inventory"].GetBool();
+
+	militia_use_sector_inventory          = (*json)["militia_use_sector_inventory"].GetBool();
+	enemy_defenders_use_sector_inventory  = (*json)["enemy_defenders_use_sector_inventory"].GetBool();
+
+	imp_load_saved_merc_by_nickname = (*json)["imp_load_saved_merc_by_nickname"].GetBool();
+	imp_load_keep_inventory         = (*json)["imp_load_keep_inventory"].GetBool();
+	load_saved_npc                  = (*json)["load_saved_npc"].GetBool();
+	load_saved_npc_inventory        = (*json)["load_saved_npc_inventory"].GetBool();
+
+	accurate_aim_circle       = (*json)["accurate_aim_circle"].GetBool();
+ 
+	ironman_can_save_realtime = (*json)["tactical_realtime_save_allowed"].GetBool();
+
+	all_skilltraits_mode      = (*json)["all_skilltraits_mode"].GetBool();
+	all_skilltraits_just_ours = (*json)["all_skilltraits_just_ours"].GetBool();
+	all_skilltraits_wisdom    = (*json)["all_skilltraits_required_wisdom"].GetInt();
+	all_skilltraits_level     = (*json)["all_skilltraits_required_level"].GetInt();
+	enemy_elite_all_traits    = (*json)["enemy_elite_all_traits"].GetBool();
+
+	ironman_can_save_realtime = (*json)["tactical_realtime_save_allowed"].GetBool();
+
+	accurate_aim_circle       = (*json)["accurate_aim_circle"].GetBool();
+ 
+	perpetual_corpse_queen_crepitus = (*json)["perpetual_corpse_queen_crepitus"].GetBool();
+
 	pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
 
 	critical_damage_head_multiplier = (*json)["tactical_head_damage_multiplier"].GetDouble();
 	critical_damage_legs_multiplier = (*json)["tactical_legs_damage_multiplier"].GetDouble();
 	chance_to_hit_maximum     = (*json)["chance_to_hit_maximum"].GetInt();
 	chance_to_hit_minimum     = (*json)["chance_to_hit_minimum"].GetInt();
+
+	damage_minimum            = (*json)["damage_minimum"].GetInt();
+	aim_bonus_per_std_ap      = (*json)["aim_bonus_per_std_ap"].GetInt();
+	aim_bonus_sniperscope     = (*json)["aim_bonus_sniperscope"].GetInt();
+	range_bonus_silencer      = (*json)["range_bonus_silencer"].GetInt();
+	aim_bonus_per_extra_ap    = (*json)["aim_bonus_per_extra_ap"].GetInt();
+	extra_ap_max_sniperscope  = (*json)["extra_ap_max_sniperscope"].GetInt();
+	extra_ap_max_bipod        = (*json)["extra_ap_max_bipod"].GetInt();
+	extra_ap_max_bipod_scope_combined = (*json)["extra_ap_max_bipod_scope_combined"].GetInt();
 
 	imp_attribute_max         = (*json)["imp"]["max_attribute_points"].GetInt();
 	imp_attribute_min         = (*json)["imp"]["min_attribute_points"].GetInt();
@@ -70,6 +114,7 @@ bool DefaultGamePolicy::isHotkeyEnabled(UIMode mode, HotkeyModifier modifier, ui
 		{
 			switch(key)
 			{
+				case 'n':
 				case 'j':         return extra_hotkeys;
 			}
 		}
