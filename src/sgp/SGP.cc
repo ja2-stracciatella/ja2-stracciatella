@@ -1,7 +1,3 @@
-#include <clocale>
-#include <exception>
-#include <new>
-
 #include "Button_System.h"
 #include "Cheats.h"
 #include "Debug.h"
@@ -47,6 +43,13 @@
 #endif
 
 #include "Multi_Language_Graphic_Utils.h"
+
+#include <string_theory/format>
+
+#include <exception>
+#include <locale>
+#include <new>
+#include <utility>
 
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 
@@ -251,56 +254,91 @@ ContentManager *GCM = NULL;
 
 ////////////////////////////////////////////////////////////
 
-/// Sets C locale to something that supports unicode.
-/// The C++ locale is unchanged (VS2015 hangs for unknown reasons).
-///
-/// There is no way to query available locales so this is the most portable
-/// way to get a locale that supports unicode.
-void SetUnicodeLocale()
+/// Sets the C/C++ locale.
+/// @return true if successful, false otherwise
+static bool SetGlobalLocale(const char* name)
 {
-	static const char* LOCALES[] = {
-		// custom locale set at configure time
-#if defined WITH_CUSTOM_LOCALE
-		WITH_CUSTOM_LOCALE,
-#endif
-		// the preferred locale with UTF-8 encoding
-		".UTF8", ".UTF-8",
-		// a specific locale with UTF-8 encoding
-		"C.UTF-8", "en_US.UTF8", "en_US.UTF-8", "English_US.UTF8", "en_GB.UTF-8",
-		// give up
-		nullptr
-	};
-
-	for (const char* name : LOCALES)
+	try
 	{
-		if (name == nullptr)
-		{
-			if (setlocale(LC_ALL, "C") != nullptr)
-			{
-				fprintf(stderr, "WARNING: Failed to set a unicode locale, using the C locale (might accept only ASCII).\n");
-			}
-			else
-			{
-				fprintf(stderr, "WARNING: Failed to set a unicode locale and the C locale...\n");
-			}
-			return;
-		}
-		if (setlocale(LC_ALL, name) != nullptr)
-		{
-			return;
-		}
-		// try next locale
+		std::locale::global(std::locale(name));
+		return true;
 	}
+	catch(...)
+	{
+		return false;
+	}
+}
+
+/// Tries to set the C/C++ locale to something that supports unicode.
+///
+/// There is no way to query available locales so you can only try them.
+///
+/// @return List of problems.
+std::vector<ST::string> InitGlobalLocale()
+{
+	std::vector<ST::string> problems;
+
+#ifdef _WIN32
+	// In windows the console is a special device that accepts CP_UTF8, but needs a true type font to display it.
+	if (!SetConsoleOutputCP(CP_UTF8))
+	{
+		problems.emplace_back(std::move(ST::format("SetConsoleOutputCP(CP_UTF8) failed, using output code page {}", GetConsoleOutputCP())));
+	}
+	if (!SetConsoleCP(CP_UTF8))
+	{
+		problems.emplace_back(std::move(ST::format("SetConsoleCP(CP_UTF8) failed, using input code page {}", GetConsoleCP())));
+	}
+#endif
+
+#ifdef WITH_CUSTOM_LOCALE
+	if (!SetGlobalLocale(WITH_CUSTOM_LOCALE))
+	{
+		problems.emplace_back(std::move(ST::format("failed to set custom locale '{}'", WITH_CUSTOM_LOCALE)));
+	}
+	else
+	{
+		return problems; // the custom locale is set, assume unicode locale (no way to test)
+	}
+#endif
+
+#ifndef _WIN32
+	// Windows does not support the utf8 locale (".65001") or the LC_* environment variables.
+	// CP_UTF8 (65001) is a pseudo code page that does not have a nls file.
+	// With VS2003 setlocale would accept it but the CRT APIs would fail, now it fails directly.
+	//
+	// According to https://www.python.org/dev/peps/pep-0538/
+	// *nix have one of "C.UTF-8", "C.utf8" or "UTF-8".
+	// Mac OS X and other *BSD systems have a partial UTF-8 locale that only defines the LC_CTYPE category.
+
+	// set locale from the process environment
+	if (!SetGlobalLocale(""))
+	{
+		problems.emplace_back("failed to set locale from the process environment");
+	}
+
+	// TODO how to set a unicode LC_CTYPE for the C++ locale?
+	if (!setlocale(LC_CTYPE, "C.UTF-8") && !setlocale(LC_CTYPE, "C.utf8") && !setlocale(LC_CTYPE, "UTF-8"))
+	{
+		problems.emplace_back(std::move(ST::format("failed to set unicode ctype for locale '{}', using ctype '{}'", setlocale(LC_ALL, nullptr), setlocale(LC_CTYPE, nullptr))));
+	}
+#endif
+
+	return problems;
 }
 
 int main(int argc, char* argv[])
 {
-	SetUnicodeLocale();
+	// init locale and logging
+	{
+		std::vector<ST::string> problems = InitGlobalLocale();
+		Logger_initialize("ja2.log");
+		for (const ST::string& msg : problems)
+		{
+			SLOGW("%s", msg.c_str());
+		}
+	}
 
 	std::string exeFolder = FileMan::getParentPath(argv[0], true);
-
-	// init logging
-	Logger_initialize("ja2.log");
 
 	RustPointer<EngineOptions> params(EngineOptions_create(argv, argc));
 	if (params == NULL) {
