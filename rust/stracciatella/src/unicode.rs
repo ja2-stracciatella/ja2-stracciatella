@@ -44,6 +44,9 @@
 //!
 //! To get a caseless string we must normalize, then get a caseless representation with [case folding] and normalize again.
 //!
+//! Based on [(faq/casemap_charprop.html#2)], you can expect a lowercase result most of the time:
+//! "Case folding in Unicode is primarily based on the lowercase mapping..."
+//!
 //!
 //! [`caseless`]: https://crates.io/crates/caseless
 //! [`unicode-normalization`]: https://crates.io/crates/unicode-normalization
@@ -51,6 +54,7 @@
 //! [canonical equivalence]: http://www.unicode.org/reports/tr15/#Canon_Compat_Equivalence
 //! [normalization forms]: http://www.unicode.org/reports/tr15/#Norm_Forms
 //! [case folding]: https://www.w3.org/International/wiki/Case_folding
+//! [(faq/casemap_charprop.html#2)]: http://unicode.org/faq/casemap_charprop.html#2
 #![allow(dead_code)]
 
 use std::fmt;
