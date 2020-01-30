@@ -106,6 +106,8 @@
     "take_control_of_militia": false,
     "controlled_militia_salary": 0,
 
+    "perpetual_corpse_queen_crepitus": false,
+
     //  Enables middle mouse button to trigger a look into cursor direction
     //  vanilla_setting: false
     "middle_mouse_look": true,

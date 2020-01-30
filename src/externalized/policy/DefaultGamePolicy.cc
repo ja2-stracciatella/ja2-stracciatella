@@ -60,6 +60,12 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	all_skilltraits_level     = (*json)["all_skilltraits_required_level"].GetInt();
 	enemy_elite_all_traits    = (*json)["enemy_elite_all_traits"].GetBool();
 
+	ironman_can_save_realtime = (*json)["tactical_realtime_save_allowed"].GetBool();
+
+	accurate_aim_circle       = (*json)["accurate_aim_circle"].GetBool();
+ 
+	perpetual_corpse_queen_crepitus = (*json)["perpetual_corpse_queen_crepitus"].GetBool();
+
 	pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
 
 	critical_damage_head_multiplier = (*json)["tactical_head_damage_multiplier"].GetDouble();

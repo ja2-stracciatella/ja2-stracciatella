@@ -83,6 +83,8 @@ public:
 	bool militia_use_sector_inventory;    // Militia are equiped from sector.inventory
 	bool enemy_defenders_use_sector_inventory; // Enemies add equipment from sector.inventory, even from lockers
 
+	bool perpetual_corpse_queen_crepitus; // Queen crepitus' corpse souvenir
+
 	bool pablo_wont_steal;                // Packages not stolen
 
 	float critical_damage_head_multiplier;//Head damage multiplier. Vanilla 1.5
