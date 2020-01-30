@@ -2434,6 +2434,13 @@ bool CanGoToTacticalInSector(INT16 const x, INT16 const y, UINT8 const z)
 		return true;
 	}
 
+	if (GCM->getGamePolicy()->militia_control)
+	{
+		SECTORINFO *pSector = &SectorInfo[ SECTOR( x, y ) ];
+
+		if ((z==0)&&((pSector->ubNumberOfCivsAtLevel[GREEN_MILITIA]+pSector->ubNumberOfCivsAtLevel[REGULAR_MILITIA]+pSector->ubNumberOfCivsAtLevel[ELITE_MILITIA]) != 0)) return true;
+	}
+
 	return false;
 }
 
@@ -3380,6 +3387,23 @@ static void HandleDefiniteUnloadingOfWorld(UINT8 const ubUnloadCode)
 
 BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 {
+	if gamepolicy(militia_control)
+	{
+		bool enemy_present = false;
+
+		for( int i = gTacticalStatus.Team[ ENEMY_TEAM ].bFirstID; i <= gTacticalStatus.Team[ CREATURE_TEAM ].bLastID; i++ )
+		{
+			SOLDIERTYPE const& creature = GetMan(i);
+			if 	(creature.bActive &&
+					creature.bLife != 0 &&
+					creature.sSectorX == gWorldSectorX &&
+					creature.sSectorY == gWorldSectorY &&
+					creature.bSectorZ == gbWorldSectorZ) enemy_present=true;
+		}
+
+		if(enemy_present) if(RecruitMilitaSoldier(SoldierFindBestCombatRatingInLoadedSectorByTeamSide(MILITIA_TEAM, OUR_TEAM), NPC165)) return true;
+	}
+
 	INT32 i;
 
 	//We don't have mercs in the sector.  Now, we check to see if there are BOTH enemies and militia.  If both

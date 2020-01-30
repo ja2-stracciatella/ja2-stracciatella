@@ -9318,7 +9318,7 @@ UINT32 SoldierScroungeAmmoByGunItem(SOLDIERTYPE* const pSoldier, OBJECTTYPE* con
 			ammo_scrounged[object_ammo_type] += object->ubShotsLeft[j];
 		}
 
-		RemoveItemFromPool(worlditem);
+		RemoveItemFromPool(*worlditem);
 		RemoveItemFromWorld(i);
 
 		if(ammo_scrounged[prefered_ammo_type]>=enough) break;
@@ -9645,7 +9645,7 @@ bool SoldierEquipFindByItemClass(SOLDIERTYPE* const pSoldier, UINT16 usItem, boo
 
 		if(wi->o.usItem == NOTHING)
 		{
-			RemoveItemFromPool(wi);
+			RemoveItemFromPool(*wi);
 			RemoveItemFromWorld(pick);
 		}
 

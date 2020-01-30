@@ -71,6 +71,9 @@ public:
 	int8_t all_skilltraits_level;         // Level required to qualify. Above 10 disables
 	bool enemy_elite_all_traits;          // Elites from queen's army get all perks
 
+	bool militia_control;                 // 'q' hotkey to recruit militia/release/recruit best/nextbest
+	int32_t militiamerc_salary;           // Daily salary of recruited milita merc
+
 	bool inventory_management_extras;     // 1.13 inventory management hotkeys, shift-f, etc.
 	bool ime_detach_ammo;                 // hotkey detaches magazines from sector weapons
 	bool ime_detach_attachments;          // hotkey removes removable attachments from sector weapons

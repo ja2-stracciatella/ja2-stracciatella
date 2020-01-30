@@ -103,6 +103,9 @@
 
     "vehicle_inventory": false,
 
+    "take_control_of_militia": false,
+    "controlled_militia_salary": 0,
+
     //  Enables middle mouse button to trigger a look into cursor direction
     //  vanilla_setting: false
     "middle_mouse_look": true,

@@ -70,9 +70,10 @@ void HandleMilitiaPromotions()
 	gbRegToElitePromotions   = 0;
 	gbMilitiaPromotions      = 0;
 
-	FOR_EACH_IN_TEAM(i, MILITIA_TEAM)
+	FOR_EACH_SOLDIER(i)
 	{
 		SOLDIERTYPE& s = *i;
+		if (s.bTeam != MILITIA_TEAM && s.ubWhatKindOfMercAmI != MERC_TYPE__MILITA) continue;
 		if (!s.bInSector)          continue;
 		if (s.bLife <= 0)          continue;
 		if (s.ubMilitiaKills == 0) continue;

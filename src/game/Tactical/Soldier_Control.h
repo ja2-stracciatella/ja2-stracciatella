@@ -211,6 +211,7 @@ enum
 	MERC_TYPE__EPC,
 	MERC_TYPE__NPC_WITH_UNEXTENDABLE_CONTRACT,
 	MERC_TYPE__VEHICLE,
+	MERC_TYPE__MILITA, // * Militia control mod, maybe unused
 };
 
 // I don't care if this isn't intuitive!  The hand positions go right

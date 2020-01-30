@@ -708,6 +708,302 @@ UINT32 SoldierCombatRating(SOLDIERTYPE* const pSoldier, bool normalize)
  return SoldierCombatRatingStats(pSoldier, normalize);
 }
 
+SOLDIERTYPE* SoldierFindBestCombatRatingInLoadedSectorByTeamSide(UINT8 bTeam, UINT8 bSide)
+{
+	SOLDIERTYPE* pBestSoldier = 0;
+	UINT32 scr_BestSoldier = 0;
+
+	FOR_EACH_IN_TEAM(s, bTeam)
+	{
+		if(s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY || s->bSectorZ != gbWorldSectorZ) continue;
+		UINT32 scr_s = SoldierCombatRating(s, false);
+		if (scr_s > scr_BestSoldier)
+		{
+			if(s->bSide == bSide)
+			{
+				pBestSoldier = s;
+				scr_BestSoldier=scr_s;
+			}
+		}
+	}
+
+	return pBestSoldier;
+}
+
+SOLDIERTYPE* SoldierFindByTeamSideBestMarksmanship(UINT8 bTeam, UINT8 bSide)
+{
+	SOLDIERTYPE* pBestSoldier = 0;
+
+	FOR_EACH_IN_TEAM(s, bTeam)
+	{
+		if (pBestSoldier == 0)
+		{
+			if(s->bSide == bSide) pBestSoldier = s;
+			continue;
+		}
+		else if (s->bMarksmanship > pBestSoldier->bMarksmanship)
+		{
+			if(s->bSide == bSide) pBestSoldier = s;
+		}
+	}
+
+	return pBestSoldier;
+}
+
+void GiveProfileToMiltiaSoldier(SOLDIERTYPE* const pSoldier, ProfileID const pid)
+{
+	UINT8 const mercprofileID_template_male   = FIDEL;
+	UINT8 const mercprofileID_template_female = RAVEN;
+
+	MERCPROFILESTRUCT profile = gMercProfiles[pid];
+
+	if (pSoldier->ubBodyType == REGFEMALE )
+	{
+		profile = gMercProfiles[mercprofileID_template_female];
+		profile.zName = "Mrs. Smith";
+	}
+	else
+	{
+		profile = gMercProfiles[mercprofileID_template_male];
+		profile.zName = "Mr. Smith";
+	}
+
+	switch (pSoldier->ubSoldierClass)
+	{
+		case SOLDIER_CLASS_GREEN_MILITIA:
+			profile.zNickname = "Boot";
+			break;
+		case SOLDIER_CLASS_REG_MILITIA:
+			profile.zNickname = "Regular";
+			break;
+		case SOLDIER_CLASS_ELITE_MILITIA:
+			profile.zNickname = "Veteran";
+			break;
+		default:
+			profile.zNickname = "Militia";
+			break;
+	}
+
+	profile.bMercStatus = MERC_OK;
+
+	pSoldier->ubProfile	  = pid;
+	profile.ubBodyType    = pSoldier->ubBodyType;
+	profile.bLifeMax      = pSoldier->bLifeMax;
+	profile.bLife         = pSoldier->bLife;
+	profile.bAgility      = pSoldier->bAgility;
+	profile.bStrength     = pSoldier->bStrength;
+	profile.bDexterity    = pSoldier->bDexterity;
+	profile.bWisdom       = pSoldier->bWisdom;
+	profile.bLeadership   = pSoldier->bLeadership;
+
+	profile.bMarksmanship = pSoldier->bMarksmanship;
+	profile.bMedical      = pSoldier->bMedical;
+	profile.bMechanical   = pSoldier->bMechanical;
+	profile.bExplosive    = pSoldier->bExplosive;
+	profile.bExpLevel     = pSoldier->bExpLevel;
+
+	profile.bAttitude     = pSoldier->bAttitude;
+
+	profile.ubBodyType    = pSoldier->ubBodyType;
+	profile.bSkillTrait   = pSoldier->ubSkillTrait1;
+	profile.bSkillTrait2  = pSoldier->ubSkillTrait2;
+
+	profile.HAIR = pSoldier->HeadPal;
+	profile.SKIN = pSoldier->SkinPal;
+	profile.VEST = pSoldier->VestPal;
+	profile.PANTS = pSoldier->PantsPal;
+
+//	UINT8		ubMiscFlags2;
+	profile.bEvolution=0;
+//	UINT8		ubMiscFlags;
+	profile.bSexist = 0;
+	profile.bLearnToHate = 0;
+
+	// skills
+	profile.bDeathRate=0;
+	profile.sExpLevelGain=0;
+	profile.sLifeGain=0;
+	profile.sAgilityGain=0;
+	profile.sDexterityGain=0;
+	profile.sWisdomGain=0;
+	profile.sMarksmanshipGain=0;
+	profile.sMedicalGain=0;
+	profile.sMechanicGain=0;
+	profile.sExplosivesGain=0;
+
+	profile.bExpLevelDelta=0;
+	profile.bLifeDelta=0;
+	profile.bAgilityDelta=0;
+	profile.bDexterityDelta=0;
+	profile.bWisdomDelta=0;
+	profile.bMarksmanshipDelta=0;
+	profile.bMedicalDelta=0;
+	profile.bMechanicDelta=0;
+	profile.bExplosivesDelta=0;
+	profile.bStrengthDelta=0;
+	profile.bLeadershipDelta=0;
+/*
+	profile.usKills=0;
+	profile.usAssists=0;
+	profile.usShotsFired=0;
+	profile.usShotsHit=0;
+	profile.usBattlesFought=0;
+	profile.usTimesWounded=0;
+	profile.usTotalDaysServed=0;
+*/
+	profile.sLeadershipGain=0;
+	profile.sStrengthGain=0;
+
+
+	profile.sSalary=GCM->getGamePolicy()->militiamerc_salary;
+	profile.bPersonalityTrait=0; // override template value
+	//profile.bReputationTolerance=?
+
+	memset(profile.bBuddy, 0, 5);
+	memset(profile.bHated, 0, 5);
+
+	//profile.bRace
+	//profile.bNationality;
+	profile.bLearnToLike=0;
+	//profile.bTown;
+	//profile.bTownAttachment;
+	memset(profile.bMercOpinion, 0, 75);
+	memset(profile.bHatedTime, 0, 5);
+	profile.bLearnToLikeTime=0;
+	profile.bLearnToHateTime=0;
+	memset(profile.bHatedCount, 0, 5);
+	profile.bLearnToLikeCount=0;
+	profile.bLearnToHateCount=0;
+	profile.bNPCData=0;			// NPC specific
+	//profile.ubCivilianGroup;
+	//profile.ubNeedForSleep;
+	profile.uiMoney=0;
+	profile.bNPCData2=0;		// NPC specific
+
+//	UINT8	ubMiscFlags3;
+
+	profile.ubDaysOfMoraleHangover=0;		// used only when merc leaves team while having poor morale
+	profile.ubNumTimesDrugUseInLifetime=0;		// The # times a drug has been used in the player's lifetime...
+
+	profile.ubSuspiciousDeath=0;
+
+//	profile.uiTotalCostToDate=0;			// The total amount of money that has been paid to the merc for their salary
+
+}
+
+void AjustSectorMilitiaCount(SOLDIERTYPE* const pSoldier, INT8 delta)
+{
+	SECTORINFO *pSector = &SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ];
+	if (pSoldier->ubSoldierClass == SOLDIER_CLASS_GREEN_MILITIA) pSector->ubNumberOfCivsAtLevel[GREEN_MILITIA]+=delta;
+	if (pSoldier->ubSoldierClass == SOLDIER_CLASS_REG_MILITIA)   pSector->ubNumberOfCivsAtLevel[REGULAR_MILITIA]+=delta;
+	if (pSoldier->ubSoldierClass == SOLDIER_CLASS_ELITE_MILITIA) pSector->ubNumberOfCivsAtLevel[ELITE_MILITIA]+=delta;
+}
+
+void CopySoldierStats(SOLDIERTYPE* const d, SOLDIERTYPE* const s)
+{
+	#define COPY(v) d->v=s->v
+
+	COPY(ubSoldierClass);
+	COPY(bActionPoints);
+	COPY(bBleeding);
+	COPY(bCollapsed);
+	COPY(bBreathCollapsed);
+
+	COPY(sFractLife);   // fraction of life pts (in hundreths)
+	COPY(bBleeding);    // blood loss control variable
+	COPY(bBreath);      // current breath value
+	COPY(bBreathMax);   // max breath, affected by fatigue/sleep
+	COPY(bStealthMode);
+
+	COPY(sBreathRed);   // current breath value
+	COPY(bAssignment);
+	COPY(ubMilitiaKills);
+
+	COPY(sHeightAdjustment);
+	COPY(sDesiredHeight);
+	COPY(sDesiredHeight);
+	COPY(sTempNewGridNo);
+	COPY(bOverTerrainType);
+	COPY(ubDesiredHeight);
+	COPY(bLevel);
+}
+
+void UnRecruitMilitiaSoldier( ProfileID const pid )
+{
+	SOLDIERTYPE* const pMilitiaExisting = FindSoldierByProfileID(pid);
+
+	if (pMilitiaExisting)
+	{
+		gMercProfiles[ pid ].ubMiscFlags &= ~PROFILE_MISC_FLAG_RECRUITED;
+		SOLDIERTYPE pOldSoldier = *pMilitiaExisting;
+		INT8 bLife = pMilitiaExisting->bLife;
+		SECTORINFO *pSector = &SectorInfo[ SECTOR( pMilitiaExisting->sSectorX, pMilitiaExisting->sSectorY ) ];
+		SOLDIERTYPE *pTempSoldier = (SOLDIERTYPE *)malloc(sizeof(SOLDIERTYPE));
+		CopySoldierStats(pTempSoldier, &pOldSoldier);
+		SOLDIERTYPE* const pNewSoldier = ChangeSoldierTeam( pMilitiaExisting, MILITIA_TEAM );
+		CopySoldierStats(pNewSoldier, pTempSoldier);
+
+		// CHECK: Determine militia type by name since ubSoldierClass was not preserved
+		if (gMercProfiles[pid].zNickname[0] == L'B')
+		{
+			if (bLife > 0) pSector->ubNumberOfCivsAtLevel[GREEN_MILITIA]++;
+			pNewSoldier->ubSoldierClass = SOLDIER_CLASS_GREEN_MILITIA;
+		}
+		if (gMercProfiles[pid].zNickname[0] == L'R')
+		{
+			if (bLife > 0) pSector->ubNumberOfCivsAtLevel[REGULAR_MILITIA]++;
+			pNewSoldier->ubSoldierClass = SOLDIER_CLASS_REG_MILITIA;
+		}
+		if (gMercProfiles[pid].zNickname[0] == L'V')
+		{
+			if (bLife > 0) pSector->ubNumberOfCivsAtLevel[ELITE_MILITIA]++;
+			pNewSoldier->ubSoldierClass = SOLDIER_CLASS_ELITE_MILITIA;
+		}
+
+		free(pTempSoldier);
+		pNewSoldier->ubProfile = NO_PROFILE;
+		UpdateTeamPanelAssignments();
+	}
+}
+
+SOLDIERTYPE* const RecruitMilitaSoldier( SOLDIERTYPE* const pSoldier, ProfileID const pid)
+{
+	if(!pSoldier) return 0;
+
+	UnRecruitMilitiaSoldier(pid);
+	GiveProfileToMiltiaSoldier(pSoldier, pid);
+
+	SOLDIERTYPE* const pMilitia = FindSoldierByProfileID(pid);
+
+	if (!pMilitia)
+	{
+		return 0;
+	}
+
+	AjustSectorMilitiaCount(pSoldier, -1);
+
+	// OK, set recruit flag..
+	gMercProfiles[ pid ].ubMiscFlags |= PROFILE_MISC_FLAG_RECRUITED;
+
+	SOLDIERTYPE pOldSoldier = *pMilitia;
+	// Add this guy to our team!
+	SOLDIERTYPE* const pNewSoldier = ChangeSoldierTeam( pMilitia, OUR_TEAM );
+	pNewSoldier->ubWhatKindOfMercAmI  = MERC_TYPE__MILITA;
+	CopySoldierStats(pNewSoldier, &pOldSoldier);
+
+	AddCharacterToAnySquad( pNewSoldier );
+
+	ResetDeadSquadMemberList( pNewSoldier->bAssignment );
+
+	DirtyMercPanelInterface( pNewSoldier, DIRTYLEVEL2 );
+	gfRerenderInterfaceFromHelpText = TRUE;
+
+	UpdateTeamPanelAssignments( );
+
+	return( pNewSoldier );
+}
+
+
 BOOLEAN RecruitRPC( UINT8 ubCharNum )
 {
 	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubCharNum);

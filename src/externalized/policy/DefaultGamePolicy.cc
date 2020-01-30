@@ -33,6 +33,9 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	enemy_elite_minimum_level = (*json)["enemy_elite_minimum_level"].GetInt();
 	enemy_elite_maximum_level = (*json)["enemy_elite_maximum_level"].GetInt();
 
+	militia_control           = (*json)["take_control_of_militia"].GetBool();
+	militiamerc_salary        = (*json)["controlled_militia_salary"].GetInt();
+
 	inventory_management_extras    = (*json)["inventory_management_extras"].GetBool();
 	ime_detach_ammo                = (*json)["ime_detach_ammo"].GetBool();
 	ime_detach_attachments         = (*json)["ime_detach_attachments"].GetBool();

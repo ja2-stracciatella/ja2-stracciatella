@@ -2627,13 +2627,14 @@ static void SavePlayerGroupList(HWFILE const f, GROUP const* const g)
 {
 	// Save the number of nodes in the list
 	UINT32 uiNumberOfNodesInList = 0;
-	CFOR_EACH_PLAYER_IN_GROUP(p, g) ++uiNumberOfNodesInList;
+	CFOR_EACH_PLAYER_IN_GROUP(p, g) if(p->pSoldier) ++uiNumberOfNodesInList;
 	FileWrite(f, &uiNumberOfNodesInList, sizeof(UINT32));
 
 	// Loop through and save only the players profile id
 	CFOR_EACH_PLAYER_IN_GROUP(p, g)
 	{
 		// Save the ubProfile ID for this node
+		if(!p->pSoldier) continue; //! soldier was deleted but group not properly updated
 		const UINT32 uiProfileID = p->pSoldier->ubProfile;
 		FileWrite(f, &uiProfileID, sizeof(UINT32));
 	}
