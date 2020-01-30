@@ -27,12 +27,12 @@
 
 #include <algorithm>
 
-#define DC_MAX_COVER_RANGE		31
+#define DC_MAX_COVER_RANGE		63
 
-#define DC__SOLDIER_VISIBLE_RANGE	31
+#define DC__SOLDIER_VISIBLE_RANGE	63
 
 #define DC__MIN_SIZE			4
-#define DC__MAX_SIZE			11
+#define DC__MAX_SIZE			63
 
 struct BEST_COVER_STRUCT
 {
