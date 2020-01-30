@@ -119,6 +119,7 @@ static void QueryTBRightButton(UIEventKind*);
 static void QueryTBMiddleButton(UIEventKind*);
 
 static void GroupAutoReload();
+static void GroupAutoSwitchHeadGear();
 static void SwitchHeadGear(bool dayGear);
 
 void HandleTBReload( void );
@@ -1711,13 +1712,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'n':
 			if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_CTRL, 'n')))
 			{
-				static BOOLEAN bHeadGearDirection = true;
-				if (bHeadGearDirection) {
-					SwitchHeadGear(true);
-				} else {
-					SwitchHeadGear(false);
-				}
-				bHeadGearDirection = !bHeadGearDirection;
+				GroupAutoSwitchHeadGear();
 			}
 			break;
 
@@ -2755,6 +2750,25 @@ static void SetBurstMode(void)
 {
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel != NULL) ChangeWeaponMode(sel);
+}
+
+static void GroupAutoSwitchHeadGear()
+{
+ // modified from SwitchHeadGear
+ 
+	INT32 squad = CurrentSquad();
+	if (!IsSquadOnCurrentTacticalMap(squad)) return;
+
+	FOR_EACH_IN_SQUAD(k, squad)
+	{
+		SOLDIERTYPE* s = *k;
+
+		if(s == NULL) continue;
+		if(s->bAssignment == ASSIGNMENT_DEAD) continue;
+		if(s->uiStatusFlags & SOLDIER_VEHICLE) continue;
+
+		SoldierAutoSwitchGoggles(s);
+	}
 }
 
 static void GroupAutoReload()
