@@ -187,5 +187,30 @@
         // NOTE: does not set any personality
         // vanilla setting: false
         "pick_skills_directly": false
-    }
+    },
+
+    "progress": {
+        //  Progress weight of parameter on campaign progress
+        //  vanilla_settings: kills 25, control 25, income 50
+        "weight_kills": 25,
+        "weight_control": 25,
+        "weight_income": 50,
+
+        //  Progress point progression
+        //  vanilla_settings: 0_easy 7, 1_medium 10, 2_hard 15
+        "kills_per_point_0": 7,
+        "kills_per_point_1": 10,
+        "kills_per_point_2": 15,
+
+        //  Minimum first time progress to trigger event
+        //  vanilla_settings: madlab:35, mike:50, iggy:70
+        "event_madlab_min": 35,
+        "event_mike_min": 50,
+        "event_iggy_min": 70
+    },
+
+    //  Allowed unhired merc deaths at difficulty
+    "unhired_merc_deaths_difficulty_0": 1,
+    "unhired_merc_deaths_difficulty_1": 2,
+    "unhired_merc_deaths_difficulty_2": 3
 }

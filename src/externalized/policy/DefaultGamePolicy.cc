@@ -92,6 +92,23 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	imp_attribute_bonus       = (*json)["imp"]["bonus_attribute_points"].GetInt();
 	imp_attribute_zero_bonus  = (*json)["imp"]["zero_attribute_points_bonus"].GetInt();
 	imp_pick_skills_directly  = (*json)["imp"]["pick_skills_directly"].GetBool();
+
+	progress_event_madlab_min = (*json)["progress"]["event_madlab_min"].GetInt();
+	progress_event_mike_min   = (*json)["progress"]["event_mike_min"].GetInt();
+	progress_event_iggy_min   = (*json)["progress"]["event_iggy_min"].GetInt();
+
+	kills_per_point_0         = (*json)["progress"]["kills_per_point_0"].GetInt();
+	kills_per_point_1         = (*json)["progress"]["kills_per_point_1"].GetInt();
+	kills_per_point_2         = (*json)["progress"]["kills_per_point_2"].GetInt();
+
+	progress_weight_kills     = (*json)["progress"]["weight_kills"].GetDouble();
+	progress_weight_control   = (*json)["progress"]["weight_control"].GetDouble();
+	progress_weight_income    = (*json)["progress"]["weight_income"].GetDouble();
+
+	unhired_merc_deaths_difficulty_0    = (*json)["unhired_merc_deaths_difficulty_0"].GetInt();
+	unhired_merc_deaths_difficulty_1    = (*json)["unhired_merc_deaths_difficulty_1"].GetInt();
+	unhired_merc_deaths_difficulty_2    = (*json)["unhired_merc_deaths_difficulty_2"].GetInt();
+
 }
 
 /** Check if a hotkey is enabled. */
