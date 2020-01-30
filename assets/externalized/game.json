@@ -98,6 +98,32 @@
     "chance_to_hit_maximum": 99,
     "tactical_head_damage_multiplier": 1.5,
     "tactical_legs_damage_multiplier": 0.5,
+    
+    //  vanilla_setting: 1
+    "damage_minimum": 1,
+    //  (%) vanilla_setting: 10
+    "aim_bonus_per_std_ap": 10,
+    //  (%) vanilla_setting: 20
+    "aim_bonus_sniperscope": 20,
+    // range bonus, negative for penalty, for attached silencer (due to assumed sub-sonic rounds). 10 per 1 tile.
+    // vanilla_setting: 0
+    "range_bonus_silencer": 0,
+    //  (%) vanilla_setting: n/a
+    "aim_bonus_per_extra_ap": 5,
+    //  Extra AP that can be spent for having an attached sniper scope at 100% condition.
+    //  vanilla_setting: 0
+    "extra_ap_max_sniperscope": 0,
+    //  Extra AP that can be spent for having an attached bipod at 100% condition while prone.
+    //  vanilla_setting: 0
+    "extra_ap_max_bipod": 0,
+    //  Extra AP that can be spent for having attached both scope and bipod at 100% condition while prone.
+    //  vanilla_setting: 0
+    "extra_ap_max_bipod_scope_combined": 0,
+
+    // vanilla_Setting: false
+    "rocket_rifle_builtin_bipod": false,
+    // vanilla_Setting: false
+    "rocket_rifle_builtin_sniperscope": false,
 
     //  IMP attribute point defaults:
     //  Warning: Setting min attribute points to a value less than 15 allows

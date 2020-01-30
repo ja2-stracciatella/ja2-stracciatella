@@ -63,6 +63,18 @@ public:
 	int8_t chance_to_hit_minimum;         //Minimum chance to hit (0 - chance_to_hit_maximum) vanilla 1
 	int8_t chance_to_hit_maximum;         //Maximum chance to hit (chance_to_hit_minimum - 100) vanilla 99
 
+	int8_t damage_minimum;                // Minimum damage taken i.e. hit by glowstick. Vanilla 1
+	int8_t aim_bonus_per_std_ap;          // Aim bonus % for first 4 AP (aim clicks) spent. Vanilla 10.
+	int8_t aim_bonus_sniperscope;         // Flat bonus after at suitable range. Vanilla 20
+	int8_t range_bonus_silencer;          // Absolute bonus, negative for penalty, to range from silencer attachment. 10 per 1 tile. Vanilla 0.
+	int8_t aim_bonus_per_extra_ap;        // Aim bonus % for extra AP (aim clicks) spent. Not vanilla.
+	int8_t extra_ap_max_sniperscope;      // bonus to maximum AP that can be spent aiming to improve chance to hit. Vanilla 0
+	int8_t extra_ap_max_bipod;            // bonus to maximum AP that can be spent aiming to improve chance to hit. Vanilla 0
+	int8_t extra_ap_max_bipod_scope_combined; // bonus to maximum AP that can be spent aiming to improve chance to hit. Vanilla 0
+
+	bool rocket_rifle_builtin_bipod;         // rocket launcher can only use built-in attachments. Vanilla false
+	bool rocket_rifle_builtin_sniperscope;   // rocket launcher can only use built-in attachments. Vanilla false
+
 	/* IMP */
 	int8_t imp_attribute_max;             // IMP character attribute maximum 0 to 100, vanilla 85
 	int8_t imp_attribute_min;             // IMP character attribute minimum 0 to imp_attribute_max, vanilla 35

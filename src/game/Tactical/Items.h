@@ -21,6 +21,7 @@ INT8 FindObj(const SOLDIERTYPE* pSoldier, UINT16 usItem);
 INT8 FindAmmo(const SOLDIERTYPE*, const CalibreModel *, UINT8 ubMagSize, INT8 bExcludeSlot);
 
 INT8 FindAttachment(const OBJECTTYPE* pObj, UINT16 usItem);
+INT8 UniqueAttachmentStatusGet(const OBJECTTYPE* pObj, UINT16 usItem);
 INT8 FindObjClass(const SOLDIERTYPE* s, UINT32 usItemClass);
 extern INT8 FindAIUsableObjClass( const SOLDIERTYPE * pSoldier, 	UINT32 usItemClass );
 extern INT8 FindAIUsableObjClassWithin( const SOLDIERTYPE * pSoldier, 	UINT32 usItemClass, INT8 bLower, INT8 bUpper );

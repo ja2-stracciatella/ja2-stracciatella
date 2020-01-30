@@ -40,6 +40,18 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	chance_to_hit_maximum     = (*json)["chance_to_hit_maximum"].GetInt();
 	chance_to_hit_minimum     = (*json)["chance_to_hit_minimum"].GetInt();
 
+	damage_minimum            = (*json)["damage_minimum"].GetInt();
+	aim_bonus_per_std_ap      = (*json)["aim_bonus_per_std_ap"].GetInt();
+	aim_bonus_sniperscope     = (*json)["aim_bonus_sniperscope"].GetInt();
+	range_bonus_silencer      = (*json)["range_bonus_silencer"].GetInt();
+	aim_bonus_per_extra_ap    = (*json)["aim_bonus_per_extra_ap"].GetInt();
+	extra_ap_max_sniperscope  = (*json)["extra_ap_max_sniperscope"].GetInt();
+	extra_ap_max_bipod        = (*json)["extra_ap_max_bipod"].GetInt();
+	extra_ap_max_bipod_scope_combined = (*json)["extra_ap_max_bipod_scope_combined"].GetInt();
+
+	rocket_rifle_builtin_bipod       = (*json)["rocket_rifle_builtin_bipod"].GetBool();
+	rocket_rifle_builtin_sniperscope = (*json)["rocket_rifle_builtin_sniperscope"].GetBool();
+
 	imp_attribute_max         = (*json)["imp"]["max_attribute_points"].GetInt();
 	imp_attribute_min         = (*json)["imp"]["min_attribute_points"].GetInt();
 	imp_attribute_bonus       = (*json)["imp"]["bonus_attribute_points"].GetInt();

@@ -57,12 +57,12 @@
 #define BASIC_DEPRECIATE_CHANCE	15
 
 #define NORMAL_RANGE		90 // # world units considered an 'avg' shot
-#define MIN_SCOPE_RANGE	60 // # world units after which scope's useful
+#define MIN_SCOPE_RANGE		60 // # world units after which scope's useful
 
 #define MIN_TANK_RANGE		120 // range at which tank starts really having trouble aiming
 
 // percent reduction in sight range per point of aiming
-#define SNIPERSCOPE_AIM_BONUS	20
+#define SNIPERSCOPE_AIM_BONUS	gamepolicy(aim_bonus_sniperscope)
 // bonus to hit with working laser scope
 #define LASERSCOPE_BONUS	20
 
@@ -178,13 +178,14 @@ UINT16 GunRange(OBJECTTYPE const& o)
 	// return a minimal value of 1 tile
 	if (!(GCM->getItem(o.usItem)->isWeapon())) return CELL_X_SIZE;
 
-	INT8   const attach_pos = FindAttachment(&o, GUN_BARREL_EXTENDER);
-	UINT16       range      = GCM->getWeapon(o.usItem)->usRange;
-	if (attach_pos != ITEM_NOT_FOUND)
-	{
-		range += GUN_BARREL_RANGE_BONUS * WEAPON_STATUS_MOD(o.bAttachStatus[attach_pos]) / 100;
-	}
-	return range;
+	int       range      = GCM->getWeapon(o.usItem)->usRange;
+	range += GUN_BARREL_RANGE_BONUS * WEAPON_STATUS_MOD(UniqueAttachmentStatusGet(&o, GUN_BARREL_EXTENDER)) / 100;
+
+	range += SILENCER_RANGE_BONUS * WEAPON_STATUS_MOD(UniqueAttachmentStatusGet(&o, SILENCER)) / 100;
+
+	if(range < 0) range = CELL_X_SIZE; // minimal value
+
+	return (UINT16)range;
 }
 
 
@@ -707,7 +708,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	UINT16  usItemNum;
 	BOOLEAN fBuckshot;
 	UINT8   ubVolume;
-	INT8    bSilencerPos;
 	char    zBurstString[50];
 	UINT8   ubDirection;
 	INT16   sNewGridNo;
@@ -998,12 +998,10 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	else
 	{
 		// if the weapon has a silencer attached
-		bSilencerPos = FindAttachment( &(pSoldier->inv[HANDPOS]), SILENCER );
-		if (bSilencerPos != -1)
-		{
-			// reduce volume by a percentage equal to silencer's work %age (min 1)
-			ubVolume = 1 + ((100 - WEAPON_STATUS_MOD(pSoldier->inv[HANDPOS].bAttachStatus[bSilencerPos])) / (100 / (ubVolume - 1)));
-		}
+		// reduce volume by a percentage equal to silencer's work %age (min 1)
+		UINT8 const bAttachStatus = WEAPON_STATUS_MOD(UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), SILENCER));
+		if (bAttachStatus > 0)
+			ubVolume = 1 + ((100 - bAttachStatus) / (100 / (ubVolume - 1)));
 	}
 
 	MakeNoise(pSoldier, pSoldier->sGridNo, pSoldier->bLevel, ubVolume, NOISE_GUNFIRE);
@@ -1106,9 +1104,9 @@ static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 			}
 
 			// any successful hit does at LEAST 1 pt minimum damage
-			if (iImpact < 1)
+			if (iImpact < gamepolicy(damage_minimum))
 			{
-				iImpact = 1;
+				iImpact = gamepolicy(damage_minimum);
 			}
 
 			if ( pSoldier->inv[ pSoldier->ubAttackingHand ].bStatus[ 0 ] > USABLE )
@@ -2166,12 +2164,10 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 			{
 				iBonus = AIM_BONUS_PRONE;
 			}
-			bAttachPos = FindAttachment( pInHand, BIPOD );
-			if (bAttachPos != ITEM_NOT_FOUND)
-			{
-				// extra bonus to hit for a bipod, up to half the prone bonus itself
-				iBonus += (iBonus * WEAPON_STATUS_MOD(pInHand->bAttachStatus[bAttachPos]) / 100) / 2;
-			}
+
+			// extra bonus to hit for a bipod, up to half the prone bonus itself
+			iBonus += (iBonus * WEAPON_STATUS_MOD(UniqueAttachmentStatusGet(pInHand, BIPOD)) / 100) / 2;
+
 			iChance += iBonus;
 		}
 	}
@@ -2261,7 +2257,15 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 
 	// if shooter spent some extra time aiming and can see the target
 	if (iSightRange > 0 && ubAimTime && !pSoldier->bDoBurst)
-		iChance += (AIM_BONUS_PER_AP * ubAimTime); // bonus for every pt of aiming
+	{
+		if(ubAimTime > 4)
+		{
+			iChance += (AIM_BONUS_PER_AP * 4); // bonus for every pt of std aiming
+			iChance += (AIM_BONUS_PER_AP_EXTRA * (ubAimTime - 4)); // bonus for every extra pt of aiming
+		}
+		else
+			iChance += (AIM_BONUS_PER_AP * ubAimTime); // bonus for every pt of aiming
+	}
 
 	if ( !(pSoldier->uiStatusFlags & SOLDIER_PC ) ) // if this is a computer AI controlled enemy
 	{
@@ -2344,17 +2348,17 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 			iSightRange -= iRange / 10; //basically, +1% to hit per every 2 squares
 		}
 
-		bAttachPos = FindAttachment( pInHand, SNIPERSCOPE );
+		INT8 bScopeStatus = WEAPON_STATUS_MOD(UniqueAttachmentStatusGet(pInHand, SNIPERSCOPE));
 
 		// does gun have scope, long range recommends its use, and shooter's aiming?
-		if (bAttachPos != NO_SLOT && (iRange > MIN_SCOPE_RANGE) && (ubAimTime > 0))
+		if (bScopeStatus != 0 && (iRange > MIN_SCOPE_RANGE) && (ubAimTime > 0))
 		{
 			// reduce effective sight range by 20% per extra aiming time AP of the distance
 			// beyond MIN_SCOPE_RANGE.  Max reduction is 80% of the range beyond.
 			iScopeBonus = ((SNIPERSCOPE_AIM_BONUS * ubAimTime) * (iRange - MIN_SCOPE_RANGE)) / 100;
 
 			// adjust for scope condition, only has full affect at 100%
-			iScopeBonus = (iScopeBonus * WEAPON_STATUS_MOD(pInHand->bAttachStatus[bAttachPos])) / 100;
+			iScopeBonus = (iScopeBonus * bScopeStatus) / 100;
 
 			// reduce effective range by the bonus obtained from the scope
 			iSightRange -= iScopeBonus;
@@ -2364,35 +2368,24 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 			}
 		}
 
-		bAttachPos = FindAttachment( pInHand, LASERSCOPE );
-		if (usInHand == ROCKET_RIFLE || usInHand == AUTO_ROCKET_RIFLE ||
-			bAttachPos != NO_SLOT) // rocket rifle has one built in
+		INT8 bLaserStatus = WEAPON_STATUS_MOD(UniqueAttachmentStatusGet(pInHand, LASERSCOPE));
+
+		iScopeBonus = 0; // reset, vanilla sniperscope only affects iSightRange
+
+		// TODO VANILLA: laser scope isn't of much use in high light levels; add something for that
+		if (bLaserStatus > 50)
 		{
-			INT8 bLaserStatus;
-
-			if ( usInHand == ROCKET_RIFLE || usInHand == AUTO_ROCKET_RIFLE )
-			{
-				bLaserStatus = WEAPON_STATUS_MOD(pInHand->bGunStatus);
-			}
-			else
-			{
-				bLaserStatus = WEAPON_STATUS_MOD(pInHand->bAttachStatus[ bAttachPos ]);
-			}
-
-			// laser scope isn't of much use in high light levels; add something for that
-			if (bLaserStatus > 50)
-			{
-				iScopeBonus = LASERSCOPE_BONUS * (bLaserStatus - 50) / 50;
-			}
-			else
-			{
-				// laser scope in bad condition creates aim penalty!
-				iScopeBonus = - LASERSCOPE_BONUS * (50 - bLaserStatus) / 50;
-			}
-
-			iChance += iScopeBonus;
-
+			iScopeBonus = LASERSCOPE_BONUS * (bLaserStatus - 50) / 50;
 		}
+		else if (bLaserStatus > 0) // ignored if not found
+		{
+			// laser scope in bad condition creates aim penalty!
+			iScopeBonus = - LASERSCOPE_BONUS * (50 - bLaserStatus) / 50;
+		}
+
+
+		iChance += iScopeBonus;
+
 
 	}
 
@@ -3367,7 +3360,13 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 	{
 		// use only HALF of the normal aiming bonus for knife aiming.
 		// since there's no range penalty, the bonus is otherwise too generous
-		iAttRating += ((AIM_BONUS_PER_AP * ubAimTime) / 2);    //bonus for aiming
+		if(ubAimTime > 4)
+		{
+			iAttRating += ((AIM_BONUS_PER_AP * 4) / 2);    //bonus for aiming
+			iAttRating += ((AIM_BONUS_PER_AP_EXTRA * (ubAimTime - 4) / 2));    //bonus for extra aiming
+		}
+		else
+			iAttRating += ((AIM_BONUS_PER_AP * ubAimTime) / 2);    //bonus for aiming
 	}
 
 	if (! (pAttacker->uiStatusFlags & SOLDIER_PC) )   // if attacker is a computer AI controlled enemy
@@ -3721,7 +3720,13 @@ UINT32 CalcThrownChanceToHit(SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubAimTi
 	// ADJUST FOR EXTRA AIMING TIME
 	if (ubAimTime)
 	{
-		iChance += (AIM_BONUS_PER_AP * ubAimTime); // bonus for every pt of aiming
+		if(ubAimTime > 4)
+		{
+			iChance += (AIM_BONUS_PER_AP * 4); // bonus for every pt of std aiming
+			iChance += (AIM_BONUS_PER_AP_EXTRA * (ubAimTime - 4)); // bonus for every extra pt of aiming
+		}
+		else
+			iChance += (AIM_BONUS_PER_AP * ubAimTime); // bonus for every pt of aiming
 	}
 
 	// if shooter is being affected by gas
