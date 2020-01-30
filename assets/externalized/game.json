@@ -97,6 +97,15 @@
     //  when enough time units have been spent and which shots are unlikely.
     "accurate_aim_circle": false,
 
+    //  Increase difficulty by giving enemy elite all skill trait advantages (enemy_elite_all_traits)
+    //  Set lower requirements to allow any merc to get all advantages after enough skill grinding.
+    //  vanilla_setting: false
+    "all_skilltraits_mode": false,
+    "all_skilltraits_just_ours": false,
+    "all_skilltraits_required_wisdom": 100,
+    "all_skilltraits_required_level": 10,
+    "enemy_elite_all_traits": true,
+
     //  Press d in realtime mode to manually start turn based mode.
     //  vanilla_setting: false
     "can_enter_turnbased": false,

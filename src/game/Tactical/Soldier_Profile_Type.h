@@ -340,13 +340,6 @@ struct MERCPROFILESTRUCT
 	UINT32 uiTotalCostToDate; // The total amount of money that has been paid to the merc for their salary
 };
 
-
-static inline bool HasSkillTrait(MERCPROFILESTRUCT const& p, SkillTrait const skill)
-{
-	return p.bSkillTrait == skill || p.bSkillTrait2 == skill;
-}
-
-
 #define TIME_BETWEEN_HATED_COMPLAINTS				24
 
 #define SUSPICIOUS_DEATH					1

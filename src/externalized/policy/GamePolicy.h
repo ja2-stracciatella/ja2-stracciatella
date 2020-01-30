@@ -61,9 +61,15 @@ public:
 	bool load_saved_npc;                  // NPC merc that was hired gets loaded from last save game if was saved while also enabled
 	bool load_saved_npc_inventory;        // NPC merc gets inventory from last save game if was saved while also enabled
 
+	bool ironman_can_save_realtime;       // Save during real-time even when enemies present "clayman"
+
 	bool accurate_aim_circle;             // Aim circle size and colour corresponds to chance_to_hit
 
-	bool ironman_can_save_realtime;       // Save during real-time even when enemies present "clayman"
+	bool all_skilltraits_mode;            // Allow soldier to get every perk available
+	bool all_skilltraits_just_ours;       // limit to player soldiers
+	int8_t all_skilltraits_wisdom;        // Wisdom required to qualify. Above 100 disables
+	int8_t all_skilltraits_level;         // Level required to qualify. Above 10 disables
+	bool enemy_elite_all_traits;          // Elites from queen's army get all perks
 
 	bool pablo_wont_steal;                // Packages not stolen
 

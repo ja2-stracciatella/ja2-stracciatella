@@ -2374,14 +2374,7 @@ INT16 GetBonusTrainingPtsDueToInstructor(const SOLDIERTYPE* pInstructor, const S
 	}
 
 	// check for teaching skill bonuses
-	if( gMercProfiles[ pInstructor -> ubProfile ].bSkillTrait == TEACHING )
-	{
-		bTrainingBonus += TEACH_BONUS_TO_TRAIN;
-	}
-	if( gMercProfiles[ pInstructor -> ubProfile ].bSkillTrait2 == TEACHING )
-	{
-		bTrainingBonus += TEACH_BONUS_TO_TRAIN;
-	}
+	bTrainingBonus += TEACH_BONUS_TO_TRAIN*NUM_SKILL_TRAITS(pInstructor, TEACHING);
 
 	// teaching bonus is counted as normal, but gun range bonus is not
 	*pusMaxPts += ( ( ( bTrainingBonus + bOpinionFactor ) * *pusMaxPts ) / 100 );
@@ -2607,14 +2600,7 @@ INT16 GetTownTrainPtsForCharacter(const SOLDIERTYPE* pTrainer, UINT16* pusMaxPts
 	UINT16 sTotalTrainingPts = (EffectiveWisdom(pTrainer) + EffectiveLeadership(pTrainer) + 10 * EffectiveExpLevel(pTrainer)) * TOWN_TRAINING_RATE;
 
 	// check for teaching bonuses
-	if( gMercProfiles[ pTrainer -> ubProfile ].bSkillTrait == TEACHING )
-	{
-		bTrainingBonus += TEACH_BONUS_TO_TRAIN;
-	}
-	if( gMercProfiles[ pTrainer -> ubProfile ].bSkillTrait2 == TEACHING )
-	{
-		bTrainingBonus += TEACH_BONUS_TO_TRAIN;
-	}
+	bTrainingBonus += TEACH_BONUS_TO_TRAIN*NUM_SKILL_TRAITS(pTrainer, TEACHING);
 
 	// RPCs get a small training bonus for being more familiar with the locals and their customs/needs than outsiders
 	if( pTrainer->ubProfile >= FIRST_RPC )

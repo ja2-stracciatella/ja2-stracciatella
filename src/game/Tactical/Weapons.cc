@@ -3409,7 +3409,15 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 		else
 		{
 			// add bonuses for hand-to-hand and martial arts
-			iAttRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pAttacker, MARTIALARTS);
+			if(SoldierGetsAllTraits(pAttacker))
+			{
+				iAttRating += gbSkillTraitBonus[MARTIALARTS] * 2;
+			}
+			else
+			{
+				iAttRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pAttacker, MARTIALARTS);
+			}
+
 			iAttRating += gbSkillTraitBonus[HANDTOHAND]  * NUM_SKILL_TRAITS(pAttacker, HANDTOHAND);
 		}
 	}
@@ -3513,14 +3521,28 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 				// good with knives, got one, so we're good at parrying
 				iDefRating += gbSkillTraitBonus[KNIFING] * NUM_SKILL_TRAITS(pDefender, KNIFING);
 				// the knife gets in the way but we're still better than nobody
-				iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS) / 3;
+				if(SoldierGetsAllTraits(pDefender))
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS] * 2 / 3;
+				}
+				else
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS) / 3;
+				}
 			}
 			else
 			{
 				// good with knives, don't have one, but we know a bit about dodging
 				iDefRating += gbSkillTraitBonus[KNIFING]     * NUM_SKILL_TRAITS(pDefender, KNIFING)     / 3;
 				// bonus for dodging knives
-				iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS) / 2;
+				if(SoldierGetsAllTraits(pDefender))
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS];
+				}
+				else
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS) / 2;
+				}
 			}
 		}
 		else
@@ -3532,7 +3554,15 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 			}
 			else
 			{
-				iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS);
+				if(SoldierGetsAllTraits(pDefender))
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS] * 2;
+				}
+				else
+				{
+					iDefRating += gbSkillTraitBonus[MARTIALARTS] * NUM_SKILL_TRAITS(pDefender, MARTIALARTS);
+				}
+
 				iDefRating += gbSkillTraitBonus[HANDTOHAND]  * NUM_SKILL_TRAITS(pDefender, HANDTOHAND);
 			}
 		}

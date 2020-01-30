@@ -27,6 +27,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "Soldier_Control.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -1885,7 +1886,7 @@ static void AddIMPResultText(UINT32 Offset)
 
 static void AddSkillTraitText(MERCPROFILESTRUCT const& imp, SkillTrait const Skill, UINT32 const Offset)
 {
-	if (HasSkillTrait(imp, Skill)) AddIMPResultText(Offset);
+	if (HAS_SKILL_TRAIT(&imp, Skill)) AddIMPResultText(Offset);
 }
 
 

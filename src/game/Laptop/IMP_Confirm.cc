@@ -367,39 +367,44 @@ static void GiveItemsToPC(UINT8 ubProfileId)
 
 
 	// check for special skills
-	if (HasSkillTrait(p, LOCKPICKING) && iMechanical)
+	if (HAS_SKILL_TRAIT(&p, LOCKPICKING) && iMechanical)
 	{
 		MakeProfileInvItemAnySlot(p, LOCKSMITHKIT, 100, 1);
 	}
 
-	if (HasSkillTrait(p, HANDTOHAND))
+	if (HAS_SKILL_TRAIT(&p, HANDTOHAND))
 	{
 		MakeProfileInvItemAnySlot(p, BRASS_KNUCKLES, 100, 1);
 	}
 
-	if (HasSkillTrait(p, ELECTRONICS) && iMechanical)
+	if (HAS_SKILL_TRAIT(&p, ELECTRONICS) && iMechanical)
 	{
 		MakeProfileInvItemAnySlot(p, METALDETECTOR, 100, 1);
 	}
 
-	if (HasSkillTrait(p, NIGHTOPS))
+	if (HAS_SKILL_TRAIT(&p, NIGHTOPS))
 	{
 		MakeProfileInvItemAnySlot(p, BREAK_LIGHT, 100, 2);
 	}
 
-	if (HasSkillTrait(p, THROWING))
+	if (HAS_SKILL_TRAIT(&p, THROWING))
 	{
 		MakeProfileInvItemAnySlot(p, THROWING_KNIFE, 100, 1);
 	}
 
-	if (HasSkillTrait(p, STEALTHY))
+	if (HAS_SKILL_TRAIT(&p, STEALTHY))
 	{
 		MakeProfileInvItemAnySlot(p, SILENCER, 100, 1);
 	}
 
-	if (HasSkillTrait(p, KNIFING))
+	if (HAS_SKILL_TRAIT(&p, KNIFING))
 	{
 		MakeProfileInvItemAnySlot(p, COMBAT_KNIFE, 100, 1);
+	}
+
+	if (HAS_SKILL_TRAIT(&p, CAMOUFLAGED))
+	{
+		MakeProfileInvItemAnySlot(p, CAMOUFLAGEKIT, 100, 1);
 	}
 }
 

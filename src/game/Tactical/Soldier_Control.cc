@@ -92,6 +92,8 @@
 
 #include <string_theory/string>
 
+#include "policy/GamePolicy.h"
+
 #include <algorithm>
 #include <stdexcept>
 
@@ -213,6 +215,125 @@ BOOLEAN	gfGetNewPathThroughPeople = FALSE;
 UINT8*                  gubpNumReplacementsPerRange;
 PaletteReplacementType* gpPalRep;
 
+UINT32 GetProfileIDByPointer(const MERCPROFILESTRUCT* p)
+{
+	UINT32 ProfileID = (UINT32)-1;
+
+	if (!p) return ProfileID;
+
+	for(UINT32 i=0; i<NUM_PROFILES; i++)
+	{
+		if(&gMercProfiles[i]==p)
+		{
+			ProfileID=i;
+			break;
+		}
+	}
+
+	return ProfileID;
+}
+
+bool MercGetsAllTraits(MERCPROFILESTRUCT const* const s)
+{
+	if (!s) return false;
+	if (s->bWisdom < gamepolicy(all_skilltraits_wisdom)) return false;
+	if (s->bExpLevel < gamepolicy(all_skilltraits_level)) return false;
+	return true;
+}
+
+bool SoldierGetsAllTraits(SOLDIERTYPE const* const s)
+{
+	if (!s) return false;
+	if (s->bSide == ENEMY_TEAM && s->ubSoldierClass == SOLDIER_CLASS_ELITE && gamepolicy(enemy_elite_all_traits)) return true;
+	if (s->bSide != OUR_TEAM && gamepolicy(all_skilltraits_just_ours)) return false;
+	if (s->bWisdom < gamepolicy(all_skilltraits_wisdom)) return false;
+	if (s->bExpLevel < gamepolicy(all_skilltraits_level)) return false;
+	return true;
+}
+
+BOOLEAN HAS_SKILL_TRAIT(SOLDIERTYPE const* const s, INT32 const trait)
+{
+
+	BOOLEAN b = ((s)->ubSkillTrait1 == (trait) || (s)->ubSkillTrait2 == (trait));
+
+	if(!SoldierGetsAllTraits(s)) return b;
+
+	b = true;
+
+	switch(trait)
+	{
+		case MARTIALARTS:
+			if(s->ubBodyType == REGFEMALE) b = FALSE;
+			break;
+	}
+
+	return b;
+}
+
+UINT8 NUM_SKILL_TRAITS(SOLDIERTYPE const* const s, INT32 const trait)
+{
+	UINT8 n = (((s)->ubSkillTrait1 == (trait)) + ((s)->ubSkillTrait2 == (trait)));
+
+	if(!SoldierGetsAllTraits(s)) return n;
+
+	n = 2;
+
+	switch(trait)
+	{
+		case MARTIALARTS:
+			if(s->ubBodyType == REGFEMALE) n = 0;
+			break;
+		case CAMOUFLAGED:
+		case ELECTRONICS:
+		case AMBIDEXT:
+			n = 1;
+			break;
+	}
+
+	return n;
+}
+
+BOOLEAN HAS_SKILL_TRAIT(MERCPROFILESTRUCT const* const s, INT32 const trait)
+{
+
+	BOOLEAN b = ((s)->bSkillTrait == (trait) || (s)->bSkillTrait2 == (trait));
+
+	if(!MercGetsAllTraits(s)) return b;
+
+	b = true;
+
+	switch(trait)
+	{
+		case MARTIALARTS:
+//			if(s->ubBodyType == REGFEMALE) b = FALSE;
+			break;
+	}
+
+	return b;
+}
+
+UINT8 NUM_SKILL_TRAITS(MERCPROFILESTRUCT const* const s, INT32 const trait)
+{
+	UINT8 n = (((s)->bSkillTrait == (trait)) + ((s)->bSkillTrait2 == (trait)));
+
+	if(!MercGetsAllTraits(s)) return n;
+
+	n = 2;
+
+	switch(trait)
+	{
+		case MARTIALARTS:
+//			if(s->ubBodyType == REGFEMALE) n = 0;
+			break;
+		case CAMOUFLAGED:
+		case ELECTRONICS:
+		case AMBIDEXT:
+			n = 1;
+			break;
+	}
+
+	return n;
+}
 
 void AdjustNoAPToFinishMove( SOLDIERTYPE *pSoldier, BOOLEAN fSet )
 {

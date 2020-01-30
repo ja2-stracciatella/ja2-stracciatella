@@ -83,8 +83,13 @@
 #define SOLDIER_TRAIT_MARTIALARTS			0x0800
 #define SOLDIER_TRAIT_KNIFING				0x1000
 */
-#define HAS_SKILL_TRAIT(s, t)				((s)->ubSkillTrait1 == (t) || (s)->ubSkillTrait2 == (t))
-#define NUM_SKILL_TRAITS(s, t)				(((s)->ubSkillTrait1 == (t)) + ((s)->ubSkillTrait2 == (t)))
+
+bool MercGetsAllTraits(MERCPROFILESTRUCT const* const s);
+bool SoldierGetsAllTraits(SOLDIERTYPE const* const s);
+BOOLEAN HAS_SKILL_TRAIT(SOLDIERTYPE const* const s, INT32 const trait);
+UINT8 NUM_SKILL_TRAITS(SOLDIERTYPE const* const s, INT32 const trait);
+BOOLEAN HAS_SKILL_TRAIT(MERCPROFILESTRUCT const* const s, INT32 const trait);
+UINT8 NUM_SKILL_TRAITS(MERCPROFILESTRUCT const* const s, INT32 const trait);
 
 #define SOLDIER_QUOTE_SAID_IN_SHIT			0x0001
 #define SOLDIER_QUOTE_SAID_LOW_BREATH			0x0002
@@ -119,6 +124,7 @@
 
 
 #define SOLDIER_MISC_HEARD_GUNSHOT			0x01
+
 // make sure soldiers (esp tanks) are not hurt multiple times by explosions
 #define SOLDIER_MISC_HURT_BY_EXPLOSION			0x02
 // should be revealed due to xrays
