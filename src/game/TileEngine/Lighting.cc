@@ -558,6 +558,11 @@ UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel )
 	LEVELNODE * pNode;
 	INT32 iSum;
 
+	if (sGridNo > 25600) // HACK : sGridNo likely off by 1 bug
+	{
+		return( ubAmbientLightLevel );
+	}
+
 	if (bLevel == 0)
 	{
 		pNode = gpWorldLevelData[sGridNo].pLandHead;
@@ -567,6 +572,10 @@ UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel )
 		pNode = gpWorldLevelData[sGridNo].pRoofHead;
 	}
 
+	if (pNode <= (void*)0xffff) // HACK : sGridNo likely off by 1 bug
+	{
+		return( ubAmbientLightLevel );
+	}
 	if (pNode == NULL)
 	{
 		return( ubAmbientLightLevel );
