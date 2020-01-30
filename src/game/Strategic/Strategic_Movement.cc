@@ -777,6 +777,9 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 						CFOR_EACH_PLAYER_IN_GROUP(pPlayer, &g)
 						{
 							pSoldier = pPlayer->pSoldier;
+
+							if(pSoldier == 0) continue; //  move to group cleanup
+
 							if( !(pSoldier->uiStatusFlags & SOLDIER_VEHICLE) )
 							{
 								if( !AM_A_ROBOT( pSoldier ) &&
