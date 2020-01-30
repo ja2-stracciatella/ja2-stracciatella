@@ -39,6 +39,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	load_saved_npc_inventory        = (*json)["load_saved_npc_inventory"].GetBool();
 
 	accurate_aim_circle       = (*json)["accurate_aim_circle"].GetBool();
+ 
+	ironman_can_save_realtime = (*json)["tactical_realtime_save_allowed"].GetBool();
 
 	pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
 

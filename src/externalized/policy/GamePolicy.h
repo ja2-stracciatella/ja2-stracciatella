@@ -63,6 +63,8 @@ public:
 
 	bool accurate_aim_circle;             // Aim circle size and colour corresponds to chance_to_hit
 
+	bool ironman_can_save_realtime;       // Save during real-time even when enemies present "clayman"
+
 	bool pablo_wont_steal;                // Packages not stolen
 
 	float critical_damage_head_multiplier;//Head damage multiplier. Vanilla 1.5

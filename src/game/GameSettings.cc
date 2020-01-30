@@ -26,6 +26,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #include <string_theory/format>
 
@@ -274,7 +275,7 @@ BOOLEAN	CanGameBeSaved()
 				NumEnemiesInAnySector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) > 0 )
 		{
 			//no save for you
-			return( FALSE );
+			if (!gamepolicy(ironman_can_save_realtime)) return( FALSE );
 		}
 
 		//All checks failed, so we can save
