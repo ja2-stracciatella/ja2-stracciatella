@@ -117,6 +117,8 @@ const SOLDIERTYPE* gUITargetSoldier = NULL;
 static void QueryTBLeftButton(UIEventKind*);
 static void QueryTBRightButton(UIEventKind*);
 static void QueryTBMiddleButton(UIEventKind*);
+
+static void GroupAutoReload();
 static void SwitchHeadGear(bool dayGear);
 
 void HandleTBReload( void );
@@ -1643,6 +1645,20 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 }
 
 
+static void HandleModCtrlShift(UINT32 const key, UIEventKind* const new_event)
+{
+	switch (key)
+	{
+		case 'r':
+			if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_CTRL_SHIFT, 'r')))
+			{
+				GroupAutoReload();
+			}
+			break;
+
+	}
+}
+
 static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 {
 	switch (key)
@@ -2305,6 +2321,8 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 				case CTRL_DOWN:  HandleModCtrl( key, puiNewEvent); break;
 				case ALT_DOWN:   HandleModAlt(  key, puiNewEvent); break;
 
+				case CTRL_DOWN | SHIFT_DOWN:  HandleModCtrlShift( key, puiNewEvent); break;
+
 				case CTRL_DOWN | ALT_DOWN:
 					if (key == 'k')
 					{
@@ -2727,6 +2745,25 @@ static void SetBurstMode(void)
 {
 	SOLDIERTYPE* const sel = GetSelectedMan();
 	if (sel != NULL) ChangeWeaponMode(sel);
+}
+
+static void GroupAutoReload()
+{
+	// modified from SwitchHeadGear
+
+	SOLDIERTYPE* const selectedSoldier = GetSelectedMan();
+	if (selectedSoldier == NULL) return;
+
+	FOR_EACH_IN_SQUAD(k, selectedSoldier->bAssignment)
+	{
+		SOLDIERTYPE* s = *k;
+
+		if(s == NULL) continue;
+		if(s->bAssignment == ASSIGNMENT_DEAD) continue;
+		if(s->uiStatusFlags & SOLDIER_VEHICLE) continue;
+
+		AutoReload(s);
+	}
 }
 
 static void SwitchHeadGear(bool dayGear)

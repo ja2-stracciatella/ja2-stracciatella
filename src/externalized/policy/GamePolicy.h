@@ -13,7 +13,8 @@ enum HotkeyModifier
 	HKMOD_None,
 	HKMOD_CTRL,
 	HKMOD_SHIFT,
-	HKMOD_ALT
+	HKMOD_ALT,
+	HKMOD_CTRL_SHIFT
 };
 
 #define gamepolicy(element) (GCM->getGamePolicy()->element)
