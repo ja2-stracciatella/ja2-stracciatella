@@ -268,6 +268,15 @@ impl cmp::PartialEq for LibraryEntry {
 
 impl cmp::Eq for LibraryEntry {}
 
+/// LibraryFile displays the library and the file path by default.
+impl fmt::Display for LibraryFile {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        let library = self.arc_library.read().unwrap();
+        let entry = &library.entries[self.index];
+        write!(f, "LibraryFile {{ {}, {:?} }}", &library, &entry.file_path)
+    }
+}
+
 /// LibraryFile seeks the data of a library entry.
 impl io::Seek for LibraryFile {
     fn seek(&mut self, pos: SeekFrom) -> io::Result<u64> {

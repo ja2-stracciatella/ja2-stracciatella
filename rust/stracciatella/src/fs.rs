@@ -1,14 +1,46 @@
 //! This module contains code to interact with the filesystem.
+//!
+//! Use this module instead of [`std::fs`].
+//! It will make it easy to replace functions when needed.
+//!
+//! [`std::fs`]: https://doc.rust-lang.org/std/fs/index.html
+
+use std::io;
+use std::path::{Component, Path, PathBuf};
+
+use dunce;
 
 use crate::unicode::Nfc;
-use dunce;
-use std::path::{Component, Path, PathBuf};
+
+//------------
+// re-exports
+//------------
+
+pub use std::fs::create_dir;
+pub use std::fs::metadata;
+pub use std::fs::read_dir;
+pub use std::fs::rename;
+pub use std::fs::set_permissions;
+
+pub use tempfile::TempDir;
+
+//--------------
+// replacements
+//--------------
+
+/// A reliable implementation of remove_dir_all for Windows.
+/// For other systems it re-exports std::fs::remove_dir_all.
+pub use remove_dir_all::remove_dir_all;
 
 /// Returns the canonical, absolute form of a path with all intermediate
 /// components normalized and symbolic links resolved.
 ///
 /// On windows, UNC paths are converted to normal paths when possible.
 pub use dunce::canonicalize;
+
+//-------
+// other
+//-------
 
 /// Returns path joined with base.
 /// The path separators are normalized and path components are resolved only when needed.
@@ -70,4 +102,74 @@ pub fn resolve_existing_components(path: &Path, base: Option<&Path>, caseless: b
             current.push(&component);
             current // give up, copied
         })
+}
+
+/// Gets the paths of the directory entries.
+pub fn read_dir_paths(dir: &Path, ignore_entry_errors: bool) -> io::Result<Vec<PathBuf>> {
+    let mut vec = Vec::new();
+    for entry_result in read_dir(&dir)? {
+        match entry_result {
+            Ok(entry) => {
+                vec.push(entry.path());
+            }
+            Err(err) => {
+                if !ignore_entry_errors {
+                    return Err(err);
+                }
+            }
+        }
+    }
+    Ok(vec)
+}
+
+/// Gets the amount of bytes available as space in the target path.
+#[allow(unreachable_code)]
+pub fn free_space(path: &Path) -> io::Result<u64> {
+    // I did not find a crate with this functionality.
+    // This is a "best effort" implementation.
+    // It might not compile or be unimplemented on some targets.
+    #[cfg(windows)]
+    {
+        // use GetDiskFreeSpaceExW in the windows family (msvc/msys2)
+        use std::os::windows::ffi::OsStrExt;
+
+        use winapi::um::fileapi::GetDiskFreeSpaceExW;
+        use winapi::um::winnt::ULARGE_INTEGER;
+
+        let wpath: Vec<u16> = path
+            .as_os_str()
+            .encode_wide()
+            .chain(std::iter::once(0))
+            .collect();
+        let mut free_bytes: ULARGE_INTEGER = unsafe { std::mem::zeroed() };
+        let result = unsafe {
+            GetDiskFreeSpaceExW(
+                wpath.as_ptr(),
+                std::ptr::null_mut(),
+                std::ptr::null_mut(),
+                &mut free_bytes,
+            )
+        };
+        return match result {
+            0 => Err(io::Error::last_os_error()),
+            _ => Ok(*unsafe { free_bytes.QuadPart() }),
+        };
+    }
+    #[cfg(unix)]
+    #[allow(clippy::cast_lossless)]
+    {
+        // use statvfs in unix family
+        // TODO determine which of statvfs64/statfs64/statvfs/statfs are available
+        use std::os::unix::ffi::OsStrExt;
+
+        let mut bytes = path.as_os_str().as_bytes().to_vec();
+        bytes.push(0);
+        let mut data: libc::statvfs = unsafe { std::mem::zeroed() };
+        let result = unsafe { libc::statvfs(bytes.as_ptr() as *const libc::c_char, &mut data) };
+        return match result {
+            0 => Ok(data.f_bfree as u64 * data.f_bsize as u64),
+            _ => Err(io::Error::last_os_error()),
+        };
+    }
+    Err(io::Error::new(io::ErrorKind::Other, "not implemented"))
 }

@@ -33,15 +33,25 @@ log = "0.4"
 simplelog = "0.6"
 rayon = "1.1.0"
 dunce = "1"
+remove_dir_all = "0.5"
+tempfile = "3.0"
 
 [dependencies.clap]
 optional = true
 version = "~2.33"
 default-features = false
 
+[target.'cfg(windows)'.dependencies.winapi]
+# @see stracciatella::fs::free_space
+version = "0.3"
+features = ["std", "fileapi"]
+
+[target.'cfg(unix)'.dependencies.libc]
+# @see stracciatella::fs::free_space
+version = "0.2"
+
 [dev-dependencies]
 regex = "1.0"
-tempfile = "3.0"
 
 [features]
 default = ["bin"]

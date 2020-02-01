@@ -27,7 +27,6 @@ jobs:
             - make
             - g++
             - libsdl2-dev
-            - libboost-all-dev
             - fluid
             - libfltk1.3-dev
             - fakeroot
@@ -76,7 +75,7 @@ before_install:
 
   - export BUILD_SWITCHES="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVERSION_TAG=$VERSION_TAG"
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
-      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DLOCAL_BOOST_LIB=ON";
+      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2";
     fi
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" == "true" ]; then
       export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP";
@@ -150,7 +149,6 @@ addons:
     - make
     - g++
     - libsdl2-dev
-    - libboost-all-dev
     - fluid
     - libfltk1.3-dev
     - fakeroot

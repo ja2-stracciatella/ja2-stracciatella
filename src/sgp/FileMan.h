@@ -48,17 +48,6 @@ enum FileAttributes
 ENUM_BITSET(FileAttributes)
 
 FileAttributes FileGetAttributes(const char* filename);
-BOOLEAN FileClearAttributes(const char* filename);
-BOOLEAN FileClearAttributes(const std::string &filename);
-
-
-BOOLEAN GetFileManFileTime(const char* fileName, time_t* pLastWriteTime);
-
-/* returns
- * - -1 if the First file time is less than second file time. (first file is older)
- * -  0 First file time is equal to second file time.
- * - +1 First file time is greater than second file time (first file is newer). */
-INT32 CompareSGPFileTimes(const time_t* const pFirstFileTime, const time_t* const pSecondFileTime);
 
 /* Pass in the Fileman file handle of an OPEN file and it will return..
  * - if its a Real File, the return will be the handle of the REAL file
@@ -66,7 +55,7 @@ INT32 CompareSGPFileTimes(const time_t* const pFirstFileTime, const time_t* cons
 FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* hFile);
 
 //Gets the amount of free space on the hard drive that the main executeablt is runnning from
-uintmax_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
+uint64_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 
 /***
  * New file manager.
@@ -168,9 +157,9 @@ private:
 /**
  * Find all files with the given extension in the given directory.
  * @param dirPath Path to the directory
- * @param extension Extension with dot (e.g. ".txt")
+ * @param extension Extension (e.g. "txt")
  * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems.
- * @param returnOnlyNames When True, return only names (without the director path)
+ * @param returnOnlyNames When True, return only names (without the directory path)
  * @param sortResults When True, sort found paths.
  * @return List of paths (dir + filename). */
 std::vector<std::string>

@@ -136,7 +136,7 @@ try
 		if( guiCurrentScreen == MAP_SCREEN || guiCurrentScreen == GAME_SCREEN || guiCurrentScreen == SAVE_LOAD_SCREEN )
 		{
 			// Make sure the user has enough hard drive space
-			uintmax_t uiSpaceOnDrive = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom();
+			uint64_t uiSpaceOnDrive = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom();
 			if( uiSpaceOnDrive < REQUIRED_FREE_SPACE )
 			{
 				wchar_t	zText[512];

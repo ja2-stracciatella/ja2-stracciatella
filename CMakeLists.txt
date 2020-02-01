@@ -41,7 +41,6 @@ set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
 option(LOCAL_FLTK_LIB "Build with fltk lib" OFF)
-option(LOCAL_BOOST_LIB "Build with local boost lib" OFF)
 option(LOCAL_RAPIDJSON_LIB "Build with local rapidjson lib" ON)
 option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
 option(WITH_UNITTESTS "Build with unittests" ON)
@@ -121,15 +120,6 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 find_package(SDL2 REQUIRED)
 
-if (NOT LOCAL_BOOST_LIB)
-    find_package(Boost REQUIRED COMPONENTS filesystem system)
-else()
-    message(STATUS "Compiling with local Boost libraries from ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-boost")
-    add_subdirectory("dependencies/lib-boost")
-    set(Boost_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-boost")
-    set(Boost_LIBRARIES "boost")
-endif()
-
 if (NOT LOCAL_RAPIDJSON_LIB)
     find_package(RapidJSON REQUIRED)
 else()
@@ -174,7 +164,6 @@ endif()
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${JA2_INCLUDES}
-    ${Boost_INCLUDE_DIRS}
     ${RAPIDJSON_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
     ${STRACCIATELLA_INCLUDE_DIR}
@@ -228,7 +217,7 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 endif()
 
 add_executable(${JA2_BINARY} ${JA2_SOURCES})
-target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${Boost_LIBRARIES} ${GTEST_LIBRARIES} smacker ${STRACCIATELLA_LIBRARIES} string_theory ${ADDITIONAL_LIBS})
+target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${GTEST_LIBRARIES} smacker ${STRACCIATELLA_LIBRARIES} string_theory ${ADDITIONAL_LIBS})
 add_dependencies(${JA2_BINARY} stracciatella)
 if (LOCAL_GTEST_LIB)
     add_dependencies(${JA2_BINARY} gtest-internal)

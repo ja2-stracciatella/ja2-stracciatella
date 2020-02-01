@@ -32,19 +32,17 @@ pub extern "C" fn LibraryDB_push(
     data_dir: *const c_char,
     library: *const c_char,
 ) -> bool {
+    forget_rust_error();
     let ldb = unsafe_mut(ldb);
     let data_dir = path_from_c_str_or_panic(unsafe_c_str(data_dir));
     let library = path_from_c_str_or_panic(unsafe_c_str(library));
-    match ldb.add_library(data_dir, library) {
-        Err(err) => {
-            remember_rust_error(format!("{:?}", err));
-            false
-        }
-        Ok(_) => {
-            forget_rust_error();
-            true
-        }
+    if let Err(err) = ldb.add_library(&data_dir, &library) {
+        remember_rust_error(format!(
+            "LibraryDB_push {:?} {:?}: {}",
+            data_dir, library, err
+        ));
     }
+    no_rust_error()
 }
 
 /// Opens a library database file for reading.
@@ -53,17 +51,15 @@ pub extern "C" fn LibraryDB_push(
 /// Sets the rust error.
 #[no_mangle]
 pub extern "C" fn LibraryFile_open(ldb: *mut LibraryDB, path: *const c_char) -> *mut LibraryFile {
+    forget_rust_error();
     let ldb = unsafe_mut(ldb);
     let path = str_from_c_str_or_panic(unsafe_c_str(path));
     match ldb.open_file(&path) {
         Err(err) => {
-            remember_rust_error(format!("{:?}", err));
+            remember_rust_error(format!("LibraryFile_open {:?}: {}", path, err));
             std::ptr::null_mut()
         }
-        Ok(file) => {
-            forget_rust_error();
-            into_ptr(file)
-        }
+        Ok(file) => into_ptr(file),
     }
 }
 
@@ -79,6 +75,7 @@ pub extern "C" fn LibraryFile_close(file: *mut LibraryFile) {
 /// Sets the rust error.
 #[no_mangle]
 pub extern "C" fn LibraryFile_seek(file: *mut LibraryFile, distance: i64, from: c_int) -> bool {
+    forget_rust_error();
     let file = unsafe_mut(file);
     let seek_result = match from {
         0 if distance >= 0 => file.seek(SeekFrom::Start(distance as u64)),
@@ -86,16 +83,13 @@ pub extern "C" fn LibraryFile_seek(file: *mut LibraryFile, distance: i64, from: 
         2 => file.seek(SeekFrom::Current(distance)),
         _ => Err(io::ErrorKind::InvalidInput.into()),
     };
-    match seek_result {
-        Err(err) => {
-            remember_rust_error(format!("{:?}", err));
-            false
-        }
-        Ok(_) => {
-            forget_rust_error();
-            true
-        }
+    if let Err(err) = seek_result {
+        remember_rust_error(format!(
+            "LibraryFile_seek {} {} {}: {}",
+            file, distance, from, err
+        ));
     }
+    no_rust_error()
 }
 
 /// Reads from a library database file.
@@ -106,18 +100,16 @@ pub extern "C" fn LibraryFile_read(
     buffer: *mut u8,
     buffer_length: size_t,
 ) -> bool {
+    forget_rust_error();
     let file = unsafe_mut(file);
     let buffer = unsafe_slice_mut(buffer, buffer_length);
-    match file.read_exact(buffer) {
-        Err(err) => {
-            remember_rust_error(format!("{:?}", err));
-            false
-        }
-        Ok(_) => {
-            forget_rust_error();
-            true
-        }
+    if let Err(err) = file.read_exact(buffer) {
+        remember_rust_error(format!(
+            "LibraryFile_read {} {}: {}",
+            file, buffer_length, err
+        ));
     }
+    no_rust_error()
 }
 
 /// Gets the current position in a library database file.

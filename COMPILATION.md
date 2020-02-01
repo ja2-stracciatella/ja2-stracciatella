@@ -4,7 +4,6 @@
   __WARNING__: There is an issue with SDL in version `2.0.6` that causes segfaults when playing sounds.
   Please ensure that you run the game with a different version of the SDL2 library otherwise sound will be
   disabled.
-- boost-filesystem (included with `-DLOCAL_BOOST_LIB=ON`)
 - cmake
 - Rust and Cargo
 - Your systems compiler
@@ -84,11 +83,11 @@ pacman -S base-devel
 ```
 to build 64-bit:
 ```
-pacman -S mingw-w64-x86_64-toolchain mingw-w64-x86_64-rust mingw-w64-x86_64-cmake mingw-w64-x86_64-SDL2 mingw-w64-x86_64-boost mingw-w64-x86_64-fltk
+pacman -S mingw-w64-x86_64-toolchain mingw-w64-x86_64-rust mingw-w64-x86_64-cmake mingw-w64-x86_64-SDL2 mingw-w64-x86_64-fltk
 ```
 to build 32-bit:
 ```
-pacman -S mingw-w64-i686-toolchain mingw-w64-i686-rust mingw-w64-i686-cmake mingw-w64-i686-SDL2 mingw-w64-i686-boost mingw-w64-i686-fltk
+pacman -S mingw-w64-i686-toolchain mingw-w64-i686-rust mingw-w64-i686-cmake mingw-w64-i686-SDL2 mingw-w64-i686-fltk
 ```
 
 Get ja2-stracciatella, cd into it, and build the package:
@@ -133,7 +132,6 @@ cmake. The supported options are:
 | ------------- |-------------| -----|
 | `EXTRA_DATA_DIR` | Directory to read externalized data from. Useful for creating installable packages that have a fixed data path. | `` |
 | `LOCAL_SDL_LIB` | Use SDL library from this directory. | `` |
-| `LOCAL_BOOST_LIB` | Build with local boost lib from `_build` directory. No global boost installation required. | `OFF` |
 | `WITH_UNITTESTS` | Build with unittests | `ON` |
 | `WITH_FIXMES` | Build with fixme messages | `OFF` |
 | `WITH_MAEMO` | Build with right click mapped to F4 (menu button) | `OFF` |

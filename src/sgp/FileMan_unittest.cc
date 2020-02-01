@@ -1,8 +1,6 @@
 #include "gtest/gtest.h"
 
 #include "FileMan.h"
-#include "boost/filesystem.hpp"
-#include "boost/filesystem/fstream.hpp"
 
 #include "externalized/TestUtils.h"
 
@@ -46,7 +44,7 @@ TEST(FileManTest, joinPaths)
 }
 
 
-TEST(FileManTest, FindFilesWithBoost)
+TEST(FileManTest, FindFilesInDir)
 {
 #define PS PATH_SEPARATOR_STR
 
@@ -56,34 +54,34 @@ TEST(FileManTest, FindFilesWithBoost)
 
 	std::string testDir = FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files");
 
-	std::vector<std::string> results = FindFilesInDir(testDir, ".txt", false, false);
+	std::vector<std::string> results = FindFilesInDir(testDir, "txt", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 
-	results = FindFilesInDir(FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files"), ".txt", false, false);
+	results = FindFilesInDir(FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files"), "txt", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files" PS "lowercase-ext.txt").c_str());
 
-	results = FindFilesInDir(testDir, ".TXT", false, false);
+	results = FindFilesInDir(testDir, "TXT", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
-	results = FindFilesInDir(testDir, ".TXT", false, true);
+	results = FindFilesInDir(testDir, "TXT", false, true);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), "uppercase-ext.TXT");
 
-	results = FindFilesInDir(testDir, ".tXt", true, false);
+	results = FindFilesInDir(testDir, "tXt", true, false);
 	std::sort(results.begin(), results.end());
 	ASSERT_EQ(results.size(), 2u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 	EXPECT_STREQ(results[1].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
-	results = FindFilesInDir(testDir, ".tXt", true, false, true);
+	results = FindFilesInDir(testDir, "tXt", true, false, true);
 	ASSERT_EQ(results.size(), 2u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 	EXPECT_STREQ(results[1].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
-	results = FindFilesInDir(testDir, ".tXt", true, true, true);
+	results = FindFilesInDir(testDir, "tXt", true, true, true);
 	ASSERT_EQ(results.size(), 2u);
 	EXPECT_STREQ(results[0].c_str(), "lowercase-ext.txt");
 	EXPECT_STREQ(results[1].c_str(), "uppercase-ext.TXT");
@@ -100,48 +98,57 @@ TEST(FileManTest, FindFilesWithBoost)
 
 TEST(FileManTest, RemoveAllFilesInDir)
 {
-	boost::filesystem::path tmpDir = boost::filesystem::temp_directory_path();
-	tmpDir /= boost::filesystem::unique_path();
-	boost::filesystem::path subDir = tmpDir / "subdir";
-	ASSERT_EQ(boost::filesystem::create_directory(tmpDir), true);
-	ASSERT_EQ(boost::filesystem::create_directory(subDir), true);
+	RustPointer<TempDir> tempDir(Fs_createTempDir());
+	ASSERT_NE(tempDir.get(), nullptr);
+	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
+	ASSERT_NE(tempPath.get(), nullptr);
+	std::string subDir = FileMan::joinPaths(tempPath.get(), "subdir");
+	ASSERT_EQ(Fs_createDir(subDir.c_str()), true);
 
-	boost::filesystem::path pathA = tmpDir / "foo.txt";
-	boost::filesystem::path pathB = tmpDir / "bar.txt";
+	std::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
+	std::string pathB = FileMan::joinPaths(tempPath.get(), "bar.txt");
 
-	boost::filesystem::ofstream fileA(pathA);
-	boost::filesystem::ofstream fileB(pathB);
+	SGPFile* fileA = FileMan::openForWriting(pathA.c_str());
+	ASSERT_NE(fileA, nullptr);
+	SGPFile* fileB = FileMan::openForWriting(pathB.c_str());
+	ASSERT_NE(fileB, nullptr);
 
-	fileA << "foo";
-	fileB << "bar";
+	FileWrite(fileA, "foo", 3);
+	FileWrite(fileB, "bar", 3);
 
-	fileA.close();
-	fileB.close();
+	FileClose(fileA);
+	FileClose(fileB);
 
-	std::vector<std::string> results = FindAllFilesInDir(tmpDir.string(), true);
+	std::vector<std::string> results = FindAllFilesInDir(tempPath.get(), true);
 	ASSERT_EQ(results.size(), 2u);
 
-	EraseDirectory(tmpDir.string().c_str());
+	EraseDirectory(tempPath.get());
 
 	// check that the subdirectory is still there
-	ASSERT_EQ(boost::filesystem::is_directory(subDir), true);
+	ASSERT_EQ(Fs_isDir(subDir.c_str()), true);
 
-	results = FindAllFilesInDir(tmpDir.string(), true);
+	results = FindAllFilesInDir(tempPath.get(), true);
 	ASSERT_EQ(results.size(), 0u);
 }
 
 TEST(FileManTest, ReadTextFile)
 {
-	boost::filesystem::path tmpDir = boost::filesystem::temp_directory_path();
-	boost::filesystem::path pathA = tmpDir / "foo.txt";
+	RustPointer<TempDir> tempDir(Fs_createTempDir());
+	ASSERT_NE(tempDir.get(), nullptr);
+	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
+	ASSERT_NE(tempPath.get(), nullptr);
+	std::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
 
-	boost::filesystem::ofstream fileA(pathA);
-	fileA << "foo bar baz";
-	fileA.close();
+	SGPFile* fileA = FileMan::openForWriting(pathA.c_str());
+	ASSERT_NE(fileA, nullptr);
+	FileWrite(fileA, "foo bar baz", 11);
+	FileClose(fileA);
 
-	SGPFile* forReading = FileMan::openForReading(pathA.string().c_str());
+	SGPFile* forReading = FileMan::openForReading(pathA.c_str());
+	ASSERT_NE(forReading, nullptr);
 	std::string content = FileMan::fileReadText(forReading);
 	ASSERT_STREQ(content.c_str(), "foo bar baz");
+	FileClose(forReading);
 }
 
 TEST(FileManTest, GetFileName)
@@ -201,4 +208,9 @@ TEST(FileManTest, SlashifyPath)
 	std::string test("foo\\bar\\baz");
 	FileMan::slashifyPath(test);
 	EXPECT_STREQ(test.c_str(), "foo/bar/baz");
+}
+
+TEST(FileManTest, FreeSpace)
+{
+	EXPECT_NE(GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(), 0u);
 }

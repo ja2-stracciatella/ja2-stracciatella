@@ -1,8 +1,6 @@
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
 
-#include "boost/filesystem.hpp"
-
 #include "sgp/FileMan.h"
 
 #include "DefaultContentManager.h"
@@ -15,25 +13,25 @@
 TEST(TempFiles, createFile)
 {
 	DefaultContentManager * cm = createDefaultCMForTesting();
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
 	}
 
-	std::vector<std::string> results = FindFilesInDir(TMPDIR, ".txt", false, false);
+	std::vector<std::string> results = FindFilesInDir(TMPDIR, "txt", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), TMPDIR PS "foo.txt");
 
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, writeToFile)
 {
 	DefaultContentManager * cm = createDefaultCMForTesting();
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
 	{
@@ -55,14 +53,14 @@ TEST(TempFiles, writeToFile)
 
 	// // void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, writeAndRead)
 {
 	DefaultContentManager * cm = createDefaultCMForTesting();
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
 	{
@@ -78,14 +76,14 @@ TEST(TempFiles, writeAndRead)
 		ASSERT_STREQ(buf, "hello");
 	}
 
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, append)
 {
 	DefaultContentManager * cm = createDefaultCMForTesting();
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
 	{
@@ -103,29 +101,29 @@ TEST(TempFiles, append)
 		ASSERT_EQ(FileGetSize(file), 10u);
 	}
 
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, deleteFile)
 {
 	DefaultContentManager * cm = createDefaultCMForTesting();
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
 	}
 
-	std::vector<std::string> results = FindFilesInDir(TMPDIR, ".txt", false, false);
+	std::vector<std::string> results = FindFilesInDir(TMPDIR, "txt", false, false);
 	ASSERT_EQ(results.size(), 1u);
 
 	cm->deleteTempFile("foo.txt");
 
-	results = FindFilesInDir(TMPDIR, ".txt", false, false);
+	results = FindFilesInDir(TMPDIR, "txt", false, false);
 	ASSERT_EQ(results.size(), 0u);
 
-	boost::filesystem::remove_all(TMPDIR);
+	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 

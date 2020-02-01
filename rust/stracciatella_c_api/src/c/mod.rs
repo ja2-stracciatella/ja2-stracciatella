@@ -4,9 +4,11 @@
 //! http://geosoft.no/development/cppstyle.html
 
 pub mod config;
+pub mod fs;
 pub mod librarydb;
 pub mod logger;
 pub mod misc;
+pub mod path;
 
 pub mod error {
     //! This module contains error handling code for C.
@@ -68,6 +70,14 @@ pub(crate) mod common {
             let mut error = x.borrow_mut();
             *error = None;
         });
+    }
+
+    /// Returns true if there is no thread local error string for C, false otherwise.
+    pub fn no_rust_error() -> bool {
+        RUST_ERROR.with(|x| {
+            let error = x.borrow();
+            error.is_none()
+        })
     }
 
     /// Moves a value into a wrapped raw pointer. The caller is responsible for the memory.

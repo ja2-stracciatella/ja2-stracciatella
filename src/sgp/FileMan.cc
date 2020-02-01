@@ -10,8 +10,6 @@
 #include "MemMan.h"
 #include "PODObj.h"
 
-#include "boost/filesystem.hpp"
-
 #include "Logger.h"
 
 #if _WIN32
@@ -416,64 +414,28 @@ FileAttributes FileGetAttributes(const char* const filename)
 }
 
 
-BOOLEAN FileClearAttributes(const std::string &filename)
-{
-	return FileClearAttributes(filename.c_str());
-}
-
-BOOLEAN FileClearAttributes(const char* const filename)
-{
-	using namespace boost::filesystem;
-
-	permissions(filename, ( add_perms | owner_read | owner_write | group_read | group_write ));
-	return true;
-}
-
-
-BOOLEAN GetFileManFileTime(const char* fileName, time_t* const pLastWriteTime)
-{
-	using namespace boost::filesystem;
-	*pLastWriteTime = last_write_time(fileName);
-	if(*pLastWriteTime == -1)
-	{
-		return FALSE;
-	}
-	return TRUE;
-}
-
-
-INT32 CompareSGPFileTimes(const time_t* const pFirstFileTime, const time_t* const pSecondFileTime)
-{
-	if ( *pFirstFileTime < *pSecondFileTime )
-	{
-		return -1;
-	}
-	if ( *pFirstFileTime > *pSecondFileTime )
-	{
-		return 1;
-	}
-	return 0;
-}
-
-
 FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
 {
 	return f->flags & SGPFILE_REAL ? f->u.file : nullptr;
 }
 
-uintmax_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
+uint64_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 {
-	using namespace boost::filesystem;
-	space_info si = space(current_path());
-	if (si.available == static_cast<uintmax_t>(-1))
+	RustPointer<char> path(Env_currentDir());
+	if (!path)
 	{
-		/* something is wrong, tell everyone no space available */
+		RustPointer<char> msg(getRustError());
+		SLOGW("%s", msg.get());
 		return 0;
 	}
-	else
+	uint64_t bytes;
+	if (!Fs_freeSpace(path.get(), &bytes))
 	{
-		return si.available;
+		RustPointer<char> msg(getRustError());
+		SLOGW("%s", msg.get());
+		return 0;
 	}
+	return bytes;
 }
 
 /** Join two path components. */
@@ -672,11 +634,6 @@ FILE* FileMan::openForReadingCaseInsensitive(const std::string &folderPath, cons
 	return NULL;
 }
 
-/**
- * Find all files with the given extension in the given directory.
- * @param dirPath Path to the directory
- * @param extension Extension with dot (e.g. ".txt")
- * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems. * * @return List of paths (dir + filename). */
 std::vector<std::string>
 FindFilesInDir(const std::string &dirPath,
 		const std::string &ext,
@@ -684,58 +641,65 @@ FindFilesInDir(const std::string &dirPath,
 		bool returnOnlyNames,
 		bool sortResults)
 {
-	std::string ext_copy = ext;
-	if(caseIncensitive)
+	std::vector<std::string> ret;
+	std::vector<std::string> paths = FindAllFilesInDir(dirPath, sortResults);
+	for (std::string& path : paths)
 	{
-		std::transform(ext_copy.begin(), ext_copy.end(), ext_copy.begin(), ::tolower);
-	}
-
-	std::vector<std::string> paths;
-	boost::filesystem::path path(dirPath);
-	boost::filesystem::directory_iterator end;
-	for(boost::filesystem::directory_iterator it(path); it != end; it++)
-	{
-		if(boost::filesystem::is_regular_file(it->status()))
+		RustPointer<char> path_ext(Path_extension(path.c_str()));
+		bool same_ext;
+		if (!path_ext)
 		{
-			std::string file_ext = it->path().extension().string();
-			if(caseIncensitive)
+			same_ext = ext.empty();
+		}
+		else if (caseIncensitive)
+		{
+			same_ext = std::equal(ext.begin(), ext.end(), path_ext.get(), [](unsigned char a, unsigned char b) {
+				return ::tolower(a) == ::tolower(b);
+			});
+		}
+		else
+		{
+			same_ext = (ext == path_ext.get());
+		}
+		if (!same_ext)
+		{
+			continue;
+		}
+		if (returnOnlyNames)
+		{
+			RustPointer<char> filename(Path_filename(path.c_str()));
+			if (!filename)
 			{
-				std::transform(file_ext.begin(), file_ext.end(), file_ext.begin(), ::tolower);
+				throw new std::logic_error("expected a filename");
 			}
-			if(file_ext.compare(ext_copy) == 0)
-			{
-				if(returnOnlyNames)
-				{
-					paths.push_back(it->path().filename().string());
-				}
-				else
-				{
-					paths.push_back(it->path().string());
-				}
-			}
+			ret.emplace_back(filename.get());
+		}
+		else
+		{
+			ret.emplace_back(std::move(path));
 		}
 	}
-	if(sortResults)
-	{
-		std::sort(paths.begin(), paths.end());
-	}
-	return paths;
+	return ret;
 }
 
-/**
- * Find all files in a directory.
- * @return List of paths (dir + filename). */
 std::vector<std::string>
 FindAllFilesInDir(const std::string &dirPath, bool sortResults)
 {
 	std::vector<std::string> paths;
-	boost::filesystem::path path(dirPath);
-	boost::filesystem::directory_iterator end;
-	for(boost::filesystem::directory_iterator it(path); it != end; it++)
+	RustPointer<VecCString> vec(Fs_readDirPaths(dirPath.c_str(), false));
+	if (!vec)
 	{
-		if(boost::filesystem::is_regular_file(it->status()))
+		RustPointer<char> msg(getRustError());
+		SLOGW("%s", msg.get());
+		return paths;
+	}
+	size_t len = VecCString_length(vec.get());
+	for (size_t i = 0; i < len; i++)
+	{
+		RustPointer<char> path(VecCString_get(vec.get(), i));
+		if (Fs_isFile(path.get()))
 		{
-			paths.push_back(it->path().string());
+			paths.emplace_back(path.get());
 		}
 	}
 	if(sortResults)
@@ -745,31 +709,61 @@ FindAllFilesInDir(const std::string &dirPath, bool sortResults)
 	return paths;
 }
 
-/** Replace extension of a file. */
-std::string FileMan::replaceExtension(const std::string &_path, const char *newExtensionWithDot)
+std::string FileMan::replaceExtension(const std::string &path, const char *newExtensionWithDot)
 {
-	boost::filesystem::path path(_path);
-	boost::filesystem::path foo = boost::filesystem::path(newExtensionWithDot);
-	return path.replace_extension(newExtensionWithDot).string();
+	// TODO switch to rust path extensions (treats the dot in a different way)
+	std::string filename = getFileName(path);
+	size_t n = filename.length();
+
+	if (filename != "." && filename != "..")
+	{
+		size_t dot = filename.find_last_of('.');
+		if (dot != std::string::npos)
+		{
+			filename.erase(dot);
+		}
+	}
+	if (newExtensionWithDot[0] != '\0' && newExtensionWithDot[0] != '.')
+	{
+		filename.push_back('.');
+	}
+	filename += newExtensionWithDot;
+
+	std::string newPath = path.substr(0, path.length() - n);
+	newPath += filename;
+	return newPath;
 }
 
-/** Get parent path (e.g. directory path from the full path). */
-std::string FileMan::getParentPath(const std::string &_path, bool absolute)
+std::string FileMan::getParentPath(const std::string &path, bool absolute)
 {
-	boost::filesystem::path path(_path);
-	boost::filesystem::path parent = path.parent_path();
-	if(absolute)
+	RustPointer<char> parent(Path_parent(path.c_str()));
+	if (!parent)
 	{
-		parent = boost::filesystem::absolute(parent);
+		return std::string();
 	}
-	return parent.string();
+	if (absolute && !Path_isAbsolute(path.c_str()))
+	{
+		RustPointer<char> dir(Env_currentDir());
+		if (!dir)
+		{
+			RustPointer<char> msg(getRustError());
+			SLOGW("%s", msg.get());
+			throw new std::runtime_error("expected the current directory");
+		}
+		return joinPaths(dir.get(), parent.get());
+	}
+	return parent.get();
 }
 
 /** Get filename from the path. */
-std::string FileMan::getFileName(const std::string &_path)
+std::string FileMan::getFileName(const std::string &path)
 {
-	boost::filesystem::path path(_path);
-	return path.filename().string();
+	RustPointer<char> filename(Path_filename(path.c_str()));
+	if (!filename)
+	{
+		return std::string();
+	}
+	return std::string(filename.get());
 }
 
 /** Get filename from the path without extension. */
@@ -816,14 +810,15 @@ std::string FileMan::fileReadText(SGPFile* file)
 /** Check file existance. */
 bool FileMan::checkFileExistance(const char *folder, const char *fileName)
 {
-	boost::filesystem::path path(folder);
-	path /= fileName;
-	return boost::filesystem::exists(path);
+	std::string path = joinPaths(folder, fileName);
+	return Fs_exists(path.c_str());
 }
 
 void FileMan::moveFile(const char *from, const char *to)
 {
-	boost::filesystem::path fromPath(from);
-	boost::filesystem::path toPath(to);
-	boost::filesystem::rename(fromPath, toPath);
+	if (!Fs_rename(from, to))
+	{
+		RustPointer<char> msg(getRustError());
+		throw new std::runtime_error(msg.get());
+	}
 }
