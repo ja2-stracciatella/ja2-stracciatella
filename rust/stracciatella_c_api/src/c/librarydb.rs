@@ -36,8 +36,11 @@ pub extern "C" fn LibraryDB_push(
     let ldb = unsafe_mut(ldb);
     let data_dir = path_from_c_str_or_panic(unsafe_c_str(data_dir));
     let library = path_from_c_str_or_panic(unsafe_c_str(library));
-    if let Err(err) = ldb.add_library(data_dir, library) {
-        remember_rust_error(format!("{:?}", err));
+    if let Err(err) = ldb.add_library(&data_dir, &library) {
+        remember_rust_error(format!(
+            "LibraryDB_push {:?} {:?}: {}",
+            data_dir, library, err
+        ));
     }
     no_rust_error()
 }
@@ -53,7 +56,7 @@ pub extern "C" fn LibraryFile_open(ldb: *mut LibraryDB, path: *const c_char) -> 
     let path = str_from_c_str_or_panic(unsafe_c_str(path));
     match ldb.open_file(&path) {
         Err(err) => {
-            remember_rust_error(format!("{:?}", err));
+            remember_rust_error(format!("LibraryFile_open {:?}: {}", path, err));
             std::ptr::null_mut()
         }
         Ok(file) => into_ptr(file),
@@ -81,7 +84,10 @@ pub extern "C" fn LibraryFile_seek(file: *mut LibraryFile, distance: i64, from: 
         _ => Err(io::ErrorKind::InvalidInput.into()),
     };
     if let Err(err) = seek_result {
-        remember_rust_error(format!("{:?}", err));
+        remember_rust_error(format!(
+            "LibraryFile_seek {} {} {}: {}",
+            file, distance, from, err
+        ));
     }
     no_rust_error()
 }
@@ -98,7 +104,10 @@ pub extern "C" fn LibraryFile_read(
     let file = unsafe_mut(file);
     let buffer = unsafe_slice_mut(buffer, buffer_length);
     if let Err(err) = file.read_exact(buffer) {
-        remember_rust_error(format!("{:?}", err));
+        remember_rust_error(format!(
+            "LibraryFile_read {} {}: {}",
+            file, buffer_length, err
+        ));
     }
     no_rust_error()
 }
