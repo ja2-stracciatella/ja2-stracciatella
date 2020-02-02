@@ -1051,7 +1051,7 @@ void HandleMercLeavingEquipment(SOLDIERTYPE& s, bool const in_drassen)
 static void FreeLeaveListSlot(UINT32 uiSlotIndex);
 
 
-static void HandleEquipmentLeft(UINT32 const slot_idx, UINT const sector, GridNo const grid)
+static void HandleEquipmentLeft(UINT32 const slot_idx, INT const sector, GridNo const grid)
 {
 	Assert(slot_idx < NUM_LEAVE_LIST_SLOTS);
 
