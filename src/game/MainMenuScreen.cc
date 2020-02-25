@@ -76,7 +76,6 @@ static void HandleMainMenuInput(void);
 static void HandleMainMenuScreen(void);
 static void RenderMainMenu(void);
 static void RenderGameVersion(void);
-static void RenderSDLVersionWarningIfNeccessary(void);
 static void RenderCopyright(void);
 static void RestoreButtonBackGrounds(void);
 
@@ -128,7 +127,6 @@ ScreenID MainMenuScreenHandle(void)
 		RenderMainMenu();
 		RenderGameVersion();
 		RenderCopyright();
-		RenderSDLVersionWarningIfNeccessary();
 
 		fInitialRender = FALSE;
 	}
@@ -357,15 +355,6 @@ static void RenderMainMenu(void)
 void RenderGameVersion() {
 	SetFontAttributes(FONT10ARIAL, FONT_MCOLOR_WHITE);
 	mprintf(g_ui.m_versionPosition.iX, g_ui.m_versionPosition.iY, L"%hs", g_version_label, g_version_number);
-}
-
-void RenderSDLVersionWarningIfNeccessary() {
-	SDL_version sdl_version_linked;
-	SDL_GetVersion(&sdl_version_linked);
-	if (sdl_version_linked.major == 2 && sdl_version_linked.minor == 0 && sdl_version_linked.patch == 6) {
-		SetFontAttributes(FONT14ARIAL, FONT_MCOLOR_RED);
-		mprintf(0, 0, L"Detected SDL2 2.0.6. Sound disabled. Check ja2.log for more details.");
-	}
 }
 
 void RenderCopyright() {

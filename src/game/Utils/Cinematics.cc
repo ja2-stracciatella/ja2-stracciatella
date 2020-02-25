@@ -126,7 +126,7 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 	unsigned char audio_channels[7];
 	unsigned char audio_depth[7];
 	unsigned long audio_rate[7];
-	std::vector<unsigned char> audio[7];
+	std::vector<UINT8> audio[7];
 	if (smk_info_audio(sf->smacker, &audio_tracks, audio_channels, audio_depth, audio_rate) == 0 && audio_tracks != 0)
 	{
 		status = smk_enable_all(sf->smacker, audio_tracks);
@@ -174,8 +174,9 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 		}
 		else
 		{
-			UINT32 bytes = MIN(static_cast<UINT32>(audio[i].size()), UINT32_MAX);
-			sf->sounds[i] = SoundPlayFromSmackBuff(audio_channels[i], audio_depth[i], audio_rate[i], audio[i].data(), bytes, MAXVOLUME, 64, 1, nullptr, nullptr);
+			char name[128];
+			snprintf(name, sizeof(name), "%u@%s", i, filename);
+			sf->sounds[i] = SoundPlayFromSmackBuff(name, audio_channels[i], audio_depth[i], audio_rate[i], audio[i], MAXVOLUME, 64, 1, nullptr, nullptr);
 		}
 	}
 

@@ -3,6 +3,8 @@
 
 #include "Types.h"
 
+#include <vector>
+
 
 #define MAXVOLUME 127
 
@@ -20,7 +22,7 @@ void InitializeSoundManager(void);
 void ShutdownSoundManager(void);
 
 
-UINT32 SoundPlayFromSmackBuff(UINT8 channels, UINT8 depth, UINT32 rate, UINT8* pbuffer, UINT32 size, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
+UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UINT32 rate, std::vector<UINT8>& buf, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 
 /* Starts a sample playing. If the sample is not loaded in the cache, it will

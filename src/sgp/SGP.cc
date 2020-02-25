@@ -359,16 +359,6 @@ int main(int argc, char* argv[])
 		SoundEnableSound(FALSE);
 	}
 
-	// Disable sound when using SDL2 2.0.6:
-	SDL_version sdl_version_linked;
-	SDL_GetVersion(&sdl_version_linked);
-	if (sdl_version_linked.major == 2 && sdl_version_linked.minor == 0 && sdl_version_linked.patch == 6) {
-		SLOGE("Detected SDL2 2.0.6. Disabled sound.\n"
-							 "This version of SDL2 has a fatal bug in the audio conversion routines.\n"
-							 "Either downgrade to version 2.0.5 or upgrade to version 2.0.7 or later.");
-		SoundEnableSound(FALSE);
-	}
-
 	if (EngineOptions_shouldStartInDebugMode(params.get())) {
 		Logger_setLevel(LogLevel::Debug);
 		GameState::getInstance()->setDebugging(true);
