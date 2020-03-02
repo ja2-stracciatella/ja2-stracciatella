@@ -593,7 +593,7 @@ static bool SoundConvertBuffer(std::vector<UINT8>& buf,
 		Assert(tmpsize >= finalsize);
 
 		buf.resize(tmpsize);
-		cvt.len = buf.size();
+		cvt.len = static_cast<int>(buf.size());
 		cvt.buf = buf.data();
 		if (is_sdl206)
 		{
@@ -708,7 +708,7 @@ static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8>& buf, SDL_AudioFormat forma
 
 	// if insufficient memory, start unloading old samples until either
 	// there's nothing left to unload, or we fit
-	UINT32 samplesize = buf.size();
+	UINT32 samplesize = static_cast<UINT32>(buf.size());
 	while (samplesize + guiSoundMemoryUsed > guiSoundMemoryLimit)
 	{
 		if (!SoundCleanCache())
