@@ -86,59 +86,59 @@
 #include <iterator>
 
 #define ITEMDESC_FONT					BLOCKFONT2
-#define ITEMDESC_FONTSHADOW2				32
+#define ITEMDESC_FONTSHADOW2				RGB(201, 172, 133)
 
-#define ITEMDESC_FONTAPFORE				218
-#define ITEMDESC_FONTHPFORE				24
-#define ITEMDESC_FONTBSFORE				125
-#define ITEMDESC_FONTHEFORE				75
-#define ITEMDESC_FONTHEAPFORE				76
+#define ITEMDESC_FONTAPFORE				RGB(178,  15,  15)
+#define ITEMDESC_FONTHPFORE				RGB( 57,  79, 225)
+#define ITEMDESC_FONTBSFORE				RGB(190, 157, 103)
+#define ITEMDESC_FONTHEFORE				RGB(255, 206,  30)
+#define ITEMDESC_FONTHEAPFORE				RGB(240, 116,  45)
 
-#define ITEMDESC_AMMO_FORE				209
+#define ITEMDESC_AMMO_FORE				RGB(222, 222, 222)
 
 #define ITEMDESC_FONTHIGHLIGHT				FONT_MCOLOR_WHITE
 
-#define STATUS_BAR_SHADOW				FROMRGB( 140, 136,  119 )
-#define STATUS_BAR					FROMRGB( 201, 172,  133 )
+#define STATUS_BAR_SHADOW				RGB( 140, 136,  119 )
+#define STATUS_BAR					RGB( 201, 172,  133 )
 #define DESC_STATUS_BAR_SHADOW				STATUS_BAR_SHADOW
 #define DESC_STATUS_BAR				STATUS_BAR
 
-#define INV_BAR_DX					5
-#define INV_BAR_DY					21
+#define INV_BAR_DX					(g_ui.m_stdScreenScale * 5)
+#define INV_BAR_DY					(g_ui.m_stdScreenScale * 21)
 
 #define RENDER_ITEM_NOSTATUS				20
 #define RENDER_ITEM_ATTACHMENT1			200
 
-#define ITEM_STATS_WIDTH				26
-#define ITEM_STATS_HEIGHT				8
+#define ITEM_STATS_WIDTH				(g_ui.m_stdScreenScale * 26)
+#define ITEM_STATS_HEIGHT				(g_ui.m_stdScreenScale * 8)
 #define MAX_STACK_POPUP_WIDTH				6
 
-#define ITEMDESC_START_X				214
-#define ITEMDESC_START_Y				1 + INV_INTERFACE_START_Y
-#define ITEMDESC_HEIGHT				133
-#define ITEMDESC_WIDTH					320
-#define MAP_ITEMDESC_HEIGHT				268
-#define MAP_ITEMDESC_WIDTH				272
-#define ITEMDESC_ITEM_X				(8 + gsInvDescX)
-#define ITEMDESC_ITEM_Y				(11 + gsInvDescY)
+#define ITEMDESC_START_X				(g_ui.m_stdScreenScale * 214)
+#define ITEMDESC_START_Y				(g_ui.m_stdScreenScale * 1 + INV_INTERFACE_START_Y)
+#define ITEMDESC_HEIGHT				(g_ui.m_stdScreenScale * 133)
+#define ITEMDESC_WIDTH					(g_ui.m_stdScreenScale * 320)
+#define MAP_ITEMDESC_HEIGHT				(g_ui.m_stdScreenScale * 268)
+#define MAP_ITEMDESC_WIDTH				(g_ui.m_stdScreenScale * 272)
+#define ITEMDESC_ITEM_X				(g_ui.m_stdScreenScale * 8 + gsInvDescX)
+#define ITEMDESC_ITEM_Y				(g_ui.m_stdScreenScale * 11 + gsInvDescY)
 
-#define CAMO_REGION_HEIGHT				75
-#define CAMO_REGION_WIDTH				75
+#define CAMO_REGION_HEIGHT				(g_ui.m_stdScreenScale * 75)
+#define CAMO_REGION_WIDTH				(g_ui.m_stdScreenScale * 75)
 
-#define BULLET_SING_X					(222 + gsInvDescX)
-#define BULLET_SING_Y					(49 + gsInvDescY)
-#define BULLET_BURST_X					(263 + gsInvDescX)
-#define BULLET_BURST_Y					(49 + gsInvDescY)
-#define BULLET_WIDTH					3
+#define BULLET_SING_X					(g_ui.m_stdScreenScale * 222 + gsInvDescX)
+#define BULLET_SING_Y					(g_ui.m_stdScreenScale * 49 + gsInvDescY)
+#define BULLET_BURST_X					(g_ui.m_stdScreenScale * 263 + gsInvDescX)
+#define BULLET_BURST_Y					(g_ui.m_stdScreenScale * 49 + gsInvDescY)
+#define BULLET_WIDTH					(g_ui.m_stdScreenScale * 3)
 
-#define MAP_BULLET_SING_X				(77 + gsInvDescX)
-#define MAP_BULLET_SING_Y				(135 + gsInvDescY)
-#define MAP_BULLET_BURST_X				(117 + gsInvDescX)
-#define MAP_BULLET_BURST_Y				(135 + gsInvDescY)
+#define MAP_BULLET_SING_X				(g_ui.m_stdScreenScale * 77 + gsInvDescX)
+#define MAP_BULLET_SING_Y				(g_ui.m_stdScreenScale * 135 + gsInvDescY)
+#define MAP_BULLET_BURST_X				(g_ui.m_stdScreenScale * 117 + gsInvDescX)
+#define MAP_BULLET_BURST_Y				(g_ui.m_stdScreenScale * 135 + gsInvDescY)
 
-static const SGPBox g_itemdesc_desc_box            = { 11,  80, 301,  0 };
+static const SGPBox g_itemdesc_desc_box            = { 11, 80,  301, 0 };
 static const SGPBox g_itemdesc_pros_cons_box       = { 11, 110, 301, 10 };
-static const SGPBox g_itemdesc_item_status_box     = {  6,  60,   2, 51 };
+static const SGPBox g_itemdesc_item_status_box     = {  6,  60, 2,   51 };
 
 static const SGPBox g_map_itemdesc_desc_box        = { 23, 170, 220,  0 };
 static const SGPBox g_map_itemdesc_pros_cons_box   = { 23, 230, 220, 10 };
@@ -149,11 +149,12 @@ static const SGPBox g_map_itemdesc_item_status_box = { 18,  54,   2, 42 };
 
 #define ITEM_PROS_AND_CONS( usItem )			( ( GCM->getItem(usItem)->isGun()) )
 
-#define ITEMDESC_AMMO_TEXT_X				3
-#define ITEMDESC_AMMO_TEXT_Y				2
-#define ITEMDESC_AMMO_TEXT_WIDTH			31
+#define ITEMDESC_AMMO_TEXT_X				(g_ui.m_stdScreenScale * 3)
+#define ITEMDESC_AMMO_TEXT_Y				(g_ui.m_stdScreenScale * 2)
+#define ITEMDESC_AMMO_TEXT_WIDTH			(g_ui.m_stdScreenScale * 31)
 
-#define ITEM_BAR_HEIGHT				20
+#define ITEM_BAR_WIDTH				(g_ui.m_stdScreenScale * 2 + .5)
+#define ITEM_BAR_HEIGHT				(g_ui.m_stdScreenScale * 20)
 
 #define ITEM_FONT					TINYFONT1
 
@@ -174,13 +175,13 @@ static const SGPBox g_map_itemdesc_item_status_box = { 18,  54,   2, 42 };
 #define BAD_RELIABILITY				-2
 #define BAD_REPAIR_EASE				-2
 
-#define KEYRING_X      496
-#define KEYRING_Y      (INV_INTERFACE_START_Y + 106)
-#define MAP_KEYRING_X (STD_SCREEN_X + 217)
-#define MAP_KEYRING_Y (STD_SCREEN_Y + 271)
-#define KEYRING_WIDTH   29
-#define KEYRING_HEIGHT  23
-#define TACTICAL_INVENTORY_KEYRING_GRAPHIC_OFFSET_X 215
+#define KEYRING_X      (g_ui.m_stdScreenScale * 496)
+#define KEYRING_Y      (INV_INTERFACE_START_Y + g_ui.m_stdScreenScale * 106)
+#define MAP_KEYRING_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 217)
+#define MAP_KEYRING_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 271)
+#define KEYRING_WIDTH   (g_ui.m_stdScreenScale * 29)
+#define KEYRING_HEIGHT  (g_ui.m_stdScreenScale * 23)
+#define TACTICAL_INVENTORY_KEYRING_GRAPHIC_OFFSET_X (g_ui.m_stdScreenScale * 215)
 //enum used for the money buttons
 enum
 {
@@ -239,13 +240,19 @@ static SOLDIERTYPE *gpAttachSoldier;
 
 #define gMoneyButtonLoc				(g_ui.m_moneyButtonLoc)
 #define gMapMoneyButtonLoc				(g_ui.m_MoneyButtonLocMap)
-static const MoneyLoc gMoneyButtonOffsets[] = { { 0, 0 }, { 34, 0 }, { 0, 32 }, { 34, 32 }, { 8, 22 } };
+static const MoneyLoc gMoneyButtonOffsets[] = {
+	{ 0, 0 },
+	{ 34, 0 },
+	{ 0, 32 },
+	{ 34, 32 },
+	{ 8, 22 }
+};
 
 
 // number of keys on keyring, temp for now
 #define NUMBER_KEYS_ON_KEYRING				28
-#define KEY_RING_ROW_WIDTH				7
-#define MAP_KEY_RING_ROW_WIDTH				4
+#define KEY_RING_ITEMS_PER_ROW				7
+#define MAP_KEY_RING_ITEMS_PER_ROW				4
 
 // ITEM STACK POPUP STUFF
 static BOOLEAN gfInItemStackPopup = FALSE;
@@ -415,7 +422,7 @@ static MOUSE_REGION gKeyRingPanel;
 static MOUSE_REGION gSMInvCamoRegion;
 static INT8 gbCompatibleAmmo[NUM_INV_SLOTS];
 INT8 gbInvalidPlacementSlot[ NUM_INV_SLOTS ];
-static UINT16 us16BPPItemCyclePlacedItemColors[20];
+static UINT32 usItemCyclePlacedItemColors[20];
 static SGPVObject* guiBodyInvVO[4][2];
 static SGPVObject* guiGoldKeyVO;
 INT8 gbCompatibleApplyItem = FALSE;
@@ -692,7 +699,9 @@ void InitInvSlotInterface(INV_REGION_DESC const* const pRegionDesc, INV_REGION_D
 		INT16       const  y = pRegionDesc[i].uY;
 		INV_REGIONS const& r = gSMInvData[i];
 		MOUSE_REGION&      m = gSMInvRegion[i];
-		MSYS_DefineRegion(&m, x, y, x + r.w, y + r.h, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback);
+		MSYS_DefineRegion(&m, x, y,
+			x + g_ui.m_stdScreenScale * r.w, y + g_ui.m_stdScreenScale * r.h,
+			MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, INVMoveCallback, INVClickCallback);
 		MSYS_SetRegionUserData(&m, 0, i);
 	}
 
@@ -800,7 +809,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 	MOUSE_REGION&     r      = gSMInvRegion[pocket];
 
 	bool   hatch_out = false;
-	UINT16 outline   = SGP_TRANSPARENT;
+	UINT32 outline   = SGP_TRANSPARENT;
 	if (dirty_level == DIRTYLEVEL2)
 	{
 		wchar_t buf[150];
@@ -813,20 +822,21 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 		{
 			if (in_map)
 			{
-				BltVideoObject(guiSAVEBUFFER, guiMapInvSecondHandBlockout, 0, STD_SCREEN_X + 14, STD_SCREEN_Y + 218);
-				RestoreExternBackgroundRect(STD_SCREEN_X + 14, STD_SCREEN_Y + 218, 102, 24);
+				BltVideoObject(guiSAVEBUFFER, guiMapInvSecondHandBlockout, 0, STD_SCREEN_X + g_ui.m_stdScreenScale * 14, STD_SCREEN_Y + g_ui.m_stdScreenScale * 218);
+				RestoreExternBackgroundRect(STD_SCREEN_X + g_ui.m_stdScreenScale * 14, STD_SCREEN_Y + g_ui.m_stdScreenScale * 218,
+					g_ui.m_stdScreenScale * 102, g_ui.m_stdScreenScale * 24);
 			}
 			else
 			{
-				INT32 const x = 217;
-				INT32 const y = INV_INTERFACE_START_Y + 108;
+				INT32 const x = g_ui.m_stdScreenScale * 217;
+				INT32 const y = INV_INTERFACE_START_Y + g_ui.m_stdScreenScale * 108;
 				BltVideoObject(guiSAVEBUFFER, guiSecItemHiddenVO, 0, x, y);
-				RestoreExternBackgroundRect(x, y, 72, 28);
+				RestoreExternBackgroundRect(x, y, g_ui.m_stdScreenScale * 72, g_ui.m_stdScreenScale * 28);
 			}
 		}
 
 		// Check for compatibility with magazines
-		if (gbCompatibleAmmo[pocket]) outline = Get16BPPColor(FROMRGB(255, 255, 255));
+		if (gbCompatibleAmmo[pocket]) outline = RGB(255, 255, 255);
 	}
 
 	INT16 const x = r.X();
@@ -866,8 +876,8 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 	if (o.usItem != NOTHING)
 	{
 		// Add item status bar
-		DrawItemUIBarEx(o, 0, x - INV_BAR_DX, y + INV_BAR_DY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR),
-				Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+		DrawItemUIBarEx(o, 0, x - INV_BAR_DX + 0.5, y + INV_BAR_DY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, STATUS_BAR,
+				STATUS_BAR_SHADOW, guiSAVEBUFFER);
 	}
 }
 
@@ -1492,8 +1502,8 @@ void HandleNewlyAddedItems(SOLDIERTYPE& s, DirtyLevel* const dirty_level)
 		OBJECTTYPE const& o        = s.inv[i];
 		if (o.usItem == NOTHING) continue;
 		MOUSE_REGION const& r      = gSMInvRegion[i];
-		UINT16       const  colour = us16BPPItemCyclePlacedItemColors[s.bNewItemCycleCount[i]];
-		INVRenderItem(guiSAVEBUFFER, &s, o, r.X(), r.Y(), r.W(), r.H(), DIRTYLEVEL2, 0, colour);
+		UINT32       const  color = usItemCyclePlacedItemColors[s.bNewItemCycleCount[i]];
+		INVRenderItem(guiSAVEBUFFER, &s, o, r.X(), r.Y(), r.W(), r.H(), DIRTYLEVEL2, 0, color);
 	}
 }
 
@@ -1550,12 +1560,12 @@ void DegradeNewlyAddedItems( )
 	}
 }
 
-UINT8 GetAttachmentHintColor(const OBJECTTYPE* o) {
+UINT32 GetAttachmentHintColor(const OBJECTTYPE* o) {
 	return FindAttachmentByClass(o, IC_LAUNCHER) == NO_SLOT ? FONT_GREEN : FONT_YELLOW;
 }
 
 
-void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECTTYPE const& o, INT16 const sX, INT16 const sY, INT16 const sWidth, INT16 const sHeight, DirtyLevel const dirty_level, UINT8 const ubStatusIndex, INT16 const outline_colour)
+void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECTTYPE const& o, INT16 const sX, INT16 const sY, INT16 const sWidth, INT16 const sHeight, DirtyLevel const dirty_level, UINT8 const ubStatusIndex, UINT32 const outline_color)
 {
 	if (o.usItem    == NOTHING)     return;
 	if (dirty_level == DIRTYLEVEL0) return;
@@ -1575,9 +1585,9 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 
 		if (gamepolicy(f_draw_item_shadow))
 		{
-			BltVideoObjectOutlineShadow(buffer, &item_vo, gfx_idx, cx - 2, cy + 2);
+			BltVideoObjectOutlineShadow(buffer, &item_vo, gfx_idx, cx - g_ui.m_stdScreenScale * 2, cy + g_ui.m_stdScreenScale * 2);
 		}
-		BltVideoObjectOutline(      buffer, &item_vo, gfx_idx, cx,     cy, outline_colour);
+		BltVideoObjectOutline(      buffer, &item_vo, gfx_idx, cx,     cy, outline_color);
 
 		if (buffer == FRAME_BUFFER)
 		{
@@ -1592,30 +1602,28 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 	if (ubStatusIndex < RENDER_ITEM_ATTACHMENT1)
 	{
 		SetFont(ITEM_FONT);
-		SetFontBackground(FONT_MCOLOR_BLACK);
+		SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 
 		if (item->getItemClass() == IC_GUN && o.usItem != ROCKET_LAUNCHER)
 		{
 			// Display free rounds remianing
-			UINT8 colour;
+			UINT32 color;
 			switch (o.ubGunAmmoType)
 			{
 				case AMMO_AP:
-				case AMMO_SUPER_AP: colour = ITEMDESC_FONTAPFORE;   break;
-				case AMMO_HP:       colour = ITEMDESC_FONTHPFORE;   break;
-				case AMMO_BUCKSHOT: colour = ITEMDESC_FONTBSFORE;   break;
-				case AMMO_HE:       colour = ITEMDESC_FONTHEFORE;   break;
-				case AMMO_HEAT:     colour = ITEMDESC_FONTHEAPFORE; break;
-				default:            colour = FONT_MCOLOR_DKGRAY;    break;
+				case AMMO_SUPER_AP: color = ITEMDESC_FONTAPFORE;   break;
+				case AMMO_HP:       color = ITEMDESC_FONTHPFORE;   break;
+				case AMMO_BUCKSHOT: color = ITEMDESC_FONTBSFORE;   break;
+				case AMMO_HE:       color = ITEMDESC_FONTHEFORE;   break;
+				case AMMO_HEAT:     color = ITEMDESC_FONTHEAPFORE; break;
+				default:            color = FONT_MCOLOR_DKGRAY;    break;
 			}
-			SetFontForeground(colour);
+			SetFontForeground(color);
 
-			const INT16 sNewX = sX + 1;
-			const INT16 sNewY = sY + sHeight - 10;
+			const INT16 sNewX = sX + g_ui.m_stdScreenScale * 1;
+			const INT16 sNewY = sY + sHeight - g_ui.m_stdScreenScale * 10;
 			if (buffer == guiSAVEBUFFER)
-			{
-				RestoreExternBackgroundRect(sNewX, sNewY, 20, 15);
-			}
+				RestoreExternBackgroundRect(sNewX, sNewY, g_ui.m_stdScreenScale * 20, g_ui.m_stdScreenScale * 15);
 			GPrintInvalidateF(sNewX, sNewY, L"%d", o.ubGunShotsLeft);
 
 			// Display 'JAMMED' if we are jammed
@@ -1643,8 +1651,8 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 			swprintf(pStr, lengthof(pStr), L"%d", o.ubNumberOfObjects);
 
 			const UINT16 uiStringLength = StringPixLength(pStr, ITEM_FONT);
-			const INT16  sNewX          = sX + sWidth - uiStringLength - 4;
-			const INT16  sNewY          = sY + sHeight - 10;
+			const INT16  sNewX          = sX + sWidth - uiStringLength - g_ui.m_stdScreenScale * 4;
+			const INT16  sNewY          = sY + sHeight -g_ui.m_stdScreenScale *  10;
 
 			if (buffer == guiSAVEBUFFER)
 			{
@@ -1779,7 +1787,7 @@ static void ItemDescDoneButtonCallback(GUI_BUTTON* btn, INT32 reason);
 static void ReloadItemDesc(void);
 
 
-void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const INT16 sY, const UINT8 ubStatusIndex, SOLDIERTYPE* const s)
+void InternalInitItemDescriptionBox(OBJECTTYPE *o, const INT16 sX, const INT16 sY, const UINT8 ubStatusIndex, SOLDIERTYPE *s)
 {
 	// Set the current screen
 	guiCurrentItemDescriptionScreen = guiCurrentScreen;
@@ -1798,13 +1806,16 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 	{
 		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + MAP_ITEMDESC_WIDTH, gsInvDescY + MAP_ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST - 2, CURSOR_NORMAL, MSYS_NO_CALLBACK, ItemDescCallback);
 
-		giMapInvDescButton = QuickCreateButtonImg(INTERFACEDIR "/itemdescdonebutton.sti", 0, 1, gsInvDescX + 204, gsInvDescY + 107, MSYS_PRIORITY_HIGHEST, ItemDescDoneButtonCallback);
+		giMapInvDescButton = QuickCreateButtonImg(INTERFACEDIR "/itemdescdonebutton.sti", 0, 1,
+			gsInvDescX + g_ui.m_stdScreenScale * 204, gsInvDescY + g_ui.m_stdScreenScale * 107,
+			MSYS_PRIORITY_HIGHEST, ItemDescDoneButtonCallback);
 
 		fShowDescriptionFlag = TRUE;
 	}
 	else
 	{
-		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + ITEMDESC_WIDTH, gsInvDescY + ITEMDESC_HEIGHT, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback);
+		MSYS_DefineRegion(&gInvDesc, gsInvDescX, gsInvDescY, gsInvDescX + ITEMDESC_WIDTH, gsInvDescY + ITEMDESC_HEIGHT,
+			MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback);
 	}
 
 	if (GCM->getItem(o->usItem)->isGun()&& o->usItem != ROCKET_LAUNCHER)
@@ -1825,11 +1836,12 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 		const INT16         h  = GetDimensionsOfButtonPic(ammo_img)->h;
 		const SGPBox* const xy = (in_map ? &g_desc_item_box_map: &g_desc_item_box);
-		const INT16         x  = gsInvDescX + xy->x;
-		const INT16         y  = gsInvDescY + xy->y + xy->h - h; // align with bottom
-		const INT16         text_col   = ITEMDESC_AMMO_FORE;
-		const INT16         shadow_col = FONT_MCOLOR_BLACK;
-		GUIButtonRef  const ammo_btn   = CreateIconAndTextButton(ammo_img, pStr, TINYFONT1, text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
+		const INT16         x  = gsInvDescX + g_ui.m_stdScreenScale * xy->x;
+		const INT16         y  = gsInvDescY + g_ui.m_stdScreenScale * xy->y + g_ui.m_stdScreenScale * xy->h - h; // align with bottom
+		const UINT32        text_col   = ITEMDESC_AMMO_FORE;
+		const UINT32        shadow_col = FONT_MCOLOR_BLACK;
+		const GUIButtonRef  ammo_btn = CreateIconAndTextButton(ammo_img, pStr, TINYFONT1,
+			text_col, shadow_col, text_col, shadow_col, x, y, MSYS_PRIORITY_HIGHEST, ItemDescAmmoCallback);
 		giItemDescAmmoButton = ammo_btn;
 
 		// Disable the eject button, if we are being init from the shop keeper
@@ -1852,18 +1864,18 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 	if (ITEM_PROS_AND_CONS(o->usItem))
 	{
-		INT16         const pros_cons_indent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + 10;
+		INT16         const pros_cons_indent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + g_ui.m_stdScreenScale * 10;
 		const SGPBox* const box              = (in_map ? &g_map_itemdesc_pros_cons_box : &g_itemdesc_pros_cons_box);
-		UINT16        const x                = box->x + pros_cons_indent + gsInvDescX;
-		UINT16              y                = box->y                    + gsInvDescY;
-		UINT16        const w                = box->w - pros_cons_indent;
+		UINT16        const x                = g_ui.m_stdScreenScale * box->x + pros_cons_indent + gsInvDescX;
+		UINT16              y                = g_ui.m_stdScreenScale * box->y                    + gsInvDescY;
+		UINT16        const w                = g_ui.m_stdScreenScale * box->w - pros_cons_indent;
 		UINT16        const h                = GetFontHeight(ITEMDESC_FONT);
 		for (INT32 i = 0; i < 2; ++i)
 		{
 			// Add region for pros/cons help text
 			MOUSE_REGION* const r = &gProsAndConsRegions[i];
 			MSYS_DefineRegion(r, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback);
-			y += box->h;
+			y += g_ui.m_stdScreenScale * box->h;
 
 			const wchar_t* label;
 			// use temp variable to prevent an initial comma from being displayed
@@ -1895,10 +1907,10 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		for (INT32 i = 0; i < MAX_ATTACHMENTS; ++i)
 		{
 			// Build a mouse region here that is over any others.....
-			const UINT16        x = agi->item_box.x + agi->slot[i].iX + gsInvDescX;
-			const UINT16        y = agi->item_box.y + agi->slot[i].iY + gsInvDescY;
-			const UINT16        w = agi->item_box.w;
-			const UINT16        h = agi->item_box.h;
+			const UINT16        x = g_ui.m_stdScreenScale * agi->item_box.x + g_ui.m_stdScreenScale * agi->slot[i].iX + gsInvDescX;
+			const UINT16        y = g_ui.m_stdScreenScale * agi->item_box.y + g_ui.m_stdScreenScale * agi->slot[i].iY + gsInvDescY;
+			const UINT16        w = g_ui.m_stdScreenScale * agi->item_box.w;
+			const UINT16        h = g_ui.m_stdScreenScale * agi->item_box.h;
 			MOUSE_REGION* const r = &gItemDescAttachmentRegions[i];
 			MSYS_DefineRegion(r, x, y, x + w, y + h, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescAttachmentsCallback);
 			MSYS_SetRegionUserData(r, 0, i);
@@ -1922,9 +1934,9 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		{
 			guiMoneyButtonBtn[i] = CreateIconAndTextButton(
 				guiMoneyButtonImage, gzMoneyAmounts[i], BLOCKFONT2,
-				5, DEFAULT_SHADOW,
-				5, DEFAULT_SHADOW,
-				loc->x + gMoneyButtonOffsets[i].x, loc->y + gMoneyButtonOffsets[i].y, MSYS_PRIORITY_HIGHEST,
+				RGB(214, 201, 156), DEFAULT_SHADOW,
+				RGB(214, 201, 156), DEFAULT_SHADOW,
+				g_ui.m_stdScreenScale * loc->x + gMoneyButtonOffsets[i].x, g_ui.m_stdScreenScale * loc->y + gMoneyButtonOffsets[i].y, MSYS_PRIORITY_HIGHEST,
 				BtnMoneyButtonCallback
 			);
 			guiMoneyButtonBtn[i]->SetUserData(i);
@@ -1939,9 +1951,8 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 			guiMoneyDoneButtonImage, gzMoneyAmounts[i], BLOCKFONT2,
 			5, DEFAULT_SHADOW,
 			5, DEFAULT_SHADOW,
-			loc->x + gMoneyButtonOffsets[i].x, loc->y + gMoneyButtonOffsets[i].y, MSYS_PRIORITY_HIGHEST,
-			BtnMoneyButtonCallback
-		);
+			g_ui.m_stdScreenScale * loc->x + gMoneyButtonOffsets[i].x, g_ui.m_stdScreenScale * loc->y + gMoneyButtonOffsets[i].y,
+			MSYS_PRIORITY_HIGHEST, BtnMoneyButtonCallback);
 		guiMoneyButtonBtn[i]->SetUserData(i);
 	}
 
@@ -1972,7 +1983,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 		{
 			text = g_langRes->Message[STR_ATTACHMENT_INVALID_HELP];
 		}
-		SetUpFastHelpRegion(69 + gsInvDescX, 12 + gsInvDescY, 170, text);
+		SetUpFastHelpRegion(g_ui.m_stdScreenScale * 69 + gsInvDescX, g_ui.m_stdScreenScale * 12 + gsInvDescY, g_ui.m_stdScreenScale * 170, text);
 
 		StartShowingInterfaceFastHelpText();
 
@@ -2216,7 +2227,7 @@ static wchar_t const* GetObjectImprint(OBJECTTYPE const& o)
 
 static void HighlightIf(const BOOLEAN cond)
 {
-	SetFontForeground(cond ? ITEMDESC_FONTHIGHLIGHT : 5);
+	SetFontForeground(cond ? ITEMDESC_FONTHIGHLIGHT : RGB(214, 201, 156));
 }
 
 
@@ -2241,8 +2252,8 @@ void RenderItemDescriptionBox(void)
 	{
 		// Render the money Boxes
 		MoneyLoc const& xy = in_map ? gMapMoneyButtonLoc : gMoneyButtonLoc;
-		INT32    const  x  = xy.x + gMoneyButtonOffsets[0].x - 1;
-		INT32    const  y  = xy.y + gMoneyButtonOffsets[0].y;
+		INT32    const  x  = g_ui.m_stdScreenScale * xy.x + gMoneyButtonOffsets[0].x - 1;
+		INT32    const  y  = g_ui.m_stdScreenScale * xy.y + gMoneyButtonOffsets[0].y;
 		BltVideoObject(guiSAVEBUFFER, guiMoneyGraphicsForDescBox, 0, x, y);
 	}
 
@@ -2250,22 +2261,23 @@ void RenderItemDescriptionBox(void)
 		// Display item
 		// center in slot, remove offsets
 		ETRLEObject const& e  = guiItemGraphic->SubregionProperties(0);
-		SGPBox      const& xy = in_map ? g_desc_item_box_map: g_desc_item_box;
-		INT32       const  x  = dx + xy.x + (xy.w - e.usWidth)  / 2 - e.sOffsetX;
-		INT32       const  y  = dy + xy.y + (xy.h - e.usHeight) / 2 - e.sOffsetY;
+		SGPBox      const& xy = in_map ? g_desc_item_box_map : g_desc_item_box;
+		INT32       const  x  = dx + g_ui.m_stdScreenScale * xy.x + (g_ui.m_stdScreenScale * xy.w - e.usWidth) / 2 - e.sOffsetX;
+		INT32       const  y  = dy + g_ui.m_stdScreenScale * xy.y + (g_ui.m_stdScreenScale * xy.h - e.usHeight) / 2 - e.sOffsetY;
 		if (gamepolicy(f_draw_item_shadow))
 		{
-			BltVideoObjectOutlineShadow(guiSAVEBUFFER, guiItemGraphic, 0, x - 2, y + 2);
+			BltVideoObjectOutlineShadow(guiSAVEBUFFER, guiItemGraphic, 0, x - g_ui.m_stdScreenScale * 2, y + g_ui.m_stdScreenScale * 2);
 		}
 		BltVideoObject(guiSAVEBUFFER, guiItemGraphic, 0, x, y);
 	}
 
 	{ // Display status
 		SGPBox const& box = in_map ? g_map_itemdesc_item_status_box : g_itemdesc_item_status_box;
-		INT16  const  x   = box.x + dx;
-		INT16  const  y   = box.y + dy;
-		INT16  const  h   = box.h;
-		DrawItemUIBarEx(obj, gubItemDescStatusIndex, x, y, h, Get16BPPColor(DESC_STATUS_BAR), Get16BPPColor(DESC_STATUS_BAR_SHADOW), guiSAVEBUFFER);
+		const INT16 x = g_ui.m_stdScreenScale * box.x + dx + 0.5;
+		const INT16 y = g_ui.m_stdScreenScale * box.y + dy;
+		const INT16 w = g_ui.m_stdScreenScale * box.w;
+		const INT16 h = g_ui.m_stdScreenScale * box.h;
+		DrawItemUIBarEx(obj, gubItemDescStatusIndex, x, y, w, h, DESC_STATUS_BAR, DESC_STATUS_BAR_SHADOW, guiSAVEBUFFER);
 	}
 
 	bool hatch_out_attachments = gfItemDescObjectIsAttachment; // if examining attachment, always hatch out attachment slots
@@ -2285,27 +2297,28 @@ void RenderItemDescriptionBox(void)
 		AttachmentGfxInfo const& agi = in_map ? g_map_attachment_info : g_attachment_info;
 		for (INT32 i = 0; i < MAX_ATTACHMENTS; ++i)
 		{
-			INT16 const x = dx + agi.slot[i].iX;
-			INT16 const y = dy + agi.slot[i].iY;
+			INT16 const x = dx + g_ui.m_stdScreenScale * agi.slot[i].iX;
+			INT16 const y = dy + g_ui.m_stdScreenScale * agi.slot[i].iY;
 
 			if (obj.usAttachItem[i] != NOTHING)
 			{
-				INT16 const item_x = agi.item_box.x + x;
-				INT16 const item_y = agi.item_box.y + y;
-				INT16 const item_w = agi.item_box.w;
-				INT16 const item_h = agi.item_box.h;
+				INT16 const item_x = g_ui.m_stdScreenScale * agi.item_box.x + x;
+				INT16 const item_y = g_ui.m_stdScreenScale * agi.item_box.y + y;
+				INT16 const item_w = g_ui.m_stdScreenScale * agi.item_box.w;
+				INT16 const item_h = g_ui.m_stdScreenScale * agi.item_box.h;
 				INVRenderItem(guiSAVEBUFFER, NULL, obj, item_x, item_y, item_w, item_h, DIRTYLEVEL2, RENDER_ITEM_ATTACHMENT1 + i, SGP_TRANSPARENT);
 
-				INT16 const bar_x = agi.bar_box.x + x;
-				INT16 const bar_h = agi.bar_box.h;
-				INT16 const bar_y = agi.bar_box.y + y + bar_h - 1;
-				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_h, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), guiSAVEBUFFER);
+				INT16 const bar_x = g_ui.m_stdScreenScale * agi.bar_box.x + x + 0.5;
+				INT16 const bar_h = g_ui.m_stdScreenScale * agi.bar_box.h;
+				INT16 const bar_y = g_ui.m_stdScreenScale * agi.bar_box.y + y + bar_h - 1;
+				INT16 const bar_w = g_ui.m_stdScreenScale * agi.bar_box.w;
+				DrawItemUIBarEx(obj, DRAW_ITEM_STATUS_ATTACHMENT1 + i, bar_x, bar_y, bar_w, bar_h, STATUS_BAR, STATUS_BAR_SHADOW, guiSAVEBUFFER);
 			}
 
 			if (hatch_out_attachments)
 			{
-				UINT16 const hatch_w = agi.item_box.x + agi.item_box.w;
-				UINT16 const hatch_h = agi.item_box.y + agi.item_box.h;
+				UINT16 const hatch_w = g_ui.m_stdScreenScale * agi.item_box.x + g_ui.m_stdScreenScale * agi.item_box.w;
+				UINT16 const hatch_h = g_ui.m_stdScreenScale * agi.item_box.y + g_ui.m_stdScreenScale * agi.item_box.h;
 				DrawHatchOnInventory(guiSAVEBUFFER, x, y, hatch_w, hatch_h);
 			}
 		}
@@ -2347,14 +2360,15 @@ void RenderItemDescriptionBox(void)
 	{
 		// Render name
 		SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
-		MPrint(dx + xy.x, dy + xy.y, gzItemName);
+		MPrint(dx + g_ui.m_stdScreenScale * xy.x, dy + g_ui.m_stdScreenScale * xy.y, gzItemName);
 	}
 
 	SetFontShadow(ITEMDESC_FONTSHADOW2);
 
 	{
 		SGPBox const& box = in_map ? g_map_itemdesc_desc_box : g_itemdesc_desc_box;
-		DisplayWrappedString(dx + box.x, dy + box.y, box.w, 2, ITEMDESC_FONT, FONT_BLACK, gzItemDesc, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DisplayWrappedString(dx + g_ui.m_stdScreenScale * box.x, dy + g_ui.m_stdScreenScale * box.y, g_ui.m_stdScreenScale * box.w, g_ui.m_stdScreenScale * 2,
+			ITEMDESC_FONT, FONT_BLACK, gzItemDesc, FONT_MCOLOR_TRANSPARENT, LEFT_JUSTIFIED);
 	}
 
 	if (ITEM_PROS_AND_CONS(obj.usItem))
@@ -2375,16 +2389,17 @@ void RenderItemDescriptionBox(void)
 			}
 
 			SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
-			FindFontRightCoordinates(dx + xy.x, dy + xy.y, xy.w, xy.h, pStr, ITEMDESC_FONT, &usX, &usY);
+			FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * xy.x, dy + g_ui.m_stdScreenScale * xy.y, g_ui.m_stdScreenScale * xy.w, g_ui.m_stdScreenScale * xy.h,
+				pStr, ITEMDESC_FONT, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 
 		{
 			SGPBox const& box = in_map ? g_map_itemdesc_pros_cons_box : g_itemdesc_pros_cons_box;
-			INT32         x   = box.x + dx;
-			INT32  const  y   = box.y + dy;
-			INT32         w   = box.w;
-			INT32  const  h   = box.h;
+			INT32         x   = g_ui.m_stdScreenScale * box.x + dx;
+			INT32  const  y   = g_ui.m_stdScreenScale * box.y + dy;
+			INT32         w   = g_ui.m_stdScreenScale * box.w;
+			INT32  const  h   = g_ui.m_stdScreenScale * box.h;
 
 			SetFontForeground(FONT_MCOLOR_DKWHITE2);
 			SetFontShadow(DEFAULT_SHADOW);
@@ -2394,7 +2409,7 @@ void RenderItemDescriptionBox(void)
 			SetFontForeground(FONT_BLACK);
 			SetFontShadow(ITEMDESC_FONTSHADOW2);
 
-			INT16 const pros_cons_indent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + 10;
+			INT16 const pros_cons_indent = __max(StringPixLength(gzProsLabel, ITEMDESC_FONT), StringPixLength(gzConsLabel, ITEMDESC_FONT)) + g_ui.m_stdScreenScale * 10;
 			x += pros_cons_indent;
 			w -= pros_cons_indent + StringPixLength(DOTDOTDOT, ITEMDESC_FONT);
 
@@ -2416,43 +2431,45 @@ void RenderItemDescriptionBox(void)
 	// Render, stat  name
 	if (item->isWeapon())
 	{
-		SetFontForeground(6);
+		SetFontForeground(RGB(173, 148, 115));
 
 		INV_DESC_STATS const* const ids = in_map ? gMapWeaponStats : gWeaponStats;
 
 		//LABELS
-		mprintf(dx + ids[0].sX, dy + ids[0].sY, gWeaponStatsDesc[0], GetWeightUnitString()); // mass
+		mprintf(dx + g_ui.m_stdScreenScale * ids[0].sX, dy + g_ui.m_stdScreenScale * ids[0].sY, gWeaponStatsDesc[0], GetWeightUnitString()); // mass
 		if (item->getItemClass() & (IC_GUN | IC_LAUNCHER))
 		{
-			MPrint(dx + ids[2].sX, dy + ids[2].sY, gWeaponStatsDesc[3]); // range
+			MPrint(dx + g_ui.m_stdScreenScale * ids[2].sX, dy + g_ui.m_stdScreenScale * ids[2].sY, gWeaponStatsDesc[3]); // range
 		}
 		if (!(item->isLauncher()) && obj.usItem != ROCKET_LAUNCHER)
 		{
-			MPrint(dx + ids[3].sX, dy + ids[3].sY, gWeaponStatsDesc[4]); // damage
+			MPrint(dx + g_ui.m_stdScreenScale * ids[3].sX, dy + g_ui.m_stdScreenScale * ids[3].sY, gWeaponStatsDesc[4]); // damage
 		}
-		MPrint(dx + ids[4].sX, dy + ids[4].sY, gWeaponStatsDesc[5]); // APs
+		MPrint(dx + g_ui.m_stdScreenScale * ids[4].sX, dy + g_ui.m_stdScreenScale * ids[4].sY, gWeaponStatsDesc[5]); // APs
 		if (item->isGun())
 		{
-			MPrint(dx + ids[6].sX, dy + ids[6].sY, gWeaponStatsDesc[6]); // = (sic)
+			MPrint(dx + g_ui.m_stdScreenScale * ids[6].sX, dy + g_ui.m_stdScreenScale * ids[6].sY, gWeaponStatsDesc[6]); // = (sic)
 		}
-		MPrint(dx + ids[1].sX, dy + ids[1].sY, gWeaponStatsDesc[1]); // status
+		MPrint(dx + g_ui.m_stdScreenScale * ids[1].sX, dy + g_ui.m_stdScreenScale * ids[1].sY, gWeaponStatsDesc[1]); // status
 
 		const WeaponModel * w = GCM->getWeapon(obj.usItem);
 		if (w->ubShotsPerBurst > 0)
 		{
-			MPrint(dx + ids[7].sX, dy + ids[7].sY, gWeaponStatsDesc[6]); // = (sic)
+			MPrint(dx + g_ui.m_stdScreenScale * ids[7].sX, dy + g_ui.m_stdScreenScale * ids[7].sY, gWeaponStatsDesc[6]); // = (sic)
 		}
 
 		//Status
-		SetFontForeground(5);
+		SetFontForeground(RGB(214, 201, 156));
 		swprintf(pStr, lengthof(pStr), L"%2d%%", obj.bGunStatus);
-		FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+		FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * ids[1].sX + g_ui.m_stdScreenScale * ids[1].sValDx, dy + g_ui.m_stdScreenScale * ids[1].sY,
+			ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
 		//Weight
 		HighlightIf(fWeight <= EXCEPTIONAL_WEIGHT / 10);
 		swprintf(pStr, lengthof(pStr), L"%1.1f", fWeight);
-		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx, dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+		FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * ids[0].sX + g_ui.m_stdScreenScale * ids[0].sValDx, dy + g_ui.m_stdScreenScale * ids[0].sY,
+			ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
 		if (item->getItemClass() & (IC_GUN | IC_LAUNCHER))
@@ -2461,7 +2478,8 @@ void RenderItemDescriptionBox(void)
 			UINT16 const range = GunRange(obj);
 			HighlightIf(range >= EXCEPTIONAL_RANGE);
 			swprintf(pStr, lengthof(pStr), L"%2d", range / 10);
-			FindFontRightCoordinates(dx + ids[2].sX + ids[2].sValDx, dy + ids[2].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * ids[2].sX + g_ui.m_stdScreenScale * ids[2].sValDx, dy + g_ui.m_stdScreenScale * ids[2].sY,
+				ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 
@@ -2470,7 +2488,8 @@ void RenderItemDescriptionBox(void)
 			// Damage
 			HighlightIf(w->ubImpact >= EXCEPTIONAL_DAMAGE);
 			swprintf(pStr, lengthof(pStr), L"%2d", w->ubImpact);
-			FindFontRightCoordinates(dx + ids[3].sX + ids[3].sValDx, dy + ids[3].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * ids[3].sX + g_ui.m_stdScreenScale * ids[3].sValDx, dy + g_ui.m_stdScreenScale * ids[3].sY,
+				ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 
@@ -2479,14 +2498,16 @@ void RenderItemDescriptionBox(void)
 		//APs
 		HighlightIf(ubAttackAPs <= EXCEPTIONAL_AP_COST);
 		swprintf(pStr, lengthof(pStr), L"%2d", ubAttackAPs);
-		FindFontRightCoordinates(dx + ids[4].sX + ids[4].sValDx, dy + ids[4].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+		FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * ids[4].sX + g_ui.m_stdScreenScale * ids[4].sValDx, dy + g_ui.m_stdScreenScale * ids[4].sY,
+			ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
 		if (w->ubShotsPerBurst > 0)
 		{
 			HighlightIf(w->ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || obj.usItem == G11);
 			swprintf(pStr, lengthof(pStr), L"%2d", ubAttackAPs + CalcAPsToBurst(DEFAULT_APS, obj));
-			FindFontRightCoordinates(dx + ids[5].sX + ids[5].sValDx, dy + ids[5].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * ids[5].sX + g_ui.m_stdScreenScale * ids[5].sValDx, dy + g_ui.m_stdScreenScale * ids[5].sY,
+				ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 	}
@@ -2498,38 +2519,39 @@ void RenderItemDescriptionBox(void)
 			// Display the total amount of money
 			SPrintMoney(pStr, in_map && gfAddingMoneyToMercFromPlayersAccount ? LaptopSaveInfo.iCurrentBalance : gRemoveMoney.uiTotalAmount);
 			SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
-			FindFontRightCoordinates(dx + xy.x, dy + xy.y, xy.w, xy.h, pStr, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * xy.x, dy + g_ui.m_stdScreenScale * xy.y, g_ui.m_stdScreenScale * xy.w, g_ui.m_stdScreenScale * xy.h,
+				pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 
 		{
 			// Display the 'Separate' text
-			SetFontForeground(in_map ? 5 : 6);
+			SetFontForeground(in_map ? RGB(214, 201, 156) : RGB(173, 148, 115));
 			MoneyLoc const&       xy    = in_map ? gMapMoneyButtonLoc : gMoneyButtonLoc;
 			wchar_t  const* const label = !in_map && gfAddingMoneyToMercFromPlayersAccount ? gzMoneyAmounts[5] : gzMoneyAmounts[4];
-			MPrint(xy.x + gMoneyButtonOffsets[4].x, xy.y + gMoneyButtonOffsets[4].y, label);
+			MPrint(g_ui.m_stdScreenScale * xy.x + gMoneyButtonOffsets[4].x, g_ui.m_stdScreenScale * xy.y + gMoneyButtonOffsets[4].y, label);
 		}
 
-		SetFontForeground(6);
+		SetFontForeground(RGB(173, 148, 115));
 
 		INV_DESC_STATS const* const xy = in_map ? gMapMoneyStats : gMoneyStats;
 
 		if (!in_map && gfAddingMoneyToMercFromPlayersAccount)
 		{
-			MPrint(dx + xy[0].sX, dy + xy[0].sY, gMoneyStatsDesc[MONEY_DESC_PLAYERS]);           // current ...
-			MPrint(dx + xy[1].sX, dy + xy[1].sY, gMoneyStatsDesc[MONEY_DESC_BALANCE]);           // ... balance
-			MPrint(dx + xy[2].sX, dy + xy[2].sY, gMoneyStatsDesc[MONEY_DESC_AMOUNT_2_WITHDRAW]); // amount to ...
-			MPrint(dx + xy[3].sX, dy + xy[3].sY, gMoneyStatsDesc[MONEY_DESC_TO_WITHDRAW]);       // ... widthdraw
+			MPrint(dx + g_ui.m_stdScreenScale * xy[0].sX, dy + g_ui.m_stdScreenScale * xy[0].sY, gMoneyStatsDesc[MONEY_DESC_PLAYERS]);           // current ...
+			MPrint(dx + g_ui.m_stdScreenScale * xy[1].sX, dy + g_ui.m_stdScreenScale * xy[1].sY, gMoneyStatsDesc[MONEY_DESC_BALANCE]);           // ... balance
+			MPrint(dx + g_ui.m_stdScreenScale * xy[2].sX, dy + g_ui.m_stdScreenScale * xy[2].sY, gMoneyStatsDesc[MONEY_DESC_AMOUNT_2_WITHDRAW]); // amount to ...
+			MPrint(dx + g_ui.m_stdScreenScale * xy[3].sX, dy + g_ui.m_stdScreenScale * xy[3].sY, gMoneyStatsDesc[MONEY_DESC_TO_WITHDRAW]);       // ... widthdraw
 		}
 		else
 		{
-			MPrint(dx + xy[0].sX, dy + xy[0].sY, gMoneyStatsDesc[MONEY_DESC_AMOUNT]);         // amount ...
-			MPrint(dx + xy[1].sX, dy + xy[1].sY, gMoneyStatsDesc[MONEY_DESC_REMAINING]);      // ... remaining
-			MPrint(dx + xy[2].sX, dy + xy[2].sY, gMoneyStatsDesc[MONEY_DESC_AMOUNT_2_SPLIT]); // amount ...
-			MPrint(dx + xy[3].sX, dy + xy[3].sY, gMoneyStatsDesc[MONEY_DESC_TO_SPLIT]);       // ... to split
+			MPrint(dx + g_ui.m_stdScreenScale * xy[0].sX, dy + g_ui.m_stdScreenScale * xy[0].sY, gMoneyStatsDesc[MONEY_DESC_AMOUNT]);         // amount ...
+			MPrint(dx + g_ui.m_stdScreenScale * xy[1].sX, dy + g_ui.m_stdScreenScale * xy[1].sY, gMoneyStatsDesc[MONEY_DESC_REMAINING]);      // ... remaining
+			MPrint(dx + g_ui.m_stdScreenScale * xy[2].sX, dy + g_ui.m_stdScreenScale * xy[2].sY, gMoneyStatsDesc[MONEY_DESC_AMOUNT_2_SPLIT]); // amount ...
+			MPrint(dx + g_ui.m_stdScreenScale * xy[3].sX, dy + g_ui.m_stdScreenScale * xy[3].sY, gMoneyStatsDesc[MONEY_DESC_TO_SPLIT]);       // ... to split
 		}
 
-		SetFontForeground(5);
+		SetFontForeground(RGB(214, 201, 156));
 
 		// Get length of string
 		UINT16 const uiRightLength = 35;
@@ -2539,12 +2561,13 @@ void RenderItemDescriptionBox(void)
 		if (in_map)
 		{
 			UINT16 const uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
-			INT16  const sStrX          = dx + xy[1].sX + xy[1].sValDx + (uiRightLength - uiStringLength);
-			MPrint(sStrX, dy + xy[1].sY, pStr);
+			INT16  const sStrX          = dx + g_ui.m_stdScreenScale * xy[1].sX + g_ui.m_stdScreenScale * xy[1].sValDx + (uiRightLength - uiStringLength);
+			MPrint(sStrX, dy + g_ui.m_stdScreenScale * xy[1].sY, pStr);
 		}
 		else
 		{
-			FindFontRightCoordinates(dx + xy[1].sX + xy[1].sValDx, dy + xy[1].sY, ITEM_STATS_WIDTH - 3, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * xy[1].sX + g_ui.m_stdScreenScale * xy[1].sValDx, dy + g_ui.m_stdScreenScale * xy[1].sY,
+				ITEM_STATS_WIDTH - g_ui.m_stdScreenScale * 3, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 
@@ -2553,12 +2576,13 @@ void RenderItemDescriptionBox(void)
 		if (in_map)
 		{
 			UINT16 const uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
-			INT16  const sStrX          = dx + xy[3].sX + xy[3].sValDx + (uiRightLength - uiStringLength);
-			MPrint(sStrX, dy + xy[3].sY, pStr);
+			INT16  const sStrX          = dx + g_ui.m_stdScreenScale * xy[3].sX + g_ui.m_stdScreenScale * xy[3].sValDx + (uiRightLength - uiStringLength);
+			MPrint(sStrX, dy + g_ui.m_stdScreenScale * xy[3].sY, pStr);
 		}
 		else
 		{
-			FindFontRightCoordinates(dx + xy[3].sX + xy[3].sValDx, dy + xy[3].sY, ITEM_STATS_WIDTH - 3, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * xy[3].sX + g_ui.m_stdScreenScale * xy[3].sValDx, dy + g_ui.m_stdScreenScale * xy[3].sY,
+				ITEM_STATS_WIDTH - g_ui.m_stdScreenScale * 3, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 	}
@@ -2567,53 +2591,57 @@ void RenderItemDescriptionBox(void)
 		SetFontForeground(FONT_FCOLOR_WHITE);
 		SPrintMoney(pStr, obj.uiMoneyAmount);
 		SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
-		FindFontRightCoordinates(dx + xy.x, dy + xy.y, xy.w, xy.h, pStr, BLOCKFONT2, &usX, &usY);
+		FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * xy.x, dy + g_ui.m_stdScreenScale * xy.y, g_ui.m_stdScreenScale * xy.w, g_ui.m_stdScreenScale * xy.h,
+			pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 	}
 	else
 	{
 		//Labels
-		SetFontForeground(6);
+		SetFontForeground(RGB(173, 148, 115));
 
 		INV_DESC_STATS const* const ids = in_map ? gMapWeaponStats : gWeaponStats;
 
 		// amount for ammunition, status otherwise
 		wchar_t const* const label = GCM->getItem(gpItemDescObject->usItem)->isAmmo() ? gWeaponStatsDesc[2] : gWeaponStatsDesc[1];
-		MPrint(dx + ids[1].sX, dy + ids[1].sY, label);
+		MPrint(dx + g_ui.m_stdScreenScale * ids[1].sX, dy + g_ui.m_stdScreenScale * ids[1].sY, label);
 
 		//Weight
-		mprintf(dx + ids[0].sX, dy + ids[0].sY, gWeaponStatsDesc[0], GetWeightUnitString());
+		mprintf(dx + g_ui.m_stdScreenScale * ids[0].sX, dy + g_ui.m_stdScreenScale * ids[0].sY, gWeaponStatsDesc[0], GetWeightUnitString());
 
 		// Values
-		SetFontForeground(5);
+		SetFontForeground(RGB(214, 201, 156));
 
 		if (item->isAmmo())
 		{
 			// Ammo - print amount
 			swprintf(pStr, lengthof(pStr), L"%d/%d", obj.ubShotsLeft[0], item->asAmmo()->capacity);
-			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * ids[1].sX + g_ui.m_stdScreenScale * ids[1].sValDx, dy + g_ui.m_stdScreenScale * ids[1].sY,
+				ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 		else
 		{
 			// Status
 			swprintf(pStr, lengthof(pStr), L"%2d%%", obj.bStatus[gubItemDescStatusIndex]);
-			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+			FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * ids[1].sX + g_ui.m_stdScreenScale * ids[1].sValDx, dy + g_ui.m_stdScreenScale * ids[1].sY,
+				ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 
 		//Weight
 		swprintf(pStr, lengthof(pStr), L"%1.1f", fWeight);
-		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx, dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
+		FindFontRightCoordinates(dx + g_ui.m_stdScreenScale * ids[0].sX + g_ui.m_stdScreenScale * ids[0].sValDx, dy + g_ui.m_stdScreenScale * ids[0].sY,
+			ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
 		if (InKeyRingPopup() || item->isKey())
 		{
-			SetFontForeground(6);
+			SetFontForeground(RGB(173, 148, 115));
 
-			INT32 const x  = dx + ids[3].sX;
-			INT32 const y0 = dy + ids[3].sY;
-			INT32 const y1 = y0 + GetFontHeight(BLOCKFONT) + 2;
+			INT32 const x  = dx + g_ui.m_stdScreenScale * ids[3].sX;
+			INT32 const y0 = dy + g_ui.m_stdScreenScale * ids[3].sY;
+			INT32 const y1 = y0 + GetFontHeight(BLOCKFONT) + g_ui.m_stdScreenScale * 2;
 
 			// build description for keys .. the sector found
 			MPrint(x, y0, sKeyDescriptionStrings[0]);
@@ -2621,7 +2649,7 @@ void RenderItemDescriptionBox(void)
 
 			KEY const& key = KeyTable[obj.ubKeyID];
 
-			SetFontForeground(5);
+			SetFontForeground(RGB(214, 201, 156));
 			wchar_t sTempString[128];
 			GetShortSectorString(SECTORX(key.usSectorFound), SECTORY(key.usSectorFound), sTempString, lengthof(sTempString));
 			FindFontRightCoordinates(x, y0, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
@@ -3744,7 +3772,7 @@ static void ItemPopupFullRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT16 const sInvX, INT16 const sInvY, INT16 const sInvWidth, INT16 const sInvHeight)
+void InitItemStackPopup(SOLDIERTYPE *pSoldier, const UINT8 ubPosition, const INT16 sInvX, const INT16 sInvY, const INT16 sInvWidth, const INT16 sInvHeight)
 {
 	SGPRect aRect;
 	UINT8 ubLimit;
@@ -3757,14 +3785,11 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 	gsItemPopupInvY = sInvY;
 	gsItemPopupInvWidth = sInvWidth;
 	gsItemPopupInvHeight = sInvHeight;
-
-
 	gpItemPopupSoldier = pSoldier;
 
-
 	// Determine # of items
-	gpItemPopupObject = &(pSoldier->inv[ ubPosition ] );
-	ubLimit = ItemSlotLimit( gpItemPopupObject->usItem, ubPosition );
+	gpItemPopupObject = &pSoldier->inv[ubPosition];
+	ubLimit = ItemSlotLimit(gpItemPopupObject->usItem, ubPosition);
 
 	// Return if #objects not >1
 	if (ubLimit < 1) return;
@@ -3782,9 +3807,9 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 	guiItemPopupBoxes = AddVideoObjectFromFile(INTERFACEDIR "/extra_inventory.sti");
 
 	// Get size
-	ETRLEObject const& pTrav        = guiItemPopupBoxes->SubregionProperties(0);
-	UINT16      const  usPopupWidth = pTrav.usWidth;
-	UINT16      const  usPopupHeight = pTrav.usHeight;
+	const ETRLEObject &pTrav = guiItemPopupBoxes->SubregionProperties(0);
+	const UINT16 usPopupWidth = pTrav.usWidth;
+	const UINT16 usPopupHeight = pTrav.usHeight;
 
 	// Get Width, Height
 	INT16 gsItemPopupWidth = ubCols * usPopupWidth;
@@ -3792,37 +3817,25 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 	gubNumItemPopups = ubLimit;
 
 	// Calculate X,Y, first center
-	MOUSE_REGION const& r = gSMInvRegion[ubPosition];
-	INT16 sCenX = r.X() - (gsItemPopupWidth / 2 + r.W() / 2);
-	INT16 sCenY	= r.Y()- (gsItemPopupHeight / 2 + r.H() / 2);
+	const MOUSE_REGION &r = gSMInvRegion[ubPosition];
+	INT16 sCenX = r.X() - (gsItemPopupWidth + r.W()) / 2;
+	INT16 sCenY	= r.Y() - (gsItemPopupHeight + r.H()) / 2;
 
 	// Limit it to window for item desc
-	if ( sCenX < gsItemPopupInvX )
-	{
+	if (sCenX < gsItemPopupInvX)
 		sCenX = gsItemPopupInvX;
-	}
-	if ( ( sCenX + gsItemPopupWidth ) > ( gsItemPopupInvX + gsItemPopupInvWidth ) )
-	{
+	if (sCenX + gsItemPopupWidth > gsItemPopupInvX + gsItemPopupInvWidth)
 		sCenX = gsItemPopupInvX + gsItemPopupInvWidth - gsItemPopupWidth;
-	}
-	if ( sCenY < gsItemPopupInvY )
-	{
+	if (sCenY < gsItemPopupInvY)
 		sCenY = gsItemPopupInvY;
-	}
-	if ( sCenY + gsItemPopupHeight > ( gsItemPopupInvY + gsItemPopupInvHeight ) )
-	{
+	if (sCenY + gsItemPopupHeight > gsItemPopupInvY + gsItemPopupInvHeight)
 		sCenY = gsItemPopupInvY + gsItemPopupInvHeight - gsItemPopupHeight;
-	}
 
 	// Cap it at 0....
-	if ( sCenX < 0 )
-	{
+	if (sCenX < 0)
 		sCenX = 0;
-	}
 	if ( sCenY < 0 )
-	{
 		sCenY = 0;
-	}
 
 	// Set
 	gsItemPopupX	= sCenX;
@@ -3844,7 +3857,9 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 
 
 	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion(&gItemPopupRegion, gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvX + gsItemPopupInvWidth, gsItemPopupInvY + gsItemPopupInvHeight, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupFullRegionCallback);
+	MSYS_DefineRegion(&gItemPopupRegion, gsItemPopupInvX, gsItemPopupInvY,
+		gsItemPopupInvX + gsItemPopupInvWidth, gsItemPopupInvY + gsItemPopupInvHeight,
+		MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemPopupFullRegionCallback);
 
 
 	//Disable all faces
@@ -3855,18 +3870,16 @@ void InitItemStackPopup(SOLDIERTYPE* const pSoldier, UINT8 const ubPosition, INT
 
 	gfInItemStackPopup = TRUE;
 
-	if( guiCurrentItemDescriptionScreen != MAP_SCREEN )
-	{
+	if(guiCurrentItemDescriptionScreen != MAP_SCREEN)
 		EnableSMPanelButtons( FALSE, FALSE );
-	}
 
-	//Reserict mouse cursor to panel
+	// Restrict mouse cursor to panel
 	aRect.iTop = sInvY;
 	aRect.iLeft = sInvX;
 	aRect.iBottom = sInvY + sInvHeight;
 	aRect.iRight = sInvX + sInvWidth;
 
-	RestrictMouseCursor( &aRect );
+	RestrictMouseCursor(&aRect);
 }
 
 
@@ -3890,16 +3903,13 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 		SetAllAutoFacesInactive( );
 
 		// Shadow Area
-		if ( fFullRender )
-		{
+		if (fFullRender)
 			FRAME_BUFFER->ShadowRect(gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvX + gsItemPopupInvWidth, gsItemPopupInvY + gsItemPopupInvHeight);
-		}
-
 	}
 	// TAKE A LOOK AT THE VIDEO OBJECT SIZE ( ONE OF TWO SIZES ) AND CENTER!
-	ETRLEObject const& pTrav  = guiItemPopupBoxes->SubregionProperties(0);
-	UINT32 const usWidth = pTrav.usWidth;
-	UINT32 const usHeight = pTrav.usHeight;
+	const ETRLEObject &pTrav = guiItemPopupBoxes->SubregionProperties(0);
+	const UINT32 usWidth = pTrav.usWidth;
+	const UINT32 usHeight = pTrav.usHeight;
 
 	for (UINT32 cnt = 0; cnt < gubNumItemPopups; cnt++)
 	{
@@ -3910,15 +3920,17 @@ void RenderItemStackPopup( BOOLEAN fFullRender )
 
 		if ( cnt < gpItemPopupObject->ubNumberOfObjects )
 		{
-			INT16 sX = gsItemPopupX + col * usWidth + 11;
-			INT16 sY = gsItemPopupY + row * usHeight + 3;
+			INT16 sX = gsItemPopupX + col * usWidth + g_ui.m_stdScreenScale * 11;
+			INT16 sY = gsItemPopupY + row * usHeight + g_ui.m_stdScreenScale * 3;
 
-			INVRenderItem(FRAME_BUFFER, NULL, *gpItemPopupObject, sX, sY, 29, 23, DIRTYLEVEL2, RENDER_ITEM_NOSTATUS, SGP_TRANSPARENT);
+			INVRenderItem(FRAME_BUFFER, NULL, *gpItemPopupObject, sX, sY,
+				g_ui.m_stdScreenScale * 29, g_ui.m_stdScreenScale * 23,
+				DIRTYLEVEL2, RENDER_ITEM_NOSTATUS, SGP_TRANSPARENT);
 
 			// Do status bar here...
-			INT16 sNewX = gsItemPopupX + col * usWidth + 7;
-			INT16 sNewY = gsItemPopupY + row * usHeight + INV_BAR_DY + 3;
-			DrawItemUIBarEx(*gpItemPopupObject, cnt, sNewX, sNewY, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
+			INT16 sNewX = gsItemPopupX + col * usWidth + g_ui.m_stdScreenScale * 7 + 0.5;
+			INT16 sNewY = gsItemPopupY + row * usHeight + INV_BAR_DY + g_ui.m_stdScreenScale * 3;
+			DrawItemUIBarEx(*gpItemPopupObject, cnt, sNewX, sNewY, ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, STATUS_BAR, STATUS_BAR_SHADOW, FRAME_BUFFER);
 		}
 	}
 
@@ -3957,25 +3969,25 @@ static void DeleteItemStackPopup(void)
 }
 
 
-void InitKeyRingPopup(SOLDIERTYPE* const pSoldier, INT16 const sInvX, INT16 const sInvY, INT16 const sInvWidth, INT16 const sInvHeight)
+void InitKeyRingPopup(SOLDIERTYPE *pSoldier, const INT16 sInvX, const INT16 sInvY, const INT16 sInvWidth, const INT16 sInvHeight)
 {
 	SGPRect aRect;
-	INT16 sKeyRingItemWidth = 0;
+	INT16 sKeyRingItemsPerLine = 0;
 	INT16 sOffSetY = 0, sOffSetX = 0;
 
 	if( guiCurrentScreen == MAP_SCREEN )
 	{
 		gsKeyRingPopupInvX = STD_SCREEN_X + 0;
-		sKeyRingItemWidth = MAP_KEY_RING_ROW_WIDTH;
-		sOffSetX = 40;
-		sOffSetY = 15;
+		sKeyRingItemsPerLine = MAP_KEY_RING_ITEMS_PER_ROW;
+		sOffSetX = g_ui.m_stdScreenScale * 40;
+		sOffSetY = g_ui.m_stdScreenScale * 15;
 	}
 	else
 	{
 		// Set some globals
 		gsKeyRingPopupInvX = sInvX + TACTICAL_INVENTORY_KEYRING_GRAPHIC_OFFSET_X;
-		sKeyRingItemWidth = KEY_RING_ROW_WIDTH;
-		sOffSetY = 8;
+		sKeyRingItemsPerLine = KEY_RING_ITEMS_PER_ROW;
+		sOffSetY = g_ui.m_stdScreenScale * 8;
 	}
 
 	gsKeyRingPopupInvY = sInvY;
@@ -3997,10 +4009,10 @@ void InitKeyRingPopup(SOLDIERTYPE* const pSoldier, INT16 const sInvX, INT16 cons
 	{
 		// Build a mouse region here that is over any others.....
 		MSYS_DefineRegion(&gKeyRingRegions[cnt],
-			gsKeyRingPopupInvX + (cnt % sKeyRingItemWidth      * usPopupWidth)  + sOffSetX, // top left
-			sInvY              + (cnt / sKeyRingItemWidth      * usPopupHeight) + sOffSetY, // top right
-			gsKeyRingPopupInvX + (cnt % sKeyRingItemWidth + 1) * usPopupWidth   + sOffSetX, // bottom left
-			sInvY              + (cnt / sKeyRingItemWidth + 1) * usPopupHeight  + sOffSetY, // bottom right
+			gsKeyRingPopupInvX + (cnt % sKeyRingItemsPerLine      * usPopupWidth)  + sOffSetX, // top left
+			sInvY              + (cnt / sKeyRingItemsPerLine      * usPopupHeight) + sOffSetY, // top right
+			gsKeyRingPopupInvX + (cnt % sKeyRingItemsPerLine + 1) * usPopupWidth   + sOffSetX, // bottom left
+			sInvY              + (cnt / sKeyRingItemsPerLine + 1) * usPopupHeight  + sOffSetY, // bottom right
 			MSYS_PRIORITY_HIGHEST,
 			MSYS_NO_CURSOR, MSYS_NO_CALLBACK, KeyRingSlotInvClickCallback
 		);
@@ -4064,15 +4076,15 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 	INT16 key_ring_cols;
 	if (guiCurrentScreen == MAP_SCREEN)
 	{
-		offset_x      = 40;
-		offset_y      = 15;
-		key_ring_cols = MAP_KEY_RING_ROW_WIDTH;
+		offset_x      = g_ui.m_stdScreenScale * 40;
+		offset_y      = g_ui.m_stdScreenScale * 15;
+		key_ring_cols = MAP_KEY_RING_ITEMS_PER_ROW;
 	}
 	else
 	{
-		offset_x      = 0;
-		offset_y      = 8;
-		key_ring_cols = KEY_RING_ROW_WIDTH;
+		offset_x      = g_ui.m_stdScreenScale * 0;
+		offset_y      = g_ui.m_stdScreenScale * 8;
+		key_ring_cols = KEY_RING_ITEMS_PER_ROW;
 	}
 
 	const KEY_ON_RING* const key_ring = gpItemPopupSoldier->pKeyRing;
@@ -4089,7 +4101,8 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 		o.ubNumberOfObjects = key->ubNumber;
 		o.usItem            = FIRST_KEY + LockTable[key->ubKeyID].usKeyItem;
 
-		DrawItemUIBarEx(o, 0, x + 7, y + 24, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
+		DrawItemUIBarEx(o, 0, x + g_ui.m_stdScreenScale * 7 + 0.5, y + g_ui.m_stdScreenScale * 24,
+			ITEM_BAR_WIDTH, ITEM_BAR_HEIGHT, STATUS_BAR, STATUS_BAR_SHADOW, FRAME_BUFFER);
 		INVRenderItem(FRAME_BUFFER, NULL, o, x + 8, y, box_w - 8, box_h - 2, DIRTYLEVEL2, 0, SGP_TRANSPARENT);
 	}
 
@@ -4350,7 +4363,7 @@ static void ItemPopupRegionCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if ( !InItemDescriptionBox( ) )
 		{
 			// RESTORE BACKGROUND
-			RestoreExternBackgroundRect( gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvWidth, gsItemPopupInvHeight );
+			RestoreExternBackgroundRect(gsItemPopupInvX, gsItemPopupInvY, gsItemPopupInvWidth, gsItemPopupInvHeight);
 			if ( guiCurrentItemDescriptionScreen == MAP_SCREEN )
 			{
 				MAPInternalInitItemDescriptionBox( gpItemPopupObject, (UINT8)uiItemPos, gpItemPopupSoldier );
@@ -4438,27 +4451,27 @@ struct ITEM_PICKUP_MENU_STRUCT
 	BOOLEAN fAllSelected;
 };
 
-#define ITEMPICK_UP_X					55
-#define ITEMPICK_UP_Y					5
-#define ITEMPICK_DOWN_X				111
-#define ITEMPICK_DOWN_Y				5
-#define ITEMPICK_ALL_X					79
-#define ITEMPICK_ALL_Y					6
-#define ITEMPICK_OK_X					16
-#define ITEMPICK_OK_Y					6
-#define ITEMPICK_CANCEL_X				141
-#define ITEMPICK_CANCEL_Y				6
+#define ITEMPICK_UP_X				(g_ui.m_stdScreenScale * 55)
+#define ITEMPICK_UP_Y				(g_ui.m_stdScreenScale * 5)
+#define ITEMPICK_DOWN_X			(g_ui.m_stdScreenScale * 111)
+#define ITEMPICK_DOWN_Y			(g_ui.m_stdScreenScale * 5)
+#define ITEMPICK_ALL_X				(g_ui.m_stdScreenScale * 79)
+#define ITEMPICK_ALL_Y				(g_ui.m_stdScreenScale * 6)
+#define ITEMPICK_OK_X				(g_ui.m_stdScreenScale * 16)
+#define ITEMPICK_OK_Y				(g_ui.m_stdScreenScale * 6)
+#define ITEMPICK_CANCEL_X			(g_ui.m_stdScreenScale * 141)
+#define ITEMPICK_CANCEL_Y			(g_ui.m_stdScreenScale * 6)
 
-#define ITEMPICK_START_X_OFFSET			10
+#define ITEMPICK_START_X_OFFSET			(g_ui.m_stdScreenScale * 10)
 
-#define ITEMPICK_GRAPHIC_X				10
-#define ITEMPICK_GRAPHIC_Y				12
-#define ITEMPICK_GRAPHIC_YSPACE			26
+#define ITEMPICK_GRAPHIC_X				(g_ui.m_stdScreenScale * 10)
+#define ITEMPICK_GRAPHIC_Y				(g_ui.m_stdScreenScale * 12)
+#define ITEMPICK_GRAPHIC_YSPACE			(g_ui.m_stdScreenScale * 26)
 
-#define ITEMPICK_TEXT_X				56
-#define ITEMPICK_TEXT_Y				22
-#define ITEMPICK_TEXT_YSPACE				26
-#define ITEMPICK_TEXT_WIDTH				109
+#define ITEMPICK_TEXT_X				(g_ui.m_stdScreenScale * 56)
+#define ITEMPICK_TEXT_Y				(g_ui.m_stdScreenScale * 22)
+#define ITEMPICK_TEXT_YSPACE				(g_ui.m_stdScreenScale * 26)
+#define ITEMPICK_TEXT_WIDTH				(g_ui.m_stdScreenScale * 109)
 
 
 static ITEM_PICKUP_MENU_STRUCT gItemPickupMenu;
@@ -4570,7 +4583,8 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 	menu.iOKButtonImages     = UseLoadedButtonImage(pics, 4,  9);
 
 	// Build a mouse region here that is over any others.....
-	MSYS_DefineRegion(&menu.BackRegion, 532, 367, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+	MSYS_DefineRegion(&menu.BackRegion, g_ui.m_stdScreenScale * 532, g_ui.m_stdScreenScale * 367,
+			  SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
 	// Build a mouse region here that is over any others.....
 	MSYS_DefineRegion(&menu.BackRegions, sX, sY, menu.sX + menu.sWidth, sY + menu.sHeight, MSYS_PRIORITY_HIGHEST, CURSOR_NORMAL, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
@@ -4772,15 +4786,14 @@ void RenderItemPickupMenu()
 	sY = menu.sY + ITEMPICK_GRAPHIC_Y;
 
 	SetFont(ITEMDESC_FONT);
-	SetFontBackground(FONT_MCOLOR_BLACK);
+	SetFontBackground(FONT_MCOLOR_TRANSPARENT);
 	SetFontShadow(ITEMDESC_FONTSHADOW2);
 
 	{
 		SGPVSurface::Lock l(FRAME_BUFFER);
-		UINT16* const pDestBuf         = l.Buffer<UINT16>();
+		UINT32* const pDestBuf         = l.Buffer<UINT32>();
 		UINT32  const uiDestPitchBYTES = l.Pitch();
 
-		UINT16 const outline_col = Get16BPPColor(FROMRGB(255, 255, 0));
 		for (INT32 cnt = 0; cnt < menu.bNumSlotsPerPage; ++cnt)
 		{
 			INT32 const world_item = menu.items[cnt];
@@ -4793,11 +4806,13 @@ void RenderItemPickupMenu()
 			UINT16              const usItemTileIndex = GetTileGraphicForItem(item);
 			TILE_ELEMENT const* const te              = &gTileDatabase[usItemTileIndex];
 
-			// ATE: Adjust to basic shade.....
-			te->hTileSurface->CurrentShade(4);
+			Assert(te->hInterfaceSurface != nullptr);
 
-			UINT16 const outline = menu.pfSelectedArray[cnt + menu.ubScrollAnchor] ? outline_col : SGP_TRANSPARENT;
-			Blt8BPPDataTo16BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hTileSurface, sX, sY, te->usRegionIndex, outline);
+			// ATE: Adjust to basic shade.....
+			te->hInterfaceSurface->CurrentShade(4);
+
+			const UINT32 outline = menu.pfSelectedArray[cnt + menu.ubScrollAnchor] ? FONT_MCOLOR_WHITE : SGP_TRANSPARENT;
+			Blt32BPPDataTo32BPPBufferOutline(pDestBuf, uiDestPitchBYTES, te->hInterfaceSurface, sX, sY, te->usRegionIndex, outline);
 
 			if (o.ubNumberOfObjects > 1)
 			{
@@ -4807,7 +4822,9 @@ void RenderItemPickupMenu()
 
 				INT16 sFontX;
 				INT16 sFontY;
-				FindFontRightCoordinates(sX - 4, sY + 14, 42, 1, pStr, ITEM_FONT, &sFontX, &sFontY);
+				FindFontRightCoordinates(sX - 4 * g_ui.m_stdScreenScale, sY + 14 * g_ui.m_stdScreenScale,
+							 42 * g_ui.m_stdScreenScale, 1 * g_ui.m_stdScreenScale,
+							 pStr, ITEM_FONT, &sFontX, &sFontY);
 				MPrintBuffer(pDestBuf, uiDestPitchBYTES, sFontX, sFontY, pStr);
 				SetFont(ITEMDESC_FONT);
 			}
@@ -4819,8 +4836,8 @@ void RenderItemPickupMenu()
 				SetFontShadow(DEFAULT_SHADOW);
 				wchar_t const* const AttachMarker   = L"*";
 				UINT16         const uiStringLength = StringPixLength(AttachMarker, ITEM_FONT);
-				INT16          const sNewX          = sX + 43 - uiStringLength - 4;
-				INT16          const sNewY          = sY + 2;
+				INT16          const sNewX          = sX + 43 * g_ui.m_stdScreenScale - uiStringLength - 4 * g_ui.m_stdScreenScale;
+				INT16          const sNewY          = sY + 2 * g_ui.m_stdScreenScale;
 				MPrintBuffer(pDestBuf, uiDestPitchBYTES, sNewX, sNewY, AttachMarker);
 			}
 
@@ -5420,19 +5437,19 @@ void LoadInterfaceItemsGraphics()
 {
 	guiMapInvSecondHandBlockout = AddVideoObjectFromFile(INTERFACEDIR "/map_inv_2nd_gun_cover.sti");
 	guiSecItemHiddenVO          = AddVideoObjectFromFile(INTERFACEDIR "/secondary_gun_hidden.sti");
-	guiGUNSM                    = AddVideoObjectFromFile(INTERFACEDIR "/mdguns.sti");    // interface gun pictures
-	guiP1ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp1items.sti"); // interface item pictures
-	guiP2ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp2items.sti"); // interface item pictures
-	guiP3ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp3items.sti"); // interface item pictures
+	guiGUNSM                    = AddScaledOutlineVideoObjectFromFile(INTERFACEDIR "/mdguns.sti");    // interface gun pictures
+	guiP1ITEMS                  = AddScaledOutlineVideoObjectFromFile(INTERFACEDIR "/mdp1items.sti"); // interface item pictures
+	guiP2ITEMS                  = AddScaledOutlineVideoObjectFromFile(INTERFACEDIR "/mdp2items.sti"); // interface item pictures
+	guiP3ITEMS                  = AddScaledOutlineVideoObjectFromFile(INTERFACEDIR "/mdp3items.sti"); // interface item pictures
 
-	// Build a sawtooth black-white-black colour gradient
-	size_t const length = lengthof(us16BPPItemCyclePlacedItemColors);
+	// Build a sawtooth black-white-black color gradient
+	size_t const length = lengthof(usItemCyclePlacedItemColors);
 	for (INT32 i = 0; i != length / 2; ++i)
 	{
 		UINT32 const l = 25 * (i + 1);
-		UINT16 const c = Get16BPPColor(FROMRGB(l, l, l));
-		us16BPPItemCyclePlacedItemColors[i]              = c;
-		us16BPPItemCyclePlacedItemColors[length - i - 1] = c;
+		UINT32 const c = RGB(l, l, l);
+		usItemCyclePlacedItemColors[i]              = c;
+		usItemCyclePlacedItemColors[length - i - 1] = c;
 	}
 }
 

@@ -85,7 +85,7 @@ WRAPPED_STRING* LineWrap(SGPFont const font, UINT16 const usLineWidthPixels, wch
 // Pass in, the x,y location for the start of the string,
 //					the width of the buffer
 //					the gap in between the lines
-UINT16 DisplayWrappedString(UINT16 const x, UINT16 y, UINT16 w, UINT8 const gap, SGPFont const font, UINT8 const foreground, const wchar_t* const string, UINT8 const background, UINT32 const flags)
+UINT16 DisplayWrappedString(const UINT16 x, UINT16 y, UINT16 w, const UINT8 gap, const SGPFont font, const UINT32 foreground, const wchar_t *string, const UINT32 background, const UINT32 flags)
 {
 	UINT16       total_h = 0;
 	UINT16 const h       = GetFontHeight(font) + gap;
@@ -112,7 +112,7 @@ UINT16 DisplayWrappedString(UINT16 const x, UINT16 y, UINT16 w, UINT8 const gap,
 //			the color of the background
 //			do you want to display it using dirty rects, TRUE or FALSE
 //			flags for either LEFT_JUSTIFIED, CENTER_JUSTIFIED, RIGHT_JUSTIFIED
-void DrawTextToScreen(wchar_t const* const str, UINT16 x, UINT16 const y, UINT16 const max_w, SGPFont const font, UINT8 const foreground, UINT8 const background, UINT32 const flags)
+void DrawTextToScreen(const wchar_t *str, UINT16 x, const UINT16 y, const UINT16 max_w, const SGPFont font, const UINT32 foreground, const UINT32 background, const UINT32 flags)
 {
 	if (flags & DONT_DISPLAY_TEXT) return;
 
@@ -154,7 +154,7 @@ void DrawTextToScreen(wchar_t const* const str, UINT16 x, UINT16 const y, UINT16
 }
 
 
-static void IanDrawTextToScreen(wchar_t const* const str, wchar_t* const end, UINT16 const x, UINT16 const y, UINT16 const w, SGPFont const font, UINT8 const foreground, UINT8 const background, UINT32 flags, UINT32 const ian_flags)
+static void IanDrawTextToScreen(wchar_t const* const str, wchar_t* const end, UINT16 const x, UINT16 const y, UINT16 const w, SGPFont const font, UINT32 const foreground, UINT32 const background, UINT32 flags, UINT32 const ian_flags)
 {
 	*end = L'\0';
 	if (ian_flags & IAN_WRAP_NO_SHADOW) SetFontShadow(NO_SHADOW);
@@ -167,7 +167,7 @@ static void IanDrawTextToScreen(wchar_t const* const str, wchar_t* const end, UI
 // Pass in, the x,y location for the start of the string,
 //					the width of the buffer (how many pixels wide for word wrapping)
 //					the gap in between the lines
-UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const max_w, UINT8 const gap, SGPFont const font, UINT8 const foreground, wchar_t const* const str, UINT8 const background, UINT32 const flags)
+UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const max_w, UINT8 const gap, SGPFont const font, UINT32 const foreground, wchar_t const* const str, UINT32 const background, UINT32 const flags)
 {
 	wchar_t        line_buf[128];
 	wchar_t*       line_pos       = line_buf;

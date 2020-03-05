@@ -109,10 +109,10 @@
 #define ETA_FONT BLOCKFONT2
 
 // Colors
-#define FONT_MAP_DKYELLOW 170
+#define FONT_MAP_DKYELLOW RGB(231, 204,  86)
 
-#define CHAR_TITLE_FONT_COLOR 6
-#define CHAR_TEXT_FONT_COLOR 5
+#define CHAR_TITLE_FONT_COLOR RGB(173, 148, 115)
+#define CHAR_TEXT_FONT_COLOR RGB(214, 201, 156)
 
 #define STARTING_COLOR_NUM 5
 
@@ -127,11 +127,11 @@
 
 // Coordinate defines
 
-#define TOWN_INFO_X           (STD_SCREEN_X + 0)
-#define TOWN_INFO_Y           (STD_SCREEN_Y + 1)
+#define TOWN_INFO_X           (STD_SCREEN_X + g_ui.m_stdScreenScale * 0)
+#define TOWN_INFO_Y           (STD_SCREEN_Y + g_ui.m_stdScreenScale * 1)
 
-#define PLAYER_INFO_X         (STD_SCREEN_X + 0)
-#define PLAYER_INFO_Y         (STD_SCREEN_Y + 107)
+#define PLAYER_INFO_X         (STD_SCREEN_X + g_ui.m_stdScreenScale * 0)
+#define PLAYER_INFO_Y         (STD_SCREEN_Y + g_ui.m_stdScreenScale * 107)
 
 // item description
 #define MAP_ITEMDESC_START_X PLAYER_INFO_X
@@ -139,65 +139,65 @@
 
 #define INV_REGION_X PLAYER_INFO_X
 #define INV_REGION_Y PLAYER_INFO_Y
-#define INV_REGION_WIDTH 261
-#define INV_REGION_HEIGHT 359-94
-#define INV_BTN_X PLAYER_INFO_X + 217
-#define INV_BTN_Y PLAYER_INFO_Y + 210
+#define INV_REGION_WIDTH (g_ui.m_stdScreenScale * 261)
+#define INV_REGION_HEIGHT (g_ui.m_stdScreenScale * (359 - 94))
+#define INV_BTN_X PLAYER_INFO_X + g_ui.m_stdScreenScale * 217
+#define INV_BTN_Y PLAYER_INFO_Y + g_ui.m_stdScreenScale * 210
 
-#define MAP_BG_WIDTH      (640 - 261)
+#define MAP_BG_WIDTH       (g_ui.m_stdScreenScale * (640 - 261))
 
-#define MAP_ARMOR_LABEL_X (STD_SCREEN_X + 208)
-#define MAP_ARMOR_LABEL_Y (STD_SCREEN_Y + 179)
-#define MAP_ARMOR_X       (STD_SCREEN_X + 209)
-#define MAP_ARMOR_Y       (STD_SCREEN_Y + 188)
-#define MAP_ARMOR_W        28
-#define MAP_ARMOR_H        10
+#define MAP_ARMOR_LABEL_X  (STD_SCREEN_X + g_ui.m_stdScreenScale * 208)
+#define MAP_ARMOR_LABEL_Y  (STD_SCREEN_Y + g_ui.m_stdScreenScale * 179)
+#define MAP_ARMOR_X        (STD_SCREEN_X + g_ui.m_stdScreenScale * 209)
+#define MAP_ARMOR_Y        (STD_SCREEN_Y + g_ui.m_stdScreenScale * 188)
+#define MAP_ARMOR_W        (g_ui.m_stdScreenScale * 28)
+#define MAP_ARMOR_H        (g_ui.m_stdScreenScale * 10)
 
-#define MAP_WEIGHT_LABEL_X (STD_SCREEN_X + 173)
-#define MAP_WEIGHT_LABEL_Y (STD_SCREEN_Y + 256)
-#define MAP_WEIGHT_X       (STD_SCREEN_X + 176)
-#define MAP_WEIGHT_Y       (STD_SCREEN_Y + 265)
-#define MAP_WEIGHT_W        28
-#define MAP_WEIGHT_H        10
+#define MAP_WEIGHT_LABEL_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 173)
+#define MAP_WEIGHT_LABEL_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 256)
+#define MAP_WEIGHT_X       (STD_SCREEN_X + g_ui.m_stdScreenScale * 176)
+#define MAP_WEIGHT_Y       (STD_SCREEN_Y + g_ui.m_stdScreenScale * 265)
+#define MAP_WEIGHT_W       (g_ui.m_stdScreenScale * 28)
+#define MAP_WEIGHT_H       (g_ui.m_stdScreenScale * 10)
 
-#define MAP_CAMO_LABEL_X (STD_SCREEN_X + 178)
-#define MAP_CAMO_LABEL_Y (STD_SCREEN_Y + 283)
-#define MAP_CAMO_X       (STD_SCREEN_X + 176)
-#define MAP_CAMO_Y       (STD_SCREEN_Y + 292)
-#define MAP_CAMO_W        28
-#define MAP_CAMO_H        10
+#define MAP_CAMO_LABEL_X   (STD_SCREEN_X + g_ui.m_stdScreenScale * 178)
+#define MAP_CAMO_LABEL_Y   (STD_SCREEN_Y + g_ui.m_stdScreenScale * 283)
+#define MAP_CAMO_X         (STD_SCREEN_X + g_ui.m_stdScreenScale * 176)
+#define MAP_CAMO_Y         (STD_SCREEN_Y + g_ui.m_stdScreenScale * 292)
+#define MAP_CAMO_W         (g_ui.m_stdScreenScale * 28)
+#define MAP_CAMO_H         (g_ui.m_stdScreenScale * 10)
 
-#define MAP_INV_STATS_TITLE_FONT_COLOR 6
+#define MAP_INV_STATS_TITLE_FONT_COLOR RGB(173, 148, 115)
 
-#define PLAYER_INFO_FACE_START_X    (STD_SCREEN_X + 9)
-#define PLAYER_INFO_FACE_START_Y    (STD_SCREEN_Y + 17)
-#define PLAYER_INFO_FACE_END_X			(STD_SCREEN_X + 60)
-#define PLAYER_INFO_FACE_END_Y			(STD_SCREEN_Y + 76)
+#define PLAYER_INFO_FACE_START_X    (STD_SCREEN_X + g_ui.m_stdScreenScale * 9)
+#define PLAYER_INFO_FACE_START_Y	(STD_SCREEN_Y + g_ui.m_stdScreenScale * 17)
+#define PLAYER_INFO_FACE_END_X		(STD_SCREEN_X + g_ui.m_stdScreenScale * 60)
+#define PLAYER_INFO_FACE_END_Y		(STD_SCREEN_Y + g_ui.m_stdScreenScale * 76)
 
-#define PLAYER_INFO_HAND_START_X    (STD_SCREEN_X + 4)
-#define PLAYER_INFO_HAND_START_Y    (STD_SCREEN_Y + 81)
-#define PLAYER_INFO_HAND_END_X      (STD_SCREEN_X + 62)
-#define PLAYER_INFO_HAND_END_Y      (STD_SCREEN_Y + 103)
+#define PLAYER_INFO_HAND_START_X	(STD_SCREEN_X + g_ui.m_stdScreenScale * 4)
+#define PLAYER_INFO_HAND_START_Y	(STD_SCREEN_Y + g_ui.m_stdScreenScale * 81)
+#define PLAYER_INFO_HAND_END_X	(STD_SCREEN_X + g_ui.m_stdScreenScale * 62)
+#define PLAYER_INFO_HAND_END_Y	(STD_SCREEN_Y + g_ui.m_stdScreenScale * 103)
 
-#define INV_BODY_X (UINT16)(STD_SCREEN_X + 71)
-#define INV_BODY_Y (UINT16)(STD_SCREEN_Y + 116)
+#define INV_BODY_X (UINT16)(STD_SCREEN_X + g_ui.m_stdScreenScale * 71)
+#define INV_BODY_Y (UINT16)(STD_SCREEN_Y + g_ui.m_stdScreenScale * 116)
 
 //Text offsets
-#define Y_OFFSET 2
+#define Y_OFFSET (g_ui.m_stdScreenScale * 2)
 
 
 // char stat positions
-#define STR_X (STD_SCREEN_X + 112)
-#define STR_Y (STD_SCREEN_Y + 42)
+#define STR_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 112)
+#define STR_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 42)
 #define DEX_X STR_X
-#define DEX_Y (STD_SCREEN_Y + 32)
+#define DEX_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 32)
 #define AGL_X STR_X
-#define AGL_Y (STD_SCREEN_Y + 22)
+#define AGL_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 22)
 #define LDR_X STR_X
-#define LDR_Y (STD_SCREEN_Y + 52)
+#define LDR_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 52)
 #define WIS_X STR_X
-#define WIS_Y (STD_SCREEN_Y + 62)
-#define LVL_X (STD_SCREEN_X + 159)
+#define WIS_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 62)
+#define LVL_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 159)
 #define LVL_Y AGL_Y
 #define MRK_X LVL_X
 #define MRK_Y DEX_Y
@@ -208,55 +208,56 @@
 #define MED_X LVL_X
 #define MED_Y WIS_Y
 
-#define STAT_WID 15
-#define STAT_HEI GetFontHeight(CHAR_FONT)
+#define STAT_WID (g_ui.m_stdScreenScale * 15)
+#define STAT_HEI (GetFontHeight(CHAR_FONT))
 
-#define PIC_NAME_X (STD_SCREEN_X + 8)
-#define PIC_NAME_Y (STD_SCREEN_Y + 66 + 3)
-#define PIC_NAME_WID (STD_SCREEN_X + 60 - PIC_NAME_X)
-#define PIC_NAME_HEI (STD_SCREEN_Y + 75 - PIC_NAME_Y)
-#define CHAR_NAME_X (STD_SCREEN_X + 14)
-#define CHAR_NAME_Y (STD_SCREEN_Y + 2 + 3)
-#define CHAR_NAME_WID (STD_SCREEN_X + 164 - CHAR_NAME_X)
-#define CHAR_NAME_HEI (STD_SCREEN_Y + 11 - CHAR_NAME_Y)
-#define CHAR_TIME_REMAINING_X (STD_SCREEN_X + 207)
-#define CHAR_TIME_REMAINING_Y (STD_SCREEN_Y + 65)
-#define CHAR_TIME_REMAINING_WID (STD_SCREEN_X + 258 - CHAR_TIME_REMAINING_X)
-#define CHAR_TIME_REMAINING_HEI GetFontHeight(CHAR_FONT)
+#define PIC_NAME_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 8)
+#define PIC_NAME_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * (66 + 3))
+#define PIC_NAME_WID (STD_SCREEN_X + g_ui.m_stdScreenScale * 60 - PIC_NAME_X)
+#define PIC_NAME_HEI (STD_SCREEN_Y + g_ui.m_stdScreenScale * 75 - PIC_NAME_Y)
+#define CHAR_NAME_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 14)
+#define CHAR_NAME_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * (2 + 3))
+#define CHAR_NAME_WID (STD_SCREEN_X + g_ui.m_stdScreenScale * 164 - CHAR_NAME_X)
+#define CHAR_NAME_HEI (STD_SCREEN_Y + g_ui.m_stdScreenScale * 11 - CHAR_NAME_Y)
+#define CHAR_TIME_REMAINING_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 207)
+#define CHAR_TIME_REMAINING_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 65)
+#define CHAR_TIME_REMAINING_WID (STD_SCREEN_X + g_ui.m_stdScreenScale * 258 - CHAR_TIME_REMAINING_X)
+#define CHAR_TIME_REMAINING_HEI (GetFontHeight(CHAR_FONT))
 #define CHAR_SALARY_X					CHAR_TIME_REMAINING_X
-#define CHAR_SALARY_Y					(STD_SCREEN_Y + 79)
-#define CHAR_SALARY_WID					CHAR_TIME_REMAINING_WID - 8		// for right justify
+#define CHAR_SALARY_Y					(STD_SCREEN_Y + g_ui.m_stdScreenScale * 79)
+#define CHAR_SALARY_WID					CHAR_TIME_REMAINING_WID - g_ui.m_stdScreenScale * 8		// for right justify
 #define CHAR_SALARY_HEI					CHAR_TIME_REMAINING_HEI
 #define CHAR_MEDICAL_X					CHAR_TIME_REMAINING_X
-#define CHAR_MEDICAL_Y					(STD_SCREEN_Y + 93)
-#define CHAR_MEDICAL_WID				CHAR_TIME_REMAINING_WID - 8		// for right justify
+#define CHAR_MEDICAL_Y					(STD_SCREEN_Y + g_ui.m_stdScreenScale * 93)
+#define CHAR_MEDICAL_WID				CHAR_TIME_REMAINING_WID - g_ui.m_stdScreenScale * 8		// for right justify
 #define CHAR_MEDICAL_HEI				CHAR_TIME_REMAINING_HEI
-#define CHAR_ASSIGN_X (STD_SCREEN_X + 182)
-#define CHAR_ASSIGN1_Y (STD_SCREEN_Y + 18)
-#define CHAR_ASSIGN2_Y (STD_SCREEN_Y + 31)
-#define CHAR_ASSIGN_WID 257 - 178
-#define CHAR_ASSIGN_HEI 39 - 29
-#define CHAR_HP_X (STD_SCREEN_X + 133)
-#define CHAR_HP_Y (STD_SCREEN_Y + 77 + 3)
-#define CHAR_HP_WID  (STD_SCREEN_X + 175 - CHAR_HP_X)
-#define CHAR_HP_HEI  (STD_SCREEN_Y + 90 - CHAR_HP_Y)
-#define CHAR_MORALE_X (STD_SCREEN_X + 133)
-#define CHAR_MORALE_Y (STD_SCREEN_Y + 91 + 3)
-#define CHAR_MORALE_WID (STD_SCREEN_X + 175 - CHAR_MORALE_X)
-#define CHAR_MORALE_HEI (STD_SCREEN_Y + 101 - CHAR_MORALE_Y)
+#define CHAR_ASSIGN_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 182)
+#define CHAR_ASSIGN1_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 18)
+#define CHAR_ASSIGN2_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 31)
+#define CHAR_ASSIGN_WID g_ui.m_stdScreenScale * (257 - 178)
+#define CHAR_ASSIGN_HEI g_ui.m_stdScreenScale * (39 - 29)
+#define CHAR_HP_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 133)
+#define CHAR_HP_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * (77 + 3))
+#define CHAR_HP_WID  (STD_SCREEN_X + g_ui.m_stdScreenScale * 175 - CHAR_HP_X)
+#define CHAR_HP_HEI  (STD_SCREEN_Y + g_ui.m_stdScreenScale * 90 - CHAR_HP_Y)
+#define CHAR_MORALE_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 133)
+#define CHAR_MORALE_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * (91 + 3))
+#define CHAR_MORALE_WID (STD_SCREEN_X + g_ui.m_stdScreenScale * 175 - CHAR_MORALE_X)
+#define CHAR_MORALE_HEI (STD_SCREEN_Y + g_ui.m_stdScreenScale * 101 - CHAR_MORALE_Y)
 
-#define SOLDIER_PIC_X (STD_SCREEN_X + 9)
-#define SOLDIER_PIC_Y (STD_SCREEN_Y + 20)
-#define SOLDIER_HAND_X (STD_SCREEN_X + 6)
-#define SOLDIER_HAND_Y (STD_SCREEN_Y + 81)
+#define SOLDIER_PIC_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 9)
+#define SOLDIER_PIC_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 20)
+#define SOLDIER_HAND_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 5)
+#define SOLDIER_HAND_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 81)
+#define SOLDIER_HAND_WIDTH (g_ui.m_stdScreenScale * 58)
+#define SOLDIER_HAND_HEIGHT (g_ui.m_stdScreenScale * 23)
 
-#define CLOCK_X (STD_SCREEN_X + 554)
-#define CLOCK_Y (STD_SCREEN_Y + 459)
+#define CLOCK_X (STD_SCREEN_X + g_ui.m_stdScreenScale * 554)
+#define CLOCK_Y (STD_SCREEN_Y + g_ui.m_stdScreenScale * 459)
 
 
-#define RGB_WHITE	( FROMRGB( 255, 255, 255 ) )
-#define RGB_YELLOW	( FROMRGB( 255, 255,   0 ) )
-#define RGB_NEAR_BLACK	( FROMRGB(   0,   0,   1 ) )
+#define RGB_WHITE      RGB( 255, 255, 255 )
+#define RGB_YELLOW     RGB( 255, 255,   0 )
 
 
 // ARM: NOTE that these map "events" are never actually saved in a player's game in any way
@@ -269,10 +270,10 @@ enum MapEvent
 };
 
 
-static inline UINT16 GlowColor(UINT i)
+static inline UINT32 GlowColor(UINT i)
 {
 	Assert(i <= 10);
-	return Get16BPPColor(FROMRGB(25 * i, 0, 0));
+	return RGB(25 * i, 0, 0);
 }
 
 
@@ -483,10 +484,10 @@ static void ContractListRegionBoxGlow(UINT16 usCount)
 	usY=(Y_OFFSET*usCount-1)+(Y_START+(usCount*Y_SIZE) + sYAdd );
 
 	// glow contract box
-	UINT16 usColor = GlowColor(iColorNum);
+	UINT32 usColor = GlowColor(iColorNum);
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight(MAP_SCREEN_FONT) + 2, usColor, l.Buffer<UINT16>());
+	RectangleDraw(TRUE, TIME_REMAINING_X, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH, usY + GetFontHeight(MAP_SCREEN_FONT) + 2, usColor, l.Buffer<UINT32>());
 	InvalidateRegion(TIME_REMAINING_X - 1, usY, TIME_REMAINING_X + TIME_REMAINING_WIDTH + 1, usY + GetFontHeight( MAP_SCREEN_FONT ) + 3 );
 }
 
@@ -507,9 +508,8 @@ static void GlowItem(void)
 		fDelta = TRUE;
 
 		if (fOldItemGlow)
-		{
-			RestoreExternBackgroundRect( STD_SCREEN_X + 3, STD_SCREEN_Y + 80, ( UINT16 )( 65 - 3 ), ( UINT16 )( 105 - 80 ) );
-		}
+			RestoreExternBackgroundRect(STD_SCREEN_X + g_ui.m_stdScreenScale * 3, STD_SCREEN_Y + g_ui.m_stdScreenScale * 80,
+				g_ui.m_stdScreenScale * (65 - 3), g_ui.m_stdScreenScale * (105 - 80));
 
 		fOldItemGlow = FALSE;
 		return;
@@ -537,16 +537,20 @@ static void GlowItem(void)
 	// restore background
 	if((iColorNum==0)||(iColorNum==1))
 	{
-		RestoreExternBackgroundRect( STD_SCREEN_X + 3, STD_SCREEN_Y + 80, ( UINT16 )( 65 - 3 ), ( UINT16 )( 105 - 80 ) );
+		RestoreExternBackgroundRect(STD_SCREEN_X + g_ui.m_stdScreenScale * 3, STD_SCREEN_Y + g_ui.m_stdScreenScale * 80,
+			g_ui.m_stdScreenScale * (65 - 3), g_ui.m_stdScreenScale * (105 - 80));
 		RenderHandPosItem();
 	}
 
 	// glow contract box
-	UINT16 usColor = GlowColor(iColorNum);
+	UINT32 usColor = GlowColor(iColorNum);
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, STD_SCREEN_X + 3, STD_SCREEN_Y + 80, STD_SCREEN_X + 64, STD_SCREEN_Y + 104, usColor, l.Buffer<UINT16>());
-	InvalidateRegion( STD_SCREEN_X + 3, STD_SCREEN_Y + 80, STD_SCREEN_X + 65, STD_SCREEN_Y + 105 );
+	RectangleDraw(TRUE, STD_SCREEN_X + g_ui.m_stdScreenScale * 3, STD_SCREEN_Y + g_ui.m_stdScreenScale * 80,
+				  STD_SCREEN_X + g_ui.m_stdScreenScale * 64, STD_SCREEN_Y + g_ui.m_stdScreenScale * 104,
+				  usColor, l.Buffer<UINT32>());
+	InvalidateRegion(STD_SCREEN_X + g_ui.m_stdScreenScale * 3, STD_SCREEN_Y + g_ui.m_stdScreenScale * 80,
+					 STD_SCREEN_X + g_ui.m_stdScreenScale * 65, STD_SCREEN_Y + g_ui.m_stdScreenScale * 105);
 }
 
 
@@ -560,12 +564,11 @@ static void GlowTrashCan(void)
 	// not glowing right now, leave
 	if (!fShowTrashCanHighLight)
 	{
-		iColorNum =0;
+		iColorNum = 0;
 
 		if (fOldTrashCanGlow)
-		{
-			RestoreExternBackgroundRect( TRASH_CAN_X, TRASH_CAN_Y, ( UINT16 )( TRASH_CAN_WIDTH + 2 ), ( UINT16 )( TRASH_CAN_HEIGHT + 2 ) );
-		}
+			RestoreExternBackgroundRect(TRASH_CAN_X, TRASH_CAN_Y,
+				TRASH_CAN_WIDTH + g_ui.m_stdScreenScale * 2, TRASH_CAN_HEIGHT + g_ui.m_stdScreenScale * 2);
 
 		fOldTrashCanGlow = FALSE;
 		return;
@@ -579,16 +582,18 @@ static void GlowTrashCan(void)
 	fOldTrashCanGlow = TRUE;
 
 	// glow contract box
-	UINT16 usColor = GlowColor(iColorNum);
-	{ SGPVSurface::Lock l(FRAME_BUFFER);
+	UINT32 usColor = GlowColor(iColorNum);
+	{
+		SGPVSurface::Lock l(FRAME_BUFFER);
 		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		RectangleDraw(TRUE, TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT, usColor, l.Buffer<UINT16>());
-		InvalidateRegion( TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH + 1, TRASH_CAN_Y + TRASH_CAN_HEIGHT + 1 );
+		RectangleDraw(TRUE, TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT, usColor, l.Buffer<UINT32>());
+		InvalidateRegion(TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH + 1, TRASH_CAN_Y + TRASH_CAN_HEIGHT + 1);
 	}
 
 	// restore background
-	if((iColorNum==0)||(iColorNum==1))
-		RestoreExternBackgroundRect( TRASH_CAN_X, TRASH_CAN_Y, ( UINT16 )( TRASH_CAN_WIDTH + 2 ), ( UINT16 )( TRASH_CAN_HEIGHT + 2 ) );
+	if(iColorNum == 0 || iColorNum == 1)
+		RestoreExternBackgroundRect(TRASH_CAN_X, TRASH_CAN_Y,
+			TRASH_CAN_WIDTH + g_ui.m_stdScreenScale * 2, TRASH_CAN_HEIGHT + g_ui.m_stdScreenScale * 2);
 }
 
 
@@ -631,7 +636,7 @@ static void RenderHandPosItem()
 	SOLDIERTYPE const* const s = GetSelectedInfoChar();
 	if (!s || s->bLife == 0) return;
 
-	INVRenderItem(guiSAVEBUFFER, s, s->inv[HANDPOS], SOLDIER_HAND_X, SOLDIER_HAND_Y, 58, 23, DIRTYLEVEL2, 0, SGP_TRANSPARENT);
+	INVRenderItem(guiSAVEBUFFER, s, s->inv[HANDPOS], SOLDIER_HAND_X, SOLDIER_HAND_Y, SOLDIER_HAND_WIDTH, SOLDIER_HAND_HEIGHT, DIRTYLEVEL2, 0, SGP_TRANSPARENT);
 }
 
 
@@ -661,18 +666,20 @@ static void RenderIconsForUpperLeftCornerPiece(const SOLDIERTYPE* const s)
 
 static void PrintStat(UINT32 change_time, UINT16 const stat_gone_up_bit, INT8 stat_val, INT16 x, INT16 y, INT32 progress)
 {
-	UINT8 const colour =
+	UINT32 const color =
 		change_time == 0 ||
 		GetJA2Clock() >= CHANGE_STAT_RECENTLY_DURATION + change_time ? CHAR_TEXT_FONT_COLOR :
 		stat_gone_up_bit != 0                                        ? FONT_LTGREEN         :
 		FONT_RED;
-	SetFontForeground(colour);
+	SetFontForeground(color);
 
 	wchar_t str[4];
 	swprintf(str, lengthof(str), L"%3d", stat_val);
 	if (gamepolicy(gui_extras))
 	{
-		ProgressBarBackgroundRect(x+1,y-2,15*progress/100,10,0x514A05,progress);
+		ProgressBarBackgroundRect(x + 1, y - 2,
+			g_ui.m_stdScreenScale * 15 * progress / 100, g_ui.m_stdScreenScale * 10,
+			0x514A05FF, RGB(progress, progress, progress));
 	}
 	DrawStringRight(str, x, y, STAT_WID, STAT_HEI, CHAR_FONT);
 }
@@ -715,12 +722,12 @@ static void DrawCharHealth(SOLDIERTYPE const& s)
 
 		// How is character's life?
 		UINT32 const health_percent = life_max > 0 ? 100 * life / life_max : 0;
-		UINT8  const cur_colour     =
+		UINT32  const cur_color     =
 			health_percent ==  0 ? FONT_METALGRAY : // Dead
 			health_percent <  25 ? FONT_RED       : // Very bad
 			health_percent <  50 ? FONT_YELLOW    : // Not good
 			CHAR_TEXT_FONT_COLOR;                   // Ok
-		SetFontForeground(cur_colour);
+		SetFontForeground(cur_color);
 
 		// Current life
 		swprintf(buf, lengthof(buf), L"%d", life);
@@ -736,11 +743,11 @@ static void DrawCharHealth(SOLDIERTYPE const& s)
 		bool  const recent_change =
 			GetJA2Clock() < CHANGE_STAT_RECENTLY_DURATION + s.uiChangeHealthTime &&
 			s.uiChangeHealthTime != 0;
-		UINT8 const max_colour =
+		UINT32 const max_color =
 			!recent_change                    ? CHAR_TEXT_FONT_COLOR :
 			s.usValueGoneUp & HEALTH_INCREASE ? FONT_LTGREEN         :
 			FONT_RED;
-		SetFontForeground(max_colour);
+		SetFontForeground(max_color);
 
 		// Maximum life
 		swprintf(buf, lengthof(buf), L"%d", life_max);
@@ -1105,7 +1112,7 @@ static void DisplayGroundEta(void)
 
 struct HighLightState
 {
-	INT32 colour_idx;
+	INT32 color_idx;
 	bool  delta;
 	INT32 old_highlight;
 };
@@ -1127,36 +1134,36 @@ static void HighLightSelection(HighLightState& state, INT32 const line, UINT16 c
 	if (state.old_highlight != line)
 	{
 		state.old_highlight = line;
-		state.colour_idx    = STARTING_COLOR_NUM;
+		state.color_idx    = STARTING_COLOR_NUM;
 		state.delta         = false;
 	}
 
-	if (state.colour_idx == 0 || state.colour_idx == 10) state.delta = !state.delta;
-	state.colour_idx += state.delta ? -1 : +1;
+	if (state.color_idx == 0 || state.color_idx == 10) state.delta = !state.delta;
+	state.color_idx += state.delta ? -1 : +1;
 
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	UINT16* const pDestBuf = l.Buffer<UINT16>();
+	UINT32* const pDestBuf = l.Buffer<UINT32>();
 
-	UINT16 const colour = GlowColor(state.colour_idx);
+	UINT32 const color = GlowColor(state.color_idx);
 	INT32  const h      = Y_SIZE + Y_OFFSET;
 	for (INT16 i = 0; i != MAX_CHARACTER_COUNT; ++i)
 	{
 		if (!predicate(i)) continue;
 
 		UINT16 y = Y_START - 1 + i * h;
-		if (i >= FIRST_VEHICLE) y += 6;
+		if (i >= FIRST_VEHICLE) y += g_ui.m_stdScreenScale * 6;
 
 		if (i == 0 || !predicate(i - 1) || i == FIRST_VEHICLE)
 		{
-			LineDraw(TRUE, x, y, x + w, y, colour, pDestBuf);
+			LineDraw(TRUE, x, y, x + w, y, color, pDestBuf);
 		}
 		if (i == MAX_CHARACTER_COUNT - 1 || !predicate(i + 1) || i == FIRST_VEHICLE - 1)
 		{
-			LineDraw(TRUE, x, y + h, x + w, y + h, colour, pDestBuf);
+			LineDraw(TRUE, x, y + h, x + w, y + h, color, pDestBuf);
 		}
-		LineDraw(TRUE, x,     y, x,     y + h, colour, pDestBuf);
-		LineDraw(TRUE, x + w, y, x + w, y + h, colour, pDestBuf);
+		LineDraw(TRUE, x,     y, x,     y + h, color, pDestBuf);
+		LineDraw(TRUE, x + w, y, x + w, y + h, color, pDestBuf);
 
 		InvalidateRegion(x, y, x + w + 1, y + h + 1);
 	}
@@ -1256,14 +1263,14 @@ static void DisplayCharacterList(void)
 		if (!gCharactersList[i].merc) continue;
 		SOLDIERTYPE const& s = *gCharactersList[i].merc;
 
-		UINT8 foreground =
+		UINT32 foreground =
 			i == (INT16)giHighLine           ? FONT_WHITE     :
 			s.bLife == 0                     ? FONT_METALGRAY :
 			CharacterIsGettingPathPlotted(i) ? FONT_LTBLUE    :
 			/* Not in current sector? */
 			s.sSectorX != sSelMapX ||
 			s.sSectorY != sSelMapY ||
-			s.bSectorZ != iCurrentMapSectorZ ? 5              :
+			s.bSectorZ != iCurrentMapSectorZ ? RGB(214, 201, 156) :
 			/* Mobile? */
 			s.bAssignment < ON_DUTY ||
 			s.bAssignment == VEHICLE         ? FONT_YELLOW    :
@@ -1271,7 +1278,8 @@ static void DisplayCharacterList(void)
 		SetFontForeground(foreground);
 
 		UINT16 y = Y_START + i * (Y_SIZE + Y_OFFSET) + 1;
-		if (i >= FIRST_VEHICLE) y += 6;
+		if (i >= FIRST_VEHICLE)
+			y += g_ui.m_stdScreenScale * 6;
 
 		// Name
 		DrawStringCentered(s.name, NAME_X + 1, y, NAME_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
@@ -1285,20 +1293,16 @@ static void DisplayCharacterList(void)
 		// Destination
 		GetMapscreenMercDestinationString(s, str, lengthof(str));
 		if (str[0] != '\0')
-		{
 			DrawStringCentered(str, DEST_ETA_X + 1, y, DEST_ETA_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
-		}
 
 		// Assignment
 		if (fFlashAssignDone && s.fDoneAssignmentAndNothingToDoFlag)
-		{
 			SetFontForeground(FONT_RED);
-		}
 		wchar_t const* const assignment = GetMapscreenMercAssignmentString(s);
 		DrawStringCentered(assignment, ASSIGN_X + 1, y, ASSIGN_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 
 		// Remaining contract time
-		GetMapscreenMercDepartureString(s, str, lengthof(str), foreground != FONT_WHITE ? &foreground : 0);
+		GetMapscreenMercDepartureString(s, str, lengthof(str), foreground != FONT_WHITE ? &foreground : NULL);
 		SetFontForeground(foreground);
 		DrawStringCentered(str, TIME_REMAINING_X + 1, y, TIME_REMAINING_WIDTH, Y_SIZE, MAP_SCREEN_FONT);
 	}
@@ -1317,9 +1321,6 @@ static void DisplayCharacterList(void)
 // THIS IS STUFF THAT RUNS *ONCE* DURING APPLICATION EXECUTION, AT INITIAL STARTUP
 void MapScreenInit(void)
 {
-	// init palettes for big map
-	InitializePalettesForMap( );
-
 	InitMapScreenInterfaceMap();
 
 	// set up leave list arrays for dismissed mercs
@@ -1333,8 +1334,6 @@ void MapScreenShutdown(void)
 {
 	// free up alloced mapscreen messages
 	FreeGlobalMessageList( );
-
-	ShutDownPalettesForMap( );
 
 	// free memory for leave list arrays for dismissed mercs
 	ShutDownLeaveList( );
@@ -1489,12 +1488,10 @@ try
 		// Refreshing the whole screen, otherwise user could see remnants of
 		// the tactical screen.
 		if(g_ui.isBigScreen())
-		{
 			InvalidateRegion(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-		}
 
 		// dirty map
-		fMapPanelDirty=TRUE;
+		fMapPanelDirty = TRUE;
 
 		// dirty team region
 		fTeamPanelDirty = TRUE;
@@ -1509,7 +1506,7 @@ try
 		fOkToBeepNewMessage = FALSE;
 
 		// not in laptop, not about to go there either
-		fLapTop=FALSE;
+		fLapTop = FALSE;
 
 		// reset show aircraft flag
 		//fShowAircraftFlag = FALSE;
@@ -1528,21 +1525,33 @@ try
 
 
 		// set up regions
-		MSYS_DefineRegion( &gMapViewRegion, MAP_VIEW_START_X + MAP_GRID_X, MAP_VIEW_START_Y + MAP_GRID_Y,MAP_VIEW_START_X + MAP_VIEW_WIDTH+MAP_GRID_X-1, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT-1 + 8, MSYS_PRIORITY_HIGH - 3,
-					MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK );
+		MSYS_DefineRegion(&gMapViewRegion,
+			MAP_VIEW_START_X + MAP_GRID_X,
+			MAP_VIEW_START_Y + MAP_GRID_Y,
+			MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X - 1,
+			MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - 1 + 8,
+			MSYS_PRIORITY_HIGH - 3, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-		MSYS_DefineRegion( &gCharInfoHandRegion,
-					PLAYER_INFO_HAND_START_X, PLAYER_INFO_HAND_START_Y,
-					PLAYER_INFO_HAND_END_X, PLAYER_INFO_HAND_END_Y,
-					MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR,
-					ItemRegionMvtCallback , ItemRegionBtnCallback );
+		MSYS_DefineRegion(&gCharInfoHandRegion,
+			PLAYER_INFO_HAND_START_X, PLAYER_INFO_HAND_START_Y,
+			PLAYER_INFO_HAND_END_X, PLAYER_INFO_HAND_END_Y,
+			MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, ItemRegionMvtCallback, ItemRegionBtnCallback);
 
-		MSYS_DefineRegion( &gCharInfoFaceRegion, (INT16) PLAYER_INFO_FACE_START_X, (INT16) PLAYER_INFO_FACE_START_Y, (INT16) PLAYER_INFO_FACE_END_X, (INT16) PLAYER_INFO_FACE_END_Y, MSYS_PRIORITY_HIGH,
-					MSYS_NO_CURSOR, MSYS_NO_CALLBACK, FaceRegionBtnCallback );
+		MSYS_DefineRegion(&gCharInfoFaceRegion,
+			(INT16)PLAYER_INFO_FACE_START_X, (INT16)PLAYER_INFO_FACE_START_Y,
+			(INT16)PLAYER_INFO_FACE_END_X, (INT16)PLAYER_INFO_FACE_END_Y,
+			MSYS_PRIORITY_HIGH,
+			MSYS_NO_CURSOR, MSYS_NO_CALLBACK, FaceRegionBtnCallback);
 
-		MSYS_DefineRegion(&gMPanelRegion, INV_REGION_X, INV_REGION_Y, INV_REGION_X + INV_REGION_WIDTH, INV_REGION_Y + INV_REGION_HEIGHT, MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+		MSYS_DefineRegion(&gMPanelRegion,
+			INV_REGION_X, INV_REGION_Y,
+			INV_REGION_X + INV_REGION_WIDTH, INV_REGION_Y + INV_REGION_HEIGHT,
+			MSYS_PRIORITY_HIGH, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
+
 		// screen mask for animated cursors
-		MSYS_DefineRegion(&gMapScreenMaskRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_LOW, CURSOR_NORMAL, MSYS_NO_CALLBACK, MapScreenMarkRegionBtnCallback);
+		MSYS_DefineRegion(&gMapScreenMaskRegion,
+			0, 0, SCREEN_WIDTH, SCREEN_HEIGHT,
+			MSYS_PRIORITY_LOW, CURSOR_NORMAL, MSYS_NO_CALLBACK, MapScreenMarkRegionBtnCallback);
 
 		// set help text for item glow region
 		gCharInfoHandRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[0]);
@@ -1550,7 +1559,8 @@ try
 		// init the timer menus
 		InitTimersForMoveMenuMouseRegions( );
 
-		giMapContractButton = QuickCreateButtonImg(INTERFACEDIR "/contractbutton.sti", 0, 1, CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
+		giMapContractButton = QuickCreateButtonImg(INTERFACEDIR "/contractbutton.sti", 0, 1,
+			CONTRACT_X + 5, CONTRACT_Y - 1, MSYS_PRIORITY_HIGHEST - 5, ContractButtonCallback);
 		giMapContractButton->SpecifyGeneralTextAttributes(pContractButtonString, MAP_SCREEN_FONT, CHAR_TEXT_FONT_COLOR, FONT_BLACK);
 		giMapContractButton->SpecifyTextSubOffsets(0, 0, TRUE);
 		giMapContractButton->SpecifyHilitedTextColors(FONT_MCOLOR_WHITE, DEFAULT_SHADOW);
@@ -1584,8 +1594,8 @@ try
 		// create merc remove box
 		CreateMercRemoveAssignBox( );
 
-		guiSAVEBUFFER->Fill(Get16BPPColor(RGB_NEAR_BLACK));
-		FRAME_BUFFER->Fill( Get16BPPColor(RGB_NEAR_BLACK));
+		guiSAVEBUFFER->Fill(0x000000FF);
+		FRAME_BUFFER->Fill(0x000000FF);
 
 		if( gpCurrentTalkingFace != NULL )
 		{
@@ -1843,8 +1853,7 @@ try
 		ReBuildMoveBox( );
 	}
 
-	if (!fDisableDueToBattleRoster &&
-		(fShowAssignmentMenu || fShowContractMenu))
+	if (!fDisableDueToBattleRoster && (fShowAssignmentMenu || fShowContractMenu))
 	{
 		// highlight lines?
 		HandleHighLightingOfLinesInTeamPanel( );
@@ -1866,7 +1875,6 @@ try
 		HandleTalkingAutoFaces( );
 
 		//GlowItem( );
-
 	}
 
 
@@ -2017,7 +2025,7 @@ try
 
 	if ( InItemStackPopup( ) )
 	{
-		RenderItemStackPopup( FALSE );
+		RenderItemStackPopup(FALSE);
 	}
 
 	if( InKeyRingPopup() )
@@ -2128,7 +2136,7 @@ void DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h,
 }
 
 
-static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOOLEAN fStationary);
+static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT32 usLineColor, BOOLEAN fStationary);
 static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY);
 
 
@@ -2136,7 +2144,7 @@ static void RenderMapCursorsIndexesAnims(void)
 {
 	BOOLEAN fSelectedSectorHighlighted = FALSE;
 	BOOLEAN fSelectedCursorIsYellow = TRUE;
-	UINT16 usCursorColor;
+	UINT32 usCursorColor;
 	UINT32 uiDeltaTime;
 	static INT16 sPrevHighlightedMapX = -1, sPrevHighlightedMapY = -1;
 	static INT16 sPrevSelectedMapX = -1, sPrevSelectedMapY = -1;
@@ -2163,12 +2171,10 @@ static void RenderMapCursorsIndexesAnims(void)
 		if ( ( gsHighlightSectorX != sPrevHighlightedMapX ) || ( gsHighlightSectorY != sPrevHighlightedMapY ) || gfMapPanelWasRedrawn )
 		{
 			if ( sPrevHighlightedMapX != -1 && sPrevHighlightedMapY != -1 )
-			{
 				RestoreMapSectorCursor( sPrevHighlightedMapX, sPrevHighlightedMapY );
-			}
 
 			// draw WHITE highlight rectangle
-			RenderMapHighlight( gsHighlightSectorX, gsHighlightSectorY, Get16BPPColor( RGB_WHITE ), FALSE );
+			RenderMapHighlight( gsHighlightSectorX, gsHighlightSectorY, RGB_WHITE, FALSE );
 
 			sPrevHighlightedMapX = gsHighlightSectorX;
 			sPrevHighlightedMapY = gsHighlightSectorY;
@@ -2216,12 +2222,12 @@ static void RenderMapCursorsIndexesAnims(void)
 		if ( !fSelectedSectorHighlighted || fFlashCursorIsYellow )
 		{
 			// draw YELLOW highlight rectangle
-			usCursorColor = Get16BPPColor( RGB_YELLOW );
+			usCursorColor = RGB_YELLOW;
 		}
 		else
 		{
 			// draw WHITE highlight rectangle
-			usCursorColor = Get16BPPColor( RGB_WHITE );
+			usCursorColor = RGB_WHITE;
 
 			// index letters will also be white instead of yellow so that they flash in synch with the cursor
 			fSelectedCursorIsYellow = FALSE;
@@ -3339,8 +3345,9 @@ void EndMapScreen( BOOLEAN fDuringFade )
 	{
 		//Load a tiny graphic of the on screen and draw it to the buffer.
 		PlayJA2SampleFromFile(SOUNDSDIR "/initial power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
-		BltVideoObjectOnce(FRAME_BUFFER, INTERFACEDIR "/laptopon.sti", 0, 465, 417);
-		InvalidateRegion( 465, 417, 480, 427 );
+		BltVideoObjectOnce(FRAME_BUFFER, INTERFACEDIR "/laptopon.sti", 0, g_ui.m_stdScreenScale * 465, g_ui.m_stdScreenScale * 417);
+		InvalidateRegion(g_ui.m_stdScreenScale * 465, g_ui.m_stdScreenScale * 417,
+			g_ui.m_stdScreenScale * 480, g_ui.m_stdScreenScale * 427);
 		ExecuteBaseDirtyRectQueue( );
 		EndFrameBufferRender( );
 		RefreshScreen();
@@ -3363,15 +3370,6 @@ BOOLEAN GetMouseMapXY(INT16* psMapWorldX, INT16* psMapWorldY)
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
 
-	if (fZoomFlag)
-	{
-		if (MousePos.iX > MAP_VIEW_START_X + MAP_GRID_X)           MousePos.iX -= MAP_GRID_X;
-		if (MousePos.iX > MAP_VIEW_START_X + MAP_VIEW_WIDTH)       MousePos.iX  = -1;
-		if (MousePos.iY > MAP_VIEW_START_Y + MAP_GRID_Y)           MousePos.iY -= MAP_GRID_Y;
-		if (MousePos.iY > MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - 11) MousePos.iY  = -11;
-		if (MousePos.iY < MAP_VIEW_START_Y)                        MousePos.iY  = -1;
-	}
-
 	return GetMapXY(MousePos.iX, MousePos.iY, psMapWorldX, psMapWorldY);
 }
 
@@ -3384,19 +3382,17 @@ static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorl
 	sMapX = sX - MAP_VIEW_START_X;//+2*MAP_GRID_X;
 	sMapY = sY - MAP_VIEW_START_Y;
 
-	if(!fZoomFlag)
-	{
-		if ( sMapX < MAP_GRID_X || sMapY < MAP_GRID_Y )
+	if ( sMapX < MAP_GRID_X || sMapY < MAP_GRID_Y )
 	{
 		return( FALSE );
 	}
-	}
+
 	if ( sMapX < 0 || sMapY < 0 )
 	{
 		return( FALSE );
 	}
 
-	if ( sMapX > MAP_VIEW_WIDTH+MAP_GRID_X-1 || sMapY > MAP_VIEW_HEIGHT+7/* +MAP_VIEW_HEIGHT */ )
+	if ( sMapX > MAP_VIEW_WIDTH+MAP_GRID_X-1 || sMapY > MAP_VIEW_HEIGHT+g_ui.m_stdScreenScale * 7/* +MAP_VIEW_HEIGHT */ )
 	{
 		return( FALSE );
 	}
@@ -3412,64 +3408,27 @@ static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorl
 }
 
 
-static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOOLEAN fStationary)
+static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT32 usLineColor, BOOLEAN fStationary)
 {
-	INT16												sScreenX, sScreenY;
-
-	Assert( ( sMapX >= 1 ) && ( sMapX <= 16 ) );
-	Assert( ( sMapY >= 1 ) && ( sMapY <= 16 ) );
-
-	/*
-	if((fZoomFlag)&&((sMapX > MAP_WORLD_X-1)||(sMapY> MAP_WORLD_Y-1)))
-	return;*/
+	Assert(sMapX >= 1 && sMapX <= 16);
+	Assert(sMapY >= 1 && sMapY <= 16);
 
 	// if we are not allowed to highlight, leave
-	if (!IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY) && !fZoomFlag)
-	{
+	if(!IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY))
 		return;
-	}
-	/*
-	else if (!IsTheCursorAllowedToHighLightThisSector(sMapX , sMapY) && fZoomFlag && fStationary)
-	{
-		return;
-	}
-	else if (!IsTheCursorAllowedToHighLightThisSector(iZoomX / (MAP_GRID_X * 2) + sMapX / 2, iZoomY / (MAP_GRID_Y * 2) + sMapY / 2) && fZoomFlag && !fStationary)
-	{
-		return;
-	}*/
 
-
-	//if((!fStationary)||(!fZoomFlag))
-	{
-		GetScreenXYFromMapXY( sMapX, sMapY, &sScreenX, &sScreenY );
-	}
-	/*
-	else
-	{
-		GetScreenXYFromMapXYStationary( sMapX, sMapY, &sScreenX, &sScreenY );
-	}*/
+	const SGPRect rc = GetScreenRectFromMapXY(sMapX, sMapY);
 
 	// blit in the highlighted sector
 	SGPVSurface::Lock l(FRAME_BUFFER);
-	UINT16* const pDestBuf         = l.Buffer<UINT16>();
+	UINT32* const pDestBuf         = l.Buffer<UINT32>();
 	UINT32  const uiDestPitchBYTES = l.Pitch();
 
 	// clip to view region
 	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
 
-	/*
-	if (fZoomFlag)
-	{
-		// draw rectangle for zoom in
-		RectangleDraw( TRUE, sScreenX-MAP_GRID_X,     sScreenY-MAP_GRID_Y - 1, sScreenX +  MAP_GRID_ZOOM_X - MAP_GRID_X, sScreenY +  MAP_GRID_ZOOM_Y - MAP_GRID_Y - 1, usLineColor, pDestBuf );
-		InvalidateRegion(    sScreenX-MAP_GRID_X - 3, sScreenY-MAP_GRID_Y - 4, sScreenX + DMAP_GRID_ZOOM_X - MAP_GRID_X, sScreenY + DMAP_GRID_ZOOM_Y - MAP_GRID_Y - 1 );
-	}
-	else*/
-	{
-		// draw rectangle for zoom out
-		RectangleDraw( TRUE, sScreenX, sScreenY - 1, sScreenX +  MAP_GRID_X, sScreenY +  MAP_GRID_Y - 1, usLineColor, pDestBuf );
-		InvalidateRegion(    sScreenX, sScreenY - 2, sScreenX + DMAP_GRID_X + 1, sScreenY + DMAP_GRID_Y - 1 );
-	}
+	RectangleDraw(TRUE, rc.iLeft - 1, rc.iTop - 1, rc.iRight, rc.iBottom, usLineColor, pDestBuf);
+	InvalidateRegion(rc.iLeft - 1, rc.iTop - 1, rc.iRight + 1, rc.iBottom + 1);
 
 	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
 }
@@ -3805,7 +3764,7 @@ static void BltCharInvPanel(void)
 	if( InKeyRingPopup() || InItemStackPopup() )
 	{
 		// shade the background
-		guiSAVEBUFFER->ShadowRect(PLAYER_INFO_X, PLAYER_INFO_Y, PLAYER_INFO_X + 261,  PLAYER_INFO_Y + (359 - 107));
+		guiSAVEBUFFER->ShadowRect(PLAYER_INFO_X, PLAYER_INFO_Y, PLAYER_INFO_X + INV_REGION_WIDTH, PLAYER_INFO_Y + INV_REGION_HEIGHT);
 	}
 	else
 	{
@@ -4069,12 +4028,12 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 		// Some global stuff here - for esc, etc
 		// Check for # of slots in item
-		if ( ( pSoldier->inv[ uiHandPos ].ubNumberOfObjects > 1 ) && ( ItemSlotLimit( pSoldier->inv[ uiHandPos ].usItem, (UINT8)uiHandPos ) > 0 ) )
+		if (pSoldier->inv[uiHandPos].ubNumberOfObjects > 1 && ItemSlotLimit(pSoldier->inv[uiHandPos].usItem, uiHandPos) > 0)
 		{
-			if ( !InItemStackPopup( ) )
+			if (!InItemStackPopup())
 			{
-				InitItemStackPopup( pSoldier, (UINT8)uiHandPos, INV_REGION_X, INV_REGION_Y, 261, 248 );
-				fTeamPanelDirty=TRUE;
+				InitItemStackPopup(pSoldier, (UINT8)uiHandPos, INV_REGION_X, INV_REGION_Y, INV_REGION_WIDTH, INV_REGION_HEIGHT);
+				fTeamPanelDirty = TRUE;
 				fInterfacePanelDirty = DIRTYLEVEL2;
 			}
 		}
@@ -4082,9 +4041,9 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		{
 			if ( !InItemDescriptionBox( ) )
 			{
-				InitItemDescriptionBox( pSoldier, (UINT8)uiHandPos, MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y, 0 );
-				fShowDescriptionFlag=TRUE;
-				fTeamPanelDirty=TRUE;
+				InitItemDescriptionBox(pSoldier, (UINT8)uiHandPos, MAP_ITEMDESC_START_X, MAP_ITEMDESC_START_Y, 0);
+				fShowDescriptionFlag = TRUE;
+				fTeamPanelDirty = TRUE;
 				fInterfacePanelDirty = DIRTYLEVEL2;
 			}
 		}
@@ -4185,28 +4144,39 @@ static void RenderAttributeStringsForUpperLeftHandCorner(SGPVSurface* const uiBu
 	SetFontDestBuffer(uiBufferToRenderTo);
 
 	// assignment strings
-	DrawString(pUpperLeftMapScreenStrings[0], STD_SCREEN_X + 220 - StringPixLength(pUpperLeftMapScreenStrings[0], CHAR_FONT) / 2, STD_SCREEN_Y + 6, CHAR_FONT);
+	DrawString(pUpperLeftMapScreenStrings[0],
+		STD_SCREEN_X + g_ui.m_stdScreenScale * 220 - StringPixLength(pUpperLeftMapScreenStrings[0], CHAR_FONT) / 2, STD_SCREEN_Y + g_ui.m_stdScreenScale * 6,
+		CHAR_FONT);
 
 	// vehicles and robot don't have attributes, contracts, or morale
 	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
 	if (!pSoldier || !IsMechanical(*pSoldier))
 	{
 		// health
-		DrawString(pUpperLeftMapScreenStrings[1], STD_SCREEN_X + 87, STD_SCREEN_Y + 80, CHAR_FONT);
+		DrawString(pUpperLeftMapScreenStrings[1],
+			STD_SCREEN_X + g_ui.m_stdScreenScale * 87, STD_SCREEN_Y + g_ui.m_stdScreenScale * 80, CHAR_FONT);
 
 		for( iCounter = 0; iCounter < 5; iCounter++ )
 		{
-			DrawString(pShortAttributeStrings[iCounter],     STD_SCREEN_X +  88, STD_SCREEN_Y + 22 + iCounter * 10, CHAR_FONT);
-			DrawString(pShortAttributeStrings[iCounter + 5], STD_SCREEN_X + 133, STD_SCREEN_Y + 22 + iCounter * 10, CHAR_FONT);
+			DrawString(pShortAttributeStrings[iCounter],
+				STD_SCREEN_X + g_ui.m_stdScreenScale * 88, STD_SCREEN_Y + g_ui.m_stdScreenScale * 22 + iCounter * g_ui.m_stdScreenScale * 10,
+				CHAR_FONT);
+			DrawString(pShortAttributeStrings[iCounter + 5],
+				STD_SCREEN_X + g_ui.m_stdScreenScale * 133, STD_SCREEN_Y + g_ui.m_stdScreenScale * 22 + iCounter * g_ui.m_stdScreenScale * 10,
+				CHAR_FONT);
 		}
 
 		// morale
-		DrawString(pUpperLeftMapScreenStrings[2], STD_SCREEN_X + 87, STD_SCREEN_Y + 94,  CHAR_FONT);
+		DrawString(pUpperLeftMapScreenStrings[2],
+			STD_SCREEN_X + g_ui.m_stdScreenScale * 87, STD_SCREEN_Y + g_ui.m_stdScreenScale * 94,
+			CHAR_FONT);
 	}
 	else
 	{
 		// condition
-		DrawString(pUpperLeftMapScreenStrings[3], STD_SCREEN_X + 87, STD_SCREEN_Y + 80, CHAR_FONT);
+		DrawString(pUpperLeftMapScreenStrings[3],
+			STD_SCREEN_X + g_ui.m_stdScreenScale * 87, STD_SCREEN_Y + g_ui.m_stdScreenScale * 80,
+			CHAR_FONT);
 	}
 
 
@@ -4457,7 +4427,7 @@ static void CreateMouseRegionsForTeamList(void)
 	// the info region...is the background for the list itself
 	for (UINT i = 0; i < MAX_CHARACTER_COUNT; ++i)
 	{
-		const UINT16 y = Y_START + i * (Y_SIZE + 2) + (i >= FIRST_VEHICLE ? 6 : 0);
+		const UINT16 y = Y_START + i * (Y_SIZE + g_ui.m_stdScreenScale * 2) + (i >= FIRST_VEHICLE ? g_ui.m_stdScreenScale * 6 : 0);
 
 		const UINT16 w = NAME_WIDTH;
 		CharacterRegions& r = g_character_regions[i];
@@ -5270,7 +5240,8 @@ void RenderMapRegionBackground( void )
 
 	MapscreenMarkButtonsDirty();
 
-	RestoreExternBackgroundRect(STD_SCREEN_X + 261, STD_SCREEN_Y + 0, MAP_BG_WIDTH, 359);
+	RestoreExternBackgroundRect(STD_SCREEN_X + g_ui.m_stdScreenScale * 261, STD_SCREEN_Y + g_ui.m_stdScreenScale * 0,
+		MAP_BG_WIDTH, g_ui.m_stdScreenScale * 359);
 
 	// don't bother if showing sector inventory instead of the map!!!
 	if( !fShowMapInventoryPool )
@@ -5316,7 +5287,8 @@ static void RenderTeamRegionBackground()
 	gfRenderPBInterface = TRUE;
 
 	MarkAllBoxesAsAltered();
-	RestoreExternBackgroundRect(STD_SCREEN_X + 0, STD_SCREEN_Y + 107, 261 - 0, 359 - 107);
+	RestoreExternBackgroundRect(STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 107,
+		g_ui.m_stdScreenScale * (261 - 0), g_ui.m_stdScreenScale * (359 - 107));
 	MapscreenMarkButtonsDirty();
 }
 
@@ -5339,7 +5311,7 @@ static void RenderCharacterInfoBackground(void)
 	if (!fDisableDueToBattleRoster)
 	{
 		DisplayCharacterInfo();
-		RenderAttributeStringsForUpperLeftHandCorner( guiSAVEBUFFER );
+		RenderAttributeStringsForUpperLeftHandCorner(guiSAVEBUFFER);
 	}
 
 	// reset dirty flag
@@ -5354,8 +5326,8 @@ static void RenderCharacterInfoBackground(void)
 	MarkAllBoxesAsAltered( );
 
 	// restore background for area
-	RestoreExternBackgroundRect( STD_SCREEN_X + 0, STD_SCREEN_Y + 0, 261, 107 );
-
+	RestoreExternBackgroundRect(STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 0,
+		g_ui.m_stdScreenScale * 261, g_ui.m_stdScreenScale * 107);
 }
 
 
@@ -5972,15 +5944,6 @@ static void UpdateCursorIfInLastSector(void)
 	{
 		GetMouseMapXY(&sMapX, &sMapY);
 
-		// translate screen values to map grid values for zoomed in
-		if(fZoomFlag)
-		{
-			sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
-			sMapX=sMapX/2;
-			sMapY=(UINT16)iZoomY/MAP_GRID_Y+sMapY;
-			sMapY=sMapY/2;
-		}
-
 		if (!fShowAircraftFlag)
 		{
 			if( bSelectedDestChar != -1 )
@@ -6241,22 +6204,25 @@ static void CreateDestroyTrashCanRegion(void)
 
 	if (fShowInventoryFlag && !fCreated)
 	{
-
 		fCreated = TRUE;
 
 		// trash can
-		MSYS_DefineRegion( &gTrashCanRegion, 	TRASH_CAN_X, TRASH_CAN_Y, TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT , MSYS_PRIORITY_HIGHEST - 4 ,
-					MSYS_NO_CURSOR, TrashCanMoveCallback, TrashCanBtnCallback );
+		MSYS_DefineRegion(&gTrashCanRegion,
+			TRASH_CAN_X, TRASH_CAN_Y,
+			TRASH_CAN_X + TRASH_CAN_WIDTH, TRASH_CAN_Y + TRASH_CAN_HEIGHT,
+			MSYS_PRIORITY_HIGHEST - 4, MSYS_NO_CURSOR, TrashCanMoveCallback, TrashCanBtnCallback);
 
 		// done inventory button define
-		giMapInvDoneButton = QuickCreateButtonImg(INTERFACEDIR "/done_button2.sti", 0, 1, INV_BTN_X, INV_BTN_Y, MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
+		giMapInvDoneButton = QuickCreateButtonImg(INTERFACEDIR "/done_button2.sti", 0, 1,
+			INV_BTN_X, INV_BTN_Y,
+			MSYS_PRIORITY_HIGHEST - 1, DoneInventoryMapBtnCallback);
 		giMapInvDoneButton->SetFastHelpText(pMiscMapScreenMouseRegionHelpText[2]);
 
 		gTrashCanRegion.SetFastHelpText(pMiscMapScreenMouseRegionHelpText[1]);
 
 		InitMapKeyRingInterface( KeyRingItemPanelButtonCallback );
 
-			// reset the compatable item array at this point
+		// reset the compatable item array at this point
 		ResetCompatibleItemArray( );
 
 	}
@@ -6567,8 +6533,12 @@ static void CreateDestroyMapCharacterScrollButtons(void)
 	{
 		const INT16 prio = MSYS_PRIORITY_HIGHEST - 5;
 
-		giCharInfoButton[0] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1, STD_SCREEN_X + 67, STD_SCREEN_Y + 69, prio, PrevInventoryMapBtnCallback);
-		giCharInfoButton[1] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1, STD_SCREEN_X + 67, STD_SCREEN_Y + 87, prio, NextInventoryMapBtnCallback);
+		giCharInfoButton[0] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", 11, 4, -1, 6, -1,
+			STD_SCREEN_X + g_ui.m_stdScreenScale * 67, STD_SCREEN_Y + g_ui.m_stdScreenScale * 69,
+			prio, PrevInventoryMapBtnCallback);
+		giCharInfoButton[1] = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", 12, 5, -1, 7, -1,
+			STD_SCREEN_X + g_ui.m_stdScreenScale * 67, STD_SCREEN_Y + g_ui.m_stdScreenScale * 87,
+			prio, NextInventoryMapBtnCallback);
 
 		giCharInfoButton[0]->SetFastHelpText(pMapScreenPrevNextCharButtonHelpText[0]);
 		giCharInfoButton[1]->SetFastHelpText(pMapScreenPrevNextCharButtonHelpText[1]);
@@ -6687,7 +6657,9 @@ static void AddTeamPanelSortButtonsForMapScreen(void)
 
 	for (INT32 i = 0; i < MAX_SORT_METHODS; ++i)
 	{
-		giMapSortButton[i] = QuickCreateButtonImg(filename, iImageIndex[i], iImageIndex[i] + 6, STD_SCREEN_X + gMapSortButtons[i].iX, STD_SCREEN_Y + gMapSortButtons[i].iY, MSYS_PRIORITY_HIGHEST - 5, MapSortBtnCallback);
+		giMapSortButton[i] = QuickCreateButtonImg(filename, iImageIndex[i], iImageIndex[i] + 6,
+			STD_SCREEN_X + g_ui.m_stdScreenScale * gMapSortButtons[i].iX, STD_SCREEN_Y + g_ui.m_stdScreenScale * gMapSortButtons[i].iY,
+			MSYS_PRIORITY_HIGHEST - 5, MapSortBtnCallback);
 		giMapSortButton[i]->SetUserData(i);
 		giMapSortButton[i]->SetFastHelpText(wMapScreenSortButtonHelpText[i]);
 	}
@@ -6958,9 +6930,8 @@ static void DisplayIconsForMercsAsleep(void)
 		if (pSoldier == NULL) continue;
 
 		if (pSoldier->bActive && pSoldier->fMercAsleep && CanChangeSleepStatusForSoldier(pSoldier))
-		{
-			BltVideoObject(guiSAVEBUFFER, guiSleepIcon, 0, STD_SCREEN_X + 125, Y_START + iCounter * (Y_SIZE + 2));
-		}
+			BltVideoObject(guiSAVEBUFFER, guiSleepIcon, 0,
+				STD_SCREEN_X + g_ui.m_stdScreenScale * 125, Y_START + iCounter * (Y_SIZE + g_ui.m_stdScreenScale * 2));
 	}
 }
 
@@ -6974,20 +6945,29 @@ static void CheckForAndRenderNewMailOverlay(void)
 		{
 			if (guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]->Clicked())
 			{ //button is down, so offset the icon
-				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 1, STD_SCREEN_X + 465, STD_SCREEN_Y + 418);
-				InvalidateRegion( STD_SCREEN_X + 465, STD_SCREEN_Y + 418, STD_SCREEN_X + 480, STD_SCREEN_Y + 428 );
+				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 1,
+					STD_SCREEN_X + g_ui.m_stdScreenScale * 465, STD_SCREEN_Y + g_ui.m_stdScreenScale * 418);
+				InvalidateRegion(STD_SCREEN_X + g_ui.m_stdScreenScale * 465, STD_SCREEN_Y + g_ui.m_stdScreenScale * 418,
+					STD_SCREEN_X + g_ui.m_stdScreenScale * 480, STD_SCREEN_Y + g_ui.m_stdScreenScale * 428 );
 			}
 			else
 			{ //button is up, so draw the icon normally
-				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 0, STD_SCREEN_X + 464, STD_SCREEN_Y + 417);
+				BltVideoObject(FRAME_BUFFER, guiNewMailIcons, 0,
+					STD_SCREEN_X + g_ui.m_stdScreenScale * 464, STD_SCREEN_Y + g_ui.m_stdScreenScale * 417);
 				if (!guiMapBottomExitButtons[MAP_EXIT_TO_LAPTOP]->Enabled())
 				{
-					SGPRect area = { (UINT16)(STD_SCREEN_X + 463), (UINT16)(STD_SCREEN_Y + 417), (UINT16)(STD_SCREEN_X + 477), (UINT16)(STD_SCREEN_Y + 425) };
+					SGPRect area = {
+						UINT16(STD_SCREEN_X + g_ui.m_stdScreenScale * 463),
+						UINT16(STD_SCREEN_Y + g_ui.m_stdScreenScale * 417),
+						UINT16(STD_SCREEN_X + g_ui.m_stdScreenScale * 477),
+						UINT16(STD_SCREEN_Y + g_ui.m_stdScreenScale * 425)
+					};
 
 					SGPVSurface::Lock l(FRAME_BUFFER);
-					Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &area);
+					Blt32BPPBufferHatchRect(l.Buffer<UINT32>(), l.Pitch(), &area);
 				}
-				InvalidateRegion( STD_SCREEN_X + 463, STD_SCREEN_Y + 417, STD_SCREEN_X + 481, STD_SCREEN_Y + 430 );
+				InvalidateRegion(STD_SCREEN_X + g_ui.m_stdScreenScale * 463, STD_SCREEN_Y + g_ui.m_stdScreenScale * 417,
+					STD_SCREEN_X + g_ui.m_stdScreenScale * 481, STD_SCREEN_Y + g_ui.m_stdScreenScale * 430);
 
 			}
 		}
@@ -8063,7 +8043,7 @@ no_destination:
 }
 
 
-void GetMapscreenMercDepartureString(SOLDIERTYPE const& s, wchar_t* const buf, size_t const n, UINT8* const text_colour)
+void GetMapscreenMercDepartureString(SOLDIERTYPE const& s, wchar_t* const buf, size_t const n, UINT32 *text_color)
 {
 	if ((s.ubWhatKindOfMercAmI != MERC_TYPE__AIM_MERC && s.ubProfile != SLAY) ||
 			s.bLife == 0)
@@ -8086,7 +8066,7 @@ void GetMapscreenMercDepartureString(SOLDIERTYPE const& s, wchar_t* const buf, s
 	{ // 3 or more days remain
 		INT32 const days_remaining = mins_remaining / (24*60);
 		swprintf(buf, n, L"%d%ls", days_remaining, gpStrategicString[STR_PB_DAYS_ABBREVIATION]);
-		if (text_colour) *text_colour = FONT_LTGREEN;
+		if (text_color) *text_color = FONT_LTGREEN;
 		return;
 	}
 
@@ -8095,9 +8075,9 @@ void GetMapscreenMercDepartureString(SOLDIERTYPE const& s, wchar_t* const buf, s
 	swprintf(buf, n, L"%d%ls", hours_remaining, gpStrategicString[STR_PB_HOURS_ABBREVIATION]);
 
 	// last 3 days is Red, last 4 hours start flashing red/white!
-	if (text_colour)
+	if (text_color)
 	{
-		*text_colour = mins_remaining <= MINS_TO_FLASH_CONTRACT_TIME && fFlashContractFlag ?
+		*text_color = mins_remaining <= MINS_TO_FLASH_CONTRACT_TIME && fFlashContractFlag ?
 			FONT_WHITE : FONT_RED;
 	}
 }
@@ -8256,22 +8236,11 @@ BOOLEAN CanDrawSectorCursor(void)
 
 static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY)
 {
-	INT16 sScreenX, sScreenY;
+	Assert(sMapX >= 1 && sMapX <= 16);
+	Assert(sMapY >= 1 && sMapY <= 16);
 
-
-	Assert( ( sMapX >= 1 ) && ( sMapX <= 16 ) );
-	Assert( ( sMapY >= 1 ) && ( sMapY <= 16 ) );
-
-	GetScreenXYFromMapXY( sMapX, sMapY, &sScreenX, &sScreenY );
-
-	sScreenY -= 1;
-
-/*
-	if(fZoomFlag)
-		RestoreExternBackgroundRect( ((INT16)( sScreenX - MAP_GRID_X )), ((INT16)( sScreenY - MAP_GRID_Y )), DMAP_GRID_ZOOM_X, DMAP_GRID_ZOOM_Y);
-	else
-*/
-	RestoreExternBackgroundRect( sScreenX, sScreenY, DMAP_GRID_X, DMAP_GRID_Y );
+	const SGPRect rc = GetScreenRectFromMapXY(sMapX, sMapY);
+	RestoreExternBackgroundRect(rc.iLeft - 1, rc.iTop - 1, rc.width() + 1, rc.height() + 1);
 }
 
 

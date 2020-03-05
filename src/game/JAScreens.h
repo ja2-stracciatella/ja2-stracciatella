@@ -5,6 +5,8 @@
 #include "Types.h"
 
 
+#define INTRO_SPLASH_DURATION 500
+
 ScreenID ErrorScreenHandle(void);
 
 ScreenID InitScreenHandle(void);

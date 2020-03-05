@@ -56,9 +56,9 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 	FileRead(f, data, sizeof(data));
 
 	BYTE const* d = data;
-	EXTR_SKIP(d, 2)              // colour map origin
+	EXTR_SKIP(d, 2)              // color map origin
 	EXTR_U16(d, uiColMapLength)
-	EXTR_SKIP(d, 5)              // colour map entry size, x origin, y origin
+	EXTR_SKIP(d, 5)              // color map entry size, x origin, y origin
 	EXTR_U16(d, uiWidth)         // XXX unaligned
 	EXTR_U16(d, uiHeight)        // XXX unaligned
 	EXTR_U8(d, uiImagePixelSize)
@@ -68,7 +68,7 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 	// skip the id
 	FileSeek(f, uiImgID, FILE_SEEK_FROM_CURRENT);
 
-	// skip the colour map
+	// skip the color map
 	if (uiColMap != 0)
 	{
 		FileSeek(f, uiColMapLength * (uiImagePixelSize / 8), FILE_SEEK_FROM_CURRENT);
@@ -105,7 +105,7 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 		}
 		else
 		{
-			throw std::runtime_error("Failed to load TGA with unsupported colour depth");
+			throw std::runtime_error("Failed to load TGA with unsupported color depth");
 		}
 		img->fFlags |= IMAGE_BITMAPDATA;
 	}

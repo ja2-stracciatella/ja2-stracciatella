@@ -720,7 +720,7 @@ static void DisplayBigItemImage(const ItemModel* item, const UINT16 PosY)
 	if (gamepolicy(f_draw_item_shadow))
 	{
 		//blt the shadow of the item
-		BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage, 0, sCenX - 2, sCenY + 2);
+		BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage, 0, sCenX - g_ui.m_stdScreenScale * 2, sCenY + g_ui.m_stdScreenScale * 2);
 	}
 
 	BltVideoObject(FRAME_BUFFER, uiImage, 0, sCenX, sCenY);

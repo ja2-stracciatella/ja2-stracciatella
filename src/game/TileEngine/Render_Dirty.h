@@ -31,12 +31,12 @@ struct VIDEO_OVERLAY
 	BOOLEAN          fActivelySaving;
 	BOOLEAN          fDeletionPending;
 	BACKGROUND_SAVE* background;
-	UINT16*          pSaveArea;
+	UINT32*          pSaveArea;
 	SGPFont          uiFontID;
 	INT16            sX;
 	INT16            sY;
-	UINT8            ubFontBack;
-	UINT8            ubFontFore;
+	UINT32           ubFontBack;
+	UINT32           ubFontFore;
 	wchar_t          zText[200];
 	SGPVSurface*     uiDestBuff;
 	OVERLAY_CALLBACK BltCallback;
@@ -78,7 +78,7 @@ void GPrintInvalidateF(INT16 x, INT16 y, wchar_t const* fmt, ...);
 
 // VIDEO OVERLAY STUFF
 VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, INT16 w, INT16 h);
-VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT8 foreground, UINT8 background, wchar_t const* text);
+VIDEO_OVERLAY* RegisterVideoOverlay(OVERLAY_CALLBACK callback, INT16 x, INT16 y, SGPFont font, UINT32 foreground, UINT32 background, wchar_t const* text);
 void ExecuteVideoOverlays(void);
 void SaveVideoOverlaysArea(SGPVSurface* src);
 
@@ -93,6 +93,6 @@ void EnableVideoOverlay(BOOLEAN fEnable, VIDEO_OVERLAY*);
 void SetVideoOverlayTextF(VIDEO_OVERLAY*, const wchar_t* fmt, ...);
 void SetVideoOverlayPos(VIDEO_OVERLAY*, INT16 X, INT16 Y);
 
-void BlitBufferToBuffer(SGPVSurface* src, SGPVSurface* dst, UINT16 usSrcX, UINT16 usSrcY, UINT16 usWidth, UINT16 usHeight);
+void BlitBufferToBuffer(SGPVSurface* const src, SGPVSurface* const dst, const UINT16 usSrcX, const UINT16 usSrcY, const UINT16 usWidth, const UINT16 usHeight);
 
 #endif

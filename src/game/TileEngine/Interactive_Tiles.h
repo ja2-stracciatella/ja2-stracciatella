@@ -28,8 +28,8 @@ void SetActionModeDoorCursorText(void);
 LEVELNODE *GetCurInteractiveTile(void);
 LEVELNODE *GetCurInteractiveTileGridNo( INT16 *psGridNo );
 LEVELNODE *GetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure );
-LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure( INT16 *psGridNo, STRUCTURE **ppStructure, BOOLEAN fRejectOnTopItems );
+LEVELNODE *ConditionalGetCurInteractiveTileGridNoAndStructure(INT16* const psGridNo, STRUCTURE** const ppStructure, const BOOLEAN fRejectOnTopItems);
 
-BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT hSrcVObject, UINT16 usIndex, INT32 iTestX, INT32 iTestY);
+BOOLEAN CheckVideoObjectScreenCoordinateInData(HVOBJECT srcObj, UINT16 srcIndex, INT32 testX, INT32 testY);
 
 #endif

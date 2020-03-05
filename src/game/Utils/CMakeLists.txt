@@ -14,7 +14,6 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Message.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Music_Control.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/PopUpBox.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Quantize.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/STIConvert.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Slider.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Sound_Control.cc
@@ -23,6 +22,7 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Text_Utils.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Timer_Control.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Utilities.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/VideoScale.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/WordWrap.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/_DutchText.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/_EnglishText.cc

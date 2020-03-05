@@ -3122,7 +3122,7 @@ static void SetBoxTextAttrs(PopUpBox* const box)
 	SetBoxFont(box, MAP_SCREEN_FONT);
 	SetBoxHighLight(box, FONT_WHITE);
 	SetBoxForeground(box, FONT_LTGREEN);
-	SetBoxBackground(box, FONT_BLACK);
+	SetBoxBackground(box, FONT_MCOLOR_TRANSPARENT);
 	SetBoxShade(box, FONT_GRAY7);
 	SetBoxSecondaryShade(box, FONT_YELLOW);
 }
@@ -5197,7 +5197,8 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static PopUpBox* MakeBox(const SGPPoint pos, const UINT32 flags)
 {
-	return CreatePopUpBox(pos, flags | POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX, 6, 6, 4, 4, 2);
+	return CreatePopUpBox(pos, flags | POPUP_BOX_FLAG_RESIZE, FRAME_BUFFER, guiPOPUPBORDERS, guiPOPUPTEX,
+		g_ui.m_stdScreenScale * 6, g_ui.m_stdScreenScale * 6, g_ui.m_stdScreenScale * 4, g_ui.m_stdScreenScale * 4, g_ui.m_stdScreenScale * 2);
 }
 
 

@@ -2,10 +2,11 @@
 #define SHADING_H
 
 void BuildShadeTable(void);
-void BuildIntensityTable(void);
 void SetShadeTablePercent(float uiShadePercent);
 
-extern UINT16 IntensityTable[65536];
+extern float gShadowShadePercent;
+extern float gIntensityShadePercent;
+
 extern UINT16 ShadeTable[65536];
 extern UINT16 White16BPPPalette[256];
 

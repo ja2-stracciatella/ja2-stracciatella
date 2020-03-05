@@ -1,6 +1,9 @@
 #ifndef RENDERWORLD_H
 #define RENDERWORLD_H
 
+#include "UILayout.h"
+
+
 extern BOOLEAN gfDoVideoScroll;
 extern UINT8   gubCurScrollSpeedID;
 
@@ -35,7 +38,7 @@ ENUM_BITSET(RenderFlags)
 #define TOPMOST_Z_LEVEL 32767
 
 /* number of pixels to show the exit sector cursor at the edge of the map */
-#define NO_PX_SHOW_EXIT_CURS			15
+#define NO_PX_SHOW_EXIT_CURS			(g_ui.m_tacticalScreenScale * 15)
 
 enum RenderLayerFlags
 {
@@ -71,8 +74,6 @@ extern INT16 gsRenderHeight;
 
 extern INT16 gsRenderCenterX;
 extern INT16 gsRenderCenterY;
-extern INT16 gsRenderWorldOffsetX;
-extern INT16 gsRenderWorldOffsetY;
 
 // CURRENT VIEWPORT IN WORLD COORDS
 extern INT16 gsTopLeftWorldX;
@@ -107,10 +108,10 @@ void ClearRenderFlags(RenderFlags);
 
 void RenderSetShadows(BOOLEAN fShadows);
 
-extern UINT16* gpZBuffer;
+extern UINT16 *gpZBuffer;
 extern UINT16  gZBufferPitch;
-extern BOOLEAN gfIgnoreScrolling;
 
+extern BOOLEAN gfIgnoreScrolling;
 extern bool    g_scroll_inertia;
 extern BOOLEAN gfScrollPending;
 

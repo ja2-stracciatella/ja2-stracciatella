@@ -1991,10 +1991,10 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 {
 	wchar_t buf[64];
 
-	UINT16 outline;
+	UINT32 outline;
 	if (IsGunOrAmmoOfSameTypeSelected(item_o))
 	{
-		outline = Get16BPPColor(FROMRGB(255, 255, 255));
+		outline = RGB(255, 255, 255);
 	}
 	else if (gubSkiDirtyLevel != SKI_DIRTY_LEVEL0)
 	{
@@ -2018,14 +2018,14 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 		INT16              cen_y   = y +     ABS(SKI_INV_HEIGHT    - e.usHeight) / 2 - e.sOffsetY;
 		if (gamepolicy(f_draw_item_shadow))
 		{
-			BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item->getGraphicNum(), cen_x - 2, cen_y + 2);
+			BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, item->getGraphicNum(), cen_x - g_ui.m_stdScreenScale * 2, cen_y + g_ui.m_stdScreenScale * 2);
 		}
 		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, item->getGraphicNum(), cen_x,     cen_y, outline);	}
 
 	{
 		// Display the status of the item
-		UINT16 const colour = Get16BPPColor(FROMRGB(140, 136, 119));
-		DrawItemUIBarEx(item_o, 0, x + 2, y + 21, 20, colour, colour, FRAME_BUFFER);
+		UINT32 const color = RGB(140, 136, 119);
+		DrawItemUIBarEx(item_o, 0, x + 2, y + 21, 2, 20, color, color, FRAME_BUFFER);
 	}
 
 	// Display the item's cost
@@ -2106,7 +2106,7 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 	if (ItemHasAttachments(item_o))
 	{
 		// Display the '*' in the bottom right corner of the square
-		UINT8 attachmentHintColor = GetAttachmentHintColor(&item_o);
+		UINT32 attachmentHintColor = GetAttachmentHintColor(&item_o);
 		DrawTextToScreen(L"*", x + SKI_ATTACHMENT_SYMBOL_X_OFFSET, y + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, attachmentHintColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -2420,7 +2420,7 @@ void DrawHatchOnInventory(SGPVSurface* const uiSurface, const UINT16 usPosX, con
 	ClipRect.iBottom = usPosY + usHeight - 1;
 
 	SGPVSurface::Lock l(uiSurface);
-	Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
+	Blt32BPPBufferHatchRect(l.Buffer<UINT32>(), l.Pitch(), &ClipRect);
 }
 
 

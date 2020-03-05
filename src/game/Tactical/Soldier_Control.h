@@ -933,7 +933,8 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier );
 // Palette functions for soldiers
 void  CreateSoldierPalettes(SOLDIERTYPE&);
 UINT8 GetPaletteRepIndexFromID(const PaletteRepID pal_rep);
-void  SetPaletteReplacement(SGPPaletteEntry*, PaletteRepID);
+void  SetPaletteReplacement(SGPPaletteEntry* const p8BPPPalette, PaletteRepID aPalRep);
+void  SetPaletteReplacement(SGPPaletteEntry* const p8BPPPalette, const UINT8 ubPalIndex);
 void  LoadPaletteData(void);
 void  DeletePaletteData(void);
 

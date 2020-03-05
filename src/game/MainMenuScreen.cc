@@ -48,8 +48,8 @@ enum
 #	define MAINMENU_Y         0
 #	define MAINMENU_Y_SPACE  18
 #else
-#	define MAINMENU_Y       277
-#	define MAINMENU_Y_SPACE  37
+#	define MAINMENU_Y       g_ui.m_stdScreenScale * 277
+#	define MAINMENU_Y_SPACE  g_ui.m_stdScreenScale * 37
 #endif
 
 
@@ -82,7 +82,7 @@ static void RestoreButtonBackGrounds(void);
 
 ScreenID MainMenuScreenHandle(void)
 {
-	if (guiSplashStartTime + 4000 > GetJA2Clock())
+	if (guiSplashStartTime + INTRO_SPLASH_DURATION > GetJA2Clock())
 	{
 		SetCurrentCursorFromDatabase(VIDEO_NO_CURSOR);
 		SetMusicMode(MUSIC_NONE);
@@ -97,7 +97,7 @@ ScreenID MainMenuScreenHandle(void)
 		}
 		else if (guiSplashFrameFade > 1)
 		{
-			FRAME_BUFFER->Fill(0);
+			FRAME_BUFFER->Fill(0x000000FF);
 		}
 		else
 		{
@@ -204,8 +204,8 @@ void InitMainMenu(void)
 	CreateDestroyMainMenuButtons(TRUE);
 
 #	define GFX_DIR LOADSCREENSDIR
-	guiMainMenuBackGroundImage = AddVideoObjectFromFile(GFX_DIR "/mainmenubackground.sti");
-	guiJa2LogoImage            = AddVideoObjectFromFile(GFX_DIR "/ja2logo.sti");
+	guiMainMenuBackGroundImage = AddScaledVideoObjectFromFile(GFX_DIR "/mainmenubackground.sti");
+	guiJa2LogoImage            = AddScaledVideoObjectFromFile(GFX_DIR "/ja2logo.sti");
 #undef GFX_DIR
 
 	// If there are no saved games, disable the button
@@ -283,7 +283,7 @@ static void HandleMainMenuInput(void)
 
 void ClearMainMenu(void)
 {
-	FRAME_BUFFER->Fill(0);
+	FRAME_BUFFER->Fill(0x000000FF);
 	InvalidateScreen();
 }
 
@@ -348,7 +348,7 @@ static void CreateDestroyMainMenuButtons(BOOLEAN fCreate)
 static void RenderMainMenu(void)
 {
 	BltVideoObject(FRAME_BUFFER, guiMainMenuBackGroundImage, 0, STD_SCREEN_X,       STD_SCREEN_Y     );
-	BltVideoObject(FRAME_BUFFER, guiJa2LogoImage,            0, STD_SCREEN_X + 188, STD_SCREEN_Y + 15);
+	BltVideoObject(FRAME_BUFFER, guiJa2LogoImage,            0, STD_SCREEN_X + g_ui.m_stdScreenScale * 188, STD_SCREEN_Y + g_ui.m_stdScreenScale * 15);
 	BltVideoSurface(guiSAVEBUFFER, FRAME_BUFFER, 0, 0, NULL);
 }
 

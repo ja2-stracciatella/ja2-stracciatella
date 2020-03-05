@@ -95,6 +95,8 @@ struct SGPBox
 		w = _w;
 		h = _h;
 	}
+
+	operator SDL_Rect() { return SDL_Rect{x, y, w, h}; }
 };
 
 struct SGPRect
@@ -111,6 +113,9 @@ struct SGPRect
 		iRight      = right;
 		iBottom     = bottom;
 	}
+
+	inline UINT16 width() const { return iRight - iLeft + 1; }
+	inline UINT16 height() const { return iBottom - iTop + 1; }
 };
 
 struct SGPPoint
@@ -149,7 +154,7 @@ struct SGPFile;
 typedef SGPFile* HWFILE;
 
 
-#define SGP_TRANSPARENT ((UINT16)0)
+#define SGP_TRANSPARENT ((UINT32)0)
 
 
 #ifdef __cplusplus

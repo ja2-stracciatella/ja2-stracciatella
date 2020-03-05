@@ -746,7 +746,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	LoadOppListInfoFromSavedGame(f);
 
 	BAR(1, L"MapScreen Messages...");
-	LoadMapScreenMessagesFromSaveGameFile(f, stracLinuxFormat);
+	LoadMapScreenMessagesFromSaveGameFile(f, stracLinuxFormat, version);
 
 	BAR(1, L"NPC Info...");
 	LoadNPCInfoFromSavedGameFile(f, version);

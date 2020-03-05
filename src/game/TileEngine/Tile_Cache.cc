@@ -139,7 +139,7 @@ INT32 GetCachedTile(const char* const filename)
 
 	TILE_CACHE_ELEMENT* const tce = &gpTileCache[idx];
 
-	tce->pImagery = LoadTileSurface(filename);
+	tce->pImagery = LoadTileSurface(filename, -1);
 
 	strcpy(tce->zName, filename);
 	tce->sHits = 1;

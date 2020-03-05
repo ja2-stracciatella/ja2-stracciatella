@@ -80,168 +80,168 @@
 #include <iterator>
 
 // DEFINES FOR VARIOUS PANELS
-#define SM_ITEMDESC_START_X			214
-#define SM_ITEMDESC_START_Y			1 + INV_INTERFACE_START_Y
-#define SM_ITEMDESC_HEIGHT			128
-#define SM_ITEMDESC_WIDTH			314
+#define SM_ITEMDESC_START_X			(g_ui.m_stdScreenScale * 214)
+#define SM_ITEMDESC_START_Y			(g_ui.m_stdScreenScale * 1 + INV_INTERFACE_START_Y)
+#define SM_ITEMDESC_HEIGHT			(g_ui.m_stdScreenScale * 128)
+#define SM_ITEMDESC_WIDTH			(g_ui.m_stdScreenScale * 314)
 
 // SINGLE MERC SCREEN
 
-#define SM_SELMERC_AP_X			67
-#define SM_SELMERC_AP_Y			53
-#define SM_SELMERC_AP_HEIGHT			10
-#define SM_SELMERC_AP_WIDTH			17
+#define SM_SELMERC_AP_X			(g_ui.m_stdScreenScale * 67)
+#define SM_SELMERC_AP_Y			(g_ui.m_stdScreenScale * 53)
+#define SM_SELMERC_AP_HEIGHT			(g_ui.m_stdScreenScale * 10)
+#define SM_SELMERC_AP_WIDTH			(g_ui.m_stdScreenScale * 17)
 
-#define SM_SELMERC_HEALTH_X			69
-#define SM_SELMERC_HEALTH_Y			47
+#define SM_SELMERC_HEALTH_X			(g_ui.m_stdScreenScale * 69)
+#define SM_SELMERC_HEALTH_Y			(g_ui.m_stdScreenScale * 47)
 
-#define SM_SELMERCNAME_X			11
-#define SM_SELMERCNAME_Y			53
-#define SM_SELMERCNAME_WIDTH			53
-#define SM_SELMERCNAME_HEIGHT			10
+#define SM_SELMERCNAME_X			(g_ui.m_stdScreenScale * 11)
+#define SM_SELMERCNAME_Y			(g_ui.m_stdScreenScale * 53)
+#define SM_SELMERCNAME_WIDTH			(g_ui.m_stdScreenScale * 53)
+#define SM_SELMERCNAME_HEIGHT			(g_ui.m_stdScreenScale * 10)
 
-#define SM_SELMERC_FACE_X			13
-#define SM_SELMERC_FACE_Y			6
-#define SM_SELMERC_FACE_HEIGHT			42
-#define SM_SELMERC_FACE_WIDTH			48
+#define SM_SELMERC_FACE_X			(g_ui.m_stdScreenScale * 13)
+#define SM_SELMERC_FACE_Y			(g_ui.m_stdScreenScale * 6)
+#define SM_SELMERC_FACE_HEIGHT			(g_ui.m_stdScreenScale * 42)
+#define SM_SELMERC_FACE_WIDTH			(g_ui.m_stdScreenScale * 48)
 
-#define SM_SELMERC_PLATE_X			4
-#define SM_SELMERC_PLATE_Y			2
-#define SM_SELMERC_PLATE_HEIGHT		65
-#define SM_SELMERC_PLATE_WIDTH			83
-
-
-#define STATS_TITLE_FONT_COLOR			6
-#define STATS_TEXT_FONT_COLOR			5
+#define SM_SELMERC_PLATE_X			(g_ui.m_stdScreenScale * 4)
+#define SM_SELMERC_PLATE_Y			(g_ui.m_stdScreenScale * 2)
+#define SM_SELMERC_PLATE_HEIGHT		(g_ui.m_stdScreenScale * 65)
+#define SM_SELMERC_PLATE_WIDTH			(g_ui.m_stdScreenScale * 83)
 
 
-#define SM_TALKB_X				155
-#define SM_TALKB_Y				108
-#define SM_MUTEB_X				91
-#define SM_MUTEB_Y				108
-#define SM_STANCEUPB_X				187
-#define SM_STANCEUPB_Y				40
-#define SM_UPDOWNB_X				91
-#define SM_UPDOWNB_Y				73
-#define SM_CLIMBB_X				187
-#define SM_CLIMBB_Y				8
-#define SM_STANCEDOWNB_X			187
-#define SM_STANCEDOWNB_Y			108
-#define SM_HANDCURSORB_X			123
-#define SM_HANDCURSORB_Y			73
-#define SM_PREVMERCB_X				9
-#define SM_PREVMERCB_Y				70
-#define SM_NEXTMERCB_X				51
-#define SM_NEXTMERCB_Y				70
-#define SM_OPTIONSB_X				9
-#define SM_OPTIONSB_Y				105
-#define SM_BURSTMODEB_X			155
-#define SM_BURSTMODEB_Y			73
-#define SM_LOOKB_X				123
-#define SM_LOOKB_Y				108
-#define SM_STEALTHMODE_X			187
-#define SM_STEALTHMODE_Y			73
-#define SM_DONE_X				543
-#define SM_DONE_Y				4
-#define SM_MAPSCREEN_X				589
-#define SM_MAPSCREEN_Y				4
+#define STATS_TITLE_FONT_COLOR			RGB(173, 148, 115)
+#define STATS_TEXT_FONT_COLOR			RGB(214, 201, 156)
 
 
-#define SM_PERCENT_WIDTH			20
-#define SM_PERCENT_HEIGHT			10
-#define SM_ARMOR_X				347
-#define SM_ARMOR_Y				79
-#define SM_ARMOR_LABEL_X			363
-#define SM_ARMOR_LABEL_Y			69
-#define SM_ARMOR_PERCENT_X			368
-#define SM_ARMOR_PERCENT_Y			79
+#define SM_TALKB_X				(g_ui.m_stdScreenScale * 155)
+#define SM_TALKB_Y				(g_ui.m_stdScreenScale * 108)
+#define SM_MUTEB_X				(g_ui.m_stdScreenScale * 91)
+#define SM_MUTEB_Y				(g_ui.m_stdScreenScale * 108)
+#define SM_STANCEUPB_X				(g_ui.m_stdScreenScale * 187)
+#define SM_STANCEUPB_Y				(g_ui.m_stdScreenScale * 40)
+#define SM_UPDOWNB_X				(g_ui.m_stdScreenScale * 91)
+#define SM_UPDOWNB_Y				(g_ui.m_stdScreenScale * 73)
+#define SM_CLIMBB_X				(g_ui.m_stdScreenScale * 187)
+#define SM_CLIMBB_Y				(g_ui.m_stdScreenScale * 8)
+#define SM_STANCEDOWNB_X			(g_ui.m_stdScreenScale * 187)
+#define SM_STANCEDOWNB_Y			(g_ui.m_stdScreenScale * 108)
+#define SM_HANDCURSORB_X			(g_ui.m_stdScreenScale * 123)
+#define SM_HANDCURSORB_Y			(g_ui.m_stdScreenScale * 73)
+#define SM_PREVMERCB_X				(g_ui.m_stdScreenScale * 9)
+#define SM_PREVMERCB_Y				(g_ui.m_stdScreenScale * 70)
+#define SM_NEXTMERCB_X				(g_ui.m_stdScreenScale * 51)
+#define SM_NEXTMERCB_Y				(g_ui.m_stdScreenScale * 70)
+#define SM_OPTIONSB_X				(g_ui.m_stdScreenScale * 9)
+#define SM_OPTIONSB_Y				(g_ui.m_stdScreenScale * 105)
+#define SM_BURSTMODEB_X			(g_ui.m_stdScreenScale * 155)
+#define SM_BURSTMODEB_Y			(g_ui.m_stdScreenScale * 73)
+#define SM_LOOKB_X				(g_ui.m_stdScreenScale * 123)
+#define SM_LOOKB_Y				(g_ui.m_stdScreenScale * 108)
+#define SM_STEALTHMODE_X			(g_ui.m_stdScreenScale * 187)
+#define SM_STEALTHMODE_Y			(g_ui.m_stdScreenScale * 73)
+#define SM_DONE_X				(g_ui.m_stdScreenScale * 543)
+#define SM_DONE_Y				(g_ui.m_stdScreenScale * 4)
+#define SM_MAPSCREEN_X				(g_ui.m_stdScreenScale * 589)
+#define SM_MAPSCREEN_Y				(g_ui.m_stdScreenScale * 4)
 
-#define SM_WEIGHT_LABEL_X			430
-#define SM_WEIGHT_LABEL_Y			107
-#define SM_WEIGHT_PERCENT_X			449
-#define SM_WEIGHT_PERCENT_Y			106
-#define SM_WEIGHT_X				428
-#define SM_WEIGHT_Y				106
 
-#define SM_CAMO_LABEL_X			430
-#define SM_CAMO_LABEL_Y			122
-#define SM_CAMO_PERCENT_X			449
-#define SM_CAMO_PERCENT_Y			121
-#define SM_CAMO_X				428
-#define SM_CAMO_Y				121
+#define SM_PERCENT_WIDTH			(g_ui.m_stdScreenScale * 20)
+#define SM_PERCENT_HEIGHT			(g_ui.m_stdScreenScale * 10)
+#define SM_ARMOR_X				(g_ui.m_stdScreenScale * 347)
+#define SM_ARMOR_Y				(g_ui.m_stdScreenScale * 79)
+#define SM_ARMOR_LABEL_X			(g_ui.m_stdScreenScale * 363)
+#define SM_ARMOR_LABEL_Y			(g_ui.m_stdScreenScale * 69)
+#define SM_ARMOR_PERCENT_X			(g_ui.m_stdScreenScale * 368)
+#define SM_ARMOR_PERCENT_Y			(g_ui.m_stdScreenScale * 79)
+
+#define SM_WEIGHT_LABEL_X			(g_ui.m_stdScreenScale * 430)
+#define SM_WEIGHT_LABEL_Y			(g_ui.m_stdScreenScale * 107)
+#define SM_WEIGHT_PERCENT_X			(g_ui.m_stdScreenScale * 449)
+#define SM_WEIGHT_PERCENT_Y			(g_ui.m_stdScreenScale * 106)
+#define SM_WEIGHT_X				(g_ui.m_stdScreenScale * 428)
+#define SM_WEIGHT_Y				(g_ui.m_stdScreenScale * 106)
+
+#define SM_CAMO_LABEL_X			(g_ui.m_stdScreenScale * 430)
+#define SM_CAMO_LABEL_Y			(g_ui.m_stdScreenScale * 122)
+#define SM_CAMO_PERCENT_X			(g_ui.m_stdScreenScale * 449)
+#define SM_CAMO_PERCENT_Y			(g_ui.m_stdScreenScale * 121)
+#define SM_CAMO_X				(g_ui.m_stdScreenScale * 428)
+#define SM_CAMO_Y				(g_ui.m_stdScreenScale * 121)
 
 
-#define SM_STATS_WIDTH				30
-#define SM_STATS_HEIGHT			8
-#define SM_AGI_X				99
-#define SM_AGI_Y				7
-#define SM_DEX_X				99
-#define SM_DEX_Y				17
-#define SM_STR_X				99
-#define SM_STR_Y				27
-#define SM_CHAR_X				99
-#define SM_CHAR_Y				37
-#define SM_WIS_X				99
-#define SM_WIS_Y				47
-#define SM_EXPLVL_X				148
-#define SM_EXPLVL_Y				7
-#define SM_MRKM_X				148
-#define SM_MRKM_Y				17
-#define SM_EXPL_X				148
-#define SM_EXPL_Y				27
-#define SM_MECH_X				148
-#define SM_MECH_Y				37
-#define SM_MED_X				148
-#define SM_MED_Y				47
+#define SM_STATS_WIDTH				(g_ui.m_stdScreenScale * 30)
+#define SM_STATS_HEIGHT			(g_ui.m_stdScreenScale * 8)
+#define SM_AGI_X				(g_ui.m_stdScreenScale * 99)
+#define SM_AGI_Y				(g_ui.m_stdScreenScale * 7)
+#define SM_DEX_X				(g_ui.m_stdScreenScale * 99)
+#define SM_DEX_Y				(g_ui.m_stdScreenScale * 17)
+#define SM_STR_X				(g_ui.m_stdScreenScale * 99)
+#define SM_STR_Y				(g_ui.m_stdScreenScale * 27)
+#define SM_CHAR_X				(g_ui.m_stdScreenScale * 99)
+#define SM_CHAR_Y				(g_ui.m_stdScreenScale * 37)
+#define SM_WIS_X				(g_ui.m_stdScreenScale * 99)
+#define SM_WIS_Y				(g_ui.m_stdScreenScale * 47)
+#define SM_EXPLVL_X				(g_ui.m_stdScreenScale * 148)
+#define SM_EXPLVL_Y				(g_ui.m_stdScreenScale * 7)
+#define SM_MRKM_X				(g_ui.m_stdScreenScale * 148)
+#define SM_MRKM_Y				(g_ui.m_stdScreenScale * 17)
+#define SM_EXPL_X				(g_ui.m_stdScreenScale * 148)
+#define SM_EXPL_Y				(g_ui.m_stdScreenScale * 27)
+#define SM_MECH_X				(g_ui.m_stdScreenScale * 148)
+#define SM_MECH_Y				(g_ui.m_stdScreenScale * 37)
+#define SM_MED_X				(g_ui.m_stdScreenScale * 148)
+#define SM_MED_Y				(g_ui.m_stdScreenScale * 47)
 
-#define MONEY_X				460
-#define MONEY_Y				105
-#define MONEY_WIDTH				30
-#define MONEY_HEIGHT				22
+#define MONEY_X				(g_ui.m_stdScreenScale * 460)
+#define MONEY_Y				(g_ui.m_stdScreenScale * 105)
+#define MONEY_WIDTH				(g_ui.m_stdScreenScale * 30)
+#define MONEY_HEIGHT				(g_ui.m_stdScreenScale * 22)
 
-#define TM_FACE_X				14
-#define TM_FACE_Y				6
-#define TM_FACE_WIDTH				48
-#define TM_FACE_HEIGHT				43
+#define TM_FACE_X				(g_ui.m_stdScreenScale * 14)
+#define TM_FACE_Y				(g_ui.m_stdScreenScale * 6)
+#define TM_FACE_WIDTH				(g_ui.m_stdScreenScale * 48)
+#define TM_FACE_HEIGHT				(g_ui.m_stdScreenScale * 43)
 
-#define TM_ENDTURN_X				507
-#define TM_ENDTURN_Y				9
-#define TM_ROSTERMODE_X			507
-#define TM_ROSTERMODE_Y			45
-#define TM_DISK_X				507
-#define TM_DISK_Y				81
+#define TM_ENDTURN_X				(g_ui.m_stdScreenScale * 507)
+#define TM_ENDTURN_Y				(g_ui.m_stdScreenScale * 9)
+#define TM_ROSTERMODE_X			(g_ui.m_stdScreenScale * 507)
+#define TM_ROSTERMODE_Y			(g_ui.m_stdScreenScale * 45)
+#define TM_DISK_X				(g_ui.m_stdScreenScale * 507)
+#define TM_DISK_Y				(g_ui.m_stdScreenScale * 81)
 
-#define TM_NAME_X				11
-#define TM_NAME_Y				53
-#define TM_NAME_WIDTH				53
-#define TM_NAME_HEIGHT				10
+#define TM_NAME_X				(g_ui.m_stdScreenScale * 11)
+#define TM_NAME_Y				(g_ui.m_stdScreenScale * 53)
+#define TM_NAME_WIDTH				(g_ui.m_stdScreenScale * 53)
+#define TM_NAME_HEIGHT				(g_ui.m_stdScreenScale * 10)
 
-#define TM_AP_X				67
-#define TM_AP_Y				53
-#define TM_AP_WIDTH				18
-#define TM_AP_HEIGHT				10
+#define TM_AP_X				(g_ui.m_stdScreenScale * 67)
+#define TM_AP_Y				(g_ui.m_stdScreenScale * 53)
+#define TM_AP_WIDTH				(g_ui.m_stdScreenScale * 18)
+#define TM_AP_HEIGHT				(g_ui.m_stdScreenScale * 10)
 
-#define TM_LIFEBAR_HEIGHT			42
+#define TM_LIFEBAR_HEIGHT			(g_ui.m_stdScreenScale * 42)
 
-#define TM_FACEHIGHTL_X			4
-#define TM_FACEHIGHTL_Y			2
-#define TM_FACEHIGHTL_WIDTH			84
-#define TM_FACEHIGHTL_HEIGHT			114
+#define TM_FACEHIGHTL_X			(g_ui.m_stdScreenScale * 4)
+#define TM_FACEHIGHTL_Y			(g_ui.m_stdScreenScale * 2)
+#define TM_FACEHIGHTL_WIDTH			(g_ui.m_stdScreenScale * 84)
+#define TM_FACEHIGHTL_HEIGHT			(g_ui.m_stdScreenScale * 114)
 
-#define TM_INV_WIDTH				58
-#define TM_INV_HEIGHT				23
-#define TM_INV_HAND1STARTX			8
-#define TM_INV_HAND1STARTY			67
-#define TM_INV_HAND_SEP			83
-#define TM_INV_HAND_SEPY			24
+#define TM_INV_WIDTH				(g_ui.m_stdScreenScale * 58)
+#define TM_INV_HEIGHT				(g_ui.m_stdScreenScale * 23)
+#define TM_INV_HAND1STARTX			(g_ui.m_stdScreenScale * 8)
+#define TM_INV_HAND1STARTY			(g_ui.m_stdScreenScale * 67)
+#define TM_INV_HAND_SEP			(g_ui.m_stdScreenScale * 83)
+#define TM_INV_HAND_SEPY			(g_ui.m_stdScreenScale * 24)
 
-#define TM_BARS_X				67
-#define TM_BARS_Y				3
-#define TM_BARS_WIDTH				19
-#define TM_BARS_HEIGHT				47
+#define TM_BARS_X				(g_ui.m_stdScreenScale * 67)
+#define TM_BARS_Y				(g_ui.m_stdScreenScale * 3)
+#define TM_BARS_WIDTH				(g_ui.m_stdScreenScale * 19)
+#define TM_BARS_HEIGHT				(g_ui.m_stdScreenScale * 47)
 
-#define INDICATOR_BOX_WIDTH			12
-#define INDICATOR_BOX_HEIGHT			10
+#define INDICATOR_BOX_WIDTH			(g_ui.m_stdScreenScale * 12)
+#define INDICATOR_BOX_HEIGHT			(g_ui.m_stdScreenScale * 10)
 
 
 enum
@@ -851,8 +851,10 @@ static void FillEmptySpaceAtBottom()
 {
 	if(g_ui.isBigScreen())
 	{
-		ColorFillVideoSurfaceArea(guiSAVEBUFFER, 640, g_ui.get_INV_INTERFACE_START_Y(),
-						g_ui.m_screenWidth, g_ui.m_screenHeight, 0);
+		ColorFillVideoSurfaceArea(guiSAVEBUFFER,
+					  640, g_ui.get_INV_INTERFACE_START_Y(),
+					  g_ui.m_screenWidth, g_ui.m_screenHeight,
+					  RGB(0, 0, 0));
 	}
 }
 
@@ -1095,13 +1097,13 @@ static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 co
 
 	INT8  const ap         = GetUIApsToDisplay(s);
 	UINT8 const min_ap     = MinAPsToAttack(s, s->sLastTarget, TRUE);
-	UINT8 const foreground =
+	const UINT32 foreground =
 		!EnoughPoints(s, min_ap, 0, FALSE) ? FONT_MCOLOR_DKRED    :
 		ap < 0                             ? FONT_MCOLOR_DKRED    :
 		MercUnderTheInfluence(s)           ? FONT_MCOLOR_LTBLUE   :
 		s->bStealthMode                    ? FONT_MCOLOR_LTYELLOW :
 		FONT_MCOLOR_LTGRAY;
-	SetFontAttributes(TINYFONT1, foreground);
+	SetFontAttributes(TINYFONT1, foreground, DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 
 	RestoreExternBackgroundRect(x, y, w, h);
 	wchar_t buf[16];
@@ -1137,32 +1139,21 @@ static void SetStatsHelp(MOUSE_REGION& r, SOLDIERTYPE const& s)
 	r.SetFastHelpText(help);
 }
 
-void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight, const UINT32 rgb, const UINT8 scale_rgb)
+void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 sWidth, const INT16 sHeight, const UINT32 fill_color, const UINT32 scale_color)
 {
 	SGPVSurface::Lock l(guiSAVEBUFFER);
 
-	#define s(a)				((a)/2)+((a)/2)*(scale_rgb)/100
-
-	const int r = s(0xff&rgb>>16);
-	const int g = s(0xff&rgb>>8);
-	const int b = s(0xff&rgb);
-	const UINT16 fill_color = Get16BPPColor((b<<16)+(g<<8)+r);
-
-	UINT16* const dst = l.Buffer<UINT16>();
+	UINT32* dst = l.Buffer<UINT32>();
 
 	for (int y = 0; y < sHeight; ++y)
-	{
 		for(int x = 0; x < sWidth; ++x)
-		{
-			dst[(y+sTop)*l.Pitch()/2+sLeft+x]=fill_color;
-		}
-	}
+			dst[(y + sTop) * l.Pitch() / 4 + sLeft + x] = fill_color;
 }
 
 static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 const stat_val, INT16 const x, INT16 const y, INT32 const progress)
 {
-	SOLDIERTYPE const& s  = *gpSMCurrentMerc;
-	UINT8       const  fg =
+	const SOLDIERTYPE &s = *gpSMCurrentMerc;
+	const UINT32 fg =
 		s.bLife < OKLIFE                                             ? FONT_MCOLOR_DKGRAY    :
 		GetJA2Clock() >= CHANGE_STAT_RECENTLY_DURATION + change_time ? STATS_TEXT_FONT_COLOR :
 		change_time == 0                                             ? STATS_TEXT_FONT_COLOR :
@@ -1173,9 +1164,8 @@ static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 cons
 	wchar_t str[4];
 	swprintf(str, lengthof(str), L"%3d", stat_val);
 	if (gamepolicy(gui_extras))
-	{
-		ProgressBarBackgroundRect(x+16, y-2, 15*progress/100, 10, 0x514A05, progress);
-	}
+		ProgressBarBackgroundRect(x + g_ui.m_stdScreenScale * 16, y - g_ui.m_stdScreenScale * 2,
+			g_ui.m_stdScreenScale * 15 * progress / 100, g_ui.m_stdScreenScale * 10, RGB(0x51, 0x4A, 0x05), progress);
 	DrawStringRight(str, x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, BLOCKFONT2);
 }
 
@@ -1250,9 +1240,9 @@ no_plate:
 			SetFontAttributes(BLOCKFONT2, STATS_TITLE_FONT_COLOR);
 			for (UINT32 i = 0; i != 5; ++i)
 			{
-				INT32 const y = dy + 7 + i * 10;
-				MPrint( 92, y, pShortAttributeStrings[i]);
-				MPrint(137, y, pShortAttributeStrings[i + 5]);
+				INT32 const y = dy + g_ui.m_stdScreenScale * 7 + i * g_ui.m_stdScreenScale * 10;
+				MPrint(g_ui.m_stdScreenScale *  92, y, pShortAttributeStrings[i]);
+				MPrint(g_ui.m_stdScreenScale * 137, y, pShortAttributeStrings[i + 5]);
 			}
 
 			MPrint(SM_ARMOR_LABEL_X - StringPixLength(pInvPanelTitleStrings[0], BLOCKFONT2) / 2, dy + SM_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);
@@ -1303,8 +1293,8 @@ no_plate:
 		}
 
 		// Render name
-		UINT8 const fg = s.bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
-		SetFontAttributes(BLOCKFONT2, fg);
+		const UINT32 fg = s.bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
+		SetFontAttributes(BLOCKFONT2, fg, DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 
 		INT32 const x = SM_SELMERCNAME_X;
 		INT32 const y = SM_SELMERCNAME_Y + dy;
@@ -1337,12 +1327,12 @@ no_plate:
 	if (gfSMDisableForItems && *dirty_level != DIRTYLEVEL0)
 	{
 		SGPRect ClipRect;
-		ClipRect.iLeft = 87;
-		ClipRect.iRight = 536;
+		ClipRect.iLeft = g_ui.m_stdScreenScale * 87;
+		ClipRect.iRight = g_ui.m_stdScreenScale * 536;
 		ClipRect.iTop = INV_INTERFACE_START_Y;
 		ClipRect.iBottom = SCREEN_HEIGHT;
 		SGPVSurface::Lock l(FRAME_BUFFER);
-		Blt16BPPBufferHatchRect(l.Buffer<UINT16>(), l.Pitch(), &ClipRect);
+		Blt32BPPBufferHatchRect(l.Buffer<UINT32>(), l.Pitch(), &ClipRect);
 	}
 }
 
@@ -2412,8 +2402,8 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				// Restore AP/LIFE POSIITONS
 
 				// Render name!
-				UINT8 const foreground = s->bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
-				SetFontAttributes(BLOCKFONT2, foreground);
+				const UINT32 foreground = s->bStealthMode ? FONT_MCOLOR_LTYELLOW : FONT_MCOLOR_LTGRAY;
+				SetFontAttributes(BLOCKFONT2, foreground, DEFAULT_SHADOW, FONT_MCOLOR_BLACK);
 
 				// RENDER ON SAVE BUFFER!
 				SetFontDestBuffer(guiSAVEBUFFER);
@@ -3168,10 +3158,12 @@ void RenderTownIDString(void)
 	INT16 sFontX, sFontY;
 
 	// Render town, position
-	SetFontAttributes(COMPFONT, 183);
+	SetFontAttributes(COMPFONT, RGB(  0, 255,   0));
 	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, lengthof(zTownIDString), TRUE );
-	ReduceStringLength( zTownIDString, lengthof(zTownIDString), 80, COMPFONT );
-	FindFontCenterCoordinates(548, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
+	ReduceStringLength( zTownIDString, lengthof(zTownIDString), g_ui.m_stdScreenScale * 80, COMPFONT );
+	FindFontCenterCoordinates(g_ui.m_stdScreenScale * 548, SCREEN_HEIGHT - g_ui.m_stdScreenScale * 55,
+		g_ui.m_stdScreenScale * 80, g_ui.m_stdScreenScale * 16,
+		zTownIDString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, zTownIDString);
 }
 
@@ -3293,8 +3285,8 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if (pSoldier == NULL) return;
 
 		sStartYPosition = MAP_START_KEYRING_Y;
-		sWidth = 261;
-		sHeight = ( 359 - 107 );
+		sWidth = g_ui.m_stdScreenScale * 261;
+		sHeight = g_ui.m_stdScreenScale * (359 - 107);
 	}
 	else
 	{
@@ -3317,9 +3309,10 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		if( guiCurrentScreen == MAP_SCREEN )
 		{
 			// shade the background
-			FRAME_BUFFER->ShadowRect(STD_SCREEN_X + 0, STD_SCREEN_Y + 107,
-							STD_SCREEN_X + 261, STD_SCREEN_Y + 359);
-			InvalidateRegion(STD_SCREEN_X + 0, STD_SCREEN_Y + 107, STD_SCREEN_X + 261, STD_SCREEN_Y + 359);
+			FRAME_BUFFER->ShadowRect(STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 107,
+				STD_SCREEN_X + g_ui.m_stdScreenScale * 261, STD_SCREEN_Y + g_ui.m_stdScreenScale * 359);
+			InvalidateRegion(STD_SCREEN_X + g_ui.m_stdScreenScale * 0, STD_SCREEN_Y + g_ui.m_stdScreenScale * 107,
+				STD_SCREEN_X + g_ui.m_stdScreenScale * 261, STD_SCREEN_Y + g_ui.m_stdScreenScale * 359);
 			InitKeyRingPopup(pSoldier, STD_SCREEN_X + 0, sStartYPosition, sWidth, sHeight);
 		}
 		else

@@ -682,7 +682,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 //	Displays a single palette set. (used by ShowEditMercPalettes)
 static void ShowEditMercColorSet(UINT8 ubPaletteRep, INT16 sSet)
 {
-	UINT16 us16BPPColor, usFillColorDark, usFillColorLight;
+	UINT32 us16BPPColor, usFillColorDark, usFillColorLight;
 	UINT8 cnt1;
 	UINT8  ubSize;
 	INT16 sUnitSize;
@@ -700,8 +700,8 @@ static void ShowEditMercColorSet(UINT8 ubPaletteRep, INT16 sSet)
 	sLeft = 230;
 	sRight = 359;
 
-	usFillColorDark = Get16BPPColor(FROMRGB(24, 61, 81));
-	usFillColorLight = Get16BPPColor(FROMRGB(136, 138, 135));
+	usFillColorDark = RGB(24, 61, 81);
+	usFillColorLight = RGB(136, 138, 135);
 
 	// Draw color bar window area
 	ColorFillVideoSurfaceArea(FRAME_BUFFER, sLeft,     sTop,     sRight, sBottom, usFillColorDark );
@@ -719,11 +719,11 @@ static void ShowEditMercColorSet(UINT8 ubPaletteRep, INT16 sSet)
 		if (cnt1 == (ubSize - 1) )
 			sRight = 358;
 		if( ubPaletteRep == 0xff )
-			us16BPPColor = Get16BPPColor( FROMRGB( (16 - cnt1)*10, (16 - cnt1)*10, (16 - cnt1)*10 ) );
+			us16BPPColor = RGB((16 - cnt1) * 10, (16 - cnt1) * 10, (16 - cnt1) * 10);
 		else
 		{
 			const SGPPaletteEntry* Clr = &gpPalRep[ubPaletteRep].rgb[cnt1];
-			us16BPPColor = Get16BPPColor(FROMRGB(Clr->r, Clr->g, Clr->b));
+			us16BPPColor = RGB(Clr->r, Clr->g, Clr->b);
 		}
 		ColorFillVideoSurfaceArea( FRAME_BUFFER, sLeft, sTop, sRight, sBottom, us16BPPColor );
 
@@ -743,7 +743,7 @@ void DisplayWayPoints(void)
 	INT16 sX,sY;
 	INT16	sXMapPos,sYMapPos;
 	INT16 sScreenX,sScreenY;
-	FLOAT ScrnX,ScrnY,dOffsetX,dOffsetY;
+	INT16 ScrnX,ScrnY,dOffsetX,dOffsetY;
 	INT8	bPoint;
 	INT16 sGridNo;
 
@@ -770,7 +770,7 @@ void DisplayWayPoints(void)
 		dOffsetX = (FLOAT)(sXMapPos * CELL_X_SIZE) - gsRenderCenterX;
 		dOffsetY = (FLOAT)(sYMapPos * CELL_Y_SIZE) - gsRenderCenterY;
 
-		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
+		FromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
 
 		sScreenX = ( g_ui.m_tacticalMapCenterX ) + (INT16)ScrnX;
 		sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)ScrnY;
@@ -783,7 +783,7 @@ void DisplayWayPoints(void)
 		if( sScreenY <= 355 )
 		{
 			// Shown it on screen!
-			UINT8 background;
+			UINT32 background;
 			if( pSoldier->bLevel == 1 )
 			{
 				sScreenY -= 68;
@@ -1954,7 +1954,7 @@ void UpdateMercsInfo()
 			{
 				wchar_t str[255];
 				const wchar_t* keyword = L"";
-				ColorFillVideoSurfaceArea( FRAME_BUFFER, 431, EDITOR_TASKBAR_POS_Y + 28, 590, EDITOR_TASKBAR_POS_Y + 90, Get16BPPColor( FROMRGB( 32, 45, 72 ) ) );
+				ColorFillVideoSurfaceArea( FRAME_BUFFER, 431, EDITOR_TASKBAR_POS_Y + 28, 590, EDITOR_TASKBAR_POS_Y + 90, RGB(32, 45, 72) );
 				switch( gCurrSchedule.ubAction[ gubCurrentScheduleActionIndex ] )
 				{
 					case SCHEDULE_ACTION_LOCKDOOR:   keyword = L"lock";   break;
@@ -2010,11 +2010,11 @@ static BOOLEAN PointInRect(SGPRect* pRect, INT32 x, INT32 y)
 }
 
 
-static void DrawRect(SGPRect* pRect, INT16 color)
+static void DrawRect(SGPRect* pRect, UINT32 color)
 {
 	SGPVSurface::Lock l(FRAME_BUFFER);
 	SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-	RectangleDraw(TRUE, pRect->iLeft + MERCPANEL_X, pRect->iTop + MERCPANEL_Y, pRect->iRight + MERCPANEL_X, pRect->iBottom + MERCPANEL_Y, color, l.Buffer<UINT16>());
+	RectangleDraw(TRUE, pRect->iLeft + MERCPANEL_X, pRect->iTop + MERCPANEL_Y, pRect->iRight + MERCPANEL_X, pRect->iBottom + MERCPANEL_Y, color, l.Buffer<UINT32>());
 }
 
 
@@ -2022,7 +2022,7 @@ static void RenderSelectedMercsInventory(void)
 {
 	INT32 i;
 	INT32 xp, yp;
-	UINT8 ubFontColor;
+	UINT32 ubFontColor;
 	if (g_selected_merc == NULL) return;
 	for( i = 0; i < 9; i++ )
 	{
@@ -2248,9 +2248,9 @@ static void RenderMercInventoryPanel(void)
 	}
 	RenderButtons();
 	if( gbCurrHilite != -1 )
-		DrawRect( &mercRects[ gbCurrHilite ], Get16BPPColor( FROMRGB( 200, 200, 0 ) ) );
+		DrawRect( &mercRects[ gbCurrHilite ], RGB(200, 200, 0) );
 	if( gbCurrSelect != -1 )
-		DrawRect( &mercRects[ gbCurrSelect ], Get16BPPColor( FROMRGB( 200,   0, 0 ) ) );
+		DrawRect( &mercRects[ gbCurrSelect ], RGB(200, 0, 0) );
 	RenderSelectedMercsInventory();
 	InvalidateRegion( MERCPANEL_X, MERCPANEL_Y, 475, EDITOR_TASKBAR_POS_Y + 100 );
 	UpdateItemStatsPanel();
@@ -2376,7 +2376,7 @@ static void SetDroppableCheckboxesBasedOnMercsInventory(void)
 }
 
 
-void SetEnemyColorCode(UINT8 const colour_code)
+void SetEnemyColorCode(UINT8 const ubSoldierClass)
 {
 	SOLDIERINITNODE       const& sel = *gpSelected;
 	SOLDIERCREATE_STRUCT* const  dp  = sel.pDetailedPlacement;
@@ -2385,7 +2385,7 @@ void SetEnemyColorCode(UINT8 const colour_code)
 	UnclickEditorButtons(FIRST_MERCS_COLORCODE_BUTTON, LAST_MERCS_COLORCODE_BUTTON);
 	char const* vest;
 	char const* pants;
-	switch (colour_code)
+	switch (ubSoldierClass)
 	{
 		case SOLDIER_CLASS_ARMY:
 			ClickEditorButton(MERCS_ARMY_CODE);
@@ -2412,9 +2412,9 @@ void SetEnemyColorCode(UINT8 const colour_code)
 
 		default: return;
 	}
-	gubSoldierClass                     = colour_code;
-	sel.pBasicPlacement->ubSoldierClass = colour_code;
-	if (dp) dp->ubSoldierClass = colour_code;
+	gubSoldierClass                     = ubSoldierClass;
+	sel.pBasicPlacement->ubSoldierClass = ubSoldierClass;
+	if (dp) dp->ubSoldierClass = ubSoldierClass;
 	SOLDIERTYPE& s = *sel.pSoldier;
 	SET_PALETTEREP_ID(s.VestPal,  vest);
 	SET_PALETTEREP_ID(s.PantsPal, pants);
@@ -2801,8 +2801,8 @@ void ClearCurrentSchedule()
 
 static void RenderCurrentSchedule(void)
 {
-	FLOAT dOffsetX, dOffsetY;
-	FLOAT ScrnX, ScrnY;
+	INT16 dOffsetX, dOffsetY;
+	INT16 ScrnX, ScrnY;
 	INT32 i;
 	INT32 iMapIndex;
 	INT16 sXMapPos, sYMapPos;
@@ -2825,7 +2825,7 @@ static void RenderCurrentSchedule(void)
 		dOffsetX = (FLOAT)(sXMapPos * CELL_X_SIZE) - gsRenderCenterX;
 		dOffsetY = (FLOAT)(sYMapPos * CELL_Y_SIZE) - gsRenderCenterY;
 
-		FloatFromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
+		FromCellToScreenCoordinates( dOffsetX, dOffsetY, &ScrnX, &ScrnY);
 
 		sScreenX = ( g_ui.m_tacticalMapCenterX ) + (INT16)ScrnX;
 		sScreenY = ( g_ui.m_tacticalMapCenterY ) + (INT16)ScrnY;

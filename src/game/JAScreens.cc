@@ -185,7 +185,7 @@ ScreenID InitScreenHandle(void)
 	{
 		// wait 3 seconds since the splash displayed and then switch
 		// to the main menu
-		if((GetClock() - splashDisplayedMoment) >= 3000)
+		if((GetClock() - splashDisplayedMoment) >= INTRO_SPLASH_DURATION)
 		{
 			InitMainMenu( );
 			ubCurrentScreen = 3;
@@ -440,7 +440,7 @@ ScreenID SexScreenHandle(void)
 	static UINT32					uiTimeOfLastUpdate = 0, uiTime;
 
 	// OK, Clear screen and show smily face....
-	FRAME_BUFFER->Fill(Get16BPPColor(FROMRGB(0, 0, 0)));
+	FRAME_BUFFER->Fill(0x000000FF);
 	InvalidateScreen( );
 	// Remove cursor....
 	SetCurrentCursorFromDatabase( VIDEO_NO_CURSOR );

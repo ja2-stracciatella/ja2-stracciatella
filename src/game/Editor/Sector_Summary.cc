@@ -1223,7 +1223,7 @@ void RenderSummaryWindow()
 		MPrint(354, 18, L"Summary");
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			RectangleDraw(TRUE, 350, 15, 405, 28, 0, l.Buffer<UINT16>());
+			RectangleDraw(TRUE, 350, 15, 405, 28, 0, l.Buffer<UINT32>());
 		}
 		FRAME_BUFFER->ShadowRectUsingLowPercentTable(351, 16, 404, 27);
 		if( gpCurrentSectorSummary )
@@ -1240,7 +1240,7 @@ void RenderSummaryWindow()
 		MPrint(354, 33, L"Items");
 		{ SGPVSurface::Lock l(FRAME_BUFFER);
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-			RectangleDraw(TRUE, 350, 30, 405, 43, 0, l.Buffer<UINT16>());
+			RectangleDraw(TRUE, 350, 30, 405, 43, 0, l.Buffer<UINT32>());
 		}
 		if( gpCurrentSectorSummary )
 			/*&& gpCurrentSectorSummary->usNumItems ||
@@ -1281,7 +1281,7 @@ void RenderSummaryWindow()
 		{
 			UINT16 pos;
 			SGPVSurface::Lock l(FRAME_BUFFER);
-			UINT16* const pDestBuf = l.Buffer<UINT16>();
+			UINT32* const pDestBuf = l.Buffer<UINT32>();
 			SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 			for( i = 1; i <= 15; i++ )
 			{
@@ -1365,14 +1365,14 @@ void RenderSummaryWindow()
 	if( gfGlobalSummaryExists )
 	{
 		SGPVSurface::Lock l(FRAME_BUFFER);
-		UINT16* const pDestBuf = l.Buffer<UINT16>();
+		UINT32* const pDestBuf = l.Buffer<UINT32>();
 		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		//Render the grid for the map currently residing in memory (blue).
 		if( gfWorldLoaded && !gfTempFile && gsSectorX )
 		{
 			x = MAP_LEFT + (gsSectorX-1) * 13 + 1;
 			y = MAP_TOP + (gsSectorY-1) * 13 + 1;
-			RectangleDraw( TRUE, x, y, x+11, y+11, Get16BPPColor( FROMRGB( 50, 50, 200 ) ), pDestBuf );
+			RectangleDraw( TRUE, x, y, x+11, y+11, RGB(50, 50, 200), pDestBuf );
 		}
 
 		//Render the grid for the sector currently in focus (red).
@@ -1380,7 +1380,7 @@ void RenderSummaryWindow()
 		{
 			x = MAP_LEFT + (gsSelSectorX-1) * 13 ;
 			y = MAP_TOP + (gsSelSectorY-1) * 13 ;
-			RectangleDraw( TRUE, x, y, x+13, y+13, Get16BPPColor( FROMRGB( 200, 50, 50 ) ), pDestBuf );
+			RectangleDraw( TRUE, x, y, x+13, y+13, RGB(200, 50, 50), pDestBuf );
 		}
 
 		//Render the grid for the sector if the mouse is over it (yellow).
@@ -1388,7 +1388,7 @@ void RenderSummaryWindow()
 		{
 			x = MAP_LEFT + (gsHiSectorX-1) * 13 - 1;
 			y = MAP_TOP + (gsHiSectorY-1) * 13 - 1;
-			RectangleDraw( TRUE, x, y, x+15, y+15, Get16BPPColor( FROMRGB( 200, 200, 50 ) ), pDestBuf );
+			RectangleDraw( TRUE, x, y, x+15, y+15, RGB(200, 200, 50), pDestBuf );
 		}
 	}
 	//Check to see if the user clicked on one of the hot spot mode change areas.

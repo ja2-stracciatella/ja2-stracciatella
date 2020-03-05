@@ -58,8 +58,8 @@ struct GUI_BUTTON
 	// Draw the button on the screen.
 	void Draw();
 
-	void SpecifyDownTextColors(INT16 fore_colour_down, INT16 shadow_colour_down);
-	void SpecifyHilitedTextColors(INT16 fore_colour_highlighted, INT16 shadow_colour_highlighted);
+	void SpecifyDownTextColors(UINT32 fore_color_down, UINT32 shadow_color_down);
+	void SpecifyHilitedTextColors(UINT32 fore_color_highlighted, UINT32 shadow_color_highlighted);
 
 	enum Justification
 	{
@@ -70,7 +70,7 @@ struct GUI_BUTTON
 	void SpecifyTextJustification(Justification);
 
 	void SpecifyText(wchar_t const* text);
-	void SpecifyGeneralTextAttributes(wchar_t const* string, SGPFont, INT16 fore_colour, INT16 shadow_colour);
+	void SpecifyGeneralTextAttributes(wchar_t const* string, SGPFont, UINT32 fore_color, UINT32 shadow_color);
 	void SpecifyTextOffsets(INT8 text_x_offset, INT8 text_y_offset, BOOLEAN shift_text);
 	void SpecifyTextSubOffsets(INT8 text_x_offset, INT8 text_y_offset, BOOLEAN shift_text);
 	void SpecifyTextWrappedWidth(INT16 wrapped_width);
@@ -90,7 +90,7 @@ struct GUI_BUTTON
 	 * If fShiftImage is true, then the image will shift down one pixel and right
 	 * one pixel just like the text does.
 	 */
-	void SpecifyIcon(SGPVObject const* icon, UINT16 usVideoObjectIndex, INT8 bXOffset, INT8 bYOffset, BOOLEAN fShiftImage);
+	void SpecifyIcon(SGPVObject const* const icon_, UINT16 const usVideoObjectIndex, INT8 const bXOffset, INT8 const bYOffset, BOOLEAN const);
 
 	// will simply set the cursor for the mouse region the button occupies
 	void SetCursor(UINT16 const cursor) { Area.ChangeCursor(cursor); }
@@ -133,12 +133,12 @@ struct GUI_BUTTON
 	// For buttons with text
 	wchar_t*     string;              // the string
 	SGPFont      usFont;              // font for text
-	INT16        sForeColor;          // text colors if there is text
-	INT16        sShadowColor;
-	INT16        sForeColorDown;      // text colors when button is down (optional)
-	INT16        sShadowColorDown;
-	INT16        sForeColorHilited;   // text colors when button is down (optional)
-	INT16        sShadowColorHilited;
+	UINT32       sForeColor;          // text colors if there is text
+	UINT32       sShadowColor;
+	UINT32       sForeColorDown;      // text colors when button is down (optional)
+	UINT32       sShadowColorDown;
+	UINT32       sForeColorHilited;   // text colors when button is down (optional)
+	UINT32       sShadowColorHilited;
 	INT8         bJustification;      // BUTTON_TEXT_LEFT, BUTTON_TEXT_CENTER, BUTTON_TEXT_RIGHT
 	INT8         bTextXOffset;
 	INT8         bTextYOffset;
@@ -250,7 +250,7 @@ extern BOOLEAN gfRenderHilights;
  * allocated your own image, this is a somewhat simplified function.
  */
 GUIButtonRef QuickCreateButton(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
-GUIButtonRef QuickCreateButtonNoMove(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
+GUIButtonRef QuickCreateButtonNoMove(BUTTON_PICS* const image, const INT16 x, const INT16 y, const INT16 priority, const GUI_CALLBACK click);
 GUIButtonRef QuickCreateButtonToggle(BUTTON_PICS* image, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
 
 GUIButtonRef QuickCreateButtonImg(const char* gfx, INT32 grayed, INT32 off_normal, INT32 off_hilite, INT32 on_normal, INT32 on_hilite, INT16 x, INT16 y, INT16 priority, GUI_CALLBACK click);
@@ -267,13 +267,13 @@ GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 ylo
 GUIButtonRef CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 // Creates a generic button with text on it.
-GUIButtonRef CreateTextButton(const wchar_t* string, SGPFont, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
+GUIButtonRef CreateTextButton(const wchar_t* string, SGPFont, UINT32 sForeColor, UINT32 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
 
-GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const wchar_t* string, SGPFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback);
+GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const wchar_t* string, SGPFont, UINT32 sForeColor, UINT32 sShadowColor, UINT32 sForeColorDown, UINT32 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 /* This is technically not a clickable button, but just a label with text. It is
  * implemented as button */
-GUIButtonRef CreateLabel(const wchar_t* text, SGPFont, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
+GUIButtonRef CreateLabel(const wchar_t* text, SGPFont, UINT32 forecolor, UINT32 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
 
 void MarkAButtonDirty(GUIButtonRef); // will mark only selected button dirty
 void MarkButtonsDirty(void);// Function to mark buttons dirty ( all will redraw at next RenderButtons )
@@ -290,7 +290,7 @@ struct ButtonDimensions
 
 const ButtonDimensions* GetDimensionsOfButtonPic(const BUTTON_PICS*);
 
-UINT16 GetGenericButtonFillColor(void);
+UINT32 GetGenericButtonFillColor(void);
 
 void ReleaseAnchorMode(void);
 

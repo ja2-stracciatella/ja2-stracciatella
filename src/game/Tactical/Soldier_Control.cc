@@ -4675,6 +4675,9 @@ static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, 
 
 void CreateSoldierPalettes(SOLDIERTYPE& s)
 {
+	// FIXME: maxrd2 we're not supposed to use palette anymore - TODO: convert to shades
+	return;
+
 	// --- TAKE FROM CURRENT ANIMATION HVOBJECT!
 	UINT16 const anim_surface = GetSoldierAnimationSurface(&s);
 	if (anim_surface == INVALID_ANIMATION_SURFACE)
@@ -5049,17 +5052,17 @@ void LoadPaletteData()
 
 void SetPaletteReplacement(SGPPaletteEntry* const p8BPPPalette, PaletteRepID aPalRep)
 {
-	UINT32 cnt2;
-	UINT8  ubType;
+	SetPaletteReplacement(p8BPPPalette, GetPaletteRepIndexFromID(aPalRep));
+}
 
-	const UINT8 ubPalIndex = GetPaletteRepIndexFromID(aPalRep);
-
+void  SetPaletteReplacement(SGPPaletteEntry* const p8BPPPalette, const UINT8 ubPalIndex)
+{
 	// Get range type
-	ubType = gpPalRep[ ubPalIndex ].ubType;
+	UINT8 ubType = gpPalRep[ ubPalIndex ].ubType;
 
-	for ( cnt2 = gpPaletteSubRanges[ ubType ].ubStart; cnt2 <= gpPaletteSubRanges[ ubType ].ubEnd; cnt2++ )
-	{
+	for (UINT32 cnt2 = gpPaletteSubRanges[ubType].ubStart; cnt2 <= gpPaletteSubRanges[ubType].ubEnd; cnt2++) {
 		p8BPPPalette[cnt2] = gpPalRep[ubPalIndex].rgb[cnt2 - gpPaletteSubRanges[ubType].ubStart];
+		p8BPPPalette[cnt2].a = 255;
 	}
 }
 
@@ -7570,7 +7573,7 @@ static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT
 		UINT8 r = __max(rscale, pPalette[cnt].r);
 		UINT8 g = __max(gscale, pPalette[cnt].g);
 		UINT8 b = pPalette[cnt].b;
-		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
+		p16BPPPalette[cnt] = RGB(r, g, b);
 	}
 	return p16BPPPalette;
 }
@@ -7595,7 +7598,7 @@ static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, 
 		UINT8 r = __min(rmod, 255);
 		UINT8 g = __min(gmod, 255);
 		UINT8 b = __min(bmod, 255);
-		p16BPPPalette[cnt] = Get16BPPColor(FROMRGB(r, g, b));
+		p16BPPPalette[cnt] = RGB(r, g, b);
 	}
 	return p16BPPPalette;
 }

@@ -60,6 +60,7 @@ enum TerrainTypeDefines
 struct TILE_IMAGERY
 {
 	HVOBJECT           vo;
+	HVOBJECT           voInterface;
 	UINT32             fType;
 	AuxObjectData      *pAuxData;
 	RelTileLoc         *pTileLocData;
@@ -83,6 +84,7 @@ struct TILE_ANIMATION_DATA
 struct TILE_ELEMENT
 {
 	HVOBJECT             hTileSurface;
+	HVOBJECT             hInterfaceSurface;
 	DB_STRUCTURE_REF*    pDBStructureRef;
 	RelTileLoc*          pTileLocData;
 	TileElementFlags     uiFlags;

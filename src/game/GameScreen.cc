@@ -99,7 +99,7 @@ static void BlitMFont(VIDEO_OVERLAY* const ovr)
 {
 	SetFontAttributes(ovr->uiFontID, ovr->ubFontFore, DEFAULT_SHADOW, ovr->ubFontBack);
 	SGPVSurface::Lock l(ovr->uiDestBuff);
-	MPrintBuffer(l.Buffer<UINT16>(), l.Pitch(), ovr->sX, ovr->sY, ovr->zText);
+	MPrintBuffer(l.Buffer<UINT32>(), l.Pitch(), ovr->sX, ovr->sY, ovr->zText);
 }
 
 
@@ -123,7 +123,6 @@ void MainGameScreenInit(void)
 					DEBUG_PAGE_SCREEN_OFFSET_Y,
 					DEBUG_PAGE_FONT,
 					DEBUG_PAGE_TEXT_COLOR,
-					0,
 					L"90"
 	);
 	EnableVideoOverlay(false, g_fps_overlay);
@@ -135,7 +134,6 @@ void MainGameScreenInit(void)
 					DEBUG_PAGE_SCREEN_OFFSET_Y+DEBUG_PAGE_LINE_HEIGHT,
 					DEBUG_PAGE_FONT,
 					DEBUG_PAGE_TEXT_COLOR,
-					0,
 					L"Levelnodes: 100000"
 	);
 	EnableVideoOverlay(false, g_counter_period_overlay);

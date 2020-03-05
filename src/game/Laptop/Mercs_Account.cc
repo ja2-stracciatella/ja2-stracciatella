@@ -214,7 +214,7 @@ static void DisplayHiredMercs(void)
 	UINT32	uiContractCharge;
 	wchar_t	sTemp[20];
 	UINT8	i;
-	UINT8	ubFontColor;
+	UINT32	ubFontColor;
 
 	giMercTotalContractCharge = 0;
 

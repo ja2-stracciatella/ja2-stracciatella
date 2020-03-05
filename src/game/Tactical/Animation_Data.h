@@ -524,6 +524,7 @@ struct AnimationSurfaceType
 	HVOBJECT     hVideoObject;
 	INT8         bUsageCount;
 	const INT8   bProfile;
+	UINT8        head, pants, vest, skin;
 };
 
 
@@ -532,7 +533,8 @@ extern AnimationSurfaceType gAnimSurfaceDatabase[NUMANIMATIONSURFACETYPES];
 
 void InitAnimationSystem(void);
 void DeInitAnimationSystem(void);
-void LoadAnimationSurface(UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState);
+void LoadAnimationSurface(UINT16 usSoldierID, UINT16 usSurfaceIndex, UINT16 usAnimState,
+			  UINT8 head, UINT8 pants, UINT8 vest, UINT8 skin);
 void UnLoadAnimationSurface(UINT16 usSoldierID, UINT16 usSurfaceIndex);
 void ClearAnimationSurfacesUsageHistory( UINT16 usSoldierID );
 

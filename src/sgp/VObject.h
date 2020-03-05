@@ -4,6 +4,7 @@
 #include "AutoPtr.h"
 #include "Buffer.h"
 #include "Types.h"
+#include "VideoScale.h"
 
 
 // Defines for HVOBJECT limits
@@ -19,9 +20,11 @@ struct ZStripInfo
 	INT8* pbZChange;          // change to the Z value in each strip (after the first)
 };
 
-// This definition mimics what is found in WINDOWS.H ( for Direct Draw compatiblity )
-// From RGB to COLORVAL
-#define FROMRGB(r, g ,b)  ((UINT32) (((UINT8) (r) | ((UINT16) (g) << 8)) | (((UINT32) (UINT8) (b)) << 16)))
+#define RGBA(r, g, b, a)  (UINT32(r) << 24 | UINT32(g) << 16 | UINT32(b) << 8 | UINT32(a))
+#define RGB(r, g, b)  (UINT32(r) << 24 | UINT32(g) << 16 | UINT32(b) << 8 | 0xFF)
+#define SHADE_NONE RGBA(0, 0, 0, 0)
+#define SHADE_MONO(r, g, b) RGBA(r, g, b, 1)
+#define SHADE_STD(r, g, b) RGBA(r, g, b, 2)
 
 // This structure is a video object.
 // The video object contains different data based on it's type, compressed or not
@@ -37,10 +40,11 @@ class SGPVObject
 
 		UINT16 const* Palette16() const { return palette16_; }
 
-		UINT16 const* CurrentShade() const { return current_shade_; }
+		UINT32 CurrentShade() const { return current_shade_; }
 
 		// Set the current object shade table
 		void CurrentShade(size_t idx);
+		void SetShadeColor(UINT32 rgba) { current_shade_ = rgba; }
 
 		UINT16 SubregionCount() const { return subregion_count_; }
 
@@ -73,9 +77,9 @@ class SGPVObject
 		UINT8*                       pix_data_;                      // ETRLE pixel data
 		ETRLEObject*                 etrle_object_;                  // Object offset data etc
 	public:
-		UINT16*                      pShades[HVOBJECT_SHADE_TABLES]; // Shading tables
+		UINT32                       pShades[HVOBJECT_SHADE_TABLES]; // Shading values
 	private:
-		UINT16 const*                current_shade_;
+		UINT32                       current_shade_;
 	public:
 		ZStripInfo**                 ppZStripInfo;                   // Z-value strip info arrays
 
@@ -109,8 +113,11 @@ extern UINT32 guiVObjectSize;
 	#define AddVideoObjectFromHImage(a) AddAndRecordVObjectFromHImage(a, __LINE__, __FILE__)
 	#define AddVideoObjectFromFile(a)   AddAndRecordVObjectFromFile(  a, __LINE__, __FILE__)
 #else
-	SGPVObject* AddStandardVideoObjectFromHImage(SGPImage*);
-	SGPVObject* AddStandardVideoObjectFromFile(const char* ImageFile);
+	SGPVObject* AddStandardVideoObjectFromHImage(SGPImage *img);
+	SGPVObject* AddStandardVideoObjectFromFile(const char *ImageFile);
+	SGPVObject* AddScaledVideoObjectFromFile(const char *ImageFile, ScaleCallback *callback=nullptr);
+	SGPVObject* AddScaledOutlineVideoObjectFromFile(const char *ImageFile);
+	SGPVObject* AddScaledAlphaVideoObjectFromFile(const char *ImageFile);
 	#define AddVideoObjectFromHImage(a) AddStandardVideoObjectFromHImage(a)
 	#define AddVideoObjectFromFile(a)   AddStandardVideoObjectFromFile(a)
 #endif
@@ -122,13 +129,11 @@ static inline void DeleteVideoObject(SGPVObject* const vo)
 }
 
 // Blits a video object to another video object
-void BltVideoObject(SGPVSurface* dst, SGPVObject const* src, UINT16 usRegionIndex, INT32 iDestX, INT32 iDestY);
+void BltVideoObject(SGPVSurface *dst, const SGPVObject *src, const UINT16 usRegionIndex, const INT32 iDestX, const INT32 iDestY);
+void BltVideoObjectOutline(SGPVSurface* const dst, SGPVObject const* const hSrcVObject, UINT16 const usIndex, INT32 const iDestX, INT32 const iDestY, const UINT32 colOutline);
+void BltVideoObjectOutlineShadow(SGPVSurface *dst, const SGPVObject *src, const UINT16 usIndex, const INT32 iDestX, const INT32 iDestY);
 
-
-void BltVideoObjectOutline(SGPVSurface* dst, SGPVObject const* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY, INT16 s16BPPColor);
-void BltVideoObjectOutlineShadow(SGPVSurface* dst, SGPVObject const* src, UINT16 usIndex, INT32 iDestX, INT32 iDestY);
-
-/* Loads a video object, blits it once and frees it */
+// Loads a video object, blits it once and frees it
 void BltVideoObjectOnce(SGPVSurface* dst, char const* filename, UINT16 region, INT32 x, INT32 y);
 
 typedef SGP::AutoPtr<SGPVObject> AutoSGPVObject;

@@ -52,7 +52,8 @@ void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimC
 }
 
 
-void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheType* const pAnimCache, UINT16 const usSurfaceIndex, UINT16 const usCurrentAnimation)
+void GetCachedAnimationSurface(UINT16 usSoldierID, AnimationSurfaceCacheType* pAnimCache, UINT16 usSurfaceIndex, UINT16 usCurrentAnimation,
+			       UINT8 head, UINT8 pants, UINT8 vest, UINT8 skin)
 {
 	UINT8  cnt;
 	UINT8  ubLowestIndex = 0;
@@ -62,8 +63,12 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 	// Check to see if surface exists already
 	for ( cnt = 0; cnt < pAnimCache->ubCacheSize; cnt++ )
 	{
-		if ( pAnimCache->usCachedSurfaces[ cnt ] == usSurfaceIndex )
+		if (pAnimCache->usCachedSurfaces[ cnt ] == usSurfaceIndex)
 		{
+			AnimationSurfaceType *a = &gAnimSurfaceDatabase[usSurfaceIndex];
+			if(a->head != head || a->pants != pants || a->vest != vest || a->skin != skin)
+				continue;
+
 			// Found surface, return
 			SLOGD("Anim Cache: Hit %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
 			pAnimCache->sCacheHits[cnt]++;
@@ -120,7 +125,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 			SLOGD("Anim Cache: Loading Surface %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
 
 			// Insert here
-			LoadAnimationSurface(usSoldierID, usSurfaceIndex, usCurrentAnimation);
+			LoadAnimationSurface(usSoldierID, usSurfaceIndex, usCurrentAnimation, head, pants, vest, skin);
 			pAnimCache->sCacheHits[ cnt ] = 0;
 			pAnimCache->usCachedSurfaces[ cnt ] = usSurfaceIndex;
 			pAnimCache->ubCacheSize++;

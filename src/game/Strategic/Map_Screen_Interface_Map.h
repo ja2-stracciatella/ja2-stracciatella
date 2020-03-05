@@ -12,10 +12,9 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow );
 
 void DrawMap(void);
 
-void GetScreenXYFromMapXY( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16 *psY );
-
-void InitializePalettesForMap(void);
-void ShutDownPalettesForMap( void );
+void GetScreenXYFromMapXY(INT16 sMapX, INT16 sMapY, INT16 *psX, INT16 *psY);
+SGPRect GetRectFromMapXY(INT16 secX, INT16 secY);
+SGPRect GetScreenRectFromMapXY(INT16 secX, INT16 secY);
 
 // plot path for helicopter
 void PlotPathForHelicopter( INT16 sX, INT16 sY );
@@ -123,25 +122,25 @@ enum {
 
 
 // size of squares on the map
-#define MAP_GRID_X		21
-#define MAP_GRID_Y		18
+#define MAP_GRID_X		(g_ui.m_stdScreenScale * 21)
+#define MAP_GRID_Y		(g_ui.m_stdScreenScale * 18)
 
 
 // scroll bounds
-#define EAST_ZOOM_BOUND		(STD_SCREEN_X + 378)
-#define WEST_ZOOM_BOUND		(STD_SCREEN_X + 42)
-#define SOUTH_ZOOM_BOUND	(STD_SCREEN_Y + 324)
-#define NORTH_ZOOM_BOUND	(STD_SCREEN_Y + 36)
+#define EAST_ZOOM_BOUND		(STD_SCREEN_X + g_ui.m_stdScreenScale * 378)
+#define WEST_ZOOM_BOUND		(STD_SCREEN_X + g_ui.m_stdScreenScale * 42)
+#define SOUTH_ZOOM_BOUND	(STD_SCREEN_Y + g_ui.m_stdScreenScale * 324)
+#define NORTH_ZOOM_BOUND	(STD_SCREEN_Y + g_ui.m_stdScreenScale * 36)
 
 // map view region
-#define MAP_VIEW_START_X	(STD_SCREEN_X + 270)
-#define MAP_VIEW_START_Y	(STD_SCREEN_Y + 10)
-#define MAP_VIEW_WIDTH		336
-#define MAP_VIEW_HEIGHT		298
+#define MAP_VIEW_START_X	int(STD_SCREEN_X + g_ui.m_stdScreenScale * 270)
+#define MAP_VIEW_START_Y	int(STD_SCREEN_Y + g_ui.m_stdScreenScale * 10)
+#define MAP_VIEW_WIDTH		int(MAP_GRID_X * 16)
+#define MAP_VIEW_HEIGHT		int(MAP_GRID_Y * 16)
 
 // zoomed in grid sizes
-#define MAP_GRID_ZOOM_X		MAP_GRID_X*2
-#define MAP_GRID_ZOOM_Y		MAP_GRID_Y*2
+#define MAP_GRID_ZOOM_X		MAP_GRID_X * 2
+#define MAP_GRID_ZOOM_Y		MAP_GRID_Y * 2
 
 // number of units wide
 #define WORLD_MAP_X		18
@@ -149,8 +148,8 @@ enum {
 // dirty regions for the map
 #define DMAP_GRID_X		( MAP_GRID_X + 1 )
 #define DMAP_GRID_Y		( MAP_GRID_Y + 1 )
-#define DMAP_GRID_ZOOM_X	( MAP_GRID_ZOOM_X+1)
-#define DMAP_GRID_ZOOM_Y	( MAP_GRID_ZOOM_Y+1)
+#define DMAP_GRID_ZOOM_X	( MAP_GRID_ZOOM_X + 1)
+#define DMAP_GRID_ZOOM_Y	( MAP_GRID_ZOOM_Y + 1)
 
 
 // Orta position on the map

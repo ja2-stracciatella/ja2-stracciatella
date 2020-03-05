@@ -921,8 +921,8 @@ void MercsSetEnemyColorCodeCallback( GUI_BUTTON *btn, INT32 reason )
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
-		UINT8 const ubColorCode = btn->GetUserData();
-		SetEnemyColorCode( ubColorCode );
+		UINT8 const ubSoldierClass = btn->GetUserData();
+		SetEnemyColorCode( ubSoldierClass );
 	}
 }
 

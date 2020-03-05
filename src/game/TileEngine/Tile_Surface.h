@@ -7,7 +7,7 @@
 extern TILE_IMAGERY* gTileSurfaceArray[NUMBEROFTILETYPES];
 
 
-TILE_IMAGERY* LoadTileSurface(const char* cFilename);
+TILE_IMAGERY* LoadTileSurface(const char* cFilename, int type);
 
 void DeleteTileSurface(TILE_IMAGERY* pTileSurf);
 

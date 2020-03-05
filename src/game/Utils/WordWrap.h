@@ -14,7 +14,7 @@
 #define TEXT_CODE_NEWCOLOR	180
 #define TEXT_CODE_DEFCOLOR	181
 
-UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, SGPFont, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 uiFlags);
+UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, SGPFont, UINT32 ubColor, const wchar_t* pString, UINT32 ubBackGroundColor, UINT32 uiFlags);
 
 
 #define LEFT_JUSTIFIED		0x00000001
@@ -39,9 +39,9 @@ struct WRAPPED_STRING
 
 
 WRAPPED_STRING* LineWrap(SGPFont, UINT16 usLineWidthPixels, wchar_t const* pString);
-UINT16 DisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UINT8 ubGap, SGPFont, UINT8 ubColor, const wchar_t* pString, UINT8 ubBackGroundColor, UINT32 ulFlags);
+UINT16 DisplayWrappedString(const UINT16 x, UINT16 y, UINT16 w, const UINT8 gap, const SGPFont font, const UINT32 foreground, const wchar_t *string, const UINT32 background, const UINT32 flags);
 void CleanOutControlCodesFromString(const wchar_t* pSourceString, wchar_t* pDestString);
-void DrawTextToScreen(const wchar_t* pStr, UINT16 LocX, UINT16 LocY, UINT16 usWidth, SGPFont, UINT8 ubColor, UINT8 ubBackGroundColor, UINT32 ulFlags);
+void DrawTextToScreen(const wchar_t *str, UINT16 x, const UINT16 y, const UINT16 max_w, const SGPFont font, const UINT32 foreground, const UINT32 background, const UINT32 flags);
 UINT16 IanWrappedStringHeight(UINT16 usWidth, UINT8 ubGap, SGPFont, const wchar_t* pString);
 
 void ReduceStringLength(wchar_t* pString, size_t Length, UINT32 uiWidth, SGPFont);
