@@ -3326,7 +3326,8 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 		d = InjectStoreInvetory(d, *i);
 	}
 	INJ_SKIP( d, 6)
-	INJ_U8(   d, l.usNumberOfBobbyRayOrderItems)
+	Assert(l.BobbyRayOrdersOnDeliveryArray.size() <= UINT8_MAX);
+	INJ_U8(   d, static_cast<UINT8>(l.BobbyRayOrdersOnDeliveryArray.size()))
 	INJ_U8(   d, l.usNumberOfBobbyRayOrderUsed)
 	INJ_SKIP( d, 6)
 	INJ_U8(   d, l.ubNumberLifeInsurancePayouts)
@@ -3363,8 +3364,8 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 
 	if (l.usNumberOfBobbyRayOrderUsed != 0)
 	{ // There is anything in the Bobby Ray Orders on delivery
-		UINT32 const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray) * l.usNumberOfBobbyRayOrderItems;
-		FileWrite(f, l.BobbyRayOrdersOnDeliveryArray, size);
+		size_t const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray.data()) * l.BobbyRayOrdersOnDeliveryArray.size();
+		FileWrite(f, l.BobbyRayOrdersOnDeliveryArray.data(), size);
 	}
 
 	if (l.ubNumberLifeInsurancePayoutUsed != 0)
@@ -3379,10 +3380,7 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 {
 	LaptopSaveInfoStruct& l = LaptopSaveInfo;
 
-	if (l.usNumberOfBobbyRayOrderItems)
-	{ // There is memory allocated for the BobbyR orders
-		FreeNull(l.BobbyRayOrdersOnDeliveryArray);
-	}
+	l.BobbyRayOrdersOnDeliveryArray.clear();
 
 	if (l.ubNumberLifeInsurancePayouts)
 	{ // There is memory allocated for life insurance payouts
@@ -3418,7 +3416,8 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 		d = ExtractStoreInvetory(d, *i);
 	}
 	EXTR_SKIP( d, 6)
-	EXTR_U8(   d, l.usNumberOfBobbyRayOrderItems)
+	UINT8 BobbyRayOrdersOnDeliveryArraySize;
+	EXTR_U8(   d, BobbyRayOrdersOnDeliveryArraySize)
 	EXTR_U8(   d, l.usNumberOfBobbyRayOrderUsed)
 	EXTR_SKIP( d, 6)
 	EXTR_U8(   d, l.ubNumberLifeInsurancePayouts)
@@ -3453,14 +3452,13 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 
 	if (l.usNumberOfBobbyRayOrderUsed != 0)
 	{ // There is anything in the Bobby Ray Orders on Delivery
-		UINT32 const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray) * l.usNumberOfBobbyRayOrderItems;
-		l.BobbyRayOrdersOnDeliveryArray = MALLOCN(BobbyRayOrderStruct, l.usNumberOfBobbyRayOrderItems);
-		FileRead(f, l.BobbyRayOrdersOnDeliveryArray, size);
+		l.BobbyRayOrdersOnDeliveryArray.resize(BobbyRayOrdersOnDeliveryArraySize);
+		size_t const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray.data()) * BobbyRayOrdersOnDeliveryArraySize;
+		FileRead(f, l.BobbyRayOrdersOnDeliveryArray.data(), size);
 	}
 	else
 	{
-		l.usNumberOfBobbyRayOrderItems  = 0;
-		l.BobbyRayOrdersOnDeliveryArray = 0;
+		l.BobbyRayOrdersOnDeliveryArray.clear();
 	}
 
 	if (l.ubNumberLifeInsurancePayoutUsed != 0)

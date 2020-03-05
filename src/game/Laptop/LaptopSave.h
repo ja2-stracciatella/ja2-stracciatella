@@ -4,6 +4,8 @@
 #include "Item_Types.h"
 #include "Store_Inventory.h"
 
+#include <vector>
+
 #define MAX_BOOKMARKS			20
 
 
@@ -96,8 +98,7 @@ struct LaptopSaveInfoStruct
 	STORE_INVENTORY BobbyRayInventory[ MAXITEMS ];
 	STORE_INVENTORY BobbyRayUsedInventory[ MAXITEMS ];
 
-	BobbyRayOrderStruct *BobbyRayOrdersOnDeliveryArray;
-	UINT8 usNumberOfBobbyRayOrderItems; // The number of elements in the array
+	std::vector<BobbyRayOrderStruct> BobbyRayOrdersOnDeliveryArray;
 	UINT8 usNumberOfBobbyRayOrderUsed; // The number of items in the array that are used
 
 

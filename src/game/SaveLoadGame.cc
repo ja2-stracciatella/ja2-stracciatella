@@ -2303,7 +2303,6 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 static void HandleOldBobbyRMailOrders(void)
 {
-	INT32 iCnt;
 	INT32	iNewListCnt=0;
 
 	if( LaptopSaveInfo.usNumberOfBobbyRayOrderUsed != 0 )
@@ -2313,7 +2312,7 @@ static void HandleOldBobbyRMailOrders(void)
 		giNumberOfNewBobbyRShipment = LaptopSaveInfo.usNumberOfBobbyRayOrderUsed;
 
 		//loop through and add the old items to the new list
-		for( iCnt=0; iCnt< LaptopSaveInfo.usNumberOfBobbyRayOrderItems; iCnt++ )
+		for (size_t iCnt = 0; iCnt < LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size(); iCnt++)
 		{
 			//if this slot is used
 			if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[iCnt].fActive )
@@ -2337,8 +2336,7 @@ static void HandleOldBobbyRMailOrders(void)
 
 		//Clear out the old list
 		LaptopSaveInfo.usNumberOfBobbyRayOrderUsed = 0;
-		MemFree( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray );
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = NULL;
+		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.clear();
 	}
 }
 

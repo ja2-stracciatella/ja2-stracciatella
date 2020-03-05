@@ -687,14 +687,13 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 					INT8		bDaysAhead;
 
 					//if we need to add more array elements for the Order Array
-					if( LaptopSaveInfo.usNumberOfBobbyRayOrderItems <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed )
+					if (LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size() <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed)
 					{
-						LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
-						LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
-						LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ] = BobbyRayOrderStruct{};
+						LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.push_back(BobbyRayOrderStruct{});
+						Assert(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size() <= UINT8_MAX);
 					}
 
-					for( cnt =0; cnt< LaptopSaveInfo.usNumberOfBobbyRayOrderItems; cnt++ )
+					for (cnt = 0; cnt < LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size(); cnt++)
 					{
 						//get an empty element in the array
 						if( !LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].fActive )
@@ -1681,11 +1680,8 @@ void BobbyRayMailOrderEndGameShutDown()
 {
 	ShutDownBobbyRNewMailOrders();
 	/*
-	if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray )
-	{
-		MemFree( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray );
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = NULL;
-	}*/
+	LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.clear();
+	*/
 }
 
 
@@ -1749,14 +1745,13 @@ static void PurchaseBobbyOrder(void)
 
 		/*
 		//if we need to add more array elements for the Order Array
-		if( LaptopSaveInfo.usNumberOfBobbyRayOrderItems <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed )
+		if (LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size() <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed)
 		{
-			LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
-			LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
-			LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ] = BobbyRayOrderStruct{};
+			LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.push_back(BobbyRayOrderStruct{});
+			Assert(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size() <= UINT8_MAX);
 		}
 
-		for( cnt =0; cnt< LaptopSaveInfo.usNumberOfBobbyRayOrderItems; cnt++ )
+		for (cnt = 0; cnt < LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size(); cnt++)
 		{
 			//get an empty element in the array
 			if( !LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].fActive )
@@ -1817,7 +1812,6 @@ static void PurchaseBobbyOrder(void)
 void AddJohnsGunShipment()
 {
 	BobbyRayPurchaseStruct Temp[ MAX_PURCHASE_AMOUNT ];
-	//UINT8 cnt;
 	INT8 bDaysAhead;
 
 	//clear out the memory
@@ -1825,14 +1819,13 @@ void AddJohnsGunShipment()
 
 	/*
 	//if we need to add more array elements for the Order Array
-	if( LaptopSaveInfo.usNumberOfBobbyRayOrderItems <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed )
+	if (LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size() <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed)
 	{
-		LaptopSaveInfo.usNumberOfBobbyRayOrderItems++;
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = REALLOC(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray, BobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderItems);
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ LaptopSaveInfo.usNumberOfBobbyRayOrderItems - 1 ] = BobbyRayOrderStruct{};
+		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.push_back(BobbyRayOrderStruct{});
+		Assert(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size() <= UINT8_MAX);
 	}
 
-	for( cnt =0; cnt< LaptopSaveInfo.usNumberOfBobbyRayOrderItems; cnt++ )
+	for (size_t cnt =0; cnt < LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size(); cnt++)
 	{
 		//get an empty element in the array
 		if( !LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].fActive )
