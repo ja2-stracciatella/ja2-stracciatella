@@ -685,10 +685,8 @@ static wchar_t const* BuildTriggerName(OBJECTTYPE const& o, wchar_t* const buf, 
 static void RenderDoorLockInfo()
 {
 	wchar_t str[50];
-	FOR_EACH_DOOR(i)
+	FOR_EACH_DOOR(d)
 	{
-		DOOR const& d = *i;
-
 		INT16 screen_x;
 		INT16 screen_y;
 		GetGridNoScreenPos(d.sGridNo, 0, &screen_x, &screen_y);

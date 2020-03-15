@@ -670,18 +670,18 @@ static void DoorToggleLockedCallback(GUI_BUTTON* btn, INT32 reason)
 
 void AddLockedDoorCursors()
 {
-	FOR_EACH_DOOR(i)
+	FOR_EACH_DOOR(d)
 	{
-		AddTopmostToHead(i->sGridNo, ROTATINGKEY1);
+		AddTopmostToHead(d.sGridNo, ROTATINGKEY1);
 	}
 }
 
 
 void RemoveLockedDoorCursors()
 {
-	FOR_EACH_DOOR(i)
+	FOR_EACH_DOOR(d)
 	{
-		GridNo const gridno = i->sGridNo;
+		GridNo const gridno = d.sGridNo;
 		for (LEVELNODE* k = gpWorldLevelData[gridno].pTopmostHead; k;)
 		{
 			LEVELNODE* const next = k->pNext;
