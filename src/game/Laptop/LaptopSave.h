@@ -106,8 +106,7 @@ struct LaptopSaveInfoStruct
 	//NONE
 
 	// Insurance Site
-	LIFE_INSURANCE_PAYOUT *pLifeInsurancePayouts;
-	UINT8   ubNumberLifeInsurancePayouts; // The number of elements in the array
+	std::vector<LIFE_INSURANCE_PAYOUT> pLifeInsurancePayouts;
 	UINT8   ubNumberLifeInsurancePayoutUsed; // The number of items in the array that are used
 
 	BOOLEAN fBobbyRSiteCanBeAccessed;
