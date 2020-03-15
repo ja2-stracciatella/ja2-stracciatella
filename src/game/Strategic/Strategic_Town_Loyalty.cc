@@ -34,6 +34,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <vector>
 
 // the max loyalty rating for any given town
 #define MAX_LOYALTY_VALUE 100
@@ -632,47 +633,42 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 	{
 		/* if the player has never been there, there's no temp file, and 0 items
 		 * will get returned, preventing any stealing */
-		UINT32     uiNumberOfItems;
-		WORLDITEM* pItemList;
-		LoadWorldItemsFromTempItemFile(sSectorX, sSectorY, sSectorZ, &uiNumberOfItems, &pItemList);
-		if (uiNumberOfItems == 0) return;
+		std::vector<WORLDITEM> pItemList = LoadWorldItemsFromTempItemFile(sSectorX, sSectorY, sSectorZ);
+		if (pItemList.size() == 0) return;
 
-		UINT32 uiNewTotal = uiNumberOfItems;
+		bool somethingWasStolen = false;
 
 		// set up item list ptrs
-		WORLDITEM const* const end = pItemList + uiNumberOfItems;
-		for (WORLDITEM* wi = pItemList; wi != end; ++wi)
+		for (WORLDITEM& wi : pItemList)
 		{
 			//if the item exists, and is visible and reachable, see if it should be stolen
-			if (!wi->fExists)                          continue;
-			if (wi->bVisible != VISIBLE)               continue;
-			if (!(wi->usFlags & WORLD_ITEM_REACHABLE)) continue;
+			if (!wi.fExists)                          continue;
+			if (wi.bVisible != VISIBLE)               continue;
+			if (!(wi.usFlags & WORLD_ITEM_REACHABLE)) continue;
 			if (Random(100) >= ubChance)               continue;
 
 			// remove
-			--uiNewTotal;
-			wi->fExists = FALSE;
+			somethingWasStolen = true;
+			wi.fExists = FALSE;
 
-			SLOGD("%ls stolen in %ls!", ItemNames[wi->o.usItem], wSectorName);
+			SLOGD("%ls stolen in %ls!", ItemNames[wi.o.usItem], wSectorName);
 		}
 
 		// only save if something was stolen
-		if (uiNewTotal < uiNumberOfItems)
+		if (somethingWasStolen)
 		{
-			SaveWorldItemsToTempItemFile(sSectorX, sSectorY, sSectorZ, uiNumberOfItems, pItemList);
+			SaveWorldItemsToTempItemFile(sSectorX, sSectorY, sSectorZ, pItemList);
 		}
-
-		MemFree(pItemList);
 	}
 	else	// handle a loaded sector
 	{
 		FOR_EACH_WORLD_ITEM(wi)
 		{
 			// note, can't do reachable test here because we'd have to do a path call
-			if (wi->bVisible != VISIBLE) continue;
+			if (wi.bVisible != VISIBLE) continue;
 			if (Random(100) >= ubChance) continue;
 
-			SLOGD("%ls stolen in %ls!", ItemNames[wi->o.usItem], wSectorName);
+			SLOGD("%ls stolen in %ls!", ItemNames[wi.o.usItem], wSectorName);
 			RemoveItemFromPool(wi);
 		}
 	}

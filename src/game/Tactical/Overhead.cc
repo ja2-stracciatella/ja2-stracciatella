@@ -1585,7 +1585,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 						{
 							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[STR_SLIPPED_MARBLES], pSoldier->name);
 						}
-						RemoveItemFromPool(&GetWorldItem(iMarblesIndex));
+						RemoveItemFromPool(GetWorldItem(iMarblesIndex));
 						SoldierCollapse(pSoldier);
 						if (pSoldier->bActionPoints > 0)
 						{

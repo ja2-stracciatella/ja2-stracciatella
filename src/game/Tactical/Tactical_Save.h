@@ -9,6 +9,8 @@
 
 #include "Soldier_Profile_Type.h"
 
+#include <vector>
+
 
 //Load the Map modifications from the saved game file
 void LoadMapTempFilesFromSavedGameFile(HWFILE, UINT32 savegame_version);
@@ -24,14 +26,14 @@ void SaveCurrentSectorsInformationToTempItemFile(void);
 void LoadCurrentSectorsInformationFromTempItemsFile();
 
 // Loads a World Item array from that sectors temp item file
-void LoadWorldItemsFromTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32* item_count, WORLDITEM** items);
+std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 //  Adds an array of Item Objects to the specified location on a unloaded map.
 //  If you want to overwrite all the items in the array set fReplaceEntireFile to TRUE.
 void AddItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItems, OBJECTTYPE const* pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, Visibility);
 
 
-void AddWorldItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, const WORLDITEM* pWorldItem);
+void AddWorldItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, const std::vector<WORLDITEM>& wis);
 
 // Delete all the files in the temp directory.
 void InitTacticalSave();
@@ -94,6 +96,6 @@ void		SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16
 #define BASE_NUMBER_OF_ROTATION_ARRAYS			19
 
 
-void SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems, WORLDITEM const* pData);
+void SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, const std::vector<WORLDITEM>& items);
 
 #endif

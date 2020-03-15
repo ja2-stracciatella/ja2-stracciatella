@@ -1103,7 +1103,7 @@ static BOOLEAN ExpAffect(const INT16 sBombGridNo, const INT16 sGridNo, const UIN
 				if (DamageItemOnGround(&wi.o, sGridNo, bLevel, sWoundAmt * 2, owner))
 				{
 					// item was destroyed
-					RemoveItemFromPool(&wi);
+					RemoveItemFromPool(wi);
 				}
 				pItemPool = pItemPoolNext;
 			}
@@ -2235,7 +2235,7 @@ void HandleExplosionQueue()
 		else if (o.usBombItem == TRIP_FLARE)
 		{
 			NewLightEffect(gridno, LIGHT_FLARE_MARK_1);
-			RemoveItemFromPool(&wi);
+			RemoveItemFromPool(wi);
 		}
 		else
 		{
@@ -2243,7 +2243,7 @@ void HandleExplosionQueue()
 
 			/* Remove the item first to prevent the explosion from detonating it a
 			 * second time. */
-			RemoveItemFromPool(&wi);
+			RemoveItemFromPool(wi);
 
 			// Make sure no one thinks there is a bomb here any more
 			UINT16& flags = gpWorldLevelData[gridno].uiFlags;

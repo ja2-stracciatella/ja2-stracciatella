@@ -427,19 +427,16 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	else
 	{
 		// otherwise load the saved items from the item file and change the records of their locations
-		UINT32     uiNumWorldItems;
-		WORLDITEM* pTemp;
-		LoadWorldItemsFromTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, &uiNumWorldItems, &pTemp);
+		std::vector<WORLDITEM> pTemp = LoadWorldItemsFromTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z);
 
-		for (UINT32 uiLoop = 0; uiLoop < uiNumWorldItems; ++uiLoop)
+		for (WORLDITEM& wi : pTemp)
 		{
-			if (pTemp[uiLoop].sGridNo == PABLOS_STOLEN_DEST_GRIDNO)
+			if (wi.sGridNo == PABLOS_STOLEN_DEST_GRIDNO)
 			{
-				pTemp[uiLoop].sGridNo = BOBBYR_SHIPPING_DEST_GRIDNO;
+				wi.sGridNo = BOBBYR_SHIPPING_DEST_GRIDNO;
 			}
 		}
-		SaveWorldItemsToTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, uiNumWorldItems, pTemp);
-		MemFree(pTemp);
+		SaveWorldItemsToTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, pTemp);
 	}
 }
 
@@ -493,7 +490,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 	// money in D5b1 must be less than 30k
 	CFOR_EACH_WORLD_ITEM(wi)
 	{
-		OBJECTTYPE const& o = wi->o;
+		OBJECTTYPE const& o = wi.o;
 		if (o.usItem == MONEY) uiTotalCash += o.uiMoneyAmount;
 	}
 
@@ -543,7 +540,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		// remove all money from map
 		FOR_EACH_WORLD_ITEM(wi)
 		{
-			if (wi->o.usItem == MONEY) wi->fExists = FALSE; // remove!
+			if (wi.o.usItem == MONEY) wi.fExists = FALSE; // remove!
 		}
 	}
 	else if ( fKingpinDiscovers )
@@ -970,9 +967,9 @@ void CheckForMissingHospitalSupplies( void )
 	CFOR_EACH_WORLD_ITEM(wi)
 	{
 		// loop through all items, look for ownership
-		if (wi->o.usItem != OWNERSHIP || wi->o.ubOwnerCivGroup != DOCTORS_CIV_GROUP) continue;
+		if (wi.o.usItem != OWNERSHIP || wi.o.ubOwnerCivGroup != DOCTORS_CIV_GROUP) continue;
 
-		const ITEM_POOL* pItemPool = GetItemPool(wi->sGridNo, 0);
+		const ITEM_POOL* pItemPool = GetItemPool(wi.sGridNo, 0);
 		while( pItemPool )
 		{
 			OBJECTTYPE const& o = GetWorldItem(pItemPool->iItemIndex).o;

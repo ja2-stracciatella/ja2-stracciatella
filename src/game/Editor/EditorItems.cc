@@ -903,7 +903,7 @@ void DeleteSelectedItem()
 		}
 		if( gpEditingItemPool == gpItemPool )
 			gpEditingItemPool = NULL;
-		RemoveItemFromPool(&wi);
+		RemoveItemFromPool(wi);
 		gpItemPool = NULL;
 		//determine if there are still any items at this location
 		gpItemPool = GetItemPool(sGridNo, 0);

@@ -167,10 +167,8 @@ void Remove5X5Pit( INT32 iMapIndex )
 
 void AddAllPits()
 {
-	UINT32 i;
-	for( i = 0; i < guiNumWorldItems; i++ )
+	for (const WORLDITEM& wi : gWorldItems)
 	{
-		WORLDITEM const& wi = GetWorldItem(i);
 		if (wi.o.usItem != ACTION_ITEM) continue;
 
 		switch (wi.o.bActionValue)
@@ -183,10 +181,8 @@ void AddAllPits()
 
 void RemoveAllPits()
 {
-	UINT32 i;
-	for( i = 0; i < guiNumWorldItems; i++ )
+	for (const WORLDITEM& wi : gWorldItems)
 	{
-		WORLDITEM const& wi = GetWorldItem(i);
 		if (wi.o.usItem != ACTION_ITEM) continue;
 
 		switch (wi.o.bActionValue)
