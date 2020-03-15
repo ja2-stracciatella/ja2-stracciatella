@@ -67,8 +67,7 @@ struct LIGHT_NODE
 struct LightTemplate
 {
 	std::vector<LIGHT_NODE> lights;
-	UINT16*     rays;
-	UINT16      n_rays;
+	std::vector<UINT16> rays;
 	char*       name;
 };
 
@@ -326,31 +325,19 @@ static UINT16 LightAddTemplateNode(LightTemplate* const t, const INT16 iX, const
 // Adds a node to the ray casting list.
 static UINT16 LightAddRayNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight, const UINT16 usFlags)
 {
-	const UINT16 n_rays = t->n_rays;
-	Assert((t->rays == NULL) == (n_rays == 0));
-
-	t->rays = REALLOC(t->rays, UINT16, n_rays + 1);
-
-	t->rays[n_rays] = LightAddTemplateNode(t, iX, iY, ubLight) | usFlags;
-	t->n_rays       = n_rays + 1;
-	return n_rays;
+	Assert(t->rays.size() <= UINT16_MAX);
+	const UINT16 usIndex = static_cast<UINT16>(t->rays.size());
+	UINT16 usNodeIndex = LightAddTemplateNode(t, iX, iY, ubLight) | usFlags;
+	t->rays.push_back(usNodeIndex);
+	return usIndex;
 }
 
 
 // Adds a node to the ray casting list.
-static UINT16 LightInsertRayNode(LightTemplate* const t, const UINT16 usIndex, const INT16 iX, const INT16 iY, const UINT8 ubLight, const UINT16 usFlags)
+static void LightInsertRayNode(LightTemplate* const t, const UINT16 usIndex, const INT16 iX, const INT16 iY, const UINT8 ubLight, const UINT16 usFlags)
 {
-	const UINT16 n_rays = t->n_rays;
-	Assert((t->rays == NULL) == (n_rays == 0));
-	Assert(usIndex <= n_rays);
-
-	t->rays = REALLOC(t->rays, UINT16, n_rays + 1);
-
-	memmove(t->rays + usIndex + 1, t->rays + usIndex, (n_rays - usIndex) * sizeof(*t->rays));
-
-	t->rays[usIndex] = LightAddTemplateNode(t, iX, iY, ubLight) | usFlags;
-	t->n_rays        = n_rays + 1;
-	return n_rays;
+	UINT16 usNodeIndex = LightAddTemplateNode(t, iX, iY, ubLight) | usFlags;
+	t->rays.insert(t->rays.begin() + usIndex, 1, usNodeIndex);
 }
 
 
@@ -512,11 +499,7 @@ static BOOLEAN LightDelete(LightTemplate* const t)
 
 	t->lights.clear();
 
-	if (t->rays != NULL)
-	{
-		MemFree(t->rays);
-		t->rays = NULL;
-	}
+	t->rays.clear();
 
 	if (t->name != NULL)
 	{
@@ -524,7 +507,6 @@ static BOOLEAN LightDelete(LightTemplate* const t)
 		t->name = NULL;
 	}
 
-	t->n_rays   = 0;
 	return TRUE;
 }
 
@@ -1038,7 +1020,8 @@ static void LightInsertNode(LightTemplate* const t, const UINT16 usLightIns, con
 static UINT16 LightFindNextRay(const LightTemplate* const t, const UINT16 usIndex)
 {
 	UINT16 usNodeIndex = usIndex;
-	while ((usNodeIndex < t->n_rays) && !(t->rays[usNodeIndex] & LIGHT_NEW_RAY))
+	Assert(t->rays.size() <= UINT16_MAX);
+	while ((usNodeIndex < static_cast<UINT16>(t->rays.size())) && !(t->rays[usNodeIndex] & LIGHT_NEW_RAY))
 		usNodeIndex++;
 
 	return(usNodeIndex);
@@ -1096,7 +1079,8 @@ static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const I
 
 	SLOGD("Drawing (%d,%d) to (%d,%d)", iXPos, iYPos, iEndX, iEndY);
 	LightAddNode(t, 32767, 32767, 32767, 32767, 0, LIGHT_NEW_RAY);
-	if (fInsertNodes) usCurNode = t->n_rays;
+	Assert(t->rays.size() <= UINT16_MAX);
+	if (fInsertNodes) usCurNode = static_cast<UINT16>(t->rays.size());
 	/* Special-case horizontal, vertical, and diagonal lines, for speed
 		and to avoid nasty boundary conditions and division by 0 */
 	if (XDelta == 0)
@@ -1611,7 +1595,8 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 	iOldX = iX;
 	iOldY = iY;
 
-	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
+	Assert(t->rays.size() <= UINT16_MAX);
+	for (UINT16 uiCount = 0; uiCount < static_cast<UINT16>(t->rays.size()); ++uiCount)
 	{
 		const UINT16 usNodeIndex = t->rays[uiCount];
 		if(!(usNodeIndex&LIGHT_NEW_RAY))
@@ -1740,7 +1725,8 @@ BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 	LightTemplate* const t = &g_light_templates[0];
 	if (t->lights.empty()) return FALSE;
 
-	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
+	Assert(t->rays.size() <= UINT16_MAX);
+	for (UINT16 uiCount = 0; uiCount < static_cast<UINT16>(t->rays.size()); ++uiCount)
 	{
 		const UINT16 usNodeIndex = t->rays[uiCount];
 		if (!(usNodeIndex & LIGHT_NEW_RAY))
@@ -1786,7 +1772,8 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 	iOldX = iX;
 	iOldY = iY;
 
-	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
+	Assert(t->rays.size() <= UINT16_MAX);
+	for (UINT16 uiCount = 0; uiCount < static_cast<UINT16>(t->rays.size()); ++uiCount)
 	{
 		const UINT16 usNodeIndex = t->rays[uiCount];
 		if (!(usNodeIndex & LIGHT_NEW_RAY))
@@ -1855,7 +1842,9 @@ void LightSave(LightTemplate const* const t, char const* const pFilename)
 	Assert(t->lights.size() <= UINT16_MAX);
 	UINT16 numLights = static_cast<UINT16>(t->lights.size());
 	FileWriteArray(f, numLights, t->lights.data());
-	FileWriteArray(f, t->n_rays,   t->rays);
+	Assert(t->rays.size() <= UINT16_MAX);
+	UINT16 numRays = static_cast<UINT16>(t->rays.size());
+	FileWriteArray(f, numRays, t->rays.data());
 }
 
 
@@ -1871,18 +1860,18 @@ static LightTemplate* LightLoad(const char* pFilename)
 	lights.assign(numLights, LIGHT_NODE{});
 	FileRead(hFile, lights.data(), sizeof(LIGHT_NODE) * numLights);
 
-	UINT16 n_rays;
-	FileRead(hFile, &n_rays, sizeof(n_rays));
-	SGP::Buffer<UINT16> rays(n_rays);
-	FileRead(hFile, rays, sizeof(*rays) * n_rays);
+	UINT16 numRays;
+	FileRead(hFile, &numRays, sizeof(UINT16));
+	std::vector<UINT16> rays;
+	rays.assign(numRays, 0);
+	FileRead(hFile, rays.data(), sizeof(UINT16) * numRays);
 
 	SGP::Buffer<char> name(strlen(pFilename) + 1);
 	strcpy(name, pFilename);
 
 	LightTemplate* const t = LightGetFree();
 	t->lights   = std::move(lights);
-	t->n_rays   = n_rays;
-	t->rays     = rays.Release();
+	t->rays     = std::move(rays);
 	t->name     = name.Release();
 	return t;
 }
