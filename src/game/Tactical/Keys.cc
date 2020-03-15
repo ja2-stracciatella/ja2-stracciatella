@@ -43,12 +43,11 @@
 
 #include <vector>
 
-static DOOR_STATUS* gpDoorStatus     = NULL;
-static UINT8        gubNumDoorStatus = 0;
+static std::vector<DOOR_STATUS> gpDoorStatus;
 
 
 #define FOR_EACH_DOOR_STATUS(iter) \
-	for (DOOR_STATUS* iter = gpDoorStatus, * const iter##__end = iter + gubNumDoorStatus; iter != iter##__end; ++iter)
+	for (DOOR_STATUS& iter : gpDoorStatus)
 
 
 KEY KeyTable[NUM_KEYS];
@@ -835,9 +834,8 @@ bool ModifyDoorStatus(GridNo const gridno, BOOLEAN const is_open, BOOLEAN const 
 	GridNo const base_gridno = base->sGridNo;
 
 	// Check to see if the user is adding an existing door
-	FOR_EACH_DOOR_STATUS(i)
+	FOR_EACH_DOOR_STATUS(d)
 	{
-		DOOR_STATUS& d = *i;
 		if (d.sGridNo != base_gridno) continue;
 
 		// Set the status
@@ -864,11 +862,9 @@ bool ModifyDoorStatus(GridNo const gridno, BOOLEAN const is_open, BOOLEAN const 
 	}
 
 	// Add a new door status structure
-	UINT8 const n = gubNumDoorStatus;
-	gpDoorStatus     = REALLOC(gpDoorStatus, DOOR_STATUS, n + 1);
-	gubNumDoorStatus = n + 1;
+	gpDoorStatus.push_back(DOOR_STATUS{});
 
-	DOOR_STATUS& d = gpDoorStatus[n];
+	DOOR_STATUS& d = gpDoorStatus.back();
 	d.sGridNo = base_gridno;
 
 	// Init the flags
@@ -894,20 +890,14 @@ bool ModifyDoorStatus(GridNo const gridno, BOOLEAN const is_open, BOOLEAN const 
 
 void TrashDoorStatusArray( )
 {
-	if( gpDoorStatus )
-	{
-		MemFree( gpDoorStatus );
-		gpDoorStatus = NULL;
-	}
-
-	gubNumDoorStatus = 0;
+	gpDoorStatus.clear();
 }
 
 
 // Returns a doors status value, NULL if not found
 DOOR_STATUS* GetDoorStatus(INT16 const sGridNo)
 {
-	if (!gpDoorStatus) return 0;
+	if (gpDoorStatus.empty()) return 0;
 
 	// Find the base tile for the door structure and use that gridno
 	STRUCTURE* const structure = FindStructure(sGridNo, STRUCTURE_ANYDOOR);
@@ -915,9 +905,8 @@ DOOR_STATUS* GetDoorStatus(INT16 const sGridNo)
 	STRUCTURE const* const base = FindBaseStructure(structure);
 	if (!base) return 0;
 
-	FOR_EACH_DOOR_STATUS(i)
+	FOR_EACH_DOOR_STATUS(d)
 	{
-		DOOR_STATUS& d = *i;
 		if (d.sGridNo == base->sGridNo) return &d;
 	}
 
@@ -973,10 +962,8 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS&);
 
 void MercLooksForDoors(SOLDIERTYPE const& s)
 {
-	FOR_EACH_DOOR_STATUS(i)
+	FOR_EACH_DOOR_STATUS(d)
 	{
-		DOOR_STATUS& d = *i;
-
 		if (!InternalIsPerceivedDifferentThanReality(d)) continue;
 
 		GridNo const gridno       = d.sGridNo;
@@ -1023,9 +1010,8 @@ static void SynchronizeDoorStatusToStructureData(DOOR_STATUS const& d)
 
 void UpdateDoorGraphicsFromStatus()
 {
-	FOR_EACH_DOOR_STATUS(i)
+	FOR_EACH_DOOR_STATUS(d)
 	{
-		DOOR_STATUS const& d = *i;
 		// ATE: Make sure door status flag and struct info are synchronized
 		SynchronizeDoorStatusToStructureData(d);
 		InternalUpdateDoorGraphicFromStatus(d, false);
@@ -1161,12 +1147,14 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS& d)
 void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const x, INT16 const y, INT8 const z)
 {
 	// Turn off any door busy flags
-	FOR_EACH_DOOR_STATUS(i) i->ubFlags &= ~DOOR_BUSY;
+	FOR_EACH_DOOR_STATUS(d) d.ubFlags &= ~DOOR_BUSY;
 
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, x, y, z);
 	AutoSGPFile f(FileMan::openForWriting(map_name));
-	FileWriteArray(f, gubNumDoorStatus, gpDoorStatus);
+	Assert(gpDoorStatus.size() <= UINT8_MAX);
+	UINT8 numDoorStatus = static_cast<UINT8>(gpDoorStatus.size());
+	FileWriteArray(f, numDoorStatus, gpDoorStatus.data());
 
 	// Set the flag indicating that there is a door status array
 	SetSectorFlag(x, y, z, SF_DOOR_STATUS_TEMP_FILE_EXISTS);
@@ -1182,16 +1170,17 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
 	// Load the number of elements in the door status array
-	FileRead(f, &gubNumDoorStatus, sizeof(UINT8));
-	if (gubNumDoorStatus == 0) return;
+	UINT8 numDoorStatus = 0;
+	FileRead(f, &numDoorStatus, sizeof(UINT8));
+	if (numDoorStatus == 0) return;
 
-	gpDoorStatus = MALLOCNZ(DOOR_STATUS, gubNumDoorStatus);
-	FileRead(f, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus);
+	gpDoorStatus.assign(numDoorStatus, DOOR_STATUS{});
+	FileRead(f, gpDoorStatus.data(), sizeof(DOOR_STATUS) * numDoorStatus);
 
 	// Set flags in map for containing a door status
-	FOR_EACH_DOOR_STATUS(i)
+	FOR_EACH_DOOR_STATUS(d)
 	{
-		gpWorldLevelData[i->sGridNo].ubExtFlags[0] |= MAPELEMENT_EXT_DOOR_STATUS_PRESENT;
+		gpWorldLevelData[d.sGridNo].ubExtFlags[0] |= MAPELEMENT_EXT_DOOR_STATUS_PRESENT;
 	}
 
 	// The graphics will be updated later in the loading process
@@ -1244,10 +1233,9 @@ void ExamineDoorsOnEnteringSector()
 	{
 		if (!s->bInSector) continue;
 
-		FOR_EACH_DOOR_STATUS(i)
+		FOR_EACH_DOOR_STATUS(d)
 		{
 			// If open, close
-			DOOR_STATUS const& d = *i;
 			if (!(d.ubFlags & DOOR_OPEN)) continue;
 			HandleDoorChangeFromGridNo(0, d.sGridNo, TRUE);
 		}
