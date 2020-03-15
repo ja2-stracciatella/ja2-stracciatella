@@ -49,6 +49,7 @@
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
+#include <vector>
 
 #define MAX_LIGHT_TEMPLATES 32 // maximum number of light types
 
@@ -65,9 +66,8 @@ struct LIGHT_NODE
 
 struct LightTemplate
 {
-	LIGHT_NODE* lights;
+	std::vector<LIGHT_NODE> lights;
 	UINT16*     rays;
-	UINT16      n_lights;
 	UINT16      n_rays;
 	char*       name;
 };
@@ -79,7 +79,7 @@ static LightTemplate g_light_templates[MAX_LIGHT_TEMPLATES];
 
 #define FOR_EACH_LIGHT_TEMPLATE(iter) \
 	FOR_EACH_LIGHT_TEMPLATE_SLOT(iter) \
-		if (!iter->lights) continue; else
+		if (iter->lights.empty()) continue; else
 
 
 // Sprite data
@@ -295,19 +295,18 @@ void LightReset(void)
 	* list is returned. */
 static UINT16 LightCreateTemplateNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight)
 {
-	const UINT16 n_lights = t->n_lights;
-	Assert((t->lights == NULL) == (n_lights == 0));
+	Assert(t->lights.size() <= UINT16_MAX);
+	const UINT16 idx = static_cast<UINT16>(t->lights.size());
 
-	t->lights = REALLOC(t->lights, LIGHT_NODE, n_lights + 1);
+	t->lights.push_back(LIGHT_NODE{});
 
-	LIGHT_NODE* const l = &t->lights[n_lights];
+	LIGHT_NODE* const l = &t->lights.back();
 	l->iDX     = iX;
 	l->iDY     = iY;
 	l->ubLight = ubLight;
 	l->uiFlags = 0;
 
-	t->n_lights = n_lights + 1;
-	return n_lights;
+	return idx;
 }
 
 
@@ -315,7 +314,8 @@ static UINT16 LightCreateTemplateNode(LightTemplate* const t, const INT16 iX, co
 	* new one.  Returns the index into the list. */
 static UINT16 LightAddTemplateNode(LightTemplate* const t, const INT16 iX, const INT16 iY, const UINT8 ubLight)
 {
-	for (UINT16 i = 0; i < t->n_lights; ++i)
+	Assert(t->lights.size() <= UINT16_MAX);
+	for (UINT16 i = 0; i < static_cast<UINT16>(t->lights.size()); ++i)
 	{
 		if (t->lights[i].iDX == iX && t->lights[i].iDY == iY) return i;
 	}
@@ -508,10 +508,9 @@ static BOOLEAN LightTileHasWall(INT16 iSrcX, INT16 iSrcY, INT16 iX, INT16 iY)
 // Removes a light template from the list, and frees up the associated node memory.
 static BOOLEAN LightDelete(LightTemplate* const t)
 {
-	if (t->lights == NULL) return FALSE;
+	if (t->lights.empty()) return FALSE;
 
-	MemFree(t->lights);
-	t->lights = NULL;
+	t->lights.clear();
 
 	if (t->rays != NULL)
 	{
@@ -525,7 +524,6 @@ static BOOLEAN LightDelete(LightTemplate* const t)
 		t->name = NULL;
 	}
 
-	t->n_lights = 0;
 	t->n_rays   = 0;
 	return TRUE;
 }
@@ -536,7 +534,7 @@ static LightTemplate* LightGetFree(void)
 {
 	FOR_EACH_LIGHT_TEMPLATE_SLOT(t)
 	{
-		if (!t->lights) return t;
+		if (t->lights.empty()) return t;
 	}
 	throw std::runtime_error("Out of light template slots");
 }
@@ -1598,13 +1596,13 @@ BOOLEAN LightDraw(const LIGHT_SPRITE* const l)
 	BOOLEAN fBlocked = FALSE;
 	BOOLEAN fOnlyWalls;
 
-	const LightTemplate* const t = l->light_template;
-	if (t->lights == NULL) return FALSE;
+	LightTemplate* const t = l->light_template;
+	if (t->lights.empty()) return FALSE;
 
 	// clear out all the flags
-	for (UINT16 uiCount = 0; uiCount < t->n_lights; ++uiCount)
+	for (LIGHT_NODE& light : t->lights)
 	{
-		t->lights[uiCount].uiFlags &= ~LIGHT_NODE_DRAWN;
+		light.uiFlags &= ~LIGHT_NODE_DRAWN;
 	}
 
 	const INT16 iX = l->iX;
@@ -1740,7 +1738,7 @@ static BOOLEAN LightHideWall(const INT16 sX, const INT16 sY, const INT16 sSrcX, 
 BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 {
 	LightTemplate* const t = &g_light_templates[0];
-	if (t->lights == NULL) return FALSE;
+	if (t->lights.empty()) return FALSE;
 
 	for (UINT16 uiCount = 0; uiCount < t->n_rays; ++uiCount)
 	{
@@ -1775,12 +1773,12 @@ static BOOLEAN LightErase(const LIGHT_SPRITE* const l)
 	BOOLEAN fOnlyWalls;
 
 	LightTemplate* const t = l->light_template;
-	if (t->lights == NULL) return FALSE;
+	if (t->lights.empty()) return FALSE;
 
 	// clear out all the flags
-	for (UINT16 uiCount = 0; uiCount < t->n_lights; ++uiCount)
+	for (LIGHT_NODE& light : t->lights)
 	{
-		t->lights[uiCount].uiFlags &= ~LIGHT_NODE_DRAWN;
+		light.uiFlags &= ~LIGHT_NODE_DRAWN;
 	}
 
 	const INT16 iX = l->iX;
@@ -1850,11 +1848,13 @@ LightSave
 ***************************************************************************************/
 void LightSave(LightTemplate const* const t, char const* const pFilename)
 {
-	if (t->lights == NULL) throw std::logic_error("Tried to save invalid light template");
+	if (t->lights.empty()) throw std::logic_error("Tried to save invalid light template");
 
 	const char* const pName = (pFilename != NULL ? pFilename : t->name);
 	AutoSGPFile f(FileMan::openForWriting(pName));
-	FileWriteArray(f, t->n_lights, t->lights);
+	Assert(t->lights.size() <= UINT16_MAX);
+	UINT16 numLights = static_cast<UINT16>(t->lights.size());
+	FileWriteArray(f, numLights, t->lights.data());
 	FileWriteArray(f, t->n_rays,   t->rays);
 }
 
@@ -1865,10 +1865,11 @@ static LightTemplate* LightLoad(const char* pFilename)
 {
 	AutoSGPFile hFile(GCM->openGameResForReading(pFilename));
 
-	UINT16 n_lights;
-	FileRead(hFile, &n_lights, sizeof(n_lights));
-	SGP::Buffer<LIGHT_NODE> lights(n_lights);
-	FileRead(hFile, lights, sizeof(*lights) * n_lights);
+	UINT16 numLights;
+	FileRead(hFile, &numLights, sizeof(UINT16));
+	std::vector<LIGHT_NODE> lights;
+	lights.assign(numLights, LIGHT_NODE{});
+	FileRead(hFile, lights.data(), sizeof(LIGHT_NODE) * numLights);
 
 	UINT16 n_rays;
 	FileRead(hFile, &n_rays, sizeof(n_rays));
@@ -1879,8 +1880,7 @@ static LightTemplate* LightLoad(const char* pFilename)
 	strcpy(name, pFilename);
 
 	LightTemplate* const t = LightGetFree();
-	t->n_lights = n_lights;
-	t->lights   = lights.Release();
+	t->lights   = std::move(lights);
 	t->n_rays   = n_rays;
 	t->rays     = rays.Release();
 	t->name     = name.Release();
