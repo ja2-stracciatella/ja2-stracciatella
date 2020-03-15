@@ -473,10 +473,9 @@ void InsertLandIndexAtLevel(const UINT32 iMapIndex, const UINT16 usIndex, const 
 }
 
 
-void RemoveHigherLandLevels(UINT32 const map_idx, UINT32 const src_type, UINT32*& out_higher_types, UINT8& out_n_higher_types)
+void RemoveHigherLandLevels(UINT32 const map_idx, UINT32 const src_type, std::vector<UINT32>& out_higher_types)
 {
-	out_n_higher_types = 0;
-	out_higher_types   = 0;
+	out_higher_types.clear();
 
 	// Get tail
 	LEVELNODE* tail = 0;
@@ -496,9 +495,7 @@ void RemoveHigherLandLevels(UINT32 const map_idx, UINT32 const src_type, UINT32*
 
 		RemoveLand(map_idx, l.usIndex);
 
-		out_higher_types = REALLOC(out_higher_types, UINT32, out_n_higher_types + 1);
-		out_higher_types[out_n_higher_types] = tile_type;
-		++out_n_higher_types;
+		out_higher_types.push_back(tile_type);
 	}
 
 	AdjustForFullTile(map_idx);

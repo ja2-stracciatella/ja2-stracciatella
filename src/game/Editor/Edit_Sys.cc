@@ -623,9 +623,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 {
 	UINT8  ubLastHighLevel;
-	UINT32 *puiDeletedTypes = NULL;
-	UINT8  ubNumTypes;
-	UINT8  cnt;
+	std::vector<UINT32> deletedTypes;
 
 	// Here we do the following:
 	// - Remove old type from layer
@@ -644,19 +642,16 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 		AddToUndoList( iMapIndex );
 
 		// - For all heigher level, remove
-		RemoveHigherLandLevels(iMapIndex, fNewType, puiDeletedTypes, ubNumTypes);
+		RemoveHigherLandLevels(iMapIndex, fNewType, deletedTypes);
 
 		// Set with a radius of 1 and smooth according to height difference
 		SetLowerLandIndexWithRadius( iMapIndex, fNewType, 1 , TRUE );
 
 		// Smooth all deleted levels
-		for ( cnt = 0; cnt < ubNumTypes; cnt++ )
+		for (UINT32 deletedType : deletedTypes)
 		{
-		SmoothTerrainRadius( iMapIndex, puiDeletedTypes[ cnt ], 1, TRUE );
+			SmoothTerrainRadius( iMapIndex, deletedType, 1, TRUE );
 		}
-
-		MemFree( puiDeletedTypes );
-
 	}
 	else if ( iMapIndex < GRIDSIZE )
 	{

@@ -1,9 +1,10 @@
 #ifndef __WORLDMAN_H_
 #define __WORLDMAN_H_
 
-#include <exception>
-
 #include "WorldDef.h"
+
+#include <exception>
+#include <vector>
 
 // memory-accounting function
 void CountLevelNodes( void );
@@ -60,7 +61,7 @@ BOOLEAN TypeRangeExistsInLandLayer(UINT32 iMapIndex, UINT32 fStartType, UINT32 f
 void ReplaceLandIndex(UINT32 iMapIndex, UINT16 usOldIndex, UINT16 usNewIndex);
 void DeleteAllLandLayers(UINT32 iMapIndex);
 void InsertLandIndexAtLevel(UINT32 iMapIndex, UINT16 usIndex, UINT8 ubLevel);
-void RemoveHigherLandLevels(UINT32 map_idx, UINT32 src_type, UINT32*& higher_types, UINT8& n_higher_types);
+void RemoveHigherLandLevels(UINT32 map_idx, UINT32 src_type, std::vector<UINT32>& higher_types);
 
 UINT8 GetTerrainType(GridNo);
 bool  Water(GridNo);
