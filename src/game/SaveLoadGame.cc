@@ -2307,9 +2307,7 @@ static void HandleOldBobbyRMailOrders(void)
 
 	if( LaptopSaveInfo.usNumberOfBobbyRayOrderUsed != 0 )
 	{
-		gpNewBobbyrShipments = MALLOCN(NewBobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderUsed);
-
-		giNumberOfNewBobbyRShipment = LaptopSaveInfo.usNumberOfBobbyRayOrderUsed;
+		gpNewBobbyrShipments.assign(LaptopSaveInfo.usNumberOfBobbyRayOrderUsed, NewBobbyRayOrderStruct{});
 
 		//loop through and add the old items to the new list
 		for (size_t iCnt = 0; iCnt < LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size(); iCnt++)
@@ -2318,9 +2316,9 @@ static void HandleOldBobbyRMailOrders(void)
 			if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[iCnt].fActive )
 			{
 				//copy over the purchase info
-				memcpy( gpNewBobbyrShipments[ iNewListCnt ].BobbyRayPurchase,
-								LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[iCnt].BobbyRayPurchase,
-								sizeof( BobbyRayPurchaseStruct ) * MAX_PURCHASE_AMOUNT );
+				std::copy_n(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[iCnt].BobbyRayPurchase,
+					MAX_PURCHASE_AMOUNT,
+					gpNewBobbyrShipments[ iNewListCnt ].BobbyRayPurchase);
 
 				gpNewBobbyrShipments[ iNewListCnt ].fActive = TRUE;
 				gpNewBobbyrShipments[ iNewListCnt ].ubDeliveryLoc = BR_DRASSEN;

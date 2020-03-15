@@ -1055,7 +1055,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 	uiCount = 0;
 
 	//loop through the number of purchases
-	for( i=0; i< gpNewBobbyrShipments->ubNumberPurchases; i++)
+	for (i = 0; i < gpNewBobbyrShipments[0].ubNumberPurchases; i++)// FIXME shipment ubOrderNum instead of 0
 	{
 		ubItemsDelivered = gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].ubNumberPurchased;
 		usItem = gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].usItemIndex;

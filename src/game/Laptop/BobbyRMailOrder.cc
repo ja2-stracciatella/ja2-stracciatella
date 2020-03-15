@@ -36,6 +36,7 @@
 #include "GameInstance.h"
 
 #include <algorithm>
+#include <vector>
 
 struct BobbyROrderLocationStruct
 {
@@ -256,8 +257,7 @@ static UINT8 gubCityAtTopOfList;
 
 static BOOLEAN gfRemoveItemsFromStock = FALSE;
 
-NewBobbyRayOrderStruct	*gpNewBobbyrShipments;
-INT32			giNumberOfNewBobbyRShipment;
+std::vector<NewBobbyRayOrderStruct> gpNewBobbyrShipments;
 
 
 //
@@ -320,8 +320,7 @@ void GameInitBobbyRMailOrder()
 {
 	gubSelectedLight = 0;
 
-	gpNewBobbyrShipments = NULL;
-	giNumberOfNewBobbyRShipment = 0;
+	gpNewBobbyrShipments.clear();
 }
 
 
@@ -1687,12 +1686,7 @@ void BobbyRayMailOrderEndGameShutDown()
 
 static void ShutDownBobbyRNewMailOrders(void)
 {
-	if( gpNewBobbyrShipments != NULL )
-	{
-		MemFree( gpNewBobbyrShipments );
-		gpNewBobbyrShipments = NULL;
-	}
-	giNumberOfNewBobbyRShipment = 0;
+	gpNewBobbyrShipments.clear();
 }
 
 
@@ -1967,13 +1961,13 @@ static void AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UINT8 
 	UINT8 i;
 	INT8  bDaysAhead=0;
 	//UINT32 uiPackageWeight;
-	//gpNewBobbyrShipments = NULL;
-	//giNumberOfNewBobbyRShipment = 0;
+	//gpNewBobbyrShipments.clear();
 
 	//loop through and see if there is a free spot to insert the new order
-	for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
+	Assert(gpNewBobbyrShipments.size() <= INT32_MAX);
+	for (iCnt = 0; iCnt < static_cast<INT32>(gpNewBobbyrShipments.size()); iCnt++)
 	{
-		if( !gpNewBobbyrShipments->fActive )
+		if (!gpNewBobbyrShipments[0].fActive)// FIXME shipment iCnt instead of 0
 		{
 			iFoundSpot = iCnt;
 			break;
@@ -1982,13 +1976,10 @@ static void AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UINT8 
 
 	if( iFoundSpot == -1 )
 	{
-		//increment the number of spots used
-		giNumberOfNewBobbyRShipment++;
+		gpNewBobbyrShipments.push_back(NewBobbyRayOrderStruct{});
 
-		//allocate some more memory
-		gpNewBobbyrShipments = REALLOC(gpNewBobbyrShipments, NewBobbyRayOrderStruct, giNumberOfNewBobbyRShipment);
-
-		iFoundSpot = giNumberOfNewBobbyRShipment - 1;
+		Assert(gpNewBobbyrShipments.size() <= INT32_MAX);
+		iFoundSpot = static_cast<INT32>(gpNewBobbyrShipments.size()) - 1;
 	}
 
 	//memset the memory
@@ -2051,7 +2042,8 @@ UINT16	CountNumberOfBobbyPurchasesThatAreInTransit()
 	UINT16	usItemCount=0;
 	INT32		iCnt;
 
-	for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
+	Assert(gpNewBobbyrShipments.size() <= INT32_MAX);
+	for (iCnt = 0; iCnt < static_cast<INT32>(gpNewBobbyrShipments.size()); iCnt++)
 	{
 		if( gpNewBobbyrShipments[iCnt].fActive )
 		{
@@ -2068,10 +2060,12 @@ void NewWayOfSavingBobbyRMailOrdersToSaveGameFile(HWFILE const hFile)
 	INT32 iCnt;
 
 	//Write the number of orders
-	FileWrite(hFile, &giNumberOfNewBobbyRShipment, sizeof(INT32));
+	Assert(gpNewBobbyrShipments.size() <= INT32_MAX);
+	INT32 numNewBobbyrShipments = static_cast<INT32>(gpNewBobbyrShipments.size());
+	FileWrite(hFile, &numNewBobbyrShipments, sizeof(INT32));
 
 	//loop through and save all the mail order slots
-	for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
+	for (iCnt = 0; iCnt < numNewBobbyrShipments; iCnt++)
 	{
 		//Write the order
 		FileWrite(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct));
@@ -2088,18 +2082,19 @@ void NewWayOfLoadingBobbyRMailOrdersToSaveGameFile(HWFILE const hFile)
 
 
 	//Read the number of orders
-	FileRead(hFile, &giNumberOfNewBobbyRShipment, sizeof(INT32));
+	INT32 numNewBobbyrShipments = 0;
+	FileRead(hFile, &numNewBobbyrShipments, sizeof(INT32));
 
-	if ( giNumberOfNewBobbyRShipment == 0 )
+	if (numNewBobbyrShipments == 0)
 	{
-		gpNewBobbyrShipments = NULL;
+		gpNewBobbyrShipments.clear();
 	}
 	else
 	{
-		gpNewBobbyrShipments = MALLOCN(NewBobbyRayOrderStruct, giNumberOfNewBobbyRShipment);
+		gpNewBobbyrShipments.assign(numNewBobbyrShipments, NewBobbyRayOrderStruct{});
 
 		//loop through and load all the mail order slots
-		for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
+		for (iCnt = 0; iCnt < numNewBobbyrShipments; iCnt++)
 		{
 			//Read the order
 			FileRead(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct));
