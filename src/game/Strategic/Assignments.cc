@@ -384,9 +384,8 @@ static bool IsAnythingAroundForSoldierToRepair(SOLDIERTYPE const& s)
 	// Vehicles?
 	if (s.bSectorZ == 0)
 	{
-		CFOR_EACH_VEHICLE(i)
+		CFOR_EACH_VEHICLE(v)
 		{
-			VEHICLETYPE const& v = *i;
 			// The helicopter, is NEVER repairable
 			if (IsHelicopter(v))                         continue;
 			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
@@ -2990,9 +2989,8 @@ static void CreateDestroyMouseRegionForVehicleMenu(void)
 		UINT16      const  h    = GetLineSpace(box) + GetFontHeight(GetBoxFont(box));
 		MOUSE_REGION*      r    = gVehicleMenuRegion;
 		SOLDIERTYPE const& s    = *GetSelectedAssignSoldier(FALSE);
-		FOR_EACH_VEHICLE(i)
+		FOR_EACH_VEHICLE(v)
 		{
-			VEHICLETYPE& v = *i;
 			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
 			// add mouse region for each accessible vehicle
@@ -3040,9 +3038,8 @@ static void HandleShadingOfLinesForVehicleMenu()
 
 	SOLDIERTYPE const& s    = *GetSelectedAssignSoldier(FALSE);
 	UINT32             line = 0;
-	CFOR_EACH_VEHICLE(i)
+	CFOR_EACH_VEHICLE(v)
 	{
-		VEHICLETYPE const& v = *i;
 		// inaccessible vehicles aren't listed at all!
 		if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 
@@ -3145,9 +3142,8 @@ static void DisplayRepairMenu(SOLDIERTYPE const& s)
 
 	if (s.bSectorZ == 0)
 	{ // Run through list of vehicles in sector and add them to pop up box
-		CFOR_EACH_VEHICLE(i)
+		CFOR_EACH_VEHICLE(v)
 		{
-			VEHICLETYPE const& v = *i;
 			// Don't even list the helicopter, because it's never repairable
 			if (IsHelicopter(v))                         continue;
 			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
@@ -3193,9 +3189,8 @@ static void HandleShadingOfLinesForRepairMenu()
 
 	if (s.bSectorZ == 0)
 	{
-		CFOR_EACH_VEHICLE(i)
+		CFOR_EACH_VEHICLE(v)
 		{
-			VEHICLETYPE const& v = *i;
 			// don't even list the helicopter, because it's NEVER repairable...
 			if (IsHelicopter(v))                         continue;
 			if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
@@ -3259,9 +3254,8 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 		if (s.bSectorZ == 0)
 		{
 			// vehicles
-			CFOR_EACH_VEHICLE(i)
+			CFOR_EACH_VEHICLE(v)
 			{
-				VEHICLETYPE const& v = *i;
 				// don't even list the helicopter, because it's NEVER repairable...
 				if (IsHelicopter(v)) continue;
 
@@ -5296,9 +5290,8 @@ static bool DisplayVehicleMenu(SOLDIERTYPE const& s)
 
 	// Run through list of vehicles in sector and add them to pop up box
 	bool vehicle_present = false;
-	CFOR_EACH_VEHICLE(i)
+	CFOR_EACH_VEHICLE(v)
 	{
-		VEHICLETYPE const& v = *i;
 		if (!IsThisVehicleAccessibleToSoldier(s, v)) continue;
 		AddMonoString(box, pVehicleStrings[v.ubVehicleType]);
 		vehicle_present = true;

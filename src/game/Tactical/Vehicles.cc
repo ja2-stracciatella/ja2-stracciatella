@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "LoadSaveVehicleType.h"
 #include "SaveLoadGame.h"
 #include "Soldier_Find.h"
@@ -42,14 +40,14 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <stdexcept>
+#include <vector>
+
 
 INT8 gubVehicleMovementGroups[ MAX_VEHICLES ];
 
-// the list of vehicles
-VEHICLETYPE *pVehicleList = NULL;
-
-// number of vehicle slots on the list
-UINT8 ubNumberOfVehicles = 0;
+// the list of vehicle slots
+std::vector<VEHICLETYPE> pVehicleList;
 
 
 //ATE: These arrays below should all be in a large LUT which contains
@@ -107,9 +105,10 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 	INT32 vid;
 	for (vid = 0;; ++vid)
 	{
-		if (vid == ubNumberOfVehicles)
+		Assert(pVehicleList.size() <= INT32_MAX);
+		if (vid == static_cast<INT32>(pVehicleList.size()))
 		{
-			pVehicleList = REALLOC(pVehicleList, VEHICLETYPE, ++ubNumberOfVehicles);
+			pVehicleList.push_back(VEHICLETYPE{});
 			break;
 		}
 		if (!pVehicleList[vid].fValid) break;
@@ -157,16 +156,14 @@ void RemoveVehicleFromList(VEHICLETYPE& v)
 
 void ClearOutVehicleList(void)
 {
-	if (pVehicleList == NULL) return;
+	if (pVehicleList.size() == 0) return;
 
 	FOR_EACH_VEHICLE(v)
 	{
-		v->pMercPath = ClearStrategicPathList(v->pMercPath, 0);
+		v.pMercPath = ClearStrategicPathList(v.pMercPath, 0);
 	}
 
-	MemFree(pVehicleList);
-	pVehicleList       = NULL;
-	ubNumberOfVehicles = 0;
+	pVehicleList.clear();
 }
 
 
@@ -456,7 +453,8 @@ void SetUpMvtGroupForVehicle(SOLDIERTYPE* const s)
 
 VEHICLETYPE& GetVehicle(INT32 const vehicle_id)
 {
-	if (0 <= vehicle_id && vehicle_id < ubNumberOfVehicles)
+	Assert(pVehicleList.size() <= INT32_MAX);
+	if (0 <= vehicle_id && vehicle_id < static_cast<INT32>(pVehicleList.size()))
 	{
 		VEHICLETYPE& v = pVehicleList[vehicle_id];
 		if (v.fValid) return v;
@@ -468,9 +466,8 @@ VEHICLETYPE& GetVehicle(INT32 const vehicle_id)
 VEHICLETYPE& GetVehicleFromMvtGroup(GROUP const& g)
 {
 	// given the id of a mvt group, find a vehicle in this group
-	FOR_EACH_VEHICLE(i)
+	FOR_EACH_VEHICLE(v)
 	{
-		VEHICLETYPE& v = *i;
 		if (v.ubMovementGroup == g.ubGroupID) return v;
 	}
 	throw std::logic_error("Group does not contain a vehicle");
@@ -537,7 +534,7 @@ bool AnyAccessibleVehiclesInSoldiersSector(SOLDIERTYPE const& s)
 {
 	CFOR_EACH_VEHICLE(v)
 	{
-		if (IsThisVehicleAccessibleToSoldier(s, *v)) return true;
+		if (IsThisVehicleAccessibleToSoldier(s, v)) return true;
 	}
 	return false;
 }
@@ -768,18 +765,19 @@ SOLDIERTYPE& GetSoldierStructureForVehicle(VEHICLETYPE const& v)
 void SaveVehicleInformationToSaveGameFile(HWFILE const f)
 {
 	//Save the number of elements
-	FileWrite(f, &ubNumberOfVehicles, sizeof(UINT8));
+	Assert(pVehicleList.size() <= UINT8_MAX);
+	UINT8 numVehicles = static_cast<UINT8>(pVehicleList.size());
+	FileWrite(f, &numVehicles, sizeof(UINT8));
 
 	//loop through all the vehicles and save each one
-	for (UINT8 i = 0; i < ubNumberOfVehicles; ++i)
+	for (const VEHICLETYPE& v : pVehicleList)
 	{
-		const VEHICLETYPE* const v = &pVehicleList[i];
 		//save if the vehicle spot is valid
-		FileWrite(f, &v->fValid, sizeof(BOOLEAN));
-		if (!v->fValid) continue;
+		FileWrite(f, &v.fValid, sizeof(BOOLEAN));
+		if (!v.fValid) continue;
 
-		InjectVehicleTypeIntoFile(f, v);
-		SaveMercPath(f, v->pMercPath);
+		InjectVehicleTypeIntoFile(f, &v);
+		SaveMercPath(f, v.pMercPath);
 	}
 }
 
@@ -789,23 +787,22 @@ void LoadVehicleInformationFromSavedGameFile(HWFILE const hFile, UINT32 const ui
 	ClearOutVehicleList();
 
 	//Load the number of elements
-	FileRead(hFile, &ubNumberOfVehicles, sizeof(UINT8));
-	if (ubNumberOfVehicles == 0) return;
+	UINT8 numVehicles = 0;
+	FileRead(hFile, &numVehicles, sizeof(UINT8));
+	if (numVehicles == 0) return;
 
 	//allocate memory to hold the vehicle list
-	VEHICLETYPE* const vl = MALLOCNZ(VEHICLETYPE, ubNumberOfVehicles);
-	pVehicleList = vl;
+	pVehicleList.assign(numVehicles, VEHICLETYPE{});
 
 	//loop through all the vehicles and load each one
-	for (UINT8 cnt = 0; cnt < ubNumberOfVehicles; ++cnt)
+	for (VEHICLETYPE& v : pVehicleList)
 	{
-		VEHICLETYPE* const v = &vl[cnt];
 		//Load if the vehicle spot is valid
-		FileRead(hFile, &v->fValid, sizeof(BOOLEAN));
-		if (!v->fValid) continue;
+		FileRead(hFile, &v.fValid, sizeof(BOOLEAN));
+		if (!v.fValid) continue;
 
-		ExtractVehicleTypeFromFile(hFile, v, uiSavedGameVersion);
-		LoadMercPath(hFile, &v->pMercPath);
+		ExtractVehicleTypeFromFile(hFile, &v, uiSavedGameVersion);
+		LoadMercPath(hFile, &v.pMercPath);
 	}
 }
 
@@ -945,9 +942,8 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 
 void AddVehicleFuelToSave( )
 {
-	CFOR_EACH_VEHICLE(i)
+	CFOR_EACH_VEHICLE(v)
 	{
-		VEHICLETYPE const& v = *i;
 		if (IsHelicopter(v)) continue;
 		SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 		// Init fuel!

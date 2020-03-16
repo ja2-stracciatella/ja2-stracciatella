@@ -4,6 +4,8 @@
 #include "JA2Types.h"
 #include "Strategic_Movement.h"
 
+#include <vector>
+
 
 #define MAX_VEHICLES 10
 
@@ -45,19 +47,13 @@ struct VEHICLETYPE
 
 
 // the list of vehicles
-extern VEHICLETYPE *pVehicleList;
+extern std::vector<VEHICLETYPE> pVehicleList;
 
-// number of vehicles on the list
-extern UINT8 ubNumberOfVehicles;
+#define VEHICLE2ID(v) static_cast<INT32>(&(v) - pVehicleList.data())
 
-#define VEHICLE2ID(v) (INT32)((&(v) - pVehicleList))
-
-#define BASE_FOR_EACH_VEHICLE(type, iter)                           \
-	for (type* iter = pVehicleList,                      \
-		* const end__##iter = pVehicleList + ubNumberOfVehicles; \
-		iter != end__##iter;                                         \
-		++iter)                                                      \
-		if (!iter->fValid) continue; else
+#define BASE_FOR_EACH_VEHICLE(type, iter) \
+	for (type& iter : pVehicleList) \
+		if (!iter.fValid) continue; else
 #define FOR_EACH_VEHICLE( iter) BASE_FOR_EACH_VEHICLE(      VEHICLETYPE, iter)
 #define CFOR_EACH_VEHICLE(iter) BASE_FOR_EACH_VEHICLE(const VEHICLETYPE, iter)
 
