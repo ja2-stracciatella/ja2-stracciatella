@@ -588,26 +588,25 @@ static bool SoundConvertBuffer(std::vector<UINT8>& buf,
 	}
 	if (cvt.needed)
 	{
-		size_t tmpsize = static_cast<size_t>(buf.size() * cvt.len_mult);
-		size_t finalsize = static_cast<size_t>(buf.size() * cvt.len_ratio);
-		Assert(tmpsize >= finalsize);
-
-		buf.resize(tmpsize);
+		// original size
+		Assert(buf.size() <= INT_MAX);
 		cvt.len = static_cast<int>(buf.size());
-		cvt.buf = buf.data();
-		if (is_sdl206)
-		{
-			// SDL 2.0.6 needs more memory for SDL_Convert_U8_to_F32_SSE2, maybe others too
-			// DO NOT update cvt.len or it will crash the same way!
-			buf.resize(tmpsize * 4);
-			cvt.buf = buf.data();
-		}
 
+		// temporary size
+		size_t tmpsize = static_cast<size_t>(buf.size() * cvt.len_mult);
+		buf.resize(tmpsize);
+		cvt.buf = buf.data();
+
+		// convert
 		if (SDL_ConvertAudio(&cvt) == -1)
 		{
 			SLOGE("SoundConvertBuffer: SDL_ConvertAudio failed - %s", SDL_GetError());
 			return false;
 		}
+
+		// final size
+		size_t finalsize = static_cast<size_t>(cvt.len_cvt);
+		Assert(finalsize <= tmpsize);
 		buf.resize(finalsize);
 	}
 
