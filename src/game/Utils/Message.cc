@@ -331,7 +331,7 @@ static void ClearWrappedStrings(WRAPPED_STRING* pStringWrapperHead)
 	{
 		WRAPPED_STRING* del = i;
 		i = i->pNextWrappedString;
-		MemFree(del);
+		delete del;
 	}
 }
 
@@ -361,7 +361,7 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t
 	BOOLEAN new_string = TRUE;
 	for (WRAPPED_STRING* i = head; i; i = i->pNextWrappedString)
 	{
-		ScrollStringSt* const tmp = AddString(i->sString, colour, new_string);
+		ScrollStringSt* const tmp = AddString(i->sString.data(), colour, new_string);
 		*anchor    = tmp;
 		anchor     = &tmp->pNext;
 		new_string = FALSE;
@@ -419,7 +419,7 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 	BOOLEAN fNewString = TRUE;
 	do
 	{
-		AddStringToMapScreenMessageList(pStringWrapper->sString, usColor, fNewString);
+		AddStringToMapScreenMessageList(pStringWrapper->sString.data(), usColor, fNewString);
 		fNewString = FALSE;
 		pStringWrapper = pStringWrapper->pNextWrappedString;
 	}

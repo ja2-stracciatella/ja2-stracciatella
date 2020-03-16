@@ -3,6 +3,8 @@
 
 #include "Types.h"
 
+#include <vector>
+
 //Flags for DrawTextToScreen()
 
 
@@ -34,7 +36,7 @@ UINT16 IanDisplayWrappedString(UINT16 usPosX, UINT16 usPosY, UINT16 usWidth, UIN
 struct WRAPPED_STRING
 {
 	WRAPPED_STRING* pNextWrappedString;
-	wchar_t sString[];
+	std::vector<wchar_t> sString;
 };
 
 
