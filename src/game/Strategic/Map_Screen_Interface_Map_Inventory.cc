@@ -46,6 +46,7 @@
 #include "GameInstance.h"
 
 #include <algorithm>
+#include <climits>
 #include <vector>
 
 // status bar colors
