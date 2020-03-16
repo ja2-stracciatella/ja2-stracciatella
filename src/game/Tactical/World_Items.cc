@@ -32,32 +32,23 @@
 //Global dynamic array of all of the items in a loaded map.
 std::vector<WORLDITEM> gWorldItems;
 
-WORLDBOMB *gWorldBombs = NULL;
-UINT32    guiNumWorldBombs = 0;
+std::vector<WORLDBOMB> gWorldBombs;
 
 
 static INT32 GetFreeWorldBombIndex(void)
 {
-	UINT32    uiCount;
-	WORLDBOMB *newWorldBombs;
-	UINT32    uiOldNumWorldBombs;
+	INT32 idx;
 
-	for(uiCount=0; uiCount < guiNumWorldBombs; uiCount++)
+	Assert(gWorldBombs.size() <= INT32_MAX);
+	for (idx = 0; idx < static_cast<INT32>(gWorldBombs.size()); idx++)
 	{
-		if (!gWorldBombs[uiCount].fExists) return (INT32)uiCount;
+		if (!gWorldBombs[idx].fExists) return idx;
 	}
 
-	uiOldNumWorldBombs = guiNumWorldBombs;
-	guiNumWorldBombs += 10;
-	//Allocate new table with max+10 items.
-	newWorldBombs = REALLOC(gWorldBombs, WORLDBOMB, guiNumWorldBombs);
-
-	//Clear the rest of the new array
-	std::fill_n(newWorldBombs + uiOldNumWorldBombs, guiNumWorldBombs - uiOldNumWorldBombs, WORLDBOMB{});
-	gWorldBombs = newWorldBombs;
+	gWorldBombs.push_back(WORLDBOMB{});
 
 	// Return uiCount.....
-	return( uiCount );
+	return( idx );
 }
 
 
@@ -81,9 +72,9 @@ static void RemoveBombFromWorldByItemIndex(INT32 iItemIndex)
 	// remove the world bomb from the table.
 	FOR_EACH_WORLD_BOMB(wb)
 	{
-		if (wb->iItemIndex != iItemIndex) continue;
+		if (wb.iItemIndex != iItemIndex) continue;
 
-		wb->fExists = FALSE;
+		wb.fExists = FALSE;
 		return;
 	}
 }
@@ -93,10 +84,10 @@ INT32 FindWorldItemForBombInGridNo(const INT16 sGridNo, const INT8 bLevel)
 {
 	CFOR_EACH_WORLD_BOMB(wb)
 	{
-		WORLDITEM const& wi = GetWorldItem(wb->iItemIndex);
+		WORLDITEM const& wi = GetWorldItem(wb.iItemIndex);
 		if (wi.sGridNo != sGridNo || wi.ubLevel != bLevel) continue;
 
-		return wb->iItemIndex;
+		return wb.iItemIndex;
 	}
 	throw std::logic_error("Cannot find bomb item");
 }
@@ -107,7 +98,7 @@ void FindPanicBombsAndTriggers(void)
 	// This function searches the bomb table to find panic-trigger-tuned bombs and triggers
 	CFOR_EACH_WORLD_BOMB(wb)
 	{
-		WORLDITEM  const& wi = GetWorldItem(wb->iItemIndex);
+		WORLDITEM  const& wi = GetWorldItem(wb.iItemIndex);
 		OBJECTTYPE const& o  = wi.o;
 
 		INT8 bPanicIndex;
@@ -229,12 +220,7 @@ void TrashWorldItems()
 		RemoveItemFromPool(wi);
 	}
 	gWorldItems.clear();
-	if ( gWorldBombs )
-	{
-		MemFree( gWorldBombs );
-		gWorldBombs = NULL;
-		guiNumWorldBombs = 0;
-	}
+	gWorldBombs.clear();
 }
 
 

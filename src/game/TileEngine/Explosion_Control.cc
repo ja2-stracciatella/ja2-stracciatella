@@ -1750,7 +1750,7 @@ static void ToggleActionItemsByFrequency(INT8 bFrequency)
 	// Go through all the bombs in the world, and look for remote ones
 	CFOR_EACH_WORLD_BOMB(wb)
 	{
-		OBJECTTYPE& o = GetWorldItem(wb->iItemIndex).o;
+		OBJECTTYPE& o = GetWorldItem(wb.iItemIndex).o;
 		if (o.bDetonatorType == BOMB_REMOTE)
 		{
 			// Found a remote bomb, so check to see if it has the same frequency
@@ -1776,7 +1776,7 @@ static void TogglePressureActionItemsInGridNo(INT16 sGridNo)
 	// Go through all the bombs in the world, and look for remote ones
 	CFOR_EACH_WORLD_BOMB(wb)
 	{
-		WORLDITEM& wi = GetWorldItem(wb->iItemIndex);
+		WORLDITEM& wi = GetWorldItem(wb.iItemIndex);
 		if (wi.sGridNo != sGridNo) continue;
 
 		OBJECTTYPE& o = wi.o;
@@ -2314,7 +2314,8 @@ void DecayBombTimers( void )
 	uiTimeStamp = GetJA2Clock();
 
 	// Go through all the bombs in the world, and look for timed ones
-	for (uiWorldBombIndex = 0; uiWorldBombIndex < guiNumWorldBombs; uiWorldBombIndex++)
+	Assert(gWorldBombs.size() <= UINT32_MAX);
+	for (uiWorldBombIndex = 0; uiWorldBombIndex < static_cast<UINT32>(gWorldBombs.size()); uiWorldBombIndex++)
 	{
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
@@ -2356,7 +2357,8 @@ void SetOffBombsByFrequency(SOLDIERTYPE* const s, const INT8 bFrequency)
 	uiTimeStamp = GetJA2Clock();
 
 	// Go through all the bombs in the world, and look for remote ones
-	for (uiWorldBombIndex = 0; uiWorldBombIndex < guiNumWorldBombs; uiWorldBombIndex++)
+	Assert(gWorldBombs.size() <= UINT32_MAX);
+	for (uiWorldBombIndex = 0; uiWorldBombIndex < static_cast<UINT32>(gWorldBombs.size()); uiWorldBombIndex++)
 	{
 		if (gWorldBombs[uiWorldBombIndex].fExists)
 		{
@@ -2424,7 +2426,8 @@ BOOLEAN SetOffBombsInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo, const BOO
 	uiTimeStamp = GetJA2Clock();
 
 	// Go through all the bombs in the world, and look for mines at this location
-	for (uiWorldBombIndex = 0; uiWorldBombIndex < guiNumWorldBombs; uiWorldBombIndex++)
+	Assert(gWorldBombs.size() <= UINT32_MAX);
+	for (uiWorldBombIndex = 0; uiWorldBombIndex < static_cast<UINT32>(gWorldBombs.size()); uiWorldBombIndex++)
 	{
 		if (!gWorldBombs[uiWorldBombIndex].fExists) continue;
 
@@ -2488,7 +2491,7 @@ void ActivateSwitchInGridNo(SOLDIERTYPE* const s, const INT16 sGridNo)
 	// Go through all the bombs in the world, and look for mines at this location
 	CFOR_EACH_WORLD_BOMB(wb)
 	{
-		WORLDITEM const& wi = GetWorldItem(wb->iItemIndex);
+		WORLDITEM const& wi = GetWorldItem(wb.iItemIndex);
 		if (wi.sGridNo != sGridNo) continue;
 
 		OBJECTTYPE const& o = wi.o;
@@ -2717,10 +2720,10 @@ static INT32 FindActiveTimedBomb(void)
 	// Go through all the bombs in the world, and look for timed ones
 	FOR_EACH_WORLD_BOMB(wb)
 	{
-		OBJECTTYPE const& o = GetWorldItem(wb->iItemIndex).o;
+		OBJECTTYPE const& o = GetWorldItem(wb.iItemIndex).o;
 		if (o.bDetonatorType != BOMB_TIMED || o.fFlags & OBJECT_DISABLED_BOMB) continue;
 
-		return wb->iItemIndex;
+		return wb.iItemIndex;
 	}
 	return -1;
 }

@@ -66,15 +66,11 @@ struct WORLDBOMB
 	INT32   iItemIndex;
 };
 
-extern WORLDBOMB * gWorldBombs;
-extern UINT32 guiNumWorldBombs;
+extern std::vector<WORLDBOMB> gWorldBombs;
 
-#define BASE_FOR_EACH_WORLD_BOMB(type, iter)                     \
-	for (type*       iter        = gWorldBombs,                    \
-		* const end__##iter = gWorldBombs + guiNumWorldBombs; \
-		iter != end__##iter;                                      \
-		++iter)                                                   \
-		if (!iter->fExists) continue; else
+#define BASE_FOR_EACH_WORLD_BOMB(type, iter) \
+	for (type& iter : gWorldBombs) \
+		if (!iter.fExists) continue; else
 #define FOR_EACH_WORLD_BOMB( iter) BASE_FOR_EACH_WORLD_BOMB(      WORLDBOMB, iter)
 #define CFOR_EACH_WORLD_BOMB(iter) BASE_FOR_EACH_WORLD_BOMB(const WORLDBOMB, iter)
 
