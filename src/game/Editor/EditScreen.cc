@@ -190,8 +190,6 @@ void EditScreenInit(void)
 	gusEditorTaskbarHiColor = Get16BPPColor( FROMRGB( 122, 124, 121 ) );
 	gusEditorTaskbarLoColor = Get16BPPColor( FROMRGB(  22,  55,  73 ) );
 
-	InitClipboard();
-
 	InitializeRoadMacros();
 
 	InitArmyGunTypes();
@@ -203,7 +201,6 @@ void EditScreenShutdown(void)
 {
 	GameShutdownEditorMercsInfo();
 	RemoveAllFromUndoList();
-	KillClipboard();
 }
 
 
@@ -2648,7 +2645,7 @@ static void MapOptimize(void)
 				{
 					fChangedHead = TRUE;
 					temp = head->pNext;
-					MemFree( head );
+					delete head;
 					head = temp;
 					if ( head )
 						head->pPrev = NULL;
@@ -2660,7 +2657,7 @@ static void MapOptimize(void)
 				{
 					fChangedTail = TRUE;
 					temp = end->pPrev;
-					MemFree( end );
+					delete end;
 					end = temp;
 					if ( end )
 						end->pNext = NULL;

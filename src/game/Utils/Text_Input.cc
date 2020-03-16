@@ -16,7 +16,6 @@
 #include "MouseSystem.h"
 
 
-static UINT16* szClipboard;
 BOOLEAN gfNoScroll = FALSE;
 
 struct TextInputColors
@@ -1154,21 +1153,6 @@ BOOLEAN TextInputMode()
 	return gfTextInputMode;
 }
 
-
-//copy, cut, and paste hilighted text code
-void InitClipboard()
-{
-	szClipboard = NULL;
-}
-
-void KillClipboard()
-{
-	if( szClipboard )
-	{
-		MemFree( szClipboard );
-		szClipboard = NULL;
-	}
-}
 
 //Saves the current text input mode, then removes it and activates the previous text input mode,
 //if applicable.  The second function restores the settings.  Doesn't currently support nested
