@@ -101,7 +101,7 @@ SLIDER* AddSlider(UINT8 ubStyle, UINT16 usCursor, UINT16 usPosX, UINT16 usPosY, 
 
 	if (ubStyle >= NUM_SLIDER_STYLES) throw std::logic_error("Invalid slider style");
 
-	SLIDER* const s = MALLOCZ(SLIDER);
+	SLIDER* const s = new SLIDER{};
 	// Assign the settings to the current slider
 	s->usPosX               = usPosX;
 	s->usPosY               = usPosY;
@@ -269,7 +269,7 @@ void RemoveSliderBar(SLIDER* s)
 	if (s->pPrev) s->pPrev->pNext = s->pNext;
 
 	MSYS_RemoveRegion(&s->ScrollAreaMouseRegion);
-	MemFree(s);
+	delete s;
 }
 
 

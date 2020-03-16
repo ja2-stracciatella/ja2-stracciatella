@@ -818,7 +818,7 @@ static void ExitShopKeeperInterface(void)
 	//if there is a temp inventory array, destroy it
 	if( gpTempDealersInventory )
 	{
-		MemFree( gpTempDealersInventory );
+		delete[] gpTempDealersInventory;
 		gpTempDealersInventory = NULL;
 	}
 
@@ -2167,12 +2167,12 @@ static void DetermineArmsDealersSellingInventory(void)
 	//if there is an old inventory, delete it
 	if( gpTempDealersInventory )
 	{
-		MemFree( gpTempDealersInventory );
+		delete[] gpTempDealersInventory;
 		gpTempDealersInventory = NULL;
 	}
 
 	//allocate memory to hold the inventory in memory
-	gpTempDealersInventory = MALLOCNZ(INVENTORY_IN_SLOT, gSelectArmsDealerInfo.uiNumDistinctInventoryItems);
+	gpTempDealersInventory = new INVENTORY_IN_SLOT[gSelectArmsDealerInfo.uiNumDistinctInventoryItems]{};
 	guiNextFreeInvSlot     = 0;
 
 	//loop through the dealer's permanent inventory items, adding them all to the temp inventory list

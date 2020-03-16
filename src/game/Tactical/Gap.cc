@@ -34,10 +34,10 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 		const UINT32 count = size / 8;
 		if (count > 0)
 		{
-			BYTE *data = MALLOCN(BYTE, size);
+			BYTE *data = new BYTE[size]{};
 			FileRead(f, data, size);
 
-			AUDIO_GAP* const gaps  = MALLOCN(AUDIO_GAP, count);
+			AUDIO_GAP* const gaps  = new AUDIO_GAP[count]{};
 
 			pGapList->gaps = gaps;
 			pGapList->end  = gaps + count;
@@ -59,7 +59,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 			SLOGD("gap list started from file %s", sFileName.c_str());
 
-			MemFree(data);
+			delete[] data;
 			return;
 		}
 	}
@@ -73,7 +73,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 void AudioGapListDone(AudioGapList* pGapList)
 {
 	// Free the array and nullify the pointers in the AudioGapList
-	MemFree(pGapList->gaps);
+	delete[] pGapList->gaps;
 	pGapList->gaps = NULL;
 	pGapList->end  = NULL;
 	SLOGD("Audio Gap List Deleted");

@@ -43,7 +43,7 @@ static const wchar_t gzLevelString[][15] =
 // LEVEL NODE MANIPLULATION FUNCTIONS
 static LEVELNODE* CreateLevelNode(void)
 {
-	LEVELNODE* const Node = MALLOCZ(LEVELNODE);
+	LEVELNODE* const Node = new LEVELNODE{};
 	Node->ubShadeLevel        = LightGetAmbient();
 	Node->ubNaturalShadeLevel = LightGetAmbient();
 	Node->pSoldier            = NULL;
@@ -161,7 +161,7 @@ BOOLEAN RemoveObject(UINT32 iMapIndex, UINT16 usIndex)
 
 			CheckForAndDeleteTileCacheStructInfo(pObject, usIndex);
 
-			MemFree(pObject);
+			delete pObject;
 
 			//Add the index to the maps temp file so we can remove it after reloading the map
 			AddRemoveObjectToMapTempFile(iMapIndex, usIndex);
@@ -306,7 +306,7 @@ static void RemoveLandEx(UINT32 iMapIndex, UINT16 usIndex)
 				pLand->pNext->pPrevNode = pLand->pPrevNode;
 			}
 
-			MemFree(pLand);
+			delete pLand;
 			break;
 		}
 	}
@@ -514,7 +514,7 @@ static LEVELNODE* AddNodeToWorld(UINT32 const iMapIndex, UINT16 const usIndex, I
 
 	if (AddStructureToWorld(iMapIndex, level, sr, n)) return n;
 
-	MemFree(n);
+	delete n;
 	throw FailedToAddNode();
 }
 
@@ -690,7 +690,7 @@ void ForceRemoveStructFromTail(UINT32 const iMapIndex)
 			//If we have to, make sure to remove this node when we reload the map from a saved game
 			RemoveStructFromMapTempFile(iMapIndex, usIndex);
 
-			MemFree(pStruct);
+			delete pStruct;
 
 			RemoveShadowBuddy(iMapIndex, usIndex);
 			return;
@@ -715,7 +715,7 @@ static void InternalRemoveStruct(UINT32 const map_idx, LEVELNODE** const anchor)
 	RemoveStructFromMapTempFile(map_idx, idx);
 
 	RemoveShadowBuddy(map_idx, idx);
-	MemFree(removee);
+	delete removee;
 }
 
 
@@ -980,7 +980,7 @@ static BOOLEAN RemoveShadow(UINT32 iMapIndex, UINT16 usIndex)
 				pOldShadow->pNext = pShadow->pNext;
 			}
 
-			MemFree(pShadow);
+			delete pShadow;
 			return TRUE;
 		}
 
@@ -1011,7 +1011,7 @@ BOOLEAN RemoveShadowFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 				pOldShadow->pNext = pShadow->pNext;
 			}
 
-			MemFree(pShadow);
+			delete pShadow;
 			return TRUE;
 		}
 
@@ -1209,7 +1209,7 @@ void RemoveMerc(UINT32 const map_idx, SOLDIERTYPE& s, bool const placeholder)
 			DeleteStructureFromWorld(merc->pStructureData);
 		}
 
-		MemFree(merc);
+		delete merc;
 		break;
 	}
 	// XXX exception?
@@ -1274,7 +1274,7 @@ BOOLEAN RemoveRoof(UINT32 iMapIndex, UINT16 usIndex)
 			}
 
 			DeleteStructureFromWorld(pRoof->pStructureData);
-			MemFree(pRoof);
+			delete pRoof;
 			return TRUE;
 		}
 
@@ -1441,7 +1441,7 @@ BOOLEAN RemoveOnRoof(UINT32 iMapIndex, UINT16 usIndex)
 				pOldOnRoof->pNext = pOnRoof->pNext;
 			}
 
-			MemFree(pOnRoof);
+			delete pOnRoof;
 			return TRUE;
 		}
 
@@ -1473,7 +1473,7 @@ BOOLEAN RemoveOnRoofFromLevelNode( UINT32 iMapIndex, LEVELNODE *pNode )
 				pOldOnRoof->pNext = pOnRoof->pNext;
 			}
 
-			MemFree(pOnRoof);
+			delete pOnRoof;
 			return TRUE;
 		}
 
@@ -1584,7 +1584,7 @@ BOOLEAN RemoveTopmost(UINT32 iMapIndex, UINT16 usIndex)
 				pOldTopmost->pNext = pTopmost->pNext;
 			}
 
-			MemFree(pTopmost);
+			delete pTopmost;
 			return TRUE;
 		}
 
@@ -1616,7 +1616,7 @@ BOOLEAN RemoveTopmostFromLevelNode(UINT32 iMapIndex, LEVELNODE* pNode)
 				pOldTopmost->pNext = pTopmost->pNext;
 			}
 
-			MemFree(pTopmost);
+			delete pTopmost;
 			return TRUE;
 		}
 

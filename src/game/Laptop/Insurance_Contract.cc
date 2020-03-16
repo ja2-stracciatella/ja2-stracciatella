@@ -966,7 +966,6 @@ void EndInsuranceInvestigation( UINT8	ubPayoutID )
 }
 
 
-//void InsuranceContractPayLifeInsuranceForDeadMerc( LIFE_INSURANCE_PAYOUT *pPayoutStruct )
 void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 {
 	LIFE_INSURANCE_PAYOUT* const lip = &LaptopSaveInfo.pLifeInsurancePayouts[ubPayoutID];
@@ -993,7 +992,6 @@ void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 
 	LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed--;
 	lip->fActive = FALSE;
-	//MemFree( pPayoutStruct );
 }
 
 

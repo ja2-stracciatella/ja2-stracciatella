@@ -204,7 +204,7 @@ static SMKFLIC* SmkOpenFlic(const char* const filename)
 		AutoSGPFile file(GCM->openGameResForReading(filename));
 		unsigned long bytes = FileGetSize(file);
 		if (bytes == 0) throw new std::runtime_error("empty file");
-		sf->file_in_memory = MALLOCN(unsigned char, bytes);
+		sf->file_in_memory = new unsigned char[bytes]{};
 		FileRead(file, sf->file_in_memory, bytes);
 
 		// open with smacker
@@ -242,7 +242,7 @@ void SmkCloseFlic(SMKFLIC* const sf)
 	}
 	if (sf->file_in_memory != nullptr)
 	{
-		MemFree(sf->file_in_memory);
+		delete[] sf->file_in_memory;
 		sf->file_in_memory = nullptr;
 	}
 	sf->flags = 0;

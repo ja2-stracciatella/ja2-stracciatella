@@ -151,7 +151,7 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 
 	if( pOutputBuffer != NULL )
 	{
-		MemFree( pOutputBuffer );
+		delete[] pOutputBuffer;
 	}
 }
 

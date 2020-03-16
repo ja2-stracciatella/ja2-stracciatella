@@ -1116,10 +1116,10 @@ void InitializePalettesForMap(void)
 
 void ShutDownPalettesForMap(void)
 {
-	MemFree(pMapLTRedPalette);
-	MemFree(pMapDKRedPalette);
-	MemFree(pMapLTGreenPalette);
-	MemFree(pMapDKGreenPalette);
+	delete[] pMapLTRedPalette;
+	delete[] pMapDKRedPalette;
+	delete[] pMapLTGreenPalette;
+	delete[] pMapDKGreenPalette;
 
 	pMapLTRedPalette   = NULL;
 	pMapDKRedPalette   = NULL;

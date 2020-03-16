@@ -503,7 +503,7 @@ static BOOLEAN LightDelete(LightTemplate* const t)
 
 	if (t->name != NULL)
 	{
-		MemFree(t->name);
+		delete[] t->name;
 		t->name = NULL;
 	}
 
@@ -1538,7 +1538,7 @@ LightTemplate* LightCreateOmni(const UINT8 ubIntensity, const INT16 iRadius)
 
 	char usName[14];
 	sprintf(usName, "LTO%d.LHT", iRadius);
-	t->name = MALLOCN(char, strlen(usName) + 1);
+	t->name = new char[strlen(usName) + 1]{};
 	strcpy(t->name, usName);
 
 	return t;

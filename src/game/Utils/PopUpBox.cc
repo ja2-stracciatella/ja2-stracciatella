@@ -91,7 +91,7 @@ PopUpBox* CreatePopUpBox(const SGPPoint Position, const UINT32 uiFlags, SGPVSurf
 	{
 		if (*i == NULL)
 		{
-			PopUpBox* const box = MALLOCZ(PopUpBox);
+			PopUpBox* const box = new PopUpBox{};
 			SetBoxXY(box, Position.iX, Position.iY);
 			box->uiFlags            = uiFlags;
 			box->uiBuffer           = buffer;
@@ -180,8 +180,8 @@ void AddMonoString(PopUpBox* const box, const wchar_t* pString)
 		return;
 	}
 
-	PopUpString* const pStringSt    = MALLOC(PopUpString);
-	wchar_t*     const pLocalString = MALLOCN(wchar_t, wcslen(pString) + 1);
+	PopUpString* const pStringSt    = new PopUpString{};
+	wchar_t*     const pLocalString = new wchar_t[wcslen(pString) + 1]{};
 
 	wcscpy(pLocalString, pString);
 
@@ -212,8 +212,8 @@ void AddSecondColumnMonoString(PopUpBox* const box, const wchar_t* const pString
 		return;
 	}
 
-	PopUpString* const pStringSt    = MALLOC(PopUpString);
-	wchar_t*     const pLocalString = MALLOCN(wchar_t, wcslen(pString) + 1);
+	PopUpString* const pStringSt    = new PopUpString{};
+	wchar_t*     const pLocalString = new wchar_t[wcslen(pString) + 1]{};
 
 	wcscpy(pLocalString, pString);
 
@@ -410,7 +410,7 @@ void RemoveBox(PopUpBox* const box)
 		{
 			*i = NULL;
 			RemoveAllBoxStrings(box);
-			MemFree(box);
+			delete box;
 			return;
 		}
 	}
@@ -701,10 +701,10 @@ static void RemoveBoxPrimaryText(PopUpBox* const Box, const INT32 hStringHandle)
 	{
 		if (Box->Text[hStringHandle]->pString)
 		{
-			MemFree(Box->Text[hStringHandle]->pString);
+			delete[] Box->Text[hStringHandle]->pString;
 		}
 
-		MemFree(Box->Text[hStringHandle]);
+		delete Box->Text[hStringHandle];
 		Box->Text[hStringHandle] = NULL;
 	}
 }
@@ -720,10 +720,10 @@ static void RemoveBoxSecondaryText(PopUpBox* const Box, const INT32 hStringHandl
 	{
 		if (Box->pSecondColumnString[hStringHandle]->pString)
 		{
-			MemFree(Box->pSecondColumnString[hStringHandle]->pString);
+			delete[] Box->pSecondColumnString[hStringHandle]->pString;
 		}
 
-		MemFree(Box->pSecondColumnString[hStringHandle]);
+		delete Box->pSecondColumnString[hStringHandle];
 		Box->pSecondColumnString[hStringHandle] = NULL;
 	}
 }

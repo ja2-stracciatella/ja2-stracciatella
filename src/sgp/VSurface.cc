@@ -78,11 +78,11 @@ SGPVSurface::~SGPVSurface()
 		break;
 	}
 
-	if (p16BPPPalette) MemFree(p16BPPPalette);
+	if (p16BPPPalette) delete[] p16BPPPalette;
 
 #ifdef SGP_VIDEO_DEBUGGING
-	if (name_) MemFree(name_);
-	if (code_) MemFree(code_);
+	if (name_) delete[] name_;
+	if (code_) delete[] code_;
 #endif
 }
 
@@ -97,7 +97,7 @@ void SGPVSurface::SetPalette(const SGPPaletteEntry* const src_pal)
 		p[i] = src_pal[i];
 	}
 
-	if (p16BPPPalette != NULL) MemFree(p16BPPPalette);
+	if (p16BPPPalette != NULL) delete[] p16BPPPalette;
 	p16BPPPalette = Create16BPPPalette(src_pal);
 }
 
@@ -232,13 +232,13 @@ SGPVSurfaceAuto* AddVideoSurfaceFromFile(const char* const Filename)
 static void RecordVSurface(SGPVSurface* const vs, char const* const Filename, UINT32 const LineNum, char const* const SourceFile)
 {
 	//record the filename of the vsurface (some are created via memory though)
-	vs->name_ = MALLOCN(char, strlen(Filename) + 1);
+	vs->name_ = new char[strlen(Filename) + 1]{};
 	strcpy(vs->name_, Filename);
 
 	//record the code location of the calling creating function.
 	char str[256];
 	sprintf(str, "%s -- line(%d)", SourceFile, LineNum);
-	vs->code_ = MALLOCN(char, strlen(str) + 1);
+	vs->code_ = new char[strlen(str) + 1]{};
 	strcpy(vs->code_, str);
 }
 
@@ -454,7 +454,7 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 	Assert(fp != NULL);
 
 	//Allocate enough strings and counters for each node.
-	DUMPINFO* const Info = MALLOCNZ(DUMPINFO, guiVSurfaceSize);
+	DUMPINFO* const Info = new DUMPINFO[guiVSurfaceSize]{};
 
 	//Loop through the list and record every unique filename and count them
 	UINT32 uiUniqueID = 0;
@@ -491,7 +491,7 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 	}
 	fprintf(fp, "\n-----------------------------------------------\n\n");
 
-	MemFree(Info);
+	delete[] Info;
 	fclose(fp);
 }
 

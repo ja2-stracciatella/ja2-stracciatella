@@ -61,7 +61,7 @@ try
 	else if (hImage->uiAppDataSize == hVObject->SubregionCount() * sizeof(AuxObjectData))
 	{
 		// Valid auxiliary data, so make a copy of it for TileSurf
-		pTileSurf->pAuxData = MALLOCN(AuxObjectData, hVObject->SubregionCount());
+		pTileSurf->pAuxData = new AuxObjectData[hVObject->SubregionCount()]{};
 		memcpy( pTileSurf->pAuxData, hImage->pAppData, hImage->uiAppDataSize );
 	}
 	else
@@ -93,12 +93,12 @@ void DeleteTileSurface(TILE_IMAGERY* const pTileSurf)
 		// free it ourselves.
 		if (pTileSurf->pAuxData != NULL)
 		{
-			MemFree( pTileSurf->pAuxData );
+			delete[] pTileSurf->pAuxData;
 		}
 	}
 
 	DeleteVideoObject(pTileSurf->vo);
-	MemFree( pTileSurf );
+	delete pTileSurf;
 }
 
 

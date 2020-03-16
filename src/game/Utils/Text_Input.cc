@@ -80,7 +80,7 @@ static UINT16 gusTextInputCursor = CURSOR_IBEAM;
 //one.
 static void PushTextInputLevel(void)
 {
-	STACKTEXTINPUTNODE* const pNewLevel = MALLOC(STACKTEXTINPUTNODE);
+	STACKTEXTINPUTNODE* const pNewLevel = new STACKTEXTINPUTNODE{};
 	pNewLevel->head = gpTextInputHead;
 	pNewLevel->pColors = pColors;
 	pNewLevel->next = pInputStack;
@@ -99,7 +99,7 @@ static void PopTextInputLevel(void)
 	pColors = pInputStack->pColors;
 	pLevel = pInputStack;
 	pInputStack = pInputStack->next;
-	MemFree( pLevel );
+	delete pLevel;
 	pLevel = NULL;
 	EnableAllTextFields();
 }
@@ -147,7 +147,7 @@ void InitTextInputMode()
 		//KillTextInputMode();
 	}
 	gpTextInputHead = NULL;
-	pColors = MALLOC(TextInputColors);
+	pColors = new TextInputColors{};
 	gfTextInputMode = TRUE;
 	SetEditingStatus(FALSE);
 	pColors->fBevelling = FALSE;
@@ -184,13 +184,13 @@ void KillTextInputMode()
 		i = i->next;
 		if (del->szString)
 		{
-			MemFree(del->szString);
+			delete[] del->szString;
 			del->szString = 0;
 			MSYS_RemoveRegion(&del->region);
 		}
-		MemFree(del);
+		delete del;
 	}
-	MemFree(pColors);
+	delete pColors;
 	pColors         = 0;
 	gpTextInputHead = 0;
 
@@ -222,7 +222,7 @@ void KillAllTextInputModes()
 
 static TEXTINPUTNODE* AllocateTextInputNode(BOOLEAN const start_editing)
 {
-	TEXTINPUTNODE* const n = MALLOCZ(TEXTINPUTNODE);
+	TEXTINPUTNODE* const n = new TEXTINPUTNODE{};
 	n->fEnabled = TRUE;
 	if (!gpTextInputHead)
 	{ // First entry, so we start with text input.
@@ -260,7 +260,7 @@ void AddTextInputField(INT16 const sLeft, INT16 const sTop, INT16 const sWidth, 
 	if (usInputType == INPUTTYPE_24HOURCLOCK) ubMaxChars = 6;
 	// Allocate and copy the string.
 	n->ubMaxChars = ubMaxChars;
-	n->szString   = MALLOCN(wchar_t, ubMaxChars + 1);
+	n->szString   = new wchar_t[ubMaxChars + 1]{};
 	if (szInitText)
 	{
 		n->ubStrLen = static_cast<UINT8>(wcslen(szInitText));

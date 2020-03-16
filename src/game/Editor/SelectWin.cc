@@ -647,7 +647,7 @@ static DisplayList* TrashList(DisplayList* pNode)
 		pNode->pNext = TrashList(pNode->pNext);
 
 	if (pNode->pNext == NULL)
-		MemFree(pNode);
+		delete pNode;
 
 	return(NULL);
 }
@@ -1185,7 +1185,7 @@ try
 				max_h = 0;
 			}
 
-			DisplayList* const n = MALLOC(DisplayList);
+			DisplayList* const n = new DisplayList{};
 			n->hObj      = vo;
 			n->uiIndex   = usETRLELoop;
 			n->iX        = x;

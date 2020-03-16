@@ -403,9 +403,9 @@ void DestroySummaryWindow()
 	EnableAllTextFields();
 
 	gpWorldItemsSummaryArray.clear();
-	FreeNull(gpPEnemyItemsSummaryArray);
+	FreeNullArray(gpPEnemyItemsSummaryArray);
 	gusPEnemyItemsSummaryArraySize = 0;
-	FreeNull(gpNEnemyItemsSummaryArray);
+	FreeNullArray(gpNEnemyItemsSummaryArray);
 	gusNEnemyItemsSummaryArraySize = 0;
 
 	if (gfWorldLoaded) gfConfirmExitFirst = TRUE;
@@ -2089,7 +2089,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 	{
 		/* Even if the info is outdated (but existing), allocate the structure, but
 		 * indicate that the info is bad. */
-		SUMMARYFILE* const sum = MALLOC(SUMMARYFILE);
+		SUMMARYFILE* const sum = new SUMMARYFILE{};
 		if (fread(sum, sizeof(SUMMARYFILE), 1, f_sum) != 1)
 		{
 			// failed, initialize and force update
@@ -2107,7 +2107,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		UpdateSummaryInfo(sum);
 
 		SUMMARYFILE** const anchor = &gpSectorSummary[x][y][level];
-		if (*anchor) MemFree(*anchor);
+		if (*anchor) delete *anchor;
 		*anchor = sum;
 
 		if (sum->ubSummaryVersion < GLOBAL_SUMMARY_VERSION)
@@ -2336,7 +2336,7 @@ static void SummaryUpdateCallback(GUI_BUTTON* btn, INT32 reason)
 
 		if( gpCurrentSectorSummary )
 		{
-			MemFree( gpCurrentSectorSummary );
+			delete gpCurrentSectorSummary;
 			gpCurrentSectorSummary = NULL;
 		}
 
@@ -2507,13 +2507,13 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	gpWorldItemsSummaryArray.clear();
 	if( gpPEnemyItemsSummaryArray )
 	{
-		MemFree( gpPEnemyItemsSummaryArray );
+		delete[] gpPEnemyItemsSummaryArray;
 		gpPEnemyItemsSummaryArray = NULL;
 		gusPEnemyItemsSummaryArraySize = 0;
 	}
 	if( gpNEnemyItemsSummaryArray )
 	{
-		MemFree( gpNEnemyItemsSummaryArray );
+		delete[] gpNEnemyItemsSummaryArray;
 		gpNEnemyItemsSummaryArray = NULL;
 		gusNEnemyItemsSummaryArraySize = 0;
 	}
@@ -2601,11 +2601,11 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//Pass 1 completed, so now allocate enough space to hold all the items
 	if( gusPEnemyItemsSummaryArraySize )
 	{
-		gpPEnemyItemsSummaryArray = MALLOCNZ(OBJECTTYPE, gusPEnemyItemsSummaryArraySize);
+		gpPEnemyItemsSummaryArray = new OBJECTTYPE[gusPEnemyItemsSummaryArraySize]{};
 	}
 	if( gusNEnemyItemsSummaryArraySize )
 	{
-		gpNEnemyItemsSummaryArray = MALLOCNZ(OBJECTTYPE, gusNEnemyItemsSummaryArraySize);
+		gpNEnemyItemsSummaryArray = new OBJECTTYPE[gusNEnemyItemsSummaryArraySize]{};
 	}
 
 	//PASS #2

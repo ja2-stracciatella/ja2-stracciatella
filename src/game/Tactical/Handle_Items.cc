@@ -997,7 +997,7 @@ void SoldierHandleDropItem( SOLDIERTYPE *pSoldier )
 		AddItemToPool(pSoldier->sGridNo, pSoldier->pTempObject, VISIBLE, pSoldier->bLevel, 0 , -1);
 		NotifySoldiersToLookforItems( );
 
-		MemFree( pSoldier->pTempObject );
+		delete pSoldier->pTempObject;
 		pSoldier->pTempObject = NULL;
 	}
 }
@@ -1056,7 +1056,7 @@ void HandleSoldierThrowItem( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 					AddItemToPool(sGridNo, pSoldier->pTempObject, VISIBLE, pSoldier->bLevel, 0, -1);
 					NotifySoldiersToLookforItems( );
 
-					MemFree( pSoldier->pTempObject );
+					delete pSoldier->pTempObject;
 					pSoldier->pTempObject = NULL;
 				}
 			}
@@ -1090,7 +1090,7 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 
 		pSoldier->bPendingActionData5 = bInvPos;
 		// Copy temp object
-		pSoldier->pTempObject	= MALLOC(OBJECTTYPE);
+		pSoldier->pTempObject	= new OBJECTTYPE{};
 		*pSoldier->pTempObject = *pObject;
 
 
@@ -1122,7 +1122,7 @@ void SoldierGiveItem( SOLDIERTYPE *pSoldier, SOLDIERTYPE *pTargetSoldier, OBJECT
 
 void SoldierDropItem(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj)
 {
-	pSoldier->pTempObject = MALLOC(OBJECTTYPE);
+	pSoldier->pTempObject = new OBJECTTYPE{};
 	*pSoldier->pTempObject = *pObj;
 	PickDropItemAnimation( pSoldier );
 }
@@ -1620,7 +1620,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 
 	// Check for and existing pool on the object layer
 
-	ITEM_POOL* const new_item = MALLOC(ITEM_POOL);
+	ITEM_POOL* const new_item = new ITEM_POOL{};
 	new_item->pNext      = NULL;
 	new_item->iItemIndex = iWorldItem;
 
@@ -1915,7 +1915,7 @@ void RemoveItemFromPool(WORLDITEM& wi)
 	}
 
 	RemoveItemFromWorld(item->iItemIndex);
-	MemFree(item);
+	delete item;
 }
 
 
@@ -2320,7 +2320,7 @@ SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* const pSoldier)
 				GetMan(ubTargetMercID).uiStatusFlags &= ~SOLDIER_ENGAGEDINACTION;
 			}
 
-			MemFree( pSoldier->pTempObject );
+			delete pSoldier->pTempObject;
 			pSoldier->pTempObject = NULL;
 
 		}
@@ -2347,7 +2347,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 		return;
 	}
 	TempObject = *pSoldier->pTempObject;
-	MemFree( pSoldier->pTempObject );
+	delete pSoldier->pTempObject;
 	pSoldier->pTempObject = NULL;
 
 

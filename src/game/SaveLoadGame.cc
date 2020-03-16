@@ -1600,7 +1600,7 @@ void LoadMercPath(HWFILE const hFile, PathSt** const head)
 	PathSt* path = NULL;
 	for (UINT32 cnt = 0; cnt < uiNumOfNodes; ++cnt)
 	{
-		PathSt* const n = MALLOC(PathSt);
+		PathSt* const n = new PathSt{};
 
 		BYTE data[20];
 		FileRead(hFile, data, sizeof(data));

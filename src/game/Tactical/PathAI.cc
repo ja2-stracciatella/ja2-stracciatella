@@ -409,10 +409,10 @@ static INT8 RandomSkipListLevel(void)
 
 void InitPathAI(void)
 {
-	pathQ         = MALLOCN( path_t,        ABSMAX_PATHQ);
-	trailCost     = MALLOCN( TRAILCELLTYPE, MAPLENGTH);
-	trailCostUsed = MALLOCNZ(UINT8,         MAPLENGTH);
-	trailTree     = MALLOCN( trail_t,       ABSMAX_TRAIL_TREE);
+	pathQ         = new path_t[ABSMAX_PATHQ]{};
+	trailCost     = new TRAILCELLTYPE[MAPLENGTH]{};
+	trailCostUsed = new UINT8[MAPLENGTH]{};
+	trailTree     = new trail_t[ABSMAX_TRAIL_TREE]{};
 	pQueueHead = &(pathQ[QHEADNDX]);
 	pClosedHead = &(pathQ[QPOOLNDX]);
 }
@@ -420,10 +420,10 @@ void InitPathAI(void)
 
 void ShutDownPathAI( void )
 {
-	MemFree( pathQ );
-	MemFree( trailCostUsed );
-	MemFree( trailCost );
-	MemFree( trailTree );
+	delete[] pathQ;
+	delete[] trailCostUsed;
+	delete[] trailCost;
+	delete[] trailTree;
 }
 
 

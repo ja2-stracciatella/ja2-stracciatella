@@ -603,7 +603,7 @@ try
 	// ANYTHING AFTER HERE CAN FAIL
 	if (IsOnOurTeam(s))
 	{
-		s.pKeyRing = MALLOCNZ(KEY_ON_RING, NUM_KEYS);
+		s.pKeyRing = new KEY_ON_RING[NUM_KEYS]{};
 		for (UINT32 i = 0; i < NUM_KEYS; ++i)
 		{
 			s.pKeyRing[i].ubKeyID = INVALID_KEY_NUMBER;
@@ -671,7 +671,7 @@ void DeleteSoldier(SOLDIERTYPE& s)
 
 	if (s.pKeyRing)
 	{
-		MemFree(s.pKeyRing);
+		delete[] s.pKeyRing;
 		s.pKeyRing = 0;
 	}
 
@@ -680,20 +680,20 @@ void DeleteSoldier(SOLDIERTYPE& s)
 	FOR_EACH(UINT16*, i, s.pShades)
 	{
 		if (*i == NULL) continue;
-		MemFree(*i);
+		delete[] *i;
 		*i = NULL;
 	}
 
 	if (s.effect_shade)
 	{
-		MemFree(s.effect_shade);
+		delete[] s.effect_shade;
 		s.effect_shade = 0;
 	}
 
 	FOR_EACH(UINT16*, i, s.pGlowShades)
 	{
 		if (*i == NULL) continue;
-		MemFree(*i);
+		delete[] *i;
 		*i = NULL;
 	}
 
@@ -4719,14 +4719,14 @@ void CreateSoldierPalettes(SOLDIERTYPE& s)
 	{
 		if (s.pShades[i])
 		{
-			MemFree(s.pShades[i]);
+			delete[] s.pShades[i];
 			s.pShades[i] = 0;
 		}
 	}
 
 	if (s.effect_shade)
 	{
-		MemFree(s.effect_shade);
+		delete[] s.effect_shade;
 		s.effect_shade = 0;
 	}
 
@@ -4734,7 +4734,7 @@ void CreateSoldierPalettes(SOLDIERTYPE& s)
 	{
 		if (s.pGlowShades[i])
 		{
-			MemFree(s.pGlowShades[i]);
+			delete[] s.pGlowShades[i];
 			s.pGlowShades[i] = 0;
 		}
 	}
@@ -4999,8 +4999,8 @@ void LoadPaletteData()
 	FileRead(hFile, &guiNumPaletteSubRanges, sizeof(guiNumPaletteSubRanges));
 
 	// Malloc!
-	gpPaletteSubRanges          = MALLOCN(PaletteSubRangeType, guiNumPaletteSubRanges);
-	gubpNumReplacementsPerRange = MALLOCN(UINT8,               guiNumPaletteSubRanges);
+	gpPaletteSubRanges          = new PaletteSubRangeType[guiNumPaletteSubRanges]{};
+	gubpNumReplacementsPerRange = new UINT8[guiNumPaletteSubRanges]{};
 
 	// Read # of types for each!
 	for ( cnt = 0; cnt < guiNumPaletteSubRanges; cnt++ )
@@ -5020,7 +5020,7 @@ void LoadPaletteData()
 	FileRead(hFile, &guiNumReplacements, sizeof(guiNumReplacements));
 
 	// Malloc!
-	gpPalRep = MALLOCN(PaletteReplacementType, guiNumReplacements);
+	gpPalRep = new PaletteReplacementType[guiNumReplacements]{};
 
 	// Read!
 	for ( cnt = 0; cnt < guiNumReplacements; cnt++ )
@@ -5033,7 +5033,7 @@ void LoadPaletteData()
 		// # entries
 		FileRead(hFile, &gpPalRep[cnt].ubPaletteSize, sizeof(gpPalRep[cnt].ubPaletteSize));
 
-		SGPPaletteEntry* const Pal = MALLOCN(SGPPaletteEntry, gpPalRep[cnt].ubPaletteSize);
+		SGPPaletteEntry* const Pal = new SGPPaletteEntry[gpPalRep[cnt].ubPaletteSize]{};
 		gpPalRep[cnt].rgb = Pal;
 
 		for( cnt2 = 0; cnt2 < gpPalRep[ cnt ].ubPaletteSize; cnt2++ )
@@ -5071,26 +5071,26 @@ void DeletePaletteData()
 	// Free!
 	if ( gpPaletteSubRanges != NULL )
 	{
-		MemFree( gpPaletteSubRanges );
+		delete[] gpPaletteSubRanges;
 		gpPaletteSubRanges = NULL;
 	}
 
 	if ( gubpNumReplacementsPerRange != NULL )
 	{
-		MemFree( gubpNumReplacementsPerRange );
+		delete[] gubpNumReplacementsPerRange;
 		gubpNumReplacementsPerRange = NULL;
 	}
 
 
 	for ( cnt = 0; cnt < guiNumReplacements; cnt++ )
 	{
-		if (gpPalRep[cnt].rgb != NULL) MemFree(gpPalRep[cnt].rgb);
+		if (gpPalRep[cnt].rgb != NULL) delete[] gpPalRep[cnt].rgb;
 	}
 
 	// Free
 	if ( gpPalRep != NULL )
 	{
-		MemFree( gpPalRep );
+		delete[] gpPalRep;
 		gpPalRep = NULL;
 	}
 }
@@ -6665,7 +6665,8 @@ void EVENT_SoldierBeginGiveItem( SOLDIERTYPE *pSoldier )
 	{
 		UnSetEngagedInConvFromPCAction( pSoldier );
 
-		MemFree( pSoldier->pTempObject );
+		delete pSoldier->pTempObject;
+		pSoldier->pTempObject = nullptr;
 	}
 }
 
@@ -7381,7 +7382,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	{
 		// Place it back into inv....
 		AutoPlaceObject( pSoldier, pSoldier->pTempObject, FALSE );
-		MemFree( pSoldier->pTempObject );
+		delete pSoldier->pTempObject;
 		pSoldier->pTempObject        = NULL;
 		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 
@@ -7563,7 +7564,7 @@ static UINT16* CreateEnemyGlow16BPPPalette(const SGPPaletteEntry* pPalette, UINT
 {
 	Assert(pPalette != NULL);
 
-	UINT16* const p16BPPPalette = MALLOCN(UINT16, 256);
+	UINT16* const p16BPPPalette = new UINT16[256]{};
 
 	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
@@ -7580,7 +7581,7 @@ static UINT16* CreateEnemyGreyGlow16BPPPalette(const SGPPaletteEntry* pPalette, 
 {
 	Assert(pPalette != NULL);
 
-	UINT16* const p16BPPPalette = MALLOCN(UINT16, 256);
+	UINT16* const p16BPPPalette = new UINT16[256]{};
 
 	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
@@ -8896,7 +8897,7 @@ void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 				{
 					// Place it back into inv....
 					AutoPlaceObject( pSoldier, pSoldier->pTempObject, FALSE );
-					MemFree( pSoldier->pTempObject );
+					delete pSoldier->pTempObject;
 					pSoldier->pTempObject        = NULL;
 					pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 

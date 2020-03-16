@@ -728,7 +728,7 @@ static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8>& buf, SDL_AudioFormat forma
 		return NULL;
 	}
 
-	UINT8* sampledata = MALLOCN(UINT8, samplesize);
+	UINT8* sampledata = new UINT8[samplesize]{};
 	memcpy(sampledata, buf.data(), samplesize);
 
 	s->pData = sampledata;
@@ -854,7 +854,7 @@ static void SoundFreeSample(SAMPLETAG* s)
 	assert(s->uiInstances == 0);
 
 	DecreaseSoundMemoryUsedBySample(s);
-	MemFree(s->pData);
+	delete[] s->pData;
 	*s = SAMPLETAG{};
 }
 

@@ -1123,7 +1123,7 @@ void LoadUnderGroundSectorInfoFromSavedGame(HWFILE const f)
 	UNDERGROUND_SECTORINFO** anchor = &gpUndergroundSectorInfoHead;
 	for (UINT32 n = n_records; n != 0; --n)
 	{
-		UNDERGROUND_SECTORINFO* const u = MALLOC(UNDERGROUND_SECTORINFO);
+		UNDERGROUND_SECTORINFO* const u = new UNDERGROUND_SECTORINFO{};
 		ExtractUndergroundSectorInfoFromFile(f, u);
 
 		gpUndergroundSectorInfoTail = u;

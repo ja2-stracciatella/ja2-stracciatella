@@ -221,7 +221,7 @@ static void ConditionalExtractNPCQuoteInfoArrayFromFile(HWFILE const f, NPCQuote
 {
 	UINT8 present;
 	FileRead(f, &present, sizeof(present));
-	FreeNull(q);
+	FreeNullArray(q);
 	if (!present) return;
 	q = ExtractNPCQuoteInfoArrayFromFile(f);
 }
@@ -328,7 +328,7 @@ static void RevertToOriginalQuoteFile(UINT8 ubNPC)
 {
 	if ( gpBackupNPCQuoteInfoArray[ ubNPC ] && gpNPCQuoteInfoArray[ubNPC] )
 	{
-		MemFree( gpNPCQuoteInfoArray[ubNPC] );
+		delete[] gpNPCQuoteInfoArray[ubNPC];
 		gpNPCQuoteInfoArray[ubNPC] = gpBackupNPCQuoteInfoArray[ubNPC];
 		gpBackupNPCQuoteInfoArray[ubNPC] = NULL;
 	}
@@ -393,8 +393,8 @@ static NPCQuoteInfo* EnsureQuoteFileLoaded(UINT8 const ubNPC)
 
 bool ReloadQuoteFile(UINT8 const ubNPC)
 {
-	FreeNull(gpNPCQuoteInfoArray[ubNPC]);
-	FreeNull(gpBackupNPCQuoteInfoArray[ubNPC]);
+	FreeNullArray(gpNPCQuoteInfoArray[ubNPC]);
+	FreeNullArray(gpBackupNPCQuoteInfoArray[ubNPC]);
 	return EnsureQuoteFileLoaded(ubNPC);
 }
 
@@ -403,7 +403,7 @@ static bool ReloadQuoteFileIfLoaded(UINT8 const ubNPC)
 {
 	NPCQuoteInfo*& q = gpNPCQuoteInfoArray[ubNPC];
 	if (!q) return TRUE;
-	FreeNull(q);
+	FreeNullArray(q);
 	return EnsureQuoteFileLoaded(ubNPC);
 }
 
@@ -477,7 +477,7 @@ try
 {
 	NPCQuoteInfo*& q = gpCivQuoteInfoArray[idx];
 	if (!q) return true;
-	FreeNull(q);
+	FreeNullArray(q);
 	q = LoadCivQuoteFile(idx);
 	return true;
 }
@@ -486,9 +486,9 @@ catch (...) { return false; }
 
 void ShutdownNPCQuotes()
 {
-	FOR_EACH(NPCQuoteInfo*, i, gpNPCQuoteInfoArray)       FreeNull(*i);
-	FOR_EACH(NPCQuoteInfo*, i, gpBackupNPCQuoteInfoArray) FreeNull(*i);
-	FOR_EACH(NPCQuoteInfo*, i, gpCivQuoteInfoArray)       FreeNull(*i);
+	FOR_EACH(NPCQuoteInfo*, i, gpNPCQuoteInfoArray)       FreeNullArray(*i);
+	FOR_EACH(NPCQuoteInfo*, i, gpBackupNPCQuoteInfoArray) FreeNullArray(*i);
+	FOR_EACH(NPCQuoteInfo*, i, gpCivQuoteInfoArray)       FreeNullArray(*i);
 }
 
 
@@ -503,7 +503,7 @@ void ReloadAllQuoteFiles(void)
 	for ( ubProfile = FIRST_RPC; ubProfile < NUM_PROFILES; ubProfile++ )
 	{
 		// zap backup if any
-		FreeNull(gpBackupNPCQuoteInfoArray[ubProfile]);
+		FreeNullArray(gpBackupNPCQuoteInfoArray[ubProfile]);
 		ReloadQuoteFileIfLoaded( ubProfile );
 	}
 	// reload all civ quote files

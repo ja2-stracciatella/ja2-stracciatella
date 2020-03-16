@@ -603,7 +603,7 @@ void MSYS_RemoveRegion(MOUSE_REGION* const r)
 
 	if (r->FastHelpText)
 	{
-		MemFree(r->FastHelpText);
+		delete[] r->FastHelpText;
 		r->FastHelpText = 0;
 	}
 
@@ -658,7 +658,7 @@ void MOUSE_REGION::SetFastHelpText(wchar_t const* const text)
 {
 	if (FastHelpText)
 	{
-		MemFree(FastHelpText);
+		delete[] FastHelpText;
 		FastHelpText = 0;
 	}
 
@@ -666,7 +666,7 @@ void MOUSE_REGION::SetFastHelpText(wchar_t const* const text)
 
 	if (!text || text[0] == L'\0') return;
 
-	FastHelpText = MALLOCN(wchar_t, wcslen(text) + 1);
+	FastHelpText = new wchar_t[wcslen(text) + 1]{};
 	wcscpy(FastHelpText, text);
 
 	/* ATE: We could be replacing already existing, active text so let's remove

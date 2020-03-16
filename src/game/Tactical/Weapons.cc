@@ -1566,10 +1566,10 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	const THROW_PARAMS* const t = pSoldier->pThrowParams;
 	CreatePhysicalObject(pSoldier->pTempObject, t->dLifeSpan, t->dX, t->dY, t->dZ, t->dForceX, t->dForceY, t->dForceZ, pSoldier, t->ubActionCode, t->target);
 
-	MemFree( pSoldier->pTempObject );
+	delete pSoldier->pTempObject;
 	pSoldier->pTempObject = NULL;
 
-	MemFree( pSoldier->pThrowParams );
+	delete pSoldier->pThrowParams;
 	pSoldier->pThrowParams = NULL;
 
 	return( TRUE );

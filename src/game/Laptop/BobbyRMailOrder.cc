@@ -702,7 +702,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 					//gets reset when the confirm order graphic disappears
 					gfCanAcceptOrder = FALSE;
 
-					//pBobbyRayPurchase = MALLOCZ(BobbyRayOrderStruct);
+					//pBobbyRayPurchase = new BobbyRayOrderStruct{};
 
 
 					ubCount = 0;
@@ -1755,7 +1755,7 @@ static void PurchaseBobbyOrder(void)
 		//gets reset when the confirm order graphic disappears
 		gfCanAcceptOrder = FALSE;
 
-		//pBobbyRayPurchase = MALLOCZ(BobbyRayOrderStruct);
+		//pBobbyRayPurchase = new BobbyRayOrderStruct{};
 
 
 

@@ -124,7 +124,7 @@ ScreenID AniEditScreenHandle(void)
 
 			if ( fOKFiles )
 			{
-				MemFree( pusStates );
+				delete[] pusStates;
 			}
 
 				fOKFiles = FALSE;
@@ -288,7 +288,7 @@ static void BuildListFile(void)
 	fseek( infoFile, 0, SEEK_SET ); //reset header file
 
 	// Allocate array
-	pusStates = MALLOCN(UINT16, numEntries);
+	pusStates = new UINT16[numEntries]{};
 
 	fOKFiles = TRUE;
 

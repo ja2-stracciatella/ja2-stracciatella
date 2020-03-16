@@ -72,8 +72,8 @@ static UINT32  uiStartOfPauseTime = 0;
 
 static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, BOOLEAN fStartOfNewString)
 {
-	ScrollStringSt* const i = MALLOC(ScrollStringSt);
-	i->pString              = MALLOCN(wchar_t, wcslen(pString) + 1);
+	ScrollStringSt* const i = new ScrollStringSt{};
+	i->pString              = new wchar_t[wcslen(pString) + 1]{};
 	wcscpy(i->pString, pString);
 	i->video_overlay         = NULL;
 	i->usColor               = usColor;
@@ -118,8 +118,8 @@ void ClearDisplayedListOfTacticalStrings(void)
 		if (gpDisplayList[cnt] != NULL)
 		{
 			RemoveStringVideoOverlay(gpDisplayList[cnt]);
-			MemFree(gpDisplayList[cnt]->pString);
-			MemFree(gpDisplayList[cnt]);
+			delete[] gpDisplayList[cnt]->pString;
+			delete gpDisplayList[cnt];
 			gpDisplayList[cnt] = NULL;
 		}
 	}
@@ -176,8 +176,8 @@ void ScrollString(void)
 			if (suiTimer - gpDisplayList[cnt]->uiTimeOfLastUpdate > (UINT32)(iMaxAge - 1000 * iNumberOfMessagesOnQueue))
 			{
 				RemoveStringVideoOverlay(gpDisplayList[cnt]);
-				MemFree(gpDisplayList[cnt]->pString);
-				MemFree(gpDisplayList[cnt]);
+				delete[] gpDisplayList[cnt]->pString;
+				delete gpDisplayList[cnt];
 				gpDisplayList[cnt] = NULL;
 			}
 		}
@@ -446,8 +446,8 @@ static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usCol
 	ScrollStringSt* const old = gMapScreenMessageList[gubEndOfMapScreenMessageList];
 	if (old != NULL)
 	{
-		MemFree(old->pString);
-		MemFree(old);
+		delete[] old->pString;
+		delete old;
 	}
 
 	// store the new message there
@@ -648,8 +648,8 @@ void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile, bool stracLinuxFo
 		ScrollStringSt* const old = *i;
 		if (old)
 		{
-			MemFree(old->pString);
-			MemFree(old);
+			delete[] old->pString;
+			delete old;
 		}
 
 		*i = s;
@@ -680,8 +680,8 @@ void ClearTacticalMessageQueue(void)
 	{
 		ScrollStringSt* del = i;
 		i = i->pNext;
-		MemFree(del->pString);
-		MemFree(del);
+		delete[] del->pString;
+		delete del;
 	}
 
 	pStringS = NULL;
@@ -695,8 +695,8 @@ void FreeGlobalMessageList(void)
 		ScrollStringSt* const s = *i;
 		if (s != NULL)
 		{
-			MemFree(s->pString);
-			MemFree(s);
+			delete[] s->pString;
+			delete s;
 			*i = NULL;
 		}
 	}

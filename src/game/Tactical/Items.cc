@@ -2941,7 +2941,7 @@ void CreateKeyObject(OBJECTTYPE* const pObj, UINT8 const ubNumberOfKeys, UINT8 c
 void AllocateObject(OBJECTTYPE** const pObj)
 {
 	// create a key object
-	*pObj = MALLOC(OBJECTTYPE);
+	*pObj = new OBJECTTYPE{};
 }
 
 
@@ -2950,7 +2950,7 @@ BOOLEAN DeleteKeyObject( OBJECTTYPE * pObj )
 	if (pObj == NULL) return FALSE;
 
 	// free up space
-	MemFree( pObj );
+	delete pObj;
 
 	return( TRUE );
 }

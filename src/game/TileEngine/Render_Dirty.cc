@@ -158,8 +158,8 @@ BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags const uiFlags, INT16 sLe
 	const UINT32 uiBufSize = (sRight - sLeft) * (sBottom - sTop);
 	if (uiBufSize == 0) return NO_BGND_RECT;
 
-	if (uiFlags & BGND_FLAG_SAVERECT) b->pSaveArea  = MALLOCN(UINT16, uiBufSize);
-	if (uiFlags & BGND_FLAG_SAVE_Z)   b->pZSaveArea = MALLOCN(UINT16, uiBufSize);
+	if (uiFlags & BGND_FLAG_SAVERECT) b->pSaveArea  = new UINT16[uiBufSize]{};
+	if (uiFlags & BGND_FLAG_SAVE_Z)   b->pZSaveArea = new UINT16[uiBufSize]{};
 
 	b->fFreeMemory = TRUE;
 	b->fAllocated  = TRUE;
@@ -232,8 +232,8 @@ void EmptyBackgroundRects(void)
 
 			if (!b->fAllocated && b->fFreeMemory)
 			{
-				if (b->pSaveArea  != NULL) MemFree(b->pSaveArea);
-				if (b->pZSaveArea != NULL) MemFree(b->pZSaveArea);
+				if (b->pSaveArea  != NULL) delete[] b->pSaveArea;
+				if (b->pZSaveArea != NULL) delete[] b->pZSaveArea;
 
 				b->fAllocated  = FALSE;
 				b->fFreeMemory = FALSE;
@@ -246,8 +246,8 @@ void EmptyBackgroundRects(void)
 		{
 			if (b->fFreeMemory)
 			{
-				if (b->pSaveArea != NULL)  MemFree(b->pSaveArea);
-				if (b->pZSaveArea != NULL) MemFree(b->pZSaveArea);
+				if (b->pSaveArea != NULL)  delete[] b->pSaveArea;
+				if (b->pZSaveArea != NULL) delete[] b->pZSaveArea;
 			}
 
 			b->fAllocated     = FALSE;
@@ -310,8 +310,8 @@ static void FreeBackgroundRectNow(BACKGROUND_SAVE* const b)
 {
 	if (b->fFreeMemory)
 	{
-		if (b->pSaveArea)  MemFree(b->pSaveArea);
-		if (b->pZSaveArea) MemFree(b->pZSaveArea);
+		if (b->pSaveArea)  delete[] b->pSaveArea;
+		if (b->pZSaveArea) delete[] b->pZSaveArea;
 	}
 
 	b->fAllocated  = FALSE;
@@ -444,7 +444,7 @@ try
 	BACKGROUND_SAVE* const bgs = RegisterBackgroundRect(BGND_FLAG_PERMANENT, x, y, w, h);
 	if (!bgs) return 0;
 
-	VIDEO_OVERLAY* const v    = MALLOCZ(VIDEO_OVERLAY);
+	VIDEO_OVERLAY* const v    = new VIDEO_OVERLAY{};
 	VIDEO_OVERLAY* const head = gVideoOverlays;
 	v->prev        = 0;
 	v->next        = head;
@@ -493,14 +493,14 @@ void RemoveVideoOverlay(VIDEO_OVERLAY* const v)
 
 		FreeBackgroundRect(v->background);
 
-		if (v->pSaveArea != NULL) MemFree(v->pSaveArea);
+		if (v->pSaveArea != NULL) delete v->pSaveArea;
 		v->pSaveArea = NULL;
 
 		VIDEO_OVERLAY* const prev = v->prev;
 		VIDEO_OVERLAY* const next = v->next;
 		*(prev ? &prev->next : &gVideoOverlays) = next;
 		if (next) next->prev = prev;
-		MemFree(v);
+		delete v;
 	}
 }
 
@@ -546,7 +546,7 @@ static void AllocateVideoOverlayArea(VIDEO_OVERLAY* const v)
 	UINT32                 const buf_size = (bgs->sRight - bgs->sLeft) * (bgs->sBottom - bgs->sTop);
 
 	v->fActivelySaving = TRUE;
-	v->pSaveArea       = MALLOCN(UINT16, buf_size);
+	v->pSaveArea       = new UINT16[buf_size]{};
 }
 
 
@@ -585,7 +585,7 @@ void DeleteVideoOverlaysArea(void)
 {
 	FOR_EACH_VIDEO_OVERLAY_SAFE(v)
 	{
-		if (v->pSaveArea != NULL) MemFree(v->pSaveArea);
+		if (v->pSaveArea != NULL) delete[] v->pSaveArea;
 		v->pSaveArea       = NULL;
 		v->fActivelySaving = FALSE;
 		if (v->fDeletionPending) RemoveVideoOverlay(v);

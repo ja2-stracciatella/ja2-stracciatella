@@ -955,7 +955,7 @@ void BeginMapEdgepointSearch()
 
 	//Create the reserved list
 	AssertMsg( !gpReservedGridNos, "Attempting to BeginMapEdgepointSearch that has already been created." );
-	gpReservedGridNos = MALLOCN(INT16, 20);
+	gpReservedGridNos = new INT16[20]{};
 	gsReservedIndex   = 0;
 
 	if( gMapInformation.sNorthGridNo != -1 )
@@ -977,7 +977,7 @@ void BeginMapEdgepointSearch()
 void EndMapEdgepointSearch()
 {
 	AssertMsg( gpReservedGridNos, "Attempting to EndMapEdgepointSearch that has already been removed." );
-	MemFree( gpReservedGridNos );
+	delete[] gpReservedGridNos;
 	gpReservedGridNos = NULL;
 	gsReservedIndex = 0;
 }

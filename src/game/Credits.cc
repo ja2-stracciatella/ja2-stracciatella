@@ -327,13 +327,13 @@ static void DeleteFirstNode(void)
 	if (g_credits_tail == del) g_credits_tail = NULL;
 
 	DeleteVideoSurface(del->uiVideoSurfaceImage);
-	MemFree(del);
+	delete del;
 }
 
 
 static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
 {
-	CRDT_NODE* const pNodeToAdd = MALLOCZ(CRDT_NODE);
+	CRDT_NODE* const pNodeToAdd = new CRDT_NODE{};
 
 	//Determine the font and the color to use
 	SGPFont  uiFontToUse;

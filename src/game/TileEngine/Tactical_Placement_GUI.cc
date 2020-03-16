@@ -159,7 +159,7 @@ void InitTacticalPlacementGUI()
 		++n;
 	}
 	// Allocate the array based on how many mercs there are.
-	gMercPlacement = MALLOCNZ(MERCPLACEMENT, n);
+	gMercPlacement = new MERCPLACEMENT[n]{};
 
 	// Second pass: Assign the mercs to their respective slots.
 	giPlacements = 0;

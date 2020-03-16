@@ -9,16 +9,16 @@ namespace SGP
 	template<typename T> class PODObj
 	{
 		public:
-			PODObj() : p_(MALLOCZ(T)) {}
+			PODObj() : p_(new T{}) {}
 
 			PODObj(T* const p) : p_(p) {}
 
-			~PODObj() { if (p_) MemFree(p_); }
+			~PODObj() { if (p_) delete p_; }
 
 			T* Allocate()
 			{
-				T* const p = MALLOCZ(T);
-				if (p_) MemFree(p_);
+				T* const p = new T{};
+				if (p_) delete p_;
 				p_ = p;
 				return p;
 			}

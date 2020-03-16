@@ -1357,7 +1357,7 @@ void InitDetailedPlacementForMerc()
 {
 	Assert( !gpSelected->pDetailedPlacement );
 
-	gpSelected->pDetailedPlacement = MALLOC(SOLDIERCREATE_STRUCT);
+	gpSelected->pDetailedPlacement = new SOLDIERCREATE_STRUCT{};
 	gpSelected->pBasicPlacement->fDetailedPlacement = TRUE;
 	gpSelected->pBasicPlacement->fPriorityExistance = FALSE;
 	CreateStaticDetailedPlacementGivenBasicPlacementInfo( gpSelected->pDetailedPlacement, gpSelected->pBasicPlacement );
@@ -1371,7 +1371,7 @@ void InitDetailedPlacementForMerc()
 void KillDetailedPlacementForMerc()
 {
 	Assert( gpSelected->pDetailedPlacement );
-	MemFree( gpSelected->pDetailedPlacement );
+	delete gpSelected->pDetailedPlacement;
 	gpSelected->pDetailedPlacement = NULL;
 	gpSelected->pBasicPlacement->fDetailedPlacement = FALSE;
 	SetMercEditability( TRUE );
@@ -3006,7 +3006,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 				//allocate memory for new static detailed placement
 				gTempBasicPlacement.fDetailedPlacement = TRUE;
 				gTempBasicPlacement.fPriorityExistance = gSaveBufferBasicPlacement.fPriorityExistance;
-				pNode->pDetailedPlacement = MALLOC(SOLDIERCREATE_STRUCT);
+				pNode->pDetailedPlacement = new SOLDIERCREATE_STRUCT{};
 				//copy the file information from temp var to node in list.
 				*pNode->pDetailedPlacement = gSaveBufferDetailedPlacement;
 			}

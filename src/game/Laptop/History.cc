@@ -324,7 +324,7 @@ static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
 
 static void ProcessAndEnterAHistoryRecord(const UINT8 ubCode, const UINT32 uiDate, const UINT8 ubSecondCode, const INT16 sSectorX, const INT16 sSectorY, const INT8 bSectorZ)
 {
-	HistoryUnit* const h = MALLOC(HistoryUnit);
+	HistoryUnit* const h = new HistoryUnit{};
 	h->Next         = NULL;
 	h->ubCode       = ubCode;
 	h->ubSecondCode = ubSecondCode;
@@ -374,7 +374,7 @@ void ClearHistoryList(void)
 	for (HistoryUnit* h = pHistoryListHead; h != NULL;)
 	{
 		HistoryUnit* const next = h->Next;
-		MemFree(h);
+		delete h;
 		h = next;
 	}
 	pHistoryListHead = NULL;

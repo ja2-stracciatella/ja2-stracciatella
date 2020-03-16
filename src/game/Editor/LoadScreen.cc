@@ -615,7 +615,7 @@ FDLG_LIST* AddToFDlgList(FDLG_LIST* const list, char const* const filename)
 	{
 		if (strcasecmp(i->filename, filename) > 0) break;
 	}
-	FDLG_LIST* const n = MALLOC(FDLG_LIST);
+	FDLG_LIST* const n = new FDLG_LIST{};
 	strlcpy(n->filename, filename, lengthof(n->filename));
 	n->pPrev = prev;
 	n->pNext = i;
@@ -635,7 +635,7 @@ static void RemoveFromFDlgList(FDLG_LIST** const head, FDLG_LIST* const node)
 		FDLG_LIST* const next = i->pNext;
 		if (prev) prev->pNext = next;
 		if (next) next->pPrev = prev;
-		MemFree(node);
+		delete node;
 		break;
 	}
 }
@@ -647,7 +647,7 @@ static void TrashFDlgList(FDLG_LIST* i)
 	{
 		FDLG_LIST* const del = i;
 		i = i->pNext;
-		MemFree(del);
+		delete del;
 	}
 }
 

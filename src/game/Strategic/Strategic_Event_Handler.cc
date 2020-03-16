@@ -127,8 +127,8 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	if (!fSectorLoaded) // if we are NOT currently in the right sector
 	{
 		//build an array of objects to be added
-		pObject       = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
-		pStolenObject = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
+		pObject       = new OBJECTTYPE[usNumberOfItems]{};
+		pStolenObject = new OBJECTTYPE[usNumberOfItems]{};
 	}
 
 	// check for potential theft
@@ -282,8 +282,8 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 		{
 			AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, INVISIBLE);
 		}
-		MemFree(pObject);
-		MemFree(pStolenObject);
+		delete[] pObject;
+		delete[] pStolenObject;
 	}
 
 	if (fPablosStoleSomething)
@@ -1045,7 +1045,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 	if( !fSectorLoaded )
 	{
 		//build an array of objects to be added
-		pObject = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
+		pObject = new OBJECTTYPE[usNumberOfItems]{};
 	}
 
 
@@ -1085,7 +1085,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
 		AddItemsToUnLoadedSector(MEDUNA_ITEM_DROP_OFF_SECTOR_X, MEDUNA_ITEM_DROP_OFF_SECTOR_Y, MEDUNA_ITEM_DROP_OFF_SECTOR_Z, MEDUNA_ITEM_DROP_OFF_GRIDNO, uiCount, pObject, 0, 0, 0, INVISIBLE);
-		MemFree( pObject );
+		delete[] pObject;
 		pObject = NULL;
 	}
 
