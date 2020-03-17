@@ -281,8 +281,8 @@ UINT16 GetWallOrientation(UINT16 usIndex)
 
 void AllocateAnimTileData(TILE_ELEMENT* const pTileElem, UINT8 const ubNumFrames)
 {
-	pTileElem->pAnimData            = MALLOC(TILE_ANIMATION_DATA);
-	pTileElem->pAnimData->pusFrames = MALLOCN(UINT16, ubNumFrames);
+	pTileElem->pAnimData            = new TILE_ANIMATION_DATA{};
+	pTileElem->pAnimData->pusFrames = new UINT16[ubNumFrames]{};
 
 	// Set # if frames!
 	pTileElem->pAnimData->ubNumFrames = ubNumFrames;
@@ -294,9 +294,9 @@ static void FreeAnimTileData(TILE_ELEMENT* pTileElem)
 	if ( pTileElem->pAnimData != NULL )
 	{
 		// Free frames list
-		MemFree( pTileElem->pAnimData->pusFrames );
+		delete[] pTileElem->pAnimData->pusFrames;
 
 		// Free frames
-		MemFree( pTileElem->pAnimData );
+		delete pTileElem->pAnimData;
 	}
 }

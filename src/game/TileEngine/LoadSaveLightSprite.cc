@@ -27,7 +27,7 @@ void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 	EXTR_U8(d, str_len)
 	Assert(d == endof(data));
 
-	char *template_name = MALLOCN(char, str_len);
+	char *template_name = new char[str_len]{};
 	FileRead(f, template_name, str_len);
 	template_name[str_len - 1] = '\0';
 
@@ -55,7 +55,7 @@ void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 			l->uiFlags |= LIGHT_NIGHTTIME;
 		}
 	}
-	MemFree(template_name);
+	delete[] template_name;
 }
 
 

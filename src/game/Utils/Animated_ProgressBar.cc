@@ -62,7 +62,7 @@ void RemoveLoadingScreenProgressBar()
 
 void CreateProgressBar(const UINT8 ubProgressBarID, const UINT16 x, const UINT16 y, const UINT16 w, const UINT16 h)
 {
-	PROGRESSBAR* const pNew = MALLOCZ(PROGRESSBAR);
+	PROGRESSBAR* const pNew = new PROGRESSBAR{};
 
 	if( pBar[ ubProgressBarID ] )
 		RemoveProgressBar( ubProgressBarID );
@@ -121,12 +121,12 @@ void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, SGPFont const font
 		return;
 	if( pCurr->swzTitle )
 	{
-		MemFree( pCurr->swzTitle );
+		delete[] pCurr->swzTitle;
 		pCurr->swzTitle = NULL;
 	}
 	if( pString && wcslen( pString ) )
 	{
-		pCurr->swzTitle = MALLOCN(wchar_t, wcslen(pString) + 1);
+		pCurr->swzTitle = new wchar_t[wcslen(pString) + 1]{};
 		wcscpy(pCurr->swzTitle, pString);
 	}
 	pCurr->usTitleFont = font;
@@ -156,8 +156,8 @@ void RemoveProgressBar( UINT8 ubID )
 	if( pBar[ubID] )
 	{
 		if( pBar[ubID]->swzTitle )
-			MemFree( pBar[ubID]->swzTitle );
-		MemFree( pBar[ubID] );
+			delete[] pBar[ubID]->swzTitle;
+		delete pBar[ubID];
 		pBar[ubID] = NULL;
 		return;
 	}

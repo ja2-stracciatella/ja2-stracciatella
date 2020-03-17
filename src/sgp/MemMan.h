@@ -32,7 +32,15 @@ template<typename T> static inline void FreeNull(T*& r) throw()
 	T* const p = r;
 	if (!p) return;
 	r = 0;
-	MemFree(p);
+	delete p;
+}
+
+template<typename T> static inline void FreeNullArray(T*& r) throw()
+{
+	T* const p = r;
+	if (!p) return;
+	r = 0;
+	delete[] p;
 }
 
 #define MALLOC(type)             (type*)MemAlloc(sizeof(type))

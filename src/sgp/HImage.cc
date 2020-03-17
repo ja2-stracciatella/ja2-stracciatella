@@ -170,7 +170,7 @@ UINT16* Create16BPPPalette(const SGPPaletteEntry* pPalette)
 {
 	Assert(pPalette != NULL);
 
-	UINT16* const p16BPPPalette = MALLOCN(UINT16, 256);
+	UINT16* const p16BPPPalette = new UINT16[256]{};
 
 	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{
@@ -212,7 +212,7 @@ UINT16* Create16BPPPaletteShaded(const SGPPaletteEntry* pPalette, UINT32 rscale,
 {
 	Assert(pPalette != NULL);
 
-	UINT16* const p16BPPPalette = MALLOCN(UINT16, 256);
+	UINT16* const p16BPPPalette = new UINT16[256]{};
 
 	for (UINT32 cnt = 0; cnt < 256; cnt++)
 	{

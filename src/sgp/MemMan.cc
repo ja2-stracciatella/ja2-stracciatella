@@ -59,3 +59,25 @@ void* XRealloc(void* const ptr, size_t const size)
 	if (!p) throw std::bad_alloc();
 	return p;
 }
+
+/// Allocate memory in C++.
+///
+/// This is a global replacement of `operator new`.
+/// The other versions of `operator new` call this replacement by default in C++11.
+///
+/// @see https://en.cppreference.com/w/cpp/memory/new/operator_new
+void* operator new(std::size_t size)
+{
+	return MemAlloc(size);
+}
+
+/// Deallocate memory in C++.
+///
+/// This is a global replacement of `operator delete`.
+/// The other versions of `operator delete` call this replacement by default in C++11.
+///
+/// @see https://en.cppreference.com/w/cpp/memory/new/operator_delete
+void operator delete(void* ptr) noexcept
+{
+	MemFree(ptr);
+}

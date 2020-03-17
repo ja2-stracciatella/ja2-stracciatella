@@ -156,9 +156,6 @@ void DisableAllTextFields(void);
 BOOLEAN EditingText(void);
 BOOLEAN TextInputMode(void);
 
-void InitClipboard(void);
-void KillClipboard(void);
-
 extern BOOLEAN gfNoScroll;
 
 #endif

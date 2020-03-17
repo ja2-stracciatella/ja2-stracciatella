@@ -544,7 +544,7 @@ static void FreeCorpsePalettes(ROTTING_CORPSE* pCorpse)
 	{
 		if ( pCorpse->pShades[ cnt ] != NULL )
 		{
-			MemFree( pCorpse->pShades[ cnt ] );
+			delete[] pCorpse->pShades[ cnt ];
 			pCorpse->pShades[ cnt ] = NULL;
 		}
 	}

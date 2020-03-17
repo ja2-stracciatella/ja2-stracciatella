@@ -127,8 +127,8 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	if (!fSectorLoaded) // if we are NOT currently in the right sector
 	{
 		//build an array of objects to be added
-		pObject       = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
-		pStolenObject = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
+		pObject       = new OBJECTTYPE[usNumberOfItems]{};
+		pStolenObject = new OBJECTTYPE[usNumberOfItems]{};
 	}
 
 	// check for potential theft
@@ -282,8 +282,8 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 		{
 			AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, INVISIBLE);
 		}
-		MemFree(pObject);
-		MemFree(pStolenObject);
+		delete[] pObject;
+		delete[] pStolenObject;
 	}
 
 	if (fPablosStoleSomething)
@@ -427,19 +427,16 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	else
 	{
 		// otherwise load the saved items from the item file and change the records of their locations
-		UINT32     uiNumWorldItems;
-		WORLDITEM* pTemp;
-		LoadWorldItemsFromTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, &uiNumWorldItems, &pTemp);
+		std::vector<WORLDITEM> pTemp = LoadWorldItemsFromTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z);
 
-		for (UINT32 uiLoop = 0; uiLoop < uiNumWorldItems; ++uiLoop)
+		for (WORLDITEM& wi : pTemp)
 		{
-			if (pTemp[uiLoop].sGridNo == PABLOS_STOLEN_DEST_GRIDNO)
+			if (wi.sGridNo == PABLOS_STOLEN_DEST_GRIDNO)
 			{
-				pTemp[uiLoop].sGridNo = BOBBYR_SHIPPING_DEST_GRIDNO;
+				wi.sGridNo = BOBBYR_SHIPPING_DEST_GRIDNO;
 			}
 		}
-		SaveWorldItemsToTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, uiNumWorldItems, pTemp);
-		MemFree(pTemp);
+		SaveWorldItemsToTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, pTemp);
 	}
 }
 
@@ -493,7 +490,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 	// money in D5b1 must be less than 30k
 	CFOR_EACH_WORLD_ITEM(wi)
 	{
-		OBJECTTYPE const& o = wi->o;
+		OBJECTTYPE const& o = wi.o;
 		if (o.usItem == MONEY) uiTotalCash += o.uiMoneyAmount;
 	}
 
@@ -543,7 +540,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		// remove all money from map
 		FOR_EACH_WORLD_ITEM(wi)
 		{
-			if (wi->o.usItem == MONEY) wi->fExists = FALSE; // remove!
+			if (wi.o.usItem == MONEY) wi.fExists = FALSE; // remove!
 		}
 	}
 	else if ( fKingpinDiscovers )
@@ -970,9 +967,9 @@ void CheckForMissingHospitalSupplies( void )
 	CFOR_EACH_WORLD_ITEM(wi)
 	{
 		// loop through all items, look for ownership
-		if (wi->o.usItem != OWNERSHIP || wi->o.ubOwnerCivGroup != DOCTORS_CIV_GROUP) continue;
+		if (wi.o.usItem != OWNERSHIP || wi.o.ubOwnerCivGroup != DOCTORS_CIV_GROUP) continue;
 
-		const ITEM_POOL* pItemPool = GetItemPool(wi->sGridNo, 0);
+		const ITEM_POOL* pItemPool = GetItemPool(wi.sGridNo, 0);
 		while( pItemPool )
 		{
 			OBJECTTYPE const& o = GetWorldItem(pItemPool->iItemIndex).o;
@@ -1048,14 +1045,14 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 	if( !fSectorLoaded )
 	{
 		//build an array of objects to be added
-		pObject = MALLOCNZ(OBJECTTYPE, usNumberOfItems);
+		pObject = new OBJECTTYPE[usNumberOfItems]{};
 	}
 
 
 	uiCount = 0;
 
 	//loop through the number of purchases
-	for( i=0; i< gpNewBobbyrShipments->ubNumberPurchases; i++)
+	for (i = 0; i < gpNewBobbyrShipments[0].ubNumberPurchases; i++)// FIXME shipment ubOrderNum instead of 0
 	{
 		ubItemsDelivered = gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].ubNumberPurchased;
 		usItem = gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].usItemIndex;
@@ -1088,7 +1085,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
 		AddItemsToUnLoadedSector(MEDUNA_ITEM_DROP_OFF_SECTOR_X, MEDUNA_ITEM_DROP_OFF_SECTOR_Y, MEDUNA_ITEM_DROP_OFF_SECTOR_Z, MEDUNA_ITEM_DROP_OFF_GRIDNO, uiCount, pObject, 0, 0, 0, INVISIBLE);
-		MemFree( pObject );
+		delete[] pObject;
 		pObject = NULL;
 	}
 

@@ -71,7 +71,7 @@ void BuildItemPoolList(void)
 
 		ShowItemCursor(i);
 
-		IPListNode* const n = MALLOC(IPListNode);
+		IPListNode* const n = new IPListNode{};
 		n->sGridNo = i;
 		n->next    = NULL;
 
@@ -94,7 +94,7 @@ void KillItemPoolList()
 	{
 		HideItemCursor( pIPCurr->sGridNo );
 		pIPHead = pIPHead->next;
-		MemFree( pIPCurr );
+		delete pIPCurr;
 		pIPCurr = pIPHead;
 	}
 	pIPHead = NULL;
@@ -274,7 +274,7 @@ void InitEditorItemsInfo(ToolbarMode const uiItemType)
 			return;
 	}
 	//Allocate memory to store all the item pointers.
-	eInfo.pusItemIndex = MALLOCN(UINT16, eInfo.sNumItems);
+	eInfo.pusItemIndex = new UINT16[eInfo.sNumItems]{};
 
 	//Disable the appropriate scroll buttons based on the saved scroll index if applicable
 	//Left most scroll position
@@ -557,7 +557,7 @@ void ClearEditorItemsInfo()
 	}
 	if( eInfo.pusItemIndex )
 	{
-		MemFree( eInfo.pusItemIndex );
+		delete[] eInfo.pusItemIndex;
 		eInfo.pusItemIndex = NULL;
 	}
 	DisableEditorRegion( ITEM_REGION_ID );
@@ -820,7 +820,7 @@ void AddSelectedItemToWorld(INT16 sGridNo)
 	//there isn't one, so we will add it now.
 	ShowItemCursor(sGridNo);
 
-	IPListNode* const n = MALLOC(IPListNode);
+	IPListNode* const n = new IPListNode{};
 	n->next            = 0;
 	n->sGridNo         = sGridNo;
 	*anchor            = n;
@@ -903,7 +903,7 @@ void DeleteSelectedItem()
 		}
 		if( gpEditingItemPool == gpItemPool )
 			gpEditingItemPool = NULL;
-		RemoveItemFromPool(&wi);
+		RemoveItemFromPool(wi);
 		gpItemPool = NULL;
 		//determine if there are still any items at this location
 		gpItemPool = GetItemPool(sGridNo, 0);
@@ -932,7 +932,7 @@ void DeleteSelectedItem()
 					}
 					//remove node
 					HideItemCursor( sGridNo );
-					MemFree( pIPCurr );
+					delete pIPCurr;
 					pIPCurr = NULL;
 					return;
 				}

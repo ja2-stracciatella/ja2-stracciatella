@@ -23,6 +23,7 @@
 #include <assert.h>
 #include <cmath>
 #include <climits>
+#include <vector>
 #include <iterator>
 #include <stdexcept>
 
@@ -127,8 +128,7 @@ static void DecreaseSoundMemoryUsedBySample(SAMPLETAG *sample) { guiSoundMemoryU
 
 static BOOLEAN fSoundSystemInit = FALSE; // Startup called
 static BOOLEAN gfEnableStartup  = TRUE;  // Allow hardware to start up
-static INT32*  gMixBuffer = NULL;
-static UINT32  guiMixLength = 0;
+static std::vector<INT32> gMixBuffer;
 
 SDL_AudioSpec gTargetAudioSpec;
 
@@ -174,12 +174,7 @@ void ShutdownSoundManager(void)
 	SoundEmptyCache();
 	SoundShutdownHardware();
 	fSoundSystemInit = FALSE;
-	if (gMixBuffer != NULL)
-	{
-		MemFree(gMixBuffer);
-		gMixBuffer = NULL;
-		guiMixLength = 0;
-	}
+	gMixBuffer.clear();
 }
 
 
@@ -733,7 +728,7 @@ static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8>& buf, SDL_AudioFormat forma
 		return NULL;
 	}
 
-	UINT8* sampledata = MALLOCN(UINT8, samplesize);
+	UINT8* sampledata = new UINT8[samplesize]{};
 	memcpy(sampledata, buf.data(), samplesize);
 
 	s->pData = sampledata;
@@ -859,7 +854,7 @@ static void SoundFreeSample(SAMPLETAG* s)
 	assert(s->uiInstances == 0);
 
 	DecreaseSoundMemoryUsedBySample(s);
-	MemFree(s->pData);
+	delete[] s->pData;
 	*s = SAMPLETAG{};
 }
 
@@ -892,14 +887,7 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 	UINT32 want_values = want_bytes / sizeof(INT16);
 	UINT32 want_samples = want_values / 2;
 
-	// INT16 data is being mixed as INT32, so it needs to be double the length of the stream
-	if (guiMixLength < want_values)
-	{
-		guiMixLength = want_values;
-		gMixBuffer = REALLOC(gMixBuffer, INT32, guiMixLength);
-	}
-
-	std::fill_n(gMixBuffer, want_values, 0);
+	gMixBuffer.assign(want_values, 0);
 
 	// Mix sounds
 	for (UINT32 i = 0; i < lengthof(pSoundList); i++)

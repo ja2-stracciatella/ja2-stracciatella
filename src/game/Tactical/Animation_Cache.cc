@@ -17,10 +17,10 @@ void InitAnimationCache(UINT16 const usSoldierID, AnimationSurfaceCacheType* con
 
 	// Allocate entries
 	SLOGD("Initializing anim cache surface for soldier %d", usSoldierID);
-	pAnimCache->usCachedSurfaces = MALLOCN(UINT16, guiCacheSize);
+	pAnimCache->usCachedSurfaces = new UINT16[guiCacheSize]{};
 
 	SLOGD("Initializing anim cache hit counter for soldier %d", usSoldierID);
-	pAnimCache->sCacheHits = MALLOCN(INT16, guiCacheSize);
+	pAnimCache->sCacheHits = new INT16[guiCacheSize]{};
 
 	// Zero entries
 	for ( cnt = 0; cnt < guiCacheSize; cnt++ )
@@ -41,13 +41,13 @@ void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimC
 	if ( pAnimCache->usCachedSurfaces!= NULL )
 	{
 		SLOGD("Removing Anim Cache surface for soldier %d", usSoldierID);
-		MemFree( pAnimCache->usCachedSurfaces );
+		delete[] pAnimCache->usCachedSurfaces;
 	}
 
 	if ( pAnimCache->sCacheHits != NULL )
 	{
 		SLOGD("Removing Anim Cache hit counter for soldier %d", usSoldierID);
-		MemFree( pAnimCache->sCacheHits );
+		delete[] pAnimCache->sCacheHits;
 	}
 }
 

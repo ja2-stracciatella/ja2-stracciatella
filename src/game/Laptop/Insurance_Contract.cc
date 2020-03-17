@@ -845,11 +845,9 @@ void AddLifeInsurancePayout(SOLDIERTYPE* const pSoldier)
 	MERCPROFILESTRUCT const& p = GetProfile(pSoldier->ubProfile);
 
 	//if we need to add more array elements
-	if( LaptopSaveInfo.ubNumberLifeInsurancePayouts <= LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed )
+	if (LaptopSaveInfo.pLifeInsurancePayouts.size() <= LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed)
 	{
-		LaptopSaveInfo.ubNumberLifeInsurancePayouts++;
-		LaptopSaveInfo.pLifeInsurancePayouts = REALLOC(LaptopSaveInfo.pLifeInsurancePayouts, LIFE_INSURANCE_PAYOUT, LaptopSaveInfo.ubNumberLifeInsurancePayouts);
-		LaptopSaveInfo.pLifeInsurancePayouts[ LaptopSaveInfo.ubNumberLifeInsurancePayouts - 1 ] = LIFE_INSURANCE_PAYOUT{};
+		LaptopSaveInfo.pLifeInsurancePayouts.push_back(LIFE_INSURANCE_PAYOUT{});
 	}
 
 	for( ubPayoutID = 0; ubPayoutID < LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed; ubPayoutID++ )
@@ -968,7 +966,6 @@ void EndInsuranceInvestigation( UINT8	ubPayoutID )
 }
 
 
-//void InsuranceContractPayLifeInsuranceForDeadMerc( LIFE_INSURANCE_PAYOUT *pPayoutStruct )
 void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 {
 	LIFE_INSURANCE_PAYOUT* const lip = &LaptopSaveInfo.pLifeInsurancePayouts[ubPayoutID];
@@ -993,9 +990,8 @@ void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 		AddEmailWithSpecialData(INSUR_PAYMENT, INSUR_PAYMENT_LENGTH, INSURANCE_COMPANY, GetWorldTotalMin(), lip->iPayOutPrice, lip->ubMercID);
 	}
 
-	LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed --;
+	LaptopSaveInfo.ubNumberLifeInsurancePayoutUsed--;
 	lip->fActive = FALSE;
-	//MemFree( pPayoutStruct );
 }
 
 
@@ -1003,11 +999,7 @@ void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 void InsuranceContractEndGameShutDown()
 {
 	//Free up the memory allocated to the insurance payouts
-	if( LaptopSaveInfo.pLifeInsurancePayouts )
-	{
-		MemFree( LaptopSaveInfo.pLifeInsurancePayouts );
-		LaptopSaveInfo.pLifeInsurancePayouts = NULL;
-	}
+	LaptopSaveInfo.pLifeInsurancePayouts.clear();
 }
 
 

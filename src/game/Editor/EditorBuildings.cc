@@ -146,7 +146,7 @@ void DeleteBuildingLayout()
 	{
 		curr = gpBuildingLayoutList;
 		gpBuildingLayoutList = gpBuildingLayoutList->next;
-		MemFree( curr );
+		delete curr;
 	}
 	gpBuildingLayoutList = NULL;
 	gsBuildingLayoutAnchorGridNo = -1;
@@ -181,7 +181,7 @@ static void BuildLayout(INT32 iMapIndex, INT32 iOffset)
 		curr = curr->next;
 	}
 	//Good, it hasn't, so process it and add it to the head of the list.
-	curr = MALLOC(BUILDINGLAYOUTNODE);
+	curr = new BUILDINGLAYOUTNODE{};
 	curr->sGridNo = (INT16)iMapIndex;
 	curr->next = gpBuildingLayoutList;
 	gpBuildingLayoutList = curr;
@@ -203,7 +203,7 @@ void CopyBuilding( INT32 iMapIndex )
 		return;
 	//Okay, a building does exist here to some undetermined capacity.
 	//Allocate the basic structure, then calculate the layout.  The head node is
-	gpBuildingLayoutList = MALLOC(BUILDINGLAYOUTNODE);
+	gpBuildingLayoutList = new BUILDINGLAYOUTNODE{};
 	gpBuildingLayoutList->sGridNo = (INT16)iMapIndex;
 	gpBuildingLayoutList->next = NULL;
 
@@ -437,7 +437,7 @@ static void ReplaceRoof(INT32 iMapIndex, UINT16 usRoofType)
 		curr = curr->next;
 	}
 	//Good, it hasn't, so process it and add it to the head of the list.
-	curr = MALLOC(ROOFNODE);
+	curr = new ROOFNODE{};
 	curr->iMapIndex = iMapIndex;
 	curr->next = gpRoofList;
 	gpRoofList = curr;
@@ -465,7 +465,7 @@ void ReplaceBuildingWithNewRoof( INT32 iMapIndex )
 	usRoofType = (UINT16)SelSingleNewRoof[ iCurBank ].uiObject;
 
 	//now start building a linked list of all nodes visited -- start the first node.
-	gpRoofList = MALLOC(ROOFNODE);
+	gpRoofList = new ROOFNODE{};
 	gpRoofList->iMapIndex = iMapIndex;
 	gpRoofList->next = 0;
 	RebuildRoofUsingFloorInfo( iMapIndex, usRoofType );
@@ -481,7 +481,7 @@ void ReplaceBuildingWithNewRoof( INT32 iMapIndex )
 	{
 		curr = gpRoofList;
 		gpRoofList = gpRoofList->next;
-		MemFree( curr );
+		delete curr;
 	}
 	gpRoofList = NULL;
 }
@@ -670,18 +670,18 @@ static void DoorToggleLockedCallback(GUI_BUTTON* btn, INT32 reason)
 
 void AddLockedDoorCursors()
 {
-	FOR_EACH_DOOR(i)
+	FOR_EACH_DOOR(d)
 	{
-		AddTopmostToHead(i->sGridNo, ROTATINGKEY1);
+		AddTopmostToHead(d.sGridNo, ROTATINGKEY1);
 	}
 }
 
 
 void RemoveLockedDoorCursors()
 {
-	FOR_EACH_DOOR(i)
+	FOR_EACH_DOOR(d)
 	{
-		GridNo const gridno = i->sGridNo;
+		GridNo const gridno = d.sGridNo;
 		for (LEVELNODE* k = gpWorldLevelData[gridno].pTopmostHead; k;)
 		{
 			LEVELNODE* const next = k->pNext;

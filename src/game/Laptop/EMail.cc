@@ -523,7 +523,7 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UI
 	// will add a message to the list of messages
 
 	// add new element onto list
-	Email* const pTempEmail = MALLOC(Email);
+	Email* const pTempEmail = new Email{};
 
 	// copy offset and length of the actual message in email.edt
 	pTempEmail->usOffset =(UINT16)iMessageOffset;
@@ -585,13 +585,13 @@ static void RemoveEmailMessage(Email* Mail)
 		Assert(pEmailList == Mail);
 		pEmailList = Next;
 	}
-	MemFree(Mail);
+	delete Mail;
 }
 
 
 static void AddEmailPage(void)
 {
-	Page* const p = MALLOC(Page);
+	Page* const p = new Page{};
 	FOR_EACH(Email*, i, p->Mail) *i = 0;
 	p->Next = NULL;
 
@@ -702,7 +702,7 @@ static void ClearPages(void)
 	for (Page* i = pPageList; i;)
 	{
 		Page* const next = i->Next;
-		MemFree(i);
+		delete i;
 		i = next;
 	}
 
@@ -1592,7 +1592,7 @@ static void ClearOutEmailMessageRecordsList(void)
 		// next element
 		pMessageRecordList = pMessageRecordList -> Next;
 
-		MemFree( pTempRecord );
+		delete pTempRecord;
 	}
 
 	for( iCounter = 0; iCounter < MAX_NUMBER_EMAIL_PAGES; iCounter++ )
@@ -1610,7 +1610,7 @@ static void ClearOutEmailMessageRecordsList(void)
 static void AddEmailRecordToList(wchar_t* const text)
 {
 	text[MAIL_STRING_SIZE-1] = L'\0';
-	Record* const e = MALLOC(Record);
+	Record* const e = new Record{};
 	e->Next = NULL;
 	wcscpy(e->pRecord, text);
 
@@ -2302,7 +2302,7 @@ void ShutDownEmailList()
 	{
 		Email* const del = i;
 		i = i->Next;
-		MemFree(del);
+		delete del;
 	}
 	ClearPages();
 }

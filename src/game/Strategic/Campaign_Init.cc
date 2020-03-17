@@ -22,7 +22,7 @@ UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail = NULL;
 
 static UNDERGROUND_SECTORINFO* NewUndergroundNode(UINT8 const x, UINT8 const y, UINT8 const z)
 {
-	UNDERGROUND_SECTORINFO* const u = MALLOCZ(UNDERGROUND_SECTORINFO);
+	UNDERGROUND_SECTORINFO* const u = new UNDERGROUND_SECTORINFO{};
 	u->ubSectorX = x;
 	u->ubSectorY = y;
 	u->ubSectorZ = z;
@@ -79,7 +79,7 @@ void TrashUndergroundSectorInfo()
 	{
 		curr = gpUndergroundSectorInfoHead;
 		gpUndergroundSectorInfoHead = gpUndergroundSectorInfoHead->next;
-		MemFree( curr );
+		delete curr;
 	}
 	gpUndergroundSectorInfoHead = NULL;
 	gpUndergroundSectorInfoTail = NULL;

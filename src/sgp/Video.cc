@@ -563,7 +563,7 @@ static void TakeScreenshot()
 	UINT16* buf = 0;
 	if (gusRedMask != 0x7C00 || gusGreenMask != 0x03E0 || gusBlueMask != 0x001F)
 	{
-		buf = MALLOCN(UINT16, SCREEN_WIDTH);
+		buf = new UINT16[SCREEN_WIDTH]{};
 	}
 
 	UINT16 const* src = static_cast<UINT16 const*>(ScreenBuffer->pixels);
@@ -581,7 +581,7 @@ static void TakeScreenshot()
 		}
 	}
 
-	if (buf) MemFree(buf);
+	if (buf) delete[] buf;
 
 	fclose(f);
 }

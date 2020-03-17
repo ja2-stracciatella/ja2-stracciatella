@@ -566,7 +566,7 @@ GUI_BUTTON::~GUI_BUTTON()
 		UnloadButtonImage(image);
 	}
 
-	if (string) MemFree(string);
+	if (string) delete[] string;
 }
 
 
@@ -574,7 +574,7 @@ static void CopyButtonText(GUI_BUTTON* b, const wchar_t* text)
 {
 	if (text == NULL || text[0] == L'\0') return;
 
-	wchar_t* const Buf = MALLOCN(wchar_t, wcslen(text) + 1);
+	wchar_t* const Buf = new wchar_t[wcslen(text) + 1]{};
 	wcscpy(Buf, text);
 	b->string = Buf;
 }
@@ -689,7 +689,7 @@ GUIButtonRef CreateLabel(const wchar_t* text, SGPFont const font, INT16 forecolo
 void GUI_BUTTON::SpecifyText(wchar_t const* const text)
 {
 	//free the previous strings memory if applicable
-	if (string) MemFree(string);
+	if (string) delete[] string;
 	string = NULL;
 
 	CopyButtonText(this, text);

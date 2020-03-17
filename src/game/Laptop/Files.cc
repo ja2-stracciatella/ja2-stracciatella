@@ -339,7 +339,7 @@ static void ProcessAndEnterAFilesRecord(const UINT8 ubCode, const BOOLEAN fRead)
 		if ((*anchor)->ubCode == ubCode) return;
 	}
 
-	FilesUnit* const f = MALLOC(FilesUnit);
+	FilesUnit* const f = new FilesUnit{};
 	f->Next   = NULL;
 	f->ubCode = ubCode;
 	f->fRead  = fRead;
@@ -410,7 +410,7 @@ static void ClearFilesList(void)
 	{
 		FilesUnit* const del = i;
 		i = i->Next;
-		MemFree(del);
+		delete del;
 	}
 }
 
@@ -658,9 +658,9 @@ static FileString* LoadStringsIntoFileList(char const* const filename, UINT32 of
 		wchar_t str[FILE_STRING_SIZE];
 		GCM->loadEncryptedString(f, str, lengthof(str) * offset, lengthof(str));
 
-		FileString* const fs = MALLOC(FileString);
+		FileString* const fs = new FileString{};
 		fs->Next    = 0;
-		fs->pString = MALLOCN(wchar_t, wcslen(str) + 1);
+		fs->pString = new wchar_t[wcslen(str) + 1]{};
 		wcscpy(fs->pString, str);
 
 		// Append node to list
@@ -679,8 +679,8 @@ namespace
 		{
 			FileString* const del = i;
 			i = i->Next;
-			MemFree(del->pString);
-			MemFree(del);
+			delete[] del->pString;
+			delete del;
 		}
 	}
 
@@ -855,7 +855,7 @@ static FileRecordWidth* CreateRecordWidth(INT32 iRecordNumber, INT32 iRecordWidt
 {
 	// allocs and inits a width info record for the multipage file viewer...this will tell the procedure that does inital computation on which record is the start of the current page
 	// how wide special records are ( ones that share space with pictures )
-	FileRecordWidth* const pTempRecord = MALLOC(FileRecordWidth);
+	FileRecordWidth* const pTempRecord = new FileRecordWidth{};
 	pTempRecord -> Next = NULL;
 	pTempRecord -> iRecordNumber = iRecordNumber;
 	pTempRecord -> iRecordWidth = iRecordWidth;
@@ -927,7 +927,7 @@ static void ClearOutWidthRecordsList(FileRecordWidth* i)
 	{
 		FileRecordWidth* const del = i;
 		i = i->Next;
-		MemFree(del);
+		delete del;
 	}
 }
 

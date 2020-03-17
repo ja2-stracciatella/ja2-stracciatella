@@ -634,19 +634,19 @@ void InitStrategicAI()
 	giPatrolArraySize = lengthof(gOrigPatrolGroup);
 	if (!gPatrolGroup)
 	{ // Allocate it (otherwise, we just overwrite it because the size never changes)
-		gPatrolGroup = MALLOCN(PATROL_GROUP, lengthof(gOrigPatrolGroup));
+		gPatrolGroup = new PATROL_GROUP[lengthof(gOrigPatrolGroup)]{};
 	}
 	memcpy(gPatrolGroup, gOrigPatrolGroup, sizeof(gOrigPatrolGroup));
-	gubPatrolReinforcementsDenied = MALLOCNZ(UINT8, giPatrolArraySize);
+	gubPatrolReinforcementsDenied = new UINT8[giPatrolArraySize]{};
 
 	// Initialize the garrison group definitions
 	giGarrisonArraySize = lengthof(gOrigGarrisonGroup);
 	if (!gGarrisonGroup)
 	{
-		gGarrisonGroup = MALLOCN(GARRISON_GROUP, lengthof(gOrigGarrisonGroup));
+		gGarrisonGroup = new GARRISON_GROUP[lengthof(gOrigGarrisonGroup)]{};
 	}
 	memcpy(gGarrisonGroup, gOrigGarrisonGroup, sizeof(gOrigGarrisonGroup));
-	gubGarrisonReinforcementsDenied = MALLOCNZ(UINT8, giGarrisonArraySize);
+	gubGarrisonReinforcementsDenied = new UINT8[giGarrisonArraySize]{};
 
 	// Modify initial force sizes?
 	INT32 const force_percentage = giForcePercentage;
@@ -836,22 +836,22 @@ void KillStrategicAI()
 {
 	if( gPatrolGroup )
 	{
-		MemFree( gPatrolGroup );
+		delete[] gPatrolGroup;
 		gPatrolGroup = NULL;
 	}
 	if( gGarrisonGroup )
 	{
-		MemFree( gGarrisonGroup );
+		delete[] gGarrisonGroup;
 		gGarrisonGroup = NULL;
 	}
 	if( gubPatrolReinforcementsDenied )
 	{
-		MemFree( gubPatrolReinforcementsDenied );
+		delete[] gubPatrolReinforcementsDenied;
 		gubPatrolReinforcementsDenied = NULL;
 	}
 	if( gubGarrisonReinforcementsDenied )
 	{
-		MemFree( gubGarrisonReinforcementsDenied );
+		delete[] gubGarrisonReinforcementsDenied;
 		gubGarrisonReinforcementsDenied = NULL;
 	}
 	DeleteAllStrategicEventsOfType( EVENT_EVALUATE_QUEEN_SITUATION );
@@ -2481,9 +2481,9 @@ void LoadStrategicAI(HWFILE const hFile)
 	//Restore the patrol group definitions
 	if( gPatrolGroup )
 	{
-		MemFree( gPatrolGroup );
+		delete[] gPatrolGroup;
 	}
-	gPatrolGroup = MALLOCN(PATROL_GROUP, giPatrolArraySize);
+	gPatrolGroup = new PATROL_GROUP[giPatrolArraySize]{};
 	FileRead(hFile, gPatrolGroup, giPatrolArraySize * sizeof(PATROL_GROUP));
 	i = SAVED_PATROL_GROUPS - giPatrolArraySize;
 	while( i-- )
@@ -2495,9 +2495,9 @@ void LoadStrategicAI(HWFILE const hFile)
 	//Load the garrison information!
 	if( gGarrisonGroup )
 	{
-		MemFree( gGarrisonGroup );
+		delete[] gGarrisonGroup;
 	}
-	gGarrisonGroup = MALLOCN(GARRISON_GROUP, giGarrisonArraySize);
+	gGarrisonGroup = new GARRISON_GROUP[giGarrisonArraySize]{};
 	FileRead(hFile, gGarrisonGroup, giGarrisonArraySize * sizeof(GARRISON_GROUP));
 	i = SAVED_GARRISON_GROUPS - giGarrisonArraySize;
 	while( i-- )
@@ -2508,19 +2508,19 @@ void LoadStrategicAI(HWFILE const hFile)
 	//Load the list of reinforcement patrol points.
 	if( gubPatrolReinforcementsDenied )
 	{
-		MemFree( gubPatrolReinforcementsDenied );
+		delete[] gubPatrolReinforcementsDenied;
 		gubPatrolReinforcementsDenied = NULL;
 	}
-	gubPatrolReinforcementsDenied = MALLOCN(UINT8, giPatrolArraySize);
+	gubPatrolReinforcementsDenied = new UINT8[giPatrolArraySize]{};
 	FileRead(hFile, gubPatrolReinforcementsDenied, giPatrolArraySize);
 
 	//Load the list of reinforcement garrison points.
 	if( gubGarrisonReinforcementsDenied )
 	{
-		MemFree( gubGarrisonReinforcementsDenied );
+		delete[] gubGarrisonReinforcementsDenied;
 		gubGarrisonReinforcementsDenied = NULL;
 	}
-	gubGarrisonReinforcementsDenied = MALLOCN(UINT8, giGarrisonArraySize);
+	gubGarrisonReinforcementsDenied = new UINT8[giGarrisonArraySize]{};
 	FileRead(hFile, gubGarrisonReinforcementsDenied, giGarrisonArraySize);
 
 	if( ubSAIVersion < 6 )

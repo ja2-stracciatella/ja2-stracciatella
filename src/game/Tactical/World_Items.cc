@@ -27,37 +27,28 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <vector>
 
 //Global dynamic array of all of the items in a loaded map.
-WORLDITEM *gWorldItems = NULL;
-UINT32    guiNumWorldItems = 0;
+std::vector<WORLDITEM> gWorldItems;
 
-WORLDBOMB *gWorldBombs = NULL;
-UINT32    guiNumWorldBombs = 0;
+std::vector<WORLDBOMB> gWorldBombs;
 
 
 static INT32 GetFreeWorldBombIndex(void)
 {
-	UINT32    uiCount;
-	WORLDBOMB *newWorldBombs;
-	UINT32    uiOldNumWorldBombs;
+	INT32 idx;
 
-	for(uiCount=0; uiCount < guiNumWorldBombs; uiCount++)
+	Assert(gWorldBombs.size() <= INT32_MAX);
+	for (idx = 0; idx < static_cast<INT32>(gWorldBombs.size()); idx++)
 	{
-		if (!gWorldBombs[uiCount].fExists) return (INT32)uiCount;
+		if (!gWorldBombs[idx].fExists) return idx;
 	}
 
-	uiOldNumWorldBombs = guiNumWorldBombs;
-	guiNumWorldBombs += 10;
-	//Allocate new table with max+10 items.
-	newWorldBombs = REALLOC(gWorldBombs, WORLDBOMB, guiNumWorldBombs);
-
-	//Clear the rest of the new array
-	std::fill_n(newWorldBombs + uiOldNumWorldBombs, guiNumWorldBombs - uiOldNumWorldBombs, WORLDBOMB{});
-	gWorldBombs = newWorldBombs;
+	gWorldBombs.push_back(WORLDBOMB{});
 
 	// Return uiCount.....
-	return( uiCount );
+	return( idx );
 }
 
 
@@ -81,9 +72,9 @@ static void RemoveBombFromWorldByItemIndex(INT32 iItemIndex)
 	// remove the world bomb from the table.
 	FOR_EACH_WORLD_BOMB(wb)
 	{
-		if (wb->iItemIndex != iItemIndex) continue;
+		if (wb.iItemIndex != iItemIndex) continue;
 
-		wb->fExists = FALSE;
+		wb.fExists = FALSE;
 		return;
 	}
 }
@@ -93,10 +84,10 @@ INT32 FindWorldItemForBombInGridNo(const INT16 sGridNo, const INT8 bLevel)
 {
 	CFOR_EACH_WORLD_BOMB(wb)
 	{
-		WORLDITEM const& wi = GetWorldItem(wb->iItemIndex);
+		WORLDITEM const& wi = GetWorldItem(wb.iItemIndex);
 		if (wi.sGridNo != sGridNo || wi.ubLevel != bLevel) continue;
 
-		return wb->iItemIndex;
+		return wb.iItemIndex;
 	}
 	throw std::logic_error("Cannot find bomb item");
 }
@@ -107,7 +98,7 @@ void FindPanicBombsAndTriggers(void)
 	// This function searches the bomb table to find panic-trigger-tuned bombs and triggers
 	CFOR_EACH_WORLD_BOMB(wb)
 	{
-		WORLDITEM  const& wi = GetWorldItem(wb->iItemIndex);
+		WORLDITEM  const& wi = GetWorldItem(wb.iItemIndex);
 		OBJECTTYPE const& o  = wi.o;
 
 		INT8 bPanicIndex;
@@ -155,26 +146,16 @@ void FindPanicBombsAndTriggers(void)
 
 static INT32 GetFreeWorldItemIndex(void)
 {
-	UINT32 uiCount;
-	WORLDITEM *newWorldItems;
-	UINT32	uiOldNumWorldItems;
+	INT32 iItemIndex;
 
-	for(uiCount=0; uiCount < guiNumWorldItems; uiCount++)
+	Assert(gWorldItems.size() <= INT32_MAX);
+	for (iItemIndex = 0; iItemIndex < static_cast<INT32>(gWorldItems.size()); iItemIndex++)
 	{
-		if (!gWorldItems[uiCount].fExists) return (INT32)uiCount;
+		if (!gWorldItems[iItemIndex].fExists) return iItemIndex;
 	}
 
-	uiOldNumWorldItems = guiNumWorldItems;
-	guiNumWorldItems += 10;
-	//Allocate new table with max+10 items.
-	newWorldItems = REALLOC(gWorldItems, WORLDITEM, guiNumWorldItems);
-
-	//Clear the rest of the new array
-	std::fill_n(newWorldItems + uiOldNumWorldItems, guiNumWorldItems - uiOldNumWorldItems, WORLDITEM{});
-	gWorldItems = newWorldItems;
-
-	// Return uiCount.....
-	return( uiCount );
+	gWorldItems.push_back(WORLDITEM{});
+	return iItemIndex;
 }
 
 
@@ -234,22 +215,12 @@ void RemoveItemFromWorld(const INT32 iItemIndex)
 
 void TrashWorldItems()
 {
-	if( gWorldItems )
+	FOR_EACH_WORLD_ITEM(wi)
 	{
-		FOR_EACH_WORLD_ITEM(wi)
-		{
-			RemoveItemFromPool(wi);
-		}
-		MemFree( gWorldItems );
-		gWorldItems = NULL;
-		guiNumWorldItems = 0;
+		RemoveItemFromPool(wi);
 	}
-	if ( gWorldBombs )
-	{
-		MemFree( gWorldBombs );
-		gWorldBombs = NULL;
-		guiNumWorldBombs = 0;
-	}
+	gWorldItems.clear();
+	gWorldBombs.clear();
 }
 
 
@@ -258,7 +229,7 @@ void SaveWorldItemsToMap(HWFILE const f)
 	UINT32 const n_actual_world_items = GetNumUsedWorldItems();
 	FileWrite(f, &n_actual_world_items, sizeof(n_actual_world_items));
 
-	CFOR_EACH_WORLD_ITEM(wi) FileWrite(f, wi, sizeof(WORLDITEM));
+	CFOR_EACH_WORLD_ITEM(wi) FileWrite(f, &wi, sizeof(WORLDITEM));
 }
 
 
@@ -388,9 +359,9 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 		CFOR_EACH_WORLD_ITEM(wi)
 		{
 			// loop through all items, look for ownership
-			if (wi->o.usItem != OWNERSHIP) continue;
+			if (wi.o.usItem != OWNERSHIP) continue;
 
-			const ProfileID pid = wi->o.ubOwnerProfile;
+			const ProfileID pid = wi.o.ubOwnerProfile;
 			// if owner is a terrorist
 			if (!IsProfileATerrorist(pid)) continue;
 
@@ -399,11 +370,11 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 			if (p.sSectorX == gWorldSectorX && p.sSectorY == gWorldSectorY) continue;
 
 			// then all items in this location should be deleted
-			const INT16 sGridNo = wi->sGridNo;
-			const UINT8 ubLevel = wi->ubLevel;
+			const INT16 sGridNo = wi.sGridNo;
+			const UINT8 ubLevel = wi.ubLevel;
 			FOR_EACH_WORLD_ITEM(owned_item)
 			{
-				if (owned_item->sGridNo == sGridNo && owned_item->ubLevel == ubLevel)
+				if (owned_item.sGridNo == sGridNo && owned_item.ubLevel == ubLevel)
 				{
 					RemoveItemFromPool(owned_item);
 				}
@@ -428,19 +399,19 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 	CFOR_EACH_WORLD_ITEM(wi)
 	{
 		// Look for items belonging to the queen
-		if (wi->o.usItem         != OWNERSHIP) continue;
-		if (wi->o.ubOwnerProfile != QUEEN)     continue;
+		if (wi.o.usItem         != OWNERSHIP) continue;
+		if (wi.o.ubOwnerProfile != QUEEN)     continue;
 
 		// Delete all items on this tile
-		const INT16 sGridNo = wi->sGridNo;
-		const UINT8 ubLevel = wi->ubLevel;
+		const INT16 sGridNo = wi.sGridNo;
+		const UINT8 ubLevel = wi.ubLevel;
 		FOR_EACH_WORLD_ITEM(item)
 		{
-			if (item->sGridNo != sGridNo) continue;
-			if (item->ubLevel != ubLevel) continue;
+			if (item.sGridNo != sGridNo) continue;
+			if (item.ubLevel != ubLevel) continue;
 
 			// Upgrade equipment
-			switch (item->o.usItem)
+			switch (item.o.usItem)
 			{
 				case AUTO_ROCKET_RIFLE:
 				{
@@ -463,13 +434,13 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 
 
 // Refresh item pools
-void RefreshWorldItemsIntoItemPools(const WORLDITEM* const items, const INT32 item_count)
+void RefreshWorldItemsIntoItemPools(const std::vector<WORLDITEM>& items)
 {
-	for (const WORLDITEM* i = items; i != items + item_count; ++i)
+	for (const WORLDITEM& wi : items)
 	{
-		if (!i->fExists) continue;
-		OBJECTTYPE o = i->o; // XXX AddItemToPool() may alter the object
-		AddItemToPool(i->sGridNo, &o, static_cast<Visibility>(i->bVisible), i->ubLevel, i->usFlags, i->bRenderZHeightAboveLevel);
+		if (!wi.fExists) continue;
+		OBJECTTYPE o = wi.o; // XXX AddItemToPool() may alter the object
+		AddItemToPool(wi.sGridNo, &o, static_cast<Visibility>(wi.bVisible), wi.ubLevel, wi.usFlags, wi.bRenderZHeightAboveLevel);
 	}
 }
 

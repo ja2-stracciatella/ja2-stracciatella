@@ -179,17 +179,17 @@ namespace
 			DB_STRUCTURE_REF const* const end = sr + f->usNumberOfStructures;
 			for (DB_STRUCTURE_REF* i = sr; i != end; ++i)
 			{
-				if (i->ppTile) MemFree(i->ppTile);
+				if (i->ppTile) delete[] i->ppTile;
 			}
-			MemFree(sr);
+			delete[] sr;
 		}
-		if (f->pubStructureData) MemFree(f->pubStructureData);
+		if (f->pubStructureData) delete[] f->pubStructureData;
 		if (f->pAuxData)
 		{
-			MemFree(f->pAuxData);
-			if (f->pTileLocData) MemFree(f->pTileLocData);
+			delete[] f->pAuxData;
+			if (f->pTileLocData) delete[] f->pTileLocData;
 		}
-		MemFree(f);
+		delete f;
 	}
 }
 
@@ -298,7 +298,7 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32
 { /* Based on a file chunk, creates all the dynamic arrays for the structure
 	 * definitions contained within */
 	UINT8*                  pCurrent        = pFileRef->pubStructureData;
-	DB_STRUCTURE_REF* const pDBStructureRef = MALLOCNZ(DB_STRUCTURE_REF, pFileRef->usNumberOfStructures);
+	DB_STRUCTURE_REF* const pDBStructureRef = new DB_STRUCTURE_REF[pFileRef->usNumberOfStructures]{};
 	pFileRef->pDBStructureRef = pDBStructureRef;
 	for (UINT16 usLoop = 0; usLoop < pFileRef->usNumberOfStructuresStored; ++usLoop)
 	{
@@ -311,7 +311,7 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32
 		pCurrent   += sizeof(DB_STRUCTURE);
 		uiDataSize -= sizeof(DB_STRUCTURE);
 
-		DB_STRUCTURE_TILE** const tiles       = MALLOCN(DB_STRUCTURE_TILE*, dbs->ubNumberOfTiles);
+		DB_STRUCTURE_TILE** const tiles       = new DB_STRUCTURE_TILE*[dbs->ubNumberOfTiles]{};
 		UINT16              const usIndex     = dbs->usStructureNumber;
 		pDBStructureRef[usIndex].pDBStructure = dbs;
 		pDBStructureRef[usIndex].ppTile       = tiles;
@@ -343,7 +343,7 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32
 
 STRUCTURE_FILE_REF* LoadStructureFile(char const* const filename)
 { // NB should be passed in expected number of structures so we can check equality
-	SGP::AutoObj<STRUCTURE_FILE_REF, FreeStructureFileRef> sfr(MALLOCZ(STRUCTURE_FILE_REF));
+	SGP::AutoObj<STRUCTURE_FILE_REF, FreeStructureFileRef> sfr(new STRUCTURE_FILE_REF{});
 	UINT32 data_size = 0;
 	LoadStructureData(filename, sfr, &data_size);
 	if (sfr->pubStructureData) CreateFileStructureArrays(sfr, data_size);
@@ -365,7 +365,7 @@ static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF const* const pDBStructu
 	DB_STRUCTURE const* const pDBStructure = pDBStructureRef->pDBStructure;
 	DB_STRUCTURE_TILE*  const pTile        = pDBStructureRef->ppTile[ubTileNum];
 
-	STRUCTURE* const pStructure = MALLOCZ(STRUCTURE);
+	STRUCTURE* const pStructure = new STRUCTURE{};
 
 	pStructure->fFlags          = pDBStructure->fFlags;
 	pStructure->pShape          = &pTile->Shape;
@@ -674,7 +674,7 @@ try
 			// Free allocated memory and abort!
 			for (UINT8 k = 0; k < i; ++k)
 			{
-				MemFree(structures[k]);
+				delete structures[k];
 			}
 			return 0;
 		}
@@ -787,7 +787,7 @@ static void DeleteStructureFromTile(MAP_ELEMENT* const me, STRUCTURE* const s)
 	// only one allowed in a tile, so we are safe to do this
 	if (s->fFlags & STRUCTURE_OPENABLE) me->uiFlags &= ~MAPELEMENT_INTERACTIVETILE;
 
-	MemFree(s);
+	delete s;
 }
 
 
@@ -1489,7 +1489,7 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 	if (!fFound) return;
 
 	UINT         const zcount = hVObject->SubregionCount();
-	ZStripInfo** const zinfo  = MALLOCNZ(ZStripInfo*, zcount);
+	ZStripInfo** const zinfo  = new ZStripInfo*[zcount]{};
 
 	INT16 sSTIStep;
 	if (fFromAnimation)
@@ -1551,7 +1551,7 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 				// ATE: We allow SLIDING DOORS of 2 tile sizes...
 				if (!(pDBStructure->fFlags & STRUCTURE_ANYDOOR) || pDBStructure->fFlags & STRUCTURE_SLIDINGDOOR)
 				{
-					ZStripInfo* const pCurr = MALLOC(ZStripInfo);
+					ZStripInfo* const pCurr = new ZStripInfo{};
 					Assert(uiDestVoIndex < zcount);
 					zinfo[uiDestVoIndex] = pCurr;
 
@@ -1671,7 +1671,7 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 
 					// now create the array!
 					pCurr->ubNumberOfZChanges = ubNumIncreasing + ubNumStable + ubNumDecreasing;
-					pCurr->pbZChange = MALLOCN(INT8, pCurr->ubNumberOfZChanges);
+					pCurr->pbZChange = new INT8[pCurr->ubNumberOfZChanges]{};
 
 					UINT8 ubLoop2;
 					for (ubLoop2 = 0; ubLoop2 < ubNumIncreasing; ubLoop2++)
@@ -1708,10 +1708,10 @@ void AddZStripInfoToVObject(HVOBJECT const hVObject, STRUCTURE_FILE_REF const* c
 		{
 			if (zinfo[ubLoop2] != NULL)
 			{
-				MemFree(zinfo[uiLoop]);
+				delete zinfo[uiLoop];
 			}
 		}
-		MemFree(zinfo);
+		delete[] zinfo;
 		throw;
 	}
 

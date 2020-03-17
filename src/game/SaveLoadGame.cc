@@ -1600,7 +1600,7 @@ void LoadMercPath(HWFILE const hFile, PathSt** const head)
 	PathSt* path = NULL;
 	for (UINT32 cnt = 0; cnt < uiNumOfNodes; ++cnt)
 	{
-		PathSt* const n = MALLOC(PathSt);
+		PathSt* const n = new PathSt{};
 
 		BYTE data[20];
 		FileRead(hFile, data, sizeof(data));
@@ -2303,25 +2303,22 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 
 static void HandleOldBobbyRMailOrders(void)
 {
-	INT32 iCnt;
 	INT32	iNewListCnt=0;
 
 	if( LaptopSaveInfo.usNumberOfBobbyRayOrderUsed != 0 )
 	{
-		gpNewBobbyrShipments = MALLOCN(NewBobbyRayOrderStruct, LaptopSaveInfo.usNumberOfBobbyRayOrderUsed);
-
-		giNumberOfNewBobbyRShipment = LaptopSaveInfo.usNumberOfBobbyRayOrderUsed;
+		gpNewBobbyrShipments.assign(LaptopSaveInfo.usNumberOfBobbyRayOrderUsed, NewBobbyRayOrderStruct{});
 
 		//loop through and add the old items to the new list
-		for( iCnt=0; iCnt< LaptopSaveInfo.usNumberOfBobbyRayOrderItems; iCnt++ )
+		for (size_t iCnt = 0; iCnt < LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size(); iCnt++)
 		{
 			//if this slot is used
 			if( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[iCnt].fActive )
 			{
 				//copy over the purchase info
-				memcpy( gpNewBobbyrShipments[ iNewListCnt ].BobbyRayPurchase,
-								LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[iCnt].BobbyRayPurchase,
-								sizeof( BobbyRayPurchaseStruct ) * MAX_PURCHASE_AMOUNT );
+				std::copy_n(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[iCnt].BobbyRayPurchase,
+					MAX_PURCHASE_AMOUNT,
+					gpNewBobbyrShipments[ iNewListCnt ].BobbyRayPurchase);
 
 				gpNewBobbyrShipments[ iNewListCnt ].fActive = TRUE;
 				gpNewBobbyrShipments[ iNewListCnt ].ubDeliveryLoc = BR_DRASSEN;
@@ -2337,8 +2334,7 @@ static void HandleOldBobbyRMailOrders(void)
 
 		//Clear out the old list
 		LaptopSaveInfo.usNumberOfBobbyRayOrderUsed = 0;
-		MemFree( LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray );
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray = NULL;
+		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.clear();
 	}
 }
 

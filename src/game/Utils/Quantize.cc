@@ -27,7 +27,7 @@ static NODE* g_reducible_nodes[COLOUR_BITS];
 
 static NODE* CreateNode(const UINT level)
 {
-	NODE* const node = MALLOCZ(NODE);
+	NODE* const node = new NODE{};
 
 	node->bIsLeaf = level == COLOUR_BITS;
 	if (node->bIsLeaf)
@@ -94,7 +94,7 @@ static void ReduceTree(void)
 			nGreenSum += child->nGreenSum;
 			nBlueSum  += child->nBlueSum;
 			node->nPixelCount += child->nPixelCount;
-			free(child);
+			delete child;
 			node->pChild[i] = NULL;
 			++nChildren;
 		}
@@ -150,7 +150,7 @@ static void DeleteTree(NODE* const node)
 		NODE* const child = node->pChild[i];
 		if (child != NULL) DeleteTree(child);
 	}
-	free(node);
+	delete node;
 }
 
 

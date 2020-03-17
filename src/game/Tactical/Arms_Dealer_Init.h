@@ -5,6 +5,8 @@
 #include "Item_Types.h"
 #include "JA2Types.h"
 
+#include <vector>
+
 
 //the enums for the different kinds of arms dealers
 enum
@@ -172,8 +174,7 @@ struct DEALER_ITEM_HEADER
 	UINT8   ubPerfectItems; // non-special (perfect) items held by dealer
 	UINT8   ubStrayAmmo; // partially-depleted ammo mags are stored here as #bullets, and can be converted to full packs
 
-	UINT8   ubElementsAlloced; // number of DEALER_SPECIAL_ITEM array elements alloced for the special item array
-	DEALER_SPECIAL_ITEM *SpecialItem; // dynamic array of special items with this same item index
+	std::vector<DEALER_SPECIAL_ITEM> SpecialItem; // dynamic array of special items with this same item index
 
 	UINT32  uiOrderArrivalTime; // Day the items ordered will arrive on.  It's UINT32 in case we change this to minutes.
 	UINT8   ubQtyOnOrder; // The number of items currently on order

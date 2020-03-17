@@ -128,7 +128,7 @@ UINT8 gubSectorIDOfCreatureAttack = 0;
 static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8 ubCreatureHabitat)
 {
 	UINT8 ubSectorX, ubSectorY;
-	CREATURE_DIRECTIVE* const curr = MALLOC(CREATURE_DIRECTIVE);
+	CREATURE_DIRECTIVE* const curr = new CREATURE_DIRECTIVE{};
 	ubSectorX = (UINT8)((ubSectorID % 16) + 1);
 	ubSectorY = (UINT8)((ubSectorID / 16) + 1);
 	curr->pLevel = FindUnderGroundSector( ubSectorX, ubSectorY, ubSectorZ );
@@ -136,7 +136,7 @@ static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8
 	{
 		SLOGA("Could not find underground sector node (%c%db_%d) that should exist.",
 			ubSectorY + 'A' - 1, ubSectorX, ubSectorZ);
-		MemFree(curr);
+		delete curr;
 		return 0;
 	}
 
@@ -818,7 +818,7 @@ static void DeleteDirectiveNode(CREATURE_DIRECTIVE** node)
 {
 	if( (*node)->next )
 		DeleteDirectiveNode( &((*node)->next) );
-	MemFree( *node );
+	delete *node;
 	*node = NULL;
 }
 

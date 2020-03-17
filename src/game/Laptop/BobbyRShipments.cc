@@ -13,6 +13,7 @@
 #include "Video.h"
 #include "VSurface.h"
 #include "Font_Control.h"
+#include "Debug.h"
 
 
 #define BOBBYR_SHIPMENT_TITLE_TEXT_FONT		FONT14ARIAL
@@ -110,12 +111,13 @@ void EnterBobbyRShipments()
 	giBobbyRShipmentSelectedShipment = -1;
 
 	//if there are shipments
-	if( giNumberOfNewBobbyRShipment != 0 )
+	if (gpNewBobbyrShipments.size() != 0)
 	{
 		INT32 iCnt;
 
 		//get the first shipment #
-		for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
+		Assert(gpNewBobbyrShipments.size() <= INT32_MAX);
+		for (iCnt = 0; iCnt < static_cast<INT32>(gpNewBobbyrShipments.size()); iCnt++)
 		{
 			if( gpNewBobbyrShipments[iCnt].fActive )
 				giBobbyRShipmentSelectedShipment = iCnt;
@@ -337,7 +339,8 @@ static void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 			giBobbyRShipmentSelectedShipment = -1;
 
 			//loop through and get the "x" iSlotID shipment
-			for( iCnt=0; iCnt<giNumberOfNewBobbyRShipment; iCnt++ )
+			Assert(gpNewBobbyrShipments.size() <= INT32_MAX);
+			for (iCnt = 0; iCnt < static_cast<INT32>(gpNewBobbyrShipments.size()); iCnt++)
 			{
 				if( gpNewBobbyrShipments[iCnt].fActive )
 				{
@@ -358,8 +361,9 @@ static void SelectPreviousShipmentsRegionCallBack(MOUSE_REGION* pRegion, INT32 i
 
 static INT32 CountNumberValidShipmentForTheShipmentsPage(void)
 {
-	if( giNumberOfNewBobbyRShipment > BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS )
+	Assert(gpNewBobbyrShipments.size() <= INT32_MAX);
+	if (gpNewBobbyrShipments.size() > BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS)
 		return( BOBBYR_SHIPMENT_NUM_PREVIOUS_SHIPMENTS );
 	else
-		return( giNumberOfNewBobbyRShipment );
+		return( static_cast<INT32>(gpNewBobbyrShipments.size()) );
 }

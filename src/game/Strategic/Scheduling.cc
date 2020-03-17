@@ -51,7 +51,7 @@ void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode )
 {
 	SCHEDULENODE *curr;
 	curr = gpScheduleList;
-	gpScheduleList = MALLOC(SCHEDULENODE);
+	gpScheduleList = new SCHEDULENODE{};
 	*gpScheduleList = *pSchedule;
 	gpScheduleList->next = curr;
 	gubScheduleID++;
@@ -94,7 +94,7 @@ void DestroyAllSchedules()
 	{
 		curr = gpScheduleList;
 		gpScheduleList = gpScheduleList->next;
-		MemFree( curr );
+		delete curr;
 	}
 	gpScheduleList = NULL;
 	gubScheduleID = 0;
@@ -110,7 +110,7 @@ void DestroyAllSchedulesWithoutDestroyingEvents()
 	{
 		curr = gpScheduleList;
 		gpScheduleList = gpScheduleList->next;
-		MemFree( curr );
+		delete curr;
 	}
 	gpScheduleList = NULL;
 	gubScheduleID = 0;
@@ -146,7 +146,7 @@ void DeleteSchedule( UINT8 ubScheduleID )
 	if( temp )
 	{
 		DeleteStrategicEvent( EVENT_PROCESS_TACTICAL_SCHEDULE, temp->ubScheduleID );
-		MemFree( temp );
+		delete temp;
 	}
 }
 
@@ -306,7 +306,7 @@ void PrepareSchedulesForEditorEntry()
 			curr->soldier->ubScheduleID = 0;
 			temp = curr;
 			curr = curr->next;
-			MemFree( temp );
+			delete temp;
 			gubScheduleID--;
 		}
 		else
@@ -348,7 +348,7 @@ void LoadSchedules(HWFILE const f)
 		BYTE data[36];
 		FileRead(f, data, sizeof(data));
 
-		SCHEDULENODE* const node = MALLOCZ(SCHEDULENODE);
+		SCHEDULENODE* const node = new SCHEDULENODE{};
 
 		BYTE const* d = data;
 		EXTR_SKIP(d, 4)
@@ -385,7 +385,7 @@ void LoadSchedulesFromSave(HWFILE const f)
 		BYTE data[36];
 		FileRead(f, data, sizeof(data));
 
-		SCHEDULENODE* const node = MALLOCZ(SCHEDULENODE);
+		SCHEDULENODE* const node = new SCHEDULENODE{};
 
 		BYTE const* s = data;
 		EXTR_SKIP(   s, 4)
@@ -887,7 +887,7 @@ static void PostDefaultSchedule(SOLDIERTYPE* pSoldier)
 	//Create a new node at the head of the list.  The head will become the new schedule
 	//we are about to add.
 	curr = gpScheduleList;
-	gpScheduleList = MALLOCZ(SCHEDULENODE);
+	gpScheduleList = new SCHEDULENODE{};
 	gpScheduleList->next = curr;
 	gubScheduleID++;
 	//Assign all of the links

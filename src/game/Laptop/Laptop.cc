@@ -3326,10 +3326,13 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 		d = InjectStoreInvetory(d, *i);
 	}
 	INJ_SKIP( d, 6)
-	INJ_U8(   d, l.usNumberOfBobbyRayOrderItems)
+	Assert(l.BobbyRayOrdersOnDeliveryArray.size() <= UINT8_MAX);
+	INJ_U8(   d, static_cast<UINT8>(l.BobbyRayOrdersOnDeliveryArray.size()))
 	INJ_U8(   d, l.usNumberOfBobbyRayOrderUsed)
 	INJ_SKIP( d, 6)
-	INJ_U8(   d, l.ubNumberLifeInsurancePayouts)
+	Assert(l.pLifeInsurancePayouts.size() <= UINT8_MAX);
+	INJ_U8(   d, static_cast<UINT8>(l.pLifeInsurancePayouts.size()))
+	Assert(l.ubNumberLifeInsurancePayoutUsed <= l.pLifeInsurancePayouts.size());
 	INJ_U8(   d, l.ubNumberLifeInsurancePayoutUsed)
 	INJ_BOOL( d, l.fBobbyRSiteCanBeAccessed)
 	INJ_U8(   d, l.ubPlayerBeenToMercSiteStatus)
@@ -3363,14 +3366,13 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 
 	if (l.usNumberOfBobbyRayOrderUsed != 0)
 	{ // There is anything in the Bobby Ray Orders on delivery
-		UINT32 const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray) * l.usNumberOfBobbyRayOrderItems;
-		FileWrite(f, l.BobbyRayOrdersOnDeliveryArray, size);
+		size_t const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray.data()) * l.BobbyRayOrdersOnDeliveryArray.size();
+		FileWrite(f, l.BobbyRayOrdersOnDeliveryArray.data(), size);
 	}
 
 	if (l.ubNumberLifeInsurancePayoutUsed != 0)
 	{ // There are any insurance payouts in progress
-		UINT32 const size = sizeof(*l.pLifeInsurancePayouts) * l.ubNumberLifeInsurancePayouts;
-		FileWrite(f, l.pLifeInsurancePayouts, size);
+		FileWrite(f, l.pLifeInsurancePayouts.data(), sizeof(LIFE_INSURANCE_PAYOUT) * l.pLifeInsurancePayouts.size());
 	}
 }
 
@@ -3379,16 +3381,9 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 {
 	LaptopSaveInfoStruct& l = LaptopSaveInfo;
 
-	if (l.usNumberOfBobbyRayOrderItems)
-	{ // There is memory allocated for the BobbyR orders
-		FreeNull(l.BobbyRayOrdersOnDeliveryArray);
-	}
+	l.BobbyRayOrdersOnDeliveryArray.clear();
 
-	if (l.ubNumberLifeInsurancePayouts)
-	{ // There is memory allocated for life insurance payouts
-		Assert(l.pLifeInsurancePayouts);
-		FreeNull(l.pLifeInsurancePayouts);
-	}
+	l.pLifeInsurancePayouts.clear();
 
 	BYTE data[7440];
 	FileRead(f, data, sizeof(data));
@@ -3418,11 +3413,14 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 		d = ExtractStoreInvetory(d, *i);
 	}
 	EXTR_SKIP( d, 6)
-	EXTR_U8(   d, l.usNumberOfBobbyRayOrderItems)
+	UINT8 BobbyRayOrdersOnDeliveryArraySize;
+	EXTR_U8(   d, BobbyRayOrdersOnDeliveryArraySize)
 	EXTR_U8(   d, l.usNumberOfBobbyRayOrderUsed)
 	EXTR_SKIP( d, 6)
-	EXTR_U8(   d, l.ubNumberLifeInsurancePayouts)
+	UINT8 numLifeInsurancePayouts;
+	EXTR_U8(   d, numLifeInsurancePayouts)
 	EXTR_U8(   d, l.ubNumberLifeInsurancePayoutUsed)
+	Assert(l.ubNumberLifeInsurancePayoutUsed <= numLifeInsurancePayouts);
 	EXTR_BOOL( d, l.fBobbyRSiteCanBeAccessed)
 	EXTR_U8(   d, l.ubPlayerBeenToMercSiteStatus)
 	EXTR_BOOL( d, l.fFirstVisitSinceServerWentDown)
@@ -3453,26 +3451,23 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 
 	if (l.usNumberOfBobbyRayOrderUsed != 0)
 	{ // There is anything in the Bobby Ray Orders on Delivery
-		UINT32 const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray) * l.usNumberOfBobbyRayOrderItems;
-		l.BobbyRayOrdersOnDeliveryArray = MALLOCN(BobbyRayOrderStruct, l.usNumberOfBobbyRayOrderItems);
-		FileRead(f, l.BobbyRayOrdersOnDeliveryArray, size);
+		l.BobbyRayOrdersOnDeliveryArray.resize(BobbyRayOrdersOnDeliveryArraySize);
+		size_t const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray.data()) * BobbyRayOrdersOnDeliveryArraySize;
+		FileRead(f, l.BobbyRayOrdersOnDeliveryArray.data(), size);
 	}
 	else
 	{
-		l.usNumberOfBobbyRayOrderItems  = 0;
-		l.BobbyRayOrdersOnDeliveryArray = 0;
+		l.BobbyRayOrdersOnDeliveryArray.clear();
 	}
 
 	if (l.ubNumberLifeInsurancePayoutUsed != 0)
 	{ // There are any Insurance Payouts in progress
-		UINT32 const size = sizeof(*l.pLifeInsurancePayouts) * l.ubNumberLifeInsurancePayouts;
-		l.pLifeInsurancePayouts = MALLOCN(LIFE_INSURANCE_PAYOUT, l.ubNumberLifeInsurancePayouts);
-		FileRead(f, l.pLifeInsurancePayouts, size);
+		l.pLifeInsurancePayouts.assign(numLifeInsurancePayouts, LIFE_INSURANCE_PAYOUT{});
+		FileRead(f, l.pLifeInsurancePayouts.data(), sizeof(LIFE_INSURANCE_PAYOUT) * numLifeInsurancePayouts);
 	}
 	else
 	{
-		l.ubNumberLifeInsurancePayouts = 0;
-		l.pLifeInsurancePayouts        = 0;
+		l.pLifeInsurancePayouts.clear();
 	}
 }
 

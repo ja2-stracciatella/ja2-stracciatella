@@ -882,10 +882,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						// Update UI
 						DirtyMercPanelInterface( pSoldier, DIRTYLEVEL2 );
 
-						MemFree( pSoldier->pTempObject );
+						delete pSoldier->pTempObject;
 						pSoldier->pTempObject = NULL;
 
-						MemFree( pSoldier->pThrowParams );
+						delete pSoldier->pThrowParams;
 						pSoldier->pThrowParams = NULL;
 					}
 					break;
@@ -2263,7 +2263,7 @@ no_cry:
 							AutoPlaceObject( pSoldier, pSoldier->pTempObject, TRUE );
 						}
 
-						MemFree( pSoldier->pTempObject );
+						delete pSoldier->pTempObject;
 						pSoldier->pTempObject = NULL;
 					}
 				}
@@ -2345,7 +2345,7 @@ no_cry:
 						AddItemToPool(pSoldier->sPendingActionData2, pSoldier->pTempObject, VISIBLE, pSoldier->bLevel, 0, -1);
 						NotifySoldiersToLookforItems( );
 
-						MemFree( pSoldier->pTempObject );
+						delete pSoldier->pTempObject;
 						pSoldier->pTempObject = NULL;
 					}
 					break;

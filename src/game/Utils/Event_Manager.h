@@ -3,14 +3,15 @@
 
 #include "Types.h"
 
+#include <vector>
+
 struct EVENT
 {
 	UINT32 TimeStamp;
 	UINT32	uiFlags;
 	UINT16	usDelay;
 	UINT32	uiEvent;
-	UINT32	uiDataSize;
-	BYTE   Data[];
+	std::vector<BYTE> Data;
 };
 
 enum EventQueueID

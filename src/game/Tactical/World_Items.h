@@ -4,6 +4,8 @@
 #include "Debug.h"
 #include "Item_Types.h"
 
+#include <vector>
+
 
 #define WORLD_ITEM_DONTRENDER				0x0001
 #define WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO		0x0002
@@ -33,23 +35,18 @@ struct WORLDITEM
 };
 
 
-extern WORLDITEM		*gWorldItems;
-
-// number of items in currently loaded sector
-extern UINT32 guiNumWorldItems;
+// items in currently loaded sector
+extern std::vector<WORLDITEM> gWorldItems;
 
 static inline WORLDITEM& GetWorldItem(size_t const idx)
 {
-	Assert(idx < guiNumWorldItems);
+	Assert(idx < gWorldItems.size());
 	return gWorldItems[idx];
 }
 
-#define BASE_FOR_EACH_WORLD_ITEM(type, iter)                     \
-	for (type*       iter        = gWorldItems,                    \
-		* const end__##iter = gWorldItems + guiNumWorldItems; \
-		iter != end__##iter;                                      \
-		++iter)                                                   \
-		if (!iter->fExists) continue; else
+#define BASE_FOR_EACH_WORLD_ITEM(type, iter) \
+	for (type& iter : gWorldItems) \
+		if (!iter.fExists) continue; else
 #define FOR_EACH_WORLD_ITEM( iter) BASE_FOR_EACH_WORLD_ITEM(      WORLDITEM, iter)
 #define CFOR_EACH_WORLD_ITEM(iter) BASE_FOR_EACH_WORLD_ITEM(const WORLDITEM, iter)
 
@@ -69,21 +66,17 @@ struct WORLDBOMB
 	INT32   iItemIndex;
 };
 
-extern WORLDBOMB * gWorldBombs;
-extern UINT32 guiNumWorldBombs;
+extern std::vector<WORLDBOMB> gWorldBombs;
 
-#define BASE_FOR_EACH_WORLD_BOMB(type, iter)                     \
-	for (type*       iter        = gWorldBombs,                    \
-		* const end__##iter = gWorldBombs + guiNumWorldBombs; \
-		iter != end__##iter;                                      \
-		++iter)                                                   \
-		if (!iter->fExists) continue; else
+#define BASE_FOR_EACH_WORLD_BOMB(type, iter) \
+	for (type& iter : gWorldBombs) \
+		if (!iter.fExists) continue; else
 #define FOR_EACH_WORLD_BOMB( iter) BASE_FOR_EACH_WORLD_BOMB(      WORLDBOMB, iter)
 #define CFOR_EACH_WORLD_BOMB(iter) BASE_FOR_EACH_WORLD_BOMB(const WORLDBOMB, iter)
 
 extern void FindPanicBombsAndTriggers( void );
 extern INT32 FindWorldItemForBombInGridNo( INT16 sGridNo, INT8 bLevel);
 
-void RefreshWorldItemsIntoItemPools(const WORLDITEM* pItemList, INT32 iNumberOfItems);
+void RefreshWorldItemsIntoItemPools(const std::vector<WORLDITEM>& items);
 
 #endif

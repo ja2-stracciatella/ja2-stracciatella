@@ -88,8 +88,8 @@ SGPVObject::~SGPVObject()
 
 	DestroyPalettes();
 
-	if (pix_data_)     MemFree(pix_data_);
-	if (etrle_object_) MemFree(etrle_object_);
+	if (pix_data_)     delete[] pix_data_;
+	if (etrle_object_) delete[] etrle_object_;
 
 	if (ppZStripInfo != NULL)
 	{
@@ -97,16 +97,16 @@ SGPVObject::~SGPVObject()
 		{
 			if (ppZStripInfo[usLoop] != NULL)
 			{
-				MemFree(ppZStripInfo[usLoop]->pbZChange);
-				MemFree(ppZStripInfo[usLoop]);
+				delete[] ppZStripInfo[usLoop]->pbZChange;
+				delete ppZStripInfo[usLoop];
 			}
 		}
-		MemFree(ppZStripInfo);
+		delete[] ppZStripInfo;
 	}
 
 #ifdef SGP_VIDEO_DEBUGGING
-	if (name_) MemFree(name_);
-	if (code_) MemFree(code_);
+	if (name_) delete[] name_;
+	if (code_) delete[] code_;
 #endif
 }
 
@@ -213,13 +213,13 @@ void SGPVObject::DestroyPalettes()
 		if (!p)                         continue;
 		if (palette16_ == p) palette16_ = 0;
 		*i = 0;
-		MemFree(p);
+		delete[] p;
 	}
 
 	if (UINT16* const p = palette16_)
 	{
 		palette16_ = 0;
-		MemFree(p);
+		delete[] p;
 	}
 
 	current_shade_ = 0;
@@ -355,7 +355,7 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 	Assert(fp != NULL);
 
 	//Allocate enough strings and counters for each node.
-	DUMPINFO* const Info = MALLOCNZ(DUMPINFO, guiVObjectSize);
+	DUMPINFO* const Info = new DUMPINFO[guiVObjectSize]{};
 
 	//Loop through the list and record every unique filename and count them
 	UINT32 uiUniqueID = 0;
@@ -393,7 +393,7 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 	fprintf(fp, "\n-----------------------------------------------\n\n");
 
 	//Free all memory associated with this operation.
-	MemFree(Info);
+	delete[] Info;
 	fclose(fp);
 }
 
@@ -402,13 +402,13 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 static void RecordVObject(SGPVObject* const vo, const char* Filename, UINT32 uiLineNum, const char* pSourceFile)
 {
 	//record the filename of the vObject (some are created via memory though)
-	vo->name_ = MALLOCN(char, strlen(Filename) + 1);
+	vo->name_ = new char[strlen(Filename) + 1]{};
 	strcpy(vo->name_, Filename);
 
 	//record the code location of the calling creating function.
 	char str[256];
 	sprintf(str, "%s -- line(%d)", pSourceFile, uiLineNum);
-	vo->code_ = MALLOCN(char, strlen(str) + 1);
+	vo->code_ = new char[strlen(str) + 1]{};
 	strcpy(vo->code_, str);
 }
 

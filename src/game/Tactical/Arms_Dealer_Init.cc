@@ -162,7 +162,7 @@ void ShutDownArmsDealers()
 		//loop through all the item types
 		for( usItemIndex = 1; usItemIndex < MAXITEMS; usItemIndex++ )
 		{
-			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced > 0 )
+			if (gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() > 0)
 			{
 				FreeSpecialItemArray( &gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ] );
 			}
@@ -184,7 +184,8 @@ void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 			INJ_U8(  d, item->ubTotalItems)
 			INJ_U8(  d, item->ubPerfectItems)
 			INJ_U8(  d, item->ubStrayAmmo)
-			INJ_U8(  d, item->ubElementsAlloced)
+			Assert(item->SpecialItem.size() <= UINT8_MAX);
+			INJ_U8(  d, static_cast<UINT8>(item->SpecialItem.size()))
 			INJ_SKIP(d, 4)
 			INJ_U32( d, item->uiOrderArrivalTime)
 			INJ_U8(  d, item->ubQtyOnOrder)
@@ -202,8 +203,8 @@ void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 		for (UINT16 item_idx = 1; item_idx != MAXITEMS; ++item_idx)
 		{
 			DEALER_ITEM_HEADER const& di = gArmsDealersInventory[dealer][item_idx];
-			if (di.ubElementsAlloced == 0) continue;
-			FileWrite(f, di.SpecialItem, sizeof(DEALER_SPECIAL_ITEM) * di.ubElementsAlloced);
+			if (di.SpecialItem.size() == 0) continue;
+			FileWrite(f, di.SpecialItem.data(), sizeof(DEALER_SPECIAL_ITEM) * di.SpecialItem.size());
 		}
 	}
 }
@@ -237,13 +238,15 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, UINT32 const saveg
 			EXTR_U8(  d, item->ubTotalItems)
 			EXTR_U8(  d, item->ubPerfectItems)
 			EXTR_U8(  d, item->ubStrayAmmo)
-			EXTR_U8(  d, item->ubElementsAlloced)
+			UINT8 numSpecialItem = 0;
+			EXTR_U8(  d, numSpecialItem)
 			EXTR_SKIP(d, 4)
 			EXTR_U32( d, item->uiOrderArrivalTime)
 			EXTR_U8(  d, item->ubQtyOnOrder)
 			EXTR_BOOL(d, item->fPreviouslyEligible)
 			EXTR_SKIP(d, 2)
 			Assert(d == endof(data));
+			AllocMemsetSpecialItemArray(item, numSpecialItem);
 		}
 	}
 
@@ -256,9 +259,8 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, UINT32 const saveg
 		for (UINT16 item_idx = 1; item_idx != MAXITEMS; ++item_idx)
 		{
 			DEALER_ITEM_HEADER& di = gArmsDealersInventory[dealer][item_idx];
-			if (di.ubElementsAlloced == 0) continue;
-			AllocMemsetSpecialItemArray(&di, di.ubElementsAlloced);
-			FileRead(f, di.SpecialItem, sizeof(DEALER_SPECIAL_ITEM) * di.ubElementsAlloced);
+			if (di.SpecialItem.size() == 0) continue;
+			FileRead(f, di.SpecialItem.data(), sizeof(DEALER_SPECIAL_ITEM) * di.SpecialItem.size());
 		}
 	}
 }
@@ -328,7 +330,8 @@ static void SimulateArmsDealerCustomer(void)
 				}
 
 				// next, try to sell all the used ones, gotta do these one at a time so we can remove them by element
-				for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+				Assert(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
+				for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size()); ubElement++)
 				{
 					// don't worry about negative condition, repairmen can't come this far, they don't sell!
 					if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive )
@@ -936,7 +939,8 @@ BOOLEAN RepairmanIsFixingItemsButNoneAreDoneYet( UINT8 ubProfileID )
 		if( gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubTotalItems )
 		{
 			//loop through the array of items
-			for( ubElement=0; ubElement< gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+			Assert(gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
+			for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem.size()); ubElement++)
 			{
 				if ( gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive )
 				{
@@ -1063,47 +1067,25 @@ BOOLEAN CanDealerRepairItem(ArmsDealerID const ubArmsDealer, UINT16 const usItem
 static void AllocMemsetSpecialItemArray(DEALER_ITEM_HEADER* const pDealerItem, UINT8 const ubElementsNeeded)
 {
 	Assert(pDealerItem);
-	Assert( ubElementsNeeded > 0);
 
-	// zero them out (they're inactive until an item is actually added)
-	pDealerItem->SpecialItem       = MALLOCNZ(DEALER_SPECIAL_ITEM, ubElementsNeeded);
-	pDealerItem->ubElementsAlloced = ubElementsNeeded;
+	pDealerItem->SpecialItem.assign(ubElementsNeeded, DEALER_SPECIAL_ITEM{});
 }
 
 
 static void ResizeSpecialItemArray(DEALER_ITEM_HEADER* const pDealerItem, UINT8 const ubElementsNeeded)
 {
 	Assert(pDealerItem);
-	// must already have a ptr allocated!
-	Assert(pDealerItem->SpecialItem);
 
-	// shouldn't have been called, but what they hey, it's not exactly a problem
-	if (ubElementsNeeded == pDealerItem->ubElementsAlloced) return;
-
-	// already allocated, but change its size
-	pDealerItem->SpecialItem = REALLOC(pDealerItem->SpecialItem, DEALER_SPECIAL_ITEM, ubElementsNeeded);
-
-	// if adding more elements
-	if ( ubElementsNeeded > pDealerItem->ubElementsAlloced)
-	{
-		// zero them out (they're inactive until an item is actually added)
-		std::fill_n(pDealerItem->SpecialItem + pDealerItem->ubElementsAlloced, ubElementsNeeded - pDealerItem->ubElementsAlloced, DEALER_SPECIAL_ITEM{});
-	}
-
-	pDealerItem->ubElementsAlloced = ubElementsNeeded;
+	pDealerItem->SpecialItem.resize(ubElementsNeeded, DEALER_SPECIAL_ITEM{});
 }
 
 
 static void FreeSpecialItemArray(DEALER_ITEM_HEADER* pDealerItem)
 {
 	Assert(pDealerItem);
-	// must already have a ptr allocated!
-	Assert(pDealerItem->SpecialItem);
 
-	MemFree( pDealerItem->SpecialItem );
-	pDealerItem->SpecialItem = NULL;
+	pDealerItem->SpecialItem.clear();
 
-	pDealerItem->ubElementsAlloced = 0;
 	pDealerItem->ubTotalItems = pDealerItem->ubPerfectItems;
 
 	// doesn't effect perfect items, orders or stray bullets!
@@ -1242,7 +1224,8 @@ static UINT8 CountActiveSpecialItemsInArmsDealersInventory(ArmsDealerID const ub
 
 
 	// next, try to sell all the used ones, gotta do these one at a time so we can remove them by element
-	for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+	Assert(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
+	for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size()); ubElement++)
 	{
 		// don't worry about negative condition, repairmen can't come this far, they don't sell!
 		if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive )
@@ -1291,7 +1274,8 @@ static UINT8 CountSpecificItemsRepairDealerHasInForRepairs(ArmsDealerID const ub
 	if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems )
 	{
 		//loop through the array of items
-		for( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+		Assert(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
+		for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size()); ubElement++)
 		{
 			if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive)
 			{
@@ -1488,7 +1472,8 @@ static void AddItemToArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16
 		{
 			// search for an already allocated, empty element in the special item array
 			fFoundOne = FALSE;
-			for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+			Assert(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
+			for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size()); ubElement++)
 			{
 				if ( !( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive ) )
 				{
@@ -1505,17 +1490,8 @@ static void AddItemToArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16
 				// then we're going to have to allocate some more space...
 				ubElementsToAdd = MAX( SPECIAL_ITEMS_ALLOCED_AT_ONCE, ubHowMany);
 
-				// if there aren't any allocated at all right now
-				if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced == 0 )
-				{
-					// allocate new memory for the real buffer
-					AllocMemsetSpecialItemArray(&gArmsDealersInventory[ubArmsDealer][usItemIndex], ubElementsToAdd);
-				}
-				else
-				{
-					// we have some allocated, but they're all full and we need more.  MemRealloc existing amount + # addition elements
-					ResizeSpecialItemArray(&gArmsDealersInventory[ubArmsDealer][usItemIndex], (UINT8)(gArmsDealersInventory[ubArmsDealer][usItemIndex].ubElementsAlloced + ubElementsToAdd));
-				}
+				Assert(gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem.size() + ubElementsToAdd <= UINT8_MAX);
+				ResizeSpecialItemArray(&gArmsDealersInventory[ubArmsDealer][usItemIndex], static_cast<UINT8>(gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem.size() + ubElementsToAdd));
 
 				// now add the special item at the first of the newly added elements (still stored in ubElement!)
 				AddSpecialItemToArmsDealerInventoryAtElement( ubArmsDealer, usItemIndex, ubElement, pSpclItemInfo );
@@ -1540,7 +1516,7 @@ static void AddItemToArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16
 static void AddSpecialItemToArmsDealerInventoryAtElement(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, UINT8 const ubElement, SPECIAL_ITEM_INFO* const pSpclItemInfo)
 {
 	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems < 255 );
-	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
+	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() );
 	Assert(!gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[ubElement].fActive);
 	Assert( IsItemInfoSpecial( pSpclItemInfo ) );
 
@@ -1574,7 +1550,8 @@ void RemoveItemFromArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16 c
 	if ( IsItemInfoSpecial( pSpclItemInfo ) )
 	{
 		// look through the elements, trying to find special items matching the specifications
-		for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+		Assert(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
+		for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size()); ubElement++)
 		{
 			pSpecialItem = &(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ]);
 
@@ -1645,7 +1622,8 @@ static void RemoveRandomItemFromArmsDealerInventory(ArmsDealerID const ubArmsDea
 
 			fFoundIt = FALSE;
 
-			for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+			Assert(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
+			for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size()); ubElement++)
 			{
 				// if this is an active special item, not in repair
 				if (gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[ubElement].fActive) // &&
@@ -1679,7 +1657,7 @@ static void RemoveRandomItemFromArmsDealerInventory(ArmsDealerID const ubArmsDea
 void RemoveSpecialItemFromArmsDealerInventoryAtElement(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, UINT8 const ubElement)
 {
 	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems > 0 );
-	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
+	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() );
 	Assert(gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem[ubElement].fActive);
 
 	// wipe it out (turning off fActive)
@@ -1755,7 +1733,8 @@ BOOLEAN AddDeadArmsDealerItemsToWorld(SOLDIERTYPE const* const pSoldier)
 			}
 
 			// then drop all the special items
-			for ( ubElement = 0; ubElement < gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+			Assert(gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
+			for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem.size()); ubElement++)
 			{
 				pSpecialItem = &(gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ]);
 
@@ -1768,7 +1747,7 @@ BOOLEAN AddDeadArmsDealerItemsToWorld(SOLDIERTYPE const* const pSoldier)
 			}
 
 			// release any memory allocated for special items, he won't need it now...
-			if( gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].ubElementsAlloced > 0 )
+			if (gArmsDealersInventory[ bArmsDealer ][ usItemIndex ].SpecialItem.size() > 0)
 			{
 				FreeSpecialItemArray( &gArmsDealersInventory[ bArmsDealer ][ usItemIndex ] );
 			}
@@ -1947,7 +1926,8 @@ static UINT32 WhenWillRepairmanBeAllDoneRepairing(ArmsDealerID const ubArmsDeale
 		//if there is some items in stock
 		if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubTotalItems > 0 )
 		{
-			for ( ubElement = 0; ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+			Assert(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
+			for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size()); ubElement++)
 			{
 				if ( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive )
 				{

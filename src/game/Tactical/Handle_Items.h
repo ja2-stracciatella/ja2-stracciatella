@@ -4,6 +4,8 @@
 #include "JA2Types.h"
 #include "World_Items.h"
 
+#include <vector>
+
 
 enum ItemHandleResult
 {
@@ -78,7 +80,7 @@ INT32 InternalAddItemToPool(INT16* psGridNo, OBJECTTYPE* pObject, Visibility, UI
 GridNo     AdjustGridNoForItemPlacement(SOLDIERTYPE*, GridNo);
 ITEM_POOL* GetItemPool(UINT16 usMapPos, UINT8 ubLevel);
 void       DrawItemPoolList(const ITEM_POOL* pItemPool, INT8 bZLevel, INT16 sXPos, INT16 sYPos);
-void       RemoveItemFromPool(WORLDITEM*);
+void       RemoveItemFromPool(WORLDITEM& wi);
 void       MoveItemPools(INT16 sStartPos, INT16 sEndPos);
 
 BOOLEAN SetItemsVisibilityOn(GridNo, UINT8 level, Visibility bAllGreaterThan, BOOLEAN fSetLocator);
@@ -114,7 +116,7 @@ void RemoveBlueFlag( INT16 sGridNo, INT8 bLevel  );
 // check if item is booby trapped
 BOOLEAN ContinuePastBoobyTrapInMapScreen( OBJECTTYPE *pObject, SOLDIERTYPE *pSoldier );
 
-void RefreshItemPools(const WORLDITEM* pItemList, INT32 iNumberOfItems);
+void RefreshItemPools(const std::vector<WORLDITEM>& pItemList);
 
 BOOLEAN ItemTypeExistsAtLocation( INT16 sGridNo, UINT16 usItem, UINT8 ubLevel, INT32 * piItemIndex );
 

@@ -1929,9 +1929,9 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridN
 
 
 	// Allocate Throw Parameters
-	pSoldier->pThrowParams = MALLOCZ(THROW_PARAMS);
+	pSoldier->pThrowParams = new THROW_PARAMS{};
 
-	pSoldier->pTempObject  = MALLOC(OBJECTTYPE);
+	pSoldier->pTempObject  = new OBJECTTYPE{};
 
 	*pSoldier->pTempObject = *pItem;
 	pSoldier->pThrowParams->dX = (float)sSrcX;

@@ -201,7 +201,7 @@ void FileClose(SGPFile* f)
 	{
 		LibraryFile_close(f->u.lib);
 	}
-	MemFree(f);
+	delete f;
 }
 
 void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
@@ -549,7 +549,7 @@ SGPFile* FileMan::getSGPFileFromFD(int fd, const char *filename, const char *fmo
 		throw std::runtime_error(buf);
 	}
 
-	SGPFile *file = MALLOCZ(SGPFile);
+	SGPFile *file = new SGPFile{};
 	file->flags  = SGPFILE_REAL;
 	file->u.file = f;
 	return file;

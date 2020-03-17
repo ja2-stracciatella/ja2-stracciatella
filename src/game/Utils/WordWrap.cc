@@ -9,11 +9,9 @@
 
 static WRAPPED_STRING* AllocWrappedString(const wchar_t* start, const wchar_t* end)
 {
-	WRAPPED_STRING* const ws = MALLOCE(WRAPPED_STRING, sString, end - start + 1);
-	ws->pNextWrappedString = NULL;
-	wchar_t* d = ws->sString;
-	for (wchar_t const* i = start; i != end; i++) *d++ = *i;
-	*d = L'\0';
+	WRAPPED_STRING* const ws = new WRAPPED_STRING{};
+	ws->sString.assign(start, end);
+	ws->sString.push_back(L'\0');
 	return ws;
 }
 
@@ -91,10 +89,10 @@ UINT16 DisplayWrappedString(UINT16 const x, UINT16 y, UINT16 w, UINT8 const gap,
 	UINT16 const h       = GetFontHeight(font) + gap;
 	for (WRAPPED_STRING* i = LineWrap(font, w, string); i;)
 	{
-		DrawTextToScreen(i->sString, x, y, w, font, foreground, background, flags);
+		DrawTextToScreen(i->sString.data(), x, y, w, font, foreground, background, flags);
 		WRAPPED_STRING* const del = i;
 		i = i->pNextWrappedString;
-		MemFree(del);
+		delete del;
 		total_h += h;
 		y       += h;
 	}

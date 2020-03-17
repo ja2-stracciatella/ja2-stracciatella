@@ -41,24 +41,16 @@
 #include "GameInstance.h"
 #include "Logger.h"
 
-static DOOR_STATUS* gpDoorStatus     = NULL;
-static UINT8        gubNumDoorStatus = 0;
+#include <vector>
+
+static std::vector<DOOR_STATUS> gpDoorStatus;
 
 
 #define FOR_EACH_DOOR_STATUS(iter) \
-	for (DOOR_STATUS* iter = gpDoorStatus, * const iter##__end = iter + gubNumDoorStatus; iter != iter##__end; ++iter)
+	for (DOOR_STATUS& iter : gpDoorStatus)
 
 
 KEY KeyTable[NUM_KEYS];
-
-//Current number of doors in world.
-UINT8 gubNumDoors = 0;
-
-//Current max number of doors.  This is only used by the editor.  When adding doors to the
-//world, we may run out of space in the DoorTable, so we will allocate a new array with extra slots,
-//then copy everything over again.  gubMaxDoors holds the arrays actual number of slots, even though
-//the current number (gubNumDoors) will be <= to it.
-static UINT8 gubMaxDoors = 0;
 
 LOCK LockTable[NUM_LOCKS];
 
@@ -98,7 +90,7 @@ DOORTRAP const DoorTrapTable[NUM_DOOR_TRAPS] =
 //Dynamic array of Doors.  For general game purposes, the doors that are locked and/or trapped
 //are permanently saved within the map, and are loaded and allocated when the map is loaded.  Because
 //the editor allows more doors to be added, or removed, the actual size of the DoorTable may change.
-DOOR * DoorTable = NULL;
+std::vector<DOOR> DoorTable;
 
 
 void LoadLockTable(void)
@@ -683,17 +675,16 @@ void LoadDoorTableFromMap(HWFILE const f)
 {
 	TrashDoorTable();
 
-	FileRead(f, &gubNumDoors, sizeof(gubNumDoors));
-	if (gubNumDoors == 0) return;
+	UINT8 numDoors = 0;
+	FileRead(f, &numDoors, sizeof(numDoors));
+	if (numDoors == 0) return;
 
-	gubMaxDoors = gubNumDoors;
-	DoorTable = MALLOCN(DOOR, gubMaxDoors);
-	FileRead(f, DoorTable, sizeof(*DoorTable) * gubMaxDoors);
+	DoorTable.assign(numDoors, DOOR{});
+	FileRead(f, DoorTable.data(), sizeof(DOOR) * numDoors);
 
 	// OK, reset perceived values to nothing...
-	FOR_EACH_DOOR(i)
+	FOR_EACH_DOOR(d)
 	{
-		DOOR& d = *i;
 		d.bPerceivedLocked  = DOOR_PERCEIVED_UNKNOWN;
 		d.bPerceivedTrapped = DOOR_PERCEIVED_UNKNOWN;
 	}
@@ -705,16 +696,18 @@ void LoadDoorTableFromMap(HWFILE const f)
 //many different ways, so I opted to put it in the saving routine.
 void SaveDoorTableToMap( HWFILE fp )
 {
-	INT32 i = 0;
+	size_t i = 0;
 
-	while( i < gubNumDoors )
+	while (i < DoorTable.size())
 	{
-		if( !OpenableAtGridNo( DoorTable[ i ].sGridNo ) )
+		if (!OpenableAtGridNo( DoorTable[ i ].sGridNo ))
 			RemoveDoorInfoFromTable( DoorTable[ i ].sGridNo );
 		else
 			i++;
 	}
-	FileWriteArray(fp, gubNumDoors, DoorTable);
+	Assert(DoorTable.size() <= UINT8_MAX);
+	UINT8 numDoors = static_cast<UINT8>(DoorTable.size());
+	FileWriteArray(fp, numDoors, DoorTable.data());
 }
 
 
@@ -722,36 +715,15 @@ void SaveDoorTableToMap( HWFILE fp )
 //information is overwritten.
 void AddDoorInfoToTable( DOOR *pDoor )
 {
-	FOR_EACH_DOOR(i)
+	FOR_EACH_DOOR(d)
 	{
-		DOOR& d = *i;
 		if (d.sGridNo != pDoor->sGridNo) continue;
 		d = *pDoor;
 		return;
 	}
 
 	//no existing door found, so add a new one.
-	if( gubNumDoors < gubMaxDoors )
-	{
-		DoorTable[gubNumDoors] = *pDoor;
-		gubNumDoors++;
-	}
-	else
-	{ //we need to allocate more memory, so add ten more slots.
-		gubMaxDoors += 10;
-		//Allocate new table with max+10 doors.
-		DOOR* const NewDoorTable = MALLOCN(DOOR, gubMaxDoors);
-		//Copy contents of existing door table to new door table.
-		memcpy( NewDoorTable, DoorTable, sizeof( DOOR ) * gubNumDoors );
-		//Deallocate the existing door table (possible to not have one).
-		if( DoorTable )
-			MemFree( DoorTable );
-		//Assign the new door table as the existing door table
-		DoorTable = NewDoorTable;
-		//Add the new door info to the table.
-		DoorTable[gubNumDoors] = *pDoor;
-		gubNumDoors++;
-	}
+	DoorTable.push_back(*pDoor);
 }
 
 //When the editor removes a door from the world, this function looks for and removes accompanying door
@@ -759,18 +731,11 @@ void AddDoorInfoToTable( DOOR *pDoor )
 //everything contiguous.
 void RemoveDoorInfoFromTable( INT32 iMapIndex )
 {
-	INT32 i;
-	INT32 iNumDoorsToCopy;
-	for( i = 0; i < gubNumDoors; i++ )
+	for (size_t i = 0; i < DoorTable.size(); i++)
 	{
-		if( DoorTable[ i ].sGridNo == iMapIndex )
+		if (DoorTable[ i ].sGridNo == iMapIndex)
 		{
-			iNumDoorsToCopy = gubNumDoors - i - 1;
-			if( iNumDoorsToCopy )
-			{
-				memmove( &DoorTable[ i ], &DoorTable[ i+1 ], sizeof( DOOR ) * iNumDoorsToCopy );
-			}
-			gubNumDoors--;
+			DoorTable.erase(DoorTable.begin() + i);
 			return;
 		}
 	}
@@ -779,23 +744,17 @@ void RemoveDoorInfoFromTable( INT32 iMapIndex )
 //This is the link to see if a door exists at a gridno.
 DOOR* FindDoorInfoAtGridNo( INT32 iMapIndex )
 {
-	FOR_EACH_DOOR(i)
+	FOR_EACH_DOOR(d)
 	{
-		DOOR& d = *i;
 		if (d.sGridNo == iMapIndex) return &d;
 	}
 	return NULL;
 }
 
-//Upon world deallocation, the door table needs to be deallocated.  Remember, this function
-//resets the values, so make sure you do this before you change gubNumDoors or gubMaxDoors.
+//Upon world deallocation, the door table needs to be deallocated.
 void TrashDoorTable()
 {
-	if( DoorTable )
-		MemFree( DoorTable );
-	DoorTable = NULL;
-	gubNumDoors = 0;
-	gubMaxDoors = 0;
+	DoorTable.clear();
 }
 
 void UpdateDoorPerceivedValue( DOOR *pDoor )
@@ -826,7 +785,9 @@ void SaveDoorTableToDoorTableTempFile(INT16 const x, INT16 const y, INT8 const z
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_TABLE_TEMP_FILES_EXISTS, map_name, x, y, z);
 	AutoSGPFile f(FileMan::openForWriting(map_name));
-	FileWriteArray(f, gubNumDoors, DoorTable);
+	Assert(DoorTable.size() <= UINT8_MAX);
+	UINT8 numDoors = static_cast<UINT8>(DoorTable.size());
+	FileWriteArray(f, numDoors, DoorTable.data());
 	// Set the sector flag indicating that there is a Door table temp file present
 	SetSectorFlag(x, y, z, SF_DOOR_TABLE_TEMP_FILES_EXISTS);
 }
@@ -849,15 +810,14 @@ void LoadDoorTableFromDoorTableTempFile()
 	AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
 
 	//Read in the number of doors
-	FileRead(hFile, &gubMaxDoors, sizeof(UINT8));
-
-	gubNumDoors = gubMaxDoors;
+	UINT8 numDoors = 0;
+	FileRead(hFile, &numDoors, sizeof(UINT8));
 
 	//if there is no doors to load
-	if( gubNumDoors != 0 )
+	if (numDoors != 0)
 	{
-		DoorTable = MALLOCN(DOOR, gubMaxDoors);
-		FileRead(hFile, DoorTable, sizeof(DOOR) * gubMaxDoors);
+		DoorTable.assign(numDoors, DOOR{});
+		FileRead(hFile, DoorTable.data(), sizeof(DOOR) * numDoors);
 	}
 }
 
@@ -874,9 +834,8 @@ bool ModifyDoorStatus(GridNo const gridno, BOOLEAN const is_open, BOOLEAN const 
 	GridNo const base_gridno = base->sGridNo;
 
 	// Check to see if the user is adding an existing door
-	FOR_EACH_DOOR_STATUS(i)
+	FOR_EACH_DOOR_STATUS(d)
 	{
-		DOOR_STATUS& d = *i;
 		if (d.sGridNo != base_gridno) continue;
 
 		// Set the status
@@ -903,11 +862,9 @@ bool ModifyDoorStatus(GridNo const gridno, BOOLEAN const is_open, BOOLEAN const 
 	}
 
 	// Add a new door status structure
-	UINT8 const n = gubNumDoorStatus;
-	gpDoorStatus     = REALLOC(gpDoorStatus, DOOR_STATUS, n + 1);
-	gubNumDoorStatus = n + 1;
+	gpDoorStatus.push_back(DOOR_STATUS{});
 
-	DOOR_STATUS& d = gpDoorStatus[n];
+	DOOR_STATUS& d = gpDoorStatus.back();
 	d.sGridNo = base_gridno;
 
 	// Init the flags
@@ -933,20 +890,14 @@ bool ModifyDoorStatus(GridNo const gridno, BOOLEAN const is_open, BOOLEAN const 
 
 void TrashDoorStatusArray( )
 {
-	if( gpDoorStatus )
-	{
-		MemFree( gpDoorStatus );
-		gpDoorStatus = NULL;
-	}
-
-	gubNumDoorStatus = 0;
+	gpDoorStatus.clear();
 }
 
 
 // Returns a doors status value, NULL if not found
 DOOR_STATUS* GetDoorStatus(INT16 const sGridNo)
 {
-	if (!gpDoorStatus) return 0;
+	if (gpDoorStatus.empty()) return 0;
 
 	// Find the base tile for the door structure and use that gridno
 	STRUCTURE* const structure = FindStructure(sGridNo, STRUCTURE_ANYDOOR);
@@ -954,9 +905,8 @@ DOOR_STATUS* GetDoorStatus(INT16 const sGridNo)
 	STRUCTURE const* const base = FindBaseStructure(structure);
 	if (!base) return 0;
 
-	FOR_EACH_DOOR_STATUS(i)
+	FOR_EACH_DOOR_STATUS(d)
 	{
-		DOOR_STATUS& d = *i;
 		if (d.sGridNo == base->sGridNo) return &d;
 	}
 
@@ -1012,10 +962,8 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS&);
 
 void MercLooksForDoors(SOLDIERTYPE const& s)
 {
-	FOR_EACH_DOOR_STATUS(i)
+	FOR_EACH_DOOR_STATUS(d)
 	{
-		DOOR_STATUS& d = *i;
-
 		if (!InternalIsPerceivedDifferentThanReality(d)) continue;
 
 		GridNo const gridno       = d.sGridNo;
@@ -1062,9 +1010,8 @@ static void SynchronizeDoorStatusToStructureData(DOOR_STATUS const& d)
 
 void UpdateDoorGraphicsFromStatus()
 {
-	FOR_EACH_DOOR_STATUS(i)
+	FOR_EACH_DOOR_STATUS(d)
 	{
-		DOOR_STATUS const& d = *i;
 		// ATE: Make sure door status flag and struct info are synchronized
 		SynchronizeDoorStatusToStructureData(d);
 		InternalUpdateDoorGraphicFromStatus(d, false);
@@ -1200,12 +1147,14 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS& d)
 void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const x, INT16 const y, INT8 const z)
 {
 	// Turn off any door busy flags
-	FOR_EACH_DOOR_STATUS(i) i->ubFlags &= ~DOOR_BUSY;
+	FOR_EACH_DOOR_STATUS(d) d.ubFlags &= ~DOOR_BUSY;
 
 	char map_name[128];
 	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, x, y, z);
 	AutoSGPFile f(FileMan::openForWriting(map_name));
-	FileWriteArray(f, gubNumDoorStatus, gpDoorStatus);
+	Assert(gpDoorStatus.size() <= UINT8_MAX);
+	UINT8 numDoorStatus = static_cast<UINT8>(gpDoorStatus.size());
+	FileWriteArray(f, numDoorStatus, gpDoorStatus.data());
 
 	// Set the flag indicating that there is a door status array
 	SetSectorFlag(x, y, z, SF_DOOR_STATUS_TEMP_FILE_EXISTS);
@@ -1221,16 +1170,17 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 	AutoSGPFile f(GCM->openGameResForReading(map_name));
 
 	// Load the number of elements in the door status array
-	FileRead(f, &gubNumDoorStatus, sizeof(UINT8));
-	if (gubNumDoorStatus == 0) return;
+	UINT8 numDoorStatus = 0;
+	FileRead(f, &numDoorStatus, sizeof(UINT8));
+	if (numDoorStatus == 0) return;
 
-	gpDoorStatus = MALLOCNZ(DOOR_STATUS, gubNumDoorStatus);
-	FileRead(f, gpDoorStatus, sizeof(DOOR_STATUS) * gubNumDoorStatus);
+	gpDoorStatus.assign(numDoorStatus, DOOR_STATUS{});
+	FileRead(f, gpDoorStatus.data(), sizeof(DOOR_STATUS) * numDoorStatus);
 
 	// Set flags in map for containing a door status
-	FOR_EACH_DOOR_STATUS(i)
+	FOR_EACH_DOOR_STATUS(d)
 	{
-		gpWorldLevelData[i->sGridNo].ubExtFlags[0] |= MAPELEMENT_EXT_DOOR_STATUS_PRESENT;
+		gpWorldLevelData[d.sGridNo].ubExtFlags[0] |= MAPELEMENT_EXT_DOOR_STATUS_PRESENT;
 	}
 
 	// The graphics will be updated later in the loading process
@@ -1283,10 +1233,9 @@ void ExamineDoorsOnEnteringSector()
 	{
 		if (!s->bInSector) continue;
 
-		FOR_EACH_DOOR_STATUS(i)
+		FOR_EACH_DOOR_STATUS(d)
 		{
 			// If open, close
-			DOOR_STATUS const& d = *i;
 			if (!(d.ubFlags & DOOR_OPEN)) continue;
 			HandleDoorChangeFromGridNo(0, d.sGridNo, TRUE);
 		}

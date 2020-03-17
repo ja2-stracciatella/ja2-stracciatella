@@ -173,7 +173,7 @@ void InitializeWorld()
 
 	// Initialize world data
 
-	gpWorldLevelData = MALLOCNZ(MAP_ELEMENT, WORLD_MAX);
+	gpWorldLevelData = new MAP_ELEMENT[WORLD_MAX]{};
 
 	// Init room database
 	InitRoomDatabase( );
@@ -192,7 +192,8 @@ void DeinitializeWorld( )
 
 	if ( gpWorldLevelData != NULL )
 	{
-		MemFree( gpWorldLevelData );
+		delete[] gpWorldLevelData;
+		gpWorldLevelData = nullptr;
 	}
 
 	DestroyTileSurfaces( );
@@ -1726,7 +1727,7 @@ try
 	RenderProgressBar(0, 0);
 
 	//clear the summary file info
-	SUMMARYFILE* const pSummary = MALLOCZ(SUMMARYFILE);
+	SUMMARYFILE* const pSummary = new SUMMARYFILE{};
 	pSummary->ubSummaryVersion = GLOBAL_SUMMARY_VERSION;
 	pSummary->dMajorMapVersion = getMajorMapVersion();
 
@@ -2508,7 +2509,7 @@ void FreeLevelNodeList(LEVELNODE** const head)
 	while (i != NULL)
 	{
 		LEVELNODE* const next = i->pNext;
-		MemFree(i);
+		delete i;
 		i = next;
 	}
 }

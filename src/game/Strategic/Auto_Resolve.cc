@@ -433,13 +433,13 @@ void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 	RenderButtons();
 
 	//Allocate memory for all the globals while we are in this mode.
-	gpAR = MALLOCZ(AUTORESOLVE_STRUCT);
+	gpAR = new AUTORESOLVE_STRUCT{};
 	//Mercs -- 20 max
-	gpMercs = MALLOCNZ(SOLDIERCELL, 20);
+	gpMercs = new SOLDIERCELL[20]{};
 	//Militia -- MAX_ALLOWABLE_MILITIA_PER_SECTOR max
-	gpCivs = MALLOCNZ(SOLDIERCELL, MAX_ALLOWABLE_MILITIA_PER_SECTOR);
+	gpCivs = new SOLDIERCELL[MAX_ALLOWABLE_MILITIA_PER_SECTOR]{};
 	//Enemies -- 32 max
-	gpEnemies = MALLOCNZ(SOLDIERCELL, 32);
+	gpEnemies = new SOLDIERCELL[32]{};
 
 	//Set up autoresolve
 	gpAR->fEnteringAutoResolve = TRUE;
@@ -1877,16 +1877,16 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 
 		// Deallocate all of the global memory.
 		// Everything internal to them, should have already been deleted.
-		MemFree(gpAR);
+		delete gpAR;
 		gpAR = 0;
 
-		MemFree(gpMercs);
+		delete[] gpMercs;
 		gpMercs = 0;
 
-		MemFree(gpCivs);
+		delete[] gpCivs;
 		gpCivs = 0;
 
-		MemFree(gpEnemies);
+		delete[] gpEnemies;
 		gpEnemies = 0;
 	}
 

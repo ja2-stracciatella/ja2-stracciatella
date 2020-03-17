@@ -1736,28 +1736,22 @@ INT16 FindClosestDoor( SOLDIERTYPE * pSoldier )
 
 INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode )
 {
-	INT32 iLoop;
-	INT16 *psEdgepointArray;
-	INT32 iEdgepointArraySize;
+	std::vector<INT16>* pEdgepoints;
 	INT16 sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
 
 	switch( bEdgeCode )
 	{
 		case NORTH_EDGEPOINT_SEARCH:
-			psEdgepointArray = gps1stNorthEdgepointArray;
-			iEdgepointArraySize = gus1stNorthEdgepointArraySize;
+			pEdgepoints = &gps1stNorthEdgepointArray;
 			break;
 		case EAST_EDGEPOINT_SEARCH:
-			psEdgepointArray = gps1stEastEdgepointArray;
-			iEdgepointArraySize = gus1stEastEdgepointArraySize;
+			pEdgepoints = &gps1stEastEdgepointArray;
 			break;
 		case SOUTH_EDGEPOINT_SEARCH:
-			psEdgepointArray = gps1stSouthEdgepointArray;
-			iEdgepointArraySize = gus1stSouthEdgepointArraySize;
+			pEdgepoints = &gps1stSouthEdgepointArray;
 			break;
 		case WEST_EDGEPOINT_SEARCH:
-			psEdgepointArray = gps1stWestEdgepointArray;
-			iEdgepointArraySize = gus1stWestEdgepointArraySize;
+			pEdgepoints = &gps1stWestEdgepointArray;
 			break;
 		default:
 			// WTF???
@@ -1767,13 +1761,13 @@ INT16 FindNearestEdgepointOnSpecifiedEdge( INT16 sGridNo, INT8 bEdgeCode )
 	// Do a 2D search to find the closest map edgepoint and
 	// try to create a path there
 
-	for ( iLoop = 0; iLoop < iEdgepointArraySize; iLoop++ )
+	for (INT16 edgepoint : *pEdgepoints)
 	{
-		sTempDist = PythSpacesAway( sGridNo, psEdgepointArray[ iLoop ] );
+		sTempDist = PythSpacesAway(sGridNo, edgepoint);
 		if ( sTempDist < sClosestDist )
 		{
 			sClosestDist = sTempDist;
-			sClosestSpot = psEdgepointArray[ iLoop ];
+			sClosestSpot = edgepoint;
 		}
 	}
 
@@ -1786,8 +1780,7 @@ INT16 FindNearestEdgePoint( INT16 sGridNo )
 	INT16 sDist[5], sMinDist;
 	INT32 iLoop;
 	INT8  bMinIndex;
-	INT16 *psEdgepointArray;
-	INT32 iEdgepointArraySize;
+	std::vector<INT16>* pEdgepoints;
 	INT16 sClosestSpot = NOWHERE, sClosestDist = 0x7FFF, sTempDist;
 
 	GetAbsoluteScreenXYFromMapPos(sGridNo, &sScreenX, &sScreenY);
@@ -1815,20 +1808,16 @@ INT16 FindNearestEdgePoint( INT16 sGridNo )
 	switch( bMinIndex )
 	{
 		case 1:
-			psEdgepointArray = gps1stWestEdgepointArray;
-			iEdgepointArraySize = gus1stWestEdgepointArraySize;
+			pEdgepoints = &gps1stWestEdgepointArray;
 			break;
 		case 2:
-			psEdgepointArray = gps1stEastEdgepointArray;
-			iEdgepointArraySize = gus1stEastEdgepointArraySize;
+			pEdgepoints = &gps1stEastEdgepointArray;
 			break;
 		case 3:
-			psEdgepointArray = gps1stNorthEdgepointArray;
-			iEdgepointArraySize = gus1stNorthEdgepointArraySize;
+			pEdgepoints = &gps1stNorthEdgepointArray;
 			break;
 		case 4:
-			psEdgepointArray = gps1stSouthEdgepointArray;
-			iEdgepointArraySize = gus1stSouthEdgepointArraySize;
+			pEdgepoints = &gps1stSouthEdgepointArray;
 			break;
 		default:
 			// WTF???
@@ -1838,13 +1827,13 @@ INT16 FindNearestEdgePoint( INT16 sGridNo )
 	// Do a 2D search to find the closest map edgepoint and
 	// try to create a path there
 
-	for ( iLoop = 0; iLoop < iEdgepointArraySize; iLoop++ )
+	for (INT16 edgepoint : *pEdgepoints)
 	{
-		sTempDist = PythSpacesAway( sGridNo, psEdgepointArray[ iLoop ] );
+		sTempDist = PythSpacesAway(sGridNo, edgepoint);
 		if ( sTempDist < sClosestDist )
 		{
 			sClosestDist = sTempDist;
-			sClosestSpot = psEdgepointArray[ iLoop ];
+			sClosestSpot = edgepoint;
 		}
 	}
 

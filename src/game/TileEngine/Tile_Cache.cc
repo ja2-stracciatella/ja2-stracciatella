@@ -33,7 +33,7 @@ static std::vector<TILE_CACHE_STRUCT> gpTileCacheStructInfo;
 
 void InitTileCache(void)
 {
-	gpTileCache         = MALLOCN(TILE_CACHE_ELEMENT, guiMaxTileCacheSize);
+	gpTileCache         = new TILE_CACHE_ELEMENT[guiMaxTileCacheSize]{};
 	guiCurTileCacheSize = 0;
 
 	// Zero entries
@@ -77,7 +77,7 @@ void DeleteTileCache( )
 				DeleteTileSurface( gpTileCache[ cnt ].pImagery );
 			}
 		}
-		MemFree( gpTileCache );
+		delete[] gpTileCache;
 	}
 
 	gpTileCacheStructInfo.clear();

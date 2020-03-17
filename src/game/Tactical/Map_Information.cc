@@ -431,7 +431,7 @@ static void UpdateOldVersionMap(void)
 		gMapInformation.ubMapVersion = 18;
 		FOR_EACH_WORLD_ITEM(wi)
 		{
-			OBJECTTYPE& o = wi->o;
+			OBJECTTYPE& o = wi.o;
 			if (o.usItem == JAR_ELIXIR) o.usItem = CROWBAR;
 		}
 	}

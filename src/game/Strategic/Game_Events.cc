@@ -38,7 +38,7 @@ static void DeleteEventsWithDeletionPending()
 		if (i->ubFlags & SEF_DELETION_PENDING)
 		{
 			*anchor = i->next;
-			MemFree(i);
+			delete i;
 		}
 		else
 		{
@@ -139,7 +139,7 @@ void ProcessPendingGameEvents(UINT32 uiAdjustment, const UINT8 ubWarpCode)
 			if( curr == gpEventList )
 			{
 				gpEventList = gpEventList->next;
-				MemFree( curr );
+				delete curr;
 				curr = gpEventList;
 				prev = NULL;
 			}
@@ -148,7 +148,7 @@ void ProcessPendingGameEvents(UINT32 uiAdjustment, const UINT8 ubWarpCode)
 				temp = curr;
 				prev->next = curr->next;
 				curr = curr->next;
-				MemFree( temp );
+				delete temp;
 			}
 		}
 		else
@@ -188,7 +188,7 @@ STRATEGICEVENT* AddAdvancedStrategicEvent(StrategicEventFrequency const event_ty
 		return 0;
 	}
 
-	STRATEGICEVENT* const n = MALLOCZ(STRATEGICEVENT);
+	STRATEGICEVENT* const n = new STRATEGICEVENT{};
 	n->ubCallbackID = callback_id;
 	n->uiParam      = param;
 	n->ubEventType  = event_type;
@@ -284,7 +284,7 @@ void DeleteAllStrategicEventsOfType(StrategicEventKind const callback_id)
 			if (!gfPreventDeletionOfAnyEvent)
 			{ // Detach and delete the node
 				*anchor = e->next;
-				MemFree(e);
+				delete e;
 				continue;
 			}
 
@@ -302,7 +302,7 @@ void DeleteAllStrategicEvents()
 	{
 		STRATEGICEVENT* const del = i;
 		i = i->next;
-		MemFree(del);
+		delete del;
 	}
 	gpEventList = 0;
 }
@@ -325,7 +325,7 @@ void DeleteStrategicEvent(StrategicEventKind const callback_id, UINT32 const par
 		else
 		{
 			*anchor = e->next;
-			MemFree(e);
+			delete e;
 		}
 		return;
 	}
@@ -377,7 +377,7 @@ void LoadStrategicEventsFromSavedGame(HWFILE const f)
 		BYTE data[28];
 		FileRead(f, data, sizeof(data));
 
-		STRATEGICEVENT* const sev = MALLOCZ(STRATEGICEVENT);
+		STRATEGICEVENT* const sev = new STRATEGICEVENT{};
 		BYTE const*           d   = data;
 		EXTR_SKIP(d, 4)
 		EXTR_U32( d, sev->uiTimeStamp)

@@ -1130,7 +1130,7 @@ void AddItemToLeaveIndex(const OBJECTTYPE* const o, const UINT32 uiSlotIndex)
 
 	if (o == NULL) return;
 
-	MERC_LEAVE_ITEM* const mli = MALLOC(MERC_LEAVE_ITEM);
+	MERC_LEAVE_ITEM* const mli = new MERC_LEAVE_ITEM{};
 	mli->o     = *o;
 	mli->pNext = NULL;
 
@@ -1154,7 +1154,7 @@ static void FreeLeaveListSlot(UINT32 uiSlotIndex)
 	while( pCurrent )
 	{
 		pTemp = pCurrent->pNext;
-		MemFree( pCurrent );
+		delete pCurrent;
 		pCurrent = pTemp;
 	}
 
@@ -4190,7 +4190,7 @@ void LoadLeaveItemList(HWFILE const f)
 		MERC_LEAVE_ITEM** anchor = &gpLeaveListHead[i];
 		for (UINT32 n = n_items; n != 0; --n)
 		{
-			MERC_LEAVE_ITEM* const li = MALLOCZ(MERC_LEAVE_ITEM);
+			MERC_LEAVE_ITEM* const li = new MERC_LEAVE_ITEM{};
 
 			BYTE  data[40];
 			FileRead(f, data, sizeof(data));

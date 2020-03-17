@@ -3,7 +3,7 @@
 
 #include "LaptopSave.h"
 
-
+#include <vector>
 
 
 //enums for the various destinations that are available in the bobbyR dest drop down box
@@ -63,8 +63,7 @@ struct NewBobbyRayOrderStruct
 };
 
 
-extern NewBobbyRayOrderStruct *gpNewBobbyrShipments;
-extern INT32 giNumberOfNewBobbyRShipment;
+extern std::vector<NewBobbyRayOrderStruct> gpNewBobbyrShipments;
 
 UINT16 CountNumberOfBobbyPurchasesThatAreInTransit(void);
 

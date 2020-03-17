@@ -63,7 +63,8 @@ extern INT32 iHelicopterVehicleId;
 
 static inline VEHICLETYPE& GetHelicopter(void)
 {
-	Assert(0 <= iHelicopterVehicleId && iHelicopterVehicleId < ubNumberOfVehicles);
+	Assert(pVehicleList.size() <= INT32_MAX);
+	Assert(0 <= iHelicopterVehicleId && iHelicopterVehicleId < static_cast<INT32>(pVehicleList.size()));
 	VEHICLETYPE& v = pVehicleList[iHelicopterVehicleId];
 	Assert(v.fValid);
 	return v;

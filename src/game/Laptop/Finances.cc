@@ -701,7 +701,7 @@ static void ClearFinanceList(void)
 		pFinanceList=pFinanceList->Next;
 
 		// delete current node
-		MemFree(pFinanceNode);
+		delete pFinanceNode;
 	}
 	pFinanceListHead = NULL;
 }
@@ -709,7 +709,7 @@ static void ClearFinanceList(void)
 
 static void ProcessAndEnterAFinacialRecord(const UINT8 ubCode, const UINT32 uiDate, const INT32 iAmount, const UINT8 ubSecondCode, const INT32 iBalanceToDate)
 {
-	FinanceUnit* const fu = MALLOC(FinanceUnit);
+	FinanceUnit* const fu = new FinanceUnit{};
 	fu->Next           = NULL;
 	fu->ubCode         = ubCode;
 	fu->ubSecondCode   = ubSecondCode;

@@ -24,6 +24,8 @@
 #include "MemMan.h"
 #include "Logger.h"
 
+#include <vector>
+
 UINT16			CurrentPaste = NO_TILE;
 
 
@@ -623,9 +625,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 {
 	UINT8  ubLastHighLevel;
-	UINT32 *puiDeletedTypes = NULL;
-	UINT8  ubNumTypes;
-	UINT8  cnt;
+	std::vector<UINT32> deletedTypes;
 
 	// Here we do the following:
 	// - Remove old type from layer
@@ -644,19 +644,16 @@ static void PasteHigherTexture(UINT32 iMapIndex, UINT32 fNewType)
 		AddToUndoList( iMapIndex );
 
 		// - For all heigher level, remove
-		RemoveHigherLandLevels(iMapIndex, fNewType, puiDeletedTypes, ubNumTypes);
+		RemoveHigherLandLevels(iMapIndex, fNewType, deletedTypes);
 
 		// Set with a radius of 1 and smooth according to height difference
 		SetLowerLandIndexWithRadius( iMapIndex, fNewType, 1 , TRUE );
 
 		// Smooth all deleted levels
-		for ( cnt = 0; cnt < ubNumTypes; cnt++ )
+		for (UINT32 deletedType : deletedTypes)
 		{
-		SmoothTerrainRadius( iMapIndex, puiDeletedTypes[ cnt ], 1, TRUE );
+			SmoothTerrainRadius( iMapIndex, deletedType, 1, TRUE );
 		}
-
-		MemFree( puiDeletedTypes );
-
 	}
 	else if ( iMapIndex < GRIDSIZE )
 	{
@@ -727,8 +724,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 	BOOLEAN fDoPaste = FALSE;
 	INT32   leftmost;
 	UINT8   ubLastHighLevel;
-	UINT32  *puiSmoothTiles = NULL;
-	INT16   sNumSmoothTiles = 0;
+	std::vector<UINT32> smoothTiles;
 	UINT16  usTemp;
 
 	// Determine start end end indicies and num rows
@@ -795,9 +791,7 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 						SetLandIndex(iNewIndex, NewTile, uiNewType);
 
 						// If we are top-most, add to smooth list
-						sNumSmoothTiles++;
-						puiSmoothTiles = REALLOC(puiSmoothTiles, UINT32, sNumSmoothTiles);
-						puiSmoothTiles[ sNumSmoothTiles-1 ] = iNewIndex;
+						smoothTiles.push_back(iNewIndex);
 					}
 				}
 			}
@@ -805,13 +799,9 @@ static BOOLEAN SetLowerLandIndexWithRadius(INT32 iMapIndex, UINT32 uiNewType, UI
 	}
 
 	// Once here, smooth any tiles that need it
-	if ( sNumSmoothTiles > 0 )
+	for (UINT32 smoothTile : smoothTiles)
 	{
-		for ( cnt1 = 0; cnt1 < sNumSmoothTiles; cnt1++ )
-		{
-			SmoothTerrainRadius( puiSmoothTiles[ cnt1 ], uiNewType, 10, FALSE );
-		}
-		MemFree( puiSmoothTiles );
+		SmoothTerrainRadius(smoothTile, uiNewType, 10, FALSE);
 	}
 
 	return( TRUE );

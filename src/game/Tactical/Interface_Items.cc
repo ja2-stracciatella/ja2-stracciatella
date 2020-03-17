@@ -3424,7 +3424,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					if ( sActionGridNo != -1 && gbItemPointerSrcSlot != NO_SLOT )
 					{
 							// Make a temp object for ammo...
-							gpItemPointerSoldier->pTempObject  = MALLOC(OBJECTTYPE);
+							gpItemPointerSoldier->pTempObject  = new OBJECTTYPE{};
 							*gpItemPointerSoldier->pTempObject = TempObject;
 
 							// Remove from soldier's inv...
@@ -3524,7 +3524,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 				switch ( gAnimControl[ gpItemPointerSoldier->usAnimState ].ubHeight )
 				{
 					case ANIM_STAND:
-						gpItemPointerSoldier->pTempObject = MALLOC(OBJECTTYPE);
+						gpItemPointerSoldier->pTempObject = new OBJECTTYPE{};
 						*gpItemPointerSoldier->pTempObject = *gpItemPointer;
 						gpItemPointerSoldier->sPendingActionData2 = usMapPos;
 
@@ -4518,7 +4518,7 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 
 	menu.uiPanelVo = AddVideoObjectFromFile(INTERFACEDIR "/itembox.sti");
 
-	menu.pfSelectedArray = MALLOCNZ(BOOLEAN, menu.ubTotalItems);
+	menu.pfSelectedArray = new BOOLEAN[menu.ubTotalItems]{};
 
 	CalculateItemPickupMenuDimensions();
 
@@ -4910,7 +4910,7 @@ void RemoveItemPickupMenu( )
 		}
 
 		// Free selection list...
-		MemFree( gItemPickupMenu.pfSelectedArray );
+		delete[] gItemPickupMenu.pfSelectedArray;
 		gItemPickupMenu.pfSelectedArray = NULL;
 
 

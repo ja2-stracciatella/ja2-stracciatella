@@ -298,7 +298,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 	UINT16	cnt;
 	STRUCTURE * pStructure;
 
-	gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
+	gpRevealedMap = new UINT8[NUM_REVEALED_BYTES]{};
 
 	//Loop though all the map elements
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -415,7 +415,7 @@ void SaveRevealedStatusArrayToRevealedTempFile(INT16 const sSectorX, INT16 const
 
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_REVEALED_STATUS_TEMP_FILE_EXISTS );
 
-	MemFree( gpRevealedMap );
+	delete[] gpRevealedMap;
 	gpRevealedMap = NULL;
 }
 
@@ -436,7 +436,7 @@ void LoadRevealedStatusArrayFromRevealedTempFile()
 		AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
 
 		Assert( gpRevealedMap == NULL );
-		gpRevealedMap = MALLOCNZ(UINT8, NUM_REVEALED_BYTES);
+		gpRevealedMap = new UINT8[NUM_REVEALED_BYTES]{};
 
 		// Load the Reveal map array structure
 		FileRead(hFile, gpRevealedMap, NUM_REVEALED_BYTES);
@@ -445,7 +445,7 @@ void LoadRevealedStatusArrayFromRevealedTempFile()
 	//Loop through and set the bits in the map that are revealed
 	SetMapRevealedStatus();
 
-	MemFree( gpRevealedMap );
+	delete[] gpRevealedMap;
 	gpRevealedMap = NULL;
 }
 

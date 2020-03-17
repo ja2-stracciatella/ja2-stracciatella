@@ -4,6 +4,8 @@
 #include "Types.h"
 #include "World_Items.h"
 
+#include <vector>
+
 // number of inventory slots
 #define MAP_INVENTORY_POOL_SLOT_COUNT 45
 
@@ -32,7 +34,7 @@ void CancelSectorInventoryDisplayIfOn( BOOLEAN fExitFromMapScreen );
 void HandleFlashForHighLightedItem( void );
 
 // the list for the inventory
-extern WORLDITEM *pInventoryPoolList;
+extern std::vector<WORLDITEM> pInventoryPoolList;
 
 // autoplace down object
 void AutoPlaceObjectInInventoryStash(OBJECTTYPE* pItemPtr);
@@ -44,6 +46,6 @@ extern INT16 sObjectSourceGridNo;
 extern INT32 iCurrentInventoryPoolPage;
 extern BOOLEAN fMapInventoryItemCompatable[ ];
 
-BOOLEAN IsMapScreenWorldItemVisibleInMapInventory(const WORLDITEM*);
+BOOLEAN IsMapScreenWorldItemVisibleInMapInventory(const WORLDITEM& wi);
 
 #endif

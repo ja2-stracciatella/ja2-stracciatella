@@ -177,7 +177,7 @@ void LoadEnemySoldiersFromTempFile()
 			if (!dp)
 			{
 				// Need to upgrade the placement to detailed placement
-				dp = MALLOC(SOLDIERCREATE_STRUCT);
+				dp = new SOLDIERCREATE_STRUCT{};
 				curr->pDetailedPlacement = dp;
 			}
 			// Now replace the map pristine placement info with the temp map file
@@ -427,7 +427,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 			if (!dp)
 			{
 				// Need to upgrade the placement to detailed placement
-				dp = MALLOC(SOLDIERCREATE_STRUCT);
+				dp = new SOLDIERCREATE_STRUCT{};
 				curr->pDetailedPlacement = dp;
 			}
 			// Now replace the map pristine placement info with the temp map file
@@ -591,7 +591,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 			if (!dp)
 			{
 				// Need to upgrade the placement to detailed placement
-				dp = MALLOC(SOLDIERCREATE_STRUCT);
+				dp = new SOLDIERCREATE_STRUCT{};
 				curr->pDetailedPlacement = dp;
 			}
 			// Now replace the map pristine placement info with the temp map file
@@ -711,7 +711,7 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 		if (!dp)
 		{
 			//need to upgrade the placement to detailed placement
-			dp                                        = MALLOCZ(SOLDIERCREATE_STRUCT);
+			dp                                        = new SOLDIERCREATE_STRUCT{};
 			curr->pDetailedPlacement                  = dp;
 			curr->pBasicPlacement->fDetailedPlacement = TRUE;
 		}

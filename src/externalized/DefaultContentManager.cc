@@ -54,7 +54,7 @@ static void LoadEncryptedData(STRING_ENC_TYPE encType, SGPFile* const File, wcha
 {
 	FileSeek(File, seek_chars * 2, FILE_SEEK_FROM_START);
 
-	UINT16 *Str = MALLOCN(UINT16, read_chars);
+	UINT16 *Str = new UINT16[read_chars]{};
 	FileRead(File, Str, sizeof(UINT16) * read_chars);
 
 	Str[read_chars - 1] = '\0';
@@ -136,7 +136,7 @@ static void LoadEncryptedData(STRING_ENC_TYPE encType, SGPFile* const File, wcha
 		*DestString++ = c;
 	}
 	*DestString = L'\0';
-	MemFree(Str);
+	delete[] Str;
 }
 
 DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
@@ -425,7 +425,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
 				if (libFile)
 				{
 					SLOGD("Opened file (from library ): %s", filename);
-					SGPFile *file = MALLOCZ(SGPFile);
+					SGPFile *file = new SGPFile{};
 					file->flags = SGPFILE_NONE;
 					file->u.lib = libFile.release();
 					return file;

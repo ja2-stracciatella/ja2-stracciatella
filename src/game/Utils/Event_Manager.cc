@@ -31,13 +31,13 @@ static EventList& GetQueue(EventQueueID ubQueueID);
 
 void AddEvent(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, UINT32 const uiDataSize, EventQueueID const ubQueueID)
 {
-	EVENT* pEvent = MALLOCE(EVENT, Data, uiDataSize);
+	EVENT* pEvent = new EVENT{};
 	pEvent->TimeStamp  = GetJA2Clock();
 	pEvent->usDelay    = usDelay;
 	pEvent->uiEvent    = uiEvent;
 	pEvent->uiFlags    = 0;
-	pEvent->uiDataSize = uiDataSize;
-	memcpy(pEvent->Data, pEventData, uiDataSize);
+	UINT8* data = static_cast<UINT8*>(pEventData);
+	pEvent->Data.assign(data, data + uiDataSize);
 
 	// Add event to queue
 	GetQueue(ubQueueID).push_back(pEvent);
@@ -72,7 +72,7 @@ catch (const std::exception&)
 BOOLEAN FreeEvent(EVENT* pEvent)
 {
 	CHECKF(pEvent != NULL);
-	MemFree(pEvent);
+	delete pEvent;
 	return TRUE;
 }
 

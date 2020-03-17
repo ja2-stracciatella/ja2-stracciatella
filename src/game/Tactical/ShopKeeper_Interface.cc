@@ -818,7 +818,7 @@ static void ExitShopKeeperInterface(void)
 	//if there is a temp inventory array, destroy it
 	if( gpTempDealersInventory )
 	{
-		MemFree( gpTempDealersInventory );
+		delete[] gpTempDealersInventory;
 		gpTempDealersInventory = NULL;
 	}
 
@@ -2167,12 +2167,12 @@ static void DetermineArmsDealersSellingInventory(void)
 	//if there is an old inventory, delete it
 	if( gpTempDealersInventory )
 	{
-		MemFree( gpTempDealersInventory );
+		delete[] gpTempDealersInventory;
 		gpTempDealersInventory = NULL;
 	}
 
 	//allocate memory to hold the inventory in memory
-	gpTempDealersInventory = MALLOCNZ(INVENTORY_IN_SLOT, gSelectArmsDealerInfo.uiNumDistinctInventoryItems);
+	gpTempDealersInventory = new INVENTORY_IN_SLOT[gSelectArmsDealerInfo.uiNumDistinctInventoryItems]{};
 	guiNextFreeInvSlot     = 0;
 
 	//loop through the dealer's permanent inventory items, adding them all to the temp inventory list
@@ -2192,7 +2192,8 @@ static void DetermineArmsDealersSellingInventory(void)
 			}
 
 			// add all active special items
-			for( ubElement=0; ubElement< gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].ubElementsAlloced; ubElement++ )
+			Assert(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem.size() <= UINT8_MAX);
+			for (ubElement = 0; ubElement < static_cast<UINT8>(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem.size()); ubElement++)
 			{
 				pSpecialItem = &(gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ]);
 
@@ -6010,7 +6011,8 @@ static BOOLEAN RepairmanFixingAnyItemsThatShouldBeDoneNow(UINT32* puiHoursSinceO
 		if( pDealerItem->ubTotalItems )
 		{
 			//loop through the array of items
-			for( ubElement=0; ubElement< pDealerItem->ubElementsAlloced; ubElement++ )
+			Assert(pDealerItem->SpecialItem.size() <= UINT8_MAX);
+			for (ubElement = 0; ubElement < static_cast<UINT8>(pDealerItem->SpecialItem.size()); ubElement++)
 			{
 				pSpecialItem = &( pDealerItem->SpecialItem[ ubElement ] );
 
@@ -6071,7 +6073,8 @@ static void DelayRepairsInProgressBy(UINT32 uiMinutesDelayed)
 		if( pDealerItem->ubTotalItems )
 		{
 			//loop through the array of items
-			for( ubElement=0; ubElement< pDealerItem->ubElementsAlloced; ubElement++ )
+			Assert(pDealerItem->SpecialItem.size() <= UINT8_MAX);
+			for (ubElement = 0; ubElement < static_cast<UINT8>(pDealerItem->SpecialItem.size()); ubElement++)
 			{
 				pSpecialItem = &( pDealerItem->SpecialItem[ ubElement ] );
 
@@ -6290,7 +6293,7 @@ static void BuildDoneWhenTimeString(wchar_t sString[], size_t const Length, Arms
 	//dealer must be a repair dealer
 	Assert( DoesDealerDoRepairs( ubArmsDealer ) );
 	// element index must be valid
-	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubElementsAlloced );
+	Assert( ubElement < gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem.size() );
 	// that item must be active
 	Assert( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].fActive );
 	// that item must be in repair
