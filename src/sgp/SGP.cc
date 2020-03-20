@@ -727,25 +727,25 @@ TEST(cpp_language, new_array_initialization)
 		int* tmp = new int[2]();
 		EXPECT_EQ(tmp[0], 0);
 		EXPECT_EQ(tmp[1], 0);
-		delete tmp;
+		delete[] tmp;
 	}
 	{
 		int* tmp = new int[2]{};
 		EXPECT_EQ(tmp[0], 0);
 		EXPECT_EQ(tmp[1], 0);
-		delete tmp;
+		delete[] tmp;
 	}
 	{
 		int* tmp = new int[2]{123};
 		EXPECT_EQ(tmp[0], 123);
 		EXPECT_EQ(tmp[1], 0);
-		delete tmp;
+		delete[] tmp;
 	}
 	{
 		int* tmp = new int[2]{123, 456};
 		EXPECT_EQ(tmp[0], 123);
 		EXPECT_EQ(tmp[1], 456);
-		delete tmp;
+		delete[] tmp;
 	}
 	{
 		// avoid this pattern, it's uninitialized memory for trivial structs (PODs)
@@ -754,7 +754,7 @@ TEST(cpp_language, new_array_initialization)
 		EXPECT_EQ(tmp[0].b, 0);
 		EXPECT_EQ(tmp[1].a, 0);
 		EXPECT_EQ(tmp[1].b, 0);
-		delete tmp;
+		delete[] tmp;
 	}
 	{
 		TestStruct* tmp = new TestStruct[2]();
@@ -766,7 +766,7 @@ TEST(cpp_language, new_array_initialization)
 		EXPECT_EQ(tmp[1].b, 0);
 		EXPECT_EQ(tmp[1].c[0], 0);
 		EXPECT_EQ(tmp[1].c[1], 0);
-		delete tmp;
+		delete[] tmp;
 	}
 	{
 		NonTrivialTestStruct* tmp = new NonTrivialTestStruct[2]();
@@ -774,7 +774,7 @@ TEST(cpp_language, new_array_initialization)
 		EXPECT_EQ(tmp[0].b, 0);
 		EXPECT_EQ(tmp[1].a, 0);
 		EXPECT_EQ(tmp[1].b, 0);
-		delete tmp;
+		delete[] tmp;
 	}
 	{
 		TestStruct* tmp = new TestStruct[2]{};
@@ -786,7 +786,7 @@ TEST(cpp_language, new_array_initialization)
 		EXPECT_EQ(tmp[1].b, 0);
 		EXPECT_EQ(tmp[1].c[0], 0);
 		EXPECT_EQ(tmp[1].c[1], 0);
-		delete tmp;
+		delete[] tmp;
 	}
 	{
 		NonTrivialTestStruct* tmp = new NonTrivialTestStruct[2]{};
@@ -794,7 +794,7 @@ TEST(cpp_language, new_array_initialization)
 		EXPECT_EQ(tmp[0].b, 0);
 		EXPECT_EQ(tmp[1].a, 0);
 		EXPECT_EQ(tmp[1].b, 0);
-		delete tmp;
+		delete[] tmp;
 	}
 	{
 		// avoid this pattern, it's uninitialized memory for trivial structs (PODs) in VS2015
@@ -805,7 +805,7 @@ TEST(cpp_language, new_array_initialization)
 		EXPECT_EQ(tmp[0].b, 0);
 		EXPECT_EQ(tmp[1].a, 0);
 		EXPECT_EQ(tmp[1].b, 0);
-		delete tmp;
+		delete[] tmp;
 	}
 	{
 		// avoid this pattern, it's uninitialized memory for trivial structs (PODs) in VS2015
@@ -817,7 +817,7 @@ TEST(cpp_language, new_array_initialization)
 		EXPECT_EQ(tmp[0].b, 0);
 		EXPECT_EQ(tmp[1].a, 456);
 		EXPECT_EQ(tmp[1].b, 0);
-		delete tmp;
+		delete[] tmp;
 	}
 }
 
