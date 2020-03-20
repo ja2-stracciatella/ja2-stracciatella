@@ -84,7 +84,7 @@ struct SAMPLETAG
 	CHAR8   pName[128];  // Path to sample data
 	UINT32  n_samples;
 	UINT32  uiFlags;     // Status flags
-	PTR     pData;       // pointer to sample data memory
+	UINT8*  pData;       // pointer to sample data memory
 	UINT32  uiCacheHits;
 
 	// Random sound data
