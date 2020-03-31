@@ -89,3 +89,13 @@ pub extern "C" fn Path_parent(path: *const c_char) -> *mut c_char {
         ptr::null_mut()
     }
 }
+
+/// Sets the filename of the path.
+#[no_mangle]
+pub extern "C" fn Path_setFilename(path: *const c_char, filename: *const c_char) -> *mut c_char {
+    let mut path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+    let filename = path_buf_from_c_str_or_panic(unsafe_c_str(filename));
+    path.set_file_name(filename.as_os_str());
+    let new_path = c_string_from_path_or_panic(&path);
+    new_path.into_raw()
+}
