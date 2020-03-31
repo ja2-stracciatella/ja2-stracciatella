@@ -42,6 +42,42 @@ const std::vector<VideoScaleQuality> scalingModes = {
 	VideoScaleQuality::PERFECT,
 };
 
+void showRustError() {
+	RustPointer<char> err(getRustError());
+	if (err) {
+		SLOGE("%s", err.get());
+		fl_message_title("Rust error");
+		fl_alert("%s", err.get());
+	} else {
+		RustPointer<char> err(getRustError());
+		SLOGE("showRustError: no rust error");
+		fl_message_title("showRustError");
+		fl_alert("no rust error");
+	}
+}
+
+std::string encodePath(const char* path) {
+	if (path == nullptr) {
+		return std::string();
+	}
+	RustPointer<char> encodedPath(Path_encodeU8(reinterpret_cast<const uint8_t*>(path), strlen(path)));
+	return std::string(encodedPath.get());
+}
+
+std::string decodePath(const char* path) {
+	if (path == nullptr) {
+		return std::string();
+	}
+	std::string buf(path); // the decoded size always fits in the original size
+	size_t len = Path_decodeU8(path, reinterpret_cast<uint8_t*>(&buf[0]), buf.size());
+	if (len > buf.size()) {
+		showRustError();
+		return std::string();
+	}
+	buf.resize(len);
+	return buf;
+}
+
 Launcher::Launcher(int argc, char* argv[]) : StracciatellaLauncher() {
 	this->argc = argc;
 	this->argv = argv;
@@ -207,7 +243,8 @@ void Launcher::openGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 	Fl_Native_File_Chooser fnfc;
 	fnfc.title("Select the original Jagged Alliance 2 install directory");
 	fnfc.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
-	fnfc.directory(window->gameDirectoryInput->value());
+	std::string gameDir = decodePath(window->gameDirectoryInput->value());
+	fnfc.directory(gameDir.empty() ? nullptr : gameDir.c_str());
 
 	switch ( fnfc.show() ) {
 		case -1:
@@ -215,7 +252,8 @@ void Launcher::openGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 		case  1:
 			break; // CANCEL
 		default:
-			window->gameDirectoryInput->value(fnfc.filename());
+			gameDir = encodePath(fnfc.filename());
+			window->gameDirectoryInput->value(gameDir.c_str());
 			window->update(true, window->gameDirectoryInput);
 			break; // FILE CHOSEN
 	}
