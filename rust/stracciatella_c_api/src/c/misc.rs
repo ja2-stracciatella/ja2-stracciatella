@@ -167,6 +167,23 @@ pub extern "C" fn Env_currentDir() -> *mut c_char {
     }
 }
 
+/// Gets the path to the current executable.
+/// Sets the rust error.
+#[no_mangle]
+pub extern "C" fn Env_currentExe() -> *mut c_char {
+    forget_rust_error();
+    match env::current_exe() {
+        Err(err) => {
+            remember_rust_error(format!("Env_currentExe: {}", err));
+            ptr::null_mut()
+        }
+        Ok(path) => {
+            let c_path = c_string_from_path_or_panic(&path);
+            c_path.into_raw()
+        }
+    }
+}
+
 /// A wrapper around `Vec<CString>` for C.
 #[derive(Default)]
 pub struct VecCString {
