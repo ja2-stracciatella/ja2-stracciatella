@@ -4,6 +4,7 @@
 
 use std::env;
 use std::ffi::CString;
+use std::process::Command;
 use std::ptr;
 
 use stracciatella::config::find_stracciatella_home;
@@ -147,6 +148,41 @@ pub extern "C" fn findAvailableMods() -> *mut VecCString {
     } else {
         into_ptr(VecCString::new())
     }
+}
+
+/// Executes a command.
+/// Sets the rust error.
+#[no_mangle]
+pub extern "C" fn Command_execute(program: *const c_char, args: *mut VecCString) -> bool {
+    forget_rust_error();
+    let program = path_buf_from_c_str_or_panic(unsafe_c_str(program));
+    let args: Vec<_> = unsafe_ref(args)
+        .inner
+        .iter()
+        .map(|x| path_buf_from_c_str_or_panic(x))
+        .collect();
+    let status_result = Command::new(&program).args(&args).status();
+    match status_result {
+        Err(err) => remember_rust_error(format!(
+            "Command_execute {:?} {:?}: failed to execute: {}",
+            program, args, err
+        )),
+        Ok(status) => match status.code() {
+            None => remember_rust_error(format!(
+                "Command_execute {:?} {:?}: terminated by a signal",
+                program, args
+            )),
+            Some(code) => {
+                if code != 0 {
+                    remember_rust_error(format!(
+                        "Command_execute {:?} {:?}: exited with status code {}",
+                        program, args, code
+                    ))
+                }
+            }
+        },
+    }
+    no_rust_error()
 }
 
 /// Gets the path to the current directory.
