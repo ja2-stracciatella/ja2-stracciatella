@@ -9,7 +9,7 @@ use std::time;
 use stracciatella::fs;
 
 use crate::c::common::*;
-use crate::c::misc::VecCString;
+use crate::c::vec::VecCString;
 
 /// A directory in the filesystem that is automatically deleted.
 /// The contents of the directory are deleted before the directory is deleted.

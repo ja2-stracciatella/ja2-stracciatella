@@ -9,6 +9,7 @@ pub mod librarydb;
 pub mod logger;
 pub mod misc;
 pub mod path;
+pub mod vec;
 
 pub mod error {
     //! This module contains error handling code for C.

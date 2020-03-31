@@ -13,6 +13,7 @@ use stracciatella::get_assets_dir;
 use stracciatella::guess::guess_vanilla_version;
 
 use crate::c::common::*;
+use crate::c::vec::VecCString;
 
 /// Converts the launcher executable path to the game executable path.
 /// The executable is assumed to be in the same directory as the launcher.
@@ -218,42 +219,6 @@ pub extern "C" fn Env_currentExe() -> *mut c_char {
             c_path.into_raw()
         }
     }
-}
-
-/// A wrapper around `Vec<CString>` for C.
-#[derive(Default)]
-pub struct VecCString {
-    inner: Vec<CString>,
-}
-
-impl VecCString {
-    pub fn new() -> Self {
-        Self { inner: Vec::new() }
-    }
-    pub fn from_vec(vec: Vec<CString>) -> Self {
-        Self { inner: vec }
-    }
-}
-
-/// Deletes the vector.
-#[no_mangle]
-pub extern "C" fn VecCString_destroy(vec: *mut VecCString) {
-    let _drop_me = from_ptr(vec);
-}
-
-/// Returns the vector length.
-#[no_mangle]
-pub extern "C" fn VecCString_length(vec: *mut VecCString) -> size_t {
-    let vec = unsafe_ref(vec);
-    vec.inner.len()
-}
-
-/// Returns the string at the target index.
-/// The caller is responsible for the returned memory.
-#[no_mangle]
-pub extern "C" fn VecCString_get(vec: *mut VecCString, index: size_t) -> *mut c_char {
-    let vec = unsafe_ref(vec);
-    vec.inner[index].clone().into_raw()
 }
 
 #[cfg(test)]
