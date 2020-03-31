@@ -45,11 +45,14 @@ pub(crate) mod common {
     #![allow(dead_code)]
 
     use std::cell::RefCell;
+    use std::convert::TryFrom;
     use std::ffi::{CStr, CString};
-    use std::path::Path;
+    use std::path::{Path, PathBuf};
     use std::slice;
 
     pub use libc::{c_char, c_int, size_t};
+
+    use crate::any_path::AnyPath;
 
     thread_local!(
         /// A thread local error for C.
@@ -129,43 +132,16 @@ pub(crate) mod common {
         }
     }
 
-    /// Converts a CStr to a Path. Panics on failure.
-    pub fn path_from_c_str_or_panic(c_str: &CStr) -> &Path {
-        let bytes = c_str.to_bytes();
-        #[cfg(unix)]
-        {
-            use std::os::unix::ffi::OsStrExt;
-            Path::new(std::ffi::OsStr::from_bytes(&bytes))
-        }
-        #[cfg(not(unix))]
-        {
-            match std::str::from_utf8(&bytes) {
-                Ok(s) => Path::new(s),
-                Err(e) => panic!("Converting {:?} to Path: {:?}", &c_str, e),
-            }
-        }
+    /// Converts a CStr to a PathBuf. Panics on failure.
+    pub fn path_buf_from_c_str_or_panic(c_str: &CStr) -> PathBuf {
+        let c_path = AnyPath::try_from(c_str).expect("AnyPath");
+        c_path.decode_path_buf().expect("PathBuf")
     }
 
     // Converts a Path to a CString. Discards characters starting with the first nul character.
     pub fn c_string_from_path_or_panic(path: &Path) -> CString {
-        #[cfg(unix)]
-        {
-            use std::os::unix::ffi::OsStrExt;
-            let bytes = path
-                .as_os_str()
-                .as_bytes()
-                .split(|x| *x == 0)
-                .next()
-                .unwrap();
-            unsafe { CString::from_vec_unchecked(bytes.to_vec()) }
-        }
-        #[cfg(not(unix))]
-        {
-            match path.to_str() {
-                Some(s) => c_string_from_str(s),
-                None => panic!("Converting Path {:?} to CString: not utf8", &path),
-            }
-        }
+        let c_path = AnyPath::encode_path(path);
+        c_path.into()
     }
 
     /// Converts a str to a CString. Discards characters starting with the first nul character.
@@ -238,22 +214,22 @@ mod tests {
     fn test_conversions() {
         let c_str = CStr::from_bytes_with_nul(b"123\0").unwrap();
         assert_eq!(str_from_c_str_or_panic(&c_str), "123");
-        assert_eq!(path_from_c_str_or_panic(&c_str), Path::new("123"));
+        assert_eq!(path_buf_from_c_str_or_panic(&c_str), Path::new("123"));
         assert_eq!(
             c_string_from_path_or_panic(Path::new("123")).to_bytes(),
             b"123"
         );
         assert_eq!(
-            c_string_from_path_or_panic(Path::new("123\0nope")).to_bytes(),
-            b"123"
+            c_string_from_path_or_panic(Path::new("123\0yup%")).to_bytes(),
+            b"123%00yup%25"
         );
         assert_eq!(c_string_from_str("123").to_bytes(), b"123");
         assert_eq!(c_string_from_str("123\0nope").to_bytes(), b"123");
         #[cfg(unix)]
         {
             // Path supports invalid utf8 on unix
-            let c_str = CStr::from_bytes_with_nul(b"123\xe1\0").unwrap();
-            let path = path_from_c_str_or_panic(&c_str);
+            let c_str = CStr::from_bytes_with_nul(b"123%E1\0").unwrap();
+            let path = path_buf_from_c_str_or_panic(&c_str);
             assert_eq!(path.as_os_str().len(), 4);
             assert_eq!(c_string_from_path_or_panic(&path).as_ref(), c_str);
         }
@@ -272,9 +248,9 @@ mod tests {
     #[should_panic]
     #[cfg(not(unix))]
     fn test_path_from_c_str_panic_not_unix() {
-        if let Ok(c_str) = CStr::from_bytes_with_nul(b"123\xe1\0") {
+        if let Ok(c_str) = CStr::from_bytes_with_nul(b"123%E1\0") {
             // panics, Path only supports invalid utf8 on unix
-            path_from_c_str_or_panic(&c_str);
+            path_buf_from_c_str_or_panic(&c_str);
         }
     }
 

@@ -78,7 +78,7 @@ pub extern "C" fn EngineOptions_setVanillaGameDir(
     game_dir_ptr: *const c_char,
 ) {
     let engine_options = unsafe_mut(ptr);
-    let vanilla_game_dir = path_from_c_str_or_panic(unsafe_c_str(game_dir_ptr));
+    let vanilla_game_dir = path_buf_from_c_str_or_panic(unsafe_c_str(game_dir_ptr));
     engine_options.vanilla_game_dir = vanilla_game_dir.to_owned();
 }
 

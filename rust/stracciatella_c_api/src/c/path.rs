@@ -10,7 +10,7 @@ use crate::c::common::*;
 /// Returns null if there is no extension.
 #[no_mangle]
 pub extern "C" fn Path_extension(path: *const c_char) -> *mut c_char {
-    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     if let Some(extension) = path.extension() {
         let c_extension = c_string_from_path_or_panic(extension.as_ref());
         c_extension.into_raw()
@@ -23,7 +23,7 @@ pub extern "C" fn Path_extension(path: *const c_char) -> *mut c_char {
 /// Returns null if there is no filename.
 #[no_mangle]
 pub extern "C" fn Path_filename(path: *const c_char) -> *mut c_char {
-    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     if let Some(filename) = path.file_name() {
         let c_filename = c_string_from_path_or_panic(filename.as_ref());
         c_filename.into_raw()
@@ -35,7 +35,7 @@ pub extern "C" fn Path_filename(path: *const c_char) -> *mut c_char {
 /// Checks if the path is absolute.
 #[no_mangle]
 pub extern "C" fn Path_isAbsolute(path: *const c_char) -> bool {
-    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     path.is_absolute()
 }
 
@@ -43,7 +43,7 @@ pub extern "C" fn Path_isAbsolute(path: *const c_char) -> bool {
 /// Returns null if there is no parent path.
 #[no_mangle]
 pub extern "C" fn Path_parent(path: *const c_char) -> *mut c_char {
-    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     if let Some(parent) = path.parent() {
         let c_parent = c_string_from_path_or_panic(parent);
         c_parent.into_raw()

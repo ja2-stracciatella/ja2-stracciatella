@@ -44,7 +44,7 @@ pub extern "C" fn TempDir_path(tempdir: *mut TempDir) -> *mut c_char {
 #[no_mangle]
 pub extern "C" fn Fs_createDir(path: *const c_char) -> bool {
     forget_rust_error();
-    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     if let Err(err) = fs::create_dir(&path) {
         remember_rust_error(format!("Fs_createDir {:?}: {}", path, err));
     }
@@ -70,7 +70,7 @@ pub extern "C" fn Fs_createTempDir() -> *mut TempDir {
 /// Checks if the path exists.
 #[no_mangle]
 pub extern "C" fn Fs_exists(path: *const c_char) -> bool {
-    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     fs::metadata(&path).is_ok()
 }
 
@@ -80,7 +80,7 @@ pub extern "C" fn Fs_exists(path: *const c_char) -> bool {
 #[no_mangle]
 pub extern "C" fn Fs_freeSpace(path: *const c_char, bytes: *mut u64) -> bool {
     forget_rust_error();
-    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     let bytes = unsafe_mut(bytes);
     let free_space = match fs::free_space(&path) {
         Err(err) => {
@@ -96,14 +96,14 @@ pub extern "C" fn Fs_freeSpace(path: *const c_char, bytes: *mut u64) -> bool {
 /// Checks if the path points to a directory.
 #[no_mangle]
 pub extern "C" fn Fs_isDir(path: *const c_char) -> bool {
-    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     fs::metadata(&path).map(|x| x.is_dir()).unwrap_or(false)
 }
 
 /// Checks if the path points to a file.
 #[no_mangle]
 pub extern "C" fn Fs_isFile(path: *const c_char) -> bool {
-    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     fs::metadata(&path).map(|x| x.is_file()).unwrap_or(false)
 }
 
@@ -116,7 +116,7 @@ pub extern "C" fn Fs_readDirPaths(
     ignore_entry_errors: bool,
 ) -> *mut VecCString {
     forget_rust_error();
-    let dir = path_from_c_str_or_panic(unsafe_c_str(dir));
+    let dir = path_buf_from_c_str_or_panic(unsafe_c_str(dir));
     match fs::read_dir_paths(&dir, ignore_entry_errors) {
         Err(err) => {
             remember_rust_error(format!("Fs_readDirPaths {:?}: {}", dir, err));
@@ -139,7 +139,7 @@ pub extern "C" fn Fs_readDirPaths(
 #[no_mangle]
 pub extern "C" fn Fs_modifiedSecs(path: *const c_char, modified_secs: *mut f64) -> bool {
     forget_rust_error();
-    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     let modified_secs = unsafe_mut(modified_secs);
     // FIXME use Duration.as_secs_f64 with rust 1.38.0+
     let as_secs_f64 = |duration: time::Duration| {
@@ -170,7 +170,7 @@ pub extern "C" fn Fs_modifiedSecs(path: *const c_char, modified_secs: *mut f64) 
 #[no_mangle]
 pub extern "C" fn Fs_removeDirAll(dir: *const c_char) -> bool {
     forget_rust_error();
-    let dir = path_from_c_str_or_panic(unsafe_c_str(dir));
+    let dir = path_buf_from_c_str_or_panic(unsafe_c_str(dir));
     if let Err(err) = fs::remove_dir_all(&dir) {
         remember_rust_error(format!("Fs_removeDirAll {:?}: {}", dir, err));
     }
@@ -183,8 +183,8 @@ pub extern "C" fn Fs_removeDirAll(dir: *const c_char) -> bool {
 #[no_mangle]
 pub extern "C" fn Fs_rename(from: *const c_char, to: *const c_char) -> bool {
     forget_rust_error();
-    let from = path_from_c_str_or_panic(unsafe_c_str(from));
-    let to = path_from_c_str_or_panic(unsafe_c_str(to));
+    let from = path_buf_from_c_str_or_panic(unsafe_c_str(from));
+    let to = path_buf_from_c_str_or_panic(unsafe_c_str(to));
     if let Err(err) = fs::rename(&from, &to) {
         remember_rust_error(format!("Fs_rename {:?} {:?}: {}", from, to, err));
     }
@@ -196,7 +196,7 @@ pub extern "C" fn Fs_rename(from: *const c_char, to: *const c_char) -> bool {
 #[no_mangle]
 pub extern "C" fn Fs_setReadOnly(path: *const c_char, readonly: bool) -> bool {
     forget_rust_error();
-    let path = path_from_c_str_or_panic(unsafe_c_str(path));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     let result = fs::metadata(&path).and_then(|x| {
         let mut permissions = x.permissions();
         permissions.set_readonly(readonly);

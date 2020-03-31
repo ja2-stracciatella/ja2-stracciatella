@@ -4,7 +4,6 @@
 
 use std::env;
 use std::ffi::CString;
-use std::path::PathBuf;
 use std::ptr;
 
 use stracciatella::config::find_stracciatella_home;
@@ -68,8 +67,8 @@ pub extern "C" fn findPathFromAssetsDir(
 ) -> *mut c_char {
     let assets_dir = get_assets_dir();
     let path = if !path.is_null() {
-        let path = path_from_c_str_or_panic(unsafe_c_str(path));
-        resolve_existing_components(path, Some(&assets_dir), caseless)
+        let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+        resolve_existing_components(&path, Some(&assets_dir), caseless)
     } else {
         assets_dir
     };
@@ -93,8 +92,8 @@ pub extern "C" fn findPathFromStracciatellaHome(
 ) -> *mut c_char {
     if let Ok(mut path_buf) = find_stracciatella_home() {
         if !path.is_null() {
-            let path = path_from_c_str_or_panic(unsafe_c_str(path));
-            let path = resolve_existing_components(path, Some(&path_buf), caseless);
+            let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+            let path = resolve_existing_components(&path, Some(&path_buf), caseless);
             path_buf = path;
         }
         if test_exists && !path_buf.exists() {
@@ -119,8 +118,8 @@ pub extern "C" fn checkIfRelativePathExists(
     path: *const c_char,
     caseless: bool,
 ) -> bool {
-    let base: PathBuf = path_from_c_str_or_panic(unsafe_c_str(base)).to_owned();
-    let path: PathBuf = path_from_c_str_or_panic(unsafe_c_str(path)).to_owned();
+    let base = path_buf_from_c_str_or_panic(unsafe_c_str(base));
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
     let path = resolve_existing_components(&path, Some(&base), caseless);
     path.exists()
 }
