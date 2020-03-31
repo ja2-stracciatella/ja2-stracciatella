@@ -2,9 +2,47 @@
 //!
 //! [`std::path`]: https://doc.rust-lang.org/std/path/index.html
 
+use std::convert::TryFrom;
+use std::ffi::CString;
 use std::ptr;
+use std::usize;
 
+use crate::any_path::AnyPath;
 use crate::c::common::*;
+
+/// Encodes a `[u8]` path.
+/// Returns the encoded path.
+#[no_mangle]
+pub extern "C" fn Path_encodeU8(path: *const u8, path_len: usize) -> *mut c_char {
+    let path = unsafe_slice(path, path_len);
+    CString::from(AnyPath::encode_slice_u8(path)).into_raw()
+}
+
+/// Decodes a `[u8]` path to the buffer.
+/// The decoded path is never bigger than the encoded path.
+/// Returns the amount of decoded bytes, or `usize::MAX` if there is an error.
+/// Sets the rust error.
+#[no_mangle]
+pub extern "C" fn Path_decodeU8(path: *const c_char, buf: *mut u8, buf_len: usize) -> usize {
+    forget_rust_error();
+    let path = unsafe_c_str(path);
+    let buf = unsafe_slice_mut(buf, buf_len);
+    let vec_result = AnyPath::try_from(path).and_then(|x| x.decode_vec_u8());
+    match vec_result {
+        Err(err) => {
+            remember_rust_error(format!("Path_decodeU8 {:?} {}: {}", path, buf_len, err));
+            usize::MAX
+        }
+        Ok(vec) => {
+            let n = vec.len().min(buf_len);
+            buf[..n].copy_from_slice(&vec[..n]);
+            for b in buf.iter_mut().skip(n) {
+                *b = 0;
+            }
+            vec.len()
+        }
+    }
+}
 
 /// Gets the extension of the path.
 /// Returns null if there is no extension.
