@@ -48,6 +48,7 @@
 
 #include <algorithm>
 #include <iterator>
+#include <sstream>
 #include <stdexcept>
 #include <vector>
 
@@ -185,21 +186,29 @@ BOOLEAN gfLoadShadeTablesFromTextFile = FALSE;
 
 void LoadShadeTablesFromTextFile()
 {
-	FILE *fp;
 	INT32 i, j;
 	INT32 num;
 	if( gfLoadShadeTablesFromTextFile )
 	{
-		fp = fopen("ShadeTables.txt", "r");
-		Assert( fp );
-		if( fp )
+		RustPointer<VecU8> vec(Fs_read("ShadeTables.txt"));
+		if (!vec)
 		{
+			RustPointer<char> err(getRustError());
+			SLOGA("LoadShadeTablesFromTextFile: %s", err.get());
+			return;
+		}
+		if (vec)
+		{
+			std::string data(reinterpret_cast<const char*>(VecU8_as_ptr(vec.get())), VecU8_len(vec.get()));
+			vec.reset(nullptr);
+
+			std::stringstream ss(data);
 			for( i = 0; i < 16; i++ )
 			{
 				for( j = 0; j < 3; j++ )
 				{
-					char str[10];
-					if (fscanf( fp, "%s", str ) == 1 && sscanf( str, "%d", &num ) == 1)
+					std::string str;
+					if (ss >> str && sscanf(str.c_str(), "%d", &num) == 1)
 					{
 						gusShadeLevels[i][j] = (UINT16)num;
 					}
@@ -209,7 +218,6 @@ void LoadShadeTablesFromTextFile()
 					}
 				}
 			}
-			fclose( fp );
 		}
 	}
 }
