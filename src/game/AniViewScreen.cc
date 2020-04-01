@@ -18,6 +18,8 @@
 #include "Video.h"
 #include "MemMan.h"
 
+#include <sstream>
+
 
 BOOLEAN	gfAniEditMode = FALSE;
 static UINT16		usStartAnim = 0;
@@ -266,26 +268,28 @@ static UINT16 GetAnimStateFromName(const char* zName)
 
 static void BuildListFile(void)
 {
-	FILE *infoFile;
 	char currFilename[128];
 	int numEntries = 0;
 	int	cnt;
 	UINT16 usState;
 	wchar_t zError[128];
 
-
-	//Verify the existance of the header text file.
-	infoFile = fopen("anitest.dat", "rb");
-	if(!infoFile)
+	RustPointer<VecU8> vec(Fs_read("anitest.dat"));
+	if (!vec)
 	{
+		RustPointer<char> err(getRustError());
+		SLOGE("BuildListFile: %s", err.get());
 		return;
 	}
+	std::string data(reinterpret_cast<const char*>(VecU8_as_ptr(vec.get())), VecU8_len(vec.get()));
+	vec.reset(nullptr);
+
 	//count STIs inside header and verify each one's existance.
-	while( fgets( currFilename, 128, infoFile ) != nullptr )
+	std::stringstream ss(data);
+	while (ss.getline(currFilename, 128))
 	{
 		numEntries++;
 	}
-	fseek( infoFile, 0, SEEK_SET ); //reset header file
 
 	// Allocate array
 	pusStates = new UINT16[numEntries]{};
@@ -293,7 +297,8 @@ static void BuildListFile(void)
 	fOKFiles = TRUE;
 
 	cnt = 0;
-	while( fgets( currFilename, 128, infoFile ) != nullptr )
+	ss.str(data);
+	while (ss.getline(currFilename, 128))
 	{
 		// Remove newline
 		currFilename[ strcspn( currFilename, "\r\n" ) ] = '\0';
@@ -310,9 +315,7 @@ static void BuildListFile(void)
 		{
 			swprintf(zError, lengthof(zError), L"Animation str %hs is not known: ", currFilename);
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zError, ANIEDIT_SCREEN, MSG_BOX_FLAG_YESNO, NULL, NULL);
-			fclose( infoFile );
 			return;
 		}
 	}
-	fclose(infoFile);
 }
