@@ -2081,8 +2081,8 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		FileRead(f_map, &dMajorMapVersion, sizeof(FLOAT));
 	}
 
-	FILE* const f_sum = fopen(summary_filename, "rb");
-	if (!f_sum)
+	RustPointer<File> file(File_open(summary_filename, FILE_OPEN_READ));
+	if (!file)
 	{
 		++gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	}
@@ -2091,12 +2091,12 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		/* Even if the info is outdated (but existing), allocate the structure, but
 		 * indicate that the info is bad. */
 		SUMMARYFILE* const sum = new SUMMARYFILE{};
-		if (fread(sum, sizeof(SUMMARYFILE), 1, f_sum) != 1)
+		if (!File_readExact(file.get(), reinterpret_cast<uint8_t*>(sum), sizeof(SUMMARYFILE)))
 		{
 			// failed, initialize and force update
 			*sum = SUMMARYFILE{};
 		}
-		fclose(f_sum);
+		file.reset(nullptr);
 
 		if (sum->ubSummaryVersion < MINIMUMVERSION ||
 				dMajorMapVersion      < getMajorMapVersion())
