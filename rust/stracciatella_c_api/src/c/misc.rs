@@ -15,24 +15,6 @@ use stracciatella::guess::guess_vanilla_version;
 use crate::c::common::*;
 use crate::c::vec::VecCString;
 
-/// Converts the launcher executable path to the game executable path.
-/// The executable is assumed to be in the same directory as the launcher.
-/// The caller is responsible for the returned memory.
-#[no_mangle]
-pub extern "C" fn findJa2Executable(launcher_path_ptr: *const c_char) -> *mut c_char {
-    let launcher_path = str_from_c_str_or_panic(unsafe_c_str(launcher_path_ptr));
-    let is_exe = launcher_path.to_lowercase().ends_with(".exe");
-    let end_of_executable_slice = launcher_path.len() - if is_exe { 13 } else { 9 };
-    let mut executable_path = String::from(&launcher_path[0..end_of_executable_slice]);
-
-    if is_exe {
-        executable_path.push_str(if is_exe { ".exe" } else { "" });
-    }
-
-    let c_string = c_string_from_str(&executable_path);
-    c_string.into_raw()
-}
-
 /// Deletes a CString.
 /// The caller is no longer responsible for the memory.
 #[no_mangle]
@@ -229,29 +211,6 @@ mod tests {
     use std::fs;
 
     use tempfile::TempDir;
-
-    use crate::c::common::*;
-    use crate::c::misc::CString_destroy;
-
-    #[test]
-    fn find_ja2_executable_should_determine_game_path_from_launcher_path() {
-        macro_rules! t {
-            ($path:expr, $expected:expr) => {
-                let path = c_string_from_str($path);
-                let got = super::findJa2Executable(path.as_ptr());
-                assert_eq!(str_from_c_str_or_panic(unsafe_c_str(got)), $expected);
-                CString_destroy(got);
-            };
-        }
-        t!("/home/test/ja2-launcher", "/home/test/ja2");
-        t!(
-            "C:\\\\home\\\\test\\\\ja2-launcher.exe",
-            "C:\\\\home\\\\test\\\\ja2.exe"
-        );
-        t!("ja2-launcher", "ja2");
-        t!("ja2-launcher.exe", "ja2.exe");
-        t!("JA2-LAUNCHER.EXE", "JA2.exe");
-    }
 
     #[test]
     fn check_if_relative_path_exists() {
