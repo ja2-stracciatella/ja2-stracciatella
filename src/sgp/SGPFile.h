@@ -16,6 +16,7 @@ enum SGPFileFlags
 	SGPFILE_REAL = 1U << 0
 };
 
+struct File;
 struct LibraryFile;
 
 struct SGPFile
@@ -23,7 +24,7 @@ struct SGPFile
 	SGPFileFlags flags;
 	union
 	{
-		FILE*       file;
+		File* file;
 		LibraryFile* lib;
 	} u;
 };

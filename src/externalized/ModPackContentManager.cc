@@ -42,15 +42,12 @@ bool ModPackContentManager::doesGameResExists(char const* fileName) const
  * If not found, use the previous method. */
 SGPFile* ModPackContentManager::openGameResForReading(const char* filename) const
 {
-	int mode;
-	const char* fmode = GetFileOpenModeForReading(&mode);
-
 	for (const auto& folder : m_modResFolders)
 	{
-		int d = FileMan::openFileCaseInsensitive(folder, filename, mode);
-		if (d >= 0) {
+		RustPointer<File> file = FileMan::openFileCaseInsensitive(folder, filename, FILE_OPEN_READ);
+		if (file) {
 			SLOGI("opening mod's resource: %s", filename);
-			return FileMan::getSGPFileFromFD(d, filename, fmode);
+			return FileMan::getSGPFileFromFile(file.release());
 		}
 	}
 	return DefaultContentManager::openGameResForReading(filename);
