@@ -2177,10 +2177,12 @@ void WriteSectorSummaryUpdate(const char* const filename, const UINT8 ubLevel, S
 	STRING512 summary_filename;
 	snprintf(summary_filename, lengthof(summary_filename), DEVINFO_DIR "/%.*s.sum", (int)(ext - filename), filename);
 
-	FILE* const f = fopen(summary_filename, "wb");
-	Assert(f);
-	fwrite(sf, sizeof(*sf), 1, f);
-	fclose(f);
+	if (!Fs_write(summary_filename, reinterpret_cast<const uint8_t*>(sf), sizeof(*sf)))
+	{
+		RustPointer<char> err(getRustError());
+		SLOGA("WriteSectorSummaryUpdate: %s", err.get());
+		return;
+	}
 
 	--gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	UpdateMasterProgress();
