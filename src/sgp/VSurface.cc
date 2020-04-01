@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Debug.h"
 #include "HImage.h"
 #include "MemMan.h"
@@ -9,6 +7,11 @@
 #include "Video.h"
 #include "SGP.h"
 #include "Logger.h"
+
+#include <string_theory/format>
+#include <string_theory/string>
+
+#include <stdexcept>
 
 extern SGPVSurface* gpVSurfaceHead;
 
@@ -450,8 +453,13 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 {
 	if (!guiVSurfaceSize) return;
 
-	FILE* fp = fopen(filename, fAppend ? "a" : "w");
-	Assert(fp != NULL);
+	RustPointer<File> file(File_open(filename, fAppend ? FILE_OPEN_APPEND : FILE_OPEN_WRITE));
+	if (!file)
+	{
+		RustPointer<char> err(getRustError());
+		SLOGA("DumpVSurfaceInfoIntoFile: %s", err.get());
+		return;
+	}
 
 	//Allocate enough strings and counters for each node.
 	DUMPINFO* const Info = new DUMPINFO[guiVSurfaceSize]{};
@@ -482,17 +490,22 @@ void DumpVSurfaceInfoIntoFile(const char* filename, BOOLEAN fAppend)
 	}
 
 	//Now dump the info.
-	fprintf(fp, "-----------------------------------------------\n");
-	fprintf(fp, "%d unique vSurface names exist in %d VSurfaces\n", uiUniqueID, guiVSurfaceSize);
-	fprintf(fp, "-----------------------------------------------\n\n");
+	ST::string buf;
+	buf += "-----------------------------------------------\n";
+	buf += ST::format(ST::substitute_invalid, "{} unique vSurface names exist in {} VSurfaces\n", uiUniqueID, guiVSurfaceSize);
+	buf += "-----------------------------------------------\n\n";
 	for (UINT32 i = 0; i < uiUniqueID; i++)
 	{
-		fprintf(fp, "%d occurrences of %s\n%s\n\n", Info[i].Counter, Info[i].Name, Info[i].Code);
+		buf += ST::format(ST::substitute_invalid, "{} occurrences of {}\n{}\n\n", Info[i].Counter, Info[i].Name, Info[i].Code);
 	}
-	fprintf(fp, "\n-----------------------------------------------\n\n");
+	buf += "\n-----------------------------------------------\n\n";
 
 	delete[] Info;
-	fclose(fp);
+	if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(buf.c_str()), buf.size()))
+	{
+		RustPointer<char> err(getRustError());
+		SLOGW("DumpVSurfaceInfoIntoFile: %s", err.get());
+	}
 }
 
 
