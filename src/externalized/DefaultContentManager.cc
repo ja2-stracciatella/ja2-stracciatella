@@ -469,12 +469,12 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 	}
 	else
 	{
-		FILE* file = fopen(filename, "rb");
+		RustPointer<File> file(File_open(filename, FILE_OPEN_READ));
 		if (!file)
 		{
 			char path[512];
 			snprintf(path, lengthof(path), "%s/%s", m_dataDir.c_str(), filename);
-			file = fopen(path, "rb");
+			file.reset(File_open(filename, FILE_OPEN_READ));
 			if (!file)
 			{
 				RustPointer<LibraryFile> libFile(LibraryFile_open(m_libraryDB.get(), filename));
@@ -482,7 +482,6 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 			}
 		}
 
-		fclose(file);
 		return true;
 	}
 }
