@@ -493,7 +493,7 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 }
 
 
-static void WriteTGAHeader(FILE* const f)
+static void WriteTGAHeader(File* file)
 {
 	/*
 	 *  0 byte ID length
@@ -524,40 +524,42 @@ static void WriteTGAHeader(FILE* const f)
 		PIXEL_DEPTH,
 		0
 	};
-	fwrite(data, sizeof(data), 1, f);
+	if (!File_writeAll(file, data, sizeof(data)))
+	{
+		RustPointer<char> err(getRustError());
+		SLOGW("WriteTGAHeader: %s", err.get());
+	}
 }
 
 
 /* Create a file for a screenshot, which is guaranteed not to exist yet. */
-static FILE* CreateScreenshotFile(void)
+static RustPointer<File> CreateScreenshotFile(void)
 {
 	const std::string exec_dir = GCM->getScreenshotFolder();
-	do
+	while (true)
 	{
 		char filename[2048];
 		sprintf(filename, "%s/SCREEN%03d.TGA", exec_dir.c_str(), guiPrintFrameBufferIndex++);
-#ifndef _WIN32
-#	define O_BINARY 0
-#endif
-		int const fd = open3(filename, O_WRONLY | O_CREAT | O_EXCL | O_BINARY, 0644);
-		if (fd >= 0)
+		RustPointer<File> file(File_open(filename, FILE_OPEN_WRITE | FILE_OPEN_CREATE_NEW));
+		if (file)
 		{
-			FILE* const f = fdopen(fd, "wb");
-			if (f == NULL) close(fd);
-			return f;
+			return file;
 		}
 	}
-	while (errno == EEXIST);
-	return NULL;
 }
 
 
 static void TakeScreenshot()
 {
-	FILE* const f = CreateScreenshotFile();
-	if (!f) return;
+	RustPointer<File> file = CreateScreenshotFile();
+	if (!file)
+	{
+		RustPointer<char> err(getRustError());
+		SLOGE("TakeScreenshot: %s", err.get());
+		return;
+	}
 
-	WriteTGAHeader(f);
+	WriteTGAHeader(file.get());
 
 	// If not 5/5/5, create buffer
 	UINT16* buf = 0;
@@ -573,17 +575,23 @@ static void TakeScreenshot()
 		{ // ATE: Fix this such that it converts pixel format to 5/5/5
 			memcpy(buf, src + y * SCREEN_WIDTH, SCREEN_WIDTH * sizeof(*buf));
 			ConvertRGBDistribution565To555(buf, SCREEN_WIDTH);
-			fwrite(buf, sizeof(*buf), SCREEN_WIDTH, f);
+			if (!File_writeAll(file.get(), reinterpret_cast<const UINT8*>(buf), sizeof(*buf) * SCREEN_WIDTH))
+			{
+				RustPointer<char> err(getRustError());
+				SLOGW("TakeScreenshot: %s", err.get());
+			}
 		}
 		else
 		{
-			fwrite(src + y * SCREEN_WIDTH, SCREEN_WIDTH * 2, 1, f);
+			if (!File_writeAll(file.get(), reinterpret_cast<const UINT8*>(src + y * SCREEN_WIDTH), sizeof(*buf) * SCREEN_WIDTH))
+			{
+				RustPointer<char> err(getRustError());
+				SLOGW("TakeScreenshot: %s", err.get());
+			}
 		}
 	}
 
 	if (buf) delete[] buf;
-
-	fclose(f);
 }
 
 static void SnapshotSmall(void);
@@ -808,10 +816,15 @@ static void RefreshMovieCache(void)
 		CHAR8 cFilename[2048];
 		sprintf(cFilename, "%s/JA%5.5d.TGA", exec_dir.c_str(), uiPicNum++);
 
-		FILE* disk = fopen(cFilename, "wb");
-		if (disk == NULL) return;
+		RustPointer<File> file(File_open(cFilename, FILE_OPEN_WRITE));
+		if (!file)
+		{
+			RustPointer<char> err(getRustError());
+			SLOGE("RefreshMovieCache: %s", err.get());
+			return;
+		}
 
-		WriteTGAHeader(disk);
+		WriteTGAHeader(file.get());
 
 		UINT16* pDest = gpFrameData[cnt];
 
@@ -819,11 +832,13 @@ static void RefreshMovieCache(void)
 		{
 			for (INT32 iCountX = 0; iCountX < SCREEN_WIDTH; iCountX ++)
 			{
-				fwrite(pDest + iCountY * SCREEN_WIDTH + iCountX, sizeof(UINT16), 1, disk);
+				if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(pDest + iCountY * SCREEN_WIDTH + iCountX), sizeof(UINT16)))
+				{
+					RustPointer<char> err(getRustError());
+					SLOGW("RefreshMovieCache: %s", err.get());
+				}
 			}
 		}
-
-		fclose(disk);
 	}
 
 	PauseTime(FALSE);
