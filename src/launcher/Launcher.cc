@@ -87,9 +87,6 @@ Launcher::~Launcher() {
 }
 
 void Launcher::loadJa2Json() {
-	RustPointer<char> rustExePath(findJa2Executable(argv[0]));
-	this->exePath = std::string(rustExePath.get());
-
 	this->engine_options.reset(EngineOptions_create(argv, argc));
 
 	if (this->engine_options == NULL) {
@@ -269,16 +266,39 @@ void Launcher::startExecutable(bool asEditor) {
 		return;
 	}
 
-	std::string cmd("\"" + this->exePath + "\"");
-
-	if (asEditor) {
-		cmd += std::string(" -editor");
+	RustPointer<char> exePath(Env_currentExe());
+	if (!exePath) {
+		showRustError();
+		return;
 	}
-
-	int ret = system(cmd.c_str());
-	if (ret != 0)
-	{
-		SLOGW("There was an error while running '%s' (%d)", cmd.c_str(), ret);
+	RustPointer<char> filename(Path_filename(exePath.get()));
+	if (!filename) {
+		fl_message_title("No filename");
+		fl_alert("%s", exePath.get());
+		return;
+	}
+	std::string target("-launcher");
+	std::string newFilename(filename.get());
+	size_t pos = newFilename.find(target);
+	if (pos == std::string::npos) {
+		fl_message_title("Not launcher");
+		fl_alert("%s", exePath.get());
+		return;
+	}
+	newFilename.replace(pos, target.size(), "");
+	exePath.reset(Path_setFilename(exePath.get(), newFilename.c_str()));
+	if (!Fs_exists(exePath.get())) {
+		fl_message_title("Not found");
+		fl_alert("%s", exePath.get());
+		return;
+	}
+	RustPointer<VecCString> args(VecCString_create());
+	if (asEditor) {
+		VecCString_push(args.get(), "-editor");
+	}
+	bool ok = Command_execute(exePath.get(), args.get());
+	if (!ok) {
+		showRustError();
 	}
 }
 

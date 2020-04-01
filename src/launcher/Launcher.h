@@ -16,7 +16,6 @@ public:
 private:
 	int argc;
 	char** argv;
-	std::string exePath;
 	RustPointer<EngineOptions> engine_options;
 
 	void populateChoices();
