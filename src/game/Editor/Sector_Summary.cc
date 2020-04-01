@@ -1755,14 +1755,15 @@ static void CreateGlobalSummary(void)
 	FileMan::createDir(DEVINFO_DIR);
 
 	// Generate a simple readme file.
-	FILE* const f = fopen(DEVINFO_DIR "/readme.txt", "w");
-	Assert(f);
-	fputs(
+	const char* readme = ""
 		"This information is used in conjunction with the editor.\n"
-		"This directory or its contents shouldn't be included with final release.\n",
-		f
-	);
-	fclose(f);
+		"This directory or its contents shouldn't be included with final release.\n";
+	if (!Fs_write(DEVINFO_DIR "/readme.txt", reinterpret_cast<const uint8_t*>(readme), strlen(readme)))
+	{
+		RustPointer<char> err(getRustError());
+		SLOGA("CreateGlobalSummary: %s", err.get());
+		return;
+	}
 
 	LoadGlobalSummary();
 	RegenerateSummaryInfoForAllOutdatedMaps();
