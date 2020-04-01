@@ -693,7 +693,7 @@ FindAllFilesInDir(const std::string &dirPath, bool sortResults)
 		SLOGW("%s", msg.get());
 		return paths;
 	}
-	size_t len = VecCString_length(vec.get());
+	size_t len = VecCString_len(vec.get());
 	for (size_t i = 0; i < len; i++)
 	{
 		RustPointer<char> path(VecCString_get(vec.get(), i));

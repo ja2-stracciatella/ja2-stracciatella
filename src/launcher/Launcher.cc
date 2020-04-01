@@ -216,7 +216,7 @@ int Launcher::writeJsonFile() {
 
 void Launcher::populateChoices() {
 	RustPointer<VecCString> mods(findAvailableMods());
-	size_t nmods = VecCString_length(mods.get());
+	size_t nmods = VecCString_len(mods.get());
 	for (size_t i = 0; i < nmods; ++i) {
 		RustPointer<char> mod(VecCString_get(mods.get(), i));
 		addModMenuButton->insert(-1, mod.get(), 0, addMod, this, 0);

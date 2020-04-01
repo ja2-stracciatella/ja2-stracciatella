@@ -145,9 +145,9 @@ pub extern "C" fn findAvailableMods() -> *mut VecCString {
             }) // String
             .filter_map(|x| CString::new(x.as_bytes().to_owned()).ok()) // CString
             .collect();
-        into_ptr(VecCString::from_vec(mods))
+        into_ptr(VecCString::from(mods))
     } else {
-        into_ptr(VecCString::new())
+        into_ptr(VecCString::default())
     }
 }
 

@@ -123,11 +123,11 @@ pub extern "C" fn Fs_readDirPaths(
             ptr::null_mut()
         }
         Ok(vec) => {
-            let vec = vec
+            let vec: Vec<_> = vec
                 .iter()
                 .map(|x| c_string_from_path_or_panic(&x))
                 .collect();
-            let c_vec = VecCString::from_vec(vec);
+            let c_vec = VecCString::from(vec);
             into_ptr(c_vec)
         }
     }
