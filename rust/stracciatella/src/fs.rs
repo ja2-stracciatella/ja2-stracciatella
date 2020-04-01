@@ -23,6 +23,8 @@ pub use std::fs::read_dir;
 pub use std::fs::rename;
 pub use std::fs::set_permissions;
 pub use std::fs::write;
+pub use std::fs::File;
+pub use std::fs::OpenOptions;
 
 pub use tempfile::TempDir;
 
