@@ -17,4 +17,4 @@ stracciatella = { path = "../stracciatella" }
 tempfile = "3.0"
 
 [build-dependencies]
-cbindgen = "0.9"
+cbindgen = "0.13, ~0.13.2"
