@@ -355,10 +355,10 @@ pub extern "C" fn File_readExact(file: *mut File, buf: *mut u8, buf_len: usize) 
     let file = unsafe_mut(file);
     let buf = unsafe_slice_mut(buf, buf_len);
     while let Err(err) = file.inner.read_exact(buf) {
-        if err.kind() == io::ErrorKind::Interrupted {
-            continue;
+        if err.kind() != io::ErrorKind::Interrupted {
+            remember_rust_error(format!("File_readExact {}: {}", buf_len, err));
+            break;
         }
-        remember_rust_error(format!("File_readExact {}: {}", buf_len, err));
     }
     no_rust_error()
 }
@@ -447,7 +447,7 @@ pub extern "C" fn File_seekFromEnd(file: *mut File, offset: i64) -> u64 {
 pub extern "C" fn File_seekFromCurrent(file: *mut File, offset: i64) -> u64 {
     forget_rust_error();
     let file = unsafe_mut(file);
-    match file.inner.seek(io::SeekFrom::End(offset)) {
+    match file.inner.seek(io::SeekFrom::Current(offset)) {
         Err(err) => {
             remember_rust_error(format!("File_seekFromCurrent {}: {}", offset, err));
             u64::MAX
