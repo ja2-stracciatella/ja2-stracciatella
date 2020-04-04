@@ -4,6 +4,7 @@
   __WARNING__: There is an issue with SDL in version `2.0.6` that causes segfaults when playing sounds.
   Please ensure that you run the game with a different version of the SDL2 library otherwise sound will be
   disabled.
+- fltk
 - cmake
 - Rust and Cargo
 - Your systems compiler
