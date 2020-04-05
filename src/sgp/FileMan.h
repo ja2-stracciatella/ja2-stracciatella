@@ -51,8 +51,8 @@ FileAttributes FileGetAttributes(const char* filename);
 
 /* Pass in the Fileman file handle of an OPEN file and it will return..
  * - if its a Real File, the return will be the handle of the REAL file
- * - if its a LIBRARY file, the return will be the handle of the LIBRARY */
-FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* hFile);
+ * - if its a LIBRARY file, the return will be null */
+File* GetRealFileHandleFromFileManFileHandle(const SGPFile* hFile);
 
 //Gets the amount of free space on the hard drive that the main executeablt is runnning from
 uint64_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
@@ -97,7 +97,7 @@ public:
 #endif
 
 	/** Open file in the 'Data' directory in case-insensitive manner. */
-	static FILE* openForReadingCaseInsensitive(const std::string &folderPath, const char *filename);
+	static RustPointer<File> openForReadingCaseInsensitive(const std::string& folderPath, const char* filename);
 
 	/* ------------------------------------------------------------
 	 * Other operations
@@ -130,15 +130,14 @@ public:
 	static std::string getFileNameWithoutExt(const char *path);
 	static std::string getFileNameWithoutExt(const std::string &path);
 
-	static int openFileForReading(const char *filename, int mode);
+	static RustPointer<File> openFileForReading(const char* filename);
 
 	/** Open file in the given folder in case-insensitive manner.
-	 * @return file descriptor or -1 if file is not found. */
-	static int openFileCaseInsensitive(const std::string &folderPath, const char *filename, int mode);
+	 * @return file descriptor or null if file is not found. */
+	static RustPointer<File> openFileCaseInsensitive(const std::string& folderPath, const char* filename, uint8_t open_options);
 
-	/** Convert file descriptor to HWFile.
-	 * Raise runtime_error if not possible. */
-	static SGPFile* getSGPFileFromFD(int fd, const char *filename, const char *fmode);
+	/** Convert File to HWFile. */
+	static SGPFile* getSGPFileFromFile(File* f);
 
 	/** Replace all \ with / */
 	static void slashifyPath(std::string &path);
@@ -176,8 +175,5 @@ FindFilesInDir(const std::string &dirPath,
  * @return List of paths (dir + filename). */
 std::vector<std::string>
 FindAllFilesInDir(const std::string &dirPath, bool sortResults = false);
-
-/** Get file open modes from reading. */
-const char* GetFileOpenModeForReading(int *posixMode);
 
 #endif

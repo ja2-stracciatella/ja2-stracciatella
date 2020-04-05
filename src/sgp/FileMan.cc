@@ -47,11 +47,6 @@ enum FileOpenFlags
 
 static void SetFileManCurrentDirectory(char const* const pcDirectory);
 
-/** Get file open modes from our enumeration.
- * Abort program if conversion is not found.
- * @return file mode for fopen call and posix mode using parameter 'posixMode' */
-static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode);
-
 #if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
 
 void SetBinDataDirFromBundle(void)
@@ -107,13 +102,11 @@ std::string FileMan::switchTmpFolder(std::string home)
 }
 
 
-/** Open file in the given folder in case-insensitive manner.
- * @return file descriptor or -1 if file is not found. */
-int FileMan::openFileCaseInsensitive(const std::string &folderPath, const char *filename, int mode)
+RustPointer<File> FileMan::openFileCaseInsensitive(const std::string& folderPath, const char* filename, uint8_t open_options)
 {
 	std::string path = FileMan::joinPaths(folderPath, filename);
-	int d = open(path.c_str(), mode);
-	if (d < 0)
+	RustPointer<File> file(File_open(path.c_str(), open_options));
+	if (!file)
 	{
 #if CASE_SENSITIVE_FS
 		// on case-sensitive file system need to try to find another name
@@ -121,11 +114,11 @@ int FileMan::openFileCaseInsensitive(const std::string &folderPath, const char *
 		if(findObjectCaseInsensitive(folderPath.c_str(), filename, true, false, newFileName))
 		{
 			path = FileMan::joinPaths(folderPath, newFileName);
-			d = open(path.c_str(), mode);
+			file.reset(File_open(path.c_str(), open_options));
 		}
 #endif
 	}
-	return d;
+	return file;
 }
 
 void FileDelete(const std::string &path)
@@ -160,42 +153,11 @@ void FileDelete(char const* const path)
 }
 
 
-/** Get file open modes from reading. */
-const char* GetFileOpenModeForReading(int *posixMode)
-{
-	return GetFileOpenModes(FILE_ACCESS_READ, posixMode);
-}
-
-/** Get file open modes from our enumeration.
- * Abort program if conversion is not found.
- * @return file mode for fopen call and posix mode using parameter 'posixMode' */
-static const char* GetFileOpenModes(FileOpenFlags flags, int *posixMode)
-{
-	const char *cMode = NULL;
-
-#ifndef _WIN32
-	*posixMode = 0;
-#else
-	*posixMode = O_BINARY;
-#endif
-
-	switch (flags & (FILE_ACCESS_READWRITE | FILE_ACCESS_APPEND))
-	{
-		case FILE_ACCESS_READ:      cMode = "rb";  *posixMode |= O_RDONLY;            break;
-		case FILE_ACCESS_WRITE:     cMode = "wb";  *posixMode |= O_WRONLY;            break;
-		case FILE_ACCESS_READWRITE: cMode = "r+b"; *posixMode |= O_RDWR;              break;
-		case FILE_ACCESS_APPEND:    cMode = "ab";  *posixMode |= O_WRONLY | O_APPEND; break;
-
-		default: abort();
-	}
-	return cMode;
-}
-
 void FileClose(SGPFile* f)
 {
 	if (f->flags & SGPFILE_REAL)
 	{
-		fclose(f->u.file);
+		File_close(f->u.file);
 	}
 	else
 	{
@@ -209,7 +171,7 @@ void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 	BOOLEAN ret;
 	if (f->flags & SGPFILE_REAL)
 	{
-		ret = fread(pDest, uiBytesToRead, 1, f->u.file) == 1;
+		ret = File_readExact(f->u.file, reinterpret_cast<uint8_t*>(pDest), uiBytesToRead);
 	}
 	else
 	{
@@ -223,7 +185,7 @@ void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 void FileWrite(SGPFile* const f, void const* const pDest, size_t const uiBytesToWrite)
 {
 	if (!(f->flags & SGPFILE_REAL)) throw std::logic_error("Tried to write to library file");
-	if (fwrite(pDest, uiBytesToWrite, 1, f->u.file) != 1) throw std::runtime_error("Writing to file failed");
+	if (!File_writeAll(f->u.file, reinterpret_cast<const uint8_t*>(pDest), uiBytesToWrite)) throw std::runtime_error("Writing to file failed");
 }
 
 static int64_t SGPSeekRW(SDL_RWops *context, int64_t offset, int whence)
@@ -306,15 +268,12 @@ void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 	bool success;
 	if (f->flags & SGPFILE_REAL)
 	{
-		int whence;
 		switch (how)
 		{
-			case FILE_SEEK_FROM_START: whence = SEEK_SET; break;
-			case FILE_SEEK_FROM_END:   whence = SEEK_END; break;
-			default:                   whence = SEEK_CUR; break;
+			case FILE_SEEK_FROM_START: success = distance >= 0 && File_seekFromStart(f->u.file, static_cast<uint64_t>(distance)) != UINT64_MAX; break;
+			case FILE_SEEK_FROM_END:   success = File_seekFromEnd(f->u.file, distance) != UINT64_MAX; break;
+			default:                   success = File_seekFromCurrent(f->u.file, distance) != UINT64_MAX; break;
 		}
-
-		success = fseek(f->u.file, distance, whence) == 0;
 	}
 	else
 	{
@@ -326,7 +285,7 @@ void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 
 INT32 FileGetPos(const SGPFile* f)
 {
-	return f->flags & SGPFILE_REAL ? (INT32)ftell(f->u.file) : (INT32)LibraryFile_getPosition(f->u.lib);
+	return f->flags & SGPFILE_REAL ? (INT32)File_seekFromCurrent(f->u.file, 0) : (INT32)LibraryFile_getPosition(f->u.lib);
 }
 
 
@@ -334,12 +293,12 @@ UINT32 FileGetSize(const SGPFile* f)
 {
 	if (f->flags & SGPFILE_REAL)
 	{
-		struct stat sb;
-		if (fstat(fileno(f->u.file), &sb) != 0)
+		uint64_t len = File_len(f->u.file);
+		if (len == UINT64_MAX)
 		{
 			throw std::runtime_error("Getting file size failed");
 		}
-		return (UINT32)sb.st_size;
+		return (UINT32)len;
 	}
 	else
 	{
@@ -414,7 +373,7 @@ FileAttributes FileGetAttributes(const char* const filename)
 }
 
 
-FILE* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
+File* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
 {
 	return f->flags & SGPFILE_REAL ? f->u.file : nullptr;
 }
@@ -530,29 +489,13 @@ bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name,
 #endif
 
 
-/** Convert file descriptor to HWFile.
- * Raise runtime_error if not possible. */
-SGPFile* FileMan::getSGPFileFromFD(int fd, const char *filename, const char *fmode)
+SGPFile* FileMan::getSGPFileFromFile(File* f)
 {
-	if (fd < 0)
-	{
-		char buf[128];
-		snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
-		throw std::runtime_error(buf);
-	}
-
-	FILE* const f = fdopen(fd, fmode);
-	if (!f)
-	{
-		char buf[128];
-		snprintf(buf, sizeof(buf), "Opening file '%s' failed", filename);
-		throw std::runtime_error(buf);
-	}
-
-	SGPFile *file = new SGPFile{};
-	file->flags  = SGPFILE_REAL;
-	file->u.file = f;
-	return file;
+	Assert(f);
+	SGPFile *sgp_file = new SGPFile{};
+	sgp_file->flags  = SGPFILE_REAL;
+	sgp_file->u.file = f;
+	return sgp_file;
 }
 
 
@@ -561,16 +504,21 @@ SGPFile* FileMan::getSGPFileFromFD(int fd, const char *filename, const char *fmo
  * If file exists, it's content will be removed. */
 SGPFile* FileMan::openForWriting(const char *filename, bool truncate)
 {
-	int mode;
-	const char* fmode = GetFileOpenModes(FILE_ACCESS_WRITE, &mode);
-
-	if(truncate)
+	uint8_t open_options = FILE_OPEN_WRITE | FILE_OPEN_CREATE;
+	if (truncate)
 	{
-		mode |= O_TRUNC;
+		open_options |= FILE_OPEN_TRUNCATE;
 	}
 
-	int d = open3(filename, mode | O_CREAT, 0600);
-	return getSGPFileFromFD(d, filename, fmode);
+	RustPointer<File> file(File_open(filename, open_options));
+	if (!file)
+	{
+		RustPointer<char> err(getRustError());
+		char buf[128];
+		snprintf(buf, sizeof(buf), "FileMan::openForWriting: %s", err.get());
+		throw std::runtime_error(buf);
+	}
+	return getSGPFileFromFile(file.release());
 }
 
 
@@ -578,11 +526,15 @@ SGPFile* FileMan::openForWriting(const char *filename, bool truncate)
  * If file doesn't exist, it will be created. */
 SGPFile* FileMan::openForAppend(const char *filename)
 {
-	int         mode;
-	const char* fmode = GetFileOpenModes(FILE_ACCESS_APPEND, &mode);
-
-	int d = open3(filename, mode | O_CREAT, 0600);
-	return getSGPFileFromFD(d, filename, fmode);
+	RustPointer<File> file(File_open(filename, FILE_OPEN_APPEND | FILE_OPEN_CREATE));
+	if (!file)
+	{
+		RustPointer<char> err(getRustError());
+		char buf[128];
+		snprintf(buf, sizeof(buf), "FileMan::openForAppend: %s", err.get());
+		throw std::runtime_error(buf);
+	}
+	return getSGPFileFromFile(file.release());
 }
 
 
@@ -590,20 +542,29 @@ SGPFile* FileMan::openForAppend(const char *filename)
  * If file doesn't exist, it will be created. */
 SGPFile* FileMan::openForReadWrite(const char *filename)
 {
-	int         mode;
-	const char* fmode = GetFileOpenModes(FILE_ACCESS_READWRITE, &mode);
-
-	int d = open3(filename, mode | O_CREAT, 0600);
-	return getSGPFileFromFD(d, filename, fmode);
+	RustPointer<File> file(File_open(filename, FILE_OPEN_READ | FILE_OPEN_WRITE | FILE_OPEN_CREATE));
+	if (!file)
+	{
+		RustPointer<char> err(getRustError());
+		char buf[128];
+		snprintf(buf, sizeof(buf), "FileMan::openForReadWrite: %s", err.get());
+		throw std::runtime_error(buf);
+	}
+	return getSGPFileFromFile(file.release());
 }
 
 /** Open file for reading. */
 SGPFile* FileMan::openForReading(const char *filename)
 {
-	int         mode;
-	const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
-	int d = open3(filename, mode, 0600);
-	return getSGPFileFromFD(d, filename, fmode);
+	RustPointer<File> file(File_open(filename, FILE_OPEN_READ));
+	if (!file)
+	{
+		RustPointer<char> err(getRustError());
+		char buf[128];
+		snprintf(buf, sizeof(buf), "FileMan::openForReading: %s", err.get());
+		throw std::runtime_error(buf);
+	}
+	return getSGPFileFromFile(file.release());
 }
 
 /** Open file for reading. */
@@ -613,25 +574,9 @@ SGPFile* FileMan::openForReading(const std::string &filename)
 }
 
 /** Open file for reading.  Look file in folderPath in case-insensitive manner. */
-FILE* FileMan::openForReadingCaseInsensitive(const std::string &folderPath, const char *filename)
+RustPointer<File> FileMan::openForReadingCaseInsensitive(const std::string& folderPath, const char* filename)
 {
-	int mode;
-	const char* fmode = GetFileOpenModes(FILE_ACCESS_READ, &mode);
-
-	int d = openFileCaseInsensitive(folderPath, filename, mode);
-	if(d >= 0)
-	{
-		FILE* hFile = fdopen(d, fmode);
-		if (hFile == NULL)
-		{
-			close(d);
-		}
-		else
-		{
-			return hFile;
-		}
-	}
-	return NULL;
+	return openFileCaseInsensitive(folderPath, filename, FILE_OPEN_READ);
 }
 
 std::vector<std::string>
@@ -693,7 +638,7 @@ FindAllFilesInDir(const std::string &dirPath, bool sortResults)
 		SLOGW("%s", msg.get());
 		return paths;
 	}
-	size_t len = VecCString_length(vec.get());
+	size_t len = VecCString_len(vec.get());
 	for (size_t i = 0; i < len; i++)
 	{
 		RustPointer<char> path(VecCString_get(vec.get(), i));
@@ -777,9 +722,9 @@ std::string FileMan::getFileNameWithoutExt(const std::string &path)
 	return getFileNameWithoutExt(path.c_str());
 }
 
-int FileMan::openFileForReading(const char *filename, int mode)
+RustPointer<File> FileMan::openFileForReading(const char* filename)
 {
-	return open(filename, mode);
+	return RustPointer<File>(File_open(filename, FILE_OPEN_READ));
 }
 
 /** Replace all \ with / */

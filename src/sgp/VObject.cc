@@ -5,6 +5,9 @@
 #include "VObject_Blitters.h"
 #include "VSurface.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
@@ -351,8 +354,13 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 {
 	if (guiVObjectSize == 0) return;
 
-	FILE* fp = fopen(filename, fAppend ? "a" : "w");
-	Assert(fp != NULL);
+	RustPointer<File> file(File_open(filename, fAppend ? FILE_OPEN_APPEND : FILE_OPEN_WRITE));
+	if (!file)
+	{
+		RustPointer<char> err(getRustError());
+		SLOGA("DumpVObjectInfoIntoFile: %s", err.get());
+		return;
+	}
 
 	//Allocate enough strings and counters for each node.
 	DUMPINFO* const Info = new DUMPINFO[guiVObjectSize]{};
@@ -383,18 +391,23 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 	}
 
 	//Now dump the info.
-	fprintf(fp, "-----------------------------------------------\n");
-	fprintf(fp, "%d unique vObject names exist in %d VObjects\n", uiUniqueID, guiVObjectSize);
-	fprintf(fp, "-----------------------------------------------\n\n");
+	ST::string buf;
+	buf += "-----------------------------------------------\n";
+	buf += ST::format(ST::substitute_invalid, "{} unique vObject names exist in {} VObjects\n", uiUniqueID, guiVObjectSize);
+	buf += "-----------------------------------------------\n\n";
 	for (UINT32 i = 0; i < uiUniqueID; i++)
 	{
-		fprintf(fp, "%d occurrences of %s\n%s\n\n", Info[i].Counter, Info[i].Name, Info[i].Code);
+		buf += ST::format(ST::substitute_invalid, "{} occurrences of {}\n{}\n\n", Info[i].Counter, Info[i].Name, Info[i].Code);
 	}
-	fprintf(fp, "\n-----------------------------------------------\n\n");
+	buf += "\n-----------------------------------------------\n\n";
 
 	//Free all memory associated with this operation.
 	delete[] Info;
-	fclose(fp);
+	if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(buf.c_str()), buf.size()))
+	{
+		RustPointer<char> err(getRustError());
+		SLOGW("DumpVObjectInfoIntoFile: %s", err.get());
+	}
 }
 
 

@@ -9,6 +9,7 @@ workspace = ".."
 crate-type = ["staticlib"]
 
 [dependencies]
+hex = "0.3.2"
 libc = "0.2"
 stracciatella = { path = "../stracciatella" }
 
@@ -16,4 +17,4 @@ stracciatella = { path = "../stracciatella" }
 tempfile = "3.0"
 
 [build-dependencies]
-cbindgen = "0.9"
+cbindgen = "0.13, ~0.13.2"

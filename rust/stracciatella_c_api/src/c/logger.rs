@@ -10,8 +10,8 @@ use crate::c::common::*;
 /// Initializes the logger
 #[no_mangle]
 pub extern "C" fn Logger_initialize(log_file: *const c_char) {
-    let log_file = path_from_c_str_or_panic(unsafe_c_str(log_file));
-    Logger::init(log_file)
+    let log_file = path_buf_from_c_str_or_panic(unsafe_c_str(log_file));
+    Logger::init(&log_file)
 }
 
 /// Set log level

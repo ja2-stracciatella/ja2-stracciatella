@@ -34,8 +34,8 @@ pub extern "C" fn LibraryDB_push(
 ) -> bool {
     forget_rust_error();
     let ldb = unsafe_mut(ldb);
-    let data_dir = path_from_c_str_or_panic(unsafe_c_str(data_dir));
-    let library = path_from_c_str_or_panic(unsafe_c_str(library));
+    let data_dir = path_buf_from_c_str_or_panic(unsafe_c_str(data_dir));
+    let library = path_buf_from_c_str_or_panic(unsafe_c_str(library));
     if let Err(err) = ldb.add_library(&data_dir, &library) {
         remember_rust_error(format!(
             "LibraryDB_push {:?} {:?}: {}",

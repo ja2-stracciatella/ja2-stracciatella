@@ -2,4 +2,5 @@
 //!
 //! [stracciatella]: ../stracciatella/index.html
 
+pub mod any_path;
 pub mod c;

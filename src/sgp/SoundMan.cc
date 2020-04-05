@@ -257,7 +257,7 @@ try
 	}
 
 	//Get the real file handle of the file
-	FILE* hRealFileHandle = GetRealFileHandleFromFileManFileHandle(hFile);
+	File* hRealFileHandle = GetRealFileHandleFromFileManFileHandle(hFile);
 	if (hRealFileHandle == NULL)
 	{
 		SLOGE("SoundPlayStreamedFile(): Couldnt get a real file handle for '%s' in SoundPlayStreamedFile()", pFilename );

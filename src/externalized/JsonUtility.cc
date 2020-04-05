@@ -1,32 +1,35 @@
+#include "Debug.h"
 #include "JsonUtility.h"
+#include "RustInterface.h"
 
-// #include <iostream>
-// #include <fstream>
 #include "rapidjson/document.h"
-#include "rapidjson/filereadstream.h"
-#include "rapidjson/filewritestream.h"
+#include "rapidjson/ostreamwrapper.h"
 #include "rapidjson/prettywriter.h"
+
+#include <sstream>
 
 /** Write list of strings to file. */
 bool JsonUtility::writeToFile(const char *name, const std::vector<std::string> &strings)
 {
-	FILE *f = fopen(name, "wt");
-	if(f)
+	std::stringstream ss;
+	rapidjson::OStreamWrapper os(ss);
+	rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(os);
+	writer.StartArray();
+	for(auto it = strings.begin(); it != strings.end(); ++it)
 	{
-		char writeBuffer[65536];
-		rapidjson::FileWriteStream os(f, writeBuffer, sizeof(writeBuffer));
-		rapidjson::PrettyWriter<rapidjson::FileWriteStream> writer(os);
-		writer.StartArray();
-		for(std::vector<std::string>::const_iterator it = strings.begin(); it != strings.end(); ++it)
-		{
-			writer.String(it->c_str());
-		}
-		writer.EndArray();
-
-		fputs("\n", f);
-		return fclose(f) == 0;
+		writer.String(it->c_str());
 	}
-	return false;
+	writer.EndArray();
+	ss << std::endl;
+
+	std::string buf = ss.str();
+	if (!Fs_write(name, reinterpret_cast<const uint8_t*>(buf.data()), buf.size()))
+	{
+		RustPointer<char> err(getRustError());
+		SLOGE("JsonUtility::writeToFile: %s", err.get());
+		return false;
+	}
+	return true;
 }
 
 /** Parse json to a list of strings. */

@@ -42,6 +42,42 @@ const std::vector<VideoScaleQuality> scalingModes = {
 	VideoScaleQuality::PERFECT,
 };
 
+void showRustError() {
+	RustPointer<char> err(getRustError());
+	if (err) {
+		SLOGE("%s", err.get());
+		fl_message_title("Rust error");
+		fl_alert("%s", err.get());
+	} else {
+		RustPointer<char> err(getRustError());
+		SLOGE("showRustError: no rust error");
+		fl_message_title("showRustError");
+		fl_alert("no rust error");
+	}
+}
+
+std::string encodePath(const char* path) {
+	if (path == nullptr) {
+		return std::string();
+	}
+	RustPointer<char> encodedPath(Path_encodeU8(reinterpret_cast<const uint8_t*>(path), strlen(path)));
+	return std::string(encodedPath.get());
+}
+
+std::string decodePath(const char* path) {
+	if (path == nullptr) {
+		return std::string();
+	}
+	std::string buf(path); // the decoded size always fits in the original size
+	size_t len = Path_decodeU8(path, reinterpret_cast<uint8_t*>(&buf[0]), buf.size());
+	if (len > buf.size()) {
+		showRustError();
+		return std::string();
+	}
+	buf.resize(len);
+	return buf;
+}
+
 Launcher::Launcher(int argc, char* argv[]) : StracciatellaLauncher() {
 	this->argc = argc;
 	this->argv = argv;
@@ -51,9 +87,6 @@ Launcher::~Launcher() {
 }
 
 void Launcher::loadJa2Json() {
-	RustPointer<char> rustExePath(findJa2Executable(argv[0]));
-	this->exePath = std::string(rustExePath.get());
-
 	this->engine_options.reset(EngineOptions_create(argv, argc));
 
 	if (this->engine_options == NULL) {
@@ -180,7 +213,7 @@ int Launcher::writeJsonFile() {
 
 void Launcher::populateChoices() {
 	RustPointer<VecCString> mods(findAvailableMods());
-	size_t nmods = VecCString_length(mods.get());
+	size_t nmods = VecCString_len(mods.get());
 	for (size_t i = 0; i < nmods; ++i) {
 		RustPointer<char> mod(VecCString_get(mods.get(), i));
 		addModMenuButton->insert(-1, mod.get(), 0, addMod, this, 0);
@@ -207,7 +240,8 @@ void Launcher::openGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 	Fl_Native_File_Chooser fnfc;
 	fnfc.title("Select the original Jagged Alliance 2 install directory");
 	fnfc.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
-	fnfc.directory(window->gameDirectoryInput->value());
+	std::string gameDir = decodePath(window->gameDirectoryInput->value());
+	fnfc.directory(gameDir.empty() ? nullptr : gameDir.c_str());
 
 	switch ( fnfc.show() ) {
 		case -1:
@@ -215,7 +249,8 @@ void Launcher::openGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 		case  1:
 			break; // CANCEL
 		default:
-			window->gameDirectoryInput->value(fnfc.filename());
+			gameDir = encodePath(fnfc.filename());
+			window->gameDirectoryInput->value(gameDir.c_str());
 			window->update(true, window->gameDirectoryInput);
 			break; // FILE CHOSEN
 	}
@@ -231,16 +266,39 @@ void Launcher::startExecutable(bool asEditor) {
 		return;
 	}
 
-	std::string cmd("\"" + this->exePath + "\"");
-
-	if (asEditor) {
-		cmd += std::string(" -editor");
+	RustPointer<char> exePath(Env_currentExe());
+	if (!exePath) {
+		showRustError();
+		return;
 	}
-
-	int ret = system(cmd.c_str());
-	if (ret != 0)
-	{
-		SLOGW("There was an error while running '%s' (%d)", cmd.c_str(), ret);
+	RustPointer<char> filename(Path_filename(exePath.get()));
+	if (!filename) {
+		fl_message_title("No filename");
+		fl_alert("%s", exePath.get());
+		return;
+	}
+	std::string target("-launcher");
+	std::string newFilename(filename.get());
+	size_t pos = newFilename.find(target);
+	if (pos == std::string::npos) {
+		fl_message_title("Not launcher");
+		fl_alert("%s", exePath.get());
+		return;
+	}
+	newFilename.replace(pos, target.size(), "");
+	exePath.reset(Path_setFilename(exePath.get(), newFilename.c_str()));
+	if (!Fs_exists(exePath.get())) {
+		fl_message_title("Not found");
+		fl_alert("%s", exePath.get());
+		return;
+	}
+	RustPointer<VecCString> args(VecCString_create());
+	if (asEditor) {
+		VecCString_push(args.get(), "-editor");
+	}
+	bool ok = Command_execute(exePath.get(), args.get());
+	if (!ok) {
+		showRustError();
 	}
 }
 

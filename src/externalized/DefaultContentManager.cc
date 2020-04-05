@@ -376,12 +376,15 @@ SGPFile* DefaultContentManager::openTempFileForAppend(const char* filename) cons
 SGPFile* DefaultContentManager::openTempFileForReading(const char* filename) const
 {
 	std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
-
-	int         mode;
-	const char* fmode = GetFileOpenModeForReading(&mode);
-
-	int d = FileMan::openFileForReading(path.c_str(), mode);
-	return FileMan::getSGPFileFromFD(d, path.c_str(), fmode);
+	RustPointer<File> file(File_open(path.c_str(), FILE_OPEN_READ));
+	if (!file)
+	{
+		RustPointer<char> err(getRustError());
+		char buf[128];
+		snprintf(buf, sizeof(buf), "DefaultContentManager::openTempFileForReading: %s", err.get());
+		throw std::runtime_error(buf);
+	}
+	return FileMan::getSGPFileFromFile(file.release());
 }
 
 /** Delete temporary file. */
@@ -400,23 +403,20 @@ void DefaultContentManager::deleteTempFile(const char* filename) const
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
 SGPFile* DefaultContentManager::openGameResForReading(const char* filename) const
 {
-	int         mode;
-	const char* fmode = GetFileOpenModeForReading(&mode);
-
-	int d = FileMan::openFileCaseInsensitive(m_externalizedDataPath, filename, mode);
-	if (d >= 0)
+	RustPointer<File> file = FileMan::openFileCaseInsensitive(m_externalizedDataPath, filename, FILE_OPEN_READ);
+	if (file)
 	{
-		return FileMan::getSGPFileFromFD(d, filename, fmode);
+		return FileMan::getSGPFileFromFile(file.release());
 	}
 	else
 	{
-		d = FileMan::openFileForReading(filename, mode);
-		if (d < 0)
+		file = FileMan::openFileForReading(filename);
+		if (!file)
 		{
 			// failed to open file in the local directory
 			// let's try Data
-			d = FileMan::openFileCaseInsensitive(m_dataDir, filename, mode);
-			if (d < 0)
+			file = FileMan::openFileCaseInsensitive(m_dataDir, filename, FILE_OPEN_READ);
+			if (!file)
 			{
 				// failed to open in the data dir
 				// let's try libraries
@@ -441,18 +441,28 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
 			SLOGD("Opened file (current dir  ): %s", filename);
 		}
 	}
-
-	return FileMan::getSGPFileFromFD(d, filename, fmode);
+	if (!file)
+	{
+		RustPointer<char> err(getRustError());
+		char buf[128];
+		snprintf(buf, sizeof(buf), "DefaultContentManager::openGameResForReading: %s", err.get());
+		throw std::runtime_error(buf);
+	}
+	return FileMan::getSGPFileFromFile(file.release());
 }
 
 /** Open user's private file (e.g. saved game, settings) for reading. */
 SGPFile* DefaultContentManager::openUserPrivateFileForReading(const std::string& filename) const
 {
-	int         mode;
-	const char* fmode = GetFileOpenModeForReading(&mode);
-
-	int d = FileMan::openFileForReading(filename.c_str(), mode);
-	return FileMan::getSGPFileFromFD(d, filename.c_str(), fmode);
+	RustPointer<File> file = FileMan::openFileForReading(filename.c_str());
+	if (!file)
+	{
+		RustPointer<char> err(getRustError());
+		char buf[128];
+		snprintf(buf, sizeof(buf), "DefaultContentManager::openUserPrivateFileForReading: %s", err.get());
+		throw std::runtime_error(buf);
+	}
+	return FileMan::getSGPFileFromFile(file.release());
 }
 
 SGPFile* DefaultContentManager::openGameResForReading(const std::string& filename) const
@@ -469,12 +479,12 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 	}
 	else
 	{
-		FILE* file = fopen(filename, "rb");
+		RustPointer<File> file(File_open(filename, FILE_OPEN_READ));
 		if (!file)
 		{
 			char path[512];
 			snprintf(path, lengthof(path), "%s/%s", m_dataDir.c_str(), filename);
-			file = fopen(path, "rb");
+			file.reset(File_open(filename, FILE_OPEN_READ));
 			if (!file)
 			{
 				RustPointer<LibraryFile> libFile(LibraryFile_open(m_libraryDB.get(), filename));
@@ -482,7 +492,6 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 			}
 		}
 
-		fclose(file);
 		return true;
 	}
 }

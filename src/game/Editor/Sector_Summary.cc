@@ -1755,14 +1755,15 @@ static void CreateGlobalSummary(void)
 	FileMan::createDir(DEVINFO_DIR);
 
 	// Generate a simple readme file.
-	FILE* const f = fopen(DEVINFO_DIR "/readme.txt", "w");
-	Assert(f);
-	fputs(
+	const char* readme = ""
 		"This information is used in conjunction with the editor.\n"
-		"This directory or its contents shouldn't be included with final release.\n",
-		f
-	);
-	fclose(f);
+		"This directory or its contents shouldn't be included with final release.\n";
+	if (!Fs_write(DEVINFO_DIR "/readme.txt", reinterpret_cast<const uint8_t*>(readme), strlen(readme)))
+	{
+		RustPointer<char> err(getRustError());
+		SLOGA("CreateGlobalSummary: %s", err.get());
+		return;
+	}
 
 	LoadGlobalSummary();
 	RegenerateSummaryInfoForAllOutdatedMaps();
@@ -2080,8 +2081,8 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		FileRead(f_map, &dMajorMapVersion, sizeof(FLOAT));
 	}
 
-	FILE* const f_sum = fopen(summary_filename, "rb");
-	if (!f_sum)
+	RustPointer<File> file(File_open(summary_filename, FILE_OPEN_READ));
+	if (!file)
 	{
 		++gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	}
@@ -2090,12 +2091,12 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		/* Even if the info is outdated (but existing), allocate the structure, but
 		 * indicate that the info is bad. */
 		SUMMARYFILE* const sum = new SUMMARYFILE{};
-		if (fread(sum, sizeof(SUMMARYFILE), 1, f_sum) != 1)
+		if (!File_readExact(file.get(), reinterpret_cast<uint8_t*>(sum), sizeof(SUMMARYFILE)))
 		{
 			// failed, initialize and force update
 			*sum = SUMMARYFILE{};
 		}
-		fclose(f_sum);
+		file.reset(nullptr);
 
 		if (sum->ubSummaryVersion < MINIMUMVERSION ||
 				dMajorMapVersion      < getMajorMapVersion())
@@ -2176,10 +2177,12 @@ void WriteSectorSummaryUpdate(const char* const filename, const UINT8 ubLevel, S
 	STRING512 summary_filename;
 	snprintf(summary_filename, lengthof(summary_filename), DEVINFO_DIR "/%.*s.sum", (int)(ext - filename), filename);
 
-	FILE* const f = fopen(summary_filename, "wb");
-	Assert(f);
-	fwrite(sf, sizeof(*sf), 1, f);
-	fclose(f);
+	if (!Fs_write(summary_filename, reinterpret_cast<const uint8_t*>(sf), sizeof(*sf)))
+	{
+		RustPointer<char> err(getRustError());
+		SLOGA("WriteSectorSummaryUpdate: %s", err.get());
+		return;
+	}
 
 	--gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	UpdateMasterProgress();

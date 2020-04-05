@@ -53,9 +53,6 @@ static BOOLEAN ConvertToETRLE(UINT8** ppDest, UINT32* puiDestLen, std::vector<ST
 
 void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT16 sWidth, const INT16 sHeight, const char* const cOutputName, const UINT32 fFlags, const UINT32 uiAppDataSize)
 {
-
-	FILE *							pOutput;
-
 	UINT32							uiOriginalSize;
 	UINT8 *							pOutputBuffer = NULL;
 	UINT32							uiCompressedSize=0; // Wmaybe-uninitialized
@@ -108,13 +105,19 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 	// save file
 	//
 
-	pOutput = fopen( cOutputName, "wb" );
-	if (pOutput == NULL )
+	RustPointer<File> file(File_open(cOutputName, FILE_OPEN_WRITE));
+	if (!file)
 	{
+		RustPointer<char> err(getRustError());
+		SLOGE("WriteSTIFile: %s", err.get());
 		return;
 	}
 	// write header
-	fwrite(&Header, sizeof(Header), 1, pOutput);
+	if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(&Header), sizeof(Header)))
+	{
+		RustPointer<char> err(getRustError());
+		SLOGW("WriteSTIFile: %s", err.get());
+	}
 	// write palette and subimage structs, if any
 	if (Header.fFlags & STCI_INDEXED)
 	{
@@ -127,27 +130,42 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 				STCIPaletteEntry.ubRed   = pSGPPaletteEntry[uiLoop].r;
 				STCIPaletteEntry.ubGreen = pSGPPaletteEntry[uiLoop].g;
 				STCIPaletteEntry.ubBlue  = pSGPPaletteEntry[uiLoop].b;
-				fwrite(&STCIPaletteEntry, sizeof(STCIPaletteEntry), 1, pOutput);
+				if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(&STCIPaletteEntry), sizeof(STCIPaletteEntry)))
+				{
+					RustPointer<char> err(getRustError());
+					SLOGW("WriteSTIFile: %s", err.get());
+				}
 			}
 		}
 		if (Header.fFlags & STCI_ETRLE_COMPRESSED)
 		{
-			fwrite( subImages.data(), subImages.size() * sizeof(STCISubImage), 1, pOutput );
+			if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(subImages.data()), subImages.size() * sizeof(STCISubImage)))
+			{
+				RustPointer<char> err(getRustError());
+				SLOGW("WriteSTIFile: %s", err.get());
+			}
 		}
 	}
 
 	// write file data
 	Assert(Header.fFlags & STCI_ETRLE_COMPRESSED);
 	Assert(pOutputBuffer);
-	fwrite( pOutputBuffer, Header.uiStoredSize, 1, pOutput );
-
-	// write app-specific data (blanked to 0)
-	for (uiLoop = 0; uiLoop < Header.uiAppDataSize; uiLoop++)
+	if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(pOutputBuffer), Header.uiStoredSize))
 	{
-		fputc( 0, pOutput );
+		RustPointer<char> err(getRustError());
+		SLOGW("WriteSTIFile: %s", err.get());
 	}
 
-	fclose( pOutput );
+	// write app-specific data (blanked to 0)
+	const uint8_t zero = 0;
+	for (uiLoop = 0; uiLoop < Header.uiAppDataSize; uiLoop++)
+	{
+		if (!File_writeAll(file.get(), &zero, sizeof(zero)))
+		{
+			RustPointer<char> err(getRustError());
+			SLOGW("WriteSTIFile: %s", err.get());
+		}
+	}
 
 	if( pOutputBuffer != NULL )
 	{

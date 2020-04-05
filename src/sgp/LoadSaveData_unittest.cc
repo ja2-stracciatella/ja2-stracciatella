@@ -4,6 +4,7 @@
 
 #include "LoadSaveData.h"
 
+#include "externalized/RustInterface.h"
 #include "externalized/TestUtils.h"
 
 
@@ -194,13 +195,12 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 	ASSERT_EQ(sizeof(double), 8u);
 
 	{
-		char buf[100];
-		FILE *floats = fopen(floatsPath.c_str(), "rb");
-		EXPECT_EQ(fread(buf, sizeof(float), 5, floats), 5u);
-		fclose(floats);
+		RustPointer<VecU8> buf(Fs_read(floatsPath.c_str()));
+		ASSERT_TRUE(buf);
+		ASSERT_EQ(VecU8_len(buf.get()), sizeof(float) * 5);
 		float f;
 
-		char *S = buf;
+		const uint8_t* S = VecU8_as_ptr(buf.get());
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 0         );
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 1         );
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, -1        );
@@ -209,13 +209,12 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 	}
 
 	{
-		char buf[100];
-		FILE *doubles = fopen(doublesPath.c_str(), "rb");
-		EXPECT_EQ(fread(buf, sizeof(double), 5, doubles), 5u);
-		fclose(doubles);
+		RustPointer<VecU8> buf(Fs_read(doublesPath.c_str()));
+		ASSERT_TRUE(buf);
+		ASSERT_EQ(VecU8_len(buf.get()), sizeof(double) * 5);
 		double d;
 
-		char *S = buf;
+		const uint8_t* S = VecU8_as_ptr(buf.get());
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 0         );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 1         );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, -1        );
