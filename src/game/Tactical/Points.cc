@@ -1685,12 +1685,10 @@ INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_
 	if (!item)
 	{
 		SLOGW("MinAPsToThrow - in-hand item is missing");
-		return 0;
 	}
 	else if (!(item->getItemClass() & (IC_GRENADE | IC_THROWN))) // match MinAPsToAttack
 	{
 		SLOGW("MinAPsToThrow - in-hand item '%s' has unexpected item class 0x%x", item->getInternalName().c_str(), item->getItemClass());
-		return 0;
 	}
 
 	if (gridno != NOWHERE)
