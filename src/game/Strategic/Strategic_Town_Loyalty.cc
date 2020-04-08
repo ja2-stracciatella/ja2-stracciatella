@@ -73,9 +73,10 @@
 // town loyalty table
 TOWN_LOYALTY gTownLoyalty[ NUM_TOWNS ];
 
+#define MAX_NUM_OF_TOWNS_SECTORS 50
 
 // Town names and locations
-TownSectorInfo g_town_sectors[40];
+TownSectorInfo g_town_sectors[MAX_NUM_OF_TOWNS_SECTORS];
 
 
 #define BASIC_COST_FOR_CIV_MURDER	(10 * GAIN_PTS_PER_LOYALTY_PT)
