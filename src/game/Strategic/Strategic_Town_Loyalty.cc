@@ -75,7 +75,7 @@ TOWN_LOYALTY gTownLoyalty[ NUM_TOWNS ];
 
 
 // Town names and locations
-TownSectorInfo g_town_sectors[40];
+std::vector<TownSectorInfo> g_town_sectors;
 
 
 #define BASIC_COST_FOR_CIV_MURDER	(10 * GAIN_PTS_PER_LOYALTY_PT)
@@ -677,19 +677,15 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 
 void BuildListOfTownSectors()
 {
-	std::fill(std::begin(g_town_sectors), std::end(g_town_sectors), TownSectorInfo{});
-
-	TownSectorInfo* i = g_town_sectors;
 	for (INT32 x = 1; x != MAP_WORLD_X - 1; ++x)
 	{
 		for (INT32 y = 1; y != MAP_WORLD_Y - 1; ++y)
 		{
 			INT8 const town = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId;
 			if (town < FIRST_TOWN || NUM_TOWNS <= town) continue;
-
-			i->sector = SECTOR(x, y);
-			i->town   = town;
-			++i;
+			g_town_sectors.push_back(
+				TownSectorInfo{ SECTOR(x, y) , (UINT8)town }
+			);
 		}
 	}
 }

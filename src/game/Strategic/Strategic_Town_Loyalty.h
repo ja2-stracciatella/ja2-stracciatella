@@ -2,6 +2,7 @@
 #define __STRATEGIC_TOWN_LOYALTY_H
 
 #include "JA2Types.h"
+#include <vector>
 
 
 // gain pts per real loyalty pt
@@ -85,10 +86,10 @@ struct TownSectorInfo
 	UINT8 sector;
 };
 
-extern TownSectorInfo g_town_sectors[];
+extern std::vector<TownSectorInfo> g_town_sectors;
 
 #define FOR_EACH_TOWN_SECTOR(iter) \
-	for (TownSectorInfo const* iter = g_town_sectors; iter->town != BLANK_SECTOR; ++iter)
+	for (auto iter = g_town_sectors.begin(); iter != g_town_sectors.end(); ++iter)
 
 #define FOR_EACH_SECTOR_IN_TOWN(iter, town_) \
 	FOR_EACH_TOWN_SECTOR(iter) if (iter->town != (town_)) continue; else
