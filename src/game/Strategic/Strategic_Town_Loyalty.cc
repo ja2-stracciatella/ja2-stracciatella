@@ -684,7 +684,7 @@ void BuildListOfTownSectors()
 			INT8 const town = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId;
 			if (town < FIRST_TOWN || NUM_TOWNS <= town) continue;
 			g_town_sectors.push_back(
-				TownSectorInfo{ SECTOR(x, y) , (UINT8)town }
+				TownSectorInfo{ (UINT8)town, SECTOR(x, y) }
 			);
 		}
 	}
