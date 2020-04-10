@@ -54,6 +54,10 @@
 #include <iterator>
 #include <stdexcept>
 
+#include "GameInstance.h"
+#include "ContentManager.h"
+#include "externalized/strategic/BloodCatSpawnsModel.h"
+
 // the delay for a group about to arrive
 #define ABOUT_TO_ARRIVE_DELAY 5
 
@@ -1366,7 +1370,8 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			if (!g.fVehicle || !IsGroupTheHelicopterGroup(g))
 			{
 				// ATE: Add a few corpse to the bloodcat lair
-				if (SECTOR(x, y) == SEC_I16 &&
+				auto spawns = GCM->getBloodCatSpawnsOfSector( SECTOR(x, y) );
+				if ( spawns != NULL && spawns->isLair &&
 					!GetSectorFlagStatus(x, y, z, SF_ALREADY_VISITED))
 				{
 					AddCorpsesToBloodcatLair(x, y);
@@ -3348,8 +3353,15 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 
 	ubChance = 5 * gGameOptions.ubDifficultyLevel;
 
+	bool bIsLair = false, bIsArena = false;
+	auto spawns = GCM->getBloodCatSpawnsOfSector( ubSectorID );
+	if (spawns != NULL) {
+		bIsLair = spawns->isLair;   // SEC_I16
+		bIsArena = spawns->isArena; // SEC_N5
+	}
+
 	iHoursElapsed = (GetWorldTotalMin() - pSector->uiTimeCurrentSectorWasLastLoaded) / 60;
-	if( ubSectorID == SEC_N5 || ubSectorID == SEC_I16 )
+	if( bIsLair || bIsArena )
 	{ //These are special maps -- we use all placements.
 		if( pSector->bBloodCats == -1 )
 		{
@@ -3390,7 +3402,7 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 			pSector->bBloodCats = (INT8)MIN( pSector->bBloodCats, pSector->bBloodCatPlacements );
 		}
 	}
-	else if( ubSectorID != SEC_I16 )
+	else if( !bIsLair )
 	{
 		if( !gfAutoAmbush && PreChance( 95 ) )
 		{ //already ambushed here.  But 5% chance of getting ambushed again!
@@ -3398,10 +3410,10 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 		}
 	}
 
-	if( !fAlreadyAmbushed && ubSectorID != SEC_N5 && pSector->bBloodCats > 0 &&
+	if( !fAlreadyAmbushed && !bIsArena && pSector->bBloodCats > 0 &&
 			!pGroup->fVehicle && !NumEnemiesInSector( pGroup->ubSectorX, pGroup->ubSectorY ) )
 	{
-		if( ubSectorID != SEC_I16 || !gubFact[ FACT_PLAYER_KNOWS_ABOUT_BLOODCAT_LAIR ] )
+		if( !bIsLair || !gubFact[ FACT_PLAYER_KNOWS_ABOUT_BLOODCAT_LAIR ] )
 		{
 			gubEnemyEncounterCode = BLOODCAT_AMBUSH_CODE;
 		}

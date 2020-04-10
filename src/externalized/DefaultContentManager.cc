@@ -27,6 +27,8 @@
 #include "WeaponModels.h"
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
+#include "strategic/BloodCatPlacementsModel.h"
+#include "strategic/BloodCatSpawnsModel.h"
 
 #include "Logger.h"
 
@@ -268,6 +270,9 @@ DefaultContentManager::~DefaultContentManager()
 	{
 		delete str;
 	}
+
+	m_bloodCatPlacements.clear();
+	m_bloodCatSpawns.clear();
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -927,6 +932,8 @@ bool DefaultContentManager::loadGameData()
 
 	loadStringRes("strings/new-strings", m_newStrings);
 
+	loadStrategicLayerData();
+
 	return result;
 }
 
@@ -1033,4 +1040,46 @@ const ST::string* DefaultContentManager::getNewString(size_t stringId) const
 	{
 		return m_newStrings[stringId];
 	}
+}
+
+
+bool DefaultContentManager::loadStrategicLayerData() {
+	auto json = readJsonDataFile("strategic-bloodcat-placements.json");
+	for (auto& element : json->GetArray()) {
+		auto obj = JsonObjectReader(element);
+		m_bloodCatPlacements.push_back(
+			BloodCatPlacementsModel::deserialize(obj)
+		);
+	}
+
+	json = readJsonDataFile("strategic-bloodcat-spawns.json");
+	for (auto& element : json->GetArray()) {
+		auto obj = JsonObjectReader(element);
+		m_bloodCatSpawns.push_back(
+			BloodCatSpawnsModel::deserialize(obj)
+		);
+	}
+	return true;
+}
+
+const std::vector<const BloodCatPlacementsModel*>& DefaultContentManager::getBloodCatPlacements() const
+{
+	return m_bloodCatPlacements;
+}
+
+const std::vector<const BloodCatSpawnsModel*>& DefaultContentManager::getBloodCatSpawns() const
+{
+	return m_bloodCatSpawns;
+}
+
+const BloodCatSpawnsModel* DefaultContentManager::getBloodCatSpawnsOfSector(uint8_t sectorId) const
+{
+	for ( auto spawns : m_bloodCatSpawns )
+	{
+		if ( spawns->sectorId == sectorId )
+		{
+			return spawns;
+		}
+	}
+	return NULL;
 }

@@ -142,6 +142,10 @@ public:
 
 	virtual const ST::string* getNewString(size_t stringId) const;
 
+	virtual const std::vector<const BloodCatPlacementsModel*>& getBloodCatPlacements() const;
+	virtual const std::vector<const BloodCatSpawnsModel*>& getBloodCatSpawns() const;
+	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const;
+
 protected:
 	std::string m_dataDir;
 	std::string m_tileDir;
@@ -179,6 +183,9 @@ protected:
 	const IMPPolicy *m_impPolicy;
 	const GamePolicy *m_gamePolicy;
 
+	std::vector<const BloodCatPlacementsModel*> m_bloodCatPlacements;
+	std::vector<const BloodCatSpawnsModel*> m_bloodCatSpawns;
+
 	RustPointer<LibraryDB> m_libraryDB;
 
 	bool loadWeapons();
@@ -196,6 +203,8 @@ protected:
 	bool readWeaponTable(
 		const char *fileName,
 		std::vector<std::vector<const WeaponModel*> > & weaponTable);
+
+	bool loadStrategicLayerData();
 
 	rapidjson::Document* readJsonDataFile(const char *fileName) const;
 };

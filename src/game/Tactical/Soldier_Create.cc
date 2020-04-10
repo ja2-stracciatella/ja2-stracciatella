@@ -46,7 +46,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
-
+#include "externalized/strategic/BloodCatSpawnsModel.h"
+                 
 #include <algorithm>
 #include <iterator>
 #include <math.h>
@@ -1309,7 +1310,8 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 
 				case BLOODCAT:
 					pp->bExpLevel = 5 + bExpLevelModifier;
-					if( SECTOR( gWorldSectorX, gWorldSectorY ) == SEC_I16 )
+					auto spawns = GCM->getBloodCatSpawnsOfSector( SECTOR( gWorldSectorX, gWorldSectorY ));
+					if( spawns != NULL && spawns->isLair )  
 					{
 						pp->bExpLevel += gGameOptions.ubDifficultyLevel;
 					}
