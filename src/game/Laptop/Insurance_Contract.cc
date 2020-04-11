@@ -153,7 +153,7 @@ static void SetNumberOfDisplayedInsuranceMercs(void)
 }
 
 
-static GUIButtonRef MakeButtonBig(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click, const INT8 offset_x)
+static GUIButtonRef MakeButtonBig(BUTTON_PICS* img, const ST::string& text, INT16 x, const GUI_CALLBACK click, INT8 offset_x)
 {
 	const INT16 text_col   = INS_FONT_COLOR;
 	const INT16 shadow_col = INS_FONT_SHADOW;
@@ -634,7 +634,7 @@ static void CreateDestroyInsuranceContractFormButtons(BOOLEAN fCreate)
 		//The accept button image
 		guiInsuranceAcceptClearFormButtonImage = LoadButtonImage(LAPTOPDIR "/acceptclearbox.sti", 0, 1);
 
-		const wchar_t* const text       = InsContractText[INS_CONTRACT_ACCEPT];
+		ST::string text = InsContractText[INS_CONTRACT_ACCEPT];
 		const INT16          text_col   = INS_FONT_BTN_COLOR;
 		const INT16          shadow_col = INS_FONT_BTN_SHADOW_COLOR;
 		const INT16          y          = INS_CTRCT_ORDER_GRID_Y + INS_CTRCT_ACCEPT_BTN_Y;
