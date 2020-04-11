@@ -67,6 +67,7 @@
 #include "WeaponModels.h"
 #include "policy/GamePolicy.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 #include <algorithm>
@@ -507,7 +508,7 @@ void ShopKeeperScreenShutdown(void)
 }
 
 
-static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 prio, const GUI_CALLBACK click, const wchar_t* const help)
+static GUIButtonRef MakeButton(BUTTON_PICS* img, const ST::string& text, INT16 x, INT16 prio, GUI_CALLBACK click, const ST::string& help)
 {
 	const INT16 text_col   = SKI_BUTTON_COLOR;
 	const INT16 shadow_col = DEFAULT_SHADOW;
@@ -599,7 +600,7 @@ static void EnterShopKeeperInterface(void)
 
 	//Transaction button
 	//if the dealer repairs, use the repair fast help text for the transaction button
-	const wchar_t* help;
+	ST::string help;
 	if (ArmsDealerInfo[gbSelectedArmsDealerID].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS)
 	{
 		help = SkiMessageBoxText[SKI_REPAIR_TRANSACTION_BUTTON_HELP_TEXT];
@@ -1849,7 +1850,7 @@ static void SetSkiRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pR
 
 static void DisplayArmsDealerCurrentInventoryPage(void)
 {
-	wchar_t zTemp[32];
+	ST::string zTemp;
 	UINT16  uiFontHeight;
 	UINT16  usCnt=0;
 	UINT16  usPosX, usPosY;
@@ -1879,7 +1880,7 @@ static void DisplayArmsDealerCurrentInventoryPage(void)
 
 			//Display the Current Page number
 			uiFontHeight = GetFontHeight( SKI_LABEL_FONT );
-			swprintf( zTemp, lengthof(zTemp), L"%d/%d", gSelectArmsDealerInfo.ubCurrentPage, gSelectArmsDealerInfo.ubNumberOfPages );
+			zTemp = ST::format("{}/{}", gSelectArmsDealerInfo.ubCurrentPage, gSelectArmsDealerInfo.ubNumberOfPages);
 			DrawTextToScreen(zTemp, SKI_PAGE_X, SKI_PAGE_Y + uiFontHeight + 6, SKI_PAGE_WIDTH, SKI_LABEL_FONT, SKI_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
 
@@ -1980,7 +1981,7 @@ static void DisplayArmsDealerCurrentInventoryPage(void)
 }
 
 
-static void BuildDoneWhenTimeString(wchar_t sString[], size_t Length, ArmsDealerID, UINT16 usItemIndex, UINT8 ubElement);
+static ST::string BuildDoneWhenTimeString(ArmsDealerID, UINT16 usItemIndex, UINT8 ubElement);
 static UINT32 CalcShopKeeperItemPrice(BOOLEAN fDealerSelling, BOOLEAN fUnitPriceOnly, UINT16 usItemID, FLOAT dModifier, const OBJECTTYPE* pItemObject);
 static INT8 GetSlotNumberForMerc(UINT8 ubProfile);
 static bool IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE const&);
@@ -1988,7 +1989,7 @@ static bool IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE const&);
 
 static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16 const x, UINT16 const y, OBJECTTYPE const& item_o, bool const hatched_out, UINT8 const item_area)
 {
-	wchar_t buf[64];
+	ST::string buf;
 
 	UINT16 outline;
 	if (IsGunOrAmmoOfSameTypeSelected(item_o))
@@ -2054,7 +2055,7 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 			// Display the length of time needed to repair the item
 			INVENTORY_IN_SLOT const& inv = gpTempDealersInventory[slot_num];
 			Assert(inv.sSpecialItemElement != -1);
-			BuildDoneWhenTimeString(buf, lengthof(buf), gbSelectedArmsDealerID, item_idx, inv.sSpecialItemElement);
+			buf = BuildDoneWhenTimeString(gbSelectedArmsDealerID, item_idx, inv.sSpecialItemElement);
 			DrawTextToScreen(buf, x + SKI_INV_PRICE_OFFSET_X, y + SKI_INV_PRICE_OFFSET_Y, SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 			owner = inv.ubIdOfMercWhoOwnsTheItem;
 		}
@@ -2088,7 +2089,7 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 		item_area == ARMS_DEALER_INVENTORY &&
 		gpTempDealersInventory[slot_num].uiFlags & ARMS_INV_ITEM_SELECTED))
 	{
-		swprintf(buf, lengthof(buf), L"x%d", item_o.ubNumberOfObjects);
+		buf = ST::format("x{}", item_o.ubNumberOfObjects);
 		DrawTextToScreen(buf, x + SKI_ITEM_NUMBER_TEXT_OFFSET_X, y + SKI_ITEM_NUMBER_TEXT_OFFSET_Y, SKI_ITEM_NUMBER_TEXT_WIDTH, SKIT_NUMBER_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	}
 
@@ -2106,16 +2107,16 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 	{
 		// Display the '*' in the bottom right corner of the square
 		UINT8 attachmentHintColor = GetAttachmentHintColor(&item_o);
-		DrawTextToScreen(L"*", x + SKI_ATTACHMENT_SYMBOL_X_OFFSET, y + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, attachmentHintColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen("*", x + SKI_ATTACHMENT_SYMBOL_X_OFFSET, y + SKI_ATTACHMENT_SYMBOL_Y_OFFSET, 0, TINYFONT1, attachmentHintColor, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
 	{
 		// Display 'JAMMED' or 'REPAIRED', if appropriate
-		wchar_t const* const overlay_text =
-			item_o.bGunAmmoStatus < 0 ? TacticalStr[JAMMED_ITEM_STR] :
-			print_repaired            ? SKI_Text[SKI_TEXT_REPAIRED]  :
-			0;
-		if (overlay_text)
+		ST::string overlay_text =
+			item_o.bGunAmmoStatus < 0 ? ST::string(TacticalStr[JAMMED_ITEM_STR]) :
+			print_repaired            ? ST::string(SKI_Text[SKI_TEXT_REPAIRED]) :
+			ST::null;
+		if (!overlay_text.empty())
 		{
 			INT16 cen_x;
 			INT16 cen_y;
@@ -2767,37 +2768,35 @@ static BOOLEAN RemoveItemFromArmsDealerOfferArea(INT8 bSlotId, BOOLEAN fKeepItem
 }
 
 
-static void BuildItemHelpTextString(wchar_t sString[], size_t Length, const INVENTORY_IN_SLOT* pInv, UINT8 ubScreenArea);
+static ST::string BuildItemHelpTextString(const INVENTORY_IN_SLOT* pInv, UINT8 ubScreenArea);
 
 
 static void SetSkiRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea)
 {
-	wchar_t zHelpText[ 512 ];
-
 	Assert( pRegion );
 
-	BuildItemHelpTextString( zHelpText, lengthof(zHelpText), pInv, ubScreenArea );
+	ST::string zHelpText = BuildItemHelpTextString(pInv, ubScreenArea );
 	pRegion->SetFastHelpText(zHelpText);
 }
 
 
 static void SetSkiFaceRegionHelpText(const INVENTORY_IN_SLOT* pInv, MOUSE_REGION* pRegion, UINT8 ubScreenArea)
 {
-	wchar_t zTempText[ 512 ];
-	wchar_t zHelpText[ 512 ];
+	ST::string zTempText;
+	ST::string zHelpText;
 
 	Assert( pRegion );
 
 	//if the item isn't NULL, and is owned by a merc
 	if( ( pInv != NULL ) && ( pInv->ubIdOfMercWhoOwnsTheItem != NO_PROFILE ) )
 	{
-		BuildItemHelpTextString( zTempText, lengthof(zTempText), pInv, ubScreenArea );
+		zTempText = BuildItemHelpTextString(pInv, ubScreenArea);
 		// add who owns it
-		swprintf( zHelpText, lengthof(zHelpText), L"%ls%ls %ls", gMercProfiles[ pInv->ubIdOfMercWhoOwnsTheItem ].zNickname, pMessageStrings[ MSG_DASH_S ], zTempText );
+		zHelpText = ST::format("{}{} {}", gMercProfiles[ pInv->ubIdOfMercWhoOwnsTheItem ].zNickname, pMessageStrings[ MSG_DASH_S ], zTempText);
 	}
 	else
 	{
-		zHelpText[ 0 ] = '\0';
+		zHelpText = ST::null;
 	}
 	pRegion->SetFastHelpText(zHelpText);
 }
@@ -3106,7 +3105,7 @@ class DialogueEventShopkeeperLockTransactionButton : public DialogueEvent
 class DialogueEventShopkeeperMoney : public DialogueEvent
 {
 	public:
-		DialogueEventShopkeeperMoney(wchar_t const* const message, UINT32 const money_amount, MessageBoxFlags const flags, MSGBOX_CALLBACK callback) :
+		DialogueEventShopkeeperMoney(const ST::string& message, UINT32 money_amount, MessageBoxFlags flags, MSGBOX_CALLBACK callback) :
 			message_(message),
 			money_amount_(money_amount),
 			flags_(flags),
@@ -3115,17 +3114,14 @@ class DialogueEventShopkeeperMoney : public DialogueEvent
 
 		bool Execute()
 		{
-			wchar_t zMoney[128];
-			ST::wchar_buffer wstr = SPrintMoney(money_amount_).to_wchar();
-			wcslcpy(zMoney, wstr.c_str(), lengthof(zMoney));
-			wchar_t zText[512];
-			swprintf(zText, lengthof(zText), message_, zMoney);
+			ST::string zMoney = SPrintMoney(money_amount_);
+			ST::string zText = st_format_printf(message_, zMoney);
 			DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, flags_, callback_);
 			return false;
 		}
 
 	private:
-		wchar_t const*  const message_;
+		ST::string      const message_;
 		UINT32          const money_amount_;
 		MessageBoxFlags const flags_;
 		MSGBOX_CALLBACK const callback_;
@@ -3216,7 +3212,7 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 				DialogueEvent::Add(new DialogueEventSkipAFrame());
 				DialogueEvent::Add(new DialogueEventShopkeeperLockTransactionButton(true));
 
-				wchar_t const* const message =
+				ST::string message =
 					uiPlayersTotalMoneyValue != 0 ? SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_DIFFERENCE] :
 					SkiMessageBoxText[SKI_QUESTION_TO_DEDUCT_MONEY_FROM_PLAYERS_ACCOUNT_TO_COVER_COST];
 				UINT32 const amount = uiArmsDealersItemsCost - uiPlayersTotalMoneyValue;
@@ -4136,7 +4132,7 @@ static bool IsGunOrAmmoOfSameTypeSelected(OBJECTTYPE const& o)
 static void ShopKeeperSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void InitShopKeeperSubTitledText(const wchar_t* pString)
+void InitShopKeeperSubTitledText(const ST::string& str)
 {
 	//Now setup the popup box
 	if( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
@@ -4145,8 +4141,7 @@ void InitShopKeeperSubTitledText(const wchar_t* pString)
 		UINT16 usActualHeight=0;
 
 		// The subutitled text for what the merc is saying
-		wchar_t ShopKeeperTalkingText[SKI_SUBTITLE_TEXT_SIZE];
-		swprintf(ShopKeeperTalkingText, lengthof(ShopKeeperTalkingText), L"\"%ls\"", pString);
+		ST::string ShopKeeperTalkingText = ST::format("\"%{}\"", str);
 		g_popup_box = PrepareMercPopupBox(g_popup_box, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, ShopKeeperTalkingText, 300, 0, 0, 0, &usActualWidth, &usActualHeight);
 
 		//position it to start under the guys face
@@ -4573,12 +4568,12 @@ static void ClearArmsDealerOfferSlot(INT32 ubSlotToClear)
 	ArmsDealerOfferArea[ ubSlotToClear ] = INVENTORY_IN_SLOT{};
 
 	//Remove the mouse help text from the region
-	gDealersOfferSlotsMouseRegions[ubSlotToClear].SetFastHelpText(L"");
+	gDealersOfferSlotsMouseRegions[ubSlotToClear].SetFastHelpText(ST::null);
 
 	//if the dealer repairs
 	if( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS )
 	{
-		gDealersOfferSlotsSmallFaceMouseRegions[ubSlotToClear].SetFastHelpText(L"");
+		gDealersOfferSlotsSmallFaceMouseRegions[ubSlotToClear].SetFastHelpText(ST::null);
 	}
 }
 
@@ -4592,8 +4587,8 @@ static void ClearPlayersOfferSlot(INT32 ubSlotToClear)
 	PlayersOfferArea[ ubSlotToClear ] = INVENTORY_IN_SLOT{};
 
 	//Clear the text for the item
-	gPlayersOfferSlotsMouseRegions[ubSlotToClear].SetFastHelpText(L"");
-	gPlayersOfferSlotsSmallFaceMouseRegions[ubSlotToClear].SetFastHelpText(L"");
+	gPlayersOfferSlotsMouseRegions[ubSlotToClear].SetFastHelpText(ST::null);
+	gPlayersOfferSlotsSmallFaceMouseRegions[ubSlotToClear].SetFastHelpText(ST::null);
 
 	// if the player offer area is clear, reset flags for transaction
 	CheckAndHandleClearingOfPlayerOfferArea( );
@@ -4836,14 +4831,14 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 }
 
 
-void DoSkiMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
+void DoSkiMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags ubFlags, MSGBOX_CALLBACK ReturnCallback)
 {
 	// reset exit mode
 	gfExitSKIDueToMessageBox = TRUE;
 
 	// do message box and return
 	SGPBox const centering_rect = { 0, 0, SCREEN_WIDTH, 339 };
-	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, ubFlags, ReturnCallback, &centering_rect);
+	DoMessageBox(MSG_BOX_BASIC_STYLE, str, uiExitScreen, ubFlags, ReturnCallback, &centering_rect);
 }
 
 
@@ -5244,7 +5239,7 @@ static BOOLEAN OfferObjectToDealer(OBJECTTYPE* pComplexObject, UINT8 ubOwnerProf
 		if ( ( ubDealerOfferAreaSlotsNeeded + CountNumberOfItemsInTheArmsDealersOfferArea() ) > SKI_NUM_TRADING_INV_SLOTS )
 		{
 			// tell player there's not enough room in the dealer's offer area
-			DoSkiMessageBox(L"There is not enough room in the dealers repair area.", SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			DoSkiMessageBox("There is not enough room in the dealers repair area.", SHOPKEEPER_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return(FALSE);	// no room
 		}*/
 
@@ -6235,7 +6230,7 @@ static UINT32 EvaluateInvSlot(INVENTORY_IN_SLOT* pInvSlot)
 #define REPAIR_MINUTES_INTERVAL 15
 
 
-static void BuildRepairTimeString(wchar_t sString[], size_t Length, UINT32 uiTimeInMinutesToFixItem)
+static ST::string BuildRepairTimeString(UINT32 uiTimeInMinutesToFixItem)
 {
 	UINT16 usNumberOfHoursToFixItem = 0;
 
@@ -6259,7 +6254,7 @@ static void BuildRepairTimeString(wchar_t sString[], size_t Length, UINT32 uiTim
 	if ( uiTimeInMinutesToFixItem <= 90 )
 	{
 		// show minutes
-		swprintf( sString, Length, SKI_Text[ SKI_TEXT_MINUTES ], uiTimeInMinutesToFixItem );
+		return st_format_printf(SKI_Text[ SKI_TEXT_MINUTES ], uiTimeInMinutesToFixItem);
 	}
 	else
 	{
@@ -6270,17 +6265,17 @@ static void BuildRepairTimeString(wchar_t sString[], size_t Length, UINT32 uiTim
 
 		if ( usNumberOfHoursToFixItem > 1 )
 		{
-			swprintf( sString, Length, SKI_Text[ SKI_TEXT_PLURAL_HOURS ], usNumberOfHoursToFixItem );
+			return st_format_printf(SKI_Text[ SKI_TEXT_PLURAL_HOURS ], usNumberOfHoursToFixItem);
 		}
 		else
 		{
-			wcscpy( sString, SKI_Text[ SKI_TEXT_ONE_HOUR ] );
+			return SKI_Text[ SKI_TEXT_ONE_HOUR ];
 		}
 	}
 }
 
 
-static void BuildDoneWhenTimeString(wchar_t sString[], size_t const Length, ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, UINT8 const ubElement)
+static ST::string BuildDoneWhenTimeString(ArmsDealerID ubArmsDealer, UINT16 usItemIndex, UINT8 ubElement)
 {
 	UINT32 uiDoneTime;
 	UINT32 uiDay, uiHour, uiMin;
@@ -6298,8 +6293,7 @@ static void BuildDoneWhenTimeString(wchar_t sString[], size_t const Length, Arms
 	//if the item has already been repaired
 	if( gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime <= GetWorldTotalMin() )
 	{
-		wcscpy( sString, L"" );
-		return;
+		return ST::null;
 	}
 
 	uiDoneTime = gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].SpecialItem[ ubElement ].uiRepairDoneTime;
@@ -6318,40 +6312,39 @@ static void BuildDoneWhenTimeString(wchar_t sString[], size_t const Length, Arms
 	// only show day if it's gonna take overnight
 	if ( GetWorldDay() != uiDay )
 	{
-		swprintf(sString, Length, L"%ls %d %02d:%02d", pDayStrings, uiDay, uiHour, uiMin);
+		return ST::format("{} {} {02d}:{02d}", pDayStrings, uiDay, uiHour, uiMin);
 	}
 	else
 	{
-		swprintf( sString, Length, L"%02d:%02d", uiHour, uiMin );
+		return ST::format("{02d}:{02d}", uiHour, uiMin);
 	}
 }
 
 
-static void BuildItemHelpTextString(wchar_t sString[], size_t Length, const INVENTORY_IN_SLOT* pInv, UINT8 ubScreenArea)
+static ST::string BuildItemHelpTextString(const INVENTORY_IN_SLOT* pInv, UINT8 ubScreenArea)
 {
-	wchar_t zHelpText[ 512 ];
-	wchar_t zRepairTime[ 64 ];
+	ST::string zHelpText;
+	ST::string zRepairTime;
 
 	if( pInv != NULL )
 	{
-		ST::wchar_buffer wstr = GetHelpTextForItem(pInv->ItemObject).to_wchar();
-		wcslcpy(zHelpText, wstr.c_str(), lengthof(zHelpText));
+		zHelpText = GetHelpTextForItem(pInv->ItemObject);
 
 		// add repair time for items in a repairman's offer area
 		if ( ( ubScreenArea == ARMS_DEALER_OFFER_AREA ) &&
 			( ArmsDealerInfo[ gbSelectedArmsDealerID ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS ) )
 		{
-			BuildRepairTimeString( zRepairTime, lengthof(zRepairTime), CalculateObjectItemRepairTime( gbSelectedArmsDealerID, &( pInv->ItemObject ) ) );
-			swprintf(sString, Length, L"%ls\n(%ls: %ls)", zHelpText, gzLateLocalizedString[STR_LATE_44], zRepairTime);
+			zRepairTime = BuildRepairTimeString(CalculateObjectItemRepairTime( gbSelectedArmsDealerID, &( pInv->ItemObject ) ));
+			return ST::format("{}\n({}: {})", zHelpText, gzLateLocalizedString[STR_LATE_44], zRepairTime);
 		}
 		else
 		{
-			wcscpy( sString, zHelpText );
+			return zHelpText;
 		}
 	}
 	else
 	{
-		sString[ 0 ] = '\0';
+		return ST::null;
 	}
 }
 
