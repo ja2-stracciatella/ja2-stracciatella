@@ -101,7 +101,7 @@ static bool gfSouth;
 static bool gfWest;
 
 
-static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const wchar_t* text, const wchar_t* help)
+static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, const ST::string& text, const ST::string& help)
 {
 	GUIButtonRef const btn = QuickCreateButton(giOverheadButtonImages[idx], STD_SCREEN_X + 11, STD_SCREEN_Y + y, MSYS_PRIORITY_HIGH, click);
 	iTPButtons[idx] = btn;
@@ -357,7 +357,7 @@ static void RenderTacticalPlacementGUI()
 		else
 		{
 			SetFont(FONT10ARIALBOLD);
-			MPrint(qx, qy, L"?");
+			MPrint(qx, qy, "?");
 			InvalidateRegion(qx, qy, qx + 8, qy + 8);
 		}
 	}
