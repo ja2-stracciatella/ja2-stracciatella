@@ -7917,8 +7917,8 @@ static void BullsEyeOrChopperSelectionPopupCallback(MessageBoxReturnValue);
 
 static void CreateBullsEyeOrChopperSelectionPopup(void)
 {
-	wcscpy( gzUserDefinedButton1, pHelicopterEtaStrings[ 8 ] );
-	wcscpy( gzUserDefinedButton2, pHelicopterEtaStrings[ 9 ] );
+	gzUserDefinedButton1 = pHelicopterEtaStrings[ 8 ];
+	gzUserDefinedButton2 = pHelicopterEtaStrings[ 9 ];
 
 	// do a BULLSEYE/CHOPPER message box
 	DoScreenIndependantMessageBox( pHelicopterEtaStrings[ 7 ], MSG_BOX_FLAG_GENERIC, BullsEyeOrChopperSelectionPopupCallback );

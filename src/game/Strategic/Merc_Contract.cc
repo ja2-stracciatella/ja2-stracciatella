@@ -780,13 +780,13 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 		if (elsewhere == SECTOR(x, y) && z == 0) goto no_choice;
 
 		// Set strings for generic buttons
-		wcslcpy(gzUserDefinedButton1, town_sector, lengthof(gzUserDefinedButton1));
-		wstr = GetShortSectorString(SECTORX(elsewhere), SECTORY(elsewhere)).to_wchar();
-		wcslcpy(gzUserDefinedButton2, wstr.c_str(), lengthof(gzUserDefinedButton2));
+		gzUserDefinedButton1 = town_sector;
+		gzUserDefinedButton2 = GetShortSectorString(SECTORX(elsewhere), SECTORY(elsewhere));
 
 		wchar_t const* const town = g_towns_locative[GetTownIdForSector(elsewhere)];
 		wchar_t const* const text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;
-		swprintf(msg, lengthof(msg), text, s.name, town_sector, town, gzUserDefinedButton2);
+		ST::wchar_buffer wstr = gzUserDefinedButton2.to_wchar();
+		swprintf(msg, lengthof(msg), text, s.name, town_sector, town, wstr.c_str());
 		flags = add_rehire_button ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC;
 	}
 	else

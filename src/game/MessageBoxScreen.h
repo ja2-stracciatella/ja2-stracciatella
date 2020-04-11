@@ -82,8 +82,8 @@ extern BOOLEAN            fRestoreBackgroundForMessageBox;
 //this variable can be unset if ur in a non gamescreen and DONT want the msg box to use the save buffer
 extern BOOLEAN gfDontOverRideSaveBuffer;
 
-extern wchar_t gzUserDefinedButton1[128];
-extern wchar_t gzUserDefinedButton2[128];
+extern ST::string gzUserDefinedButton1;
+extern ST::string gzUserDefinedButton2;
 
 /* ubStyle:       Determines the look of graphics including buttons
  * zString:       16-bit string
@@ -91,18 +91,8 @@ extern wchar_t gzUserDefinedButton2[128];
  * ubFlags        Some flags for button style
  * ReturnCallback Callback for return. Can be NULL. Returns any above return value
  * pCenteringRect Rect to center in. Can be NULL */
-void DoMessageBox(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect);
-inline void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPBox* centering_rect)
-{
-	ST::wchar_buffer wstr = str.to_wchar();
-	DoMessageBox(ubStyle, wstr.c_str(), uiExitScreen, usFlags, ReturnCallback, centering_rect);
-}
-void DoScreenIndependantMessageBox(const wchar_t* zString, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
-inline void DoScreenIndependantMessageBox(const ST::string& str, MessageBoxFlags flags, MSGBOX_CALLBACK callback)
-{
-	ST::wchar_buffer wstr = str.to_wchar();
-	DoScreenIndependantMessageBox(wstr.c_str(), flags, callback);
-}
+void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPBox* centering_rect);
+void DoScreenIndependantMessageBox(const ST::string& msg, MessageBoxFlags flags, MSGBOX_CALLBACK callback);
 
 //wrappers for other screens
 void DoMapMessageBoxWithRect(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, const SGPBox* centering_rect);
