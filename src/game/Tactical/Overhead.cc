@@ -103,6 +103,8 @@
 #include "Soldier.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -6015,7 +6017,7 @@ void InitializeTacticalStatusAtBattleStart(void)
 
 static void DeathTimerCallback(void)
 {
-	const wchar_t* text;
+	ST::string text;
 	if (gTacticalStatus.Team[CREATURE_TEAM].bMenInSector > gTacticalStatus.Team[ENEMY_TEAM].bMenInSector)
 	{
 		text = LargeTacticalStr[LARGESTR_NOONE_LEFT_CAPABLE_OF_BATTLE_AGAINST_CREATURES_STR];
@@ -6030,7 +6032,7 @@ static void DeathTimerCallback(void)
 
 void CaptureTimerCallback(void)
 {
-	const wchar_t* text;
+	ST::string text;
 	if (gfSurrendered)
 	{
 		text = LargeTacticalStr[3];
