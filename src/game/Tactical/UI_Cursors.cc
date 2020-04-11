@@ -29,6 +29,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
 
 // FUNCTIONS FOR ITEM CURSOR HANDLING
 static UICursorID HandleActivatedTargetCursor(   SOLDIERTYPE*, GridNo map_pos, BOOLEAN recalc);
@@ -538,7 +540,7 @@ static void DetermineCursorBodyLocation(SOLDIERTYPE* const s, BOOLEAN const disp
 	SOLDIERTYPE* const tgt = gUIFullTarget;
 	if (!tgt) return;
 
-	wchar_t const* hit_location;
+	ST::string hit_location;
 	if (tgt->ubBodyType == CROW)
 	{
 		s->bAimShotLocation = AIM_SHOT_LEGS;
