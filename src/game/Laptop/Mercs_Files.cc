@@ -128,7 +128,7 @@ static void BtnMercFilesBackButtonCallback(GUI_BUTTON *btn, INT32 reason);
 GUIButtonRef guiMercBackButton;
 
 
-static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const ST::string& text, INT16 x, GUI_CALLBACK click)
 {
 	const INT16 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(guiButtonImage, text, FONT12ARIAL, MERC_BUTTON_UP_COLOR, shadow_col, MERC_BUTTON_DOWN_COLOR, shadow_col, x, MERC_FILES_BUTTON_Y, MSYS_PRIORITY_HIGH, click);
@@ -293,7 +293,7 @@ try
 	AutoSGPVObject face(LoadBigPortrait(p));
 
 	BOOLEAN        shaded;
-	const wchar_t* text;
+	ST::string text;
 	if (IsMercDead(p))
 	{
 		// The merc is dead, shade the face red and put text over top saying the merc is dead
@@ -328,7 +328,7 @@ try
 	else
 	{
 		shaded = FALSE;
-		text   = NULL;
+		text   = ST::null;
 	}
 
 	BltVideoObject(FRAME_BUFFER, face, 0, MERC_FACE_X, MERC_FACE_Y);
@@ -370,7 +370,7 @@ static void LoadAndDisplayMercBio(UINT8 ubMercID)
 }
 
 
-static void DrawStat(const UINT16 x, const UINT16 y, const wchar_t* const stat, const UINT16 x_val, const INT32 val)
+static void DrawStat(UINT16 x, UINT16 y, const ST::string& stat, UINT16 x_val, INT32 val)
 {
 	DrawTextToScreen(stat, x, y, 0, MERC_STATS_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DrawNumeralsToScreen(val, 3, x_val, y, MERC_STATS_FONT, MERC_DYNAMIC_STATS_COLOR);
@@ -401,12 +401,11 @@ static void DisplayMercsStats(MERCPROFILESTRUCT const& p)
 
 	//Daily Salary
 	y2 += dy;
-	const wchar_t* const salary = MercInfo[MERC_FILES_SALARY];
+	ST::string salary = MercInfo[MERC_FILES_SALARY];
 	DrawTextToScreen(salary, MERC_STATS_SECOND_COL_X, y2, 0, MERC_NAME_FONT, MERC_STATIC_STATS_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	const UINT16 x = MERC_STATS_SECOND_COL_X + StringPixLength(salary, MERC_NAME_FONT) + 1;
-	wchar_t sString[128];
-	swprintf(sString, lengthof(sString), L"%d %ls", p.sSalary, MercInfo[MERC_FILES_PER_DAY]);
+	ST::string sString = ST::format("{} {}", p.sSalary, MercInfo[MERC_FILES_PER_DAY]);
 	DrawTextToScreen(sString, x, y2, 95, MERC_NAME_FONT, MERC_DYNAMIC_STATS_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 }
 
