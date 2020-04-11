@@ -25,6 +25,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 
@@ -206,8 +207,8 @@ static UINT8 gubFlowerDestDropDownMode;
 static UINT8 gubCurrentlySelectedFlowerLocation;
 
 
-static wchar_t gsSentimentTextField[FLOWER_ORDER_PERSONEL_SENTIMENT_NUM_CHARS];
-static wchar_t gsNameTextField[FLOWER_ORDER_NAME_FIELD_NUM_CHARS];
+static ST::string gsSentimentTextField;
+static ST::string gsNameTextField;
 
 
 //buttons
@@ -249,7 +250,7 @@ static MOUSE_REGION gSelectedFloristDisableDropDownRegion;
 static MOUSE_REGION gSelectedFlowerDropDownRegion[FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS];
 
 
-static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const ST::string& text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
 	const INT16 shadow_col = FLORIST_BUTTON_TEXT_SHADOW_COLOR;
 	GUIButtonRef const btn = CreateIconAndTextButton(guiFlowerOrderButtonImage, text, FLORIST_BUTTON_TEXT_FONT, FLORIST_BUTTON_TEXT_UP_COLOR, shadow_col, FLORIST_BUTTON_TEXT_DOWN_COLOR, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
@@ -376,10 +377,8 @@ void ExitFloristOrderForm()
 	RemoveButton( guiFlowerOrderGalleryButton );
 
 	//Store the text fields
-	ST::wchar_buffer wstr = GetStringFromField(1).to_wchar();
-	wcslcpy(gsSentimentTextField, wstr.c_str(), lengthof(gsSentimentTextField));
-	wstr = GetStringFromField(2).to_wchar();
-	wcslcpy(gsNameTextField, wstr.c_str(), lengthof(gsNameTextField));
+	gsSentimentTextField = GetStringFromField(1);
+	gsNameTextField = GetStringFromField(2);
 	gbCurrentlySelectedCard = -1;
 
 
@@ -642,12 +641,12 @@ static void DisplayFlowerDynamicItems(void)
 {
 	UINT32	uiStartLoc=0;
 	UINT16	usPosX;
-	wchar_t	sTemp[ 640 ];
+	ST::string sTemp;
 	UINT16	usPrice;
 
 	//order number
 	usPosX = StringPixLength( sOrderFormText[FLORIST_ORDER_ORDER_NUMBER], FLOWER_ORDEER_SMALL_FONT) + 5 + FLOWER_ORDER_ORDER_NUM_NAME_X;
-	swprintf(sTemp, lengthof(sTemp), L"%d", LaptopSaveInfo.uiFlowerOrderNumber );
+	sTemp = ST::format("{}", LaptopSaveInfo.uiFlowerOrderNumber);
 	DrawTextToScreen(sTemp, usPosX, FLOWER_ORDER_ORDER_NUM_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	guiFlowerPrice = 0;
@@ -670,9 +669,8 @@ static void DisplayFlowerDynamicItems(void)
 	//price
 	usPosX = StringPixLength( sOrderFormText[FLORIST_ORDER_PRICE], FLOWER_ORDEER_SMALL_FONT) + 5 + FLOWER_ORDER_BOUQUET_NAME_X;
 	uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * guiCurrentlySelectedFlower + FLOR_GALLERY_TEXT_TITLE_SIZE;
-	ST::wchar_buffer wstr = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_PRICE_SIZE).to_wchar();
-	wcslcpy(sTemp, wstr.c_str(), lengthof(sTemp));
-	swscanf( sTemp, L"%hu", &usPrice);
+	sTemp = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_PRICE_SIZE);
+	sscanf(sTemp.c_str(), "%hu", &usPrice);
 
 	//if its the next day delivery
 	if( gfFLoristCheckBox0Down )
@@ -681,7 +679,7 @@ static void DisplayFlowerDynamicItems(void)
 	else
 		guiFlowerPrice += usPrice + FlowerOrderLocations[ gubCurrentlySelectedFlowerLocation ].ubWhenItGetsThereCost;
 
-	swprintf(sTemp, lengthof(sTemp), L"$%d.00 %ls", guiFlowerPrice, pMessageStrings[MSG_USDOLLAR_ABBREVIATION]);
+	sTemp = ST::format("${}.00 {}", guiFlowerPrice, pMessageStrings[MSG_USDOLLAR_ABBREVIATION]);
 	DrawTextToScreen(sTemp, usPosX, FLOWER_ORDER_BOUQUET_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 }
 
@@ -749,13 +747,11 @@ static void GetInputText()
 	UINT8 const text_field_id = GetActiveFieldID();
 	if (text_field_id == 1)
 	{ // The personel sentiment field
-		ST::wchar_buffer wstr = GetStringFromField(text_field_id).to_wchar();
-		wcslcpy(gsSentimentTextField, wstr.c_str(), lengthof(gsSentimentTextField));
+		gsSentimentTextField = GetStringFromField(text_field_id);
 	}
 	else if (text_field_id == 2)
 	{ // The name field
-		ST::wchar_buffer wstr = GetStringFromField(text_field_id).to_wchar();
-		wcslcpy(gsNameTextField, wstr.c_str(), lengthof(gsNameTextField));
+		gsNameTextField = GetStringFromField(text_field_id);
 	}
 
 	SetActiveField(0);
@@ -810,8 +806,7 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 
 				//disable the text entry fields
 				//DisableAllTextFields();
-				ST::wchar_buffer wstr = GetStringFromField(1).to_wchar();
-				wcslcpy(gsSentimentTextField, wstr.c_str(), lengthof(gsSentimentTextField));
+				gsSentimentTextField = GetStringFromField(1);
 				KillTextInputMode();
 
 				//disable the clear order and accept order buttons, (their rendering interferes with the drop down graphics)
@@ -952,11 +947,9 @@ static void InitFlowerOrderTextInputBoxes(void)
 
 		const UINT32 uiStartLoc = FLOR_CARD_TEXT_TITLE_SIZE * gbCurrentlySelectedCard;
 		ST::string sTemp = GCM->loadEncryptedString( FLOR_CARD_TEXT_FILE, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
-		wchar_t	sText[FLOR_CARD_TEXT_TITLE_SIZE];
-		ST::wchar_buffer wstr = CleanOutControlCodesFromString(sTemp).to_wchar();
-		wcslcpy(sText, wstr.c_str(), lengthof(sText));
+		ST::string sText = CleanOutControlCodesFromString(sTemp);
 
-		wcslcpy(gsSentimentTextField, sText, lengthof(gsSentimentTextField));
+		gsSentimentTextField = sText;
 
 		gbCurrentlySelectedCard = -1;
 
@@ -1003,8 +996,6 @@ static void HandleFloristOrderKeyBoardInput(void)
 //Initialize the Florsit Order Page (reset some variables)
 void InitFloristOrderForm()
 {
-	gsSentimentTextField[0] = 0;
-
 	gfFLoristCheckBox0Down = FALSE; // next day delviery
 	gfFLoristCheckBox1Down = TRUE; // when it gets there delivery
 	gfFLoristCheckBox2Down = FALSE;
@@ -1017,7 +1008,6 @@ void InitFloristOrderForm()
 	gubCurrentlySelectedFlowerLocation = 0;
 	gbCurrentlySelectedCard = -1;
 
-	gsSentimentTextField[0] = 0;
-	gsNameTextField[0] = 0;
-
+	gsSentimentTextField = ST::null;
+	gsNameTextField = ST::null;
 }
