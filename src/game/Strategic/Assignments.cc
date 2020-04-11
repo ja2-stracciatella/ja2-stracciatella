@@ -73,6 +73,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 #include <algorithm>
@@ -738,7 +739,7 @@ static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 {
 	if (!AreAssignmentConditionsMet(s, AC_IMPASSABLE | AC_COMBAT | AC_EPC | AC_IN_HELI_IN_HOSTILE_SECTOR | AC_MOVING | AC_UNDERGROUND)) return false;
 
-	wchar_t const* why;
+	ST::string why;
 	if (s.fBetweenSectors) // Traveling?
 	{
 		if (s.bAssignment != VEHICLE)
@@ -788,8 +789,7 @@ static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 cannot_sleep:
 	if (explain_why_not)
 	{
-		wchar_t buf[128];
-		swprintf(buf, lengthof(buf), why, s.name);
+		ST::string buf = st_format_printf(why, s.name);
 		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, 0);
 	}
 	return false;
@@ -798,7 +798,7 @@ cannot_sleep:
 
 static BOOLEAN CanCharacterBeAwakened(SOLDIERTYPE* pSoldier, BOOLEAN fExplainWhyNot)
 {
-	wchar_t sString[ 128 ];
+	ST::string sString;
 
 	// if dead tired
 	if( ( pSoldier -> bBreathMax <= BREATHMAX_ABSOLUTE_MINIMUM ) && !pSoldier->fMercCollapsedFlag )
@@ -812,7 +812,7 @@ static BOOLEAN CanCharacterBeAwakened(SOLDIERTYPE* pSoldier, BOOLEAN fExplainWhy
 	{
 		if ( fExplainWhyNot )
 		{
-			swprintf( sString, lengthof(sString), zMarksMapScreenText[ 6 ], pSoldier->name );
+			sString = st_format_printf(zMarksMapScreenText[ 6 ], pSoldier->name);
 			DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 		}
 
@@ -4622,7 +4622,7 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 		/* Can the character join this squad?  If already in it, accept that as a
 			* legal choice and exit menu */
 		SOLDIERTYPE& s = *GetSelectedAssignSoldier(FALSE);
-		wchar_t buf[128] = { L'\0' };
+		ST::string buf;
 		switch (CanCharacterSquad(s, value))
 		{
 			case CHARACTER_CAN_JOIN_SQUAD: // able to add, do it
@@ -4645,22 +4645,22 @@ static void SquadMenuBtnCallback(MOUSE_REGION* const pRegion, INT32 const reason
 				break;
 
 			case CHARACTER_CANT_JOIN_SQUAD_SQUAD_MOVING:
-				swprintf(buf, lengthof(buf), pMapErrorString[36], s.name, pLongAssignmentStrings[value]);
+				buf = st_format_printf(pMapErrorString[36], s.name, pLongAssignmentStrings[value]);
 				break;
 			case CHARACTER_CANT_JOIN_SQUAD_VEHICLE:
-				swprintf(buf, lengthof(buf), pMapErrorString[37], s.name);
+				buf = st_format_printf(pMapErrorString[37], s.name);
 				break;
 			case CHARACTER_CANT_JOIN_SQUAD_TOO_FAR:
-				swprintf(buf, lengthof(buf), pMapErrorString[20], s.name, pLongAssignmentStrings[value]);
+				buf = st_format_printf(pMapErrorString[20], s.name, pLongAssignmentStrings[value]);
 				break;
 			case CHARACTER_CANT_JOIN_SQUAD_FULL:
-				swprintf(buf, lengthof(buf), pMapErrorString[19], s.name, pLongAssignmentStrings[value]);
+				buf = st_format_printf(pMapErrorString[19], s.name, pLongAssignmentStrings[value]);
 				break;
 			default: // generic "you can't join this squad" msg
-				swprintf(buf, lengthof(buf), pMapErrorString[38], s.name, pLongAssignmentStrings[value]);
+				buf = st_format_printf(pMapErrorString[38], s.name, pLongAssignmentStrings[value]);
 				break;
 		}
-		if (buf[0] != L'\0')
+		if (!buf.empty())
 		{
 			DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, NULL);
 		}
@@ -4675,8 +4675,8 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
 	SOLDIERTYPE * pSoldier = NULL;
-	wchar_t sString[ 128 ];
-	wchar_t sStringA[ 128 ];
+	ST::string sString;
+	ST::string sStringA;
 
 
 	pSoldier = GetSelectedAssignSoldier( FALSE );
@@ -4726,7 +4726,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						// can we keep militia in this town?
 						if (!MilitiaTrainingAllowedInSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ))
 						{
-							swprintf( sString, lengthof(sString), pMapErrorString[ 31 ], pTownNames[ bTownId ] );
+							sString = st_format_printf(pMapErrorString[ 31 ], pTownNames[ bTownId ]);
 							DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 							break;
 						}
@@ -4744,14 +4744,13 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						if( bTownId == BLANK_SECTOR )
 						{
 							// SAM site
-							ST::wchar_buffer wstr = GetShortSectorString(pSoldier->sSectorX, pSoldier->sSectorY).to_wchar();
-							wcslcpy(sStringA, wstr.c_str(), lengthof(sStringA));
-							swprintf(sString, lengthof(sString), zMarksMapScreenText[20], sStringA);
+							sStringA = GetShortSectorString(pSoldier->sSectorX, pSoldier->sSectorY);
+							sString = st_format_printf(zMarksMapScreenText[20], sStringA);
 						}
 						else
 						{
 							// town
-							swprintf(sString, lengthof(sString), zMarksMapScreenText[20], pTownNames[bTownId]);
+							sString = st_format_printf(zMarksMapScreenText[20], pTownNames[bTownId]);
 						}
 
 						DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
@@ -4760,7 +4759,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 					if ( CountMilitiaTrainersInSoldiersSector( pSoldier ) >= MAX_MILITIA_TRAINERS_PER_SECTOR )
 					{
-						swprintf(sString, lengthof(sString), gzLateLocalizedString[STR_LATE_47], MAX_MILITIA_TRAINERS_PER_SECTOR);
+						sString = st_format_printf(gzLateLocalizedString[STR_LATE_47], MAX_MILITIA_TRAINERS_PER_SECTOR);
 						DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 						break;
 					}
@@ -4921,7 +4920,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
-	wchar_t sString[ 128 ];
+	ST::string sString;
 
 	SOLDIERTYPE * pSoldier = NULL;
 
@@ -5070,7 +5069,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					{
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
-						swprintf(sString, lengthof(sString), zMarksMapScreenText[18], pSoldier->name);
+						sString = st_format_printf(zMarksMapScreenText[18], pSoldier->name);
 
 						DoScreenIndependantMessageBox( sString , MSG_BOX_FLAG_OK, NULL );
 					}
@@ -5137,7 +5136,7 @@ static void AssignmentMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 					{
 						fTeamPanelDirty = TRUE;
 						fMapScreenBottomDirty = TRUE;
-						swprintf(sString, lengthof(sString), zMarksMapScreenText[17], pSoldier->name);
+						sString = st_format_printf(zMarksMapScreenText[17], pSoldier->name);
 
 						DoScreenIndependantMessageBox( sString , MSG_BOX_FLAG_OK, NULL );
 					}
@@ -5212,8 +5211,7 @@ static void CreateSquadBox(void)
 	for (UINT32 i = 0; i <= uiMaxSquad; ++i)
 	{
 		// get info about current squad and put in  string
-		wchar_t buf[64];
-		swprintf(buf, lengthof(buf), L"%ls ( %d/%d )", pSquadMenuStrings[i], NumberOfPeopleInSquad(i), NUMBER_OF_SOLDIERS_PER_SQUAD);
+		ST::string buf = ST::format("{} ( {}/{} )", pSquadMenuStrings[i], NumberOfPeopleInSquad(i), NUMBER_OF_SOLDIERS_PER_SQUAD);
 		AddMonoString(box, buf);
 	}
 
@@ -5349,11 +5347,8 @@ void CreateContractBox(const SOLDIERTYPE* const s)
 					continue;
 			}
 
-			wchar_t sDollarString[50];
-			ST::wchar_buffer wstr= SPrintMoney(salary).to_wchar();
-			wcslcpy(sDollarString, wstr.c_str(), lengthof(sDollarString));
-			wchar_t sString[50];
-			swprintf(sString, lengthof(sString), L"%ls ( %ls )", pContractStrings[i], sDollarString);
+			ST::string sDollarString = SPrintMoney(salary);
+			ST::string sString = ST::format("{} ( {} )", pContractStrings[i], sDollarString);
 			AddMonoString(box, sString);
 		}
 	}
@@ -5417,13 +5412,13 @@ static void CreateAssignmentsBox()
 
 	for (UINT32 i = 0; i < MAX_ASSIGN_STRING_COUNT; ++i)
 	{
-		wchar_t const* str = pAssignMenuStrings[i];
+		ST::string str = pAssignMenuStrings[i];
 		// if we have a soldier, and this is the squad line
-		wchar_t buf[128];
+		ST::string buf;
 		if (i == ASSIGN_MENU_ON_DUTY && s != NULL && s->bAssignment < ON_DUTY)
 		{
 			// show his squad # in brackets
-			swprintf(buf, lengthof(buf), L"%ls(%d)", str, s->bAssignment + 1);
+			buf = ST::format("{}({})", str, s->bAssignment + 1);
 			str = buf;
 		}
 		AddMonoString(box, str);
@@ -6601,7 +6596,7 @@ BOOLEAN HandleSelectedMercsBeingPutAsleep(BOOLEAN const wake_up, BOOLEAN const d
 	if (!success && display_warning)
 	{
 		// inform player not everyone could be woken up/put to sleep
-		wchar_t const* const warning = wake_up ?
+		ST::string warning = wake_up ?
 			pMapErrorString[27] : pMapErrorString[26];
 		DoScreenIndependantMessageBox(warning, MSG_BOX_FLAG_OK, NULL);
 	}
