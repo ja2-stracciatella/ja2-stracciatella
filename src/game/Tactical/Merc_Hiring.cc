@@ -489,9 +489,9 @@ static void CheckForValidArrivalSector(void)
 	INT16   sSectorGridNo, sSectorGridNo2;
 	INT32   uiRange, uiLowestRange = 999999;
 	BOOLEAN fFound = FALSE;
-	wchar_t sString[ 1024 ];
-	wchar_t zShortTownIDString1[ 50 ];
-	wchar_t zShortTownIDString2[ 50 ];
+	ST::string sString;
+	ST::string zShortTownIDString1;
+	ST::string zShortTownIDString2;
 
 	sSectorGridNo = SECTOR_INFO_TO_STRATEGIC_INDEX(g_merc_arrive_sector);
 
@@ -501,8 +501,7 @@ static void CheckForValidArrivalSector(void)
 		return;
 	}
 
-	ST::wchar_buffer wstr = GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector)).to_wchar();
-	wcslcpy(zShortTownIDString1, wstr.c_str(), lengthof(zShortTownIDString1));
+	zShortTownIDString1 = GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector));
 
 
 	// If here - we need to do a search!
@@ -545,10 +544,9 @@ static void CheckForValidArrivalSector(void)
 
 		UpdateAnyInTransitMercsWithGlobalArrivalSector( );
 
-		wstr = GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector)).to_wchar();
-		wcslcpy(zShortTownIDString2, wstr.c_str(), lengthof(zShortTownIDString2));
+		zShortTownIDString2 = GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector));
 
-		swprintf(sString, lengthof(sString), str_arrival_rerouted, zShortTownIDString2, zShortTownIDString1);
+		sString = st_format_printf(str_arrival_rerouted, zShortTownIDString2, zShortTownIDString1);
 
 		DoScreenIndependantMessageBox(  sString, MSG_BOX_FLAG_OK, NULL );
 
