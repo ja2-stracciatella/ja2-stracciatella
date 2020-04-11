@@ -144,7 +144,7 @@ void ExitInsurance()
 
 void RenderInsurance()
 {
-	wchar_t sText[800];
+	ST::string sText;
 
 	DisplayInsuranceDefaults();
 
@@ -153,51 +153,51 @@ void RenderInsurance()
 	BltVideoObject(FRAME_BUFFER, guiInsuranceTitleImage, 0, INSURANCE_BIG_TITLE_X, INSURANCE_BIG_TITLE_Y);
 
 	//Display the title slogan
-	GetInsuranceText( INS_SNGL_WERE_LISTENING, sText );
+	sText = GetInsuranceText(INS_SNGL_WERE_LISTENING);
 	DrawTextToScreen(sText, LAPTOP_SCREEN_UL_X, INSURANCE_TOP_RED_BAR_Y - 35, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 	//Display the subtitle slogan
-	GetInsuranceText( INS_SNGL_LIFE_INSURANCE_SPECIALISTS, sText );
+	sText = GetInsuranceText(INS_SNGL_LIFE_INSURANCE_SPECIALISTS);
 	DrawTextToScreen(sText, INSURANCE_SUBTITLE_X, INSURANCE_SUBTITLE_Y, 0, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Display the bulleted text 1
 	BltVideoObject(FRAME_BUFFER, guiInsuranceBulletImage, 0, INSURANCE_SUBTITLE_X, INSURANCE_BULLET_TEXT_1_Y);
-	GetInsuranceText( INS_MLTI_EMPLOY_HIGH_RISK, sText );
+	sText = GetInsuranceText(INS_MLTI_EMPLOY_HIGH_RISK);
 	DrawTextToScreen(sText, INSURANCE_SUBTITLE_X + INSURANCE_BULLET_TEXT_OFFSET_X, INSURANCE_BULLET_TEXT_1_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Display the bulleted text 2
 	BltVideoObject(FRAME_BUFFER, guiInsuranceBulletImage, 0, INSURANCE_SUBTITLE_X, INSURANCE_BULLET_TEXT_2_Y);
-	GetInsuranceText( INS_MLTI_HIGH_FATALITY_RATE, sText );
+	sText = GetInsuranceText(INS_MLTI_HIGH_FATALITY_RATE);
 	DrawTextToScreen(sText, INSURANCE_SUBTITLE_X + INSURANCE_BULLET_TEXT_OFFSET_X, INSURANCE_BULLET_TEXT_2_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Display the bulleted text 3
 	BltVideoObject(FRAME_BUFFER, guiInsuranceBulletImage, 0, INSURANCE_SUBTITLE_X, INSURANCE_BULLET_TEXT_3_Y);
-	GetInsuranceText( INS_MLTI_DRAIN_SALARY, sText );
+	sText = GetInsuranceText(INS_MLTI_DRAIN_SALARY);
 	DrawTextToScreen(sText, INSURANCE_SUBTITLE_X + INSURANCE_BULLET_TEXT_OFFSET_X, INSURANCE_BULLET_TEXT_3_Y, 0, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Display the bottom slogan
-	GetInsuranceText( INS_MLTI_IF_ANSWERED_YES, sText );
+	sText = GetInsuranceText(INS_MLTI_IF_ANSWERED_YES);
 	DrawTextToScreen(sText, INSURANCE_BOTTOM_SLOGAN_X, INSURANCE_BOTTOM_SLOGAN_Y, INSURANCE_BOTTOM_SLOGAN_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 
 	//Display the red bar under the link at the bottom.  and the text
 	DisplaySmallRedLineWithShadow( INSURANCE_BOTTOM_LINK_RED_BAR_X, INSURANCE_BOTTOM_LINK_RED_BAR_Y, INSURANCE_BOTTOM_LINK_RED_BAR_X+INSURANCE_BOTTOM_LINK_RED_BAR_WIDTH, INSURANCE_BOTTOM_LINK_RED_BAR_Y);
 
-	GetInsuranceText( INS_SNGL_COMMENTSFROM_CLIENTS, sText );
+	sText = GetInsuranceText(INS_SNGL_COMMENTSFROM_CLIENTS);
 	DisplayWrappedString(INSURANCE_LINK_TEXT_1_X, INSURANCE_LINK_TEXT_1_Y, INSURANCE_LINK_TEXT_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 
 	//Display the red bar under the link at the bottom
 	DisplaySmallRedLineWithShadow( INSURANCE_BOTTOM_LINK_RED_BAR_X_2, INSURANCE_BOTTOM_LINK_RED_BAR_Y, INSURANCE_BOTTOM_LINK_RED_BAR_X_2+INSURANCE_BOTTOM_LINK_RED_BAR_WIDTH, INSURANCE_BOTTOM_LINK_RED_BAR_Y);
 
-	GetInsuranceText( INS_SNGL_HOW_DOES_INS_WORK, sText );
+	sText = GetInsuranceText(INS_SNGL_HOW_DOES_INS_WORK);
 	DisplayWrappedString(INSURANCE_LINK_TEXT_2_X, INSURANCE_LINK_TEXT_2_Y+7, INSURANCE_LINK_TEXT_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 
 	//Display the red bar under the link at the bottom
 	DisplaySmallRedLineWithShadow( INSURANCE_BOTTOM_LINK_RED_BAR_X_3, INSURANCE_BOTTOM_LINK_RED_BAR_Y, INSURANCE_BOTTOM_LINK_RED_BAR_X_3+INSURANCE_BOTTOM_LINK_RED_BAR_WIDTH, INSURANCE_BOTTOM_LINK_RED_BAR_Y);
 
-	GetInsuranceText( INS_SNGL_TO_ENTER_REVIEW, sText );
+	sText = GetInsuranceText(INS_SNGL_TO_ENTER_REVIEW);
 	DisplayWrappedString(INSURANCE_LINK_TEXT_3_X, INSURANCE_LINK_TEXT_3_Y+7, INSURANCE_LINK_TEXT_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 
@@ -312,7 +312,7 @@ void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 End
 }
 
 
-void GetInsuranceText(const UINT8 ubNumber, wchar_t* const pString)
+ST::string GetInsuranceText(const UINT8 ubNumber)
 {
 	UINT32	uiStartLoc=0;
 
@@ -320,15 +320,13 @@ void GetInsuranceText(const UINT8 ubNumber, wchar_t* const pString)
 	{
 		//Get and display the card saying
 		uiStartLoc = INSURANCE_TEXT_SINGLE_LINE_SIZE * ubNumber;
-		ST::wchar_buffer wstr = GCM->loadEncryptedString(INSURANCE_TEXT_SINGLE_FILE, uiStartLoc, INSURANCE_TEXT_SINGLE_LINE_SIZE).to_wchar();
-		wcslcpy(pString, wstr.c_str(), INSURANCE_TEXT_SINGLE_LINE_SIZE);
+		return GCM->loadEncryptedString(INSURANCE_TEXT_SINGLE_FILE, uiStartLoc, INSURANCE_TEXT_SINGLE_LINE_SIZE);
 	}
 	else
 	{
 		//Get and display the card saying
 		uiStartLoc = INSURANCE_TEXT_MULTI_LINE_SIZE * ( ubNumber - INS_MULTI_LINE_BEGINS - 1 );
-		ST::wchar_buffer wstr = GCM->loadEncryptedString(INSURANCE_TEXT_MULTI_FILE, uiStartLoc, INSURANCE_TEXT_MULTI_LINE_SIZE).to_wchar();
-		wcslcpy(pString, wstr.c_str(), INSURANCE_TEXT_MULTI_LINE_SIZE);
+		return GCM->loadEncryptedString(INSURANCE_TEXT_MULTI_FILE, uiStartLoc, INSURANCE_TEXT_MULTI_LINE_SIZE);
 	}
 }
 
