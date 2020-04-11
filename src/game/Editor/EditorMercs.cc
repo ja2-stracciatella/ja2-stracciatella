@@ -2497,7 +2497,7 @@ void RenderMercStrings()
 		}
 
 		// Render the health text
-		wchar_t const* const health = GetSoldierHealthString(s);
+		ST::string health = GetSoldierHealthString(s);
 		SetFontForeground(FONT_RED);
 		FindFontCenterCoordinates(sXPos, sYPos, 80, 1, health, TINYFONT1, &sX, &sY);
 		if (sY < 352)

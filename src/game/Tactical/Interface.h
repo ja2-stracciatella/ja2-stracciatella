@@ -4,6 +4,8 @@
 #include "Handle_UI.h"
 #include "MouseSystem.h"
 
+#include <string_theory/string>
+
 
 #define MAX_UICOMPOSITES		4
 
@@ -142,11 +144,11 @@ void DirtyMercPanelInterface(SOLDIERTYPE const*, DirtyLevel);
 
 
 void EndUIMessage(void);
-void BeginUIMessage(BOOLEAN fUseSkullIcon, const wchar_t* text);
+void BeginUIMessage(BOOLEAN fUseSkullIcon, const ST::string& text);
 
 
 // map screen version, for centering over the map area
-void BeginMapUIMessage(INT16 delta_y, const wchar_t* text);
+void BeginMapUIMessage(INT16 delta_y, const ST::string& text);
 
 
 extern VIDEO_OVERLAY* g_ui_message_overlay;
@@ -169,7 +171,7 @@ void EndTopMessage(void);
 
 void InitEnemyUIBar( UINT8 ubNumEnemies, UINT8 ubDoneEnemies );
 
-const wchar_t* GetSoldierHealthString(const SOLDIERTYPE* s);
+ST::string GetSoldierHealthString(const SOLDIERTYPE* s);
 
 
 void ResetPhysicsTrajectoryUI(void);
