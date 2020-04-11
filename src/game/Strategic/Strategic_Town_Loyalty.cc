@@ -623,9 +623,7 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 	 * unvisited sectors, but let's check anyway */
 	Assert(GetSectorFlagStatus(sSectorX, sSectorY, sSectorZ, SF_ALREADY_VISITED));
 
-	wchar_t wSectorName[128];
-	ST::wchar_buffer wstr = GetSectorIDString(sSectorX, sSectorY, sSectorZ, TRUE).to_wchar();
-	wcslcpy(wSectorName, wstr.c_str(), lengthof(wSectorName));
+	ST::string wSectorName = GetSectorIDString(sSectorX, sSectorY, sSectorZ, TRUE);
 
 	// go through list of items in sector and randomly remove them
 
@@ -815,8 +813,8 @@ static INT32 IsTownUnderCompleteControlByEnemy(INT8 bTownId)
 void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 ubHowMany)
 {
 	UINT32 uiLoyaltyChange = 0;
-	wchar_t str[256];
-	wchar_t pSectorString[128];
+	ST::string str;
+	ST::string pSectorString;
 
 	UINT8 const bTownId = GetTownIdForSector(SECTOR(sSectorX, sSectorY));
 
@@ -827,9 +825,8 @@ void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 
 	}
 
 	//Report this to player
-	ST::wchar_buffer wstr = GetSectorIDString(sSectorX, sSectorY, 0, TRUE).to_wchar();
-	wcslcpy(pSectorString, wstr.c_str(), lengthof(pSectorString));
-	swprintf( str, lengthof(str), gpStrategicString[ STR_DIALOG_CREATURES_KILL_CIVILIANS ], ubHowMany, pSectorString );
+	pSectorString = GetSectorIDString(sSectorX, sSectorY, 0, TRUE);
+	str = st_format_printf(gpStrategicString[ STR_DIALOG_CREATURES_KILL_CIVILIANS ], ubHowMany, pSectorString);
 	DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 
 	// use same formula as if it were a civilian "murder" in tactical!!!
