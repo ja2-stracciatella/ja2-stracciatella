@@ -15,6 +15,8 @@
 #include "MemMan.h"
 #include "MouseSystem.h"
 
+#include <string_theory/string>
+
 
 BOOLEAN gfNoScroll = FALSE;
 
@@ -586,11 +588,14 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 	if (!gfEditingText && a->usParam != SDLK_TAB) return FALSE;
 
 	if (a->usEvent == TEXT_INPUT) {
-		wchar_t const c = a->Char;
 		/* If the key has no character associated, bail out */
-		AssertMsg(c != L'\0', "TEXT_INPUT event sent null character");
+		AssertMsg(a->codepoints.size() > 0, "TEXT_INPUT event sent null character");
 		DeleteHilitedText();
-		HandleRegularInput(c);
+		ST::wchar_buffer wstr = ST::utf32_to_wchar(a->codepoints);
+		for (wchar_t c : wstr)
+		{
+			HandleRegularInput(c);
+		}
 		return TRUE;
 	}
 
