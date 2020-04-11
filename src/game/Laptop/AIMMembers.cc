@@ -863,8 +863,10 @@ static void UpdateMercInfo(void)
 static void LoadMercBioInfo(UINT8 const ubIndex, wchar_t* const pInfoString, wchar_t* const pAddInfo)
 {
 	UINT32 uiStartSeekAmount = (SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex;
-	GCM->loadEncryptedString(MERCBIOSFILENAME, pInfoString, uiStartSeekAmount,                      SIZE_MERC_BIO_INFO);
-	GCM->loadEncryptedString(MERCBIOSFILENAME, pAddInfo,    uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(MERCBIOSFILENAME, uiStartSeekAmount, SIZE_MERC_BIO_INFO).to_wchar();
+	wcslcpy(pInfoString, wstr.c_str(), SIZE_MERC_BIO_INFO);
+	wstr = GCM->loadEncryptedString(MERCBIOSFILENAME, uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO).to_wchar();
+	wcslcpy(pAddInfo, wstr.c_str(), SIZE_MERC_ADDITIONAL_INFO);
 }
 
 

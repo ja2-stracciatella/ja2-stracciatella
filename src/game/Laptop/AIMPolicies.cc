@@ -15,6 +15,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 
 #define NUM_AIM_POLICY_PAGES			11
@@ -393,7 +395,8 @@ static void ExitAimPolicyMenuBar()
 
 static void LoadAIMPolicyText(wchar_t* Text, UINT32 Offset)
 {
-	GCM->loadEncryptedString(AIMPOLICYFILE, Text, Offset * AIM_POLICY_LINE_SIZE, AIM_POLICY_LINE_SIZE);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(AIMPOLICYFILE, Offset * AIM_POLICY_LINE_SIZE, AIM_POLICY_LINE_SIZE).to_wchar();
+	wcslcpy(Text, wstr.c_str(), AIM_POLICY_LINE_SIZE);
 }
 
 

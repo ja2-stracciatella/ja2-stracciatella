@@ -15,6 +15,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 
 #define AIM_ALUMNI_NAME_FILE		BINARYDATADIR "/alumname.edt"
@@ -248,8 +250,7 @@ void RenderAimArchives()
 		BltVideoObject(FRAME_BUFFER, guiAlumniFrame, 0,        x,     y);     // Blt the alumni frame background
 
 		// Display the merc's name
-		wchar_t sText[AIM_ALUMNI_NAME_SIZE];
-		GCM->loadEncryptedString(AIM_ALUMNI_NAME_FILE, sText, AIM_ALUMNI_NAME_SIZE * face_idx, AIM_ALUMNI_NAME_SIZE);
+		ST::string sText = GCM->loadEncryptedString(AIM_ALUMNI_NAME_FILE, AIM_ALUMNI_NAME_SIZE * face_idx, AIM_ALUMNI_NAME_SIZE);
 		DrawTextToScreen(sText, x + AIM_ALUMNI_NAME_OFFSET_X, y + AIM_ALUMNI_NAME_OFFSET_Y, AIM_ALUMNI_NAME_WIDTH, AIM_ALUMNI_NAME_FONT, AIM_ALUMNI_NAME_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
@@ -328,9 +329,8 @@ static void DisplayAlumniOldMercPopUp(void)
 	UINT16 usStringPixLength;
 
 	//Load the description
-	wchar_t sDesc[AIM_ALUMNI_DECRIPTION_SIZE];
 	uiStartLoc = AIM_ALUMNI_FILE_RECORD_SIZE * gubDrawOldMerc + AIM_ALUMNI_FULL_NAME_SIZE;
-	GCM->loadEncryptedString(AIM_ALUMNI_FILE, sDesc, uiStartLoc, AIM_ALUMNI_DECRIPTION_SIZE);
+	ST::string sDesc = GCM->loadEncryptedString(AIM_ALUMNI_FILE, uiStartLoc, AIM_ALUMNI_DECRIPTION_SIZE);
 
 	usStringPixLength = StringPixLength( sDesc, AIM_ALUMNI_POPUP_FONT);
 	ubNumDescLines = (UINT8) (usStringPixLength / AIM_POPUP_TEXT_WIDTH);
@@ -363,9 +363,8 @@ static void DisplayAlumniOldMercPopUp(void)
 	BltVideoObject(FRAME_BUFFER, guiOldAim,   gubDrawOldMerc, AIM_ALUMNI_FACE_PANEL_X + 1, AIM_ALUMNI_FACE_PANEL_Y + 1);
 
 	//Load and display the name
-	wchar_t	sName[AIM_ALUMNI_FULL_NAME_SIZE];
 	uiStartLoc = AIM_ALUMNI_FILE_RECORD_SIZE * gubDrawOldMerc;
-	GCM->loadEncryptedString(AIM_ALUMNI_FILE, sName, uiStartLoc, AIM_ALUMNI_FULL_NAME_SIZE);
+	ST::string sName = GCM->loadEncryptedString(AIM_ALUMNI_FILE, uiStartLoc, AIM_ALUMNI_FULL_NAME_SIZE);
 
 	DrawTextToScreen(sName, AIM_ALUMNI_POPUP_NAME_X, AIM_ALUMNI_POPUP_NAME_Y, 0, AIM_ALUMNI_POPUP_NAME_FONT, AIM_ALUMNI_POPUP_NAME_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 

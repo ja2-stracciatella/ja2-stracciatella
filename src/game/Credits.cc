@@ -24,6 +24,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 struct CRDT_NODE
 {
 	INT16        sPosY;
@@ -450,7 +453,8 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 	const UINT32 pos = CREDITS_LINESIZE * guiCurrentCreditRecord++;
 	try
 	{
-		GCM->loadEncryptedString(CRDT_NAME_OF_CREDIT_FILE, text, pos, CREDITS_LINESIZE);
+		ST::wchar_buffer wstr = GCM->loadEncryptedString(CRDT_NAME_OF_CREDIT_FILE, pos, CREDITS_LINESIZE).to_wchar();
+		wcslcpy(text, wstr.c_str(), lengthof(text));
 	}
 	catch (...) // XXX fishy, should check file size beforehand
 	{

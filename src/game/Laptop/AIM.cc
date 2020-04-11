@@ -19,6 +19,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 UINT8			AimMercArray[ MAX_NUMBER_MERCS ];
 
 static LaptopMode const gCurrentAimPage[NUM_AIM_SCREENS] =
@@ -453,7 +456,8 @@ static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void LoadAIMText(wchar_t buf[], UINT32 entry)
 {
-	GCM->loadEncryptedString(AIMHISTORYFILE, buf, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(AIMHISTORYFILE, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE).to_wchar();
+	wcslcpy(buf, wstr.c_str(), AIM_HISTORY_LINE_SIZE);
 }
 
 

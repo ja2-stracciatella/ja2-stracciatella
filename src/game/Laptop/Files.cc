@@ -23,6 +23,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 struct FilesUnit
 {
 	UINT8 ubCode; // the code index in the files code table
@@ -656,7 +659,8 @@ static FileString* LoadStringsIntoFileList(char const* const filename, UINT32 of
 	for (; n != 0; ++offset, --n)
 	{
 		wchar_t str[FILE_STRING_SIZE];
-		GCM->loadEncryptedString(f, str, lengthof(str) * offset, lengthof(str));
+		ST::wchar_buffer wstr = GCM->loadEncryptedString(f, lengthof(str) * offset, lengthof(str)).to_wchar();
+		wcslcpy(str, wstr.c_str(), lengthof(str));
 
 		FileString* const fs = new FileString{};
 		fs->Next    = 0;

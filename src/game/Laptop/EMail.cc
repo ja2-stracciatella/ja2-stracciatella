@@ -514,7 +514,8 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 
 static void LoadEMailText(wchar_t buf[], UINT32 entry)
 {
-	GCM->loadEncryptedString(BINARYDATADIR "/email.edt", buf, MAIL_STRING_SIZE * entry, MAIL_STRING_SIZE);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(BINARYDATADIR "/email.edt", MAIL_STRING_SIZE * entry, MAIL_STRING_SIZE).to_wchar();
+	wcslcpy(buf, wstr.c_str(), MAIL_STRING_SIZE);
 }
 
 
@@ -1876,7 +1877,8 @@ ENUM_BITSET(PhysicalBits)
 
 static void LoadIMPResultText(wchar_t* Text, UINT32 Offset)
 {
-	GCM->loadEncryptedString(BINARYDATADIR "/impass.edt", Text, MAIL_STRING_SIZE * Offset, MAIL_STRING_SIZE);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(BINARYDATADIR "/impass.edt", MAIL_STRING_SIZE * Offset, MAIL_STRING_SIZE).to_wchar();
+	wcslcpy(Text, wstr.c_str(), MAIL_STRING_SIZE);
 }
 
 

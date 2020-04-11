@@ -8,13 +8,17 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 #define ITEMSTRINGFILENAME BINARYDATADIR "/itemdesc.edt"
 
 
 void LoadItemInfo(UINT16 const ubIndex, wchar_t Info[])
 {
 	UINT32 Seek = (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * ubIndex;
-	GCM->loadEncryptedString(ITEMSTRINGFILENAME, Info, Seek + SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_INFO);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(ITEMSTRINGFILENAME, Seek + SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_INFO).to_wchar();
+	wcslcpy(Info, wstr.c_str(), SIZE_ITEM_INFO);
 }
 
 
@@ -24,8 +28,10 @@ static void LoadAllItemNames(void)
 	for (UINT32 i = 0; i < MAXITEMS; i++)
 	{
 		UINT32 Seek = (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * i;
-		GCM->loadEncryptedString(File, ShortItemNames[i], Seek, SIZE_SHORT_ITEM_NAME);
-		GCM->loadEncryptedString(File, ItemNames[i], Seek + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_NAME);
+		ST::wchar_buffer wstr = GCM->loadEncryptedString(File, Seek, SIZE_SHORT_ITEM_NAME).to_wchar();
+		wcslcpy(ShortItemNames[i], wstr.c_str(), SIZE_SHORT_ITEM_NAME);
+		wstr = GCM->loadEncryptedString(File, Seek + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_NAME).to_wchar();
+		wcslcpy(ItemNames[i], wstr.c_str(), SIZE_ITEM_NAME);
 	}
 }
 

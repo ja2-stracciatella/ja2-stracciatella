@@ -15,6 +15,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 #define FLORIST_CARDS_SENTENCE_FONT		FONT12ARIAL
 #define FLORIST_CARDS_SENTENCE_COLOR		FONT_MCOLOR_WHITE
 
@@ -142,9 +145,8 @@ void RenderFloristCards()
 			BltVideoObject(FRAME_BUFFER, guiCardBackground, 0, usPosX, usPosY);
 
 			//Get and display the card saying
-			wchar_t sTemp[FLOR_CARD_TEXT_TITLE_SIZE];
 			uiStartLoc = FLOR_CARD_TEXT_TITLE_SIZE * ubCount;
-			GCM->loadEncryptedString(FLOR_CARD_TEXT_FILE, sTemp, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
+			ST::string sTemp = GCM->loadEncryptedString(FLOR_CARD_TEXT_FILE, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
 
 			//DisplayWrappedString(usPosX + 7, usPosY + 15, FLORIST_CARD_TEXT_WIDTH, 2, FLORIST_CARDS_SENTENCE_FONT, FLORIST_CARDS_SENTENCE_COLOR, sTemp, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 			usHeightOffset = IanWrappedStringHeight(FLORIST_CARD_TEXT_WIDTH, 2, FLORIST_CARDS_SENTENCE_FONT, sTemp);

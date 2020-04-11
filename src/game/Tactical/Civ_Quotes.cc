@@ -32,6 +32,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 #define CIV_QUOTE_TEXT_SIZE		160
 
 
@@ -140,7 +143,8 @@ try
 		sprintf(zFileName, NPCDATADIR "/civ%02d.edt", ubCivQuoteID);
 	}
 
-	GCM->loadEncryptedString(zFileName, zQuote, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(zFileName, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE).to_wchar();
+	wcslcpy(zQuote, wstr.c_str(), CIV_QUOTE_TEXT_SIZE);
 	return zQuote[0] != L'\0';
 }
 catch (...) { return FALSE; }

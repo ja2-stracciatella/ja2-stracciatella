@@ -35,6 +35,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 #include <algorithm>
@@ -861,18 +862,16 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			}
 
 
-			wchar_t	sText[BOBBYR_ITEM_DESC_NAME_SIZE + 2];
+			ST::string sText;
 			if( pBobbyRayPurchase[i].fUsed )
 			{
-				wchar_t	sBack[BOBBYR_ITEM_DESC_NAME_SIZE];
-				GCM->loadEncryptedString(BOBBYRDESCFILE, sBack, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
-				swprintf(sText, lengthof(sText), L"* %ls", sBack);
+				ST::string sBack = GCM->loadEncryptedString(BOBBYRDESCFILE, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+				sText = ST::format("* {}", sBack);
 			}
 			else
-				GCM->loadEncryptedString(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+				sText = GCM->loadEncryptedString(BOBBYRDESCFILE, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 
-			ST::wchar_buffer wstr = ReduceStringLength(sText, BOBBYR_GRID_THIRD_COLUMN_WIDTH - 4, BOBBYR_ORDER_DYNAMIC_TEXT_FONT).to_wchar();
-			wcslcpy(sText, wstr.c_str(), lengthof(sText));
+			sText = ReduceStringLength(sText, BOBBYR_GRID_THIRD_COLUMN_WIDTH - 4, BOBBYR_ORDER_DYNAMIC_TEXT_FONT);
 
 			DrawTextToScreen(sText, usGridX + BOBBYR_GRID_THIRD_COLUMN_X + 2, usPosY, BOBBYR_GRID_THIRD_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 

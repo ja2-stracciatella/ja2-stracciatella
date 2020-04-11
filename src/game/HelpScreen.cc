@@ -34,6 +34,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 extern void PrintDate( void );
 extern void PrintNumberOnTeam( void );
 extern void PrintBalance( void );
@@ -1232,7 +1235,8 @@ static void ChangeToHelpScreenSubPage(INT8 bNewPage)
 
 static void GetHelpScreenText(const UINT32 uiRecordToGet, wchar_t* const pText)
 {
-	GCM->loadEncryptedString(BINARYDATADIR "/help.edt", pText, HELPSCREEN_RECORD_SIZE * uiRecordToGet, HELPSCREEN_RECORD_SIZE);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(BINARYDATADIR "/help.edt", HELPSCREEN_RECORD_SIZE * uiRecordToGet, HELPSCREEN_RECORD_SIZE).to_wchar();
+	wcslcpy(pText, wstr.c_str(), lengthof(pText));
 }
 
 

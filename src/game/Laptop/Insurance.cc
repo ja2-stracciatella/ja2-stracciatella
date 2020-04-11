@@ -21,6 +21,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 #define INSURANCE_TEXT_SINGLE_FILE		BINARYDATADIR "/insurancesingle.edt"
 #define INSURANCE_TEXT_MULTI_FILE		BINARYDATADIR "/insurancemulti.edt"
 
@@ -317,13 +320,15 @@ void GetInsuranceText(const UINT8 ubNumber, wchar_t* const pString)
 	{
 		//Get and display the card saying
 		uiStartLoc = INSURANCE_TEXT_SINGLE_LINE_SIZE * ubNumber;
-		GCM->loadEncryptedString(INSURANCE_TEXT_SINGLE_FILE, pString, uiStartLoc, INSURANCE_TEXT_SINGLE_LINE_SIZE);
+		ST::wchar_buffer wstr = GCM->loadEncryptedString(INSURANCE_TEXT_SINGLE_FILE, uiStartLoc, INSURANCE_TEXT_SINGLE_LINE_SIZE).to_wchar();
+		wcslcpy(pString, wstr.c_str(), INSURANCE_TEXT_SINGLE_LINE_SIZE);
 	}
 	else
 	{
 		//Get and display the card saying
 		uiStartLoc = INSURANCE_TEXT_MULTI_LINE_SIZE * ( ubNumber - INS_MULTI_LINE_BEGINS - 1 );
-		GCM->loadEncryptedString(INSURANCE_TEXT_MULTI_FILE, pString, uiStartLoc, INSURANCE_TEXT_MULTI_LINE_SIZE);
+		ST::wchar_buffer wstr = GCM->loadEncryptedString(INSURANCE_TEXT_MULTI_FILE, uiStartLoc, INSURANCE_TEXT_MULTI_LINE_SIZE).to_wchar();
+		wcslcpy(pString, wstr.c_str(), INSURANCE_TEXT_MULTI_LINE_SIZE);
 	}
 }
 

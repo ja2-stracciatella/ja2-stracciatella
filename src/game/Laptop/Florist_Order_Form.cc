@@ -429,8 +429,7 @@ void RenderFloristOrderForm()
 	//The flower name
 	usPosX = StringPixLength( sOrderFormText[FLORIST_ORDER_NAME_BOUQUET], FLOWER_ORDEER_SMALL_FONT) + 5 + FLOWER_ORDER_FLOWER_NAME_X;
 	uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * guiCurrentlySelectedFlower;
-	wchar_t sTemp[FLOR_GALLERY_TEXT_TITLE_SIZE];
-	GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, sTemp, uiStartLoc, FLOR_GALLERY_TEXT_TITLE_SIZE);
+	ST::string sTemp = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_TITLE_SIZE);
 	DrawTextToScreen(sTemp, usPosX, FLOWER_ORDER_FLOWER_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 
@@ -671,7 +670,8 @@ static void DisplayFlowerDynamicItems(void)
 	//price
 	usPosX = StringPixLength( sOrderFormText[FLORIST_ORDER_PRICE], FLOWER_ORDEER_SMALL_FONT) + 5 + FLOWER_ORDER_BOUQUET_NAME_X;
 	uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * guiCurrentlySelectedFlower + FLOR_GALLERY_TEXT_TITLE_SIZE;
-	GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, sTemp, uiStartLoc, FLOR_GALLERY_TEXT_PRICE_SIZE);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_PRICE_SIZE).to_wchar();
+	wcslcpy(sTemp, wstr.c_str(), lengthof(sTemp));
 	swscanf( sTemp, L"%hu", &usPrice);
 
 	//if its the next day delivery
@@ -950,9 +950,8 @@ static void InitFlowerOrderTextInputBoxes(void)
 		//Get and display the card saying
 		//Display Flower Desc
 
-		wchar_t	sTemp[FLOR_CARD_TEXT_TITLE_SIZE];
 		const UINT32 uiStartLoc = FLOR_CARD_TEXT_TITLE_SIZE * gbCurrentlySelectedCard;
-		GCM->loadEncryptedString( FLOR_CARD_TEXT_FILE, sTemp, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
+		ST::string sTemp = GCM->loadEncryptedString( FLOR_CARD_TEXT_FILE, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
 		wchar_t	sText[FLOR_CARD_TEXT_TITLE_SIZE];
 		ST::wchar_buffer wstr = CleanOutControlCodesFromString(sTemp).to_wchar();
 		wcslcpy(sText, wstr.c_str(), lengthof(sText));

@@ -15,6 +15,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 
 // Defines
@@ -141,7 +143,8 @@ void ExitAimHistory()
 
 static void LoadAIMHistoryText(wchar_t buf[], UINT32 entry)
 {
-	GCM->loadEncryptedString(AIMHISTORYFILE, buf, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(AIMHISTORYFILE, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE).to_wchar();
+	wcslcpy(buf, wstr.c_str(), AIM_HISTORY_LINE_SIZE);
 }
 
 

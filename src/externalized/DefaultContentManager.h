@@ -1,10 +1,5 @@
 #pragma once
 
-#include <map>
-#include <stdexcept>
-#include <string>
-#include <vector>
-
 #include "game/GameRes.h"
 
 #include "ContentManager.h"
@@ -13,6 +8,13 @@
 #include "StringEncodingTypes.h"
 
 #include "rapidjson/document.h"
+#include <string_theory/string>
+
+#include <map>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
 
 struct LibraryDB;
 
@@ -38,8 +40,7 @@ public:
 	bool loadGameData();
 
 	/** Get map file path. */
-	virtual std::string getMapPath(const char *mapName) const;
-	virtual std::string getMapPath(const wchar_t *mapName) const;
+	virtual std::string getMapPath(const ST::string& mapName) const override;
 
 	/** Get radar map resource name. */
 	virtual std::string getRadarMapResourceName(const std::string &mapName) const;
@@ -51,8 +52,7 @@ public:
 	virtual std::string getTilesetDBResName() const;
 
 	/** Open map for reading. */
-	virtual SGPFile* openMapForReading(const std::string& mapName) const;
-	virtual SGPFile* openMapForReading(const wchar_t *mapName) const;
+	virtual SGPFile* openMapForReading(const ST::string& mapName) const override;
 
 	/** Get directory for storing new map file. */
 	virtual std::string getNewMapFolder() const;
@@ -101,9 +101,9 @@ public:
 	virtual std::string getSavedGamesFolder() const;
 
 	/** Load encrypted string from game resource file. */
-	virtual void loadEncryptedString(const char *fileName, wchar_t* DestString, uint32_t seek_chars, uint32_t read_chars) const;
+	virtual ST::string loadEncryptedString(const char* fileName, uint32_t seek_chars, uint32_t read_chars) const override;
 
-	virtual void loadEncryptedString(SGPFile* const File, wchar_t* DestString, uint32_t const seek_chars, uint32_t const read_chars) const;
+	virtual ST::string loadEncryptedString(SGPFile* File, uint32_t seek_chars, uint32_t read_chars) const override;
 
 	/** Load dialogue quote from file. */
 	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number);

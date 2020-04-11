@@ -13,6 +13,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 
 #define FLOR_GALLERY_TITLE_FONT			FONT10ARIAL
@@ -298,9 +300,8 @@ static BOOLEAN DisplayFloralDescriptions(void)
 	{
 		{
 			//Display Flower title
-			wchar_t sTemp[FLOR_GALLERY_TEXT_TITLE_SIZE];
 			uiStartLoc = FLOR_GALLERY_TEXT_TOTAL_SIZE * (i + gubCurFlowerIndex);
-			GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, sTemp, uiStartLoc, FLOR_GALLERY_TEXT_TITLE_SIZE);
+			ST::string sTemp = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_TITLE_SIZE);
 			DrawTextToScreen(sTemp, FLOR_GALLERY_FLOWER_TITLE_X, usPosY + FLOR_GALLERY_FLOWER_TITLE_OFFSET_Y, 0, FLOR_GALLERY_FLOWER_TITLE_FONT, FLOR_GALLERY_FLOWER_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		}
 
@@ -308,7 +309,8 @@ static BOOLEAN DisplayFloralDescriptions(void)
 			//Display Flower Price
 			wchar_t sTemp[FLOR_GALLERY_TEXT_PRICE_SIZE];
 			uiStartLoc += FLOR_GALLERY_TEXT_TITLE_SIZE;
-			GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, sTemp, uiStartLoc, FLOR_GALLERY_TEXT_PRICE_SIZE);
+			ST::wchar_buffer wstr = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_PRICE_SIZE).to_wchar();
+			wcslcpy(sTemp, wstr.c_str(), lengthof(sTemp));
 			swscanf( sTemp, L"%hu", &usPrice);
 			swprintf(sTemp, lengthof(sTemp), L"$%d.00 %ls", usPrice, pMessageStrings[MSG_USDOLLAR_ABBREVIATION]);
 			DrawTextToScreen(sTemp, FLOR_GALLERY_FLOWER_TITLE_X, usPosY + FLOR_GALLERY_FLOWER_PRICE_OFFSET_Y, 0, FLOR_GALLERY_FLOWER_PRICE_FONT, FLOR_GALLERY_FLOWER_PRICE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -316,9 +318,8 @@ static BOOLEAN DisplayFloralDescriptions(void)
 
 		{
 			//Display Flower Desc
-			wchar_t sTemp[FLOR_GALLERY_TEXT_DESC_SIZE];
 			uiStartLoc += FLOR_GALLERY_TEXT_PRICE_SIZE;
-			GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, sTemp, uiStartLoc, FLOR_GALLERY_TEXT_DESC_SIZE);
+			ST::string sTemp = GCM->loadEncryptedString(FLOR_GALLERY_TEXT_FILE, uiStartLoc, FLOR_GALLERY_TEXT_DESC_SIZE);
 			DisplayWrappedString(FLOR_GALLERY_FLOWER_TITLE_X, usPosY + FLOR_GALLERY_FLOWER_DESC_OFFSET_Y, FLOR_GALLERY_DESC_WIDTH, 2, FLOR_GALLERY_FLOWER_DESC_FONT, FLOR_GALLERY_FLOWER_DESC_COLOR, sTemp, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		}
 

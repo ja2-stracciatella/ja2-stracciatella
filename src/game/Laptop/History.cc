@@ -798,14 +798,16 @@ UINT32 GetTimeQuestWasStarted(const UINT8 ubCode)
 static void GetQuestStartedString(const UINT8 ubQuestValue, wchar_t* const sQuestString)
 {
 	// open the file and copy the string
-	GCM->loadEncryptedString(BINARYDATADIR "/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * ubQuestValue * 2, HISTORY_QUEST_TEXT_SIZE);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(BINARYDATADIR "/quests.edt", HISTORY_QUEST_TEXT_SIZE * ubQuestValue * 2, HISTORY_QUEST_TEXT_SIZE).to_wchar();
+	wcslcpy(sQuestString, wstr.c_str(), HISTORY_QUEST_TEXT_SIZE);
 }
 
 
 static void GetQuestEndedString(const UINT8 ubQuestValue, wchar_t* const sQuestString)
 {
 	// open the file and copy the string
-	GCM->loadEncryptedString(BINARYDATADIR "/quests.edt", sQuestString, HISTORY_QUEST_TEXT_SIZE * (ubQuestValue * 2 + 1), HISTORY_QUEST_TEXT_SIZE);
+	ST::wchar_buffer wstr = GCM->loadEncryptedString(BINARYDATADIR "/quests.edt", HISTORY_QUEST_TEXT_SIZE * (ubQuestValue * 2 + 1), HISTORY_QUEST_TEXT_SIZE).to_wchar();
+	wcslcpy(sQuestString, wstr.c_str(), HISTORY_QUEST_TEXT_SIZE);
 }
 
 static INT32 GetNumberOfHistoryPages(void)

@@ -33,6 +33,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 #define MERCBIOFILE			BINARYDATADIR "/mercbios.edt"
 
 #define MERC_BIO_FONT			FONT14ARIAL//FONT12ARIAL
@@ -349,17 +352,15 @@ static void LoadAndDisplayMercBio(UINT8 ubMercID)
 
 	{
 		//load and display the merc bio
-		wchar_t	sText[MERC_BIO_INFO_TEXT_SIZE];
 		uiStartLoc = MERC_BIO_SIZE * ubMercID;
-		GCM->loadEncryptedString(MERCBIOFILE, sText, uiStartLoc, MERC_BIO_INFO_TEXT_SIZE);
+		ST::string sText = GCM->loadEncryptedString(MERCBIOFILE, uiStartLoc, MERC_BIO_INFO_TEXT_SIZE);
 		DisplayWrappedString(MERC_BIO_TEXT_X, MERC_BIO_TEXT_Y, MERC_BIO_WIDTH, 2, MERC_BIO_FONT, MERC_BIO_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
 	{
 		//load and display the merc's additioanl info (if any)
-		wchar_t	sText[MERC_BIO_ADD_INFO_TEXT_SIZE];
 		uiStartLoc += MERC_BIO_INFO_TEXT_SIZE;
-		GCM->loadEncryptedString(MERCBIOFILE, sText, uiStartLoc, MERC_BIO_ADD_INFO_TEXT_SIZE);
+		ST::string sText = GCM->loadEncryptedString(MERCBIOFILE, uiStartLoc, MERC_BIO_ADD_INFO_TEXT_SIZE);
 		if( sText[0] != 0 )
 		{
 			DrawTextToScreen(MercInfo[MERC_FILES_ADDITIONAL_INFO], MERC_ADD_BIO_TITLE_X, MERC_ADD_BIO_TITLE_Y, 0, MERC_TITLE_FONT, MERC_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
