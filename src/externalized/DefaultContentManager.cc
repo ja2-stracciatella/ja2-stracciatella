@@ -29,6 +29,7 @@
 #include "policy/DefaultIMPPolicy.h"
 #include "strategic/BloodCatPlacementsModel.h"
 #include "strategic/BloodCatSpawnsModel.h"
+#include "strategic/TownModel.h"
 
 #include "Logger.h"
 
@@ -273,6 +274,7 @@ DefaultContentManager::~DefaultContentManager()
 
 	m_bloodCatPlacements.clear();
 	m_bloodCatSpawns.clear();
+	m_towns.clear();
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -1059,6 +1061,13 @@ bool DefaultContentManager::loadStrategicLayerData() {
 			BloodCatSpawnsModel::deserialize(obj)
 		);
 	}
+
+	json = readJsonDataFile("strategic-map-towns.json");
+	for (auto& element : json->GetArray()) {
+		auto town = TownModel::deserialize(element);
+		m_towns.insert(std::make_pair(town->townId, town));
+	}
+
 	return true;
 }
 
@@ -1082,4 +1091,15 @@ const BloodCatSpawnsModel* DefaultContentManager::getBloodCatSpawnsOfSector(uint
 		}
 	}
 	return NULL;
+}
+
+const TownModel* DefaultContentManager::getTown(int8_t townId) const
+{
+	auto iter = m_towns.find(townId);
+	return (iter != m_towns.end()) ? iter->second : NULL;
+}
+
+const std::map<int8_t, const TownModel*>& DefaultContentManager::getTowns() const
+{
+	return m_towns;
 }
