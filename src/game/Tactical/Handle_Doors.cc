@@ -32,6 +32,8 @@
 #include "Debug.h"
 #include "GameRes.h"
 
+#include <string_theory/string>
+
 
 static BOOLEAN HandleDoorsOpenClose(SOLDIERTYPE* pSoldier, INT16 sGridNo, STRUCTURE* pStructure, BOOLEAN fNoAnimations);
 
@@ -371,7 +373,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							// do we know it's trapped?
 							if ( pDoor->bPerceivedTrapped == DOOR_PERCEIVED_UNKNOWN )
 							{
-								wchar_t const* const trap_name = GetTrapName(*pDoor);
+								ST::string trap_name = GetTrapName(*pDoor);
 								ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[DOOR_LOCK_DESCRIPTION_STR], trap_name));
 
 								// Stop action this time....
@@ -579,7 +581,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							{
 								// We have a trap. Use door pointer to determine what type, etc
 								TacticalCharacterDialogue( pSoldier, QUOTE_BOOBYTRAP_ITEM );
-								wchar_t const* const trap_name = GetTrapName(*pDoor);
+								ST::string trap_name = GetTrapName(*pDoor);
 								ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[DOOR_LOCK_DESCRIPTION_STR], trap_name));
 
 								UpdateDoorPerceivedValue( pDoor );

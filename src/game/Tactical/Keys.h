@@ -5,6 +5,8 @@
 #include "Item_Types.h"
 #include "Types.h"
 
+#include <string_theory/string>
+
 #include <vector>
 
 
@@ -158,7 +160,7 @@ DOOR * FindDoorInfoAtGridNo( INT32 iMapIndex );
 //Upon world deallocation, the door table needs to be deallocated.
 void TrashDoorTable(void);
 
-wchar_t const* GetTrapName(DOOR const&);
+ST::string GetTrapName(DOOR const&);
 
 BOOLEAN AttemptToUnlockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor);
 BOOLEAN AttemptToLockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor);
