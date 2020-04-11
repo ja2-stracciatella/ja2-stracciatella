@@ -5,6 +5,8 @@
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
 
+#include <string_theory/string>
+
 
 #define NUM_SAVE_GAMES		11
 
@@ -21,7 +23,7 @@ extern	BOOLEAN gfCameDirectlyFromGame;
 
 ScreenID SaveLoadScreenHandle(void);
 
-void DoSaveLoadMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
+void DoSaveLoadMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 
 void DoQuickSave(void);
 void DoDeadIsDeadSave(void);
