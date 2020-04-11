@@ -40,6 +40,8 @@
 #include "WorldMan.h"
 #include "UILayout.h"
 
+#include <string_theory/string>
+
 
 #define OPT_MAIN_FONT				FONT12ARIAL
 #define OPT_MAIN_COLOR				OPT_BUTTON_ON_COLOR//FONT_MCOLOR_WHITE
@@ -223,7 +225,7 @@ ScreenID OptionsScreenHandle()
 }
 
 
-static GUIButtonRef MakeButton(INT16 x, GUI_CALLBACK click, const wchar_t* text)
+static GUIButtonRef MakeButton(INT16 x, GUI_CALLBACK click, const ST::string& text)
 {
 	return CreateIconAndTextButton(giOptionsButtonImages, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, OPT_BTN_Y, MSYS_PRIORITY_HIGH, click);
 }
@@ -574,7 +576,7 @@ static void BtnOptGotoLoadGameCallback(GUI_BUTTON* btn, INT32 reason)
 
 
 static void ConfirmQuitToMainMenuMessageBoxCallBack(MessageBoxReturnValue);
-static void DoOptionsMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
+static void DoOptionsMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
 
 
 static void BtnOptQuitCallback(GUI_BUTTON* btn, INT32 reason)
@@ -674,19 +676,19 @@ static void MusicSliderChangeCallBack(INT32 iNewValue)
 }
 
 
-void DoOptionsMessageBoxWithRect(wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPBox const* const centering_rect)
+void DoOptionsMessageBoxWithRect(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect)
 {
 	// reset exit mode
 	gfExitOptionsDueToMessageBox = TRUE;
 
 	// do message box and return
-	DoMessageBox(MSG_BOX_BASIC_STYLE, zString, uiExitScreen, usFlags, ReturnCallback, centering_rect);
+	DoMessageBox(MSG_BOX_BASIC_STYLE, str, uiExitScreen, usFlags, ReturnCallback, centering_rect);
 }
 
 
-static void DoOptionsMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
+static void DoOptionsMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
-	DoOptionsMessageBoxWithRect(zString, uiExitScreen, usFlags, ReturnCallback, NULL);
+	DoOptionsMessageBoxWithRect(str, uiExitScreen, usFlags, ReturnCallback, NULL);
 }
 
 
