@@ -73,6 +73,7 @@
 #include "Logger.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 
 #define NUM_ITEMS_LISTED		8
@@ -2064,11 +2065,11 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 		}
 
 		WORLDITEM const& wi  = GetWorldItem(i->iItemIndex);
-		wchar_t   const* txt = ShortItemNames[wi.o.usItem];
-		wchar_t                buf[100];
+		ST::string txt = ShortItemNames[wi.o.usItem];
+		ST::string buf;
 		if (wi.o.ubNumberOfObjects > 1)
 		{
-			swprintf(buf, lengthof(buf), L"%ls (%d)", txt, wi.o.ubNumberOfObjects);
+			buf = ST::format("{} ({})", txt, wi.o.ubNumberOfObjects);
 			txt = buf;
 		}
 
@@ -2114,7 +2115,7 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 		}
 
 		WORLDITEM const&       wi  = GetWorldItem(i->iItemIndex);
-		wchar_t   const* const txt = ShortItemNames[wi.o.usItem];
+		ST::string txt = ShortItemNames[wi.o.usItem];
 		if (wi.o.ubNumberOfObjects > 1)
 		{
 			GDirtyPrint(x, y, ST::format("{} ({})", txt, wi.o.ubNumberOfObjects));
@@ -2567,7 +2568,7 @@ static void StartBombMessageBox(SOLDIERTYPE* const s, INT16 const gridno)
 	gpTempSoldier = s;
 	gsTempGridno  = gridno;
 
-	wchar_t    const* text;
+	ST::string text;
 	OBJECTTYPE const& o = s->inv[HANDPOS];
 	if (o.usItem == REMOTETRIGGER)
 	{
