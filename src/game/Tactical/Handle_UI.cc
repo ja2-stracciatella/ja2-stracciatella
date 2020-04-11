@@ -1036,7 +1036,7 @@ ScreenID UIHandleEndTurn(UI_EVENT* pUIEvent)
 		{
 			//Save the game
 			guiPreviousOptionScreen = guiCurrentScreen;
-			SaveGame( SAVE__END_TURN_NUM, L"End Turn Auto Save" );
+			SaveGame( SAVE__END_TURN_NUM, "End Turn Auto Save" );
 		}
 
 		// End our turn!
@@ -2235,8 +2235,7 @@ static ScreenID UIHandleCAMercShoot(UI_EVENT* pUIEvent)
 			gpRequesterTargetMerc = tgt;
 			gsRequesterGridNo = usMapPos;
 
-			wchar_t zStr[200];
-			swprintf(zStr, lengthof(zStr), TacticalStr[ATTACK_OWN_GUY_PROMPT], tgt->name);
+			ST::string zStr = st_format_printf(TacticalStr[ATTACK_OWN_GUY_PROMPT], tgt->name);
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zStr, GAME_SCREEN, MSG_BOX_FLAG_YESNO, AttackRequesterCallback, NULL);
 			return GAME_SCREEN;
 		}
