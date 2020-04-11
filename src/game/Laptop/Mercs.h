@@ -1,6 +1,8 @@
 #ifndef __MERCS_H
 #define __MERCS_H
 
+#include <string_theory/string>
+
 
 #define MERC_BUTTON_UP_COLOR			FONT_MCOLOR_WHITE
 #define MERC_BUTTON_DOWN_COLOR			FONT_MCOLOR_DKWHITE
@@ -59,7 +61,7 @@ void DrawMecBackGround(void);
 void RemoveMercBackGround(void);
 void DailyUpdateOfMercSite( UINT16 usDate);
 UINT8 GetMercIDFromMERCArray(UINT8 ubMercID);
-void DisplayTextForSpeckVideoPopUp(const wchar_t* pString);
+void DisplayTextForSpeckVideoPopUp(const ST::string& str);
 
 void EnterInitMercSite(void);
 
