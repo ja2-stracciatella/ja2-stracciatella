@@ -2343,7 +2343,8 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 	RemoveAllBoxStrings(box);
 
 	// add title
-	GetShortSectorString( sSelMapX, sSelMapY, sStringB, lengthof(sStringB));
+	ST::wchar_buffer wstr = GetShortSectorString(sSelMapX, sSelMapY).to_wchar();
+	wcslcpy(sStringB, wstr.c_str(), lengthof(sStringB));
 	swprintf(sString, lengthof(sString), pMovementMenuStrings[0], sStringB);
 	AddMonoString(box, sString);
 
@@ -3755,7 +3756,8 @@ void NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 con
 	if (z != 0) return;
 
 	wchar_t sector_desc[128];
-	GetSectorIDString(x, y, z, sector_desc, lengthof(sector_desc), TRUE);
+	ST::wchar_buffer wstr = GetSectorIDString(x, y, z, TRUE).to_wchar();
+	wcslcpy(sector_desc, wstr.c_str(), lengthof(sector_desc));
 
 	wchar_t buf[256];
 	if (IsThisSectorASAMSector(x, y, z))
@@ -3804,19 +3806,22 @@ void NotifyPlayerOfInvasionByEnemyForces(INT16 const x, INT16 const y, INT8 cons
 	// check if SAM site here
 	if (IsThisSectorASAMSector(x, y, z))
 	{
-		GetShortSectorString(x, y, sector_desc, lengthof(sector_desc));
+		ST::wchar_buffer wstr = GetShortSectorString(x, y).to_wchar();
+		wcslcpy(sector_desc, wstr.c_str(), lengthof(sector_desc));
 		swprintf(buf, lengthof(buf), pMapErrorString[22], sector_desc);
 		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, return_callback);
 	}
 	else if (GetTownIdForSector(SECTOR(x, y)) != BLANK_SECTOR)
 	{
-		GetSectorIDString(x, y, z, sector_desc, lengthof(sector_desc), TRUE);
+		ST::wchar_buffer wstr = GetSectorIDString(x, y, z, TRUE).to_wchar();
+		wcslcpy(sector_desc, wstr.c_str(), lengthof(sector_desc));
 		swprintf(buf, lengthof(buf), pMapErrorString[23], sector_desc);
 		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, return_callback);
 	}
 	else
 	{
-		GetShortSectorString(x, y, sector_desc, lengthof(sector_desc));
+		ST::wchar_buffer wstr = GetShortSectorString(x, y).to_wchar();
+		wcslcpy(sector_desc, wstr.c_str(), lengthof(sector_desc));
 		swprintf(buf, lengthof(buf), pMapErrorString[24], sector_desc);
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, buf);
 	}

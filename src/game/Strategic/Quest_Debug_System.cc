@@ -1678,7 +1678,6 @@ static void DisplaySelectedNPC(void)
 		MERCPROFILESTRUCT const& p   = GetProfile(pid);
 		DrawTextToScreen(p.zNickname, usPosX, usPosY, 0, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		GetDebugLocationString(pid, sTempString, lengthof(sTempString));
-		//GetShortSectorString(p.sSectorX, p.sSectorY, sTempString);
 
 		FindFontRightCoordinates( gpActiveListBox->usScrollPosX, usPosY, gpActiveListBox->usScrollWidth, 0, sTempString, QUEST_DBS_FONT_LISTBOX_TEXT, &usLocationX, &usLocationY );
 
@@ -1704,7 +1703,6 @@ static void DisplaySelectedNPC(void)
 		// the highlighted name
 		DrawTextToScreen(p.zNickname, gpActiveListBox->usScrollPosX, usPosY, 0, QUEST_DBS_FONT_LISTBOX_TEXT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		GetDebugLocationString(pid, sTempString, lengthof(sTempString));
-		//GetShortSectorString(pid->sSectorX, pid->sSectorY, sTempString);
 
 		FindFontRightCoordinates(gpActiveListBox->usScrollPosX, usPosY, gpActiveListBox->usScrollWidth, 0, sTempString, QUEST_DBS_FONT_LISTBOX_TEXT, &usLocationX, &usLocationY);
 
@@ -3189,12 +3187,14 @@ static void GetDebugLocationString(const UINT16 usProfileID, wchar_t* const pzTe
 	//the soldier is in this sector
 	else if( pSoldier != NULL )
 	{
-		GetShortSectorString( pSoldier->sSectorX, pSoldier->sSectorY, pzText, Length);
+		ST::wchar_buffer wstr = GetShortSectorString(pSoldier->sSectorX, pSoldier->sSectorY).to_wchar();
+		wcslcpy(pzText, wstr.c_str(), Length);
 	}
 
 	//else the soldier is in a different map
 	else
 	{
-		GetShortSectorString( gMercProfiles[ usProfileID ].sSectorX, gMercProfiles[ usProfileID ].sSectorY, pzText, Length);
+		ST::wchar_buffer wstr = GetShortSectorString(gMercProfiles[ usProfileID ].sSectorX, gMercProfiles[ usProfileID ].sSectorY).to_wchar();
+		wcslcpy(pzText, wstr.c_str(), Length);
 	}
 }

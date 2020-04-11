@@ -766,7 +766,8 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 	INT8  const  z = s.bSectorZ;
 
 	wchar_t town_sector[16];
-	GetShortSectorString(x, y, town_sector, lengthof(town_sector));
+	ST::wchar_buffer wstr = GetShortSectorString(x, y).to_wchar();
+	wcslcpy(town_sector, wstr.c_str(), lengthof(town_sector));
 
 	wchar_t         msg[1024];
 	MessageBoxFlags flags;
@@ -780,7 +781,8 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 
 		// Set strings for generic buttons
 		wcslcpy(gzUserDefinedButton1, town_sector, lengthof(gzUserDefinedButton1));
-		GetShortSectorString(SECTORX(elsewhere), SECTORY(elsewhere), gzUserDefinedButton2, lengthof(gzUserDefinedButton2));
+		wstr = GetShortSectorString(SECTORX(elsewhere), SECTORY(elsewhere)).to_wchar();
+		wcslcpy(gzUserDefinedButton2, wstr.c_str(), lengthof(gzUserDefinedButton2));
 
 		wchar_t const* const town = g_towns_locative[GetTownIdForSector(elsewhere)];
 		wchar_t const* const text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;

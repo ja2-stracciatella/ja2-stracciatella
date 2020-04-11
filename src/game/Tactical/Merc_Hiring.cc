@@ -43,6 +43,9 @@
 #include "Quests.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
+
 #define MIN_FLIGHT_PREP_TIME 6
 
 extern BOOLEAN gfTacticalDoHeliRun;
@@ -498,7 +501,8 @@ static void CheckForValidArrivalSector(void)
 		return;
 	}
 
-	GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), zShortTownIDString1, lengthof(zShortTownIDString1));
+	ST::wchar_buffer wstr = GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector)).to_wchar();
+	wcslcpy(zShortTownIDString1, wstr.c_str(), lengthof(zShortTownIDString1));
 
 
 	// If here - we need to do a search!
@@ -541,7 +545,8 @@ static void CheckForValidArrivalSector(void)
 
 		UpdateAnyInTransitMercsWithGlobalArrivalSector( );
 
-		GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), zShortTownIDString2, lengthof(zShortTownIDString2));
+		wstr = GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector)).to_wchar();
+		wcslcpy(zShortTownIDString2, wstr.c_str(), lengthof(zShortTownIDString2));
 
 		swprintf(sString, lengthof(sString), str_arrival_rerouted, zShortTownIDString2, zShortTownIDString1);
 

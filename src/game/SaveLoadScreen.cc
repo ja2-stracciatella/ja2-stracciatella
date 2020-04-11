@@ -1063,7 +1063,8 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 			if (header.sSectorX != -1 && header.sSectorY != -1 && header.bSectorZ >= 0)
 			{
 				gfGettingNameFromSaveLoadScreen = TRUE;
-				GetSectorIDString(header.sSectorX, header.sSectorY, header.bSectorZ, location, lengthof(location), FALSE);
+				ST::wchar_buffer wstr = GetSectorIDString(header.sSectorX, header.sSectorY, header.bSectorZ, FALSE).to_wchar();
+				wcslcpy(location, wstr.c_str(), lengthof(location));
 				gfGettingNameFromSaveLoadScreen = FALSE;
 			}
 			else if (header.uiDay * NUM_SEC_IN_DAY + header.ubHour * NUM_SEC_IN_HOUR + header.ubMin * NUM_SEC_IN_MIN <= STARTING_TIME)

@@ -2629,8 +2629,7 @@ void RenderItemDescriptionBox(void)
 			KEY const& key = KeyTable[obj.ubKeyID];
 
 			SetFontForeground(5);
-			wchar_t sTempString[128];
-			GetShortSectorString(SECTORX(key.usSectorFound), SECTORY(key.usSectorFound), sTempString, lengthof(sTempString));
+			ST::string sTempString = GetShortSectorString(SECTORX(key.usSectorFound), SECTORY(key.usSectorFound));
 			FindFontRightCoordinates(x, y0, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, sTempString);
 

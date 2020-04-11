@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
@@ -72,6 +70,11 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"
+
+#include <string_theory/string>
+
+#include <stdexcept>
+
 
 //#define INVULNERABILITY
 
@@ -1270,7 +1273,8 @@ static void RenderAutoResolve(void)
 
 	SetFontAttributes(FONT10ARIAL, FONT_GRAY2);
 
-	GetSectorIDString( gpAR->ubSectorX, gpAR->ubSectorY, 0, str, lengthof(str), TRUE );
+	ST::wchar_buffer wstr = GetSectorIDString(gpAR->ubSectorX, gpAR->ubSectorY, 0, TRUE).to_wchar();
+	wcslcpy(str, wstr.c_str(), lengthof(str));
 	xp = gpAR->sCenterStartX + 70 - StringPixLength( str, FONT10ARIAL )/2;
 	yp += 11;
 	MPrint(xp, yp, str);

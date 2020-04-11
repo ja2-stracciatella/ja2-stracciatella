@@ -43,6 +43,7 @@
 #include "UILayout.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 #include <stdexcept>
 
@@ -285,8 +286,7 @@ static void RenderTacticalPlacementGUI()
 		}
 
 		SetFontAttributes(BLOCKFONT, FONT_BEIGE);
-		wchar_t str[128];
-		GetSectorIDString(gubPBSectorX, gubPBSectorY, gubPBSectorZ, str, lengthof(str), TRUE);
+		ST::string str = GetSectorIDString(gubPBSectorX, gubPBSectorY, gubPBSectorZ, TRUE);
 		MPrint(STD_SCREEN_X + 120, STD_SCREEN_Y + 335, ST::format("{} {} -- {}...", gpStrategicString[STR_TP_SECTOR], str, gpStrategicString[STR_TP_CHOOSEENTRYPOSITIONS]));
 
 		// Shade out the part of the tactical map that isn't considered placable.

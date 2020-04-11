@@ -366,10 +366,8 @@ static void DrawNameOfLoadedSector()
 	SGPFont const font = COMPFONT;
 	SetFontAttributes(font, 183);
 
-	wchar_t buf[128];
-	GetSectorIDString(sSelMapX, sSelMapY, iCurrentMapSectorZ, buf, lengthof(buf), TRUE);
-	ST::wchar_buffer wstr = ReduceStringLength(buf, 80, font).to_wchar();
-	wcslcpy(buf, wstr.c_str(), lengthof(buf));
+	ST::string buf = GetSectorIDString(sSelMapX, sSelMapY, iCurrentMapSectorZ, TRUE);
+	buf = ReduceStringLength(buf, 80, font);
 
 	INT16 x;
 	INT16 y;

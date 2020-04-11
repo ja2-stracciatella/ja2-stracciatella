@@ -243,7 +243,8 @@ static void AddTextToTownBox(PopUpBox* const box)
 		// Associated Mine: Sector
 		swprintf(wString, lengthof(wString), L"%ls:",  pwTownInfoStrings[2]);
 		AddMonoString(box, wString);
-		GetShortSectorString( ( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X ), wString, lengthof(wString));
+		ST::wchar_buffer wstr = GetShortSectorString(( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X )).to_wchar();
+		wcslcpy(wString, wstr.c_str(), lengthof(wString));
 		AddSecondColumnMonoString(box, wString);
 	}
 }
@@ -363,7 +364,8 @@ static void AddSectorToBox(PopUpBox* const box)
 	swprintf( wString, lengthof(wString), L"%ls:", pwMiscSectorStrings[ 1 ]);
 	AddMonoString(box, wString);
 
-	GetShortSectorString( bCurrentTownMineSectorX, bCurrentTownMineSectorY, wString, lengthof(wString));
+	ST::wchar_buffer wstr = GetShortSectorString(bCurrentTownMineSectorX, bCurrentTownMineSectorY).to_wchar();
+	wcslcpy(wString, wstr.c_str(), lengthof(wString));
 	if (bCurrentTownMineSectorZ != 0 )
 	{
 		swprintf( wString2, lengthof(wString2), L"-%d", bCurrentTownMineSectorZ );

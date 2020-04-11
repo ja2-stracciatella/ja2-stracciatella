@@ -32,6 +32,8 @@
 #include "FileMan.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 #include <vector>
@@ -622,7 +624,8 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 	Assert(GetSectorFlagStatus(sSectorX, sSectorY, sSectorZ, SF_ALREADY_VISITED));
 
 	wchar_t wSectorName[128];
-	GetSectorIDString(sSectorX, sSectorY, sSectorZ, wSectorName, lengthof(wSectorName), TRUE);
+	ST::wchar_buffer wstr = GetSectorIDString(sSectorX, sSectorY, sSectorZ, TRUE).to_wchar();
+	wcslcpy(wSectorName, wstr.c_str(), lengthof(wSectorName));
 
 	// go through list of items in sector and randomly remove them
 
@@ -824,7 +827,8 @@ void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 
 	}
 
 	//Report this to player
-	GetSectorIDString( sSectorX, sSectorY, 0, pSectorString, lengthof(pSectorString), TRUE );
+	ST::wchar_buffer wstr = GetSectorIDString(sSectorX, sSectorY, 0, TRUE).to_wchar();
+	wcslcpy(pSectorString, wstr.c_str(), lengthof(pSectorString));
 	swprintf( str, lengthof(str), gpStrategicString[ STR_DIALOG_CREATURES_KILL_CIVILIANS ], ubHowMany, pSectorString );
 	DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 

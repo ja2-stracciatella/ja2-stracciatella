@@ -4744,7 +4744,8 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						if( bTownId == BLANK_SECTOR )
 						{
 							// SAM site
-							GetShortSectorString(  pSoldier->sSectorX, pSoldier->sSectorY, sStringA, lengthof(sStringA));
+							ST::wchar_buffer wstr = GetShortSectorString(pSoldier->sSectorX, pSoldier->sSectorY).to_wchar();
+							wcslcpy(sStringA, wstr.c_str(), lengthof(sStringA));
 							swprintf(sString, lengthof(sString), zMarksMapScreenText[20], sStringA);
 						}
 						else

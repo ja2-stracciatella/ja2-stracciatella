@@ -2477,7 +2477,8 @@ static UINT32 HandleMapUI(void)
 							CancelChangeArrivalSectorMode();
 
 							// get the name of the sector
-							GetSectorIDString( sMapX, sMapY, 0, sMsgSubString, lengthof(sMsgSubString), FALSE );
+							ST::wchar_buffer wstr = GetSectorIDString(sMapX, sMapY, 0, FALSE).to_wchar();
+							wcslcpy(sMsgSubString, wstr.c_str(), lengthof(sMsgSubString));
 
 							// now build the string
 							swprintf( sMsgString, lengthof(sMsgString), pBullseyeStrings[ 1 ], sMsgSubString );
@@ -6644,7 +6645,8 @@ void TellPlayerWhyHeCantCompressTime( void )
 		{
 			wchar_t str[ 256 ];
 			wchar_t pSectorString[ 128 ];
-			GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, pSectorString, lengthof(pSectorString), TRUE );
+			ST::wchar_buffer wstr = GetSectorIDString(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE).to_wchar();
+			wcslcpy(pSectorString, wstr.c_str(), lengthof(pSectorString));
 			swprintf(str, lengthof(str), gzLateLocalizedString[STR_LATE_27], pSectorString);
 			DoMapMessageBox( MSG_BOX_BASIC_STYLE, str, MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 		}

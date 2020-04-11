@@ -2917,7 +2917,8 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime()
 	swprintf(time_string, lengthof(time_string), L"%02d:00", hour);
 
 	wchar_t sector_string[512];
-	GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, sector_string, lengthof(sector_string), FALSE);
+	ST::wchar_buffer wstr = GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, FALSE).to_wchar();
+	wcslcpy(sector_string, wstr.c_str(), lengthof(sector_string));
 
 	wchar_t              msg[512];
 	wchar_t const* const nickname = GetProfile(h.iIdOfMerc).zNickname;

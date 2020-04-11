@@ -50,6 +50,8 @@
 #include "FileMan.h"
 #include "Items.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
@@ -893,7 +895,8 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 			{
 				wchar_t str[ 256 ];
 				wchar_t pSectorStr[ 128 ];
-				GetSectorIDString( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ , pSectorStr, lengthof(pSectorStr), TRUE );
+				ST::wchar_buffer wstr = GetSectorIDString(pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, TRUE).to_wchar();
+				wcslcpy(pSectorStr, wstr.c_str(), lengthof(pSectorStr));
 				swprintf( str, lengthof(str), gpStrategicString[ STR_DIALOG_ENEMIES_ATTACK_UNCONCIOUSMERCS ], pSectorStr );
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, TriggerPrebattleInterface );
 			}
@@ -3437,7 +3440,8 @@ static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY)
 	wchar_t zTempString[ 128 ];
 	if( gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
 	{
-		GetSectorIDString( ubSectorX, ubSectorY, 0, zTempString, lengthof(zTempString), TRUE );
+		ST::wchar_buffer wstr = GetSectorIDString(ubSectorX, ubSectorY, 0, TRUE).to_wchar();
+		wcslcpy(zTempString, wstr.c_str(), lengthof(zTempString));
 		swprintf( str, lengthof(str), pMapErrorString[ 12 ], zTempString );
 	}
 	else if( gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
@@ -3616,7 +3620,8 @@ static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
 
 	// Build string for squad.
 	wchar_t sector_name[128];
-	GetSectorIDString(x, y, z, sector_name, lengthof(sector_name), FALSE);
+	ST::wchar_buffer wstr = GetSectorIDString(x, y, z, FALSE).to_wchar();
+	wcslcpy(sector_name, wstr.c_str(), lengthof(sector_name));
 	wchar_t msg[128];
 	swprintf(msg, lengthof(msg), pLandMarkInSectorString, g.pPlayerList->pSoldier->bAssignment + 1, sector_name);
 

@@ -106,6 +106,9 @@
 #include "UILayout.h"
 #include "Logger.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
@@ -401,10 +404,10 @@ void InitializeSAMSites()
 
 
 // get short sector name without town name
-void GetShortSectorString(const INT16 sMapX, const INT16 sMapY, wchar_t* const sString, const size_t Length)
+ST::string GetShortSectorString(INT16 sMapX, INT16 sMapY)
 {
 	// OK, build string id like J11
-	swprintf(sString, Length, L"%lc%d", L'A' - 1 + sMapY, sMapX);
+	return ST::format("{c}{}", 'A' - 1 + sMapY, sMapX);
 }
 
 
@@ -1123,7 +1126,7 @@ void UpdateMercsInSector()
 }
 
 
-static void GetLoadedSectorString(wchar_t* pString, size_t Length);
+static ST::string GetLoadedSectorString();
 
 
 void UpdateMercInSector(SOLDIERTYPE& s, INT16 const x, INT16 const y, INT8 const z)
@@ -1164,52 +1167,51 @@ check_entry:
 			{ /* Strategic insertion failed because it expected to find an entry
 				 * point. This is likely a missing part of the map or possible fault in
 				 * strategic movement costs, traversal logic, etc. */
-				wchar_t sector[10];
-				GetLoadedSectorString(sector, lengthof(sector));
+				ST::string sector = GetLoadedSectorString();
 
-				wchar_t const* entry;
+				ST::string entry;
 				if (gMapInformation.sNorthGridNo != -1)
 				{
-					entry  = L"north";
+					entry  = "north";
 					gridno = gMapInformation.sNorthGridNo;
 				}
 				else if (gMapInformation.sEastGridNo != -1)
 				{
-					entry  = L"east";
+					entry  = "east";
 					gridno = gMapInformation.sEastGridNo;
 				}
 				else if (gMapInformation.sSouthGridNo != -1)
 				{
-					entry  = L"south";
+					entry  = "south";
 					gridno = gMapInformation.sSouthGridNo;
 				}
 				else if (gMapInformation.sWestGridNo != -1)
 				{
-					entry  = L"west";
+					entry  = "west";
 					gridno = gMapInformation.sWestGridNo;
 				}
 				else if (gMapInformation.sCenterGridNo != -1)
 				{
-					entry  = L"center";
+					entry  = "center";
 					gridno = gMapInformation.sCenterGridNo;
 				}
 				else
 				{
-					SLOGD("Sector %ls has NO entrypoints -- using precise center of map for %ls.", sector, s.name);
+					SLOGD("Sector %s has NO entrypoints -- using precise center of map for %ls.", sector.c_str(), s.name);
 					goto place_in_center;
 				}
-				wchar_t const* no_entry = 0;
+				ST::string no_entry;
 				switch (s.ubStrategicInsertionCode)
 				{
-					case INSERTION_CODE_NORTH:  no_entry = L"north";  break;
-					case INSERTION_CODE_EAST:   no_entry = L"east";   break;
-					case INSERTION_CODE_SOUTH:  no_entry = L"south";  break;
-					case INSERTION_CODE_WEST:   no_entry = L"west";   break;
-					case INSERTION_CODE_CENTER: no_entry = L"center"; break;
+					case INSERTION_CODE_NORTH:  no_entry = "north";  break;
+					case INSERTION_CODE_EAST:   no_entry = "east";   break;
+					case INSERTION_CODE_SOUTH:  no_entry = "south";  break;
+					case INSERTION_CODE_WEST:   no_entry = "west";   break;
+					case INSERTION_CODE_CENTER: no_entry = "center"; break;
 				}
-				if (no_entry)
+				if (!no_entry.empty())
 				{
-					SLOGD("Sector %ls doesn't have a %ls entrypoint -- substituting %ls entrypoint for %ls.", sector, no_entry, entry, s.name);
+					SLOGD("Sector %s doesn't have a %s entrypoint -- substituting %s entrypoint for %ls.", sector.c_str(), no_entry.c_str(), entry.c_str(), s.name);
 				}
 			}
 			break;
@@ -1299,23 +1301,21 @@ static void InitializeStrategicMapSectorTownNames(void)
 }
 
 
-void GetSectorIDString(INT16 const x, INT16 const y, INT8 const z, wchar_t* const buf, size_t const length, BOOLEAN const detailed)
+ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)
 {
 	if (x <= 0 || y <= 0 || z < 0) /* Empty? */
 	{
-		//swprintf(buf, L"%ls", pErrorStrings);
-		return;
+		return ST::null;
 	}
 
 	INT8    const  mine_index = GetIdOfMineForSector(x, y, z);
-	wchar_t const* add;
+	ST::string add;
 	if (z != 0)
 	{
 		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
 		if (!u || (!(u->uiFlags & SF_ALREADY_VISITED) && !gfGettingNameFromSaveLoadScreen))
 		{ // Display nothing
-			buf[0] = L'\0';
-			return;
+			return ST::null;
 		}
 
 		if (mine_index != -1)
@@ -1398,11 +1398,12 @@ plain_sector:;
 		}
 	}
 
-	size_t const n = swprintf(buf, length, L"%c%d: %ls", 'A' + y - 1, x, add);
+	ST::string buf = ST::format("{c}{}: {}", 'A' + y - 1, x, add);
 	if (detailed && mine_index != -1)
 	{ // Append "Mine"
-		swprintf(buf + n, length - n, L" %ls", pwMineStrings[0]);
+		buf += ST::format(" {}", pwMineStrings[0]);
 	}
+	return buf;
 }
 
 
@@ -2523,23 +2524,20 @@ void UpdateAirspaceControl( void )
 	// if it's not enemy air controlled
 	if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(g_merc_arrive_sector)].fEnemyAirControlled)
 	{
-		// NOPE!
-		wchar_t sMsgString[ 256 ], sMsgSubString1[ 64 ], sMsgSubString2[ 64 ];
-
 		// get the name of the old sector
-		GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, sMsgSubString1, lengthof(sMsgSubString1), FALSE);
+		ST::string sMsgSubString1 = GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, FALSE);
 
 		// Move the landing zone over to the start sector.
 		g_merc_arrive_sector = START_SECTOR;
 
 		// get the name of the new sector
-		GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, sMsgSubString2, lengthof(sMsgSubString2), FALSE);
+		ST::string sMsgSubString2 = GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, FALSE);
 
 		// now build the string
-		swprintf( sMsgString, lengthof(sMsgString), pBullseyeStrings[ 4 ], sMsgSubString1, sMsgSubString2 );
+		ST::string sMsgString = st_format_printf(pBullseyeStrings[ 4 ], sMsgSubString1, sMsgSubString2);
 
 		// confirm the change with overlay message
-		DoScreenIndependantMessageBox( sMsgString, MSG_BOX_FLAG_OK, NULL );
+		DoScreenIndependantMessageBox(sMsgString, MSG_BOX_FLAG_OK, NULL);
 
 		// update position of bullseye
 		fMapPanelDirty = TRUE;
@@ -3307,19 +3305,19 @@ static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirectio
 //Examples:		A9
 //						A10_B1
 //						J9_B2_A ( >= BETAVERSION ) else J9_B2 (release equivalent)
-static void GetLoadedSectorString(wchar_t* const pString, const size_t Length)
+static ST::string GetLoadedSectorString()
 {
 	if (!gfWorldLoaded)
 	{
-		swprintf(pString, Length, L"");
+		return ST::null;
 	}
 	else if (gbWorldSectorZ == 0)
 	{
-		swprintf(pString, Length, L"%c%d", gWorldSectorY + 'A' - 1, gWorldSectorX);
+		return ST::format("{c}{}", gWorldSectorY + 'A' - 1, gWorldSectorX);
 	}
 	else
 	{
-		swprintf(pString, Length, L"%c%d_b%d", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ);
+		return ST::format("{c}{}_b{}", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ);
 	}
 }
 

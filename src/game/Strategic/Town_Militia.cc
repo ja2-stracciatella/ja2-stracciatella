@@ -27,6 +27,8 @@
 #include "ScreenIDs.h"
 #include "UILayout.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -501,7 +503,8 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 		if ( bTownId == BLANK_SECTOR )
 		{
 			// wilderness SAM site
-			GetSectorIDString( sSectorX, sSectorY, 0, sStringB, lengthof(sStringB), TRUE );
+			ST::wchar_buffer wstr = GetSectorIDString(sSectorX, sSectorY, 0, TRUE).to_wchar();
+			wcslcpy(sStringB, wstr.c_str(), lengthof(sStringB));
 			swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[9], sStringB);
 		}
 		else
@@ -527,7 +530,8 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 
 	// ok to continue, ask player
 
-	GetSectorIDString( sSectorX, sSectorY, 0, sStringB, lengthof(sStringB), TRUE );
+	ST::wchar_buffer wstr = GetSectorIDString(sSectorX, sSectorY, 0, TRUE).to_wchar();
+	wcslcpy(sStringB, wstr.c_str(), lengthof(sStringB));
 	swprintf( sString, lengthof(sString), pMilitiaConfirmStrings[ 3 ], sStringB, pMilitiaConfirmStrings[ 4 ], giTotalCostOfTraining );
 
 	// ask player whether he'd like to continue training

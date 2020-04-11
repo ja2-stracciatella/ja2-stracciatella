@@ -98,6 +98,11 @@ inline void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, Scree
 	DoMessageBox(ubStyle, wstr.c_str(), uiExitScreen, usFlags, ReturnCallback, centering_rect);
 }
 void DoScreenIndependantMessageBox(const wchar_t* zString, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
+inline void DoScreenIndependantMessageBox(const ST::string& str, MessageBoxFlags flags, MSGBOX_CALLBACK callback)
+{
+	ST::wchar_buffer wstr = str.to_wchar();
+	DoScreenIndependantMessageBox(wstr.c_str(), flags, callback);
+}
 
 //wrappers for other screens
 void DoMapMessageBoxWithRect(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect);

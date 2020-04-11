@@ -3166,14 +3166,12 @@ static void RemovePlayerFromInterfaceTeamSlot(TeamPanelSlot& tp)
 
 void RenderTownIDString(void)
 {
-	wchar_t	zTownIDString[80];
 	INT16 sFontX, sFontY;
 
 	// Render town, position
 	SetFontAttributes(COMPFONT, 183);
-	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, lengthof(zTownIDString), TRUE );
-	ST::wchar_buffer wstr = ReduceStringLength(zTownIDString, 80, COMPFONT).to_wchar();
-	wcslcpy(zTownIDString, wstr.c_str(), lengthof(zTownIDString));
+	ST::string zTownIDString = GetSectorIDString(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE);
+	zTownIDString = ReduceStringLength(zTownIDString, 80, COMPFONT);
 	FindFontCenterCoordinates(548, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, zTownIDString);
 }

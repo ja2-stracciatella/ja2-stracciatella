@@ -56,6 +56,7 @@
 #include "UILayout.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 
 extern BOOLEAN gfDelayAutoResolveStart;
@@ -866,8 +867,7 @@ void RenderPreBattleInterface()
 
 		// Location
 		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-		wchar_t sector_name[128];
-		GetSectorIDString(sec_x, sec_y, sec_z, sector_name, lengthof(sector_name), TRUE);
+		ST::string sector_name = GetSectorIDString(sec_x, sec_y, sec_z, TRUE);
 		MPrint(STD_SCREEN_X + 70, STD_SCREEN_Y + 17, ST::format("{} {}", gpStrategicString[STR_PB_SECTOR], sector_name));
 
 		SetFont(FONT14ARIAL);

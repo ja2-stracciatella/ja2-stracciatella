@@ -1278,10 +1278,8 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* const blt)
 		if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY ||
 			s->bSectorZ != gbWorldSectorZ || s->fBetweenSectors)
 		{
-			wchar_t sector_id[50];
-			GetSectorIDString(s->sSectorX, s->sSectorY, s->bSectorZ, sector_id, lengthof(sector_id), FALSE);
-			ST::wchar_buffer wstr = ReduceStringLength(sector_id, 64, BLOCKFONT2).to_wchar();
-			wcslcpy(sector_id, wstr.c_str(), lengthof(sector_id));
+			ST::string sector_id = GetSectorIDString(s->sSectorX, s->sSectorY, s->bSectorZ, FALSE);
+			sector_id = ReduceStringLength(sector_id, 64, BLOCKFONT2);
 			FindFontCenterCoordinates(x + 12, y + 68, 73, 9, sector_id, BLOCKFONT2, &sFontX, &sFontY);
 			MPrint(sFontX, sFontY, sector_id);
 		}
