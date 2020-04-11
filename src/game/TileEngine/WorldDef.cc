@@ -61,6 +61,8 @@
 #include "GameInstance.h"
 #include "Logger.h"
 
+#include <string_theory/format>
+
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
@@ -1298,16 +1300,16 @@ static bool LimitCheck(UINT8 const n, INT32 const gridno, UINT32& n_warnings, wc
 	if (n > 15)
 	{
 		SetErrorCatchString(
-			L"SAVE ABORTED!  %ls count too high (%d) for gridno %d.  Need to fix before map can be saved!  There are %d additional warnings.",
-			kind, n, gridno, n_warnings);
+			ST::format("SAVE ABORTED!  {} count too high ({}) for gridno {}.  Need to fix before map can be saved!  There are {} additional warnings.",
+			kind, n, gridno, n_warnings));
 		return false;
 	}
 	if (n > 10)
 	{
 		++n_warnings;
 		SetErrorCatchString(
-			L"Warnings %d -- Last warning:  %ls count warning of %d for gridno %d.",
-			n_warnings, kind, n, gridno);
+			ST::format("Warnings {} -- Last warning:  {} count warning of {} for gridno {}.",
+			n_warnings, kind, n, gridno));
 	}
 	return true;
 }

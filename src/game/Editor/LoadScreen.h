@@ -3,6 +3,8 @@
 
 #include "ScreenIDs.h"
 
+#include <string_theory/string>
+
 
 struct FDLG_LIST
 {
@@ -14,10 +16,10 @@ struct FDLG_LIST
 FDLG_LIST* AddToFDlgList(FDLG_LIST*, char const* filename);
 
 
-BOOLEAN ExternalLoadMap(const wchar_t* szFilename);
-BOOLEAN ExternalSaveMap(const wchar_t* szFilename);
+BOOLEAN ExternalLoadMap(const ST::string& szFilename);
+BOOLEAN ExternalSaveMap(const ST::string& szFilename);
 
-void SetErrorCatchString(wchar_t const* fmt, ...);
+void SetErrorCatchString(const ST::string& str);
 
 ScreenID LoadSaveScreenHandle(void);
 
