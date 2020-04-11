@@ -28,54 +28,58 @@
 #include "GameInstance.h"
 #include "WeaponModels.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
+
 GUIButtonRef giBothCheckboxButton;
 GUIButtonRef giRealisticCheckboxButton;
 GUIButtonRef giSciFiCheckboxButton;
 GUIButtonRef giAlarmTriggerButton;
 GUIButtonRef giOwnershipGroupButton;
 
-const wchar_t* gszActionItemDesc[NUM_ACTIONITEMS] =
+const ST::string gszActionItemDesc[NUM_ACTIONITEMS] =
 {
-	L"Klaxon Mine",
-	L"Flare Mine",
-	L"Teargas Explosion",
-	L"Stun Explosion",
-	L"Smoke Explosion",
-	L"Mustard Gas",
-	L"Land Mine",
-	L"Open Door",
-	L"Close Door",
-	L"3x3 Hidden Pit",
-	L"5x5 Hidden Pit",
-	L"Small Explosion",
-	L"Medium Explosion",
-	L"Large Explosion",
-	L"Toggle Door",
-	L"Toggle Action1s",
-	L"Toggle Action2s",
-	L"Toggle Action3s",
-	L"Toggle Action4s",
-	L"Enter Brothel",
-	L"Exit Brothel",
-	L"Kingpin Alarm",
-	L"Sex with Prostitute",
-	L"Reveal Room",
-	L"Local Alarm",
-	L"Global Alarm",
-	L"Klaxon Sound",
-	L"Unlock door",
-	L"Toggle lock",
-	L"Untrap door",
-	L"Tog pressure items",
-	L"Museum alarm",
-	L"Bloodcat alarm",
-	L"Big teargas",
+	"Klaxon Mine",
+	"Flare Mine",
+	"Teargas Explosion",
+	"Stun Explosion",
+	"Smoke Explosion",
+	"Mustard Gas",
+	"Land Mine",
+	"Open Door",
+	"Close Door",
+	"3x3 Hidden Pit",
+	"5x5 Hidden Pit",
+	"Small Explosion",
+	"Medium Explosion",
+	"Large Explosion",
+	"Toggle Door",
+	"Toggle Action1s",
+	"Toggle Action2s",
+	"Toggle Action3s",
+	"Toggle Action4s",
+	"Enter Brothel",
+	"Exit Brothel",
+	"Kingpin Alarm",
+	"Sex with Prostitute",
+	"Reveal Room",
+	"Local Alarm",
+	"Global Alarm",
+	"Klaxon Sound",
+	"Unlock door",
+	"Toggle lock",
+	"Untrap door",
+	"Tog pressure items",
+	"Museum alarm",
+	"Bloodcat alarm",
+	"Big teargas",
 };
 
-wchar_t const* GetActionItemName(OBJECTTYPE const* const pItem)
+ST::string GetActionItemName(const OBJECTTYPE* pItem)
 {
 	if( !pItem || pItem->usItem != ACTION_ITEM )
-		return NULL;
+		return ST::null;
 	if( pItem->bActionValue != ACTION_ITEM_BLOW_UP )
 	{
 		switch( pItem->bActionValue )
@@ -103,7 +107,7 @@ wchar_t const* GetActionItemName(OBJECTTYPE const* const pItem)
 			case ACTION_ITEM_TOGGLE_PRESSURE_ITEMS:		return gszActionItemDesc[ ACTIONITEM_TOGGLE_PRESSURE_ITEMS ];
 			case ACTION_ITEM_MUSEUM_ALARM:						return gszActionItemDesc[ ACTIONITEM_MUSEUM_ALARM ];
 			case ACTION_ITEM_BLOODCAT_ALARM:					return gszActionItemDesc[ ACTIONITEM_BLOODCAT_ALARM ];
-			default:																	return NULL;
+			default:																	return ST::null;
 		}
 	}
 	else switch( pItem->usBombItem )
@@ -119,33 +123,33 @@ wchar_t const* GetActionItemName(OBJECTTYPE const* const pItem)
 		case TRIP_FLARE:				return gszActionItemDesc[ ACTIONITEM_FLARE ];
 		case TRIP_KLAXON:				return gszActionItemDesc[ ACTIONITEM_TRIP_KLAXON ];
 		case BIG_TEAR_GAS:			return gszActionItemDesc[ ACTIONITEM_BIG_TEAR_GAS ];
-		default:								return NULL;
+		default:								return ST::null;
 	}
 }
 
 struct AttachmentInfo
 {
-	AttachmentInfo(UINT16 const a, wchar_t const* const l) : attachment(a), label(l), attached(false) {}
+	AttachmentInfo(UINT16 const a, const ST::string& l) : attachment(a), label(l), attached(false) {}
 
 	UINT16         const attachment;
-	wchar_t const* const label;
+	const ST::string     label;
 	GUIButtonRef         button;
 	bool                 attached;
 };
 
 static AttachmentInfo g_weapon_attachment[] =
 {
-	AttachmentInfo(SILENCER,        L"SILENCER"),
-	AttachmentInfo(SNIPERSCOPE,     L"SNIPERSCOPE"),
-	AttachmentInfo(LASERSCOPE,      L"LASERSCOPE"),
-	AttachmentInfo(BIPOD,           L"BIPOD"),
-	AttachmentInfo(DUCKBILL,        L"DUCKBILL"),
-	AttachmentInfo(UNDER_GLAUNCHER, L"G-LAUNCHER")
+	AttachmentInfo(SILENCER,        "SILENCER"),
+	AttachmentInfo(SNIPERSCOPE,     "SNIPERSCOPE"),
+	AttachmentInfo(LASERSCOPE,      "LASERSCOPE"),
+	AttachmentInfo(BIPOD,           "BIPOD"),
+	AttachmentInfo(DUCKBILL,        "DUCKBILL"),
+	AttachmentInfo(UNDER_GLAUNCHER, "G-LAUNCHER")
 };
 
-static AttachmentInfo g_ceramic_attachment(CERAMIC_PLATES, L"CERAMIC PLATES");
+static AttachmentInfo g_ceramic_attachment(CERAMIC_PLATES, "CERAMIC PLATES");
 
-static AttachmentInfo g_detonator_attachment(DETONATOR, L"DETONATOR");
+static AttachmentInfo g_detonator_attachment(DETONATOR, "DETONATOR");
 
 GUIButtonRef guiActionItemButton;
 static void ActionItemCallback(GUI_BUTTON* btn, INT32 reason);
@@ -453,67 +457,67 @@ void UpdateItemStatsPanel()
 	if( gpItem && iCurrentTaskbar == TASK_ITEMS &&
 			gbEditingMode != EDITING_TRIGGERS && gbEditingMode != EDITING_ACTIONITEMS )
 	{
-		MPrint(500, EDITOR_TASKBAR_POS_Y +  6, L"Toggle hide flag");
+		MPrint(500, EDITOR_TASKBAR_POS_Y +  6, "Toggle hide flag");
 	}
 	SetFontForeground( FONT_YELLOW );
 	switch( gbEditingMode )
 	{
 		case EDITING_NOTHING:
 			if( iCurrentTaskbar == TASK_ITEMS )
-				MPrint(520, EDITOR_TASKBAR_POS_Y + 40, L"No item selected.");
+				MPrint(520, EDITOR_TASKBAR_POS_Y + 40, "No item selected.");
 			else
 			{
-				MPrint(500, EDITOR_TASKBAR_POS_Y + 30, L"Slot available for");
-				MPrint(500, EDITOR_TASKBAR_POS_Y + 40, L"random generation.");
+				MPrint(500, EDITOR_TASKBAR_POS_Y + 30, "Slot available for");
+				MPrint(500, EDITOR_TASKBAR_POS_Y + 40, "random generation.");
 			}
 			return;
 		case EDITING_KEYS:
 			if( !gpEditingItemPool )
 			{
-				MPrint(500, EDITOR_TASKBAR_POS_Y + 40, L"Keys not editable.");
+				MPrint(500, EDITOR_TASKBAR_POS_Y + 40, "Keys not editable.");
 				return;
 			}
 			break;
 		case EDITING_OWNERSHIP:
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, L"ProfileID of owner");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, "ProfileID of owner");
 			return;
 		case EDITING_NOT_YET_IMPLEMENTED:
-			MPrint(500, EDITOR_TASKBAR_POS_Y + 40, L"Item class not implemented.");
+			MPrint(500, EDITOR_TASKBAR_POS_Y + 40, "Item class not implemented.");
 			return;
 		case EDITING_DROPPABLE:
-			MPrint(500, EDITOR_TASKBAR_POS_Y + 40, L"Slot locked as empty.");
+			MPrint(500, EDITOR_TASKBAR_POS_Y + 40, "Slot locked as empty.");
 			return;
 		case EDITING_GUNS:
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, L"Status");
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, L"Rounds");
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 64, L"Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, "Status");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, "Rounds");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 64, "Trap Level");
 			break;
 		case EDITING_AMMO:
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, L"Quantity");
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, L"Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, "Quantity");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, "Trap Level");
 			break;
 		case EDITING_ARMOUR:
 		case EDITING_EQUIPMENT:
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, L"Status");
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, L"Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 24, "Status");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, "Trap Level");
 			break;
 		case EDITING_EXPLOSIVES:
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 20, L"Status");
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, L"Quantity");
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 64, L"Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 20, "Status");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 44, "Quantity");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 64, "Trap Level");
 			break;
 		case EDITING_MONEY:
-			MPrint(532, EDITOR_TASKBAR_POS_Y + 24, L"Dollars");
+			MPrint(532, EDITOR_TASKBAR_POS_Y + 24, "Dollars");
 			break;
 		case EDITING_ACTIONITEMS:
-			MPrint(512, EDITOR_TASKBAR_POS_Y +  9, L"Status");
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 29, L"Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y +  9, "Status");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 29, "Trap Level");
 			break;
 		case EDITING_TRIGGERS:
-			MPrint(512, EDITOR_TASKBAR_POS_Y +  9, L"Trap Level");
-			MPrint(512, EDITOR_TASKBAR_POS_Y + 29, L"Tolerance");
+			MPrint(512, EDITOR_TASKBAR_POS_Y +  9, "Trap Level");
+			MPrint(512, EDITOR_TASKBAR_POS_Y + 29, "Tolerance");
 			if (gpEditingItemPool && gpItem->bFrequency >= PANIC_FREQUENCY_3)
-				MPrint(500, EDITOR_TASKBAR_POS_Y + 47, L"Alarm Trigger");
+				MPrint(500, EDITOR_TASKBAR_POS_Y + 47, "Alarm Trigger");
 			break;
 	}
 	if( gpEditingItemPool )
@@ -525,10 +529,10 @@ void UpdateItemStatsPanel()
 			SetFontForeground( FONT_ORANGE );
 		else
 			SetFontForeground( FONT_RED );
-		MPrint(512, EDITOR_TASKBAR_POS_Y + 84, L"Exist Chance");
-		MPrint(587, EDITOR_TASKBAR_POS_Y +  6, L"B");
-		MPrint(609, EDITOR_TASKBAR_POS_Y +  6, L"R");
-		MPrint(630, EDITOR_TASKBAR_POS_Y +  6, L"S");
+		MPrint(512, EDITOR_TASKBAR_POS_Y + 84, "Exist Chance");
+		MPrint(587, EDITOR_TASKBAR_POS_Y +  6, "B");
+		MPrint(609, EDITOR_TASKBAR_POS_Y +  6, "R");
+		MPrint(630, EDITOR_TASKBAR_POS_Y +  6, "S");
 	}
 	InvalidateRegion( 477, EDITOR_TASKBAR_POS_Y +  2, 161, 97 );
 }
@@ -581,7 +585,7 @@ static void BothModesCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static GUIButtonRef MakeRadioButton(INT16 const x, GUI_CALLBACK const click, wchar_t const* const help)
+static GUIButtonRef MakeRadioButton(INT16 x, GUI_CALLBACK click, const ST::string& help)
 {
 	GUIButtonRef const b = CreateCheckBoxButton(x, EDITOR_TASKBAR_POS_Y +  5, EDITORDIR "/radiobutton.sti", MSYS_PRIORITY_NORMAL, click);
 	b->SetFastHelpText(help);
@@ -593,9 +597,9 @@ static void SetupGameTypeFlags(void)
 {
 	if( gpEditingItemPool )
 	{
-		giBothCheckboxButton      = MakeRadioButton(573, BothModesCheckboxCallback,     L"Item appears in both Sci-Fi and Realistic modes. (|B)");
-		giRealisticCheckboxButton = MakeRadioButton(595, RealisticOnlyCheckboxCallback, L"Item appears in |Realistic mode only.");
-		giSciFiCheckboxButton     = MakeRadioButton(616, SciFiOnlyCheckboxCallback,     L"Item appears in |Sci-Fi mode only.");
+		giBothCheckboxButton      = MakeRadioButton(573, BothModesCheckboxCallback,     "Item appears in both Sci-Fi and Realistic modes. (|B)");
+		giRealisticCheckboxButton = MakeRadioButton(595, RealisticOnlyCheckboxCallback, "Item appears in |Realistic mode only.");
+		giSciFiCheckboxButton     = MakeRadioButton(616, SciFiOnlyCheckboxCallback,     "Item appears in |Sci-Fi mode only.");
 
 		GUIButtonRef     btn;
 		WORLDITEM& wi = GetWorldItem(gpEditingItemPool->iItemIndex);
@@ -637,16 +641,15 @@ static void ToggleWeaponAttachment(GUI_BUTTON* btn, INT32 reason);
 
 static void SetupGunGUI()
 {
-	wchar_t str[20];
-	swprintf(str, lengthof(str), L"%d", gpItem->bGunStatus);
+	ST::string str = ST::format("{}", gpItem->bGunStatus);
 	AddTextInputField(485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
-	swprintf(str, lengthof(str), L"%d", gpItem->ubGunShotsLeft);
+	str = ST::format("{}", gpItem->ubGunShotsLeft);
 	AddTextInputField(485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
-	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
+	str = ST::format("{}", gpItem->bTrap);
 	AddTextInputField(485, EDITOR_TASKBAR_POS_Y + 60, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT);
 	if (gpEditingItemPool)
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
+		str = ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
 		AddTextInputField(485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT);
 	}
 
@@ -709,14 +712,13 @@ static void ExtractAndUpdateGunGUI(void)
 
 static void SetupAmmoGUI(void)
 {
-	wchar_t str[20];
-	swprintf(str, lengthof(str), L"%d", gpItem->ubNumberOfObjects);
+	ST::string str = ST::format("{}", gpItem->ubNumberOfObjects);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
+	str += ST::format("{}", gpItem->bTrap);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
+		str += ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -786,14 +788,13 @@ static void ToggleItemAttachment(GUI_BUTTON* const btn, INT32 const reason)
 
 static void SetupArmourGUI(void)
 {
-	wchar_t str[20];
-	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
+	ST::string str = ST::format("{}", gpItem->bStatus[0]);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
+	str = ST::format("{}", gpItem->bTrap);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
+		str = ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
@@ -835,14 +836,13 @@ static void ExtractAndUpdateArmourGUI(void)
 
 static void SetupEquipGUI(void)
 {
-	wchar_t str[20];
-	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
+	ST::string str = ST::format("{}", gpItem->bStatus[0]);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
+	str = ST::format("{}", gpItem->bTrap);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
+		str += ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -882,20 +882,19 @@ static void ExtractAndUpdateEquipGUI(void)
 
 static void SetupExplosivesGUI(void)
 {
-	wchar_t str[20];
-	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
+	ST::string str = ST::format("{}", gpItem->bStatus[0]);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf(str, lengthof(str), L"%d", gpItem->ubNumberOfObjects);
+	str = ST::format("{}", gpItem->ubNumberOfObjects);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
 	if( GCM->getItem(gpItem->usItem )->getPerPocket() == 1 )
 	{
 		DisableTextField( 2 );
 	}
-	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
+	str = ST::format("{}", gpItem->bTrap);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 60, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
+		str = ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 
@@ -949,12 +948,11 @@ static void ExtractAndUpdateExplosivesGUI(void)
 
 static void SetupMoneyGUI(void)
 {
-	wchar_t str[20];
-	swprintf(str, lengthof(str), L"%d", gpItem->uiMoneyAmount);
+	ST::string str = ST::format("{}", gpItem->uiMoneyAmount);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 45, 15, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
+		str = ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -992,8 +990,7 @@ static void OwnershipGroupButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 static void SetupOwnershipGUI(void)
 {
-	wchar_t str[20];
-	swprintf(str, lengthof(str), L"%d", gpItem->ubOwnerProfile);
+	ST::string str = ST::format("{}", gpItem->ubOwnerProfile);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	giOwnershipGroupButton = CreateTextButton(gszCivGroupNames[gpItem->ubOwnerCivGroup], SMALLCOMPFONT, FONT_YELLOW, FONT_BLACK, 485, EDITOR_TASKBAR_POS_Y + 55, 80, 25, MSYS_PRIORITY_NORMAL, OwnershipGroupButtonCallback);
 }
@@ -1036,10 +1033,10 @@ static void RemoveOwnershipGUI(void)
 
 static void SetupKeysGUI(void)
 {
-	wchar_t str[20];
+	ST::string str;
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
+		str = ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -1064,19 +1061,18 @@ static void RemoveKeysGUI(void)
 
 static void SetupActionItemsGUI(void)
 {
-	wchar_t str[4];
-	const wchar_t* pStr;
-	swprintf(str, lengthof(str), L"%d", gpItem->bStatus[0]);
+	ST::string str;
+	str = ST::format("{}", gpItem->bStatus[0]);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y +  5, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
+	str = ST::format("{}", gpItem->bTrap);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 25, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
+		str = ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
-	pStr = GetActionItemName( gpItem );
-	guiActionItemButton = CreateTextButton(pStr, FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 510, EDITOR_TASKBAR_POS_Y + 50, 100, 20, MSYS_PRIORITY_NORMAL, ActionItemCallback);
+	str = GetActionItemName( gpItem );
+	guiActionItemButton = CreateTextButton(str, FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 510, EDITOR_TASKBAR_POS_Y + 50, 100, 20, MSYS_PRIORITY_NORMAL, ActionItemCallback);
 }
 
 
@@ -1129,19 +1125,18 @@ static void AlarmTriggerCheckboxCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void SetupTriggersGUI(void)
 {
-	wchar_t str[4];
-	swprintf(str, lengthof(str), L"%d", gpItem->bTrap);
+	ST::string str = ST::format("{}", gpItem->bTrap);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y +  5, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf(str, lengthof(str), L"%d", gpItem->ubTolerance);
+	str = ST::format("{}", gpItem->ubTolerance);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 25, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		swprintf(str, lengthof(str), L"%d", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
+		str = ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 		if (gpItem->bFrequency >= PANIC_FREQUENCY_3)
 		{
 			giAlarmTriggerButton = CreateCheckBoxButton(485, EDITOR_TASKBAR_POS_Y + 45, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_NORMAL, AlarmTriggerCheckboxCallback);
-			giAlarmTriggerButton->SetFastHelpText(L"If the panic trigger is an alarm trigger,\nenemies won't attempt to use it if they\nare already aware of your presence.");
+			giAlarmTriggerButton->SetFastHelpText("If the panic trigger is an alarm trigger,\nenemies won't attempt to use it if they\nare already aware of your presence.");
 			if( gpItem->fFlags & OBJECT_ALARM_TRIGGER )
 				giAlarmTriggerButton->uiFlags |= BUTTON_CLICKED_ON;
 		}
