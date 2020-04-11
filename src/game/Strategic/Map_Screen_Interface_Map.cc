@@ -47,6 +47,7 @@
 #include "UILayout.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 #include <stdexcept>
 
@@ -3988,7 +3989,7 @@ void CreateDestroyMilitiaSectorButtons()
 			GUIButtonRef b = QuickCreateButtonImg(INTERFACEDIR "/militia.sti", 3, 4, x, y, MSYS_PRIORITY_HIGHEST - 1, MilitiaButtonCallback);
 			giMapMilitiaButton[i] = b;
 			b->SetUserData(i);
-			b->SpecifyGeneralTextAttributes(0, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
+			b->SpecifyGeneralTextAttributes(ST::null, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
 			b->SpecifyTextSubOffsets(0, 0, TRUE);
 			b->fShiftText = FALSE;
 			b->SetFastHelpText(pMilitiaButtonsHelpText[i]);

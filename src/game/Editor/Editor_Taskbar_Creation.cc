@@ -17,11 +17,13 @@
 
 #include "UILayout.h"
 
+#include <string_theory/string>
+
 
 static void InitEditorItemStatsButtons(void)
 {
 	INT16 const y = TASKBAR_Y;
-	iEditorButton[ITEMSTATS_PANEL]      = CreateLabel(NULL, 0, 0, 0, 480, y + 1, 160, 99, MSYS_PRIORITY_NORMAL);
+	iEditorButton[ITEMSTATS_PANEL]      = CreateLabel(ST::null, 0, 0, 0, 480, y + 1, 160, 99, MSYS_PRIORITY_NORMAL);
 	iEditorButton[ITEMSTATS_HIDDEN_BTN] = CreateCheckBoxButton(485, y + 5, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_NORMAL, ItemStatsToggleHideCallback);
 	iEditorButton[ITEMSTATS_DELETE_BTN] = CreateTextButton(L"Delete", FONT10ARIAL, FONT_RED, FONT_BLACK, 600, y + 81, 36, 16, MSYS_PRIORITY_NORMAL + 1, ItemStatsDeleteCallback);
 }
@@ -343,7 +345,7 @@ static void InitEditorMapInfoToolbar(void)
 	MakeButton(MAPINFO_ADD_LIGHT1_SOURCE, 10, 2, BtnDrawLightsCallback, EDITORDIR "/light.sti", L"Add ambient light source");
 
 	INT16 const y = TASKBAR_Y;
-	iEditorButton[MAPINFO_LIGHT_PANEL]     = CreateLabel(NULL, 0, 0, 0, 45, y + 2, 60, 50, MSYS_PRIORITY_NORMAL);
+	iEditorButton[MAPINFO_LIGHT_PANEL]     = CreateLabel(ST::null, 0, 0, 0, 45, y + 2, 60, 50, MSYS_PRIORITY_NORMAL);
 	iEditorButton[MAPINFO_PRIMETIME_LIGHT] = MakeRadio(48,  5, MapInfoPrimeTimeRadioCallback);
 	iEditorButton[MAPINFO_NIGHTTIME_LIGHT] = MakeRadio(48, 20, MapInfoNightTimeRadioCallback);
 	iEditorButton[MAPINFO_24HOUR_LIGHT]    = MakeRadio(48, 35, MapInfo24HourTimeRadioCallback);
@@ -351,7 +353,7 @@ static void InitEditorMapInfoToolbar(void)
 
 	MakeButton(MAPINFO_TOGGLE_FAKE_LIGHTS, 120, 2, BtnFakeLightCallback, EDITORDIR "/fakelight.sti", L"Toggle fake ambient lights.");
 
-	iEditorButton[MAPINFO_RADIO_PANEL]    = CreateLabel(NULL, 0, 0, 0, 207, y + 2, 70, 50, MSYS_PRIORITY_NORMAL);
+	iEditorButton[MAPINFO_RADIO_PANEL]    = CreateLabel(ST::null, 0, 0, 0, 207, y + 2, 70, 50, MSYS_PRIORITY_NORMAL);
 	iEditorButton[MAPINFO_RADIO_NORMAL]   = MakeRadio(210,  5, MapInfoNormalRadioCallback);
 	iEditorButton[MAPINFO_RADIO_BASEMENT] = MakeRadio(210, 20, MapInfoBasementRadioCallback);
 	iEditorButton[MAPINFO_RADIO_CAVES]    = MakeRadio(210, 35, MapInfoCavesRadioCallback);
