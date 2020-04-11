@@ -157,7 +157,10 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-string_theory")
 
 if(BUILD_LAUNCHER)
     set(LAUNCHER_INCLUDES ${FLTK_INCLUDE_DIR} ${STRACCIATELLA_INCLUDE_DIR})
-    set(LAUNCHER_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/Logger.cc")
+    set(LAUNCHER_SOURCES
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/Logger.cc"
+        "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/SGPStrings.cc"
+    )
     add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/launcher")
 endif()
 
