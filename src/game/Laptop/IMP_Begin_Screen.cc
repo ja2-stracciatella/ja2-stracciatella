@@ -190,8 +190,8 @@ void ExitIMPBeginScreen( void )
 
 	KillTextInputMode();
 
-	wcscpy( pFullName, pFullNameString );
-	wcscpy( pNickName, pNickNameString );
+	pFullName = pFullNameString;
+	pNickName = pNickNameString;
 
 	// set gender
 	fCharacterIsMale = bGenderFlag;
