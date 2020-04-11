@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Debug_Pages.h"
 #include "Animation_Data.h"
 #include "Environment.h"
@@ -23,6 +21,10 @@
 #include "Render_Fun.h"
 #include "GameSettings.h"
 #include "MemMan.h"
+
+#include <string_theory/format>
+
+#include <stdexcept>
 
 
 static UINT32 guiLNCount[9];
@@ -86,9 +88,9 @@ void DebugLevelNodePage(void)
 	{
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, gzLevelString[uiLoop], guiLNCount[uiLoop]);
 	}
-	mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"%d land nodes in excess of world max (25600)", guiLNCount[1] - WORLD_MAX);
-	mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Total # levelnodes %d, %d bytes each", guiLNCount[0], sizeof(LEVELNODE));
-	mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Total memory for levelnodes %d", guiLNCount[0] * sizeof(LEVELNODE));
+	MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, ST::format("{} land nodes in excess of world max (25600)", guiLNCount[1] - WORLD_MAX));
+	MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, ST::format("Total # levelnodes {}, {} bytes each", guiLNCount[0], sizeof(LEVELNODE)));
+	MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, ST::format("Total memory for levelnodes {}", guiLNCount[0] * sizeof(LEVELNODE)));
 }
 
 

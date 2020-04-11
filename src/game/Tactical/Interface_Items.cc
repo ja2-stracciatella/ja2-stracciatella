@@ -2421,7 +2421,7 @@ void RenderItemDescriptionBox(void)
 		INV_DESC_STATS const* const ids = in_map ? gMapWeaponStats : gWeaponStats;
 
 		//LABELS
-		mprintf(dx + ids[0].sX, dy + ids[0].sY, gWeaponStatsDesc[0], GetWeightUnitString()); // mass
+		MPrint(dx + ids[0].sX, dy + ids[0].sY, st_format_printf(gWeaponStatsDesc[0], GetWeightUnitString())); // mass
 		if (item->getItemClass() & (IC_GUN | IC_LAUNCHER))
 		{
 			MPrint(dx + ids[2].sX, dy + ids[2].sY, gWeaponStatsDesc[3]); // range
@@ -2582,7 +2582,7 @@ void RenderItemDescriptionBox(void)
 		MPrint(dx + ids[1].sX, dy + ids[1].sY, label);
 
 		//Weight
-		mprintf(dx + ids[0].sX, dy + ids[0].sY, gWeaponStatsDesc[0], GetWeightUnitString());
+		MPrint(dx + ids[0].sX, dy + ids[0].sY, st_format_printf(gWeaponStatsDesc[0], GetWeightUnitString()));
 
 		// Values
 		SetFontForeground(5);

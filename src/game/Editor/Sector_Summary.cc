@@ -44,6 +44,8 @@
 #include "GameInstance.h"
 #include "Logger.h"
 
+#include <string_theory/format>
+
 #include <algorithm>
 #include <vector>
 
@@ -438,14 +440,14 @@ static void RenderSectorInformation(void)
 		ePoints++;
 	//start at 10,35
 	SetFontAttributes(FONT10ARIAL, FONT_ORANGE);
-	mprintf(10, 32, L"Tileset:  %ls", gTilesets[s->ubTilesetID].zName);
+	MPrint(10, 32, ST::format("Tileset:  {}", gTilesets[s->ubTilesetID].zName));
 	if( m->ubMapVersion < 10 )
 		SetFontForeground( FONT_RED );
-	mprintf( 10, 42,    L"Version Info:  Summary:  1.%02d,  Map:  %d.%02d", s->ubSummaryVersion, (INT32)s->dMajorMapVersion, m->ubMapVersion );
+	MPrint( 10, 42, ST::format("Version Info:  Summary:  1.{02d},  Map:  {}.{02d}", s->ubSummaryVersion, (INT32)s->dMajorMapVersion, m->ubMapVersion) );
 	SetFontForeground( FONT_GRAY2 );
-	mprintf( 10, 55,		L"Number of items:  %d", s->usNumItems );
-	mprintf( 10, 65,		L"Number of lights:  %d", s->usNumLights );
-	mprintf( 10, 75,		L"Number of entry points:  %d", ePoints );
+	MPrint( 10, 55, ST::format("Number of items:  {}", s->usNumItems) );
+	MPrint( 10, 65, ST::format("Number of lights:  {}", s->usNumLights) );
+	MPrint( 10, 75, ST::format("Number of entry points:  {}", ePoints) );
 	if( ePoints )
 	{
 		INT32 x;
@@ -460,45 +462,45 @@ static void RenderSectorInformation(void)
 		if (m->sIsolatedGridNo != -1) { MPrint(x, 75, L"I"); x += StringPixLength(L"I", FONT10ARIAL) + 2; }
 		MPrint(x, 75, L")");
 	}
-	mprintf( 10, 85,			L"Number of rooms:  %d", s->ubNumRooms );
-	mprintf( 10, 95,			L"Total map population:  %d", m->ubNumIndividuals );
-	mprintf( 20, 105,			L"Enemies:  %d", s->EnemyTeam.ubTotal );
-	mprintf( 30, 115,			L"Admins:  %d", s->ubNumAdmins );
+	MPrint( 10, 85, ST::format("Number of rooms:  {}", s->ubNumRooms) );
+	MPrint( 10, 95, ST::format("Total map population:  {}", m->ubNumIndividuals) );
+	MPrint( 20, 105, ST::format("Enemies:  {}", s->EnemyTeam.ubTotal) );
+	MPrint( 30, 115, ST::format("Admins:  {}", s->ubNumAdmins) );
 	if( s->ubNumAdmins )
-		mprintf( 100, 115,		L"(%d detailed, %d profile -- %d have priority existance)", s->ubAdminDetailed, s->ubAdminProfile, s->ubAdminExistance );
-	mprintf( 30, 125,			L"Troops:  %d", s->ubNumTroops );
+		MPrint( 100, 115, ST::format("({} detailed, {} profile -- {} have priority existance)", s->ubAdminDetailed, s->ubAdminProfile, s->ubAdminExistance) );
+	MPrint( 30, 125, ST::format("Troops:  {}", s->ubNumTroops) );
 	if( s->ubNumTroops )
-		mprintf( 100, 125,		L"(%d detailed, %d profile -- %d have priority existance)", s->ubTroopDetailed, s->ubTroopProfile, s->ubTroopExistance );
-	mprintf( 30, 135,			L"Elites:  %d", s->ubNumElites );
+		MPrint( 100, 125, ST::format("({} detailed, {} profile -- {} have priority existance)", s->ubTroopDetailed, s->ubTroopProfile, s->ubTroopExistance) );
+	MPrint( 30, 135, ST::format("Elites:  {}", s->ubNumElites) );
 	if( s->ubNumElites )
-		mprintf( 100, 135,		L"(%d detailed, %d profile -- %d have priority existance)", s->ubEliteDetailed, s->ubEliteProfile, s->ubEliteExistance );
-	mprintf( 20, 145,			L"Civilians:  %d", s->CivTeam.ubTotal );
+		MPrint( 100, 135, ST::format("({} detailed, {} profile -- {} have priority existance)", s->ubEliteDetailed, s->ubEliteProfile, s->ubEliteExistance) );
+	MPrint( 20, 145, ST::format("Civilians:  {}", s->CivTeam.ubTotal) );
 	if( s->CivTeam.ubTotal )
-		mprintf( 100, 145,		L"(%d detailed, %d profile -- %d have priority existance)", s->CivTeam.ubDetailed, s->CivTeam.ubProfile, s->CivTeam.ubExistance );
+		MPrint( 100, 145, ST::format("({} detailed, {} profile -- {} have priority existance)", s->CivTeam.ubDetailed, s->CivTeam.ubProfile, s->CivTeam.ubExistance) );
 	if( s->ubSummaryVersion >= 9 )
 	{
-		mprintf( 30, 155,		L"Humans:  %d", s->CivTeam.ubTotal - s->ubCivCows - s->ubCivBloodcats );
-		mprintf( 30, 165,		L"Cows:  %d", s->ubCivCows );
-		mprintf( 30, 175,		L"Bloodcats:  %d", s->ubCivBloodcats );
+		MPrint( 30, 155, ST::format("Humans:  {}", s->CivTeam.ubTotal - s->ubCivCows - s->ubCivBloodcats) );
+		MPrint( 30, 165, ST::format("Cows:  {}", s->ubCivCows) );
+		MPrint( 30, 175, ST::format("Bloodcats:  {}", s->ubCivBloodcats) );
 	}
-	mprintf( 20, 185,			L"Creatures:  %d", s->CreatureTeam.ubTotal );
+	MPrint( 20, 185, ST::format("Creatures:  {}", s->CreatureTeam.ubTotal) );
 	if( s->ubSummaryVersion >= 9 )
 	{
-		mprintf( 30, 195,     L"Monsters:  %d", s->CreatureTeam.ubTotal - s->CreatureTeam.ubNumAnimals );
-		mprintf( 30, 205,     L"Bloodcats:  %d", s->CreatureTeam.ubNumAnimals );
+		MPrint( 30, 195, ST::format("Monsters:  {}", s->CreatureTeam.ubTotal - s->CreatureTeam.ubNumAnimals) );
+		MPrint( 30, 205, ST::format("Bloodcats:  {}", s->CreatureTeam.ubNumAnimals) );
 	}
-	mprintf( 10, 215,		L"Number of locked and/or trapped doors:  %d", s->ubNumDoors );
-	mprintf( 20, 225,			L"Locked:  %d", s->ubNumDoorsLocked );
-	mprintf( 20, 235,			L"Trapped:  %d", s->ubNumDoorsTrapped );
-	mprintf( 20, 245,			L"Locked & Trapped:  %d", s->ubNumDoorsLockedAndTrapped );
+	MPrint( 10, 215, ST::format("Number of locked and/or trapped doors:  {}", s->ubNumDoors) );
+	MPrint( 20, 225, ST::format("Locked:  {}", s->ubNumDoorsLocked) );
+	MPrint( 20, 235, ST::format("Trapped:  {}", s->ubNumDoorsTrapped) );
+	MPrint( 20, 245, ST::format("Locked & Trapped:  {}", s->ubNumDoorsLockedAndTrapped) );
 	if( s->ubSummaryVersion >= 8 )
-		mprintf( 10, 255,			L"Civilians with schedules:  %d", s->ubCivSchedules );
+		MPrint( 10, 255, ST::format("Civilians with schedules:  {}", s->ubCivSchedules) );
 	if( s->ubSummaryVersion >= 10 )
 	{
 		if( s->fTooManyExitGridDests )
 		{
 			SetFontForeground( FONT_RED );
-			mprintf( 10, 265, L"Too many exit grid destinations (more than 4)...");
+			MPrint( 10, 265, "Too many exit grid destinations (more than 4)...");
 		}
 		else
 		{
@@ -512,7 +514,7 @@ static void RenderSectorInformation(void)
 			if( ubNumInvalid )
 			{
 				SetFontForeground( FONT_RED );
-				mprintf( 10, 265, L"ExitGrids:  %d (%d with a long distance destination)", s->ubNumExitGridDests, ubNumInvalid );
+				MPrint( 10, 265, ST::format("ExitGrids:  {} ({} with a long distance destination)", s->ubNumExitGridDests, ubNumInvalid) );
 			}
 			else switch( s->ubNumExitGridDests )
 			{
@@ -520,47 +522,47 @@ static void RenderSectorInformation(void)
 					MPrint(10, 265, L"ExitGrids:  none");
 					break;
 				case 1:
-					mprintf( 10, 265, L"ExitGrids:  1 destination using %d exitgrids", s->usExitGridSize[0] );
+					MPrint( 10, 265, ST::format("ExitGrids:  1 destination using {} exitgrids", s->usExitGridSize[0]) );
 					break;
 				case 2:
-					mprintf( 10, 265, L"ExitGrids:  2 -- 1) Qty: %d, 2) Qty: %d", s->usExitGridSize[0], s->usExitGridSize[1] );
+					MPrint( 10, 265, ST::format("ExitGrids:  2 -- 1) Qty: {}, 2) Qty: {}", s->usExitGridSize[0], s->usExitGridSize[1]) );
 					break;
 				case 3:
-					mprintf( 10, 265, L"ExitGrids:  3 -- 1) Qty: %d, 2) Qty: %d, 3) Qty: %d",
-						s->usExitGridSize[0], s->usExitGridSize[1], s->usExitGridSize[2] );
+					MPrint( 10, 265, ST::format("ExitGrids:  3 -- 1) Qty: {}, 2) Qty: {}, 3) Qty: {}",
+						s->usExitGridSize[0], s->usExitGridSize[1], s->usExitGridSize[2]) );
 					break;
 				case 4:
-					mprintf( 10, 265, L"ExitGrids:  3 -- 1) Qty: %d, 2) Qty: %d, 3) Qty: %d, 4) Qty: %d",
-						s->usExitGridSize[0], s->usExitGridSize[1], s->usExitGridSize[2], s->usExitGridSize[3] );
+					MPrint( 10, 265, ST::format("ExitGrids:  3 -- 1) Qty: {}, 2) Qty: {}, 3) Qty: {}, 4) Qty: {}",
+						s->usExitGridSize[0], s->usExitGridSize[1], s->usExitGridSize[2], s->usExitGridSize[3]) );
 					break;
 			}
 		}
 	}
 	iOverall = - ( 2 * s->EnemyTeam.ubBadA ) - s->EnemyTeam.ubPoorA + s->EnemyTeam.ubGoodA + ( 2 * s->EnemyTeam.ubGreatA );
 	usLine = 275;
-	mprintf( 10, usLine, L"Enemy Relative Attributes:  %d bad, %d poor, %d norm, %d good, %d great (%+d Overall)",
+	MPrint( 10, usLine, ST::format("Enemy Relative Attributes:  {} bad, {} poor, {} norm, {} good, {} great ({+d} Overall)",
 		s->EnemyTeam.ubBadA,
 		s->EnemyTeam.ubPoorA,
 		s->EnemyTeam.ubAvgA,
 		s->EnemyTeam.ubGoodA,
 		s->EnemyTeam.ubGreatA,
-		iOverall );
+		iOverall) );
 	iOverall = - ( 2 * s->EnemyTeam.ubBadE ) - s->EnemyTeam.ubPoorE + s->EnemyTeam.ubGoodE + ( 2 * s->EnemyTeam.ubGreatE );
 	usLine += 10;
-	mprintf( 10, usLine, L"Enemy Relative Equipment:  %d bad, %d poor, %d norm, %d good, %d great (%+d Overall)",
+	MPrint( 10, usLine, ST::format("Enemy Relative Equipment:  {} bad, {} poor, {} norm, {} good, {} great ({+d} Overall)",
 		s->EnemyTeam.ubBadE,
 		s->EnemyTeam.ubPoorE,
 		s->EnemyTeam.ubAvgE,
 		s->EnemyTeam.ubGoodE,
 		s->EnemyTeam.ubGreatE,
-		iOverall );
+		iOverall) );
 	usLine += 10;
 	if( s->ubSummaryVersion >= 11 )
 	{
 		if( s->ubEnemiesReqWaypoints )
 		{
 			SetFontForeground( FONT_RED );
-			mprintf( 10, usLine, L"%d placements have patrol orders without any waypoints defined.", s->ubEnemiesReqWaypoints );
+			MPrint( 10, usLine, ST::format("{} placements have patrol orders without any waypoints defined.", s->ubEnemiesReqWaypoints) );
 			usLine += 10;
 		}
 	}
@@ -569,7 +571,7 @@ static void RenderSectorInformation(void)
 		if( s->ubEnemiesHaveWaypoints )
 		{
 			SetFontForeground( FONT_RED );
-			mprintf( 10, usLine, L"%d placements have waypoints, but without any patrol orders.", s->ubEnemiesHaveWaypoints );
+			MPrint( 10, usLine, ST::format("{} placements have waypoints, but without any patrol orders.", s->ubEnemiesHaveWaypoints) );
 			usLine += 10;
 		}
 	}
@@ -578,7 +580,7 @@ static void RenderSectorInformation(void)
 		if( s->usWarningRoomNums )
 		{
 			SetFontForeground( FONT_RED );
-			mprintf( 10, usLine, L"%d gridnos have questionable room numbers.  Please validate.", s->usWarningRoomNums );
+			MPrint( 10, usLine, ST::format("{} gridnos have questionable room numbers.  Please validate.", s->usWarningRoomNums) );
 		}
 	}
 }
@@ -677,8 +679,8 @@ static void RenderItemDetails(void)
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				MPrint(xp, yp, ShortItemNames[index]);
-				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
-				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
+				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
+				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;
 				if( yp >= 355 )
 				{
@@ -722,12 +724,12 @@ static void RenderItemDetails(void)
 				{
 					dAvgExistChance = (FLOAT)(uiTriggerExistChance[i] / 100.0);
 					dAvgStatus = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf(xp, yp, L"%ls:  %3.02f trigger(s), %3.02f action(s)", Type, dAvgExistChance, dAvgStatus);
+					MPrint(xp, yp, ST::format("{}:  {3.02f} trigger(s), {3.02f} action(s)", Type, dAvgExistChance, dAvgStatus));
 				}
 				else
 				{
 					dAvgExistChance = (FLOAT)(uiActionExistChance[i] / 100.0);
-					mprintf(xp, yp, L"%ls:  %3.02f", Type, dAvgExistChance);
+					MPrint(xp, yp, ST::format("{}:  {3.02f}", Type, dAvgExistChance));
 				}
 				yp += 10;
 				if( yp >= 355 )
@@ -784,8 +786,8 @@ static void RenderItemDetails(void)
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				MPrint(xp, yp, ShortItemNames[index]);
-				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
-				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
+				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
+				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;
 				if( yp >= 355 )
 				{
@@ -851,8 +853,8 @@ static void RenderItemDetails(void)
 				dAvgStatus = uiStatus / (FLOAT)uiQuantity;
 				//Display stats.
 				MPrint(xp, yp, ShortItemNames[index]);
-				mprintf( xp + 85, yp, L"%3.02f", dAvgExistChance );
-				mprintf( xp + 110, yp, L"@ %3.02f%%", dAvgStatus );
+				MPrint( xp + 85, yp, ST::format("{3.02f}", dAvgExistChance) );
+				MPrint( xp + 110, yp, ST::format("@ {3.02f}%", dAvgStatus) );
 				yp += 10;
 				if( yp >= 355 )
 				{
@@ -911,8 +913,8 @@ void RenderSummaryWindow()
 		SetFontAttributes(BLOCKFONT2, FONT_LTKHAKI, FONT_DKKHAKI);
 		if( !gfItemDetailsMode )
 		{
-			mprintf(10, 5, L"CAMPAIGN EDITOR -- %ls Version 1.%02d",
-				gszVersionType[ GLOBAL_SUMMARY_STATE ], GLOBAL_SUMMARY_VERSION );
+			MPrint(10, 5, ST::format("CAMPAIGN EDITOR -- {} Version 1.{02d}",
+				gszVersionType[ GLOBAL_SUMMARY_STATE ], GLOBAL_SUMMARY_VERSION) );
 		}
 
 		//This section builds the proper header to be displayed for an existing global summary.
@@ -932,7 +934,7 @@ void RenderSummaryWindow()
 			{
 				DisableButton( iSummaryButton[ SUMMARY_LOAD ] );
 				SetFontForeground( FONT_YELLOW );
-				mprintf( 10, 20, L"You currently have %d outdated maps.", gusNumEntriesWithOutdatedOrNoSummaryInfo);
+				MPrint( 10, 20, ST::format("You currently have {} outdated maps.", gusNumEntriesWithOutdatedOrNoSummaryInfo));
 				MPrint( 10, 30, L"The more maps that need to be updated, the longer it takes.  It'll take ");
 				MPrint( 10, 40, L"approximately 4 minutes on a P200MMX to analyse 100 maps, so");
 				MPrint( 10, 50, L"depending on your computer, it may vary.");
@@ -1112,12 +1114,12 @@ void RenderSummaryWindow()
 								SetupItemDetailsMode( TRUE );
 								gfSetupItemDetailsMode = FALSE;
 							}
-							mprintf(10, 5, L"ITEM DETAILS -- sector %ls", str);
+							MPrint(10, 5, ST::format("ITEM DETAILS -- sector {}", str));
 							RenderItemDetails();
 						}
 						else
 						{
-							mprintf(10, 20, L"Summary Information for sector %ls:", str);
+							MPrint(10, 20, ST::format("Summary Information for sector {}:", str));
 							HideButton( iSummaryButton[ SUMMARY_REAL ] );
 							HideButton( iSummaryButton[ SUMMARY_SCIFI ] );
 							HideButton( iSummaryButton[ SUMMARY_ENEMY ] );
@@ -1128,7 +1130,7 @@ void RenderSummaryWindow()
 					{
 						SetFontForeground( FONT_RED );
 						INT32 const y = (gfItemDetailsMode ? 5 : 20);
-						mprintf(10, y,      L"Summary Information for sector %ls" , str);
+						MPrint(10, y, ST::format("Summary Information for sector {}" , str));
 						MPrint( 10, y + 10, L"does not exist.");
 						ShowButton( iSummaryButton[ SUMMARY_UPDATE ] );
 					}
@@ -1143,9 +1145,9 @@ void RenderSummaryWindow()
 						SetFontShadow( 0 );
 					}
 					if( gfItemDetailsMode )
-						mprintf(10, 5, L"No information exists for sector %ls.", str);
+						MPrint(10, 5, ST::format("No information exists for sector {}.", str));
 					else
-						mprintf(10, 20, L"No information exists for sector %ls.", str);
+						MPrint(10, 20, ST::format("No information exists for sector {}.", str));
 					SetFontShadow( FONT_NEARBLACK );
 
 					switch( giCurrentViewLevel )
@@ -1173,7 +1175,7 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_LTKHAKI );
 					else
 						SetFontForeground( FONT_LTBLUE );
-					mprintf(MAP_LEFT + 110, MAP_BOTTOM + 55, L"FILE:  %ls", gszDisplayName);
+					MPrint(MAP_LEFT + 110, MAP_BOTTOM + 55, ST::format("FILE:  {}", gszDisplayName));
 				}
 				else //little higher to make room for the override checkbox and text.
 				{
@@ -1181,7 +1183,7 @@ void RenderSummaryWindow()
 						SetFontForeground( FONT_LTKHAKI );
 					else
 						SetFontForeground( FONT_LTBLUE );
-					mprintf(MAP_LEFT + 110, MAP_BOTTOM + 46, L"FILE:  %ls", gszDisplayName);
+					MPrint(MAP_LEFT + 110, MAP_BOTTOM + 46, ST::format("FILE:  {}", gszDisplayName));
 					if( gubOverrideStatus == READONLY )
 					{
 						SetFontForeground(gfOverride ? FONT_YELLOW : FONT_LTRED);
@@ -1269,13 +1271,13 @@ void RenderSummaryWindow()
 		SetFontForeground( FONT_BLACK );
 		for( y = 0; y < 16; y++ )
 		{
-			mprintf( MAP_LEFT-8, MAP_TOP+4+y*13, L"%c", 65 + y );
+			MPrint( MAP_LEFT-8, MAP_TOP+4+y*13, ST::format("{c}", 65 + y) );
 		}
 		for( x = 1; x <= 16; x++ )
 		{
 			wchar_t str[3];
 			swprintf(str, lengthof(str), L"%d", x);
-			mprintf( MAP_LEFT+x*13-(13+StringPixLength( str, SMALLCOMPFONT ))/2, MAP_TOP-8, str );
+			MPrint( MAP_LEFT+x*13-(13+StringPixLength( str, SMALLCOMPFONT ))/2, MAP_TOP-8, str );
 		}
 		if( gfRenderGrid )
 		{
@@ -1313,7 +1315,7 @@ void RenderSummaryWindow()
 							//is no ground level, then it'll be shadowed.
 							SetFont( SMALLCOMPFONT );
 							SetFontForeground( FONT_YELLOW );
-							mprintf(MAP_LEFT + x * 13 + 4, ClipRect.iTop + 4, L"%d", ubNumUndergroundLevels);
+							MPrint(MAP_LEFT + x * 13 + 4, ClipRect.iTop + 4, ST::format("%d", ubNumUndergroundLevels));
 						}
 						if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 						{
@@ -1332,7 +1334,7 @@ void RenderSummaryWindow()
 							//is no ground level, then it'll be shadowed.
 							SetFont( SMALLCOMPFONT );
 							SetFontForeground( FONT_YELLOW );
-							mprintf(MAP_LEFT + x * 13 + 4, ClipRect.iTop + 4, L"%d", ubNumUndergroundLevels);
+							MPrint(MAP_LEFT + x * 13 + 4, ClipRect.iTop + 4, ST::format("%d", ubNumUndergroundLevels));
 						}
 						if( gbSectorLevels[x][y] & ALTERNATE_GROUND_MASK )
 						{
@@ -2238,7 +2240,7 @@ static void ReportError(const char* pSector, UINT8 ubLevel)
 		swprintf(temp, lengthof(temp), L"_b%d.dat", ubLevel % 4);
 		wcscat( str, temp );
 	}
-	mprintf(10, yp, L"Skipping update for %ls.  Probably due to tileset conflicts...", str);
+	MPrint(10, yp, ST::format("Skipping update for {}.  Probably due to tileset conflicts...", str));
 	InvalidateScreen();
 	yp++;
 }

@@ -28,6 +28,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+
+
 #define MAX_MESSAGES_PAGE 18 // max number of messages per page
 
 #define VIEWER_X (155 + STD_SCREEN_X)
@@ -745,7 +748,7 @@ static void DrawEmailSummary(INT32 y, const Email* e)
 	MPrint(SENDER_X,  y + 4, pSenderNameList[e->ubSender]);
 
 	// draw date of message being displayed in mail viewer
-	mprintf(DATE_X, y + 4, L"%ls %d", pDayStrings, e->iDate / (24 * 60));
+	MPrint(DATE_X, y + 4, ST::format("{} {}", pDayStrings, e->iDate / (24 * 60)));
 }
 
 
@@ -1544,7 +1547,7 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 	MPrint(usX, MESSAGE_DATE_Y + iViewerY, pEmailHeaders[2]);
 
 	// the actual date info
-	mprintf(MESSAGE_HEADER_X + 235, MESSAGE_DATE_Y + iViewerY, L"%d", pMail->iDate / (24 * 60));
+	MPrint(MESSAGE_HEADER_X + 235, MESSAGE_DATE_Y + iViewerY, ST::format("{}", pMail->iDate / (24 * 60)));
 
 	// print subject
 	FindFontRightCoordinates(MESSAGE_HEADER_X - 20, MESSAGE_SUBJECT_Y, MESSAGE_HEADER_WIDTH, MESSAGE_SUBJECT_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[1], MESSAGE_FONT, &usX, &usY);
@@ -2222,7 +2225,7 @@ static void DisplayWhichPageOfEmailProgramIsDisplayed(void)
 		CPage = iCurrentPage + 1;
 		LPage = iLastPage + 1;
 	}
-	mprintf(PAGE_NUMBER_X, PAGE_NUMBER_Y, L"%d / %d", CPage, LPage);
+	MPrint(PAGE_NUMBER_X, PAGE_NUMBER_Y, ST::format("{} / {}", CPage, LPage));
 
 	// restore shadow
 	SetFontShadow( DEFAULT_SHADOW );

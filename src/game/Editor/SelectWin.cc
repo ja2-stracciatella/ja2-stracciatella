@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Button_System.h"
 #include "Directories.h"
 #include "Font.h"
@@ -20,6 +18,10 @@
 #include "VObject_Blitters.h"
 #include "WorldDef.h"
 #include "UILayout.h"
+
+#include <string_theory/format>
+
+#include <stdexcept>
 
 
 // defines for DisplaySpec.ubType
@@ -853,15 +855,15 @@ void DisplaySelectionWindowGraphicalInformation()
 		char const* const filename = gTilesets[giCurrentTilesetID].TileSurfaceFilenames[obj_idx];
 		if (filename[0] != '\0')
 		{
-			mprintf(2, 2, L"File:  %hs, subindex:  %d (%hs)", filename, i->uiIndex, name);
+			MPrint(2, 2, ST::format("File:  {}, subindex:  {} ({})", filename, i->uiIndex, name));
 		}
 		else
 		{
 			TILESET const& generic = gTilesets[GENERIC_1];
-			mprintf(2, 2, L"%hs[%d] is from default tileset %ls (%hs)", generic.TileSurfaceFilenames[obj_idx], i->uiIndex, generic.zName, name);
+			MPrint(2, 2, ST::format("{}[{}] is from default tileset {} ({})", generic.TileSurfaceFilenames[obj_idx], i->uiIndex, generic.zName, name));
 		}
 	}
-	mprintf(350, 2, L"Current Tileset:  %ls", gTilesets[giCurrentTilesetID].zName);
+	MPrint(350, 2, ST::format("Current Tileset:  {}", gTilesets[giCurrentTilesetID].zName));
 }
 
 
@@ -1234,6 +1236,6 @@ static void DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGP
 	if (n->fChosen)
 	{
 		INT16 const count = FindInSelectionList(*n).sCount;
-		if (count != 0) gprintf(x, y, L"%d", count);
+		if (count != 0) GPrint(x, y, ST::format("{}", count));
 	}
 }

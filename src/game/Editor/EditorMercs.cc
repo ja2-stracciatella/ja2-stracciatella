@@ -61,6 +61,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+
 
 //--------------------------------------------------
 //	NON_CIV_GROUP,
@@ -1923,7 +1925,7 @@ void UpdateMercsInfo()
 				{
 					SetFontForeground( FONT_WHITE );
 					ClearTaskbarRegion(240, 75, 580, 85);
-					mprintf(240, EDITOR_TASKBAR_POS_Y + 75, L"Current Profile:  %ls", gMercProfiles[gpSelected->pDetailedPlacement->ubProfile].zName);
+					MPrint(240, EDITOR_TASKBAR_POS_Y + 75, ST::format("Current Profile:  {}", gMercProfiles[gpSelected->pDetailedPlacement->ubProfile].zName));
 				}
 			}
 			break;

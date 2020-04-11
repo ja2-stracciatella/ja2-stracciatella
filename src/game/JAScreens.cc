@@ -42,6 +42,9 @@
 #include "Timer.h"
 #include "Logger.h"
 
+#include <string_theory/format>
+
+
 #define MAX_DEBUG_PAGES 4
 
 
@@ -110,7 +113,7 @@ ScreenID ErrorScreenHandle(void)
 	MPrint(50, 225, L"PRESS <ESC> TO EXIT");
 
 	SetFontAttributes(FONT12ARIAL, FONT_YELLOW);
-	mprintf(50, 255, L"%hs", gubErrorText);
+	MPrint(50, 255, ST::format("{}", gubErrorText));
 
 	if ( !fFirstTime )
 	{

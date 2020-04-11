@@ -547,8 +547,8 @@ static void DisplayPageNumberAndDateRange(void)
 	}
 
 	SetFontAttributes(HISTORY_TEXT_FONT, FONT_BLACK, NO_SHADOW);
-	mprintf(PAGE_NUMBER_X,  PAGE_NUMBER_Y,  L"%ls  %d / %d", pHistoryHeaders[1], current_page, count_pages);
-	mprintf(HISTORY_DATE_X, HISTORY_DATE_Y, L"%ls %d - %d",  pHistoryHeaders[2], first_date,   last_date);
+	MPrint(PAGE_NUMBER_X,  PAGE_NUMBER_Y, ST::format("{}  {} / {}", pHistoryHeaders[1], current_page, count_pages));
+	MPrint(HISTORY_DATE_X, HISTORY_DATE_Y, ST::format("{} {} - {}",  pHistoryHeaders[2], first_date, last_date));
 	SetFontShadow(DEFAULT_SHADOW);
 }
 

@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
@@ -43,6 +41,10 @@
 #include "MemMan.h"
 #include "JAScreens.h"
 #include "UILayout.h"
+
+#include <string_theory/format>
+
+#include <stdexcept>
 
 
 struct MERCPLACEMENT
@@ -285,7 +287,7 @@ static void RenderTacticalPlacementGUI()
 		SetFontAttributes(BLOCKFONT, FONT_BEIGE);
 		wchar_t str[128];
 		GetSectorIDString(gubPBSectorX, gubPBSectorY, gubPBSectorZ, str, lengthof(str), TRUE);
-		mprintf(STD_SCREEN_X + 120, STD_SCREEN_Y + 335, L"%ls %ls -- %ls...", gpStrategicString[STR_TP_SECTOR], str, gpStrategicString[STR_TP_CHOOSEENTRYPOSITIONS]);
+		MPrint(STD_SCREEN_X + 120, STD_SCREEN_Y + 335, ST::format("{} {} -- {}...", gpStrategicString[STR_TP_SECTOR], str, gpStrategicString[STR_TP_CHOOSEENTRYPOSITIONS]));
 
 		// Shade out the part of the tactical map that isn't considered placable.
 		BlitBufferToBuffer(buf, guiSAVEBUFFER, STD_SCREEN_X + 0, STD_SCREEN_Y + 320, 640, 160);

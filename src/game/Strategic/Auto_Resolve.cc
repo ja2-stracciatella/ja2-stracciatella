@@ -2843,9 +2843,9 @@ static void DrawDebugText(SOLDIERCELL* pCell)
 		MPrint(xp, yp, L"LEADER");
 		yp += 9;
 	}
-	mprintf( xp, yp, L"AT: %d", pCell->usAttack );
+	MPrint( xp, yp, ST::format("AT: {}", pCell->usAttack) );
 	yp += 9;
-	mprintf( xp, yp, L"DF: %d", pCell->usDefence );
+	MPrint( xp, yp, ST::format("DF: {}", pCell->usDefence) );
 	yp += 9;
 
 	xp = pCell->xp;

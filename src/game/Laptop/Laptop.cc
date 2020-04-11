@@ -88,6 +88,8 @@
 #include "JAScreens.h"
 #include "UILayout.h"
 
+#include <string_theory/format>
+
 #include <algorithm>
 #include <iterator>
 
@@ -2757,7 +2759,7 @@ void PrintNumberOnTeam(void)
 		++usPosX;
 		++usPosY;
 	}
-	mprintf(usPosX, usPosY, L"%ls %d", pPersonnelString, iCounter);
+	MPrint(usPosX, usPosY, ST::format("{} {}", pPersonnelString, iCounter));
 
 	SetFontShadow(DEFAULT_SHADOW);
 }
@@ -2880,7 +2882,7 @@ void RenderWWWProgramTitleBar(void)
 	else
 	{
 		const INT32 iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW-1;
-		mprintf(STD_SCREEN_X + 140, STD_SCREEN_Y + 33, L"%ls  -  %ls", pWebTitle, pWebPagesTitles[iIndex]);
+		MPrint(STD_SCREEN_X + 140, STD_SCREEN_Y + 33, ST::format("{}  -  {}", pWebTitle, pWebPagesTitles[iIndex]));
 	}
 
 	BlitTitleBarIcons();

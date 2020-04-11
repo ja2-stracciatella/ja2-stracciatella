@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Buffer.h"
 #include "HImage.h"
 #include "LoadSaveData.h"
@@ -35,6 +33,11 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+
+#include <string_theory/format>
+
+#include <stdexcept>
+
 
 #ifdef COUNT_PATHS
 	extern UINT32 guiSuccessfulPathChecks;
@@ -1267,7 +1270,7 @@ void DebugStructurePage1()
 	if (!might_have_structures) return;
 
 	MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Movement Costs:");
-	mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"N %d NE %d E %d SE %d S %d SW %d W %d NW %d",
+	MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("N {} NE {} E {} SE {} S {} SW {} W {} NW {}",
 		gubWorldMovementCosts[grid_no][NORTH    ][gsInterfaceLevel],
 		gubWorldMovementCosts[grid_no][NORTHEAST][gsInterfaceLevel],
 		gubWorldMovementCosts[grid_no][EAST     ][gsInterfaceLevel],
@@ -1275,11 +1278,11 @@ void DebugStructurePage1()
 		gubWorldMovementCosts[grid_no][SOUTH    ][gsInterfaceLevel],
 		gubWorldMovementCosts[grid_no][SOUTHWEST][gsInterfaceLevel],
 		gubWorldMovementCosts[grid_no][WEST     ][gsInterfaceLevel],
-		gubWorldMovementCosts[grid_no][NORTHWEST][gsInterfaceLevel]);
+		gubWorldMovementCosts[grid_no][NORTHWEST][gsInterfaceLevel]));
 	MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Ground smell:");
-	mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d of strength %d",
+	MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} of strength {}",
 		SMELL_TYPE(gpWorldLevelData[grid_no].ubSmellInfo),
-		SMELL_STRENGTH(gpWorldLevelData[grid_no].ubSmellInfo));
+		SMELL_STRENGTH(gpWorldLevelData[grid_no].ubSmellInfo)));
 
 	INT16 const desired_level = gsInterfaceLevel == I_GROUND_LEVEL ? STRUCTURE_ON_GROUND : STRUCTURE_ON_ROOF;
 	for (STRUCTURE* s = gpWorldLevelData[grid_no].pStructureHead; s; s = s->pNext)
@@ -1292,80 +1295,80 @@ void DebugStructurePage1()
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Type:");
 		if (s->fFlags & STRUCTURE_GENERIC)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Generic structure no %d", s->pDBStructureRef->pDBStructure->usStructureNumber);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Generic structure no {}", s->pDBStructureRef->pDBStructure->usStructureNumber));
 		}
 		else if (s->fFlags & STRUCTURE_TREE)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Tree");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, "Tree");
 		}
 		else if (s->fFlags & STRUCTURE_FENCE)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Fence with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Fence with orientation {}", WallOrientationString[s->ubWallOrientation]));
 		}
 		else if (s->fFlags & STRUCTURE_WIREFENCE)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Wirefence with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Wirefence with orientation {}", WallOrientationString[s->ubWallOrientation]));
 		}
 		else if (s->fFlags & STRUCTURE_WALL)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Wall with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Wall with orientation {}", WallOrientationString[s->ubWallOrientation]));
 		}
 		else if (s->fFlags & STRUCTURE_WALLNWINDOW)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Wall with window with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Wall with window with orientation {}", WallOrientationString[s->ubWallOrientation]));
 		}
 		else if (s->fFlags & STRUCTURE_VEHICLE)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Vehicle %d", s->pDBStructureRef->pDBStructure->usStructureNumber);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Vehicle {}", s->pDBStructureRef->pDBStructure->usStructureNumber));
 		}
 		else if (s->fFlags & STRUCTURE_NORMAL_ROOF)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Roof");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, "Roof");
 		}
 		else if (s->fFlags & STRUCTURE_SLANTED_ROOF)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Slanted roof");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, "Slanted roof");
 		}
 		else if (s->fFlags & STRUCTURE_TALL_ROOF)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Tall roof");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, "Tall roof");
 		}
 		else if (s->fFlags & STRUCTURE_SWITCH)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Switch");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, "Switch");
 		}
 		else if (s->fFlags & STRUCTURE_CORPSE)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Corpse");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, "Corpse");
 		}
 		else if (s->fFlags & STRUCTURE_PERSON)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Person");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, "Person");
 		}
 		else if (s->fFlags & STRUCTURE_CAVEWALL)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Cave wall");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, "Cave wall");
 		}
 		else if (s->fFlags & STRUCTURE_DOOR)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Door with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Door with orientation {}", WallOrientationString[s->ubWallOrientation]));
 		}
 		else if (s->fFlags & STRUCTURE_SLIDINGDOOR)
 		{
 			wchar_t const* const state = s->fFlags & STRUCTURE_OPEN ? L"Open" : L"Closed";
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%ls sliding door with orientation %ls", state, WallOrientationString[s->ubWallOrientation]);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} sliding door with orientation {}", state, WallOrientationString[s->ubWallOrientation]));
 		}
 		else if (s->fFlags & STRUCTURE_DDOOR_LEFT)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"DDoorLft with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("DDoorLft with orientation {}", WallOrientationString[s->ubWallOrientation]));
 		}
 		else if (s->fFlags & STRUCTURE_DDOOR_RIGHT)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"DDoorRt with orientation %ls", WallOrientationString[s->ubWallOrientation]);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("DDoorRt with orientation {}", WallOrientationString[s->ubWallOrientation]));
 		}
 		else
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Unknown Structure");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, "Unknown Structure");
 		}
 
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Flags:");
@@ -1392,13 +1395,13 @@ void DebugStructurePage1()
 		if (s->fFlags & STRUCTURE_LIGHTSOURCE) {
 			wcscat(flagString, L"LIG ");
 		}
-		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, flagString);
+		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, flagString);
 
 		INT8             const height = StructureHeight(s);
 		STRUCTURE const* const base   = FindBaseStructure(s);
 		UINT8            const armour = gubMaterialArmour[s->pDBStructureRef->pDBStructure->ubArmour];
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure info:");
-		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"Structure height %d, cube offset %d, armour %d, HP %d", height, s->sCubeOffset, armour, base->ubHitPoints);
+		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Structure height {}, cube offset {}, armour {}, HP {}}", height, s->sCubeOffset, armour, base->ubHitPoints));
 
 		UINT8 dens0;
 		UINT8 dens1;
@@ -1407,7 +1410,7 @@ void DebugStructurePage1()
 		if (StructureDensity(s, &dens0, &dens1, &dens2, &dens3))
 		{
 			MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure fill:");
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L" %d%%/%d%%/%d%%/%d%% density %d", dens0, dens1, dens2, dens3, s->pDBStructureRef->pDBStructure->ubDensity);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format(" {}%/{}%/{}%/{}% density {}", dens0, dens1, dens2, dens3, s->pDBStructureRef->pDBStructure->ubDensity));
 		}
 	}
 
@@ -1415,27 +1418,27 @@ void DebugStructurePage1()
 	LOSResults const& los = gLOSTestResults;
 	if (los.fLOSTestPerformed)
 	{
-		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"LOS from (%7d,%7d,%7d)", los.iStartX, los.iStartY, los.iStartZ);
-		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"to (%7d,%7d,%7d)", los.iEndX, los.iEndY, los.iEndZ);
+		MPrint(DEBUG_PAGE_FIRST_COLUMN, y+=h, ST::format("LOS from ({7d},{7d},{7d})", los.iStartX, los.iStartY, los.iStartZ));
+		MPrint(DEBUG_PAGE_FIRST_COLUMN, y+=h, ST::format("to ({7d},{7d},{7d})", los.iEndX, los.iEndY, los.iEndZ));
 		if (los.fOutOfRange)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"is out of range");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y+=h, "is out of range");
 		}
 		else if (los.fLOSClear)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"is clear!");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y+=h, "is clear!");
 		}
 		else
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"is blocked at (%7d,%7d,%7d)!", los.iStoppedX, los.iStoppedY, los.iStoppedZ);
-			mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Blocked at cube level %d", los.iCurrCubesZ);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y+=h, ST::format("is blocked at ({7d},{7d},{7d})!", los.iStoppedX, los.iStoppedY, los.iStoppedZ));
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y+=h, ST::format("Blocked at cube level {}", los.iCurrCubesZ));
 		}
-		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Passed through %d tree bits!", los.ubTreeSpotsHit);
-		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Maximum range was %7d", los.iMaxDistance);
-		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"actual range was %7d", los.iDistance);
+		MPrint(DEBUG_PAGE_FIRST_COLUMN, y+=h, ST::format("Passed through {} tree bits!", los.ubTreeSpotsHit));
+		MPrint(DEBUG_PAGE_FIRST_COLUMN, y+=h, ST::format("Maximum range was {7d}", los.iMaxDistance));
+		MPrint(DEBUG_PAGE_FIRST_COLUMN, y+=h, ST::format("actual range was {7d}", los.iDistance));
 		if (los.ubChanceToGetThrough <= 100)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Chance to get through was %d", los.ubChanceToGetThrough);
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y+=h, ST::format("Chance to get through was {}", los.ubChanceToGetThrough));
 		}
 	}
 #endif
@@ -1443,12 +1446,12 @@ void DebugStructurePage1()
 #ifdef COUNT_PATHS
 	if (guiTotalPathChecks > 0)
 	{
-		mprintf(DEBUG_PAGE_FIRST_COLUMN, y+=h,
-			L"Total %ld, %%succ %3ld | %%failed %3ld | %%unsucc %3ld",
+		MPrint(DEBUG_PAGE_FIRST_COLUMN, y+=h,
+			ST::format("Total {}, %succ {3d} | %failed {3d} | %unsucc {3d}",
 			guiTotalPathChecks,
 			100 * guiSuccessfulPathChecks   / guiTotalPathChecks,
 			100 * guiFailedPathChecks       / guiTotalPathChecks,
-			100 * guiUnsuccessfulPathChecks / guiTotalPathChecks);
+			100 * guiUnsuccessfulPathChecks / guiTotalPathChecks));
 	}
 #endif
 }

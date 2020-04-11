@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Directories.h"
 #include "Font.h"
 #include "Font_Control.h"
@@ -47,6 +45,10 @@
 #include "Button_System.h"
 #include "Debug.h"
 #include "UILayout.h"
+
+#include <string_theory/format>
+
+#include <stdexcept>
 
 
 // zoom x and y coords for map scrolling
@@ -3255,7 +3257,7 @@ void DisplayPositionOfHelicopter( void )
 			BltVideoObject(FRAME_BUFFER, guiHelicopterIcon, HELI_ICON, x, y);
 
 			SetFontAttributes(MAP_MVT_ICON_FONT, FONT_WHITE);
-			mprintf(x + 5, y + 1,  L"%d", GetNumberInVehicle(v));
+			MPrint(x + 5, y + 1, ST::format("{}", GetNumberInVehicle(v)));
 
 			InvalidateRegion( x, y, x + HELI_ICON_WIDTH, y + HELI_ICON_HEIGHT );
 
@@ -3617,7 +3619,7 @@ static void DisplayLevelString(void)
 
 	SetFontDestBuffer(guiSAVEBUFFER, MAP_VIEW_START_X, MAP_VIEW_START_Y, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + 7);
 	SetFontAttributes(MAP_FONT, MAP_INDEX_COLOR);
-	mprintf(MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, L"%ls %d", sMapLevelString, iCurrentMapSectorZ);
+	MPrint(MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, ST::format("{} {}", sMapLevelString, iCurrentMapSectorZ));
 	SetFontDestBuffer(FRAME_BUFFER);
 }
 

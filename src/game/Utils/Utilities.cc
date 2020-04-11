@@ -14,6 +14,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+
+
 BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* const pal, const char* const col_file)
 try
 {
@@ -64,5 +67,5 @@ void DisplayPaletteRep(const PaletteRepID aPalRep, const UINT8 ubXPos, const UIN
 		ColorFillVideoSurfaceArea(dst, sTLX, sTLY, sBRX, sBRY, us16BPPColor);
 	}
 
-	gprintf(ubXPos + 16 * 20, ubYPos, L"%hs", gpPalRep[ubPaletteRep].ID);
+	GPrint(ubXPos + 16 * 20, ubYPos, ST::format("{}", gpPalRep[ubPaletteRep].ID));
 }

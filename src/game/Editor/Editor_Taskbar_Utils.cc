@@ -1,4 +1,3 @@
-#include <stdarg.h>
 #include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
@@ -48,6 +47,10 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+
+#include <string_theory/format>
+
+#include <stdarg.h>
 
 
 //editor icon storage vars
@@ -778,7 +781,7 @@ static void RenderSelectedItemBlownUp(void)
 	{
 		++n;
 	}
-	mprintf(screen_x, screen_y + 10, L"%d", n);
+	MPrint(screen_x, screen_y + 10, ST::format("{}", n));
 
 	// If the item is hidden, render a blinking H (just like DG)
 	WORLDITEM const& wi = GetWorldItem(gpItemPool->iItemIndex);
@@ -812,7 +815,7 @@ static void RenderEditorInfo(void)
 			if( !gfWorldLoaded || giCurrentTilesetID < 0 )
 				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, L"No map currently loaded.");
 			else
-				mprintf(260, EDITOR_TASKBAR_POS_Y + 85, L"File:  %hs, Current Tileset:  %ls", g_filename, gTilesets[giCurrentTilesetID].zName);
+				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, ST::format("File:  {}, Current Tileset:  {}", g_filename, gTilesets[giCurrentTilesetID].zName));
 			break;
 		case TASK_TERRAIN:
 			if( gusSelectionType == LINESELECTION )

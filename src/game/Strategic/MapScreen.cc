@@ -96,6 +96,8 @@
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 
+#include <string_theory/format>
+
 #include <algorithm>
 #include <iterator>
 
@@ -1089,16 +1091,16 @@ static void DisplayGroundEta(void)
 		// show hours and minutes
 		UINT Minutes = iTotalTime % 60;
 		UINT Hours   = iTotalTime / 60;
-		mprintf(CLOCK_MIN_X_START  - 5, CLOCK_Y_START, L"%2u%ls", Minutes, gsTimeStrings[1]);
-		mprintf(CLOCK_HOUR_X_START - 8, CLOCK_Y_START, L"%2u%ls", Hours,   gsTimeStrings[0]);
+		MPrint(CLOCK_MIN_X_START  - 5, CLOCK_Y_START, ST::format("{2d}{}", Minutes, gsTimeStrings[1]));
+		MPrint(CLOCK_HOUR_X_START - 8, CLOCK_Y_START, ST::format("{2d}{}", Hours,   gsTimeStrings[0]));
 	}
 	else
 	{
 		// show days and hours
 		UINT Hours = iTotalTime / 60 % 24;
 		UINT Days  = iTotalTime / (60 * 24);
-		mprintf(CLOCK_MIN_X_START  - 5, CLOCK_Y_START, L"%2u%ls", Hours, gsTimeStrings[0]);
-		mprintf(CLOCK_HOUR_X_START - 9, CLOCK_Y_START, L"%2u%ls", Days,  gsTimeStrings[3]);
+		MPrint(CLOCK_MIN_X_START  - 5, CLOCK_Y_START, ST::format("{2d}{}", Hours, gsTimeStrings[0]));
+		MPrint(CLOCK_HOUR_X_START - 9, CLOCK_Y_START, ST::format("{2d}{}", Days,  gsTimeStrings[3]));
 	}
 }
 

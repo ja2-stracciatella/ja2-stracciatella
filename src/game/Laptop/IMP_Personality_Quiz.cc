@@ -16,6 +16,8 @@
 #include "Button_System.h"
 #include "Font_Control.h"
 
+#include <string_theory/format>
+
 #include <algorithm>
 
 static BUTTON_PICS* giIMPPersonalityQuizButtonImage[2];
@@ -745,7 +747,7 @@ static void PrintQuizQuestionNumber(void)
 	SetFontAttributes(FONT12ARIAL, FONT_WHITE);
 
 	// print current question number
-	mprintf(LAPTOP_SCREEN_UL_X + 345, LAPTOP_SCREEN_WEB_UL_Y + 370, L"%d", giCurrentPersonalityQuizQuestion + 1);
+	MPrint(LAPTOP_SCREEN_UL_X + 345, LAPTOP_SCREEN_WEB_UL_Y + 370, ST::format("{}", giCurrentPersonalityQuizQuestion + 1));
 
 	// total number of questions
 	MPrint(LAPTOP_SCREEN_UL_X + 383, LAPTOP_SCREEN_WEB_UL_Y + 370, L"16");

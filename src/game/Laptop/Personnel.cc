@@ -38,6 +38,8 @@
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 
+#include <string_theory/format>
+
 #include <algorithm>
 #include <iterator>
 #include <stdexcept>
@@ -687,7 +689,7 @@ static void PrintStatWithDelta(UINT idx, INT8 stat, INT8 delta)
 		MPrint(sX, y, sString);
 	}
 	swprintf(sString, lengthof(sString), L"%d", stat);
-	mprintf(pers_stat_x, y, L"%ls:", str_stat_list[idx]);
+	MPrint(pers_stat_x, y, ST::format("{}:", str_stat_list[idx]));
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, y, sString);
 }
@@ -699,7 +701,7 @@ static void PrintStat(UINT16 stat, INT32 y, const wchar_t* text)
 	INT16 sX;
 	INT16 sY;
 
-	mprintf(pers_stat_x, y, L"%ls:", text);
+	MPrint(pers_stat_x, y, ST::format("{}:", text));
 	swprintf(sString, lengthof(sString), L"%d", stat);
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, y, sString);
@@ -730,7 +732,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 	{
 		wcslcpy(sString, pPOWStrings[1], lengthof(sString));
 	}
-	mprintf(pers_stat_x, STD_SCREEN_Y + pers_stat_y[0], L"%ls:", str_stat_health);
+	MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[0], ST::format("{}:", str_stat_health));
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, STD_SCREEN_Y + pers_stat_y[0], sString);
 
@@ -739,7 +741,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 		for (INT32 i = 1; i < 11; ++i)
 		{
 			const INT32 y = STD_SCREEN_Y + pers_stat_y[i];
-			mprintf(pers_stat_x, y, L"%ls:", str_stat_list[i]);
+			MPrint(pers_stat_x, y, ST::format("{}:", str_stat_list[i]));
 			const wchar_t* const na = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
 			FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, na, PERS_FONT, &sX, &sY);
 			MPrint(sX, y, na);
@@ -1356,7 +1358,7 @@ static void DisplayPersonnelSummary(void)
 
 	if (fCurrentTeamMode)
 	{
-		mprintf(PERS_CURR_TEAM_X, PERS_CURR_TEAM_Y, L"%ls ( %d )", pPersonelTeamStrings[0], GetNumberOfMercsDeadOrAliveOnPlayersTeam());
+		MPrint(PERS_CURR_TEAM_X, PERS_CURR_TEAM_Y, ST::format("{} ( {} )", pPersonelTeamStrings[0], GetNumberOfMercsDeadOrAliveOnPlayersTeam()));
 		DisplayCostOfCurrentTeam();
 
 		const wchar_t* const s = pPersonelTeamStrings[1];
@@ -1373,7 +1375,7 @@ static void DisplayPersonnelSummary(void)
 		FindFontCenterCoordinates(PERS_CURR_TEAM_X, 0, 65, 0, s, FONT10ARIAL, &sX, &sY);
 		MPrint(sX, PERS_CURR_TEAM_Y, s);
 
-		mprintf(PERS_CURR_TEAM_X, PERS_DEPART_TEAM_Y, L"%ls ( %d )", pPersonelTeamStrings[1], GetNumberOfPastMercsOnPlayersTeam());
+		MPrint(PERS_CURR_TEAM_X, PERS_DEPART_TEAM_Y, ST::format("{} ( {} )", pPersonelTeamStrings[1], GetNumberOfPastMercsOnPlayersTeam()));
 		DisplayStateOfPastTeamMembers();
 	}
 }
@@ -1889,7 +1891,7 @@ static void DisplayDepartedCharStats(MERCPROFILESTRUCT const& p, INT32 const iSt
 	INT8 const life = p.bLife;
 	INT8 const cur  = (iState == DEPARTED_DEAD ? 0 : life);
 	swprintf(sString, lengthof(sString), L"%d/%d", cur, life);
-	mprintf(pers_stat_x, STD_SCREEN_Y + pers_stat_y[0], L"%ls:", str_stat_health);
+	MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[0], ST::format("{}:", str_stat_health));
 	FindFontRightCoordinates(pers_stat_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, STD_SCREEN_Y + pers_stat_y[0], sString);
 

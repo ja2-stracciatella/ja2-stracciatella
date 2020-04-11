@@ -29,6 +29,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+
+
 #define MINIMAP_X_SIZE		88
 #define MINIMAP_Y_SIZE		44
 
@@ -262,8 +265,8 @@ ScreenID MapUtilScreenHandle()
 	}
 
 	SetFontAttributes(TINYFONT1, FONT_MCOLOR_DKGRAY);
-	mprintf(10, 340, L"Writing radar image %hs", zFilename2);
-	mprintf(10, 350, L"Using tileset %ls", gTilesets[giCurrentTilesetID].zName);
+	MPrint(10, 340, ST::format("Writing radar image {}", zFilename2));
+	MPrint(10, 350, ST::format("Using tileset {}", gTilesets[giCurrentTilesetID].zName));
 
 	InvalidateScreen( );
 

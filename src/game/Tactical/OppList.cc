@@ -54,6 +54,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+
 #include <algorithm>
 #include <iterator>
 
@@ -2736,7 +2738,7 @@ void DebugSoldierPage1()
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"SIDE:", s->bSide);
 
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y +=  h, L"STATUS FLAGS:");
-		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%x", s->uiStatusFlags);
+		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{x}", s->uiStatusFlags));
 
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"HUMAN:",    gTacticalStatus.Team[s->bTeam].bHuman);
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"APs:",      s->bActionPoints);
@@ -2807,9 +2809,9 @@ void DebugSoldierPage2()
 			opp_header = L"OppList A:";
 		}
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, opp_header);
-		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d %d %d %d %d %d",
+		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} {} {} {} {} {} {} {}",
 			opp_list[0], opp_list[1], opp_list[2], opp_list[3],
-			opp_list[4], opp_list[5], opp_list[6], opp_list[7]
+			opp_list[4], opp_list[5], opp_list[6], opp_list[7])
 		);
 
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Visible:",     s->bVisible);
@@ -2821,17 +2823,17 @@ void DebugSoldierPage2()
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Path Index:",  s->ubPathIndex);
 
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"First 3 Steps:");
-		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d",
+		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} {} {}",
 			s->ubPathingData[0],
 			s->ubPathingData[1],
-			s->ubPathingData[2]
+			s->ubPathingData[2])
 		);
 
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Next 3 Steps:");
-		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d",
+		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} {} {}",
 			s->ubPathingData[s->ubPathIndex],
 			s->ubPathingData[s->ubPathIndex + 1],
-			s->ubPathingData[s->ubPathIndex + 2]
+			s->ubPathingData[s->ubPathIndex + 2])
 		);
 
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"FlashInd:",    s->fFlashLocator);
@@ -2871,14 +2873,14 @@ void DebugSoldierPage2()
 
 		if (me->uiFlags & MAPELEMENT_MOVEMENT_RESERVED)
 		{
-			mprintf(  DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Merc: %d",  me->ubReservedSoldierID);
+			MPrint(  DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, ST::format("Merc: {}",  me->ubReservedSoldierID));
 			MPrint( DEBUG_PAGE_FIRST_COLUMN, y,      L"RESERVED MOVEMENT FLAG ON:");
 		}
 
 		LEVELNODE const* const node = GetCurInteractiveTile();
 		if (node != NULL)
 		{
-			mprintf(  DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Tile: %d", node->usIndex);
+			MPrint(  DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, ST::format("Tile: {}", node->usIndex));
 			MPrint( DEBUG_PAGE_FIRST_COLUMN, y,      L"ON INT TILE");
 		}
 
@@ -2952,10 +2954,10 @@ void DebugSoldierPage3()
 
 		if (gubWatchedLocPoints[s->ubID][0] > 0)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Watch %d/%d for %d pts",
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, ST::format("Watch {}/{} for {} pts",
 				gsWatchedLoc[s->ubID][0],
 				gbWatchedLocLevel[s->ubID][0],
-				gubWatchedLocPoints[s->ubID][0]
+				gubWatchedLocPoints[s->ubID][0])
 			);
 		}
 
@@ -2963,10 +2965,10 @@ void DebugSoldierPage3()
 
 		if (gubWatchedLocPoints[s->ubID][1] > 0)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Watch %d/%d for %d pts",
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, ST::format("Watch {}/{} for {} pts",
 				gsWatchedLoc[s->ubID][1],
 				gbWatchedLocLevel[s->ubID][1],
-				gubWatchedLocPoints[s->ubID][1]
+				gubWatchedLocPoints[s->ubID][1])
 			);
 		}
 
@@ -2974,10 +2976,10 @@ void DebugSoldierPage3()
 
 		if (gubWatchedLocPoints[s->ubID][2] > 0)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Watch %d/%d for %d pts",
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, ST::format("Watch {}/{} for {} pts",
 				gsWatchedLoc[s->ubID][2],
 				gbWatchedLocLevel[s->ubID][2],
-				gubWatchedLocPoints[s->ubID][2]
+				gubWatchedLocPoints[s->ubID][2])
 			);
 		}
 
@@ -3089,11 +3091,11 @@ static void WriteQuantityAndAttachments(OBJECTTYPE const* o, INT32 const y)
 				wcscat(str, temp);
 			}
 			wcscat(str, L")");
-			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, str);
+			MPrint(DEBUG_PAGE_SECOND_COLUMN, y, str);
 		}
 		else
 		{
-			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%d rounds", o->bStatus[0]);
+			MPrint(DEBUG_PAGE_SECOND_COLUMN, y, ST::format("{} rounds", o->bStatus[0]));
 		}
 	}
 	else
@@ -3120,12 +3122,12 @@ static void WriteQuantityAndAttachments(OBJECTTYPE const* o, INT32 const y)
 		if (o->ubNumberOfObjects > 1)
 		{
 			//everything
-			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%d%%  Qty:  %d%ls", o->bStatus[0], o->ubNumberOfObjects, attachments);
+			MPrint(DEBUG_PAGE_SECOND_COLUMN, y, ST::format("{}%  Qty:  {}{}", o->bStatus[0], o->ubNumberOfObjects, attachments));
 		}
 		else
 		{
 			//condition and attachments
-			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%d%%%ls", o->bStatus[0], attachments);
+			MPrint(DEBUG_PAGE_SECOND_COLUMN, y, ST::format("{}%{}", o->bStatus[0], attachments));
 		}
 	}
 }
@@ -3135,7 +3137,7 @@ static void PrintItem(INT32 const y, wchar_t const* const header, OBJECTTYPE con
 {
 	MHeader(DEBUG_PAGE_FIRST_COLUMN, y, header);
 	if (!o->usItem) return;
-	mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%ls", ShortItemNames[o->usItem]);
+	MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{}", ShortItemNames[o->usItem]));
 	WriteQuantityAndAttachments(o, y);
 }
 
@@ -3186,7 +3188,7 @@ void DebugSoldierPage4()
 				break;
 		}
 		if (sclass)
-			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%ls", sclass);
+			MPrint(DEBUG_PAGE_SECOND_COLUMN, y, ST::format("{}", sclass));
 
 		if (s->bTeam != OUR_TEAM)
 		{
@@ -3218,15 +3220,15 @@ void DebugSoldierPage4()
 			y += h;
 			if (node)
 			{
-				mprintf(DEBUG_PAGE_FIRST_COLUMN, y, L"%ls, %ls, REL EQUIP: %d, REL ATTR: %d",
+				MPrint(DEBUG_PAGE_FIRST_COLUMN, y, ST::format("{}, {}, REL EQUIP: {}, REL ATTR: {}",
 					orders, attitude,
 					node->pBasicPlacement->bRelativeEquipmentLevel,
-					node->pBasicPlacement->bRelativeAttributeLevel
+					node->pBasicPlacement->bRelativeAttributeLevel)
 				);
 			}
 			else
 			{
-				mprintf(DEBUG_PAGE_FIRST_COLUMN, y, L"%ls, %ls", orders, attitude);
+				MPrint(DEBUG_PAGE_FIRST_COLUMN, y, ST::format("{}, {}", orders, attitude));
 			}
 		}
 

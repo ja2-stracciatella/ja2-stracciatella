@@ -28,6 +28,8 @@
 #include "Video.h"
 #include "UILayout.h"
 
+#include <string_theory/format>
+
 
 BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
 UINT16 usCurrentMode;
@@ -623,7 +625,7 @@ void RenderDoorEditingWindow()
 {
 	InvalidateRegion( 200, 130, 440, 230 );
 	SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-	mprintf( 210, 140, L"Editing lock attributes at map index %d.", iDoorMapIndex );
+	MPrint( 210, 140, ST::format("Editing lock attributes at map index {}.", iDoorMapIndex) );
 
 	SetFontForeground( FONT_GRAY2 );
 	MPrint(238, 160, L"Lock ID");

@@ -11,6 +11,8 @@
 #include "Video.h"
 #include "VSurface.h"
 
+#include <string_theory/format>
+
 
 #define SCURSOR(name)         { name, NULL, 0,                   0 }
 #define ECURSOR()             { NULL, NULL, USE_OUTLINE_BLITTER, 0 }
@@ -1379,7 +1381,7 @@ static void DrawMouseText(void)
 				SetFontShadow(DEFAULT_SHADOW);
 			}
 
-			mprintf(sX, sY, L"%d", gsCurrentActionPoints);
+			MPrint(sX, sY, ST::format("{}", gsCurrentActionPoints));
 
 			SetFontShadow(DEFAULT_SHADOW);
 
@@ -1400,7 +1402,7 @@ static void DrawMouseText(void)
 			FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, pStr, TINYFONT1, &sX, &sY);
 
 			SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-			mprintf(sX + 10, sY - 10, L"x%d", gpItemPointer->ubNumberOfObjects);
+			MPrint(sX + 10, sY - 10, ST::format("x{}", gpItemPointer->ubNumberOfObjects));
 
 			SetFontDestBuffer(FRAME_BUFFER);
 		}

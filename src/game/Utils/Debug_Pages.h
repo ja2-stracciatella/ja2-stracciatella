@@ -1,7 +1,9 @@
-#include "Font.h"
-
 #ifndef __DEBUG_PAGES_H
 #define __DEBUG_PAGES_H
+
+#include "Font.h"
+#include "SGPStrings.h"
+
 
 #define DEBUG_PAGE_HEADER_COLOR FONT_MCOLOR_BLACK<<8 | FONT_MCOLOR_LTGREEN
 #define DEBUG_PAGE_TEXT_COLOR FONT_MCOLOR_BLACK<<8 | FONT_MCOLOR_LTGRAY2
@@ -15,7 +17,7 @@
 #define DEBUG_PAGE_SECOND_COLUMN 300
 #define DEBUG_PAGE_LABEL_WIDTH 150
 
-#define MPageHeader(...) SetFont(DEBUG_PAGE_FONT); SetFontColors(DEBUG_PAGE_HEADER_COLOR); mprintf(DEBUG_PAGE_FIRST_COLUMN, DEBUG_PAGE_SCREEN_OFFSET_Y, __VA_ARGS__); SetFontColors(DEBUG_PAGE_TEXT_COLOR);
+#define MPageHeader(...) SetFont(DEBUG_PAGE_FONT); SetFontColors(DEBUG_PAGE_HEADER_COLOR); MPrint(DEBUG_PAGE_FIRST_COLUMN, DEBUG_PAGE_SCREEN_OFFSET_Y, st_format_printf(__VA_ARGS__)); SetFontColors(DEBUG_PAGE_TEXT_COLOR);
 
 void MHeader(INT32 const x, INT32 const y, wchar_t const* const str);
 void MPrintStat(INT32 const x, INT32 const y, wchar_t const* const header, INT32 const val);

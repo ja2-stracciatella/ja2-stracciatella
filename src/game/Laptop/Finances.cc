@@ -24,6 +24,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+
+
 #define FINANCE_HEADER_SIZE 4
 #define FINANCE_RECORD_SIZE (1 + 1 + 4 + 4 + 4)
 
@@ -870,7 +873,7 @@ static void ProcessTransactionString(wchar_t pString[], const size_t Length, con
 static void DisplayFinancePageNumberAndDateRange(void)
 {
 	SetFontAttributes(FINANCE_TEXT_FONT, FONT_BLACK, NO_SHADOW);
-	mprintf(PAGE_NUMBER_X, PAGE_NUMBER_Y, L"%ls %d / %d", pFinanceHeaders[5], iCurrentPage + 1, guiLastPageInRecordsList + 2);
+	MPrint(PAGE_NUMBER_X, PAGE_NUMBER_Y, ST::format("{} {} / {}", pFinanceHeaders[5], iCurrentPage + 1, guiLastPageInRecordsList + 2));
 	SetFontShadow(DEFAULT_SHADOW);
 }
 

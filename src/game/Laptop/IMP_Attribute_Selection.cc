@@ -20,6 +20,9 @@
 #include "ContentManager.h"
 #include "policy/GamePolicy.h"
 
+#include <string_theory/format>
+
+
 // width of the slider bar region
 #define BAR_WIDTH 423 - 197
 
@@ -447,7 +450,7 @@ void RenderAttributeBoxes(void)
 
 		sX += LAPTOP_SCREEN_UL_X;
 		sY += LAPTOP_SCREEN_WEB_UL_Y;
-		mprintf(sX + 13, sY + 3, L"%d", val);
+		MPrint(sX + 13, sY + 3, ST::format("{}", val));
 	}
 
 	SetFontShadow(DEFAULT_SHADOW);
@@ -750,7 +753,7 @@ void DrawBonusPointsRemaining(void)
 	if (fReviewStats) return;
 
 	SetFontAttributes(FONT12ARIAL, FONT_WHITE);
-	mprintf(LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, L"%d", iCurrentBonusPoints);
+	MPrint(LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, ST::format("{}", iCurrentBonusPoints));
 	InvalidateRegion(LAPTOP_SCREEN_UL_X + 425, LAPTOP_SCREEN_WEB_UL_Y + 51, LAPTOP_SCREEN_UL_X + 475, LAPTOP_SCREEN_WEB_UL_Y + 71);
 }
 

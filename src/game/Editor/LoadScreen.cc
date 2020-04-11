@@ -1,5 +1,3 @@
-#include <cstdarg>
-
 #include "Button_System.h"
 #include "Directories.h"
 #include "FileMan.h"
@@ -55,6 +53,11 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+
+#include <string_theory/format>
+
+#include <cstdarg>
+
 
 static BOOLEAN gfErrorCatch            = FALSE;
 static wchar_t gzErrorCatchString[256] = L"";
@@ -332,7 +335,7 @@ ScreenID LoadSaveScreenHandle(void)
 			SetFontForeground( FONT_BLACK );
 			SetFontBackground( 142 );
 		}
-		mprintf(186, 73 + (x - iTopFileShown) * 15, L"%hs", FListNode->filename);
+		MPrint(186, 73 + (x - iTopFileShown) * 15, ST::format("{}", FListNode->filename));
 		FListNode = FListNode->pNext;
 	}
 

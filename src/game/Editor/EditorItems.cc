@@ -37,6 +37,8 @@
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 
+#include <string_theory/format>
+
 
 #define NUMBER_TRIGGERS			27
 #define PRESSURE_ACTION_ID	(NUMBER_TRIGGERS - 1)
@@ -538,11 +540,11 @@ void RenderEditorItemsInfo()
 		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 		if (n_items == quantity)
 		{
-			mprintf(x + 12, y + 4, L"%d", n_items);
+			MPrint(x + 12, y + 4, ST::format("{}", n_items));
 		}
 		else
 		{
-			mprintf(x + 12, y + 4, L"%d(%d)", n_items, quantity);
+			MPrint(x + 12, y + 4, ST::format("{}({})", n_items, quantity));
 		}
 	}
 }
