@@ -55,6 +55,7 @@
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 #include <stdexcept>
@@ -335,7 +336,7 @@ static UINT8       gubContractLength;
 static BOOLEAN     gfBuyEquipment;
 static INT32       giContractAmount  = 0;
 static FACETYPE*   giMercFaceIndex;
-static wchar_t     gsTalkingMercText[TEXT_POPUP_STRING_SIZE];
+static ST::string  gsTalkingMercText;
 static UINT32      guiTimeThatMercStartedTalking;
 static UINT32      guiLastHandleMercTime;
 static BOOLEAN     gfFirstTimeInContactScreen;
@@ -425,7 +426,7 @@ void EnterInitAimMembers()
 }
 
 
-static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const ST::string& text, INT16 x, GUI_CALLBACK click)
 {
 	GUIButtonRef const btn = CreateIconAndTextButton
 	(
@@ -771,8 +772,7 @@ void RenderAIMMembers()
 
 void DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, SGPFont const font, UINT8 ubColor)
 {
-	wchar_t		sStr[10];
-	swprintf(sStr, lengthof(sStr), L"%d", iNumber);
+	ST::string sStr = ST::format("{}", iNumber);
 	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, font, ubColor, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 }
 
@@ -816,7 +816,7 @@ static void SelectFaceMovementRegionCallBack(MOUSE_REGION* pRegion, INT32 iReaso
 }
 
 
-static void LoadMercBioInfo(UINT8 ubIndex, wchar_t* pInfoString, wchar_t* pAddInfo);
+static void LoadMercBioInfo(UINT8 ubIndex, ST::string& pInfoString, ST::string& pAddInfo);
 
 
 static void UpdateMercInfo(void)
@@ -829,12 +829,11 @@ static void UpdateMercInfo(void)
 	//if medical deposit is required
 	if( gMercProfiles[gbCurrentSoldier].bMedicalDeposit )
 	{
-		wchar_t	zTemp[40];
-		wchar_t	sMedicalString[40];
+		ST::string zTemp;
+		ST::string sMedicalString;
 
-		ST::wchar_buffer wstr = SPrintMoney(gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount).to_wchar();
-		wcslcpy(zTemp, wstr.c_str(), lengthof(zTemp));
-		swprintf( sMedicalString, lengthof(sMedicalString), L"%ls %ls", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ] );
+		zTemp = SPrintMoney(gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount);
+		sMedicalString = ST::format("{} {}", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ]);
 
 		// If the string will be displayed in more then 2 lines, recenter the string
 		if (DisplayWrappedString(0, 0, AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, sMedicalString, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED | DONT_DISPLAY_TEXT) / GetFontHeight(AIM_FONT12ARIAL) > 2)
@@ -845,8 +844,8 @@ static void UpdateMercInfo(void)
 			DisplayWrappedString(AIM_MEDICAL_DEPOSIT_X, AIM_MEDICAL_DEPOSIT_Y, AIM_MEDICAL_DEPOSIT_WIDTH, 2, AIM_FONT12ARIAL, AIM_M_COLOR_DYNAMIC_TEXT, sMedicalString, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
-	wchar_t MercInfoString[SIZE_MERC_BIO_INFO];
-	wchar_t AdditionalInfoString[SIZE_MERC_BIO_INFO];
+	ST::string MercInfoString;
+	ST::string AdditionalInfoString;
 	LoadMercBioInfo( gbCurrentSoldier, MercInfoString, AdditionalInfoString);
 	if( MercInfoString[0] != 0)
 	{
@@ -860,13 +859,11 @@ static void UpdateMercInfo(void)
 }
 
 
-static void LoadMercBioInfo(UINT8 const ubIndex, wchar_t* const pInfoString, wchar_t* const pAddInfo)
+static void LoadMercBioInfo(UINT8 ubIndex, ST::string& pInfoString, ST::string& pAddInfo)
 {
 	UINT32 uiStartSeekAmount = (SIZE_MERC_BIO_INFO + SIZE_MERC_ADDITIONAL_INFO) * ubIndex;
-	ST::wchar_buffer wstr = GCM->loadEncryptedString(MERCBIOSFILENAME, uiStartSeekAmount, SIZE_MERC_BIO_INFO).to_wchar();
-	wcslcpy(pInfoString, wstr.c_str(), SIZE_MERC_BIO_INFO);
-	wstr = GCM->loadEncryptedString(MERCBIOSFILENAME, uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO).to_wchar();
-	wcslcpy(pAddInfo, wstr.c_str(), SIZE_MERC_ADDITIONAL_INFO);
+	pInfoString = GCM->loadEncryptedString(MERCBIOSFILENAME, uiStartSeekAmount, SIZE_MERC_BIO_INFO);
+	pAddInfo = GCM->loadEncryptedString(MERCBIOSFILENAME, uiStartSeekAmount + SIZE_MERC_BIO_INFO, SIZE_MERC_ADDITIONAL_INFO);
 }
 
 
@@ -902,13 +899,12 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		// how many there are
 		if (p.bInvNumber[i] > 1)
 		{
-			wchar_t buf[32];
-			swprintf(buf, lengthof(buf), L"x%d", p.bInvNumber[i]);
+			ST::string buf = ST::format("x{}", p.bInvNumber[i]);
 			DrawTextToScreen(buf, x - 1, y + 20, AIM_MEMBER_WEAPON_NAME_WIDTH, AIM_M_FONT_DYNAMIC_TEXT, AIM_M_WEAPON_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 		}
 
 		// If this will only be a single line, center it in the box
-		wchar_t const* const item_name = ShortItemNames[usItem];
+		ST::string item_name = ShortItemNames[usItem];
 		UINT16  const        tx        = x - 1;
 		UINT16  const        ty        = AIM_MEMBER_WEAPON_NAME_Y;
 		UINT16  const        tw        = AIM_MEMBER_WEAPON_NAME_WIDTH;
@@ -994,7 +990,7 @@ try
 	AutoSGPVObject face(LoadBigPortrait(p));
 
 	BOOLEAN                  shaded;
-	wchar_t           const* text;
+	ST::string text;
 	if (IsMercDead(p))
 	{
 		// the merc is dead, so shade the face red
@@ -1024,7 +1020,7 @@ try
 	else
 	{
 		shaded = FALSE;
-		text   = NULL;
+		text   = ST::null;
 	}
 
 	BltVideoObject(FRAME_BUFFER, face, 0, FACE_X, FACE_Y);
@@ -1042,10 +1038,10 @@ try
 catch (...) { /* XXX ignore */ }
 
 
-static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wchar_t* pString);
+static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const ST::string& pString);
 
 
-static void DrawStatColoured(const UINT16 x, const UINT16 y, const wchar_t* const stat, const INT32 val, const UINT8 colour)
+static void DrawStatColoured(UINT16 x, UINT16 y, const ST::string stat, INT32 val, UINT8 colour)
 {
 	DrawTextToScreen(stat, x, y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	DisplayDots(x, y, x + STAT_NAME_WIDTH, stat);
@@ -1053,7 +1049,7 @@ static void DrawStatColoured(const UINT16 x, const UINT16 y, const wchar_t* cons
 }
 
 
-static void DrawStat(const UINT16 x, const UINT16 y, const wchar_t* const stat, const INT32 val)
+static void DrawStat(UINT16 x, UINT16 y, const ST::string& stat, INT32 val)
 {
 	const UINT8 colour = (val >= 80 ? HIGH_STAT_COLOR : (val >= 50 ? MED_STAT_COLOR : LOW_STAT_COLOR));
 	DrawStatColoured(x, y, stat, val, colour);
@@ -1085,7 +1081,7 @@ static void DisplayMercStats(MERCPROFILESTRUCT const& p)
 
 
 //displays the dots between the stats and the stat name
-static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wchar_t* pString)
+static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const ST::string& pString)
 {
 	UINT16 usStringLength = StringPixLength(pString, AIM_M_FONT_STATIC_TEXT);
 	INT16  i;
@@ -1094,7 +1090,7 @@ static void DisplayDots(UINT16 usNameX, UINT16 usNameY, UINT16 usStatX, const wc
 	usPosX = usStatX;
 	for(i=usNameX + usStringLength; i <= usPosX; usPosX-=7)
 	{
-		DrawTextToScreen(L".", usPosX, usNameY, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(".", usPosX, usNameY, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 }
 
@@ -1138,7 +1134,7 @@ static void BtnBuyEquipmentButtonCallback(GUI_BUTTON *btn, INT32 reason)
 static INT8    AimMemberHireMerc(void);
 static BOOLEAN CanMercBeHired(void);
 static void    EnableDisableCurrentVideoConferenceButtons(BOOLEAN fEnable);
-static void    CreateAimPopUpBox(wchar_t const* sString1, wchar_t const* sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData);
+static void    CreateAimPopUpBox(const ST::string& sString1, const ST::string& sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData);
 
 
 //Transfer funds button callback
@@ -1163,7 +1159,7 @@ static void BtnAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 				if (AimMemberHireMerc())
 				{
 					// if merc was hired
-					CreateAimPopUpBox(AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_SUCCESFUL], NULL, AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
+					CreateAimPopUpBox(AimPopUpText[AIM_MEMBER_FUNDS_TRANSFER_SUCCESFUL], ST::null, AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
 					DelayMercSpeech( gbCurrentSoldier, QUOTE_CONTRACT_ACCEPTANCE, 750, TRUE, FALSE );
 
 					//Disable the buttons behind the message box
@@ -1282,7 +1278,7 @@ static void DisplayMercsVideoFace(void);
 
 static void DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const& p)
 {
-	wchar_t sMercName[128];
+	ST::string sMercName;
 
 	if (gubVideoConferencingMode == AIM_VIDEO_NOT_DISPLAYED_MODE) return;
 	if (gubVideoConferencingMode == AIM_VIDEO_POPUP_MODE)         return;
@@ -1292,12 +1288,12 @@ static void DisplayVideoConferencingDisplay(MERCPROFILESTRUCT const& p)
 	//Title & Name
 	if( gubVideoConferencingMode == AIM_VIDEO_INIT_MODE)
 	{
-		wcslcpy(sMercName, VideoConfercingText[AIM_MEMBER_CONNECTING], lengthof(sMercName));
+		sMercName = VideoConfercingText[AIM_MEMBER_CONNECTING];
 		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 	else
 	{
-		swprintf(sMercName, lengthof(sMercName), L"%ls %ls", VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], p.zName);
+		sMercName = ST::format("{} {}", VideoConfercingText[AIM_MEMBER_VIDEO_CONF_WITH], p.zName);
 		DrawTextToScreen(sMercName, AIM_MEMBER_VIDEO_NAME_X, AIM_MEMBER_VIDEO_NAME_Y, 0, FONT12ARIAL, AIM_M_VIDEO_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -1421,18 +1417,16 @@ static void DisplayMercChargeAmount(void)
 		giContractAmount = amount;
 	}
 
-	wchar_t wDollarTemp[50];
-	ST::wchar_buffer wstr = SPrintMoney(giContractAmount).to_wchar();
-	wcslcpy(wDollarTemp, wstr.c_str(), lengthof(wDollarTemp));
+	ST::string wDollarTemp = SPrintMoney(giContractAmount);
 
-	wchar_t wTemp[50];
+	ST::string wTemp;
 	if (p.bMedicalDeposit)
 	{
-		swprintf(wTemp, lengthof(wTemp), L"%ls %ls", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL]);
+		wTemp = ST::format("{} {}", wDollarTemp, VideoConfercingText[AIM_MEMBER_WITH_MEDICAL]);
 	}
 	else
 	{
-		wcslcpy(wTemp, wDollarTemp, lengthof(wTemp));
+		wTemp = wDollarTemp;
 	}
 	DrawTextToScreen(wTemp, AIM_CONTRACT_CHARGE_AMOUNNT_X + 1, AIM_CONTRACT_CHARGE_AMOUNNT_Y + 3, 0, AIM_M_VIDEO_CONTRACT_AMOUNT_FONT, AIM_M_VIDEO_CONTRACT_AMOUNT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 }
@@ -1440,23 +1434,23 @@ static void DisplayMercChargeAmount(void)
 
 static UINT16  usPopUpBoxPosX;
 static UINT16  usPopUpBoxPosY;
-static wchar_t sPopUpString1[400];
-static wchar_t sPopUpString2[400];
+static ST::string sPopUpString1;
+static ST::string sPopUpString2;
 static BOOLEAN fPopUpBoxActive = FALSE;
 
 
 static void BtnPopUpOkButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static void CreateAimPopUpBox(wchar_t const* const sString1, wchar_t const* const sString2, UINT16 const usPosX, UINT16 const usPosY, UINT8 const ubData)
+static void CreateAimPopUpBox(const ST::string& sString1, const ST::string& sString2, UINT16 usPosX, UINT16 usPosY, UINT8 ubData)
 {
 	if (fPopUpBoxActive) throw std::logic_error("AIM popup box already active");
 
 	//Disable the 'X' to close the pop upi video
 	DisableButton(giXToCloseVideoConfButton);
 
-	wcscpy(sPopUpString1, sString1 ? sString1 : L"");
-	wcscpy(sPopUpString2, sString2 ? sString2 : L"");
+	sPopUpString1 = sString1;
+	sPopUpString2 = sString2;
 
 	usPopUpBoxPosX = usPosX;
 	usPopUpBoxPosY = usPosY;
@@ -1500,8 +1494,8 @@ static BOOLEAN DisplayAimPopUpBox()
 	SetFontShadow(AIM_M_VIDEO_NAME_SHADOWCOLOR);
 
 	y += AIM_POPUP_BOX_STRING1_Y;
-	if (sPopUpString1[0] != L'\0') y += DisplayWrappedString(usPopUpBoxPosX, y,     AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString1, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
-	if (sPopUpString2[0] != L'\0')      DisplayWrappedString(usPopUpBoxPosX, y + 4, AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString2, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	if (sPopUpString1[0] != '\0') y += DisplayWrappedString(usPopUpBoxPosX, y,     AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString1, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+	if (sPopUpString2[0] != '\0')      DisplayWrappedString(usPopUpBoxPosX, y + 4, AIM_POPUP_BOX_WIDTH, 2, AIM_POPUP_BOX_FONT, AIM_POPUP_BOX_COLOR, sPopUpString2, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 	SetFontShadow(DEFAULT_SHADOW);
 	InvalidateRegion(LAPTOP_SCREEN_UL_X,LAPTOP_SCREEN_WEB_UL_Y,LAPTOP_SCREEN_LR_X,LAPTOP_SCREEN_WEB_LR_Y);
@@ -1613,7 +1607,7 @@ static void BtnAnsweringMachineButtonCallback(GUI_BUTTON *btn, INT32 reason)
 
 			//Display a message box displaying a messsage that the message was recorded
 			//DoLapTopMessageBox(10, AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-			CreateAimPopUpBox(L" ", AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
+			CreateAimPopUpBox(" ", AimPopUpText[AIM_MEMBER_MESSAGE_RECORDED], AIM_POPUP_BOX_X, AIM_POPUP_BOX_Y, AIM_POPUP_BOX_SUCCESS);
 
 
 			giAnsweringMachineButton[1]->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
@@ -1751,12 +1745,12 @@ static BOOLEAN DisplayTalkingMercFaceForVideoPopUp(const FACETYPE* const face)
 }
 
 
-void DisplayTextForMercFaceVideoPopUp(const wchar_t* const pString)
+void DisplayTextForMercFaceVideoPopUp(const ST::string& str)
 {
-	swprintf(gsTalkingMercText, lengthof(gsTalkingMercText), L"\"%ls\"", pString);
+	gsTalkingMercText = ST::format("\"{}\"", str);
 
 	//Set the minimum time for the dialogue text to be present
-	usAimMercSpeechDuration = static_cast<UINT16>(wcslen( gsTalkingMercText ) * AIM_TEXT_SPEECH_MODIFIER);
+	usAimMercSpeechDuration = static_cast<UINT16>(gsTalkingMercText.to_utf32().size() * AIM_TEXT_SPEECH_MODIFIER);
 
 	if( usAimMercSpeechDuration < MINIMUM_TALKING_TIME_FOR_MERC )
 		usAimMercSpeechDuration = MINIMUM_TALKING_TIME_FOR_MERC;
@@ -2296,7 +2290,7 @@ static void BtnXToCloseVideoConfButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static GUIButtonRef MakeButtonVideo(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
+static GUIButtonRef MakeButtonVideo(BUTTON_PICS* img, const ST::string& text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
 	const INT16 txt_col    = AIM_M_VIDEO_NAME_COLOR;
 	const INT16 shadow_col = AIM_M_VIDEO_NAME_SHADOWCOLOR;
@@ -2912,26 +2906,24 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime()
 	if (h.fHaveDisplayedPopUpInLaptop) return;
 
 	// Calculate the approximate hour the mercs will arrive at
-	wchar_t      time_string[16];
+	ST::string time_string;
 	UINT32 const hour = h.uiArrivalTime % 1440 / 60;
-	swprintf(time_string, lengthof(time_string), L"%02d:00", hour);
+	time_string = ST::format("{02d}:00", hour);
 
-	wchar_t sector_string[512];
-	ST::wchar_buffer wstr = GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, FALSE).to_wchar();
-	wcslcpy(sector_string, wstr.c_str(), lengthof(sector_string));
+	ST::string sector_string = GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, FALSE);
 
-	wchar_t              msg[512];
-	wchar_t const* const nickname = GetProfile(h.iIdOfMerc).zNickname;
+	ST::string msg;
+	ST::string nickname = GetProfile(h.iIdOfMerc).zNickname;
 	UINT32         const day      = h.uiArrivalTime / 1440;
 
 	// German version has a different argument order
 	if(isGermanVersion())
 	{
-		swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, day, time_string, sector_string);
+		msg = st_format_printf(pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, day, time_string, sector_string);
 	}
 	else
 	{
-		swprintf(msg, lengthof(msg), pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, sector_string, day, time_string);
+		msg = st_format_printf(pMessageStrings[MSG_JUST_HIRED_MERC_ARRIVAL_LOCATION_POPUP], nickname, sector_string, day, time_string);
 	}
 
 	DoLapTopMessageBox(MSG_BOX_LAPTOP_DEFAULT, msg, LAPTOP_SCREEN, MSG_BOX_FLAG_OK, DisplayPopUpBoxExplainingMercArrivalLocationAndTimeCallBack);
