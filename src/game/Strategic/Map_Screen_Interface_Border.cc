@@ -24,6 +24,9 @@
 #include "Video.h"
 #include "UILayout.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 
 #define MAP_BORDER_FILE INTERFACEDIR "/mbs.sti"
 #define BTN_TOWN_X      (STD_SCREEN_X + 299)
@@ -207,7 +210,7 @@ void RenderMapBorderEtaPopUp( void )
 }
 
 
-static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const wchar_t* help)
+static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const ST::string& help)
 {
 	BUTTON_PICS* const img = LoadButtonImage(INTERFACEDIR "/map_border_buttons.sti", gfx, gfx + 9);
 	giMapBorderButtonsImage[idx] = img;
@@ -219,7 +222,7 @@ static void MakeButton(UINT idx, UINT gfx, INT16 x, GUI_CALLBACK click, const wc
 
 
 #if 0
-static void MakeButtonScroll(UINT idx, INT32 gray, INT32 normal, INT16 x, INT16 y, GUI_CALLBACK click, const wchar_t* help)
+static void MakeButtonScroll(UINT idx, INT32 gray, INT32 normal, INT16 x, INT16 y, GUI_CALLBACK click, const ST::string& help)
 {
 	INT32 btn = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", gray, normal, -1, normal + 2, -1, x, y, MSYS_PRIORITY_HIGH, click);
 	guiMapBorderScrollButtons[idx] = btn;
@@ -613,7 +616,7 @@ void ToggleShowMilitiaMode( void )
 		// check if player has any militia
 		if (!DoesPlayerHaveAnyMilitia())
 		{
-			const wchar_t *pwString = NULL;
+			ST::string pwString;
 
 			// no - so put up a message explaining how it works
 
@@ -937,8 +940,7 @@ void CreateMouseRegionsForLevelMarkers(void)
 
 		MSYS_SetRegionUserData(r, 0, sCounter);
 
-		wchar_t sString[64];
-		swprintf(sString, lengthof(sString), L"%ls %d", zMarksMapScreenText[0], sCounter + 1);
+		ST::string sString = ST::format("{} {}", zMarksMapScreenText[0], sCounter + 1);
 		r->SetFastHelpText(sString);
 	}
 }
