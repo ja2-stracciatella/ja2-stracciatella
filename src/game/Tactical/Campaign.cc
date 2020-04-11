@@ -29,6 +29,10 @@
 #include "EMail.h"
 #include "Logger.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
+
 // Convert hired mercs' stats subpoint changes into actual point changes where warranted
 static void ProcessUpdateStats(MERCPROFILESTRUCT&, SOLDIERTYPE*);
 
@@ -592,8 +596,7 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 							if (!MayExecute()) return true;
 
 							// Tell player about stat increase
-							wchar_t buf[128];
-							BuildStatChangeString(buf, lengthof(buf), soldier_.name, change_type_increase_, pts_changed_, stat_);
+							ST::string buf = BuildStatChangeString(soldier_.name, change_type_increase_, pts_changed_, stat_);
 							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, buf);
 							return false;
 						}
@@ -609,10 +612,8 @@ static void ChangeStat(MERCPROFILESTRUCT& p, SOLDIERTYPE* const pSoldier, StatKi
 			}
 			else
 			{
-				wchar_t wTempString[ 128 ];
-
 				// tell player about it
-				BuildStatChangeString( wTempString, lengthof(wTempString), pSoldier->name, fChangeTypeIncrease, sPtsChanged, ubStat );
+				ST::string wTempString = BuildStatChangeString(pSoldier->name, fChangeTypeIncrease, sPtsChanged, ubStat);
 				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, wTempString );
 			}
 
@@ -1344,7 +1345,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 }
 
 
-void BuildStatChangeString(wchar_t* const wString, size_t const Length, wchar_t const* const wName, BOOLEAN const fIncrease, INT16 const sPtsChanged, StatKind const ubStat)
+ST::string BuildStatChangeString(const ST::string& name, BOOLEAN fIncrease, INT16 sPtsChanged, StatKind ubStat)
 {
 	UINT8 ubStringIndex;
 	UINT16 absPointsChanged = ABS( (int)sPtsChanged );
@@ -1372,7 +1373,7 @@ void BuildStatChangeString(wchar_t* const wString, size_t const Length, wchar_t 
 		ubStringIndex += 2;
 	}
 
-	swprintf(wString, Length, L"%ls %ls %d %ls %ls", wName,
+	return ST::format("{} {} {} {} {}", name,
 			sPreStatBuildString[fIncrease ? 1 : 0], absPointsChanged,
 			sPreStatBuildString[ubStringIndex],
 			sStatGainStrings[ubStat - FIRST_CHANGEABLE_STAT]);
