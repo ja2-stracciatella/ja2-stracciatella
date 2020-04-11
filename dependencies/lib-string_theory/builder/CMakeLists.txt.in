@@ -9,14 +9,12 @@ project(builder NONE)
 
 include(ExternalProject)
 externalproject_add(string_theory
-    URL "https://github.com/zrax/string_theory/archive/2.4.tar.gz"
-    URL_MD5 "bc6308290a73587610157afc4c3b9d3a"
+    URL "https://github.com/zrax/string_theory/archive/3.1.tar.gz"
+    URL_MD5 "b4cade32fb24f5e62e27d3e3135bcdb6"
     CMAKE_ARGS
         "-C@CACHE_FILE@"
         "-DCMAKE_INSTALL_PREFIX=@INSTALL_PREFIX@"
-        -DST_CXX_STANDARD:STRING=11
         -DST_ENABLE_STL_FILESYSTEM:BOOL=OFF
-        -DST_BUILD_STATIC:BOOL=ON
         -DST_BUILD_TESTS:BOOL=OFF
     BUILD_COMMAND "${CMAKE_COMMAND}" --build . --config "@CMAKE_BUILD_TYPE@"
     INSTALL_COMMAND "${CMAKE_COMMAND}" --build . --config "@CMAKE_BUILD_TYPE@" --target install
