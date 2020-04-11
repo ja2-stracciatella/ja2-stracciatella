@@ -90,6 +90,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 
 static const INT16 sBasementEnterGridNos[] = { 13362, 13363, 13364, 13365, 13525, 13524 };
 static const INT16 sBasementExitGridNos[] = { 8047, 8207, 8208, 8048, 7888, 7728, 7727, 7567 };
@@ -638,7 +641,7 @@ void RenderTalkingMenu()
 
 	// Render name
 	SetFontAttributes(MILITARYFONT1, tp->fOnName ? FONT_WHITE : 33);
-	wchar_t const* const name = GetProfile(pid).zNickname;
+	ST::string name = GetProfile(pid).zNickname;
 	INT16 sFontX;
 	INT16 sFontY;
 	FindFontCenterCoordinates(tp->sX + TALK_PANEL_NAME_X, tp->sY + TALK_PANEL_NAME_Y, TALK_PANEL_NAME_WIDTH, TALK_PANEL_NAME_HEIGHT, name, MILITARYFONT1, &sFontX, &sFontY);
@@ -738,8 +741,8 @@ void RenderTalkingMenu()
 			SetFontShadow(MILITARY_SHADOW);
 		}
 
-		wchar_t const* str;
-		wchar_t        buf[512];
+		ST::string str;
+		ST::string buf;
 		if (cnt == 4 && IsMercADealer(pid))
 		{
 			str = zDealerStrings[GetTypeOfArmsDealer(GetArmsDealerIDFromMercID(pid))];
@@ -752,7 +755,7 @@ void RenderTalkingMenu()
 			pid                  != NO_PROFILE)
 		{
 			UINT8 const desire = CalcDesireToTalk(pid, gubSrcSoldierProfile, ubTalkMenuApproachIDs[cnt]);
-			swprintf(buf, lengthof(buf), L"%ls (%d)", zTalkMenuStrings[cnt], desire);
+			buf = ST::format("{} ({})", zTalkMenuStrings[cnt], desire);
 			str = buf;
 		}
 		else
@@ -1560,7 +1563,7 @@ static void CarmenLeavesSectorCallback(void);
 
 void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum )
 {
-	//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Handling %ls, action %d at %ld", gMercProfiles[ubTargetNPC].zNickname, usActionCode, GetJA2Clock());
+	//ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("Handling {}, action {} at {}", gMercProfiles[ubTargetNPC].zNickname, usActionCode, GetJA2Clock());
 
 	// Switch on action code!
 	if (usActionCode > NPC_ACTION_TURN_TO_FACE_NEAREST_MERC && usActionCode < NPC_ACTION_LAST_TURN_TO_FACE_PROFILE)
@@ -4163,7 +4166,8 @@ static void DialogueMessageBoxCallBack(MessageBoxReturnValue);
 static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 {
 	INT32   iTemp;
-	wchar_t zTemp[256], zTemp2[256];
+	ST::string zTemp;
+	ST::string zTemp2;
 
 	gusDialogueMessageBoxType = usMessageBoxType;
 	switch( gusDialogueMessageBoxType )
@@ -4172,19 +4176,19 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 			if ((ubProfileID == JOHN && gMercProfiles[MARY].bMercStatus != MERC_IS_DEAD) ||
 				(ubProfileID == MARY && gMercProfiles[JOHN].bMercStatus != MERC_IS_DEAD) )
 			{
-				swprintf(zTemp, lengthof(zTemp), gzLateLocalizedString[STR_LATE_57]);
+				zTemp = gzLateLocalizedString[STR_LATE_57];
 			}
 			else
 			{
-				swprintf( zTemp, lengthof(zTemp), TacticalStr[ ESCORT_PROMPT ], gMercProfiles[ubProfileID].zNickname );
+				zTemp = st_format_printf(TacticalStr[ ESCORT_PROMPT ], gMercProfiles[ubProfileID].zNickname);
 			}
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		case NPC_ACTION_ASK_ABOUT_PAYING_RPC:
 		case NPC_ACTION_ASK_ABOUT_PAYING_RPC_WITH_DAILY_SALARY:
 		case NPC_ACTION_REDUCE_CONRAD_SALARY_CONDITIONS:
-			swprintf(zTemp2, lengthof(zTemp2), L"$%d", gMercProfiles[ubProfileID].sSalary);
-			swprintf( zTemp, lengthof(zTemp), TacticalStr[ HIRE_PROMPT ], gMercProfiles[ubProfileID].zNickname, zTemp2 );
+			zTemp2 = st_format_printf("${}", gMercProfiles[ubProfileID].sSalary);
+			zTemp = st_format_printf(TacticalStr[ HIRE_PROMPT ], gMercProfiles[ubProfileID].zNickname, zTemp2);
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		case NPC_ACTION_DARREN_REQUESTOR:
@@ -4192,8 +4196,8 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 			DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[BOXING_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		case NPC_ACTION_BUY_LEATHER_KEVLAR_VEST:
-			swprintf(zTemp2, lengthof(zTemp2), L"$%d", GCM->getItem(LEATHER_JACKET_W_KEVLAR)->getPrice());
-			swprintf( zTemp, lengthof(zTemp), TacticalStr[ BUY_VEST_PROMPT ], ItemNames[LEATHER_JACKET_W_KEVLAR], zTemp2 );
+			zTemp2 = st_format_printf("${}", GCM->getItem(LEATHER_JACKET_W_KEVLAR)->getPrice());
+			zTemp = st_format_printf(TacticalStr[ BUY_VEST_PROMPT ], ItemNames[LEATHER_JACKET_W_KEVLAR], zTemp2);
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		case NPC_ACTION_PROMPT_PLAYER_TO_LIE:
@@ -4212,13 +4216,13 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 			{
 				iTemp -= giHospitalRefund;
 			}
-			swprintf(zTemp2, lengthof(zTemp2), L"$%ld", iTemp);
-			swprintf( zTemp, lengthof(zTemp), TacticalStr[ PAY_MONEY_PROMPT ], zTemp2 );
+			zTemp2 = ST::format("${}", iTemp);
+			zTemp = st_format_printf(TacticalStr[ PAY_MONEY_PROMPT ], zTemp2);
 
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		case NPC_ACTION_BUY_VEHICLE_REQUESTOR:
-			swprintf(zTemp, lengthof(zTemp), TacticalStr[PAY_MONEY_PROMPT], L"$10000");
+			zTemp = st_format_printf(TacticalStr[PAY_MONEY_PROMPT], "$10000");
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		case NPC_ACTION_TRIGGER_MARRY_DARYL_PROMPT:

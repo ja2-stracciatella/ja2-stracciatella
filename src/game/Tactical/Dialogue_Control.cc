@@ -928,7 +928,7 @@ static void HandleTacticalNPCTextUI(const UINT8 ubCharacterNum, const wchar_t* c
 	}
 
 	// post message to mapscreen message system
-	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%ls\"", zQuoteStr );
+	gTalkPanel.zQuoteStr = ST::format("\"{}\"", zQuoteStr);
 	MapScreenMessage(FONT_MCOLOR_WHITE, MSG_DIALOG, ST::format("{}: \"{}\"", GetProfile(ubCharacterNum).zNickname, zQuoteStr));
 }
 
@@ -950,7 +950,7 @@ static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t*
 	}
 
 	// post message to mapscreen message system
-	swprintf( gTalkPanel.zQuoteStr, lengthof(gTalkPanel.zQuoteStr), L"\"%ls\"", zQuoteStr );
+	gTalkPanel.zQuoteStr = ST::format("\"{}\"", zQuoteStr);
 	MapScreenMessage(FONT_MCOLOR_WHITE, MSG_DIALOG, ST::format("{}: \"{}\"",
 				GetProfile(ubCharacterNum).zNickname, zQuoteStr));
 
@@ -968,7 +968,8 @@ static void DisplayTextForExternalNPC(const UINT8 ubCharacterNum, const wchar_t*
 		sTop = 20;
 	}
 
-	ExecuteTacticalTextBox( sLeft, sTop, gTalkPanel.zQuoteStr );
+	ST::wchar_buffer wstr = gTalkPanel.zQuoteStr.to_wchar();
+	ExecuteTacticalTextBox( sLeft, sTop, wstr.c_str() );
 }
 
 
