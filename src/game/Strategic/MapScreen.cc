@@ -7997,8 +7997,7 @@ static void HandlePostAutoresolveMessages(void)
 	}
 	else if( gbMilitiaPromotions )
 	{
-		wchar_t str[ 512 ];
-		BuildMilitiaPromotionsString(str, lengthof(str));
+		ST::string str = BuildMilitiaPromotionsString();
 		DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 	}
 }

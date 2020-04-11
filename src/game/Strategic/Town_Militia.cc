@@ -27,6 +27,7 @@
 #include "ScreenIDs.h"
 #include "UILayout.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 #include <algorithm>
@@ -424,7 +425,7 @@ static void PayMilitiaTrainingYesNoBoxCallback(MessageBoxReturnValue);
 
 void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 {
-	wchar_t sString[ 128 ];
+	ST::string sString;
 	INT32 iNumberOfSectors = 0;
 
 	pMilitiaTrainerSoldier = pSoldier;
@@ -441,7 +442,7 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 
 	if( LaptopSaveInfo.iCurrentBalance < giTotalCostOfTraining )
 	{
-		swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[7], giTotalCostOfTraining);
+		sString = st_format_printf(pMilitiaConfirmStrings[7], giTotalCostOfTraining);
 		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		return;
 	}
@@ -451,11 +452,11 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 
 	if( iNumberOfSectors > 1 )
 	{
-		swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[6], iNumberOfSectors, giTotalCostOfTraining, pMilitiaConfirmStrings[1]);
+		sString = st_format_printf(pMilitiaConfirmStrings[6], iNumberOfSectors, giTotalCostOfTraining, pMilitiaConfirmStrings[1]);
 	}
 	else
 	{
-		swprintf( sString, lengthof(sString), L"%ls%d. %ls", pMilitiaConfirmStrings[ 0 ], giTotalCostOfTraining, pMilitiaConfirmStrings[ 1 ] );
+		sString = ST::format("{}{}. {}", pMilitiaConfirmStrings[ 0 ], giTotalCostOfTraining, pMilitiaConfirmStrings[ 1 ]);
 	}
 
 	// if we are in mapscreen, make a pop up
@@ -473,9 +474,9 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 // continue training?
 static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* const pSoldier)
 {
-	wchar_t sString[ 128 ];
+	ST::string sString;
 	INT16 sSectorX = 0, sSectorY = 0;
-	wchar_t sStringB[ 128 ];
+	ST::string sStringB;
 
 	sSectorX = pSoldier->sSectorX;
 	sSectorY = pSoldier->sSectorY;
@@ -491,7 +492,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 	if (!DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(pSoldier))
 	{
 		// loyalty too low to continue training
-		swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[8], pTownNames[GetTownIdForSector(sector)], MIN_RATING_TO_TRAIN_TOWN);
+		sString = st_format_printf(pMilitiaConfirmStrings[8], pTownNames[GetTownIdForSector(sector)], MIN_RATING_TO_TRAIN_TOWN);
 		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		return;
 	}
@@ -503,14 +504,13 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 		if ( bTownId == BLANK_SECTOR )
 		{
 			// wilderness SAM site
-			ST::wchar_buffer wstr = GetSectorIDString(sSectorX, sSectorY, 0, TRUE).to_wchar();
-			wcslcpy(sStringB, wstr.c_str(), lengthof(sStringB));
-			swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[9], sStringB);
+			sStringB = GetSectorIDString(sSectorX, sSectorY, 0, TRUE);
+			sString = st_format_printf(pMilitiaConfirmStrings[9], sStringB);
 		}
 		else
 		{
 			// town
-			swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[9], pTownNames[bTownId], MIN_RATING_TO_TRAIN_TOWN);
+			sString = st_format_printf(pMilitiaConfirmStrings[9], pTownNames[bTownId], MIN_RATING_TO_TRAIN_TOWN);
 		}
 		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		return;
@@ -523,16 +523,15 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 	if( LaptopSaveInfo.iCurrentBalance < giTotalCostOfTraining )
 	{
 		// can't afford to continue training
-		swprintf(sString, lengthof(sString), pMilitiaConfirmStrings[7], giTotalCostOfTraining);
+		sString = st_format_printf(pMilitiaConfirmStrings[7], giTotalCostOfTraining);
 		DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, CantTrainMilitiaOkBoxCallback );
 		return;
 	}
 
 	// ok to continue, ask player
 
-	ST::wchar_buffer wstr = GetSectorIDString(sSectorX, sSectorY, 0, TRUE).to_wchar();
-	wcslcpy(sStringB, wstr.c_str(), lengthof(sStringB));
-	swprintf( sString, lengthof(sString), pMilitiaConfirmStrings[ 3 ], sStringB, pMilitiaConfirmStrings[ 4 ], giTotalCostOfTraining );
+	sStringB = GetSectorIDString(sSectorX, sSectorY, 0, TRUE);
+	sString = st_format_printf(pMilitiaConfirmStrings[ 3 ], sStringB, pMilitiaConfirmStrings[ 4 ], giTotalCostOfTraining);
 
 	// ask player whether he'd like to continue training
 	//DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_YESNO, PayMilitiaTrainingYesNoBoxCallback );
@@ -963,38 +962,38 @@ BOOLEAN MilitiaTrainingAllowedInTown( INT8 bTownId )
 }
 
 
-static size_t PromoteMilitia(wchar_t* const str, size_t const length, size_t n, INT8 const count, wchar_t const* const singular, wchar_t const* const plural)
+static void PromoteMilitia(ST::string& str, INT8 count, const ST::string& singular, const ST::string& plural)
 {
 	if (count > 0)
 	{
-		if (n != 0) n += swprintf(str + n, length - n, L" ");
+		if (!str.empty()) str += " ";
 		if (count == 1)
 		{
-			n += swprintf(str + n, length - n, singular);
+			str += singular;
 		}
 		else
 		{
-			n += swprintf(str + n, length - n, plural, count);
+			str += st_format_printf(plural, count);
 		}
 	}
-	return n;
 }
 
 
-void BuildMilitiaPromotionsString(wchar_t* const str, size_t const length)
+ST::string BuildMilitiaPromotionsString()
 {
-	str[0] = L'\0';
+	ST::string str;
 
-	if (gbMilitiaPromotions == 0) return;
+	if (gbMilitiaPromotions == 0) return ST::null;
 
-	size_t n = 0;
-	n = PromoteMilitia(str, length, n, gbGreenToElitePromotions, gzLateLocalizedString[STR_LATE_29], gzLateLocalizedString[STR_LATE_22]);
-	n = PromoteMilitia(str, length, n, gbGreenToRegPromotions,   gzLateLocalizedString[STR_LATE_30], gzLateLocalizedString[STR_LATE_23]);
-	n = PromoteMilitia(str, length, n, gbRegToElitePromotions,   gzLateLocalizedString[STR_LATE_31], gzLateLocalizedString[STR_LATE_24]);
+	PromoteMilitia(str, gbGreenToElitePromotions, gzLateLocalizedString[STR_LATE_29], gzLateLocalizedString[STR_LATE_22]);
+	PromoteMilitia(str, gbGreenToRegPromotions,  gzLateLocalizedString[STR_LATE_30], gzLateLocalizedString[STR_LATE_23]);
+	PromoteMilitia(str, gbRegToElitePromotions,  gzLateLocalizedString[STR_LATE_31], gzLateLocalizedString[STR_LATE_24]);
 
 	// Clear the fields
 	gbGreenToElitePromotions = 0;
 	gbGreenToRegPromotions   = 0;
 	gbRegToElitePromotions   = 0;
 	gbMilitiaPromotions      = 0;
+
+	return str;
 }
