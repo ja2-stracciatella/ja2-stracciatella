@@ -1714,7 +1714,8 @@ void DoDeadIsDeadSave()
 			}
 		}
 
-		BOOLEAN tmpSuccess = SaveGame(gGameSettings.bLastSavedGameSlot, gGameSettings.sCurrentSavedGameName);
+		ST::wchar_buffer wstr = gGameSettings.sCurrentSavedGameName.to_wchar();
+		BOOLEAN tmpSuccess = SaveGame(gGameSettings.bLastSavedGameSlot, wstr.c_str());
 
 		// Reset the previous option screen
 		guiPreviousOptionScreen = tmpGuiPreviousOptionScreen;
@@ -1836,7 +1837,7 @@ static void SaveGameToSlotNum(void)
 	{
 		guiPreviousOptionScreen = INTRO_SCREEN;
 		gGameSettings.bLastSavedGameSlot = (gbSelectedSaveLocation + NUM_SAVE_GAMES);
-		wcscpy(gGameSettings.sCurrentSavedGameName, gzGameDescTextField);
+		gGameSettings.sCurrentSavedGameName = gzGameDescTextField;
 	}
 	else if( !SaveGame(gbSelectedSaveLocation, gzGameDescTextField ) )
 	{

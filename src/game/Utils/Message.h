@@ -3,6 +3,9 @@
 
 #include "Types.h"
 
+#include <string_theory/string>
+
+
 extern UINT8 gubCurrentMapMessageString;
 
 #define MSG_INTERFACE		0
@@ -24,6 +27,11 @@ extern BOOLEAN fOkToBeepNewMessage;
 
 
 void ScreenMsg( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA, ...);
+inline void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
+{
+        ST::wchar_buffer wstr = str.to_wchar();
+        ScreenMsg(usColor, ubPriority, L"%s", wstr.c_str());
+}
 
 // same as screen message, but only display to mapscreen message system, not tactical
 void MapScreenMessage( UINT16 usColor, UINT8 ubPriority, const wchar_t *pStringA, ...);
