@@ -8,6 +8,9 @@
 
 #include "UILayout.h"
 
+#include <string_theory/string>
+
+
 struct ItemModel;
 
 
@@ -105,7 +108,7 @@ SGPVObject const& GetInterfaceGraphicForItem(const ItemModel *item);
 UINT16            GetTileGraphicForItem(const ItemModel *item);
 SGPVObject*       LoadTileGraphicForItem(const ItemModel *item);
 
-void GetHelpTextForItem(wchar_t* buf, size_t length, OBJECTTYPE const&);
+ST::string GetHelpTextForItem(const OBJECTTYPE& obj);
 
 void CancelItemPointer(void);
 

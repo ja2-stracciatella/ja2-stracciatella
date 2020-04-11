@@ -6334,7 +6334,8 @@ static void BuildItemHelpTextString(wchar_t sString[], size_t Length, const INVE
 
 	if( pInv != NULL )
 	{
-		GetHelpTextForItem(zHelpText, lengthof(zHelpText), pInv->ItemObject);
+		ST::wchar_buffer wstr = GetHelpTextForItem(pInv->ItemObject).to_wchar();
+		wcslcpy(zHelpText, wstr.c_str(), lengthof(zHelpText));
 
 		// add repair time for items in a repairman's offer area
 		if ( ( ubScreenArea == ARMS_DEALER_OFFER_AREA ) &&

@@ -2390,7 +2390,8 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				}
 				else
 				{
-					GetHelpTextForItem(help_buf, lengthof(help_buf), s->inv[HANDPOS]);
+					ST::wchar_buffer wstr = GetHelpTextForItem(s->inv[HANDPOS]).to_wchar();
+					wcslcpy(help_buf, wstr.c_str(), lengthof(help_buf));
 					help = help_buf;
 				}
 				i->first_hand.SetFastHelpText(help);
@@ -2406,7 +2407,8 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				}
 				else
 				{
-					GetHelpTextForItem(help_buf, lengthof(help_buf), s->inv[SECONDHANDPOS]);
+					ST::wchar_buffer wstr = GetHelpTextForItem(s->inv[SECONDHANDPOS]).to_wchar();
+					wscanf(help_buf, wstr.c_str(), lengthof(help_buf));
 					help = help_buf;
 				}
 				i->second_hand.SetFastHelpText(help);

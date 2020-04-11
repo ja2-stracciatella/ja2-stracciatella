@@ -147,8 +147,8 @@ static const SGPBox g_map_itemdesc_desc_box        = { 23, 170, 220,  0 };
 static const SGPBox g_map_itemdesc_pros_cons_box   = { 23, 230, 220, 10 };
 static const SGPBox g_map_itemdesc_item_status_box = { 18,  54,   2, 42 };
 
-#define DOTDOTDOT L"..."
-#define COMMA_AND_SPACE L", "
+#define DOTDOTDOT "..."
+#define COMMA_AND_SPACE ", "
 
 #define ITEM_PROS_AND_CONS( usItem )			( ( GCM->getItem(usItem)->isGun()) )
 
@@ -218,10 +218,10 @@ BOOLEAN gfInItemDescBox = FALSE;
 static UINT32 guiCurrentItemDescriptionScreen=0;
 OBJECTTYPE *gpItemDescObject = NULL;
 static BOOLEAN gfItemDescObjectIsAttachment = FALSE;
-static const wchar_t *gzItemName;
-static wchar_t gzItemDesc[SIZE_ITEM_INFO];
-static wchar_t gzItemPros[SIZE_ITEM_PROS];
-static wchar_t gzItemCons[SIZE_ITEM_CONS];
+static ST::string gzItemName;
+static ST::string gzItemDesc;
+static ST::string gzItemPros;
+static ST::string gzItemCons;
 static INT16 gsInvDescX;
 static INT16 gsInvDescY;
 static UINT8 gubItemDescStatusIndex;
@@ -432,42 +432,42 @@ static SGPVObject *guiP2ITEMS;
 static SGPVObject *guiP3ITEMS;
 
 
-static BOOLEAN AttemptToAddSubstring(wchar_t* const zDest, const wchar_t* const zTemp, UINT32* const puiStringLength, const UINT32 uiPixLimit)
+static BOOLEAN AttemptToAddSubstring(ST::string& zDest, const ST::string& zTemp, UINT32* puiStringLength, UINT32 uiPixLimit)
 {
 	UINT32 uiRequiredStringLength, uiTempStringLength;
 
 	uiTempStringLength = StringPixLength( zTemp, ITEMDESC_FONT );
 	uiRequiredStringLength = *puiStringLength + uiTempStringLength;
-	if (zDest[0] != 0)
+	if (!zDest.empty())
 	{
 		uiRequiredStringLength += StringPixLength( COMMA_AND_SPACE, ITEMDESC_FONT );
 	}
 	if (uiRequiredStringLength < uiPixLimit)
 	{
-		if (zDest[0] != 0)
+		if (!zDest.empty())
 		{
-			wcscat( zDest, COMMA_AND_SPACE );
+			zDest += COMMA_AND_SPACE;
 		}
-		wcscat( zDest, zTemp );
+		zDest += zTemp;
 		*puiStringLength = uiRequiredStringLength;
 		return( TRUE );
 	}
 	else
 	{
-		wcscat( zDest, DOTDOTDOT );
+		zDest += DOTDOTDOT;
 		return( FALSE );
 	}
 }
 
 
-static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UINT32 const uiPixLimit)
+static void GenerateProsString(ST::string& zItemPros, const OBJECTTYPE& o, UINT32 uiPixLimit)
 {
 	UINT32 uiStringLength = 0;
-	const wchar_t *zTemp;
+	ST::string zTemp;
 	UINT16 usItem = o.usItem;
 	UINT8 ubWeight;
 
-	zItemPros[0] = 0;
+	zItemPros = ST::null;
 
 	ubWeight = GCM->getItem(usItem)->getWeight();
 	if (GCM->getItem(usItem)->getItemClass() == IC_GUN)
@@ -567,14 +567,14 @@ static void GenerateProsString(wchar_t* const zItemPros, OBJECTTYPE const& o, UI
 }
 
 
-static void GenerateConsString(wchar_t* const zItemCons, OBJECTTYPE const& o, UINT32 const uiPixLimit)
+static void GenerateConsString(ST::string& zItemCons, const OBJECTTYPE& o, UINT32 uiPixLimit)
 {
 	UINT32 uiStringLength = 0;
-	const wchar_t *zTemp;
+	ST::string zTemp;
 	UINT8 ubWeight;
 	UINT16 usItem = o.usItem;
 
-	zItemCons[0] = 0;
+	zItemCons = ST::null;
 
 	// calculate the weight of the item plus ammunition but not including any attachments
 	ubWeight = GCM->getItem(usItem)->getWeight();
@@ -806,8 +806,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 	UINT16 outline   = SGP_TRANSPARENT;
 	if (dirty_level == DIRTYLEVEL2)
 	{
-		wchar_t buf[150];
-		GetHelpTextForItem(buf, lengthof(buf), o);
+		ST::string buf = GetHelpTextForItem(o);
 		r.SetFastHelpText(buf);
 
 		// If it's the second hand and this hand cannot contain anything, remove the
@@ -1626,7 +1625,7 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 			{
 				SetFontForeground(FONT_MCOLOR_RED);
 
-				const wchar_t* const jammed =
+				ST::string jammed =
 					sWidth >= BIG_INV_SLOT_WIDTH - 10 ?
 						TacticalStr[JAMMED_ITEM_STR] :
 						TacticalStr[SHORT_JAMMED_GUN];
@@ -1642,8 +1641,7 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 			// Display # of items
 			SetFontForeground(FONT_GRAY4);
 
-			wchar_t pStr[16];
-			swprintf(pStr, lengthof(pStr), L"%d", o.ubNumberOfObjects);
+			ST::string pStr = ST::format("{}", o.ubNumberOfObjects);
 
 			const UINT16 uiStringLength = StringPixLength(pStr, ITEM_FONT);
 			const INT16  sNewX          = sX + sWidth - uiStringLength - 4;
@@ -1660,7 +1658,7 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 		{
 			SetFontForeground(GetAttachmentHintColor(&o));
 
-			const wchar_t* const attach_marker  = L"*";
+			ST::string attach_marker = "*";
 			UINT16         const uiStringLength = StringPixLength(attach_marker, ITEM_FONT);
 			INT16          const sNewX          = sX + sWidth - uiStringLength - 4;
 			INT16          const sNewY          = sY;
@@ -1676,7 +1674,7 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 		{
 			SetFontForeground(FONT_DKRED);
 
-			const wchar_t* const mode_marker    = s->bWeaponMode == WM_BURST ? L"*" : L"+";
+			ST::string mode_marker = s->bWeaponMode == WM_BURST ? "*" : "+";
 			UINT16         const uiStringLength = StringPixLength(mode_marker, ITEM_FONT);
 			INT16          const sNewX          = sX + sWidth - uiStringLength - 4;
 			INT16          const sNewY          = sY + 13; // rather arbitrary
@@ -1768,7 +1766,7 @@ static void SetAttachmentTooltips(void)
 	for (UINT i = 0; i < MAX_ATTACHMENTS; ++i)
 	{
 		const UINT16 attachment = gpItemDescObject->usAttachItem[i];
-		const wchar_t* const tip = (attachment != NOTHING ? ItemNames[attachment] : g_langRes->Message[STR_ATTACHMENTS]);
+		ST::string tip = (attachment != NOTHING ? ItemNames[attachment] : g_langRes->Message[STR_ATTACHMENTS]);
 		gItemDescAttachmentRegions[i].SetFastHelpText(tip);
 	}
 }
@@ -1812,8 +1810,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 	if (GCM->getItem(o->usItem)->isGun()&& o->usItem != ROCKET_LAUNCHER)
 	{
-		wchar_t	pStr[10];
-		swprintf(pStr, lengthof(pStr), L"%d/%d", o->ubGunShotsLeft, GCM->getWeapon(o->usItem)->ubMagSize);
+		ST::string pStr = ST::format("{}/{}", o->ubGunShotsLeft, GCM->getWeapon(o->usItem)->ubMagSize);
 
 		INT32 img;
 		switch (o->ubGunAmmoType)
@@ -1868,9 +1865,9 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 			MSYS_DefineRegion(r, x, y, x + w - 1, y + h - 1, MSYS_PRIORITY_HIGHEST, MSYS_NO_CURSOR, MSYS_NO_CALLBACK, ItemDescCallback);
 			y += box->h;
 
-			const wchar_t* label;
+			ST::string label;
 			// use temp variable to prevent an initial comma from being displayed
-			wchar_t FullItemTemp[SIZE_ITEM_PROS];
+			ST::string FullItemTemp;
 			if (i == 0)
 			{
 				label = gzProsLabel;
@@ -1881,8 +1878,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 				label = gzConsLabel;
 				GenerateConsString(FullItemTemp, *o, 1000);
 			}
-			wchar_t text[SIZE_ITEM_PROS];
-			swprintf(text, lengthof(text), L"%ls %ls", label, FullItemTemp);
+			ST::string text = ST::format("{} {}", label, FullItemTemp);
 			r->SetFastHelpText(text);
 		}
 	}
@@ -1963,7 +1959,7 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 	if (gpItemPointer != NULL && !gfItemDescHelpTextOffset && !CheckFact(FACT_ATTACHED_ITEM_BEFORE, 0))
 	{
-		const wchar_t* text;
+		ST::string text;
 		if (!(GCM->getItem(o->usItem)->getFlags() & ITEM_HIDDEN_ADDON) && (
 			ValidAttachment(gpItemPointer->usItem, o->usItem) ||
 			ValidLaunchable(gpItemPointer->usItem, o->usItem) ||
@@ -2000,7 +1996,7 @@ static void ReloadItemDesc(void)
 		Item = MONEY_FOR_PLAYERS_ACCOUNT;
 	}
 	gzItemName = ItemNames[Item];
-	LoadItemInfo(Item, gzItemDesc);
+	gzItemDesc = LoadItemInfo(Item);
 }
 
 
@@ -2014,7 +2010,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  const btn, INT32 const reason)
 		SetItemPointer(&gItemPointer, gpItemDescSoldier);
 		fInterfacePanelDirty = DIRTYLEVEL2;
 
-		btn->SpecifyText(L"0");
+		btn->SpecifyText("0");
 
 		if (guiCurrentItemDescriptionScreen == MAP_SCREEN)
 		{
@@ -2209,7 +2205,7 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static wchar_t const* GetObjectImprint(OBJECTTYPE const& o)
+static ST::string GetObjectImprint(OBJECTTYPE const& o)
 {
 	return !HasObjectImprint(o) ? 0 :
 		o.ubImprintID == NO_PROFILE + 1 ? pwMiscSectorStrings[3] :
@@ -2227,7 +2223,7 @@ void RenderItemDescriptionBox(void)
 {
 	if (!gfInItemDescBox) return;
 
-	wchar_t pStr[100];
+	ST::string pStr;
 	INT16   usX;
 	INT16   usY;
 
@@ -2367,14 +2363,15 @@ void RenderItemDescriptionBox(void)
 			size_t            n = 0;
 			if (w->calibre->index != NOAMMO)
 			{
-				ST::wchar_buffer name = w->calibre->getName()->to_wchar();
-				n += swprintf(pStr, lengthof(pStr), L"%ls ", name.c_str());
+				ST::string name = *w->calibre->getName();
+				pStr += ST::format("{} ", name);
 			}
-			n += swprintf(pStr + n, lengthof(pStr) - n, L"%ls", WeaponType[w->ubWeaponType]);
-			if (wchar_t const* const imprint = GetObjectImprint(obj))
+			pStr += ST::format("{}", WeaponType[w->ubWeaponType]);
+			ST::string imprint = GetObjectImprint(obj);
+			if (!imprint.empty())
 			{
 				// Add name noting imprint
-				n += swprintf(pStr + n, lengthof(pStr) - n, L" (%ls)", imprint);
+				pStr += ST::format(" ({})", imprint);
 			}
 
 			SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
@@ -2448,13 +2445,13 @@ void RenderItemDescriptionBox(void)
 
 		//Status
 		SetFontForeground(5);
-		swprintf(pStr, lengthof(pStr), L"%2d%%", obj.bGunStatus);
+		pStr = ST::format("{2d}%", obj.bGunStatus);
 		FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
 		//Weight
 		HighlightIf(fWeight <= EXCEPTIONAL_WEIGHT / 10);
-		swprintf(pStr, lengthof(pStr), L"%1.1f", fWeight);
+		pStr = ST::format("{1.1f}", fWeight);
 		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx, dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
@@ -2463,7 +2460,7 @@ void RenderItemDescriptionBox(void)
 			// Range
 			UINT16 const range = GunRange(obj);
 			HighlightIf(range >= EXCEPTIONAL_RANGE);
-			swprintf(pStr, lengthof(pStr), L"%2d", range / 10);
+			pStr = ST::format("{2d}", range / 10);
 			FindFontRightCoordinates(dx + ids[2].sX + ids[2].sValDx, dy + ids[2].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
@@ -2472,7 +2469,7 @@ void RenderItemDescriptionBox(void)
 		{
 			// Damage
 			HighlightIf(w->ubImpact >= EXCEPTIONAL_DAMAGE);
-			swprintf(pStr, lengthof(pStr), L"%2d", w->ubImpact);
+			pStr = ST::format("{2d}", w->ubImpact);
 			FindFontRightCoordinates(dx + ids[3].sX + ids[3].sValDx, dy + ids[3].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
@@ -2481,14 +2478,14 @@ void RenderItemDescriptionBox(void)
 
 		//APs
 		HighlightIf(ubAttackAPs <= EXCEPTIONAL_AP_COST);
-		swprintf(pStr, lengthof(pStr), L"%2d", ubAttackAPs);
+		pStr = ST::format("{2d}", ubAttackAPs);
 		FindFontRightCoordinates(dx + ids[4].sX + ids[4].sValDx, dy + ids[4].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
 		if (w->ubShotsPerBurst > 0)
 		{
 			HighlightIf(w->ubShotsPerBurst >= EXCEPTIONAL_BURST_SIZE || obj.usItem == G11);
-			swprintf(pStr, lengthof(pStr), L"%2d", ubAttackAPs + CalcAPsToBurst(DEFAULT_APS, obj));
+			pStr = ST::format("{2d}", ubAttackAPs + CalcAPsToBurst(DEFAULT_APS, obj));
 			FindFontRightCoordinates(dx + ids[5].sX + ids[5].sValDx, dy + ids[5].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
@@ -2499,8 +2496,7 @@ void RenderItemDescriptionBox(void)
 
 		{
 			// Display the total amount of money
-			ST::wchar_buffer wstr = SPrintMoney(in_map && gfAddingMoneyToMercFromPlayersAccount ? LaptopSaveInfo.iCurrentBalance : gRemoveMoney.uiTotalAmount).to_wchar();
-			wcslcpy(pStr, wstr.c_str(), lengthof(pStr));
+			pStr = SPrintMoney(in_map && gfAddingMoneyToMercFromPlayersAccount ? LaptopSaveInfo.iCurrentBalance : gRemoveMoney.uiTotalAmount);
 			SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
 			FindFontRightCoordinates(dx + xy.x, dy + xy.y, xy.w, xy.h, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
@@ -2510,7 +2506,7 @@ void RenderItemDescriptionBox(void)
 			// Display the 'Separate' text
 			SetFontForeground(in_map ? 5 : 6);
 			MoneyLoc const&       xy    = in_map ? gMapMoneyButtonLoc : gMoneyButtonLoc;
-			wchar_t  const* const label = !in_map && gfAddingMoneyToMercFromPlayersAccount ? gzMoneyAmounts[5] : gzMoneyAmounts[4];
+			ST::string label = !in_map && gfAddingMoneyToMercFromPlayersAccount ? gzMoneyAmounts[5] : gzMoneyAmounts[4];
 			MPrint(xy.x + gMoneyButtonOffsets[4].x, xy.y + gMoneyButtonOffsets[4].y, label);
 		}
 
@@ -2539,8 +2535,7 @@ void RenderItemDescriptionBox(void)
 		UINT16 const uiRightLength = 35;
 
 		//Display the total amount of money remaining
-		ST::wchar_buffer wstr = SPrintMoney(gRemoveMoney.uiMoneyRemaining).to_wchar();
-		wcslcpy(pStr, wstr.c_str(), lengthof(pStr));
+		pStr = SPrintMoney(gRemoveMoney.uiMoneyRemaining);
 		if (in_map)
 		{
 			UINT16 const uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
@@ -2554,8 +2549,7 @@ void RenderItemDescriptionBox(void)
 		}
 
 		//Display the total amount of money removing
-		wstr = SPrintMoney(gRemoveMoney.uiMoneyRemoving).to_wchar();
-		wcslcpy(pStr, wstr.c_str(), lengthof(pStr));
+		pStr = SPrintMoney(gRemoveMoney.uiMoneyRemoving);
 		if (in_map)
 		{
 			UINT16 const uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
@@ -2571,8 +2565,7 @@ void RenderItemDescriptionBox(void)
 	else if (item->getItemClass() == IC_MONEY)
 	{
 		SetFontForeground(FONT_FCOLOR_WHITE);
-		ST::wchar_buffer wstr = SPrintMoney(obj.uiMoneyAmount).to_wchar();
-		wcslcpy(pStr, wstr.c_str(), lengthof(pStr));
+		pStr = SPrintMoney(obj.uiMoneyAmount);
 		SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
 		FindFontRightCoordinates(dx + xy.x, dy + xy.y, xy.w, xy.h, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
@@ -2585,7 +2578,7 @@ void RenderItemDescriptionBox(void)
 		INV_DESC_STATS const* const ids = in_map ? gMapWeaponStats : gWeaponStats;
 
 		// amount for ammunition, status otherwise
-		wchar_t const* const label = GCM->getItem(gpItemDescObject->usItem)->isAmmo() ? gWeaponStatsDesc[2] : gWeaponStatsDesc[1];
+		ST::string label = GCM->getItem(gpItemDescObject->usItem)->isAmmo() ? gWeaponStatsDesc[2] : gWeaponStatsDesc[1];
 		MPrint(dx + ids[1].sX, dy + ids[1].sY, label);
 
 		//Weight
@@ -2597,20 +2590,20 @@ void RenderItemDescriptionBox(void)
 		if (item->isAmmo())
 		{
 			// Ammo - print amount
-			swprintf(pStr, lengthof(pStr), L"%d/%d", obj.ubShotsLeft[0], item->asAmmo()->capacity);
+			pStr = ST::format("{}/{}", obj.ubShotsLeft[0], item->asAmmo()->capacity);
 			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 		else
 		{
 			// Status
-			swprintf(pStr, lengthof(pStr), L"%2d%%", obj.bStatus[gubItemDescStatusIndex]);
+			pStr = ST::format("{2d}%", obj.bStatus[gubItemDescStatusIndex]);
 			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
 
 		//Weight
-		swprintf(pStr, lengthof(pStr), L"%1.1f", fWeight);
+		pStr = ST::format("{1.1f}", fWeight);
 		FindFontRightCoordinates(dx + ids[0].sX + ids[0].sValDx, dy + ids[0].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
 
@@ -2633,7 +2626,7 @@ void RenderItemDescriptionBox(void)
 			FindFontRightCoordinates(x, y0, 110, ITEM_STATS_HEIGHT, sTempString, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, sTempString);
 
-			swprintf(pStr, lengthof(pStr), L"%d", key.usDateFound);
+			pStr = ST::format("{}", key.usDateFound);
 			FindFontRightCoordinates(x, y1, 110, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
@@ -3274,8 +3267,8 @@ static bool IsValidAmmoToReloadRobot(SOLDIERTYPE const& s, OBJECTTYPE const& amm
 	OBJECTTYPE const& weapon = s.inv[HANDPOS];
 	if (!CompatibleAmmoForGun(&ammo, &weapon))
 	{
-		ST::wchar_buffer name = GCM->getWeapon(weapon.usItem)->calibre->getName()->to_wchar();
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], name.c_str()));
+		ST::string name = *GCM->getWeapon(weapon.usItem)->calibre->getName();
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], name));
 		return false;
 	}
 	return true;
@@ -4662,7 +4655,7 @@ static void SetupPickupPage(INT8 bPage)
 	// Clear help text!
 	for ( cnt = 0; cnt < NUM_PICKUP_SLOTS; cnt++ )
 	{
-		gItemPickupMenu.Regions[cnt].SetFastHelpText(L"");
+		gItemPickupMenu.Regions[cnt].SetFastHelpText(ST::null);
 	}
 
 	for ( cnt = 0; cnt < iEnd; )
@@ -4683,14 +4676,14 @@ static void SetupPickupPage(INT8 bPage)
 			sValue = o.bStatus[0];
 
 			// Adjust for ammo, other thingys..
-			wchar_t pStr[200];
+			ST::string pStr;
 			if (GCM->getItem(o.usItem)->isAmmo() || GCM->getItem(o.usItem)->isKey())
 			{
-				swprintf( pStr, lengthof(pStr), L"" );
+				pStr = ST::null;
 			}
 			else
 			{
-				swprintf( pStr, lengthof(pStr), L"%d%%", sValue );
+				pStr = ST::format("{}%", sValue);
 			}
 
 			gItemPickupMenu.Regions[cnt - iStart].SetFastHelpText(pStr);
@@ -4742,7 +4735,7 @@ static void CalculateItemPickupMenuDimensions(void)
 
 void RenderItemPickupMenu()
 {
-	wchar_t pStr[100];
+	ST::string pStr;
 
 	if (!gfInItemPickupMenu) return;
 
@@ -4809,7 +4802,7 @@ void RenderItemPickupMenu()
 			{
 				SetFontAttributes(ITEM_FONT, FONT_GRAY4);
 
-				swprintf(pStr, lengthof(pStr), L"%d", o.ubNumberOfObjects);
+				pStr = ST::format("{}", o.ubNumberOfObjects);
 
 				INT16 sFontX;
 				INT16 sFontY;
@@ -4823,7 +4816,7 @@ void RenderItemPickupMenu()
 				// Render attachment symbols
 				SetFontForeground(GetAttachmentHintColor(&o));
 				SetFontShadow(DEFAULT_SHADOW);
-				wchar_t const* const AttachMarker   = L"*";
+				ST::string AttachMarker = "*";
 				UINT16         const uiStringLength = StringPixLength(AttachMarker, ITEM_FONT);
 				INT16          const sNewX          = sX + 43 - uiStringLength - 4;
 				INT16          const sNewY          = sY + 2;
@@ -4844,14 +4837,12 @@ void RenderItemPickupMenu()
 			// Render name
 			if (item->getItemClass() == IC_MONEY)
 			{
-				wchar_t pStr2[20];
-				ST::wchar_buffer wstr = SPrintMoney(o.uiMoneyAmount).to_wchar();
-				wcslcpy(pStr2, wstr.c_str(), lengthof(pStr2));
-				swprintf(pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[o.usItem], pStr2);
+				ST::string pStr2 = SPrintMoney(o.uiMoneyAmount);
+				pStr = ST::format("{} ({})", ItemNames[o.usItem], pStr2);
 			}
 			else
 			{
-				wcslcpy(pStr, ShortItemNames[o.usItem], lengthof(pStr));
+				pStr = ShortItemNames[o.usItem];
 			}
 			INT16 sFontX;
 			INT16 sFontY;
@@ -5250,60 +5241,60 @@ static void RemoveMoney(void)
 }
 
 
-void GetHelpTextForItem(wchar_t* const dst, size_t const length, OBJECTTYPE const& obj)
+ST::string GetHelpTextForItem(const OBJECTTYPE& obj)
 {
+	ST::string dst;
 	UINT16 const usItem = obj.usItem;
 	if (usItem == MONEY)
 	{
-		ST::wchar_buffer wstr = SPrintMoney(obj.uiMoneyAmount).to_wchar();
-		wcslcpy(dst, wstr.c_str(), length);
+		dst = SPrintMoney(obj.uiMoneyAmount);
 	}
 	else if (GCM->getItem(usItem)->getItemClass() == IC_MONEY)
 	{
 		// alternate money like silver or gold
-		wchar_t pStr2[20];
-		ST::wchar_buffer wstr = SPrintMoney(obj.uiMoneyAmount).to_wchar();
-		wcslcpy(pStr2, wstr.c_str(), lengthof(pStr2));
-		swprintf(dst, length, L"%ls (%ls)", ItemNames[usItem], pStr2);
+		ST::string pStr2 = SPrintMoney(obj.uiMoneyAmount);
+		dst = ST::format("{} ({})", ItemNames[usItem], pStr2);
 	}
 	else if (usItem == NOTHING)
 	{
-		wcslcpy(dst, L"", length);
+		dst = ST::null;
 	}
 	else
 	{
-		size_t n = swprintf(dst, length, L"%ls", ItemNames[usItem]);
+		dst = ST::format("{}", ItemNames[usItem]);
 		if (!gGameOptions.fGunNut && GCM->getItem(usItem)->getItemClass() == IC_GUN)
 		{
 			const CalibreModel * calibre = GCM->getWeapon(usItem)->calibre;
 			if (calibre->showInHelpText)
 			{
-				ST::wchar_buffer name = calibre->getName()->to_wchar();
-				n += swprintf(dst + n, length - n, L" (%ls)", name.c_str());
+				ST::string name = *calibre->getName();
+				dst += ST::format(" ({})", name);
 			}
 		}
 
-		if (wchar_t const* const imprint = GetObjectImprint(obj))
+		ST::string imprint = GetObjectImprint(obj);
+		if (!imprint.empty())
 		{
-			n += swprintf(dst + n, length - n, L" [%ls]", imprint);
+			dst += ST::format(" [{}]", imprint);
 		}
 
 		// Add attachment string....
-		wchar_t const* const first_prefix = L" (";
-		wchar_t const*       prefix       = first_prefix;
+		ST::string first_prefix = " (";
+		ST::string prefix       = first_prefix;
 		FOR_EACH(UINT16 const, i, obj.usAttachItem)
 		{
 			UINT16 const attachment = *i;
 			if (attachment == NOTHING) continue;
 
-			n += swprintf(dst + n, length - n, L"%ls%ls", prefix, ItemNames[attachment]);
-			prefix = L",\n";
+			dst += ST::format("{}{}", prefix, ItemNames[attachment]);
+			prefix = ",\n";
 		}
 		if (prefix != first_prefix)
 		{
-			n += swprintf(dst + n, length - n, L"%ls", pMessageStrings[MSG_END_ATTACHMENT_LIST]);
+			dst += ST::format("{}", pMessageStrings[MSG_END_ATTACHMENT_LIST]);
 		}
 	}
+	return dst;
 }
 
 
