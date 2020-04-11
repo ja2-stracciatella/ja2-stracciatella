@@ -2747,7 +2747,7 @@ unlock:
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 					if ( pSoldier )
 					{
-						wcslcpy(pSoldier->name, gMercProfiles[ubTargetNPC].zNickname, lengthof(pSoldier->name));
+						pSoldier->name = gMercProfiles[ubTargetNPC].zNickname;
 					}
 				}
 				break;

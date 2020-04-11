@@ -6725,7 +6725,7 @@ static void SortListOfMercsInTeamPanel(BOOLEAN fRetainSelectedMercs)
 					const SOLDIERTYPE* const b = gCharactersList[iCounterA].merc;
 					if (b == NULL) break;
 
-					if (wcscmp(b->name, a->name) > 0 && iCounterA < iCounter)
+					if (b->name.compare(a->name) > 0 && iCounterA < iCounter)
 					{
 						SwapCharactersInList( iCounter, iCounterA );
 					}

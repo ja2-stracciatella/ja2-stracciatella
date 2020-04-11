@@ -85,15 +85,13 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	{
 		EXTR_SKIP(d, 2)
 		DataReader reader(d);
-		ST::wchar_buffer wstr = reader.readUTF32(lengthof(s->name)).to_wchar();
-		wcslcpy(s->name, wstr.c_str(), lengthof(s->name));
+		s->name = reader.readUTF32(SOLDIERTYPE_NAME_LENGTH);
 		d += reader.getConsumed();
 	}
 	else
 	{
 		DataReader reader(d);
-		ST::wchar_buffer wstr = reader.readUTF16(lengthof(s->name)).to_wchar();
-		wcslcpy(s->name, wstr.c_str(), lengthof(s->name));
+		s->name = reader.readUTF16(SOLDIERTYPE_NAME_LENGTH);
 		d += reader.getConsumed();
 	}
 	EXTR_I8(d, s->bVisible)

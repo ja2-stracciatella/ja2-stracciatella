@@ -501,7 +501,7 @@ static void TacticalCopySoldierFromProfile(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT 
 	s.ubScheduleID    = c.ubScheduleID;
 	s.bHasKeys        = c.fHasKeys;
 
-	wcscpy(s.name, p.zNickname);
+	s.name = p.zNickname;
 
 	s.bLife           = p.bLife;
 	s.bLifeMax        = p.bLifeMax;
@@ -906,7 +906,7 @@ maybe_nightops:
 
 		default: goto no_name; // XXX fishy
 	}
-	wcslcpy(s.name, name, lengthof(s.name));
+	s.name = name;
 no_name:
 
 	GeneratePaletteForSoldier(&s, c.ubSoldierClass);
