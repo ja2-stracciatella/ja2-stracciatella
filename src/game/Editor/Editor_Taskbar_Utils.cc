@@ -809,6 +809,7 @@ static void RenderEditorInfo(void)
 		swprintf(FPSText, lengthof(FPSText), L"          ");
 	mprintfEditor(50 - StringPixLength(FPSText, FONT12POINT1) / 2, 103, FPSText);
 
+	ST::wchar_buffer wstr;
 	switch( iCurrentTaskbar )
 	{
 		case TASK_OPTIONS:
@@ -819,8 +820,9 @@ static void RenderEditorInfo(void)
 			break;
 		case TASK_TERRAIN:
 			if( gusSelectionType == LINESELECTION )
-				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
-			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 220, 70, 60, 30);
+				wszSelType[LINESELECTION] = ST::format("Width: {}", gusSelectionWidth);
+			wstr = wszSelType[gusSelectionType].to_wchar();
+			DrawEditorInfoBox(wstr.c_str(), FONT12POINT1, 220, 70, 60, 30);
 			swprintf(FPSText, lengthof(FPSText), L"%d%%", gusSelectionDensity);
 			DrawEditorInfoBox(FPSText, FONT12POINT1, 310, 70, 40, 30);
 			break;
@@ -831,8 +833,9 @@ static void RenderEditorInfo(void)
 		case TASK_BUILDINGS:
 			UpdateBuildingsInfo();
 			if( gusSelectionType == LINESELECTION )
-				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
-			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 530, 70, 60, 30);
+				wszSelType[LINESELECTION] = ST::format("Width: {}", gusSelectionWidth);
+			wstr = wszSelType[gusSelectionType].to_wchar();
+			DrawEditorInfoBox(wstr.c_str(), FONT12POINT1, 530, 70, 60, 30);
 			break;
 		case TASK_MERCS:
 			UpdateMercsInfo();
@@ -840,8 +843,9 @@ static void RenderEditorInfo(void)
 		case TASK_MAPINFO:
 			UpdateMapInfo();
 			if( gusSelectionType == LINESELECTION )
-				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
-			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 450, 70, 60, 30);
+				wszSelType[LINESELECTION] = ST::format("Width: {}", gusSelectionWidth);
+			wstr = wszSelType[gusSelectionType].to_wchar();
+			DrawEditorInfoBox(wstr.c_str(), FONT12POINT1, 450, 70, 60, 30);
 			break;
 		default:
 			break;
