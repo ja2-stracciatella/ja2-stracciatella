@@ -821,4 +821,11 @@ TEST(cpp_language, new_array_initialization)
 	}
 }
 
+TEST(cpp_language, sizeof_type)
+{
+	EXPECT_EQ(sizeof(char), 1);
+	EXPECT_EQ(sizeof(char16_t), 2);
+	EXPECT_EQ(sizeof(char32_t), 4);
+}
+
 #endif // WITH_UNITTESTS

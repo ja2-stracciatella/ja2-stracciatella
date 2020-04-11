@@ -225,7 +225,7 @@ endif()
 
 if(BUILD_LAUNCHER)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-    target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} ${STRACCIATELLA_LIBRARIES} ${ADDITIONAL_LIBS})
+    target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} ${STRACCIATELLA_LIBRARIES} string_theory ${ADDITIONAL_LIBS})
     add_dependencies(${LAUNCHER_BINARY} stracciatella)
     if (LOCAL_FLTK_LIB)
         add_dependencies(${LAUNCHER_BINARY} fltk-internal)

@@ -1,9 +1,14 @@
 #ifndef SGPSTRINGS_H
 #define SGPSTRINGS_H
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <cwchar>
+#include <stdexcept>
 #include <stdio.h>
 #include <string.h>
+#include <utility>
 
 #include "PlatformStrings.h"
 
@@ -34,5 +39,45 @@ int WINvswprintf(wchar_t* s, size_t n, const wchar_t* fmt, va_list arg);
 #endif
 
 void CopyTrimmedString(wchar_t* dst, const size_t maxLen, const wchar_t* src);
+
+/// Converts `std::printf` formatting to `ST::format` formatting.
+/// @see https://en.cppreference.com/w/cpp/io/c/fprintf
+ST::string st_fmt_printf_to_format(const ST::string& fmt_printf);
+
+/// Format a string with `std::printf` formatting.
+template <typename ... T>
+inline ST::string st_format_printf(ST::utf_validation_t validation, const ST::string& fmt_printf, T&& ... args)
+{
+	ST::string fmt = st_fmt_printf_to_format(fmt_printf);
+	return ST::format(validation, fmt.c_str(), std::forward<T>(args) ...);
+}
+
+/// Format a string with `std::printf` formatting.
+template <typename ... T>
+inline ST::string st_format_printf(const ST::string& fmt_printf, T&& ... args)
+{
+	return st_format_printf(ST_DEFAULT_VALIDATION, fmt_printf, std::forward<T>(args) ...);
+}
+
+ST::string st_buffer_escape(const ST::char_buffer& buf);
+ST::string st_buffer_escape(const ST::utf16_buffer& buf);
+ST::string st_buffer_escape(const ST::utf32_buffer& buf);
+
+/// Converts a buffer to a string.
+template<typename T>
+ST::string st_checked_buffer_to_string(ST::string& err_msg, const ST::buffer<T>& buf) noexcept
+{
+	err_msg = ST::null;
+	try
+	{
+		return buf.c_str();
+	}
+	catch (const std::runtime_error& ex)
+	{
+		ST::string str = ST::string(buf.c_str(), ST_AUTO_SIZE, ST::substitute_invalid);
+		err_msg = ST::format(ST::substitute_invalid, "{}: \"{}\" -> '{}'", ex.what(), st_buffer_escape(buf), str);
+		return str;
+	}
+}
 
 #endif
