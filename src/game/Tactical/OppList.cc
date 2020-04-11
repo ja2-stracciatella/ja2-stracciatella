@@ -2729,7 +2729,7 @@ void DebugSoldierPage1()
 	const SOLDIERTYPE* const s = FindSoldierFromMouse();
 	if (s != NULL)
 	{
-		MPageHeader(L"DEBUG SOLDIER PAGE ONE, GRIDNO %d", s->sGridNo);
+		MPageHeader(ST::format("DEBUG SOLDIER PAGE ONE, GRIDNO {}", s->sGridNo));
 
 		INT32 y = DEBUG_PAGE_START_Y;
 
@@ -2789,7 +2789,7 @@ void DebugSoldierPage2()
 	const SOLDIERTYPE* const s = FindSoldierFromMouse();
 	if (s != NULL)
 	{
-		MPageHeader(L"DEBUG SOLDIER PAGE TWO, GRIDNO %d", s->sGridNo);
+		MPageHeader(ST::format("DEBUG SOLDIER PAGE TWO, GRIDNO {}", s->sGridNo));
 
 		INT32 y = DEBUG_PAGE_START_Y;
 
@@ -2927,7 +2927,7 @@ void DebugSoldierPage3()
 	const SOLDIERTYPE* const s = FindSoldierFromMouse();
 	if (s != NULL)
 	{
-		MPageHeader(L"DEBUG SOLDIER PAGE THREE, GRIDNO %d", s->sGridNo);
+		MPageHeader(ST::format("DEBUG SOLDIER PAGE THREE, GRIDNO {}", s->sGridNo));
 
 		INT32 y = DEBUG_PAGE_START_Y;
 
@@ -3150,7 +3150,7 @@ void DebugSoldierPage4()
 
 	if (s != NULL)
 	{
-		MPageHeader(L"DEBUG SOLDIER PAGE FOUR, GRIDNO %d", s->sGridNo);
+		MPageHeader(ST::format("DEBUG SOLDIER PAGE FOUR, GRIDNO {}", s->sGridNo));
 
 		INT32 y = DEBUG_PAGE_START_Y;
 

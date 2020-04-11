@@ -1248,7 +1248,7 @@ void DebugStructurePage1()
 		MPageHeader(L"DEBUG STRUCTURES PAGE ONE");
 		return;
 	} else {
-		MPageHeader(L"DEBUG STRUCTURES PAGE ONE, GRIDNO %d", grid_no);
+		MPageHeader(ST::format("DEBUG STRUCTURES PAGE ONE, GRIDNO {}", grid_no));
 	}
 
 	INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
