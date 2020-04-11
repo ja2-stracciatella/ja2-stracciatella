@@ -25,7 +25,7 @@ const int8_t BloodCatSpawnsModel::getSpawnsByDifficulty(uint8_t difficultyLevel)
 
 BloodCatSpawnsModel* BloodCatSpawnsModel::deserialize(JsonObjectReader& obj)
 {
-	uint8_t sectorId = SECTOR_FROM_COORDINATES( obj.GetString("sector") );
+	uint8_t sectorId = SECTOR_FROM_SECTOR_SHORT_STRING( obj.GetString("sector") );
 	return new BloodCatSpawnsModel(
 		sectorId,
 		obj.GetBool("isLair"),
