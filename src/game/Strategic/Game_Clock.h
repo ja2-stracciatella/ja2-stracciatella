@@ -3,6 +3,8 @@
 
 #include "Types.h"
 
+#include <string_theory/string>
+
 
 #define NUM_SEC_IN_DAY		86400
 #define NUM_SEC_IN_HOUR		3600
@@ -123,7 +125,7 @@ void AdvanceToNextDay(void);
 void UpdateClock(void);
 
 
-extern wchar_t gswzWorldTimeStr[ 20 ]; //Day 99, 23:55
+extern ST::string gswzWorldTimeStr; //Day 99, 23:55
 
 extern	UINT32			guiDay;
 extern	UINT32			guiHour;
