@@ -1017,7 +1017,7 @@ catch (...) { return FALSE; }
 
 void SetDoorString(INT16 const sGridNo)
 {
-	if (!GetIntTileLocationText())
+	if (GetIntTileLocationText().empty())
 	{
 		SetIntTileLocationText(TacticalStr[DOOR_DOOR_MOUSE_DESCRIPTION]);
 		DOOR const* const d = FindDoorInfoAtGridNo(sGridNo);
@@ -1047,7 +1047,7 @@ void SetDoorString(INT16 const sGridNo)
 	}
 
 	// ATE: If here, we try to say, opened or closed...
-	if (!GetIntTileLocation2Text())
+	if (GetIntTileLocation2Text().empty())
 	{
 	if(isGermanVersion())
 	{

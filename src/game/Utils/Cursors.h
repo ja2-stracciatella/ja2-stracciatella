@@ -3,6 +3,9 @@
 
 #include "Types.h"
 
+#include <string_theory/string>
+
+
 // INDIVIDUAL CURSORS
 
 enum CursorTypeDefines
@@ -244,11 +247,11 @@ void SetCursorFlags(UINT32 uiCursor, UINT8 ubFlags);
 void RemoveCursorFlags(UINT32 uiCursor, UINT8 ubFlags);
 
 // The string must be persistent
-void SetHitLocationText(const wchar_t* Text);
-void SetIntTileLocationText(const wchar_t* Text);
-void SetIntTileLocation2Text(const wchar_t* Text);
+void SetHitLocationText(const ST::string& str);
+void SetIntTileLocationText(const ST::string& str);
+void SetIntTileLocation2Text(const ST::string& str);
 
-const wchar_t* GetIntTileLocationText(void);
-const wchar_t* GetIntTileLocation2Text(void);
+const ST::string& GetIntTileLocationText(void);
+const ST::string& GetIntTileLocation2Text(void);
 
 #endif

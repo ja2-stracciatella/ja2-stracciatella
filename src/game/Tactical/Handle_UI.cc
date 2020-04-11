@@ -79,6 +79,7 @@
 #include "Soldier.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 #include <algorithm>
 #include <iterator>
@@ -385,9 +386,9 @@ ScreenID HandleTacticalUI(void)
 	gfUIHandleSelection = NO_GUY_SELECTION;
 	gSelectedGuy = NULL;
 	guiShowUPDownArrows = ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
-	SetHitLocationText(NULL);
-	SetIntTileLocationText(NULL);
-	SetIntTileLocation2Text(NULL);
+	SetHitLocationText(ST::null);
+	SetIntTileLocationText(ST::null);
+	SetIntTileLocation2Text(ST::null);
 	//gfUIForceReExamineCursorData = FALSE;
 	gfUINewStateForIntTile = FALSE;
 	gfUIShowExitExitGrid = FALSE;
