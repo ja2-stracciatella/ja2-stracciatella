@@ -893,11 +893,8 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 			}
 			else
 			{
-				wchar_t str[ 256 ];
-				wchar_t pSectorStr[ 128 ];
-				ST::wchar_buffer wstr = GetSectorIDString(pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, TRUE).to_wchar();
-				wcslcpy(pSectorStr, wstr.c_str(), lengthof(pSectorStr));
-				swprintf( str, lengthof(str), gpStrategicString[ STR_DIALOG_ENEMIES_ATTACK_UNCONCIOUSMERCS ], pSectorStr );
+				ST::string pSectorStr = GetSectorIDString(pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, TRUE);
+				ST::string str = st_format_printf(gpStrategicString[ STR_DIALOG_ENEMIES_ATTACK_UNCONCIOUSMERCS ], pSectorStr);
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, TriggerPrebattleInterface );
 			}
 		}
@@ -1271,7 +1268,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		}
 
 		bool    const  here = x == gWorldSectorX && y == gWorldSectorY && z == gbWorldSectorZ;
-		wchar_t const* who  = 0;
+		ST::string who;
 		if (!g.fVehicle)
 		{
 			// non-vehicle player group
@@ -1358,7 +1355,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			if (!group_destroyed) who = pVehicleStrings[v.ubVehicleType];
 		}
 
-		if (who)
+		if (!who.empty())
 		{ /* Don't print any messages when arriving underground (there's no delay
 			 * involved) or if we never left (cancel) */
 			if (GroupAtFinalDestination(&g) && z == 0 && !never_left)
@@ -1631,18 +1628,17 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* const first_
 	LockPauseState(LOCK_PAUSE_13);
 	gpPendingSimultaneousGroup = first_group;
 
-	wchar_t const* const pStr =
+	ST::string pStr =
 		n_nearby_groups == 1 ? gpStrategicString[STR_DETECTED_SINGULAR] :
 		gpStrategicString[STR_DETECTED_PLURAL];
-	wchar_t const* const enemy_type =
+	ST::string enemy_type =
 		gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ? gpStrategicString[STR_PB_BLOODCATS] :
 		gpStrategicString[STR_PB_ENEMIES];
 	/* header, sector, singular/plural str, confirmation string.
 	 * Ex:  Enemies have been detected in sector J9 and another squad is about to
 	 *      arrive.  Do you wish to coordinate a simultaneous arrival? */
-	wchar_t str[255];
-	size_t const n = swprintf(str, lengthof(str), pStr, enemy_type, 'A' + first_group->ubSectorY - 1, first_group->ubSectorX);
-	swprintf(str + n, lengthof(str) - n, L" %ls", gpStrategicString[STR_COORDINATE]);
+	ST::string str = st_format_printf(pStr, enemy_type, 'A' + first_group->ubSectorY - 1, first_group->ubSectorX);
+	str += ST::format(" {}", gpStrategicString[STR_COORDINATE]);
 	DoMapMessageBox(MSG_BOX_BASIC_STYLE, str, guiCurrentScreen, MSG_BOX_FLAG_YESNO, PlanSimultaneousGroupArrivalCallback);
 	gfWaitingForInput = TRUE;
 	return TRUE;
@@ -1896,7 +1892,7 @@ void RemoveGroup(GROUP& g)
 	{
 		CancelEmptyPersistentGroupMovement(g);
 		return;
-		DoScreenIndependantMessageBox(L"Strategic Info Warning:  Attempting to delete a persistant group.", MSG_BOX_FLAG_OK, NULL);
+		DoScreenIndependantMessageBox("Strategic Info Warning:  Attempting to delete a persistant group.", MSG_BOX_FLAG_OK, NULL);
 	}
 
 	RemoveGroupWaypoints(g);
@@ -3221,8 +3217,7 @@ void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle)
 static void ReportVehicleOutOfGas(VEHICLETYPE const& v, UINT8 const x, UINT8 const y)
 {
 	// Report that the vehicle that just arrived is out of gas
-	wchar_t str[255];
-	swprintf(str, lengthof(str), gzLateLocalizedString[STR_LATE_05], pVehicleStrings[v.ubVehicleType], y + 'A' - 1, x);
+	ST::string str = st_format_printf(gzLateLocalizedString[STR_LATE_05], pVehicleStrings[v.ubVehicleType], y + 'A' - 1, x);
 	DoScreenIndependantMessageBox(str, MSG_BOX_FLAG_OK, 0);
 }
 
@@ -3436,17 +3431,16 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 
 static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY)
 {
-	wchar_t str[ 256 ];
-	wchar_t zTempString[ 128 ];
+	ST::string str;
+	ST::string zTempString;
 	if( gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
 	{
-		ST::wchar_buffer wstr = GetSectorIDString(ubSectorX, ubSectorY, 0, TRUE).to_wchar();
-		wcslcpy(zTempString, wstr.c_str(), lengthof(zTempString));
-		swprintf( str, lengthof(str), pMapErrorString[ 12 ], zTempString );
+		zTempString = GetSectorIDString(ubSectorX, ubSectorY, 0, TRUE);
+		str = st_format_printf(pMapErrorString[ 12 ], zTempString);
 	}
 	else if( gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
 	{
-		wcscpy( str, pMapErrorString[ 13 ] );
+		str = pMapErrorString[ 13 ];
 	}
 
 	if( guiCurrentScreen == MAP_SCREEN )
@@ -3619,11 +3613,8 @@ static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
 	gpGroupPrompting = &g;
 
 	// Build string for squad.
-	wchar_t sector_name[128];
-	ST::wchar_buffer wstr = GetSectorIDString(x, y, z, FALSE).to_wchar();
-	wcslcpy(sector_name, wstr.c_str(), lengthof(sector_name));
-	wchar_t msg[128];
-	swprintf(msg, lengthof(msg), pLandMarkInSectorString, g.pPlayerList->pSoldier->bAssignment + 1, sector_name);
+	ST::string sector_name = GetSectorIDString(x, y, z, FALSE);
+	ST::string msg = st_format_printf(pLandMarkInSectorString, g.pPlayerList->pSoldier->bAssignment + 1, sector_name);
 
 	MessageBoxFlags const flags =
 		GroupAtFinalDestination(&g) ? MSG_BOX_FLAG_OK :
