@@ -3,6 +3,9 @@
 
 #include "JA2Types.h"
 
+#include <string_theory/string>
+
+
 #define MAX_POPUP_BOX_STRING_COUNT 50		// worst case = 45: move menu with 20 soldiers, each on different squad + overhead
 
 // PopUpBox Flags
@@ -20,7 +23,7 @@ void SetBoxX(PopUpBox*, INT16 x);
 void SetBoxY(PopUpBox*, INT16 y);
 UINT32 GetNumberOfLinesOfTextInBox(const PopUpBox*);
 SGPBox const& GetBoxArea(PopUpBox const*);
-void AddMonoString(PopUpBox*, const wchar_t* pString);
+void AddMonoString(PopUpBox* box, const ST::string& str);
 void SetBoxFont(PopUpBox*, SGPFont);
 SGPFont GetBoxFont(const PopUpBox*);
 void SetBoxForeground(PopUpBox*, UINT8 colour);
@@ -69,7 +72,7 @@ void SetBoxLineForeground(PopUpBox*, INT32 iStringValue, UINT8 ubColor);
 void HideAllBoxes( void );
 
 // add a second column monochrome string
-void AddSecondColumnMonoString(PopUpBox*, const wchar_t* pString);
+void AddSecondColumnMonoString(PopUpBox* box, const ST::string& str);
 
 // set the minimum offset
 void SetBoxSecondColumnMinimumOffset(PopUpBox*, UINT32 uiWidth);
