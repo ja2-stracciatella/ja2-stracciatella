@@ -71,6 +71,7 @@
 #include "GameInstance.h"
 #include "Logger.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 #include <stdexcept>
@@ -1179,7 +1180,7 @@ static void AutoBandageMercs(void)
 			parallel_points_used += points_used;
 		}
 	}
-	wchar_t const* const msg = complete ? gzLateLocalizedString[STR_LATE_13] : gzLateLocalizedString[STR_LATE_10];
+	ST::string msg = complete ? gzLateLocalizedString[STR_LATE_13] : gzLateLocalizedString[STR_LATE_10];
 	DoScreenIndependantMessageBox(msg, MSG_BOX_FLAG_OK, AutoBandageFinishedCallback);
 
 	gpAR->uiTotalElapsedBattleTimeInMilliseconds += parallel_points_used * 200;
@@ -1189,7 +1190,7 @@ static void AutoBandageMercs(void)
 static void RenderAutoResolve(void)
 {
 	INT32 xp, yp;
-	wchar_t str[100];
+	ST::string str;
 	UINT8 ubGood, ubBad;
 
 	if (gpAR->fShowInterface)
@@ -1253,7 +1254,7 @@ static void RenderAutoResolve(void)
 	//Render the titles
 	SetFontAttributes(FONT10ARIALBOLD, FONT_WHITE);
 
-	const wchar_t* EncounterType; // XXX HACK000E
+	ST::string EncounterType;
 	switch( gubEnemyEncounterCode )
 	{
 		case ENEMY_ENCOUNTER_CODE:
@@ -1263,8 +1264,6 @@ static void RenderAutoResolve(void)
 		case CREATURE_ATTACK_CODE:
 			EncounterType = gpStrategicString[STR_AR_DEFEND_HEADER];
 			break;
-
-		default: abort(); // HACK000E
 	}
 
 	xp = gpAR->sCenterStartX + 70 - StringPixLength(EncounterType, FONT10ARIALBOLD) / 2;
@@ -1273,8 +1272,7 @@ static void RenderAutoResolve(void)
 
 	SetFontAttributes(FONT10ARIAL, FONT_GRAY2);
 
-	ST::wchar_buffer wstr = GetSectorIDString(gpAR->ubSectorX, gpAR->ubSectorY, 0, TRUE).to_wchar();
-	wcslcpy(str, wstr.c_str(), lengthof(str));
+	str = GetSectorIDString(gpAR->ubSectorX, gpAR->ubSectorY, 0, TRUE);
 	xp = gpAR->sCenterStartX + 70 - StringPixLength( str, FONT10ARIAL )/2;
 	yp += 11;
 	MPrint(xp, yp, str);
@@ -1282,7 +1280,7 @@ static void RenderAutoResolve(void)
 	//Display the remaining forces
 	ubGood = (UINT8)(gpAR->ubAliveMercs + gpAR->ubAliveCivs);
 	ubBad = gpAR->ubAliveEnemies;
-	swprintf(str, lengthof(str), gzLateLocalizedString[STR_LATE_17], ubGood, ubBad);
+	str = st_format_printf(gzLateLocalizedString[STR_LATE_17], ubGood, ubBad);
 
 	SetFont( FONT14ARIAL );
 	if( ubGood * 3 <= ubBad * 2 )
@@ -1393,7 +1391,7 @@ static void RenderAutoResolve(void)
 			}
 		}
 		//Render the end battle condition.
-			const wchar_t* BattleResult; // XXX HACK000E
+			ST::string BattleResult;
 			switch( gpAR->ubBattleStatus )
 			{
 				case BATTLE_VICTORY:
@@ -1421,8 +1419,6 @@ static void RenderAutoResolve(void)
 					SetFontForeground( FONT_YELLOW );
 					BattleResult = gpStrategicString[STR_AR_OVER_RETREATED];
 					break;
-
-				default: abort(); // HACK000E
 			}
 			//Render the results of the battle.
 			SetFont( BLOCKFONT2 );
@@ -1435,7 +1431,7 @@ static void RenderAutoResolve(void)
 
 			//Render the total battle time elapsed.
 			SetFont( FONT10ARIAL );
-			swprintf(str, lengthof(str), L"%ls:  %d%ls %02d%ls",
+			str = ST::format("{}:  {}{} {02d}{}",
 				gpStrategicString[ STR_AR_TIME_ELAPSED ],
 				gpAR->uiTotalElapsedBattleTimeInMilliseconds/60000,
 				gsTimeStrings[1],
@@ -1452,7 +1448,7 @@ static void RenderAutoResolve(void)
 }
 
 
-static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, BOOLEAN hide, const wchar_t* text)
+static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, BOOLEAN hide, const ST::string& text)
 {
 	GUIButtonRef const btn = QuickCreateButton(gpAR->iButtonImage[idx], x, y, MSYS_PRIORITY_HIGH, click);
 	gpAR->iButton[idx] = btn;
@@ -1461,7 +1457,7 @@ static void MakeButton(UINT idx, INT16 x, INT16 y, GUI_CALLBACK click, BOOLEAN h
 }
 
 
-static SOLDIERCELL* MakeEnemyTroops(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STRUCT* const ar, SoldierClass const sc, UINT16 const face, wchar_t const* const name)
+static SOLDIERCELL* MakeEnemyTroops(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STRUCT* ar, SoldierClass sc, UINT16 face, const ST::string& name)
 {
 	for (; n != 0; --n, ++cell)
 	{
@@ -1644,18 +1640,18 @@ static void CreateAutoResolveInterface(void)
 	const INT16 dy = ar->bVerticalOffset + SCREEN_HEIGHT / 2;
 
 	// Create the buttons -- subject to relocation
-	MakeButton(PLAY_BUTTON,     dx + 11, dy,      PlayButtonCallback,      FALSE, 0);
-	MakeButton(FAST_BUTTON,     dx + 51, dy,      FastButtonCallback,      FALSE, 0);
-	MakeButton(FINISH_BUTTON,   dx + 91, dy,      FinishButtonCallback,    FALSE, 0);
-	MakeButton(PAUSE_BUTTON,    dx + 11, dy + 34, PauseButtonCallback,     FALSE, 0);
+	MakeButton(PLAY_BUTTON,     dx + 11, dy,      PlayButtonCallback,      FALSE, ST::null);
+	MakeButton(FAST_BUTTON,     dx + 51, dy,      FastButtonCallback,      FALSE, ST::null);
+	MakeButton(FINISH_BUTTON,   dx + 91, dy,      FinishButtonCallback,    FALSE, ST::null);
+	MakeButton(PAUSE_BUTTON,    dx + 11, dy + 34, PauseButtonCallback,     FALSE, ST::null);
 	MakeButton(RETREAT_BUTTON,  dx + 51, dy + 34, RetreatButtonCallback,   FALSE, gpStrategicString[STR_AR_RETREAT_BUTTON]);
 	if (!ar->ubMercs) DisableButton(ar->iButton[RETREAT_BUTTON]);
 
-	MakeButton(BANDAGE_BUTTON,  dx + 11, dy +  5, BandageButtonCallback,   TRUE,  0);
+	MakeButton(BANDAGE_BUTTON,  dx + 11, dy +  5, BandageButtonCallback,   TRUE,  ST::null);
 	MakeButton(DONEWIN_BUTTON,  dx + 51, dy +  5, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
 	MakeButton(DONELOSE_BUTTON, dx + 25, dy +  5, DoneButtonCallback,      TRUE,  gpStrategicString[STR_AR_DONE_BUTTON]);
-	MakeButton(YES_BUTTON,      dx + 21, dy + 17, AcceptSurrenderCallback, TRUE,  0);
-	MakeButton(NO_BUTTON,       dx + 81, dy + 17, RejectSurrenderCallback, TRUE,  0);
+	MakeButton(YES_BUTTON,      dx + 21, dy + 17, AcceptSurrenderCallback, TRUE,  ST::null);
+	MakeButton(NO_BUTTON,       dx + 81, dy + 17, RejectSurrenderCallback, TRUE,  ST::null);
 	ar->iButton[PLAY_BUTTON]->uiFlags |= BUTTON_CLICKED_ON;
 }
 
@@ -2008,7 +2004,7 @@ static bool CanAnybodyBandage()
 
 static void DetermineBandageButtonState(void)
 {
-	wchar_t const* help;
+	ST::string help;
 	bool           enable = false;
 	if (!IsAnybodyWounded()) // Does anyone need bandaging?
 	{
@@ -2469,8 +2465,8 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 {
 	UINT8 cnt, cntStart;
 	UINT16 xp, yp;
-	const wchar_t *pStr;
-	wchar_t str[20];
+	ST::string pStr;
+	ST::string str;
 	UINT16 usColor;
 
 	SetFont( SMALLCOMPFONT );
@@ -2523,10 +2519,9 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 	}
 	else
 	{
-		ST::wchar_buffer wstr = pCell->pSoldier->name.to_wchar();
-		wcscpy( str, wstr.c_str() );
+		str = pCell->pSoldier->name;
 		#if 0 /* XXX */
-		pStr = _wcsupr( str );
+		pStr = str.to_upper();
 		#else
 		pStr = str;
 		#endif
@@ -2556,7 +2551,7 @@ static void RenderSoldierCellHealth(SOLDIERCELL* pCell)
 		if( pCell->pSoldier->bLife >= OKLIFE )
 		{
 			SetFontForeground( FONT_YELLOW );
-			const wchar_t* Retreat = gpStrategicString[STR_AR_MERC_RETREAT];
+			ST::string Retreat = gpStrategicString[STR_AR_MERC_RETREAT];
 			xp = pCell->xp + 25 - StringPixLength(Retreat, SMALLCOMPFONT) / 2;
 			yp = pCell->yp + 12;
 			MPrint(xp, yp, Retreat);
@@ -2845,7 +2840,7 @@ static void DrawDebugText(SOLDIERCELL* pCell)
 	if( pCell->uiFlags & CELL_TEAMLEADER )
 	{
 		//debug str
-		MPrint(xp, yp, L"LEADER");
+		MPrint(xp, yp, "LEADER");
 		yp += 9;
 	}
 	MPrint( xp, yp, ST::format("AT: {}", pCell->usAttack) );
@@ -2860,21 +2855,21 @@ static void DrawDebugText(SOLDIERCELL* pCell)
 	if( pCell->uiFlags & CELL_FIREDATTARGET )
 	{
 		SetFontForeground( FONT_YELLOW );
-		MPrint(xp, yp, L"FIRE");
+		MPrint(xp, yp, "FIRE");
 		pCell->uiFlags &= ~CELL_FIREDATTARGET;
 		yp += 13;
 	}
 	if( pCell->uiFlags & CELL_DODGEDATTACK )
 	{
 		SetFontForeground( FONT_BLUE );
-		MPrint(xp, yp, L"MISS");
+		MPrint(xp, yp, "MISS");
 		pCell->uiFlags &= ~CELL_DODGEDATTACK;
 		yp += 13;
 	}
 	if( pCell->uiFlags & CELL_HITBYATTACKER )
 	{
 		SetFontForeground( FONT_RED );
-		MPrint(xp, yp, L"HIT");
+		MPrint(xp, yp, "HIT");
 		pCell->uiFlags &= ~CELL_HITBYATTACKER;
 		yp += 13;
 	}
