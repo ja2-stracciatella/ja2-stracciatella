@@ -39,6 +39,7 @@
 #include "WeaponModels.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 #include <algorithm>
 #include <iterator>
@@ -1161,7 +1162,8 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 		SetFontDestBuffer(FRAME_BUFFER);
 
 		wcslcpy(sString, ItemNames[item_idx], lengthof(sString));
-		ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
+		ST::wchar_buffer wstr = ReduceStringLength(sString, 171 - 75, FONT10ARIAL).to_wchar();
+		wcslcpy(sString, wstr.c_str(), lengthof(sString));
 		MPrint(PosX + 65, PosY + 3, sString);
 
 		// condition
@@ -1183,7 +1185,8 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 		{
 			ST::wchar_buffer name = item->asWeapon()->calibre->getName()->to_wchar();
 			wcslcpy(sString, name.c_str(), lengthof(sString)); // might not terminate with '\0'
-			ReduceStringLength(sString, lengthof(sString), 171 - 75, FONT10ARIAL);
+			ST::wchar_buffer wstr = ReduceStringLength(sString, 171 - 75, FONT10ARIAL).to_wchar();
+			wcslcpy(sString, wstr.c_str(), lengthof(sString));
 			MPrint(PosX + 65, PosY + 15, sString);
 		}
 

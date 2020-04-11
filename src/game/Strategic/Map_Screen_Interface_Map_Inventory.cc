@@ -45,6 +45,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <climits>
 #include <vector>
@@ -229,7 +231,8 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	const SGPBox* const name_box = &g_sector_inv_name_box;
 	wchar_t sString[SIZE_SHORT_ITEM_NAME];
 	wcscpy(sString, ShortItemNames[item.o.usItem]);
-	ReduceStringLength(sString, lengthof(sString), name_box->w, MAP_IVEN_FONT);
+	ST::wchar_buffer wstr = ReduceStringLength(sString, name_box->w, MAP_IVEN_FONT).to_wchar();
+	wcslcpy(sString, wstr.c_str(), lengthof(sString));
 
 	SetFontAttributes(MAP_IVEN_FONT, FONT_WHITE);
 

@@ -35,6 +35,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <vector>
 
@@ -869,7 +871,8 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			else
 				GCM->loadEncryptedString(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 
-			ReduceStringLength(sText, lengthof(sText), BOBBYR_GRID_THIRD_COLUMN_WIDTH - 4, BOBBYR_ORDER_DYNAMIC_TEXT_FONT);
+			ST::wchar_buffer wstr = ReduceStringLength(sText, BOBBYR_GRID_THIRD_COLUMN_WIDTH - 4, BOBBYR_ORDER_DYNAMIC_TEXT_FONT).to_wchar();
+			wcslcpy(sText, wstr.c_str(), lengthof(sText));
 
 			DrawTextToScreen(sText, usGridX + BOBBYR_GRID_THIRD_COLUMN_X + 2, usPosY, BOBBYR_GRID_THIRD_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 

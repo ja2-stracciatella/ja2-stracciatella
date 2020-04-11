@@ -29,6 +29,7 @@
 #include "GameInstance.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 
 #define MAX_MESSAGES_PAGE 18 // max number of messages per page
@@ -743,7 +744,8 @@ static void DrawEmailSummary(INT32 y, const Email* e)
 
 	wchar_t pTempSubject[MAIL_STRING_SIZE];
 	wcscpy(pTempSubject, e->pSubject);
-	ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, font);
+	ST::wchar_buffer wstr = ReduceStringLength(pTempSubject, SUBJECT_WIDTH - 10, font).to_wchar();
+	wcslcpy(pTempSubject, wstr.c_str(), lengthof(pTempSubject));
 	MPrint(SUBJECT_X, y + 4, pTempSubject);
 	MPrint(SENDER_X,  y + 4, pSenderNameList[e->ubSender]);
 

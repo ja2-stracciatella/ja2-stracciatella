@@ -25,6 +25,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 #define FLOWER_ORDEER_TINY_FONT				FONT10ARIAL
 #define FLOWER_ORDEER_SMALL_FONT			FONT12ARIAL
 #define FLOWER_ORDEER_BIG_FONT				FONT12ARIAL
@@ -946,7 +949,8 @@ static void InitFlowerOrderTextInputBoxes(void)
 		const UINT32 uiStartLoc = FLOR_CARD_TEXT_TITLE_SIZE * gbCurrentlySelectedCard;
 		GCM->loadEncryptedString( FLOR_CARD_TEXT_FILE, sTemp, uiStartLoc, FLOR_CARD_TEXT_TITLE_SIZE);
 		wchar_t	sText[FLOR_CARD_TEXT_TITLE_SIZE];
-		CleanOutControlCodesFromString(sTemp, sText);
+		ST::wchar_buffer wstr = CleanOutControlCodesFromString(sTemp).to_wchar();
+		wcslcpy(sText, wstr.c_str(), lengthof(sText));
 
 		wcslcpy(gsSentimentTextField, sText, lengthof(gsSentimentTextField));
 

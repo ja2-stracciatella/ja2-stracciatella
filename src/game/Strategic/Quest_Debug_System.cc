@@ -47,6 +47,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 #define QUEST_DBS_FONT_TITLE			FONT14ARIAL
 #define QUEST_DBS_COLOR_TITLE			FONT_MCOLOR_LTGREEN
 #define QUEST_DBS_COLOR_SUBTITLE		FONT_MCOLOR_DKGRAY
@@ -1370,7 +1373,8 @@ static void DisplayFactList(void)
 		else
 		{
 			wcscpy( sTemp, FactDescText[ usLoop1 ] );
-			ReduceStringLength(sTemp, lengthof(sTemp), QUEST_DBS_SECOND_TITLE_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT);
+			ST::wchar_buffer wstr = ReduceStringLength(sTemp, QUEST_DBS_SECOND_TITLE_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT).to_wchar();
+			wcslcpy(sTemp, wstr.c_str(), lengthof(sTemp));
 //			DisplayWrappedString(QUEST_DBS_SECOND_COL_TITLE_X, usPosY, QUEST_DBS_SECOND_TITLE_COL_WIDTH, 2, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_STATIC_TEXT, FactDescText[usLoop1], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 			DrawTextToScreen(sTemp, QUEST_DBS_SECOND_COL_TITLE_X, usPosY, QUEST_DBS_SECOND_TITLE_COL_WIDTH, QUEST_DBS_FONT_DYNAMIC_TEXT, QUEST_DBS_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}

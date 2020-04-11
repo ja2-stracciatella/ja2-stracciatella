@@ -25,6 +25,9 @@
 #include "FileMan.h"
 #include "UILayout.h"
 
+#include <string_theory/string>
+
+
 struct ScrollStringSt
 {
 	wchar_t*        pString;
@@ -361,7 +364,8 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t
 	BOOLEAN new_string = TRUE;
 	for (WRAPPED_STRING* i = head; i; i = i->pNextWrappedString)
 	{
-		ScrollStringSt* const tmp = AddString(i->sString.data(), colour, new_string);
+		ST::wchar_buffer wstr = ST::utf32_to_wchar(i->codepoints);
+		ScrollStringSt* const tmp = AddString(wstr.c_str(), colour, new_string);
 		*anchor    = tmp;
 		anchor     = &tmp->pNext;
 		new_string = FALSE;
@@ -419,7 +423,8 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 	BOOLEAN fNewString = TRUE;
 	do
 	{
-		AddStringToMapScreenMessageList(pStringWrapper->sString.data(), usColor, fNewString);
+		ST::wchar_buffer wstr = ST::utf32_to_wchar(pStringWrapper->codepoints);
+		AddStringToMapScreenMessageList(wstr.c_str(), usColor, fNewString);
 		fNewString = FALSE;
 		pStringWrapper = pStringWrapper->pNextWrappedString;
 	}

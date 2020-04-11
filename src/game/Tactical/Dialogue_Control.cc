@@ -1,5 +1,3 @@
-#include <queue>
-
 #include "Directories.h"
 #include "Font.h"
 #include "Font_Control.h"
@@ -57,6 +55,11 @@
 #include "GameInstance.h"
 #include "MercProfile.h"
 #include "content/Dialogs.h"
+
+#include <string_theory/string>
+
+#include <queue>
+
 
 #define QUOTE_MESSAGE_SIZE			520
 
@@ -1277,7 +1280,8 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* const blt)
 		{
 			wchar_t sector_id[50];
 			GetSectorIDString(s->sSectorX, s->sSectorY, s->bSectorZ, sector_id, lengthof(sector_id), FALSE);
-			ReduceStringLength(sector_id, lengthof(sector_id), 64, BLOCKFONT2);
+			ST::wchar_buffer wstr = ReduceStringLength(sector_id, 64, BLOCKFONT2).to_wchar();
+			wcslcpy(sector_id, wstr.c_str(), lengthof(sector_id));
 			FindFontCenterCoordinates(x + 12, y + 68, 73, 9, sector_id, BLOCKFONT2, &sFontX, &sFontY);
 			MPrint(sFontX, sFontY, sector_id);
 		}

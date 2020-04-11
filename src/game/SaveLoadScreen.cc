@@ -1,5 +1,3 @@
-#include <exception>
-
 #include "Directories.h"
 #include "Font.h"
 #include "GameLoop.h"
@@ -49,6 +47,11 @@
 #include "PreBattle_Interface.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
+
+#include <string_theory/string>
+
+#include <exception>
+
 
 #define SAVE_LOAD_TITLE_FONT				FONT14ARIAL
 #define SAVE_LOAD_TITLE_COLOR				FONT_MCOLOR_WHITE
@@ -1069,7 +1072,8 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 			{
 				wcslcpy(location, gzLateLocalizedString[STR_LATE_14], lengthof(location));
 			}
-			ReduceStringLength(location, lengthof(location), SLG_SECTOR_WIDTH, font);
+			ST::wchar_buffer wstr = ReduceStringLength(location, SLG_SECTOR_WIDTH, font).to_wchar();
+			wcslcpy(location, wstr.c_str(), lengthof(location));
 			DrawTextToScreen(location, x + SLG_SECTOR_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			// Number of mercs on the team

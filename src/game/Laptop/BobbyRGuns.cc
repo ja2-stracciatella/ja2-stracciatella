@@ -33,6 +33,8 @@
 #include "policy/GamePolicy.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -859,7 +861,8 @@ static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 	ST::wchar_buffer name = GCM->getCalibreNameForBobbyRay(calibre->index)->to_wchar();;
 	wcslcpy(zTemp, name.c_str(), lengthof(zTemp)); // might not terminate with '\0'
 
-	ReduceStringLength(zTemp, lengthof(zTemp), BOBBYR_GRID_PIC_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT);
+	ST::wchar_buffer wstr = ReduceStringLength(zTemp, BOBBYR_GRID_PIC_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT).to_wchar();
+	wcslcpy(zTemp, wstr.c_str(), lengthof(zTemp));
 	DrawTextToScreen(zTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 	usPosY += usFontHeight + 2;
@@ -878,7 +881,8 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 		wchar_t sText[BOBBYR_ITEM_DESC_NAME_SIZE];
 		uiStartLoc = BOBBYR_ITEM_DESC_FILE_SIZE * usIndex;
 		GCM->loadEncryptedString(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
-		ReduceStringLength(sText, lengthof(sText), BOBBYR_GRID_PIC_WIDTH - 6, BOBBYR_ITEM_NAME_TEXT_FONT);
+		ST::wchar_buffer wstr = ReduceStringLength(sText, BOBBYR_GRID_PIC_WIDTH - 6, BOBBYR_ITEM_NAME_TEXT_FONT).to_wchar();
+		wcslcpy(sText, wstr.c_str(), lengthof(sText));
 		DrawTextToScreen(sText, BOBBYR_ITEM_NAME_X, usPosY + BOBBYR_ITEM_NAME_Y_OFFSET, 0, BOBBYR_ITEM_NAME_TEXT_FONT, BOBBYR_ITEM_NAME_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 

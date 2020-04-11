@@ -76,6 +76,8 @@
 #include "policy/GamePolicy.h"
 #include "HImage.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -3170,7 +3172,8 @@ void RenderTownIDString(void)
 	// Render town, position
 	SetFontAttributes(COMPFONT, 183);
 	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, lengthof(zTownIDString), TRUE );
-	ReduceStringLength( zTownIDString, lengthof(zTownIDString), 80, COMPFONT );
+	ST::wchar_buffer wstr = ReduceStringLength(zTownIDString, 80, COMPFONT).to_wchar();
+	wcslcpy(zTownIDString, wstr.c_str(), lengthof(zTownIDString));
 	FindFontCenterCoordinates(548, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, zTownIDString);
 }

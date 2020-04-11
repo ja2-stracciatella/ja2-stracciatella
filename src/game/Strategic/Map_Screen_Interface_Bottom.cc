@@ -50,6 +50,8 @@
 #include "ScreenIDs.h"
 #include "UILayout.h"
 
+#include <string_theory/string>
+
 
 #define MAP_BOTTOM_X (STD_SCREEN_X + 0)
 #define MAP_BOTTOM_Y (STD_SCREEN_Y + 359)
@@ -366,7 +368,8 @@ static void DrawNameOfLoadedSector()
 
 	wchar_t buf[128];
 	GetSectorIDString(sSelMapX, sSelMapY, iCurrentMapSectorZ, buf, lengthof(buf), TRUE);
-	ReduceStringLength(buf, lengthof(buf), 80, font);
+	ST::wchar_buffer wstr = ReduceStringLength(buf, 80, font).to_wchar();
+	wcslcpy(buf, wstr.c_str(), lengthof(buf));
 
 	INT16 x;
 	INT16 y;

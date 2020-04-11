@@ -26,6 +26,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 #define HISTORY_QUEST_TEXT_SIZE 80
 
 
@@ -465,7 +468,8 @@ static void DrawHistoryRecordsText(void)
 		{
 			GetSectorIDString(h->sSectorX, h->sSectorY, h->bSectorZ, sString, lengthof(sString), TRUE);
 			FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0,  sString, HISTORY_TEXT_FONT, &sX, &sY);
-			ReduceStringLength(sString, lengthof(sString), RECORD_LOCATION_WIDTH + 10, HISTORY_TEXT_FONT);
+			ST::wchar_buffer wstr = ReduceStringLength(sString, RECORD_LOCATION_WIDTH + 10, HISTORY_TEXT_FONT).to_wchar();
+			wcslcpy(sString, wstr.c_str(), lengthof(sString));
 			MPrint(sX, y, sString);
 		}
 
