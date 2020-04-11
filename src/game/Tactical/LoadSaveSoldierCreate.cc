@@ -6,6 +6,9 @@
 
 #include "Logger.h"
 
+#include <string_theory/string>
+
+
 UINT16 CalcSoldierCreateCheckSum(const SOLDIERCREATE_STRUCT* const s)
 {
 	return
@@ -81,13 +84,15 @@ static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* c
 	if(stracLinuxFormat)
 	{
 		DataReader reader(d);
-		reader.readUTF32(c->name, lengthof(c->name));
+		ST::wchar_buffer wstr = reader.readUTF32(lengthof(c->name)).to_wchar();
+		wcslcpy(c->name, wstr.c_str(), lengthof(c->name));
 		d += reader.getConsumed();
 	}
 	else
 	{
 		DataReader reader(d);
-		reader.readUTF16(c->name, lengthof(c->name));
+		ST::wchar_buffer wstr = reader.readUTF16(lengthof(c->name)).to_wchar();
+		wcslcpy(c->name, wstr.c_str(), lengthof(c->name));
 		d += reader.getConsumed();
 	}
 	EXTR_U8(d, c->ubSoldierClass)

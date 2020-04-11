@@ -115,16 +115,6 @@ TEST(LoadSaveData, utf16ToWideString)
 		EXPECT_EQ(reader.getConsumed(), 10u);
 		EXPECT_EQ(writer.getConsumed(), 10u);
 	}
-
-	{
-		DataReader reader(buf);
-		wchar_t wideBuf[10];
-		reader.readUTF16(wideBuf, 5);
-		EXPECT_STREQ(wideBuf, L"тест");
-
-		EXPECT_EQ(reader.getConsumed(), 10u);
-		EXPECT_EQ(writer.getConsumed(), 10u);
-	}
 }
 
 TEST(LoadSaveData, utf32ToWideString)
@@ -141,16 +131,6 @@ TEST(LoadSaveData, utf32ToWideString)
 	{
 		DataReader reader(buf);
 		EXPECT_EQ(reader.readUTF32(5), "тест");
-
-		EXPECT_EQ(reader.getConsumed(), 20u);
-		EXPECT_EQ(writer.getConsumed(), 20u);
-	}
-
-	{
-		DataReader reader(buf);
-		wchar_t wideBuf[10];
-		reader.readUTF32(wideBuf, 5);
-		EXPECT_STREQ(wideBuf, L"тест");
 
 		EXPECT_EQ(reader.getConsumed(), 20u);
 		EXPECT_EQ(writer.getConsumed(), 20u);

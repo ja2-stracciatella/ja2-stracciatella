@@ -1,10 +1,13 @@
-#include <stdexcept>
-
 #include "Debug.h"
 #include "FileMan.h"
 #include "LoadSaveData.h"
 #include "LoadSaveMercProfile.h"
 #include "Tactical_Save.h"
+
+#include <string_theory/string>
+
+#include <stdexcept>
+
 
 /** Calculates soldier profile checksum. */
 UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p)
@@ -40,15 +43,19 @@ void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracL
 	if(stracLinuxFormat)
 	{
 		DataReader reader(S);
-		reader.readUTF32(p.zName,     NAME_LENGTH);
-		reader.readUTF32(p.zNickname, NICKNAME_LENGTH);
+		ST::wchar_buffer wstr = reader.readUTF32(NAME_LENGTH).to_wchar();
+		wcslcpy(p.zName, wstr.c_str(), lengthof(p.zName));
+		wstr = reader.readUTF32(NICKNAME_LENGTH).to_wchar();
+		wcslcpy(p.zNickname, wstr.c_str(), lengthof(p.zNickname));
 		S += reader.getConsumed();
 	}
 	else
 	{
 		DataReader reader(S);
-		reader.readUTF16(p.zName,     NAME_LENGTH,          fixer);
-		reader.readUTF16(p.zNickname, NICKNAME_LENGTH,      fixer);
+		ST::wchar_buffer wstr = reader.readUTF16(NAME_LENGTH, fixer).to_wchar();
+		wcslcpy(p.zName, wstr.c_str(), lengthof(p.zName));
+		wstr = reader.readUTF16(NICKNAME_LENGTH, fixer).to_wchar();
+		wcslcpy(p.zNickname, wstr.c_str(), lengthof(p.zNickname));
 		S += reader.getConsumed();
 	}
 

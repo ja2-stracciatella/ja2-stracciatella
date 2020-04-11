@@ -109,6 +109,8 @@
 #include "GameInstance.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <stdexcept>
 
@@ -473,13 +475,15 @@ void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinu
 	if(stracLinuxFormat)
 	{
 		DataReader reader(d);
-		reader.readUTF32(h.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
+		ST::wchar_buffer wstr = reader.readUTF32(SIZE_OF_SAVE_GAME_DESC).to_wchar();
+		wcslcpy(h.sSavedGameDesc, wstr.c_str(), lengthof(h.sSavedGameDesc));
 		d += reader.getConsumed();
 	}
 	else
 	{
 		DataReader reader(d);
-		reader.readUTF16(h.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
+		ST::wchar_buffer wstr = reader.readUTF16(SIZE_OF_SAVE_GAME_DESC).to_wchar();
+		wcslcpy(h.sSavedGameDesc, wstr.c_str(), lengthof(h.sSavedGameDesc));
 		d += reader.getConsumed();
 	}
 	EXTR_SKIP(  d, 4)
