@@ -35,6 +35,8 @@
 #include "VSurface.h"
 #include "UILayout.h"
 
+#include <string_theory/string>
+
 
 BOOLEAN gfInSectorExitMenu = FALSE;
 
@@ -95,7 +97,7 @@ INT8    gbWarpWorldZ;
 INT16   gsWarpGridNo;
 
 
-static GUIButtonRef MakeButton(const wchar_t* text, INT16 dx, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const ST::string& text, INT16 dx, GUI_CALLBACK click)
 {
 	const INT16 text_col   = FONT_MCOLOR_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
@@ -494,7 +496,7 @@ static void UpdateSectorExitMenu(void)
 
 
 	{
-		wchar_t const* help;
+		ST::string help;
 		if (gExitDialog.fGotoSectorDisabled)
 		{
 			DisableButton(gExitDialog.uiLoadCheckButton);
@@ -542,8 +544,7 @@ static void UpdateSectorExitMenu(void)
 		if( gExitDialog.fSelectedMercIsEPC )
 		{
 			//EPCs cannot leave the sector alone and must be escorted
-			wchar_t str[ 256 ];
-			swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_ESCORTED_CHARACTERS_MUST_BE_ESCORTED_HELPTEXT], sel->name);
+			ST::string str = st_format_printf(pExitingSectorHelpText[EXIT_GUI_ESCORTED_CHARACTERS_MUST_BE_ESCORTED_HELPTEXT], sel->name);
 			gExitDialog.uiSingleMoveButton->SetFastHelpText(str);
 			gExitDialog.SingleRegion.SetFastHelpText(str);
 		}
@@ -552,18 +553,18 @@ static void UpdateSectorExitMenu(void)
 			//It has been previously determined that there are only two mercs in the squad, the selected merc
 			//isn't an EPC, but the other merc is.  That means that this merc cannot leave the sector alone
 			//as he would isolate the EPC.
-			wchar_t str[ 256 ];
+			ST::string str;
 			if( !gExitDialog.fSquadHasMultipleEPCs )
 			{
 				if (gMercProfiles[sel->ubProfile].bSex == MALE)
 				{
 					//male singular
-					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR], sel->name, gExitDialog.single_move_will_isolate_epc->name);
+					str = st_format_printf(pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR], sel->name, gExitDialog.single_move_will_isolate_epc->name);
 				}
 				else
 				{
 					//female singular
-					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR], sel->name, gExitDialog.single_move_will_isolate_epc->name);
+					str = st_format_printf(pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR], sel->name, gExitDialog.single_move_will_isolate_epc->name);
 				}
 			}
 			else
@@ -571,12 +572,12 @@ static void UpdateSectorExitMenu(void)
 				if (gMercProfiles[sel->ubProfile].bSex == MALE)
 				{
 					//male plural
-					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_PLURAL], sel->name);
+					str = st_format_printf(pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_PLURAL], sel->name);
 				}
 				else
 				{
 					//female plural
-					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL], sel->name);
+					str = st_format_printf(pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL], sel->name);
 				}
 			}
 			gExitDialog.uiSingleMoveButton->SetFastHelpText(str);
@@ -585,16 +586,16 @@ static void UpdateSectorExitMenu(void)
 	}
 	else
 	{
-		wchar_t str[ 256 ];
+		ST::string str;
 		EnableButton( gExitDialog.uiSingleMoveButton );
 		gExitDialog.SingleRegion.Enable();
-		swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_SINGLE_TRAVERSAL_WILL_SEPARATE_SQUADS_HELPTEXT], sel->name);
+		str = st_format_printf(pExitingSectorHelpText[EXIT_GUI_SINGLE_TRAVERSAL_WILL_SEPARATE_SQUADS_HELPTEXT], sel->name);
 		gExitDialog.uiSingleMoveButton->SetFastHelpText(str);
 		gExitDialog.SingleRegion.SetFastHelpText(str);
 	}
 
 	{
-		wchar_t const* help;
+		ST::string help;
 		if (gExitDialog.fAllMoveDisabled)
 		{
 			DisableButton(gExitDialog.uiAllMoveButton);
@@ -670,7 +671,7 @@ void RenderSectorExitMenu()
 			gExitDialog.fGotoSectorHilighted ? FONT_MCOLOR_LTYELLOW :
 			FONT_MCOLOR_WHITE;
 		SetFontForeground(foreground);
-		wchar_t const* const msg = gExitDialog.fGotoSectorText ?
+		ST::string msg = gExitDialog.fGotoSectorText ?
 			TacticalStr[EXIT_GUI_GOTO_SECTOR_STR] : // 5 minute convenience warp for town traversal
 			TacticalStr[EXIT_GUI_GOTO_MAP_STR];     // Enter map screen
 		MPrint(x + 180, y + 45, msg);
@@ -729,8 +730,7 @@ void RemoveSectorExitMenu(BOOLEAN const fOk)
 	SOLDIERTYPE const* const sel = GetSelectedMan();
 	if (AM_AN_EPC(sel) && d.ubNumPeopleOnSquad == 0)
 	{
-		wchar_t buf[50];
-		swprintf(buf, lengthof(buf), pMessageStrings[MSG_EPC_CANT_TRAVERSE], sel->name);
+		ST::string buf = st_format_printf(pMessageStrings[MSG_EPC_CANT_TRAVERSE], sel->name);
 		DoMessageBox(MSG_BOX_BASIC_STYLE, buf, GAME_SCREEN, MSG_BOX_FLAG_OK, 0, 0);
 		return;
 	}
