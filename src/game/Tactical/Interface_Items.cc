@@ -82,6 +82,8 @@
 #include "policy/GamePolicy.h"
 #include "Logger.h"
 
+#include <string_theory/format>
+
 #include <algorithm>
 #include <iterator>
 
@@ -1616,7 +1618,7 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 			{
 				RestoreExternBackgroundRect(sNewX, sNewY, 20, 15);
 			}
-			GPrintInvalidateF(sNewX, sNewY, L"%d", o.ubGunShotsLeft);
+			GPrintInvalidate(sNewX, sNewY, ST::format("{}", o.ubGunShotsLeft));
 
 			// Display 'JAMMED' if we are jammed
 			if (o.bGunAmmoStatus < 0)

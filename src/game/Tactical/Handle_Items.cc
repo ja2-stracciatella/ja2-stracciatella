@@ -72,6 +72,9 @@
 #include "Soldier.h"
 #include "Logger.h"
 
+#include <string_theory/format>
+
+
 #define NUM_ITEMS_LISTED		8
 #define NUM_ITEM_FLASH_SLOTS		50
 #define MIN_LOB_RANGE			6
@@ -2114,7 +2117,7 @@ void DrawItemPoolList(const ITEM_POOL* const pItemPool, const INT8 bZLevel, cons
 		wchar_t   const* const txt = ShortItemNames[wi.o.usItem];
 		if (wi.o.ubNumberOfObjects > 1)
 		{
-			GDirtyPrintF(x, y, L"%ls (%d)", txt, wi.o.ubNumberOfObjects);
+			GDirtyPrint(x, y, ST::format("{} ({})", txt, wi.o.ubNumberOfObjects));
 		}
 		else
 		{

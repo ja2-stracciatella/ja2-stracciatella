@@ -106,7 +106,7 @@ static void BlitString(VIDEO_OVERLAY* pBlitter)
 
 	SetFontAttributes(pBlitter->uiFontID, pBlitter->ubFontFore, DEFAULT_SHADOW, pBlitter->ubFontBack);
 	SGPVSurface::Lock l(pBlitter->uiDestBuff);
-	MPrintBuffer(l.Buffer<UINT16>(), l.Pitch(), pBlitter->sX, pBlitter->sY, pBlitter->zText);
+	MPrintBuffer(l.Buffer<UINT16>(), l.Pitch(), pBlitter->sX, pBlitter->sY, pBlitter->codepoints);
 }
 
 

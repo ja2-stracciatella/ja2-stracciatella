@@ -18,6 +18,8 @@
 #include "Video.h"
 #include "MemMan.h"
 
+#include <string_theory/format>
+
 #include <sstream>
 
 
@@ -92,7 +94,7 @@ ScreenID AniEditScreenHandle(void)
 
 	SetFont( LARGEFONT1 );
 	GDirtyPrint( 0,  0, L"SOLDIER ANIMATION VIEWER");
-	GDirtyPrintF(0, 20, L"Current Animation: %hs %hs", gAnimControl[usStartAnim].zAnimStr, gAnimSurfaceDatabase[pSoldier->usAnimSurface].Filename);
+	GDirtyPrint(0, 20, ST::format("Current Animation: {} {}", gAnimControl[usStartAnim].zAnimStr, gAnimSurfaceDatabase[pSoldier->usAnimSurface].Filename));
 
 	switch( ubStartHeight )
 	{
@@ -109,7 +111,7 @@ ScreenID AniEditScreenHandle(void)
 	if ( fToggle2 )
 	{
 		GDirtyPrint( 0, 70, L"LOADED ORDER ON");
-		GDirtyPrintF(0, 90, L"LOADED ORDER : %hs", gAnimControl[pusStates[ubCurLoadedState]].zAnimStr);
+		GDirtyPrint(0, 90, ST::format("LOADED ORDER : {}", gAnimControl[pusStates[ubCurLoadedState]].zAnimStr));
 	}
 
 	if (DequeueEvent(&InputEvent))
