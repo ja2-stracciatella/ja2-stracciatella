@@ -65,6 +65,9 @@
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 
+#include "externalized/strategic/BloodCatPlacementsModel.h"
+#include "externalized/strategic/BloodCatSpawnsModel.h"
+
 UINT8			gubScreenCount=0;
 
 
@@ -211,62 +214,21 @@ static void InitNPCs(void)
 void InitBloodCatSectors()
 {
 	INT32 i;
-	//Hard coded table of bloodcat populations.  We don't have
-	//access to the real population (if different) until we physically
-	//load the map.  If the real population is different, then an error
-	//will be reported.
 	for( i = 0; i < 255; i++ )
 	{
 		SectorInfo[ i ].bBloodCats = -1;
-	}
-	SectorInfo[ SEC_A15	].bBloodCatPlacements = 9;
-	SectorInfo[ SEC_B4	].bBloodCatPlacements = 9;
-	SectorInfo[ SEC_B16	].bBloodCatPlacements = 8;
-	SectorInfo[ SEC_C3	].bBloodCatPlacements = 12;
-	SectorInfo[ SEC_C8	].bBloodCatPlacements = 13;
-	SectorInfo[ SEC_C11	].bBloodCatPlacements = 7;
-	SectorInfo[ SEC_D4	].bBloodCatPlacements = 8;
-	SectorInfo[ SEC_D9	].bBloodCatPlacements = 12;
-	SectorInfo[ SEC_E11	].bBloodCatPlacements = 10;
-	SectorInfo[ SEC_E13	].bBloodCatPlacements = 14;
-	SectorInfo[ SEC_F3	].bBloodCatPlacements = 13;
-	SectorInfo[ SEC_F5	].bBloodCatPlacements = 7;
-	SectorInfo[ SEC_F7	].bBloodCatPlacements = 12;
-	SectorInfo[ SEC_F12	].bBloodCatPlacements = 9;
-	SectorInfo[ SEC_F14	].bBloodCatPlacements = 14;
-	SectorInfo[ SEC_F15	].bBloodCatPlacements = 8;
-	SectorInfo[ SEC_G6	].bBloodCatPlacements = 7;
-	SectorInfo[ SEC_G10	].bBloodCatPlacements = 12;
-	SectorInfo[ SEC_G12	].bBloodCatPlacements = 11;
-	SectorInfo[ SEC_H5	].bBloodCatPlacements = 9;
-	SectorInfo[ SEC_I4	].bBloodCatPlacements = 8;
-	SectorInfo[ SEC_I15	].bBloodCatPlacements = 8;
-	SectorInfo[ SEC_J6	].bBloodCatPlacements = 11;
-	SectorInfo[ SEC_K3	].bBloodCatPlacements = 12;
-	SectorInfo[ SEC_K6	].bBloodCatPlacements = 14;
-	SectorInfo[ SEC_K10	].bBloodCatPlacements = 12;
-	SectorInfo[ SEC_K14	].bBloodCatPlacements = 14;
-
-	switch( gGameOptions.ubDifficultyLevel )
+	};
+	for (auto placements : GCM->getBloodCatPlacements())
 	{
-		case DIF_LEVEL_EASY: //50%
-			SectorInfo[ SEC_I16	].bBloodCatPlacements = 14;
-			SectorInfo[ SEC_I16	].bBloodCats = 14;
-			SectorInfo[ SEC_N5	].bBloodCatPlacements = 8;
-			SectorInfo[ SEC_N5	].bBloodCats = 8;
-			break;
-		case DIF_LEVEL_MEDIUM: //75%
-			SectorInfo[ SEC_I16	].bBloodCatPlacements = 19;
-			SectorInfo[ SEC_I16	].bBloodCats = 19;
-			SectorInfo[ SEC_N5	].bBloodCatPlacements = 10;
-			SectorInfo[ SEC_N5	].bBloodCats = 10;
-			break;
-		case DIF_LEVEL_HARD: //100%
-			SectorInfo[ SEC_I16	].bBloodCatPlacements = 26;
-			SectorInfo[ SEC_I16	].bBloodCats = 26;
-			SectorInfo[ SEC_N5	].bBloodCatPlacements = 12;
-			SectorInfo[ SEC_N5	].bBloodCats = 12;
-			break;
+		INT8 sectorId = placements->sectorId;
+		SectorInfo[ sectorId ].bBloodCatPlacements = placements->bloodCatPlacements;
+	}
+	for (auto spawns : GCM->getBloodCatSpawns())
+	{
+		INT8 sectorId = spawns->sectorId;
+		INT8 spawnsCount = spawns->getSpawnsByDifficulty(gGameOptions.ubDifficultyLevel);
+		SectorInfo[ sectorId ].bBloodCatPlacements = spawnsCount;
+		SectorInfo[ sectorId ].bBloodCats = spawnsCount;
 	}
 }
 

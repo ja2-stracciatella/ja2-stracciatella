@@ -34,6 +34,10 @@
 #include "FileMan.h"
 #include "Logger.h"
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "externalized/strategic/BloodCatSpawnsModel.h"
+
 BOOLEAN gfOriginalList = TRUE;
 
 SOLDIERINITNODE *gSoldierInitHead = NULL;
@@ -1577,8 +1581,9 @@ void AddSoldierInitListBloodcats()
 				bBloodCatPlacements++;
 			}
 		}
-		if( bBloodCatPlacements != pSector->bBloodCatPlacements &&
-			ubSectorID != SEC_I16 && ubSectorID != SEC_N5 )
+
+		auto spawns = GCM->getBloodCatSpawnsOfSector( ubSectorID );
+		if( bBloodCatPlacements != pSector->bBloodCatPlacements && spawns == NULL )
 		{
 			pSector->bBloodCatPlacements = bBloodCatPlacements;
 			pSector->bBloodCats = -1;

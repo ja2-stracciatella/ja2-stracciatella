@@ -14,6 +14,8 @@
 class DealerInventory;
 class GamePolicy;
 class IMPPolicy;
+class BloodCatPlacementsModel;
+class BloodCatSpawnsModel;
 struct AmmoTypeModel;
 struct CalibreModel;
 struct MagazineModel;
@@ -106,6 +108,10 @@ public:
 
 	virtual const GamePolicy* getGamePolicy() const = 0;
 	virtual const IMPPolicy* getIMPPolicy() const = 0;
+
+	virtual const std::vector<const BloodCatPlacementsModel*> & getBloodCatPlacements() const = 0;
+	virtual const std::vector<const BloodCatSpawnsModel*> & getBloodCatSpawns() const = 0;
+	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const = 0;
 
 	virtual const ST::string* getNewString(size_t stringId) const = 0;
 

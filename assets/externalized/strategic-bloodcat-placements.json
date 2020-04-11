@@ -1,0 +1,33 @@
+// Externalized table of bloodcat populations.  We don't have
+// access to the real population (if different) until we physically
+// load the map.  If the real population is different, then an error
+// will be reported.
+[
+	{ "sector":"A15", "bloodCatPlacements":9 },
+	{ "sector":"B4",  "bloodCatPlacements":9 },
+	{ "sector":"B16", "bloodCatPlacements":8 },
+	{ "sector":"C3",  "bloodCatPlacements":12 },
+	{ "sector":"C8",  "bloodCatPlacements":13 },
+	{ "sector":"C11", "bloodCatPlacements":7 },
+	{ "sector":"D4",  "bloodCatPlacements":8 },
+	{ "sector":"D9",  "bloodCatPlacements":12 },
+	{ "sector":"E11", "bloodCatPlacements":10 },
+	{ "sector":"E13", "bloodCatPlacements":14 },
+	{ "sector":"F3",  "bloodCatPlacements":13 },
+	{ "sector":"F5",  "bloodCatPlacements":7 },
+	{ "sector":"F7",  "bloodCatPlacements":12 },
+	{ "sector":"F12", "bloodCatPlacements":9 },
+	{ "sector":"F14", "bloodCatPlacements":14 },
+	{ "sector":"F15", "bloodCatPlacements":8 },
+	{ "sector":"G6",  "bloodCatPlacements":7 },
+	{ "sector":"G10", "bloodCatPlacements":12 },
+	{ "sector":"G12", "bloodCatPlacements":11 },
+	{ "sector":"H5",  "bloodCatPlacements":9 },
+	{ "sector":"I4",  "bloodCatPlacements":8 },
+	{ "sector":"I15", "bloodCatPlacements":8 },
+	{ "sector":"J6",  "bloodCatPlacements":12 },
+	{ "sector":"K3",  "bloodCatPlacements":12 },
+	{ "sector":"K6",  "bloodCatPlacements":14 },
+	{ "sector":"K10", "bloodCatPlacements":12 },
+	{ "sector":"K14", "bloodCatPlacements":14 }
+]

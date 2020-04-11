@@ -1,0 +1,19 @@
+// Spawn blood cats at specific locations (lair and arena), based on difficulty
+[
+	{
+		"sector": "I16",
+		"isLair": true,
+		"isArena": false,
+		"bloodCatsSpawnsEasy": 14, 
+		"bloodCatsSpawnsMedium": 19,
+		"bloodCatsSpawnsHard": 26
+	},
+	{
+		"sector": "N5",
+		"isLair": false,
+		"isArena": true,
+		"bloodCatsSpawnsEasy": 8,
+		"bloodCatsSpawnsMedium": 10,
+		"bloodCatsSpawnsHard": 12
+	}
+]

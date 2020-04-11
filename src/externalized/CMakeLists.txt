@@ -2,6 +2,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/content")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/internals")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/policy")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ui")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/strategic")
 
 file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 set(LOCAL_JA2_SOURCES
