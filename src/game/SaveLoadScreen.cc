@@ -562,7 +562,8 @@ static void EnterSaveLoadScreen()
 		SAVED_GAME_HEADER SaveGameHeader;
 		if (LoadSavedGameHeader(last_slot, &SaveGameHeader))
 		{
-			wcscpy(gzGameDescTextField, SaveGameHeader.sSavedGameDesc);
+			ST::wchar_buffer wstr = SaveGameHeader.sSavedGameDesc.to_wchar();
+			wcscpy(gzGameDescTextField, wstr.c_str());
 			gbSelectedSaveLocation = last_slot;
 		}
 		else
@@ -1002,7 +1003,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 		SAVED_GAME_HEADER header;
 		if (gfSaveGame && is_selected)
 		{ // The user has selected a spot to save.  Fill out all the required information
-			wcscpy(header.sSavedGameDesc, gzGameDescTextField);
+			header.sSavedGameDesc = gzGameDescTextField;
 			header.uiDay                     = GetWorldDay();
 			header.ubHour                    = GetWorldHour();
 			header.ubMin                     = guiMin;
@@ -1133,7 +1134,6 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 			AutoSGPFile f(GCM->openUserPrivateFileForReading(zSavedGameName));
 			ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
 			endof(header->zGameVersionNumber)[-1] =  '\0';
-			endof(header->sSavedGameDesc)[-1]     = L'\0';
 			return TRUE;
 		}
 		catch (...) { /* Handled below */ }
@@ -1380,7 +1380,8 @@ static void InitSaveLoadScreenTextInputBoxes(void)
 	{
 		SAVED_GAME_HEADER SaveGameHeader;
 		LoadSavedGameHeader(gbSelectedSaveLocation, &SaveGameHeader);
-		wcscpy(gzGameDescTextField, SaveGameHeader.sSavedGameDesc);
+		ST::wchar_buffer wstr = SaveGameHeader.sSavedGameDesc.to_wchar();
+		wcscpy(gzGameDescTextField, wstr.c_str());
 	}
 
 	// Game Desc Field

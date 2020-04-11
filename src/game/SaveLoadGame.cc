@@ -186,7 +186,7 @@ static void SaveSoldierStructure(HWFILE hFile);
 static void SaveTacticalStatusToSavedGame(HWFILE);
 static void SaveWatchedLocsToSavedGame(HWFILE);
 
-BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
+BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 {
 	BOOLEAN	fPausedStateBeforeSaving    = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
@@ -243,15 +243,17 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		SAVED_GAME_HEADER header;
 		header = SAVED_GAME_HEADER{};
 
-		wchar_t (& desc)[lengthof(header.sSavedGameDesc)] = header.sSavedGameDesc;
 		if (ubSaveGameID == 0)
 		{ // We are saving the quick save
-				swprintf(desc, lengthof(desc), L"%hs", g_quicksave_name);
+			header.sSavedGameDesc = g_quicksave_name;
+		}
+		else if (!gameDesc.empty())
+		{
+			header.sSavedGameDesc = pMessageStrings[MSG_NODESC];
 		}
 		else
 		{
-			if (GameDesc[0] == L'\0') GameDesc = pMessageStrings[MSG_NODESC];
-			wcslcpy(desc, GameDesc, lengthof(desc));
+			header.sSavedGameDesc = gameDesc;
 		}
 
 		FileMan::createDir(GCM->getSavedGamesFolder().c_str());
@@ -303,7 +305,7 @@ BOOLEAN SaveGame(UINT8 const ubSaveGameID, wchar_t const* GameDesc)
 		INJ_STR(   d, header.zGameVersionNumber, lengthof(header.zGameVersionNumber))
 		{
 			DataWriter writer(d);
-			writer.writeStringAsUTF16(header.sSavedGameDesc, lengthof(header.sSavedGameDesc));
+			writer.writeStringAsUTF16(header.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
 			d += writer.getConsumed();
 		}
 		INJ_SKIP(  d, 4)
@@ -475,15 +477,13 @@ void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinu
 	if(stracLinuxFormat)
 	{
 		DataReader reader(d);
-		ST::wchar_buffer wstr = reader.readUTF32(SIZE_OF_SAVE_GAME_DESC).to_wchar();
-		wcslcpy(h.sSavedGameDesc, wstr.c_str(), lengthof(h.sSavedGameDesc));
+		h.sSavedGameDesc = reader.readUTF32(SIZE_OF_SAVE_GAME_DESC);
 		d += reader.getConsumed();
 	}
 	else
 	{
 		DataReader reader(d);
-		ST::wchar_buffer wstr = reader.readUTF16(SIZE_OF_SAVE_GAME_DESC).to_wchar();
-		wcslcpy(h.sSavedGameDesc, wstr.c_str(), lengthof(h.sSavedGameDesc));
+		h.sSavedGameDesc = reader.readUTF16(SIZE_OF_SAVE_GAME_DESC);
 		d += reader.getConsumed();
 	}
 	EXTR_SKIP(  d, 4)
@@ -704,171 +704,171 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	RenderProgressBar(0, 100),                                                 \
 	uiRelStartPerc = uiRelEndPerc)                                             \
 
-	BAR(1, L"Strategic Events...");
+	BAR(1, "Strategic Events...");
 	LoadStrategicEventsFromSavedGame(f);
 
-	BAR(0, L"Laptop Info");
+	BAR(0, "Laptop Info");
 	LoadLaptopInfoFromSavedGame(f);
 
-	BAR(0, L"Merc Profiles...");
+	BAR(0, "Merc Profiles...");
 	LoadSavedMercProfiles(f, version, stracLinuxFormat);
 
-	BAR(30, L"Soldier Structure...");
+	BAR(30, "Soldier Structure...");
 	LoadSoldierStructure(f, version, stracLinuxFormat);
 
-	BAR(1, L"Finances Data File...");
+	BAR(1, "Finances Data File...");
 	LoadTempFileFromSavedGame(NEWTMP_FINANCES_DATA_FILE, f);
 
-	BAR(1, L"History File...");
+	BAR(1, "History File...");
 	LoadFilesFromSavedGame(HISTORY_DATA_FILE, f);
 
-	BAR(1, L"The Laptop FILES file...");
+	BAR(1, "The Laptop FILES file...");
 	LoadFilesFromSavedGame(FILES_DAT_FILE, f);
 
-	BAR(1, L"Email...");
+	BAR(1, "Email...");
 	LoadEmailFromSavedGame(f);
 
-	BAR(1, L"Strategic Information...");
+	BAR(1, "Strategic Information...");
 	LoadStrategicInfoFromSavedFile(f);
 
-	BAR(1, L"UnderGround Information...");
+	BAR(1, "UnderGround Information...");
 	LoadUnderGroundSectorInfoFromSavedGame(f);
 
-	BAR(1, L"Squad Info...");
+	BAR(1, "Squad Info...");
 	LoadSquadInfoFromSavedGameFile(f);
 
-	BAR(1, L"Strategic Movement Groups...");
+	BAR(1, "Strategic Movement Groups...");
 	LoadStrategicMovementGroupsFromSavedGameFile(f);
 
-	BAR(30, L"All the Map Temp files...");
+	BAR(30, "All the Map Temp files...");
 	LoadMapTempFilesFromSavedGameFile(f, version);
 
-	BAR(1, L"Quest Info...");
+	BAR(1, "Quest Info...");
 	LoadQuestInfoFromSavedGameFile(f);
 
-	BAR(1, L"OppList Info...");
+	BAR(1, "OppList Info...");
 	LoadOppListInfoFromSavedGame(f);
 
-	BAR(1, L"MapScreen Messages...");
+	BAR(1, "MapScreen Messages...");
 	LoadMapScreenMessagesFromSaveGameFile(f, stracLinuxFormat);
 
-	BAR(1, L"NPC Info...");
+	BAR(1, "NPC Info...");
 	LoadNPCInfoFromSavedGameFile(f, version);
 
-	BAR(1, L"KeyTable...");
+	BAR(1, "KeyTable...");
 	LoadKeyTableFromSaveedGameFile(f);
 
-	BAR(1, L"Npc Temp Quote File...");
+	BAR(1, "Npc Temp Quote File...");
 	LoadTempNpcQuoteArrayToSaveGameFile(f);
 
-	BAR(0, L"PreGenerated Random Files...");
+	BAR(0, "PreGenerated Random Files...");
 	LoadPreRandomNumbersFromSaveGameFile(f);
 
-	BAR(0, L"Smoke Effect Structures...");
+	BAR(0, "Smoke Effect Structures...");
 	// No longer need to load smoke effects.  They are now in temp files
 	if (version < 75) LoadSmokeEffectsFromLoadGameFile(f, version);
 
-	BAR(1, L"Arms Dealers Inventory...");
+	BAR(1, "Arms Dealers Inventory...");
 	LoadArmsDealerInventoryFromSavedGameFile(f, version);
 
-	BAR(0, L"Misc info...");
+	BAR(0, "Misc info...");
 	LoadGeneralInfo(f, version);
 
-	BAR(1, L"Mine Status...");
+	BAR(1, "Mine Status...");
 	LoadMineStatusFromSavedGameFile(f);
 
-	BAR(0, L"Town Loyalty...");
+	BAR(0, "Town Loyalty...");
 	if (version	>= 21)
 	{
 		LoadStrategicTownLoyaltyFromSavedGameFile(f);
 	}
 
-	BAR(1, L"Vehicle Information...");
+	BAR(1, "Vehicle Information...");
 	if (version	>= 22)
 	{
 		LoadVehicleInformationFromSavedGameFile(f, version);
 	}
 
-	BAR(1, L"Bullet Information...");
+	BAR(1, "Bullet Information...");
 	if (version	>= 24)
 	{
 		LoadBulletStructureFromSavedGameFile(f);
 	}
 
-	BAR(1, L"Physics table...");
+	BAR(1, "Physics table...");
 	if (version	>= 24)
 	{
 		LoadPhysicsTableFromSavedGameFile(f);
 	}
 
-	BAR(1, L"Air Raid Info...");
+	BAR(1, "Air Raid Info...");
 	if (version	>= 24)
 	{
 		LoadAirRaidInfoFromSaveGameFile(f);
 	}
 
-	BAR(0, L"Team Turn Info...");
+	BAR(0, "Team Turn Info...");
 	if (version	>= 24)
 	{
 		LoadTeamTurnsFromTheSavedGameFile(f);
 	}
 
-	BAR(1, L"Explosion Table...");
+	BAR(1, "Explosion Table...");
 	if (version	>= 25)
 	{
 		LoadExplosionTableFromSavedGameFile(f);
 	}
 
-	BAR(1, L"Creature Spreading...");
+	BAR(1, "Creature Spreading...");
 	if (version	>= 27)
 	{
 		LoadCreatureDirectives(f, version);
 	}
 
-	BAR(1, L"Strategic Status...");
+	BAR(1, "Strategic Status...");
 	if (version	>= 28)
 	{
 		LoadStrategicStatusFromSaveGameFile(f);
 	}
 
-	BAR(1, L"Strategic AI...");
+	BAR(1, "Strategic AI...");
 	if (version	>= 31)
 	{
 		LoadStrategicAI(f);
 	}
 
-	BAR(1, L"Lighting Effects...");
+	BAR(1, "Lighting Effects...");
 	// No longer need to load Light effects.  They are now in temp files
 	if (37 <= version && version < 76)
 	{
 		LoadLightEffectsFromLoadGameFile(f);
 	}
 
-	BAR(1, L"Watched Locs Info...");
+	BAR(1, "Watched Locs Info...");
 	if (version	>= 38)
 	{
 		LoadWatchedLocsFromSavedGame(f);
 	}
 
-	BAR(1, L"Item cursor Info...");
+	BAR(1, "Item cursor Info...");
 	if (version	>= 39)
 	{
 		LoadItemCursorFromSavedGame(f);
 	}
 
-	BAR(1, L"Civ Quote System...");
+	BAR(1, "Civ Quote System...");
 	if (version >= 51)
 	{
 		LoadCivQuotesFromLoadGameFile(f);
 	}
 
-	BAR(1, L"Backed up NPC Info...");
+	BAR(1, "Backed up NPC Info...");
 	if (version >= 53)
 	{
 		LoadBackupNPCInfoFromSavedGameFile(f);
 	}
 
-	BAR(1, L"Meanwhile definitions...");
+	BAR(1, "Meanwhile definitions...");
 	if (version >= 58)
 	{
 		LoadMeanwhileDefsFromSaveGameFile(f, version);
@@ -878,7 +878,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		gMeanwhileDef[gCurrentMeanwhileDef.ubMeanwhileID] = gCurrentMeanwhileDef;
 	}
 
-	BAR(1, L"Schedules...");
+	BAR(1, "Schedules...");
 	if (version >= 59)
 	{
 		// trash schedules loaded from map
@@ -886,7 +886,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		LoadSchedulesFromSave(f);
 	}
 
-	BAR(1, L"Extra Vehicle Info...");
+	BAR(1, "Extra Vehicle Info...");
 	if (version >= 61)
 	{
 		if (version < 84)
@@ -899,7 +899,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		}
 	}
 
-	BAR(1, L"Contract renweal sequence stuff...");
+	BAR(1, "Contract renweal sequence stuff...");
 	if (version < 62)
 	{ // The older games had a bug where this flag was never being set
 		gfResetAllPlayerKnowsEnemiesFlags = TRUE;
@@ -931,7 +931,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		HandleOldBobbyRMailOrders();
 	}
 
-	BAR(1, L"Final Checks...");
+	BAR(1, "Final Checks...");
 
 	// ATE: Patch? Patch up groups (will only do for old saves)
 	UpdatePersistantGroupsFromOldSave(version);
@@ -959,7 +959,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		}
 	}
 
-	BAR(1, L"Final Checks...");
+	BAR(1, "Final Checks...");
 
 	InitAI();
 
@@ -968,7 +968,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	PostSchedules();
 
-	BAR(1, L"Final Checks...");
+	BAR(1, "Final Checks...");
 
 	// Reset the lighting level if we are outside
 	if (gbWorldSectorZ == 0)
@@ -987,7 +987,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	 */
 //	ResetMilitia();
 
-	BAR(1, L"Final Checks...");
+	BAR(1, "Final Checks...");
 
 	// if the UI was locked in the saved game file
 	if (gTacticalStatus.ubAttackBusyCount > 1)
@@ -1001,7 +1001,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	//Save the save game settings
 	SaveGameSettings();
 
-	BAR(1, L"Final Checks...");
+	BAR(1, "Final Checks...");
 
 	// Reset the AI Timer clock
 	giRTAILastUpdateTime = 0;
@@ -1014,7 +1014,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		if (sel) SelectSoldier(sel, SELSOLDIER_FORCE_RESELECT);
 	}
 
-	BAR(1, L"Final Checks...");
+	BAR(1, "Final Checks...");
 
 #undef BAR
 
@@ -1095,7 +1095,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	gfLoadedGame = TRUE;
 
 	uiRelEndPerc = 100;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, L"Done!");
+	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, "Done!");
 	RenderProgressBar(0, 100);
 
 	RemoveLoadingScreenProgressBar();

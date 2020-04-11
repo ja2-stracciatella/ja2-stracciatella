@@ -96,7 +96,7 @@ TEST(SaveLoadGameTest, structParsers)
 		ParseSavedGameHeader(s_savedGameHeaderVanilla, header, false);
 		EXPECT_EQ(header.uiSavedGameVersion,          0x63u);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 04.12.02");
-		EXPECT_STREQ(header.sSavedGameDesc,           L"9");
+		EXPECT_EQ(header.sSavedGameDesc,              "9");
 		EXPECT_EQ(header.uiDay,                       2u);
 		EXPECT_EQ(header.ubHour,                      9);
 		EXPECT_EQ(header.ubMin,                       51);
@@ -123,7 +123,7 @@ TEST(SaveLoadGameTest, structParsers)
 		ParseSavedGameHeader(s_savedGameHeaderStracLinux, header, true);
 		EXPECT_EQ(header.uiSavedGameVersion,          0x63u);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 04.12.02");
-		EXPECT_STREQ(header.sSavedGameDesc,           L"1");
+		EXPECT_EQ(header.sSavedGameDesc,              "1");
 		EXPECT_EQ(header.uiDay,                       1u);
 		EXPECT_EQ(header.ubHour,                      1);
 		EXPECT_EQ(header.ubMin,                       0);
@@ -183,7 +183,7 @@ TEST(SaveLoadGameTest, parseHeaderLinux)
 		ASSERT_EQ(isValidSavedGameHeader(header), true);
 		EXPECT_EQ(header.uiSavedGameVersion,          0x63u);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 04.12.02");
-		EXPECT_STREQ(header.sSavedGameDesc,           L"1");
+		EXPECT_EQ(header.sSavedGameDesc,              "1");
 		EXPECT_EQ(header.uiDay,                       1u);
 		EXPECT_EQ(header.ubHour,                      1);
 		EXPECT_EQ(header.ubMin,                       0);
@@ -212,7 +212,7 @@ TEST(SaveLoadGameTest, parseHeaderWin)
 		ASSERT_EQ(isValidSavedGameHeader(header), true);
 		EXPECT_EQ(header.uiSavedGameVersion,          0x63u);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 04.12.02");
-		EXPECT_STREQ(header.sSavedGameDesc,           L"9");
+		EXPECT_EQ(header.sSavedGameDesc,              "9");
 		EXPECT_EQ(header.uiDay,                       2u);
 		EXPECT_EQ(header.ubHour,                      9);
 		EXPECT_EQ(header.ubMin,                       51);
@@ -236,7 +236,7 @@ TEST(SaveLoadGameTest, parseHeaderWin)
 		ASSERT_EQ(isValidSavedGameHeader(header), true);
 		EXPECT_EQ(header.uiSavedGameVersion,          0x5eu);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 99.06.25");
-		EXPECT_STREQ(header.sSavedGameDesc,           L"6");
+		EXPECT_EQ(header.sSavedGameDesc,              "6");
 		EXPECT_EQ(header.uiDay,                       1u);
 		EXPECT_EQ(header.ubHour,                      1);
 		EXPECT_EQ(header.ubMin,                       0);
@@ -265,7 +265,7 @@ TEST(SaveLoadGameTest, parseHeaderMac)
 		ASSERT_EQ(isValidSavedGameHeader(header), true);
 		EXPECT_EQ(header.uiSavedGameVersion,          0x63u);
 		EXPECT_STREQ(header.zGameVersionNumber,       "Build 04.12.02");
-		EXPECT_STREQ(header.sSavedGameDesc,           L"very long description long long long long long");
+		EXPECT_EQ(header.sSavedGameDesc,              "very long description long long long long long");
 		EXPECT_EQ(header.uiDay,                       1u);
 		EXPECT_EQ(header.ubHour,                      1);
 		EXPECT_EQ(header.ubMin,                       0);
