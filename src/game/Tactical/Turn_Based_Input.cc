@@ -104,6 +104,8 @@
 	#include "VObject.h"
 #endif
 
+#include <string_theory/format>
+
 #include <algorithm>
 
 static BOOLEAN gfFirstCycleMovementStarted = FALSE;
@@ -1607,7 +1609,7 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 						if (new_soldier->bAssignment != current_squad)
 						{
 							HandleLocateSelectMerc(new_soldier, true);
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[MSG_SQUAD_ACTIVE], CurrentSquad() + 1);
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[MSG_SQUAD_ACTIVE], CurrentSquad() + 1));
 							// Center to guy
 							LocateSoldier(GetSelectedMan(), SETLOCATOR);
 						}
@@ -1742,8 +1744,8 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 
 #ifdef SGP_VIDEO_DEBUGGING
 		case 'v':
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VObjects:  %d", guiVObjectSize);
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VSurfaces:  %d", guiVSurfaceSize);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("VObjects:  {}", guiVObjectSize));
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("VSurfaces:  {}", guiVSurfaceSize));
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"SGPVideoDump.txt updated...");
 			PerformVideoInfoDumpIntoFile("SGPVideoDump.txt", TRUE);
 			break;
@@ -2424,7 +2426,7 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 		}
 		else if( gfLoneEPCAttemptingTraversal )
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, pExitingSectorHelpText[EXIT_GUI_ESCORTED_CHARACTERS_CANT_LEAVE_SECTOR_ALONE_STR], sel->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(pExitingSectorHelpText[EXIT_GUI_ESCORTED_CHARACTERS_CANT_LEAVE_SECTOR_ALONE_STR], sel->name));
 			gfLoneEPCAttemptingTraversal = FALSE;
 		}
 		else if( gubLoneMercAttemptingToAbandonEPCs )
@@ -2463,7 +2465,7 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 		}
 		else
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[MERC_IS_TOO_FAR_AWAY_STR], sel->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[MERC_IS_TOO_FAR_AWAY_STR], sel->name));
 		}
 
 		return( TRUE );
@@ -3233,7 +3235,7 @@ static void ToggleStealthMode(SOLDIERTYPE& s)
 
 	wchar_t const* const msg = s.bStealthMode ? pMessageStrings[MSG_MERC_ON_STEALTHMODE] :
 						pMessageStrings[MSG_MERC_OFF_STEALTHMODE];
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg, s.name);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(msg, s.name));
 }
 
 

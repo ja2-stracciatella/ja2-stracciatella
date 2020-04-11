@@ -529,7 +529,7 @@ void HandleDoorTrap(SOLDIERTYPE& s, DOOR const& d)
 	if (!(DoorTrapTable[d.ubTrapID].fFlags & DOOR_TRAP_SILENT))
 	{
 		wchar_t const* const trap_name = GetTrapName(d);
-		ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[LOCK_TRAP_HAS_GONE_OFF_STR], trap_name);
+		ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[LOCK_TRAP_HAS_GONE_OFF_STR], trap_name));
 	}
 
 	// set trap off

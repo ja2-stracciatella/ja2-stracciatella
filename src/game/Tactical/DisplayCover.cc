@@ -413,14 +413,14 @@ void DisplayRangeToTarget(SOLDIERTYPE const* const s, INT16 const sTargetGridNo)
 	{
 		//display a string with the weapons range, then range to target
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
-				zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE],
-				GCM->getWeapon(s->inv[HANDPOS].usItem)->usRange / 10, usRange);
+				st_format_printf(zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE],
+				GCM->getWeapon(s->inv[HANDPOS].usItem)->usRange / 10, usRange));
 	}
 	else
 	{
 		//display a string with the range to target
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
-				zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET], usRange);
+				st_format_printf(zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET], usRange));
 	}
 
 	//if the target is out of the mercs gun range or knife

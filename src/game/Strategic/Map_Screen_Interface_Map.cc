@@ -1147,7 +1147,7 @@ void PlotPathForCharacter(SOLDIERTYPE& s, INT16 const x, INT16 const y, bool con
 		wchar_t const* const who =
 			s.bAssignment >= ON_DUTY ? s.name :
 			pLongAssignmentStrings[s.bAssignment];
-		MapScreenMessage(FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%ls %ls", who, gsUndergroundString);
+		MapScreenMessage(FONT_MCOLOR_DKRED, MSG_INTERFACE, ST::format("{} {}", who, gsUndergroundString));
 		return;
 	}
 

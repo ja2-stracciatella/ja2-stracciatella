@@ -372,7 +372,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 							if ( pDoor->bPerceivedTrapped == DOOR_PERCEIVED_UNKNOWN )
 							{
 								wchar_t const* const trap_name = GetTrapName(*pDoor);
-								ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[DOOR_LOCK_DESCRIPTION_STR], trap_name);
+								ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[DOOR_LOCK_DESCRIPTION_STR], trap_name));
 
 								// Stop action this time....
 								fDoAction = FALSE;
@@ -580,7 +580,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								// We have a trap. Use door pointer to determine what type, etc
 								TacticalCharacterDialogue( pSoldier, QUOTE_BOOBYTRAP_ITEM );
 								wchar_t const* const trap_name = GetTrapName(*pDoor);
-								ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[DOOR_LOCK_DESCRIPTION_STR], trap_name);
+								ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[DOOR_LOCK_DESCRIPTION_STR], trap_name));
 
 								UpdateDoorPerceivedValue( pDoor );
 							}
@@ -718,7 +718,7 @@ BOOLEAN HandleOpenableStruct( SOLDIERTYPE *pSoldier, INT16 sGridNo, STRUCTURE *p
 								ChangeSoldierState(pSoldier, GetAnimStateForInteraction(*pSoldier, fDoor, END_OPEN_LOCKED_DOOR), 0, FALSE);
 								// Do we have a quote for locked stuff?
 								// Now just show on message bar
-								ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[ DOOR_NOT_PROPER_KEY_STR ], pSoldier->name );
+								ScreenMsg( MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ DOOR_NOT_PROPER_KEY_STR ], pSoldier->name) );
 
 								// Update perceived lock value
 								UpdateDoorPerceivedValue( pDoor );

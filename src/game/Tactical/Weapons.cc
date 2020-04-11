@@ -1258,7 +1258,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 				if ( iDiceRoll <= iHitChance )
 				{
 					// Was a good steal!
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[ STR_STOLE_SOMETHING ], pSoldier->name, ShortItemNames[ pTargetSoldier->inv[HANDPOS].usItem ] );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[ STR_STOLE_SOMETHING ], pSoldier->name, ShortItemNames[ pTargetSoldier->inv[HANDPOS].usItem ]) );
 
 					usOldItem = pTargetSoldier->inv[HANDPOS].usItem;
 
@@ -1313,8 +1313,8 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 				else
 				{
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
-						g_langRes->Message[ STR_FAILED_TO_STEAL_SOMETHING ],
-						pSoldier->name, ShortItemNames[ pTargetSoldier->inv[HANDPOS].usItem ] );
+						st_format_printf(g_langRes->Message[ STR_FAILED_TO_STEAL_SOMETHING ],
+						pSoldier->name, ShortItemNames[ pTargetSoldier->inv[HANDPOS].usItem ]) );
 					if ( pSoldier->bTeam == OUR_TEAM )
 					{
 						DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
@@ -2321,7 +2321,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 				{
 					DoMercBattleSound( pSoldier, BATTLE_SOUND_CURSE1 );
 
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_46], pSoldier->name);
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_46], pSoldier->name));
 				}
 			}
 		}
@@ -2813,7 +2813,7 @@ INT32 TotalArmourProtection(SOLDIERTYPE& pTarget, const UINT8 ubHitLocation, con
 						if (pTarget.bTeam == OUR_TEAM)
 						{
 							// report plates destroyed!
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, str_ceramic_plates_smashed, pTarget.name);
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(str_ceramic_plates_smashed, pTarget.name));
 						}
 					}
 				}
@@ -3079,17 +3079,17 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 
 								if (bStatLoss == 1)
 								{
-									ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_LOSES_1_WISDOM], pTarget->name );
+									ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_LOSES_1_WISDOM], pTarget->name) );
 								}
 								else
 								{
-									ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_LOSES_WISDOM], pTarget->name, bStatLoss );
+									ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_LOSES_WISDOM], pTarget->name, bStatLoss) );
 								}
 							}
 						}
 						else if ( pTarget->bNumPelletsHitBy == 0 )
 						{
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_HEAD_HIT], pTarget->name );
+							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_HEAD_HIT], pTarget->name) );
 						}
 						break;
 					case AIM_SHOT_TORSO:
@@ -3116,11 +3116,11 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 
 									if (bStatLoss == 1)
 									{
-										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_LOSES_1_DEX], pTarget->name );
+										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_LOSES_1_DEX], pTarget->name) );
 									}
 									else
 									{
-										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_LOSES_DEX], pTarget->name, bStatLoss );
+										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_LOSES_DEX], pTarget->name, bStatLoss) );
 									}
 								}
 							}
@@ -3148,11 +3148,11 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 
 									if (bStatLoss == 1)
 									{
-										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_LOSES_1_STRENGTH], pTarget->name );
+										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_LOSES_1_STRENGTH], pTarget->name) );
 									}
 									else
 									{
-										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_LOSES_STRENGTH], pTarget->name, bStatLoss );
+										ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_LOSES_STRENGTH], pTarget->name, bStatLoss) );
 									}
 								}
 							}
@@ -3180,11 +3180,11 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 
 								if (bStatLoss == 1)
 								{
-									ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_LOSES_1_AGIL], pTarget->name );
+									ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_LOSES_1_AGIL], pTarget->name) );
 								}
 								else
 								{
-									ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_LOSES_AGIL], pTarget->name, bStatLoss );
+									ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_LOSES_AGIL], pTarget->name, bStatLoss) );
 								}
 							}
 						}
@@ -3193,7 +3193,7 @@ INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocat
 			}
 			else if ( ubHitLocation == AIM_SHOT_HEAD && pTarget->bNumPelletsHitBy == 0 )
 			{
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_HEAD_HIT], pTarget->name );
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_HEAD_HIT], pTarget->name) );
 			}
 		}
 	}
@@ -3852,7 +3852,7 @@ void ChangeWeaponMode(SOLDIERTYPE* const s)
 			}
 			else
 			{
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[STR_NOT_BURST_CAPABLE], s->name);
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_NOT_BURST_CAPABLE], s->name));
 			}
 			break;
 

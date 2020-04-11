@@ -289,7 +289,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 						if (s->bTeam == OUR_TEAM)
 						{
 							PlayJA2Sample(RG_ID_IMPRINTED, HIGHVOLUME, 1, MIDDLE);
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"\"%ls\"", TacticalStr[GUN_GOT_FINGERPRINT]);
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("\"{}\"", TacticalStr[GUN_GOT_FINGERPRINT]));
 							return ITEM_HANDLE_BROKEN;
 						}
 					}
@@ -384,7 +384,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 				DoMercBattleSound(s, BATTLE_SOUND_LAUGH1);
 				s->bDoBurst    = TRUE;
 				s->bWeaponMode = WM_BURST;
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_26], s->name);
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_26], s->name));
 			}
 		}
 
@@ -2313,7 +2313,7 @@ SOLDIERTYPE* VerifyGiveItem(SOLDIERTYPE* const pSoldier)
 			AddItemToPool(pSoldier->sGridNo, pSoldier->pTempObject, VISIBLE, pSoldier->bLevel, 0 , -1);
 
 			// Place it on the ground!
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ITEM_HAS_BEEN_PLACED_ON_GROUND_STR ], ShortItemNames[ pSoldier->pTempObject->usItem ] );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ ITEM_HAS_BEEN_PLACED_ON_GROUND_STR ], ShortItemNames[ pSoldier->pTempObject->usItem ]) );
 
 			// OK, disengage buddy
 			pSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
@@ -2470,7 +2470,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 
 				// We could not place it!
 				// Drop it on the ground?
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ITEM_HAS_BEEN_PLACED_ON_GROUND_STR ], ShortItemNames[ usItemNum ] );
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ ITEM_HAS_BEEN_PLACED_ON_GROUND_STR ], ShortItemNames[ usItemNum ]) );
 
 				// OK, disengage buddy
 				pSoldier->uiStatusFlags &= (~SOLDIER_ENGAGEDINACTION );
@@ -2486,7 +2486,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 				}
 
 				// OK, it's given, display message!
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ ITEM_HAS_BEEN_GIVEN_TO_STR ], ShortItemNames[ usItemNum ], pTSoldier->name );
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ ITEM_HAS_BEEN_GIVEN_TO_STR ], ShortItemNames[ usItemNum ], pTSoldier->name) );
 				if (usItemNum == MONEY)
 				{
 					// are we giving money to an NPC, to whom we owe money?
@@ -2499,12 +2499,12 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 							gMercProfiles[pTSoldier->ubProfile].iBalance = 0;
 
 							// report the payment and set facts to indicate people not being owed money
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ GUY_HAS_BEEN_PAID_IN_FULL_STR ], pTSoldier->name );
+							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ GUY_HAS_BEEN_PAID_IN_FULL_STR ], pTSoldier->name) );
 						}
 						else
 						{
 							// report the payment
-							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ GUY_STILL_OWED_STR ], pTSoldier->name, -gMercProfiles[pTSoldier->ubProfile].iBalance );
+							ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ GUY_STILL_OWED_STR ], pTSoldier->name, -gMercProfiles[pTSoldier->ubProfile].iBalance) );
 						}
 					}
 				}

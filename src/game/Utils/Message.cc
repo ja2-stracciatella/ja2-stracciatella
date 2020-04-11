@@ -30,7 +30,7 @@
 
 struct ScrollStringSt
 {
-	wchar_t*        pString;
+	ST::string pString;
 	VIDEO_OVERLAY* video_overlay;
 	UINT16  usColor;
 	BOOLEAN fBeginningOfNewString;
@@ -73,11 +73,10 @@ static BOOLEAN fScrollMessagesHidden = FALSE;
 static UINT32  uiStartOfPauseTime = 0;
 
 
-static ScrollStringSt* AddString(const wchar_t* pString, UINT16 usColor, BOOLEAN fStartOfNewString)
+static ScrollStringSt* AddString(const ST::string& str, UINT16 usColor, BOOLEAN fStartOfNewString)
 {
 	ScrollStringSt* const i = new ScrollStringSt{};
-	i->pString              = new wchar_t[wcslen(pString) + 1]{};
-	wcscpy(i->pString, pString);
+	i->pString = str;
 	i->video_overlay         = NULL;
 	i->usColor               = usColor;
 	i->fBeginningOfNewString = fStartOfNewString;
@@ -121,7 +120,6 @@ void ClearDisplayedListOfTacticalStrings(void)
 		if (gpDisplayList[cnt] != NULL)
 		{
 			RemoveStringVideoOverlay(gpDisplayList[cnt]);
-			delete[] gpDisplayList[cnt]->pString;
 			delete gpDisplayList[cnt];
 			gpDisplayList[cnt] = NULL;
 		}
@@ -179,7 +177,6 @@ void ScrollString(void)
 			if (suiTimer - gpDisplayList[cnt]->uiTimeOfLastUpdate > (UINT32)(iMaxAge - 1000 * iNumberOfMessagesOnQueue))
 			{
 				RemoveStringVideoOverlay(gpDisplayList[cnt]);
-				delete[] gpDisplayList[cnt]->pString;
 				delete gpDisplayList[cnt];
 				gpDisplayList[cnt] = NULL;
 			}
@@ -299,21 +296,15 @@ void UnHideMessagesDuringNPCDialogue(void)
 }
 
 
-static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...);
+static void TacticalScreenMsg(UINT16 usColor, UINT8 ubPriority, const ST::string& str);
 
 
 // new screen message
-void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
+void ScreenMsg(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
 {
-	va_list argptr;
-	va_start(argptr, pStringA);
-	wchar_t DestString[512];
-	vswprintf(DestString, lengthof(DestString), pStringA, argptr);
-	va_end(argptr);
-
 	// pass onto tactical message and mapscreen message
-	TacticalScreenMsg(usColor, ubPriority, L"%ls", DestString);
-	MapScreenMessage(usColor, ubPriority, L"%ls", DestString);
+	TacticalScreenMsg(usColor, ubPriority, str);
+	MapScreenMessage(usColor, ubPriority, str);
 
 	if (guiCurrentScreen == MAP_SCREEN)
 	{
@@ -340,15 +331,11 @@ static void ClearWrappedStrings(WRAPPED_STRING* pStringWrapperHead)
 
 
 // this function sets up the string into several single line structures
-static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t* const fmt, ...)
+static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const ST::string& str)
 {
 	if (IsTimeBeingCompressed()) return;
 
-	va_list ap;
-	va_start(ap, fmt);
-	wchar_t msg[512];
-	vswprintf(msg, lengthof(msg), fmt, ap);
-	va_end(ap);
+	ST::string msg = str;
 
 	switch (priority)
 	{
@@ -364,8 +351,7 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t
 	BOOLEAN new_string = TRUE;
 	for (WRAPPED_STRING* i = head; i; i = i->pNextWrappedString)
 	{
-		ST::wchar_buffer wstr = ST::utf32_to_wchar(i->codepoints);
-		ScrollStringSt* const tmp = AddString(wstr.c_str(), colour, new_string);
+		ScrollStringSt* const tmp = AddString(i->codepoints, colour, new_string);
 		*anchor    = tmp;
 		anchor     = &tmp->pNext;
 		new_string = FALSE;
@@ -375,22 +361,13 @@ static void TacticalScreenMsg(UINT16 colour, UINT8 const priority, const wchar_t
 }
 
 
-static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usColor, BOOLEAN fStartOfNewString);
+static void AddStringToMapScreenMessageList(const ST::string& pString, UINT16 usColor, BOOLEAN fStartOfNewString);
 
 
 // this function sets up the string into several single line structures
-void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA, ...)
+void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const ST::string& str)
 {
-
-#if defined _DEBUG
-	wchar_t DestStringA[512];
-#endif
-
-	va_list argptr;
-	va_start(argptr, pStringA);
-	wchar_t DestString[512];
-	vswprintf(DestString, lengthof(DestString), pStringA, argptr);
-	va_end(argptr);
+	ST::string DestString = str;
 
 	switch (ubPriority)
 	{
@@ -405,8 +382,7 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 
 		case MSG_DEBUG:
 #if defined _DEBUG
-			wcscpy(DestStringA, DestString);
-			swprintf(DestString, lengthof(DestString), L"Debug: %ls", DestStringA);
+			DestString = ST::format("Debug: {}", DestString);
 			usColor = DEBUG_COLOR;
 #else
 			return;
@@ -423,8 +399,7 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 	BOOLEAN fNewString = TRUE;
 	do
 	{
-		ST::wchar_buffer wstr = ST::utf32_to_wchar(pStringWrapper->codepoints);
-		AddStringToMapScreenMessageList(wstr.c_str(), usColor, fNewString);
+		AddStringToMapScreenMessageList(pStringWrapper->codepoints, usColor, fNewString);
 		fNewString = FALSE;
 		pStringWrapper = pStringWrapper->pNextWrappedString;
 	}
@@ -437,7 +412,7 @@ void MapScreenMessage(UINT16 usColor, UINT8 ubPriority, const wchar_t* pStringA,
 
 
 // add string to the map screen message list
-static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usColor, BOOLEAN fStartOfNewString)
+static void AddStringToMapScreenMessageList(const ST::string& pString, UINT16 usColor, BOOLEAN fStartOfNewString)
 {
 	ScrollStringSt* const pStringSt = AddString(pString, usColor, fStartOfNewString);
 
@@ -451,7 +426,6 @@ static void AddStringToMapScreenMessageList(const wchar_t* pString, UINT16 usCol
 	ScrollStringSt* const old = gMapScreenMessageList[gubEndOfMapScreenMessageList];
 	if (old != NULL)
 	{
-		delete[] old->pString;
 		delete old;
 	}
 
@@ -552,18 +526,12 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLin
 		if(stracLinuxFormat)
 		{
 			size_t const len = size / 4;
-			SGP::Buffer<wchar_t> str(len);
-			ST::wchar_buffer wstr = reader.readUTF32(len).to_wchar();
-			wcslcpy(str, wstr.c_str(), len);
-			s->pString = str.Release();
+			s->pString = reader.readUTF32(len);
 		}
 		else
 		{
 			size_t const len = size / 2;
-			SGP::Buffer<wchar_t> str(len);
-			ST::wchar_buffer wstr = reader.readUTF16(len).to_wchar();
-			wcslcpy(str, wstr.c_str(), len);
-			s->pString = str.Release();
+			s->pString = reader.readUTF16(len);
 		}
 	}
 
@@ -592,7 +560,7 @@ static void InjectScrollStringIntoFile(HWFILE const f, ScrollStringSt const* con
 		return;
 	}
 
-	ST::utf16_buffer utf16data = ST::string::from_wchar(s->pString).to_utf16();
+	ST::utf16_buffer utf16data = s->pString.to_utf16();
 	UINT32 const size = static_cast<UINT32>(2 * (utf16data.size() + 1));
 	FileWrite(f, &size, sizeof(size));
 	FileWrite(f, utf16data.c_str(), size);
@@ -655,7 +623,6 @@ void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile, bool stracLinuxFo
 		ScrollStringSt* const old = *i;
 		if (old)
 		{
-			delete[] old->pString;
 			delete old;
 		}
 
@@ -687,7 +654,6 @@ void ClearTacticalMessageQueue(void)
 	{
 		ScrollStringSt* del = i;
 		i = i->pNext;
-		delete[] del->pString;
 		delete del;
 	}
 
@@ -702,7 +668,6 @@ void FreeGlobalMessageList(void)
 		ScrollStringSt* const s = *i;
 		if (s != NULL)
 		{
-			delete[] s->pString;
 			delete s;
 			*i = NULL;
 		}

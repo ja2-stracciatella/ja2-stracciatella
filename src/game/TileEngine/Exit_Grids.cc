@@ -191,7 +191,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 		MoveAllGroupsInCurrentSectorToSector(gWorldSectorX, gWorldSectorY, look_for_level);
 		if (look_for_level)
 		{
-			ScreenMsg(FONT_YELLOW, MSG_INTERFACE, pMessageStrings[MSG_ENTERING_LEVEL], look_for_level);
+			ScreenMsg(FONT_YELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[MSG_ENTERING_LEVEL], look_for_level));
 		}
 		else
 		{

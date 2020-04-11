@@ -956,7 +956,7 @@ check_give_money:
 							p.iBalance          += (INT32)o->uiMoneyAmount;
 							p.uiTotalCostToDate += o->uiMoneyAmount;
 							if (p.iBalance > 0) p.iBalance = 0;
-							ScreenMsg(FONT_YELLOW, MSG_INTERFACE, TacticalStr[BALANCE_OWED_STR], p.zNickname, -p.iBalance);
+							ScreenMsg(FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[BALANCE_OWED_STR], p.zNickname, -p.iBalance));
 						}
 						else if (!CheckFact(FACT_VINCE_EXPECTING_MONEY, ubNPC) &&
 								q.sActionData != NPC_ACTION_DONT_ACCEPT_ITEM)
@@ -1006,7 +1006,7 @@ check_give_money:
 						p.iBalance          += (INT32)o->uiMoneyAmount;
 						p.uiTotalCostToDate += o->uiMoneyAmount;
 						if (p.iBalance > 0) p.iBalance = 0;
-						ScreenMsg(FONT_YELLOW, MSG_INTERFACE, TacticalStr[BALANCE_OWED_STR], p.zNickname, -p.iBalance);
+						ScreenMsg(FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[BALANCE_OWED_STR], p.zNickname, -p.iBalance));
 					}
 				}
 				break;
@@ -1061,9 +1061,9 @@ static UINT8 HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const ui
 					// not enough cash
 					ScreenMsg( FONT_MCOLOR_LTYELLOW,
 						MSG_INTERFACE,
-						g_langRes->Message[ STR_NEED_TO_GIVE_MONEY ],
+						st_format_printf(g_langRes->Message[ STR_NEED_TO_GIVE_MONEY ],
 						gMercProfiles[ ubNPC ].zNickname,
-						sTempString );
+						sTempString) );
 					quote_id = 27;
 					giHospitalTempBalance += uiMoneyAmount;
 				}

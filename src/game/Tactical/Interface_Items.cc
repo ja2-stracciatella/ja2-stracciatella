@@ -3275,7 +3275,7 @@ static bool IsValidAmmoToReloadRobot(SOLDIERTYPE const& s, OBJECTTYPE const& amm
 	if (!CompatibleAmmoForGun(&ammo, &weapon))
 	{
 		ST::wchar_buffer name = GCM->getWeapon(weapon.usItem)->calibre->getName()->to_wchar();
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], name.c_str());
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[ROBOT_NEEDS_GIVEN_CALIBER_STR], name.c_str()));
 		return false;
 	}
 	return true;
@@ -3597,7 +3597,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					// try to auto place object....
 					if ( AutoPlaceObject( pSoldier, gpItemPointer, TRUE ) )
 					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usItem ], pSoldier->name );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usItem ], pSoldier->name) );
 
 						// Check if it's the same now!
 						if ( gpItemPointer->ubNumberOfObjects == 0 )
@@ -3636,7 +3636,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					}
 					else
 					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_NO_ROOM_TO_PASS_ITEM ], ShortItemNames[ usItem ], pSoldier->name );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_NO_ROOM_TO_PASS_ITEM ], ShortItemNames[ usItem ], pSoldier->name) );
 						return( FALSE );
 					}
 				}

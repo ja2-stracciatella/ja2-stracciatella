@@ -3034,8 +3034,8 @@ static void HandleModCtrl(UINT const key)
 
 #if defined SGP_VIDEO_DEBUGGING
 		case 'v':
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VObjects:  %d",  guiVObjectSize);
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VSurfaces:  %d", guiVSurfaceSize);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("VObjects:  {}", guiVObjectSize));
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("VSurfaces:  {}", guiVSurfaceSize));
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"SGPVideoDump.txt updated...");
 			PerformVideoInfoDumpIntoFile("SGPVideoDump.txt", TRUE);
 			break;
@@ -4047,7 +4047,7 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				// if item came from another merc
 				if ( gpItemPointerSoldier != pSoldier )
 				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usNewItemIndex ], pSoldier->name );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usNewItemIndex ], pSoldier->name) );
 				}
 
 			}

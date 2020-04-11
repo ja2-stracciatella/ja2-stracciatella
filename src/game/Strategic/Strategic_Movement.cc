@@ -1363,7 +1363,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			 * involved) or if we never left (cancel) */
 			if (GroupAtFinalDestination(&g) && z == 0 && !never_left)
 			{
-				ScreenMsg(FONT_MCOLOR_DKRED, MSG_INTERFACE, pMessageStrings[MSG_ARRIVE], who, pMapVertIndex[y], pMapHortIndex[x]);
+				ScreenMsg(FONT_MCOLOR_DKRED, MSG_INTERFACE, st_format_printf(pMessageStrings[MSG_ARRIVE], who, pMapVertIndex[y], pMapHortIndex[x]));
 			}
 		}
 

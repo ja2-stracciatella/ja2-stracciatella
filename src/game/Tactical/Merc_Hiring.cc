@@ -298,7 +298,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 
 	if (s.ubStrategicInsertionCode != INSERTION_CODE_CHOPPER)
 	{
-		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s.name);
+		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, st_format_printf(TacticalStr[MERC_HAS_ARRIVED_STR], s.name));
 
 		// ATE: He's going to say something, now that they've arrived...
 		if (!gTacticalStatus.bMercArrivingQuoteBeingUsed && !gfFirstHeliRun)

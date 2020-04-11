@@ -1236,7 +1236,7 @@ static void HaltGuyFromNewGridNoBecauseOfNoAPs(SOLDIERTYPE& s)
 	// Display message if our merc
 	if (s.bTeam == OUR_TEAM && gTacticalStatus.uiFlags & INCOMBAT)
 	{
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[GUY_HAS_RUN_OUT_OF_APS_STR], s.name);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[GUY_HAS_RUN_OUT_OF_APS_STR], s.name));
 	}
 
 	UnSetUIBusy(&s);
@@ -1479,7 +1479,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 		// ATE: If our own guy and an initial move.. display message
 		//if ( fInitialMove && pSoldier->bTeam == OUR_TEAM  )
 		//{
-		//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name );
+		//	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name) );
 		//}
 
 		pSoldier->bEndDoorOpenCode = FALSE;
@@ -1583,7 +1583,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 						DoMercBattleSound(pSoldier, BATTLE_SOUND_CURSE1);
 						if (pSoldier->bTeam == OUR_TEAM)
 						{
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[STR_SLIPPED_MARBLES], pSoldier->name);
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_SLIPPED_MARBLES], pSoldier->name));
 						}
 						RemoveItemFromPool(GetWorldItem(iMarblesIndex));
 						SoldierCollapse(pSoldier);
@@ -1602,7 +1602,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				{
 					// 20% chance of falling over!
 					DoMercBattleSound(pSoldier, BATTLE_SOUND_CURSE1);
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_37], pSoldier->name);
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_37], pSoldier->name));
 					SoldierCollapse(pSoldier);
 					if (pSoldier->bActionPoints > 0)
 					{
@@ -1616,7 +1616,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 				{
 					// 20% chance of falling over!
 					DoMercBattleSound(pSoldier, BATTLE_SOUND_CURSE1);
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_37], pSoldier->name);
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_37], pSoldier->name));
 					SoldierCollapse(pSoldier);
 					if (pSoldier->bActionPoints > 0)
 					{
@@ -2106,7 +2106,7 @@ void SelectSoldier(SOLDIERTYPE* const s, const SelSoldierFlags flags)
 		// OK, we want to display message that we can't....
 		if (flags & SELSOLDIER_FROM_UI)
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[MERC_IS_UNAVAILABLE_STR], s->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[MERC_IS_UNAVAILABLE_STR], s->name));
 		}
 		return;
 	}
@@ -2401,7 +2401,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 		// ATE: Added string to player
 		if (bVisible != -1 && pSoldierOld->ubProfile != NO_PROFILE)
 		{
-			ScreenMsg(FONT_RED, MSG_INTERFACE, pMercDeadString, pSoldierOld->name);
+			ScreenMsg(FONT_RED, MSG_INTERFACE, st_format_printf(pMercDeadString, pSoldierOld->name));
 		}
 
 		switch (pSoldierOld->ubProfile)
@@ -3855,7 +3855,7 @@ void HandlePlayerServices(SOLDIERTYPE& s)
 	bool done = FALSE;
 	if (tgt->bBleeding == 0 && tgt->bLife >= OKLIFE)
 	{
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[MERC_IS_ALL_BANDAGED_STR], tgt->name);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[MERC_IS_ALL_BANDAGED_STR], tgt->name));
 		// Cancel all services for this guy!
 		ReceivingSoldierCancelServices(tgt);
 		done = TRUE;
@@ -3888,7 +3888,7 @@ void HandlePlayerServices(SOLDIERTYPE& s)
 	}
 	else
 	{
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[MERC_IS_OUT_OF_BANDAGES_STR], s.name);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[MERC_IS_OUT_OF_BANDAGES_STR], s.name));
 		GivingSoldierCancelServices(&s);
 		if (!gTacticalStatus.fAutoBandageMode)
 		{

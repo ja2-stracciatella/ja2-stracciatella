@@ -1520,7 +1520,7 @@ static void HandleStuffForNPCEscorted(UINT8 ubNPC)
 			SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(MARY);
 			if ( pSoldier )
 			{
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NOW_BING_ESCORTED_STR ], gMercProfiles[ MARY ].zNickname, ( pSoldier->bAssignment + 1 ) );
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ NOW_BING_ESCORTED_STR ], gMercProfiles[ MARY ].zNickname, ( pSoldier->bAssignment + 1 )) );
 			}
 
 			if ( gubQuest[ QUEST_ESCORT_TOURISTS ] == QUESTNOTSTARTED )
@@ -1538,7 +1538,7 @@ static void HandleStuffForNPCEscorted(UINT8 ubNPC)
 			SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(JOHN);
 			if ( pSoldier )
 			{
-				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NOW_BING_ESCORTED_STR ], gMercProfiles[ JOHN ].zNickname, ( pSoldier->bAssignment + 1 ) );
+				ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ NOW_BING_ESCORTED_STR ], gMercProfiles[ JOHN ].zNickname, ( pSoldier->bAssignment + 1 )) );
 			}
 
 			if ( gubQuest[ QUEST_ESCORT_TOURISTS ] == QUESTNOTSTARTED )
@@ -1839,7 +1839,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				{
 					RecruitRPC( ubTargetNPC );
 					// OK, update UI with message that we have been recruited
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ HAS_BEEN_RECRUITED_STR ], gMercProfiles[ ubTargetNPC ].zNickname );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ HAS_BEEN_RECRUITED_STR ], gMercProfiles[ ubTargetNPC ].zNickname) );
 				}
 				break;
 
@@ -2162,7 +2162,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_REPORT_BALANCE:
-				ScreenMsg( FONT_YELLOW, MSG_INTERFACE, TacticalStr[ BALANCE_OWED_STR ], gMercProfiles[ubTargetNPC].zNickname, -gMercProfiles[ubTargetNPC].iBalance );
+				ScreenMsg( FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ BALANCE_OWED_STR ], gMercProfiles[ubTargetNPC].zNickname, -gMercProfiles[ubTargetNPC].iBalance) );
 				break;
 
 			case NPC_ACTION_DELAYED_MAKE_BRENDA_LEAVE:
@@ -4276,7 +4276,7 @@ static void DialogueMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 					}
 
 					// OK, update UI with message that we have been recruited
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NOW_BING_ESCORTED_STR ], gMercProfiles[ ubProfile ].zNickname, ( pSoldier->bAssignment + 1 ) );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ NOW_BING_ESCORTED_STR ], gMercProfiles[ ubProfile ].zNickname, ( pSoldier->bAssignment + 1 )) );
 
 					// Change Squads....
 					SetCurrentSquad( pSoldier ->bAssignment, FALSE );

@@ -48,6 +48,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+
 #include <algorithm>
 #include <iterator>
 
@@ -1298,7 +1300,7 @@ BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent)
 			fResult = TRUE;
 		}
 	}
-	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Interrupt duel %d (%d pts) vs %d (%d pts)", pSoldier->ubID, pSoldier->bInterruptDuelPts, pOpponent->ubID, pOpponent->bInterruptDuelPts );
+	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("Interrupt duel {} ({} pts) vs {} ({} pts)", pSoldier->ubID, pSoldier->bInterruptDuelPts, pOpponent->ubID, pOpponent->bInterruptDuelPts) );
 	return( fResult );
 }
 

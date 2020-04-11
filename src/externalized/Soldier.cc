@@ -20,6 +20,7 @@
 
 #include "Logger.h"
 
+
 /** Get soldier object from the structure. */
 std::shared_ptr<Soldier> GetSoldier(struct SOLDIERTYPE* s)
 {
@@ -241,14 +242,12 @@ static bool isHeadPosition(int8_t pos)
 
 static void showGearEquipMessage(const SOLDIERTYPE* s, uint16_t usItem)
 {
-	ST::wchar_buffer msg = GCM->getNewString(NS_SOLDIER_EQUIPS_ITEM)->to_wchar();
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg.c_str(), s->name, ItemNames[usItem]);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(*GCM->getNewString(NS_SOLDIER_EQUIPS_ITEM), s->name, ItemNames[usItem]));
 }
 
 static void showGearRemoveMessage(const SOLDIERTYPE* s, uint16_t usItem)
 {
-	ST::wchar_buffer msg = GCM->getNewString(NS_SOLDIER_REMOVES_ITEM)->to_wchar();
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg.c_str(), s->name, ItemNames[usItem]);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(*GCM->getNewString(NS_SOLDIER_REMOVES_ITEM), s->name, ItemNames[usItem]));
 }
 
 void Soldier::putNightHeadGear()

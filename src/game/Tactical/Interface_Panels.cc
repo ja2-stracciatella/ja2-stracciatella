@@ -1515,7 +1515,7 @@ static BOOLEAN UIHandleItemPlacement(UINT8 ubHandPos, UINT16 usOldItemIndex, UIN
 
 		if ( gpItemPointerSoldier != gpSMCurrentMerc )
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usNewItemIndex ], gpSMCurrentMerc->name );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usNewItemIndex ], gpSMCurrentMerc->name) );
 		}
 
 		// UPDATE ITEM POINTER.....
@@ -2125,7 +2125,7 @@ static void BtnMuteCallback(GUI_BUTTON* btn, INT32 reason)
 	{
 		gpSMCurrentMerc->uiStatusFlags ^= SOLDIER_MUTE;
 		const wchar_t* msg = (gpSMCurrentMerc->uiStatusFlags & SOLDIER_MUTE ? TacticalStr[MUTE_ON_STR] : TacticalStr[MUTE_OFF_STR]);
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg, gpSMCurrentMerc->name);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(msg, gpSMCurrentMerc->name));
 	}
 }
 
@@ -2942,7 +2942,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 
 			if ( pSoldier->ubDeadPanelFrame == 4 )
 			{
-				ScreenMsg(FONT_RED, MSG_SKULL_UI_FEEDBACK, pMercDeadString, pSoldier->name);
+				ScreenMsg(FONT_RED, MSG_SKULL_UI_FEEDBACK, st_format_printf(pMercDeadString, pSoldier->name));
 
 				PlayJA2Sample(DOORCR_1, HIGHVOLUME, 1, MIDDLEPAN);
 				PlayJA2Sample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);

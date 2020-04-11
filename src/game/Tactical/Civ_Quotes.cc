@@ -32,6 +32,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 
@@ -335,7 +336,7 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 
 	if ( ubCivQuoteID == CIV_QUOTE_HINT )
 	{
-		MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  gzCivQuote );
+		MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, ST::format("{}", gzCivQuote) );
 	}
 
 	// Prepare text box

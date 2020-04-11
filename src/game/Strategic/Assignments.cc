@@ -1778,11 +1778,11 @@ static bool DoRepair(SOLDIERTYPE* const repairer, SOLDIERTYPE const* const owner
 	{ // report it as fixed
 		if (repairer == owner)
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_REPAIRED], repairer->name, ItemNames[item]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_REPAIRED], repairer->name, ItemNames[item]));
 		}
 		else
 		{ // NOTE: may need to be changed for localized versions
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_35], repairer->name, owner->name, ItemNames[item]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_35], repairer->name, owner->name, ItemNames[item]));
 		}
 	}
 	return true;
@@ -1902,7 +1902,7 @@ static void HandleRepairBySoldier(SOLDIERTYPE& s)
 		// if he fixed something of his, and now has no more of his own items to fix
 		if (fAnyOfSoldiersOwnItemsWereFixed && !DoesCharacterHaveAnyItemsToRepair(&s, -1))
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sRepairsDoneString[0], s.name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(sRepairsDoneString[0], s.name));
 
 			// let player react
 			StopTimeCompression();
@@ -2665,7 +2665,7 @@ void MakeSoldiersTacticalAnimationReflectAssignment(SOLDIERTYPE* const s)
 static void AssignmentAborted(SOLDIERTYPE const& s, AssignmentAbortReason const reason)
 {
 	Assert(reason < NUM_ASSIGN_ABORT_REASONS);
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[reason], s.name);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[reason], s.name));
 	StopTimeCompression();
 	fCharacterInfoPanelDirty = TRUE;
 	fTeamPanelDirty          = TRUE;
@@ -3069,7 +3069,7 @@ static void VehicleMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 		else
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_18], zVehicleName[v.ubVehicleType]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(gzLateLocalizedString[STR_LATE_18], zVehicleName[v.ubVehicleType]));
 		}
 
 		fShowAssignmentMenu = FALSE;
@@ -7306,7 +7306,7 @@ static void RepairItemsOnOthers(SOLDIERTYPE* pSoldier, UINT8* pubRepairPtsLeft)
 
 		if ( fSomethingWasRepairedThisPass && !DoesCharacterHaveAnyItemsToRepair( pSoldier, ubPassType ) )
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sRepairsDoneString[ 1 + ubPassType ], pSoldier->name );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(sRepairsDoneString[ 1 + ubPassType ], pSoldier->name) );
 
 			// let player react
 			StopTimeCompression();
@@ -7340,12 +7340,12 @@ static BOOLEAN UnjamGunsOnSoldier(SOLDIERTYPE* pOwnerSoldier, SOLDIERTYPE* pRepa
 				// report it as unjammed
 				if ( pRepairSoldier == pOwnerSoldier )
 				{
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_53], pRepairSoldier->name, ItemNames[pOwnerSoldier->inv[bPocket].usItem]);
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_53], pRepairSoldier->name, ItemNames[pOwnerSoldier->inv[bPocket].usItem]));
 				}
 				else
 				{
 					// NOTE: may need to be changed for localized versions
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_54], pRepairSoldier->name, pOwnerSoldier->name, ItemNames[pOwnerSoldier->inv[bPocket].usItem]);
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_54], pRepairSoldier->name, pOwnerSoldier->name, ItemNames[pOwnerSoldier->inv[bPocket].usItem]));
 				}
 
 				fAnyGunsWereUnjammed = TRUE;

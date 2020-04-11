@@ -4320,7 +4320,7 @@ static void TellPlayerAboutNoise(SOLDIERTYPE* const s, SOLDIERTYPE const* const 
 		noise_type == NOISE_GRENADE_IMPACT ? pDirectionStr[noise_dir] :
 		level      >  s->bLevel            ? gzLateLocalizedString[STR_LATE_06] : // From above
 		gzLateLocalizedString[STR_LATE_07];                                       // From below
-	ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, pNewNoiseStr[noise_type], s->name, pNoiseVolStr[volume_idx], direction);
+	ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(pNewNoiseStr[noise_type], s->name, pNoiseVolStr[volume_idx], direction));
 
 	// If the sound was faint, say something
 	if (volume_idx == 0 &&

@@ -1348,14 +1348,14 @@ static void PaySkyriderBill(void)
 			// no problem, pay the man
 			// add the transaction
 			AddTransactionToPlayersBook( PAYMENT_TO_NPC, SKYRIDER, GetWorldTotalMin( ), -iTotalAccumulatedCostByPlayer );
-			ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, pSkyriderText[ 0 ], iTotalAccumulatedCostByPlayer );
+			ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, st_format_printf(pSkyriderText[ 0 ], iTotalAccumulatedCostByPlayer) );
 		}
 		else
 		{
 			// money owed
 			if( LaptopSaveInfo.iCurrentBalance > 0 )
 			{
-				ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, pSkyriderText[ 0 ], LaptopSaveInfo.iCurrentBalance );
+				ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, st_format_printf(pSkyriderText[ 0 ], LaptopSaveInfo.iCurrentBalance) );
 				gMercProfiles[ SKYRIDER ].iBalance = LaptopSaveInfo.iCurrentBalance - iTotalAccumulatedCostByPlayer;
 				// add the transaction
 				AddTransactionToPlayersBook( PAYMENT_TO_NPC, SKYRIDER, GetWorldTotalMin( ), -LaptopSaveInfo.iCurrentBalance );
@@ -1366,7 +1366,7 @@ static void PaySkyriderBill(void)
 			}
 
 			HeliCharacterDialogue(OWED_MONEY_TO_SKYRIDER);
-			ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, pSkyriderText[ 1 ], -gMercProfiles[ SKYRIDER ].iBalance );
+			ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, st_format_printf(pSkyriderText[ 1 ], -gMercProfiles[ SKYRIDER ].iBalance) );
 
 			// kick everyone out! (we know we're in a safe sector if we're paying)
 			MoveAllInHelicopterToFootMovementGroup( );
@@ -1393,14 +1393,14 @@ void PayOffSkyriderDebtIfAny( )
 		// add the transaction
 		AddTransactionToPlayersBook( PAYMENT_TO_NPC, SKYRIDER, GetWorldTotalMin( ), -iPayAmount );
 		// tell player
-		ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, pSkyriderText[ 0 ], iPayAmount );
+		ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, st_format_printf(pSkyriderText[ 0 ], iPayAmount) );
 		// now whaddawe owe?
 		iAmountOwed = - gMercProfiles[ SKYRIDER ].iBalance;
 
 		// if it wasn't enough
 		if ( iAmountOwed > 0 )
 		{
-			ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, pSkyriderText[ 1 ], iAmountOwed );
+			ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, st_format_printf(pSkyriderText[ 1 ], iAmountOwed) );
 			HeliCharacterDialogue(OWED_MONEY_TO_SKYRIDER);
 		}
 	}
