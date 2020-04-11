@@ -1025,7 +1025,7 @@ void SetDoorString(INT16 const sGridNo)
 		DOOR const* const d = FindDoorInfoAtGridNo(sGridNo);
 		if (d != NULL)
 		{
-			wchar_t const* state = 0;
+			ST::string state;
 			if (d->bPerceivedTrapped == DOOR_PERCEIVED_TRAPPED)
 			{
 				state = TacticalStr[DOOR_TRAPPED_MOUSE_DESCRIPTION];
@@ -1044,7 +1044,7 @@ void SetDoorString(INT16 const sGridNo)
 					state = TacticalStr[DOOR_BROKEN_MOUSE_DESCRIPTION];
 					break;
 			}
-			if (state) SetIntTileLocation2Text(state);
+			if (!state.empty()) SetIntTileLocation2Text(state);
 		}
 	}
 
@@ -1073,7 +1073,7 @@ void SetDoorString(INT16 const sGridNo)
 			// Use percived value
 			open = (ds->ubFlags & DOOR_PERCEIVED_OPEN) != 0;
 		}
-		wchar_t const* const state = open ?
+		ST::string state = open ?
 			pMessageStrings[MSG_OPENED] : pMessageStrings[MSG_CLOSED];
 	if(isGermanVersion())
 	{
