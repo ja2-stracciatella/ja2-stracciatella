@@ -274,7 +274,7 @@ void RenderMapScreenInterfaceBottom( void )
 }
 
 
-static GUIButtonRef MakeExitButton(const INT32 off, const INT32 on, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+static GUIButtonRef MakeExitButton(INT32 off, INT32 on, INT16 x, INT16 y, GUI_CALLBACK click, const ST::string& help)
 {
 	GUIButtonRef const btn = QuickCreateButtonImg(INTERFACEDIR "/map_border_buttons.sti", off, on, x, y, MSYS_PRIORITY_HIGHEST - 1, click);
 	btn->SetFastHelpText(help);
@@ -283,7 +283,7 @@ static GUIButtonRef MakeExitButton(const INT32 off, const INT32 on, const INT16 
 }
 
 
-static GUIButtonRef MakeArrowButton(const INT32 grayed, const INT32 off, const INT32 on, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+static GUIButtonRef MakeArrowButton(INT32 grayed, INT32 off, INT32 on, INT16 x, INT16 y, GUI_CALLBACK click, const ST::string& help)
 {
 	GUIButtonRef const btn = QuickCreateButtonImg(INTERFACEDIR "/map_screen_bottom_arrows.sti", grayed, off, -1, on, -1, x, y, MSYS_PRIORITY_HIGHEST - 2, click);
 	btn->SetFastHelpText(help);
@@ -567,14 +567,10 @@ static void DisplayCompressMode(void)
 	static UINT8 usColor = FONT_LTGREEN;
 
 	// get compress speed
-	const wchar_t* Time; // XXX HACK000E
+	ST::string Time;
 	if( giTimeCompressMode != NOT_USING_TIME_COMPRESSION )
 	{
 		Time = sTimeStrings[IsTimeBeingCompressed() ? giTimeCompressMode : 0];
-	}
-	else
-	{
-		abort(); // XXX HACK000E
 	}
 
 	RestoreExternBackgroundRect( STD_SCREEN_X + 489, STD_SCREEN_Y + 457, 522 - 489, 467 - 454 );
@@ -922,7 +918,7 @@ BOOLEAN AllowedToTimeCompress( void )
 
 static void DisplayCurrentBalanceTitleForMapBottom(void)
 {
-	const wchar_t* sString;
+	ST::string sString;
 	INT16 sFontX, sFontY;
 
 	SetFontDestBuffer(guiSAVEBUFFER);
