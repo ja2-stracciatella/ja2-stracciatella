@@ -62,6 +62,7 @@
 #include "GameInstance.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 
 //--------------------------------------------------
@@ -1886,10 +1887,10 @@ void UpdateMercsInfo()
 			SetFontForeground( FONT_BLACK );
 			if( gpSelected->pDetailedPlacement->fVisible || gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 			{
-				mprintfEditor(396, 14, L"%hs    ", gpSelected->pSoldier->HeadPal);
-				mprintfEditor(396, 38, L"%hs    ", gpSelected->pSoldier->SkinPal);
-				mprintfEditor(396, 62, L"%hs    ", gpSelected->pSoldier->VestPal);
-				mprintfEditor(396, 86, L"%hs    ", gpSelected->pSoldier->PantsPal);
+				MPrintEditor(396, 14, ST::format("{}    ", gpSelected->pSoldier->HeadPal));
+				MPrintEditor(396, 38, ST::format("{}    ", gpSelected->pSoldier->SkinPal));
+				MPrintEditor(396, 62, ST::format("{}    ", gpSelected->pSoldier->VestPal));
+				MPrintEditor(396, 86, ST::format("{}    ", gpSelected->pSoldier->PantsPal));
 				ShowEditMercPalettes( gpSelected->pSoldier );
 			}
 			else
@@ -1919,7 +1920,7 @@ void UpdateMercsInfo()
 				if( gpSelected->pDetailedPlacement->ubProfile == NO_PROFILE )
 				{
 					SetFontForeground( FONT_GRAY3 );
-					mprintfEditor(240, 75, L"Current Profile:  n/a                            ");
+					MPrintEditor(240, 75, "Current Profile:  n/a                            ");
 				}
 				else
 				{

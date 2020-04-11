@@ -85,16 +85,16 @@ void UpdateBuildingsInfo()
 	//print the headers on top of the columns
 	SetFont( SMALLCOMPFONT );
 	SetFontForeground( FONT_RED );
-	mprintfEditor(112,  2, L"TOGGLE");
-	mprintfEditor(114, 12, L"VIEWS");
+	MPrintEditor(112,  2, "TOGGLE");
+	MPrintEditor(114, 12, "VIEWS");
 	SetFontForeground( FONT_YELLOW );
-	mprintfEditor(185,  2, L"SELECTION METHOD");
+	MPrintEditor(185,  2, "SELECTION METHOD");
 	SetFontForeground( FONT_LTGREEN );
-	mprintfEditor(290,  2, L"SMART METHOD");
+	MPrintEditor(290,  2, "SMART METHOD");
 	SetFontForeground( FONT_LTBLUE );
-	mprintfEditor(390,  2, L"BUILDING METHOD");
+	MPrintEditor(390,  2, "BUILDING METHOD");
 	SetFontForeground( FONT_GRAY2 );
-	mprintfEditor(437, 44, L"Room#" );
+	MPrintEditor(437, 44, "Room#" );
 }
 
 //Uses a recursive method to elimate adjacent tiles of structure information.

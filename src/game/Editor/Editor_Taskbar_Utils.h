@@ -1,6 +1,9 @@
 #ifndef __EDITOR_TASKBAR_UTILS_H
 #define __EDITOR_TASKBAR_UTILS_H
 
+#include <string_theory/string>
+
+
 //These are utilities that are used within the editor.  This function absorbs the expensive
 //compile time of the SGP dependencies, while allowing the other editor files to hook into it
 //without paying, so to speak.
@@ -53,9 +56,9 @@ void DisableEditorRegion( INT8 bRegionID );
 
 
 //Rendering Utils
-void mprintfEditor(INT16 x, INT16 y, const wchar_t* pFontString, ...);
+void MPrintEditor(INT16 x, INT16 y, const ST::string& str);
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom );
-void DrawEditorInfoBox(const wchar_t* str, SGPFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h);
+void DrawEditorInfoBox(const ST::string& str, SGPFont, UINT16 x, UINT16 y, UINT16 w, UINT16 h);
 
 extern INT32	giEditMercDirectionIcons[2];
 extern SGPVObject* guiMercInventoryPanel;
