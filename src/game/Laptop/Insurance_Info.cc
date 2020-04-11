@@ -90,7 +90,7 @@ void EnterInitInsuranceInfo()
 }
 
 
-static GUIButtonRef MakeButtonBig(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click, const INT8 offset_x)
+static GUIButtonRef MakeButtonBig(BUTTON_PICS* img, const ST::string& text, INT16 x, GUI_CALLBACK click, INT8 offset_x)
 {
 	const INT16 text_col   = INS_FONT_COLOR;
 	const INT16 shadow_col = INS_FONT_SHADOW;
