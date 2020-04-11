@@ -3,6 +3,8 @@
 
 #include "JA2Types.h"
 
+#include <string_theory/string>
+
 
 #define NO_EXPRESSION				0
 #define BLINKING				1
@@ -174,6 +176,11 @@ void RenderAutoFace(FACETYPE&);
 // If you want to setup the face to talking, ( most times this call is done in JA2 by other functions, not
 //directly), you call
 void SetFaceTalking(FACETYPE&, char const* zSoundFile, wchar_t const* zTextString);
+inline void SetFaceTalking(FACETYPE& f, char const* zSoundFile, const ST::string& zTextString)
+{
+	ST::wchar_buffer wstr = zTextString.to_wchar();
+	SetFaceTalking(f, zSoundFile, wstr.c_str());
+}
 // This function will setup appropriate face data and begin the speech process. It can fail if the sound
 //cannot be played for any reason.
 
