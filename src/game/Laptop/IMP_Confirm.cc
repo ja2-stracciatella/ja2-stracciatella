@@ -34,6 +34,9 @@
 #include "policy/IMPPolicy.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
+
 #define IMP_MERC_FILE "imp.dat"
 
 static BUTTON_PICS* giIMPConfirmButtonImage[2];
@@ -112,7 +115,7 @@ void HandleIMPConfirm( void )
 }
 
 
-static void MakeButton(UINT idx, const wchar_t* text, INT16 y, GUI_CALLBACK click)
+static void MakeButton(UINT idx, const ST::string& text, INT16 y, GUI_CALLBACK click)
 {
 	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/button_2.sti", 0, 1);
 	giIMPConfirmButtonImage[idx] = img;
