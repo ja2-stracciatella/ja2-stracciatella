@@ -47,7 +47,9 @@
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 #include "externalized/strategic/BloodCatSpawnsModel.h"
-                 
+
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 #include <math.h>
@@ -885,7 +887,7 @@ maybe_nightops:
 
 	// Kris:  November 10, 1997
 	// Expanded the default names based on team.
-	wchar_t const* name;
+	ST::string name;
 	switch (c.bTeam)
 	{
 		case ENEMY_TEAM:   name = TacticalStr[ENEMY_TEAM_MERC_NAME];   break;
@@ -1635,7 +1637,7 @@ static void UpdateStaticDetailedPlacementWithProfileInformation(SOLDIERCREATE_ST
 	SET_PALETTEREP_ID(spp->SkinPal,  p.SKIN);
 	SET_PALETTEREP_ID(spp->PantsPal, p.PANTS);
 
-	wcscpy(spp->name, p.zNickname);
+	spp->name = p.zNickname;
 
 	spp->bLife         = p.bLife;
 	spp->bLifeMax      = p.bLifeMax;

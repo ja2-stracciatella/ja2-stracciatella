@@ -761,8 +761,7 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 			dp->sInsertionGridNo = curr->pBasicPlacement->usStartingGridNo;
 		}
 
-		ST::wchar_buffer wstr = s.name.to_wchar();
-		wcslcpy(dp->name, wstr.c_str(), lengthof(dp->name));
+		dp->name = s.name;
 
 		// Copy patrol points
 		dp->bPatrolCnt = s.bPatrolCnt;
