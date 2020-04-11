@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "GameLoop.h"
 #include "GameVersion.h"
 #include "Local.h"
@@ -33,6 +31,12 @@
 #include "GameState.h"
 #include "sgp/FileMan.h"
 #include "Logger.h"
+
+#include <string_theory/format>
+#include <string_theory/string>
+
+#include <stdexcept>
+
 
 ScreenID guiCurrentScreen = ERROR_SCREEN; // XXX TODO001A had no explicit initialisation
 ScreenID guiPendingScreen = NO_PENDING_SCREEN;
@@ -139,12 +143,9 @@ try
 			uint64_t uiSpaceOnDrive = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom();
 			if( uiSpaceOnDrive < REQUIRED_FREE_SPACE )
 			{
-				wchar_t	zText[512];
-				wchar_t	zSpaceOnDrive[20];
+				ST::string zSpaceOnDrive = ST::format("{.2f}", uiSpaceOnDrive / (FLOAT)BYTESINMEGABYTE);
 
-				swprintf( zSpaceOnDrive, lengthof(zSpaceOnDrive), L"%.2f", uiSpaceOnDrive / (FLOAT)BYTESINMEGABYTE );
-
-				swprintf( zText, lengthof(zText), pMessageStrings[ MSG_LOWDISKSPACE_WARNING ], zSpaceOnDrive, L"20" );
+				ST::string zText = st_format_printf(pMessageStrings[ MSG_LOWDISKSPACE_WARNING ], zSpaceOnDrive, "20");
 
 				if( guiPreviousOptionScreen == MAP_SCREEN )
 					DoMapMessageBox( MSG_BOX_BASIC_STYLE, zText, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL );
@@ -232,7 +233,7 @@ catch (std::exception const& e)
 	else
 	{
 		what = "savegame";
-		if (SaveGame(SAVE__ERROR_NUM, L"error savegame"))
+		if (SaveGame(SAVE__ERROR_NUM, "error savegame"))
 		{
 			success = "succeeded (error.sav)";
 			attach  = " Do not forget to attach the savegame.";
