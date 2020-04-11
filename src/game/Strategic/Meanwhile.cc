@@ -32,6 +32,9 @@
 #include "Squads.h"
 #include "Random.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 
 #define MAX_MEANWHILE_PROFILES	10
 
@@ -224,9 +227,7 @@ static void BeginMeanwhileCallBack(MessageBoxReturnValue);
 
 static void BringupMeanwhileBox(void)
 {
-	wchar_t zStr[256];
-
-	swprintf( zStr, lengthof(zStr), L"%ls.....", pMessageStrings[ MSG_MEANWHILE ] );
+	ST::string zStr = ST::format("{}.....", pMessageStrings[ MSG_MEANWHILE ]);
 	MessageBoxFlags const flags =
 		gCurrentMeanwhileDef.ubMeanwhileID != INTERROGATION
 		&& MeanwhileSceneSeen(gCurrentMeanwhileDef.ubMeanwhileID)
