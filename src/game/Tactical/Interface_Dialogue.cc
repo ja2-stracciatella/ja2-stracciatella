@@ -2743,7 +2743,7 @@ unlock:
 				// NOW overwrite name with true name in profile
 				// copy new nickname into soldier structure
 				{
-					wcslcpy(gMercProfiles[ubTargetNPC].zNickname, gMercProfiles[ubTargetNPC].zName, lengthof(gMercProfiles[ubTargetNPC].zNickname));
+					gMercProfiles[ubTargetNPC].zNickname = gMercProfiles[ubTargetNPC].zName;
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 					if ( pSoldier )
 					{

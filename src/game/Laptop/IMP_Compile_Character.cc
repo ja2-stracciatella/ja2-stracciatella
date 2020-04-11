@@ -34,8 +34,8 @@ void CreateACharacterFromPlayerEnteredStats(void)
 {
 	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
 
-	wcscpy(p.zName,     pFullName);
-	wcscpy(p.zNickname, pNickName);
+	p.zName = pFullName;
+	p.zNickname = pNickName;
 
 	p.bSex = fCharacterIsMale ? MALE : FEMALE;
 

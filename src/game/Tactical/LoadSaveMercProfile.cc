@@ -43,19 +43,15 @@ void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracL
 	if(stracLinuxFormat)
 	{
 		DataReader reader(S);
-		ST::wchar_buffer wstr = reader.readUTF32(NAME_LENGTH).to_wchar();
-		wcslcpy(p.zName, wstr.c_str(), lengthof(p.zName));
-		wstr = reader.readUTF32(NICKNAME_LENGTH).to_wchar();
-		wcslcpy(p.zNickname, wstr.c_str(), lengthof(p.zNickname));
+		p.zName = reader.readUTF32(NAME_LENGTH);
+		p.zNickname = reader.readUTF32(NICKNAME_LENGTH);
 		S += reader.getConsumed();
 	}
 	else
 	{
 		DataReader reader(S);
-		ST::wchar_buffer wstr = reader.readUTF16(NAME_LENGTH, fixer).to_wchar();
-		wcslcpy(p.zName, wstr.c_str(), lengthof(p.zName));
-		wstr = reader.readUTF16(NICKNAME_LENGTH, fixer).to_wchar();
-		wcslcpy(p.zNickname, wstr.c_str(), lengthof(p.zNickname));
+		p.zName = reader.readUTF16(NAME_LENGTH, fixer);
+		p.zNickname = reader.readUTF16(NICKNAME_LENGTH, fixer);
 		S += reader.getConsumed();
 	}
 
