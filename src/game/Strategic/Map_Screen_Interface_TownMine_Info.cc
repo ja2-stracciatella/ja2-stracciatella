@@ -28,6 +28,7 @@
 #include "VObject.h"
 #include "VSurface.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 
@@ -172,14 +173,14 @@ no_mine:
 // adds text to town info box
 static void AddTextToTownBox(PopUpBox* const box)
 {
-	wchar_t wString[ 64 ];
+	ST::string wString;
 	INT16 sMineSector = 0;
 
 	UINT8 const sector   = SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
 	UINT8 const ubTownId = GetTownIdForSector(sector);
 	Assert((ubTownId >= FIRST_TOWN) && (ubTownId < NUM_TOWNS));
 
-	const wchar_t* title;
+	ST::string title;
 	switch (sector)
 	{
 		case SEC_B13: title = pLandTypeStrings[DRASSEN_AIRPORT_SITE];                    break;
@@ -200,30 +201,29 @@ static void AddTextToTownBox(PopUpBox* const box)
 	}
 	AddMonoString(box, title);
 	// blank line
-	AddMonoString(box, L"");
+	AddMonoString(box, ST::null);
 
 	AddSectorToBox(box);
 
 	// town size
-	swprintf( wString, lengthof(wString), L"%ls:", pwTownInfoStrings[ 0 ] );
+	wString = ST::format("{}:", pwTownInfoStrings[ 0 ]);
 	AddMonoString(box, wString);
-	swprintf( wString, lengthof(wString), L"%d",  GetTownSectorSize( ubTownId ) );
+	wString = ST::format("{}",  GetTownSectorSize( ubTownId ));
 	AddSecondColumnMonoString(box, wString);
 
 	// main facilities
-	swprintf(wString, lengthof(wString), L"%ls:", pwTownInfoStrings[4]);
+	wString = ST::format("{}:", pwTownInfoStrings[4]);
 	AddMonoString(box, wString);
-	ST::wchar_buffer wstr = GetSectorFacilitiesFlags(bCurrentTownMineSectorX, bCurrentTownMineSectorY).to_wchar();
-	wcslcpy(wString, wstr.c_str(), lengthof(wString));
+	wString = GetSectorFacilitiesFlags(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
 	AddSecondColumnMonoString(box, wString);
 
 	// the concept of control is only meaningful in sectors where militia can be trained
 	if ( MilitiaTrainingAllowedInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, 0 ) )
 	{
 		// town control
-		swprintf(wString, lengthof(wString), L"%ls:", pwTownInfoStrings[1]);
+		wString = ST::format("{}:", pwTownInfoStrings[1]);
 		AddMonoString(box, wString);
-		swprintf(wString, lengthof(wString), L"%d%%", GetTownSectorsUnderControl(ubTownId) * 100 / GetTownSectorSize(ubTownId));
+		wString = ST::format("{}%", GetTownSectorsUnderControl(ubTownId) * 100 / GetTownSectorSize(ubTownId));
 		AddSecondColumnMonoString(box, wString);
 	}
 
@@ -231,9 +231,9 @@ static void AddTextToTownBox(PopUpBox* const box)
 	if( gTownLoyalty[ ubTownId ].fStarted && gfTownUsesLoyalty[ ubTownId ])
 	{
 		// town loyalty
-		swprintf(wString, lengthof(wString), L"%ls:", pwTownInfoStrings[3]);
+		wString = ST::format("{}:", pwTownInfoStrings[3]);
 		AddMonoString(box, wString);
-		swprintf(wString, lengthof(wString), L"%d%%", gTownLoyalty[ubTownId].ubRating);
+		wString = ST::format("{}%", gTownLoyalty[ubTownId].ubRating);
 		AddSecondColumnMonoString(box, wString);
 	}
 
@@ -242,10 +242,9 @@ static void AddTextToTownBox(PopUpBox* const box)
 	if( sMineSector != -1 )
 	{
 		// Associated Mine: Sector
-		swprintf(wString, lengthof(wString), L"%ls:",  pwTownInfoStrings[2]);
+		wString = ST::format("{}:",  pwTownInfoStrings[2]);
 		AddMonoString(box, wString);
-		ST::wchar_buffer wstr = GetShortSectorString(( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X )).to_wchar();
-		wcslcpy(wString, wstr.c_str(), lengthof(wString));
+		wString = GetShortSectorString(( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X ));
 		AddSecondColumnMonoString(box, wString);
 	}
 }
@@ -256,20 +255,20 @@ static void AddTextToMineBox(PopUpBox* const box, INT8 const mine)
 {
 	UINT8            const  town   = GetTownAssociatedWithMine(mine);
 	MINE_STATUS_TYPE const& status = gMineStatus[mine];
-	wchar_t                 buf[64];
+	ST::string buf;
 
 	// Name of town followed by "mine"
-	swprintf(buf, lengthof(buf), L"%ls %ls", pTownNames[town], pwMineStrings[0]);
+	buf = ST::format("{} {}", pTownNames[town], pwMineStrings[0]);
 	AddMonoString(box, buf);
 
-	AddMonoString(box, L""); // Blank line
+	AddMonoString(box, ST::null); // Blank line
 
 	AddSectorToBox(box);
 
 	// Mine status
-	swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[9]);
+	buf = ST::format("{}:", pwMineStrings[9]);
 	AddMonoString(box, buf);
-	wchar_t const* const status_txt =
+	ST::string status_txt =
 		status.fEmpty      ? pwMineStrings[5] : // Abandonded
 		status.fShutDown   ? pwMineStrings[6] : // Shut down
 		status.fRunningOut ? pwMineStrings[7] : // Running out
@@ -279,49 +278,49 @@ static void AddTextToMineBox(PopUpBox* const box, INT8 const mine)
 	if (!status.fEmpty)
 	{
 		// Current production
-		swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[3]);
+		buf = ST::format("{}:", pwMineStrings[3]);
 		AddMonoString(box, buf);
 		UINT32 const predicted_income = PredictDailyIncomeFromAMine(mine);
 		AddSecondColumnMonoString(box, SPrintMoney(predicted_income));
 
 		// Potential production
-		swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[4]);
+		buf = ST::format("{}:", pwMineStrings[4]);
 		AddMonoString(box, buf);
 		UINT32 const max_removal = GetMaxDailyRemovalFromMine(mine);
 		AddSecondColumnMonoString(box, SPrintMoney(max_removal));
 
 		if (GetMaxPeriodicRemovalFromMine(mine) > 0)
 		{ // Production rate (current production as a percentage of potential production)
-			swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[10]);
+			buf = ST::format("{}:", pwMineStrings[10]);
 			AddMonoString(box, buf);
-			swprintf(buf, lengthof(buf), L"%d%%", predicted_income * 100 / max_removal);
+			buf = ST::format("{}%", predicted_income * 100 / max_removal);
 			AddSecondColumnMonoString(box, buf);
 		}
 
 		// Town control percentage
-		swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[12]);
+		buf = ST::format("{}:", pwMineStrings[12]);
 		AddMonoString(box, buf);
-		swprintf(buf, lengthof(buf), L"%d%%", GetTownSectorsUnderControl(town) * 100 / GetTownSectorSize(town));
+		buf = ST::format("{}%", GetTownSectorsUnderControl(town) * 100 / GetTownSectorSize(town));
 		AddSecondColumnMonoString(box, buf);
 
 		TOWN_LOYALTY const& loyalty = gTownLoyalty[town];
 		if (loyalty.fStarted && gfTownUsesLoyalty[town])
 		{ // Town loyalty percentage
-			swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[13]);
+			buf = ST::format("{}:", pwMineStrings[13]);
 			AddMonoString(box, buf);
-			swprintf(buf, lengthof(buf), L"%d%%", loyalty.ubRating);
+			buf = ST::format("{}%", loyalty.ubRating);
 			AddSecondColumnMonoString(box, buf);
 		}
 
 		// Ore type (silver/gold)
-		swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[11]);
+		buf = ST::format("{}:", pwMineStrings[11]);
 		AddMonoString(box, buf);
 		AddSecondColumnMonoString(box, status.ubMineType == SILVER_MINE ? pwMineStrings[1] : pwMineStrings[2]);
 	}
 
 #ifdef _DEBUG
 	// Dollar amount remaining in mine
-	AddMonoString(box, L"Remaining (DEBUG):");
+	AddMonoString(box, "Remaining (DEBUG):");
 	AddSecondColumnMonoString(box, SPrintMoney(GetTotalLeftInMine(mine)));
 #endif
 }
@@ -335,7 +334,7 @@ static void AddTextToBlankSectorBox(PopUpBox* const box)
 	// get the sector value
 	usSectorValue = SECTOR( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
 
-	const wchar_t* title;
+	ST::string title;
 	switch( usSectorValue )
 	{
 		case SEC_D2:  title = (fSamSiteFound[SAM_SITE_ONE]   ? pLandTypeStrings[TROPICS_SAM_SITE] : pLandTypeStrings[TROPICS]); break; // Chitzena SAM
@@ -349,7 +348,7 @@ static void AddTextToBlankSectorBox(PopUpBox* const box)
 	AddMonoString(box, title);
 
 	// blank line
-	AddMonoString(box, L"");
+	AddMonoString(box, ST::null);
 
 	AddSectorToBox(box);
 }
@@ -358,19 +357,18 @@ static void AddTextToBlankSectorBox(PopUpBox* const box)
 // add "sector" line text to any popup box
 static void AddSectorToBox(PopUpBox* const box)
 {
-	wchar_t wString[ 64 ];
-	wchar_t wString2[ 10 ];
+	ST::string wString;
+	ST::string wString2;
 
 	// sector
-	swprintf( wString, lengthof(wString), L"%ls:", pwMiscSectorStrings[ 1 ]);
+	wString = ST::format("{}:", pwMiscSectorStrings[ 1 ]);
 	AddMonoString(box, wString);
 
-	ST::wchar_buffer wstr = GetShortSectorString(bCurrentTownMineSectorX, bCurrentTownMineSectorY).to_wchar();
-	wcslcpy(wString, wstr.c_str(), lengthof(wString));
+	wString = GetShortSectorString(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
 	if (bCurrentTownMineSectorZ != 0 )
 	{
-		swprintf( wString2, lengthof(wString2), L"-%d", bCurrentTownMineSectorZ );
-		wcscat( wString, wString2 );
+		wString2 = ST::format("-{}", bCurrentTownMineSectorZ);
+		wString += wString2;
 	}
 
 	AddSecondColumnMonoString(box, wString);
@@ -379,7 +377,7 @@ static void AddSectorToBox(PopUpBox* const box)
 
 static void AddCommonInfoToBox(PopUpBox* const box)
 {
-	wchar_t wString[ 64 ];
+	ST::string wString;
 	BOOLEAN fUnknownSAMSite = FALSE;
 	UINT8 ubMilitiaTotal = 0;
 	UINT8 ubNumEnemies;
@@ -409,21 +407,21 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 	if ( MilitiaTrainingAllowedInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, 0 ) && !fUnknownSAMSite )
 	{
 		// controlled:
-		swprintf( wString, lengthof(wString), L"%ls:", pwMiscSectorStrings[ 4 ] );
+		wString = ST::format("{}:", pwMiscSectorStrings[ 4 ]);
 		AddMonoString(box, wString);
 
 		// No/Yes
 		AddSecondColumnMonoString(box, pwMiscSectorStrings[StrategicMap[CALCULATE_STRATEGIC_INDEX(bCurrentTownMineSectorX, bCurrentTownMineSectorY)].fEnemyControlled ? 6 : 5]);
 
 		// militia - is there any?
-		swprintf(wString, lengthof(wString), L"%ls:", pwTownInfoStrings[6]);
+		wString = ST::format("{}:", pwTownInfoStrings[6]);
 		AddMonoString(box, wString);
 
 		ubMilitiaTotal = CountAllMilitiaInSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
 		if (ubMilitiaTotal > 0)
 		{
 			// some militia, show total & their breakdown by level
-			swprintf( wString, lengthof(wString), L"%d  (%d/%d/%d)", ubMilitiaTotal,
+			wString = ST::format("{}  ({}/{}/{})", ubMilitiaTotal,
 					MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, GREEN_MILITIA),
 					MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, REGULAR_MILITIA),
 					MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, ELITE_MILITIA));
@@ -432,20 +430,20 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 		else
 		{
 			// no militia: don't bother displaying level breakdown
-			AddSecondColumnMonoString(box, L"0");
+			AddSecondColumnMonoString(box, "0");
 		}
 
 
 		// percentage of current militia squad training completed
-		swprintf(wString, lengthof(wString), L"%ls:", pwTownInfoStrings[5]);
+		wString = ST::format("{}:", pwTownInfoStrings[5]);
 		AddMonoString(box, wString);
-		swprintf(wString, lengthof(wString), L"%d%%", SectorInfo[SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY)].ubMilitiaTrainingPercentDone);
+		wString = ST::format("{}%", SectorInfo[SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY)].ubMilitiaTrainingPercentDone);
 		AddSecondColumnMonoString(box, wString);
 	}
 
 
 	// enemy forces
-	swprintf( wString, lengthof(wString), L"%ls:", pwMiscSectorStrings[ 0 ] );
+	wString = ST::format("{}:", pwMiscSectorStrings[ 0 ]);
 	AddMonoString(box, wString);
 
 	// how many are there, really?
@@ -455,7 +453,7 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 	{
 		case KNOWS_NOTHING:
 			// show "Unknown"
-			wcscpy(wString, pwMiscSectorStrings[ 3 ] );
+			wString = pwMiscSectorStrings[ 3 ];
 			break;
 
 		case KNOWS_THEYRE_THERE:
@@ -463,18 +461,18 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 			if ( ubNumEnemies > 0 )
 			{
 				// show "?", but not exactly how many
-				wcscpy(wString, L"?" );
+				wString = "?";
 			}
 			else
 			{
 				// we know there aren't any (or we'd be seing them on map, too)
-				wcscpy(wString, L"0" );
+				wString = "0";
 			}
 			break;
 
 		case KNOWS_HOW_MANY:
 			// show exactly how many
-			swprintf( wString, lengthof(wString), L"%d", ubNumEnemies );
+			wString = ST::format("{}", ubNumEnemies);
 			break;
 	}
 
@@ -484,14 +482,14 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 
 static void AddItemsInSectorToBox(PopUpBox* const box)
 {
-	wchar_t wString[ 64 ];
+	ST::string wString;
 
 	// items in sector (this works even for underground)
 
-	swprintf( wString, lengthof(wString), L"%ls:", pwMiscSectorStrings[ 2 ] );
+	wString = ST::format("{}:", pwMiscSectorStrings[ 2 ]);
 	AddMonoString(box, wString);
 
-	swprintf( wString, lengthof(wString), L"%d", GetNumberOfVisibleWorldItemsFromSectorStructureForSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, bCurrentTownMineSectorZ ));
+	wString = ST::format("{}", GetNumberOfVisibleWorldItemsFromSectorStructureForSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, bCurrentTownMineSectorZ ));
 	AddSecondColumnMonoString(box, wString);
 }
 
@@ -519,7 +517,7 @@ static void PositionTownMineInfoBox(PopUpBox* const box)
 }
 
 
-static void MakeButton(UINT idx, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+static void MakeButton(UINT idx, const ST::string& text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
 	BUTTON_PICS* const img = LoadButtonImage(INTERFACEDIR "/mapinvbtns.sti", idx, idx + 2);
 	guiMapButtonInventoryImage[idx] = img;
