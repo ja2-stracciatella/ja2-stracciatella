@@ -28,10 +28,8 @@ static void LoadAllItemNames(void)
 	for (UINT32 i = 0; i < MAXITEMS; i++)
 	{
 		UINT32 Seek = (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * i;
-		ST::wchar_buffer wstr = GCM->loadEncryptedString(File, Seek, SIZE_SHORT_ITEM_NAME).to_wchar();
-		wcslcpy(ShortItemNames[i], wstr.c_str(), SIZE_SHORT_ITEM_NAME);
-		wstr = GCM->loadEncryptedString(File, Seek + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_NAME).to_wchar();
-		wcslcpy(ItemNames[i], wstr.c_str(), SIZE_ITEM_NAME);
+		ShortItemNames[i] = GCM->loadEncryptedString(File, Seek, SIZE_SHORT_ITEM_NAME);
+		ItemNames[i] = GCM->loadEncryptedString(File, Seek + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_NAME);
 	}
 }
 
@@ -41,7 +39,7 @@ void LoadAllExternalText( void )
 	LoadAllItemNames();
 }
 
-const wchar_t* GetWeightUnitString( void )
+ST::string GetWeightUnitString( void )
 {
 	if ( gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] ) // metric
 	{

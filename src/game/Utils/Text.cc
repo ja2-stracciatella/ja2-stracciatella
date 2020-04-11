@@ -1,4 +1,7 @@
 #include "Text.h"
 
-wchar_t ItemNames[MAXITEMS][SIZE_ITEM_NAME];
-wchar_t ShortItemNames[MAXITEMS][SIZE_SHORT_ITEM_NAME];
+#include <string_theory/string>
+
+
+ST::string ItemNames[MAXITEMS];
+ST::string ShortItemNames[MAXITEMS];
