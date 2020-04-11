@@ -919,11 +919,12 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 		DrawStringRight(buf, CHAR_MEDICAL_X, CHAR_MEDICAL_Y, CHAR_MEDICAL_WID, CHAR_MEDICAL_HEI, CHAR_FONT);
 	}
 
-	wchar_t const* const morale =
-		s.bAssignment == ASSIGNMENT_POW ? pPOWStrings[1] : // POW - morale unknown
-		s.bLife == 0                    ? L""            :
+	ST::string morale =
+		s.bAssignment == ASSIGNMENT_POW ? ST::string(pPOWStrings[1]) : // POW - morale unknown
+		s.bLife == 0                    ? ST::null :
 		GetMoraleString(s);
-	DrawStringCentered(morale, CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, CHAR_FONT);
+	wstr = morale.to_wchar();
+	DrawStringCentered(wstr.c_str(), CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, CHAR_FONT);
 }
 
 
