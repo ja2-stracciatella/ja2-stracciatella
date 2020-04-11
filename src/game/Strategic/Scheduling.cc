@@ -29,8 +29,10 @@
 #include "ScreenIDs.h"
 #include "GameState.h"
 #include "Logger.h"
+#include "EditorMercs.h"
 
-extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
+#include <string_theory/string>
+
 
 #define FOURPM 960
 

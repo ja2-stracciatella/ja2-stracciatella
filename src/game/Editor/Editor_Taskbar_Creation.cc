@@ -232,7 +232,8 @@ static void InitEditorMercsToolbar(void)
 	MakeButtonRank(MERCS_ADMIN_CODE, 64, SOLDIER_CLASS_ADMINISTRATOR);
 	MakeButtonRank(MERCS_ELITE_CODE, 78, SOLDIER_CLASS_ELITE);
 
-	iEditorButton[MERCS_CIVILIAN_GROUP] = MakeTextButton(gszCivGroupNames[0], FONT_YELLOW, 574, 50, 60, 25, MercsCivilianGroupCallback);
+	ST::wchar_buffer wstr = gszCivGroupNames[0].to_wchar();
+	iEditorButton[MERCS_CIVILIAN_GROUP] = MakeTextButton(wstr.c_str(), FONT_YELLOW, 574, 50, 60, 25, MercsCivilianGroupCallback);
 
 	iEditorButton[MERCS_TOGGLECOLOR_BUTTON] = CreateCheckBoxButton(180, y + 4, EDITORDIR "/checkbox.sti", MSYS_PRIORITY_NORMAL, MercsToggleColorModeCallback);
 	for (INT32 i = 0; i != 4; ++i)
