@@ -83,7 +83,7 @@ struct FACETYPE
 	BOOLEAN fAutoDisplayBuffer; // Flag to indicate our own display buffer or not
 	BOOLEAN fDisplayTextOver; // Boolean indicating to display text on face
 	BOOLEAN fCanHandleInactiveNow;
-	wchar_t zDisplayText[ 30 ]; // String of text that can be displayed
+	ST::string zDisplayText; // String of text that can be displayed
 
 	UINT16  usEyesX;
 	UINT16  usEyesY;
@@ -175,12 +175,7 @@ void RenderAutoFace(FACETYPE&);
 
 // If you want to setup the face to talking, ( most times this call is done in JA2 by other functions, not
 //directly), you call
-void SetFaceTalking(FACETYPE&, char const* zSoundFile, wchar_t const* zTextString);
-inline void SetFaceTalking(FACETYPE& f, char const* zSoundFile, const ST::string& zTextString)
-{
-	ST::wchar_buffer wstr = zTextString.to_wchar();
-	SetFaceTalking(f, zSoundFile, wstr.c_str());
-}
+void SetFaceTalking(FACETYPE& f, const char* zSoundFile, const ST::string& zTextString);
 // This function will setup appropriate face data and begin the speech process. It can fail if the sound
 //cannot be played for any reason.
 

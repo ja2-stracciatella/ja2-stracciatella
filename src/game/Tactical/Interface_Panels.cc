@@ -1884,7 +1884,7 @@ static void HandleMouseOverSoldierFaceForContMove(SOLDIERTYPE* pSoldier, BOOLEAN
 			FACETYPE* const pFace = pSoldier->face;
 
 			pFace->fDisplayTextOver = FACE_DRAW_TEXT_OVER;
-			wcscpy( pFace->zDisplayText, TacticalStr[ CONTINUE_OVER_FACE_STR ] );
+			pFace->zDisplayText = TacticalStr[ CONTINUE_OVER_FACE_STR ];
 
 			sGridNo = pSoldier->sFinalDestination;
 
