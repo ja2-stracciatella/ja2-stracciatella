@@ -26,6 +26,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 
@@ -426,13 +427,13 @@ static void DisplayHistoryListBackground(void)
 }
 
 
-static void ProcessHistoryTransactionString(wchar_t* pString, size_t Length, const HistoryUnit* pHistory);
+static ST::string ProcessHistoryTransactionString(const HistoryUnit* h);
 
 
 // draw the text of the records
 static void DrawHistoryRecordsText(void)
 {
-	wchar_t sString[512];
+	ST::string sString;
 	INT16   sX;
 	INT16   sY;
 
@@ -452,7 +453,7 @@ static void DrawHistoryRecordsText(void)
 		const INT32 y = RECORD_Y + entry_count * BOX_HEIGHT + 3;
 
 		// get and write the date
-		swprintf(sString, lengthof(sString), L"%d", h->uiDate / (24 * 60));
+		sString = ST::format("{}", h->uiDate / (24 * 60));
 		INT16 usX;
 		INT16 usY;
 		FindFontCenterCoordinates(RECORD_DATE_X + 5, 0, RECORD_DATE_WIDTH, 0, sString, HISTORY_TEXT_FONT, &usX, &usY);
@@ -466,16 +467,14 @@ static void DrawHistoryRecordsText(void)
 		}
 		else
 		{
-			ST::wchar_buffer wstr = GetSectorIDString(h->sSectorX, h->sSectorY, h->bSectorZ, TRUE).to_wchar();
-			wcslcpy(sString, wstr.c_str(), lengthof(sString));
+			sString = GetSectorIDString(h->sSectorX, h->sSectorY, h->bSectorZ, TRUE);
 			FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0,  sString, HISTORY_TEXT_FONT, &sX, &sY);
-			wstr = ReduceStringLength(sString, RECORD_LOCATION_WIDTH + 10, HISTORY_TEXT_FONT).to_wchar();
-			wcslcpy(sString, wstr.c_str(), lengthof(sString));
+			sString = ReduceStringLength(sString, RECORD_LOCATION_WIDTH + 10, HISTORY_TEXT_FONT);
 			MPrint(sX, y, sString);
 		}
 
 		// the actual history text
-		ProcessHistoryTransactionString(sString, lengthof(sString), h);
+		sString = ProcessHistoryTransactionString(h);
 		MPrint(RECORD_DATE_X + RECORD_LOCATION_WIDTH + RECORD_DATE_WIDTH + 15, y, sString);
 
 		if (++entry_count == NUM_RECORDS_PER_PAGE) break;
@@ -558,22 +557,20 @@ static void DisplayPageNumberAndDateRange(void)
 }
 
 
-static void GetQuestEndedString(UINT8 ubQuestValue, wchar_t* sQuestString);
-static void GetQuestStartedString(UINT8 ubQuestValue, wchar_t* sQuestString);
+static ST::string GetQuestEndedString(UINT8 ubQuestValue);
+static ST::string GetQuestStartedString(UINT8 ubQuestValue);
 
 
-static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t Length, const HistoryUnit* const h)
+static ST::string ProcessHistoryTransactionString(const HistoryUnit* h)
 {
 	const UINT8 code = h->ubCode;
 	switch (code)
 	{
 		case HISTORY_QUEST_STARTED:
-			GetQuestStartedString(h->ubSecondCode, pString);
-			break;
+			return GetQuestStartedString(h->ubSecondCode);
 
 		case HISTORY_QUEST_FINISHED:
-			GetQuestEndedString(h->ubSecondCode, pString);
-			break;
+			return GetQuestEndedString(h->ubSecondCode);
 
 		case HISTORY_LIBERATED_TOWN:
 		case HISTORY_MINE_RAN_OUT:
@@ -581,23 +578,20 @@ static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t
 		case HISTORY_MINE_RUNNING_OUT:
 		case HISTORY_MINE_SHUTDOWN:
 		case HISTORY_TALKED_TO_MINER:
-			swprintf(pString, Length, pHistoryStrings[code], pTownNames[h->ubSecondCode]);
-			break;
+			return st_format_printf(pHistoryStrings[code], pTownNames[h->ubSecondCode]);
 
 		case HISTORY_MERC_KILLED:
 			if (h->ubSecondCode == NO_PROFILE)
 			{
 				break;
 			}
-			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode).zName);
-			break;
+			return st_format_printf(pHistoryStrings[code], GetProfile(h->ubSecondCode).zName);
 
 		case HISTORY_HIRED_MERC_FROM_AIM:
 		case HISTORY_HIRED_MERC_FROM_MERC:
 		case HISTORY_MERC_CONTRACT_EXPIRED:
 		case HISTORY_RPC_JOINED_TEAM:
-			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode).zName);
-			break;
+			return st_format_printf(pHistoryStrings[code], GetProfile(h->ubSecondCode).zName);
 
 		case HISTORY_CANCELLED_INSURANCE:
 		case HISTORY_DISQUALIFIED_BOXING:
@@ -613,8 +607,7 @@ static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t
 		case HISTORY_NPC_KILLED:
 		case HISTORY_PURCHASED_INSURANCE:
 		case HISTORY_WON_BOXING:
-			swprintf(pString, Length, pHistoryStrings[code], GetProfile(h->ubSecondCode).zNickname);
-			break;
+			return st_format_printf(pHistoryStrings[code], GetProfile(h->ubSecondCode).zNickname);
 
 		// all simple history log msgs, no params
 		case HISTORY_ACCEPTED_ASSIGNMENT_FROM_ENRICO:
@@ -668,9 +661,9 @@ static void ProcessHistoryTransactionString(wchar_t* const pString, const size_t
 		case HISTORY_WALTER:
 		case HISTORY_WIPEDOUTENEMYAMBUSH:
 		case HISTORY_WONBATTLE:
-			swprintf(pString, Length, pHistoryStrings[code]);
-			break;
+			return pHistoryStrings[code];
 	}
+	return ST::null;
 }
 
 
@@ -796,19 +789,17 @@ UINT32 GetTimeQuestWasStarted(const UINT8 ubCode)
 }
 
 
-static void GetQuestStartedString(const UINT8 ubQuestValue, wchar_t* const sQuestString)
+static ST::string GetQuestStartedString(const UINT8 ubQuestValue)
 {
 	// open the file and copy the string
-	ST::wchar_buffer wstr = GCM->loadEncryptedString(BINARYDATADIR "/quests.edt", HISTORY_QUEST_TEXT_SIZE * ubQuestValue * 2, HISTORY_QUEST_TEXT_SIZE).to_wchar();
-	wcslcpy(sQuestString, wstr.c_str(), HISTORY_QUEST_TEXT_SIZE);
+	return GCM->loadEncryptedString(BINARYDATADIR "/quests.edt", HISTORY_QUEST_TEXT_SIZE * ubQuestValue * 2, HISTORY_QUEST_TEXT_SIZE);
 }
 
 
-static void GetQuestEndedString(const UINT8 ubQuestValue, wchar_t* const sQuestString)
+static ST::string GetQuestEndedString(const UINT8 ubQuestValue)
 {
 	// open the file and copy the string
-	ST::wchar_buffer wstr = GCM->loadEncryptedString(BINARYDATADIR "/quests.edt", HISTORY_QUEST_TEXT_SIZE * (ubQuestValue * 2 + 1), HISTORY_QUEST_TEXT_SIZE).to_wchar();
-	wcslcpy(sQuestString, wstr.c_str(), HISTORY_QUEST_TEXT_SIZE);
+	return GCM->loadEncryptedString(BINARYDATADIR "/quests.edt", HISTORY_QUEST_TEXT_SIZE * (ubQuestValue * 2 + 1), HISTORY_QUEST_TEXT_SIZE);
 }
 
 static INT32 GetNumberOfHistoryPages(void)
