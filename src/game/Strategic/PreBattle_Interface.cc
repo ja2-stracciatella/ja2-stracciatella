@@ -910,7 +910,9 @@ void RenderPreBattleInterface()
 				// Name
 				MPrintCentered( 17, y, 52, s.name);
 				// Assignment
-				MPrintCentered( 72, y, 45, GetMapscreenMercAssignmentString(s));
+				ST::wchar_buffer wstr = GetMapscreenMercAssignmentString(s).to_wchar();
+				wcslcpy(str, wstr.c_str(), lengthof(str));
+				MPrintCentered( 72, y, 45, str);
 				// Condition
 				MPrintCentered(129, y, 58, GetSoldierConditionInfo(s));
 				// HP
@@ -943,15 +945,20 @@ void RenderPreBattleInterface()
 				// Name
 				MPrintCentered( 17, y, 52, s.name);
 				// Assignment
-				MPrintCentered( 72, y, 54, GetMapscreenMercAssignmentString(s));
+				ST::wchar_buffer wstr = GetMapscreenMercAssignmentString(s).to_wchar();
+				wcslcpy(str, wstr.c_str(), lengthof(str));
+				MPrintCentered( 72, y, 54, str);
 				// Location
-				GetMapscreenMercLocationString(s, str, lengthof(str));
+				wstr = GetMapscreenMercLocationString(s).to_wchar();
+				wcslcpy(str, wstr.c_str(), lengthof(str));
 				MPrintCentered(128, y, 33, str);
 				// Destination
-				GetMapscreenMercDestinationString(s, str, lengthof(str));
+				wstr = GetMapscreenMercDestinationString(s).to_wchar();
+				wcslcpy(str, wstr.c_str(), lengthof(str));
 				if (str[0] != L'\0') MPrintCentered(164, y, 41, str);
 				// Departure
-				GetMapscreenMercDepartureString(s, str, lengthof(str), 0);
+				wstr = GetMapscreenMercDepartureString(s, 0).to_wchar();
+				wcslcpy(str, wstr.c_str(), lengthof(str));
 				MPrintCentered(208, y, 34, str);
 				y += ROW_HEIGHT;
 			}
