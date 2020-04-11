@@ -1418,25 +1418,24 @@ static void DisplayCostOfCurrentTeam(void)
 
 	if (min_cost == 999999) min_cost = 0;
 
-	wchar_t sString[32];
 	INT16 sX;
 	INT16 sY;
 
 	// daily cost
 	MPrint(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[2]);
-	SPrintMoney(sString, sum_cost);
+	ST::string sString = SPrintMoney(sum_cost);
 	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, PERS_CURR_TEAM_COST_Y, sString);
 
 	// highest cost
 	MPrint(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_HIGHEST_Y, pPersonelTeamStrings[3]);
-	SPrintMoney(sString, max_cost);
+	sString = SPrintMoney(max_cost);
 	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, PERS_CURR_TEAM_HIGHEST_Y, sString);
 
 	// the lowest cost
 	MPrint(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_LOWEST_Y, pPersonelTeamStrings[4]);
-	SPrintMoney(sString, min_cost);
+	sString = SPrintMoney(min_cost);
 	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_CURR_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, PERS_CURR_TEAM_LOWEST_Y, sString);
 }
@@ -2345,8 +2344,7 @@ static void UpDateStateOfStartButton(void)
 static void DisplayAmountOnChar(SOLDIERTYPE const& s)
 {
 	// will display the amount that the merc is carrying on him or herself
-	wchar_t sString[64];
-	SPrintMoney(sString, GetFundsOnMerc(s));
+	ST::string sString = SPrintMoney(GetFundsOnMerc(s));
 
 	SetFontAttributes(ATM_FONT, FONT_WHITE);
 
@@ -2370,7 +2368,6 @@ static void HandlePersonnelKeyboard(void)
 static void DisplayEmploymentinformation(SOLDIERTYPE const& s)
 {
 	wchar_t sString[50];
-	wchar_t sStringA[50];
 	INT16 sX, sY;
 
 	MERCPROFILESTRUCT const& p = GetProfile(s.ubProfile);
@@ -2435,7 +2432,8 @@ static void DisplayEmploymentinformation(SOLDIERTYPE const& s)
 
 			case 3: // cost (PRSNL_TXT_TOTAL_COST)
 			{
-				SPrintMoney(sString, p.uiTotalCostToDate);
+				ST::wchar_buffer wstr = SPrintMoney(p.uiTotalCostToDate).to_wchar();
+				wcslcpy(sString, wstr.c_str(), lengthof(sString));
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 				MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[i], pPersonnelScreenStrings[PRSNL_TXT_TOTAL_COST]);
 
@@ -2457,7 +2455,7 @@ static void DisplayEmploymentinformation(SOLDIERTYPE const& s)
 					default: salary = p.sSalary; break;
 				}
 
-				SPrintMoney(sStringA, salary);
+				ST::string sStringA = SPrintMoney(salary);
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sStringA, PERS_FONT,  &sX, &sY);
 
 				i++;
@@ -2473,12 +2471,14 @@ static void DisplayEmploymentinformation(SOLDIERTYPE const& s)
 				if (s.ubWhatKindOfMercAmI == MERC_TYPE__MERC)
 				{
 					MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_UNPAID_AMOUNT]);
-					SPrintMoney(sString, p.sSalary * p.iMercMercContractLength);
+					ST::wchar_buffer wstr = SPrintMoney(p.sSalary * p.iMercMercContractLength).to_wchar();
+					wcslcpy(sString, wstr.c_str(), lengthof(sString));
 				}
 				else
 				{
 					MPrint(pers_stat_x, STD_SCREEN_Y + pers_stat_y[i - 1], pPersonnelScreenStrings[PRSNL_TXT_MED_DEPOSIT]);
-					SPrintMoney(sString, p.sMedicalDepositAmount);
+					ST::wchar_buffer wstr = SPrintMoney(p.sMedicalDepositAmount).to_wchar();
+					wcslcpy(sString, wstr.c_str(), lengthof(sString));
 				}
 				FindFontRightCoordinates(pers_stat_data_x, 0, TEXT_BOX_WIDTH - 20, 0, sString, PERS_FONT, &sX, &sY);
 				MPrint(sX, STD_SCREEN_Y + pers_stat_y[i - 1], sString);

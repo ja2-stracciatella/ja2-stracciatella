@@ -86,6 +86,12 @@ void GetShortSectorString(INT16 sMapX, INT16 sMapY, wchar_t* sString, size_t Len
 
 // Return a string like 'A9: Omerta'
 void GetSectorIDString(INT16 x, INT16 y, INT8 z, wchar_t* buf, size_t length, BOOLEAN detailed);
+inline ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)
+{
+	ST::wchar_buffer wstr(128, L'\0');
+	GetSectorIDString(x, y, z, wstr.data(), wstr.size(), detailed);
+	return wstr.c_str();
+}
 
 void GetMapFileName(INT16 x, INT16 y, INT8 z, char* buf, BOOLEAN add_alternate_map_letter);
 

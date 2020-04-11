@@ -97,6 +97,7 @@
 #include "policy/GamePolicy.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 #include <algorithm>
 #include <iterator>
@@ -906,13 +907,15 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 	{
 		daily_cost = p.sSalary;
 	}
-	SPrintMoney(buf, daily_cost);
+	ST::wchar_buffer wstr = SPrintMoney(daily_cost).to_wchar();
+	wcslcpy(buf, wstr.c_str(), lengthof(buf));
 	DrawStringRight(buf, CHAR_SALARY_X, CHAR_SALARY_Y, CHAR_SALARY_WID, CHAR_SALARY_HEI, CHAR_FONT);
 
 	// Medical deposit
 	if (p.sMedicalDepositAmount > 0)
 	{
-		SPrintMoney(buf, p.sMedicalDepositAmount);
+		wstr = SPrintMoney(p.sMedicalDepositAmount).to_wchar();
+		wcslcpy(buf, wstr.c_str(), lengthof(buf));
 		DrawStringRight(buf, CHAR_MEDICAL_X, CHAR_MEDICAL_Y, CHAR_MEDICAL_WID, CHAR_MEDICAL_HEI, CHAR_FONT);
 	}
 

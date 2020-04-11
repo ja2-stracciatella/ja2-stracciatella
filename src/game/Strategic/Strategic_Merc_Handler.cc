@@ -42,6 +42,9 @@
 #include "WeaponModels.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
+
 #define NUM_DAYS_TILL_UNPAID_RPC_QUITS 3
 
 
@@ -227,7 +230,8 @@ void MercDailyUpdate()
 					{
 						// Display a screen msg indicating that the npc was NOT paid
 						wchar_t zMoney[128];
-						SPrintMoney(zMoney, sSalary);
+						ST::wchar_buffer wstr = SPrintMoney(sSalary).to_wchar();
+						wcslcpy(zMoney, wstr.c_str(), lengthof(zMoney));
 						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[MSG_CANT_AFFORD_TO_PAY_NPC_DAILY_SALARY_MSG], p.zNickname, zMoney);
 
 						/* if the merc hasnt been paid for NUM_DAYS_TILL_UNPAID_RPC_QUITS

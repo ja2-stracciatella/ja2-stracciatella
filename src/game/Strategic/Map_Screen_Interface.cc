@@ -69,6 +69,8 @@
 #include "Items.h"
 #include "UILayout.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -3771,7 +3773,8 @@ void NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 con
 			// Get how much we now will get from the mines
 			INT32 const income = GetProjectedTotalDailyIncome();
 			wchar_t     income_string[64];
-			SPrintMoney(income_string, income);
+			ST::wchar_buffer wstr = SPrintMoney(income).to_wchar();
+			wcslcpy(income_string, wstr.c_str(), lengthof(income_string));
 			swprintf(buf, lengthof(buf), pMapErrorString[16], sector_desc, income_string);
 		}
 		else

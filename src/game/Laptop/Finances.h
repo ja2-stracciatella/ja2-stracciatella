@@ -1,6 +1,9 @@
 #ifndef __FINANCES_H
 #define __FINANCES_H
 
+#include <string_theory/string>
+
+
 void GameInitFinances(void);
 void EnterFinances(void);
 void ExitFinances(void);
@@ -44,7 +47,7 @@ enum
 void AddTransactionToPlayersBook(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT32 iAmount);
 INT32 GetProjectedTotalDailyIncome( void );
 
-void SPrintMoney(wchar_t* Str, INT32 Amount);
+ST::string SPrintMoney(INT32 amount);
 
 INT32 GetCurrentBalance(void);
 

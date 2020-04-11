@@ -878,13 +878,11 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 
 			//unit price
 			const BobbyRayPurchaseStruct* Purchase = &pBobbyRayPurchase[i];
-			SPrintMoney(sTemp, CalcBobbyRayCost(Purchase->usItemIndex, Purchase->usBobbyItemIndex, Purchase->fUsed));
-			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FOURTH_COLUMN_X - 2, usPosY, BOBBYR_GRID_FOURTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+			DrawTextToScreen(SPrintMoney(CalcBobbyRayCost(Purchase->usItemIndex, Purchase->usBobbyItemIndex, Purchase->fUsed)), usGridX + BOBBYR_GRID_FOURTH_COLUMN_X - 2, usPosY, BOBBYR_GRID_FOURTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			uiTotal += CalcBobbyRayCost( pBobbyRayPurchase[i].usItemIndex, pBobbyRayPurchase[i].usBobbyItemIndex, pBobbyRayPurchase[i].fUsed ) * pBobbyRayPurchase[i].ubNumberPurchased;
 
-			SPrintMoney(sTemp, uiTotal);
-			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usPosY, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+			DrawTextToScreen(SPrintMoney(uiTotal), usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usPosY, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//add the current item total to the sub total
 			if( fCalledFromOrderPage )
@@ -909,7 +907,6 @@ static UINT32 CalcCostFromWeightOfPackage(UINT8 ubTypeOfService);
 
 static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, UINT16 usGridX, UINT16 usGridY, INT32 iOrderNum)
 {
-	wchar_t sTemp[20];
 	INT32   iShippingCost = 0;
 
 	if( fCalledFromOrderPage )
@@ -959,18 +956,15 @@ static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, 
 	if( iSubTotal )
 	{
 		//Display the subtotal
-		SPrintMoney(sTemp, iSubTotal);
-		DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_SUBTOTAL_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+		DrawTextToScreen(SPrintMoney(iSubTotal), usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_SUBTOTAL_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 		//Display the shipping and handling charge
-		SPrintMoney(sTemp, iShippingCost);
-		DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_SHIPPING_N_HANDLE_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+		DrawTextToScreen(SPrintMoney(iShippingCost), usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_SHIPPING_N_HANDLE_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 
 		//Display the grand total
 		giGrandTotal = iSubTotal + iShippingCost;
-		SPrintMoney(sTemp, giGrandTotal);
-		DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_GRAND_TOTAL_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+		DrawTextToScreen(SPrintMoney(giGrandTotal), usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_GRAND_TOTAL_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	}
 
 	InvalidateRegion(STD_SCREEN_X + 333, STD_SCREEN_Y + 326, STD_SCREEN_X + 376, STD_SCREEN_Y + 400);
@@ -1365,7 +1359,6 @@ static void DrawSelectedCity(UINT8 ubCityNumber)
 
 static void DisplayShippingLocationCity(void)
 {
-	wchar_t	sTemp[40];
 	UINT16 usPosY;
 
 	//display the name on the title bar
@@ -1384,11 +1377,11 @@ static void DisplayShippingLocationCity(void)
 	//Display the shipping cost
 	usPosY = BOBBYR_OVERNIGHT_EXPRESS_Y;
 
-	wcscpy(sTemp, L"$0");
+	ST::string sTemp = "$0";
 
 	if( gbSelectedCity != -1 )
 	{
-		SPrintMoney(sTemp, BobbyROrderLocations[gbSelectedCity].usOverNightExpress / GetWeightBasedOnMetricOption(1));
+		sTemp = SPrintMoney(BobbyROrderLocations[gbSelectedCity].usOverNightExpress / GetWeightBasedOnMetricOption(1)).to_wchar();
 	}
 
 	DrawTextToScreen(sTemp, BOBBYR_SHIPPING_SPEED_NUMBER_X, usPosY, BOBBYR_SHIPPING_SPEED_NUMBER_WIDTH, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
@@ -1396,7 +1389,7 @@ static void DisplayShippingLocationCity(void)
 
 	if( gbSelectedCity != -1 )
 	{
-		SPrintMoney(sTemp, BobbyROrderLocations[gbSelectedCity].us2DaysService / GetWeightBasedOnMetricOption(1));
+		sTemp = SPrintMoney(BobbyROrderLocations[gbSelectedCity].us2DaysService / GetWeightBasedOnMetricOption(1)).to_wchar();
 	}
 
 	DrawTextToScreen(sTemp, BOBBYR_SHIPPING_SPEED_NUMBER_X, usPosY, BOBBYR_SHIPPING_SPEED_NUMBER_WIDTH, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
@@ -1404,7 +1397,7 @@ static void DisplayShippingLocationCity(void)
 
 	if( gbSelectedCity != -1 )
 	{
-		SPrintMoney(sTemp, BobbyROrderLocations[gbSelectedCity].usStandardService / GetWeightBasedOnMetricOption(1));
+		sTemp = SPrintMoney(BobbyROrderLocations[gbSelectedCity].usStandardService / GetWeightBasedOnMetricOption(1)).to_wchar();
 	}
 
 	DrawTextToScreen(sTemp, BOBBYR_SHIPPING_SPEED_NUMBER_X, usPosY, BOBBYR_SHIPPING_SPEED_NUMBER_WIDTH, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);

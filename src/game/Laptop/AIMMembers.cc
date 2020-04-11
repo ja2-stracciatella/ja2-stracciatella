@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Cursors.h"
 #include "Directories.h"
 #include "EMail.h"
@@ -56,6 +54,11 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
+
+#include <string_theory/string>
+
+#include <stdexcept>
+
 
 #define MERCBIOSFILENAME			BINARYDATADIR "/aimbios.edt"
 
@@ -693,7 +696,6 @@ static void UpdateMercInfo(void);
 void RenderAIMMembers()
 {
 	UINT16		x, uiPosX;
-	wchar_t		wTemp[50];
 
 	DrawAimDefaults();
 
@@ -725,9 +727,8 @@ void RenderAIMMembers()
 	DrawTextToScreen(CharacterInfo[AIM_MEMBER_OPTIONAL_GEAR], AIM_MEMBER_OPTIONAL_GEAR_X, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_STATIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	MERCPROFILESTRUCT const& p = GetProfile(gbCurrentSoldier);
-	SPrintMoney(wTemp, p.usOptionalGearCost);
 	uiPosX = AIM_MEMBER_OPTIONAL_GEAR_X + StringPixLength( CharacterInfo[AIM_MEMBER_OPTIONAL_GEAR], AIM_M_FONT_STATIC_TEXT) + 5;
-	DrawTextToScreen(wTemp, uiPosX, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(SPrintMoney(p.usOptionalGearCost), uiPosX, AIM_MEMBER_OPTIONAL_GEAR_Y, 0, AIM_M_FONT_STATIC_TEXT, AIM_M_COLOR_DYNAMIC_TEXT, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	DisableAimButton();
 
@@ -778,9 +779,7 @@ void DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLo
 
 static void DrawMoneyToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, SGPFont const font, UINT8 ubColor)
 {
-	wchar_t		sStr[10];
-	SPrintMoney(sStr, iNumber);
-	DrawTextToScreen(sStr, usLocX, usLocY, bWidth, font, ubColor, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+	DrawTextToScreen(SPrintMoney(iNumber), usLocX, usLocY, bWidth, font, ubColor, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 }
 
 
@@ -833,7 +832,8 @@ static void UpdateMercInfo(void)
 		wchar_t	zTemp[40];
 		wchar_t	sMedicalString[40];
 
-		SPrintMoney(zTemp, gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount);
+		ST::wchar_buffer wstr = SPrintMoney(gMercProfiles[gbCurrentSoldier].sMedicalDepositAmount).to_wchar();
+		wcslcpy(zTemp, wstr.c_str(), lengthof(zTemp));
 		swprintf( sMedicalString, lengthof(sMedicalString), L"%ls %ls", zTemp, CharacterInfo[AIM_MEMBER_MEDICAL_DEPOSIT_REQ] );
 
 		// If the string will be displayed in more then 2 lines, recenter the string
@@ -1420,7 +1420,8 @@ static void DisplayMercChargeAmount(void)
 	}
 
 	wchar_t wDollarTemp[50];
-	SPrintMoney(wDollarTemp, giContractAmount);
+	ST::wchar_buffer wstr = SPrintMoney(giContractAmount).to_wchar();
+	wcslcpy(wDollarTemp, wstr.c_str(), lengthof(wDollarTemp));
 
 	wchar_t wTemp[50];
 	if (p.bMedicalDeposit)

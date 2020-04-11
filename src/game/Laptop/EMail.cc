@@ -2516,7 +2516,8 @@ static void ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, con
 			else
 			{
 				wchar_t	sDollarAmount[64];
-				SPrintMoney(sDollarAmount, pMail->iFirstData);
+				ST::wchar_buffer wstr = SPrintMoney(pMail->iFirstData).to_wchar();
+				wcslcpy(sDollarAmount, wstr.c_str(), lengthof(sDollarAmount));
 
 				//add the mercs name to the string
 				wcscat( pFinishedString, sDollarAmount );

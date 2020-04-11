@@ -34,6 +34,8 @@
 #include "Font_Control.h"
 #include "EMail.h"
 
+#include <string_theory/string>
+
 
 #define INS_CTRCT_ORDER_GRID_WIDTH			132
 #define INS_CTRCT_ORDER_GRID_HEIGHT			216
@@ -553,7 +555,8 @@ try
 		DrawTextToScreen(sText, dx + INS_CTRCT_EMPLYMNT_CNTRCT_TEXT_OFFSET_X, dy + INS_CTRCT_PREMIUM_OWING_OFFSET_Y, INS_CTRCT_ORDER_GRID_WIDTH, INS_FONT_MED, INS_FONT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 		//display the amount of refund
-		SPrintMoney(sText, iCostOfContract);
+		ST::wchar_buffer wstr = SPrintMoney(iCostOfContract).to_wchar();
+		wcslcpy(sText, wstr.c_str(), lengthof(sText));
 	}
 
 

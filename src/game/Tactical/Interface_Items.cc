@@ -83,6 +83,7 @@
 #include "Logger.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 #include <algorithm>
 #include <iterator>
@@ -2498,7 +2499,8 @@ void RenderItemDescriptionBox(void)
 
 		{
 			// Display the total amount of money
-			SPrintMoney(pStr, in_map && gfAddingMoneyToMercFromPlayersAccount ? LaptopSaveInfo.iCurrentBalance : gRemoveMoney.uiTotalAmount);
+			ST::wchar_buffer wstr = SPrintMoney(in_map && gfAddingMoneyToMercFromPlayersAccount ? LaptopSaveInfo.iCurrentBalance : gRemoveMoney.uiTotalAmount).to_wchar();
+			wcslcpy(pStr, wstr.c_str(), lengthof(pStr));
 			SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
 			FindFontRightCoordinates(dx + xy.x, dy + xy.y, xy.w, xy.h, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
@@ -2537,7 +2539,8 @@ void RenderItemDescriptionBox(void)
 		UINT16 const uiRightLength = 35;
 
 		//Display the total amount of money remaining
-		SPrintMoney(pStr, gRemoveMoney.uiMoneyRemaining);
+		ST::wchar_buffer wstr = SPrintMoney(gRemoveMoney.uiMoneyRemaining).to_wchar();
+		wcslcpy(pStr, wstr.c_str(), lengthof(pStr));
 		if (in_map)
 		{
 			UINT16 const uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
@@ -2551,7 +2554,8 @@ void RenderItemDescriptionBox(void)
 		}
 
 		//Display the total amount of money removing
-		SPrintMoney(pStr, gRemoveMoney.uiMoneyRemoving);
+		wstr = SPrintMoney(gRemoveMoney.uiMoneyRemoving).to_wchar();
+		wcslcpy(pStr, wstr.c_str(), lengthof(pStr));
 		if (in_map)
 		{
 			UINT16 const uiStringLength = StringPixLength(pStr, ITEMDESC_FONT);
@@ -2567,7 +2571,8 @@ void RenderItemDescriptionBox(void)
 	else if (item->getItemClass() == IC_MONEY)
 	{
 		SetFontForeground(FONT_FCOLOR_WHITE);
-		SPrintMoney(pStr, obj.uiMoneyAmount);
+		ST::wchar_buffer wstr = SPrintMoney(obj.uiMoneyAmount).to_wchar();
+		wcslcpy(pStr, wstr.c_str(), lengthof(pStr));
 		SGPBox const& xy = in_map ? gMapDescNameBox : gDescNameBox;
 		FindFontRightCoordinates(dx + xy.x, dy + xy.y, xy.w, xy.h, pStr, BLOCKFONT2, &usX, &usY);
 		MPrint(usX, usY, pStr);
@@ -4841,7 +4846,8 @@ void RenderItemPickupMenu()
 			if (item->getItemClass() == IC_MONEY)
 			{
 				wchar_t pStr2[20];
-				SPrintMoney(pStr2, o.uiMoneyAmount);
+				ST::wchar_buffer wstr = SPrintMoney(o.uiMoneyAmount).to_wchar();
+				wcslcpy(pStr2, wstr.c_str(), lengthof(pStr2));
 				swprintf(pStr, lengthof(pStr), L"%ls (%ls)", ItemNames[o.usItem], pStr2);
 			}
 			else
@@ -5250,13 +5256,15 @@ void GetHelpTextForItem(wchar_t* const dst, size_t const length, OBJECTTYPE cons
 	UINT16 const usItem = obj.usItem;
 	if (usItem == MONEY)
 	{
-		SPrintMoney(dst, obj.uiMoneyAmount);
+		ST::wchar_buffer wstr = SPrintMoney(obj.uiMoneyAmount).to_wchar();
+		wcslcpy(dst, wstr.c_str(), length);
 	}
 	else if (GCM->getItem(usItem)->getItemClass() == IC_MONEY)
 	{
 		// alternate money like silver or gold
 		wchar_t pStr2[20];
-		SPrintMoney(pStr2, obj.uiMoneyAmount);
+		ST::wchar_buffer wstr = SPrintMoney(obj.uiMoneyAmount).to_wchar();
+		wcslcpy(pStr2, wstr.c_str(), lengthof(pStr2));
 		swprintf(dst, length, L"%ls (%ls)", ItemNames[usItem], pStr2);
 	}
 	else if (usItem == NOTHING)

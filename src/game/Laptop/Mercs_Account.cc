@@ -24,6 +24,8 @@
 #include "ScreenIDs.h"
 #include "Font_Control.h"
 
+#include <string_theory/string>
+
 
 #define MERC_ACCOUNT_TEXT_FONT		FONT14ARIAL
 #define MERC_ACCOUNT_TEXT_COLOR		FONT_MCOLOR_WHITE
@@ -188,7 +190,8 @@ static void BtnMercAuthorizeButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		wchar_t wzAuthorizeString[512];
 		wchar_t wzDollarAmount[128];
 
-		SPrintMoney(wzDollarAmount, giMercTotalContractCharge);
+		ST::wchar_buffer wstr = SPrintMoney(giMercTotalContractCharge).to_wchar();
+		wcslcpy(wzDollarAmount, wstr.c_str(), lengthof(wzDollarAmount));
 
 		//create the string to show to the user
 		swprintf(wzAuthorizeString, lengthof(wzAuthorizeString), MercAccountText[MERC_ACCOUNT_AUTHORIZE_CONFIRMATION], wzDollarAmount);

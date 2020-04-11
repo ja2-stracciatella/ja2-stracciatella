@@ -28,6 +28,8 @@
 #include "VObject.h"
 #include "VSurface.h"
 
+#include <string_theory/string>
+
 
 #define BOX_BUTTON_HEIGHT 20
 
@@ -278,15 +280,13 @@ static void AddTextToMineBox(PopUpBox* const box, INT8 const mine)
 		swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[3]);
 		AddMonoString(box, buf);
 		UINT32 const predicted_income = PredictDailyIncomeFromAMine(mine);
-		SPrintMoney(buf, predicted_income);
-		AddSecondColumnMonoString(box, buf);
+		AddSecondColumnMonoString(box, SPrintMoney(predicted_income));
 
 		// Potential production
 		swprintf(buf, lengthof(buf), L"%ls:", pwMineStrings[4]);
 		AddMonoString(box, buf);
 		UINT32 const max_removal = GetMaxDailyRemovalFromMine(mine);
-		SPrintMoney(buf, max_removal);
-		AddSecondColumnMonoString(box, buf);
+		AddSecondColumnMonoString(box, SPrintMoney(max_removal));
 
 		if (GetMaxPeriodicRemovalFromMine(mine) > 0)
 		{ // Production rate (current production as a percentage of potential production)
@@ -320,8 +320,7 @@ static void AddTextToMineBox(PopUpBox* const box, INT8 const mine)
 #ifdef _DEBUG
 	// Dollar amount remaining in mine
 	AddMonoString(box, L"Remaining (DEBUG):");
-	SPrintMoney(buf, GetTotalLeftInMine(mine));
-	AddSecondColumnMonoString(box, buf);
+	AddSecondColumnMonoString(box, SPrintMoney(GetTotalLeftInMine(mine)));
 #endif
 }
 

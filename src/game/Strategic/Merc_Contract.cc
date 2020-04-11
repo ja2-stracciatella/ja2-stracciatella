@@ -34,6 +34,8 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 
+#include <string_theory/string>
+
 
 struct CONTRACT_NEWAL_LIST_NODE
 {
@@ -934,7 +936,8 @@ static void HandleNotifyPlayerCanAffordInsurance(SOLDIERTYPE* pSoldier, UINT8 ub
 	wchar_t sString[ 128 ];
 	wchar_t sStringA[ 32 ];
 
-	SPrintMoney(sStringA, iCost);
+	ST::wchar_buffer wstr = SPrintMoney(iCost).to_wchar();
+	wcslcpy(sStringA, wstr.c_str(), lengthof(sStringA));
 
 	swprintf( sString, lengthof(sString), zMarksMapScreenText[ 10 ], pSoldier->name, sStringA, ubLength );
 

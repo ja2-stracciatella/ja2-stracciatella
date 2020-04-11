@@ -3116,7 +3116,8 @@ void DisplayDistancesForHelicopter()
 	// calculate the cost of the trip based on the number of safe and unsafe sectors it will pass through
 	MPrint(x, y, pHelicopterEtaStrings[3]);
 	UINT32 const uiTripCost = n_safe_sectors * COST_AIRSPACE_SAFE + n_unsafe_sectors * COST_AIRSPACE_UNSAFE;
-	SPrintMoney(sString, uiTripCost);
+	ST::wchar_buffer wstr = SPrintMoney(uiTripCost).to_wchar();
+	wcslcpy(sString, wstr.c_str(), lengthof(sString));
 	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
 	MPrint(sX, y, sString);
 	y += h;
@@ -3484,7 +3485,8 @@ static void BlitMineText(UINT8 const mine_idx, INT16 const sMapX, INT16 const sM
 	if (PlayerControlsMine(mine_idx) && !gMineStatus[mine_idx].fEmpty)
 	{
 		// show current production
-		SPrintMoney(buf, PredictDailyIncomeFromAMine(mine_idx));
+		ST::wchar_buffer wstr = SPrintMoney(PredictDailyIncomeFromAMine(mine_idx)).to_wchar();
+		wcslcpy(buf, wstr.c_str(), lengthof(buf));
 
 		// if potential is not nil, show percentage of the two
 		if (GetMaxPeriodicRemovalFromMine(mine_idx) > 0)

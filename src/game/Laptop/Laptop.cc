@@ -89,6 +89,7 @@
 #include "UILayout.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 #include <algorithm>
 #include <iterator>
@@ -2730,8 +2731,7 @@ void PrintBalance(void)
 {
 	SetFontAttributes(FONT10ARIAL, FONT_BLACK, NO_SHADOW);
 
-	wchar_t pString[32];
-	SPrintMoney(pString, LaptopSaveInfo.iCurrentBalance);
+	ST::string pString = SPrintMoney(LaptopSaveInfo.iCurrentBalance);
 
 	INT32 x = STD_SCREEN_X + 47;
 	INT32 y = STD_SCREEN_Y + 257 + 15;

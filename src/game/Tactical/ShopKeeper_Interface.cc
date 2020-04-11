@@ -67,6 +67,8 @@
 #include "WeaponModels.h"
 #include "policy/GamePolicy.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 
 #define SKI_BUTTON_FONT				MILITARYFONT1//FONT14ARIAL
@@ -962,8 +964,6 @@ static void RestoreTacticalBackGround(void);
 
 static void RenderShopKeeperInterface(void)
 {
-	wchar_t	zMoney[128];
-
 	if (InItemDescriptionBox() && pShopKeeperItemDescObject != NULL) return;
 
 	//RenderTacticalInterface( );
@@ -995,8 +995,7 @@ static void RenderShopKeeperInterface(void)
 	DisplayWrappedString(SKI_PLAYERS_CURRENT_BALANCE_X, SKI_PLAYERS_CURRENT_BALANCE_Y, SKI_PLAYERS_CURRENT_BALANCE_WIDTH, 2, SKI_LABEL_FONT, SKI_TITLE_COLOR, SkiMessageBoxText[SKI_PLAYERS_CURRENT_BALANCE], FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 	//Display the players current balance value
-	SPrintMoney(zMoney, LaptopSaveInfo.iCurrentBalance);
-	DrawTextToScreen(zMoney, SKI_PLAYERS_CURRENT_BALANCE_X, SKI_PLAYERS_CURRENT_BALANCE_OFFSET_TO_VALUE, SKI_PLAYERS_CURRENT_BALANCE_WIDTH, FONT10ARIAL, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
+	DrawTextToScreen(SPrintMoney(LaptopSaveInfo.iCurrentBalance), SKI_PLAYERS_CURRENT_BALANCE_X, SKI_PLAYERS_CURRENT_BALANCE_OFFSET_TO_VALUE, SKI_PLAYERS_CURRENT_BALANCE_WIDTH, FONT10ARIAL, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
 	BlitBufferToBuffer(FRAME_BUFFER, guiSAVEBUFFER, 0, 0, SKI_TACTICAL_BACKGROUND_START_X, SKI_TACTICAL_BACKGROUND_START_HEIGHT);
 
@@ -2078,7 +2077,7 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 	if (item_cost != 0)
 	{
 		// Display the item's price
-		SPrintMoney(buf, item_cost);
+		SPrintMoney(item_cost);
 		DrawTextToScreen(buf, x + SKI_INV_PRICE_OFFSET_X, y + SKI_INV_PRICE_OFFSET_Y, SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
@@ -2619,7 +2618,6 @@ static FLOAT ItemConditionModifier(UINT16 usItemIndex, INT8 bStatus)
 static void DisplayArmsDealerOfferArea(void)
 {
 	INT16   sCnt, sCount;
-	wchar_t zTemp[32];
 	UINT32  uiTotalCost;
 	UINT16  usPosX, usPosY;
 	BOOLEAN fDisplayHatchOnItem;
@@ -2689,8 +2687,7 @@ static void DisplayArmsDealerOfferArea(void)
 		RestoreExternBackgroundRect( SKI_ARMS_DEALER_TOTAL_COST_X, SKI_ARMS_DEALER_TOTAL_COST_Y, SKI_ARMS_DEALER_TOTAL_COST_WIDTH, SKI_ARMS_DEALER_TOTAL_COST_HEIGHT );
 
 		//Display the total cost text
-		SPrintMoney(zTemp, uiTotalCost);
-		DrawTextToScreen(zTemp, SKI_ARMS_DEALER_TOTAL_COST_X, SKI_ARMS_DEALER_TOTAL_COST_Y + 5, SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		DrawTextToScreen(SPrintMoney(uiTotalCost), SKI_ARMS_DEALER_TOTAL_COST_X, SKI_ARMS_DEALER_TOTAL_COST_Y + 5, SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 }
 
@@ -2892,7 +2889,6 @@ static BOOLEAN WillShopKeeperRejectObjectsFromPlayer(INT8 bDealerId, INT8 bSlotI
 static void DisplayPlayersOfferArea(void)
 {
 	INT16   sCnt, sCount;
-	wchar_t zTemp[32];
 	UINT32  uiTotalCost;
 	UINT16  usPosX, usPosY;
 	BOOLEAN fDisplayHatchOnItem=FALSE;
@@ -2980,8 +2976,7 @@ static void DisplayPlayersOfferArea(void)
 		RestoreExternBackgroundRect( SKI_PLAYERS_TOTAL_VALUE_X, SKI_PLAYERS_TOTAL_VALUE_Y, SKI_PLAYERS_TOTAL_VALUE_WIDTH, SKI_PLAYERS_TOTAL_VALUE_HEIGHT );
 
 		//Display the total cost text
-		SPrintMoney(zTemp, uiTotalCost);
-		DrawTextToScreen(zTemp, SKI_PLAYERS_TOTAL_VALUE_X, SKI_PLAYERS_TOTAL_VALUE_Y + 5, SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		DrawTextToScreen(SPrintMoney(uiTotalCost), SKI_PLAYERS_TOTAL_VALUE_X, SKI_PLAYERS_TOTAL_VALUE_Y + 5, SKI_INV_SLOT_WIDTH, SKI_LABEL_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
 	CrossOutUnwantedItems( );
@@ -3121,7 +3116,8 @@ class DialogueEventShopkeeperMoney : public DialogueEvent
 		bool Execute()
 		{
 			wchar_t zMoney[128];
-			SPrintMoney(zMoney, money_amount_);
+			ST::wchar_buffer wstr = SPrintMoney(money_amount_).to_wchar();
+			wcslcpy(zMoney, wstr.c_str(), lengthof(zMoney));
 			wchar_t zText[512];
 			swprintf(zText, lengthof(zText), message_, zMoney);
 			DoSkiMessageBox(zText, SHOPKEEPER_SCREEN, flags_, callback_);

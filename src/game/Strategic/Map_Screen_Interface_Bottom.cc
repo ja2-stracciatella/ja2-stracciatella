@@ -945,12 +945,11 @@ static void DisplayCurrentBalanceTitleForMapBottom(void)
 static void DisplayCurrentBalanceForMapBottom(void)
 {
 	// show the current balance for the player on the map panel bottom
-	wchar_t sString[ 128 ];
 	INT16 sFontX, sFontY;
 
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontAttributes(COMPFONT, 183);
-	SPrintMoney(sString, LaptopSaveInfo.iCurrentBalance);
+	ST::string sString = SPrintMoney(LaptopSaveInfo.iCurrentBalance);
 	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 387 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);
 }
@@ -994,7 +993,6 @@ static void DisplayProjectedDailyMineIncome(void)
 {
 	INT32 iRate = 0;
 	static INT32 iOldRate = -1;
-	wchar_t sString[ 128 ];
 	INT16 sFontX, sFontY;
 
 	// grab the rate from the financial system
@@ -1011,7 +1009,7 @@ static void DisplayProjectedDailyMineIncome(void)
 
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontAttributes(COMPFONT, 183);
-	SPrintMoney(sString, iRate);
+	ST::string sString = SPrintMoney(iRate);
 	FindFontCenterCoordinates(STD_SCREEN_X + 359, STD_SCREEN_Y + 433 + 2,  437 - 359, 10, sString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, sString);
 }

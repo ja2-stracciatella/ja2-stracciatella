@@ -73,6 +73,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -5347,7 +5349,8 @@ void CreateContractBox(const SOLDIERTYPE* const s)
 			}
 
 			wchar_t sDollarString[50];
-			SPrintMoney(sDollarString, salary);
+			ST::wchar_buffer wstr= SPrintMoney(salary).to_wchar();
+			wcslcpy(sDollarString, wstr.c_str(), lengthof(sDollarString));
 			wchar_t sString[50];
 			swprintf(sString, lengthof(sString), L"%ls ( %ls )", pContractStrings[i], sDollarString);
 			AddMonoString(box, sString);

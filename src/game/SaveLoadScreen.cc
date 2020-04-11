@@ -1087,9 +1087,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 			DrawTextToScreen(merc_count, x + SLG_NUM_MERCS_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			// The balance
-			wchar_t balance[128];
-			SPrintMoney(balance, header.iCurrentBalance);
-			DrawTextToScreen(balance, x + SLG_BALANCE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(SPrintMoney(header.iCurrentBalance), x + SLG_BALANCE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			if (save_exists || (gfSaveGame && !gfUserInTextInputMode && is_selected))
 			{
