@@ -2219,11 +2219,11 @@ static void UpdateMasterProgress(void)
 		MasterEnd = (gusCurrent / (double)gusTotal) * 100.0;
 		if( gfMajorUpdate )
 		{
-			SetRelativeStartAndEndPercentage( 2, (UINT16)MasterStart, (UINT16)MasterEnd, NULL );
+			SetRelativeStartAndEndPercentage( 2, (UINT16)MasterStart, (UINT16)MasterEnd, ST::null );
 			RenderProgressBar( 2, 0 );
 		}
 		else
-			SetRelativeStartAndEndPercentage( 1, (UINT16)MasterStart, (UINT16)MasterEnd, NULL );
+			SetRelativeStartAndEndPercentage( 1, (UINT16)MasterStart, (UINT16)MasterEnd, ST::null );
 	}
 }
 
