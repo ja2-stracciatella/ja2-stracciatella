@@ -33,6 +33,7 @@
 #include "policy/GamePolicy.h"
 #include "Logger.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 #include <algorithm>
@@ -319,7 +320,7 @@ static void SelectTitleImageLinkRegionCallBack(MOUSE_REGION* pRegion, INT32 iRea
 }
 
 
-static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
+static GUIButtonRef MakeButton(BUTTON_PICS* img, const ST::string& text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
 	const INT16 shadow_col = BOBBYR_GUNS_SHADOW_COLOR;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, BOBBYR_GUNS_BUTTON_FONT, BOBBYR_GUNS_TEXT_COLOR_ON, shadow_col, BOBBYR_GUNS_TEXT_COLOR_OFF, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
@@ -455,8 +456,8 @@ void DisplayItemInfo(UINT32 uiItemClass)
 	UINT8   ubCount=0;
 	UINT16  PosY, usTextPosY;
 	UINT16  usItemIndex;
-	wchar_t sDollarTemp[60];
-	wchar_t sTemp[60];
+	ST::string sDollarTemp;
+	ST::string sTemp;
 
 	PosY = BOBBYR_GRID_PIC_Y;
 	usTextPosY = BOBBYR_ITEM_DESC_START_Y;
@@ -612,9 +613,8 @@ void DisplayItemInfo(UINT32 uiItemClass)
 	}
 
 	//Display the subtotal at the bottom of the screen
-	ST::wchar_buffer wstr = SPrintMoney(CalculateTotalPurchasePrice()).to_wchar();
-	wcslcpy(sDollarTemp, wstr.c_str(), lengthof(sDollarTemp));
-	swprintf( sTemp, lengthof(sTemp), L"%ls %ls", BobbyRText[BOBBYR_GUNS_SUB_TOTAL], sDollarTemp );
+	sDollarTemp = SPrintMoney(CalculateTotalPurchasePrice());
+	sTemp = ST::format("{} {}", BobbyRText[BOBBYR_GUNS_SUB_TOTAL], sDollarTemp);
 	DrawTextToScreen(sTemp, BOBBYR_ORDER_SUBTOTAL_X, BOBBYR_ORDER_SUBTOTAL_Y, 0, BOBBYR_ORDER_TITLE_FONT, BOBBYR_ORDER_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | TEXT_SHADOWED);
 
 	//Display the Used item disclaimer
@@ -757,7 +757,7 @@ static UINT8 CheckIfItemIsPurchased(UINT16 usItemNumber);
 
 static UINT16 DisplayCostAndQty(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight, UINT16 usBobbyIndex, BOOLEAN fUsed)
 {
-	wchar_t	sTemp[20];
+	ST::string sTemp;
 	//UINT8	ubPurchaseNumber;
 
 	//
@@ -777,7 +777,7 @@ static UINT16 DisplayCostAndQty(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeig
 	usPosY += usFontHeight + 2;
 
 
-	swprintf(sTemp, lengthof(sTemp), L"%3.2f %ls", GetWeightBasedOnMetricOption(GCM->getItem(usIndex)->getWeight()) / 10.0f, GetWeightUnitString());
+	sTemp = ST::format("{3.2f} {}", GetWeightBasedOnMetricOption(GCM->getItem(usIndex)->getWeight()) / 10.0f, GetWeightUnitString());
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_STOCK_TEXT_X, usPosY, BOBBYR_ITEM_COST_TEXT_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 
@@ -787,9 +787,9 @@ static UINT16 DisplayCostAndQty(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeig
 	usPosY += usFontHeight + 2;
 
 	if( fUsed )
-		swprintf(sTemp, lengthof(sTemp), L"% 4d", LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].ubQtyOnHand);
+		sTemp = ST::format("{_ 4d}", LaptopSaveInfo.BobbyRayUsedInventory[ usBobbyIndex ].ubQtyOnHand);
 	else
-		swprintf(sTemp, lengthof(sTemp), L"% 4d", LaptopSaveInfo.BobbyRayInventory[ usBobbyIndex ].ubQtyOnHand);
+		sTemp = ST::format("{_ 4d}", LaptopSaveInfo.BobbyRayInventory[ usBobbyIndex ].ubQtyOnHand);
 
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_STOCK_TEXT_X, usPosY, BOBBYR_ITEM_COST_TEXT_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
@@ -801,11 +801,11 @@ static UINT16 DisplayCostAndQty(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeig
 
 static UINT16 DisplayRof(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 {
-	wchar_t	sTemp[20];
+	ST::string sTemp;
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_ROF], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	swprintf(sTemp, lengthof(sTemp), L"%3d/%ls", GCM->getWeapon(usIndex)->getRateOfFire(), pMessageStrings[ MSG_MINUTE_ABBREVIATION ]);
+	sTemp = ST::format("{3d}/{}", GCM->getWeapon(usIndex)->getRateOfFire(), pMessageStrings[ MSG_MINUTE_ABBREVIATION ]);
 
 
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
@@ -816,10 +816,10 @@ static UINT16 DisplayRof(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 
 static UINT16 DisplayDamage(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 {
-	wchar_t	sTemp[20];
+	ST::string sTemp;
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_DAMAGE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	swprintf(sTemp, lengthof(sTemp), L"%4d", GCM->getWeapon( usIndex )->ubImpact);
+	sTemp = ST::format("{4d}", GCM->getWeapon( usIndex )->ubImpact);
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -828,10 +828,10 @@ static UINT16 DisplayDamage(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 
 static UINT16 DisplayRange(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 {
-	wchar_t	sTemp[20];
+	ST::string sTemp;
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_RANGE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", GCM->getWeapon( usIndex )->usRange, pMessageStrings[ MSG_METER_ABBREVIATION ] );
+	sTemp = ST::format("{3d} {}", GCM->getWeapon( usIndex )->usRange, pMessageStrings[ MSG_METER_ABBREVIATION ]);
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -840,10 +840,10 @@ static UINT16 DisplayRange(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 
 static UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 {
-	wchar_t	sTemp[20];
+	ST::string sTemp;
 
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_MAGAZINE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-	swprintf(sTemp, lengthof(sTemp), L"%3d %ls", GCM->getWeapon(usIndex)->ubMagSize, pMessageStrings[ MSG_ROUNDS_ABBREVIATION ] );
+	sTemp = ST::format("{3d} {}", GCM->getWeapon(usIndex)->ubMagSize, pMessageStrings[ MSG_ROUNDS_ABBREVIATION ]);
 	DrawTextToScreen(sTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY += usFontHeight + 2;
 	return(usPosY);
@@ -853,16 +853,14 @@ static UINT16 DisplayMagazine(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight
 static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 {
 	const ItemModel * item = GCM->getItem(usIndex);
-	wchar_t	zTemp[128];
+	ST::string zTemp;
 	DrawTextToScreen(BobbyRText[BOBBYR_GUNS_CALIBRE], BOBBYR_ITEM_WEIGHT_TEXT_X, usPosY, 0, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	// ammo or gun?
 	const CalibreModel *calibre = item->getItemClass() == IC_AMMO ? item->asAmmo()->calibre : item->asWeapon()->calibre;
-	ST::wchar_buffer name = GCM->getCalibreNameForBobbyRay(calibre->index)->to_wchar();;
-	wcslcpy(zTemp, name.c_str(), lengthof(zTemp)); // might not terminate with '\0'
+	zTemp = *GCM->getCalibreNameForBobbyRay(calibre->index);
 
-	ST::wchar_buffer wstr = ReduceStringLength(zTemp, BOBBYR_GRID_PIC_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT).to_wchar();
-	wcslcpy(zTemp, wstr.c_str(), lengthof(zTemp));
+	zTemp = ReduceStringLength(zTemp, BOBBYR_GRID_PIC_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT);
 	DrawTextToScreen(zTemp, BOBBYR_ITEM_WEIGHT_NUM_X, usPosY, BOBBYR_ITEM_WEIGHT_NUM_WIDTH, BOBBYR_ITEM_DESC_TEXT_FONT, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 	usPosY += usFontHeight + 2;
@@ -872,7 +870,7 @@ static UINT16 DisplayCaliber(UINT16 usPosY, UINT16 usIndex, UINT16 usFontHeight)
 
 static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobbyIndex, BOOLEAN fUsed)
 {
-	wchar_t	sTemp[20];
+	ST::string sTemp;
 	UINT32 uiStartLoc;
 	UINT8	ubPurchaseNumber;
 
@@ -893,7 +891,7 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 
 		if( ubPurchaseNumber != BOBBY_RAY_NOT_PURCHASED)
 		{
-			swprintf(sTemp, lengthof(sTemp), L"% 4d", BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased);
+			sTemp = ST::format("{_ 4d}", BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased);
 			DrawTextToScreen(sTemp, BOBBYR_ITEMS_BOUGHT_X, usPosY, 0, FONT14ARIAL, BOBBYR_ITEM_DESC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		}
 	}
@@ -904,7 +902,7 @@ static void DisplayItemNameAndInfo(UINT16 usPosY, UINT16 usIndex, UINT16 usBobby
 	//if it's a used item, display how damaged the item is
 	if( fUsed )
 	{
-		swprintf(sTemp, lengthof(sTemp), L"*%3d%%", LaptopSaveInfo.BobbyRayUsedInventory[usBobbyIndex].ubItemQuality);
+		sTemp = ST::format("*{3d}%", LaptopSaveInfo.BobbyRayUsedInventory[usBobbyIndex].ubItemQuality);
 		DrawTextToScreen(sTemp, BOBBYR_ITEM_NAME_X - 2, usPosY - BOBBYR_ORDER_NUM_Y_OFFSET, BOBBYR_ORDER_NUM_WIDTH, BOBBYR_ITEM_NAME_TEXT_FONT, BOBBYR_ITEM_NAME_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -1044,8 +1042,7 @@ static void CreateMouseRegionForBigImage(UINT16 y, const UINT8 n_regions, const 
 		UINT8 const n_guns = CheckPlayersInventoryForGunMatchingGivenAmmoID(item);
 		if (n_guns == 0) continue;
 
-		wchar_t buf[SIZE_ITEM_NAME];
-		swprintf(buf, lengthof(buf), str_bobbyr_guns_num_guns_that_use_ammo, n_guns);
+		ST::string buf = st_format_printf(str_bobbyr_guns_num_guns_that_use_ammo, n_guns);
 		r.SetFastHelpText(buf);
 	}
 
