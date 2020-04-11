@@ -3,6 +3,9 @@
 
 #include "Input.h"
 
+#include <string_theory/string>
+
+
 #define TEXT_CURSOR_BLINK_INTERVAL 500
 
 //AUTHOR:  Kris Morness
@@ -70,7 +73,7 @@ void SetTextInputCursor( UINT16 usNewCursor );
 //After calling InitTextInputMode, you want to define one or more text input fields.  The order
 //of calls to this function dictate the TAB order from traversing from one field to the next.  This
 //function adds mouse regions and processes them for you, as well as deleting them when you are done.
-void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority, const wchar_t *szInitText, UINT8 ubMaxChars, InputType);
+void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority, const ST::string& str, size_t maxCodepoints, InputType usInputType);
 
 //This allows you to insert special processing functions and modes that can't be determined here.  An example
 //would be a file dialog where there would be a file list.  This file list would be accessed using the Win95
@@ -89,11 +92,10 @@ void AddUserInputField( INPUT_CALLBACK userFunction );
 //This is a useful call made from an external user input field.  Using the previous file dialog example, this
 //call would be made when the user selected a different filename in the list via clicking or scrolling with
 //the arrows, or even using alpha chars to jump to the appropriate filename.
-void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText );
-void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText);
+void SetInputFieldString(UINT8 ubField, const ST::string& str);
 
 //Allows external functions to access the strings within the fields at anytime.
-wchar_t const* GetStringFromField(UINT8 ubField);
+ST::string GetStringFromField(UINT8 ubField);
 
 //Utility functions for the INPUTTYPE_24HOURCLOCK input type.
 UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField );

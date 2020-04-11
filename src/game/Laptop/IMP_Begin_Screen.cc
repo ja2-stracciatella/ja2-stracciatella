@@ -21,6 +21,9 @@
 #include "VSurface.h"
 #include "Font_Control.h"
 
+#include <string_theory/string>
+
+
 #define FULL_NAME_INPUT_X LAPTOP_SCREEN_UL_X + 196
 #define FULL_NAME_INPUT_Y LAPTOP_SCREEN_UL_Y + 153
 #define FULL_NAME_INPUT_WIDTH 229
@@ -260,8 +263,10 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// back to mainpage
-		CopyTrimmedString(pFullNameString, NAME_LENGTH, GetStringFromField(0));
-		CopyTrimmedString(pNickNameString, NICKNAME_LENGTH, GetStringFromField(1));
+		ST::wchar_buffer wstr = GetStringFromField(0).to_wchar();
+		CopyTrimmedString(pFullNameString, NAME_LENGTH, wstr.c_str());
+		wstr = GetStringFromField(1).to_wchar();
+		CopyTrimmedString(pNickNameString, NICKNAME_LENGTH, wstr.c_str());
 
 		// check to see if a name has been selected, if not, do not allow player to proceed with more char generation
 		if (wcslen(pFullNameString) != 0 && bGenderFlag != -1)

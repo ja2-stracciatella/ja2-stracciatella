@@ -692,7 +692,8 @@ static bool GetGameDescription()
 	INT8 const id = GetActiveFieldID();
 	if (id == 0 || id == -1) return false;
 
-	wcslcpy(gzGameDescTextField, GetStringFromField(id), lengthof(gzGameDescTextField));
+	ST::wchar_buffer wstr = GetStringFromField(id).to_wchar();
+	wcslcpy(gzGameDescTextField, wstr.c_str(), lengthof(gzGameDescTextField));
 	return true;
 }
 

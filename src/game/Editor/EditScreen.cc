@@ -83,6 +83,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 static BOOLEAN gfCorruptMap        = FALSE;
 static BOOLEAN gfCorruptSchedules  = FALSE;
 BOOLEAN        gfProfileDataLoaded = FALSE;
@@ -1212,7 +1215,7 @@ static void HandleKeyboardShortcuts(void)
 				switch( EditorInputEvent.usParam )
 				{
 					case SDLK_ESCAPE:
-						SetInputFieldStringWith16BitString( 0, L"" );
+						SetInputFieldString( 0, ST::null );
 						RemoveGotoGridNoUI();
 						break;
 
@@ -1221,7 +1224,7 @@ static void HandleKeyboardShortcuts(void)
 					case 'x':
 						if( EditorInputEvent.usKeyState & ALT_DOWN )
 						{
-							SetInputFieldStringWith16BitString( 0, L"" );
+							SetInputFieldString( 0, ST::null );
 							RemoveGotoGridNoUI();
 							iCurrentAction = ACTION_QUIT_GAME;
 						}
@@ -3135,7 +3138,7 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 				{
 					wchar_t str[4];
 					swprintf(str, lengthof(str), L"%d", gubCurrRoomNumber);
-					SetInputFieldStringWith16BitString( 1, str );
+					SetInputFieldString( 1, str );
 					SetActiveField( 0 );
 				}
 			}

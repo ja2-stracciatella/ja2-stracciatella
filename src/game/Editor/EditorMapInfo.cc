@@ -33,6 +33,8 @@
 #include "Environment.h"
 #include "Simple_Render_Utils.h"
 
+#include <string_theory/string>
+
 
 INT8 gbDefaultLightType = PRIMETIME_LIGHT;
 
@@ -123,19 +125,19 @@ void UpdateMapInfoFields()
 	//Update the text fields to reflect the validated values.
 	//light rgb fields
 	swprintf(str, lengthof(str), L"%d", gEditorLightColor.r);
-	SetInputFieldStringWith16BitString( 1, str );
+	SetInputFieldString( 1, str );
 	swprintf(str, lengthof(str), L"%d", gEditorLightColor.g);
-	SetInputFieldStringWith16BitString( 2, str );
+	SetInputFieldString( 2, str );
 	swprintf(str, lengthof(str), L"%d", gEditorLightColor.b);
-	SetInputFieldStringWith16BitString( 3, str );
+	SetInputFieldString( 3, str );
 
 	swprintf(str, lengthof(str), L"%d", gsLightRadius);
-	SetInputFieldStringWith16BitString( 4, str );
+	SetInputFieldString( 4, str );
 	swprintf(str, lengthof(str), L"%d", gusLightLevel);
-	SetInputFieldStringWith16BitString( 5, str );
+	SetInputFieldString( 5, str );
 
 	swprintf(str, lengthof(str), L"%.d", gMapInformation.ubRestrictedScrollID);
-	SetInputFieldStringWith16BitString( 6, str );
+	SetInputFieldString( 6, str );
 
 	ApplyNewExitGridValuesToTextFields();
 }
@@ -188,8 +190,8 @@ void ExtractAndUpdateMapInfo()
 	gMapInformation.ubRestrictedScrollID = temp != -1 ? temp : 0;
 
 	//set up fields for exitgrid information
-	wchar_t const* const str = GetStringFromField(7);
-	wchar_t row = str[0];
+	ST::string str = GetStringFromField(7);
+	char row = str[0];
 	if ('a' <= row && row <= 'z' ) row -= 32; //uppercase it!
 	if ('A' <= row && row <= 'Z' && '0' <= str[1] && str[1] <= '9')
 	{ //only update, if coordinate is valid.
@@ -213,11 +215,11 @@ BOOLEAN ApplyNewExitGridValuesToTextFields()
 	if( iCurrentTaskbar != TASK_MAPINFO )
 		return FALSE;
 	swprintf(str, lengthof(str), L"%c%d", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX);
-	SetInputFieldStringWith16BitString( 7, str );
+	SetInputFieldString( 7, str );
 	swprintf(str, lengthof(str), L"%d", gExitGrid.ubGotoSectorZ);
-	SetInputFieldStringWith16BitString( 8, str );
+	SetInputFieldString( 8, str );
 	swprintf(str, lengthof(str), L"%d", gExitGrid.usGridNo);
-	SetInputFieldStringWith16BitString( 9, str );
+	SetInputFieldString( 9, str );
 	SetActiveField( 0 );
 	return TRUE;
 }

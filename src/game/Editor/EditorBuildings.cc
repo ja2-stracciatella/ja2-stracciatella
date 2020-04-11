@@ -719,6 +719,6 @@ void ExtractAndUpdateBuildingInfo()
 		gubCurrRoomNumber = 0;
 	}
 	swprintf(str, lengthof(str), L"%d", gubCurrRoomNumber);
-	SetInputFieldStringWith16BitString( 1, str );
+	SetInputFieldString( 1, str );
 	SetActiveField( 0 );
 }

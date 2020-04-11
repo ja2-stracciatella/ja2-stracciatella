@@ -55,6 +55,7 @@
 #include "GameInstance.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 #include <cstdarg>
 
@@ -214,7 +215,7 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 				else
 					swprintf(gzFilename, lengthof(gzFilename), L"%hs", temp->filename);
 				if (!ValidFilename()) gzFilename[0] = L'\0';
-				SetInputFieldStringWith16BitString(0, gzFilename);
+				SetInputFieldString(0, gzFilename);
 				RemoveFromFDlgList( &FileList, curr );
 				iTotalFiles--;
 				if( !iTotalFiles )
@@ -508,7 +509,7 @@ static void FileDialogModeCallback(UINT8 ubID, BOOLEAN fEntering)
 			if( iCurrFileShown == (x-iTopFileShown) )
 			{
 				FListNode->filename[30] = '\0';
-				SetInputFieldStringWith8BitString(0, FListNode->filename);
+				SetInputFieldString(0, FListNode->filename);
 				return;
 			}
 			FListNode = FListNode->pNext;
@@ -592,7 +593,7 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 			FListNode->filename[30] = '\0';
 			swprintf(gzFilename, lengthof(gzFilename), L"%hs", FListNode->filename);
 			if (!ValidFilename()) gzFilename[0] = L'\0';
-			SetInputFieldStringWith16BitString(0, gzFilename);
+			SetInputFieldString(0, gzFilename);
 
 			RenderInactiveTextField( 0 );
 
@@ -682,7 +683,7 @@ static void SetTopFileToLetter(UINT16 usLetter)
 		iTopFileShown = x;
 		if( iTopFileShown > iTotalFiles - 7 )
 			iTopFileShown = iTotalFiles - 7;
-		SetInputFieldStringWith8BitString(0, prev->filename);
+		SetInputFieldString(0, prev->filename);
 	}
 }
 
@@ -776,7 +777,7 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 		}
 		if( curr )
 		{
-			SetInputFieldStringWith8BitString(0, curr->filename);
+			SetInputFieldString(0, curr->filename);
 			swprintf(gzFilename, lengthof(gzFilename), L"%hs", curr->filename);
 		}
 	}
@@ -1038,7 +1039,8 @@ static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason)
 
 static BOOLEAN ExtractFilenameFromFields(void)
 {
-	wcslcpy(gzFilename, GetStringFromField(0), lengthof(gzFilename));
+	ST::wchar_buffer wstr = GetStringFromField(0).to_wchar();
+	wcslcpy(gzFilename, wstr.c_str(), lengthof(gzFilename));
 	return ValidFilename();
 }
 

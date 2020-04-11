@@ -376,8 +376,10 @@ void ExitFloristOrderForm()
 	RemoveButton( guiFlowerOrderGalleryButton );
 
 	//Store the text fields
-	wcslcpy(gsSentimentTextField, GetStringFromField(1), lengthof(gsSentimentTextField));
-	wcslcpy(gsNameTextField,      GetStringFromField(2), lengthof(gsNameTextField));
+	ST::wchar_buffer wstr = GetStringFromField(1).to_wchar();
+	wcslcpy(gsSentimentTextField, wstr.c_str(), lengthof(gsSentimentTextField));
+	wstr = GetStringFromField(2).to_wchar();
+	wcslcpy(gsNameTextField, wstr.c_str(), lengthof(gsNameTextField));
 	gbCurrentlySelectedCard = -1;
 
 
@@ -747,11 +749,13 @@ static void GetInputText()
 	UINT8 const text_field_id = GetActiveFieldID();
 	if (text_field_id == 1)
 	{ // The personel sentiment field
-		wcslcpy(gsSentimentTextField, GetStringFromField(text_field_id), lengthof(gsSentimentTextField));
+		ST::wchar_buffer wstr = GetStringFromField(text_field_id).to_wchar();
+		wcslcpy(gsSentimentTextField, wstr.c_str(), lengthof(gsSentimentTextField));
 	}
 	else if (text_field_id == 2)
 	{ // The name field
-		wcslcpy(gsNameTextField, GetStringFromField(text_field_id), lengthof(gsNameTextField));
+		ST::wchar_buffer wstr = GetStringFromField(text_field_id).to_wchar();
+		wcslcpy(gsNameTextField, wstr.c_str(), lengthof(gsNameTextField));
 	}
 
 	SetActiveField(0);
@@ -806,7 +810,8 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 
 				//disable the text entry fields
 				//DisableAllTextFields();
-				wcslcpy(gsSentimentTextField, GetStringFromField(1), lengthof(gsSentimentTextField));
+				ST::wchar_buffer wstr = GetStringFromField(1).to_wchar();
+				wcslcpy(gsSentimentTextField, wstr.c_str(), lengthof(gsSentimentTextField));
 				KillTextInputMode();
 
 				//disable the clear order and accept order buttons, (their rendering interferes with the drop down graphics)

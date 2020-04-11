@@ -2285,15 +2285,13 @@ static void CreateDestroyDisplayTextEntryBox(UINT8 ubAction, const wchar_t* pStr
 			//redraw the entire screen
 			gfRedrawQuestDebugSystem = TRUE;
 
-			wchar_t const* const zText = GetStringFromField(0);
-			//if the text is not null
+			ST::string zText = GetStringFromField(0);
+			iTextEntryNumber = 0;
 			if( zText[0] != '\0' )
 			{
 				//get the number from the string
-				swscanf( zText, L"%ld", &iTextEntryNumber );
+				sscanf( zText.c_str(), "%d", &iTextEntryNumber );
 			}
-			else
-				iTextEntryNumber = 0;
 
 
 

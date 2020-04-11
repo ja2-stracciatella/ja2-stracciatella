@@ -1,4 +1,3 @@
-#include <math.h>
 #include "HImage.h"
 #include "Input.h"
 #include "Font.h"
@@ -46,9 +45,9 @@ struct TEXTINPUTNODE
 {
 	InputType      usInputType;
 	UINT8          ubID;
-	UINT8          ubMaxChars;
-	wchar_t*       szString;
-	UINT8          ubStrLen;
+	ST::string     str;
+	size_t         numCodepoints;
+	size_t         maxCodepoints;
 	BOOLEAN        fEnabled;
 	BOOLEAN        fUserField;
 	MOUSE_REGION   region;
@@ -128,8 +127,8 @@ void SetEditingStatus(bool bIsEditing)
 }
 
 //values that contain the hiliting positions and the cursor position.
-static UINT8 gubCursorPos = 0;
-static UINT8 gubStartHilite = 0;
+static size_t gubCursorPos = 0;
+static size_t gubStartHilite = 0;
 
 
 //Simply initiates that you wish to begin inputting text.  This should only apply to screen
@@ -184,10 +183,8 @@ void KillTextInputMode()
 	{
 		TEXTINPUTNODE* const del = i;
 		i = i->next;
-		if (del->szString)
+		if (del->maxCodepoints > 0)
 		{
-			delete[] del->szString;
-			del->szString = 0;
 			MSYS_RemoveRegion(&del->region);
 		}
 		delete del;
@@ -253,33 +250,25 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* reg, INT32 reason);
  * fields.  The order of calls to this function dictate the TAB order from
  * traversing from one field to the next.  This function adds mouse regions and
  * processes them for you, as well as deleting them when you are done. */
-void AddTextInputField(INT16 const sLeft, INT16 const sTop, INT16 const sWidth, INT16 const sHeight, INT8 const bPriority, wchar_t const* const szInitText, UINT8 ubMaxChars, InputType const usInputType)
+void AddTextInputField(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, INT8 bPriority, const ST::string& str, size_t maxCodepoints, InputType usInputType)
 {
 	TEXTINPUTNODE* const n = AllocateTextInputNode(TRUE);
 	//Setup the information for the node
 	n->usInputType = usInputType;	//setup the filter type
-	// All 24hourclock inputtypes have 6 characters.  01:23 (null terminated)
-	if (usInputType == INPUTTYPE_24HOURCLOCK) ubMaxChars = 6;
+	// All 24hourclock inputtypes have 5 codepoints.  01:23
+	if (usInputType == INPUTTYPE_24HOURCLOCK) maxCodepoints = 5;
+	Assert(maxCodepoints > 0);
 	// Allocate and copy the string.
-	n->ubMaxChars = ubMaxChars;
-	n->szString   = new wchar_t[ubMaxChars + 1]{};
-	if (szInitText)
-	{
-		n->ubStrLen = static_cast<UINT8>(wcslen(szInitText));
-		Assert(n->ubStrLen <= ubMaxChars);
-		wcslcpy(n->szString, szInitText, ubMaxChars + 1);
-	}
-	else
-	{
-		n->ubStrLen = 0;
-		n->szString[0] = L'\0';
-	}
+	n->str = str;
+	n->numCodepoints = str.to_utf32().size();
+	n->maxCodepoints = maxCodepoints;
+	Assert(n->numCodepoints <= maxCodepoints);
 
 	// If this is the first field, then hilight it.
 	if (gpTextInputHead == n)
 	{
 		gubStartHilite = 0;
-		gubCursorPos   = n->ubStrLen;
+		gubCursorPos   = n->numCodepoints;
 	}
 	// Setup the region.
 	MSYS_DefineRegion(&n->region, sLeft, sTop, sLeft + sWidth, sTop + sHeight, bPriority, gusTextInputCursor, MouseMovedInTextRegionCallback, MouseClickedInTextRegionCallback);
@@ -324,21 +313,21 @@ INT16 GetActiveFieldID()
 //This is a useful call made from an external user input field.  Using the previous file dialog example, this
 //call would be made when the user selected a different filename in the list via clicking or scrolling with
 //the arrows, or even using alpha chars to jump to the appropriate filename.
-void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText)
+void SetInputFieldString(UINT8 ubField, const ST::string& str)
 {
 	TEXTINPUTNODE* const curr = GetTextInputField(ubField);
 	if (!curr) return;
 
-	if (szNewText)
+	if (!str.empty())
 	{
-		curr->ubStrLen = (UINT8)wcslen(szNewText);
-		Assert(curr->ubStrLen <= curr->ubMaxChars);
-		wcslcpy(curr->szString, szNewText, curr->ubMaxChars + 1);
+		curr->str = str;
+		curr->numCodepoints = str.to_utf32().size();
+		Assert(curr->numCodepoints <= curr->maxCodepoints);
 	}
 	else if (!curr->fUserField)
 	{
-		curr->ubStrLen = 0;
-		curr->szString[0] = L'\0';
+		curr->str = ST::null;
+		curr->numCodepoints = 0;
 	}
 	else
 	{
@@ -347,47 +336,24 @@ void SetInputFieldStringWith16BitString( UINT8 ubField, const wchar_t *szNewText
 }
 
 
-void SetInputFieldStringWith8BitString(UINT8 ubField, const char* szNewText)
-{
-	TEXTINPUTNODE* const curr = GetTextInputField(ubField);
-	if (!curr) return;
-
-	if (szNewText)
-	{
-		curr->ubStrLen = (UINT8)strlen(szNewText);
-		Assert(curr->ubStrLen <= curr->ubMaxChars);
-		swprintf(curr->szString, curr->ubMaxChars + 1, L"%hs", szNewText);
-	}
-	else if (!curr->fUserField)
-	{
-		curr->ubStrLen = 0;
-		curr->szString[0] = L'\0';
-	}
-	else
-	{
-		SLOGA("Attempting to illegally set text into user field %d", curr->ubID);
-	}
-}
-
-
-wchar_t const* GetStringFromField(UINT8 const ubField)
+ST::string GetStringFromField(UINT8 const ubField)
 {
 	TEXTINPUTNODE const* const n = GetTextInputField(ubField);
-	return n ? n->szString : L"";
+	return n ? n->str : ST::null;
 }
 
 
 INT32 GetNumericStrictValueFromField(UINT8 const id)
 {
-	wchar_t const* i = GetStringFromField(id);
-	if (*i == L'\0') return -1; // Blank string, so return -1
+	ST::utf32_buffer codepoints = GetStringFromField(id).to_utf32();
+	if (codepoints.size() == 0) return -1; // Blank string, so return -1
 	/* Convert the string to a number. This ensures that non-numeric values
 	 * automatically return -1. */
 	INT32 total = 0;
-	for (; *i != '\0'; ++i)
+	for (char32_t c : codepoints)
 	{
-		if (*i < L'0' || L'9' < *i) return -1;
-		total = total * 10 + (*i - '0');
+		if (c < U'0' || U'9' < c) return -1;
+		total = total * 10 + (c - U'0');
 	}
 	return total;
 }
@@ -403,17 +369,18 @@ void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber )
 	AssertMsg(!curr->fUserField, String("Attempting to illegally set text into user field %d", curr->ubID));
 	if (iNumber < 0) //negative number converts to blank string
 	{
-		curr->szString[0] = L'\0';
+		curr->str = ST::null;
+		curr->numCodepoints = 0;
 	}
 	else
 	{
-		INT32 iMax = (INT32)pow(10.0, curr->ubMaxChars);
+		INT32 iMax = (INT32)pow(10.0, curr->maxCodepoints);
 		if (iNumber > iMax) //set string to max value based on number of chars.
-			swprintf(curr->szString, curr->ubMaxChars + 1, L"%d", iMax - 1);
+			curr->str = ST::format("{}", iMax - 1);
 		else	//set string to the number given
-			swprintf(curr->szString, curr->ubMaxChars + 1, L"%d", iNumber);
+			curr->str = ST::format("{}", iNumber);
+		curr->numCodepoints = curr->str.to_utf32().size();
 	}
-	curr->ubStrLen = (UINT8)wcslen(curr->szString);
 }
 
 
@@ -430,10 +397,10 @@ void SetActiveField(UINT8 const id)
 	}
 
 	gpActive = n;
-	if (n->szString)
+	if (n->maxCodepoints > 0)
 	{
 		gubStartHilite = 0;
-		gubCursorPos   = n->ubStrLen;
+		gubCursorPos   = n->numCodepoints;
 		SetEditingStatus(TRUE);
 	}
 	else
@@ -454,7 +421,7 @@ void SelectNextField()
 
 	if( !gpActive )
 		return;
-	if( gpActive->szString )
+	if (gpActive->maxCodepoints > 0)
 		RenderInactiveTextFieldNode( gpActive );
 	else if( gpActive->InputCallback )
 		(gpActive->InputCallback)(gpActive->ubID, FALSE );
@@ -467,10 +434,10 @@ void SelectNextField()
 		if( gpActive->fEnabled )
 		{
 			fDone = TRUE;
-			if( gpActive->szString )
+			if (gpActive->maxCodepoints > 0)
 			{
 				gubStartHilite = 0;
-				gubCursorPos = gpActive->ubStrLen;
+				gubCursorPos = gpActive->numCodepoints;
 				SetEditingStatus(TRUE);
 			}
 			else
@@ -496,7 +463,7 @@ static void SelectPrevField(void)
 
 	if( !gpActive )
 		return;
-	if( gpActive->szString )
+	if (gpActive->maxCodepoints > 0)
 		RenderInactiveTextFieldNode( gpActive );
 	else if( gpActive->InputCallback )
 		(gpActive->InputCallback)(gpActive->ubID, FALSE );
@@ -509,10 +476,10 @@ static void SelectPrevField(void)
 		if( gpActive->fEnabled )
 		{
 			fDone = TRUE;
-			if( gpActive->szString )
+			if (gpActive->maxCodepoints > 0)
 			{
 				gubStartHilite = 0;
-				gubCursorPos = gpActive->ubStrLen;
+				gubCursorPos = gpActive->numCodepoints;
 				SetEditingStatus(TRUE);
 			}
 			else
@@ -571,9 +538,9 @@ void SetCursorColor( UINT16 usCursorColor )
 }
 
 
-static void AddChar(wchar_t);
+static void AddChar(char32_t c);
 static void DeleteHilitedText(void);
-static void HandleRegularInput(wchar_t);
+static void HandleRegularInput(char32_t c);
 static void RemoveChars(size_t pos, size_t n);
 
 
@@ -591,8 +558,7 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 		/* If the key has no character associated, bail out */
 		AssertMsg(a->codepoints.size() > 0, "TEXT_INPUT event sent null character");
 		DeleteHilitedText();
-		ST::wchar_buffer wstr = ST::utf32_to_wchar(a->codepoints);
-		for (wchar_t c : wstr)
+		for (char32_t c : a->codepoints)
 		{
 			HandleRegularInput(c);
 		}
@@ -626,12 +592,12 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					return TRUE;
 
 				case SDLK_RIGHT:
-					if (gubCursorPos < gpActive->ubStrLen) ++gubCursorPos;
+					if (gubCursorPos < gpActive->numCodepoints) ++gubCursorPos;
 					gubStartHilite = gubCursorPos;
 					return TRUE;
 
 				case SDLK_END:
-					gubCursorPos   = gpActive->ubStrLen;
+					gubCursorPos   = gpActive->numCodepoints;
 					gubStartHilite = gubCursorPos;
 					return TRUE;
 
@@ -647,7 +613,7 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					{
 						DeleteHilitedText();
 					}
-					else if (gubCursorPos < gpActive->ubStrLen)
+					else if (gubCursorPos < gpActive->numCodepoints)
 					{
 						RemoveChars(gubCursorPos, 1);
 					}
@@ -693,11 +659,11 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 					return TRUE;
 
 				case SDLK_RIGHT:
-					if (gubCursorPos < gpActive->ubStrLen) ++gubCursorPos;
+					if (gubCursorPos < gpActive->numCodepoints) ++gubCursorPos;
 					return TRUE;
 
 				case SDLK_END:
-					gubCursorPos = gpActive->ubStrLen;
+					gubCursorPos = gpActive->numCodepoints;
 					return TRUE;
 
 				case SDLK_HOME:
@@ -721,7 +687,7 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 				case SDLK_DELETE:
 					// Delete the entire text field, regardless of hilighting.
 					gubStartHilite = 0;
-					gubCursorPos   = gpActive->ubStrLen;
+					gubCursorPos   = gpActive->numCodepoints;
 					DeleteHilitedText();
 					break;
 
@@ -738,13 +704,13 @@ BOOLEAN HandleTextInput(InputAtom const* const a)
 
 
 // All input types are handled in this function.
-static void HandleRegularInput(wchar_t const c)
+static void HandleRegularInput(char32_t c)
 {
 	TEXTINPUTNODE const& n = *gpActive;
 	switch (n.usInputType)
 	{
 		case INPUTTYPE_NUMERICSTRICT:
-			if (L'0' <= c && c <= L'9') AddChar(c);
+			if (U'0' <= c && c <= U'9') AddChar(c);
 			break;
 
 		case INPUTTYPE_FULL_TEXT:
@@ -752,11 +718,11 @@ static void HandleRegularInput(wchar_t const c)
 			break;
 
 		case INPUTTYPE_DOSFILENAME: // DOS file names
-			if ((L'A' <= c && c <= L'Z') ||
-					(L'a' <= c && c <= L'z') ||
+			if ((U'A' <= c && c <= U'Z') ||
+					(U'a' <= c && c <= U'z') ||
 					/* Cannot begin a new filename with a number */
-					(L'0' <= c && c <= L'9' && gubCursorPos != 0) ||
-					c == L'_' || c == L'.')
+					(U'0' <= c && c <= U'9' && gubCursorPos != 0) ||
+					c == U'_' || c == U'.')
 			{
 				AddChar(c);
 			}
@@ -766,18 +732,18 @@ static void HandleRegularInput(wchar_t const c)
 			// First char is an lower case alpha, subsequent chars are numeric
 			if (gubCursorPos == 0)
 			{
-				if (L'a' <= c && c <= L'z')
+				if (U'a' <= c && c <= U'z')
 				{
 					AddChar(c);
 				}
-				else if (L'A' <= c && c <= L'Z')
+				else if (U'A' <= c && c <= U'Z')
 				{
-					AddChar(c + 32); // Convert to lowercase
+					AddChar(static_cast<char32_t>(c + 32)); // Convert to lowercase
 				}
 			}
 			else
 			{
-				if (L'0' <= c && c <= L'9') AddChar(c);
+				if (U'0' <= c && c <= U'9') AddChar(c);
 			}
 			break;
 
@@ -785,18 +751,18 @@ static void HandleRegularInput(wchar_t const c)
 			switch (gubCursorPos)
 			{
 				case 0:
-					if (L'0' <= c && c <= L'2') AddChar(c);
+					if (U'0' <= c && c <= U'2') AddChar(c);
 					break;
 
 				case 1:
-					if (L'0' <= c && c <= L'9')
+					if (U'0' <= c && c <= U'9')
 					{
-						if (n.szString[0] == L'2' && c > L'3') break;
+						if (n.str[0] == '2' && c > U'3') break;
 						AddChar(c);
 					}
-					if (n.szString[2] == L'\0')
+					if (n.str[2] == '\0')
 					{
-						AddChar(L':');
+						AddChar(U':');
 					}
 					else
 					{
@@ -805,23 +771,23 @@ static void HandleRegularInput(wchar_t const c)
 					break;
 
 				case 2:
-					if (c == L':')
+					if (c == U':')
 					{
 						AddChar(c);
 					}
-					else if (L'0' <= c && c <= L'9')
+					else if (U'0' <= c && c <= U'9')
 					{
-						AddChar(L':');
+						AddChar(U':');
 						AddChar(c);
 					}
 					break;
 
 				case 3:
-					if (L'0' <= c && c <= L'5') AddChar(c);
+					if (U'0' <= c && c <= U'5') AddChar(c);
 					break;
 
 				case 4:
-					if (L'0' <= c && c <= L'9') AddChar(c);
+					if (U'0' <= c && c <= U'9') AddChar(c);
 					break;
 			}
 			break;
@@ -829,26 +795,40 @@ static void HandleRegularInput(wchar_t const c)
 }
 
 
-static void AddChar(wchar_t const c)
+static void AddChar(char32_t c)
 {
 	PlayJA2Sample(ENTERING_TEXT, BTNVOLUME, 1, MIDDLEPAN);
 	TEXTINPUTNODE& n   = *gpActive;
-	UINT8&         len = n.ubStrLen;
-	if (len >= n.ubMaxChars) return;
+	if (n.numCodepoints >= n.maxCodepoints) return;
 	// Insert character after cursor
-	wchar_t*       const str = n.szString;
-	wchar_t*             i   = str + ++len;
-	wchar_t const* const end = str + gubCursorPos;
+	if (gubCursorPos < n.numCodepoints)
+	{
+		ST::utf32_buffer codepoints = n.str.to_utf32();
+		size_t i = 0;
+		n.str = ST::null;
+		while (i < gubCursorPos)
+		{
+			n.str += codepoints[i++];
+		}
+		n.str += c;
+		while (i < codepoints.size())
+		{
+			n.str += codepoints[i++];
+		}
+	}
+	else
+	{
+		n.str += c;
+	}
+	++n.numCodepoints;
 	gubStartHilite = ++gubCursorPos;
-	for (; i != end; --i) *i = i[-1];
-	*i = c;
 }
 
 
 static void DeleteHilitedText(void)
 {
-	UINT8 start = gubStartHilite;
-	UINT8 end   = gubCursorPos;
+	size_t start = gubStartHilite;
+	size_t end   = gubCursorPos;
 	if (start == end) return;
 	if (start >  end) Swap(start, end);
 	gubStartHilite = start;
@@ -860,9 +840,20 @@ static void DeleteHilitedText(void)
 static void RemoveChars(size_t const pos, size_t const n)
 {
 	TEXTINPUTNODE& t = *gpActive;
-	Assert(pos + n <= t.ubStrLen);
-	t.ubStrLen -= static_cast<UINT8>(n);
-	for (wchar_t* str = t.szString + pos; (*str = str[n]) != L'\0'; ++str) {}
+	Assert(pos + n <= t.numCodepoints);
+	ST::utf32_buffer codepoints = t.str.to_utf32();
+	size_t i = 0;
+	t.str = ST::null;
+	while (i < pos)
+	{
+		t.str += codepoints[i++];
+	}
+	i += n;
+	while (i < codepoints.size())
+	{
+		t.str += codepoints[i++];
+	}
+	t.numCodepoints = codepoints.size() - n;
 }
 
 
@@ -883,12 +874,12 @@ static void SetActiveFieldMouse(MOUSE_REGION const* const r)
 static size_t CalculateCursorPos(INT32 const click_x)
 {
 	SGPFont const font     = pColors->usFont;
-	wchar_t const* const str      = gpActive->szString;
+	ST::utf32_buffer codepoints = gpActive->str.to_utf32();
 	INT32                char_pos = 0;
 	size_t               i;
-	for (i = 0; str[i] != L'\0'; ++i)
+	for (i = 0; codepoints[i] != U'\0'; ++i)
 	{
-		char_pos += GetCharWidth(font, str[i]);
+		char_pos += GetCharWidth(font, codepoints[i]);
 		if (char_pos >= click_x) break;
 	}
 	return i;
@@ -913,7 +904,7 @@ static void MouseMovedInTextRegionCallback(MOUSE_REGION* const reg, INT32 const 
 			}
 			else if (gusMouseYPos > reg->RegionBottomRightY)
 			{
-				gubCursorPos = gpActive->ubStrLen;
+				gubCursorPos = gpActive->numCodepoints;
 			}
 		}
 		else
@@ -967,7 +958,7 @@ static void RenderBackgroundField(TEXTINPUTNODE const* const n)
 static void RenderActiveTextField(void)
 {
 	TEXTINPUTNODE const* const n = gpActive;
-	if (!n || !n->szString) return;
+	if (!n || n->maxCodepoints == 0) return;
 
 	SaveFontSettings();
 	RenderBackgroundField(n);
@@ -976,16 +967,16 @@ static void RenderActiveTextField(void)
 	SGPFont         const  font  = clrs.usFont;
 	UINT16          const  h     = GetFontHeight(font);
 	INT32           const  y     = n->region.RegionTopLeftY + (n->region.RegionBottomRightY - n->region.RegionTopLeftY - h) / 2;
-	wchar_t const*  const  str   = n->szString;
-	wchar_t const*         start = str + gubStartHilite;
-	wchar_t const*         end   = str + gubCursorPos;
+	ST::utf32_buffer codepoints = n->str.to_utf32();
+	size_t start = gubStartHilite;
+	size_t end = gubCursorPos;
 	if (start != end)
 	{ // Some or all of the text is hilighted, so we will use a different method.
 		// Sort the hilite order.
 		if (start > end) Swap(start, end);
 		// Traverse the string one character at a time, and draw the highlited part differently.
 		UINT32 x = n->region.RegionTopLeftX + 3;
-		for (wchar_t const* i = str; *i != L'\0'; ++i)
+		for (size_t i = 0; i < codepoints.size(); ++i)
 		{
 			if (start <= i && i < end)
 			{ // In highlighted part of text
@@ -995,24 +986,23 @@ static void RenderActiveTextField(void)
 			{ // In regular part of text
 				SetFontAttributes(font, clrs.ubForeColor, clrs.ubShadowColor, 0);
 			}
-			x += MPrintChar(x, y, *i);
+			x += MPrintChar(x, y, codepoints[i]);
 		}
 	}
 	else
 	{
 		SetFontAttributes(font, clrs.ubForeColor, clrs.ubShadowColor, 0);
-		MPrint(n->region.RegionTopLeftX + 3, y, str);
+		MPrint(n->region.RegionTopLeftX + 3, y, codepoints);
 	}
 
 	// Draw the blinking ibeam cursor during the on blink period.
-	if (gfEditingText && str && GetJA2Clock() % 1000 < TEXT_CURSOR_BLINK_INTERVAL)
+	if (gfEditingText && n->maxCodepoints > 0 && GetJA2Clock() % 1000 < TEXT_CURSOR_BLINK_INTERVAL)
 	{
 		INT32          x = n->region.RegionTopLeftX + 2;
-		wchar_t const* c = str;
-		for (size_t i = gubCursorPos; i != 0; --i)
+		for (size_t i = 0; i < gubCursorPos; ++i)
 		{
-			Assert(*c != L'\0');
-			x += GetCharWidth(font, *c++);
+			Assert(codepoints[i] != U'\0');
+			x += GetCharWidth(font, codepoints[i]);
 		}
 		ColorFillVideoSurfaceArea(FRAME_BUFFER, x, y, x + 1, y + h, clrs.usCursorColor);
 	}
@@ -1024,19 +1014,19 @@ static void RenderActiveTextField(void)
 void RenderInactiveTextField(UINT8 const id)
 {
 	TEXTINPUTNODE const* const n = GetTextInputField(id);
-	if (!n || !n->szString) return;
+	if (!n || n->maxCodepoints == 0) return;
 	SaveFontSettings();
 	SetFontAttributes(pColors->usFont, pColors->ubForeColor, pColors->ubShadowColor);
 	RenderBackgroundField(n);
 	UINT16 const offset = (n->region.RegionBottomRightY - n->region.RegionTopLeftY - GetFontHeight(pColors->usFont)) / 2;
-	MPrint(n->region.RegionTopLeftX + 3, n->region.RegionTopLeftY + offset, n->szString);
+	MPrint(n->region.RegionTopLeftX + 3, n->region.RegionTopLeftY + offset, n->str);
 	RestoreFontSettings();
 }
 
 
 static void RenderInactiveTextFieldNode(TEXTINPUTNODE const* const n)
 {
-	if (!n || !n->szString) return;
+	if (!n || n->maxCodepoints == 0) return;
 
 	SaveFontSettings();
 	TextInputColors const& clrs     = *pColors;
@@ -1052,7 +1042,7 @@ static void RenderInactiveTextFieldNode(TEXTINPUTNODE const* const n)
 	RenderBackgroundField(n);
 	MOUSE_REGION const& r = n->region;
 	UINT16       const  y = r.RegionTopLeftY + (r.RegionBottomRightY - r.RegionTopLeftY - GetFontHeight(clrs.usFont)) / 2;
-	MPrint(r.RegionTopLeftX + 3, y, n->szString);
+	MPrint(r.RegionTopLeftX + 3, y, n->str);
 	RestoreFontSettings();
 
 	if (disabled)
@@ -1206,19 +1196,19 @@ UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField )
 	if (curr->usInputType != INPUTTYPE_24HOURCLOCK)
 		return 0xffff; //illegal!
 	//First validate the hours 00-23
-	if ((curr->szString[0] == '2' && curr->szString[1] >= '0' && //20-23
-			curr->szString[1] <='3') ||
-			(curr->szString[0] >= '0' && curr->szString[0] <= '1' && // 00-19
-			curr->szString[1] >= '0' && curr->szString[1] <= '9'))
+	if ((curr->str[0] == '2' && curr->str[1] >= '0' && //20-23
+			curr->str[1] <='3') ||
+			(curr->str[0] >= '0' && curr->str[0] <= '1' && // 00-19
+			curr->str[1] >= '0' && curr->str[1] <= '9'))
 	{ //Next, validate the colon, and the minutes 00-59
-		if (curr->szString[2] == ':' &&	curr->szString[5] == 0   && //	:
-				curr->szString[3] >= '0' && curr->szString[3] <= '5' && // 0-5
-				curr->szString[4] >= '0' && curr->szString[4] <= '9')   // 0-9
+		if (curr->str[2] == ':' && curr->str[5] == '\0' && //	:
+				curr->str[3] >= '0' && curr->str[3] <= '5' && // 0-5
+				curr->str[4] >= '0' && curr->str[4] <= '9')   // 0-9
 		{
 			//Hours
-			usTime = ((curr->szString[0]-0x30) * 10 + curr->szString[1]-0x30) * 60;
+			usTime = ((curr->str[0]-0x30) * 10 + curr->str[1]-0x30) * 60;
 			//Minutes
-			usTime += (curr->szString[3]-0x30) * 10 + curr->szString[4]-0x30;
+			usTime += (curr->str[3]-0x30) * 10 + curr->str[4]-0x30;
 			return usTime;
 		}
 	}
@@ -1232,7 +1222,7 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 	//First make sure the time is a valid time.  If not, then use 23:59
 	if( usTime == 0xffff )
 	{
-		SetInputFieldStringWith16BitString( ubField, L"" );
+		SetInputFieldString(ubField, ST::null);
 		return;
 	}
 	usTime = MIN( 1439, usTime );
@@ -1241,11 +1231,11 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 	if (!curr) return;
 
 	AssertMsg(!curr->fUserField, String("Attempting to illegally set text into user field %d", curr->ubID));
-	curr->szString[0] = (usTime / 600)     + 0x30; //10 hours
-	curr->szString[1] = (usTime / 60 % 10) + 0x30; //1 hour
+	curr->str = ST::null;
+	curr->str += static_cast<char>((usTime / 600) + 0x30); //10 hours
+	curr->str += static_cast<char>((usTime / 60 % 10) + 0x30); //1 hour
 	usTime %= 60;                                  //truncate the hours
-	curr->szString[2] = ':';
-	curr->szString[3] = (usTime / 10) + 0x30;      //10 minutes
-	curr->szString[4] = (usTime % 10) + 0x30;      //1 minute;
-	curr->szString[5] = 0;
+	curr->str += ':';
+	curr->str += static_cast<char>((usTime / 10) + 0x30); //10 minutes
+	curr->str += static_cast<char>((usTime % 10) + 0x30); //1 minute;
 }

@@ -894,7 +894,7 @@ void RenderSummaryWindow()
 	if( (GetActiveFieldID() == 1 ) != gfTempFile )
 	{
 		gfTempFile ^= 1;
-		SetInputFieldStringWith16BitString( 1, L"" );
+		SetInputFieldString( 1, ST::null );
 		gfRenderSummary = TRUE;
 	}
 	if( gfTempFile ) //constantly extract the temp filename for updating purposes.
@@ -2361,14 +2361,14 @@ static void SummaryUpdateCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void ExtractTempFilename(void)
 {
-	wchar_t const* const str = GetStringFromField(1);
-	if( wcscmp( gszTempFilename, str ) )
+	ST::wchar_buffer wstr = GetStringFromField(1).to_wchar();
+	if( wcscmp( gszTempFilename, wstr.c_str() ) )
 	{
-		wcscpy( gszTempFilename, str );
+		wcscpy( gszTempFilename, wstr.c_str() );
 		gfRenderSummary = TRUE;
 		gfOverrideDirty = TRUE;
 	}
-	if( !wcslen( str ) )
+	if( !wcslen( wstr.c_str() ) )
 		wcslcpy(gszDisplayName, L"test.dat", lengthof(gszDisplayName));
 }
 
