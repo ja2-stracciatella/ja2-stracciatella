@@ -22,7 +22,7 @@ TownModel* TownModel::deserialize(const rapidjson::Value& obj)
 	std::vector<uint8_t> sectorIDs;
 	for ( auto& s : obj["sectors"].GetArray() ) 
 	{
-		sectorIDs.push_back( SECTOR_FROM_COORDINATES( s.GetString() ) );
+		sectorIDs.push_back( SECTOR_FROM_SECTOR_SHORT_STRING( s.GetString() ) );
 	}
 
 	Assert( obj.HasMember("townPoint") && obj["townPoint"].IsObject() );
