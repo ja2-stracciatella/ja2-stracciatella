@@ -652,7 +652,7 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 			somethingWasStolen = true;
 			wi.fExists = FALSE;
 
-			SLOGD("%ls stolen in %ls!", ItemNames[wi.o.usItem], wSectorName);
+			SLOGD("%s stolen in %s!", ItemNames[wi.o.usItem].c_str(), wSectorName.c_str());
 		}
 
 		// only save if something was stolen
@@ -669,7 +669,7 @@ void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16
 			if (wi.bVisible != VISIBLE) continue;
 			if (Random(100) >= ubChance) continue;
 
-			SLOGD("%ls stolen in %ls!", ItemNames[wi.o.usItem], wSectorName);
+			SLOGD("%s stolen in %s!", ItemNames[wi.o.usItem].c_str(), wSectorName.c_str());
 			RemoveItemFromPool(wi);
 		}
 	}

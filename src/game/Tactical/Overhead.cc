@@ -1004,8 +1004,8 @@ void ExecuteOverhead(void)
 										if (pSoldier->ubPathDataSize != MAX_PATH_LIST_SIZE)
 										{
 											SLOGD(
-												"Path for %ls ( %d ) did not make merc get to dest.",
-												pSoldier->name, pSoldier->ubID);
+												"Path for %s ( %d ) did not make merc get to dest.",
+												pSoldier->name.c_str(), pSoldier->ubID);
 										}
 
 										// In case this is an AI person with the path-stored flag set,
@@ -5458,7 +5458,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 		{
 			if (pTarget->uiStatusFlags & SOLDIER_PC)
 			{
-				SLOGD("%ls is changing teams", pTarget->name);
+				SLOGD("%s is changing teams", pTarget->name.c_str());
 			}
 			// member of a civ group, either recruited or neutral, so should
 			// change sides individually or all together

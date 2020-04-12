@@ -57,7 +57,7 @@ void StatChange(SOLDIERTYPE& s, StatKind const stat, UINT16 const n_chances, Sta
 
 	if (s.bAssignment == ASSIGNMENT_POW)
 	{
-		SLOGE("StatChange: %ls improving stats while POW! stat %d", s.name, stat);
+		SLOGE("StatChange: %s improving stats while POW! stat %d", s.name.c_str(), stat);
 		return;
 	}
 

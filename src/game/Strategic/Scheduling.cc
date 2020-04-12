@@ -186,7 +186,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 
 	if ( !pSoldier->bActive )
 	{
-		SLOGW("Schedule callback:  Soldier isn't active.  Name is %ls.", pSoldier->name);
+		SLOGW("Schedule callback:  Soldier isn't active.  Name is %s.", pSoldier->name.c_str());
 	}
 
 	//Okay, now we have good pointers to the soldier and the schedule.
@@ -590,9 +590,9 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 	{
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
-				SLOGD("Autoprocessing schedule action %ls for %ls (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
-				gszScheduleActions[ pSchedule->ubAction[ index ] ],
-				pSoldier->name,
+				SLOGD("Autoprocessing schedule action %s for %s (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
+				gszScheduleActions[ pSchedule->ubAction[ index ] ].c_str(),
+				pSoldier->name.c_str(),
 				pSoldier->ubID,
 				GetWorldHour(),
 				guiMin,
@@ -602,8 +602,8 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 		}
 		else
 		{
-			SLOGD("Autoprocessing schedule action %ls for civ (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
-				gszScheduleActions[ pSchedule->ubAction[ index ] ],
+			SLOGD("Autoprocessing schedule action %s for civ (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
+				gszScheduleActions[ pSchedule->ubAction[ index ] ].c_str(),
 				pSoldier->ubID,
 				GetWorldHour(),
 				guiMin,

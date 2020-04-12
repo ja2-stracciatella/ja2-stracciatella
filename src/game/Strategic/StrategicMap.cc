@@ -1197,7 +1197,7 @@ check_entry:
 				}
 				else
 				{
-					SLOGD("Sector %s has NO entrypoints -- using precise center of map for %ls.", sector.c_str(), s.name);
+					SLOGD("Sector %s has NO entrypoints -- using precise center of map for %s.", sector.c_str(), s.name.c_str());
 					goto place_in_center;
 				}
 				ST::string no_entry;
@@ -1211,7 +1211,7 @@ check_entry:
 				}
 				if (!no_entry.empty())
 				{
-					SLOGD("Sector %s doesn't have a %s entrypoint -- substituting %s entrypoint for %ls.", sector.c_str(), no_entry.c_str(), entry.c_str(), s.name);
+					SLOGD("Sector %s doesn't have a %s entrypoint -- substituting %s entrypoint for %s.", sector.c_str(), no_entry.c_str(), entry.c_str(), s.name.c_str());
 				}
 			}
 			break;
@@ -1223,11 +1223,11 @@ check_entry:
 		case INSERTION_CODE_PRIMARY_EDGEINDEX:
 		{
 			gridno = SearchForClosestPrimaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
-			SLOGD("%ls's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.",
-						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
+			SLOGD("%s's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.",
+						s.name.c_str(), gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
-				SLOGE("Main edgepoint search failed for %ls -- substituting entrypoint.", s.name);
+				SLOGE("Main edgepoint search failed for %s -- substituting entrypoint.", s.name.c_str());
 				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}
@@ -1237,11 +1237,11 @@ check_entry:
 		case INSERTION_CODE_SECONDARY_EDGEINDEX:
 		{
 			gridno = SearchForClosestSecondaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
-			SLOGD("%ls's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.",
-						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
+			SLOGD("%s's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.",
+						s.name.c_str(), gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
-				SLOGE("Isolated edgepoint search failed for %ls -- substituting entrypoint.", s.name);
+				SLOGE("Isolated edgepoint search failed for %s -- substituting entrypoint.", s.name.c_str());
 				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}
@@ -1575,7 +1575,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 
 	//Now, determine the traversal time.
 	GROUP* const pGroup = GetGroup(pValidSoldier->ubGroupID);
-	AssertMsg( pGroup, String( "%ls is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
+	AssertMsg( pGroup, String( "%s is not in a valid group (pSoldier->ubGroupID is %d)", pValidSoldier->name.c_str(), pValidSoldier->ubGroupID) );
 
 	// If we are going through an exit grid, don't get traversal direction!
 	if ( ubTacticalDirection != 255 )
@@ -2068,7 +2068,7 @@ static void DoneFadeOutAdjacentSector(void)
 			}
 			else
 			{
-				SLOGW("%ls's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name);
+				SLOGW("%s's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name.c_str());
 			}
 		}
 		SetActionToDoOnceMercsGetToLocation(WAIT_FOR_MERCS_TO_WALKON_SCREEN, ubNum);
@@ -2255,7 +2255,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 				{
 					//Now, determine if this is a valid path.
 					pGroup = GetGroup( pValidSoldier->ubGroupID );
-					AssertMsg( pGroup, String( "%ls is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
+					AssertMsg( pGroup, String( "%s is not in a valid group (pSoldier->ubGroupID is %d)", pValidSoldier->name.c_str(), pValidSoldier->ubGroupID) );
 					UINT32 traverse_time = TRAVERSE_TIME_IMPOSSIBLE;
 					if( !gbWorldSectorZ )
 					{
@@ -2313,7 +2313,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 			GROUP *pGroup;
 			//Now, determine if this is a valid path.
 			pGroup = GetGroup( pValidSoldier->ubGroupID );
-			AssertMsg( pGroup, String( "%ls is not in a valid group (pSoldier->ubGroupID is %d)",pValidSoldier->name, pValidSoldier->ubGroupID) );
+			AssertMsg( pGroup, String( "%s is not in a valid group (pSoldier->ubGroupID is %d)", pValidSoldier->name.c_str(), pValidSoldier->ubGroupID) );
 			UINT32 traverse_time = TRAVERSE_TIME_IMPOSSIBLE; // -XXX Wmaybe-uninitialized : valid default?
 			if( !gbWorldSectorZ )
 			{
