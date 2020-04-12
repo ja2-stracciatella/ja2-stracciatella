@@ -65,7 +65,7 @@ impl Ja2Json {
         let content = self.get_content()?;
 
         if let Some(data_dir) = content.data_dir {
-            warn!("`data_dir` option in ja2.json is deprecated, use `game_version` instead");
+            warn!("`data_dir` option in ja2.json is deprecated, use `game_dir` instead");
             engine_options.vanilla_game_dir = data_dir;
         }
 
