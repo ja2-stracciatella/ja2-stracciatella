@@ -247,7 +247,7 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		{ // We are saving the quick save
 			header.sSavedGameDesc = g_quicksave_name;
 		}
-		else if (!gameDesc.empty())
+		else if (gameDesc.empty())
 		{
 			header.sSavedGameDesc = pMessageStrings[MSG_NODESC];
 		}
