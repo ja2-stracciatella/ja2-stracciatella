@@ -62,6 +62,7 @@
 #include "Logger.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 #include <algorithm>
 #include <iterator>
@@ -212,7 +213,7 @@ static void AddTileSurface(char const* filename, UINT32 type, TileSetID);
 static void LoadTileSurfaces(char const tile_surface_filenames[][32], TileSetID const tileset_id)
 try
 {
-	SetRelativeStartAndEndPercentage(0, 1, 35, L"Tile Surfaces");
+	SetRelativeStartAndEndPercentage(0, 1, 35, "Tile Surfaces");
 	for (UINT32 i = 0; i != NUMBEROFTILETYPES; ++i)
 	{
 		UINT32 const percentage = i * 100 / (NUMBEROFTILETYPES - 1);
@@ -1295,7 +1296,7 @@ void CompileWorldMovementCosts( )
 }
 
 
-static bool LimitCheck(UINT8 const n, INT32 const gridno, UINT32& n_warnings, wchar_t const* const kind)
+static bool LimitCheck(UINT8 n, INT32 gridno, UINT32& n_warnings, const ST::string& kind)
 {
 	if (n > 15)
 	{
@@ -1396,7 +1397,7 @@ try
 		// Determine # of land
 		UINT8 n_layers = 0;
 		for (LEVELNODE const* i = e.pLandHead; i; i = i->pNext) ++n_layers;
-		if (!LimitCheck(n_layers, cnt, n_warnings, L"Land")) return FALSE;
+		if (!LimitCheck(n_layers, cnt, n_warnings, "Land")) return FALSE;
 
 		// Combine # of land layers with worlddef flags (first 4 bits)
 		ubCombine = (n_layers & 0xf) | ((e.uiFlags & 0xf) << 4);
@@ -1414,7 +1415,7 @@ try
 			if (uiTileType >= FIRSTPOINTERS) continue;
 			++n_objects;
 		}
-		if (!LimitCheck(n_objects, cnt, n_warnings, L"Object")) return FALSE;
+		if (!LimitCheck(n_objects, cnt, n_warnings, "Object")) return FALSE;
 
 		// Determine # of structs
 		UINT8 n_structs = 0;
@@ -1424,7 +1425,7 @@ try
 			if (i->uiFlags & LEVELNODE_ITEM) continue;
 			++n_structs;
 		}
-		if (!LimitCheck(n_structs, cnt, n_warnings, L"Struct")) return FALSE;
+		if (!LimitCheck(n_structs, cnt, n_warnings, "Struct")) return FALSE;
 
 		ubCombine = (n_objects & 0xf) | ((n_structs & 0xf) << 4);
 		FileWrite(f, &ubCombine, sizeof(ubCombine));
@@ -1438,7 +1439,7 @@ try
 			if (i->uiFlags & (LEVELNODE_BUDDYSHADOW  | LEVELNODE_EXITGRID)) continue;
 			++n_shadows;
 		}
-		if (!LimitCheck(n_shadows, cnt, n_warnings, L"Shadow")) return FALSE;
+		if (!LimitCheck(n_shadows, cnt, n_warnings, "Shadow")) return FALSE;
 
 		// Determine # of Roofs
 		UINT8 n_roofs = 0;
@@ -1448,7 +1449,7 @@ try
 			if (i->usIndex == SLANTROOFCEILING1) continue;
 			++n_roofs;
 		}
-		if (!LimitCheck(n_roofs, cnt, n_warnings, L"Roof")) return FALSE;
+		if (!LimitCheck(n_roofs, cnt, n_warnings, "Roof")) return FALSE;
 
 		ubCombine = (n_shadows & 0xf) | ((n_roofs & 0xf) << 4);
 		FileWrite(f, &ubCombine, sizeof(ubCombine));
@@ -1460,7 +1461,7 @@ try
 		{
 			++n_on_roofs;
 		}
-		if (!LimitCheck(n_on_roofs, cnt, n_warnings, L"OnRoof")) return FALSE;
+		if (!LimitCheck(n_on_roofs, cnt, n_warnings, "OnRoof")) return FALSE;
 
 		// Write combination of onroof and nothing
 		ubCombine = n_on_roofs & 0xf;
@@ -1715,8 +1716,7 @@ try
 
 	AutoSGPFile f(GCM->openMapForReading(filename));
 
-	wchar_t str[40];
-	swprintf(str, lengthof(str), L"Analyzing map %hs", filename);
+	ST::string str = ST::format("Analyzing map {}", filename);
 	if (!gfUpdatingNow)
 	{
 		SetRelativeStartAndEndPercentage(0, 0, 100, str);
@@ -2042,7 +2042,7 @@ try
 
 	AutoSGPFile f(GCM->openMapForReading(filename));
 
-	SetRelativeStartAndEndPercentage(0, 0, 1, L"Trashing world...");
+	SetRelativeStartAndEndPercentage(0, 0, 1, "Trashing world...");
 	TrashWorld();
 
 	LightReset();
@@ -2093,7 +2093,7 @@ try
 		}
 	}
 
-	SetRelativeStartAndEndPercentage(0, 35, 40, L"Counting layers...");
+	SetRelativeStartAndEndPercentage(0, 35, 40, "Counting layers...");
 	RenderProgressBar(0, 100);
 
 	UINT8 bCounts[WORLD_MAX][6];
@@ -2124,7 +2124,7 @@ try
 		}
 	}
 
-	SetRelativeStartAndEndPercentage(0, 40, 43, L"Loading land layers...");
+	SetRelativeStartAndEndPercentage(0, 40, 43, "Loading land layers...");
 	RenderProgressBar(0, 100);
 
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
@@ -2145,7 +2145,7 @@ try
 		}
 	}
 
-	SetRelativeStartAndEndPercentage(0, 43, 46, L"Loading object layer...");
+	SetRelativeStartAndEndPercentage(0, 43, 46, "Loading object layer...");
 	RenderProgressBar(0, 100);
 
 	if (ubMinorMapVersion < 15)
@@ -2192,7 +2192,7 @@ try
 		}
 	}
 
-	SetRelativeStartAndEndPercentage(0, 46, 49, L"Loading struct layer...");
+	SetRelativeStartAndEndPercentage(0, 46, 49, "Loading struct layer...");
 	RenderProgressBar(0, 100);
 
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
@@ -2234,7 +2234,7 @@ try
 		}
 	}
 
-	SetRelativeStartAndEndPercentage(0, 49, 52, L"Loading shadow layer...");
+	SetRelativeStartAndEndPercentage(0, 49, 52, "Loading shadow layer...");
 	RenderProgressBar(0, 100);
 
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
@@ -2255,7 +2255,7 @@ try
 		}
 	}
 
-	SetRelativeStartAndEndPercentage(0, 52, 55, L"Loading roof layer...");
+	SetRelativeStartAndEndPercentage(0, 52, 55, "Loading roof layer...");
 	RenderProgressBar(0, 100);
 
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
@@ -2276,7 +2276,7 @@ try
 		}
 	}
 
-	SetRelativeStartAndEndPercentage(0, 55, 58, L"Loading on roof layer...");
+	SetRelativeStartAndEndPercentage(0, 55, 58, "Loading on roof layer...");
 	RenderProgressBar(0, 100);
 
 	for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
@@ -2303,7 +2303,7 @@ try
 		FileSeek(f, 148, FILE_SEEK_FROM_CURRENT);
 	}
 
-	SetRelativeStartAndEndPercentage(0, 58, 59, L"Loading room information...");
+	SetRelativeStartAndEndPercentage(0, 58, 59, "Loading room information...");
 	RenderProgressBar(0, 100);
 
 	FileRead(f, gubWorldRoomInfo, sizeof(gubWorldRoomInfo));
@@ -2322,7 +2322,7 @@ try
 
 	std::fill(std::begin(gubWorldRoomHidden), std::end(gubWorldRoomHidden), TRUE);
 
-	SetRelativeStartAndEndPercentage(0, 59, 61, L"Loading items...");
+	SetRelativeStartAndEndPercentage(0, 59, 61, "Loading items...");
 	RenderProgressBar(0, 100);
 
 	if (uiFlags & MAP_WORLDITEMS_SAVED)
@@ -2330,7 +2330,7 @@ try
 		LoadWorldItemsFromMap(f);
 	}
 
-	SetRelativeStartAndEndPercentage(0, 62, 85, L"Loading lights...");
+	SetRelativeStartAndEndPercentage(0, 62, 85, "Loading lights...");
 	RenderProgressBar(0, 0);
 
 	if (uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED)
@@ -2362,7 +2362,7 @@ try
 	}
 	LightSetBaseLevel(ubAmbientLightLevel);
 
-	SetRelativeStartAndEndPercentage(0, 85, 86, L"Loading map information...");
+	SetRelativeStartAndEndPercentage(0, 85, 86, "Loading map information...");
 	RenderProgressBar(0, 0);
 
 	LoadMapInformation(f);
@@ -2374,26 +2374,26 @@ try
 
 	if (uiFlags & MAP_FULLSOLDIER_SAVED)
 	{
-		SetRelativeStartAndEndPercentage(0, 86, 87, L"Loading placements...");
+		SetRelativeStartAndEndPercentage(0, 86, 87, "Loading placements...");
 		RenderProgressBar(0, 0);
 		LoadSoldiersFromMap(f, false);
 	}
 	if (uiFlags & MAP_EXITGRIDS_SAVED)
 	{
-		SetRelativeStartAndEndPercentage(0, 87, 88, L"Loading exit grids...");
+		SetRelativeStartAndEndPercentage(0, 87, 88, "Loading exit grids...");
 		RenderProgressBar(0, 0);
 		LoadExitGrids(f);
 	}
 	if (uiFlags & MAP_DOORTABLE_SAVED)
 	{
-		SetRelativeStartAndEndPercentage(0, 89, 90, L"Loading door tables...");
+		SetRelativeStartAndEndPercentage(0, 89, 90, "Loading door tables...");
 		RenderProgressBar(0, 0);
 		LoadDoorTableFromMap(f);
 	}
 	bool generate_edge_points;
 	if (uiFlags & MAP_EDGEPOINTS_SAVED)
 	{
-		SetRelativeStartAndEndPercentage(0, 90, 91, L"Loading edgepoints...");
+		SetRelativeStartAndEndPercentage(0, 90, 91, "Loading edgepoints...");
 		RenderProgressBar(0, 0);
 		// Only if the map had the older edgepoint system
 		generate_edge_points = !LoadMapEdgepoints(f);
@@ -2404,7 +2404,7 @@ try
 	}
 	if (uiFlags & MAP_NPCSCHEDULES_SAVED)
 	{
-		SetRelativeStartAndEndPercentage(0, 91, 92, L"Loading NPC schedules...");
+		SetRelativeStartAndEndPercentage(0, 91, 92, "Loading NPC schedules...");
 		RenderProgressBar(0, 0);
 		LoadSchedules(f);
 	}
@@ -2432,13 +2432,13 @@ try
 
 	ValidateAndUpdateMapVersionIfNecessary();
 
-	SetRelativeStartAndEndPercentage(0, 93, 94, L"Init Loaded World...");
+	SetRelativeStartAndEndPercentage(0, 93, 94, "Init Loaded World...");
 	RenderProgressBar(0, 0);
 	InitLoadedWorld();
 
 	if (generate_edge_points)
 	{
-		SetRelativeStartAndEndPercentage(0, 94, 95, L"Generating map edgepoints...");
+		SetRelativeStartAndEndPercentage(0, 94, 95, "Generating map edgepoints...");
 		RenderProgressBar(0, 0);
 		CompileWorldMovementCosts();
 		GenerateMapEdgepoints();
@@ -2446,7 +2446,7 @@ try
 
 	RenderProgressBar(0, 20);
 
-	SetRelativeStartAndEndPercentage(0, 95, 100, L"General initialization...");
+	SetRelativeStartAndEndPercentage(0, 95, 100, "General initialization...");
 	// Reset AI!
 	InitOpponentKnowledgeSystem();
 
