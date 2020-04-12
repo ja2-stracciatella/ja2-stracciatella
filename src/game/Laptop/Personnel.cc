@@ -1648,7 +1648,7 @@ static void DisplayStateOfPastTeamMembers(void)
 
 	// dead
 	MPrint(PERS_CURR_TEAM_COST_X, PERS_CURR_TEAM_COST_Y, pPersonelTeamStrings[5]);
-	sString = ST::string("{}", GetNumberOfDeadOnPastTeam());
+	sString = ST::format("{}", GetNumberOfDeadOnPastTeam());
 	FindFontRightCoordinates(PERS_CURR_TEAM_COST_X, 0, PERS_DEPART_TEAM_WIDTH, 0, sString, PERS_FONT, &sX, &sY);
 	MPrint(sX, PERS_CURR_TEAM_COST_Y, sString);
 

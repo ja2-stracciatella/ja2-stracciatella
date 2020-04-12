@@ -916,7 +916,7 @@ void RenderPreBattleInterface()
 				str = ST::format("{}%", s.bLife * 100 / s.bLifeMax);
 				MPrintCentered(189, y, 25, str);
 				// BP
-				str = ST::string("{}%", s.bBreath);
+				str = ST::format("{}%", s.bBreath);
 				MPrintCentered(217, y, 25, str);
 
 				y += ROW_HEIGHT;
