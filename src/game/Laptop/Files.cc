@@ -658,7 +658,7 @@ static FileString* LoadStringsIntoFileList(char const* const filename, UINT32 of
 	AutoSGPFile f(GCM->openGameResForReading(filename));
 	for (; n != 0; ++offset, --n)
 	{
-		ST::string str = GCM->loadEncryptedString(f, lengthof(str) * offset, lengthof(str));
+		ST::string str = GCM->loadEncryptedString(f, FILE_STRING_SIZE * offset, FILE_STRING_SIZE);
 
 		FileString* const fs = new FileString{};
 		fs->Next    = 0;
