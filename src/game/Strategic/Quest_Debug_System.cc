@@ -2441,7 +2441,7 @@ static void AddItemToGridNo(INT32 iGridNo)
 	if( GCM->getItem(gItemListBox.sCurSelectedItem)->getItemClass() == IC_KEY )
 	{
 		gfAddKeyNextPass = TRUE;
-//		swprintf( zTemp, "Please enter the Key ID" );
+//		ST::string zTemp = "Please enter the Key ID";
 //		TextEntryBox( zTemp, AddKeyToGridNo );
 	}
 	else
