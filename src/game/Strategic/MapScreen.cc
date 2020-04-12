@@ -7495,7 +7495,7 @@ static ST::string ConvertMinTimeToETADayHourMinString(const UINT32 uiTimeInMin)
 	// there ain't enough room to show both the day and ETA: and without ETA it's confused as the current time
 	//return ST::format("{} {} {}, {02d}:{02d}", pEtaString, pDayStrings, uiDay, uiHour, uiMin);
 	//return ST::format("{} {}, {02d}:{02d}", pDayStrings, uiDay, uiHour, uiMin);
-	return ST::format("{} {02d}:{%02d}", pEtaString, uiHour, uiMin);
+	return ST::format("{} {02d}:{02d}", pEtaString, uiHour, uiMin);
 }
 
 
