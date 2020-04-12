@@ -2208,7 +2208,7 @@ static void ItemDescAttachmentsCallback(MOUSE_REGION* pRegion, INT32 iReason)
 static ST::string GetObjectImprint(OBJECTTYPE const& o)
 {
 	return !HasObjectImprint(o) ? ST::null :
-		o.ubImprintID == NO_PROFILE + 1 ? ST::string(pwMiscSectorStrings[3]) :
+		o.ubImprintID == NO_PROFILE + 1 ? pwMiscSectorStrings[3] :
 		GetProfile(o.ubImprintID).zNickname;
 }
 

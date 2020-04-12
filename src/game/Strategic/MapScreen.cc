@@ -916,7 +916,7 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 	}
 
 	ST::string morale =
-		s.bAssignment == ASSIGNMENT_POW ? ST::string(pPOWStrings[1]) : // POW - morale unknown
+		s.bAssignment == ASSIGNMENT_POW ? pPOWStrings[1] : // POW - morale unknown
 		s.bLife == 0                    ? ST::null :
 		GetMoraleString(s);
 	DrawStringCentered(morale, CHAR_MORALE_X, CHAR_MORALE_Y, CHAR_MORALE_WID, CHAR_MORALE_HEI, CHAR_FONT);

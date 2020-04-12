@@ -3660,17 +3660,17 @@ void UpdateHelpTextForMapScreenMercIcons()
 
 	// if merc is an AIM merc
 	ST::string contract = s && s->ubWhatKindOfMercAmI == MERC_TYPE__AIM_MERC ?
-		ST::string(zMarksMapScreenText[21]) : ST::null;
+		zMarksMapScreenText[21] : ST::null;
 	gContractIconRegion.SetFastHelpText(contract);
 
 	// if merc has life insurance
 	ST::string insurance = s && s->usLifeInsurance > 0 ?
-		ST::string(zMarksMapScreenText[3]) : ST::null;
+		zMarksMapScreenText[3] : ST::null;
 	gInsuranceIconRegion.SetFastHelpText(insurance);
 
 	// if merc has a medical deposit
 	ST::string medical = s && s->usMedicalDeposit > 0 ?
-		ST::string(zMarksMapScreenText[12]) : ST::null;
+		zMarksMapScreenText[12] : ST::null;
 	gDepositIconRegion.SetFastHelpText(medical);
 }
 

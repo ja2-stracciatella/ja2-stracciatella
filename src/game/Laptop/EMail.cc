@@ -662,7 +662,7 @@ static void SortMessages(EMailSortCriteria Criterium)
 					break;
 
 				case SENDER:
-					Order = ST::string(pSenderNameList[Mail->ubSender]).compare(pSenderNameList[Other->ubSender]);
+					Order = pSenderNameList[Mail->ubSender].compare(pSenderNameList[Other->ubSender]);
 					if (fSortSenderUpwards) Order = -Order;
 					break;
 
