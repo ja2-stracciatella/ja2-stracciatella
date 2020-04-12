@@ -83,6 +83,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 
@@ -377,7 +378,7 @@ static BOOLEAN EditModeShutdown(void)
 	if( gfConfirmExitFirst )
 	{
 		gfConfirmExitPending = TRUE;
-		CreateMessageBox( L"Exit editor?" );
+		CreateMessageBox( "Exit editor?" );
 		return FALSE;
 	}
 
@@ -1455,17 +1456,17 @@ static void HandleKeyboardShortcuts(void)
 				case SDLK_F9: break;
 
 				case SDLK_F10:
-					CreateMessageBox( L"Are you sure you wish to remove all lights?" );
+					CreateMessageBox( "Are you sure you wish to remove all lights?" );
 					gfRemoveLightsPending = TRUE;
 					break;
 
 				case SDLK_F11:
-					CreateMessageBox( L"Are you sure you wish to reverse the schedules?" );
+					CreateMessageBox( "Are you sure you wish to reverse the schedules?" );
 					gfScheduleReversalPending = TRUE;
 					break;
 
 				case SDLK_F12:
-					CreateMessageBox( L"Are you sure you wish to clear all of the schedules?" );
+					CreateMessageBox( "Are you sure you wish to clear all of the schedules?" );
 					gfScheduleClearPending = TRUE;
 					break;
 
@@ -1694,12 +1695,12 @@ static void HandleKeyboardShortcuts(void)
 					{
 						if (fShowTrees)
 						{
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Removing Treetops");
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, "Removing Treetops");
 							WorldHideTrees();
 						}
 						else
 						{
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Showing Treetops");
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, "Showing Treetops");
 							WorldShowTrees();
 						}
 						fShowTrees = !fShowTrees;
@@ -1862,16 +1863,16 @@ static ScreenID PerformSelectedAction(void)
 		case ACTION_NEW_MAP:
 			fNewMap = TRUE;
 			if( gfPendingBasement )
-				CreateMessageBox( L"Delete current map and start a new basement level?" );
+				CreateMessageBox( "Delete current map and start a new basement level?" );
 			else if( gfPendingCaves )
-				CreateMessageBox( L"Delete current map and start a new cave level?" );
+				CreateMessageBox( "Delete current map and start a new cave level?" );
 			else
-				CreateMessageBox( L"Delete current map and start a new outdoor level?" );
+				CreateMessageBox( "Delete current map and start a new outdoor level?" );
 			break;
 
 		case ACTION_SET_NEW_BACKGROUND:
 			if (!fBeenWarned)
-				CreateMessageBox( L" Wipe out ground textures? " );
+				CreateMessageBox( " Wipe out ground textures? " );
 			else
 			{
 				gCurrentBackground = TerrainBackgroundTile;
@@ -3136,8 +3137,7 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 				gubMaxRoomNumber++;
 				if( iCurrentTaskbar == TASK_BUILDINGS && TextInputMode() )
 				{
-					wchar_t str[4];
-					swprintf(str, lengthof(str), L"%d", gubCurrRoomNumber);
+					ST::string str = ST::format("{}", gubCurrRoomNumber);
 					SetInputFieldString( 1, str );
 					SetActiveField( 0 );
 				}
@@ -3364,13 +3364,13 @@ static void CreateGotoGridNoUI(void)
 	//Disable the rest of the editor
 	DisableEditorTaskbar();
 	//Create the background panel.
-	guiGotoGridNoUIButtonID = CreateLabel(L"Enter gridno:", FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 290, 155, 60, 50, MSYS_PRIORITY_NORMAL);
+	guiGotoGridNoUIButtonID = CreateLabel("Enter gridno:", FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 290, 155, 60, 50, MSYS_PRIORITY_NORMAL);
 	guiGotoGridNoUIButtonID->SpecifyTextOffsets(5, 5, FALSE);
 	//Create a blanket region so nobody can use
 	MSYS_DefineRegion(&GotoGridNoUIRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL + 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	//Init a text input field.
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
-	AddTextInputField( 300, 180, 40, 18, MSYS_PRIORITY_HIGH, L"", 6, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 300, 180, 40, 18, MSYS_PRIORITY_HIGH, ST::null, 6, INPUTTYPE_NUMERICSTRICT );
 }
 
 
@@ -3405,7 +3405,6 @@ static void UpdateLastActionBeforeLeaving(void)
 
 static void ReloadMap(void)
 {
-	wchar_t szFilename[30];
-	swprintf(szFilename, lengthof(szFilename), L"%hs", g_filename);
+	ST::string szFilename = ST::format("{}", g_filename);
 	ExternalLoadMap( szFilename );
 }
