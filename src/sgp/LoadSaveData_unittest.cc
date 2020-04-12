@@ -58,12 +58,12 @@ TEST(LoadSaveData, integers)
 	}
 }
 
-TEST(LoadSaveData, wcharToUTF16English)
+TEST(LoadSaveData, writeStringAsUTF16English)
 {
 	char buf[100];
 
 	DataWriter writer(buf);
-	writer.writeStringAsUTF16(L"test", 5);
+	writer.writeStringAsUTF16("test", 5);
 
 	// read as 5 uint16
 	{
@@ -79,12 +79,12 @@ TEST(LoadSaveData, wcharToUTF16English)
 	}
 }
 
-TEST(LoadSaveData, wcharToUTF16Russian)
+TEST(LoadSaveData, writeStringAsUTF16Russian)
 {
 	char buf[100];
 
 	DataWriter writer(buf);
-	writer.writeStringAsUTF16(L"тест", 5);
+	writer.writeStringAsUTF16("тест", 5);
 
 	// read as 5 uint16
 	{
@@ -97,7 +97,7 @@ TEST(LoadSaveData, wcharToUTF16Russian)
 	}
 }
 
-TEST(LoadSaveData, utf16ToWideString)
+TEST(LoadSaveData, readUTF16)
 {
 	char buf[100];
 	DataWriter writer(buf);
@@ -117,7 +117,7 @@ TEST(LoadSaveData, utf16ToWideString)
 	}
 }
 
-TEST(LoadSaveData, utf32ToWideString)
+TEST(LoadSaveData, readUTF32)
 {
 	char buf[100];
 	DataWriter writer(buf);
