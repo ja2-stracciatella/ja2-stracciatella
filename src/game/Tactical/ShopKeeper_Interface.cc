@@ -4141,7 +4141,7 @@ void InitShopKeeperSubTitledText(const ST::string& str)
 		UINT16 usActualHeight=0;
 
 		// The subutitled text for what the merc is saying
-		ST::string ShopKeeperTalkingText = ST::format("\"%{}\"", str);
+		ST::string ShopKeeperTalkingText = ST::format("\"{}\"", str);
 		g_popup_box = PrepareMercPopupBox(g_popup_box, BASIC_MERC_POPUP_BACKGROUND, BASIC_MERC_POPUP_BORDER, ShopKeeperTalkingText, 300, 0, 0, 0, &usActualWidth, &usActualHeight);
 
 		//position it to start under the guys face
