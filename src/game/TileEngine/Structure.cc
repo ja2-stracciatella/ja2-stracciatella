@@ -35,6 +35,7 @@
 #include "GameInstance.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 #include <stdexcept>
 
@@ -1234,18 +1235,18 @@ BOOLEAN DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason 
 #define LINE_HEIGHT 20
 void DebugStructurePage1()
 {
-	static wchar_t const* const WallOrientationString[] =
+	static const ST::string WallOrientationString[] =
 	{
-		L"None",
-		L"Inside left",
-		L"Inside right",
-		L"Outside left",
-		L"Outside right"
+		"None",
+		"Inside left",
+		"Inside right",
+		"Outside left",
+		"Outside right"
 	};
 
 	GridNo const grid_no = GetMouseMapPos();
 	if (grid_no == NOWHERE) {
-		MPageHeader(L"DEBUG STRUCTURES PAGE ONE");
+		MPageHeader("DEBUG STRUCTURES PAGE ONE");
 		return;
 	} else {
 		MPageHeader(ST::format("DEBUG STRUCTURES PAGE ONE, GRIDNO {}", grid_no));
@@ -1254,7 +1255,7 @@ void DebugStructurePage1()
 	INT32 const h = DEBUG_PAGE_LINE_HEIGHT;
 	INT32 y = DEBUG_PAGE_START_Y;
 
-	MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y+=h, L"Building:", gubBuildingInfo[grid_no]);
+	MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y+=h, "Building:", gubBuildingInfo[grid_no]);
 
 
 	bool might_have_structures = GridNoOnVisibleWorldTile(grid_no);
@@ -1265,11 +1266,11 @@ void DebugStructurePage1()
 			++n_structures;
 		}
 	}
-	MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Number of structures:", n_structures);
+	MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Number of structures:", n_structures);
 
 	if (!might_have_structures) return;
 
-	MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Movement Costs:");
+	MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, "Movement Costs:");
 	MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("N {} NE {} E {} SE {} S {} SW {} W {} NW {}",
 		gubWorldMovementCosts[grid_no][NORTH    ][gsInterfaceLevel],
 		gubWorldMovementCosts[grid_no][NORTHEAST][gsInterfaceLevel],
@@ -1279,7 +1280,7 @@ void DebugStructurePage1()
 		gubWorldMovementCosts[grid_no][SOUTHWEST][gsInterfaceLevel],
 		gubWorldMovementCosts[grid_no][WEST     ][gsInterfaceLevel],
 		gubWorldMovementCosts[grid_no][NORTHWEST][gsInterfaceLevel]));
-	MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Ground smell:");
+	MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, "Ground smell:");
 	MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} of strength {}",
 		SMELL_TYPE(gpWorldLevelData[grid_no].ubSmellInfo),
 		SMELL_STRENGTH(gpWorldLevelData[grid_no].ubSmellInfo)));
@@ -1291,8 +1292,8 @@ void DebugStructurePage1()
 
 		y += h;
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure ID:", s->usStructureID);
-		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Type:");
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Structure ID:", s->usStructureID);
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, "Type:");
 		if (s->fFlags & STRUCTURE_GENERIC)
 		{
 			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Generic structure no {}", s->pDBStructureRef->pDBStructure->usStructureNumber));
@@ -1355,7 +1356,7 @@ void DebugStructurePage1()
 		}
 		else if (s->fFlags & STRUCTURE_SLIDINGDOOR)
 		{
-			wchar_t const* const state = s->fFlags & STRUCTURE_OPEN ? L"Open" : L"Closed";
+			ST::string state = s->fFlags & STRUCTURE_OPEN ? "Open" : "Closed";
 			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} sliding door with orientation {}", state, WallOrientationString[s->ubWallOrientation]));
 		}
 		else if (s->fFlags & STRUCTURE_DDOOR_LEFT)
@@ -1371,36 +1372,35 @@ void DebugStructurePage1()
 			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, "Unknown Structure");
 		}
 
-		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Flags:");
-		wchar_t flagString[256];
-		swprintf(flagString, lengthof(flagString), L"");
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, "Flags:");
+		ST::string flagString;
 		if (s->fFlags & STRUCTURE_MOBILE) {
-			wcscat(flagString, L"MOB ");
+			flagString += "MOB ";
 		}
 		if (s->fFlags & STRUCTURE_PASSABLE) {
-			wcscat(flagString, L"PAS ");
+			flagString += "PAS ";
 		}
 		if (s->fFlags & STRUCTURE_EXPLOSIVE) {
-			wcscat(flagString, L"EXP ");
+			flagString += "EXP ";
 		}
 		if (s->fFlags & STRUCTURE_TRANSPARENT) {
-			wcscat(flagString, L"TRA ");
+			flagString += "TRA ";
 		}
 		if (s->fFlags & STRUCTURE_HASITEMONTOP) {
-			wcscat(flagString, L"HIT ");
+			flagString += "HIT ";
 		}
 		if (s->fFlags & STRUCTURE_SPECIAL) {
-			wcscat(flagString, L"SPE ");
+			flagString += "SPE ";
 		}
 		if (s->fFlags & STRUCTURE_LIGHTSOURCE) {
-			wcscat(flagString, L"LIG ");
+			flagString += "LIG ";
 		}
 		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, flagString);
 
 		INT8             const height = StructureHeight(s);
 		STRUCTURE const* const base   = FindBaseStructure(s);
 		UINT8            const armour = gubMaterialArmour[s->pDBStructureRef->pDBStructure->ubArmour];
-		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure info:");
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, "Structure info:");
 		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("Structure height {}, cube offset {}, armour {}, HP {}}", height, s->sCubeOffset, armour, base->ubHitPoints));
 
 		UINT8 dens0;
@@ -1409,7 +1409,7 @@ void DebugStructurePage1()
 		UINT8 dens3;
 		if (StructureDensity(s, &dens0, &dens1, &dens2, &dens3))
 		{
-			MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Structure fill:");
+			MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, "Structure fill:");
 			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format(" {}%/{}%/{}%/{}% density {}", dens0, dens1, dens2, dens3, s->pDBStructureRef->pDBStructure->ubDensity));
 		}
 	}
