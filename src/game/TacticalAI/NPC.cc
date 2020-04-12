@@ -1055,8 +1055,7 @@ static UINT8 HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const ui
 				}
 				else
 				{
-					wchar_t sTempString[ 100 ];
-					swprintf(sTempString, lengthof(sTempString), L"$%ld", iCost - uiMoneyAmount - giHospitalTempBalance);
+					ST::string sTempString = ST::format("${}", iCost - uiMoneyAmount - giHospitalTempBalance);
 
 					// not enough cash
 					ScreenMsg( FONT_MCOLOR_LTYELLOW,
@@ -1143,9 +1142,9 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 
 	if (ubApproach != NPC_INITIATING_CONV && ubMerc != NO_PROFILE)
 	{
-		SLOGD("New Approach for NPC ID: %d '%ls' against Merc: %d '%ls'\n\
+		SLOGD("New Approach for NPC ID: %d '%s' against Merc: %d '%s'\n\
 														\tTesting Record #: %d",
-					ubNPC, GetProfile(ubNPC).zNickname, ubMerc, GetProfile(ubMerc).zNickname, ubQuoteNum);
+					ubNPC, GetProfile(ubNPC).zNickname.c_str(), ubMerc, GetProfile(ubMerc).zNickname.c_str(), ubQuoteNum);
 	}
 
 	if (CHECK_FLAG( pNPCQuoteInfo->fFlags, QUOTE_FLAG_SAID ))
@@ -1190,8 +1189,8 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		fTrue = CheckFact((Fact)pNPCQuoteInfo->usFactMustBeTrue, ubNPC);
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
-			SLOGD("Fact (%d:'%ls') Must be True, status is %s",
-						pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue],
+			SLOGD("Fact (%d:'%s') Must be True, status is %s",
+						pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue].c_str(),
 						fTrue ? "True" : "False, returning");
 		}
 		if (!fTrue) return FALSE;
@@ -1203,7 +1202,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
 			SLOGD("Fact(%d:'%ls') Must be False status is  %s",
-						pNPCQuoteInfo->usFactMustBeFalse, FactDescText[pNPCQuoteInfo->usFactMustBeFalse],
+						pNPCQuoteInfo->usFactMustBeFalse, FactDescText[pNPCQuoteInfo->usFactMustBeFalse].c_str(),
 						(fTrue == TRUE) ? "True, return" : "FALSE" );
 		}
 		if (fTrue)	return( FALSE );
@@ -1611,7 +1610,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 					break;
 				case TRIGGER_NPC:
 					// if triggering, pass in the approach data as the record to consider
-					SLOGD("Handling trigger %ls/%d at %ld", gMercProfiles[ubNPC].zNickname, approach_record, GetJA2Clock());
+					SLOGD("Handling trigger %s/%d at %ld", gMercProfiles[ubNPC].zNickname.c_str(), approach_record, GetJA2Clock());
 					NPCConsiderTalking(ubNPC, ubMerc, bApproach, approach_record, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum);
 					break;
 				default:
