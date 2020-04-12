@@ -2078,8 +2078,7 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 	if (item_cost != 0)
 	{
 		// Display the item's price
-		SPrintMoney(item_cost);
-		DrawTextToScreen(buf, x + SKI_INV_PRICE_OFFSET_X, y + SKI_INV_PRICE_OFFSET_Y, SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		DrawTextToScreen(SPrintMoney(item_cost), x + SKI_INV_PRICE_OFFSET_X, y + SKI_INV_PRICE_OFFSET_Y, SKI_INV_SLOT_WIDTH, SKI_ITEM_DESC_FONT, SKI_ITEM_PRICE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 	}
 
 	// If the there is more then 1 or if the item is stackable and some of it has been bought and only 1 remains
