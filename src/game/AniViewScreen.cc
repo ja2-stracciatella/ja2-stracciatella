@@ -93,24 +93,24 @@ ScreenID AniEditScreenHandle(void)
 	EndFrameBufferRender( );
 
 	SetFont( LARGEFONT1 );
-	GDirtyPrint( 0,  0, L"SOLDIER ANIMATION VIEWER");
+	GDirtyPrint( 0,  0, "SOLDIER ANIMATION VIEWER");
 	GDirtyPrint(0, 20, ST::format("Current Animation: {} {}", gAnimControl[usStartAnim].zAnimStr, gAnimSurfaceDatabase[pSoldier->usAnimSurface].Filename));
 
 	switch( ubStartHeight )
 	{
-		case ANIM_STAND:  GDirtyPrint(0, 40, L"Current Stance: STAND");  break;
-		case ANIM_CROUCH: GDirtyPrint(0, 40, L"Current Stance: CROUCH"); break;
-		case ANIM_PRONE:  GDirtyPrint(0, 40, L"Current Stance: PRONE");  break;
+		case ANIM_STAND:  GDirtyPrint(0, 40, "Current Stance: STAND");  break;
+		case ANIM_CROUCH: GDirtyPrint(0, 40, "Current Stance: CROUCH"); break;
+		case ANIM_PRONE:  GDirtyPrint(0, 40, "Current Stance: PRONE");  break;
 	}
 
 	if ( fToggle )
 	{
-		GDirtyPrint(0, 60,L"FORCE ON");
+		GDirtyPrint(0, 60, "FORCE ON");
 	}
 
 	if ( fToggle2 )
 	{
-		GDirtyPrint( 0, 70, L"LOADED ORDER ON");
+		GDirtyPrint( 0, 70, "LOADED ORDER ON");
 		GDirtyPrint(0, 90, ST::format("LOADED ORDER : {}", gAnimControl[pusStates[ubCurLoadedState]].zAnimStr));
 	}
 
@@ -274,7 +274,7 @@ static void BuildListFile(void)
 	int numEntries = 0;
 	int	cnt;
 	UINT16 usState;
-	wchar_t zError[128];
+	ST::string zError;
 
 	RustPointer<VecU8> vec(Fs_read("anitest.dat"));
 	if (!vec)
@@ -315,7 +315,7 @@ static void BuildListFile(void)
 		}
 		else
 		{
-			swprintf(zError, lengthof(zError), L"Animation str %hs is not known: ", currFilename);
+			zError = st_format_printf("Animation str {} is not known: ", currFilename);
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zError, ANIEDIT_SCREEN, MSG_BOX_FLAG_YESNO, NULL, NULL);
 			return;
 		}
