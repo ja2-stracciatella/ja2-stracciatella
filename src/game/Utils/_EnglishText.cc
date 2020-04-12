@@ -2772,7 +2772,7 @@ static const ST::string s_eng_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Saved the game successfully",
 	"ERROR saving the game!",
 	"Loaded the game successfully",
-	"ERROR loading the game: \"%hs\"",
+	"ERROR loading the game: \"%s\"",
 
 	"The game version in the saved game file is different then the current version.  It is most likely safe to continue.  Continue?",
 	"The saved game files may be invalidated.  Do you want them all deleted?",

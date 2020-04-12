@@ -2773,7 +2773,7 @@ static const ST::string s_pl_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Gra została pomyślnie zapisana",
 	"BŁĄD podczas zapisu gry!",
 	"Gra została pomyślnie odczytana",
-	"BŁĄD podczas odczytu gry: \"%hs\"",
+	"BŁĄD podczas odczytu gry: \"%s\"",
 
 	"Wersja gry w zapisanym pliku różni się od bieżącej. Prawdopodobnie można bezpiecznie kontynuować. Kontynuować?",
 	"Zapisane pliki gier mogą być uszkodzone. Czy chcesz je usunąć?",

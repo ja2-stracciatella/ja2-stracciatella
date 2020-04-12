@@ -1325,12 +1325,12 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 	if (gfTurnBasedAI || gTacticalStatus.fAutoBandageMode)
 	{
-		SLOGD("%d does %hs (a.d. %d) in %d with %d APs left",
+		SLOGD("%d does %s (a.d. %d) in %d with %d APs left",
 			pSoldier->ubID, gzActionStr[pSoldier->bAction], pSoldier->usActionData,
 			pSoldier->sGridNo, pSoldier->bActionPoints);
 	}
 
-	SLOGD("%d does %hs (a.d. %d) at time %ld", pSoldier->ubID,
+	SLOGD("%d does %s (a.d. %d) at time %ld", pSoldier->ubID,
 		gzActionStr[pSoldier->bAction], pSoldier->usActionData, GetJA2Clock());
 
 	switch (pSoldier->bAction)

@@ -2772,7 +2772,7 @@ static const ST::string s_fr_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Enregistrement réussi",
 	"ERREUR lors de la sauvegarde !",
 	"Chargement réussi",
-	"ERREUR lors du chargement: \"%hs\"",
+	"ERREUR lors du chargement: \"%s\"",
 
 	"La version de la sauvegarde est différente de celle du jeu. Désirez-vous continuer ?",
 	"Les fichiers de sauvegarde sont peut-être altérés. Voulez-vous les effacer ?",

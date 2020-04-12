@@ -2602,7 +2602,7 @@ static const ST::string s_ger_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Spiel erfolgreich gespeichert",
 	"FEHLER beim Speichern des Spiels!",
 	"Spiel erfolgreich geladen",
-	"FEHLER beim Laden des Spiels: \"%hs\"",
+	"FEHLER beim Laden des Spiels: \"%s\"",
 
 
 	"Der gespeicherte Spielstand unterscheidet sich vom aktuellen Spielstand. Es kann wahrscheinlich nichts passieren. Weiter?",

@@ -2787,7 +2787,7 @@ static const ST::string s_dut_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Spel Bewaren voltooid",
 	"FOUT bij bewaren spel!",
 	"Spel laden succesvol",
-	"FOUT bij laden spel: \"%hs\"",
+	"FOUT bij laden spel: \"%s\"",
 
 	"De spelversie van het bewaarde spel verschilt van de huidige versie. Waarschijnlijk is het veilig om door te gaan. Doorgaan?",
 	"De bewaarde spelen zijn waarschijnlijk ongeldig. Deze verwijderen?",

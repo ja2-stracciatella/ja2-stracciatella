@@ -833,7 +833,7 @@ static INT16 GetBreathPerAP(SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 
 	if ( !fAnimTypeFound )
 	{
-		SLOGD("Unknown end-of-turn breath anim: %hs",
+		SLOGD("Unknown end-of-turn breath anim: %s",
 			gAnimControl[usAnimState].zAnimStr);
 	}
 

@@ -2773,7 +2773,7 @@ static const ST::string s_it_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Partita salvata con successo",
 	"ERRORE durante il salvataggio!",
 	"Partita caricata con successo",
-	"ERRORE durante il caricamento: \"%hs\"",
+	"ERRORE durante il caricamento: \"%s\"",
 
 	"La versione del gioco nel file della partita salvata è diverso dalla versione attuale. È abbastanza sicuro proseguire. Continuate?",
 	"I file della partita salvata potrebbero essere annullati. Volete cancellarli tutti?",
