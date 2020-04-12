@@ -319,7 +319,7 @@ std::vector<ST::string> InitGlobalLocale()
 	// TODO how to set a unicode LC_CTYPE for the C++ locale?
 	if (!setlocale(LC_CTYPE, "C.UTF-8") && !setlocale(LC_CTYPE, "C.utf8") && !setlocale(LC_CTYPE, "UTF-8"))
 	{
-		problems.emplace_back(std::move(ST::format("failed to set unicode ctype for locale '{}', using ctype '{}'", setlocale(LC_ALL, nullptr), setlocale(LC_CTYPE, nullptr))));
+		problems.emplace_back(ST::format("failed to set unicode ctype for locale '{}', using ctype '{}'", setlocale(LC_ALL, nullptr), setlocale(LC_CTYPE, nullptr)));
 	}
 #endif
 
