@@ -27,7 +27,7 @@ public:
 				const std::string &gameResRootPath,
 				const std::string &externalizedDataPath);
 
-	virtual ~DefaultContentManager();
+	virtual ~DefaultContentManager() override;
 
 	/** Get list of game resources. */
 	virtual std::vector<std::string> getListOfGameResources() const;
@@ -43,54 +43,54 @@ public:
 	virtual std::string getMapPath(const ST::string& mapName) const override;
 
 	/** Get radar map resource name. */
-	virtual std::string getRadarMapResourceName(const std::string &mapName) const;
+	virtual std::string getRadarMapResourceName(const std::string &mapName) const override;
 
 	/** Get tileset resource name. */
-	virtual std::string getTilesetResourceName(int number, std::string fileName) const;
+	virtual std::string getTilesetResourceName(int number, std::string fileName) const override;
 
 	/** Get tileset db resource name. */
-	virtual std::string getTilesetDBResName() const;
+	virtual std::string getTilesetDBResName() const override;
 
 	/** Open map for reading. */
 	virtual SGPFile* openMapForReading(const ST::string& mapName) const override;
 
 	/** Get directory for storing new map file. */
-	virtual std::string getNewMapFolder() const;
+	virtual std::string getNewMapFolder() const override;
 
 	/** Get all available maps. */
-	virtual std::vector<std::string> getAllMaps() const;
+	virtual std::vector<std::string> getAllMaps() const override;
 
 	/** Get all available tilecache. */
-	virtual std::vector<std::string> getAllTilecache() const;
+	virtual std::vector<std::string> getAllTilecache() const override;
 
 	/* Open a game resource file for reading. */
-	virtual SGPFile* openGameResForReading(const char* filename) const;
-	virtual SGPFile* openGameResForReading(const std::string& filename) const;
+	virtual SGPFile* openGameResForReading(const char* filename) const override;
+	virtual SGPFile* openGameResForReading(const std::string& filename) const override;
 
 	/** Open temporary file for writing. */
-	virtual SGPFile* openTempFileForWriting(const char* filename, bool truncate) const;
+	virtual SGPFile* openTempFileForWriting(const char* filename, bool truncate) const override;
 
 	/** Open temporary file for reading. */
-	virtual SGPFile* openTempFileForReading(const char* filename) const;
+	virtual SGPFile* openTempFileForReading(const char* filename) const override;
 
 	/** Open temporary file for appending. */
-	virtual SGPFile* openTempFileForAppend(const char* filename) const;
+	virtual SGPFile* openTempFileForAppend(const char* filename) const override;
 
 	/** Delete temporary file. */
-	virtual void deleteTempFile(const char* filename) const;
+	virtual void deleteTempFile(const char* filename) const override;
 
 	/** Open user's private file (e.g. saved game, settings) for reading. */
-	virtual SGPFile* openUserPrivateFileForReading(const std::string& filename) const;
+	virtual SGPFile* openUserPrivateFileForReading(const std::string& filename) const override;
 
 	/* Checks if a game resource exists. */
-	virtual bool doesGameResExists(char const* filename) const;
-	virtual bool doesGameResExists(const std::string &filename) const;
+	virtual bool doesGameResExists(char const* filename) const override;
+	virtual bool doesGameResExists(const std::string &filename) const override;
 
 	/** Get folder for screenshots. */
-	virtual std::string getScreenshotFolder() const;
+	virtual std::string getScreenshotFolder() const override;
 
 	/** Get folder for video capture. */
-	virtual std::string getVideoCaptureFolder() const;
+	virtual std::string getVideoCaptureFolder() const override;
 
 	const std::string& getDataDir() { return m_dataDir; }
 	const std::string& getTileDir() { return m_tileDir; }
@@ -98,7 +98,7 @@ public:
 	const std::string& getExternalizedDataDir() { return m_externalizedDataPath; }
 
 	/** Get folder for saved games. */
-	virtual std::string getSavedGamesFolder() const;
+	virtual std::string getSavedGamesFolder() const override;
 
 	/** Load encrypted string from game resource file. */
 	virtual ST::string loadEncryptedString(const char* fileName, uint32_t seek_chars, uint32_t read_chars) const override;
@@ -106,45 +106,45 @@ public:
 	virtual ST::string loadEncryptedString(SGPFile* File, uint32_t seek_chars, uint32_t read_chars) const override;
 
 	/** Load dialogue quote from file. */
-	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number);
+	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number) override;
 
 	/** Load all dialogue quotes for a character. */
 	void loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* filename, std::vector<ST::string*> &quotes) const;
 
 	/** Get weapons with the give index. */
-	virtual const WeaponModel* getWeapon(uint16_t index);
-	virtual const WeaponModel* getWeaponByName(const std::string &internalName);
+	virtual const WeaponModel* getWeapon(uint16_t index) override;
+	virtual const WeaponModel* getWeaponByName(const std::string &internalName) override;
 
-	virtual const MagazineModel* getMagazineByName(const std::string &internalName);
-	virtual const MagazineModel* getMagazineByItemIndex(uint16_t itemIndex);
-	virtual const std::vector<const MagazineModel*>& getMagazines() const;
+	virtual const MagazineModel* getMagazineByName(const std::string &internalName) override;
+	virtual const MagazineModel* getMagazineByItemIndex(uint16_t itemIndex) override;
+	virtual const std::vector<const MagazineModel*>& getMagazines() const override;
 
-	virtual const CalibreModel* getCalibre(uint8_t index);
-	virtual const ST::string* getCalibreName(uint8_t index) const;
-	virtual const ST::string* getCalibreNameForBobbyRay(uint8_t index) const;
+	virtual const CalibreModel* getCalibre(uint8_t index) override;
+	virtual const ST::string* getCalibreName(uint8_t index) const override;
+	virtual const ST::string* getCalibreNameForBobbyRay(uint8_t index) const override;
 
-	virtual const AmmoTypeModel* getAmmoType(uint8_t index);
+	virtual const AmmoTypeModel* getAmmoType(uint8_t index) override;
 
-	virtual const ItemModel* getItem(uint16_t index) const;
-	virtual const ItemModel* getItemByName(const std::string &internalName) const;
+	virtual const ItemModel* getItem(uint16_t index) const override;
+	virtual const ItemModel* getItemByName(const std::string &internalName) const override;
 
-	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const;
-	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const;
+	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const override;
+	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const override;
 
-	virtual const DealerInventory* getDealerInventory(int dealerId) const;
-	virtual const DealerInventory* getBobbyRayNewInventory() const;
-	virtual const DealerInventory* getBobbyRayUsedInventory() const;
+	virtual const DealerInventory* getDealerInventory(int dealerId) const override;
+	virtual const DealerInventory* getBobbyRayNewInventory() const override;
+	virtual const DealerInventory* getBobbyRayUsedInventory() const override;
 
-	virtual const ST::string* getMusicForMode(MusicMode mode) const;
+	virtual const ST::string* getMusicForMode(MusicMode mode) const override;
 
-	virtual const GamePolicy* getGamePolicy() const;
-	virtual const IMPPolicy* getIMPPolicy() const;
+	virtual const GamePolicy* getGamePolicy() const override;
+	virtual const IMPPolicy* getIMPPolicy() const override;
 
-	virtual const ST::string* getNewString(size_t stringId) const;
+	virtual const ST::string* getNewString(size_t stringId) const override;
 
-	virtual const std::vector<const BloodCatPlacementsModel*>& getBloodCatPlacements() const;
-	virtual const std::vector<const BloodCatSpawnsModel*>& getBloodCatSpawns() const;
-	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const;
+	virtual const std::vector<const BloodCatPlacementsModel*>& getBloodCatPlacements() const override;
+	virtual const std::vector<const BloodCatSpawnsModel*>& getBloodCatSpawns() const override;
+	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const override;
 
 protected:
 	std::string m_dataDir;
