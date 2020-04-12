@@ -7,12 +7,6 @@
 #include <string_theory/string>
 
 
-void LoadItemInfo(UINT16 ubIndex, wchar_t Info[]);
-inline ST::string LoadItemInfo(UINT16 ubIndex)
-{
-        wchar_t Info[SIZE_ITEM_INFO];
-        LoadItemInfo(ubIndex, Info);
-        return Info;
-}
+ST::string LoadItemInfo(UINT16 ubIndex);
 
 #endif

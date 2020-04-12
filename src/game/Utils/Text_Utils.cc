@@ -14,11 +14,10 @@
 #define ITEMSTRINGFILENAME BINARYDATADIR "/itemdesc.edt"
 
 
-void LoadItemInfo(UINT16 const ubIndex, wchar_t Info[])
+ST::string LoadItemInfo(UINT16 const ubIndex)
 {
 	UINT32 Seek = (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * ubIndex;
-	ST::wchar_buffer wstr = GCM->loadEncryptedString(ITEMSTRINGFILENAME, Seek + SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_INFO).to_wchar();
-	wcslcpy(Info, wstr.c_str(), SIZE_ITEM_INFO);
+	return GCM->loadEncryptedString(ITEMSTRINGFILENAME, Seek + SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_INFO);
 }
 
 
