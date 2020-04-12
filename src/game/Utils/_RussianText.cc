@@ -24,7 +24,7 @@
 // - Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only
 //   have one space after a period, which is different than standard typing convention.  Never modify sections
 //   of strings contain combinations of % characters.  These are special format characters and are always
-//   used in conjunction with other characters.  For example, %ls means string, and is commonly used for names,
+//   used in conjunction with other characters.  For example, %s means string, and is commonly used for names,
 //   locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).
 //   %% is how a single % character is built.  There are countless types, but strings containing these
 //   special characters are usually commented to explain what they mean.  If it isn't commented, then
@@ -126,24 +126,24 @@ static const ST::string s_rus_TeamTurnString[TeamTurnString_SIZE] =
 
 static const ST::string s_rus_Message[Message_SIZE] =
 {
-	// In the following 8 strings, the %ls is the merc's name, and the %d (if any) is a number.
+	// In the following 8 strings, the %s is the merc's name, and the %d (if any) is a number.
 
-	"%ls получает ранение в голову и теряет в мудрости!",
-	"%ls получает ранение в плечо и теряет в ловкости!",
-	"%ls получает ранение в грудь и теряет в силе!",
-	"%ls получает ранение ног и теряет в проворности!",
-	"%ls получает ранение в голову и теряет %d очков мудрости!",
-	"%ls получает ранение в плечо и теряет %d очков ловкости!",
-	"%ls получает ранение в грудь и теряет %d очков силы!",
-	"%ls получает ранение ног и теряет %d очков проворности!",
+	"%s получает ранение в голову и теряет в мудрости!",
+	"%s получает ранение в плечо и теряет в ловкости!",
+	"%s получает ранение в грудь и теряет в силе!",
+	"%s получает ранение ног и теряет в проворности!",
+	"%s получает ранение в голову и теряет %d очков мудрости!",
+	"%s получает ранение в плечо и теряет %d очков ловкости!",
+	"%s получает ранение в грудь и теряет %d очков силы!",
+	"%s получает ранение ног и теряет %d очков проворности!",
 	"Перехват инициативы!",
 
 	"К вам на помощь прибыло подкрепление!",
 
-	// In the following four lines, all %ls's are merc names
+	// In the following four lines, all %s's are merc names
 
-	"%ls перезаряжает оружие.",
-	"%ls: недостаточно очков действия!",
+	"%s перезаряжает оружие.",
+	"%s: недостаточно очков действия!",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
 	"надежность",
@@ -164,26 +164,26 @@ static const ST::string s_rus_Message[Message_SIZE] =
 	"большой магазин",
 	"маленький магазин",
 
-	// In the following two lines, all %ls's are merc names
+	// In the following two lines, all %s's are merc names
 
-	"%ls: камуфляж изношен.",
-	"%ls: окраска камуфляжа смыта.",
+	"%s: камуфляж изношен.",
+	"%s: окраска камуфляжа смыта.",
 
-	// The first %ls is a merc name and the second %ls is an item name
+	// The first %s is a merc name and the second %s is an item name
 
 	"У второго оружия закончились патроны!",
-	"%ls крадет %ls.",
+	"%s крадет %s.",
 
-	// The %ls is a merc name
+	// The %s is a merc name
 
-	"%ls: оружие не стреляет очередями.",
+	"%s: оружие не стреляет очередями.",
 
 	"Это уже присоединено!",
 	"Соединить?",
 
-	// Both %ls's are item names
+	// Both %s's are item names
 
-	"Нельзя присоединить %ls к %ls.",
+	"Нельзя присоединить %s к %s.",
 
 	"Ничего",
 	"Разрядить",
@@ -191,25 +191,25 @@ static const ST::string s_rus_Message[Message_SIZE] =
 
 	//You cannot use "item(s)" and your "other item" at the same time.
 	//Ex:  You cannot use sun goggles and you gas mask at the same time.
-	"Нельзя использовать %ls и %ls одновременно.",
+	"Нельзя использовать %s и %s одновременно.",
 
 	"Этот предмет можно присоединить к другим предметам, поместив его в одну из ячеек приспособлений.",
 	"Этот предмет можно присоединить к другим предметам, поместив его в одну из ячеек приспособлений. (Однако данные предметы несовместимы.)",
 	"В секторе еще остались враги!",
-	"%ls должен получить еще %ls", ///TRNSL_ASSUME all doctors who can get money are male
-	"%ls: попадание в голову!",
+	"%s должен получить еще %s", ///TRNSL_ASSUME all doctors who can get money are male
+	"%s: попадание в голову!",
 	"Выйти из боя?",
 	"Соединение будет неразборно. Соединить?",
-	"%ls чувствует прилив энергии!",
-	"%ls поскальзывается на шариках!",
-	"%ls не удается взять %ls!",
-	"%ls чинит %ls",
+	"%s чувствует прилив энергии!",
+	"%s поскальзывается на шариках!",
+	"%s не удается взять %s!",
+	"%s чинит %s",
 	"На перехвате ",
 	"Сдаться?",
 	"Человек отвергает вашу помощь.",
 	"Ни за что!",//refuse to heal monster creature
 	"Чтобы воспользоваться вертолетом Всадника, нужно дать бойцам ЗАДАНИЕ сесть в ТРАНСПОРТ.",
-	"%ls успевает зарядить только одно оружие",
+	"%s успевает зарядить только одно оружие",
 	"Ход кошек-убийц",
 };
 
@@ -696,8 +696,8 @@ static const ST::string s_rus_pLandTypeStrings[pLandTypeStrings_SIZE] =
 
 static const ST::string s_rus_gpStrategicString[gpStrategicString_SIZE] =
 {
-	"%ls обнаружены в секторе %c%d и вот-вот прибудет еще один отряд.", //STR_DETECTED_SINGULAR
-	"%ls обнаружены в секторе %c%d и вот-вот прибудут еще отряды.",	//STR_DETECTED_PLURAL
+	"%s обнаружены в секторе %c%d и вот-вот прибудет еще один отряд.", //STR_DETECTED_SINGULAR
+	"%s обнаружены в секторе %c%d и вот-вот прибудут еще отряды.",	//STR_DETECTED_PLURAL
 	"Хотите координировать одновременное прибытие?",													//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -818,11 +818,11 @@ static const ST::string s_rus_gpStrategicString[gpStrategicString_SIZE] =
 	"Существа напали на ополчение в секторе %c%d.",
 	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
-	"Существа напали на гражданских, убито %d в секторе %ls.",
-	//%ls is the sector location -- ex:  A9: Omerta
-	"Враги атакуют ваш отряд секторе %ls. Никто из наемников не может сражаться!",
-	//%ls is the sector location -- ex:  A9: Omerta
-	"Существа атакуют ваш отряд в секторе %ls. Никто из наемников не может сражаться!",
+	"Существа напали на гражданских, убито %d в секторе %s.",
+	//%s is the sector location -- ex:  A9: Omerta
+	"Враги атакуют ваш отряд секторе %s. Никто из наемников не может сражаться!",
+	//%s is the sector location -- ex:  A9: Omerta
+	"Существа атакуют ваш отряд в секторе %s. Никто из наемников не может сражаться!",
 
 };
 
@@ -841,7 +841,7 @@ static const ST::string s_rus_sKeyDescriptionStrings[sKeyDescriptionStrings_SIZE
 
 static const ST::string s_rus_gWeaponStatsDesc[ gWeaponStatsDesc_SIZE] =
 {
-	"Вес (%ls):",
+	"Вес (%s):",
 	"Состояние:",
 	"Патроны:", 	// Number of bullets left in a magazine
 	"Дист:",		// Range
@@ -958,15 +958,15 @@ static const ST::string s_rus_TacticalStr[TacticalStr_SIZE] =
 
 	// CAMFIELD NUKE THIS and add quote #66.
 
-	"%ls замечает недостачу товара в ящике.",
+	"%s замечает недостачу товара в ящике.",
 
-	// The %ls is a string from pDoorTrapStrings
+	// The %s is a string from pDoorTrapStrings
 
-	"К замку присоединена %ls.", ///TRNSL_ASSUME all traps are female gender words
+	"К замку присоединена %s.", ///TRNSL_ASSUME all traps are female gender words
 	"Тут нет замка.",
 	"Замок без ловушки.",
-	// The %ls is a merc name
-	"%ls не имеет нужного ключа.",
+	// The %s is a merc name
+	"%s не имеет нужного ключа.",
 	"Замок без ловушки.",
 	"Заперто.",
 	"ДВЕРЬ",
@@ -978,15 +978,15 @@ static const ST::string s_rus_TacticalStr[TacticalStr_SIZE] =
 	"Обезвредить ловушку?",
 	"Еще предметы...",
 
-	// In the next 2 strings, %ls is an item name
+	// In the next 2 strings, %s is an item name
 
-	"%ls теперь на земле.",
-	"Предмет \'%ls\' получает %ls.",
+	"%s теперь на земле.",
+	"Предмет \'%s\' получает %s.",
 
-	// In the next 2 strings, %ls is a name
+	// In the next 2 strings, %s is a name
 
-	"%ls получил(а) всю сумму.",
-	"%ls ожидает от вас уплаты еще %d.",
+	"%s получил(а) всю сумму.",
+	"%s ожидает от вас уплаты еще %d.",
 	"Выберите частоту детонатора:",  	//in this case, frequency refers to a radio signal
 	"Количество ходов перед взрывом:",	//how much time, in turns, until the bomb blows
 	"Выберите частоту подрыва:", 	//in this case, frequency refers to a radio signal
@@ -995,53 +995,53 @@ static const ST::string s_rus_TacticalStr[TacticalStr_SIZE] =
 	"Установить флажок?",
 	"Завершение хода",
 
-	// In the next string, %ls is a name. Stance refers to way they are standing.
+	// In the next string, %s is a name. Stance refers to way they are standing.
 
-	"%ls на вашей стороне! Атаковать?",
+	"%s на вашей стороне! Атаковать?",
 	"Ох, транспорт не может менять положения.",
 	"Робот не может менять положения.",
 
-	// In the next 3 strings, %ls is a name
+	// In the next 3 strings, %s is a name
 
-	"%ls не может здесь поменять положение.",
-	"%ls не может быть перевязан.",
-	"%ls не нуждается в перевязке.",
+	"%s не может здесь поменять положение.",
+	"%s не может быть перевязан.",
+	"%s не нуждается в перевязке.",
 	"Туда идти нельзя.",
 	"Команда набрана. Нет места для новобранца.",	//there's no room for a recruit on the player's team
 
-	// In the next string, %ls is a name
+	// In the next string, %s is a name
 
-	"%ls теперь в команде.",
+	"%s теперь в команде.",
 
-	// Here %ls is a name and %d is a number
+	// Here %s is a name and %d is a number
 
-	"%ls ожидает уплаты еще $%d.",
+	"%s ожидает уплаты еще $%d.",
 
-	// In the next string, %ls is a name
+	// In the next string, %s is a name
 
-	"%ls будет сопровождаться в составе вашего отряда. Согласны?",
+	"%s будет сопровождаться в составе вашего отряда. Согласны?",
 
-	// In the next string, the first %ls is a name and the second %ls is an amount of money (including $ sign)
+	// In the next string, the first %s is a name and the second %s is an amount of money (including $ sign)
 
-	"%ls может вступить в ваш отряд за %ls в день. Нанять?",
+	"%s может вступить в ваш отряд за %s в день. Нанять?",
 
 	// This line is used repeatedly to ask player if they wish to participate in a boxing match.
 
 	"Хотите драться?",
 
-	// In the next string, the first %ls is an item name and the
-	// second %ls is an amount of money (including $ sign)
+	// In the next string, the first %s is an item name and the
+	// second %s is an amount of money (including $ sign)
 
-	"Купить %ls за %ls?",
+	"Купить %s за %s?",
 
-	// In the next string, %ls is a name
+	// In the next string, %s is a name
 
-	"%ls теперь сопровождается отрядом %d.",
+	"%s теперь сопровождается отрядом %d.",
 
 	// These messages are displayed during play to alert the player to a particular situation
 
 	"ЗАКЛИНИЛО",					//weapon is jammed.
-	"Роботу нужны патроны %ls.",		//Robot is out of ammo
+	"Роботу нужны патроны %s.",		//Robot is out of ammo
 	"Бросить туда? Не получится.",		//Merc can't throw to the destination he selected
 
 	// These are different buttons that the player can turn on and off.
@@ -1061,11 +1061,11 @@ static const ST::string s_rus_TacticalStr[TacticalStr_SIZE] =
 	"Настройки (|O)",
 	"Стрелять очередью (|B)",
 	"Смотреть/Повернуться (|L)",
-	"Здоровье: %d/%d\nЭнергия.: %d/%d\nНастрой: %ls",
+	"Здоровье: %d/%d\nЭнергия.: %d/%d\nНастрой: %s",
 	"Чего?",					//this means "what?"
 	"Продолж.",					//an abbrieviation for "Continued"
-	"%ls будет говорить.",
-	"%ls будет молчать.",
+	"%s будет говорить.",
+	"%s будет молчать.",
 	"Состояние: %d/%d\nТопливо: %d/%d",
 	"Выйти из машины",
 	"Поменять отряд (|S|h|i|f|t |S|p|a|c|e)",
@@ -1079,12 +1079,12 @@ static const ST::string s_rus_TacticalStr[TacticalStr_SIZE] =
 	"(Ловит)",
 	"(Перезарядка)", ///TRNSL_CHECK_INGAME LENGTH
 	"(Дать)",
-	"Сработала %ls.", // The %ls here is a string from pDoorTrapStrings  ASSUME all traps are female gender
-	"%ls прибыл(a).",
-	"%ls: нет очков действия.",
-	"%ls: наемник недоступен.",
-	"%ls: успешная перевязка.",
-	"%ls: нет бинтов.",
+	"Сработала %s.", // The %s here is a string from pDoorTrapStrings  ASSUME all traps are female gender
+	"%s прибыл(a).",
+	"%s: нет очков действия.",
+	"%s: наемник недоступен.",
+	"%s: успешная перевязка.",
+	"%s: нет бинтов.",
 	"Враг в секторе!",
 	"Нет врагов в поле зрения.",
 	"Не хватает очков действия.",
@@ -1102,7 +1102,7 @@ static const ST::string s_rus_TacticalStr[TacticalStr_SIZE] =
 	"Идти в сектор",
 	"Идти на карту",
 	"Этот сектор нельзя покинуть здесь.",
-	"%ls слишком далеко.",
+	"%s слишком далеко.",
 	"Вершины деревьев скрыты",
 	"Вершины деревьев отображены",
 	"ВОРОНА",				//Crow, as in the large black bird
@@ -1120,8 +1120,8 @@ static const ST::string s_rus_TacticalStr[TacticalStr_SIZE] =
 	"Слом.",											// Short form of JAMMED, for small inv slots
 	"Туда не добраться.",					// used ( now ) for when we click on a cliff
 	"Человек отказывается двигаться.",
-	// In the following message, '%ls' would be replaced with a quantity of money (e.g. $200)
-	"Заплатить %ls?",
+	// In the following message, '%s' would be replaced with a quantity of money (e.g. $200)
+	"Заплатить %s?",
 	"Согласиться на бесплатное лечение?",
 	"Согласны женить Дэррела?",
 	"Ключи",
@@ -1131,13 +1131,13 @@ static const ST::string s_rus_TacticalStr[TacticalStr_SIZE] =
 	"Шахтер",
 	"Транспорт передвигается только между секторами.",
 	"Автоперевязку сделать сейчас нельзя",
-	"%ls не может пройти, путь блокирован.",
+	"%s не может пройти, путь блокирован.",
 	"Здесь томятся ваши бойцы, захваченные армией Дейдраны!",
 	"Попадание в замок",
 	"Замок разрушен",
 	"Кто-то еще пытается воспользоваться этой дверью.",
 	"Состояние: %d/%d\nТопливо: %d/%d",
-	"%ls и %ls не видят друг друга.", // Cannot see person trying to talk to
+	"%s и %s не видят друг друга.", // Cannot see person trying to talk to
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
@@ -1156,22 +1156,22 @@ static const ST::string s_rus_pExitingSectorHelpText[pExitingSectorHelpText_SIZE
 	"Выведя всех наемников из сектора,\nвы автоматически выйдете на карту,\nпока ваши бойцы в пути.",
 
 	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.  The "single" button is disabled.
-	"%ls не может покинуть этот сектор без сопровождения.",
+	"%s не может покинуть этот сектор без сопровождения.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
 	//There are several strings depending on the gender of the merc and how many EPCs are in the squad.
 	//DO NOT USE THE NEWLINE HERE AS IT IS USED FOR BOTH HELPTEXT AND SCREEN MESSAGES!
-	"%ls не может покинуть сектор один - он сопровождает %ls.", //male singular
-	"%ls не может покинуть сектор одна - она сопровождает %ls.", //female singular
-	"%ls не может покинуть сектор один - он сопровождает группу.", //male plural
-	"%ls не может покинуть сектор одна - она сопровождает группу.", //female plural
+	"%s не может покинуть сектор один - он сопровождает %s.", //male singular
+	"%s не может покинуть сектор одна - она сопровождает %s.", //female singular
+	"%s не может покинуть сектор один - он сопровождает группу.", //male plural
+	"%s не может покинуть сектор одна - она сопровождает группу.", //female plural
 
 	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the  "move all" option is disabled,
 	//and this helptext explains why.
 	"Для перемещения отряда\nвсе ваши наемники дожны быть рядом.",
 
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
-	"Если выбрана эта опция, %ls пойдет в одиночку и\nавтоматически попадет в отдельный отряд.",
+	"Если выбрана эта опция, %s пойдет в одиночку и\nавтоматически попадет в отдельный отряд.",
 
 	//Standard helptext for all movement.  Explains what will happen (moving the squad)
 	"Если выбрана эта опция, текущий \nотряд покинет этот сектор.",
@@ -1180,7 +1180,7 @@ static const ST::string s_rus_pExitingSectorHelpText[pExitingSectorHelpText_SIZE
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
 	//"exiting sector" interface will not appear.  This is just like the situation where
 	//This string is special, as it is not used as helptext.  Do not use the special newline character (\n) for this string.
-	"%ls не может покинуть этот сектор без сопровождения. Для этого ваш отряд должен быть рядом.",
+	"%s не может покинуть этот сектор без сопровождения. Для этого ваш отряд должен быть рядом.",
 };
 
 
@@ -1325,10 +1325,10 @@ static const ST::string s_rus_pwMiscSectorStrings[pwMiscSectorStrings_SIZE] =
 static const ST::string s_rus_pMapInventoryErrorString[pMapInventoryErrorString_SIZE] =
 {
 	"Нельзя выбрать этого бойца.",  //MARK CARTER
-	"%ls не в этом секторе, и не может взять этот предмет.",
+	"%s не в этом секторе, и не может взять этот предмет.",
 	"Во время битвы надо подбирать предметы вручную",
 	"Во время битвы надо бросать предметы вручную.",
-	"%ls не в этом секторе, и не может бросить этот предмет.",
+	"%s не в этом секторе, и не может бросить этот предмет.",
 };
 
 static const ST::string s_rus_pMapInventoryStrings[pMapInventoryStrings_SIZE] =
@@ -1342,7 +1342,7 @@ static const ST::string s_rus_pMapInventoryStrings[pMapInventoryStrings_SIZE] =
 
 static const ST::string s_rus_pMovementMenuStrings[pMovementMenuStrings_SIZE] =
 {
-	"Отправить бойцов из сектора %ls", 	// title for movement box
+	"Отправить бойцов из сектора %s", 	// title for movement box
 	"Проложить маршрут", 		// done with movement menu, start plotting movement
 	"Отмена", 		// cancel this menu
 	"Другие",		// title for group of mercs not on squads nor in vehicles
@@ -1386,7 +1386,7 @@ static const ST::string s_rus_pMapScreenBottomFastHelp[pMapScreenBottomFastHelp_
 
 static const ST::string s_rus_pMapScreenBottomText = "Текущий баланс"; // current balance in player bank account
 
-static const ST::string s_rus_pMercDeadString = "%ls мертв(а).";
+static const ST::string s_rus_pMercDeadString = "%s мертв(а).";
 
 
 static const ST::string s_rus_pDayStrings = "День";
@@ -1572,31 +1572,31 @@ static const ST::string s_rus_pTransactionText[pTransactionText_SIZE] =
 	"Проценты",			// interest the player has accumulated so far
 	"Анонимный вклад",
 	"Плата за перевод",
-	"%ls нанят(а) в AIM", // Merc was hired
+	"%s нанят(а) в AIM", // Merc was hired
 	"Покупки у Бобби Рэя", 		// Bobby Ray is the name of an arms dealer
 	"Оплата по счетам M.E.R.C.",
-	"%ls: оплачен мед. депозит", 		// medical deposit for merc
+	"%s: оплачен мед. депозит", 		// medical deposit for merc
 	"Профилирование в IMP", 		// IMP is the acronym for International Mercenary Profiling
-	"Застрахован(а) %ls",
-	"%ls: cнижена страховка",
-	"%ls: продлена страховка", 				// johnny contract extended
-	"%ls: отмена страховки",
-	"%ls: выплата cтраховки", 		// insurance claim for merc
-	"%ls: контракт продлен на 1 день", 				// entend mercs contract by a day
-	"%ls: контракт продлен на 7 дней",
-	"%ls: контракт продлен на 14 дней",
+	"Застрахован(а) %s",
+	"%s: cнижена страховка",
+	"%s: продлена страховка", 				// johnny contract extended
+	"%s: отмена страховки",
+	"%s: выплата cтраховки", 		// insurance claim for merc
+	"%s: контракт продлен на 1 день", 				// entend mercs contract by a day
+	"%s: контракт продлен на 7 дней",
+	"%s: контракт продлен на 14 дней",
 	"Доход с шахт",
 	"", //String nuked
 	"Приобретение цветов",
-	"%ls: возврат депозита",
-	"%ls: возврат части депозита",
-	"%ls: удержание депозита",
-	"Выплаты %ls",		// %ls is the name of the npc being paid
-	"Перевод средств на имя %ls", 			// transfer funds to a merc
-	"Перевод средств от %ls", 		// transfer funds from a merc
-	"Ополчение в %ls", // initial cost to equip a town's militia
-	"%ls: оплата покупок.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
-	"%ls: вклад наличными.",
+	"%s: возврат депозита",
+	"%s: возврат части депозита",
+	"%s: удержание депозита",
+	"Выплаты %s",		// %s is the name of the npc being paid
+	"Перевод средств на имя %s", 			// transfer funds to a merc
+	"Перевод средств от %s", 		// transfer funds from a merc
+	"Ополчение в %s", // initial cost to equip a town's militia
+	"%s: оплата покупок.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
+	"%s: вклад наличными.",
 };
 
 // helicopter pilot payment
@@ -1622,7 +1622,7 @@ static const ST::string s_rus_pMoralStrings[pMoralStrings_SIZE] =
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
-static const ST::string s_rus_str_left_equipment   = "%ls оставляет снаряжение в %ls (%c%d).";
+static const ST::string s_rus_str_left_equipment   = "%s оставляет снаряжение в %s (%c%d).";
 
 // Status that appears on the Map Screen
 
@@ -1663,51 +1663,51 @@ static const ST::string s_rus_pMapErrorString[pMapErrorString_SIZE] =
 	"У вас в команде пока никого нет",	// you have no members, can't do anything
 	"Боец не может выполнить приказ.",		// merc can't comply with your order
 //6-10
-	"%ls нуждается в сопровождении. Назначьте его в отряд.", // merc can't move unescorted .. for a male
-	"%ls нуждается в сопровождении. Назначьте ее в отряд.", // for a female
+	"%s нуждается в сопровождении. Назначьте его в отряд.", // merc can't move unescorted .. for a male
+	"%s нуждается в сопровождении. Назначьте ее в отряд.", // for a female
 	"Наемник еще не прибыл в Арулько!",
 	"Кажется, сначала нужно уладить некоторые проблемы с контрактом.",
 	"",
 //11-15
 	"Приказ двигаться? Тут же битва идет!",
-	"Вы попали в засаду кошек-убийц в секторе %ls!",
+	"Вы попали в засаду кошек-убийц в секторе %s!",
 	"Вы попали в логово кошек-убийц в секторе I16!",
 	"",
-	"База ПВО в %ls захвачена врагом.",
+	"База ПВО в %s захвачена врагом.",
 //16-20
-	"%ls: шахта захвачена. Ваш ежедневный доход упал до %ls в день.",
-	"Противник взял сектор %ls, не встретив сопротивления.",
+	"%s: шахта захвачена. Ваш ежедневный доход упал до %s в день.",
+	"Противник взял сектор %s, не встретив сопротивления.",
 	"Как минимум одного из ваших бойцов нельзя назначить на это задание.",
-	"%ls не может вступить в %ls. Отряд полон.",
-	"%ls не может вступить в %ls. Слишком далеко.",
+	"%s не может вступить в %s. Отряд полон.",
+	"%s не может вступить в %s. Слишком далеко.",
 //21-25
-	"%ls: шахта захвачена войсками Дейдраны!",
-	"Войска Дейдраны захватили базу ПВО в %ls",
-	"%ls: в город вошли войска Дейдраны!",
-	"Войска Дейдраны были замечены в %ls.",
-	"Войска Дейдраны захватили %ls.",
+	"%s: шахта захвачена войсками Дейдраны!",
+	"Войска Дейдраны захватили базу ПВО в %s",
+	"%s: в город вошли войска Дейдраны!",
+	"Войска Дейдраны были замечены в %s.",
+	"Войска Дейдраны захватили %s.",
 //26-30
 	"Как минимум одного из ваших бойцов невозможно уложить спать.",
 	"Как минимум одного из ваших бойцов невозможно разбудить.",
 	"Ополчение небоеспособно, пока не закончится его обучение.",
-	"%ls не может передвигаться прямо сейчас.",
+	"%s не может передвигаться прямо сейчас.",
 	"Ополчение, которое находится вне города, нельзя переместить в другой сектор.",
 //31-35
-	"%ls не может иметь ополчения.",
+	"%s не может иметь ополчения.",
 	"Машине нужен водитель!",
-	"%ls слишком изранен(а), чтобы идти!",
+	"%s слишком изранен(а), чтобы идти!",
 	"Сперва надо покинуть музей!",
-	"%ls мертв(а)!",
+	"%s мертв(а)!",
 //36-40
-	"%ls не может перейти к %ls: он в движении", ///TRNSL_CHECK MEANING
-	"%ls не может сесть в машину так",///TRNSL_CHECK MEANING
-	"%ls не может присоединиться к %ls",///TRNSL_CHECK MEANING
+	"%s не может перейти к %s: он в движении", ///TRNSL_CHECK MEANING
+	"%s не может сесть в машину так",///TRNSL_CHECK MEANING
+	"%s не может присоединиться к %s",///TRNSL_CHECK MEANING
 	"Нельзя ускорять время, пока у вас нет бойцов!",
 	"Эта машина может ездить только по дорогам!",
 //41-45
 	"Нельзя переназначать наемников в пути",///TRNSL_CHECK MEANING
 	"У транспорта кончился бензин!",
-	"%ls не может передвигаться из-за усталости.",
+	"%s не может передвигаться из-за усталости.",
 	"Никто из сидящих в машине не может управлять ею.",
 	"Один или более бойцов этого отряда сейчас не могут перемещаться.",
 //46-50
@@ -1733,10 +1733,10 @@ static const ST::string s_rus_pMapPlotStrings[pMapPlotStrings_SIZE] =
 static const ST::string s_rus_pBullseyeStrings[pBullseyeStrings_SIZE] =
 {
 	"Выберите сектор высадки прибывающих наемников.",
-	"Теперь прибывающие наемники будут высаживаться в %ls",
+	"Теперь прибывающие наемники будут высаживаться в %s",
 	"Сюда нельзя лететь, воздух контролирует враг!",
 	"Отмена. Сектор прибытия тот же.",
-	"Полет над %ls опасен! Сектор прибытия перемещен в %ls.",
+	"Полет над %s опасен! Сектор прибытия перемещен в %s.",
 };
 
 
@@ -1750,10 +1750,10 @@ static const ST::string s_rus_pMiscMapScreenMouseRegionHelpText[pMiscMapScreenMo
 };
 
 
-static const ST::string s_rus_str_he_leaves_where_drop_equipment  = "%ls должен оставить снаряжение в (%ls) или потом, в %ls (%ls), перед вылетом из Арулько?";
-static const ST::string s_rus_str_she_leaves_where_drop_equipment = "%ls должна оставить свое снаряжение в (%ls) или потом, в %ls (%ls), перед вылетом из Арулько?";
-static const ST::string s_rus_str_he_leaves_drops_equipment       = "%ls собрался уйти, оставив свое снаряжение в %ls.";
-static const ST::string s_rus_str_she_leaves_drops_equipment      = "%ls собралась уйти, оставив свое снаряжение в %ls.";
+static const ST::string s_rus_str_he_leaves_where_drop_equipment  = "%s должен оставить снаряжение в (%s) или потом, в %s (%s), перед вылетом из Арулько?";
+static const ST::string s_rus_str_she_leaves_where_drop_equipment = "%s должна оставить свое снаряжение в (%s) или потом, в %s (%s), перед вылетом из Арулько?";
+static const ST::string s_rus_str_he_leaves_drops_equipment       = "%s собрался уйти, оставив свое снаряжение в %s.";
+static const ST::string s_rus_str_she_leaves_drops_equipment      = "%s собралась уйти, оставив свое снаряжение в %s.";
 
 
 // Text used on IMP Web Pages
@@ -1845,40 +1845,40 @@ static const ST::string s_rus_pHistoryStrings[pHistoryStrings_SIZE] =
 {
 	"",																						// leave this line blank
 	//1-5
-	"%ls нанят(а) в A.I.M.", 										// merc was hired from the aim site
-	"%ls нанят(а) в M.E.R.C.", 									// merc was hired from the aim site
-	"%ls мертв(а).", 															// merc was killed
+	"%s нанят(а) в A.I.M.", 										// merc was hired from the aim site
+	"%s нанят(а) в M.E.R.C.", 									// merc was hired from the aim site
+	"%s мертв(а).", 															// merc was killed
 	"Оплата счетов M.E.R.C.",								// paid outstanding bills at MERC
 	"Принято задание от Энрико Чивалдори",
 	//6-10
 	"Прошел профилирование в IMP",
-	"%ls: жизнь застрахована", 				// insurance contract purchased
-	"%ls: страховка отменена", 				// insurance contract canceled
-	"%ls: страховка выплачена", 							// insurance claim payout for merc
-	"%ls: контракт продлен на день.", 						// Extented "mercs name"'s for a day
+	"%s: жизнь застрахована", 				// insurance contract purchased
+	"%s: страховка отменена", 				// insurance contract canceled
+	"%s: страховка выплачена", 							// insurance claim payout for merc
+	"%s: контракт продлен на день.", 						// Extented "mercs name"'s for a day
 	//11-15
-	"%ls: контракт продлен на 7 дней", 					// Extented "mercs name"'s for a week
-	"%ls: контракт продлен на 14 дней", 					// Extented "mercs name"'s 2 weeks
-	"%ls уволен(а).", // "merc's name" was dismissed.
-	"%ls ушел.", // "merc's name" quit.
+	"%s: контракт продлен на 7 дней", 					// Extented "mercs name"'s for a week
+	"%s: контракт продлен на 14 дней", 					// Extented "mercs name"'s 2 weeks
+	"%s уволен(а).", // "merc's name" was dismissed.
+	"%s ушел.", // "merc's name" quit.
 	"начат.", // a particular quest started
 	//16-20
 	"завершен.",
-	"%ls: состоялся разговор с начальником шахты.",	// talked to head miner of town
-	"%ls освобожден(а).",
+	"%s: состоялся разговор с начальником шахты.",	// talked to head miner of town
+	"%s освобожден(а).",
 	"Читы включены.",
 	"Провизия завтра будет в Омерте.",
 	//21-25
-	"%ls ушла из команды и вышла замуж за Хика",
-	"%ls: контракт окончен.",
-	"%ls в команде.",
+	"%s ушла из команды и вышла замуж за Хика",
+	"%s: контракт окончен.",
+	"%s в команде.",
 	"Энрико недоволен отсутствием прогресса.",
 	"Битва выиграна.",
 	//26-30
-	"%ls: в шахте кончается руда",
-	"%ls: шахта выработана",
-	"%ls: шахта закрыта",
-	"%ls: шахта вновь открыта",
+	"%s: в шахте кончается руда",
+	"%s: шахта выработана",
+	"%s: шахта закрыта",
+	"%s: шахта вновь открыта",
 	"Получил сведения о тюрьме Тикса.",
 	//31-35
 	"Услышал о секретном военном заводе Орта.",
@@ -1914,10 +1914,10 @@ static const ST::string s_rus_pHistoryStrings[pHistoryStrings_SIZE] =
 	"Дэвид заправит нас даром, если у него есть бензин.",
 	"Дал на лапу Пабло.",
 	"Босс хранит деньги в шахте Сан Моны.",
-	"%ls выиграл кулачный бой",
-	"%ls проиграл кулачный бой",
+	"%s выиграл кулачный бой",
+	"%s проиграл кулачный бой",
 	//61-65
-	"%ls: дисквалификация в кулачном бою",
+	"%s: дисквалификация в кулачном бою",
 	"Нашел много денег в заброшенной шахте.",
 	"Столкнулся с убийцей, посланным Боссом.",
 	"Утрачен контроль над сектором",				//ENEMY_INVASION_CODE
@@ -1932,10 +1932,10 @@ static const ST::string s_rus_pHistoryStrings[pHistoryStrings_SIZE] =
 	"Нападение существ!",			//CREATURE_ATTACK_CODE
 	"Атака кошек-убийц",			//BLOODCAT_AMBUSH_CODE
 	"Перебил кошек-убийц",
-	"%ls убит(а)",
+	"%s убит(а)",
 	"Отдал голову террориста Кармену",
 	"Убийца ушел",
-	"Убил %ls",
+	"Убил %s",
 };
 
 static const ST::string s_rus_pHistoryLocations = "Н/П"; // N/A is an acronym for Not Applicable
@@ -2215,7 +2215,7 @@ static const ST::string s_rus_MercAccountText[MercAccountText_SIZE] =
 	"Ставка",	//5
 	"Плата",
 	"Всего:",
-	"Подтверждаете выплату %ls?",		//the %ls is a string that contains the dollar amount ( ex. "$150" )
+	"Подтверждаете выплату %s?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
 };
 
 
@@ -2389,7 +2389,7 @@ static const ST::string s_rus_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
 {
 	"Бланк заказа",				//Title of the page
 	"Шт.",					// The number of items ordered
-	"Вес (%ls)",			// The weight of the item
+	"Вес (%s)",			// The weight of the item
 	"Наименование",				// The name of the item
 	"Цена",				// the item's price
 	"Всего",				//5	// The total price of all of items of the same type
@@ -2398,7 +2398,7 @@ static const ST::string s_rus_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
 	"Цена с доставкой",			// The grand total of all item totals + the shipping and handling
 	"Место доставки",
 	"Тип доставки",			//10	// See below
-	"Цена (за %ls.)",			// The cost to ship the items
+	"Цена (за %s.)",			// The cost to ship the items
 	"Доставка наутро",			// Gets deliverd the next day
 	"2 рабочих дня",			// Gets delivered in 2 days
 	"Стандартный срок",			// Gets delivered in 3 days
@@ -2409,7 +2409,7 @@ static const ST::string s_rus_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
 	"* обозначает товары Б/У",		// Disclaimer stating that the item is used
 	"У вас нет на это средств.",		//20	// A popup message that to warn of not enough money
 	"<ПУСТО>",				// Gets displayed when there is no valid city selected
-	"Место доставки заказа %ls. Уверены?",		// A popup that asks if the city selected is the correct one
+	"Место доставки заказа %s. Уверены?",		// A popup that asks if the city selected is the correct one
 	"Вес товаров**",			// Displays the weight of the package
 	"** минимальный вес заказа",				// Disclaimer states that there is a minimum weight for the package
 	"Заказы",
@@ -2686,8 +2686,8 @@ static const ST::string s_rus_AimFiText[AimFiText_SIZE] =
 
 	// The title of the page, the above text gets added at the end of this text
 
-	"Список наемников по возрастанию %ls",
-	"Список наемников по убыванию %ls",
+	"Список наемников по возрастанию %s",
+	"Список наемников по убыванию %s",
 
 	// Instructions to the players on what to do
 
@@ -2785,9 +2785,9 @@ static const ST::string s_rus_SKI_Text[SKI_SIZE ] =
 
 static const ST::string s_rus_SkiMessageBoxText[SkiMessageBoxText_SIZE] =
 {
-	"Cнять %ls со своего основного счета, чтобы покрыть разницу?",
-	"Недостаточно денег. Не хватает %ls",
-	"Cнять %ls со своего основного счета, чтобы оплатить покупку?",
+	"Cнять %s со своего основного счета, чтобы покрыть разницу?",
+	"Недостаточно денег. Не хватает %s",
+	"Cнять %s со своего основного счета, чтобы оплатить покупку?",
 	"Предложить торговцу совершить сделку",
 	"Попросить торговца починить выбранные вещи",
 	"Закончить разговор",
@@ -2864,15 +2864,15 @@ static const ST::string s_rus_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 	"У вас нет ополчения. Подготовьте его из гражданского населения.",
 	"Доход в день",
 	"Жизнь наемника застрахована",
-	"%ls не устал(а).",
-	"%ls движется и спать не может",
-	"%ls слишком устал(а), попробуйте позже.",
-	"%ls за рулем.",
+	"%s не устал(а).",
+	"%s движется и спать не может",
+	"%s слишком устал(а), попробуйте позже.",
+	"%s за рулем.",
 	"Отряд не может двигаться, пока кто-то из бойцов спит.",
 
 	// stuff for contracts
 	"Вы можете платить по контракту, но у вас нет денег на оплату страхования жизни.",
-	"%ls застрахован(а) на случай гибели. Для продления страховки надо доплатить %ls за %d дней. Согласны?",
+	"%s застрахован(а) на случай гибели. Для продления страховки надо доплатить %s за %d дней. Согласны?",
 	"Предметы в секторе",
 	"У наемника есть медицинский депозит",
 
@@ -2881,16 +2881,16 @@ static const ST::string s_rus_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 	"Пациенты", // people who are being bandaged by a medic
 	"Готово", // Continue on with the game after autobandage is complete
 	"Стоп", // Stop autobandaging of patients by medics now
-	"%ls не может этого сделать, нет инструментов для ремонта.",
-	"%ls не может этого сделать, нет медицинских принадлежностей.",
+	"%s не может этого сделать, нет инструментов для ремонта.",
+	"%s не может этого сделать, нет медицинских принадлежностей.",
 	"Недостаточно желающих пройти подготовку.",
-	"%ls: слишком много ополченцев.",
+	"%s: слишком много ополченцев.",
 	"У наемника ограниченный по времени контракт",
 	"У наемника нет страховки",
 };
 
 
-static const ST::string s_rus_pLandMarkInSectorString = "Отряд %d заметил кого-то в секторе %ls";
+static const ST::string s_rus_pLandMarkInSectorString = "Отряд %d заметил кого-то в секторе %s";
 
 // confirm the player wants to pay X dollars to build a militia force in town
 static const ST::string s_rus_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] =
@@ -2898,13 +2898,13 @@ static const ST::string s_rus_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE
 	"Тренировка отряда ополчения будет стоить $", // telling player how much it will cost
 	"Оплатить расходы?", // asking player if they wish to pay the amount requested
 	"У вас нет такой суммы.", // telling the player they can't afford to train this town
-	"Продолжить тренировку ополчения в %ls (%ls %d)?", // continue training this town?
+	"Продолжить тренировку ополчения в %s (%s %d)?", // continue training this town?
 	"Стоимость $", // the cost in dollars to train militia
 	"(Д/Н)",   // abbreviated yes/no
-	"Тренировка ополчения в %d секторах будет стоить $ %d. %ls", // cost to train sveral sectors at once
+	"Тренировка ополчения в %d секторах будет стоить $ %d. %s", // cost to train sveral sectors at once
 	"У вас нет $%d на тренировку здесь ополчения.",
-	"%ls: нужно %d%% отношения к вам, чтобы продолжить тренировку ополчения.",
-	"%ls: невозможно продолжить подготовку ополчения.",
+	"%s: нужно %d%% отношения к вам, чтобы продолжить тренировку ополчения.",
+	"%s: невозможно продолжить подготовку ополчения.",
 };
 
 
@@ -2912,7 +2912,7 @@ static const ST::string s_rus_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE
 static const ST::string s_rus_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
 {
 	"За один раз можно снять со счета не более $20,000.",
-	"Вы уверены, что хотите положить %ls на свой счет?",
+	"Вы уверены, что хотите положить %s на свой счет?",
 };
 
 static const ST::string s_rus_gzCopyrightText =
@@ -3058,7 +3058,7 @@ static const ST::string s_rus_pDeliveryLocationStrings[pDeliveryLocationStrings_
 static const ST::string s_rus_pSkillAtZeroWarning    = "Уверены? Ноль означает отсутствие навыка.";
 static const ST::string s_rus_pIMPBeginScreenStrings = "(не более 8 букв)";
 static const ST::string s_rus_pIMPFinishButtonText   = "Анализ";
-static const ST::string s_rus_pIMPFinishStrings      = "Спасибо, %ls"; //%ls is the name of the merc
+static const ST::string s_rus_pIMPFinishStrings      = "Спасибо, %s"; //%s is the name of the merc
 static const ST::string s_rus_pIMPVoicesStrings      = "Голос"; // the strings for imp voices screen
 
 // title for program
@@ -3097,17 +3097,17 @@ static const ST::string s_rus_pMessageStrings[pMessageStrings_SIZE] =
 	"USD",					//Abbreviation to US dollars
 	"н/п",					//Lowercase acronym for not applicable.
 	"Тем временем",		//Meanwhile
-	"%ls теперь в секторе %ls%ls", //Name/Squad has arrived in sector A9.  Order must not change without notifying
+	"%s теперь в секторе %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	"Версия",
 	"Пустая ячейка быстрого сохр",
 	"Эта ячейка предназначена для быстрого сохранения игры (с помощью ALT+S).",
 	"Открытая", //doors definitions
 	"Закрытая", //doors definitions
-	"У вас кончается дисковое пространство. У вас осталось %lsМБ свободных, а для игры требуется %lsMБ.",
-	"%ls ловит %ls.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
-	"%ls принимает препарат.", //'Merc name' has taken the drug
-	"%ls не имеет медицинских навыков",//'Merc name' has no medical skill.
+	"У вас кончается дисковое пространство. У вас осталось %sМБ свободных, а для игры требуется %sMБ.",
+	"%s ловит %s.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
+	"%s принимает препарат.", //'Merc name' has taken the drug
+	"%s не имеет медицинских навыков",//'Merc name' has no medical skill.
 
 	//CDRom errors (such as ejecting CD while attempting to read the CD)
 	"Нарушена целостность программы.",
@@ -3124,9 +3124,9 @@ static const ST::string s_rus_pMessageStrings[pMessageStrings_SIZE] =
 	"Бросить",
 	"Передать",
 
-	"%ls передан %ls.",	//"Item" passed to "merc".  Please try to keep the item %ls before the merc %ls,
+	"%s передан %s.",	//"Item" passed to "merc".  Please try to keep the item %s before the merc %s,
 				//otherwise, must notify SirTech.
-	"Нельзя передать %ls %ls.", //pass "item" to "merc".  Same instructions as above.
+	"Нельзя передать %s %s.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
 	" присоединен)",
@@ -3138,8 +3138,8 @@ static const ST::string s_rus_pMessageStrings[pMessageStrings_SIZE] =
 	//Toggling various stealth modes
 	"Отряд в режиме скрытности.",
 	"Отряд в обычном режиме.",
-	"%ls в режиме скрытности.",
-	"%ls в обычном режиме.",
+	"%s в режиме скрытности.",
+	"%s в обычном режиме.",
 
 	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in
 	//an isometric engine.  You can toggle this mode freely in the game.
@@ -3159,13 +3159,13 @@ static const ST::string s_rus_pMessageStrings[pMessageStrings_SIZE] =
 	"Курсор трехмерный.",
 	"Курсор обычный.",
 	"Отряд %d действует.",
-	"У вас нет денег, чтобы ежедневно выплачивать %ls %ls",	//first %ls is the mercs name, the seconds is a string containing the salary
+	"У вас нет денег, чтобы ежедневно выплачивать %s %s",	//first %s is the mercs name, the seconds is a string containing the salary
 	"Пропуск",
-	"%ls не может идти в одиночку.",
+	"%s не может идти в одиночку.",
 	"Игра была сохранена под именем SaveGame99.sav. Для загрузки переименуйте ее в SaveGame01-SaveGame10.",
-	"%ls пъет %ls",
+	"%s пъет %s",
 	"Груз снаряжения прибыл в Драссен.",
-	"%ls прибудет в указанное место высадки (сектор %ls) в день %d, примерно в %ls.",		//first %ls is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
+	"%s прибудет в указанное место высадки (сектор %s) в день %d, примерно в %s.",		//first %s is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
 	"Журнал событий обновлен.",
 };
 
@@ -3181,7 +3181,7 @@ static const ST::string s_rus_ItemPickupHelpPopup[ItemPickupHelpPopup_SIZE] =
 
 static const ST::string s_rus_pDoctorWarningString[pDoctorWarningString_SIZE] =
 {
-	"%ls слишком далеко для лечения.",
+	"%s слишком далеко для лечения.",
 	"Медики не смогли перевязать всех.",
 };
 
@@ -3246,7 +3246,7 @@ static const ST::string s_rus_gzMiscString[gzMiscString_SIZE] =
 	"Ваше ополчение сражается без помощи наемников...",
 	"Транспорт полностью заправлен.",
 	"Бензобак заправлен на %d%%.",
-	"Армия Дейдраны полностью захватила %ls.",
+	"Армия Дейдраны полностью захватила %s.",
 	"Вы потеряли заправку.",
 };
 
@@ -3258,17 +3258,17 @@ static const ST::string s_rus_gzIntroScreen = "Невозможно найти �
 // e.g. "Sidney hears a loud sound of MOVEMENT coming from the SOUTH."
 static const ST::string s_rus_pNewNoiseStr[pNewNoiseStr_SIZE] =
 {
-	"%ls слышит %ls звук, идущий %ls.",
-	"%ls слышит %ls звук ДВИЖЕНИЯ, идущий %ls.",
-	"%ls слышит %ls СКРИП, идущий %ls.",
-	"%ls слышит %ls ПЛЕСК, идущий %ls.",
-	"%ls слышит %ls УДАР, идущий %ls.", //$$
-	"%ls слышит %ls ВЗРЫВ %ls.",
-	"%ls слышит %ls КРИК %ls.",
-	"%ls слышит %ls УДАР %ls.",
-	"%ls слышит %ls УДАР %ls.",
-	"%ls слышит %ls ЗВОН, идущий %ls.",
-	"%ls слышит %ls ГРОХОТ, идущий %ls.",
+	"%s слышит %s звук, идущий %s.",
+	"%s слышит %s звук ДВИЖЕНИЯ, идущий %s.",
+	"%s слышит %s СКРИП, идущий %s.",
+	"%s слышит %s ПЛЕСК, идущий %s.",
+	"%s слышит %s УДАР, идущий %s.", //$$
+	"%s слышит %s ВЗРЫВ %s.",
+	"%s слышит %s КРИК %s.",
+	"%s слышит %s УДАР %s.",
+	"%s слышит %s УДАР %s.",
+	"%s слышит %s ЗВОН, идущий %s.",
+	"%s слышит %s ГРОХОТ, идущий %s.",
 };
 
 static const ST::string s_rus_wMapScreenSortButtonHelpText[wMapScreenSortButtonHelpText_SIZE] =
@@ -3359,10 +3359,10 @@ static const ST::string s_rus_gzCreditNameFunny[gzCreditNameFunny_SIZE]=
 
 static const ST::string s_rus_sRepairsDoneString[sRepairsDoneString_SIZE] =
 {
-	"%ls отремонтировал(а) свои вещи",
-	"%ls отремонтировал(а) оружие и броню команды",
-	"%ls отремонтировал(а) снаряжение команды",
-	"%ls отремонтировал(а) транспортируемые командой вещи",
+	"%s отремонтировал(а) свои вещи",
+	"%s отремонтировал(а) оружие и броню команды",
+	"%s отремонтировал(а) снаряжение команды",
+	"%s отремонтировал(а) транспортируемые командой вещи",
 };
 
 static const ST::string s_rus_zGioDifConfirmText[zGioDifConfirmText_SIZE]=
@@ -3381,13 +3381,13 @@ static const ST::string s_rus_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"Сейчас ускорять время нельзя. Подождите фейерверка!",
 
 	//'Name' refuses to move.
-	"%ls отказывается двигаться.",
+	"%s отказывается двигаться.",
 
-	//%ls a merc name
-	"%ls без сил и не может поменять положение.",
+	//%s a merc name
+	"%s без сил и не может поменять положение.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	"У %lsа кончилось топливо и он остается в %c%d.",///TRNSL Assumes that all vehicle names are male gender words
+	"У %sа кончилось топливо и он остается в %c%d.",///TRNSL Assumes that all vehicle names are male gender words
 
 	//6-10
 
@@ -3415,15 +3415,15 @@ static const ST::string s_rus_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	//"vs." is the abbreviation of versus.
 	"%d против %d",
 
-	"В %lsе нет места!",  //(ex "The ice cream truck is full")///TRNSL_ASSUME vehicle gender is male
+	"В %sе нет места!",  //(ex "The ice cream truck is full")///TRNSL_ASSUME vehicle gender is male
 
-	"%ls нуждается не в перевязке и первой помощи, а в основательном медицинском обследовании и/или отдыхе.",
+	"%s нуждается не в перевязке и первой помощи, а в основательном медицинском обследовании и/или отдыхе.",
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
-	"%ls получает ранение в ногу и падает!",
+	"%s получает ранение в ногу и падает!",
 	//Name can't speak right now.
-	"%ls не может сейчас говорить.",
+	"%s не может сейчас говорить.",
 
 	//22-24 plural versions @@@2 elite to veteran
 	"Несколько (%d) ополченцев-новобранцев стали ветеранами.",
@@ -3435,11 +3435,11 @@ static const ST::string s_rus_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 
 	//26
 	//Name has gone psycho -- when the game forces the player into burstmode (certain unstable characters)
-	"%ls впадает в безумие!",
+	"%s впадает в безумие!",
 
 	//27-28
 	//Messages why a player can't time compress.
-	"Нельзя ускорять время, поскольку у вас есть бойцы в секторе %ls.", //
+	"Нельзя ускорять время, поскольку у вас есть бойцы в секторе %s.", //
 	"Нельзя ускорять время, когда бойцы находятся в шахтах с монстрами.", //
 
 	//29-31 singular versions @@@2 elite to veteran
@@ -3448,37 +3448,37 @@ static const ST::string s_rus_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"Один ополченец-солдат стал ветераном.",
 
 	//32-34
-	"%ls ничего не говорит.",
+	"%s ничего не говорит.",
 	"Выбраться на поверхность?",
 	"(Отряд %d)",
 
 	//35
 	//Ex: "Red has repaired Scope's MP5K".  Careful to maintain the proper order (Red before Scope, Scope before MP5K)
-	"%ls починил для %ls %ls",
+	"%s починил для %s %s",
 
 	//36
 	"КОШКА-УБИЙЦА",
 
 	//37-38 "Name trips and falls"
-	"%ls спотыкается и падает",
+	"%s спотыкается и падает",
 	"Эту вещь нельзя взять отсюда.",
 
 	//39
 	"Ваши бойцы не в состоянии сражаться. Ополчение ведет бой с существами само.",
 
 	//40-43
-	//%ls is the name of merc.
-	"%ls истратил(а) все медикаменты!",
-	"%ls не обладает навыками, чтобы лечить кого-либо!",
-	"%ls без инструментов!",
-	"%ls не обладает навыками, чтобы ремонтировать что-либо!",
+	//%s is the name of merc.
+	"%s истратил(а) все медикаменты!",
+	"%s не обладает навыками, чтобы лечить кого-либо!",
+	"%s без инструментов!",
+	"%s не обладает навыками, чтобы ремонтировать что-либо!",
 
 	//44-45
 	"Время ремонта",
-	"%ls не видит этого человека.",
+	"%s не видит этого человека.",
 
 	//46-48
-	"%ls ломает удлинитель ствола!",
+	"%s ломает удлинитель ствола!",
 	"Не разрешается больше %d тренеров ополчения на сектор.",
 	"Вы уверены?",
 
@@ -3491,8 +3491,8 @@ static const ST::string s_rus_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"Прекратить ускорение времени (|E|s|c)",
 
 	//53-54 "Magic has unjammed the Glock 18" or "Magic has unjammed Raven's H&K G11"
-	"%ls расклинил %ls",
-	"%ls расклинил для %ls %ls",
+	"%s расклинил %s",
+	"%s расклинил для %s %s",
 
 	//55
 	"Невозможно сжимать время при просмотре предметов сектора.",
@@ -3507,9 +3507,9 @@ static const ST::string s_rus_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"Выключатель нажат."
 };
 
-static const ST::string s_rus_str_ceramic_plates_smashed = "%ls: в бронежилете разбились пластины!";
+static const ST::string s_rus_str_ceramic_plates_smashed = "%s: в бронежилете разбились пластины!";
 
-static const ST::string s_rus_str_arrival_rerouted = "Место высадки новоприбывших наемников перенесено в сектор %ls; ранее заданный сектор %ls захвачен врагом.";
+static const ST::string s_rus_str_arrival_rerouted = "Место высадки новоприбывших наемников перенесено в сектор %s; ранее заданный сектор %s захвачен врагом.";
 
 
 static const ST::string s_rus_str_stat_health       = "Здоровье";

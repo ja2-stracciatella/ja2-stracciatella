@@ -128,22 +128,22 @@ static ST::string s_ger_Message[Message_SIZE] =
 {
 	// In the following 8 strings, the %s is the merc's name, and the %d (if any) is a number.
 
-	"%ls am Kopf getroffen, verliert einen Weisheitspunkt!",
-	"%ls an der Schulter getroffen, verliert Geschicklichkeitspunkt!",
-	"%ls an der Brust getroffen, verliert einen Kraftpunkt!",
-	"%ls an den Beinen getroffen, verliert einen Beweglichkeitspunkt!",
-	"%ls am Kopf getroffen, verliert %d Weisheitspunkte!",
-	"%ls an der Schulter getroffen, verliert %d Geschicklichkeitspunkte!",
-	"%ls an der Brust getroffen, verliert %d Kraftpunkte!",
-	"%ls an den Beinen getroffen, verliert %d Beweglichkeitspunkte!",
+	"%s am Kopf getroffen, verliert einen Weisheitspunkt!",
+	"%s an der Schulter getroffen, verliert Geschicklichkeitspunkt!",
+	"%s an der Brust getroffen, verliert einen Kraftpunkt!",
+	"%s an den Beinen getroffen, verliert einen Beweglichkeitspunkt!",
+	"%s am Kopf getroffen, verliert %d Weisheitspunkte!",
+	"%s an der Schulter getroffen, verliert %d Geschicklichkeitspunkte!",
+	"%s an der Brust getroffen, verliert %d Kraftpunkte!",
+	"%s an den Beinen getroffen, verliert %d Beweglichkeitspunkte!",
 	"Unterbrechung!",
 
 	"Verstärkung ist angekommen!",
 
 	// In the following four lines, all %s's are merc names
 
-	"%ls lädt nach.",
-	"%ls hat nicht genug Action-Punkte!",
+	"%s lädt nach.",
+	"%s hat nicht genug Action-Punkte!",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
 	"zuverlässig",
@@ -166,24 +166,24 @@ static ST::string s_ger_Message[Message_SIZE] =
 
 	// In the following two lines, all %s's are merc names
 
-	"%lss Tarnung hat sich abgenutzt.",
-	"%lss Tarnung ist weggewaschen.",
+	"%ss Tarnung hat sich abgenutzt.",
+	"%ss Tarnung ist weggewaschen.",
 
 	// The first %s is a merc name and the second %s is an item name
 
 	"Zweite Waffe hat keine Munition!",
-	"%ls hat %ls gestohlen.",
+	"%s hat %s gestohlen.",
 
 	// The %s is a merc name
 
-	"%lss Waffe kann keinen Feuerstoß abgeben.",
+	"%ss Waffe kann keinen Feuerstoß abgeben.",
 
 	"Sie haben schon eines davon angebracht.",
 	"Gegenstände zusammenfügen?",
 
 	// Both %s's are item names
 
-	"Sie können %ls mit %ls nicht zusammenfügen",
+	"Sie können %s mit %s nicht zusammenfügen",
 
 	"Keine",
 	"Munition entfernen",
@@ -191,25 +191,25 @@ static ST::string s_ger_Message[Message_SIZE] =
 
 	//You cannot use "item(s)" and your "other item" at the same time.
 	//Ex: You cannot use sun goggles and you gas mask at the same time.
-	"Sie können %ls nicht zusammen mit %ls benutzen.",	//
+	"Sie können %s nicht zusammen mit %s benutzen.",	//
 
 	"Der Gegenstand in Ihrem Cursor kann mit anderen Gegenständen verbunden werden, indem Sie ihn in einem der vier Slots platzieren",
 	"Der Gegenstand in Ihrem Cursor kann mit anderen Gegenständen verbunden werden, indem Sie ihn in einem der vier Attachment-Slots platzieren. (Aber in diesem Fall sind die Gegenstände nicht kompatibel.)",
 	"Es sind noch Feinde im Sektor!",
-	"Geben Sie %ls %ls",
-	"%ls am Kopf getroffen!",
+	"Geben Sie %s %s",
+	"%s am Kopf getroffen!",
 	"Kampf abbrechen?",
 	"Die Modifikation ist permanent. Weitermachen?",
-	"%ls fühlt sich frischer!",
-	"%ls ist auf Murmeln ausgerutscht!",
-	"%ls konnte %ls nicht greifen!",
-	"%ls hat %ls repariert",
+	"%s fühlt sich frischer!",
+	"%s ist auf Murmeln ausgerutscht!",
+	"%s konnte %s nicht greifen!",
+	"%s hat %s repariert",
 	"Unterbrechung für ",
 	"Ergeben?",
 	"Diese Person will keine Hilfe.",
 	"Lieber NICHT!",
 	"Wenn Sie zu Skyriders Heli wollen, müssen Sie Söldner einem FAHRZEUG/HELIKOPTER ZUWEISEN.",
-	"%ls hat nur Zeit, EINE Waffe zu laden",
+	"%s hat nur Zeit, EINE Waffe zu laden",
 	"Spielzug Bloodcats",
 };
 
@@ -676,8 +676,8 @@ static const ST::string s_ger_pLandTypeStrings[pLandTypeStrings_SIZE] =
 
 static const ST::string s_ger_gpStrategicString[gpStrategicString_SIZE] =
 {
-	"%ls wurden entdeckt in Sektor %c%d und ein weiterer Trupp wird gleich ankommen.",	//STR_DETECTED_SINGULAR
-	"%ls wurden entdeckt in Sektor %c%d und weitere Trupps werden gleich ankommen.",	//STR_DETECTED_PLURAL
+	"%s wurden entdeckt in Sektor %c%d und ein weiterer Trupp wird gleich ankommen.",	//STR_DETECTED_SINGULAR
+	"%s wurden entdeckt in Sektor %c%d und weitere Trupps werden gleich ankommen.",	//STR_DETECTED_PLURAL
 	"Gleichzeitige Ankunft koordinieren?",													//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -798,11 +798,11 @@ static const ST::string s_ger_gpStrategicString[gpStrategicString_SIZE] =
 	"Monster attackieren Ihre Miliz im Sektor %c%d.",
 	//1st %d refers to the number of civilians eaten by monsters, %c%d is the sector -- ex: A9
 	//Note: the minimum number of civilians eaten will be two.
-	"Monster attackieren und töten %d Zivilisten im Sektor %ls.",
+	"Monster attackieren und töten %d Zivilisten im Sektor %s.",
 	//%s is the sector -- ex: A9
-	"Feinde attackieren Ihre Söldner im Sektor %ls. Alle Söldner sind bewusstlos!",
+	"Feinde attackieren Ihre Söldner im Sektor %s. Alle Söldner sind bewusstlos!",
 	//%s is the sector -- ex: A9
-	"Monster attackieren Ihre Söldner im Sektor %ls. Alle Söldner sind bewusstlos!",
+	"Monster attackieren Ihre Söldner im Sektor %s. Alle Söldner sind bewusstlos!",
 
 };
 
@@ -820,7 +820,7 @@ static const ST::string s_ger_sKeyDescriptionStrings[sKeyDescriptionStrings_SIZE
 //The headers used to describe various weapon statistics.
 static ST::string s_ger_gWeaponStatsDesc[ gWeaponStatsDesc_SIZE] =
 {
-	"Gewicht (%ls):", //weight
+	"Gewicht (%s):", //weight
 	"Status:",
 	"Anzahl:", 		// Number of bullets left in a magazine
 	"Reichw.:",		// Range
@@ -929,15 +929,15 @@ static ST::string s_ger_TacticalStr[TacticalStr_SIZE] =
 
 	// CAMFIELD NUKE THIS and add quote #66.
 
-	"%ls bemerkt, dass Teile aus der Lieferung fehlen.",
+	"%s bemerkt, dass Teile aus der Lieferung fehlen.",
 
 	// The %s is a string from pDoorTrapStrings
 
-	"Das Schloss hat %ls.",
+	"Das Schloss hat %s.",
 	"Es gibt kein Schloss.",
 	"Das Schloss hat keine Falle.",
 	// The %s is a merc name
-	"%ls hat nicht den richtigen Schlüssel.",
+	"%s hat nicht den richtigen Schlüssel.",
 	"Das Schloss hat keine Falle.",
 	"Geschl.",
 	"TÜR",
@@ -951,13 +951,13 @@ static ST::string s_ger_TacticalStr[TacticalStr_SIZE] =
 
 	// In the next 2 strings, %s is an item name
 
-	"%ls liegt jetzt auf dem Boden.",
-	"%ls ist jetzt bei %ls.",
+	"%s liegt jetzt auf dem Boden.",
+	"%s ist jetzt bei %s.",
 
 	// In the next 2 strings, %s is a name
 
-	"%ls hat den vollen Betrag erhalten.",
-	"%ls bekommt noch %d.",
+	"%s hat den vollen Betrag erhalten.",
+	"%s bekommt noch %d.",
 	"Detonationsfrequenz auswählen:",		//in this case, frequency refers to a radio signal
 	"Wie viele Züge bis zur Explosion:",	//how much time, in turns, until the bomb blows
 	"Ferngesteuerte Zündung einstellen:",//in this case, frequency refers to a radio signal
@@ -968,35 +968,35 @@ static ST::string s_ger_TacticalStr[TacticalStr_SIZE] =
 
 	// In the next string, %s is a name. Stance refers to way they are standing.
 
-	"Wollen Sie %ls wirklich angreifen?",
+	"Wollen Sie %s wirklich angreifen?",
 	"Fahrzeuge können ihre Position nicht ändern.",
 	"Der Roboter kann seine Position nicht ändern.",
 
 	// In the next 3 strings, %s is a name
 
 	//%s can't change to that stance here
-	"%ls kann die Haltung hier nicht ändern.",
+	"%s kann die Haltung hier nicht ändern.",
 
-	"%ls kann hier nicht versorgt werden.",
-	"%ls braucht keine Erste Hilfe.",
+	"%s kann hier nicht versorgt werden.",
+	"%s braucht keine Erste Hilfe.",
 	"Kann nicht dorthin gehen.",
 	"Ihr Team ist komplett. Kein Platz mehr für Rekruten.",	//there's no room for a recruit on the player's team
 
 	// In the next string, %s is a name
 
-	"%ls wurde rekrutiert.",
+	"%s wurde rekrutiert.",
 
 	// Here %s is a name and %d is a number
 
-	"%ls bekommt noch %d $.",
+	"%s bekommt noch %d $.",
 
 	// In the next string, %s is a name
 
-	"%ls eskortieren?",
+	"%s eskortieren?",
 
 	// In the next string, the first %s is a name and the second %s is an amount of money (including $ sign)
 
-	"%ls für %ls pro Tag anheuern?",
+	"%s für %s pro Tag anheuern?",
 
 	// This line is used repeatedly to ask player if they wish to participate in a boxing match.
 
@@ -1005,16 +1005,16 @@ static ST::string s_ger_TacticalStr[TacticalStr_SIZE] =
 	// In the next string, the first %s is an item name and the
 	// second %s is an amount of money (including $ sign)
 
-	"%ls für %ls kaufen?",
+	"%s für %s kaufen?",
 
 	// In the next string, %s is a name
 
-	"%ls wird von Trupp %d eskortiert.",
+	"%s wird von Trupp %d eskortiert.",
 
 	// These messages are displayed during play to alert the player to a particular situation
 
 	"KLEMMT",					//weapon is jammed.
-	"Roboter braucht %ls Munition.",		//Robot is out of ammo
+	"Roboter braucht %s Munition.",		//Robot is out of ammo
 	"Dorthin werfen? Unmöglich.",		//Merc can't throw to the destination he selected
 
 	// These are different buttons that the player can turn on and off.
@@ -1034,11 +1034,11 @@ static ST::string s_ger_TacticalStr[TacticalStr_SIZE] =
 	"|Optionen",
 	"Feuerstoß (|B)",
 	"B|lickrichtung",
-	"Gesundheit: %d/%d\nEnergie: %d/%d\nMoral: %ls",
+	"Gesundheit: %d/%d\nEnergie: %d/%d\nMoral: %s",
 	"Was?",					//this means "what?"
 	"Forts.",					//an abbrieviation for "Continued"
-	"Stumm aus für %ls.",
-	"Stumm für %ls.", //
+	"Stumm aus für %s.",
+	"Stumm für %s.", //
 	"Fahrer",
 	"Fahrzeug verlassen",
 	"Trupp wechseln",
@@ -1052,12 +1052,12 @@ static ST::string s_ger_TacticalStr[TacticalStr_SIZE] =
 	"(Fangen)",
 	"(Nachladen)",
 	"(Geben)",
-	"%ls Falle wurde ausgelöst.",
-	"%ls ist angekommen.",
-	"%ls hat keine Action-Punkte mehr.",
-	"%ls ist nicht verfügbar.",
-	"%ls ist fertig verbunden.",
-	"%ls sind die Verbände ausgegangen.",
+	"%s Falle wurde ausgelöst.",
+	"%s ist angekommen.",
+	"%s hat keine Action-Punkte mehr.",
+	"%s ist nicht verfügbar.",
+	"%s ist fertig verbunden.",
+	"%s sind die Verbände ausgegangen.",
 	"Feind im Sektor!",
 	"Keine Feinde in Sicht.",
 	"Nicht genug Action-Punkte.",
@@ -1077,7 +1077,7 @@ static ST::string s_ger_TacticalStr[TacticalStr_SIZE] =
 	"Gehe zu Karte",
 
 	"Sie können den Sektor von dieser Seite aus nicht verlassen.",
-	"%ls ist zu weit weg.",
+	"%s ist zu weit weg.",
 	"Baumkronen entfernen",
 	"Baumkronen zeigen",
 	"KRÄHE",				//Crow, as in the large black bird
@@ -1096,7 +1096,7 @@ static ST::string s_ger_TacticalStr[TacticalStr_SIZE] =
 	"Kann da nicht hin.",					// used ( now ) for when we click on a cliff
 	"Person will sich nicht bewegen",
 	// In the following message, '%s' would be replaced with a quantity of money (e.g. $200)
-	"Mit der Zahlung von %ls einverstanden?",
+	"Mit der Zahlung von %s einverstanden?",
 	"Gratisbehandlung akzeptieren?",
 	"Daryl heiraten?",
 	"Schlüsselring",
@@ -1106,13 +1106,13 @@ static ST::string s_ger_TacticalStr[TacticalStr_SIZE] =
 	"Arbeiter",	//People that work in mines to extract precious metals
 	"Fahrzeug kann nur zwischen Sektoren fahren",
 	"Automatische Erste Hilfe nicht möglich",
-	"Weg blockiert für %ls",
+	"Weg blockiert für %s",
 	"Ihre von Deidrannas Truppe gefangenen Soldaten sind hier inhaftiert",
 	"Schloss getroffen",
 	"Schloss zerstört",
 	"Noch jemand an der Tür.",
 	"Gesundh.: %d/%d\nTank: %d/%d",
-	"%ls kann %ls nicht sehen.", // Cannot see person trying to talk to
+	"%s kann %s nicht sehen.", // Cannot see person trying to talk to
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
@@ -1131,22 +1131,22 @@ static const ST::string s_ger_pExitingSectorHelpText[pExitingSectorHelpText_SIZE
 	"Wenn die restlichen Söldner den Sektor verlassen,\nkommen Sie sofort zum Kartenbildschirm\nweil die Reise Zeit braucht.",
 
 	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted. The "single" button is disabled.
-	"%ls kann den Sektor nicht ohne Eskorte verlassen.",
+	"%s kann den Sektor nicht ohne Eskorte verlassen.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
 	//There are several strings depending on the gender of the merc and how many EPCs are in the squad.
 	//DO NOT USE THE NEWLINE HERE AS IT IS USED FOR BOTH HELPTEXT AND SCREEN MESSAGES!
-	"%ls kann den Sektor nicht verlassen, weil er %ls eskortiert.", //male singular
-	"%ls kann den Sektor nicht verlassen, weil sie %ls eskortiert.", //female singular
-	"%ls kann den Sektor nicht verlassen, weil er mehrere Personen eskortiert.", //male plural
-	"%ls kann den Sektor nicht verlassen, weil sie mehrere Personen eskortiert.", //female plural
+	"%s kann den Sektor nicht verlassen, weil er %s eskortiert.", //male singular
+	"%s kann den Sektor nicht verlassen, weil sie %s eskortiert.", //female singular
+	"%s kann den Sektor nicht verlassen, weil er mehrere Personen eskortiert.", //male plural
+	"%s kann den Sektor nicht verlassen, weil sie mehrere Personen eskortiert.", //female plural
 
 	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the "move all" option is disabled,
 	//and this helptext explains why.
 	"Alle Söldner müssen in der Nähe sein,\ndamit der Trupp weiterreisen kann.",
 
 	//Standard helptext for single movement. Explains what will happen (splitting the squad)
-	"Bei aktiviertem Kästchen reist %ls alleine und\nbildet automatisch wieder einen Trupp.",
+	"Bei aktiviertem Kästchen reist %s alleine und\nbildet automatisch wieder einen Trupp.",
 
 	//Standard helptext for all movement. Explains what will happen (moving the squad)
 	"Bei aktiviertem Kästchen reist der ausgewählte Trupp\nweiter und verlässt den Sektor.",
@@ -1155,7 +1155,7 @@ static const ST::string s_ger_pExitingSectorHelpText[pExitingSectorHelpText_SIZE
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
 	//"exiting sector" interface will not appear. This is just like the situation where
 	//This string is special, as it is not used as helptext. Do not use the special newline character (\n) for this string.
-	"%ls wird von Söldnern eskortiert und kann den Sektor nicht alleine verlassen. Die anderen Söldner müssen in der Nähe sein.",
+	"%s wird von Söldnern eskortiert und kann den Sektor nicht alleine verlassen. Die anderen Söldner müssen in der Nähe sein.",
 };
 
 static const ST::string s_ger_pRepairStrings[pRepairStrings_SIZE] =
@@ -1291,10 +1291,10 @@ static const ST::string s_ger_pwMiscSectorStrings[pwMiscSectorStrings_SIZE] =
 static const ST::string s_ger_pMapInventoryErrorString[pMapInventoryErrorString_SIZE] =
 {
 	"Diesen Söldner können Sie nicht auswählen.",
-	"%ls ist nicht im Sektor.",
+	"%s ist nicht im Sektor.",
 	"Während einer Schlacht müssen Sie Gegenstände manuell nehmen.",
 	"Während einer Schlacht müssen Sie Gegenstände manuell fallenlassen.",
-	"%ls ist nicht im Sektor und kann Gegenstand nicht fallen lassen.",
+	"%s ist nicht im Sektor und kann Gegenstand nicht fallen lassen.",
 };
 
 static const ST::string s_ger_pMapInventoryStrings[pMapInventoryStrings_SIZE] =
@@ -1306,7 +1306,7 @@ static const ST::string s_ger_pMapInventoryStrings[pMapInventoryStrings_SIZE] =
 // movement menu text
 static const ST::string s_ger_pMovementMenuStrings[pMovementMenuStrings_SIZE] =
 {
-	"Söldner in Sektor %ls bewegen", 	// title for movement box
+	"Söldner in Sektor %s bewegen", 	// title for movement box
 	"Route planen", 		// done with movement menu, start plotting movement
 	"Abbruch", 	// cancel this menu
 	"Andere",			// title for group of mercs not on squads nor in vehicles
@@ -1347,7 +1347,7 @@ static const ST::string s_ger_pMapScreenBottomFastHelp[pMapScreenBottomFastHelp_
 
 static const ST::string s_ger_pMapScreenBottomText = "Kontostand"; // current balance in player bank account
 
-static const ST::string s_ger_pMercDeadString = "%ls ist tot.";
+static const ST::string s_ger_pMercDeadString = "%s ist tot.";
 
 
 static const ST::string s_ger_pDayStrings = "Tag";
@@ -1468,31 +1468,31 @@ static const ST::string s_ger_pTransactionText[pTransactionText_SIZE] =
 	"Aufgelaufene Zinsen",			// interest the player has accumulated so far
 	"Anonyme Einzahlung",
 	"Bearbeitungsgebühr",
-	"%ls von AIM angeheuert", // Merc was hired
+	"%s von AIM angeheuert", // Merc was hired
 	"Kauf bei Bobby Rays",		// Bobby Ray is the name of an arms dealer
 	"Ausgeglichene Konten bei M.E.R.C.",
-	"Krankenversicherung für %ls", 		// medical deposit for merc
+	"Krankenversicherung für %s", 		// medical deposit for merc
 	"BSE-Profilanalyse", 		// IMP is the acronym for International Mercenary Profiling
-	"Versicherung für %ls abgeschlossen",
-	"Versicherung für %ls verringert",
-	"Versicherung für %ls verlängert", 				// johnny contract extended
-	"Versicherung für %ls gekündigt",
-	"Versicherungsanspruch für %ls", 		// insurance claim for merc
-	"%lss Vertrag verl. um 1 Tag", 				// entend mercs contract by a day
-	"%lss Vertrag verl. um 1 Woche",
-	"%lss Vertrag verl. um 2 Wochen",
+	"Versicherung für %s abgeschlossen",
+	"Versicherung für %s verringert",
+	"Versicherung für %s verlängert", 				// johnny contract extended
+	"Versicherung für %s gekündigt",
+	"Versicherungsanspruch für %s", 		// insurance claim for merc
+	"%ss Vertrag verl. um 1 Tag", 				// entend mercs contract by a day
+	"%ss Vertrag verl. um 1 Woche",
+	"%ss Vertrag verl. um 2 Wochen",
 	"Minenertrag",
 	"",
 	"Blumen kaufen",
-	"Volle Rückzahlung für %ls",
-	"Teilw. Rückzahlung für %ls",
-	"Keine Rückzahlung für %ls",
-	"Zahlung an %ls",		// %s is the name of the npc being paid
-	"Überweisen an %ls", 			// transfer funds to a merc
-	"Überweisen von %ls", 		// transfer funds from a merc
-	"Miliz in %ls ausbilden", // initial cost to equip a town's militia
-	"Gegenstände von %ls gekauft.",	//is used for the Shop keeper interface. The dealers name will be appended to the end of the string.
-	"%ls hat Geld angelegt.",
+	"Volle Rückzahlung für %s",
+	"Teilw. Rückzahlung für %s",
+	"Keine Rückzahlung für %s",
+	"Zahlung an %s",		// %s is the name of the npc being paid
+	"Überweisen an %s", 			// transfer funds to a merc
+	"Überweisen von %s", 		// transfer funds from a merc
+	"Miliz in %s ausbilden", // initial cost to equip a town's militia
+	"Gegenstände von %s gekauft.",	//is used for the Shop keeper interface. The dealers name will be appended to the end of the string.
+	"%s hat Geld angelegt.",
 };
 
 // helicopter pilot payment
@@ -1515,7 +1515,7 @@ static const ST::string s_ger_pMoralStrings[pMoralStrings_SIZE] =
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
-static const ST::string s_ger_str_left_equipment   = "%lss Ausrüstung ist in %ls (%c%d) angekommen.";
+static const ST::string s_ger_str_left_equipment   = "%ss Ausrüstung ist in %s (%c%d) angekommen.";
 
 // Status that appears on the Map Screen
 static const ST::string s_ger_pMapScreenStatusStrings[pMapScreenStatusStrings_SIZE] =
@@ -1552,51 +1552,51 @@ static const ST::string s_ger_pMapErrorString[pMapErrorString_SIZE] =
 	"Sie haben noch keine Teammitglieder.",		// you have no members, can't do anything
 	"Söldner kann nicht gehorchen.",			// merc can't comply with your order
 //6-10
-	"%ls braucht eine Eskorte. Platzieren Sie ihn in einem Trupp mit Eskorte.", // merc can't move unescorted .. for a male
-	"%ls braucht eine Eskorte. Platzieren Sie sie in einem Trupp mit Eskorte.", // for a female
+	"%s braucht eine Eskorte. Platzieren Sie ihn in einem Trupp mit Eskorte.", // merc can't move unescorted .. for a male
+	"%s braucht eine Eskorte. Platzieren Sie sie in einem Trupp mit Eskorte.", // for a female
 	"Söldner ist noch nicht in Arulco!",
 	"Erst mal Vertrag aushandeln!",
 	"",
 //11-15
 	"Marschbefehl? Hier tobt ein Kampf!",
-	"Sie sind von Bloodcats umstellt in Sektor %ls!",
+	"Sie sind von Bloodcats umstellt in Sektor %s!",
 	"Sie haben gerade eine Bloodcat-Höhle betreten in Sektor I16!",
 	"",
-	"Raketenstützpunkt in %ls wurde erobert.",
+	"Raketenstützpunkt in %s wurde erobert.",
 //16-20
-	"Mine in %ls wurde erobert. Ihre Tageseinnahmen wurden reduziert auf %ls.",
-	"Gegner hat Sektor %ls ohne Gegenwehr erobert.",
+	"Mine in %s wurde erobert. Ihre Tageseinnahmen wurden reduziert auf %s.",
+	"Gegner hat Sektor %s ohne Gegenwehr erobert.",
 	"Mindestens ein Söldner konnte nicht eingeteilt werden.",
-	"%ls konnte sich nicht anschließen, weil %ls voll ist",
-	"%ls konnte sich %ls nicht anschließen, weil er zu weit weg ist.",
+	"%s konnte sich nicht anschließen, weil %s voll ist",
+	"%s konnte sich %s nicht anschließen, weil er zu weit weg ist.",
 //21-25
-	"Die Mine in %ls ist von Deidrannas Truppen erobert worden!",
-	"Deidrannas Truppen sind gerade in den Raketenstützpunkt in %ls eingedrungen",
-	"Deidrannas Truppen sind gerade in %ls eingedrungen",
-	"Deidrannas Truppen wurden gerade in %ls gesichtet.",
-	"Deidrannas Truppen haben gerade %ls erobert.",
+	"Die Mine in %s ist von Deidrannas Truppen erobert worden!",
+	"Deidrannas Truppen sind gerade in den Raketenstützpunkt in %s eingedrungen",
+	"Deidrannas Truppen sind gerade in %s eingedrungen",
+	"Deidrannas Truppen wurden gerade in %s gesichtet.",
+	"Deidrannas Truppen haben gerade %s erobert.",
 //26-30
 	"Mindestens ein Söldner kann nicht schlafen.",
 	"Mindestens ein Söldner ist noch nicht wach.",
 	"Die Miliz kommt erst, wenn das Training beendet ist.",
-	"%ls kann im Moment keine Marschbefehle erhalten.",
+	"%s kann im Moment keine Marschbefehle erhalten.",
 	"Milizen außerhalb der Stadtgrenzen können nicht in andere Sektoren reisen.",
 //31-35
-	"Sie können keine Milizen in %ls haben.",
+	"Sie können keine Milizen in %s haben.",
 	"Leere Fahrzeuge fahren nicht!",
-	"%ls ist nicht transportfähig!",
+	"%s ist nicht transportfähig!",
 	"Sie müssen erst das Museum verlassen!",
-	"%ls ist tot!",
+	"%s ist tot!",
 //36-40
-	"%ls kann nicht zu %ls wechseln, weil der sich bewegt",
-	"%ls kann so nicht einsteigen",
-	"%ls kann sich nicht %ls anschließen",
+	"%s kann nicht zu %s wechseln, weil der sich bewegt",
+	"%s kann so nicht einsteigen",
+	"%s kann sich nicht %s anschließen",
 	"Sie können den Zeitraffer erst mit neuen Söldner benutzen!",
 	"Dieses Fahrzeug kann nur auf Straßen fahren!",
 //41-45
 	"Reisenden Söldnern können Sie keine Aufträge erteilen.",
 	"Kein Benzin mehr!",
-	"%ls ist zu müde.",
+	"%s ist zu müde.",
 	"Keiner kann das Fahrzeug steuern.",
 	"Ein oder mehrere Söldner dieses Trupps können sich jetzt nicht bewegen.",
 //46-50
@@ -1621,10 +1621,10 @@ static const ST::string s_ger_pMapPlotStrings[pMapPlotStrings_SIZE] =
 static const ST::string s_ger_pBullseyeStrings[pBullseyeStrings_SIZE] =
 {
 	"Klicken Sie auf den Sektor, in dem die Söldner statt dessen ankommen sollen.",
-	"OK. Söldner werden in %ls abgesetzt",
+	"OK. Söldner werden in %s abgesetzt",
 	"Söldner können nicht dorthin fliegen. Luftraum nicht gesichert!",
 	"Abbruch. Ankunftssektor unverändert,",
-	"Luftraum über %ls ist nicht mehr sicher! Ankunftssektor jetzt in %ls.",
+	"Luftraum über %s ist nicht mehr sicher! Ankunftssektor jetzt in %s.",
 };
 
 // help text for mouse regions
@@ -1635,10 +1635,10 @@ static const ST::string s_ger_pMiscMapScreenMouseRegionHelpText[pMiscMapScreenMo
 	"Inventar verlassen (|E|i|n|g|a|b|e)",
 };
 
-static const ST::string s_ger_str_he_leaves_where_drop_equipment  = "Soll %ls seine Ausrüstung hier lassen (%ls) oder in %ls (%ls), bevor er Arulco verlässt?";
-static const ST::string s_ger_str_she_leaves_where_drop_equipment = "Soll %ls ihre Ausrüstung hier lassen (%ls) oder in %ls (%ls), bevor sie Arulco verlässt?";
-static const ST::string s_ger_str_he_leaves_drops_equipment       = "%ls geht bald und lässt seine Ausrüstung in %ls.";
-static const ST::string s_ger_str_she_leaves_drops_equipment      = "%ls geht bald und lässt ihre Ausrüstung in %ls.";
+static const ST::string s_ger_str_he_leaves_where_drop_equipment  = "Soll %s seine Ausrüstung hier lassen (%s) oder in %s (%s), bevor er Arulco verlässt?";
+static const ST::string s_ger_str_she_leaves_where_drop_equipment = "Soll %s ihre Ausrüstung hier lassen (%s) oder in %s (%s), bevor sie Arulco verlässt?";
+static const ST::string s_ger_str_he_leaves_drops_equipment       = "%s geht bald und lässt seine Ausrüstung in %s.";
+static const ST::string s_ger_str_she_leaves_drops_equipment      = "%s geht bald und lässt ihre Ausrüstung in %s.";
 
 
 // Text used on IMP Web Pages
@@ -1727,40 +1727,40 @@ static const ST::string s_ger_pHistoryStrings[pHistoryStrings_SIZE] =
 {
 	"",																						// leave this line blank
 	//1-5
-	"%ls von A.I.M. angeheuert.", 										// merc was hired from the aim site
-	"%ls von M.E.R.C. angeheuert.", 									// merc was hired from the aim site
-	"%ls ist tot.", 															// merc was killed
+	"%s von A.I.M. angeheuert.", 										// merc was hired from the aim site
+	"%s von M.E.R.C. angeheuert.", 									// merc was hired from the aim site
+	"%s ist tot.", 															// merc was killed
 	"Rechnung an M.E.R.C. bezahlt",								// paid outstanding bills at MERC
 	"Enrico Chivaldoris Auftrag akzeptiert",
 	//6-10
 	"BSE-Profil erstellt",
-	"Versicherung abgeschlossen für %ls.", 				// insurance contract purchased
-	"Versicherung gekündigt für %ls.", 				// insurance contract canceled
-	"Versicherung ausgezahlt für %ls.", 							// insurance claim payout for merc
-	"%lss Vertrag um 1 Tag verlängert.", 						// Extented "mercs name"'s for a day
+	"Versicherung abgeschlossen für %s.", 				// insurance contract purchased
+	"Versicherung gekündigt für %s.", 				// insurance contract canceled
+	"Versicherung ausgezahlt für %s.", 							// insurance claim payout for merc
+	"%ss Vertrag um 1 Tag verlängert.", 						// Extented "mercs name"'s for a day
 	//11-15
-	"%lss Vertrag um 1 Woche verlängert.", 					// Extented "mercs name"'s for a week
-	"%lss Vertrag um 2 Wochen verlängert.", 					// Extented "mercs name"'s 2 weeks
-	"%ls entlassen.", 													// "merc's name" was dismissed.
-	"%ls geht.", 																		// "merc's name" quit.
+	"%ss Vertrag um 1 Woche verlängert.", 					// Extented "mercs name"'s for a week
+	"%ss Vertrag um 2 Wochen verlängert.", 					// Extented "mercs name"'s 2 weeks
+	"%s entlassen.", 													// "merc's name" was dismissed.
+	"%s geht.", 																		// "merc's name" quit.
 	"Quest begonnen.", 															// a particular quest started
 	//16-20
 	"Quest gelöst.",
-	"Mit Vorarbeiter in %ls geredet",									// talked to head miner of town
-	"%ls befreit",
+	"Mit Vorarbeiter in %s geredet",									// talked to head miner of town
+	"%s befreit",
 	"Cheat benutzt",
 	"Essen ist morgen in Omerta",
 	//21-25
-	"%ls heiratet Daryl Hick",
-	"%lss Vertrag abgelaufen.",
-	"%ls rekrutiert.",
+	"%s heiratet Daryl Hick",
+	"%ss Vertrag abgelaufen.",
+	"%s rekrutiert.",
 	"Enrico sieht kaum Fortschritte",
 	"Schlacht gewonnen",
 	//26-30
-	"Mine in %ls produziert weniger",
-	"Mine in %ls leer",
-	"Mine in %ls geschlossen",
-	"Mine in %ls wieder offen",
+	"Mine in %s produziert weniger",
+	"Mine in %s leer",
+	"Mine in %s geschlossen",
+	"Mine in %s wieder offen",
 	"Etwas über Gefängnis in Tixa erfahren.",
 	//31-35
 	"Von Waffenfabrik in Orta gehört.",
@@ -1796,10 +1796,10 @@ static const ST::string s_ger_pHistoryStrings[pHistoryStrings_SIZE] =
 	"Wenn Dave Sprit hat, bekommen wir's gratis.",
 	"Pablo bestochen.",
 	"Kingpin hat Geld in San Mona-Mine.",
-	"%ls gewinnt Extremkampf",
-	"%ls verliert Extremkampf",
+	"%s gewinnt Extremkampf",
+	"%s verliert Extremkampf",
 	//61-65
-	"%ls beim Extremkampf disqualifiziert",
+	"%s beim Extremkampf disqualifiziert",
 	"Viel Geld in verlassener Mine gefunden.",
 	"Von Kingpin geschickten Mörder getroffen",
 	"Kontrolle über Sektor verloren",
@@ -1814,10 +1814,10 @@ static const ST::string s_ger_pHistoryStrings[pHistoryStrings_SIZE] =
 	"Monster angegriffen",			//CREATURE_ATTACK_CODE
 	"Von Bloodcats getötet",			//BLOODCAT_AMBUSH_CODE
 	"Bloodcats getötet",
-	"%ls wurde getötet",
+	"%s wurde getötet",
 	"Carmen den Kopf eines Terroristen gegeben",
 	"Slay ist gegangen", //Slay is a merc and has left the team
-	"%ls gekillt",		//History log for when a merc kills an NPC or PC
+	"%s gekillt",		//History log for when a merc kills an NPC or PC
 };
 
 static const ST::string s_ger_pHistoryLocations = "n.a"; // N/A is an acronym for Not Applicable
@@ -2073,7 +2073,7 @@ static const ST::string s_ger_MercAccountText[MercAccountText_SIZE] =
 	"Rate",		//5
 	"Belasten",
 	"Gesamt:",
-	"Zahlung von %ls wirklich genehmigen?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
+	"Zahlung von %s wirklich genehmigen?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
 };
 
 //For use at the M.E.R.C. web site. Text relating a MERC mercenary
@@ -2219,7 +2219,7 @@ static const ST::string s_ger_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
 {
 	"Bestellformular",				//Title of the page
 	"St.",					// The number of items ordered
-	"Gew. (%ls)",			// The weight of the item
+	"Gew. (%s)",			// The weight of the item
 	"Artikel",				// The name of the item
 	"Preis",				// the item's weight
 	"Summe",				//5	// The total price of all of items of the same type
@@ -2228,7 +2228,7 @@ static const ST::string s_ger_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
 	"Endbetrag",			// The grand total of all item totals + the shipping and handling
 	"Bestimmungsort",
 	"Liefergeschwindigkeit",			//10	// See below
-	"$ (pro %ls)",			// The cost to ship the items
+	"$ (pro %s)",			// The cost to ship the items
 	"Übernacht Express",			// Gets deliverd the next day
 	"2 Arbeitstage",			// Gets delivered in 2 days
 	"Standard-Service",			// Gets delivered in 3 days
@@ -2239,7 +2239,7 @@ static const ST::string s_ger_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
 	"* Gebrauchter Gegenstand",		// Disclaimer stating that the item is used
 	"Sie haben nicht genug Geld.",		//20	// A popup message that to warn of not enough money
 	"<KEINER>",				// Gets displayed when there is no valid city selected
-	"Wollen Sie Ihre Bestellung wirklich nach %ls schicken?",		// A popup that asks if the city selected is the correct one
+	"Wollen Sie Ihre Bestellung wirklich nach %s schicken?",		// A popup that asks if the city selected is the correct one
 	"Packungsgewicht**",			// Displays the weight of the package
 	"** Mindestgewicht",				// Disclaimer states that there is a minimum weight for the package
 	"Lieferungen",
@@ -2481,8 +2481,8 @@ static const ST::string s_ger_AimFiText[AimFiText_SIZE] =
 	"Technik",
 
 	// The title of the page, the above text gets added at the end of this text
-	"A.I.M.-Mitglieder ansteigend sortiert nach %ls",
-	"A.I.M. Mitglieder absteigend sortiert nach %ls",
+	"A.I.M.-Mitglieder ansteigend sortiert nach %s",
+	"A.I.M. Mitglieder absteigend sortiert nach %s",
 
 	// Instructions to the players on what to do
 
@@ -2564,9 +2564,9 @@ static const ST::string s_ger_SKI_Text[SKI_SIZE ] =
 
 static const ST::string s_ger_SkiMessageBoxText[SkiMessageBoxText_SIZE] =
 {
-	"Möchten Sie %ls von Ihrem Konto abbuchen, um die Differenz zu begleichen?",
-	"Nicht genug Geld. Ihnen fehlen %ls",
-	"Möchten Sie %ls von Ihrem Konto abbuchen, um die Kosten zu decken?",
+	"Möchten Sie %s von Ihrem Konto abbuchen, um die Differenz zu begleichen?",
+	"Nicht genug Geld. Ihnen fehlen %s",
+	"Möchten Sie %s von Ihrem Konto abbuchen, um die Kosten zu decken?",
 	"Händler bitten, mit der Überweisung zu beginnen.",
 	"Händler bitten, Gegenstände zu reparieren",
 	"Unterhaltung beenden",
@@ -2637,16 +2637,16 @@ static const ST::string s_ger_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 	"Sie haben gar keine Miliz. Sie müssen Bewohner der Stadt trainieren, wenn Sie dort eine Miliz aufstellen wollen.",
 	"Tägliches Einkommen",
 	"Söldner hat Lebensversicherung",
-	"%ls ist nicht müde.",
-	"%ls ist unterwegs und kann nicht schlafen.",
-	"%ls ist zu müde. Versuchen Sie es ein bisschen später nochmal.",
-	"%ls fährt.",
+	"%s ist nicht müde.",
+	"%s ist unterwegs und kann nicht schlafen.",
+	"%s ist zu müde. Versuchen Sie es ein bisschen später nochmal.",
+	"%s fährt.",
 	"Der Trupp kann nicht weiter, wenn einer der Söldner pennt.",
 
 
 	// stuff for contracts
 	"Sie können zwar den Vertrag bezahlen, haben aber kein Geld für die Lebensversicherung.",
-	"%ls Lebensversicherungsprämien kosten %ls pro %d Zusatztag(en). Wollen Sie das bezahlen?",
+	"%s Lebensversicherungsprämien kosten %s pro %d Zusatztag(en). Wollen Sie das bezahlen?",
 	"Sektorinventar",
 
 	"Söldner hat Krankenversicherung.",
@@ -2658,15 +2658,15 @@ static const ST::string s_ger_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 	"Fertig", // Continue on with the game after autobandage is complete
 	"Stop", // Stop autobandaging of patients by medics now
 
-	"%ls hat kein Werkzeug.",
-	"%ls hat kein Verbandszeug.",
+	"%s hat kein Werkzeug.",
+	"%s hat kein Verbandszeug.",
 	"Es sind nicht genug Leute zum Training bereit.",
-	"%ls ist voller Milizen.",
+	"%s ist voller Milizen.",
 	"Söldner hat begrenzten Vertrag.",
 	"Vertrag des Söldners ist nicht versichert",
 };
 
-static const ST::string s_ger_pLandMarkInSectorString = "Trupp %d hat in Sektor %ls jemanden bemerkt";
+static const ST::string s_ger_pLandMarkInSectorString = "Trupp %d hat in Sektor %s jemanden bemerkt";
 
 // confirm the player wants to pay X dollars to build a militia force in town
 static const ST::string s_ger_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] =
@@ -2674,13 +2674,13 @@ static const ST::string s_ger_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE
 	"Eine Milizeinheit für diese Stadt zu trainieren kostet $", // telling player how much it will cost
 	"Ausgabe genehmigen?", // asking player if they wish to pay the amount requested
 	"Sie haben nicht genug Geld.", // telling the player they can't afford to train this town
-	"Miliz in %ls (%ls %d) weitertrainieren?", // continue training this town?
+	"Miliz in %s (%s %d) weitertrainieren?", // continue training this town?
 	"Preis $", // the cost in dollars to train militia
 	"( J/N )", // abbreviated yes/no
-	"Milizen in %d Sektoren zu trainieren kostet $ %d. %ls", // cost to train sveral sectors at once
+	"Milizen in %d Sektoren zu trainieren kostet $ %d. %s", // cost to train sveral sectors at once
 	"Sie können sich keine $%d für die Miliz hier leisten.",
-	"%ls benötigt eine Loyalität von %d Prozent, um mit dem Milizen-Training fortzufahren.",
-	"Sie können die Miliz in %ls nicht mehr trainieren.",
+	"%s benötigt eine Loyalität von %d Prozent, um mit dem Milizen-Training fortzufahren.",
+	"Sie können die Miliz in %s nicht mehr trainieren.",
 };
 
 
@@ -2688,7 +2688,7 @@ static const ST::string s_ger_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE
 static const ST::string s_ger_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
 {
 	"Sie können nur maximal 20.000$ abheben.",
-	"Wollen Sie wirklich %ls auf Ihr Konto einzahlen?",
+	"Wollen Sie wirklich %s auf Ihr Konto einzahlen?",
 };
 
 static const ST::string s_ger_gzCopyrightText = "Copyright (C) 1999 Sir-tech Canada Ltd. Alle Rechte vorbehalten.";
@@ -2830,7 +2830,7 @@ static const ST::string s_ger_pDeliveryLocationStrings[pDeliveryLocationStrings_
 static const ST::string s_ger_pSkillAtZeroWarning    = "Sind Sie sicher? Ein Wert von 0 bedeutet, dass der Charakter diese Fähigkeit nicht nutzen kann.";
 static const ST::string s_ger_pIMPBeginScreenStrings = "(max. 8 Buchstaben)";
 static const ST::string s_ger_pIMPFinishButtonText   = "Analyse wird durchgeführt";
-static const ST::string s_ger_pIMPFinishStrings      = "Danke, %ls"; //%s is the name of the merc
+static const ST::string s_ger_pIMPFinishStrings      = "Danke, %s"; //%s is the name of the merc
 static const ST::string s_ger_pIMPVoicesStrings      = "Stimme"; // the strings for imp voices screen
 
 // title for program
@@ -2868,17 +2868,17 @@ static const ST::string s_ger_pMessageStrings[pMessageStrings_SIZE] =
 	"US$",					//Abbreviation for US Dollars
 	"n.a",					//Lowercase acronym for not applicable.
 	"Inzwischen",		//Meanwhile
-	"%ls ist im Sektor %ls%ls angekommen", //Name/Squad has arrived in sector A9. Order must not change without notifying SirTech
+	"%s ist im Sektor %s%s angekommen", //Name/Squad has arrived in sector A9. Order must not change without notifying SirTech
 	"Version",
 	"Leerer Quick-Save-Slot",
 	"Dieser Slot ist nur für Quick-Saves aus den Map Screens und dem Taktik-Bildschirm. Speichern mit ALT+S",
 	"offen",
 	"zu",
-	"Ihr Festplattenspeicher ist knapp. Sie haben lediglich %lsMB frei und Jagged Alliance 2 benötigt %lsMB.",
-	"%ls hat %ls gefangen.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
+	"Ihr Festplattenspeicher ist knapp. Sie haben lediglich %sMB frei und Jagged Alliance 2 benötigt %sMB.",
+	"%s hat %s gefangen.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
 
-	"%ls hat die Droge genommen.", //'Merc name' has taken the drug
-	"%ls hat keine medizinischen Fähigkeiten",//'Merc name' has no medical skill.
+	"%s hat die Droge genommen.", //'Merc name' has taken the drug
+	"%s hat keine medizinischen Fähigkeiten",//'Merc name' has no medical skill.
 
 	//CDRom errors (such as ejecting CD while attempting to read the CD)
 	"Die Integrität des Spieles wurde beschädigt.", //The integrity of the game has been compromised
@@ -2895,9 +2895,9 @@ static const ST::string s_ger_pMessageStrings[pMessageStrings_SIZE] =
 	"Werfen",
 	"Weitergeben",
 
-	"%ls weitergegeben an %ls.",	//"Item" passed to "merc". Please try to keep the item %s before the merc %s,
+	"%s weitergegeben an %s.",	//"Item" passed to "merc". Please try to keep the item %s before the merc %s,
 					//otherwise, must notify SirTech.
-	"Kein Platz, um %ls an %ls weiterzugeben.", //pass "item" to "merc". Same instructions as above.
+	"Kein Platz, um %s an %s weiterzugeben.", //pass "item" to "merc". Same instructions as above.
 
 	//A list of attachments appear after the items. Ex: Kevlar vest ( Ceramic Plate 'Attached )'
 	" angebracht)",
@@ -2909,8 +2909,8 @@ static const ST::string s_ger_pMessageStrings[pMessageStrings_SIZE] =
 	//Toggling various stealth modes
 	"Stealth Mode für Trupp ein.",
 	"Stealth Mode für Trupp aus.",
-	"Stealth Mode für %ls ein.",
-	"Stealth Mode für %ls aus.",
+	"Stealth Mode für %s ein.",
+	"Stealth Mode für %s aus.",
 
 	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in
 	//an isometric engine. You can toggle this mode freely in the game.
@@ -2930,13 +2930,13 @@ static const ST::string s_ger_pMessageStrings[pMessageStrings_SIZE] =
 	"3D-Cursor AUS.",
 	"3D-Cursor AN.",
 	"Trupp %d aktiv.",
-	"Sie können %lss Tagessold von %ls nicht zahlen",	//first %s is the mercs name, the second is a string containing the salary
+	"Sie können %ss Tagessold von %s nicht zahlen",	//first %s is the mercs name, the second is a string containing the salary
 	"Abbruch",
-	"%ls kann alleine nicht gehen.",
+	"%s kann alleine nicht gehen.",
 	"Spielstand namens Spielstand99.sav kreiert. Wenn nötig, in Spielstand01 - Spielstand10 umbennen und über die Option 'Laden' aufrufen.",
-	"%ls hat %ls getrunken.",
+	"%s hat %s getrunken.",
 	"Paket in Drassen angekommen.",
-	"%ls kommt am %d. um ca. %ls am Zielort an (Sektor %ls).",		//first %s is mercs name(OK), next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival       !!!7 It should be like this: first one is merc (OK), next is day of arrival (OK) , next is time of the day for ex. 07:00 (not OK, now it is still sector), next should be sector (not OK, now it is still time of the day)
+	"%s kommt am %d. um ca. %s am Zielort an (Sektor %s).",		//first %s is mercs name(OK), next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival       !!!7 It should be like this: first one is merc (OK), next is day of arrival (OK) , next is time of the day for ex. 07:00 (not OK, now it is still sector), next should be sector (not OK, now it is still time of the day)
 	"Logbuch aktualisiert.",
 };
 
@@ -2951,7 +2951,7 @@ static const ST::string s_ger_ItemPickupHelpPopup[ItemPickupHelpPopup_SIZE] =
 
 static const ST::string s_ger_pDoctorWarningString[pDoctorWarningString_SIZE] =
 {
-	"%ls ist nicht nahe genug, um geheilt zu werden",
+	"%s ist nicht nahe genug, um geheilt zu werden",
 	"Ihre Mediziner haben noch nicht alle verbinden können.",
 };
 
@@ -3015,7 +3015,7 @@ static const ST::string s_ger_gzMiscString[gzMiscString_SIZE] =
 	"Ihre Milizen kämpfen ohne die Hilfe der Söldner weiter...",
 	"Das Fahrzeug muss nicht mehr aufgetankt werden.",
 	"Der Tank ist %d%% voll.",
-	"Deidrannas Armee hat wieder volle Kontrolle über %ls.",
+	"Deidrannas Armee hat wieder volle Kontrolle über %s.",
 	"Sie haben ein Tanklager verloren.",
 };
 
@@ -3033,17 +3033,17 @@ static const ST::string s_ger_pNewNoiseStr[pNewNoiseStr_SIZE] =
 	//	"Gus hears a loud EXPLOSION 'to' the north.",
 	//	"Gus hears a loud EXPLOSION 'coming from' the north.",
 	//For certain idioms, it sounds better to use one over the other. It is a matter of preference.
-	"%ls hört %ls aus dem %ls.",
-	"%ls hört eine BEWEGUNG (%ls) von %ls.",
-	"%ls hört ein KNARREN (%ls) von %ls.",
-	"%ls hört ein KLATSCHEN (%ls) von %ls.",
-	"%ls hört einen AUFSCHLAG (%ls) von %ls.",
-	"%ls hört eine EXPLOSION (%ls) von %ls.",
-	"%ls hört einen SCHREI (%ls) von %ls.",
-	"%ls hört einen AUFSCHLAG (%ls) von %ls.",
-	"%ls hört einen AUFSCHLAG (%ls) von %ls.",
-	"%ls hört ein ZERBRECHEN (%ls) von %ls.",
-	"%ls hört ein ZERSCHMETTERN (%ls) von %ls.",
+	"%s hört %s aus dem %s.",
+	"%s hört eine BEWEGUNG (%s) von %s.",
+	"%s hört ein KNARREN (%s) von %s.",
+	"%s hört ein KLATSCHEN (%s) von %s.",
+	"%s hört einen AUFSCHLAG (%s) von %s.",
+	"%s hört eine EXPLOSION (%s) von %s.",
+	"%s hört einen SCHREI (%s) von %s.",
+	"%s hört einen AUFSCHLAG (%s) von %s.",
+	"%s hört einen AUFSCHLAG (%s) von %s.",
+	"%s hört ein ZERBRECHEN (%s) von %s.",
+	"%s hört ein ZERSCHMETTERN (%s) von %s.",
 };
 
 static const ST::string s_ger_wMapScreenSortButtonHelpText[wMapScreenSortButtonHelpText_SIZE] =
@@ -3129,10 +3129,10 @@ static const ST::string s_ger_gzCreditNameFunny[gzCreditNameFunny_SIZE]=
 
 static const ST::string s_ger_sRepairsDoneString[sRepairsDoneString_SIZE] =
 {
-	"%ls hat  seine eigenen Gegenstände repariert",
-	"%ls hat die Waffen und Rüstungen aller Teammitglieder repariert",
-	"%ls hat die aktivierten Gegenstände aller Teammitglieder repariert",
-	"%ls hat die mitgeführten Gegenstände aller Teammitglieder repariert",
+	"%s hat  seine eigenen Gegenstände repariert",
+	"%s hat die Waffen und Rüstungen aller Teammitglieder repariert",
+	"%s hat die aktivierten Gegenstände aller Teammitglieder repariert",
+	"%s hat die mitgeführten Gegenstände aller Teammitglieder repariert",
 };
 
 static const ST::string s_ger_zGioDifConfirmText[zGioDifConfirmText_SIZE]=
@@ -3148,9 +3148,9 @@ static const ST::string s_ger_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"Der Roboter kann diesen Sektor nicht verlassen, wenn niemand die Fernbedienung benutzt.",
 
 	"Sie können den Zeitraffer jetzt nicht benutzen. Warten Sie das Feuerwerk ab!",
-	"%ls will sich nicht bewegen.",
-	"%ls hat nicht genug Energie, um die Position zu ändern.",
-	"%ls hat kein Benzin mehr und steckt in %c%d fest.",
+	"%s will sich nicht bewegen.",
+	"%s hat nicht genug Energie, um die Position zu ändern.",
+	"%s hat kein Benzin mehr und steckt in %c%d fest.",
 
 	//6-10
 
@@ -3178,14 +3178,14 @@ static const ST::string s_ger_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"%d gegen %d",
 
 	//18-19
-	"%ls ist voll!", //(ex "The ice cream truck is full")
-	"%ls braucht nicht eine schnelle Erste Hilfe, sondern eine richtige medizinische Betreuung und/oder Erholung.",
+	"%s ist voll!", //(ex "The ice cream truck is full")
+	"%s braucht nicht eine schnelle Erste Hilfe, sondern eine richtige medizinische Betreuung und/oder Erholung.",
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
-	"%ls ist am Bein getroffen und hingefallen!",
+	"%s ist am Bein getroffen und hingefallen!",
 	//Name can't speak right now.
-	"%ls kann gerade nicht sprechen.",
+	"%s kann gerade nicht sprechen.",
 
 	//22-24 plural versions
 	"%d grüne Milizen wurden zu Elitemilizen befördert.",
@@ -3197,11 +3197,11 @@ static const ST::string s_ger_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 
 	//26
 	//Name has gone psycho -- when the game forces the player into burstmode (certain unstable characters)
-	"%ls dreht durch!",
+	"%s dreht durch!",
 
 	//27-28
 	//Messages why a player can't time compress.
-	"Es ist momentan gefährlich den Zeitraffer zu betätigen, da Sie noch Söldner in Sektor %ls haben.",
+	"Es ist momentan gefährlich den Zeitraffer zu betätigen, da Sie noch Söldner in Sektor %s haben.",
 	"Es ist gefährlich den Zeitraffer zu betätigen, wenn Sie noch Söldner in den von Monstern verseuchten Minen haben.",
 
 	//29-31 singular versions
@@ -3210,18 +3210,18 @@ static const ST::string s_ger_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"1 reguläre Miliz wurde zur Elitemiliz befördert.",
 
 	//32-34
-	"%ls sagt überhaupt nichts.",
+	"%s sagt überhaupt nichts.",
 	"Zur Oberfläche gehen?",
 	"(Trupp %d)",
 
 	//35
-	"%ls reparierte %lss %ls",
+	"%s reparierte %ss %s",
 
 	//36
 	"BLOODCAT",
 
 	//37-38 "Name trips and falls"
-	"%ls stolpert und stürzt",
+	"%s stolpert und stürzt",
 	"Dieser Gegenstand kann von hier aus nicht aufgehoben werden.",
 
 	//39
@@ -3229,17 +3229,17 @@ static const ST::string s_ger_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 
 	//40-43
 	//%s is the name of merc.
-	"%ls hat keinen Erste-Hilfe-Kasten mehr!",
-	"%ls hat nicht das geringste Talent, jemanden zu verarzten!",
-	"%ls hat keinen Werkzeugkasten mehr!",
-	"%ls ist absolut unfähig dazu, irgend etwas zu reparieren!",
+	"%s hat keinen Erste-Hilfe-Kasten mehr!",
+	"%s hat nicht das geringste Talent, jemanden zu verarzten!",
+	"%s hat keinen Werkzeugkasten mehr!",
+	"%s ist absolut unfähig dazu, irgend etwas zu reparieren!",
 
 	//44
 	"Repar. Zeit",
-	"%ls kann diese Person nicht sehen.",
+	"%s kann diese Person nicht sehen.",
 
 	//46-48
-	"%lss Gewehrlauf-Verlängerung fällt ab!",
+	"%ss Gewehrlauf-Verlängerung fällt ab!",
 	"Pro Sektor sind nicht mehr als %d Milizausbilder erlaubt.",
 	"Sind Sie sicher?", //
 
@@ -3252,8 +3252,8 @@ static const ST::string s_ger_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"Zeitraffer anhalten (|E|s|c)",
 
 	//53-54 "Magic has unjammed the Glock 18" or "Magic has unjammed Raven's H&K G11"
-	"%ls hat die Ladehemmung der %ls behoben",
-	"%ls hat die Ladehemmung von %lss %ls behoben",
+	"%s hat die Ladehemmung der %s behoben",
+	"%s hat die Ladehemmung von %ss %s behoben",
 
 	//55
 	"Die Zeit kann nicht komprimiert werden, während das Sektorinventar eingesehen wird.",
@@ -3270,9 +3270,9 @@ static const ST::string s_ger_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"Schalter betätigt.",
 };
 
-static const ST::string s_ger_str_ceramic_plates_smashed = "%lss Keramikplatten wurden zertrümmert!";
+static const ST::string s_ger_str_ceramic_plates_smashed = "%ss Keramikplatten wurden zertrümmert!";
 
-static const ST::string s_ger_str_arrival_rerouted = "Die Ankunft neuer Rekruten wurde nach Sektor %ls umgeleitet, da der geplante Ankunftsort in Sektor %ls vom Feind besetzt ist.";
+static const ST::string s_ger_str_arrival_rerouted = "Die Ankunft neuer Rekruten wurde nach Sektor %s umgeleitet, da der geplante Ankunftsort in Sektor %s vom Feind besetzt ist.";
 
 
 static const ST::string s_ger_str_stat_health       = "Gesundheit";

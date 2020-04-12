@@ -24,7 +24,7 @@
 // - Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only
 //   have one space after a period, which is different than standard typing convention.  Never modify sections
 //   of strings contain combinations of % characters.  These are special format characters and are always
-//   used in conjunction with other characters.  For example, %ls means string, and is commonly used for names,
+//   used in conjunction with other characters.  For example, %s means string, and is commonly used for names,
 //   locations, items, etc.  %d is used for numbers.  %c%d is a character and a number (such as A9).
 //   %% is how a single % character is built.  There are countless types, but strings containing these
 //   special characters are usually commented to explain what they mean.  If it isn't commented, then
@@ -126,24 +126,24 @@ static ST::string s_dut_TeamTurnString[TeamTurnString_SIZE] =
 
 static ST::string s_dut_Message[Message_SIZE] =
 {
-	// In the following 8 strings, the %ls is the merc's name, and the %d (if any) is a number.
+	// In the following 8 strings, the %s is the merc's name, and the %d (if any) is a number.
 
-	"%ls geraakt in hoofd en verliest een intelligentiepunt!",
-	"%ls geraakt in de schouder en verliest een handigheidspunt!",
-	"%ls geraakt in de borst en verliest een krachtspunt!",
-	"%ls geraakt in het benen en verliest een beweeglijkspunt!",
-	"%ls geraakt in het hoofd en verliest %d wijsheidspunten!",
-	"%ls geraakt in de schouder en verliest %d handigheidspunten!",
-	"%ls geraakt in de borst en verliest %d krachtspunten!",
-	"%ls geraakt in de benen en verliest %d beweeglijkheidspunten!",
+	"%s geraakt in hoofd en verliest een intelligentiepunt!",
+	"%s geraakt in de schouder en verliest een handigheidspunt!",
+	"%s geraakt in de borst en verliest een krachtspunt!",
+	"%s geraakt in het benen en verliest een beweeglijkspunt!",
+	"%s geraakt in het hoofd en verliest %d wijsheidspunten!",
+	"%s geraakt in de schouder en verliest %d handigheidspunten!",
+	"%s geraakt in de borst en verliest %d krachtspunten!",
+	"%s geraakt in de benen en verliest %d beweeglijkheidspunten!",
 	"Storing!",
 
 	"Je versterkingen zijn gearriveerd!",
 
-	// In the following four lines, all %ls's are merc names
+	// In the following four lines, all %s's are merc names
 
-	"%ls herlaad.",
-	"%ls heeft niet genoeg actiepunten!",
+	"%s herlaad.",
+	"%s heeft niet genoeg actiepunten!",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
 	"reliable",
@@ -164,51 +164,51 @@ static ST::string s_dut_Message[Message_SIZE] =
 	"large magazine",
 	"small magazine",
 
-	// In the following two lines, all %ls's are merc names
+	// In the following two lines, all %s's are merc names
 
-	"%ls's camouflage is verdwenen.",
-	"%ls's camouflage is afgespoelt.",
+	"%s's camouflage is verdwenen.",
+	"%s's camouflage is afgespoelt.",
 
-	// The first %ls is a merc name and the second %ls is an item name
+	// The first %s is a merc name and the second %s is an item name
 
 	"Tweede wapen is leeg!",
-	"%ls heeft %ls gestolen.",
+	"%s heeft %s gestolen.",
 
-	// The %ls is a merc name
+	// The %s is a merc name
 
-	"%ls's wapen vuurt geen salvo.",
+	"%s's wapen vuurt geen salvo.",
 
 	"Je hebt er al één van die vastgemaakt.",
 	"Samen voegen?",
 
-	// Both %ls's are item names
+	// Both %s's are item names
 
-	"Je verbindt %ls niet met %ls.",
+	"Je verbindt %s niet met %s.",
 	"Geen",
 	"Eject ammo",
 	"Toebehoren",
 
 	//You cannot use "item(s)" and your "other item" at the same time.
 	//Ex:  You cannot use sun goggles and you gas mask at the same time.
-	"%ls en %ls zijn niet tegelijk te gebruiken.",
+	"%s en %s zijn niet tegelijk te gebruiken.",
 
 	"Het item dat je aanwijst, kan vastgemaakt worden aan een bepaald item door het in een van de vier uitbreidingssloten te plaatsen.",
 	"Het item dat je aanwijst, kan vastgemaakt worden aan een bepaald item door het in een van de vier uitbreidingssloten te plaatsen. (Echter, het item is niet compatibel.)",
 	"Er zijn nog vijanden in de sector!",
-	"Je moet %ls %ls nog geven",
-	"kogel doorboorde %ls in zijn hoofd!",
+	"Je moet %s %s nog geven",
+	"kogel doorboorde %s in zijn hoofd!",
 	"Gevecht verlaten?",
 	"Dit samenvoegen is permanent. Verdergaan?",
-	"%ls heeft meer energie!",
-	"%ls is uitgegleden!",
-	"%ls heeft %ls niet gepakt!",
-	"%ls repareert de %ls",
+	"%s heeft meer energie!",
+	"%s is uitgegleden!",
+	"%s heeft %s niet gepakt!",
+	"%s repareert de %s",
 	"Stoppen voor ",
 	"Overgeven?",
 	"Deze persoon weigert je hulp.",
 	"Ik denk het NIET!",
 	"Chopper van Skyrider gebruiken? Eerst huurlingen TOEWIJZEN aan VOERTUIG/HELIKOPTER.",
-	"%ls had tijd maar EEN geweer te herladen",
+	"%s had tijd maar EEN geweer te herladen",
 	"Beurt bloodcats",
 };
 
@@ -710,8 +710,8 @@ static const ST::string s_dut_pLandTypeStrings[pLandTypeStrings_SIZE] =
 
 static const ST::string s_dut_gpStrategicString[gpStrategicString_SIZE] =
 {
-	"%ls zijn ontdekt in sector %c%d en een ander team arriveert binnenkort.",	//STR_DETECTED_SINGULAR
-	"%ls zijn ontdekt in sector %c%d en andere teams arriveren binnenkort.",	//STR_DETECTED_PLURAL
+	"%s zijn ontdekt in sector %c%d en een ander team arriveert binnenkort.",	//STR_DETECTED_SINGULAR
+	"%s zijn ontdekt in sector %c%d en andere teams arriveren binnenkort.",	//STR_DETECTED_PLURAL
 	"Wil je een gezamenlijke aankomst coördineren?",					//STR_COORDINATE
 
 	//Dialog strings for enemies.
@@ -832,11 +832,11 @@ static const ST::string s_dut_gpStrategicString[gpStrategicString_SIZE] =
 	"Beesten vallen je militie aan in sector %c%d.",
 	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
-	"Beesten vallen aan en doden %d burgers in sector %ls.",
-	//%ls is the sector location -- ex:  A9: Omerta
-	"Vijand valt je huurlingen aan in sector %ls. Geen enkele huurling kan vechten!",
-	//%ls is the sector location -- ex:  A9: Omerta
-	"Beesten vallen je huurlingen aan in sector %ls. Geen enkele huurling kan vechten!",
+	"Beesten vallen aan en doden %d burgers in sector %s.",
+	//%s is the sector location -- ex:  A9: Omerta
+	"Vijand valt je huurlingen aan in sector %s. Geen enkele huurling kan vechten!",
+	//%s is the sector location -- ex:  A9: Omerta
+	"Beesten vallen je huurlingen aan in sector %s. Geen enkele huurling kan vechten!",
 
 };
 
@@ -855,7 +855,7 @@ static const ST::string s_dut_sKeyDescriptionStrings[sKeyDescriptionStrings_SIZE
 
 static ST::string s_dut_gWeaponStatsDesc[ gWeaponStatsDesc_SIZE] =
 {
-	"Gewicht (%ls):",
+	"Gewicht (%s):",
 	"Status:",
 	"Munitie:", 		// Number of bullets left in a magazine
 	"Afst:",		// Range
@@ -972,15 +972,15 @@ static ST::string s_dut_TacticalStr[TacticalStr_SIZE] =
 
 	// CAMFIELD NUKE THIS and add quote #66.
 
-	"%ls ziet dat er items missen van de lading.",
+	"%s ziet dat er items missen van de lading.",
 
-	// The %ls is a string from pDoorTrapStrings
+	// The %s is a string from pDoorTrapStrings
 
-	"Het slot heeft %ls.",
+	"Het slot heeft %s.",
 	"Er is geen slot.",
 	"Geen boobytrap op het slot.",
-	// The %ls is a merc name
-	"%ls heeft niet de juiste sleutel.",
+	// The %s is a merc name
+	"%s heeft niet de juiste sleutel.",
 	"Slot heeft geen boobytrap.",
 	"Op slot.",
 	"DEUR",
@@ -992,15 +992,15 @@ static ST::string s_dut_TacticalStr[TacticalStr_SIZE] =
 	"Boobytrap ontmantelen?",
 	"Meer...",
 
-	// In the next 2 strings, %ls is an item name
+	// In the next 2 strings, %s is an item name
 
-	"%ls is op de grond geplaatst.",
-	"%ls is gegeven aan %ls.",
+	"%s is op de grond geplaatst.",
+	"%s is gegeven aan %s.",
 
-	// In the next 2 strings, %ls is a name
+	// In the next 2 strings, %s is a name
 
-	"%ls is helemaal betaald.",
-	"%ls heeft tegoed nog %d.",
+	"%s is helemaal betaald.",
+	"%s heeft tegoed nog %d.",
 	"Kies detonatie frequentie:",  	//in this case, frequency refers to a radio signal
 	"Aantal beurten tot ontploffing:",	//how much time, in turns, until the bomb blows
 	"Stel frequentie in van ontsteking:", 	//in this case, frequency refers to a radio signal
@@ -1009,53 +1009,53 @@ static ST::string s_dut_TacticalStr[TacticalStr_SIZE] =
 	"Blauwe vlag hier neerzetten?",
 	"Laatste beurt",
 
-	// In the next string, %ls is a name. Stance refers to way they are standing.
+	// In the next string, %s is a name. Stance refers to way they are standing.
 
-	"Zeker weten dat je %ls wil aanvallen?",
+	"Zeker weten dat je %s wil aanvallen?",
 	"Ah, voertuigen kunnen plaats niet veranderen.",
 	"De robot kan niet van plaats veranderen.",
 
-	// In the next 3 strings, %ls is a name
+	// In the next 3 strings, %s is a name
 
-	"%ls kan niet naar die plaats gaan.",
-	"%ls kan hier geen EHBO krijgen.",
-	"%ls heeft geen EHBO nodig.",
+	"%s kan niet naar die plaats gaan.",
+	"%s kan hier geen EHBO krijgen.",
+	"%s heeft geen EHBO nodig.",
 	"Kan daar niet heen.",
 	"Je team is vol. Geen ruimte voor rekruut.",	//there's no room for a recruit on the player's team
 
-	// In the next string, %ls is a name
+	// In the next string, %s is a name
 
-	"%ls is gerekruteerd.",
+	"%s is gerekruteerd.",
 
-	// Here %ls is a name and %d is a number
+	// Here %s is a name and %d is a number
 
-	"%ls ontvangt $%d.",
+	"%s ontvangt $%d.",
 
-	// In the next string, %ls is a name
+	// In the next string, %s is a name
 
-	"%ls begeleiden?",
+	"%s begeleiden?",
 
-	// In the next string, the first %ls is a name and the second %ls is an amount of money (including $ sign)
+	// In the next string, the first %s is a name and the second %s is an amount of money (including $ sign)
 
-	"%ls inhuren voor %ls per dag?",
+	"%s inhuren voor %s per dag?",
 
 	// This line is used repeatedly to ask player if they wish to participate in a boxing match.
 
 	"Wil je vechten?",
 
-	// In the next string, the first %ls is an item name and the
-	// second %ls is an amount of money (including $ sign)
+	// In the next string, the first %s is an item name and the
+	// second %s is an amount of money (including $ sign)
 
-	"%ls kopen voor %ls?",
+	"%s kopen voor %s?",
 
-	// In the next string, %ls is a name
+	// In the next string, %s is a name
 
-	"%ls wordt begeleid door team %d.",
+	"%s wordt begeleid door team %d.",
 
 	// These messages are displayed during play to alert the player to a particular situation
 
 	"GEBLOKKEERD",					//weapon is jammed.
-	"Robot heeft %ls kal. munitie nodig.",		//Robot is out of ammo
+	"Robot heeft %s kal. munitie nodig.",		//Robot is out of ammo
 	"Hier gooien? Kan niet.",		//Merc can't throw to the destination he selected
 
 	// These are different buttons that the player can turn on and off.
@@ -1075,11 +1075,11 @@ static ST::string s_dut_TacticalStr[TacticalStr_SIZE] =
 	"|Opties",					// "|Options",
 	"Salvo's (|B)",				// "|Burst Mode",
 	"Kijk/draai (|L)",			// "|Look/Turn",
-	"Gezond: %d/%d\nKracht: %d/%d\nMoraal: %ls",		// "Health: %d/%d\nEnergy: %d/%d\nMorale: %ls",
+	"Gezond: %d/%d\nKracht: %d/%d\nMoraal: %s",		// "Health: %d/%d\nEnergy: %d/%d\nMorale: %s",
 	"Hé?",					//this means "what?"
 	"Door",					//an abbrieviation for "Continued"
-	"%ls is praat weer.",			// "Mute off for %ls.",
-	"%ls is stil.",				// "Mute on for %ls.",
+	"%s is praat weer.",			// "Mute off for %s.",
+	"%s is stil.",				// "Mute on for %s.",
 	"Gezond: %d/%d\nBrandst: %d/%d",	// "Health: %d/%d\nFuel: %d/%d",
 	"Stap uit voertuig",			// "Exit Vehicle" ,
 	"Wissel Team ( |S|h|i|f|t |S|p|a|c|e )",			// "Change Squad ( |S|h|i|f|t |S|p|a|c|e )",
@@ -1093,12 +1093,12 @@ static ST::string s_dut_TacticalStr[TacticalStr_SIZE] =
 	"(Vang)",					// "(Catch)",
 	"(Herlaad)",				// "(Reload)",
 	"(Geef)",					// "(Give)",
-	"%ls is afgezet.",			// "%ls has been set off.",
-	"%ls is gearriveerd.",			// "%ls has arrived.",
-	"%ls heeft geen Actie Punten.",	// "%ls ran out of Action Points.",
-	"%ls is niet beschikbaar.",		// "%ls isn't available.",
-	"%ls zit onder het verband.",		// "%ls is all bandaged.",
-	"Verband van %ls is op.",		// "%ls is out of bandages.",
+	"%s is afgezet.",			// "%s has been set off.",
+	"%s is gearriveerd.",			// "%s has arrived.",
+	"%s heeft geen Actie Punten.",	// "%s ran out of Action Points.",
+	"%s is niet beschikbaar.",		// "%s isn't available.",
+	"%s zit onder het verband.",		// "%s is all bandaged.",
+	"Verband van %s is op.",		// "%s is out of bandages.",
 	"Vijand in de sector!",		// "Enemy in sector!",
 	"Geen vijanden in zicht.",		// "No enemies in sight.",
 	"Niet genoeg Actie Punten.",		// "Not enough Action Points.",
@@ -1116,7 +1116,7 @@ static ST::string s_dut_TacticalStr[TacticalStr_SIZE] =
 	"Naar Sector",				// "Go to Sector",
 	"Naar Landk.",				// "Go to Map",
 	"Vanaf deze kant kun je de sector niet verlaten.",	// "You can't leave the sector from this side.",
-	"%ls is te ver weg.",			// "%ls is too far away.",
+	"%s is te ver weg.",			// "%s is too far away.",
 	"Verwijder Boomtoppen",		// "Removing Treetops",
 	"Tonen Boomtoppen",			// "Showing Treetops",
 	"KRAAI",				//Crow, as in the large black bird
@@ -1134,8 +1134,8 @@ static ST::string s_dut_TacticalStr[TacticalStr_SIZE] =
 	"Vast.",						// Short form of JAMMED, for small inv slots
 	"Kan daar niet heen.",				// used ( now ) for when we click on a cliff
 	"Persoon weigert weg te gaan.",
-	// In the following message, '%ls' would be replaced with a quantity of money (e.g. $200)
-	"Ben je het eens met %ls?",					// "Do you agree to pay %ls?",
+	// In the following message, '%s' would be replaced with a quantity of money (e.g. $200)
+	"Ben je het eens met %s?",					// "Do you agree to pay %s?",
 	"Wil je kostenloze medische hulp?",			// "Accept free medical treatment?",
 	"Wil je trouwen met Daryl?",					// "Agree to marry Daryl?",
 	"Slot Ring Paneel",						// "Key Ring Panel",
@@ -1145,13 +1145,13 @@ static ST::string s_dut_TacticalStr[TacticalStr_SIZE] =
 	"Mijnwerker",							// "Miner",
 	"Voertuig kan alleen tussen sectors reizen",		// "Vehicle can only travel between sectors",
 	"Nu geen Auto-EHBO mogelijk",				// "Can't autobandage right now",
-	"Pad Geblokkeerd voor %ls",					// "Path Blocked for %ls",
+	"Pad Geblokkeerd voor %s",					// "Path Blocked for %s",
 	"Je huurlingen, gevangen door Deidranna's leger, zitten hier opgesloten!",
 	"Slot geraakt",							// "Lock hit",
 	"Slot vernielt",							// "Lock destroyed",
 	"Iemand anders probeert deze deur te gebruiken.",		// "Somebody else is trying to use this door.",
 	"Gezondheid: %d/%d\nBrandstof: %d/%d",				// "Health: %d/%d\nFuel: %d/%d",
-	"%ls kan %ls niet zien.",					// Cannot see person trying to talk to
+	"%s kan %s niet zien.",					// Cannot see person trying to talk to
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
@@ -1170,22 +1170,22 @@ static const ST::string s_dut_pExitingSectorHelpText[pExitingSectorHelpText_SIZE
 	"Als de overgebleven huurlingen uit deze sector trekken,\nwordt je automatisch in het landkaartscherm geplaatst,\nrekening houdend met de reistijd van je huurlingen.",
 
 	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.  The "single" button is disabled.
-	"%ls moet geëscorteerd worden door jouw huurlingen\nen kan de sector niet alleen verlaten.",
+	"%s moet geëscorteerd worden door jouw huurlingen\nen kan de sector niet alleen verlaten.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
 	//There are several strings depending on the gender of the merc and how many EPCs are in the squad.
 	//DO NOT USE THE NEWLINE HERE AS IT IS USED FOR BOTH HELPTEXT AND SCREEN MESSAGES!
-	"%ls kan de sector niet alleen verlaten omdat hij %ls escorteert.",	//male singular
-	"%ls kan de sector niet alleen verlaten omdat zij %ls escorteert.",	//female singular
-	"%ls kan de sector niet alleen verlaten omdat hij meerdere karakters escorteert.",	//male plural
-	"%ls kan de sector niet alleen verlaten omdat zij meerdere karakters escorteert.",	//female plural
+	"%s kan de sector niet alleen verlaten omdat hij %s escorteert.",	//male singular
+	"%s kan de sector niet alleen verlaten omdat zij %s escorteert.",	//female singular
+	"%s kan de sector niet alleen verlaten omdat hij meerdere karakters escorteert.",	//male plural
+	"%s kan de sector niet alleen verlaten omdat zij meerdere karakters escorteert.",	//female plural
 
 	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the  "move all" option is disabled,
 	//and this helptext explains why.
 	"Al je huurlingen moeten in de buurt zijn om het team te laten reizen.",
 
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
-	"Als aangekruist, dan zal %ls alleen verder reizen\nen automatisch bij een uniek team gevoegd worden.",
+	"Als aangekruist, dan zal %s alleen verder reizen\nen automatisch bij een uniek team gevoegd worden.",
 
 	//Standard helptext for all movement.  Explains what will happen (moving the squad)
 	"Als aangekruist, dan zal je geselecteerde\nteam verder reizen, de sector verlatend.",
@@ -1194,7 +1194,7 @@ static const ST::string s_dut_pExitingSectorHelpText[pExitingSectorHelpText_SIZE
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
 	//"exiting sector" interface will not appear.  This is just like the situation where
 	//This string is special, as it is not used as helptext.  Do not use the special newline character (\n) for this string.
-	"%ls wordt geëscorteerd door jouw huurlingen en kan de sector niet alleen verlaten. Je huurlingen moeten eerst in de buurt zijn.",
+	"%s wordt geëscorteerd door jouw huurlingen en kan de sector niet alleen verlaten. Je huurlingen moeten eerst in de buurt zijn.",
 };
 
 
@@ -1339,10 +1339,10 @@ static const ST::string s_dut_pwMiscSectorStrings[pwMiscSectorStrings_SIZE] =
 static const ST::string s_dut_pMapInventoryErrorString[pMapInventoryErrorString_SIZE] =
 {
 	"Kan huurling niet selecteren.",		//MARK CARTER
-	"%ls is niet in de sector om dat item te pakken.",
+	"%s is niet in de sector om dat item te pakken.",
 	"Tijdens gevechten moet je items handmatig oppakken.",
 	"Tijdens gevechten moet je items handmatig neerleggen.",
-	"%ls is niet in de sector om dat item neer te leggen.",
+	"%s is niet in de sector om dat item neer te leggen.",
 };
 
 static const ST::string s_dut_pMapInventoryStrings[pMapInventoryStrings_SIZE] =
@@ -1356,7 +1356,7 @@ static const ST::string s_dut_pMapInventoryStrings[pMapInventoryStrings_SIZE] =
 
 static const ST::string s_dut_pMovementMenuStrings[pMovementMenuStrings_SIZE] =
 {
-	"Huurlingen in Sector %ls", 	// title for movement box
+	"Huurlingen in Sector %s", 	// title for movement box
 	"Teken Reisroute", 		// done with movement menu, start plotting movement
 	"Stop", 		// cancel this menu
 	"Anders",		// title for group of mercs not on squads nor in vehicles
@@ -1400,7 +1400,7 @@ static const ST::string s_dut_pMapScreenBottomFastHelp[pMapScreenBottomFastHelp_
 
 static const ST::string s_dut_pMapScreenBottomText = "Huidig Saldo"; // current balance in player bank account
 
-static const ST::string s_dut_pMercDeadString = "%ls is dood.";
+static const ST::string s_dut_pMercDeadString = "%s is dood.";
 
 
 static const ST::string s_dut_pDayStrings = "Dag";
@@ -1529,31 +1529,31 @@ static const ST::string s_dut_pTransactionText[pTransactionText_SIZE] =
 	"Toegenomen Interest",			// interest the player has accumulated so far
 	"Anonieme Storting",
 	"Transactiekosten",
-	"%ls ingehuurd van AIM", // Merc was hired
+	"%s ingehuurd van AIM", // Merc was hired
 	"Bobby Ray's Wapenhandel", 		// Bobby Ray is the name of an arms dealer
 	"Rekeningen Voldaan bij M.E.R.C.",
-	"Medische Storting voor %ls", 		// medical deposit for merc
+	"Medische Storting voor %s", 		// medical deposit for merc
 	"IMP Profiel Analyse", 		// IMP is the acronym for International Mercenary Profiling
-	"Verzekering Afgesloten voor %ls",
-	"Verzekering Verminderd voor %ls",
-	"Verzekering Verlengd voor %ls", 				// johnny contract extended
-	"Verzekering Afgebroken voor %ls",
-	"Verzekeringsclaim voor %ls", 		// insurance claim for merc
-	"Contract %ls verl. met 1 dag.", 		// entend mercs contract by a day
-	"Contract %ls verl. met 1 week.",
-	"Contract %ls verl. met 2 weken.",
+	"Verzekering Afgesloten voor %s",
+	"Verzekering Verminderd voor %s",
+	"Verzekering Verlengd voor %s", 				// johnny contract extended
+	"Verzekering Afgebroken voor %s",
+	"Verzekeringsclaim voor %s", 		// insurance claim for merc
+	"Contract %s verl. met 1 dag.", 		// entend mercs contract by a day
+	"Contract %s verl. met 1 week.",
+	"Contract %s verl. met 2 weken.",
 	"Inkomen Mijn",
 	"",						//String nuked
 	"Gekochte Bloemen",
-	"Volledige Medische Vergoeding voor %ls",
-	"Gedeeltelijke Medische Vergoeding voor %ls",
-	"Geen Medische Vergoeding voor %ls",
-	"Betaling aan %ls",			// %ls is the name of the npc being paid
-	"Maak Geld over aan %ls", 		// transfer funds to a merc
-	"Maak Geld over van %ls", 		// transfer funds from a merc
-	"Rust militie uit in %ls",		// initial cost to equip a town's militia
-	"Items gekocht van %ls.",		//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
-	"%ls heeft geld gestort.",
+	"Volledige Medische Vergoeding voor %s",
+	"Gedeeltelijke Medische Vergoeding voor %s",
+	"Geen Medische Vergoeding voor %s",
+	"Betaling aan %s",			// %s is the name of the npc being paid
+	"Maak Geld over aan %s", 		// transfer funds to a merc
+	"Maak Geld over van %s", 		// transfer funds from a merc
+	"Rust militie uit in %s",		// initial cost to equip a town's militia
+	"Items gekocht van %s.",		//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
+	"%s heeft geld gestort.",
 };
 
 // helicopter pilot payment
@@ -1579,7 +1579,7 @@ static const ST::string s_dut_pMoralStrings[pMoralStrings_SIZE] =
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
-static const ST::string s_dut_str_left_equipment   = "%ls's uitrusting is nu beschikbaar in %ls (%c%d).";
+static const ST::string s_dut_str_left_equipment   = "%s's uitrusting is nu beschikbaar in %s (%c%d).";
 
 // Status that appears on the Map Screen
 
@@ -1621,51 +1621,51 @@ static const ST::string s_dut_pMapErrorString[pMapErrorString_SIZE] =
 	"Je hebt nog geen team-leden.", // you have no members, can't do anything
 	"Huurling kan order niet opvolgen.", // merc can't comply with your order
 //6-10
-	"%ls heeft een escorte nodig. Plaats hem in een team.", // merc can't move unescorted .. for a male
-	"%ls heeft een escorte nodig. Plaats haar in een team.", // for a female
+	"%s heeft een escorte nodig. Plaats hem in een team.", // merc can't move unescorted .. for a male
+	"%s heeft een escorte nodig. Plaats haar in een team.", // for a female
 	"Huurling is nog niet in Arulco aangekomen!",
 	"Het lijkt erop dat er eerst nog contractbesprekingen gehouden moeten worden.",
 	"",
 //11-15
 	"Reisorders? Er is daar een gevecht gaande!",
-	"Je bent in een hinderlaag gelokt van Bloodcats in sector %ls!",
+	"Je bent in een hinderlaag gelokt van Bloodcats in sector %s!",
 	"Je bent in sector I16 iets binnengelopen dat lijkt op het hol van een bloodcat!",
 	"",
-	"De SAM-stelling in %ls is overgenomen.",
+	"De SAM-stelling in %s is overgenomen.",
 //16-20
-	"De mijn in %ls is overgenomen. Je dagelijkse inkomen is gereduceerd tot %ls per dag.",
-	"De vijand heeft sector %ls onbetwist overgenomen.",
+	"De mijn in %s is overgenomen. Je dagelijkse inkomen is gereduceerd tot %s per dag.",
+	"De vijand heeft sector %s onbetwist overgenomen.",
 	"Tenminste een van je huurlingen kan niet meedoen met deze opdracht.",
-	"%ls kon niet meedoen met %ls omdat het al vol is",
-	"%ls kon niet meedoen met %ls omdat het te ver weg is.",
+	"%s kon niet meedoen met %s omdat het al vol is",
+	"%s kon niet meedoen met %s omdat het te ver weg is.",
 //21-25
-	"De mijn in %ls is buitgemaakt door Deidranna's troepen!",
-	"Deidranna's troepen zijn net de SAM-stelling in %ls binnengevallen",
-	"Deidranna's troepen zijn net %ls binnengevallen",
-	"Deidranna's troepen zijn gezien in %ls.",
-	"Deidranna's troepen hebben zojuist %ls overgenomen.",
+	"De mijn in %s is buitgemaakt door Deidranna's troepen!",
+	"Deidranna's troepen zijn net de SAM-stelling in %s binnengevallen",
+	"Deidranna's troepen zijn net %s binnengevallen",
+	"Deidranna's troepen zijn gezien in %s.",
+	"Deidranna's troepen hebben zojuist %s overgenomen.",
 //26-30
 	"Tenminste één huurling kon niet tot slapen gebracht worden.",
 	"Tenminste één huurling kon niet wakker gemaakt worden.",
 	"De Militie verschijnt niet totdat hun training voorbij is.",
-	"%ls kan geen reisorders gegeven worden op dit moment.",
+	"%s kan geen reisorders gegeven worden op dit moment.",
 	"Milities niet binnen de stadsgrenzen kunnen niet verplaatst worden naar een andere sector.",
 //31-35
-	"Je kunt geen militie in %ls hebben.",
+	"Je kunt geen militie in %s hebben.",
 	"Een voertuig kan niet leeg rijden!",
-	"%ls is te gewond om te reizen!",
+	"%s is te gewond om te reizen!",
 	"Je moet het museum eerst verlaten!",
-	"%ls is dood!",
+	"%s is dood!",
 //36-40
-	"%ls kan niet wisselen naar %ls omdat het onderweg is",
-	"%ls kan het voertuig op die manier niet in",
-	"%ls kan zich niet aansluiten bij %ls",
+	"%s kan niet wisselen naar %s omdat het onderweg is",
+	"%s kan het voertuig op die manier niet in",
+	"%s kan zich niet aansluiten bij %s",
 	"Totdat je nieuwe huurlingen in dienst neemt, kan de tijd niet versneld worden!",
 	"Dit voertuig kan alleen over wegen rijden!",
 //41-45
 	"Je kunt geen reizende huurlingen opnieuw toewijzen",
 	"Voertuig zit zonder brandstof!",
-	"%ls is te moe om te reizen.",
+	"%s is te moe om te reizen.",
 	"Niemand aan boord is in staat om het voertuig te besturen.",
 	"Eén of meer teamleden kunnen zich op dit moment niet verplaatsen.",
 //46-50
@@ -1691,10 +1691,10 @@ static const ST::string s_dut_pMapPlotStrings[pMapPlotStrings_SIZE] =
 static const ST::string s_dut_pBullseyeStrings[pBullseyeStrings_SIZE] =
 {
 	"Klik op de sector waar de huurlingen in plaats daarvan moeten arriveren.",
-	"OK. Arriverende huurlingen worden afgezet in %ls",
+	"OK. Arriverende huurlingen worden afgezet in %s",
 	"Huurlingen kunnen hier niet ingevlogen worden, het luchtruim is onveilig!",
 	"Afgebroken. Aankomst-sector onveranderd",
-	"Luchtruim boven %ls is niet langer veilig! Aankomst-sector is verplaatst naar %ls.",
+	"Luchtruim boven %s is niet langer veilig! Aankomst-sector is verplaatst naar %s.",
 };
 
 
@@ -1708,10 +1708,10 @@ static const ST::string s_dut_pMiscMapScreenMouseRegionHelpText[pMiscMapScreenMo
 };
 
 
-static const ST::string s_dut_str_he_leaves_where_drop_equipment  = "Laat %ls zijn uitrusting achterlaten waar hij nu is (%ls) of later in %ls (%ls) bij het nemen van de vlucht uit Arulco?";
-static const ST::string s_dut_str_she_leaves_where_drop_equipment = "Laat %ls haar uitrusting achterlaten waar ze nu is (%ls) of later in %ls (%ls) bij het nemen van de vlucht uit Arulco?";
-static const ST::string s_dut_str_he_leaves_drops_equipment       = "%ls gaat binnenkort weg en laat zijn uitrusting achter in %ls.";
-static const ST::string s_dut_str_she_leaves_drops_equipment      = "%ls gaat binnenkort weg en laat haar uitrusting achter in %ls.";
+static const ST::string s_dut_str_he_leaves_where_drop_equipment  = "Laat %s zijn uitrusting achterlaten waar hij nu is (%s) of later in %s (%s) bij het nemen van de vlucht uit Arulco?";
+static const ST::string s_dut_str_she_leaves_where_drop_equipment = "Laat %s haar uitrusting achterlaten waar ze nu is (%s) of later in %s (%s) bij het nemen van de vlucht uit Arulco?";
+static const ST::string s_dut_str_he_leaves_drops_equipment       = "%s gaat binnenkort weg en laat zijn uitrusting achter in %s.";
+static const ST::string s_dut_str_she_leaves_drops_equipment      = "%s gaat binnenkort weg en laat haar uitrusting achter in %s.";
 
 
 // Text used on IMP Web Pages
@@ -1803,40 +1803,40 @@ static const ST::string s_dut_pHistoryStrings[pHistoryStrings_SIZE] =
 {
 	"",										// leave this line blank
 	//1-5
-	"%ls ingehuurd via A.I.M.",						// merc was hired from the aim site
-	"%ls ingehuurd via M.E.R.C.",						// merc was hired from the merc site
-	"%ls gedood.", 								// merc was killed
+	"%s ingehuurd via A.I.M.",						// merc was hired from the aim site
+	"%s ingehuurd via M.E.R.C.",						// merc was hired from the merc site
+	"%s gedood.", 								// merc was killed
 	"Facturen betaald bij M.E.R.C.",					// paid outstanding bills at MERC
 	"Opdracht van Enrico Chivaldori geaccepteerd.",		// ("Accepted Assignment From Enrico Chivaldori")
 	//6-10
 	"IMP Profiel Klaar",							// ("IMP Profile Generated")
-	"Verzekeringspolis gekocht voor %ls.",				// insurance contract purchased
-	"Verzekeringspolis afgebroken van %ls.",				// insurance contract canceled
-	"Uitbetaling Verzekeringspolis %ls.",				// insurance claim payout for merc
-	"%ls's contract verlengd met 1 dag.",				// Extented "mercs name"'s for a day
+	"Verzekeringspolis gekocht voor %s.",				// insurance contract purchased
+	"Verzekeringspolis afgebroken van %s.",				// insurance contract canceled
+	"Uitbetaling Verzekeringspolis %s.",				// insurance claim payout for merc
+	"%s's contract verlengd met 1 dag.",				// Extented "mercs name"'s for a day
 	//11-15
-	"%ls's contract verlengd met 1 week.",				// Extented "mercs name"'s for a week
-	"%ls's contract verlengd met 2 weken.",				// Extented "mercs name"'s 2 weeks
-	"%ls is ontslagen.",							// "merc's name" was dismissed.
-	"%ls gestopt.",								// "merc's name" quit.
+	"%s's contract verlengd met 1 week.",				// Extented "mercs name"'s for a week
+	"%s's contract verlengd met 2 weken.",				// Extented "mercs name"'s 2 weeks
+	"%s is ontslagen.",							// "merc's name" was dismissed.
+	"%s gestopt.",								// "merc's name" quit.
 	"zoektocht gestart.",							// a particular quest started
 	//16-20
 	"zoektocht afgesloten.",						// ("quest completed.")
-	"Gepraat met hoofdmijnwerker van %ls",				// talked to head miner of town
-	"%ls bevrijd",								// ("Liberated %ls")
+	"Gepraat met hoofdmijnwerker van %s",				// talked to head miner of town
+	"%s bevrijd",								// ("Liberated %s")
 	"Vals gespeeld",								// ("Cheat Used")
 	"Voedsel zou morgen in Omerta moeten zijn",			// ("Food should be in Omerta by tomorrow")
 	//21-25
-	"%ls weggegaan, wordt Daryl Hick's vrouw",			// ("%ls left team to become Daryl Hick's wife")
-	"%ls's contract afgelopen.",						// ("%ls's contract expired.")
-	"%ls aangenomen.",							// ("%ls was recruited.")
+	"%s weggegaan, wordt Daryl Hick's vrouw",			// ("%s left team to become Daryl Hick's wife")
+	"%s's contract afgelopen.",						// ("%s's contract expired.")
+	"%s aangenomen.",							// ("%s was recruited.")
 	"Enrico klaagde over de voortgang",				// ("Enrico complained about lack of progress")
 	"Strijd gewonnen",							// ("Battle won")
 	//26-30
-	"%ls mijn raakt uitgeput",						// ("%ls mine started running out of ore")
-	"%ls mijn is uitgeput",							// ("%ls mine ran out of ore")
-	"%ls mijn is gesloten",							// ("%ls mine was shut down")
-	"%ls mijn heropend",							// ("%ls mine was reopened")
+	"%s mijn raakt uitgeput",						// ("%s mine started running out of ore")
+	"%s mijn is uitgeput",							// ("%s mine ran out of ore")
+	"%s mijn is gesloten",							// ("%s mine was shut down")
+	"%s mijn heropend",							// ("%s mine was reopened")
 	"Info verkregen over gevangenis Tixa.",				// ("Found out about a prison called Tixa.")
 	//31-35
 	"Van geheime wapenfabriek gehoord, Orta genaamd.",		// ("Heard about a secret weapons plant called Orta.")
@@ -1872,10 +1872,10 @@ static const ST::string s_dut_pHistoryStrings[pHistoryStrings_SIZE] =
 	"Als Dave gas heeft, geeft hij deze weg.",			// ("If Dave has gas, he'll provide free fillups.")
 	"Geslijmd met Pablo.",							// ("Greased Pablo's palms.")
 	"Kingpin bewaard geld in San Mona mine.",			// ("Kingpin keeps money in San Mona mine.")
-	"%ls heeft Extreme Fighting gewonnen",				// ("%ls won Extreme Fighting match")
-	"%ls heeft Extreme Fighting verloren",				// ("%ls lost Extreme Fighting match")
+	"%s heeft Extreme Fighting gewonnen",				// ("%s won Extreme Fighting match")
+	"%s heeft Extreme Fighting verloren",				// ("%s lost Extreme Fighting match")
 	//61-65
-	"%ls gediskwalificeerd v. Extreme Fighting",			// ("%ls was disqualified in Extreme Fighting")
+	"%s gediskwalificeerd v. Extreme Fighting",			// ("%s was disqualified in Extreme Fighting")
 	"Veel geld gevonden in een verlaten mijn.",			// ("Found a lot of money stashed in the abandoned mine.")
 	"Huurmoordenaar van Kingpin ontdekt.",				// ("Encountered assassin sent by Kingpin.")
 	"Controle over sector verloren",					//ENEMY_INVASION_CODE ("Lost control of sector")
@@ -1890,10 +1890,10 @@ static const ST::string s_dut_pHistoryStrings[pHistoryStrings_SIZE] =
 	"Beesten vielen aan",					//CREATURE_ATTACK_CODE ("Creatures attacked")
 	"Gedood door bloodcats",				//BLOODCAT_AMBUSH_CODE ("Killed by bloodcats")
 	"Afgeslacht door bloodcats",				// ("Slaughtered bloodcats")
-	"%ls was gedood",						// ("%ls was killed")
+	"%s was gedood",						// ("%s was killed")
 	"Carmen kop v.e. terrorist gegeven",		// ("Gave Carmen a terrorist's head")
 	"Slay vertrok",						// ("Slay left")
-	"%ls vermoord",						// ("Killed %ls")
+	"%s vermoord",						// ("Killed %s")
 };
 
 static const ST::string s_dut_pHistoryLocations = "Nvt"; // N/A is an acronym for Not Applicable
@@ -2173,7 +2173,7 @@ static const ST::string s_dut_MercAccountText[MercAccountText_SIZE] =
 	"Tarief",	//5
 	"Prijs",
 	"Totaal:",
-	"Weet je zeker de betaling van %ls te autoriseren?",		//the %ls is a string that contains the dollar amount ( ex. "$150" )
+	"Weet je zeker de betaling van %s te autoriseren?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
 };
 
 
@@ -2347,7 +2347,7 @@ static const ST::string s_dut_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
 {
 	"Bestelformulier",				//Title of the page
 	"Hvl",					// The number of items ordered
-	"Gewicht(%ls)",			// The weight of the item
+	"Gewicht(%s)",			// The weight of the item
 	"Itemnaam",				// The name of the item
 	"Prijs unit",				// the item's weight
 	"Totaal",				//5	// The total price of all of items of the same type
@@ -2356,7 +2356,7 @@ static const ST::string s_dut_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
 	"Eindtotaal",			// The grand total of all item totals + the shipping and handling
 	"Bezorglocatie",
 	"Verzendingssnelheid",			//10	// See below
-	"Kosten (per %ls.)",			// The cost to ship the items
+	"Kosten (per %s.)",			// The cost to ship the items
 	"Nacht-Express",			// Gets deliverd the next day
 	"2 Werkdagen",			// Gets delivered in 2 days
 	"Standaard Service",			// Gets delivered in 3 days
@@ -2367,7 +2367,7 @@ static const ST::string s_dut_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
 	"* Duidt op Gebruikte Items",		// Disclaimer stating that the item is used
 	"Je kunt dit niet betalen.",		//20	// A popup message that to warn of not enough money
 	"<GEEN>",				// Gets displayed when there is no valid city selected
-	"Weet je zeker dat je de bestelling wil sturen naar %ls?",		// A popup that asks if the city selected is the correct one
+	"Weet je zeker dat je de bestelling wil sturen naar %s?",		// A popup that asks if the city selected is the correct one
 	"Gewicht Pakket**",			// Displays the weight of the package
 	"** Min. Gew.",				// Disclaimer states that there is a minimum weight for the package
 	"Zendingen",
@@ -2644,8 +2644,8 @@ static const ST::string s_dut_AimFiText[AimFiText_SIZE] =
 
 	// The title of the page, the above text gets added at the end of this text
 
-	"A.I.M. Leden Oplopend Gesorteerd op %ls",
-	"A.I.M. Leden Aflopend Gesorteerd op %ls",
+	"A.I.M. Leden Oplopend Gesorteerd op %s",
+	"A.I.M. Leden Aflopend Gesorteerd op %s",
 
 	// Instructions to the players on what to do
 
@@ -2743,9 +2743,9 @@ static const ST::string s_dut_SKI_Text[SKI_SIZE ] =
 
 static const ST::string s_dut_SkiMessageBoxText[SkiMessageBoxText_SIZE] =
 {
-	"Wil je %ls aftrekken van je hoofdrekening om het verschil op te vangen?",
-	"Niet genoeg geld. Je komt %ls tekort",
-	"Wil je %ls aftrekken van je hoofdrekening om de kosten te dekken?",
+	"Wil je %s aftrekken van je hoofdrekening om het verschil op te vangen?",
+	"Niet genoeg geld. Je komt %s tekort",
+	"Wil je %s aftrekken van je hoofdrekening om de kosten te dekken?",
 	"Vraag de dealer om de transactie te starten",
 	"Vraag de dealer om de gesel. items te repareren",
 	"Einde conversatie",
@@ -2822,15 +2822,15 @@ static const ST::string s_dut_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 	"Je hebt geen militie. Je moet stadsburgers trainen om een stadsmilitie te krijgen.",
 	"Dagelijks Inkomen",
 	"Huurling heeft levensverzekering",
-	"%ls is niet moe.",
-	"%ls is bezig en kan niet slapen",
-	"%ls is te moe, probeer het later nog eens.",
-	"%ls is aan het rijden.",
+	"%s is niet moe.",
+	"%s is bezig en kan niet slapen",
+	"%s is te moe, probeer het later nog eens.",
+	"%s is aan het rijden.",
 	"Team kan niet reizen met een slapende huurling.",
 
 	// stuff for contracts
 	"Je kunt wel het contract betalen, maar je hebt geen geld meer om de levensverzekering van de huurling te betalen.",
-	"%ls verzekeringspremie kost %ls voor %d extra dag(en). Wil je betalen?",
+	"%s verzekeringspremie kost %s voor %d extra dag(en). Wil je betalen?",
 	"Inventaris Sector",
 	"Huurling heeft medische kosten.",
 
@@ -2839,16 +2839,16 @@ static const ST::string s_dut_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 	"Patiënten", // people who are being bandaged by a medic
 	"OK", // Continue on with the game after autobandage is complete
 	"Stop", // Stop autobandaging of patients by medics now
-	"%ls heeft geen reparatie-kit.",
-	"%ls heeft geen medische kit.",
+	"%s heeft geen reparatie-kit.",
+	"%s heeft geen medische kit.",
 	"Er zijn nu niet genoeg mensen die getraind willen worden.",
-	"%ls is vol met milities.",
+	"%s is vol met milities.",
 	"Huurling heeft eindig contract.",
 	"Contract Huurling is niet verzekerd",
 };
 
 
-static const ST::string s_dut_pLandMarkInSectorString = "Team %d is heeft iemand ontdekt in sector %ls";
+static const ST::string s_dut_pLandMarkInSectorString = "Team %d is heeft iemand ontdekt in sector %s";
 
 // confirm the player wants to pay X dollars to build a militia force in town
 static const ST::string s_dut_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] =
@@ -2856,13 +2856,13 @@ static const ST::string s_dut_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE
 	"Een stadsmilitie trainen kost $",		// telling player how much it will cost
 	"Uitgave goedkeuren?", // asking player if they wish to pay the amount requested
 	"je kunt dit niet betalen.", // telling the player they can't afford to train this town
-	"Doorgaan met militie trainen %ls (%ls %d)?", // continue training this town?
+	"Doorgaan met militie trainen %s (%s %d)?", // continue training this town?
 	"Kosten $", // the cost in dollars to train militia
 	"( J/N )",   // abbreviated yes/no
-	"Stadsmilities trainen in %d sectors kost $ %d. %ls", // cost to train sveral sectors at once
+	"Stadsmilities trainen in %d sectors kost $ %d. %s", // cost to train sveral sectors at once
 	"Je kunt de $%d niet betalen om de stadsmilitie hier te trainen.",
-	"%ls heeft een loyaliteit nodig van %d procent om door te gaan met milities trainen.",
-	"Je kunt de militie in %ls niet meer trainen.",
+	"%s heeft een loyaliteit nodig van %d procent om door te gaan met milities trainen.",
+	"Je kunt de militie in %s niet meer trainen.",
 };
 
 
@@ -2870,7 +2870,7 @@ static const ST::string s_dut_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE
 static const ST::string s_dut_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
 {
 	"Je kunt maximaal $20.000 in één keer opnemen.",
-	"Weet je zeker dat je %ls wil storten op je rekening?",
+	"Weet je zeker dat je %s wil storten op je rekening?",
 };
 
 static const ST::string s_dut_gzCopyrightText = "Copyright (C) 1999 Sir-tech Canada Ltd.  All rights reserved.";
@@ -3013,7 +3013,7 @@ static const ST::string s_dut_pDeliveryLocationStrings[pDeliveryLocationStrings_
 static const ST::string s_dut_pSkillAtZeroWarning    = "Are you sure? A value of zero means NO ability in this skill.";
 static const ST::string s_dut_pIMPBeginScreenStrings = "( 8 Karakters Max )";
 static const ST::string s_dut_pIMPFinishButtonText   = "Analiseren";
-static const ST::string s_dut_pIMPFinishStrings      = "Bedankt, %ls"; //%ls is the name of the merc
+static const ST::string s_dut_pIMPFinishStrings      = "Bedankt, %s"; //%s is the name of the merc
 static const ST::string s_dut_pIMPVoicesStrings      = "Stem"; // the strings for imp voices screen
 
 // title for program
@@ -3052,17 +3052,17 @@ static const ST::string s_dut_pMessageStrings[pMessageStrings_SIZE] =
 	"USD",					//Abbreviation to US dollars
 	"nvt",					//Lowercase acronym for not applicable.
 	"Intussen",		//Meanwhile
-	"%ls is gearriveerd in sector %ls%ls", //Name/Squad has arrived in sector A9.  Order must not change without notifying
+	"%s is gearriveerd in sector %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	"Versie",
 	"Leeg SnelBewaarSlot",
 	"Dit slot is gereserveerd voor SnelBewaren tijdens tactische en kaartoverzichten m.b.v. ALT+S.",
 	"Geopend",
 	"Gesloten",
-	"Schijfruimte raakt op. Er is slects %ls MB vrij en Jagged Alliance 2 heeft %ls MB nodig.",
-	"%ls heeft %ls gevangen.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
-	"%ls heeft de drug genomen.",		//'Merc name' has taken the drug
-	"%ls heeft geen medische kennis",	//'Merc name' has no medical skill.
+	"Schijfruimte raakt op. Er is slects %s MB vrij en Jagged Alliance 2 heeft %s MB nodig.",
+	"%s heeft %s gevangen.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
+	"%s heeft de drug genomen.",		//'Merc name' has taken the drug
+	"%s heeft geen medische kennis",	//'Merc name' has no medical skill.
 
 	//CDRom errors (such as ejecting CD while attempting to read the CD)
 	"De integriteit van het spel is aangetast.",
@@ -3079,9 +3079,9 @@ static const ST::string s_dut_pMessageStrings[pMessageStrings_SIZE] =
 	"Gooi",
 	"Geef",
 
-	"%ls gegeven aan %ls.",	//"Item" passed to "merc".  Please try to keep the item %ls before the merc %ls,
+	"%s gegeven aan %s.",	//"Item" passed to "merc".  Please try to keep the item %s before the merc %s,
 					//otherwise, must notify SirTech.
-	"Geen plaats om %ls aan %ls te geven.",	//pass "item" to "merc".  Same instructions as above.
+	"Geen plaats om %s aan %s te geven.",	//pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
 	" eraan vastgemaakt)",
@@ -3093,8 +3093,8 @@ static const ST::string s_dut_pMessageStrings[pMessageStrings_SIZE] =
 	//Toggling various stealth modes
 	"Team op sluipmodus.",
 	"Team niet op sluipmodus.",
-	"%ls op sluipmodus.",
-	"%ls niet op sluipmodus.",
+	"%s op sluipmodus.",
+	"%s niet op sluipmodus.",
 
 	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in
 	//an isometric engine.  You can toggle this mode freely in the game.
@@ -3114,13 +3114,13 @@ static const ST::string s_dut_pMessageStrings[pMessageStrings_SIZE] =
 	"3D Cursor UIT.",
 	"3D Cursor AAN.",
 	"Team %d actief.",
-	"Je kunt %ls's dagelijkse salaris van %ls niet betalen",	//first %ls is the mercs name, the seconds is a string containing the salary
+	"Je kunt %s's dagelijkse salaris van %s niet betalen",	//first %s is the mercs name, the seconds is a string containing the salary
 	"Overslaan",
-	"%ls kan niet alleen weggaan.",
+	"%s kan niet alleen weggaan.",
 	"Een spel is bewaard onder de naam SaveGame99.sav. Indien nodig, hernoem het naar SaveGame10 zodat je het kan aanroepen in het Laden-scherm.",
-	"%ls dronk wat %ls",
+	"%s dronk wat %s",
 	"Een pakket is in Drassen gearriveerd.",
-	"%ls zou moeten arriveren op het aangewezen punt (sector %ls) op dag %d, om ongeveer %ls.",
+	"%s zou moeten arriveren op het aangewezen punt (sector %s) op dag %d, om ongeveer %s.",
 	"Geschiedenisverslag bijgewerkt.",
 };
 
@@ -3136,7 +3136,7 @@ static const ST::string s_dut_ItemPickupHelpPopup[ItemPickupHelpPopup_SIZE] =
 
 static const ST::string s_dut_pDoctorWarningString[pDoctorWarningString_SIZE] =
 {
-	"%ls is niet dichtbij genoeg om te worden genezen.",
+	"%s is niet dichtbij genoeg om te worden genezen.",
 	"Je medici waren niet in staat om iedereen te verbinden.",
 };
 
@@ -3201,7 +3201,7 @@ static const ST::string s_dut_gzMiscString[gzMiscString_SIZE] =
 	"Je militie vecht door zonder hulp van je huurlingen...",
 	"Het voertuig heeft geen brandstof meer nodig.",
 	"De brandstoftank is voor %d%% gevuld.",
-	"Het leger van Deidranna heeft totale controle verkregen over %ls.",
+	"Het leger van Deidranna heeft totale controle verkregen over %s.",
 	"Je hebt een tankplaats verloren.",
 };
 
@@ -3213,17 +3213,17 @@ static const ST::string s_dut_gzIntroScreen = "Kan intro video niet vinden";
 // e.g. "Sidney hears a loud sound of MOVEMENT coming from the SOUTH."
 static const ST::string s_dut_pNewNoiseStr[pNewNoiseStr_SIZE] =
 {
-	"%ls hoort een %ls geluid uit %ls.",
-	"%ls hoort een %ls geluid van BEWEGING uit %ls.",
-	"%ls hoort een %ls KRAKEND geluid uit %ls.",
-	"%ls hoort een %ls SPETTEREND geluid uit %ls.",
-	"%ls hoort een %ls INSLAG uit %ls.",
-	"%ls hoort een %ls EXPLOSIE naar %ls.",
-	"%ls hoort een %ls SCHREEUW naar %ls.",
-	"%ls hoort een %ls INSLAG naar %ls.",
-	"%ls hoort een %ls INSLAG naar %ls.",
-	"%ls hoort een %ls VERSPLINTEREN uit %ls.",
-	"%ls hoort een %ls KLAP uit %ls.",
+	"%s hoort een %s geluid uit %s.",
+	"%s hoort een %s geluid van BEWEGING uit %s.",
+	"%s hoort een %s KRAKEND geluid uit %s.",
+	"%s hoort een %s SPETTEREND geluid uit %s.",
+	"%s hoort een %s INSLAG uit %s.",
+	"%s hoort een %s EXPLOSIE naar %s.",
+	"%s hoort een %s SCHREEUW naar %s.",
+	"%s hoort een %s INSLAG naar %s.",
+	"%s hoort een %s INSLAG naar %s.",
+	"%s hoort een %s VERSPLINTEREN uit %s.",
+	"%s hoort een %s KLAP uit %s.",
 };
 
 static const ST::string s_dut_wMapScreenSortButtonHelpText[wMapScreenSortButtonHelpText_SIZE] =
@@ -3314,10 +3314,10 @@ static const ST::string s_dut_gzCreditNameFunny[gzCreditNameFunny_SIZE]=
 
 static const ST::string s_dut_sRepairsDoneString[sRepairsDoneString_SIZE] =
 {
-	"%ls is klaar met reparatie van eigen items",
-	"%ls is klaar met reparatie van ieders wapens en bepantering",
-	"%ls is klaar met reparatie van ieders uitrusting",
-	"%ls is klaar met reparatie van ieders vervoerde items",
+	"%s is klaar met reparatie van eigen items",
+	"%s is klaar met reparatie van ieders wapens en bepantering",
+	"%s is klaar met reparatie van ieders uitrusting",
+	"%s is klaar met reparatie van ieders vervoerde items",
 };
 
 static const ST::string s_dut_zGioDifConfirmText[zGioDifConfirmText_SIZE]=
@@ -3336,13 +3336,13 @@ static const ST::string s_dut_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"Je kan de tijd niet versnellen, Wacht op het vuurwerk!",
 
 	//'Name' refuses to move.
-	"%ls weigert zich te verplaatsen.",
+	"%s weigert zich te verplaatsen.",
 
-	//%ls a merc name
-	"%ls heeft niet genoeg energie om standpunt te wisselen.",
+	//%s a merc name
+	"%s heeft niet genoeg energie om standpunt te wisselen.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	"%ls heeft geen brandstof en is gestrand in %c%d.",
+	"%s heeft geen brandstof en is gestrand in %c%d.",
 
 	//6-10
 
@@ -3370,15 +3370,15 @@ static const ST::string s_dut_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	//"vs." is the abbreviation of versus.
 	"%d vs. %d",
 
-	"%ls is vol!",  //(ex "The ice cream truck is full")
+	"%s is vol!",  //(ex "The ice cream truck is full")
 
-	"%ls heeft geen eerste hulp nodig, maar échte medische hulp of iets dergelijks.",
+	"%s heeft geen eerste hulp nodig, maar échte medische hulp of iets dergelijks.",
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
-	"%ls is geraakt in het been en valt om!",
+	"%s is geraakt in het been en valt om!",
 	//Name can't speak right now.
-	"%ls kan nu niet praten.",
+	"%s kan nu niet praten.",
 
 	//22-24 plural versions
 	"%d groene milities zijn gepromoveerd tot veteranenmilitie.",
@@ -3390,11 +3390,11 @@ static const ST::string s_dut_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 
 	//26
 	//Name has gone psycho -- when the game forces the player into burstmode (certain unstable characters)
-	"%ls wordt gek!",
+	"%s wordt gek!",
 
 	//27-28
 	//Messages why a player can't time compress.
-	"Het is nu onveilig om de tijd te versnellen omdat je huurlingen hebt in sector %ls.",
+	"Het is nu onveilig om de tijd te versnellen omdat je huurlingen hebt in sector %s.",
 	"Het is nu onveilig om de tijd te versnellen als er huurlingen zijn in de mijnen met beesten.",
 
 	//29-31 singular versions
@@ -3403,37 +3403,37 @@ static const ST::string s_dut_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"1 reguliere militie is gepromoveerd tot veteranenmilitie.",
 
 	//32-34
-	"%ls zegt helemaal niets.",
+	"%s zegt helemaal niets.",
 	"Naar oppervlakte reizen?",
 	"(Team %d)",
 
 	//35
 	//Ex: "Red has repaired Scope's MP5K".  Careful to maintain the proper order (Red before Scope, Scope before MP5K)
-	"%ls heeft %ls's %ls gerepareerd",
+	"%s heeft %s's %s gerepareerd",
 
 	//36
 	"BLOODCAT",
 
 	//37-38 "Name trips and falls"
-	"%ls ups en downs",
+	"%s ups en downs",
 	"Dit item kan vanaf hier niet opgepakt worden.",
 
 	//39
 	"Geen enkele huurling van je is in staat om te vechten. De militie zal zelf tegen de beesten vechten.",
 
 	//40-43
-	//%ls is the name of merc.
-	"%ls heeft geen medische kits meer!",
-	"%ls heeft geen medische kennis om iemand te verzorgen!",
-	"%ls heeft geen gereedschapkits meer!",
-	"%ls heeft geen technische kennis om iets te repareren!",
+	//%s is the name of merc.
+	"%s heeft geen medische kits meer!",
+	"%s heeft geen medische kennis om iemand te verzorgen!",
+	"%s heeft geen gereedschapkits meer!",
+	"%s heeft geen technische kennis om iets te repareren!",
 
 	//44-45
 	"Reparatietijd",
-	"%ls kan deze persoon niet zien.",
+	"%s kan deze persoon niet zien.",
 
 	//46-48
-	"%ls's pistoolloopverlenger valt eraf!",
+	"%s's pistoolloopverlenger valt eraf!",
 	"Niet meer dan %d militietrainers zijn toegelaten per sector.",
 	"Zeker weten?",
 
@@ -3446,8 +3446,8 @@ static const ST::string s_dut_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"Stop Tijdversnelling (|E|s|c)",
 
 	//53-54 "Magic has unjammed the Glock 18" or "Magic has unjammed Raven's H&K G11"
-	"%ls heeft de %ls gedeblokkeerd",
-	"%ls heeft %ls's %ls gedeblokkeerd",
+	"%s heeft de %s gedeblokkeerd",
+	"%s heeft %s's %s gedeblokkeerd",
 
 	//55
 	"Kan tijd niet versneller tijdens bekijken van sector inventaris.",
@@ -3462,9 +3462,9 @@ static const ST::string s_dut_gzLateLocalizedString[gzLateLocalizedString_SIZE] 
 	"Schakelaar geactiveerd.",
 };
 
-static const ST::string s_dut_str_ceramic_plates_smashed = "%ls's ceramic plates have been smashed!"; // TODO translate
+static const ST::string s_dut_str_ceramic_plates_smashed = "%s's ceramic plates have been smashed!"; // TODO translate
 
-static const ST::string s_dut_str_arrival_rerouted = "Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied."; // TODO translate
+static const ST::string s_dut_str_arrival_rerouted = "Arrival of new recruits is being rerouted to sector %s, as scheduled drop-off point of sector %s is enemy occupied."; // TODO translate
 
 
 static const ST::string s_dut_str_stat_health       = "Gezondheid";

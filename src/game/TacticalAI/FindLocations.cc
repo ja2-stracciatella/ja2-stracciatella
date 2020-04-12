@@ -1682,7 +1682,7 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 		}
 		else
 		{ // We want to drop this item
-			SLOGD("%d decides he must drop %ls first", s.ubID, ItemNames[s.inv[HANDPOS].usItem].c_str());
+			SLOGD("%d decides he must drop %s first", s.ubID, ItemNames[s.inv[HANDPOS].usItem].c_str());
 			s.bNextAction            = AI_ACTION_PICKUP_ITEM;
 			s.usNextActionData       = best_spot;
 			s.iNextActionSpecialData = best_item_idx;

@@ -1201,7 +1201,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		fTrue = CheckFact((Fact)pNPCQuoteInfo->usFactMustBeFalse, ubNPC);
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
-			SLOGD("Fact(%d:'%ls') Must be False status is  %s",
+			SLOGD("Fact(%d:'%s') Must be False status is  %s",
 						pNPCQuoteInfo->usFactMustBeFalse, FactDescText[pNPCQuoteInfo->usFactMustBeFalse].c_str(),
 						(fTrue == TRUE) ? "True, return" : "FALSE" );
 		}

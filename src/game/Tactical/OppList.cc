@@ -436,7 +436,7 @@ static void HandleBestSightingPositionInRealtime(void)
 		{
 			SOLDIERTYPE* const s = *i;
 			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT,
-					String("%ls (%d) still has interrupt pts!", s->name, s->ubID));
+					String("%s (%d) still has interrupt pts!", s->name.c_str(), s->ubID));
 		}
 #endif
 	}
@@ -499,7 +499,7 @@ static void HandleBestSightingPositionInTurnbased(void)
 		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE* const s = *i;
-			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, String("%ls (%d) still has interrupt pts!", s->name, s->ubID));
+			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, String("%s (%d) still has interrupt pts!", s->name.c_str(), s->ubID));
 		}
 #endif
 	}
