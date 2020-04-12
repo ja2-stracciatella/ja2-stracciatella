@@ -37,7 +37,6 @@ ST::string GetSectorFacilitiesFlags(INT16 x, INT16 y)
 
 	ST::string buf;
 	const char* fmt = "{}";
-	size_t         n   = 0;
 	for (size_t i = 0;; ++i)
 	{
 		UINT32 const bit = 1 << i;
