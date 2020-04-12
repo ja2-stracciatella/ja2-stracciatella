@@ -36,7 +36,7 @@ struct FilesUnit
 
 struct FileString
 {
-	wchar_t* pString;
+	ST::string pString;
 	FileString* Next;
 };
 
@@ -658,14 +658,11 @@ static FileString* LoadStringsIntoFileList(char const* const filename, UINT32 of
 	AutoSGPFile f(GCM->openGameResForReading(filename));
 	for (; n != 0; ++offset, --n)
 	{
-		wchar_t str[FILE_STRING_SIZE];
-		ST::wchar_buffer wstr = GCM->loadEncryptedString(f, lengthof(str) * offset, lengthof(str)).to_wchar();
-		wcslcpy(str, wstr.c_str(), lengthof(str));
+		ST::string str = GCM->loadEncryptedString(f, lengthof(str) * offset, lengthof(str));
 
 		FileString* const fs = new FileString{};
 		fs->Next    = 0;
-		fs->pString = new wchar_t[wcslen(str) + 1]{};
-		wcscpy(fs->pString, str);
+		fs->pString = str;
 
 		// Append node to list
 		*anchor = fs;
@@ -683,7 +680,6 @@ namespace
 		{
 			FileString* const del = i;
 			i = i->Next;
-			delete[] del->pString;
 			delete del;
 		}
 	}
@@ -734,7 +730,7 @@ static void HandleSpecialFiles(void)
 				break;
 		}
 
-		wchar_t const* const txt = i->pString;
+		ST::string txt = i->pString;
 		if (y + IanWrappedStringHeight(max_width, FILE_GAP, font, txt) >= MAX_FILE_MESSAGE_PAGE_SIZE)
 		{
 			// gonna get cut off, end now
@@ -1015,7 +1011,7 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 			start_x   = FILE_VIEWER_X + 10;
 		}
 
-		wchar_t const* const txt = i->pString;
+		ST::string txt = i->pString;
 		if (y + IanWrappedStringHeight(max_width, FILE_GAP, font, txt) >= MAX_FILE_MESSAGE_PAGE_SIZE)
 		{
 			// gonna get cut off, end now
