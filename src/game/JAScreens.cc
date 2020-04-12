@@ -109,8 +109,8 @@ ScreenID ErrorScreenHandle(void)
 
 	// Create string
 	SetFontAttributes(LARGEFONT1, FONT_MCOLOR_LTGRAY);
-	MPrint(50, 200, L"RUNTIME ERROR");
-	MPrint(50, 225, L"PRESS <ESC> TO EXIT");
+	MPrint(50, 200, "RUNTIME ERROR");
+	MPrint(50, 225, "PRESS <ESC> TO EXIT");
 
 	SetFontAttributes(FONT12ARIAL, FONT_YELLOW);
 	MPrint(50, 255, ST::format("{}", gubErrorText));
@@ -410,25 +410,25 @@ void SetDebugRenderHook( RENDER_HOOK pDebugRenderOverride, INT8 ubPage )
 
 static void DefaultDebugPage1(void)
 {
-	MPageHeader(L"DEBUG PAGE ONE");
+	MPageHeader("DEBUG PAGE ONE");
 }
 
 
 static void DefaultDebugPage2(void)
 {
-	MPageHeader(L"DEBUG PAGE TWO");
+	MPageHeader("DEBUG PAGE TWO");
 }
 
 
 static void DefaultDebugPage3(void)
 {
-	MPageHeader(L"DEBUG PAGE THREE");
+	MPageHeader("DEBUG PAGE THREE");
 }
 
 
 static void DefaultDebugPage4(void)
 {
-	MPageHeader(L"DEBUG PAGE FOUR");
+	MPageHeader("DEBUG PAGE FOUR");
 }
 
 
