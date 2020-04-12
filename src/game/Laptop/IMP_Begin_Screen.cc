@@ -52,8 +52,8 @@ enum {
 };
 
 // beginning character stats
-wchar_t pFullNameString[NAME_LENGTH];
-wchar_t pNickNameString[NICKNAME_LENGTH];
+ST::string pFullNameString;
+ST::string pNickNameString;
 
 
 // non gender
@@ -263,16 +263,14 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// back to mainpage
-		ST::wchar_buffer wstr = GetStringFromField(0).to_wchar();
-		CopyTrimmedString(pFullNameString, NAME_LENGTH, wstr.c_str());
-		wstr = GetStringFromField(1).to_wchar();
-		CopyTrimmedString(pNickNameString, NICKNAME_LENGTH, wstr.c_str());
+		pFullNameString = GetStringFromField(0).trim();
+		pNickNameString = GetStringFromField(1).trim();
 
 		// check to see if a name has been selected, if not, do not allow player to proceed with more char generation
-		if (wcslen(pFullNameString) != 0 && bGenderFlag != -1)
+		if (!pFullNameString.empty() && bGenderFlag != -1)
 		{
 			// valid full name, check to see if nick name
-			if (wcslen(pNickNameString) == 0)
+			if (pNickNameString.empty())
 			{
 				// no nick name
 				// copy first name to nick name
@@ -354,12 +352,15 @@ static void DisplayFemaleCheckboxFocus(void)
 static void CopyFirstNameIntoNickName(void)
 {
 	// this procedure will copy the characters first name in to the nickname for the character
-	UINT32 iCounter=0;
-	while( ( pFullNameString[ iCounter ] != L' ' ) && ( iCounter < NICKNAME_LENGTH) && ( pFullNameString[ iCounter ] != 0 ) )
+	// FIXME it should only copy NICKNAME_LENGTH, but which type? (char/char16_t/char32_t)
+	auto i = pFullNameString.find(' ');
+	if (i == -1)
 	{
-		// copy charcters into nick name
-		pNickNameString[ iCounter ] = pFullNameString[ iCounter ];
-		iCounter++;
+		pNickNameString = pFullNameString;
+	}
+	else
+	{
+		pNickNameString = pFullNameString.substr(0, i);
 	}
 }
 
@@ -437,7 +438,7 @@ static void RenderGender(void)
 	}
 	SetFontBackground(FONT_BLACK);
 	SetFontAttributes(FONT14ARIAL, 184);
-	MPrint(x, MALE_BOX_Y + 6, L"X");
+	MPrint(x, MALE_BOX_Y + 6, "X");
 }
 
 
