@@ -8,6 +8,7 @@
 
 #include <string_theory/string>
 
+#include <map>
 #include <stdint.h>
 #include <string>
 #include <vector>
@@ -18,6 +19,7 @@ class GamePolicy;
 class IMPPolicy;
 class BloodCatPlacementsModel;
 class BloodCatSpawnsModel;
+class TownModel;
 struct AmmoTypeModel;
 struct CalibreModel;
 struct MagazineModel;
@@ -112,6 +114,8 @@ public:
 	virtual const std::vector<const BloodCatPlacementsModel*> & getBloodCatPlacements() const = 0;
 	virtual const std::vector<const BloodCatSpawnsModel*> & getBloodCatSpawns() const = 0;
 	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const = 0;
+	virtual const TownModel* getTown(int8_t townId) const = 0;
+	virtual const std::map<int8_t, const TownModel*>& getTowns() const = 0;
 
 	virtual const ST::string* getNewString(size_t stringId) const = 0;
 

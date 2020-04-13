@@ -45,6 +45,9 @@
 #include "Button_System.h"
 #include "Debug.h"
 #include "UILayout.h"
+#include "GameInstance.h"
+#include "DefaultContentManager.h"
+#include "externalized/strategic/TownModel.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -374,42 +377,12 @@ static UINT16* pMapDKGreenPalette;
 // heli pop up
 static SGPVObject* guiMapBorderHeliSectors;
 
+// base sectors (sector value for the upper left corner) of towns. List start at zero, indexed by (townId - 1)
+static std::vector<INT16> sBaseSectorList;
 
-static INT16 const sBaseSectorList[] =
-{
-	// NOTE: These co-ordinates must match the top left corner of the 3x3 town tiles cutouts in interface/militiamaps.sti!
-	SECTOR(  9, 1 ), // Omerta
-	SECTOR( 13, 2 ), // Drassen
-	SECTOR( 13, 8 ), // Alma
-	SECTOR(  1, 7 ), // Grumm
-	SECTOR(  8, 9 ), // Tixa
-	SECTOR(  8, 6 ), // Cambria
-	SECTOR(  4, 2 ), // San Mona
-	SECTOR(  5, 8 ), // Estoni
-	SECTOR(  3,10 ), // Orta
-	SECTOR( 11,11 ), // Balime
-	SECTOR(  3,14 ), // Meduna
-	SECTOR(  2, 1 ), // Chitzena
-};
-
-// position of town names on the map
+// position of town names on the map (list by townId, starting at 1)
 // these are no longer PIXELS, but 10 * the X,Y position in SECTORS (fractions possible) to the X-CENTER of the town
-static SGPPoint const pTownPoints[] =
-{
-	{ 0 ,  0 },
-	{ 90, 10}, // Omerta
-	{125, 40}, // Drassen
-	{130, 90}, // Alma
-	{ 15, 80}, // Grumm
-	{ 85,100}, // Tixa
-	{ 95, 70}, // Cambria
-	{ 45, 40}, // San Mona
-	{ 55, 90}, // Estoni
-	{ 35,110}, // Orta
-	{110,120}, // Balime
-	{ 45,150}, // Meduna
-	{ 15, 20}, // Chitzena
-};
+static std::vector<SGPPoint> pTownPoints;
 
 
 // map region
@@ -479,6 +452,18 @@ static SGPVObject* guiHelicopterIcon;
 
 void InitMapScreenInterfaceMap()
 {
+	sBaseSectorList.clear();
+	pTownPoints.clear();
+	pTownPoints.push_back(SGPPoint());
+
+	auto towns = GCM->getTowns();
+	for (auto& pair : GCM->getTowns()) 
+	{
+		auto town = pair.second;
+		sBaseSectorList.push_back(town->getBaseSector());
+		pTownPoints.push_back(town->townPoint);
+	}
+
 	MapScreenRect.set((MAP_VIEW_START_X+MAP_GRID_X - 2), ( MAP_VIEW_START_Y+MAP_GRID_Y - 1),
 				MAP_VIEW_START_X + MAP_VIEW_WIDTH - 1 + MAP_GRID_X , MAP_VIEW_START_Y+MAP_VIEW_HEIGHT-10+MAP_GRID_Y);
 }

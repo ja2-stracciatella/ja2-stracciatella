@@ -145,6 +145,8 @@ public:
 	virtual const std::vector<const BloodCatPlacementsModel*>& getBloodCatPlacements() const override;
 	virtual const std::vector<const BloodCatSpawnsModel*>& getBloodCatSpawns() const override;
 	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const override;
+	virtual const TownModel* getTown(int8_t townId) const  override;
+	virtual const std::map<int8_t, const TownModel*>& getTowns() const override;
 
 protected:
 	std::string m_dataDir;
@@ -185,6 +187,7 @@ protected:
 
 	std::vector<const BloodCatPlacementsModel*> m_bloodCatPlacements;
 	std::vector<const BloodCatSpawnsModel*> m_bloodCatSpawns;
+	std::map<int8_t, const TownModel*> m_towns;
 
 	RustPointer<LibraryDB> m_libraryDB;
 

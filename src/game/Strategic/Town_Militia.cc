@@ -26,6 +26,9 @@
 #include "Debug.h"
 #include "ScreenIDs.h"
 #include "UILayout.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "TownModel.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -934,31 +937,11 @@ BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSe
 
 BOOLEAN MilitiaTrainingAllowedInTown( INT8 bTownId )
 {
-	switch ( bTownId )
-	{
-		case DRASSEN:
-		case ALMA:
-		case GRUMM:
-		case CAMBRIA:
-		case BALIME:
-		case MEDUNA:
-		case CHITZENA:
-			return(TRUE);
-
-		case OMERTA:
-		case ESTONI:
-		case SAN_MONA:
-		case TIXA:
-		case ORTA:
-			// can't keep militia in these towns
-			return(FALSE);
-
-		case BLANK_SECTOR:
-		default:
-			// not a town sector!
-			return(FALSE);
-
+	auto town = GCM->getTown(bTownId);
+	if (town == NULL) {
+		return false;
 	}
+	return town->isMilitiaTrainingAllowed;
 }
 
 
