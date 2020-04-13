@@ -105,9 +105,13 @@
 #include "Items.h"
 #include "UILayout.h"
 #include "Logger.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "externalized/strategic/TownModel.h"
 
 #include <algorithm>
 #include <iterator>
+#include <map>
 #include <stdexcept>
 
 //Used by PickGridNoToWalkIn
@@ -1284,18 +1288,14 @@ place_in_center:
 
 static void InitializeStrategicMapSectorTownNames(void)
 {
-	StrategicMap[2+2*MAP_WORLD_X].bNameId= StrategicMap[2+1*MAP_WORLD_X].bNameId= CHITZENA;
-	StrategicMap[5+3*MAP_WORLD_X].bNameId=StrategicMap[6+3*MAP_WORLD_X].bNameId=StrategicMap[5+4*MAP_WORLD_X].bNameId = StrategicMap[4+4*MAP_WORLD_X].bNameId =SAN_MONA;
-	StrategicMap[9+1*MAP_WORLD_X].bNameId=StrategicMap[10+1*MAP_WORLD_X].bNameId=OMERTA;
-	StrategicMap[13+2*MAP_WORLD_X].bNameId=StrategicMap[13+3*MAP_WORLD_X].bNameId=StrategicMap[13+4*MAP_WORLD_X].bNameId=DRASSEN;
-	StrategicMap[1+7*MAP_WORLD_X].bNameId=StrategicMap[1+8*MAP_WORLD_X].bNameId=StrategicMap[2+7*MAP_WORLD_X].bNameId= StrategicMap[2+8*MAP_WORLD_X].bNameId = StrategicMap[3+8*MAP_WORLD_X].bNameId = GRUMM;
-	StrategicMap[6+9*MAP_WORLD_X].bNameId=ESTONI;
-	StrategicMap[9+10*MAP_WORLD_X].bNameId=TIXA;
-	StrategicMap[8+6*MAP_WORLD_X].bNameId=StrategicMap[9+6*MAP_WORLD_X].bNameId=StrategicMap[8+7*MAP_WORLD_X].bNameId=StrategicMap[9+7*MAP_WORLD_X].bNameId= StrategicMap[8+8*MAP_WORLD_X].bNameId = CAMBRIA;
-	StrategicMap[13+9*MAP_WORLD_X].bNameId=StrategicMap[14+9*MAP_WORLD_X].bNameId=StrategicMap[13+8*MAP_WORLD_X].bNameId=StrategicMap[14+8*MAP_WORLD_X].bNameId=ALMA;
-	StrategicMap[4+11*MAP_WORLD_X].bNameId=ORTA;
-	StrategicMap[11+12*MAP_WORLD_X].bNameId= 	StrategicMap[12+12*MAP_WORLD_X].bNameId = BALIME;
-	StrategicMap[3+14*MAP_WORLD_X].bNameId=StrategicMap[4+14*MAP_WORLD_X].bNameId=StrategicMap[5+14*MAP_WORLD_X].bNameId=StrategicMap[3+15*MAP_WORLD_X].bNameId=StrategicMap[4+15*MAP_WORLD_X].bNameId= StrategicMap[3+16*MAP_WORLD_X].bNameId = MEDUNA;
+	for (auto& element: GCM->getTowns())
+	{
+		auto town = element.second;
+		for (auto sector : town->sectorIDs)
+		{
+			StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX(sector) ].bNameId = town->townId;
+		}
+	}
 }
 
 
