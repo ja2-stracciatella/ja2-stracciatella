@@ -147,6 +147,7 @@ public:
 	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const;
 	virtual const TownModel* getTown(int8_t townId) const;
 	virtual const std::map<int8_t, const TownModel*>& getTowns() const;
+	virtual const MovementCostsModel* getMovementCosts() const;
 
 protected:
 	std::string m_dataDir;
@@ -188,6 +189,7 @@ protected:
 	std::vector<const BloodCatPlacementsModel*> m_bloodCatPlacements;
 	std::vector<const BloodCatSpawnsModel*> m_bloodCatSpawns;
 	std::map<int8_t, const TownModel*> m_towns;
+	const MovementCostsModel *m_movementCosts;
 
 	RustPointer<LibraryDB> m_libraryDB;
 
