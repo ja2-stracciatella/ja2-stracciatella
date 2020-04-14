@@ -36,6 +36,9 @@
 #include "GameState.h"
 #include "Logger.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 #include <math.h>
 #include <stdint.h>
@@ -1201,8 +1204,7 @@ zlevel_topmost:
 							UINT8 const foreground = gfUIDisplayActionPointsBlack ? FONT_MCOLOR_BLACK : FONT_MCOLOR_WHITE;
 							SetFontAttributes(TINYFONT1, foreground);
 							SetFontDestBuffer(guiSAVEBUFFER, 0, gsVIEWPORT_WINDOW_START_Y, SCREEN_WIDTH, gsVIEWPORT_WINDOW_END_Y);
-							wchar_t buf[16];
-							swprintf(buf, lengthof(buf), L"%d", pNode->uiAPCost);
+							ST::string buf = ST::format("{}", pNode->uiAPCost);
 							INT16 sX;
 							INT16 sY;
 							FindFontCenterCoordinates(sXPos, sYPos, 1, 1, buf, TINYFONT1, &sX, &sY);
@@ -3800,7 +3802,7 @@ static void RenderRoomInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16 sSt
 						case 3: SetFontForeground(FONT_LTBLUE);  break;
 						case 4: SetFontForeground(FONT_LTGREEN); break;
 					}
-					mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", gubWorldRoomInfo[usTileIndex]);
+					MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, ST::format("{}", gubWorldRoomInfo[usTileIndex]));
 					SetFontDestBuffer(FRAME_BUFFER);
 				}
 			}
@@ -3867,7 +3869,7 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 					SetFont(SMALLCOMPFONT);
 					SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, gsVIEWPORT_END_Y);
 					SetFontForeground(FONT_GRAY3);
-					mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", gubFOVDebugInfoInfo[usTileIndex]);
+					MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, ST::format("{}", gubFOVDebugInfoInfo[usTileIndex]));
 					SetFontDestBuffer(FRAME_BUFFER);
 
 					Blt8BPPDataTo16BPPBufferTransparentClip(pDestBuf, uiDestPitchBYTES, gTileDatabase[0].hTileSurface, sTempPosX_S, sTempPosY_S, 0, &gClippingRect);
@@ -3878,7 +3880,7 @@ static void RenderFOVDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT16
 					SetFont(SMALLCOMPFONT);
 					SetFontDestBuffer(FRAME_BUFFER, 0, 0, SCREEN_WIDTH, gsVIEWPORT_END_Y);
 					SetFontForeground(FONT_FCOLOR_YELLOW);
-					MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY + 4, L"x");
+					MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY + 4, "x");
 					SetFontDestBuffer(FRAME_BUFFER);
 				}
 			}
@@ -3954,7 +3956,7 @@ static void RenderCoverDebugInfo(INT16 sStartPointX_M, INT16 sStartPointY_M, INT
 					{
 						SetFontForeground(FONT_GRAY3);
 					}
-					mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", gsCoverValue[usTileIndex]);
+					MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, ST::format("{}", gsCoverValue[usTileIndex]));
 					SetFontDestBuffer(FRAME_BUFFER);
 				}
 			}
@@ -4025,7 +4027,7 @@ static void RenderGridNoVisibleDebugInfo(INT16 sStartPointX_M, INT16 sStartPoint
 				{
 					SetFontForeground(FONT_GRAY3);
 				}
-				mprintf_buffer(pDestBuf, uiDestPitchBYTES, sX, sY, L"%d", usTileIndex);
+				MPrintBuffer(pDestBuf, uiDestPitchBYTES, sX, sY, ST::format("{}", usTileIndex));
 				SetFontDestBuffer(FRAME_BUFFER);
 			}
 

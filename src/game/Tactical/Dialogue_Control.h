@@ -6,6 +6,9 @@
 
 #include "MercProfile.h"
 
+#include <string_theory/string>
+
+
 // An enumeration for dialog quotes
 enum DialogQuoteIDs
 {
@@ -227,7 +230,7 @@ void SayQuoteFromAnyBodyInSector(UINT16 quote_id);
 void SayQuoteFromAnyBodyInThisSector(INT16 x, INT16 y, INT8 z, UINT16 quote_id);
 void SayQuoteFromNearbyMercInSector(GridNo, INT8 distance, UINT16 quote_id);
 void SayQuote58FromNearbyMercInSector(GridNo, INT8 distance, UINT16 quote_id, INT8 sex);
-UINT32 FindDelayForString(const wchar_t* sString);
+UINT32 FindDelayForString(const ST::string& str);
 void BeginLoggingForBleedMeToos( BOOLEAN fStart );
 
 void UnSetEngagedInConvFromPCAction( SOLDIERTYPE *pSoldier );

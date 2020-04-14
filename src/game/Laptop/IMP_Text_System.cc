@@ -15,6 +15,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 #define IMP_SEEK_AMOUNT (5 * 80)
 
 #define IMP_LEFT_IDENT_TEXT_X  (STD_SCREEN_X + 116)
@@ -43,8 +46,7 @@ static void LoadAndDisplayIMPText(INT16 sStartX, INT16 sStartY, INT16 sLineLengt
 		SetFontShadow(NO_SHADOW);
 	}
 
-	wchar_t sString[IMP_SEEK_AMOUNT];
-	GCM->loadEncryptedString(BINARYDATADIR "/imptext.edt", sString, sIMPTextRecordNumber * IMP_SEEK_AMOUNT, IMP_SEEK_AMOUNT);
+	ST::string sString = GCM->loadEncryptedString(BINARYDATADIR "/imptext.edt", sIMPTextRecordNumber * IMP_SEEK_AMOUNT, IMP_SEEK_AMOUNT);
 	DisplayWrappedString(sStartX, sStartY, sLineLength, 2, font, ubColor, sString, FONT_BLACK, uiFlags);
 
 	// reset shadow

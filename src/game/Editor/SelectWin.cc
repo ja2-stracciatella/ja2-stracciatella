@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Button_System.h"
 #include "Directories.h"
 #include "Font.h"
@@ -20,6 +18,11 @@
 #include "VObject_Blitters.h"
 #include "WorldDef.h"
 #include "UILayout.h"
+
+#include <string_theory/format>
+#include <string_theory/string>
+
+#include <stdexcept>
 
 
 // defines for DisplaySpec.ubType
@@ -221,7 +224,7 @@ static void SelWinClkCallback(GUI_BUTTON* button, INT32 reason);
 static void UpClkCallback(GUI_BUTTON* button, INT32 reason);
 
 
-static GUIButtonRef MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_CALLBACK click, const wchar_t* help)
+static GUIButtonRef MakeButton(UINT idx, const char* gfx, INT16 y, INT16 h, GUI_CALLBACK click, const ST::string& help)
 {
 	INT32 img = LoadGenericButtonIcon(gfx);
 	iButtonIcons[idx] = img;
@@ -244,11 +247,11 @@ void CreateJA2SelectionWindow(SelectWindow const sWhat)
 	iSelectWin = CreateHotSpot(0, 0, SCREEN_WIDTH - 40, TASKBAR_Y, MSYS_PRIORITY_HIGH, SelWinClkCallback);
 
 	INT16 y;
-	iOkWin      = MakeButton(OK_ICON,     EDITORDIR "/checkmark.sti",   y  =  0, 40, OkClkCallback,   L"Accept selections");
-	iCancelWin  = MakeButton(CANCEL_ICON, EDITORDIR "/bigx.sti",        y += 40, 40, CnclClkCallback, L"Cancel selections");
+	iOkWin      = MakeButton(OK_ICON,     EDITORDIR "/checkmark.sti",   y  =  0, 40, OkClkCallback,   "Accept selections");
+	iCancelWin  = MakeButton(CANCEL_ICON, EDITORDIR "/bigx.sti",        y += 40, 40, CnclClkCallback, "Cancel selections");
 	INT16 const h = (TASKBAR_Y - 40 - 40) / 2;
-	iScrollUp   = MakeButton(UP_ICON,     EDITORDIR "/lguparrow.sti",   y += 40,  h, UpClkCallback,   L"Scroll window up");
-	iScrollDown = MakeButton(DOWN_ICON,   EDITORDIR "/lgdownarrow.sti", y += h,   h, DwnClkCallback,  L"Scroll window down");
+	iScrollUp   = MakeButton(UP_ICON,     EDITORDIR "/lguparrow.sti",   y += 40,  h, UpClkCallback,   "Scroll window up");
+	iScrollDown = MakeButton(DOWN_ICON,   EDITORDIR "/lgdownarrow.sti", y += h,   h, DwnClkCallback,  "Scroll window down");
 
 	fButtonsPresent = TRUE;
 
@@ -853,15 +856,15 @@ void DisplaySelectionWindowGraphicalInformation()
 		char const* const filename = gTilesets[giCurrentTilesetID].TileSurfaceFilenames[obj_idx];
 		if (filename[0] != '\0')
 		{
-			mprintf(2, 2, L"File:  %hs, subindex:  %d (%hs)", filename, i->uiIndex, name);
+			MPrint(2, 2, ST::format("File:  {}, subindex:  {} ({})", filename, i->uiIndex, name));
 		}
 		else
 		{
 			TILESET const& generic = gTilesets[GENERIC_1];
-			mprintf(2, 2, L"%hs[%d] is from default tileset %ls (%hs)", generic.TileSurfaceFilenames[obj_idx], i->uiIndex, generic.zName, name);
+			MPrint(2, 2, ST::format("{}[{}] is from default tileset {} ({})", generic.TileSurfaceFilenames[obj_idx], i->uiIndex, generic.zName, name));
 		}
 	}
-	mprintf(350, 2, L"Current Tileset:  %ls", gTilesets[giCurrentTilesetID].zName);
+	MPrint(350, 2, ST::format("Current Tileset:  {}", gTilesets[giCurrentTilesetID].zName));
 }
 
 
@@ -1234,6 +1237,6 @@ static void DisplayWindowFunc(DisplayList* const n, INT16 const top_cut_off, SGP
 	if (n->fChosen)
 	{
 		INT16 const count = FindInSelectionList(*n).sCount;
-		if (count != 0) gprintf(x, y, L"%d", count);
+		if (count != 0) GPrint(x, y, ST::format("{}", count));
 	}
 }

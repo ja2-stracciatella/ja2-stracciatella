@@ -15,6 +15,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 
 // Defines
@@ -139,9 +141,9 @@ void ExitAimHistory()
 }
 
 
-static void LoadAIMHistoryText(wchar_t buf[], UINT32 entry)
+static ST::string LoadAIMHistoryText(UINT32 entry)
 {
-	GCM->loadEncryptedString(AIMHISTORYFILE, buf, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
+	return GCM->loadEncryptedString(AIMHISTORYFILE, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
 }
 
 
@@ -151,7 +153,7 @@ static void InitTocMenu(void);
 
 void RenderAimHistory()
 {
-	wchar_t	sText[AIM_HISTORY_LINE_SIZE];
+	ST::string sText;
 
 	DrawAimDefaults();
 	//DrawAimHistoryMenuBar();
@@ -187,7 +189,7 @@ void RenderAimHistory()
 			DisplayAimHistoryParagraph(WORD_FROM_FOUNDER, 1);
 
 			// display coloniel Mohanned...
-			LoadAIMHistoryText(sText, COLONEL_MOHANNED);
+			sText = LoadAIMHistoryText(COLONEL_MOHANNED);
 			DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, 210 + LAPTOP_SCREEN_WEB_DELTA_Y + STD_SCREEN_Y, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 			break;
 
@@ -196,11 +198,11 @@ void RenderAimHistory()
 			DisplayAimHistoryParagraph(INCORPORATION, 2);
 
 			// display dunn and bradbord...
-			LoadAIMHistoryText(sText, DUNN_AND_BRADROAD);
+			sText = LoadAIMHistoryText(DUNN_AND_BRADROAD);
 			DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, 270 + LAPTOP_SCREEN_WEB_DELTA_Y + STD_SCREEN_Y, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//AIM_HISTORY_PARAGRAPH_Y
-			LoadAIMHistoryText(sText, INCORPORATION_3);
+			sText = LoadAIMHistoryText(INCORPORATION_3);
 			DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, 290 + LAPTOP_SCREEN_WEB_DELTA_Y + STD_SCREEN_Y, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 			break;
 	}
@@ -251,19 +253,19 @@ static void ExitAimHistoryMenuBar()
 
 static void DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs)
 {
-	wchar_t	sText[AIM_HISTORY_LINE_SIZE];
+	ST::string sText;
 	UINT16	usPosY=0;
 	UINT16	usNumPixels=0;
 
 	//title
-	LoadAIMHistoryText(sText, ubPageNum);
+	sText = LoadAIMHistoryText(ubPageNum);
 	DrawTextToScreen(sText, AIM_HISTORY_PARAGRAPH_X, AIM_HISTORY_SUBTITLE_Y, 0, AIM_HISTORY_PARAGRAPH_TITLE_FONT, AIM_HISTORY_PARAGRAPH_TITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	if(ubNumParagraphs >= 1)
 	{
 		usPosY = AIM_HISTORY_PARAGRAPH_Y;
 		//1st paragraph
-		LoadAIMHistoryText(sText, ubPageNum + 1);
+		sText = LoadAIMHistoryText(ubPageNum + 1);
 		usNumPixels = DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, usPosY, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -271,7 +273,7 @@ static void DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs)
 	{
 		//2nd paragraph
 		usPosY += usNumPixels + AIM_HISTORY_SPACE_BETWEEN_PARAGRAPHS;
-		LoadAIMHistoryText(sText, ubPageNum + 2);
+		sText = LoadAIMHistoryText(ubPageNum + 2);
 		DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, usPosY, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -279,7 +281,7 @@ static void DisplayAimHistoryParagraph(UINT8 ubPageNum, UINT8 ubNumParagraphs)
 	{
 		//3rd paragraph
 		usPosY += usNumPixels + AIM_HISTORY_SPACE_BETWEEN_PARAGRAPHS;
-		LoadAIMHistoryText(sText, ubPageNum + 3);
+		sText = LoadAIMHistoryText(ubPageNum + 3);
 		DisplayWrappedString(AIM_HISTORY_PARAGRAPH_X, usPosY, AIM_HISTORY_PARAGRAPH_WIDTH, 2, AIM_HISTORY_TEXT_FONT, AIM_HISTORY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 }
@@ -300,8 +302,7 @@ static void InitTocMenu(void)
 	usPosY = AIM_HISTORY_CONTENTBUTTON_Y;
 	for(i=0; i<NUM_AIM_HISTORY_PAGES; i++)
 	{
-		wchar_t sText[AIM_HISTORY_LINE_SIZE];
-		LoadAIMHistoryText(sText, ubLocInFile[i]);
+		ST::string sText = LoadAIMHistoryText(ubLocInFile[i]);
 
 		//if the mouse regions havent been inited, init them
 		if( !gfInToc )

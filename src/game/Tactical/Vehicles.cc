@@ -92,7 +92,7 @@ void InitVehicles(void)
 void SetVehicleValuesIntoSoldierType(SOLDIERTYPE* const vs)
 {
 	const VEHICLETYPE* const v = &pVehicleList[vs->bVehicleID];
-	wcscpy(vs->name, zVehicleName[v->ubVehicleType]);
+	vs->name = zVehicleName[v->ubVehicleType];
 	vs->ubProfile           = g_vehicle_type_info[v->ubVehicleType].profile;
 	vs->sBreathRed          = 10000; // Init fuel
 	vs->bBreath             = 100;

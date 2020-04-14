@@ -3,6 +3,9 @@
 
 #include "Item_Types.h"
 
+#include <string_theory/string>
+
+
 //Handles the dynamic changing of text input fields and button modes depending on the currently edited
 //item.  Both the merc's inventory panel, and the items tab use the same code to accomplish this.
 
@@ -76,9 +79,9 @@ enum
 	ACTIONITEM_BIG_TEAR_GAS,
 	NUM_ACTIONITEMS
 };
-extern const wchar_t* gszActionItemDesc[NUM_ACTIONITEMS];
+extern const ST::string gszActionItemDesc[NUM_ACTIONITEMS];
 //Returns a pointer to one of the above string array.
-extern wchar_t const* GetActionItemName(OBJECTTYPE const*);
+extern ST::string GetActionItemName(const OBJECTTYPE* pItem);
 //Called by the popup menu, when a selection is made.
 extern void UpdateActionItem( INT8 bActionItemIndex );
 //Changes an action item into the type specified by the ACTIONITEM enumeration.

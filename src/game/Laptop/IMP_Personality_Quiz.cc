@@ -16,6 +16,9 @@
 #include "Button_System.h"
 #include "Font_Control.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 
 static BUTTON_PICS* giIMPPersonalityQuizButtonImage[2];
@@ -149,7 +152,7 @@ void HandleIMPPersonalityQuiz( void )
 }
 
 
-static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
+static GUIButtonRef MakeButton(BUTTON_PICS* const img, const ST::string& text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
 {
 	const INT16 text_col   = FONT_WHITE;
 	const INT16 shadow_col = DEFAULT_SHADOW;
@@ -307,8 +310,7 @@ static void AddIMPPersonalityQuizAnswerButtons(INT32 iNumberOfButtons)
 		giIMPPersonalityQuizAnswerButton[i] = Button;
 		Button->SetUserData(i);
 		Button->SpecifyTextOffsets(23, 12, TRUE);
-		wchar_t sString[32];
-		swprintf(sString, lengthof(sString), L"%d", i + 1);
+		ST::string sString = ST::format("{}", i + 1);
 		Button->SpecifyGeneralTextAttributes(sString, FONT12ARIAL, FONT_WHITE, FONT_BLACK);
 		Button->SetCursor(CURSOR_WWW);
 	}
@@ -745,10 +747,10 @@ static void PrintQuizQuestionNumber(void)
 	SetFontAttributes(FONT12ARIAL, FONT_WHITE);
 
 	// print current question number
-	mprintf(LAPTOP_SCREEN_UL_X + 345, LAPTOP_SCREEN_WEB_UL_Y + 370, L"%d", giCurrentPersonalityQuizQuestion + 1);
+	MPrint(LAPTOP_SCREEN_UL_X + 345, LAPTOP_SCREEN_WEB_UL_Y + 370, ST::format("{}", giCurrentPersonalityQuizQuestion + 1));
 
 	// total number of questions
-	MPrint(LAPTOP_SCREEN_UL_X + 383, LAPTOP_SCREEN_WEB_UL_Y + 370, L"16");
+	MPrint(LAPTOP_SCREEN_UL_X + 383, LAPTOP_SCREEN_WEB_UL_Y + 370, "16");
 }
 
 

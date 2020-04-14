@@ -35,6 +35,7 @@
 #include "Logger.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 #include <memory>
 #include <stdexcept>
@@ -54,18 +55,18 @@
 // Boost probably provides this functionality
 #define NEW_TEMP_DIR "temp"
 
-static void LoadEncryptedData(STRING_ENC_TYPE encType, SGPFile* const File, wchar_t* DestString, UINT32 const seek_chars, UINT32 const read_chars)
+static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType, SGPFile* File, UINT32 seek_chars, UINT32 read_chars)
 {
 	FileSeek(File, seek_chars * 2, FILE_SEEK_FROM_START);
 
-	UINT16 *Str = new UINT16[read_chars]{};
-	FileRead(File, Str, sizeof(UINT16) * read_chars);
+	ST::utf16_buffer buf(read_chars, u'\0');
+	FileRead(File, buf.data(), sizeof(char16_t) * read_chars);
 
-	Str[read_chars - 1] = '\0';
-	for (const UINT16* i = Str; *i != '\0'; ++i)
+	buf[read_chars - 1] = u'\0';
+	for (char16_t* i = buf.data(); *i != u'\0'; ++i)
 	{
 		/* "Decrypt" the ROT-1 "encrypted" data */
-		wchar_t c = (*i > 33 ? *i - 1 : *i);
+		char16_t c = (*i > 33 ? *i - 1 : *i);
 
 		if(encType == SE_RUSSIAN)
 		{
@@ -137,10 +138,9 @@ static void LoadEncryptedData(STRING_ENC_TYPE encType, SGPFile* const File, wcha
 			}
 		}
 
-		*DestString++ = c;
+		*i = c;
 	}
-	*DestString = L'\0';
-	delete[] Str;
+	return st_checked_buffer_to_string(err_msg, buf);
 }
 
 DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
@@ -293,11 +293,11 @@ const DealerInventory* DefaultContentManager::getBobbyRayUsedInventory() const
 }
 
 /** Get map file path. */
-std::string DefaultContentManager::getMapPath(const char *mapName) const
+std::string DefaultContentManager::getMapPath(const ST::string& mapName) const
 {
 	std::string result = MAPSDIR;
-	result += "/";
-	result += mapName;
+	result += '/';
+	result += mapName.c_str();
 
 	SLOGD("map file %s", result.c_str());
 
@@ -329,25 +329,8 @@ std::string DefaultContentManager::getTilesetDBResName() const
 	return BINARYDATADIR "/ja2set.dat";
 }
 
-std::string DefaultContentManager::getMapPath(const wchar_t *mapName) const
-{
-	SLOGW("converting wchar to char");
-
-	// This will not work for non-latin names.
-	// But it is just a hack to make the code compile.
-	// XXX: This method should be removed altogether
-
-	ST::string str(mapName);
-	return getMapPath(str.c_str());
-}
-
 /** Open map for reading. */
-SGPFile* DefaultContentManager::openMapForReading(const std::string& mapName) const
-{
-	return openGameResForReading(getMapPath(mapName.c_str()));
-}
-
-SGPFile* DefaultContentManager::openMapForReading(const wchar_t *mapName) const
+SGPFile* DefaultContentManager::openMapForReading(const ST::string& mapName) const
 {
 	return openGameResForReading(getMapPath(mapName));
 }
@@ -530,24 +513,40 @@ std::string DefaultContentManager::getSavedGamesFolder() const
 }
 
 /** Load encrypted string from game resource file. */
-void DefaultContentManager::loadEncryptedString(const char *fileName, wchar_t* DestString, uint32_t seek_chars, uint32_t read_chars) const
+ST::string DefaultContentManager::loadEncryptedString(const char* fileName, uint32_t seek_chars, uint32_t read_chars) const
 {
 	AutoSGPFile File(openGameResForReading(fileName));
-	loadEncryptedString(File, DestString, seek_chars, read_chars);
+	ST::string err_msg;
+	ST::string str = LoadEncryptedData(err_msg, getStringEncType(), File, seek_chars, read_chars);
+	if (!err_msg.empty())
+	{
+		SLOGW("DefaultContentManager::loadEncryptedString '%s' %u %u: %s", fileName, seek_chars, read_chars, err_msg.c_str());
+	}
+	return str;
 }
 
-void DefaultContentManager::loadEncryptedString(SGPFile* const File, wchar_t* DestString, uint32_t const seek_chars, uint32_t const read_chars) const
+ST::string DefaultContentManager::loadEncryptedString(SGPFile* File, uint32_t seek_chars, uint32_t read_chars) const
 {
-	LoadEncryptedData(getStringEncType(), File, DestString, seek_chars, read_chars);
+	ST::string err_msg;
+	ST::string str = LoadEncryptedData(err_msg, getStringEncType(), File, seek_chars, read_chars);
+	if (!err_msg.empty())
+	{
+		SLOGW("DefaultContentManager::loadEncryptedString ? %u %u: %s", seek_chars, read_chars, err_msg.c_str());
+	}
+	return str;
 }
+
 
 /** Load dialogue quote from file. */
 ST::string* DefaultContentManager::loadDialogQuoteFromFile(const char* fileName, int quote_number)
 {
 	AutoSGPFile File(openGameResForReading(fileName));
-
-	wchar_t quote[DIALOGUESIZE];
-	LoadEncryptedData(getStringEncType(), File, quote, quote_number * DIALOGUESIZE, DIALOGUESIZE);
+	ST::string err_msg;
+	ST::string quote = LoadEncryptedData(err_msg, getStringEncType(), File, quote_number * DIALOGUESIZE, DIALOGUESIZE);
+	if (!err_msg.empty())
+	{
+		SLOGW("DefaultContentManager::loadDialogQuoteFromFile '%s' %d: %s", fileName, quote_number, err_msg.c_str());
+	}
 	return new ST::string(quote);
 }
 
@@ -560,8 +559,12 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const c
 	// SLOGI("%d quotes in dialog %s", numQuotes, fileName);
 	for(uint32_t i = 0; i < numQuotes; i++)
 	{
-		wchar_t quote[DIALOGUESIZE];
-		LoadEncryptedData(encType, File, quote, i * DIALOGUESIZE, DIALOGUESIZE);
+		ST::string err;
+		ST::string quote = LoadEncryptedData(err, encType, File, i * DIALOGUESIZE, DIALOGUESIZE);
+		if (!err.empty())
+		{
+			SLOGW("DefaultContentManager::loadAllDialogQuotes '%s' %d: %s", fileName, i, err.c_str());
+		}
 		quotes.push_back(new ST::string(quote));
 	}
 }

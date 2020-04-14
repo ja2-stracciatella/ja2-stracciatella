@@ -1,16 +1,18 @@
 #pragma once
 
-#include <stdint.h>
-#include <string>
-#include <string_theory/string>
-#include <map>
-#include <vector>
-
 /* XXX */
 #include "ItemModel.h"
 #include "ContentMusic.h"
 
 #include "ItemSystem.h"
+
+#include <string_theory/string>
+
+#include <map>
+#include <stdint.h>
+#include <string>
+#include <vector>
+
 
 class DealerInventory;
 class GamePolicy;
@@ -31,8 +33,7 @@ public:
 	virtual ~ContentManager() {};
 
 	/** Get map file path. */
-	virtual std::string getMapPath(const char *mapName) const = 0;
-	virtual std::string getMapPath(const wchar_t *mapName) const = 0;
+	virtual std::string getMapPath(const ST::string& mapName) const = 0;
 
 	/** Get radar map resource name. */
 	virtual std::string getRadarMapResourceName(const std::string &mapName) const = 0;
@@ -53,8 +54,7 @@ public:
 	virtual std::vector<std::string> getAllTilecache() const = 0;
 
 	/** Open map for reading. */
-	virtual SGPFile* openMapForReading(const std::string& mapName) const = 0;
-	virtual SGPFile* openMapForReading(const wchar_t *mapName) const = 0;
+	virtual SGPFile* openMapForReading(const ST::string& mapName) const = 0;
 
 	/** Open user's private file (e.g. saved game, settings) for reading. */
 	virtual SGPFile* openUserPrivateFileForReading(const std::string& filename) const = 0;
@@ -77,9 +77,9 @@ public:
 	virtual std::string getSavedGamesFolder() const = 0;
 
 	/** Load encrypted string from game resource file. */
-	virtual void loadEncryptedString(const char *fileName, wchar_t* DestString, uint32_t seek_chars, uint32_t read_chars) const = 0;
+	virtual ST::string loadEncryptedString(const char* fileName, uint32_t seek_chars, uint32_t read_chars) const = 0;
 
-	virtual void loadEncryptedString(SGPFile* const File, wchar_t* DestString, uint32_t const seek_chars, uint32_t const read_chars) const = 0;
+	virtual ST::string loadEncryptedString(SGPFile* File, uint32_t seek_chars, uint32_t read_chars) const = 0;
 
 	/** Load dialogue quote from file. */
 	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number) = 0;

@@ -5,6 +5,8 @@
 
 #include "MouseSystem.h"
 
+#include <string_theory/string>
+
 
 #define MAX_BUTTONS     400
 #define MAX_BUTTON_PICS 256
@@ -50,7 +52,7 @@ struct GUI_BUTTON
 	bool Enabled() const { return uiFlags & BUTTON_ENABLED; }
 
 	// Set the text that will be displayed as the FastHelp
-	void SetFastHelpText(wchar_t const* text);
+	void SetFastHelpText(const ST::string& str);
 
 	void Hide();
 	void Show();
@@ -69,8 +71,8 @@ struct GUI_BUTTON
 	};
 	void SpecifyTextJustification(Justification);
 
-	void SpecifyText(wchar_t const* text);
-	void SpecifyGeneralTextAttributes(wchar_t const* string, SGPFont, INT16 fore_colour, INT16 shadow_colour);
+	void SpecifyText(const ST::string& str);
+	void SpecifyGeneralTextAttributes(const ST::string& str, SGPFont font, INT16 fore_colour, INT16 shadow_colour);
 	void SpecifyTextOffsets(INT8 text_x_offset, INT8 text_y_offset, BOOLEAN shift_text);
 	void SpecifyTextSubOffsets(INT8 text_x_offset, INT8 text_y_offset, BOOLEAN shift_text);
 	void SpecifyTextWrappedWidth(INT16 wrapped_width);
@@ -131,7 +133,7 @@ struct GUI_BUTTON
 	INT8         bDisabledStyle; // Button disabled style
 
 	// For buttons with text
-	wchar_t*     string;              // the string
+	ST::utf32_buffer codepoints;
 	SGPFont      usFont;              // font for text
 	INT16        sForeColor;          // text colors if there is text
 	INT16        sShadowColor;
@@ -267,13 +269,13 @@ GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 ylo
 GUIButtonRef CreateHotSpot(INT16 xloc, INT16 yloc, INT16 Width, INT16 Height, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 // Creates a generic button with text on it.
-GUIButtonRef CreateTextButton(const wchar_t* string, SGPFont, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
+GUIButtonRef CreateTextButton(const ST::string& str, SGPFont font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback);
 
-GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const wchar_t* string, SGPFont, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback);
+GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const ST::string& str, SGPFont font, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback);
 
 /* This is technically not a clickable button, but just a label with text. It is
  * implemented as button */
-GUIButtonRef CreateLabel(const wchar_t* text, SGPFont, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
+GUIButtonRef CreateLabel(const ST::string& str, SGPFont font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority);
 
 void MarkAButtonDirty(GUIButtonRef); // will mark only selected button dirty
 void MarkButtonsDirty(void);// Function to mark buttons dirty ( all will redraw at next RenderButtons )

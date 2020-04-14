@@ -30,6 +30,9 @@
 #include "Debug.h"
 #include "Font_Control.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 
 #define MERC_TEXT_FONT			FONT12ARIAL
 #define MERC_TEXT_COLOR			FONT_MCOLOR_WHITE
@@ -166,7 +169,7 @@ UINT8			gubCurMercIndex;
 
 static MercPopUpBox* g_merc_popup_box;
 
-static wchar_t gsSpeckDialogueTextPopUp[900];
+static ST::string gsSpeckDialogueTextPopUp;
 static UINT16  gusSpeckDialogueX;
 static UINT16  gusSpeckDialogueActualWidth;
 
@@ -883,7 +886,7 @@ static void HandleTalkingSpeck(void)
 			if( DisplayMercVideoIntro( MERC_INTRO_TIME ) )
 			{
 				//NULL out the string
-				gsSpeckDialogueTextPopUp[0] = '\0';
+				gsSpeckDialogueTextPopUp = ST::null;
 
 				//Start speck talking
 				if( !StartSpeckTalking( gusMercVideoSpeckSpeech ) )
@@ -934,7 +937,7 @@ static void HandleTalkingSpeck(void)
 				}
 
 
-				if( gsSpeckDialogueTextPopUp[0] != L'\0' )
+				if (!gsSpeckDialogueTextPopUp.empty())
 				{
 					//guiAccountBoxButton->Draw();
 					//guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
@@ -984,7 +987,7 @@ static void HandleTalkingSpeck(void)
 static void MercSiteSubTitleRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void DisplayTextForSpeckVideoPopUp(const wchar_t* const pString)
+void DisplayTextForSpeckVideoPopUp(const ST::string& str)
 {
 	UINT16	usActualHeight;
 
@@ -993,7 +996,7 @@ void DisplayTextForSpeckVideoPopUp(const wchar_t* const pString)
 		return;
 
 	//add the "" around the speech.
-	swprintf( gsSpeckDialogueTextPopUp, lengthof(gsSpeckDialogueTextPopUp), L"\"%ls\"", pString );
+	gsSpeckDialogueTextPopUp = ST::format("\"{}\"", str);
 
 	gfDisplaySpeckTextBox = TRUE;
 

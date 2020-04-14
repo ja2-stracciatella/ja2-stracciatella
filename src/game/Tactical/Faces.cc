@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
@@ -39,6 +37,11 @@
 #include "JAScreens.h"
 #include "ScreenIDs.h"
 #include "UILayout.h"
+
+#include <string_theory/format>
+#include <string_theory/string>
+
+#include <stdexcept>
 
 
 // Defines
@@ -806,8 +809,7 @@ static void HandleRenderFaceAdjustments(FACETYPE& f, BOOLEAN const fDisplayBuffe
 			{
 				SetFontDestBuffer(uiRenderBuffer);
 
-				wchar_t sString[32];
-				swprintf(sString, lengthof(sString), L"%d", s->bOppCnt);
+				ST::string sString = ST::format("{}", s->bOppCnt);
 
 				SetFontAttributes(TINYFONT1, FONT_DKRED, DEFAULT_SHADOW, FONT_NEARBLACK);
 
@@ -973,8 +975,7 @@ static void HandleRenderFaceAdjustments(FACETYPE& f, BOOLEAN const fDisplayBuffe
 			{
 				SetFontDestBuffer(uiRenderBuffer);
 
-				wchar_t sString[32];
-				swprintf(sString, lengthof(sString), L"%d/%d", sPtsAvailable, usMaximumPts);
+				ST::string sString = ST::format("{}/{}", sPtsAvailable, usMaximumPts);
 
 				SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 
@@ -1248,7 +1249,7 @@ static void FaceRestoreSavedBackgroundRect(FACETYPE const& f, INT16 const sDestL
 }
 
 
-void SetFaceTalking(FACETYPE& f, char const* const zSoundFile, wchar_t const* const zTextString)
+void SetFaceTalking(FACETYPE& f, const char* zSoundFile, const ST::string& zTextString)
 {
 	// Set face to talking
 	f.fTalking          = TRUE;

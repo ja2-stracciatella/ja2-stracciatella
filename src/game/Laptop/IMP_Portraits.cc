@@ -15,6 +15,8 @@
 #include "VSurface.h"
 #include "Font_Control.h"
 
+#include <string_theory/string>
+
 
 //current and last pages
 INT32 iCurrentPortrait = 0;
@@ -123,7 +125,7 @@ static void DecrementPicture(void)
 }
 
 
-static void MakeButton(UINT idx, const char* img_file, INT32 off_normal, INT32 on_normal, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+static void MakeButton(UINT idx, const char* img_file, INT32 off_normal, INT32 on_normal, const ST::string& text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
 	BUTTON_PICS* const img = LoadButtonImage(img_file, off_normal, on_normal);
 	giIMPPortraitButtonImage[idx] = img;

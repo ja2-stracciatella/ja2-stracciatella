@@ -26,6 +26,8 @@
 #include "Text.h"
 #include "Soldier_Profile_Type.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -54,8 +56,8 @@ INT32 iMechanical = 55;
 BOOLEAN fCharacterIsMale = TRUE;
 
 // name and nick name
-wchar_t pFullName[NAME_LENGTH];
-wchar_t pNickName[NICKNAME_LENGTH];
+ST::string pFullName;
+ST::string pNickName;
 
 // skills
 INT32 iSkillA = 0;
@@ -469,8 +471,8 @@ void ResetCharacterStats( void )
 	iAttitude = 0;
 
 	// names
-	std::fill(std::begin(pFullName), std::end(pFullName), L'\0');
-	std::fill(std::begin(pNickName), std::end(pNickName), L'\0');
+	pFullName = ST::null;
+	pNickName = ST::null;
 }
 
 

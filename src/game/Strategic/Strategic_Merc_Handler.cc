@@ -42,6 +42,9 @@
 #include "WeaponModels.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
+
 #define NUM_DAYS_TILL_UNPAID_RPC_QUITS 3
 
 
@@ -68,7 +71,7 @@ void StrategicHandlePlayerTeamMercDeath(SOLDIERTYPE& s)
 
 	if (guiCurrentScreen != GAME_SCREEN)
 	{
-		ScreenMsg(FONT_RED, MSG_INTERFACE, pMercDeadString, s.name);
+		ScreenMsg(FONT_RED, MSG_INTERFACE, st_format_printf(pMercDeadString, s.name));
 	}
 
 	/* Robot and EPCs don't count against death rate - the mercs back home don't
@@ -131,7 +134,7 @@ void MercDailyUpdate()
 	// if its the first day, leave
 	if (GetWorldDay() == 1) return;
 
-	SLOGD("%ls - Doing MercDailyUpdate", WORLDTIMESTR);
+	SLOGD("%s - Doing MercDailyUpdate", WORLDTIMESTR.c_str());
 
 	/* if the death rate is very low (this is independent of mercs' personal
 	 * deathrate tolerances) */
@@ -226,9 +229,8 @@ void MercDailyUpdate()
 					else
 					{
 						// Display a screen msg indicating that the npc was NOT paid
-						wchar_t zMoney[128];
-						SPrintMoney(zMoney, sSalary);
-						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[MSG_CANT_AFFORD_TO_PAY_NPC_DAILY_SALARY_MSG], p.zNickname, zMoney);
+						ST::string zMoney = SPrintMoney(sSalary);
+						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, st_format_printf(pMessageStrings[MSG_CANT_AFFORD_TO_PAY_NPC_DAILY_SALARY_MSG], p.zNickname, zMoney));
 
 						/* if the merc hasnt been paid for NUM_DAYS_TILL_UNPAID_RPC_QUITS
 						 * days, the merc will quit */
@@ -738,7 +740,7 @@ void HourlyCamouflageUpdate()
 				s.bCamo = 0;
 				if (s.bInSector) CreateSoldierPalettes(s);
 
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_CAMO_WORN_OFF], s.name);
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_CAMO_WORN_OFF], s.name));
 				DirtyMercPanelInterface(&s, DIRTYLEVEL2);
 			}
 			else

@@ -1,5 +1,10 @@
 #include "Text.h"
 
+#ifdef WITH_UNITTESTS
+#include "gtest/gtest.h"
+#endif
+
+#include <string_theory/string>
 
 
 // ******************************************************************************************************
@@ -14,8 +19,8 @@
 //   The general rule is if the string is very short (less than 10 characters), then it's short because of
 //   interface limitations.  On the other hand, full sentences commonly have little limitations for length.
 //   Strings in between are a little dicey.
-// - Never translate a string to appear on multiple lines.  All strings L"This is a really long string...",
-//   must fit on a single line no matter how long the string is.  All strings start with L" and end with ",
+// - Never translate a string to appear on multiple lines.  All strings "This is a really long string...",
+//   must fit on a single line no matter how long the string is.  All strings start with " and end with ",
 // - Never remove any extra spaces in strings.  In addition, all strings containing multiple sentences only
 //   have one space after a period, which is different than standard typing convention.  Never modify sections
 //   of strings contain combinations of % characters.  These are special format characters and are always
@@ -46,14 +51,14 @@
 //   Anytime you see a '|' symbol within the help text string, that means the following key is assigned
 //   to activate the action which is usually a button.
 //
-//   EX:  L"|Map Screen"
+//   EX:  "|Map Screen"
 //
 //   This means the 'M' is the hotkey.  In the game, when somebody hits the 'M' key, it activates that
 //   button.  When translating the text to another language, it is best to attempt to choose a word that
 //   uses 'M'.  If you can't always find a match, then the best thing to do is append the 'M' at the end
 //   of the string in this format:
 //
-//   EX:  L"Ecran De Carte (|M)"  (this is the French translation)
+//   EX:  "Ecran De Carte (|M)"  (this is the French translation)
 //
 //   Other examples are used multiple times, like the Esc key  or "|E|s|c" or Space -> (|S|p|a|c|e)
 //
@@ -62,7 +67,7 @@
 //   text system.  \n notation doesn't need to be precisely placed within that string, but whereever you wish
 //   to start a new line.
 //
-//   EX:  L"Clears all the mercs' positions,\nand allows you to re-enter them manually."
+//   EX:  "Clears all the mercs' positions,\nand allows you to re-enter them manually."
 //
 //   Would appear as:
 //
@@ -73,7 +78,7 @@
 //     in the above example, we would see
 //
 //   WRONG WAY -- spaces before and after the \n
-//   EX:  L"Clears all the mercs' positions, \n and allows you to re-enter them manually."
+//   EX:  "Clears all the mercs' positions, \n and allows you to re-enter them manually."
 //
 //   Would appear as: (the second line is moved in a character)
 //
@@ -96,1681 +101,1681 @@
 
 
 
-static StrPointer s_eng_WeaponType[WeaponType_SIZE] =
+static ST::string s_eng_WeaponType[WeaponType_SIZE] =
 {
-	L"Other",
-	L"Pistol",
-	L"Machine pistol",
-	L"Submachine gun",
-	L"Rifle",
-	L"Sniper rifle",
-	L"Assault rifle",
-	L"Light machine gun",
-	L"Shotgun",
+	"Other",
+	"Pistol",
+	"Machine pistol",
+	"Submachine gun",
+	"Rifle",
+	"Sniper rifle",
+	"Assault rifle",
+	"Light machine gun",
+	"Shotgun",
 };
 
-static StrPointer s_eng_TeamTurnString[TeamTurnString_SIZE] =
+static ST::string s_eng_TeamTurnString[TeamTurnString_SIZE] =
 {
-	L"Player's Turn", // player's turn
-	L"Opponents' Turn",
-	L"Creatures' Turn",
-	L"Militia's Turn",
-	L"Civilians' Turn",
+	"Player's Turn", // player's turn
+	"Opponents' Turn",
+	"Creatures' Turn",
+	"Militia's Turn",
+	"Civilians' Turn",
 	// planning turn
 };
 
-static StrPointer s_eng_Message[Message_SIZE] =
+static ST::string s_eng_Message[Message_SIZE] =
 {
 	// In the following 8 strings, the %s is the merc's name, and the %d (if any) is a number.
 
-	L"%ls is hit in the head and loses a point of wisdom!",
-	L"%ls is hit in the shoulder and loses a point of dexterity!",
-	L"%ls is hit in the chest and loses a point of strength!",
-	L"%ls is hit in the legs and loses a point of agility!",
-	L"%ls is hit in the head and loses %d points of wisdom!",
-	L"%ls is hit in the shoulder and loses %d points of dexterity!",
-	L"%ls is hit in the chest and loses %d points of strength!",
-	L"%ls is hit in the legs and loses %d points of agility!",
-	L"Interrupt!",
+	"%s is hit in the head and loses a point of wisdom!",
+	"%s is hit in the shoulder and loses a point of dexterity!",
+	"%s is hit in the chest and loses a point of strength!",
+	"%s is hit in the legs and loses a point of agility!",
+	"%s is hit in the head and loses %d points of wisdom!",
+	"%s is hit in the shoulder and loses %d points of dexterity!",
+	"%s is hit in the chest and loses %d points of strength!",
+	"%s is hit in the legs and loses %d points of agility!",
+	"Interrupt!",
 
-	L"Your reinforcements have arrived!",
+	"Your reinforcements have arrived!",
 
 	// In the following four lines, all %s's are merc names
 
-	L"%ls reloads.",
-	L"%ls doesn't have enough Action Points!",
+	"%s reloads.",
+	"%s doesn't have enough Action Points!",
 	// the following 17 strings are used to create lists of gun advantages and disadvantages
 	// (separated by commas)
-	L"reliable",
-	L"unreliable",
-	L"easy to repair",
-	L"hard to repair",
-	L"high damage",
-	L"low damage",
-	L"quick firing",
-	L"slow firing",
-	L"long range",
-	L"short range",
-	L"light",
-	L"heavy",
-	L"small",
-	L"fast burst fire",
-	L"no burst fire",
-	L"large magazine",
-	L"small magazine",
+	"reliable",
+	"unreliable",
+	"easy to repair",
+	"hard to repair",
+	"high damage",
+	"low damage",
+	"quick firing",
+	"slow firing",
+	"long range",
+	"short range",
+	"light",
+	"heavy",
+	"small",
+	"fast burst fire",
+	"no burst fire",
+	"large magazine",
+	"small magazine",
 
 	// In the following two lines, all %s's are merc names
 
-	L"%ls's camouflage has worn off.",
-	L"%ls's camouflage has washed off.",
+	"%s's camouflage has worn off.",
+	"%s's camouflage has washed off.",
 
 	// The first %s is a merc name and the second %s is an item name
 
-	L"Second weapon is out of ammo!",
-	L"%ls has stolen the %ls.",
+	"Second weapon is out of ammo!",
+	"%s has stolen the %s.",
 
 	// The %s is a merc name
 
-	L"%ls's weapon can't burst fire.",
+	"%s's weapon can't burst fire.",
 
-	L"You've already got one of those attached.",
-	L"Merge items?",
+	"You've already got one of those attached.",
+	"Merge items?",
 
 	// Both %s's are item names
 
-	L"You can't attach a %ls to a %ls.",
+	"You can't attach a %s to a %s.",
 
-	L"None",
-	L"Eject ammo",
-	L"Attachments",
+	"None",
+	"Eject ammo",
+	"Attachments",
 
 	//You cannot use "item(s)" and your "other item" at the same time.
 	//Ex:  You cannot use sun goggles and you gas mask at the same time.
-	L"You cannot use %ls and your %ls at the same time.",
+	"You cannot use %s and your %s at the same time.",
 
-	L"The item you have in your cursor can be attached to certain items by placing it in one of the four attachment slots.",
-	L"The item you have in your cursor can be attached to certain items by placing it in one of the four attachment slots. (However in this case, the item is not compatible.)",
-	L"The sector isn't cleared of enemies!",
-	L"You still need to give %ls %ls",
-	L"%ls is hit in the head!",
-	L"Abandon the fight?",
-	L"This attachment will be permanent.  Go ahead with it?",
-	L"%ls feels more energetic!",
-	L"%ls slipped on some marbles!",
-	L"%ls failed to grab the %ls!",
-	L"%ls has repaired the %ls",
-	L"Interrupt for ",
-	L"Surrender?",
-	L"This person refuses your aid.",
-	L"I DON'T think so!",
-	L"To travel in Skyrider's chopper, you'll have to ASSIGN mercs to VEHICLE/HELICOPTER first.",
-	L"%ls only had enough time to reload ONE gun",
-	L"Bloodcats' turn",
+	"The item you have in your cursor can be attached to certain items by placing it in one of the four attachment slots.",
+	"The item you have in your cursor can be attached to certain items by placing it in one of the four attachment slots. (However in this case, the item is not compatible.)",
+	"The sector isn't cleared of enemies!",
+	"You still need to give %s %s",
+	"%s is hit in the head!",
+	"Abandon the fight?",
+	"This attachment will be permanent.  Go ahead with it?",
+	"%s feels more energetic!",
+	"%s slipped on some marbles!",
+	"%s failed to grab the %s!",
+	"%s has repaired the %s",
+	"Interrupt for ",
+	"Surrender?",
+	"This person refuses your aid.",
+	"I DON'T think so!",
+	"To travel in Skyrider's chopper, you'll have to ASSIGN mercs to VEHICLE/HELICOPTER first.",
+	"%s only had enough time to reload ONE gun",
+	"Bloodcats' turn",
 };
 
 
 // the names of the towns in the game
 
-static const wchar_t *s_eng_pTownNames[pTownNames_SIZE] =
+static const ST::string s_eng_pTownNames[pTownNames_SIZE] =
 {
-	L"",
-	L"Omerta",
-	L"Drassen",
-	L"Alma",
-	L"Grumm",
-	L"Tixa",
-	L"Cambria",
-	L"San Mona",
-	L"Estoni",
-	L"Orta",
-	L"Balime",
-	L"Meduna",
-	L"Chitzena",
+	"",
+	"Omerta",
+	"Drassen",
+	"Alma",
+	"Grumm",
+	"Tixa",
+	"Cambria",
+	"San Mona",
+	"Estoni",
+	"Orta",
+	"Balime",
+	"Meduna",
+	"Chitzena",
 };
 
-static const wchar_t *s_eng_g_towns_locative[g_towns_locative_SIZE] =
+static const ST::string s_eng_g_towns_locative[g_towns_locative_SIZE] =
 {
-	L"",
-	L"Omerta",
-	L"Drassen",
-	L"Alma",
-	L"Grumm",
-	L"Tixa",
-	L"Cambria",
-	L"San Mona",
-	L"Estoni",
-	L"Orta",
-	L"Balime",
-	L"Meduna",
-	L"Chitzena"
+	"",
+	"Omerta",
+	"Drassen",
+	"Alma",
+	"Grumm",
+	"Tixa",
+	"Cambria",
+	"San Mona",
+	"Estoni",
+	"Orta",
+	"Balime",
+	"Meduna",
+	"Chitzena"
 };
 
 // the types of time compression. For example: is the timer paused? at normal speed, 5 minutes per second, etc.
 // min is an abbreviation for minutes
 
-static const wchar_t *s_eng_sTimeStrings[sTimeStrings_SIZE] =
+static const ST::string s_eng_sTimeStrings[sTimeStrings_SIZE] =
 {
-	L"Paused",
-	L"Normal",
-	L"5 min",
-	L"30 min",
-	L"60 min",
-	L"6 hrs",
+	"Paused",
+	"Normal",
+	"5 min",
+	"30 min",
+	"60 min",
+	"6 hrs",
 };
 
 
 // Assignment Strings: what assignment does the merc  have right now? For example, are they on a squad, training,
 // administering medical aid (doctor) or training a town. All are abbreviated. 8 letters is the longest it can be.
 
-static const wchar_t *s_eng_pAssignmentStrings[pAssignmentStrings_SIZE] =
+static const ST::string s_eng_pAssignmentStrings[pAssignmentStrings_SIZE] =
 {
-	L"Squad 1",
-	L"Squad 2",
-	L"Squad 3",
-	L"Squad 4",
-	L"Squad 5",
-	L"Squad 6",
-	L"Squad 7",
-	L"Squad 8",
-	L"Squad 9",
-	L"Squad 10",
-	L"Squad 11",
-	L"Squad 12",
-	L"Squad 13",
-	L"Squad 14",
-	L"Squad 15",
-	L"Squad 16",
-	L"Squad 17",
-	L"Squad 18",
-	L"Squad 19",
-	L"Squad 20",
-	L"On Duty", // on active duty
-	L"Doctor", // administering medical aid
-	L"Patient", // getting medical aid
-	L"Vehicle", // in a vehicle
-	L"In Trans", // in transit - abbreviated form
-	L"Repair", // repairing
-	L"Practice", // training themselves
-	L"Militia", // training a town to revolt
-	L"Trainer", // training a teammate
-	L"Student", // being trained by someone else
-	L"Dead", // dead
-	L"Incap.", // abbreviation for incapacitated
-	L"POW", // Prisoner of war - captured
-	L"Hospital", // patient in a hospital
-	L"Empty",	// Vehicle is empty
+	"Squad 1",
+	"Squad 2",
+	"Squad 3",
+	"Squad 4",
+	"Squad 5",
+	"Squad 6",
+	"Squad 7",
+	"Squad 8",
+	"Squad 9",
+	"Squad 10",
+	"Squad 11",
+	"Squad 12",
+	"Squad 13",
+	"Squad 14",
+	"Squad 15",
+	"Squad 16",
+	"Squad 17",
+	"Squad 18",
+	"Squad 19",
+	"Squad 20",
+	"On Duty", // on active duty
+	"Doctor", // administering medical aid
+	"Patient", // getting medical aid
+	"Vehicle", // in a vehicle
+	"In Trans", // in transit - abbreviated form
+	"Repair", // repairing
+	"Practice", // training themselves
+	"Militia", // training a town to revolt
+	"Trainer", // training a teammate
+	"Student", // being trained by someone else
+	"Dead", // dead
+	"Incap.", // abbreviation for incapacitated
+	"POW", // Prisoner of war - captured
+	"Hospital", // patient in a hospital
+	"Empty",	// Vehicle is empty
 };
 
 
-static const wchar_t *s_eng_pMilitiaString[pMilitiaString_SIZE] =
+static const ST::string s_eng_pMilitiaString[pMilitiaString_SIZE] =
 {
-	L"Militia", // the title of the militia box
-	L"Unassigned", //the number of unassigned militia troops
-	L"You can't redistribute militia while there are hostilities in the area!",
+	"Militia", // the title of the militia box
+	"Unassigned", //the number of unassigned militia troops
+	"You can't redistribute militia while there are hostilities in the area!",
 };
 
 
-static const wchar_t *s_eng_pMilitiaButtonString[pMilitiaButtonString_SIZE] =
+static const ST::string s_eng_pMilitiaButtonString[pMilitiaButtonString_SIZE] =
 {
-	L"Auto", // auto place the militia troops for the player
-	L"Done", // done placing militia troops
+	"Auto", // auto place the militia troops for the player
+	"Done", // done placing militia troops
 };
 
-static const wchar_t *s_eng_pConditionStrings[pConditionStrings_SIZE] =
+static const ST::string s_eng_pConditionStrings[pConditionStrings_SIZE] =
 {
-	L"Excellent", //the state of a soldier .. excellent health
-	L"Good", // good health
-	L"Fair", // fair health
-	L"Wounded", // wounded health
-	L"Fatigued", // tired
-	L"Bleeding", // bleeding to death
-	L"Unconscious", // knocked out
-	L"Dying", // near death
-	L"Dead", // dead
+	"Excellent", //the state of a soldier .. excellent health
+	"Good", // good health
+	"Fair", // fair health
+	"Wounded", // wounded health
+	"Fatigued", // tired
+	"Bleeding", // bleeding to death
+	"Unconscious", // knocked out
+	"Dying", // near death
+	"Dead", // dead
 };
 
-static const wchar_t *s_eng_pEpcMenuStrings[pEpcMenuStrings_SIZE] =
+static const ST::string s_eng_pEpcMenuStrings[pEpcMenuStrings_SIZE] =
 {
-	L"On Duty", // set merc on active duty
-	L"Patient", // set as a patient to receive medical aid
-	L"Vehicle", // tell merc to enter vehicle
-	L"Unescort", // let the escorted character go off on their own
-	L"Cancel", // close this menu
+	"On Duty", // set merc on active duty
+	"Patient", // set as a patient to receive medical aid
+	"Vehicle", // tell merc to enter vehicle
+	"Unescort", // let the escorted character go off on their own
+	"Cancel", // close this menu
 };
 
 
 // look at pAssignmentString above for comments
 
-static const wchar_t *s_eng_pLongAssignmentStrings[pLongAssignmentStrings_SIZE] =
+static const ST::string s_eng_pLongAssignmentStrings[pLongAssignmentStrings_SIZE] =
 {
-	L"Squad 1",
-	L"Squad 2",
-	L"Squad 3",
-	L"Squad 4",
-	L"Squad 5",
-	L"Squad 6",
-	L"Squad 7",
-	L"Squad 8",
-	L"Squad 9",
-	L"Squad 10",
-	L"Squad 11",
-	L"Squad 12",
-	L"Squad 13",
-	L"Squad 14",
-	L"Squad 15",
-	L"Squad 16",
-	L"Squad 17",
-	L"Squad 18",
-	L"Squad 19",
-	L"Squad 20",
-	L"On Duty",
-	L"Doctor",
-	L"Patient",
-	L"Vehicle",
-	L"In Transit",
-	L"Repair",
-	L"Practice",
-	L"Train Militia",
-	L"Train Teammate",
-	L"Student",
-	L"Dead",
-	L"Incap.",
-	L"POW",
-	L"Hospital", // patient in a hospital
-	L"Empty",	// Vehicle is empty
+	"Squad 1",
+	"Squad 2",
+	"Squad 3",
+	"Squad 4",
+	"Squad 5",
+	"Squad 6",
+	"Squad 7",
+	"Squad 8",
+	"Squad 9",
+	"Squad 10",
+	"Squad 11",
+	"Squad 12",
+	"Squad 13",
+	"Squad 14",
+	"Squad 15",
+	"Squad 16",
+	"Squad 17",
+	"Squad 18",
+	"Squad 19",
+	"Squad 20",
+	"On Duty",
+	"Doctor",
+	"Patient",
+	"Vehicle",
+	"In Transit",
+	"Repair",
+	"Practice",
+	"Train Militia",
+	"Train Teammate",
+	"Student",
+	"Dead",
+	"Incap.",
+	"POW",
+	"Hospital", // patient in a hospital
+	"Empty",	// Vehicle is empty
 };
 
 
 // the contract options
 
-static const wchar_t *s_eng_pContractStrings[pContractStrings_SIZE] =
+static const ST::string s_eng_pContractStrings[pContractStrings_SIZE] =
 {
-	L"Contract Options:",
-	L"", // a blank line, required
-	L"Offer One Day", // offer merc a one day contract extension
-	L"Offer One Week", // 1 week
-	L"Offer Two Weeks", // 2 week
-	L"Dismiss", // end merc's contract
-	L"Cancel", // stop showing this menu
+	"Contract Options:",
+	"", // a blank line, required
+	"Offer One Day", // offer merc a one day contract extension
+	"Offer One Week", // 1 week
+	"Offer Two Weeks", // 2 week
+	"Dismiss", // end merc's contract
+	"Cancel", // stop showing this menu
 };
 
-static const wchar_t *s_eng_pPOWStrings[pPOWStrings_SIZE] =
+static const ST::string s_eng_pPOWStrings[pPOWStrings_SIZE] =
 {
-	L"POW",  //an acronym for Prisoner of War
-	L"??",
+	"POW",  //an acronym for Prisoner of War
+	"??",
 };
 
-static const wchar_t *s_eng_pInvPanelTitleStrings[pInvPanelTitleStrings_SIZE] =
+static const ST::string s_eng_pInvPanelTitleStrings[pInvPanelTitleStrings_SIZE] =
 {
-	L"Armor", // the armor rating of the merc
-	L"Weight", // the weight the merc is carrying
-	L"Camo", // the merc's camouflage rating
+	"Armor", // the armor rating of the merc
+	"Weight", // the weight the merc is carrying
+	"Camo", // the merc's camouflage rating
 };
 
-static const wchar_t *s_eng_pShortAttributeStrings[pShortAttributeStrings_SIZE] =
+static const ST::string s_eng_pShortAttributeStrings[pShortAttributeStrings_SIZE] =
 {
-	L"Agi", // the abbreviated version of : agility
-	L"Dex", // dexterity
-	L"Str", // strength
-	L"Ldr", // leadership
-	L"Wis", // wisdom
-	L"Lvl", // experience level
-	L"Mrk", // marksmanship skill
-	L"Exp", // explosive skill
-	L"Mec", // mechanical skill
-	L"Med", // medical skill
-};
-
-
-static const wchar_t *s_eng_pUpperLeftMapScreenStrings[pUpperLeftMapScreenStrings_SIZE] =
-{
-	L"Assignment", // the mercs current assignment
-	L"Health", // the health level of the current merc
-	L"Morale", // the morale of the current merc
-	L"Cond.",	// the condition of the current vehicle
-};
-
-static const wchar_t *s_eng_pTrainingStrings[pTrainingStrings_SIZE] =
-{
-	L"Practice", // tell merc to train self
-	L"Militia", // tell merc to train town
-	L"Trainer", // tell merc to act as trainer
-	L"Student", // tell merc to be train by other
-};
-
-static const wchar_t *s_eng_pAssignMenuStrings[pAssignMenuStrings_SIZE] =
-{
-	L"On Duty", // merc is on active duty
-	L"Doctor", // the merc is acting as a doctor
-	L"Patient", // the merc is receiving medical attention
-	L"Vehicle", // the merc is in a vehicle
-	L"Repair", // the merc is repairing items
-	L"Train", // the merc is training
-	L"Cancel", // cancel this menu
-};
-
-static const wchar_t *s_eng_pRemoveMercStrings[pRemoveMercStrings_SIZE] =
-{
-	L"Remove Merc", // remove dead merc from current team
-	L"Cancel",
-};
-
-static const wchar_t *s_eng_pAttributeMenuStrings[pAttributeMenuStrings_SIZE] =
-{
-	L"Strength",
-	L"Dexterity",
-	L"Agility",
-	L"Health",
-	L"Marksmanship",
-	L"Medical",
-	L"Mechanical",
-	L"Leadership",
-	L"Explosives",
-	L"Cancel",
-};
-
-static const wchar_t *s_eng_pTrainingMenuStrings[pTrainingMenuStrings_SIZE] =
-{
-	L"Practice", // train yourself
-	L"Militia", // train the town
-	L"Trainer", // train your teammates
-	L"Student",  // be trained by an instructor
-	L"Cancel", // cancel this menu
+	"Agi", // the abbreviated version of : agility
+	"Dex", // dexterity
+	"Str", // strength
+	"Ldr", // leadership
+	"Wis", // wisdom
+	"Lvl", // experience level
+	"Mrk", // marksmanship skill
+	"Exp", // explosive skill
+	"Mec", // mechanical skill
+	"Med", // medical skill
 };
 
 
-static const wchar_t *s_eng_pSquadMenuStrings[pSquadMenuStrings_SIZE] =
+static const ST::string s_eng_pUpperLeftMapScreenStrings[pUpperLeftMapScreenStrings_SIZE] =
 {
-	L"Squad  1",
-	L"Squad  2",
-	L"Squad  3",
-	L"Squad  4",
-	L"Squad  5",
-	L"Squad  6",
-	L"Squad  7",
-	L"Squad  8",
-	L"Squad  9",
-	L"Squad 10",
-	L"Squad 11",
-	L"Squad 12",
-	L"Squad 13",
-	L"Squad 14",
-	L"Squad 15",
-	L"Squad 16",
-	L"Squad 17",
-	L"Squad 18",
-	L"Squad 19",
-	L"Squad 20",
-	L"Cancel",
+	"Assignment", // the mercs current assignment
+	"Health", // the health level of the current merc
+	"Morale", // the morale of the current merc
+	"Cond.",	// the condition of the current vehicle
+};
+
+static const ST::string s_eng_pTrainingStrings[pTrainingStrings_SIZE] =
+{
+	"Practice", // tell merc to train self
+	"Militia", // tell merc to train town
+	"Trainer", // tell merc to act as trainer
+	"Student", // tell merc to be train by other
+};
+
+static const ST::string s_eng_pAssignMenuStrings[pAssignMenuStrings_SIZE] =
+{
+	"On Duty", // merc is on active duty
+	"Doctor", // the merc is acting as a doctor
+	"Patient", // the merc is receiving medical attention
+	"Vehicle", // the merc is in a vehicle
+	"Repair", // the merc is repairing items
+	"Train", // the merc is training
+	"Cancel", // cancel this menu
+};
+
+static const ST::string s_eng_pRemoveMercStrings[pRemoveMercStrings_SIZE] =
+{
+	"Remove Merc", // remove dead merc from current team
+	"Cancel",
+};
+
+static const ST::string s_eng_pAttributeMenuStrings[pAttributeMenuStrings_SIZE] =
+{
+	"Strength",
+	"Dexterity",
+	"Agility",
+	"Health",
+	"Marksmanship",
+	"Medical",
+	"Mechanical",
+	"Leadership",
+	"Explosives",
+	"Cancel",
+};
+
+static const ST::string s_eng_pTrainingMenuStrings[pTrainingMenuStrings_SIZE] =
+{
+	"Practice", // train yourself
+	"Militia", // train the town
+	"Trainer", // train your teammates
+	"Student",  // be trained by an instructor
+	"Cancel", // cancel this menu
 };
 
 
-static const wchar_t *s_eng_pPersonnelScreenStrings[pPersonnelScreenStrings_SIZE] =
+static const ST::string s_eng_pSquadMenuStrings[pSquadMenuStrings_SIZE] =
 {
-	L"Medical Deposit:", // amount of medical deposit put down on the merc
-	L"Remaining Contract:", // cost of current contract
-	L"Kills", // number of kills by merc
-	L"Assists", // number of assists on kills by merc
-	L"Daily Cost:", // daily cost of merc
-	L"Total Cost to Date:", // total cost of merc
-	L"Contract:", // cost of current contract
-	L"Total Service to Date:", // total service rendered by merc
-	L"Salary Owing:", // amount left on MERC merc to be paid
-	L"Hit Percentage:", // percentage of shots that hit target
-	L"Battles", // number of battles fought
-	L"Times Wounded", // number of times merc has been wounded
-	L"Skills:",
-	L"No Skills",
+	"Squad  1",
+	"Squad  2",
+	"Squad  3",
+	"Squad  4",
+	"Squad  5",
+	"Squad  6",
+	"Squad  7",
+	"Squad  8",
+	"Squad  9",
+	"Squad 10",
+	"Squad 11",
+	"Squad 12",
+	"Squad 13",
+	"Squad 14",
+	"Squad 15",
+	"Squad 16",
+	"Squad 17",
+	"Squad 18",
+	"Squad 19",
+	"Squad 20",
+	"Cancel",
+};
+
+
+static const ST::string s_eng_pPersonnelScreenStrings[pPersonnelScreenStrings_SIZE] =
+{
+	"Medical Deposit:", // amount of medical deposit put down on the merc
+	"Remaining Contract:", // cost of current contract
+	"Kills", // number of kills by merc
+	"Assists", // number of assists on kills by merc
+	"Daily Cost:", // daily cost of merc
+	"Total Cost to Date:", // total cost of merc
+	"Contract:", // cost of current contract
+	"Total Service to Date:", // total service rendered by merc
+	"Salary Owing:", // amount left on MERC merc to be paid
+	"Hit Percentage:", // percentage of shots that hit target
+	"Battles", // number of battles fought
+	"Times Wounded", // number of times merc has been wounded
+	"Skills:",
+	"No Skills",
 };
 
 
 //These string correspond to enums used in by the SkillTrait enums in SoldierProfileType.h
-static const wchar_t *s_eng_gzMercSkillText[gzMercSkillText_SIZE] =
+static const ST::string s_eng_gzMercSkillText[gzMercSkillText_SIZE] =
 {
-	L"No Skill",
-	L"Lock picking",
-	L"Hand to hand",
-	L"Electronics",
-	L"Night ops",
-	L"Throwing",
-	L"Teaching",
-	L"Heavy Weapons",
-	L"Auto Weapons",
-	L"Stealthy",
-	L"Ambidextrous",
-	L"Thief",
-	L"Martial Arts",
-	L"Knifing",
-	L"On Roof Bonus to hit",
-	L"Camouflaged",
-	L"(Expert)",
+	"No Skill",
+	"Lock picking",
+	"Hand to hand",
+	"Electronics",
+	"Night ops",
+	"Throwing",
+	"Teaching",
+	"Heavy Weapons",
+	"Auto Weapons",
+	"Stealthy",
+	"Ambidextrous",
+	"Thief",
+	"Martial Arts",
+	"Knifing",
+	"On Roof Bonus to hit",
+	"Camouflaged",
+	"(Expert)",
 };
 
 
 // This is pop up help text for the options that are available to the merc
 
-static const wchar_t *s_eng_pTacticalPopupButtonStrings[pTacticalPopupButtonStrings_SIZE] =
+static const ST::string s_eng_pTacticalPopupButtonStrings[pTacticalPopupButtonStrings_SIZE] =
 {
-	L"|Stand/Walk",
-	L"|Crouch/Crouched Move",
-	L"Stand/|Run",
-	L"|Prone/Crawl",
-	L"|Look",
-	L"Action",
-	L"Talk",
-	L"Examine (|C|t|r|l)",
+	"|Stand/Walk",
+	"|Crouch/Crouched Move",
+	"Stand/|Run",
+	"|Prone/Crawl",
+	"|Look",
+	"Action",
+	"Talk",
+	"Examine (|C|t|r|l)",
 
 	// Pop up door menu
-	L"Open Manually",
-	L"Examine for Traps",
-	L"Lockpick",
-	L"Force Open",
-	L"Untrap",
-	L"Lock",
-	L"Unlock",
-	L"Use Door Explosive",
-	L"Use Crowbar",
-	L"Cancel (|E|s|c)",
-	L"Close",
+	"Open Manually",
+	"Examine for Traps",
+	"Lockpick",
+	"Force Open",
+	"Untrap",
+	"Lock",
+	"Unlock",
+	"Use Door Explosive",
+	"Use Crowbar",
+	"Cancel (|E|s|c)",
+	"Close",
 };
 
 // Door Traps. When we examine a door, it could have a particular trap on it. These are the traps.
 
-static const wchar_t *s_eng_pDoorTrapStrings[pDoorTrapStrings_SIZE] =
+static const ST::string s_eng_pDoorTrapStrings[pDoorTrapStrings_SIZE] =
 {
-	L"no trap",
-	L"an explosion trap",
-	L"an electric trap",
-	L"a siren trap",
-	L"a silent alarm trap",
+	"no trap",
+	"an explosion trap",
+	"an electric trap",
+	"a siren trap",
+	"a silent alarm trap",
 };
 
 // On the map screen, there are four columns. This text is popup help text that identifies the individual columns.
 
-static const wchar_t *s_eng_pMapScreenMouseRegionHelpText[pMapScreenMouseRegionHelpText_SIZE] =
+static const ST::string s_eng_pMapScreenMouseRegionHelpText[pMapScreenMouseRegionHelpText_SIZE] =
 {
-	L"Select Character",
-	L"Assign Merc",
-	L"Plot Travel Route",
-	L"Merc |Contract",
-	L"Remove Merc",
-	L"Sleep",
+	"Select Character",
+	"Assign Merc",
+	"Plot Travel Route",
+	"Merc |Contract",
+	"Remove Merc",
+	"Sleep",
 };
 
 // volumes of noises
 
-static const wchar_t *s_eng_pNoiseVolStr[pNoiseVolStr_SIZE] =
+static const ST::string s_eng_pNoiseVolStr[pNoiseVolStr_SIZE] =
 {
-	L"FAINT",
-	L"DEFINITE",
-	L"LOUD",
-	L"VERY LOUD",
+	"FAINT",
+	"DEFINITE",
+	"LOUD",
+	"VERY LOUD",
 };
 
 // types of noises
 
-static const wchar_t *s_eng_pNoiseTypeStr[pNoiseTypeStr_SIZE] = // OBSOLETE
+static const ST::string s_eng_pNoiseTypeStr[pNoiseTypeStr_SIZE] = // OBSOLETE
 {
-	L"UNKNOWN",
-	L"sound of MOVEMENT",
-	L"CREAKING",
-	L"SPLASHING",
-	L"IMPACT",
-	L"GUNSHOT",
-	L"EXPLOSION",
-	L"SCREAM",
-	L"IMPACT",
-	L"IMPACT",
-	L"SHATTERING",
-	L"SMASH",
+	"UNKNOWN",
+	"sound of MOVEMENT",
+	"CREAKING",
+	"SPLASHING",
+	"IMPACT",
+	"GUNSHOT",
+	"EXPLOSION",
+	"SCREAM",
+	"IMPACT",
+	"IMPACT",
+	"SHATTERING",
+	"SMASH",
 };
 
 // Directions that are used to report noises
 
-static const wchar_t *s_eng_pDirectionStr[pDirectionStr_SIZE] =
+static const ST::string s_eng_pDirectionStr[pDirectionStr_SIZE] =
 {
-	L"the NORTHEAST",
-	L"the EAST",
-	L"the SOUTHEAST",
-	L"the SOUTH",
-	L"the SOUTHWEST",
-	L"the WEST",
-	L"the NORTHWEST",
-	L"the NORTH",
+	"the NORTHEAST",
+	"the EAST",
+	"the SOUTHEAST",
+	"the SOUTH",
+	"the SOUTHWEST",
+	"the WEST",
+	"the NORTHWEST",
+	"the NORTH",
 };
 
 // These are the different terrain types.
 
-static const wchar_t *s_eng_pLandTypeStrings[pLandTypeStrings_SIZE] =
+static const ST::string s_eng_pLandTypeStrings[pLandTypeStrings_SIZE] =
 {
-	L"Urban",
-	L"Road",
-	L"Plains",
-	L"Desert",
-	L"Woods",
-	L"Forest",
-	L"Swamp",
-	L"Water",
-	L"Hills",
-	L"Impassable",
-	L"River",	//river from north to south
-	L"River",	//river from east to west
-	L"Foreign Country",
+	"Urban",
+	"Road",
+	"Plains",
+	"Desert",
+	"Woods",
+	"Forest",
+	"Swamp",
+	"Water",
+	"Hills",
+	"Impassable",
+	"River",	//river from north to south
+	"River",	//river from east to west
+	"Foreign Country",
 	//NONE of the following are used for directional travel, just for the sector description.
-	L"Tropical",
-	L"Farmland",
-	L"Plains, road",
-	L"Woods, road",
-	L"Farm, road",
-	L"Tropical, road",
-	L"Forest, road",
-	L"Coastline",
-	L"Mountain, road",
-	L"Coastal, road",
-	L"Desert, road",
-	L"Swamp, road",
-	L"Woods, SAM site",
-	L"Desert, SAM site",
-	L"Tropical, SAM site",
-	L"Meduna, SAM site",
+	"Tropical",
+	"Farmland",
+	"Plains, road",
+	"Woods, road",
+	"Farm, road",
+	"Tropical, road",
+	"Forest, road",
+	"Coastline",
+	"Mountain, road",
+	"Coastal, road",
+	"Desert, road",
+	"Swamp, road",
+	"Woods, SAM site",
+	"Desert, SAM site",
+	"Tropical, SAM site",
+	"Meduna, SAM site",
 
 	//These are descriptions for special sectors
-	L"Cambria Hospital",
-	L"Drassen Airport",
-	L"Meduna Airport",
-	L"SAM site",
-	L"Rebel Hideout", //The rebel base underground in sector A10
-	L"Tixa Dungeon",	//The basement of the Tixa Prison (J9)
-	L"Creature Lair",	//Any mine sector with creatures in it
-	L"Orta Basement",	//The basement of Orta (K4)
-	L"Tunnel",				//The tunnel access from the maze garden in Meduna
+	"Cambria Hospital",
+	"Drassen Airport",
+	"Meduna Airport",
+	"SAM site",
+	"Rebel Hideout", //The rebel base underground in sector A10
+	"Tixa Dungeon",	//The basement of the Tixa Prison (J9)
+	"Creature Lair",	//Any mine sector with creatures in it
+	"Orta Basement",	//The basement of Orta (K4)
+	"Tunnel",				//The tunnel access from the maze garden in Meduna
 										//leading to the secret shelter underneath the palace
-	L"Shelter",				//The shelter underneath the queen's palace
-	L"",							//Unused
+	"Shelter",				//The shelter underneath the queen's palace
+	"",							//Unused
 };
 
-static const wchar_t *s_eng_gpStrategicString[gpStrategicString_SIZE] =
+static const ST::string s_eng_gpStrategicString[gpStrategicString_SIZE] =
 {
-	L"%ls have been detected in sector %c%d and another squad is about to arrive.",	//STR_DETECTED_SINGULAR
-	L"%ls have been detected in sector %c%d and other squads are about to arrive.",	//STR_DETECTED_PLURAL
-	L"Do you want to coordinate a simultaneous arrival?",													//STR_COORDINATE
+	"%s have been detected in sector %c%d and another squad is about to arrive.",	//STR_DETECTED_SINGULAR
+	"%s have been detected in sector %c%d and other squads are about to arrive.",	//STR_DETECTED_PLURAL
+	"Do you want to coordinate a simultaneous arrival?",													//STR_COORDINATE
 
 	//Dialog strings for enemies.
 
-	L"The enemy offers you the chance to surrender.",			//STR_ENEMY_SURRENDER_OFFER
-	L"The enemy has captured your remaining unconscious mercs.",	//STR_ENEMY_CAPTURED
+	"The enemy offers you the chance to surrender.",			//STR_ENEMY_SURRENDER_OFFER
+	"The enemy has captured your remaining unconscious mercs.",	//STR_ENEMY_CAPTURED
 
 	//The text that goes on the autoresolve buttons
 
-	L"Retreat", 		//The retreat button				//STR_AR_RETREAT_BUTTON
-	L"Done",		//The done button				//STR_AR_DONE_BUTTON
+	"Retreat", 		//The retreat button				//STR_AR_RETREAT_BUTTON
+	"Done",		//The done button				//STR_AR_DONE_BUTTON
 
 	//The headers are for the autoresolve type (MUST BE UPPERCASE)
 
-	L"DEFENDING",								//STR_AR_DEFEND_HEADER
-	L"ATTACKING",								//STR_AR_ATTACK_HEADER
-	L"ENCOUNTER",								//STR_AR_ENCOUNTER_HEADER
-	L"Sector",		//The Sector A9 part of the header		//STR_AR_SECTOR_HEADER
+	"DEFENDING",								//STR_AR_DEFEND_HEADER
+	"ATTACKING",								//STR_AR_ATTACK_HEADER
+	"ENCOUNTER",								//STR_AR_ENCOUNTER_HEADER
+	"Sector",		//The Sector A9 part of the header		//STR_AR_SECTOR_HEADER
 
 	//The battle ending conditions
 
-	L"VICTORY!",								//STR_AR_OVER_VICTORY
-	L"DEFEAT!",								//STR_AR_OVER_DEFEAT
-	L"SURRENDERED!",							//STR_AR_OVER_SURRENDERED
-	L"CAPTURED!",								//STR_AR_OVER_CAPTURED
-	L"RETREATED!",								//STR_AR_OVER_RETREATED
+	"VICTORY!",								//STR_AR_OVER_VICTORY
+	"DEFEAT!",								//STR_AR_OVER_DEFEAT
+	"SURRENDERED!",							//STR_AR_OVER_SURRENDERED
+	"CAPTURED!",								//STR_AR_OVER_CAPTURED
+	"RETREATED!",								//STR_AR_OVER_RETREATED
 
 	//These are the labels for the different types of enemies we fight in autoresolve.
 
-	L"Militia",							//STR_AR_MILITIA_NAME,
-	L"Elite",								//STR_AR_ELITE_NAME,
-	L"Troop",								//STR_AR_TROOP_NAME,
-	L"Admin",								//STR_AR_ADMINISTRATOR_NAME,
-	L"Creature",								//STR_AR_CREATURE_NAME,
+	"Militia",							//STR_AR_MILITIA_NAME,
+	"Elite",								//STR_AR_ELITE_NAME,
+	"Troop",								//STR_AR_TROOP_NAME,
+	"Admin",								//STR_AR_ADMINISTRATOR_NAME,
+	"Creature",								//STR_AR_CREATURE_NAME,
 
 	//Label for the length of time the battle took
 
-	L"Time Elapsed",							//STR_AR_TIME_ELAPSED,
+	"Time Elapsed",							//STR_AR_TIME_ELAPSED,
 
 	//Labels for status of merc if retreating.  (UPPERCASE)
 
-	L"RETREATED",								//STR_AR_MERC_RETREATED,
-	L"RETREATING",								//STR_AR_MERC_RETREATING,
-	L"RETREAT",								//STR_AR_MERC_RETREAT,
+	"RETREATED",								//STR_AR_MERC_RETREATED,
+	"RETREATING",								//STR_AR_MERC_RETREATING,
+	"RETREAT",								//STR_AR_MERC_RETREAT,
 
 	//PRE BATTLE INTERFACE STRINGS
 	//Goes on the three buttons in the prebattle interface.  The Auto resolve button represents
 	//a system that automatically resolves the combat for the player without having to do anything.
 	//These strings must be short (two lines -- 6-8 chars per line)
 
-	L"Auto Resolve",							//STR_PB_AUTORESOLVE_BTN,
-	L"Go To Sector",							//STR_PB_GOTOSECTOR_BTN,
-	L"Retreat Mercs",							//STR_PB_RETREATMERCS_BTN,
+	"Auto Resolve",							//STR_PB_AUTORESOLVE_BTN,
+	"Go To Sector",							//STR_PB_GOTOSECTOR_BTN,
+	"Retreat Mercs",							//STR_PB_RETREATMERCS_BTN,
 
 	//The different headers(titles) for the prebattle interface.
-	L"ENEMY ENCOUNTER",							//STR_PB_ENEMYENCOUNTER_HEADER,
-	L"ENEMY INVASION",							//STR_PB_ENEMYINVASION_HEADER, // 30
-	L"ENEMY AMBUSH",								//STR_PB_ENEMYAMBUSH_HEADER
-	L"ENTERING ENEMY SECTOR",				//STR_PB_ENTERINGENEMYSECTOR_HEADER
-	L"CREATURE ATTACK",							//STR_PB_CREATUREATTACK_HEADER
-	L"BLOODCAT AMBUSH",							//STR_PB_BLOODCATAMBUSH_HEADER
-	L"ENTERING BLOODCAT LAIR",			//STR_PB_ENTERINGBLOODCATLAIR_HEADER
+	"ENEMY ENCOUNTER",							//STR_PB_ENEMYENCOUNTER_HEADER,
+	"ENEMY INVASION",							//STR_PB_ENEMYINVASION_HEADER, // 30
+	"ENEMY AMBUSH",								//STR_PB_ENEMYAMBUSH_HEADER
+	"ENTERING ENEMY SECTOR",				//STR_PB_ENTERINGENEMYSECTOR_HEADER
+	"CREATURE ATTACK",							//STR_PB_CREATUREATTACK_HEADER
+	"BLOODCAT AMBUSH",							//STR_PB_BLOODCATAMBUSH_HEADER
+	"ENTERING BLOODCAT LAIR",			//STR_PB_ENTERINGBLOODCATLAIR_HEADER
 
 	//Various single words for direct translation.  The Civilians represent the civilian
 	//militia occupying the sector being attacked.  Limited to 9-10 chars
 
-	L"Location",
-	L"Enemies",
-	L"Mercs",
-	L"Militia",
-	L"Creatures",
-	L"Bloodcats",
-	L"Sector",
-	L"None",		//If there are no uninvolved mercs in this fight.
-	L"N/A",			//Acronym of Not Applicable
-	L"d",			//One letter abbreviation of day
-	L"h",			//One letter abbreviation of hour
+	"Location",
+	"Enemies",
+	"Mercs",
+	"Militia",
+	"Creatures",
+	"Bloodcats",
+	"Sector",
+	"None",		//If there are no uninvolved mercs in this fight.
+	"N/A",			//Acronym of Not Applicable
+	"d",			//One letter abbreviation of day
+	"h",			//One letter abbreviation of hour
 
 	//TACTICAL PLACEMENT USER INTERFACE STRINGS
 	//The four buttons
 
-	L"Clear",
-	L"Spread",
-	L"Group",
-	L"Done",
+	"Clear",
+	"Spread",
+	"Group",
+	"Done",
 
 	//The help text for the four buttons.  Use \n to denote new line (just like enter).
 
-	L"|Clears all the mercs' positions,\nand allows you to re-enter them manually.",
-	L"Randomly |spreads your mercs out\neach time it's pressed.",
-	L"Allows you to select where you wish to |group your mercs.",
-	L"Click this button when you're finished\nchoosing your mercs' positions. (|E|n|t|e|r)",
-	L"You must place all of your mercs\nbefore you start the battle.",
+	"|Clears all the mercs' positions,\nand allows you to re-enter them manually.",
+	"Randomly |spreads your mercs out\neach time it's pressed.",
+	"Allows you to select where you wish to |group your mercs.",
+	"Click this button when you're finished\nchoosing your mercs' positions. (|E|n|t|e|r)",
+	"You must place all of your mercs\nbefore you start the battle.",
 
 	//Various strings (translate word for word)
 
-	L"Sector",
-	L"Choose entry positions",
+	"Sector",
+	"Choose entry positions",
 
 	//Strings used for various popup message boxes.  Can be as long as desired.
 
-	L"Doesn't look so good there. It's inaccessible. Try a different location.",
-	L"Place your mercs in the highlighted section of the map.",
+	"Doesn't look so good there. It's inaccessible. Try a different location.",
+	"Place your mercs in the highlighted section of the map.",
 
 	//These entries are for button popup help text for the prebattle interface.  All popup help
 	//text supports the use of \n to denote new line.  Do not use spaces before or after the \n.
-	L"|Automatically resolves combat for you\nwithout loading map.",
-	L"Can't use auto resolve feature when\nthe player is attacking.",
-	L"|Enter the sector to engage the enemy.",
-	L"|Retreat group to their previous sector.",				//singular version
-	L"|Retreat all groups to their previous sectors.", //multiple groups with same previous sector
+	"|Automatically resolves combat for you\nwithout loading map.",
+	"Can't use auto resolve feature when\nthe player is attacking.",
+	"|Enter the sector to engage the enemy.",
+	"|Retreat group to their previous sector.",				//singular version
+	"|Retreat all groups to their previous sectors.", //multiple groups with same previous sector
 
 	//various popup messages for battle conditions.
 
 	//%c%d is the sector -- ex:  A9
-	L"Enemies attack your militia in sector %c%d.",
+	"Enemies attack your militia in sector %c%d.",
 	//%c%d is the sector -- ex:  A9
-	L"Creatures attack your militia in sector %c%d.",
+	"Creatures attack your militia in sector %c%d.",
 	//1st %d refers to the number of civilians eaten by monsters,  %c%d is the sector -- ex:  A9
 	//Note:  the minimum number of civilians eaten will be two.
-	L"Creatures attack and kill %d civilians in sector %ls.",
+	"Creatures attack and kill %d civilians in sector %s.",
 	//%s is the sector location -- ex:  A9: Omerta
-	L"Enemies attack your mercs in sector %ls.  None of your mercs are able to fight!",
+	"Enemies attack your mercs in sector %s.  None of your mercs are able to fight!",
 	//%s is the sector location -- ex:  A9: Omerta
-	L"Creatures attack your mercs in sector %ls.  None of your mercs are able to fight!",
+	"Creatures attack your mercs in sector %s.  None of your mercs are able to fight!",
 
 };
 
 //This is the day represented in the game clock.  Must be very short, 4 characters max.
-static const wchar_t s_eng_gpGameClockString[] = L"Day";
+static const ST::string s_eng_gpGameClockString = "Day";
 
 //When the merc finds a key, they can get a description of it which
 //tells them where and when they found it.
-static const wchar_t *s_eng_sKeyDescriptionStrings[sKeyDescriptionStrings_SIZE] =
+static const ST::string s_eng_sKeyDescriptionStrings[sKeyDescriptionStrings_SIZE] =
 {
-	L"Sector Found:",
-	L"Day Found:",
+	"Sector Found:",
+	"Day Found:",
 };
 
 //The headers used to describe various weapon statistics.
 
-static StrPointer s_eng_gWeaponStatsDesc[ gWeaponStatsDesc_SIZE] =
+static ST::string s_eng_gWeaponStatsDesc[ gWeaponStatsDesc_SIZE] =
 {
-	L"Weight (%ls):",
-	L"Status:",
-	L"Amount:", 		// Number of bullets left in a magazine
-	L"Rng:",		// Range
-	L"Dam:",		// Damage
-	L"AP:",			// abbreviation for Action Points
-	L"="
+	"Weight (%s):",
+	"Status:",
+	"Amount:", 		// Number of bullets left in a magazine
+	"Rng:",		// Range
+	"Dam:",		// Damage
+	"AP:",			// abbreviation for Action Points
+	"="
 };
 
 //The headers used for the merc's money.
 
-static const wchar_t *s_eng_gMoneyStatsDesc[gMoneyStatsDesc_SIZE] =
+static const ST::string s_eng_gMoneyStatsDesc[gMoneyStatsDesc_SIZE] =
 {
-	L"Amount",
-	L"Remaining:", //this is the overall balance
-	L"Amount",
-	L"To Split:", // the amount he wants to separate from the overall balance to get two piles of money
+	"Amount",
+	"Remaining:", //this is the overall balance
+	"Amount",
+	"To Split:", // the amount he wants to separate from the overall balance to get two piles of money
 
-	L"Current",
-	L"Balance",
-	L"Amount to",
-	L"Withdraw",
+	"Current",
+	"Balance",
+	"Amount to",
+	"Withdraw",
 };
 
 //The health of various creatures, enemies, characters in the game. The numbers following each are for comment
 //only, but represent the precentage of points remaining.
 
-static const wchar_t *s_eng_zHealthStr[zHealthStr_SIZE] =
+static const ST::string s_eng_zHealthStr[zHealthStr_SIZE] =
 {
-	L"DYING",		//	>= 0
-	L"CRITICAL", 		//	>= 15
-	L"POOR",		//	>= 30
-	L"WOUNDED",    	//	>= 45
-	L"HEALTHY",    	//	>= 60
-	L"STRONG",     	// 	>= 75
-	L"EXCELLENT",		// 	>= 90
+	"DYING",		//	>= 0
+	"CRITICAL", 		//	>= 15
+	"POOR",		//	>= 30
+	"WOUNDED",    	//	>= 45
+	"HEALTHY",    	//	>= 60
+	"STRONG",     	// 	>= 75
+	"EXCELLENT",		// 	>= 90
 };
 
-static const wchar_t *s_eng_gzMoneyAmounts[gzMoneyAmounts_SIZE] =
+static const ST::string s_eng_gzMoneyAmounts[gzMoneyAmounts_SIZE] =
 {
-	L"$1000",
-	L"$100",
-	L"$10",
-	L"Done",
-	L"Separate",
-	L"Withdraw",
+	"$1000",
+	"$100",
+	"$10",
+	"Done",
+	"Separate",
+	"Withdraw",
 };
 
 // short words meaning "Advantages" for "Pros" and "Disadvantages" for "Cons."
-static const wchar_t s_eng_gzProsLabel[] = L"Pros:";
-static const wchar_t s_eng_gzConsLabel[] = L"Cons:";
+static const ST::string s_eng_gzProsLabel = "Pros:";
+static const ST::string s_eng_gzConsLabel = "Cons:";
 
 //Conversation options a player has when encountering an NPC
-static StrPointer s_eng_zTalkMenuStrings[zTalkMenuStrings_SIZE] =
+static ST::string s_eng_zTalkMenuStrings[zTalkMenuStrings_SIZE] =
 {
-	L"Come Again?", 	//meaning "Repeat yourself"
-	L"Friendly",		//approach in a friendly
-	L"Direct",		//approach directly - let's get down to business
-	L"Threaten",		//approach threateningly - talk now, or I'll blow your face off
-	L"Give",
-	L"Recruit",
+	"Come Again?", 	//meaning "Repeat yourself"
+	"Friendly",		//approach in a friendly
+	"Direct",		//approach directly - let's get down to business
+	"Threaten",		//approach threateningly - talk now, or I'll blow your face off
+	"Give",
+	"Recruit",
 };
 
 //Some NPCs buy, sell or repair items. These different options are available for those NPCs as well.
-static StrPointer s_eng_zDealerStrings[zDealerStrings_SIZE] =
+static ST::string s_eng_zDealerStrings[zDealerStrings_SIZE] =
 {
-	L"Buy/Sell",
-	L"Buy",
-	L"Sell",
-	L"Repair",
+	"Buy/Sell",
+	"Buy",
+	"Sell",
+	"Repair",
 };
 
-static const wchar_t s_eng_zDialogActions[] = L"Done";
+static const ST::string s_eng_zDialogActions = "Done";
 
 
 //These are vehicles in the game.
 
-static const wchar_t *s_eng_pVehicleStrings[pVehicleStrings_SIZE] =
+static const ST::string s_eng_pVehicleStrings[pVehicleStrings_SIZE] =
 {
-	L"Eldorado",
-	L"Hummer", // a hummer jeep/truck -- military vehicle
-	L"Icecream Truck",
-	L"Jeep",
-	L"Tank",
-	L"Helicopter",
+	"Eldorado",
+	"Hummer", // a hummer jeep/truck -- military vehicle
+	"Icecream Truck",
+	"Jeep",
+	"Tank",
+	"Helicopter",
 };
 
-static const wchar_t *s_eng_pShortVehicleStrings[pVehicleStrings_SIZE] =
+static const ST::string s_eng_pShortVehicleStrings[pVehicleStrings_SIZE] =
 {
-	L"Eldor.",
-	L"Hummer",			// the HMVV
-	L"Truck",
-	L"Jeep",
-	L"Tank",
-	L"Heli", 				// the helicopter
+	"Eldor.",
+	"Hummer",			// the HMVV
+	"Truck",
+	"Jeep",
+	"Tank",
+	"Heli", 				// the helicopter
 };
 
-static const wchar_t *s_eng_zVehicleName[pVehicleStrings_SIZE] =
+static const ST::string s_eng_zVehicleName[pVehicleStrings_SIZE] =
 {
-	L"Eldorado",
-	L"Hummer",		//a military jeep. This is a brand name.
-	L"Truck",			// Ice cream truck
-	L"Jeep",
-	L"Tank",
-	L"Heli", 		//an abbreviation for Helicopter
+	"Eldorado",
+	"Hummer",		//a military jeep. This is a brand name.
+	"Truck",			// Ice cream truck
+	"Jeep",
+	"Tank",
+	"Heli", 		//an abbreviation for Helicopter
 };
 
 
 //These are messages Used in the Tactical Screen
 
-static StrPointer s_eng_TacticalStr[TacticalStr_SIZE] =
+static ST::string s_eng_TacticalStr[TacticalStr_SIZE] =
 {
-	L"Air Raid",
-	L"Apply first aid automatically?",
+	"Air Raid",
+	"Apply first aid automatically?",
 
 	// CAMFIELD NUKE THIS and add quote #66.
 
-	L"%ls notices that items are missing from the shipment.",
+	"%s notices that items are missing from the shipment.",
 
 	// The %s is a string from pDoorTrapStrings
 
-	L"The lock has %ls.",
-	L"There's no lock.",
-	L"The lock isn't trapped.",
+	"The lock has %s.",
+	"There's no lock.",
+	"The lock isn't trapped.",
 	// The %s is a merc name
-	L"%ls doesn't have the right key.",
-	L"The lock isn't trapped.",
-	L"Locked.",
-	L"DOOR",
-	L"TRAPPED",
-	L"LOCKED",
-	L"UNLOCKED",
-	L"SMASHED",
-	L"There's a switch here.  Activate it?",
-	L"Disarm trap?",
-	L"More...",
+	"%s doesn't have the right key.",
+	"The lock isn't trapped.",
+	"Locked.",
+	"DOOR",
+	"TRAPPED",
+	"LOCKED",
+	"UNLOCKED",
+	"SMASHED",
+	"There's a switch here.  Activate it?",
+	"Disarm trap?",
+	"More...",
 
 	// In the next 2 strings, %s is an item name
 
-	L"The %ls has been placed on the ground.",
-	L"The %ls has been given to %ls.",
+	"The %s has been placed on the ground.",
+	"The %s has been given to %s.",
 
 	// In the next 2 strings, %s is a name
 
-	L"%ls has been paid in full.",
-	L"%ls is still owed %d.",
-	L"Choose detonation frequency:",  	//in this case, frequency refers to a radio signal
-	L"How many turns 'til she blows:",	//how much time, in turns, until the bomb blows
-	L"Set remote detonator frequency:", 	//in this case, frequency refers to a radio signal
-	L"Disarm boobytrap?",
-	L"Remove blue flag?",
-	L"Put blue flag here?",
-	L"Ending Turn",
+	"%s has been paid in full.",
+	"%s is still owed %d.",
+	"Choose detonation frequency:",  	//in this case, frequency refers to a radio signal
+	"How many turns 'til she blows:",	//how much time, in turns, until the bomb blows
+	"Set remote detonator frequency:", 	//in this case, frequency refers to a radio signal
+	"Disarm boobytrap?",
+	"Remove blue flag?",
+	"Put blue flag here?",
+	"Ending Turn",
 
 	// In the next string, %s is a name. Stance refers to way they are standing.
 
-	L"You sure you want to attack %ls ?",
-	L"Ah, vehicles can't change stance.",
-	L"The robot can't change its stance.",
+	"You sure you want to attack %s ?",
+	"Ah, vehicles can't change stance.",
+	"The robot can't change its stance.",
 
 	// In the next 3 strings, %s is a name
 
-	L"%ls can't change to that stance here.",
-	L"%ls can't have first aid done here.",
-	L"%ls doesn't need first aid.",
-	L"Can't move there.",
-	L"Your team's full. No room for a recruit.",	//there's no room for a recruit on the player's team
+	"%s can't change to that stance here.",
+	"%s can't have first aid done here.",
+	"%s doesn't need first aid.",
+	"Can't move there.",
+	"Your team's full. No room for a recruit.",	//there's no room for a recruit on the player's team
 
 	// In the next string, %s is a name
 
-	L"%ls has been recruited.",
+	"%s has been recruited.",
 
 	// Here %s is a name and %d is a number
 
-	L"%ls is owed $%d.",
+	"%s is owed $%d.",
 
 	// In the next string, %s is a name
 
-	L"Escort %ls?",
+	"Escort %s?",
 
 	// In the next string, the first %s is a name and the second %s is an amount of money (including $ sign)
 
-	L"Hire %ls for %ls per day?",
+	"Hire %s for %s per day?",
 
 	// This line is used repeatedly to ask player if they wish to participate in a boxing match.
 
-	L"You want to fight?",
+	"You want to fight?",
 
 	// In the next string, the first %s is an item name and the
 	// second %s is an amount of money (including $ sign)
 
-	L"Buy %ls for %ls?",
+	"Buy %s for %s?",
 
 	// In the next string, %s is a name
 
-	L"%ls is being escorted on squad %d.",
+	"%s is being escorted on squad %d.",
 
 	// These messages are displayed during play to alert the player to a particular situation
 
-	L"JAMMED",					//weapon is jammed.
-	L"Robot needs %ls caliber ammo.",		//Robot is out of ammo
-	L"Throw there? Not gonna happen.",		//Merc can't throw to the destination he selected
+	"JAMMED",					//weapon is jammed.
+	"Robot needs %s caliber ammo.",		//Robot is out of ammo
+	"Throw there? Not gonna happen.",		//Merc can't throw to the destination he selected
 
 	// These are different buttons that the player can turn on and off.
 
-	L"Stealth Mode (|Z)",
-	L"|Map Screen",
-	L"|Done (End Turn)",
-	L"Talk",
-	L"Mute",
-	L"Stance Up (|P|g|U|p)",
-	L"Cursor Level (|T|a|b)",
-	L"Climb / Jump",
-	L"Stance Down (|P|g|D|n)",
-	L"Examine (|C|t|r|l)",
-	L"Previous Merc",
-	L"Next Merc (|S|p|a|c|e)",
-	L"|Options",
-	L"|Burst Mode",
-	L"|Look/Turn",
-	L"Health: %d/%d\nEnergy: %d/%d\nMorale: %ls",
-	L"Heh?",					//this means "what?"
-	L"Cont",					//an abbrieviation for "Continued"
-	L"Mute off for %ls.",
-	L"Mute on for %ls.",
-	L"Health: %d/%d\nFuel: %d/%d",
-	L"Exit Vehicle" ,
-	L"Change Squad ( |S|h|i|f|t |S|p|a|c|e )",
-	L"Drive",
-	L"N/A",						//this is an acronym for "Not Applicable."
-	L"Use ( Hand To Hand )",
-	L"Use ( Firearm )",
-	L"Use ( Blade )",
-	L"Use ( Explosive )",
-	L"Use ( Medkit )",
-	L"(Catch)",
-	L"(Reload)",
-	L"(Give)",
-	L"%ls has been set off.",
-	L"%ls has arrived.",
-	L"%ls ran out of Action Points.",
-	L"%ls isn't available.",
-	L"%ls is all bandaged.",
-	L"%ls is out of bandages.",
-	L"Enemy in sector!",
-	L"No enemies in sight.",
-	L"Not enough Action Points.",
-	L"Nobody's using the remote.",
-	L"Burst fire emptied the clip!",
-	L"SOLDIER",
-	L"CREPITUS",
-	L"MILITIA",
-	L"CIVILIAN",
-	L"Exiting Sector",
-	L"OK",
-	L"Cancel",
-	L"Selected Merc",
-	L"All Mercs in Squad",
-	L"Go to Sector",
-	L"Go to Map",
-	L"You can't leave the sector from this side.",
-	L"%ls is too far away.",
-	L"Removing Treetops",
-	L"Showing Treetops",
-	L"CROW",				//Crow, as in the large black bird
-	L"NECK",
-	L"HEAD",
-	L"TORSO",
-	L"LEGS",
-	L"Tell the Queen what she wants to know?",
-	L"Fingerprint ID aquired",
-	L"Invalid fingerprint ID. Weapon non-functional",
-	L"Target aquired",
-	L"Path Blocked",
-	L"Deposit/Withdraw Money",		//Help text over the $ button on the Single Merc Panel
-	L"No one needs first aid.",
-	L"Jam.",											// Short form of JAMMED, for small inv slots
-	L"Can't get there.",					// used ( now ) for when we click on a cliff
-	L"The person refuses to move.",
+	"Stealth Mode (|Z)",
+	"|Map Screen",
+	"|Done (End Turn)",
+	"Talk",
+	"Mute",
+	"Stance Up (|P|g|U|p)",
+	"Cursor Level (|T|a|b)",
+	"Climb / Jump",
+	"Stance Down (|P|g|D|n)",
+	"Examine (|C|t|r|l)",
+	"Previous Merc",
+	"Next Merc (|S|p|a|c|e)",
+	"|Options",
+	"|Burst Mode",
+	"|Look/Turn",
+	"Health: %d/%d\nEnergy: %d/%d\nMorale: %s",
+	"Heh?",					//this means "what?"
+	"Cont",					//an abbrieviation for "Continued"
+	"Mute off for %s.",
+	"Mute on for %s.",
+	"Health: %d/%d\nFuel: %d/%d",
+	"Exit Vehicle" ,
+	"Change Squad ( |S|h|i|f|t |S|p|a|c|e )",
+	"Drive",
+	"N/A",						//this is an acronym for "Not Applicable."
+	"Use ( Hand To Hand )",
+	"Use ( Firearm )",
+	"Use ( Blade )",
+	"Use ( Explosive )",
+	"Use ( Medkit )",
+	"(Catch)",
+	"(Reload)",
+	"(Give)",
+	"%s has been set off.",
+	"%s has arrived.",
+	"%s ran out of Action Points.",
+	"%s isn't available.",
+	"%s is all bandaged.",
+	"%s is out of bandages.",
+	"Enemy in sector!",
+	"No enemies in sight.",
+	"Not enough Action Points.",
+	"Nobody's using the remote.",
+	"Burst fire emptied the clip!",
+	"SOLDIER",
+	"CREPITUS",
+	"MILITIA",
+	"CIVILIAN",
+	"Exiting Sector",
+	"OK",
+	"Cancel",
+	"Selected Merc",
+	"All Mercs in Squad",
+	"Go to Sector",
+	"Go to Map",
+	"You can't leave the sector from this side.",
+	"%s is too far away.",
+	"Removing Treetops",
+	"Showing Treetops",
+	"CROW",				//Crow, as in the large black bird
+	"NECK",
+	"HEAD",
+	"TORSO",
+	"LEGS",
+	"Tell the Queen what she wants to know?",
+	"Fingerprint ID aquired",
+	"Invalid fingerprint ID. Weapon non-functional",
+	"Target aquired",
+	"Path Blocked",
+	"Deposit/Withdraw Money",		//Help text over the $ button on the Single Merc Panel
+	"No one needs first aid.",
+	"Jam.",											// Short form of JAMMED, for small inv slots
+	"Can't get there.",					// used ( now ) for when we click on a cliff
+	"The person refuses to move.",
 	// In the following message, '%s' would be replaced with a quantity of money (e.g. $200)
-	L"Do you agree to pay %ls?",
-	L"Accept free medical treatment?",
-	L"Agree to marry Daryl?",
-	L"Key Ring Panel",
-	L"You cannot do that with an EPC.",
-	L"Spare Krott?",
-	L"Out of effective weapon range.",
-	L"Miner",
-	L"Vehicle can only travel between sectors",
-	L"Can't autobandage right now",
-	L"Path Blocked for %ls",
-	L"Your mercs, who were captured by Deidranna's army are imprisoned here!",
-	L"Lock hit",
-	L"Lock destroyed",
-	L"Somebody else is trying to use this door.",
-	L"Health: %d/%d\nFuel: %d/%d",
-	L"%ls cannot see %ls.",  // Cannot see person trying to talk to
+	"Do you agree to pay %s?",
+	"Accept free medical treatment?",
+	"Agree to marry Daryl?",
+	"Key Ring Panel",
+	"You cannot do that with an EPC.",
+	"Spare Krott?",
+	"Out of effective weapon range.",
+	"Miner",
+	"Vehicle can only travel between sectors",
+	"Can't autobandage right now",
+	"Path Blocked for %s",
+	"Your mercs, who were captured by Deidranna's army are imprisoned here!",
+	"Lock hit",
+	"Lock destroyed",
+	"Somebody else is trying to use this door.",
+	"Health: %d/%d\nFuel: %d/%d",
+	"%s cannot see %s.",  // Cannot see person trying to talk to
 };
 
 //Varying helptext explains (for the "Go to Sector/Map" checkbox) what will happen given different circumstances in the "exiting sector" interface.
-static const wchar_t *s_eng_pExitingSectorHelpText[pExitingSectorHelpText_SIZE] =
+static const ST::string s_eng_pExitingSectorHelpText[pExitingSectorHelpText_SIZE] =
 {
 	//Helptext for the "Go to Sector" checkbox button, that explains what will happen when the box is checked.
-	L"If checked, the adjacent sector will be immediately loaded.",
-	L"If checked, you will be placed automatically in the map screen\nas it will take time for your mercs to travel.",
+	"If checked, the adjacent sector will be immediately loaded.",
+	"If checked, you will be placed automatically in the map screen\nas it will take time for your mercs to travel.",
 
 	//If you attempt to leave a sector when you have multiple squads in a hostile sector.
-	L"This sector is enemy occupied and you can't leave mercs here.\nYou must deal with this situation before loading any other sectors.",
+	"This sector is enemy occupied and you can't leave mercs here.\nYou must deal with this situation before loading any other sectors.",
 
 	//Because you only have one squad in the sector, and the "move all" option is checked, the "go to sector" option is locked to on.
 	//The helptext explains why it is locked.
-	L"By moving your remaining mercs out of this sector,\nthe adjacent sector will immediately be loaded.",
-	L"By moving your remaining mercs out of this sector,\nyou will be placed automatically in the map screen\nas it will take time for your mercs to travel.",
+	"By moving your remaining mercs out of this sector,\nthe adjacent sector will immediately be loaded.",
+	"By moving your remaining mercs out of this sector,\nyou will be placed automatically in the map screen\nas it will take time for your mercs to travel.",
 
 	//If an EPC is the selected merc, it won't allow the merc to leave alone as the merc is being escorted.  The "single" button is disabled.
-	L"%ls needs to be escorted by your mercs and cannot leave this sector alone.",
+	"%s needs to be escorted by your mercs and cannot leave this sector alone.",
 
 	//If only one conscious merc is left and is selected, and there are EPCs in the squad, the merc will be prohibited from leaving alone.
 	//There are several strings depending on the gender of the merc and how many EPCs are in the squad.
 	//DO NOT USE THE NEWLINE HERE AS IT IS USED FOR BOTH HELPTEXT AND SCREEN MESSAGES!
-	L"%ls cannot leave this sector alone as he is escorting %ls.", //male singular
-	L"%ls cannot leave this sector alone as she is escorting %ls.", //female singular
-	L"%ls cannot leave this sector alone as he is escorting multiple characters.", //male plural
-	L"%ls cannot leave this sector alone as she is escorting multiple characters.", //female plural
+	"%s cannot leave this sector alone as he is escorting %s.", //male singular
+	"%s cannot leave this sector alone as she is escorting %s.", //female singular
+	"%s cannot leave this sector alone as he is escorting multiple characters.", //male plural
+	"%s cannot leave this sector alone as she is escorting multiple characters.", //female plural
 
 	//If one or more of your mercs in the selected squad aren't in range of the traversal area, then the  "move all" option is disabled,
 	//and this helptext explains why.
-	L"All of your mercs must be in the vicinity\nin order to allow the squad to traverse.",
+	"All of your mercs must be in the vicinity\nin order to allow the squad to traverse.",
 
 	//Standard helptext for single movement.  Explains what will happen (splitting the squad)
-	L"If checked, %ls will travel alone, and\nautomatically get reassigned to a unique squad.",
+	"If checked, %s will travel alone, and\nautomatically get reassigned to a unique squad.",
 
 	//Standard helptext for all movement.  Explains what will happen (moving the squad)
-	L"If checked, your currently selected\nsquad will travel, leaving this sector.",
+	"If checked, your currently selected\nsquad will travel, leaving this sector.",
 
 	//This strings is used BEFORE the "exiting sector" interface is created.  If you have an EPC selected and you attempt to tactically
 	//traverse the EPC while the escorting mercs aren't near enough (or dead, dying, or unconscious), this message will appear and the
 	//"exiting sector" interface will not appear.  This is just like the situation where
 	//This string is special, as it is not used as helptext.  Do not use the special newline character (\n) for this string.
-	L"%ls is being escorted by your mercs and cannot leave this sector alone. Your other mercs must be nearby before you can leave.",
+	"%s is being escorted by your mercs and cannot leave this sector alone. Your other mercs must be nearby before you can leave.",
 };
 
 
 
-static const wchar_t *s_eng_pRepairStrings[pRepairStrings_SIZE] =
+static const ST::string s_eng_pRepairStrings[pRepairStrings_SIZE] =
 {
-	L"Items", 		// tell merc to repair items in inventory
-	L"SAM Site", 		// tell merc to repair SAM site - SAM is an acronym for Surface to Air Missile
-	L"Cancel", 		// cancel this menu
-	L"Robot", 		// repair the robot
+	"Items", 		// tell merc to repair items in inventory
+	"SAM Site", 		// tell merc to repair SAM site - SAM is an acronym for Surface to Air Missile
+	"Cancel", 		// cancel this menu
+	"Robot", 		// repair the robot
 };
 
 
 // NOTE: combine prestatbuildstring with statgain to get a line like the example below.
 // "John has gained 3 points of marksmanship skill."
 
-static const wchar_t *s_eng_sPreStatBuildString[sPreStatBuildString_SIZE] =
+static const ST::string s_eng_sPreStatBuildString[sPreStatBuildString_SIZE] =
 {
-	L"lost", 			// the merc has lost a statistic
-	L"gained", 		// the merc has gained a statistic
-	L"point of",	// singular
-	L"points of",	// plural
-	L"level of",	// singular
-	L"levels of",	// plural
+	"lost", 			// the merc has lost a statistic
+	"gained", 		// the merc has gained a statistic
+	"point of",	// singular
+	"points of",	// plural
+	"level of",	// singular
+	"levels of",	// plural
 };
 
-static const wchar_t *s_eng_sStatGainStrings[sStatGainStrings_SIZE] =
+static const ST::string s_eng_sStatGainStrings[sStatGainStrings_SIZE] =
 {
-	L"health.",
-	L"agility.",
-	L"dexterity.",
-	L"wisdom.",
-	L"medical skill.",
-	L"explosives skill.",
-	L"mechanical skill.",
-	L"marksmanship skill.",
-	L"experience.",
-	L"strength.",
-	L"leadership.",
+	"health.",
+	"agility.",
+	"dexterity.",
+	"wisdom.",
+	"medical skill.",
+	"explosives skill.",
+	"mechanical skill.",
+	"marksmanship skill.",
+	"experience.",
+	"strength.",
+	"leadership.",
 };
 
 
-static const wchar_t *s_eng_pHelicopterEtaStrings[pHelicopterEtaStrings_SIZE] =
+static const ST::string s_eng_pHelicopterEtaStrings[pHelicopterEtaStrings_SIZE] =
 {
-	L"Total Distance:  ", 			// total distance for helicopter to travel
-	L" Safe:  ", 			// distance to travel to destination
-	L" Unsafe:", 			// distance to return from destination to airport
-	L"Total Cost: ", 		// total cost of trip by helicopter
-	L"ETA:  ", 			// ETA is an acronym for "estimated time of arrival"
-	L"Helicopter is low on fuel and must land in hostile territory!",	// warning that the sector the helicopter is going to use for refueling is under enemy control ->
-	L"Passengers: ",
-	L"Select Skyrider or the Arrivals Drop-off?",
-	L"Skyrider",
-	L"Arrivals",
+	"Total Distance:  ", 			// total distance for helicopter to travel
+	" Safe:  ", 			// distance to travel to destination
+	" Unsafe:", 			// distance to return from destination to airport
+	"Total Cost: ", 		// total cost of trip by helicopter
+	"ETA:  ", 			// ETA is an acronym for "estimated time of arrival"
+	"Helicopter is low on fuel and must land in hostile territory!",	// warning that the sector the helicopter is going to use for refueling is under enemy control ->
+	"Passengers: ",
+	"Select Skyrider or the Arrivals Drop-off?",
+	"Skyrider",
+	"Arrivals",
 };
 
-static const wchar_t s_eng_sMapLevelString[] = L"Sublevel:"; // what level below the ground is the player viewing in mapscreen
+static const ST::string s_eng_sMapLevelString = "Sublevel:"; // what level below the ground is the player viewing in mapscreen
 
-static const wchar_t s_eng_gsLoyalString[] = L"%d%% Loyal"; // the loyalty rating of a town ie : Loyal 53%
+static const ST::string s_eng_gsLoyalString = "%d%% Loyal"; // the loyalty rating of a town ie : Loyal 53%
 
 
 // error message for when player is trying to give a merc a travel order while he's underground.
-static const wchar_t s_eng_gsUndergroundString[] = L"can't get travel orders underground.";
+static const ST::string s_eng_gsUndergroundString = "can't get travel orders underground.";
 
-static const wchar_t *s_eng_gsTimeStrings[gsTimeStrings_SIZE] =
+static const ST::string s_eng_gsTimeStrings[gsTimeStrings_SIZE] =
 {
-	L"h",				// hours abbreviation
-	L"m",				// minutes abbreviation
-	L"s",				// seconds abbreviation
-	L"d",				// days abbreviation
+	"h",				// hours abbreviation
+	"m",				// minutes abbreviation
+	"s",				// seconds abbreviation
+	"d",				// days abbreviation
 };
 
 // text for the various facilities in the sector
 
-static const wchar_t *s_eng_sFacilitiesStrings[sFacilitiesStrings_SIZE] =
+static const ST::string s_eng_sFacilitiesStrings[sFacilitiesStrings_SIZE] =
 {
-	L"None",
-	L"Hospital",
-	L"Industry",
-	L"Prison",
-	L"Military",
-	L"Airport",
-	L"Shooting Range",		// a field for soldiers to practise their shooting skills
+	"None",
+	"Hospital",
+	"Industry",
+	"Prison",
+	"Military",
+	"Airport",
+	"Shooting Range",		// a field for soldiers to practise their shooting skills
 };
 
 // text for inventory pop up button
 
-static const wchar_t *s_eng_pMapPopUpInventoryText[pMapPopUpInventoryText_SIZE] =
+static const ST::string s_eng_pMapPopUpInventoryText[pMapPopUpInventoryText_SIZE] =
 {
-	L"Inventory",
-	L"Exit",
+	"Inventory",
+	"Exit",
 };
 
 // town strings
 
-static const wchar_t *s_eng_pwTownInfoStrings[pwTownInfoStrings_SIZE] =
+static const ST::string s_eng_pwTownInfoStrings[pwTownInfoStrings_SIZE] =
 {
-	L"Size",					// size of the town in sectors
-	L"Control", 					// how much of town is controlled
-	L"Associated Mine", 				// mine associated with this town
-	L"Loyalty",					// the loyalty level of this town
-	L"Main Facilities", 				// main facilities in this town
-	L"Civilian Training",				// state of civilian training in town
-	L"Militia", 					// the state of the trained civilians in the town
+	"Size",					// size of the town in sectors
+	"Control", 					// how much of town is controlled
+	"Associated Mine", 				// mine associated with this town
+	"Loyalty",					// the loyalty level of this town
+	"Main Facilities", 				// main facilities in this town
+	"Civilian Training",				// state of civilian training in town
+	"Militia", 					// the state of the trained civilians in the town
 };
 
 // Mine strings
 
-static const wchar_t *s_eng_pwMineStrings[pwMineStrings_SIZE] =
+static const ST::string s_eng_pwMineStrings[pwMineStrings_SIZE] =
 {
-	L"Mine",						// 0
-	L"Silver",
-	L"Gold",
-	L"Daily Production",
-	L"Possible Production",
-	L"Abandoned",				// 5
-	L"Shut Down",
-	L"Running Out",
-	L"Producing",
-	L"Status",
-	L"Production Rate",
-	L"Ore Type",				// 10
-	L"Town Control",
-	L"Town Loyalty",
+	"Mine",						// 0
+	"Silver",
+	"Gold",
+	"Daily Production",
+	"Possible Production",
+	"Abandoned",				// 5
+	"Shut Down",
+	"Running Out",
+	"Producing",
+	"Status",
+	"Production Rate",
+	"Ore Type",				// 10
+	"Town Control",
+	"Town Loyalty",
 };
 
 // blank sector strings
 
-static const wchar_t *s_eng_pwMiscSectorStrings[pwMiscSectorStrings_SIZE] =
+static const ST::string s_eng_pwMiscSectorStrings[pwMiscSectorStrings_SIZE] =
 {
-	L"Enemy Forces",
-	L"Sector",
-	L"# of Items",
-	L"Unknown",
-	L"Controlled",
-	L"Yes",
-	L"No",
+	"Enemy Forces",
+	"Sector",
+	"# of Items",
+	"Unknown",
+	"Controlled",
+	"Yes",
+	"No",
 };
 
 // error strings for inventory
 
-static const wchar_t *s_eng_pMapInventoryErrorString[pMapInventoryErrorString_SIZE] =
+static const ST::string s_eng_pMapInventoryErrorString[pMapInventoryErrorString_SIZE] =
 {
-	L"Can't select that merc.",  //MARK CARTER
-	L"%ls isn't in the sector to take that item.",
-	L"During combat, you'll have to pick up items manually.",
-	L"During combat, you'll have to drop items manually.",
-	L"%ls isn't in the sector to drop that item.",
+	"Can't select that merc.",  //MARK CARTER
+	"%s isn't in the sector to take that item.",
+	"During combat, you'll have to pick up items manually.",
+	"During combat, you'll have to drop items manually.",
+	"%s isn't in the sector to drop that item.",
 };
 
-static const wchar_t *s_eng_pMapInventoryStrings[pMapInventoryStrings_SIZE] =
+static const ST::string s_eng_pMapInventoryStrings[pMapInventoryStrings_SIZE] =
 {
-	L"Location", 			// sector these items are in
-	L"Total Items", 		// total number of items in sector
+	"Location", 			// sector these items are in
+	"Total Items", 		// total number of items in sector
 };
 
 
 // movement menu text
 
-static const wchar_t *s_eng_pMovementMenuStrings[pMovementMenuStrings_SIZE] =
+static const ST::string s_eng_pMovementMenuStrings[pMovementMenuStrings_SIZE] =
 {
-	L"Move Mercs In Sector %ls", 	// title for movement box
-	L"Plot Travel Route", 		// done with movement menu, start plotting movement
-	L"Cancel", 		// cancel this menu
-	L"Other",		// title for group of mercs not on squads nor in vehicles
+	"Move Mercs In Sector %s", 	// title for movement box
+	"Plot Travel Route", 		// done with movement menu, start plotting movement
+	"Cancel", 		// cancel this menu
+	"Other",		// title for group of mercs not on squads nor in vehicles
 };
 
 
-static const wchar_t *s_eng_pUpdateMercStrings[pUpdateMercStrings_SIZE] =
+static const ST::string s_eng_pUpdateMercStrings[pUpdateMercStrings_SIZE] =
 {
-	L"Oops:", 			// an error has occured
-	L"Mercs Contract Expired:", 	// this pop up came up due to a merc contract ending
-	L"Mercs Completed Assignment:", // this pop up....due to more than one merc finishing assignments
-	L"Mercs Back on the Job:", // this pop up ....due to more than one merc waking up and returing to work
-	L"Mercs Catching Some Z's:", // this pop up ....due to more than one merc being tired and going to sleep
-	L"Contracts Expiring Soon:", 	// this pop up came up due to a merc contract ending
+	"Oops:", 			// an error has occured
+	"Mercs Contract Expired:", 	// this pop up came up due to a merc contract ending
+	"Mercs Completed Assignment:", // this pop up....due to more than one merc finishing assignments
+	"Mercs Back on the Job:", // this pop up ....due to more than one merc waking up and returing to work
+	"Mercs Catching Some Z's:", // this pop up ....due to more than one merc being tired and going to sleep
+	"Contracts Expiring Soon:", 	// this pop up came up due to a merc contract ending
 };
 
 // map screen map border buttons help text
 
-static const wchar_t *s_eng_pMapScreenBorderButtonHelpText[pMapScreenBorderButtonHelpText_SIZE] =
+static const ST::string s_eng_pMapScreenBorderButtonHelpText[pMapScreenBorderButtonHelpText_SIZE] =
 {
-	L"Show To|wns",
-	L"Show |Mines",
-	L"Show |Teams & Enemies",
-	L"Show |Airspace",
-	L"Show |Items",
-	L"Show Militia & Enemies (|Z)",
+	"Show To|wns",
+	"Show |Mines",
+	"Show |Teams & Enemies",
+	"Show |Airspace",
+	"Show |Items",
+	"Show Militia & Enemies (|Z)",
 };
 
 
-static const wchar_t *s_eng_pMapScreenBottomFastHelp[pMapScreenBottomFastHelp_SIZE] =
+static const ST::string s_eng_pMapScreenBottomFastHelp[pMapScreenBottomFastHelp_SIZE] =
 {
-	L"|Laptop",
-	L"Tactical (|E|s|c)",
-	L"|Options",
-	L"Time Compress (|+)", 	// time compress more
-	L"Time Compress (|-)", 	// time compress less
-	L"Previous Message (|U|p)\nPrevious Page (|P|g|U|p)", 	// previous message in scrollable list
-	L"Next Message (|D|o|w|n)\nNext Page (|P|g|D|n)", 	// next message in the scrollable list
-	L"Start/Stop Time (|S|p|a|c|e)",	// start/stop time compression
+	"|Laptop",
+	"Tactical (|E|s|c)",
+	"|Options",
+	"Time Compress (|+)", 	// time compress more
+	"Time Compress (|-)", 	// time compress less
+	"Previous Message (|U|p)\nPrevious Page (|P|g|U|p)", 	// previous message in scrollable list
+	"Next Message (|D|o|w|n)\nNext Page (|P|g|D|n)", 	// next message in the scrollable list
+	"Start/Stop Time (|S|p|a|c|e)",	// start/stop time compression
 };
 
-static const wchar_t s_eng_pMapScreenBottomText[] = L"Current Balance"; // current balance in player bank account
+static const ST::string s_eng_pMapScreenBottomText = "Current Balance"; // current balance in player bank account
 
-static const wchar_t s_eng_pMercDeadString[] = L"%ls is dead.";
+static const ST::string s_eng_pMercDeadString = "%s is dead.";
 
 
-static const wchar_t s_eng_pDayStrings[] = L"Day";
+static const ST::string s_eng_pDayStrings = "Day";
 
 // the list of email sender names
 
-static const wchar_t *s_eng_pSenderNameList[pSenderNameList_SIZE] =
+static const ST::string s_eng_pSenderNameList[pSenderNameList_SIZE] =
 {
-	L"Enrico",
-	L"Psych Pro Inc",
-	L"Help Desk",
-	L"Psych Pro Inc",
-	L"Speck",
-	L"R.I.S.",		//5
-	L"Barry",
-	L"Blood",
-	L"Lynx",
-	L"Grizzly",
-	L"Vicki",			//10
-	L"Trevor",
-	L"Grunty",
-	L"Ivan",
-	L"Steroid",
-	L"Igor",			//15
-	L"Shadow",
-	L"Red",
-	L"Reaper",
-	L"Fidel",
-	L"Fox",				//20
-	L"Sidney",
-	L"Gus",
-	L"Buns",
-	L"Ice",
-	L"Spider",		//25
-	L"Cliff",
-	L"Bull",
-	L"Hitman",
-	L"Buzz",
-	L"Raider",		//30
-	L"Raven",
-	L"Static",
-	L"Len",
-	L"Danny",
-	L"Magic",
-	L"Stephen",
-	L"Scully",
-	L"Malice",
-	L"Dr.Q",
-	L"Nails",
-	L"Thor",
-	L"Scope",
-	L"Wolf",
-	L"MD",
-	L"Meltdown",
+	"Enrico",
+	"Psych Pro Inc",
+	"Help Desk",
+	"Psych Pro Inc",
+	"Speck",
+	"R.I.S.",		//5
+	"Barry",
+	"Blood",
+	"Lynx",
+	"Grizzly",
+	"Vicki",			//10
+	"Trevor",
+	"Grunty",
+	"Ivan",
+	"Steroid",
+	"Igor",			//15
+	"Shadow",
+	"Red",
+	"Reaper",
+	"Fidel",
+	"Fox",				//20
+	"Sidney",
+	"Gus",
+	"Buns",
+	"Ice",
+	"Spider",		//25
+	"Cliff",
+	"Bull",
+	"Hitman",
+	"Buzz",
+	"Raider",		//30
+	"Raven",
+	"Static",
+	"Len",
+	"Danny",
+	"Magic",
+	"Stephen",
+	"Scully",
+	"Malice",
+	"Dr.Q",
+	"Nails",
+	"Thor",
+	"Scope",
+	"Wolf",
+	"MD",
+	"Meltdown",
 	//----------
-	L"M.I.S. Insurance",
-	L"Bobby Rays",
-	L"Kingpin",
-	L"John Kulba",
-	L"A.I.M.",
+	"M.I.S. Insurance",
+	"Bobby Rays",
+	"Kingpin",
+	"John Kulba",
+	"A.I.M.",
 };
 
 
 // new mail notify string
-static const wchar_t s_eng_pNewMailStrings[] = L"You have new mail...";
+static const ST::string s_eng_pNewMailStrings = "You have new mail...";
 
 
 // confirm player's intent to delete messages
 
-static const wchar_t *s_eng_pDeleteMailStrings[pDeleteMailStrings_SIZE] =
+static const ST::string s_eng_pDeleteMailStrings[pDeleteMailStrings_SIZE] =
 {
-	L"Delete mail?",
-	L"Delete UNREAD mail?",
+	"Delete mail?",
+	"Delete UNREAD mail?",
 };
 
 
 // the sort header strings
 
-static const wchar_t *s_eng_pEmailHeaders[pEmailHeaders_SIZE] =
+static const ST::string s_eng_pEmailHeaders[pEmailHeaders_SIZE] =
 {
-	L"From:",
-	L"Subject:",
-	L"Day:",
+	"From:",
+	"Subject:",
+	"Day:",
 };
 
 // email titlebar text
-static const wchar_t s_eng_pEmailTitleText[] = L"Mail Box";
+static const ST::string s_eng_pEmailTitleText = "Mail Box";
 
 
 // the financial screen strings
-static const wchar_t s_eng_pFinanceTitle[] = L"Bookkeeper Plus"; // the name we made up for the financial program in the game
+static const ST::string s_eng_pFinanceTitle = "Bookkeeper Plus"; // the name we made up for the financial program in the game
 
-static const wchar_t *s_eng_pFinanceSummary[pFinanceSummary_SIZE] =
+static const ST::string s_eng_pFinanceSummary[pFinanceSummary_SIZE] =
 {
-	L"Credit:", 				// credit (subtract from) to player's account
-	L"Debit:", 				// debit (add to) to player's account
-	L"Yesterday's Actual Income:",
-	L"Yesterday's Other Deposits:",
-	L"Yesterday's Debits:",
-	L"Balance At Day's End:",
-	L"Today's Actual Income:",
-	L"Today's Other Deposits:",
-	L"Today's Debits:",
-	L"Current Balance:",
-	L"Forecasted Income:",
-	L"Projected Balance:", 		// projected balance for player for tommorow
+	"Credit:", 				// credit (subtract from) to player's account
+	"Debit:", 				// debit (add to) to player's account
+	"Yesterday's Actual Income:",
+	"Yesterday's Other Deposits:",
+	"Yesterday's Debits:",
+	"Balance At Day's End:",
+	"Today's Actual Income:",
+	"Today's Other Deposits:",
+	"Today's Debits:",
+	"Current Balance:",
+	"Forecasted Income:",
+	"Projected Balance:", 		// projected balance for player for tommorow
 };
 
 
 // headers to each list in financial screen
 
-static const wchar_t *s_eng_pFinanceHeaders[pFinanceHeaders_SIZE] =
+static const ST::string s_eng_pFinanceHeaders[pFinanceHeaders_SIZE] =
 {
-	L"Day", 				// the day column
-	L"Credit", 			// the credits column (to ADD money to your account)
-	L"Debit",				// the debits column (to SUBTRACT money from your account)
-	L"Transaction", // transaction type - see TransactionText below
-	L"Balance", 		// balance at this point in time
-	L"Page", 				// page number
-	L"Day(s)", 			// the day(s) of transactions this page displays
+	"Day", 				// the day column
+	"Credit", 			// the credits column (to ADD money to your account)
+	"Debit",				// the debits column (to SUBTRACT money from your account)
+	"Transaction", // transaction type - see TransactionText below
+	"Balance", 		// balance at this point in time
+	"Page", 				// page number
+	"Day(s)", 			// the day(s) of transactions this page displays
 };
 
 
-static const wchar_t *s_eng_pTransactionText[pTransactionText_SIZE] =
+static const ST::string s_eng_pTransactionText[pTransactionText_SIZE] =
 {
-	L"Accrued Interest",			// interest the player has accumulated so far
-	L"Anonymous Deposit",
-	L"Transaction Fee",
-	L"Hired %ls from AIM", // Merc was hired
-	L"Bobby Ray Purchase", 		// Bobby Ray is the name of an arms dealer
-	L"Settled Accounts at M.E.R.C.",
-	L"Medical Deposit for %ls", 		// medical deposit for merc
-	L"IMP Profile Analysis", 		// IMP is the acronym for International Mercenary Profiling
-	L"Purchased Insurance for %ls",
-	L"Reduced Insurance for %ls",
-	L"Extended Insurance for %ls", 				// johnny contract extended
-	L"Canceled Insurance for %ls",
-	L"Insurance Claim for %ls", 		// insurance claim for merc
-	L"Ext. %ls's contract by one day.", 				// entend mercs contract by a day
-	L"Ext. %ls contract by 1 week.",
-	L"Ext. %ls contract by 2 weeks.",
-	L"Mine income",
-	L"", //String nuked
-	L"Purchased Flowers",
-	L"Full Medical Refund for %ls",
-	L"Partial Medical Refund for %ls",
-	L"No Medical Refund for %ls",
-	L"Payment to %ls",		// %s is the name of the npc being paid
-	L"Transfer Funds to %ls", 			// transfer funds to a merc
-	L"Transfer Funds from %ls", 		// transfer funds from a merc
-	L"Equip militia in %ls", // initial cost to equip a town's militia
-	L"Purchased items from %ls.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
-	L"%ls deposited money.",
+	"Accrued Interest",			// interest the player has accumulated so far
+	"Anonymous Deposit",
+	"Transaction Fee",
+	"Hired %s from AIM", // Merc was hired
+	"Bobby Ray Purchase", 		// Bobby Ray is the name of an arms dealer
+	"Settled Accounts at M.E.R.C.",
+	"Medical Deposit for %s", 		// medical deposit for merc
+	"IMP Profile Analysis", 		// IMP is the acronym for International Mercenary Profiling
+	"Purchased Insurance for %s",
+	"Reduced Insurance for %s",
+	"Extended Insurance for %s", 				// johnny contract extended
+	"Canceled Insurance for %s",
+	"Insurance Claim for %s", 		// insurance claim for merc
+	"Ext. %s's contract by one day.", 				// entend mercs contract by a day
+	"Ext. %s contract by 1 week.",
+	"Ext. %s contract by 2 weeks.",
+	"Mine income",
+	"", //String nuked
+	"Purchased Flowers",
+	"Full Medical Refund for %s",
+	"Partial Medical Refund for %s",
+	"No Medical Refund for %s",
+	"Payment to %s",		// %s is the name of the npc being paid
+	"Transfer Funds to %s", 			// transfer funds to a merc
+	"Transfer Funds from %s", 		// transfer funds from a merc
+	"Equip militia in %s", // initial cost to equip a town's militia
+	"Purchased items from %s.",	//is used for the Shop keeper interface.  The dealers name will be appended to the end of the string.
+	"%s deposited money.",
 };
 
 // helicopter pilot payment
 
-static const wchar_t *s_eng_pSkyriderText[pSkyriderText_SIZE] =
+static const ST::string s_eng_pSkyriderText[pSkyriderText_SIZE] =
 {
-	L"Skyrider was paid $%d", 			// skyrider was paid an amount of money
-	L"Skyrider is still owed $%d", 		// skyrider is still owed an amount of money
-	L"Skyrider has no passengers.  If it is your intention to transport mercs in this sector, assign them to Vehicle/Helicopter first.",
+	"Skyrider was paid $%d", 			// skyrider was paid an amount of money
+	"Skyrider is still owed $%d", 		// skyrider is still owed an amount of money
+	"Skyrider has no passengers.  If it is your intention to transport mercs in this sector, assign them to Vehicle/Helicopter first.",
 };
 
 
 // strings for different levels of merc morale
 
-static const wchar_t *s_eng_pMoralStrings[pMoralStrings_SIZE] =
+static const ST::string s_eng_pMoralStrings[pMoralStrings_SIZE] =
 {
-	L"Great",
-	L"Good",
-	L"Stable",
-	L"Poor",
-	L"Panic",
-	L"Bad",
+	"Great",
+	"Good",
+	"Stable",
+	"Poor",
+	"Panic",
+	"Bad",
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
-static const wchar_t s_eng_str_left_equipment[]   = L"%ls's equipment is now available in %ls (%c%d).";
+static const ST::string s_eng_str_left_equipment   = "%s's equipment is now available in %s (%c%d).";
 
 // Status that appears on the Map Screen
 
-static const wchar_t *s_eng_pMapScreenStatusStrings[pMapScreenStatusStrings_SIZE] =
+static const ST::string s_eng_pMapScreenStatusStrings[pMapScreenStatusStrings_SIZE] =
 {
-	L"Health",
-	L"Energy",
-	L"Morale",
-	L"Condition",	// the condition of the current vehicle (its "health")
-	L"Fuel",	// the fuel level of the current vehicle (its "energy")
+	"Health",
+	"Energy",
+	"Morale",
+	"Condition",	// the condition of the current vehicle (its "health")
+	"Fuel",	// the fuel level of the current vehicle (its "energy")
 };
 
 
-static const wchar_t *s_eng_pMapScreenPrevNextCharButtonHelpText[pMapScreenPrevNextCharButtonHelpText_SIZE] =
+static const ST::string s_eng_pMapScreenPrevNextCharButtonHelpText[pMapScreenPrevNextCharButtonHelpText_SIZE] =
 {
-	L"Previous Merc (|L|e|f|t)", 			// previous merc in the list
-	L"Next Merc (|R|i|g|h|t)", 				// next merc in the list
+	"Previous Merc (|L|e|f|t)", 			// previous merc in the list
+	"Next Merc (|R|i|g|h|t)", 				// next merc in the list
 };
 
 
-static const wchar_t s_eng_pEtaString[] = L"ETA:"; // eta is an acronym for Estimated Time of Arrival
+static const ST::string s_eng_pEtaString = "ETA:"; // eta is an acronym for Estimated Time of Arrival
 
-static const wchar_t *s_eng_pTrashItemText[pTrashItemText_SIZE] =
+static const ST::string s_eng_pTrashItemText[pTrashItemText_SIZE] =
 {
-	L"You'll never see it again. You sure?", 	// do you want to continue and lose the item forever
-	L"This item looks REALLY important. Are you REALLY REALLY sure you want to trash it?", // does the user REALLY want to trash this item
+	"You'll never see it again. You sure?", 	// do you want to continue and lose the item forever
+	"This item looks REALLY important. Are you REALLY REALLY sure you want to trash it?", // does the user REALLY want to trash this item
 };
 
 
-static const wchar_t *s_eng_pMapErrorString[pMapErrorString_SIZE] =
+static const ST::string s_eng_pMapErrorString[pMapErrorString_SIZE] =
 {
-	L"Squad can't move with a sleeping merc on it.",
+	"Squad can't move with a sleeping merc on it.",
 
 //1-5
-	L"Move the squad above ground first.",
-	L"Movement orders? It's a hostile sector!",
-	L"Mercs must be assigned to a squad or vehicle in order to travel.",
-	L"You don't have any team members yet.", // you have no members, can't do anything
-	L"Merc can't comply.", // merc can't comply with your order
+	"Move the squad above ground first.",
+	"Movement orders? It's a hostile sector!",
+	"Mercs must be assigned to a squad or vehicle in order to travel.",
+	"You don't have any team members yet.", // you have no members, can't do anything
+	"Merc can't comply.", // merc can't comply with your order
 //6-10
-	L"%ls needs an escort to move. Place him on a squad with one.", // merc can't move unescorted .. for a male
-	L"%ls needs an escort to move. Place her on a squad with one.", // for a female
-	L"Merc hasn't yet arrived in Arulco!",
-	L"Looks like there's some contract negotiations to settle first.",
-	L"",
+	"%s needs an escort to move. Place him on a squad with one.", // merc can't move unescorted .. for a male
+	"%s needs an escort to move. Place her on a squad with one.", // for a female
+	"Merc hasn't yet arrived in Arulco!",
+	"Looks like there's some contract negotiations to settle first.",
+	"",
 //11-15
-	L"Movement orders? There's a battle going on!",
-	L"You have been ambushed by bloodcats in sector %ls!",
-	L"You have just entered what appears to be a bloodcat lair in sector I16!",
-	L"",
-	L"The SAM site in %ls has been taken over.",
+	"Movement orders? There's a battle going on!",
+	"You have been ambushed by bloodcats in sector %s!",
+	"You have just entered what appears to be a bloodcat lair in sector I16!",
+	"",
+	"The SAM site in %s has been taken over.",
 //16-20
-	L"The mine in %ls has been taken over. Your daily income has been reduced to %ls per day.",
-	L"The enemy has taken over sector %ls uncontested.",
-	L"At least one of your mercs could not be put on this assignment.",
-	L"%ls could not join %ls as it is already full",
-	L"%ls could not join %ls as it is too far away.",
+	"The mine in %s has been taken over. Your daily income has been reduced to %s per day.",
+	"The enemy has taken over sector %s uncontested.",
+	"At least one of your mercs could not be put on this assignment.",
+	"%s could not join %s as it is already full",
+	"%s could not join %s as it is too far away.",
 //21-25
-	L"The mine in %ls has been captured by Deidranna's forces!",
-	L"Deidranna's forces have just invaded the SAM site in %ls",
-	L"Deidranna's forces have just invaded %ls",
-	L"Deidranna's forces have just been spotted in %ls.",
-	L"Deidranna's forces have just taken over %ls.",
+	"The mine in %s has been captured by Deidranna's forces!",
+	"Deidranna's forces have just invaded the SAM site in %s",
+	"Deidranna's forces have just invaded %s",
+	"Deidranna's forces have just been spotted in %s.",
+	"Deidranna's forces have just taken over %s.",
 //26-30
-	L"At least one of your mercs could not be put asleep.",
-	L"At least one of your mercs could not be woken up.",
-	L"Militia will not appear until they have finished training.",
-	L"%ls cannot be given movement orders at this time.",
-	L"Militia that are not within town boundaries cannot be moved to another sector.",
+	"At least one of your mercs could not be put asleep.",
+	"At least one of your mercs could not be woken up.",
+	"Militia will not appear until they have finished training.",
+	"%s cannot be given movement orders at this time.",
+	"Militia that are not within town boundaries cannot be moved to another sector.",
 //31-35
-	L"You can't have militia in %ls.",
-	L"A vehicle can't move while empty!",
-	L"%ls is too injured to travel!",
-	L"You must leave the museum first!",
-	L"%ls is dead!",
+	"You can't have militia in %s.",
+	"A vehicle can't move while empty!",
+	"%s is too injured to travel!",
+	"You must leave the museum first!",
+	"%s is dead!",
 //36-40
-	L"%ls can't switch to %ls because it's moving",
-	L"%ls can't enter the vehicle that way",
-	L"%ls can't join %ls",
-	L"You can't compress time until you hire some new mercs!",
-	L"This vehicle can only travel along roads!",
+	"%s can't switch to %s because it's moving",
+	"%s can't enter the vehicle that way",
+	"%s can't join %s",
+	"You can't compress time until you hire some new mercs!",
+	"This vehicle can only travel along roads!",
 //41-45
-	L"You can't reassign mercs who are on the move",
-	L"Vehicle is out of gas!",
-	L"%ls is too tired to travel.",
-	L"Nobody aboard is able to drive the vehicle.",
-	L"One or more members of this squad can't move right now.",
+	"You can't reassign mercs who are on the move",
+	"Vehicle is out of gas!",
+	"%s is too tired to travel.",
+	"Nobody aboard is able to drive the vehicle.",
+	"One or more members of this squad can't move right now.",
 //46-50
-	L"One or more of the OTHER mercs can't move right now.",
-	L"Vehicle is too damaged!",
-	L"Note that only two mercs may train militia in each sector.",
-	L"The robot can't move without its controller. Place them together in the same squad.",
+	"One or more of the OTHER mercs can't move right now.",
+	"Vehicle is too damaged!",
+	"Note that only two mercs may train militia in each sector.",
+	"The robot can't move without its controller. Place them together in the same squad.",
 };
 
 
 // help text used during strategic route plotting
-static const wchar_t *s_eng_pMapPlotStrings[pMapPlotStrings_SIZE] =
+static const ST::string s_eng_pMapPlotStrings[pMapPlotStrings_SIZE] =
 {
-	L"Click again on the destination to confirm your final route, or click on another sector to place more waypoints.",
-	L"Travel route confirmed.",
-	L"Destination unchanged.",
-	L"Travel route canceled.",
-	L"Travel route shortened.",
+	"Click again on the destination to confirm your final route, or click on another sector to place more waypoints.",
+	"Travel route confirmed.",
+	"Destination unchanged.",
+	"Travel route canceled.",
+	"Travel route shortened.",
 };
 
 
 // help text used when moving the merc arrival sector
-static const wchar_t *s_eng_pBullseyeStrings[pBullseyeStrings_SIZE] =
+static const ST::string s_eng_pBullseyeStrings[pBullseyeStrings_SIZE] =
 {
-	L"Click on the sector where you would like the mercs to arrive instead.",
-	L"OK.  Arriving mercs will be dropped off in %ls",
-	L"Mercs can't be flown there, the airspace isn't secured!",
-	L"Canceled.  Arrival sector unchanged",
-	L"Airspace over %ls is no longer secure!  Arrival sector was moved to %ls.",
+	"Click on the sector where you would like the mercs to arrive instead.",
+	"OK.  Arriving mercs will be dropped off in %s",
+	"Mercs can't be flown there, the airspace isn't secured!",
+	"Canceled.  Arrival sector unchanged",
+	"Airspace over %s is no longer secure!  Arrival sector was moved to %s.",
 };
 
 
 // help text for mouse regions
 
-static const wchar_t *s_eng_pMiscMapScreenMouseRegionHelpText[pMiscMapScreenMouseRegionHelpText_SIZE] =
+static const ST::string s_eng_pMiscMapScreenMouseRegionHelpText[pMiscMapScreenMouseRegionHelpText_SIZE] =
 {
-	L"Enter Inventory (|E|n|t|e|r)",
-	L"Throw Item Away",
-	L"Exit Inventory (|E|n|t|e|r)",
+	"Enter Inventory (|E|n|t|e|r)",
+	"Throw Item Away",
+	"Exit Inventory (|E|n|t|e|r)",
 };
 
 
-static const wchar_t s_eng_str_he_leaves_where_drop_equipment[]  = L"Have %ls leave his equipment where he is now (%ls) or later on in %ls (%ls) upon catching flight out of Arulco?";
-static const wchar_t s_eng_str_she_leaves_where_drop_equipment[] = L"Have %ls leave her equipment where she is now (%ls) or later on in %ls (%ls) upon catching flight out of Arulco?";
-static const wchar_t s_eng_str_he_leaves_drops_equipment[]       = L"%ls is about to leave and will drop off his equipment in %ls.";
-static const wchar_t s_eng_str_she_leaves_drops_equipment[]      = L"%ls is about to leave and will drop off her equipment in %ls.";
+static const ST::string s_eng_str_he_leaves_where_drop_equipment  = "Have %s leave his equipment where he is now (%s) or later on in %s (%s) upon catching flight out of Arulco?";
+static const ST::string s_eng_str_she_leaves_where_drop_equipment = "Have %s leave her equipment where she is now (%s) or later on in %s (%s) upon catching flight out of Arulco?";
+static const ST::string s_eng_str_he_leaves_drops_equipment       = "%s is about to leave and will drop off his equipment in %s.";
+static const ST::string s_eng_str_she_leaves_drops_equipment      = "%s is about to leave and will drop off her equipment in %s.";
 
 
 // Text used on IMP Web Pages
 
-static const wchar_t *s_eng_pImpPopUpStrings[pImpPopUpStrings_SIZE] =
+static const ST::string s_eng_pImpPopUpStrings[pImpPopUpStrings_SIZE] =
 {
-	L"Invalid Authorization Code",
-	L"You Are About To Restart The Entire Profiling Process. Are You Certain?",
-	L"Please Enter A Valid Full Name and Gender",
-	L"Preliminary analysis of your financial status shows that you cannot afford a profile analysis.",
-	L"Not A Valid Option At This Time.",
-	L"To complete an accurate profile, you must have room for at least one team member.",
-	L"Profile Already Completed.",
+	"Invalid Authorization Code",
+	"You Are About To Restart The Entire Profiling Process. Are You Certain?",
+	"Please Enter A Valid Full Name and Gender",
+	"Preliminary analysis of your financial status shows that you cannot afford a profile analysis.",
+	"Not A Valid Option At This Time.",
+	"To complete an accurate profile, you must have room for at least one team member.",
+	"Profile Already Completed.",
 };
 
 
 // button labels used on the IMP site
 
-static const wchar_t *s_eng_pImpButtonText[pImpButtonText_SIZE] =
+static const ST::string s_eng_pImpButtonText[pImpButtonText_SIZE] =
 {
-	L"About Us", 			// about the IMP site
-	L"BEGIN", 			// begin profiling
-	L"Personality", 		// personality section
-	L"Attributes", 		// personal stats/attributes section
-	L"Portrait", 			// the personal portrait selection
-	L"Voice %d", 			// the voice selection
-	L"Done", 			// done profiling
-	L"Start Over", 		// start over profiling
-	L"Yes, I choose the highlighted answer.",
-	L"Yes",
-	L"No",
-	L"Finished", 			// finished answering questions
-	L"Prev", 			// previous question..abbreviated form
-	L"Next", 			// next question
-	L"YES, I AM.", 		// yes, I am certain
-	L"NO, I WANT TO START OVER.", // no, I want to start over the profiling process
-	L"YES, I DO.",
-	L"NO",
-	L"Back", 			// back one page
-	L"Cancel", 			// cancel selection
-	L"Yes, I am certain.",
-	L"No, let me have another look.",
-	L"Registry", 			// the IMP site registry..when name and gender is selected
-	L"Analyzing", 			// analyzing your profile results
-	L"OK",
-	L"Voice",
+	"About Us", 			// about the IMP site
+	"BEGIN", 			// begin profiling
+	"Personality", 		// personality section
+	"Attributes", 		// personal stats/attributes section
+	"Portrait", 			// the personal portrait selection
+	"Voice %d", 			// the voice selection
+	"Done", 			// done profiling
+	"Start Over", 		// start over profiling
+	"Yes, I choose the highlighted answer.",
+	"Yes",
+	"No",
+	"Finished", 			// finished answering questions
+	"Prev", 			// previous question..abbreviated form
+	"Next", 			// next question
+	"YES, I AM.", 		// yes, I am certain
+	"NO, I WANT TO START OVER.", // no, I want to start over the profiling process
+	"YES, I DO.",
+	"NO",
+	"Back", 			// back one page
+	"Cancel", 			// cancel selection
+	"Yes, I am certain.",
+	"No, let me have another look.",
+	"Registry", 			// the IMP site registry..when name and gender is selected
+	"Analyzing", 			// analyzing your profile results
+	"OK",
+	"Voice",
 };
 
-static const wchar_t *s_eng_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
+static const ST::string s_eng_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 {
-	L"To Commence Actual Profiling, Select Personality.",
-	L"Now That You Have Completed Personality, Select Your Attributes.",
-	L"With Attributes Now Allocated, You Can Proceed to Portrait Selection.",
-	L"To Complete The Process, Select The Voice Sample That Best Fits You.",
+	"To Commence Actual Profiling, Select Personality.",
+	"Now That You Have Completed Personality, Select Your Attributes.",
+	"With Attributes Now Allocated, You Can Proceed to Portrait Selection.",
+	"To Complete The Process, Select The Voice Sample That Best Fits You.",
 };
 
-static const wchar_t s_eng_pFilesTitle[] = L"File Viewer";
+static const ST::string s_eng_pFilesTitle = "File Viewer";
 
-static const wchar_t *s_eng_pFilesSenderList[pFilesSenderList_SIZE] =
+static const ST::string s_eng_pFilesSenderList[pFilesSenderList_SIZE] =
 {
-	L"Recon Report", // the recon report sent to the player. Recon is an abbreviation for reconissance
-	L"Intercept #1", // first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
-	L"Intercept #2", // second intercept file
-	L"Intercept #3", // third intercept file
-	L"Intercept #4", // fourth intercept file
-	L"Intercept #5", // fifth intercept file
-	L"Intercept #6", // sixth intercept file
+	"Recon Report", // the recon report sent to the player. Recon is an abbreviation for reconissance
+	"Intercept #1", // first intercept file .. Intercept is the title of the organization sending the file...similar in function to INTERPOL/CIA/KGB..refer to fist record in files.txt for the translated title
+	"Intercept #2", // second intercept file
+	"Intercept #3", // third intercept file
+	"Intercept #4", // fourth intercept file
+	"Intercept #5", // fifth intercept file
+	"Intercept #6", // sixth intercept file
 };
 
 // Text having to do with the History Log
-static const wchar_t s_eng_pHistoryTitle[] = L"History Log";
+static const ST::string s_eng_pHistoryTitle = "History Log";
 
-static const wchar_t *s_eng_pHistoryHeaders[pHistoryHeaders_SIZE] =
+static const ST::string s_eng_pHistoryHeaders[pHistoryHeaders_SIZE] =
 {
-	L"Day", 			// the day the history event occurred
-	L"Page", 			// the current page in the history report we are in
-	L"Day", 			// the days the history report occurs over
-	L"Location", 			// location (in sector) the event occurred
-	L"Event", 			// the event label
+	"Day", 			// the day the history event occurred
+	"Page", 			// the current page in the history report we are in
+	"Day", 			// the days the history report occurs over
+	"Location", 			// location (in sector) the event occurred
+	"Event", 			// the event label
 };
 
 // various history events
@@ -1779,352 +1784,352 @@ static const wchar_t *s_eng_pHistoryHeaders[pHistoryHeaders_SIZE] =
 // IS TO TURN "CHEAT MODE" ON AND USE CONTROL-R IN THE TACTICAL SCREEN, THEN
 // GO INTO THE LAPTOP/HISTORY LOG AND CHECK OUT THE STRINGS. CONTROL-R INSERTS
 // MANY (NOT ALL) OF THE STRINGS IN THE FOLLOWING LIST INTO THE GAME.
-static const wchar_t *s_eng_pHistoryStrings[pHistoryStrings_SIZE] =
+static const ST::string s_eng_pHistoryStrings[pHistoryStrings_SIZE] =
 {
-	L"",																						// leave this line blank
+	"",																						// leave this line blank
 	//1-5
-	L"%ls was hired from A.I.M.", 										// merc was hired from the aim site
-	L"%ls was hired from M.E.R.C.", 									// merc was hired from the aim site
-	L"%ls died.", 															// merc was killed
-	L"Settled Accounts at M.E.R.C.",								// paid outstanding bills at MERC
-	L"Accepted Assignment From Enrico Chivaldori",
+	"%s was hired from A.I.M.", 										// merc was hired from the aim site
+	"%s was hired from M.E.R.C.", 									// merc was hired from the aim site
+	"%s died.", 															// merc was killed
+	"Settled Accounts at M.E.R.C.",								// paid outstanding bills at MERC
+	"Accepted Assignment From Enrico Chivaldori",
 	//6-10
-	L"IMP Profile Generated",
-	L"Purchased Insurance Contract for %ls.", 				// insurance contract purchased
-	L"Canceled Insurance Contract for %ls.", 				// insurance contract canceled
-	L"Insurance Claim Payout for %ls.", 							// insurance claim payout for merc
-	L"Extended %ls's contract by a day.", 						// Extented "mercs name"'s for a day
+	"IMP Profile Generated",
+	"Purchased Insurance Contract for %s.", 				// insurance contract purchased
+	"Canceled Insurance Contract for %s.", 				// insurance contract canceled
+	"Insurance Claim Payout for %s.", 							// insurance claim payout for merc
+	"Extended %s's contract by a day.", 						// Extented "mercs name"'s for a day
 	//11-15
-	L"Extended %ls's contract by 1 week.", 					// Extented "mercs name"'s for a week
-	L"Extended %ls's contract by 2 weeks.", 					// Extented "mercs name"'s 2 weeks
-	L"%ls was dismissed.", 													// "merc's name" was dismissed.
-	L"%ls quit.", 																		// "merc's name" quit.
-	L"quest started.", 															// a particular quest started
+	"Extended %s's contract by 1 week.", 					// Extented "mercs name"'s for a week
+	"Extended %s's contract by 2 weeks.", 					// Extented "mercs name"'s 2 weeks
+	"%s was dismissed.", 													// "merc's name" was dismissed.
+	"%s quit.", 																		// "merc's name" quit.
+	"quest started.", 															// a particular quest started
 	//16-20
-	L"quest completed.",
-	L"Talked to head miner of %ls",									// talked to head miner of town
-	L"Liberated %ls",
-	L"Cheat Used",
-	L"Food should be in Omerta by tomorrow",
+	"quest completed.",
+	"Talked to head miner of %s",									// talked to head miner of town
+	"Liberated %s",
+	"Cheat Used",
+	"Food should be in Omerta by tomorrow",
 	//21-25
-	L"%ls left team to become Daryl Hick's wife",
-	L"%ls's contract expired.",
-	L"%ls was recruited.",
-	L"Enrico complained about lack of progress",
-	L"Battle won",
+	"%s left team to become Daryl Hick's wife",
+	"%s's contract expired.",
+	"%s was recruited.",
+	"Enrico complained about lack of progress",
+	"Battle won",
 	//26-30
-	L"%ls mine started running out of ore",
-	L"%ls mine ran out of ore",
-	L"%ls mine was shut down",
-	L"%ls mine was reopened",
-	L"Found out about a prison called Tixa.",
+	"%s mine started running out of ore",
+	"%s mine ran out of ore",
+	"%s mine was shut down",
+	"%s mine was reopened",
+	"Found out about a prison called Tixa.",
 	//31-35
-	L"Heard about a secret weapons plant called Orta.",
-	L"Scientist in Orta donated a slew of rocket rifles.",
-	L"Queen Deidranna has a use for dead bodies.",
-	L"Frank talked about fighting matches in San Mona.",
-	L"A patient thinks he saw something in the mines.",
+	"Heard about a secret weapons plant called Orta.",
+	"Scientist in Orta donated a slew of rocket rifles.",
+	"Queen Deidranna has a use for dead bodies.",
+	"Frank talked about fighting matches in San Mona.",
+	"A patient thinks he saw something in the mines.",
 	//36-40
-	L"Met someone named Devin - he sells explosives.",
-	L"Ran into the famous ex-AIM merc Mike!",
-	L"Met Tony - he deals in arms.",
-	L"Got a rocket rifle from Sergeant Krott.",
-	L"Gave Kyle the deed to Angel's leather shop.",
+	"Met someone named Devin - he sells explosives.",
+	"Ran into the famous ex-AIM merc Mike!",
+	"Met Tony - he deals in arms.",
+	"Got a rocket rifle from Sergeant Krott.",
+	"Gave Kyle the deed to Angel's leather shop.",
 	//41-45
-	L"Madlab offered to build a robot.",
-	L"Gabby can make stealth concoction for bugs.",
-	L"Keith is out of business.",
-	L"Howard provided cyanide to Queen Deidranna.",
-	L"Met Keith - all purpose dealer in Cambria.",
+	"Madlab offered to build a robot.",
+	"Gabby can make stealth concoction for bugs.",
+	"Keith is out of business.",
+	"Howard provided cyanide to Queen Deidranna.",
+	"Met Keith - all purpose dealer in Cambria.",
 	//46-50
-	L"Met Howard - deals pharmaceuticals in Balime",
-	L"Met Perko - runs a small repair business.",
-	L"Met Sam of Balime - runs a hardware shop.",
-	L"Franz deals in electronics and other goods.",
-	L"Arnold runs a repair shop in Grumm.",
+	"Met Howard - deals pharmaceuticals in Balime",
+	"Met Perko - runs a small repair business.",
+	"Met Sam of Balime - runs a hardware shop.",
+	"Franz deals in electronics and other goods.",
+	"Arnold runs a repair shop in Grumm.",
 	//51-55
-	L"Fredo repairs electronics in Grumm.",
-	L"Received donation from rich guy in Balime.",
-	L"Met a junkyard dealer named Jake.",
-	L"Some bum gave us an electronic keycard.",
-	L"Bribed Walter to unlock the door to the basement.",
+	"Fredo repairs electronics in Grumm.",
+	"Received donation from rich guy in Balime.",
+	"Met a junkyard dealer named Jake.",
+	"Some bum gave us an electronic keycard.",
+	"Bribed Walter to unlock the door to the basement.",
 	//56-60
-	L"If Dave has gas, he'll provide free fillups.",
-	L"Greased Pablo's palms.",
-	L"Kingpin keeps money in San Mona mine.",
-	L"%ls won Extreme Fighting match",
-	L"%ls lost Extreme Fighting match",
+	"If Dave has gas, he'll provide free fillups.",
+	"Greased Pablo's palms.",
+	"Kingpin keeps money in San Mona mine.",
+	"%s won Extreme Fighting match",
+	"%s lost Extreme Fighting match",
 	//61-65
-	L"%ls was disqualified in Extreme Fighting",
-	L"Found a lot of money stashed in the abandoned mine.",
-	L"Encountered assassin sent by Kingpin.",
-	L"Lost control of sector",				//ENEMY_INVASION_CODE
-	L"Defended sector",
+	"%s was disqualified in Extreme Fighting",
+	"Found a lot of money stashed in the abandoned mine.",
+	"Encountered assassin sent by Kingpin.",
+	"Lost control of sector",				//ENEMY_INVASION_CODE
+	"Defended sector",
 	//66-70
-	L"Lost battle",							//ENEMY_ENCOUNTER_CODE
-	L"Fatal ambush",						//ENEMY_AMBUSH_CODE
-	L"Wiped out enemy ambush",
-	L"Unsuccessful attack",			//ENTERING_ENEMY_SECTOR_CODE
-	L"Successful attack!",
+	"Lost battle",							//ENEMY_ENCOUNTER_CODE
+	"Fatal ambush",						//ENEMY_AMBUSH_CODE
+	"Wiped out enemy ambush",
+	"Unsuccessful attack",			//ENTERING_ENEMY_SECTOR_CODE
+	"Successful attack!",
 	//71-75
-	L"Creatures attacked",			//CREATURE_ATTACK_CODE
-	L"Killed by bloodcats",			//BLOODCAT_AMBUSH_CODE
-	L"Slaughtered bloodcats",
-	L"%ls was killed",
-	L"Gave Carmen a terrorist's head",
-	L"Slay left",
-	L"Killed %ls",
+	"Creatures attacked",			//CREATURE_ATTACK_CODE
+	"Killed by bloodcats",			//BLOODCAT_AMBUSH_CODE
+	"Slaughtered bloodcats",
+	"%s was killed",
+	"Gave Carmen a terrorist's head",
+	"Slay left",
+	"Killed %s",
 };
 
-static const wchar_t s_eng_pHistoryLocations[] = L"N/A"; // N/A is an acronym for Not Applicable
+static const ST::string s_eng_pHistoryLocations = "N/A"; // N/A is an acronym for Not Applicable
 
 // icon text strings that appear on the laptop
 
-static const wchar_t *s_eng_pLaptopIcons[pLaptopIcons_SIZE] =
+static const ST::string s_eng_pLaptopIcons[pLaptopIcons_SIZE] =
 {
-	L"E-mail",
-	L"Web",
-	L"Financial",
-	L"Personnel",
-	L"History",
-	L"Files",
-	L"Shut Down",
-	L"sir-FER 4.0",			// our play on the company name (Sirtech) and web surFER
+	"E-mail",
+	"Web",
+	"Financial",
+	"Personnel",
+	"History",
+	"Files",
+	"Shut Down",
+	"sir-FER 4.0",			// our play on the company name (Sirtech) and web surFER
 };
 
 // bookmarks for different websites
 // IMPORTANT make sure you move down the Cancel string as bookmarks are being added
 
-static const wchar_t *s_eng_pBookMarkStrings[pBookMarkStrings_SIZE] =
+static const ST::string s_eng_pBookMarkStrings[pBookMarkStrings_SIZE] =
 {
-	L"A.I.M.",
-	L"Bobby Ray's",
-	L"I.M.P",
-	L"M.E.R.C.",
-	L"Mortuary",
-	L"Florist",
-	L"Insurance",
-	L"Cancel",
+	"A.I.M.",
+	"Bobby Ray's",
+	"I.M.P",
+	"M.E.R.C.",
+	"Mortuary",
+	"Florist",
+	"Insurance",
+	"Cancel",
 };
 
 // When loading or download a web page
 
-static const wchar_t *s_eng_pDownloadString[pDownloadString_SIZE] =
+static const ST::string s_eng_pDownloadString[pDownloadString_SIZE] =
 {
-	L"Downloading",
-	L"Reloading",
+	"Downloading",
+	"Reloading",
 };
 
 //This is the text used on the bank machines, here called ATMs for Automatic Teller Machine
 
-static const wchar_t *s_eng_gsAtmStartButtonText[gsAtmStartButtonText_SIZE] =
+static const ST::string s_eng_gsAtmStartButtonText[gsAtmStartButtonText_SIZE] =
 {
-	L"Stats", 			// view stats of the merc
-	L"Inventory", 			// view the inventory of the merc
-	L"Employment",
+	"Stats", 			// view stats of the merc
+	"Inventory", 			// view the inventory of the merc
+	"Employment",
 };
 
 // Web error messages. Please use foreign language equivilant for these messages.
 // DNS is the acronym for Domain Name Server
 // URL is the acronym for Uniform Resource Locator
 
-static const wchar_t s_eng_pErrorStrings[] = L"Intermittent Connection to Host. Expect longer transfer times.";
+static const ST::string s_eng_pErrorStrings = "Intermittent Connection to Host. Expect longer transfer times.";
 
 
-static const wchar_t s_eng_pPersonnelString[] = L"Mercs:"; // mercs we have
+static const ST::string s_eng_pPersonnelString = "Mercs:"; // mercs we have
 
 
-static const wchar_t s_eng_pWebTitle[] = L"sir-FER 4.0"; // our name for the version of the browser, play on company name
+static const ST::string s_eng_pWebTitle = "sir-FER 4.0"; // our name for the version of the browser, play on company name
 
 
 // The titles for the web program title bar, for each page loaded
 
-static const wchar_t *s_eng_pWebPagesTitles[pWebPagesTitles_SIZE] =
+static const ST::string s_eng_pWebPagesTitles[pWebPagesTitles_SIZE] =
 {
-	L"A.I.M.",
-	L"A.I.M. Members",
-	L"A.I.M. Mug Shots",		// a mug shot is another name for a portrait
-	L"A.I.M. Sort",
-	L"A.I.M.",
-	L"A.I.M. Alumni",
-	L"A.I.M. Policies",
-	L"A.I.M. History",
-	L"A.I.M. Links",
-	L"M.E.R.C.",
-	L"M.E.R.C. Accounts",
-	L"M.E.R.C. Registration",
-	L"M.E.R.C. Index",
-	L"Bobby Ray's",
-	L"Bobby Ray's - Guns",
-	L"Bobby Ray's - Ammo",
-	L"Bobby Ray's - Armor",
-	L"Bobby Ray's - Misc",							//misc is an abbreviation for miscellaneous
-	L"Bobby Ray's - Used",
-	L"Bobby Ray's - Mail Order",
-	L"I.M.P.",
-	L"I.M.P.",
-	L"United Floral Service",
-	L"United Floral Service - Gallery",
-	L"United Floral Service - Order Form",
-	L"United Floral Service - Card Gallery",
-	L"Malleus, Incus & Stapes Insurance Brokers",
-	L"Information",
-	L"Contract",
-	L"Comments",
-	L"McGillicutty's Mortuary",
-	L"URL not found.",
-	L"Bobby Ray's - Recent Shipments",
-	L"",
-	L"",
+	"A.I.M.",
+	"A.I.M. Members",
+	"A.I.M. Mug Shots",		// a mug shot is another name for a portrait
+	"A.I.M. Sort",
+	"A.I.M.",
+	"A.I.M. Alumni",
+	"A.I.M. Policies",
+	"A.I.M. History",
+	"A.I.M. Links",
+	"M.E.R.C.",
+	"M.E.R.C. Accounts",
+	"M.E.R.C. Registration",
+	"M.E.R.C. Index",
+	"Bobby Ray's",
+	"Bobby Ray's - Guns",
+	"Bobby Ray's - Ammo",
+	"Bobby Ray's - Armor",
+	"Bobby Ray's - Misc",							//misc is an abbreviation for miscellaneous
+	"Bobby Ray's - Used",
+	"Bobby Ray's - Mail Order",
+	"I.M.P.",
+	"I.M.P.",
+	"United Floral Service",
+	"United Floral Service - Gallery",
+	"United Floral Service - Order Form",
+	"United Floral Service - Card Gallery",
+	"Malleus, Incus & Stapes Insurance Brokers",
+	"Information",
+	"Contract",
+	"Comments",
+	"McGillicutty's Mortuary",
+	"URL not found.",
+	"Bobby Ray's - Recent Shipments",
+	"",
+	"",
 };
 
-static const wchar_t *s_eng_pShowBookmarkString[pShowBookmarkString_SIZE] =
+static const ST::string s_eng_pShowBookmarkString[pShowBookmarkString_SIZE] =
 {
-	L"Sir-Help",
-	L"Click Web Again for Bookmarks.",
+	"Sir-Help",
+	"Click Web Again for Bookmarks.",
 };
 
-static const wchar_t *s_eng_pLaptopTitles[pLaptopTitles_SIZE] =
+static const ST::string s_eng_pLaptopTitles[pLaptopTitles_SIZE] =
 {
-	L"Mail Box",
-	L"File Viewer",
-	L"Personnel",
-	L"Bookkeeper Plus",
-	L"History Log",
+	"Mail Box",
+	"File Viewer",
+	"Personnel",
+	"Bookkeeper Plus",
+	"History Log",
 };
 
-static const wchar_t *s_eng_pPersonnelDepartedStateStrings[pPersonnelDepartedStateStrings_SIZE] =
+static const ST::string s_eng_pPersonnelDepartedStateStrings[pPersonnelDepartedStateStrings_SIZE] =
 {
 	//reasons why a merc has left.
-	L"Killed in Action",
-	L"Dismissed",
-	L"Married",
-	L"Contract Expired",
-	L"Quit",
+	"Killed in Action",
+	"Dismissed",
+	"Married",
+	"Contract Expired",
+	"Quit",
 };
 // personnel strings appearing in the Personnel Manager on the laptop
 
-static const wchar_t *s_eng_pPersonelTeamStrings[pPersonelTeamStrings_SIZE] =
+static const ST::string s_eng_pPersonelTeamStrings[pPersonelTeamStrings_SIZE] =
 {
-	L"Current Team",
-	L"Departures",
-	L"Daily Cost:",
-	L"Highest Cost:",
-	L"Lowest Cost:",
-	L"Killed in Action:",
-	L"Dismissed:",
-	L"Other:",
+	"Current Team",
+	"Departures",
+	"Daily Cost:",
+	"Highest Cost:",
+	"Lowest Cost:",
+	"Killed in Action:",
+	"Dismissed:",
+	"Other:",
 };
 
 
-static const wchar_t *s_eng_pPersonnelCurrentTeamStatsStrings[pPersonnelCurrentTeamStatsStrings_SIZE] =
+static const ST::string s_eng_pPersonnelCurrentTeamStatsStrings[pPersonnelCurrentTeamStatsStrings_SIZE] =
 {
-	L"Lowest",
-	L"Average",
-	L"Highest",
+	"Lowest",
+	"Average",
+	"Highest",
 };
 
 
-static const wchar_t *s_eng_pPersonnelTeamStatsStrings[pPersonnelTeamStatsStrings_SIZE] =
+static const ST::string s_eng_pPersonnelTeamStatsStrings[pPersonnelTeamStatsStrings_SIZE] =
 {
-	L"HLTH",
-	L"AGI",
-	L"DEX",
-	L"STR",
-	L"LDR",
-	L"WIS",
-	L"LVL",
-	L"MRKM",
-	L"MECH",
-	L"EXPL",
-	L"MED",
+	"HLTH",
+	"AGI",
+	"DEX",
+	"STR",
+	"LDR",
+	"WIS",
+	"LVL",
+	"MRKM",
+	"MECH",
+	"EXPL",
+	"MED",
 };
 
 
 // horizontal and vertical indices on the map screen
 
-static const wchar_t *s_eng_pMapVertIndex[pMapVertIndex_SIZE] =
+static const ST::string s_eng_pMapVertIndex[pMapVertIndex_SIZE] =
 {
-	L"X",
-	L"A",
-	L"B",
-	L"C",
-	L"D",
-	L"E",
-	L"F",
-	L"G",
-	L"H",
-	L"I",
-	L"J",
-	L"K",
-	L"L",
-	L"M",
-	L"N",
-	L"O",
-	L"P",
+	"X",
+	"A",
+	"B",
+	"C",
+	"D",
+	"E",
+	"F",
+	"G",
+	"H",
+	"I",
+	"J",
+	"K",
+	"L",
+	"M",
+	"N",
+	"O",
+	"P",
 };
 
-static const wchar_t *s_eng_pMapHortIndex[pMapHortIndex_SIZE] =
+static const ST::string s_eng_pMapHortIndex[pMapHortIndex_SIZE] =
 {
-	L"X",
-	L"1",
-	L"2",
-	L"3",
-	L"4",
-	L"5",
-	L"6",
-	L"7",
-	L"8",
-	L"9",
-	L"10",
-	L"11",
-	L"12",
-	L"13",
-	L"14",
-	L"15",
-	L"16",
+	"X",
+	"1",
+	"2",
+	"3",
+	"4",
+	"5",
+	"6",
+	"7",
+	"8",
+	"9",
+	"10",
+	"11",
+	"12",
+	"13",
+	"14",
+	"15",
+	"16",
 };
 
-static const wchar_t *s_eng_pMapDepthIndex[pMapDepthIndex_SIZE] =
+static const ST::string s_eng_pMapDepthIndex[pMapDepthIndex_SIZE] =
 {
-	L"",
-	L"-1",
-	L"-2",
-	L"-3",
+	"",
+	"-1",
+	"-2",
+	"-3",
 };
 
 // text that appears on the contract button
 
-static const wchar_t s_eng_pContractButtonString[] = L"Contract";
+static const ST::string s_eng_pContractButtonString = "Contract";
 
 // text that appears on the update panel buttons
 
-static const wchar_t *s_eng_pUpdatePanelButtons[pUpdatePanelButtons_SIZE] =
+static const ST::string s_eng_pUpdatePanelButtons[pUpdatePanelButtons_SIZE] =
 {
-	L"Continue",
-	L"Stop",
+	"Continue",
+	"Stop",
 };
 
 // Text which appears when everyone on your team is incapacitated and incapable of battle
 
-static StrPointer s_eng_LargeTacticalStr[LargeTacticalStr_SIZE] =
+static ST::string s_eng_LargeTacticalStr[LargeTacticalStr_SIZE] =
 {
-	L"You have been defeated in this sector!",
-	L"The enemy, having no mercy for the team's soul, devours each and every one of you!",
-	L"Your unconscious team members have been captured!",
-	L"Your team members have been taken prisoner by the enemy.",
+	"You have been defeated in this sector!",
+	"The enemy, having no mercy for the team's soul, devours each and every one of you!",
+	"Your unconscious team members have been captured!",
+	"Your team members have been taken prisoner by the enemy.",
 };
 
 
 //Insurance Contract.c
 //The text on the buttons at the bottom of the screen.
 
-static const wchar_t *s_eng_InsContractText[InsContractText_SIZE] =
+static const ST::string s_eng_InsContractText[InsContractText_SIZE] =
 {
-	L"Previous",
-	L"Next",
-	L"Accept",
-	L"Clear",
+	"Previous",
+	"Next",
+	"Accept",
+	"Clear",
 };
 
 
@@ -2132,28 +2137,28 @@ static const wchar_t *s_eng_InsContractText[InsContractText_SIZE] =
 //Insurance Info
 // Text on the buttons on the bottom of the screen
 
-static const wchar_t *s_eng_InsInfoText[InsInfoText_SIZE] =
+static const ST::string s_eng_InsInfoText[InsInfoText_SIZE] =
 {
-	L"Previous",
-	L"Next",
+	"Previous",
+	"Next",
 };
 
 
 
 //For use at the M.E.R.C. web site. Text relating to the player's account with MERC
 
-static const wchar_t *s_eng_MercAccountText[MercAccountText_SIZE] =
+static const ST::string s_eng_MercAccountText[MercAccountText_SIZE] =
 {
 	// Text on the buttons on the bottom of the screen
-	L"Authorize",
-	L"Home",
-	L"Account #:",
-	L"Merc",
-	L"Days",
-	L"Rate",	//5
-	L"Charge",
-	L"Total:",
-	L"Are you sure you want to authorize the payment of %ls?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
+	"Authorize",
+	"Home",
+	"Account #:",
+	"Merc",
+	"Days",
+	"Rate",	//5
+	"Charge",
+	"Total:",
+	"Are you sure you want to authorize the payment of %s?",		//the %s is a string that contains the dollar amount ( ex. "$150" )
 };
 
 
@@ -2161,133 +2166,133 @@ static const wchar_t *s_eng_MercAccountText[MercAccountText_SIZE] =
 //For use at the M.E.R.C. web site. Text relating a MERC mercenary
 
 
-static const wchar_t *s_eng_MercInfo[MercInfo_SIZE] =
+static const ST::string s_eng_MercInfo[MercInfo_SIZE] =
 {
-	L"Previous",
-	L"Hire",
-	L"Next",
-	L"Additional Info",
-	L"Home",
-	L"Hired",
-	L"Salary:",
-	L"Per Day",
-	L"Deceased",
+	"Previous",
+	"Hire",
+	"Next",
+	"Additional Info",
+	"Home",
+	"Hired",
+	"Salary:",
+	"Per Day",
+	"Deceased",
 
-	L"Looks like you're trying to hire too many mercs. Your limit is 18.",
-	L"Unavailable",
+	"Looks like you're trying to hire too many mercs. Your limit is 18.",
+	"Unavailable",
 };
 
 
 
 // For use at the M.E.R.C. web site. Text relating to opening an account with MERC
 
-static const wchar_t *s_eng_MercNoAccountText[MercNoAccountText_SIZE] =
+static const ST::string s_eng_MercNoAccountText[MercNoAccountText_SIZE] =
 {
 	//Text on the buttons at the bottom of the screen
-	L"Open Account",
-	L"Cancel",
-	L"You have no account.  Would you like to open one?",
+	"Open Account",
+	"Cancel",
+	"You have no account.  Would you like to open one?",
 };
 
 
 
 // For use at the M.E.R.C. web site. MERC Homepage
 
-static const wchar_t *s_eng_MercHomePageText[MercHomePageText_SIZE] =
+static const ST::string s_eng_MercHomePageText[MercHomePageText_SIZE] =
 {
 	//Description of various parts on the MERC page
-	L"Speck T. Kline, founder and owner",
-	L"To open an account press here",
-	L"To view account press here",
-	L"To view files press here",
+	"Speck T. Kline, founder and owner",
+	"To open an account press here",
+	"To view account press here",
+	"To view files press here",
 	// The version number on the video conferencing system that pops up when Speck is talking
-	L"Speck Com v3.2",
+	"Speck Com v3.2",
 };
 
 // For use at MiGillicutty's Web Page
-static const wchar_t *s_eng_sFuneralString[sFuneralString_SIZE] =
+static const ST::string s_eng_sFuneralString[sFuneralString_SIZE] =
 {
-	L"McGillicutty's Mortuary: Helping families grieve since 1983.",
-	L"Funeral Director and former A.I.M. mercenary Murray \"Pops\" McGillicutty is a highly skilled and experienced mortician.",
-	L"Having been intimately involved in death and bereavement throughout his life, Pops knows how difficult it can be.",
-	L"McGillicutty's Mortuary offers a wide range of bereavement services, from a shoulder to cry on to post-mortem reconstruction for badly disfigured remains.",
-	L"Let McGillicutty's Mortuary help you and your loved one rest in peace.",
+	"McGillicutty's Mortuary: Helping families grieve since 1983.",
+	"Funeral Director and former A.I.M. mercenary Murray \"Pops\" McGillicutty is a highly skilled and experienced mortician.",
+	"Having been intimately involved in death and bereavement throughout his life, Pops knows how difficult it can be.",
+	"McGillicutty's Mortuary offers a wide range of bereavement services, from a shoulder to cry on to post-mortem reconstruction for badly disfigured remains.",
+	"Let McGillicutty's Mortuary help you and your loved one rest in peace.",
 
 	// Text for the various links available at the bottom of the page
-	L"SEND FLOWERS",
-	L"CASKET & URN COLLECTION",
-	L"CREMATION SERVICES",
-	L"PRE- FUNERAL PLANNING SERVICES",
-	L"FUNERAL ETIQUETTE",
+	"SEND FLOWERS",
+	"CASKET & URN COLLECTION",
+	"CREMATION SERVICES",
+	"PRE- FUNERAL PLANNING SERVICES",
+	"FUNERAL ETIQUETTE",
 
 	// The text that comes up when you click on any of the links ( except for send flowers ).
-	L"Regretably, the remainder of this site has not been completed due to a death in the family. Pending reading of the will and disbursement of assets, the site will be completed as soon as possible.",
-	L"Our sympathies do, however, go out to you at this trying time.  Please come again.",
+	"Regretably, the remainder of this site has not been completed due to a death in the family. Pending reading of the will and disbursement of assets, the site will be completed as soon as possible.",
+	"Our sympathies do, however, go out to you at this trying time.  Please come again.",
 };
 
 // Text for the florist Home page
 
-static const wchar_t *s_eng_sFloristText[sFloristText_SIZE] =
+static const ST::string s_eng_sFloristText[sFloristText_SIZE] =
 {
 	//Text on the button on the bottom of the page
 
-	L"Gallery",
+	"Gallery",
 
 	//Address of United Florist
 
-	L"\"We air-drop anywhere\"",
-	L"1-555-SCENT-ME",
-	L"333 NoseGay Dr, Seedy City, CA USA 90210",
-	L"http://www.scent-me.com",
+	"\"We air-drop anywhere\"",
+	"1-555-SCENT-ME",
+	"333 NoseGay Dr, Seedy City, CA USA 90210",
+	"http://www.scent-me.com",
 
 	// detail of the florist page
 
-	L"We're fast and efficient!",
-	L"Next day delivery to most areas worldwide, guaranteed.  Some restrictions apply.",
-	L"Lowest prices in the world, guaranteed!",
-	L"Show us a lower advertised price for any arrangements, and receive a dozen roses, absolutely free.",
-	L"Flying Flora, Fauna & Flowers Since 1981.",
-	L"Our decorated ex-bomber aviators will air-drop your bouquet within a ten mile radius of the requested location.  Anytime - Everytime!",
-	L"Let us satisfy your floral fantasy.",
-	L"Let Bruce, our world-renowned floral designer, hand-pick the freshest, highest quality flowers from our very own greenhouse.",
-	L"And remember, if we don't have it, we can grow it - Fast!",
+	"We're fast and efficient!",
+	"Next day delivery to most areas worldwide, guaranteed.  Some restrictions apply.",
+	"Lowest prices in the world, guaranteed!",
+	"Show us a lower advertised price for any arrangements, and receive a dozen roses, absolutely free.",
+	"Flying Flora, Fauna & Flowers Since 1981.",
+	"Our decorated ex-bomber aviators will air-drop your bouquet within a ten mile radius of the requested location.  Anytime - Everytime!",
+	"Let us satisfy your floral fantasy.",
+	"Let Bruce, our world-renowned floral designer, hand-pick the freshest, highest quality flowers from our very own greenhouse.",
+	"And remember, if we don't have it, we can grow it - Fast!",
 };
 
 
 
 //Florist OrderForm
 
-static const wchar_t *s_eng_sOrderFormText[sOrderFormText_SIZE] =
+static const ST::string s_eng_sOrderFormText[sOrderFormText_SIZE] =
 {
 	//Text on the buttons
 
-	L"Back",
-	L"Send",
-	L"Clear",
-	L"Gallery",
+	"Back",
+	"Send",
+	"Clear",
+	"Gallery",
 
-	L"Name of Bouquet:",
-	L"Price:",			//5
-	L"Order Number:",
-	L"Delivery Date",
-	L"next day",
-	L"gets there when it gets there",
-	L"Delivery Location",			//10
-	L"Additional Services",
-	L"Crushed Bouquet($10)",
-	L"Black Roses($20)",
-	L"Wilted Bouquet($10)",
-	L"Fruit Cake (if available)($10)",		//15
-	L"Personal Sentiments:",
-	L"Due to the size of gift cards, your message can be no longer than 75 characters.",
-	L"...or select from one of our",
+	"Name of Bouquet:",
+	"Price:",			//5
+	"Order Number:",
+	"Delivery Date",
+	"next day",
+	"gets there when it gets there",
+	"Delivery Location",			//10
+	"Additional Services",
+	"Crushed Bouquet($10)",
+	"Black Roses($20)",
+	"Wilted Bouquet($10)",
+	"Fruit Cake (if available)($10)",		//15
+	"Personal Sentiments:",
+	"Due to the size of gift cards, your message can be no longer than 75 characters.",
+	"...or select from one of our",
 
-	L"STANDARDIZED CARDS",
-	L"Billing Information",//20
+	"STANDARDIZED CARDS",
+	"Billing Information",//20
 
 	//The text that goes beside the area where the user can enter their name
 
-	L"Name:",
+	"Name:",
 };
 
 
@@ -2295,110 +2300,110 @@ static const wchar_t *s_eng_sOrderFormText[sOrderFormText_SIZE] =
 
 //Florist Gallery.c
 
-static const wchar_t *s_eng_sFloristGalleryText[sFloristGalleryText_SIZE] =
+static const ST::string s_eng_sFloristGalleryText[sFloristGalleryText_SIZE] =
 {
 	//text on the buttons
 
-	L"Prev",	//abbreviation for previous
-	L"Next",	//abbreviation for next
+	"Prev",	//abbreviation for previous
+	"Next",	//abbreviation for next
 
-	L"Click on the selection you want to order.",
-	L"Please Note: there is an additional $10 fee for all wilted or crushed bouquets.",
+	"Click on the selection you want to order.",
+	"Please Note: there is an additional $10 fee for all wilted or crushed bouquets.",
 
 	//text on the button
 
-	L"Home",
+	"Home",
 };
 
 //Florist Cards
 
-static const wchar_t *s_eng_sFloristCards[sFloristCards_SIZE] =
+static const ST::string s_eng_sFloristCards[sFloristCards_SIZE] =
 {
-	L"Click on your selection",
-	L"Back",
+	"Click on your selection",
+	"Back",
 };
 
 
 
 // Text for Bobby Ray's Mail Order Site
 
-static const wchar_t *s_eng_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
+static const ST::string s_eng_BobbyROrderFormText[BobbyROrderFormText_SIZE] =
 {
-	L"Order Form",				//Title of the page
-	L"Qty",					// The number of items ordered
-	L"Weight (%ls)",			// The weight of the item
-	L"Item Name",				// The name of the item
-	L"Unit Price",				// the item's weight
-	L"Total",				//5	// The total price of all of items of the same type
-	L"Sub-Total",				// The sub total of all the item totals added
-	L"S&H (See Delivery Loc.)",		// S&H is an acronym for Shipping and Handling
-	L"Grand Total",			// The grand total of all item totals + the shipping and handling
-	L"Delivery Location",
-	L"Shipping Speed",			//10	// See below
-	L"Cost (per %ls.)",			// The cost to ship the items
-	L"Overnight Express",			// Gets deliverd the next day
-	L"2 Business Days",			// Gets delivered in 2 days
-	L"Standard Service",			// Gets delivered in 3 days
-	L"Clear Order",//15			// Clears the order page
-	L"Accept Order",			// Accept the order
-	L"Back",				// text on the button that returns to the previous page
-	L"Home",				// Text on the button that returns to the home page
-	L"* Denotes Used Items",		// Disclaimer stating that the item is used
-	L"You can't afford to pay for this.",		//20	// A popup message that to warn of not enough money
-	L"<NONE>",				// Gets displayed when there is no valid city selected
-	L"Are you sure you want to send this order to %ls?",		// A popup that asks if the city selected is the correct one
-	L"Package Weight**",			// Displays the weight of the package
-	L"** Min. Wt.",				// Disclaimer states that there is a minimum weight for the package
-	L"Shipments",
+	"Order Form",				//Title of the page
+	"Qty",					// The number of items ordered
+	"Weight (%s)",			// The weight of the item
+	"Item Name",				// The name of the item
+	"Unit Price",				// the item's weight
+	"Total",				//5	// The total price of all of items of the same type
+	"Sub-Total",				// The sub total of all the item totals added
+	"S&H (See Delivery Loc.)",		// S&H is an acronym for Shipping and Handling
+	"Grand Total",			// The grand total of all item totals + the shipping and handling
+	"Delivery Location",
+	"Shipping Speed",			//10	// See below
+	"Cost (per %s.)",			// The cost to ship the items
+	"Overnight Express",			// Gets deliverd the next day
+	"2 Business Days",			// Gets delivered in 2 days
+	"Standard Service",			// Gets delivered in 3 days
+	"Clear Order",//15			// Clears the order page
+	"Accept Order",			// Accept the order
+	"Back",				// text on the button that returns to the previous page
+	"Home",				// Text on the button that returns to the home page
+	"* Denotes Used Items",		// Disclaimer stating that the item is used
+	"You can't afford to pay for this.",		//20	// A popup message that to warn of not enough money
+	"<NONE>",				// Gets displayed when there is no valid city selected
+	"Are you sure you want to send this order to %s?",		// A popup that asks if the city selected is the correct one
+	"Package Weight**",			// Displays the weight of the package
+	"** Min. Wt.",				// Disclaimer states that there is a minimum weight for the package
+	"Shipments",
 };
 
 
 // This text is used when on the various Bobby Ray Web site pages that sell items
 
-static const wchar_t *s_eng_BobbyRText[BobbyRText_SIZE] =
+static const ST::string s_eng_BobbyRText[BobbyRText_SIZE] =
 {
-	L"To Order",				// Title
+	"To Order",				// Title
 	// instructions on how to order
-	L"Click on the item(s). For more than one, keep on clicking. Right click for less. Once you've selected all you'd like to buy, go on to the order form.",
+	"Click on the item(s). For more than one, keep on clicking. Right click for less. Once you've selected all you'd like to buy, go on to the order form.",
 
 	//Text on the buttons to go the various links
 
-	L"Previous Items",		//
-	L"Guns", 			//3
-	L"Ammo",			//4
-	L"Armor",			//5
-	L"Misc.",			//6	//misc is an abbreviation for miscellaneous
-	L"Used",			//7
-	L"More Items",
-	L"ORDER FORM",
-	L"Home",			//10
+	"Previous Items",		//
+	"Guns", 			//3
+	"Ammo",			//4
+	"Armor",			//5
+	"Misc.",			//6	//misc is an abbreviation for miscellaneous
+	"Used",			//7
+	"More Items",
+	"ORDER FORM",
+	"Home",			//10
 
 	//The following lines provide information on the items
 
-	L"Weight:",		// Weight of all the items of the same type
-	L"Cal:",			// the caliber of the gun
-	L"Mag:",			// number of rounds of ammo the Magazine can hold
-	L"Rng:",			// The range of the gun
-	L"Dam:",			// Damage of the weapon
-	L"ROF:",			// Weapon's Rate Of Fire, acronym ROF
-	L"Cost:",			// Cost of the item
-	L"In stock:",			// The number of items still in the store's inventory
-	L"Qty on Order:",		// The number of items on order
-	L"Damaged",			// If the item is damaged
-	L"SubTotal:",			// The total cost of all items on order
-	L"* % Functional",		// if the item is damaged, displays the percent function of the item
+	"Weight:",		// Weight of all the items of the same type
+	"Cal:",			// the caliber of the gun
+	"Mag:",			// number of rounds of ammo the Magazine can hold
+	"Rng:",			// The range of the gun
+	"Dam:",			// Damage of the weapon
+	"ROF:",			// Weapon's Rate Of Fire, acronym ROF
+	"Cost:",			// Cost of the item
+	"In stock:",			// The number of items still in the store's inventory
+	"Qty on Order:",		// The number of items on order
+	"Damaged",			// If the item is damaged
+	"SubTotal:",			// The total cost of all items on order
+	"* % Functional",		// if the item is damaged, displays the percent function of the item
 
 	//Popup that tells the player that they can only order 10 items at a time
 
-	L"Darn!  This here on-line order form will only accept 10 items per order.  If you're looking to order more stuff (and we hope you are), kindly make a separate order and accept our apologies.",
+	"Darn!  This here on-line order form will only accept 10 items per order.  If you're looking to order more stuff (and we hope you are), kindly make a separate order and accept our apologies.",
 
 	// A popup that tells the user that they are trying to order more items then the store has in stock
 
-	L"Sorry. We don't have any more of that in stock right now. Please try again later.",
+	"Sorry. We don't have any more of that in stock right now. Please try again later.",
 
 	//A popup that tells the user that the store is temporarily sold out
 
-	L"Sorry, but we are currently out of stock on all items of that type.",
+	"Sorry, but we are currently out of stock on all items of that type.",
 
 };
 
@@ -2406,30 +2411,30 @@ static const wchar_t *s_eng_BobbyRText[BobbyRText_SIZE] =
 // The following line is used on the Ammunition page.  It is used for help text
 // to display how many items the player's merc has that can use this type of
 // ammo.
-static const wchar_t s_eng_str_bobbyr_guns_num_guns_that_use_ammo[] = L"Your team has %d weapon(s) that use this type of ammo";
+static const ST::string s_eng_str_bobbyr_guns_num_guns_that_use_ammo = "Your team has %d weapon(s) that use this type of ammo";
 
 
 // Text for Bobby Ray's Home Page
 
-static const wchar_t *s_eng_BobbyRaysFrontText[BobbyRaysFrontText_SIZE] =
+static const ST::string s_eng_BobbyRaysFrontText[BobbyRaysFrontText_SIZE] =
 {
 	//Details on the web site
 
-	L"This is the place to be for the newest and hottest in weaponry and military supplies",
-	L"We can find the perfect solution for all your explosives needs",
-	L"Used and refitted items",
+	"This is the place to be for the newest and hottest in weaponry and military supplies",
+	"We can find the perfect solution for all your explosives needs",
+	"Used and refitted items",
 
 	//Text for the various links to the sub pages
 
-	L"Miscellaneous",
-	L"GUNS",
-	L"AMMUNITION",		//5
-	L"ARMOR",
+	"Miscellaneous",
+	"GUNS",
+	"AMMUNITION",		//5
+	"ARMOR",
 
 	//Details on the web site
 
-	L"If we don't sell it, you can't get it!",
-	L"Under Construction",
+	"If we don't sell it, you can't get it!",
+	"Under Construction",
 };
 
 
@@ -2437,44 +2442,44 @@ static const wchar_t *s_eng_BobbyRaysFrontText[BobbyRaysFrontText_SIZE] =
 // Text for the AIM page.
 // This is the text used when the user selects the way to sort the aim mercanaries on the AIM mug shot page
 
-static const wchar_t *s_eng_AimSortText[AimSortText_SIZE] =
+static const ST::string s_eng_AimSortText[AimSortText_SIZE] =
 {
-	L"A.I.M. Members",				// Title
+	"A.I.M. Members",				// Title
 	// Title for the way to sort
-	L"Sort By:",
+	"Sort By:",
 
 	//Text of the links to other AIM pages
 
-	L"View the mercenary mug shot index",
-	L"Review the individual mercenary's file",
-	L"Browse the A.I.M. Alumni Gallery"
+	"View the mercenary mug shot index",
+	"Review the individual mercenary's file",
+	"Browse the A.I.M. Alumni Gallery"
 };
 
 
 // text to display how the entries will be sorted
-static const wchar_t s_eng_str_aim_sort_price[]        = L"Price";
-static const wchar_t s_eng_str_aim_sort_experience[]   = L"Experience";
-static const wchar_t s_eng_str_aim_sort_marksmanship[] = L"Marksmanship";
-static const wchar_t s_eng_str_aim_sort_medical[]      = L"Medical";
-static const wchar_t s_eng_str_aim_sort_explosives[]   = L"Explosives";
-static const wchar_t s_eng_str_aim_sort_mechanical[]   = L"Mechanical";
-static const wchar_t s_eng_str_aim_sort_ascending[]    = L"Ascending";
-static const wchar_t s_eng_str_aim_sort_descending[]   = L"Descending";
+static const ST::string s_eng_str_aim_sort_price        = "Price";
+static const ST::string s_eng_str_aim_sort_experience   = "Experience";
+static const ST::string s_eng_str_aim_sort_marksmanship = "Marksmanship";
+static const ST::string s_eng_str_aim_sort_medical      = "Medical";
+static const ST::string s_eng_str_aim_sort_explosives   = "Explosives";
+static const ST::string s_eng_str_aim_sort_mechanical   = "Mechanical";
+static const ST::string s_eng_str_aim_sort_ascending    = "Ascending";
+static const ST::string s_eng_str_aim_sort_descending   = "Descending";
 
 
 //Aim Policies.c
 //The page in which the AIM policies and regulations are displayed
 
-static const wchar_t *s_eng_AimPolicyText[AimPolicyText_SIZE] =
+static const ST::string s_eng_AimPolicyText[AimPolicyText_SIZE] =
 {
 	// The text on the buttons at the bottom of the page
 
-	L"Previous Page",
-	L"AIM HomePage",
-	L"Policy Index",
-	L"Next Page",
-	L"Disagree",
-	L"Agree",
+	"Previous Page",
+	"AIM HomePage",
+	"Policy Index",
+	"Next Page",
+	"Disagree",
+	"Agree",
 };
 
 
@@ -2484,38 +2489,38 @@ static const wchar_t *s_eng_AimPolicyText[AimPolicyText_SIZE] =
 
 // Instructions to the user to either start video conferencing with the merc, or to go the mug shot index
 
-static const wchar_t *s_eng_AimMemberText[AimMemberText_SIZE] =
+static const ST::string s_eng_AimMemberText[AimMemberText_SIZE] =
 {
-	L"Left Click",
-	L"to Contact Merc.",
-	L"Right Click",
-	L"for Mug Shot Index.",
+	"Left Click",
+	"to Contact Merc.",
+	"Right Click",
+	"for Mug Shot Index.",
 };
 
 //Aim Member.c
 //The page in which the players hires AIM mercenaries
 
-static const wchar_t *s_eng_CharacterInfo[CharacterInfo_SIZE] =
+static const ST::string s_eng_CharacterInfo[CharacterInfo_SIZE] =
 {
 	// the contract expenses' area
 
-	L"Fee",
-	L"Contract",
-	L"one day",
-	L"one week",
-	L"two weeks",
+	"Fee",
+	"Contract",
+	"one day",
+	"one week",
+	"two weeks",
 
 	// text for the buttons that either go to the previous merc,
 	// start talking to the merc, or go to the next merc
 
-	L"Previous",
-	L"Contact",
-	L"Next",
+	"Previous",
+	"Contact",
+	"Next",
 
-	L"Additional Info",				// Title for the additional info for the merc's bio
-	L"Active Members", // Title of the page
-	L"Optional Gear:",				// Displays the optional gear cost
-	L"MEDICAL deposit required",			// If the merc required a medical deposit, this is displayed
+	"Additional Info",				// Title for the additional info for the merc's bio
+	"Active Members", // Title of the page
+	"Optional Gear:",				// Displays the optional gear cost
+	"MEDICAL deposit required",			// If the merc required a medical deposit, this is displayed
 };
 
 
@@ -2524,36 +2529,36 @@ static const wchar_t *s_eng_CharacterInfo[CharacterInfo_SIZE] =
 
 //The following text is used with the video conference popup
 
-static const wchar_t *s_eng_VideoConfercingText[VideoConfercingText_SIZE] =
+static const ST::string s_eng_VideoConfercingText[VideoConfercingText_SIZE] =
 {
-	L"Contract Charge:",				//Title beside the cost of hiring the merc
+	"Contract Charge:",				//Title beside the cost of hiring the merc
 
 	//Text on the buttons to select the length of time the merc can be hired
 
-	L"One Day",
-	L"One Week",
-	L"Two Weeks",
+	"One Day",
+	"One Week",
+	"Two Weeks",
 
 	//Text on the buttons to determine if you want the merc to come with the equipment
 
-	L"No Equipment",
-	L"Buy Equipment",
+	"No Equipment",
+	"Buy Equipment",
 
 	// Text on the Buttons
 
-	L"TRANSFER FUNDS",			// to actually hire the merc
-	L"CANCEL",				// go back to the previous menu
-	L"HIRE",				// go to menu in which you can hire the merc
-	L"HANG UP",				// stops talking with the merc
-	L"OK",
-	L"LEAVE MESSAGE",			// if the merc is not there, you can leave a message
+	"TRANSFER FUNDS",			// to actually hire the merc
+	"CANCEL",				// go back to the previous menu
+	"HIRE",				// go to menu in which you can hire the merc
+	"HANG UP",				// stops talking with the merc
+	"OK",
+	"LEAVE MESSAGE",			// if the merc is not there, you can leave a message
 
 	//Text on the top of the video conference popup
 
-	L"Video Conferencing with",
-	L"Connecting. . .",
+	"Video Conferencing with",
+	"Connecting. . .",
 
-	L"with medical"			// Displays if you are hiring the merc with the medical deposit
+	"with medical"			// Displays if you are hiring the merc with the medical deposit
 };
 
 
@@ -2563,30 +2568,30 @@ static const wchar_t *s_eng_VideoConfercingText[VideoConfercingText_SIZE] =
 
 // The text that pops up when you select the TRANSFER FUNDS button
 
-static const wchar_t *s_eng_AimPopUpText[AimPopUpText_SIZE] =
+static const ST::string s_eng_AimPopUpText[AimPopUpText_SIZE] =
 {
-	L"ELECTRONIC FUNDS TRANSFER SUCCESSFUL",	// You hired the merc
-	L"UNABLE TO PROCESS TRANSFER",		// Player doesn't have enough money, message 1
-	L"INSUFFICIENT FUNDS",				// Player doesn't have enough money, message 2
+	"ELECTRONIC FUNDS TRANSFER SUCCESSFUL",	// You hired the merc
+	"UNABLE TO PROCESS TRANSFER",		// Player doesn't have enough money, message 1
+	"INSUFFICIENT FUNDS",				// Player doesn't have enough money, message 2
 
 	// if the merc is not available, one of the following is displayed over the merc's face
 
-	L"On Assignment",
-	L"Please Leave Message",
-	L"Deceased",
+	"On Assignment",
+	"Please Leave Message",
+	"Deceased",
 
 	//If you try to hire more mercs than game can support
 
-	L"You have a full team of 18 mercs already.",
+	"You have a full team of 18 mercs already.",
 
-	L"Pre-recorded message",
-	L"Message recorded",
+	"Pre-recorded message",
+	"Message recorded",
 };
 
 
 //AIM Link.c
 
-static const wchar_t s_eng_AimLinkText[] = L"A.I.M. Links"; // The title of the AIM links page
+static const ST::string s_eng_AimLinkText = "A.I.M. Links"; // The title of the AIM links page
 
 
 
@@ -2594,16 +2599,16 @@ static const wchar_t s_eng_AimLinkText[] = L"A.I.M. Links"; // The title of the 
 
 // This page displays the history of AIM
 
-static const wchar_t *s_eng_AimHistoryText[AimHistoryText_SIZE] =
+static const ST::string s_eng_AimHistoryText[AimHistoryText_SIZE] =
 {
-	L"A.I.M. History",					//Title
+	"A.I.M. History",					//Title
 
 	// Text on the buttons at the bottom of the page
 
-	L"Previous Page",
-	L"Home",
-	L"A.I.M. Alumni",
-	L"Next Page",
+	"Previous Page",
+	"Home",
+	"A.I.M. Alumni",
+	"Next Page",
 };
 
 
@@ -2611,33 +2616,33 @@ static const wchar_t *s_eng_AimHistoryText[AimHistoryText_SIZE] =
 
 //The page in which all the AIM members' portraits are displayed in the order selected by the AIM sort page.
 
-static const wchar_t *s_eng_AimFiText[AimFiText_SIZE] =
+static const ST::string s_eng_AimFiText[AimFiText_SIZE] =
 {
 	// displays the way in which the mercs were sorted
 
-	L"Price",
-	L"Experience",
-	L"Marksmanship",
-	L"Medical",
-	L"Explosives",
-	L"Mechanical",
+	"Price",
+	"Experience",
+	"Marksmanship",
+	"Medical",
+	"Explosives",
+	"Mechanical",
 
 	// The title of the page, the above text gets added at the end of this text
 
-	L"A.I.M. Members Sorted Ascending By %ls",
-	L"A.I.M. Members Sorted Descending By %ls",
+	"A.I.M. Members Sorted Ascending By %s",
+	"A.I.M. Members Sorted Descending By %s",
 
 	// Instructions to the players on what to do
 
-	L"Left Click",
-	L"To Select Merc",			//10
-	L"Right Click",
-	L"For Sorting Options",
+	"Left Click",
+	"To Select Merc",			//10
+	"Right Click",
+	"For Sorting Options",
 
 	// Gets displayed on top of the merc's portrait if they are...
 
-	L"Deceased",						//14
-	L"On Assign",
+	"Deceased",						//14
+	"On Assign",
 };
 
 
@@ -2645,17 +2650,17 @@ static const wchar_t *s_eng_AimFiText[AimFiText_SIZE] =
 //AimArchives.
 // The page that displays information about the older AIM alumni merc... mercs who are no longer with AIM
 
-static const wchar_t *s_eng_AimAlumniText[AimAlumniText_SIZE] =
+static const ST::string s_eng_AimAlumniText[AimAlumniText_SIZE] =
 {
 	// Text of the buttons
 
-	L"PAGE 1",
-	L"PAGE 2",
-	L"PAGE 3",
+	"PAGE 1",
+	"PAGE 2",
+	"PAGE 3",
 
-	L"A.I.M. Alumni",	// Title of the page
+	"A.I.M. Alumni",	// Title of the page
 
-	L"DONE"			// Stops displaying information on selected merc
+	"DONE"			// Stops displaying information on selected merc
 };
 
 
@@ -2665,35 +2670,35 @@ static const wchar_t *s_eng_AimAlumniText[AimAlumniText_SIZE] =
 
 //AIM Home Page
 
-static const wchar_t *s_eng_AimScreenText[AimScreenText_SIZE] =
+static const ST::string s_eng_AimScreenText[AimScreenText_SIZE] =
 {
 	// AIM disclaimers
 
-	L"A.I.M. and the A.I.M. logo are registered trademarks in most countries.",
-	L"So don't even think of trying to copy us.",
-	L"Copyright 1998-1999 A.I.M., Ltd.  All rights reserved.",
+	"A.I.M. and the A.I.M. logo are registered trademarks in most countries.",
+	"So don't even think of trying to copy us.",
+	"Copyright 1998-1999 A.I.M., Ltd.  All rights reserved.",
 
 	//Text for an advertisement that gets displayed on the AIM page
 
-	L"United Floral Service",
-	L"\"We air-drop anywhere\"",				//10
-	L"Do it right",
-	L"... the first time",
-	L"Guns and stuff, if we dont have it, you dont need it.",
+	"United Floral Service",
+	"\"We air-drop anywhere\"",				//10
+	"Do it right",
+	"... the first time",
+	"Guns and stuff, if we dont have it, you dont need it.",
 };
 
 
 //Aim Home Page
 
-static const wchar_t *s_eng_AimBottomMenuText[AimBottomMenuText_SIZE] =
+static const ST::string s_eng_AimBottomMenuText[AimBottomMenuText_SIZE] =
 {
 	//Text for the links at the bottom of all AIM pages
-	L"Home",
-	L"Members",
-	L"Alumni",
-	L"Policies",
-	L"History",
-	L"Links",
+	"Home",
+	"Members",
+	"Alumni",
+	"Policies",
+	"History",
+	"Links",
 };
 
 
@@ -2702,763 +2707,763 @@ static const wchar_t *s_eng_AimBottomMenuText[AimBottomMenuText_SIZE] =
 // The shopkeeper interface is displayed when the merc wants to interact with
 // the various store clerks scattered through out the game.
 
-static const wchar_t *s_eng_SKI_Text[SKI_SIZE ] =
+static const ST::string s_eng_SKI_Text[SKI_SIZE ] =
 {
-	L"MERCHANDISE IN STOCK",		//Header for the merchandise available
-	L"PAGE",				//The current store inventory page being displayed
-	L"TOTAL COST",				//The total cost of the the items in the Dealer inventory area
-	L"TOTAL VALUE",			//The total value of items player wishes to sell
-	L"EVALUATE",				//Button text for dealer to evaluate items the player wants to sell
-	L"TRANSACTION",			//Button text which completes the deal. Makes the transaction.
-	L"DONE",				//Text for the button which will leave the shopkeeper interface.
-	L"REPAIR COST",			//The amount the dealer will charge to repair the merc's goods
-	L"1 HOUR",			// SINGULAR! The text underneath the inventory slot when an item is given to the dealer to be repaired
-	L"%d HOURS",		// PLURAL!   The text underneath the inventory slot when an item is given to the dealer to be repaired
-	L"REPAIRED",		// Text appearing over an item that has just been repaired by a NPC repairman dealer
-	L"There is not enough room in your offer area.",	//Message box that tells the user there is no more room to put there stuff
-	L"%d MINUTES",		// The text underneath the inventory slot when an item is given to the dealer to be repaired
-	L"Drop Item To Ground.",
+	"MERCHANDISE IN STOCK",		//Header for the merchandise available
+	"PAGE",				//The current store inventory page being displayed
+	"TOTAL COST",				//The total cost of the the items in the Dealer inventory area
+	"TOTAL VALUE",			//The total value of items player wishes to sell
+	"EVALUATE",				//Button text for dealer to evaluate items the player wants to sell
+	"TRANSACTION",			//Button text which completes the deal. Makes the transaction.
+	"DONE",				//Text for the button which will leave the shopkeeper interface.
+	"REPAIR COST",			//The amount the dealer will charge to repair the merc's goods
+	"1 HOUR",			// SINGULAR! The text underneath the inventory slot when an item is given to the dealer to be repaired
+	"%d HOURS",		// PLURAL!   The text underneath the inventory slot when an item is given to the dealer to be repaired
+	"REPAIRED",		// Text appearing over an item that has just been repaired by a NPC repairman dealer
+	"There is not enough room in your offer area.",	//Message box that tells the user there is no more room to put there stuff
+	"%d MINUTES",		// The text underneath the inventory slot when an item is given to the dealer to be repaired
+	"Drop Item To Ground.",
 };
 
 
-static const wchar_t *s_eng_SkiMessageBoxText[SkiMessageBoxText_SIZE] =
+static const ST::string s_eng_SkiMessageBoxText[SkiMessageBoxText_SIZE] =
 {
-	L"Do you want to deduct %ls from your main account to cover the difference?",
-	L"Not enough funds.  You're short %ls",
-	L"Do you want to deduct %ls from your main account to cover the cost?",
-	L"Ask the dealer to start the transaction",
-	L"Ask the dealer to repair the selected items",
-	L"End conversation",
-	L"Current Balance",
+	"Do you want to deduct %s from your main account to cover the difference?",
+	"Not enough funds.  You're short %s",
+	"Do you want to deduct %s from your main account to cover the cost?",
+	"Ask the dealer to start the transaction",
+	"Ask the dealer to repair the selected items",
+	"End conversation",
+	"Current Balance",
 };
 
 
 //OptionScreen.c
 
-static const wchar_t *s_eng_zOptionsText[zOptionsText_SIZE] =
+static const ST::string s_eng_zOptionsText[zOptionsText_SIZE] =
 {
 	//button Text
-	L"Save Game",
-	L"Load Game",
-	L"Quit",
-	L"Done",
+	"Save Game",
+	"Load Game",
+	"Quit",
+	"Done",
 
 	//Text above the slider bars
-	L"Effects",
-	L"Speech",
-	L"Music",
+	"Effects",
+	"Speech",
+	"Music",
 
 	//Confirmation pop when the user selects..
-	L"Quit game and return to the main menu?",
+	"Quit game and return to the main menu?",
 
-	L"You need either the Speech option, or the Subtitle option to be enabled.",
+	"You need either the Speech option, or the Subtitle option to be enabled.",
 };
 
 
 //SaveLoadScreen
-static const wchar_t *s_eng_zSaveLoadText[zSaveLoadText_SIZE] =
+static const ST::string s_eng_zSaveLoadText[zSaveLoadText_SIZE] =
 {
-	L"Save Game",
-	L"Load Game",
-	L"Cancel",
-	L"Save Selected",
-	L"Load Selected",
+	"Save Game",
+	"Load Game",
+	"Cancel",
+	"Save Selected",
+	"Load Selected",
 
-	L"Saved the game successfully",
-	L"ERROR saving the game!",
-	L"Loaded the game successfully",
-	L"ERROR loading the game: \"%hs\"",
+	"Saved the game successfully",
+	"ERROR saving the game!",
+	"Loaded the game successfully",
+	"ERROR loading the game: \"%s\"",
 
-	L"The game version in the saved game file is different then the current version.  It is most likely safe to continue.  Continue?",
-	L"The saved game files may be invalidated.  Do you want them all deleted?",
+	"The game version in the saved game file is different then the current version.  It is most likely safe to continue.  Continue?",
+	"The saved game files may be invalidated.  Do you want them all deleted?",
 
-	L"Attempting to load an older version save.  Automatically update and load the save?",
+	"Attempting to load an older version save.  Automatically update and load the save?",
 
-	L"Attempting to load an older version save.  Automatically update and load the save?",
+	"Attempting to load an older version save.  Automatically update and load the save?",
 
-	L"Are you sure you want to overwrite the saved game in slot #%d?",
+	"Are you sure you want to overwrite the saved game in slot #%d?",
 
 
 	//The first %d is a number that contains the amount of free space on the users hard drive,
 	//the second is the recommended amount of free space.
-	L"You are running low on disk space.  You only have %d Megs free and Jagged should have at least %d Megs free.",
+	"You are running low on disk space.  You only have %d Megs free and Jagged should have at least %d Megs free.",
 
-	L"Saving...",			//When saving a game, a message box with this string appears on the screen
+	"Saving...",			//When saving a game, a message box with this string appears on the screen
 
-	L"Normal Guns",
-	L"Tons of Guns",
-	L"Realistic style",
-	L"Sci Fi style",
+	"Normal Guns",
+	"Tons of Guns",
+	"Realistic style",
+	"Sci Fi style",
 
-	L"Difficulty",
+	"Difficulty",
 };
 
 
 
 //MapScreen
-static const wchar_t *s_eng_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
+static const ST::string s_eng_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 {
-	L"Map Level",
-	L"You have no militia.  You need to train town residents in order to have a town militia.",
-	L"Daily Income",
-	L"Merc has life insurance",
-	L"%ls isn't tired.",
-	L"%ls is on the move and can't sleep",
-	L"%ls is too tired, try a little later.",
-	L"%ls is driving.",
-	L"Squad can't move with a sleeping merc on it.",
+	"Map Level",
+	"You have no militia.  You need to train town residents in order to have a town militia.",
+	"Daily Income",
+	"Merc has life insurance",
+	"%s isn't tired.",
+	"%s is on the move and can't sleep",
+	"%s is too tired, try a little later.",
+	"%s is driving.",
+	"Squad can't move with a sleeping merc on it.",
 
 	// stuff for contracts
-	L"While you can pay for the contract, you don't have the bucks to cover this merc's life insurance premium.",
-	L"%ls insurance premium will cost %ls for %d extra day(s). Do you want to pay?",
-	L"Sector Inventory",
-	L"Merc has a medical deposit.",
+	"While you can pay for the contract, you don't have the bucks to cover this merc's life insurance premium.",
+	"%s insurance premium will cost %s for %d extra day(s). Do you want to pay?",
+	"Sector Inventory",
+	"Merc has a medical deposit.",
 
 	// other items
-	L"Medics", // people acting a field medics and bandaging wounded mercs
-	L"Patients", // people who are being bandaged by a medic
-	L"Done", // Continue on with the game after autobandage is complete
-	L"Stop", // Stop autobandaging of patients by medics now
-	L"%ls doesn't have a repair kit.",
-	L"%ls doesn't have a medical kit.",
-	L"There aren't enough people willing to be trained right now.",
-	L"%ls is full of militia.",
-	L"Merc has a finite contract.",
-	L"Merc's contract is not insured",
+	"Medics", // people acting a field medics and bandaging wounded mercs
+	"Patients", // people who are being bandaged by a medic
+	"Done", // Continue on with the game after autobandage is complete
+	"Stop", // Stop autobandaging of patients by medics now
+	"%s doesn't have a repair kit.",
+	"%s doesn't have a medical kit.",
+	"There aren't enough people willing to be trained right now.",
+	"%s is full of militia.",
+	"Merc has a finite contract.",
+	"Merc's contract is not insured",
 };
 
 
-static const wchar_t s_eng_pLandMarkInSectorString[] = L"Squad %d has noticed someone in sector %ls";
+static const ST::string s_eng_pLandMarkInSectorString = "Squad %d has noticed someone in sector %s";
 
 // confirm the player wants to pay X dollars to build a militia force in town
-static const wchar_t *s_eng_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] =
+static const ST::string s_eng_pMilitiaConfirmStrings[pMilitiaConfirmStrings_SIZE] =
 {
-	L"Training a squad of town militia will cost $", // telling player how much it will cost
-	L"Approve expenditure?", // asking player if they wish to pay the amount requested
-	L"You can't afford it.", // telling the player they can't afford to train this town
-	L"Continue training militia in %ls (%ls %d)?", // continue training this town?
-	L"Cost $", // the cost in dollars to train militia
-	L"( Y/N )",   // abbreviated yes/no
-	L"Training town militia in %d sectors will cost $ %d. %ls", // cost to train sveral sectors at once
-	L"You cannot afford the $%d to train town militia here.",
-	L"%ls needs a loyalty of %d percent for you to be able to continue training militia.",
-	L"You cannot train the militia in %ls any further.",
+	"Training a squad of town militia will cost $", // telling player how much it will cost
+	"Approve expenditure?", // asking player if they wish to pay the amount requested
+	"You can't afford it.", // telling the player they can't afford to train this town
+	"Continue training militia in %s (%s %d)?", // continue training this town?
+	"Cost $", // the cost in dollars to train militia
+	"( Y/N )",   // abbreviated yes/no
+	"Training town militia in %d sectors will cost $ %d. %s", // cost to train sveral sectors at once
+	"You cannot afford the $%d to train town militia here.",
+	"%s needs a loyalty of %d percent for you to be able to continue training militia.",
+	"You cannot train the militia in %s any further.",
 };
 
 
 //Strings used in the popup box when withdrawing, or depositing money from the $ sign at the bottom of the single merc panel
-static const wchar_t *s_eng_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
+static const ST::string s_eng_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageText_SIZE] =
 {
-	L"You can only withdraw up to $20,000 at a time.",
-	L"Are you sure you want to deposit the %ls into your account?",
+	"You can only withdraw up to $20,000 at a time.",
+	"Are you sure you want to deposit the %s into your account?",
 };
 
-static const wchar_t s_eng_gzCopyrightText[] = L"Copyright (C) 1999 Sir-tech Canada Ltd.  All rights reserved.";
+static const ST::string s_eng_gzCopyrightText = "Copyright (C) 1999 Sir-tech Canada Ltd.  All rights reserved.";
 
 //option Text
-static const wchar_t *s_eng_zOptionsToggleText[zOptionsToggleText_SIZE] =
+static const ST::string s_eng_zOptionsToggleText[zOptionsToggleText_SIZE] =
 {
-	L"Speech",
-	L"Mute Confirmations",
-	L"SubTitles",
-	L"Pause Text Dialogue",
-	L"Animate Smoke",
-	L"Blood n Gore",
-	L"Never Move My Mouse!",
-	L"Old Selection Method",
-	L"Show Movement Path",
-	L"Show Misses",
-	L"Real Time Confirmation",
-	L"Display sleep/wake notifications",
-	L"Use Metric System",
-	L"Merc Lights during Movement",
-	L"Snap Cursor to Mercs",
-	L"Snap Cursor to Doors",
-	L"Make Items Glow",
-	L"Show Tree Tops",
-	L"Show Wireframes",
-	L"Show 3D Cursor",
+	"Speech",
+	"Mute Confirmations",
+	"SubTitles",
+	"Pause Text Dialogue",
+	"Animate Smoke",
+	"Blood n Gore",
+	"Never Move My Mouse!",
+	"Old Selection Method",
+	"Show Movement Path",
+	"Show Misses",
+	"Real Time Confirmation",
+	"Display sleep/wake notifications",
+	"Use Metric System",
+	"Merc Lights during Movement",
+	"Snap Cursor to Mercs",
+	"Snap Cursor to Doors",
+	"Make Items Glow",
+	"Show Tree Tops",
+	"Show Wireframes",
+	"Show 3D Cursor",
 };
 
 //This is the help text associated with the above toggles.
-static const wchar_t *s_eng_zOptionsScreenHelpText[zOptionsToggleText_SIZE] =
+static const ST::string s_eng_zOptionsScreenHelpText[zOptionsToggleText_SIZE] =
 {
 	//speech
-	L"Keep this option ON if you want to hear character dialogue.",
+	"Keep this option ON if you want to hear character dialogue.",
 
 	//Mute Confirmation
-	L"Turns characters' verbal confirmations on or off.",
+	"Turns characters' verbal confirmations on or off.",
 
 		//Subtitles
-	L"Controls whether on-screen text is displayed for dialogue.",
+	"Controls whether on-screen text is displayed for dialogue.",
 
 	//Key to advance speech
-	L"If Subtitles are ON, turn this on also to be able to take your time reading NPC dialogue.",
+	"If Subtitles are ON, turn this on also to be able to take your time reading NPC dialogue.",
 
 	//Toggle smoke animation
-	L"Turn off this option if animating smoke slows down your game's framerate.",
+	"Turn off this option if animating smoke slows down your game's framerate.",
 
 	//Blood n Gore
-	L"Turn this option OFF if blood offends you.",
+	"Turn this option OFF if blood offends you.",
 
 	//Never move my mouse
-	L"Turn this option OFF to have your mouse automatically move over pop-up confirmation boxes when they appear.",
+	"Turn this option OFF to have your mouse automatically move over pop-up confirmation boxes when they appear.",
 
 	//Old selection method
-	L"Turn this ON for character selection to work as in previous JAGGED ALLIANCE games (which is the opposite of how it works otherwise).",
+	"Turn this ON for character selection to work as in previous JAGGED ALLIANCE games (which is the opposite of how it works otherwise).",
 
 	//Show movement path
-	L"Turn this ON to display movement paths in Real-time (or leave it off and use the SHIFT key when you do want them displayed).",
+	"Turn this ON to display movement paths in Real-time (or leave it off and use the SHIFT key when you do want them displayed).",
 
 	//show misses
-	L"Turn ON to have the game show you where your bullets ended up when you \"miss\".",
+	"Turn ON to have the game show you where your bullets ended up when you \"miss\".",
 
 	//Real Time Confirmation
-	L"When ON, an additional \"safety\" click will be required for movement in Real-time.",
+	"When ON, an additional \"safety\" click will be required for movement in Real-time.",
 
 	//Sleep/Wake notification
-	L"When ON, you will be notified when mercs on \"assignment\" go to sleep and resume work.",
+	"When ON, you will be notified when mercs on \"assignment\" go to sleep and resume work.",
 
 	//Use the metric system
-	L"When ON, uses the metric system for measurements; otherwise it uses the Imperial system.",
+	"When ON, uses the metric system for measurements; otherwise it uses the Imperial system.",
 
 	//Merc Lighted movement
-	L"When ON, the merc will light the ground while walking.  Turn OFF for faster frame rate.",
+	"When ON, the merc will light the ground while walking.  Turn OFF for faster frame rate.",
 
 	//Smart cursor
-	L"When ON, moving the cursor near your mercs will automatically highlight them.",
+	"When ON, moving the cursor near your mercs will automatically highlight them.",
 
 	//snap cursor to the door
-	L"When ON, moving the cursor near a door will automatically position the cursor over the door.",
+	"When ON, moving the cursor near a door will automatically position the cursor over the door.",
 
 	//glow items
-	L"When ON, |Items continuously glow",
+	"When ON, |Items continuously glow",
 
 	//toggle tree tops
-	L"When ON, shows the |Tree tops.",
+	"When ON, shows the |Tree tops.",
 
 	//toggle wireframe
-	L"When ON, displays |Wireframes for obscured walls.",
+	"When ON, displays |Wireframes for obscured walls.",
 
-	L"When ON, the movement cursor is shown in 3D. (|H|o|m|e)",
+	"When ON, the movement cursor is shown in 3D. (|H|o|m|e)",
 
 };
 
 
-static const wchar_t *s_eng_gzGIOScreenText[gzGIOScreenText_SIZE] =
+static const ST::string s_eng_gzGIOScreenText[gzGIOScreenText_SIZE] =
 {
-	L"INITIAL GAME SETTINGS",
-	L"Game Style",
-	L"Realistic",
-	L"Sci Fi",
-	L"Gun Options",
-	L"Tons of Guns",
-	L"Normal",
-	L"Difficulty Level",
-	L"Novice",
-	L"Experienced",
-	L"Expert",
-	L"Ok",
-	L"Cancel",
-	L"Extra Difficulty",
-	L"Save Anytime",
-	L"Iron Man",
-	L"Dead is Dead"
+	"INITIAL GAME SETTINGS",
+	"Game Style",
+	"Realistic",
+	"Sci Fi",
+	"Gun Options",
+	"Tons of Guns",
+	"Normal",
+	"Difficulty Level",
+	"Novice",
+	"Experienced",
+	"Expert",
+	"Ok",
+	"Cancel",
+	"Extra Difficulty",
+	"Save Anytime",
+	"Iron Man",
+	"Dead is Dead"
 };
 
-static const wchar_t *s_eng_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
+static const ST::string s_eng_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
 {
-	L"Austin",			//Austin, Texas, USA
-	L"Baghdad",			//Baghdad, Iraq (Suddam Hussein's home)
-	L"Drassen",			//The main place in JA2 that you can receive items.  The other towns are dummy names...
-	L"Hong Kong",		//Hong Kong, Hong Kong
-	L"Beirut",			//Beirut, Lebanon	(Middle East)
-	L"London",			//London, England
-	L"Los Angeles",	//Los Angeles, California, USA (SW corner of USA)
-	L"Meduna",			//Meduna -- the other airport in JA2 that you can receive items.
-	L"Metavira",		//The island of Metavira was the fictional location used by JA1
-	L"Miami",				//Miami, Florida, USA (SE corner of USA)
-	L"Moscow",			//Moscow, USSR
-	L"New York",		//New York, New York, USA
-	L"Ottawa",			//Ottawa, Ontario, Canada -- where JA2 was made!
-	L"Paris",				//Paris, France
-	L"Tripoli",			//Tripoli, Libya (eastern Mediterranean)
-	L"Tokyo",				//Tokyo, Japan
-	L"Vancouver",		//Vancouver, British Columbia, Canada (west coast near US border)
+	"Austin",			//Austin, Texas, USA
+	"Baghdad",			//Baghdad, Iraq (Suddam Hussein's home)
+	"Drassen",			//The main place in JA2 that you can receive items.  The other towns are dummy names...
+	"Hong Kong",		//Hong Kong, Hong Kong
+	"Beirut",			//Beirut, Lebanon	(Middle East)
+	"London",			//London, England
+	"Los Angeles",	//Los Angeles, California, USA (SW corner of USA)
+	"Meduna",			//Meduna -- the other airport in JA2 that you can receive items.
+	"Metavira",		//The island of Metavira was the fictional location used by JA1
+	"Miami",				//Miami, Florida, USA (SE corner of USA)
+	"Moscow",			//Moscow, USSR
+	"New York",		//New York, New York, USA
+	"Ottawa",			//Ottawa, Ontario, Canada -- where JA2 was made!
+	"Paris",				//Paris, France
+	"Tripoli",			//Tripoli, Libya (eastern Mediterranean)
+	"Tokyo",				//Tokyo, Japan
+	"Vancouver",		//Vancouver, British Columbia, Canada (west coast near US border)
 };
 
 // This string is used in the IMP character generation.  It is possible to
 // select 0 ability in a skill meaning you can't use it.  This text is
 // confirmation to the player.
-static const wchar_t s_eng_pSkillAtZeroWarning[]    = L"Are you sure? A value of zero means NO ability in this skill.";
-static const wchar_t s_eng_pIMPBeginScreenStrings[] = L"( 8 Characters Max )";
-static const wchar_t s_eng_pIMPFinishButtonText[]   = L"Analyzing";
-static const wchar_t s_eng_pIMPFinishStrings[]      = L"Thank You, %ls"; //%s is the name of the merc
-static const wchar_t s_eng_pIMPVoicesStrings[]      = L"Voice"; // the strings for imp voices screen
+static const ST::string s_eng_pSkillAtZeroWarning    = "Are you sure? A value of zero means NO ability in this skill.";
+static const ST::string s_eng_pIMPBeginScreenStrings = "( 8 Characters Max )";
+static const ST::string s_eng_pIMPFinishButtonText   = "Analyzing";
+static const ST::string s_eng_pIMPFinishStrings      = "Thank You, %s"; //%s is the name of the merc
+static const ST::string s_eng_pIMPVoicesStrings      = "Voice"; // the strings for imp voices screen
 
 // title for program
-static const wchar_t s_eng_pPersTitleText[] = L"Personnel Manager";
+static const ST::string s_eng_pPersTitleText = "Personnel Manager";
 
 // paused game strings
-static const wchar_t *s_eng_pPausedGameText[pPausedGameText_SIZE] =
+static const ST::string s_eng_pPausedGameText[pPausedGameText_SIZE] =
 {
-	L"Game Paused",
-	L"Resume Game (|P|a|u|s|e)",
-	L"Pause Game (|P|a|u|s|e)",
+	"Game Paused",
+	"Resume Game (|P|a|u|s|e)",
+	"Pause Game (|P|a|u|s|e)",
 };
 
 
-static const wchar_t *s_eng_pMessageStrings[pMessageStrings_SIZE] =
+static const ST::string s_eng_pMessageStrings[pMessageStrings_SIZE] =
 {
-	L"Exit Game?",
-	L"OK",
-	L"YES",
-	L"NO",
-	L"CANCEL",
-	L"REHIRE",
-	L"LIE",
-	L"No description", //Save slots that don't have a description.
-	L"Game Saved.",
-	L"Day",
-	L"Mercs",
-	L"Empty Slot", //An empty save game slot
-	L"rpm",					//Abbreviation for Rounds per minute -- the potential # of bullets fired in a minute.
-	L"min",					//Abbreviation for minute.
-	L"m",						//One character abbreviation for meter (metric distance measurement unit).
-	L"rnds",				//Abbreviation for rounds (# of bullets)
-	L"kg",					//Abbreviation for kilogram (metric weight measurement unit)
-	L"lb",					//Abbreviation for pounds (Imperial weight measurement unit)
-	L"Home",				//Home as in homepage on the internet.
-	L"USD",					//Abbreviation to US dollars
-	L"n/a",					//Lowercase acronym for not applicable.
-	L"Meanwhile",		//Meanwhile
-	L"%ls has arrived in sector %ls%ls",	//Name/Squad has arrived in sector A9.  Order must not
+	"Exit Game?",
+	"OK",
+	"YES",
+	"NO",
+	"CANCEL",
+	"REHIRE",
+	"LIE",
+	"No description", //Save slots that don't have a description.
+	"Game Saved.",
+	"Day",
+	"Mercs",
+	"Empty Slot", //An empty save game slot
+	"rpm",					//Abbreviation for Rounds per minute -- the potential # of bullets fired in a minute.
+	"min",					//Abbreviation for minute.
+	"m",						//One character abbreviation for meter (metric distance measurement unit).
+	"rnds",				//Abbreviation for rounds (# of bullets)
+	"kg",					//Abbreviation for kilogram (metric weight measurement unit)
+	"lb",					//Abbreviation for pounds (Imperial weight measurement unit)
+	"Home",				//Home as in homepage on the internet.
+	"USD",					//Abbreviation to US dollars
+	"n/a",					//Lowercase acronym for not applicable.
+	"Meanwhile",		//Meanwhile
+	"%s has arrived in sector %s%s",	//Name/Squad has arrived in sector A9.  Order must not
 						//change without notifyingSirTech
-	L"Version",
-	L"Empty Quick Save Slot",
-	L"This slot is reserved for Quick Saves made from the tactical and map screens using ALT+S.",
-	L"Opened",
-	L"Closed",
-	L"You are running low on disk space.  You only have %lsMB free and Jagged Alliance 2 requires %lsMB.",
-	L"%ls has caught %ls.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
-	L"%ls has taken the drug.", //'Merc name' has taken the drug
-	L"%ls has no medical skill",//'Merc name' has no medical skill.
+	"Version",
+	"Empty Quick Save Slot",
+	"This slot is reserved for Quick Saves made from the tactical and map screens using ALT+S.",
+	"Opened",
+	"Closed",
+	"You are running low on disk space.  You only have %sMB free and Jagged Alliance 2 requires %sMB.",
+	"%s has caught %s.",		//'Merc name' has caught 'item' -- let SirTech know if name comes after item.
+	"%s has taken the drug.", //'Merc name' has taken the drug
+	"%s has no medical skill",//'Merc name' has no medical skill.
 
 	//CDRom errors (such as ejecting CD while attempting to read the CD)
-	L"The integrity of the game has been compromised.",
-	L"ERROR: Ejected CD-ROM",
+	"The integrity of the game has been compromised.",
+	"ERROR: Ejected CD-ROM",
 
 	//When firing heavier weapons in close quarters, you may not have enough room to do so.
-	L"There is no room to fire from here.",
+	"There is no room to fire from here.",
 
 	//Can't change stance due to objects in the way...
-	L"Cannot change stance at this time.",
+	"Cannot change stance at this time.",
 
 	//Simple text indications that appear in the game, when the merc can do one of these things.
-	L"Drop",
-	L"Throw",
-	L"Pass",
+	"Drop",
+	"Throw",
+	"Pass",
 
-	L"%ls passed to %ls.", 	//"Item" passed to "merc".  Please try to keep the item %s before the merc %s,
+	"%s passed to %s.", 	//"Item" passed to "merc".  Please try to keep the item %s before the merc %s,
 				//otherwise, must notify SirTech.
-	L"No room to pass %ls to %ls.", //pass "item" to "merc".  Same instructions as above.
+	"No room to pass %s to %s.", //pass "item" to "merc".  Same instructions as above.
 
 	//A list of attachments appear after the items.  Ex:  Kevlar vest ( Ceramic Plate 'Attached )'
-	L" Attached)",
+	" Attached)",
 
 	//Cheat modes
-	L"Cheat level ONE reached",
-	L"Cheat level TWO reached",
+	"Cheat level ONE reached",
+	"Cheat level TWO reached",
 
 	//Toggling various stealth modes
-	L"Squad on stealth mode.",
-	L"Squad off stealth mode.",
-	L"%ls on stealth mode.",
-	L"%ls off stealth mode.",
+	"Squad on stealth mode.",
+	"Squad off stealth mode.",
+	"%s on stealth mode.",
+	"%s off stealth mode.",
 
 	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in
 	//an isometric engine.  You can toggle this mode freely in the game.
-	L"Extra Wireframes On",
-	L"Extra Wireframes Off",
+	"Extra Wireframes On",
+	"Extra Wireframes Off",
 
 	//These are used in the cheat modes for changing levels in the game.  Going from a basement level to
 	//an upper level, etc.
-	L"Can't go up from this level...",
-	L"There are no lower levels...",
-	L"Entering basement level %d...",
-	L"Leaving basement...",
+	"Can't go up from this level...",
+	"There are no lower levels...",
+	"Entering basement level %d...",
+	"Leaving basement...",
 
-	L"'s",		// used in the shop keeper inteface to mark the ownership of the item eg Red's gun
-	L"Follow mode OFF.",
-	L"Follow mode ON.",
-	L"3D Cursor OFF.",
-	L"3D Cursor ON.",
-	L"Squad %d active.",
-	L"You cannot afford to pay for %ls's daily salary of %ls",	//first %s is the mercs name, the seconds is a string containing the salary
-	L"Skip",
-	L"%ls cannot leave alone.",
-	L"A save has been created called, SaveGame99.sav.  If needed, rename it to SaveGame01 - SaveGame10 and then you will have access to it in the Load screen.",
-	L"%ls drank some %ls",
-	L"A package has arrived in Drassen.",
-	L"%ls should arrive at the designated drop-off point (sector %ls) on day %d, at approximately %ls.",		//first %s is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
-	L"History log updated.",
+	"'s",		// used in the shop keeper inteface to mark the ownership of the item eg Red's gun
+	"Follow mode OFF.",
+	"Follow mode ON.",
+	"3D Cursor OFF.",
+	"3D Cursor ON.",
+	"Squad %d active.",
+	"You cannot afford to pay for %s's daily salary of %s",	//first %s is the mercs name, the seconds is a string containing the salary
+	"Skip",
+	"%s cannot leave alone.",
+	"A save has been created called, SaveGame99.sav.  If needed, rename it to SaveGame01 - SaveGame10 and then you will have access to it in the Load screen.",
+	"%s drank some %s",
+	"A package has arrived in Drassen.",
+	"%s should arrive at the designated drop-off point (sector %s) on day %d, at approximately %s.",		//first %s is mercs name, next is the sector location and name where they will be arriving in, lastely is the day an the time of arrival
+	"History log updated.",
 };
 
 
-static const wchar_t *s_eng_ItemPickupHelpPopup[ItemPickupHelpPopup_SIZE] =
+static const ST::string s_eng_ItemPickupHelpPopup[ItemPickupHelpPopup_SIZE] =
 {
-	L"OK",
-	L"Scroll Up",
-	L"Select All",
-	L"Scroll Down",
-	L"Cancel",
+	"OK",
+	"Scroll Up",
+	"Select All",
+	"Scroll Down",
+	"Cancel",
 };
 
-static const wchar_t *s_eng_pDoctorWarningString[pDoctorWarningString_SIZE] =
+static const ST::string s_eng_pDoctorWarningString[pDoctorWarningString_SIZE] =
 {
-	L"%ls isn't close enough to be healed.",
-	L"Your medics were unable to completely bandage everyone.",
+	"%s isn't close enough to be healed.",
+	"Your medics were unable to completely bandage everyone.",
 };
 
-static const wchar_t *s_eng_pMilitiaButtonsHelpText[pMilitiaButtonsHelpText_SIZE] =
+static const ST::string s_eng_pMilitiaButtonsHelpText[pMilitiaButtonsHelpText_SIZE] =
 {
-	L"Pick up(Right Click)/drop(Left Click) Green Troops", // button help text informing player they can pick up or drop militia with this button
-	L"Pick up(Right Click)/drop(Left Click) Regular Troops",
-	L"Pick up(Right Click)/drop(Left Click) Veteran Troops",
-	L"Distribute available militia equally among all sectors",
+	"Pick up(Right Click)/drop(Left Click) Green Troops", // button help text informing player they can pick up or drop militia with this button
+	"Pick up(Right Click)/drop(Left Click) Regular Troops",
+	"Pick up(Right Click)/drop(Left Click) Veteran Troops",
+	"Distribute available militia equally among all sectors",
 };
 
 // to inform the player to hire some mercs to get things going
-static const wchar_t s_eng_pMapScreenJustStartedHelpText[] = L"Go to AIM and hire some mercs ( *Hint* it's in the Laptop )";
+static const ST::string s_eng_pMapScreenJustStartedHelpText = "Go to AIM and hire some mercs ( *Hint* it's in the Laptop )";
 
-static const wchar_t s_eng_pAntiHackerString[] = L"Error. Missing or corrupted file(s). Game will exit now.";
+static const ST::string s_eng_pAntiHackerString = "Error. Missing or corrupted file(s). Game will exit now.";
 
 
-static const wchar_t *s_eng_gzLaptopHelpText[gzLaptopHelpText_SIZE] =
+static const ST::string s_eng_gzLaptopHelpText[gzLaptopHelpText_SIZE] =
 {
 	//Buttons:
-	L"View email",
-	L"Browse various web sites",
-	L"View files and email attachments",
-	L"Read log of events",
-	L"View team info",
-	L"View financial summary and history",
-	L"Close laptop",
+	"View email",
+	"Browse various web sites",
+	"View files and email attachments",
+	"Read log of events",
+	"View team info",
+	"View financial summary and history",
+	"Close laptop",
 
 	//Bottom task bar icons (if they exist):
-	L"You have new mail",
-	L"You have new file(s)",
+	"You have new mail",
+	"You have new file(s)",
 
 	//Bookmarks:
-	L"Association of International Mercenaries",
-	L"Bobby Ray's online weapon mail order",
-	L"Institute of Mercenary Profiling",
-	L"More Economic Recruiting Center",
-	L"McGillicutty's Mortuary",
-	L"United Floral Service",
-	L"Insurance Brokers for A.I.M. contracts",
+	"Association of International Mercenaries",
+	"Bobby Ray's online weapon mail order",
+	"Institute of Mercenary Profiling",
+	"More Economic Recruiting Center",
+	"McGillicutty's Mortuary",
+	"United Floral Service",
+	"Insurance Brokers for A.I.M. contracts",
 };
 
 
-static const wchar_t s_eng_gzHelpScreenText[] = L"Exit help screen";
+static const ST::string s_eng_gzHelpScreenText = "Exit help screen";
 
-static const wchar_t *s_eng_gzNonPersistantPBIText[gzNonPersistantPBIText_SIZE] =
+static const ST::string s_eng_gzNonPersistantPBIText[gzNonPersistantPBIText_SIZE] =
 {
-	L"There is a battle in progress. You can only retreat from the tactical screen.",
-	L"|Enter sector to continue the current battle in progress.",
-	L"|Automatically resolves the current battle.",
-	L"You can't automatically resolve a battle when you are the attacker.",
-	L"You can't automatically resolve a battle while you are being ambushed.",
-	L"You can't automatically resolve a battle while you are fighting creatures in the mines.",
-	L"You can't automatically resolve a battle while there are hostile civilians.",
-	L"You can't automatically resolve a battle while there are bloodcats.",
-	L"BATTLE IN PROGRESS",
-	L"You cannot retreat at this time.",
+	"There is a battle in progress. You can only retreat from the tactical screen.",
+	"|Enter sector to continue the current battle in progress.",
+	"|Automatically resolves the current battle.",
+	"You can't automatically resolve a battle when you are the attacker.",
+	"You can't automatically resolve a battle while you are being ambushed.",
+	"You can't automatically resolve a battle while you are fighting creatures in the mines.",
+	"You can't automatically resolve a battle while there are hostile civilians.",
+	"You can't automatically resolve a battle while there are bloodcats.",
+	"BATTLE IN PROGRESS",
+	"You cannot retreat at this time.",
 };
 
-static const wchar_t *s_eng_gzMiscString[gzMiscString_SIZE] =
+static const ST::string s_eng_gzMiscString[gzMiscString_SIZE] =
 {
-	L"Your militia continue to battle without the aid of your mercs...",
-	L"The vehicle does not need anymore fuel right now.",
-	L"The fuel tank is %d%% full.",
-	L"Deidranna's army has regained complete control over %ls.",
-	L"You have lost a refueling site.",
+	"Your militia continue to battle without the aid of your mercs...",
+	"The vehicle does not need anymore fuel right now.",
+	"The fuel tank is %d%% full.",
+	"Deidranna's army has regained complete control over %s.",
+	"You have lost a refueling site.",
 };
 
-static const wchar_t s_eng_gzIntroScreen[] = L"Cannot find intro video";
+static const ST::string s_eng_gzIntroScreen = "Cannot find intro video";
 
 // These strings are combined with a merc name, a volume string (from pNoiseVolStr),
 // and a direction (either "above", "below", or a string from pDirectionStr) to
 // report a noise.
 // e.g. "Sidney hears a loud sound of MOVEMENT coming from the SOUTH."
-static const wchar_t *s_eng_pNewNoiseStr[pNewNoiseStr_SIZE] =
+static const ST::string s_eng_pNewNoiseStr[pNewNoiseStr_SIZE] =
 {
-	L"%ls hears a %ls sound coming from %ls.",
-	L"%ls hears a %ls sound of MOVEMENT coming from %ls.",
-	L"%ls hears a %ls CREAKING coming from %ls.",
-	L"%ls hears a %ls SPLASHING coming from %ls.",
-	L"%ls hears a %ls IMPACT coming from %ls.",
-	L"%ls hears a %ls EXPLOSION to %ls.",
-	L"%ls hears a %ls SCREAM to %ls.",
-	L"%ls hears a %ls IMPACT to %ls.",
-	L"%ls hears a %ls IMPACT to %ls.",
-	L"%ls hears a %ls SHATTERING coming from %ls.",
-	L"%ls hears a %ls SMASH coming from %ls.",
+	"%s hears a %s sound coming from %s.",
+	"%s hears a %s sound of MOVEMENT coming from %s.",
+	"%s hears a %s CREAKING coming from %s.",
+	"%s hears a %s SPLASHING coming from %s.",
+	"%s hears a %s IMPACT coming from %s.",
+	"%s hears a %s EXPLOSION to %s.",
+	"%s hears a %s SCREAM to %s.",
+	"%s hears a %s IMPACT to %s.",
+	"%s hears a %s IMPACT to %s.",
+	"%s hears a %s SHATTERING coming from %s.",
+	"%s hears a %s SMASH coming from %s.",
 };
 
-static const wchar_t *s_eng_wMapScreenSortButtonHelpText[wMapScreenSortButtonHelpText_SIZE] =
+static const ST::string s_eng_wMapScreenSortButtonHelpText[wMapScreenSortButtonHelpText_SIZE] =
 {
-	L"Sort by Name (|F|1)",
-	L"Sort by Assignment (|F|2)",
-	L"Sort by Sleep Status (|F|3)",
-	L"Sort by Location (|F|4)",
-	L"Sort by Destination (|F|5)",
-	L"Sort by Departure Time (|F|6)",
-};
-
-
-
-static const wchar_t *s_eng_BrokenLinkText[BrokenLinkText_SIZE] =
-{
-	L"Error 404",
-	L"Site not found.",
+	"Sort by Name (|F|1)",
+	"Sort by Assignment (|F|2)",
+	"Sort by Sleep Status (|F|3)",
+	"Sort by Location (|F|4)",
+	"Sort by Destination (|F|5)",
+	"Sort by Departure Time (|F|6)",
 };
 
 
-static const wchar_t *s_eng_gzBobbyRShipmentText[gzBobbyRShipmentText_SIZE] =
+
+static const ST::string s_eng_BrokenLinkText[BrokenLinkText_SIZE] =
 {
-	L"Recent Shipments",
-	L"Order #",
-	L"Number Of Items",
-	L"Ordered On",
+	"Error 404",
+	"Site not found.",
 };
 
 
-static const wchar_t *s_eng_gzCreditNames[gzCreditNames_SIZE]=
+static const ST::string s_eng_gzBobbyRShipmentText[gzBobbyRShipmentText_SIZE] =
 {
-	L"Chris Camfield",
-	L"Shaun Lyng",
-	L"Kris Märnes",
-	L"Ian Currie",
-	L"Linda Currie",
-	L"Eric \"WTF\" Cheng",
-	L"Lynn Holowka",
-	L"Norman \"NRG\" Olsen",
-	L"George Brooks",
-	L"Andrew Stacey",
-	L"Scot Loving",
-	L"Andrew \"Big Cheese\" Emmons",
-	L"Dave \"The Feral\" French",
-	L"Alex Meduna",
-	L"Joey \"Joeker\" Whelan",
+	"Recent Shipments",
+	"Order #",
+	"Number Of Items",
+	"Ordered On",
 };
 
 
-static const wchar_t *s_eng_gzCreditNameTitle[gzCreditNameTitle_SIZE]=
+static const ST::string s_eng_gzCreditNames[gzCreditNames_SIZE]=
 {
-	L"Game Internals Programmer", 			// Chris Camfield
-	L"Co-designer/Writer",							// Shaun Lyng
-	L"Strategic Systems & Editor Programmer",					//Kris \"The Cow Rape Man\" Marnes
-	L"Producer/Co-designer",						// Ian Currie
-	L"Co-designer/Map Designer",				// Linda Currie
-	L"Artist",													// Eric \"WTF\" Cheng
-	L"Beta Coordinator, Support",				// Lynn Holowka
-	L"Artist Extraordinaire",						// Norman \"NRG\" Olsen
-	L"Sound Guru",											// George Brooks
-	L"Screen Designer/Artist",					// Andrew Stacey
-	L"Lead Artist/Animator",						// Scot Loving
-	L"Lead Programmer",									// Andrew \"Big Cheese Doddle\" Emmons
-	L"Programmer",											// Dave French
-	L"Strategic Systems & Game Balance Programmer",					// Alex Meduna
-	L"Portraits Artist",								// Joey \"Joeker\" Whelan",
+	"Chris Camfield",
+	"Shaun Lyng",
+	"Kris Märnes",
+	"Ian Currie",
+	"Linda Currie",
+	"Eric \"WTF\" Cheng",
+	"Lynn Holowka",
+	"Norman \"NRG\" Olsen",
+	"George Brooks",
+	"Andrew Stacey",
+	"Scot Loving",
+	"Andrew \"Big Cheese\" Emmons",
+	"Dave \"The Feral\" French",
+	"Alex Meduna",
+	"Joey \"Joeker\" Whelan",
 };
 
-static const wchar_t *s_eng_gzCreditNameFunny[gzCreditNameFunny_SIZE]=
+
+static const ST::string s_eng_gzCreditNameTitle[gzCreditNameTitle_SIZE]=
 {
-	L"", 																			// Chris Camfield
-	L"(still learning punctuation)",					// Shaun Lyng
-	L"(\"It's done. I'm just fixing it\")",	//Kris \"The Cow Rape Man\" Marnes
-	L"(getting much too old for this)",				// Ian Currie
-	L"(and working on Wizardry 8)",						// Linda Currie
-	L"(forced at gunpoint to also do QA)",			// Eric \"WTF\" Cheng
-	L"(Left us for the CFSA - go figure...)",	// Lynn Holowka
-	L"",																			// Norman \"NRG\" Olsen
-	L"",																			// George Brooks
-	L"(Dead Head and jazz lover)",						// Andrew Stacey
-	L"(his real name is Robert)",							// Scot Loving
-	L"(the only responsible person)",					// Andrew \"Big Cheese Doddle\" Emmons
-	L"(can now get back to motocrossing)",	// Dave French
-	L"(stolen from Wizardry 8)",							// Alex Meduna
-	L"(did items and loading screens too!)",	// Joey \"Joeker\" Whelan",
+	"Game Internals Programmer", 			// Chris Camfield
+	"Co-designer/Writer",							// Shaun Lyng
+	"Strategic Systems & Editor Programmer",					//Kris \"The Cow Rape Man\" Marnes
+	"Producer/Co-designer",						// Ian Currie
+	"Co-designer/Map Designer",				// Linda Currie
+	"Artist",													// Eric \"WTF\" Cheng
+	"Beta Coordinator, Support",				// Lynn Holowka
+	"Artist Extraordinaire",						// Norman \"NRG\" Olsen
+	"Sound Guru",											// George Brooks
+	"Screen Designer/Artist",					// Andrew Stacey
+	"Lead Artist/Animator",						// Scot Loving
+	"Lead Programmer",									// Andrew \"Big Cheese Doddle\" Emmons
+	"Programmer",											// Dave French
+	"Strategic Systems & Game Balance Programmer",					// Alex Meduna
+	"Portraits Artist",								// Joey \"Joeker\" Whelan",
 };
 
-static const wchar_t *s_eng_sRepairsDoneString[sRepairsDoneString_SIZE] =
+static const ST::string s_eng_gzCreditNameFunny[gzCreditNameFunny_SIZE]=
 {
-	L"%ls finished repairing own items",
-	L"%ls finished repairing everyone's guns & armor",
-	L"%ls finished repairing everyone's equipped items",
-	L"%ls finished repairing everyone's carried items",
+	"", 																			// Chris Camfield
+	"(still learning punctuation)",					// Shaun Lyng
+	"(\"It's done. I'm just fixing it\")",	//Kris \"The Cow Rape Man\" Marnes
+	"(getting much too old for this)",				// Ian Currie
+	"(and working on Wizardry 8)",						// Linda Currie
+	"(forced at gunpoint to also do QA)",			// Eric \"WTF\" Cheng
+	"(Left us for the CFSA - go figure...)",	// Lynn Holowka
+	"",																			// Norman \"NRG\" Olsen
+	"",																			// George Brooks
+	"(Dead Head and jazz lover)",						// Andrew Stacey
+	"(his real name is Robert)",							// Scot Loving
+	"(the only responsible person)",					// Andrew \"Big Cheese Doddle\" Emmons
+	"(can now get back to motocrossing)",	// Dave French
+	"(stolen from Wizardry 8)",							// Alex Meduna
+	"(did items and loading screens too!)",	// Joey \"Joeker\" Whelan",
 };
 
-static const wchar_t *s_eng_zGioDifConfirmText[zGioDifConfirmText_SIZE]=
+static const ST::string s_eng_sRepairsDoneString[sRepairsDoneString_SIZE] =
 {
-	L"You have chosen NOVICE mode. This setting is appropriate for those new to Jagged Alliance, those new to strategy games in general, or those wishing shorter battles in the game. Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in Novice mode?",
-	L"You have chosen EXPERIENCED mode. This setting is suitable for those already familiar with Jagged Alliance or similar games. Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in Experienced mode?",
-	L"You have chosen EXPERT mode. We warned you. Don't blame us if you get shipped back in a body bag. Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in Expert mode?",
+	"%s finished repairing own items",
+	"%s finished repairing everyone's guns & armor",
+	"%s finished repairing everyone's equipped items",
+	"%s finished repairing everyone's carried items",
 };
 
-static const wchar_t *s_eng_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
+static const ST::string s_eng_zGioDifConfirmText[zGioDifConfirmText_SIZE]=
+{
+	"You have chosen NOVICE mode. This setting is appropriate for those new to Jagged Alliance, those new to strategy games in general, or those wishing shorter battles in the game. Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in Novice mode?",
+	"You have chosen EXPERIENCED mode. This setting is suitable for those already familiar with Jagged Alliance or similar games. Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in Experienced mode?",
+	"You have chosen EXPERT mode. We warned you. Don't blame us if you get shipped back in a body bag. Your choice will affect things throughout the entire course of the game, so choose wisely. Are you sure you want to play in Expert mode?",
+};
+
+static const ST::string s_eng_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 {
 	//1-5
-	L"The robot cannot leave this sector when nobody is using the controller.",
+	"The robot cannot leave this sector when nobody is using the controller.",
 
 	//This message comes up if you have pending bombs waiting to explode in tactical.
-	L"You can't compress time right now.  Wait for the fireworks!",
+	"You can't compress time right now.  Wait for the fireworks!",
 
 	//'Name' refuses to move.
-	L"%ls refuses to move.",
+	"%s refuses to move.",
 
 	//%s a merc name
-	L"%ls does not have enough energy to change stance.",
+	"%s does not have enough energy to change stance.",
 
 	//A message that pops up when a vehicle runs out of gas.
-	L"The %ls has run out of gas and is now stranded in %c%d.",
+	"The %s has run out of gas and is now stranded in %c%d.",
 
 	//6-10
 
 	// the following two strings are combined with the pNewNoise[] strings above to report noises
 	// heard above or below the merc
-	L"above",
-	L"below",
+	"above",
+	"below",
 
 	//The following strings are used in autoresolve for autobandaging related feedback.
-	L"None of your mercs have any medical ability.",
-	L"There are no medical supplies to perform bandaging.",
-	L"There weren't enough medical supplies to bandage everybody.",
-	L"None of your mercs need bandaging.",
-	L"Bandages mercs automatically.",
-	L"All your mercs are bandaged.",
+	"None of your mercs have any medical ability.",
+	"There are no medical supplies to perform bandaging.",
+	"There weren't enough medical supplies to bandage everybody.",
+	"None of your mercs need bandaging.",
+	"Bandages mercs automatically.",
+	"All your mercs are bandaged.",
 
 	//14
-	L"Arulco",
+	"Arulco",
 
-	L"(roof)",
+	"(roof)",
 
-	L"Health: %d/%d",
+	"Health: %d/%d",
 
 	//In autoresolve if there were 5 mercs fighting 8 enemies the text would be "5 vs. 8"
 	//"vs." is the abbreviation of versus.
-	L"%d vs. %d",
+	"%d vs. %d",
 
-	L"The %ls is full!",  //(ex "The ice cream truck is full")
+	"The %s is full!",  //(ex "The ice cream truck is full")
 
-	L"%ls does not need immediate first aid or bandaging but rather more serious medical attention and/or rest.",
+	"%s does not need immediate first aid or bandaging but rather more serious medical attention and/or rest.",
 
 	//20
 	//Happens when you get shot in the legs, and you fall down.
-	L"%ls is hit in the leg and collapses!",
+	"%s is hit in the leg and collapses!",
 	//Name can't speak right now.
-	L"%ls can't speak right now.",
+	"%s can't speak right now.",
 
 	//22-24 plural versions
-	L"%d green militia have been promoted to veteran militia.",
-	L"%d green militia have been promoted to regular militia.",
-	L"%d regular militia have been promoted to veteran militia.",
+	"%d green militia have been promoted to veteran militia.",
+	"%d green militia have been promoted to regular militia.",
+	"%d regular militia have been promoted to veteran militia.",
 
 	//25
-	L"Switch",
+	"Switch",
 
 	//26
 	//Name has gone psycho -- when the game forces the player into burstmode (certain unstable characters)
-	L"%ls goes psycho!",
+	"%s goes psycho!",
 
 	//27-28
 	//Messages why a player can't time compress.
-	L"It is currently unsafe to compress time because you have mercs in sector %ls.",
-	L"It is currently unsafe to compress time when mercs are in the creature infested mines.",
+	"It is currently unsafe to compress time because you have mercs in sector %s.",
+	"It is currently unsafe to compress time when mercs are in the creature infested mines.",
 
 	//29-31 singular versions
-	L"1 green militia has been promoted to a veteran militia.",
-	L"1 green militia has been promoted to a regular militia.",
-	L"1 regular militia has been promoted to a veteran militia.",
+	"1 green militia has been promoted to a veteran militia.",
+	"1 green militia has been promoted to a regular militia.",
+	"1 regular militia has been promoted to a veteran militia.",
 
 	//32-34
-	L"%ls doesn't say anything.",
-	L"Travel to surface?",
-	L"(Squad %d)",
+	"%s doesn't say anything.",
+	"Travel to surface?",
+	"(Squad %d)",
 
 	//35
 	//Ex: "Red has repaired Scope's MP5K".  Careful to maintain the proper order (Red before Scope, Scope before MP5K)
-	L"%ls has repaired %ls's %ls",
+	"%s has repaired %s's %s",
 
 	//36
-	L"BLOODCAT",
+	"BLOODCAT",
 
 	//37-38 "Name trips and falls"
-	L"%ls trips and falls",
-	L"This item can't be picked up from here.",
+	"%s trips and falls",
+	"This item can't be picked up from here.",
 
 	//39
-	L"None of your remaining mercs are able to fight.  The militia will fight the creatures on their own.",
+	"None of your remaining mercs are able to fight.  The militia will fight the creatures on their own.",
 
 	//40-43
 	//%s is the name of merc.
-	L"%ls ran out of medical kits!",
-	L"%ls lacks the necessary skill to doctor anyone!",
-	L"%ls ran out of tool kits!",
-	L"%ls lacks the necessary skill to repair anything!",
+	"%s ran out of medical kits!",
+	"%s lacks the necessary skill to doctor anyone!",
+	"%s ran out of tool kits!",
+	"%s lacks the necessary skill to repair anything!",
 
 	//44-45
-	L"Repair Time",
-	L"%ls cannot see this person.",
+	"Repair Time",
+	"%s cannot see this person.",
 
 	//46-48
-	L"%ls's gun barrel extender falls off!",
-	L"No more than %d militia trainers are permitted per sector.",
-	L"Are you sure?",
+	"%s's gun barrel extender falls off!",
+	"No more than %d militia trainers are permitted per sector.",
+	"Are you sure?",
 
 	//49-50
-	L"Time Compression",
-	L"The vehicle's gas tank is now full.",
+	"Time Compression",
+	"The vehicle's gas tank is now full.",
 
 	//51-52 Fast help text in mapscreen.
-	L"Continue Time Compression (|S|p|a|c|e)",
-	L"Stop Time Compression (|E|s|c)",
+	"Continue Time Compression (|S|p|a|c|e)",
+	"Stop Time Compression (|E|s|c)",
 
 	//53-54 "Magic has unjammed the Glock 18" or "Magic has unjammed Raven's H&K G11"
-	L"%ls has unjammed the %ls",
-	L"%ls has unjammed %ls's %ls",
+	"%s has unjammed the %s",
+	"%s has unjammed %s's %s",
 
 	//55
-	L"Can't compress time while viewing sector inventory.",
+	"Can't compress time while viewing sector inventory.",
 
 	//56
 	//Displayed with the version information when cheats are enabled.
-	L"Current/Max Progress: %d%%/%d%%",
+	"Current/Max Progress: %d%%/%d%%",
 
-	L"Escort John and Mary?",
+	"Escort John and Mary?",
 
 	// 58
-	L"Switch Activated.",
+	"Switch Activated.",
 };
 
-static const wchar_t s_eng_str_ceramic_plates_smashed[] = L"%ls's ceramic plates have been smashed!";
+static const ST::string s_eng_str_ceramic_plates_smashed = "%s's ceramic plates have been smashed!";
 
-static const wchar_t s_eng_str_arrival_rerouted[] = L"Arrival of new recruits is being rerouted to sector %ls, as scheduled drop-off point of sector %ls is enemy occupied.";
+static const ST::string s_eng_str_arrival_rerouted = "Arrival of new recruits is being rerouted to sector %s, as scheduled drop-off point of sector %s is enemy occupied.";
 
-static const wchar_t s_eng_str_stat_health[]       = L"Health";
-static const wchar_t s_eng_str_stat_agility[]      = L"Agility";
-static const wchar_t s_eng_str_stat_dexterity[]    = L"Dexterity";
-static const wchar_t s_eng_str_stat_strength[]     = L"Strength";
-static const wchar_t s_eng_str_stat_leadership[]   = L"Leadership";
-static const wchar_t s_eng_str_stat_wisdom[]       = L"Wisdom";
-static const wchar_t s_eng_str_stat_exp_level[]    = L"Experience Level";
-static const wchar_t s_eng_str_stat_marksmanship[] = L"Marksmanship";
-static const wchar_t s_eng_str_stat_mechanical[]   = L"Mechanical";
-static const wchar_t s_eng_str_stat_explosive[]    = L"Explosives";
-static const wchar_t s_eng_str_stat_medical[]      = L"Medical";
+static const ST::string s_eng_str_stat_health       = "Health";
+static const ST::string s_eng_str_stat_agility      = "Agility";
+static const ST::string s_eng_str_stat_dexterity    = "Dexterity";
+static const ST::string s_eng_str_stat_strength     = "Strength";
+static const ST::string s_eng_str_stat_leadership   = "Leadership";
+static const ST::string s_eng_str_stat_wisdom       = "Wisdom";
+static const ST::string s_eng_str_stat_exp_level    = "Experience Level";
+static const ST::string s_eng_str_stat_marksmanship = "Marksmanship";
+static const ST::string s_eng_str_stat_mechanical   = "Mechanical";
+static const ST::string s_eng_str_stat_explosive    = "Explosives";
+static const ST::string s_eng_str_stat_medical      = "Medical";
 
-static const wchar_t *s_eng_str_stat_list[str_stat_list_SIZE] =
+static const ST::string s_eng_str_stat_list[str_stat_list_SIZE] =
 {
 	s_eng_str_stat_health,
 	s_eng_str_stat_agility,
@@ -3473,7 +3478,7 @@ static const wchar_t *s_eng_str_stat_list[str_stat_list_SIZE] =
 	s_eng_str_stat_medical
 };
 
-static const wchar_t *s_eng_str_aim_sort_list[str_aim_sort_list_SIZE] =
+static const ST::string s_eng_str_aim_sort_list[str_aim_sort_list_SIZE] =
 {
 	s_eng_str_aim_sort_price,
 	s_eng_str_aim_sort_experience,
@@ -3487,29 +3492,29 @@ static const wchar_t *s_eng_str_aim_sort_list[str_aim_sort_list_SIZE] =
 
 // VERY TRUNCATED FILE COPIED FROM JA2.5 FOR ITS FEATURES FOR JA2 GOLD
 
-const wchar_t *g_eng_zNewTacticalMessages[] =
+const ST::string g_eng_zNewTacticalMessages[] =
 {
-	L"Range to target: %d tiles",
-	L"Gun Range: %d tiles, Range to target: %d tiles",
-	L"Display Cover",
-	L"Line of Sight",
-	L"This is an IRON MAN game and you cannot save when enemies are around.",	//	@@@  new text
-	L"(Cannot save during combat)", //@@@@ new text
-	L"(Cannot load previous savegames)", // Stracciatella: New Dead is Dead game mode text
-	L"This is a Dead is Dead game and you cannot save through the save screen.",
+	"Range to target: %d tiles",
+	"Gun Range: %d tiles, Range to target: %d tiles",
+	"Display Cover",
+	"Line of Sight",
+	"This is an IRON MAN game and you cannot save when enemies are around.",	//	@@@  new text
+	"(Cannot save during combat)", //@@@@ new text
+	"(Cannot load previous savegames)", // Stracciatella: New Dead is Dead game mode text
+	"This is a Dead is Dead game and you cannot save through the save screen.",
 };
 
 //@@@:  New string as of March 3, 2000.
-const wchar_t *g_eng_str_iron_man_mode_warning = L"You have chosen IRON MAN mode. This setting makes the game considerably more challenging as you will not be able to save your game when in a sector occupied by enemies. This setting will affect the entire course of the game.  Are you sure want to play in IRON MAN mode?";
+const ST::string g_eng_str_iron_man_mode_warning = "You have chosen IRON MAN mode. This setting makes the game considerably more challenging as you will not be able to save your game when in a sector occupied by enemies. This setting will affect the entire course of the game.  Are you sure want to play in IRON MAN mode?";
 
 // Stracciatella: New Dead is Dead game mode warning
-const wchar_t *g_eng_str_dead_is_dead_mode_warning = L"You have chosen DEAD IS DEAD mode. This setting makes the game considerably more challenging as you will not be able to load a previous savegame if you have made a mistake. The game will save automatically on leave. This setting will affect the entire course of the game.  Are you sure want to play in DEAD IS DEAD mode?";
-const wchar_t *g_eng_str_dead_is_dead_mode_enter_name = L"You will now be taken to the save screen. Choose a savegame slot and name for your game. This slot will be persistent for your game and cannot be changed!";
+const ST::string g_eng_str_dead_is_dead_mode_warning = "You have chosen DEAD IS DEAD mode. This setting makes the game considerably more challenging as you will not be able to load a previous savegame if you have made a mistake. The game will save automatically on leave. This setting will affect the entire course of the game.  Are you sure want to play in DEAD IS DEAD mode?";
+const ST::string g_eng_str_dead_is_dead_mode_enter_name = "You will now be taken to the save screen. Choose a savegame slot and name for your game. This slot will be persistent for your game and cannot be changed!";
 
-static const wchar_t *s_eng_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_tab_name_SIZE] =
+static const ST::string s_eng_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_tab_name_SIZE] =
 {
-	L"Normal", 			// Normal Tab
-	L"DiD", 			// Dead is Dead Tab
+	"Normal", 			// Normal Tab
+	"DiD", 			// Dead is Dead Tab
 };
 
 // English language resources.
@@ -3741,3 +3746,23 @@ LanguageRes g_LanguageResEnglish = {
 
 	s_eng_gs_dead_is_dead_mode_tab_name,
 };
+
+#ifdef WITH_UNITTESTS
+TEST(StringEncodingTest, EnglishTextFile)
+{
+	// This test checks that the utf8 string literals in this file are correctly
+	// interpreted by the compiler.  Failed test means that the compiler
+	// cannot correctly interpret the string literals.
+	const ST::string str = "тест";
+	ASSERT_EQ(str.size(), 8u) << "Compiler cannot correctly interpret utf8 string literals";
+	EXPECT_EQ(str[0], '\xD1');
+	EXPECT_EQ(str[1], '\x82');
+	EXPECT_EQ(str[2], '\xD0');
+	EXPECT_EQ(str[3], '\xB5');
+	EXPECT_EQ(str[4], '\xD1');
+	EXPECT_EQ(str[5], '\x81');
+	EXPECT_EQ(str[6], '\xD1');
+	EXPECT_EQ(str[7], '\x82');
+	EXPECT_EQ(str[8], '\0');
+}
+#endif

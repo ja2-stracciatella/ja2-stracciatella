@@ -153,7 +153,7 @@ static void InitNPCs(void)
 				p.bSectorZ = 0;
 				break;
 		}
-		SLOGD("%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
+		SLOGD("%s in %c %d", p.zNickname.c_str(), 'A' + p.sSectorY - 1, p.sSectorX);
 
 		// use alternate map in this sector
 		//SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
@@ -186,7 +186,7 @@ static void InitNPCs(void)
 					p.bSectorZ = 0;
 					break;
 			}
-			SLOGD("%ls in %c %d", p.zNickname, 'A' + p.sSectorY - 1, p.sSectorX);
+			SLOGD("%s in %c %d", p.zNickname.c_str(), 'A' + p.sSectorY - 1, p.sSectorX);
 
 			// use alternate map in this sector
 			SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;

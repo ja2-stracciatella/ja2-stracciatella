@@ -1,5 +1,3 @@
-#include <cstdarg>
-
 #include "Button_System.h"
 #include "Directories.h"
 #include "FileMan.h"
@@ -56,16 +54,19 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
+#include <cstdarg>
+
+
 static BOOLEAN gfErrorCatch            = FALSE;
-static wchar_t gzErrorCatchString[256] = L"";
+static ST::string gzErrorCatchString;
 
 
-void SetErrorCatchString(wchar_t const* const fmt, ...)
+void SetErrorCatchString(const ST::string& str)
 {
-	va_list ap;
-	va_start(ap, fmt);
-	vswprintf(gzErrorCatchString, lengthof(gzErrorCatchString), fmt, ap);
-	va_end(ap);
+	gzErrorCatchString = str;
 	gfErrorCatch = TRUE;
 }
 
@@ -84,7 +85,7 @@ static INT32 iCurrFileShown;
 static INT32	iLastFileClicked;
 static INT32 iLastClickTime;
 
-static wchar_t gzFilename[31];
+static ST::string gzFilename;
 
 static FDLG_LIST* FileList = NULL;
 
@@ -116,7 +117,7 @@ static INT8 gbCurrentFileIOStatus; // 1 init saving message, 2 save, 3 init load
 static bool gfUpdateSummaryInfo = true;
 
 
-static void CreateFileDialog(const wchar_t* zTitle);
+static void CreateFileDialog(const ST::string& zTitle);
 static void TrashFDlgList(FDLG_LIST*);
 
 
@@ -153,9 +154,9 @@ static void LoadSaveScreenEntry(void)
 	}
 	catch (...) { /* XXX ignore */ }
 
-	swprintf(gzFilename, lengthof(gzFilename), L"%hs", g_filename);
+	gzFilename = ST::format("{}", g_filename);
 
-	CreateFileDialog(iCurrentAction == ACTION_SAVE_MAP ? L"Save Map (*.dat)" : L"Load Map (*.dat)");
+	CreateFileDialog(iCurrentAction == ACTION_SAVE_MAP ? "Save Map (*.dat)" : "Load Map (*.dat)");
 
 	if( !iTotalFiles )
 	{
@@ -207,11 +208,11 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 				if( !temp )
 					temp = curr->pPrev;
 				if( !temp )
-					wcscpy( gzFilename, L"" );
+					gzFilename = ST::null;
 				else
-					swprintf(gzFilename, lengthof(gzFilename), L"%hs", temp->filename);
-				if (!ValidFilename()) gzFilename[0] = L'\0';
-				SetInputFieldStringWith16BitString(0, gzFilename);
+					gzFilename = ST::format("{}", temp->filename);
+				if (!ValidFilename()) gzFilename = ST::null;
+				SetInputFieldString(0, gzFilename);
 				RemoveFromFDlgList( &FileList, curr );
 				iTotalFiles--;
 				if( !iTotalFiles )
@@ -273,6 +274,7 @@ ScreenID LoadSaveScreenHandle(void)
 	FDLG_LIST *FListNode;
 	INT32 x;
 	InputAtom DialogEvent;
+	ST::string zOrigName;
 
 	if( fEnteringLoadSaveScreen )
 	{
@@ -318,7 +320,7 @@ ScreenID LoadSaveScreenHandle(void)
 	{
 		SetFontForeground( FONT_LTRED );
 		SetFontBackground( 142 );
-		MPrint(226, 126, L"NO FILES IN /MAPS DIRECTORY");
+		MPrint(226, 126, "NO FILES IN /MAPS DIRECTORY");
 	}
 	else for(x=iTopFileShown;x<(iTopFileShown+8) && x<iTotalFiles && FListNode != NULL; x++)
 	{
@@ -332,7 +334,7 @@ ScreenID LoadSaveScreenHandle(void)
 			SetFontForeground( FONT_BLACK );
 			SetFontBackground( 142 );
 		}
-		mprintf(186, 73 + (x - iTopFileShown) * 15, L"%hs", FListNode->filename);
+		MPrint(186, 73 + (x - iTopFileShown) * 15, ST::format("{}", FListNode->filename));
 		FListNode = FListNode->pNext;
 	}
 
@@ -355,13 +357,13 @@ ScreenID LoadSaveScreenHandle(void)
 			const UINT32 attr = FileGetAttributes(gMapFileForRemoval.c_str());
 			if (attr != FILE_ATTR_ERROR)
 			{
-				wchar_t str[40];
+				ST::string str;
 				if (attr & FILE_ATTR_READONLY)
 				{
-					swprintf(str, lengthof(str), L" Delete READ-ONLY file %ls? ", gzFilename);
+					str = ST::format(" Delete READ-ONLY file {}? ", gzFilename);
 				}
 				else
-					swprintf(str, lengthof(str), L" Delete file %ls? ", gzFilename);
+					str = ST::format(" Delete file {}? ", gzFilename);
 				gfDeleteFile = TRUE;
 				CreateMessageBox( str );
 			}
@@ -372,7 +374,7 @@ ScreenID LoadSaveScreenHandle(void)
 		{
 			if( !ExtractFilenameFromFields() )
 			{
-				CreateMessageBox( L" Illegal filename.  Try another filename? " );
+				CreateMessageBox( " Illegal filename.  Try another filename? " );
 				gfIllegalName = TRUE;
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
@@ -388,9 +390,9 @@ ScreenID LoadSaveScreenHandle(void)
 					gfReadOnly = TRUE;
 				}
 				if( gfReadOnly )
-					CreateMessageBox( L" File is read only!  Choose a different name? " );
+					CreateMessageBox( " File is read only!  Choose a different name? " );
 				else
-					CreateMessageBox( L" File exists, Overwrite? " );
+					CreateMessageBox( " File exists, Overwrite? " );
 				return( LOADSAVE_SCREEN );
 			}
 			RemoveFileDialog();
@@ -400,7 +402,7 @@ ScreenID LoadSaveScreenHandle(void)
 		case DIALOG_LOAD:
 			if( !ExtractFilenameFromFields() )
 			{
-				CreateMessageBox( L" Illegal filename.  Try another filename? " );
+				CreateMessageBox( " Illegal filename.  Try another filename? " );
 				gfIllegalName = TRUE;
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
@@ -408,8 +410,7 @@ ScreenID LoadSaveScreenHandle(void)
 			RemoveFileDialog();
 			CreateProgressBar(0, 118, 183, 404, 19);
 			DefineProgressBarPanel( 0, 65, 79, 94, 100, 155, 540, 235 );
-			wchar_t zOrigName[60];
-			swprintf(zOrigName, lengthof(zOrigName), L"Loading map:  %ls", gzFilename);
+			zOrigName = ST::format("Loading map:  {}", gzFilename);
 			SetProgressBarTitle( 0, zOrigName, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
 			gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
 			return LOADSAVE_SCREEN ;
@@ -438,7 +439,7 @@ static void FileDialogModeCallback(UINT8 ubID, BOOLEAN fEntering);
 static void UpdateWorldInfoCallback(GUI_BUTTON* b, INT32 reason);
 
 
-static void CreateFileDialog(const wchar_t* zTitle)
+static void CreateFileDialog(const ST::string& zTitle)
 {
 
 	iFDlgState = DIALOG_NONE;
@@ -448,8 +449,8 @@ static void CreateFileDialog(const wchar_t* zTitle)
 	MSYS_DefineRegion( &BlanketRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_HIGH - 5, 0, 0, 0 );
 
 	//Okay and cancel buttons
-	iFileDlgButtons[0] = CreateTextButton(L"Okay",   FONT12POINT1, FONT_BLACK, FONT_BLACK, 354, 225, 50, 30, MSYS_PRIORITY_HIGH, FDlgOkCallback);
-	iFileDlgButtons[1] = CreateTextButton(L"Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, 406, 225, 50, 30, MSYS_PRIORITY_HIGH, FDlgCancelCallback);
+	iFileDlgButtons[0] = CreateTextButton("Okay",   FONT12POINT1, FONT_BLACK, FONT_BLACK, 354, 225, 50, 30, MSYS_PRIORITY_HIGH, FDlgOkCallback);
+	iFileDlgButtons[1] = CreateTextButton("Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, 406, 225, 50, 30, MSYS_PRIORITY_HIGH, FDlgCancelCallback);
 
 	//Scroll buttons
 	iFileDlgButtons[2] = MakeButtonArrow(EDITORDIR "/uparrow.sti",    92, FDlgUpCallback);
@@ -505,7 +506,7 @@ static void FileDialogModeCallback(UINT8 ubID, BOOLEAN fEntering)
 			if( iCurrFileShown == (x-iTopFileShown) )
 			{
 				FListNode->filename[30] = '\0';
-				SetInputFieldStringWith8BitString(0, FListNode->filename);
+				SetInputFieldString(0, FListNode->filename);
 				return;
 			}
 			FListNode = FListNode->pNext;
@@ -554,9 +555,9 @@ static void DrawFileDialog(void)
 	RenderButtonsFastHelp();
 
 	SetFontAttributes(FONT10ARIAL, FONT_LTKHAKI, FONT_DKKHAKI);
-	MPrint(183, 217, L"Filename");
+	MPrint(183, 217, "Filename");
 
-	if (iFileDlgButtons[6]) MPrint(200, 231, L"Update world info");
+	if (iFileDlgButtons[6]) MPrint(200, 231, "Update world info");
 }
 
 
@@ -587,9 +588,9 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 			INT32 iCurrClickTime;
 			iCurrFileShown = x;
 			FListNode->filename[30] = '\0';
-			swprintf(gzFilename, lengthof(gzFilename), L"%hs", FListNode->filename);
-			if (!ValidFilename()) gzFilename[0] = L'\0';
-			SetInputFieldStringWith16BitString(0, gzFilename);
+			gzFilename = ST::format("{}", FListNode->filename);
+			if (!ValidFilename()) gzFilename = ST::null;
+			SetInputFieldString(0, gzFilename);
 
 			RenderInactiveTextField( 0 );
 
@@ -679,7 +680,7 @@ static void SetTopFileToLetter(UINT16 usLetter)
 		iTopFileShown = x;
 		if( iTopFileShown > iTotalFiles - 7 )
 			iTopFileShown = iTotalFiles - 7;
-		SetInputFieldStringWith8BitString(0, prev->filename);
+		SetInputFieldString(0, prev->filename);
 	}
 }
 
@@ -773,8 +774,8 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 		}
 		if( curr )
 		{
-			SetInputFieldStringWith8BitString(0, curr->filename);
-			swprintf(gzFilename, lengthof(gzFilename), L"%hs", curr->filename);
+			SetInputFieldString(0, curr->filename);
+			gzFilename = ST::format("{}", curr->filename);
 		}
 	}
 }
@@ -783,7 +784,7 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 // Editor doesn't care about the z value. It uses its own methods.
 static void SetGlobalSectorValues()
 {
-	{ wchar_t const* f = gzFilename;
+	{ const char* f = gzFilename.c_str();
 
 		INT16 y;
 		if ('A' <= f[0] && f[0] <= 'P')
@@ -840,14 +841,14 @@ static void InitErrorCatchDialog(void)
 static ScreenID ProcessFileIO(void)
 {
 	INT16 usStartX, usStartY;
-	char ubNewFilename[50];
+	ST::string ubNewFilename;
+	ST::string zOrigName;
 	switch( gbCurrentFileIOStatus )
 	{
 		case INITIATE_MAP_SAVE:	//draw save message
 			SaveFontSettings();
 			SetFontAttributes(HUGEFONT, FONT_LTKHAKI, FONT_DKKHAKI);
-			wchar_t zOrigName[60];
-			swprintf(zOrigName, lengthof(zOrigName), L"Saving map:  %ls", gzFilename);
+			zOrigName = ST::format("Saving map:  {}", gzFilename);
 			usStartX = (SCREEN_WIDTH - StringPixLength(zOrigName, HUGEFONT)) / 2;
 			usStartY = 180 - GetFontHeight(HUGEFONT) / 2;
 			MPrint(usStartX, usStartY, zOrigName);
@@ -856,12 +857,12 @@ static ScreenID ProcessFileIO(void)
 			gbCurrentFileIOStatus = SAVING_MAP;
 			return LOADSAVE_SCREEN;
 		case SAVING_MAP: //save map
-			sprintf( ubNewFilename, "%ls", gzFilename );
+			ubNewFilename = ST::format("{}", gzFilename);
 			RaiseWorldLand();
 			if( gfShowPits )
 				RemoveAllPits();
 			OptimizeSchedules();
-			if ( !SaveWorld( ubNewFilename ) )
+			if ( !SaveWorld( ubNewFilename.c_str() ) )
 			{
 				if( gfErrorCatch )
 				{
@@ -901,14 +902,14 @@ static ScreenID ProcessFileIO(void)
 			return LOADSAVE_SCREEN;
 		case LOADING_MAP: //load map
 			DisableUndo();
-			sprintf( ubNewFilename, "%ls", gzFilename );
+			ubNewFilename = ST::format("{}", gzFilename);
 
 			RemoveMercsInSector( );
 
 			try
 			{
 				UINT32 const start = SDL_GetTicks();
-				LoadWorld(ubNewFilename);
+				LoadWorld(ubNewFilename.c_str());
 				fprintf(stderr, "---> %u\n", SDL_GetTicks() - start);
 			}
 			catch (...)
@@ -919,7 +920,7 @@ static ScreenID ProcessFileIO(void)
 				gfGlobalError = FALSE;
 				gfLoadError = TRUE;
 				//RemoveButton( iTempButton );
-				CreateMessageBox( L" Error loading file.  Try another filename?" );
+				CreateMessageBox( " Error loading file.  Try another filename?" );
 				return LOADSAVE_SCREEN;
 			}
 			SetGlobalSectorValues();
@@ -1035,29 +1036,27 @@ static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason)
 
 static BOOLEAN ExtractFilenameFromFields(void)
 {
-	wcslcpy(gzFilename, GetStringFromField(0), lengthof(gzFilename));
+	gzFilename = GetStringFromField(0);
 	return ValidFilename();
 }
 
 
 static BOOLEAN ValidFilename(void)
 {
-	const wchar_t* pDest;
-	if( gzFilename[0] != '\0' )
+	if (!gzFilename.empty())
 	{
-		pDest = wcsstr( gzFilename, L".dat" );
-		if( pDest && pDest != gzFilename && pDest[4] == '\0' )
+		auto pos = gzFilename.find(".dat");
+		if (pos > 0 && gzFilename[pos + 4] == '\0' )
 			return TRUE;
 	}
 	return FALSE;
 }
 
-BOOLEAN ExternalLoadMap(const wchar_t* szFilename)
+BOOLEAN ExternalLoadMap(const ST::string& szFilename)
 {
-	Assert( szFilename );
-	if( !wcslen( szFilename ) )
+	if (szFilename.empty())
 		return FALSE;
-	wcscpy( gzFilename, szFilename );
+	gzFilename = szFilename;
 	if( !ValidFilename() )
 		return FALSE;
 	gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
@@ -1070,12 +1069,11 @@ BOOLEAN ExternalLoadMap(const wchar_t* szFilename)
 	return FALSE;
 }
 
-BOOLEAN ExternalSaveMap(const wchar_t* szFilename)
+BOOLEAN ExternalSaveMap(const ST::string& szFilename)
 {
-	Assert( szFilename );
-	if( !wcslen( szFilename ) )
+	if (szFilename.empty())
 		return FALSE;
-	wcscpy( gzFilename, szFilename );
+	gzFilename = szFilename;
 	if( !ValidFilename() )
 		return FALSE;
 	gbCurrentFileIOStatus = INITIATE_MAP_SAVE;

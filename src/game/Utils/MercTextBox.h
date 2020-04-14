@@ -4,6 +4,8 @@
 #include "AutoObj.h"
 #include "JA2Types.h"
 
+#include <string_theory/string>
+
 
 enum MercPopupBoxFlags
 {
@@ -37,7 +39,11 @@ enum MercPopUpBorder
 
 
 // create a pop up box if needed, return null pointer on failure
-MercPopUpBox* PrepareMercPopupBox(MercPopUpBox*, MercPopUpBackground, MercPopUpBorder, wchar_t const* pString, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight, MercPopupBoxFlags flags = MERC_POPUP_PREPARE_FLAGS_NONE);
+MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackgroundIndex, MercPopUpBorder ubBorderIndex, const ST::utf32_buffer& codepoints, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight, MercPopupBoxFlags flags = MERC_POPUP_PREPARE_FLAGS_NONE);
+inline MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackgroundIndex, MercPopUpBorder ubBorderIndex, const ST::string& str, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight, MercPopupBoxFlags flags = MERC_POPUP_PREPARE_FLAGS_NONE)
+{
+	return PrepareMercPopupBox(box, ubBackgroundIndex, ubBorderIndex, str.to_utf32(), usWidth, usMarginX, usMarginTopY, usMarginBottomY, pActualWidth, pActualHeight, flags);
+}
 
 void RemoveMercPopupBox(MercPopUpBox*);
 

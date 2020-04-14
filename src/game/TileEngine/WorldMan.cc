@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Debug_Pages.h"
 #include "Animation_Data.h"
 #include "Environment.h"
@@ -24,19 +22,24 @@
 #include "GameSettings.h"
 #include "MemMan.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
+#include <stdexcept>
+
 
 static UINT32 guiLNCount[9];
-static const wchar_t gzLevelString[][15] =
+static const ST::string gzLevelString[] =
 {
-	L"",
-	L"Land",
-	L"Object",
-	L"Struct",
-	L"Shadow",
-	L"Merc",
-	L"Roof",
-	L"Onroof",
-	L"Topmost",
+	"",
+	"Land",
+	"Object",
+	"Struct",
+	"Shadow",
+	"Merc",
+	"Roof",
+	"Onroof",
+	"Topmost",
 };
 
 
@@ -78,7 +81,7 @@ void CountLevelNodes(void)
 
 void DebugLevelNodePage(void)
 {
-	MPageHeader(L"DEBUG LEVELNODES PAGE 1 OF 1");
+	MPageHeader("DEBUG LEVELNODES PAGE 1 OF 1");
 	INT32 y = DEBUG_PAGE_START_Y;
 	INT32 h = DEBUG_PAGE_LINE_HEIGHT;
 
@@ -86,9 +89,9 @@ void DebugLevelNodePage(void)
 	{
 		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, gzLevelString[uiLoop], guiLNCount[uiLoop]);
 	}
-	mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"%d land nodes in excess of world max (25600)", guiLNCount[1] - WORLD_MAX);
-	mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Total # levelnodes %d, %d bytes each", guiLNCount[0], sizeof(LEVELNODE));
-	mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Total memory for levelnodes %d", guiLNCount[0] * sizeof(LEVELNODE));
+	MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, ST::format("{} land nodes in excess of world max (25600)", guiLNCount[1] - WORLD_MAX));
+	MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, ST::format("Total # levelnodes {}, {} bytes each", guiLNCount[0], sizeof(LEVELNODE)));
+	MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, ST::format("Total memory for levelnodes {}", guiLNCount[0] * sizeof(LEVELNODE)));
 }
 
 
@@ -1129,8 +1132,8 @@ BOOLEAN AddMercStructureInfoFromAnimSurface(const INT16 sGridNo, SOLDIERTYPE* co
 	bool const success = AddStructureToWorld(sGridNo, s->bLevel, sr, n);
 	if (!success)
 	{
-		SLOGD("add struct info for merc %d (%ls), at %d direction %d failed",
-					s->ubID, s->name, sGridNo, s->bDirection);
+		SLOGD("add struct info for merc %d (%s), at %d direction %d failed",
+					s->ubID, s->name.c_str(), sGridNo, s->bDirection);
 	}
 
 	// Turn on if we are multi-tiled

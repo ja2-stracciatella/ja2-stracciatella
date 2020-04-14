@@ -1,6 +1,9 @@
 #ifndef __CURSOR_MODES_H
 #define __CURSOR_MODES_H
 
+#include <string_theory/string>
+
+
 enum
 {
 	SMALLSELECTION,		// 1x1
@@ -26,8 +29,7 @@ void IncreaseSelectionDensity(void);
 void DecreaseSelectionDensity(void);
 void RemoveCursors(void);
 
-extern wchar_t SelTypeWidth[lengthof("Width: xx")];
-extern const wchar_t* const wszSelType[6];
+extern ST::string wszSelType[6];
 
 extern BOOLEAN gfCurrentSelectionWithRightButton;
 

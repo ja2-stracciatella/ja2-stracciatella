@@ -529,7 +529,7 @@ static INT32 MineAMine(INT8 bMineIndex)
 		if( iAmtExtracted > 0 )
 		{
 			// debug message
-			SLOGD("%ls - Mine income from %ls = $%d", WORLDTIMESTR, pTownNames[GetTownAssociatedWithMine(bMineIndex)], iAmtExtracted);
+			SLOGD("%s - Mine income from %s = $%d", WORLDTIMESTR.c_str(), pTownNames[GetTownAssociatedWithMine(bMineIndex)].c_str(), iAmtExtracted);
 
 			// if this is the first time this mine has produced income for the player in the game
 			if ( !gMineStatus[ bMineIndex ].fMineHasProducedForPlayer )
@@ -809,7 +809,7 @@ void IssueHeadMinerQuote(INT8 const mine_idx, HeadMinerQuote const quote_type)
 	MERCPROFILESTRUCT const& p = GetProfile(miner_data.usProfileId);
 	if (p.bLife < OKLIFE)
 	{
-		SLOGD("Head Miner #%ls can't talk (quote #%d)", p.zNickname, quote_type);
+		SLOGD("Head Miner #%s can't talk (quote #%d)", p.zNickname.c_str(), quote_type);
 		return;
 	}
 

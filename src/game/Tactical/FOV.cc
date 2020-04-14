@@ -32,6 +32,8 @@
 #include "Video.h"
 #endif
 
+#include <string_theory/format>
+
 #include <algorithm>
 #include <iterator>
 
@@ -437,9 +439,9 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 				gubFOVDebugInfoInfo[ marker ] = (UINT8)markercnt;
 				RenderFOVDebug( );
 				SetFontAttributes(LARGEFONT1, FONT_MCOLOR_WHITE);
-				mprintf( 10,  10 , L"%d", maincnt  );
-				//mprintf( 10,  20 , L"%d", marker  );
-				//mprintf( 50,  20 , L"%d", pSoldier->sGridNo  );
+				MPrint( 10,  10 , ST::format("{}", maincnt) );
+				//MPrint( 10,  20 , ST::format("{}", marker) );
+				//MPrint( 50,  20 , ST::format("{}", pSoldier->sGridNo) );
 				InvalidateScreen( );
 				RefreshScreen();
 				do

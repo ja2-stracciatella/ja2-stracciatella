@@ -48,6 +48,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -524,7 +527,7 @@ static void StartInterrupt(void)
 	if (first_interrupter->bTeam == OUR_TEAM)
 	{
 		// start interrupts for everyone on our side at once
-		wchar_t sTemp[ 255 ];
+		ST::string sTemp;
 		UINT8   ubInterrupters = 0;
 
 		// build string for display of who gets interrupt
@@ -547,7 +550,7 @@ static void StartInterrupt(void)
 			}
 		}
 
-		wcscpy( sTemp, g_langRes->Message[ STR_INTERRUPT_FOR ] );
+		sTemp = g_langRes->Message[ STR_INTERRUPT_FOR ];
 
 		// build string in separate loop here, want to linearly process squads...
 		for (INT32 iSquad = 0; iSquad < NUMBER_OF_SQUADS; ++iSquad)
@@ -564,17 +567,17 @@ static void StartInterrupt(void)
 				{
 					// flush... display string, then clear it (we could have 20 names!)
 					// add comma to end, we know we have another person after this...
-					wcscat( sTemp, L", " );
+					sTemp += ", ";
 					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sTemp );
-					wcscpy( sTemp, L"" );
+					sTemp = ST::null;
 					ubInterrupters = 1;
 				}
 
 				if ( ubInterrupters > 1 )
 				{
-					wcscat( sTemp, L", " );
+					sTemp += ", ";
 				}
-				wcscat(sTemp, s->name);
+				sTemp += s->name;
 			}
 		}
 
@@ -1298,7 +1301,7 @@ BOOLEAN InterruptDuel( SOLDIERTYPE * pSoldier, SOLDIERTYPE * pOpponent)
 			fResult = TRUE;
 		}
 	}
-	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Interrupt duel %d (%d pts) vs %d (%d pts)", pSoldier->ubID, pSoldier->bInterruptDuelPts, pOpponent->ubID, pOpponent->bInterruptDuelPts );
+	//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("Interrupt duel {} ({} pts) vs {} ({} pts)", pSoldier->ubID, pSoldier->bInterruptDuelPts, pOpponent->ubID, pOpponent->bInterruptDuelPts) );
 	return( fResult );
 }
 
@@ -1584,7 +1587,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 						/*
 							if (pOpponent->bInterruptDuelPts != NO_INTERRUPT)
 							{
-								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"%d fails to interrupt %d (%d vs %d pts)", pOpponent->ubID, pSoldier->ubID, pOpponent->bInterruptDuelPts, pSoldier->bInterruptDuelPts);
+								ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("{} fails to interrupt {} ({} vs {} pts)", pOpponent->ubID, pSoldier->ubID, pOpponent->bInterruptDuelPts, pSoldier->bInterruptDuelPts));
 							}
 							*/
 						}

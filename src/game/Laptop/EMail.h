@@ -3,6 +3,8 @@
 
 #include "Types.h"
 
+#include <string_theory/string>
+
 
 #define IMP_EMAIL_INTRO				0
 #define IMP_EMAIL_INTRO_LENGTH			10
@@ -133,7 +135,7 @@
 
 struct Email
 {
-	wchar_t pSubject[128];
+	ST::string pSubject;
 	UINT16  usOffset;
 	UINT16  usLength;
 	UINT8   ubSender;

@@ -1,6 +1,6 @@
 [
-        "%ls equips %ls",
-        "%ls removes %ls",
+        "%s equips %s",
+        "%s removes %s",
 
         "__last_one"
 ]

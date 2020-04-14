@@ -857,7 +857,7 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 	{
 		// Release attacker
 		SLOGD("Releasesoldierattacker, normal hit animation ended\n\
-			NEW: %hs ( %d ) OLD: %hs ( %d )",
+			NEW: %s ( %d ) OLD: %s ( %d )",
 			gAnimControl[usNewState].zAnimStr, usNewState,
 			gAnimControl[usOldAniState].zAnimStr, pSoldier->usOldAniState);
 		ReleaseSoldiersAttacker( pSoldier );
@@ -1272,7 +1272,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 			{
 				if ( usNewState != SWATTING  )
 				{
-					SLOGD("Handling New gridNo for %d: Old %hs, New %hs",
+					SLOGD("Handling New gridNo for %d: Old %s, New %s",
 						pSoldier->ubID, gAnimControl[pSoldier->usAnimState].zAnimStr,
 						gAnimControl[usNewState].zAnimStr);
 
@@ -2675,7 +2675,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		case THROW_ITEM:
 		case LOB_ITEM:
 			SLOGD(
-				"Freeing up attacker - ATTACK ANIMATION %hs ENDED BY HIT ANIMATION, Now %d",
+				"Freeing up attacker - ATTACK ANIMATION %s ENDED BY HIT ANIMATION, Now %d",
 				gAnimControl[pSoldier->usAnimState].zAnimStr, gTacticalStatus.ubAttackBusyCount);
 			ReduceAttackBusyCount(pSoldier, FALSE);
 			break;
@@ -3233,7 +3233,7 @@ static void SoldierGotHitGunFire(SOLDIERTYPE* const pSoldier, const UINT16 bDire
 					if ( gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_STAND && !MercInWater( pSoldier ) )
 					{
 						fFallenOver = TRUE;
-						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, gzLateLocalizedString[STR_LATE_20], pSoldier->name);
+						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(gzLateLocalizedString[STR_LATE_20], pSoldier->name));
 					}
 				}
 			}
@@ -4238,7 +4238,7 @@ BOOLEAN ConvertAniCodeToAniFrame(SOLDIERTYPE* const s, UINT16 ani_frame)
 		{
 			// Debug msg here....
 			SLOGW(
-				"Wrong Number of frames per number of objects: %d vs %d, %hs",
+				"Wrong Number of frames per number of objects: %d vs %d, %s",
 				as.uiNumFramesPerDir, as.hVideoObject->SubregionCount(),
 				gAnimControl[s->usAnimState].zAnimStr);
 			ani_frame = 0;

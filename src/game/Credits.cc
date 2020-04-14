@@ -24,6 +24,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 struct CRDT_NODE
 {
 	INT16        sPosY;
@@ -47,9 +50,9 @@ struct CRDT_NODE
 // Code tokens
 //
 //new codes:
-#define CRDT_START_CODE		L'@'
-#define CRDT_SEPARATION_CODE		L','
-#define CRDT_END_CODE			L';'
+#define CRDT_START_CODE		'@'
+#define CRDT_SEPARATION_CODE		','
+#define CRDT_END_CODE			';'
 
 #define CRDT_DELAY_BN_STRINGS_CODE	'D'
 #define CRDT_DELAY_BN_SECTIONS_CODE	'B'
@@ -331,7 +334,7 @@ static void DeleteFirstNode(void)
 }
 
 
-static void AddCreditNode(UINT32 uiFlags, const wchar_t* pString)
+static void AddCreditNode(UINT32 uiFlags, const ST::string& pString)
 {
 	CRDT_NODE* const pNodeToAdd = new CRDT_NODE{};
 
@@ -433,10 +436,10 @@ static void DisplayCreditNode(const CRDT_NODE* const pCurrent)
 }
 
 
-static UINT32 GetNumber(const wchar_t* const string)
+static UINT32 GetNumber(const char* string)
 {
 	unsigned int v = 0;
-	swscanf(string, L"%u", &v);
+	sscanf(string, "%u", &v);
 	return v;
 }
 
@@ -446,11 +449,11 @@ static void HandleCreditFlags(UINT32 uiFlags);
 
 static BOOLEAN GetNextCreditFromTextFile(void)
 {
-	wchar_t text[CREDITS_LINESIZE];
+	ST::string text;
 	const UINT32 pos = CREDITS_LINESIZE * guiCurrentCreditRecord++;
 	try
 	{
-		GCM->loadEncryptedString(CRDT_NAME_OF_CREDIT_FILE, text, pos, CREDITS_LINESIZE);
+		text = GCM->loadEncryptedString(CRDT_NAME_OF_CREDIT_FILE, pos, CREDITS_LINESIZE);
 	}
 	catch (...) // XXX fishy, should check file size beforehand
 	{
@@ -458,7 +461,7 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 	}
 
 	UINT32         flags = 0;
-	const wchar_t* s     = text;
+	const char* s = text.c_str();
 	if (*s == CRDT_START_CODE)
 	{
 		for (;;)
@@ -496,7 +499,7 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 				switch (*s)
 				{
 					case CRDT_END_CODE:  ++s; goto handle_text;
-					case L'\0':               goto handle_text;
+					case '\0':               goto handle_text;
 					default:             ++s; break;
 				}
 			}
@@ -504,7 +507,7 @@ static BOOLEAN GetNextCreditFromTextFile(void)
 	}
 
 handle_text:
-	if (*s != L'\0') AddCreditNode(flags, s);
+	if (*s != '\0') AddCreditNode(flags, s);
 	HandleCreditFlags(flags);
 	return TRUE;
 }

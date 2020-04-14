@@ -4,6 +4,8 @@
 #include "Overhead_Types.h"
 #include "Types.h"
 
+#include <string_theory/string>
+
 
 #define NUM_PROFILES						170
 #define FIRST_RPC						57
@@ -162,8 +164,8 @@ enum CharacterEvolution
 
 struct MERCPROFILESTRUCT
 {
-	wchar_t zName[ NAME_LENGTH ];
-	wchar_t zNickname[ NICKNAME_LENGTH ];
+	ST::string zName;
+	ST::string zNickname;
 	UINT8 ubFaceIndex;
 	PaletteRepID PANTS;
 	PaletteRepID VEST;

@@ -7,6 +7,8 @@
 #include "Types.h"
 #include "UILayout.h"
 
+#include <string_theory/string>
+
 
 void ExitLaptop(void);
 void HandleLapTopESCKey(void);
@@ -15,14 +17,14 @@ void SetLaptopExitScreen(ScreenID uiExitScreen);
 void SetLaptopNewGameFlag(void);
 void LapTopScreenCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 void HandleRightButtonUpEvent(void);
-void DoLapTopMessageBox(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
+void DoLapTopMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags ubFlags, MSGBOX_CALLBACK ReturnCallback);
 void GoToWebPage(INT32 iPageId);
 void WebPageTileBackground(UINT8 ubNumX, UINT8 ubNumY, UINT16 usWidth, UINT16 usHeight, const SGPVObject* background);
 void BlitTitleBarIcons(void);
 void HandleKeyBoardShortCutsForLapTop(UINT16 usEvent, UINT32 usParam, UINT16 usKeyState);
 void RenderWWWProgramTitleBar(void);
 void DisplayProgramBoundingBox(BOOLEAN fMarkButtons);
-void DoLapTopSystemMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
+void DoLapTopSystemMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback);
 void CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHelpText);
 void InitLaptopAndLaptopScreens(void);
 
@@ -139,7 +141,7 @@ enum{
 #define DEAD_MERC_COLOR_BLUE   55
 
 
-void DoLapTopSystemMessageBoxWithRect(MessageBoxStyleID, wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect);
+void DoLapTopSystemMessageBoxWithRect(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect);
 
 void     LaptopScreenInit(void);
 ScreenID LaptopScreenHandle(void);

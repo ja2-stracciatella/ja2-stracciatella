@@ -78,6 +78,9 @@
 #include "GameInstance.h"
 #include "Soldier.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -383,9 +386,9 @@ ScreenID HandleTacticalUI(void)
 	gfUIHandleSelection = NO_GUY_SELECTION;
 	gSelectedGuy = NULL;
 	guiShowUPDownArrows = ARROWS_HIDE_UP | ARROWS_HIDE_DOWN;
-	SetHitLocationText(NULL);
-	SetIntTileLocationText(NULL);
-	SetIntTileLocation2Text(NULL);
+	SetHitLocationText(ST::null);
+	SetIntTileLocationText(ST::null);
+	SetIntTileLocation2Text(ST::null);
 	//gfUIForceReExamineCursorData = FALSE;
 	gfUINewStateForIntTile = FALSE;
 	gfUIShowExitExitGrid = FALSE;
@@ -1033,7 +1036,7 @@ ScreenID UIHandleEndTurn(UI_EVENT* pUIEvent)
 		{
 			//Save the game
 			guiPreviousOptionScreen = guiCurrentScreen;
-			SaveGame( SAVE__END_TURN_NUM, L"End Turn Auto Save" );
+			SaveGame( SAVE__END_TURN_NUM, "End Turn Auto Save" );
 		}
 
 		// End our turn!
@@ -1138,7 +1141,7 @@ static ScreenID UIHandleSelectMerc(UI_EVENT* pUIEvent)
 		// If different, display message
 		if ( CurrentSquad( ) != iCurrentSquad )
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_SQUAD_ACTIVE ], ( CurrentSquad( ) + 1 ) );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_SQUAD_ACTIVE ], ( CurrentSquad( ) + 1 )) );
 		}
 	}
 
@@ -1636,7 +1639,7 @@ static ScreenID UIHandleCMoveMerc(UI_EVENT* pUIEvent)
 					}
 					else
 					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name) );
 					}
 
 					pSoldier->fUIMovementFast = fOldFastMove;
@@ -2232,8 +2235,7 @@ static ScreenID UIHandleCAMercShoot(UI_EVENT* pUIEvent)
 			gpRequesterTargetMerc = tgt;
 			gsRequesterGridNo = usMapPos;
 
-			wchar_t zStr[200];
-			swprintf(zStr, lengthof(zStr), TacticalStr[ATTACK_OWN_GUY_PROMPT], tgt->name);
+			ST::string zStr = st_format_printf(TacticalStr[ATTACK_OWN_GUY_PROMPT], tgt->name);
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zStr, GAME_SCREEN, MSG_BOX_FLAG_YESNO, AttackRequesterCallback, NULL);
 			return GAME_SCREEN;
 		}
@@ -2738,7 +2740,7 @@ void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance)
 	{
 		if (s->bCollapsed && s->bBreath < OKBREATH)
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_04], s->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(gzLateLocalizedString[STR_LATE_04], s->name));
 		}
 		else
 		{
@@ -2754,11 +2756,11 @@ void UIHandleSoldierStanceChange(SOLDIERTYPE* s, INT8 bNewStance)
 			{
 				if (s->bCollapsed)
 				{
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, pMessageStrings[MSG_CANT_CHANGE_STANCE], s->name);
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(pMessageStrings[MSG_CANT_CHANGE_STANCE], s->name));
 				}
 				else
 				{
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[CANNOT_STANCE_CHANGE_STR], s->name);
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[CANNOT_STANCE_CHANGE_STR], s->name));
 				}
 			}
 		}
@@ -3430,7 +3432,7 @@ bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 	{
 		// Access denied
 		PlayJA2Sample(RG_ID_INVALID, HIGHVOLUME, 1, MIDDLE);
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"\"%ls\"", TacticalStr[GUN_NOGOOD_FINGERPRINT]);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, ST::format("\"{}\"", TacticalStr[GUN_NOGOOD_FINGERPRINT]));
 		return false;
 	}
 
@@ -3455,25 +3457,25 @@ bool UIMouseOnValidAttackLocation(SOLDIERTYPE* const s)
 
 		if (tgt->uiStatusFlags & (SOLDIER_VEHICLE | SOLDIER_ROBOT))
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[CANNOT_DO_FIRST_AID_STR], tgt->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[CANNOT_DO_FIRST_AID_STR], tgt->name));
 			return false;
 		}
 
 		if (s->bMedical == 0)
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, pMessageStrings[MSG_MERC_HAS_NO_MEDSKILL], s->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(pMessageStrings[MSG_MERC_HAS_NO_MEDSKILL], s->name));
 			return false;
 		}
 
 		if (tgt->bBleeding == 0 && tgt->bLife != tgt->bLifeMax)
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_19], tgt->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(gzLateLocalizedString[STR_LATE_19], tgt->name));
 			return false;
 		}
 
 		if (tgt->bBleeding == 0 && tgt->bLife >= OKLIFE)
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[CANNOT_NO_NEED_FIRST_AID_STR], tgt->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[CANNOT_NO_NEED_FIRST_AID_STR], tgt->name));
 			return false;
 		}
 	}
@@ -4186,7 +4188,7 @@ static BOOLEAN HandleMultiSelectionMove(INT16 sDestGridNo)
 				}
 				else
 				{
-					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name );
+					ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name) );
 				}
 
 				fAtLeastOneMultiSelect = TRUE;
@@ -4568,11 +4570,11 @@ BOOLEAN HandleTalkInit(  )
 				{
 					if ( pTSoldier->ubProfile != NO_PROFILE )
 					{
-						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[NO_LOS_TO_TALK_TARGET], sel->name, pTSoldier->name);
+						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[NO_LOS_TO_TALK_TARGET], sel->name, pTSoldier->name));
 					}
 					else
 					{
-						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_45], sel->name);
+						ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(gzLateLocalizedString[STR_LATE_45], sel->name));
 					}
 					return( FALSE );
 				}
@@ -4581,7 +4583,7 @@ BOOLEAN HandleTalkInit(  )
 			if ( pTSoldier->bCollapsed )
 			{
 				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK,
-						gzLateLocalizedString[STR_LATE_21], pTSoldier->name);
+						st_format_printf(gzLateLocalizedString[STR_LATE_21], pTSoldier->name));
 				return( FALSE );
 			}
 
@@ -4596,7 +4598,7 @@ BOOLEAN HandleTalkInit(  )
 			{
 				if ( pTSoldier->ubProfile == DIMITRI )
 				{
-					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, gzLateLocalizedString[STR_LATE_32], pTSoldier->name);
+					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(gzLateLocalizedString[STR_LATE_32], pTSoldier->name));
 					return( FALSE );
 				}
 

@@ -473,7 +473,7 @@ void HandleHeliDrop( )
 				// Check for merc arrives quotes...
 				HandleMercArrivesQuotes(s);
 
-				ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s.name);
+				ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, st_format_printf(TacticalStr[MERC_HAS_ARRIVED_STR], s.name));
 			}
 
 			// Remove heli
@@ -609,7 +609,7 @@ void HandleHeliDrop( )
 							gfFirstGuyDown = FALSE;
 							SetCurrentSquad(s.bAssignment, TRUE );
 						}
-						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s.name);
+						ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, st_format_printf(TacticalStr[MERC_HAS_ARRIVED_STR], s.name));
 
 						gbCurDrop++;
 

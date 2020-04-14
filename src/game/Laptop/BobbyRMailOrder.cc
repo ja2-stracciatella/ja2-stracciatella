@@ -35,6 +35,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 #include <vector>
 
@@ -324,7 +327,7 @@ void GameInitBobbyRMailOrder()
 }
 
 
-static GUIButtonRef MakeButton(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const INT16 y, const GUI_CALLBACK click)
+static GUIButtonRef MakeButton(BUTTON_PICS* img, const ST::string& text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
 	const INT16 shadow_col = BOBBYR_GUNS_SHADOW_COLOR;
 	GUIButtonRef const btn = CreateIconAndTextButton(img, text, BOBBYR_ORDER_TITLE_TEXT_FONT, BOBBYR_GUNS_TEXT_COLOR_ON, shadow_col, BOBBYR_GUNS_TEXT_COLOR_OFF, shadow_col, x, y, MSYS_PRIORITY_HIGH, click);
@@ -558,7 +561,7 @@ void RenderBobbyRMailOrder()
 {
 	UINT16 usPosY;
 	UINT16 usHeight;//usWidth,
-	wchar_t	sTemp[ 128 ];
+	ST::string sTemp;
 
 	DrawBobbyRWoodBackground();
 
@@ -583,7 +586,7 @@ void RenderBobbyRMailOrder()
 	DrawTextToScreen(BobbyROrderFormText[BOBBYR_SHIPPING_SPEED], BOBBYR_SHIPPING_SPEED_X, BOBBYR_SHIPPING_SPEED_Y, 0, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Create a string for the weight ( %s ) ( where %s is the weight string, either kg or lbs )
-	swprintf( sTemp, lengthof(sTemp), BobbyROrderFormText[BOBBYR_COST], GetWeightUnitString( ) );
+	sTemp = st_format_printf(BobbyROrderFormText[BOBBYR_COST], GetWeightUnitString( ));
 
 	//Output the cost
 	DrawTextToScreen(sTemp, BOBBYR_SHIPPING_COST_X, BOBBYR_SHIPPING_SPEED_Y, 0, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -608,7 +611,7 @@ void RenderBobbyRMailOrder()
 
 	//Display the minimum weight disclaimer at the bottom of the page
 	usHeight = GetFontHeight( BOBBYR_DISCLAIMER_FONT ) + 2;
-	swprintf( sTemp, lengthof(sTemp), L"%ls %2.1f %ls.", BobbyROrderFormText[BOBBYR_MINIMUM_WEIGHT], GetWeightBasedOnMetricOption( MIN_SHIPPING_WEIGHT ) / 10.0, GetWeightUnitString() );
+	sTemp = ST::format("{} {2.1f} {}.", BobbyROrderFormText[BOBBYR_MINIMUM_WEIGHT], GetWeightBasedOnMetricOption( MIN_SHIPPING_WEIGHT ) / 10.0, GetWeightUnitString());
 	DrawTextToScreen(sTemp, BOBBYR_USED_WARNING_X, BOBBYR_USED_WARNING_Y + usHeight + 1, 0, BOBBYR_DISCLAIMER_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED | TEXT_SHADOWED);
 
 
@@ -660,7 +663,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 			}
 			else
 			{
-				wchar_t zTemp[ 128 ];
+				ST::string zTemp;
 
 				//if the city is Drassen, and the airport sector is player controlled
 				if( gbSelectedCity == BR_DRASSEN && !StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( SEC_B13 ) ].fEnemyControlled )
@@ -671,7 +674,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 				else
 				{
 					//else pop up a confirmation box
-					swprintf( zTemp, lengthof(zTemp), BobbyROrderFormText[BOBBYR_CONFIRM_DEST],  pDeliveryLocationStrings[gbSelectedCity] );
+					zTemp = st_format_printf(BobbyROrderFormText[BOBBYR_CONFIRM_DEST], pDeliveryLocationStrings[gbSelectedCity]);
 					DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, zTemp, LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmBobbyRPurchaseMessageBoxCallBack );
 				}
 
@@ -779,7 +782,7 @@ static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, 
 void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16 usGridY, BobbyRayPurchaseStruct *pBobbyRayPurchase, BOOLEAN fJustDisplayTitles, INT32 iOrderNum )
 {
 	UINT16  i;
-	wchar_t sTemp[20];
+	ST::string sTemp;
 	UINT16  usPosY;
 	UINT32  uiStartLoc=0;
 	UINT32  uiTotal;
@@ -788,7 +791,7 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 	DrawTextToScreen(BobbyROrderFormText[BOBBYR_QTY], usGridX + BOBBYR_GRID_FIRST_COLUMN_X, usGridY + BOBBYR_GRID_FIRST_COLUMN_Y - BOBBYR_GRID_TITLE_OFFSET, BOBBYR_GRID_FIRST_COLUMN_WIDTH, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 	//Create a string for the weight ( %s ) ( where %s is the weight string, either kg or lbs )
-	swprintf( sTemp, lengthof(sTemp), BobbyROrderFormText[BOBBYR_WEIGHT], GetWeightUnitString( ) );
+	sTemp = st_format_printf(BobbyROrderFormText[BOBBYR_WEIGHT], GetWeightUnitString( ));
 
 	//Output the Weight
 	DisplayWrappedString(usGridX + BOBBYR_GRID_SECOND_COLUMN_X, usGridY + BOBBYR_GRID_SECOND_COLUMN_Y - 30, BOBBYR_GRID_SECOND_COLUMN_WIDTH, 2, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, sTemp, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -841,11 +844,11 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			//Display the qty, order#, item name, unit price and the total
 
 			//qty
-			swprintf(sTemp, lengthof(sTemp), L"%3d", pBobbyRayPurchase[i].ubNumberPurchased );
+			sTemp = ST::format("{3d}", pBobbyRayPurchase[i].ubNumberPurchased);
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIRST_COLUMN_X - 2, usPosY, BOBBYR_GRID_FIRST_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//weight
-			swprintf( sTemp, lengthof(sTemp), L"%3.1f", GetWeightBasedOnMetricOption( GCM->getItem(pBobbyRayPurchase[i].usItemIndex)->getWeight() ) / (FLOAT)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased );
+			sTemp = ST::format("{3.1f}", GetWeightBasedOnMetricOption( GCM->getItem(pBobbyRayPurchase[i].usItemIndex)->getWeight() ) / (FLOAT)( 10.0 ) * pBobbyRayPurchase[i].ubNumberPurchased);
 			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_SECOND_COLUMN_X - 2, usPosY, BOBBYR_GRID_SECOND_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//Display Items Name
@@ -859,29 +862,26 @@ void DisplayPurchasedItems( BOOLEAN fCalledFromOrderPage, UINT16 usGridX, UINT16
 			}
 
 
-			wchar_t	sText[BOBBYR_ITEM_DESC_NAME_SIZE + 2];
+			ST::string sText;
 			if( pBobbyRayPurchase[i].fUsed )
 			{
-				wchar_t	sBack[BOBBYR_ITEM_DESC_NAME_SIZE];
-				GCM->loadEncryptedString(BOBBYRDESCFILE, sBack, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
-				swprintf(sText, lengthof(sText), L"* %ls", sBack);
+				ST::string sBack = GCM->loadEncryptedString(BOBBYRDESCFILE, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+				sText = ST::format("* {}", sBack);
 			}
 			else
-				GCM->loadEncryptedString(BOBBYRDESCFILE, sText, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
+				sText = GCM->loadEncryptedString(BOBBYRDESCFILE, uiStartLoc, BOBBYR_ITEM_DESC_NAME_SIZE);
 
-			ReduceStringLength(sText, lengthof(sText), BOBBYR_GRID_THIRD_COLUMN_WIDTH - 4, BOBBYR_ORDER_DYNAMIC_TEXT_FONT);
+			sText = ReduceStringLength(sText, BOBBYR_GRID_THIRD_COLUMN_WIDTH - 4, BOBBYR_ORDER_DYNAMIC_TEXT_FONT);
 
 			DrawTextToScreen(sText, usGridX + BOBBYR_GRID_THIRD_COLUMN_X + 2, usPosY, BOBBYR_GRID_THIRD_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//unit price
 			const BobbyRayPurchaseStruct* Purchase = &pBobbyRayPurchase[i];
-			SPrintMoney(sTemp, CalcBobbyRayCost(Purchase->usItemIndex, Purchase->usBobbyItemIndex, Purchase->fUsed));
-			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FOURTH_COLUMN_X - 2, usPosY, BOBBYR_GRID_FOURTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+			DrawTextToScreen(SPrintMoney(CalcBobbyRayCost(Purchase->usItemIndex, Purchase->usBobbyItemIndex, Purchase->fUsed)), usGridX + BOBBYR_GRID_FOURTH_COLUMN_X - 2, usPosY, BOBBYR_GRID_FOURTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			uiTotal += CalcBobbyRayCost( pBobbyRayPurchase[i].usItemIndex, pBobbyRayPurchase[i].usBobbyItemIndex, pBobbyRayPurchase[i].fUsed ) * pBobbyRayPurchase[i].ubNumberPurchased;
 
-			SPrintMoney(sTemp, uiTotal);
-			DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usPosY, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+			DrawTextToScreen(SPrintMoney(uiTotal), usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usPosY, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 			//add the current item total to the sub total
 			if( fCalledFromOrderPage )
@@ -906,7 +906,6 @@ static UINT32 CalcCostFromWeightOfPackage(UINT8 ubTypeOfService);
 
 static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, UINT16 usGridX, UINT16 usGridY, INT32 iOrderNum)
 {
-	wchar_t sTemp[20];
 	INT32   iShippingCost = 0;
 
 	if( fCalledFromOrderPage )
@@ -956,18 +955,15 @@ static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, 
 	if( iSubTotal )
 	{
 		//Display the subtotal
-		SPrintMoney(sTemp, iSubTotal);
-		DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_SUBTOTAL_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+		DrawTextToScreen(SPrintMoney(iSubTotal), usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_SUBTOTAL_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 		//Display the shipping and handling charge
-		SPrintMoney(sTemp, iShippingCost);
-		DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_SHIPPING_N_HANDLE_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+		DrawTextToScreen(SPrintMoney(iShippingCost), usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_SHIPPING_N_HANDLE_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 
 
 		//Display the grand total
 		giGrandTotal = iSubTotal + iShippingCost;
-		SPrintMoney(sTemp, giGrandTotal);
-		DrawTextToScreen(sTemp, usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_GRAND_TOTAL_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
+		DrawTextToScreen(SPrintMoney(giGrandTotal), usGridX + BOBBYR_GRID_FIFTH_COLUMN_X - 2, usGridY + BOBBYR_GRAND_TOTAL_Y, BOBBYR_GRID_FIFTH_COLUMN_WIDTH, BOBBYR_ORDER_DYNAMIC_TEXT_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	}
 
 	InvalidateRegion(STD_SCREEN_X + 333, STD_SCREEN_Y + 326, STD_SCREEN_X + 376, STD_SCREEN_Y + 400);
@@ -1344,7 +1340,7 @@ static void DrawSelectedCity(UINT8 ubCityNumber)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_CITY_START_LOCATION_X+4, usPosY+4, BOBBYR_CITY_START_LOCATION_X+BOBBYR_DROP_DOWN_WIDTH-4,	usPosY+usFontHeight+6, Get16BPPColor( FROMRGB( 200, 169, 87 ) ) );
 
 	SetFontShadow(NO_SHADOW);
-	const wchar_t* city = (pDeliveryLocationStrings[ubCityNumber == 255 ? 0 : ubCityNumber]);
+	ST::string city = (pDeliveryLocationStrings[ubCityNumber == 255 ? 0 : ubCityNumber]);
 	DrawTextToScreen(city, BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, usPosY + 5, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	SetFontShadow(DEFAULT_SHADOW);
@@ -1362,14 +1358,13 @@ static void DrawSelectedCity(UINT8 ubCityNumber)
 
 static void DisplayShippingLocationCity(void)
 {
-	wchar_t	sTemp[40];
 	UINT16 usPosY;
 
 	//display the name on the title bar
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SHIPPING_LOC_AREA_L_X, BOBBYR_SHIPPING_LOC_AREA_T_Y, BOBBYR_SHIPPING_LOC_AREA_L_X+175,	BOBBYR_SHIPPING_LOC_AREA_T_Y+BOBBYR_DROP_DOWN_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 
 	//if there is no city selected
-	const wchar_t* dest = (gbSelectedCity == -1 ? BobbyROrderFormText[BOBBYR_SELECT_DEST] : (pDeliveryLocationStrings[gbSelectedCity]));
+	ST::string dest = (gbSelectedCity == -1 ? BobbyROrderFormText[BOBBYR_SELECT_DEST] : (pDeliveryLocationStrings[gbSelectedCity]));
 	DrawTextToScreen(dest, BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	DisplayShippingCosts( TRUE, 0, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, -1 );
@@ -1381,11 +1376,11 @@ static void DisplayShippingLocationCity(void)
 	//Display the shipping cost
 	usPosY = BOBBYR_OVERNIGHT_EXPRESS_Y;
 
-	wcscpy(sTemp, L"$0");
+	ST::string sTemp = "$0";
 
 	if( gbSelectedCity != -1 )
 	{
-		SPrintMoney(sTemp, BobbyROrderLocations[gbSelectedCity].usOverNightExpress / GetWeightBasedOnMetricOption(1));
+		sTemp = SPrintMoney(BobbyROrderLocations[gbSelectedCity].usOverNightExpress / GetWeightBasedOnMetricOption(1));
 	}
 
 	DrawTextToScreen(sTemp, BOBBYR_SHIPPING_SPEED_NUMBER_X, usPosY, BOBBYR_SHIPPING_SPEED_NUMBER_WIDTH, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
@@ -1393,7 +1388,7 @@ static void DisplayShippingLocationCity(void)
 
 	if( gbSelectedCity != -1 )
 	{
-		SPrintMoney(sTemp, BobbyROrderLocations[gbSelectedCity].us2DaysService / GetWeightBasedOnMetricOption(1));
+		sTemp = SPrintMoney(BobbyROrderLocations[gbSelectedCity].us2DaysService / GetWeightBasedOnMetricOption(1));
 	}
 
 	DrawTextToScreen(sTemp, BOBBYR_SHIPPING_SPEED_NUMBER_X, usPosY, BOBBYR_SHIPPING_SPEED_NUMBER_WIDTH, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
@@ -1401,7 +1396,7 @@ static void DisplayShippingLocationCity(void)
 
 	if( gbSelectedCity != -1 )
 	{
-		SPrintMoney(sTemp, BobbyROrderLocations[gbSelectedCity].usStandardService / GetWeightBasedOnMetricOption(1));
+		sTemp = SPrintMoney(BobbyROrderLocations[gbSelectedCity].usStandardService / GetWeightBasedOnMetricOption(1));
 	}
 
 	DrawTextToScreen(sTemp, BOBBYR_SHIPPING_SPEED_NUMBER_X, usPosY, BOBBYR_SHIPPING_SPEED_NUMBER_WIDTH, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
@@ -1903,7 +1898,7 @@ static UINT32 CalcPackageTotalWeight()
 
 static void DisplayPackageWeight(void)
 {
-	wchar_t zTemp[32];
+	ST::string zTemp;
 	UINT32  uiTotalWeight = CalcPackageTotalWeight();
 	//FLOAT  fWeight = (FLOAT)(uiTotalWeight / 10.0);
 
@@ -1911,8 +1906,8 @@ static void DisplayPackageWeight(void)
 	DrawTextToScreen(BobbyROrderFormText[BOBBYR_PACKAGE_WEIGHT], BOBBYR_PACKAXGE_WEIGHT_X + 8, BOBBYR_PACKAXGE_WEIGHT_Y + 4, BOBBYR_PACKAXGE_WEIGHT_WIDTH, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Display the weight
-	//swprintf(zTemp, L"%3.1f %ls", fWeight, pMessageStrings[MSG_KILOGRAM_ABBREVIATION]);
-	swprintf( zTemp, lengthof(zTemp), L"%3.1f %ls", ( GetWeightBasedOnMetricOption( uiTotalWeight ) / 10.0f ), GetWeightUnitString() );
+	//zTemp = ST::format("{3.1f} {}", fWeight, pMessageStrings[MSG_KILOGRAM_ABBREVIATION]);
+	zTemp = ST::format("{3.1f} {}", ( GetWeightBasedOnMetricOption( uiTotalWeight ) / 10.0f ), GetWeightUnitString());
 	DrawTextToScreen(zTemp, BOBBYR_PACKAXGE_WEIGHT_X + 3, BOBBYR_PACKAXGE_WEIGHT_Y + 4, BOBBYR_PACKAXGE_WEIGHT_WIDTH, BOBBYR_ORDER_STATIC_TEXT_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 }
 

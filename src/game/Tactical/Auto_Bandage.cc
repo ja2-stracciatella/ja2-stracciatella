@@ -38,6 +38,8 @@
 
 #include "Soldier.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -595,7 +597,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 				RenderSoldierSmallFaceForAutoBandagePanel( iIndex, sCurrentXPosition, sCurrentYPosition );
 
 				// display the mercs name
-				const wchar_t* const Name = doctor->name;
+				ST::string Name = doctor->name;
 				FindFontCenterCoordinates(sCurrentXPosition, sCurrentYPosition, TACT_UPDATE_MERC_FACE_X_WIDTH - 25, 0, Name, TINYFONT1, &sX, &sY);
 				SetFontAttributes(TINYFONT1, FONT_LTRED);
 
@@ -635,7 +637,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 	iCurPixelY = sYPosition + ((iCounterA - 1) * TACT_UPDATE_MERC_FACE_X_HEIGHT);
 
 
-	const wchar_t* Medics = zMarksMapScreenText[13];
+	ST::string Medics = zMarksMapScreenText[13];
 	FindFontCenterCoordinates(sXPosition, sCurrentYPosition, iTotalPixelsWide, 0, Medics, TINYFONT1, &sX, &sY);
 	// print medic
 	MPrint(sX, sYPosition - 7, Medics);
@@ -672,7 +674,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 				RenderSoldierSmallFaceForAutoBandagePanel( iIndex + iNumberDoctors, sCurrentXPosition, sCurrentYPosition );
 
 				// display the mercs name
-				const wchar_t* const Name = patient->name;
+				ST::string Name = patient->name;
 				FindFontCenterCoordinates(sCurrentXPosition, sCurrentYPosition, TACT_UPDATE_MERC_FACE_X_WIDTH - 25, 0, Name, TINYFONT1, &sX, &sY);
 				SetFontAttributes(TINYFONT1, FONT_LTRED);
 				sY+= 35;
@@ -748,7 +750,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 
 	SetFontAttributes(TINYFONT1, FONT_WHITE);
 
-	const wchar_t* Patients = zMarksMapScreenText[14];
+	ST::string Patients = zMarksMapScreenText[14];
 	FindFontCenterCoordinates(sXPosition, sCurrentYPosition, iTotalPixelsWide, 0, Patients, TINYFONT1, &sX, &sY);
 	// print patient
 	MPrint(sX, iCurPixelY + TACT_UPDATE_MERC_FACE_X_HEIGHT + 2, Patients);
@@ -775,7 +777,7 @@ static void DisplayAutoBandageUpdatePanel(void)
 static void StopAutoBandageButtonCallback(GUI_BUTTON* btn, INT32 reason);
 
 
-static void MakeButton(UINT idx, INT16 x, INT16 y, const wchar_t* text)
+static void MakeButton(UINT idx, INT16 x, INT16 y, const ST::string& text)
 {
 	GUIButtonRef const btn = QuickCreateButtonImg(INTERFACEDIR "/group_confirm_tactical.sti", 7, 8, x, y,
 							MSYS_PRIORITY_HIGHEST - 1, StopAutoBandageButtonCallback);

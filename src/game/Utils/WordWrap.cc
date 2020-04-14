@@ -6,48 +6,49 @@
 #include "MemMan.h"
 #include "VSurface.h"
 
+#include <string_theory/string>
 
-static WRAPPED_STRING* AllocWrappedString(const wchar_t* start, const wchar_t* end)
+
+static WRAPPED_STRING* AllocWrappedString(const char32_t* data, size_t size)
 {
 	WRAPPED_STRING* const ws = new WRAPPED_STRING{};
-	ws->sString.assign(start, end);
-	ws->sString.push_back(L'\0');
+	ws->codepoints = ST::utf32_buffer(data, size);
 	return ws;
 }
 
 
-WRAPPED_STRING* LineWrap(SGPFont const font, UINT16 const usLineWidthPixels, wchar_t const* const pString)
+WRAPPED_STRING* LineWrap(SGPFont font, UINT16 usLineWidthPixels, const ST::utf32_buffer& codepoints)
 {
 	size_t const max_w = usLineWidthPixels;
 
 	WRAPPED_STRING*  head   = 0;
 	WRAPPED_STRING** anchor = &head;
 
-	wchar_t const* i = pString;
-	while (*i == L' ') ++i; // Skip leading spaces
+	const char32_t* i = codepoints.data();
+	while (*i == U' ') ++i; // Skip leading spaces
 
 	size_t         line_w     = 0;
-	wchar_t const* line_start = i;
-	wchar_t const* line_end   = i;
-	wchar_t const* word_start = i;
+	const char32_t* line_start = i;
+	const char32_t* line_end   = i;
+	const char32_t* word_start = i;
 	size_t         word_w     = 0;
 	for (;; ++i)
 	{
-		if (*i == L' ')
+		if (*i == U' ')
 		{
 			line_end = i;
-			for (; *i == L' '; ++i)
+			for (; *i == U' '; ++i)
 			{
 				line_w += GetCharWidth(font, *i);
 			}
 			word_start = i;
 			word_w     = 0;
 		}
-		if (*i == L'\0')
+		if (*i == U'\0')
 		{
 			if (line_start != i) // Append last line
 			{
-				WRAPPED_STRING* const ws = AllocWrappedString(line_start, i);
+				WRAPPED_STRING* const ws = AllocWrappedString(line_start, i - line_start);
 				*anchor = ws;
 			}
 			return head;
@@ -63,14 +64,14 @@ WRAPPED_STRING* LineWrap(SGPFont const font, UINT16 const usLineWidthPixels, wch
 				word_start = i;
 				word_w     = 0;
 			}
-			WRAPPED_STRING* const ws = AllocWrappedString(line_start, line_end);
+			WRAPPED_STRING* const ws = AllocWrappedString(line_start, line_end - line_start);
 			*anchor    = ws;
 			anchor     = &ws->pNextWrappedString;
 			line_start = word_start;
 			line_end   = word_start;
 			line_w     = word_w;
 		}
-		if (*i == '-')
+		if (*i == U'-')
 		{ // Allow separation at hyphens
 			line_end   = i + 1;
 			word_start = i + 1;
@@ -83,13 +84,13 @@ WRAPPED_STRING* LineWrap(SGPFont const font, UINT16 const usLineWidthPixels, wch
 // Pass in, the x,y location for the start of the string,
 //					the width of the buffer
 //					the gap in between the lines
-UINT16 DisplayWrappedString(UINT16 const x, UINT16 y, UINT16 w, UINT8 const gap, SGPFont const font, UINT8 const foreground, const wchar_t* const string, UINT8 const background, UINT32 const flags)
+UINT16 DisplayWrappedString(UINT16 x, UINT16 y, UINT16 w, UINT8 gap, SGPFont font, UINT8 foreground, const ST::utf32_buffer& codepoints, UINT8 background, UINT32 flags)
 {
 	UINT16       total_h = 0;
 	UINT16 const h       = GetFontHeight(font) + gap;
-	for (WRAPPED_STRING* i = LineWrap(font, w, string); i;)
+	for (WRAPPED_STRING* i = LineWrap(font, w, codepoints); i;)
 	{
-		DrawTextToScreen(i->sString.data(), x, y, w, font, foreground, background, flags);
+		DrawTextToScreen(i->codepoints, x, y, w, font, foreground, background, flags);
 		WRAPPED_STRING* const del = i;
 		i = i->pNextWrappedString;
 		delete del;
@@ -110,12 +111,12 @@ UINT16 DisplayWrappedString(UINT16 const x, UINT16 y, UINT16 w, UINT8 const gap,
 //			the color of the background
 //			do you want to display it using dirty rects, TRUE or FALSE
 //			flags for either LEFT_JUSTIFIED, CENTER_JUSTIFIED, RIGHT_JUSTIFIED
-void DrawTextToScreen(wchar_t const* const str, UINT16 x, UINT16 const y, UINT16 const max_w, SGPFont const font, UINT8 const foreground, UINT8 const background, UINT32 const flags)
+void DrawTextToScreen(const ST::utf32_buffer& codepoints, UINT16 x, UINT16 y, UINT16 max_w, SGPFont font, UINT8 foreground, UINT8 background, UINT32 flags)
 {
 	if (flags & DONT_DISPLAY_TEXT) return;
 
 	INT16 const w = flags & (CENTER_JUSTIFIED | RIGHT_JUSTIFIED | TEXT_SHADOWED | INVALIDATE_TEXT) ?
-		StringPixLength(str, font) : 0;
+		StringPixLength(codepoints, font) : 0;
 
 	if (flags & CENTER_JUSTIFIED)
 	{
@@ -137,11 +138,11 @@ void DrawTextToScreen(wchar_t const* const str, UINT16 x, UINT16 const y, UINT16
 	SetFontBackground(background);
 	if (flags & MARK_DIRTY)
 	{
-		GDirtyPrint(x, y, str);
+		GDirtyPrint(x, y, codepoints);
 	}
 	else
 	{
-		MPrint(x, y, str);
+		MPrint(x, y, codepoints);
 	}
 
 	if (flags & INVALIDATE_TEXT)
@@ -152,9 +153,8 @@ void DrawTextToScreen(wchar_t const* const str, UINT16 x, UINT16 const y, UINT16
 }
 
 
-static void IanDrawTextToScreen(wchar_t const* const str, wchar_t* const end, UINT16 const x, UINT16 const y, UINT16 const w, SGPFont const font, UINT8 const foreground, UINT8 const background, UINT32 flags, UINT32 const ian_flags)
+static void IanDrawTextToScreen(const ST::string& str, UINT16 x, UINT16 y, UINT16 w, SGPFont font, UINT8 foreground, UINT8 background, UINT32 flags, UINT32 ian_flags)
 {
-	*end = L'\0';
 	if (ian_flags & IAN_WRAP_NO_SHADOW) SetFontShadow(NO_SHADOW);
 	flags |= ian_flags & MARK_DIRTY;
 	DrawTextToScreen(str, x, y, w, font, foreground, background, flags);
@@ -165,11 +165,10 @@ static void IanDrawTextToScreen(wchar_t const* const str, wchar_t* const end, UI
 // Pass in, the x,y location for the start of the string,
 //					the width of the buffer (how many pixels wide for word wrapping)
 //					the gap in between the lines
-UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const max_w, UINT8 const gap, SGPFont const font, UINT8 const foreground, wchar_t const* const str, UINT8 const background, UINT32 const flags)
+UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SGPFont font, UINT8 foreground, const ST::utf32_buffer& codepoints, UINT8 background, UINT32 flags)
 {
-	wchar_t        line_buf[128];
-	wchar_t*       line_pos       = line_buf;
-	wchar_t const* i              = str;
+	ST::string line_buf;
+	const char32_t* i = codepoints.c_str();
 	UINT16         cur_max_w      = max_w;
 	UINT16         line_w         = 0;
 	UINT16         x              = sx;
@@ -182,8 +181,8 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 	do
 	{
 		// each character goes towards building a new word
-		wchar_t const* word_start = i;
-		while (*i != TEXT_SPACE && *i != L'\0') ++i;
+		const char32_t* word_start = i;
+		while (*i != TEXT_SPACE && *i != U'\0') ++i;
 
 		// we hit a space (or end of record), so this is the END of a word!
 		switch (word_start[0])
@@ -196,7 +195,7 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 				else	// turn OFF centering...
 				{
 					// time to draw this line of text (centered)!
-					IanDrawTextToScreen(line_buf, line_pos, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
+					IanDrawTextToScreen(line_buf, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
 
 					x  = sx;
 					y += h;
@@ -206,19 +205,19 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 				}
 
 				// reset the line
-				line_pos = line_buf;
+				line_buf = ST::null;
 				line_w   = 0;
 				break;
 
 			case TEXT_CODE_NEWLINE:
 				// Display what we have up to now
-				IanDrawTextToScreen(line_buf, line_pos, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
+				IanDrawTextToScreen(line_buf, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
 
 				x  = sx;
 				y += h;
 
 				// reset the line
-				line_pos = line_buf;
+				line_buf = ST::null;
 				line_w   = 0;
 
 				// reset width
@@ -226,7 +225,7 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 				break;
 
 			case TEXT_CODE_BOLD:
-				IanDrawTextToScreen(line_buf, line_pos, x, y, cur_max_w, cur_font, foreground, background, justification, flags);
+				IanDrawTextToScreen(line_buf, x, y, cur_max_w, cur_font, foreground, background, justification, flags);
 				// calculate new x position for next time
 				x += StringPixLength(line_buf, cur_font);
 
@@ -246,12 +245,12 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 				h = GetFontHeight(cur_font) + gap;
 
 				// erase line string
-				line_pos = line_buf;
+				line_buf = ST::null;
 				break;
 
 			case TEXT_CODE_NEWCOLOR:
 				// change to new color.... but first, write whatever we have in normal now...
-				IanDrawTextToScreen(line_buf, line_pos, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
+				IanDrawTextToScreen(line_buf, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
 				// calculate new x position for next time
 				x += StringPixLength(line_buf, cur_font);
 
@@ -265,12 +264,12 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 				cur_max_w -= line_w;
 
 				// erase line string
-				line_pos = line_buf;
+				line_buf = ST::null;
 				break;
 
 			case TEXT_CODE_DEFCOLOR:
 				// turn color back to default - write whatever we have in bold now...
-				IanDrawTextToScreen(line_buf, line_pos, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
+				IanDrawTextToScreen(line_buf, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
 				// calculate new x position for next time
 				x += StringPixLength(line_buf, cur_font);
 
@@ -278,7 +277,7 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 				cur_max_w -= line_w;
 
 				// erase line string
-				line_pos = line_buf;
+				line_buf = ST::null;
 
 				// change color back to default color
 				cur_foreground = foreground;
@@ -287,7 +286,7 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 			default: // not a special character
 				// get the length (in pixels) of this word
 				UINT16 word_w = 0;
-				for (wchar_t const* k = word_start; k != i; ++k)
+				for (const char32_t* k = word_start; k != i; ++k)
 				{
 					word_w += GetCharWidth(cur_font, *k);
 				}
@@ -296,13 +295,13 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 				if (line_w + word_w >= max_w)
 				{ // can't fit this word!
 					// Display what we have up to now
-					IanDrawTextToScreen(line_buf, line_pos, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
+					IanDrawTextToScreen(line_buf, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
 
 					x  = sx;
 					y += h;
 
 					// start off next line string with the word we couldn't fit
-					line_pos = line_buf;
+					line_buf = ST::null;
 					line_w   = 0;
 
 					// reset width
@@ -310,18 +309,18 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 				}
 
 				// add the word (with the space) to the line
-				while (word_start != i) *line_pos++ = *word_start++;
-				*line_pos++ = L' ';
+				while (word_start != i) line_buf += *word_start++;
+				line_buf += U' ';
 
 				// calc new pixel length for the line
-				line_w += word_w + GetCharWidth(cur_font, L' ');
+				line_w += word_w + GetCharWidth(cur_font, U' ');
 				break;
 		}
 	}
-	while (*i++ != '\0');
+	while (*i++ != U'\0');
 
 	// draw the paragraph
-	IanDrawTextToScreen(line_buf, line_pos, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
+	IanDrawTextToScreen(line_buf, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
 	y += h;
 
 	// return how many Y pixels we used
@@ -332,11 +331,10 @@ UINT16 IanDisplayWrappedString(UINT16 const sx, UINT16 const sy, UINT16 const ma
 /* This procedure will run through a string and strip out all control
  * characters. This is a nessacary as wcscmp and the like tend not to like
  * control chars in their strings */
-void CleanOutControlCodesFromString(wchar_t const* const src, wchar_t* const dst)
+ST::string CleanOutControlCodesFromString(const ST::utf32_buffer& codepoints)
 {
-	// while not end of source string,
-	wchar_t const* s = src;
-	wchar_t*       d = dst;
+	ST::string buf;
+	const char32_t* s = codepoints.c_str();
 	for (;;)
 	{
 		switch (*s)
@@ -354,9 +352,11 @@ void CleanOutControlCodesFromString(wchar_t const* const src, wchar_t* const dst
 				++s;
 				break;
 
+			case U'\0':
+				return buf;
+
 			default:
-				if ((*d++ = *s++) == L'\0')
-					return;
+				buf += *s++;
 				break;
 		}
 	}
@@ -364,7 +364,7 @@ void CleanOutControlCodesFromString(wchar_t const* const src, wchar_t* const dst
 
 
 // now variant for grabbing height
-UINT16 IanWrappedStringHeight(UINT16 const max_w, UINT8 const gap, SGPFont const font, wchar_t const* const str)
+UINT16 IanWrappedStringHeight(UINT16 max_w, UINT8 gap, SGPFont font, const ST::utf32_buffer& codepoints)
 {
 	UINT16  line_w             = 0;
 	UINT16  n_lines            = 1;
@@ -376,12 +376,12 @@ UINT16 IanWrappedStringHeight(UINT16 const max_w, UINT8 const gap, SGPFont const
 	 * string to screen since this all we want to do, everything IanWrapped will
 	 * do but without displaying string */
 
-	wchar_t const* i = str;
+	const char32_t* i = codepoints.c_str();
 	do
 	{
 		// each character goes towards building a new word
-		wchar_t const* word_start = i;
-		while (*i != TEXT_SPACE && *i != L'\0') i++;
+		const char32_t* word_start = i;
+		while (*i != TEXT_SPACE && *i != U'\0') i++;
 
 		// we hit a space (or end of record), so this is the END of a word!
 		switch (word_start[0])
@@ -431,7 +431,7 @@ UINT16 IanWrappedStringHeight(UINT16 const max_w, UINT8 const gap, SGPFont const
 			default:
 				// get the length (in pixels) of this word
 				UINT16 word_w = 0;
-				for (wchar_t const* k = word_start; k != i; ++k)
+				for (const char32_t* k = word_start; k != i; ++k)
 				{
 					word_w += GetCharWidth(cur_font, *k);
 				}
@@ -448,32 +448,37 @@ UINT16 IanWrappedStringHeight(UINT16 const max_w, UINT8 const gap, SGPFont const
 				}
 
 				// calc new pixel length for the line
-				line_w += word_w + GetCharWidth(cur_font, L' ');
+				line_w += word_w + GetCharWidth(cur_font, U' ');
 		}
 	}
-	while (*i++ != L'\0');
+	while (*i++ != U'\0');
 
 	// return how many Y pixels we used
 	return n_lines * (GetFontHeight(font) + gap);
 }
 
 
-void ReduceStringLength(wchar_t* pString, size_t Length, UINT32 uiWidthToFitIn, SGPFont const font)
+ST::string ReduceStringLength(const ST::utf32_buffer& codepoints, UINT32 widthToFitIn, SGPFont font)
 {
-	//if the string is wider then the loaction
-	if (static_cast<UINT32>(StringPixLength(pString, font)) <= uiWidthToFitIn) return;
+	if (static_cast<UINT32>(StringPixLength(codepoints, font)) <= widthToFitIn) return codepoints;
 
-	const wchar_t* const Dots = L"...";
-	UINT32 RestWidth = uiWidthToFitIn - StringPixLength(Dots, font);
+	const char32_t dot = U'.';
+	const UINT32 dotWidth = GetCharWidth(font, dot);
+	const size_t numDots = 3;
+	const UINT32 dotsWidth = dotWidth * numDots;
 
-	//loop through and add each character, 1 at a time
-	UINT32 i;
-	for (i = 0;; i++)
+	ST::string buf;
+	UINT32 width = 0;
+	for (char32_t c: codepoints)
 	{
-		UINT32 CharWidth = GetCharWidth(font, pString[i]);
-		if (CharWidth > RestWidth) break;
-		RestWidth -= CharWidth;
+		UINT32 charWidth = GetCharWidth(font, c);
+		if (width + charWidth + dotsWidth > widthToFitIn) break;
+		buf += c;
 	}
-
-	wcslcpy(pString + i, Dots, Length - i);
+	for (size_t i = 0; i < numDots; ++i)
+	{
+		if (width + dotWidth > widthToFitIn) break;
+		buf += dot;
+	}
+	return buf;
 }

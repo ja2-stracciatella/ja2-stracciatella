@@ -14,6 +14,8 @@
 #include "Video.h"
 #include "UILayout.h"
 
+#include <string_theory/format>
+
 
 LoadingScreenID gubLastLoadingScreenID = LOADINGSCREEN_NOTHING;
 
@@ -187,7 +189,7 @@ void DisplayLoadScreenWithID(LoadingScreenID const id)
 	{ // Failed to load the file, so use a black screen and print out message.
 		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
 		FRAME_BUFFER->Fill(0);
-		mprintf(5, 5, L"%hs loadscreen data file not found", filename);
+		MPrint(5, 5, ST::format("{} loadscreen data file not found", filename));
 	}
 
 	gubLastLoadingScreenID = id;

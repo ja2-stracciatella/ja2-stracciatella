@@ -11,6 +11,8 @@
 #include "Overhead_Types.h"
 #include "Item_Types.h"
 
+#include <string_theory/string>
+
 
 // ANDREW: these are defines for OKDestanation usage - please move to approprite file
 #define IGNOREPEOPLE					0
@@ -303,6 +305,9 @@ enum
 };
 
 
+#define SOLDIERTYPE_NAME_LENGTH 10
+
+
 struct SOLDIERTYPE
 {
 	// ID
@@ -340,7 +345,7 @@ struct SOLDIERTYPE
 	UINT8 ubAttackingHand;
 	// traits
 	INT16 sWeightCarriedAtTurnStart;
-	wchar_t name[ 10 ];
+	ST::string name;
 
 	INT8 bVisible; // to render or not to render...
 

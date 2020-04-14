@@ -1,6 +1,9 @@
 #ifndef __MESSAGEBOX_H
 #define __MESSAGEBOX_H
 
+#include <string_theory/string>
+
+
 enum
 {
 	MESSAGEBOX_NONE,
@@ -11,7 +14,7 @@ enum
 extern UINT8 gubMessageBoxStatus;
 extern BOOLEAN gfMessageBoxResult;
 
-void CreateMessageBox(wchar_t const* msg);
+void CreateMessageBox(const ST::string& msg);
 BOOLEAN MessageBoxHandled(void);
 void RemoveMessageBox(void);
 

@@ -22,27 +22,30 @@
 #include "Map_Screen_Interface.h"
 #include "Tactical_Save.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
 
-void GetSectorFacilitiesFlags(INT16 const x, INT16 const y, wchar_t* const buf, size_t const length)
+
+ST::string GetSectorFacilitiesFlags(INT16 x, INT16 y)
 {
 	// Build a string stating current facilities present in sector
 	UINT32 const facilities = SectorInfo[SECTOR(x, y)].uiFacilitiesFlags;
 	if (facilities == 0)
 	{
-		wcslcpy(buf, sFacilitiesStrings[0], length);
-		return;
+		return sFacilitiesStrings[0];
 	}
 
-	wchar_t const* fmt = L"%ls";
-	size_t         n   = 0;
+	ST::string buf;
+	const char* fmt = "{}";
 	for (size_t i = 0;; ++i)
 	{
 		UINT32 const bit = 1 << i;
 		if (!(facilities & bit)) continue;
-		n  += swprintf(buf + n, length - n, fmt, sFacilitiesStrings[i + 1]);
-		fmt = L",%ls";
+		buf += ST::format(fmt, sFacilitiesStrings[i + 1]);
+		fmt = ",{}";
 		if ((facilities & ~(bit - 1)) == bit) break;
 	}
+	return buf;
 }
 
 

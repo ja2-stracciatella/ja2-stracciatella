@@ -41,6 +41,8 @@
 #include "GameInstance.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
 #include <vector>
 
 static std::vector<DOOR_STATUS> gpDoorStatus;
@@ -512,7 +514,7 @@ BOOLEAN HasDoorTrapGoneOff( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 }
 
 
-wchar_t const* GetTrapName(DOOR const& d)
+ST::string GetTrapName(DOOR const& d)
 {
 	UINT8 trap_kind = d.ubTrapID;
 	switch (trap_kind)
@@ -528,8 +530,8 @@ void HandleDoorTrap(SOLDIERTYPE& s, DOOR const& d)
 {
 	if (!(DoorTrapTable[d.ubTrapID].fFlags & DOOR_TRAP_SILENT))
 	{
-		wchar_t const* const trap_name = GetTrapName(d);
-		ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, TacticalStr[LOCK_TRAP_HAS_GONE_OFF_STR], trap_name);
+		ST::string trap_name = GetTrapName(d);
+		ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[LOCK_TRAP_HAS_GONE_OFF_STR], trap_name));
 	}
 
 	// set trap off

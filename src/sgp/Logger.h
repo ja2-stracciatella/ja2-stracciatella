@@ -1,7 +1,11 @@
-#pragma once
+#ifndef SGP_LOGGER_H_
+#define SGP_LOGGER_H_
 
 #include "RustInterface.h"
 
+#include <string_theory/string>
+
+void LogMessage(bool isAssert, LogLevel level, const char* file, const ST::string& str);
 void LogMessage(bool isAssert, LogLevel level, const char *file, const char *format, ...);
 
 /** Print debug message macro. */
@@ -18,3 +22,5 @@ void LogMessage(bool isAssert, LogLevel level, const char *file, const char *for
 
 /** Print error message macro. */
 #define SLOGA(FORMAT, ...) LogMessage(true, LogLevel::Error, __FILE__, FORMAT, ##__VA_ARGS__)
+
+#endif//SGP_LOGGER_H_

@@ -45,6 +45,5 @@ endif()
 # interface library
 add_library(string_theory INTERFACE)
 target_include_directories(string_theory INTERFACE "${INSTALL_PREFIX}/include")
-target_link_libraries(string_theory INTERFACE "${INSTALL_PREFIX}/lib/${CMAKE_STATIC_LIBRARY_PREFIX}string_theory${CMAKE_STATIC_LIBRARY_SUFFIX}")
 
 message(STATUS "</string_theory>")

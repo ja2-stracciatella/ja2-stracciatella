@@ -19,6 +19,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 UINT8			AimMercArray[ MAX_NUMBER_MERCS ];
 
 static LaptopMode const gCurrentAimPage[NUM_AIM_SCREENS] =
@@ -451,16 +454,15 @@ static void SelectAimLogoRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-static void LoadAIMText(wchar_t buf[], UINT32 entry)
+static ST::string LoadAIMText(UINT32 entry)
 {
-	GCM->loadEncryptedString(AIMHISTORYFILE, buf, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
+	return GCM->loadEncryptedString(AIMHISTORYFILE, AIM_HISTORY_LINE_SIZE * entry, AIM_HISTORY_LINE_SIZE);
 }
 
 
 void DisplayAimSlogan()
 {
-	wchar_t	sSlogan[AIM_HISTORY_LINE_SIZE];
-	LoadAIMText(sSlogan, 0);
+	ST::string sSlogan = LoadAIMText(0);
 	//Display Aim Text under the logo
 	DisplayWrappedString(AIM_LOGO_TEXT_X, AIM_LOGO_TEXT_Y, AIM_LOGO_TEXT_WIDTH, 2, AIM_LOGO_FONT, AIM_FONT_MCOLOR_WHITE, sSlogan, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 }
@@ -468,17 +470,17 @@ void DisplayAimSlogan()
 
 void DisplayAimCopyright()
 {
-	wchar_t	sSlogan[AIM_HISTORY_LINE_SIZE];
+	ST::string sSlogan;
 
 	//Load and Display the copyright notice
 
-	LoadAIMText(sSlogan, AIM_COPYRIGHT_1);
+	sSlogan = LoadAIMText(AIM_COPYRIGHT_1);
 	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
-	LoadAIMText(sSlogan, AIM_COPYRIGHT_2);
+	sSlogan = LoadAIMText(AIM_COPYRIGHT_2);
 	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y + AIM_COPYRIGHT_GAP, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
-	LoadAIMText(sSlogan, AIM_COPYRIGHT_3);
+	sSlogan = LoadAIMText(AIM_COPYRIGHT_3);
 	DrawTextToScreen(sSlogan, AIM_COPYRIGHT_X, AIM_COPYRIGHT_Y + AIM_COPYRIGHT_GAP * 2, AIM_COPYRIGHT_WIDTH, AIM_COPYRIGHT_FONT, FONT_MCOLOR_DKWHITE, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 }
 
@@ -493,7 +495,7 @@ void InitAimMenuBar()
 
 	UINT16             x    = BOTTOM_BUTTON_START_X;
 	UINT16     const   y    = BOTTOM_BUTTON_START_Y;
-	const StrPointer * text = AimBottomMenuText;
+	const ST::string* text = AimBottomMenuText;
 	LaptopMode const*  page = gCurrentAimPage;
 	FOR_EACHX(GUIButtonRef, i, guiBottomButtons, x += BOTTOM_BUTTON_START_WIDTH)
 	{
@@ -736,8 +738,7 @@ static BOOLEAN DrawWarningBox(BOOLEAN fInit, BOOLEAN fRedraw)
 		BltVideoObject(FRAME_BUFFER, guiWarning, 0, WARNING_X, WARNING_Y);
 
 		//Display Aim Warning Text
-		wchar_t sText[AIM_HISTORY_LINE_SIZE];
-		LoadAIMText(sText, AIM_WARNING_1);
+		ST::string sText = LoadAIMText(AIM_WARNING_1);
 		DisplayWrappedString(AIM_WARNING_TEXT_X, AIM_WARNING_TEXT_Y, AIM_WARNING_TEXT_WIDTH, 2, AIM_WARNING_FONT, FONT_RED, sText, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 		InvalidateRegion(AIM_AD_TOP_LEFT_X,AIM_AD_TOP_LEFT_Y, AIM_AD_BOTTOM_RIGHT_X	,AIM_AD_BOTTOM_RIGHT_Y);

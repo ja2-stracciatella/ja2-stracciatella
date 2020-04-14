@@ -1,6 +1,3 @@
-#include <bitset>
-#include <string_theory/string>
-
 #include "Types.h"
 #include "Input.h"
 #include "MemMan.h"
@@ -9,6 +6,10 @@
 #include "Video.h"
 #include "Local.h"
 #include "UILayout.h"
+
+#include <string_theory/string>
+
+#include <bitset>
 
 
 // The gfKeyState table is used to track which of the keys is up or down at any one time. This is used while polling
@@ -53,7 +54,7 @@ static void QueueMouseEvent(UINT16 ubInputEvent)
 }
 
 
-static void QueueKeyEvent(UINT16 ubInputEvent, SDL_Keycode Key, SDL_Keymod Mod, wchar_t Char)
+static void QueueKeyEvent(UINT16 ubInputEvent, SDL_Keycode Key, SDL_Keymod Mod, ST::utf32_buffer codepoints)
 {
 	// Can we queue up one more event, if not, the event is lost forever
 	if (gusQueueCount == lengthof(gEventQueue)) return;
@@ -65,7 +66,7 @@ static void QueueKeyEvent(UINT16 ubInputEvent, SDL_Keycode Key, SDL_Keymod Mod, 
 	gEventQueue[gusTailIndex].usKeyState = ModifierState;
 	gEventQueue[gusTailIndex].usEvent = ubInputEvent;
 	gEventQueue[gusTailIndex].usParam = Key;
-	gEventQueue[gusTailIndex].Char    = Char;
+	gEventQueue[gusTailIndex].codepoints = std::move(codepoints);
 
 	gusQueueCount++;
 
@@ -290,7 +291,7 @@ static void KeyChange(SDL_Keysym const* const key_sym, bool const pressed)
 	}
 	gfKeyState[RemapKeycode(key)] = pressed;
 
-	QueueKeyEvent(event_type, key, mod, '\0');
+	QueueKeyEvent(event_type, key, mod, ST::null);
 }
 
 
@@ -372,8 +373,7 @@ void KeyUp(const SDL_Keysym* KeySym)
 
 void TextInput(const SDL_TextInputEvent* TextEv) {
 	try {
-		ST::utf16_buffer str = ST::string(TextEv->text).to_utf16();
-		QueueKeyEvent(TEXT_INPUT, SDLK_UNKNOWN, KMOD_NONE, str.c_str()[0]); // expects a wchar_t but a char16_t is sent, might have more characters
+		QueueKeyEvent(TEXT_INPUT, SDLK_UNKNOWN, KMOD_NONE, ST::string(TextEv->text).to_utf32());
 	}
 	catch (const ST::unicode_error&)
 	{

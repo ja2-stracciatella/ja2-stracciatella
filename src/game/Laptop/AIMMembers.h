@@ -1,6 +1,9 @@
 #ifndef __AIMMEMBERS_H_
 #define __AIMMEMBERS_H_
 
+#include <string_theory/string>
+
+
 void EnterAIMMembers(void);
 void ExitAIMMembers(void);
 void HandleAIMMembers(void);
@@ -9,7 +12,7 @@ void RenderAIMMembers(void);
 
 void DrawNumeralsToScreen(INT32 iNumber, INT8 bWidth, UINT16 usLocX, UINT16 usLocY, SGPFont, UINT8 ubColor);
 
-void DisplayTextForMercFaceVideoPopUp(const wchar_t* pString);
+void DisplayTextForMercFaceVideoPopUp(const ST::string& str);
 void EnterInitAimMembers(void);
 void RenderAIMMembersTopLevel(void);
 

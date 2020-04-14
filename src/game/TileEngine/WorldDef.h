@@ -4,6 +4,8 @@
 #include "JA2Types.h"
 #include "World_Tileset_Enums.h"
 
+#include <string_theory/string>
+
 
 #define WORLD_TILE_X		40
 #define WORLD_TILE_Y		20

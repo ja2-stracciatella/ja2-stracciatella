@@ -15,6 +15,8 @@
 #include "VSurface.h"
 #include "Font_Control.h"
 
+#include <string_theory/string>
+
 
 #define MERC_NA_TEXT_FONT	FONT12ARIAL
 #define MERC_NA_TEXT_COLOR	FONT_MCOLOR_WHITE
@@ -45,7 +47,7 @@ static void BtnCancelBoxButtonCallback(GUI_BUTTON *btn, INT32 reason);
 GUIButtonRef guiCancelBoxButton;
 
 
-static GUIButtonRef MakeButton(const wchar_t* text, INT16 x, GUI_CALLBACK click)
+static GUIButtonRef MakeButton(const ST::string& text, INT16 x, GUI_CALLBACK click)
 {
 	const INT16 shadow_col = DEFAULT_SHADOW;
 	GUIButtonRef const btn = CreateIconAndTextButton(guiOpenAccountBoxButtonImage, text, FONT12ARIAL, MERC_BUTTON_UP_COLOR, shadow_col, MERC_BUTTON_DOWN_COLOR, shadow_col, x, MERC_BUTTON_Y, MSYS_PRIORITY_HIGH, click);

@@ -58,12 +58,12 @@ TEST(LoadSaveData, integers)
 	}
 }
 
-TEST(LoadSaveData, wcharToUTF16English)
+TEST(LoadSaveData, writeStringAsUTF16English)
 {
 	char buf[100];
 
 	DataWriter writer(buf);
-	writer.writeStringAsUTF16(L"test", 5);
+	writer.writeStringAsUTF16("test", 5);
 
 	// read as 5 uint16
 	{
@@ -79,12 +79,12 @@ TEST(LoadSaveData, wcharToUTF16English)
 	}
 }
 
-TEST(LoadSaveData, wcharToUTF16Russian)
+TEST(LoadSaveData, writeStringAsUTF16Russian)
 {
 	char buf[100];
 
 	DataWriter writer(buf);
-	writer.writeStringAsUTF16(L"тест", 5);
+	writer.writeStringAsUTF16("тест", 5);
 
 	// read as 5 uint16
 	{
@@ -97,7 +97,7 @@ TEST(LoadSaveData, wcharToUTF16Russian)
 	}
 }
 
-TEST(LoadSaveData, utf16ToWideString)
+TEST(LoadSaveData, readUTF16)
 {
 	char buf[100];
 	DataWriter writer(buf);
@@ -110,24 +110,14 @@ TEST(LoadSaveData, utf16ToWideString)
 
 	{
 		DataReader reader(buf);
-		EXPECT_EQ(reader.readUTF16(5), "тест"_st);
-
-		EXPECT_EQ(reader.getConsumed(), 10u);
-		EXPECT_EQ(writer.getConsumed(), 10u);
-	}
-
-	{
-		DataReader reader(buf);
-		wchar_t wideBuf[10];
-		reader.readUTF16(wideBuf, 5);
-		EXPECT_STREQ(wideBuf, L"тест");
+		EXPECT_EQ(reader.readUTF16(5), "тест");
 
 		EXPECT_EQ(reader.getConsumed(), 10u);
 		EXPECT_EQ(writer.getConsumed(), 10u);
 	}
 }
 
-TEST(LoadSaveData, utf32ToWideString)
+TEST(LoadSaveData, readUTF32)
 {
 	char buf[100];
 	DataWriter writer(buf);
@@ -140,17 +130,7 @@ TEST(LoadSaveData, utf32ToWideString)
 
 	{
 		DataReader reader(buf);
-		EXPECT_EQ(reader.readUTF32(5), "тест"_st);
-
-		EXPECT_EQ(reader.getConsumed(), 20u);
-		EXPECT_EQ(writer.getConsumed(), 20u);
-	}
-
-	{
-		DataReader reader(buf);
-		wchar_t wideBuf[10];
-		reader.readUTF32(wideBuf, 5);
-		EXPECT_STREQ(wideBuf, L"тест");
+		EXPECT_EQ(reader.readUTF32(5), "тест");
 
 		EXPECT_EQ(reader.getConsumed(), 20u);
 		EXPECT_EQ(writer.getConsumed(), 20u);

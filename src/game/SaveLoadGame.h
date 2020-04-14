@@ -4,6 +4,8 @@
 #include "GameSettings.h"
 #include "ScreenIDs.h"
 
+#include <string_theory/string>
+
 
 #define BYTESINMEGABYTE				1048576 //1024*1024
 #define REQUIRED_FREE_SPACE				(20 * BYTESINMEGABYTE)
@@ -25,7 +27,7 @@ struct SAVED_GAME_HEADER
 	UINT32	uiSavedGameVersion;
 	char zGameVersionNumber[GAME_VERSION_LENGTH];
 
-	wchar_t	sSavedGameDesc[ SIZE_OF_SAVE_GAME_DESC ];
+	ST::string sSavedGameDesc;
 
 	/* (vanilla) UINT32	uiFlags; */
 
@@ -75,7 +77,7 @@ extern ScreenID guiScreenToGotoAfterLoadingSavedGame;
 void CreateSavedGameFileNameFromNumber(UINT8 ubSaveGameID, char* pzNewFileName);
 
 
-BOOLEAN SaveGame( UINT8 ubSaveGameID, const wchar_t *pGameDesc );
+BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc);
 void    LoadSavedGame(UINT8 save_slot_id);
 
 void BackupSavedGame(UINT8 const ubSaveGameID);

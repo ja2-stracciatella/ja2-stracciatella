@@ -319,7 +319,6 @@ static void ClassifyEdgepoints(void)
 
 void GenerateMapEdgepoints()
 {
-	INT32 i=-1;
 	INT16 sGridNo=-1;
 
 	//Get rid of the current edgepoint lists.

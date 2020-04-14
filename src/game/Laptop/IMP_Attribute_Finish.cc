@@ -13,6 +13,8 @@
 #include "Button_System.h"
 #include "Font_Control.h"
 
+#include <string_theory/string>
+
 
 // buttons
 static BUTTON_PICS* giIMPAttributeFinishButtonImage[2];
@@ -63,7 +65,7 @@ void HandleIMPAttributeFinish( void )
 }
 
 
-static void MakeButton(UINT idx, const wchar_t* text, INT16 y, GUI_CALLBACK click)
+static void MakeButton(UINT idx, const ST::string& text, INT16 y, GUI_CALLBACK click)
 {
 	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/button_2.sti", 0, 1);
 	giIMPAttributeFinishButtonImage[idx] = img;

@@ -111,14 +111,12 @@ static UINT32 GetWidth(HVOBJECT const hSrcVObject, GlyphIdx const ssIndex)
 
 
 /* Returns the length of a string in pixels, depending on the font given. */
-INT16 StringPixLength(wchar_t const* const string, SGPFont const font)
+INT16 StringPixLength(const ST::utf32_buffer& codepoints, SGPFont font)
 {
-	if (!string) return 0;
-
 	UINT32 w = 0;
-	for (wchar_t const* c = string; *c != L'\0'; ++c)
+	for (char32_t c : codepoints)
 	{
-		w += GetCharWidth(font, *c);
+		w += GetCharWidth(font, c);
 	}
 	return w;
 }
@@ -164,18 +162,18 @@ UINT16 GetFontHeight(SGPFont const font)
 }
 
 
-bool IsPrintableChar(wchar_t const c)
+bool IsPrintableChar(char32_t c)
 {
 	if (TRANSLATION_TABLE_SIZE <= c) return false;
 	return TranslationTable[c] != 0 || c == getZeroGlyphChar();
 }
 
 
-/* Given a wide char, this function returns the index of the glyph. If no glyph
- * exists for the requested wide char, the glyph index of '?' is returned. */
-static GlyphIdx GetGlyphIndex(wchar_t const c)
+/* Given a unicode codepoint, this function returns the index of the glyph. If no glyph
+ * exists for the requested codepoint, the glyph index of '?' is returned. */
+static GlyphIdx GetGlyphIndex(char32_t c)
 {
-	if ((0 <= c) && (c < TRANSLATION_TABLE_SIZE))
+	if (c < TRANSLATION_TABLE_SIZE)
 	{
 		GlyphIdx const idx = TranslationTable[c];
 		if (idx != 0 || c == getZeroGlyphChar()) return idx;
@@ -185,7 +183,7 @@ static GlyphIdx GetGlyphIndex(wchar_t const c)
 }
 
 
-UINT32 GetCharWidth(HVOBJECT SGPFont, wchar_t c)
+UINT32 GetCharWidth(HVOBJECT SGPFont, char32_t c)
 {
 	return GetWidth(SGPFont, GetGlyphIndex(c));
 }
@@ -226,6 +224,7 @@ void SetFontDestBuffer(SGPVSurface* const dst)
 	SetFontDestBuffer(dst, 0, 0, dst->Width(), dst->Height());
 }
 
+
 /** Replace backbuffer if it is used by the font system. */
 void ReplaceFontBackBuffer(SGPVSurface* oldBackbuffer, SGPVSurface* newBackbuffer)
 {
@@ -240,10 +239,11 @@ void ReplaceFontBackBuffer(SGPVSurface* oldBackbuffer, SGPVSurface* newBackbuffe
 	}
 }
 
-void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, SGPFont const font, INT16* psNewX, INT16* psNewY)
+
+void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const ST::utf32_buffer& codepoints, SGPFont font, INT16* psNewX, INT16* psNewY)
 {
 	// Compute the coordinates to right justify the text
-	INT16 xp = sWidth - StringPixLength(pStr, font) + sLeft;
+	INT16 xp = sWidth - StringPixLength(codepoints, font) + sLeft;
 	INT16 yp = (sHeight - GetFontHeight(font)) / 2 + sTop;
 
 	*psNewX = xp;
@@ -251,10 +251,10 @@ void FindFontRightCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeig
 }
 
 
-void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const wchar_t* pStr, SGPFont const font, INT16* psNewX, INT16* psNewY)
+void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHeight, const ST::utf32_buffer& codepoints, SGPFont font, INT16* psNewX, INT16* psNewY)
 {
 	// Compute the coordinates to center the text
-	INT16 xp = (sWidth - StringPixLength(pStr, font) + 1) / 2 + sLeft;
+	INT16 xp = (sWidth - StringPixLength(codepoints, font) + 1) / 2 + sLeft;
 	INT16 yp = (sHeight - GetFontHeight(font)) / 2 + sTop;
 
 	*psNewX = xp;
@@ -262,28 +262,22 @@ void FindFontCenterCoordinates(INT16 sLeft, INT16 sTop, INT16 sWidth, INT16 sHei
 }
 
 
-void gprintf(INT32 x, INT32 const y, wchar_t const* fmt, ...)
+void GPrint(INT32 x, INT32 y, const ST::utf32_buffer& codepoints)
 {
-	va_list ap;
-	va_start(ap, fmt);
-	wchar_t	string[512];
-	vswprintf(string, lengthof(string), fmt, ap);
-	va_end(ap);
-
 	SGPVSurface::Lock l(FontDestBuffer);
 	UINT16* const buf   = l.Buffer<UINT16>();
 	UINT32  const pitch = l.Pitch();
 	SGPFont const font  = FontDefault;
-	for (wchar_t const* i = string; *i != L'\0'; ++i)
+	for (char32_t c : codepoints)
 	{
-		GlyphIdx const glyph = GetGlyphIndex(*i);
+		GlyphIdx const glyph = GetGlyphIndex(c);
 		Blt8BPPDataTo16BPPBufferTransparentClip(buf, pitch, font, x, y, glyph, &FontDestRegion);
 		x += GetWidth(font, glyph);
 	}
 }
 
 
-UINT32 MPrintChar(INT32 const x, INT32 const y, wchar_t const c)
+UINT32 MPrintChar(INT32 x, INT32 y, char32_t c)
 {
 	GlyphIdx const glyph = GetGlyphIndex(c);
 	SGPFont  const font  = FontDefault;
@@ -294,48 +288,22 @@ UINT32 MPrintChar(INT32 const x, INT32 const y, wchar_t const c)
 }
 
 
-void MPrintBuffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32 x, INT32 const y, wchar_t const* str)
+void MPrintBuffer(UINT16* pDestBuf, UINT32 uiDestPitchBYTES, INT32 x, INT32 y, const ST::utf32_buffer& codepoints)
 {
 	SGPFont const font = FontDefault;
-	for (; *str != L'\0'; ++str)
+	for (char32_t c : codepoints)
 	{
-		GlyphIdx const glyph = GetGlyphIndex(*str);
+		GlyphIdx const glyph = GetGlyphIndex(c);
 		Blt8BPPDataTo16BPPBufferMonoShadowClip(pDestBuf, uiDestPitchBYTES, font, x, y, glyph, &FontDestRegion, FontForeground16, FontBackground16, FontShadow16);
 		x += GetWidth(font, glyph);
 	}
 }
 
 
-void MPrint(INT32 const x, INT32 const y, wchar_t const* const str)
+void MPrint(INT32 x, INT32 y, const ST::utf32_buffer& codepoints)
 {
 	SGPVSurface::Lock l(FontDestBuffer);
-	MPrintBuffer(l.Buffer<UINT16>(), l.Pitch(), x, y, str);
-}
-
-
-/* Prints to the currently selected destination buffer, at the X/Y coordinates
- * specified, using the currently selected font. Other than the X/Y coordinates,
- * the parameters are identical to printf. The resulting string may be no longer
- * than 512 word-characters. Uses monochrome font color settings */
-void mprintf(INT32 const x, INT32 const y, wchar_t const* const fmt, ...)
-{
-	wchar_t str[512];
-	va_list ap;
-	va_start(ap, fmt);
-	vswprintf(str, lengthof(str), fmt, ap);
-	va_end(ap);
-	MPrint(x, y, str);
-}
-
-
-void mprintf_buffer(UINT16* const pDestBuf, UINT32 const uiDestPitchBYTES, INT32 const x, INT32 const y, wchar_t const* const fmt, ...)
-{
-	wchar_t str[512];
-	va_list ap;
-	va_start(ap, fmt);
-	vswprintf(str, lengthof(str), fmt, ap);
-	va_end(ap);
-	MPrintBuffer(pDestBuf, uiDestPitchBYTES, x, y, str);
+	MPrintBuffer(l.Buffer<UINT16>(), l.Pitch(), x, y, codepoints);
 }
 
 

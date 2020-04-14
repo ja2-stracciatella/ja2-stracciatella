@@ -287,7 +287,7 @@ static void MSYS_UpdateMouseRegion(void)
 		{
 			/* Remove the help text for the previous region if one is currently being
 			 * displayed. */
-			if (prev->FastHelpText)
+			if (!prev->FastHelpText.empty())
 			{
 #ifdef _JA2_RENDER_DIRTY
 				if (prev->uiFlags & MSYS_GOT_BACKGROUND)
@@ -319,7 +319,7 @@ static void MSYS_UpdateMouseRegion(void)
 			//Implemented gain mouse region
 			if (cur->MovementCallback != NULL)
 			{
-				if (cur->FastHelpText && !(cur->uiFlags & MSYS_FASTHELP_RESET))
+				if (!cur->FastHelpText.empty() && !(cur->uiFlags & MSYS_FASTHELP_RESET))
 				{
 #ifdef _JA2_RENDER_DIRTY
 					if (cur->uiFlags & MSYS_GOT_BACKGROUND)
@@ -564,7 +564,7 @@ void MSYS_DefineRegion(MOUSE_REGION* const r, UINT16 const tlx, UINT16 const tly
 	r->MovementCallback   = movecallback;
 	r->ButtonCallback     = buttoncallback;
 	r->FastHelpTimer      = 0;
-	r->FastHelpText       = 0;
+	r->FastHelpText       = ST::null;
 	r->next               = 0;
 	r->prev               = 0;
 
@@ -601,11 +601,7 @@ void MSYS_RemoveRegion(MOUSE_REGION* const r)
 	}
 #endif
 
-	if (r->FastHelpText)
-	{
-		delete[] r->FastHelpText;
-		r->FastHelpText = 0;
-	}
+	r->FastHelpText = ST::null;
 
 	MSYS_DeleteRegionFromList(r);
 
@@ -654,20 +650,15 @@ void RefreshMouseRegions( )
 }
 
 
-void MOUSE_REGION::SetFastHelpText(wchar_t const* const text)
+void MOUSE_REGION::SetFastHelpText(const ST::string& str)
 {
-	if (FastHelpText)
-	{
-		delete[] FastHelpText;
-		FastHelpText = 0;
-	}
+	FastHelpText = ST::null;
 
 	if (!(uiFlags & MSYS_REGION_EXISTS)) return;
 
-	if (!text || text[0] == L'\0') return;
+	if (str.empty()) return;
 
-	FastHelpText = new wchar_t[wcslen(text) + 1]{};
-	wcscpy(FastHelpText, text);
+	FastHelpText = str.to_utf32();
 
 	/* ATE: We could be replacing already existing, active text so let's remove
 	 * the region so it be rebuilt */
@@ -683,19 +674,19 @@ void MOUSE_REGION::SetFastHelpText(wchar_t const* const text)
 }
 
 
-static UINT32 GetNumberOfLinesInHeight(const wchar_t* String)
+static UINT32 GetNumberOfLinesInHeight(const ST::utf32_buffer& codepoints)
 {
 	UINT32 Lines = 1;
-	for (const wchar_t* i = String; *i != L'\0'; i++)
+	for (const char32_t* i = codepoints.c_str(); *i != U'\0'; i++)
 	{
-		if (*i == L'\n') Lines++;
+		if (*i == U'\n') Lines++;
 	}
 	return Lines;
 }
 
 
-static UINT32 GetWidthOfString(const wchar_t* String);
-static void DisplayHelpTokenizedString(const wchar_t* text, INT16 sx, INT16 sy);
+static UINT32 GetWidthOfString(const ST::utf32_buffer& codepoints);
+static void DisplayHelpTokenizedString(const ST::utf32_buffer& codepoints, INT16 sx, INT16 sy);
 
 
 static void DisplayFastHelp(MOUSE_REGION* const r)
@@ -735,27 +726,27 @@ static void DisplayFastHelp(MOUSE_REGION* const r)
 }
 
 
-static UINT32 GetWidthOfString(wchar_t const* const str)
+static UINT32 GetWidthOfString(const ST::utf32_buffer& codepoints)
 {
 	SGPFont const bold_font   = FONT10ARIALBOLD;
 	SGPFont const normal_font = FONT10ARIAL;
 	UINT32     max_w       = 0;
 	UINT32     w           = 0;
-	for (wchar_t const* i = str;; ++i)
+	for (const char32_t* i = codepoints.c_str();; ++i)
 	{
-		wchar_t c = *i;
+		char32_t c = *i;
 		SGPFont font;
 		switch (c)
 		{
-			case L'\0':
+			case U'\0':
 				return MAX(w, max_w);
 
-			case L'\n':
+			case U'\n':
 				max_w = MAX(w, max_w);
 				w     = 0;
 				continue;
 
-			case L'|':
+			case U'|':
 				c    = *++i;
 				font = bold_font;
 				break;
@@ -769,28 +760,28 @@ static UINT32 GetWidthOfString(wchar_t const* const str)
 }
 
 
-static void DisplayHelpTokenizedString(wchar_t const* const text, INT16 const sx, INT16 const sy)
+static void DisplayHelpTokenizedString(const ST::utf32_buffer& codepoints, INT16 const sx, INT16 const sy)
 {
 	SGPFont const bold_font   = FONT10ARIALBOLD;
 	SGPFont const normal_font = FONT10ARIAL;
 	INT32   const h           = GetFontHeight(normal_font) + 1;
 	INT32         x           = sx;
 	INT32         y           = sy;
-	for (wchar_t const* i = text;; ++i)
+	for (const char32_t* i = codepoints.c_str();; ++i)
 	{
-		wchar_t c = *i;
+		char32_t c = *i;
 		SGPFont font;
 		UINT8   foreground;
 		switch (c)
 		{
-			case L'\0': return;
+			case U'\0': return;
 
-			case L'\n':
+			case U'\n':
 				x  = sx;
 				y += h;
 				continue;
 
-			case L'|':
+			case U'|':
 				c = *++i;
 				font       = bold_font;
 				foreground = 146;
@@ -817,7 +808,7 @@ void RenderFastHelp()
 	last_clock = current_clock;
 
 	MOUSE_REGION* const r = MSYS_CurrRegion;
-	if (!r || !r->FastHelpText) return;
+	if (!r || r->FastHelpText.empty()) return;
 
 	if (r->uiFlags & (MSYS_ALLOW_DISABLED_FASTHELP | MSYS_REGION_ENABLED))
 	{

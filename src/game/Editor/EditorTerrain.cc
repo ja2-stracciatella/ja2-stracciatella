@@ -23,6 +23,8 @@
 #include "UILayout.h"
 #include "Random.h"
 
+#include <string_theory/format>
+
 
 BOOLEAN gfShowTerrainTileButtons;
 UINT8 ubTerrainTileButtonWeight[NUM_TERRAIN_TILE_REGIONS];
@@ -119,7 +121,7 @@ void RenderTerrainTileButtons()
 
 			if( fUseTerrainWeights )
 			{
-				mprintf( usX+2, usY+2, L"%d", ubTerrainTileButtonWeight[ x ] );
+				MPrint( usX+2, usY+2, ST::format("{}", ubTerrainTileButtonWeight[ x ]) );
 			}
 		}
 	}

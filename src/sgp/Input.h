@@ -5,6 +5,9 @@
 #include "SDL_events.h"
 #include "SDL_keyboard.h"
 
+#include <string_theory/string>
+
+
 #define KEY_DOWN									0x0001
 #define KEY_UP										0x0002
 #define KEY_REPEAT								0x0004
@@ -38,7 +41,7 @@ struct InputAtom
 	UINT16 usKeyState;
 	UINT16 usEvent;
 	UINT32 usParam;
-	wchar_t Char;
+	ST::utf32_buffer codepoints;
 };
 
 

@@ -3,13 +3,15 @@
 
 #include "Input.h"
 
+#include <string_theory/string>
+
 
 void CreateSummaryWindow(void);
 void DestroySummaryWindow();
 void RenderSummaryWindow(void);
 void LoadWorldInfo(void);
 
-void UpdateSectorSummary(const wchar_t* gszFilename, BOOLEAN fUpdate);
+void UpdateSectorSummary(const ST::string& gszFilename, BOOLEAN fUpdate);
 
 void SaveGlobalSummary(void);
 

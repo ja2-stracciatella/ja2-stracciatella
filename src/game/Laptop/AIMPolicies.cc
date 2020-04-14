@@ -15,6 +15,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 
 #define NUM_AIM_POLICY_PAGES			11
@@ -370,7 +373,7 @@ static void InitAimPolicyMenuBar()
 
 	UINT16          x    = AIM_POLICY_MENU_X;
 	UINT16  const   y    = AIM_POLICY_MENU_Y;
-	const StrPointer *text = AimPolicyText;
+	const ST::string* text = AimPolicyText;
 	INT32           idx  = 0;
 	FOR_EACHX(GUIButtonRef, i, guiPoliciesMenuButton, x += AIM_POLICY_GAP_X)
 	{
@@ -391,9 +394,9 @@ static void ExitAimPolicyMenuBar()
 }
 
 
-static void LoadAIMPolicyText(wchar_t* Text, UINT32 Offset)
+static ST::string LoadAIMPolicyText(UINT32 Offset)
 {
-	GCM->loadEncryptedString(AIMPOLICYFILE, Text, Offset * AIM_POLICY_LINE_SIZE, AIM_POLICY_LINE_SIZE);
+	return GCM->loadEncryptedString(AIMPOLICYFILE, Offset * AIM_POLICY_LINE_SIZE, AIM_POLICY_LINE_SIZE);
 }
 
 
@@ -416,8 +419,7 @@ static void DrawAimPolicyMenu(void)
 	{
 		BltVideoObject(FRAME_BUFFER, guiContentButton, 0, AIM_POLICY_TOC_X, usPosY);
 
-		wchar_t sText[AIM_POLICY_LINE_SIZE];
-		LoadAIMPolicyText(sText, ubLocInFile[i]);
+		ST::string sText = LoadAIMPolicyText(ubLocInFile[i]);
 		DrawTextToScreen(sText, AIM_POLICY_TOC_X + AIM_POLICY_TOC_TEXT_OFFSET_X, usPosY + AIM_POLICY_TOC_TEXT_OFFSET_Y, AIM_CONTENTBUTTON_WIDTH, AIM_POLICY_TOC_FONT, AIM_POLICY_TOC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 		usPosY += AIM_POLICY_TOC_GAP_Y;
@@ -478,8 +480,7 @@ static void SelectPolicyTocMenuRegionCallBack(MOUSE_REGION* pRegion, INT32 iReas
 
 static void DisplayAimPolicyTitleText(void)
 {
-	wchar_t	sText[AIM_POLICY_LINE_SIZE];
-	LoadAIMPolicyText(sText, AIM_STATEMENT_OF_POLICY);
+	ST::string	sText = LoadAIMPolicyText(AIM_STATEMENT_OF_POLICY);
 
 	UINT16 y = (gubCurPageNum == 0 ? AIM_POLICY_TITLE_STATEMENT_Y - 25 : AIM_POLICY_TITLE_Y);
 	DrawTextToScreen(sText, AIM_POLICY_TITLE_X, y, AIM_POLICY_TITLE_WIDTH, AIM_POLICY_TITLE_FONT, AIM_POLICY_TITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
@@ -488,15 +489,15 @@ static void DisplayAimPolicyTitleText(void)
 
 static void DisplayAimPolicyStatement(void)
 {
-	wchar_t	sText[AIM_POLICY_LINE_SIZE];
+	ST::string	sText;
 	UINT16	usNumPixels;
 
 	//load and display the statment of policies
-	LoadAIMPolicyText(sText, AIM_STATEMENT_OF_POLICY_1);
+	sText = LoadAIMPolicyText(AIM_STATEMENT_OF_POLICY_1);
 	usNumPixels = DisplayWrappedString(AIM_POLICY_TITLE_STATEMENT_X, AIM_POLICY_TITLE_STATEMENT_Y, AIM_POLICY_TITLE_STATEMENT_WIDTH, 2, AIM_POLICY_TEXT_FONT, AIM_POLICY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//load and display the statment of policies
-	LoadAIMPolicyText(sText, AIM_STATEMENT_OF_POLICY_2);
+	sText = LoadAIMPolicyText(AIM_STATEMENT_OF_POLICY_2);
 	DisplayWrappedString(AIM_POLICY_TITLE_STATEMENT_X, AIM_POLICY_TITLE_STATEMENT_Y + usNumPixels + 15, AIM_POLICY_TITLE_STATEMENT_WIDTH, 2, AIM_POLICY_TEXT_FONT, AIM_POLICY_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 }
 
@@ -509,7 +510,7 @@ static void InitAgreementRegion()
 
 	UINT16          x    = AIM_POLICY_AGREEMENT_X;
 	UINT16  const   y    = AIM_POLICY_AGREEMENT_Y;
-	const StrPointer *text = AimPolicyText + AIM_POLICIES_DISAGREE;
+	const ST::string* text = AimPolicyText + AIM_POLICIES_DISAGREE;
 	INT32           idx  = 0;
 	FOR_EACHX(GUIButtonRef, i, guiPoliciesAgreeButton, x += 125)
 	{
@@ -532,24 +533,22 @@ static void ExitAgreementButton()
 
 static void DisplayAimPolicyTitle(UINT16 usPosY, UINT8 ubPageNum)
 {
-	wchar_t	sText[AIM_POLICY_LINE_SIZE];
-	LoadAIMPolicyText(sText, ubPageNum);
+	ST::string	sText = LoadAIMPolicyText(ubPageNum);
 	DrawTextToScreen(sText, AIM_POLICY_SUBTITLE_NUMBER, usPosY, 0, AIM_POLICY_SUBTITLE_FONT, AIM_POLICY_SUBTITLE_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 }
 
 
 static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber)
 {
-	wchar_t	sTemp[20];
+	ST::string sTemp;
 	UINT16	usNumPixels;
 
-	wchar_t	sText[AIM_POLICY_LINE_SIZE];
-	LoadAIMPolicyText(sText, ubPageNum);
+	ST::string sText = LoadAIMPolicyText(ubPageNum);
 
 	if(fNumber != 0.0)
 	{
 		//Display the section number
-		swprintf(sTemp, lengthof(sTemp), L"%2.1f", fNumber);
+		sTemp = ST::format("{2.1f}", fNumber);
 		DrawTextToScreen(sTemp, AIM_POLICY_PARAGRAPH_NUMBER, usPosY, 0, AIM_POLICY_TEXT_FONT, AIM_POLICY_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	}
 
@@ -562,14 +561,13 @@ static UINT16 DisplayAimPolicyParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fN
 
 static UINT16 DisplayAimPolicySubParagraph(UINT16 usPosY, UINT8 ubPageNum, FLOAT fNumber)
 {
-	wchar_t	sTemp[20];
+	ST::string sTemp;
 	UINT16	usNumPixels;
 
-	wchar_t	sText[AIM_POLICY_LINE_SIZE];
-	LoadAIMPolicyText(sText, ubPageNum);
+	ST::string sText = LoadAIMPolicyText(ubPageNum);
 
 	//Display the section number
-	swprintf(sTemp, lengthof(sTemp), L"%2.2f", fNumber);
+	sTemp = ST::format("{2.2f}", fNumber);
 	DrawTextToScreen(sTemp, AIM_POLICY_SUBPARAGRAPH_NUMBER, usPosY, 0, AIM_POLICY_TEXT_FONT, AIM_POLICY_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Display the text beside the section number

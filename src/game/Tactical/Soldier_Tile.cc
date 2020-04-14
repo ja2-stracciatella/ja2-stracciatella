@@ -80,7 +80,7 @@ static void SetFinalTile(SOLDIERTYPE* pSoldier, INT16 sGridNo, BOOLEAN fGivenUp)
 
 	if ( pSoldier->bTeam == OUR_TEAM  && fGivenUp )
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name );
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(TacticalStr[ NO_PATH_FOR_MERC ], pSoldier->name) );
 	}
 
 	EVENT_StopMerc(pSoldier);
@@ -733,7 +733,7 @@ BOOLEAN CanExchangePlaces( SOLDIERTYPE *pSoldier1, SOLDIERTYPE *pSoldier2, BOOLE
 				else
 				{
 					ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK,
-							gzLateLocalizedString[STR_LATE_03], pSoldier2->name);
+							st_format_printf(gzLateLocalizedString[STR_LATE_03], pSoldier2->name));
 				}
 			}
 		}

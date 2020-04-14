@@ -88,6 +88,9 @@
 #include "JAScreens.h"
 #include "UILayout.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -746,7 +749,7 @@ static void RenderLaptop(void)
 }
 
 
-static void InitTitleBarMaximizeGraphics(const SGPVObject* uiBackgroundGraphic, const wchar_t* pTitle, const SGPVObject* uiIconGraphic, UINT16 usIconGraphicIndex);
+static void InitTitleBarMaximizeGraphics(const SGPVObject* uiBackgroundGraphic, const ST::string& str, const SGPVObject* uiIconGraphic, UINT16 usIconGraphicIndex);
 static void SetSubSiteAsVisted(void);
 
 
@@ -760,7 +763,7 @@ static void EnterNewLaptopMode(void)
 
 	// handle maximizing of programs
 	UINT           prog;
-	const wchar_t* title;
+	ST::string title;
 	UINT16         gfx_idx;
 	switch (guiCurrentLaptopMode)
 	{
@@ -1311,7 +1314,7 @@ static void ExitLaptopMode(LaptopMode uiMode)
 }
 
 
-static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const wchar_t* text, const wchar_t* help_text)
+static void MakeButton(UINT idx, INT16 y, GUI_CALLBACK click, INT8 off_x, const ST::string& text, const ST::string& help_text)
 {
 	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/buttonsforlaptop.sti", idx, idx + 8, (29 + STD_SCREEN_X), (y + STD_SCREEN_Y), MSYS_PRIORITY_HIGH, click);
 	gLaptopButton[idx] = btn;
@@ -1678,7 +1681,7 @@ static void DisplayBookMarks(void)
 
 		SetFontForeground(highlighted ? FONT_WHITE : FONT_BLACK);
 		INT32          const idx = LaptopSaveInfo.iBookMarkList[i];
-		wchar_t const* const txt = pBookMarkStrings[idx != -1 ? idx : CANCEL_STRING];
+		ST::string txt = pBookMarkStrings[idx != -1 ? idx : CANCEL_STRING];
 		INT16                sX;
 		INT16                sY;
 		FindFontCenterCoordinates(BOOK_X + 3, y + 2, BOOK_WIDTH - 3, h, txt, BOOK_FONT, &sX, &sY);
@@ -1968,7 +1971,7 @@ static void DisplayLoadPending(void)
 	SetFontAttributes(DOWNLOAD_FONT, FONT_WHITE, NO_SHADOW);
 
 	// reload or download?
-	const wchar_t* const str = (fFastLoadFlag ? pDownloadString[1] : pDownloadString[0]);
+	ST::string str = (fFastLoadFlag ? pDownloadString[1] : pDownloadString[0]);
 	INT16 sXPosition = 0;
 	INT16 sYPosition = 0;
 	FindFontCenterCoordinates(328, 0, 446 - 328, 0, str, DOWNLOAD_FONT, &sXPosition, &sYPosition);
@@ -2169,27 +2172,27 @@ void LapTopScreenCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 }
 
 
-void DoLapTopMessageBox(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const ubFlags, MSGBOX_CALLBACK const ReturnCallback)
+void DoLapTopMessageBox(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags ubFlags, MSGBOX_CALLBACK ReturnCallback)
 {
 	SGPBox const centering_rect = { LAPTOP_SCREEN_UL_X, LAPTOP_SCREEN_UL_Y, LAPTOP_SCREEN_WIDTH, LAPTOP_SCREEN_HEIGHT };
-	DoLapTopSystemMessageBoxWithRect(ubStyle, zString, uiExitScreen, ubFlags, ReturnCallback, &centering_rect);
+	DoLapTopSystemMessageBoxWithRect(ubStyle, str, uiExitScreen, ubFlags, ReturnCallback, &centering_rect);
 }
 
 
-void DoLapTopSystemMessageBoxWithRect(MessageBoxStyleID const ubStyle, wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback, SGPBox const* const centering_rect)
+void DoLapTopSystemMessageBoxWithRect(MessageBoxStyleID ubStyle, const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect)
 {
 	// reset exit mode
 	fExitDueToMessageBox = TRUE;
 
 	// do message box and return
-	DoMessageBox(ubStyle, zString, uiExitScreen, usFlags, ReturnCallback, centering_rect);
+	DoMessageBox(ubStyle, str, uiExitScreen, usFlags, ReturnCallback, centering_rect);
 }
 
 
-void DoLapTopSystemMessageBox(wchar_t const* const zString, ScreenID const uiExitScreen, MessageBoxFlags const usFlags, MSGBOX_CALLBACK const ReturnCallback)
+void DoLapTopSystemMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
 	SGPBox const centering_rect = { 0, 0, SCREEN_WIDTH, INV_INTERFACE_START_Y };
-	DoLapTopSystemMessageBoxWithRect(MSG_BOX_LAPTOP_DEFAULT, zString, uiExitScreen, usFlags, ReturnCallback, &centering_rect);
+	DoLapTopSystemMessageBoxWithRect(MSG_BOX_LAPTOP_DEFAULT, str, uiExitScreen, usFlags, ReturnCallback, &centering_rect);
 }
 
 
@@ -2210,7 +2213,7 @@ void WebPageTileBackground(const UINT8 ubNumX, const UINT8 ubNumY, const UINT16 
 }
 
 
-static void InitTitleBarMaximizeGraphics(const SGPVObject* const uiBackgroundGraphic, const wchar_t* const pTitle, const SGPVObject* const uiIconGraphic, const UINT16 usIconGraphicIndex)
+static void InitTitleBarMaximizeGraphics(const SGPVObject* uiBackgroundGraphic, const ST::string& str, const SGPVObject* uiIconGraphic, UINT16 usIconGraphicIndex)
 {
 	Assert(uiBackgroundGraphic);
 
@@ -2222,7 +2225,7 @@ static void InitTitleBarMaximizeGraphics(const SGPVObject* const uiBackgroundGra
 	BltVideoObject(guiTitleBarSurface, uiIconGraphic, usIconGraphicIndex, LAPTOP_TITLE_BAR_ICON_OFFSET_X, LAPTOP_TITLE_BAR_ICON_OFFSET_Y);
 
 	SetFontDestBuffer(guiTitleBarSurface);
-	DrawTextToScreen(pTitle, LAPTOP_TITLE_BAR_TEXT_OFFSET_X, LAPTOP_TITLE_BAR_TEXT_OFFSET_Y, 0, FONT14ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(str, LAPTOP_TITLE_BAR_TEXT_OFFSET_X, LAPTOP_TITLE_BAR_TEXT_OFFSET_Y, 0, FONT14ARIAL, FONT_MCOLOR_WHITE, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	SetFontDestBuffer(FRAME_BUFFER);
 }
 
@@ -2567,7 +2570,7 @@ static void LaptopMinimizeProgramButtonCallback(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		UINT           prog;
-		const wchar_t* title;
+		ST::string title;
 		UINT16         gfx_idx;
 		switch (guiCurrentLaptopMode)
 		{
@@ -2728,8 +2731,7 @@ void PrintBalance(void)
 {
 	SetFontAttributes(FONT10ARIAL, FONT_BLACK, NO_SHADOW);
 
-	wchar_t pString[32];
-	SPrintMoney(pString, LaptopSaveInfo.iCurrentBalance);
+	ST::string pString = SPrintMoney(LaptopSaveInfo.iCurrentBalance);
 
 	INT32 x = STD_SCREEN_X + 47;
 	INT32 y = STD_SCREEN_Y + 257 + 15;
@@ -2757,7 +2759,7 @@ void PrintNumberOnTeam(void)
 		++usPosX;
 		++usPosY;
 	}
-	mprintf(usPosX, usPosY, L"%ls %d", pPersonnelString, iCounter);
+	MPrint(usPosX, usPosY, ST::format("{} {}", pPersonnelString, iCounter));
 
 	SetFontShadow(DEFAULT_SHADOW);
 }
@@ -2880,7 +2882,7 @@ void RenderWWWProgramTitleBar(void)
 	else
 	{
 		const INT32 iIndex = guiCurrentLaptopMode - LAPTOP_MODE_WWW-1;
-		mprintf(STD_SCREEN_X + 140, STD_SCREEN_Y + 33, L"%ls  -  %ls", pWebTitle, pWebPagesTitles[iIndex]);
+		MPrint(STD_SCREEN_X + 140, STD_SCREEN_Y + 33, ST::format("{}  -  {}", pWebTitle, pWebPagesTitles[iIndex]));
 	}
 
 	BlitTitleBarIcons();
@@ -3518,7 +3520,7 @@ void CreateFileAndNewEmailIconFastHelpText(UINT32 uiHelpTextID, BOOLEAN fClearHe
 			return;
 	}
 
-	const wchar_t* help = (fClearHelpText ? L"" : gzLaptopHelpText[uiHelpTextID]);
+	ST::string help = (fClearHelpText ? ST::null : gzLaptopHelpText[uiHelpTextID]);
 	pRegion->SetFastHelpText(help);
 }
 

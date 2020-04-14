@@ -7,6 +7,8 @@
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
 
+#include <string_theory/string>
+
 
 // Sector name identifiers
 enum Towns
@@ -74,10 +76,10 @@ BOOLEAN CanChangeSleepStatusForSoldier(const SOLDIERTYPE* s);
 
 bool MapCharacterHasAccessibleInventory(SOLDIERTYPE const&);
 
-wchar_t const* GetMapscreenMercAssignmentString(SOLDIERTYPE const&);
-void GetMapscreenMercLocationString(SOLDIERTYPE const&, wchar_t* buf, size_t n);
-void GetMapscreenMercDestinationString(SOLDIERTYPE const&, wchar_t* buf, size_t n);
-void GetMapscreenMercDepartureString(SOLDIERTYPE const&, wchar_t* buf, size_t n, UINT8* text_colour);
+ST::string GetMapscreenMercAssignmentString(SOLDIERTYPE const& s);
+ST::string GetMapscreenMercLocationString(SOLDIERTYPE const& s);
+ST::string GetMapscreenMercDestinationString(SOLDIERTYPE const& s);
+ST::string GetMapscreenMercDepartureString(SOLDIERTYPE const& s, UINT8* text_colour);
 
 // mapscreen wrapper to init the item description box
 void MAPInternalInitItemDescriptionBox(OBJECTTYPE* pObject, UINT8 ubStatusIndex, SOLDIERTYPE* pSoldier);
@@ -94,7 +96,7 @@ void    RememberPreviousPathForAllSelectedChars(void);
 void    MapScreenDefaultOkBoxCallback(MessageBoxReturnValue);
 void    SetUpCursorForStrategicMap(void);
 void    DrawFace(void);
-void 		DrawStringRight(const wchar_t* str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont);
+void DrawStringRight(const ST::string& str, UINT16 x, UINT16 y, UINT16 w, UINT16 h, SGPFont font);
 
 extern GUIButtonRef giMapInvDoneButton;
 extern BOOLEAN      fInMapMode;

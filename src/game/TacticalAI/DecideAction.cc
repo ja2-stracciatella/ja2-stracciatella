@@ -3134,7 +3134,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			case ATTACKSLAYONLY:iOffense += 30; break;
 		}
 		SLOGD("%s - CHOICE: iOffense = %d, iDefense = %d\n",
-			pSoldier->name,iOffense,iDefense);
+			pSoldier->name.c_str(), iOffense,iDefense);
 
 		// if his defensive instincts win out, forget all about the attack
 		if (iDefense > iOffense)
@@ -3336,9 +3336,9 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			pSoldier->bTargetLevel = BestAttack.bTargetLevel;
 
 			SLOGD("%d(%s) %s %d(%s)",
-				pSoldier->ubID, pSoldier->name,
+				pSoldier->ubID, pSoldier->name.c_str(),
 				ubBestAttackAction == AI_ACTION_FIRE_GUN ? "SHOOTS" : (ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE ? "TOSSES AT" : "STABS"),
-				BestAttack.opponent->ubID, BestAttack.opponent->name );
+				BestAttack.opponent->ubID, BestAttack.opponent->name.c_str() );
 			return(ubBestAttackAction);
 		}
 
@@ -3384,7 +3384,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 	if (sBestCover != NOWHERE)
 	{
 		SLOGD("%s - taking cover at gridno %d (%d%% better)",
-			pSoldier->name, sBestCover, iCoverPercentBetter);
+			pSoldier->name.c_str(), sBestCover, iCoverPercentBetter);
 		pSoldier->usActionData = sBestCover;
 		return(AI_ACTION_TAKE_COVER);
 	}

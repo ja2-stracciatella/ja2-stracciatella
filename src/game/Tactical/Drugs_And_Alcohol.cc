@@ -198,11 +198,11 @@ BOOLEAN ApplyDrugs( SOLDIERTYPE *pSoldier, OBJECTTYPE *pObject )
 
 	if ( ubDrugType == DRUG_TYPE_ALCOHOL )
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_DRANK_SOME ], pSoldier->name, ShortItemNames[ usItem ] );
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_DRANK_SOME ], pSoldier->name, ShortItemNames[ usItem ]) );
 	}
 	else
 	{
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_MERC_TOOK_DRUG ], pSoldier->name );
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_MERC_TOOK_DRUG ], pSoldier->name) );
 	}
 
 	// Dirty panel

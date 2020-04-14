@@ -1098,7 +1098,7 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 			if ( fAttemptingAttachment && ValidAttachmentClass( usAttachment, pObj->usItem ) )
 			{
 				// well, maybe the player thought he could
-				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[STR_CANT_ATTACH], ItemNames[usAttachment], ItemNames[pObj->usItem]);
+				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_ATTACH], ItemNames[usAttachment], ItemNames[pObj->usItem]));
 			}
 
 			return( FALSE );
@@ -1165,7 +1165,7 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 		}
 		else if (fSimilarItems)
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ usSimilarItem ], ItemNames[ usAttachment ] );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[ STR_CANT_USE_TWO_ITEMS ], ItemNames[ usSimilarItem ], ItemNames[ usAttachment ]) );
 			return( FALSE );
 		}
 	}
@@ -1790,7 +1790,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 	if (pSoldier->bTeam == OUR_TEAM)
 	{
 		// spit out a message if this is one of our folks reloading
-		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_PLAYER_RELOADS], pSoldier->name );
+		ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_PLAYER_RELOADS], pSoldier->name) );
 	}
 
 	DeductPoints( pSoldier, bAPs, 0 );
@@ -1982,7 +1982,7 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 					}
 					else
 					{
-						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[ STR_RELOAD_ONLY_ONE_GUN ], pSoldier->name );
+						ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[ STR_RELOAD_ONLY_ONE_GUN ], pSoldier->name) );
 					}
 				}
 			}
@@ -2408,8 +2408,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD2POS ].usItem ) )
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
-					ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD2POS].usItem]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
+					ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD2POS].usItem]));
 			return( FALSE );
 		}
 	}
@@ -2417,8 +2417,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	{
 		if ( !CompatibleFaceItem( pObj->usItem, pSoldier->inv[ HEAD1POS ].usItem ) )
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
-					ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD1POS].usItem]);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(g_langRes->Message[STR_CANT_USE_TWO_ITEMS],
+					ItemNames[pObj->usItem], ItemNames[pSoldier->inv[HEAD1POS].usItem]));
 			return( FALSE );
 		}
 	}
@@ -3916,7 +3916,7 @@ void WaterDamage(SOLDIERTYPE& s)
 		{
 			// Reload palettes....
 			if (s.bInSector) CreateSoldierPalettes(s);
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, g_langRes->Message[STR_CAMO_WASHED_OFF], s.name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(g_langRes->Message[STR_CAMO_WASHED_OFF], s.name));
 		}
 	}
 	if (s.bTeam == OUR_TEAM && s.bMonsterSmell > 0)

@@ -13,6 +13,8 @@
 #include "Button_System.h"
 #include "Font_Control.h"
 
+#include <string_theory/string>
+
 
 // this is the amount of time, the player waits until booted back to main profileing screen
 
@@ -145,7 +147,7 @@ static void CheckIfConfirmHasBeenSelectedAndTimeDelayHasPassed(void)
 }
 
 
-static void MakeButton(UINT idx, const wchar_t* text, INT16 x, GUI_CALLBACK click)
+static void MakeButton(UINT idx, const ST::string& text, INT16 x, GUI_CALLBACK click)
 {
 	BUTTON_PICS* const img = LoadButtonImage(LAPTOPDIR "/button_5.sti", 0, 1);
 	giIMPPersonalityFinishButtonImage[idx] = img;

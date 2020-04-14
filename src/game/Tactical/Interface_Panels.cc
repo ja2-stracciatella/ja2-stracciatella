@@ -76,6 +76,9 @@
 #include "policy/GamePolicy.h"
 #include "HImage.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -926,7 +929,7 @@ void InitializeSMPanel(void)
 }
 
 
-static void MakeButtonN(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+static void MakeButtonN(UINT idx, BUTTON_PICS* image, INT16 x, INT16 y, const GUI_CALLBACK click, const ST::string& help)
 try
 {
 	GUIButtonRef const btn = QuickCreateButtonToggle(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
@@ -940,7 +943,7 @@ catch (...)
 }
 
 
-static void MakeButtonT(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+static void MakeButtonT(UINT idx, BUTTON_PICS* image, INT16 x, INT16 y, const GUI_CALLBACK click, const ST::string& help)
 try
 {
 	GUIButtonRef const btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
@@ -1104,8 +1107,7 @@ static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 co
 	SetFontAttributes(TINYFONT1, foreground);
 
 	RestoreExternBackgroundRect(x, y, w, h);
-	wchar_t buf[16];
-	swprintf(buf, lengthof(buf), L"%d", ap);
+	ST::string buf = ST::format("{}", ap);
 	INT16 sFontX;
 	INT16 sFontY;
 	FindFontCenterCoordinates(x, y, w, h, buf, TINYFONT1, &sFontX, &sFontY);
@@ -1115,22 +1117,21 @@ static void PrintAP(SOLDIERTYPE* const s, INT16 const x, INT16 const y, INT16 co
 
 static void SetStatsHelp(MOUSE_REGION& r, SOLDIERTYPE const& s)
 {
-	wchar_t const* help = L"";
-	wchar_t        text[200];
+	ST::string help;
+	ST::string text;
 	if (s.bLife != 0)
 	{
 		if (s.uiStatusFlags & SOLDIER_VEHICLE)
 		{
-			swprintf(text, lengthof(text), TacticalStr[VEHICLE_VITAL_STATS_POPUPTEXT], s.bLife, s.bLifeMax, s.bBreath, s.bBreathMax);
+			text = st_format_printf(TacticalStr[VEHICLE_VITAL_STATS_POPUPTEXT], s.bLife, s.bLifeMax, s.bBreath, s.bBreathMax);
 		}
 		else if (s.uiStatusFlags & SOLDIER_ROBOT)
 		{
-			swprintf(text, lengthof(text), gzLateLocalizedString[STR_LATE_16], s.bLife, s.bLifeMax);
+			text = st_format_printf(gzLateLocalizedString[STR_LATE_16], s.bLife, s.bLifeMax);
 		}
 		else
 		{
-			wchar_t const* const morale = GetMoraleString(s);
-			swprintf(text, lengthof(text), TacticalStr[MERC_VITAL_STATS_POPUPTEXT], s.bLife, s.bLifeMax, s.bBreath, s.bBreathMax, morale);
+			text = st_format_printf(TacticalStr[MERC_VITAL_STATS_POPUPTEXT], s.bLife, s.bLifeMax, s.bBreath, s.bBreathMax, GetMoraleString(s));
 		}
 		help = text;
 	}
@@ -1170,8 +1171,7 @@ static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 cons
 		FONT_RED;
 	SetFontForeground(fg);
 
-	wchar_t str[4];
-	swprintf(str, lengthof(str), L"%3d", stat_val);
+	ST::string str = ST::format("{3d}", stat_val);
 	if (gamepolicy(gui_extras))
 	{
 		ProgressBarBackgroundRect(x+16, y-2, 15*progress/100, 10, 0x514A05, progress);
@@ -1256,13 +1256,13 @@ no_plate:
 			}
 
 			MPrint(SM_ARMOR_LABEL_X - StringPixLength(pInvPanelTitleStrings[0], BLOCKFONT2) / 2, dy + SM_ARMOR_LABEL_Y, pInvPanelTitleStrings[0]);
-			MPrint(SM_ARMOR_PERCENT_X, dy + SM_ARMOR_PERCENT_Y, L"%");
+			MPrint(SM_ARMOR_PERCENT_X, dy + SM_ARMOR_PERCENT_Y, "%");
 
 			MPrint(SM_WEIGHT_LABEL_X - StringPixLength(pInvPanelTitleStrings[1], BLOCKFONT2), dy + SM_WEIGHT_LABEL_Y, pInvPanelTitleStrings[1]);
-			MPrint(SM_WEIGHT_PERCENT_X, dy + SM_WEIGHT_PERCENT_Y, L"%");
+			MPrint(SM_WEIGHT_PERCENT_X, dy + SM_WEIGHT_PERCENT_Y, "%");
 
 			MPrint(SM_CAMO_LABEL_X - StringPixLength(pInvPanelTitleStrings[2], BLOCKFONT2), dy + SM_CAMO_LABEL_Y, pInvPanelTitleStrings[2]);
-			MPrint(SM_CAMO_PERCENT_X, dy + SM_CAMO_PERCENT_Y, L"%");
+			MPrint(SM_CAMO_PERCENT_X, dy + SM_CAMO_PERCENT_Y, "%");
 
 			MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
 			PrintStat(s.uiChangeAgilityTime,      AGIL_INCREASE,     s.bAgility,      SM_AGI_X,    dy + SM_AGI_Y,    p.sAgilityGain*2);
@@ -1280,20 +1280,20 @@ no_plate:
 
 			INT16   usX;
 			INT16   usY;
-			wchar_t sString[9];
+			ST::string sString;
 
 			// Display armour value
-			swprintf(sString, lengthof(sString), L"%3d", ArmourPercent(&s));
+			sString = ST::format("{3d}", ArmourPercent(&s));
 			FindFontRightCoordinates(SM_ARMOR_X, dy + SM_ARMOR_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY , sString);
 
 			// Display weight value
-			swprintf(sString, lengthof(sString), L"%3d", CalculateCarriedWeight(&s));
+			sString = ST::format("{3d}", CalculateCarriedWeight(&s));
 			FindFontRightCoordinates(SM_WEIGHT_X, dy + SM_WEIGHT_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, sString);
 
 			// Display camo value
-			swprintf(sString, lengthof(sString), L"%3d", s.bCamo);
+			sString = ST::format("{3d}", s.bCamo);
 			FindFontRightCoordinates(SM_CAMO_X, dy + SM_CAMO_Y, SM_PERCENT_WIDTH, SM_PERCENT_HEIGHT, sString, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, sString);
 
@@ -1513,7 +1513,7 @@ static BOOLEAN UIHandleItemPlacement(UINT8 ubHandPos, UINT16 usOldItemIndex, UIN
 
 		if ( gpItemPointerSoldier != gpSMCurrentMerc )
 		{
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usNewItemIndex ], gpSMCurrentMerc->name );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[ MSG_ITEM_PASSED_TO_MERC ], ShortItemNames[ usNewItemIndex ], gpSMCurrentMerc->name) );
 		}
 
 		// UPDATE ITEM POINTER.....
@@ -1882,7 +1882,7 @@ static void HandleMouseOverSoldierFaceForContMove(SOLDIERTYPE* pSoldier, BOOLEAN
 			FACETYPE* const pFace = pSoldier->face;
 
 			pFace->fDisplayTextOver = FACE_DRAW_TEXT_OVER;
-			wcscpy( pFace->zDisplayText, TacticalStr[ CONTINUE_OVER_FACE_STR ] );
+			pFace->zDisplayText = TacticalStr[ CONTINUE_OVER_FACE_STR ];
 
 			sGridNo = pSoldier->sFinalDestination;
 
@@ -2122,8 +2122,8 @@ static void BtnMuteCallback(GUI_BUTTON* btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		gpSMCurrentMerc->uiStatusFlags ^= SOLDIER_MUTE;
-		const wchar_t* msg = (gpSMCurrentMerc->uiStatusFlags & SOLDIER_MUTE ? TacticalStr[MUTE_ON_STR] : TacticalStr[MUTE_OFF_STR]);
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg, gpSMCurrentMerc->name);
+		ST::string msg = (gpSMCurrentMerc->uiStatusFlags & SOLDIER_MUTE ? TacticalStr[MUTE_ON_STR] : TacticalStr[MUTE_OFF_STR]);
+		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(msg, gpSMCurrentMerc->name));
 	}
 }
 
@@ -2370,25 +2370,25 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 
 			if (s)
 			{
-				const wchar_t* help;
-				wchar_t        help_buf[200];
+				ST::string help;
+				ST::string help_buf;
 
 				// Add text for first hand popup
 				if (s->uiStatusFlags & SOLDIER_DRIVER)
 				{
 					// Get soldier pointer for vehicle.....
 					SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(GetVehicle(s->iVehicleId));
-					swprintf(help_buf, lengthof(help_buf), TacticalStr[DRIVER_POPUPTEXT], vs.bLife,
+					help_buf = st_format_printf(TacticalStr[DRIVER_POPUPTEXT], vs.bLife,
 							vs.bLifeMax, vs.bBreath, vs.bBreathMax);
 					help = help_buf;
 				}
 				else if (s->uiStatusFlags & SOLDIER_DEAD)
 				{
-					help = L"";
+					help = ST::null;
 				}
 				else
 				{
-					GetHelpTextForItem(help_buf, lengthof(help_buf), s->inv[HANDPOS]);
+					help_buf = GetHelpTextForItem(s->inv[HANDPOS]);
 					help = help_buf;
 				}
 				i->first_hand.SetFastHelpText(help);
@@ -2400,11 +2400,11 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 				}
 				else if (s->uiStatusFlags & SOLDIER_DEAD)
 				{
-					help = L"";
+					help = ST::null;
 				}
 				else
 				{
-					GetHelpTextForItem(help_buf, lengthof(help_buf), s->inv[SECONDHANDPOS]);
+					help_buf = GetHelpTextForItem(s->inv[SECONDHANDPOS]);
 					help = help_buf;
 				}
 				i->second_hand.SetFastHelpText(help);
@@ -2489,7 +2489,7 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 }
 
 
-static void MakeButtonTeam(const UINT idx, BUTTON_PICS* const image, const INT16 x, const INT16 y, const GUI_CALLBACK click, const wchar_t* const help)
+static void MakeButtonTeam(UINT idx, BUTTON_PICS* image, INT16 x, INT16 y, const GUI_CALLBACK click, const ST::string& help)
 try
 {
 	GUIButtonRef const btn = QuickCreateButton(image, x, y, MSYS_PRIORITY_HIGH - 1, click);
@@ -2940,7 +2940,7 @@ void HandlePanelFaceAnimations(SOLDIERTYPE* pSoldier)
 
 			if ( pSoldier->ubDeadPanelFrame == 4 )
 			{
-				ScreenMsg(FONT_RED, MSG_SKULL_UI_FEEDBACK, pMercDeadString, pSoldier->name);
+				ScreenMsg(FONT_RED, MSG_SKULL_UI_FEEDBACK, st_format_printf(pMercDeadString, pSoldier->name));
 
 				PlayJA2Sample(DOORCR_1, HIGHVOLUME, 1, MIDDLEPAN);
 				PlayJA2Sample(HEADCR_1, HIGHVOLUME, 1, MIDDLEPAN);
@@ -3164,13 +3164,12 @@ static void RemovePlayerFromInterfaceTeamSlot(TeamPanelSlot& tp)
 
 void RenderTownIDString(void)
 {
-	wchar_t	zTownIDString[80];
 	INT16 sFontX, sFontY;
 
 	// Render town, position
 	SetFontAttributes(COMPFONT, 183);
-	GetSectorIDString( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, zTownIDString, lengthof(zTownIDString), TRUE );
-	ReduceStringLength( zTownIDString, lengthof(zTownIDString), 80, COMPFONT );
+	ST::string zTownIDString = GetSectorIDString(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE);
+	zTownIDString = ReduceStringLength(zTownIDString, 80, COMPFONT);
 	FindFontCenterCoordinates(548, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, zTownIDString);
 }
@@ -3622,17 +3621,17 @@ static void SMInvMoneyButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			//and the item is money
 			if( GCM->getItem(gpItemPointer->usItem)->getItemClass() == IC_MONEY )
 			{
-				wchar_t	zText[512];
-				wchar_t	zMoney[64];
+				ST::string zText;
+				ST::string zMoney;
 
 				// Make sure we go back to movement mode...
 				guiPendingOverrideEvent = A_CHANGE_TO_MOVE;
 				HandleTacticalUI( );
 
-				SPrintMoney(zMoney, gpItemPointer->uiMoneyAmount);
+				zMoney = SPrintMoney(gpItemPointer->uiMoneyAmount);
 
 				//ask the user if they are sure they want to deposit the money
-				swprintf( zText, lengthof(zText), gzMoneyWithdrawMessageText[ CONFIRMATION_TO_DEPOSIT_MONEY_TO_ACCOUNT ], zMoney );
+				zText = st_format_printf(gzMoneyWithdrawMessageText[ CONFIRMATION_TO_DEPOSIT_MONEY_TO_ACCOUNT ], zMoney);
 
 				if( guiCurrentScreen == SHOPKEEPER_SCREEN )
 				{
