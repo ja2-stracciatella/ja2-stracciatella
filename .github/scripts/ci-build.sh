@@ -110,7 +110,7 @@ if [[ "$RUN_TESTS" == "true" ]]; then
   if [[ "$RUN_INSTALL_TEST" == "true" ]]; then
     sudo $BUILD_CMD --target install
   fi
-  $BUILD_CMD --target cargo-fmt-test
+  $BUILD_CMD --target cargo-fmt-check
   $BUILD_CMD --target cargo-clippy-test
   $BUILD_CMD --target cargo-test
   ./ja2 -unittests
