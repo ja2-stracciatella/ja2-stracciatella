@@ -1,5 +1,24 @@
 # \file dependencies/lib-string_theory/CMakeLists.txt
 
+option(LOCAL_STRING_THEORY_LIB "Download and build string_theory instead of searching the system" ON)
+if (NOT LOCAL_STRING_THEORY_LIB)
+    message(STATUS "Using system string_theory")
+    find_package(string_theory 3
+        REQUIRED
+        HINTS "${STRING_THEORY_ROOT}" "$ENV{STRING_THEORY_ROOT}"
+        PATH_SUFFIXES lib/cmake/string_theory # path to string_theory-config.cmake
+    )
+    mark_as_advanced(string_theory_DIR)
+    if (NOT string_theory_FOUND)
+        message(FATAL_ERROR "string_theory 3+ not found")
+    endif()
+
+    # interface library
+    add_library(string_theory-internal INTERFACE)
+    target_include_directories(string_theory-internal INTERFACE ${STRING_THEORY_INCLUDE_DIRS})
+    return()
+endif()
+
 message(STATUS "<string_theory>")
 
 # create builder

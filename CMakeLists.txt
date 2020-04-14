@@ -43,6 +43,7 @@ set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
 option(LOCAL_FLTK_LIB "Build with fltk lib" OFF)
 option(LOCAL_RAPIDJSON_LIB "Build with local rapidjson lib" ON)
 option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
+# @see LOCAL_STRING_THEORY_LIB in dependencies/lib-string_theory/CMakeLists.txt
 option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
