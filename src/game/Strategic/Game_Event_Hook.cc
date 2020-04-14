@@ -154,7 +154,7 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 			break;
 		case EVENT_HANDLE_MINE_INCOME:
 			HandleIncomeFromMines( );
-			//ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, L"Income From Mines at %d", GetWorldTotalMin( ) );
+			//ScreenMsg( FONT_MCOLOR_DKRED, MSG_INTERFACE, ST::format("Income From Mines at {}", GetWorldTotalMin()) );
 			break;
 		case EVENT_SETUP_MINE_INCOME:
 			PostEventsForMineProduction();

@@ -45,6 +45,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 #include <climits>
 #include <vector>
@@ -227,9 +230,8 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 
 	// the name
 	const SGPBox* const name_box = &g_sector_inv_name_box;
-	wchar_t sString[SIZE_SHORT_ITEM_NAME];
-	wcscpy(sString, ShortItemNames[item.o.usItem]);
-	ReduceStringLength(sString, lengthof(sString), name_box->w, MAP_IVEN_FONT);
+	ST::string sString = ShortItemNames[item.o.usItem];
+	sString = ReduceStringLength(sString, name_box->w, MAP_IVEN_FONT);
 
 	SetFontAttributes(MAP_IVEN_FONT, FONT_WHITE);
 
@@ -246,7 +248,7 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 
 static void UpdateHelpTextForInvnentoryStashSlots(void)
 {
-	wchar_t pStr[ 512 ];
+	ST::string pStr;
 	INT32 iCounter = 0;
 	INT32 iFirstSlotOnPage = ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT );
 
@@ -254,11 +256,11 @@ static void UpdateHelpTextForInvnentoryStashSlots(void)
 	// run through list of items in slots and update help text for mouse regions
 	for( iCounter = 0; iCounter < MAP_INVENTORY_POOL_SLOT_COUNT; iCounter++ )
 	{
-		wchar_t    const* help = L"";
+		ST::string help;
 		OBJECTTYPE const& o    = pInventoryPoolList[iCounter + iFirstSlotOnPage].o;
 		if  (o.ubNumberOfObjects > 0)
 		{
-			GetHelpTextForItem(pStr, lengthof(pStr), o);
+			pStr = GetHelpTextForItem(o);
 			help = pStr;
 		}
 		MapInventoryPoolSlots[iCounter].SetFastHelpText(help);
@@ -564,9 +566,8 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 				s->bSectorZ != iCurrentMapSectorZ ||
 				s->fBetweenSectors)
 		{
-			const wchar_t* const msg = (gpItemPointer == NULL ? pMapInventoryErrorString[1] : pMapInventoryErrorString[4]);
-			wchar_t buf[128];
-			swprintf(buf, lengthof(buf), msg, s->name);
+			ST::string msg = (gpItemPointer == NULL ? pMapInventoryErrorString[1] : pMapInventoryErrorString[4]);
+			ST::string buf = st_format_printf(msg, s->name);
 			DoMapMessageBox(MSG_BOX_BASIC_STYLE, buf, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return;
 		}
@@ -574,7 +575,7 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 		// If in battle inform player they will have to do this in tactical
 		if (!CanPlayerUseSectorInventory())
 		{
-			const wchar_t* const msg = (gpItemPointer == NULL ? pMapInventoryErrorString[2] : pMapInventoryErrorString[3]);
+			ST::string msg = (gpItemPointer == NULL ? pMapInventoryErrorString[2] : pMapInventoryErrorString[3]);
 			DoMapMessageBox(MSG_BOX_BASIC_STYLE, msg, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
 			return;
 		}
@@ -981,14 +982,14 @@ static void MapInventoryPoolDoneBtn(GUI_BUTTON* btn, INT32 reason)
 static void DisplayPagesForMapInventoryPool(void)
 {
 	// get the current and last pages and display them
-	wchar_t sString[ 32 ];
+	ST::string sString;
 	INT16 sX, sY;
 
 	SetFontAttributes(COMPFONT, 183);
 	SetFontDestBuffer(guiSAVEBUFFER);
 
 	// grab current and last pages
-	swprintf( sString, lengthof(sString), L"%d / %d", iCurrentInventoryPoolPage + 1, iLastInventoryPoolPage + 1 );
+	sString = ST::format("{} / {}", iCurrentInventoryPoolPage + 1, iLastInventoryPoolPage + 1);
 
 	// grab centered coords
 	const SGPBox* const box = &g_sector_inv_page_box;
@@ -1037,7 +1038,7 @@ static size_t GetTotalNumberOfItems(void)
 static void DrawNumberOfIventoryPoolItems(void)
 {
 	size_t numObjects = 0;
-	wchar_t sString[ 32 ];
+	ST::string sString;
 	INT16 sX, sY;
 
 
@@ -1045,7 +1046,7 @@ static void DrawNumberOfIventoryPoolItems(void)
 
 	// get number of items
 	Assert(numObjects <= INT_MAX);
-	swprintf( sString, lengthof(sString), L"%d", static_cast<int>(numObjects) );
+	sString = ST::format("{}", numObjects);
 
 	SetFontAttributes(COMPFONT, 183);
 	SetFontDestBuffer(guiSAVEBUFFER);
@@ -1076,11 +1077,11 @@ static void DestroyInventoryPoolDoneButton(void)
 static void DisplayCurrentSector(void)
 {
 	// grab current sector being displayed
-	wchar_t sString[ 32 ];
+	ST::string sString;
 	INT16 sX, sY;
 
 
-	swprintf( sString, lengthof(sString), L"%ls%ls%ls", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ] );
+	sString = ST::format("{}{}{}", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ]);
 
 	SetFontAttributes(COMPFONT, 183);
 	SetFontDestBuffer(guiSAVEBUFFER);
@@ -1115,7 +1116,6 @@ static void DrawTextOnSectorInventory(void);
 
 static void DrawTextOnMapInventoryBackground(void)
 {
-//	wchar_t sString[ 64 ];
 	UINT16 usStringHeight;
 
 	SetFontDestBuffer(guiSAVEBUFFER);
@@ -1161,7 +1161,7 @@ static void DrawTextOnSectorInventory(void)
 	INT16 x;
 	INT16 y;
 	const SGPBox*  const box   = &g_sector_inv_title_box;
-	const wchar_t* const title = zMarksMapScreenText[11];
+	ST::string title = zMarksMapScreenText[11];
 	FindFontCenterCoordinates(STD_SCREEN_X + box->x, STD_SCREEN_Y + box->y, box->w, box->h, title, FONT14ARIAL, &x, &y);
 	MPrint(x, y, title);
 

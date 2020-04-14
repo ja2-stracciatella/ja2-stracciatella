@@ -8,13 +8,16 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/string>
+
+
 #define ITEMSTRINGFILENAME BINARYDATADIR "/itemdesc.edt"
 
 
-void LoadItemInfo(UINT16 const ubIndex, wchar_t Info[])
+ST::string LoadItemInfo(UINT16 const ubIndex)
 {
 	UINT32 Seek = (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * ubIndex;
-	GCM->loadEncryptedString(ITEMSTRINGFILENAME, Info, Seek + SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_INFO);
+	return GCM->loadEncryptedString(ITEMSTRINGFILENAME, Seek + SIZE_ITEM_NAME + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_INFO);
 }
 
 
@@ -24,8 +27,8 @@ static void LoadAllItemNames(void)
 	for (UINT32 i = 0; i < MAXITEMS; i++)
 	{
 		UINT32 Seek = (SIZE_SHORT_ITEM_NAME + SIZE_ITEM_NAME + SIZE_ITEM_INFO) * i;
-		GCM->loadEncryptedString(File, ShortItemNames[i], Seek, SIZE_SHORT_ITEM_NAME);
-		GCM->loadEncryptedString(File, ItemNames[i], Seek + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_NAME);
+		ShortItemNames[i] = GCM->loadEncryptedString(File, Seek, SIZE_SHORT_ITEM_NAME);
+		ItemNames[i] = GCM->loadEncryptedString(File, Seek + SIZE_SHORT_ITEM_NAME, SIZE_ITEM_NAME);
 	}
 }
 
@@ -35,7 +38,7 @@ void LoadAllExternalText( void )
 	LoadAllItemNames();
 }
 
-const wchar_t* GetWeightUnitString( void )
+ST::string GetWeightUnitString( void )
 {
 	if ( gGameSettings.fOptions[ TOPTION_USE_METRIC_SYSTEM ] ) // metric
 	{

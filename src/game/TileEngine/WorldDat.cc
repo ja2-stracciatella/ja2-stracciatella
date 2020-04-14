@@ -9,6 +9,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+
+
 // THIS FILE CONTAINS DEFINITIONS FOR TILESET FILES
 
 TILESET gTilesets[NUM_TILESETS];
@@ -49,7 +52,7 @@ try
 		char zName[32];
 		FileRead(f, &zName, sizeof(zName));
 		zName[sizeof(zName) - 1] = '\0';
-		swprintf(ts->zName, lengthof(ts->zName), L"%hs", zName);
+		ts->zName = ST::format("{}", zName);
 
 		// Read ambience value
 		FileRead(f, &ts->ubAmbientID, sizeof(UINT8));

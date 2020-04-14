@@ -6,6 +6,8 @@
 #include "Item_Types.h"
 #include "Soldier_Control.h"
 
+#include <string_theory/string>
+
 
 //Kris:  SERIALIZING INFORMATION
 //All maps must have:
@@ -92,7 +94,7 @@ struct SOLDIERCREATE_STRUCT
 
 	//Kris: Additions November 16, 1997 (padding down to 129 from 150)
 	BOOLEAN fVisible;
-	wchar_t name[ 10 ];
+	ST::string name;
 
 	UINT8   ubSoldierClass; //army, administrator, elite
 

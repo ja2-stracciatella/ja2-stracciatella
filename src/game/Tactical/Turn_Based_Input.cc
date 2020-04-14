@@ -104,6 +104,9 @@
 	#include "VObject.h"
 #endif
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 
 static BOOLEAN gfFirstCycleMovementStarted = FALSE;
@@ -1523,7 +1526,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		{
 			BOOLEAN& cursor3d = gGameSettings.fOptions[TOPTION_3D_CURSOR];
 			cursor3d = !cursor3d;
-			wchar_t const* const msg =
+			ST::string msg =
 				cursor3d ? pMessageStrings[MSG_3DCURSOR_ON] :
 				pMessageStrings[MSG_3DCURSOR_OFF];
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
@@ -1607,7 +1610,7 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 						if (new_soldier->bAssignment != current_squad)
 						{
 							HandleLocateSelectMerc(new_soldier, true);
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[MSG_SQUAD_ACTIVE], CurrentSquad() + 1);
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[MSG_SQUAD_ACTIVE], CurrentSquad() + 1));
 							// Center to guy
 							LocateSoldier(GetSelectedMan(), SETLOCATOR);
 						}
@@ -1742,9 +1745,9 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 
 #ifdef SGP_VIDEO_DEBUGGING
 		case 'v':
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VObjects:  %d", guiVObjectSize);
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"VSurfaces:  %d", guiVSurfaceSize);
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"SGPVideoDump.txt updated...");
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("VObjects:  {}", guiVObjectSize));
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, ST::format("VSurfaces:  {}", guiVSurfaceSize));
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, "SGPVideoDump.txt updated...");
 			PerformVideoInfoDumpIntoFile("SGPVideoDump.txt", TRUE);
 			break;
 #endif
@@ -1830,7 +1833,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		{
 			BOOLEAN& tracking = gGameSettings.fOptions[TOPTION_TRACKING_MODE];
 			tracking = !tracking;
-			wchar_t const* const msg =
+			ST::string msg =
 				tracking ? pMessageStrings[MSG_TACKING_MODE_ON] :
 				pMessageStrings[MSG_TACKING_MODE_OFF];
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
@@ -1913,8 +1916,8 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		{
 			if (DEBUG_CHEAT_LEVEL()) {
 				gfDoVideoScroll ^= TRUE;
-				wchar_t const *const msg = gfDoVideoScroll ? L"Video Scroll ON" :
-								L"Video Scroll OFF";
+				ST::string msg = gfDoVideoScroll ? "Video Scroll ON" :
+								"Video Scroll OFF";
 				ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
 			}
 			break;
@@ -1976,7 +1979,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			fInterfacePanelDirty = DIRTYLEVEL2;
 
 			// Display message
-			wchar_t const* const msg = stealth_on ? pMessageStrings[MSG_SQUAD_ON_STEALTHMODE] :
+			ST::string msg = stealth_on ? pMessageStrings[MSG_SQUAD_ON_STEALTHMODE] :
 								pMessageStrings[MSG_SQUAD_OFF_STEALTHMODE];
 			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
 			break;
@@ -2424,24 +2427,24 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 		}
 		else if( gfLoneEPCAttemptingTraversal )
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, pExitingSectorHelpText[EXIT_GUI_ESCORTED_CHARACTERS_CANT_LEAVE_SECTOR_ALONE_STR], sel->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(pExitingSectorHelpText[EXIT_GUI_ESCORTED_CHARACTERS_CANT_LEAVE_SECTOR_ALONE_STR], sel->name));
 			gfLoneEPCAttemptingTraversal = FALSE;
 		}
 		else if( gubLoneMercAttemptingToAbandonEPCs )
 		{
-			wchar_t str[256];
+			ST::string str;
 			if( gubLoneMercAttemptingToAbandonEPCs == 1 )
 			{
 				//Use the singular version of the string
 				if (gMercProfiles[sel->ubProfile ].bSex == MALE)
 				{
 					//male singular
-					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR], sel->name, gPotentiallyAbandonedEPC->name);
+					str = st_format_printf(pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_SINGULAR], sel->name, gPotentiallyAbandonedEPC->name);
 				}
 				else
 				{
 					//female singular
-					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR], sel->name, gPotentiallyAbandonedEPC->name);
+					str = st_format_printf(pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_SINGULAR], sel->name, gPotentiallyAbandonedEPC->name);
 				}
 			}
 			else
@@ -2450,12 +2453,12 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 				if (gMercProfiles[sel->ubProfile].bSex == MALE)
 				{
 					//male plural
-					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_PLURAL], sel->name);
+					str = st_format_printf(pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_MALE_PLURAL], sel->name);
 				}
 				else
 				{
 					//female plural
-					swprintf(str, lengthof(str), pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL], sel->name);
+					str = st_format_printf(pExitingSectorHelpText[EXIT_GUI_MERC_CANT_ISOLATE_EPC_HELPTEXT_FEMALE_PLURAL], sel->name);
 				}
 			}
 			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, str );
@@ -2463,7 +2466,7 @@ BOOLEAN HandleCheckForExitArrowsInput( BOOLEAN fAdjustConfirm )
 		}
 		else
 		{
-			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, TacticalStr[MERC_IS_TOO_FAR_AWAY_STR], sel->name);
+			ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, st_format_printf(TacticalStr[MERC_IS_TOO_FAR_AWAY_STR], sel->name));
 		}
 
 		return( TRUE );
@@ -2619,7 +2622,7 @@ static void ToggleWireFrame(void)
 {
 	UINT8& show_wireframe = gGameSettings.fOptions[TOPTION_TOGGLE_WIREFRAME];
 	show_wireframe = !show_wireframe;
-	wchar_t const* const msg = show_wireframe ?
+	ST::string msg = show_wireframe ?
 		pMessageStrings[MSG_WIREFRAMES_ADDED] :
 		pMessageStrings[MSG_WIREFRAMES_REMOVED];
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
@@ -2704,7 +2707,7 @@ static void ToggleTreeTops(void)
 {
 	UINT8& show_trees = gGameSettings.fOptions[TOPTION_TOGGLE_TREE_TOPS];
 	show_trees = !show_trees;
-	wchar_t const* const msg = show_trees ?
+	ST::string msg = show_trees ?
 		TacticalStr[SHOWING_TREETOPS_STR] :
 		TacticalStr[REMOVING_TREETOPS_STR];
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg);
@@ -3133,7 +3136,7 @@ BOOLEAN HandleUIReloading(SOLDIERTYPE* pSoldier)
 	if ( guiCurrentUICursor == BAD_RELOAD_UICURSOR )
 	{
 		// OK, we have been told to reload but have no ammo...
-		//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, L"No ammo to reload." );
+		//ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_UI_FEEDBACK, "No ammo to reload." );
 		if ( Random( 3 ) == 0 )
 		{
 			TacticalCharacterDialogue( pSoldier, QUOTE_OUT_OF_AMMO );
@@ -3231,9 +3234,9 @@ static void ToggleStealthMode(SOLDIERTYPE& s)
 	fInterfacePanelDirty = DIRTYLEVEL2;
 	s.bStealthMode       = !s.bStealthMode;
 
-	wchar_t const* const msg = s.bStealthMode ? pMessageStrings[MSG_MERC_ON_STEALTHMODE] :
+	ST::string msg = s.bStealthMode ? pMessageStrings[MSG_MERC_ON_STEALTHMODE] :
 						pMessageStrings[MSG_MERC_OFF_STEALTHMODE];
-	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, msg, s.name);
+	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(msg, s.name));
 }
 
 

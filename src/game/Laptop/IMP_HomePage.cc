@@ -13,6 +13,9 @@
 #include "LaptopSave.h"
 #include "Font_Control.h"
 
+#include <string_theory/string>
+
+
 static void BtnIMPAboutUsCallback(GUI_BUTTON *btn, INT32 reason);
 
 // position defines
@@ -51,8 +54,8 @@ static void InitImpHomepageTextInputBoxes(void) {
 
 static void ProcessPlayerInputActivationString(void)
 {
-	wchar_t const* str = GetStringFromField(0);
-	bool stringMatchesCode = wcscmp(str, L"XEP624") == 0 || wcscmp(str, L"xep624") == 0;
+	ST::string str = GetStringFromField(0);
+	bool stringMatchesCode = str == "XEP624" || str == "xep624";
 
 	if (stringMatchesCode && !LaptopSaveInfo.fIMPCompletedFlag) {
 		iCurrentImpPage = IMP_MAIN_PAGE;

@@ -54,6 +54,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 
@@ -433,7 +436,7 @@ static void HandleBestSightingPositionInRealtime(void)
 		{
 			SOLDIERTYPE* const s = *i;
 			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT,
-					String("%ls (%d) still has interrupt pts!", s->name, s->ubID));
+					String("%s (%d) still has interrupt pts!", s->name.c_str(), s->ubID));
 		}
 #endif
 	}
@@ -496,7 +499,7 @@ static void HandleBestSightingPositionInTurnbased(void)
 		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE* const s = *i;
-			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, String("%ls (%d) still has interrupt pts!", s->name, s->ubID));
+			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, String("%s (%d) still has interrupt pts!", s->name.c_str(), s->ubID));
 		}
 #endif
 	}
@@ -1230,8 +1233,8 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 
 static void ManLooksForOtherTeams(SOLDIERTYPE* pSoldier)
 {
-	SLOGD("MANLOOKSFOROTHERTEAMS ID %d(%ls) team %d side %d",
-		pSoldier->ubID, pSoldier->name, pSoldier->bTeam, pSoldier->bSide);
+	SLOGD("MANLOOKSFOROTHERTEAMS ID %d(%s) team %d side %d",
+		pSoldier->ubID, pSoldier->name.c_str(), pSoldier->bTeam, pSoldier->bSide);
 
 	// one soldier (pSoldier) looks for every soldier on another team (pOpponent)
 	FOR_EACH_MERC(i)
@@ -1304,8 +1307,8 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 		// THIS MUST HAPPEN EVEN FOR ENEMIES, TO MAKE THEIR PUBLIC opplist DECAY!
 		if (TeamNoLongerSeesMan(pSoldier->bTeam, pOpponent, pSoldier, 0))
 		{
-			SLOGD("TeamNoLongerSeesMan: ID %d(%ls) to ID %d",
-				pSoldier->ubID, pSoldier->name, pOpponent->ubID);
+			SLOGD("TeamNoLongerSeesMan: ID %d(%s) to ID %d",
+				pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID);
 
 			// don't use UpdatePublic() here, because we're changing to a *lower*
 			// opplist value (which UpdatePublic ignores) and we're not updating
@@ -1324,8 +1327,8 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 		}
 	}
 	else
-		SLOGD("ManLooksForMan: ID %d(%ls) to ID %d Personally seen, public %d",
-			pSoldier->ubID, pSoldier->name, pOpponent->ubID, *pbPublOL);
+		SLOGD("ManLooksForMan: ID %d(%s) to ID %d Personally seen, public %d",
+			pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID, *pbPublOL);
 
 	// if we had only seen the guy for an instant and now lost sight of him
 	if (gbSeenOpponents[pSoldier->ubID][pOpponent->ubID] == -1)
@@ -1361,8 +1364,8 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 	// if we're somehow looking while inactive, at base, dead or dying
 	if (!pSoldier->bActive || !pSoldier->bInSector || (pSoldier->bLife < OKLIFE))
 	{
-		SLOGE("ManLooksForMan - WE are inactive/dead etc ID %d(%ls)to ID %d",
-			pSoldier->ubID, pSoldier->name, pOpponent->ubID);
+		SLOGE("ManLooksForMan - WE are inactive/dead etc ID %d(%s)to ID %d",
+			pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID);
 		return(FALSE);
 	}
 
@@ -1372,8 +1375,8 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 	if (!pOpponent->bActive || !pOpponent->bInSector || pOpponent->bLife <= 0 ||
 		pOpponent->sGridNo == NOWHERE )
 	{
-		SLOGE("ManLooksForMan - TARGET is inactive etc ID %d(%ls)to ID %d",
-			pSoldier->ubID, pSoldier->name, pOpponent->ubID);
+		SLOGE("ManLooksForMan - TARGET is inactive etc ID %d(%s)to ID %d",
+			pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID);
 		return(FALSE);
 	}
 
@@ -1381,8 +1384,8 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 	// if he's looking for a guy who is on the same team
 	if (pSoldier->bTeam == pOpponent->bTeam)
 	{
-		SLOGE("ManLooksForMan - SAME TEAM ID %d(%ls)to ID %d",
-			pSoldier->ubID, pSoldier->name, pOpponent->ubID);
+		SLOGE("ManLooksForMan - SAME TEAM ID %d(%s)to ID %d",
+			pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID);
 		return(FALSE);
 	}
 
@@ -1463,8 +1466,8 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 
 	// calculate how many spaces away soldier is (using Pythagoras' theorem)
 	sDistAway = PythSpacesAway(pSoldier->sGridNo,pOpponent->sGridNo);
-	SLOGD("MANLOOKSFORMAN: ID %d(%ls) to ID %d: sDistAway %d sDistVisible %d",
-		pSoldier->ubID, pSoldier->name, pOpponent->ubID, sDistAway, sDistVisible);
+	SLOGD("MANLOOKSFORMAN: ID %d(%s) to ID %d: sDistAway %d sDistVisible %d",
+		pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID, sDistAway, sDistVisible);
 
 	// if we see close enough to see the soldier
 	if (sDistAway <= sDistVisible)
@@ -1478,8 +1481,8 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 		}
 		else
 		{
-			SLOGD("FAILED LINEOFSIGHT: ID %d (%ls)to ID %d Personally %d, public %d",
-				pSoldier->ubID, pSoldier->name, pOpponent->ubID, *pPersOL, *pbPublOL);
+			SLOGD("FAILED LINEOFSIGHT: ID %d (%s)to ID %d Personally %d, public %d",
+				pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID, *pPersOL, *pbPublOL);
 		}
 	}
 
@@ -1493,8 +1496,8 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 		if (!bSuccess)
 		{
 			SLOGD(
-				"NO LONGER VISIBLE ID %d (%ls)to ID %d Personally %d, public %d success: %d",
-				pSoldier->ubID, pSoldier->name, pOpponent->ubID, *pPersOL, *pbPublOL, bSuccess);
+				"NO LONGER VISIBLE ID %d (%s)to ID %d Personally %d, public %d success: %d",
+				pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID, *pPersOL, *pbPublOL, bSuccess);
 
 
 			// we didn't see the opponent, but since we didn't last time, we should be
@@ -1504,8 +1507,8 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 		else
 		{
 			SLOGD(
-				"COOL. STILL VISIBLE ID %d (%ls)to ID %d Personally %d, public %d success: %d",
-				pSoldier->ubID, pSoldier->name, pOpponent->ubID, *pPersOL, *pbPublOL, bSuccess);
+				"COOL. STILL VISIBLE ID %d (%s)to ID %d Personally %d, public %d success: %d",
+				pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID, *pPersOL, *pbPublOL, bSuccess);
 		}
 	}
 	return(bSuccess);
@@ -1789,8 +1792,8 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 			s.bSide != opponent.bSide)
 		{
 			AddOneOpponent(&s);
-			SLOGD("ManSeesMan: ID %d(%ls) to ID %d NEW TO ME",
-				s.ubID, s.name, opponent.ubID);
+			SLOGD("ManSeesMan: ID %d(%s) to ID %d NEW TO ME",
+				s.ubID, s.name.c_str(), opponent.ubID);
 
 			// if we also haven't seen him earlier this turn
 			if (s.bOppList[opponent.ubID] != SEEN_THIS_TURN)
@@ -1844,8 +1847,8 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 	}
 	else
 	{
-		SLOGD("ManSeesMan: ID %d(%ls) to ID %d ALREADYSEENCURRENTLY",
-			s.ubID, s.name, opponent.ubID);
+		SLOGD("ManSeesMan: ID %d(%s) to ID %d ALREADYSEENCURRENTLY",
+			s.ubID, s.name.c_str(), opponent.ubID);
 	}
 	// Remember that the soldier is currently seen and his new location
 	UpdatePersonal(&s, opponent.ubID, SEEN_CURRENTLY, opp_gridno, opp_level);
@@ -1922,8 +1925,8 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 				opponent.pLevelNode->ubShadeLevel = opponent.ubFadeLevel;
 			}
 		}
-		SLOGD("ID %d (%ls) MAKING %d VISIBLE",
-			s.ubID, s.name, opponent.ubID);
+		SLOGD("ID %d (%s) MAKING %d VISIBLE",
+			s.ubID, s.name.c_str(), opponent.ubID);
 
 		if (do_locate)
 		{
@@ -1976,8 +1979,8 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 		// assume he's no longer visible, until one of our mercs sees him again
 		pOpponent->bVisible = 0;
 	}
-		SLOGD("OTHERTEAMSLOOKFORMAN ID %d(%ls) team %d side %d",
-			pOpponent->ubID, pOpponent->name, pOpponent->bTeam, pOpponent->bSide);
+		SLOGD("OTHERTEAMSLOOKFORMAN ID %d(%s) team %d side %d",
+			pOpponent->ubID, pOpponent->name.c_str(), pOpponent->bTeam, pOpponent->bSide);
 
 	// all soldiers not on oppPtr's team now look for him
 	FOR_EACH_MERC(i)
@@ -2081,8 +2084,8 @@ static void RemoveOneOpponent(SOLDIERTYPE* pSoldier)
 
 	if ( pSoldier->bOppCnt < 0 )
 	{
-		SLOGD("Oppcnt for %d (%ls) tried to go below 0",
-			pSoldier->ubID, pSoldier->name);
+		SLOGD("Oppcnt for %d (%s) tried to go below 0",
+			pSoldier->ubID, pSoldier->name.c_str());
 		pSoldier->bOppCnt = 0;
 	}
 
@@ -2727,44 +2730,44 @@ void DebugSoldierPage1()
 	const SOLDIERTYPE* const s = FindSoldierFromMouse();
 	if (s != NULL)
 	{
-		MPageHeader(L"DEBUG SOLDIER PAGE ONE, GRIDNO %d", s->sGridNo);
+		MPageHeader(ST::format("DEBUG SOLDIER PAGE ONE, GRIDNO {}", s->sGridNo));
 
 		INT32 y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ID:",   s->ubID);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"TEAM:", s->bTeam);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"SIDE:", s->bSide);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "ID:",   s->ubID);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "TEAM:", s->bTeam);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "SIDE:", s->bSide);
 
-		MHeader(DEBUG_PAGE_FIRST_COLUMN, y +=  h, L"STATUS FLAGS:");
-		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%x", s->uiStatusFlags);
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y +=  h, "STATUS FLAGS:");
+		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{x}", s->uiStatusFlags));
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"HUMAN:",    gTacticalStatus.Team[s->bTeam].bHuman);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"APs:",      s->bActionPoints);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Breath:",   s->bBreath);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Life:",     s->bLife);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"LifeMax:",  s->bLifeMax);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Bleeding:", s->bBleeding);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "HUMAN:",    gTacticalStatus.Team[s->bTeam].bHuman);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "APs:",      s->bActionPoints);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Breath:",   s->bBreath);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Life:",     s->bLife);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "LifeMax:",  s->bLifeMax);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Bleeding:", s->bBleeding);
 
 		y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Agility:",               s->bAgility,      EffectiveAgility(s));
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Dexterity:",             s->bDexterity,    EffectiveDexterity(s));
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Strength:",              s->bStrength);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Wisdom:",                s->bWisdom,       EffectiveWisdom(s));
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Exp Lvl:",               s->bExpLevel,     EffectiveExpLevel(s));
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Mrksmnship",             s->bMarksmanship, EffectiveMarksmanship(s));
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Mechanical:",            s->bMechanical);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Explosive:",             s->bExplosive);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Medical:",               s->bMedical);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Drug Effects:",          s->bDrugEffect[0]);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Drug Side Effects:",     s->bDrugSideEffect[0]);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Booze Effects:",         s->bDrugEffect[1]);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Hangover Side Effects:", s->bDrugSideEffect[1]);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"AI has Keys:",           s->bHasKeys);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Agility:",               s->bAgility,      EffectiveAgility(s));
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Dexterity:",             s->bDexterity,    EffectiveDexterity(s));
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Strength:",              s->bStrength);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Wisdom:",                s->bWisdom,       EffectiveWisdom(s));
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Exp Lvl:",               s->bExpLevel,     EffectiveExpLevel(s));
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Mrksmnship",             s->bMarksmanship, EffectiveMarksmanship(s));
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Mechanical:",            s->bMechanical);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Explosive:",             s->bExplosive);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Medical:",               s->bMedical);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Drug Effects:",          s->bDrugEffect[0]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Drug Side Effects:",     s->bDrugSideEffect[0]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Booze Effects:",         s->bDrugEffect[1]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Hangover Side Effects:", s->bDrugSideEffect[1]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "AI has Keys:",           s->bHasKeys);
 	}
 	else if (GetMouseMapPos() != NOWHERE)
 	{
-		MPageHeader(L"DEBUG LAND PAGE ONE");
+		MPageHeader("DEBUG LAND PAGE ONE");
 	}
 }
 
@@ -2787,62 +2790,62 @@ void DebugSoldierPage2()
 	const SOLDIERTYPE* const s = FindSoldierFromMouse();
 	if (s != NULL)
 	{
-		MPageHeader(L"DEBUG SOLDIER PAGE TWO, GRIDNO %d", s->sGridNo);
+		MPageHeader(ST::format("DEBUG SOLDIER PAGE TWO, GRIDNO {}", s->sGridNo));
 
 		INT32 y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ID:", s->ubID);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Body Type:", s->ubBodyType);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Opp Cnt:", s->bOppCnt);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "ID:", s->ubID);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Body Type:", s->ubBodyType);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Opp Cnt:", s->bOppCnt);
 
-		wchar_t const* opp_header;
+		ST::string opp_header;
 		INT8    const* opp_list = s->bOppList;
 		if (s->bTeam == OUR_TEAM || s->bTeam == MILITIA_TEAM)	// look at 8 to 15 opplist entries
 		{
-			opp_header = L"Opplist B:";
+			opp_header = "Opplist B:";
 			opp_list += 20;
 		}
 		else	// team 1 - enemies so look at first 8 (0-7) opplist entries
 		{
-			opp_header = L"OppList A:";
+			opp_header = "OppList A:";
 		}
 		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, opp_header);
-		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d %d %d %d %d %d",
+		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} {} {} {} {} {} {} {}",
 			opp_list[0], opp_list[1], opp_list[2], opp_list[3],
-			opp_list[4], opp_list[5], opp_list[6], opp_list[7]
+			opp_list[4], opp_list[5], opp_list[6], opp_list[7])
 		);
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Visible:",     s->bVisible);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Direction:",   gzDirectionStr[s->bDirection]);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"DesDirection", gzDirectionStr[s->bDesiredDirection]);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"GridNo:",      s->sGridNo);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Dest:",        s->sFinalDestination);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Path Size:",   s->ubPathDataSize);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Path Index:",  s->ubPathIndex);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Visible:",     s->bVisible);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Direction:",   gzDirectionStr[s->bDirection]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "DesDirection", gzDirectionStr[s->bDesiredDirection]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "GridNo:",      s->sGridNo);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Dest:",        s->sFinalDestination);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Path Size:",   s->ubPathDataSize);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Path Index:",  s->ubPathIndex);
 
-		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"First 3 Steps:");
-		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d",
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, "First 3 Steps:");
+		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} {} {}",
 			s->ubPathingData[0],
 			s->ubPathingData[1],
-			s->ubPathingData[2]
+			s->ubPathingData[2])
 		);
 
-		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Next 3 Steps:");
-		mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%d %d %d",
+		MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, "Next 3 Steps:");
+		MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{} {} {}",
 			s->ubPathingData[s->ubPathIndex],
 			s->ubPathingData[s->ubPathIndex + 1],
-			s->ubPathingData[s->ubPathIndex + 2]
+			s->ubPathingData[s->ubPathIndex + 2])
 		);
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"FlashInd:",    s->fFlashLocator);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ShowInd:",     s->fShowLocator);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Main hand:",   ShortItemNames[s->inv[HANDPOS].usItem]);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Second hand:", ShortItemNames[s->inv[SECONDHANDPOS].usItem]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "FlashInd:",    s->fFlashLocator);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "ShowInd:",     s->fShowLocator);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Main hand:",   ShortItemNames[s->inv[HANDPOS].usItem]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Second hand:", ShortItemNames[s->inv[SECONDHANDPOS].usItem]);
 
 		const GridNo map_pos = GetMouseMapPos();
 		if (map_pos != NOWHERE)
 		{
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"CurrGridNo:", map_pos);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "CurrGridNo:", map_pos);
 		}
 	}
 	else
@@ -2850,61 +2853,61 @@ void DebugSoldierPage2()
 		const GridNo map_pos = GetMouseMapPos();
 		if (map_pos == NOWHERE) return;
 
-		MPageHeader(L"DEBUG LAND PAGE TWO");
+		MPageHeader("DEBUG LAND PAGE TWO");
 
 		INT32                    y  = DEBUG_PAGE_START_Y;
 		MAP_ELEMENT const* const me = &gpWorldLevelData[map_pos];
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Land Raised:", me->sHeight);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Land Raised:", me->sHeight);
 
 		LEVELNODE const* const land_head = me->pLandHead;
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Land Node:", land_head);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Land Node:", land_head);
 		if (land_head != NULL)
 		{
 			UINT16 const idx = land_head->usIndex;
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Land Node:", idx);
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Full Land:", gTileDatabase[idx].ubFullTile);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Land Node:", idx);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Full Land:", gTileDatabase[idx].ubFullTile);
 		}
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Land St Node:", me->pLandStart);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"GRIDNO:",       map_pos);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Land St Node:", me->pLandStart);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "GRIDNO:",       map_pos);
 
 		if (me->uiFlags & MAPELEMENT_MOVEMENT_RESERVED)
 		{
-			mprintf(  DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Merc: %d",  me->ubReservedSoldierID);
-			MPrint( DEBUG_PAGE_FIRST_COLUMN, y,      L"RESERVED MOVEMENT FLAG ON:");
+			MPrint(  DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, ST::format("Merc: {}",  me->ubReservedSoldierID));
+			MPrint( DEBUG_PAGE_FIRST_COLUMN, y,      "RESERVED MOVEMENT FLAG ON:");
 		}
 
 		LEVELNODE const* const node = GetCurInteractiveTile();
 		if (node != NULL)
 		{
-			mprintf(  DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Tile: %d", node->usIndex);
-			MPrint( DEBUG_PAGE_FIRST_COLUMN, y,      L"ON INT TILE");
+			MPrint(  DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, ST::format("Tile: {}", node->usIndex));
+			MPrint( DEBUG_PAGE_FIRST_COLUMN, y,      "ON INT TILE");
 		}
 
 		if (me->uiFlags & MAPELEMENT_REVEALED)
 		{
-			MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, L"REVEALED");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, "REVEALED");
 		}
 
 		if (me->uiFlags & MAPELEMENT_RAISE_LAND_START)
 		{
-			MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Land Raise Start");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, "Land Raise Start");
 		}
 
 		if (me->uiFlags & MAPELEMENT_RAISE_LAND_END)
 		{
-			MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Raise Land End");
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, "Raise Land End");
 		}
 
 		if (gubWorldRoomInfo[map_pos] != NO_ROOM)
 		{
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Room Number", gubWorldRoomInfo[map_pos]);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Room Number", gubWorldRoomInfo[map_pos]);
 		}
 
 		if (me->ubExtFlags[0] & MAPELEMENT_EXT_NOBURN_STRUCT)
 		{
-			MPrint(0, y += h, L"Don't Use Burn Through For Soldier");
+			MPrint(0, y += h, "Don't Use Burn Through For Soldier");
 		}
 	}
 }
@@ -2925,91 +2928,91 @@ void DebugSoldierPage3()
 	const SOLDIERTYPE* const s = FindSoldierFromMouse();
 	if (s != NULL)
 	{
-		MPageHeader(L"DEBUG SOLDIER PAGE THREE, GRIDNO %d", s->sGridNo);
+		MPageHeader(ST::format("DEBUG SOLDIER PAGE THREE, GRIDNO {}", s->sGridNo));
 
 		INT32 y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ID:",     s->ubID);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Action:", gzActionStr[s->bAction]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "ID:",     s->ubID);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Action:", gzActionStr[s->bAction]);
 
 		if (s->uiStatusFlags & SOLDIER_ENEMY)
 		{
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Alert:", gzAlertStr[s->bAlertStatus]);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Alert:", gzAlertStr[s->bAlertStatus]);
 		}
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Action Data:", s->usActionData);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Action Data:", s->usActionData);
 
 		if (s->uiStatusFlags & SOLDIER_ENEMY)
 		{
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"AIMorale", s->bAIMorale);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "AIMorale", s->bAIMorale);
 		}
 		else
 		{
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Morale", s->bMorale);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Morale", s->bMorale);
 		}
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Delayed Movement:", s->fDelayedMovement);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Delayed Movement:", s->fDelayedMovement);
 
 		if (gubWatchedLocPoints[s->ubID][0] > 0)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Watch %d/%d for %d pts",
+			MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, ST::format("Watch {}/{} for {} pts",
 				gsWatchedLoc[s->ubID][0],
 				gbWatchedLocLevel[s->ubID][0],
-				gubWatchedLocPoints[s->ubID][0]
+				gubWatchedLocPoints[s->ubID][0])
 			);
 		}
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ActionInProg:", s->bActionInProgress);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "ActionInProg:", s->bActionInProgress);
 
 		if (gubWatchedLocPoints[s->ubID][1] > 0)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Watch %d/%d for %d pts",
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, ST::format("Watch {}/{} for {} pts",
 				gsWatchedLoc[s->ubID][1],
 				gbWatchedLocLevel[s->ubID][1],
-				gubWatchedLocPoints[s->ubID][1]
+				gubWatchedLocPoints[s->ubID][1])
 			);
 		}
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Last Action:", gzActionStr[s->bLastAction]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Last Action:", gzActionStr[s->bLastAction]);
 
 		if (gubWatchedLocPoints[s->ubID][2] > 0)
 		{
-			mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, L"Watch %d/%d for %d pts",
+			MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y += h, ST::format("Watch {}/{} for {} pts",
 				gsWatchedLoc[s->ubID][2],
 				gbWatchedLocLevel[s->ubID][2],
-				gubWatchedLocPoints[s->ubID][2]
+				gubWatchedLocPoints[s->ubID][2])
 			);
 		}
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Animation:",   gAnimControl[s->usAnimState].zAnimStr);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Getting Hit:", s->fGettingHit);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Animation:",   gAnimControl[s->usAnimState].zAnimStr);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Getting Hit:", s->fGettingHit);
 
 		if (s->ubCivilianGroup != 0)
 		{
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Civ group", s->ubCivilianGroup);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Civ group", s->ubCivilianGroup);
 		}
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Suppress pts:",       s->ubSuppressionPoints);
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Attacker ID:",        SOLDIER2ID(s->attacker));
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"EndAINotCalled:",     s->fTurnInProgress);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Suppress pts:",       s->ubSuppressionPoints);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Attacker ID:",        SOLDIER2ID(s->attacker));
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "EndAINotCalled:",     s->fTurnInProgress);
 
 		y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"PrevAnimation:",      gAnimControl[s->usOldAniState].zAnimStr);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"PrevAniCode:",        gusAnimInst[s->usOldAniState][s->sOldAniCode]);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"GridNo:",             s->sGridNo);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"AniCode:",            gusAnimInst[s->usAnimState][s->usAniCode]);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"No APS To fin Move:", s->fNoAPToFinishMove);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Bullets out:",        s->bBulletsLeft);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"Anim non-int:",       s->fInNonintAnim);
-		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"RT Anim non-int:",    s->fRTInNonintAnim);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "PrevAnimation:",      gAnimControl[s->usOldAniState].zAnimStr);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "PrevAniCode:",        gusAnimInst[s->usOldAniState][s->sOldAniCode]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "GridNo:",             s->sGridNo);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "AniCode:",            gusAnimInst[s->usAnimState][s->usAniCode]);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "No APS To fin Move:", s->fNoAPToFinishMove);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Bullets out:",        s->bBulletsLeft);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Anim non-int:",       s->fInNonintAnim);
+		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "RT Anim non-int:",    s->fRTInNonintAnim);
 
 		// OPIONION OF SELECTED MERC
 		const SOLDIERTYPE* const sel = GetSelectedMan();
 		if (sel != NULL &&
 				sel->ubProfile < FIRST_NPC && s->ubProfile != NO_PROFILE)
 		{
-			MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, L"NPC Opinion:", GetProfile(s->ubProfile).bMercOpinion[sel->ubProfile]);
+			MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "NPC Opinion:", GetProfile(s->ubProfile).bMercOpinion[sel->ubProfile]);
 		}
 	}
 	else
@@ -3017,7 +3020,7 @@ void DebugSoldierPage3()
 		const GridNo map_pos = GetMouseMapPos();
 		if (map_pos == NOWHERE) return;
 
-		MPageHeader(L"DEBUG LAND PAGE THREE");
+		MPageHeader("DEBUG LAND PAGE THREE");
 
 		INT32 y = DEBUG_PAGE_START_Y;
 
@@ -3025,47 +3028,47 @@ void DebugSoldierPage3()
 		DOOR_STATUS const* const door = GetDoorStatus(map_pos);
 		if (door == NULL)
 		{
-			MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"No Door Status");
+			MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, "No Door Status");
 		}
 		else
 		{
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Door Status Found:", map_pos);
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Door Status Found:", map_pos);
 
-			wchar_t const* const door_state =
-				door->ubFlags & DOOR_OPEN ? L"OPEN" : L"CLOSED";
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Actual Status:", door_state);
+			ST::string door_state =
+				door->ubFlags & DOOR_OPEN ? "OPEN" : "CLOSED";
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Actual Status:", door_state);
 
-			wchar_t const* const perceived_state =
-				door->ubFlags & DOOR_PERCEIVED_NOTSET ? L"NOT SET" :
-				door->ubFlags & DOOR_PERCEIVED_OPEN   ? L"OPEN"    :
-									L"CLOSED";
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Perceived Status:", perceived_state);
+			ST::string perceived_state =
+				door->ubFlags & DOOR_PERCEIVED_NOTSET ? "NOT SET" :
+				door->ubFlags & DOOR_PERCEIVED_OPEN   ? "OPEN"    :
+									"CLOSED";
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Perceived Status:", perceived_state);
 		}
 
 		//Find struct data and se what it says......
 		STRUCTURE const* const structure = FindStructure(map_pos, STRUCTURE_ANYDOOR);
 		if (structure == NULL)
 		{
-			MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, L"No Door Struct Data");
+			MHeader(DEBUG_PAGE_FIRST_COLUMN, y += h, "No Door Struct Data");
 		}
 		else
 		{
-			wchar_t const* const structure_state =
-				structure->fFlags & STRUCTURE_OPEN ? L"OPEN" : L"CLOSED";
-			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"State:", structure_state);
+			ST::string structure_state =
+				structure->fFlags & STRUCTURE_OPEN ? "OPEN" : "CLOSED";
+			MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "State:", structure_state);
 		}
 	}
 }
 
 
-static void AppendAttachmentCode(UINT16 const item, wchar_t* const str) /* XXX Needs length */
+static void AppendAttachmentCode(UINT16 item, ST::string& str)
 {
 	switch (item)
 	{
-		case SILENCER:    wcscat(str, L" Sil"); break;
-		case SNIPERSCOPE: wcscat(str, L" Scp"); break;
-		case BIPOD:       wcscat(str, L" Bip"); break;
-		case LASERSCOPE:  wcscat(str, L" Las"); break;
+		case SILENCER:    str += " Sil"; break;
+		case SNIPERSCOPE: str += " Scp"; break;
+		case BIPOD:       str += " Bip"; break;
+		case LASERSCOPE:  str += " Las"; break;
 	}
 }
 
@@ -3080,62 +3083,60 @@ static void WriteQuantityAndAttachments(OBJECTTYPE const* o, INT32 const y)
 	{
 		if (o->ubNumberOfObjects > 1)
 		{
-			wchar_t str[50];
-			swprintf(str, lengthof(str), L"Clips:  %d  (%d", o->ubNumberOfObjects, o->bStatus[0]);
+			ST::string str = ST::format("Clips:  {}  ({}", o->ubNumberOfObjects, o->bStatus[0]);
 			for (UINT8 i = 1; i < o->ubNumberOfObjects; ++i)
 			{
-				wchar_t temp[5];
-				swprintf(temp, lengthof(temp), L", %d", o->bStatus[0]);
-				wcscat(str, temp);
+				ST::string temp = ST::format(", {}", o->bStatus[0]);
+				str += temp;
 			}
-			wcscat(str, L")");
-			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, str);
+			str += ")";
+			MPrint(DEBUG_PAGE_SECOND_COLUMN, y, str);
 		}
 		else
 		{
-			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%d rounds", o->bStatus[0]);
+			MPrint(DEBUG_PAGE_SECOND_COLUMN, y, ST::format("{} rounds", o->bStatus[0]));
 		}
 	}
 	else
 	{
 		// Build attachment string
-		wchar_t attachments[30];
+		ST::string attachments;
 		if (o->usAttachItem[0] ||
 				o->usAttachItem[1] ||
 				o->usAttachItem[2] ||
 				o->usAttachItem[3])
 		{
-			swprintf(attachments, lengthof(attachments), L"  (");
+			attachments = "  (";
 			AppendAttachmentCode(o->usAttachItem[0], attachments);
 			AppendAttachmentCode(o->usAttachItem[1], attachments);
 			AppendAttachmentCode(o->usAttachItem[2], attachments);
 			AppendAttachmentCode(o->usAttachItem[3], attachments);
-			wcscat(attachments, L" )");
+			attachments += " )";
 		}
 		else
 		{
-			attachments[0] = L'\0';
+			attachments = ST::null;
 		}
 
 		if (o->ubNumberOfObjects > 1)
 		{
 			//everything
-			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%d%%  Qty:  %d%ls", o->bStatus[0], o->ubNumberOfObjects, attachments);
+			MPrint(DEBUG_PAGE_SECOND_COLUMN, y, ST::format("{}%  Qty:  {}{}", o->bStatus[0], o->ubNumberOfObjects, attachments));
 		}
 		else
 		{
 			//condition and attachments
-			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%d%%%ls", o->bStatus[0], attachments);
+			MPrint(DEBUG_PAGE_SECOND_COLUMN, y, ST::format("{}%{}", o->bStatus[0], attachments));
 		}
 	}
 }
 
 
-static void PrintItem(INT32 const y, wchar_t const* const header, OBJECTTYPE const* o)
+static void PrintItem(INT32 y, const ST::string& header, const OBJECTTYPE* o)
 {
 	MHeader(DEBUG_PAGE_FIRST_COLUMN, y, header);
 	if (!o->usItem) return;
-	mprintf(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, L"%ls", ShortItemNames[o->usItem]);
+	MPrint(DEBUG_PAGE_FIRST_COLUMN+DEBUG_PAGE_LABEL_WIDTH, y, ST::format("{}", ShortItemNames[o->usItem]));
 	WriteQuantityAndAttachments(o, y);
 }
 
@@ -3148,113 +3149,113 @@ void DebugSoldierPage4()
 
 	if (s != NULL)
 	{
-		MPageHeader(L"DEBUG SOLDIER PAGE FOUR, GRIDNO %d", s->sGridNo);
+		MPageHeader(ST::format("DEBUG SOLDIER PAGE FOUR, GRIDNO {}", s->sGridNo));
 
 		INT32 y = DEBUG_PAGE_START_Y;
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"Exp. Level:", s->bExpLevel);
-		wchar_t const* sclass;
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "Exp. Level:", s->bExpLevel);
+		ST::string sclass;
 		switch (s->ubSoldierClass)
 		{
 			case SOLDIER_CLASS_ADMINISTRATOR:
-				sclass = L"(Administrator)";
+				sclass = "(Administrator)";
 				break;
 			case SOLDIER_CLASS_ELITE:
-				sclass = L"(Army Elite)";
+				sclass = "(Army Elite)";
 				break;
 			case SOLDIER_CLASS_ARMY:
-				sclass = L"(Army Troop)";
+				sclass = "(Army Troop)";
 				break;
 			case SOLDIER_CLASS_CREATURE:
-				sclass = L"(Creature)";
+				sclass = "(Creature)";
 				break;
 			case SOLDIER_CLASS_GREEN_MILITIA:
-				sclass = L"(Green Militia)";
+				sclass = "(Green Militia)";
 				break;
 			case SOLDIER_CLASS_REG_MILITIA:
-				sclass = L"(Reg Militia)";
+				sclass = "(Reg Militia)";
 				break;
 			case SOLDIER_CLASS_ELITE_MILITIA:
-				sclass = L"(Elite Militia)";
+				sclass = "(Elite Militia)";
 				break;
 			case SOLDIER_CLASS_MINER:
-				sclass = L"(Miner)";
+				sclass = "(Miner)";
 				break;
 			// don't care (don't write anything)
 			default:
-				sclass = NULL;
+				sclass = ST::null;
 				break;
 		}
-		if (sclass)
-			mprintf(DEBUG_PAGE_SECOND_COLUMN, y, L"%ls", sclass);
+		if (!sclass.empty())
+			MPrint(DEBUG_PAGE_SECOND_COLUMN, y, ST::format("{}", sclass));
 
 		if (s->bTeam != OUR_TEAM)
 		{
-			const wchar_t* orders;
+			ST::string orders;
 			switch (s->bOrders)
 			{
-				case STATIONARY:  orders = L"STATIONARY";    break;
-				case ONGUARD:     orders = L"ON GUARD";      break;
-				case ONCALL:      orders = L"ON CALL";       break;
-				case SEEKENEMY:   orders = L"SEEK ENEMY";    break;
-				case CLOSEPATROL: orders = L"CLOSE PATROL";  break;
-				case FARPATROL:   orders = L"FAR PATROL";    break;
-				case POINTPATROL: orders = L"POINT PATROL";  break;
-				case RNDPTPATROL: orders = L"RND PT PATROL"; break;
-				default:          orders = L"UNKNOWN";       break;
+				case STATIONARY:  orders = "STATIONARY";    break;
+				case ONGUARD:     orders = "ON GUARD";      break;
+				case ONCALL:      orders = "ON CALL";       break;
+				case SEEKENEMY:   orders = "SEEK ENEMY";    break;
+				case CLOSEPATROL: orders = "CLOSE PATROL";  break;
+				case FARPATROL:   orders = "FAR PATROL";    break;
+				case POINTPATROL: orders = "POINT PATROL";  break;
+				case RNDPTPATROL: orders = "RND PT PATROL"; break;
+				default:          orders = "UNKNOWN";       break;
 			}
-			const wchar_t* attitude;
+			ST::string attitude;
 			switch (s->bAttitude)
 			{
-				case DEFENSIVE:   attitude = L"DEFENSIVE";    break;
-				case BRAVESOLO:   attitude = L"BRAVE SOLO";   break;
-				case BRAVEAID:    attitude = L"BRAVE AID";    break;
-				case AGGRESSIVE:  attitude = L"AGGRESSIVE";   break;
-				case CUNNINGSOLO: attitude = L"CUNNING SOLO"; break;
-				case CUNNINGAID:  attitude = L"CUNNING AID";  break;
-				default:          attitude = L"UNKNOWN";      break;
+				case DEFENSIVE:   attitude = "DEFENSIVE";    break;
+				case BRAVESOLO:   attitude = "BRAVE SOLO";   break;
+				case BRAVEAID:    attitude = "BRAVE AID";    break;
+				case AGGRESSIVE:  attitude = "AGGRESSIVE";   break;
+				case CUNNINGSOLO: attitude = "CUNNING SOLO"; break;
+				case CUNNINGAID:  attitude = "CUNNING AID";  break;
+				default:          attitude = "UNKNOWN";      break;
 			}
 			SOLDIERINITNODE const* const node = FindSoldierInitNodeBySoldier(*s);
 			y += h;
 			if (node)
 			{
-				mprintf(DEBUG_PAGE_FIRST_COLUMN, y, L"%ls, %ls, REL EQUIP: %d, REL ATTR: %d",
+				MPrint(DEBUG_PAGE_FIRST_COLUMN, y, ST::format("{}, {}, REL EQUIP: {}, REL ATTR: {}",
 					orders, attitude,
 					node->pBasicPlacement->bRelativeEquipmentLevel,
-					node->pBasicPlacement->bRelativeAttributeLevel
+					node->pBasicPlacement->bRelativeAttributeLevel)
 				);
 			}
 			else
 			{
-				mprintf(DEBUG_PAGE_FIRST_COLUMN, y, L"%ls, %ls", orders, attitude);
+				MPrint(DEBUG_PAGE_FIRST_COLUMN, y, ST::format("{}, {}", orders, attitude));
 			}
 		}
 
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, L"ID:", s->ubID);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, "ID:", s->ubID);
 
-		PrintItem(y += h, L"HELMETPOS:",     &s->inv[HELMETPOS]);
-		PrintItem(y += h, L"VESTPOS:",       &s->inv[VESTPOS]);
-		PrintItem(y += h, L"LEGPOS:",        &s->inv[LEGPOS]);
-		PrintItem(y += h, L"HEAD1POS:",      &s->inv[HEAD1POS]);
-		PrintItem(y += h, L"HEAD2POS:",      &s->inv[HEAD2POS]);
-		PrintItem(y += h, L"HANDPOS:",       &s->inv[HANDPOS]);
-		PrintItem(y += h, L"SECONDHANDPOS:", &s->inv[SECONDHANDPOS]);
-		PrintItem(y += h, L"BIGPOCK1POS:",   &s->inv[BIGPOCK1POS]);
-		PrintItem(y += h, L"BIGPOCK2POS:",   &s->inv[BIGPOCK2POS]);
-		PrintItem(y += h, L"BIGPOCK3POS:",   &s->inv[BIGPOCK3POS]);
-		PrintItem(y += h, L"BIGPOCK4POS:",   &s->inv[BIGPOCK4POS]);
-		PrintItem(y += h, L"SMALLPOCK1POS:", &s->inv[SMALLPOCK1POS]);
-		PrintItem(y += h, L"SMALLPOCK2POS:", &s->inv[SMALLPOCK2POS]);
-		PrintItem(y += h, L"SMALLPOCK3POS:", &s->inv[SMALLPOCK3POS]);
-		PrintItem(y += h, L"SMALLPOCK4POS:", &s->inv[SMALLPOCK4POS]);
-		PrintItem(y += h, L"SMALLPOCK5POS:", &s->inv[SMALLPOCK5POS]);
-		PrintItem(y += h, L"SMALLPOCK6POS:", &s->inv[SMALLPOCK6POS]);
-		PrintItem(y += h, L"SMALLPOCK7POS:", &s->inv[SMALLPOCK7POS]);
-		PrintItem(y += h, L"SMALLPOCK8POS:", &s->inv[SMALLPOCK8POS]);
+		PrintItem(y += h, "HELMETPOS:",     &s->inv[HELMETPOS]);
+		PrintItem(y += h, "VESTPOS:",       &s->inv[VESTPOS]);
+		PrintItem(y += h, "LEGPOS:",        &s->inv[LEGPOS]);
+		PrintItem(y += h, "HEAD1POS:",      &s->inv[HEAD1POS]);
+		PrintItem(y += h, "HEAD2POS:",      &s->inv[HEAD2POS]);
+		PrintItem(y += h, "HANDPOS:",       &s->inv[HANDPOS]);
+		PrintItem(y += h, "SECONDHANDPOS:", &s->inv[SECONDHANDPOS]);
+		PrintItem(y += h, "BIGPOCK1POS:",   &s->inv[BIGPOCK1POS]);
+		PrintItem(y += h, "BIGPOCK2POS:",   &s->inv[BIGPOCK2POS]);
+		PrintItem(y += h, "BIGPOCK3POS:",   &s->inv[BIGPOCK3POS]);
+		PrintItem(y += h, "BIGPOCK4POS:",   &s->inv[BIGPOCK4POS]);
+		PrintItem(y += h, "SMALLPOCK1POS:", &s->inv[SMALLPOCK1POS]);
+		PrintItem(y += h, "SMALLPOCK2POS:", &s->inv[SMALLPOCK2POS]);
+		PrintItem(y += h, "SMALLPOCK3POS:", &s->inv[SMALLPOCK3POS]);
+		PrintItem(y += h, "SMALLPOCK4POS:", &s->inv[SMALLPOCK4POS]);
+		PrintItem(y += h, "SMALLPOCK5POS:", &s->inv[SMALLPOCK5POS]);
+		PrintItem(y += h, "SMALLPOCK6POS:", &s->inv[SMALLPOCK6POS]);
+		PrintItem(y += h, "SMALLPOCK7POS:", &s->inv[SMALLPOCK7POS]);
+		PrintItem(y += h, "SMALLPOCK8POS:", &s->inv[SMALLPOCK8POS]);
 	}
 	else
 	{
-		MPageHeader(L"DEBUG LAND PAGE FOUR");
+		MPageHeader("DEBUG LAND PAGE FOUR");
 	}
 }
 
@@ -4304,13 +4305,13 @@ static void TellPlayerAboutNoise(SOLDIERTYPE* const s, SOLDIERTYPE const* const 
 
 	if (noise_maker && s->bTeam == OUR_TEAM && s->bTeam == noise_maker->bTeam)
 	{
-		SLOGE("%ls (%d) heard noise from %ls (%d), noise at %dL%d, type %d",
-			s->name, s->ubID, noise_maker->name, noise_maker->ubID, sGridNo, level, noise_type);
+		SLOGE("%s (%d) heard noise from %s (%d), noise at %dL%d, type %d",
+			s->name.c_str(), s->ubID, noise_maker->name.c_str(), noise_maker->ubID, sGridNo, level, noise_type);
 	}
 
 	// display a message about a noise, e.g. Sidney hears a loud splash from/to?
 	// the north.
-	wchar_t const* const direction =
+	ST::string direction =
 		level      == s->bLevel            ||
 		noise_type == NOISE_EXPLOSION      ||
 		noise_type == NOISE_SCREAM         ||
@@ -4318,7 +4319,7 @@ static void TellPlayerAboutNoise(SOLDIERTYPE* const s, SOLDIERTYPE const* const 
 		noise_type == NOISE_GRENADE_IMPACT ? pDirectionStr[noise_dir] :
 		level      >  s->bLevel            ? gzLateLocalizedString[STR_LATE_06] : // From above
 		gzLateLocalizedString[STR_LATE_07];                                       // From below
-	ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, pNewNoiseStr[noise_type], s->name, pNoiseVolStr[volume_idx], direction);
+	ScreenMsg(MSG_FONT_YELLOW, MSG_INTERFACE, st_format_printf(pNewNoiseStr[noise_type], s->name, pNoiseVolStr[volume_idx], direction));
 
 	// If the sound was faint, say something
 	if (volume_idx == 0 &&

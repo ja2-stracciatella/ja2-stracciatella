@@ -2225,7 +2225,7 @@ no_cry:
 
 					// code: freeup attcker
 					SLOGD(
-						"Reducing attacker busy count..., CODE FROM ANIMATION %hs ( %d )",
+						"Reducing attacker busy count..., CODE FROM ANIMATION %s ( %d )",
 						gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState);
 					ReduceAttackBusyCount(pSoldier, FALSE);
 
@@ -2274,7 +2274,7 @@ no_cry:
 					// INcrement attacker busy count....
 					gTacticalStatus.ubAttackBusyCount++;
 					SLOGD(
-						"Incrementing attacker busy count..., CODE FROM ANIMATION %hs ( %d ) : Count now %d",
+						"Incrementing attacker busy count..., CODE FROM ANIMATION %s ( %d ) : Count now %d",
 						gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState,
 						gTacticalStatus.ubAttackBusyCount);
 					break;

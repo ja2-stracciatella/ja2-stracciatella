@@ -21,8 +21,8 @@ TEST(LoadSaveMercProfileTest, vanillaProfile)
 	ExtractImpProfileFromFile(f, &profileId, &portraitNumber, p);
 	EXPECT_EQ(profileId, PLAYER_GENERATED_CHARACTER_ID);
 	EXPECT_EQ(portraitNumber, 0);
-	EXPECT_STREQ(p.zName,         L"Foo Bar .....................");
-	EXPECT_STREQ(p.zNickname,     L".FooBar.");
+	EXPECT_EQ(p.zName, "Foo Bar .....................");
+	EXPECT_EQ(p.zNickname, ".FooBar.");
 	// UINT8 ubFaceIndex;
 	// PaletteRepID PANTS;
 	// PaletteRepID VEST;
@@ -173,8 +173,8 @@ TEST(LoadSaveMercProfileTest, stracLinuxProfile)
 	ExtractImpProfileFromFile(f, &profileId, &portraitNumber, p);
 	EXPECT_EQ(profileId, PLAYER_GENERATED_CHARACTER_ID);
 	EXPECT_EQ(portraitNumber, 0);
-	EXPECT_STREQ(p.zName, L"Vasya Вася Курочкин Kurochki");
-	EXPECT_STREQ(p.zNickname, L"ВАСЯКУРА");
+	EXPECT_EQ(p.zName, "Vasya Вася Курочкин Kurochki");
+	EXPECT_EQ(p.zNickname, "ВАСЯКУРА");
 	// UINT8 ubFaceIndex;
 	// PaletteRepID PANTS;
 	// PaletteRepID VEST;

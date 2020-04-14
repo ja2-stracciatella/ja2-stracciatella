@@ -15,6 +15,8 @@
 #include "Font_Control.h"
 #include "UILayout.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 
 #define INS_INFO_FRAUD_TEXT_COLOR		FONT_MCOLOR_RED
@@ -88,7 +90,7 @@ void EnterInitInsuranceInfo()
 }
 
 
-static GUIButtonRef MakeButtonBig(BUTTON_PICS* const img, const wchar_t* const text, const INT16 x, const GUI_CALLBACK click, const INT8 offset_x)
+static GUIButtonRef MakeButtonBig(BUTTON_PICS* img, const ST::string& text, INT16 x, GUI_CALLBACK click, INT8 offset_x)
 {
 	const INT16 text_col   = INS_FONT_COLOR;
 	const INT16 shadow_col = INS_FONT_SHADOW;
@@ -167,7 +169,7 @@ static void DisplaySubmitClaimPage(void);
 
 void RenderInsuranceInfo()
 {
-	wchar_t		sText[800];
+	ST::string sText;
 	UINT16		usPosX;
 
 	DisableArrowButtonsIfOnLastOrFirstPage();
@@ -212,7 +214,7 @@ void RenderInsuranceInfo()
 
 	//Display the red bar under the link at the bottom.  and the text
 	DisplaySmallRedLineWithShadow( usPosX, INS_INFO_LINK_TO_CONTRACT_Y, (UINT16)(usPosX+INS_INFO_LINK_TO_CONTRACT_WIDTH), INS_INFO_LINK_TO_CONTRACT_Y);
-	GetInsuranceText( INS_SNGL_TO_ENTER_REVIEW, sText );
+	sText = GetInsuranceText(INS_SNGL_TO_ENTER_REVIEW);
 	DisplayWrappedString(usPosX, INS_INFO_LINK_TO_CONTRACT_TEXT_Y, INS_INFO_LINK_TO_CONTRACT_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 
@@ -269,38 +271,38 @@ static void SelectInsuranceInfoHomeLinkRegionCallBack(MOUSE_REGION* pRegion, INT
 
 static void DisplaySubmitClaimPage(void)
 {
-	wchar_t		sText[800];
+	ST::string sText;
 	UINT16 usNewLineOffset = 0;
 	UINT16	usPosX;
 
 	usNewLineOffset = INS_INFO_FIRST_PARAGRAPH_Y;
 
 	//Display the title slogan
-	GetInsuranceText( INS_SNGL_SUBMITTING_CLAIM, sText );
+	sText = GetInsuranceText(INS_SNGL_SUBMITTING_CLAIM);
 	DrawTextToScreen(sText, INS_INFO_SUBTITLE_X, INS_INFO_SUBTITLE_Y, 0, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Display the title slogan
-	GetInsuranceText( INS_MLTI_U_CAN_REST_ASSURED, sText );
+	sText = GetInsuranceText(INS_MLTI_U_CAN_REST_ASSURED);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
-	GetInsuranceText( INS_MLTI_HAD_U_HIRED_AN_INDIVIDUAL, sText );
+	sText = GetInsuranceText(INS_MLTI_HAD_U_HIRED_AN_INDIVIDUAL);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
 	//display the BIG FRAUD
-	GetInsuranceText( INS_SNGL_FRAUD, sText );
+	sText = GetInsuranceText(INS_SNGL_FRAUD);
 	DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset - 1, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_BIG, INS_INFO_FRAUD_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	usPosX = INS_INFO_FIRST_PARAGRAPH_X + StringPixLength( sText, INS_FONT_BIG ) + 2;
-	GetInsuranceText( INS_MLTI_WE_RESERVE_THE_RIGHT, sText );
+	sText = GetInsuranceText(INS_MLTI_WE_RESERVE_THE_RIGHT);
 	usNewLineOffset += DisplayWrappedString(usPosX, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	GetInsuranceText( INS_MLTI_SHOULD_THERE_BE_GROUNDS, sText );
+	sText = GetInsuranceText(INS_MLTI_SHOULD_THERE_BE_GROUNDS);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
-	GetInsuranceText( INS_MLTI_SHOULD_SUCH_A_SITUATION, sText );
+	sText = GetInsuranceText(INS_MLTI_SHOULD_SUCH_A_SITUATION);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
@@ -309,35 +311,35 @@ static void DisplaySubmitClaimPage(void)
 
 static void DisplayPremiumPage(void)
 {
-	wchar_t		sText[800];
+	ST::string sText;
 	UINT16 usNewLineOffset = 0;
 
 	usNewLineOffset = INS_INFO_FIRST_PARAGRAPH_Y;
 
 
 	//Display the title slogan
-	GetInsuranceText( INS_SNGL_PREMIUMS, sText );
+	sText = GetInsuranceText(INS_SNGL_PREMIUMS);
 	DrawTextToScreen(sText, INS_INFO_SUBTITLE_X, INS_INFO_SUBTITLE_Y, 0, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	GetInsuranceText( INS_MLTI_EACH_TIME_U_COME_TO_US, sText );
+	sText = GetInsuranceText(INS_MLTI_EACH_TIME_U_COME_TO_US);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
 	BltVideoObject(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
 
-	GetInsuranceText( INS_MLTI_LENGTH_OF_EMPLOYMENT_CONTRACT, sText );
+	sText = GetInsuranceText(INS_MLTI_LENGTH_OF_EMPLOYMENT_CONTRACT);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X + INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
 	BltVideoObject(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
 
-	GetInsuranceText( INS_MLTI_EMPLOYEES_AGE_AND_HEALTH, sText );
+	sText = GetInsuranceText(INS_MLTI_EMPLOYEES_AGE_AND_HEALTH);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X + INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
 	BltVideoObject(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
 
-	GetInsuranceText( INS_MLTI_EMPLOOYEES_TRAINING_AND_EXP, sText );
+	sText = GetInsuranceText(INS_MLTI_EMPLOOYEES_TRAINING_AND_EXP);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X + INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 }
@@ -345,25 +347,25 @@ static void DisplayPremiumPage(void)
 
 static void DisplayRenewingPremiumPage(void)
 {
-	wchar_t		sText[800];
+	ST::string sText;
 	UINT16 usNewLineOffset = 0;
 
 	usNewLineOffset = INS_INFO_FIRST_PARAGRAPH_Y;
 
 	//Display the title slogan
-	GetInsuranceText( INS_SNGL_RENEWL_PREMIUMS, sText );
+	sText = GetInsuranceText(INS_SNGL_RENEWL_PREMIUMS);
 	DrawTextToScreen(sText, INS_INFO_SUBTITLE_X, INS_INFO_SUBTITLE_Y, 0, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	GetInsuranceText( INS_MLTI_WHEN_IT_COMES_TIME_TO_RENEW, sText );
+	sText = GetInsuranceText(INS_MLTI_WHEN_IT_COMES_TIME_TO_RENEW);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
-	GetInsuranceText( INS_MLTI_SHOULD_THE_PROJECT_BE_GOING_WELL, sText );
+	sText = GetInsuranceText(INS_MLTI_SHOULD_THE_PROJECT_BE_GOING_WELL);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
 	//display the LOWER PREMIUM FOR RENWING EARLY
-	GetInsuranceText( INS_SNGL_LOWER_PREMIUMS_4_RENEWING, sText );
+	sText = GetInsuranceText(INS_SNGL_LOWER_PREMIUMS_4_RENEWING);
 	DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset - 1, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_BIG, INS_INFO_FRAUD_TEXT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS + 2;
 }
@@ -371,24 +373,24 @@ static void DisplayRenewingPremiumPage(void)
 
 static void DisplayCancelationPagePage(void)
 {
-	wchar_t		sText[800];
+	ST::string sText;
 	UINT16 usNewLineOffset = 0;
 
 	usNewLineOffset = INS_INFO_FIRST_PARAGRAPH_Y;
 
 	//Display the title slogan
-	GetInsuranceText( INS_SNGL_POLICY_CANCELATIONS, sText );
+	sText = GetInsuranceText(INS_SNGL_POLICY_CANCELATIONS);
 	DrawTextToScreen(sText, INS_INFO_SUBTITLE_X, INS_INFO_SUBTITLE_Y, 0, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
-	GetInsuranceText( INS_MLTI_WE_WILL_ACCEPT_INS_CANCELATION, sText );
+	sText = GetInsuranceText(INS_MLTI_WE_WILL_ACCEPT_INS_CANCELATION);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
-	GetInsuranceText( INS_MLTI_1_HOUR_EXCLUSION_A, sText );
+	sText = GetInsuranceText(INS_MLTI_1_HOUR_EXCLUSION_A);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
-	GetInsuranceText( INS_MLTI_1_HOUR_EXCLUSION_B, sText );
+	sText = GetInsuranceText(INS_MLTI_1_HOUR_EXCLUSION_B);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 }
@@ -422,29 +424,29 @@ static void ChangingInsuranceInfoSubPage(UINT8 ubSubPageNumber)
 
 static void DisplayInfoTocPage(void)
 {
-	wchar_t		sText[800];
+	ST::string sText;
 	UINT16 usNewLineOffset = 0;
 	UINT16		usPosY;
 
 	usNewLineOffset = INS_INFO_FIRST_PARAGRAPH_Y;
 
 	//Display the title slogan
-	GetInsuranceText( INS_SNGL_HOW_DOES_INS_WORK, sText );
+	sText = GetInsuranceText(INS_SNGL_HOW_DOES_INS_WORK);
 	DrawTextToScreen(sText, INS_INFO_INFO_TOC_TITLE_X, INS_INFO_INFO_TOC_TITLE_Y, 439, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
 	//Display the First paragraph
-	GetInsuranceText( INS_MLTI_HIRING_4_SHORT_TERM_HIGH_RISK_1, sText );
+	sText = GetInsuranceText(INS_MLTI_HIRING_4_SHORT_TERM_HIGH_RISK_1);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
 	//Display the 2nd paragraph
-	GetInsuranceText( INS_MLTI_HIRING_4_SHORT_TERM_HIGH_RISK_2, sText );
+	sText = GetInsuranceText(INS_MLTI_HIRING_4_SHORT_TERM_HIGH_RISK_2);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
 
 	//Display the sub title
-	GetInsuranceText( INS_SNGL_WE_CAN_OFFER_U, sText );
+	sText = GetInsuranceText(INS_SNGL_WE_CAN_OFFER_U);
 	DrawTextToScreen(sText, INS_INFO_TOC_SUBTITLE_X, usNewLineOffset, SCREEN_WIDTH - INS_INFO_INFO_TOC_TITLE_X, INS_FONT_BIG, INS_FONT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usPosY = usNewLineOffset + 12;
 	DisplaySmallRedLineWithShadow( INS_INFO_SUBTITLE_X, usPosY, (UINT16)(INS_INFO_SUBTITLE_X+INS_INFO_SUBTITLE_LINE_WIDTH), usPosY );
@@ -459,7 +461,7 @@ static void DisplayInfoTocPage(void)
 
 	BltVideoObject(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
 
-	GetInsuranceText( INS_MLTI_REASONABLE_AND_FLEXIBLE, sText );
+	sText = GetInsuranceText(INS_MLTI_REASONABLE_AND_FLEXIBLE);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X + INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 
@@ -471,7 +473,7 @@ static void DisplayInfoTocPage(void)
 
 	BltVideoObject(FRAME_BUFFER, guiBulletImage, 0, INS_INFO_FIRST_PARAGRAPH_X, usNewLineOffset);
 
-	GetInsuranceText( INS_MLTI_QUICKLY_AND_EFFICIENT, sText );
+	sText = GetInsuranceText(INS_MLTI_QUICKLY_AND_EFFICIENT);
 	usNewLineOffset += DisplayWrappedString(INS_INFO_FIRST_PARAGRAPH_X + INSURANCE_BULLET_TEXT_OFFSET_X, usNewLineOffset, INS_INFO_FIRST_PARAGRAPH_WIDTH, 2, INS_FONT_MED, INS_FONT_COLOR, sText, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	usNewLineOffset += INS_INFO_SPACE_BN_PARAGRAPHS;
 }

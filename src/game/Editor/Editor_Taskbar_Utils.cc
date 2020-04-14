@@ -1,4 +1,3 @@
-#include <stdarg.h>
 #include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
@@ -48,6 +47,11 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+
+#include <string_theory/format>
+#include <string_theory/string>
+
+#include <stdarg.h>
 
 
 //editor icon storage vars
@@ -437,23 +441,15 @@ void EnableEditorTaskbar(void)
 //A specialized mprint function that'll restore the editor panel underneath the
 //string before rendering the string.  This is obviously only useful for drawing text
 //in the editor taskbar.
-void mprintfEditor(INT16 x, INT16 y, const wchar_t* pFontString, ...)
+void MPrintEditor(INT16 x, INT16 y, const ST::string& str)
 {
-	va_list argptr;
-	wchar_t	string[512];
 	UINT16 uiStringLength, uiStringHeight;
 
-	Assert( pFontString != NULL );
-
-	va_start( argptr, pFontString );       	// Set up variable argument pointer
-	vswprintf(string, lengthof(string), pFontString, argptr); // process gprintf string (get output str)
-	va_end( argptr );
-
-	uiStringLength = StringPixLength( string, FontDefault );
+	uiStringLength = StringPixLength( str, FontDefault );
 	uiStringHeight = GetFontHeight( FontDefault );
 
 	ClearTaskbarRegion( x, y, (INT16)(x+uiStringLength), (INT16)(y+uiStringHeight) );
-	MPrint(x, TASKBAR_Y + y, string);
+	MPrint(x, TASKBAR_Y + y, str);
 }
 
 void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
@@ -489,7 +485,7 @@ void ClearTaskbarRegion( INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sBottom )
 //This is a new function which duplicates the older "yellow info boxes" that
 //are common throughout the editor.  This draws the yellow box with the indentation
 //look.
-void DrawEditorInfoBox(const wchar_t* str, SGPFont const font, UINT16 x, UINT16 y, UINT16 w, UINT16 h)
+void DrawEditorInfoBox(const ST::string& str, SGPFont const font, UINT16 x, UINT16 y, UINT16 w, UINT16 h)
 {
 	UINT16 usFillColorDark, usFillColorLight, usFillColorBack;
 	UINT16 x2, y2;
@@ -598,7 +594,7 @@ void EnableEditorButtons( INT32 iFirstEditorButtonID, INT32 iLastEditorButtonID 
 }
 
 
-static void RenderEntryPoint(INT16 const gridno, wchar_t const* const label)
+static void RenderEntryPoint(INT16 const gridno, const ST::string& label)
 {
 	if (gridno == -1) return;
 	INT16 x;
@@ -614,12 +610,12 @@ static void RenderMapEntryPointsAndLights(void)
 	if (gfSummaryWindowActive) return;
 
 	SetFontShadow(FONT_NEARBLACK);
-	RenderEntryPoint(gMapInformation.sNorthGridNo,    L"North Entry Point");
-	RenderEntryPoint(gMapInformation.sWestGridNo,     L"West Entry Point");
-	RenderEntryPoint(gMapInformation.sEastGridNo,     L"East Entry Point");
-	RenderEntryPoint(gMapInformation.sSouthGridNo,    L"South Entry Point");
-	RenderEntryPoint(gMapInformation.sCenterGridNo,   L"Center Entry Point");
-	RenderEntryPoint(gMapInformation.sIsolatedGridNo, L"Isolated Entry Point");
+	RenderEntryPoint(gMapInformation.sNorthGridNo,    "North Entry Point");
+	RenderEntryPoint(gMapInformation.sWestGridNo,     "West Entry Point");
+	RenderEntryPoint(gMapInformation.sEastGridNo,     "East Entry Point");
+	RenderEntryPoint(gMapInformation.sSouthGridNo,    "South Entry Point");
+	RenderEntryPoint(gMapInformation.sCenterGridNo,   "Center Entry Point");
+	RenderEntryPoint(gMapInformation.sIsolatedGridNo, "Isolated Entry Point");
 
 	//Do the lights now.
 	CFOR_EACH_LIGHT_SPRITE(l)
@@ -631,60 +627,59 @@ static void RenderMapEntryPointsAndLights(void)
 		if (x < -40 || SCREEN_WIDTH <= x || y < -50 || TASKBAR_Y - 60 <= y) continue;
 
 		UINT8          colour;
-		wchar_t const* text;
+		ST::string text;
 		if (l->uiFlags & LIGHT_PRIMETIME)
 		{
 			colour = FONT_ORANGE;
-			text   = L"Prime";
+			text   = "Prime";
 		}
 		else if (l->uiFlags & LIGHT_NIGHTTIME)
 		{
 			colour = FONT_RED;
-			text   = L"Night";
+			text   = "Night";
 		}
 		else
 		{
 			colour = FONT_YELLOW;
-			text   = L"24Hour";
+			text   = "24Hour";
 		}
 		DisplayWrappedString(x, y - 5, 50, 2, FONT10ARIAL, colour, text, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 	}
 }
 
 
-static wchar_t const* BuildTriggerName(OBJECTTYPE const& o, wchar_t* const buf, size_t const length)
+static ST::string BuildTriggerName(OBJECTTYPE const& o)
 {
 	if (o.usItem == SWITCH)
 	{
 		switch (o.bFrequency)
 		{
-			case PANIC_FREQUENCY:   return L"Panic Trigger1";
-			case PANIC_FREQUENCY_2: return L"Panic Trigger2";
-			case PANIC_FREQUENCY_3: return L"Panic Trigger3";
-			default: swprintf(buf, length, L"Trigger%d", o.bFrequency - 50); break;
+			case PANIC_FREQUENCY:   return "Panic Trigger1";
+			case PANIC_FREQUENCY_2: return "Panic Trigger2";
+			case PANIC_FREQUENCY_3: return "Panic Trigger3";
+			default: return ST::format("Trigger{}", o.bFrequency - 50);
 		}
 	}
 	else
 	{ // Action item
 		if (o.bDetonatorType == BOMB_PRESSURE)
 		{
-			return L"Pressure Action";
+			return "Pressure Action";
 		}
 		else switch (o.bFrequency)
 		{
-			case PANIC_FREQUENCY:   return L"Panic Action1";
-			case PANIC_FREQUENCY_2: return L"Panic Action2";
-			case PANIC_FREQUENCY_3: return L"Panic Action3";
-			default: swprintf(buf, length, L"Action%d", o.bFrequency - 50); break;
+			case PANIC_FREQUENCY:   return "Panic Action1";
+			case PANIC_FREQUENCY_2: return "Panic Action2";
+			case PANIC_FREQUENCY_3: return "Panic Action3";
+			default: return ST::format("Action{}", o.bFrequency - 50);
 		}
 	}
-	return buf;
 }
 
 
 static void RenderDoorLockInfo()
 {
-	wchar_t str[50];
+	ST::string str;
 	FOR_EACH_DOOR(d)
 	{
 		INT16 screen_x;
@@ -695,27 +690,25 @@ static void RenderDoorLockInfo()
 		if (y > 390) continue;
 
 		if (d.ubLockID != 255)
-			swprintf(str, lengthof(str), L"%hs", LockTable[d.ubLockID].ubEditorName);
+			str = ST::format("{}", LockTable[d.ubLockID].ubEditorName);
 		else
-			wcslcpy(str, L"No Lock ID", lengthof(str));
+			str = "No Lock ID";
 		DisplayWrappedString(x - 10, y - 40, 60, 2, FONT10ARIAL, FONT_LTKHAKI, str, FONT_BLACK, CENTER_JUSTIFIED | MARK_DIRTY);
 
-		wchar_t const* trap_type; // HACK000E
+		ST::string trap_type;
 		switch (d.ubTrapID)
 		{
 			case NO_TRAP:        continue;
-			case EXPLOSION:      trap_type = L"Explosion Trap";      break;
-			case ELECTRIC:       trap_type = L"Electric Trap";       break;
-			case SIREN:          trap_type = L"Siren Trap";          break;
-			case SILENT_ALARM:   trap_type = L"Silent Alarm";        break;
-			case BROTHEL_SIREN:  trap_type = L"Brothel Siren Trap";  break;
-			case SUPER_ELECTRIC: trap_type = L"Super Electric Trap"; break;
-
-			default: abort(); // HACK000E
+			case EXPLOSION:      trap_type = "Explosion Trap";      break;
+			case ELECTRIC:       trap_type = "Electric Trap";       break;
+			case SIREN:          trap_type = "Siren Trap";          break;
+			case SILENT_ALARM:   trap_type = "Silent Alarm";        break;
+			case BROTHEL_SIREN:  trap_type = "Brothel Siren Trap";  break;
+			case SUPER_ELECTRIC: trap_type = "Super Electric Trap"; break;
 		}
 		SetFontAttributes(FONT10ARIAL, FONT_RED);
 		MPrint(x + 20 - StringPixLength(trap_type, FONT10ARIAL) / 2, y, trap_type);
-		swprintf(str, lengthof(str), L"Trap Level %d", d.ubTrapLevel);
+		str = ST::format("Trap Level {}", d.ubTrapLevel);
 		MPrint(x + 20 - StringPixLength(str, FONT10ARIAL) / 2, y + 10, str);
 	}
 }
@@ -742,16 +735,14 @@ static void RenderSelectedItemBlownUp(void)
 
 	// Display the item name above it
 	SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-	wchar_t const* item_name;
-	wchar_t        buf[SIZE_ITEM_NAME];
+	ST::string item_name;
 	if (o.usItem == ACTION_ITEM || o.usItem == SWITCH)
 	{
-		item_name = BuildTriggerName(o, buf, lengthof(buf));
+		item_name = BuildTriggerName(o);
 	}
 	else if (item->getItemClass() == IC_KEY)
 	{
-		swprintf(buf, lengthof(buf), L"%hs", LockTable[o.ubKeyID].ubEditorName);
-		item_name = buf;
+		item_name = ST::format("{}", LockTable[o.ubKeyID].ubEditorName);
 	}
 	else
 	{
@@ -765,7 +756,7 @@ static void RenderSelectedItemBlownUp(void)
 	{
 		SetFont(FONT10ARIALBOLD);
 		SetFontForeground(FONT_LTKHAKI);
-		wchar_t const* const name = GetActionItemName(&o);
+		ST::string name = GetActionItemName(&o);
 		x  = screen_x - (StringPixLength(name, FONT10ARIALBOLD) - 40) / 2;
 		y += 10;
 		MPrint(x, y, name);
@@ -778,7 +769,7 @@ static void RenderSelectedItemBlownUp(void)
 	{
 		++n;
 	}
-	mprintf(screen_x, screen_y + 10, L"%d", n);
+	MPrint(screen_x, screen_y + 10, ST::format("{}", n));
 
 	// If the item is hidden, render a blinking H (just like DG)
 	WORLDITEM const& wi = GetWorldItem(gpItemPool->iItemIndex);
@@ -786,7 +777,7 @@ static void RenderSelectedItemBlownUp(void)
 	{
 		SetFont(FONT10ARIALBOLD);
 		if (GetJA2Clock() % 1000 > 500) SetFontForeground(249);
-		MPrint(screen_x + 16, screen_y + 7, L"H");
+		MPrint(screen_x + 16, screen_y + 7, "H");
 		InvalidateRegion(screen_x + 16, screen_y + 7, screen_x + 24, screen_y + 27);
 	}
 }
@@ -794,31 +785,31 @@ static void RenderSelectedItemBlownUp(void)
 
 static void RenderEditorInfo(void)
 {
-	wchar_t					FPSText[ 50 ];
+	ST::string FPSText;
 
 	SetFontAttributes(FONT12POINT1, FONT_BLACK, NO_SHADOW);
 
 	//Display the mapindex position
 	const GridNo iMapIndex = GetMouseMapPos();
 	if (iMapIndex != NOWHERE)
-		swprintf(FPSText, lengthof(FPSText), L"   (%d)   ", iMapIndex);
+		FPSText = ST::format("   ({})   ", iMapIndex);
 	else
-		swprintf(FPSText, lengthof(FPSText), L"          ");
-	mprintfEditor(50 - StringPixLength(FPSText, FONT12POINT1) / 2, 103, FPSText);
+		FPSText = "          ";
+	MPrintEditor(50 - StringPixLength(FPSText, FONT12POINT1) / 2, 103, FPSText);
 
 	switch( iCurrentTaskbar )
 	{
 		case TASK_OPTIONS:
 			if( !gfWorldLoaded || giCurrentTilesetID < 0 )
-				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, L"No map currently loaded.");
+				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, "No map currently loaded.");
 			else
-				mprintf(260, EDITOR_TASKBAR_POS_Y + 85, L"File:  %hs, Current Tileset:  %ls", g_filename, gTilesets[giCurrentTilesetID].zName);
+				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, ST::format("File:  {}, Current Tileset:  {}", g_filename, gTilesets[giCurrentTilesetID].zName));
 			break;
 		case TASK_TERRAIN:
 			if( gusSelectionType == LINESELECTION )
-				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
+				wszSelType[LINESELECTION] = ST::format("Width: {}", gusSelectionWidth);
 			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 220, 70, 60, 30);
-			swprintf(FPSText, lengthof(FPSText), L"%d%%", gusSelectionDensity);
+			FPSText = ST::format("{}%", gusSelectionDensity);
 			DrawEditorInfoBox(FPSText, FONT12POINT1, 310, 70, 40, 30);
 			break;
 		case TASK_ITEMS:
@@ -828,7 +819,7 @@ static void RenderEditorInfo(void)
 		case TASK_BUILDINGS:
 			UpdateBuildingsInfo();
 			if( gusSelectionType == LINESELECTION )
-				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
+				wszSelType[LINESELECTION] = ST::format("Width: {}", gusSelectionWidth);
 			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 530, 70, 60, 30);
 			break;
 		case TASK_MERCS:
@@ -837,7 +828,7 @@ static void RenderEditorInfo(void)
 		case TASK_MAPINFO:
 			UpdateMapInfo();
 			if( gusSelectionType == LINESELECTION )
-				swprintf(SelTypeWidth, lengthof(SelTypeWidth), L"Width: %d", gusSelectionWidth );
+				wszSelType[LINESELECTION] = ST::format("Width: {}", gusSelectionWidth);
 			DrawEditorInfoBox(wszSelType[gusSelectionType], FONT12POINT1, 450, 70, 60, 30);
 			break;
 		default:

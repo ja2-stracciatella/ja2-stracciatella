@@ -44,6 +44,8 @@
 #include "Civ_Quotes.h"
 #include "UILayout.h"
 
+#include <string_theory/format>
+
 
 static SGPRect gOldClippingRect;
 static SGPRect gOldDirtyClippingRect;
@@ -428,7 +430,7 @@ void RenderTopmostTacticalInterface()
 		}
 
 		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-		GDirtyPrintF(x, y, L"-%d", s.sDamage);
+		GDirtyPrint(x, y, ST::format("-{}", s.sDamage));
 	}
 
 	// FOR THE MOST PART, DISABLE INTERFACE STUFF WHEN IT'S ENEMY'S TURN

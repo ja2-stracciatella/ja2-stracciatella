@@ -236,6 +236,9 @@ enum WorldDirections
 
 
 //-----------------------------------------------
+//NOTE:  The editor uses these enumerations, so please update the text as well if you modify or
+//       add new groups.  Try to abbreviate the team name as much as possible.  The text is in
+//       EditorMercs.c
 //
 // civilian "sub teams":
 enum
@@ -281,11 +284,6 @@ enum BoxingStates
 	WON_ROUND,
 	LOST_ROUND
 };
-
-//NOTE:  The editor uses these enumerations, so please update the text as well if you modify or
-//       add new groups.  Try to abbreviate the team name as much as possible.  The text is in
-//       EditorMercs.c
-extern const wchar_t* gszCivGroupNames[NUM_CIV_GROUPS];
 
 //
 //-----------------------------------------------

@@ -35,7 +35,8 @@ if (WITH_UNITTESTS)
         ${LOCAL_JA2_SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/FileMan_unittest.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/LoadSaveData_unittest.cc
-        ${CMAKE_CURRENT_SOURCE_DIR}/wchar_unittest.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/SGPStrings_unittest.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/string_unittest.cc
     )
 endif()
 

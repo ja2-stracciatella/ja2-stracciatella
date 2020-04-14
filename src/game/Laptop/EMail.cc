@@ -28,6 +28,10 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
+
 #define MAX_MESSAGES_PAGE 18 // max number of messages per page
 
 #define VIEWER_X (155 + STD_SCREEN_X)
@@ -53,7 +57,7 @@ struct Page
 
 struct Record
 {
-	wchar_t pRecord[MAIL_STRING_SIZE];
+	ST::string pRecord;
 	Record* Next;
 };
 
@@ -508,14 +512,14 @@ void AddPreReadEmail(INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender,
 }
 
 
-static void LoadEMailText(wchar_t buf[], UINT32 entry)
+static ST::string LoadEMailText(UINT32 entry)
 {
-	GCM->loadEncryptedString(BINARYDATADIR "/email.edt", buf, MAIL_STRING_SIZE * entry, MAIL_STRING_SIZE);
+	return GCM->loadEncryptedString(BINARYDATADIR "/email.edt", MAIL_STRING_SIZE * entry, MAIL_STRING_SIZE);
 }
 
 
 static void AddMessageToPages(Email* Mail);
-static void ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, const Email* pMail);
+static ST::string ReplaceMercNameAndAmountWithProperData(const ST::string& pFinishedString, const Email* pMail);
 
 
 void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UINT8 ubSender, BOOLEAN fAlreadyRead, INT32 iFirstData, UINT32 uiSecondData)
@@ -537,10 +541,9 @@ void AddEmailMessage(INT32 iMessageOffset, INT32 iMessageLength, INT32 iDate, UI
 	pTempEmail->iFirstData = iFirstData;
 	pTempEmail->uiSecondData = uiSecondData;
 
-	wchar_t pSubject[MAIL_STRING_SIZE];
-	LoadEMailText(pSubject, iMessageOffset);
-	ReplaceMercNameAndAmountWithProperData(pSubject, pTempEmail);
-	swprintf(pTempEmail->pSubject, lengthof(pTempEmail->pSubject), L" %ls", pSubject);
+	ST::string pSubject = LoadEMailText(iMessageOffset);
+	pSubject = ReplaceMercNameAndAmountWithProperData(pSubject, pTempEmail);
+	pTempEmail->pSubject = ST::format(" {}", pSubject);
 
 	// place into list
 	Email* pEmail = pEmailList;
@@ -659,12 +662,12 @@ static void SortMessages(EMailSortCriteria Criterium)
 					break;
 
 				case SENDER:
-					Order = wcscmp(pSenderNameList[Mail->ubSender], pSenderNameList[Other->ubSender]);
+					Order = pSenderNameList[Mail->ubSender].compare(pSenderNameList[Other->ubSender]);
 					if (fSortSenderUpwards) Order = -Order;
 					break;
 
 				case SUBJECT:
-					Order = wcscmp(Mail->pSubject, Other->pSubject);
+					Order = Mail->pSubject.compare(Other->pSubject);
 					if (fSortSubjectUpwards) Order = -Order;
 					break;
 
@@ -738,14 +741,13 @@ static void DrawEmailSummary(INT32 y, const Email* e)
 
 	SetFont(font);
 
-	wchar_t pTempSubject[MAIL_STRING_SIZE];
-	wcscpy(pTempSubject, e->pSubject);
-	ReduceStringLength(pTempSubject, lengthof(pTempSubject), SUBJECT_WIDTH - 10, font);
+	ST::string pTempSubject = e->pSubject;
+	pTempSubject = ReduceStringLength(pTempSubject, SUBJECT_WIDTH - 10, font);
 	MPrint(SUBJECT_X, y + 4, pTempSubject);
 	MPrint(SENDER_X,  y + 4, pSenderNameList[e->ubSender]);
 
 	// draw date of message being displayed in mail viewer
-	mprintf(DATE_X, y + 4, L"%ls %d", pDayStrings, e->iDate / (24 * 60));
+	MPrint(DATE_X, y + 4, ST::format("{} {}", pDayStrings, e->iDate / (24 * 60)));
 }
 
 
@@ -1498,12 +1500,12 @@ static void DestroyMailScreenButtons(void)
 }
 
 
-static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
+static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const ST::string& text)
 {
 	GUIButtonRef const btn = QuickCreateButtonImg(LAPTOPDIR "/mailbuttons.sti", idx, idx + 4, x, FROM_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giSortButton[idx] = btn;
 	btn->SetCursor(CURSOR_LAPTOP_SCREEN);
-	if (text)
+	if (!text.empty())
 	{
 		btn->SpecifyGeneralTextAttributes(text, EMAIL_WARNING_FONT, FONT_BLACK, FONT_BLACK);
 	}
@@ -1513,7 +1515,7 @@ static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* tex
 static void CreateMailScreenButtons(void)
 {
 	// create sort buttons, right now - not finished
-	MakeButton(0, ENVELOPE_BOX_X, ReadCallback,    NULL);
+	MakeButton(0, ENVELOPE_BOX_X, ReadCallback,    ST::null);
 	MakeButton(1, FROM_BOX_X,     FromCallback,    pEmailHeaders[FROM_HEADER]);
 	MakeButton(2, SUBJECT_BOX_X,  SubjectCallback, pEmailHeaders[SUBJECT_HEADER]);
 	MakeButton(3, DATE_BOX_X,     DateCallback,    pEmailHeaders[RECD_HEADER]);
@@ -1544,7 +1546,7 @@ static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY
 	MPrint(usX, MESSAGE_DATE_Y + iViewerY, pEmailHeaders[2]);
 
 	// the actual date info
-	mprintf(MESSAGE_HEADER_X + 235, MESSAGE_DATE_Y + iViewerY, L"%d", pMail->iDate / (24 * 60));
+	MPrint(MESSAGE_HEADER_X + 235, MESSAGE_DATE_Y + iViewerY, ST::format("{}", pMail->iDate / (24 * 60)));
 
 	// print subject
 	FindFontRightCoordinates(MESSAGE_HEADER_X - 20, MESSAGE_SUBJECT_Y, MESSAGE_HEADER_WIDTH, MESSAGE_SUBJECT_Y + GetFontHeight(MESSAGE_FONT), pEmailHeaders[1], MESSAGE_FONT, &usX, &usY);
@@ -1607,12 +1609,11 @@ static void ClearOutEmailMessageRecordsList(void)
 }
 
 
-static void AddEmailRecordToList(wchar_t* const text)
+static void AddEmailRecordToList(const ST::string& text)
 {
-	text[MAIL_STRING_SIZE-1] = L'\0';
 	Record* const e = new Record{};
 	e->Next = NULL;
-	wcscpy(e->pRecord, text);
+	e->pRecord = text;
 
 	// Append node to list
 	Record** anchor = &pMessageRecordList;
@@ -1869,16 +1870,15 @@ enum PhysicalBits
 ENUM_BITSET(PhysicalBits)
 
 
-static void LoadIMPResultText(wchar_t* Text, UINT32 Offset)
+static ST::string LoadIMPResultText(UINT32 Offset)
 {
-	GCM->loadEncryptedString(BINARYDATADIR "/impass.edt", Text, MAIL_STRING_SIZE * Offset, MAIL_STRING_SIZE);
+	return GCM->loadEncryptedString(BINARYDATADIR "/impass.edt", MAIL_STRING_SIZE * Offset, MAIL_STRING_SIZE);
 }
 
 
 static void AddIMPResultText(UINT32 Offset)
 {
-	wchar_t Text[MAIL_STRING_SIZE];
-	LoadIMPResultText(Text, Offset);
+	ST::string Text = LoadIMPResultText(Offset);
 	AddEmailRecordToList(Text);
 }
 
@@ -1906,15 +1906,13 @@ static void HandleIMPCharProfileResultsMessage(void)
 	iEndOfSection = IMP_RESULTS_INTRO_LENGTH;
 	for (INT32 i = 0; i < iEndOfSection; ++i)
 	{
-		wchar_t pString[MAIL_STRING_SIZE];
-		LoadIMPResultText(pString, i);
+		ST::string pString = LoadIMPResultText(i);
 
 		// have to place players name into string for first record
 		if (i == 0)
 		{
-			wchar_t zTemp[NAME_LENGTH + 1];
-			swprintf(zTemp, lengthof(zTemp), L" %ls", imp.zName);
-			wcscat(pString, zTemp);
+			ST::string zTemp = ST::format(" {}", imp.zName);
+			pString += zTemp;
 		}
 
 		AddEmailRecordToList(pString);
@@ -2222,7 +2220,7 @@ static void DisplayWhichPageOfEmailProgramIsDisplayed(void)
 		CPage = iCurrentPage + 1;
 		LPage = iLastPage + 1;
 	}
-	mprintf(PAGE_NUMBER_X, PAGE_NUMBER_Y, L"%d / %d", CPage, LPage);
+	MPrint(PAGE_NUMBER_X, PAGE_NUMBER_Y, ST::format("{} / {}", CPage, LPage));
 
 	// restore shadow
 	SetFontShadow( DEFAULT_SHADOW );
@@ -2261,8 +2259,7 @@ static void DisplayNumberOfPagesToThisEmail(INT32 const iViewerY)
 	// display the indent for the display of pages to this email..along with the current page/number of pages
 	SetFontAttributes(FONT12ARIAL, FONT_BLACK, NO_SHADOW);
 
-	wchar_t str[32];
-	swprintf(str, lengthof(str), L"%d / %d", giMessagePage + 1, giNumberOfPagesToCurrentEmail - 1);
+	ST::string str = ST::format("{} / {}", giMessagePage + 1, giNumberOfPagesToCurrentEmail - 1);
 	INT16 sX;
 	INT16 sY;
 	FindFontCenterCoordinates(VIEWER_X + INDENT_X_OFFSET, 0, INDENT_X_WIDTH, 0, str, FONT12ARIAL, &sX, &sY);
@@ -2319,8 +2316,7 @@ static void PreProcessEmail(Email* const m)
 		for (INT32 i = 0; i != m->usLength; ++i)
 		{
 			// read one record from email file
-			wchar_t str[MAIL_STRING_SIZE];
-			LoadEMailText(str, offset + i);
+			ST::string str = LoadEMailText(offset + i);
 			AddEmailRecordToList(str);
 		}
 		PreviousMail = CurrentMail;
@@ -2416,11 +2412,10 @@ static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumb
 	for( ubCnt=0; ubCnt<ubNumberOfRecords; ubCnt++)
 	{
 		// read one record from email file
-		wchar_t pString[MAIL_STRING_SIZE];
-		LoadEMailText(pString, usMessageId);
+		ST::string pString = LoadEMailText(usMessageId);
 
 		//Replace the $MERCNAME$ and $AMOUNT$ with the mercs name and the amountm if the string contains the keywords.
-		ReplaceMercNameAndAmountWithProperData( pString, pMail );
+		pString = ReplaceMercNameAndAmountWithProperData( pString, pMail );
 
 		// add to list
 		AddEmailRecordToList( pString );
@@ -2432,98 +2427,13 @@ static void ModifyInsuranceEmails(UINT16 usMessageId, Email* pMail, UINT8 ubNumb
 }
 
 
-static void ReplaceMercNameAndAmountWithProperData(wchar_t* pFinishedString, const Email* pMail)
+static ST::string ReplaceMercNameAndAmountWithProperData(const ST::string& pFinishedString, const Email* pMail)
 {
-	const wchar_t* const sMercName = L"$MERCNAME$"; //Doesnt need to be translated, inside Email.txt and will be replaced by the mercs name
-	const wchar_t* const sAmount = L"$AMOUN$"; //Doesnt need to be translated, inside Email.txt and will be replaced by a dollar amount
+	const ST::string sMercName = "$MERCNAME$"; //Doesnt need to be translated, inside Email.txt and will be replaced by the mercs name
+	const ST::string sAmount = "$AMOUN$"; //Doesnt need to be translated, inside Email.txt and will be replaced by a dollar amount
 
-	wchar_t pTempString[MAIL_STRING_SIZE];
-	INT32   iCurLocInSourceString=0;
-	INT32   iLengthOfSourceString = (INT32)wcslen( pFinishedString );		//Get the length of the source string
-	BOOLEAN fReplacingMercName = TRUE;
-
-	//Copy the original string over to the temp string
-	wcscpy( pTempString, pFinishedString );
-
-	//Null out the string
-	pFinishedString[0] = L'\0';
-
-
-	//Keep looping through to replace all references to the keyword
-	while( iCurLocInSourceString < iLengthOfSourceString )
-	{
-		//Find out if the $MERCNAME$ is in the string
-		const wchar_t* pMercNameString = wcsstr(&pTempString[iCurLocInSourceString], sMercName);
-		const wchar_t* pAmountString   = wcsstr(&pTempString[iCurLocInSourceString], sAmount);
-
-		const wchar_t* pSubString;
-		const wchar_t* sSearchString;
-		if( pMercNameString != NULL && pAmountString != NULL )
-		{
-			if( pMercNameString < pAmountString )
-			{
-				fReplacingMercName = TRUE;
-				pSubString = pMercNameString;
-				sSearchString = sMercName;
-			}
-			else
-			{
-				fReplacingMercName = FALSE;
-				pSubString = pAmountString;
-				sSearchString = sAmount;
-			}
-		}
-		else if( pMercNameString != NULL )
-		{
-			fReplacingMercName = TRUE;
-			pSubString = pMercNameString;
-			sSearchString = sMercName;
-		}
-		else if( pAmountString != NULL )
-		{
-			fReplacingMercName = FALSE;
-			pSubString = pAmountString;
-			sSearchString = sAmount;
-		}
-		else
-		{
-			pSubString = NULL;
-			sSearchString = NULL; // XXX HACK000E
-		}
-
-
-		// if there is a substring
-		if( pSubString != NULL )
-		{
-			INT32 iLength = (INT32)(pSubString - &pTempString[iCurLocInSourceString]);
-
-			//Copy the part of the source string upto the keyword
-			wcsncat( pFinishedString, &pTempString[ iCurLocInSourceString ], iLength );
-
-			//increment the source string counter by how far in the keyword is and by the length of the keyword
-			iCurLocInSourceString += static_cast<INT32>(iLength + wcslen( sSearchString ));
-
-			if( fReplacingMercName )
-			{
-				//add the mercs name to the string
-				wcscat( pFinishedString, gMercProfiles[ pMail->uiSecondData ].zName );
-			}
-			else
-			{
-				wchar_t	sDollarAmount[64];
-				SPrintMoney(sDollarAmount, pMail->iFirstData);
-
-				//add the mercs name to the string
-				wcscat( pFinishedString, sDollarAmount );
-			}
-		}
-		else
-		{
-			//add the rest of the string
-			wcscat( pFinishedString, &pTempString[ iCurLocInSourceString ] );
-
-			iCurLocInSourceString += static_cast<INT32>(wcslen( &pTempString[ iCurLocInSourceString ] ));
-		}
-	}
+	ST::string mercName = gMercProfiles[ pMail->uiSecondData ].zName;
+	ST::string amount = SPrintMoney(pMail->iFirstData);
+	return pFinishedString.replace(sAmount, amount).replace(sMercName, mercName);
 }
 

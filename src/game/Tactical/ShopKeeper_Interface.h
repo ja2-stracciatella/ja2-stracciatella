@@ -7,6 +7,8 @@
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
 
+#include <string_theory/string>
+
 
 //Enums used for when the user clicks on an item and the item goes to..
 enum
@@ -79,7 +81,7 @@ void ConfirmDontHaveEnoughForTheDealerMessageBoxCallBack(MessageBoxReturnValue);
 
 void SetSkiCursor( UINT16 usCursor );
 
-void InitShopKeeperSubTitledText(const wchar_t* pString);
+void InitShopKeeperSubTitledText(const ST::string& str);
 
 void AddItemToPlayersOfferAreaAfterShopKeeperOpen( OBJECTTYPE	*pItemObject, INT8 bPreviousInvPos );
 
@@ -91,7 +93,7 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper(const SOLDIERTYPE* s);
 
 void RestrictSkiMouseCursor(void);
 
-void DoSkiMessageBox(wchar_t const* zString, ScreenID uiExitScreen, MessageBoxFlags, MSGBOX_CALLBACK ReturnCallback);
+void DoSkiMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags ubFlags, MSGBOX_CALLBACK ReturnCallback);
 void StartSKIDescriptionBox(void);
 
 #endif

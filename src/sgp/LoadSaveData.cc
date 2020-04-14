@@ -1,24 +1,9 @@
 #include "LoadSaveData.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 
-/** Encode wchar_t into UTF-16 and write to the buffer.
- * @param string        String to encode
- * @param outputBuf     Output buffer for the encoded string
- * @param charsToWrite  Number of characters to write (at least one trailing 0x0000 will be written) */
-void wchar_to_utf16(const wchar_t *string, void *outputBuf, size_t charsToWrite)
-{
-	if(charsToWrite > 0)
-	{
-		ST::utf16_buffer data = ST::string::from_wchar(string).to_utf16();
-		size_t charsToCopy = std::min<size_t>(charsToWrite, data.size());
-		memcpy(outputBuf, data.c_str(), charsToCopy * 2);
-		if(charsToCopy < charsToWrite) // might not terminate with '\0'
-		{
-			std::fill_n(static_cast<char16_t*>(outputBuf) + charsToCopy, charsToWrite-charsToCopy, u'\0');
-		}
-	}
-}
 
 /** Get number of the consumed bytes during reading. */
 size_t DataReader::getConsumed() const
@@ -37,16 +22,23 @@ DataWriter::DataWriter(void *buf)
 {
 }
 
-/** Write wchar string into UTF-16 format.
+/** Write string into UTF-16 format.
  *
  * If \a numChars is bigger then the number of actual characters in the string,
  * then zeroes will be written to the buffer.
  *
  * @param string      String to write
  * @param numChars    Number of characters to write. */
-void DataWriter::writeStringAsUTF16(const wchar_t *string, size_t numChars)
+void DataWriter::writeStringAsUTF16(const ST::string& str, size_t numChars)
 {
-	wchar_to_utf16(string, m_buf, numChars);
+	ST::utf16_buffer buf = str.to_utf16();
+	if (buf.size() > numChars)
+	{
+		SLOGW("DataWriter::writeStringAsUTF16: truncating '%s' %u->%u", str.c_str(), static_cast<unsigned int>(buf.size()), static_cast<unsigned int>(numChars));
+	}
+	size_t n = std::min<size_t>(buf.size() + 1, numChars);
+	std::copy_n(buf.c_str(), n, reinterpret_cast<char16_t*>(m_buf));
+	std::fill_n(reinterpret_cast<char16_t*>(m_buf) + n, numChars - n, u'\0');
 	move(static_cast<int>(2*numChars));
 }
 
@@ -128,29 +120,6 @@ ST::string DataReader::readUTF32(size_t numChars)
 		data[i] = readU32();
 	}
 	return ST::string::from_utf32(data.c_str()); // can throw ST::unicode_error
-}
-
-/** Read UTF-16 encoded string into wide string buffer.
- * @param buffer Buffer to read data in.
- * @param numChars Number of characters to read.
- * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text. */
-void DataReader::readUTF16(wchar_t *buffer, size_t numChars, const IEncodingCorrector *fixer)
-{
-	if (numChars == 0) return;
-	ST::wchar_buffer wstr = readUTF16(numChars, fixer).to_wchar();
-	size_t const charsToCopy = std::min<size_t>(wstr.size() + 1, numChars);
-	memcpy(buffer, wstr.c_str(), charsToCopy * sizeof(wchar_t)); // might not terminate with '\0'
-}
-
-/** Read UTF-32 encoded string into wide string buffer.
- * @param buffer Buffer to read data in.
- * @param numChars Number of characters to read. */
-void DataReader::readUTF32(wchar_t *buffer, size_t numChars)
-{
-	if (numChars == 0) return;
-	ST::wchar_buffer wstr = readUTF32(numChars).to_wchar();
-	size_t const charsToCopy = std::min<size_t>(wstr.size() + 1, numChars);
-	memcpy(buffer, wstr.c_str(), charsToCopy * sizeof(wchar_t)); // might not terminate with '\0'
 }
 
 uint8_t DataReader::readU8()

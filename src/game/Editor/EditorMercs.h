@@ -2,6 +2,10 @@
 #define __EDITORMERCS_H
 
 #include "JA2Types.h"
+#include "Overhead_Types.h"
+#include "Scheduling.h"
+
+#include <string_theory/string>
 
 
 //Merc editing modes.  These are used to determine which buttons to show and hide.
@@ -46,6 +50,10 @@ enum _ForUseWithIndicateSelectedMerc
 	SELECT_NO_MERC				= -1
 	// >= 0 select merc with matching ID
 };
+
+extern const ST::string gszScheduleActions[NUM_SCHEDULE_ACTIONS];
+
+extern const ST::string gszCivGroupNames[NUM_CIV_GROUPS];
 
 void IndicateSelectedMerc( INT16 sID );
 

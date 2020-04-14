@@ -5,6 +5,8 @@
 #include "MouseSystem.h"
 #include "NPC.h"
 
+#include <string_theory/string>
+
 
 extern UINT8 gubSrcSoldierProfile;
 
@@ -39,7 +41,7 @@ struct NPC_DIALOGUE_TYPE
 	BOOLEAN  fHandledCanDeleteVal;
 	BOOLEAN  fRenderSubTitlesNow;
 	BOOLEAN  fSetupSubTitles;
-	wchar_t  zQuoteStr[ 480 ]; //QIALOGUE_SIZE is in dialog control which includes this file...
+	ST::string zQuoteStr; //QIALOGUE_SIZE is in dialog control which includes this file...
 };
 
 

@@ -131,7 +131,7 @@ void LoadMercProfiles()
 			MERCPROFILESTRUCT& p = gMercProfiles[i];
 
 			// // dumping std inventory
-			// printf("%03d/%ls\n", i, p.zNickname);
+			// printf("%03d/%s\n", i, p.zNickname.c_str());
 			// FOR_EACH(UINT16, k, p.inv)
 			// {
 			//   const ItemModel *item = GCM->getItem(*k);

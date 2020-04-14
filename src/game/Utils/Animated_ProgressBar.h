@@ -3,6 +3,8 @@
 
 #include "Types.h"
 
+#include <string_theory/string>
+
 
 void CreateLoadingScreenProgressBar(void);
 void RemoveLoadingScreenProgressBar(void);
@@ -20,7 +22,7 @@ void DefineProgressBarPanel( UINT32 ubID, UINT8 r, UINT8 g, UINT8 b,
 
 //Assigning a title for the panel will automatically position the text horizontally centered on the
 //panel and vertically centered from the top of the panel, to the top of the progress bar.
-void SetProgressBarTitle(UINT32 ubID, const wchar_t* pString, SGPFont, UINT8 ubForeColor, UINT8 ubShadowColor);
+void SetProgressBarTitle(UINT32 ubID, const ST::string& str, SGPFont font, UINT8 ubForeColor, UINT8 ubShadowColor);
 
 //Unless you set up the attributes, any text you pass to SetRelativeStartAndEndPercentage will
 //default to FONT12POINT1 in a black color.
@@ -37,7 +39,7 @@ void RemoveProgressBar( UINT8 ubID );
 //As the process animates using UpdateProgressBar( 0 to 100 ), the total progress bar will only reach 30%
 //at the 100% mark within UpdateProgressBar.  At that time, you would go onto the next step, resetting the
 //relative start and end percentage from 30 to whatever, until your done.
-void SetRelativeStartAndEndPercentage( UINT8 ubID, UINT32 uiRelStartPerc, UINT32 uiRelEndPerc, const wchar_t *str);
+void SetRelativeStartAndEndPercentage(UINT8 id, UINT32 uiRelStartPerc, UINT32 uiRelEndPerc, const ST::string& str);
 
 //This part renders the progress bar at the percentage level that you specify.  If you have set relative
 //percentage values in the above function, then the uiPercentage will be reflected based off of the relative

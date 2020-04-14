@@ -16,19 +16,19 @@ public:
 				const std::string &gameResRootPath,
 				const std::string &externalizedDataPath);
 
-	virtual ~ModPackContentManager();
+	virtual ~ModPackContentManager() override;
 
 	/* Checks if a game resource exists. */
-	virtual bool doesGameResExists(char const* fileName) const;
+	virtual bool doesGameResExists(char const* fileName) const override;
 
-	virtual SGPFile* openGameResForReading(const char* filename) const;
-	virtual SGPFile* openGameResForReading(const std::string& filename) const;
+	virtual SGPFile* openGameResForReading(const char* filename) const override;
+	virtual SGPFile* openGameResForReading(const std::string& filename) const override;
 
 	/** Get folder for saved games. */
-	std::string getSavedGamesFolder() const;
+	virtual std::string getSavedGamesFolder() const override;
 
 	/** Load dialogue quote from file. */
-	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number);
+	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number) override;
 
 protected:
 	std::vector<std::string> m_modNames;

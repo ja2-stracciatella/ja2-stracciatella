@@ -9,6 +9,8 @@
 #include "Button_System.h"
 #include "UILayout.h"
 
+#include <string_theory/string>
+
 
 GUIButtonRef iMsgBoxBgrnd;
 GUIButtonRef iMsgBoxOk;
@@ -22,7 +24,7 @@ static void MsgBoxCnclClkCallback(GUI_BUTTON* butn, INT32 reason);
 static void MsgBoxOkClkCallback(GUI_BUTTON* butn, INT32 reason);
 
 
-void CreateMessageBox(wchar_t const* const msg)
+void CreateMessageBox(const ST::string& msg)
 {
 	SGPFont  const font   = gpLargeFontType1;
 	INT16       w      = StringPixLength(msg, font) + 10;

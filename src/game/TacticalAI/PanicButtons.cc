@@ -241,7 +241,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 			// if we have enough APs to activate it now
 			if (pSoldier->bActionPoints >= AP_USE_REMOTE)
 			{
-				SLOGD("%ls is activating his detonator",pSoldier->name);
+				SLOGD("%s is activating his detonator", pSoldier->name.c_str());
 				// blow up all the PANIC bombs!
 				return(AI_ACTION_USE_DETONATOR);
 			}
@@ -300,7 +300,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 						// blow up the all the PANIC bombs (or just the journal)
 						pSoldier->usActionData = sPanicTriggerGridNo;
 						SLOGD("%s pulls panic trigger at grid %d",
-									pSoldier->name,pSoldier->usActionData);
+									pSoldier->name.c_str(), pSoldier->usActionData);
 						return(AI_ACTION_PULL_TRIGGER);
 					}
 					else       // otherwise, wait a turn

@@ -18,6 +18,8 @@
 #include "VSurface.h"
 #include "Font_Control.h"
 
+#include <string_theory/string>
+
 
 extern UINT8			gbCurrentIndex;
 
@@ -130,16 +132,16 @@ static void DrawMercsFaceToScreen(UINT8 ubMercID, UINT16 usPosX, UINT16 usPosY, 
 void RenderAimFacialIndex()
 {
 	UINT16		usPosX, usPosY, x,y;
-	wchar_t		sString[150];
+	ST::string sString;
 	UINT8			i;
 
 	DrawAimDefaults();
 
 	//Display the 'A.I.M. Members Sorted Ascending By Price' type string
 	if( gubCurrentListMode == AIM_ASCEND )
-		swprintf(sString, lengthof(sString), AimFiText[ AIM_FI_AIM_MEMBERS_SORTED_ASCENDING ], AimFiText[gubCurrentSortMode] );
+		sString = st_format_printf(AimFiText[ AIM_FI_AIM_MEMBERS_SORTED_ASCENDING ], AimFiText[gubCurrentSortMode]);
 	else
-		swprintf(sString, lengthof(sString), AimFiText[ AIM_FI_AIM_MEMBERS_SORTED_DESCENDING ], AimFiText[gubCurrentSortMode] );
+		sString = st_format_printf(AimFiText[ AIM_FI_AIM_MEMBERS_SORTED_DESCENDING ], AimFiText[gubCurrentSortMode]);
 
 	DrawTextToScreen(sString, AIM_FI_MEMBER_TEXT_X, AIM_FI_MEMBER_TEXT_Y, AIM_FI_MEMBER_TEXT_WIDTH, AIM_MAINTITLE_FONT, AIM_MAINTITLE_COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 
@@ -242,7 +244,7 @@ static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, con
 	SGPVObject* const face = guiAimFiFace[ubMercID];
 
 	BOOLEAN                  shaded;
-	wchar_t           const* text;
+	ST::string text;
 	MERCPROFILESTRUCT const& p = GetProfile(id);
 	if (IsMercDead(p))
 	{
@@ -273,7 +275,7 @@ static void DrawMercsFaceToScreen(const UINT8 ubMercID, const UINT16 usPosX, con
 	else
 	{
 		shaded = FALSE;
-		text   = NULL;
+		text   = ST::null;
 	}
 
 	BltVideoObject(FRAME_BUFFER, face, 0, usPosX + AIM_FI_FACE_OFFSET, usPosY + AIM_FI_FACE_OFFSET);

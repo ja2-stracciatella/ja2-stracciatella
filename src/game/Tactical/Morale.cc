@@ -426,8 +426,8 @@ void HandleMoraleEvent( SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, INT16 sMapX, I
 	else
 	{
 		SLOGD(
-			"Handling morale event %d for %ls at X=%d, Y=%d, Z=%d",
-			bMoraleEvent, pSoldier->name, sMapX, sMapY, bMapZ);
+			"Handling morale event %d for %s at X=%d, Y=%d, Z=%d",
+			bMoraleEvent, pSoldier->name.c_str(), sMapX, sMapY, bMapZ);
 	}
 
 

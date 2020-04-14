@@ -22,6 +22,8 @@
 #include "VSurface.h"
 #include "Font_Control.h"
 
+#include <string_theory/string>
+
 
 // min time btween frames of animation
 #define ANIMATE_MIN_TIME 200
@@ -98,7 +100,7 @@ void HandleIMPFinish( void )
 }
 
 
-static void MakeButton(UINT idx, const char* img_file, const wchar_t* text, INT16 x, INT16 y, GUI_CALLBACK click)
+static void MakeButton(UINT idx, const char* img_file, const ST::string& text, INT16 x, INT16 y, GUI_CALLBACK click)
 {
 	BUTTON_PICS* const img = LoadButtonImage(img_file, 0, 1);
 	giIMPFinishButtonImage[idx] = img;
@@ -141,8 +143,7 @@ static void CreateIMPFinishButtons(void)
 	giIMPFinishButton[4]->SpecifyIcon(guiCHARACTERPORTRAIT, 0, 33, 23, FALSE);
 
 	// the voice button
-	wchar_t sString[128];
-	swprintf(sString, lengthof(sString), pImpButtonText[5], iCurrentVoices + 1);
+	ST::string sString = st_format_printf(pImpButtonText[5], iCurrentVoices + 1);
 	MakeButton(5, LAPTOPDIR "/button_8.sti", sString, dx + 373, dy + 245, BtnIMPMainPageVoiceCallback);
 	giIMPFinishButton[5]->SpecifyIcon(guiSMALLSILHOUETTE, 0, 33, 23, FALSE);
 }
@@ -265,12 +266,11 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void RenderCharFullName(void)
 {
-	wchar_t sString[ 64 ];
 	INT16 sX, sY;
 
 	// render the characters full name
 	SetFontAttributes(FONT14ARIAL, FONT_WHITE);
-	swprintf(sString, lengthof(sString), pIMPFinishStrings, pFullName);
+	ST::string sString = st_format_printf(pIMPFinishStrings, pFullName);
 	FindFontCenterCoordinates(LAPTOP_SCREEN_UL_X, 0, LAPTOP_SCREEN_LR_X - LAPTOP_SCREEN_UL_X, 0 , sString , FONT14ARIAL, &sX, &sY);
 	MPrint(sX, STD_SCREEN_Y + LAPTOP_SCREEN_WEB_DELTA_Y + 33, sString);
 }

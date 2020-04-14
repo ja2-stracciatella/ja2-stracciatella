@@ -14,6 +14,8 @@
 #include "EditorBuildings.h"
 #include "Debug.h"
 
+#include <string_theory/string>
+
 
 SGPRect gSelectRegion;
 
@@ -28,8 +30,7 @@ UINT16 gusSavedSelectionType = SMALLSELECTION;
 UINT16 gusSavedBuildingSelectionType = AREASELECTION;
 static INT16 sBadMarker = -1;
 
-wchar_t SelTypeWidth[] = L"Width: xx";
-const wchar_t* const wszSelType[6]= { L"Small", L"Medium", L"Large", L"XLarge", SelTypeWidth, L"Area" };
+ST::string wszSelType[6]= { "Small", "Medium", "Large", "XLarge", "Width: xx", "Area" };
 
 static BOOLEAN gfAllowRightButtonSelections = FALSE;
 BOOLEAN gfCurrentSelectionWithRightButton = FALSE;

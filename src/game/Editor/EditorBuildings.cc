@@ -28,6 +28,9 @@
 #include "Video.h"
 #include "UILayout.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 
 BOOLEAN fBuildingShowRoofs, fBuildingShowWalls, fBuildingShowRoomInfo;
 UINT16 usCurrentMode;
@@ -82,16 +85,16 @@ void UpdateBuildingsInfo()
 	//print the headers on top of the columns
 	SetFont( SMALLCOMPFONT );
 	SetFontForeground( FONT_RED );
-	mprintfEditor(112,  2, L"TOGGLE");
-	mprintfEditor(114, 12, L"VIEWS");
+	MPrintEditor(112,  2, "TOGGLE");
+	MPrintEditor(114, 12, "VIEWS");
 	SetFontForeground( FONT_YELLOW );
-	mprintfEditor(185,  2, L"SELECTION METHOD");
+	MPrintEditor(185,  2, "SELECTION METHOD");
 	SetFontForeground( FONT_LTGREEN );
-	mprintfEditor(290,  2, L"SMART METHOD");
+	MPrintEditor(290,  2, "SMART METHOD");
 	SetFontForeground( FONT_LTBLUE );
-	mprintfEditor(390,  2, L"BUILDING METHOD");
+	MPrintEditor(390,  2, "BUILDING METHOD");
 	SetFontForeground( FONT_GRAY2 );
-	mprintfEditor(437, 44, L"Room#" );
+	MPrintEditor(437, 44, "Room#" );
 }
 
 //Uses a recursive method to elimate adjacent tiles of structure information.
@@ -512,13 +515,13 @@ void InitDoorEditing(INT32 const map_idx)
 	iDoorMapIndex = map_idx;
 	DisableEditorTaskbar();
 	MSYS_DefineRegion(&DoorRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 2, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
-	iDoorButton[DOOR_BACKGROUND] = CreateLabel(0, 0, 0, 0, 200, 130, 240, 100, MSYS_PRIORITY_HIGH - 1);
-	iDoorButton[DOOR_OKAY]       = CreateTextButton(L"Okay",   FONT12POINT1, FONT_BLACK, FONT_BLACK, 330, 195, 50, 30, MSYS_PRIORITY_HIGH, DoorOkayCallback);
-	iDoorButton[DOOR_CANCEL]     = CreateTextButton(L"Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, 385, 195, 50, 30, MSYS_PRIORITY_HIGH, DoorCancelCallback);
+	iDoorButton[DOOR_BACKGROUND] = CreateLabel(ST::null, 0, 0, 0, 200, 130, 240, 100, MSYS_PRIORITY_HIGH - 1);
+	iDoorButton[DOOR_OKAY]       = CreateTextButton("Okay",   FONT12POINT1, FONT_BLACK, FONT_BLACK, 330, 195, 50, 30, MSYS_PRIORITY_HIGH, DoorOkayCallback);
+	iDoorButton[DOOR_CANCEL]     = CreateTextButton("Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, 385, 195, 50, 30, MSYS_PRIORITY_HIGH, DoorCancelCallback);
 	InitTextInputModeWithScheme(DEFAULT_SCHEME);
-	AddTextInputField(210, 155, 25, 16, MSYS_PRIORITY_HIGH, L"0", 3, INPUTTYPE_NUMERICSTRICT);
-	AddTextInputField(210, 175, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT);
-	AddTextInputField(210, 195, 25, 16, MSYS_PRIORITY_HIGH, L"0", 2, INPUTTYPE_NUMERICSTRICT);
+	AddTextInputField(210, 155, 25, 16, MSYS_PRIORITY_HIGH, "0", 3, INPUTTYPE_NUMERICSTRICT);
+	AddTextInputField(210, 175, 25, 16, MSYS_PRIORITY_HIGH, "0", 2, INPUTTYPE_NUMERICSTRICT);
+	AddTextInputField(210, 195, 25, 16, MSYS_PRIORITY_HIGH, "0", 2, INPUTTYPE_NUMERICSTRICT);
 	iDoorButton[DOOR_LOCKED] = CreateCheckBoxButton(210, 215, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, DoorToggleLockedCallback);
 
 	if (DOOR const* const door = FindDoorInfoAtGridNo(map_idx))
@@ -623,13 +626,13 @@ void RenderDoorEditingWindow()
 {
 	InvalidateRegion( 200, 130, 440, 230 );
 	SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-	mprintf( 210, 140, L"Editing lock attributes at map index %d.", iDoorMapIndex );
+	MPrint( 210, 140, ST::format("Editing lock attributes at map index {}.", iDoorMapIndex) );
 
 	SetFontForeground( FONT_GRAY2 );
-	MPrint(238, 160, L"Lock ID");
-	MPrint(238, 180, L"Trap Type");
-	MPrint(238, 200, L"Trap Level");
-	MPrint(238, 218, L"Locked");
+	MPrint(238, 160, "Lock ID");
+	MPrint(238, 180, "Trap Type");
+	MPrint(238, 200, "Trap Level");
+	MPrint(238, 218, "Locked");
 }
 
 
@@ -694,16 +697,16 @@ void RemoveLockedDoorCursors()
 
 void SetupTextInputForBuildings()
 {
-	wchar_t str[4];
+	ST::string str;
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	AddUserInputField( NULL );  //just so we can use short cut keys while not typing.
-	swprintf(str, lengthof(str), L"%d", gubMaxRoomNumber);
+	str = ST::format("{}", gubMaxRoomNumber);
 	AddTextInputField( 410, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 }
 
 void ExtractAndUpdateBuildingInfo()
 {
-	wchar_t str[4];
+	ST::string str;
 	INT32 temp;
 	//extract light1 colors
 	temp = MIN( GetNumericStrictValueFromField( 1 ), 255 );
@@ -715,7 +718,7 @@ void ExtractAndUpdateBuildingInfo()
 	{
 		gubCurrRoomNumber = 0;
 	}
-	swprintf(str, lengthof(str), L"%d", gubCurrRoomNumber);
-	SetInputFieldStringWith16BitString( 1, str );
+	str = ST::format("{}", gubCurrRoomNumber);
+	SetInputFieldString( 1, str );
 	SetActiveField( 0 );
 }

@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Font.h"
 #include "Local.h"
 #include "PopUpBox.h"
@@ -11,12 +9,17 @@
 #include "VSurface.h"
 #include "UILayout.h"
 
+#include <string_theory/string>
+
+#include <stdexcept>
+
+
 #define MAX_POPUP_BOX_COUNT 20
 
 
 struct PopUpString
 {
-	wchar_t* pString;
+	ST::utf32_buffer codepoints;
 	UINT8 ubForegroundColor;
 	UINT8 ubBackgroundColor;
 	UINT8 ubHighLight;
@@ -166,7 +169,7 @@ SGPBox const& GetBoxArea(PopUpBox const* const box)
 
 
 // adds a FIRST column string to the CURRENT popup box
-void AddMonoString(PopUpBox* const box, const wchar_t* pString)
+void AddMonoString(PopUpBox* box, const ST::string& str)
 {
 	INT32 iCounter = 0;
 
@@ -181,12 +184,9 @@ void AddMonoString(PopUpBox* const box, const wchar_t* pString)
 	}
 
 	PopUpString* const pStringSt    = new PopUpString{};
-	wchar_t*     const pLocalString = new wchar_t[wcslen(pString) + 1]{};
-
-	wcscpy(pLocalString, pString);
 
 	box->Text[iCounter]                      = pStringSt;
-	box->Text[iCounter]->pString             = pLocalString;
+	box->Text[iCounter]->codepoints          = str.to_utf32();
 	box->Text[iCounter]->fShadeFlag          = FALSE;
 	box->Text[iCounter]->fHighLightFlag      = FALSE;
 	box->Text[iCounter]->fSecondaryShadeFlag = FALSE;
@@ -198,7 +198,7 @@ void AddMonoString(PopUpBox* const box, const wchar_t* pString)
 static void RemoveBoxSecondaryText(PopUpBox*, INT32 hStringHandle);
 
 
-void AddSecondColumnMonoString(PopUpBox* const box, const wchar_t* const pString)
+void AddSecondColumnMonoString(PopUpBox* box, const ST::string& str)
 {
 	INT32 iCounter=0;
 
@@ -213,14 +213,11 @@ void AddSecondColumnMonoString(PopUpBox* const box, const wchar_t* const pString
 	}
 
 	PopUpString* const pStringSt    = new PopUpString{};
-	wchar_t*     const pLocalString = new wchar_t[wcslen(pString) + 1]{};
-
-	wcscpy(pLocalString, pString);
 
 	RemoveBoxSecondaryText(box, iCounter);
 
 	box->pSecondColumnString[iCounter]                 = pStringSt;
-	box->pSecondColumnString[iCounter]->pString        = pLocalString;
+	box->pSecondColumnString[iCounter]->codepoints     = str.to_utf32();
 	box->pSecondColumnString[iCounter]->fShadeFlag     = FALSE;
 	box->pSecondColumnString[iCounter]->fHighLightFlag = FALSE;
 }
@@ -578,14 +575,14 @@ static void DrawBoxText(const PopUpBox* const box)
 			INT16 uY;
 			if (box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
 			{
-				FindFontCenterCoordinates(tlx, y, w, h, text->pString, font, &uX, &uY);
+				FindFontCenterCoordinates(tlx, y, w, h, text->codepoints, font, &uX, &uY);
 			}
 			else
 			{
 				uX = tlx;
 				uY = y;
 			}
-			MPrint(uX, uY, text->pString);
+			MPrint(uX, uY, text->codepoints);
 		}
 
 		// there is secondary text in this line?
@@ -613,14 +610,14 @@ static void DrawBoxText(const PopUpBox* const box)
 			INT16 uY;
 			if (box->uiFlags & POPUP_BOX_FLAG_CENTER_TEXT)
 			{
-				FindFontCenterCoordinates(tlx, y, w, h, second->pString, font, &uX, &uY);
+				FindFontCenterCoordinates(tlx, y, w, h, second->codepoints, font, &uX, &uY);
 			}
 			else
 			{
 				uX = tlx + box->uiSecondColumnCurrentOffset;
 				uY = y;
 			}
-			MPrint(uX, uY, second->pString);
+			MPrint(uX, uY, second->codepoints);
 		}
 	}
 
@@ -644,13 +641,13 @@ void ResizeBoxToText(PopUpBox* const box)
 		const PopUpString* const l = box->Text[i];
 		if (l == NULL) break;
 
-		const UINT32 lw = StringPixLength(l->pString, font);
+		const UINT32 lw = StringPixLength(l->codepoints, font);
 		if (lw > max_lw) max_lw = lw;
 
 		const PopUpString* const r = box->pSecondColumnString[i];
 		if (r != NULL)
 		{
-			const UINT32 rw = StringPixLength(r->pString, font);
+			const UINT32 rw = StringPixLength(r->codepoints, font);
 			if (rw > max_rw) max_rw = rw;
 		}
 	}
@@ -699,11 +696,6 @@ static void RemoveBoxPrimaryText(PopUpBox* const Box, const INT32 hStringHandle)
 	// remove & release primary text
 	if (Box->Text[hStringHandle] != NULL)
 	{
-		if (Box->Text[hStringHandle]->pString)
-		{
-			delete[] Box->Text[hStringHandle]->pString;
-		}
-
 		delete Box->Text[hStringHandle];
 		Box->Text[hStringHandle] = NULL;
 	}
@@ -718,11 +710,6 @@ static void RemoveBoxSecondaryText(PopUpBox* const Box, const INT32 hStringHandl
 	// remove & release secondary strings
 	if (Box->pSecondColumnString[hStringHandle] != NULL)
 	{
-		if (Box->pSecondColumnString[hStringHandle]->pString)
-		{
-			delete[] Box->pSecondColumnString[hStringHandle]->pString;
-		}
-
 		delete Box->pSecondColumnString[hStringHandle];
 		Box->pSecondColumnString[hStringHandle] = NULL;
 	}

@@ -1,30 +1,39 @@
 #include "Logger.h"
+#include "SGPStrings.h"
+#include "Types.h"
+
+#include <string_theory/string>
 
 #include <stdio.h>
 #if defined(_MSC_VER)
-  /* Visual Studio */
-  #include <io.h>
-  #define write _write
-  #define snprintf(buf, size, format, ...) _snprintf_s(buf, size, _TRUNCATE, format, ##__VA_ARGS__)
-  #define vsnprintf(buf, size, format, args) vsnprintf_s(buf, size, _TRUNCATE, format, args)
-  #pragma warning( disable : 4996 )  /* disable some VS warnings, e.g. 'fopen': This function or variable may be unsafe. */
-#else
-  #include <unistd.h>
+#define vsnprintf(buf, size, format, args) vsnprintf_s(buf, size, _TRUNCATE, format, args)
 #endif
 
-void LogMessage(bool isAssert, LogLevel level, const char *file, const char *format, ...) {
-  char message[256];
-  va_list args;
-  va_start(args, format);
-  vsnprintf(message, 256, format, args);
-  va_end(args);
+void LogMessage(bool isAssert, LogLevel level, const char* file, const ST::string& str)
+{
+	Logger_log(level, str.c_str(), file);
 
-  Logger_log(level, message, file);
+	#ifdef ENABLE_ASSERTS
+	if (isAssert)
+	{
+		abort();
+	}
+	#endif
+}
 
-  #ifdef ENABLE_ASSERTS
-    if (isAssert)
-    {
-      abort();
-    }
-  #endif
+void LogMessage(bool isAssert, LogLevel level, const char *file, const char *format, ...)
+{
+	char message[256];
+	va_list args;
+	va_start(args, format);
+	vsnprintf(message, 256, format, args);
+	va_end(args);
+
+	ST::string err_msg;
+	ST::string str = st_checked_buffer_to_string(err_msg, ST::char_buffer(message, lengthof(message)));
+	if (!err_msg.empty())
+	{
+		SLOGW(ST::format("LogMessage: {}", err_msg));
+	}
+	LogMessage(isAssert, level, file, str);
 }

@@ -4,6 +4,8 @@
 
 #include "JA2Types.h"
 
+#include <string_theory/string>
+
 
 //The maximum size for any team strategically speaking.  For example, we can't have more than 20 enemies, militia, or creatures at a time.
 #define MAX_STRATEGIC_TEAM_SIZE	20
@@ -82,10 +84,10 @@ void UpdateMercsInSector();
 void UpdateMercInSector(SOLDIERTYPE&, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 // get short sector name without town name
-void GetShortSectorString(INT16 sMapX, INT16 sMapY, wchar_t* sString, size_t Length);
+ST::string GetShortSectorString(INT16 sMapX, INT16 sMapY);
 
 // Return a string like 'A9: Omerta'
-void GetSectorIDString(INT16 x, INT16 y, INT8 z, wchar_t* buf, size_t length, BOOLEAN detailed);
+ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed);
 
 void GetMapFileName(INT16 x, INT16 y, INT8 z, char* buf, BOOLEAN add_alternate_map_letter);
 

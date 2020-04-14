@@ -42,6 +42,9 @@
 #include "Timer.h"
 #include "Logger.h"
 
+#include <string_theory/format>
+
+
 #define MAX_DEBUG_PAGES 4
 
 
@@ -92,10 +95,10 @@ void DisplayFrameRate( )
 	if ( gbFPSDisplay == SHOW_FULL_FPS )
 	{
 		// FRAME RATE
-		SetVideoOverlayTextF(g_fps_overlay, L"FPS: %ld", __min(uiFPS, 1000));
+		SetVideoOverlayText(g_fps_overlay, ST::format("FPS: {}", __min(uiFPS, 1000)));
 
 		// TIMER COUNTER
-		SetVideoOverlayTextF(g_counter_period_overlay, L"Game Loop Time: %ld", __min(giTimerDiag, 1000));
+		SetVideoOverlayText(g_counter_period_overlay, ST::format("Game Loop Time: {}", __min(giTimerDiag, 1000)));
 	}
 }
 
@@ -106,11 +109,11 @@ ScreenID ErrorScreenHandle(void)
 
 	// Create string
 	SetFontAttributes(LARGEFONT1, FONT_MCOLOR_LTGRAY);
-	MPrint(50, 200, L"RUNTIME ERROR");
-	MPrint(50, 225, L"PRESS <ESC> TO EXIT");
+	MPrint(50, 200, "RUNTIME ERROR");
+	MPrint(50, 225, "PRESS <ESC> TO EXIT");
 
 	SetFontAttributes(FONT12ARIAL, FONT_YELLOW);
-	mprintf(50, 255, L"%hs", gubErrorText);
+	MPrint(50, 255, ST::format("{}", gubErrorText));
 
 	if ( !fFirstTime )
 	{
@@ -407,25 +410,25 @@ void SetDebugRenderHook( RENDER_HOOK pDebugRenderOverride, INT8 ubPage )
 
 static void DefaultDebugPage1(void)
 {
-	MPageHeader(L"DEBUG PAGE ONE");
+	MPageHeader("DEBUG PAGE ONE");
 }
 
 
 static void DefaultDebugPage2(void)
 {
-	MPageHeader(L"DEBUG PAGE TWO");
+	MPageHeader("DEBUG PAGE TWO");
 }
 
 
 static void DefaultDebugPage3(void)
 {
-	MPageHeader(L"DEBUG PAGE THREE");
+	MPageHeader("DEBUG PAGE THREE");
 }
 
 
 static void DefaultDebugPage4(void)
 {
-	MPageHeader(L"DEBUG PAGE FOUR");
+	MPageHeader("DEBUG PAGE FOUR");
 }
 
 

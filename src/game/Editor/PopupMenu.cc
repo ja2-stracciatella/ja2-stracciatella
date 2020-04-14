@@ -34,6 +34,8 @@
 #include "WorldDef.h"
 #include "UILayout.h"
 
+#include <string_theory/string>
+
 
 #define POPUP_ACTIVETYPE_NOT_YET_DETERMINED 0
 #define POPUP_ACTIVETYPE_PERSISTANT         1
@@ -70,11 +72,9 @@ static MOUSE_REGION popupRegion;
 static UINT16  gusEntryHeight;
 static BOOLEAN fWaitingForLButtonRelease = FALSE;
 
-extern const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS];
-
 //Finds the string for any popup menu in JA2 -- the strings are stored
 //in different ways in each instance.
-static const wchar_t* GetPopupMenuString(UINT8 ubIndex)
+static const ST::string GetPopupMenuString(UINT8 ubIndex)
 {
 	switch( gPopup.ubPopupMenuID )
 	{
@@ -88,7 +88,7 @@ static const wchar_t* GetPopupMenuString(UINT8 ubIndex)
 		case ACTIONITEM_POPUP:
 			return gszActionItemDesc[ ubIndex ];
 		default:
-			return 0;
+			return ST::null;
 	}
 }
 
@@ -300,7 +300,7 @@ static void RenderPopupMenu(void)
 
 			SetFontForeground(entry == selected ? FONT_MCOLOR_LTBLUE : FONT_MCOLOR_WHITE);
 
-			wchar_t const* const str   = GetPopupMenuString(entry);
+			ST::string str = GetPopupMenuString(entry);
 			UINT16         const str_w = StringPixLength(str, font);
 			// Horizontally center the string inside the popup menu
 			UINT16         const x     = dx + (w - str_w) / 2;

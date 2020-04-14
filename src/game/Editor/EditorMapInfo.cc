@@ -33,6 +33,9 @@
 #include "Environment.h"
 #include "Simple_Render_Utils.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 
 INT8 gbDefaultLightType = PRIMETIME_LIGHT;
 
@@ -42,35 +45,35 @@ BOOLEAN gfEditorForceShadeTableRebuild = FALSE;
 
 void SetupTextInputForMapInfo()
 {
-	wchar_t str[10];
+	ST::string str;
 
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 
 	AddUserInputField( NULL );  //just so we can use short cut keys while not typing.
 
 	//light rgb fields
-	swprintf(str, lengthof(str), L"%d", gEditorLightColor.r);
+	str = ST::format("{}", gEditorLightColor.r);
 	AddTextInputField( 10, EDITOR_TASKBAR_POS_Y + 34, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf(str, lengthof(str), L"%d", gEditorLightColor.g);
+	str = ST::format("{}", gEditorLightColor.g);
 	AddTextInputField( 10, EDITOR_TASKBAR_POS_Y + 54, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf(str, lengthof(str), L"%d", gEditorLightColor.b);
+	str = ST::format("{}", gEditorLightColor.b);
 	AddTextInputField( 10, EDITOR_TASKBAR_POS_Y + 74, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 
-	swprintf(str, lengthof(str), L"%d", gsLightRadius);
+	str = ST::format("{}", gsLightRadius);
 	AddTextInputField( 120, EDITOR_TASKBAR_POS_Y + 34, 25, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	swprintf(str, lengthof(str), L"%d", gusLightLevel);
+	str = ST::format("{}", gusLightLevel);
 	AddTextInputField( 120, EDITOR_TASKBAR_POS_Y + 54, 25, 18, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 
 	//Scroll restriction ID
-	swprintf(str, lengthof(str), L"%.d", gMapInformation.ubRestrictedScrollID);
+	str = ST::format("{.d}", gMapInformation.ubRestrictedScrollID);
 	AddTextInputField( 210, EDITOR_TASKBAR_POS_Y + 60, 30, 20, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 
 	//exit grid input fields
-	swprintf(str, lengthof(str), L"%c%d", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX);
+	str = ST::format("{c}{}", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX);
 	AddTextInputField(338, EDITOR_TASKBAR_POS_Y +  3, 30, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_COORDINATE);
-	swprintf(str, lengthof(str), L"%d", gExitGrid.ubGotoSectorZ);
+	str = ST::format("{}", gExitGrid.ubGotoSectorZ);
 	AddTextInputField( 338, EDITOR_TASKBAR_POS_Y + 23, 30, 18, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	swprintf(str, lengthof(str), L"%d", gExitGrid.usGridNo);
+	str = ST::format("{}", gExitGrid.usGridNo);
 	AddTextInputField( 338, EDITOR_TASKBAR_POS_Y + 43, 40, 18, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
 }
 
@@ -80,62 +83,62 @@ void UpdateMapInfo()
 	SetFontShadow( FONT_NEARBLACK );
 
 	SetFontForeground( FONT_RED );
-	MPrint( 38, EDITOR_TASKBAR_POS_Y + 39, L"R");
+	MPrint( 38, EDITOR_TASKBAR_POS_Y + 39, "R");
 	SetFontForeground( FONT_GREEN );
-	MPrint( 38, EDITOR_TASKBAR_POS_Y + 59, L"G");
+	MPrint( 38, EDITOR_TASKBAR_POS_Y + 59, "G");
 	SetFontForeground( FONT_DKBLUE );
-	MPrint( 38, EDITOR_TASKBAR_POS_Y + 79, L"B");
+	MPrint( 38, EDITOR_TASKBAR_POS_Y + 79, "B");
 
 	SetFontForeground( FONT_YELLOW );
-	MPrint( 65, EDITOR_TASKBAR_POS_Y +  9, L"Prime");
-	MPrint( 65, EDITOR_TASKBAR_POS_Y + 22, L"Night");
-	MPrint( 65, EDITOR_TASKBAR_POS_Y + 37, L"24Hrs");
+	MPrint( 65, EDITOR_TASKBAR_POS_Y +  9, "Prime");
+	MPrint( 65, EDITOR_TASKBAR_POS_Y + 22, "Night");
+	MPrint( 65, EDITOR_TASKBAR_POS_Y + 37, "24Hrs");
 
 	SetFontForeground( FONT_YELLOW );
-	MPrint(148, EDITOR_TASKBAR_POS_Y + 39, L"Radius");
+	MPrint(148, EDITOR_TASKBAR_POS_Y + 39, "Radius");
 
 	if( !gfBasement && !gfCaves )
 		SetFontForeground( FONT_DKYELLOW );
-	MPrint(148, EDITOR_TASKBAR_POS_Y + 54, L"Underground");
-	MPrint(148, EDITOR_TASKBAR_POS_Y + 63, L"Light Level");
+	MPrint(148, EDITOR_TASKBAR_POS_Y + 54, "Underground");
+	MPrint(148, EDITOR_TASKBAR_POS_Y + 63, "Light Level");
 
 	SetFontForeground( FONT_YELLOW );
-	MPrint(230, EDITOR_TASKBAR_POS_Y +  9, L"Outdoors");
-	MPrint(230, EDITOR_TASKBAR_POS_Y + 24, L"Basement");
-	MPrint(230, EDITOR_TASKBAR_POS_Y + 39, L"Caves");
+	MPrint(230, EDITOR_TASKBAR_POS_Y +  9, "Outdoors");
+	MPrint(230, EDITOR_TASKBAR_POS_Y + 24, "Basement");
+	MPrint(230, EDITOR_TASKBAR_POS_Y + 39, "Caves");
 
 	SetFontForeground( FONT_ORANGE );
-	MPrint(250, EDITOR_TASKBAR_POS_Y + 60, L"Restricted");
-	MPrint(250, EDITOR_TASKBAR_POS_Y + 70, L"Scroll ID");
+	MPrint(250, EDITOR_TASKBAR_POS_Y + 60, "Restricted");
+	MPrint(250, EDITOR_TASKBAR_POS_Y + 70, "Scroll ID");
 
 	SetFontForeground( FONT_YELLOW );
-	MPrint(368, EDITOR_TASKBAR_POS_Y +  3, L"Destination");
-	MPrint(368, EDITOR_TASKBAR_POS_Y + 12, L"Sector");
-	MPrint(368, EDITOR_TASKBAR_POS_Y + 23, L"Destination");
-	MPrint(368, EDITOR_TASKBAR_POS_Y + 32, L"Bsmt. Level");
-	MPrint(378, EDITOR_TASKBAR_POS_Y + 43, L"Dest.");
-	MPrint(378, EDITOR_TASKBAR_POS_Y + 52, L"GridNo");
+	MPrint(368, EDITOR_TASKBAR_POS_Y +  3, "Destination");
+	MPrint(368, EDITOR_TASKBAR_POS_Y + 12, "Sector");
+	MPrint(368, EDITOR_TASKBAR_POS_Y + 23, "Destination");
+	MPrint(368, EDITOR_TASKBAR_POS_Y + 32, "Bsmt. Level");
+	MPrint(378, EDITOR_TASKBAR_POS_Y + 43, "Dest.");
+	MPrint(378, EDITOR_TASKBAR_POS_Y + 52, "GridNo");
 }
 
 void UpdateMapInfoFields()
 {
-	wchar_t str[10];
+	ST::string str;
 	//Update the text fields to reflect the validated values.
 	//light rgb fields
-	swprintf(str, lengthof(str), L"%d", gEditorLightColor.r);
-	SetInputFieldStringWith16BitString( 1, str );
-	swprintf(str, lengthof(str), L"%d", gEditorLightColor.g);
-	SetInputFieldStringWith16BitString( 2, str );
-	swprintf(str, lengthof(str), L"%d", gEditorLightColor.b);
-	SetInputFieldStringWith16BitString( 3, str );
+	str = ST::format("{}", gEditorLightColor.r);
+	SetInputFieldString( 1, str );
+	str = ST::format("{}", gEditorLightColor.g);
+	SetInputFieldString( 2, str );
+	str = ST::format("{}", gEditorLightColor.b);
+	SetInputFieldString( 3, str );
 
-	swprintf(str, lengthof(str), L"%d", gsLightRadius);
-	SetInputFieldStringWith16BitString( 4, str );
-	swprintf(str, lengthof(str), L"%d", gusLightLevel);
-	SetInputFieldStringWith16BitString( 5, str );
+	str = ST::format("{}", gsLightRadius);
+	SetInputFieldString( 4, str );
+	str = ST::format("{}", gusLightLevel);
+	SetInputFieldString( 5, str );
 
-	swprintf(str, lengthof(str), L"%.d", gMapInformation.ubRestrictedScrollID);
-	SetInputFieldStringWith16BitString( 6, str );
+	str = ST::format("{.d}", gMapInformation.ubRestrictedScrollID);
+	SetInputFieldString( 6, str );
 
 	ApplyNewExitGridValuesToTextFields();
 }
@@ -188,8 +191,8 @@ void ExtractAndUpdateMapInfo()
 	gMapInformation.ubRestrictedScrollID = temp != -1 ? temp : 0;
 
 	//set up fields for exitgrid information
-	wchar_t const* const str = GetStringFromField(7);
-	wchar_t row = str[0];
+	ST::string str = GetStringFromField(7);
+	char row = str[0];
 	if ('a' <= row && row <= 'z' ) row -= 32; //uppercase it!
 	if ('A' <= row && row <= 'Z' && '0' <= str[1] && str[1] <= '9')
 	{ //only update, if coordinate is valid.
@@ -208,16 +211,16 @@ void ExtractAndUpdateMapInfo()
 
 BOOLEAN ApplyNewExitGridValuesToTextFields()
 {
-	wchar_t str[10];
+	ST::string str;
 	//exit grid input fields
 	if( iCurrentTaskbar != TASK_MAPINFO )
 		return FALSE;
-	swprintf(str, lengthof(str), L"%c%d", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX);
-	SetInputFieldStringWith16BitString( 7, str );
-	swprintf(str, lengthof(str), L"%d", gExitGrid.ubGotoSectorZ);
-	SetInputFieldStringWith16BitString( 8, str );
-	swprintf(str, lengthof(str), L"%d", gExitGrid.usGridNo);
-	SetInputFieldStringWith16BitString( 9, str );
+	str = ST::format("{c}{}", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX);
+	SetInputFieldString( 7, str );
+	str = ST::format("{}", gExitGrid.ubGotoSectorZ);
+	SetInputFieldString( 8, str );
+	str = ST::format("{}", gExitGrid.usGridNo);
+	SetInputFieldString( 9, str );
 	SetActiveField( 0 );
 	return TRUE;
 }

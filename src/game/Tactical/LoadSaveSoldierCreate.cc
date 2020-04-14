@@ -6,6 +6,9 @@
 
 #include "Logger.h"
 
+#include <string_theory/string>
+
+
 UINT16 CalcSoldierCreateCheckSum(const SOLDIERCREATE_STRUCT* const s)
 {
 	return
@@ -81,13 +84,13 @@ static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* c
 	if(stracLinuxFormat)
 	{
 		DataReader reader(d);
-		reader.readUTF32(c->name, lengthof(c->name));
+		c->name = reader.readUTF32(SOLDIERTYPE_NAME_LENGTH);
 		d += reader.getConsumed();
 	}
 	else
 	{
 		DataReader reader(d);
-		reader.readUTF16(c->name, lengthof(c->name));
+		c->name = reader.readUTF16(SOLDIERTYPE_NAME_LENGTH);
 		d += reader.getConsumed();
 	}
 	EXTR_U8(d, c->ubSoldierClass)
@@ -198,7 +201,7 @@ static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* co
 	INJ_BOOL(d, c->fVisible)
 	{
 		DataWriter writer(d);
-		writer.writeStringAsUTF16(c->name, lengthof(c->name));
+		writer.writeStringAsUTF16(c->name, SOLDIERTYPE_NAME_LENGTH);
 		d += writer.getConsumed();
 	}
 	INJ_U8(d, c->ubSoldierClass)

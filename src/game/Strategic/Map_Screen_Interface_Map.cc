@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Directories.h"
 #include "Font.h"
 #include "Font_Control.h"
@@ -50,6 +48,11 @@
 #include "GameInstance.h"
 #include "DefaultContentManager.h"
 #include "externalized/strategic/TownModel.h"
+
+#include <string_theory/format>
+#include <string_theory/string>
+
+#include <stdexcept>
 
 
 // zoom x and y coords for map scrolling
@@ -785,8 +788,7 @@ static void ShowTownText(void)
 					FONT_MCOLOR_RED : FONT_MCOLOR_LTGREEN;
 			SetFontForeground(colour);
 
-			wchar_t loyalty_str[32];
-			swprintf(loyalty_str, lengthof(loyalty_str), gsLoyalString, gTownLoyalty[town].ubRating);
+			ST::string loyalty_str = st_format_printf(gsLoyalString, gTownLoyalty[town].ubRating);
 
 			INT16 loyalty_x = x - StringPixLength(loyalty_str, MAP_FONT) / 2;
 			if (!fZoomFlag) // make sure we don't go past left edge (Grumm)
@@ -802,7 +804,7 @@ static void ShowTownText(void)
 			SetFontForeground(FONT_MCOLOR_LTGREEN);
 		}
 
-		wchar_t const* const name   = pTownNames[town];
+		ST::string name = pTownNames[town];
 		INT16          const name_x = x - StringPixLength(name, MAP_FONT) / 2;
 		GDirtyPrint(name_x, y, name);
 	}
@@ -1126,10 +1128,10 @@ void PlotPathForCharacter(SOLDIERTYPE& s, INT16 const x, INT16 const y, bool con
 	if (s.bSectorZ != 0)
 	{ /* Not on the surface, character won't move until they reach surface, inform
 		* player of this fact */
-		wchar_t const* const who =
+		ST::string who =
 			s.bAssignment >= ON_DUTY ? s.name :
 			pLongAssignmentStrings[s.bAssignment];
-		MapScreenMessage(FONT_MCOLOR_DKRED, MSG_INTERFACE, L"%ls %ls", who, gsUndergroundString);
+		MapScreenMessage(FONT_MCOLOR_DKRED, MSG_INTERFACE, ST::format("{} {}", who, gsUndergroundString));
 		return;
 	}
 
@@ -2999,8 +3001,7 @@ static void ShowPeopleInMotion(INT16 const sX, INT16 const sY)
 		SetFontAttributes(MAP_MVT_ICON_FONT, foreground);
 		SetFontDestBuffer(guiSAVEBUFFER);
 
-		wchar_t buf[32];
-		swprintf(buf, lengthof(buf), L"%d", sExiting);
+		ST::string buf = ST::format("{}", sExiting);
 
 		INT16 usX;
 		INT16 usY;
@@ -3070,27 +3071,27 @@ void DisplayDistancesForHelicopter()
 	INT32       y = sYPosition + 5;
 	INT32 const w = MAP_HELICOPTER_ETA_POPUP_WIDTH;
 	INT32 const h = GetFontHeight(MAP_FONT);
-	wchar_t     sString[32];
+	ST::string sString;
 	INT16       sX;
 	INT16       sY;
 
 	MPrint(x, y, pHelicopterEtaStrings[0]);
 	INT32 const total_distance = DistanceOfIntendedHelicopterPath();
-	swprintf(sString, lengthof(sString), L"%d", total_distance);
+	sString = ST::format("{}", total_distance);
 	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT,  &sX, &sY);
 	MPrint(sX, y, sString);
 	y += h;
 
 	MPrint(x, y, pHelicopterEtaStrings[1]);
 	INT16 const n_safe_sectors = GetNumSafeSectorsInPath();
-	swprintf(sString, lengthof(sString), L"%d", n_safe_sectors);
+	sString = ST::format("{}", n_safe_sectors);
 	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
 	MPrint(sX, y, sString);
 	y += h;
 
 	MPrint(x, y, pHelicopterEtaStrings[2]);
 	INT16 const n_unsafe_sectors = GetNumUnSafeSectorsInPath();
-	swprintf(sString, lengthof(sString), L"%d", n_unsafe_sectors);
+	sString = ST::format("{}", n_unsafe_sectors);
 	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
 	MPrint(sX, y, sString);
 	y += h;
@@ -3098,7 +3099,7 @@ void DisplayDistancesForHelicopter()
 	// calculate the cost of the trip based on the number of safe and unsafe sectors it will pass through
 	MPrint(x, y, pHelicopterEtaStrings[3]);
 	UINT32 const uiTripCost = n_safe_sectors * COST_AIRSPACE_SAFE + n_unsafe_sectors * COST_AIRSPACE_UNSAFE;
-	SPrintMoney(sString, uiTripCost);
+	sString = SPrintMoney(uiTripCost);
 	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
 	MPrint(sX, y, sString);
 	y += h;
@@ -3108,14 +3109,14 @@ void DisplayDistancesForHelicopter()
 	INT32 iTime = GetPathTravelTimeDuringPlotting(pTempHelicopterPath);
 	// add travel time for any prior path segments (stored in the helicopter's mercpath, but waypoints aren't built)
 	iTime += GetPathTravelTimeDuringPlotting(GetHelicopter().pMercPath);
-	swprintf(sString, lengthof(sString), L"%d%ls %d%ls", iTime / 60, gsTimeStrings[0], iTime % 60, gsTimeStrings[1]);
+	sString = ST::format("{}{} {}{}", iTime / 60, gsTimeStrings[0], iTime % 60, gsTimeStrings[1]);
 	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
 	MPrint(sX, y, sString);
 	y += h;
 
 	// show # of passengers aboard the chopper
 	MPrint(x, y, pHelicopterEtaStrings[6]);
-	swprintf(sString, lengthof(sString), L"%d", GetNumberInVehicle(GetHelicopter()));
+	sString = ST::format("{}", GetNumberInVehicle(GetHelicopter()));
 	FindFontRightCoordinates(x, y, w, 0, sString, MAP_FONT, &sX, &sY);
 	MPrint(sX, y, sString);
 
@@ -3240,7 +3241,7 @@ void DisplayPositionOfHelicopter( void )
 			BltVideoObject(FRAME_BUFFER, guiHelicopterIcon, HELI_ICON, x, y);
 
 			SetFontAttributes(MAP_MVT_ICON_FONT, FONT_WHITE);
-			mprintf(x + 5, y + 1,  L"%d", GetNumberInVehicle(v));
+			MPrint(x + 5, y + 1, ST::format("{}", GetNumberInVehicle(v)));
 
 			InvalidateRegion( x, y, x + HELI_ICON_WIDTH, y + HELI_ICON_HEIGHT );
 
@@ -3402,7 +3403,7 @@ static void BlitMineIcon(INT16 sMapX, INT16 sMapY)
 }
 
 
-static void PrintStringCenteredBoxed(INT32 x, const INT32 y, const wchar_t* const string)
+static void PrintStringCenteredBoxed(INT32 x, INT32 y, const ST::string& string)
 {
 	x -= StringPixLength(string, MAP_FONT) / 2;
 	if (!fZoomFlag) // it's ok to cut strings off in zoomed mode
@@ -3438,10 +3439,10 @@ static void BlitMineText(UINT8 const mine_idx, INT16 const sMapX, INT16 const sM
 	INT32 const x = sScreenX;
 	INT32       y = sScreenY;
 	INT32 const h = GetFontHeight(MAP_FONT);
-	wchar_t     buf[32];
+	ST::string buf;
 
 	// display associated town name, followed by "mine"
-	swprintf(buf, lengthof(buf), L"%ls %ls", pTownNames[GetTownAssociatedWithMine(mine_idx)], pwMineStrings[0]);
+	buf = ST::format("{} {}", pTownNames[GetTownAssociatedWithMine(mine_idx)], pwMineStrings[0]);
 	PrintStringCenteredBoxed(x, y, buf);
 	y += h;
 
@@ -3466,14 +3467,13 @@ static void BlitMineText(UINT8 const mine_idx, INT16 const sMapX, INT16 const sM
 	if (PlayerControlsMine(mine_idx) && !gMineStatus[mine_idx].fEmpty)
 	{
 		// show current production
-		SPrintMoney(buf, PredictDailyIncomeFromAMine(mine_idx));
+		buf = SPrintMoney(PredictDailyIncomeFromAMine(mine_idx));
 
 		// if potential is not nil, show percentage of the two
 		if (GetMaxPeriodicRemovalFromMine(mine_idx) > 0)
 		{
-			wchar_t wSubString[32];
-			swprintf(wSubString, lengthof(wSubString), L" (%d%%)", PredictDailyIncomeFromAMine(mine_idx) * 100 / GetMaxDailyRemovalFromMine(mine_idx));
-			wcscat(buf, wSubString);
+			ST::string wSubString = ST::format(" ({}%)", PredictDailyIncomeFromAMine(mine_idx) * 100 / GetMaxDailyRemovalFromMine(mine_idx));
+			buf += wSubString;
 		}
 
 		PrintStringCenteredBoxed(x, y, buf);
@@ -3602,7 +3602,7 @@ static void DisplayLevelString(void)
 
 	SetFontDestBuffer(guiSAVEBUFFER, MAP_VIEW_START_X, MAP_VIEW_START_Y, MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X, MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + 7);
 	SetFontAttributes(MAP_FONT, MAP_INDEX_COLOR);
-	mprintf(MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, L"%ls %d", sMapLevelString, iCurrentMapSectorZ);
+	MPrint(MAP_LEVEL_STRING_X, MAP_LEVEL_STRING_Y, ST::format("{} {}", sMapLevelString, iCurrentMapSectorZ));
 	SetFontDestBuffer(FRAME_BUFFER);
 }
 
@@ -3841,8 +3841,7 @@ static void RenderIconsPerSectorForSelectedTown(void)
 		{
 			// print number of troops
 			SetFont(FONT10ARIAL);
-			wchar_t sString[32];
-			swprintf(sString, lengthof(sString), L"%d", n_total);
+			ST::string sString = ST::format("{}", n_total);
 			INT16       sX;
 			INT16       sY;
 			INT16 const x  = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + dx * MILITIA_BOX_BOX_WIDTH;
@@ -3971,7 +3970,7 @@ void CreateDestroyMilitiaSectorButtons()
 			GUIButtonRef b = QuickCreateButtonImg(INTERFACEDIR "/militia.sti", 3, 4, x, y, MSYS_PRIORITY_HIGHEST - 1, MilitiaButtonCallback);
 			giMapMilitiaButton[i] = b;
 			b->SetUserData(i);
-			b->SpecifyGeneralTextAttributes(0, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
+			b->SpecifyGeneralTextAttributes(ST::null, FONT10ARIAL, gsMilitiaSectorButtonColors[i], FONT_BLACK);
 			b->SpecifyTextSubOffsets(0, 0, TRUE);
 			b->fShiftText = FALSE;
 			b->SetFastHelpText(pMilitiaButtonsHelpText[i]);
@@ -4016,18 +4015,18 @@ static void SetMilitiaMapButtonsText()
 	INT16      const  base_sector = GetBaseSectorForCurrentTown();
 	INT16      const  sector      = base_sector + (sSectorMilitiaMapSector % MILITIA_BOX_ROWS + sSectorMilitiaMapSector / MILITIA_BOX_ROWS * 16);
 	SECTORINFO const& si          = SectorInfo[sector];
-	wchar_t           buf[64];
+	ST::string buf;
 
 	// the greens in this sector
-	swprintf(buf, lengthof(buf), L"%d", si.ubNumberOfCivsAtLevel[GREEN_MILITIA]);
+	buf = ST::format("{}", si.ubNumberOfCivsAtLevel[GREEN_MILITIA]);
 	giMapMilitiaButton[0]->SpecifyText(buf);
 
 	// the regulars in this sector
-	swprintf(buf, lengthof(buf), L"%d", si.ubNumberOfCivsAtLevel[REGULAR_MILITIA]);
+	buf = ST::format("{}", si.ubNumberOfCivsAtLevel[REGULAR_MILITIA]);
 	giMapMilitiaButton[1]->SpecifyText(buf);
 
 	// the number of elites in this sector
-	swprintf(buf, lengthof(buf), L"%d", si.ubNumberOfCivsAtLevel[ELITE_MILITIA]);
+	buf = ST::format("{}", si.ubNumberOfCivsAtLevel[ELITE_MILITIA]);
 	giMapMilitiaButton[2]->SpecifyText(buf);
 }
 
@@ -4106,21 +4105,21 @@ static bool IsThisMilitiaTownSectorAllowable(INT16 const sSectorIndexValue)
 
 static void DrawTownMilitiaName()
 {
-	wchar_t const* const town = pTownNames[sSelectedMilitiaTown];
+	ST::string town = pTownNames[sSelectedMilitiaTown];
 	INT16          const x    = MAP_MILITIA_BOX_POS_X;
 	INT16          const y    = MAP_MILITIA_BOX_POS_Y;
 	INT16          const w    = MILITIA_BOX_WIDTH;
-	wchar_t              buf[64];
+	ST::string buf;
 	INT16                sX;
 	INT16                sY;
 
 	// get the name for the current militia town
-	swprintf(buf, lengthof(buf), L"%ls %ls", town, pMilitiaString[0]);
+	buf = ST::format("{} {}", town, pMilitiaString[0]);
 	FindFontCenterCoordinates(x, y + MILITIA_BOX_TEXT_OFFSET_Y, w, MILITIA_BOX_TEXT_TITLE_HEIGHT, buf, FONT10ARIAL, &sX, &sY);
 	MPrint(sX, sY, buf);
 
 	// might as well show the unassigned string
-	swprintf(buf, lengthof(buf), L"%ls %ls", town, pMilitiaString[1]);
+	buf = ST::format("{} {}", town, pMilitiaString[1]);
 	FindFontCenterCoordinates(x, y + MILITIA_BOX_UNASSIGNED_TEXT_OFFSET_Y, w, GetFontHeight(FONT10ARIAL), buf, FONT10ARIAL, &sX, &sY);
 	MPrint(sX, sY, buf);
 }
@@ -4263,7 +4262,7 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 }
 
 
-static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const wchar_t* text)
+static void MakeButton(UINT idx, INT16 x, GUI_CALLBACK click, const ST::string& text)
 {
 	GUIButtonRef const btn = QuickCreateButtonImg(INTERFACEDIR "/militia.sti", 1, 2, x, MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_BOX_AUTO_BOX_Y, MSYS_PRIORITY_HIGHEST - 1, click);
 	giMapMilitiaButton[idx] = btn;
@@ -4661,7 +4660,7 @@ static void ShowSAMSitesOnStrategicMap()
 				y += 19;
 			}
 
-			wchar_t const* const sam_site = pLandTypeStrings[SAM_SITE];
+			ST::string sam_site = pLandTypeStrings[SAM_SITE];
 
 			// Center the first string around x.
 			x -= StringPixLength(sam_site, MAP_FONT) / 2;
@@ -4768,8 +4767,7 @@ static void ShowItemsOnMap(void)
 			INT16       usYPos;
 			INT16 const sXCorner = MAP_VIEW_START_X + x * MAP_GRID_X;
 			INT16 const sYCorner = MAP_VIEW_START_Y + y * MAP_GRID_Y;
-			wchar_t     sString[10];
-			swprintf(sString, lengthof(sString), L"%d", n_items);
+			ST::string sString = ST::format("{}", n_items);
 			FindFontCenterCoordinates(sXCorner, sYCorner, MAP_GRID_X, MAP_GRID_Y, sString, MAP_FONT, &usXPos, &usYPos);
 			GDirtyPrint(usXPos, usYPos, sString);
 		}

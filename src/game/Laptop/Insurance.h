@@ -1,6 +1,8 @@
 #ifndef __INSURANCE_H
 #define __INSURANCE_H
 
+#include <string_theory/string>
+
 
 #define INS_FONT_COLOR			2
 #define INS_FONT_COLOR_RED		FONT_MCOLOR_RED
@@ -28,6 +30,6 @@ void InitInsuranceDefaults(void);
 void DisplayInsuranceDefaults(void);
 void RemoveInsuranceDefaults(void);
 void DisplaySmallRedLineWithShadow( UINT16 usStartX, UINT16 usStartY, UINT16 EndX, UINT16 EndY);
-void GetInsuranceText(UINT8 ubNumber, wchar_t* pString);
+ST::string GetInsuranceText(UINT8 ubNumber);
 
 #endif

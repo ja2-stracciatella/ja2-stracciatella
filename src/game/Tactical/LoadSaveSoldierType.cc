@@ -6,6 +6,8 @@
 #include "Tactical_Save.h"
 #include "Types.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <stdexcept>
 
@@ -83,13 +85,13 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	{
 		EXTR_SKIP(d, 2)
 		DataReader reader(d);
-		reader.readUTF32(s->name, lengthof(s->name));
+		s->name = reader.readUTF32(SOLDIERTYPE_NAME_LENGTH);
 		d += reader.getConsumed();
 	}
 	else
 	{
 		DataReader reader(d);
-		reader.readUTF16(s->name, lengthof(s->name));
+		s->name = reader.readUTF16(SOLDIERTYPE_NAME_LENGTH);
 		d += reader.getConsumed();
 	}
 	EXTR_I8(d, s->bVisible)
@@ -606,7 +608,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I16(d, s->sWeightCarriedAtTurnStart)
 	{
 		DataWriter writer(d);
-		writer.writeStringAsUTF16(s->name, lengthof(s->name));
+		writer.writeStringAsUTF16(s->name, SOLDIERTYPE_NAME_LENGTH);
 		d += writer.getConsumed();
 	}
 	INJ_I8(d, s->bVisible)

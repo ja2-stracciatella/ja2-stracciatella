@@ -43,6 +43,9 @@
 #include "Quests.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
+
 #define MIN_FLIGHT_PREP_TIME 6
 
 extern BOOLEAN gfTacticalDoHeliRun;
@@ -295,7 +298,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 
 	if (s.ubStrategicInsertionCode != INSERTION_CODE_CHOPPER)
 	{
-		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, TacticalStr[MERC_HAS_ARRIVED_STR], s.name);
+		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, st_format_printf(TacticalStr[MERC_HAS_ARRIVED_STR], s.name));
 
 		// ATE: He's going to say something, now that they've arrived...
 		if (!gTacticalStatus.bMercArrivingQuoteBeingUsed && !gfFirstHeliRun)
@@ -486,9 +489,9 @@ static void CheckForValidArrivalSector(void)
 	INT16   sSectorGridNo, sSectorGridNo2;
 	INT32   uiRange, uiLowestRange = 999999;
 	BOOLEAN fFound = FALSE;
-	wchar_t sString[ 1024 ];
-	wchar_t zShortTownIDString1[ 50 ];
-	wchar_t zShortTownIDString2[ 50 ];
+	ST::string sString;
+	ST::string zShortTownIDString1;
+	ST::string zShortTownIDString2;
 
 	sSectorGridNo = SECTOR_INFO_TO_STRATEGIC_INDEX(g_merc_arrive_sector);
 
@@ -498,7 +501,7 @@ static void CheckForValidArrivalSector(void)
 		return;
 	}
 
-	GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), zShortTownIDString1, lengthof(zShortTownIDString1));
+	zShortTownIDString1 = GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector));
 
 
 	// If here - we need to do a search!
@@ -541,9 +544,9 @@ static void CheckForValidArrivalSector(void)
 
 		UpdateAnyInTransitMercsWithGlobalArrivalSector( );
 
-		GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), zShortTownIDString2, lengthof(zShortTownIDString2));
+		zShortTownIDString2 = GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector));
 
-		swprintf(sString, lengthof(sString), str_arrival_rerouted, zShortTownIDString2, zShortTownIDString1);
+		sString = st_format_printf(str_arrival_rerouted, zShortTownIDString2, zShortTownIDString1);
 
 		DoScreenIndependantMessageBox(  sString, MSG_BOX_FLAG_OK, NULL );
 

@@ -4,6 +4,8 @@
 #include "JA2Types.h"
 #include "Soldier_Profile_Type.h"
 
+#include <string_theory/string>
+
 
 enum StatKind
 {
@@ -86,7 +88,7 @@ void HandleAnyStatChangesAfterAttack( void );
 
 void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType );
 
-void BuildStatChangeString(wchar_t* wString, size_t Length, wchar_t const* wName, BOOLEAN fIncrease, INT16 sPtsChanged, StatKind);
+ST::string BuildStatChangeString(const ST::string& name, BOOLEAN fIncrease, INT16 sPtsChanged, StatKind ubStat);
 
 void MERCMercWentUpALevelSendEmail( UINT8 ubMercMercIdValue );
 

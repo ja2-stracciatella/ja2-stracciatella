@@ -34,6 +34,8 @@
 #include "ScreenIDs.h"
 #include "FileMan.h"
 
+#include <string_theory/string>
+
 
 struct CONTRACT_NEWAL_LIST_NODE
 {
@@ -763,10 +765,9 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 	INT16 const  y = s.sSectorY;
 	INT8  const  z = s.bSectorZ;
 
-	wchar_t town_sector[16];
-	GetShortSectorString(x, y, town_sector, lengthof(town_sector));
+	ST::string town_sector = GetShortSectorString(x, y);
 
-	wchar_t         msg[1024];
+	ST::string msg;
 	MessageBoxFlags flags;
 	INT8 const      sex = GetProfile(s.ubProfile).bSex;
 	if (s.ubProfile < FIRST_RPC || FIRST_NPC <= s.ubProfile)
@@ -777,19 +778,19 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 		if (elsewhere == SECTOR(x, y) && z == 0) goto no_choice;
 
 		// Set strings for generic buttons
-		wcslcpy(gzUserDefinedButton1, town_sector, lengthof(gzUserDefinedButton1));
-		GetShortSectorString(SECTORX(elsewhere), SECTORY(elsewhere), gzUserDefinedButton2, lengthof(gzUserDefinedButton2));
+		gzUserDefinedButton1 = town_sector;
+		gzUserDefinedButton2 = GetShortSectorString(SECTORX(elsewhere), SECTORY(elsewhere));
 
-		wchar_t const* const town = g_towns_locative[GetTownIdForSector(elsewhere)];
-		wchar_t const* const text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;
-		swprintf(msg, lengthof(msg), text, s.name, town_sector, town, gzUserDefinedButton2);
+		ST::string town = g_towns_locative[GetTownIdForSector(elsewhere)];
+		ST::string text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;
+		msg = st_format_printf(text, s.name, town_sector, town, gzUserDefinedButton2);
 		flags = add_rehire_button ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC;
 	}
 	else
 	{
 no_choice:
-		wchar_t const* const text = sex == MALE ? str_he_leaves_drops_equipment : str_she_leaves_drops_equipment;
-		swprintf(msg, lengthof(msg), text, s.name, town_sector);
+		ST::string text = sex == MALE ? str_he_leaves_drops_equipment : str_she_leaves_drops_equipment;
+		msg = st_format_printf(text, s.name, town_sector);
 		flags = add_rehire_button ? MSG_BOX_FLAG_OKCONTRACT : MSG_BOX_FLAG_OK;
 	}
 
@@ -931,12 +932,12 @@ static void ExtendMercInsuranceContractCallBack(MessageBoxReturnValue);
 
 static void HandleNotifyPlayerCanAffordInsurance(SOLDIERTYPE* pSoldier, UINT8 ubLength, INT32 iCost)
 {
-	wchar_t sString[ 128 ];
-	wchar_t sStringA[ 32 ];
+	ST::string sString;
+	ST::string sStringA;
 
-	SPrintMoney(sStringA, iCost);
+	sStringA = SPrintMoney(iCost);
 
-	swprintf( sString, lengthof(sString), zMarksMapScreenText[ 10 ], pSoldier->name, sStringA, ubLength );
+	sString = st_format_printf(zMarksMapScreenText[ 10 ], pSoldier->name, sStringA, ubLength);
 
 	//Set the length to the global variable ( so we know how long the contract is in the callback )
 	gubContractLength = ubLength;

@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Directories.h"
 #include "Font.h"
 #include "HImage.h"
@@ -14,6 +12,10 @@
 #include "Video.h"
 #include "MemMan.h"
 #include "UILayout.h"
+
+#include <string_theory/string>
+
+#include <stdexcept>
 
 
 #define TEXT_POPUP_GAP_BN_LINES		10
@@ -117,7 +119,7 @@ void RenderMercPopUpBox(MercPopUpBox const* const box, INT16 const sDestX, INT16
 static void GetMercPopupBoxFontColor(UINT8 ubBackgroundIndex, UINT8* pubFontColor, UINT8* pubFontShadowColor);
 
 
-MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground const ubBackgroundIndex, MercPopUpBorder const ubBorderIndex, wchar_t const* const pString, UINT16 usWidth, UINT16 const usMarginX, UINT16 const usMarginTopY, UINT16 const usMarginBottomY, UINT16* const pActualWidth, UINT16* const pActualHeight, MercPopupBoxFlags const flags)
+MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackgroundIndex, MercPopUpBorder ubBorderIndex, const ST::utf32_buffer& codepoints, UINT16 usWidth, UINT16 usMarginX, UINT16 usMarginTopY, UINT16 usMarginBottomY, UINT16* pActualWidth, UINT16* pActualHeight, MercPopupBoxFlags flags)
 {
 	if (usWidth >= SCREEN_WIDTH)
 	{
@@ -147,7 +149,7 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground const u
 		}
 	}
 
-	UINT16 const usStringPixLength = StringPixLength(pString, TEXT_POPUP_FONT);
+	UINT16 const usStringPixLength = StringPixLength(codepoints, TEXT_POPUP_FONT);
 	UINT16       usTextWidth;
 	if (usStringPixLength < usWidth - MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2)
 	{
@@ -159,7 +161,7 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground const u
 		usTextWidth = usWidth - MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2 + 1 - usMarginX;
 	}
 
-	UINT16 const usNumberVerticalPixels = IanWrappedStringHeight(usTextWidth, 2, TEXT_POPUP_FONT, pString);
+	UINT16 const usNumberVerticalPixels = IanWrappedStringHeight(usTextWidth, 2, TEXT_POPUP_FONT, codepoints);
 	UINT16       usHeight               = usNumberVerticalPixels + MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y * 2;
 
 	// Add height for margins
@@ -260,7 +262,7 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground const u
 		sDispTextXPos += 30;
 	}
 
-	DisplayWrappedString(sDispTextXPos, MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y + usMarginTopY, usTextWidth, 2, MERC_TEXT_FONT, ubFontColor, pString, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DisplayWrappedString(sDispTextXPos, MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_Y + usMarginTopY, usTextWidth, 2, MERC_TEXT_FONT, ubFontColor, codepoints, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	SetFontDestBuffer(FRAME_BUFFER);
 	SetFontShadow(DEFAULT_SHADOW);

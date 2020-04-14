@@ -61,6 +61,9 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
 
 //--------------------------------------------------
 //	NON_CIV_GROUP,
@@ -69,30 +72,30 @@
 //	SANMONA_ARMS_GROUP,
 //	ANGELS_GROUP,
 //	NUM_CIV_GROUPS
-const wchar_t* gszCivGroupNames[NUM_CIV_GROUPS] =
+const ST::string gszCivGroupNames[NUM_CIV_GROUPS] =
 {
-	L"NONE",
-	L"REBEL",
-	L"KINGPIN",
-	L"SANMONA ARMS",
-	L"ANGELS",
+	"NONE",
+	"REBEL",
+	"KINGPIN",
+	"SANMONA ARMS",
+	"ANGELS",
 
-	L"BEGGARS",
-	L"TOURISTS",
-	L"ALMA MIL",
-	L"DOCTORS",
-	L"COUPLE1",
+	"BEGGARS",
+	"TOURISTS",
+	"ALMA MIL",
+	"DOCTORS",
+	"COUPLE1",
 
-	L"HICKS",
-	L"WARDEN",
-	L"JUNKYARD",
-	L"FACTORY KIDS",
-	L"QUEENS",
-	L"UNUSED15",
-	L"UNUSED16",
-	L"UNUSED17",
-	L"UNUSED18",
-	L"UNUSED19",
+	"HICKS",
+	"WARDEN",
+	"JUNKYARD",
+	"FACTORY KIDS",
+	"QUEENS",
+	"UNUSED15",
+	"UNUSED16",
+	"UNUSED17",
+	"UNUSED18",
+	"UNUSED19",
 };
 
 //--------------------------------------------------
@@ -107,19 +110,19 @@ const wchar_t* gszCivGroupNames[NUM_CIV_GROUPS] =
 //	SCHEDULE_ACTION_ENTERSECTOR,
 //	SCHEDULE_ACTION_STAYINSECTOR,
 //  SCHEDULE_ACTION_SLEEP,
-const wchar_t* gszScheduleActions[NUM_SCHEDULE_ACTIONS] =
+const ST::string gszScheduleActions[NUM_SCHEDULE_ACTIONS] =
 {
-	L"No action",
-	L"Lock door",
-	L"Unlock door",
-	L"Open door",
-	L"Close door",
-	L"Move to gridno",
-	L"Leave sector",
-	L"Enter sector",
-	L"Stay in sector",
-	L"Sleep",
-	L"Ignore this!"
+	"No action",
+	"Lock door",
+	"Unlock door",
+	"Open door",
+	"Close door",
+	"Move to gridno",
+	"Leave sector",
+	"Enter sector",
+	"Stay in sector",
+	"Sleep",
+	"Ignore this!"
 };
 
 
@@ -794,8 +797,7 @@ void DisplayWayPoints(void)
 				background = FONT_LTRED;
 			}
 			SetFontAttributes(TINYFONT1, FONT_WHITE, DEFAULT_SHADOW, background);
-			wchar_t buf[16];
-			swprintf(buf, lengthof(buf), L"%d", bPoint);
+			ST::string buf = ST::format("{}", bPoint);
 			FindFontCenterCoordinates(sScreenX, sScreenY, 1, 1, buf, TINYFONT1, &sX, &sY);
 			MPrint(sX, sY, buf);
 		}
@@ -1091,56 +1093,56 @@ void DeleteSelectedMerc()
 }
 
 
-static void CalcStringForValue(wchar_t* str, size_t length, INT32 iValue, UINT32 uiMax);
+static ST::string CalcStringForValue(INT32 iValue, UINT32 uiMax);
 
 
 static void SetupTextInputForMercProfile(void)
 {
-	wchar_t str[4];
+	ST::string str;
 	INT16 sNum;
 
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 
 	sNum = gpSelected->pDetailedPlacement->ubProfile;
 	if( sNum == NO_PROFILE )
-		str[0] = '\0';
+		str = ST::null;
 	else
-		CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->ubProfile, NUM_PROFILES);
+		str = CalcStringForValue(gpSelected->pDetailedPlacement->ubProfile, NUM_PROFILES);
 	AddTextInputField( 200, EDITOR_TASKBAR_POS_Y + 70, 30, 20, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 }
 
 
 static void SetupTextInputForMercAttributes(void)
 {
-	wchar_t str[4];
+	ST::string str;
 
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bExpLevel, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bExpLevel, 100);
 	AddTextInputField( 200, EDITOR_TASKBAR_POS_Y +  5, 20, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bLife, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bLife, 100);
 	AddTextInputField( 200, EDITOR_TASKBAR_POS_Y + 30, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bLifeMax, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bLifeMax, 100);
 	AddTextInputField( 200, EDITOR_TASKBAR_POS_Y + 55, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMarksmanship, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bMarksmanship, 100);
 	AddTextInputField( 200, EDITOR_TASKBAR_POS_Y + 80, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bStrength, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bStrength, 100);
 	AddTextInputField( 300, EDITOR_TASKBAR_POS_Y +  5, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bAgility, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bAgility, 100);
 	AddTextInputField( 300, EDITOR_TASKBAR_POS_Y + 30, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bDexterity, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bDexterity, 100);
 	AddTextInputField( 300, EDITOR_TASKBAR_POS_Y + 55, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bWisdom, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bWisdom, 100);
 	AddTextInputField( 300, EDITOR_TASKBAR_POS_Y + 80, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bLeadership, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bLeadership, 100);
 	AddTextInputField( 400, EDITOR_TASKBAR_POS_Y +  5, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bExplosive, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bExplosive, 100);
 	AddTextInputField( 400, EDITOR_TASKBAR_POS_Y + 30, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMedical, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bMedical, 100);
 	AddTextInputField( 400, EDITOR_TASKBAR_POS_Y + 55, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMechanical, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bMechanical, 100);
 	AddTextInputField( 400, EDITOR_TASKBAR_POS_Y + 80, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
-	CalcStringForValue(str, lengthof(str), gpSelected->pDetailedPlacement->bMorale, 100);
+	str = CalcStringForValue(gpSelected->pDetailedPlacement->bMorale, 100);
 	AddTextInputField( 500, EDITOR_TASKBAR_POS_Y +  5, 20, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 
 	if( !gfCanEditMercs )
@@ -1151,14 +1153,14 @@ static void SetupTextInputForMercAttributes(void)
 //In the merc editing, all detailed placement values for generated attributes are set to -1.
 //When making a generated attribute static, we then set the value to its applicable value.
 //This function is similar to the itoa function except that -1 is converted to a null string.
-static void CalcStringForValue(wchar_t* str, size_t length, INT32 iValue, UINT32 uiMax)
+static ST::string CalcStringForValue(INT32 iValue, UINT32 uiMax)
 {
 	if( iValue < 0 )			//a blank string is determined by a negative value.
-		str[0] = '\0';
+		return ST::null;
 	else if( (UINT32)iValue > uiMax )	//higher than max attribute value, so convert it to the max.
-		swprintf(str, length, L"%d", uiMax);
+		return ST::format("{}", uiMax);
 	else										//this is a valid static value, so convert it to a string.
-		swprintf(str, length, L"%d", iValue);
+		return ST::format("{}", iValue);
 }
 
 
@@ -1249,13 +1251,13 @@ static void SetupTextInputForMercSchedule(void)
 {
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	AddUserInputField( NULL );
-	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 13, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 13, 36, 16, MSYS_PRIORITY_NORMAL, ST::null, 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 1, gCurrSchedule.usTime[0] );
-	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 34, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 34, 36, 16, MSYS_PRIORITY_NORMAL, ST::null, 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 2, gCurrSchedule.usTime[1] );
-	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 55, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 55, 36, 16, MSYS_PRIORITY_NORMAL, ST::null, 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 3, gCurrSchedule.usTime[2] );
-	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 76, 36, 16, MSYS_PRIORITY_NORMAL, L"", 6, INPUTTYPE_24HOURCLOCK);
+	AddTextInputField(268, EDITOR_TASKBAR_POS_Y + 76, 36, 16, MSYS_PRIORITY_NORMAL, ST::null, 6, INPUTTYPE_24HOURCLOCK);
 	SetExclusive24HourTimeValue( 4, gCurrSchedule.usTime[3] );
 }
 
@@ -1757,39 +1759,37 @@ void SetMercEditingMode( UINT8 ubNewMode )
 
 static void DisplayBodyTypeInfo(void)
 {
-	const wchar_t* str; // XXX HACK000E
+	ST::string str;
 	switch( gpSelected->pBasicPlacement->bBodyType )
 	{
-		case BODY_RANDOM:         str = L"Random";         break;
-		case REGMALE:             str = L"Reg Male";       break;
-		case BIGMALE:             str = L"Big Male";       break;
-		case STOCKYMALE:          str = L"Stocky Male";    break;
-		case REGFEMALE:           str = L"Reg Female";     break;
-		case TANK_NE:             str = L"NE Tank";        break;
-		case TANK_NW:             str = L"NW Tank";        break;
-		case FATCIV:              str = L"Fat Civilian";   break;
-		case MANCIV:              str = L"M Civilian";     break;
-		case MINICIV:             str = L"Miniskirt";      break;
-		case DRESSCIV:            str = L"F Civilian";     break;
-		case HATKIDCIV:           str = L"Kid w/ Hat";     break;
-		case HUMVEE:              str = L"Humvee";         break;
-		case ELDORADO:            str = L"Eldorado";       break;
-		case ICECREAMTRUCK:       str = L"Icecream Truck"; break;
-		case JEEP:                str = L"Jeep";           break;
-		case KIDCIV:              str = L"Kid Civilian";   break;
-		case COW:                 str = L"Domestic Cow";   break;
-		case CRIPPLECIV:          str = L"Cripple";        break;
-		case ROBOTNOWEAPON:       str = L"Unarmed Robot";  break;
-		case LARVAE_MONSTER:      str = L"Larvae";         break;
-		case INFANT_MONSTER:      str = L"Infant";         break;
-		case YAF_MONSTER:         str = L"Yng F Monster";  break;
-		case YAM_MONSTER:         str = L"Yng M Monster";  break;
-		case ADULTFEMALEMONSTER:  str = L"Adt F Monster";  break;
-		case AM_MONSTER:          str = L"Adt M Monster";  break;
-		case QUEENMONSTER:        str = L"Queen Monster";  break;
-		case BLOODCAT:            str = L"Bloodcat";       break;
-
-		default: abort(); // HACK000E
+		case BODY_RANDOM:         str = "Random";         break;
+		case REGMALE:             str = "Reg Male";       break;
+		case BIGMALE:             str = "Big Male";       break;
+		case STOCKYMALE:          str = "Stocky Male";    break;
+		case REGFEMALE:           str = "Reg Female";     break;
+		case TANK_NE:             str = "NE Tank";        break;
+		case TANK_NW:             str = "NW Tank";        break;
+		case FATCIV:              str = "Fat Civilian";   break;
+		case MANCIV:              str = "M Civilian";     break;
+		case MINICIV:             str = "Miniskirt";      break;
+		case DRESSCIV:            str = "F Civilian";     break;
+		case HATKIDCIV:           str = "Kid w/ Hat";     break;
+		case HUMVEE:              str = "Humvee";         break;
+		case ELDORADO:            str = "Eldorado";       break;
+		case ICECREAMTRUCK:       str = "Icecream Truck"; break;
+		case JEEP:                str = "Jeep";           break;
+		case KIDCIV:              str = "Kid Civilian";   break;
+		case COW:                 str = "Domestic Cow";   break;
+		case CRIPPLECIV:          str = "Cripple";        break;
+		case ROBOTNOWEAPON:       str = "Unarmed Robot";  break;
+		case LARVAE_MONSTER:      str = "Larvae";         break;
+		case INFANT_MONSTER:      str = "Infant";         break;
+		case YAF_MONSTER:         str = "Yng F Monster";  break;
+		case YAM_MONSTER:         str = "Yng M Monster";  break;
+		case ADULTFEMALEMONSTER:  str = "Adt F Monster";  break;
+		case AM_MONSTER:          str = "Adt M Monster";  break;
+		case QUEENMONSTER:        str = "Queen Monster";  break;
+		case BLOODCAT:            str = "Bloodcat";       break;
 	}
 	DrawEditorInfoBox(str, FONT10ARIAL, 490, 4, 70, 20);
 }
@@ -1823,49 +1823,49 @@ void UpdateMercsInfo()
 			BltVideoObject(FRAME_BUFFER, guiExclamation, 0, 188, EDITOR_TASKBAR_POS_Y + 3);
 			BltVideoObject(FRAME_BUFFER, guiKeyImage,    0, 186, EDITOR_TASKBAR_POS_Y + 28);
 			SetFontAttributes(SMALLCOMPFONT, FONT_YELLOW);
-			MPrint(240, EDITOR_TASKBAR_POS_Y +  3, L" --=ORDERS=-- ");
-			MPrint(240, EDITOR_TASKBAR_POS_Y + 59, L"--=ATTITUDE=--");
+			MPrint(240, EDITOR_TASKBAR_POS_Y +  3, " --=ORDERS=-- ");
+			MPrint(240, EDITOR_TASKBAR_POS_Y + 59, "--=ATTITUDE=--");
 			if( iDrawMode == DRAW_MODE_CREATURE )
 			{
 				DisplayBodyTypeInfo();
 				SetFont( SMALLCOMPFONT );
 				SetFontForeground( FONT_LTBLUE );
-				MPrint(493, EDITOR_TASKBAR_POS_Y + 56, L"RELATIVE");
-				MPrint(480, EDITOR_TASKBAR_POS_Y + 62, L"ATTRIBUTES");
+				MPrint(493, EDITOR_TASKBAR_POS_Y + 56, "RELATIVE");
+				MPrint(480, EDITOR_TASKBAR_POS_Y + 62, "ATTRIBUTES");
 			}
 			else
 			{
 				SetFontForeground( FONT_LTGREEN );
-				MPrint(480, EDITOR_TASKBAR_POS_Y +  3, L"RELATIVE");
-				MPrint(480, EDITOR_TASKBAR_POS_Y + 11, L"EQUIPMENT");
+				MPrint(480, EDITOR_TASKBAR_POS_Y +  3, "RELATIVE");
+				MPrint(480, EDITOR_TASKBAR_POS_Y + 11, "EQUIPMENT");
 				SetFontForeground( FONT_LTBLUE );
-				MPrint(530, EDITOR_TASKBAR_POS_Y +  3, L"RELATIVE");
-				MPrint(530, EDITOR_TASKBAR_POS_Y + 11, L"ATTRIBUTES");
+				MPrint(530, EDITOR_TASKBAR_POS_Y +  3, "RELATIVE");
+				MPrint(530, EDITOR_TASKBAR_POS_Y + 11, "ATTRIBUTES");
 			}
 			if( iDrawMode == DRAW_MODE_ENEMY )
 			{
 				SetFont( FONT10ARIAL );
 				SetFontForeground( FONT_YELLOW );
-				MPrint(590, EDITOR_TASKBAR_POS_Y + 51, L"Army");
-				MPrint(590, EDITOR_TASKBAR_POS_Y + 65, L"Admin");
-				MPrint(590, EDITOR_TASKBAR_POS_Y + 79, L"Elite");
+				MPrint(590, EDITOR_TASKBAR_POS_Y + 51, "Army");
+				MPrint(590, EDITOR_TASKBAR_POS_Y + 65, "Admin");
+				MPrint(590, EDITOR_TASKBAR_POS_Y + 79, "Elite");
 			}
 			break;
 		case MERC_ATTRIBUTEMODE:
 			SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-			MPrint(225, EDITOR_TASKBAR_POS_Y + 10, L"Exp. Level");
-			MPrint(225, EDITOR_TASKBAR_POS_Y + 35, L"Life");
-			MPrint(225, EDITOR_TASKBAR_POS_Y + 60, L"LifeMax");
-			MPrint(225, EDITOR_TASKBAR_POS_Y + 85, L"Marksmanship");
-			MPrint(325, EDITOR_TASKBAR_POS_Y + 10, L"Strength");
-			MPrint(325, EDITOR_TASKBAR_POS_Y + 35, L"Agility");
-			MPrint(325, EDITOR_TASKBAR_POS_Y + 60, L"Dexterity");
-			MPrint(325, EDITOR_TASKBAR_POS_Y + 85, L"Wisdom");
-			MPrint(425, EDITOR_TASKBAR_POS_Y + 10, L"Leadership");
-			MPrint(425, EDITOR_TASKBAR_POS_Y + 35, L"Explosives");
-			MPrint(425, EDITOR_TASKBAR_POS_Y + 60, L"Medical");
-			MPrint(425, EDITOR_TASKBAR_POS_Y + 85, L"Mechanical");
-			MPrint(525, EDITOR_TASKBAR_POS_Y + 10, L"Morale");
+			MPrint(225, EDITOR_TASKBAR_POS_Y + 10, "Exp. Level");
+			MPrint(225, EDITOR_TASKBAR_POS_Y + 35, "Life");
+			MPrint(225, EDITOR_TASKBAR_POS_Y + 60, "LifeMax");
+			MPrint(225, EDITOR_TASKBAR_POS_Y + 85, "Marksmanship");
+			MPrint(325, EDITOR_TASKBAR_POS_Y + 10, "Strength");
+			MPrint(325, EDITOR_TASKBAR_POS_Y + 35, "Agility");
+			MPrint(325, EDITOR_TASKBAR_POS_Y + 60, "Dexterity");
+			MPrint(325, EDITOR_TASKBAR_POS_Y + 85, "Wisdom");
+			MPrint(425, EDITOR_TASKBAR_POS_Y + 10, "Leadership");
+			MPrint(425, EDITOR_TASKBAR_POS_Y + 35, "Explosives");
+			MPrint(425, EDITOR_TASKBAR_POS_Y + 60, "Medical");
+			MPrint(425, EDITOR_TASKBAR_POS_Y + 85, "Mechanical");
+			MPrint(525, EDITOR_TASKBAR_POS_Y + 10, "Morale");
 			break;
 
 		case MERC_APPEARANCEMODE:
@@ -1875,27 +1875,27 @@ void UpdateMercsInfo()
 				dp.fVisible || dp.ubProfile != NO_PROFILE ? FONT_YELLOW : FONT_DKYELLOW;
 			SetFontAttributes(FONT10ARIAL, foreground);
 
-			MPrint(396, EDITOR_TASKBAR_POS_Y +  4, L"Hair color:");
-			MPrint(396, EDITOR_TASKBAR_POS_Y + 28, L"Skin color:");
-			MPrint(396, EDITOR_TASKBAR_POS_Y + 52, L"Vest color:");
-			MPrint(396, EDITOR_TASKBAR_POS_Y + 76, L"Pant color:");
+			MPrint(396, EDITOR_TASKBAR_POS_Y +  4, "Hair color:");
+			MPrint(396, EDITOR_TASKBAR_POS_Y + 28, "Skin color:");
+			MPrint(396, EDITOR_TASKBAR_POS_Y + 52, "Vest color:");
+			MPrint(396, EDITOR_TASKBAR_POS_Y + 76, "Pant color:");
 
 			SetFont( SMALLCOMPFONT );
 			SetFontForeground( FONT_BLACK );
 			if( gpSelected->pDetailedPlacement->fVisible || gpSelected->pDetailedPlacement->ubProfile != NO_PROFILE )
 			{
-				mprintfEditor(396, 14, L"%hs    ", gpSelected->pSoldier->HeadPal);
-				mprintfEditor(396, 38, L"%hs    ", gpSelected->pSoldier->SkinPal);
-				mprintfEditor(396, 62, L"%hs    ", gpSelected->pSoldier->VestPal);
-				mprintfEditor(396, 86, L"%hs    ", gpSelected->pSoldier->PantsPal);
+				MPrintEditor(396, 14, ST::format("{}    ", gpSelected->pSoldier->HeadPal));
+				MPrintEditor(396, 38, ST::format("{}    ", gpSelected->pSoldier->SkinPal));
+				MPrintEditor(396, 62, ST::format("{}    ", gpSelected->pSoldier->VestPal));
+				MPrintEditor(396, 86, ST::format("{}    ", gpSelected->pSoldier->PantsPal));
 				ShowEditMercPalettes( gpSelected->pSoldier );
 			}
 			else
 			{
-				MPrint(396, EDITOR_TASKBAR_POS_Y + 14, L"RANDOM");
-				MPrint(396, EDITOR_TASKBAR_POS_Y + 38, L"RANDOM");
-				MPrint(396, EDITOR_TASKBAR_POS_Y + 62, L"RANDOM");
-				MPrint(396, EDITOR_TASKBAR_POS_Y + 86, L"RANDOM");
+				MPrint(396, EDITOR_TASKBAR_POS_Y + 14, "RANDOM");
+				MPrint(396, EDITOR_TASKBAR_POS_Y + 38, "RANDOM");
+				MPrint(396, EDITOR_TASKBAR_POS_Y + 62, "RANDOM");
+				MPrint(396, EDITOR_TASKBAR_POS_Y + 86, "RANDOM");
 				ShowEditMercPalettes( NULL ); //will display grey scale to signify random
 			}
 			DisplayBodyTypeInfo();
@@ -1904,26 +1904,25 @@ void UpdateMercsInfo()
 
 		case MERC_PROFILEMODE:
 			{ //scope trick
-				wchar_t tempStr[500];
-				swprintf(tempStr, lengthof(tempStr),
-					L"By specifying a profile index, all of the information will be extracted from the profile "
-					L"and override any values that you have edited.  It will also disable the editing features "
-					L"though, you will still be able to view stats, etc.  Pressing ENTER will automatically "
-					L"extract the number you have typed.  A blank field will clear the profile.  The current "
-					L"number of profiles range from 0 to %d.", NUM_PROFILES);
+				ST::string tempStr = ST::format(
+					"By specifying a profile index, all of the information will be extracted from the profile "
+					"and override any values that you have edited.  It will also disable the editing features "
+					"though, you will still be able to view stats, etc.  Pressing ENTER will automatically "
+					"extract the number you have typed.  A blank field will clear the profile.  The current "
+					"number of profiles range from 0 to {}.", NUM_PROFILES);
 				SetFontShadow(FONT_NEARBLACK);
 				DisplayWrappedString(180, EDITOR_TASKBAR_POS_Y + 10, 400, 2, FONT10ARIAL, 146, tempStr,	FONT_BLACK, LEFT_JUSTIFIED);
 				SetFont( FONT12POINT1 );
 				if( gpSelected->pDetailedPlacement->ubProfile == NO_PROFILE )
 				{
 					SetFontForeground( FONT_GRAY3 );
-					mprintfEditor(240, 75, L"Current Profile:  n/a                            ");
+					MPrintEditor(240, 75, "Current Profile:  n/a                            ");
 				}
 				else
 				{
 					SetFontForeground( FONT_WHITE );
 					ClearTaskbarRegion(240, 75, 580, 85);
-					mprintf(240, EDITOR_TASKBAR_POS_Y + 75, L"Current Profile:  %ls", gMercProfiles[gpSelected->pDetailedPlacement->ubProfile].zName);
+					MPrint(240, EDITOR_TASKBAR_POS_Y + 75, ST::format("Current Profile:  {}", gMercProfiles[gpSelected->pDetailedPlacement->ubProfile].zName));
 				}
 			}
 			break;
@@ -1931,54 +1930,54 @@ void UpdateMercsInfo()
 			SetFontAttributes(FONT10ARIAL, FONT_WHITE);
 			switch( gpSelected->pSoldier->bOrders )
 			{
-				case STATIONARY:  MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"STATIONARY");    break;
-				case ONCALL:      MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"ON CALL");       break;
-				case ONGUARD:     MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"ON GUARD");      break;
-				case SEEKENEMY:   MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"SEEK ENEMY");    break;
-				case CLOSEPATROL: MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"CLOSE PATROL");  break;
-				case FARPATROL:   MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"FAR PATROL");    break;
-				case POINTPATROL: MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"POINT PATROL");  break;
-				case RNDPTPATROL: MPrint(430, EDITOR_TASKBAR_POS_Y +  3, L"RND PT PATROL"); break;
+				case STATIONARY:  MPrint(430, EDITOR_TASKBAR_POS_Y +  3, "STATIONARY");    break;
+				case ONCALL:      MPrint(430, EDITOR_TASKBAR_POS_Y +  3, "ON CALL");       break;
+				case ONGUARD:     MPrint(430, EDITOR_TASKBAR_POS_Y +  3, "ON GUARD");      break;
+				case SEEKENEMY:   MPrint(430, EDITOR_TASKBAR_POS_Y +  3, "SEEK ENEMY");    break;
+				case CLOSEPATROL: MPrint(430, EDITOR_TASKBAR_POS_Y +  3, "CLOSE PATROL");  break;
+				case FARPATROL:   MPrint(430, EDITOR_TASKBAR_POS_Y +  3, "FAR PATROL");    break;
+				case POINTPATROL: MPrint(430, EDITOR_TASKBAR_POS_Y +  3, "POINT PATROL");  break;
+				case RNDPTPATROL: MPrint(430, EDITOR_TASKBAR_POS_Y +  3, "RND PT PATROL"); break;
 			}
 			SetFontForeground( FONT_YELLOW );
-			MPrint(186, EDITOR_TASKBAR_POS_Y +  3, L"Action");
-			MPrint(268, EDITOR_TASKBAR_POS_Y +  3, L"Time");
-			MPrint(309, EDITOR_TASKBAR_POS_Y +  3, L"V");
-			MPrint(331, EDITOR_TASKBAR_POS_Y +  3, L"GridNo 1");
-			MPrint(381, EDITOR_TASKBAR_POS_Y +  3, L"GridNo 2");
-			MPrint(172, EDITOR_TASKBAR_POS_Y + 16, L"1)");
-			MPrint(172, EDITOR_TASKBAR_POS_Y + 37, L"2)");
-			MPrint(172, EDITOR_TASKBAR_POS_Y + 58, L"3)");
-			MPrint(172, EDITOR_TASKBAR_POS_Y + 79, L"4)");
+			MPrint(186, EDITOR_TASKBAR_POS_Y +  3, "Action");
+			MPrint(268, EDITOR_TASKBAR_POS_Y +  3, "Time");
+			MPrint(309, EDITOR_TASKBAR_POS_Y +  3, "V");
+			MPrint(331, EDITOR_TASKBAR_POS_Y +  3, "GridNo 1");
+			MPrint(381, EDITOR_TASKBAR_POS_Y +  3, "GridNo 2");
+			MPrint(172, EDITOR_TASKBAR_POS_Y + 16, "1)");
+			MPrint(172, EDITOR_TASKBAR_POS_Y + 37, "2)");
+			MPrint(172, EDITOR_TASKBAR_POS_Y + 58, "3)");
+			MPrint(172, EDITOR_TASKBAR_POS_Y + 79, "4)");
 			if( gubScheduleInstructions )
 			{
-				wchar_t str[255];
-				const wchar_t* keyword = L"";
+				ST::string str;
+				ST::string keyword;
 				ColorFillVideoSurfaceArea( FRAME_BUFFER, 431, EDITOR_TASKBAR_POS_Y + 28, 590, EDITOR_TASKBAR_POS_Y + 90, Get16BPPColor( FROMRGB( 32, 45, 72 ) ) );
 				switch( gCurrSchedule.ubAction[ gubCurrentScheduleActionIndex ] )
 				{
-					case SCHEDULE_ACTION_LOCKDOOR:   keyword = L"lock";   break;
-					case SCHEDULE_ACTION_UNLOCKDOOR: keyword = L"unlock"; break;
-					case SCHEDULE_ACTION_OPENDOOR:   keyword = L"open";   break;
-					case SCHEDULE_ACTION_CLOSEDOOR:  keyword = L"close";  break;
+					case SCHEDULE_ACTION_LOCKDOOR:   keyword = "lock";   break;
+					case SCHEDULE_ACTION_UNLOCKDOOR: keyword = "unlock"; break;
+					case SCHEDULE_ACTION_OPENDOOR:   keyword = "open";   break;
+					case SCHEDULE_ACTION_CLOSEDOOR:  keyword = "close";  break;
 				}
 				switch( gubScheduleInstructions )
 				{
 					case SCHEDULE_INSTRUCTIONS_DOOR1:
-						swprintf(str, lengthof(str), L"Click on the gridno adjacent to the door that you wish to %ls.", keyword);
+						str = ST::format("Click on the gridno adjacent to the door that you wish to {}.", keyword);
 						break;
 					case SCHEDULE_INSTRUCTIONS_DOOR2:
-						swprintf(str, lengthof(str), L"Click on the gridno where you wish to move after you %ls the door.", keyword);
+						str = ST::format("Click on the gridno where you wish to move after you {} the door.", keyword);
 						break;
 					case SCHEDULE_INSTRUCTIONS_GRIDNO:
-						wcslcpy(str, L"Click on the gridno where you wish to move to.", lengthof(str));
+						str = "Click on the gridno where you wish to move to.";
 						break;
 					case SCHEDULE_INSTRUCTIONS_SLEEP:
-						wcslcpy(str, L"Click on the gridno where you wish to sleep at.  Person will automatically return to original position after waking up.", lengthof(str));
+						str = "Click on the gridno where you wish to sleep at.  Person will automatically return to original position after waking up.";
 					default:
 						return;
 				}
-				wcscat(str, L"  Hit ESC to abort entering this line in the schedule.");
+				str += "  Hit ESC to abort entering this line in the schedule.";
 				DisplayWrappedString(436, EDITOR_TASKBAR_POS_Y + 32, 149, 2, FONT10ARIAL, FONT_YELLOW, str, FONT_BLACK, LEFT_JUSTIFIED);
 			}
 			break;
@@ -2059,7 +2058,7 @@ static void RenderSelectedMercsInventory(void)
 				ubFontColor = FONT_YELLOW;
 			else
 				ubFontColor = FONT_WHITE;
-			const wchar_t* ItemName = ItemNames[gpMercSlotItem[i]->usItem];
+			ST::string ItemName = ItemNames[gpMercSlotItem[i]->usItem];
 			DisplayWrappedString(xp, yp, 60, 2, SMALLCOMPFONT, ubFontColor, ItemName, 0, LEFT_JUSTIFIED);
 		}
 	}
@@ -2495,7 +2494,7 @@ void RenderMercStrings()
 		}
 
 		// Render the health text
-		wchar_t const* const health = GetSoldierHealthString(s);
+		ST::string health = GetSoldierHealthString(s);
 		SetFontForeground(FONT_RED);
 		FindFontCenterCoordinates(sXPos, sYPos, 80, 1, health, TINYFONT1, &sX, &sY);
 		if (sY < 352)
@@ -2505,8 +2504,7 @@ void RenderMercStrings()
 		sYPos += 10;
 
 		SetFontForeground(FONT_GRAY2);
-		wchar_t str[50];
-		swprintf(str, lengthof(str), L"Slot #%d", s->ubID);
+		ST::string str = ST::format("Slot #{}", s->ubID);
 		FindFontCenterCoordinates(sXPos, sYPos, 80, 1, str, TINYFONT1, &sX, &sY);
 		if (sY < 352)
 		{
@@ -2521,9 +2519,9 @@ void RenderMercStrings()
 		if (has_patrol_order != has_patrol_points)
 		{
 			SetFontForeground(GetJA2Clock() % 1000 < 500 ? FONT_DKRED : FONT_RED);
-			wchar_t const* const msg = has_patrol_points ?
-				L"Waypoints with no patrol orders" :
-				L"Patrol orders with no waypoints";
+			ST::string msg = has_patrol_points ?
+				"Waypoints with no patrol orders" :
+				"Patrol orders with no waypoints";
 			FindFontCenterCoordinates(sXPos, sYPos, 80, 1, msg, TINYFONT1, &sX, &sY);
 			if (sY < 352)
 			{
@@ -2615,9 +2613,8 @@ void CancelCurrentScheduleAction()
 
 void RegisterCurrentScheduleAction( INT32 iMapIndex )
 {
-	wchar_t str[6];
 	MarkWorldDirty();
-	swprintf(str, lengthof(str), L"%d", iMapIndex);
+	ST::string str = ST::format("{}", iMapIndex);
 	if( gfUseScheduleData2 )
 	{
 		if( gfSingleAction )
@@ -2780,13 +2777,13 @@ void ClearCurrentSchedule()
 	for( i = 0; i < 4; i++ )
 	{
 		iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SetUserData(0);
-		iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SpecifyText(L"No action");
+		iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SpecifyText("No action");
 		gCurrSchedule.usTime[i] = 0xffff;
 		SetExclusive24HourTimeValue( (UINT8)(i+1), gCurrSchedule.usTime[ i ] ); //blanks the field
 		gCurrSchedule.usData1[i] = 0xffff;
-		iEditorButton[MERCS_SCHEDULE_DATA1A + i]->SpecifyText(L"");
+		iEditorButton[MERCS_SCHEDULE_DATA1A + i]->SpecifyText(ST::null);
 		gCurrSchedule.usData2[i] = 0xffff;
-		iEditorButton[MERCS_SCHEDULE_DATA1B + i]->SpecifyText(L"");
+		iEditorButton[MERCS_SCHEDULE_DATA1B + i]->SpecifyText(ST::null);
 	}
 	//Remove the variance stuff
 	gCurrSchedule.usFlags = 0;
@@ -2808,7 +2805,6 @@ static void RenderCurrentSchedule(void)
 	INT16 sXMapPos, sYMapPos;
 	INT16 sScreenX, sScreenY;
 	INT16 sX, sY;
-	wchar_t str[3];
 	for( i = 0; i < 8; i++ )
 	{
 		if( i % 2 )
@@ -2839,7 +2835,7 @@ static void RenderCurrentSchedule(void)
 		{
 			// Shown it on screen!
 			SetFontAttributes(TINYFONT1, FONT_WHITE, DEFAULT_SHADOW, FONT_LTKHAKI);
-			swprintf(str, lengthof(str), L"%d%c", i / 2 + 1, 'A' + i % 2);
+			ST::string str = ST::format("{}{c}", i / 2 + 1, 'A' + i % 2);
 			FindFontCenterCoordinates(sScreenX, sScreenY, 1, 1, str, TINYFONT1, &sX, &sY);
 			MPrint(sX, sY, str);
 		}
@@ -2851,7 +2847,6 @@ static void UpdateScheduleInfo(void)
 {
 	INT32 i;
 	SCHEDULENODE *pSchedule;
-	wchar_t str[6];
 	if( gpSelected->pSoldier->ubScheduleID )
 	{
 		pSchedule = GetSchedule( gpSelected->pSoldier->ubScheduleID );
@@ -2863,13 +2858,13 @@ static void UpdateScheduleInfo(void)
 		{ //Update the text and buttons
 			iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SetUserData(pSchedule->ubAction[i]);
 			iEditorButton[MERCS_SCHEDULE_ACTION1 + i]->SpecifyText(gszScheduleActions[pSchedule->ubAction[i]]);
-			swprintf(str, lengthof(str), L"");
+			ST::string str;
 			if( pSchedule->usData1[i] != 0xffff )
-				swprintf(str, lengthof(str), L"%d", pSchedule->usData1[i]);
+				str = ST::format("{}", pSchedule->usData1[i]);
 			iEditorButton[MERCS_SCHEDULE_DATA1A + i]->SpecifyText(str);
-			swprintf(str, lengthof(str), L"");
+			str = ST::null;
 			if( pSchedule->usData2[i] != 0xffff )
-				swprintf(str, lengthof(str), L"%d", pSchedule->usData2[i]);
+				str = ST::format("{}", pSchedule->usData2[i]);
 			iEditorButton[MERCS_SCHEDULE_DATA1B + i]->SpecifyText(str);
 			if( gubCurrMercMode == MERC_SCHEDULEMODE )
 			{ //Update the text input fields too!
@@ -2908,7 +2903,7 @@ void CopyMercPlacement( INT32 iMapIndex )
 {
 	if (g_selected_merc == NULL)
 	{
-		ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, L"Placement not copied because no placement selected." );
+		ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, "Placement not copied because no placement selected." );
 		return;
 	}
 	gfSaveBuffer = TRUE;
@@ -2917,7 +2912,7 @@ void CopyMercPlacement( INT32 iMapIndex )
 	{
 		gSaveBufferDetailedPlacement = *gpSelected->pDetailedPlacement;
 	}
-	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Placement copied." );
+	ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, "Placement copied." );
 }
 
 void PasteMercPlacement( INT32 iMapIndex )
@@ -2927,7 +2922,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 
 	if( !gfSaveBuffer )
 	{
-		ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, L"Placement not pasted as no placement is saved in buffer." );
+		ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, "Placement not pasted as no placement is saved in buffer." );
 		return;
 	}
 
@@ -3028,11 +3023,11 @@ void PasteMercPlacement( INT32 iMapIndex )
 			{
 				SetEnemyDroppableStatus( gbMercSlotTypes[i-FIRST_MERCS_INVENTORY_BUTTON], FALSE );
 			}
-			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Placement pasted." );
+			ScreenMsg( FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, "Placement pasted." );
 		}
 		else
 		{
-			ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, L"Placement not pasted as the maximum number of placements for this team is already used." );
+			ScreenMsg( FONT_MCOLOR_LTRED, MSG_INTERFACE, "Placement not pasted as the maximum number of placements for this team is already used." );
 		}
 	}
 }

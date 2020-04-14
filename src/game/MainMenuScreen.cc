@@ -30,6 +30,8 @@
 #include "WordWrap.h"
 #include "UILayout.h"
 
+#include <string_theory/format>
+
 
 //#define TESTFOREIGNFONTS
 
@@ -354,7 +356,7 @@ static void RenderMainMenu(void)
 
 void RenderGameVersion() {
 	SetFontAttributes(FONT10ARIAL, FONT_MCOLOR_WHITE);
-	mprintf(g_ui.m_versionPosition.iX, g_ui.m_versionPosition.iY, L"%hs", g_version_label, g_version_number);
+	MPrint(g_ui.m_versionPosition.iX, g_ui.m_versionPosition.iY, ST::format("{}", g_version_label));
 }
 
 void RenderCopyright() {

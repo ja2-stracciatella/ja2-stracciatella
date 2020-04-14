@@ -1,8 +1,10 @@
 #ifndef _QUEST_TEXT_H_
 #define _QUEST_TEXT_H_
 
+#include <string_theory/string>
 
-extern const wchar_t* const QuestDescText[];
-extern const wchar_t* const FactDescText[];
+
+extern const ST::string QuestDescText[];
+extern const ST::string FactDescText[];
 
 #endif

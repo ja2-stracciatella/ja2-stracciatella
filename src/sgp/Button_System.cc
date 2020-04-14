@@ -1,6 +1,4 @@
 // Rewritten mostly by Kris Morness
-#include  <stdexcept>
-
 #include "Button_Sound_Control.h"
 #include "Button_System.h"
 #include "Debug.h"
@@ -18,6 +16,10 @@
 #ifdef _JA2_RENDER_DIRTY
 #	include "Font_Control.h"
 #endif
+
+#include <string_theory/string>
+
+#include <stdexcept>
 
 
 // Names of the default generic button image files.
@@ -512,7 +514,7 @@ GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, IN
 	uiFlags(BUTTON_DIRTY | BUTTON_ENABLED | flags),
 	uiOldFlags(0),
 	bDisabledStyle(GUI_BUTTON::DISABLED_STYLE_DEFAULT),
-	string(0),
+	codepoints(),
 	usFont(0),
 	sForeColor(0),
 	sShadowColor(-1),
@@ -565,18 +567,6 @@ GUI_BUTTON::~GUI_BUTTON()
 		 */
 		UnloadButtonImage(image);
 	}
-
-	if (string) delete[] string;
-}
-
-
-static void CopyButtonText(GUI_BUTTON* b, const wchar_t* text)
-{
-	if (text == NULL || text[0] == L'\0') return;
-
-	wchar_t* const Buf = new wchar_t[wcslen(text) + 1]{};
-	wcscpy(Buf, text);
-	b->string = Buf;
 }
 
 
@@ -596,14 +586,14 @@ GUIButtonRef CreateIconButton(INT16 Icon, INT16 IconIndex, INT16 xloc, INT16 ylo
 }
 
 
-GUIButtonRef CreateTextButton(const wchar_t *string, SGPFont const font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateTextButton(const ST::string& str, SGPFont font, INT16 sForeColor, INT16 sShadowColor, INT16 xloc, INT16 yloc, INT16 w, INT16 h, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	// if button size is too small, adjust it.
 	if (w < 4) w = 4;
 	if (h < 3) h = 3;
 
 	GUI_BUTTON* const b = new GUI_BUTTON(BUTTON_GENERIC, xloc, yloc, w, h, Priority, ClickCallback, DefaultMoveCallback);
-	CopyButtonText(b, string);
+	b->codepoints   = str.to_utf32();
 	b->usFont       = font;
 	b->sForeColor   = sForeColor;
 	b->sShadowColor = sShadowColor;
@@ -664,10 +654,10 @@ GUIButtonRef QuickCreateButtonImg(char const* const gfx, INT32 const off_normal,
 }
 
 
-GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* const string, SGPFont const font, const INT16 sForeColor, const INT16 sShadowColor, const INT16 sForeColorDown, const INT16 sShadowColorDown, const INT16 xloc, const INT16 yloc, const INT16 Priority, const GUI_CALLBACK ClickCallback)
+GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* Image, const ST::string& str, SGPFont font, INT16 sForeColor, INT16 sShadowColor, INT16 sForeColorDown, INT16 sShadowColorDown, INT16 xloc, INT16 yloc, INT16 Priority, GUI_CALLBACK ClickCallback)
 {
 	GUIButtonRef const b = QuickCreateButton(Image, xloc, yloc, Priority, ClickCallback);
-	CopyButtonText(b, string);
+	b->codepoints       = str.to_utf32();
 	b->usFont           = font;
 	b->sForeColor       = sForeColor;
 	b->sShadowColor     = sShadowColor;
@@ -677,22 +667,18 @@ GUIButtonRef CreateIconAndTextButton(BUTTON_PICS* const Image, const wchar_t* co
 }
 
 
-GUIButtonRef CreateLabel(const wchar_t* text, SGPFont const font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
+GUIButtonRef CreateLabel(const ST::string& str, SGPFont font, INT16 forecolor, INT16 shadowcolor, INT16 x, INT16 y, INT16 w, INT16 h, INT16 priority)
 {
-	GUIButtonRef const btn = CreateTextButton(text, font, forecolor, shadowcolor, x, y, w, h, priority, NULL);
+	GUIButtonRef const btn = CreateTextButton(str, font, forecolor, shadowcolor, x, y, w, h, priority, NULL);
 	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_NONE);
 	DisableButton(btn);
 	return btn;
 }
 
 
-void GUI_BUTTON::SpecifyText(wchar_t const* const text)
+void GUI_BUTTON::SpecifyText(const ST::string& str)
 {
-	//free the previous strings memory if applicable
-	if (string) delete[] string;
-	string = NULL;
-
-	CopyButtonText(this, text);
+	this->codepoints = str.to_utf32();
 	uiFlags |= BUTTON_DIRTY;
 }
 
@@ -720,9 +706,9 @@ void GUI_BUTTON::SpecifyTextJustification(Justification const j)
 }
 
 
-void GUI_BUTTON::SpecifyGeneralTextAttributes(wchar_t const* const string, SGPFont const font, INT16 const fore_colour, INT16 const shadow_colour)
+void GUI_BUTTON::SpecifyGeneralTextAttributes(const ST::string& str, SGPFont font, INT16 fore_colour, INT16 shadow_colour)
 {
-	SpecifyText(string);
+	SpecifyText(str);
 	usFont        = font;
 	sForeColor    = fore_colour;
 	sShadowColor  = shadow_colour;
@@ -779,9 +765,9 @@ void GUI_BUTTON::AllowDisabledFastHelp()
 }
 
 
-void GUI_BUTTON::SetFastHelpText(const wchar_t* const text)
+void GUI_BUTTON::SetFastHelpText(const ST::string& str)
 {
-	Area.SetFastHelpText(text);
+	Area.SetFastHelpText(str);
 }
 
 
@@ -1043,9 +1029,9 @@ void ForceButtonUnDirty(GUIButtonRef const b)
 
 void GUI_BUTTON::Draw()
 {
-	if (string) SaveFontSettings();
+	if (!codepoints.empty()) SaveFontSettings();
 	if (Area.uiFlags & MSYS_REGION_ENABLED) DrawButtonFromPtr(this);
-	if (string) RestoreFontSettings();
+	if (!codepoints.empty()) RestoreFontSettings();
 }
 
 
@@ -1073,7 +1059,7 @@ static void DrawButtonFromPtr(GUI_BUTTON* b)
 			return; // hotspots don't have text, but if you want to, change this to a break!
 	}
 	if (b->icon)   DrawIconOnButton(b);
-	if (b->string) DrawTextOnButton(b);
+	if (!b->codepoints.empty()) DrawTextOnButton(b);
 	/* If the button is disabled, and a style has been calculated, then draw the
 	 * style last.
 	 */
@@ -1133,7 +1119,7 @@ static void DrawQuickButton(const GUI_BUTTON* b)
 		switch (b->bDisabledStyle)
 		{
 			case GUI_BUTTON::DISABLED_STYLE_DEFAULT:
-				gbDisabledButtonStyle = b->string ?
+				gbDisabledButtonStyle = !b->codepoints.empty() ?
 					GUI_BUTTON::DISABLED_STYLE_SHADED :
 					GUI_BUTTON::DISABLED_STYLE_HATCHED;
 				break;
@@ -1348,7 +1334,7 @@ static void DrawIconOnButton(const GUI_BUTTON* b)
 static void DrawTextOnButton(const GUI_BUTTON* b)
 {
 	// If this button actually has a string to print
-	if (b->string == NULL) return;
+	if (b->codepoints.empty()) return;
 
 	// Get the width and height of this button
 	INT32 const width  = b->W();
@@ -1413,9 +1399,9 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 		switch (b->bJustification)
 		{
 			case GUI_BUTTON::TEXT_LEFT:   xp = TextX + 3; break;
-			case GUI_BUTTON::TEXT_RIGHT:  xp = NewClip.iRight - StringPixLength(b->string, b->usFont) - 3; break;
+			case GUI_BUTTON::TEXT_RIGHT:  xp = NewClip.iRight - StringPixLength(b->codepoints, b->usFont) - 3; break;
 			default:
-			case GUI_BUTTON::TEXT_CENTER: xp = TextX + (width - 6 - StringPixLength(b->string, b->usFont)) / 2; break;
+			case GUI_BUTTON::TEXT_CENTER: xp = TextX + (width - 6 - StringPixLength(b->codepoints, b->usFont)) / 2; break;
 		}
 	}
 	else
@@ -1512,13 +1498,13 @@ static void DrawTextOnButton(const GUI_BUTTON* b)
 		}
 		yp += b->bTextYSubOffSet;
 		xp += b->bTextXSubOffSet;
-		DisplayWrappedString(xp, yp, b->sWrappedWidth, 1, b->usFont, sForeColor, b->string, FONT_MCOLOR_BLACK, bJustified);
+		DisplayWrappedString(xp, yp, b->sWrappedWidth, 1, b->usFont, sForeColor, b->codepoints, FONT_MCOLOR_BLACK, bJustified);
 	}
 	else
 	{
 		yp += b->bTextYSubOffSet;
 		xp += b->bTextXSubOffSet;
-		MPrint(xp, yp, b->string);
+		MPrint(xp, yp, b->codepoints);
 	}
 	// Restore the old text printing settings
 }
@@ -1537,7 +1523,7 @@ static void DrawGenericButton(const GUI_BUTTON* b)
 		switch (b->bDisabledStyle)
 		{
 			case GUI_BUTTON::DISABLED_STYLE_DEFAULT:
-				gbDisabledButtonStyle = b->string ?
+				gbDisabledButtonStyle = !b->codepoints.empty() ?
 					GUI_BUTTON::DISABLED_STYLE_SHADED :
 					GUI_BUTTON::DISABLED_STYLE_HATCHED;
 				break;

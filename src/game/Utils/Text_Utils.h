@@ -1,8 +1,12 @@
 #ifndef TEXT_UTILS_H
 #define TEXT_UTILS_H
 
+#include "Text.h"
 #include "Types.h"
 
-void LoadItemInfo(UINT16 ubIndex, wchar_t Info[]);
+#include <string_theory/string>
+
+
+ST::string LoadItemInfo(UINT16 ubIndex);
 
 #endif

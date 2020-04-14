@@ -32,6 +32,10 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
+
 #define CIV_QUOTE_TEXT_SIZE		160
 
 
@@ -118,7 +122,7 @@ static UINT16 gusCivQuoteBoxWidth;
 static UINT16 gusCivQuoteBoxHeight;
 
 
-static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, wchar_t* zQuote)
+static BOOLEAN GetCivQuoteText(UINT8 ubCivQuoteID, UINT8 ubEntryID, ST::string& zQuote)
 try
 {
 	char zFileName[164];
@@ -140,8 +144,8 @@ try
 		sprintf(zFileName, NPCDATADIR "/civ%02d.edt", ubCivQuoteID);
 	}
 
-	GCM->loadEncryptedString(zFileName, zQuote, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE);
-	return zQuote[0] != L'\0';
+	zQuote = GCM->loadEncryptedString(zFileName, CIV_QUOTE_TEXT_SIZE * ubEntryID, CIV_QUOTE_TEXT_SIZE);
+	return !zQuote.empty();
 }
 catch (...) { return FALSE; }
 
@@ -320,18 +324,18 @@ void BeginCivQuote( SOLDIERTYPE *pCiv, UINT8 ubCivQuoteID, UINT8 ubEntryID, INT1
 	}
 
 	// get text
-	wchar_t zQuote[CIV_QUOTE_TEXT_SIZE];
+	ST::string zQuote;
 	if ( !GetCivQuoteText( ubCivQuoteID, ubEntryID, zQuote ) )
 	{
 		return;
 	}
 
-	wchar_t	gzCivQuote[320];
-	swprintf( gzCivQuote, lengthof(gzCivQuote), L"\"%ls\"", zQuote );
+	ST::string gzCivQuote;
+	gzCivQuote = ST::format("\"{}\"", zQuote);
 
 	if ( ubCivQuoteID == CIV_QUOTE_HINT )
 	{
-		MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, L"%ls",  gzCivQuote );
+		MapScreenMessage( FONT_MCOLOR_WHITE, MSG_DIALOG, ST::format("{}", gzCivQuote) );
 	}
 
 	// Prepare text box

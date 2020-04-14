@@ -35,15 +35,15 @@ const LanguageRes* g_langRes = &g_LanguageResEnglish;
 unsigned char const *TranslationTable = g_en_TranslationTable->m_table;
 
 
-wchar_t getZeroGlyphChar()
+char32_t getZeroGlyphChar()
 {
 	if(s_gameVersion == GameVersion::RUSSIAN)
 	{
-		return L' ';
+		return U' ';
 	}
 	else
 	{
-		return L'A';
+		return U'A';
 	}
 }
 

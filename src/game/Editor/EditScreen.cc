@@ -83,6 +83,10 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <string_theory/format>
+#include <string_theory/string>
+
+
 static BOOLEAN gfCorruptMap        = FALSE;
 static BOOLEAN gfCorruptSchedules  = FALSE;
 BOOLEAN        gfProfileDataLoaded = FALSE;
@@ -374,7 +378,7 @@ static BOOLEAN EditModeShutdown(void)
 	if( gfConfirmExitFirst )
 	{
 		gfConfirmExitPending = TRUE;
-		CreateMessageBox( L"Exit editor?" );
+		CreateMessageBox( "Exit editor?" );
 		return FALSE;
 	}
 
@@ -1212,7 +1216,7 @@ static void HandleKeyboardShortcuts(void)
 				switch( EditorInputEvent.usParam )
 				{
 					case SDLK_ESCAPE:
-						SetInputFieldStringWith16BitString( 0, L"" );
+						SetInputFieldString( 0, ST::null );
 						RemoveGotoGridNoUI();
 						break;
 
@@ -1221,7 +1225,7 @@ static void HandleKeyboardShortcuts(void)
 					case 'x':
 						if( EditorInputEvent.usKeyState & ALT_DOWN )
 						{
-							SetInputFieldStringWith16BitString( 0, L"" );
+							SetInputFieldString( 0, ST::null );
 							RemoveGotoGridNoUI();
 							iCurrentAction = ACTION_QUIT_GAME;
 						}
@@ -1452,17 +1456,17 @@ static void HandleKeyboardShortcuts(void)
 				case SDLK_F9: break;
 
 				case SDLK_F10:
-					CreateMessageBox( L"Are you sure you wish to remove all lights?" );
+					CreateMessageBox( "Are you sure you wish to remove all lights?" );
 					gfRemoveLightsPending = TRUE;
 					break;
 
 				case SDLK_F11:
-					CreateMessageBox( L"Are you sure you wish to reverse the schedules?" );
+					CreateMessageBox( "Are you sure you wish to reverse the schedules?" );
 					gfScheduleReversalPending = TRUE;
 					break;
 
 				case SDLK_F12:
-					CreateMessageBox( L"Are you sure you wish to clear all of the schedules?" );
+					CreateMessageBox( "Are you sure you wish to clear all of the schedules?" );
 					gfScheduleClearPending = TRUE;
 					break;
 
@@ -1691,12 +1695,12 @@ static void HandleKeyboardShortcuts(void)
 					{
 						if (fShowTrees)
 						{
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Removing Treetops");
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, "Removing Treetops");
 							WorldHideTrees();
 						}
 						else
 						{
-							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, L"Showing Treetops");
+							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, "Showing Treetops");
 							WorldShowTrees();
 						}
 						fShowTrees = !fShowTrees;
@@ -1859,16 +1863,16 @@ static ScreenID PerformSelectedAction(void)
 		case ACTION_NEW_MAP:
 			fNewMap = TRUE;
 			if( gfPendingBasement )
-				CreateMessageBox( L"Delete current map and start a new basement level?" );
+				CreateMessageBox( "Delete current map and start a new basement level?" );
 			else if( gfPendingCaves )
-				CreateMessageBox( L"Delete current map and start a new cave level?" );
+				CreateMessageBox( "Delete current map and start a new cave level?" );
 			else
-				CreateMessageBox( L"Delete current map and start a new outdoor level?" );
+				CreateMessageBox( "Delete current map and start a new outdoor level?" );
 			break;
 
 		case ACTION_SET_NEW_BACKGROUND:
 			if (!fBeenWarned)
-				CreateMessageBox( L" Wipe out ground textures? " );
+				CreateMessageBox( " Wipe out ground textures? " );
 			else
 			{
 				gCurrentBackground = TerrainBackgroundTile;
@@ -2285,68 +2289,68 @@ static ScreenID WaitForHelpScreenResponse(void)
 
 	SetFont( gp12PointFont1 );
 
-	gprintf( 55,  55, L"HOME" );
-	gprintf( 205, 55, L"Toggle fake editor lighting ON/OFF" );
+	GPrint( 55,  55, "HOME" );
+	GPrint( 205, 55, "Toggle fake editor lighting ON/OFF" );
 
-	gprintf( 55,  67, L"INSERT" );
-	gprintf( 205, 67, L"Toggle fill mode ON/OFF" );
+	GPrint( 55,  67, "INSERT" );
+	GPrint( 205, 67, "Toggle fill mode ON/OFF" );
 
-	gprintf( 55,  79, L"BKSPC" );
-	gprintf( 205, 79, L"Undo last change" );
+	GPrint( 55,  79, "BKSPC" );
+	GPrint( 205, 79, "Undo last change" );
 
-	gprintf( 55,  91, L"DEL" );
-	gprintf( 205, 91, L"Quick erase object under mouse cursor" );
+	GPrint( 55,  91, "DEL" );
+	GPrint( 205, 91, "Quick erase object under mouse cursor" );
 
-	gprintf( 55,  103, L"ESC" );
-	gprintf( 205, 103, L"Exit editor" );
+	GPrint( 55,  103, "ESC" );
+	GPrint( 205, 103, "Exit editor" );
 
-	gprintf( 55,  115, L"PGUP/PGDN" );
-	gprintf( 205, 115, L"Change object to be pasted" );
+	GPrint( 55,  115, "PGUP/PGDN" );
+	GPrint( 205, 115, "Change object to be pasted" );
 
-	gprintf( 55,  127, L"F1" );
-	gprintf( 205, 127, L"This help screen" );
+	GPrint( 55,  127, "F1" );
+	GPrint( 205, 127, "This help screen" );
 
-	gprintf( 55,  139, L"F10" );
-	gprintf( 205, 139, L"Save current map" );
+	GPrint( 55,  139, "F10" );
+	GPrint( 205, 139, "Save current map" );
 
-	gprintf( 55,  151, L"F11" );
-	gprintf( 205, 151, L"Load map as current" );
+	GPrint( 55,  151, "F11" );
+	GPrint( 205, 151, "Load map as current" );
 
-	gprintf( 55,  163, L"+/-" );
-	gprintf( 205, 163, L"Change shadow darkness by .01" );
+	GPrint( 55,  163, "+/-" );
+	GPrint( 205, 163, "Change shadow darkness by .01" );
 
-	gprintf( 55,  175, L"SHFT +/-" );
-	gprintf( 205, 175, L"Change shadow darkness by .05" );
+	GPrint( 55,  175, "SHFT +/-" );
+	GPrint( 205, 175, "Change shadow darkness by .05" );
 
-	gprintf( 55,  187, L"0 - 9" );
-	gprintf( 205, 187, L"Change map/tileset filename" );
+	GPrint( 55,  187, "0 - 9" );
+	GPrint( 205, 187, "Change map/tileset filename" );
 
-	gprintf( 55,  199, L"b" );
-	gprintf( 205, 199, L"Change brush size" );
+	GPrint( 55,  199, "b" );
+	GPrint( 205, 199, "Change brush size" );
 
-	gprintf( 55,  211, L"d" );
-	gprintf( 205, 211, L"Draw debris" );
+	GPrint( 55,  211, "d" );
+	GPrint( 205, 211, "Draw debris" );
 
-	gprintf( 55,  223, L"o" );
-	gprintf( 205, 223, L"Draw obstacle" );
+	GPrint( 55,  223, "o" );
+	GPrint( 205, 223, "Draw obstacle" );
 
-	gprintf( 55,  235, L"r" );
-	gprintf( 205, 235, L"Draw rocks" );
+	GPrint( 55,  235, "r" );
+	GPrint( 205, 235, "Draw rocks" );
 
-	gprintf( 55,  247, L"t" );
-	gprintf( 205, 247, L"Toggle trees display ON/OFF" );
+	GPrint( 55,  247, "t" );
+	GPrint( 205, 247, "Toggle trees display ON/OFF" );
 
-	gprintf( 55,  259, L"g" );
-	gprintf( 205, 259, L"Draw ground textures" );
+	GPrint( 55,  259, "g" );
+	GPrint( 205, 259, "Draw ground textures" );
 
-	gprintf( 55,  271, L"w" );
-	gprintf( 205, 271, L"Draw building walls" );
+	GPrint( 55,  271, "w" );
+	GPrint( 205, 271, "Draw building walls" );
 
-	gprintf( 55,  283, L"e" );
-	gprintf( 205, 283, L"Toggle erase mode ON/OFF" );
+	GPrint( 55,  283, "e" );
+	GPrint( 205, 283, "Toggle erase mode ON/OFF" );
 
-	gprintf( 55,  295, L"h" );
-	gprintf( 205, 295, L"Toggle roofs ON/OFF" );
+	GPrint( 55,  295, "h" );
+	GPrint( 205, 295, "Toggle roofs ON/OFF" );
 
 
 	fLeaveScreen = FALSE;
@@ -3133,9 +3137,8 @@ void ProcessAreaSelection( BOOLEAN fWithLeftButton )
 				gubMaxRoomNumber++;
 				if( iCurrentTaskbar == TASK_BUILDINGS && TextInputMode() )
 				{
-					wchar_t str[4];
-					swprintf(str, lengthof(str), L"%d", gubCurrRoomNumber);
-					SetInputFieldStringWith16BitString( 1, str );
+					ST::string str = ST::format("{}", gubCurrRoomNumber);
+					SetInputFieldString( 1, str );
 					SetActiveField( 0 );
 				}
 			}
@@ -3361,13 +3364,13 @@ static void CreateGotoGridNoUI(void)
 	//Disable the rest of the editor
 	DisableEditorTaskbar();
 	//Create the background panel.
-	guiGotoGridNoUIButtonID = CreateLabel(L"Enter gridno:", FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 290, 155, 60, 50, MSYS_PRIORITY_NORMAL);
+	guiGotoGridNoUIButtonID = CreateLabel("Enter gridno:", FONT10ARIAL, FONT_YELLOW, FONT_BLACK, 290, 155, 60, 50, MSYS_PRIORITY_NORMAL);
 	guiGotoGridNoUIButtonID->SpecifyTextOffsets(5, 5, FALSE);
 	//Create a blanket region so nobody can use
 	MSYS_DefineRegion(&GotoGridNoUIRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_NORMAL + 1, 0, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 	//Init a text input field.
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
-	AddTextInputField( 300, 180, 40, 18, MSYS_PRIORITY_HIGH, L"", 6, INPUTTYPE_NUMERICSTRICT );
+	AddTextInputField( 300, 180, 40, 18, MSYS_PRIORITY_HIGH, ST::null, 6, INPUTTYPE_NUMERICSTRICT );
 }
 
 
@@ -3402,7 +3405,6 @@ static void UpdateLastActionBeforeLeaving(void)
 
 static void ReloadMap(void)
 {
-	wchar_t szFilename[30];
-	swprintf(szFilename, lengthof(szFilename), L"%hs", g_filename);
+	ST::string szFilename = ST::format("{}", g_filename);
 	ExternalLoadMap( szFilename );
 }

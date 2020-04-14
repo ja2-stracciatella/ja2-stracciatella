@@ -61,7 +61,7 @@ static void AdjustClockToEventStamp(STRATEGICEVENT* pEvent, UINT32* puiAdjustmen
 	guiHour = ( guiGameClock - ( guiDay * NUM_SEC_IN_DAY ) ) / NUM_SEC_IN_HOUR;
 	guiMin	= ( guiGameClock - ( ( guiDay * NUM_SEC_IN_DAY ) + ( guiHour * NUM_SEC_IN_HOUR ) ) ) / NUM_SEC_IN_MIN;
 
-	swprintf(WORLDTIMESTR, lengthof(WORLDTIMESTR), L"%ls %d, %02d:%02d", gpGameClockString, guiDay, guiHour, guiMin);
+	WORLDTIMESTR = ST::format("{} {}, {02d}:{02d}", gpGameClockString, guiDay, guiHour, guiMin);
 }
 
 

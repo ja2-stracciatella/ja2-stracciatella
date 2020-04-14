@@ -1,10 +1,13 @@
-#include <stdexcept>
-
 #include "Debug.h"
 #include "FileMan.h"
 #include "LoadSaveData.h"
 #include "LoadSaveMercProfile.h"
 #include "Tactical_Save.h"
+
+#include <string_theory/string>
+
+#include <stdexcept>
+
 
 /** Calculates soldier profile checksum. */
 UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p)
@@ -40,15 +43,15 @@ void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracL
 	if(stracLinuxFormat)
 	{
 		DataReader reader(S);
-		reader.readUTF32(p.zName,     NAME_LENGTH);
-		reader.readUTF32(p.zNickname, NICKNAME_LENGTH);
+		p.zName = reader.readUTF32(NAME_LENGTH);
+		p.zNickname = reader.readUTF32(NICKNAME_LENGTH);
 		S += reader.getConsumed();
 	}
 	else
 	{
 		DataReader reader(S);
-		reader.readUTF16(p.zName,     NAME_LENGTH,          fixer);
-		reader.readUTF16(p.zNickname, NICKNAME_LENGTH,      fixer);
+		p.zName = reader.readUTF16(NAME_LENGTH, fixer);
+		p.zNickname = reader.readUTF16(NICKNAME_LENGTH, fixer);
 		S += reader.getConsumed();
 	}
 
@@ -255,8 +258,8 @@ void InjectMercProfile(BYTE* const Dst, MERCPROFILESTRUCT const& p)
 
 	{
 		DataWriter writer(D);
-		writer.writeStringAsUTF16(p.zName, lengthof(p.zName));
-		writer.writeStringAsUTF16(p.zNickname, lengthof(p.zNickname));
+		writer.writeStringAsUTF16(p.zName, NAME_LENGTH);
+		writer.writeStringAsUTF16(p.zNickname, NICKNAME_LENGTH);
 		D += writer.getConsumed();
 	}
 	INJ_SKIP(D, 28)

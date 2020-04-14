@@ -1079,7 +1079,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 
 
 	SLOGD("HandleManAI - DECIDING for guynum %d(%s) at gridno %d, APs %d",
-		pSoldier->ubID,pSoldier->name,pSoldier->sGridNo,pSoldier->bActionPoints);
+		pSoldier->ubID, pSoldier->name.c_str(), pSoldier->sGridNo, pSoldier->bActionPoints);
 
 
 	// if man has nothing to do
@@ -1325,12 +1325,12 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 	if (gfTurnBasedAI || gTacticalStatus.fAutoBandageMode)
 	{
-		SLOGD("%d does %hs (a.d. %d) in %d with %d APs left",
+		SLOGD("%d does %s (a.d. %d) in %d with %d APs left",
 			pSoldier->ubID, gzActionStr[pSoldier->bAction], pSoldier->usActionData,
 			pSoldier->sGridNo, pSoldier->bActionPoints);
 	}
 
-	SLOGD("%d does %hs (a.d. %d) at time %ld", pSoldier->ubID,
+	SLOGD("%d does %s (a.d. %d) at time %ld", pSoldier->ubID,
 		gzActionStr[pSoldier->bAction], pSoldier->usActionData, GetJA2Clock());
 
 	switch (pSoldier->bAction)
@@ -1351,7 +1351,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				if (pSoldier->ubProfile != NO_PROFILE)
 				{
 					SLOGD("%s waiting %d from %d",
-								pSoldier->name, pSoldier->AICounter, GetJA2Clock());
+								pSoldier->name.c_str(), pSoldier->AICounter, GetJA2Clock());
 				}
 			}
 			ActionDone( pSoldier );
@@ -1495,7 +1495,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 					// Check if we were told to move by NPC stuff
 					if ( pSoldier->sAbsoluteFinalDestination != NOWHERE && !(gTacticalStatus.uiFlags & INCOMBAT) )
 					{
-						SLOGE("AI %ls failed to get path for dialogue-related move!", pSoldier->name);
+						SLOGE("AI %s failed to get path for dialogue-related move!", pSoldier->name.c_str());
 
 						// Are we close enough?
 						if ( !ACTING_ON_SCHEDULE( pSoldier ) && SpacesAway( pSoldier->sGridNo, pSoldier->sAbsoluteFinalDestination ) < 4 )
