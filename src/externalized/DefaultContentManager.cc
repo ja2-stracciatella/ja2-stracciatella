@@ -1079,6 +1079,9 @@ bool DefaultContentManager::loadStrategicLayerData() {
 	json = readJsonDataFile("strategic-map-movement-costs.json");
 	m_movementCosts = MovementCostsModel::deserialize(*json);
 
+	loadStringRes("strings/strategic-map-town-names", m_townNames);
+	loadStringRes("strings/strategic-map-town-name-locatives", m_townNameLocatives);
+
 	return true;
 }
 
@@ -1113,6 +1116,16 @@ const TownModel* DefaultContentManager::getTown(int8_t townId) const
 const std::map<int8_t, const TownModel*>& DefaultContentManager::getTowns() const
 {
 	return m_towns;
+}
+
+const ST::string DefaultContentManager::getTownName(uint8_t townId) const
+{
+	return *m_townNames[townId];
+}
+
+const ST::string DefaultContentManager::getTownLocative(uint8_t townId) const
+{
+	return *m_townNameLocatives[townId];
 }
 
 const MovementCostsModel* DefaultContentManager::getMovementCosts() const

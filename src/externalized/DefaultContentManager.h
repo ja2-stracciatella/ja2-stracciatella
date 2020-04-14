@@ -147,6 +147,8 @@ public:
 	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const override;
 	virtual const TownModel* getTown(int8_t townId) const  override;
 	virtual const std::map<int8_t, const TownModel*>& getTowns() const override;
+	virtual const ST::string getTownName(uint8_t townId) const override;
+	virtual const ST::string getTownLocative(uint8_t townId) const override;
 	virtual const MovementCostsModel* getMovementCosts() const override;
 
 protected:
@@ -189,6 +191,8 @@ protected:
 	std::vector<const BloodCatPlacementsModel*> m_bloodCatPlacements;
 	std::vector<const BloodCatSpawnsModel*> m_bloodCatSpawns;
 	std::map<int8_t, const TownModel*> m_towns;
+	std::vector<const ST::string*> m_townNames;
+	std::vector<const ST::string*> m_townNameLocatives;
 	const MovementCostsModel *m_movementCosts;
 
 	RustPointer<LibraryDB> m_libraryDB;

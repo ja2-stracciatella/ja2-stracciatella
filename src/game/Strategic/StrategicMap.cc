@@ -1320,7 +1320,7 @@ ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)
 
 		if (mine_index != -1)
 		{
-			add = pTownNames[GetTownAssociatedWithMine(mine_index)];
+			add = GCM->getTownName(GetTownAssociatedWithMine(mine_index));
 		}
 		else switch (SECTOR(x, y))
 		{
@@ -1369,11 +1369,11 @@ ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)
 				break;
 
 			case SEC_J9: // Tixa
-				add = fFoundTixa ? pTownNames[TIXA] : pLandTypeStrings[SAND];
+				add = fFoundTixa ? GCM->getTownName(TIXA) : pLandTypeStrings[SAND];
 				break;
 
 			case SEC_K4: // Orta
-				add = fFoundOrta ? pTownNames[ORTA] : pLandTypeStrings[SWAMP];
+				add = fFoundOrta ? GCM->getTownName(ORTA) : pLandTypeStrings[SWAMP];
 				break;
 
 			case SEC_N3:
@@ -1392,7 +1392,7 @@ ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)
 plain_sector:;
 				INT8 const town_name_id = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId;
 				add =
-					town_name_id != BLANK_SECTOR ? pTownNames[town_name_id] :
+					town_name_id != BLANK_SECTOR ? GCM->getTownName(town_name_id) :
 					pLandTypeStrings[SectorInfo[sector_id].ubTraversability[THROUGH_STRATEGIC_MOVE]];
 				break;
 		}

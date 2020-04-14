@@ -33,6 +33,8 @@
 #include "Debug.h"
 #include "ScreenIDs.h"
 #include "FileMan.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #include <string_theory/string>
 
@@ -781,7 +783,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 		gzUserDefinedButton1 = town_sector;
 		gzUserDefinedButton2 = GetShortSectorString(SECTORX(elsewhere), SECTORY(elsewhere));
 
-		ST::string town = g_towns_locative[GetTownIdForSector(elsewhere)];
+		ST::string town = GCM->getTownLocative(GetTownIdForSector(elsewhere));
 		ST::string text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;
 		msg = st_format_printf(text, s.name, town_sector, town, gzUserDefinedButton2);
 		flags = add_rehire_button ? MSG_BOX_FLAG_GENERICCONTRACT : MSG_BOX_FLAG_GENERIC;

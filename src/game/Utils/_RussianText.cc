@@ -214,42 +214,6 @@ static const ST::string s_rus_Message[Message_SIZE] =
 };
 
 
-// the names of the towns in the game
-
-static const ST::string s_rus_pTownNames[pTownNames_SIZE] =
-{
-	"",
-	"Омерта",
-	"Драссен",
-	"Альма",
-	"Грам",
-	"Тикса",
-	"Камбрия",
-	"Сан Мона",
-	"Эстони",
-	"Орта",
-	"Балайм",
-	"Медуна",
-	"Читзена",
-};
-
-static const ST::string s_rus_g_towns_locative[g_towns_locative_SIZE] =
-{
-	"",
-	"Омерте",
-	"Драссене",
-	"Альма",     // TODO fill in correct forms
-	"Грам",
-	"Тикса",
-	"Камбрия",
-	"Сан Мона",
-	"Эстони",
-	"Орта",
-	"Балайм",
-	"Медуна",
-	"Читзена",
-};
-
 // the types of time compression. For example: is the timer paused? at normal speed, 5 minutes per second, etc.
 // min is an abbreviation for minutes
 
@@ -3590,8 +3554,6 @@ LanguageRes g_LanguageResRussian = {
 	s_rus_pContractStrings,
 	s_rus_pAssignmentStrings,
 	s_rus_pConditionStrings,
-	s_rus_pTownNames,
-	s_rus_g_towns_locative,
 	s_rus_pPersonnelScreenStrings,
 	s_rus_pUpperLeftMapScreenStrings,
 	s_rus_pTacticalPopupButtonStrings,
@@ -3821,8 +3783,6 @@ LanguageRes g_LanguageResRussianGold = {
 	s_rus_pContractStrings,
 	s_rus_pAssignmentStrings,
 	s_rus_pConditionStrings,
-	s_rus_pTownNames,
-	s_rus_g_towns_locative,
 	s_rus_pPersonnelScreenStrings,
 	s_rus_pUpperLeftMapScreenStrings,
 	s_rus_pTacticalPopupButtonStrings,

@@ -4726,7 +4726,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						// can we keep militia in this town?
 						if (!MilitiaTrainingAllowedInSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ))
 						{
-							sString = st_format_printf(pMapErrorString[ 31 ], pTownNames[ bTownId ]);
+							sString = st_format_printf(pMapErrorString[ 31 ], GCM->getTownName(bTownId));
 							DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 							break;
 						}
@@ -4750,7 +4750,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						else
 						{
 							// town
-							sString = st_format_printf(zMarksMapScreenText[20], pTownNames[bTownId]);
+							sString = st_format_printf(zMarksMapScreenText[20], GCM->getTownName(bTownId));
 						}
 
 						DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );

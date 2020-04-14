@@ -578,7 +578,7 @@ static ST::string ProcessHistoryTransactionString(const HistoryUnit* h)
 		case HISTORY_MINE_RUNNING_OUT:
 		case HISTORY_MINE_SHUTDOWN:
 		case HISTORY_TALKED_TO_MINER:
-			return st_format_printf(pHistoryStrings[code], pTownNames[h->ubSecondCode]);
+			return st_format_printf(pHistoryStrings[code], GCM->getTownName(h->ubSecondCode));
 
 		case HISTORY_MERC_KILLED:
 			if (h->ubSecondCode == NO_PROFILE)

@@ -117,6 +117,8 @@ public:
 	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const = 0;
 	virtual const TownModel* getTown(int8_t townId) const = 0;
 	virtual const std::map<int8_t, const TownModel*>& getTowns() const = 0;
+	virtual const ST::string getTownName(uint8_t townId) const = 0;
+	virtual const ST::string getTownLocative(uint8_t townId) const = 0;
 	virtual const MovementCostsModel* getMovementCosts() const = 0;
 
 	virtual const ST::string* getNewString(size_t stringId) const = 0;

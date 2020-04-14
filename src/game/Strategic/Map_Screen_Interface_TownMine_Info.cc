@@ -27,6 +27,8 @@
 #include "Render_Dirty.h"
 #include "VObject.h"
 #include "VSurface.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -185,8 +187,8 @@ static void AddTextToTownBox(PopUpBox* const box)
 	{
 		case SEC_B13: title = pLandTypeStrings[DRASSEN_AIRPORT_SITE];                    break;
 		case SEC_F8:  title = pLandTypeStrings[CAMBRIA_HOSPITAL_SITE];                   break;
-		case SEC_J9:  title = (fFoundTixa ? pTownNames[TIXA] : pLandTypeStrings[SAND]);  break;
-		case SEC_K4:  title = (fFoundOrta ? pTownNames[ORTA] : pLandTypeStrings[SWAMP]); break;
+		case SEC_J9:  title = (fFoundTixa ? GCM->getTownName(TIXA) : pLandTypeStrings[SAND]);  break;
+		case SEC_K4:  title = (fFoundOrta ? GCM->getTownName(ORTA) : pLandTypeStrings[SWAMP]); break;
 		case SEC_N3:  title = pLandTypeStrings[MEDUNA_AIRPORT_SITE];                     break;
 
 		case SEC_N4:
@@ -197,7 +199,7 @@ static void AddTextToTownBox(PopUpBox* const box)
 			}
 			/* FALLTHROUGH */
 
-		default: title = pTownNames[ubTownId]; break;
+		default: title = GCM->getTownName(ubTownId); break;
 	}
 	AddMonoString(box, title);
 	// blank line
@@ -258,7 +260,7 @@ static void AddTextToMineBox(PopUpBox* const box, INT8 const mine)
 	ST::string buf;
 
 	// Name of town followed by "mine"
-	buf = ST::format("{} {}", pTownNames[town], pwMineStrings[0]);
+	buf = ST::format("{} {}", GCM->getTownName(town), pwMineStrings[0]);
 	AddMonoString(box, buf);
 
 	AddMonoString(box, ST::null); // Blank line
