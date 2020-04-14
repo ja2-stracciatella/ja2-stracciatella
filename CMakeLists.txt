@@ -249,6 +249,22 @@ if (APPLE)
             "$<TARGET_FILE:${LAUNCHER_BINARY}>")
 endif()
 
+## Auxiliary targets
+
+add_custom_target(run-${JA2_BINARY}
+    COMMAND "$<TARGET_FILE:${JA2_BINARY}>"
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:${JA2_BINARY}>"
+    DEPENDS "${JA2_BINARY}"
+)
+
+if (TARGET "${LAUNCHER_BINARY}")
+    add_custom_target(run-${LAUNCHER_BINARY}
+        COMMAND "$<TARGET_FILE:${LAUNCHER_BINARY}>"
+        WORKING_DIRECTORY "$<TARGET_FILE_DIR:${LAUNCHER_BINARY}>"
+        DEPENDS "${LAUNCHER_BINARY}"
+    )
+endif()
+
 ## Installing and Packaging
 
 set(CPACK_PACKAGE_VERSION_MAJOR ${ja2-stracciatella_VERSION_MAJOR})
