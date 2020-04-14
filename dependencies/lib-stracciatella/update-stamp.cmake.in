@@ -1,0 +1,26 @@
+# \file dependencies/lib-stracciatella/update-stamp.cmake.in
+# Configured by @CMAKE_CURRENT_LIST_FILE@
+#
+# @ONLY variables:
+#  * CMAKE_SOURCE_DIR - source root
+#  * STAMP_FILE - the stamp file
+
+file(GLOB_RECURSE sources "@CMAKE_SOURCE_DIR@/rust/*")
+
+# create new stamp
+set(new_stamp "")
+foreach (source IN ITEMS ${sources})
+    file(TIMESTAMP "${source}" timestamp)
+    set(new_stamp "${new_stamp}${timestamp};${source}\n")
+endforeach()
+
+# read old stamp
+set(old_stamp "NOT_FOUND")
+if(EXISTS "@STAMP_FILE@")
+    file(READ "@STAMP_FILE@" old_stamp)
+endif()
+
+# update if different
+if(NOT "${new_stamp}" STREQUAL "${old_stamp}")
+    file(WRITE "@STAMP_FILE@" "${new_stamp}")
+endif()
