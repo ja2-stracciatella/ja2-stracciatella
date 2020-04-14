@@ -123,7 +123,7 @@ build_script:
 
 test_script:
   - cmd: cmake --build . --target cargo-fmt-check
-  - cmd: cmake --build . --target cargo-clippy-test
+  - cmd: cmake --build . --target cargo-clippy
   - cmd: cmake --build . --target cargo-test
   - cmd: cd %BUILD_TYPE%
   - cmd: ja2.exe -unittests
