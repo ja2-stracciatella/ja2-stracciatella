@@ -1,10 +1,12 @@
 #include "GameVersion.h"
 
 #ifndef GAME_VERSION
-	#define GAME_VERSION "XXXXX"
+	#define GAME_VERSION XXXXX
 #endif
 
-#define FULL_VERSION "Stracciatella " GAME_VERSION
+#define STRINGIFY(x) #x
+#define TOSTRING(x) STRINGIFY(x)
+#define FULL_VERSION "Stracciatella " TOSTRING(GAME_VERSION)
 
 //
 // Keeps track of the game version
