@@ -13,7 +13,6 @@ void readIntIntoVector(const rapidjson::Value& jsonArray, IntIntVector& vec, siz
 MovementCostsModel::MovementCostsModel(IntIntVector traverseWE_, IntIntVector traverseNS_, IntIntVector traverseThrough_, IntIntVector travelRatings_)
 	:traverseWE(traverseWE_), traverseNS(traverseNS_), traverseThrough(traverseThrough_), travelRatings(travelRatings_) {}
 
-
 const uint8_t MovementCostsModel::getTraversibilityWestEast(uint8_t x, uint8_t y) const
 {
 	Assert(y < 16 && x <= 16 && y >= 0 && x >= 0);
@@ -80,10 +79,17 @@ void readTraversibiltyIntoVector(const rapidjson::Value& jsonArray, IntIntVector
 		{
 			row.push_back(mapping.at(std::string(c.GetString())));
 		}
-		Assert(row.size() == expectedCols);
+		
+		if (row.size() != expectedCols) {
+			SLOGA("num of columns is different from expected");
+			throw std::runtime_error("num of columns is different from expected");
+		}
 		vec.push_back(row);
 	}
-	Assert(vec.size() == expectedRows);
+	if (vec.size() != expectedRows) {
+		SLOGA("num of rows is different from expected");
+		throw std::runtime_error("num of rows is different from expected");
+	}
 }
 
 void readIntIntoVector(const rapidjson::Value& jsonArray, IntIntVector& vec, size_t expectedRows, size_t expectedCols)
@@ -95,8 +101,15 @@ void readIntIntoVector(const rapidjson::Value& jsonArray, IntIntVector& vec, siz
 		{
 			row.push_back(c.GetInt());
 		}
-		Assert(row.size() == expectedCols);
+
+		if (row.size() != expectedCols) {
+			SLOGA("num of columns is different from expected");
+			throw std::runtime_error("num of columns is different from expected");
+		}
 		vec.push_back(row);
 	}
-	Assert(vec.size() == expectedRows);
+	if (vec.size() != expectedRows) {
+		SLOGA("num of rows is different from expected");
+		throw std::runtime_error("num of row is different from expected");
+	}
 }
