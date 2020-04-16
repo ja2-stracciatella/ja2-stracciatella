@@ -1,49 +1,47 @@
-# string_theory library
-#
-# built as a release static library with an extrenal project at configure time
-# installed to "${CMAKE_BINARY_DIR}/lib-string_theory"
-# the builder can be replaced by FetchContent in cmake 3.11
+# \file dependencies/lib-string_theory/CMakeLists.txt
+
+option(LOCAL_STRING_THEORY_LIB "Download and build string_theory instead of searching the system" ON)
+if (NOT LOCAL_STRING_THEORY_LIB)
+    message(STATUS "Using system string_theory")
+    find_package(string_theory 3
+        REQUIRED
+        HINTS "${STRING_THEORY_ROOT}" "$ENV{STRING_THEORY_ROOT}"
+        PATH_SUFFIXES lib/cmake/string_theory # path to string_theory-config.cmake
+    )
+    mark_as_advanced(string_theory_DIR)
+    if (NOT string_theory_FOUND)
+        message(FATAL_ERROR "string_theory 3+ not found")
+    endif()
+
+    # interface library
+    add_library(string_theory-internal INTERFACE)
+    target_include_directories(string_theory-internal INTERFACE ${STRING_THEORY_INCLUDE_DIRS})
+    return()
+endif()
 
 message(STATUS "<string_theory>")
 
-# local config
-set(CMAKE_BUILD_TYPE Release)
+# create builder
 set(CACHE_FILE "${CMAKE_CURRENT_BINARY_DIR}/external-project-cache.cmake")
 set(INSTALL_PREFIX "${CMAKE_BINARY_DIR}/lib-string_theory")
-
 configure_file(
-	"${CMAKE_SOURCE_DIR}/cmake/external-project-cache.cmake.in"
-	"${CACHE_FILE}"
-	@ONLY
+    "${CMAKE_SOURCE_DIR}/cmake/external-project-cache.cmake.in"
+    "${CACHE_FILE}"
+    @ONLY
 )
-
-# configure builder
 configure_file(
-	"${CMAKE_CURRENT_SOURCE_DIR}/builder/CMakeLists.txt.in"
-	"${CMAKE_CURRENT_BINARY_DIR}/builder/CMakeLists.txt"
-	@ONLY
+    "${CMAKE_CURRENT_SOURCE_DIR}/builder/CMakeLists.txt.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/builder/CMakeLists.txt"
+    @ONLY
 )
-execute_process(
-	COMMAND "${CMAKE_COMMAND}" "-C${CACHE_FILE}" .
-	RESULT_VARIABLE result
-	WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/builder"
-)
-if(NOT "${result}" EQUAL 0)
-	message(FATAL_ERROR "${result}")
-endif()
 
-# run builder
-execute_process(
-	COMMAND "${CMAKE_COMMAND}" --build . --target string_theory
-	RESULT_VARIABLE result
-	WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/builder"
-)
-if(NOT "${result}" EQUAL 0)
-	message(FATAL_ERROR "${result}")
-endif()
+# execute builder
+execute_process(COMMAND ${CMAKE_COMMAND} . "-G${CMAKE_GENERATOR}" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/builder")
+execute_process(COMMAND ${CMAKE_COMMAND} --build "${CMAKE_CURRENT_BINARY_DIR}/builder")
 
 # interface library
-add_library(string_theory INTERFACE)
-target_include_directories(string_theory INTERFACE "${INSTALL_PREFIX}/include")
+include("${INSTALL_PREFIX}/lib/cmake/string_theory/string_theory-config.cmake")
+add_library(string_theory-internal INTERFACE)
+target_include_directories(string_theory-internal INTERFACE "${STRING_THEORY_INCLUDE_DIRS}")
 
 message(STATUS "</string_theory>")

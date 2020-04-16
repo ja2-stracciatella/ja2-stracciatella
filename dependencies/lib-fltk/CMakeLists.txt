@@ -1,53 +1,48 @@
-include(ExternalProject)
+# \file dependencies/lib-fltk/CMakeLists.txt
 
+message(STATUS "<fltk>")
+
+# create builder
+set(CACHE_FILE "${CMAKE_CURRENT_BINARY_DIR}/external-project-cache.cmake")
+set(INSTALL_PREFIX "${CMAKE_BINARY_DIR}/lib-fltk")
 configure_file(
     "${CMAKE_SOURCE_DIR}/cmake/external-project-cache.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/external-project-cache.cmake"
+    "${CACHE_FILE}"
+    @ONLY
+)
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/builder/CMakeLists.txt.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/builder/CMakeLists.txt"
     @ONLY
 )
 
-externalproject_add(fltk-internal
-    URL "http://fltk.org/pub/fltk/1.3.4/fltk-1.3.4-2-source.tar.gz"
-    INSTALL_DIR "${CMAKE_BINARY_DIR}/lib-fltk"
-    CMAKE_ARGS
-        "-C${CMAKE_CURRENT_BINARY_DIR}/external-project-cache.cmake"
-        "-DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/lib-fltk"
-        -DOPTION_USE_GL=OFF -DOPTION_USE_SYSTEM_ZLIB=OFF -DOPTION_USE_SYSTEM_LIBJPEG=OFF
-        -DOPTION_USE_SYSTEM_LIBPNG=OFF -DOPTION_USE_XINERAMA=OFF -DOPTION_USE_XFIXES=OFF
-        -DOPTION_USE_XCURSOR=OFF -DOPTION_USE_XFT=OFF -DOPTION_USE_XRENDER=OFF
-        -DOPTION_USE_XDBE=OFF -DOPTION_BUILD_EXAMPLES=OFF
-    BUILD_COMMAND ""
-    # NOTE this will always use the initial config in multi-config projects
-    INSTALL_COMMAND "${CMAKE_COMMAND}" --build . --target install --config "${CMAKE_BUILD_TYPE}"
-    BUILD_ALWAYS 1
+# execute builder
+execute_process(COMMAND ${CMAKE_COMMAND} . "-G${CMAKE_GENERATOR}" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/builder")
+execute_process(COMMAND ${CMAKE_COMMAND} --build "${CMAKE_CURRENT_BINARY_DIR}/builder")
+
+# interface library
+find_file(FLTK_CONFIG "FLTKConfig.cmake"
+    PATHS
+        "${INSTALL_PREFIX}/CMake"
+        "${INSTALL_PREFIX}/FLTK/.framework/Resources/CMake"
+        "${INSTALL_PREFIX}/fltk"
+    NO_DEFAULT_PATH
 )
-
-set(FLTK_BASE_DIR "${CMAKE_BINARY_DIR}/lib-fltk")
-set(FLTK_LIB_DIR "lib")
-set(FLTK_LIB_PREFIX "${CMAKE_STATIC_LIBRARY_PREFIX}")
-set(FLTK_LIB_SUFFIX "${CMAKE_STATIC_LIBRARY_SUFFIX}")
-set(FLTK_ADDITIONAL_LIBRARIES "")
-
-if (UNIX AND NOT MINGW AND NOT APPLE)
-    set(FLTK_LIB_DIR "lib64")
-    set(FLTK_ADDITIONAL_LIBRARIES X11)
-elseif(MINGW)
-    set(FLTK_ADDITIONAL_LIBRARIES comctl32)
-elseif(MSVC)
-    set(MSVC_LIB_SUFFIX "")
-    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-        set(MSVC_LIB_SUFFIX "d")
-    endif()
-    set(FLTK_LIB_SUFFIX "${MSVC_LIB_SUFFIX}${FLTK_LIB_SUFFIX}")
-endif()
-
-set(FLTK_INCLUDE_DIR "${CMAKE_BINARY_DIR}/lib-fltk/include" PARENT_SCOPE)
-set(FLTK_LIBRARIES
-    "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_images${FLTK_LIB_SUFFIX}"
-    "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk${FLTK_LIB_SUFFIX}"
-    "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_forms${FLTK_LIB_SUFFIX}"
-    "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_png${FLTK_LIB_SUFFIX}"
-    "${FLTK_BASE_DIR}/${FLTK_LIB_DIR}/${FLTK_LIB_PREFIX}fltk_z${FLTK_LIB_SUFFIX}"
-    ${FLTK_ADDITIONAL_LIBRARIES}
-    PARENT_SCOPE
+include("${FLTK_CONFIG}")
+add_library(fltk-internal INTERFACE)
+target_include_directories(fltk-internal INTERFACE "${FLTK_INCLUDE_DIRS}")
+target_link_libraries(fltk-internal INTERFACE
+    $<TARGET_PROPERTY:fltk_images,IMPORTED_LINK_INTERFACE_LIBRARIES_RELWITHDEBINFO>
+    $<TARGET_PROPERTY:fltk_images,IMPORTED_LOCATION_RELWITHDEBINFO>
+    $<TARGET_PROPERTY:fltk,IMPORTED_LINK_INTERFACE_LIBRARIES_RELWITHDEBINFO>
+    $<TARGET_PROPERTY:fltk,IMPORTED_LOCATION_RELWITHDEBINFO>
+    $<TARGET_PROPERTY:fltk_forms,IMPORTED_LINK_INTERFACE_LIBRARIES_RELWITHDEBINFO>
+    $<TARGET_PROPERTY:fltk_forms,IMPORTED_LOCATION_RELWITHDEBINFO>
+    $<TARGET_PROPERTY:fltk_png,IMPORTED_LINK_INTERFACE_LIBRARIES_RELWITHDEBINFO>
+    $<TARGET_PROPERTY:fltk_png,IMPORTED_LOCATION_RELWITHDEBINFO>
+    $<TARGET_PROPERTY:fltk_z,IMPORTED_LINK_INTERFACE_LIBRARIES_RELWITHDEBINFO>
+    $<TARGET_PROPERTY:fltk_z,IMPORTED_LOCATION_RELWITHDEBINFO>
 )
+set(FLTK_LIBRARIES fltk-internal PARENT_SCOPE)
+
+message(STATUS "</fltk>")

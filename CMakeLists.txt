@@ -39,10 +39,11 @@ set(VERSION_TAG "" CACHE STRING "Build date for nightly versioning")
 set(EXTRA_DATA_DIR "" CACHE STRING "Directory for externalized data")
 set(INSTALL_LIB_DIR lib CACHE PATH "Installation directory for libraries")
 set(LOCAL_SDL_LIB "" CACHE STRING "Use local SDL library from this directory")
-set(LIBSTRACCIATELLA_TARGET "" CACHE STRING "Rust target architecture for libstracciatella")
+# @see CARGO_BUILD_TARGET in dependencies/lib-stracciatella/CMakeLists.txt
 option(LOCAL_FLTK_LIB "Build with fltk lib" OFF)
 option(LOCAL_RAPIDJSON_LIB "Build with local rapidjson lib" ON)
 option(LOCAL_GTEST_LIB "Build with local gtest lib" ON)
+# @see LOCAL_STRING_THEORY_LIB in dependencies/lib-string_theory/CMakeLists.txt
 option(WITH_UNITTESTS "Build with unittests" ON)
 option(WITH_FIXMES "Build with fixme messages" OFF)
 option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
@@ -156,7 +157,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-stracciatella")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-string_theory")
 
 if(BUILD_LAUNCHER)
-    set(LAUNCHER_INCLUDES ${FLTK_INCLUDE_DIR} ${STRACCIATELLA_INCLUDE_DIR})
+    set(LAUNCHER_INCLUDES ${FLTK_INCLUDE_DIR})
     set(LAUNCHER_SOURCES
         "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/Logger.cc"
         "${CMAKE_CURRENT_SOURCE_DIR}/src/sgp/SGPStrings.cc"
@@ -169,7 +170,6 @@ include_directories(
     ${JA2_INCLUDES}
     ${RAPIDJSON_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
-    ${STRACCIATELLA_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
 )
 
@@ -201,38 +201,19 @@ if (WITH_UNITTESTS)
     add_definitions("-DWITH_UNITTESTS")
 endif()
 
-set(ADDITIONAL_LIBS "")
-if (UNIX AND NOT MINGW)
-    if(${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD")
-        set(ADDITIONAL_LIBS pthread)
-    else()
-        set(ADDITIONAL_LIBS dl pthread)
-    endif()
-elseif(MINGW)
-    set(ADDITIONAL_LIBS ws2_32 shell32 advapi32 userenv gcc_eh pthread)
-elseif(MSVC)
-    set(ADDITIONAL_LIBS ws2_32 shell32 advapi32 userenv)
-endif()
-
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CFLAGS}")
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-missing-braces -Wno-unused-function")
 endif()
 
 add_executable(${JA2_BINARY} ${JA2_SOURCES})
-target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${GTEST_LIBRARIES} smacker ${STRACCIATELLA_LIBRARIES} string_theory ${ADDITIONAL_LIBS})
+target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${GTEST_LIBRARIES} smacker ${STRACCIATELLA_LIBRARIES} string_theory-internal)
 add_dependencies(${JA2_BINARY} stracciatella)
-if (LOCAL_GTEST_LIB)
-    add_dependencies(${JA2_BINARY} gtest-internal)
-endif()
 
 if(BUILD_LAUNCHER)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-    target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} ${STRACCIATELLA_LIBRARIES} string_theory ${ADDITIONAL_LIBS})
+    target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} ${STRACCIATELLA_LIBRARIES} string_theory-internal)
     add_dependencies(${LAUNCHER_BINARY} stracciatella)
-    if (LOCAL_FLTK_LIB)
-        add_dependencies(${LAUNCHER_BINARY} fltk-internal)
-    endif()
 endif()
 
 macro(copy_assets_dir_to_ja2_binary_after_build DIR)
@@ -267,6 +248,22 @@ if (APPLE)
             POST_BUILD COMMAND
             ${CMAKE_INSTALL_NAME_TOOL} -add_rpath "@executable_path"
             "$<TARGET_FILE:${LAUNCHER_BINARY}>")
+endif()
+
+## Auxiliary targets
+
+add_custom_target(run-${JA2_BINARY}
+    COMMAND "$<TARGET_FILE:${JA2_BINARY}>"
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:${JA2_BINARY}>"
+    DEPENDS "${JA2_BINARY}"
+)
+
+if (TARGET "${LAUNCHER_BINARY}")
+    add_custom_target(run-${LAUNCHER_BINARY}
+        COMMAND "$<TARGET_FILE:${LAUNCHER_BINARY}>"
+        WORKING_DIRECTORY "$<TARGET_FILE_DIR:${LAUNCHER_BINARY}>"
+        DEPENDS "${LAUNCHER_BINARY}"
+    )
 endif()
 
 ## Installing and Packaging

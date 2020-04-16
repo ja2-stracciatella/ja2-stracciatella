@@ -120,9 +120,9 @@ script:
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
       sudo make install;
     fi
-  - make cargo-fmt-test;
+  - make cargo-fmt-check;
   - if [ "$TRAVIS_MINGW" != "true" ]; then
-      make cargo-clippy-test;
+      make cargo-clippy;
     fi
   - if [ "$TRAVIS_MINGW" != "true" ]; then
       make cargo-test;
