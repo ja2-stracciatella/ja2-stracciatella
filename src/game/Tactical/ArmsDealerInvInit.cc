@@ -287,16 +287,13 @@ BOOLEAN ItemTransactionOccurs(ArmsDealerID const bArmsDealer, UINT16 const usIte
 		// mark it as such
 		if (bArmsDealer == ARMS_DEALER_BOBBYR)
 		{
-			if (fUsed)
+			STORE_INVENTORY* pInventory = fUsed ? LaptopSaveInfo.BobbyRayUsedInventory : LaptopSaveInfo.BobbyRayInventory;
+			sInventorySlot = GetInventorySlotForItem(pInventory, usItemIndex, fUsed);
+			if (sInventorySlot == -1)
 			{
-				sInventorySlot = GetInventorySlotForItem(LaptopSaveInfo.BobbyRayUsedInventory, usItemIndex, fUsed);
-				LaptopSaveInfo.BobbyRayUsedInventory[ sInventorySlot ].fPreviouslyEligible = TRUE;
+				return(FALSE);
 			}
-			else
-			{
-				sInventorySlot = GetInventorySlotForItem(LaptopSaveInfo.BobbyRayInventory, usItemIndex, fUsed);
-				LaptopSaveInfo.BobbyRayInventory    [ sInventorySlot ].fPreviouslyEligible = TRUE;
-			}
+			pInventory[ sInventorySlot ].fPreviouslyEligible = TRUE;
 		}
 		else
 		{
