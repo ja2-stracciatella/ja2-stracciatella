@@ -1,9 +1,5 @@
 #include "GameVersion.h"
 
-#ifndef GAME_VERSION
-	#define GAME_VERSION XXXXX
-#endif
-
 #define STRINGIFY(x) #x
 #define TOSTRING(x) STRINGIFY(x)
 #define FULL_VERSION "Stracciatella " TOSTRING(GAME_VERSION)
