@@ -1,4 +1,7 @@
+# \file CMakeLists.txt
+
 cmake_minimum_required (VERSION 3.1)
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 ## Some macros
 
@@ -19,12 +22,38 @@ set(JA2_BINARY "ja2")
 set(LAUNCHER_BINARY "ja2-launcher")
 set(CMAKE_CXX_STANDARD 11)
 
-## Versioning
+## Semantic Versioning
+# @see https://semver.org/
+#
+# The version must be set to:
+#  * "0.<next minor>.0-dev" in the master branch
+#  * "0.<minor>.<patch>" in release tags
+#  * "0.<minor>.<next patch>-dev" in the "0.<minor>.x" branches
+#
+# TODO when releasing 1.0.0 we must decide what is a breaking change.
+#      The master branch version will be "<major>.<next minor>.0-dev" before a
+#      breaking change and "<next major>.0.0-dev" with a breaking change.
 
-set(ja2-stracciatella_VERSION_MAJOR "0")
-set(ja2-stracciatella_VERSION_MINOR "16")
-set(ja2-stracciatella_VERSION_PATCH "x")
-set(ja2-stracciatella_VERSION "${ja2-stracciatella_VERSION_MAJOR}.${ja2-stracciatella_VERSION_MINOR}.${ja2-stracciatella_VERSION_PATCH}")
+include(semver-functions)
+semver_set(ja2-stracciatella_VERSION "0.17.0-dev")
+if (VERSION_TAG)
+    semver_set_prerelease(ja2-stracciatella_VERSION_PRERELEASE "-${VERSION_TAG}")
+endif()
+find_package(Git)
+if (GIT_FOUND)
+    execute_process(
+        COMMAND "${GIT_EXECUTABLE}" rev-parse --short HEAD
+        WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}"
+        RESULT_VARIABLE failed
+        OUTPUT_VARIABLE hash
+        OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+    if (NOT failed)
+        list(APPEND ja2-stracciatella_VERSION_BUILDMETADATA "${hash}")
+    endif()
+endif()
+semver_rebuild(ja2-stracciatella_VERSION)
+message(STATUS "ja2-stracciatella version: ${ja2-stracciatella_VERSION}")
 
 ## Meta Information
 set(CONTACT "JA2 Stracciatella Team <no-email@ja2-stracciatella.github.io>")
@@ -86,11 +115,6 @@ endif()
 set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
 
 set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
-if (NOT (VERSION_TAG STREQUAL ""))
-    set(GAME_VERSION "${GAME_VERSION}-${VERSION_TAG}")
-endif()
-
-add_definitions(-DGAME_VERSION="\\"${GAME_VERSION}\\"")
 
 message(STATUS "Setting extra data dir to" "${EXTRA_DATA_DIR}")
 add_definitions(-DEXTRA_DATA_DIR="${EXTRA_DATA_DIR}")
@@ -118,7 +142,6 @@ if (NOT (LOCAL_SDL_LIB STREQUAL ""))
     set(ENV{SDL2DIR} "${CMAKE_CURRENT_SOURCE_DIR}/${LOCAL_SDL_LIB}")
 endif()
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 find_package(SDL2 REQUIRED)
 
 if (NOT LOCAL_RAPIDJSON_LIB)
@@ -209,6 +232,7 @@ endif()
 add_executable(${JA2_BINARY} ${JA2_SOURCES})
 target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${GTEST_LIBRARIES} smacker ${STRACCIATELLA_LIBRARIES} string_theory-internal)
 add_dependencies(${JA2_BINARY} stracciatella)
+set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/game/GameVersion.cc APPEND PROPERTY COMPILE_DEFINITIONS "GAME_VERSION=v${ja2-stracciatella_VERSION}")
 
 if(BUILD_LAUNCHER)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
@@ -272,9 +296,6 @@ set(CPACK_PACKAGE_VERSION_MAJOR ${ja2-stracciatella_VERSION_MAJOR})
 set(CPACK_PACKAGE_VERSION_MINOR ${ja2-stracciatella_VERSION_MINOR})
 set(CPACK_PACKAGE_VERSION_PATCH ${ja2-stracciatella_VERSION_PATCH})
 set(CPACK_PACKAGE_VERSION ${ja2-stracciatella_VERSION})
-if (NOT (VERSION_TAG STREQUAL ""))
-    set(CPACK_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}-${VERSION_TAG}")
-endif()
 
 set(CPACK_PACKAGE_CONTACT ${CONTACT})
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${DESCRIPTION})
