@@ -2734,7 +2734,7 @@ static void EnableQDSButtons(void)
 
 	if( gfUseLocalNPCs )
 	{
-		bool const enable = IsMercInTheSector(gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem]) != -1;
+		bool const enable = gNpcListBox.sCurSelectedItem != -1 && IsMercInTheSector(gubCurrentNpcInSector[gNpcListBox.sCurSelectedItem]) != -1;
 		EnableButton(guiQuestDebugViewNPCInvButton,       enable);
 		EnableButton(guiQuestDebugNPCRefreshButtonButton, enable);
 		EnableButton(guiQuestDebugAddNpcToLocationButton, enable);
