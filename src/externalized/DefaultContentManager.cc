@@ -30,6 +30,7 @@
 #include "strategic/BloodCatPlacementsModel.h"
 #include "strategic/BloodCatSpawnsModel.h"
 #include "strategic/TownModel.h"
+#include "strategic/MovementCostsModel.h"
 
 #include "Logger.h"
 
@@ -187,6 +188,8 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_bobbyRayUsedInventory = NULL;
 	m_impPolicy = NULL;
 	m_gamePolicy = NULL;
+
+	m_movementCosts = NULL;
 }
 
 /** Get list of game resources. */
@@ -275,6 +278,8 @@ DefaultContentManager::~DefaultContentManager()
 	m_bloodCatPlacements.clear();
 	m_bloodCatSpawns.clear();
 	m_towns.clear();
+
+	delete m_movementCosts;
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -1071,6 +1076,9 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		m_towns.insert(std::make_pair(town->townId, town));
 	}
 
+	json = readJsonDataFile("strategic-map-movement-costs.json");
+	m_movementCosts = MovementCostsModel::deserialize(*json);
+
 	return true;
 }
 
@@ -1105,4 +1113,9 @@ const TownModel* DefaultContentManager::getTown(int8_t townId) const
 const std::map<int8_t, const TownModel*>& DefaultContentManager::getTowns() const
 {
 	return m_towns;
+}
+
+const MovementCostsModel* DefaultContentManager::getMovementCosts() const
+{
+	return m_movementCosts;
 }
