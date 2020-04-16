@@ -81,13 +81,13 @@ void readTraversibiltyIntoVector(const rapidjson::Value& jsonArray, IntIntVector
 		}
 		
 		if (row.size() != expectedCols) {
-			SLOGA("num of columns is different from expected");
+			SLOGE("num of columns is different from expected");
 			throw std::runtime_error("num of columns is different from expected");
 		}
 		vec.push_back(row);
 	}
 	if (vec.size() != expectedRows) {
-		SLOGA("num of rows is different from expected");
+		SLOGE("num of rows is different from expected");
 		throw std::runtime_error("num of rows is different from expected");
 	}
 }
@@ -103,13 +103,13 @@ void readIntIntoVector(const rapidjson::Value& jsonArray, IntIntVector& vec, siz
 		}
 
 		if (row.size() != expectedCols) {
-			SLOGA("num of columns is different from expected");
+			SLOGE("num of columns is different from expected");
 			throw std::runtime_error("num of columns is different from expected");
 		}
 		vec.push_back(row);
 	}
 	if (vec.size() != expectedRows) {
-		SLOGA("num of rows is different from expected");
+		SLOGE("num of rows is different from expected");
 		throw std::runtime_error("num of row is different from expected");
 	}
 }
