@@ -28,6 +28,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
+#include "strategic/NpcPlacementModel.h"
 
 
 #define MEDUNA_ITEM_DROP_OFF_GRIDNO		10959
@@ -772,29 +773,10 @@ void HandleEarlyMorningEvents( void )
 			{
 				// ok, Devin's sector not loaded, so time to move!
 				// might be same sector as before, if so, oh well!
-				switch( Random( 5 ) )
-				{
-					case 0:
-						gMercProfiles[ DEVIN ].sSectorX = 9;
-						gMercProfiles[ DEVIN ].sSectorY = MAP_ROW_G;
-						break;
-					case 1:
-						gMercProfiles[ DEVIN ].sSectorX = 13;
-						gMercProfiles[ DEVIN ].sSectorY = MAP_ROW_D;
-						break;
-					case 2:
-						gMercProfiles[ DEVIN ].sSectorX = 5;
-						gMercProfiles[ DEVIN ].sSectorY = MAP_ROW_C;
-						break;
-					case 3:
-						gMercProfiles[ DEVIN ].sSectorX = 2;
-						gMercProfiles[ DEVIN ].sSectorY = MAP_ROW_H;
-						break;
-					case 4:
-						gMercProfiles[ DEVIN ].sSectorX = 6;
-						gMercProfiles[ DEVIN ].sSectorY = MAP_ROW_C;
-						break;
-				}
+				auto placement = GCM->getNpcPlacement(DEVIN);
+				auto sector = placement->sectorIds[ Random(placement->sectorIds.size()) ];
+				gMercProfiles[DEVIN].sSectorX = SECTORX(sector);
+				gMercProfiles[DEVIN].sSectorY = SECTORY(sector);
 			}
 		}
 	}
@@ -810,39 +792,12 @@ void HandleEarlyMorningEvents( void )
 	{
 		// ok, HAMOUS's sector not loaded, so time to move!
 		// might be same sector as before, if so, oh well!
-		switch( Random( 5 ) )
-		{
-			case 0:
-				gMercProfiles[ HAMOUS ].sSectorX = 6;
-				gMercProfiles[ HAMOUS ].sSectorY = MAP_ROW_G;
-				gMercProfiles[ PROF_ICECREAM ].sSectorX = 6;
-				gMercProfiles[ PROF_ICECREAM ].sSectorY = MAP_ROW_G;
-				break;
-			case 1:
-				gMercProfiles[ HAMOUS ].sSectorX = 12;
-				gMercProfiles[ HAMOUS ].sSectorY = MAP_ROW_F;
-				gMercProfiles[ PROF_ICECREAM ].sSectorX = 12;
-				gMercProfiles[ PROF_ICECREAM ].sSectorY = MAP_ROW_F;
-				break;
-			case 2:
-				gMercProfiles[ HAMOUS ].sSectorX = 7;
-				gMercProfiles[ HAMOUS ].sSectorY = MAP_ROW_D;
-				gMercProfiles[ PROF_ICECREAM ].sSectorX = 7;
-				gMercProfiles[ PROF_ICECREAM ].sSectorY = MAP_ROW_D;
-				break;
-			case 3:
-				gMercProfiles[ HAMOUS ].sSectorX = 3;
-				gMercProfiles[ HAMOUS ].sSectorY = MAP_ROW_D;
-				gMercProfiles[ PROF_ICECREAM ].sSectorX = 3;
-				gMercProfiles[ PROF_ICECREAM ].sSectorY = MAP_ROW_D;
-				break;
-			case 4:
-				gMercProfiles[ HAMOUS ].sSectorX = 9;
-				gMercProfiles[ HAMOUS ].sSectorY = MAP_ROW_D;
-				gMercProfiles[ PROF_ICECREAM ].sSectorX = 9;
-				gMercProfiles[ PROF_ICECREAM ].sSectorY = MAP_ROW_D;
-				break;
-		}
+		auto placement = GCM->getNpcPlacement(HAMOUS);
+		auto sector = placement->sectorIds[ Random(placement->sectorIds.size()) ];
+		gMercProfiles[HAMOUS].sSectorX = SECTORX(sector);
+		gMercProfiles[HAMOUS].sSectorY = SECTORY(sector);
+		gMercProfiles[PROF_ICECREAM].sSectorX = SECTORX(sector);
+		gMercProfiles[PROF_ICECREAM].sSectorY = SECTORY(sector);
 	}
 
 	// Does Rat take off?
@@ -903,21 +858,11 @@ void HandleEarlyMorningEvents( void )
 
 		if ( gMercProfiles[ CARMEN ].sSectorX != gWorldSectorX || gMercProfiles[ CARMEN ].sSectorY != gWorldSectorY )
 		{
-			switch( Random( 3 ) )
-			{
-				case 0:
-					gMercProfiles[ CARMEN ].sSectorX = 5;
-					gMercProfiles[ CARMEN ].sSectorY = MAP_ROW_C;
-					break;
-				case 1:
-					gMercProfiles[ CARMEN ].sSectorX = 13;
-					gMercProfiles[ CARMEN ].sSectorY = MAP_ROW_C;
-					break;
-				case 2:
-					gMercProfiles[ CARMEN ].sSectorX = 9;
-					gMercProfiles[ CARMEN ].sSectorY = MAP_ROW_G;
-					break;
-			}
+			auto placement = GCM->getNpcPlacement(CARMEN);
+			auto sector = placement->sectorIds[ Random(placement->sectorIds.size()) ];
+			gMercProfiles[CARMEN].sSectorX = SECTORX(sector);
+			gMercProfiles[CARMEN].sSectorY = SECTORY(sector);
+
 			// he should have $5000... unless the player forgot to meet him
 			if (gMercProfiles[ CARMEN ].uiMoney < 5000)
 			{

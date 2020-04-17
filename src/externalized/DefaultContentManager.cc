@@ -31,6 +31,7 @@
 #include "strategic/BloodCatSpawnsModel.h"
 #include "strategic/TownModel.h"
 #include "strategic/MovementCostsModel.h"
+#include "strategic/NpcPlacementModel.h"
 
 #include "Logger.h"
 
@@ -278,6 +279,7 @@ DefaultContentManager::~DefaultContentManager()
 	m_bloodCatPlacements.clear();
 	m_bloodCatSpawns.clear();
 	m_towns.clear();
+	m_npcPlacements.clear();
 
 	delete m_movementCosts;
 }
@@ -1063,7 +1065,8 @@ bool DefaultContentManager::loadStrategicLayerData() {
 	}
 
 	json = readJsonDataFile("strategic-bloodcat-spawns.json");
-	for (auto& element : json->GetArray()) {
+	for (auto& element : json->GetArray()) 
+	{
 		auto obj = JsonObjectReader(element);
 		m_bloodCatSpawns.push_back(
 			BloodCatSpawnsModel::deserialize(obj)
@@ -1071,16 +1074,24 @@ bool DefaultContentManager::loadStrategicLayerData() {
 	}
 
 	json = readJsonDataFile("strategic-map-towns.json");
-	for (auto& element : json->GetArray()) {
+	for (auto& element : json->GetArray()) 
+	{
 		auto town = TownModel::deserialize(element);
 		m_towns.insert(std::make_pair(town->townId, town));
 	}
+	
+	loadStringRes("strings/strategic-map-town-names", m_townNames);
+	loadStringRes("strings/strategic-map-town-name-locatives", m_townNameLocatives);
 
 	json = readJsonDataFile("strategic-map-movement-costs.json");
 	m_movementCosts = MovementCostsModel::deserialize(*json);
 
-	loadStringRes("strings/strategic-map-town-names", m_townNames);
-	loadStringRes("strings/strategic-map-town-name-locatives", m_townNameLocatives);
+	json = readJsonDataFile("strategic-map-npc-placements.json");
+	for (auto& element : json->GetArray())
+	{
+		auto placement = NpcPlacementModel::deserialize(element);
+		m_npcPlacements.insert(std::make_pair(placement->profileId, placement));
+	}
 
 	return true;
 }
@@ -1139,4 +1150,9 @@ const ST::string DefaultContentManager::getTownLocative(uint8_t townId) const
 const MovementCostsModel* DefaultContentManager::getMovementCosts() const
 {
 	return m_movementCosts;
+}
+
+const NpcPlacementModel* DefaultContentManager::getNpcPlacement(uint8_t profileId) const
+{
+	return m_npcPlacements.at(profileId);
 }

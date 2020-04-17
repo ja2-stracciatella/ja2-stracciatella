@@ -150,6 +150,7 @@ public:
 	virtual const ST::string getTownName(uint8_t townId) const override;
 	virtual const ST::string getTownLocative(uint8_t townId) const override;
 	virtual const MovementCostsModel* getMovementCosts() const override;
+	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 
 protected:
 	std::string m_dataDir;
@@ -194,6 +195,7 @@ protected:
 	std::vector<const ST::string*> m_townNames;
 	std::vector<const ST::string*> m_townNameLocatives;
 	const MovementCostsModel *m_movementCosts;
+	std::map<uint8_t, const NpcPlacementModel*> m_npcPlacements;
 
 	RustPointer<LibraryDB> m_libraryDB;
 
