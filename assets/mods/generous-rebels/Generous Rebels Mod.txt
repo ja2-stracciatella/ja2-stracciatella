@@ -20,16 +20,6 @@ The GR mod should also work with several mods for JA2, as long, as the weapons a
 Using the GR mod with a mod that changes the weapons or maps will probably lead to weird results.
 
 --------------------
-| Installation
---------------------
-Just copy the data-folder into your JA2 folder. No files will be overwritten.
-
---------------------
-| Uninstallation:
---------------------
-Just delete the file \Data\Maps\A10_b1.dat - everything will be as it was before.
-
---------------------
 | Some information on the GR mod
 --------------------
 This mini-mod is intended for players who have a rough time in the beginning of the game. Now, when the player meets the rebels in their underground hideout, they have some nice stuff for him in stock.

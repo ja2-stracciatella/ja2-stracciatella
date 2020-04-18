@@ -20,16 +20,6 @@ The IQHA mod should also work with virtually any mod for JA2, as long as it has 
 The language of your JA2 doesn't matter - however, IQHA mod will turn the whole IMP site into English, no matter what.
 
 --------------------
-| Installation
---------------------
-Just copy the data-folder into your JA2 folder. No files will be overwritten.
-
---------------------
-| Uninstallation:
---------------------
-Just delete the file \Data\Binarydata\IMPTEXT.edt - everything will be as it was before.
-
---------------------
 | Some information on the IMP quiz
 --------------------
 The quiz basically works like this: The game counts how many times you pick a certain skill, attitude or trait. In the end, the skills and attitude which were picked most often are taken for the character. So, if you pick "attitude asshole" once and "attitude agressive" twice, the latter is taken for the character. You can pick the answers with no effect to your advantage here...
