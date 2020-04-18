@@ -1856,14 +1856,14 @@ ENDOFLOOP:
 		{
 
 			z=_z;
-
-			for (ubCnt=0; z != 0 && ubCnt < lengthof(guiPathingData); ubCnt++)
+			INT16 iCnt;
+			for (iCnt = 0; z != 0 && iCnt < lengthof(guiPathingData); iCnt++)
 			{
-				guiPathingData[ ubCnt ] = trailTree[z].stepDir;
+				guiPathingData[ iCnt ] = trailTree[z].stepDir;
 
 				z = trailTree[z].nextLink;
 			}
-
+			ubCnt = iCnt;
 			giPathDataSize = ubCnt;
 
 		}
