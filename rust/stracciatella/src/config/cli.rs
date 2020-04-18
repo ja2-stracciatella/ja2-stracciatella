@@ -179,7 +179,7 @@ impl Cli {
 
                 Ok(())
             }
-            Err(f) => Err(f.to_string()),
+            Err(f) => Err(format!("{}\n{}", f.to_string(), &Cli::usage())),
         }
     }
 
