@@ -22,8 +22,6 @@ extern const ST::string g_eng_str_dead_is_dead_mode_enter_name;
 #define WeaponType_SIZE 9
 #define TeamTurnString_SIZE 5
 #define Message_SIZE 59
-#define pTownNames_SIZE 13
-#define g_towns_locative_SIZE 13
 #define sTimeStrings_SIZE 6
 #define pAssignmentStrings_SIZE 35
 #define pMilitiaString_SIZE 3
@@ -203,8 +201,6 @@ struct LanguageRes
 	const ST::string* pContractStrings;
 	const ST::string* pAssignmentStrings;
 	const ST::string* pConditionStrings;
-	const ST::string* pTownNames;
-	const ST::string* g_towns_locative;
 	const ST::string* pPersonnelScreenStrings;
 	const ST::string* pUpperLeftMapScreenStrings;
 	const ST::string* pTacticalPopupButtonStrings;
@@ -435,8 +431,6 @@ extern const LanguageRes* g_langRes;
 #define pContractStrings                                    (g_langRes->pContractStrings)
 #define pAssignmentStrings                                  (g_langRes->pAssignmentStrings)
 #define pConditionStrings                                   (g_langRes->pConditionStrings)
-#define pTownNames                                          (g_langRes->pTownNames)
-#define g_towns_locative                                    (g_langRes->g_towns_locative)
 #define pPersonnelScreenStrings                             (g_langRes->pPersonnelScreenStrings)
 #define pUpperLeftMapScreenStrings                          (g_langRes->pUpperLeftMapScreenStrings)
 #define pTacticalPopupButtonStrings                         (g_langRes->pTacticalPopupButtonStrings)

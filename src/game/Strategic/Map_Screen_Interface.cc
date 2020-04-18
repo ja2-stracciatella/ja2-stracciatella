@@ -68,6 +68,8 @@
 #include "EMail.h"
 #include "Items.h"
 #include "UILayout.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -1055,7 +1057,7 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, UINT const sector, GridNo
 	if (MERC_LEAVE_ITEM* i = gpLeaveListHead[slot_idx])
 	{
 		ST::string sString;
-		ST::string town = g_towns_locative[GetTownIdForSector(sector)];
+		ST::string town = GCM->getTownLocative(GetTownIdForSector(sector));
 		int            const x    = SECTORX(sector);
 		char           const y    = SECTORY(sector) - 1 + 'A';
 		ProfileID      const id   = guiLeaveListOwnerProfileId[slot_idx];

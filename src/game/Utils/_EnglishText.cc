@@ -214,42 +214,6 @@ static ST::string s_eng_Message[Message_SIZE] =
 };
 
 
-// the names of the towns in the game
-
-static const ST::string s_eng_pTownNames[pTownNames_SIZE] =
-{
-	"",
-	"Omerta",
-	"Drassen",
-	"Alma",
-	"Grumm",
-	"Tixa",
-	"Cambria",
-	"San Mona",
-	"Estoni",
-	"Orta",
-	"Balime",
-	"Meduna",
-	"Chitzena",
-};
-
-static const ST::string s_eng_g_towns_locative[g_towns_locative_SIZE] =
-{
-	"",
-	"Omerta",
-	"Drassen",
-	"Alma",
-	"Grumm",
-	"Tixa",
-	"Cambria",
-	"San Mona",
-	"Estoni",
-	"Orta",
-	"Balime",
-	"Meduna",
-	"Chitzena"
-};
-
 // the types of time compression. For example: is the timer paused? at normal speed, 5 minutes per second, etc.
 // min is an abbreviation for minutes
 
@@ -3533,8 +3497,6 @@ LanguageRes g_LanguageResEnglish = {
 	s_eng_pContractStrings,
 	s_eng_pAssignmentStrings,
 	s_eng_pConditionStrings,
-	s_eng_pTownNames,
-	s_eng_g_towns_locative,
 	s_eng_pPersonnelScreenStrings,
 	s_eng_pUpperLeftMapScreenStrings,
 	s_eng_pTacticalPopupButtonStrings,

@@ -213,39 +213,6 @@ static ST::string s_ger_Message[Message_SIZE] =
 	"Spielzug Bloodcats",
 };
 
-static const ST::string s_ger_pTownNames[pTownNames_SIZE] =
-{
-	"",
-	"Omerta",
-	"Drassen",
-	"Alma",
-	"Grumm",
-	"Tixa",
-	"Cambria",
-	"San Mona",
-	"Estoni",
-	"Orta",
-	"Balime",
-	"Meduna",
-	"Chitzena",
-};
-
-static const ST::string s_ger_g_towns_locative[g_towns_locative_SIZE] =
-{
-	"",
-	"Omerta",
-	"Drassen",
-	"Alma",
-	"Grumm",
-	"Tixa",
-	"Cambria",
-	"San Mona",
-	"Estoni",
-	"Orta",
-	"Balime",
-	"Meduna",
-	"Chitzena"
-};
 
 // the types of time compression. For example: is the timer paused? at normal speed, 5 minutes per second, etc.
 // min is an abbreviation for minutes
@@ -3355,8 +3322,6 @@ LanguageRes g_LanguageResGerman = {
 	s_ger_pContractStrings,
 	s_ger_pAssignmentStrings,
 	s_ger_pConditionStrings,
-	s_ger_pTownNames,
-	s_ger_g_towns_locative,
 	s_ger_pPersonnelScreenStrings,
 	s_ger_pUpperLeftMapScreenStrings,
 	s_ger_pTacticalPopupButtonStrings,

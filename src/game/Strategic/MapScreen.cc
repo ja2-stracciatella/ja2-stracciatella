@@ -802,7 +802,7 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 			break;
 
 		case TRAIN_TOWN:
-			assignment2 = pTownNames[GetTownIdForSector(SECTOR(s.sSectorX, s.sSectorY))];
+			assignment2 = GCM->getTownName(GetTownIdForSector(SECTOR(s.sSectorX, s.sSectorY)));
 			break;
 
 		case REPAIR:
@@ -7853,7 +7853,7 @@ static void HandleMilitiaRedistributionClick(void)
 			else
 			{
 				// can't have militia in this town
-				sString = st_format_printf(pMapErrorString[ 31 ], pTownNames [ bTownId ]);
+				sString = st_format_printf(pMapErrorString[ 31 ], GCM->getTownName(bTownId));
 				DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
 			}
 		}

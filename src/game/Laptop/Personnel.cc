@@ -653,7 +653,7 @@ static void DisplayCharName(SOLDIERTYPE const& s)
 	{
 		// name of town, if any
 		INT8 const bTownId = GetTownIdForSector(SECTOR(s.sSectorX, s.sSectorY));
-		if (bTownId != BLANK_SECTOR) sTownName = pTownNames[bTownId];
+		if (bTownId != BLANK_SECTOR) sTownName = GCM->getTownName(bTownId);
 	}
 
 	ST::string sString;
