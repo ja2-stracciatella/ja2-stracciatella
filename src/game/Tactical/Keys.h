@@ -31,7 +31,7 @@ struct KEY
 #define MAXLOCKDESCLENGTH		40
 struct LOCK
 {
-	UINT8  ubEditorName[ MAXLOCKDESCLENGTH ]; // name to display in editor
+	CHAR8  ubEditorName[ MAXLOCKDESCLENGTH ]; // name to display in editor
 	UINT16 usKeyItem; // key for this door uses which graphic (item #)?
 	UINT8  ubLockType; // regular, padlock, electronic, etc
 	UINT8  ubPickDifficulty; // difficulty to pick such a lock
