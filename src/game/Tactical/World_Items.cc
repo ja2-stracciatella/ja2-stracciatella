@@ -272,10 +272,16 @@ void LoadWorldItemsFromMap(HWFILE const f)
 			// Check for matching item existance modes and only add if there is a match
 			if (wi.usFlags & (gGameOptions.fSciFi ? WORLD_ITEM_SCIFI_ONLY : WORLD_ITEM_REALISTIC_ONLY)) continue;
 
+			const ItemModel* item = GCM->getItem(o.usItem);
+			if (item->getFlags() & ITEM_NOT_EDITOR) {
+				// This item is not placable by Editor. Maybe the map was created for a different item set.
+				SLOGW(ST::format("Skipping non-Editor item #{}({}) at gridNo {}", item->getItemIndex(), item->getInternalName(), wi.sGridNo));
+				continue;
+			}
+
 			if (!gGameOptions.fGunNut)
 			{
 				// do replacements?
-				const ItemModel * item = GCM->getItem(o.usItem);
 				const WeaponModel *weapon = item->asWeapon();
 				const MagazineModel *mag = item->asAmmo();
 				if (weapon && weapon->isInBigGunList())
