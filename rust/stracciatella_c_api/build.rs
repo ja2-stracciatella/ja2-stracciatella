@@ -16,6 +16,7 @@ fn stracciatella_h() {
     cbindgen::generate(&crate_dir)
         .expect("Unable to generate bindings")
         .write_to_file(&header_path);
+    println!("cargo:rerun-if-changed={:?}", &header_path);
 }
 
 fn main() {
