@@ -258,8 +258,8 @@ void InjectMercProfile(BYTE* const Dst, MERCPROFILESTRUCT const& p)
 
 	{
 		DataWriter writer(D);
-		writer.writeStringAsUTF16(p.zName, NAME_LENGTH);
-		writer.writeStringAsUTF16(p.zNickname, NICKNAME_LENGTH);
+		writer.writeUTF16(p.zName, NAME_LENGTH);
+		writer.writeUTF16(p.zNickname, NICKNAME_LENGTH);
 		D += writer.getConsumed();
 	}
 	INJ_SKIP(D, 28)

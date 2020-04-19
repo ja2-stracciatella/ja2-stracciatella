@@ -7,6 +7,7 @@
 #include <string_theory/string>
 
 #include <algorithm>
+#include <type_traits>
 
 #define EXTR_STR(S, D, Size)  memcpy((D), (S), Size); (S) += (Size);
 #define EXTR_BOOLA(S, D, Size) memcpy((D), (S), Size); (S) += (Size);
@@ -39,37 +40,69 @@
 ////////////////////////////////////////////////////////////////////////////
 
 
-/** Class for serializing data (writing them into stream of bytes). */
+/** Class for serializing data.
+ * Assumes the endianess is correct. */
 class DataWriter
 {
+private:
+	DataWriter(const DataWriter&) = delete; // no copy
+	DataWriter& operator=(const DataWriter&) = delete; // no assign
 public:
 	/** Constructor.
 	 * @param buf Pointer to the buffer for writing data. */
-	DataWriter(void *buf);
+	DataWriter(void* buf);
 
-	/** Write string into UTF-16 format.
-	 *
-	 * If \a numChars is bigger then the number of actual characters in the string,
-	 * then zeroes will be written to the buffer.
-	 *
-	 * @param string      String to write
-	 * @param numChars    Number of characters to write. */
-	void writeStringAsUTF16(const ST::string& str, size_t numChars);
+	/** Write UTF-8 encoded string.
+	 * @param str      String to write
+	 * @param numChars Number of `char` characters to write. */
+	void writeUTF8(const ST::string& str, size_t numChars);
+
+	/** Write UTF-16 encoded string.
+	 * @param str      String to write
+	 * @param numChars Number of `char16_t` characters to write. */
+	void writeUTF16(const ST::string& str, size_t numChars);
+
+	/** Write UTF-32 encoded string.
+	 * @param str      String to write
+	 * @param numChars Number of `char32_t` characters to write. */
+	void writeUTF32(const ST::string& str, size_t numChars);
 
 	void writeU8 (uint8_t  value);        /**< Write uint8_t */
 	void writeU16(uint16_t value);        /**< Write uint16_t */
 	void writeU32(uint32_t value);        /**< Write uint32_t */
 
+	/* Write a value. */
+	template<typename T>
+	void write(const T& value)
+	{
+		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
+		size_t numBytes = sizeof(T);
+		memcpy(m_buf, &value, numBytes);
+		move(numBytes);
+	}
+
+	/* Write an array of values. */
+	template<typename T>
+	void writeArray(const T* arr, size_t len)
+	{
+		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
+		size_t numBytes = len * sizeof(T);
+		memcpy(m_buf, arr, numBytes);
+		move(numBytes);
+	}
+
+	/* Write zeroed bytes. */
+	void skip(size_t numBytes);
+
 	/** Get number of the consumed bytes during writing. */
 	size_t getConsumed() const;
 
 protected:
-	void *m_buf;
-	const void *m_original;
+	void* m_buf;
+	void* m_original;
 
 	/** Move pointer to \a numBytes bytes forward. */
-	void move(int numBytes);
-
+	void move(size_t numBytes);
 };
 
 
@@ -78,37 +111,72 @@ protected:
 ////////////////////////////////////////////////////////////////////////////
 
 
-/** Class for reading serializing data. */
+/** Class for reading serializing data.
+ * Assumes the endianess is correct. */
 class DataReader
 {
+private:
+	DataReader(const DataReader&) = delete; // no copy
+	DataReader& operator=(const DataReader&) = delete; // no assign
 public:
 	/** Constructor.
 	 * @param buf Pointer to the buffer for writing data. */
-	DataReader(const void *buf);
+	DataReader(const void* buf);
+
+	/** Read UTF-8 encoded string.
+	 * @param numChars Number of `char` characters to read. */
+	ST::string readUTF8(size_t numChars);
 
 	/** Read UTF-16 encoded string.
-	 * @param numChars Number of characters to read.
+	 * @param numChars Number of `char16_t` characters to read.
 	 * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text. */
-	ST::string readUTF16(size_t numChars, const IEncodingCorrector *fixer=NULL);
+	ST::string readUTF16(size_t numChars, const IEncodingCorrector* fixer = nullptr);
 
 	/** Read UTF-32 encoded string.
-	 * @param numChars Number of characters to read. */
+	 * @param numChars Number of `char32_t` characters to read. */
 	ST::string readUTF32(size_t numChars);
 
 	uint8_t  readU8();            /**< Read uint8_t */
 	uint16_t readU16();           /**< Read uint16_t */
 	uint32_t readU32();           /**< Read uint32_t */
 
+	/* Read raw bytes. */
+	void readBytes(uint8_t* bytes, size_t numBytes);
+
+	/* Read a value. */
+	template<typename T>
+	T read()
+	{
+		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
+		size_t numBytes = sizeof(T);
+		T value;
+		memcpy(&value, m_buf, numBytes);
+		move(numBytes);
+		return value;
+	}
+
+	/* Read an array of values. */
+	template<typename T>
+	void readArray(T* arr, size_t len)
+	{
+		static_assert(std::is_trivially_copyable<T>::value, "memcpy requires a trivially copyable type");
+		size_t numBytes = len * sizeof(T);
+		memcpy(arr, m_buf, numBytes);
+		move(numBytes);
+	}
+
+	/* Read and discard bytes. */
+	void skip(size_t numBytes);
+
 	/** Get number of the consumed bytes during reading. */
 	size_t getConsumed() const;
 
 protected:
-	const void *m_buf;
-	const void *m_original;
+	const void* m_buf;
+	const void* m_original;
 
 	/** Move pointer to \a numBytes bytes forward. */
-	void move(int numBytes);
-
+	void move(size_t numBytes);
 };
 
 

@@ -1,15 +1,10 @@
 #include "LoadSaveData.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 #include <algorithm>
 
-
-/** Get number of the consumed bytes during reading. */
-size_t DataReader::getConsumed() const
-{
-	return ((const char*)m_buf) - ((const char*)m_original);
-}
 
 ////////////////////////////////////////////////////////////////////////////
 // DataWriter
@@ -17,59 +12,77 @@ size_t DataReader::getConsumed() const
 
 /** Constructor.
  * @param buf Pointer to the buffer for writing data. */
-DataWriter::DataWriter(void *buf)
+DataWriter::DataWriter(void* buf)
 	:m_buf(buf), m_original(buf)
 {
 }
 
-/** Write string into UTF-16 format.
- *
- * If \a numChars is bigger then the number of actual characters in the string,
- * then zeroes will be written to the buffer.
- *
- * @param string      String to write
- * @param numChars    Number of characters to write. */
-void DataWriter::writeStringAsUTF16(const ST::string& str, size_t numChars)
+void DataWriter::writeUTF8(const ST::string& str, size_t numChars)
+{
+	size_t n = std::min<size_t>(str.size() + 1, numChars);
+	if (str.size() > n)
+	{
+		SLOGW(ST::format("DataWriter::writeUTF8: truncating '{}' {}->{}", str, str.size(), n));
+	}
+	writeArray(str.c_str(), n);
+	skip(sizeof(char) * (numChars - n));
+}
+
+void DataWriter::writeUTF16(const ST::string& str, size_t numChars)
 {
 	ST::utf16_buffer buf = str.to_utf16();
-	if (buf.size() > numChars)
-	{
-		SLOGW("DataWriter::writeStringAsUTF16: truncating '%s' %u->%u", str.c_str(), static_cast<unsigned int>(buf.size()), static_cast<unsigned int>(numChars));
-	}
 	size_t n = std::min<size_t>(buf.size() + 1, numChars);
-	std::copy_n(buf.c_str(), n, reinterpret_cast<char16_t*>(m_buf));
-	std::fill_n(reinterpret_cast<char16_t*>(m_buf) + n, numChars - n, u'\0');
-	move(static_cast<int>(2*numChars));
+	if (buf.size() > n)
+	{
+		SLOGW(ST::format("DataWriter::writeUTF16: truncating '{}' {}->{}", str, buf.size(), n));
+	}
+	writeArray(buf.c_str(), n);
+	skip(sizeof(char16_t) * (numChars - n));
+}
+
+void DataWriter::writeUTF32(const ST::string& str, size_t numChars)
+{
+	ST::utf32_buffer buf = str.to_utf32();
+	size_t n = std::min<size_t>(buf.size() + 1, numChars);
+	if (buf.size() > n)
+	{
+		SLOGW(ST::format("DataWriter::writeUTF32: truncating '{}' {}->{}", str, buf.size(), n));
+	}
+	writeArray(buf.c_str(), n);
+	skip(sizeof(char32_t) * (numChars - n));
 }
 
 void DataWriter::writeU8 (uint8_t  value)
 {
-	*((uint8_t*)m_buf) = value;
-	move(1);
+	write(value);
 }
 
 void DataWriter::writeU16(uint16_t value)
 {
-	*((uint16_t*)m_buf) = value;
-	move(2);
+	write(value);
 }
 
 void DataWriter::writeU32(uint32_t value)
 {
-	*((uint32_t*)m_buf) = value;
-	move(4);
+	write(value);
+}
+
+void DataWriter::skip(size_t numBytes)
+{
+	std::fill_n(reinterpret_cast<uint8_t*>(m_buf), numBytes, 0);
+	move(numBytes);
 }
 
 /** Move pointer to \a numBytes bytes forward. */
-void DataWriter::move(int numBytes)
+void DataWriter::move(size_t numBytes)
 {
-	m_buf = ((char*)m_buf) + numBytes;
+	m_buf = reinterpret_cast<uint8_t*>(m_buf) + numBytes;
 }
 
 /** Get number of the consumed bytes during writing. */
 size_t DataWriter::getConsumed() const
 {
-	return ((const char*)m_buf) - ((const char*)m_original);
+	return reinterpret_cast<uint8_t*>(m_buf) - reinterpret_cast<uint8_t*>(m_original);
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -77,77 +90,71 @@ size_t DataWriter::getConsumed() const
 ////////////////////////////////////////////////////////////////////////////
 
 
-/** Constructor.
- * @param buf Pointer to the buffer for writing data. */
-DataReader::DataReader(const void *buf)
-	:m_buf(buf), m_original(buf)
+DataReader::DataReader(const void* buf)
+	: m_buf(buf), m_original(buf)
 {
 }
 
-/** Read UTF-16 encoded string.
- * @param numChars Number of characters to read. */
-ST::string DataReader::readUTF16(size_t numChars, const IEncodingCorrector *fixer)
+ST::string DataReader::readUTF8(size_t numChars)
 {
-	if (numChars == 0) return ST::null;
-	ST::utf16_buffer data;
-	data.allocate(numChars);
+	ST::char_buffer buf{numChars, '\0'};
+	readArray(buf.data(), numChars);
+	return buf.c_str(); // can throw ST::unicode_error
+}
+
+ST::string DataReader::readUTF16(size_t numChars, const IEncodingCorrector* fixer)
+{
+	ST::utf16_buffer buf{numChars, u'\0'};
+	readArray(buf.data(), numChars);
 	if (fixer)
 	{
-		for (size_t i = 0; i < numChars; i++)
+		for (char16_t& c : buf)
 		{
-			data[i] = fixer->fix(readU16());
+			c = fixer->fix(c);
+			if (c == u'\0')
+			{
+				break;
+			}
 		}
 	}
-	else
-	{
-		for (size_t i = 0; i < numChars; i++)
-		{
-			data[i] = readU16();
-		}
-	}
-	return ST::string::from_utf16(data.c_str()); // can throw ST::unicode_error
+	return buf.c_str(); // can throw ST::unicode_error
 }
 
-/** Read UTF-32 encoded string.
- * @param numChars Number of characters to read. */
 ST::string DataReader::readUTF32(size_t numChars)
 {
-	if (numChars == 0) return ST::null;
-	ST::utf32_buffer data;
-	data.allocate(numChars);
-	for (size_t i = 0; i < numChars; i++)
-	{
-		data[i] = readU32();
-	}
-	return ST::string::from_utf32(data.c_str()); // can throw ST::unicode_error
+	ST::utf32_buffer buf{numChars, U'\0'};
+	readArray(buf.data(), numChars);
+	return buf.c_str(); // can throw ST::unicode_error
 }
 
 uint8_t DataReader::readU8()
 {
-	uint8_t value = *((uint8_t*)m_buf);
-	move(1);
-	return value;
+	return read<uint8_t>();
 }
 
 uint16_t DataReader::readU16()
 {
-	uint16_t value = *((uint16_t*)m_buf);
-	move(2);
-	return value;
+	return read<uint16_t>();
 }
 
-/** Move pointer to \a numBytes bytes forward. */
 uint32_t DataReader::readU32()
 {
-	uint32_t value = *((uint32_t*)m_buf);
-	move(4);
-	return value;
+	return read<uint32_t>();
 }
 
-/** Move pointer to \a numBytes bytes forward. */
-void DataReader::move(int numBytes)
+void DataReader::skip(size_t numBytes)
 {
-	m_buf = ((char*)m_buf) + numBytes;
+	move(numBytes);
+}
+
+void DataReader::move(size_t numBytes)
+{
+	m_buf = reinterpret_cast<const uint8_t*>(m_buf) + numBytes;
+}
+
+size_t DataReader::getConsumed() const
+{
+	return reinterpret_cast<const uint8_t*>(m_buf) - reinterpret_cast<const uint8_t*>(m_original);
 }
 
 ////////////////////////////////////////////////////////////////////////////

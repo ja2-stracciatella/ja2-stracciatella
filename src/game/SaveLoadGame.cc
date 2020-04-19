@@ -305,7 +305,7 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		INJ_STR(   d, header.zGameVersionNumber, lengthof(header.zGameVersionNumber))
 		{
 			DataWriter writer(d);
-			writer.writeStringAsUTF16(header.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
+			writer.writeUTF16(header.sSavedGameDesc, SIZE_OF_SAVE_GAME_DESC);
 			d += writer.getConsumed();
 		}
 		INJ_SKIP(  d, 4)

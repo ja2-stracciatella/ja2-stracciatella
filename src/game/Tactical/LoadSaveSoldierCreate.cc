@@ -201,7 +201,7 @@ static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* co
 	INJ_BOOL(d, c->fVisible)
 	{
 		DataWriter writer(d);
-		writer.writeStringAsUTF16(c->name, SOLDIERTYPE_NAME_LENGTH);
+		writer.writeUTF16(c->name, SOLDIERTYPE_NAME_LENGTH);
 		d += writer.getConsumed();
 	}
 	INJ_U8(d, c->ubSoldierClass)

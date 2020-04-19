@@ -608,7 +608,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I16(d, s->sWeightCarriedAtTurnStart)
 	{
 		DataWriter writer(d);
-		writer.writeStringAsUTF16(s->name, SOLDIERTYPE_NAME_LENGTH);
+		writer.writeUTF16(s->name, SOLDIERTYPE_NAME_LENGTH);
 		d += writer.getConsumed();
 	}
 	INJ_I8(d, s->bVisible)
