@@ -97,7 +97,11 @@ mod tests {
         let input = vec![String::from("ja2"), String::from("--testunknown")];
         assert_eq!(
             parse_args(&mut engine_options, &input).unwrap(),
-            "Unrecognized option: 'testunknown'"
+            format!(
+                "{}\n{}",
+                "Unrecognized option: 'testunknown'",
+                &Cli::usage()
+            )
         );
     }
 
