@@ -180,12 +180,13 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 		ASSERT_EQ(VecU8_len(buf.get()), sizeof(float) * 5);
 		float f;
 
-		const uint8_t* S = VecU8_as_ptr(buf.get());
+		DataReader S{VecU8_as_ptr(buf.get())};
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 0         );
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 1         );
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, -1        );
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 1.1234678f);
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 12345.678f);
+		ASSERT_EQ(S.getConsumed(), sizeof(float) * 5);
 	}
 
 	{
@@ -194,11 +195,12 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 		ASSERT_EQ(VecU8_len(buf.get()), sizeof(double) * 5);
 		double d;
 
-		const uint8_t* S = VecU8_as_ptr(buf.get());
+		DataReader S{VecU8_as_ptr(buf.get())};
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 0         );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 1         );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, -1        );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 1.1234678 );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 12345.678 );
+		ASSERT_EQ(S.getConsumed(), sizeof(double) * 5);
 	}
 }

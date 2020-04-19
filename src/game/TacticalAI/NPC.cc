@@ -178,7 +178,7 @@ static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 		BYTE data[32];
 		FileRead(f, data, sizeof(data));
 
-		BYTE const* d = data;
+		DataReader d{data};
 		if(isRussianVersion())
 		{
 			EXTR_U32( d, i->ubIdentifier);
@@ -211,7 +211,7 @@ static NPCQuoteInfo* ExtractNPCQuoteInfoArrayFromFile(HWFILE const f)
 		{
 			EXTR_SKIP(d, 4);
 		}
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 	}
 	return buf.Release();
 }
@@ -242,7 +242,7 @@ static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteI
 	for (NPCQuoteInfo const* i = q; i != q + NUM_NPC_QUOTE_RECORDS; ++i)
 	{
 		BYTE  data[32];
-		BYTE* d = data;
+		DataWriter d{data};
 		if(isRussianVersion())
 		{
 			INJ_U32( d, i->ubIdentifier);
@@ -271,7 +271,7 @@ static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteI
 		{
 			INJ_SKIP(d, 4);
 		}
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 		FileWrite(f, data, sizeof(data));
 	}
 }

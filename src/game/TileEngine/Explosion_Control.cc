@@ -2529,12 +2529,12 @@ void SaveExplosionTableToSaveGameFile(HWFILE const hFile)
 	{
 		ExplosionQueueElement const& e = *i;
 		BYTE  data[12];
-		BYTE* d = data;
+		DataWriter d{data};
 		INJ_U32( d, e.uiWorldBombIndex)
 		INJ_U32( d, e.uiTimeStamp)
 		INJ_U8(  d, e.fExists)
 		INJ_SKIP(d, 3)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 		FileWrite(hFile, data, sizeof(data));
 	}
 
@@ -2582,13 +2582,13 @@ void LoadExplosionTableFromSavedGameFile(HWFILE const hFile)
 	{
 		BYTE  data[12];
 		FileRead(hFile, data, sizeof(data));
-		BYTE*                  d = data;
+		DataReader d{data};
 		ExplosionQueueElement& e = *i;
 		EXTR_U32( d, e.uiWorldBombIndex)
 		EXTR_U32( d, e.uiTimeStamp)
 		EXTR_U8(  d, e.fExists)
 		EXTR_SKIP(d, 3)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 	}
 
 	//

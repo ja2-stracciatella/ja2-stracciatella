@@ -1678,7 +1678,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 void SaveTeamTurnsToTheSaveGameFile(HWFILE const f)
 {
 	BYTE  data[174];
-	BYTE* d = data;
+	DataWriter d{data};
 	for (size_t i = 0; i != lengthof(gOutOfTurnOrder); ++i)
 	{
 		INJ_SOLDIER(d, gOutOfTurnOrder[i])
@@ -1690,7 +1690,7 @@ void SaveTeamTurnsToTheSaveGameFile(HWFILE const f)
 	INJ_BOOL(   d, gfHiddenInterrupt)
 	INJ_SOLDIER(d, gLastInterruptedGuy)
 	INJ_SKIP(   d, 17)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	FileWrite(f, data, sizeof(data));
 }
@@ -1701,7 +1701,7 @@ void LoadTeamTurnsFromTheSavedGameFile(HWFILE const f)
 	BYTE data[174];
 	FileRead(f, data, sizeof(data));
 
-	BYTE const* d = data;
+	DataReader d{data};
 	EXTR_SKIP(d, 1)
 	for (size_t i = 1; i != lengthof(gOutOfTurnOrder); ++i)
 	{
@@ -1714,7 +1714,7 @@ void LoadTeamTurnsFromTheSavedGameFile(HWFILE const f)
 	EXTR_BOOL(   d, gfHiddenInterrupt)
 	EXTR_SOLDIER(d, gLastInterruptedGuy)
 	EXTR_SKIP(   d, 17)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 }
 
 

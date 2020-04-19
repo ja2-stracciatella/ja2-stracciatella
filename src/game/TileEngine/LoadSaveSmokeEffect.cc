@@ -11,7 +11,7 @@ void ExtractSmokeEffectFromFile(HWFILE const file, SMOKEEFFECT* const s)
 	BYTE data[16];
 	FileRead(file, data, sizeof(data));
 
-	const BYTE* d = data;
+	DataReader d{data};
 	EXTR_I16(d, s->sGridNo)
 	EXTR_U8(d, s->ubDuration)
 	EXTR_U8(d, s->ubRadius)
@@ -23,7 +23,7 @@ void ExtractSmokeEffectFromFile(HWFILE const file, SMOKEEFFECT* const s)
 	EXTR_SOLDIER(d, s->owner)
 	EXTR_SKIP(d, 1)
 	EXTR_U32(d, s->uiTimeOfLastUpdate)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 }
 
 
@@ -31,7 +31,7 @@ void InjectSmokeEffectIntoFile(HWFILE const file, SMOKEEFFECT const* const s)
 {
 	BYTE data[16];
 
-	BYTE* d = data;
+	DataWriter d{data};
 	INJ_I16(d, s->sGridNo)
 	INJ_U8(d, s->ubDuration)
 	INJ_U8(d, s->ubRadius)
@@ -43,7 +43,7 @@ void InjectSmokeEffectIntoFile(HWFILE const file, SMOKEEFFECT const* const s)
 	INJ_SOLDIER(d, s->owner)
 	INJ_SKIP(d, 1)
 	INJ_U32(d, s->uiTimeOfLastUpdate)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	FileWrite(file, data, sizeof(data));
 }

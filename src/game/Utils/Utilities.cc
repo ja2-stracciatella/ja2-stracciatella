@@ -25,7 +25,7 @@ try
 	BYTE data[776];
 	FileRead(f, data, sizeof(data));
 
-	const BYTE* d = data;
+	DataReader d{data};
 	EXTR_SKIP(d, 8); // skip header
 	for (UINT i = 0; i != 256; ++i)
 	{
@@ -33,7 +33,7 @@ try
 		EXTR_U8(d, pal[i].g)
 		EXTR_U8(d, pal[i].b)
 	}
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	return TRUE;
 }

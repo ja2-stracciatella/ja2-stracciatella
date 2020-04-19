@@ -2,10 +2,11 @@
 #define LOADSAVEOBJECTTYPE_H
 
 #include "Item_Types.h"
+#include "LoadSaveData.h"
 
 
-const BYTE* ExtractObject(const BYTE* Src, OBJECTTYPE* o);
+void ExtractObject(DataReader& d, OBJECTTYPE* o);
 
-BYTE* InjectObject(BYTE* Dst, const OBJECTTYPE* o);
+void InjectObject(DataWriter& d, const OBJECTTYPE* o);
 
 #endif

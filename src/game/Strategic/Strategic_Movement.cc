@@ -2483,7 +2483,7 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE const f)
 	CFOR_EACH_GROUP(g)
 	{
 		BYTE data[84];
-		BYTE* d = data;
+		DataWriter d{data};
 		INJ_BOOL(d, g->fDebugGroup)
 		INJ_BOOL(d, g->fPlayer)
 		INJ_BOOL(d, g->fVehicle)
@@ -2511,7 +2511,7 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE const f)
 		INJ_U8(d, g->ubCreatedSectorID)
 		INJ_U8(d, g->ubSectorIDOfLastReassignment)
 		INJ_SKIP(d, 38)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		FileWrite(f, data, sizeof(data));
 
@@ -2555,7 +2555,7 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 		BYTE data[84];
 		FileRead(f, data, sizeof(data));
 
-		BYTE const* d = data;
+		DataReader d{data};
 		EXTR_BOOL(d, g->fDebugGroup)
 		EXTR_BOOL(d, g->fPlayer)
 		EXTR_BOOL(d, g->fVehicle)
@@ -2583,7 +2583,7 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 		EXTR_U8(d, g->ubCreatedSectorID)
 		EXTR_U8(d, g->ubSectorIDOfLastReassignment)
 		EXTR_SKIP(d, 38)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		if (g->fPlayer)
 		{
@@ -2667,7 +2667,7 @@ static void LoadPlayerGroupList(HWFILE const f, GROUP* const g)
 static void SaveEnemyGroupStruct(HWFILE const f, GROUP const& g)
 {
 	BYTE              data[29];
-	BYTE*             d  = data;
+	DataWriter d{data};
 	ENEMYGROUP const& eg = *g.pEnemyGroup;
 	INJ_U8(  d, eg.ubNumTroops)
 	INJ_U8(  d, eg.ubNumElites)
@@ -2679,7 +2679,7 @@ static void SaveEnemyGroupStruct(HWFILE const f, GROUP const& g)
 	INJ_U8(  d, eg.ubTroopsInBattle)
 	INJ_U8(  d, eg.ubElitesInBattle)
 	INJ_SKIP(d, 20)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	FileWrite(f, data, sizeof(data));
 }
@@ -2692,7 +2692,7 @@ static void LoadEnemyGroupStructFromSavedGame(HWFILE const f, GROUP& g)
 	FileRead(f, data, sizeof(data));
 
 	ENEMYGROUP* const eg = new ENEMYGROUP{};
-	BYTE*             d  = data;
+	DataReader d{data};
 	EXTR_U8(  d, eg->ubNumTroops)
 	EXTR_U8(  d, eg->ubNumElites)
 	EXTR_U8(  d, eg->ubNumAdmins)
@@ -2703,7 +2703,7 @@ static void LoadEnemyGroupStructFromSavedGame(HWFILE const f, GROUP& g)
 	EXTR_U8(  d, eg->ubTroopsInBattle)
 	EXTR_U8(  d, eg->ubElitesInBattle)
 	EXTR_SKIP(d, 20)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	g.pEnemyGroup = eg;
 }
@@ -2722,11 +2722,11 @@ static void SaveWayPointList(HWFILE const f, GROUP const* const g)
 	for (const WAYPOINT* w = g->pWaypoints; w != NULL; w = w->next)
 	{
 		BYTE  data[8];
-		BYTE* d = data;
+		DataWriter d{data};
 		INJ_U8(  d, w->x)
 		INJ_U8(  d, w->y)
 		INJ_SKIP(d, 6)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		FileWrite(f, data, sizeof(data));
 	}
@@ -2747,11 +2747,11 @@ static void LoadWayPointList(HWFILE const f, GROUP* const g)
 		BYTE data[8];
 		FileRead(f, data, sizeof(data));
 
-		BYTE const* d = data;
+		DataReader d{data};
 		EXTR_U8(  d, w->x)
 		EXTR_U8(  d, w->y)
 		EXTR_SKIP(d, 6)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		// Add the node to the list
 		*anchor = w;

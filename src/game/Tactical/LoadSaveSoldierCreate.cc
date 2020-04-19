@@ -40,7 +40,7 @@ UINT16 CalcSoldierCreateCheckSum(const SOLDIERCREATE_STRUCT* const s)
 
 static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* const c, bool stracLinuxFormat)
 {
-	const BYTE* d = data;
+	DataReader d{data};
 	EXTR_BOOL(d, c->fStatic)
 	EXTR_U8(d, c->ubProfile)
 	EXTR_SKIP(d, 2)
@@ -71,7 +71,7 @@ static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* c
 	EXTR_I8(d, c->bAIMorale)
 	for (size_t i = 0; i < lengthof(c->Inv); i++)
 	{
-		d = ExtractObject(d, &c->Inv[i]);
+		ExtractObject(d, &c->Inv[i]);
 	}
 	EXTR_STR(d, c->HeadPal, lengthof(c->HeadPal))
 	EXTR_STR(d, c->PantsPal, lengthof(c->PantsPal))
@@ -83,15 +83,11 @@ static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* c
 	EXTR_BOOL(d, c->fVisible);
 	if(stracLinuxFormat)
 	{
-		DataReader reader(d);
-		c->name = reader.readUTF32(SOLDIERTYPE_NAME_LENGTH);
-		d += reader.getConsumed();
+		c->name = d.readUTF32(SOLDIERTYPE_NAME_LENGTH);
 	}
 	else
 	{
-		DataReader reader(d);
-		c->name = reader.readUTF16(SOLDIERTYPE_NAME_LENGTH);
-		d += reader.getConsumed();
+		c->name = d.readUTF16(SOLDIERTYPE_NAME_LENGTH);
 	}
 	EXTR_U8(d, c->ubSoldierClass)
 	EXTR_BOOL(d, c->fOnRoof)
@@ -106,11 +102,11 @@ static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* c
 	EXTR_SKIP(d, 117)
 	if(stracLinuxFormat)
 	{
-		Assert(d == data + 1060);
+		Assert(d.getConsumed() == 1060);
 	}
 	else
 	{
-		Assert(d == data + 1040);
+		Assert(d.getConsumed() == 1040);
 	}
 }
 
@@ -158,7 +154,7 @@ void ExtractSoldierCreateFromFileWithChecksumAndGuess(HWFILE f, SOLDIERCREATE_ST
 
 static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* const c)
 {
-	BYTE* d = data;
+	DataWriter d{data};
 	INJ_BOOL(d, c->fStatic)
 	INJ_U8(d, c->ubProfile)
 	INJ_SKIP(d, 2)
@@ -189,7 +185,7 @@ static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* co
 	INJ_I8(d, c->bAIMorale)
 	for (size_t i = 0; i < lengthof(c->Inv); i++)
 	{
-		d = InjectObject(d, &c->Inv[i]);
+		InjectObject(d, &c->Inv[i]);
 	}
 	INJ_STR(d, c->HeadPal, lengthof(c->HeadPal))
 	INJ_STR(d, c->PantsPal, lengthof(c->PantsPal))
@@ -199,11 +195,7 @@ static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* co
 	INJ_I16A(d, c->sPatrolGrid, lengthof(c->sPatrolGrid))
 	INJ_I8(d, c->bPatrolCnt)
 	INJ_BOOL(d, c->fVisible)
-	{
-		DataWriter writer(d);
-		writer.writeUTF16(c->name, SOLDIERTYPE_NAME_LENGTH);
-		d += writer.getConsumed();
-	}
+	d.writeUTF16(c->name, SOLDIERTYPE_NAME_LENGTH);
 	INJ_U8(d, c->ubSoldierClass)
 	INJ_BOOL(d, c->fOnRoof)
 	INJ_I8(d, c->bSectorZ)
@@ -215,7 +207,7 @@ static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* co
 	INJ_I8(d, c->bUseGivenVehicleID)
 	INJ_BOOL(d, c->fHasKeys)
 	INJ_SKIP(d, 117)
-	Assert(d == data + 1040);
+	Assert(d.getConsumed() == 1040);
 }
 
 

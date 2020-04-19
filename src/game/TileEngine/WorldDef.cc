@@ -1323,9 +1323,10 @@ static void WriteLevelNode(HWFILE const f, LEVELNODE const* const n)
 	UINT32 const type           = GetTileType(idx);
 	UINT8  const type_sub_index = (UINT8)GetTypeSubIndexFromTileIndex(type, idx);
 	BYTE  data[2];
-	BYTE* d = data;
+	DataWriter d{data};
 	INJ_U8(d, (UINT8)type)
 	INJ_U8(d, (UINT8)type_sub_index)
+	Assert(d.getConsumed() == lengthof(data));
 	FileWrite(f, data, sizeof(data));
 }
 
@@ -1510,9 +1511,10 @@ try
 			UINT16 const type_sub_index = GetTypeSubIndexFromTileIndex(type, i->usIndex);
 
 			BYTE  data[3];
-			BYTE* d = data;
+			DataWriter d{data};
 			INJ_U8( d, (UINT8)type)
 			INJ_U16(d, type_sub_index) // XXX misaligned
+			Assert(d.getConsumed() == lengthof(data));
 			FileWrite(f, data, sizeof(data));
 		}
 	}
@@ -2136,9 +2138,10 @@ try
 
 			UINT8       ubType;
 			UINT8       ubSubIndex;
-			BYTE const* d = data;
+			DataReader d{data};
 			EXTR_U8(d, ubType)
 			EXTR_U8(d, ubSubIndex)
+			Assert(d.getConsumed() == lengthof(data));
 
 			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 			AddLandToHead(cnt, usTileIndex);
@@ -2159,9 +2162,10 @@ try
 
 				UINT8       ubType;
 				UINT8       ubSubIndex;
-				BYTE const* d = data;
+				DataReader d{data};
 				EXTR_U8(d, ubType)
 				EXTR_U8(d, ubSubIndex)
+				Assert(d.getConsumed() == lengthof(data));
 
 				if (ubType >= FIRSTPOINTERS) continue;
 				UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
@@ -2181,9 +2185,10 @@ try
 
 				UINT8       ubType;
 				UINT16      usTypeSubIndex;
-				BYTE const* d = data;
+				DataReader d{data};
 				EXTR_U8( d, ubType)
 				EXTR_U16(d, usTypeSubIndex)
+				Assert(d.getConsumed() == lengthof(data));
 
 				if (ubType >= FIRSTPOINTERS) continue;
 				UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, usTypeSubIndex);
@@ -2204,9 +2209,10 @@ try
 
 			UINT8       ubType;
 			UINT8       ubSubIndex;
-			BYTE const* d = data;
+			DataReader d{data};
 			EXTR_U8(d, ubType)
 			EXTR_U8(d, ubSubIndex)
+			Assert(d.getConsumed() == lengthof(data));
 
 			UINT16 usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 
@@ -2246,9 +2252,10 @@ try
 
 			UINT8       ubType;
 			UINT8       ubSubIndex;
-			BYTE const* d = data;
+			DataReader d{data};
 			EXTR_U8(d, ubType)
 			EXTR_U8(d, ubSubIndex)
+			Assert(d.getConsumed() == lengthof(data));
 
 			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 			AddShadowToTail(cnt, usTileIndex);
@@ -2267,9 +2274,10 @@ try
 
 			UINT8       ubType;
 			UINT8       ubSubIndex;
-			BYTE const* d = data;
+			DataReader d{data};
 			EXTR_U8(d, ubType)
 			EXTR_U8(d, ubSubIndex)
+			Assert(d.getConsumed() == lengthof(data));
 
 			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 			AddRoofToTail(cnt, usTileIndex);
@@ -2288,9 +2296,10 @@ try
 
 			UINT8       ubType;
 			UINT8       ubSubIndex;
-			BYTE const* d = data;
+			DataReader d{data};
 			EXTR_U8(d, ubType)
 			EXTR_U8(d, ubSubIndex)
+			Assert(d.getConsumed() == lengthof(data));
 
 			UINT16 const usTileIndex = GetTileIndexFromTypeSubIndex(ubType, ubSubIndex);
 			AddOnRoofToTail(cnt, usTileIndex);

@@ -907,13 +907,13 @@ static void AppendFinanceToEndOfFile(void)
 
 	const FinanceUnit* const fu = pFinanceListHead;
 	BYTE  data[FINANCE_RECORD_SIZE];
-	BYTE* d = data;
+	DataWriter d{data};
 	INJ_U8(d, fu->ubCode);
 	INJ_U8(d, fu->ubSecondCode);
 	INJ_U32(d, fu->uiDate);
 	INJ_I32(d, fu->iAmount);
 	INJ_I32(d, fu->iBalanceToDate);
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	FileWrite(f, data, sizeof(data));
 }
@@ -984,13 +984,13 @@ static void LoadInRecords(UINT32 const page)
 		UINT32 date;
 		INT32  amount;
 		INT32  balance_to_date;
-		const BYTE* d = data;
+		DataReader d{data};
 		EXTR_U8(d, code);
 		EXTR_U8(d, second_code);
 		EXTR_U32(d, date);
 		EXTR_I32(d, amount);
 		EXTR_I32(d, balance_to_date);
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		ProcessAndEnterAFinacialRecord(code, date, amount, second_code, balance_to_date);
 	}
@@ -1053,12 +1053,12 @@ static INT32 GetPreviousDaysBalance(void)
 
 		UINT32 date;
 		INT32 balance_to_date;
-		const BYTE* d = data;
+		DataReader d{data};
 		EXTR_SKIP(d, 2);
 		EXTR_U32(d, date);
 		EXTR_SKIP(d, 4);
 		EXTR_I32(d, balance_to_date);
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		// check to see if we are far enough
 		if (date / (24 * 60) == date_in_days - 2)
@@ -1093,12 +1093,12 @@ static INT32 GetTodaysBalance(void)
 
 		UINT32 date;
 		INT32 balance_to_date;
-		const BYTE* d = data;
+		DataReader d{data};
 		EXTR_SKIP(d, 2);
 		EXTR_U32(d, date);
 		EXTR_SKIP(d, 4);
 		EXTR_I32(d, balance_to_date);
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		// check to see if we are far enough
 		if (date / (24 * 60) == date_in_days - 1)
@@ -1135,13 +1135,13 @@ static INT32 GetPreviousDaysIncome(void)
 		UINT8  code;
 		UINT32 date;
 		INT32  amount;
-		const BYTE* d = data;
+		DataReader d{data};
 		EXTR_U8(d, code);
 		EXTR_SKIP(d, 1);
 		EXTR_U32(d, date);
 		EXTR_I32(d, amount);
 		EXTR_SKIP(d, 4);
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		// now ok to increment amount
 		if (date / (24 * 60) == date_in_days - 1) fOkToIncrement = TRUE;
@@ -1180,13 +1180,13 @@ static INT32 GetTodaysDaysIncome(void)
 		UINT8  code;
 		UINT32 date;
 		INT32  amount;
-		const BYTE* d = data;
+		DataReader d{data};
 		EXTR_U8(d, code);
 		EXTR_SKIP(d, 1);
 		EXTR_U32(d, date);
 		EXTR_I32(d, amount);
 		EXTR_SKIP(d, 4);
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		// now ok to increment amount
 		if (date / (24 * 60) > date_in_days - 1) fOkToIncrement = TRUE;
@@ -1241,13 +1241,13 @@ static INT32 GetTodaysOtherDeposits(void)
 		UINT8  code;
 		UINT32 date;
 		INT32  amount;
-		const BYTE* d = data;
+		DataReader d{data};
 		EXTR_U8(d, code);
 		EXTR_SKIP(d, 1);
 		EXTR_U32(d, date);
 		EXTR_I32(d, amount);
 		EXTR_SKIP(d, 4);
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		// now ok to increment amount
 		if (date / (24 * 60) > date_in_days - 1) fOkToIncrement = TRUE;
@@ -1290,13 +1290,13 @@ static INT32 GetYesterdaysOtherDeposits(void)
 		UINT8  code;
 		UINT32 date;
 		INT32  amount;
-		const BYTE* d = data;
+		DataReader d{data};
 		EXTR_U8(d, code);
 		EXTR_SKIP(d, 1);
 		EXTR_U32(d, date);
 		EXTR_I32(d, amount);
 		EXTR_SKIP(d, 4);
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		// now ok to increment amount
 		if (date / (24 * 60) == date_in_days - 1) fOkToIncrement = TRUE;

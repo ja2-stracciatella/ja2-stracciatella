@@ -180,7 +180,7 @@ void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 		FOR_EACH(DEALER_ITEM_HEADER const, item, *dealer)
 		{
 			BYTE  data[16];
-			BYTE* d = data;
+			DataWriter d{data};
 			INJ_U8(  d, item->ubTotalItems)
 			INJ_U8(  d, item->ubPerfectItems)
 			INJ_U8(  d, item->ubStrayAmmo)
@@ -191,7 +191,7 @@ void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 			INJ_U8(  d, item->ubQtyOnOrder)
 			INJ_BOOL(d, item->fPreviouslyEligible)
 			INJ_SKIP(d, 2)
-			Assert(d == endof(data));
+			Assert(d.getConsumed() == lengthof(data));
 
 			FileWrite(f, data, sizeof(data));
 		}
@@ -234,7 +234,7 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, UINT32 const saveg
 			BYTE data[16];
 			FileRead(f, data, sizeof(data));
 
-			BYTE const* d = data;
+			DataReader d{data};
 			EXTR_U8(  d, item->ubTotalItems)
 			EXTR_U8(  d, item->ubPerfectItems)
 			EXTR_U8(  d, item->ubStrayAmmo)
@@ -245,7 +245,7 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, UINT32 const saveg
 			EXTR_U8(  d, item->ubQtyOnOrder)
 			EXTR_BOOL(d, item->fPreviouslyEligible)
 			EXTR_SKIP(d, 2)
-			Assert(d == endof(data));
+			Assert(d.getConsumed() == lengthof(data));
 			AllocMemsetSpecialItemArray(item, numSpecialItem);
 		}
 	}

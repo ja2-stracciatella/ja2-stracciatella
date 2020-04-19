@@ -58,7 +58,7 @@ void LoadGameSettings(void)
 		UINT8          speech_volume;
 		UINT32         settings_version;
 		GAME_SETTINGS& g = gGameSettings;
-		BYTE const*    d = data;
+		DataReader d{data};
 		EXTR_I8(  d, g.bLastSavedGameSlot)
 		EXTR_U8(  d, music_volume)
 		EXTR_U8(  d, sound_volume)
@@ -72,7 +72,7 @@ void LoadGameSettings(void)
 		EXTR_U8(  d, g.ubSizeOfDisplayCover)
 		EXTR_U8(  d, g.ubSizeOfLOS)
 		EXTR_SKIP(d, 20)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		if (settings_version < GAME_SETTING_CURRENT_VERSION) goto fail;
 
@@ -115,7 +115,7 @@ void SaveGameSettings(void)
 	GAME_SETTINGS& g = gGameSettings;
 
 	BYTE  data[76];
-	BYTE* d = data;
+	DataWriter d{data};
 	INJ_I8(  d, g.bLastSavedGameSlot)
 	UINT8 const music_volume  = MusicGetVolume();
 	INJ_U8(  d, music_volume)
@@ -133,7 +133,7 @@ void SaveGameSettings(void)
 	INJ_U8(  d, g.ubSizeOfDisplayCover)
 	INJ_U8(  d, g.ubSizeOfLOS)
 	INJ_SKIP(d, 20)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	AutoSGPFile f(FileMan::openForWriting(GAME_SETTINGS_FILE));
 	FileWrite(f, data, sizeof(data));

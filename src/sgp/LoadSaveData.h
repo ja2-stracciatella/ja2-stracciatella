@@ -9,31 +9,6 @@
 #include <algorithm>
 #include <type_traits>
 
-#define EXTR_STR(S, D, Size)  memcpy((D), (S), Size); (S) += (Size);
-#define EXTR_BOOLA(S, D, Size) memcpy((D), (S), Size); (S) += (Size);
-#define EXTR_I8A(S, D, Size)  memcpy((D), (S), Size); (S) += (Size);
-#define EXTR_U8A(S, D, Size)  memcpy((D), (S), Size); (S) += (Size);
-#define EXTR_I16A(S, D, Size) memcpy((D), (S), sizeof(INT16)  * Size); (S) += sizeof(INT16)  * (Size);
-#define EXTR_U16A(S, D, Size) memcpy((D), (S), sizeof(UINT16) * Size); (S) += sizeof(UINT16) * (Size);
-#define EXTR_I32A(S, D, Size) memcpy((D), (S), sizeof(INT32)  * Size); (S) += sizeof(INT32)  * (Size);
-#define EXTR_BOOL(S, D)   (D) = *(const BOOLEAN*)(S); (S) += sizeof(BOOLEAN);
-#define EXTR_BYTE(S, D)   (D) = *(const    BYTE*)(S); (S) += sizeof(BYTE);
-#define EXTR_I8(S, D)     (D) = *(const    INT8*)(S); (S) += sizeof(INT8);
-#define EXTR_U8(S, D)     (D) = *(const   UINT8*)(S); (S) += sizeof(UINT8);
-#define EXTR_I16(S, D)    (D) = *(const   INT16*)(S); (S) += sizeof(INT16);
-#define EXTR_U16(S, D)    (D) = *(const  UINT16*)(S); (S) += sizeof(UINT16);
-#define EXTR_I32(S, D)    (D) = *(const   INT32*)(S); (S) += sizeof(INT32);
-#define EXTR_U32(S, D)    (D) = *(const  UINT32*)(S); (S) += sizeof(UINT32);
-#define EXTR_FLOAT(S, D)  (D) = *(const   FLOAT*)(S); (S) += sizeof(FLOAT);
-#define EXTR_DOUBLE(S, D) (D) = *(const  DOUBLE*)(S); (S) += sizeof(DOUBLE);
-#define EXTR_PTR(S, D) (D) = NULL; (S) += 4;
-#define EXTR_SKIP(S, Size) (S) += (Size);
-#define EXTR_SKIP_I16(S)   (S) += (2);
-#define EXTR_SKIP_I32(S)   (S) += (4);
-#define EXTR_SKIP_U8(S)    (S) += (1);
-#define EXTR_SOLDIER(S, D) (D) = ID2Soldier(*(const SoldierID*)(S)); (S) += sizeof(SoldierID);
-#define EXTR_VEC3(S, D) EXTR_FLOAT(S, (D).x); EXTR_FLOAT(S, (D).y); EXTR_FLOAT(S, (D).z);
-
 
 ////////////////////////////////////////////////////////////////////////////
 // DataWriter
@@ -180,29 +155,54 @@ protected:
 };
 
 
-#define INJ_STR(D, S, Size)  memcpy((D), (S), (Size)); (D) += (Size);
-#define INJ_BOOLA(D, S, Size)  memcpy((D), (S), (Size)); (D) += (Size);
-#define INJ_I8A(D, S, Size)  memcpy((D), (S), (Size)); (D) += (Size);
-#define INJ_U8A(D, S, Size)  memcpy((D), (S), (Size)); (D) += (Size);
-#define INJ_I16A(D, S, Size) memcpy((D), (S), sizeof(INT16)  * (Size)); (D) += sizeof(INT16)  * (Size);
-#define INJ_U16A(D, S, Size) memcpy((D), (S), sizeof(UINT16) * (Size)); (D) += sizeof(UINT16) * (Size);
-#define INJ_I32A(D, S, Size) memcpy((D), (S), sizeof(INT32)  * (Size)); (D) += sizeof(INT32)  * (Size);
-#define INJ_BOOL(D, S)   *(BOOLEAN*)(D) = (S); (D) += sizeof(BOOLEAN);
-#define INJ_BYTE(D, S)   *(   BYTE*)(D) = (S); (D) += sizeof(BYTE);
-#define INJ_I8(D, S)     *(   INT8*)(D) = (S); (D) += sizeof(INT8);
-#define INJ_U8(D, S)     *(  UINT8*)(D) = (S); (D) += sizeof(UINT8);
-#define INJ_I16(D, S)    *(  INT16*)(D) = (S); (D) += sizeof(INT16);
-#define INJ_U16(D, S)    *( UINT16*)(D) = (S); (D) += sizeof(UINT16);
-#define INJ_I32(D, S)    *(  INT32*)(D) = (S); (D) += sizeof(INT32);
-#define INJ_U32(D, S)    *( UINT32*)(D) = (S); (D) += sizeof(UINT32);
-#define INJ_FLOAT(D, S)  *(  FLOAT*)(D) = (S); (D) += sizeof(FLOAT);
-#define INJ_DOUBLE(D, S) *( DOUBLE*)(D) = (S); (D) += sizeof(DOUBLE);
+#define INJ_STR(D, S, Size)  (D).writeArray<char>((S), (Size));
+#define INJ_BOOLA(D, S, Size)  (D).writeArray<BOOLEAN>((S), (Size));
+#define INJ_I8A(D, S, Size)  (D).writeArray<INT8>((S), (Size));
+#define INJ_U8A(D, S, Size)  (D).writeArray<UINT8>((S), (Size));
+#define INJ_I16A(D, S, Size) (D).writeArray<INT16>((S), (Size));
+#define INJ_U16A(D, S, Size) (D).writeArray<UINT16>((S), (Size));
+#define INJ_I32A(D, S, Size) (D).writeArray<INT32>((S), (Size));
+#define INJ_BOOL(D, S)   (D).write<BOOLEAN>((S));
+#define INJ_BYTE(D, S)   (D).write<BYTE>((S));
+#define INJ_I8(D, S)     (D).write<INT8>((S));
+#define INJ_U8(D, S)     (D).write<UINT8>((S));
+#define INJ_I16(D, S)    (D).write<INT16>((S));
+#define INJ_U16(D, S)    (D).write<UINT16>((S));
+#define INJ_I32(D, S)    (D).write<INT32>((S));
+#define INJ_U32(D, S)    (D).write<UINT32>((S));
+#define INJ_FLOAT(D, S)  (D).write<FLOAT>((S));
+#define INJ_DOUBLE(D, S) (D).write<DOUBLE>((S));
 #define INJ_PTR(D, S) INJ_SKIP(D, 4)
-#define INJ_SKIP(D, Size) std::fill_n(D, Size, 0); (D) += Size;
-#define INJ_SKIP_I16(D)   std::fill_n(D, 2, 0);    (D) += 2;
-#define INJ_SKIP_I32(D)   std::fill_n(D, 4, 0);    (D) += 4;
-#define INJ_SKIP_U8(D)    std::fill_n(D, 1, 0);    (D) += 1;
-#define INJ_SOLDIER(D, S) *(SoldierID*)(D) = Soldier2ID((S)); (D) += sizeof(SoldierID);
+#define INJ_SKIP(D, Size) (D).skip((Size));
+#define INJ_SKIP_I16(D)   (D).skip(2);
+#define INJ_SKIP_I32(D)   (D).skip(4);
+#define INJ_SKIP_U8(D)    (D).skip(1);
+#define INJ_SOLDIER(D, S) (D).write<SoldierID>(Soldier2ID((S)));
 #define INJ_VEC3(D, S) INJ_FLOAT(D, (S).x); INJ_FLOAT(D, (S).y); INJ_FLOAT(D, (S).z);
+
+#define EXTR_STR(S, D, Size)  (S).readArray<char>((D), (Size));
+#define EXTR_BOOLA(S, D, Size) (S).readArray<BOOLEAN>((D), (Size));
+#define EXTR_I8A(S, D, Size)  (S).readArray<INT8>((D), (Size));
+#define EXTR_U8A(S, D, Size)  (S).readArray<UINT8>((D), (Size));
+#define EXTR_I16A(S, D, Size) (S).readArray<INT16>((D), (Size));
+#define EXTR_U16A(S, D, Size) (S).readArray<UINT16>((D), (Size));
+#define EXTR_I32A(S, D, Size) (S).readArray<INT32>((D), (Size));
+#define EXTR_BOOL(S, D)   (D) = (S).read<BOOLEAN>();
+#define EXTR_BYTE(S, D)   (D) = (S).read<BYTE>();
+#define EXTR_I8(S, D)     (D) = (S).read<INT8>();
+#define EXTR_U8(S, D)     (D) = (S).read<UINT8>();
+#define EXTR_I16(S, D)    (D) = (S).read<INT16>();
+#define EXTR_U16(S, D)    (D) = (S).read<UINT16>();
+#define EXTR_I32(S, D)    (D) = (S).read<INT32>();
+#define EXTR_U32(S, D)    (D) = (S).read<UINT32>();
+#define EXTR_FLOAT(S, D)  (D) = (S).read<FLOAT>();
+#define EXTR_DOUBLE(S, D) (D) = (S).read<DOUBLE>();
+#define EXTR_PTR(S, D) (D) = NULL; (S).skip(4);
+#define EXTR_SKIP(S, Size) (S).skip((Size));
+#define EXTR_SKIP_I16(S)   (S).skip(2);
+#define EXTR_SKIP_I32(S)   (S).skip(4);
+#define EXTR_SKIP_U8(S)    (S).skip(1);
+#define EXTR_SOLDIER(S, D) (D) = ID2Soldier((S).read<SoldierID>());
+#define EXTR_VEC3(S, D) EXTR_FLOAT(S, (D).x); EXTR_FLOAT(S, (D).y); EXTR_FLOAT(S, (D).z);
 
 #endif

@@ -8,7 +8,7 @@
 void ExtractExplosionTypeFromFile(HWFILE const file, EXPLOSIONTYPE* const e)
 {
 	BYTE src[36];
-	const BYTE* s = src;
+	DataReader s{src};
 
 	FileRead(file, src, sizeof(src));
 
@@ -27,7 +27,7 @@ void ExtractExplosionTypeFromFile(HWFILE const file, EXPLOSIONTYPE* const e)
 	EXTR_SKIP(s, 1)
 	EXTR_I16(s, e->sCurrentFrame)
 	EXTR_SKIP(s, 12)
-	Assert(s == endof(src));
+	Assert(s.getConsumed() == lengthof(src));
 
 	e->light = NULL;
 }
@@ -36,7 +36,7 @@ void ExtractExplosionTypeFromFile(HWFILE const file, EXPLOSIONTYPE* const e)
 void InjectExplosionTypeIntoFile(HWFILE const file, EXPLOSIONTYPE const* e)
 {
 	BYTE dst[36];
-	BYTE* d = dst;
+	DataWriter d{dst};
 
 	INJ_SKIP(d, 4)
 	INJ_SOLDIER(d, e->owner)
@@ -53,7 +53,7 @@ void InjectExplosionTypeIntoFile(HWFILE const file, EXPLOSIONTYPE const* e)
 	INJ_SKIP(d, 1)
 	INJ_I16(d, e->sCurrentFrame)
 	INJ_SKIP(d, 12)
-	Assert(d == endof(dst));
+	Assert(d.getConsumed() == lengthof(dst));
 
 	FileWrite(file, dst, sizeof(dst));
 }
