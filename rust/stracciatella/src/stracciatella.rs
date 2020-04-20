@@ -71,14 +71,14 @@ pub fn get_assets_dir() -> PathBuf {
 
 #[cfg(test)]
 mod tests {
-    use std::fs;
-    use std::fs::File;
     use std::io::prelude::*;
     use std::path::Path;
 
     use tempfile::TempDir;
 
     use crate::config::{find_stracciatella_home, VanillaVersion};
+    use crate::fs;
+    use crate::fs::File;
     use crate::*;
 
     #[test]
@@ -256,7 +256,10 @@ mod tests {
         ];
 
         assert_eq!(parse_args(&mut engine_options, &input), None);
-        assert_eq!(engine_options.vanilla_game_dir, temp_dir.path());
+        assert_eq!(
+            engine_options.vanilla_game_dir,
+            fs::canonicalize(temp_dir.path()).unwrap()
+        );
     }
 
     #[test]
