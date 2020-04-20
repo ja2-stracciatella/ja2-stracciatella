@@ -1,9 +1,11 @@
 /**
- * Lists the sectors where randomly placed NPCs can appear. Each NPC here has his own corresponding code sections.
+ * Lists the sectors where randomly placed NPCs can appear. 
+ * 
+ * Adding other NPCs here will not have any effect, as each NPC here requires his own corresponding sections in codebase.
  *
  * Fields:
  *  - profileId:    The numeric ID of the NPC merc profile.
- *  - sectors:    Sectors in which the NPC can appear. All of these sectors should to have NPC merc+-+ placed, or else the NPC may get "assigned" to sector but not appearing.
+ *  - sectors:    Sectors in which the NPC can appear. If empty, the NPC will never appear. All of these sectors should to have NPC merc placed, or else the NPC may get "assigned" to sector but not appearing.
  */
 [
 	{
