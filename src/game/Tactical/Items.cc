@@ -93,9 +93,9 @@ void createAllHardcodedItemModels(std::vector<const ItemModel*> &items)
 	items[155] = new ItemModel(155, "STRUCTURE_EXPLOSION",        IC_BOMB,    24, INVALIDCURS, 1, 40,  41,  2, 450,  0,  /* fake struct xplod*/    0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE);
 	items[156] = new ItemModel(156, "GREAT_BIG_EXPLOSION",        IC_BOMB,    25, INVALIDCURS, 1, 40,  41,  2, 450,  0,  /* fake vehicle xplod*/   0, -4, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_NOT_BUYABLE);
 	items[157] = new ItemModel(157, "BIG_TEAR_GAS",               IC_GRENADE, 26, TOSSCURS,    1, 48,  6,   4, 0,    0,  /* BIG tear gas grenade*/ 0, -2, ITEM_DAMAGEABLE | ITEM_METAL | ITEM_REPAIRABLE | ITEM_NOT_BUYABLE);
-	items[158] = new ItemModel(158, "SMALL_CREATURE_GAS",         IC_GRENADE, 27, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* small creature gas */  0, 0,  0);
-	items[159] = new ItemModel(159, "LARGE_CREATURE_GAS",         IC_GRENADE, 28, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* big creature gas */    0, 0,  0);
-	items[160] = new ItemModel(160, "VERY_SMALL_CREATURE_GAS",    IC_GRENADE, 29, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* very sm creat gas */   0, 0,  0);
+	items[158] = new ItemModel(158, "SMALL_CREATURE_GAS",         IC_GRENADE, 27, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* small creature gas */  0, 0,  ITEM_NOT_EDITOR);
+	items[159] = new ItemModel(159, "LARGE_CREATURE_GAS",         IC_GRENADE, 28, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* big creature gas */    0, 0,  ITEM_NOT_EDITOR);
+	items[160] = new ItemModel(160, "VERY_SMALL_CREATURE_GAS",    IC_GRENADE, 29, INVALIDCURS, 0, 0,   0,   0, 0,    0,  /* very sm creat gas */   0, 0,  ITEM_NOT_EDITOR);
 
 	items[161] = new ItemModel(161, "FLAK_JACKET",                IC_ARMOUR,  0,  INVALIDCURS, 1, 66,  20,  0, 300,  2,  /* Flak jacket */         0, +2, IF_STANDARD_ARMOUR);
 	items[162] = new ItemModel(162, "FLAK_JACKET_18",             IC_ARMOUR,  1,  INVALIDCURS, 2, 18,  22,  0, 350,  0,  /* Flak jacket w X */     0, +1, IF_STANDARD_ARMOUR | ITEM_NOT_BUYABLE);
