@@ -374,11 +374,11 @@ static void OpenAndReadFilesFile(void)
 		UINT8 code;
 		UINT8 already_read;
 
-		const BYTE* d = data;
+		DataReader d{data};
 		EXTR_U8(d, code)
 		EXTR_SKIP(d, 261)
 		EXTR_U8(d, already_read)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		ProcessAndEnterAFilesRecord(code, already_read);
 	}
@@ -392,11 +392,11 @@ static void OpenAndWriteFilesFile(void)
 	for (const FilesUnit* i = pFilesListHead; i; i = i->Next)
 	{
 		BYTE  data[FILE_ENTRY_SIZE];
-		BYTE* d = data;
+		DataWriter d{data};
 		INJ_U8(d, i->ubCode)
 		INJ_SKIP(d, 261)
 		INJ_U8(d, i->fRead)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		FileWrite(f, data, sizeof(data));
 	}

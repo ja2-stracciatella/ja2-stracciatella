@@ -1196,11 +1196,11 @@ void SaveKeyTableToSaveGameFile(HWFILE const f)
 	{
 		KEY const& k = *i;
 		BYTE       data[8];
-		BYTE*      d = data;
+		DataWriter d{data};
 		INJ_SKIP(d, 4)
 		INJ_U16( d, k.usSectorFound)
 		INJ_U16( d, k.usDateFound)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 		FileWrite(f, data, sizeof(data));
 	}
 }
@@ -1213,11 +1213,11 @@ void LoadKeyTableFromSaveedGameFile(HWFILE const f)
 		BYTE data[8];
 		FileRead(f, data, sizeof(data));
 		KEY&  k = *i;
-		BYTE* d = data;
+		DataReader d{data};
 		EXTR_SKIP(d, 4)
 		EXTR_U16( d, k.usSectorFound)
 		EXTR_U16( d, k.usDateFound)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 	}
 }
 

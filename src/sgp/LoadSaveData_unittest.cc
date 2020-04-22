@@ -58,12 +58,12 @@ TEST(LoadSaveData, integers)
 	}
 }
 
-TEST(LoadSaveData, writeStringAsUTF16English)
+TEST(LoadSaveData, writeUTF16English)
 {
 	char buf[100];
 
 	DataWriter writer(buf);
-	writer.writeStringAsUTF16("test", 5);
+	writer.writeUTF16("test", 5);
 
 	// read as 5 uint16
 	{
@@ -79,12 +79,12 @@ TEST(LoadSaveData, writeStringAsUTF16English)
 	}
 }
 
-TEST(LoadSaveData, writeStringAsUTF16Russian)
+TEST(LoadSaveData, writeUTF16Russian)
 {
 	char buf[100];
 
 	DataWriter writer(buf);
-	writer.writeStringAsUTF16("тест", 5);
+	writer.writeUTF16("тест", 5);
 
 	// read as 5 uint16
 	{
@@ -180,12 +180,13 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 		ASSERT_EQ(VecU8_len(buf.get()), sizeof(float) * 5);
 		float f;
 
-		const uint8_t* S = VecU8_as_ptr(buf.get());
+		DataReader S{VecU8_as_ptr(buf.get())};
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 0         );
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 1         );
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, -1        );
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 1.1234678f);
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 12345.678f);
+		ASSERT_EQ(S.getConsumed(), sizeof(float) * 5);
 	}
 
 	{
@@ -194,11 +195,12 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 		ASSERT_EQ(VecU8_len(buf.get()), sizeof(double) * 5);
 		double d;
 
-		const uint8_t* S = VecU8_as_ptr(buf.get());
+		DataReader S{VecU8_as_ptr(buf.get())};
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 0         );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 1         );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, -1        );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 1.1234678 );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 12345.678 );
+		ASSERT_EQ(S.getConsumed(), sizeof(double) * 5);
 	}
 }

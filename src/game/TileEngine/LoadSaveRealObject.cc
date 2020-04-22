@@ -11,7 +11,7 @@ void ExtractRealObjectFromFile(HWFILE const file, REAL_OBJECT* const o)
 	BYTE data[256];
 	FileRead(file, data, sizeof(data));
 
-	const BYTE* d = data;
+	DataReader d{data};
 	EXTR_BOOL(d, o->fAllocated)
 	EXTR_BOOL(d, o->fAlive)
 	EXTR_BOOL(d, o->fApplyFriction)
@@ -44,7 +44,7 @@ void ExtractRealObjectFromFile(HWFILE const file, REAL_OBJECT* const o)
 	EXTR_I32(d, o->iOldCollisionCode)
 	EXTR_FLOAT(d, o->dLifeLength)
 	EXTR_FLOAT(d, o->dLifeSpan)
-	d = ExtractObject(d, &o->Obj);
+	ExtractObject(d, &o->Obj);
 	EXTR_BOOL(d, o->fFirstTimeMoved)
 	EXTR_SKIP(d, 1)
 	EXTR_I16(d, o->sFirstGridNo)
@@ -69,7 +69,7 @@ void ExtractRealObjectFromFile(HWFILE const file, REAL_OBJECT* const o)
 	EXTR_U32(d, o->uiSoundID)
 	EXTR_U8(d, o->ubLastTargetTakenDamage)
 	EXTR_SKIP(d, 3)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 }
 
 
@@ -77,7 +77,7 @@ void InjectRealObjectIntoFile(HWFILE const file, REAL_OBJECT const* const o)
 {
 	BYTE data[256];
 
-	BYTE* d = data;
+	DataWriter d{data};
 	INJ_BOOL(d, o->fAllocated)
 	INJ_BOOL(d, o->fAlive)
 	INJ_BOOL(d, o->fApplyFriction)
@@ -110,7 +110,7 @@ void InjectRealObjectIntoFile(HWFILE const file, REAL_OBJECT const* const o)
 	INJ_I32(d, o->iOldCollisionCode)
 	INJ_FLOAT(d, o->dLifeLength)
 	INJ_FLOAT(d, o->dLifeSpan)
-	d = InjectObject(d, &o->Obj);
+	InjectObject(d, &o->Obj);
 	INJ_BOOL(d, o->fFirstTimeMoved)
 	INJ_SKIP(d, 1)
 	INJ_I16(d, o->sFirstGridNo)
@@ -135,7 +135,7 @@ void InjectRealObjectIntoFile(HWFILE const file, REAL_OBJECT const* const o)
 	INJ_U32(d, o->uiSoundID)
 	INJ_U8(d, o->ubLastTargetTakenDamage)
 	INJ_SKIP(d, 3)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	FileWrite(file, data, sizeof(data));
 }

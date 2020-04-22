@@ -352,7 +352,7 @@ void LoadSchedules(HWFILE const f)
 
 		SCHEDULENODE* const node = new SCHEDULENODE{};
 
-		BYTE const* d = data;
+		DataReader d{data};
 		EXTR_SKIP(d, 4)
 		EXTR_U16A(d, node->usTime,   lengthof(node->usTime))
 		EXTR_U16A(d, node->usData1,  lengthof(node->usData1))
@@ -360,7 +360,7 @@ void LoadSchedules(HWFILE const f)
 		EXTR_U8A( d, node->ubAction, lengthof(node->ubAction))
 		EXTR_SKIP(d, 2) // skip schedule ID and soldier ID, they get overwritten
 		EXTR_U16( d, node->usFlags)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		node->ubScheduleID = gubScheduleID++;
 
@@ -389,7 +389,7 @@ void LoadSchedulesFromSave(HWFILE const f)
 
 		SCHEDULENODE* const node = new SCHEDULENODE{};
 
-		BYTE const* s = data;
+		DataReader s{data};
 		EXTR_SKIP(   s, 4)
 		EXTR_U16A(   s, node->usTime,   lengthof(node->usTime))
 		EXTR_U16A(   s, node->usData1,  lengthof(node->usData1))
@@ -398,7 +398,7 @@ void LoadSchedulesFromSave(HWFILE const f)
 		EXTR_U8(     s, node->ubScheduleID)
 		EXTR_SOLDIER(s, node->soldier)
 		EXTR_U16(    s, node->usFlags)
-		Assert(s == endof(data));
+		Assert(s.getConsumed() == lengthof(data));
 
 		// Add node to the list
 		*anchor = node;
@@ -478,7 +478,7 @@ void SaveSchedules(HWFILE const f)
 		if (n_to_save-- == 0) return;
 
 		BYTE data[36];
-		BYTE* d = data;
+		DataWriter d{data};
 		INJ_SKIP(   d, 4)
 		INJ_U16A(   d, i->usTime,   lengthof(i->usTime))
 		INJ_U16A(   d, i->usData1,  lengthof(i->usData1))
@@ -487,7 +487,7 @@ void SaveSchedules(HWFILE const f)
 		INJ_U8(     d, i->ubScheduleID)
 		INJ_SOLDIER(d, i->soldier)
 		INJ_U16(    d, i->usFlags)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		FileWrite(f, data, sizeof(data));
 	}

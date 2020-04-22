@@ -14,7 +14,7 @@ void ExtractTacticalStatusTypeFromFile(HWFILE const f, bool stracLinuxFormat)
 	FileRead(f, data.data(), dataSize);
 
 	TacticalStatusType* const s = &gTacticalStatus;
-	const BYTE* d = data.data();
+	DataReader d{data.data()};
 	EXTR_U32(d, s->uiFlags)
 	FOR_EACH(TacticalTeamType, t, s->Team)
 	{
@@ -132,14 +132,14 @@ void ExtractTacticalStatusTypeFromFile(HWFILE const f, bool stracLinuxFormat)
 	EXTR_U16(d, s->sCreatureTenseQuoteDelay)
 	EXTR_SKIP(d, 2)
 	EXTR_U32(d, s->uiCreatureTenseQuoteLastUpdate)
-	Assert(d == (data.data() + dataSize));
+	Assert(d.getConsumed() == dataSize);
 }
 
 
 void InjectTacticalStatusTypeIntoFile(HWFILE const f)
 {
 	BYTE data[316];
-	BYTE*                     d = data;
+	DataWriter d{data};
 	TacticalStatusType* const s = &gTacticalStatus;
 	INJ_U32(d, s->uiFlags)
 	FOR_EACH(TacticalTeamType const, t, s->Team)
@@ -247,7 +247,7 @@ void InjectTacticalStatusTypeIntoFile(HWFILE const f)
 	INJ_U16(d, s->sCreatureTenseQuoteDelay)
 	INJ_SKIP(d, 2)
 	INJ_U32(d, s->uiCreatureTenseQuoteLastUpdate)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	FileWrite(f, data, sizeof(data));
 }

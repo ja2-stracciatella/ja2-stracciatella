@@ -3270,31 +3270,29 @@ void ClearOutTempLaptopFiles(void)
 }
 
 
-static BYTE* InjectStoreInvetory(BYTE* const data, STORE_INVENTORY const& i)
+static void InjectStoreInvetory(DataWriter& d, STORE_INVENTORY const& i)
 {
-	BYTE* d = data;
+	size_t start = d.getConsumed();
 	INJ_U16( d, i.usItemIndex)
 	INJ_U8(  d, i.ubQtyOnHand)
 	INJ_U8(  d, i.ubQtyOnOrder)
 	INJ_U8(  d, i.ubItemQuality)
 	INJ_BOOL(d, i.fPreviouslyEligible)
 	INJ_SKIP(d, 2)
-	Assert(d == data + 8);
-	return d;
+	Assert(d.getConsumed() == start + 8);
 }
 
 
-static BYTE const* ExtractStoreInvetory(BYTE const* const data, STORE_INVENTORY& i)
+static void ExtractStoreInvetory(DataReader& d, STORE_INVENTORY& i)
 {
-	BYTE const* d = data;
+	size_t start = d.getConsumed();
 	EXTR_U16( d, i.usItemIndex)
 	EXTR_U8(  d, i.ubQtyOnHand)
 	EXTR_U8(  d, i.ubQtyOnOrder)
 	EXTR_U8(  d, i.ubItemQuality)
 	EXTR_BOOL(d, i.fPreviouslyEligible)
 	EXTR_SKIP(d, 2)
-	Assert(d == data + 8);
-	return d;
+	Assert(d.getConsumed() == start + 8);
 }
 
 
@@ -3303,7 +3301,7 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 	LaptopSaveInfoStruct const& l = LaptopSaveInfo;
 
 	BYTE  data[7440];
-	BYTE* d = data;
+	DataWriter d{data};
 	INJ_BOOL( d, l.gfNewGameLaptop)
 	INJ_BOOLA(d, l.fVisitedBookmarkAlready, lengthof(l.fVisitedBookmarkAlready))
 	INJ_SKIP( d, 3)
@@ -3321,11 +3319,11 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 	INJ_SKIP( d, 1)
 	FOR_EACH(STORE_INVENTORY const, i, l.BobbyRayInventory)
 	{
-		d = InjectStoreInvetory(d, *i);
+		InjectStoreInvetory(d, *i);
 	}
 	FOR_EACH(STORE_INVENTORY const, i, l.BobbyRayUsedInventory)
 	{
-		d = InjectStoreInvetory(d, *i);
+		InjectStoreInvetory(d, *i);
 	}
 	INJ_SKIP( d, 6)
 	Assert(l.BobbyRayOrdersOnDeliveryArray.size() <= UINT8_MAX);
@@ -3362,7 +3360,7 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 	INJ_U32(  d, l.uiTotalMoneyPaidToSpeck)
 	INJ_U8(   d, l.ubLastMercAvailableId)
 	INJ_SKIP( d, 87)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	FileWrite(f, data, sizeof(data));
 
@@ -3390,7 +3388,7 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	BYTE data[7440];
 	FileRead(f, data, sizeof(data));
 
-	BYTE const* d = data;
+	DataReader d{data};
 	EXTR_BOOL( d, l.gfNewGameLaptop)
 	EXTR_BOOLA(d, l.fVisitedBookmarkAlready, lengthof(l.fVisitedBookmarkAlready))
 	EXTR_SKIP( d, 3)
@@ -3408,11 +3406,11 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	EXTR_SKIP( d, 1)
 	FOR_EACH(STORE_INVENTORY, i, l.BobbyRayInventory)
 	{
-		d = ExtractStoreInvetory(d, *i);
+		ExtractStoreInvetory(d, *i);
 	}
 	FOR_EACH(STORE_INVENTORY, i, l.BobbyRayUsedInventory)
 	{
-		d = ExtractStoreInvetory(d, *i);
+		ExtractStoreInvetory(d, *i);
 	}
 	EXTR_SKIP( d, 6)
 	UINT8 BobbyRayOrdersOnDeliveryArraySize;
@@ -3449,7 +3447,7 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	EXTR_U32(  d, l.uiTotalMoneyPaidToSpeck)
 	EXTR_U8(   d, l.ubLastMercAvailableId)
 	EXTR_SKIP( d, 87)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	if (l.usNumberOfBobbyRayOrderUsed != 0)
 	{ // There is anything in the Bobby Ray Orders on Delivery

@@ -8,7 +8,7 @@
 void ExtractBulletFromFile(HWFILE const file, BULLET* const b)
 {
 	BYTE src[128];
-	const BYTE* s = src;
+	DataReader s{src};
 
 	FileRead(file, src, sizeof(src));
 
@@ -59,14 +59,14 @@ void ExtractBulletFromFile(HWFILE const file, BULLET* const b)
 	EXTR_PTR(s, b->pShadowAniTile)
 	EXTR_U8(s, b->ubItemStatus)
 	EXTR_SKIP(s, 3)
-	Assert(s == endof(src));
+	Assert(s.getConsumed() == lengthof(src));
 }
 
 
 void InjectBulletIntoFile(HWFILE const file, BULLET const* b)
 {
 	BYTE dst[128];
-	BYTE* d = dst;
+	DataWriter d{dst};
 
 	INJ_SKIP(d, 4)
 	INJ_SOLDIER(d, b->pFirer)
@@ -115,7 +115,7 @@ void InjectBulletIntoFile(HWFILE const file, BULLET const* b)
 	INJ_PTR(d, b->pShadowAniTile)
 	INJ_U8(d, b->ubItemStatus)
 	INJ_SKIP(d, 3)
-	Assert(d == endof(dst));
+	Assert(d.getConsumed() == lengthof(dst));
 
 	FileWrite(file, dst, sizeof(dst));
 }

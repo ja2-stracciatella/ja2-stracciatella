@@ -9,7 +9,7 @@ void ExtractSectorInfoFromFile(HWFILE const f, SECTORINFO& s)
 	BYTE data[116];
 	FileRead(f, data, sizeof(data));
 
-	BYTE const* d = data;
+	DataReader d{data};
 	EXTR_U32( d, s.uiFlags)
 	EXTR_SKIP(d, 1)
 	EXTR_U8(  d, s.ubGarrisonID)
@@ -44,14 +44,14 @@ void ExtractSectorInfoFromFile(HWFILE const f, SECTORINFO& s)
 	EXTR_SKIP(d, 3)
 	EXTR_U32( d, s.uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer)
 	EXTR_SKIP(d, 44)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 }
 
 
 void InjectSectorInfoIntoFile(HWFILE const f, SECTORINFO const& s)
 {
 	BYTE  data[116];
-	BYTE* d = data;
+	DataWriter d{data};
 	INJ_U32( d, s.uiFlags)
 	INJ_SKIP(d, 1)
 	INJ_U8(  d, s.ubGarrisonID)
@@ -86,7 +86,7 @@ void InjectSectorInfoIntoFile(HWFILE const f, SECTORINFO const& s)
 	INJ_SKIP(d, 3)
 	INJ_U32( d, s.uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer)
 	INJ_SKIP(d, 44)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	FileWrite(f, data, sizeof(data));
 }

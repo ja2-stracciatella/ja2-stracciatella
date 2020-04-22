@@ -674,7 +674,7 @@ void SaveMineStatusToSaveGameFile(HWFILE const f)
 	FOR_EACH(MINE_STATUS_TYPE const, i, gMineStatus)
 	{
 		BYTE  data[44];
-		BYTE* d = data;
+		DataWriter d{data};
 		INJ_U8(  d, i->ubMineType)
 		INJ_SKIP(d, 3)
 		INJ_U32( d, i->uiMaxRemovalRate)
@@ -693,7 +693,7 @@ void SaveMineStatusToSaveGameFile(HWFILE const f)
 		INJ_SKIP(d, 2)
 		INJ_U32( d, i->uiTimePlayerProductionStarted)
 		INJ_SKIP(d, 12)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 
 		FileWrite(f, data, sizeof(data));
 	}
@@ -707,7 +707,7 @@ void LoadMineStatusFromSavedGameFile(HWFILE const f)
 		BYTE  data[44];
 		FileRead(f, data, sizeof(data));
 
-		BYTE const* d = data;
+		DataReader d{data};
 		EXTR_U8(  d, i->ubMineType)
 		EXTR_SKIP(d, 3)
 		EXTR_U32( d, i->uiMaxRemovalRate)
@@ -726,7 +726,7 @@ void LoadMineStatusFromSavedGameFile(HWFILE const f)
 		EXTR_SKIP(d, 2)
 		EXTR_U32( d, i->uiTimePlayerProductionStarted)
 		EXTR_SKIP(d, 12)
-		Assert(d == endof(data));
+		Assert(d.getConsumed() == lengthof(data));
 	}
 }
 

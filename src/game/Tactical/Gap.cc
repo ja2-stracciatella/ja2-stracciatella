@@ -42,7 +42,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 			pGapList->gaps = gaps;
 			pGapList->end  = gaps + count;
 
-			const BYTE* d = data;
+			DataReader d{data};
 			for (UINT32 i = 0; i < count; ++i)
 			{
 				UINT32 start;
@@ -56,6 +56,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 				SLOGD("Gap Start %d and Ends %d", start, end);
 			}
+			Assert(d.getConsumed() == size);
 
 			SLOGD("gap list started from file %s", sFileName.c_str());
 

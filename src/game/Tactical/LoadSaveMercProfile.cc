@@ -38,21 +38,17 @@ UINT32 SoldierProfileChecksum(MERCPROFILESTRUCT const& p)
 void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracLinuxFormat, UINT32 *checksum,
 			const IEncodingCorrector *fixer)
 {
-	const BYTE* S = Src;
+	DataReader S{Src};
 
 	if(stracLinuxFormat)
 	{
-		DataReader reader(S);
-		p.zName = reader.readUTF32(NAME_LENGTH);
-		p.zNickname = reader.readUTF32(NICKNAME_LENGTH);
-		S += reader.getConsumed();
+		p.zName = S.readUTF32(NAME_LENGTH);
+		p.zNickname = S.readUTF32(NICKNAME_LENGTH);
 	}
 	else
 	{
-		DataReader reader(S);
-		p.zName = reader.readUTF16(NAME_LENGTH, fixer);
-		p.zNickname = reader.readUTF16(NICKNAME_LENGTH, fixer);
-		S += reader.getConsumed();
+		p.zName = S.readUTF16(NAME_LENGTH, fixer);
+		p.zNickname = S.readUTF16(NICKNAME_LENGTH, fixer);
 	}
 
 	EXTR_SKIP(S, 28)
@@ -213,11 +209,11 @@ void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracL
 	EXTR_SKIP(S, 4)
 	if(stracLinuxFormat)
 	{
-		Assert(S == Src + MERC_PROFILE_SIZE_STRAC_LINUX);
+		Assert(S.getConsumed() == MERC_PROFILE_SIZE_STRAC_LINUX);
 	}
 	else
 	{
-		Assert(S == Src + MERC_PROFILE_SIZE);
+		Assert(S.getConsumed() == MERC_PROFILE_SIZE);
 	}
 }
 
@@ -254,14 +250,10 @@ void ExtractImpProfileFromFile(SGPFile *hFile, INT32 *iProfileId, INT32 *iPortra
 
 void InjectMercProfile(BYTE* const Dst, MERCPROFILESTRUCT const& p)
 {
-	BYTE* D = Dst;
+	DataWriter D(Dst);
 
-	{
-		DataWriter writer(D);
-		writer.writeStringAsUTF16(p.zName, NAME_LENGTH);
-		writer.writeStringAsUTF16(p.zNickname, NICKNAME_LENGTH);
-		D += writer.getConsumed();
-	}
+	D.writeUTF16(p.zName, NAME_LENGTH);
+	D.writeUTF16(p.zNickname, NICKNAME_LENGTH);
 	INJ_SKIP(D, 28)
 	INJ_U8(D, p.ubFaceIndex)
 	INJ_STR(D, p.PANTS, lengthof(p.PANTS))
@@ -419,7 +411,7 @@ void InjectMercProfile(BYTE* const Dst, MERCPROFILESTRUCT const& p)
 	INJ_I32(D, p.iMercMercContractLength)
 	INJ_U32(D, p.uiTotalCostToDate)
 	INJ_SKIP(D, 4)
-	Assert(D == Dst + 716);
+	Assert(D.getConsumed() == 716);
 }
 
 

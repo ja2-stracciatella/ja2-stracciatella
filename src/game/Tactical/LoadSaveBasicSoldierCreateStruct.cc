@@ -10,7 +10,7 @@ void ExtractBasicSoldierCreateStructFromFile(HWFILE const f, BASIC_SOLDIERCREATE
 	BYTE data[52];
 	FileRead(f, data, sizeof(data));
 
-	BYTE const* d = data;
+	DataReader d{data};
 	EXTR_BOOL(d, b.fDetailedPlacement)
 	EXTR_SKIP(d, 1)
 	EXTR_U16( d, b.usStartingGridNo)
@@ -30,14 +30,14 @@ void ExtractBasicSoldierCreateStructFromFile(HWFILE const f, BASIC_SOLDIERCREATE
 	EXTR_BOOL(d, b.fPriorityExistance)
 	EXTR_BOOL(d, b.fHasKeys)
 	EXTR_SKIP(d, 14)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 }
 
 
 void InjectBasicSoldierCreateStructIntoFile(HWFILE const f, BASIC_SOLDIERCREATE_STRUCT const& b)
 {
 	BYTE  data[52];
-	BYTE* d = data;
+	DataWriter d{data};
 	INJ_BOOL(d, b.fDetailedPlacement)
 	INJ_SKIP(d, 1)
 	INJ_U16( d, b.usStartingGridNo)
@@ -57,7 +57,7 @@ void InjectBasicSoldierCreateStructIntoFile(HWFILE const f, BASIC_SOLDIERCREATE_
 	INJ_BOOL(d, b.fPriorityExistance)
 	INJ_BOOL(d, b.fHasKeys)
 	INJ_SKIP(d, 14)
-	Assert(d == endof(data));
+	Assert(d.getConsumed() == lengthof(data));
 
 	FileWrite(f, data, sizeof(data));
 }

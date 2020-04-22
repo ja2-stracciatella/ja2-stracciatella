@@ -45,7 +45,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 
 	*s = SOLDIERTYPE{};
 
-	const BYTE* d = data;
+	DataReader d{data};
 	EXTR_U8(d, s->ubID)
 	EXTR_SKIP(d, 1)
 	EXTR_U8(d, s->ubBodyType)
@@ -55,7 +55,7 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_U32(d, s->uiStatusFlags)
 	FOR_EACH_SOLDIER_INV_SLOT(i, *s)
 	{
-		d = ExtractObject(d, i);
+		ExtractObject(d, i);
 	}
 	EXTR_PTR(d, s->pTempObject)
 	EXTR_PTR(d, s->pKeyRing)
@@ -84,15 +84,11 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	if(stracLinuxFormat)
 	{
 		EXTR_SKIP(d, 2)
-		DataReader reader(d);
-		s->name = reader.readUTF32(SOLDIERTYPE_NAME_LENGTH);
-		d += reader.getConsumed();
+		s->name = d.readUTF32(SOLDIERTYPE_NAME_LENGTH);
 	}
 	else
 	{
-		DataReader reader(d);
-		s->name = reader.readUTF16(SOLDIERTYPE_NAME_LENGTH);
-		d += reader.getConsumed();
+		s->name = d.readUTF16(SOLDIERTYPE_NAME_LENGTH);
 	}
 	EXTR_I8(d, s->bVisible)
 	EXTR_I8(d, s->bActive)
@@ -550,11 +546,11 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_SKIP(d, 39)
 	if(stracLinuxFormat)
 	{
-		Assert(d == data + 2352);
+		Assert(d.getConsumed() == 2352);
 	}
 	else
 	{
-		Assert(d == data + 2328);
+		Assert(d.getConsumed() == 2328);
 	}
 
 	if (checksum != MercChecksum(*s))
@@ -570,7 +566,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	UINT16 usPathDataSize;
 	UINT16 usPathIndex;
 
-	BYTE* d = data;
+	DataWriter d{data};
 	INJ_U8(d, s->ubID)
 	INJ_SKIP(d, 1)
 	INJ_U8(d, s->ubBodyType)
@@ -580,7 +576,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_U32(d, s->uiStatusFlags)
 	CFOR_EACH_SOLDIER_INV_SLOT(i, *s)
 	{
-		d = InjectObject(d, i);
+		InjectObject(d, i);
 	}
 	INJ_PTR(d, s->pTempObject)
 	INJ_PTR(d, s->pKeyRing)
@@ -606,11 +602,7 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_U8(d, s->ubAttackingHand)
 	INJ_SKIP(d, 2)
 	INJ_I16(d, s->sWeightCarriedAtTurnStart)
-	{
-		DataWriter writer(d);
-		writer.writeStringAsUTF16(s->name, SOLDIERTYPE_NAME_LENGTH);
-		d += writer.getConsumed();
-	}
+	d.writeUTF16(s->name, SOLDIERTYPE_NAME_LENGTH);
 	INJ_I8(d, s->bVisible)
 	INJ_I8(d, s->bActive)
 	INJ_I8(d, s->bTeam)
@@ -1062,5 +1054,5 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I32(d, s->uiTimeSinceLastBleedGrunt)
 	INJ_SOLDIER(d, s->next_to_previous_attacker)
 	INJ_SKIP(d, 39)
-	Assert(d == data + 2328);
+	Assert(d.getConsumed() == 2328);
 }
