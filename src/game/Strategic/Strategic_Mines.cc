@@ -399,7 +399,7 @@ static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 }
 
 
-// get available workforce for the mine
+// Get the available player workforce for the mine [0,100]
 static INT32 GetAvailableWorkForceForMineForPlayer(INT8 bMineIndex)
 {
 	// look for available workforce in the town associated with the mine
@@ -425,15 +425,16 @@ static INT32 GetAvailableWorkForceForMineForPlayer(INT8 bMineIndex)
 
 	bTownId = gMineLocation[ bMineIndex ].bAssociatedTown;
 
-	Assert ( GetTownSectorSize( bTownId ) != 0 );
-
+	UINT8 numSectors = GetTownSectorSize( bTownId );
+	Assert(numSectors > 0);
+	UINT8 numSectorsUnderControl = GetTownSectorsUnderControl( bTownId );
+	Assert(numSectorsUnderControl <= numSectors);
 
 	// get workforce size (is 0-100 based on local town's loyalty)
 	iWorkForceSize = gTownLoyalty[ bTownId ].ubRating;
 
 	// now adjust for town size.. the number of sectors you control
-	iWorkForceSize *= GetTownSectorsUnderControl( bTownId );
-	iWorkForceSize /= GetTownSectorSize( bTownId );
+	iWorkForceSize = iWorkForceSize * numSectorsUnderControl / numSectors;
 
 	return ( iWorkForceSize );
 }
