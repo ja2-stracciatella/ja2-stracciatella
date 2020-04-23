@@ -5,7 +5,7 @@
  *
  * Fields:
  *  - profileId:    The numeric ID of the NPC merc profile.
- *  - sectors:    Sectors in which the NPC can appear. If empty, the NPC will never appear. All of these sectors should to have NPC merc placed, or else the NPC may get "assigned" to sector but not appearing.
+ *  - sectors:    Sectors in which the NPC can appear. If empty, the NPC will never appear. All of these sectors should have the NPC merc preplaced, or else the NPC may get "assigned" to a sector but not appear.
  */
 [
 	{
