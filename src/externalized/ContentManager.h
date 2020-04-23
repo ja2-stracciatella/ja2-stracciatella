@@ -21,6 +21,7 @@ class BloodCatPlacementsModel;
 class BloodCatSpawnsModel;
 class TownModel;
 class MovementCostsModel;
+class NpcPlacementModel;
 struct AmmoTypeModel;
 struct CalibreModel;
 struct MagazineModel;
@@ -120,6 +121,7 @@ public:
 	virtual const ST::string getTownName(uint8_t townId) const = 0;
 	virtual const ST::string getTownLocative(uint8_t townId) const = 0;
 	virtual const MovementCostsModel* getMovementCosts() const = 0;
+	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const = 0;
 
 	virtual const ST::string* getNewString(size_t stringId) const = 0;
 
