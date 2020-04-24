@@ -5,13 +5,13 @@
 
 SGPFile* OpenTestResourceForReading(const char *filePath)
 {
-	std::string extraDataDir = GetExtraDataDir();
+	ST::string extraDataDir = GetExtraDataDir();
 	return FileMan::openForReading(FileMan::joinPaths(extraDataDir, filePath));
 }
 
-std::string GetExtraDataDir()
+ST::string GetExtraDataDir()
 {
-	std::string extraDataDir = EXTRA_DATA_DIR;
+	ST::string extraDataDir = EXTRA_DATA_DIR;
 	if(extraDataDir.empty())
 	{
 		extraDataDir = ".";

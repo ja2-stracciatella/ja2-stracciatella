@@ -17,7 +17,7 @@
 
 struct TILE_CACHE_STRUCT
 {
-	std::string rootName;
+	ST::string rootName;
 	STRUCTURE_FILE_REF* pStructureFileRef;
 };
 
@@ -44,9 +44,9 @@ void InitTileCache(void)
 	}
 
 	// Look for JSD files in the tile cache directory and load any we find
-	std::vector<std::string> jsdFiles = GCM->getAllTilecache();
+	std::vector<ST::string> jsdFiles = GCM->getAllTilecache();
 
-	for (const std::string &file : jsdFiles)
+	for (const ST::string &file : jsdFiles)
 	{
 		TILE_CACHE_STRUCT tc;
 		tc.rootName = FileMan::getFileNameWithoutExt(file);
@@ -144,7 +144,7 @@ INT32 GetCachedTile(const char* const filename)
 	strcpy(tce->zName, filename);
 	tce->sHits = 1;
 
-	std::string root_name(FileMan::getFileNameWithoutExt(filename));
+	ST::string root_name(FileMan::getFileNameWithoutExt(filename));
 	STRUCTURE_FILE_REF* const sfr = GetCachedTileStructureRefFromFilename(root_name.c_str());
 	tce->struct_file_ref = sfr;
 	if (sfr) AddZStripInfoToVObject(tce->pImagery->vo, sfr, TRUE, 0);

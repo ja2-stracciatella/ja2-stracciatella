@@ -611,7 +611,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	char zSaveGameName[512];
 	CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
-	AutoSGPFile f(GCM->openUserPrivateFileForReading(std::string(zSaveGameName)));
+	AutoSGPFile f(GCM->openUserPrivateFileForReading(zSaveGameName));
 
 	SAVED_GAME_HEADER SaveGameHeader;
 	bool stracLinuxFormat;
@@ -1300,7 +1300,7 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 
 void BackupSavedGame(UINT8 const ubSaveGameID)
 {
-	std::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder().c_str(),"Backup");
+	ST::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder().c_str(),"Backup");
 	FileMan::createDir(backupdir.c_str());
 	char zSourceSaveGameName[512];
 	char zSourceBackupSaveGameName[515];
@@ -1535,7 +1535,7 @@ static void LoadWatchedLocsFromSavedGame(HWFILE const hFile)
 
 void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzNewFileName)
 {
-	std::string dir = GCM->getSavedGamesFolder();
+	ST::string dir = GCM->getSavedGamesFolder();
 	char const* const ext = g_savegame_ext;
 
 	switch (ubSaveGameID)

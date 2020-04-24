@@ -299,7 +299,7 @@ static void PlayAutoResolveSample(SoundID const usNum, UINT32 const ubVolume, UI
 	}
 }
 
-static void PlayAutoResolveSample(const std::string &sample, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
+static void PlayAutoResolveSample(const ST::string &sample, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
 {
 	if( gpAR->fSound )
 	{

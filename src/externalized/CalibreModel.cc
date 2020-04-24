@@ -61,13 +61,13 @@ const CalibreModel* CalibreModel::getNoCalibreObject()
 
 
 const CalibreModel* getCalibre(const char *calibreName,
-				const std::map<std::string, const CalibreModel*> &calibreMap)
+				const std::map<ST::string, const CalibreModel*> &calibreMap)
 {
-	std::map<std::string, const CalibreModel*>::const_iterator it = calibreMap.find(calibreName);
+	std::map<ST::string, const CalibreModel*>::const_iterator it = calibreMap.find(calibreName);
 	if(it != calibreMap.end())
 	{
 		return it->second;
 	}
 
-	throw std::runtime_error(FormattedString("calibre '%s' is not found", calibreName));
+	throw std::runtime_error(FormattedString("calibre '%s' is not found", calibreName).to_std_string());
 }

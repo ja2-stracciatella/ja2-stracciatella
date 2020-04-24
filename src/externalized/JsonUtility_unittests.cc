@@ -5,26 +5,26 @@
 TEST(JsonUtilityTest, parseListOfStrings)
 {
 	{
-		std::vector<std::string> strings;
+		std::vector<ST::string> strings;
 		ASSERT_TRUE(JsonUtility::parseJsonToListStrings("[]", strings));
 		ASSERT_EQ(strings.size(), 0u);
 	}
 
 	{
-		std::vector<std::string> strings;
+		std::vector<ST::string> strings;
 		ASSERT_FALSE(JsonUtility::parseJsonToListStrings("foo", strings));
 		ASSERT_EQ(strings.size(), 0u);
 	}
 
 	{
-		std::vector<std::string> strings;
+		std::vector<ST::string> strings;
 		ASSERT_TRUE(JsonUtility::parseJsonToListStrings("[\"foo\"]", strings));
 		ASSERT_EQ(strings.size(), 1u);
 		ASSERT_STREQ(strings[0].c_str(), "foo");
 	}
 
 	{
-		std::vector<std::string> strings;
+		std::vector<ST::string> strings;
 		ASSERT_TRUE(JsonUtility::parseJsonToListStrings("[\"foo\", \"bar\"]", strings));
 		ASSERT_EQ(strings.size(), 2u);
 		ASSERT_STREQ(strings[0].c_str(), "foo");

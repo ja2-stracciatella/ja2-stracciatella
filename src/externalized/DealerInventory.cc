@@ -13,7 +13,7 @@ DealerInventory::DealerInventory(rapidjson::Document *json, const ItemSystem *it
 	{
 		if(!it->value.IsInt())
 		{
-			throw std::runtime_error(FormattedString("Property '%s' should have integer value", it->name.GetString()));
+			throw std::runtime_error(FormattedString("Property '%s' should have integer value", it->name.GetString()).to_std_string());
 		}
 		const ItemModel *item = itemSystem->getItemByName(it->name.GetString());
 		int count = it->value.GetInt();

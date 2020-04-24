@@ -100,7 +100,7 @@ void WeaponModel::serializeAttachments(JsonObject &obj) const
 }
 
 WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
-					const std::map<std::string, const CalibreModel*> &calibreMap)
+					const std::map<ST::string, const CalibreModel*> &calibreMap)
 {
 	WeaponModel *wep = NULL;
 	int itemIndex = obj.GetInt("itemIndex");
@@ -663,7 +663,7 @@ bool WeaponModel::canBeAttached(uint16_t attachment) const
 }
 
 /** Get standard replacement gun name. */
-const std::string & WeaponModel::getStandardReplacement() const
+const ST::string & WeaponModel::getStandardReplacement() const
 {
 	return standardReplacement;
 }

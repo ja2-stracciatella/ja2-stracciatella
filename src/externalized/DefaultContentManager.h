@@ -12,7 +12,6 @@
 
 #include <map>
 #include <stdexcept>
-#include <string>
 #include <vector>
 
 
@@ -23,49 +22,49 @@ class DefaultContentManager : public ContentManager, public IGameDataLoader
 public:
 
 	DefaultContentManager(GameVersion gameVersion,
-				const std::string &configFolder,
-				const std::string &gameResRootPath,
-				const std::string &externalizedDataPath);
+				const ST::string &configFolder,
+				const ST::string &gameResRootPath,
+				const ST::string &externalizedDataPath);
 
 	virtual ~DefaultContentManager() override;
 
 	/** Get list of game resources. */
-	virtual std::vector<std::string> getListOfGameResources() const;
+	virtual std::vector<ST::string> getListOfGameResources() const;
 
 	/** Initialize game resources. */
-	virtual void initGameResouces(const std::string &stracciatellaHomeDir, const std::vector<std::string> &libraries);
-	virtual void addExtraResources(const std::string &baseDir, const std::string &library);
+	virtual void initGameResouces(const ST::string &stracciatellaHomeDir, const std::vector<ST::string> &libraries);
+	virtual void addExtraResources(const ST::string &baseDir, const ST::string &library);
 
 	/** Load the game data. */
 	bool loadGameData();
 
 	/** Get map file path. */
-	virtual std::string getMapPath(const ST::string& mapName) const override;
+	virtual ST::string getMapPath(const ST::string& mapName) const override;
 
 	/** Get radar map resource name. */
-	virtual std::string getRadarMapResourceName(const std::string &mapName) const override;
+	virtual ST::string getRadarMapResourceName(const ST::string &mapName) const override;
 
 	/** Get tileset resource name. */
-	virtual std::string getTilesetResourceName(int number, std::string fileName) const override;
+	virtual ST::string getTilesetResourceName(int number, ST::string fileName) const override;
 
 	/** Get tileset db resource name. */
-	virtual std::string getTilesetDBResName() const override;
+	virtual ST::string getTilesetDBResName() const override;
 
 	/** Open map for reading. */
 	virtual SGPFile* openMapForReading(const ST::string& mapName) const override;
 
 	/** Get directory for storing new map file. */
-	virtual std::string getNewMapFolder() const override;
+	virtual ST::string getNewMapFolder() const override;
 
 	/** Get all available maps. */
-	virtual std::vector<std::string> getAllMaps() const override;
+	virtual std::vector<ST::string> getAllMaps() const override;
 
 	/** Get all available tilecache. */
-	virtual std::vector<std::string> getAllTilecache() const override;
+	virtual std::vector<ST::string> getAllTilecache() const override;
 
 	/* Open a game resource file for reading. */
 	virtual SGPFile* openGameResForReading(const char* filename) const override;
-	virtual SGPFile* openGameResForReading(const std::string& filename) const override;
+	virtual SGPFile* openGameResForReading(const ST::string& filename) const override;
 
 	/** Open temporary file for writing. */
 	virtual SGPFile* openTempFileForWriting(const char* filename, bool truncate) const override;
@@ -80,25 +79,25 @@ public:
 	virtual void deleteTempFile(const char* filename) const override;
 
 	/** Open user's private file (e.g. saved game, settings) for reading. */
-	virtual SGPFile* openUserPrivateFileForReading(const std::string& filename) const override;
+	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const override;
 
 	/* Checks if a game resource exists. */
 	virtual bool doesGameResExists(char const* filename) const override;
-	virtual bool doesGameResExists(const std::string &filename) const override;
+	virtual bool doesGameResExists(const ST::string &filename) const override;
 
 	/** Get folder for screenshots. */
-	virtual std::string getScreenshotFolder() const override;
+	virtual ST::string getScreenshotFolder() const override;
 
 	/** Get folder for video capture. */
-	virtual std::string getVideoCaptureFolder() const override;
+	virtual ST::string getVideoCaptureFolder() const override;
 
-	const std::string& getDataDir() { return m_dataDir; }
-	const std::string& getTileDir() { return m_tileDir; }
+	const ST::string& getDataDir() { return m_dataDir; }
+	const ST::string& getTileDir() { return m_tileDir; }
 
-	const std::string& getExternalizedDataDir() { return m_externalizedDataPath; }
+	const ST::string& getExternalizedDataDir() { return m_externalizedDataPath; }
 
 	/** Get folder for saved games. */
-	virtual std::string getSavedGamesFolder() const override;
+	virtual ST::string getSavedGamesFolder() const override;
 
 	/** Load encrypted string from game resource file. */
 	virtual ST::string loadEncryptedString(const char* fileName, uint32_t seek_chars, uint32_t read_chars) const override;
@@ -113,9 +112,9 @@ public:
 
 	/** Get weapons with the give index. */
 	virtual const WeaponModel* getWeapon(uint16_t index) override;
-	virtual const WeaponModel* getWeaponByName(const std::string &internalName) override;
+	virtual const WeaponModel* getWeaponByName(const ST::string &internalName) override;
 
-	virtual const MagazineModel* getMagazineByName(const std::string &internalName) override;
+	virtual const MagazineModel* getMagazineByName(const ST::string &internalName) override;
 	virtual const MagazineModel* getMagazineByItemIndex(uint16_t itemIndex) override;
 	virtual const std::vector<const MagazineModel*>& getMagazines() const override;
 
@@ -126,7 +125,7 @@ public:
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index) override;
 
 	virtual const ItemModel* getItem(uint16_t index) const override;
-	virtual const ItemModel* getItemByName(const std::string &internalName) const override;
+	virtual const ItemModel* getItemByName(const ST::string &internalName) const override;
 
 	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const override;
 	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const override;
@@ -153,11 +152,11 @@ public:
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 
 protected:
-	std::string m_dataDir;
-	std::string m_tileDir;
-	std::string m_configFolder;
-	std::string m_gameResRootPath;
-	std::string m_externalizedDataPath;
+	ST::string m_dataDir;
+	ST::string m_tileDir;
+	ST::string m_configFolder;
+	ST::string m_gameResRootPath;
+	ST::string m_externalizedDataPath;
 
 	const GameVersion m_gameVersion;
 
@@ -173,11 +172,11 @@ protected:
 	std::vector<AmmoTypeModel*> m_ammoTypes;
 
 	/** Mapping of calibre names to objects. */
-	std::map<std::string, const AmmoTypeModel*> m_ammoTypeMap;
-	std::map<std::string, const CalibreModel*> m_calibreMap;
-	std::map<std::string, const MagazineModel*> m_magazineMap;
-	std::map<std::string, const WeaponModel*> m_weaponMap;
-	std::map<std::string, const ItemModel*> m_itemMap;
+	std::map<ST::string, const AmmoTypeModel*> m_ammoTypeMap;
+	std::map<ST::string, const CalibreModel*> m_calibreMap;
+	std::map<ST::string, const MagazineModel*> m_magazineMap;
+	std::map<ST::string, const WeaponModel*> m_weaponMap;
+	std::map<ST::string, const ItemModel*> m_itemMap;
 	std::map<MusicMode, const std::vector<const ST::string*>*> m_musicMap;
 
 	std::vector<std::vector<const WeaponModel*> > mNormalGunChoice;
@@ -223,8 +222,8 @@ protected:
 class LibraryFileNotFoundException : public std::runtime_error
 {
 public:
-	LibraryFileNotFoundException(const std::string& what_arg)
-		:std::runtime_error(what_arg)
+	LibraryFileNotFoundException(const ST::string& what_arg)
+		:std::runtime_error(what_arg.to_std_string())
 	{
 	}
 };

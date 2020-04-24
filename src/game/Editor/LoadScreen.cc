@@ -103,7 +103,7 @@ static BOOLEAN fEnteringLoadSaveScreen = TRUE;
 
 static MOUSE_REGION BlanketRegion;
 
-static std::string gMapFileForRemoval;
+static ST::string gMapFileForRemoval;
 
 enum{
 	IOSTATUS_NONE,
@@ -145,8 +145,8 @@ static void LoadSaveScreenEntry(void)
 	iTopFileShown = iTotalFiles = 0;
 	try
 	{
-		std::vector<std::string> files = GCM->getAllMaps();
-		for (const std::string &file : files)
+		std::vector<ST::string> files = GCM->getAllMaps();
+		for (const ST::string &file : files)
 		{
 			FileList = AddToFDlgList(FileList, file.c_str());
 			++iTotalFiles;
@@ -379,7 +379,7 @@ ScreenID LoadSaveScreenHandle(void)
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
 			}
-			std::string filename(GCM->getMapPath(gzFilename));
+			ST::string filename(GCM->getMapPath(gzFilename));
 			if ( GCM->doesGameResExists(filename.c_str()) )
 			{
 				gfFileExists = TRUE;

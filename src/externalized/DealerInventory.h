@@ -1,9 +1,8 @@
 #pragma once
 
-#include <map>
-#include <string>
-
 #include "rapidjson/document.h"
+
+#include <map>
 
 struct ItemModel;
 class ItemSystem;

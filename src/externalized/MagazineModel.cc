@@ -51,8 +51,8 @@ void MagazineModel::serializeTo(JsonObject &obj) const
 
 MagazineModel* MagazineModel::deserialize(
 	JsonObjectReader &obj,
-	const std::map<std::string, const CalibreModel*> &calibreMap,
-	const std::map<std::string, const AmmoTypeModel*> &ammoTypeMap)
+	const std::map<ST::string, const CalibreModel*> &calibreMap,
+	const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap)
 {
 	int itemIndex                 = obj.GetInt("itemIndex");
 	const char *internalName      = obj.GetString("internalName");
@@ -82,7 +82,7 @@ MagazineModel* MagazineModel::deserialize(
 }
 
 
-const std::string & MagazineModel::getStandardReplacement() const
+const ST::string & MagazineModel::getStandardReplacement() const
 {
 	return standardReplacement;
 }

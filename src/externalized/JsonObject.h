@@ -1,8 +1,7 @@
 #pragma once
 
-#include <string>
-
 #include "rapidjson/document.h"
+#include <string_theory/string>
 
 class JsonObject
 {
@@ -19,7 +18,7 @@ public:
 	void AddMember(const char *name, uint16_t    value) { m_value.AddMember<uint16_t>(rapidjson::StringRef(name), value, m_alloc); }
 	void AddMember(const char *name, bool        value) { m_value.AddMember<bool>(rapidjson::StringRef(name), value, m_alloc); }
 
-	void AddMember(const char *name, const std::string &value)
+	void AddMember(const char *name, const ST::string &value)
 	{
 		m_value.AddMember(rapidjson::StringRef(name), rapidjson::StringRef(value.c_str()), m_alloc);
 	}

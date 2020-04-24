@@ -1,14 +1,14 @@
 #pragma once
 
-#include <stdint.h>
-
-#include <map>
-#include <string>
-
 // XXX
 #include "game/Tactical/Weapons.h"
 
 #include "ItemModel.h"
+
+#include <string_theory/string>
+
+#include <map>
+#include <stdint.h>
 
 class JsonObject;
 class JsonObjectReader;
@@ -31,7 +31,7 @@ struct WeaponModel : ItemModel
 	virtual void serializeTo(JsonObject &obj) const;
 
 	static WeaponModel* deserialize(JsonObjectReader &obj,
-	const std::map<std::string, const CalibreModel*> &calibreMap);
+	const std::map<ST::string, const CalibreModel*> &calibreMap);
 
 	virtual const WeaponModel* asWeapon() const   { return this; }
 
@@ -46,13 +46,13 @@ struct WeaponModel : ItemModel
 	virtual bool canBeAttached(uint16_t attachment) const;
 
 	/** Get standard replacement gun name. */
-	virtual const std::string & getStandardReplacement() const;
+	virtual const ST::string & getStandardReplacement() const;
 
 	int getRateOfFire() const;
 
-	std::string sound;
-	std::string burstSound;
-	std::string standardReplacement;
+	ST::string sound;
+	ST::string burstSound;
+	ST::string standardReplacement;
 	bool attachSilencer;
 	bool attachSniperScope;
 	bool attachLaserScope;

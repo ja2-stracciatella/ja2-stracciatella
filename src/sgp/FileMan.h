@@ -1,11 +1,12 @@
 #ifndef FILEMAN_H
 #define FILEMAN_H
 
-#include <string>
-#include <vector>
-
 #include "sgp/SGPFile.h"
 #include "sgp/Types.h"
+
+#include <string_theory/string>
+
+#include <vector>
 
 #ifdef _WIN32
 #	define WIN32_LEAN_AND_MEAN
@@ -17,7 +18,7 @@
 /* Delete the file at path. Returns true iff deleting the file succeeded or
  * the file did not exist in the first place. */
 void FileDelete(char const* path);
-void FileDelete(const std::string &path);
+void FileDelete(const ST::string &path);
 
 void FileRead( SGPFile*, void*       pDest, size_t uiBytesToRead);
 void FileWrite(SGPFile*, void const* pDest, size_t uiBytesToWrite);
@@ -66,7 +67,7 @@ class FileMan
 public:
 
 	/** Find config folder and switch into it. */
-	static std::string switchTmpFolder(std::string homeDir);
+	static ST::string switchTmpFolder(ST::string homeDir);
 
 	/** Open file for writing.
 	 * If file is missing it will be created.
@@ -85,19 +86,19 @@ public:
 	static SGPFile* openForReading(const char *filename);
 
 	/** Open file for reading. */
-	static SGPFile* openForReading(const std::string &filename);
+	static SGPFile* openForReading(const ST::string &filename);
 
 	/** Read the whole file as text. */
-	static std::string fileReadText(SGPFile*);
+	static ST::string fileReadText(SGPFile*);
 
 #if CASE_SENSITIVE_FS
 	/** Find an object (file or subdirectory) in the given directory in case-independent manner.
 	 * @return true when found, return the found name using foundName. */
-	static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName);
+	static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, ST::string &foundName);
 #endif
 
 	/** Open file in the 'Data' directory in case-insensitive manner. */
-	static RustPointer<File> openForReadingCaseInsensitive(const std::string& folderPath, const char* filename);
+	static RustPointer<File> openForReadingCaseInsensitive(const ST::string& folderPath, const char* filename);
 
 	/* ------------------------------------------------------------
 	 * Other operations
@@ -109,38 +110,38 @@ public:
 	static void createDir(char const* path);
 
 	/** Join two path components. */
-	static std::string joinPaths(const char *first, const char *second);
+	static ST::string joinPaths(const char *first, const char *second);
 
 	/** Join two path components. */
-	static std::string joinPaths(const std::string &first, const char *second);
+	static ST::string joinPaths(const ST::string &first, const char *second);
 
 	/** Join two path components. */
-	static std::string joinPaths(const std::string &first, const std::string &second);
+	static ST::string joinPaths(const ST::string &first, const ST::string &second);
 
 	/** Replace extension of a file. */
-	static std::string replaceExtension(const std::string &path, const char *newExtensionWithDot);
+	static ST::string replaceExtension(const ST::string &path, const char *newExtensionWithDot);
 
 	/** Get parent path (e.g. directory path from the full path). */
-	static std::string getParentPath(const std::string &path, bool absolute);
+	static ST::string getParentPath(const ST::string &path, bool absolute);
 
 	/** Get filename from the path. */
-	static std::string getFileName(const std::string &path);
+	static ST::string getFileName(const ST::string &path);
 
 	/** Get filename from the path without extension. */
-	static std::string getFileNameWithoutExt(const char *path);
-	static std::string getFileNameWithoutExt(const std::string &path);
+	static ST::string getFileNameWithoutExt(const char *path);
+	static ST::string getFileNameWithoutExt(const ST::string &path);
 
 	static RustPointer<File> openFileForReading(const char* filename);
 
 	/** Open file in the given folder in case-insensitive manner.
 	 * @return file descriptor or null if file is not found. */
-	static RustPointer<File> openFileCaseInsensitive(const std::string& folderPath, const char* filename, uint8_t open_options);
+	static RustPointer<File> openFileCaseInsensitive(const ST::string& folderPath, const char* filename, uint8_t open_options);
 
 	/** Convert File to HWFile. */
 	static SGPFile* getSGPFileFromFile(File* f);
 
 	/** Replace all \ with / */
-	static void slashifyPath(std::string &path);
+	static void slashifyPath(ST::string &path);
 
 	/** Check file existance. */
 	static bool checkFileExistance(const char *folder, const char *fileName);
@@ -161,9 +162,9 @@ private:
  * @param returnOnlyNames When True, return only names (without the directory path)
  * @param sortResults When True, sort found paths.
  * @return List of paths (dir + filename). */
-std::vector<std::string>
-FindFilesInDir(const std::string &dirPath,
-		const std::string &ext,
+std::vector<ST::string>
+FindFilesInDir(const ST::string &dirPath,
+		const ST::string &ext,
 		bool caseIncensitive,
 		bool returnOnlyNames,
 		bool sortResults = false);
@@ -173,7 +174,7 @@ FindFilesInDir(const std::string &dirPath,
  * @param dirPath Path to the directory
  * @param sortResults When True, sort found paths.
  * @return List of paths (dir + filename). */
-std::vector<std::string>
-FindAllFilesInDir(const std::string &dirPath, bool sortResults = false);
+std::vector<ST::string>
+FindAllFilesInDir(const ST::string &dirPath, bool sortResults = false);
 
 #endif

@@ -9,10 +9,10 @@
 /** Create DefaultContentManager for usage in unit testing. */
 DefaultContentManager * createDefaultCMForTesting()
 {
-	std::string extraDataDir = GetExtraDataDir();
-	std::string configFolderPath = FileMan::joinPaths(extraDataDir, "unittests");
-	std::string gameResRootPath = FileMan::joinPaths(extraDataDir, "unittests");
-	std::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
+	ST::string extraDataDir = GetExtraDataDir();
+	ST::string configFolderPath = FileMan::joinPaths(extraDataDir, "unittests");
+	ST::string gameResRootPath = FileMan::joinPaths(extraDataDir, "unittests");
+	ST::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
 
 	DefaultContentManager *cm;
 

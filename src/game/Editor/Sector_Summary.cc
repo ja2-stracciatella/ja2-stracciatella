@@ -1973,7 +1973,7 @@ static void SummarySaveMapCallback(GUI_BUTTON* btn, INT32 reason)
 		{
 			if( gubOverrideStatus == READONLY )
 			{
-				std::string path = GCM->getMapPath(gszDisplayName);
+				ST::string path = GCM->getMapPath(gszDisplayName);
 				if (!Fs_setReadOnly(path.c_str(), false))
 				{
 					RustPointer<char> msg(getRustError());
@@ -2007,7 +2007,7 @@ static void SummaryOverrideCallback(GUI_BUTTON* btn, INT32 reason)
 
 static void CalculateOverrideStatus(void)
 {
-	std::string filename;
+	ST::string filename;
 	gfOverrideDirty = FALSE;
 	gfOverride = FALSE;
 	if( gfTempFile )

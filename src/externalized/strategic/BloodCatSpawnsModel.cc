@@ -19,7 +19,7 @@ const int8_t BloodCatSpawnsModel::getSpawnsByDifficulty(uint8_t difficultyLevel)
 		case DIF_LEVEL_HARD:
 			return bloodCatsSpawnsHard;
 		default:
-			throw std::runtime_error(FormattedString("Unsupported difficulty level: %d", difficultyLevel));
+			throw std::runtime_error(FormattedString("Unsupported difficulty level: %d", difficultyLevel).to_std_string());
 	}
 }
 
