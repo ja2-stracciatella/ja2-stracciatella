@@ -1,9 +1,3 @@
-#include <algorithm>
-#include <string>
-#include <vector>
-#include "FL/Fl_Native_File_Chooser.H"
-#include <FL/Fl_PNG_Image.H>
-#include <FL/fl_ask.H>
 #include "logo32.png.h"
 #include "Logger.h"
 #include "RustInterface.h"
@@ -12,6 +6,14 @@
 #include "Video.h"
 
 #include "Launcher.h"
+
+#include "FL/Fl_Native_File_Chooser.H"
+#include <FL/Fl_PNG_Image.H>
+#include <FL/fl_ask.H>
+#include <string_theory/string>
+
+#include <algorithm>
+#include <vector>
 
 #define RESOLUTION_SEPARATOR "x"
 
@@ -56,26 +58,25 @@ void showRustError() {
 	}
 }
 
-std::string encodePath(const char* path) {
+ST::string encodePath(const char* path) {
 	if (path == nullptr) {
-		return std::string();
+		return ST::string();
 	}
 	RustPointer<char> encodedPath(Path_encodeU8(reinterpret_cast<const uint8_t*>(path), strlen(path)));
-	return std::string(encodedPath.get());
+	return ST::string(encodedPath.get());
 }
 
-std::string decodePath(const char* path) {
+ST::char_buffer decodePath(const char* path) {
 	if (path == nullptr) {
-		return std::string();
+		return ST::char_buffer{};
 	}
-	std::string buf(path); // the decoded size always fits in the original size
-	size_t len = Path_decodeU8(path, reinterpret_cast<uint8_t*>(&buf[0]), buf.size());
+	ST::char_buffer buf{ST::char_buffer::strlen(path), '\0'}; // the decoded size always fits in the original size
+	size_t len = Path_decodeU8(path, reinterpret_cast<uint8_t*>(buf.data()), buf.size());
 	if (len > buf.size()) {
 		showRustError();
-		return std::string();
+		return ST::char_buffer{};
 	}
-	buf.resize(len);
-	return buf;
+	return ST::char_buffer{buf.c_str(), len};
 }
 
 Launcher::Launcher(int argc, char* argv[]) : StracciatellaLauncher() {
@@ -240,8 +241,8 @@ void Launcher::openGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 	Fl_Native_File_Chooser fnfc;
 	fnfc.title("Select the original Jagged Alliance 2 install directory");
 	fnfc.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
-	std::string gameDir = decodePath(window->gameDirectoryInput->value());
-	fnfc.directory(gameDir.empty() ? nullptr : gameDir.c_str());
+	ST::char_buffer decoded = decodePath(window->gameDirectoryInput->value());
+	fnfc.directory(decoded.empty() ? nullptr : decoded.c_str());
 
 	switch ( fnfc.show() ) {
 		case -1:
@@ -249,10 +250,12 @@ void Launcher::openGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 		case  1:
 			break; // CANCEL
 		default:
-			gameDir = encodePath(fnfc.filename());
-			window->gameDirectoryInput->value(gameDir.c_str());
+		{
+			ST::string encoded = encodePath(fnfc.filename());
+			window->gameDirectoryInput->value(encoded.c_str());
 			window->update(true, window->gameDirectoryInput);
 			break; // FILE CHOSEN
+		}
 	}
 }
 
@@ -277,15 +280,15 @@ void Launcher::startExecutable(bool asEditor) {
 		fl_alert("%s", exePath.get());
 		return;
 	}
-	std::string target("-launcher");
-	std::string newFilename(filename.get());
-	size_t pos = newFilename.find(target);
-	if (pos == std::string::npos) {
+	ST::string target("-launcher");
+	ST::string newFilename(filename.get());
+	auto pos = newFilename.find(target);
+	if (pos == -1) {
 		fl_message_title("Not launcher");
 		fl_alert("%s", exePath.get());
 		return;
 	}
-	newFilename.replace(pos, target.size(), "");
+	newFilename = newFilename.replace(target, "");
 	exePath.reset(Path_setFilename(exePath.get(), newFilename.c_str()));
 	if (!Fs_exists(exePath.get())) {
 		fl_message_title("Not found");
@@ -316,11 +319,11 @@ void Launcher::update(bool changed, Fl_Widget *widget) {
 
 	// something changed indicator
 	if (changed && ja2JsonPathOutput->value()[0] != '*') {
-		std::string tmp("*"); // add '*'
+		ST::string tmp("*"); // add '*'
 		tmp += ja2JsonPathOutput->value();
 		ja2JsonPathOutput->value(tmp.c_str());
 	} else if (!changed && ja2JsonPathOutput->value()[0] == '*') {
-		std::string tmp(ja2JsonPathOutput->value() + 1); // remove '*'
+		ST::string tmp(ja2JsonPathOutput->value() + 1); // remove '*'
 		ja2JsonPathOutput->value(tmp.c_str());
 	}
 }
@@ -392,10 +395,10 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 void Launcher::setPredefinedResolution(Fl_Widget* btn, void* userdata) {
 	Fl_Menu_Button* menuBtn = static_cast< Fl_Menu_Button* >( btn );
 	Launcher* window = static_cast< Launcher* >( userdata );
-	std::string res = menuBtn->mvalue()->label();
-	size_t split_index = res.find(RESOLUTION_SEPARATOR);
-	int x = atoi(res.substr(0, split_index).c_str());
-	int y = atoi(res.substr(split_index+1, res.length()).c_str());
+	ST::string res = menuBtn->mvalue()->label();
+	int x = 0;
+	int y = 0;
+	(void)sscanf(res.c_str(), "%d" RESOLUTION_SEPARATOR "%d", &x, &y);
 	window->resolutionXInput->value(x);
 	window->resolutionYInput->value(y);
 	window->update(true, btn);
@@ -446,7 +449,7 @@ void Launcher::moveUpMods(Fl_Widget* widget, void* userdata) {
 		order.emplace_back(item);
 	}
 
-	std::vector<std::string> text;
+	std::vector<ST::string> text;
 	std::vector<int> checked;
 	for (int item : order) {
 		text.emplace_back(window->modsCheckBrowser->text(item));
@@ -480,7 +483,7 @@ void Launcher::moveDownMods(Fl_Widget* widget, void* userdata) {
 	}
 	std::reverse(order.begin(), order.end());
 
-	std::vector<std::string> text;
+	std::vector<ST::string> text;
 	std::vector<int> checked;
 	for (int item : order) {
 		text.emplace_back(window->modsCheckBrowser->text(item));
@@ -501,7 +504,7 @@ void Launcher::removeMods(Fl_Widget* widget, void* userdata) {
 		return; // nothing to do
 	}
 
-	std::vector<std::string> text;
+	std::vector<ST::string> text;
 	int nitems = window->modsCheckBrowser->nitems();
 	for (int item = 1; item <= nitems; ++item) {
 		if (!window->modsCheckBrowser->checked(item)) {

@@ -535,7 +535,7 @@ static void WriteTGAHeader(File* file)
 /* Create a file for a screenshot, which is guaranteed not to exist yet. */
 static RustPointer<File> CreateScreenshotFile(void)
 {
-	const std::string exec_dir = GCM->getScreenshotFolder();
+	const ST::string exec_dir = GCM->getScreenshotFolder();
 	while (true)
 	{
 		char filename[2048];
@@ -809,7 +809,7 @@ static void RefreshMovieCache(void)
 
 	PauseTime(TRUE);
 
-	const std::string exec_dir = GCM->getVideoCaptureFolder();
+	const ST::string exec_dir = GCM->getVideoCaptureFolder();
 
 	for (INT32 cnt = 0; cnt < giNumFrames; cnt++)
 	{

@@ -338,7 +338,7 @@ int main(int argc, char* argv[])
 		}
 	}
 
-	std::string exeFolder = FileMan::getParentPath(argv[0], true);
+	ST::string exeFolder = FileMan::getParentPath(argv[0], true);
 
 	RustPointer<EngineOptions> params(EngineOptions_create(argv, argc));
 	if (params == NULL) {
@@ -416,14 +416,14 @@ int main(int argc, char* argv[])
 	RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome(params.get()));
 	RustPointer<char> gameResRootPath(EngineOptions_getVanillaGameDir(params.get()));
 
-	std::string extraDataDir = EXTRA_DATA_DIR;
+	ST::string extraDataDir = EXTRA_DATA_DIR;
 	if(extraDataDir.empty())
 	{
 		// use location of the exe file
 		extraDataDir = exeFolder;
 	}
 
-	std::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
+	ST::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
 
 	FileMan::switchTmpFolder(configFolderPath.get());
 
@@ -432,12 +432,12 @@ int main(int argc, char* argv[])
 	uint32_t n = EngineOptions_getModsLength(params.get());
 	if(n > 0)
 	{
-		std::vector<std::string> modNames;
-		std::vector<std::string> modResFolders;
+		std::vector<ST::string> modNames;
+		std::vector<ST::string> modResFolders;
 		for (uint32_t i = 0; i < n; ++i)
 		{
 			RustPointer<char> modName(EngineOptions_getMod(params.get(), i));
-			std::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName.get()), "data");
+			ST::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName.get()), "data");
 			modNames.emplace_back(modName.get());
 			modResFolders.emplace_back(modResFolder);
 		}
@@ -474,7 +474,7 @@ int main(int argc, char* argv[])
 		SLOGI("------------------------------------------------------------------------------");
 	}
 
-	std::vector<std::string> libraries = cm->getListOfGameResources();
+	std::vector<ST::string> libraries = cm->getListOfGameResources();
 	cm->initGameResouces(configFolderPath.get(), libraries);
 
 	// free editor.slf has the lowest priority (last library) and is optional
@@ -571,7 +571,7 @@ int main(int argc, char* argv[])
 					const char *dialogFile, const char *outputFile)
 {
 	std::vector<ST::string*> quotes;
-	std::vector<std::string> quotes_str;
+	std::vector<ST::string> quotes_str;
 	cm->loadAllDialogQuotes(encType, dialogFile, quotes);
 	for(int i = 0; i < quotes.size(); i++)
 	{

@@ -1,17 +1,17 @@
 #include "DefaultIMPPolicy.h"
 
-#include <string>
-
 #include "ItemSystem.h"
 #include "JsonUtility.h"
+
+#include <string_theory/string>
 
 struct ItemModel;
 
 static void readListOfItems(rapidjson::Value &value, std::vector<const ItemModel *> &items, const ItemSystem *itemSystem)
 {
-	std::vector<std::string> strings;
+	std::vector<ST::string> strings;
 	JsonUtility::parseListStrings(value, strings);
-	for (const std::string &str : strings)
+	for (const ST::string &str : strings)
 	{
 		items.push_back(itemSystem->getItemByName(str));
 	}

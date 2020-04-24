@@ -9,7 +9,7 @@
 #include <sstream>
 
 /** Write list of strings to file. */
-bool JsonUtility::writeToFile(const char *name, const std::vector<std::string> &strings)
+bool JsonUtility::writeToFile(const char *name, const std::vector<ST::string> &strings)
 {
 	std::stringstream ss;
 	rapidjson::OStreamWrapper os(ss);
@@ -22,8 +22,8 @@ bool JsonUtility::writeToFile(const char *name, const std::vector<std::string> &
 	writer.EndArray();
 	ss << std::endl;
 
-	std::string buf = ss.str();
-	if (!Fs_write(name, reinterpret_cast<const uint8_t*>(buf.data()), buf.size()))
+	ST::string buf = ss.str();
+	if (!Fs_write(name, reinterpret_cast<const uint8_t*>(buf.c_str()), buf.size()))
 	{
 		RustPointer<char> err(getRustError());
 		SLOGE("JsonUtility::writeToFile: %s", err.get());
@@ -33,7 +33,7 @@ bool JsonUtility::writeToFile(const char *name, const std::vector<std::string> &
 }
 
 /** Parse json to a list of strings. */
-bool JsonUtility::parseJsonToListStrings(const char* jsonData, std::vector<std::string> &strings)
+bool JsonUtility::parseJsonToListStrings(const char* jsonData, std::vector<ST::string> &strings)
 {
 	rapidjson::Document document;
 
@@ -46,7 +46,7 @@ bool JsonUtility::parseJsonToListStrings(const char* jsonData, std::vector<std::
 }
 
 /** Parse value as list of strings. */
-bool JsonUtility::parseListStrings(const rapidjson::Value &value, std::vector<std::string> &strings)
+bool JsonUtility::parseListStrings(const rapidjson::Value &value, std::vector<ST::string> &strings)
 {
 	if(value.IsArray()) {
 		for (rapidjson::SizeType i = 0; i < value.Size(); i++)

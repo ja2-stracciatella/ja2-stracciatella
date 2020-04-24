@@ -2,9 +2,6 @@
 
 #include <stdint.h>
 
-#include <string>
-#include <vector>
-
 enum UIMode
 {
 	UI_Tactical,

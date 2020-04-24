@@ -1,10 +1,10 @@
 #ifndef SOUND_CONTROL_H
 #define SOUND_CONTROL_H
 
-#include <string>
-
 #include "JA2Types.h"
 #include "Random.h"
+
+#include <string_theory/string>
 
 
 #define FARLEFT	0
@@ -375,7 +375,7 @@ UINT32 PlayJA2Ambient(AmbientSoundID, UINT32 ubVolume, UINT32 ubLoops);
 UINT32 PlayLocationJA2SampleFromFile(UINT16 grid_no, const char* filename, UINT32 base_vol, UINT32 loops);
 
 UINT32 PlayLocationJA2Sample(UINT16 grid_no, SoundID, UINT32 base_vol, UINT32 loops);
-UINT32 PlayLocationJA2Sample(UINT16 grid_no, const std::string &sample, UINT32 base_vol, UINT32 loops);
+UINT32 PlayLocationJA2Sample(UINT16 grid_no, const ST::string &sample, UINT32 base_vol, UINT32 loops);
 UINT32 PlayLocationJA2StreamingSample(UINT16 grid_no, SoundID, UINT32 base_vol, UINT32 loops);
 UINT32 PlaySoldierJA2Sample(SOLDIERTYPE const* s, SoundID, UINT32 base_vol, UINT32 ubLoops, BOOLEAN fCheck);
 

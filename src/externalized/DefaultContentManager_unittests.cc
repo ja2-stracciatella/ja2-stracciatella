@@ -20,7 +20,7 @@ TEST(TempFiles, createFile)
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
 	}
 
-	std::vector<std::string> results = FindFilesInDir(TMPDIR, "txt", false, false);
+	std::vector<ST::string> results = FindFilesInDir(TMPDIR, "txt", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), TMPDIR PS "foo.txt");
 
@@ -115,7 +115,7 @@ TEST(TempFiles, deleteFile)
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
 	}
 
-	std::vector<std::string> results = FindFilesInDir(TMPDIR, "txt", false, false);
+	std::vector<ST::string> results = FindFilesInDir(TMPDIR, "txt", false, false);
 	ASSERT_EQ(results.size(), 1u);
 
 	cm->deleteTempFile("foo.txt");

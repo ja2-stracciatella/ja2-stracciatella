@@ -1,6 +1,6 @@
 #pragma once
 
-#include <string>
+#include <string_theory/string>
 
 /** Build formatted string. */
-std::string FormattedString(const char* fmt, ...);
+ST::string FormattedString(const char* fmt, ...);

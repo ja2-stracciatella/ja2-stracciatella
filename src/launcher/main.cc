@@ -1,8 +1,8 @@
-#include <string>
-#include <FL/Fl.H>
-
 #include <Launcher.h>
 #include "RustInterface.h"
+
+#include <FL/Fl.H>
+
 
 int main(int argc, char* argv[]) {
 	Logger_initialize("ja2-launcher.log");

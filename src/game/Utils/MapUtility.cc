@@ -83,8 +83,8 @@ ScreenID MapUtilScreenHandle()
 		// USING BRET's STUFF FOR LOOPING FILES/CREATING LIST, hence AddToFDlgList.....
 		try
 		{
-			std::vector<std::string> files = GCM->getAllMaps();
-			for (const std::string &file : files)
+			std::vector<ST::string> files = GCM->getAllMaps();
+			for (const ST::string &file : files)
 			{
 				FileList = AddToFDlgList(FileList, file.c_str());
 				++sFiles;
@@ -260,7 +260,7 @@ ScreenID MapUtilScreenHandle()
 			}
 		}
 
-		std::string zFilename2(GCM->getRadarMapResourceName(FileMan::replaceExtension(zFilename, ".sti")));
+		ST::string zFilename2(GCM->getRadarMapResourceName(FileMan::replaceExtension(zFilename, ".sti")));
 		WriteSTIFile( pDataPtr, pPalette, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, zFilename2.c_str(), CONVERT_ETRLE_COMPRESS, 0 );
 	}
 

@@ -34,7 +34,7 @@ try
 
 	// Load structure data, if any.
 	// Start by hacking the image filename into that for the structure data
-	std::string cStructureFilename(FileMan::replaceExtension(cFilename, ".jsd"));
+	ST::string cStructureFilename(FileMan::replaceExtension(cFilename, ".jsd"));
 
 	AutoStructureFileRef pStructureFileRef;
 	if (GCM->doesGameResExists( cStructureFilename ))
@@ -122,7 +122,7 @@ void SetRaisedObjectFlag(char const* const filename, TILE_IMAGERY* const t)
 	if (DEBRISWOOD != t->fType && t->fType != DEBRISWEEDS && t->fType != DEBRIS2MISC && t->fType != ANOTHERDEBRIS) return;
 
 	// Loop through array of RAISED objecttype imagery and set global value
-	std::string rootfile(FileMan::getFileNameWithoutExt(filename));
+	ST::string rootfile(FileMan::getFileNameWithoutExt(filename));
 	for (char const (*i)[9] = RaisedObjectFiles; i != endof(RaisedObjectFiles); ++i)
 	{
 		if (strcasecmp(*i, rootfile.c_str()) != 0) continue;

@@ -61,7 +61,7 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 // This could be default in C++11
 ItemModel::~ItemModel() {}
 
-const std::string& ItemModel::getInternalName() const  { return internalName;          }
+const ST::string& ItemModel::getInternalName() const  { return internalName;          }
 
 uint16_t        ItemModel::getItemIndex() const        { return itemIndex;             }
 uint32_t        ItemModel::getItemClass() const        { return usItemClass;           }

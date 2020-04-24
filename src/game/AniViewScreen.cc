@@ -283,11 +283,11 @@ static void BuildListFile(void)
 		SLOGE("BuildListFile: %s", err.get());
 		return;
 	}
-	std::string data(reinterpret_cast<const char*>(VecU8_as_ptr(vec.get())), VecU8_len(vec.get()));
+	ST::string data(reinterpret_cast<const char*>(VecU8_as_ptr(vec.get())), VecU8_len(vec.get()));
 	vec.reset(nullptr);
 
 	//count STIs inside header and verify each one's existance.
-	std::stringstream ss(data);
+	std::stringstream ss(data.c_str());
 	while (ss.getline(currFilename, 128))
 	{
 		numEntries++;
@@ -299,7 +299,7 @@ static void BuildListFile(void)
 	fOKFiles = TRUE;
 
 	cnt = 0;
-	ss.str(data);
+	ss.str(data.c_str());
 	while (ss.getline(currFilename, 128))
 	{
 		// Remove newline

@@ -1,8 +1,8 @@
 #pragma once
 
-#include <string>
-
 #include "game/Tactical/Item_Types.h"
+
+#include <string_theory/string>
 
 class JsonObject;
 class JsonObjectReader;
@@ -37,7 +37,7 @@ struct ItemModel
 	// This could be default in C++11
 	virtual ~ItemModel();
 
-	const virtual std::string& getInternalName() const;
+	const virtual ST::string& getInternalName() const;
 
 	virtual uint16_t        getItemIndex() const;
 	virtual uint32_t        getItemClass() const;
@@ -84,7 +84,7 @@ struct ItemModel
 
 protected:
 	uint16_t   itemIndex;
-	std::string internalName;
+	ST::string internalName;
 	uint32_t   usItemClass;
 	uint8_t    ubClassIndex;
 	ItemCursor ubCursor;

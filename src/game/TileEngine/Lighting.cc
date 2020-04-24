@@ -46,6 +46,9 @@
 #include "GameInstance.h"
 #include "Logger.h"
 
+#include <string_theory/iostream>
+#include <string_theory/string>
+
 #include <algorithm>
 #include <iterator>
 #include <sstream>
@@ -199,15 +202,15 @@ void LoadShadeTablesFromTextFile()
 		}
 		if (vec)
 		{
-			std::string data(reinterpret_cast<const char*>(VecU8_as_ptr(vec.get())), VecU8_len(vec.get()));
+			ST::string data(reinterpret_cast<const char*>(VecU8_as_ptr(vec.get())), VecU8_len(vec.get()));
 			vec.reset(nullptr);
 
-			std::stringstream ss(data);
+			std::stringstream ss(data.c_str());
 			for( i = 0; i < 16; i++ )
 			{
 				for( j = 0; j < 3; j++ )
 				{
-					std::string str;
+					ST::string str;
 					if (ss >> str && sscanf(str.c_str(), "%d", &num) == 1)
 					{
 						gusShadeLevels[i][j] = (UINT16)num;

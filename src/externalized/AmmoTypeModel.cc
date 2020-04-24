@@ -30,13 +30,13 @@ AmmoTypeModel* AmmoTypeModel::deserialize(JsonObjectReader &obj)
 
 
 const AmmoTypeModel* getAmmoType(const char *ammoTypeName,
-					const std::map<std::string, const AmmoTypeModel*> &ammoTypeMap)
+					const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap)
 {
-	std::map<std::string, const AmmoTypeModel*>::const_iterator it = ammoTypeMap.find(ammoTypeName);
+	std::map<ST::string, const AmmoTypeModel*>::const_iterator it = ammoTypeMap.find(ammoTypeName);
 	if(it != ammoTypeMap.end())
 	{
 		return it->second;
 	}
 
-	throw std::runtime_error(FormattedString("ammoType '%s' is not found", ammoTypeName));
+	throw std::runtime_error(FormattedString("ammoType '%s' is not found", ammoTypeName).to_std_string());
 }

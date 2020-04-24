@@ -1,8 +1,5 @@
 #pragma once
 
-#include <string>
-#include <vector>
-
 /* Game resources */
 
 #include "Types.h"
@@ -10,6 +7,10 @@
 #include "stracciatella.h"
 
 #include "StringEncodingTypes.h"
+
+#include <string_theory/string>
+
+#include <vector>
 
 /** List of supported game versions (localizations). */
 using GameVersion = VanillaVersion;
@@ -58,7 +59,7 @@ char const* GetMLGFilename(MultiLanguageGraphic);
 void setGameVersion(GameVersion ver);
 
 /** Get list of resource libraries. */
-std::vector<std::string> GetResourceLibraries(const std::string &dataDir);
+std::vector<ST::string> GetResourceLibraries(const ST::string &dataDir);
 
 /**
  * Get encoding corrector for strings in data files.

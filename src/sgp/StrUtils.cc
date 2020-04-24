@@ -6,7 +6,7 @@
 #include "PlatformStrings.h"
 
 /** Build formatted string. */
-std::string FormattedString(const char* fmt, ...)
+ST::string FormattedString(const char* fmt, ...)
 {
 	char buf[512];
 	va_list ArgPtr;
@@ -16,5 +16,5 @@ std::string FormattedString(const char* fmt, ...)
 
 	buf[sizeof(buf) - 1] = 0;
 
-	return std::string(buf);
+	return ST::string(buf);
 }

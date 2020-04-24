@@ -145,9 +145,9 @@ static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType
 }
 
 DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
-						const std::string &configFolder,
-						const std::string &gameResRootPath,
-						const std::string &externalizedDataPath
+						const ST::string &configFolder,
+						const ST::string &gameResRootPath,
+						const ST::string &externalizedDataPath
 	)
 	:m_gameVersion(gameVersion),
 	mNormalGunChoice(ARMY_GUN_LEVELS),
@@ -173,7 +173,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 
 	// need to find precise names of the directories
 
-	std::string name;
+	ST::string name;
 	if(FileMan::findObjectCaseInsensitive(m_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
 	{
 		m_dataDir = FileMan::joinPaths(m_gameResRootPath, name);
@@ -194,19 +194,19 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 }
 
 /** Get list of game resources. */
-std::vector<std::string> DefaultContentManager::getListOfGameResources() const
+std::vector<ST::string> DefaultContentManager::getListOfGameResources() const
 {
-	std::vector<std::string> libraries = GetResourceLibraries(m_dataDir);
+	std::vector<ST::string> libraries = GetResourceLibraries(m_dataDir);
 	return libraries;
 }
 
-void DefaultContentManager::initGameResouces(const std::string &stracciatellaHomeDir, const std::vector<std::string> &libraries)
+void DefaultContentManager::initGameResouces(const ST::string &stracciatellaHomeDir, const std::vector<ST::string> &libraries)
 {
 	for (auto it = libraries.begin(); it != libraries.end(); ++it)
 	{
 		if (!LibraryDB_push(m_libraryDB.get(), m_dataDir.c_str(), it->c_str()))
 		{
-			std::string message = FormattedString(
+			ST::string message = FormattedString(
 				"Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s/ja2.json'.\n",
 				it->c_str(), m_dataDir.c_str(), m_gameResRootPath.c_str(), stracciatellaHomeDir.c_str());
 			throw LibraryFileNotFoundException(message);
@@ -214,11 +214,11 @@ void DefaultContentManager::initGameResouces(const std::string &stracciatellaHom
 	}
 }
 
-void DefaultContentManager::addExtraResources(const std::string &baseDir, const std::string &library)
+void DefaultContentManager::addExtraResources(const ST::string &baseDir, const ST::string &library)
 {
 	if (!LibraryDB_push(m_libraryDB.get(), baseDir.c_str(), library.c_str())) {
 		RustPointer<char> error(getRustError());
-		std::string message = FormattedString(
+		ST::string message = FormattedString(
 			"Library '%s' is not found in folder '%s': %s",
 			library.c_str(), baseDir.c_str(), error.get());
 		throw LibraryFileNotFoundException(message);
@@ -295,9 +295,9 @@ const DealerInventory* DefaultContentManager::getBobbyRayUsedInventory() const
 }
 
 /** Get map file path. */
-std::string DefaultContentManager::getMapPath(const ST::string& mapName) const
+ST::string DefaultContentManager::getMapPath(const ST::string& mapName) const
 {
-	std::string result = MAPSDIR;
+	ST::string result = MAPSDIR;
 	result += '/';
 	result += mapName.c_str();
 
@@ -307,9 +307,9 @@ std::string DefaultContentManager::getMapPath(const ST::string& mapName) const
 }
 
 /** Get radar map resource name. */
-std::string DefaultContentManager::getRadarMapResourceName(const std::string &mapName) const
+ST::string DefaultContentManager::getRadarMapResourceName(const ST::string &mapName) const
 {
-	std::string result = RADARMAPSDIR;
+	ST::string result = RADARMAPSDIR;
 	result += "/";
 	result += mapName;
 
@@ -319,14 +319,14 @@ std::string DefaultContentManager::getRadarMapResourceName(const std::string &ma
 }
 
 /** Get tileset resource name. */
-std::string DefaultContentManager::getTilesetResourceName(int number, std::string fileName) const
+ST::string DefaultContentManager::getTilesetResourceName(int number, ST::string fileName) const
 {
 	return FormattedString("%s/%d/%s", TILESETSDIR, number, fileName.c_str());
 }
 
 
 /** Get tileset db resource name. */
-std::string DefaultContentManager::getTilesetDBResName() const
+ST::string DefaultContentManager::getTilesetDBResName() const
 {
 	return BINARYDATADIR "/ja2set.dat";
 }
@@ -338,19 +338,19 @@ SGPFile* DefaultContentManager::openMapForReading(const ST::string& mapName) con
 }
 
 /** Get directory for storing new map file. */
-std::string DefaultContentManager::getNewMapFolder() const
+ST::string DefaultContentManager::getNewMapFolder() const
 {
 	return FileMan::joinPaths(m_dataDir, MAPSDIR);
 }
 
 /** Get all available maps. */
-std::vector<std::string> DefaultContentManager::getAllMaps() const
+std::vector<ST::string> DefaultContentManager::getAllMaps() const
 {
 	return FindFilesInDir(MAPSDIR, "dat", true, true, true);
 }
 
 /** Get all available tilecache. */
-std::vector<std::string> DefaultContentManager::getAllTilecache() const
+std::vector<ST::string> DefaultContentManager::getAllTilecache() const
 {
 	return FindFilesInDir(m_tileDir, "jsd", true, false);
 }
@@ -358,21 +358,21 @@ std::vector<std::string> DefaultContentManager::getAllTilecache() const
 /** Open temporary file for writing. */
 SGPFile* DefaultContentManager::openTempFileForWriting(const char* filename, bool truncate) const
 {
-	std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	return FileMan::openForWriting(path.c_str(), truncate);
 }
 
 /** Open temporary file for appending. */
 SGPFile* DefaultContentManager::openTempFileForAppend(const char* filename) const
 {
-	std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	return FileMan::openForAppend(path.c_str());
 }
 
 /* Open temporary file for reading. */
 SGPFile* DefaultContentManager::openTempFileForReading(const char* filename) const
 {
-	std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	RustPointer<File> file(File_open(path.c_str(), FILE_OPEN_READ));
 	if (!file)
 	{
@@ -387,7 +387,7 @@ SGPFile* DefaultContentManager::openTempFileForReading(const char* filename) con
 /** Delete temporary file. */
 void DefaultContentManager::deleteTempFile(const char* filename) const
 {
-	std::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	FileDelete(path);
 }
 
@@ -449,7 +449,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
 }
 
 /** Open user's private file (e.g. saved game, settings) for reading. */
-SGPFile* DefaultContentManager::openUserPrivateFileForReading(const std::string& filename) const
+SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& filename) const
 {
 	RustPointer<File> file = FileMan::openFileForReading(filename.c_str());
 	if (!file)
@@ -462,7 +462,7 @@ SGPFile* DefaultContentManager::openUserPrivateFileForReading(const std::string&
 	return FileMan::getSGPFileFromFile(file.release());
 }
 
-SGPFile* DefaultContentManager::openGameResForReading(const std::string& filename) const
+SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename) const
 {
 	return openGameResForReading(filename.c_str());
 }
@@ -493,23 +493,23 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 	}
 }
 
-bool DefaultContentManager::doesGameResExists(const std::string &filename) const
+bool DefaultContentManager::doesGameResExists(const ST::string &filename) const
 {
 	return doesGameResExists(filename.c_str());
 }
 
-std::string DefaultContentManager::getScreenshotFolder() const
+ST::string DefaultContentManager::getScreenshotFolder() const
 {
 	return m_configFolder;
 }
 
-std::string DefaultContentManager::getVideoCaptureFolder() const
+ST::string DefaultContentManager::getVideoCaptureFolder() const
 {
 	return m_configFolder;
 }
 
 /** Get folder for saved games. */
-std::string DefaultContentManager::getSavedGamesFolder() const
+ST::string DefaultContentManager::getSavedGamesFolder() const
 {
 	return FileMan::joinPaths(m_configFolder, "SavedGames");
 }
@@ -577,23 +577,23 @@ const WeaponModel* DefaultContentManager::getWeapon(uint16_t itemIndex)
 	return getItem(itemIndex)->asWeapon();
 }
 
-const WeaponModel* DefaultContentManager::getWeaponByName(const std::string &internalName)
+const WeaponModel* DefaultContentManager::getWeaponByName(const ST::string &internalName)
 {
-	std::map<std::string, const WeaponModel*>::const_iterator it = m_weaponMap.find(internalName);
+	std::map<ST::string, const WeaponModel*>::const_iterator it = m_weaponMap.find(internalName);
 	if(it == m_weaponMap.end())
 	{
 		SLOGE("weapon '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("weapon '%s' is not found", internalName.c_str()));
+		throw std::runtime_error(FormattedString("weapon '%s' is not found", internalName.c_str()).to_std_string());
 	}
 	return it->second;//m_weaponMap[internalName];
 }
 
-const MagazineModel* DefaultContentManager::getMagazineByName(const std::string &internalName)
+const MagazineModel* DefaultContentManager::getMagazineByName(const ST::string &internalName)
 {
 	if(m_magazineMap.find(internalName) == m_magazineMap.end())
 	{
 		SLOGE("magazine '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("magazine '%s' is not found", internalName.c_str()));
+		throw std::runtime_error(FormattedString("magazine '%s' is not found", internalName.c_str()).to_std_string());
 	}
 	return m_magazineMap[internalName];
 }
@@ -631,7 +631,7 @@ const AmmoTypeModel* DefaultContentManager::getAmmoType(uint8_t index)
 bool DefaultContentManager::loadWeapons()
 {
 	AutoSGPFile f(openGameResForReading("weapons.json"));
-	std::string jsonData = FileMan::fileReadText(f);
+	ST::string jsonData = FileMan::fileReadText(f);
 
 	rapidjson::Document document;
 	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
@@ -667,7 +667,7 @@ bool DefaultContentManager::loadWeapons()
 bool DefaultContentManager::loadMagazines()
 {
 	AutoSGPFile f(openGameResForReading("magazines.json"));
-	std::string jsonData = FileMan::fileReadText(f);
+	ST::string jsonData = FileMan::fileReadText(f);
 
 	rapidjson::Document document;
 	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
@@ -704,7 +704,7 @@ bool DefaultContentManager::loadMagazines()
 bool DefaultContentManager::loadCalibres()
 {
 	AutoSGPFile f(openGameResForReading("calibres.json"));
-	std::string jsonData = FileMan::fileReadText(f);
+	ST::string jsonData = FileMan::fileReadText(f);
 
 	rapidjson::Document document;
 	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
@@ -734,7 +734,7 @@ bool DefaultContentManager::loadCalibres()
 
 	for (const CalibreModel* calibre : m_calibres)
 	{
-		m_calibreMap.insert(std::make_pair(std::string(calibre->internalName), calibre));
+		m_calibreMap.insert(std::make_pair(ST::string(calibre->internalName), calibre));
 	}
 
 	return true;
@@ -743,7 +743,7 @@ bool DefaultContentManager::loadCalibres()
 bool DefaultContentManager::loadAmmoTypes()
 {
 	AutoSGPFile f(openGameResForReading("ammo_types.json"));
-	std::string jsonData = FileMan::fileReadText(f);
+	ST::string jsonData = FileMan::fileReadText(f);
 
 	rapidjson::Document document;
 	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
@@ -773,7 +773,7 @@ bool DefaultContentManager::loadAmmoTypes()
 
 	for (const AmmoTypeModel* ammoType : m_ammoTypes)
 	{
-		m_ammoTypeMap.insert(std::make_pair(std::string(ammoType->internalName), ammoType));
+		m_ammoTypeMap.insert(std::make_pair(ST::string(ammoType->internalName), ammoType));
 	}
 
 	return true;
@@ -783,9 +783,9 @@ bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::V
 {
 	std::vector<const ST::string*>* musicModeList = new std::vector<const ST::string*>();
 
-	std::vector<std::string> utf8_encoded;
+	std::vector<ST::string> utf8_encoded;
 	JsonUtility::parseListStrings(array, utf8_encoded);
-	for (const std::string &str : utf8_encoded)
+	for (const ST::string &str : utf8_encoded)
 	{
 		musicModeList->push_back(new ST::string(str));
 		SLOGD("Loaded music %s", str.c_str());
@@ -799,7 +799,7 @@ bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::V
 bool DefaultContentManager::loadMusic()
 {
 	AutoSGPFile f(openGameResForReading("music.json"));
-	std::string jsonData = FileMan::fileReadText(f);
+	ST::string jsonData = FileMan::fileReadText(f);
 
 	rapidjson::Document document;
 	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError()) {
@@ -840,7 +840,7 @@ bool DefaultContentManager::readWeaponTable(
 	std::vector<std::vector<const WeaponModel*> > & weaponTable)
 {
 	AutoSGPFile f(openGameResForReading(fileName));
-	std::string jsonData = FileMan::fileReadText(f);
+	ST::string jsonData = FileMan::fileReadText(f);
 
 	rapidjson::Document document;
 	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
@@ -854,10 +854,10 @@ bool DefaultContentManager::readWeaponTable(
 		const rapidjson::Value& a = document;
 		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
 		{
-			std::vector<std::string> weaponNames;
+			std::vector<ST::string> weaponNames;
 			if(JsonUtility::parseListStrings(a[i], weaponNames))
 			{
-				for (const std::string &weapon : weaponNames)
+				for (const ST::string &weapon : weaponNames)
 				{
 					weaponTable[i].push_back(getWeaponByName(weapon));
 				}
@@ -886,7 +886,7 @@ bool DefaultContentManager::loadArmyGunChoice()
 
 void DefaultContentManager::loadStringRes(const char *name, std::vector<const ST::string*> &strings) const
 {
-	std::string fullName(name);
+	ST::string fullName(name);
 
 	switch(m_gameVersion)
 	{
@@ -900,15 +900,15 @@ void DefaultContentManager::loadStringRes(const char *name, std::vector<const ST
 	case GameVersion::RUSSIAN_GOLD: fullName += "-rus";   break;
 	default:
 	{
-		throw std::runtime_error(FormattedString("unknown game version %d", m_gameVersion));
+		throw std::runtime_error(FormattedString("unknown game version %d", m_gameVersion).to_std_string());
 	}
 	}
 
 	fullName += ".json";
 	std::shared_ptr<rapidjson::Document> json(readJsonDataFile(fullName.c_str()));
-	std::vector<std::string> utf8_encoded;
+	std::vector<ST::string> utf8_encoded;
 	JsonUtility::parseListStrings(*json, utf8_encoded);
-	for (const std::string &str : utf8_encoded)
+	for (const ST::string &str : utf8_encoded)
 	{
 		strings.push_back(new ST::string(str));
 	}
@@ -952,14 +952,14 @@ bool DefaultContentManager::loadGameData()
 rapidjson::Document* DefaultContentManager::readJsonDataFile(const char *fileName) const
 {
 	AutoSGPFile f(openGameResForReading(fileName));
-	std::string jsonData = FileMan::fileReadText(f);
+	ST::string jsonData = FileMan::fileReadText(f);
 
 	rapidjson::Document *document = new rapidjson::Document();
 	if (document->Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
 	{
 		SLOGE("Failed to parse '%s'", fileName);
 		delete document;
-		throw std::runtime_error(FormattedString("Failed to parse '%s'", fileName));
+		throw std::runtime_error(FormattedString("Failed to parse '%s'", fileName).to_std_string());
 	}
 
 	return document;
@@ -1006,13 +1006,13 @@ const ItemModel* DefaultContentManager::getItem(uint16_t itemIndex) const
 	return m_items[itemIndex];
 }
 
-const ItemModel* DefaultContentManager::getItemByName(const std::string &internalName) const
+const ItemModel* DefaultContentManager::getItemByName(const ST::string &internalName) const
 {
-	std::map<std::string, const ItemModel*>::const_iterator it = m_itemMap.find(internalName);
+	std::map<ST::string, const ItemModel*>::const_iterator it = m_itemMap.find(internalName);
 	if(it == m_itemMap.end())
 	{
 		SLOGE("item '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("item '%s' is not found", internalName.c_str()));
+		throw std::runtime_error(FormattedString("item '%s' is not found", internalName.c_str()).to_std_string());
 	}
 	return it->second;
 }

@@ -6,24 +6,24 @@
 
 TEST(FileManTest, joinPaths)
 {
-	// std::string joinPaths(const char *first, const char *second);
+	// ST::string joinPaths(const char *first, const char *second);
 	{
-		std::string result;
+		ST::string result;
 
 		// ~~~ platform-specific separators
 
 		result = FileMan::joinPaths("foo", "bar");
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(std::string("foo"), std::string("bar"));
+		result = FileMan::joinPaths(ST::string("foo"), ST::string("bar"));
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(std::string("foo"), "bar");
+		result = FileMan::joinPaths(ST::string("foo"), "bar");
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
 
 		result = FileMan::joinPaths("foo" PATH_SEPARATOR_STR, "bar");
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(std::string("foo" PATH_SEPARATOR_STR), std::string("bar"));
+		result = FileMan::joinPaths(ST::string("foo" PATH_SEPARATOR_STR), ST::string("bar"));
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(std::string("foo" PATH_SEPARATOR_STR), "bar");
+		result = FileMan::joinPaths(ST::string("foo" PATH_SEPARATOR_STR), "bar");
 		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
 
 		// // XXX FAILS
@@ -52,9 +52,9 @@ TEST(FileManTest, FindFilesInDir)
 	// result on Linux: "unittests/find-files/lowercase-ext.txt"
 	// result on Win:   "unittests/find-files\lowercase-ext.txt"
 
-	std::string testDir = FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files");
+	ST::string testDir = FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files");
 
-	std::vector<std::string> results = FindFilesInDir(testDir, "txt", false, false);
+	std::vector<ST::string> results = FindFilesInDir(testDir, "txt", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 
@@ -102,11 +102,11 @@ TEST(FileManTest, RemoveAllFilesInDir)
 	ASSERT_NE(tempDir.get(), nullptr);
 	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
 	ASSERT_NE(tempPath.get(), nullptr);
-	std::string subDir = FileMan::joinPaths(tempPath.get(), "subdir");
+	ST::string subDir = FileMan::joinPaths(tempPath.get(), "subdir");
 	ASSERT_EQ(Fs_createDir(subDir.c_str()), true);
 
-	std::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
-	std::string pathB = FileMan::joinPaths(tempPath.get(), "bar.txt");
+	ST::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
+	ST::string pathB = FileMan::joinPaths(tempPath.get(), "bar.txt");
 
 	SGPFile* fileA = FileMan::openForWriting(pathA.c_str());
 	ASSERT_NE(fileA, nullptr);
@@ -119,7 +119,7 @@ TEST(FileManTest, RemoveAllFilesInDir)
 	FileClose(fileA);
 	FileClose(fileB);
 
-	std::vector<std::string> results = FindAllFilesInDir(tempPath.get(), true);
+	std::vector<ST::string> results = FindAllFilesInDir(tempPath.get(), true);
 	ASSERT_EQ(results.size(), 2u);
 
 	EraseDirectory(tempPath.get());
@@ -137,7 +137,7 @@ TEST(FileManTest, ReadTextFile)
 	ASSERT_NE(tempDir.get(), nullptr);
 	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
 	ASSERT_NE(tempPath.get(), nullptr);
-	std::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
+	ST::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
 
 	SGPFile* fileA = FileMan::openForWriting(pathA.c_str());
 	ASSERT_NE(fileA, nullptr);
@@ -146,7 +146,7 @@ TEST(FileManTest, ReadTextFile)
 
 	SGPFile* forReading = FileMan::openForReading(pathA.c_str());
 	ASSERT_NE(forReading, nullptr);
-	std::string content = FileMan::fileReadText(forReading);
+	ST::string content = FileMan::fileReadText(forReading);
 	ASSERT_STREQ(content.c_str(), "foo bar baz");
 	FileClose(forReading);
 }
@@ -205,7 +205,7 @@ TEST(FileManTest, ReplaceExtension)
 
 TEST(FileManTest, SlashifyPath)
 {
-	std::string test("foo\\bar\\baz");
+	ST::string test("foo\\bar\\baz");
 	FileMan::slashifyPath(test);
 	EXPECT_STREQ(test.c_str(), "foo/bar/baz");
 }

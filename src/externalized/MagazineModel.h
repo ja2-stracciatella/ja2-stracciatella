@@ -1,10 +1,11 @@
 #pragma once
 
+#include "ItemModel.h"
+
+#include <string_theory/string>
+
 #include <map>
 #include <stdint.h>
-#include <string>
-
-#include "ItemModel.h"
 
 class JsonObject;
 class JsonObjectReader;
@@ -26,14 +27,14 @@ struct MagazineModel : ItemModel
 	virtual void serializeTo(JsonObject &obj) const;
 
 	static MagazineModel* deserialize(JsonObjectReader &obj,
-						const std::map<std::string, const CalibreModel*> &calibreMap,
-						const std::map<std::string, const AmmoTypeModel*> &ammoTypeMap);
+						const std::map<ST::string, const CalibreModel*> &calibreMap,
+						const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap);
 
 
 	/** Get standard replacement ammo name. */
-	virtual const std::string & getStandardReplacement() const;
+	virtual const ST::string & getStandardReplacement() const;
 
-	std::string standardReplacement;
+	ST::string standardReplacement;
 	const CalibreModel *calibre;
 	const uint16_t capacity;
 	const AmmoTypeModel *ammoType;

@@ -232,7 +232,7 @@ try
 		}
 
 		// Adjust for tileset position
-		std::string adjusted_filename(GCM->getTilesetResourceName(tileset_to_add, filename));
+		ST::string adjusted_filename(GCM->getTilesetResourceName(tileset_to_add, filename));
 		AddTileSurface(adjusted_filename.c_str(), i, tileset_to_add);
 	}
 }
@@ -1339,7 +1339,7 @@ BOOLEAN SaveWorld(char const* const filename)
 try
 {
 	// Let's save map into Data/maps
-	std::string path = GCM->getNewMapFolder();
+	ST::string path = GCM->getNewMapFolder();
 	FileMan::createDir(path.c_str());
 	path = FileMan::joinPaths(path.c_str(), (const char*)filename);
 	AutoSGPFile f(FileMan::openForWriting(path.c_str()));

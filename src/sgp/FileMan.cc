@@ -81,13 +81,13 @@ void SetBinDataDirFromBundle(void)
 #endif
 
 /** Find config folder and switch into it. */
-std::string FileMan::switchTmpFolder(std::string home)
+ST::string FileMan::switchTmpFolder(ST::string home)
 {
 	// Create another directory and set is as the current directory for the process
 	// Temporary files will be created in this directory.
 	// ----------------------------------------------------------------------------
 
-	std::string tmpPath = FileMan::joinPaths(home, LOCAL_CURRENT_DIR);
+	ST::string tmpPath = FileMan::joinPaths(home, LOCAL_CURRENT_DIR);
 	if (mkdir(tmpPath.c_str(), 0700) != 0 && errno != EEXIST)
 	{
 		SLOGE("Unable to create tmp directory '%s'", tmpPath.c_str());
@@ -102,15 +102,15 @@ std::string FileMan::switchTmpFolder(std::string home)
 }
 
 
-RustPointer<File> FileMan::openFileCaseInsensitive(const std::string& folderPath, const char* filename, uint8_t open_options)
+RustPointer<File> FileMan::openFileCaseInsensitive(const ST::string& folderPath, const char* filename, uint8_t open_options)
 {
-	std::string path = FileMan::joinPaths(folderPath, filename);
+	ST::string path = FileMan::joinPaths(folderPath, filename);
 	RustPointer<File> file(File_open(path.c_str(), open_options));
 	if (!file)
 	{
 #if CASE_SENSITIVE_FS
 		// on case-sensitive file system need to try to find another name
-		std::string newFileName;
+		ST::string newFileName;
 		if(findObjectCaseInsensitive(folderPath.c_str(), filename, true, false, newFileName))
 		{
 			path = FileMan::joinPaths(folderPath, newFileName);
@@ -121,7 +121,7 @@ RustPointer<File> FileMan::openFileCaseInsensitive(const std::string& folderPath
 	return file;
 }
 
-void FileDelete(const std::string &path)
+void FileDelete(const ST::string &path)
 {
 	FileDelete(path.c_str());
 }
@@ -336,8 +336,8 @@ void FileMan::createDir(char const* const path)
 
 void EraseDirectory(char const* const dirPath)
 {
-	std::vector<std::string> paths = FindAllFilesInDir(dirPath);
-	for (std::vector<std::string>::const_iterator it(paths.begin()); it != paths.end(); ++it)
+	std::vector<ST::string> paths = FindAllFilesInDir(dirPath);
+	for (std::vector<ST::string>::const_iterator it(paths.begin()); it != paths.end(); ++it)
 	{
 		try
 		{
@@ -398,10 +398,10 @@ uint64_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 }
 
 /** Join two path components. */
-std::string FileMan::joinPaths(const std::string &first, const char *second)
+ST::string FileMan::joinPaths(const ST::string &first, const char *second)
 {
-	std::string result = first;
-	if((result.length() == 0) || (result[result.length()-1] != PATH_SEPARATOR))
+	ST::string result = first;
+	if((result.size() == 0) || (result[result.size()-1] != PATH_SEPARATOR))
 	{
 		if(second[0] != PATH_SEPARATOR)
 		{
@@ -413,15 +413,15 @@ std::string FileMan::joinPaths(const std::string &first, const char *second)
 }
 
 /** Join two path components. */
-std::string FileMan::joinPaths(const std::string &first, const std::string &second)
+ST::string FileMan::joinPaths(const ST::string &first, const ST::string &second)
 {
 	return joinPaths(first, second.c_str());
 }
 
 /** Join two path components. */
-std::string FileMan::joinPaths(const char *first, const char *second)
+ST::string FileMan::joinPaths(const char *first, const char *second)
 {
-	return joinPaths(std::string(first), second);
+	return joinPaths(ST::string(first), second);
 }
 
 #if CASE_SENSITIVE_FS
@@ -429,7 +429,7 @@ std::string FileMan::joinPaths(const char *first, const char *second)
 /**
  * Find an object (file or subdirectory) in the given directory in case-independent manner.
  * @return true when found, return the found name using foundName. */
-bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, std::string &foundName)
+bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, ST::string &foundName)
 {
 	bool result = false;
 
@@ -442,15 +442,15 @@ bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name,
 		// we have directory in the name
 		// let's find its correct name first
 		char newDirectory[128];
-		std::string actualSubdirName;
+		ST::string actualSubdirName;
 		strncpy(newDirectory, name, sizeof(newDirectory));
 		newDirectory[dirNameLen] = 0;
 
 		if(findObjectCaseInsensitive(directory, newDirectory, false, true, actualSubdirName))
 		{
 			// found subdirectory; let's continue the full search
-			std::string pathInSubdir;
-			std::string newDirectory = FileMan::joinPaths(directory, actualSubdirName.c_str());
+			ST::string pathInSubdir;
+			ST::string newDirectory = FileMan::joinPaths(directory, actualSubdirName.c_str());
 			if(findObjectCaseInsensitive(newDirectory.c_str(), splitter + 1,
 							lookForFiles, lookForSubdirs, pathInSubdir))
 			{
@@ -568,27 +568,27 @@ SGPFile* FileMan::openForReading(const char *filename)
 }
 
 /** Open file for reading. */
-SGPFile* FileMan::openForReading(const std::string &filename)
+SGPFile* FileMan::openForReading(const ST::string &filename)
 {
 	return openForReading(filename.c_str());
 }
 
 /** Open file for reading.  Look file in folderPath in case-insensitive manner. */
-RustPointer<File> FileMan::openForReadingCaseInsensitive(const std::string& folderPath, const char* filename)
+RustPointer<File> FileMan::openForReadingCaseInsensitive(const ST::string& folderPath, const char* filename)
 {
 	return openFileCaseInsensitive(folderPath, filename, FILE_OPEN_READ);
 }
 
-std::vector<std::string>
-FindFilesInDir(const std::string &dirPath,
-		const std::string &ext,
+std::vector<ST::string>
+FindFilesInDir(const ST::string &dirPath,
+		const ST::string &ext,
 		bool caseIncensitive,
 		bool returnOnlyNames,
 		bool sortResults)
 {
-	std::vector<std::string> ret;
-	std::vector<std::string> paths = FindAllFilesInDir(dirPath, sortResults);
-	for (std::string& path : paths)
+	std::vector<ST::string> ret;
+	std::vector<ST::string> paths = FindAllFilesInDir(dirPath, sortResults);
+	for (ST::string& path : paths)
 	{
 		RustPointer<char> path_ext(Path_extension(path.c_str()));
 		bool same_ext;
@@ -627,10 +627,10 @@ FindFilesInDir(const std::string &dirPath,
 	return ret;
 }
 
-std::vector<std::string>
-FindAllFilesInDir(const std::string &dirPath, bool sortResults)
+std::vector<ST::string>
+FindAllFilesInDir(const ST::string &dirPath, bool sortResults)
 {
-	std::vector<std::string> paths;
+	std::vector<ST::string> paths;
 	RustPointer<VecCString> vec(Fs_readDirPaths(dirPath.c_str(), false));
 	if (!vec)
 	{
@@ -654,37 +654,37 @@ FindAllFilesInDir(const std::string &dirPath, bool sortResults)
 	return paths;
 }
 
-std::string FileMan::replaceExtension(const std::string &path, const char *newExtensionWithDot)
+ST::string FileMan::replaceExtension(const ST::string &path, const char *newExtensionWithDot)
 {
 	// TODO switch to rust path extensions (treats the dot in a different way)
-	std::string filename = getFileName(path);
-	size_t n = filename.length();
+	ST::string filename = getFileName(path);
+	size_t n = filename.size();
 
 	if (filename != "." && filename != "..")
 	{
-		size_t dot = filename.find_last_of('.');
-		if (dot != std::string::npos)
+		auto dot = filename.find_last('.');
+		if (dot != -1)
 		{
-			filename.erase(dot);
+			filename = filename.substr(0, dot);
 		}
 	}
 	if (newExtensionWithDot[0] != '\0' && newExtensionWithDot[0] != '.')
 	{
-		filename.push_back('.');
+		filename += '.';
 	}
 	filename += newExtensionWithDot;
 
-	std::string newPath = path.substr(0, path.length() - n);
+	ST::string newPath = path.substr(0, path.size() - n);
 	newPath += filename;
 	return newPath;
 }
 
-std::string FileMan::getParentPath(const std::string &path, bool absolute)
+ST::string FileMan::getParentPath(const ST::string &path, bool absolute)
 {
 	RustPointer<char> parent(Path_parent(path.c_str()));
 	if (!parent)
 	{
-		return std::string();
+		return ST::string();
 	}
 	if (absolute && !Path_isAbsolute(path.c_str()))
 	{
@@ -701,23 +701,23 @@ std::string FileMan::getParentPath(const std::string &path, bool absolute)
 }
 
 /** Get filename from the path. */
-std::string FileMan::getFileName(const std::string &path)
+ST::string FileMan::getFileName(const ST::string &path)
 {
 	RustPointer<char> filename(Path_filename(path.c_str()));
 	if (!filename)
 	{
-		return std::string();
+		return ST::string();
 	}
-	return std::string(filename.get());
+	return ST::string(filename.get());
 }
 
 /** Get filename from the path without extension. */
-std::string FileMan::getFileNameWithoutExt(const char *path)
+ST::string FileMan::getFileNameWithoutExt(const char *path)
 {
 	return replaceExtension(getFileName(path), "");
 }
 
-std::string FileMan::getFileNameWithoutExt(const std::string &path)
+ST::string FileMan::getFileNameWithoutExt(const ST::string &path)
 {
 	return getFileNameWithoutExt(path.c_str());
 }
@@ -728,26 +728,19 @@ RustPointer<File> FileMan::openFileForReading(const char* filename)
 }
 
 /** Replace all \ with / */
-void FileMan::slashifyPath(std::string &path)
+void FileMan::slashifyPath(ST::string &path)
 {
-	size_t len = path.size();
-	for(size_t i = 0; i < len; i++)
-	{
-		if(path[i] == '\\')
-		{
-			path[i] = '/';
-		}
-	}
+	path = path.replace("\\", "/");
 }
 
 /** Read the whole file as text. */
-std::string FileMan::fileReadText(SGPFile* file)
+ST::string FileMan::fileReadText(SGPFile* file)
 {
 	uint32_t size = FileGetSize(file);
 	char *data = new char[size+1];
 	FileRead(file, data, size);
 	data[size] = 0;
-	std::string result(data);
+	ST::string result(data);
 	delete[] data;
 	return result;
 }
@@ -755,7 +748,7 @@ std::string FileMan::fileReadText(SGPFile* file)
 /** Check file existance. */
 bool FileMan::checkFileExistance(const char *folder, const char *fileName)
 {
-	std::string path = joinPaths(folder, fileName);
+	ST::string path = joinPaths(folder, fileName);
 	return Fs_exists(path.c_str());
 }
 
