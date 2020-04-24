@@ -18,6 +18,7 @@
 #include "Logger.h"
 
 #include <SDL.h>
+#include <string_theory/string>
 
 #include <algorithm>
 #include <assert.h>
@@ -81,7 +82,7 @@ enum
 // Holds the regular sample data, as well as the data for the random samples
 struct SAMPLETAG
 {
-	CHAR8   pName[128];  // Path to sample data
+	ST::string pName;  // Path to sample data
 	UINT32  n_samples;
 	UINT32  uiFlags;     // Status flags
 	UINT8*  pData;       // pointer to sample data memory
@@ -225,7 +226,7 @@ UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UIN
 	SAMPLETAG* s = SoundLoadBuffer(buf, format, channels, rate);
 	if (s == NULL) return SOUND_ERROR;
 
-	snprintf(s->pName, sizeof(s->pName), "%s", name);
+	s->pName           = name;
 	s->uiPanMax        = 64;
 	s->uiMaxInstances  = 1;
 
@@ -476,7 +477,7 @@ void SoundServiceStreams(void)
 		SOUNDTAG* Sound = &pSoundList[i];
 		if (Sound->State == CHANNEL_DEAD)
 		{
-			SLOGD("DEAD channel %u file \"%s\" (refcount %u)", i, Sound->pSample->pName, Sound->pSample->uiInstances);
+			SLOGD(ST::format("DEAD channel {} file \"{}\" (refcount {})", i, Sound->pSample->pName, Sound->pSample->uiInstances));
 			if (Sound->EOSCallback != NULL) Sound->EOSCallback(Sound->pCallbackData);
 			assert(Sound->pSample->uiInstances != 0);
 			Sound->pSample->uiInstances--;
@@ -545,7 +546,7 @@ static SAMPLETAG* SoundGetCached(const char* pFilename)
 
 	FOR_EACH(SAMPLETAG, i, pSampleList)
 	{
-		if (strcasecmp(i->pName, pFilename) == 0) return i;
+		if (i->pName.compare_i(pFilename) == 0) return i;
 	}
 
 	return NULL;
@@ -791,7 +792,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		return NULL;
 	}
 
-	strcpy(s->pName, pFilename);
+	s->pName = pFilename;
 
 	return s;
 }
@@ -823,7 +824,7 @@ static BOOLEAN SoundCleanCache(void)
 
 	if (candidate != NULL)
 	{
-		SLOGD("freeing sample %u \"%s\" with %u hits", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
+		SLOGD(ST::format("freeing sample {} \"{}\" with {} hits", candidate - pSampleList, candidate->pName, candidate->uiCacheHits));
 		SoundFreeSample(candidate);
 		return TRUE;
 	}
@@ -1019,7 +1020,7 @@ static UINT32 SoundGetUniqueID(void);
  * Returns: Unique sound ID if successful, SOUND_ERROR if not. */
 static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
-	SLOGD("playing channel %u sample %u file \"%s\"", channel - pSoundList, sample - pSampleList, sample->pName);
+	SLOGD(ST::format("playing channel {} sample {} file \"{}\"", channel - pSoundList, sample - pSampleList, sample->pName));
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
