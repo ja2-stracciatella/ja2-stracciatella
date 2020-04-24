@@ -3,12 +3,14 @@
 
 #include "JA2Types.h"
 
+#include <string_theory/string>
+
 
 #define TILE_CACHE_START_INDEX 36000
 
 struct TILE_CACHE_ELEMENT
 {
-	char                zName[128]; // Name of tile (filename and directory here)
+	ST::string          zName; // Name of tile (filename and directory here)
 	TILE_IMAGERY*       pImagery;   // Tile imagery
 	INT16               sHits;
 	UINT8               ubNumFrames;

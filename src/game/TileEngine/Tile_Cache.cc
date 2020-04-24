@@ -1,6 +1,3 @@
-#include <stdexcept>
-#include <vector>
-
 #include "Directories.h"
 #include "HImage.h"
 #include "Structure.h"
@@ -14,6 +11,12 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+
+#include <string_theory/string>
+
+#include <stdexcept>
+#include <vector>
+
 
 struct TILE_CACHE_STRUCT
 {
@@ -100,7 +103,7 @@ INT32 GetCachedTile(const char* const filename)
 			continue;
 		}
 
-		if (strcasecmp(i->zName, filename) != 0) continue;
+		if (i->zName.compare_i(filename) != 0) continue;
 
 		// Found surface, return
 		++i->sHits;
@@ -141,7 +144,7 @@ INT32 GetCachedTile(const char* const filename)
 
 	tce->pImagery = LoadTileSurface(filename);
 
-	strcpy(tce->zName, filename);
+	tce->zName = filename;
 	tce->sHits = 1;
 
 	ST::string root_name(FileMan::getFileNameWithoutExt(filename));
