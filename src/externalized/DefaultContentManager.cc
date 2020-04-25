@@ -32,6 +32,7 @@
 #include "strategic/TownModel.h"
 #include "strategic/MovementCostsModel.h"
 #include "strategic/NpcPlacementModel.h"
+#include "tactical/MapItemReplacementModel.h"
 
 #include "Logger.h"
 
@@ -238,6 +239,7 @@ DefaultContentManager::~DefaultContentManager()
 	m_magazines.clear();
 	m_weaponMap.clear();
 	m_itemMap.clear();
+	m_mapItemReplacements.clear();
 
 	for (const CalibreModel* calibre : m_calibres)
 	{
@@ -931,6 +933,9 @@ bool DefaultContentManager::loadGameData()
 		m_itemMap.insert(std::make_pair(item->getInternalName(), item));
 	}
 
+	std::shared_ptr<rapidjson::Document> replacement_json(readJsonDataFile("tactical-map-item-replacements.json"));
+	m_mapItemReplacements = MapItemReplacementModel::deserialize(replacement_json.get(), this);
+
 	loadAllDealersInventory();
 
 	std::shared_ptr<rapidjson::Document> game_json(readJsonDataFile("game.json"));
@@ -1015,6 +1020,11 @@ const ItemModel* DefaultContentManager::getItemByName(const ST::string &internal
 		throw std::runtime_error(FormattedString("item '%s' is not found", internalName.c_str()).to_std_string());
 	}
 	return it->second;
+}
+
+const std::map<uint16_t, uint16_t> DefaultContentManager::getMapItemReplacements() const
+{
+	return m_mapItemReplacements;
 }
 
 const DealerInventory* DefaultContentManager::getDealerInventory(int dealerId) const

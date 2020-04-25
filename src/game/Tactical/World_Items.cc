@@ -244,6 +244,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 
 	// Read the number of items that were saved in the map
 	UINT32 n_world_items;
+	auto itemReplacements = GCM->getMapItemReplacements();
 	FileRead(f, &n_world_items, sizeof(n_world_items));
 
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME && !gfEditMode)
@@ -271,6 +272,20 @@ void LoadWorldItemsFromMap(HWFILE const f)
 		{
 			// Check for matching item existance modes and only add if there is a match
 			if (wi.usFlags & (gGameOptions.fSciFi ? WORLD_ITEM_SCIFI_ONLY : WORLD_ITEM_REALISTIC_ONLY)) continue;
+
+			// Check if we have a item replacement mapping for this item
+			if (itemReplacements.find(o.usItem) != itemReplacements.end())
+			{
+				auto item = itemReplacements.at(o.usItem);
+				if (item == 0) 
+				{
+					SLOGW(ST::format("Map item #{} removed", o.usItem));
+					continue;
+				}
+
+				SLOGD(ST::format("Map item #{} replaced by #{}", o.usItem, item));
+				o.usItem = item;
+			}
 
 			const ItemModel* item = GCM->getItem(o.usItem);
 			if (item->getFlags() & ITEM_NOT_EDITOR) {

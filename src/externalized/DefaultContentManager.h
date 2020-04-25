@@ -126,6 +126,7 @@ public:
 
 	virtual const ItemModel* getItem(uint16_t index) const override;
 	virtual const ItemModel* getItemByName(const ST::string &internalName) const override;
+	virtual const std::map<uint16_t, uint16_t> getMapItemReplacements() const override;
 
 	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const override;
 	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const override;
@@ -177,6 +178,7 @@ protected:
 	std::map<ST::string, const MagazineModel*> m_magazineMap;
 	std::map<ST::string, const WeaponModel*> m_weaponMap;
 	std::map<ST::string, const ItemModel*> m_itemMap;
+	std::map<uint16_t, uint16_t> m_mapItemReplacements;
 	std::map<MusicMode, const std::vector<const ST::string*>*> m_musicMap;
 
 	std::vector<std::vector<const WeaponModel*> > mNormalGunChoice;
