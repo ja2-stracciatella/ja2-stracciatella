@@ -1007,13 +1007,9 @@ static void InternalAddSoldierToSector(SOLDIERTYPE* const s, BOOLEAN calculate_d
 			if (gridno == NOWHERE)
 			{
 				// ATE: Error condition - if nowhere use insertion gridno!
-				// FIXME: calculate_direction is left uninitialized
 				gridno = s->sInsertionGridNo;
 			}
-			else
-			{
-				calculated_direction = GetDirectionToGridNoFromGridNo(gridno, CENTER_GRIDNO);
-			}
+			calculated_direction = GetDirectionToGridNoFromGridNo(gridno, CENTER_GRIDNO);
 		}
 
 		// Override calculated direction if we were told to....
