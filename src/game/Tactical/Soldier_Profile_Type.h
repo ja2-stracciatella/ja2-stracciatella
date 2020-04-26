@@ -167,10 +167,10 @@ struct MERCPROFILESTRUCT
 	ST::string zName;
 	ST::string zNickname;
 	UINT8 ubFaceIndex;
-	PaletteRepID PANTS;
-	PaletteRepID VEST;
-	PaletteRepID SKIN;
-	PaletteRepID HAIR;
+	ST::string PANTS;
+	ST::string VEST;
+	ST::string SKIN;
+	ST::string HAIR;
 	INT8 bSex;
 	INT8 bArmourAttractiveness;
 	UINT8 ubMiscFlags2;

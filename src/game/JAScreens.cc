@@ -43,6 +43,7 @@
 #include "Logger.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 
 #define MAX_DEBUG_PAGES 4
@@ -266,7 +267,7 @@ static void PalEditRenderHook(void)
 }
 
 
-static void CyclePaletteReplacement(SOLDIERTYPE& s, PaletteRepID pal)
+static void CyclePaletteReplacement(SOLDIERTYPE& s, ST::string& pal)
 {
 	UINT8 ubPaletteRep = GetPaletteRepIndexFromID(pal);
 	const UINT8 ubType = gpPalRep[ubPaletteRep].ubType;

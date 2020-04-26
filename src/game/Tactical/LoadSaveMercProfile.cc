@@ -53,10 +53,10 @@ void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracL
 
 	EXTR_SKIP(S, 28)
 	EXTR_U8(S, p.ubFaceIndex)
-	EXTR_STR(S, p.PANTS, lengthof(p.PANTS))
-	EXTR_STR(S, p.VEST, lengthof(p.VEST))
-	EXTR_STR(S, p.SKIN, lengthof(p.SKIN))
-	EXTR_STR(S, p.HAIR, lengthof(p.HAIR))
+	p.PANTS = S.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
+	p.VEST = S.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
+	p.SKIN = S.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
+	p.HAIR = S.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
 	EXTR_I8(S, p.bSex)
 	EXTR_I8(S, p.bArmourAttractiveness)
 	EXTR_U8(S, p.ubMiscFlags2)
@@ -256,10 +256,10 @@ void InjectMercProfile(BYTE* const Dst, MERCPROFILESTRUCT const& p)
 	D.writeUTF16(p.zNickname, NICKNAME_LENGTH);
 	INJ_SKIP(D, 28)
 	INJ_U8(D, p.ubFaceIndex)
-	INJ_STR(D, p.PANTS, lengthof(p.PANTS))
-	INJ_STR(D, p.VEST, lengthof(p.VEST))
-	INJ_STR(D, p.SKIN, lengthof(p.SKIN))
-	INJ_STR(D, p.HAIR, lengthof(p.HAIR))
+	D.writeUTF8(p.PANTS, PaletteRepID_LENGTH);
+	D.writeUTF8(p.VEST, PaletteRepID_LENGTH);
+	D.writeUTF8(p.SKIN, PaletteRepID_LENGTH);
+	D.writeUTF8(p.HAIR, PaletteRepID_LENGTH);
 	INJ_I8(D, p.bSex)
 	INJ_I8(D, p.bArmourAttractiveness)
 	INJ_U8(D, p.ubMiscFlags2)

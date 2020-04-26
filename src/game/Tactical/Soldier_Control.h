@@ -461,10 +461,10 @@ struct SOLDIERTYPE
 
 
 	// PALETTE MANAGEMENT STUFF
-	PaletteRepID HeadPal; // 30
-	PaletteRepID PantsPal; // 30
-	PaletteRepID VestPal; // 30
-	PaletteRepID SkinPal; // 30
+	ST::string HeadPal;
+	ST::string PantsPal;
+	ST::string VestPal;
+	ST::string SkinPal;
 
 	UINT16 *pShades[ NUM_SOLDIER_SHADES ]; // Shading tables
 	UINT16 *pGlowShades[ 20 ]; //
@@ -859,7 +859,7 @@ struct ANIM_PROF
 struct PaletteReplacementType
 {
 	UINT8            ubType;
-	PaletteRepID     ID;
+	ST::string       ID;
 	UINT8            ubPaletteSize;
 	SGPPaletteEntry* rgb;
 };
@@ -937,8 +937,8 @@ void ReviveSoldier( SOLDIERTYPE *pSoldier );
 
 // Palette functions for soldiers
 void  CreateSoldierPalettes(SOLDIERTYPE&);
-UINT8 GetPaletteRepIndexFromID(const PaletteRepID pal_rep);
-void  SetPaletteReplacement(SGPPaletteEntry*, PaletteRepID);
+UINT8 GetPaletteRepIndexFromID(const ST::string& pal_rep);
+void SetPaletteReplacement(SGPPaletteEntry* p8BPPPalette, const ST::string& aPalRep);
 void  LoadPaletteData(void);
 void  DeletePaletteData(void);
 

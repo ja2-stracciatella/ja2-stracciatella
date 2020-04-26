@@ -5,6 +5,8 @@
 #include "Overhead_Types.h"
 #include "Tile_Animation.h"
 
+#include <string_theory/string>
+
 
 #define NUM_CORPSE_SHADES				17
 
@@ -89,10 +91,10 @@ struct ROTTING_CORPSE_DEFINITION
 	INT16   sGridNo;
 	INT16   sHeightAdjustment;
 
-	PaletteRepID HeadPal; // Palette reps
-	PaletteRepID PantsPal;
-	PaletteRepID VestPal;
-	PaletteRepID SkinPal;
+	ST::string HeadPal; // Palette reps
+	ST::string PantsPal;
+	ST::string VestPal;
+	ST::string SkinPal;
 
 	INT8    bDirection;
 	UINT32  uiTimeOfDeath;
