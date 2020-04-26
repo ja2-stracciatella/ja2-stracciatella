@@ -745,7 +745,7 @@ void HourlyMoraleUpdate()
 			{
 				INT8 const hated = WhichHated(s->ubProfile, other->ubProfile);
 				if (hated >= 2 || // Learn to hate which has become full-blown hatred, full strength
-					p.bHatedCount[hated] <= p.bHatedTime[hated] / 2)
+					(hated != -1 && p.bHatedCount[hated] <= p.bHatedTime[hated] / 2))
 				{
 					// We're teamed with someone we hate! We HATE this! Ignore everyone else!
 					found_hated = true;
