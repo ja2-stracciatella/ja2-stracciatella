@@ -73,10 +73,10 @@ static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* c
 	{
 		ExtractObject(d, &c->Inv[i]);
 	}
-	EXTR_STR(d, c->HeadPal, lengthof(c->HeadPal))
-	EXTR_STR(d, c->PantsPal, lengthof(c->PantsPal))
-	EXTR_STR(d, c->VestPal, lengthof(c->VestPal))
-	EXTR_STR(d, c->SkinPal, lengthof(c->SkinPal))
+	c->HeadPal = d.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
+	c->PantsPal = d.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
+	c->VestPal = d.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
+	c->SkinPal = d.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
 	EXTR_SKIP(d, 30)
 	EXTR_I16A(d, c->sPatrolGrid, lengthof(c->sPatrolGrid))
 	EXTR_I8(d, c->bPatrolCnt)
@@ -187,10 +187,10 @@ static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* co
 	{
 		InjectObject(d, &c->Inv[i]);
 	}
-	INJ_STR(d, c->HeadPal, lengthof(c->HeadPal))
-	INJ_STR(d, c->PantsPal, lengthof(c->PantsPal))
-	INJ_STR(d, c->VestPal, lengthof(c->VestPal))
-	INJ_STR(d, c->SkinPal, lengthof(c->SkinPal))
+	d.writeUTF8(c->HeadPal, PaletteRepID_LENGTH);
+	d.writeUTF8(c->PantsPal, PaletteRepID_LENGTH);
+	d.writeUTF8(c->VestPal, PaletteRepID_LENGTH);
+	d.writeUTF8(c->SkinPal, PaletteRepID_LENGTH);
 	INJ_SKIP(d, 30)
 	INJ_I16A(d, c->sPatrolGrid, lengthof(c->sPatrolGrid))
 	INJ_I8(d, c->bPatrolCnt)

@@ -186,10 +186,10 @@ void ExtractSoldierType(const BYTE* const data, SOLDIERTYPE* const s, bool strac
 	EXTR_I8(d, s->bMechanical)
 	EXTR_I8(d, s->bLifeMax)
 	EXTR_SKIP(d, 6)
-	EXTR_STR(d, s->HeadPal, lengthof(s->HeadPal))
-	EXTR_STR(d, s->PantsPal, lengthof(s->PantsPal))
-	EXTR_STR(d, s->VestPal, lengthof(s->VestPal))
-	EXTR_STR(d, s->SkinPal, lengthof(s->SkinPal))
+	s->HeadPal = d.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
+	s->PantsPal = d.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
+	s->VestPal = d.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
+	s->SkinPal = d.readUTF8(PaletteRepID_LENGTH, ST::substitute_invalid);
 	EXTR_SKIP(d, 328)
 	EXTR_I8(d, s->bMedical)
 	EXTR_BOOL(d, s->fBeginFade)
@@ -695,10 +695,10 @@ void InjectSoldierType(BYTE* const data, const SOLDIERTYPE* const s)
 	INJ_I8(d, s->bMechanical)
 	INJ_I8(d, s->bLifeMax)
 	INJ_SKIP(d, 6)
-	INJ_STR(d, s->HeadPal, lengthof(s->HeadPal))
-	INJ_STR(d, s->PantsPal, lengthof(s->PantsPal))
-	INJ_STR(d, s->VestPal, lengthof(s->VestPal))
-	INJ_STR(d, s->SkinPal, lengthof(s->SkinPal))
+	d.writeUTF8(s->HeadPal, PaletteRepID_LENGTH);
+	d.writeUTF8(s->PantsPal, PaletteRepID_LENGTH);
+	d.writeUTF8(s->VestPal, PaletteRepID_LENGTH);
+	d.writeUTF8(s->SkinPal, PaletteRepID_LENGTH);
 	INJ_SKIP(d, 328)
 	INJ_I8(d, s->bMedical)
 	INJ_BOOL(d, s->fBeginFade)

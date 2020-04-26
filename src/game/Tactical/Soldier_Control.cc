@@ -90,6 +90,8 @@
 #include "WeaponModels.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
 #include <algorithm>
 #include <stdexcept>
 
@@ -5028,7 +5030,9 @@ void LoadPaletteData()
 		// type
 		FileRead(hFile, &gpPalRep[cnt].ubType, sizeof(gpPalRep[cnt].ubType));
 
-		FileRead(hFile, &gpPalRep[cnt].ID, sizeof(gpPalRep[cnt].ID));
+		ST::char_buffer buf{PaletteRepID_LENGTH, '\0'};
+		FileRead(hFile, buf.data(), buf.size() * sizeof(char));
+		gpPalRep[cnt].ID = ST::string{buf.c_str(), ST::substitute_invalid};
 
 		// # entries
 		FileRead(hFile, &gpPalRep[cnt].ubPaletteSize, sizeof(gpPalRep[cnt].ubPaletteSize));
@@ -5047,7 +5051,7 @@ void LoadPaletteData()
 }
 
 
-void SetPaletteReplacement(SGPPaletteEntry* const p8BPPPalette, PaletteRepID aPalRep)
+void SetPaletteReplacement(SGPPaletteEntry* p8BPPPalette, const ST::string& aPalRep)
 {
 	UINT32 cnt2;
 	UINT8  ubType;
@@ -5096,12 +5100,12 @@ void DeletePaletteData()
 }
 
 
-UINT8 GetPaletteRepIndexFromID(const PaletteRepID pal_rep)
+UINT8 GetPaletteRepIndexFromID(const ST::string& pal_rep)
 {
 	// Check if type exists
 	for (UINT32 i = 0; i < guiNumReplacements; ++i)
 	{
-		if (strcmp(pal_rep, gpPalRep[i].ID) == 0) return i;
+		if (pal_rep.compare(gpPalRep[i].ID) == 0) return i;
 	}
 
 	throw std::logic_error("Invalid Palette Replacement ID given");

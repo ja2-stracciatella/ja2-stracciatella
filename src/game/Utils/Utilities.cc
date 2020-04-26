@@ -15,6 +15,7 @@
 #include "GameInstance.h"
 
 #include <string_theory/format>
+#include <string_theory/string>
 
 
 BOOLEAN CreateSGPPaletteFromCOLFile(SGPPaletteEntry* const pal, const char* const col_file)
@@ -40,7 +41,7 @@ try
 catch (...) { return FALSE; }
 
 
-void DisplayPaletteRep(const PaletteRepID aPalRep, const UINT8 ubXPos, const UINT8 ubYPos, SGPVSurface* const dst)
+void DisplayPaletteRep(const ST::string& aPalRep, UINT8 ubXPos, UINT8 ubYPos, SGPVSurface* dst)
 {
 	UINT16 us16BPPColor;
 	UINT32 cnt1;

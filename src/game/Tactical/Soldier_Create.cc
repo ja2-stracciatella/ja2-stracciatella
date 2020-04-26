@@ -726,7 +726,7 @@ static void GeneratePaletteForSoldier(SOLDIERTYPE* pSoldier, UINT8 ubSoldierClas
 	//merc clothing scheme is much larger and general and is an exclusive superset
 	//of the civilian clothing scheme which means the civilians will choose the
 	//merc clothing scheme often ( actually 60% of the time ).
-	if( !pSoldier->PantsPal[0] || !pSoldier->VestPal[0] )
+	if (pSoldier->PantsPal.empty() || pSoldier->VestPal.empty())
 	{
 		fMercClothingScheme = TRUE;
 		if( pSoldier->bTeam == CIV_TEAM && Random( 100 ) < 40 )
@@ -837,10 +837,10 @@ static void TacticalCopySoldierFromCreateStruct(SOLDIERTYPE& s, SOLDIERCREATE_ST
 
 	if (c.fVisible)
 	{
-		strcpy(s.HeadPal,  c.HeadPal);
-		strcpy(s.PantsPal, c.PantsPal);
-		strcpy(s.VestPal,  c.VestPal);
-		strcpy(s.SkinPal,  c.SkinPal);
+		s.HeadPal = c.HeadPal;
+		s.PantsPal = c.PantsPal;
+		s.VestPal = c.VestPal;
+		s.SkinPal = c.SkinPal;
 	}
 
 	// KM:  March 25, 1999
@@ -1514,10 +1514,10 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 	pp->fVisible = spp->fVisible;
 	if( spp->fVisible )
 	{
-		strcpy(pp->HeadPal,  spp->HeadPal);
-		strcpy(pp->PantsPal, spp->PantsPal);
-		strcpy(pp->VestPal,  spp->VestPal);
-		strcpy(pp->SkinPal,  spp->SkinPal);
+		pp->HeadPal = spp->HeadPal;
+		pp->PantsPal = spp->PantsPal;
+		pp->VestPal = spp->VestPal;
+		pp->SkinPal = spp->SkinPal;
 	}
 
 	//This isn't perfect, however, it blindly brings over the items from the static

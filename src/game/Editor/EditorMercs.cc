@@ -267,8 +267,8 @@ void ProcessMercEditing(void)
 
 	// Handle changes to the merc colors
 	SOLDIERTYPE& s = *g_selected_merc;
-	char* soldier_pal;
-	char* placement_pal;
+	ST::string soldier_pal;
+	ST::string placement_pal;
 	UINT8 ubType;
 	switch (iEditWhichStat)
 	{
@@ -318,7 +318,7 @@ void ProcessMercEditing(void)
 	}
 
 	SET_PALETTEREP_ID(soldier_pal, gpPalRep[ubPaletteRep].ID);
-	strcpy(placement_pal, soldier_pal);
+	placement_pal = soldier_pal;
 	CreateSoldierPalettes(s);
 
 	iEditMercMode = EDIT_MERC_NONE;
@@ -583,10 +583,10 @@ void MercsToggleColorModeCallback( GUI_BUTTON *btn, INT32 reason )
 		{
 			EnableEditorButtons( FIRST_MERCS_COLOR_BUTTON, LAST_MERCS_COLOR_BUTTON );
 			gpSelected->pDetailedPlacement->fVisible = TRUE;
-			strcpy(gpSelected->pDetailedPlacement->HeadPal,  gpSelected->pSoldier->HeadPal);
-			strcpy(gpSelected->pDetailedPlacement->SkinPal,  gpSelected->pSoldier->SkinPal);
-			strcpy(gpSelected->pDetailedPlacement->VestPal,  gpSelected->pSoldier->VestPal);
-			strcpy(gpSelected->pDetailedPlacement->PantsPal, gpSelected->pSoldier->PantsPal);
+			gpSelected->pDetailedPlacement->HeadPal = gpSelected->pSoldier->HeadPal;
+			gpSelected->pDetailedPlacement->SkinPal = gpSelected->pSoldier->SkinPal;
+			gpSelected->pDetailedPlacement->VestPal = gpSelected->pSoldier->VestPal;
+			gpSelected->pDetailedPlacement->PantsPal = gpSelected->pSoldier->PantsPal;
 		}
 		else //button is unchecked.
 		{
@@ -646,7 +646,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 
 	if( pSoldier )
 	{
-		if( !strlen( pSoldier->HeadPal ) )
+		if (pSoldier->HeadPal.empty())
 			ubPaletteRep = 0xff;
 		else
 			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->HeadPal);
@@ -655,7 +655,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 
 	if( pSoldier )
 	{
-		if( !strlen( pSoldier->SkinPal ) )
+		if (pSoldier->SkinPal.empty())
 			ubPaletteRep = 0xff;
 		else
 			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->SkinPal);
@@ -664,7 +664,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 
 	if( pSoldier )
 	{
-		if( !strlen( pSoldier->VestPal ) )
+		if (pSoldier->VestPal.empty())
 			ubPaletteRep = 0xff;
 		else
 			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->VestPal);
@@ -673,7 +673,7 @@ static void ShowEditMercPalettes(SOLDIERTYPE* pSoldier)
 
 	if( pSoldier )
 	{
-		if (!strlen(pSoldier->PantsPal))
+		if (pSoldier->PantsPal.empty())
 			ubPaletteRep = 0xff;
 		else
 			ubPaletteRep = GetPaletteRepIndexFromID(pSoldier->PantsPal);

@@ -290,11 +290,11 @@ enum BoxingStates
 
 // PALETTE SUBSITUTION TYPES
 
-typedef CHAR8 PaletteRepID[ 30 ];
+#define PaletteRepID_LENGTH 30
 
 
 // MACROS
 // This will set an animation ID
-#define SET_PALETTEREP_ID( a, b )			( strcpy( a, b ) )
+#define SET_PALETTEREP_ID( a, b )			( (a) = (b) )
 
 #endif

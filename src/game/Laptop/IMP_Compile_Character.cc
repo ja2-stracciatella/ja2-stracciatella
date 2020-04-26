@@ -359,8 +359,8 @@ static void SetMercSkinAndHairColors(void)
 
 	Assert(iPortraitNumber < static_cast<INT32>(lengthof(Colors)));
 	MERCPROFILESTRUCT& p = GetProfile(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
-	strcpy(p.HAIR, Colors[iPortraitNumber].Hair);
-	strcpy(p.SKIN, Colors[iPortraitNumber].Skin);
+	p.HAIR = Colors[iPortraitNumber].Hair;
+	p.SKIN = Colors[iPortraitNumber].Skin;
 }
 
 
