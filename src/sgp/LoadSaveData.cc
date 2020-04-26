@@ -95,14 +95,14 @@ DataReader::DataReader(const void* buf)
 {
 }
 
-ST::string DataReader::readUTF8(size_t numChars)
+ST::string DataReader::readUTF8(size_t numChars, ST::utf_validation_t validation)
 {
 	ST::char_buffer buf{numChars, '\0'};
 	readArray(buf.data(), numChars);
-	return buf.c_str(); // can throw ST::unicode_error
+	return ST::string{buf.c_str(), validation};
 }
 
-ST::string DataReader::readUTF16(size_t numChars, const IEncodingCorrector* fixer)
+ST::string DataReader::readUTF16(size_t numChars, const IEncodingCorrector* fixer, ST::utf_validation_t validation)
 {
 	ST::utf16_buffer buf{numChars, u'\0'};
 	readArray(buf.data(), numChars);
@@ -117,14 +117,14 @@ ST::string DataReader::readUTF16(size_t numChars, const IEncodingCorrector* fixe
 			}
 		}
 	}
-	return buf.c_str(); // can throw ST::unicode_error
+	return ST::string{buf.c_str(), validation};
 }
 
-ST::string DataReader::readUTF32(size_t numChars)
+ST::string DataReader::readUTF32(size_t numChars, ST::utf_validation_t validation)
 {
 	ST::utf32_buffer buf{numChars, U'\0'};
 	readArray(buf.data(), numChars);
-	return buf.c_str(); // can throw ST::unicode_error
+	return ST::string{buf.c_str(), validation};
 }
 
 uint8_t DataReader::readU8()

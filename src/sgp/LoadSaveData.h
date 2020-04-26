@@ -99,17 +99,20 @@ public:
 	DataReader(const void* buf);
 
 	/** Read UTF-8 encoded string.
-	 * @param numChars Number of `char` characters to read. */
-	ST::string readUTF8(size_t numChars);
+	 * @param numChars Number of `char` characters to read.
+	 * @param validation What happens with invalid character sequences. */
+	ST::string readUTF8(size_t numChars, ST::utf_validation_t validation = ST_DEFAULT_VALIDATION);
 
 	/** Read UTF-16 encoded string.
 	 * @param numChars Number of `char16_t` characters to read.
-	 * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text. */
-	ST::string readUTF16(size_t numChars, const IEncodingCorrector* fixer = nullptr);
+	 * @param fixer Optional encoding corrector.  It is used for fixing incorrectly encoded text.
+	 * @param validation What happens with invalid character sequences. */
+	ST::string readUTF16(size_t numChars, const IEncodingCorrector* fixer = nullptr, ST::utf_validation_t validation = ST_DEFAULT_VALIDATION);
 
 	/** Read UTF-32 encoded string.
-	 * @param numChars Number of `char32_t` characters to read. */
-	ST::string readUTF32(size_t numChars);
+	 * @param numChars Number of `char32_t` characters to read.
+	 * @param validation What happens with invalid character sequences. */
+	ST::string readUTF32(size_t numChars, ST::utf_validation_t validation = ST_DEFAULT_VALIDATION);
 
 	uint8_t  readU8();            /**< Read uint8_t */
 	uint16_t readU16();           /**< Read uint16_t */
