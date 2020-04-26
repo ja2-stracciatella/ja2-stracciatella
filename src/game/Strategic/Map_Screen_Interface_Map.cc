@@ -3470,10 +3470,11 @@ static void BlitMineText(UINT8 const mine_idx, INT16 const sMapX, INT16 const sM
 		buf = SPrintMoney(PredictDailyIncomeFromAMine(mine_idx));
 
 		// if potential is not nil, show percentage of the two
-		if (GetMaxPeriodicRemovalFromMine(mine_idx) > 0)
+		UINT32 maxIncome = GetMaxPeriodicRemovalFromMine(mine_idx);
+		if (maxIncome > 0)
 		{
-			ST::string wSubString = ST::format(" ({}%)", PredictDailyIncomeFromAMine(mine_idx) * 100 / GetMaxDailyRemovalFromMine(mine_idx));
-			buf += wSubString;
+			UINT32 predictedIncome = PredictDailyIncomeFromAMine(mine_idx);
+			buf += ST::format(" ({}%)", 100 * predictedIncome / maxIncome);
 		}
 
 		PrintStringCenteredBoxed(x, y, buf);
