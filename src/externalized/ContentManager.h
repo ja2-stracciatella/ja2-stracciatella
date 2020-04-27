@@ -99,6 +99,7 @@ public:
 	virtual const AmmoTypeModel* getAmmoType(uint8_t index) = 0;
 
 	virtual const ItemModel* getItem(uint16_t index) const = 0;
+	virtual const std::map<uint16_t, uint16_t> getMapItemReplacements() const = 0;
 
 	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const = 0;
 	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const = 0;

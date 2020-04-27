@@ -1,0 +1,20 @@
+/**
+ * Mappings of Item IDs for pre-placed items on maps. This allows mods to
+ * replace items with something else, or ignore totally. This does not affect
+ * items created from other means.
+ *
+ * This is intended for compatibility and for maps that was originally built 
+ * for different item sets (e.g. Wildfire maps).
+ *
+ * Items are identified by either item index (if given integer), or internal 
+ * name (if given string). Items mapped to 0 ("Nothing") are removed from map 
+ * placements.
+ *
+ * For example:
+ *  [
+ *     { "from": "KEVLAR_VEST", "to": "SPECTRA_VEST" },   // Replaces all Kevlar Vests on maps with Spectra Vests
+ * 
+ *     { "from": "HMX", "to": 0 }                         // HMX no longer placed on maps. Players can still create their own from ingredients
+ *  ]
+ */
+[]
