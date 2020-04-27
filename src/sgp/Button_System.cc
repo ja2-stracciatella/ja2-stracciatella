@@ -534,7 +534,8 @@ GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, IN
 	bIconXOffset(-1),
 	bIconYOffset(-1),
 	fShiftImage(TRUE),
-	ubToggleButtonActivated(FALSE)
+	ubToggleButtonActivated(FALSE),
+	ubSoundSchemeID(BUTTON_SOUND_SCHEME_NONE)
 {
 	AssertMsg(left >= 0 && top >= 0 && width >= 0 && height >= 0, String("Attempting to create button with invalid coordinates %dx%d+%dx%d", left, top, width, height));
 
