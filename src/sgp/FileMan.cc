@@ -45,8 +45,6 @@ enum FileOpenFlags
 };
 
 
-static void SetFileManCurrentDirectory(char const* const pcDirectory);
-
 #if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
 
 void SetBinDataDirFromBundle(void)
@@ -304,19 +302,6 @@ UINT32 FileGetSize(const SGPFile* f)
 	else
 	{
 		return (UINT32)LibraryFile_getSize(f->u.lib);
-	}
-}
-
-
-static void SetFileManCurrentDirectory(char const* const pcDirectory)
-{
-#if 1 // XXX TODO
-	if (chdir(pcDirectory) != 0)
-#else
-	if (!SetCurrentDirectory(pcDirectory))
-#endif
-	{
-		throw std::runtime_error("Changing directory failed");
 	}
 }
 
