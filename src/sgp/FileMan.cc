@@ -103,21 +103,8 @@ void FileMan::switchTmpFolder(const ST::string& home)
 
 RustPointer<File> FileMan::openFileCaseInsensitive(const ST::string& folderPath, const char* filename, uint8_t open_options)
 {
-	ST::string path = FileMan::joinPaths(folderPath, filename);
-	RustPointer<File> file(File_open(path.c_str(), open_options));
-	if (!file)
-	{
-#if CASE_SENSITIVE_FS
-		// on case-sensitive file system need to try to find another name
-		ST::string newFileName;
-		if(findObjectCaseInsensitive(folderPath.c_str(), filename, true, false, newFileName))
-		{
-			path = FileMan::joinPaths(folderPath, newFileName);
-			file.reset(File_open(path.c_str(), open_options));
-		}
-#endif
-	}
-	return file;
+	RustPointer<char> path{Fs_resolveExistingComponents(filename, folderPath.c_str(), true)};
+	return RustPointer<File>{File_open(path.get(), open_options)};
 }
 
 void FileDelete(const ST::string& path)
@@ -366,70 +353,6 @@ ST::string FileMan::joinPaths(const char *first, const char *second)
 {
 	return joinPaths(ST::string(first), second);
 }
-
-#if CASE_SENSITIVE_FS
-
-/**
- * Find an object (file or subdirectory) in the given directory in case-independent manner.
- * @return true when found, return the found name using foundName. */
-bool FileMan::findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, ST::string &foundName)
-{
-	bool result = false;
-
-	// if name contains directories, than we have to find actual case-sensitive name of the directory
-	// and only then look for a file
-	const char *splitter = strstr(name, "/");
-	int dirNameLen = (int)(splitter - name);
-	if(splitter && (dirNameLen > 0) && splitter[1] != 0)
-	{
-		// we have directory in the name
-		// let's find its correct name first
-		char newDirectory[128];
-		ST::string actualSubdirName;
-		strncpy(newDirectory, name, sizeof(newDirectory));
-		newDirectory[dirNameLen] = 0;
-
-		if(findObjectCaseInsensitive(directory, newDirectory, false, true, actualSubdirName))
-		{
-			// found subdirectory; let's continue the full search
-			ST::string pathInSubdir;
-			ST::string newDirectory = FileMan::joinPaths(directory, actualSubdirName.c_str());
-			if(findObjectCaseInsensitive(newDirectory.c_str(), splitter + 1,
-							lookForFiles, lookForSubdirs, pathInSubdir))
-			{
-				// found name in subdir
-				foundName = FileMan::joinPaths(actualSubdirName, pathInSubdir);
-				result = true;
-			}
-		}
-	}
-	else
-	{
-		// name contains only file, no directories
-		DIR *d;
-		struct dirent *entry;
-		uint8_t objectTypes = (lookForFiles ? DT_REG : 0) | (lookForSubdirs ? DT_DIR : 0);
-
-		d = opendir(directory);
-		if (d)
-		{
-			while ((entry = readdir(d)) != NULL)
-			{
-				if((entry->d_type & objectTypes)
-					&& !strcasecmp(name, entry->d_name))
-				{
-					foundName = entry->d_name;
-					result = true;
-				}
-			}
-			closedir(d);
-		}
-	}
-
-	// SLOGI("Looking for %s/[ %s ] : %s", directory, name, result ? "success" : "failure");
-	return result;
-}
-#endif
 
 
 SGPFile* FileMan::getSGPFileFromFile(File* f)

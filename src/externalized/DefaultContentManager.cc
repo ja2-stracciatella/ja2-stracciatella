@@ -166,25 +166,11 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_gameResRootPath = gameResRootPath;
 	m_externalizedDataPath = externalizedDataPath;
 
-	m_dataDir = FileMan::joinPaths(gameResRootPath, BASEDATADIR);
-	m_tileDir = FileMan::joinPaths(m_dataDir, TILECACHEDIR);
+	RustPointer<char> path{Fs_resolveExistingComponents(BASEDATADIR, m_gameResRootPath.c_str(), true)};
+	m_dataDir = path.get();
 
-
-#if CASE_SENSITIVE_FS
-
-	// need to find precise names of the directories
-
-	ST::string name;
-	if(FileMan::findObjectCaseInsensitive(m_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
-	{
-		m_dataDir = FileMan::joinPaths(m_gameResRootPath, name);
-	}
-
-	if(FileMan::findObjectCaseInsensitive(m_dataDir.c_str(), TILECACHEDIR, false, true, name))
-	{
-		m_tileDir = FileMan::joinPaths(m_dataDir, name);
-	}
-#endif
+	path.reset(Fs_resolveExistingComponents(TILECACHEDIR, m_dataDir.c_str(), true));
+	m_tileDir = path.get();
 
 	m_bobbyRayNewInventory = NULL;
 	m_bobbyRayUsedInventory = NULL;

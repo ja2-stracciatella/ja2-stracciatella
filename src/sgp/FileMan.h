@@ -78,12 +78,6 @@ public:
 	/** Read the whole file as text. */
 	static ST::string fileReadText(SGPFile*);
 
-#if CASE_SENSITIVE_FS
-	/** Find an object (file or subdirectory) in the given directory in case-independent manner.
-	 * @return true when found, return the found name using foundName. */
-	static bool findObjectCaseInsensitive(const char *directory, const char *name, bool lookForFiles, bool lookForSubdirs, ST::string &foundName);
-#endif
-
 	/** Open file in the 'Data' directory in case-insensitive manner. */
 	static RustPointer<File> openForReadingCaseInsensitive(const ST::string& folderPath, const char* filename);
 
