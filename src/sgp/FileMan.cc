@@ -544,16 +544,12 @@ void FileMan::slashifyPath(ST::string &path)
 	path = path.replace("\\", "/");
 }
 
-/** Read the whole file as text. */
 ST::string FileMan::fileReadText(SGPFile* file)
 {
 	uint32_t size = FileGetSize(file);
-	char *data = new char[size+1];
-	FileRead(file, data, size);
-	data[size] = 0;
-	ST::string result(data);
-	delete[] data;
-	return result;
+	ST::char_buffer buf{size, '\0'};
+	FileRead(file, buf.data(), size);
+	return ST::string{buf};
 }
 
 /** Check file existance. */
