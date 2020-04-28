@@ -115,7 +115,7 @@ public:
 	static void slashifyPath(ST::string &path);
 
 	/** Check file existance. */
-	static bool checkFileExistance(const char *folder, const char *fileName);
+	static bool checkFileExistance(const ST::string& folder, const ST::string& fileName);
 
 	/** Move a file */
 	static void moveFile(const char *from, const char *to);

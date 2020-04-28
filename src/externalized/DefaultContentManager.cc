@@ -458,7 +458,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename
 /* Checks if a game resource exists. */
 bool DefaultContentManager::doesGameResExists(char const* filename) const
 {
-	if(FileMan::checkFileExistance(m_externalizedDataPath.c_str(), filename))
+	if(FileMan::checkFileExistance(m_externalizedDataPath, filename))
 	{
 		return true;
 	}

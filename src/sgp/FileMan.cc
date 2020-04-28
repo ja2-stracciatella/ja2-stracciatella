@@ -557,7 +557,7 @@ ST::string FileMan::fileReadText(SGPFile* file)
 }
 
 /** Check file existance. */
-bool FileMan::checkFileExistance(const char *folder, const char *fileName)
+bool FileMan::checkFileExistance(const ST::string& folder, const ST::string& fileName)
 {
 	ST::string path = joinPaths(folder, fileName);
 	return Fs_exists(path.c_str());
