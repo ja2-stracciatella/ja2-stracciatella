@@ -88,13 +88,7 @@ public:
 	static void createDir(const ST::string& path);
 
 	/** Join two path components. */
-	static ST::string joinPaths(const char *first, const char *second);
-
-	/** Join two path components. */
-	static ST::string joinPaths(const ST::string &first, const char *second);
-
-	/** Join two path components. */
-	static ST::string joinPaths(const ST::string &first, const ST::string &second);
+	static ST::string joinPaths(const ST::string& first, const ST::string& second);
 
 	/** Replace extension of a file. */
 	static ST::string replaceExtension(const ST::string& path, const ST::string& newExtension);

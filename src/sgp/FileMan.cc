@@ -326,31 +326,11 @@ uint64_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 	return bytes;
 }
 
-/** Join two path components. */
-ST::string FileMan::joinPaths(const ST::string &first, const char *second)
-{
-	ST::string result = first;
-	if((result.size() == 0) || (result[result.size()-1] != PATH_SEPARATOR))
-	{
-		if(second[0] != PATH_SEPARATOR)
-		{
-			result += PATH_SEPARATOR;
-		}
-	}
-	result += second;
-	return result;
-}
 
-/** Join two path components. */
-ST::string FileMan::joinPaths(const ST::string &first, const ST::string &second)
+ST::string FileMan::joinPaths(const ST::string& first, const ST::string& second)
 {
-	return joinPaths(first, second.c_str());
-}
-
-/** Join two path components. */
-ST::string FileMan::joinPaths(const char *first, const char *second)
-{
-	return joinPaths(ST::string(first), second);
+	RustPointer<char> path{Path_push(first.c_str(), second.c_str())};
+	return path.get();
 }
 
 
