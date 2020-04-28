@@ -2022,7 +2022,7 @@ static void CalculateOverrideStatus(void)
 			filename = GCM->getMapPath("test.dat");
 		}
 
-		filename = FileMan::replaceExtension(filename, ".dat");
+		filename = FileMan::replaceExtension(filename, "dat");
 	}
 	else
 	{

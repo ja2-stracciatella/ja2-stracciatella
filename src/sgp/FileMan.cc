@@ -509,29 +509,10 @@ FindAllFilesInDir(const ST::string &dirPath, bool sortResults)
 	return paths;
 }
 
-ST::string FileMan::replaceExtension(const ST::string &path, const char *newExtensionWithDot)
+ST::string FileMan::replaceExtension(const ST::string& path, const ST::string& newExtension)
 {
-	// TODO switch to rust path extensions (treats the dot in a different way)
-	ST::string filename = getFileName(path);
-	size_t n = filename.size();
-
-	if (filename != "." && filename != "..")
-	{
-		auto dot = filename.find_last('.');
-		if (dot != -1)
-		{
-			filename = filename.substr(0, dot);
-		}
-	}
-	if (newExtensionWithDot[0] != '\0' && newExtensionWithDot[0] != '.')
-	{
-		filename += '.';
-	}
-	filename += newExtensionWithDot;
-
-	ST::string newPath = path.substr(0, path.size() - n);
-	newPath += filename;
-	return newPath;
+	RustPointer<char> newPath{Path_setExtension(path.c_str(), newExtension.c_str())};
+	return newPath.get();
 }
 
 ST::string FileMan::getParentPath(const ST::string &path, bool absolute)

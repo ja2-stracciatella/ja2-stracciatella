@@ -34,7 +34,7 @@ try
 
 	// Load structure data, if any.
 	// Start by hacking the image filename into that for the structure data
-	ST::string cStructureFilename(FileMan::replaceExtension(cFilename, ".jsd"));
+	ST::string cStructureFilename(FileMan::replaceExtension(cFilename, "jsd"));
 
 	AutoStructureFileRef pStructureFileRef;
 	if (GCM->doesGameResExists( cStructureFilename ))

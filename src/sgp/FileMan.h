@@ -97,7 +97,7 @@ public:
 	static ST::string joinPaths(const ST::string &first, const ST::string &second);
 
 	/** Replace extension of a file. */
-	static ST::string replaceExtension(const ST::string &path, const char *newExtensionWithDot);
+	static ST::string replaceExtension(const ST::string& path, const ST::string& newExtension);
 
 	/** Get parent path (e.g. directory path from the full path). */
 	static ST::string getParentPath(const ST::string &path, bool absolute);

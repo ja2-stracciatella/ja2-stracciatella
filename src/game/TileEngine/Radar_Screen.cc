@@ -84,7 +84,7 @@ void LoadRadarScreenBitmap(const char* const filename)
 	ClearOutRadarMapImage();
 
 	// Grab the Map image
-	ST::string image_filename(GCM->getRadarMapResourceName(FileMan::replaceExtension(FileMan::getFileName(filename), ".sti")));
+	ST::string image_filename(GCM->getRadarMapResourceName(FileMan::replaceExtension(FileMan::getFileName(filename), "sti")));
 
 	SGPVObject* const radar = AddVideoObjectFromFile(image_filename.c_str());
 	gusRadarImage = radar;
