@@ -138,6 +138,19 @@ pub extern "C" fn Fs_removeDirAll(dir: *const c_char) -> bool {
     no_rust_error()
 }
 
+/// Removes a file.
+/// Sets the rust error.
+/// @see https://doc.rust-lang.org/std/fs/fn.remove_file.html
+#[no_mangle]
+pub extern "C" fn Fs_removeFile(path: *const c_char) -> bool {
+    forget_rust_error();
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+    if let Err(err) = fs::remove_file(&path) {
+        remember_rust_error(format!("Fs_removeFile {:?}: {}", path, err));
+    }
+    no_rust_error()
+}
+
 /// Renames a file or directory.
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/fs/fn.rename.html

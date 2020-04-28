@@ -43,6 +43,22 @@ pub use remove_dir_all::remove_dir_all;
 /// On windows, UNC paths are converted to normal paths when possible.
 pub use dunce::canonicalize;
 
+/// An implementation of `std::fs::remove_file` that handles the readonly permission on windows.
+pub fn remove_file<P: AsRef<Path>>(path: P) -> Result<(), io::Error> {
+    #[cfg(windows)]
+    {
+        // On windows a readonly file cannot be deleted.
+        // This simplistic solution removes the readonly permission.
+        // For a proper solution look at the unlink_nt syscall in cygwin: https://github.com/cygwin/cygwin/blob/master/winsup/cygwin/syscalls.cc
+        let mut permissions = metadata(&path)?.permissions();
+        if permissions.readonly() {
+            permissions.set_readonly(false);
+            set_permissions(&path, permissions)?;
+        }
+    }
+    std::fs::remove_file(path)
+}
+
 //-------
 // other
 //-------
