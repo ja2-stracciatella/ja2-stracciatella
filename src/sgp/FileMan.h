@@ -88,7 +88,7 @@ public:
 	/** Create directory.
 	 * If directory already exists, do nothing.
 	 * If failed to create, raise an exception. */
-	static void createDir(char const* path);
+	static void createDir(const ST::string& path);
 
 	/** Join two path components. */
 	static ST::string joinPaths(const char *first, const char *second);

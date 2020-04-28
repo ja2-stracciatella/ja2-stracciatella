@@ -272,16 +272,14 @@ UINT32 FileGetSize(const SGPFile* f)
 }
 
 
-void FileMan::createDir(char const* const path)
+void FileMan::createDir(const ST::string& path)
 {
-	if (mkdir(path, 0755) == 0) return;
-
-	if (errno == EEXIST)
+	if (!Fs_isDir(path.c_str()) && !Fs_createDir(path.c_str()))
 	{
-		if (Fs_isDir(path)) return;
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("Failed to created directory '{}': {}", path, err.get()));
+		throw std::runtime_error("Failed to create directory");
 	}
-
-	throw std::runtime_error("Failed to create directory");
 }
 
 
