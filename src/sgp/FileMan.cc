@@ -547,15 +547,10 @@ ST::string FileMan::getFileName(const ST::string &path)
 	return ST::string(filename.get());
 }
 
-/** Get filename from the path without extension. */
-ST::string FileMan::getFileNameWithoutExt(const char *path)
+ST::string FileMan::getFileNameWithoutExt(const ST::string& path)
 {
-	return replaceExtension(getFileName(path), "");
-}
-
-ST::string FileMan::getFileNameWithoutExt(const ST::string &path)
-{
-	return getFileNameWithoutExt(path.c_str());
+	RustPointer<char> filestem{Path_filestem(path.c_str())};
+	return filestem ? ST::string(filestem.get()) : ST::null;
 }
 
 RustPointer<File> FileMan::openFileForReading(const char* filename)

@@ -157,9 +157,9 @@ TEST(FileManTest, GetFileName)
 	EXPECT_STREQ(FileMan::getFileName("/a/foo.txt").c_str(),     "foo.txt");
 	EXPECT_STREQ(FileMan::getFileName("../a/foo.txt").c_str(),   "foo.txt");
 
-	EXPECT_STREQ(FileMan::getFileNameWithoutExt("foo.txt").c_str(),       "foo");
-	EXPECT_STREQ(FileMan::getFileNameWithoutExt("/a/foo.txt").c_str(),    "foo");
-	EXPECT_STREQ(FileMan::getFileNameWithoutExt("../a/foo.txt").c_str(),  "foo");
+	EXPECT_EQ(FileMan::getFileNameWithoutExt("foo.txt"),       "foo");
+	EXPECT_EQ(FileMan::getFileNameWithoutExt("/a/foo.txt"),    "foo");
+	EXPECT_EQ(FileMan::getFileNameWithoutExt("../a/foo.txt"),  "foo");
 }
 
 #ifdef __WINDOWS__
@@ -170,8 +170,8 @@ TEST(FileManTest, GetFileNameWin)
 	EXPECT_STREQ(FileMan::getFileName("c:\\foo.txt").c_str(),    "foo.txt");
 	EXPECT_STREQ(FileMan::getFileName("c:\\b\\foo.txt").c_str(), "foo.txt");
 
-	EXPECT_STREQ(FileMan::getFileNameWithoutExt("c:\\foo.txt").c_str(),     "foo");
-	EXPECT_STREQ(FileMan::getFileNameWithoutExt("c:\\b\\foo.txt").c_str(),  "foo");
+	EXPECT_EQ(FileMan::getFileNameWithoutExt("c:\\foo.txt"),     "foo");
+	EXPECT_EQ(FileMan::getFileNameWithoutExt("c:\\b\\foo.txt"),  "foo");
 }
 #endif
 

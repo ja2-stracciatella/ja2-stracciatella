@@ -106,8 +106,7 @@ public:
 	static ST::string getFileName(const ST::string &path);
 
 	/** Get filename from the path without extension. */
-	static ST::string getFileNameWithoutExt(const char *path);
-	static ST::string getFileNameWithoutExt(const ST::string &path);
+	static ST::string getFileNameWithoutExt(const ST::string& path);
 
 	static RustPointer<File> openFileForReading(const char* filename);
 
