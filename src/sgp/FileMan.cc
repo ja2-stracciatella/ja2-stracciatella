@@ -563,11 +563,12 @@ bool FileMan::checkFileExistance(const ST::string& folder, const ST::string& fil
 	return Fs_exists(path.c_str());
 }
 
-void FileMan::moveFile(const char *from, const char *to)
+void FileMan::moveFile(const ST::string& from, const ST::string& to)
 {
-	if (!Fs_rename(from, to))
+	if (!Fs_rename(from.c_str(), to.c_str()))
 	{
-		RustPointer<char> msg(getRustError());
-		throw new std::runtime_error(msg.get());
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("FileMan::moveFile '{}' '{}': {}", from, to, err.get()));
+		throw std::runtime_error("FileMan::moveFile failed");
 	}
 }

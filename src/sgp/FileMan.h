@@ -118,7 +118,7 @@ public:
 	static bool checkFileExistance(const ST::string& folder, const ST::string& fileName);
 
 	/** Move a file */
-	static void moveFile(const char *from, const char *to);
+	static void moveFile(const ST::string& from, const ST::string& to);
 
 private:
 	/** Private constructor to avoid instantiation. */
