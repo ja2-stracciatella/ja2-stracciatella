@@ -347,7 +347,7 @@ std::vector<ST::string> DefaultContentManager::getAllTilecache() const
 SGPFile* DefaultContentManager::openTempFileForWriting(const char* filename, bool truncate) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
-	return FileMan::openForWriting(path.c_str(), truncate);
+	return FileMan::openForWriting(path, truncate);
 }
 
 /** Open temporary file for appending. */

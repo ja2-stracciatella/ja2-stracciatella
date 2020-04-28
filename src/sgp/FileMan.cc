@@ -367,7 +367,7 @@ SGPFile* FileMan::getSGPFileFromFile(File* f)
 /** Open file for writing.
  * If file is missing it will be created.
  * If file exists, it's content will be removed. */
-SGPFile* FileMan::openForWriting(const char *filename, bool truncate)
+SGPFile* FileMan::openForWriting(const ST::string& filename, bool truncate)
 {
 	uint8_t open_options = FILE_OPEN_WRITE | FILE_OPEN_CREATE;
 	if (truncate)
@@ -375,13 +375,12 @@ SGPFile* FileMan::openForWriting(const char *filename, bool truncate)
 		open_options |= FILE_OPEN_TRUNCATE;
 	}
 
-	RustPointer<File> file(File_open(filename, open_options));
+	RustPointer<File> file{File_open(filename.c_str(), open_options)};
 	if (!file)
 	{
-		RustPointer<char> err(getRustError());
-		char buf[128];
-		snprintf(buf, sizeof(buf), "FileMan::openForWriting: %s", err.get());
-		throw std::runtime_error(buf);
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("FileMan::openForWriting '{}' {}: {}", filename, truncate, err.get()));
+		throw std::runtime_error("FileMan::openForWriting failed");
 	}
 	return getSGPFileFromFile(file.release());
 }

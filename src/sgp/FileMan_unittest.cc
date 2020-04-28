@@ -108,9 +108,9 @@ TEST(FileManTest, RemoveAllFilesInDir)
 	ST::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
 	ST::string pathB = FileMan::joinPaths(tempPath.get(), "bar.txt");
 
-	SGPFile* fileA = FileMan::openForWriting(pathA.c_str());
+	SGPFile* fileA = FileMan::openForWriting(pathA);
 	ASSERT_NE(fileA, nullptr);
-	SGPFile* fileB = FileMan::openForWriting(pathB.c_str());
+	SGPFile* fileB = FileMan::openForWriting(pathB);
 	ASSERT_NE(fileB, nullptr);
 
 	FileWrite(fileA, "foo", 3);
@@ -139,7 +139,7 @@ TEST(FileManTest, ReadTextFile)
 	ASSERT_NE(tempPath.get(), nullptr);
 	ST::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
 
-	SGPFile* fileA = FileMan::openForWriting(pathA.c_str());
+	SGPFile* fileA = FileMan::openForWriting(pathA);
 	ASSERT_NE(fileA, nullptr);
 	FileWrite(fileA, "foo bar baz", 11);
 	FileClose(fileA);
