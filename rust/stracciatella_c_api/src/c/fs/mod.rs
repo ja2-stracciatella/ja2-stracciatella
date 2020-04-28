@@ -153,6 +153,22 @@ pub extern "C" fn Fs_rename(from: *const c_char, to: *const c_char) -> bool {
     no_rust_error()
 }
 
+/// Get the readonly permissions of a file or directory.
+/// Sets the rust error.
+#[no_mangle]
+pub extern "C" fn Fs_getReadOnly(path: *const c_char, readonly: *mut bool) -> bool {
+    forget_rust_error();
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+    let readonly = unsafe_mut(readonly);
+    let result = fs::metadata(&path).map(|x| {
+        *readonly = x.permissions().readonly();
+    });
+    if let Err(err) = result {
+        remember_rust_error(format!("Fs_getReadOnly {:?} {}: {}", path, readonly, err));
+    }
+    no_rust_error()
+}
+
 /// Sets the readonly permissions of a file or directory.
 /// Sets the rust error.
 #[no_mangle]
