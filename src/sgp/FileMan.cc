@@ -429,7 +429,7 @@ SGPFile* FileMan::openForReading(const ST::string &filename)
 }
 
 /** Open file for reading.  Look file in folderPath in case-insensitive manner. */
-RustPointer<File> FileMan::openForReadingCaseInsensitive(const ST::string& folderPath, const char* filename)
+RustPointer<File> FileMan::openForReadingCaseInsensitive(const ST::string& folderPath, const ST::string& filename)
 {
 	return openFileCaseInsensitive(folderPath, filename, FILE_OPEN_READ);
 }

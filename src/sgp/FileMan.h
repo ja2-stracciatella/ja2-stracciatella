@@ -76,7 +76,7 @@ public:
 	static ST::string fileReadText(SGPFile*);
 
 	/** Open file in the 'Data' directory in case-insensitive manner. */
-	static RustPointer<File> openForReadingCaseInsensitive(const ST::string& folderPath, const char* filename);
+	static RustPointer<File> openForReadingCaseInsensitive(const ST::string& folderPath, const ST::string& filename);
 
 	/* ------------------------------------------------------------
 	 * Other operations
