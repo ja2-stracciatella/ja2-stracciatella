@@ -70,6 +70,16 @@ pub extern "C" fn Path_filename(path: *const c_char) -> *mut c_char {
     }
 }
 
+/// Extends the path.
+/// If `newpath` is absolute, it replaces the current path.
+#[no_mangle]
+pub extern "C" fn Path_push(path: *const c_char, newpath: *const c_char) -> *mut c_char {
+    let mut path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+    let newpath = path_buf_from_c_str_or_panic(unsafe_c_str(newpath));
+    path.push(&newpath);
+    c_string_from_path_or_panic(&path).into_raw()
+}
+
 /// Checks if the path is absolute.
 #[no_mangle]
 pub extern "C" fn Path_isAbsolute(path: *const c_char) -> bool {
