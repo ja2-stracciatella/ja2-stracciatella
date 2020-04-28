@@ -283,18 +283,19 @@ void FileMan::createDir(const ST::string& path)
 }
 
 
-void EraseDirectory(char const* const dirPath)
+void EraseDirectory(const ST::string& dirPath)
 {
 	std::vector<ST::string> paths = FindAllFilesInDir(dirPath);
-	for (std::vector<ST::string>::const_iterator it(paths.begin()); it != paths.end(); ++it)
+	for (const ST::string& path : paths)
 	{
 		try
 		{
-			FileDelete(it->c_str());
+			FileDelete(path);
 		}
-		catch (...)
+		catch (const std::runtime_error& ex)
 		{
-			if (Fs_isDir(it->c_str())) continue;
+			if (Fs_isDir(path.c_str())) continue;
+			SLOGE(ST::format("EraseDirectory '{}' '{}': {}", dirPath, path, ex.what()));
 			throw;
 		}
 	}

@@ -35,7 +35,7 @@ UINT32 FileGetSize(const SGPFile*);
 
 /* Removes ALL FILES in the specified directory, but leaves the directory alone.
  * Does not affect any subdirectories! */
-void EraseDirectory(char const* pcDirectory);
+void EraseDirectory(const ST::string& dirPath);
 
 /* Pass in the Fileman file handle of an OPEN file and it will return..
  * - if its a Real File, the return will be the handle of the REAL file
