@@ -416,23 +416,16 @@ SGPFile* FileMan::openForReadWrite(const ST::string& filename)
 }
 
 /** Open file for reading. */
-SGPFile* FileMan::openForReading(const char *filename)
-{
-	RustPointer<File> file(File_open(filename, FILE_OPEN_READ));
-	if (!file)
-	{
-		RustPointer<char> err(getRustError());
-		char buf[128];
-		snprintf(buf, sizeof(buf), "FileMan::openForReading: %s", err.get());
-		throw std::runtime_error(buf);
-	}
-	return getSGPFileFromFile(file.release());
-}
-
-/** Open file for reading. */
 SGPFile* FileMan::openForReading(const ST::string &filename)
 {
-	return openForReading(filename.c_str());
+	RustPointer<File> file{File_open(filename.c_str(), FILE_OPEN_READ)};
+	if (!file)
+	{
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("FileMan::openForReading '{}': {}", filename, err.get()));
+		throw std::runtime_error("FileMan::openForReading failed");
+	}
+	return getSGPFileFromFile(file.release());
 }
 
 /** Open file for reading.  Look file in folderPath in case-insensitive manner. */

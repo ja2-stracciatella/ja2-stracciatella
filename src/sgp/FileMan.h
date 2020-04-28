@@ -70,9 +70,6 @@ public:
 	static SGPFile* openForReadWrite(const ST::string& filename);
 
 	/** Open file for reading. */
-	static SGPFile* openForReading(const char *filename);
-
-	/** Open file for reading. */
 	static SGPFile* openForReading(const ST::string &filename);
 
 	/** Read the whole file as text. */

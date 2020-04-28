@@ -144,7 +144,7 @@ TEST(FileManTest, ReadTextFile)
 	FileWrite(fileA, "foo bar baz", 11);
 	FileClose(fileA);
 
-	SGPFile* forReading = FileMan::openForReading(pathA.c_str());
+	SGPFile* forReading = FileMan::openForReading(pathA);
 	ASSERT_NE(forReading, nullptr);
 	ST::string content = FileMan::fileReadText(forReading);
 	ASSERT_STREQ(content.c_str(), "foo bar baz");
