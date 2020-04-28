@@ -3,7 +3,12 @@
 
 GARRISON_GROUP GarrisonGroupModel::deserialize(JsonObjectReader& obj, std::map<std::string, uint8_t> armyCompMapping)
 {
-	uint8_t sectorId = SECTOR_FROM_SECTOR_SHORT_STRING(obj.GetString("sector"));
+	auto sector = obj.GetString("sector");
+	if (!IS_VALID_SECTOR_SHORT_STRING(sector))
+	{
+		throw std::runtime_error("Not a valid sector string");
+	}
+	uint8_t sectorId = SECTOR_FROM_SECTOR_SHORT_STRING(sector);
 	uint8_t compositionId = armyCompMapping.at(std::string(obj.GetString("composition")));
 	return { sectorId, compositionId, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
 }
