@@ -165,6 +165,25 @@ pub extern "C" fn Fs_rename(from: *const c_char, to: *const c_char) -> bool {
     no_rust_error()
 }
 
+/// Returns base (optional) joined with path.
+/// The path separators are normalized and path components are resolved only when needed.
+/// The returned path might or might not exist.
+#[no_mangle]
+pub extern "C" fn Fs_resolveExistingComponents(
+    path: *const c_char,
+    base: *const c_char,
+    caseless: bool,
+) -> *mut c_char {
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+    let resolved = if base.is_null() {
+        fs::resolve_existing_components(&path, None, caseless)
+    } else {
+        let base = path_buf_from_c_str_or_panic(unsafe_c_str(base));
+        fs::resolve_existing_components(&path, Some(&base), caseless)
+    };
+    c_string_from_path_or_panic(&resolved).into_raw()
+}
+
 /// Get the readonly permissions of a file or directory.
 /// Sets the rust error.
 #[no_mangle]

@@ -63,7 +63,7 @@ pub fn remove_file<P: AsRef<Path>>(path: P) -> Result<(), io::Error> {
 // other
 //-------
 
-/// Returns path joined with base.
+/// Returns base (optional) joined with path.
 /// The path separators are normalized and path components are resolved only when needed.
 /// The returned path might or might not exist.
 ///
