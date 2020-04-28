@@ -56,7 +56,7 @@ class FileMan
 public:
 
 	/** Find config folder and switch into it. */
-	static ST::string switchTmpFolder(ST::string homeDir);
+	static void switchTmpFolder(const ST::string& homeDir);
 
 	/** Open file for writing.
 	 * If file is missing it will be created.

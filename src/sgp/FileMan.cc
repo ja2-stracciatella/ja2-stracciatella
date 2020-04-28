@@ -81,24 +81,25 @@ void SetBinDataDirFromBundle(void)
 #endif
 
 /** Find config folder and switch into it. */
-ST::string FileMan::switchTmpFolder(ST::string home)
+void FileMan::switchTmpFolder(const ST::string& home)
 {
 	// Create another directory and set is as the current directory for the process
 	// Temporary files will be created in this directory.
 	// ----------------------------------------------------------------------------
 
-	ST::string tmpPath = FileMan::joinPaths(home, LOCAL_CURRENT_DIR);
-	if (mkdir(tmpPath.c_str(), 0700) != 0 && errno != EEXIST)
+	RustPointer<char> tmpPath{Path_push(home.c_str(), LOCAL_CURRENT_DIR)};
+	if (!Fs_isDir(tmpPath.get()) && !Fs_createDir(tmpPath.get()))
 	{
-		SLOGE("Unable to create tmp directory '%s'", tmpPath.c_str());
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("Unable to create tmp directory '{}': {}", tmpPath.get(), err.get()));
 		throw std::runtime_error("Unable to create tmp directory");
 	}
-	else
+	if (!Env_setCurrentDir(tmpPath.get()))
 	{
-		SetFileManCurrentDirectory(tmpPath.c_str());
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("Unable to switch to tmp directory '{}': {}", tmpPath.get(), err.get()));
+		throw std::runtime_error("Unable to switch to tmp directory");
 	}
-
-	return home;
 }
 
 
