@@ -186,6 +186,18 @@ pub extern "C" fn Env_currentDir() -> *mut c_char {
     }
 }
 
+/// Sets the path to the current directory.
+/// Sets the rust error.
+#[no_mangle]
+pub extern "C" fn Env_setCurrentDir(path: *const c_char) -> bool {
+    forget_rust_error();
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+    if let Err(err) = env::set_current_dir(&path) {
+        remember_rust_error(format!("Env_setCurrentDir {:?}: {}", path, err));
+    }
+    no_rust_error()
+}
+
 /// Gets the path to the current executable.
 /// Sets the rust error.
 #[no_mangle]
