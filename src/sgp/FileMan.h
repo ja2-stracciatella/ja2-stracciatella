@@ -63,7 +63,7 @@ public:
 
 	/** Open file for appending data.
 	 * If file doesn't exist, it will be created. */
-	static SGPFile* openForAppend(const char *filename);
+	static SGPFile* openForAppend(const ST::string& filename);
 
 	/** Open file for reading and writing.
 	 * If file doesn't exist, it will be created. */

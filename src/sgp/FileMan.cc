@@ -388,15 +388,14 @@ SGPFile* FileMan::openForWriting(const ST::string& filename, bool truncate)
 
 /** Open file for appending data.
  * If file doesn't exist, it will be created. */
-SGPFile* FileMan::openForAppend(const char *filename)
+SGPFile* FileMan::openForAppend(const ST::string& filename)
 {
-	RustPointer<File> file(File_open(filename, FILE_OPEN_APPEND | FILE_OPEN_CREATE));
+	RustPointer<File> file{File_open(filename.c_str(), FILE_OPEN_APPEND | FILE_OPEN_CREATE)};
 	if (!file)
 	{
-		RustPointer<char> err(getRustError());
-		char buf[128];
-		snprintf(buf, sizeof(buf), "FileMan::openForAppend: %s", err.get());
-		throw std::runtime_error(buf);
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("FileMan::openForAppend '{}': {}", filename, err.get()));
+		throw std::runtime_error("FileMan::openForAppend failed");
 	}
 	return getSGPFileFromFile(file.release());
 }

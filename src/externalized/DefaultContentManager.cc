@@ -354,7 +354,7 @@ SGPFile* DefaultContentManager::openTempFileForWriting(const char* filename, boo
 SGPFile* DefaultContentManager::openTempFileForAppend(const char* filename) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
-	return FileMan::openForAppend(path.c_str());
+	return FileMan::openForAppend(path);
 }
 
 /* Open temporary file for reading. */
