@@ -553,9 +553,9 @@ ST::string FileMan::getFileNameWithoutExt(const ST::string& path)
 	return filestem ? ST::string(filestem.get()) : ST::null;
 }
 
-RustPointer<File> FileMan::openFileForReading(const char* filename)
+RustPointer<File> FileMan::openFileForReading(const ST::string& path)
 {
-	return RustPointer<File>(File_open(filename, FILE_OPEN_READ));
+	return RustPointer<File>{File_open(path.c_str(), FILE_OPEN_READ)};
 }
 
 /** Replace all \ with / */

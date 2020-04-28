@@ -108,7 +108,7 @@ public:
 	/** Get filename from the path without extension. */
 	static ST::string getFileNameWithoutExt(const ST::string& path);
 
-	static RustPointer<File> openFileForReading(const char* filename);
+	static RustPointer<File> openFileForReading(const ST::string& path);
 
 	/** Open file in the given folder in case-insensitive manner.
 	 * @return file descriptor or null if file is not found. */

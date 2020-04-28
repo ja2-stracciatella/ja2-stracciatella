@@ -439,7 +439,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
 /** Open user's private file (e.g. saved game, settings) for reading. */
 SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& filename) const
 {
-	RustPointer<File> file = FileMan::openFileForReading(filename.c_str());
+	RustPointer<File> file = FileMan::openFileForReading(filename);
 	if (!file)
 	{
 		RustPointer<char> err(getRustError());
