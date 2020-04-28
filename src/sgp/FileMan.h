@@ -113,7 +113,7 @@ public:
 
 	/** Open file in the given folder in case-insensitive manner.
 	 * @return file descriptor or null if file is not found. */
-	static RustPointer<File> openFileCaseInsensitive(const ST::string& folderPath, const char* filename, uint8_t open_options);
+	static RustPointer<File> openFileCaseInsensitive(const ST::string& folderPath, const ST::string& filename, uint8_t open_options);
 
 	/** Convert File to HWFile. */
 	static SGPFile* getSGPFileFromFile(File* f);

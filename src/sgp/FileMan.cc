@@ -101,9 +101,9 @@ void FileMan::switchTmpFolder(const ST::string& home)
 }
 
 
-RustPointer<File> FileMan::openFileCaseInsensitive(const ST::string& folderPath, const char* filename, uint8_t open_options)
+RustPointer<File> FileMan::openFileCaseInsensitive(const ST::string& folderPath, const ST::string& filename, uint8_t open_options)
 {
-	RustPointer<char> path{Fs_resolveExistingComponents(filename, folderPath.c_str(), true)};
+	RustPointer<char> path{Fs_resolveExistingComponents(filename.c_str(), folderPath.c_str(), true)};
 	return RustPointer<File>{File_open(path.get(), open_options)};
 }
 
