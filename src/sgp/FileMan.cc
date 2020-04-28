@@ -403,15 +403,14 @@ SGPFile* FileMan::openForAppend(const ST::string& filename)
 
 /** Open file for reading and writing.
  * If file doesn't exist, it will be created. */
-SGPFile* FileMan::openForReadWrite(const char *filename)
+SGPFile* FileMan::openForReadWrite(const ST::string& filename)
 {
-	RustPointer<File> file(File_open(filename, FILE_OPEN_READ | FILE_OPEN_WRITE | FILE_OPEN_CREATE));
+	RustPointer<File> file{File_open(filename.c_str(), FILE_OPEN_READ | FILE_OPEN_WRITE | FILE_OPEN_CREATE)};
 	if (!file)
 	{
-		RustPointer<char> err(getRustError());
-		char buf[128];
-		snprintf(buf, sizeof(buf), "FileMan::openForReadWrite: %s", err.get());
-		throw std::runtime_error(buf);
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("FileMan::openForReadWrite '{}': {}", filename, err.get()));
+		throw std::runtime_error("FileMan::openForReadWrite failed");
 	}
 	return getSGPFileFromFile(file.release());
 }

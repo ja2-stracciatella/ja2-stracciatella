@@ -67,7 +67,7 @@ public:
 
 	/** Open file for reading and writing.
 	 * If file doesn't exist, it will be created. */
-	static SGPFile* openForReadWrite(const char *filename);
+	static SGPFile* openForReadWrite(const ST::string& filename);
 
 	/** Open file for reading. */
 	static SGPFile* openForReading(const char *filename);
