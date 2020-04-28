@@ -1,3 +1,4 @@
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/army")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/content")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/internals")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/policy")

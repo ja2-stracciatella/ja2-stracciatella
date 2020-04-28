@@ -130,6 +130,9 @@ public:
 
 	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const override;
 	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const override;
+	virtual const std::vector<GARRISON_GROUP> getGarrisonGroups() const override;
+	virtual const std::vector<PATROL_GROUP> getPatrolGroups() const override;
+	virtual const std::vector<ARMY_COMPOSITION> getArmyCompositions() const override;
 
 	virtual const DealerInventory* getDealerInventory(int dealerId) const override;
 	virtual const DealerInventory* getBobbyRayNewInventory() const override;
@@ -189,6 +192,9 @@ protected:
 
 	std::vector<std::vector<const WeaponModel*> > mNormalGunChoice;
 	std::vector<std::vector<const WeaponModel*> > mExtendedGunChoice;
+	std::vector<GARRISON_GROUP> m_garrisonGroups;
+	std::vector<PATROL_GROUP> m_patrolGroups;
+	std::vector<ARMY_COMPOSITION> m_armyCompositions;
 
 	std::vector<const DealerInventory*> m_dealersInventory;
 	const DealerInventory *m_bobbyRayNewInventory;
@@ -215,7 +221,7 @@ protected:
 	bool loadMagazines();
 	bool loadCalibres();
 	bool loadAmmoTypes();
-	bool loadArmyGunChoice();
+	bool loadArmyData();
 	bool loadMusicModeList(MusicMode mode, rapidjson::Value &array);
 	bool loadMusic();
 

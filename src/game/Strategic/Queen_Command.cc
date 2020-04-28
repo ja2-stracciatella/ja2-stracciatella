@@ -49,7 +49,7 @@ UNDERGROUND_SECTORINFO *gpUndergroundSectorInfoHead = NULL;
 extern UNDERGROUND_SECTORINFO* gpUndergroundSectorInfoTail;
 BOOLEAN gfPendingEnemies = FALSE;
 
-extern GARRISON_GROUP *gGarrisonGroup;
+extern std::vector<GARRISON_GROUP> gGarrisonGroup;
 
 INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 

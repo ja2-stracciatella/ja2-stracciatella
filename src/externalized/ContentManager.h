@@ -6,6 +6,7 @@
 
 #include "Facts.h"
 #include "ItemSystem.h"
+#include "Strategic_AI.h"
 
 #include <string_theory/string>
 
@@ -13,16 +14,18 @@
 #include <stdint.h>
 #include <vector>
 
-
+class ArmyCompositionModel
 class BloodCatPlacementsModel;
 class BloodCatSpawnsModel;
 class DealerInventory;
 class FactParamsModel;
 class GamePolicy;
+class GarrisonGroupModel;
 class IMPPolicy;
 class MovementCostsModel;
 class NpcActionParamsModel;
 class NpcPlacementModel;
+class PatrolGroupModel;
 class SamSiteModel;
 class TownModel;
 struct AmmoTypeModel;
@@ -107,6 +110,9 @@ public:
 
 	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const = 0;
 	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const = 0;
+	virtual const std::vector<GARRISON_GROUP> getGarrisonGroups() const = 0;
+	virtual const std::vector<PATROL_GROUP> getPatrolGroups() const = 0;
+	virtual const std::vector<ARMY_COMPOSITION> getArmyCompositions() const = 0;
 
 	virtual const DealerInventory* getDealerInventory(int dealerId) const = 0;
 	virtual const DealerInventory* getBobbyRayNewInventory() const = 0;

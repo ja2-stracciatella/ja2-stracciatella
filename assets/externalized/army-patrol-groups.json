@@ -1,0 +1,50 @@
+/**
+ * This defines the Army Patrol Groups at the start of game. There can only
+ * be at most 50 Patrol Groups
+ *
+ * A point to sector A1 is ignored by the code, as the code assumes
+ * nobody is using A1 in any of the patrol groups.
+ *
+ * Patrol points must not overlap with garrisoned sectors.
+ *
+ * Field definitions:
+ *   - size:    number of soldiers in group
+ *   - priority:    how important is this group to the Queen, when considering replacing troops
+ *   - points:    sectors the group patrols. Must have at least two and at most four points
+ */
+[
+	{ "size": 8, "priority":40, "points": [ "B1",  "C1",  "C3", "A3" ] },
+	{ "size": 6, "priority":35, "points": [ "B4",  "B7",  "C7"       ] },
+	{ "size": 6, "priority":25, "points": [ "A8",  "B8",  "B9"       ] },
+	{ "size": 6, "priority":30, "points": [ "B10", "B12"             ] },
+	{ "size": 7, "priority":45, "points": [ "A11", "A14", "D14"      ] },
+
+	{ "size": 6, "priority":50, "points": [ "C8",  "C9",  "D9"  ] },
+	{ "size":12, "priority":55, "points": [ "D3",  "G3"         ] },
+	{ "size":10, "priority":50, "points": [ "D6",  "D7",  "F7"  ] },
+	{ "size":10, "priority":55, "points": [ "E8",  "E11", "F11" ] },
+	{ "size":10, "priority":60, "points": [ "E12", "E15"        ] },
+
+	{ "size":12, "priority":60, "points": [ "G4",  "G7"         ] },
+	{ "size":12, "priority":65, "points": [ "G10", "G12", "F12" ] },
+	{ "size":12, "priority":65, "points": [ "G13", "G15"        ] },
+	{ "size":10, "priority":65, "points": [ "H15", "J15"        ] },
+	{ "size":14, "priority":65, "points": [ "H12", "J12", "J13" ] },
+
+	{ "size":13, "priority":70, "points": [ "H9",  "I9",  "I10", "J10" ] },
+	{ "size":11, "priority":70, "points": [ "K11", "K14", "J14"        ] },
+	{ "size":12, "priority":75, "points": [ "J2",  "K2"                ] },
+	{ "size":12, "priority":80, "points": [ "I3",  "J3"                ] },
+	{ "size":12, "priority":80, "points": [ "J6",  "K6"                ] },
+
+	{ "size":13, "priority":85, "points": [ "K7",  "K10"             ] },
+	{ "size":12, "priority":90, "points": [ "L10", "M10"             ] },
+	{ "size":12, "priority":90, "points": [ "N9",  "N10"             ] },
+	{ "size":12, "priority":80, "points": [ "L7",  "L8",  "M8", "M9" ] },
+	{ "size":14, "priority":80, "points": [ "H4",  "H5",  "I5"       ] },
+
+	{ "size": 7, "priority":40, "points": [ "D4",  "E4",  "E5"        ] },
+	{ "size": 7, "priority":50, "points": [ "C10", "C11", "D11","D12" ] },
+	{ "size": 8, "priority":40, "points": [ "A15", "C15", "C16"       ] },
+	{ "size":12, "priority":30, "points": [ "L13", "M13", "M14","L14" ] }
+]

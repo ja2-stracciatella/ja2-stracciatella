@@ -1,0 +1,329 @@
+/**
+ * The army composition defines attributes for the various garrisons.
+ *
+ * The priority reflects how important the sector is to the queen, the
+ * elite/troop percentages refer to the desired composition of the group.
+ *
+ * The admin percentage has recently been changed to reflect the starting
+ * percentage of the garrison that are administrators.
+ *
+ * Note that elite% + troop% = 100, and the admin% is not related in this
+ * effect.  If the admin% is non-zero, then that garrison is assigned only
+ * x% of the force as admins, with NO troops or elites.
+ *
+ * All reinforcements use the composition of the troop/elite for refilling.
+ *
+ * If you change the MAX_STRATEGIC_TEAM_SIZE, then all the garrison sizes
+ * (start, desired) will have to be changed accordingly.
+ *
+ * Limitations:
+ *  1. You cannot have more than 60 army compositions. This is limited by the
+ *     value of SAVED_ARMY_COMPOSITIONS.
+ *  2. DO NOT remove, rename or re-order the default Army Compositions, or you
+ *     risk crashing the game.
+ *  3. Adding or removing Army Compositions may cause problems with previous
+ *     saves.
+ * 
+ * The below default compositions are referenced in the code, and their ordering
+ * index not be altered:
+ *    - QUEEN_DEFENCE(0)
+ *    - MEDUNA_DEFENCE(1)
+ *    - MEDUNA_SAMSITE(2)
+ *    - LEVEL1_DEFENCE(3)
+ *    - LEVEL2_DEFENCE(4)
+ *    - LEVEL3_DEFENCE(5)
+ *    - GRUMM_MINE(9)
+ *    - OMERTA_WELCOME_WAGON(10)
+ *    - TIXA_PRISON(12)
+ *    - ALMA_DEFENCE(14)
+ *    - ALMA_MINE(15)
+ *    - CAMBRIA_DEFENCE(16)
+ *    - CAMBRIA_MINE(17)
+ *    - DRASSEN_AIRPORT(21)
+ *    - DRASSEN_DEFENCE(22)
+ *    - DRASSEN_MINE(23)
+ *    - ROADBLOCK(25)
+ *    - SANMONA_SMALL(26)
+ *
+ * Fields:
+ *   - id:    The enum ID of the composition, here for readability only. This field is ignored in code, but the index of the element within the list is used instead. Many of the compositions have hard-coded reference in code (for example road block, San Mona and Meduna comps).
+ *   - name:    Internal name of the composition. Not directly referred to in code, but is used to map garrison-groups json file.
+ *   - priority:    Explained above.
+ *   - elitePercentage:    Explained above.
+ *   - troopPercentage:    Explained above.
+ *   - adminPercentage:    Explained above.
+ *   - desiredPopulation:    Garrison size that the queen will try to maintain.
+ *   - startPopulation:    Garrison size at start.
+ */
+[
+	{ 
+		"id": 0,
+		"name": "QUEEN_DEFENCE",
+		"priority": 100,
+		"elitePercentage": 100,
+		"troopPercentage": 0,
+		"adminPercentage": 0,
+		"desiredPopulation": 32,
+		"startPopulation": 32
+	},
+	{ 
+		"id": 1,
+		"name": "MEDUNA_DEFENCE",
+		"priority": 95,
+		"elitePercentage": 55,
+		"troopPercentage": 45,
+		"adminPercentage": 0,
+		"desiredPopulation": 16,
+		"startPopulation": 20
+	},
+	{ 
+		"id": 2,
+		"name": "MEDUNA_SAMSITE",
+		"priority": 96,
+		"elitePercentage": 65,
+		"troopPercentage": 35,
+		"adminPercentage": 0,
+		"desiredPopulation": 20,
+		"startPopulation": 20
+	},
+	{ 
+		"id": 3,
+		"name": "LEVEL1_DEFENCE",
+		"priority": 40,
+		"elitePercentage": 20,
+		"troopPercentage": 80,
+		"adminPercentage": 0,
+		"desiredPopulation": 12,
+		"startPopulation": 20
+	},
+	{ 
+		"id": 4,
+		"name": "LEVEL2_DEFENCE",
+		"priority": 30,
+		"elitePercentage": 10,
+		"troopPercentage": 90,
+		"adminPercentage": 0,
+		"desiredPopulation": 10,
+		"startPopulation": 20
+	},
+	{ 
+		"id": 5,
+		"name": "LEVEL3_DEFENCE",
+		"priority": 20,
+		"elitePercentage": 5,
+		"troopPercentage": 95,
+		"adminPercentage": 0,
+		"desiredPopulation": 8,
+		"startPopulation": 20
+	},
+	{ 
+		"id": 6,
+		"name": "ORTA_DEFENCE",
+		"priority": 90,
+		"elitePercentage": 50,
+		"troopPercentage": 50,
+		"adminPercentage": 0,
+		"desiredPopulation": 18,
+		"startPopulation": 19
+	},
+	{ 
+		"id": 7,
+		"name": "EAST_GRUMM_DEFENCE",
+		"priority": 80,
+		"elitePercentage": 20,
+		"troopPercentage": 80,
+		"adminPercentage": 0,
+		"desiredPopulation": 15,
+		"startPopulation": 15
+	},
+	{ 
+		"id": 8,
+		"name": "WEST_GRUMM_DEFENCE",
+		"priority": 70,
+		"elitePercentage": 0,
+		"troopPercentage": 100,
+		"adminPercentage": 40,
+		"desiredPopulation": 15,
+		"startPopulation": 15
+	},
+	{ 
+		"id": 9,
+		"name": "GRUMM_MINE",
+		"priority": 85,
+		"elitePercentage": 25,
+		"troopPercentage": 75,
+		"adminPercentage": 45,
+		"desiredPopulation": 15,
+		"startPopulation": 15
+	},
+	{ 
+		"id": 10,
+		"name": "OMERTA_WELCOME_WAGON",
+		"priority": 0,
+		"elitePercentage": 0,
+		"troopPercentage": 100,
+		"adminPercentage": 0,
+		"desiredPopulation": 0,
+		"startPopulation": 3
+	},
+	{ 
+		"id": 11,
+		"name": "BALIME_DEFENCE",
+		"priority": 60,
+		"elitePercentage": 45,
+		"troopPercentage": 55,
+		"adminPercentage": 20,
+		"desiredPopulation": 10,
+		"startPopulation": 4
+	},
+	{ 
+		"id": 12,
+		"name": "TIXA_PRISON",
+		"priority": 80,
+		"elitePercentage": 10,
+		"troopPercentage": 90,
+		"adminPercentage": 15,
+		"desiredPopulation": 15,
+		"startPopulation": 15
+	},
+	{ 
+		"id": 13,
+		"name": "TIXA_SAMSITE",
+		"priority": 85,
+		"elitePercentage": 10,
+		"troopPercentage": 90,
+		"adminPercentage": 0,
+		"desiredPopulation": 12,
+		"startPopulation": 12
+	},
+	{ 
+		"id": 14,
+		"name": "ALMA_DEFENCE",
+		"priority": 74,
+		"elitePercentage": 15,
+		"troopPercentage": 85,
+		"adminPercentage": 0,
+		"desiredPopulation": 11,
+		"startPopulation": 20
+	},
+	{ 
+		"id": 15,
+		"name": "ALMA_MINE",
+		"priority": 80,
+		"elitePercentage": 20,
+		"troopPercentage": 80,
+		"adminPercentage": 45,
+		"desiredPopulation": 15,
+		"startPopulation": 20
+	},
+	{ 
+		"id": 16,
+		"name": "CAMBRIA_DEFENCE",
+		"priority": 50,
+		"elitePercentage": 0,
+		"troopPercentage": 100,
+		"adminPercentage": 30,
+		"desiredPopulation": 10,
+		"startPopulation": 6
+	},
+	{ 
+		"id": 17,
+		"name": "CAMBRIA_MINE",
+		"priority": 60,
+		"elitePercentage": 15,
+		"troopPercentage": 85,
+		"adminPercentage": 40,
+		"desiredPopulation": 11,
+		"startPopulation": 6
+	},
+	{ 
+		"id": 18,
+		"name": "CHITZENA_DEFENCE",
+		"priority": 30,
+		"elitePercentage": 0,
+		"troopPercentage": 100,
+		"adminPercentage": 75,
+		"desiredPopulation": 12,
+		"startPopulation": 10
+	},
+	{ 
+		"id": 19,
+		"name": "CHITZENA_MINE",
+		"priority": 40,
+		"elitePercentage": 0,
+		"troopPercentage": 100,
+		"adminPercentage": 75,
+		"desiredPopulation": 10,
+		"startPopulation": 10
+	},
+	{ 
+		"id": 20,
+		"name": "CHITZENA_SAMSITE",
+		"priority": 75,
+		"elitePercentage": 10,
+		"troopPercentage": 90,
+		"adminPercentage": 0,
+		"desiredPopulation": 9,
+		"startPopulation": 9
+	},
+	{ 
+		"id": 21,
+		"name": "DRASSEN_AIRPORT",
+		"priority": 30,
+		"elitePercentage": 0,
+		"troopPercentage": 100,
+		"adminPercentage": 85,
+		"desiredPopulation": 12,
+		"startPopulation": 10
+	},
+	{ 
+		"id": 22,
+		"name": "DRASSEN_DEFENCE",
+		"priority": 20,
+		"elitePercentage": 0,
+		"troopPercentage": 100,
+		"adminPercentage": 80,
+		"desiredPopulation": 10,
+		"startPopulation": 8
+	},
+	{ 
+		"id": 23,
+		"name": "DRASSEN_MINE",
+		"priority": 35,
+		"elitePercentage": 0,
+		"troopPercentage": 100,
+		"adminPercentage": 75,
+		"desiredPopulation": 11,
+		"startPopulation": 9
+	},
+	{ 
+		"id": 24,
+		"name": "DRASSEN_SAMSITE",
+		"priority": 50,
+		"elitePercentage": 0,
+		"troopPercentage": 100,
+		"adminPercentage": 0,
+		"desiredPopulation": 10,
+		"startPopulation": 10
+	},
+	{ 
+		"id": 25,
+		"name": "ROADBLOCK",
+		"priority": 20,
+		"elitePercentage": 2,
+		"troopPercentage": 98,
+		"adminPercentage": 0,
+		"desiredPopulation": 8,
+		"startPopulation": 0
+	},
+	{ 
+		"id": 26,
+		"name": "SANMONA_SMALL",
+		"priority": 0,
+		"elitePercentage": 0,
+		"troopPercentage": 0,
+		"adminPercentage": 0,
+		"desiredPopulation": 0,
+		"startPopulation": 0
+	}
+]
