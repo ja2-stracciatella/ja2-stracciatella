@@ -98,7 +98,7 @@ TEST(FileManTest, FindFilesInDir)
 
 TEST(FileManTest, RemoveAllFilesInDir)
 {
-	RustPointer<TempDir> tempDir(Fs_createTempDir());
+	RustPointer<TempDir> tempDir(TempDir_create());
 	ASSERT_NE(tempDir.get(), nullptr);
 	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
 	ASSERT_NE(tempPath.get(), nullptr);
@@ -133,7 +133,7 @@ TEST(FileManTest, RemoveAllFilesInDir)
 
 TEST(FileManTest, ReadTextFile)
 {
-	RustPointer<TempDir> tempDir(Fs_createTempDir());
+	RustPointer<TempDir> tempDir(TempDir_create());
 	ASSERT_NE(tempDir.get(), nullptr);
 	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
 	ASSERT_NE(tempPath.get(), nullptr);
