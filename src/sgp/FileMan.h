@@ -39,17 +39,6 @@ UINT32 FileGetSize(const SGPFile*);
  * Does not affect any subdirectories! */
 void EraseDirectory(char const* pcDirectory);
 
-enum FileAttributes
-{
-	FILE_ATTR_NONE      = 0,
-	FILE_ATTR_READONLY  = 1U << 0,
-	FILE_ATTR_DIRECTORY = 1U << 1,
-	FILE_ATTR_ERROR     = 0xFFFFFFFFU
-};
-ENUM_BITSET(FileAttributes)
-
-FileAttributes FileGetAttributes(const char* filename);
-
 /* Pass in the Fileman file handle of an OPEN file and it will return..
  * - if its a Real File, the return will be the handle of the REAL file
  * - if its a LIBRARY file, the return will be null */

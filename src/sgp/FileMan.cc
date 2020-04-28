@@ -326,8 +326,7 @@ void FileMan::createDir(char const* const path)
 
 	if (errno == EEXIST)
 	{
-		FileAttributes const attr = FileGetAttributes(path);
-		if (attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY) return;
+		if (Fs_isDir(path)) return;
 	}
 
 	throw std::runtime_error("Failed to create directory");
@@ -345,31 +344,10 @@ void EraseDirectory(char const* const dirPath)
 		}
 		catch (...)
 		{
-			const FileAttributes attr = FileGetAttributes(it->c_str());
-			if (attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY) continue;
+			if (Fs_isDir(it->c_str())) continue;
 			throw;
 		}
 	}
-}
-
-
-FileAttributes FileGetAttributes(const char* const filename)
-{
-	FileAttributes attr = FILE_ATTR_NONE;
-#ifndef _WIN32 // XXX TODO
-	struct stat sb;
-	if (stat(filename, &sb) != 0) return FILE_ATTR_ERROR;
-
-	if (S_ISDIR(sb.st_mode))     attr |= FILE_ATTR_DIRECTORY;
-	if (!(sb.st_mode & S_IWUSR)) attr |= FILE_ATTR_READONLY;
-#else
-	const UINT32 w32attr = GetFileAttributes(filename);
-	if (w32attr == INVALID_FILE_ATTRIBUTES) return FILE_ATTR_ERROR;
-
-	if (w32attr & FILE_ATTRIBUTE_READONLY)  attr |= FILE_ATTR_READONLY;
-	if (w32attr & FILE_ATTRIBUTE_DIRECTORY) attr |= FILE_ATTR_DIRECTORY;
-#endif
-	return attr;
 }
 
 

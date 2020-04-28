@@ -93,7 +93,7 @@ static INT32 iFDlgState = DIALOG_NONE;
 static GUIButtonRef iFileDlgButtons[7];
 
 static BOOLEAN gfLoadError;
-static BOOLEAN gfReadOnly;
+static bool gfReadOnly;
 static BOOLEAN gfFileExists;
 static BOOLEAN gfIllegalName;
 static BOOLEAN gfDeleteFile;
@@ -126,7 +126,7 @@ static void LoadSaveScreenEntry(void)
 	fEnteringLoadSaveScreen = FALSE;
 	gbCurrentFileIOStatus	= IOSTATUS_NONE;
 
-	gfReadOnly = FALSE;
+	gfReadOnly = false;
 	gfFileExists = FALSE;
 	gfLoadError = FALSE;
 	gfIllegalName = FALSE;
@@ -354,11 +354,11 @@ ScreenID LoadSaveScreenHandle(void)
 		case DIALOG_DELETE:
 		{
 			gMapFileForRemoval = GCM->getMapPath(gzFilename);
-			const UINT32 attr = FileGetAttributes(gMapFileForRemoval.c_str());
-			if (attr != FILE_ATTR_ERROR)
+			bool readonly = false;
+			if (Fs_getReadOnly(gMapFileForRemoval.c_str(), &readonly))
 			{
 				ST::string str;
-				if (attr & FILE_ATTR_READONLY)
+				if (readonly)
 				{
 					str = ST::format(" Delete READ-ONLY file {}? ", gzFilename);
 				}
@@ -383,12 +383,8 @@ ScreenID LoadSaveScreenHandle(void)
 			if ( GCM->doesGameResExists(filename.c_str()) )
 			{
 				gfFileExists = TRUE;
-				gfReadOnly = FALSE;
-				const UINT32 attr = FileGetAttributes(filename.c_str());
-				if (attr != FILE_ATTR_ERROR && attr & FILE_ATTR_READONLY)
-				{
-					gfReadOnly = TRUE;
-				}
+				gfReadOnly = false;
+				Fs_getReadOnly(filename.c_str(), &gfReadOnly);
 				if( gfReadOnly )
 					CreateMessageBox( " File is read only!  Choose a different name? " );
 				else
