@@ -70,6 +70,19 @@ pub extern "C" fn Path_filename(path: *const c_char) -> *mut c_char {
     }
 }
 
+/// Gets the filestem of the path.
+/// Returns null if there is no filestem.
+#[no_mangle]
+pub extern "C" fn Path_filestem(path: *const c_char) -> *mut c_char {
+    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+    if let Some(filestem) = path.file_stem() {
+        let c_filestem = c_string_from_path_or_panic(filestem.as_ref());
+        c_filestem.into_raw()
+    } else {
+        ptr::null_mut()
+    }
+}
+
 /// Extends the path.
 /// If `newpath` is absolute, it replaces the current path.
 #[no_mangle]
