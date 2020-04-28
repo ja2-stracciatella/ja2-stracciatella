@@ -15,9 +15,7 @@
 #	include <glob.h>
 #endif
 
-/* Delete the file at path. Returns true iff deleting the file succeeded or
- * the file did not exist in the first place. */
-void FileDelete(char const* path);
+/* Delete the file at path. */
 void FileDelete(const ST::string &path);
 
 void FileRead( SGPFile*, void*       pDest, size_t uiBytesToRead);

@@ -120,35 +120,14 @@ RustPointer<File> FileMan::openFileCaseInsensitive(const ST::string& folderPath,
 	return file;
 }
 
-void FileDelete(const ST::string &path)
+void FileDelete(const ST::string& path)
 {
-	FileDelete(path.c_str());
-}
-
-void FileDelete(char const* const path)
-{
-	if (unlink(path) == 0) return;
-
-	switch (errno)
+	if (Fs_exists(path.c_str()) && !Fs_removeFile(path.c_str()))
 	{
-		case ENOENT: return;
-
-#ifdef _WIN32
-		/* On WIN32 read-only files cannot be deleted, so try to make the file
-		 * writable and unlink() again */
-		case EACCES:
-			if ((chmod(path, S_IREAD | S_IWRITE) == 0 && unlink(path) == 0) ||
-					errno == ENOENT)
-			{
-				return;
-			}
-			break;
-#endif
-
-		default: break;
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("Deleting file '{}' failed: {}", path, err.get()));
+		throw std::runtime_error("Deleting file failed");
 	}
-
-	throw std::runtime_error("Deleting file failed");
 }
 
 
