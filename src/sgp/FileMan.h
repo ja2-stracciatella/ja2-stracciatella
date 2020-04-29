@@ -132,10 +132,10 @@ private:
  * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems.
  * @param returnOnlyNames When True, return only names (without the directory path)
  * @param sortResults When True, sort found paths.
- * @return List of paths (dir + filename). */
+ * @return List of paths (dir + filename) or filenames. */
 std::vector<ST::string>
-FindFilesInDir(const ST::string &dirPath,
-		const ST::string &ext,
+FindFilesInDir(const ST::string& dirPath,
+		const ST::string& ext,
 		bool caseIncensitive,
 		bool returnOnlyNames,
 		bool sortResults = false);
@@ -146,6 +146,6 @@ FindFilesInDir(const ST::string &dirPath,
  * @param sortResults When True, sort found paths.
  * @return List of paths (dir + filename). */
 std::vector<ST::string>
-FindAllFilesInDir(const ST::string &dirPath, bool sortResults = false);
+FindAllFilesInDir(const ST::string& dirPath, bool sortResults = false);
 
 #endif

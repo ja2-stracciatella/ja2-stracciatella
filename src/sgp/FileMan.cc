@@ -415,68 +415,64 @@ RustPointer<File> FileMan::openForReadingCaseInsensitive(const ST::string& folde
 }
 
 std::vector<ST::string>
-FindFilesInDir(const ST::string &dirPath,
-		const ST::string &ext,
+FindFilesInDir(const ST::string& dirPath,
+		const ST::string& ext,
 		bool caseIncensitive,
 		bool returnOnlyNames,
 		bool sortResults)
 {
-	std::vector<ST::string> ret;
+	std::vector<ST::string> results;
 	std::vector<ST::string> paths = FindAllFilesInDir(dirPath, sortResults);
 	for (ST::string& path : paths)
 	{
+		// the extension must match
 		RustPointer<char> path_ext(Path_extension(path.c_str()));
-		bool same_ext;
-		if (!path_ext)
+		if (path_ext)
 		{
-			same_ext = ext.empty();
+			int cmp = caseIncensitive ? ext.compare_i(path_ext.get()) : ext.compare(path_ext.get());
+			if (cmp != 0)
+			{
+				continue;
+			}
 		}
-		else if (caseIncensitive)
-		{
-			same_ext = std::equal(ext.begin(), ext.end(), path_ext.get(), [](unsigned char a, unsigned char b) {
-				return ::tolower(a) == ::tolower(b);
-			});
-		}
-		else
-		{
-			same_ext = (ext == path_ext.get());
-		}
-		if (!same_ext)
+		else if (!ext.empty())
 		{
 			continue;
 		}
+		// keep filename or path
 		if (returnOnlyNames)
 		{
-			RustPointer<char> filename(Path_filename(path.c_str()));
-			if (!filename)
-			{
-				throw new std::logic_error("expected a filename");
-			}
-			ret.emplace_back(filename.get());
+			RustPointer<char> filename{Path_filename(path.c_str())};
+			Assert(filename);
+			results.emplace_back(filename.get());
 		}
 		else
 		{
-			ret.emplace_back(std::move(path));
+			results.emplace_back(std::move(path));
 		}
 	}
-	return ret;
+	if(sortResults)
+	{
+		std::sort(results.begin(), results.end());
+	}
+	return results;
 }
 
 std::vector<ST::string>
-FindAllFilesInDir(const ST::string &dirPath, bool sortResults)
+FindAllFilesInDir(const ST::string& dirPath, bool sortResults)
 {
 	std::vector<ST::string> paths;
-	RustPointer<VecCString> vec(Fs_readDirPaths(dirPath.c_str(), false));
+	RustPointer<VecCString> vec{Fs_readDirPaths(dirPath.c_str(), false)};
 	if (!vec)
 	{
-		RustPointer<char> msg(getRustError());
-		SLOGW("%s", msg.get());
+		RustPointer<char> err{getRustError()};
+		SLOGW(ST::format("FindAllFilesInDir: {}", err.get()));
 		return paths;
 	}
 	size_t len = VecCString_len(vec.get());
 	for (size_t i = 0; i < len; i++)
 	{
-		RustPointer<char> path(VecCString_get(vec.get(), i));
+		RustPointer<char> path{VecCString_get(vec.get(), i)};
 		if (Fs_isFile(path.get()))
 		{
 			paths.emplace_back(path.get());
