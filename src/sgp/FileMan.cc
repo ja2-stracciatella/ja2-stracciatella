@@ -1,82 +1,19 @@
-#include <stdexcept>
-
-#include <errno.h>
-#include <fcntl.h>
-#include <stdlib.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include "FileMan.h"
-#include "RustInterface.h"
-#include "MemMan.h"
-#include "PODObj.h"
-
-#include "Logger.h"
-
-#if _WIN32
-#include <shlobj.h>
-#else
-#include <pwd.h>
-#endif
-
-#include "PlatformIO.h"
 #include "Debug.h"
+#include "FileMan.h"
+#include "Logger.h"
+#include "MemMan.h"
+#include "RustInterface.h"
 
-#if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
-#include <CoreFoundation/CFBundle.h>
-#endif
-
-#if CASE_SENSITIVE_FS
-#include <dirent.h>
 #include <SDL_rwops.h>
+#include <string_theory/string>
 
-#endif
+#include <stdexcept>
 
 // XXX: remove FileMan class and make it into a namespace
 
 #define LOCAL_CURRENT_DIR "tmp"
 #define SDL_RWOPS_SGP 222
 
-enum FileOpenFlags
-{
-	FILE_ACCESS_READ      = 1U << 0,
-	FILE_ACCESS_WRITE     = 1U << 1,
-	FILE_ACCESS_READWRITE = FILE_ACCESS_READ | FILE_ACCESS_WRITE,
-	FILE_ACCESS_APPEND    = 1U << 2
-};
-
-
-#if MACOS_USE_RESOURCES_FROM_BUNDLE && defined __APPLE__  && defined __MACH__
-
-void SetBinDataDirFromBundle(void)
-{
-	CFBundleRef const app_bundle = CFBundleGetMainBundle();
-	if (app_bundle == NULL)
-	{
-		fputs("WARNING: Failed to get main bundle.\n", stderr);
-		return;
-	}
-
-	CFURLRef const app_url = CFBundleCopyBundleURL(app_bundle);
-	if (app_url == NULL)
-	{
-		fputs("WARNING: Failed to get URL of bundle.\n", stderr);
-		return;
-	}
-
-#define RESOURCE_PATH "/Contents/Resources/ja2"
-	char app_path[PATH_MAX + lengthof(RESOURCE_PATH)];
-	if (!CFURLGetFileSystemRepresentation(app_url, TRUE, (UInt8*)app_path, PATH_MAX))
-	{
-		fputs("WARNING: Failed to get application path.\n", stderr);
-		return;
-	}
-
-	strcat(app_path, RESOURCE_PATH);
-	ConfigSetValue(BinDataDir, app_path);
-#undef RESOURCE_PATH
-}
-
-#endif
 
 /** Find config folder and switch into it. */
 void FileMan::switchTmpFolder(const ST::string& home)

@@ -8,13 +8,6 @@
 
 #include <vector>
 
-#ifdef _WIN32
-#	define WIN32_LEAN_AND_MEAN
-#	include <windows.h>
-#else
-#	include <glob.h>
-#endif
-
 /* Delete the file at path. */
 void FileDelete(const ST::string &path);
 
