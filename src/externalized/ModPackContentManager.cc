@@ -28,7 +28,7 @@ bool ModPackContentManager::doesGameResExists(char const* fileName) const
 {
 	for (const auto& folder : m_modResFolders)
 	{
-		if (FileMan::checkFileExistance(folder.c_str(), fileName))
+		if (FileMan::checkFileExistance(folder, fileName))
 		{
 			return true;
 		}

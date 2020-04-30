@@ -21,7 +21,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 	SLOGD("File is %s", zSoundFile);
 
 	// strip .wav and change to .gap
-	ST::string sFileName(FileMan::replaceExtension(ST::string(zSoundFile), ".gap"));
+	ST::string sFileName(FileMan::replaceExtension(zSoundFile, "gap"));
 
 	try
 	{

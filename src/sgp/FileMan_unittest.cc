@@ -6,39 +6,36 @@
 
 TEST(FileManTest, joinPaths)
 {
-	// ST::string joinPaths(const char *first, const char *second);
 	{
 		ST::string result;
 
 		// ~~~ platform-specific separators
 
 		result = FileMan::joinPaths("foo", "bar");
-		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(ST::string("foo"), ST::string("bar"));
-		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(ST::string("foo"), "bar");
-		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
+		EXPECT_EQ(result, "foo" PATH_SEPARATOR_STR "bar");
 
 		result = FileMan::joinPaths("foo" PATH_SEPARATOR_STR, "bar");
-		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(ST::string("foo" PATH_SEPARATOR_STR), ST::string("bar"));
-		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
-		result = FileMan::joinPaths(ST::string("foo" PATH_SEPARATOR_STR), "bar");
-		EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
+		EXPECT_EQ(result, "foo" PATH_SEPARATOR_STR "bar");
 
-		// // XXX FAILS
-		// result = FileMan::joinPaths("foo", PATH_SEPARATOR_STR "bar");
-		// EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
+		result = FileMan::joinPaths("foo", PATH_SEPARATOR_STR "bar");
+		EXPECT_EQ(result, PATH_SEPARATOR_STR "bar");
 
-		// // XXX FAILS
-		// result = FileMan::joinPaths("foo" PATH_SEPARATOR_STR, PATH_SEPARATOR_STR "bar");
-		// EXPECT_STREQ(result.c_str(), "foo" PATH_SEPARATOR_STR "bar");
+		result = FileMan::joinPaths("foo" PATH_SEPARATOR_STR, PATH_SEPARATOR_STR "bar");
+		EXPECT_EQ(result, PATH_SEPARATOR_STR "bar");
 
-		// ~~~ unix separators
-		// ~~~ win separators
+		// ~~~ generic separators
 
-		// hmm... what do we really want from the library?
-		// should the library consider / to be the separator when it is compiled for windows?
+		result = FileMan::joinPaths("foo", "bar");
+		EXPECT_EQ(result, "foo" PATH_SEPARATOR_STR "bar");
+
+		result = FileMan::joinPaths("foo/", "bar");
+		EXPECT_EQ(result, "foo/bar");
+
+		result = FileMan::joinPaths("foo", "/bar");
+		EXPECT_EQ(result, "/bar");
+
+		result = FileMan::joinPaths("foo/", "/bar");
+		EXPECT_EQ(result, "/bar");
 	}
 
 }
@@ -98,7 +95,7 @@ TEST(FileManTest, FindFilesInDir)
 
 TEST(FileManTest, RemoveAllFilesInDir)
 {
-	RustPointer<TempDir> tempDir(Fs_createTempDir());
+	RustPointer<TempDir> tempDir(TempDir_create());
 	ASSERT_NE(tempDir.get(), nullptr);
 	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
 	ASSERT_NE(tempPath.get(), nullptr);
@@ -108,9 +105,9 @@ TEST(FileManTest, RemoveAllFilesInDir)
 	ST::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
 	ST::string pathB = FileMan::joinPaths(tempPath.get(), "bar.txt");
 
-	SGPFile* fileA = FileMan::openForWriting(pathA.c_str());
+	SGPFile* fileA = FileMan::openForWriting(pathA);
 	ASSERT_NE(fileA, nullptr);
-	SGPFile* fileB = FileMan::openForWriting(pathB.c_str());
+	SGPFile* fileB = FileMan::openForWriting(pathB);
 	ASSERT_NE(fileB, nullptr);
 
 	FileWrite(fileA, "foo", 3);
@@ -133,18 +130,18 @@ TEST(FileManTest, RemoveAllFilesInDir)
 
 TEST(FileManTest, ReadTextFile)
 {
-	RustPointer<TempDir> tempDir(Fs_createTempDir());
+	RustPointer<TempDir> tempDir(TempDir_create());
 	ASSERT_NE(tempDir.get(), nullptr);
 	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
 	ASSERT_NE(tempPath.get(), nullptr);
 	ST::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
 
-	SGPFile* fileA = FileMan::openForWriting(pathA.c_str());
+	SGPFile* fileA = FileMan::openForWriting(pathA);
 	ASSERT_NE(fileA, nullptr);
 	FileWrite(fileA, "foo bar baz", 11);
 	FileClose(fileA);
 
-	SGPFile* forReading = FileMan::openForReading(pathA.c_str());
+	SGPFile* forReading = FileMan::openForReading(pathA);
 	ASSERT_NE(forReading, nullptr);
 	ST::string content = FileMan::fileReadText(forReading);
 	ASSERT_STREQ(content.c_str(), "foo bar baz");
@@ -157,9 +154,9 @@ TEST(FileManTest, GetFileName)
 	EXPECT_STREQ(FileMan::getFileName("/a/foo.txt").c_str(),     "foo.txt");
 	EXPECT_STREQ(FileMan::getFileName("../a/foo.txt").c_str(),   "foo.txt");
 
-	EXPECT_STREQ(FileMan::getFileNameWithoutExt("foo.txt").c_str(),       "foo");
-	EXPECT_STREQ(FileMan::getFileNameWithoutExt("/a/foo.txt").c_str(),    "foo");
-	EXPECT_STREQ(FileMan::getFileNameWithoutExt("../a/foo.txt").c_str(),  "foo");
+	EXPECT_EQ(FileMan::getFileNameWithoutExt("foo.txt"),       "foo");
+	EXPECT_EQ(FileMan::getFileNameWithoutExt("/a/foo.txt"),    "foo");
+	EXPECT_EQ(FileMan::getFileNameWithoutExt("../a/foo.txt"),  "foo");
 }
 
 #ifdef __WINDOWS__
@@ -170,38 +167,48 @@ TEST(FileManTest, GetFileNameWin)
 	EXPECT_STREQ(FileMan::getFileName("c:\\foo.txt").c_str(),    "foo.txt");
 	EXPECT_STREQ(FileMan::getFileName("c:\\b\\foo.txt").c_str(), "foo.txt");
 
-	EXPECT_STREQ(FileMan::getFileNameWithoutExt("c:\\foo.txt").c_str(),     "foo");
-	EXPECT_STREQ(FileMan::getFileNameWithoutExt("c:\\b\\foo.txt").c_str(),  "foo");
+	EXPECT_EQ(FileMan::getFileNameWithoutExt("c:\\foo.txt"),     "foo");
+	EXPECT_EQ(FileMan::getFileNameWithoutExt("c:\\b\\foo.txt"),  "foo");
 }
 #endif
 
 TEST(FileManTest, ReplaceExtension)
 {
-	EXPECT_STREQ(FileMan::replaceExtension("foo.txt", "").c_str(),        "foo");
-	EXPECT_STREQ(FileMan::replaceExtension("foo.txt", ".").c_str(),       "foo.");
-	EXPECT_STREQ(FileMan::replaceExtension("foo.txt", ".bin").c_str(),    "foo.bin");
-	EXPECT_STREQ(FileMan::replaceExtension("foo.txt", "bin").c_str(),     "foo.bin");
+	EXPECT_EQ(FileMan::replaceExtension("", ""),        "");
+	EXPECT_EQ(FileMan::replaceExtension("", "."),       "");
+	EXPECT_EQ(FileMan::replaceExtension("", ".bin"),    "");
+	EXPECT_EQ(FileMan::replaceExtension("", "bin"),     "");
 
-	EXPECT_STREQ(FileMan::replaceExtension("foo.bar.txt", "").c_str(),        "foo.bar");
-	EXPECT_STREQ(FileMan::replaceExtension("foo.bar.txt", ".").c_str(),       "foo.bar.");
-	EXPECT_STREQ(FileMan::replaceExtension("foo.bar.txt", ".bin").c_str(),    "foo.bar.bin");
-	EXPECT_STREQ(FileMan::replaceExtension("foo.bar.txt", "bin").c_str(),     "foo.bar.bin");
+	EXPECT_EQ(FileMan::replaceExtension("foo.txt", ""),        "foo");
+	EXPECT_EQ(FileMan::replaceExtension("foo.txt", "."),       "foo..");
+	EXPECT_EQ(FileMan::replaceExtension("foo.txt", ".bin"),    "foo..bin");
+	EXPECT_EQ(FileMan::replaceExtension("foo.txt", "bin"),     "foo.bin");
 
-	EXPECT_STREQ(FileMan::replaceExtension("c:/a/foo.txt", "").c_str(),        "c:/a/foo");
-	EXPECT_STREQ(FileMan::replaceExtension("c:/a/foo.txt", ".").c_str(),       "c:/a/foo.");
-	EXPECT_STREQ(FileMan::replaceExtension("c:/a/foo.txt", ".bin").c_str(),    "c:/a/foo.bin");
-	EXPECT_STREQ(FileMan::replaceExtension("c:/a/foo.txt", "bin").c_str(),     "c:/a/foo.bin");
+	EXPECT_EQ(FileMan::replaceExtension("foo.bar.txt", ""),        "foo.bar");
+	EXPECT_EQ(FileMan::replaceExtension("foo.bar.txt", "."),       "foo.bar..");
+	EXPECT_EQ(FileMan::replaceExtension("foo.bar.txt", ".bin"),    "foo.bar..bin");
+	EXPECT_EQ(FileMan::replaceExtension("foo.bar.txt", "bin"),     "foo.bar.bin");
 
-	EXPECT_STREQ(FileMan::replaceExtension("/a/foo.txt", "").c_str(),          "/a/foo");
-	EXPECT_STREQ(FileMan::replaceExtension("/a/foo.txt", ".").c_str(),         "/a/foo.");
-	EXPECT_STREQ(FileMan::replaceExtension("/a/foo.txt", ".bin").c_str(),      "/a/foo.bin");
-	EXPECT_STREQ(FileMan::replaceExtension("/a/foo.txt", "bin").c_str(),       "/a/foo.bin");
+	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", ""),        "c:/a" PATH_SEPARATOR_STR "foo");
+	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", "."),       "c:/a" PATH_SEPARATOR_STR "foo..");
+	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", ".bin"),    "c:/a" PATH_SEPARATOR_STR "foo..bin");
+	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", "bin"),     "c:/a" PATH_SEPARATOR_STR "foo.bin");
 
-	EXPECT_STREQ(FileMan::replaceExtension("c:\\a\\foo.txt", "").c_str(),      "c:\\a\\foo");
-	EXPECT_STREQ(FileMan::replaceExtension("c:\\a\\foo.txt", ".").c_str(),     "c:\\a\\foo.");
-	EXPECT_STREQ(FileMan::replaceExtension("c:\\a\\foo.txt", ".bin").c_str(),  "c:\\a\\foo.bin");
-	EXPECT_STREQ(FileMan::replaceExtension("c:\\a\\foo.txt", "bin").c_str(),   "c:\\a\\foo.bin");
+	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", ""),          "/a" PATH_SEPARATOR_STR "foo");
+	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", "."),         "/a" PATH_SEPARATOR_STR "foo..");
+	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", ".bin"),      "/a" PATH_SEPARATOR_STR "foo..bin");
+	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", "bin"),       "/a" PATH_SEPARATOR_STR "foo.bin");
 }
+
+#ifdef __WINDOWS__
+TEST(FileManTest, ReplaceExtensionWin)
+{
+	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", ""),      "c:\\a" PATH_SEPARATOR_STR "foo");
+	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", "."),     "c:\\a" PATH_SEPARATOR_STR "foo..");
+	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", ".bin"),  "c:\\a" PATH_SEPARATOR_STR "foo..bin");
+	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", "bin"),   "c:\\a" PATH_SEPARATOR_STR "foo.bin");
+}
+#endif
 
 TEST(FileManTest, SlashifyPath)
 {

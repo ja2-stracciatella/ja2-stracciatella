@@ -2022,7 +2022,7 @@ static void CalculateOverrideStatus(void)
 			filename = GCM->getMapPath("test.dat");
 		}
 
-		filename = FileMan::replaceExtension(filename, ".dat");
+		filename = FileMan::replaceExtension(filename, "dat");
 	}
 	else
 	{
@@ -2031,12 +2031,12 @@ static void CalculateOverrideStatus(void)
 
 	gszDisplayName = ST::format("{}", FileMan::getFileName(filename));
 
-	const UINT32 attr = FileGetAttributes(filename.c_str());
-	if (attr != FILE_ATTR_ERROR)
+	bool readonly = false;
+	if (Fs_getReadOnly(filename.c_str(), &readonly))
 	{
 		if( gfWorldLoaded )
 		{
-			gubOverrideStatus = (attr & FILE_ATTR_READONLY ? READONLY : OVERWRITE);
+			gubOverrideStatus = (readonly ? READONLY : OVERWRITE);
 			ShowButton( iSummaryButton[ SUMMARY_OVERRIDE ] );
 			iSummaryButton[SUMMARY_OVERRIDE]->uiFlags &= ~BUTTON_CLICKED_ON;
 			DisableButton( iSummaryButton[ SUMMARY_SAVE ] );
@@ -2122,8 +2122,7 @@ static void LoadGlobalSummary(void)
 	gfMustForceUpdateAllMaps        = FALSE;
 	gusNumberOfMapsToBeForceUpdated = 0;
 
-	const FileAttributes attr = FileGetAttributes(DEVINFO_DIR);
-	gfGlobalSummaryExists = attr != FILE_ATTR_ERROR && attr & FILE_ATTR_DIRECTORY;
+	gfGlobalSummaryExists = Fs_isDir(DEVINFO_DIR);
 	if (!gfGlobalSummaryExists)
 	{
 		SLOGW("LoadGlobalSummary() aborted -- doesn't exist on this local computer.");

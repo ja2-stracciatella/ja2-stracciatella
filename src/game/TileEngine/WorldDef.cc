@@ -1341,8 +1341,8 @@ try
 	// Let's save map into Data/maps
 	ST::string path = GCM->getNewMapFolder();
 	FileMan::createDir(path.c_str());
-	path = FileMan::joinPaths(path.c_str(), (const char*)filename);
-	AutoSGPFile f(FileMan::openForWriting(path.c_str()));
+	path = FileMan::joinPaths(path, filename);
+	AutoSGPFile f(FileMan::openForWriting(path));
 
 	// Write JA2 Version ID
 	FLOAT mapVersion = getMajorMapVersion();

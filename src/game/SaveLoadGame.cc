@@ -1300,7 +1300,7 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 
 void BackupSavedGame(UINT8 const ubSaveGameID)
 {
-	ST::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder().c_str(),"Backup");
+	ST::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder(), "Backup");
 	FileMan::createDir(backupdir.c_str());
 	char zSourceSaveGameName[512];
 	char zSourceBackupSaveGameName[515];
@@ -1318,9 +1318,9 @@ void BackupSavedGame(UINT8 const ubSaveGameID)
 		}
 		sprintf(zTargetSaveGameName, "%s.%01d", zSourceSaveGameName, i+1);
 		// Only backup existing savegames
-		if (FileMan::checkFileExistance(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir.c_str(), zSourceBackupSaveGameName))
+		if (FileMan::checkFileExistance(i==0 ? GCM->getSavedGamesFolder() : backupdir, zSourceBackupSaveGameName))
 		{
-			FileMan::moveFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder().c_str() : backupdir, zSourceBackupSaveGameName).c_str(),
+			FileMan::moveFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder() : backupdir, zSourceBackupSaveGameName).c_str(),
 												FileMan::joinPaths(backupdir,zTargetSaveGameName).c_str());
 		}
 	}

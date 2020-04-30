@@ -260,7 +260,7 @@ ScreenID MapUtilScreenHandle()
 			}
 		}
 
-		ST::string zFilename2(GCM->getRadarMapResourceName(FileMan::replaceExtension(zFilename, ".sti")));
+		ST::string zFilename2(GCM->getRadarMapResourceName(FileMan::replaceExtension(zFilename, "sti")));
 		WriteSTIFile( pDataPtr, pPalette, MINIMAP_X_SIZE, MINIMAP_Y_SIZE, zFilename2.c_str(), CONVERT_ETRLE_COMPRESS, 0 );
 	}
 

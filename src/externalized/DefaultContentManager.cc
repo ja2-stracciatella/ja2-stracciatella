@@ -166,25 +166,11 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_gameResRootPath = gameResRootPath;
 	m_externalizedDataPath = externalizedDataPath;
 
-	m_dataDir = FileMan::joinPaths(gameResRootPath, BASEDATADIR);
-	m_tileDir = FileMan::joinPaths(m_dataDir, TILECACHEDIR);
+	RustPointer<char> path{Fs_resolveExistingComponents(BASEDATADIR, m_gameResRootPath.c_str(), true)};
+	m_dataDir = path.get();
 
-
-#if CASE_SENSITIVE_FS
-
-	// need to find precise names of the directories
-
-	ST::string name;
-	if(FileMan::findObjectCaseInsensitive(m_gameResRootPath.c_str(), BASEDATADIR, false, true, name))
-	{
-		m_dataDir = FileMan::joinPaths(m_gameResRootPath, name);
-	}
-
-	if(FileMan::findObjectCaseInsensitive(m_dataDir.c_str(), TILECACHEDIR, false, true, name))
-	{
-		m_tileDir = FileMan::joinPaths(m_dataDir, name);
-	}
-#endif
+	path.reset(Fs_resolveExistingComponents(TILECACHEDIR, m_dataDir.c_str(), true));
+	m_tileDir = path.get();
 
 	m_bobbyRayNewInventory = NULL;
 	m_bobbyRayUsedInventory = NULL;
@@ -361,14 +347,14 @@ std::vector<ST::string> DefaultContentManager::getAllTilecache() const
 SGPFile* DefaultContentManager::openTempFileForWriting(const char* filename, bool truncate) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
-	return FileMan::openForWriting(path.c_str(), truncate);
+	return FileMan::openForWriting(path, truncate);
 }
 
 /** Open temporary file for appending. */
 SGPFile* DefaultContentManager::openTempFileForAppend(const char* filename) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
-	return FileMan::openForAppend(path.c_str());
+	return FileMan::openForAppend(path);
 }
 
 /* Open temporary file for reading. */
@@ -453,7 +439,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
 /** Open user's private file (e.g. saved game, settings) for reading. */
 SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& filename) const
 {
-	RustPointer<File> file = FileMan::openFileForReading(filename.c_str());
+	RustPointer<File> file = FileMan::openFileForReading(filename);
 	if (!file)
 	{
 		RustPointer<char> err(getRustError());
@@ -472,7 +458,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename
 /* Checks if a game resource exists. */
 bool DefaultContentManager::doesGameResExists(char const* filename) const
 {
-	if(FileMan::checkFileExistance(m_externalizedDataPath.c_str(), filename))
+	if(FileMan::checkFileExistance(m_externalizedDataPath, filename))
 	{
 		return true;
 	}
