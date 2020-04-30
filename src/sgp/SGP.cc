@@ -53,80 +53,6 @@
 
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 
-////////////////////////////////////////////////////////////////////////////
-//
-////////////////////////////////////////////////////////////////////////////
-
-// #include "JsonObject.h"
-// #include "MagazineModel.h"
-// #include "WeaponModels.h"
-// #include "Weapons.h"
-// #include "rapidjson/document.h"
-// #include "rapidjson/filestream.h"
-// #include "rapidjson/prettywriter.h"
-// #include "stdio.h"
-
-// bool writeWeaponsToJson(const char *name/*, const struct WEAPONTYPE *weapon*/, int weaponCount)
-// {
-//   FILE *f = fopen(name, "wt");
-//   if(f)
-//   {
-//     rapidjson::FileStream os(f);
-//     rapidjson::PrettyWriter<rapidjson::FileStream> writer(os);
-
-//     rapidjson::Document document;
-//     document.SetArray();
-//     rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-
-//     for(int i = 0; i < weaponCount; i++)
-//     {
-//       // printf("%d\n", i);
-//       const WeaponModel *w = GCM->getWeapon(i);
-//       JsonObject obj(allocator);
-//       w->serializeTo(obj);
-//       document.PushBack(obj.getValue(), allocator);
-//     }
-
-//     document.Accept(writer);
-
-//     fputs("\n", f);
-//     return fclose(f) == 0;
-//   }
-//   return false;
-// }
-
-// bool writeMagazinesToJson(const char *name)
-// {
-//   FILE *f = fopen(name, "wt");
-//   if(f)
-//   {
-//     rapidjson::FileStream os(f);
-//     rapidjson::PrettyWriter<rapidjson::FileStream> writer(os);
-
-//     rapidjson::Document document;
-//     document.SetArray();
-//     rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-
-//     const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
-//     for (const MagazineModel* mag : magazines)
-//     {
-//       JsonObject obj(allocator);
-//       mag->serializeTo(obj);
-//       document.PushBack(obj.getValue(), allocator);
-//     }
-
-//     document.Accept(writer);
-
-//     fputs("\n", f);
-//     return fclose(f) == 0;
-//   }
-//   return false;
-// }
-
-////////////////////////////////////////////////////////////////////////////
-//
-////////////////////////////////////////////////////////////////////////////
-
 static BOOLEAN gfGameInitialized = FALSE;
 
 /** Deinitialize the game an exit. */
@@ -532,21 +458,6 @@ int main(int argc, char* argv[])
 
 		gfGameInitialized = TRUE;
 
-		////////////////////////////////////////////////////////////
-
-		// some data convertion
-		// convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/051.edt", FileMan::joinPaths(exeFolder, "051.edt.json").c_str());
-		// convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/052.edt", FileMan::joinPaths(exeFolder, "052.edt.json").c_str());
-		// convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/055.edt", FileMan::joinPaths(exeFolder, "055.edt.json").c_str());
-
-		// writeWeaponsToJson(FileMan::joinPaths(exeFolder, "externalized/weapons.json").c_str(), MAX_WEAPONS+1);
-		// writeMagazinesToJson(FileMan::joinPaths(exeFolder, "externalized/magazines.json").c_str());
-
-		// readWeaponsFromJson(FileMan::joinPaths(exeFolder, "weapon.json").c_str());
-		// readWeaponsFromJson(FileMan::joinPaths(exeFolder, "weapon2.json").c_str());
-
-		////////////////////////////////////////////////////////////
-
 		if(isEnglishVersion())
 		{
 			SetIntroType(INTRO_SPLASH);
@@ -565,22 +476,6 @@ int main(int argc, char* argv[])
 
 	return EXIT_SUCCESS;
 }
-
-/*static void convertDialogQuotesToJson(const DefaultContentManager *cm,
-					STRING_ENC_TYPE encType,
-					const char *dialogFile, const char *outputFile)
-{
-	std::vector<ST::string*> quotes;
-	std::vector<ST::string> quotes_str;
-	cm->loadAllDialogQuotes(encType, dialogFile, quotes);
-	for(int i = 0; i < quotes.size(); i++)
-	{
-		quotes_str.push_back(quotes[i]->to_std_string());
-		delete quotes[i];
-		quotes[i] = nullptr;
-	}
-	JsonUtility::writeToFile(outputFile, quotes_str);
-}*/
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
