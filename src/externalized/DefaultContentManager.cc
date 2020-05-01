@@ -14,7 +14,6 @@
 
 #include "sgp/FileMan.h"
 #include "sgp/MemMan.h"
-#include "sgp/StrUtils.h"
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
@@ -193,9 +192,9 @@ void DefaultContentManager::initGameResouces(const ST::string &stracciatellaHome
 	{
 		if (!LibraryDB_push(m_libraryDB.get(), m_dataDir.c_str(), it->c_str()))
 		{
-			ST::string message = FormattedString(
-				"Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s/ja2.json'.\n",
-				it->c_str(), m_dataDir.c_str(), m_gameResRootPath.c_str(), stracciatellaHomeDir.c_str());
+			ST::string message = ST::format(
+				"Library '{}' is not found in folder '{}'.\n\nPlease make sure that '{}' contains files of the original game.  You can change this path by editing file '{}/ja2.json'.\n",
+				*it, m_dataDir, m_gameResRootPath, stracciatellaHomeDir);
 			throw LibraryFileNotFoundException(message);
 		}
 	}
@@ -205,9 +204,9 @@ void DefaultContentManager::addExtraResources(const ST::string &baseDir, const S
 {
 	if (!LibraryDB_push(m_libraryDB.get(), baseDir.c_str(), library.c_str())) {
 		RustPointer<char> error(getRustError());
-		ST::string message = FormattedString(
-			"Library '%s' is not found in folder '%s': %s",
-			library.c_str(), baseDir.c_str(), error.get());
+		ST::string message = ST::format(
+			"Library '{}' is not found in folder '{}': {}",
+			library, baseDir, error.get());
 		throw LibraryFileNotFoundException(message);
 	}
 }
@@ -309,7 +308,7 @@ ST::string DefaultContentManager::getRadarMapResourceName(const ST::string &mapN
 /** Get tileset resource name. */
 ST::string DefaultContentManager::getTilesetResourceName(int number, ST::string fileName) const
 {
-	return FormattedString("%s/%d/%s", TILESETSDIR, number, fileName.c_str());
+	return ST::format("{}/{}/{}", TILESETSDIR, number, fileName);
 }
 
 
@@ -571,7 +570,7 @@ const WeaponModel* DefaultContentManager::getWeaponByName(const ST::string &inte
 	if(it == m_weaponMap.end())
 	{
 		SLOGE("weapon '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("weapon '%s' is not found", internalName.c_str()).to_std_string());
+		throw std::runtime_error(ST::format("weapon '{}' is not found", internalName).to_std_string());
 	}
 	return it->second;//m_weaponMap[internalName];
 }
@@ -581,7 +580,7 @@ const MagazineModel* DefaultContentManager::getMagazineByName(const ST::string &
 	if(m_magazineMap.find(internalName) == m_magazineMap.end())
 	{
 		SLOGE("magazine '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("magazine '%s' is not found", internalName.c_str()).to_std_string());
+		throw std::runtime_error(ST::format("magazine '{}' is not found", internalName).to_std_string());
 	}
 	return m_magazineMap[internalName];
 }
@@ -888,7 +887,7 @@ void DefaultContentManager::loadStringRes(const char *name, std::vector<const ST
 	case GameVersion::RUSSIAN_GOLD: fullName += "-rus";   break;
 	default:
 	{
-		throw std::runtime_error(FormattedString("unknown game version %d", m_gameVersion).to_std_string());
+		throw std::runtime_error(ST::format("unknown game version {}", static_cast<int>(m_gameVersion)).to_std_string());
 	}
 	}
 
@@ -950,7 +949,7 @@ rapidjson::Document* DefaultContentManager::readJsonDataFile(const char *fileNam
 	{
 		SLOGE("Failed to parse '%s'", fileName);
 		delete document;
-		throw std::runtime_error(FormattedString("Failed to parse '%s'", fileName).to_std_string());
+		throw std::runtime_error(ST::format("Failed to parse '{}'", fileName).to_std_string());
 	}
 
 	return document;
@@ -1003,7 +1002,7 @@ const ItemModel* DefaultContentManager::getItemByName(const ST::string &internal
 	if(it == m_itemMap.end())
 	{
 		SLOGE("item '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("item '%s' is not found", internalName.c_str()).to_std_string());
+		throw std::runtime_error(ST::format("item '{}' is not found", internalName).to_std_string());
 	}
 	return it->second;
 }
