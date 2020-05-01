@@ -1,7 +1,5 @@
 #pragma once
 
-#include "sgp/StrUtils.h"
-
 #include <string_theory/string>
 
 #include <map>

@@ -14,7 +14,6 @@
 
 #include "sgp/FileMan.h"
 #include "sgp/MemMan.h"
-#include "sgp/StrUtils.h"
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
@@ -411,7 +410,7 @@ ST::string DefaultContentManager::getRadarMapResourceName(const ST::string &mapN
 /** Get tileset resource name. */
 ST::string DefaultContentManager::getTilesetResourceName(int number, ST::string fileName) const
 {
-	return FormattedString("%s/%d/%s", TILESETSDIR, number, fileName.c_str());
+	return ST::format("{}/{}/{}", TILESETSDIR, number, fileName);
 }
 
 
@@ -647,7 +646,7 @@ const WeaponModel* DefaultContentManager::getWeaponByName(const ST::string &inte
 	if(it == m_weaponMap.end())
 	{
 		SLOGE("weapon '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("weapon '%s' is not found", internalName.c_str()).to_std_string());
+		throw std::runtime_error(ST::format("weapon '{}' is not found", internalName).to_std_string());
 	}
 	return it->second;//m_weaponMap[internalName];
 }
@@ -657,7 +656,7 @@ const MagazineModel* DefaultContentManager::getMagazineByName(const ST::string &
 	if(m_magazineMap.find(internalName) == m_magazineMap.end())
 	{
 		SLOGE("magazine '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("magazine '%s' is not found", internalName.c_str()).to_std_string());
+		throw std::runtime_error(ST::format("magazine '{}' is not found", internalName).to_std_string());
 	}
 	return m_magazineMap[internalName];
 }
@@ -955,7 +954,7 @@ void DefaultContentManager::loadStringRes(const char *name, std::vector<const ST
 	case GameVersion::RUSSIAN_GOLD: fullName += "-rus";   break;
 	default:
 	{
-		throw std::runtime_error(FormattedString("unknown game version %d", m_gameVersion).to_std_string());
+		throw std::runtime_error(ST::format("unknown game version {}", static_cast<int>(m_gameVersion)).to_std_string());
 	}
 	}
 
@@ -1084,7 +1083,7 @@ const ItemModel* DefaultContentManager::getItemByName(const ST::string &internal
 	if(it == m_itemMap.end())
 	{
 		SLOGE("item '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("item '%s' is not found", internalName.c_str()).to_std_string());
+		throw std::runtime_error(ST::format("item '{}' is not found", internalName).to_std_string());
 	}
 	return it->second;
 }
