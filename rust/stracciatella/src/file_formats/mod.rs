@@ -4,6 +4,7 @@ use std::io::ErrorKind::{InvalidData, InvalidInput};
 use std::io::{Error, Read, Result, Write};
 
 pub mod slf;
+pub mod stci;
 
 /// Trait that adds extra functions to Read.
 pub trait StracciatellaReadExt: Read {
