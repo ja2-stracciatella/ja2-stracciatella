@@ -130,9 +130,9 @@ public:
 
 	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const override;
 	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const override;
-	virtual const std::vector<GARRISON_GROUP> getGarrisonGroups() const override;
-	virtual const std::vector<PATROL_GROUP> getPatrolGroups() const override;
-	virtual const std::vector<ARMY_COMPOSITION> getArmyCompositions() const override;
+	virtual const std::vector<GARRISON_GROUP>& getGarrisonGroups() const override;
+	virtual const std::vector<PATROL_GROUP>& getPatrolGroups() const override;
+	virtual const std::vector<ARMY_COMPOSITION>& getArmyCompositions() const override;
 
 	virtual const DealerInventory* getDealerInventory(int dealerId) const override;
 	virtual const DealerInventory* getBobbyRayNewInventory() const override;

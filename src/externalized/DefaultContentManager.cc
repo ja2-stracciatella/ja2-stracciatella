@@ -898,17 +898,17 @@ const std::vector<std::vector<const WeaponModel*> > & DefaultContentManager::get
 	return mExtendedGunChoice;
 }
 
-const std::vector<GARRISON_GROUP> DefaultContentManager::getGarrisonGroups() const
+const std::vector<GARRISON_GROUP>& DefaultContentManager::getGarrisonGroups() const
 {
 	return m_garrisonGroups;
 }
 
-const std::vector<PATROL_GROUP> DefaultContentManager::getPatrolGroups() const
+const std::vector<PATROL_GROUP>& DefaultContentManager::getPatrolGroups() const
 {
 	return m_patrolGroups;
 }
 
-const std::vector<ARMY_COMPOSITION> DefaultContentManager::getArmyCompositions() const
+const std::vector<ARMY_COMPOSITION>& DefaultContentManager::getArmyCompositions() const
 {
 	return m_armyCompositions;
 }

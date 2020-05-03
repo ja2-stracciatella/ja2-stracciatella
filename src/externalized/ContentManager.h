@@ -110,9 +110,9 @@ public:
 
 	virtual const std::vector<std::vector<const WeaponModel*> > & getNormalGunChoice() const = 0;
 	virtual const std::vector<std::vector<const WeaponModel*> > & getExtendedGunChoice() const = 0;
-	virtual const std::vector<GARRISON_GROUP> getGarrisonGroups() const = 0;
-	virtual const std::vector<PATROL_GROUP> getPatrolGroups() const = 0;
-	virtual const std::vector<ARMY_COMPOSITION> getArmyCompositions() const = 0;
+	virtual const std::vector<GARRISON_GROUP>& getGarrisonGroups() const = 0;
+	virtual const std::vector<PATROL_GROUP>& getPatrolGroups() const = 0;
+	virtual const std::vector<ARMY_COMPOSITION>& getArmyCompositions() const = 0;
 
 	virtual const DealerInventory* getDealerInventory(int dealerId) const = 0;
 	virtual const DealerInventory* getBobbyRayNewInventory() const = 0;
