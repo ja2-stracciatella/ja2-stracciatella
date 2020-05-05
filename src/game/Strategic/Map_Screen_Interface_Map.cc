@@ -3470,7 +3470,7 @@ static void BlitMineText(UINT8 const mine_idx, INT16 const sMapX, INT16 const sM
 		buf = SPrintMoney(PredictDailyIncomeFromAMine(mine_idx));
 
 		// if potential is not nil, show percentage of the two
-		UINT32 maxIncome = GetMaxPeriodicRemovalFromMine(mine_idx);
+		UINT32 maxIncome = GetMaxDailyRemovalFromMine(mine_idx);
 		if (maxIncome > 0)
 		{
 			UINT32 predictedIncome = PredictDailyIncomeFromAMine(mine_idx);
