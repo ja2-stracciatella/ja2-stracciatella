@@ -3282,8 +3282,8 @@ static void DisplayDestinationOfHelicopter(void)
 		x = MAP_VIEW_START_X + ( MAP_GRID_X * sMapX ) + 1;
 		y = MAP_VIEW_START_Y + ( MAP_GRID_Y * sMapY ) + 3;
 
-		AssertMsg(0 <= x && x < SCREEN_WIDTH, String("DisplayDestinationOfHelicopter: Invalid x = %d.  Dest %d,%d", x, sMapX, sMapY));
-		AssertMsg(0 <= y && y < SCREEN_HEIGHT, String("DisplayDestinationOfHelicopter: Invalid y = %d.  Dest %d,%d", y, sMapX, sMapY));
+		AssertMsg( x < SCREEN_WIDTH, String("DisplayDestinationOfHelicopter: Invalid x = %d.  Dest %d,%d", x, sMapX, sMapY));
+		AssertMsg( y < SCREEN_HEIGHT, String("DisplayDestinationOfHelicopter: Invalid y = %d.  Dest %d,%d", y, sMapX, sMapY));
 
 		// clip blits to mapscreen region
 		ClipBlitsToMapViewRegion( );

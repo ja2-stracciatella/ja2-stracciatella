@@ -83,8 +83,8 @@ void RemoveCursors()
 	{
 		RemoveBuildingLayout();
 	}
-	Assert( gSelectRegion.iTop >= 0 && gSelectRegion.iTop <= gSelectRegion.iBottom );
-	Assert( gSelectRegion.iLeft >= 0 && gSelectRegion.iLeft <= gSelectRegion.iRight );
+	Assert( gSelectRegion.iTop <= gSelectRegion.iBottom );
+	Assert( gSelectRegion.iLeft <= gSelectRegion.iRight );
 	for( y = gSelectRegion.iTop; y <= gSelectRegion.iBottom; y++ )
 	{
 		for( x = gSelectRegion.iLeft; x <= gSelectRegion.iRight; x++ )

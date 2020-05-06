@@ -499,7 +499,7 @@ BOOLEAN AddWaypointStrategicIDToPGroup( GROUP *pGroup, UINT32 uiSectorID )
 //............................................................
 GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites )
 {
-	AssertMsg( uiSector >= 0 && uiSector <= 255, String( "CreateNewEnemyGroup with out of range value of %d", uiSector ) );
+	AssertMsg( uiSector <= 255, String( "CreateNewEnemyGroup with out of range value of %d", uiSector ) );
 	GROUP* const pNew = new GROUP{};
 	pNew->pEnemyGroup = new ENEMYGROUP{};
 	pNew->pWaypoints = NULL;
