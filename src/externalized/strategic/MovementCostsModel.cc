@@ -17,25 +17,25 @@ MovementCostsModel::MovementCostsModel(IntIntVector traverseWE_, IntIntVector tr
 
 const uint8_t MovementCostsModel::getTraversibilityWestEast(uint8_t x, uint8_t y) const
 {
-	Assert(y < 16 && x <= 16 && y >= 0 && x >= 0);
+	Assert(y < 16 && x <= 16);
 	return traverseWE[y][x];
 }
 
 const uint8_t MovementCostsModel::getTraversibilityNorthSouth(uint8_t x, uint8_t y) const
 {
-	Assert(y <= 16 && x < 16 && y >= 0 && x >= 0);
+	Assert(y <= 16 && x < 16);
 	return traverseNS[y][x];
 }
 
 const uint8_t MovementCostsModel::getTraversibilityThrough(uint8_t x, uint8_t y) const
 {
-	Assert(y < 16 && x < 16 && y >= 0 && x >= 0);
+	Assert(y < 16 && x < 16);
 	return traverseThrough[y][x];
 }
 
 const uint8_t MovementCostsModel::getTravelRating(uint8_t x, uint8_t y) const
 {
-	Assert(y < 16 && x < 16 && y >= 0 && x >= 0);
+	Assert(y < 16 && x < 16);
 	return travelRatings[y][x];
 }
 
