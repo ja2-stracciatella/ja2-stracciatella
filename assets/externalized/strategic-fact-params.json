@@ -1,0 +1,18 @@
+/**
+ * Externalized parameters to CheckFact function. Refer to the source code 
+ * to understand what each entry means.
+ *
+ * Fields:
+ *    - fact:    ID of a Fact. It must be one of values from Fact enum
+ *    - gridNo:    A location on the tactical map
+ */
+[
+    {
+        "fact": 85,      // FACT_HANS_AT_SPOT
+        "gridNo": 13523
+    },
+    {
+        "fact": 113,     // FACT_SPIKE_AT_DOOR
+        "gridNo": 9817
+    }
+]

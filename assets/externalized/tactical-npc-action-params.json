@@ -1,0 +1,70 @@
+/**
+ * Externalized parameters to NPC actions in HandleNPCDoAction. Refer to the
+ * source code to understand what each entry actually does.
+ *
+ * You can alter the values here, but you should not add or remove any entries.
+ *
+ * Fields:
+ *    - actionCode:    Code of the NPC action (one of the NPC_ACTION_ enum)
+ *    - gridNo:    (Optional) A tile in current sector
+ *    - amount:    (Optional) A non-zero amount of money involved
+ */
+[
+    {
+        "actionCode": 100, // NPC_ACTION_GOTO_HIDEOUT
+        "gridNo": 7887
+    },
+    {
+        "actionCode": 113, // NPC_ACTION_SEND_PACOS_INTO_HIDING
+        "gridNo": 16028
+    },
+    {
+        "actionCode": 114, // NPC_ACTION_HAVE_PACOS_FOLLOW
+        "gridNo": 18193
+    },
+    {
+        "actionCode": 118, // NPC_ACTION_CHOOSE_DOCTOR
+        "gridNo": 10343
+    },
+    {
+        "actionCode": 123, // NPC_ACTION_KYLE_GETS_MONEY
+        "gridNo": 14952,
+        "amount": 10000
+    },
+    {
+        "actionCode": 129, // NPC_ACTION_OPEN_CARLAS_DOOR
+        "gridNo": 12290
+    },
+    {
+        "actionCode": 130, // NPC_ACTION_OPEN_CINDYS_DOOR
+        "gridNo": 13413
+    },
+    {
+        "actionCode": 131, // NPC_ACTION_OPEN_BAMBIS_DOOR
+        "gridNo": 11173
+    },
+    {
+        "actionCode": 132, // NPC_ACTION_OPEN_MARIAS_DOOR
+        "gridNo": 10852
+    },
+    {
+        "actionCode": 147, // NPC_ACTION_ANGEL_LEAVES_DEED
+        "gridNo": 12541
+    },
+    {
+        "actionCode": 157, // NPC_ACTION_CARMEN_LEAVES_FOR_C13
+        "amount": 10000
+    },
+    {
+        "actionCode": 195, // NPC_ACTION_WALTER_GIVEN_MONEY_INITIALLY
+        "amount": 20000
+    },
+    {
+        "actionCode": 196, // NPC_ACTION_WALTER_GIVEN_MONEY
+        "amount": 20000
+    },
+    {
+        "actionCode": 210, // NPC_ACTION_CHANGE_MANNY_POSITION
+        "gridNo": 19904
+    }
+]
