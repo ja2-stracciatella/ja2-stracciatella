@@ -25,7 +25,7 @@
  *     saves.
  * 
  * The below default compositions are referenced in the code, and their ordering
- * index not be altered:
+ * index should not be altered:
  *    - QUEEN_DEFENCE(0)
  *    - MEDUNA_DEFENCE(1)
  *    - MEDUNA_SAMSITE(2)
