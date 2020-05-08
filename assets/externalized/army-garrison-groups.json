@@ -1,5 +1,5 @@
 /**
- * Defining garrison groups (stationary enemy troops) that should present at game start.
+ * Defining garrison groups (stationary enemy troops) that should be present at game start.
  *
  * Field definition:
  *   - sector:    the sector with garrison
