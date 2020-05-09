@@ -1,0 +1,29 @@
+/**
+ * Defines the locations of SAM sites on map. There must be exactly 4 SAM sites
+ *
+ * You should not change the order or the sector of the SAM sites, or you may
+ * get inconsistencies with things like terrain types, NPC dialogues and
+ * airspace control.
+ *
+ * Fields:
+ *  - sector:    Sector where the SAM site is in. The game expects SAM sites in the order of D2, D15, I8 and N4.
+ *  - gridNos:    The 2 adjacent map tiles where the controller computer is. Damages to these gridNos can disable the SAM site.
+ */
+[
+    {   // SAM_SITE_ONE
+        "sector": "D2",
+        "gridNos": [ 10196, 10195 ]
+    },
+    {   // SAM_SITE_TWO
+        "sector": "D15",
+        "gridNos": [ 11295, 11135 ]
+    },
+    {   // SAM_SITE_THREE
+        "sector": "I8",
+        "gridNos": [ 16080, 15920 ]
+    },
+    {   // SAM_SITE_FOUR
+        "sector": "N4",
+        "gridNos": [ 11913, 11912 ]
+    }
+]

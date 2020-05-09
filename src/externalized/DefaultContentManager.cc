@@ -29,6 +29,7 @@
 #include "policy/DefaultIMPPolicy.h"
 #include "strategic/BloodCatPlacementsModel.h"
 #include "strategic/BloodCatSpawnsModel.h"
+#include "strategic/SamSiteModel.h"
 #include "strategic/TownModel.h"
 #include "strategic/MovementCostsModel.h"
 #include "strategic/NpcPlacementModel.h"
@@ -266,6 +267,7 @@ DefaultContentManager::~DefaultContentManager()
 
 	m_bloodCatPlacements.clear();
 	m_bloodCatSpawns.clear();
+	m_samSites.clear();
 	m_towns.clear();
 	m_npcPlacements.clear();
 
@@ -1069,6 +1071,15 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		);
 	}
 
+	json = readJsonDataFile("strategic-map-sam-sites.json");
+	for (auto& element : json->GetArray())
+	{
+		auto samSite = SamSiteModel::deserialize(element);
+		m_samSites.push_back(samSite);
+	}
+	SamSiteModel::validateData(m_samSites);
+	delete json;
+
 	json = readJsonDataFile("strategic-map-towns.json");
 	for (auto& element : json->GetArray()) 
 	{
@@ -1118,6 +1129,29 @@ const TownModel* DefaultContentManager::getTown(int8_t townId) const
 {
 	auto iter = m_towns.find(townId);
 	return (iter != m_towns.end()) ? iter->second : NULL;
+}
+
+const std::vector<const SamSiteModel*>& DefaultContentManager::getSamSites() const
+{
+	return m_samSites;
+}
+
+const int8_t DefaultContentManager::findSamIDBySector(uint8_t sectorId) const
+{
+	for (size_t i = 0; i < m_samSites.size(); i++)
+	{
+		if (m_samSites[i]->sectorId == sectorId)
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+const SamSiteModel* DefaultContentManager::findSamSiteBySector(uint8_t sectorId) const
+{
+	auto i = findSamIDBySector(sectorId);
+	return (i > -1) ? m_samSites[i] : NULL;
 }
 
 const std::map<int8_t, const TownModel*>& DefaultContentManager::getTowns() const
