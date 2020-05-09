@@ -1,113 +1,115 @@
-#include "Directories.h"
-#include "Font.h"
-#include "HImage.h"
-#include "Interface.h"
-#include "LoadSaveSectorInfo.h"
-#include "LoadSaveStrategicMapElement.h"
-#include "Local.h"
-#include "MapScreen.h"
-#include "Merc_Contract.h"
-#include "Merc_Hiring.h"
-#include "Radar_Screen.h"
 #include "StrategicMap.h"
-#include "Strategic.h"
-#include "Strategic_Mines.h"
-#include "Tactical_Turns.h"
-#include "Timer.h"
-#include "Timer_Control.h"
-#include "Types.h"
-#include "JAScreens.h"
-#include "Soldier_Control.h"
-#include "Overhead.h"
+
+#include "AI.h"
+#include "Ambient_Control.h"
+#include "Animated_ProgressBar.h"
+#include "Animation_Control.h"
+#include "Assignments.h"
+#include "Auto_Resolve.h"
+#include "Boxing.h"
+#include "Bullets.h"
+#include "Campaign_Types.h"
+#include "ContentManager.h"
+#include "ContentMusic.h"
+#include "Creature_Spreading.h"
+#include "Cursor_Control.h"
+#include "Cursors.h"
+#include "Debug.h"
+#include "Dialogue_Control.h"
+#include "Directories.h"
+#include "Enemy_Soldier_Save.h"
+#include "Environment.h"
+#include "Event_Pump.h"
+#include "Exit_Grids.h"
+#include "Explosion_Control.h"
+#include "Faces.h"
+#include "Fade_Screen.h"
+#include "FileMan.h"
+#include "Font.h"
+#include "Font_Control.h"
+#include "GameInstance.h"
+#include "GameLoop.h"
+#include "GameScreen.h"
+#include "GameSettings.h"
+#include "Game_Clock.h"
+#include "Game_Events.h"
+#include "HImage.h"
+#include "Handle_UI.h"
+#include "History.h"
+#include "Interface.h"
+#include "Interface_Dialogue.h"
 #include "Interface_Panels.h"
 #include "Isometric_Utils.h"
-#include "Ambient_Control.h"
-#include "VObject.h"
-#include "WorldDef.h"
-#include "WorldDat.h"
-#include "Text.h"
-#include "Soldier_Add.h"
-#include "Soldier_Macros.h"
-#include "Strategic_Pathing.h"
-#include "Soldier_Create.h"
-#include "Handle_UI.h"
-#include "Faces.h"
-#include "RenderWorld.h"
-#include "GameScreen.h"
-#include "Game_Clock.h"
-#include "Soldier_Init_List.h"
-#include "Strategic_Turns.h"
-#include "Merc_Entering.h"
-#include "Map_Information.h"
-#include "Assignments.h"
-#include "Message.h"
-#include "Font_Control.h"
-#include "Environment.h"
-#include "Game_Events.h"
-#include "Quests.h"
-#include "FileMan.h"
-#include "Animated_ProgressBar.h"
-#include "Music_Control.h"
-#include "ContentMusic.h"
-#include "Fade_Screen.h"
-#include "Strategic_Movement.h"
-#include "Campaign_Types.h"
-#include "Sys_Globals.h"
-#include "Exit_Grids.h"
-#include "Tactical_Save.h"
-#include "PathAI.h"
-#include "Animation_Control.h"
-#include "Squads.h"
-#include "WorldMan.h"
-#include "Strategic_Town_Loyalty.h"
-#include "Queen_Command.h"
-#include "Cursor_Control.h"
-#include "PreBattle_Interface.h"
-#include "Scheduling.h"
-#include "GameLoop.h"
-#include "Random.h"
-#include "AI.h"
-#include "OppList.h"
-#include "Keys.h"
-#include "Tactical_Placement_GUI.h"
-#include "Map_Screen_Helicopter.h"
-#include "Map_Edgepoints.h"
-#include "Player_Command.h"
-#include "Event_Pump.h"
-#include "Meanwhile.h"
-#include "Creature_Spreading.h"
-#include "SaveLoadMap.h"
-#include "Militia_Control.h"
-#include "GameSettings.h"
-#include "Dialogue_Control.h"
-#include "Town_Militia.h"
-#include "SysUtil.h"
-#include "Sound_Control.h"
-#include "Points.h"
-#include "Render_Dirty.h"
-#include "Loading_Screen.h"
-#include "Enemy_Soldier_Save.h"
-#include "Boxing.h"
-#include "NPC.h"
-#include "Strategic_Event_Handler.h"
-#include "MessageBoxScreen.h"
-#include "Interface_Dialogue.h"
-#include "History.h"
-#include "Bullets.h"
-#include "Physics.h"
-#include "Explosion_Control.h"
-#include "Auto_Resolve.h"
-#include "Cursors.h"
-#include "Video.h"
-#include "VSurface.h"
-#include "Debug.h"
-#include "ScreenIDs.h"
 #include "Items.h"
-#include "UILayout.h"
+#include "JAScreens.h"
+#include "Keys.h"
+#include "LoadSaveSectorInfo.h"
+#include "LoadSaveStrategicMapElement.h"
+#include "Loading_Screen.h"
+#include "Local.h"
 #include "Logger.h"
-#include "ContentManager.h"
-#include "GameInstance.h"
-#include "externalized/strategic/TownModel.h"
+#include "MapScreen.h"
+#include "Map_Edgepoints.h"
+#include "Map_Information.h"
+#include "Map_Screen_Helicopter.h"
+#include "Meanwhile.h"
+#include "Merc_Contract.h"
+#include "Merc_Entering.h"
+#include "Merc_Hiring.h"
+#include "Message.h"
+#include "MessageBoxScreen.h"
+#include "Militia_Control.h"
+#include "Music_Control.h"
+#include "NPC.h"
+#include "OppList.h"
+#include "Overhead.h"
+#include "PathAI.h"
+#include "Physics.h"
+#include "Player_Command.h"
+#include "Points.h"
+#include "PreBattle_Interface.h"
+#include "Queen_Command.h"
+#include "Quests.h"
+#include "Radar_Screen.h"
+#include "Random.h"
+#include "RenderWorld.h"
+#include "Render_Dirty.h"
+#include "SamSiteModel.h"
+#include "SaveLoadMap.h"
+#include "Scheduling.h"
+#include "ScreenIDs.h"
+#include "Soldier_Add.h"
+#include "Soldier_Control.h"
+#include "Soldier_Create.h"
+#include "Soldier_Init_List.h"
+#include "Soldier_Macros.h"
+#include "Sound_Control.h"
+#include "Squads.h"
+#include "Strategic.h"
+#include "Strategic_Event_Handler.h"
+#include "Strategic_Mines.h"
+#include "Strategic_Movement.h"
+#include "Strategic_Pathing.h"
+#include "Strategic_Town_Loyalty.h"
+#include "Strategic_Turns.h"
+#include "SysUtil.h"
+#include "Sys_Globals.h"
+#include "Tactical_Placement_GUI.h"
+#include "Tactical_Save.h"
+#include "Tactical_Turns.h"
+#include "Text.h"
+#include "Timer.h"
+#include "Timer_Control.h"
+#include "TownModel.h"
+#include "Town_Militia.h"
+#include "Types.h"
+#include "UILayout.h"
+#include "VObject.h"
+#include "VSurface.h"
+#include "Video.h"
+#include "WorldDat.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -168,38 +170,6 @@ BOOLEAN fSamSiteFound[ NUMBER_OF_SAMS ]={
 	FALSE,
 	FALSE,
 };
-
-INT16 const pSamList[] =
-{
-	SEC_D2,
-	SEC_D15,
-	SEC_I8,
-	SEC_N4
-};
-
-INT16 pSamGridNoAList[ NUMBER_OF_SAMS ]={
-	10196,
-	11295,
-	16080,
-	11913,
-};
-
-INT16 pSamGridNoBList[ NUMBER_OF_SAMS ]={
-	10195,
-	11135,
-	15920,
-	11912,
-};
-
-// ATE: Update this w/ graphic used
-// Use 3 if / orientation, 4 if \ orientation
-INT8 gbSAMGraphicList[ NUMBER_OF_SAMS ]={
-	4,
-	3,
-	3,
-	4
-};
-
 
 UINT8 ubSAMControlledSectors[ MAP_WORLD_Y ][ MAP_WORLD_X ] = {
 //       1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16
@@ -398,9 +368,10 @@ void InitializeSAMSites()
 	g_merc_arrive_sector = START_SECTOR;
 
 	// All SAM sites start game in perfect working condition.
-	FOR_EACH(INT16 const, i, pSamList)
+	for (auto samSite : GCM->getSamSites())
 	{
-		StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(*i)].bSAMCondition = 100;
+		UINT8 ubSectorID = samSite->sectorId;
+		StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(ubSectorID)].bSAMCondition = 100;
 	}
 
 	UpdateAirspaceControl();
@@ -2411,7 +2382,6 @@ void SetupNewStrategicGame()
 // a -1 will be returned upon failure
 INT8 GetSAMIdFromSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	INT8 bCounter = 0;
 	INT16 sSectorValue = 0;
 
 	// check if valid sector
@@ -2422,18 +2392,7 @@ INT8 GetSAMIdFromSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 
 	// get the sector value
 	sSectorValue = SECTOR( sSectorX, sSectorY );
-
-	// run through list of sam sites
-	for( bCounter = 0; bCounter < 4; bCounter++ )
-	{
-		if( pSamList[ bCounter ] == sSectorValue )
-		{
-			return( bCounter );
-		}
-	}
-
-
-	return( -1 );
+	return GCM->findSamIDBySector(sSectorValue);
 }
 
 
@@ -2471,9 +2430,10 @@ bool CanGoToTacticalInSector(INT16 const x, INT16 const y, UINT8 const z)
 INT32 GetNumberOfSAMSitesUnderPlayerControl()
 {
 	INT32 n = 0;
-	FOR_EACH(INT16 const, i, pSamList)
+	for (auto samSite : GCM->getSamSites())
 	{
-		if (!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(*i)].fEnemyControlled) ++n;
+		UINT8 ubSectorID = samSite->sectorId;
+		if (!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(ubSectorID)].fEnemyControlled) ++n;
 	}
 	return n;
 }
@@ -2485,7 +2445,7 @@ void UpdateAirspaceControl( void )
 	UINT8 ubControllingSAM;
 	StrategicMapElement *pSAMStrategicMap = NULL;
 	BOOLEAN fEnemyControlsAir;
-
+	auto samList = GCM->getSamSites();
 
 	for( iCounterA = 1; iCounterA < ( INT32 )( MAP_WORLD_X - 1 ); iCounterA++ )
 	{
@@ -2496,7 +2456,8 @@ void UpdateAirspaceControl( void )
 
 			if ( ( ubControllingSAM >= 1 ) && ( ubControllingSAM <= NUMBER_OF_SAMS ) )
 			{
-				pSAMStrategicMap = &( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( pSamList[ ubControllingSAM - 1 ] ) ] );
+				UINT8 ubSector = samList[ubControllingSAM - 1]->sectorId;
+				pSAMStrategicMap = &( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( ubSector ) ] );
 
 				// if the enemies own the controlling SAM site, and it's in working condition
 				if( ( pSAMStrategicMap->fEnemyControlled ) && ( pSAMStrategicMap->bSAMCondition >= MIN_CONDITION_FOR_SAM_SITE_TO_WORK ) )
@@ -2564,11 +2525,8 @@ bool IsThisSectorASAMSector(INT16 const x, INT16 const y, INT8 const z)
 {
 	if (z != 0) return false;
 
-	FOR_EACH(INT16 const, i, pSamList)
-	{
-		if (*i == SECTOR(x, y)) return true;
-	}
-	return false;
+	UINT8 ubSector = SECTOR(x, y);
+	return (GCM->findSamIDBySector(ubSector) > -1);
 }
 
 

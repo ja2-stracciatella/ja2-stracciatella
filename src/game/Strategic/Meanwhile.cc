@@ -1,36 +1,41 @@
-#include "MapScreen.h"
 #include "Meanwhile.h"
-#include "PreBattle_Interface.h"
-#include "MessageBoxScreen.h"
-#include "StrategicMap.h"
-#include "Fade_Screen.h"
-#include "ScreenIDs.h"
-#include "JAScreens.h"
-#include "NPC.h"
-#include "Game_Event_Hook.h"
-#include "Game_Clock.h"
-#include "Tactical_Save.h"
-#include "Soldier_Profile.h"
-#include "Overhead.h"
-#include "Dialogue_Control.h"
+
 #include "Assignments.h"
-#include "Text.h"
-#include "GameSettings.h"
-#include "Interface_Control.h"
-#include "Interface_Items.h"
-#include "Map_Information.h"
-#include "Map_Screen_Interface_Map.h"
-#include "Map_Screen_Interface.h"
-#include "Music_Control.h"
-#include "ContentMusic.h"
-#include "Interface.h"
-#include "Game_Events.h"
-#include "Strategic_AI.h"
-#include "Interface_Dialogue.h"
-#include "Quests.h"
 #include "Campaign_Types.h"
-#include "Squads.h"
+#include "ContentManager.h"
+#include "ContentMusic.h"
+#include "Dialogue_Control.h"
+#include "Fade_Screen.h"
+#include "GameInstance.h"
+#include "GameSettings.h"
+#include "Game_Clock.h"
+#include "Game_Event_Hook.h"
+#include "Game_Events.h"
+#include "Interface.h"
+#include "Interface_Control.h"
+#include "Interface_Dialogue.h"
+#include "Interface_Items.h"
+#include "JAScreens.h"
+#include "MapScreen.h"
+#include "Map_Information.h"
+#include "Map_Screen_Helicopter.h"
+#include "Map_Screen_Interface.h"
+#include "Map_Screen_Interface_Map.h"
+#include "MessageBoxScreen.h"
+#include "Music_Control.h"
+#include "NPC.h"
+#include "Overhead.h"
+#include "PreBattle_Interface.h"
+#include "Quests.h"
 #include "Random.h"
+#include "SamSiteModel.h"
+#include "ScreenIDs.h"
+#include "Soldier_Profile.h"
+#include "Squads.h"
+#include "StrategicMap.h"
+#include "Strategic_AI.h"
+#include "Tactical_Save.h"
+#include "Text.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -447,6 +452,7 @@ bool AreInMeanwhile()
 
 static void ProcessImplicationsOfMeanwhile(void)
 {
+	auto samList = GCM->getSamSites();
 	switch( gCurrentMeanwhileDef.ubMeanwhileID )
 	{
 		case END_OF_PLAYERS_FIRST_BATTLE:
@@ -513,9 +519,9 @@ static void ProcessImplicationsOfMeanwhile(void)
 
 		{
 			UINT8 sector;
-		case NW_SAM:      sector = pSamList[0]; goto send_troops_to_sam;
-		case NE_SAM:      sector = pSamList[1]; goto send_troops_to_sam;
-		case CENTRAL_SAM: sector = pSamList[2]; goto send_troops_to_sam;
+		case NW_SAM:      sector = samList[SAM_SITE_ONE]->sectorId; goto send_troops_to_sam;
+		case NE_SAM:      sector = samList[SAM_SITE_TWO]->sectorId; goto send_troops_to_sam;
+		case CENTRAL_SAM: sector = samList[SAM_SITE_THREE]->sectorId; goto send_troops_to_sam;
 send_troops_to_sam:
 			ExecuteStrategicAIAction(NPC_ACTION_SEND_TROOPS_TO_SAM, SECTORX(sector), SECTORY(sector));
 			break;

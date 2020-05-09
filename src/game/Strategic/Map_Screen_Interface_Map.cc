@@ -1,59 +1,59 @@
+#include "Map_Screen_Interface_Map.h"
+
+#include "Air_Raid.h"
+#include "Assignments.h"
+#include "Button_System.h"
+#include "Campaign_Types.h"
+#include "ContentManager.h"
+#include "Debug.h"
 #include "Directories.h"
+#include "Finances.h"
 #include "Font.h"
 #include "Font_Control.h"
+#include "GameInstance.h"
+#include "Game_Clock.h"
 #include "HImage.h"
 #include "Interface.h"
+#include "Line.h"
 #include "Local.h"
 #include "MapScreen.h"
+#include "Map_Information.h"
+#include "Map_Screen_Helicopter.h"
 #include "Map_Screen_Interface.h"
-#include "Map_Screen_Interface_Map.h"
 #include "Map_Screen_Interface_Border.h"
+#include "MemMan.h"
 #include "Merc_Hiring.h"
+#include "Message.h"
+#include "Militia_Control.h"
 #include "Overhead.h"
+#include "Player_Command.h"
+#include "PreBattle_Interface.h"
+#include "Queen_Command.h"
 #include "Render_Dirty.h"
-#include "SysUtil.h"
+#include "SamSiteModel.h"
+#include "Soldier_Profile.h"
+#include "Squads.h"
 #include "StrategicMap.h"
+#include "Strategic_Mines.h"
+#include "Strategic_Movement.h"
 #include "Strategic_Pathing.h"
+#include "Strategic_Town_Loyalty.h"
+#include "SysUtil.h"
+#include "Tactical_Save.h"
 #include "Text.h"
 #include "Timer_Control.h"
-#include "VObject.h"
-#include "VSurface.h"
-#include "Video.h"
-#include "VObject_Blitters.h"
-#include "Assignments.h"
-#include "Squads.h"
-#include "Message.h"
-#include "Soldier_Profile.h"
-#include "Player_Command.h"
-#include "Strategic_Movement.h"
-#include "Queen_Command.h"
-#include "Campaign_Types.h"
-#include "Strategic_Town_Loyalty.h"
-#include "Strategic_Mines.h"
-#include "Vehicles.h"
-#include "Map_Screen_Helicopter.h"
-#include "Game_Clock.h"
-#include "Finances.h"
-#include "Line.h"
-#include "PreBattle_Interface.h"
-#include "Town_Militia.h"
-#include "Militia_Control.h"
-#include "Tactical_Save.h"
-#include "Map_Information.h"
-#include "Air_Raid.h"
-#include "MemMan.h"
-#include "Button_System.h"
-#include "Debug.h"
-#include "UILayout.h"
-#include "GameInstance.h"
-#include "ContentManager.h"
 #include "TownModel.h"
-
-#include <string_theory/format>
-#include <string_theory/string>
+#include "Town_Militia.h"
+#include "UILayout.h"
+#include "VObject.h"
+#include "VObject_Blitters.h"
+#include "VSurface.h"
+#include "Vehicles.h"
+#include "Video.h"
 
 #include <stdexcept>
-
+#include <string_theory/format>
+#include <string_theory/string>
 
 // zoom x and y coords for map scrolling
 INT32 iZoomX = 0;
@@ -4394,9 +4394,9 @@ static void DrawTownMilitiaForcesOnMap()
 	}
 
 	// now handle militia for sam sectors
-	FOR_EACH(INT16 const, i, pSamList)
+	for(auto s : GCM->getSamSites())
 	{
-		DrawMilitiaForcesForSector(*i);
+		DrawMilitiaForcesForSector(s->sectorId);
 	}
 
 	RestoreClipRegionToFullScreen();
@@ -4633,12 +4633,12 @@ static void ShowSAMSitesOnStrategicMap()
 	if (fShowAircraftFlag) BlitSAMGridMarkers();
 
 	BOOLEAN const* found = fSamSiteFound;
-	FOR_EACH(INT16 const, i, pSamList)
+	for (auto s : GCM->getSamSites())
 	{
 		// Has the sam site here been found?
 		if (!*found++) continue;
 
-		INT16 const sector = *i;
+		INT16 const sector = s->sectorId;
 		INT16 const sec_x  = SECTORX(sector);
 		INT16 const sec_y  = SECTORY(sector);
 
@@ -4694,7 +4694,7 @@ static void BlitSAMGridMarkers()
 	ClipBlitsToMapViewRegionForRectangleAndABit(uiDestPitchBYTES);
 
 	BOOLEAN const* found = fSamSiteFound;
-	FOR_EACH(INT16 const, i, pSamList)
+	for (auto s : GCM->getSamSites())
 	{
 		// Has the sam site here been found?
 		if (!*found++) continue;
@@ -4703,7 +4703,7 @@ static void BlitSAMGridMarkers()
 		INT16 y;
 		INT16 w;
 		INT16 h;
-		INT16 const sector = *i;
+		INT16 const sector = s->sectorId;
 		if (fZoomFlag)
 		{
 			GetScreenXYFromMapXYStationary(SECTORX(sector), SECTORY(sector), &x, &y);
