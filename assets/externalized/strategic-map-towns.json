@@ -32,7 +32,7 @@
 	// GRUMM
 	{
 		"townId": 4,
-		"sectors": [ "G1", "G2", "H1", "H2" ],
+		"sectors": [ "G1", "G2", "H1", "H2", "H3" ],
 		"townPoint": { "x": 15, "y": 80 },
 		"isMilitiaTrainingAllowed": true
 	},
@@ -46,7 +46,7 @@
 	// CAMBRIA
 	{
 		"townId": 6,
-		"sectors": [ "F8", "F9", "G8", "G9" ],
+		"sectors": [ "F8", "F9", "G8", "G9", "H8" ],
 		"townPoint": { "x": 95, "y": 70 },
 		"isMilitiaTrainingAllowed": true
 	},
