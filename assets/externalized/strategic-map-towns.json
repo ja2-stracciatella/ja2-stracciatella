@@ -12,7 +12,7 @@
 	{ 
 		"townId": 1,
 		"sectors": [ "A9", "A10" ],
-		"townPoint": { "x": 90, "y": 0 },
+		"townPoint": { "x": 90, "y": 10 },
 		"isMilitiaTrainingAllowed": false
 	},
 	// DRASSEN
