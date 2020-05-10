@@ -43,11 +43,6 @@ static inline void SetWorldSectorInvalid()
 
 #define NUMBER_OF_SAMS 4
 
-
-extern INT16 const pSamList[NUMBER_OF_SAMS];
-extern INT16 pSamGridNoAList[ NUMBER_OF_SAMS ];
-extern INT16 pSamGridNoBList[ NUMBER_OF_SAMS ];
-
 extern BOOLEAN fFoundOrta;
 extern BOOLEAN fSamSiteFound[ NUMBER_OF_SAMS ];
 

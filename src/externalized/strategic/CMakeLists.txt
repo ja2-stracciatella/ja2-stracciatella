@@ -4,9 +4,10 @@ set(JA2_SOURCES
     ${LOCAL_JA2_HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/BloodCatPlacementsModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/BloodCatSpawnsModel.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/TownModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/MovementCostsModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/NpcPlacementModel.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/SamSiteModel.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/TownModel.cc
     PARENT_SCOPE
 )
 set(JA2_INCLUDES

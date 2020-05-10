@@ -1,44 +1,47 @@
-#include "Directories.h"
-#include "Font_Control.h"
-#include "MapScreen.h"
 #include "Map_Screen_Helicopter.h"
-#include "LaptopSave.h"
-#include "MessageBoxScreen.h"
-#include "Vehicles.h"
-#include "Finances.h"
-#include "Quests.h"
-#include "Game_Clock.h"
-#include "Queen_Command.h"
-#include "Strategic_Pathing.h"
-#include "Random.h"
-#include "Game_Event_Hook.h"
-#include "Dialogue_Control.h"
-#include "Message.h"
-#include "Strategic_Movement.h"
-#include "Soldier_Profile.h"
+
 #include "Assignments.h"
+#include "ContentManager.h"
+#include "Debug.h"
+#include "Dialogue_Control.h"
+#include "Directories.h"
+#include "Finances.h"
+#include "Font_Control.h"
+#include "GameInstance.h"
+#include "Game_Clock.h"
+#include "Game_Event_Hook.h"
+#include "Isometric_Utils.h"
+#include "LaptopSave.h"
+#include "MapScreen.h"
+#include "Map_Screen_Interface.h"
+#include "Map_Screen_Interface_Border.h"
+#include "Meanwhile.h"
+#include "Message.h"
+#include "MessageBoxScreen.h"
+#include "Overhead.h"
+#include "Player_Command.h"
 #include "PreBattle_Interface.h"
+#include "Queen_Command.h"
+#include "Quests.h"
+#include "Random.h"
+#include "RenderWorld.h"
+#include "SamSiteModel.h"
+#include "Scheduling.h"
+#include "Soldier_Create.h"
+#include "Soldier_Profile.h"
+#include "SoundMan.h"
+#include "Sound_Control.h"
+#include "Squads.h"
 #include "StrategicMap.h"
+#include "Strategic_Event_Handler.h"
+#include "Strategic_Movement.h"
+#include "Strategic_Pathing.h"
+#include "Text.h"
+#include "TileDat.h"
+#include "UILayout.h"
+#include "Vehicles.h"
 #include "WorldDef.h"
 #include "WorldMan.h"
-#include "TileDat.h"
-#include "Map_Screen_Interface.h"
-#include "Text.h"
-#include "Squads.h"
-#include "Player_Command.h"
-#include "Sound_Control.h"
-#include "Meanwhile.h"
-#include "Map_Screen_Interface_Border.h"
-#include "Strategic_Event_Handler.h"
-#include "Overhead.h"
-#include "Soldier_Create.h"
-#include "RenderWorld.h"
-#include "SoundMan.h"
-#include "Isometric_Utils.h"
-#include "Scheduling.h"
-#include "Debug.h"
-#include "UILayout.h"
-
 
 // the amounts of time to wait for hover stuff
 #define TIME_DELAY_FOR_HOVER_WAIT						10		// minutes
@@ -755,7 +758,8 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 const uiSpecialCod
 			SkyriderDialogue(MENTION_DRASSEN_SAM_SITE);
 			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 1);
 
-			if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(pSamList[1])].fEnemyControlled)
+			auto samList = GCM->getSamSites();
+			if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(samList[SAM_SITE_TWO]->sectorId)].fEnemyControlled)
 			{
 				SkyriderDialogue(SECOND_HALF_OF_MENTION_DRASSEN_SAM_SITE);
 			}
@@ -888,6 +892,8 @@ void HandleAnimationOfSectors( void )
 	static BOOLEAN fOldShowEstoniRefuelHighLight = FALSE;
 	static BOOLEAN fOldShowOtherSAMHighLight = FALSE;
 
+	auto samList = GCM->getSamSites();
+
 	// find out which mode we are in and animate for that mode
 
 	// Drassen SAM site
@@ -895,7 +901,7 @@ void HandleAnimationOfSectors( void )
 	{
 		fOldShowDrassenSAMHighLight = TRUE;
 		// Drassen's SAM site is #2
-		HandleBlitOfSectorLocatorIcon(pSamList[1], LOCATOR_COLOR_RED);
+		HandleBlitOfSectorLocatorIcon(samList[SAM_SITE_TWO]->sectorId, LOCATOR_COLOR_RED);
 		fSkipSpeakersLocator = TRUE;
 	}
 	else if( fOldShowDrassenSAMHighLight )
@@ -921,9 +927,9 @@ void HandleAnimationOfSectors( void )
 	if( fShowOtherSAMHighLight )
 	{
 		fOldShowOtherSAMHighLight = TRUE;
-		HandleBlitOfSectorLocatorIcon(pSamList[0], LOCATOR_COLOR_RED);
-		HandleBlitOfSectorLocatorIcon(pSamList[2], LOCATOR_COLOR_RED);
-		HandleBlitOfSectorLocatorIcon(pSamList[3], LOCATOR_COLOR_RED);
+		HandleBlitOfSectorLocatorIcon(samList[SAM_SITE_ONE]->sectorId,   LOCATOR_COLOR_RED);
+		HandleBlitOfSectorLocatorIcon(samList[SAM_SITE_THREE]->sectorId, LOCATOR_COLOR_RED);
+		HandleBlitOfSectorLocatorIcon(samList[SAM_SITE_FOUR]->sectorId,  LOCATOR_COLOR_RED);
 		fSkipSpeakersLocator = TRUE;
 	}
 	else if( fOldShowOtherSAMHighLight )
@@ -1060,7 +1066,8 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
 
 	// get the condition of that SAM site (NOTE: SAM #s are 1-4, but indexes are 0-3!!!)
 	Assert( ubSamNumber <= NUMBER_OF_SAMS );
-	bSAMCondition = StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( pSamList[ ubSamNumber - 1 ] ) ].bSAMCondition;
+	UINT8 ubSAMSectorID = GCM->getSamSites()[ubSamNumber - 1]->sectorId;
+	bSAMCondition = StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX(ubSAMSectorID) ].bSAMCondition;
 
 	// if the SAM site is too damaged to be a threat
 	if( bSAMCondition < MIN_CONDITION_FOR_SAM_SITE_TO_WORK )

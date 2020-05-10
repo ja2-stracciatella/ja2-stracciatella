@@ -1,71 +1,69 @@
+#include "Explosion_Control.h"
+
+#include "AI.h"
+#include "Action_Items.h"
+#include "Animation_Control.h"
+#include "Campaign_Types.h"
+#include "ContentManager.h"
+#include "Debug.h"
 #include "Directories.h"
+#include "End_Game.h"
+#include "FOV.h"
+#include "FileMan.h"
 #include "Font_Control.h"
+#include "GameInstance.h"
+#include "GameSettings.h"
+#include "Game_Clock.h"
+#include "Handle_Doors.h"
+#include "Handle_Items.h"
+#include "Handle_UI.h"
+#include "Interactive_Tiles.h"
+#include "Interface.h"
+#include "Interface_Dialogue.h"
+#include "Isometric_Utils.h"
+#include "Items.h"
+#include "Keys.h"
+#include "LightEffects.h"
+#include "Lighting.h"
 #include "LoadSaveData.h"
 #include "LoadSaveExplosionType.h"
-#include "Overhead.h"
-#include "Structure.h"
-#include "Timer_Control.h"
-#include "Debug.h"
-#include "Soldier_Control.h"
-#include "Handle_Items.h"
-#include "WorldDef.h"
-#include "WorldMan.h"
-#include "Rotting_Corpses.h"
-#include "Isometric_Utils.h"
-#include "Animation_Control.h"
-#include "Game_Clock.h"
-#include "Soldier_Create.h"
-#include "RenderWorld.h"
-#include "Soldier_Add.h"
-#include "Explosion_Control.h"
-#include "Tile_Animation.h"
-#include "Sound_Control.h"
-#include "Weapons.h"
-#include "World_Items.h"
-#include "Structure_Wrap.h"
-#include "TileDef.h"
-#include "TileDat.h"
-#include "Interactive_Tiles.h"
-#include "SaveLoadMap.h"
-#include "Handle_Doors.h"
-#include "Message.h"
-#include "Random.h"
-#include "SmokeEffects.h"
-#include "Handle_UI.h"
-#include "PathAI.h"
-#include "Pits.h"
-#include "Campaign_Types.h"
-#include "StrategicMap.h"
-#include "Action_Items.h"
-#include "Soldier_Profile.h"
-#include "Quests.h"
-#include "Interface_Dialogue.h"
-#include "LightEffects.h"
-#include "AI.h"
-#include "Soldier_Tile.h"
-#include "Lighting.h"
-#include "Render_Fun.h"
-#include "OppList.h"
-#include "Smell.h"
-#include "GameSettings.h"
-#include "Interface.h"
-#include "End_Game.h"
-#include "WorldDat.h"
-#include "Keys.h"
-#include "FOV.h"
+#include "Logger.h"
 #include "Map_Information.h"
 #include "MemMan.h"
-#include "FileMan.h"
-#include "Items.h"
-#include "Soldier_Macros.h"
+#include "Message.h"
 #include "Morale.h"
-
-#include "ContentManager.h"
-#include "GameInstance.h"
-#include "Logger.h"
-
-extern INT8 gbSAMGraphicList[NUMBER_OF_SAMS];
-
+#include "OppList.h"
+#include "Overhead.h"
+#include "PathAI.h"
+#include "Pits.h"
+#include "Quests.h"
+#include "Random.h"
+#include "RenderWorld.h"
+#include "Render_Fun.h"
+#include "Rotting_Corpses.h"
+#include "SamSiteModel.h"
+#include "SaveLoadMap.h"
+#include "Smell.h"
+#include "SmokeEffects.h"
+#include "Soldier_Add.h"
+#include "Soldier_Control.h"
+#include "Soldier_Create.h"
+#include "Soldier_Macros.h"
+#include "Soldier_Profile.h"
+#include "Soldier_Tile.h"
+#include "Sound_Control.h"
+#include "StrategicMap.h"
+#include "Structure.h"
+#include "Structure_Wrap.h"
+#include "TileDat.h"
+#include "TileDef.h"
+#include "Tile_Animation.h"
+#include "Timer_Control.h"
+#include "Weapons.h"
+#include "WorldDat.h"
+#include "WorldDef.h"
+#include "WorldMan.h"
+#include "World_Items.h"
 
 struct ExplosionInfo
 {
@@ -2614,12 +2612,12 @@ bool DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const 
 	// ATE: If we are below, return right away
 	if (z != 0) return false;
 
-	INT16 const sector = SECTOR(x, y);
-	for (INT32 i = 0; i != NUMBER_OF_SAMS; ++i)
+	for (auto s : GCM->getSamSites())
 	{
-		if (pSamList[i] != sector) continue;
-		if (pSamGridNoAList[i] == gridno) return true;
-		if (pSamGridNoBList[i] == gridno) return true;
+		if (s->doesSamExistHere(x, y, gridno))
+		{
+			return true;
+		}
 	}
 	return false;
 }
@@ -2637,7 +2635,7 @@ void UpdateAndDamageSAMIfFound( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, 
 
 	// Damage.....
 	sSectorNo = CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY );
-
+	SLOGD(ST::format("SAM site at sector #{} is damaged by {} points", sSectorNo, ubDamage));
 	if ( StrategicMap[ sSectorNo ].bSAMCondition >= ubDamage )
 	{
 		StrategicMap[ sSectorNo ].bSAMCondition -= ubDamage;
@@ -2662,11 +2660,12 @@ void UpdateSAMDoneRepair(INT16 const x, INT16 const y, INT16 const z)
 	INT16 const sector = SECTOR(x, y);
 	for (INT32 i = 0; i != NUMBER_OF_SAMS; ++i)
 	{
-		if (pSamList[i] != sector) continue;
+		auto samSite = GCM->findSamSiteBySector(sector);
+		if (samSite == NULL) continue;
 
-		UINT16 const good_graphic    = GetTileIndexFromTypeSubIndex(EIGHTISTRUCT, gbSAMGraphicList[i]);
+		UINT16 const good_graphic    = GetTileIndexFromTypeSubIndex(EIGHTISTRUCT, samSite->graphicIndex);
 		UINT16 const damaged_graphic = good_graphic - 2; // Damaged one (current) is 2 less
-		GridNo const gridno          = pSamGridNoAList[i];
+		GridNo const gridno          = samSite->gridNos[0];
 		if (x == gWorldSectorX && y == gWorldSectorY && z == gbWorldSectorZ)
 		{ // Sector loaded, update graphic
 			ApplyMapChangesToMapTempFile app;
