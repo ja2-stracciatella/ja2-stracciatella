@@ -980,6 +980,11 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 			newLoc = curLoc + DirIncrementer[ubCnt];
 
+			if ( newLoc < 0 || newLoc >= GRIDSIZE )
+			{
+				SLOGW(ST::format("Path Finding algorithm tried to go out of bounds at {}, in an attempt to find path from {} to {}", newLoc, iOrigination, iDestination));
+				goto NEXTDIR;
+			}
 
 			if ( fVisitSpotsOnlyOnce && trailCostUsed[newLoc] == gubGlobalPathCount )
 			{
@@ -1257,12 +1262,6 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 			else
 			{
 				nextCost = TRAVELCOST_FLAT;
-			}
-
-			if ( newLoc > GRIDSIZE )
-			{
-				// WHAT THE??? hack.
-				goto NEXTDIR;
 			}
 
 			// if contemplated tile is NOT final dest and someone there, disqualify route
