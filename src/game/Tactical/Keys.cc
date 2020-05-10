@@ -1005,8 +1005,14 @@ static void SynchronizeDoorStatusToStructureData(DOOR_STATUS const& d)
 
 	// Swap!
 	STRUCTURE *base = FindBaseStructure(s);
-	base = SwapStructureForPartner(base);
-	RecompileLocalMovementCosts(base->sGridNo);
+	if (!base)
+	{
+		SLOGW(ST::format("Door structure data at {} was not found", d.sGridNo));
+		return;
+	}
+	INT16 sBaseGridNo = base->sGridNo;
+	SwapStructureForPartner(base);
+	RecompileLocalMovementCosts(sBaseGridNo);
 }
 
 
