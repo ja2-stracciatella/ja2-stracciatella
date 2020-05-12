@@ -1,5 +1,5 @@
 /**
- * This defines the Army Patrol Groups at the start of game. There can only
+ * This defines the Army Patrol Groups at the start of the game. There can only
  * be at most 50 Patrol Groups
  *
  * A point to sector A1 is ignored by the code, as the code assumes
