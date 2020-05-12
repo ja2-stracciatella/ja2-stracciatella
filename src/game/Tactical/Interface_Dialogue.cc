@@ -1584,6 +1584,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 	}
 	else
 	{
+		auto params = GCM->getNpcActionParams(usActionCode);
 		switch( usActionCode )
 		{
 			case NPC_ACTION_DONT_ACCEPT_ITEM:
@@ -1602,7 +1603,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				ExitGrid.usGridNo = 12722;
 
 				{ ApplyMapChangesToMapTempFile app;
-					AddExitGridToWorld( 7887, &ExitGrid );
+					AddExitGridToWorld( params->getGridNo(7887), &ExitGrid );
 				}
 
 				// For one, loop through our current squad and move them over
@@ -2069,7 +2070,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_SEND_PACOS_INTO_HIDING:
 			{
 				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PACOS);
-				const INT16 sGridNo = 16028;
+				const INT16 sGridNo = params->getGridNo(16028);
 				if (pSoldier)
 				{
 					if (NewOKDestination( pSoldier, sGridNo, TRUE, 0 ) )
@@ -2092,7 +2093,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_HAVE_PACOS_FOLLOW:
 			{
 				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PACOS);
-				const INT16 sGridNo = 18193;
+				const INT16 sGridNo = params->getGridNo(18193);
 				if (pSoldier)
 				{
 					if (NewOKDestination( pSoldier, sGridNo, TRUE, 0 ) )
@@ -2189,13 +2190,15 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// add a money item with $10000 to the tile in front of Kyle
 				// and then have him pick it up
 				{
-					OBJECTTYPE	Object;
-					INT16				sGridNo = 14952;
+					OBJECTTYPE Object;
+					INT16      sGridNo  = params->getGridNo(14952);
+					UINT32     uiAmount = params->getAmount(10000);
+					SLOGI(ST::format("add a money item with ${} to tile {} in front of Kyle", uiAmount, sGridNo));
 
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 					if (pSoldier)
 					{
-						CreateMoney(10000, &Object);
+						CreateMoney(uiAmount, &Object);
 						INT32 const iWorldItem = AddItemToPool(sGridNo, &Object, INVISIBLE, pSoldier->bLevel, 0, 0);
 
 						// shouldn't have any current action but make sure everything
@@ -2268,12 +2271,12 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			{
-				INT16 sGridNo;
-				case NPC_ACTION_OPEN_CARLAS_DOOR: sGridNo = 12290; goto unlock;
-				case NPC_ACTION_OPEN_CINDYS_DOOR: sGridNo = 13413; goto unlock;
-				case NPC_ACTION_OPEN_BAMBIS_DOOR: sGridNo = 11173; goto unlock;
-				case NPC_ACTION_OPEN_MARIAS_DOOR: sGridNo = 10852; goto unlock;
-unlock:
+			case NPC_ACTION_OPEN_CARLAS_DOOR: 
+			case NPC_ACTION_OPEN_CINDYS_DOOR: 
+			case NPC_ACTION_OPEN_BAMBIS_DOOR: 
+			case NPC_ACTION_OPEN_MARIAS_DOOR: 
+				INT16 sGridNo = params->getGridNo(10852);
+
 				// JA3Gold: unlock the doors instead of opening them
 				{
 					DOOR* pDoor;
@@ -2521,7 +2524,7 @@ unlock:
 					const INT8 bItemIn = FindObj(pSoldier, DEED);
 					if (bItemIn != NO_SLOT)
 					{
-						AddItemToPool(12541, &pSoldier->inv[bItemIn], INVISIBLE, 0, 0, 0);
+						AddItemToPool(params->getGridNo(12541), &pSoldier->inv[bItemIn], INVISIBLE, 0, 0, 0);
 						DeleteObj( &(pSoldier->inv[ bItemIn ]) );
 						RemoveObjectFromSoldierProfile( ubTargetNPC, DEED );
 					}
@@ -2687,7 +2690,7 @@ unlock:
 				// set "don't add to sector" cause he'll only appear after an event...
 				gMercProfiles[ ubTargetNPC ].ubMiscFlags2 |= PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR;
 
-				SetCustomizableTimerCallbackAndDelay( 10000, CarmenLeavesSectorCallback, TRUE );
+				SetCustomizableTimerCallbackAndDelay(params->getAmount(10000), CarmenLeavesSectorCallback, TRUE );
 				break;
 
 			case NPC_ACTION_CARMEN_LEAVES_ON_NEXT_SECTOR_LOAD:
@@ -3483,11 +3486,11 @@ action_punch_pc:
 
 				if( ( pSoldier ) && ( pSoldier2 ) )
 				{
-					if( pSoldier->sGridNo == 10343 )
+					if( pSoldier->sGridNo == params->getGridNo(10343) )
 					{
 						pSoldier2 = NULL;
 					}
-					else if( pSoldier2->sGridNo == 10343 )
+					else if( pSoldier2->sGridNo == params->getGridNo(10343) )
 					{
 						pSoldier = NULL;
 					}
@@ -3709,7 +3712,7 @@ action_punch_pc:
 			{
 				gMercProfiles[ MANNY ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
 				gMercProfiles[ MANNY ].ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-				gMercProfiles[ MANNY ].usStrategicInsertionData = 19904;
+				gMercProfiles[ MANNY ].usStrategicInsertionData = params->getGridNo(19904);
 				gMercProfiles[ MANNY ].fUseProfileInsertionInfo = TRUE;
 				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MANNY);
 				if ( pSoldier )
@@ -4039,7 +4042,7 @@ add_log:
 			}
 
 			case NPC_ACTION_WALTER_GIVEN_MONEY_INITIALLY:
-				if ( gMercProfiles[ WALTER ].iBalance >= WALTER_BRIBE_AMOUNT )
+				if ( gMercProfiles[ WALTER ].iBalance >= params->getGridNo(WALTER_BRIBE_AMOUNT) )
 				{
 					TriggerNPCRecord( WALTER, 16 );
 				}
@@ -4049,7 +4052,7 @@ add_log:
 				}
 				break;
 			case NPC_ACTION_WALTER_GIVEN_MONEY:
-				if ( gMercProfiles[ WALTER ].iBalance >= WALTER_BRIBE_AMOUNT )
+				if ( gMercProfiles[ WALTER ].iBalance >= params->getGridNo(WALTER_BRIBE_AMOUNT) )
 				{
 					TriggerNPCRecord( WALTER, 16 );
 				}

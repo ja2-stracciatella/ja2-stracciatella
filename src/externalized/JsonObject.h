@@ -76,6 +76,18 @@ public:
 		}
 	}
 
+	int getOptionalInt(const char* name, int defaultValue = 0) const
+	{
+		if (m_value.HasMember(name))
+		{
+			return m_value[name].GetInt();
+		}
+		else
+		{
+			return defaultValue;
+		}
+	}
+
 	const char * getOptionalString(const char *name) const
 	{
 		if(m_value.HasMember(name))

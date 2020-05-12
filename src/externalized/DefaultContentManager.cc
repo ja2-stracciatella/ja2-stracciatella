@@ -29,11 +29,13 @@
 #include "policy/DefaultIMPPolicy.h"
 #include "strategic/BloodCatPlacementsModel.h"
 #include "strategic/BloodCatSpawnsModel.h"
+#include "strategic/FactParamsModel.h"
 #include "strategic/SamSiteModel.h"
 #include "strategic/TownModel.h"
 #include "strategic/MovementCostsModel.h"
 #include "strategic/NpcPlacementModel.h"
 #include "tactical/MapItemReplacementModel.h"
+#include "tactical/NpcActionParamsModel.h"
 
 #include "Logger.h"
 
@@ -282,6 +284,26 @@ const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
 const DealerInventory* DefaultContentManager::getBobbyRayUsedInventory() const
 {
 	return m_bobbyRayUsedInventory;
+}
+
+const NpcActionParamsModel* DefaultContentManager::getNpcActionParams(uint16_t actionCode) const
+{
+	auto it = m_npcActionParams.find(actionCode);
+	if (it != m_npcActionParams.end())
+	{
+		return it->second;
+	}
+	return &NpcActionParamsModel::empty;
+}
+
+const FactParamsModel* DefaultContentManager::getFactParams(Fact fact) const
+{
+	auto it = m_factParams.find(fact);
+	if (it != m_factParams.end())
+	{
+		return it->second;
+	}
+	return &FactParamsModel::empty;
 }
 
 /** Get map file path. */
@@ -938,6 +960,7 @@ bool DefaultContentManager::loadGameData()
 	loadStringRes("strings/new-strings", m_newStrings);
 
 	loadStrategicLayerData();
+	loadTacticalLayerData();
 
 	return result;
 }
@@ -1099,6 +1122,19 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		auto placement = NpcPlacementModel::deserialize(element);
 		m_npcPlacements.insert(std::make_pair(placement->profileId, placement));
 	}
+
+	return true;
+}
+
+bool DefaultContentManager::loadTacticalLayerData() 
+{
+	auto json = readJsonDataFile("tactical-npc-action-params.json");
+	for (auto& element : json->GetArray())
+	{
+		auto params = NpcActionParamsModel::deserialize(element);
+		m_npcActionParams[params->actionCode] = params;
+	}
+	delete json;
 
 	return true;
 }

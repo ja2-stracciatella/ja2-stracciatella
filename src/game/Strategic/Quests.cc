@@ -496,7 +496,7 @@ static bool InTownSectorWithTrainingLoyalty(UINT8 const sector)
 BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 {
 	INT8 bTown = -1;
-
+	auto factParams = GCM->getFactParams(usFact);
 
 	switch( usFact )
 	{
@@ -629,7 +629,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 			*/
 		case FACT_SPIKE_AT_DOOR:
-			gubFact[FACT_SPIKE_AT_DOOR] = CheckNPCAt(SPIKE, 9817);
+			gubFact[FACT_SPIKE_AT_DOOR] = CheckNPCAt(SPIKE, factParams->getGridNo(9817));
 			break;
 		case FACT_WOUNDED_MERCS_NEARBY:
 			gubFact[usFact] = (NumWoundedMercsNearby( ubProfileID ) > 0);
@@ -641,7 +641,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			gubFact[usFact] = (NumWoundedMercsNearby( ubProfileID ) > 1);
 			break;
 		case FACT_HANS_AT_SPOT:
-			gubFact[usFact] = CheckNPCAt(HANS, 13523);
+			gubFact[usFact] = CheckNPCAt(HANS, factParams->getGridNo(13523));
 			break;
 		case FACT_MULTIPLE_MERCS_CLOSE:
 			gubFact[usFact] = ( NumMercsNear( ubProfileID, 3 ) > 1 );
