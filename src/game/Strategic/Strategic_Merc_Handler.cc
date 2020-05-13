@@ -87,26 +87,29 @@ void StrategicHandlePlayerTeamMercDeath(SOLDIERTYPE& s)
 	s.bBreath        = 0;
 	s.fMercAsleep    = FALSE; // Not asleep, dead
 
-	MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
-	p.bMercStatus = MERC_IS_DEAD;
-
-	if (s.usLifeInsurance)
+	if (s.ubProfile != NO_PROFILE)
 	{
-		if (guiCurrentScreen != AUTORESOLVE_SCREEN)
-		{ // Check whether this was obviously a suspicious death
-			if (now >= s.uiStartTimeOfInsuranceContract && now - s.uiStartTimeOfInsuranceContract < 60)
-			{ // Killed within an hour of being insured
-				p.ubSuspiciousDeath = VERY_SUSPICIOUS_DEATH;
-			}
-			else if (s.attacker->bTeam == OUR_TEAM || !gTacticalStatus.fEnemyInSector)
-			{ /* Killed by someone on our team or while there weren't any opponents
-				 * around, cause insurance company to suspect fraud and investigate this
-				 * claim */
-				p.ubSuspiciousDeath = SUSPICIOUS_DEATH;
-			}
-		}
+		MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
+		p.bMercStatus = MERC_IS_DEAD;
 
-		AddLifeInsurancePayout(&s);
+		if (s.usLifeInsurance)
+		{
+			if (guiCurrentScreen != AUTORESOLVE_SCREEN)
+			{ // Check whether this was obviously a suspicious death
+				if (now >= s.uiStartTimeOfInsuranceContract && now - s.uiStartTimeOfInsuranceContract < 60)
+				{ // Killed within an hour of being insured
+					p.ubSuspiciousDeath = VERY_SUSPICIOUS_DEATH;
+				}
+				else if (s.attacker->bTeam == OUR_TEAM || !gTacticalStatus.fEnemyInSector)
+				{ /* Killed by someone on our team or while there weren't any opponents
+					* around, cause insurance company to suspect fraud and investigate this
+					* claim */
+					p.ubSuspiciousDeath = SUSPICIOUS_DEATH;
+				}
+			}
+
+			AddLifeInsurancePayout(&s);
+		}
 	}
 
 	/* Robot and EPCs don't penalize morale - merc don't care about fighting
