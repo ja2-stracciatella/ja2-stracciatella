@@ -286,6 +286,11 @@ void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 	pSoldier->bAssignment = bAssignment;
 /// don't kill iVehicleId, though, 'cause militia training tries to put guys back in their vehicles when it's done(!)
 
+	if (bAssignment == ASSIGNMENT_DEAD)
+	{
+		// life checks should agree with the assignment
+		pSoldier->bLife = 0;
+	}
 	pSoldier->fFixingSAMSite = FALSE;
 	pSoldier->fFixingRobot = FALSE;
 	pSoldier->bVehicleUnderRepairID = -1;
