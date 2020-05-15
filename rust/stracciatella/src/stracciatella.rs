@@ -11,6 +11,7 @@ pub mod guess;
 pub mod json;
 pub mod librarydb;
 pub mod logger;
+pub mod math;
 pub mod res;
 pub mod unicode;
 

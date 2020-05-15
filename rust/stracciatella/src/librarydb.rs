@@ -35,6 +35,7 @@ use std::path::{Component, Path, PathBuf};
 use std::sync::{Arc, Mutex, MutexGuard, RwLock};
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
+use crate::math::checked_add_u64_i64;
 use crate::unicode::Nfc;
 
 /// Thread safe library database.
@@ -319,17 +320,6 @@ impl io::Read for LibraryFile {
             self.position += bytes as u64;
         }
         read_result
-    }
-}
-
-/// Performs a checked unsigned signed addition.
-fn checked_add_u64_i64(a: u64, b: i64) -> Option<u64> {
-    if b > 0 {
-        a.checked_add(b as u64)
-    } else if b < 0 {
-        a.checked_sub(-b as u64)
-    } else {
-        Some(a)
     }
 }
 
