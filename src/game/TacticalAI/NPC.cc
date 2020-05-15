@@ -2675,7 +2675,7 @@ void HandleVictoryInNPCSector(INT16 const x, INT16 const y, INT16 const z)
 			FOR_EACH_IN_TEAM(s, CIV_TEAM)
 			{
 				// hillbilies are still alive?..leave
-				if (s->ubCivilianGroup == HICKS_CIV_GROUP) return;
+				if (s->ubCivilianGroup == HICKS_CIV_GROUP && s->bLife > 0) return;
 			}
 
 			// we won over the hillbillies
