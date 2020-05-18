@@ -14,7 +14,8 @@
 #include <stdint.h>
 #include <vector>
 
-class ArmyCompositionModel
+
+class ArmyCompositionModel;
 class BloodCatPlacementsModel;
 class BloodCatSpawnsModel;
 class DealerInventory;
