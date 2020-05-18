@@ -136,7 +136,7 @@ const ST::string FactDescText[] =
 	"NPC is an enemy",
 	"Speaker Strength >= 84 and < 3 males present",
 	"Speaker Strength >= 84 and at least 3 males present",
-	"Hans lets ou see Tony",
+	"Hans lets you see Tony",
 	"Hans is standing on 13523",
 	"Tony isnt available Today",
 	"Female is speaking to NPC",

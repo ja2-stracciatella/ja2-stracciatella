@@ -4,6 +4,7 @@
 #include "ItemModel.h"
 #include "ContentMusic.h"
 
+#include "Facts.h"
 #include "ItemSystem.h"
 
 #include <string_theory/string>
@@ -16,9 +17,11 @@
 class BloodCatPlacementsModel;
 class BloodCatSpawnsModel;
 class DealerInventory;
+class FactParamsModel;
 class GamePolicy;
 class IMPPolicy;
 class MovementCostsModel;
+class NpcActionParamsModel;
 class NpcPlacementModel;
 class SamSiteModel;
 class TownModel;
@@ -126,6 +129,12 @@ public:
 	virtual const ST::string getTownLocative(uint8_t townId) const = 0;
 	virtual const MovementCostsModel* getMovementCosts() const = 0;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const = 0;
+	
+	/* Params for the given NPC_ACTION if found, or return an empty instance */
+	virtual const NpcActionParamsModel* getNpcActionParams(uint16_t actionCode) const = 0;
+
+	/* Params for the given NPC_ACTION if found, or return an empty instance */
+	virtual const FactParamsModel* getFactParams(Fact fact) const = 0;
 
 	virtual const ST::string* getNewString(size_t stringId) const = 0;
 

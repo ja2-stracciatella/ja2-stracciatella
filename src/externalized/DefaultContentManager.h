@@ -135,6 +135,9 @@ public:
 	virtual const DealerInventory* getBobbyRayNewInventory() const override;
 	virtual const DealerInventory* getBobbyRayUsedInventory() const override;
 
+	virtual const NpcActionParamsModel* getNpcActionParams(uint16_t actionCode) const override;
+	virtual const FactParamsModel* getFactParams(Fact fact) const override;
+
 	virtual const ST::string* getMusicForMode(MusicMode mode) const override;
 
 	virtual const GamePolicy* getGamePolicy() const override;
@@ -190,6 +193,10 @@ protected:
 	std::vector<const DealerInventory*> m_dealersInventory;
 	const DealerInventory *m_bobbyRayNewInventory;
 	const DealerInventory *m_bobbyRayUsedInventory;
+
+	std::map<Fact, const FactParamsModel*> m_factParams;
+	std::map<uint16_t, const NpcActionParamsModel*> m_npcActionParams;
+
 	const IMPPolicy *m_impPolicy;
 	const GamePolicy *m_gamePolicy;
 
@@ -221,6 +228,7 @@ protected:
 		std::vector<std::vector<const WeaponModel*> > & weaponTable);
 
 	bool loadStrategicLayerData();
+	bool loadTacticalLayerData();
 
 	rapidjson::Document* readJsonDataFile(const char *fileName) const;
 };

@@ -1,94 +1,95 @@
-#include "Animation_Control.h"
-#include "Animation_Data.h"
-#include "Directories.h"
-#include "FindLocations.h"
-#include "Font.h"
-#include "HImage.h"
-#include "Handle_Items.h"
-#include "Handle_UI.h"
-#include "Interface.h"
-#include "Isometric_Utils.h"
-#include "Local.h"
-#include "MapScreen.h"
-#include "Structure.h"
-#include "TileDat.h"
-#include "Timer_Control.h"
-#include "VObject.h"
-#include "Video.h"
-#include "Soldier_Control.h"
-#include "Faces.h"
-#include "VSurface.h"
-#include "WCheck.h"
-#include "Render_Dirty.h"
-#include "Soldier_Profile.h"
-#include "SysUtil.h"
 #include "Interface_Dialogue.h"
-#include "Font_Control.h"
-#include "Dialogue_Control.h"
-#include "RenderWorld.h"
-#include "NPC.h"
-#include "MercTextBox.h"
-#include "Message.h"
-#include "Items.h"
-#include "Text.h"
-#include "Overhead.h"
-#include "Assignments.h"
-#include "Strategic.h"
-#include "StrategicMap.h"
-#include "GameScreen.h"
+
 #include "AI.h"
 #include "AIInternals.h"
-#include "Interactive_Tiles.h"
-#include "Interface_Panels.h"
-#include "Quests.h"
-#include "Squads.h"
-#include "Game_Event_Hook.h"
-#include "Game_Clock.h"
-#include "MessageBoxScreen.h"
-#include "Tactical_Save.h"
-#include "Interface_Control.h"
-#include "Cursors.h"
-#include "Fade_Screen.h"
-#include "GameLoop.h"
-#include "SaveLoadMap.h"
+#include "Animation_Control.h"
+#include "Animation_Data.h"
 #include "Arms_Dealer_Init.h"
-#include "ShopKeeper_Interface.h"
-#include "Strategic_Town_Loyalty.h"
-#include "Meanwhile.h"
-#include "GameSettings.h"
-#include "Strategic_Mines.h"
-#include "Boxing.h"
-#include "WorldMan.h"
-#include "Render_Fun.h"
-// including this for Strategic AI.h
-#include "Strategic_Movement.h"
-#include "Strategic_AI.h"
-#include "Handle_Doors.h"
-#include "Soldier_Create.h"
-#include "SkillCheck.h"
-#include "Sound_Control.h"
-#include "Cheats.h"
-#include "OppList.h"
-#include "PreBattle_Interface.h"
-#include "History.h"
-#include "Keys.h"
-#include "Morale.h"
-#include "Personnel.h"
-#include "Map_Screen_Interface.h"
-#include "Queen_Command.h"
-#include "Campaign.h"
+#include "Assignments.h"
 #include "BobbyRMailOrder.h"
-#include "End_Game.h"
-#include "Map_Screen_Helicopter.h"
+#include "Boxing.h"
 #include "Button_System.h"
-#include "Debug.h"
-#include "ScreenIDs.h"
-#include "Files.h"
-#include "UILayout.h"
-#include "GameRes.h"
-#include "Logger.h"
+#include "Campaign.h"
+#include "Cheats.h"
 #include "ContentManager.h"
+#include "Cursors.h"
+#include "Debug.h"
+#include "Dialogue_Control.h"
+#include "Directories.h"
+#include "End_Game.h"
+#include "Faces.h"
+#include "Fade_Screen.h"
+#include "Files.h"
+#include "FindLocations.h"
+#include "Font.h"
+#include "Font_Control.h"
 #include "GameInstance.h"
+#include "GameLoop.h"
+#include "GameRes.h"
+#include "GameScreen.h"
+#include "GameSettings.h"
+#include "Game_Clock.h"
+#include "Game_Event_Hook.h"
+#include "HImage.h"
+#include "Handle_Doors.h"
+#include "Handle_Items.h"
+#include "Handle_UI.h"
+#include "History.h"
+#include "Interactive_Tiles.h"
+#include "Interface.h"
+#include "Interface_Control.h"
+#include "Interface_Panels.h"
+#include "Isometric_Utils.h"
+#include "Items.h"
+#include "Keys.h"
+#include "Local.h"
+#include "Logger.h"
+#include "MapScreen.h"
+#include "Map_Screen_Helicopter.h"
+#include "Map_Screen_Interface.h"
+#include "Meanwhile.h"
+#include "MercTextBox.h"
+#include "Message.h"
+#include "MessageBoxScreen.h"
+#include "Morale.h"
+#include "NPC.h"
+#include "NpcActionParamsModel.h"
+#include "OppList.h"
+#include "Overhead.h"
+#include "Personnel.h"
+#include "PreBattle_Interface.h"
+#include "Queen_Command.h"
+#include "Quests.h"
+#include "RenderWorld.h"
+#include "Render_Dirty.h"
+#include "Render_Fun.h"
+#include "SaveLoadMap.h"
+#include "ScreenIDs.h"
+#include "ShopKeeper_Interface.h"
+#include "SkillCheck.h"
+#include "Soldier_Control.h"
+#include "Soldier_Create.h"
+#include "Soldier_Profile.h"
+#include "Sound_Control.h"
+#include "Squads.h"
+#include "Strategic.h"
+#include "StrategicMap.h"
+#include "Strategic_AI.h"
+#include "Strategic_Mines.h"
+#include "Strategic_Movement.h"
+#include "Strategic_Town_Loyalty.h"
+#include "Structure.h"
+#include "SysUtil.h"
+#include "Tactical_Save.h"
+#include "Text.h"
+#include "TileDat.h"
+#include "Timer_Control.h"
+#include "UILayout.h"
+#include "VObject.h"
+#include "VSurface.h"
+#include "Video.h"
+#include "WCheck.h"
+#include "WorldMan.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -1583,6 +1584,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 	}
 	else
 	{
+		auto params = GCM->getNpcActionParams(usActionCode);
 		switch( usActionCode )
 		{
 			case NPC_ACTION_DONT_ACCEPT_ITEM:
@@ -1601,7 +1603,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				ExitGrid.usGridNo = 12722;
 
 				{ ApplyMapChangesToMapTempFile app;
-					AddExitGridToWorld( 7887, &ExitGrid );
+					AddExitGridToWorld( params->getGridNo(7887), &ExitGrid );
 				}
 
 				// For one, loop through our current squad and move them over
@@ -2068,7 +2070,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_SEND_PACOS_INTO_HIDING:
 			{
 				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PACOS);
-				const INT16 sGridNo = 16028;
+				const INT16 sGridNo = params->getGridNo(16028);
 				if (pSoldier)
 				{
 					if (NewOKDestination( pSoldier, sGridNo, TRUE, 0 ) )
@@ -2091,7 +2093,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			case NPC_ACTION_HAVE_PACOS_FOLLOW:
 			{
 				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PACOS);
-				const INT16 sGridNo = 18193;
+				const INT16 sGridNo = params->getGridNo(18193);
 				if (pSoldier)
 				{
 					if (NewOKDestination( pSoldier, sGridNo, TRUE, 0 ) )
@@ -2188,13 +2190,15 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// add a money item with $10000 to the tile in front of Kyle
 				// and then have him pick it up
 				{
-					OBJECTTYPE	Object;
-					INT16				sGridNo = 14952;
+					OBJECTTYPE Object;
+					INT16      sGridNo  = params->getGridNo(14952);
+					UINT32     uiAmount = params->getAmount(10000);
+					SLOGI(ST::format("add a money item with ${} to tile {} in front of Kyle", uiAmount, sGridNo));
 
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 					if (pSoldier)
 					{
-						CreateMoney(10000, &Object);
+						CreateMoney(uiAmount, &Object);
 						INT32 const iWorldItem = AddItemToPool(sGridNo, &Object, INVISIBLE, pSoldier->bLevel, 0, 0);
 
 						// shouldn't have any current action but make sure everything
@@ -2267,12 +2271,12 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			{
-				INT16 sGridNo;
-				case NPC_ACTION_OPEN_CARLAS_DOOR: sGridNo = 12290; goto unlock;
-				case NPC_ACTION_OPEN_CINDYS_DOOR: sGridNo = 13413; goto unlock;
-				case NPC_ACTION_OPEN_BAMBIS_DOOR: sGridNo = 11173; goto unlock;
-				case NPC_ACTION_OPEN_MARIAS_DOOR: sGridNo = 10852; goto unlock;
-unlock:
+			case NPC_ACTION_OPEN_CARLAS_DOOR: 
+			case NPC_ACTION_OPEN_CINDYS_DOOR: 
+			case NPC_ACTION_OPEN_BAMBIS_DOOR: 
+			case NPC_ACTION_OPEN_MARIAS_DOOR: 
+				INT16 sGridNo = params->getGridNo(10852);
+
 				// JA3Gold: unlock the doors instead of opening them
 				{
 					DOOR* pDoor;
@@ -2520,7 +2524,7 @@ unlock:
 					const INT8 bItemIn = FindObj(pSoldier, DEED);
 					if (bItemIn != NO_SLOT)
 					{
-						AddItemToPool(12541, &pSoldier->inv[bItemIn], INVISIBLE, 0, 0, 0);
+						AddItemToPool(params->getGridNo(12541), &pSoldier->inv[bItemIn], INVISIBLE, 0, 0, 0);
 						DeleteObj( &(pSoldier->inv[ bItemIn ]) );
 						RemoveObjectFromSoldierProfile( ubTargetNPC, DEED );
 					}
@@ -2686,7 +2690,7 @@ unlock:
 				// set "don't add to sector" cause he'll only appear after an event...
 				gMercProfiles[ ubTargetNPC ].ubMiscFlags2 |= PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR;
 
-				SetCustomizableTimerCallbackAndDelay( 10000, CarmenLeavesSectorCallback, TRUE );
+				SetCustomizableTimerCallbackAndDelay(params->getAmount(10000), CarmenLeavesSectorCallback, TRUE );
 				break;
 
 			case NPC_ACTION_CARMEN_LEAVES_ON_NEXT_SECTOR_LOAD:
@@ -3482,11 +3486,11 @@ action_punch_pc:
 
 				if( ( pSoldier ) && ( pSoldier2 ) )
 				{
-					if( pSoldier->sGridNo == 10343 )
+					if( pSoldier->sGridNo == params->getGridNo(10343) )
 					{
 						pSoldier2 = NULL;
 					}
-					else if( pSoldier2->sGridNo == 10343 )
+					else if( pSoldier2->sGridNo == params->getGridNo(10343) )
 					{
 						pSoldier = NULL;
 					}
@@ -3708,7 +3712,7 @@ action_punch_pc:
 			{
 				gMercProfiles[ MANNY ].ubMiscFlags3 |= PROFILE_MISC_FLAG3_PERMANENT_INSERTION_CODE;
 				gMercProfiles[ MANNY ].ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
-				gMercProfiles[ MANNY ].usStrategicInsertionData = 19904;
+				gMercProfiles[ MANNY ].usStrategicInsertionData = params->getGridNo(19904);
 				gMercProfiles[ MANNY ].fUseProfileInsertionInfo = TRUE;
 				SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(MANNY);
 				if ( pSoldier )
@@ -4038,7 +4042,7 @@ add_log:
 			}
 
 			case NPC_ACTION_WALTER_GIVEN_MONEY_INITIALLY:
-				if ( gMercProfiles[ WALTER ].iBalance >= WALTER_BRIBE_AMOUNT )
+				if ( gMercProfiles[ WALTER ].iBalance >= params->getGridNo(WALTER_BRIBE_AMOUNT) )
 				{
 					TriggerNPCRecord( WALTER, 16 );
 				}
@@ -4048,7 +4052,7 @@ add_log:
 				}
 				break;
 			case NPC_ACTION_WALTER_GIVEN_MONEY:
-				if ( gMercProfiles[ WALTER ].iBalance >= WALTER_BRIBE_AMOUNT )
+				if ( gMercProfiles[ WALTER ].iBalance >= params->getGridNo(WALTER_BRIBE_AMOUNT) )
 				{
 					TriggerNPCRecord( WALTER, 16 );
 				}
