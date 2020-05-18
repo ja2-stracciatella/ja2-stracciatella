@@ -10,16 +10,16 @@ ArmyCompositionModel::ArmyCompositionModel(uint8_t compositionId_, const char* n
 
 ARMY_COMPOSITION ArmyCompositionModel::toArmyComposition() const
 {
-	return {
-		compositionId,
-		priority,
-		elitePercentage,
-		troopPercentage,
-		adminPercentage,
-		desiredPopulation,
-		startPopulation,
-		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
-	};
+	ARMY_COMPOSITION composition{};
+	composition.iReadability = compositionId;
+	composition.bPriority = priority;
+	composition.bElitePercentage = elitePercentage;
+	composition.bTroopPercentage = troopPercentage;
+	composition.bAdminPercentage = adminPercentage;
+	composition.bDesiredPopulation = desiredPopulation;
+	composition.bStartPopulation = startPopulation;
+
+	return composition;
 }
 
 std::vector<const ArmyCompositionModel*> ArmyCompositionModel::deserialize(const rapidjson::Document& root)

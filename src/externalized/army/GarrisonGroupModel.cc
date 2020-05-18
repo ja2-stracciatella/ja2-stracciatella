@@ -10,7 +10,11 @@ GARRISON_GROUP GarrisonGroupModel::deserialize(JsonObjectReader& obj, std::map<s
 	}
 	uint8_t sectorId = SECTOR_FROM_SECTOR_SHORT_STRING(sector);
 	uint8_t compositionId = armyCompMapping.at(std::string(obj.GetString("composition")));
-	return { sectorId, compositionId, 0, 0, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 } };
+
+	GARRISON_GROUP group{};
+	group.ubSectorID = sectorId;
+	group.ubComposition = compositionId;
+	return group;
 }
 
 void GarrisonGroupModel::validateData(std::vector<GARRISON_GROUP> garrisonGroups)
