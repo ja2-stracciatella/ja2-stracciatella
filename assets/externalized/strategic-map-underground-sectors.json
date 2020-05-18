@@ -1,0 +1,274 @@
+/*
+ * Defines the underground sectors that can be occupied by enemies, creatures,
+ * etc. It also contains the network of cave connections critical for strategic
+ * creature spreading, as we can't know how the levels connect without loading
+ * the maps. Any changes to the maps, require changes accordingly.
+ *
+ * Number of enemies and variances are specified as array of integer, in the
+ * form of [ n_EASY, n_MEDIUM, n_HARD]. defaults to [0,0,0] if not given.
+ *
+ * Variances can be specified to add per-game randomness. It is specified as
+ * arrays of integers: [ var_EASY,  var_MEDIUM, var_HARD]. also defaults to
+ * [0,0,0] if not given.
+ *
+ * The formula to calculate the number of enemies is: 
+ *    ( n_DIFLEVEL + Random(var_DIFLEVEL) )
+ * where Random is a function returning a random number between 0 and 
+ * (var_DIFLEVEL - 1) inclusively.
+ *
+ *
+ * Field definitions:
+ *  - sector:    Sector X,Y, such as A1 and P16
+ *  - sectorLevel:    Sector Z, an integer between 1 and 3
+ *  - adjacentSectors:    Directions to the adjacent sectors, as an array of directions, e.g. ["N","E","S","W"]
+ *  - numTroops:    The numbers of enemy troops in sector, as an array of 3 integers, e.g. [1,2,3] meaning: 1 enemy on DIF_LEVEL_EASY; 2 on DIF_LEVEL_MEDIUM; 3 on DIF_LEVEL_HARD
+ *  - numElites:    The numbers of enemy elites in sector, by game difficulty
+ *  - numCreatures:    The numbers of Crepitus in sector, by game difficulty. (SciFi mode only)
+ *  - numTroopsVariance:    The variance added to numTroops, by game difficulty.
+ *  - numElitesVariance:    The variance added to numElites.
+ *  - numCreaturesVariance:    The variance added to numCreatures.
+ */
+[
+    {
+        //Miguel's basement.  Nothing here.
+        "sector": "A10",
+        "sectorLevel": 1
+    },
+    {
+        //Chitzena mine.  Nothing here.
+        "sector": "B2",
+        "sectorLevel": 1
+    },
+    {
+        //San Mona mine.  Nothing here.
+        "sector": "D4",
+        "sectorLevel": 1
+    },
+    {
+        "sector": "D5",
+        "sectorLevel": 1
+    },
+    //Tixa
+    {
+        "sector": "J9",
+        "sectorLevel": 1,
+        "numTroops": [8, 11, 15]
+    },
+    //J9 feeding zone
+    {
+        "sector": "J9",
+        "sectorLevel": 2,
+        "numCreatures": [4, 6, 8],        // ubNumCreatures = (2 + gGameOptions.ubDifficultyLevel*2 + Random( 2 ))
+        "numCreaturesVariance": [2, 2, 2]
+    },
+    //Orta, K4
+    {
+        "sector": "K4",
+        "sectorLevel": 1,
+        "numTroops": [8, 10, 12],         // ubNumTroops = (6 + gGameOptions.ubDifficultyLevel*2 + Random( 3 ))
+        "numTroopsVariance": [3, 3, 3],
+        "numElites": [5, 6, 7],           // ubNumElites = (4 + gGameOptions.ubDifficultyLevel + Random( 2 ))
+        "numElitesVariance": [2, 2, 2]
+    },
+    // Meduna
+    //O3
+    {
+        "sector": "O3",
+        "sectorLevel": 1,
+        "adjacentSectors": ["S"],
+        "numTroops": [8, 10, 12],         // ubNumTroops = (6 + gGameOptions.ubDifficultyLevel*2 + Random( 3 ))
+        "numTroopsVariance": [3, 3, 3],
+        "numElites": [5, 6, 7],           // ubNumElites = (4 + gGameOptions.ubDifficultyLevel + Random( 2 ))
+        "numElitesVariance": [2, 2, 2]
+    },
+    //P3
+    {
+        "sector": "P3",
+        "sectorLevel": 1,
+        "adjacentSectors": ["N"],
+        "numElites": [8, 10, 14],
+        "numElitesVariance": [3, 5, 6]
+        /**
+        switch( gGameOptions.ubDifficultyLevel )
+        {
+            case DIF_LEVEL_EASY:
+                curr->ubNumElites = (UINT8)(8 + Random( 3 ));
+                break;
+            case DIF_LEVEL_MEDIUM:
+                curr->ubNumElites = (UINT8)(10 + Random( 5 ));
+                break;
+            case DIF_LEVEL_HARD:
+                curr->ubNumElites = (UINT8)(14 + Random( 6 ));
+                break;
+        }
+        */
+    },
+    //Do all of the mandatory underground mine sectors:
+    //Drassen's mine:
+    //D13_B1
+    {
+        "sector": "D13",
+        "sectorLevel": 1,
+        "adjacentSectors": ["S"]
+    },
+    //E13_B1
+    {
+        "sector": "E13",
+        "sectorLevel": 1,
+        "adjacentSectors": ["N"]
+    },
+    //E13_B2
+    {
+        "sector": "E13",
+        "sectorLevel": 2,
+        "adjacentSectors": ["S"]
+    },
+    //F13_B2
+    {
+        "sector": "F13",
+        "sectorLevel": 2,
+        "adjacentSectors": ["N", "S"]
+    },
+    //G13_B2
+    {
+        "sector": "G13",
+        "sectorLevel": 2,
+        "           ": ["N"]
+    },
+    //G13_B3
+    {
+        "sector": "G13",
+        "sectorLevel": 3,
+        "adjacentSectors": ["N"]
+    },
+    //F13_B3
+    {
+        "sector": "F13",
+        "sectorLevel": 3,
+        "adjacentSectors": ["S"]
+    },
+    //Cambria's mine
+    //H8_B1
+    {
+        "sector": "H8",
+        "sectorLevel": 1,
+        "adjacentSectors": ["E"]
+    },
+    //H9_B1
+    {
+        "sector": "H9",
+        "sectorLevel": 1,
+        "adjacentSectors": ["W"]
+    },
+    //H9_B2
+    {
+        "sector": "H9",
+        "sectorLevel": 2,
+        "adjacentSectors": ["W"]
+    },
+    //H8_B2
+    {
+        "sector": "H8",
+        "sectorLevel": 2,
+        "adjacentSectors": ["E"]
+    },
+    //H8_B3
+    {
+        "sector": "H8",
+        "sectorLevel": 3,
+        "adjacentSectors": ["S"]
+    },
+    //I8_B3
+    {
+        "sector": "I8",
+        "sectorLevel": 3,
+        "adjacentSectors": ["N","S"]
+    },
+    //J8_B3
+    {
+        "sector": "J8",
+        "sectorLevel": 3,
+        "adjacentSectors": ["N"]
+    },
+    //Alma's mine
+    //I14_B1
+    {
+        "sector": "I14",
+        "sectorLevel": 1,
+        "adjacentSectors": ["S"]
+    },
+    //J14_B1
+    {
+        "sector": "J14",
+        "sectorLevel": 1,
+        "adjacentSectors": ["N"]
+    },
+    //J14_B2
+    {
+        "sector": "J14",
+        "sectorLevel": 2,
+        "adjacentSectors": ["W"]
+    },
+    //J13_B2
+    {
+        "sector": "J13",
+        "sectorLevel": 2,
+        "adjacentSectors": ["E"]
+    },
+    //J13_B3
+    {
+        "sector": "J13",
+        "sectorLevel": 3,
+        "adjacentSectors": ["S"]
+    },
+    //K13_B3
+    {
+        "sector": "K13",
+        "sectorLevel": 3,
+        "adjacentSectors": ["N"]
+    },
+    //Grumm's mine
+    //H3_B1
+    {
+        "sector": "H3",
+        "sectorLevel": 1,
+        "adjacentSectors": ["S"]
+    },
+    //I3_B1
+    {
+        "sector": "I3",
+        "sectorLevel": 1,
+        "adjacentSectors": ["N"]
+    },
+    //I3_B2
+    {
+        "sector": "I3",
+        "sectorLevel": 2,
+        "adjacentSectors": ["N"]
+    },
+    //H3_B2
+    {
+        "sector": "H3",
+        "sectorLevel": 2,
+        "adjacentSectors": ["S","E"]
+    },
+    //H4_B2
+    {
+        "sector": "H4",
+        "sectorLevel": 2,
+        "adjacentSectors": ["W"]
+    },
+    //H4_B3
+    {
+        "sector": "H4",
+        "sectorLevel": 3,
+        "adjacentSectors": ["N"]
+    },
+    //G4_B3
+    {
+        "sector": "G4",
+        "sectorLevel": 3,
+        "adjacentSectors": ["S"]
+    }
+]
+

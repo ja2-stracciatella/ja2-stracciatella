@@ -155,6 +155,7 @@ public:
 	virtual const std::map<int8_t, const TownModel*>& getTowns() const override;
 	virtual const ST::string getTownName(uint8_t townId) const override;
 	virtual const ST::string getTownLocative(uint8_t townId) const override;
+	virtual const std::vector <const UndergroundSectorModel*>& getUndergroundSectors() const override;
 	virtual const MovementCostsModel* getMovementCosts() const override;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 
@@ -206,6 +207,7 @@ protected:
 	std::map<int8_t, const TownModel*> m_towns;
 	std::vector<const ST::string*> m_townNames;
 	std::vector<const ST::string*> m_townNameLocatives;
+	std::vector<const UndergroundSectorModel*> m_undergroundSectors;
 	const MovementCostsModel *m_movementCosts;
 	std::map<uint8_t, const NpcPlacementModel*> m_npcPlacements;
 
