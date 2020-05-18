@@ -1,14 +1,15 @@
 #include "CalibreModel.h"
 
-#include <stdexcept>
-
 #include "game/Utils/Text.h"
-#include "sgp/StrUtils.h"
 
 #include "JsonObject.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+
+#include <string_theory/format>
+
+#include <stdexcept>
 
 CalibreModel::CalibreModel(uint16_t index_,
 				const char* internalName_,
@@ -69,5 +70,5 @@ const CalibreModel* getCalibre(const char *calibreName,
 		return it->second;
 	}
 
-	throw std::runtime_error(FormattedString("calibre '%s' is not found", calibreName).to_std_string());
+	throw std::runtime_error(ST::format("calibre '{}' is not found", calibreName).to_std_string());
 }

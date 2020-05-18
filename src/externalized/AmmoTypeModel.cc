@@ -1,10 +1,10 @@
 #include "AmmoTypeModel.h"
 
-#include <stdexcept>
-
-#include "sgp/StrUtils.h"
-
 #include "JsonObject.h"
+
+#include <string_theory/format>
+
+#include <stdexcept>
 
 AmmoTypeModel::AmmoTypeModel(uint16_t index_,
 				const char* internalName_)
@@ -38,5 +38,5 @@ const AmmoTypeModel* getAmmoType(const char *ammoTypeName,
 		return it->second;
 	}
 
-	throw std::runtime_error(FormattedString("ammoType '%s' is not found", ammoTypeName).to_std_string());
+	throw std::runtime_error(ST::format("ammoType '{}' is not found", ammoTypeName).to_std_string());
 }
