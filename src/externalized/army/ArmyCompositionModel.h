@@ -19,7 +19,10 @@ public:
 
 	static std::vector<const ArmyCompositionModel*> deserialize(const rapidjson::Document& root);
 
-	static void validateData(std::vector<const ArmyCompositionModel*> compositions);
+	static void validateData(const std::vector<const ArmyCompositionModel*> compositions);
+	
+	/** Validate the ARMY_COMPOSITION entries loaded from a saved game */
+	static void validateLoadedData(const std::vector<ARMY_COMPOSITION>& armyCompositions);
 
 	uint8_t compositionId;
 	const char* name;

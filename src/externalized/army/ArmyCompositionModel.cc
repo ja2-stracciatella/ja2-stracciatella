@@ -45,7 +45,7 @@ std::vector<const ArmyCompositionModel*> ArmyCompositionModel::deserialize(const
 #define EXPECTS_STR(s) \
 	if (strcmp(s, comp->name) != 0) SLOGW(ST::format("Army Composition has an unexpected name. We recommmend leaving the default army compositions unchanged. Expected: {}; Actual: {}", comp->name, s));
 
-void ArmyCompositionModel::validateData(std::vector<const ArmyCompositionModel*> compositions)
+void ArmyCompositionModel::validateData(const std::vector<const ArmyCompositionModel*> compositions)
 {
 	if (compositions.size() < NUM_ARMY_COMPOSITIONS || compositions.size() > SAVED_ARMY_COMPOSITIONS)
 	{
@@ -85,4 +85,21 @@ void ArmyCompositionModel::validateData(std::vector<const ArmyCompositionModel*>
 		}
 	}
 #undef EXPECTS_STR
+}
+
+void ArmyCompositionModel::validateLoadedData(const std::vector<ARMY_COMPOSITION>&armyCompositions)
+{
+	if (armyCompositions.size() < NUM_ARMY_COMPOSITIONS)
+	{
+		SLOGW(ST::format("There are too few loaded Army Compositions. Expected: {}; Actual: {}", NUM_ARMY_COMPOSITIONS, armyCompositions.size()));
+	}
+	for (size_t i = 0; i < armyCompositions.size(); i++)
+	{
+		// Warn if default compositions are altered. It might work, but no guarantee.
+		auto comp = armyCompositions[i];
+		if (comp.iReadability != i)
+		{
+			SLOGW(ST::format("Army Composition has incorrect ID. The save might be co	rrupted. Expected: {}; Actual: {}", i, comp.iReadability));
+		}
+	}
 }

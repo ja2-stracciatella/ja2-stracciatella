@@ -2282,30 +2282,19 @@ void LoadStrategicAI(HWFILE const hFile)
 	FileRead(hFile, &gfUseAlternateQueenPosition,        1);
 	FileRead(hFile, gbPadding,           SAI_PADDING_BYTES);
 	//Restore the army composition
-	auto buff = new ARMY_COMPOSITION[SAVED_ARMY_COMPOSITIONS]{};
-	FileRead(hFile, buff, SAVED_ARMY_COMPOSITIONS * sizeof(ARMY_COMPOSITION));
 	gArmyComp.clear();
-	for (i = 0; i < SAVED_ARMY_COMPOSITIONS; i++)
-	{
-		if (!buff[i].empty())
-		{
-			gArmyComp.push_back(buff[i]);
-		}
-	}
-	if (gArmyComp.size() != GCM->getArmyCompositions().size())
-	{
-		SLOGW(ST::format("Number of non-empty Army Compositions in save ({}) is different from definition ({}). Save might not work properly.", gArmyComp.size(), GCM->getArmyCompositions().size()));
-	}
+	gArmyComp.assign(SAVED_ARMY_COMPOSITIONS, ARMY_COMPOSITION{});
+	FileRead(hFile, gArmyComp.data(), SAVED_ARMY_COMPOSITIONS * sizeof(ARMY_COMPOSITION)); // read everything first, will discard what we don't need when we have also the Garrison Groups
 
 	//Restore the patrol group definitions
 	if (iPatrolArraySize != GCM->getPatrolGroups().size())
 	{
 		SLOGW(ST::format("Number of Patrol Groups in save ({}) is different from definition ({}). Save might not work properly.", iPatrolArraySize, GCM->getPatrolGroups().size()));
 	}
-	auto buff2 = new PATROL_GROUP[SAVED_PATROL_GROUPS]{};
-	FileRead(hFile, buff2, SAVED_PATROL_GROUPS * sizeof(PATROL_GROUP));
-	gPatrolGroup = std::vector<PATROL_GROUP>(buff2, buff2 + iPatrolArraySize);
-	delete[] buff2;
+	auto buffPG = new PATROL_GROUP[SAVED_PATROL_GROUPS]{};
+	FileRead(hFile, buffPG, SAVED_PATROL_GROUPS * sizeof(PATROL_GROUP));
+	gPatrolGroup = std::vector<PATROL_GROUP>(buffPG, buffPG + iPatrolArraySize);
+	delete[] buffPG;
 
 	gubSAIVersion = SAI_VERSION;
 	//Load the garrison information!
@@ -2313,10 +2302,23 @@ void LoadStrategicAI(HWFILE const hFile)
 	{
 		SLOGW(ST::format("Number of Garrison Groups in save ({}) is different from definition ({}). Save might not work properly.", iGarrisonArraySize, GCM->getGarrisonGroups().size()));
 	}
-	auto buff3 = new GARRISON_GROUP[SAVED_GARRISON_GROUPS]{};
-	FileRead(hFile, buff3, SAVED_GARRISON_GROUPS * sizeof(GARRISON_GROUP));
-	gGarrisonGroup = std::vector<GARRISON_GROUP>(buff3, buff3 + iGarrisonArraySize);
-	delete[] buff3;
+	auto buffGG = new GARRISON_GROUP[SAVED_GARRISON_GROUPS]{};
+	FileRead(hFile, buffGG, SAVED_GARRISON_GROUPS * sizeof(GARRISON_GROUP));
+	gGarrisonGroup = std::vector<GARRISON_GROUP>(buffGG, buffGG + iGarrisonArraySize);
+	delete[] buffGG;
+
+	// resize gArmyComp accoording to what are actually referenced in GarrisonGroups and PatrolGrouops
+	size_t numArmyCompositions = NUM_ARMY_COMPOSITIONS;
+	for (auto gGroup : gGarrisonGroup)
+	{
+		numArmyCompositions = std::max<size_t>(numArmyCompositions, gGroup.ubComposition + 1);
+	}
+	gArmyComp.resize(numArmyCompositions);
+	if (gArmyComp.size() != GCM->getArmyCompositions().size())
+	{
+		SLOGW(ST::format("Number of Army Compositions in save ({}) is different from definition ({}). Save might not work properly.", gArmyComp.size(), GCM->getArmyCompositions().size()));
+	}
+	ArmyCompositionModel::validateLoadedData(gArmyComp);
 
 	//Load the list of reinforcement patrol points.
 	if( gubPatrolReinforcementsDenied )
