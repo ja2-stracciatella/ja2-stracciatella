@@ -2307,7 +2307,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	gGarrisonGroup = std::vector<GARRISON_GROUP>(buffGG, buffGG + iGarrisonArraySize);
 	delete[] buffGG;
 
-	// resize gArmyComp accoording to what are actually referenced in GarrisonGroups and PatrolGrouops
+	// resize gArmyComp, ensuring all army compositions referenced by Garrison Groups exist
 	size_t numArmyCompositions = NUM_ARMY_COMPOSITIONS;
 	for (auto gGroup : gGarrisonGroup)
 	{
