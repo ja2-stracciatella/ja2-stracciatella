@@ -8,12 +8,12 @@
  * form of [ n_EASY, n_MEDIUM, n_HARD]. defaults to [0,0,0] if not given.
  *
  * Variances can be specified to add per-game randomness. It is specified as
- * arrays of integers: [ var_EASY,  var_MEDIUM, var_HARD]. also defaults to
+ * arrays of integers: [ var_EASY,  var_MEDIUM, var_HARD ]. Also defaults to
  * [0,0,0] if not given.
  *
- * The formula to calculate the number of enemies is: 
+ * The formula to calculate the number of enemies is:
  *    ( n_DIFLEVEL + Random(var_DIFLEVEL) )
- * where Random is a function returning a random number between 0 and 
+ * where Random is a function returning a random number between 0 and
  * (var_DIFLEVEL - 1) inclusively.
  *
  *
@@ -58,16 +58,16 @@
     {
         "sector": "J9",
         "sectorLevel": 2,
-        "numCreatures": [4, 6, 8],        // ubNumCreatures = (2 + gGameOptions.ubDifficultyLevel*2 + Random( 2 ))
+        "numCreatures": [4, 6, 8],
         "numCreaturesVariance": [2, 2, 2]
     },
     //Orta, K4
     {
         "sector": "K4",
         "sectorLevel": 1,
-        "numTroops": [8, 10, 12],         // ubNumTroops = (6 + gGameOptions.ubDifficultyLevel*2 + Random( 3 ))
+        "numTroops": [8, 10, 12],
         "numTroopsVariance": [3, 3, 3],
-        "numElites": [5, 6, 7],           // ubNumElites = (4 + gGameOptions.ubDifficultyLevel + Random( 2 ))
+        "numElites": [5, 6, 7],
         "numElitesVariance": [2, 2, 2]
     },
     // Meduna
@@ -76,9 +76,9 @@
         "sector": "O3",
         "sectorLevel": 1,
         "adjacentSectors": ["S"],
-        "numTroops": [8, 10, 12],         // ubNumTroops = (6 + gGameOptions.ubDifficultyLevel*2 + Random( 3 ))
+        "numTroops": [8, 10, 12],
         "numTroopsVariance": [3, 3, 3],
-        "numElites": [5, 6, 7],           // ubNumElites = (4 + gGameOptions.ubDifficultyLevel + Random( 2 ))
+        "numElites": [5, 6, 7],
         "numElitesVariance": [2, 2, 2]
     },
     //P3
@@ -88,22 +88,7 @@
         "adjacentSectors": ["N"],
         "numElites": [8, 10, 14],
         "numElitesVariance": [3, 5, 6]
-        /**
-        switch( gGameOptions.ubDifficultyLevel )
-        {
-            case DIF_LEVEL_EASY:
-                curr->ubNumElites = (UINT8)(8 + Random( 3 ));
-                break;
-            case DIF_LEVEL_MEDIUM:
-                curr->ubNumElites = (UINT8)(10 + Random( 5 ));
-                break;
-            case DIF_LEVEL_HARD:
-                curr->ubNumElites = (UINT8)(14 + Random( 6 ));
-                break;
-        }
-        */
     },
-    //Do all of the mandatory underground mine sectors:
     //Drassen's mine:
     //D13_B1
     {

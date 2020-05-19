@@ -36,7 +36,7 @@ std::array<uint8_t, NUM_DIF_LEVELS> readIntArray(const rapidjson::Value& obj, co
 	if (arr.Size() != NUM_DIF_LEVELS)
 	{
 		SLOGE(ST::format("The number of values in {} is not same as NUM_DIF_LEVELS({})", fieldName, NUM_DIF_LEVELS));
-		throw std::runtime_error("The number of elements does not match the number of difficulty levels");
+		throw std::runtime_error("");
 	}
 	for (auto i = 0; i < NUM_DIF_LEVELS; i++)
 	{
@@ -52,14 +52,14 @@ UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Val
 	if (!IS_VALID_SECTOR_SHORT_STRING(sectorString))
 	{
 		SLOGE(ST::format("'{}' is not valid sector", sectorString));
-		throw std::runtime_error("Not a valid sector");
+		throw std::runtime_error("");
 	}
 	uint8_t sectorId = SECTOR_FROM_SECTOR_SHORT_STRING(sectorString);
 	uint8_t sectorZ = obj["sectorLevel"].GetUint();
 	if (sectorZ == 0 || sectorZ > 3)
 	{
 		SLOGE("Sector level must be between 1 and 3");
-		throw std::runtime_error("Sector level is invalid");
+		throw std::runtime_error("");
 	}
 
 	uint8_t adjacencyFlag = NO_ADJACENT_SECTOR;
@@ -72,7 +72,7 @@ UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Val
 			if (strlen(adj) != 1)
 			{
 				SLOGE(ST::format("'{}' is not a valid adjacency direction.", adj));
-				throw std::runtime_error("Not a valid adjacency direction");
+				throw std::runtime_error("");
 			}
 			switch (adj[0])
 			{
@@ -90,7 +90,7 @@ UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Val
 				break;
 			default:
 				SLOGE(ST::format("{} is not a valid direction.", adj[0]));
-				throw std::runtime_error("Invalid direction");
+				throw std::runtime_error("");
 			}
 		}
 	}
@@ -120,7 +120,7 @@ void UndergroundSectorModel::validateData(const std::vector<const UndergroundSec
 		if (iter == ugSectors.end())
 		{
 			SLOGW(ST::format("An underground sector is expected at ({},{},{}), but is not defined.", basementLoc[0], basementLoc[1], basementLoc[2]));
-			throw std::runtime_error("Missing underground sector definition");
+			throw std::runtime_error("");
 		}
 	}
 }
