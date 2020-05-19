@@ -99,7 +99,7 @@ void ArmyCompositionModel::validateLoadedData(const std::vector<ARMY_COMPOSITION
 		auto comp = armyCompositions[i];
 		if (comp.iReadability != i)
 		{
-			SLOGW(ST::format("Army Composition has incorrect ID. The save might be co	rrupted. Expected: {}; Actual: {}", i, comp.iReadability));
+			SLOGW(ST::format("Army Composition has incorrect ID. The save might be corrupted. Expected: {}; Actual: {}", i, comp.iReadability));
 		}
 	}
 }
