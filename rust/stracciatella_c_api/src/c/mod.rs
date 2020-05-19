@@ -101,6 +101,15 @@ pub(crate) mod common {
         unsafe { &mut *ptr }
     }
 
+    /// Gets a mutable reference from a mutable C pointer.
+    pub fn unsafe_mut_option<'a, T>(ptr: *mut T) -> Option<&'a mut T> {
+        if ptr.is_null() {
+            None
+        } else {
+            Some(unsafe { &mut *ptr })
+        }
+    }
+
     /// Gets a reference from a const C pointer.
     pub fn unsafe_ref<'a, T>(ptr: *const T) -> &'a T {
         assert!(!ptr.is_null());
