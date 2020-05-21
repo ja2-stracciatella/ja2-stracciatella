@@ -42,6 +42,9 @@
 #include "JAScreens.h"
 #include "Logger.h"
 
+#include <string_theory/string>
+
+
 // The InitializeGame function is responsible for setting up all data and Gaming Engine
 // tasks which will run the game
 
@@ -126,7 +129,11 @@ editor:
 		default: return INIT_SCREEN;
 	}
 }
-catch (...) { return ERROR_SCREEN; }
+catch (const std::runtime_error& ex)
+{
+	SET_ERROR(ST::format("InitializeJA2: {}", ex.what()));
+	return ERROR_SCREEN;
+}
 
 
 void ShutdownJA2(void)

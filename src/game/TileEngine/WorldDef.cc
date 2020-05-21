@@ -2489,7 +2489,7 @@ try
 }
 catch (const std::runtime_error& err)
 {
-	SET_ERROR("Could not load map file '%s': %s", filename, err.what());
+	SET_ERROR(ST::format("Could not load map file '{}': {}", filename, err.what()));
 	throw;
 }
 

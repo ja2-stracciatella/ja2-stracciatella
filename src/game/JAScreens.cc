@@ -41,6 +41,7 @@
 #include "UILayout.h"
 #include "Timer.h"
 #include "Logger.h"
+#include "WordWrap.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -113,12 +114,11 @@ ScreenID ErrorScreenHandle(void)
 	MPrint(50, 200, "RUNTIME ERROR");
 	MPrint(50, 225, "PRESS <ESC> TO EXIT");
 
-	SetFontAttributes(FONT12ARIAL, FONT_YELLOW);
-	MPrint(50, 255, ST::format("{}", gubErrorText));
+	DisplayWrappedString(50, 255, MAP_SCREEN_WIDTH - 50, 5, FONT12ARIAL, FONT_YELLOW, gubErrorText, 0, 0);
 
 	if ( !fFirstTime )
 	{
-		SLOGE("Runtime Error: %s ", gubErrorText );
+		SLOGE(ST::format("Runtime Error: {} ", gubErrorText));
 		fFirstTime = TRUE;
 	}
 

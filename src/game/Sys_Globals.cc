@@ -7,7 +7,7 @@
 
 char g_filename[200];
 
-char    gubErrorText[200];
+ST::string gubErrorText;
 BOOLEAN gfEditMode             = FALSE;
 BOOLEAN fFirstTimeInGameScreen = TRUE;
 INT8    gbFPSDisplay           = SHOW_MIN_FPS;
@@ -16,13 +16,9 @@ BOOLEAN gfGlobalError          = FALSE;
 UINT32	guiGameCycleCounter = 0;
 
 
-void SET_ERROR(char const* const String, ...)
+void SET_ERROR(const ST::string& msg)
 {
-	va_list  ArgPtr;
-
-	va_start(ArgPtr, String);
-	vsprintf( gubErrorText, String, ArgPtr);
-	va_end(ArgPtr);
+	gubErrorText = msg;
 
 	SetPendingNewScreen( ERROR_SCREEN );
 
