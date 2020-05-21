@@ -75,7 +75,7 @@ try
 }
 catch (...)
 {
-	SET_ERROR("Could not load tile file: %s", cFilename);
+	SET_ERROR(ST::format("Could not load tile file : {}", cFilename));
 	throw;
 }
 
