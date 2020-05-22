@@ -21,9 +21,12 @@
 #include "VSurface.h"
 #include "Font_Control.h"
 #include "Meanwhile.h"
+#include "StrategicMap.h"
+#include "MapScreen.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "ShippingDestinationModel.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -148,34 +151,6 @@
 // the screen size.
 static SGPPoint g_order_check_box_pos[6];
 
-struct FlowerOrderLocationStruct
-{
-	UINT8 ubNextDayDeliveryCost;
-	UINT8 ubWhenItGetsThereCost;
-};
-
-#define FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS (pDeliveryLocationStrings_SIZE)
-
-FlowerOrderLocationStruct FlowerOrderLocations[FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS]={
-	{20, 15},
-	{95, 70},
-	{100, 75},
-	{50, 35},
-	{70, 50},
-	{45, 35},
-	{30, 25},
-	{100, 75},
-	{100, 75},
-	{30, 25},
-	{95, 70},
-	{30, 25},
-	{40, 30},
-	{45, 35},
-	{95, 70},
-	{50, 40},
-	{40, 30}
-};
-
 static SGPVObject* guiDeliveryLocation;
 static SGPVObject* guiFlowerFrame;
 static SGPVObject* guiCurrentlySelectedFlowerImage;
@@ -247,7 +222,7 @@ static MOUSE_REGION gSelectedFloristDisableDropDownRegion;
 
 
 //mouse region for the drop down city location area
-static MOUSE_REGION gSelectedFlowerDropDownRegion[FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS];
+static std::vector<MOUSE_REGION> gSelectedFlowerDropDownRegion;
 
 
 static GUIButtonRef MakeButton(const ST::string& text, INT16 x, INT16 y, GUI_CALLBACK click)
@@ -506,7 +481,8 @@ static void BtnFlowerOrderSendButtonCallback(GUI_BUTTON *btn, INT32 reason)
 		//add an entry in the finacial page for the medical deposit
 		AddTransactionToPlayersBook(PURCHASED_FLOWERS, 0, GetWorldTotalMin(), -(INT32)guiFlowerPrice);
 
-		if (gubCurrentlySelectedFlowerLocation == 7)
+		auto destination = GCM->getShippingDestination(gubCurrentlySelectedFlowerLocation);
+		if (GetTownIdForSector(destination->getDeliverySector()) == MEDUNA)
 		{
 			// sent to meduna!
 			if (gfFLoristCheckBox0Down)
@@ -673,11 +649,12 @@ static void DisplayFlowerDynamicItems(void)
 	sscanf(sTemp.c_str(), "%hu", &usPrice);
 
 	//if its the next day delivery
+	auto destination = GCM->getShippingDestination(gubCurrentlySelectedFlowerLocation);
 	if( gfFLoristCheckBox0Down )
-		guiFlowerPrice += usPrice + FlowerOrderLocations[ gubCurrentlySelectedFlowerLocation ].ubNextDayDeliveryCost;
+		guiFlowerPrice += usPrice + destination->flowersNextDayDeliveryCost;
 	//else its the 'when it gets there' delivery
 	else
-		guiFlowerPrice += usPrice + FlowerOrderLocations[ gubCurrentlySelectedFlowerLocation ].ubWhenItGetsThereCost;
+		guiFlowerPrice += usPrice + destination->flowersWhenItGetsThereCost;
 
 	sTemp = ST::format("${}.00 {}", guiFlowerPrice, pMessageStrings[MSG_USDOLLAR_ABBREVIATION]);
 	DrawTextToScreen(sTemp, usPosX, FLOWER_ORDER_BOUQUET_NAME_Y, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
@@ -789,7 +766,9 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 
 			usPosX = FLOWER_ORDER_DROP_DOWN_CITY_START_X;
 			usPosY = FLOWER_ORDER_DROP_DOWN_CITY_START_Y;
-			for( i=0; i< FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS; i++)
+
+			gSelectedFlowerDropDownRegion.resize(GCM->getShippingDestinations().size(),	{});
+			for (i = 0; i < gSelectedFlowerDropDownRegion.size(); i++)
 			{
 				MSYS_DefineRegion(&gSelectedFlowerDropDownRegion[i], usPosX, usPosY + 4, usPosX + FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH, usPosY + usFontHeight, MSYS_PRIORITY_HIGH + 3, CURSOR_WWW, SelectFlowerDropDownMovementCallBack, SelectFlowerDropDownRegionCallBack);
 				MSYS_SetRegionUserData( &gSelectedFlowerDropDownRegion[ i ], 0, i);
@@ -815,17 +794,17 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 
 		case FLOWER_ORDER_DROP_DOWN_DESTROY:
 		{
-			UINT8 i;
-
 			if( !fMouseRegionsCreated )
 				break;
 
-			for( i=0; i< FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS; i++)
-				MSYS_RemoveRegion( &gSelectedFlowerDropDownRegion[i]);
+			for (auto& region : gSelectedFlowerDropDownRegion)
+			{
+				MSYS_RemoveRegion(&region);
+			}
 
 			//display the name on the title bar
 			ColorFillVideoSurfaceArea( FRAME_BUFFER, FLOWER_ORDER_DROP_DOWN_LOCATION_X+3, FLOWER_ORDER_DELIVERY_LOCATION_Y+3, FLOWER_ORDER_DROP_DOWN_LOCATION_X+FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH,	FLOWER_ORDER_DELIVERY_LOCATION_Y+FLOWER_ORDER_DELIVERY_LOCATION_HEIGHT-2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-			DrawTextToScreen((pDeliveryLocationStrings[gubCurrentlySelectedFlowerLocation]), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, FLOWER_ORDER_DROP_DOWN_CITY_START_Y + 3, 0, FLOWER_ORDEER_DROP_DOWN_FONT, FLOWER_ORDEER_DROP_DOWN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			DrawTextToScreen(*(GCM->getShippingDestinationName(gubCurrentlySelectedFlowerLocation)), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, FLOWER_ORDER_DROP_DOWN_CITY_START_Y + 3, 0, FLOWER_ORDEER_DROP_DOWN_FONT, FLOWER_ORDEER_DROP_DOWN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//enable the drop down region
 			gSelectedFloristDisableDropDownRegion.Disable();
@@ -886,9 +865,9 @@ static BOOLEAN CreateDestroyFlowerOrderDestDropDown(UINT8 ubDropDownMode)
 
 			//Display the list of cities
 			usPosY = FLOWER_ORDER_DROP_DOWN_CITY_START_Y + 3;
-			for( i=0; i< FLOWER_ORDER_NUMBER_OF_DROP_DOWN_LOCATIONS; i++)
+			for (i = 0; i < GCM->getShippingDestinations().size(); i++)
 			{
-				DrawTextToScreen((pDeliveryLocationStrings[i]), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, usPosY, 0, FLOWER_ORDEER_DROP_DOWN_FONT, FLOWER_ORDEER_DROP_DOWN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+				DrawTextToScreen(*(GCM->getShippingDestinationName(i)), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, usPosY, 0, FLOWER_ORDEER_DROP_DOWN_FONT, FLOWER_ORDEER_DROP_DOWN_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 				usPosY += usFontHeight + 2;
 			}
 
@@ -913,7 +892,7 @@ static void FlowerOrderDrawSelectedCity(UINT8 ubNumber)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, FLOWER_ORDER_DROP_DOWN_CITY_START_X, usPosY+2, FLOWER_ORDER_DROP_DOWN_CITY_START_X+FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH-9,	usPosY+usFontHeight+4, Get16BPPColor( FROMRGB( 255, 255, 255 ) ) );
 
 	SetFontShadow(NO_SHADOW);
-	DrawTextToScreen((pDeliveryLocationStrings[ubNumber]), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, usPosY + 3, 0, FLOWER_ORDEER_DROP_DOWN_FONT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(*(GCM->getShippingDestinationName(ubNumber)), FLOWER_ORDER_DROP_DOWN_CITY_START_X + 6, usPosY + 3, 0, FLOWER_ORDEER_DROP_DOWN_FONT, 2, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 	SetFontShadow(DEFAULT_SHADOW);
 
 	FlowerOrderDisplayShippingLocationCity();
@@ -924,7 +903,7 @@ static void FlowerOrderDisplayShippingLocationCity(void)
 {
 	//display the name on the title bar
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, FLOWER_ORDER_DROP_DOWN_LOCATION_X+3, FLOWER_ORDER_DELIVERY_LOCATION_Y+3, FLOWER_ORDER_DROP_DOWN_LOCATION_X+FLOWER_ORDER_DROP_DOWN_LOCATION_WIDTH,	FLOWER_ORDER_DELIVERY_LOCATION_Y+FLOWER_ORDER_DELIVERY_LOCATION_HEIGHT-2, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
-	DrawTextToScreen((pDeliveryLocationStrings[gubCurrentlySelectedFlowerLocation]), FLOWER_ORDER_DELIVERY_LOCATION_X + 5, FLOWER_ORDER_DELIVERY_LOCATION_Y + 5, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+	DrawTextToScreen(*(GCM->getShippingDestinationName(gubCurrentlySelectedFlowerLocation)), FLOWER_ORDER_DELIVERY_LOCATION_X + 5, FLOWER_ORDER_DELIVERY_LOCATION_Y + 5, 0, FLOWER_ORDEER_SMALL_FONT, FLOWER_ORDEER_SMALL_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 }
 
 

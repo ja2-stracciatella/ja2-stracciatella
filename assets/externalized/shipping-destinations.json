@@ -1,0 +1,190 @@
+/**
+ * This defines the delivery destinations of Bobby Ray and Florist orders. 
+ *
+ * It is possible to change destinations so packages are delivered to any sector. But if you want to change 
+ * the displayed city name in laptop screens, you need to update the translation strings  files.
+ *
+ * Field definitions:
+ *  - locationId:    The ID of the destination city, in the dropdown in Bobby Ray checkout screen. The on-screen display name comes from translation string files. It must match the item index within the list.
+ *  - chargeRateOverNight:    Delivery charge per kg for Bobby Ray's "Overnight Express" service
+ *  - chargeRate2Days:    Delivery charge per kg for Bobby Ray's "2 Business Days" service
+ *  - chargeRateStandard:    Delivery charge per kg for Bobby Ray's "Standard" service
+ *  - flowersNextDayDeliveryCost:    Delivery charge for Florist's "Next day delivery" service
+ *  - flowersWhenItGetsThereCost:    Delivery charge for Florist's "When it gets there" service
+ *  - canDeliver:    If the destination is in Arulco and can actually be delivered to
+ *  - isPrimary:    The primary delivery destination, i.e. Drassen. This is the place where John Kulba sends his gifts, where shipments gets stolen. Pablo must be placed in the delivery sector.
+ *  - deliverySector:    Which sector the delivery arrives at
+ *  - deliverySectorZ:    Should be 0, unless it is an underground sector
+ *  - deliverySectorGridNo:    Location to place delivery items in the destination sector. It should be a crate.
+ *  - emailOffset:    Offset in the EMAIL.EDT file, to get the email message from Bobby Ray when order is delivered
+ *  - emailLength:    Length (number of lines) of delivered email in EMAIL.EDT
+ */
+[
+    {
+        // BR_AUSTIN,
+        "locationId": 0,
+        "chargeRateOverNight": 20,
+        "chargeRate2Days": 15,
+        "chargeRateStandard": 10,
+        "flowersNextDayDeliveryCost": 20,
+        "flowersWhenItGetsThereCost": 15
+    },
+    {
+        // BR_BAGHDAD,
+        "locationId": 1,
+        "chargeRateOverNight": 295,
+        "chargeRate2Days": 150,
+        "chargeRateStandard": 85,
+        "flowersNextDayDeliveryCost": 95,
+        "flowersWhenItGetsThereCost": 70
+    },
+    {
+        // BR_DRASSEN, the only one that really matters
+        "locationId": 2,
+        "chargeRateOverNight": 200,
+        "chargeRate2Days": 100,
+        "chargeRateStandard": 50,
+        "flowersNextDayDeliveryCost": 100,
+        "flowersWhenItGetsThereCost": 75,
+        "canDeliver": true,
+        "isPrimary": true,
+        "deliverySector": "B13",
+        "deliverySectorZ": 0,
+        "deliverySectorGridNo": 10112,
+        "emailOffset": 198,
+        "emailLength": 4
+    },
+    {
+        // BR_HONG_KONG,
+        "locationId": 3,
+        "chargeRateOverNight": 100,
+        "chargeRate2Days": 55,
+        "chargeRateStandard": 300,
+        "flowersNextDayDeliveryCost": 50,
+        "flowersWhenItGetsThereCost": 35
+    },
+    {
+        // BR_BEIRUT,
+        "locationId": 4,
+        "chargeRateOverNight": 95,
+        "chargeRate2Days": 65,
+        "chargeRateStandard": 40,
+        "flowersNextDayDeliveryCost": 70,
+        "flowersWhenItGetsThereCost": 50
+    },
+    {
+        // BR_LONDON,
+        "locationId": 5,
+        "chargeRateOverNight": 55,
+        "chargeRate2Days": 40,
+        "chargeRateStandard": 25,
+        "flowersNextDayDeliveryCost": 70,
+        "flowersWhenItGetsThereCost": 50
+    },
+    {
+        // BR_LOS_ANGELES,
+        "locationId": 6,
+        "chargeRateOverNight": 35,
+        "chargeRate2Days": 25,
+        "chargeRateStandard": 15,
+        "flowersNextDayDeliveryCost": 30,
+        "flowersWhenItGetsThereCost": 25
+    },
+    {
+        // BR_MEDUNA,
+        "locationId": 7,
+        "chargeRateOverNight": 200,
+        "chargeRate2Days": 100,
+        "chargeRateStandard": 50,
+        "flowersNextDayDeliveryCost": 100,
+        "flowersWhenItGetsThereCost": 75,
+        "canDeliver": true,
+        "isPrimary": false,
+        "deliverySector": "N3",
+        "deliverySectorZ": 0,
+        "deliverySectorGridNo": 10959,
+        "emailOffset": 220,
+        "emailLength": 4
+    },
+    {
+        // BR_METAVIRA,
+        "locationId": 8,
+        "chargeRateOverNight": 190,
+        "chargeRate2Days": 90,
+        "chargeRateStandard": 45,
+        "flowersNextDayDeliveryCost": 100,
+        "flowersWhenItGetsThereCost": 75
+    },
+    {
+        // BR_MIAMI,
+        "locationId": 9,
+        "chargeRateOverNight": 35,
+        "chargeRate2Days": 25,
+        "chargeRateStandard":15,
+        "flowersNextDayDeliveryCost": 30,
+        "flowersWhenItGetsThereCost": 25
+    },
+    {
+        // BR_MOSCOW,
+        "locationId": 10,
+        "chargeRateOverNight": 100,
+        "chargeRate2Days": 55,
+        "chargeRateStandard": 30,
+        "flowersNextDayDeliveryCost": 95,
+        "flowersWhenItGetsThereCost": 70
+    },
+    {
+        // BR_NEW_YORK,
+        "locationId": 11,
+        "chargeRateOverNight": 35,
+        "chargeRate2Days": 25,
+        "chargeRateStandard": 15,
+        "flowersNextDayDeliveryCost": 30,
+        "flowersWhenItGetsThereCost": 25
+    },
+    {
+        // BR_OTTAWA,
+        "locationId": 12,
+        "chargeRateOverNight": 45,
+        "chargeRate2Days": 30,
+        "chargeRateStandard": 20,
+        "flowersNextDayDeliveryCost": 40,
+        "flowersWhenItGetsThereCost": 30
+    },
+    {
+        // BR_PARIS,
+        "locationId": 13,
+        "chargeRateOverNight": 55,
+        "chargeRate2Days": 40,
+        "chargeRateStandard": 25,
+        "flowersNextDayDeliveryCost": 45,
+        "flowersWhenItGetsThereCost": 35
+    },
+    {
+        // BR_TRIPOLI,
+        "locationId": 14,
+        "chargeRateOverNight": 100,
+        "chargeRate2Days": 55,
+        "chargeRateStandard": 30,
+        "flowersNextDayDeliveryCost": 95,
+        "flowersWhenItGetsThereCost": 70
+    },
+    {
+        // BR_TOKYO,
+        "locationId": 15,
+        "chargeRateOverNight": 100,
+        "chargeRate2Days": 55,
+        "chargeRateStandard": 30,
+        "flowersNextDayDeliveryCost": 50,
+        "flowersWhenItGetsThereCost": 40
+    },
+    {
+        // BR_VANCOUVER,
+        "locationId": 16,
+        "chargeRateOverNight": 45,
+        "chargeRate2Days": 30,
+        "chargeRateStandard": 20,
+        "flowersNextDayDeliveryCost": 40,
+        "flowersWhenItGetsThereCost": 30
+    }
+]

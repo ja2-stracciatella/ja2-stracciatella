@@ -108,6 +108,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"
+#include "ShippingDestinationModel.h"
 
 #include <string_theory/string>
 
@@ -2316,7 +2317,7 @@ static void HandleOldBobbyRMailOrders(void)
 					gpNewBobbyrShipments[ iNewListCnt ].BobbyRayPurchase);
 
 				gpNewBobbyrShipments[ iNewListCnt ].fActive = TRUE;
-				gpNewBobbyrShipments[ iNewListCnt ].ubDeliveryLoc = BR_DRASSEN;
+				gpNewBobbyrShipments[ iNewListCnt ].ubDeliveryLoc = GCM->getPrimaryShippingDestination()->locationId;
 				gpNewBobbyrShipments[ iNewListCnt ].ubDeliveryMethod = 0;
 				gpNewBobbyrShipments[ iNewListCnt ].ubNumberPurchases = LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[iCnt].ubNumberPurchases;
 				gpNewBobbyrShipments[ iNewListCnt ].uiPackageWeight = 1;

@@ -24,17 +24,11 @@
 #include "Structure_Wrap.h"
 #include "History.h"
 #include "BobbyRMailOrder.h"
-
+#include "ShippingDestinationModel.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 #include "strategic/NpcPlacementModel.h"
-
-
-#define MEDUNA_ITEM_DROP_OFF_GRIDNO		10959
-#define MEDUNA_ITEM_DROP_OFF_SECTOR_X		3
-#define MEDUNA_ITEM_DROP_OFF_SECTOR_Y		14
-#define MEDUNA_ITEM_DROP_OFF_SECTOR_Z		0
 
 
 UINT32 guiPabloExtraDaysBribed = 0;
@@ -58,7 +52,7 @@ static BOOLEAN CloseCrate(const INT16 x, const INT16 y, const INT8 z, const Grid
 }
 
 
-static void DropOffItemsInMeduna(UINT8 ubOrderNum);
+static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinationModel* shippingDest);
 
 
 void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
@@ -66,15 +60,17 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	static UINT8 ubShipmentsSinceNoBribes = 0;
 
 	NewBobbyRayOrderStruct* const shipment = &gpNewBobbyrShipments[ubOrderID];
+	auto dest = GCM->getShippingDestination(shipment->ubDeliveryLoc);
 
-	// if the delivery is for meduna, drop the items off there instead
-	if (shipment->fActive && shipment->ubDeliveryLoc == BR_MEDUNA)
+	if (shipment->fActive && dest->canDeliver && !dest->isPrimary)
 	{
-		DropOffItemsInMeduna(ubOrderID);
+		// the delivery is not for Drassen, use a simple logic (reliable delivery) to handle delivery arrival there
+		DropOffItemsInDestination(ubOrderID, dest);
 		return;
 	}
 
-	UINT16 usStandardMapPos = BOBBYR_SHIPPING_DEST_GRIDNO;
+	UINT16 usStandardMapPos = dest->deliverySectorGridNo;
+	auto destSector = StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(dest->getDeliverySector())];
 	if (CheckFact(FACT_NEXT_PACKAGE_CAN_BE_LOST, 0))
 	{
 		SetFactFalse(FACT_NEXT_PACKAGE_CAN_BE_LOST);
@@ -94,7 +90,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 		SetFactFalse(FACT_NEXT_PACKAGE_CAN_BE_DELAYED);
 		usStandardMapPos = LOST_SHIPMENT_GRIDNO;
 	}
-	else if (gTownLoyalty[DRASSEN].ubRating < 20 || StrategicMap[CALCULATE_STRATEGIC_INDEX(13, MAP_ROW_B)].fEnemyControlled)
+	else if (gTownLoyalty[destSector.bNameId].ubRating < 20 || destSector.fEnemyControlled)
 	{
 		// loss of the whole shipment
 		shipment->fActive = FALSE;
@@ -121,7 +117,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	}
 
 	const BOOLEAN fSectorLoaded =
-		CloseCrate(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, BOBBYR_SHIPPING_DEST_GRIDNO);
+		CloseCrate(dest->deliverySectorX, dest->deliverySectorY, dest->deliverySectorZ, dest->deliverySectorGridNo);
 
 	OBJECTTYPE* pObject       = NULL;
 	OBJECTTYPE* pStolenObject = NULL;
@@ -278,10 +274,10 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	{
 		//add all the items from the array that was built above
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, usStandardMapPos, uiCount, pObject, 0, 0, 0, INVISIBLE);
+		AddItemsToUnLoadedSector(dest->deliverySectorX, dest->deliverySectorY, dest->deliverySectorZ, usStandardMapPos, uiCount, pObject, 0, 0, 0, INVISIBLE);
 		if (uiStolenCount > 0)
 		{
-			AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, INVISIBLE);
+			AddItemsToUnLoadedSector(dest->deliverySectorX, dest->deliverySectorY, dest->deliverySectorZ, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, INVISIBLE);
 		}
 		delete[] pObject;
 		delete[] pStolenObject;
@@ -339,7 +335,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	if (!fThisShipmentIsFromJohnKulba)
 	{
 		//Add an email from Bobby r telling the user the shipment 'Should' be there
-		AddEmail(BOBBYR_SHIPMENT_ARRIVED, BOBBYR_SHIPMENT_ARRIVED_LENGTH, BOBBY_R, GetWorldTotalMin());
+		AddEmail(dest->emailOffset, dest->emailLength, BOBBY_R, GetWorldTotalMin());
 	}
 	else
 	{
@@ -357,6 +353,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	INT16			sStartGridNo;
 	UINT8			ubLoop;
 	OBJECTTYPE Object;
+	auto shippingDest = GCM->getPrimaryShippingDestination();
 
 	if (uiReason == NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_RETURN_STOLEN_SHIPMENT_ITEMS )
 	{
@@ -399,13 +396,13 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 					CreateItems( SW38, (INT8) (90 + Random( 10 )), 2, &Object );
 					break;
 			}
-			if ( ( gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X ) && ( gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y ) && ( gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z ) )
+			if ( ( gWorldSectorX == shippingDest->deliverySectorX) && ( gWorldSectorY == shippingDest->deliverySectorY) && ( gbWorldSectorZ == shippingDest->deliverySectorZ ) )
 			{
-				AddItemToPool(BOBBYR_SHIPPING_DEST_GRIDNO, &Object, INVISIBLE, 0, 0, 0);
+				AddItemToPool(shippingDest->deliverySectorGridNo, &Object, INVISIBLE, 0, 0, 0);
 			}
 			else
 			{
-				AddItemsToUnLoadedSector(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, BOBBYR_SHIPPING_DEST_GRIDNO, 1, &Object, 0, 0, 0, INVISIBLE);
+				AddItemsToUnLoadedSector(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ, shippingDest->deliverySectorGridNo, 1, &Object, 0, 0, 0, INVISIBLE);
 			}
 		}
 	}
@@ -419,25 +416,25 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	}
 
 	// If the Drassen airport sector is already loaded, move the item pools...
-	if ( ( gWorldSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X ) && ( gWorldSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y ) && ( gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z ) )
+	if ( ( gWorldSectorX == shippingDest->deliverySectorX ) && ( gWorldSectorY == shippingDest->deliverySectorY ) && ( gbWorldSectorZ == shippingDest->deliverySectorZ ) )
 	{
 		// sector is loaded!
 		// just move the hidden item pool
-		MoveItemPools( sStartGridNo, BOBBYR_SHIPPING_DEST_GRIDNO );
+		MoveItemPools( sStartGridNo, shippingDest->deliverySectorGridNo );
 	}
 	else
 	{
 		// otherwise load the saved items from the item file and change the records of their locations
-		std::vector<WORLDITEM> pTemp = LoadWorldItemsFromTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z);
+		std::vector<WORLDITEM> pTemp = LoadWorldItemsFromTempItemFile(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ);
 
 		for (WORLDITEM& wi : pTemp)
 		{
 			if (wi.sGridNo == PABLOS_STOLEN_DEST_GRIDNO)
 			{
-				wi.sGridNo = BOBBYR_SHIPPING_DEST_GRIDNO;
+				wi.sGridNo = shippingDest->deliverySectorGridNo;
 			}
 		}
-		SaveWorldItemsToTempItemFile(BOBBYR_SHIPPING_DEST_SECTOR_X, BOBBYR_SHIPPING_DEST_SECTOR_Y, BOBBYR_SHIPPING_DEST_SECTOR_Z, pTemp);
+		SaveWorldItemsToTempItemFile(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ, pTemp);
 	}
 }
 
@@ -446,9 +443,11 @@ void AddSecondAirportAttendant( void )
 {
 	// add the second airport attendant to the Drassen airport...
 	MERCPROFILESTRUCT& sal = GetProfile(SAL);
-	sal.sSectorX = BOBBYR_SHIPPING_DEST_SECTOR_X;
-	sal.sSectorY = BOBBYR_SHIPPING_DEST_SECTOR_Y;
-	sal.bSectorZ = BOBBYR_SHIPPING_DEST_SECTOR_Z;
+	auto shippingDest = GCM->getPrimaryShippingDestination();
+
+	sal.sSectorX = shippingDest->deliverySectorX;
+	sal.sSectorY = shippingDest->deliverySectorY;
+	sal.bSectorZ = shippingDest->deliverySectorZ;
 }
 
 
@@ -972,7 +971,7 @@ void CheckForMissingHospitalSupplies( void )
 }
 
 
-static void DropOffItemsInMeduna(UINT8 ubOrderNum)
+static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinationModel* shippingDest)
 {
 	OBJECTTYPE		Object;
 	UINT32	uiCount = 0;
@@ -982,7 +981,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 	UINT32	i;
 
 	//if the player doesnt "own" the sector,
-	if( StrategicMap[ CALCULATE_STRATEGIC_INDEX( MEDUNA_ITEM_DROP_OFF_SECTOR_X, MEDUNA_ITEM_DROP_OFF_SECTOR_Y ) ].fEnemyControlled )
+	if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(shippingDest->getDeliverySector())].fEnemyControlled)
 	{
 		//the items disappear
 		gpNewBobbyrShipments[ ubOrderNum ].fActive = FALSE;
@@ -990,7 +989,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 	}
 
 	const BOOLEAN fSectorLoaded =
-		CloseCrate(MEDUNA_ITEM_DROP_OFF_SECTOR_X, MEDUNA_ITEM_DROP_OFF_SECTOR_Y, MEDUNA_ITEM_DROP_OFF_SECTOR_Z, MEDUNA_ITEM_DROP_OFF_GRIDNO);
+		CloseCrate(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ, shippingDest->deliverySectorGridNo);
 
 	for(i=0; i<gpNewBobbyrShipments[ ubOrderNum ].ubNumberPurchases; i++)
 	{
@@ -1023,7 +1022,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 			// stack as many as possible
 			if( fSectorLoaded )
 			{
-				AddItemToPool(MEDUNA_ITEM_DROP_OFF_GRIDNO, &Object, INVISIBLE, 0, 0, 0);
+				AddItemToPool(shippingDest->deliverySectorGridNo, &Object, INVISIBLE, 0, 0, 0);
 			}
 			else
 			{
@@ -1041,7 +1040,7 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 		//add all the items from the array that was built above
 
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		AddItemsToUnLoadedSector(MEDUNA_ITEM_DROP_OFF_SECTOR_X, MEDUNA_ITEM_DROP_OFF_SECTOR_Y, MEDUNA_ITEM_DROP_OFF_SECTOR_Z, MEDUNA_ITEM_DROP_OFF_GRIDNO, uiCount, pObject, 0, 0, 0, INVISIBLE);
+		AddItemsToUnLoadedSector(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ, shippingDest->deliverySectorGridNo, uiCount, pObject, 0, 0, 0, INVISIBLE);
 		delete[] pObject;
 		pObject = NULL;
 	}
@@ -1049,6 +1048,12 @@ static void DropOffItemsInMeduna(UINT8 ubOrderNum)
 	//mark that the shipment has arrived
 	gpNewBobbyrShipments[ ubOrderNum ].fActive = FALSE;
 
-	//Add an email from kulba telling the user the shipment is there
-	AddEmail( BOBBY_R_MEDUNA_SHIPMENT, BOBBY_R_MEDUNA_SHIPMENT_LENGTH, BOBBY_R, GetWorldTotalMin() );
+	if (shippingDest->emailOffset) {
+		//Add an email telling the user the shipment is there
+		AddEmail(shippingDest->emailOffset, shippingDest->emailLength, BOBBY_R, GetWorldTotalMin());
+	}
+	else
+	{
+		SLOGW("Bobby Ray shipment arrived but no email template found.");
+	}
 }

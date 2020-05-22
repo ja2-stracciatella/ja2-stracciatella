@@ -2770,27 +2770,6 @@ static const ST::string s_ger_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	"Tot ist tot"
 };
 
-static const ST::string s_ger_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
-{
-	"Austin",			//Austin, Texas, USA
-	"Bagdad",			//Baghdad, Iraq (Suddam Hussein's home)
-	"Drassen",			//The main place in JA2 that you can receive items. The other towns are dummy names...
-	"Hong Kong",		//Hong Kong, Hong Kong
-	"Beirut",			//Beirut, Lebanon	(Middle East)
-	"London",			//London, England
-	"Los Angeles",	//Los Angeles, California, USA (SW corner of USA)
-	"Meduna",			//Meduna -- the other airport in JA2 that you can receive items.
-	"Metavira",		//The island of Metavira was the fictional location used by JA1
-	"Miami",				//Miami, Florida, USA (SE corner of USA)
-	"Moskau",			//Moscow, USSR
-	"New York",		//New York, New York, USA
-	"Ottawa",			//Ottawa, Ontario, Canada -- where JA2 was made!
-	"Paris",				//Paris, France
-	"Tripolis",		//Tripoli, Libya (eastern Mediterranean)
-	"Tokio",				//Tokyo, Japan
-	"Vancouver",		//Vancouver, British Columbia, Canada (west coast near US border)
-};
-
 // This string is used in the IMP character generation.  It is possible to
 // select 0 ability in a skill meaning you can't use it.  This text is
 // confirmation to the player.
@@ -3414,7 +3393,6 @@ LanguageRes g_LanguageResGerman = {
 	s_ger_pLaptopTitles,
 	s_ger_pDayStrings,
 	s_ger_pMilitiaConfirmStrings,
-	s_ger_pDeliveryLocationStrings,
 	s_ger_pSkillAtZeroWarning,
 	s_ger_pIMPBeginScreenStrings,
 	s_ger_pIMPFinishButtonText,

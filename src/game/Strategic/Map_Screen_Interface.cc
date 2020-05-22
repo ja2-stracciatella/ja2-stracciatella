@@ -70,6 +70,7 @@
 #include "UILayout.h"
 #include "GameInstance.h"
 #include "ContentManager.h"
+#include "ShippingDestinationModel.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -1097,7 +1098,8 @@ void HandleEquipmentLeftInOmerta(const UINT32 uiSlotIndex)
 
 void HandleEquipmentLeftInDrassen(const UINT32 uiSlotIndex)
 {
-	HandleEquipmentLeft(uiSlotIndex, BOBBYR_SHIPPING_DEST_SECTOR, 10433);
+	auto primaryAirport = GCM->getPrimaryShippingDestination();
+	HandleEquipmentLeft(uiSlotIndex, primaryAirport->getDeliverySector(), 10433);
 }
 
 

@@ -24,6 +24,7 @@
 #include "JsonUtility.h"
 #include "MagazineModel.h"
 #include "RustInterface.h"
+#include "ShippingDestinationModel.h"
 #include "WeaponModels.h"
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
@@ -249,6 +250,7 @@ DefaultContentManager::~DefaultContentManager()
 		if(inv) delete inv;
 	}
 
+	m_shippingDestinations.clear();
 	delete m_bobbyRayNewInventory;
 	delete m_bobbyRayUsedInventory;
 	delete m_impPolicy;
@@ -284,6 +286,33 @@ const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
 const DealerInventory* DefaultContentManager::getBobbyRayUsedInventory() const
 {
 	return m_bobbyRayUsedInventory;
+}
+
+const std::vector<const ShippingDestinationModel*>& DefaultContentManager::getShippingDestinations() const
+{
+	return m_shippingDestinations;
+}
+
+const ShippingDestinationModel* DefaultContentManager::getShippingDestination(uint8_t locationId) const
+{
+	return m_shippingDestinations[locationId];
+}
+
+const ShippingDestinationModel* DefaultContentManager::getPrimaryShippingDestination() const
+{
+	for (auto dest : m_shippingDestinations)
+	{
+		if (dest->isPrimary)
+		{
+			return dest;
+		}
+	}
+	throw std::runtime_error("Bobby Ray primary destination is not defined");
+}
+
+const ST::string* DefaultContentManager::getShippingDestinationName(uint8_t index) const
+{
+	return m_shippingDestinationNames[index];
 }
 
 const NpcActionParamsModel* DefaultContentManager::getNpcActionParams(uint16_t actionCode) const
@@ -953,6 +982,16 @@ bool DefaultContentManager::loadGameData()
 
 	std::shared_ptr<rapidjson::Document> imp_json(readJsonDataFile("imp.json"));
 	m_impPolicy = new DefaultIMPPolicy(imp_json.get(), this);
+
+	loadStringRes("strings/shipping-destinations", m_shippingDestinationNames);
+
+	std::shared_ptr<rapidjson::Document> shippingDestJson(readJsonDataFile("shipping-destinations.json"));
+	for (auto& element : shippingDestJson->GetArray())
+	{
+		auto r = JsonObjectReader(element);
+		m_shippingDestinations.push_back(ShippingDestinationModel::deserialize(r));
+	}
+	ShippingDestinationModel::validateData(m_shippingDestinations, m_shippingDestinationNames);
 
 	loadStringRes("strings/ammo-calibre", m_calibreNames);
 	loadStringRes("strings/ammo-calibre-bobbyray", m_calibreNamesBobbyRay);

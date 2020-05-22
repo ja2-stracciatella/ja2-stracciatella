@@ -35,6 +35,7 @@
 #include "FileMan.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "ShippingDestinationModel.h"
 
 #include <string_theory/string>
 
@@ -828,7 +829,9 @@ static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue const exit_valu
 
 		default:
 		{
-			bool const in_drassen = !StrategicMap[BOBBYR_SHIPPING_DEST_SECTOR_X + BOBBYR_SHIPPING_DEST_SECTOR_Y * MAP_WORLD_X].fEnemyControlled;
+			auto primaryAirport = GCM->getPrimaryShippingDestination();
+			auto airportSectorIndex = SECTOR_INFO_TO_STRATEGIC_INDEX(primaryAirport->getDeliverySector());
+			bool const in_drassen = !StrategicMap[airportSectorIndex].fEnemyControlled;
 			HandleMercLeavingEquipment(s, in_drassen);
 			break;
 		}

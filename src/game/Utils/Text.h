@@ -148,7 +148,6 @@ extern const ST::string g_eng_str_dead_is_dead_mode_enter_name;
 #define gzMoneyWithdrawMessageText_SIZE 2
 #define zOptionsToggleText_SIZE 20
 #define gzGIOScreenText_SIZE 17
-#define pDeliveryLocationStrings_SIZE 17
 #define pPausedGameText_SIZE 3
 #define pMessageStrings_SIZE 68
 #define pDoctorWarningString_SIZE 2
@@ -293,7 +292,6 @@ struct LanguageRes
 	const ST::string* pLaptopTitles;
 	const ST::string  pDayStrings;
 	const ST::string* pMilitiaConfirmStrings;
-	const ST::string* pDeliveryLocationStrings;
 	const ST::string  pSkillAtZeroWarning;
 	const ST::string  pIMPBeginScreenStrings;
 	const ST::string  pIMPFinishButtonText;
@@ -523,7 +521,6 @@ extern const LanguageRes* g_langRes;
 #define pLaptopTitles                                       (g_langRes->pLaptopTitles)
 #define pDayStrings                                         (g_langRes->pDayStrings)
 #define pMilitiaConfirmStrings                              (g_langRes->pMilitiaConfirmStrings)
-#define pDeliveryLocationStrings                            (g_langRes->pDeliveryLocationStrings)
 #define pSkillAtZeroWarning                                 (g_langRes->pSkillAtZeroWarning)
 #define pIMPBeginScreenStrings                              (g_langRes->pIMPBeginScreenStrings)
 #define pIMPFinishButtonText                                (g_langRes->pIMPFinishButtonText)

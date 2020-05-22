@@ -26,6 +26,7 @@
 #include "Queen_Command.h"
 #include "Random.h"
 #include "Render_Fun.h"
+#include "ShippingDestinationModel.h"
 #include "Soldier_Profile.h"
 #include "StrategicMap.h"
 #include "Strategic_Event_Handler.h"
@@ -70,11 +71,12 @@ void SetFactFalse(Fact const usFact)
 
 static bool CheckForNewShipment(void)
 {
-	if (gWorldSectorX  != BOBBYR_SHIPPING_DEST_SECTOR_X) return false;
-	if (gWorldSectorY  != BOBBYR_SHIPPING_DEST_SECTOR_Y) return false;
-	if (gbWorldSectorZ != BOBBYR_SHIPPING_DEST_SECTOR_Z) return false;
+	auto shippingDest = GCM->getPrimaryShippingDestination();
+	if (gWorldSectorX  != shippingDest->deliverySectorX) return false;
+	if (gWorldSectorY  != shippingDest->deliverySectorY) return false;
+	if (gbWorldSectorZ != shippingDest->deliverySectorZ) return false;
 
-	ITEM_POOL const* const ip = GetItemPool(BOBBYR_SHIPPING_DEST_GRIDNO, 0);
+	ITEM_POOL const* const ip = GetItemPool(shippingDest->deliverySectorGridNo, 0);
 	return ip && !IsItemPoolVisible(ip);
 }
 

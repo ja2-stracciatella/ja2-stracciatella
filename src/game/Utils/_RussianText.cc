@@ -2995,27 +2995,6 @@ static const ST::string s_rus_gzGIOScreenText[gzGIOScreenText_SIZE] =
 	"Dead is Dead"
 };
 
-static const ST::string s_rus_pDeliveryLocationStrings[pDeliveryLocationStrings_SIZE] =
-{
-	"Остин",		//Austin, Texas, USA
-	"Багдад",		//Baghdad, Iraq (Suddam Hussein's home)
-	"Драссен",		//The main place in JA2 that you can receive items.  The other towns are dummy names...
-	"Гонконг",		//Hong Kong, Hong Kong
-	"Бейрут",		//Beirut, Lebanon	(Middle East)
-	"Лондон",		//London, England
-	"Лос Анджелес",	//Los Angeles, California, USA (SW corner of USA)
-	"Медуна",		//Meduna -- the other airport in JA2 that you can receive items.
-	"Метавира",		//The island of Metavira was the fictional location used by JA1
-	"Майами",		//Miami, Florida, USA (SE corner of USA)
-	"Москва",		//Moscow, USSR
-	"Нью-Йорк",		//New York, New York, USA
-	"Оттава",		//Ottawa, Ontario, Canada -- where JA2 was made!
-	"Париж",		//Paris, France
-	"Триполи",		//Tripoli, Libya (eastern Mediterranean)
-	"Токио",		//Tokyo, Japan
-	"Ванкувер",		//Vancouver, British Columbia, Canada (west coast near US border)
-};
-
 // This string is used in the IMP character generation.  It is possible to
 // select 0 ability in a skill meaning you can't use it.  This text is
 // confirmation to the player.
@@ -3646,7 +3625,6 @@ LanguageRes g_LanguageResRussian = {
 	s_rus_pLaptopTitles,
 	s_rus_pDayStrings,
 	s_rus_pMilitiaConfirmStrings,
-	s_rus_pDeliveryLocationStrings,
 	s_rus_pSkillAtZeroWarning,
 	s_rus_pIMPBeginScreenStrings,
 	s_rus_pIMPFinishButtonText,
@@ -3875,7 +3853,6 @@ LanguageRes g_LanguageResRussianGold = {
 	s_rus_pLaptopTitles,
 	s_rus_pDayStrings,
 	s_rus_pMilitiaConfirmStrings,
-	s_rus_pDeliveryLocationStrings,
 	s_rus_pSkillAtZeroWarning,
 	s_rus_pIMPBeginScreenStrings,
 	s_rus_pIMPFinishButtonText,

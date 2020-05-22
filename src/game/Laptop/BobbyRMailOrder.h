@@ -6,28 +6,6 @@
 #include <vector>
 
 
-//enums for the various destinations that are available in the bobbyR dest drop down box
-enum
-{
-	BR_AUSTIN,
-	BR_BAGHDAD,
-	BR_DRASSEN,
-	BR_HONG_KONG,
-	BR_BEIRUT,
-	BR_LONDON,
-	BR_LOS_ANGELES,
-	BR_MEDUNA,
-	BR_METAVIRA,
-	BR_MIAMI,
-	BR_MOSCOW,
-	BR_NEW_YORK,
-	BR_OTTAWA,
-	BR_PARIS,
-	BR_TRIPOLI,
-	BR_TOKYO,
-	BR_VANCOUVER,
-};
-
 
 void GameInitBobbyRMailOrder(void);
 void EnterBobbyRMailOrder(void);

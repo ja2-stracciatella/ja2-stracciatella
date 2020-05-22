@@ -34,6 +34,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "ShippingDestinationModel.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -41,34 +42,6 @@
 #include <algorithm>
 #include <vector>
 
-struct BobbyROrderLocationStruct
-{
-	UINT16 usOverNightExpress;
-	UINT16 us2DaysService;
-	UINT16 usStandardService;
-};
-
-
-BobbyROrderLocationStruct BobbyROrderLocations[pDeliveryLocationStrings_SIZE]=
-{
-	{20, 15, 10},
-	{295, 150, 85},
-	{200, 100, 50}, // the only one that really matters
-	{100, 55, 30},
-	{95, 65, 40},
-	{55, 40, 25},
-	{35, 25, 15},
-	{200, 100, 50},
-	{190, 90, 45},
-	{35, 25, 15},
-	{100, 55, 30},
-	{35, 25, 15},
-	{45, 30, 20},
-	{55, 40, 25},
-	{100, 55, 30},
-	{100, 55, 30},
-	{45, 30, 20},
- };
 
 //drop down menu
 enum
@@ -665,8 +638,10 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 			{
 				ST::string zTemp;
 
+				auto dest = GCM->getPrimaryShippingDestination();
+				auto destSectorIndex = SECTOR_INFO_TO_STRATEGIC_INDEX(dest->getDeliverySector());
 				//if the city is Drassen, and the airport sector is player controlled
-				if( gbSelectedCity == BR_DRASSEN && !StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( SEC_B13 ) ].fEnemyControlled )
+				if( gbSelectedCity == dest->locationId && !StrategicMap[destSectorIndex].fEnemyControlled )
 				{
 					//Quick hack to bypass the confirmation box
 					ConfirmBobbyRPurchaseMessageBoxCallBack( MSG_BOX_RETURN_YES );
@@ -674,102 +649,9 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 				else
 				{
 					//else pop up a confirmation box
-					zTemp = st_format_printf(BobbyROrderFormText[BOBBYR_CONFIRM_DEST], pDeliveryLocationStrings[gbSelectedCity]);
+					zTemp = st_format_printf(BobbyROrderFormText[BOBBYR_CONFIRM_DEST], *(GCM->getShippingDestinationName(gbSelectedCity)));
 					DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, zTemp, LAPTOP_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmBobbyRPurchaseMessageBoxCallBack );
 				}
-
-				/*
-				//if the shipment is going to Drassen, add the inventory
-				if( gbSelectedCity == BR_DRASSEN )
-				{
-					//BobbyRayOrderStruct *pBobbyRayPurchase;
-					//UINT32	uiResetTimeSec;
-					UINT8	i, ubCount;
-					UINT8	cnt;
-					INT8		bDaysAhead;
-
-					//if we need to add more array elements for the Order Array
-					if (LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size() <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed)
-					{
-						LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.push_back(BobbyRayOrderStruct{});
-						Assert(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size() <= UINT8_MAX);
-					}
-
-					for (cnt = 0; cnt < LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size(); cnt++)
-					{
-						//get an empty element in the array
-						if( !LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].fActive )
-							break;
-					}
-
-					//gets reset when the confirm order graphic disappears
-					gfCanAcceptOrder = FALSE;
-
-					//pBobbyRayPurchase = new BobbyRayOrderStruct{};
-
-
-					ubCount = 0;
-					for(i=0; i<MAX_PURCHASE_AMOUNT; i++)
-					{
-						//if the item was purchased
-						if( BobbyRayPurchases[ i ].ubNumberPurchased )
-						{
-							//copy the purchases into the struct that will be added to the queue
-							LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[cnt].BobbyRayPurchase[ubCount] = BobbyRayPurchases[i];
-							ubCount ++;
-						}
-					}
-
-					LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].ubNumberPurchases = ubCount;
-					LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].fActive = TRUE;
-					LaptopSaveInfo.usNumberOfBobbyRayOrderUsed++;
-
-					//get the length of time to receive the shipment
-					if( gubSelectedLight == 0 )
-					{
-						bDaysAhead = OVERNIGHT_EXPRESS;
-						//uiResetTimeSec = GetMidnightOfFutureDayInMinutes( OVERNIGHT_EXPRESS );
-					}
-					else if( gubSelectedLight == 1 )
-					{
-						bDaysAhead = TWO_BUSINESS_DAYS;
-						//uiResetTimeSec = GetMidnightOfFutureDayInMinutes( TWO_BUSINESS_DAYS );
-					}
-					else if( gubSelectedLight == 2 )
-					{
-						bDaysAhead = STANDARD_SERVICE;
-						//uiResetTimeSec = GetMidnightOfFutureDayInMinutes( STANDARD_SERVICE );
-					}
-					else
-					{
-						bDaysAhead = 0;
-						//uiResetTimeSec = 0;
-					}
-
-					if (GetProfile(SAL)->bLife == 0)
-					{
-						// Sal is dead, so Pablo is dead, so the airport is badly run
-						bDaysAhead += (UINT8) Random( 5 ) + 1;
-					}
-
-					//add a random amount between so it arrives between 8:00 am and noon
-					//uiResetTimeSec += (8 + Random(4) ) * 60;
-
-					//AddStrategicEvent( EVENT_BOBBYRAY_PURCHASE, uiResetTimeSec, cnt);
-					AddFutureDayStrategicEvent( EVENT_BOBBYRAY_PURCHASE, (8 + Random(4) ) * 60, cnt, bDaysAhead );
-
-				}
-
-				//Add the transaction to the finance page
-				AddTransactionToPlayersBook(BOBBYR_PURCHASE, 0, GetWorldTotalMin(), -giGrandTotal);
-
-				//display the confirm order graphic
-				gfDrawConfirmOrderGrpahic = TRUE;
-
-				//Get rid of the city drop dowm, if it is being displayed
-				gubDropDownAction = BR_DROP_DOWN_DESTROY;
-
-				gSelectedConfirmOrderRegion.Enable();*/
 			}
 		}
 	}
@@ -922,17 +804,17 @@ static void DisplayShippingCosts(BOOLEAN fCalledFromOrderPage, INT32 iSubTotal, 
 	else
 	{
 		UINT16	usStandardCost;
-
+		auto   dest = GCM->getShippingDestination(gpNewBobbyrShipments[iOrderNum].ubDeliveryLoc);
 		switch( gpNewBobbyrShipments[ iOrderNum ].ubDeliveryMethod )
 		{
 			case 0:
-				usStandardCost = BobbyROrderLocations[gpNewBobbyrShipments[ iOrderNum ].ubDeliveryLoc].usOverNightExpress;
+				usStandardCost = dest->chargeRateOverNight;
 				break;
 			case 1:
-				usStandardCost = BobbyROrderLocations[gpNewBobbyrShipments[ iOrderNum ].ubDeliveryLoc].us2DaysService;
+				usStandardCost = dest->chargeRate2Days;
 				break;
 			case 2:
-				usStandardCost = BobbyROrderLocations[gpNewBobbyrShipments[ iOrderNum ].ubDeliveryLoc].usStandardService;
+				usStandardCost = dest->chargeRateStandard;
 				break;
 
 			default:
@@ -1161,7 +1043,7 @@ static void CreateDestroyBobbyRDropDown(UINT8 ubDropDownAction)
 			if( gbSelectedCity == -1 )
 				DrawTextToScreen(BobbyROrderFormText[BOBBYR_SELECT_DEST], BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 			else
-				DrawTextToScreen((pDeliveryLocationStrings[gbSelectedCity]), BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+				DrawTextToScreen(*(GCM->getShippingDestinationName(gbSelectedCity)), BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 			//disable the r\close regiuon
 			gSelectedCloseDropDownRegion.Disable();
@@ -1326,7 +1208,7 @@ static void DrawSelectedCity(UINT8 ubCityNumber)
 	usPosY = BOBBYR_CITY_START_LOCATION_Y + 5;
 	for( i=gubCityAtTopOfList; i< gubCityAtTopOfList+BOBBYR_NUM_DISPLAYED_CITIES; i++)
 	{
-		DrawTextToScreen((pDeliveryLocationStrings[i]), BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, usPosY, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		DrawTextToScreen(*(GCM->getShippingDestinationName(i)), BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, usPosY, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_STATIC_TEXT_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		usPosY += usFontHeight + 2;
 	}
 
@@ -1340,7 +1222,7 @@ static void DrawSelectedCity(UINT8 ubCityNumber)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_CITY_START_LOCATION_X+4, usPosY+4, BOBBYR_CITY_START_LOCATION_X+BOBBYR_DROP_DOWN_WIDTH-4,	usPosY+usFontHeight+6, Get16BPPColor( FROMRGB( 200, 169, 87 ) ) );
 
 	SetFontShadow(NO_SHADOW);
-	ST::string city = (pDeliveryLocationStrings[ubCityNumber == 255 ? 0 : ubCityNumber]);
+	ST::string city = *(GCM->getShippingDestinationName(ubCityNumber == 255 ? 0 : ubCityNumber));
 	DrawTextToScreen(city, BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, usPosY + 5, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_FONT_BLACK, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	SetFontShadow(DEFAULT_SHADOW);
@@ -1364,7 +1246,7 @@ static void DisplayShippingLocationCity(void)
 	ColorFillVideoSurfaceArea( FRAME_BUFFER, BOBBYR_SHIPPING_LOC_AREA_L_X, BOBBYR_SHIPPING_LOC_AREA_T_Y, BOBBYR_SHIPPING_LOC_AREA_L_X+175,	BOBBYR_SHIPPING_LOC_AREA_T_Y+BOBBYR_DROP_DOWN_HEIGHT, Get16BPPColor( FROMRGB( 0, 0, 0 ) ) );
 
 	//if there is no city selected
-	ST::string dest = (gbSelectedCity == -1 ? BobbyROrderFormText[BOBBYR_SELECT_DEST] : (pDeliveryLocationStrings[gbSelectedCity]));
+	ST::string dest = (gbSelectedCity == -1 ? BobbyROrderFormText[BOBBYR_SELECT_DEST] : *(GCM->getShippingDestinationName(gbSelectedCity)));
 	DrawTextToScreen(dest, BOBBYR_CITY_START_LOCATION_X + BOBBYR_CITY_NAME_OFFSET, BOBBYR_SHIPPING_LOC_AREA_T_Y + 3, 0, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DROP_DOWN_SELEC_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	DisplayShippingCosts( TRUE, 0, BOBBYR_ORDERGRID_X, BOBBYR_ORDERGRID_Y, -1 );
@@ -1377,26 +1259,26 @@ static void DisplayShippingLocationCity(void)
 	usPosY = BOBBYR_OVERNIGHT_EXPRESS_Y;
 
 	ST::string sTemp = "$0";
-
-	if( gbSelectedCity != -1 )
+	const ShippingDestinationModel* shippingDest = (gbSelectedCity != -1) ? GCM->getShippingDestination(gbSelectedCity) : NULL;
+	if (shippingDest)
 	{
-		sTemp = SPrintMoney(BobbyROrderLocations[gbSelectedCity].usOverNightExpress / GetWeightBasedOnMetricOption(1));
+		sTemp = SPrintMoney(shippingDest->chargeRateOverNight / GetWeightBasedOnMetricOption(1));
 	}
 
 	DrawTextToScreen(sTemp, BOBBYR_SHIPPING_SPEED_NUMBER_X, usPosY, BOBBYR_SHIPPING_SPEED_NUMBER_WIDTH, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY +=BOBBYR_GRID_ROW_OFFSET;
 
-	if( gbSelectedCity != -1 )
+	if (shippingDest)
 	{
-		sTemp = SPrintMoney(BobbyROrderLocations[gbSelectedCity].us2DaysService / GetWeightBasedOnMetricOption(1));
+		sTemp = SPrintMoney(shippingDest->chargeRate2Days / GetWeightBasedOnMetricOption(1));
 	}
 
 	DrawTextToScreen(sTemp, BOBBYR_SHIPPING_SPEED_NUMBER_X, usPosY, BOBBYR_SHIPPING_SPEED_NUMBER_WIDTH, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
 	usPosY +=BOBBYR_GRID_ROW_OFFSET;
 
-	if( gbSelectedCity != -1 )
+	if (shippingDest)
 	{
-		sTemp = SPrintMoney(BobbyROrderLocations[gbSelectedCity].usStandardService / GetWeightBasedOnMetricOption(1));
+		sTemp = SPrintMoney(shippingDest->chargeRateStandard / GetWeightBasedOnMetricOption(1));
 	}
 
 	DrawTextToScreen(sTemp, BOBBYR_SHIPPING_SPEED_NUMBER_X, usPosY, BOBBYR_SHIPPING_SPEED_NUMBER_WIDTH, BOBBYR_DROPDOWN_FONT, BOBBYR_ORDER_DYNAMIC_TEXT_COLOR, FONT_MCOLOR_BLACK, RIGHT_JUSTIFIED);
@@ -1635,16 +1517,17 @@ static UINT32 CalcCostFromWeightOfPackage(UINT8 ubTypeOfService)
 	}*/
 	Assert ( ubTypeOfService < 3);
 
+	auto destination = GCM->getShippingDestination(gbSelectedCity);
 	switch( ubTypeOfService )
 	{
 		case 0:
-			usStandardCost = BobbyROrderLocations[gbSelectedCity].usOverNightExpress;
+			usStandardCost = destination->chargeRateOverNight;
 			break;
 		case 1:
-			usStandardCost = BobbyROrderLocations[gbSelectedCity].us2DaysService;
+			usStandardCost = destination->chargeRate2Days;
 			break;
 		case 2:
-			usStandardCost = BobbyROrderLocations[gbSelectedCity].usStandardService;
+			usStandardCost = destination->chargeRateStandard;
 			break;
 
 		default:
@@ -1723,64 +1606,13 @@ static void AddNewBobbyRShipment(BobbyRayPurchaseStruct* pPurchaseStruct, UINT8 
 
 static void PurchaseBobbyOrder(void)
 {
-	//if the shipment is going to Drassen, add the inventory
-	if( gbSelectedCity == BR_DRASSEN || gbSelectedCity == BR_MEDUNA )
+	auto dest = GCM->getShippingDestination(gbSelectedCity);
+	if (dest->canDeliver)
 	{
-		//BobbyRayOrderStruct *pBobbyRayPurchase;
-		//UINT32 uiResetTimeSec;
-		//UINT8 i, ubCount;
-		//UINT8 cnt;
-		//INT8 bDaysAhead;
-
-		/*
-		//if we need to add more array elements for the Order Array
-		if (LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size() <= LaptopSaveInfo.usNumberOfBobbyRayOrderUsed)
-		{
-			LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.push_back(BobbyRayOrderStruct{});
-			Assert(LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size() <= UINT8_MAX);
-		}
-
-		for (cnt = 0; cnt < LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray.size(); cnt++)
-		{
-			//get an empty element in the array
-			if( !LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].fActive )
-				break;
-		}*/
-
-		//gets reset when the confirm order graphic disappears
 		gfCanAcceptOrder = FALSE;
-
-		//pBobbyRayPurchase = new BobbyRayOrderStruct{};
-
-
-
-		/*
-		ubCount = 0;
-		for(i=0; i<MAX_PURCHASE_AMOUNT; i++)
-		{
-			//if the item was purchased
-			if( BobbyRayPurchases[ i ].ubNumberPurchased )
-			{
-				//copy the purchases into the struct that will be added to the queue
-				LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[cnt].BobbyRayPurchase[ubCount] = BobbyRayPurchases[i];
-				ubCount ++;
-			}
-		}
-
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].ubNumberPurchases = ubCount;
-		LaptopSaveInfo.BobbyRayOrdersOnDeliveryArray[ cnt ].fActive = TRUE;
-		LaptopSaveInfo.usNumberOfBobbyRayOrderUsed++;*/
 
 		//add the delivery
 		AddNewBobbyRShipment( BobbyRayPurchases, gbSelectedCity, gubSelectedLight, TRUE, CalcPackageTotalWeight() );
-
-		/*
-		//get the length of time to receive the shipment
-		bDaysAhead = CalculateOrderDelay( gubSelectedLight );
-
-		//AddStrategicEvent( EVENT_BOBBYRAY_PURCHASE, uiResetTimeSec, cnt);
-		AddFutureDayStrategicEvent( EVENT_BOBBYRAY_PURCHASE, (8 + Random(4) ) * 60, cnt, bDaysAhead );*/
-
 	}
 
 	//Add the transaction to the finance page
@@ -1850,7 +1682,8 @@ void AddJohnsGunShipment()
 	//AddFutureDayStrategicEvent( EVENT_BOBBYRAY_PURCHASE, (8 + Random(4) ) * 60, cnt, bDaysAhead );
 
 	//add the delivery ( weight is not needed as it will not be displayed )
-	AddNewBobbyRShipment( Temp, BR_DRASSEN, bDaysAhead, FALSE, 0 );
+	auto dest = GCM->getPrimaryShippingDestination();
+	AddNewBobbyRShipment( Temp, dest->locationId, bDaysAhead, FALSE, 0 );
 }
 
 
