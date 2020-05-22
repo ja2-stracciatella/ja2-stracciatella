@@ -282,6 +282,18 @@ add_custom_target(run-${JA2_BINARY}
     DEPENDS "${JA2_BINARY}"
 )
 
+add_custom_target(run-${JA2_BINARY}-editor
+    COMMAND "$<TARGET_FILE:${JA2_BINARY}>" -editor
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:${JA2_BINARY}>"
+    DEPENDS "${JA2_BINARY}"
+)
+
+add_custom_target(run-${JA2_BINARY}-unittests
+    COMMAND "$<TARGET_FILE:${JA2_BINARY}>" -unittests
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:${JA2_BINARY}>"
+    DEPENDS "${JA2_BINARY}"
+)
+
 if (TARGET "${LAUNCHER_BINARY}")
     add_custom_target(run-${LAUNCHER_BINARY}
         COMMAND "$<TARGET_FILE:${LAUNCHER_BINARY}>"
