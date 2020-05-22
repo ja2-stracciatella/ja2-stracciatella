@@ -26,6 +26,9 @@
 #include "RustInterface.h"
 #include "ShippingDestinationModel.h"
 #include "WeaponModels.h"
+#include "army/ArmyCompositionModel.h"
+#include "army/GarrisonGroupModel.h"
+#include "army/PatrolGroupModel.h"
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
 #include "strategic/BloodCatPlacementsModel.h"
@@ -39,6 +42,7 @@
 #include "tactical/NpcActionParamsModel.h"
 
 #include "Logger.h"
+#include "Strategic_AI.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -230,6 +234,10 @@ DefaultContentManager::~DefaultContentManager()
 	m_weaponMap.clear();
 	m_itemMap.clear();
 	m_mapItemReplacements.clear();
+
+	m_armyCompositions.clear();
+	m_garrisonGroups.clear();
+	m_patrolGroups.clear();
 
 	for (const CalibreModel* calibre : m_calibres)
 	{
@@ -919,10 +927,58 @@ const std::vector<std::vector<const WeaponModel*> > & DefaultContentManager::get
 	return mExtendedGunChoice;
 }
 
-bool DefaultContentManager::loadArmyGunChoice()
+const std::vector<GARRISON_GROUP>& DefaultContentManager::getGarrisonGroups() const
 {
-	return readWeaponTable("army-gun-choice-normal.json", mNormalGunChoice)
-		&& readWeaponTable("army-gun-choice-extended.json", mExtendedGunChoice);
+	return m_garrisonGroups;
+}
+
+const std::vector<PATROL_GROUP>& DefaultContentManager::getPatrolGroups() const
+{
+	return m_patrolGroups;
+}
+
+const std::vector<ARMY_COMPOSITION>& DefaultContentManager::getArmyCompositions() const
+{
+	return m_armyCompositions;
+}
+
+bool DefaultContentManager::loadArmyData()
+{
+	readWeaponTable("army-gun-choice-normal.json", mNormalGunChoice);
+	readWeaponTable("army-gun-choice-extended.json", mExtendedGunChoice);
+
+	std::shared_ptr<rapidjson::Document> jsonAC(readJsonDataFile("army-compositions.json"));
+	auto armyCompModels = ArmyCompositionModel::deserialize(*jsonAC);
+	ArmyCompositionModel::validateData(armyCompModels);
+
+	std::map<std::string, uint8_t> mapping;
+	for (auto& armyComp : armyCompModels)
+	{
+		mapping[armyComp->name] = armyComp->compositionId;
+		m_armyCompositions.push_back(armyComp->toArmyComposition());
+	}
+	armyCompModels.clear();
+
+	std::shared_ptr<rapidjson::Document> jsonGG(readJsonDataFile("army-garrison-groups.json"));
+	for (auto& element : jsonGG->GetArray())
+	{
+		auto obj = JsonObjectReader(element);
+		m_garrisonGroups.push_back(
+			GarrisonGroupModel::deserialize(obj, mapping)
+		);
+	}
+	GarrisonGroupModel::validateData(m_garrisonGroups);
+
+	std::shared_ptr<rapidjson::Document> jsonPG(readJsonDataFile("army-patrol-groups.json"));
+	for (auto& element : jsonPG->GetArray())
+	{
+		m_patrolGroups.push_back(
+			PatrolGroupModel::deserialize(element)
+		);
+	}
+	PatrolGroupModel::validateData(m_patrolGroups);
+
+	return true;
 }
 
 void DefaultContentManager::loadStringRes(const char *name, std::vector<const ST::string*> &strings) const
@@ -964,7 +1020,7 @@ bool DefaultContentManager::loadGameData()
 		&& loadAmmoTypes()
 		&& loadMagazines()
 		&& loadWeapons()
-		&& loadArmyGunChoice()
+		&& loadArmyData()
 		&& loadMusic();
 
 	for (const ItemModel *item : m_items)
