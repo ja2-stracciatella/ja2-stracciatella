@@ -10,7 +10,7 @@ ShippingDestinationModel::ShippingDestinationModel(uint8_t locationId_,
 		chargeRateOverNight(chargeRateOverNight_), chargeRate2Days(chargeRate2Days_), chargeRateStandard(chargeRateStandard_),
 		flowersNextDayDeliveryCost(flowersNextDayDeliveryCost_), flowersWhenItGetsThereCost(flowersWhenItGetsThereCost_),
 		canDeliver(canDeliver_), isPrimary(isPrimary_),
-		deliverySectorId(deliverySectorId_), deliverySectorX(SECTORX(deliverySectorId_)), deliverySectorY(SECTORY(deliverySectorId_)),
+		deliverySectorX(SECTORX(deliverySectorId_)), deliverySectorY(SECTORY(deliverySectorId_)),
 		deliverySectorZ(deliverySectorZ_), deliverySectorGridNo(deliverySectorGridNo_),
 		emailOffset(emailOffset_), emailLength(emailLength_) {}
 

@@ -33,7 +33,7 @@ public:
 
 	const bool canDeliver;
 	const bool isPrimary;
-	const uint8_t deliverySectorId;
+
 	const uint8_t deliverySectorX;
 	const uint8_t deliverySectorY;
 	const uint8_t deliverySectorZ;

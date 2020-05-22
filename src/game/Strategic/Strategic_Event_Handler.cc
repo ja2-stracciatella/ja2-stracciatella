@@ -70,7 +70,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	}
 
 	UINT16 usStandardMapPos = dest->deliverySectorGridNo;
-	auto destSector = StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(dest->deliverySectorId)];
+	auto destSector = StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(dest->getDeliverySector())];
 	if (CheckFact(FACT_NEXT_PACKAGE_CAN_BE_LOST, 0))
 	{
 		SetFactFalse(FACT_NEXT_PACKAGE_CAN_BE_LOST);
@@ -981,7 +981,7 @@ static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinatio
 	UINT32	i;
 
 	//if the player doesnt "own" the sector,
-	if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(shippingDest->deliverySectorId)].fEnemyControlled)
+	if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(shippingDest->getDeliverySector())].fEnemyControlled)
 	{
 		//the items disappear
 		gpNewBobbyrShipments[ ubOrderNum ].fActive = FALSE;
