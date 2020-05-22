@@ -39,6 +39,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "ShippingDestinationModel.h"
 
 #include <stdexcept>
 #include <vector>
@@ -312,9 +313,10 @@ void SetSoldierExitHelicopterInsertionData(SOLDIERTYPE* const s)
 {
 	if (s->bInSector) return;
 
-	if (s->sSectorX == BOBBYR_SHIPPING_DEST_SECTOR_X &&
-		s->sSectorY == BOBBYR_SHIPPING_DEST_SECTOR_Y &&
-		s->bSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z)
+	auto shippingDest = GCM->getPrimaryShippingDestination();
+	if (s->sSectorX == shippingDest->deliverySectorX &&
+		s->sSectorY == shippingDest->deliverySectorY &&
+		s->bSectorZ == shippingDest->deliverySectorZ)
 	{
 		// This is Drassen, make insertion gridno specific
 		s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;

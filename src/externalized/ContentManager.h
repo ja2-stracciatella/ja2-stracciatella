@@ -24,6 +24,7 @@ class MovementCostsModel;
 class NpcActionParamsModel;
 class NpcPlacementModel;
 class SamSiteModel;
+class ShippingDestinationModel;
 class TownModel;
 struct AmmoTypeModel;
 struct CalibreModel;
@@ -111,6 +112,10 @@ public:
 	virtual const DealerInventory* getDealerInventory(int dealerId) const = 0;
 	virtual const DealerInventory* getBobbyRayNewInventory() const = 0;
 	virtual const DealerInventory* getBobbyRayUsedInventory() const = 0;
+	virtual const std::vector<const ShippingDestinationModel*>& getShippingDestinations() const = 0;
+	virtual const ShippingDestinationModel* getShippingDestination(uint8_t locationId) const = 0;
+	virtual const ShippingDestinationModel* getPrimaryShippingDestination() const = 0;
+	virtual const ST::string* getShippingDestinationName(uint8_t index) const = 0;
 
 	virtual const ST::string* getMusicForMode(MusicMode mode) const = 0;
 

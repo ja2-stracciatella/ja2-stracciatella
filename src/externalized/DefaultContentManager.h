@@ -134,6 +134,10 @@ public:
 	virtual const DealerInventory* getDealerInventory(int dealerId) const override;
 	virtual const DealerInventory* getBobbyRayNewInventory() const override;
 	virtual const DealerInventory* getBobbyRayUsedInventory() const override;
+	virtual const std::vector<const ShippingDestinationModel*>& getShippingDestinations() const override;
+	virtual const ShippingDestinationModel* getShippingDestination(uint8_t locationId) const override;
+	virtual const ShippingDestinationModel* getPrimaryShippingDestination() const override;
+	virtual const ST::string* getShippingDestinationName(uint8_t index) const override;
 
 	virtual const NpcActionParamsModel* getNpcActionParams(uint16_t actionCode) const override;
 	virtual const FactParamsModel* getFactParams(Fact fact) const override;
@@ -193,6 +197,9 @@ protected:
 	std::vector<const DealerInventory*> m_dealersInventory;
 	const DealerInventory *m_bobbyRayNewInventory;
 	const DealerInventory *m_bobbyRayUsedInventory;
+
+	std::vector<const ShippingDestinationModel*> m_shippingDestinations;
+	std::vector<const ST::string*> m_shippingDestinationNames;
 
 	std::map<Fact, const FactParamsModel*> m_factParams;
 	std::map<uint16_t, const NpcActionParamsModel*> m_npcActionParams;

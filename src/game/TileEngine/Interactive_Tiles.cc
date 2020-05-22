@@ -37,6 +37,9 @@
 #include "UILayout.h"
 
 #include "Soldier.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
+#include "ShippingDestinationModel.h"
 
 #define MAX_INTTILE_STACK 10
 
@@ -123,14 +126,15 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 		bool did_missing_quote = false;
 		if (s->bTeam == OUR_TEAM)
 		{
-			if (grid_no        == BOBBYR_SHIPPING_DEST_GRIDNO        &&
-					gWorldSectorX  == BOBBYR_SHIPPING_DEST_SECTOR_X      &&
-					gWorldSectorY  == BOBBYR_SHIPPING_DEST_SECTOR_Y      &&
-					gbWorldSectorZ == BOBBYR_SHIPPING_DEST_SECTOR_Z      &&
+			auto primaryDest = GCM->getPrimaryShippingDestination();
+			if (grid_no        == primaryDest->deliverySectorGridNo  &&
+			    gWorldSectorX  == primaryDest->deliverySectorX       &&
+			    gWorldSectorY  == primaryDest->deliverySectorY       &&
+			    gbWorldSectorZ == primaryDest->deliverySectorZ       &&
 					CheckFact(FACT_PABLOS_STOLE_FROM_LATEST_SHIPMENT, 0) &&
 					!CheckFact(FACT_PLAYER_FOUND_ITEMS_MISSING, 0))
 			{
-				SayQuoteFromNearbyMercInSector(BOBBYR_SHIPPING_DEST_GRIDNO, 3, QUOTE_STUFF_MISSING_DRASSEN);
+				SayQuoteFromNearbyMercInSector(grid_no, 3, QUOTE_STUFF_MISSING_DRASSEN);
 				did_missing_quote = true;
 			}
 		}

@@ -21,6 +21,10 @@
 #include "PreBattle_Interface.h"
 #include "Map_Screen_Interface.h"
 #include "Tactical_Save.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
+#include "ShippingDestinationModel.h"
+
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -81,7 +85,8 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 		}
 
 		// check if we ever grabbed drassen airport, if so, set fact we can go to BR's
-		if( ( sMapX == BOBBYR_SHIPPING_DEST_SECTOR_X ) && ( sMapY == BOBBYR_SHIPPING_DEST_SECTOR_Y ) )
+		auto shippingDest = GCM->getPrimaryShippingDestination();
+		if(sector == shippingDest->getDeliverySector())
 		{
 			LaptopSaveInfo.fBobbyRSiteCanBeAccessed = TRUE;
 
