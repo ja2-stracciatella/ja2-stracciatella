@@ -38,6 +38,7 @@
 #include "strategic/TownModel.h"
 #include "strategic/MovementCostsModel.h"
 #include "strategic/NpcPlacementModel.h"
+#include "strategic/UndergroundSectorModel.h"
 #include "tactical/MapItemReplacementModel.h"
 #include "tactical/NpcActionParamsModel.h"
 
@@ -220,6 +221,16 @@ void DefaultContentManager::addExtraResources(const ST::string &baseDir, const S
 	}
 }
 
+template <class T> 
+void clearElements(std::vector<const T*> vec)
+{
+	for (auto elem : vec)
+	{
+		delete elem;
+	}
+	vec.clear();
+}
+
 DefaultContentManager::~DefaultContentManager()
 {
 	m_libraryDB.reset(nullptr);
@@ -282,6 +293,8 @@ DefaultContentManager::~DefaultContentManager()
 	m_samSites.clear();
 	m_towns.clear();
 	m_npcPlacements.clear();
+
+	clearElements(m_undergroundSectors);
 
 	delete m_movementCosts;
 }
@@ -1208,6 +1221,15 @@ bool DefaultContentManager::loadStrategicLayerData() {
 	loadStringRes("strings/strategic-map-town-names", m_townNames);
 	loadStringRes("strings/strategic-map-town-name-locatives", m_townNameLocatives);
 
+	json = readJsonDataFile("strategic-map-underground-sectors.json");
+	for (auto& element : json->GetArray())
+	{
+		auto ugSector = UndergroundSectorModel::deserialize(element);
+		m_undergroundSectors.push_back(ugSector);
+	}
+	UndergroundSectorModel::validateData(m_undergroundSectors);
+	delete json;
+
 	json = readJsonDataFile("strategic-map-movement-costs.json");
 	m_movementCosts = MovementCostsModel::deserialize(*json);
 
@@ -1306,6 +1328,11 @@ const ST::string DefaultContentManager::getTownLocative(uint8_t townId) const
 		return ST::null;
 	}
 	return *m_townNameLocatives[townId];
+}
+
+const std::vector<const UndergroundSectorModel*>& DefaultContentManager::getUndergroundSectors() const
+{
+	return m_undergroundSectors;
 }
 
 const MovementCostsModel* DefaultContentManager::getMovementCosts() const

@@ -30,6 +30,7 @@ class PatrolGroupModel;
 class SamSiteModel;
 class ShippingDestinationModel;
 class TownModel;
+class UndergroundSectorModel;
 struct AmmoTypeModel;
 struct CalibreModel;
 struct MagazineModel;
@@ -139,6 +140,8 @@ public:
 	virtual const std::map<int8_t, const TownModel*>& getTowns() const = 0;
 	virtual const ST::string getTownName(uint8_t townId) const = 0;
 	virtual const ST::string getTownLocative(uint8_t townId) const = 0;
+	virtual const std::vector <const UndergroundSectorModel*> & getUndergroundSectors() const = 0;
+
 	virtual const MovementCostsModel* getMovementCosts() const = 0;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const = 0;
 	
