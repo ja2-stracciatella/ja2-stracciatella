@@ -157,7 +157,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	mNormalGunChoice(ARMY_GUN_LEVELS),
 	mExtendedGunChoice(ARMY_GUN_LEVELS),
 	m_dealersInventory(NUM_ARMS_DEALERS),
-	m_libraryDB(LibraryDB_create())
+	m_vfs(Vfs_create())
 {
 	/*
 	 * Searching actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
@@ -183,42 +183,54 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_movementCosts = NULL;
 }
 
-/** Get list of game resources. */
-std::vector<ST::string> DefaultContentManager::getListOfGameResources() const
+void DefaultContentManager::init()
 {
-	std::vector<ST::string> libraries = GetResourceLibraries(m_dataDir);
-	return libraries;
-}
-
-void DefaultContentManager::initGameResouces(const ST::string &stracciatellaHomeDir, const std::vector<ST::string> &libraries)
-{
-	for (auto it = libraries.begin(); it != libraries.end(); ++it)
+	SLOGI(ST::format("Vfs with stracciatella dir ({}) '{}'", VFS_ORDER_STRACCIATELLA, m_externalizedDataPath));
+	if (!Vfs_addDir(m_vfs.get(), VFS_ORDER_STRACCIATELLA, m_externalizedDataPath.c_str()))
 	{
-		if (!LibraryDB_push(m_libraryDB.get(), m_dataDir.c_str(), it->c_str()))
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("DefaultContentManager::init '{}': {}", m_externalizedDataPath, err.get()));
+		throw std::runtime_error("Failed to add stracciatella dir");
+	}
+
+	SLOGI(ST::format("Vfs with vanilla dir ({}) '{}'", VFS_ORDER_VANILLA, m_dataDir));
+	if (!Vfs_addDir(m_vfs.get(), VFS_ORDER_VANILLA, m_dataDir.c_str()))
+	{
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("DefaultContentManager::init '{}': {}", m_dataDir, err.get()));
+		throw std::runtime_error("Failed to add vanilla data dir");
+	}
+
+	std::vector<ST::string> slfs = FindFilesInDir(m_dataDir, "slf", true, false);
+	for (const ST::string& slf : slfs)
+	{
+		SLOGI(ST::format("Vfs with vanilla slf ({}) '{}'", VFS_ORDER_VANILLA, slf));
+		if (!Vfs_addSlf(m_vfs.get(), VFS_ORDER_VANILLA, slf.c_str()))
 		{
-			ST::string message = FormattedString(
-				"Library '%s' is not found in folder '%s'.\n\nPlease make sure that '%s' contains files of the original game.  You can change this path by editing file '%s/ja2.json'.\n",
-				it->c_str(), m_dataDir.c_str(), m_gameResRootPath.c_str(), stracciatellaHomeDir.c_str());
-			throw LibraryFileNotFoundException(message);
+			RustPointer<char> err{getRustError()};
+			SLOGE(ST::format("DefaultContentManager::init '{}': {}", slf, err.get()));
+			throw std::runtime_error("Failed to add vanilla slf");
 		}
 	}
 }
 
-void DefaultContentManager::addExtraResources(const ST::string &baseDir, const ST::string &library)
+void DefaultContentManager::initOptionalFreeEditorSlf(const ST::string &path)
 {
-	if (!LibraryDB_push(m_libraryDB.get(), baseDir.c_str(), library.c_str())) {
-		RustPointer<char> error(getRustError());
-		ST::string message = FormattedString(
-			"Library '%s' is not found in folder '%s': %s",
-			library.c_str(), baseDir.c_str(), error.get());
-		throw LibraryFileNotFoundException(message);
+	if (!Fs_exists(path.c_str()))
+	{
+		SLOGW(ST::format("Free editor.slf not found in '{}'", path));
+		return;
+	}
+	SLOGI(ST::format("Vfs with fallback slf ({}) '{}'", VFS_ORDER_FALLBACK, path));
+	if (!Vfs_addSlf(m_vfs.get(), VFS_ORDER_FALLBACK, path.c_str()))
+	{
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("DefaultContentManager::initOptionalFreeEditorSlf '{}': {}", path, err.get()));
 	}
 }
 
 DefaultContentManager::~DefaultContentManager()
 {
-	m_libraryDB.reset(nullptr);
-
 	for (const ItemModel* item : m_items)
 	{
 		delete item;
@@ -412,52 +424,26 @@ void DefaultContentManager::deleteTempFile(const char* filename) const
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
 SGPFile* DefaultContentManager::openGameResForReading(const char* filename) const
 {
-	RustPointer<File> file = FileMan::openFileCaseInsensitive(m_externalizedDataPath, filename, FILE_OPEN_READ);
-	if (file)
 	{
-		return FileMan::getSGPFileFromFile(file.release());
-	}
-	else
-	{
-		file = FileMan::openFileForReading(filename);
-		if (!file)
+		RustPointer<File> file = FileMan::openFileForReading(filename);
+		if (file)
 		{
-			// failed to open file in the local directory
-			// let's try Data
-			file = FileMan::openFileCaseInsensitive(m_dataDir, filename, FILE_OPEN_READ);
-			if (!file)
-			{
-				// failed to open in the data dir
-				// let's try libraries
+			SLOGD(ST::format("Opened file (current dir): '{}'", filename));
+			return FileMan::getSGPFileFromFile(file.release());
+		}
+	}
 
-				RustPointer<LibraryFile> libFile(LibraryFile_open(m_libraryDB.get(), filename));
-				if (libFile)
-				{
-					SLOGD("Opened file (from library ): %s", filename);
-					SGPFile *file = new SGPFile{};
-					file->flags = SGPFILE_NONE;
-					file->u.lib = libFile.release();
-					return file;
-				}
-			}
-			else
-			{
-				SLOGD("Opened file (from data dir): %s", filename);
-			}
-		}
-		else
-		{
-			SLOGD("Opened file (current dir  ): %s", filename);
-		}
-	}
-	if (!file)
+	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename));
+	if (!vfile)
 	{
-		RustPointer<char> err(getRustError());
-		char buf[128];
-		snprintf(buf, sizeof(buf), "DefaultContentManager::openGameResForReading: %s", err.get());
-		throw std::runtime_error(buf);
+		RustPointer<char> err{getRustError()};
+		throw std::runtime_error(ST::format("openGameResForReading: {}", err.get()).to_std_string());
 	}
-	return FileMan::getSGPFileFromFile(file.release());
+	SLOGD(ST::format("Opened file (vfs): '{}'", filename));
+	SGPFile *file = new SGPFile{};
+	file->flags = SGPFILE_NONE;
+	file->u.vfile = vfile.release();
+	return file;
 }
 
 /** Open user's private file (e.g. saved game, settings) for reading. */
@@ -496,8 +482,8 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 			file.reset(File_open(path, FILE_OPEN_READ));
 			if (!file)
 			{
-				RustPointer<LibraryFile> libFile(LibraryFile_open(m_libraryDB.get(), filename));
-				return static_cast<bool>(libFile);
+				RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename));
+				return static_cast<bool>(vfile);
 			}
 		}
 

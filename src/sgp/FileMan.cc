@@ -63,31 +63,50 @@ void FileClose(SGPFile* f)
 	}
 	else
 	{
-		LibraryFile_close(f->u.lib);
+		VfsFile_close(f->u.vfile);
 	}
 	delete f;
 }
 
 void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 {
-	BOOLEAN ret;
+	bool success;
 	if (f->flags & SGPFILE_REAL)
 	{
-		ret = File_readExact(f->u.file, reinterpret_cast<uint8_t*>(pDest), uiBytesToRead);
+		success = File_readExact(f->u.file, reinterpret_cast<uint8_t*>(pDest), uiBytesToRead);
 	}
 	else
 	{
-		ret = LibraryFile_read(f->u.lib, static_cast<uint8_t *>(pDest), uiBytesToRead);
+		success = VfsFile_readExact(f->u.vfile, static_cast<uint8_t *>(pDest), uiBytesToRead);
 	}
 
-	if (!ret) throw std::runtime_error("Reading from file failed");
+	if (!success)
+	{
+		RustPointer<char> err{getRustError()};
+		SLOGE("FileRead: %s", err.get());
+		throw std::runtime_error("Reading from file failed");
+	}
 }
 
 
 void FileWrite(SGPFile* const f, void const* const pDest, size_t const uiBytesToWrite)
 {
-	if (!(f->flags & SGPFILE_REAL)) throw std::logic_error("Tried to write to library file");
-	if (!File_writeAll(f->u.file, reinterpret_cast<const uint8_t*>(pDest), uiBytesToWrite)) throw std::runtime_error("Writing to file failed");
+	bool success;
+	if (f->flags & SGPFILE_REAL)
+	{
+		success = File_writeAll(f->u.file, reinterpret_cast<const uint8_t*>(pDest), uiBytesToWrite);
+	}
+	else
+	{
+		success = VfsFile_writeAll(f->u.vfile, reinterpret_cast<const uint8_t *>(pDest), uiBytesToWrite);
+	}
+
+	if (!success)
+	{
+		RustPointer<char> err{getRustError()};
+		SLOGE("FileWrite: %s", err.get());
+		throw std::runtime_error("Writing to file failed");
+	}
 }
 
 static int64_t SGPSeekRW(SDL_RWops *context, int64_t offset, int whence)
@@ -179,7 +198,12 @@ void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 	}
 	else
 	{
-		success = LibraryFile_seek(f->u.lib, distance, how);
+		switch (how)
+		{
+			case FILE_SEEK_FROM_START: success = distance >= 0 && VfsFile_seekFromStart(f->u.vfile, static_cast<uint64_t>(distance), nullptr); break;
+			case FILE_SEEK_FROM_END:   success = VfsFile_seekFromEnd(f->u.vfile, distance, nullptr); break;
+			default:                   success = VfsFile_seekFromCurrent(f->u.vfile, distance, nullptr); break;
+		}
 	}
 	if (!success) throw std::runtime_error("Seek in file failed");
 }
@@ -187,25 +211,59 @@ void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
 
 INT32 FileGetPos(const SGPFile* f)
 {
-	return f->flags & SGPFILE_REAL ? (INT32)File_seekFromCurrent(f->u.file, 0) : (INT32)LibraryFile_getPosition(f->u.lib);
+	bool success;
+	uint64_t position = 0;
+	if (f->flags & SGPFILE_REAL)
+	{
+		position = File_seekFromCurrent(f->u.file, 0);
+		success = position != UINT64_MAX;
+	}
+	else
+	{
+		success = VfsFile_seekFromCurrent(f->u.vfile, 0, &position);
+	}
+
+	if (!success)
+	{
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("FileGetPos: {}", err.get()));
+		throw std::runtime_error("Getting file position failed");
+	}
+	if (position > INT32_MAX)
+	{
+		SLOGW(ST::format("FileGetPos: truncating from {} to {}", position, INT32_MAX));
+		position = INT32_MAX;
+	}
+	return static_cast<INT32>(position);
 }
 
 
 UINT32 FileGetSize(const SGPFile* f)
 {
+	bool success;
+	uint64_t len = 0;
 	if (f->flags & SGPFILE_REAL)
 	{
-		uint64_t len = File_len(f->u.file);
-		if (len == UINT64_MAX)
-		{
-			throw std::runtime_error("Getting file size failed");
-		}
-		return (UINT32)len;
+		len = File_len(f->u.file);
+		success = len != UINT64_MAX;
 	}
 	else
 	{
-		return (UINT32)LibraryFile_getSize(f->u.lib);
+		success = VfsFile_len(f->u.vfile, &len);
 	}
+
+	if (!success)
+	{
+		RustPointer<char> err{getRustError()};
+		SLOGE(ST::format("FileGetSize: {}", err.get()));
+		throw std::runtime_error("Getting file size failed");
+	}
+	if (len > UINT32_MAX)
+	{
+		SLOGW(ST::format("FileGetSize: truncating from {} to {}", len, UINT32_MAX));
+		len = UINT32_MAX;
+	}
+	return static_cast<UINT32>(len);
 }
 
 

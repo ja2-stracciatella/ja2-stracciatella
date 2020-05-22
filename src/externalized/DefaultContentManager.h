@@ -6,6 +6,7 @@
 #include "ContentMusic.h"
 #include "IGameDataLoader.h"
 #include "StringEncodingTypes.h"
+#include "RustInterface.h"
 
 #include "rapidjson/document.h"
 #include <string_theory/string>
@@ -14,8 +15,13 @@
 #include <stdexcept>
 #include <vector>
 
+enum : int32_t {
+	VFS_ORDER_MOD = 100,
+	VFS_ORDER_STRACCIATELLA = 200,
+	VFS_ORDER_VANILLA = 300,
+	VFS_ORDER_FALLBACK = 400,
+};
 
-struct LibraryDB;
 
 class DefaultContentManager : public ContentManager, public IGameDataLoader
 {
@@ -28,12 +34,10 @@ public:
 
 	virtual ~DefaultContentManager() override;
 
-	/** Get list of game resources. */
-	virtual std::vector<ST::string> getListOfGameResources() const;
-
-	/** Initialize game resources. */
-	virtual void initGameResouces(const ST::string &stracciatellaHomeDir, const std::vector<ST::string> &libraries);
-	virtual void addExtraResources(const ST::string &baseDir, const ST::string &library);
+	/// Called after construction.
+	/// @throw runtime_error
+	virtual void init();
+	void initOptionalFreeEditorSlf(const ST::string &path);
 
 	/** Load the game data. */
 	bool loadGameData();
@@ -209,7 +213,7 @@ protected:
 	const MovementCostsModel *m_movementCosts;
 	std::map<uint8_t, const NpcPlacementModel*> m_npcPlacements;
 
-	RustPointer<LibraryDB> m_libraryDB;
+	RustPointer<Vfs> m_vfs;
 
 	bool loadWeapons();
 	bool loadMagazines();

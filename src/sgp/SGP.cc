@@ -474,21 +474,12 @@ int main(int argc, char* argv[])
 		SLOGI("------------------------------------------------------------------------------");
 	}
 
-	std::vector<ST::string> libraries = cm->getListOfGameResources();
-	cm->initGameResouces(configFolderPath.get(), libraries);
+	cm->init();
 
-	// free editor.slf has the lowest priority (last library) and is optional
 	if(EngineOptions_shouldRunEditor(params.get()))
 	{
-		try
-		{
-			cm->addExtraResources(extraDataDir, "editor.slf");
-			SLOGI("Free editor.slf loaded from '%s'", extraDataDir.c_str());
-		}
-		catch(const LibraryFileNotFoundException& ex)
-		{
-			SLOGI("%s", ex.what());
-		}
+		RustPointer<char> path{Path_push(extraDataDir.c_str(), "editor.slf")};
+		cm->initOptionalFreeEditorSlf(path.get());
 	}
 
 	if(!cm->loadGameData())

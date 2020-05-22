@@ -9,11 +9,11 @@ pub mod file_formats;
 pub mod fs;
 pub mod guess;
 pub mod json;
-pub mod librarydb;
 pub mod logger;
 pub mod math;
 pub mod res;
 pub mod unicode;
+pub mod vfs;
 
 use std::default::Default;
 use std::path::PathBuf;
