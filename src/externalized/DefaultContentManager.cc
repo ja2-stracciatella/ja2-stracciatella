@@ -222,13 +222,23 @@ void DefaultContentManager::addExtraResources(const ST::string &baseDir, const S
 }
 
 template <class T> 
-void clearElements(std::vector<const T*> vec)
+void deleteElements(std::vector<const T*> vec)
 {
 	for (auto elem : vec)
 	{
 		delete elem;
 	}
 	vec.clear();
+}
+
+template <typename K, class V>
+void deleteElements(std::map<K, const V*> map)
+{
+	for (auto& kv : map)
+	{
+		delete kv.second;
+	}
+	map.clear();
 }
 
 DefaultContentManager::~DefaultContentManager()
@@ -268,8 +278,6 @@ DefaultContentManager::~DefaultContentManager()
 	{
 		if(inv) delete inv;
 	}
-
-	m_shippingDestinations.clear();
 	delete m_bobbyRayNewInventory;
 	delete m_bobbyRayUsedInventory;
 	delete m_impPolicy;
@@ -288,13 +296,18 @@ DefaultContentManager::~DefaultContentManager()
 		delete str;
 	}
 
-	m_bloodCatPlacements.clear();
-	m_bloodCatSpawns.clear();
-	m_samSites.clear();
-	m_towns.clear();
-	m_npcPlacements.clear();
-
-	clearElements(m_undergroundSectors);
+	deleteElements(m_bloodCatPlacements);
+	deleteElements(m_bloodCatSpawns);
+	deleteElements(m_factParams);
+	deleteElements(m_npcActionParams);
+	deleteElements(m_npcPlacements);
+	deleteElements(m_samSites);
+	deleteElements(m_shippingDestinations);
+	deleteElements(m_shippingDestinationNames);
+	deleteElements(m_towns);
+	deleteElements(m_townNames);
+	deleteElements(m_townNameLocatives);
+	deleteElements(m_undergroundSectors);
 
 	delete m_movementCosts;
 }
@@ -1192,6 +1205,7 @@ bool DefaultContentManager::loadStrategicLayerData() {
 			BloodCatPlacementsModel::deserialize(obj)
 		);
 	}
+	delete json;
 
 	json = readJsonDataFile("strategic-bloodcat-spawns.json");
 	for (auto& element : json->GetArray()) 
@@ -1201,6 +1215,7 @@ bool DefaultContentManager::loadStrategicLayerData() {
 			BloodCatSpawnsModel::deserialize(obj)
 		);
 	}
+	delete json;
 
 	json = readJsonDataFile("strategic-fact-params.json");
 	for (auto& element : json->GetArray())
@@ -1225,6 +1240,7 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		auto town = TownModel::deserialize(element);
 		m_towns.insert(std::make_pair(town->townId, town));
 	}
+	delete json;
 	
 	loadStringRes("strings/strategic-map-town-names", m_townNames);
 	loadStringRes("strings/strategic-map-town-name-locatives", m_townNameLocatives);
@@ -1240,6 +1256,7 @@ bool DefaultContentManager::loadStrategicLayerData() {
 
 	json = readJsonDataFile("strategic-map-movement-costs.json");
 	m_movementCosts = MovementCostsModel::deserialize(*json);
+	delete json;
 
 	json = readJsonDataFile("strategic-map-npc-placements.json");
 	for (auto& element : json->GetArray())
@@ -1247,6 +1264,7 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		auto placement = NpcPlacementModel::deserialize(element);
 		m_npcPlacements.insert(std::make_pair(placement->profileId, placement));
 	}
+	delete json;
 
 	return true;
 }
@@ -1303,7 +1321,7 @@ const int8_t DefaultContentManager::findSamIDBySector(uint8_t sectorId) const
 	{
 		if (m_samSites[i]->sectorId == sectorId)
 		{
-			return i;
+			return static_cast<int8_t>(i);
 		}
 	}
 	return -1;
