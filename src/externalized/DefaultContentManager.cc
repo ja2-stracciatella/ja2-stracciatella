@@ -1202,6 +1202,14 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		);
 	}
 
+	json = readJsonDataFile("strategic-fact-params.json");
+	for (auto& element : json->GetArray())
+	{
+		auto params = FactParamsModel::deserialize(element);
+		m_factParams[params->fact] = params;
+	}
+	delete json;
+
 	json = readJsonDataFile("strategic-map-sam-sites.json");
 	for (auto& element : json->GetArray())
 	{
