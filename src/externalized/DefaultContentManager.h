@@ -210,9 +210,12 @@ protected:
 
 	std::map<Fact, const FactParamsModel*> m_factParams;
 	std::map<uint16_t, const NpcActionParamsModel*> m_npcActionParams;
+	std::map<uint8_t, const NpcPlacementModel*> m_npcPlacements;
 
 	const IMPPolicy *m_impPolicy;
 	const GamePolicy *m_gamePolicy;
+
+	const MovementCostsModel* m_movementCosts;
 
 	std::vector<const BloodCatPlacementsModel*> m_bloodCatPlacements;
 	std::vector<const BloodCatSpawnsModel*> m_bloodCatSpawns;
@@ -221,8 +224,7 @@ protected:
 	std::vector<const ST::string*> m_townNames;
 	std::vector<const ST::string*> m_townNameLocatives;
 	std::vector<const UndergroundSectorModel*> m_undergroundSectors;
-	const MovementCostsModel *m_movementCosts;
-	std::map<uint8_t, const NpcPlacementModel*> m_npcPlacements;
+
 
 	RustPointer<LibraryDB> m_libraryDB;
 
