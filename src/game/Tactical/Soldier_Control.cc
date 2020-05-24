@@ -8109,7 +8109,7 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 	if (pSoldier->uiStatusFlags & SOLDIER_ENEMY)
 	{
 		INT8 bPanicTrigger = ClosestPanicTrigger(pSoldier);
-		if (bPanicTrigger != -1 && !gTacticalStatus.bPanicTriggerIsAlarm[bPanicTrigger] && gTacticalStatus.the_chosen_one == pSoldier)
+		if (!gTacticalStatus.bPanicTriggerIsAlarm[bPanicTrigger] && gTacticalStatus.the_chosen_one == pSoldier)
 		{
 			// replace this guy as the chosen one!
 			gTacticalStatus.the_chosen_one = NULL;

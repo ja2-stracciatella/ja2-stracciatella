@@ -2480,7 +2480,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 
 		bPanicTrigger = ClosestPanicTrigger( pSoldier );
 		// if it's an alarm trigger and team is alerted, ignore it
-		if ( bPanicTrigger != -1 && !(gTacticalStatus.bPanicTriggerIsAlarm[ bPanicTrigger ] && gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition) && PythSpacesAway( pSoldier->sGridNo, gTacticalStatus.sPanicTriggerGridNo[ bPanicTrigger ] ) < 10)
+		if ( !(gTacticalStatus.bPanicTriggerIsAlarm[ bPanicTrigger ] && gTacticalStatus.Team[pSoldier->bTeam].bAwareOfOpposition) && PythSpacesAway( pSoldier->sGridNo, gTacticalStatus.sPanicTriggerGridNo[ bPanicTrigger ] ) < 10)
 		{
 			PossiblyMakeThisEnemyChosenOne( pSoldier );
 		}
