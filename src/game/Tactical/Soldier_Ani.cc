@@ -2321,7 +2321,10 @@ no_cry:
 					INT8 bPanicTrigger;
 
 					bPanicTrigger = ClosestPanicTrigger( pSoldier );
-					SetOffPanicBombs(pSoldier, bPanicTrigger);
+					if (bPanicTrigger != -1)
+					{
+						SetOffPanicBombs(pSoldier, bPanicTrigger);
+					}
 					// any AI guy has been specially given keys for this, now take them
 					// away
 					pSoldier->bHasKeys = pSoldier->bHasKeys >> 1;
