@@ -1113,7 +1113,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowZClip(UINT16* pBuffer, UINT32 uiDestPitc
 	ZPtr = (UINT8 *)pZBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
-	UINT8 PxCount, px;
+	UINT8 PxCount, px = 0;
 	UINT32 Unblitted, LSCount;
 
 
@@ -1281,7 +1281,7 @@ void Blt8BPPDataTo16BPPBufferTransShadowClip(UINT16* pBuffer, UINT32 uiDestPitch
 	DestPtr = (UINT8 *)pBuffer + (uiDestPitchBYTES*(iTempY+TopSkip)) + ((iTempX+LeftSkip)*2);
 	LineSkip=(uiDestPitchBYTES-(BlitLength*2));
 
-	UINT8 px, PxCount;
+	UINT8 PxCount, px = 0;
 	UINT32 Unblitted;
 	INT32 LSCount;
 
