@@ -1142,12 +1142,13 @@ void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 
 {
 	SGPVSurface::Lock l(guiSAVEBUFFER);
 
-	#define s(a)				((a)/2)+((a)/2)*(scale_rgb)/100
+	#define s(a)				((a) / 2) + ((a) / 2) * (scale_rgb) / 100
 
-	const int r = s(0xff&rgb>>16);
-	const int g = s(0xff&rgb>>8);
-	const int b = s(0xff&rgb);
-	const UINT16 fill_color = Get16BPPColor((b<<16)+(g<<8)+r);
+	const int r = s(0xff & rgb >> 16);
+	const int g = s(0xff & rgb >> 8);
+	const int b = s(0xff & rgb);
+
+	const UINT16 fill_color = Get16BPPColor((b << 16) + (g << 8) + r);
 
 	UINT16* const dst = l.Buffer<UINT16>();
 
@@ -1155,7 +1156,7 @@ void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 
 	{
 		for(int x = 0; x < sWidth; ++x)
 		{
-			dst[(y+sTop)*l.Pitch()/2+sLeft+x]=fill_color;
+			dst[(y + sTop)*l.Pitch() / 2 + sLeft + x] = fill_color;
 		}
 	}
 }
@@ -1163,19 +1164,22 @@ void ProgressBarBackgroundRect(const INT16 sLeft, const INT16 sTop, const INT16 
 static void PrintStat(UINT32 const change_time, UINT16 const stat_bit, INT8 const stat_val, INT16 const x, INT16 const y, INT32 const progress)
 {
 	SOLDIERTYPE const& s  = *gpSMCurrentMerc;
+
 	UINT8       const  fg =
 		s.bLife < OKLIFE                                             ? FONT_MCOLOR_DKGRAY    :
 		GetJA2Clock() >= CHANGE_STAT_RECENTLY_DURATION + change_time ? STATS_TEXT_FONT_COLOR :
 		change_time == 0                                             ? STATS_TEXT_FONT_COLOR :
 		s.usValueGoneUp & stat_bit                                   ? FONT_LTGREEN          :
 		FONT_RED;
+
 	SetFontForeground(fg);
 
 	ST::string str = ST::format("{3d}", stat_val);
 	if (gamepolicy(gui_extras))
 	{
-		ProgressBarBackgroundRect(x+16, y-2, 15*progress/100, 10, 0x514A05, progress);
+		ProgressBarBackgroundRect(x + 16, y - 2, 15 * progress / 100, 10, 0x514A05, progress);
 	}
+
 	DrawStringRight(str, x, y, SM_STATS_WIDTH, SM_STATS_HEIGHT, BLOCKFONT2);
 }
 

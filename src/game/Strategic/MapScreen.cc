@@ -662,20 +662,22 @@ static void RenderIconsForUpperLeftCornerPiece(const SOLDIERTYPE* const s)
 	}
 }
 
-static void PrintStat(UINT32 change_time, UINT16 const stat_gone_up_bit, INT8 stat_val, INT16 x, INT16 y, INT32 progress)
+static void PrintStat(UINT32 change_time, UINT16 const stat_gone_up_bit, INT8 stat_val, INT16 x, INT16 y, INT16 w, INT32 progress)
 {
 	UINT8 const colour =
 		change_time == 0 ||
 		GetJA2Clock() >= CHANGE_STAT_RECENTLY_DURATION + change_time ? CHAR_TEXT_FONT_COLOR :
 		stat_gone_up_bit != 0                                        ? FONT_LTGREEN         :
 		FONT_RED;
+
 	SetFontForeground(colour);
 
 	ST::string str = ST::format("{3d}", stat_val);
 	if (gamepolicy(gui_extras))
 	{
-		ProgressBarBackgroundRect(x+1,y-2,15*progress/100,10,0x514A05,progress);
+		ProgressBarBackgroundRect(x + 1, y - 2, w * progress / 100, 10, 0x514A05, progress);
 	}
+
 	DrawStringRight(str, x, y, STAT_WID, STAT_HEI, CHAR_FONT);
 }
 
@@ -683,18 +685,20 @@ static void PrintStat(UINT32 change_time, UINT16 const stat_gone_up_bit, INT8 st
 static void DrawCharStats(SOLDIERTYPE const& s)
 {
 	SetFontAttributes(CHAR_FONT, CHAR_TEXT_FONT_COLOR);
+
 	UINT16 const up = s.usValueGoneUp;
 	MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
-	PrintStat(s.uiChangeAgilityTime,      up & AGIL_INCREASE,     s.bAgility,      AGL_X,   AGL_Y,   p.sAgilityGain*2);
-	PrintStat(s.uiChangeDexterityTime,    up & DEX_INCREASE,      s.bDexterity,    DEX_X,   DEX_Y,   p.sDexterityGain*2);
-	PrintStat(s.uiChangeStrengthTime,     up & STRENGTH_INCREASE, s.bStrength,     STR_X,   STR_Y,   p.sStrengthGain*2);
-	PrintStat(s.uiChangeLeadershipTime,   up & LDR_INCREASE,      s.bLeadership,   LDR_X,   LDR_Y,   p.sLeadershipGain*2);
-	PrintStat(s.uiChangeWisdomTime,       up & WIS_INCREASE,      s.bWisdom,       WIS_X,   WIS_Y,   p.sWisdomGain*2);
-	PrintStat(s.uiChangeLevelTime,        up & LVL_INCREASE,      s.bExpLevel,     LVL_X,   LVL_Y,   p.sExpLevelGain*100/(350*p.bExpLevel));
-	PrintStat(s.uiChangeMarksmanshipTime, up & MRK_INCREASE,      s.bMarksmanship, MRK_X,   MRK_Y,   p.sMarksmanshipGain*4);
-	PrintStat(s.uiChangeExplosivesTime,   up & EXP_INCREASE,      s.bExplosive,    EXP_X,   EXP_Y,   p.sExplosivesGain*4);
-	PrintStat(s.uiChangeMechanicalTime,   up & MECH_INCREASE,     s.bMechanical,   MEC_X,   MEC_Y,   p.sMechanicGain*4);
-	PrintStat(s.uiChangeMedicalTime,      up & MED_INCREASE,      s.bMedical,      MED_X,   MED_Y,   p.sMedicalGain*4);
+
+	PrintStat(s.uiChangeLevelTime,        up & LVL_INCREASE,      s.bExpLevel,     LVL_X,   LVL_Y,   STAT_WID,  (100 * p.sExpLevelGain) / (350 * p.bExpLevel));
+	PrintStat(s.uiChangeAgilityTime,      up & AGIL_INCREASE,     s.bAgility,      AGL_X,   AGL_Y,   STAT_WID,   2 * p.sAgilityGain);
+	PrintStat(s.uiChangeDexterityTime,    up & DEX_INCREASE,      s.bDexterity,    DEX_X,   DEX_Y,   STAT_WID,   2 * p.sDexterityGain);
+	PrintStat(s.uiChangeStrengthTime,     up & STRENGTH_INCREASE, s.bStrength,     STR_X,   STR_Y,   STAT_WID,   2 * p.sStrengthGain);
+	PrintStat(s.uiChangeLeadershipTime,   up & LDR_INCREASE,      s.bLeadership,   LDR_X,   LDR_Y,   STAT_WID,   2 * p.sLeadershipGain);
+	PrintStat(s.uiChangeWisdomTime,       up & WIS_INCREASE,      s.bWisdom,       WIS_X,   WIS_Y,   STAT_WID,   2 * p.sWisdomGain);
+	PrintStat(s.uiChangeMarksmanshipTime, up & MRK_INCREASE,      s.bMarksmanship, MRK_X,   MRK_Y,   STAT_WID,   4 * p.sMarksmanshipGain);
+	PrintStat(s.uiChangeExplosivesTime,   up & EXP_INCREASE,      s.bExplosive,    EXP_X,   EXP_Y,   STAT_WID,   4 * p.sExplosivesGain);
+	PrintStat(s.uiChangeMechanicalTime,   up & MECH_INCREASE,     s.bMechanical,   MEC_X,   MEC_Y,   STAT_WID,   4 * p.sMechanicGain);
+	PrintStat(s.uiChangeMedicalTime,      up & MED_INCREASE,      s.bMedical,      MED_X,   MED_Y,   STAT_WID,   4 * p.sMedicalGain);
 }
 
 static void DrawString(const ST::string& str, UINT16 uiX, UINT16 uiY, SGPFont);
@@ -722,6 +726,12 @@ static void DrawCharHealth(SOLDIERTYPE const& s)
 			health_percent <  50 ? FONT_YELLOW    : // Not good
 			CHAR_TEXT_FONT_COLOR;                   // Ok
 		SetFontForeground(cur_colour);
+
+		if (gamepolicy(gui_extras))
+		{
+			INT32 progress = 2 * GetProfile(s.ubProfile).sLifeGain;
+			ProgressBarBackgroundRect(CHAR_HP_X + 1, CHAR_HP_Y - 2, CHAR_HP_WID * progress / 100, 10, 0x514A05, progress);
+		}
 
 		// Current life
 		buf = ST::format("{}", life);
