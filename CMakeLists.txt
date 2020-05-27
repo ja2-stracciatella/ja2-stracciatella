@@ -116,10 +116,10 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
 
 set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
 
-message(STATUS "Setting extra data dir to" "${EXTRA_DATA_DIR}")
+message(STATUS "Setting extra data dir to: ${EXTRA_DATA_DIR}")
 add_definitions(-DEXTRA_DATA_DIR="${EXTRA_DATA_DIR}")
 
-message(STATUS "Setting directory for libraries to" "${INSTALL_LIB_DIR}")
+message(STATUS "Setting directory for libraries to: ${INSTALL_LIB_DIR}")
 add_definitions(-DINSTALL_LIB_DIR="${INSTALL_LIB_DIR}")
 
 if (WITH_FIXMES)
