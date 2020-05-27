@@ -141,6 +141,11 @@ void SoundEnableSound(BOOLEAN fEnable)
 	gfEnableStartup = fEnable;
 }
 
+bool IsSoundEnabled()
+{
+	return gfEnableStartup;
+}
+
 
 static void    SoundInitCache(void);
 static BOOLEAN SoundInitHardware(void);

@@ -168,7 +168,7 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 	sf->frame_no = 0;
 	for (uint8_t i = 0; i < 7; i++)
 	{
-		if (audio[i].empty())
+		if (audio[i].empty() || !IsSoundEnabled())
 		{
 			sf->sounds[i] = NO_SAMPLE;
 		}

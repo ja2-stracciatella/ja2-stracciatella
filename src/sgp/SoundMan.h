@@ -108,5 +108,6 @@ UINT32 SoundGetPosition(UINT32 uiSoundID);
 
 // Allows or disallows the startup of the sound hardware.
 void SoundEnableSound(BOOLEAN fEnable);
+bool IsSoundEnabled();
 
 #endif
