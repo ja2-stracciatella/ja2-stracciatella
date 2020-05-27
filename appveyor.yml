@@ -30,6 +30,10 @@ matrix:
 clone_folder: c:\projects\ja2-stracciatella
 clone_depth: 1
 
+skip_commits:
+  # appveyor only searches for tags in the first line by default
+  message: /\[ci skip\]/
+
 for:
   -
     matrix:
