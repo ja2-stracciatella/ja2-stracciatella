@@ -39,8 +39,7 @@ WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor,
 	attachGunBarrelExtender(false),
 	m_rateOfFire(0)
 {
-	strncpy(this->internalType, internalType, sizeof(this->internalType));
-	this->internalType[sizeof(this->internalType) - 1] = '\0';
+	strlcpy(this->internalType, internalType, sizeof(this->internalType));
 	ubWeaponType         = weaponType;
 	ubWeaponClass        = NOGUNCLASS;
 	calibre              = CalibreModel::getNoCalibreObject();
