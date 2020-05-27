@@ -29,9 +29,6 @@
 #include <stdexcept>
 
 
-// Uncomment this to disable the startup of sound hardware
-//#define SOUND_DISABLE
-
 /*
  * from\to FREE PLAY STOP DEAD
  *    FREE       M
@@ -155,9 +152,7 @@ void InitializeSoundManager(void)
 
 	std::fill(std::begin(pSoundList), std::end(pSoundList), SOUNDTAG{});
 
-#ifndef SOUND_DISABLE
 	if (gfEnableStartup && SoundInitHardware()) fSoundSystemInit = TRUE;
-#endif
 
 	SoundInitCache();
 
