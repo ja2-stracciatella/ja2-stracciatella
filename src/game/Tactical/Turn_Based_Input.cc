@@ -2749,12 +2749,10 @@ static void SetBurstMode(void)
 
 static void GroupAutoReload()
 {
-	// modified from SwitchHeadGear
+	INT32 squad = CurrentSquad();
+	if (!IsSquadOnCurrentTacticalMap(squad)) return;
 
-	SOLDIERTYPE* const selectedSoldier = GetSelectedMan();
-	if (selectedSoldier == NULL) return;
-
-	FOR_EACH_IN_SQUAD(k, selectedSoldier->bAssignment)
+	FOR_EACH_IN_SQUAD(k, squad)
 	{
 		SOLDIERTYPE* s = *k;
 
@@ -2768,24 +2766,10 @@ static void GroupAutoReload()
 
 static void SwitchHeadGear(bool dayGear)
 {
-	// SOLDIERTYPE* const sel = GetSelectedMan();
-	// if (sel != NULL)
-	// {
-	//   OBJECTTYPE object;
-	//   CreateItem(NIGHTGOGGLES, 100, &object);
-	//   AutoPlaceObject(sel, &object, TRUE);
+	INT32 squad = CurrentSquad();
+	if (!IsSquadOnCurrentTacticalMap(squad)) return;
 
-	//   CreateItem(UVGOGGLES,    100, &object);
-	//   AutoPlaceObject(sel, &object, TRUE);
-
-	//   CreateItem(SUNGOGGLES,   100, &object);
-	//   AutoPlaceObject(sel, &object, TRUE);
-	// }
-
-	SOLDIERTYPE* const selectedSoldier = GetSelectedMan();
-	if (selectedSoldier == NULL) return;
-
-	FOR_EACH_IN_SQUAD(k, selectedSoldier->bAssignment)
+	FOR_EACH_IN_SQUAD(k, squad)
 	{
 		SOLDIERTYPE* s = *k;
 
