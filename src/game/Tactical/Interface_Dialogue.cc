@@ -196,7 +196,7 @@ try
 {
 	// ATE: OK, let's check the status of the Q
 	// If it has something in it....delay this until after....
-	if ( DialogueQueueIsEmptyOrSomebodyTalkingNow( ) )
+	if (DialogueQueueIsEmptyAndNobodyIsTalking())
 	{
 		gfConversationPending = FALSE;
 

@@ -218,7 +218,7 @@ void HandleDialogueEnd(FACETYPE&);
 void DialogueAdvanceSpeech(void);
 
 BOOLEAN DialogueQueueIsEmpty(void);
-BOOLEAN DialogueQueueIsEmptyOrSomebodyTalkingNow(void);
+BOOLEAN DialogueQueueIsEmptyAndNobodyIsTalking(void);
 
 
 // set up and shutdown static external NPC faces

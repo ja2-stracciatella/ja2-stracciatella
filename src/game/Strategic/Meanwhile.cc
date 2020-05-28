@@ -255,7 +255,7 @@ void CheckForMeanwhileOKStart( )
 			return;
 		}
 
-		if ( !DialogueQueueIsEmptyOrSomebodyTalkingNow( ) )
+		if (!DialogueQueueIsEmptyAndNobodyIsTalking())
 		{
 			return;
 		}

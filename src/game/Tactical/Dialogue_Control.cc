@@ -217,7 +217,7 @@ BOOLEAN DialogueQueueIsEmpty( )
 }
 
 
-BOOLEAN	DialogueQueueIsEmptyOrSomebodyTalkingNow( )
+BOOLEAN	DialogueQueueIsEmptyAndNobodyIsTalking()
 {
 	if ( gpCurrentTalkingFace != NULL )
 	{
