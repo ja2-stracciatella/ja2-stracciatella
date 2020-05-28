@@ -59,9 +59,17 @@ void Soldier::removePendingAnimation()
 	removePendingAction();
 }
 
-bool Soldier::hasPendingAction() const
+bool Soldier::hasPendingAction(UINT8 action) const
 {
-	return mSoldier->ubPendingAction != NO_PENDING_ACTION;
+	if (action == NO_PENDING_ACTION)
+	{
+		// any action is ok
+		return mSoldier->ubPendingAction != action;
+	}
+	else
+	{
+		return mSoldier->ubPendingAction == action;
+	}
 }
 
 void Soldier::setPendingAction(UINT8 action)
