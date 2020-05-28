@@ -928,7 +928,17 @@ void ExecuteOverhead(void)
 											{
 												if (EnoughPoints(pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, TRUE))
 												{
-													InteractWithOpenableStruct(*pSoldier, *pStructure, pSoldier->bPendingActionData3);
+													// avoid several problems due to a lack of global action queueing
+													if (DialogueQueueIsEmptyAndNobodyIsTalking() && gCurrentUIMode != LOCKUI_MODE && !soldier->anyoneHasPendingAction(MERC_GIVEITEM))
+													{
+														InteractWithOpenableStruct(*pSoldier, *pStructure, pSoldier->bPendingActionData3);
+													}
+													else
+													{
+														SLOGD("Aborting pending action due to other ongoing activities!");
+														fKeepMoving = FALSE;
+														soldier->removePendingAnimation();
+													}
 												}
 												else
 												{
