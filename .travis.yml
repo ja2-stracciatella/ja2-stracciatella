@@ -29,6 +29,7 @@ jobs:
             - libsdl2-dev
             - fluid
             - libfltk1.3-dev
+            - libfltk-images1.3
             - fakeroot
         coverity_scan:
           project:
@@ -151,6 +152,7 @@ addons:
     - libsdl2-dev
     - fluid
     - libfltk1.3-dev
+    - libfltk-images1.3
     - fakeroot
     - mingw-w64
 
