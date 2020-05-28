@@ -118,7 +118,7 @@
     {
         "sector": "G13",
         "sectorLevel": 2,
-        "           ": ["N"]
+        "adjacentSectors": ["N"]
     },
     //G13_B3
     {
