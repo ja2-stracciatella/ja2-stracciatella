@@ -20,6 +20,7 @@ public:
 	void removePendingAnimation();
 
 	bool hasPendingAction(UINT8 action = NO_PENDING_ACTION) const;
+	static bool anyoneHasPendingAction(UINT8 action, UINT8 team = OUR_TEAM);
 
 	void setPendingAction(UINT8 action);
 

@@ -72,6 +72,21 @@ bool Soldier::hasPendingAction(UINT8 action) const
 	}
 }
 
+bool Soldier::anyoneHasPendingAction(UINT8 action, UINT8 team)
+{
+	bool anyone = false;
+	CFOR_EACH_IN_TEAM(s, team)
+	{
+		std::shared_ptr<const Soldier> soldier = GetSoldier(s);
+		if (soldier->hasPendingAction(action))
+		{
+			anyone = true;
+			break;
+		}
+	}
+	return anyone;
+}
+
 void Soldier::setPendingAction(UINT8 action)
 {
 	SLOGD("%s: set pending action %s (previous %s)",
