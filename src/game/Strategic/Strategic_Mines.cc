@@ -119,7 +119,7 @@ void InitializeMines( void )
 		pMineStatus->fSpokeToHeadMiner = FALSE;
 		pMineStatus->fMineHasProducedForPlayer = FALSE;
 		pMineStatus->fQueenRetookProducingMine = FALSE;
-		gMineStatus->fShutDownIsPermanent = FALSE;
+		pMineStatus->fShutDownIsPermanent = FALSE;
 	}
 
 	// randomize the exact size each mine.  The total production is always the same and depends on the game difficulty,
