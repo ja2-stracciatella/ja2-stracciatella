@@ -1,6 +1,9 @@
 #pragma once
 
 #include "Types.h"
+
+#include "Tactical/Soldier_Control.h"
+
 #include <memory>
 
 struct SOLDIERTYPE;
@@ -16,7 +19,8 @@ public:
 	/** Remove any pending animation. */
 	void removePendingAnimation();
 
-	bool hasPendingAction() const;
+	bool hasPendingAction(UINT8 action = NO_PENDING_ACTION) const;
+	static bool anyoneHasPendingAction(UINT8 action, UINT8 team = OUR_TEAM);
 
 	void setPendingAction(UINT8 action);
 

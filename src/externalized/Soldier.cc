@@ -59,9 +59,32 @@ void Soldier::removePendingAnimation()
 	removePendingAction();
 }
 
-bool Soldier::hasPendingAction() const
+bool Soldier::hasPendingAction(UINT8 action) const
 {
-	return mSoldier->ubPendingAction != NO_PENDING_ACTION;
+	if (action == NO_PENDING_ACTION)
+	{
+		// any action is ok
+		return mSoldier->ubPendingAction != action;
+	}
+	else
+	{
+		return mSoldier->ubPendingAction == action;
+	}
+}
+
+bool Soldier::anyoneHasPendingAction(UINT8 action, UINT8 team)
+{
+	bool anyone = false;
+	CFOR_EACH_IN_TEAM(s, team)
+	{
+		std::shared_ptr<const Soldier> soldier = GetSoldier(s);
+		if (soldier->hasPendingAction(action))
+		{
+			anyone = true;
+			break;
+		}
+	}
+	return anyone;
 }
 
 void Soldier::setPendingAction(UINT8 action)
