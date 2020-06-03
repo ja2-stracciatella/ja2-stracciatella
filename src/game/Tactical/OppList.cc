@@ -1361,6 +1361,13 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 		return(success);
 	}*/
 
+	if (pSoldier == pOpponent)
+	{
+		SLOGD(ST::format("ManLooksForMan - Looking for self - ID {}({})",
+			pSoldier->ubID, pSoldier->name));
+		return(FALSE);
+	}
+
 	// if we're somehow looking while inactive, at base, dead or dying
 	if (!pSoldier->bActive || !pSoldier->bInSector || (pSoldier->bLife < OKLIFE))
 	{
