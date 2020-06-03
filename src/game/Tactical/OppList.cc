@@ -1361,10 +1361,17 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 		return(success);
 	}*/
 
+	if (pSoldier == pOpponent)
+	{
+		SLOGD(ST::format("ManLooksForMan - Looking for self - ID {}({})",
+			pSoldier->ubID, pSoldier->name));
+		return(FALSE);
+	}
+
 	// if we're somehow looking while inactive, at base, dead or dying
 	if (!pSoldier->bActive || !pSoldier->bInSector || (pSoldier->bLife < OKLIFE))
 	{
-		SLOGE("ManLooksForMan - WE are inactive/dead etc ID %d(%s)to ID %d",
+		SLOGD("ManLooksForMan - WE are inactive/dead etc ID %d(%s)to ID %d",
 			pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID);
 		return(FALSE);
 	}
@@ -1375,8 +1382,6 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 	if (!pOpponent->bActive || !pOpponent->bInSector || pOpponent->bLife <= 0 ||
 		pOpponent->sGridNo == NOWHERE )
 	{
-		SLOGE("ManLooksForMan - TARGET is inactive etc ID %d(%s)to ID %d",
-			pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID);
 		return(FALSE);
 	}
 
@@ -1384,7 +1389,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 	// if he's looking for a guy who is on the same team
 	if (pSoldier->bTeam == pOpponent->bTeam)
 	{
-		SLOGE("ManLooksForMan - SAME TEAM ID %d(%s)to ID %d",
+		SLOGD("ManLooksForMan - SAME TEAM ID %d(%s)to ID %d",
 			pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID);
 		return(FALSE);
 	}

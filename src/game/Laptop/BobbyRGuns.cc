@@ -1119,7 +1119,6 @@ static void SelectBigImageRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 
 
 static UINT8 GetNextPurchaseNumber(void);
-static void ReportBobbyROrderError(UINT16 usItemNumber, UINT8 ubPurchaseNum, UINT8 ubQtyOnHand, UINT8 ubNumPurchasing);
 
 static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 {
@@ -1163,7 +1162,6 @@ static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 		else
 		{
 			DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, BobbyRText[ BOBBYR_MORE_NO_MORE_IN_STOCK ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-			ReportBobbyROrderError( usItemNumber, ubPurchaseNumber, LaptopSaveInfo.BobbyRayUsedInventory[ usItemNumber ].ubQtyOnHand, BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased );
 		}
 	}
 	//else the player is on a any other page except the used page
@@ -1201,7 +1199,6 @@ static void PurchaseBobbyRayItem(UINT16 usItemNumber)
 		else
 		{
 			DoLapTopMessageBox( MSG_BOX_LAPTOP_DEFAULT, BobbyRText[ BOBBYR_MORE_NO_MORE_IN_STOCK ], LAPTOP_SCREEN, MSG_BOX_FLAG_OK, NULL);
-			ReportBobbyROrderError( usItemNumber, ubPurchaseNumber, LaptopSaveInfo.BobbyRayInventory[ usItemNumber ].ubQtyOnHand, BobbyRayPurchases[ ubPurchaseNumber ].ubNumberPurchased );
 		}
 	}
 }
@@ -1372,14 +1369,4 @@ static UINT8 CheckPlayersInventoryForGunMatchingGivenAmmoID(ItemModel const* con
 		}
 	}
 	return n_items;
-}
-
-static void ReportBobbyROrderError(UINT16 usItemNumber, UINT8 ubPurchaseNum, UINT8 ubQtyOnHand, UINT8 ubNumPurchasing)
-{
-	SLOGE("**** Bobby Rays Ordering Error ****\n\
-		usItemNumber = %d\n\
-		ubPurchaseNum = %d\n\
-		ubQtyOnHand = %d\n\
-		ubNumPurchasing = %d",
-		usItemNumber, ubPurchaseNum, ubQtyOnHand, ubNumPurchasing);
 }
