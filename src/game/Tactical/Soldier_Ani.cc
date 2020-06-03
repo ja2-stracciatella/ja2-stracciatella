@@ -3445,7 +3445,7 @@ void HandleCheckForDeathCommonCode(SOLDIERTYPE* const pSoldier)
 
 		default:
 			// IF we are here - something is wrong - we should have a death animation here
-			SLOGW("unconscious hit sequence needed for animation %d", pSoldier->usAnimState);
+			SLOGD("unconscious hit sequence needed for animation %d", pSoldier->usAnimState);
 			return;
 	}
 	ChangeSoldierState(pSoldier, state, 0, FALSE);

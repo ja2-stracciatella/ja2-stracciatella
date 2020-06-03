@@ -1916,7 +1916,7 @@ void HandleInitialRedAlert(INT8 bTeam)
 {
 	if (!gTacticalStatus.Team[bTeam].bAwareOfOpposition)
 	{
-		SLOGE("Enemies on team %d prompted to go on RED ALERT!", bTeam );
+		SLOGD("Enemies on team %d prompted to go on RED ALERT!", bTeam );
 	}
 
 	// if there is a stealth mission in progress here, and a panic trigger exists
