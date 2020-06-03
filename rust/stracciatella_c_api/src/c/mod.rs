@@ -5,11 +5,11 @@
 
 pub mod config;
 pub mod fs;
-pub mod librarydb;
 pub mod logger;
 pub mod misc;
 pub mod path;
 pub mod vec;
+pub mod vfs;
 
 pub mod error {
     //! This module contains error handling code for C.
@@ -99,6 +99,15 @@ pub(crate) mod common {
     pub fn unsafe_mut<'a, T>(ptr: *mut T) -> &'a mut T {
         assert!(!ptr.is_null());
         unsafe { &mut *ptr }
+    }
+
+    /// Gets a mutable reference from a mutable C pointer.
+    pub fn unsafe_mut_option<'a, T>(ptr: *mut T) -> Option<&'a mut T> {
+        if ptr.is_null() {
+            None
+        } else {
+            Some(unsafe { &mut *ptr })
+        }
     }
 
     /// Gets a reference from a const C pointer.

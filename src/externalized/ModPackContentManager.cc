@@ -3,6 +3,7 @@
 #include "JsonUtility.h"
 #include "sgp/FileMan.h"
 
+#include "Debug.h"
 #include "Logger.h"
 
 #define DEBUG_PRINT_OPENING_FILES (1)
@@ -23,39 +24,19 @@ ModPackContentManager::~ModPackContentManager()
 {
 }
 
-/* Checks if a game resource exists. */
-bool ModPackContentManager::doesGameResExists(char const* fileName) const
+void ModPackContentManager::init()
 {
-	for (const auto& folder : m_modResFolders)
+	for (const ST::string& dir : m_modResFolders)
 	{
-		if (FileMan::checkFileExistance(folder, fileName))
+		SLOGI(ST::format("Vfs with mod dir ({}) '{}'", VFS_ORDER_MOD, dir));
+		if (!Vfs_addDir(m_vfs.get(), VFS_ORDER_MOD, dir.c_str()))
 		{
-			return true;
+			RustPointer<char> err{getRustError()};
+			SLOGE(ST::format("ModPackContentManager::init '{}': {}", dir, err.get()));
+			throw std::runtime_error("Failed to add mod dir");
 		}
 	}
-	return DefaultContentManager::doesGameResExists(fileName);
-}
-
-/* Open a game resource file for reading.
- *
- * First trying to open resource in the mod's directory.
- * If not found, use the previous method. */
-SGPFile* ModPackContentManager::openGameResForReading(const char* filename) const
-{
-	for (const auto& folder : m_modResFolders)
-	{
-		RustPointer<File> file = FileMan::openFileCaseInsensitive(folder, filename, FILE_OPEN_READ);
-		if (file) {
-			SLOGI("opening mod's resource: %s", filename);
-			return FileMan::getSGPFileFromFile(file.release());
-		}
-	}
-	return DefaultContentManager::openGameResForReading(filename);
-}
-
-SGPFile* ModPackContentManager::openGameResForReading(const ST::string& filename) const
-{
-	return openGameResForReading(filename.c_str());
+	DefaultContentManager::init();
 }
 
 /** Get folder for saved games. */

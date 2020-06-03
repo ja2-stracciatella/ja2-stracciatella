@@ -17,7 +17,7 @@ enum SGPFileFlags
 };
 
 struct File;
-struct LibraryFile;
+struct VfsFile;
 
 struct SGPFile
 {
@@ -25,7 +25,7 @@ struct SGPFile
 	union
 	{
 		File* file;
-		LibraryFile* lib;
+		VfsFile* vfile;
 	} u;
 };
 

@@ -19,11 +19,9 @@ public:
 
 	virtual ~ModPackContentManager() override;
 
-	/* Checks if a game resource exists. */
-	virtual bool doesGameResExists(char const* fileName) const override;
-
-	virtual SGPFile* openGameResForReading(const char* filename) const override;
-	virtual SGPFile* openGameResForReading(const ST::string& filename) const override;
+	/// Called after construction.
+	/// @throw runtime_error
+	virtual void init() override;
 
 	/** Get folder for saved games. */
 	virtual ST::string getSavedGamesFolder() const override;
