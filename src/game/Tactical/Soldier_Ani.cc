@@ -490,8 +490,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					pSoldier->fInNonintAnim = FALSE;
 
 					if (pSoldier->usAnimState == STEAL_ITEM) {
-						SLOGD(DEBUG_TAG_SOLDIER,
-							"Reducing attacker busy count..., CODE FROM ANIMATION %hs ( %d )",
+						SLOGD("Reducing attacker busy count..., CODE FROM ANIMATION %hs ( %d )",
 							gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState);
 						ReduceAttackBusyCount(pSoldier, FALSE);
 					}
