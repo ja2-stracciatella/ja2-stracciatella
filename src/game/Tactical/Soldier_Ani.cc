@@ -489,6 +489,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					//CODE: FOR A NON-INTERRUPTABLE SCRIPT - SIGNAL DONE
 					pSoldier->fInNonintAnim = FALSE;
 
+					if (pSoldier->usAnimState == STEAL_ITEM) {
+						SLOGD("Reducing attacker busy count..., CODE FROM ANIMATION %hs ( %d )",
+							gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState);
+						ReduceAttackBusyCount(pSoldier, FALSE);
+					}
+
 					// ATE: if it's the begin cower animation, unset ui, cause it could
 					// be from player changin stance
 					if ( pSoldier->usAnimState == START_COWER )
