@@ -140,7 +140,7 @@ script:
 
 after_success:
   - if [ "$PUBLISH_BINARY" == "true" ] && [ "$SFTP_PASSWORD" != "" ]; then
-      travis_retry curl -v --connect-timeout 60 --max-time 150 --ftp-create-dirs -T $(echo ja2-stracciatella_*) -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/;
+      travis_retry curl -v --connect-timeout 60 --max-time 300 --ftp-create-dirs -T $(echo ja2-stracciatella_*) -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/;
     fi
 
 addons:
