@@ -11,7 +11,7 @@
  *  - mineType:    Either "GOLD_MINE" or "SILVER_MINE".
  *  - noDepletion:    Mines (Alma in Vanilla) can be set to never deplete, so there will always be head miner giving quest. Defaults to false, so the mine may be randomly chosen for depletion.
  *  - delayDepletion:    If the mine is chosen for depletion, delay it.
- *  - minimumMineProduction:    Production rate (money value er period) of the mine before any random increase.
+ *  - minimumMineProduction:    Production rate (money value per period) of the mine before any random increase.
  *  - isInfestible:    If it can be infected by Crepitus bugs. An infestible mine must have an associated creature lair.
  *  - mineSectors:    List of underground sectors belonging to this mine. Sector defined as: ["<SECTORXY>", <LEVEL>]. These sectors must also be defined in strategic-map-underground-sectors.json.
  *  - faceDisplayYOffset:    Y-offset to the screen position, where the head miner's face and text box should be in order to not obscure the mine he's in as it flashes. See IssueHeadMinerQuote()
