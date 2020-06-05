@@ -1217,7 +1217,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 
 		if (fStealing)
 		{
-			if ( AM_A_ROBOT( pTargetSoldier ) || TANK( pTargetSoldier ) || CREATURE_OR_BLOODCAT( pTargetSoldier ) || TANK( pTargetSoldier ) )
+			if (AM_A_ROBOT(pTargetSoldier) || TANK(pTargetSoldier) || CREATURE_OR_BLOODCAT(pTargetSoldier))
 			{
 				iHitChance = 0;
 			}
