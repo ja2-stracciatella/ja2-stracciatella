@@ -25,6 +25,7 @@
 #include "Merc_Hiring.h"
 #include "Message.h"
 #include "Militia_Control.h"
+#include "MineModel.h"
 #include "Overhead.h"
 #include "Player_Command.h"
 #include "PreBattle_Interface.h"
@@ -675,9 +676,10 @@ void DrawMap(void)
 		ShowSAMSitesOnStrategicMap();
 
 		// draw mine icons and descriptive text
-		for (INT32 i = 0; i < MAX_NUMBER_OF_MINES; ++i)
+		auto mines = GCM->getMines();
+		for (INT32 i = 0; i < mines.size(); ++i)
 		{
-			UINT8 const sector = gMineLocation[i].sector;
+			UINT8 const sector = mines[i]->entranceSector;
 			INT16 const x      = SECTORX(sector);
 			INT16 const y      = SECTORY(sector);
 			BlitMineIcon(x, y);
@@ -3558,15 +3560,14 @@ static void BlitMineGridMarkers(void)
 	ClipBlitsToMapViewRegionForRectangleAndABit(pitch);
 
 	UINT16 const color = Get16BPPColor(FROMRGB(100, 100, 100));
-	FOR_EACH(MINE_LOCATION_TYPE const, i, gMineLocation)
+	for (auto m : GCM->getMines())
 	{
 		INT16                     x;
 		INT16                     y;
 		INT16                     w;
 		INT16                     h;
-		MINE_LOCATION_TYPE const& m  = *i;
-		INT16              const  mx = SECTORX(m.sector);
-		INT16              const  my = SECTORY(m.sector);
+		INT16              const  mx = SECTORX(m->entranceSector);
+		INT16              const  my = SECTORY(m->entranceSector);
 		if (fZoomFlag)
 		{
 			GetScreenXYFromMapXYStationary(mx, my, &x, &y);

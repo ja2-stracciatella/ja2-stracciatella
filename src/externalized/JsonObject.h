@@ -59,6 +59,11 @@ public:
 		return m_value[name].GetInt();
 	}
 
+	unsigned int GetUInt(const char* name) const
+	{
+		return m_value[name].GetUint();
+	}
+
 	bool GetBool(const char *name) const
 	{
 		return m_value[name].GetBool();
