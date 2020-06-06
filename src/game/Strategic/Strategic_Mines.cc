@@ -134,11 +134,11 @@ void InitializeMines( void )
 		{
 			if (minesData[ubDepletedMineIndex]->delayDepletion)
 			{
-				ubMinDaysBeforeDepletion = 45;
+				ubMinDaysBeforeDepletion = 20;
 			}
 			else
 			{
-				ubMinDaysBeforeDepletion = 30;
+				ubMinDaysBeforeDepletion = 10;
 			}
 
 			// the mine that runs out has only enough ore for this many days of full production
