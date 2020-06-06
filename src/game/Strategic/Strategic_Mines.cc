@@ -78,8 +78,8 @@ void InitializeMines( void )
 	{
 		MINE_STATUS_TYPE pMineStatus{};
 
-		pMineStatus.ubMineType = mine->mineType;//gubMineTypes[ubMineIndex];
-		pMineStatus.uiMaxRemovalRate = mine->minimumMineProduction; //guiMinimumMineProduction[ubMineIndex];
+		pMineStatus.ubMineType = mine->mineType;
+		pMineStatus.uiMaxRemovalRate = mine->minimumMineProduction;
 		pMineStatus.fEmpty = (pMineStatus.uiMaxRemovalRate == 0) ? TRUE : FALSE;
 		gMineStatus.push_back(pMineStatus);
 	}

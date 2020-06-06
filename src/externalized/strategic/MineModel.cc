@@ -5,17 +5,17 @@
 
 
 MineModel::MineModel(const uint8_t mineId_, const uint8_t entranceSector_, const uint8_t associatedTownId_, 
-	const uint8_t mineType_, const uint16_t minimumMineProduction_, 
+	const uint8_t mineType_, const uint16_t minimumMineProduction_, const bool headMinerAssigned_,
 	const bool noDepletion_, const bool delayDepletion_, const bool isInfestible_,
 	std::vector<std::array<uint8_t, 2>> mineSectors_, const int16_t faceDisplayYOffset_) :
 		mineId(mineId_), entranceSector(entranceSector_), associatedTownId(associatedTownId_),
-		mineType(mineType_), minimumMineProduction(minimumMineProduction_),
+		mineType(mineType_), minimumMineProduction(minimumMineProduction_), headMinerAssigned(headMinerAssigned_),
 		noDepletion(noDepletion_), delayDepletion(delayDepletion_), isInfestible(isInfestible_),
 		mineSectors(mineSectors_), faceDisplayYOffset(faceDisplayYOffset_) {}
 
 bool MineModel::isAbandoned() const
 {
-	return minimumMineProduction > 0;
+	return minimumMineProduction == 0;
 }
 
 uint8_t mineTypeFromString(std::string mineType)
@@ -68,7 +68,8 @@ MineModel* MineModel::deserialize(uint8_t index, const rapidjson::Value& json)
 		obj.GetUInt("associatedTownId"),
 		mineTypeFromString(obj.GetString("mineType")),
 		obj.GetUInt("minimumMineProduction"),
-		obj.getOptionalBool("hasHeadMinerQuest"),
+		obj.getOptionalBool("headMinerAssigned"),
+		obj.getOptionalBool("noDepletion"),
 		obj.getOptionalBool("delayDepletion"),
 		obj.getOptionalBool("isInfestible"),
 		mineSectors,

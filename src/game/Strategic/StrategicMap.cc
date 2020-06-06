@@ -765,9 +765,9 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 			{
 				ubMinersPlaced = 0;
 
-				if (ubThisMine != MINE_ALMA)
+				if (!thisMine->headMinerAssigned)
 				{
-					// Fred Morris is always in the first mine sector we enter, unless that's Alma (then he's randomized, too)
+					// Fred Morris is always in the first mine sector we enter, unless head miner here has been pre-determined (then he's randomized, too)
 					MERCPROFILESTRUCT& fred = GetProfile(FRED);
 					fred.sSectorX = sNewSectorX;
 					fred.sSectorY = sNewSectorY;
@@ -780,9 +780,9 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 				}
 
 				// assign the remaining (3) miners randomly
-				for ( ubMine = 0; ubMine < GCM->getMines().size(); ubMine++ )
+				for (auto ubMine : GCM->getMines())
 				{
-					if ( ubMine == ubThisMine || ubMine == MINE_ALMA || thisMine->isAbandoned() )
+					if ( ubMine->mineId == ubThisMine || ubMine->headMinerAssigned || ubMine->isAbandoned() )
 					{
 						// Alma always has Matt as a miner, and we have assigned Fred to the current mine
 						// and San Mona is abandoned
@@ -796,7 +796,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 					while( ubRandomMiner[ ubMiner ] == 0 );
 
 					MERCPROFILESTRUCT& p      = GetProfile(ubRandomMiner[ubMiner]);
-					UINT8 const        sector = GetMineSector(ubMine);
+					UINT8 const        sector = ubMine->entranceSector;
 					p.sSectorX = SECTORX(sector);
 					p.sSectorY = SECTORY(sector);
 					p.bSectorZ = 0;

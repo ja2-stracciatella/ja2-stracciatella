@@ -9,6 +9,7 @@
  *  - entranceSector:    Sector of the mine entrance on the surface level.
  *  - associatedTownId:    ID of the associated town, refer to strategic-map-towns.json.
  *  - mineType:    Either "GOLD_MINE" or "SILVER_MINE".
+ *  - headMinerAssigned:    True if there is a specific head miner assigned (in merc profile) to the entrance sector. If not, a head miner will be randomly assigned. Either way, the mine entrance sector must have the head miner slot(s) placed, unless it is abandoned.
  *  - noDepletion:    Mines (Alma in Vanilla) can be set to never deplete, so there will always be head miner giving quest. Defaults to false, so the mine may be randomly chosen for depletion.
  *  - delayDepletion:    If the mine is chosen for depletion, delay it.
  *  - minimumMineProduction:    Production rate (money value per period) of the mine before any random increase.
@@ -42,6 +43,7 @@
         "entranceSector": "I14",
         "associatedTownId": 3,
         "mineType": "SILVER_MINE",
+        "headMinerAssigned": true, // Matt is always the head miner here
         "noDepletion": true, // Alma mine can't run out for quest-related reasons
         "isInfestible": true,
         "minimumMineProduction": 1500,

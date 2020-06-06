@@ -10,7 +10,7 @@ class MineModel
 {
 public:
 	MineModel(const uint8_t mineId, const uint8_t entranceSector_, const uint8_t associatedTownId_, const uint8_t mineType_, const uint16_t minimumMineProduction_,
-		const bool noDepletion_, const bool delayDepletion_, const bool isInfestible_,
+		const bool headMinerAssigned_, const bool noDepletion_, const bool delayDepletion_, const bool isInfestible_,
 		const std::vector<std::array<uint8_t, 2>> mineSectors_,
 		const int16_t faceDisplayYOffset);
  
@@ -21,6 +21,7 @@ public:
 	const uint8_t entranceSector;
 	const uint8_t mineType;
 	const uint16_t minimumMineProduction;
+	const bool headMinerAssigned;
 	const bool noDepletion;
 	const bool delayDepletion;
 	const bool isInfestible;
