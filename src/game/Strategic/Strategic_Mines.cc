@@ -660,8 +660,8 @@ void SaveMineStatusToSaveGameFile(HWFILE const f)
 
 void LoadMineStatusFromSavedGameFile(HWFILE const f)
 {
-	//FOR_EACH(MINE_STATUS_TYPE, i, gMineStatus)
-	// TODO: what if number of mines changed/
+	// Save game breaks if the number of mines changes, as we do not
+	// store the number of mines when the game was saved.
 	gMineStatus.resize(GCM->getMines().size());
 	for (auto& i : gMineStatus)
 	{
