@@ -243,7 +243,7 @@ INT32 GetTotalLeftInMine( INT8 bMineIndex )
 {
 	// returns the value of the mine
 
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < gMineStatus.size() ) );
+	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
 
 	return ( gMineStatus[ bMineIndex ].uiRemainingOreSupply );
 }
@@ -253,7 +253,7 @@ UINT32 GetMaxPeriodicRemovalFromMine( INT8 bMineIndex )
 {
 	// returns max amount that can be mined in a time period
 
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < gMineStatus.size()) );
+	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
 
 	// if mine is shut down
 	if ( gMineStatus[ bMineIndex ].fShutDown)
@@ -298,7 +298,7 @@ static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 	// will remove the ore from the mine and return the amount that was removed
 	UINT32 uiAmountExtracted = 0;
 
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < gMineStatus.size()) );
+	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
 
 	// if mine is shut down
 	if ( gMineStatus[ bMineIndex ].fShutDown)
@@ -370,7 +370,7 @@ static INT32 GetAvailableWorkForceForMineForPlayer(INT8 bMineIndex)
 
 	// return the loyalty of the town associated with the mine
 
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < gMineStatus.size()) );
+	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
 	auto mine = GCM->getMine(bMineIndex);
 
 	// if mine is shut down
@@ -469,7 +469,7 @@ static INT32 MineAMine(INT8 bMineIndex)
 	INT32 iAmtExtracted = 0;
 
 
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < gMineStatus.size()) );
+	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
 
 	// is mine is empty
 	if( gMineStatus[ bMineIndex ].fEmpty)
@@ -694,7 +694,7 @@ void LoadMineStatusFromSavedGameFile(HWFILE const f)
 
 void ShutOffMineProduction( INT8 bMineIndex )
 {
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < gMineStatus.size() ) );
+	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
 
 	if ( !gMineStatus[ bMineIndex ].fShutDown )
 	{
@@ -706,7 +706,7 @@ void ShutOffMineProduction( INT8 bMineIndex )
 
 void RestartMineProduction( INT8 bMineIndex )
 {
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < gMineStatus.size()) );
+	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
 
 	if ( !gMineStatus[ bMineIndex ].fShutDownIsPermanent )
 	{
@@ -721,7 +721,7 @@ void RestartMineProduction( INT8 bMineIndex )
 
 static void MineShutdownIsPermanent(INT8 bMineIndex)
 {
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < gMineStatus.size()) );
+	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
 
 	gMineStatus[ bMineIndex ].fShutDownIsPermanent = TRUE;
 }
@@ -729,7 +729,7 @@ static void MineShutdownIsPermanent(INT8 bMineIndex)
 
 BOOLEAN IsMineShutDown( INT8 bMineIndex )
 {
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < gMineStatus.size()) );
+	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
 
 	return(gMineStatus[ bMineIndex ].fShutDown);
 }
@@ -923,7 +923,7 @@ BOOLEAN IsHisMineAtMaxProduction( UINT8 ubMinerProfileId )
 
 void QueenHasRegainedMineSector(INT8 bMineIndex)
 {
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < gMineStatus.size()) );
+	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
 
 	if (gMineStatus[ bMineIndex ].fMineHasProducedForPlayer)
 	{
