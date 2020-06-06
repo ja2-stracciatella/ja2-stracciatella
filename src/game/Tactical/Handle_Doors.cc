@@ -206,7 +206,10 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 		}
 	}
 
-	EVENT_SetSoldierDesiredDirectionForward(&s, direction);
+	if (!s.bCollapsed)
+	{
+		EVENT_SetSoldierDesiredDirectionForward(&s, direction);
+	}
 
 	// Is the door opened?
 	if (structure.fFlags & STRUCTURE_OPEN)
@@ -214,7 +217,10 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 		if (IsOnOurTeam(s) && !(structure.fFlags & STRUCTURE_SWITCH))
 		{
 			// Bring up menu to decide what to do
-			SoldierGotoStationaryStance(&s);
+			if (!s.bCollapsed)
+			{
+				SoldierGotoStationaryStance(&s);
+			}
 			DOOR* const d = FindDoorInfoAtGridNo(base.sGridNo);
 			if (!d || !DoTrapCheckOnStartingMenu(s, *d))
 				InitDoorOpenMenu(&s, TRUE);
@@ -232,8 +238,10 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 			if (d && d->fLocked) // Bring up the menu, only if it has a lock
 			{
 				// Bring up menu to decide what to do
-				SoldierGotoStationaryStance(&s);
-
+				if (!s.bCollapsed)
+				{
+					SoldierGotoStationaryStance(&s);
+				}
 				if (!DoTrapCheckOnStartingMenu(s, *d))
 				{
 					InitDoorOpenMenu(&s, FALSE);
