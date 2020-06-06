@@ -59,6 +59,7 @@
 #include "Message.h"
 #include "MessageBoxScreen.h"
 #include "Militia_Control.h"
+#include "MineModel.h"
 #include "Music_Control.h"
 #include "NPC.h"
 #include "OppList.h"
@@ -758,19 +759,20 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 		INT8 const ubThisMine = GetMineIndexForSector(sector);
 		if (ubThisMine != -1 && !CheckFact(FACT_MINERS_PLACED, 0))
 		{
-			// SET HEAD MINER LOCATIONS
-			if (ubThisMine != MINE_SAN_MONA) // San Mona is abandoned
+			auto thisMine = GCM->getMine(ubThisMine);
+			// SET HEAD MINER LOCATIONS, unless mine is abandoned
+			if (!thisMine->isAbandoned())
 			{
 				ubMinersPlaced = 0;
 
-				if (ubThisMine != MINE_ALMA)
+				if (!thisMine->headMinerAssigned)
 				{
-					// Fred Morris is always in the first mine sector we enter, unless that's Alma (then he's randomized, too)
+					// Fred Morris is always in the first mine sector we enter, unless head miner here has been pre-determined (then he's randomized, too)
 					MERCPROFILESTRUCT& fred = GetProfile(FRED);
 					fred.sSectorX = sNewSectorX;
 					fred.sSectorY = sNewSectorY;
 					fred.bSectorZ = 0;
-					fred.bTown    = gMineLocation[ubThisMine].bAssociatedTown;
+					fred.bTown    = thisMine->associatedTownId;
 
 					// mark miner as placed
 					ubRandomMiner[ 0 ] = 0;
@@ -778,9 +780,9 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 				}
 
 				// assign the remaining (3) miners randomly
-				for ( ubMine = 0; ubMine < MAX_NUMBER_OF_MINES; ubMine++ )
+				for (auto ubMine : GCM->getMines())
 				{
-					if ( ubMine == ubThisMine || ubMine == MINE_ALMA || ubMine == MINE_SAN_MONA )
+					if ( ubMine->mineId == ubThisMine || ubMine->headMinerAssigned || ubMine->isAbandoned() )
 					{
 						// Alma always has Matt as a miner, and we have assigned Fred to the current mine
 						// and San Mona is abandoned
@@ -794,11 +796,11 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 					while( ubRandomMiner[ ubMiner ] == 0 );
 
 					MERCPROFILESTRUCT& p      = GetProfile(ubRandomMiner[ubMiner]);
-					UINT8 const        sector = GetMineSector(ubMine);
+					UINT8 const        sector = ubMine->entranceSector;
 					p.sSectorX = SECTORX(sector);
 					p.sSectorY = SECTORY(sector);
 					p.bSectorZ = 0;
-					p.bTown = gMineLocation[ ubMine ].bAssociatedTown;
+					p.bTown = thisMine->associatedTownId;
 
 					// mark miner as placed
 					ubRandomMiner[ ubMiner ] = 0;

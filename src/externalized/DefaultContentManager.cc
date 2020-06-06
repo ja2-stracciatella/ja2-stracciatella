@@ -34,6 +34,7 @@
 #include "strategic/BloodCatPlacementsModel.h"
 #include "strategic/BloodCatSpawnsModel.h"
 #include "strategic/FactParamsModel.h"
+#include "strategic/MineModel.h"
 #include "strategic/SamSiteModel.h"
 #include "strategic/TownModel.h"
 #include "strategic/MovementCostsModel.h"
@@ -311,6 +312,7 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_bloodCatPlacements);
 	deleteElements(m_bloodCatSpawns);
 	deleteElements(m_factParams);
+	deleteElements(m_mines);
 	deleteElements(m_npcActionParams);
 	deleteElements(m_npcPlacements);
 	deleteElements(m_samSites);
@@ -1211,6 +1213,17 @@ bool DefaultContentManager::loadStrategicLayerData() {
 	}
 	delete json;
 
+	json = readJsonDataFile("strategic-mines.json");
+	auto arr = json->GetArray();
+	for (rapidjson::SizeType i = 0; i < arr.Size(); i++)
+	{
+		m_mines.push_back(
+			MineModel::deserialize(i, arr[i].GetObject())
+		);
+	}
+	MineModel::validateData(m_mines);
+	delete json;
+
 	json = readJsonDataFile("strategic-map-sam-sites.json");
 	for (auto& element : json->GetArray())
 	{
@@ -1288,6 +1301,31 @@ const BloodCatSpawnsModel* DefaultContentManager::getBloodCatSpawnsOfSector(uint
 		}
 	}
 	return NULL;
+}
+
+const MineModel* DefaultContentManager::getMineForSector(uint8_t sectorX, uint8_t sectorY, uint8_t sectorZ) const
+{
+	auto sectorId = SECTOR(sectorX, sectorY);
+	for (auto m : m_mines)
+	{
+		if (sectorZ == 0 && sectorId == m->entranceSector) return m;
+		for (auto s : m->mineSectors)
+		{
+			if (s[0] == sectorId && s[1] == sectorZ) return m;
+		}
+	}
+
+	return NULL;
+}
+
+const MineModel* DefaultContentManager::getMine(uint8_t mineId) const
+{
+	return m_mines[mineId];
+}
+
+const std::vector<const MineModel*>& DefaultContentManager::getMines() const
+{
+	return m_mines;
 }
 
 const TownModel* DefaultContentManager::getTown(int8_t townId) const

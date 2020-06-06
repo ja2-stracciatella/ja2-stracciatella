@@ -31,6 +31,9 @@
 #include "MemMan.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
+#include "MineModel.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -247,10 +250,11 @@ static void InitLairGrumm(void)
 static bool IsMineInfectible(MineID const id)
 { // If neither head miner was attacked, ore will/has run out nor enemy controlled
 	MINE_STATUS_TYPE const& m = gMineStatus[id];
+	auto mineData = GCM->getMine(id);
 	return
 		!m.fAttackedHeadMiner       &&
 		m.uiOreRunningOutPoint == 0 &&
-		!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(gMineLocation[id].sector)].fEnemyControlled;
+		!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(mineData->entranceSector)].fEnemyControlled;
 }
 
 

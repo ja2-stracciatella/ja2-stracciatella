@@ -159,6 +159,9 @@ public:
 	virtual const std::vector<const BloodCatPlacementsModel*>& getBloodCatPlacements() const override;
 	virtual const std::vector<const BloodCatSpawnsModel*>& getBloodCatSpawns() const override;
 	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const override;
+	virtual const MineModel* getMineForSector(uint8_t sectorX, uint8_t sectorY, uint8_t sectorZ) const override;
+	virtual const MineModel* getMine(uint8_t mineId) const override;
+	virtual const std::vector<const MineModel*>& getMines() const override;
 	virtual const std::vector<const SamSiteModel*>& getSamSites() const override;
 	virtual const int8_t findSamIDBySector(uint8_t sectorId) const override;
 	virtual const SamSiteModel* findSamSiteBySector(uint8_t sectorId) const override;
@@ -223,6 +226,7 @@ protected:
 
 	std::vector<const BloodCatPlacementsModel*> m_bloodCatPlacements;
 	std::vector<const BloodCatSpawnsModel*> m_bloodCatSpawns;
+	std::vector<const MineModel*> m_mines;
 	std::vector<const SamSiteModel*> m_samSites;
 	std::map<int8_t, const TownModel*> m_towns;
 	std::vector<const ST::string*> m_townNames;

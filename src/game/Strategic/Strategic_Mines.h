@@ -46,13 +46,7 @@ enum HeadMinerQuote
 };
 
 
-// the strategic mine structures
-struct MINE_LOCATION_TYPE
-{
-	UINT8 sector;          // Sector the mine is in
-	INT8  bAssociatedTown; // Associated town of this mine
-};
-
+// the strategic mine structures	
 struct MINE_STATUS_TYPE
 {
 	UINT8    ubMineType;								// type of mine (silver or gold)
@@ -163,7 +157,6 @@ BOOLEAN AreThereMinersInsideThisMine( UINT8 ubMineIndex );
 // use this to determine whether or not the player has spoken to a head miner
 BOOLEAN SpokenToHeadMiner( UINT8 ubMineIndex );
 
-extern MINE_LOCATION_TYPE const gMineLocation[MAX_NUMBER_OF_MINES];
-extern MINE_STATUS_TYPE         gMineStatus[MAX_NUMBER_OF_MINES];
+extern std::vector<MINE_STATUS_TYPE> gMineStatus;
 
 #endif
