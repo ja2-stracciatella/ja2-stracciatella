@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Campaign_Types.h"
 #include "GameSettings.h"
 #include "JA2Types.h"
