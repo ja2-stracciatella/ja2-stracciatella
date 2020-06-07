@@ -800,7 +800,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 					p.sSectorX = SECTORX(sector);
 					p.sSectorY = SECTORY(sector);
 					p.bSectorZ = 0;
-					p.bTown = thisMine->associatedTownId;
+					p.bTown = ubMine->associatedTownId;
 
 					// mark miner as placed
 					ubRandomMiner[ ubMiner ] = 0;
