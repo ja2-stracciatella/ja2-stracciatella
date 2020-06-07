@@ -13,7 +13,6 @@
  *  - noDepletion:    Mines (Alma in Vanilla) can be set to never deplete, so there will always be head miner giving quest. Defaults to false, so the mine may be randomly chosen for depletion.
  *  - delayDepletion:    If the mine is chosen for depletion, delay it.
  *  - minimumMineProduction:    Production rate (money value per period) of the mine before any random increase.
- *  - isInfestible:    If it can be infected by Crepitus bugs. An infestible mine must have an associated creature lair.
  *  - mineSectors:    List of underground sectors belonging to this mine. Sector defined as: ["<SECTORXY>", <LEVEL>]. These sectors must also be defined in strategic-map-underground-sectors.json.
  *  - faceDisplayYOffset:    Y-offset to the screen position, where the head miner's face and text box should be in order to not obscure the mine he's in as it flashes. See IssueHeadMinerQuote()
  */
@@ -32,7 +31,6 @@
         "associatedTownId": 2,
         "mineType": "SILVER_MINE",
         "delayDepletion": true,
-        "isInfestible": true,
         "minimumMineProduction": 1000,
         "mineSectors": [
             ["D13", 1], ["E13", 1]
@@ -45,7 +43,6 @@
         "mineType": "SILVER_MINE",
         "headMinerAssigned": true, // Matt is always the head miner here
         "noDepletion": true, // Alma mine can't run out for quest-related reasons
-        "isInfestible": true,
         "minimumMineProduction": 1500,
         "mineSectors": [
             ["I14", 1], ["J14", 1]
@@ -55,7 +52,6 @@
         "entranceSector": "H8",
         "associatedTownId": 6,
         "mineType": "SILVER_MINE",
-        "isInfestible": true,
         "minimumMineProduction": 1500,
         "mineSectors": [
             ["H8", 1], ["H9", 1]
@@ -65,7 +61,6 @@
         "entranceSector": "B2",
         "associatedTownId": 12,
         "mineType": "SILVER_MINE",
-        "isInfestible": true,
         "minimumMineProduction": 500,
         "mineSectors": [
             ["B2", 1]
@@ -76,7 +71,6 @@
         "entranceSector": "H3",
         "associatedTownId": 4,
         "mineType": "GOLD_MINE",
-        "isInfestible": true,
         "minimumMineProduction": 2000,
         "mineSectors": [
             ["H3", 1], ["I3", 1],
