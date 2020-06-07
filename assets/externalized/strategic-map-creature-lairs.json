@@ -1,0 +1,181 @@
+/*
+ * Defines all the possible Crepitus creature lairs and spreading. There can be at most 1 lair activated in each (Sci-Fi) game.
+ *
+ * Field definitions:
+ *  - lairId:    A unique numeric ID for the lair. Must be an integer greater than zero.
+ *  - associatedMineId:    Creature lair must be located and associated with one mine.
+ *  - entranceSector:    Where the lair entrance is located. There must be an alternate map file (*_a.dat), which will be activated at lair initialization.
+ *  - sectors:    An ordered list of sectors making up the lair, specified as an array of [sector, sectorZ, habitatType]. This list should start with the innermost sector, which is the QUEEN_LAIR. The creatures will spread out outwards. Each sector must have a corresponding map file and defined in strategic-map-underground-sectors.json; "habitatType" must be one of: QUEEN_LAIR, LAIR, LAIR_ENTRANCE, INNER_MINE, OUTER_MINE, FEEDING_GROUNDS or MINE_EXIT. See Creature_Spreading.h for details.
+ *  - warpExit:    Destination for the "Travel to surface?" warp from deep underground
+ *  - attackSectors: List of town sectors and enemy insertion. Used by creatures to make town attacks
+ */
+[
+    {
+        "associatedMineId": 1, // Drassen
+        "lairId": 1,
+        "sectors": [
+            [ "F13", 3, "QUEEN_LAIR" ],
+            [ "G13", 3, "LAIR" ],
+            [ "G13", 2, "LAIR_ENTRANCE" ],
+            [ "F13", 2, "INNER_MINE" ],
+            [ "E13", 2, "INNER_MINE" ],
+            [ "E13", 1, "OUTER_MINE" ],
+            [ "D13", 1, "MINE_EXIT" ]
+        ],
+        "entranceSector": [ "E13", 1 ],
+        "warpExit": {
+            "sector": "D13",
+            "gridNo": 20700
+        },
+        "attackSectors": [
+            {
+                "sector": "D13",
+                "chance": 45,
+                "insertionCode": "GRIDNO",
+                "insertionGridNo": 20703
+            },
+            {
+                "sector": "C13",
+                "chance": 25,
+                "insertionCode": "SOUTH"
+            },
+            {
+                "sector": "B13",
+                "chance": 30,
+                "insertionCode": "SOUTH"
+            }
+        ]
+    },
+    {
+        "lairId": 2,
+        "associatedMineId": 3, // Cambria
+        "sectors": [
+            [ "J8", 3, "QUEEN_LAIR" ],
+            [ "I8", 3, "LAIR" ],
+            [ "H8", 3, "LAIR" ],
+            [ "H8", 2, "LAIR_ENTRANCE" ],
+            [ "H9", 2, "INNER_MINE" ],
+            [ "H9", 1, "OUTER_MINE" ],
+            [ "H8", 1, "MINE_EXIT" ]
+        ],
+        "entranceSector": [ "H9", 1 ],
+        "warpExit": {
+            "sector": "H8",
+            "gridNo": 13002
+        },
+        "attackSectors": [
+            {
+                "sector": "H8",
+                "chance": 35,
+                "insertionCode": "GRIDNO",
+                "insertionGridNo": 13005
+            },
+            {
+                "sector": "G8",
+                "chance": 20,
+                "insertionCode": "SOUTH"
+            },
+            {
+                "sector": "F8",
+                "chance": 15,
+                "insertionCode": "SOUTH"
+            },
+            {
+                "sector": "G9",
+                "chance": 15,
+                "insertionCode": "WEST"
+            },
+            {
+                "sector": "F9",
+                "chance": 15,
+                "insertionCode": "SOUTH"
+            }
+        ]
+    },
+    {
+        "lairId": 3,
+        "associatedMineId": 2, // Alma
+        "sectors": [
+            [ "K13", 3, "QUEEN_LAIR" ],
+            [ "J13", 3, "LAIR" ],
+            [ "J13", 2, "LAIR_ENTRANCE" ],
+            [ "J14", 2, "INNER_MINE" ],
+            [ "J14", 1, "OUTER_MINE" ],
+            [ "I14", 1, "MINE_EXIT" ]
+        ],
+        "entranceSector": [ "J14", 1 ],
+        "warpExit": {
+            "sector": "I14",
+            "gridNo": 9085
+        },
+        "attackSectors": [
+            {
+                "sector": "I14",
+                "chance": 45,
+                "insertionCode": "GRIDNO",
+                "insertionGridNo": 9726
+            },
+            {
+                "sector": "I13",
+                "chance": 20,
+                "insertionCode": "EAST"
+            },
+            {
+                "sector": "H14",
+                "chance": 20,
+                "insertionCode": "SOUTH"
+            },
+            {
+                "sector": "H13",
+                "chance": 15,
+                "insertionCode": "EAST"
+            }
+        ]
+    },
+    {
+        "lairId": 4,
+        "associatedMineId": 5, // Grumm
+        "sectors": [
+            [ "G4", 3, "QUEEN_LAIR" ],
+            [ "H4", 3, "LAIR" ],
+            [ "H4", 2, "LAIR_ENTRANCE" ],
+            [ "H3", 2, "INNER_MINE" ],
+            [ "I3", 2, "INNER_MINE" ],
+            [ "I3", 1, "OUTER_MINE" ],
+            [ "H3", 1, "MINE_EXIT" ]
+        ],
+        "entranceSector": [ "H4", 2 ],
+        "warpExit": {
+            "sector": "H3",
+            "gridNo": 9822
+        },
+        "attackSectors": [
+            {
+                "sector": "H3",
+                "chance": 35,
+                "insertionCode": "GRIDNO",
+                "insertionGridNo": 10303
+            },
+            {
+                "sector": "H2",
+                "chance": 20,
+                "insertionCode": "EAST"
+            },
+            {
+                "sector": "G2",
+                "chance": 15,
+                "insertionCode": "SOUTH"
+            },
+            {
+                "sector": "H1",
+                "chance": 15,
+                "insertionCode": "EAST"
+            },
+            {
+                "sector": "G1",
+                "chance": 15,
+                "insertionCode": "SOUTH"
+            }
+        ]
+    }
+]
