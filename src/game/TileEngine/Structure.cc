@@ -34,6 +34,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <climits>
 #include <string_theory/format>
 #include <string_theory/string>
 
