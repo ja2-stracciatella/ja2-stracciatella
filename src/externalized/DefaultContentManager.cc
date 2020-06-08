@@ -33,6 +33,7 @@
 #include "policy/DefaultIMPPolicy.h"
 #include "strategic/BloodCatPlacementsModel.h"
 #include "strategic/BloodCatSpawnsModel.h"
+#include "strategic/CreatureLairModel.h"
 #include "strategic/FactParamsModel.h"
 #include "strategic/MineModel.h"
 #include "strategic/SamSiteModel.h"
@@ -311,6 +312,7 @@ DefaultContentManager::~DefaultContentManager()
 
 	deleteElements(m_bloodCatPlacements);
 	deleteElements(m_bloodCatSpawns);
+	deleteElements(m_creatureLairs);
 	deleteElements(m_factParams);
 	deleteElements(m_mines);
 	deleteElements(m_npcActionParams);
@@ -1205,6 +1207,15 @@ bool DefaultContentManager::loadStrategicLayerData() {
 	}
 	delete json;
 
+	json = readJsonDataFile("strategic-map-creature-lairs.json");
+	for (auto& element : json->GetArray())
+	{
+		m_creatureLairs.push_back(
+			CreatureLairModel::deserialize(element)
+		);
+	}
+	delete json;
+
 	json = readJsonDataFile("strategic-fact-params.json");
 	for (auto& element : json->GetArray())
 	{
@@ -1265,6 +1276,7 @@ bool DefaultContentManager::loadStrategicLayerData() {
 	}
 	delete json;
 
+	CreatureLairModel::validateData(m_creatureLairs, m_undergroundSectors, m_mines.size());
 	return true;
 }
 
@@ -1298,6 +1310,35 @@ const BloodCatSpawnsModel* DefaultContentManager::getBloodCatSpawnsOfSector(uint
 		if ( spawns->sectorId == sectorId )
 		{
 			return spawns;
+		}
+	}
+	return NULL;
+}
+
+const std::vector<const CreatureLairModel*>& DefaultContentManager::getCreatureLairs() const
+{
+	return m_creatureLairs;
+}
+
+const CreatureLairModel* DefaultContentManager::getCreatureLair(uint8_t lairId) const
+{
+	for (auto lair : m_creatureLairs)
+	{
+		if (lair->lairId == lairId)
+		{
+			return lair;
+		}
+	}
+	return NULL;
+}
+
+const CreatureLairModel* DefaultContentManager::getCreatureLairByMineId(uint8_t mineId) const
+{
+	for (auto lair : m_creatureLairs)
+	{
+		if (lair->associatedMineId == mineId) 
+		{
+			return lair;
 		}
 	}
 	return NULL;

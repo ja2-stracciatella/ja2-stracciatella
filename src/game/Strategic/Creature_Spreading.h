@@ -41,6 +41,18 @@ enum{
 	CREATURE_BATTLE_CODE_PREBATTLEINTERFACE,
 	CREATURE_BATTLE_CODE_AUTORESOLVE,
 };
+
+enum
+{
+	QUEEN_LAIR,		//where the queen lives.  Highly protected
+	LAIR,			//part of the queen's lair -- lots of babies and defending mothers
+	LAIR_ENTRANCE,		//where the creatures access the mine.
+	INNER_MINE,		//parts of the mines that aren't close to the outside world
+	OUTER_MINE,		//area's where miners work, close to towns, creatures love to eat :)
+	FEEDING_GROUNDS,	//creatures love to populate these sectors :)
+	MINE_EXIT,		//the area that creatures can initiate town attacks if lots of monsters.
+};
+
 extern UINT8 gubCreatureBattleCode;
 
 void DetermineCreatureTownComposition(UINT8 ubNumCreatures,
