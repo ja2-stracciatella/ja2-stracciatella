@@ -159,7 +159,7 @@ public:
 	virtual const std::vector<const BloodCatPlacementsModel*>& getBloodCatPlacements() const override;
 	virtual const std::vector<const BloodCatSpawnsModel*>& getBloodCatSpawns() const override;
 	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const override;
-	virtual const std::vector<const CreatureLairModel*> getCreatureLairs() const override;
+	virtual const std::vector<const CreatureLairModel*>& getCreatureLairs() const override;
 	virtual const CreatureLairModel* getCreatureLair(uint8_t lairId) const override;
 	virtual const CreatureLairModel* getCreatureLairByMineId(uint8_t mineId) const override;
 	virtual const MineModel* getMineForSector(uint8_t sectorX, uint8_t sectorY, uint8_t sectorZ) const override;

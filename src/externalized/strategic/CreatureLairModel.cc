@@ -181,7 +181,7 @@ CreatureLairModel* CreatureLairModel::deserialize(const rapidjson::Value& json)
 	);
 }
 
-void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*> lairs, const std::vector<const UndergroundSectorModel*> ugSectors, const uint8_t numMines)
+void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>& lairs, const std::vector<const UndergroundSectorModel*>& ugSectors, const uint8_t numMines)
 {
 	std::set<uint8_t> distinctLairIds;
 	for (auto lair : lairs)

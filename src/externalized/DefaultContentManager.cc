@@ -1315,7 +1315,7 @@ const BloodCatSpawnsModel* DefaultContentManager::getBloodCatSpawnsOfSector(uint
 	return NULL;
 }
 
-const std::vector<const CreatureLairModel*> DefaultContentManager::getCreatureLairs() const
+const std::vector<const CreatureLairModel*>& DefaultContentManager::getCreatureLairs() const
 {
 	return m_creatureLairs;
 }

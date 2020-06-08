@@ -64,5 +64,5 @@ public:
         const CreatureAttackSector* getTownAttackDetails(uint8_t sectorId) const;
 
         static CreatureLairModel* deserialize(const rapidjson::Value& json);
-        static void validateData(const std::vector<const CreatureLairModel*> lairs, const std::vector<const UndergroundSectorModel*> ugSectors, uint8_t numMines);
+        static void validateData(const std::vector<const CreatureLairModel*>& lairs, const std::vector<const UndergroundSectorModel*>& ugSectors, uint8_t numMines);
 };

@@ -135,7 +135,7 @@ public:
 	virtual const std::vector<const BloodCatPlacementsModel*> & getBloodCatPlacements() const = 0;
 	virtual const std::vector<const BloodCatSpawnsModel*> & getBloodCatSpawns() const = 0;
 	virtual const BloodCatSpawnsModel* getBloodCatSpawnsOfSector(uint8_t sectorId) const = 0;
-	virtual const std::vector<const CreatureLairModel*> getCreatureLairs() const = 0;
+	virtual const std::vector<const CreatureLairModel*>& getCreatureLairs() const = 0;
 	virtual const CreatureLairModel* getCreatureLair(uint8_t lairId) const = 0;
 	virtual const CreatureLairModel* getCreatureLairByMineId(uint8_t mineId) const = 0;
 	virtual const MineModel* getMineForSector(uint8_t sectorX, uint8_t sectorY, uint8_t sectorZ) const = 0;
