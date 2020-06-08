@@ -34,6 +34,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 
+#include <climits>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -297,6 +298,43 @@ static void LoadStructureData(char const* const filename, STRUCTURE_FILE_REF* co
 	sfr->pubStructureData = structure_data.Release();
 }
 
+void NormalizeStructureTiles(DB_STRUCTURE_TILE** pTiles, UINT8 ubNumTiles)
+{
+	/**
+	 * In #1107, it was discovered that some of the Copter structures do not
+	 * have a base tile. RemoveStruct will not work without a base tile, as 
+	 * it tries to find a non-existent base structure.
+	 *
+	 * This function attempts to correct such issues with JSD data, by 
+	 * ensuring there is a tile with (0, 0) position relative to base.
+	 */
+	int minDistFromBase = INT_MAX;
+	for (UINT8 i = 0; i < ubNumTiles; i++)
+	{
+		DB_STRUCTURE_TILE* tile = pTiles[i];
+		if (abs(minDistFromBase) > abs(tile->sPosRelToBase))
+		{
+			minDistFromBase = tile->sPosRelToBase;
+		}
+	}
+
+	if (minDistFromBase == 0)
+	{
+		// Data is fine. Nothing to do.
+		return;
+	}
+
+	SLOGD(ST::format("Adjusting tiles relative positions by {}", -minDistFromBase));
+	int xDist = minDistFromBase % WORLD_COLS;
+	int yDist = minDistFromBase / WORLD_COLS;
+	for (UINT8 i = 0; i < ubNumTiles; i++)
+	{
+		DB_STRUCTURE_TILE* tile = pTiles[i];
+		tile->sPosRelToBase -= minDistFromBase;
+		tile->bXPosRelToBase -= xDist;
+		tile->bYPosRelToBase -= yDist;
+	}
+}
 
 static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32 uiDataSize)
 { /* Based on a file chunk, creates all the dynamic arrays for the structure
@@ -338,6 +376,9 @@ static void CreateFileStructureArrays(STRUCTURE_FILE_REF* const pFileRef, UINT32
 			tile->sPosRelToBase = tile->bXPosRelToBase + tile->bYPosRelToBase * WORLD_COLS;
 			uiHitPoints += FilledTilePositions(tile);
 		}
+
+		NormalizeStructureTiles(tiles, dbs->ubNumberOfTiles);
+
 		// scale hit points down to something reasonable...
 		uiHitPoints = uiHitPoints * 100 / 255;
 		dbs->ubHitPoints = (UINT8)uiHitPoints;
@@ -374,6 +415,10 @@ static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF const* const pDBStructu
 	pStructure->fFlags          = pDBStructure->fFlags;
 	pStructure->pShape          = &pTile->Shape;
 	pStructure->pDBStructureRef = pDBStructureRef;
+	if (pTile->sPosRelToBase != 0 && ubTileNum == 0)
+	{
+		SLOGW(ST::format("Possible bad structure {}", pDBStructureRef->pDBStructure->usStructureNumber));
+	}
 	if (pTile->sPosRelToBase == 0)
 	{	// base tile
 		pStructure->fFlags      |= STRUCTURE_BASE_TILE;
