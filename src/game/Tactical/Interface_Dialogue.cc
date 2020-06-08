@@ -4191,7 +4191,7 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 		case NPC_ACTION_ASK_ABOUT_PAYING_RPC:
 		case NPC_ACTION_ASK_ABOUT_PAYING_RPC_WITH_DAILY_SALARY:
 		case NPC_ACTION_REDUCE_CONRAD_SALARY_CONDITIONS:
-			zTemp2 = st_format_printf("${}", gMercProfiles[ubProfileID].sSalary);
+			zTemp2 = ST::format("${}", gMercProfiles[ubProfileID].sSalary);
 			zTemp = st_format_printf(TacticalStr[ HIRE_PROMPT ], gMercProfiles[ubProfileID].zNickname, zTemp2);
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
@@ -4200,7 +4200,7 @@ static void StartDialogueMessageBox(UINT8 ubProfileID, UINT16 usMessageBoxType)
 			DoMessageBox(MSG_BOX_BASIC_STYLE, TacticalStr[BOXING_PROMPT], GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;
 		case NPC_ACTION_BUY_LEATHER_KEVLAR_VEST:
-			zTemp2 = st_format_printf("${}", GCM->getItem(LEATHER_JACKET_W_KEVLAR)->getPrice());
+			zTemp2 = ST::format("${}", GCM->getItem(LEATHER_JACKET_W_KEVLAR)->getPrice());
 			zTemp = st_format_printf(TacticalStr[ BUY_VEST_PROMPT ], ItemNames[LEATHER_JACKET_W_KEVLAR], zTemp2);
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zTemp, GAME_SCREEN, MSG_BOX_FLAG_YESNO, DialogueMessageBoxCallBack, NULL);
 			break;

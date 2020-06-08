@@ -315,7 +315,7 @@ static void BuildListFile(void)
 		}
 		else
 		{
-			zError = st_format_printf("Animation str {} is not known: ", currFilename);
+			zError = ST::format("Animation str {} is not known: ", currFilename);
 			DoMessageBox(MSG_BOX_BASIC_STYLE, zError, ANIEDIT_SCREEN, MSG_BOX_FLAG_YESNO, NULL, NULL);
 			return;
 		}
