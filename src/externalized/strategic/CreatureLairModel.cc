@@ -211,7 +211,7 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 		// The first lair sector in list should be QUEEN_LAIR
 		if (lair->lairSectors.size() < 1 || lair->lairSectors[0].habitatType != QUEEN_LAIR)
 		{
-			SLOGW(ST::format("The list of lair sectors should be non-empty and begins with the QUEEN_LAIR. Lair ID: {}", lair->lairId));
+			SLOGW(ST::format("The list of lair sectors should be non-empty and begin with the QUEEN_LAIR. Lair ID: {}", lair->lairId));
 		}
 
 		// all lair sectors should be adjacent and defined as underground sector
@@ -231,13 +231,13 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 			z = sec.sectorLevel;
 		}
 
-		// all underground sectors must also lbe defined with UndergroundSectorModel
+		// all underground sectors must also be defined with UndergroundSectorModel
 		bool isDefined = false;
 		for (auto sec : lair->lairSectors)
 		{
 			if (sec.sectorLevel == 0)
 			{
-				SLOGW(ST::format("Lair sector ({}) is not in the underground. There may cause problems.", sec.sectorId));
+				SLOGW(ST::format("Lair sector ({}) is not in the underground. This may cause problems.", sec.sectorId));
 				continue;
 			}
 			bool isDefined = false;
@@ -251,7 +251,7 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 			}
 			if (!isDefined)
 			{
-				SLOGE(ST::format("Underground lair sector ({},{}) is not defined as underground sectors. Make sure the data in consistent with strategic-map-underground-sectors.json.", sec.sectorId, sec.sectorLevel));
+				SLOGE(ST::format("Underground lair sector ({},{}) is not defined as an underground sector. Make sure the data is consistent with strategic-map-underground-sectors.json.", sec.sectorId, sec.sectorLevel));
 				throw std::runtime_error("");
 			}
 		}
