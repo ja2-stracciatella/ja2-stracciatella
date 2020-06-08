@@ -5,9 +5,9 @@
  *  - lairId:    A unique numeric ID for the lair. Must be an integer greater than zero.
  *  - associatedMineId:    Creature lair must be located and associated with one mine.
  *  - entranceSector:    Where the lair entrance is located. There must be an alternate map file (*_a.dat), which will be activated at lair initialization.
- *  - sectors:    An ordered list of sectors making up the lair, specified as an array of [sector, sectorZ, habitatType]. This list should start with the innermost sector, which is the QUEEN_LAIR. The creatures will spread out outwards. Each sector must have a corresponding map file and defined in strategic-map-underground-sectors.json; "habitatType" must be one of: QUEEN_LAIR, LAIR, LAIR_ENTRANCE, INNER_MINE, OUTER_MINE, FEEDING_GROUNDS or MINE_EXIT. See Creature_Spreading.h for details.
+ *  - sectors:    This should be a consecutive, non-branching, ordered list of underground sectors making up the lair, specified as an array of [sector, sectorZ, habitatType]. This list should start with the innermost sector, which is the QUEEN_LAIR. The creatures will spread out outwards. Each sector must have a corresponding map file and defined in strategic-map-underground-sectors.json; "habitatType" must be one of: QUEEN_LAIR, LAIR, LAIR_ENTRANCE, INNER_MINE, OUTER_MINE, FEEDING_GROUNDS or MINE_EXIT. See Creature_Spreading.h for details.
  *  - warpExit:    Destination for the "Travel to surface?" warp from deep underground
- *  - attackSectors: List of town sectors and enemy insertion. Used by creatures to make town attacks
+ *  - attackSectors: List of town sectors and enemy insertion. Used by creatures to make town attacks. Each entry can have four fields: 1) sector, which should be a nearby town sector; 2) chance, which is an integer weight on how likely the sector is chosen for the next attack; 3) insertionCode: any one from the INSERTION_CODE_* enum but without the prefix, such as "GRIDNO", "NORTH", "CENTER"; 4) insertionGridNo: optional GridNo, required only if the insertionCode is "GRIDNO"
  */
 [
     {
