@@ -714,11 +714,11 @@ static void SetupAmmoGUI(void)
 {
 	ST::string str = ST::format("{}", gpItem->ubNumberOfObjects);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 20, 25, 15, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
-	str += ST::format("{}", gpItem->bTrap);
+	str = ST::format("{}", gpItem->bTrap);
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		str += ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
+		str = ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
@@ -842,7 +842,7 @@ static void SetupEquipGUI(void)
 	AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 40, 25, 15, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 	if( gpEditingItemPool )
 	{
-		str += ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
+		str = ST::format("{}", 100 - GetWorldItem(gpEditingItemPool->iItemIndex).ubNonExistChance);
 		AddTextInputField( 485, EDITOR_TASKBAR_POS_Y + 80, 25, 15, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_NUMERICSTRICT );
 	}
 }
