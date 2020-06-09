@@ -603,15 +603,17 @@ void GetTargetWorldPositions( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo, FLOAT 
 			UINT32 const cth_aim_shot_torso = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_TORSO );
 			UINT32 const cth_aim_shot_legs = SoldierToSoldierBodyPartChanceToGetThrough( pSoldier, pTargetSoldier, AIM_SHOT_LEGS );
 
+			UINT32 cth_choice = cth_aim_shot_torso;
 			pSoldier->bAimShotLocation = AIM_SHOT_TORSO; // default
 
-			if( cth_aim_shot_legs >= threshold_cth_legs || cth_aim_shot_legs > cth_aim_shot_torso )
+			if (cth_aim_shot_legs >= threshold_cth_legs || (cth_aim_shot_legs + 5) > cth_choice)
 			{
-				pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
+				pSoldier->bAimShotLocation = AIM_SHOT_LEGS;
+				cth_choice = cth_aim_shot_legs;
 			}
 
-			if( cth_aim_shot_head >= threshold_cth_head ||   // good enough, override
-				((cth_aim_shot_head+5) >= cth_aim_shot_torso)) // close enough
+			if (cth_aim_shot_head >= threshold_cth_head ||   // good enough, override
+				cth_aim_shot_head >= cth_choice) // close enough, better if extra damage
 			{
 				pSoldier->bAimShotLocation = AIM_SHOT_HEAD;
 			}
