@@ -23,6 +23,10 @@
     //  vanilla setting: false
     "middle_mouse_look": true,
 
+    //  Size of aim cricle reflects chance to hit letting the player know
+    //  when enough time units have been spent and which shots are unlikely.
+    "accurate_aim_circle": false,
+
     //  --------------------------------------------------
     //  System settings
     //  --------------------------------------------------
