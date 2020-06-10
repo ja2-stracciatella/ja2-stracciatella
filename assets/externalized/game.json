@@ -98,6 +98,9 @@
     "ime_detach_attachments": false,
     "ime_refill_canteens": false,
 
+
+    "vehicle_inventory": false,
+
     //  Enables middle mouse button to trigger a look into cursor direction
     //  vanilla_setting: false
     "middle_mouse_look": true,

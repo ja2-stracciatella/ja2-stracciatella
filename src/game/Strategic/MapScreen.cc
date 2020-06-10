@@ -7129,6 +7129,8 @@ static bool CanToggleSelectedCharInventory()
 
 bool MapCharacterHasAccessibleInventory(SOLDIERTYPE const& s)
 {
+	if ( hasVehicleInventory( &s ) ) return true;
+
 	return
 		s.bAssignment         != IN_TRANSIT     &&
 		s.bAssignment         != ASSIGNMENT_POW &&

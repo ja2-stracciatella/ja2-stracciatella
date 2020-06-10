@@ -2336,6 +2336,11 @@ BOOLEAN CanItemFitInPosition(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, INT8 bPos,
 	UINT8 ubSlotLimit;
 	INT8  bNewPos;
 
+	if(hasVehicleInventory(pSoldier))
+	{
+		return true;
+	}
+
 	switch( bPos )
 	{
 		case SECONDHANDPOS:
@@ -2471,6 +2476,8 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		return( FALSE );
 	}
 
+	if(!(hasVehicleInventory(pSoldier)))
+	{
 	// If the position is either head slot, then the item must be IC_FACE (checked in
 	// CanItemFitInPosition).
 	if ( bPos == HEAD1POS )
@@ -2491,10 +2498,37 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 			return( FALSE );
 		}
 	}
+	}
 
 	if (GCM->getItem(pObj->usItem)->getItemClass() == IC_KEY) CollectKey(*pSoldier, *pObj);
 
 	ubSlotLimit = ItemSlotLimit( pObj->usItem, bPos );
+
+	if((hasVehicleInventory(pSoldier)) && GCM->getItem(pObj->usItem)->isStackable())
+	{
+		ubSlotLimit=1;
+		bool no_attachments=true;
+		for(int i=0; i<MAX_ATTACHMENTS; i++)
+		{
+			if(pObj->usAttachItem[i]!=NOTHING)
+			{
+				no_attachments=false;
+				break;
+			}
+		}
+		if(pSoldier->inv[bPos].usItem==pObj->usItem && no_attachments)
+		{
+			for(int i=0; i<MAX_ATTACHMENTS; i++)
+			{
+				if(pSoldier->inv[bPos].usAttachItem[i]!=NOTHING)
+				{
+					no_attachments=false;
+					break;
+				}
+			}
+		}
+		if(no_attachments) ubSlotLimit=MAX_OBJECTS_PER_SLOT;
+	}
 
 	pInSlot = &(pSoldier->inv[bPos]);
 

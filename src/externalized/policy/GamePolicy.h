@@ -75,6 +75,8 @@ public:
 	bool ime_detach_ammo;                 // hotkey detaches magazines from sector weapons
 	bool ime_detach_attachments;          // hotkey removes removable attachments from sector weapons
 	bool ime_refill_canteens;             // hotkey refill sector canteens, drinking does not deplete canteens out of combat
+	bool vehicle_inventory;               // Vehicles have accessable inventories
+
 
 	bool pablo_wont_steal;                // Packages not stolen
 

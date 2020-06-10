@@ -37,6 +37,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	ime_detach_ammo                = (*json)["ime_detach_ammo"].GetBool();
 	ime_detach_attachments         = (*json)["ime_detach_attachments"].GetBool();
 	ime_refill_canteens            = (*json)["ime_refill_canteens"].GetBool();
+	vehicle_inventory              = (*json)["vehicle_inventory"].GetBool();
+
 
 	imp_load_saved_merc_by_nickname = (*json)["imp_load_saved_merc_by_nickname"].GetBool();
 	imp_load_keep_inventory         = (*json)["imp_load_keep_inventory"].GetBool();

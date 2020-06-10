@@ -791,7 +791,8 @@ void RenderInvBodyPanel(const SOLDIERTYPE* pSoldier, INT16 sX, INT16 sY)
 	// Blit body inv, based on body type
 	INT8 bSubImageIndex = gbCompatibleApplyItem;
 
-	BltVideoObject(guiSAVEBUFFER, guiBodyInvVO[pSoldier->ubBodyType][bSubImageIndex], 0, sX, sY);
+	if(IsMechanical(*pSoldier)) BltVideoObject(guiSAVEBUFFER, guiBodyInvVO[REGMALE][bSubImageIndex], 0, sX, sY);
+	else BltVideoObject(guiSAVEBUFFER, guiBodyInvVO[pSoldier->ubBodyType][bSubImageIndex], 0, sX, sY);
 }
 
 
