@@ -120,6 +120,16 @@
 #include <map>
 #include <stdexcept>
 
+#include "AmmoTypeModel.h"
+#include "CalibreModel.h"
+#include "ItemModel.h"
+#include "MagazineModel.h"
+#include "WeaponModels.h"
+#include "Map_Screen_Interface_Map_Inventory.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
+
 //Used by PickGridNoToWalkIn
 #define MAX_ATTEMPTS 200
 
@@ -3653,4 +3663,411 @@ UINT GetWorldSector()
 {
 	if (gWorldSectorX == 0 || gWorldSectorY == 0) return NO_SECTOR;
 	return SECTOR(gWorldSectorX, gWorldSectorY);
+}
+
+UINT32 WeaponRating(OBJECTTYPE* const object)
+{
+	UINT16 uItem = object->usItem;
+	UINT32 rating = 0;
+
+	switch (GCM->getItem(uItem)->getItemClass())
+	{
+		case IC_GUN:
+		{
+			float damage = GCM->getItem(uItem)->asWeapon()->ubImpact;
+			float range = GCM->getItem(uItem)->asWeapon()->usRange;
+			float rate = GCM->getItem(uItem)->asWeapon()->ubShotsPer4Turns;
+			float status = object->bGunStatus / 100.0;
+
+			rating = ((damage * 2.0 + range * 0.80) * (rate * 4.0) * status);
+
+			if(status < 0.45)
+				rating /= 4.0;
+			break;
+		}
+		case IC_LAUNCHER:
+		{
+			float damage = GCM->getItem(uItem)->asWeapon()->ubImpact;
+			float range = GCM->getItem(uItem)->asWeapon()->usRange;
+			float rate = GCM->getItem(uItem)->asWeapon()->ubShotsPer4Turns;
+			float status = object->bGunStatus / 100.0;
+
+			rating = ((3.0 * damage * 2.0 + range * 0.80) * (rate * 4.0) * status);
+
+			if(status < 0.55)
+				rating /= 4.0;
+			break;
+		}
+		case IC_BLADE:
+		{
+				float damage = GCM->getItem(uItem)->asWeapon()->ubImpact;
+				rating = damage;
+				break;
+		}
+	}
+	return rating;
+}
+
+void LoadedSectorInventoryWorldItemEmptyMagazine(GridNo const sGridNo, WORLDITEM* const worlditem)
+{
+	if(!worlditem) return;
+
+	OBJECTTYPE* const object = &worlditem->o;
+	if ( ( GCM->getItem(object->usItem)->getItemClass() != IC_GUN )) return;
+	if ( (object->usGunAmmoItem == NONE) || (object->ubGunShotsLeft == 0) ) return;
+	OBJECTTYPE itemAmmo;
+	EmptyWeaponMagazine(object, &itemAmmo);
+	AddItemToWorld( sGridNo == -1 ? worlditem->sGridNo : sGridNo, &itemAmmo, worlditem->ubLevel, WORLD_ITEM_REACHABLE , -1, (Visibility)worlditem->bVisible );
+}
+
+UINT32 LoadedSectorInventoryCountWeaponAmmoAttachmentByItem(UINT16 const usItem, bool const full_access)
+{
+	UINT32 quantity=0;
+	for ( UINT32 i = 0; i < gWorldItems.size(); ++i )
+	{
+		WORLDITEM* const worlditem = &gWorldItems[i];
+
+		if(  worlditem->bVisible != VISIBLE && !full_access)					continue;
+		if(! worlditem->fExists)								continue;
+		if(!(worlditem->usFlags & WORLD_ITEM_REACHABLE) && !full_access)			continue;
+		if(  worlditem->usFlags & WORLD_ITEM_ARMED_BOMB)					continue;
+
+		OBJECTTYPE* const object = &worlditem->o;
+
+		if(  object->usItem != usItem)								continue;
+
+		quantity++;
+	}
+
+	return quantity;
+}
+
+UINT32 LoadedSectorInventoryCountWeaponAmmoByGunItem(UINT16 const usItem, bool const full_access)
+{
+	UINT32 quantity=0;
+	for ( UINT32 i = 0; i < gWorldItems.size(); ++i )
+	{
+		WORLDITEM* const worlditem = &gWorldItems[i];
+
+		if(  worlditem->bVisible != VISIBLE && !full_access)					continue;
+		if(! worlditem->fExists)								continue;
+		if(!(worlditem->usFlags & WORLD_ITEM_REACHABLE) && !full_access)			continue;
+		if(  worlditem->usFlags & WORLD_ITEM_ARMED_BOMB)					continue;
+
+		OBJECTTYPE* const object = &worlditem->o;
+
+		if(  GCM->getItem(object->usItem)->getItemClass() != IC_AMMO )				continue;
+		if(! GCM->getWeapon(usItem)->matches(GCM->getItem(object->usItem)->asAmmo()->calibre))	continue;
+
+		for(int i = 0; i < object->ubNumberOfObjects; ++i)
+		{
+			quantity += object->ubShotsLeft[i];
+		}
+	}
+
+	return quantity;
+}
+
+UINT32 LoadedSectorInventoryGetBestWorldItemIndexByItemClass(UINT16 const usItem, bool const full_access)
+{
+	UINT32 const itemClass = GCM->getItem(usItem)->getItemClass();
+
+	UINT16 best_usItem = usItem;
+	UINT32 pick_rating = 0;
+	bool best_found = false;
+	UINT32 worlditem_index = (UINT32)-1;
+
+	for ( UINT32 i = 0; i < gWorldItems.size(); ++i )
+	{
+		WORLDITEM* const worlditem = &gWorldItems[ i ];
+
+		if(  worlditem->bVisible != VISIBLE && !full_access)			continue;
+		if(! worlditem->fExists)						continue;
+		if(!(worlditem->usFlags & WORLD_ITEM_REACHABLE) && !full_access)	continue;
+		if(  worlditem->usFlags & WORLD_ITEM_ARMED_BOMB)			continue;
+
+		OBJECTTYPE* const object = &worlditem->o;
+		if (( GCM->getItem(object->usItem)->getItemClass() != itemClass ))	continue;
+
+		switch (itemClass)
+		{
+			case IC_GUN:
+			{
+				switch(object->usItem)
+				{
+					case ROCKET_LAUNCHER:
+					{
+						if(pick_rating<(UINT8)object->bStatus[0])
+						{
+							pick_rating = object->bStatus[0];
+							worlditem_index = i;
+						}
+						break;
+					}
+
+					default:
+						if(best_usItem == ROCKET_LAUNCHER)	continue; // no. must be this one. same as default:
+
+						LoadedSectorInventoryWorldItemEmptyMagazine(-1, worlditem);
+						if(LoadedSectorInventoryCountWeaponAmmoByGunItem(object->usItem, full_access) < GCM->getItem(object->usItem)->asWeapon()->ubMagSize) continue;
+
+						UINT32 rating = WeaponRating(object);
+						if(rating > pick_rating)
+						{
+							pick_rating = rating;
+							worlditem_index = i;
+						}
+						break;
+				}
+				break;
+			}
+			case IC_LAUNCHER:
+			{
+				switch(best_usItem)
+				{
+					case GL_HE_GRENADE:
+					case GL_STUN_GRENADE:
+					case GL_SMOKE_GRENADE:
+					case UNDER_GLAUNCHER:
+					{
+						if(object->usItem != best_usItem)
+							continue; // IC_LAUNCHER must be exact match
+
+						UINT32 rating;
+						for(int j = 0; j < object->ubNumberOfObjects; ++j)
+						{
+							rating = object->bStatus[j];
+							if(rating > pick_rating)
+							{
+								pick_rating = rating;
+								worlditem_index = i;
+							}
+						}
+						break;
+					}
+
+					case MORTAR:
+					case GLAUNCHER:
+					{
+						if(object->usItem != best_usItem)
+							continue; // IC_LAUNCHER must be exact match
+					}
+
+					default:
+					{
+						break;
+					}
+				}
+
+				switch(object->usItem)
+				{
+					case GLAUNCHER:
+					{
+						if(!ItemHasAttachments(*object))
+							if(LoadedSectorInventoryCountWeaponAmmoAttachmentByItem(GL_HE_GRENADE, full_access) < 1) continue;
+
+						UINT32 rating = WeaponRating(object);
+
+						if(rating > pick_rating)
+						{
+							pick_rating = rating;
+							worlditem_index = i;
+						}
+
+						break;
+					}
+					case MORTAR:
+					{
+						if(!ItemHasAttachments(*object))
+							if(LoadedSectorInventoryCountWeaponAmmoAttachmentByItem(MORTAR_SHELL, full_access) < 1) continue;
+
+						UINT32 rating = WeaponRating(object);
+
+						if(rating > pick_rating)
+						{
+							pick_rating = rating;
+							worlditem_index = i;
+						}
+
+						break;
+					}
+				}
+				break;
+			}
+			case IC_ARMOUR:
+			{
+				if (Armour[GCM->getItem(object->usItem)->getClassIndex()].ubArmourClass != Armour[GCM->getItem(usItem)->getClassIndex()].ubArmourClass) break;
+				UINT32 rating = EffectiveArmour(object);
+				if(rating > pick_rating)
+				{
+					pick_rating = rating;
+					worlditem_index = i;
+				}
+				break;
+			}
+			case IC_BLADE:
+			{
+				UINT32 rating = WeaponRating(object);
+				if(rating > pick_rating)
+				{
+					pick_rating = rating;
+					worlditem_index = i;
+				}
+				break;
+			}
+			case IC_KEY:
+			{
+				worlditem_index = i;
+				best_found = true;
+				break;
+			}
+			case IC_FACE:
+			{
+				switch(object->usItem)
+				{
+					case UVGOGGLES: // only above ground considered
+						if(best_usItem == NIGHTGOGGLES)
+						{
+							pick_rating = 0; // reset to pick
+							best_usItem = UVGOGGLES;
+						}
+						break;
+				}
+			}//
+			default:
+			{
+				if(object->usItem != best_usItem) break;
+				UINT32 rating;
+				for(int j = 0; j<object->ubNumberOfObjects; ++j)
+				{
+					rating = object->bStatus[j];
+					if(rating > pick_rating)
+					{
+						pick_rating = rating;
+						worlditem_index = i;
+					}
+				}
+				break;
+			}
+		}
+
+		if(best_found) break;
+	}
+
+	return worlditem_index;
+}
+
+//adapted: 1.13 HEADROCK, CHRISL et al.
+void SectorInventoryDetach(GridNo const sGridNo, INT16 const x, INT16 const y, INT const z)
+{
+	HandleAllReachAbleItemsInTheSector( x, y, z );
+
+	for ( UINT32 i = 0; i < gWorldItems.size(); ++i )
+	{
+		WORLDITEM* const worlditem = &gWorldItems[ i ];
+
+		if(  worlditem->bVisible != VISIBLE)			continue;
+		if(! worlditem->fExists)				continue;
+		if(!(worlditem->usFlags & WORLD_ITEM_REACHABLE))	continue;
+		if(  worlditem->usFlags & WORLD_ITEM_ARMED_BOMB)	continue;
+
+		OBJECTTYPE* const object = &worlditem->o;
+
+		// Detach magazine
+		if (( GCM->getItem(object->usItem)->getItemClass() == IC_GUN ) && gamepolicy(ime_detach_ammo))
+		{
+			if ( (object->usGunAmmoItem != NONE) && (object->ubGunShotsLeft > 0) )
+			{
+				OBJECTTYPE itemAmmo;
+				EmptyWeaponMagazine(object, &itemAmmo);
+				AddItemToPool( sGridNo == -1 ? worlditem->sGridNo : sGridNo, &itemAmmo, VISIBLE, worlditem->ubLevel, WORLD_ITEM_REACHABLE , -1 );
+			}
+		}
+
+		// Detach gun attachments. Armour etc. must have attachments removed before stacking
+		if(gamepolicy(ime_detach_attachments) || GCM->getItem(object->usItem)->getItemClass() != IC_GUN )
+		{
+			for(int j = 0; j < MAX_ATTACHMENTS; ++j)
+			{
+				OBJECTTYPE itemAttachment;
+				while(RemoveAttachment(object, j, &itemAttachment))
+				{
+					AddItemToPool( sGridNo == -1 ? worlditem->sGridNo : sGridNo, &itemAttachment, VISIBLE, worlditem->ubLevel, WORLD_ITEM_REACHABLE , -1 );
+					j = 0; // (I-L) Attachments rearranged
+				}
+			}
+		}
+	}
+}
+
+void SectorInventoryStack(GridNo const sGridNo, INT16 const x, INT16 const y, INT const z)
+{
+	HandleAllReachAbleItemsInTheSector( x, y, z );
+
+	for ( UINT32 i = 0; i < gWorldItems.size(); ++i )
+	{
+		WORLDITEM* const worlditem = &gWorldItems[ i ];
+
+		if(! worlditem->fExists)				continue;
+		if(  worlditem->bVisible != VISIBLE)			continue;
+		if(!(worlditem->usFlags & WORLD_ITEM_REACHABLE))	continue;
+		if(  worlditem->usFlags & WORLD_ITEM_ARMED_BOMB)	continue;
+
+		OBJECTTYPE* const object = &worlditem->o;
+
+		switch (object->usItem)
+		{
+			case CANTEEN:
+				if (gamepolicy(ime_refill_canteens))
+				{
+					for(int j = 0; j < object->ubNumberOfObjects; ++j)
+					{
+						object->bStatus[j] = 100;
+					}
+				}
+				break;
+		}
+
+		for(UINT32 j = i+1; j < gWorldItems.size(); ++j)
+		{
+			if(! gWorldItems[j].fExists)				continue;
+			if(  gWorldItems[j].o.usItem != object->usItem)		continue;
+			if(  gWorldItems[j].bVisible != VISIBLE)		continue;
+			if(!(gWorldItems[j].usFlags & WORLD_ITEM_REACHABLE))	continue;
+			if(  gWorldItems[j].usFlags & WORLD_ITEM_ARMED_BOMB)	continue;
+			{
+				PlaceObjectInInventoryStash(object, &gWorldItems[j].o);
+			}
+		}
+
+		//merge items in stack
+		CleanUpStack(object, NULL);
+	}
+}
+
+void SectorInventoryPlaceAllAtGridNo(GridNo const sGridNo, UINT8 const ubLevel, INT16 const x, INT16 const y, INT const z)
+{
+	//TODO support unloaded sectors
+
+	HandleAllReachAbleItemsInTheSector( x, y, z );
+
+	for ( UINT32 i = 0; i < gWorldItems.size(); ++i )
+	{
+		WORLDITEM* const worlditem = &gWorldItems[ i ];
+
+		if(  worlditem->bVisible != VISIBLE)			continue;
+		if(! worlditem->fExists)				continue;
+		if(!(worlditem->usFlags & WORLD_ITEM_REACHABLE))	continue;
+		if(  worlditem->usFlags & WORLD_ITEM_ARMED_BOMB)	continue;
+
+		OBJECTTYPE object = worlditem->o;
+		UINT16 const usFlags = worlditem->usFlags;
+		RemoveItemFromPool(*worlditem);
+		RemoveItemFromWorld(i);
+
+		if(worlditem->o.usItem!=NOTHING) // Filter NADA (nothing) items
+		{
+			AddItemToPool(sGridNo, &object, VISIBLE, ubLevel, usFlags, -1);
+		}
+	}
 }

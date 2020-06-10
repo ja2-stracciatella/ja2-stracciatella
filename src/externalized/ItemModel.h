@@ -72,6 +72,7 @@ struct ItemModel
 	virtual bool isThrowingKnife() const;
 	virtual bool isThrown() const;
 	virtual bool isWeapon() const;
+	virtual bool isStackable() const;
 
 	virtual bool isTwoHanded() const;
 	virtual bool isInBigGunList() const;

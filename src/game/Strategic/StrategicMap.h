@@ -175,4 +175,11 @@ struct StrategicMapElement
 
 extern StrategicMapElement StrategicMap[MAP_WORLD_X * MAP_WORLD_Y];
 
+#include "World_Items.h"
+UINT32 LoadedSectorInventoryGetBestWorldItemIndexByItemClass(UINT16 const usItem, bool const full_access);
+void LoadedSectorInventoryWorldItemEmptyMagazine(GridNo const sGridNo, WORLDITEM* const worlditem, bool const full_access);
+void SectorInventoryDetach(GridNo const sGridNo, INT16 const x, INT16 const y, INT const z);
+void SectorInventoryStack(GridNo const sGridNo, INT16 const x, INT16 const y, INT const z);
+void SectorInventoryPlaceAllAtGridNo(GridNo const sGridNo, UINT8 ubLevel, INT16 const x, INT16 const y, INT const z);
+
 #endif

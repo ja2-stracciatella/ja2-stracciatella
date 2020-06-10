@@ -226,4 +226,6 @@ SOLDIERTYPE * SwapLarrysProfiles( SOLDIERTYPE * pSoldier );
 
 BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT16 sGridNo );
 
+UINT32 SoldierCombatRating(SOLDIERTYPE* const pSoldier, bool normalize);
+
 #endif

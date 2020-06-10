@@ -668,6 +668,45 @@ SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE* const old_s, UINT8 const team)
 	return new_s;
 }
 
+UINT32 SoldierCombatRatingStats(SOLDIERTYPE* const pSoldier, bool normalize)
+{
+	#define scr_health_factor 1.25
+	#define scr_agility_factor 1.5
+	#define scr_dexterity_factor 1.2
+	#define scr_strength_factor 1.25
+	#define scr_wisdom_factor 1.0
+	#define scr_marksmanship_factor 2.0
+	#define scr_explosives_factor 0.5
+	#define scr_factor_sum (scr_agility_factor + scr_dexterity_factor + scr_explosives_factor + scr_health_factor + scr_marksmanship_factor + scr_strength_factor + scr_wisdom_factor)
+	#define scr_factor_count 1
+	#define scr_explevel_factor 0.01
+	#define scr_explevel_component ((1+(10*scr_explevel_factor))*(1+(10*scr_explevel_factor)))
+	#define scr_normalize_scale 0.01
+	#define scr_normalize_factor (scr_normalize_scale*scr_explevel_component*scr_factor_count*scr_factor_sum)
+
+	if (!pSoldier) return 0;
+
+	float combat_rating = 0;
+
+	combat_rating += pSoldier->bAgility*scr_agility_factor;
+	combat_rating += pSoldier->bDexterity*scr_dexterity_factor;
+	combat_rating += pSoldier->bLife*scr_health_factor;
+	combat_rating += (pSoldier->bLife-pSoldier->bLifeMax)*scr_health_factor;
+	combat_rating += pSoldier->bStrength*scr_strength_factor;
+	combat_rating += pSoldier->bWisdom*scr_wisdom_factor;
+	combat_rating += pSoldier->bMarksmanship*scr_marksmanship_factor;
+	combat_rating += pSoldier->bExplosive*scr_explosives_factor;
+	combat_rating *= (1.0 + (pSoldier->bExpLevel*scr_explevel_factor));
+	combat_rating *= (1.0 + (pSoldier->bExpLevel*scr_explevel_factor)); // twice
+	if (normalize) combat_rating /= scr_normalize_factor;
+
+	return combat_rating;
+}
+
+UINT32 SoldierCombatRating(SOLDIERTYPE* const pSoldier, bool normalize)
+{
+ return SoldierCombatRatingStats(pSoldier, normalize);
+}
 
 BOOLEAN RecruitRPC( UINT8 ubCharNum )
 {

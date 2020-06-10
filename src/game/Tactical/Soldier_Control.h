@@ -1067,4 +1067,29 @@ static inline bool IsWearingHeadGear(SOLDIERTYPE const& s, UINT16 const item)
 	return s.inv[HEAD1POS].usItem == item || s.inv[HEAD2POS].usItem == item;
 }
 
+static inline bool IsNotWearingThisHeadGear(SOLDIERTYPE const& s, UINT16 const item)
+{
+	return s.inv[HEAD1POS].usItem != item && s.inv[HEAD2POS].usItem != item;
+}
+
+static inline bool IsNotWearingAnyFaceGear(SOLDIERTYPE const& s)
+{
+	return IsNotWearingThisHeadGear(s, NIGHTGOGGLES) && IsNotWearingThisHeadGear(s, UVGOGGLES) && IsNotWearingThisHeadGear(s, SUNGOGGLES) && IsNotWearingThisHeadGear(s, GASMASK);
+}
+
+bool hasVehicleInventory(SOLDIERTYPE const* const s);
+void SoldierDropFromSlot(SOLDIERTYPE* const pSoldier, UINT8 const slot, bool const stack, bool const cleanup);
+void SoldierDropAll(SOLDIERTYPE* const pSoldier, bool const cleanup);
+void SoldierDropAllWithAnimation(SOLDIERTYPE* const pSoldier, bool const cleanup);
+void EnemyExtraEquipFromSectorInventory();
+void MilitiaEquipFromLoadedSectorInventory(bool const wipe);
+void TeamEquipAll(UINT8 bTeam, UINT8 bSide, bool const full_access);
+void TeamDropAll(UINT8 bTeam, UINT8 bSide);
+void SoldierWipeInventory(SOLDIERTYPE* pSoldier);
+void TeamWipeInventory(UINT8 bTeam, UINT8 bSide);
+void SoldierEquipFromLoadedSector(SOLDIERTYPE* const pSoldier, bool const full_access);
+bool SoldierFindFirstItemAttemptAutoPlace(SOLDIERTYPE* const pSoldier, UINT16 const usItem);
+bool SoldierAutoSwitchGoggles(SOLDIERTYPE* const pSoldier);
+bool SoldierItemAutoAttachPlace(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const object, bool const stack, bool fNewItem);
+
 #endif

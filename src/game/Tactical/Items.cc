@@ -49,6 +49,7 @@
 #include "ItemModel.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
+#include "policy/GamePolicy.h"
 
 #define ANY_MAGSIZE 255
 
@@ -2018,15 +2019,17 @@ INT8 FindAmmoToReload( const SOLDIERTYPE * pSoldier, INT8 bWeaponIn, INT8 bExclu
 BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 {
 	OBJECTTYPE *pObj;
-	INT8    bSlot, bAPCost;
+	INT8    bSlot, bAPCost, invpos;
 	BOOLEAN fRet;
 
 	CHECKF( pSoldier );
-	pObj = &(pSoldier->inv[HANDPOS]);
+	invpos = HANDPOS;
+
+	pObj = &(pSoldier->inv[invpos]);
 
 	if (GCM->getItem(pObj->usItem)->getItemClass() == IC_GUN || GCM->getItem(pObj->usItem)->getItemClass() == IC_LAUNCHER)
 	{
-		bSlot = FindAmmoToReload( pSoldier, HANDPOS, NO_SLOT );
+		bSlot = FindAmmoToReload( pSoldier, invpos, NO_SLOT );
 		if (bSlot != NO_SLOT)
 		{
 			// reload using this ammo!
@@ -2769,6 +2772,28 @@ static BOOLEAN InternalAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj, 
 				}
 			}
 			break;
+
+		case IC_AMMO:
+		{
+			INT8 bLoop;
+
+			for (bLoop = HANDPOS; bLoop < NUM_INV_SLOTS; bLoop++)
+			{
+				if(pSoldier->inv[bLoop].usItem != NOTHING && GCM->getItem(pSoldier->inv[bLoop].usItem)->getItemClass() == IC_GUN)
+				{
+					if(pSoldier->inv[bLoop].ubGunShotsLeft != 0)
+						continue;
+
+					ReloadGun(pSoldier, &pSoldier->inv[bLoop], pObj);
+
+					if (pObj->ubNumberOfObjects == 0)
+						return( TRUE );
+
+					continue;
+				}
+			}
+		}
+
 		default:
 			break;
 	}
@@ -4232,4 +4257,113 @@ bool HasObjectImprint(OBJECTTYPE const& o)
 {
 	return (o.usItem == ROCKET_RIFLE || o.usItem == AUTO_ROCKET_RIFLE) &&
 		o.ubImprintID != NO_PROFILE;
+}
+
+void ItemFromStackRemoveTop(OBJECTTYPE* const object, OBJECTTYPE* const newobject)
+{
+	if(!object || !newobject) return;
+
+	if(object->ubNumberOfObjects==1)
+	{
+		*newobject=*object;
+		RemoveObjs(object, 1);
+		return;
+	}
+
+	CreateItem(object->usItem, object->bStatus[0], newobject);
+	RemoveObjs(object, 1);
+}
+
+void ItemFromStackRemoveWorst(OBJECTTYPE* const object, OBJECTTYPE* const newobject)
+{
+	if(!object || !newobject) return;
+
+	if(object->ubNumberOfObjects==1)
+	{
+		*newobject=*object;
+		RemoveObjs(object, 1);
+		return;
+	}
+
+	UINT8 index=0;
+	INT8 bStatus=100;
+
+	for(int i = 0; i < object->ubNumberOfObjects; i++)
+	{
+		if(object->bStatus[i] < bStatus)
+		{
+			bStatus=object->bStatus[i];
+			index=i;
+		}
+	}
+
+	CreateItem(object->usItem, bStatus, newobject);
+	RemoveObjFrom(object, index);
+}
+
+void ItemFromStackRemoveBest(OBJECTTYPE* const object, OBJECTTYPE* const newobject)
+{
+	if(!object || !newobject) return;
+
+	if(object->ubNumberOfObjects==1)
+	{
+		*newobject=*object;
+		RemoveObjs(object, 1);
+		return;
+	}
+
+	UINT8 index=0;
+	INT8 bStatus=0;
+
+	for(int i = 0; i < object->ubNumberOfObjects; i++)
+	{
+		if(object->bStatus[i] > bStatus)
+		{
+			bStatus=object->bStatus[i];
+			index=i;
+		}
+	}
+
+	CreateItem(object->usItem, bStatus, newobject);
+	RemoveObjFrom(object, index);
+}
+
+bool ItemRemoveAttachment(OBJECTTYPE* const object, OBJECTTYPE* const newobject, UINT16 const usItem)
+{
+	if(!object || !newobject || usItem == NOTHING) return false;
+
+	for(int i = 0; i < MAX_ATTACHMENTS; i++)
+	{
+		if(object->usAttachItem[i]==usItem)
+		{
+			CreateItem(object->usAttachItem[i], object->bAttachStatus[i], newobject);
+			object->usAttachItem[i]=NOTHING;
+			object->bAttachStatus[i]=0;
+			return true;
+		}
+	}
+
+	return false;
+}
+
+bool ItemAttach(OBJECTTYPE* const object, OBJECTTYPE* const attachment)
+{
+	if(!object || !attachment) return false;
+
+	if(ValidAttachment(attachment->usItem, object->usItem) && FindAttachment(object, attachment->usItem) == ITEM_NOT_FOUND)
+	{
+		for(int i = 0; i < MAX_ATTACHMENTS; i++)
+		{
+			if(object->usAttachItem[i] == NOTHING)
+			{
+				OBJECTTYPE newattachment;
+				ItemFromStackRemoveBest(attachment, &newattachment);
+				object->usAttachItem[i] = newattachment.usItem;
+				object->bAttachStatus[i] = newattachment.bStatus[0];
+				return true;
+			}
+		}
+	}
+
+	return false;
 }

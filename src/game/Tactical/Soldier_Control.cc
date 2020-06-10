@@ -94,6 +94,15 @@
 
 #include "policy/GamePolicy.h"
 
+#include "Tactical_Save.h"
+#include "Items.h"
+#include "AmmoTypeModel.h"
+#include "CalibreModel.h"
+#include "ItemModel.h"
+#include "MagazineModel.h"
+#include "Environment.h"
+#include "Map_Screen_Interface.h"
+
 #include <algorithm>
 #include <stdexcept>
 
@@ -9209,6 +9218,756 @@ static void SetSoldierPersonalLightLevel(SOLDIERTYPE* const s)
 	n.ubSumLights         = 5;
 	n.ubMaxLights         = 5;
 	n.ubNaturalShadeLevel = 5;
+}
+
+bool IM_SoldierPlaceItem(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const object)
+{
+	if(!pSoldier) return false;
+	if(!object) return false;
+	bool small = (GCM->getItem(object->usItem)->getPerPocket() > 0);
+
+	switch(GCM->getItem(object->usItem)->getItemClass())
+	{
+		default:
+		{
+			INT8 slot;
+
+			if(small)
+			{
+				slot = FindEmptySlotWithin(pSoldier, BIGPOCK1POS, SMALLPOCK8POS);
+				if (slot == ITEM_NOT_FOUND) return false;
+			}
+			else
+			{
+				slot = FindEmptySlotWithin(pSoldier, BIGPOCK1POS, BIGPOCK4POS);
+				if (slot == ITEM_NOT_FOUND) return false;
+			}
+
+			pSoldier->inv[slot]=*object;
+		}
+	}
+
+	return true;
+}
+
+bool IM_SoldierAutoPlaceAmmo(SOLDIERTYPE* const pSoldier, UINT16 const usItem, UINT8 const ubShotsLeft, bool place_on_floor)
+{
+	if(!pSoldier) return false;
+	if(ubShotsLeft == 0) return false;
+	Visibility const visibility = pSoldier->bSide == OUR_TEAM ? VISIBLE : INVISIBLE;
+	OBJECTTYPE magazine;
+	memset(&magazine, 0, sizeof(OBJECTTYPE));
+	magazine.usItem = usItem;
+	magazine.ubNumberOfObjects = 1;
+	magazine.ubShotsLeft[0] = ubShotsLeft;
+	if(!place_on_floor) place_on_floor = !AutoPlaceObject(pSoldier, &magazine, false);
+	if( place_on_floor) AddItemToWorld(pSoldier->sGridNo, &magazine, pSoldier->bLevel, WORLD_ITEM_REACHABLE, -1, visibility);
+	return true;
+}
+
+UINT32 SoldierScroungeAmmoByGunItem(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const weapon, UINT8 const prefered_ammo_type, UINT32 const enough, bool const full_access)
+{
+	HandleAllReachAbleItemsInTheSector( pSoldier->sSectorX,  pSoldier->sSectorY,  pSoldier->bSectorZ );
+	#define number_of_ammo_types 16
+
+	UINT32 ammo_scrounged[number_of_ammo_types];
+	UINT16 ammo_type_item_index[number_of_ammo_types];
+	memset(&ammo_scrounged, 0, sizeof(ammo_scrounged));
+	memset(&ammo_type_item_index, 0, sizeof(ammo_type_item_index));
+
+	if(prefered_ammo_type >= number_of_ammo_types) return 0;
+	if(!pSoldier) return 0;
+	if(!weapon) return 0;
+
+	UINT16 usItem = weapon->usItem;
+
+	if(GCM->getItem(usItem)->getItemClass() != IC_GUN) return 0;
+
+	UINT32 magazine_size = GCM->getItem(usItem)->asWeapon()->ubMagSize;
+
+	// find & store all possible mag types that fit this gun
+	const std::vector<const MagazineModel*>& magazines = GCM->getMagazines();
+
+	for( unsigned int i = 0; i < magazines.size(); i++)
+	{
+		if (GCM->getWeapon(weapon->usItem)->matches(magazines[i]) && magazines[i]->capacity == magazine_size)
+		{
+			ammo_type_item_index[magazines[i]->ammoType->index] = magazines[i]->getItemIndex();
+		}
+	}
+
+	for ( UINT32 i = 0; i < gWorldItems.size(); ++i )
+	{
+		WORLDITEM* const worlditem = &gWorldItems[ i ];
+
+		if(  worlditem->bVisible != VISIBLE && !full_access)					continue;
+		if(! worlditem->fExists)								continue;
+		if(!(worlditem->usFlags & WORLD_ITEM_REACHABLE) && !full_access)			continue;
+		if(  worlditem->usFlags & WORLD_ITEM_ARMED_BOMB)					continue;
+
+		OBJECTTYPE* const object = &worlditem->o;
+
+		if(  GCM->getItem(object->usItem)->getItemClass() != IC_AMMO )				continue;
+		if(! GCM->getWeapon(usItem)->matches(GCM->getItem(object->usItem)->asAmmo()->calibre))	continue;
+
+		UINT8 object_ammo_type = GCM->getItem(object->usItem)->asAmmo()->ammoType->index;
+		if(  ammo_type_item_index[object_ammo_type] == 0)					continue; // we do not have an item for this ammo type
+
+		for(int j = 0; j < object->ubNumberOfObjects; ++j)
+		{
+			ammo_scrounged[object_ammo_type] += object->ubShotsLeft[j];
+		}
+
+		RemoveItemFromPool(worlditem);
+		RemoveItemFromWorld(i);
+
+		if(ammo_scrounged[prefered_ammo_type]>=enough) break;
+	}
+
+	UINT32 total_scrounged=0;
+
+	// prefered order here
+	UINT32 ammo = ammo_scrounged[0];
+	UINT16 index = ammo_type_item_index[0];
+	ammo_scrounged[0] = ammo_scrounged[prefered_ammo_type];
+	ammo_type_item_index[0] = ammo_type_item_index[prefered_ammo_type];
+	ammo_scrounged[prefered_ammo_type] = ammo;
+	ammo_type_item_index[prefered_ammo_type] = index;
+
+	for(int i = 0; i < number_of_ammo_types; ++i)
+	{
+		if(ammo_type_item_index[i] == 0) continue;
+
+		if(ammo_scrounged[i] < magazine_size)
+		{
+			total_scrounged += ammo_scrounged[i];
+			IM_SoldierAutoPlaceAmmo(pSoldier, ammo_type_item_index[i], ammo_scrounged[i], false);
+			ammo_scrounged[i] = 0;
+		}
+
+		while(ammo_scrounged[i] >= magazine_size && total_scrounged<enough)
+		{
+			ammo_scrounged[i] -= magazine_size;
+			total_scrounged += magazine_size;
+			IM_SoldierAutoPlaceAmmo(pSoldier, ammo_type_item_index[i], magazine_size, false);
+		}
+
+		if(ammo_scrounged[i] > 0 && total_scrounged<enough)
+		{
+			total_scrounged += ammo_scrounged[i];
+			IM_SoldierAutoPlaceAmmo(pSoldier, ammo_type_item_index[i], ammo_scrounged[i], false);
+			ammo_scrounged[i] = 0;
+		}
+
+		if(ammo_scrounged[i] > 0)
+		{
+			IM_SoldierAutoPlaceAmmo(pSoldier, ammo_type_item_index[i], ammo_scrounged[i], true);
+			ammo_scrounged[i] = 0;
+		}
+	}
+	return total_scrounged;
+}
+
+bool SoldierFindFirstItemAndRemove(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const newobject, UINT16 const usItem)
+{
+	if(!pSoldier) return false;
+	if(!newobject) return false;
+	if(usItem == NOTHING) return false;
+
+	for(int i = 0; i < NUM_INV_SLOTS; ++i)
+	{
+		if(pSoldier->inv[i].usItem == usItem)
+		{
+			ItemFromStackRemoveBest(&pSoldier->inv[i], newobject);
+			return true;
+		}
+
+		if(ItemRemoveAttachment(&pSoldier->inv[i], newobject, usItem)) return true;
+	}
+
+	return false;
+}
+
+bool SoldierItemAutoPlaceThenDrop(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const object, bool fNewItem)
+{
+	if(!pSoldier || !object) return false;
+	Visibility const visibility = pSoldier->bSide == OUR_TEAM ? VISIBLE : INVISIBLE;
+
+	if(!AutoPlaceObject(pSoldier, object, fNewItem))
+	{
+		AddItemToPool(pSoldier->sGridNo, object, visibility, pSoldier->bLevel, WORLD_ITEM_REACHABLE, -1);
+		DeleteObj(object);
+		return false;
+	}
+
+	DeleteObj(object);
+	return true;
+}
+
+bool SoldierItemAutoAttachPlace(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const object, bool const stack, bool const fNewItem)
+{
+	if(!pSoldier || !object) return false;
+	if(object->usItem == NOTHING) return false; //
+
+	OBJECTTYPE item_copy=*object;
+	OBJECTTYPE item;
+
+	if(stack)
+	{
+		item=*object;
+		DeleteObj(object);
+	}
+	else ItemFromStackRemoveBest(object, &item);
+
+	for(int j = item.ubNumberOfObjects; j != 0; --j)
+	{
+		OBJECTTYPE item_restore=item;
+
+		OBJECTTYPE item_w;
+		ItemFromStackRemoveBest(&item, &item_w);
+
+		bool placed_item = false;
+		for(int i = 0; i < NUM_INV_SLOTS; ++i)
+		{
+			if(ItemAttach(&pSoldier->inv[i], &item_w))
+			{
+				placed_item=true;
+				break;
+			}
+		}
+
+		if(!placed_item) item=item_restore;
+	}
+
+	if(item.ubNumberOfObjects == 0)
+	{
+		return true;
+	}
+
+	if(AutoPlaceObject(pSoldier, &item, fNewItem))
+	{
+		if(item.ubNumberOfObjects != 0)
+		{
+			*object=item;
+			return false;
+		}
+
+		return true;
+	}
+
+	if(!stack) *object=item_copy;
+	else *object=item;
+
+	return false;
+}
+
+bool SoldierItemAutoAttachPlaceThenDrop(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const object, bool fNewItem)
+{
+	if(!pSoldier || !object) return false;
+	Visibility const visibility = pSoldier->bSide == OUR_TEAM ? VISIBLE : INVISIBLE;
+
+	//First try to attach
+	for(int i = 0; i < NUM_INV_SLOTS; ++i)
+	{
+		if(ItemAttach(&pSoldier->inv[i], object)) return true;
+	}
+
+	if(!AutoPlaceObject(pSoldier, object, fNewItem))
+	{
+		AddItemToPool(pSoldier->sGridNo, object, visibility, pSoldier->bLevel, WORLD_ITEM_REACHABLE, -1);
+		DeleteObj(object);
+		return false;
+	}
+
+	DeleteObj(object);
+	return true;
+}
+
+bool SoldierItemAutoAttachThenDrop(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const object, bool fNewItem)
+{
+	if(!pSoldier || !object) return false;
+	Visibility const visibility = pSoldier->bSide == OUR_TEAM ? VISIBLE : INVISIBLE;
+
+	for(int i = 0; i < NUM_INV_SLOTS; ++i)
+	{
+		if(ItemAttach(&pSoldier->inv[i], object)) return true;
+	}
+
+	AddItemToPool(pSoldier->sGridNo, object, visibility, pSoldier->bLevel, WORLD_ITEM_REACHABLE, -1);
+	DeleteObj(object);
+	return false;
+}
+
+void SoldierItemAutoAttachPlaceUnequipedThenDrop(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const object, bool fNewItem)
+{
+	if(!pSoldier || !object) return;
+	Visibility const visibility = pSoldier->bSide == OUR_TEAM ? VISIBLE : INVISIBLE;
+
+	//First try to attach
+	for(int i = 0; i < NUM_INV_SLOTS; ++i)
+	{
+		if(ItemAttach(&pSoldier->inv[i], object)) return;
+	}
+
+	for(int i = HANDPOS; i < NUM_INV_SLOTS; ++i)
+	{
+		if(i==SECONDHANDPOS) continue;
+
+		if(pSoldier->inv[i].usItem==NOTHING)
+		{
+			pSoldier->inv[i]=*object;
+			DeleteObj(object);
+			return;
+		}
+	}
+
+	AddItemToPool(pSoldier->sGridNo, object, visibility, pSoldier->bLevel, WORLD_ITEM_REACHABLE, -1);
+	DeleteObj(object);
+	return;
+}
+
+bool SoldierUnequipFaceItems(SOLDIERTYPE* const pSoldier)
+{
+	if(!pSoldier) return false;
+	bool item_removed=false;
+
+	for(int i = HEAD1POS; i <= HEAD2POS; ++i)
+	{
+		OBJECTTYPE newobject;
+		switch(pSoldier->inv[i].usItem)
+		{
+			case GASMASK:
+			case SUNGOGGLES:
+			case NIGHTGOGGLES:
+			case UVGOGGLES:
+				newobject=pSoldier->inv[i];
+				RemoveObjs(&pSoldier->inv[i], 1);
+				SoldierItemAutoAttachPlaceUnequipedThenDrop(pSoldier, &newobject, false);
+				item_removed=true;
+				break;
+		}
+	}
+
+return item_removed;
+}
+
+bool SoldierFindFirstItemAttemptAutoPlace(SOLDIERTYPE* const pSoldier, UINT16 const usItem)
+{
+	if(!pSoldier) return false;
+	if(usItem == NOTHING) return false;
+
+	OBJECTTYPE item;
+
+	if(SoldierFindFirstItemAndRemove(pSoldier, &item, usItem))
+	{
+		SoldierUnequipFaceItems(pSoldier);
+		SoldierItemAutoPlaceThenDrop(pSoldier, &item, false);
+		return true;
+	}
+
+	return false;
+}
+
+bool InToxicGas(SOLDIERTYPE const* const s)
+{
+	return gpWorldLevelData[s->sGridNo].ubExtFlags[s->bLevel] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS) && !IsWearingHeadGear(*s, GASMASK);
+}
+
+bool SoldierAutoSwitchGoggles(SOLDIERTYPE* const pSoldier) //return true if changed
+{
+	if(!pSoldier) return false;
+	bool lowlight = (GetTimeOfDayAmbientLightLevel() > (NORMAL_LIGHTLEVEL_DAY + 5));
+	bool changed_faceitem = false;
+
+	if(pSoldier->bSectorZ != 0)
+	{
+		if(IsWearingHeadGear(*pSoldier, NIGHTGOGGLES)) return false;
+		else
+		{
+			changed_faceitem = SoldierFindFirstItemAttemptAutoPlace(pSoldier, NIGHTGOGGLES);
+		}
+
+		if(IsWearingHeadGear(*pSoldier, SUNGOGGLES) || IsWearingHeadGear(*pSoldier, UVGOGGLES))
+		{
+			SoldierUnequipFaceItems(pSoldier);
+			changed_faceitem = true;
+		}
+	}
+	else
+	{
+		if(lowlight)
+		{
+			if(IsWearingHeadGear(*pSoldier, UVGOGGLES) && pSoldier->bSectorZ == 0) return false;
+			else
+			{
+				changed_faceitem = SoldierFindFirstItemAttemptAutoPlace(pSoldier, UVGOGGLES);
+				if(!changed_faceitem)
+					changed_faceitem = SoldierFindFirstItemAttemptAutoPlace(pSoldier, NIGHTGOGGLES);
+			}
+		}
+		else
+		{
+			if(IsWearingHeadGear(*pSoldier, SUNGOGGLES)) return false;
+			changed_faceitem = SoldierFindFirstItemAttemptAutoPlace(pSoldier, SUNGOGGLES);
+
+			if(!changed_faceitem && (IsWearingHeadGear(*pSoldier, UVGOGGLES) || IsWearingHeadGear(*pSoldier, NIGHTGOGGLES)))
+			{
+				SoldierUnequipFaceItems(pSoldier);
+				changed_faceitem = true;
+			}
+		}
+	}
+
+	if(IsNotWearingAnyFaceGear(*pSoldier) || InToxicGas(pSoldier) || (pSoldier->uiStatusFlags & SOLDIER_GASSED)) // InToxicGas check should be earlier to save CPU time if this is used in DecideAction
+		changed_faceitem = SoldierFindFirstItemAttemptAutoPlace(pSoldier, GASMASK);
+
+	if(changed_faceitem && pSoldier->bTeam == OUR_TEAM)
+	{
+		DirtyMercPanelInterface(pSoldier, DIRTYLEVEL2);
+		fInterfacePanelDirty = DIRTYLEVEL2;
+	}
+
+	return changed_faceitem;
+}
+
+bool SoldierEquipFindByItemClass(SOLDIERTYPE* const pSoldier, UINT16 usItem, bool const full_access)
+{
+	if(!pSoldier) return false;
+	bool placed_in_inventory = false;
+
+	UINT32 pick = LoadedSectorInventoryGetBestWorldItemIndexByItemClass(usItem, full_access);
+
+	if(pick != (UINT32)-1)
+	{
+		WORLDITEM* wi = &GetWorldItem(pick);
+		OBJECTTYPE item;
+		ItemFromStackRemoveBest(&wi->o, &item);
+
+		if(wi->o.usItem == NOTHING)
+		{
+			RemoveItemFromPool(wi);
+			RemoveItemFromWorld(pick);
+		}
+
+		switch(item.usItem)
+		{
+			case SILENCER: //general improvement?
+			case DUCKBILL: //improvement?
+			case SNIPERSCOPE:
+			case BIPOD:
+			case LASERSCOPE:
+			case GUN_BARREL_EXTENDER:
+			case UNDER_GLAUNCHER:
+			case CERAMIC_PLATES:
+			{
+				placed_in_inventory = SoldierItemAutoAttachThenDrop(pSoldier, &item, true);
+				break;
+			}
+
+			case GL_HE_GRENADE:
+			case GL_TEARGAS_GRENADE:
+			case GL_STUN_GRENADE:
+			{
+				if(pSoldier->inv[HANDPOS].usItem == GLAUNCHER)
+					placed_in_inventory = SoldierItemAutoAttachPlaceThenDrop(pSoldier, &item, true);
+				else if(UniqueAttachmentStatusGet(&pSoldier->inv[HANDPOS], UNDER_GLAUNCHER) != 0)
+					placed_in_inventory = SoldierItemAutoAttachThenDrop(pSoldier, &item, true);
+				break;
+			}
+
+			default:
+				placed_in_inventory = SoldierItemAutoAttachPlaceThenDrop(pSoldier, &item, true);
+				break;
+		}
+	}
+
+	return placed_in_inventory;
+}
+
+void SoldierEquipFromLoadedSector(SOLDIERTYPE* const pSoldier, bool const full_access)
+{
+	if(!pSoldier) return;
+
+	UINT16 aEquipmentList[] =
+	{
+		MORTAR, GLOCK_17, ROCKET_LAUNCHER, COMBAT_KNIFE, GASMASK,
+		SNIPERSCOPE, LASERSCOPE, BIPOD, SILENCER, 
+		UNDER_GLAUNCHER, GL_HE_GRENADE, GL_STUN_GRENADE,
+		FLAK_JACKET, STEEL_HELMET, KEVLAR_LEGGINGS, CERAMIC_PLATES,
+		EXTENDEDEAR, NIGHTGOGGLES, SUNGOGGLES, THROWING_KNIFE
+	};
+
+	UINT16 aEquipmentExtras[] =
+	{
+		HAND_GRENADE, TEARGAS_GRENADE, MUSTARD_GRENADE, STUN_GRENADE,
+		CAMOUFLAGEKIT, BREAK_LIGHT, FIRSTAIDKIT, CANTEEN,
+		MINI_GRENADE, MINI_GRENADE, BRASS_KNUCKLES, CROWBAR
+	};
+
+	UINT16 aEquipmentListEnemyExtras[] =
+	{
+		CIGARS, GOLDWATCH, __ITEM_257, CHEWING_GUM, MEDICKIT,
+		ALCOHOL, SMOKE_GRENADE, SMOKE_GRENADE, ADRENALINE_BOOSTER,
+		LOCKSMITHKIT
+	};
+
+	UINT32 const ammo_mags_per_gun = 3;
+
+	SoldierDropAll(pSoldier, true);
+
+	for (unsigned int i = 0; i < lengthof(aEquipmentList); ++i)
+	{
+		SoldierEquipFindByItemClass(pSoldier, aEquipmentList[i], full_access);
+	}
+
+	for (int i = 0; i < NUM_INV_SLOTS; ++i)
+	{
+		if(pSoldier->inv[i].usItem != NOTHING)
+		{
+			if(pSoldier->inv[i].usItem == ROCKET_LAUNCHER) continue;
+
+			switch(GCM->getItem(pSoldier->inv[i].usItem)->getItemClass())
+			{
+
+				case IC_GUN:
+				{
+					OBJECTTYPE item = pSoldier->inv[i];
+					SoldierScroungeAmmoByGunItem(pSoldier, &item, GCM->getItem(item.usGunAmmoItem)->asAmmo()->ammoType->index, GCM->getItem(item.usItem)->asWeapon()->ubMagSize * ammo_mags_per_gun, full_access);
+					break;
+				}
+
+				case IC_LAUNCHER:
+					switch(pSoldier->inv[i].usItem)
+					{
+						case MORTAR:
+							SoldierEquipFindByItemClass(pSoldier, MORTAR_SHELL, full_access);
+							SoldierEquipFindByItemClass(pSoldier, MORTAR_SHELL, full_access);
+							SoldierEquipFindByItemClass(pSoldier, MORTAR_SHELL, full_access);
+							break;
+
+						case GLAUNCHER:
+							SoldierEquipFindByItemClass(pSoldier, GL_HE_GRENADE, full_access);
+							SoldierEquipFindByItemClass(pSoldier, GL_HE_GRENADE, full_access);
+							SoldierEquipFindByItemClass(pSoldier, GL_HE_GRENADE, full_access);
+							break;
+					}
+					break;
+			}
+		}
+	}
+
+	for (unsigned int i = 0; i < lengthof(aEquipmentExtras); ++i)
+	{
+		SoldierEquipFindByItemClass(pSoldier, aEquipmentExtras[i], full_access);
+	}
+
+	if(pSoldier->bTeam == ENEMY_TEAM)
+	{
+		for (unsigned int i = 0; i < lengthof(aEquipmentListEnemyExtras); ++i)
+		{
+			SoldierEquipFindByItemClass(pSoldier, aEquipmentListEnemyExtras[i], full_access);
+		}
+	}
+
+	if(pSoldier->bTeam != OUR_TEAM)
+	{
+		if((pSoldier->bTeam == MILITIA_TEAM) || (pSoldier->bTeam == ENEMY_TEAM))
+		{
+			// enforce exclusivity, only veterens / elite use CAMOUFLAGEKIT
+			if(pSoldier->ubSoldierClass == SOLDIER_CLASS_ELITE_MILITIA || (pSoldier->ubSoldierClass == SOLDIER_CLASS_ELITE))
+				pSoldier->bCamo = (FindObj(pSoldier, CAMOUFLAGEKIT) != NO_SLOT) ? 100 : 0; // CAMOUFLAGEKIT is not consumed because soldier state is lost when loading a different sector
+		}
+	}
+
+	if(HAS_SKILL_TRAIT(pSoldier, CAMOUFLAGED)) pSoldier->bCamo = 100;
+
+	CreateSoldierPalettes(*pSoldier);
+
+	AutoReload(pSoldier);
+	SoldierAutoSwitchGoggles(pSoldier);
+	DirtyMercPanelInterface(pSoldier, DIRTYLEVEL2);
+	fInterfacePanelDirty = DIRTYLEVEL2;
+	ReLoadSoldierAnimationDueToHandItemChange(pSoldier, NOTHING, pSoldier->inv[HANDPOS].usItem);
+	HandleAllReachAbleItemsInTheSector( pSoldier->sSectorX,  pSoldier->sSectorY,  pSoldier->bSectorZ );
+}
+
+void EnemyExtraEquipFromSectorInventory()
+{
+	if(!GCM->getGamePolicy()->enemy_defenders_use_sector_inventory) return;
+	TeamDropAll(ENEMY_TEAM, ENEMY_TEAM);
+	TeamEquipAll(ENEMY_TEAM, ENEMY_TEAM, true); //enemy team have access to all items
+}
+
+void SoldierWipeInventory(SOLDIERTYPE* pSoldier)
+{
+	if(!pSoldier) return;
+	memset(pSoldier->inv, 0, sizeof(OBJECTTYPE)*NUM_INV_SLOTS);
+}
+
+void TeamWipeInventory(UINT8 bTeam, UINT8 bSide)
+{
+	FOR_EACH_SOLDIER(s)
+	{
+		if(s->bTeam == bTeam && s->bSide == bSide && s->ubProfile == NO_PROFILE)
+		{
+			SoldierWipeInventory(s);
+		}
+	}
+}
+
+void MilitiaEquipFromLoadedSectorInventory(bool const wipe)
+{
+	if(!gamepolicy(militia_use_sector_inventory)) return;
+
+	if(!wipe) TeamDropAll(MILITIA_TEAM, OUR_TEAM);
+	else      TeamWipeInventory(MILITIA_TEAM, OUR_TEAM);
+
+	TeamEquipAll(MILITIA_TEAM, OUR_TEAM, false);
+}
+
+void TeamEquipAll(UINT8 bTeam, UINT8 bSide, bool const full_access)
+{
+	std::vector<SOLDIERTYPE*> apSoldier;
+	std::vector<UINT32> aSCR;
+
+	FOR_EACH_SOLDIER(s)
+	{
+		if(s->bTeam == bTeam && s->bSide == bSide && s->ubProfile == NO_PROFILE)
+		{
+			apSoldier.push_back(s);
+			aSCR.push_back(SoldierCombatRating(s, false));
+		}
+	}
+
+	if(apSoldier.empty()) return;
+
+	bool changed = true;
+
+	while(changed)
+	{
+		changed = false;
+
+		for(unsigned int i = 1; i < apSoldier.size(); ++i)
+		{
+			if(aSCR[i - 1] < aSCR[i])
+			{
+				std::swap(aSCR[i - 1], aSCR[i]);
+				std::swap(apSoldier[i - 1], apSoldier[i]);
+				changed = true;
+			}
+		}
+	}
+
+	for(unsigned int i = 0; i < apSoldier.size(); ++i)
+	{
+		SoldierEquipFromLoadedSector(apSoldier[i], full_access);
+	}
+}
+
+void TeamDropAll(UINT8 bTeam, UINT8 bSide)
+{
+	FOR_EACH_SOLDIER(s)
+	{
+		if(s->bTeam == bTeam && s->bSide == bSide && s->ubProfile == NO_PROFILE) SoldierDropAllWithAnimation(s, false);
+	}
+}
+
+bool hasVehicleInventory(SOLDIERTYPE const* const s)
+{
+	return (GCM->getGamePolicy()->vehicle_inventory && IsMechanical(*s) && (s->ubProfile==PROF_HUMMER || s->ubProfile==PROF_ICECREAM || s->ubProfile==PROF_ELDERODO));
+}
+
+void SoldierDropFromSlot(SOLDIERTYPE* const pSoldier, UINT8 const slot, bool const stack, bool const cleanup)
+{
+	if(!pSoldier) return;
+	if(slot>=NUM_INV_SLOTS) return;
+	if(pSoldier->inv[slot].usItem == NOTHING) return;
+
+	Visibility const visibility = pSoldier->bSide == OUR_TEAM ? VISIBLE : INVISIBLE;
+
+	bool const here = pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ;
+
+	GridNo sGridNo = pSoldier->sGridNo;
+
+	OBJECTTYPE item;
+
+	if(!stack)
+	{
+		ItemFromStackRemoveBest(&pSoldier->inv[slot], &item);
+	}
+	else
+	{
+		item=pSoldier->inv[slot];
+		DeleteObj(&pSoldier->inv[slot]);
+	}
+
+	if(!here) AddItemsToUnLoadedSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, sGridNo, 1, &item, pSoldier->bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, visibility);
+	else AddItemToPool(pSoldier->sGridNo, &item, visibility, pSoldier->bLevel, 0, -1);
+
+	if(cleanup)
+	{
+		DirtyMercPanelInterface(pSoldier, DIRTYLEVEL2);
+		fInterfacePanelDirty = DIRTYLEVEL2;
+		HandleAllReachAbleItemsInTheSector( pSoldier->sSectorX,  pSoldier->sSectorY,  pSoldier->bSectorZ );
+	}
+}
+
+void SoldierDropAll(SOLDIERTYPE* const pSoldier, bool const cleanup)
+{
+	if(!pSoldier) return;
+
+	Visibility const visibility = pSoldier->bSide == OUR_TEAM ? VISIBLE : INVISIBLE;
+
+	bool const here = pSoldier->sSectorX == gWorldSectorX && pSoldier->sSectorY == gWorldSectorY && pSoldier->bSectorZ == gbWorldSectorZ;
+
+	if(!here)
+	{
+		HandleLeavingOfEquipmentInCurrentSector(*pSoldier);
+		SoldierWipeInventory(pSoldier);
+		return;
+	}
+
+	if(pSoldier->bSide == OUR_TEAM)
+	{
+		for(int i = 0; i < NUM_INV_SLOTS; ++i)
+		{
+			if(pSoldier->inv[i].usItem == NOTHING) continue;
+
+			AddItemToPool(pSoldier->sGridNo, &pSoldier->inv[i], visibility, pSoldier->bLevel, 0, -1);
+			DeleteObj(&pSoldier->inv[i]);
+		}
+	}
+	else //WORKAROUND for enemy soldiers use sector equipment 
+	{
+		for(int i = 0; i < NUM_INV_SLOTS; ++i)
+		{
+			if(pSoldier->inv[i].usItem == NOTHING) continue;
+
+			// keep keys in scenario placed inventory
+			if(pSoldier->inv[i].usItem >= KEY_1 && pSoldier->inv[i].usItem <= KEY_32)
+				continue;
+
+			AddItemToPool(pSoldier->sGridNo, &pSoldier->inv[i], visibility, pSoldier->bLevel, 0, -1);
+			DeleteObj(&pSoldier->inv[i]);
+
+		}
+	}
+
+	if(cleanup)
+	{
+		DirtyMercPanelInterface(pSoldier, DIRTYLEVEL2);
+		fInterfacePanelDirty = DIRTYLEVEL2;
+		HandleAllReachAbleItemsInTheSector( pSoldier->sSectorX,  pSoldier->sSectorY,  pSoldier->bSectorZ );
+	}
+}
+
+void SoldierDropAllWithAnimation(SOLDIERTYPE* const pSoldier, bool const cleanup)
+{
+	if(!pSoldier) return;
+	UINT16 const usOldItem = pSoldier->inv[HANDPOS].usItem;
+
+	SoldierDropAll(pSoldier, cleanup);
+	ReLoadSoldierAnimationDueToHandItemChange(pSoldier, usOldItem, NOTHING);
 }
 
 

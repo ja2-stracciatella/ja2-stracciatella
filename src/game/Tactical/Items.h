@@ -178,4 +178,10 @@ bool HasObjectImprint(OBJECTTYPE const&);
 // Fill the vector with all hardcoded item models.
 void createAllHardcodedItemModels(std::vector<const ItemModel*> &items);
 
+void ItemFromStackRemoveTop(OBJECTTYPE* const object, OBJECTTYPE* const newobject);
+void ItemFromStackRemoveBest(OBJECTTYPE* const object, OBJECTTYPE* const newobject);
+void ItemFromStackRemoveWorst(OBJECTTYPE* const object, OBJECTTYPE* const newobject);
+bool ItemRemoveAttachment(OBJECTTYPE* const object, OBJECTTYPE* const newobject, UINT16 const usItem);
+bool ItemAttach(OBJECTTYPE* const object, OBJECTTYPE* const attachment);
+
 #endif
