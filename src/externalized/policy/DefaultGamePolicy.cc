@@ -35,6 +35,9 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 
 	imp_load_saved_merc_by_nickname = (*json)["imp_load_saved_merc_by_nickname"].GetBool();
 	imp_load_keep_inventory         = (*json)["imp_load_keep_inventory"].GetBool();
+	load_saved_npc                  = (*json)["load_saved_npc"].GetBool();
+	load_saved_npc_inventory        = (*json)["load_saved_npc_inventory"].GetBool();
+
 	pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
 
 	critical_damage_head_multiplier = (*json)["tactical_head_damage_multiplier"].GetDouble();

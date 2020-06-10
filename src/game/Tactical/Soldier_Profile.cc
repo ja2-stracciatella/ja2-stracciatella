@@ -50,6 +50,10 @@
 #include "content/ContentMercs.h"
 #include "WeaponModels.h"
 
+#include "Soldier_Init_List.h"
+#include "policy/GamePolicy.h"
+#include "SaveLoadGame.h"
+
 extern BOOLEAN gfProfileDataLoaded;
 
 
@@ -678,6 +682,12 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 
 	// Add this guy to our team!
 	SOLDIERTYPE* const pNewSoldier = ChangeSoldierTeam(pSoldier, OUR_TEAM);
+
+	if (gamepolicy(load_saved_npc))
+		NPCSavedProfileLoadNPCProfile(ubCharNum, pNewSoldier);
+	
+	if (gamepolicy(load_saved_npc_inventory))
+		NPCSavedProfileLoadInventory(gMercProfiles[ ubCharNum ].zNickname.c_str(), pNewSoldier);
 
 	// handle set up any RPC's that will leave us in time
 	if ( ubCharNum == SLAY )

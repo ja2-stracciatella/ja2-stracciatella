@@ -103,4 +103,11 @@ SGPFile* const IMPSavedProfileOpenFileForRead(const char *nickname);
 int IMPSavedProfileLoadMercProfile(const char *nickname);
 void IMPSavedProfileLoadInventory(const char *nickname, SOLDIERTYPE *pSoldier);
 
+const char *NPCSavedProfileCreateFilename(const char *nickname);
+bool NPCSavedProfileDoesFileExist(const char *nickname);
+SGPFile* const NPCSavedProfileOpenFileForRead(const char *nickname);
+void NPCSavedProfileLoadNPCProfile(int ubCharNum, SOLDIERTYPE *pSoldier);
+void NPCSavedProfileLoadInventory(const char *nickname, SOLDIERTYPE *pSoldier);
+
+
 #endif

@@ -58,6 +58,9 @@ public:
 
 	bool imp_load_saved_merc_by_nickname; // IMP merc is saved and can be loaded at IMP creation if has same nickname
 	bool imp_load_keep_inventory;         // IMP merc gets inventory from last save game
+	bool load_saved_npc;                  // NPC merc that was hired gets loaded from last save game if was saved while also enabled
+	bool load_saved_npc_inventory;        // NPC merc gets inventory from last save game if was saved while also enabled
+
 	bool pablo_wont_steal;                // Packages not stolen
 
 	float critical_damage_head_multiplier;//Head damage multiplier. Vanilla 1.5

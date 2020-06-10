@@ -1146,9 +1146,24 @@ const char * IMPSavedProfileCreateFilename(const char *nickname_cstring)
 	return profile_filename;
 }
 
+const char * NPCSavedProfileCreateFilename(const char *nickname_cstring)
+{
+	char *profile_filename = (char *)malloc(strlen(GCM->getSavedGamesFolder().c_str()) + 32);
+	sprintf(profile_filename, "%s/mercprofile_npc.%s",GCM->getSavedGamesFolder().c_str(), nickname_cstring);
+	return profile_filename;
+}
+
 bool IMPSavedProfileDoesFileExist(const char *nickname)
 {
 	const char *profile_filename = IMPSavedProfileCreateFilename(nickname);
+	bool fexists = Fs_exists(profile_filename);
+	free((void*)profile_filename);
+	return fexists;
+}
+
+bool NPCSavedProfileDoesFileExist(const char *nickname)
+{
+	const char *profile_filename = NPCSavedProfileCreateFilename(nickname);
 	bool fexists = Fs_exists(profile_filename);
 	free((void*)profile_filename);
 	return fexists;
@@ -1163,12 +1178,49 @@ SGPFile* const IMPSavedProfileOpenFileForRead(const char *nickname)
 	return f;
 }
 
+SGPFile* const NPCSavedProfileOpenFileForRead(const char *nickname)
+{
+	if(!NPCSavedProfileDoesFileExist(nickname)) return (SGPFile *)-1;
+	const char *profile_filename = NPCSavedProfileCreateFilename(nickname);
+	SGPFile *f = FileMan::openForReading(profile_filename);
+	free((void*)profile_filename);
+	return f;
+}
+
 SGPFile* const IMPSavedProfileOpenFileForWrite(const char *nickname)
 {
 	const char *profile_filename = IMPSavedProfileCreateFilename(nickname);
 	SGPFile *f = FileMan::openForWriting(profile_filename, true);
 	free((void*)profile_filename);
 	return f;
+}
+
+SGPFile* const NPCSavedProfileOpenFileForWrite(const char *nickname)
+{
+	const char *profile_filename = NPCSavedProfileCreateFilename(nickname);
+	SGPFile *f = FileMan::openForWriting(profile_filename, true);
+	free((void*)profile_filename);
+	return f;
+}
+
+void NPCSavedProfileLoadNPCProfile(int ubCharNum, SOLDIERTYPE *pSoldier)
+{
+	if(!NPCSavedProfileDoesFileExist(gMercProfiles[ ubCharNum ].zNickname.c_str())) return;
+	SGPFile *f = NPCSavedProfileOpenFileForRead(gMercProfiles[ ubCharNum ].zNickname.c_str());
+	MERCPROFILESTRUCT *mercprofile = &gMercProfiles[ubCharNum];
+	FileRead(f, mercprofile, sizeof(MERCPROFILESTRUCT));
+	FileClose(f);
+	mercprofile->bMercStatus = MERC_OK;
+	pSoldier->bAgility = mercprofile->bAgility;
+	pSoldier->bDexterity = mercprofile->bDexterity;
+	pSoldier->bExpLevel  = mercprofile->bExpLevel;
+	pSoldier->bExplosive = mercprofile->bExplosive;
+	pSoldier->bLeadership = mercprofile->bLeadership;
+	pSoldier->bLifeMax = mercprofile->bLifeMax;
+	pSoldier->bMarksmanship = mercprofile->bMarksmanship;
+	pSoldier->bMechanical = mercprofile->bMechanical;
+	pSoldier->bMedical = mercprofile->bMedical;
+	pSoldier->bWisdom = mercprofile->bWisdom;
 }
 
 int IMPSavedProfileLoadMercProfile(const char *nickname)
@@ -1191,6 +1243,17 @@ void IMPSavedProfileLoadInventory(const char *nickname, SOLDIERTYPE *pSoldier)
 	if(!pSoldier) return;
 
 	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
+	FileSeek(f, sizeof(MERCPROFILESTRUCT), FILE_SEEK_FROM_START);
+	FileRead(f, pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
+	FileClose(f);
+}
+
+void NPCSavedProfileLoadInventory(const char *nickname, SOLDIERTYPE *pSoldier)
+{
+	if(!NPCSavedProfileDoesFileExist(nickname)) return;
+	if(!pSoldier) return;
+
+	SGPFile *f = NPCSavedProfileOpenFileForRead(nickname);
 	FileSeek(f, sizeof(MERCPROFILESTRUCT), FILE_SEEK_FROM_START);
 	FileRead(f, pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
 	FileClose(f);
