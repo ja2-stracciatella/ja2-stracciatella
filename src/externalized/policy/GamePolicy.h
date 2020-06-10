@@ -71,6 +71,8 @@ public:
 	int8_t all_skilltraits_level;         // Level required to qualify. Above 10 disables
 	bool enemy_elite_all_traits;          // Elites from queen's army get all perks
 
+	bool skip_sleep_explanation;          // skip sleep popup
+
 	bool militia_control;                 // 'q' hotkey to recruit militia/release/recruit best/nextbest
 	int32_t militiamerc_salary;           // Daily salary of recruited milita merc
 
