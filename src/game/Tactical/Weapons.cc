@@ -799,7 +799,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	}
 	else
 	{
-		uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, pSoldier->bAimTime, pSoldier->bAimShotLocation );
+		uiHitChance = CalcChanceToHitGun( pSoldier, sTargetGridNo, pSoldier->bAimTime, pSoldier->bAimShotLocation, true );
 	}
 
 	//ATE: Added if we are in meanwhile, we always hit...
@@ -2073,7 +2073,7 @@ BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo)
 	return( FALSE );
 }
 
-UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos )
+UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos, BOOLEAN fModify )
 {
 	INT32 iChance, iRange, iSightRange, iMaxRange, iScopeBonus, iBonus; //, minRange;
 	INT32 iGunCondition, iMarksmanship;
@@ -2296,7 +2296,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 	if ( GCM->getItem(usInHand)->getItemClass() == IC_GUN )
 	{
 		bAttachPos = FindAttachment( pInHand, GUN_BARREL_EXTENDER );
-		if ( bAttachPos != ITEM_NOT_FOUND )
+		if ( bAttachPos != ITEM_NOT_FOUND && fModify)
 		{
 			// reduce status and see if it falls off
 			pInHand->bAttachStatus[ bAttachPos ] -= (INT8) Random( 2 );
@@ -2656,7 +2656,7 @@ UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTi
 	// same as CCTHG but fakes the attacker always standing
 	usTrueState = pSoldier->usAnimState;
 	pSoldier->usAnimState = STANDING;
-	uiChance = CalcChanceToHitGun( pSoldier, sGridNo, ubAimTime, ubAimPos );
+	uiChance = CalcChanceToHitGun( pSoldier, sGridNo, ubAimTime, ubAimPos, false );
 	pSoldier->usAnimState = usTrueState;
 	return( uiChance );
 }
