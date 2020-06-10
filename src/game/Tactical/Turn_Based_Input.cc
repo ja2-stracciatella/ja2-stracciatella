@@ -97,6 +97,7 @@
 #include "GameInstance.h"
 #include "Soldier.h"
 #include "policy/GamePolicy.h"
+#include "Map_Screen_Interface_Map_Inventory.h"
 
 #define DEBUG_CONSOLE_TOPIC "Debug Console"
 
@@ -1624,6 +1625,62 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 				*new_event = M_ON_TERRAIN;
 			}
 			break;
+
+	case 'e':
+		{
+			if (gTacticalStatus.fEnemyInSector) break;
+			if gamepolicy(inventory_management_extras) SoldierDropAllWithAnimation(GetSelectedMan(), true);
+		}
+		break;
+
+	case 'f':
+		{
+			if (!gamepolicy(inventory_management_extras)) break;
+			if (gTacticalStatus.fEnemyInSector) break;
+			SOLDIERTYPE* const pSoldier = GetSelectedMan();
+			if(pSoldier)
+			{
+				SectorInventoryDetach	(pSoldier->sGridNo, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+				SectorInventoryStack	(pSoldier->sGridNo, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+				SectorInventoryPlaceAllAtGridNo	(pSoldier->sGridNo, pSoldier->bLevel, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+			}
+			else
+			{
+				SectorInventoryDetach	(-1, gWorldSectorX, gWorldSectorX, gbWorldSectorZ);
+				SectorInventoryStack	(-1, gWorldSectorX, gWorldSectorX, gbWorldSectorZ);
+			}
+		}
+		break;
+
+	case 'g':
+		{
+			if (gamepolicy(inventory_management_extras)  && !gTacticalStatus.fEnemyInSector)
+			{
+				TeamDropAll(MILITIA_TEAM, OUR_TEAM);
+				TeamEquipAll(MILITIA_TEAM, OUR_TEAM, false);
+			}
+			break;
+		}
+
+	case 'h':
+		{
+			if (gamepolicy(inventory_management_extras)  && !gTacticalStatus.fEnemyInSector)
+			{
+				TeamDropAll(MILITIA_TEAM, OUR_TEAM);
+			}
+			break;
+		}
+
+	case 'i':
+		{
+			if (gamepolicy(inventory_management_extras) && !gTacticalStatus.fEnemyInSector)
+			{
+				SOLDIERTYPE* const pSoldier = GetSelectedMan();
+				if (!pSoldier) break;
+				SoldierEquipFromLoadedSector(pSoldier, false);
+			}
+			break;
+		}
 
 	case 'j':
 		if (gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'j')))

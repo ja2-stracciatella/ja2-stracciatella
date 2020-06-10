@@ -77,6 +77,8 @@ public:
 	bool ime_refill_canteens;             // hotkey refill sector canteens, drinking does not deplete canteens out of combat
 	bool vehicle_inventory;               // Vehicles have accessable inventories
 
+	bool militia_use_sector_inventory;    // Militia are equiped from sector.inventory
+	bool enemy_defenders_use_sector_inventory; // Enemies add equipment from sector.inventory, even from lockers
 
 	bool pablo_wont_steal;                // Packages not stolen
 

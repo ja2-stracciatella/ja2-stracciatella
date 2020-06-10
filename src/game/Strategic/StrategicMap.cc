@@ -3325,6 +3325,7 @@ bool IsSectorDesert(INT16 const x, INT16 const y)
 
 static void HandleDefiniteUnloadingOfWorld(UINT8 const ubUnloadCode)
 {
+	if (gamepolicy(militia_use_sector_inventory)) TeamDropAll(MILITIA_TEAM, OUR_TEAM);
 	// clear tactical queue
 	ClearEventQueue();
 

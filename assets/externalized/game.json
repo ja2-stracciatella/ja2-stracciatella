@@ -98,6 +98,8 @@
     "ime_detach_attachments": false,
     "ime_refill_canteens": false,
 
+    "militia_use_sector_inventory": false,
+    "enemy_defenders_use_sector_inventory": false,
 
     "vehicle_inventory": false,
 
