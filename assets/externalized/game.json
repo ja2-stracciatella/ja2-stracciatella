@@ -89,6 +89,10 @@
     "load_saved_npc": false,
     "load_saved_npc_inventory": false,
 
+
+    //  Press 'shift+n' to auto switch the selected soldier's head gear. Considers "extra_attachments".
+    "tactical_hotkey_shift_n": true,
+
     "inventory_management_extras": false,
     "ime_detach_ammo": false,
     "ime_detach_attachments": false,

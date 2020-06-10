@@ -1631,6 +1631,15 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 		}
 		break;
 
+	case 'n':
+		if gamepolicy(isHotkeyEnabled(UI_Tactical, HKMOD_SHIFT, 'n'))
+		{
+			SOLDIERTYPE* const pSoldier = GetSelectedMan();
+			if (!pSoldier) break;
+			SoldierAutoSwitchGoggles(pSoldier);
+		}
+		break;
+
 		case SDLK_F1:
 		case SDLK_F2:
 		case SDLK_F3:
