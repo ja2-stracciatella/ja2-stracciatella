@@ -93,6 +93,7 @@ extern const ST::string g_eng_str_dead_is_dead_mode_enter_name;
 #define pImpPopUpStrings_SIZE 7
 #define pImpButtonText_SIZE 27
 #define pExtraIMPStrings_SIZE 4
+#define gzIMPSkillTraitsText_SIZE 16
 #define pFilesSenderList_SIZE 7
 #define pHistoryHeaders_SIZE 5
 #define pHistoryStrings_SIZE 78

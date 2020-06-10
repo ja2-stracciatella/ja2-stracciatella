@@ -1707,6 +1707,7 @@ static const ST::string s_pl_pImpButtonText[pImpButtonText_SIZE] =
 	"Analizuję...", 			// analyzing your profile results
 	"OK",
 	"Głos",
+	"Specialties",			// "Specialties" - the skills selection screen
 };
 
 static const ST::string s_pl_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
@@ -1715,6 +1716,27 @@ static const ST::string s_pl_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 	"Teraz określ swoje atrybuty.",
 	"Teraz możesz przystąpić do wyboru portretu.",
 	"Aby zakończyć proces, wybierz próbkę głosu, która ci najbardziej odpowiada."
+};
+
+static const ST::string s_pl_gzIMPSkillTraitsText[gzIMPSkillTraitsText_SIZE] =
+{
+	"Otwieranie zamków",
+	"Walka wręcz",
+	"Elektronika",
+	"Nocne operacje",
+	"Rzucanie",
+	"Szkolenie",
+	"Ciężka broń",
+	"Broń automatyczna",
+	"Skradanie się",
+	"Oburęczność",
+	"Broń biała",
+	"Snajper",
+	"Kamuflaż",
+	"Sztuki walki",
+
+	"Brak umiejętności",
+	"I.M.P. Specialties"
 };
 
 static const ST::string s_pl_pFilesTitle = "Przeglądarka plików";
@@ -3668,6 +3690,8 @@ LanguageRes g_LanguageResPolish = {
 	g_eng_str_dead_is_dead_mode_enter_name,
 
 	s_pl_gs_dead_is_dead_mode_tab_name,
+
+	s_pl_gzIMPSkillTraitsText,
 };
 
 #ifdef WITH_UNITTESTS
