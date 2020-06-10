@@ -1320,6 +1320,18 @@ void GetBloodFromCorpse( SOLDIERTYPE *pSoldier )
 			break;
 
 		case QUEEN_MONSTER_DEAD:
+			if gamepolicy(inventory_management_extras)
+			{
+				for(int i = HANDPOS; i < NUM_INV_SLOTS; ++i)
+				{
+					if(pSoldier->inv[i].usItem == JAR)
+					{
+						pSoldier->inv[i].usItem = JAR_QUEEN_CREATURE_BLOOD;
+						bObjSlot = NO_SLOT;
+					}
+				}
+			}
+			else
 			CreateItem( JAR_QUEEN_CREATURE_BLOOD, 100, &Object );
 			break;
 
