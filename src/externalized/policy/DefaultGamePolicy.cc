@@ -33,6 +33,11 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	enemy_elite_minimum_level = (*json)["enemy_elite_minimum_level"].GetInt();
 	enemy_elite_maximum_level = (*json)["enemy_elite_maximum_level"].GetInt();
 
+	inventory_management_extras    = (*json)["inventory_management_extras"].GetBool();
+	ime_detach_ammo                = (*json)["ime_detach_ammo"].GetBool();
+	ime_detach_attachments         = (*json)["ime_detach_attachments"].GetBool();
+	ime_refill_canteens            = (*json)["ime_refill_canteens"].GetBool();
+
 	imp_load_saved_merc_by_nickname = (*json)["imp_load_saved_merc_by_nickname"].GetBool();
 	imp_load_keep_inventory         = (*json)["imp_load_keep_inventory"].GetBool();
 	load_saved_npc                  = (*json)["load_saved_npc"].GetBool();

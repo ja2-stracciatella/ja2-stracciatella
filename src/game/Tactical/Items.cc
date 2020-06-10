@@ -4080,7 +4080,7 @@ BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* 
 	return( TRUE );
 }
 
-BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs )
+BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs, BOOLEAN in_combat )
 {
 	INT16  sPointsToUse;
 	UINT16 usTotalKitPoints;
@@ -4122,7 +4122,14 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
 	// CJC Feb 9.  Canteens don't seem effective enough, so doubled return from them
 	DeductPoints( pSoldier, AP_DRINK, (INT16) (2 * sPointsToUse * -(100 - pSoldier->bBreath) ) );
 
-	UseKitPoints(*pObj, sPointsToUse, *pSoldier);
+	if(in_combat || !GCM->getGamePolicy()->ime_refill_canteens)
+	{
+		UseKitPoints(*pObj, sPointsToUse, *pSoldier);
+	}
+	else
+	{
+		pObj->bStatus[0]=100; // Automatic refill in peace time
+	}
 
 	return( TRUE );
 }

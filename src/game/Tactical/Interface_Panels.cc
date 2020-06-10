@@ -1420,7 +1420,7 @@ static void SMInvClickCamoCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			// Say OK acknowledge....
 			DoMercBattleSound(s, BATTLE_SOUND_COOL1);
 		}
-		else if (ApplyCanteen(s, obj, &fGoodAPs))
+		else if (ApplyCanteen(s, obj, &fGoodAPs, gTacticalStatus.fEnemyInSector))
 		{
 			if (!fGoodAPs) return;
 		}

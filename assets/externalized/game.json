@@ -89,6 +89,11 @@
     "load_saved_npc": false,
     "load_saved_npc_inventory": false,
 
+    "inventory_management_extras": false,
+    "ime_detach_ammo": false,
+    "ime_detach_attachments": false,
+    "ime_refill_canteens": false,
+
     //  Enables middle mouse button to trigger a look into cursor direction
     //  vanilla_setting: false
     "middle_mouse_look": true,

@@ -44,6 +44,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -525,11 +526,12 @@ static void MapInvenPoolSlotsMove(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void BeginInventoryPoolPtr(OBJECTTYPE* pInventorySlot);
 static BOOLEAN CanPlayerUseSectorInventory(void);
-static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYPE* pItemPtr);
 
 
 static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 {
+	static bool LBUTTON_HANDLED = false;
+
 	// btn callback handler for assignment screen mask region
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
@@ -537,6 +539,13 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
+
+		if(LBUTTON_HANDLED)
+		{
+			LBUTTON_HANDLED = false;
+			return;
+	}
+
 		// check if item in cursor, if so, then swap, and no item in curor, pick up, if item in cursor but not box, put in box
 		INT32      const slot_idx = MSYS_GetRegionUserData(pRegion, 0);
 		WORLDITEM& slot = pInventoryPoolList[iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT + slot_idx];
@@ -622,6 +631,88 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 		}
 
 		// dirty region, force update
+		fMapPanelDirty = TRUE;
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	{
+		// check if item in cursor, if so, then swap, and no item in curor, pick up, if item in cursor but not box, put in box
+		INT32      const slot_idx = MSYS_GetRegionUserData(pRegion, 0);
+		WORLDITEM* const slot     = &pInventoryPoolList[iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT + slot_idx];
+
+		// Return if empty
+		if (gpItemPointer == NULL && slot->o.usItem == NOTHING) return;
+
+		// is this item reachable
+		if (slot->o.usItem != NOTHING && !(slot->usFlags & WORLD_ITEM_REACHABLE))
+		{
+			// not reachable
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_38], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return;
+		}
+
+		// Valid character?
+		const SOLDIERTYPE* const s = GetSelectedInfoChar();
+		if (s == NULL)
+		{
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, pMapInventoryErrorString[0], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return;
+		}
+
+		// Check if selected merc is in this sector, if not, warn them and leave
+		if (s->sSectorX != sSelMapX           ||
+				s->sSectorY != sSelMapY           ||
+				s->bSectorZ != iCurrentMapSectorZ ||
+				s->fBetweenSectors)
+		{
+			ST::string msg = (gpItemPointer == NULL ? pMapInventoryErrorString[1] : pMapInventoryErrorString[4]);
+			ST::string buf = st_format_printf(msg, s->name);
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, gpItemPointer == NULL ? pMapInventoryErrorString[1] : pMapInventoryErrorString[4], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return;
+		}
+
+		// If in battle inform player they will have to do this in tactical
+		if (!CanPlayerUseSectorInventory())
+		{
+			ST::string msg = (gpItemPointer == NULL ? pMapInventoryErrorString[2] : pMapInventoryErrorString[3]);
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, msg, MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+			return;
+		}
+
+		if (gpItemPointer == NULL)
+		{
+			sObjectSourceGridNo = slot->sGridNo;
+
+			if(gamepolicy(inventory_management_extras))
+			{
+				// TODO move to key_only function
+				bool const ctrl                     = _KeyDown( CTRL );
+				bool const alt                      = _KeyDown( ALT );
+				bool const shift                    = _KeyDown( SHIFT );
+				bool const ctrl_only                =  ctrl&&!alt&&!shift;
+				bool const alt_only                 = !ctrl&& alt&&!shift;
+				bool const ctrl_shift_only          =  ctrl&&!alt&& shift;
+				bool const alt_shift_only           = !ctrl&& alt&& shift;
+
+				if(ctrl_only || ctrl_shift_only)
+				{
+					SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
+					if(!pSoldier) return;
+
+					SoldierItemAutoAttachPlace(pSoldier, &slot->o, ctrl_shift_only, false);
+					LBUTTON_HANDLED = true;
+				}
+
+				if(alt_only || alt_shift_only) //"Sell for 0". TODO Sell.
+				{
+					if(alt_shift_only) DeleteObj(&slot->o);
+					else ItemFromStackRemoveWorst(&slot->o, &gItemPointer);
+					LBUTTON_HANDLED = true;
+				}
+			}
+		}
+
+		fTeamPanelDirty = TRUE;
+
 		fMapPanelDirty = TRUE;
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_UP)
@@ -833,7 +924,7 @@ static BOOLEAN RemoveObjectFromStashSlot(OBJECTTYPE* pInventorySlot, OBJECTTYPE*
 }
 
 
-static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYPE* pItemPtr)
+BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYPE* pItemPtr)
 {
 	UINT8 ubNumberToDrop, ubSlotLimit, ubLoop;
 
@@ -841,6 +932,11 @@ static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYP
 
 	ubSlotLimit = GCM->getItem(pItemPtr -> usItem)->getPerPocket();
 
+	if gamepolicy(inventory_management_extras)
+	{
+		// remove artificial sector inventory stack limit
+		if (GCM->getItem(pItemPtr -> usItem)->getItemClass() & IC_STACKABLE) ubSlotLimit = MAX_OBJECTS_PER_SLOT;
+	}
 	if (pInventorySlot->ubNumberOfObjects == 0)
 	{
 		// placement in an empty slot
@@ -878,7 +974,7 @@ static BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYP
 
 		if (pItemPtr->usItem == pInventorySlot->usItem)
 		{
-			if (pItemPtr->usItem == MONEY)
+			if (pItemPtr->usItem == MONEY || ((pItemPtr->usItem == SILVER || pItemPtr->usItem == GOLD) && gamepolicy(inventory_management_extras)))
 			{
 				// always allow money to be combined!
 				// average out the status values using a weighted average...

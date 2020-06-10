@@ -95,6 +95,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
+#include "Interface_Panels.h"
+#include "Isometric_Utils.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -3919,8 +3921,17 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	uiHandPos = MSYS_GetRegionUserData( pRegion, 0 );
 
+	static bool LBUTTON_HANDLED = false;
+
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
+
+		if(LBUTTON_HANDLED)
+		{
+			LBUTTON_HANDLED = false;
+			return;
+		}
+
 		// If we do not have an item in hand, start moving it
 		if ( gpItemPointer == NULL )
 		{
@@ -4099,6 +4110,73 @@ static void MAPInvClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 				fTeamPanelDirty=TRUE;
 				fInterfacePanelDirty = DIRTYLEVEL2;
 			}
+		}
+	}
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
+	{
+
+		if ( gpItemPointer != NULL ) return;
+		if ( pSoldier->inv[ uiHandPos ].usItem == NOTHING ) return;
+		//ATE: Put this here to handle Nails refusal....
+		if ( HandleNailsVestFetish( pSoldier, uiHandPos, NOTHING ) ) return;
+
+		if(gamepolicy(inventory_management_extras))
+		{
+			bool const ctrl                     = _KeyDown( CTRL );
+			bool const alt                      = _KeyDown( ALT );
+			bool const shift                    = _KeyDown( SHIFT );
+			bool const ctrl_only                =  ctrl&&!alt&&!shift;
+			bool const alt_only                 = !ctrl&& alt&&!shift;
+			bool const ctrl_shift_only          =  ctrl&&!alt&& shift;
+			bool const alt_shift_only           = !ctrl&& alt&& shift;
+
+			if(ctrl_only || ctrl_shift_only)
+			{
+				usOldItemIndex = pSoldier->inv[ uiHandPos ].usItem;
+				if(!fShowMapInventoryPool) SoldierDropFromSlot(pSoldier, uiHandPos, ctrl_shift_only, true);
+				else
+				{
+					OBJECTTYPE item;
+					if(ctrl_shift_only)
+					{
+						item = pSoldier->inv[ uiHandPos ];
+						DeleteObj(&pSoldier->inv[ uiHandPos ]);
+					}
+					else ItemFromStackRemoveBest(&pSoldier->inv[ uiHandPos ], &item);
+
+					UINT32 index = 0;
+					BlitInventoryPoolGraphic(); // used to resize
+					while(pInventoryPoolList[index].o.usItem != NOTHING)
+					{
+						index++;
+					}
+
+					pInventoryPoolList[index].o = item;
+					pInventoryPoolList[index].sGridNo = pSoldier->sGridNo;
+					pInventoryPoolList[index].ubLevel = pSoldier->bLevel;
+					pInventoryPoolList[index].usFlags = WORLD_ITEM_REACHABLE;
+					pInventoryPoolList[index].bRenderZHeightAboveLevel = 0;
+
+					if (pSoldier->sGridNo == NOWHERE)
+					{
+						pInventoryPoolList[index].usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
+					}
+				}
+				HandleTacticalEffectsOfEquipmentChange( pSoldier, uiHandPos, usOldItemIndex, NOTHING );
+				LBUTTON_HANDLED = true;
+			}
+
+			if(alt_only || alt_shift_only)
+			{
+				if(alt_shift_only) DeleteObj(&pSoldier->inv[ uiHandPos ]);
+				else ItemFromStackRemoveWorst(&pSoldier->inv[ uiHandPos ], &gItemPointer);
+				LBUTTON_HANDLED = true;
+			}
+
+			fInterfacePanelDirty = DIRTYLEVEL2;
+			fTeamPanelDirty = TRUE;
+			fCharacterInfoPanelDirty = TRUE;
+			fMapPanelDirty = TRUE;
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LOST_MOUSE )

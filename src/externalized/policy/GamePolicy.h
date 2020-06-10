@@ -71,6 +71,11 @@ public:
 	int8_t all_skilltraits_level;         // Level required to qualify. Above 10 disables
 	bool enemy_elite_all_traits;          // Elites from queen's army get all perks
 
+	bool inventory_management_extras;     // 1.13 inventory management hotkeys, shift-f, etc.
+	bool ime_detach_ammo;                 // hotkey detaches magazines from sector weapons
+	bool ime_detach_attachments;          // hotkey removes removable attachments from sector weapons
+	bool ime_refill_canteens;             // hotkey refill sector canteens, drinking does not deplete canteens out of combat
+
 	bool pablo_wont_steal;                // Packages not stolen
 
 	float critical_damage_head_multiplier;//Head damage multiplier. Vanilla 1.5
