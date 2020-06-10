@@ -38,6 +38,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	load_saved_npc                  = (*json)["load_saved_npc"].GetBool();
 	load_saved_npc_inventory        = (*json)["load_saved_npc_inventory"].GetBool();
 
+	accurate_aim_circle       = (*json)["accurate_aim_circle"].GetBool();
+
 	pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
 
 	critical_damage_head_multiplier = (*json)["tactical_head_damage_multiplier"].GetDouble();

@@ -61,6 +61,8 @@ public:
 	bool load_saved_npc;                  // NPC merc that was hired gets loaded from last save game if was saved while also enabled
 	bool load_saved_npc_inventory;        // NPC merc gets inventory from last save game if was saved while also enabled
 
+	bool accurate_aim_circle;             // Aim circle size and colour corresponds to chance_to_hit
+
 	bool pablo_wont_steal;                // Packages not stolen
 
 	float critical_damage_head_multiplier;//Head damage multiplier. Vanilla 1.5
