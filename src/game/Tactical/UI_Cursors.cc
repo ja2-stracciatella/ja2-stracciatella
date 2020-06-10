@@ -28,6 +28,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "GamePolicy.h"
 
 #include <string_theory/string>
 
@@ -164,6 +165,43 @@ UICursorID GetProperItemCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLE
 
 static void DetermineCursorBodyLocation(SOLDIERTYPE*, BOOLEAN fDisplay, BOOLEAN fRecalc);
 
+static UINT8 ChanceToHit(SOLDIERTYPE* const pSoldier, GridNo const map_pos)
+{
+	bool const is_throwing_knife = GCM->getItem(pSoldier->inv[HANDPOS].usItem)->getItemClass() == IC_THROWING_KNIFE;
+	const SOLDIERTYPE* const target = gUIFullTarget;
+	UINT8 chance_to_hit, chance_to_clear, chance_on_target;
+
+	if (!target)
+	{
+		chance_to_hit = SoldierToLocationChanceToGetThrough(pSoldier, map_pos, gsInterfaceLevel, pSoldier->bTargetCubeLevel, 0);
+	}
+	else
+	{
+		INT8 bTargetLevel = pSoldier->bTargetLevel;
+		GridNo sTargetGridNo = pSoldier->sTargetGridNo;
+
+		pSoldier->bTargetLevel = target->bLevel;
+		pSoldier->sTargetGridNo = target->sGridNo;
+
+		chance_to_clear = SoldierToSoldierBodyPartChanceToGetThrough(pSoldier, target, pSoldier->bAimShotLocation);
+
+		if (is_throwing_knife)
+		{
+			chance_on_target = CalcThrownChanceToHit( pSoldier, target->sGridNo, pSoldier->bShownAimTime / 2, pSoldier->bAimShotLocation );
+		}
+		else
+		{
+			chance_on_target = CalcChanceToHitGun( pSoldier, target->sGridNo, pSoldier->bShownAimTime / 2, pSoldier->bAimShotLocation, false );
+		}
+
+		chance_to_hit = chance_to_clear * chance_on_target / 100;
+
+		pSoldier->bTargetLevel = bTargetLevel;
+		pSoldier->sTargetGridNo = sTargetGridNo;
+	}
+
+	return chance_to_hit;
+}
 
 static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const map_pos, BOOLEAN const recalc)
 {
@@ -253,6 +291,21 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 	{
 		cursor = s->fDoSpread ? ACTION_TARGETREDBURST_UICURSOR :
 			ACTION_TARGETCONFIRMBURST_UICURSOR;
+	}
+	else if (gamepolicy(accurate_aim_circle))
+	{
+		UINT8 const chance_to_hit = ChanceToHit(s, map_pos);
+		UINT8 target_circle;
+		UICursorID const table_circle_target[] = {ACTION_TARGETAIMYELLOW1_UICURSOR,ACTION_TARGETAIM1_UICURSOR,ACTION_TARGETAIM1_UICURSOR,ACTION_TARGETAIM1_UICURSOR,ACTION_TARGETAIM2_UICURSOR,ACTION_TARGETAIM2_UICURSOR,ACTION_TARGETAIM3_UICURSOR,ACTION_TARGETAIM4_UICURSOR,ACTION_TARGETAIM5_UICURSOR,ACTION_TARGETAIM6_UICURSOR,ACTION_TARGETAIM7_UICURSOR,ACTION_TARGETAIM8_UICURSOR,ACTION_TARGETAIM9_UICURSOR,ACTION_TARGETAIMFULL_UICURSOR};
+		UICursorID const table_circle_thrown[] = {ACTION_THROWAIMYELLOW1_UICURSOR, ACTION_THROWAIM1_UICURSOR, ACTION_THROWAIM1_UICURSOR, ACTION_THROWAIM1_UICURSOR, ACTION_THROWAIM2_UICURSOR, ACTION_THROWAIM2_UICURSOR, ACTION_THROWAIM3_UICURSOR, ACTION_THROWAIM4_UICURSOR, ACTION_THROWAIM5_UICURSOR, ACTION_THROWAIM6_UICURSOR, ACTION_THROWAIM7_UICURSOR, ACTION_THROWAIM8_UICURSOR, ACTION_THROWAIM9_UICURSOR, ACTION_THROWAIMFULL_UICURSOR};
+		UINT8 const table_cursor_elements = lengthof(table_circle_target);
+
+		target_circle = chance_to_hit * (table_cursor_elements - 1) / MAXCHANCETOHIT;
+		if (chance_to_hit <= MINCHANCETOHIT) target_circle = 0;			// First item is worst circle
+		if (target_circle >= table_cursor_elements) target_circle = table_cursor_elements - 1;
+
+		if(is_throwing_knife) cursor = table_circle_thrown[target_circle];
+		else cursor = table_circle_target[target_circle];
 	}
 	else
 	{

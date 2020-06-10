@@ -36,6 +36,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	gui_extras = gp.getOptionalBool("gui_extras", true);
 	extra_attachments = gp.getOptionalBool("extra_attachments");
 
+	accurate_aim_circle = gp.getOptionalBool("accurate_aim_circle");
+
 	pablo_wont_steal = gp.getOptionalBool("pablo_wont_steal");
 
 	critical_damage_head_multiplier = gp.getOptionalDouble("tactical_head_damage_multiplier", 1.5);
