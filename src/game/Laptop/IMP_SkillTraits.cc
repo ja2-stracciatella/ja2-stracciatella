@@ -1,10 +1,45 @@
-#ifdef PRECOMPILEDHEADERS
-	#include "Laptop All.h"
-	#include "IMP Skill Trait.h"
-	#include "_Ja25EnglishText.h"
-#else
-#endif
+#include "IMP_SkillTraits.h"
 
+#include "Soldier_Profile_Type.h"
+
+#include "Cursors.h"
+#include "Directories.h"
+#include "CharProfile.h"
+#include "Laptop.h"
+#include "IMP_MainPage.h"
+#include "IMP_Compile_Character.h"
+#include "IMPVideoObjects.h"
+#include "Button_System.h"
+#include "Font_Control.h"
+#include "Font.h"
+#include "MouseSystem.h"
+#include "Video.h"
+#include "VObject.h"
+#include "VSurface.h"
+#include "WordWrap.h"
+#include "Button_Sound_Control.h"
+#include "Text.h"
+
+enum
+{
+	IMP_SKILL_TRAITS__LOCKPICK,
+	IMP_SKILL_TRAITS__HAND_2_HAND,
+	IMP_SKILL_TRAITS__ELECTRONICS,
+	IMP_SKILL_TRAITS__NIGHT_OPS,
+	IMP_SKILL_TRAITS__THROWING,
+	IMP_SKILL_TRAITS__TEACHING,
+	IMP_SKILL_TRAITS__HEAVY_WEAPONS,
+	IMP_SKILL_TRAITS__AUTO_WEAPONS,
+	IMP_SKILL_TRAITS__STEALTHY,
+	IMP_SKILL_TRAITS__AMBIDEXTROUS,
+	IMP_SKILL_TRAITS__KNIFING,
+	IMP_SKILL_TRAITS__ROOFTOP_SNIPING,
+	IMP_SKILL_TRAITS__CAMO,
+	IMP_SKILL_TRAITS__MARTIAL_ARTS,
+	IMP_SKILL_TRAITS__NONE,
+
+	IMP_SKILL_TRAITS__NUMBER_SKILLS,
+};
 
 
 //*******************************************************************
@@ -61,22 +96,18 @@ BOOLEAN gfIST_Redraw=FALSE;
 BOOLEAN	gfSkillTraitQuestions[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
 
 // these are the buttons for the questions
-INT32 giIMPSkillTraitAnswerButton[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
-INT32 giIMPSkillTraitAnswerButtonImage[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
+GUIButtonRef giIMPSkillTraitAnswerButton[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
+BUTTON_PICS* giIMPSkillTraitAnswerButtonImage[ IMP_SKILL_TRAITS__NUMBER_SKILLS ];
 
 // this is the Done  buttons
-INT32 giIMPSkillTraitFinsihButton;
-INT32 giIMPSkillTraitFinsihButtonImage;
-
-
-
-//BOOLEAN	gfSkillTraitButtonChanged=FALSE;
+GUIButtonRef giIMPSkillTraitFinsihButton;
+BUTTON_PICS* giIMPSkillTraitFinsihButtonImage;
 
 #define	IST__NUM_SELECTABLE_TRAITS				2
 INT8	gbLastSelectedTraits[ IST__NUM_SELECTABLE_TRAITS ];
 
 //image handle
-UINT32	guiIST_GreyGoldBox;
+SGPVObject* guiIST_GreyGoldBox;
 
 //*******************************************************************
 //
@@ -107,30 +138,21 @@ BOOLEAN CameBackToSpecialtiesPageButNotFinished();
 
 void EnterIMPSkillTrait( void )
 {
-//	UINT32 uiCnt;
-  VOBJECT_DESC    VObjectDesc;
-
 	//add the skill trait buttons
 	AddImpSkillTraitButtons();
 
 
 	// load the stats graphic and add it
-	VObjectDesc.fCreateFlags=VOBJECT_CREATE_FROMFILE;
-	FilenameForBPP("LAPTOP\\SkillTraitSmallGreyIdent.sti", VObjectDesc.ImageFile);
-	if( !AddVideoObject(&VObjectDesc, &guiIST_GreyGoldBox ) )
-	{
-		Assert( 0 );
-		return;
-	}
+	guiIST_GreyGoldBox = AddVideoObjectFromFile(LAPTOPDIR "/SkillTraitSmallGreyIdent.sti");
+	giIMPSkillTraitFinsihButtonImage = LoadButtonImage(LAPTOPDIR "/button_5.sti", -1, 0, -1, 1, -1);
+	giIMPSkillTraitFinsihButton = CreateIconAndTextButton(giIMPSkillTraitFinsihButtonImage, pImpButtonText[11], FONT12ARIAL,
+		FONT_WHITE, DEFAULT_SHADOW,
+		FONT_WHITE, DEFAULT_SHADOW,
+		LAPTOP_SCREEN_UL_X + (350), LAPTOP_SCREEN_WEB_UL_Y + (340), MSYS_PRIORITY_HIGH,
+		(GUI_CALLBACK)BtnIMPSkillTraitFinishCallback);
 
-  giIMPSkillTraitFinsihButtonImage =  LoadButtonImage( "LAPTOP\\button_5.sti" ,-1,0,-1,1,-1 );
-  giIMPSkillTraitFinsihButton = CreateIconAndTextButton( giIMPSkillTraitFinsihButtonImage, pImpButtonText[ 11 ], FONT12ARIAL, 
-																 FONT_WHITE, DEFAULT_SHADOW, 
-																 FONT_WHITE, DEFAULT_SHADOW, 
-																 TEXT_CJUSTIFIED, 
-																 LAPTOP_SCREEN_UL_X +  ( 350 ), LAPTOP_SCREEN_WEB_UL_Y + ( 340 ), BUTTON_TOGGLE, MSYS_PRIORITY_HIGH,
-													 			 BtnGenericMouseMoveButtonCallback, (GUI_CALLBACK)BtnIMPSkillTraitFinishCallback );
-	SetButtonCursor( giIMPSkillTraitFinsihButton, CURSOR_WWW);
+
+	giIMPSkillTraitFinsihButton->SetCursor(CURSOR_WWW);
 
 	//if we are not DONE and are just reviewing
 	if( iCurrentProfileMode != 5 )
@@ -159,13 +181,13 @@ void ExitIMPSkillTrait( void )
 {
 	INT32 iCnt;
 
-	DeleteVideoObjectFromIndex( guiIST_GreyGoldBox );
+	DeleteVideoObject( guiIST_GreyGoldBox );
 
 	//remove the skill buttons
 	for(iCnt = 0; iCnt < IMP_SKILL_TRAITS__NUMBER_SKILLS; iCnt++)
 	{
 		//if there is a button allocated
-		if( giIMPSkillTraitAnswerButton[iCnt] != -1 )
+		if (giIMPSkillTraitAnswerButton[iCnt] != NULL)
 		{
 			RemoveButton(giIMPSkillTraitAnswerButton[ iCnt ] );
 			UnloadButtonImage(giIMPSkillTraitAnswerButtonImage[ iCnt ] );
@@ -199,7 +221,7 @@ void AddImpSkillTraitButtons()
 	for(iCnt = 0; iCnt < IMP_SKILL_TRAITS__NUMBER_SKILLS; iCnt++)
 	{
 		//reset
-		giIMPSkillTraitAnswerButton[iCnt] = -1;
+		giIMPSkillTraitAnswerButton[iCnt] = {};
 
 		//if we are not DONE and are just reviewing
 		if( iCurrentProfileMode != 5 )
@@ -220,21 +242,21 @@ void AddImpSkillTraitButtons()
 			continue;
 		}
 
-		if( iCnt == 0 )
-			giIMPSkillTraitAnswerButtonImage[ iCnt ] =  LoadButtonImage( "LAPTOP\\button_6.sti", -1,0,-1,1,-1 );
+		if ( iCnt == 0 )
+			giIMPSkillTraitAnswerButtonImage[ iCnt ] = LoadButtonImage(LAPTOPDIR "/button_6.sti", -1, 0, -1, 1, -1);
 		else
 			giIMPSkillTraitAnswerButtonImage[ iCnt ] =  UseLoadedButtonImage( giIMPSkillTraitAnswerButtonImage[ 0 ], -1,0,-1,1,-1 );
 
-		giIMPSkillTraitAnswerButton[iCnt] = QuickCreateButton( giIMPSkillTraitAnswerButtonImage[ iCnt ], usPosX, usPosY,
-									BUTTON_TOGGLE, MSYS_PRIORITY_HIGHEST - 3,
-									MSYS_NO_CALLBACK, (GUI_CALLBACK)BtnIMPSkillTraitAnswerCallback);
 
+		giIMPSkillTraitAnswerButton[iCnt] = QuickCreateButtonToggle(giIMPSkillTraitAnswerButtonImage[iCnt], usPosX, usPosY,
+									MSYS_PRIORITY_HIGHEST - 3, 
+									(GUI_CALLBACK)BtnIMPSkillTraitAnswerCallback);
 		//Set the button data
-		MSYS_SetBtnUserData( giIMPSkillTraitAnswerButton[iCnt], 0, iCnt );
-		SetButtonCursor( giIMPSkillTraitAnswerButton[iCnt], CURSOR_WWW);
+		giIMPSkillTraitAnswerButton[iCnt]->SetUserData(iCnt);
+		giIMPSkillTraitAnswerButton[iCnt]->SetCursor(CURSOR_WWW);
 
 		//Get rid of playing the button sound, it will be handled here
-		ButtonList[ giIMPSkillTraitAnswerButton[ iCnt ] ]->ubSoundSchemeID = 0;
+		giIMPSkillTraitAnswerButton[iCnt]->ubSoundSchemeID = 0;
 
 		//Determine the next x location
 		if( iCnt < IMP_SKILL_TRAIT__SKILL_TRAIT_TO_START_RIGHT_COL )
@@ -267,7 +289,7 @@ void BtnIMPSkillTraitAnswerCallback(GUI_BUTTON *btn,INT32 reason)
 	{
 //		btn->uiFlags|=(BUTTON_CLICKED_ON);
 
-		INT32 iSkillTrait =  MSYS_GetBtnUserData( btn, 0 );
+		INT32 iSkillTrait = btn->GetUserData();
 
 		HandleIMPSkillTraitAnswers( iSkillTrait, FALSE );
 	}
@@ -310,24 +332,8 @@ void HandleIMPSkillTraitAnswers( UINT32 uiSkillPressed, BOOLEAN fResetAllButtons
 
 	HandleLastSelectedTraits( (INT8)uiSkillPressed );
 
-/*	
-	//if there are already 2 skills selected, and we are trying to PRESS a new button ( skill isnt currently set )
-	if( CountNumSkillStraitsSelected() == 2 && 
-			!gfSkillTraitQuestions[ uiSkillPressed ] &&
-			uiSkillPressed != IMP_SKILL_TRAITS__NONE )
-	{
-		//if we have to, unselect an existing trait
-
-		//play the diosabld sound
-//		PlayButtonSound( giIMPSkillTraitAnswerButton[ uiSkillPressed ], BUTTON_SOUND_DISABLED_CLICK );
-
-		//dont select a new one
-//		return;
-	}
-*/
 
 	//Set the skill
-//	gfSkillTraitQuestions[ uiSkillPressed ] = !gfSkillTraitQuestions[ uiSkillPressed ];
 	gfSkillTraitQuestions[ uiSkillPressed ] = TRUE;
 
 	//if the NONE trait was selected, clear the rest of the buttons
@@ -406,11 +412,11 @@ void HandleSkillTraitButtonStates( )
 		//if the skill is selected ( ie depressed )
 		if( gfSkillTraitQuestions[ uiCnt ] )
 		{
-			ButtonList[ giIMPSkillTraitAnswerButton[ uiCnt ] ]->uiFlags |= BUTTON_CLICKED_ON;
+			giIMPSkillTraitAnswerButton[uiCnt]->uiFlags |= BUTTON_CLICKED_ON;
 		}
 		else
 		{
-			ButtonList[ giIMPSkillTraitAnswerButton[ uiCnt ] ]->uiFlags &= ~BUTTON_CLICKED_ON;
+			giIMPSkillTraitAnswerButton[uiCnt]->uiFlags &= ~BUTTON_CLICKED_ON;
 		}
 	}
 }
@@ -420,14 +426,13 @@ void IMPSkillTraitDisplaySkills()
 	UINT32 uiCnt;
 	UINT16 usPosX, usPosY;
 	UINT16 usBoxPosX, usBoxPosY;
-  HVOBJECT	hImageHandle;
 
 	//Display the title
-	DrawTextToScreen( gzIMPSkillTraitsText[ IMP_SKILL_TRAIT__TITLE_TEXT ], IMP_SKILL_TRAIT__TITLE_X, IMP_SKILL_TRAIT__TITLE_Y, IMP_SKILL_TRAIT__TITLE_WIDTH, IMP_SKILL_TRAIT__TITLE_FONT, IMP_SKILL_TRAIT__COLOR, FONT_MCOLOR_BLACK, FALSE, CENTER_JUSTIFIED );
-
+	DrawTextToScreen(gzIMPSkillTraitsText[IMP_SKILL_TRAIT__TITLE_TEXT],
+		IMP_SKILL_TRAIT__TITLE_X, IMP_SKILL_TRAIT__TITLE_Y, IMP_SKILL_TRAIT__TITLE_WIDTH, IMP_SKILL_TRAIT__TITLE_FONT,
+		IMP_SKILL_TRAIT__COLOR, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED
+	);
 	// Stats
-	GetVideoObject(&hImageHandle, guiIST_GreyGoldBox );
-
 	usPosX = IMP_SKILL_TRAIT__LEFT_COLUMN_START_X + IMP_SKILL_TRAIT__TEXT_OFFSET_X;
 	usPosY = IMP_SKILL_TRAIT__LEFT_COLUMN_START_Y + IMP_SKILL_TRAIT__TEXT_OFFSET_Y;
 
@@ -452,16 +457,16 @@ void IMPSkillTraitDisplaySkills()
 		if( gfSkillTraitQuestions[ uiCnt ] )
 		{
 			//Display the gold background box
-			BltVideoObject(FRAME_BUFFER, hImageHandle, 1, usBoxPosX, usBoxPosY, VO_BLT_SRCTRANSPARENCY,NULL);
+			BltVideoObject(FRAME_BUFFER, guiIST_GreyGoldBox, 1, usBoxPosX, usBoxPosY);
 		}
 		else
 		{
 			//Display the grey background box
-			BltVideoObject(FRAME_BUFFER, hImageHandle, 0,usBoxPosX, usBoxPosY, VO_BLT_SRCTRANSPARENCY,NULL);
+			BltVideoObject(FRAME_BUFFER, guiIST_GreyGoldBox, 0, usBoxPosX, usBoxPosY);
 		}
 
 		//draw the text to the screenx
-		DrawTextToScreen( gzIMPSkillTraitsText[ uiCnt ], usPosX, usPosY, 0, IMP_SKILL_TRAIT__FONT, IMP_SKILL_TRAIT__COLOR, FONT_MCOLOR_BLACK, FALSE, LEFT_JUSTIFIED );
+		DrawTextToScreen(gzIMPSkillTraitsText[uiCnt], usPosX, usPosY, 0, IMP_SKILL_TRAIT__FONT, IMP_SKILL_TRAIT__COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 		//Determine the next x location
 		if( uiCnt < IMP_SKILL_TRAIT__SKILL_TRAIT_TO_START_RIGHT_COL )
@@ -529,10 +534,6 @@ BOOLEAN CameBackToSpecialtiesPageButNotFinished()
 		return( FALSE );
 	}
 }
-
-
-
-
 
 INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection()
 {

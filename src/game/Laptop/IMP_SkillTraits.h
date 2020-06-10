@@ -1,13 +1,15 @@
-#ifndef __IMP_SKILL_TRAIT__H_
-#define __IMP_SKILL_TRAIT__H_
+#ifndef _IMP_SKILL_TRAIT_H
+#define _IMP_SKILL_TRAIT_H
 
-void EnterIMPSkillTrait( void );
-void RenderIMPSkillTrait( void );
-void ExitIMPSkillTrait( void );
-void HandleIMPSkillTrait( void );
+#include "Campaign_Types.h"
+
+void EnterIMPSkillTrait(void);
+void RenderIMPSkillTrait(void);
+void ExitIMPSkillTrait(void);
+void HandleIMPSkillTrait(void);
 
 
-INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection();
+INT8 DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection();
 void AddSelectedSkillsToSkillsList();
 
 #endif

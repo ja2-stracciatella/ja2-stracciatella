@@ -1707,6 +1707,7 @@ static const ST::string s_eng_pImpButtonText[pImpButtonText_SIZE] =
 	"Analyzing", 			// analyzing your profile results
 	"OK",
 	"Voice",
+	"Specialties",			// the skills selection screen
 };
 
 static const ST::string s_eng_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
@@ -3460,6 +3461,27 @@ static const ST::string s_eng_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode
 	"DiD", 			// Dead is Dead Tab
 };
 
+static const ST::string s_eng_gzIMPSkillTraitsText[16] =
+{
+		"Lock picking",
+		"Hand to hand combat",
+		"Electronics",
+		"Night operations",
+		"Throwing",
+		"Teaching",
+		"Heavy Weapons",
+		"Auto Weapons",
+		"Stealth",
+		"Ambidextrous",
+		"Knifing",
+		"Rooftop Sniping",
+		"Camouflage",
+		"Martial Arts",
+
+		"None",
+		"I.M.P. Specialties",
+};
+
 // English language resources.
 LanguageRes g_LanguageResEnglish = {
 
@@ -3685,6 +3707,7 @@ LanguageRes g_LanguageResEnglish = {
 	g_eng_str_dead_is_dead_mode_enter_name,
 
 	s_eng_gs_dead_is_dead_mode_tab_name,
+	s_eng_gzIMPSkillTraitsText,
 };
 
 #ifdef WITH_UNITTESTS

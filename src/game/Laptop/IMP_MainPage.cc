@@ -20,6 +20,9 @@
 #include "Button_System.h"
 #include "ScreenIDs.h"
 #include "Font_Control.h"
+#include "GamePolicy.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
 
 
 #define MAIN_PAGE_BUTTON_TEXT_WIDTH 95
@@ -160,8 +163,9 @@ static void CreateIMPMainPageButtons(void)
 	ST::string profiling_text = (iCurrentProfileMode == 0 || iCurrentProfileMode > 2 ? pImpButtonText[1] : pImpButtonText[22]);
 	MakeButton(1, LAPTOPDIR "/button_2.sti", profiling_text, dx + 136, dy + 174, BtnIMPMainPageBeginCallback);
 
-	// the personality button
-	MakeButton(2, LAPTOPDIR "/button_8.sti", pImpButtonText[2], dx + 13, dy + 245, BtnIMPMainPagePersonalityCallback);
+	// the personality/specialties button
+	ST::string btnText = gamepolicy(imp_pick_skills_directly) ? pImpButtonText[26] : pImpButtonText[2];
+	MakeButton(2, LAPTOPDIR "/button_8.sti", btnText, dx + 13, dy + 245, BtnIMPMainPagePersonalityCallback);
 
 	// the attribs button
 	MakeButton(3, LAPTOPDIR "/button_8.sti", pImpButtonText[3], dx + 133, dy + 245, BtnIMPMainPageAttributesCallback);

@@ -2,8 +2,12 @@
 #include "Laptop.h"
 #include "CharProfile.h"
 #include "Debug.h"
+#include "GameInstance.h"
+#include "GamePolicy.h"
+#include "ContentManager.h"
 #include "Render_Dirty.h"
 #include "IMP_Portraits.h"
+#include "IMP_SkillTraits.h"
 #include "IMP_Compile_Character.h"
 #include "Soldier_Profile_Type.h"
 #include "Soldier_Profile.h"
@@ -196,6 +200,35 @@ static void CreatePlayerSkills(void)
 {
 	ValidateSkillsList();
 
+	if (gamepolicy(imp_pick_skills_directly))
+	{
+		// the skills selected are distinct and there are at most 2
+		iSkillA = NO_SKILLTRAIT;
+		iSkillB = NO_SKILLTRAIT;
+
+		if (iLastElementInSkillsList == 1)
+		{
+			// grant expert level if only 1 skill is chosen, unless the skill as no expert level
+			iSkillA = SkillsList[0];
+			if (iSkillA != ELECTRONICS && iSkillA != AMBIDEXT && iSkillA != CAMOUFLAGED)
+			{
+				iSkillB = iSkillA;
+			}
+		}
+		else if (iLastElementInSkillsList == 2)
+		{
+			iSkillA = SkillsList[0];
+			iSkillB = SkillsList[1];
+		}
+		else if (iLastElementInSkillsList > 2)
+		{
+			// This should be impossible
+			SLOGA("Invalid number ({}) of skills selected", iLastElementInSkillsList);
+		}
+	
+		return;
+	}
+
 	iSkillA = SkillsList[Random(iLastElementInSkillsList)];
 
 	// there is no expert level these skills
@@ -370,6 +403,8 @@ static BOOLEAN ShouldThisMercHaveABigBody(void);
 void HandleMercStatsForChangesInFace(void)
 {
 	if (fLoadingCharacterForPreviousImpProfile) return;
+
+	AddSelectedSkillsToSkillsList();
 
 	CreatePlayerSkills();
 

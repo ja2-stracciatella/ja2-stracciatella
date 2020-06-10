@@ -44,6 +44,7 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	imp_attribute_min         = (*json)["imp"]["min_attribute_points"].GetInt();
 	imp_attribute_bonus       = (*json)["imp"]["bonus_attribute_points"].GetInt();
 	imp_attribute_zero_bonus  = (*json)["imp"]["zero_attribute_points_bonus"].GetInt();
+	imp_pick_skills_directly  = (*json)["imp"]["pick_skills_directly"].GetBool();
 }
 
 /** Check if a hotkey is enabled. */
