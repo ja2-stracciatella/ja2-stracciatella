@@ -108,6 +108,8 @@
 
     "perpetual_corpse_queen_crepitus": false,
 
+    "tactical_realtime_save_allowed": false,
+
     "skip_sleep_explanation": false,
 
     //  Enables middle mouse button to trigger a look into cursor direction
