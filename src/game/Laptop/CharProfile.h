@@ -71,4 +71,6 @@ enum{
 
 #define COST_OF_PROFILE 3000
 
+extern BOOLEAN fLoadingCharacterForPreviousImpProfile;
+
 #endif

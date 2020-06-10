@@ -33,6 +33,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	enemy_elite_minimum_level = (*json)["enemy_elite_minimum_level"].GetInt();
 	enemy_elite_maximum_level = (*json)["enemy_elite_maximum_level"].GetInt();
 
+	imp_load_saved_merc_by_nickname = (*json)["imp_load_saved_merc_by_nickname"].GetBool();
+	imp_load_keep_inventory         = (*json)["imp_load_keep_inventory"].GetBool();
 	pablo_wont_steal          = (*json)["pablo_wont_steal"].GetBool();
 
 	critical_damage_head_multiplier = (*json)["tactical_head_damage_multiplier"].GetDouble();

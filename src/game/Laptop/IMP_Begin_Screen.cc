@@ -23,6 +23,16 @@
 
 #include <string_theory/string>
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
+#include "FileMan.h"
+#include "IMP_Compile_Character.h"
+#include "Soldier_Profile.h"
+#include "Soldier_Control.h"
+#include "SaveLoadGame.h"
+#include "LaptopSave.h"
+#include "IMP_Portraits.h"
 
 #define FULL_NAME_INPUT_X LAPTOP_SCREEN_UL_X + 196
 #define FULL_NAME_INPUT_Y LAPTOP_SCREEN_UL_Y + 153
@@ -288,6 +298,20 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 
 			iCurrentImpPage = IMP_MAIN_PAGE;
 			fButtonPendingFlag = TRUE;
+		}
+
+		if(GCM->getGamePolicy()->imp_load_saved_merc_by_nickname)
+		{
+			if(IMPSavedProfileDoesFileExist(pNickNameString.c_str()))
+			{
+				fLoadingCharacterForPreviousImpProfile = true;
+				LaptopSaveInfo.iVoiceId = IMPSavedProfileLoadMercProfile(pNickNameString.c_str());
+				MERCPROFILESTRUCT& profile_saved = gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
+				iPortraitNumber = profile_saved.ubFaceIndex - 200;
+				fCharacterIsMale = ( profile_saved.bSex == MALE );
+				iCurrentImpPage = IMP_CONFIRM;
+				fButtonPendingFlag = TRUE;
+			}
 		}
 		else
 		{

@@ -36,6 +36,8 @@
 
 #include <string_theory/string>
 
+#include "SaveLoadGame.h"
+#include "Items.h"
 
 #define IMP_MERC_FILE "imp.dat"
 
@@ -71,8 +73,6 @@ static const FacePosInfo g_face_info[] =
 	{  5,  6,  5, 26 }
 };
 
-
-BOOLEAN fLoadingCharacterForPreviousImpProfile = FALSE;
 
 static void BtnIMPConfirmNo(GUI_BUTTON *btn, INT32 reason);
 static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason);
@@ -160,7 +160,8 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	// last minute chage to make sure merc with right facehas not only the right body but body specific skills...
 	// ie..small mercs have martial arts..but big guys and women don't don't
 
-	HandleMercStatsForChangesInFace( );
+	if (!fLoadingCharacterForPreviousImpProfile)
+		HandleMercStatsForChangesInFace( );
 
 	HireMercStruct = MERC_HIRE_STRUCT{};
 
@@ -220,12 +221,45 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason)
 		}
 
 		// line moved by CJC Nov 28 2002 to AFTER the check for money
-		LaptopSaveInfo.fIMPCompletedFlag = TRUE;
+		LaptopSaveInfo.fIMPCompletedFlag = AddCharacterToPlayersTeam();
+		if (!LaptopSaveInfo.fIMPCompletedFlag) return; // * only if merc hire failed: no charge, get another go.
 
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+		if(!pSoldier) return;
+
+		if(fLoadingCharacterForPreviousImpProfile)
+		{
+			IMPSavedProfileLoadInventory(gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].zNickname.c_str(), pSoldier);
+		}
+
+		if(pSoldier->ubID == 0 && FindObj(pSoldier, LETTER) == NO_SLOT)
+		{
+			// there was no letter autoplacement because inventory overwritten: find free slot.
+			if(pSoldier->inv[HANDPOS].usItem != NOTHING) SwapHandItems(pSoldier);
+			if(pSoldier->inv[HANDPOS].usItem == NOTHING)
+			{
+				pSoldier->inv[HANDPOS].usItem = LETTER;
+				pSoldier->inv[HANDPOS].ubNumberOfObjects = 1;
+				pSoldier->inv[HANDPOS].bStatus[0] = 100;
+			}
+			else if(pSoldier->inv[HELMETPOS].usItem !=NOTHING)
+			{
+				// just place letter as helmet attachment.
+				pSoldier->inv[HELMETPOS].usAttachItem[MAX_ATTACHMENTS - 1] = LETTER;
+				pSoldier->inv[HELMETPOS].bAttachStatus[MAX_ATTACHMENTS - 1] = 100;
+			}
+			else
+			{
+				// the letter is important so hide it under wig/hairpiece
+				pSoldier->inv[HELMETPOS].usItem = LETTER;
+				pSoldier->inv[HELMETPOS].ubNumberOfObjects = 1;
+				pSoldier->inv[HELMETPOS].bStatus[0] = 100;
+			}
+		}
+ 
 		// charge the player
 		AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin(), -COST_OF_PROFILE);
 		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), -1, -1);
-		AddCharacterToPlayersTeam();
 
 		// write the created imp merc
 		WriteOutCurrentImpCharacter((UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId));
