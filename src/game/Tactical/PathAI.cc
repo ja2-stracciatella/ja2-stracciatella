@@ -1855,7 +1855,7 @@ ENDOFLOOP:
 		{
 
 			z=_z;
-			INT16 iCnt;
+			UINT16 iCnt;
 			for (iCnt = 0; z != 0 && iCnt < lengthof(guiPathingData); iCnt++)
 			{
 				guiPathingData[ iCnt ] = trailTree[z].stepDir;

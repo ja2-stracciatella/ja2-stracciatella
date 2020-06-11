@@ -293,7 +293,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 
 static void RequestAttackOnSector(UINT8 ubSectorID, UINT16 usDefencePoints)
 {
-	INT32 i;
+	UINT32 i;
 	for( i = 0; i < gGarrisonGroup.size(); i++ )
 	{
 		if( gGarrisonGroup[ i ].ubSectorID == ubSectorID && !gGarrisonGroup[ i ].ubPendingGroupID )
@@ -499,7 +499,7 @@ void InitStrategicAI()
 
 	/* Initialize the garrisons based on the initial sizes (all variances are plus
 	 * or minus 1). */
-	for (INT32 i = 0; i != iGarrisonArraySize; ++i)
+	for (UINT32 i = 0; i != iGarrisonArraySize; ++i)
 	{
 		GARRISON_GROUP& gg = gGarrisonGroup[i];
 		SECTORINFO&     si = SectorInfo[gg.ubSectorID];
@@ -1084,7 +1084,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 {
 	SECTORINFO *pSector;
 	GROUP *pPatrolGroup;
-	INT32 i;
+	UINT32 i;
 
 	if( !gfQueenAIAwake )
 	{
@@ -1680,9 +1680,9 @@ static BOOLEAN GarrisonCanProvideMinimumReinforcements(INT32 iGarrisonID);
 
 static INT32 ChooseSuitableGarrisonToProvideReinforcements(INT32 iDstGarrisonID, INT32 iReinforcementsRequested)
 {
-	INT32 iSrcGarrisonID, iBestGarrisonID = NO_GARRISON;
+	UINT32 iSrcGarrisonID, iBestGarrisonID = NO_GARRISON;
 	INT32 iReinforcementsAvailable;
-	INT32 i, iRandom, iWeight;
+	UINT32 i, iRandom, iWeight;
 	INT8 bBestWeight;
 	UINT8 ubSectorID;
 	size_t iGarrisonArraySize = gGarrisonGroup.size();
@@ -1984,7 +1984,8 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 {
 	GROUP *pGroup;
-	INT32 iRandom, iSrcGarrisonID, iWeight;
+	INT32 iRandom, iWeight;
+	UINT32 iSrcGarrisonID;
 	INT32 iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
 	UINT8 ubSrcSectorX, ubSrcSectorY;
 
@@ -2083,8 +2084,8 @@ static void UpgradeAdminsToTroops();
 //reinforcements, new patrol groups, planned assaults, etc.
 void EvaluateQueenSituation()
 {
-	INT32 i, iRandom;
-	INT32 iWeight;
+	UINT32 i, iRandom;
+	UINT32 iWeight;
 	UINT32 uiOffset;
 	UINT16 usDefencePoints;
 	INT32 iSumOfAllWeights = 0;
@@ -2258,7 +2259,7 @@ void LoadStrategicAI(HWFILE const hFile)
 {
 	size_t i;
 	UINT8 ubSAIVersion;
-	INT32 iPatrolArraySize, iGarrisonArraySize;
+	UINT32 iPatrolArraySize, iGarrisonArraySize;
 
 	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
 	FileRead(hFile, &gfExtraElites,                      1);
@@ -2792,7 +2793,7 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 		//Turn off the flag so that this doesn't happen everytime this function is called!
 		gfExtraElites = FALSE;
 
-		for( INT32 i = 0; i < gGarrisonGroup.size(); i++ )
+		for( UINT32 i = 0; i < gGarrisonGroup.size(); i++ )
 		{
 			//if we are dealing with extra elites, then augment elite compositions (but only if they exist in the sector).
 			//If the queen still owns the town by more than 65% (iFactor >= 15), then upgrade troops to elites in those sectors.
@@ -3139,7 +3140,7 @@ static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 
 	}
 	ubDstSectorX = (UINT8)SECTORX( gGarrisonGroup[ iGarrisonID ].ubSectorID );
 	ubDstSectorY = (UINT8)SECTORY( gGarrisonGroup[ iGarrisonID ].ubSectorID );
-	if( iBestIndex != -1 )
+	if( iBestIndex != (size_t)-1 )
 	{ //Send the group to the garrison
 		pGroup = GetGroup( gPatrolGroup[ iBestIndex ].ubGroupID );
 		if( pGroup->ubGroupSize > ubSoldiersRequested && pGroup->ubGroupSize - ubSoldiersRequested >= gubMinEnemyGroupSize )
@@ -3541,7 +3542,7 @@ static void UpgradeAdminsToTroops()
 		if (eg.ubIntention == PATROL)
 		{ // Use that patrol's priority.
 			size_t const patrol_id = FindPatrolGroupIndexForGroupID(g.ubGroupID);
-			Assert(patrol_id != -1);
+			Assert(patrol_id != (size_t)-1);
 			priority = gPatrolGroup[patrol_id].bPriority;
 		}
 		else
@@ -3638,8 +3639,8 @@ static void SendGroupToPool(GROUP** pGroup)
 
 static void ReassignAIGroup(GROUP** pGroup)
 {
-	INT32 i, iRandom;
-	INT32 iWeight;
+	UINT32 i, iRandom;
+	UINT32 iWeight;
 	UINT16 usDefencePoints;
 	size_t iReloopLastIndex = -1;
 	UINT8 ubSectorID;
@@ -3685,7 +3686,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 						return;
 					}
 				}
-				if( iReloopLastIndex == -1 )
+				if( iReloopLastIndex == (size_t)-1 )
 				{ //go to the next garrison and clear the iRandom value so it attempts to use all subsequent groups.
 					iReloopLastIndex = i - 1;
 					iRandom = 0;
@@ -3718,7 +3719,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 			}
 		}
 	}
-	if( iReloopLastIndex == -1 )
+	if( iReloopLastIndex == (size_t)-1 )
 	{
 		//go through the patrol groups
 		for( i = 0; i < gPatrolGroup.size(); i++ )
@@ -3735,7 +3736,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 						return;
 					}
 				}
-				if( iReloopLastIndex == -1 )
+				if( iReloopLastIndex == (size_t)-1 )
 				{
 					iReloopLastIndex = i - 1;
 					iRandom = 0;
@@ -3771,7 +3772,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 static void TagSAIGroupWithGracePeriod(GROUP const& g)
 {
 	size_t const patrol_id = FindPatrolGroupIndexForGroupID(g.ubGroupID);
-	if (patrol_id == -1) return;
+	if (patrol_id == (size_t)-1) return;
 
 	UINT32 grace_period;
 	switch (gGameOptions.ubDifficultyLevel)
@@ -3796,7 +3797,7 @@ static BOOLEAN PermittedToFillPatrolGroup(INT32 iPatrolID)
 
 void RepollSAIGroup( GROUP *pGroup )
 {
-	INT32 i;
+	UINT32 i;
 	Assert( !pGroup->fPlayer );
 	if( GroupAtFinalDestination( pGroup ) )
 	{
@@ -4002,7 +4003,7 @@ static void ReinitializeUnvisitedGarrisons(void)
 	SECTORINFO *pSector;
 	ARMY_COMPOSITION *pArmyComp;
 	GROUP *pGroup;
-	INT32 i, cnt, iEliteChance, iAdminChance;
+	UINT32 i, cnt, iEliteChance, iAdminChance;
 
 	//Recreate the compositions
 	gArmyComp = GCM->getArmyCompositions();

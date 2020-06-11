@@ -232,7 +232,6 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 		}
 
 		// all underground sectors must also be defined with UndergroundSectorModel
-		bool isDefined = false;
 		for (auto sec : lair->lairSectors)
 		{
 			if (sec.sectorLevel == 0)

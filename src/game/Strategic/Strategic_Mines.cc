@@ -239,35 +239,35 @@ void HourlyMinesUpdate(void)
 }
 
 
-INT32 GetTotalLeftInMine( INT8 bMineIndex )
+INT32 GetTotalLeftInMine( UINT8 ubMineIndex )
 {
 	// returns the value of the mine
 
-	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
-	return ( gMineStatus[ bMineIndex ].uiRemainingOreSupply );
+	return ( gMineStatus[ ubMineIndex ].uiRemainingOreSupply );
 }
 
 
-UINT32 GetMaxPeriodicRemovalFromMine( INT8 bMineIndex )
+UINT32 GetMaxPeriodicRemovalFromMine( UINT8 ubMineIndex )
 {
 	// returns max amount that can be mined in a time period
 
-	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	// if mine is shut down
-	if ( gMineStatus[ bMineIndex ].fShutDown)
+	if ( gMineStatus[ ubMineIndex ].fShutDown)
 	{
 		return ( 0 );
 	}
 
-	return( gMineStatus[ bMineIndex ].uiMaxRemovalRate );
+	return( gMineStatus[ ubMineIndex ].uiMaxRemovalRate );
 }
 
 
-UINT32 GetMaxDailyRemovalFromMine(INT8 const mine_id)
+UINT32 GetMaxDailyRemovalFromMine(UINT8 const mine_id)
 {
-	Assert(0 <= mine_id && mine_id < gMineStatus.size());
+	Assert(mine_id < gMineStatus.size());
 	MINE_STATUS_TYPE const& m = gMineStatus[mine_id];
 
 	if (m.fShutDown) return 0;
@@ -278,10 +278,10 @@ UINT32 GetMaxDailyRemovalFromMine(INT8 const mine_id)
 }
 
 
-INT8 GetTownAssociatedWithMine( INT8 bMineIndex )
+INT8 GetTownAssociatedWithMine( UINT8 ubMineIndex )
 {
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < GCM->getMines().size() ) );
-	return GCM->getMine(bMineIndex)->associatedTownId;
+	Assert(ubMineIndex < GCM->getMines().size());
+	return GCM->getMine(ubMineIndex)->associatedTownId;
 }
 
 
@@ -293,15 +293,15 @@ static void AddMineHistoryEvent(UINT8 const event, UINT const mine_id)
 
 
 // remove actual ore from mine
-static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
+static UINT32 ExtractOreFromMine(UINT8 ubMineIndex, UINT32 uiAmount)
 {
 	// will remove the ore from the mine and return the amount that was removed
 	UINT32 uiAmountExtracted = 0;
 
-	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	// if mine is shut down
-	if ( gMineStatus[ bMineIndex ].fShutDown)
+	if ( gMineStatus[ ubMineIndex ].fShutDown)
 	{
 		return ( 0 );
 	}
@@ -313,45 +313,45 @@ static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 	}
 
 	// will this exhaust the ore in this mine?
-	if( uiAmount >= gMineStatus[ bMineIndex ].uiRemainingOreSupply )
+	if( uiAmount >= gMineStatus[ ubMineIndex ].uiRemainingOreSupply )
 	{
 		// exhaust remaining ore
-		uiAmountExtracted = gMineStatus[ bMineIndex ].uiRemainingOreSupply;
-		gMineStatus[ bMineIndex ].uiRemainingOreSupply = 0;
-		gMineStatus[ bMineIndex ].uiMaxRemovalRate = 0;
-		gMineStatus[ bMineIndex ].fEmpty = TRUE;
-		gMineStatus[ bMineIndex ].fRunningOut = FALSE;
+		uiAmountExtracted = gMineStatus[ ubMineIndex ].uiRemainingOreSupply;
+		gMineStatus[ ubMineIndex ].uiRemainingOreSupply = 0;
+		gMineStatus[ ubMineIndex ].uiMaxRemovalRate = 0;
+		gMineStatus[ ubMineIndex ].fEmpty = TRUE;
+		gMineStatus[ ubMineIndex ].fRunningOut = FALSE;
 
 		// tell the strategic AI about this, that mine's and town's value is greatly reduced
-		StrategicHandleMineThatRanOut(GetMineSector(bMineIndex));
+		StrategicHandleMineThatRanOut(GetMineSector(ubMineIndex));
 
-		AddMineHistoryEvent(HISTORY_MINE_RAN_OUT, bMineIndex);
+		AddMineHistoryEvent(HISTORY_MINE_RAN_OUT, ubMineIndex);
 	}
 	else	// still some left after this extraction
 	{
 		// set amount used, and decrement ore remaining in mine
 		uiAmountExtracted = uiAmount;
-		gMineStatus[ bMineIndex ].uiRemainingOreSupply -= uiAmount;
+		gMineStatus[ ubMineIndex ].uiRemainingOreSupply -= uiAmount;
 
 		// one of the mines (randomly chosen) will start running out eventually, check if we're there yet
-		if (gMineStatus[ bMineIndex ].uiRemainingOreSupply < gMineStatus[ bMineIndex ].uiOreRunningOutPoint)
+		if (gMineStatus[ ubMineIndex ].uiRemainingOreSupply < gMineStatus[ ubMineIndex ].uiOreRunningOutPoint)
 		{
-			gMineStatus[ bMineIndex ].fRunningOut = TRUE;
+			gMineStatus[ ubMineIndex ].fRunningOut = TRUE;
 
 			// round all fractions UP to the next REMOVAL_RATE_INCREMENT
-			gMineStatus[ bMineIndex ].uiMaxRemovalRate = (UINT32) (((FLOAT) gMineStatus[ bMineIndex ].uiRemainingOreSupply / 10) / REMOVAL_RATE_INCREMENT + 0.9999) * REMOVAL_RATE_INCREMENT;
+			gMineStatus[ ubMineIndex ].uiMaxRemovalRate = (UINT32) (((FLOAT) gMineStatus[ ubMineIndex ].uiRemainingOreSupply / 10) / REMOVAL_RATE_INCREMENT + 0.9999) * REMOVAL_RATE_INCREMENT;
 
 
 			// if we control it
-			if (PlayerControlsMine(bMineIndex))
+			if (PlayerControlsMine(ubMineIndex))
 			{
 				// and haven't yet been warned that it's running out
-				if (!gMineStatus[ bMineIndex ].fWarnedOfRunningOut)
+				if (!gMineStatus[ ubMineIndex ].fWarnedOfRunningOut)
 				{
 					// that mine's head miner tells player that the mine is running out
-					IssueHeadMinerQuote( bMineIndex, HEAD_MINER_STRATEGIC_QUOTE_RUNNING_OUT );
-					gMineStatus[ bMineIndex ].fWarnedOfRunningOut = TRUE;
-					AddMineHistoryEvent(HISTORY_MINE_RUNNING_OUT, bMineIndex);
+					IssueHeadMinerQuote( ubMineIndex, HEAD_MINER_STRATEGIC_QUOTE_RUNNING_OUT );
+					gMineStatus[ ubMineIndex ].fWarnedOfRunningOut = TRUE;
+					AddMineHistoryEvent(HISTORY_MINE_RUNNING_OUT, ubMineIndex);
 				}
 			}
 		}
@@ -362,7 +362,7 @@ static UINT32 ExtractOreFromMine(INT8 bMineIndex, UINT32 uiAmount)
 
 
 // Get the available player workforce for the mine [0,100]
-static INT32 GetAvailableWorkForceForMineForPlayer(INT8 bMineIndex)
+static INT32 GetAvailableWorkForceForMineForPlayer(UINT8 ubMineIndex)
 {
 	// look for available workforce in the town associated with the mine
 	INT32 iWorkForceSize = 0;
@@ -370,17 +370,17 @@ static INT32 GetAvailableWorkForceForMineForPlayer(INT8 bMineIndex)
 
 	// return the loyalty of the town associated with the mine
 
-	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
-	auto mine = GCM->getMine(bMineIndex);
+	Assert(ubMineIndex < gMineStatus.size());
+	auto mine = GCM->getMine(ubMineIndex);
 
 	// if mine is shut down
-	if ( gMineStatus[ bMineIndex ].fShutDown)
+	if ( gMineStatus[ ubMineIndex ].fShutDown)
 	{
 		return ( 0 );
 	}
 
 	// until the player contacts the head miner, production in mine ceases if in player's control
-	if ( !gMineStatus[ bMineIndex ].fSpokeToHeadMiner)
+	if ( !gMineStatus[ ubMineIndex ].fSpokeToHeadMiner)
 	{
 		return ( 0 );
 	}
@@ -404,7 +404,7 @@ static INT32 GetAvailableWorkForceForMineForPlayer(INT8 bMineIndex)
 
 
 // get workforce conscripted by enemy for mine
-static INT32 GetAvailableWorkForceForMineForEnemy(INT8 bMineIndex)
+static INT32 GetAvailableWorkForceForMineForEnemy(UINT8 ubMineIndex)
 {
 	// look for available workforce in the town associated with the mine
 	INT32 iWorkForceSize = 0;
@@ -412,11 +412,11 @@ static INT32 GetAvailableWorkForceForMineForEnemy(INT8 bMineIndex)
 
 	// return the loyalty of the town associated with the mine
 
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < GCM->getMines().size()) );
-	auto mine = GCM->getMine(bMineIndex);
+	Assert(ubMineIndex < GCM->getMines().size());
+	auto mine = GCM->getMine(ubMineIndex);
 
 	// if mine is shut down
-	if ( gMineStatus[ bMineIndex ].fShutDown)
+	if ( gMineStatus[ ubMineIndex ].fShutDown)
 	{
 		return ( 0 );
 	}
@@ -439,70 +439,70 @@ static INT32 GetAvailableWorkForceForMineForEnemy(INT8 bMineIndex)
 
 
 // how fast is the mine's workforce working for you?
-static INT32 GetCurrentWorkRateOfMineForPlayer(INT8 bMineIndex)
+static INT32 GetCurrentWorkRateOfMineForPlayer(UINT8 ubMineIndex)
 {
 	INT32 iWorkRate = 0;
 
 	// multiply maximum possible removal rate by the percentage of workforce currently working
-	iWorkRate = (gMineStatus[ bMineIndex ].uiMaxRemovalRate * GetAvailableWorkForceForMineForPlayer( bMineIndex )) / 100;
+	iWorkRate = (gMineStatus[ ubMineIndex ].uiMaxRemovalRate * GetAvailableWorkForceForMineForPlayer( ubMineIndex )) / 100;
 
 	return( iWorkRate );
 }
 
 
 // how fast is workforce working for the enemy
-static INT32 GetCurrentWorkRateOfMineForEnemy(INT8 bMineIndex)
+static INT32 GetCurrentWorkRateOfMineForEnemy(UINT8 ubMineIndex)
 {
 	INT32 iWorkRate = 0;
 
 	// multiply maximum possible removal rate by the percentage of workforce currently working
-	iWorkRate = (gMineStatus[ bMineIndex ].uiMaxRemovalRate * GetAvailableWorkForceForMineForEnemy( bMineIndex )) / 100;
+	iWorkRate = (gMineStatus[ ubMineIndex ].uiMaxRemovalRate * GetAvailableWorkForceForMineForEnemy( ubMineIndex )) / 100;
 
 	return( iWorkRate );
 }
 
 
 // mine this mine
-static INT32 MineAMine(INT8 bMineIndex)
+static INT32 MineAMine(UINT8 ubMineIndex)
 {
 	// will extract ore based on available workforce, and increment players income based on amount
 	INT32 iAmtExtracted = 0;
 
 
-	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	// is mine is empty
-	if( gMineStatus[ bMineIndex ].fEmpty)
+	if( gMineStatus[ ubMineIndex ].fEmpty)
 	{
 		return 0;
 	}
 
 	// if mine is shut down
-	if ( gMineStatus[ bMineIndex ].fShutDown)
+	if ( gMineStatus[ ubMineIndex ].fShutDown)
 	{
 		return 0;
 	}
 
 
 	// who controls the PRODUCTION in the mine ?  (Queen receives production unless player has spoken to the head miner)
-	if( PlayerControlsMine(bMineIndex) )
+	if( PlayerControlsMine(ubMineIndex) )
 	{
 		// player controlled
-		iAmtExtracted = ExtractOreFromMine( bMineIndex , GetCurrentWorkRateOfMineForPlayer( bMineIndex ) );
+		iAmtExtracted = ExtractOreFromMine( ubMineIndex , GetCurrentWorkRateOfMineForPlayer( ubMineIndex ) );
 
 		// SHOW ME THE MONEY!!!!
 		if( iAmtExtracted > 0 )
 		{
 			// debug message
-			SLOGD(ST::format("{} - Mine income from {} = ${}", WORLDTIMESTR, GCM->getTownName(GetTownAssociatedWithMine(bMineIndex)), iAmtExtracted));
+			SLOGD(ST::format("{} - Mine income from {} = ${}", WORLDTIMESTR, GCM->getTownName(GetTownAssociatedWithMine(ubMineIndex)), iAmtExtracted));
 
 			// if this is the first time this mine has produced income for the player in the game
-			if ( !gMineStatus[ bMineIndex ].fMineHasProducedForPlayer )
+			if ( !gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer )
 			{
 				// remember that we've earned income from this mine during the game
-				gMineStatus[ bMineIndex ].fMineHasProducedForPlayer = TRUE;
+				gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer = TRUE;
 				// and when we started to do so...
-				gMineStatus[ bMineIndex ].uiTimePlayerProductionStarted = GetWorldTotalMin();
+				gMineStatus[ ubMineIndex ].uiTimePlayerProductionStarted = GetWorldTotalMin();
 			}
 		}
 	}
@@ -510,10 +510,10 @@ static INT32 MineAMine(INT8 bMineIndex)
 	{
 		// we didn't want mines to run out without player ever even going to them, so now the queen doesn't reduce the
 		// amount remaining until the mine has produced for the player first (so she'd have to capture it).
-		if ( gMineStatus[ bMineIndex ].fMineHasProducedForPlayer )
+		if ( gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer )
 		{
 			// don't actually give her money, just take production away
-			iAmtExtracted = ExtractOreFromMine( bMineIndex , GetCurrentWorkRateOfMineForEnemy( bMineIndex ) );
+			iAmtExtracted = ExtractOreFromMine( ubMineIndex , GetCurrentWorkRateOfMineForEnemy( ubMineIndex ) );
 		}
 	}
 
@@ -537,10 +537,10 @@ void HandleIncomeFromMines( void )
 {
 	INT32 iIncome = 0;
 	// mine each mine, check if we own it and such
-	for (INT8 bCounter = 0; bCounter < gMineStatus.size(); ++bCounter)
+	for (UINT8 ubCounter = 0; ubCounter < gMineStatus.size(); ++ubCounter)
 	{
 		// mine this mine
-		iIncome += MineAMine(bCounter);
+		iIncome += MineAMine(ubCounter);
 	}
 	if (iIncome)
 	{
@@ -568,12 +568,12 @@ UINT32 PredictDailyIncomeFromAMine(INT8 const mine_id)
 INT32 PredictIncomeFromPlayerMines( void )
 {
 	INT32 iTotal = 0;
-	INT8 bCounter = 0;
+	UINT8 ubCounter = 0;
 
-	for( bCounter = 0; bCounter < gMineStatus.size(); bCounter++ )
+	for( ubCounter = 0; ubCounter < gMineStatus.size(); ubCounter++ )
 	{
 		// add up the total
-		iTotal += PredictDailyIncomeFromAMine( bCounter );
+		iTotal += PredictDailyIncomeFromAMine( ubCounter );
 	}
 
 	return( iTotal );
@@ -692,56 +692,56 @@ void LoadMineStatusFromSavedGameFile(HWFILE const f)
 }
 
 
-void ShutOffMineProduction( INT8 bMineIndex )
+void ShutOffMineProduction( UINT8 ubMineIndex )
 {
-	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
-	if ( !gMineStatus[ bMineIndex ].fShutDown )
+	if ( !gMineStatus[ ubMineIndex ].fShutDown )
 	{
-		gMineStatus[ bMineIndex ].fShutDown = TRUE;
-		AddMineHistoryEvent(HISTORY_MINE_SHUTDOWN, bMineIndex);
+		gMineStatus[ ubMineIndex ].fShutDown = TRUE;
+		AddMineHistoryEvent(HISTORY_MINE_SHUTDOWN, ubMineIndex);
 	}
 }
 
 
-void RestartMineProduction( INT8 bMineIndex )
+void RestartMineProduction( UINT8 ubMineIndex )
 {
-	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
-	if ( !gMineStatus[ bMineIndex ].fShutDownIsPermanent )
+	if ( !gMineStatus[ ubMineIndex ].fShutDownIsPermanent )
 	{
-		if ( gMineStatus[ bMineIndex ].fShutDown )
+		if ( gMineStatus[ ubMineIndex ].fShutDown )
 		{
-			gMineStatus[ bMineIndex ].fShutDown = FALSE;
-			AddMineHistoryEvent(HISTORY_MINE_REOPENED, bMineIndex);
+			gMineStatus[ ubMineIndex ].fShutDown = FALSE;
+			AddMineHistoryEvent(HISTORY_MINE_REOPENED, ubMineIndex);
 		}
 	}
 }
 
 
-static void MineShutdownIsPermanent(INT8 bMineIndex)
+static void MineShutdownIsPermanent(UINT8 ubMineIndex)
 {
-	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
-	gMineStatus[ bMineIndex ].fShutDownIsPermanent = TRUE;
+	gMineStatus[ ubMineIndex ].fShutDownIsPermanent = TRUE;
 }
 
 
-BOOLEAN IsMineShutDown( INT8 bMineIndex )
+BOOLEAN IsMineShutDown( UINT8 ubMineIndex )
 {
-	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
-	return(gMineStatus[ bMineIndex ].fShutDown);
+	return(gMineStatus[ ubMineIndex ].fShutDown);
 }
 
 
-static UINT8 GetHeadMinerIndexForMine(INT8 bMineIndex)
+static UINT8 GetHeadMinerIndexForMine(UINT8 ubMineIndex)
 {
 	UINT8 ubMinerIndex = 0;
 	UINT16 usProfileId = 0;
 
-	Assert( ( bMineIndex >= 0 ) && ( bMineIndex < GCM->getMines().size() ) );
-	auto mine = GCM->getMine(bMineIndex);
+	Assert(ubMineIndex < GCM->getMines().size());
+	auto mine = GCM->getMine(ubMineIndex);
 
 	// loop through all head miners, checking which town they're associated with, looking for one that matches this mine
 	for (ubMinerIndex = 0; ubMinerIndex < NUM_HEAD_MINERS; ubMinerIndex++)
@@ -760,9 +760,9 @@ static UINT8 GetHeadMinerIndexForMine(INT8 bMineIndex)
 }
 
 
-void IssueHeadMinerQuote(INT8 const mine_idx, HeadMinerQuote const quote_type)
+void IssueHeadMinerQuote(UINT8 const mine_idx, HeadMinerQuote const quote_type)
 {
-	Assert(0 <= mine_idx && mine_idx < GCM->getMines().size());
+	Assert(mine_idx < GCM->getMines().size());
 	Assert(quote_type < NUM_HEAD_MINER_STRATEGIC_QUOTES);
 	Assert(CheckFact(FACT_MINERS_PLACED, 0));
 
@@ -921,13 +921,13 @@ BOOLEAN IsHisMineAtMaxProduction( UINT8 ubMinerProfileId )
 }
 
 
-void QueenHasRegainedMineSector(INT8 bMineIndex)
+void QueenHasRegainedMineSector(UINT8 ubMineIndex)
 {
-	Assert(bMineIndex >= 0 && bMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
-	if (gMineStatus[ bMineIndex ].fMineHasProducedForPlayer)
+	if (gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer)
 	{
-		gMineStatus[ bMineIndex ].fQueenRetookProducingMine = TRUE;
+		gMineStatus[ ubMineIndex ].fQueenRetookProducingMine = TRUE;
 	}
 }
 

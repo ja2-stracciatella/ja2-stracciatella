@@ -214,11 +214,11 @@ static void InternallyClassifyEdgepoints(SOLDIERTYPE* pSoldier, INT16 sGridNo, s
 				break;
 			}
 		}
-		for (i = us1stBenchmarkID; i < middle1 - 1; i++)
+		for (i = us1stBenchmarkID; (INT32)i < middle1 - 1; i++)
 		{
 			if (!EdgepointsClose( pSoldier, edgepoints1[ i ], edgepoints1[ i+1 ] ))
 			{ //All edgepoints from index i+1 to 1st middle index are rejected.
-				while (i < middle1 - 1)
+				while ((INT32)i < middle1 - 1)
 				{
 					i++;
 					edgepoints2.push_back(edgepoints1[ i ]);
