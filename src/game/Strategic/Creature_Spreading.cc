@@ -184,7 +184,6 @@ static bool IsMineInfestible(const MineModel* mine)
 
 void InitCreatureQuest()
 {
-	UNDERGROUND_SECTORINFO *curr;
 	INT32 i=-1;
 	UINT8 ubChosenMineId;
 	INT32 iRandom;
