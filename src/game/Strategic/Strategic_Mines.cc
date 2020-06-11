@@ -243,7 +243,7 @@ INT32 GetTotalLeftInMine( UINT8 ubMineIndex )
 {
 	// returns the value of the mine
 
-	Assert(ubMineIndex >= 0 && ubMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	return ( gMineStatus[ ubMineIndex ].uiRemainingOreSupply );
 }
@@ -253,7 +253,7 @@ UINT32 GetMaxPeriodicRemovalFromMine( UINT8 ubMineIndex )
 {
 	// returns max amount that can be mined in a time period
 
-	Assert(ubMineIndex >= 0 && ubMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	// if mine is shut down
 	if ( gMineStatus[ ubMineIndex ].fShutDown)
@@ -267,7 +267,7 @@ UINT32 GetMaxPeriodicRemovalFromMine( UINT8 ubMineIndex )
 
 UINT32 GetMaxDailyRemovalFromMine(UINT8 const mine_id)
 {
-	Assert(0 <= mine_id && mine_id < gMineStatus.size());
+	Assert(mine_id < gMineStatus.size());
 	MINE_STATUS_TYPE const& m = gMineStatus[mine_id];
 
 	if (m.fShutDown) return 0;
@@ -280,7 +280,7 @@ UINT32 GetMaxDailyRemovalFromMine(UINT8 const mine_id)
 
 INT8 GetTownAssociatedWithMine( UINT8 ubMineIndex )
 {
-	Assert( ( ubMineIndex >= 0 ) && ( ubMineIndex < GCM->getMines().size() ) );
+	Assert(ubMineIndex < GCM->getMines().size());
 	return GCM->getMine(ubMineIndex)->associatedTownId;
 }
 
@@ -298,7 +298,7 @@ static UINT32 ExtractOreFromMine(UINT8 ubMineIndex, UINT32 uiAmount)
 	// will remove the ore from the mine and return the amount that was removed
 	UINT32 uiAmountExtracted = 0;
 
-	Assert(ubMineIndex >= 0 && ubMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	// if mine is shut down
 	if ( gMineStatus[ ubMineIndex ].fShutDown)
@@ -370,7 +370,7 @@ static INT32 GetAvailableWorkForceForMineForPlayer(UINT8 ubMineIndex)
 
 	// return the loyalty of the town associated with the mine
 
-	Assert(ubMineIndex >= 0 && ubMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 	auto mine = GCM->getMine(ubMineIndex);
 
 	// if mine is shut down
@@ -412,7 +412,7 @@ static INT32 GetAvailableWorkForceForMineForEnemy(UINT8 ubMineIndex)
 
 	// return the loyalty of the town associated with the mine
 
-	Assert( ( ubMineIndex >= 0 ) && ( ubMineIndex < GCM->getMines().size()) );
+	Assert(ubMineIndex < GCM->getMines().size());
 	auto mine = GCM->getMine(ubMineIndex);
 
 	// if mine is shut down
@@ -469,7 +469,7 @@ static INT32 MineAMine(UINT8 ubMineIndex)
 	INT32 iAmtExtracted = 0;
 
 
-	Assert(ubMineIndex >= 0 && ubMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	// is mine is empty
 	if( gMineStatus[ ubMineIndex ].fEmpty)
@@ -694,7 +694,7 @@ void LoadMineStatusFromSavedGameFile(HWFILE const f)
 
 void ShutOffMineProduction( UINT8 ubMineIndex )
 {
-	Assert(ubMineIndex >= 0 && ubMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	if ( !gMineStatus[ ubMineIndex ].fShutDown )
 	{
@@ -706,7 +706,7 @@ void ShutOffMineProduction( UINT8 ubMineIndex )
 
 void RestartMineProduction( UINT8 ubMineIndex )
 {
-	Assert(ubMineIndex >= 0 && ubMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	if ( !gMineStatus[ ubMineIndex ].fShutDownIsPermanent )
 	{
@@ -721,7 +721,7 @@ void RestartMineProduction( UINT8 ubMineIndex )
 
 static void MineShutdownIsPermanent(UINT8 ubMineIndex)
 {
-	Assert(ubMineIndex >= 0 && ubMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	gMineStatus[ ubMineIndex ].fShutDownIsPermanent = TRUE;
 }
@@ -729,7 +729,7 @@ static void MineShutdownIsPermanent(UINT8 ubMineIndex)
 
 BOOLEAN IsMineShutDown( UINT8 ubMineIndex )
 {
-	Assert(ubMineIndex >= 0 && ubMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	return(gMineStatus[ ubMineIndex ].fShutDown);
 }
@@ -740,7 +740,7 @@ static UINT8 GetHeadMinerIndexForMine(UINT8 ubMineIndex)
 	UINT8 ubMinerIndex = 0;
 	UINT16 usProfileId = 0;
 
-	Assert( ( ubMineIndex >= 0 ) && ( ubMineIndex < GCM->getMines().size() ) );
+	Assert(ubMineIndex < GCM->getMines().size());
 	auto mine = GCM->getMine(ubMineIndex);
 
 	// loop through all head miners, checking which town they're associated with, looking for one that matches this mine
@@ -762,7 +762,7 @@ static UINT8 GetHeadMinerIndexForMine(UINT8 ubMineIndex)
 
 void IssueHeadMinerQuote(UINT8 const mine_idx, HeadMinerQuote const quote_type)
 {
-	Assert(0 <= mine_idx && mine_idx < GCM->getMines().size());
+	Assert(mine_idx < GCM->getMines().size());
 	Assert(quote_type < NUM_HEAD_MINER_STRATEGIC_QUOTES);
 	Assert(CheckFact(FACT_MINERS_PLACED, 0));
 
@@ -923,7 +923,7 @@ BOOLEAN IsHisMineAtMaxProduction( UINT8 ubMinerProfileId )
 
 void QueenHasRegainedMineSector(UINT8 ubMineIndex)
 {
-	Assert(ubMineIndex >= 0 && ubMineIndex < gMineStatus.size());
+	Assert(ubMineIndex < gMineStatus.size());
 
 	if (gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer)
 	{
