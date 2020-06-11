@@ -13,7 +13,7 @@
 
 TEST(Items, weaponsLoading)
 {
-	DefaultContentManager * cm = createDefaultCMForTesting();
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
 	ASSERT_TRUE(cm != NULL);
 	ASSERT_TRUE(cm->loadGameData());
 	EXPECT_TRUE(cm->getWeaponByName("MP5K") != NULL);
@@ -24,7 +24,7 @@ TEST(Items, weaponsLoading)
 
 TEST(Items, bug120_cawsAmmo)
 {
-	DefaultContentManager * cm = createDefaultCMForTesting();
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
 	ASSERT_TRUE(cm->loadGameData());
 
 	// test SAP clip parameters
@@ -42,7 +42,7 @@ TEST(Items, bug120_cawsAmmo)
 
 TEST(Items, bug120_12gAmmo)
 {
-	DefaultContentManager * cm = createDefaultCMForTesting();
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
 	ASSERT_TRUE(cm->loadGameData());
 
 	// test SAP clip parameters
@@ -60,7 +60,7 @@ TEST(Items, bug120_12gAmmo)
 
 TEST(Items, bug120_cawsDefaultMag)
 {
-	DefaultContentManager * cm = createDefaultCMForTesting();
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
 	ASSERT_TRUE(cm->loadGameData());
 
 	GCM = cm;
@@ -83,7 +83,7 @@ TEST(Items, bug120_cawsDefaultMag)
 
 TEST(Items, bug120_spas15DefaultMag)
 {
-	DefaultContentManager * cm = createDefaultCMForTesting();
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
 	ASSERT_TRUE(cm->loadGameData());
 
 	GCM = cm;
