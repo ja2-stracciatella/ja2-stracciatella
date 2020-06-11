@@ -412,19 +412,20 @@ RustPointer<File> FileMan::openForReadingCaseInsensitive(const ST::string& folde
 std::vector<ST::string>
 FindFilesInDir(const ST::string& dirPath,
 		const ST::string& ext,
-		bool caseIncensitive,
+		bool caseInsensitive,
 		bool returnOnlyNames,
-		bool sortResults)
+		bool sortResults,
+		bool recursive)
 {
 	std::vector<ST::string> results;
-	std::vector<ST::string> paths = FindAllFilesInDir(dirPath, sortResults);
+	std::vector<ST::string> paths = FindAllFilesInDir(dirPath, sortResults, recursive);
 	for (ST::string& path : paths)
 	{
 		// the extension must match
 		RustPointer<char> path_ext(Path_extension(path.c_str()));
 		if (path_ext)
 		{
-			int cmp = caseIncensitive ? ext.compare_i(path_ext.get()) : ext.compare(path_ext.get());
+			int cmp = caseInsensitive ? ext.compare_i(path_ext.get()) : ext.compare(path_ext.get());
 			if (cmp != 0)
 			{
 				continue;
@@ -435,7 +436,7 @@ FindFilesInDir(const ST::string& dirPath,
 			continue;
 		}
 		// keep filename or path
-		if (returnOnlyNames)
+		if (returnOnlyNames && !recursive)
 		{
 			RustPointer<char> filename{Path_filename(path.c_str())};
 			Assert(filename);
@@ -454,7 +455,7 @@ FindFilesInDir(const ST::string& dirPath,
 }
 
 std::vector<ST::string>
-FindAllFilesInDir(const ST::string& dirPath, bool sortResults)
+FindAllFilesInDir(const ST::string& dirPath, bool sortResults, bool recursive)
 {
 	std::vector<ST::string> paths;
 	RustPointer<VecCString> vec{Fs_readDirPaths(dirPath.c_str(), false)};
@@ -471,6 +472,11 @@ FindAllFilesInDir(const ST::string& dirPath, bool sortResults)
 		if (Fs_isFile(path.get()))
 		{
 			paths.emplace_back(path.get());
+		}
+		else if (recursive && Fs_isDir(path.get()))
+		{
+			std::vector<ST::string> subDirFiles = FindAllFilesInDir(path.get(), false, true);
+			paths.insert(paths.end(), subDirFiles.begin(), subDirFiles.end());
 		}
 	}
 	if(sortResults)

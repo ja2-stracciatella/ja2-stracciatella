@@ -7,14 +7,6 @@
 
 #include "gtest/gtest.h"
 
-#ifdef __cpp_lib_filesystem
-#include <filesystem>
-namespace fs = std::filesystem;
-#else
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
-#include <experimental/filesystem> // remove when we are on C++ 17
-namespace fs = std::experimental::filesystem;
-#endif
 
 #define TMPDIR "temp"
 
@@ -143,27 +135,13 @@ TEST(ExternalizedData, readAllData)
 	ASSERT_TRUE(cm->loadGameData());
 }
 
-std::vector<ST::string> recursivelyListAllFiles(ST::string dir, std::string suffix)
-{
-	std::vector<ST::string> files;
-	for (auto& p : fs::recursive_directory_iterator(dir.to_std_string()))
-	{
-		ST::string path = ST::string(p.path());
-		if (path.ends_with(suffix))
-		{
-			files.push_back(path);
-		}
-	}
-	return files;
-}
-
 TEST(ExternalizedData, readEveryFile)
 {
 	// Not all files (e.g. translations) are covered by the previous test
 	DefaultContentManagerUT* cm = DefaultContentManagerUT::createDefaultCMForTesting();
 
 	ST::string dataPath = ST::format("{}/externalized", GetExtraDataDir());
-	std::vector<ST::string> results = recursivelyListAllFiles(dataPath, ".json");
+	std::vector<ST::string> results = FindFilesInDir(dataPath, "json", true, false, false, true);
 	for (ST::string f : results)
 	{
 		auto json = cm->_readJsonDataFile(f.c_str());
