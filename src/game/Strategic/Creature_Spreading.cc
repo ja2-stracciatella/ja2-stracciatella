@@ -244,8 +244,12 @@ void InitCreatureQuest()
 	InitCreatureLair(lairModel);
 	
 	// enable the lair entrance
-	auto entranceSector = lairModel->entranceSector;
-	auto lairEntrance = FindUnderGroundSector(SECTORX(entranceSector), SECTORY(entranceSector), lairModel->entranceSectorLevel);
+	UINT8 entranceSector = lairModel->entranceSector;
+	UNDERGROUND_SECTORINFO* lairEntrance = FindUnderGroundSector(SECTORX(entranceSector), SECTORY(entranceSector), lairModel->entranceSectorLevel);
+	if (lairEntrance == NULL)
+	{
+		throw std::runtime_error("Lair entrance sector is not defined as an underground sector");
+	}
 	lairEntrance->uiFlags |= SF_PENDING_ALTERNATE_MAP;
 
 	//Now determine how often we will spread the creatures.

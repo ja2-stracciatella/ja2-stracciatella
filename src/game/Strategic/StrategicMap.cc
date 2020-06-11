@@ -740,7 +740,6 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 {
 	UINT8		ubRandomMiner[RANDOM_HEAD_MINERS] = { 106, 156, 157, 158 };
 	UINT8		ubMiner, ubMinersPlaced;
-	UINT8		ubMine;
 
 	if ( CheckFact( FACT_ALL_TERRORISTS_KILLED, 0 ) )
 	{
@@ -780,7 +779,7 @@ void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bN
 				}
 
 				// assign the remaining (3) miners randomly
-				for (auto ubMine : GCM->getMines())
+				for (const MineModel* ubMine : GCM->getMines())
 				{
 					if ( ubMine->mineId == ubThisMine || ubMine->headMinerAssigned || ubMine->isAbandoned() )
 					{
