@@ -677,7 +677,7 @@ void DrawMap(void)
 
 		// draw mine icons and descriptive text
 		auto mines = GCM->getMines();
-		for (INT32 i = 0; i < mines.size(); ++i)
+		for (UINT32 i = 0; i < mines.size(); ++i)
 		{
 			UINT8 const sector = mines[i]->entranceSector;
 			INT16 const x      = SECTORX(sector);

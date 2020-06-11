@@ -76,16 +76,16 @@ void InitializeMines( void );
 void HourlyMinesUpdate(void);
 
 // get total left in this mine
-INT32 GetTotalLeftInMine( INT8 bMineIndex );
+INT32 GetTotalLeftInMine( UINT8 ubMineIndex );
 
 // get max rates for this mine (per period, per day)
-UINT32 GetMaxPeriodicRemovalFromMine( INT8 bMineIndex );
+UINT32 GetMaxPeriodicRemovalFromMine( UINT8 ubMineIndex );
 
 // Get the max amount that can be mined in one day.
-UINT32 GetMaxDailyRemovalFromMine(INT8 mine_id);
+UINT32 GetMaxDailyRemovalFromMine(UINT8 mine_id);
 
 // which town does this mine belong to?
-INT8 GetTownAssociatedWithMine( INT8 bMineIndex );
+INT8 GetTownAssociatedWithMine( UINT8 ubMineIndex );
 
 // posts the actual mine production events daily
 void PostEventsForMineProduction(void);
@@ -118,15 +118,15 @@ void LoadMineStatusFromSavedGameFile(HWFILE);
 // if the player controls a given mine
 bool PlayerControlsMine(INT8 mine_id);
 
-void ShutOffMineProduction( INT8 bMineIndex );
-void RestartMineProduction( INT8 bMineIndex );
+void ShutOffMineProduction( UINT8 ubMineIndex );
+void RestartMineProduction( UINT8 ubMineIndex );
 
-BOOLEAN IsMineShutDown( INT8 bMineIndex );
+BOOLEAN IsMineShutDown( UINT8 ubMineIndex );
 
 // Find the sector location of a mine
 UINT8 GetMineSector(UINT8 ubMineIndex);
 
-void IssueHeadMinerQuote(INT8 bMineIndex, HeadMinerQuote);
+void IssueHeadMinerQuote(UINT8 ubMineIndex, HeadMinerQuote);
 
 UINT8 GetHeadMinersMineIndex(UINT8 ubMinerProfileId);
 
@@ -140,7 +140,7 @@ BOOLEAN IsHisMineLostAndRegained(UINT8 ubMinerProfileId );
 BOOLEAN IsHisMineAtMaxProduction(UINT8 ubMinerProfileId );
 void ResetQueenRetookMine( UINT8 ubMinerProfileId );
 
-void QueenHasRegainedMineSector(INT8 bMineIndex);
+void QueenHasRegainedMineSector(UINT8 ubMineIndex);
 
 BOOLEAN HasAnyMineBeenAttackedByMonsters(void);
 
