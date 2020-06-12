@@ -110,7 +110,6 @@
         "max_attribute_points": 85,
         "min_attribute_points": 35,
         "zero_attribute_points_bonus": 15,
-        "bonus_attribute_points": 40
         "bonus_attribute_points": 40,
 
         // Replace the IMP personality quiz with a form to select skills directly
