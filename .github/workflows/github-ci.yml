@@ -41,7 +41,20 @@ jobs:
       run: ''
 
     - name: Checkout
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
+
+    - name: Caching for ccache and rust
+      uses: actions/cache@v2
+      with:
+        path: | 
+          ~/.rustup
+          ~/.ccache
+          ~/.cargo
+        key: ${{ matrix.cfg.target }}-v1-${{ hashFiles('rust/Cargo.lock') }}-${{ hashFiles('CMakeLists.txt') }}-${{ hashFiles('cmake') }}
+        restore-keys: |
+          ${{ matrix.cfg.target }}-v1-${{ hashFiles('rust/Cargo.lock') }}-${{ hashFiles('CMakeLists.txt') }}-${{ hashFiles('cmake') }}
+          ${{ matrix.cfg.target }}-v1-${{ hashFiles('rust/Cargo.lock') }}-
+          ${{ matrix.cfg.target }}-v1-
 
     - name: Build with bash
       shell: bash

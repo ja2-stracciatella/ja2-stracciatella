@@ -41,6 +41,7 @@ else
   export BUILD_TYPE="Debug"
 fi
 export BUILD_CMD="cmake --build . --config ${BUILD_TYPE}"
+export BUILD_TOOL_ARGS="-- -j 4"
 export CONFIGURE_CMD="cmake -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DVERSION_TAG=${VERSION_TAG}"
 if [[ "${BUILD_TYPE}" != "Debug" ]]; then
    export CONFIGURE_CMD="${CONFIGURE_CMD} -DWITH_EDITOR_SLF=ON"
@@ -49,20 +50,23 @@ if [[ "${PUBLISH_BINARY}" == "true" && "${SFTP_PASSWORD}" == "" ]]; then
   echo "Upload credentials are not set up"
   exit 1
 fi
+
 export RUN_TESTS=true
 export RUN_INSTALL_TEST=true
 export RUSTUP_INIT_ARGS="-y --no-modify-path --default-toolchain=$(cat ./rust-toolchain)"
 if [[ "$CI_TARGET" == "linux" ]]; then
-  sudo apt update
-  sudo apt install build-essential libsdl2-dev libfltk1.3-dev
+  sudo apt-get -yq update
+  sudo apt-get -yq install build-essential libsdl2-dev libfltk1.3-dev ccache
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB"
+  export BUILD_TOOL_ARGS="-- -j 4"
 elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
   # cross compiling
-  sudo apt update
-  sudo apt install build-essential mingw-w64
+  sudo apt-get -yq update
+  sudo apt-get -yq install build-essential mingw-w64 ccache
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP"
   export RUSTUP_INIT_ARGS="${RUSTUP_INIT_ARGS} --target=x86_64-pc-windows-gnu"
   export RUN_TESTS=false
+  export BUILD_TOOL_ARGS="-- -j 4"
 elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
   # FIXME upgrades disabled until there is a fix for https://github.com/msys2/MSYS2-packages/issues/1141
   #pacman -Syu --noconfirm --needed # assumes the runtime has already been updated
@@ -75,11 +79,14 @@ elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
   export RUSTUP_INIT_ARGS="${RUSTUP_INIT_ARGS}-i686-pc-windows-gnu --default-host=i686-pc-windows-gnu"
   export RUN_INSTALL_TEST=false # no sudo
 elif [[ "$CI_TARGET" == "mac" ]]; then
+  brew install --HEAD ccache
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle"
+  export BUILD_TOOL_ARGS="-- -j 4"
 else
   echo "unexpected target ${CI_TARGET}"
   exit 1
 fi
+
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- $RUSTUP_INIT_ARGS
 if [[ "$CI_TARGET" == "linux-mingw64" ]]; then
   # XXX currently rustup-init fails to add the target, so add it manually
@@ -102,8 +109,10 @@ mkdir ci-build
 cd ci-build
 $CONFIGURE_CMD ..
 cat ./CMakeCache.txt
-$BUILD_CMD
+$BUILD_CMD $BUILD_TOOL_ARGS
 $BUILD_CMD --target package
+
+command -v ccache && ccache -s
 
 echo "## test ##"
 if [[ "$RUN_TESTS" == "true" ]]; then
