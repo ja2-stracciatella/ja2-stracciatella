@@ -143,7 +143,7 @@ void EnterIMPSkillTrait( void )
 
 
 	// load the stats graphic and add it
-	guiIST_GreyGoldBox = AddVideoObjectFromFile(LAPTOPDIR "/SkillTraitSmallGreyIdent.sti");
+	guiIST_GreyGoldBox = AddVideoObjectFromFile("sti/laptop/SkillTraitSmallGreyIdent.sti");
 	giIMPSkillTraitFinsihButtonImage = LoadButtonImage(LAPTOPDIR "/button_5.sti", -1, 0, -1, 1, -1);
 	giIMPSkillTraitFinsihButton = CreateIconAndTextButton(giIMPSkillTraitFinsihButtonImage, pImpButtonText[11], FONT12ARIAL,
 		FONT_WHITE, DEFAULT_SHADOW,
