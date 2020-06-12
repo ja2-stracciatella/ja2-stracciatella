@@ -20,6 +20,8 @@
 #include "Button_Sound_Control.h"
 #include "Text.h"
 
+#include <algorithm>
+
 enum
 {
 	IMP_SKILL_TRAITS__LOCKPICK,
@@ -164,7 +166,7 @@ void EnterIMPSkillTrait( void )
 	HandleSkillTraitButtonStates( );
 
 	//reset last selecterd trait
-	memset( gbLastSelectedTraits, -1, IST__NUM_SELECTABLE_TRAITS );
+	std::fill_n(gbLastSelectedTraits, IST__NUM_SELECTABLE_TRAITS, -1);
 }
 
 
