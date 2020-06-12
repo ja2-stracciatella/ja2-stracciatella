@@ -1662,15 +1662,15 @@ static const ST::string s_ger_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 
 static const ST::string s_ger_gzIMPSkillTraitsText[gzIMPSkillTraitsText_SIZE] =
 {
-	L"Schlösser knacken",
-	L"Mann gegen Mann",
-	L"Elektronik",
+	s_ger_gzMercSkillText[1],
+	"Mann gegen Mann",
+	s_ger_gzMercSkillText[3],
 	L"Nacht-Operationen",
-	L"Werfen",
+	s_ger_gzMercSkillText[5],
 	L"Unterrichten",
-	L"Schwere Waffen",
-	L"Autom. Waffen",
-	L"Schleichen",
+	s_ger_gzMercSkillText[7],
+	s_ger_gzMercSkillText[8],
+	s_ger_gzMercSkillText[9],
 	L"Beidhändigkeit",
 	L"Messer",
 	L"Dachtreffer-Bonus",

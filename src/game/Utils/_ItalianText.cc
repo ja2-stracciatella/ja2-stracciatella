@@ -1721,22 +1721,22 @@ static const ST::string s_it_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 
 static const ST::string s_it_gzIMPSkillTraitsText[gzIMPSkillTraitsText_SIZE] =
 {
-	"Forzare serrature",
-	"Corpo a corpo",
-	"Elettronica",
-	"Op. notturne",
-	"Lanciare",
-	"Istruire",
-	"Armi pesanti",
-	"Armi automatiche",
-	"Clandestino",
-	"Ambidestro",
-	"Coltelli",
-	"Bonus per altezza",
-	"Camuffato",
-	"Arti marziali",
+	s_it_gzMercSkillText[1],
+	s_it_gzMercSkillText[2],
+	s_it_gzMercSkillText[3],
+	s_it_gzMercSkillText[4],
+	s_it_gzMercSkillText[5],
+	s_it_gzMercSkillText[6],
+	s_it_gzMercSkillText[7],
+	s_it_gzMercSkillText[8],
+	s_it_gzMercSkillText[9],
+	s_it_gzMercSkillText[10],
+	s_it_gzMercSkillText[13],
+	s_it_gzMercSkillText[14],
+	s_it_gzMercSkillText[15],
+	s_it_gzMercSkillText[12],
 
-	"Nessuna abilità",
+	s_it_gzMercSkillText[0],
 	"I.M.P. Specialties"
 };
 

@@ -1777,22 +1777,22 @@ static const ST::string s_rus_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 
 static const ST::string s_rus_gzIMPSkillTraitsText[gzIMPSkillTraitsText_SIZE] =
 {
-	"Взлом",
-	"Рукопашная",
-	"Электроника",
-	"Ночной бой",
-	"Броски",
-	"Учитель",
-	"Тяжелое вооружение",
-	"Автоматы",
-	"Скрытность",
-	"Амбидекстрия",
-	"Бой с ножом",
-	"Стрельба с крыш",
-	"Маскировка",
-	"Боевые искусства",
+	s_rus_gzMercSkillText[1],
+	s_rus_gzMercSkillText[2],
+	s_rus_gzMercSkillText[3],
+	s_rus_gzMercSkillText[4],
+	s_rus_gzMercSkillText[5],
+	s_rus_gzMercSkillText[6],
+	s_rus_gzMercSkillText[7],
+	s_rus_gzMercSkillText[8],
+	s_rus_gzMercSkillText[9],
+	s_rus_gzMercSkillText[10],
+	s_rus_gzMercSkillText[13],
+	s_rus_gzMercSkillText[14],
+	s_rus_gzMercSkillText[15],
+	s_rus_gzMercSkillText[12],
 
-	"Нет навыков",
+	s_rus_gzMercSkillText[0],
 	"I.M.P. Specialties"
 };
 

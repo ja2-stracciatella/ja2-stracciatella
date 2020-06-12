@@ -1720,22 +1720,22 @@ static const ST::string s_pl_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 
 static const ST::string s_pl_gzIMPSkillTraitsText[gzIMPSkillTraitsText_SIZE] =
 {
-	"Otwieranie zamków",
-	"Walka wręcz",
-	"Elektronika",
-	"Nocne operacje",
-	"Rzucanie",
-	"Szkolenie",
-	"Ciężka broń",
-	"Broń automatyczna",
-	"Skradanie się",
-	"Oburęczność",
-	"Broń biała",
-	"Snajper",
-	"Kamuflaż",
-	"Sztuki walki",
+	s_pl_gzMercSkillText[1],
+	s_pl_gzMercSkillText[2],
+	s_pl_gzMercSkillText[3],
+	s_pl_gzMercSkillText[4],
+	s_pl_gzMercSkillText[5],
+	s_pl_gzMercSkillText[6],
+	s_pl_gzMercSkillText[7],
+	s_pl_gzMercSkillText[8],
+	s_pl_gzMercSkillText[9],
+	s_pl_gzMercSkillText[10],
+	s_pl_gzMercSkillText[13],
+	s_pl_gzMercSkillText[14],
+	s_pl_gzMercSkillText[15],
+	s_pl_gzMercSkillText[12],
 
-	"Brak umiejętności",
+	s_pl_gzMercSkillText[0],
 	"I.M.P. Specialties"
 };
 
