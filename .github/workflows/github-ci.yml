@@ -13,7 +13,6 @@ jobs:
       fail-fast: false
       matrix:
         cfg:
-
         - name: Linux
           os: ubuntu-16.04
           target: linux
@@ -43,20 +42,36 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Caching for ccache and rust
+    - name: Cache C++ build output
       uses: actions/cache@v2
       with:
-        path: | 
-          ~/.rustup
+        path: |
           ~/.ccache
-          ~/.cargo
-        key: ${{ matrix.cfg.target }}-v1-${{ hashFiles('rust/Cargo.lock') }}-${{ hashFiles('CMakeLists.txt') }}-${{ hashFiles('cmake') }}
+        key: ${{ matrix.cfg.target }}-ccache-v1-${{ github.ref }}-${{ github.sha }}
         restore-keys: |
-          ${{ matrix.cfg.target }}-v1-${{ hashFiles('rust/Cargo.lock') }}-${{ hashFiles('CMakeLists.txt') }}-${{ hashFiles('cmake') }}
-          ${{ matrix.cfg.target }}-v1-${{ hashFiles('rust/Cargo.lock') }}-
-          ${{ matrix.cfg.target }}-v1-
+          ${{ matrix.cfg.target }}-ccache-v1-${{ github.ref }}-
+          ${{ matrix.cfg.target }}-ccache-v1-refs/heads/master-
+          ${{ matrix.cfg.target }}-ccache-v1-
 
-    - name: Build with bash
+    - name: Cache Rust deps and build output
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo
+          ~/.rustup
+          ${{ github.workspace }}/ci-build/dependencies/lib-stracciatella/target
+        key: ${{ matrix.cfg.target }}-rust-v1-${{ hashFiles('rust') }}
+        restore-keys: |
+          ${{ matrix.cfg.target }}-rust-v1-${{ hashFiles('rust') }}
+          ${{ matrix.cfg.target }}-rust-v1-
+
+    - name: Set up environment
+      shell: bash
+      run: ${{ github.workspace }}/.github/scripts/ci-setup.sh 2>&1
+      env:
+        CI_TARGET: ${{ matrix.cfg.target }}
+
+    - name: Build and run tests
       shell: bash
       run: ${{ github.workspace }}/.github/scripts/ci-build.sh 2>&1
       env:
@@ -66,6 +81,10 @@ jobs:
         CI_REF: ${{ github.ref }}
         SFTP_USER: ${{ secrets.SFTP_USER }}
         SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
+
+    - name: Publish packages
+      shell: bash
+      run: ${{ github.workspace }}/.github/scripts/ci-publish.sh 2>&1
 
     - name: Collect artifacts
       shell: bash
