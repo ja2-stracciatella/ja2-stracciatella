@@ -17,6 +17,11 @@ endmacro()
 
 ## Project Setup
 
+find_program(CCACHE_PROGRAM "ccache")
+if(CCACHE_PROGRAM)
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+endif()
+
 project(ja2-stracciatella)
 set(JA2_BINARY "ja2")
 set(LAUNCHER_BINARY "ja2-launcher")
