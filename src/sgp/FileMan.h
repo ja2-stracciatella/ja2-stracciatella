@@ -123,22 +123,25 @@ private:
  * @param dirPath Path to the directory
  * @param extension Extension (e.g. "txt")
  * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems.
- * @param returnOnlyNames When True, return only names (without the directory path)
+ * @param returnOnlyNames When True, return only names (without the directory path) except when resursive is True
  * @param sortResults When True, sort found paths.
+ * @param recursive When True, recurse into subs. Function returns full path regardless of returnOnlyNames
  * @return List of paths (dir + filename) or filenames. */
 std::vector<ST::string>
 FindFilesInDir(const ST::string& dirPath,
 		const ST::string& ext,
-		bool caseIncensitive,
+		bool caseInsensitive,
 		bool returnOnlyNames,
-		bool sortResults = false);
+		bool sortResults = false,
+		bool recursive = false);
 
 /**
  * Find all files in a directory.
  * @param dirPath Path to the directory
  * @param sortResults When True, sort found paths.
+ * @param recursive When True, recurse into subs.
  * @return List of paths (dir + filename). */
 std::vector<ST::string>
-FindAllFilesInDir(const ST::string& dirPath, bool sortResults = false);
+FindAllFilesInDir(const ST::string& dirPath, bool sortResults = false, bool recursive = false);
 
 #endif

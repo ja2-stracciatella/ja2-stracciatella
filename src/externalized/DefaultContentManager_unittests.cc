@@ -1,10 +1,12 @@
 #ifdef WITH_UNITTESTS
-#include "gtest/gtest.h"
-
-#include "sgp/FileMan.h"
 
 #include "DefaultContentManager.h"
 #include "DefaultContentManagerUT.h"
+#include "FileMan.h"
+#include "TestUtils.h"
+
+#include "gtest/gtest.h"
+
 
 #define TMPDIR "temp"
 
@@ -12,7 +14,7 @@
 
 TEST(TempFiles, createFile)
 {
-	DefaultContentManager * cm = createDefaultCMForTesting();
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
 	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
@@ -30,7 +32,7 @@ TEST(TempFiles, createFile)
 
 TEST(TempFiles, writeToFile)
 {
-	DefaultContentManager * cm = createDefaultCMForTesting();
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
 	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
@@ -59,7 +61,7 @@ TEST(TempFiles, writeToFile)
 
 TEST(TempFiles, writeAndRead)
 {
-	DefaultContentManager * cm = createDefaultCMForTesting();
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
 	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
@@ -82,7 +84,7 @@ TEST(TempFiles, writeAndRead)
 
 TEST(TempFiles, append)
 {
-	DefaultContentManager * cm = createDefaultCMForTesting();
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
 	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
@@ -107,7 +109,7 @@ TEST(TempFiles, append)
 
 TEST(TempFiles, deleteFile)
 {
-	DefaultContentManager * cm = createDefaultCMForTesting();
+	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
 	Fs_removeDirAll(TMPDIR);
 	FileMan::createDir(TMPDIR);
 
@@ -127,4 +129,23 @@ TEST(TempFiles, deleteFile)
 	delete cm;
 }
 
+TEST(ExternalizedData, readAllData)
+{
+	DefaultContentManager* cm = DefaultContentManagerUT::createDefaultCMForTesting();
+	ASSERT_TRUE(cm->loadGameData());
+}
+
+TEST(ExternalizedData, readEveryFile)
+{
+	// Not all files (e.g. translations) are covered by the previous test
+	DefaultContentManagerUT* cm = DefaultContentManagerUT::createDefaultCMForTesting();
+
+	ST::string dataPath = ST::format("{}/externalized", GetExtraDataDir());
+	std::vector<ST::string> results = FindFilesInDir(dataPath, "json", true, false, false, true);
+	for (ST::string f : results)
+	{
+		auto json = cm->_readJsonDataFile(f.c_str());
+		ASSERT_FALSE(json == NULL);
+	}
+}
 #endif
