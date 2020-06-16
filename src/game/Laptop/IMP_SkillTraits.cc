@@ -526,14 +526,7 @@ void BtnIMPSkillTraitFinishCallback(GUI_BUTTON *btn,INT32 reason)
 BOOLEAN CameBackToSpecialtiesPageButNotFinished()
 {
 	//if we are in a page that comes after this one
-	if( iCurrentProfileMode == 2 )
-	{
-		return( TRUE );
-	}
-	else
-	{
-		return( FALSE );
-	}
+	return iCurrentProfileMode == 2;
 }
 
 INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection()
@@ -579,10 +572,7 @@ INT8	DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection()
 
 BOOLEAN ShouldTraitBeSkipped( UINT32 uiTrait )
 {
-	if( uiTrait == IMP_SKILL_TRAITS__MARTIAL_ARTS && !fCharacterIsMale )
-		return( TRUE );
-	else
-		return( FALSE );
+	return uiTrait == IMP_SKILL_TRAITS__MARTIAL_ARTS && !fCharacterIsMale;
 }
 
 
