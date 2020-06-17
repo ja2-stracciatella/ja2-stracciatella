@@ -53,7 +53,7 @@ elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCPACK_GENERATOR=ZIP"
   export RUSTUP_HOME="$(cygpath -w ~/.rustup)"
   export CARGO_HOME="$(cygpath -w ~/.cargo)"
-  export PATH=$PATH:$HOME/.cargo/bin
+  export PATH="$PATH:$HOME/.cargo/bin"
   export RUN_INSTALL_TEST=false # no sudo
 
 elif [[ "$CI_TARGET" == "mac" ]]; then
