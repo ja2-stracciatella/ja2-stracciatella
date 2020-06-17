@@ -46,7 +46,6 @@ if [[ "$CI_TARGET" == "linux" ]]; then
 elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
   # cross compiling
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP"
-  export RUSTUP_INIT_ARGS="${RUSTUP_INIT_ARGS} --target=x86ST_64-pc-windows-gnu --profile=minimal"
   export RUN_TESTS=false
 
 elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
@@ -54,7 +53,7 @@ elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCPACK_GENERATOR=ZIP"
   export RUSTUP_HOME="$(cygpath -w ~/.rustup)"
   export CARGO_HOME="$(cygpath -w ~/.cargo)"
-  export RUSTUP_INIT_ARGS="${RUSTUP_INIT_ARGS}-i686-pc-windows-gnu --default-host=i686-pc-windows-gnu"
+  export PATH=$PATH:$HOME/.cargo/bin
   export RUN_INSTALL_TEST=false # no sudo
 
 elif [[ "$CI_TARGET" == "mac" ]]; then
