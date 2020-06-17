@@ -53,7 +53,9 @@ for:
           rem C:\msys64\msys2_shell.cmd -defterm -no-start -c "pacman -Syu --noconfirm --needed"
       - cmd: |
           rem build, package, test, publish in msys2
+          C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .github/scripts/ci-setup.sh"
           C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .github/scripts/ci-build.sh"
+          C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .github/scripts/ci-publish.sh"
     test_script:
       - cmd: rem test_script override
     after_test:
