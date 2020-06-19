@@ -1062,10 +1062,10 @@ static void AddCorpsesToBloodcatLair(INT16 sSectorX, INT16 sSectorY)
 	Corpse.sHeightAdjustment = 0;
 	Corpse.bVisible          = TRUE;
 
-	SET_PALETTEREP_ID ( Corpse.HeadPal,  "BROWNHEAD" );
-	SET_PALETTEREP_ID ( Corpse.VestPal,  "YELLOWVEST" );
-	SET_PALETTEREP_ID ( Corpse.SkinPal,  "PINKSKIN" );
-	SET_PALETTEREP_ID ( Corpse.PantsPal, "GREENPANTS" );
+	Corpse.HeadPal  = "BROWNHEAD";
+	Corpse.VestPal  = "YELLOWVEST";
+	Corpse.SkinPal  = "PINKSKIN";
+	Corpse.PantsPal = "GREENPANTS";
 
 
 	Corpse.bDirection = (INT8)Random(8);

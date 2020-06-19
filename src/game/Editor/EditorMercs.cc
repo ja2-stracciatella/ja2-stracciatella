@@ -267,45 +267,45 @@ void ProcessMercEditing(void)
 
 	// Handle changes to the merc colors
 	SOLDIERTYPE& s = *g_selected_merc;
-	ST::string soldier_pal;
-	ST::string placement_pal;
+	ST::string* soldier_pal;
+	ST::string* placement_pal;
 	UINT8 ubType;
 	switch (iEditWhichStat)
 	{
 		case 0:
 		case 1:
 			ubType        = EDIT_COLOR_HEAD;
-			soldier_pal   = s.HeadPal;
-			placement_pal = gpSelected->pDetailedPlacement->HeadPal;
+			soldier_pal   = &s.HeadPal;
+			placement_pal = &gpSelected->pDetailedPlacement->HeadPal;
 			break;
 
 		case 2:
 		case 3:
 			ubType        = EDIT_COLOR_SKIN;
-			soldier_pal   = s.SkinPal;
-			placement_pal = gpSelected->pDetailedPlacement->SkinPal;
+			soldier_pal   = &s.SkinPal;
+			placement_pal = &gpSelected->pDetailedPlacement->SkinPal;
 			break;
 
 		case 4:
 		case 5:
 			ubType        = EDIT_COLOR_VEST;
-			soldier_pal   = s.VestPal;
-			placement_pal = gpSelected->pDetailedPlacement->VestPal;
+			soldier_pal   = &s.VestPal;
+			placement_pal = &gpSelected->pDetailedPlacement->VestPal;
 			break;
 
 		case 6:
 		case 7:
 			ubType        = EDIT_COLOR_PANTS;
-			soldier_pal   = s.PantsPal;
-			placement_pal = gpSelected->pDetailedPlacement->PantsPal;
-			break;
+			soldier_pal   = &s.PantsPal;
+			placement_pal = &gpSelected->pDetailedPlacement->PantsPal;
+			break; 
 
 		default:
 			iEditMercMode = EDIT_MERC_NONE;
 			return;
 	}
 
-	UINT8 ubPaletteRep = GetPaletteRepIndexFromID(soldier_pal);
+	UINT8 ubPaletteRep = GetPaletteRepIndexFromID(*soldier_pal);
 	const INT32 start = iEditColorStart[ubType];
 	const UINT8 range = gubpNumReplacementsPerRange[ubType];
 	if (iEditWhichStat & 1)
@@ -317,8 +317,8 @@ void ProcessMercEditing(void)
 		ubPaletteRep = (ubPaletteRep > start ? ubPaletteRep - 1 : start + range - 1);
 	}
 
-	SET_PALETTEREP_ID(soldier_pal, gpPalRep[ubPaletteRep].ID);
-	placement_pal = soldier_pal;
+	soldier_pal->set(gpPalRep[ubPaletteRep].ID);
+	placement_pal->set(gpPalRep[ubPaletteRep].ID);
 	CreateSoldierPalettes(s);
 
 	iEditMercMode = EDIT_MERC_NONE;
@@ -2415,8 +2415,8 @@ void SetEnemyColorCode(UINT8 const colour_code)
 	sel.pBasicPlacement->ubSoldierClass = colour_code;
 	if (dp) dp->ubSoldierClass = colour_code;
 	SOLDIERTYPE& s = *sel.pSoldier;
-	SET_PALETTEREP_ID(s.VestPal,  vest);
-	SET_PALETTEREP_ID(s.PantsPal, pants);
+	s.VestPal  = vest;
+	s.PantsPal = pants;
 	CreateSoldierPalettes(s);
 }
 
