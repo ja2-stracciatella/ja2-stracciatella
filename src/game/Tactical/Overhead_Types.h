@@ -292,9 +292,4 @@ enum BoxingStates
 
 #define PaletteRepID_LENGTH 30
 
-
-// MACROS
-// This will set an animation ID
-#define SET_PALETTEREP_ID( a, b )			( (a) = (b) )
-
 #endif

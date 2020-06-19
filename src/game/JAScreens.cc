@@ -284,7 +284,7 @@ static void CyclePaletteReplacement(SOLDIERTYPE& s, ST::string& pal)
 	const UINT8 ubEndRep = ubStartRep + gubpNumReplacementsPerRange[ubType];
 
 	if (ubPaletteRep == ubEndRep) ubPaletteRep = ubStartRep;
-	SET_PALETTEREP_ID(pal, gpPalRep[ubPaletteRep].ID);
+	pal = gpPalRep[ubPaletteRep].ID;
 
 	CreateSoldierPalettes(s);
 }

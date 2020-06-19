@@ -946,10 +946,10 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 	c.sGridNo           = grid_no;
 	c.sHeightAdjustment = s->sHeightAdjustment;
 	c.bVisible          = TRUE;
-	SET_PALETTEREP_ID(c.HeadPal,  s->HeadPal);
-	SET_PALETTEREP_ID(c.VestPal,  s->VestPal);
-	SET_PALETTEREP_ID(c.SkinPal,  s->SkinPal);
-	SET_PALETTEREP_ID(c.PantsPal, s->PantsPal);
+	c.HeadPal           = s->HeadPal;
+	c.VestPal           = s->VestPal;
+	c.SkinPal           = s->SkinPal;
+	c.PantsPal          = s->PantsPal;
 	c.bDirection        = s->bDirection;
 	c.uiTimeOfDeath     = GetWorldTotalMin();
 	c.usFlags           = flags_for_rotting_corpse;
