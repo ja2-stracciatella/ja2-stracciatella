@@ -60,6 +60,7 @@
 #include "SoundMan.h"
 #include "Debug.h"
 #include "ScreenIDs.h"
+#include "Music_Control.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -373,7 +374,8 @@ void ReStartingGame()
 	//Reset the sectors
 	SetWorldSectorInvalid();
 
-	SoundStopAll( );
+	SetMusicMode(MUSIC_NONE);
+	SoundStopAll();
 
 	//we are going to restart a game so initialize the variable so we can initialize a new game
 	gubScreenCount = 0;
