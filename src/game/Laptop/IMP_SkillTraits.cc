@@ -157,6 +157,9 @@ BOOLEAN CameBackToSpecialtiesPageButNotFinished();
 
 void EnterIMPSkillTrait( void )
 {
+	//clear any existing skills
+	ResetSkillsAttributesAndPersonality();
+
 	//add the skill trait buttons
 	AddImpSkillTraitButtons();
 
