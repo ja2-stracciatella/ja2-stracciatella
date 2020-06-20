@@ -20,8 +20,9 @@
 #include "WordWrap.h"
 
 #include <algorithm>
+#include <map>
 
-enum
+enum ImpSkillTrait
 {
 	IMP_SKILL_TRAITS__LOCKPICK,
 	IMP_SKILL_TRAITS__HAND_2_HAND,
@@ -42,6 +43,23 @@ enum
 	IMP_SKILL_TRAITS__NUMBER_SKILLS,
 };
 
+// maps from IMP_SKILL_TRAITS to SkillTrait (see Soldier_Profile_Type.h)
+std::map<ImpSkillTrait, SkillTrait> skillTraitsMapping = {
+	{ IMP_SKILL_TRAITS__LOCKPICK,        LOCKPICKING },
+	{ IMP_SKILL_TRAITS__HAND_2_HAND,     HANDTOHAND },
+	{ IMP_SKILL_TRAITS__ELECTRONICS,     ELECTRONICS },
+	{ IMP_SKILL_TRAITS__NIGHT_OPS,       NIGHTOPS },
+	{ IMP_SKILL_TRAITS__THROWING,        THROWING },
+	{ IMP_SKILL_TRAITS__TEACHING,        TEACHING },
+	{ IMP_SKILL_TRAITS__HEAVY_WEAPONS,   HEAVY_WEAPS },
+	{ IMP_SKILL_TRAITS__AUTO_WEAPONS,    AUTO_WEAPS },
+	{ IMP_SKILL_TRAITS__STEALTHY,        STEALTHY },
+	{ IMP_SKILL_TRAITS__AMBIDEXTROUS,    AMBIDEXT },
+	{ IMP_SKILL_TRAITS__KNIFING,         KNIFING },
+	{ IMP_SKILL_TRAITS__ROOFTOP_SNIPING, ONROOF },
+	{ IMP_SKILL_TRAITS__CAMO,            CAMOUFLAGED },
+	{ IMP_SKILL_TRAITS__MARTIAL_ARTS,    MARTIALARTS }
+};
 
 //*******************************************************************
 //
@@ -578,7 +596,7 @@ BOOLEAN ShouldTraitBeSkipped( UINT32 uiTrait )
 
 void AddSelectedSkillsToSkillsList()
 {
-	UINT32	uiCnt;
+	UINT8	uiCnt;
 
 	//loop through all the buttons and reset them
 	for( uiCnt=0; uiCnt<IMP_SKILL_TRAITS__NONE; uiCnt++ )
@@ -587,64 +605,9 @@ void AddSelectedSkillsToSkillsList()
 		if( gfSkillTraitQuestions[ uiCnt ] )
 		{
 			//switch on the trait, and add it to the list
-			switch( uiCnt )
-			{
-				case IMP_SKILL_TRAITS__LOCKPICK:
-					AddSkillToSkillList( LOCKPICKING );
-					break;
-
-				case IMP_SKILL_TRAITS__HAND_2_HAND:
-					AddSkillToSkillList( HANDTOHAND );
-					break;
-
-				case IMP_SKILL_TRAITS__ELECTRONICS:
-					AddSkillToSkillList( ELECTRONICS );
-					break;
-				
-				case IMP_SKILL_TRAITS__NIGHT_OPS:
-					AddSkillToSkillList( NIGHTOPS );
-					break;
-				
-				case IMP_SKILL_TRAITS__THROWING:
-					AddSkillToSkillList( THROWING );
-					break;
-				
-				case IMP_SKILL_TRAITS__TEACHING:
-					AddSkillToSkillList( TEACHING );
-					break;
-				
-				case IMP_SKILL_TRAITS__HEAVY_WEAPONS:
-					AddSkillToSkillList( HEAVY_WEAPS );
-					break;
-				
-				case IMP_SKILL_TRAITS__AUTO_WEAPONS:
-					AddSkillToSkillList( AUTO_WEAPS );
-					break;
-				
-				case IMP_SKILL_TRAITS__STEALTHY:
-					AddSkillToSkillList( STEALTHY );
-					break;
-				
-				case IMP_SKILL_TRAITS__AMBIDEXTROUS:
-					AddSkillToSkillList( AMBIDEXT );
-					break;
-				
-				case IMP_SKILL_TRAITS__KNIFING:
-					AddSkillToSkillList( KNIFING );
-					break;
-				
-				case IMP_SKILL_TRAITS__ROOFTOP_SNIPING:
-					AddSkillToSkillList( ONROOF );
-					break;
-				
-				case IMP_SKILL_TRAITS__CAMO:
-					AddSkillToSkillList( CAMOUFLAGED );
-					break;
-				
-				case IMP_SKILL_TRAITS__MARTIAL_ARTS:
-					AddSkillToSkillList( MARTIALARTS );
-					break;
-			}
+			auto impTrait = static_cast<ImpSkillTrait>(uiCnt);
+			auto skillTrait = skillTraitsMapping.at(impTrait);
+			AddSkillToSkillList(skillTrait);
 		}
 	}
 }
