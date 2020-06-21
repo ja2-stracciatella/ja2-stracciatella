@@ -273,7 +273,7 @@ void DoMessageBox(MessageBoxStyleID ubStyle, const ST::string str, ScreenID uiEx
 
 	InterruptTime();
 	PauseGame();
-	LockPauseState(LOCK_PAUSE_01);
+	LockPauseState(LOCK_PAUSE_MSGBOX);
 	// Pause timers as well....
 	PauseTime(TRUE);
 

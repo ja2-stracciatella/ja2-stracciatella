@@ -3278,7 +3278,7 @@ void DisplaySoldierUpdateBox( )
 
 	//InterruptTime();
 	PauseGame( );
-	LockPauseState(LOCK_PAUSE_04);
+	LockPauseState(LOCK_PAUSE_DISPLAY_SOLDIER_UPDATE);
 
 	PauseDialogueQueue( );
 
@@ -3516,7 +3516,7 @@ void CreateDestroyTheUpdateBox( void )
 
 		// lock it paused
 		PauseGame();
-		LockPauseState(LOCK_PAUSE_05);
+		LockPauseState(LOCK_PAUSE_CREATE_SOLDIER_UPDATE);
 
 		// display the box
 		DisplaySoldierUpdateBox( );

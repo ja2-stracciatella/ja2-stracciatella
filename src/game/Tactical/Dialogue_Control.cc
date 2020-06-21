@@ -277,7 +277,7 @@ void HandleDialogue()
 		fOldEngagedInConvFlagOn = TRUE;
 
 		PauseGame();
-		LockPauseState(LOCK_PAUSE_14);
+		LockPauseState(LOCK_PAUSE_ENGAGED_IN_CONV);
 	}
 	else if (fOldEngagedInConvFlagOn && !(gTacticalStatus.uiFlags & ENGAGED_IN_CONV))
 	{
@@ -630,7 +630,7 @@ void CharacterDialogue(UINT8 const character, UINT16 const quote, FACETYPE* cons
 				if (fInMapMode && !GamePaused())
 				{
 					PauseGame();
-					LockPauseState(LOCK_PAUSE_15);
+					LockPauseState(LOCK_PAUSE_MERC_TALKING);
 					fWasPausedDuringDialogue = TRUE;
 				}
 

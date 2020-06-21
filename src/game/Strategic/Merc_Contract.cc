@@ -106,7 +106,7 @@ void BeginContractRenewalSequence()
 		ubCurrentContractRenewal           = 0;
 		ubCurrentContractRenewalInProgress = 0;
 		PauseGame();
-		LockPauseState(LOCK_PAUSE_07);
+		LockPauseState(LOCK_PAUSE_CONTRACT_RENEWAL);
 		InterruptTime();
 		MakeDialogueEventEnterMapScreen();
 		break;
@@ -569,7 +569,7 @@ void MakeCharacterDialogueEventContractEnding(SOLDIERTYPE& s, bool const add_reh
 
 				InterruptTime();
 				PauseGame();
-				LockPauseState(LOCK_PAUSE_08);
+				LockPauseState(LOCK_PAUSE_CONTRACT_ENDING);
 
 				SOLDIERTYPE& s = soldier_;
 				// If the soldier may have some special action when he/she leaves the party, handle it
