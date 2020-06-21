@@ -412,7 +412,7 @@ void StartHelicopterRun( INT16 sGridNoSweetSpot )
 
 	InterruptTime();
 	PauseGame();
-	LockPauseState(LOCK_PAUSE_20);
+	LockPauseState(LOCK_PAUSE_START_HELI);
 
 	ConvertGridNoToCenterCellXY( sGridNoSweetSpot, &sX, &sY );
 

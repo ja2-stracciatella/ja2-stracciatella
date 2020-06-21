@@ -4492,7 +4492,7 @@ void InitializeItemPickupMenu(SOLDIERTYPE* const pSoldier, INT16 const sGridNo, 
 
 	InterruptTime();
 	PauseGame();
-	LockPauseState(LOCK_PAUSE_18);
+	LockPauseState(LOCK_PAUSE_ITEM_PICKUP);
 	PauseTime(TRUE);
 
 	// Alrighty, cancel lock UI if we havn't done so already

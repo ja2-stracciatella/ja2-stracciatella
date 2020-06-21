@@ -685,7 +685,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 
 			InterruptTime();
 			PauseGame();
-			LockPauseState(LOCK_PAUSE_11);
+			LockPauseState(LOCK_PAUSE_PREBATTLE_CURRENT_SQUAD);
 
 			if( !gfTacticalTraversal )
 				fDisableMapInterfaceDueToBattle = TRUE;
@@ -706,7 +706,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 		HandleImportantPBIQuote(*chosen, pInitiatingBattleGroup);
 		InterruptTime();
 		PauseGame();
-		LockPauseState(LOCK_PAUSE_12);
+		LockPauseState(LOCK_PAUSE_PREBATTLE);
 
 		// disable exit from mapscreen and what not until face done talking
 		fDisableMapInterfaceDueToBattle = TRUE;
@@ -1625,7 +1625,7 @@ static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* const first_
 	// Postpone the battle until the user answers the dialog.
 	InterruptTime();
 	PauseGame();
-	LockPauseState(LOCK_PAUSE_13);
+	LockPauseState(LOCK_PAUSE_SIMULTANEOUS_ARRIVAL);
 	gpPendingSimultaneousGroup = first_group;
 
 	ST::string pStr =

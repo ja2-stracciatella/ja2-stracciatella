@@ -621,7 +621,7 @@ void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest )
 	}
 	InterruptTime();
 	PauseGame();
-	LockPauseState(LOCK_PAUSE_02);
+	LockPauseState(LOCK_PAUSE_CREATURE_ATTACK);
 }
 
 
