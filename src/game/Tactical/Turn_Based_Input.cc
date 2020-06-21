@@ -1437,9 +1437,10 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case 'o':
 			// nothing in hand and the Options Screen button for whichever panel we're in must be enabled
-			if (!gpItemPointer                   &&
+			if (!gpItemPointer                       &&
 				!gfDisableTacticalPanelButtons   &&
 				!fDisableMapInterfaceDueToBattle &&
+				!gfInMeanwhile                   &&
 				(gsCurInterfacePanel != SM_PANEL || iSMPanelButtons[OPTIONS_BUTTON]->Enabled()))
 			{
 				// Go to Options screen
