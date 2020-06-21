@@ -68,6 +68,7 @@ public:
 	int8_t imp_attribute_min;             // IMP character attribute minimum 0 to imp_attribute_max, vanilla 35
 	int32_t imp_attribute_bonus;          // IMP character attribute unallocated bonus points, vanilla 40
 	int32_t imp_attribute_zero_bonus;     // IMP character attribute points given instead of imp_attribute_min, vanilla 15
+	bool imp_pick_skills_directly;        // Use the IMP_SkillTrait selection screen from JA2.5, skipping the personality quiz, vanilla falase
 
 	////////////////////////////////////////////////////////////
 	//

@@ -1708,6 +1708,7 @@ static const ST::string s_it_pImpButtonText[pImpButtonText_SIZE] =
 	"Analisi", 			// analyzing your profile results
 	"OK",
 	"Voce",
+	"Specialties",			// "Specialties" - the skills selection screen
 };
 
 static const ST::string s_it_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
@@ -1716,6 +1717,27 @@ static const ST::string s_it_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 	"Ora che hai completato la Personalità, seleziona i tuoi attributi.",
 	"Con gli attributi ora assegnati, puoi procedere alla selezione del ritratto.",
 	"Per completare il processo, seleziona il campione della voce che più ti piace.",
+};
+
+static const ST::string s_it_gzIMPSkillTraitsText[gzIMPSkillTraitsText_SIZE] =
+{
+	s_it_gzMercSkillText[1],
+	s_it_gzMercSkillText[2],
+	s_it_gzMercSkillText[3],
+	s_it_gzMercSkillText[4],
+	s_it_gzMercSkillText[5],
+	s_it_gzMercSkillText[6],
+	s_it_gzMercSkillText[7],
+	s_it_gzMercSkillText[8],
+	s_it_gzMercSkillText[9],
+	s_it_gzMercSkillText[10],
+	s_it_gzMercSkillText[13],
+	s_it_gzMercSkillText[14],
+	s_it_gzMercSkillText[15],
+	s_it_gzMercSkillText[12],
+
+	s_it_gzMercSkillText[0],
+	"I.M.P. Specialties"
 };
 
 static const ST::string s_it_pFilesTitle = "Gestione risorse";
@@ -3672,6 +3694,8 @@ LanguageRes g_LanguageResItalian = {
 	g_eng_str_dead_is_dead_mode_enter_name,
 
 	s_it_gs_dead_is_dead_mode_tab_name,
+
+	s_it_gzIMPSkillTraitsText,
 };
 
 #ifdef WITH_UNITTESTS

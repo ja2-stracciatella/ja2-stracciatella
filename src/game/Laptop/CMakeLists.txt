@@ -45,6 +45,7 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/IMP_Personality_Finish.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/IMP_Personality_Quiz.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/IMP_Portraits.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/IMP_SkillTraits.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/IMP_Text_System.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/IMP_Voices.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Insurance.cc

@@ -1,6 +1,9 @@
 #include "CharProfile.h"
+#include "ContentManager.h"
 #include "Directories.h"
 #include "Font.h"
+#include "GamePolicy.h"
+#include "GameInstance.h"
 #include "IMP_Personality_Entrance.h"
 #include "IMPVideoObjects.h"
 #include "Text.h"
@@ -92,7 +95,7 @@ static void BtnIMPPersonalityEntranceDoneCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		// done with begin screen, next screen
-		iCurrentImpPage = IMP_PERSONALITY_QUIZ;
+		iCurrentImpPage = gamepolicy(imp_pick_skills_directly) ? IMP_SKILLTRAITS : IMP_PERSONALITY_QUIZ;
 		fButtonPendingFlag = TRUE;
 	}
 }

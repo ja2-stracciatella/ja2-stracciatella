@@ -1722,6 +1722,7 @@ static const ST::string s_dut_pImpButtonText[pImpButtonText_SIZE] =
 	"Analyseren", 			// analyzing your profile results
 	"OK",
 	"Stem",				// "Voice"
+	"Specialties",			// "Specialties" - the skills selection screen
 };
 
 static const ST::string s_dut_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
@@ -1730,6 +1731,27 @@ static const ST::string s_dut_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 	"Nu het onderzoek compleet is, selecteer je eigenschappen.",
 	"Nu de eigenschappen gekozen zijn, kun je verder gaan met de portretselectie.",
 	"Selecteer de stem die het best bij je past om het proces te voltooien.",
+};
+
+static const ST::string s_dut_gzIMPSkillTraitsText[gzIMPSkillTraitsText_SIZE] =
+{
+	s_dut_gzMercSkillText[1],
+	s_dut_gzMercSkillText[2],
+	s_dut_gzMercSkillText[3],
+	s_dut_gzMercSkillText[4],
+	s_dut_gzMercSkillText[5],
+	s_dut_gzMercSkillText[6],
+	s_dut_gzMercSkillText[7],
+	s_dut_gzMercSkillText[8],
+	s_dut_gzMercSkillText[9],
+	s_dut_gzMercSkillText[10],
+	s_dut_gzMercSkillText[13],
+	s_dut_gzMercSkillText[14],
+	s_dut_gzMercSkillText[15],
+	s_dut_gzMercSkillText[12],
+
+	s_dut_gzMercSkillText[0],
+	"I.M.P. Specialties",
 };
 
 static const ST::string s_dut_pFilesTitle = "Bestanden Bekijken"; // ("File Viewer")
@@ -3679,6 +3701,8 @@ LanguageRes g_LanguageResDutch = {
 	g_eng_str_dead_is_dead_mode_warning,
 	g_eng_str_dead_is_dead_mode_enter_name,
 	s_dut_gs_dead_is_dead_mode_tab_name,
+
+	s_dut_gzIMPSkillTraitsText,
 };
 
 #ifdef WITH_UNITTESTS

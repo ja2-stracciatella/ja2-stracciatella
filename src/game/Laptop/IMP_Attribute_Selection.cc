@@ -2,6 +2,7 @@
 #include "Directories.h"
 #include "Font.h"
 #include "IMP_Attribute_Selection.h"
+#include "IMP_SkillTraits.h"
 #include "IMPVideoObjects.h"
 #include "Input.h"
 #include "MessageBoxScreen.h"
@@ -742,6 +743,10 @@ void SetAttributes(void)
 
 	// reset bonus pts
 	iCurrentBonusPoints = BONUS_ATTRIBUTE_POINTS;
+	if (gamepolicy(imp_pick_skills_directly))
+	{
+		iCurrentBonusPoints += DoesPlayerHaveExtraAttibutePointsToDistributeBasedOnSkillSelection();
+	}
 }
 
 

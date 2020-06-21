@@ -1707,6 +1707,7 @@ static const ST::string s_eng_pImpButtonText[pImpButtonText_SIZE] =
 	"Analyzing", 			// analyzing your profile results
 	"OK",
 	"Voice",
+	"Specialties",			// the skills selection screen
 };
 
 static const ST::string s_eng_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
@@ -1715,6 +1716,27 @@ static const ST::string s_eng_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 	"Now That You Have Completed Personality, Select Your Attributes.",
 	"With Attributes Now Allocated, You Can Proceed to Portrait Selection.",
 	"To Complete The Process, Select The Voice Sample That Best Fits You.",
+};
+
+static const ST::string s_eng_gzIMPSkillTraitsText[gzIMPSkillTraitsText_SIZE] =
+{
+		s_eng_gzMercSkillText[1],
+		"Hand to hand combat",
+		s_eng_gzMercSkillText[3],
+		"Night operations",
+		s_eng_gzMercSkillText[5],
+		s_eng_gzMercSkillText[6],
+		s_eng_gzMercSkillText[7],
+		s_eng_gzMercSkillText[8],
+		"Stealth",
+		s_eng_gzMercSkillText[10],
+		s_eng_gzMercSkillText[13],
+		"Rooftop Sniping",
+		"Camouflage",
+		s_eng_gzMercSkillText[12],
+
+		"None",
+		"I.M.P. Specialties",
 };
 
 static const ST::string s_eng_pFilesTitle = "File Viewer";
@@ -3460,6 +3482,7 @@ static const ST::string s_eng_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode
 	"DiD", 			// Dead is Dead Tab
 };
 
+
 // English language resources.
 LanguageRes g_LanguageResEnglish = {
 
@@ -3685,6 +3708,7 @@ LanguageRes g_LanguageResEnglish = {
 	g_eng_str_dead_is_dead_mode_enter_name,
 
 	s_eng_gs_dead_is_dead_mode_tab_name,
+	s_eng_gzIMPSkillTraitsText,
 };
 
 #ifdef WITH_UNITTESTS

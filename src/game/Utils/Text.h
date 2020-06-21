@@ -91,8 +91,9 @@ extern const ST::string g_eng_str_dead_is_dead_mode_enter_name;
 #define pBullseyeStrings_SIZE 5
 #define pMiscMapScreenMouseRegionHelpText_SIZE 3
 #define pImpPopUpStrings_SIZE 7
-#define pImpButtonText_SIZE 26
+#define pImpButtonText_SIZE 27
 #define pExtraIMPStrings_SIZE 4
+#define gzIMPSkillTraitsText_SIZE 16
 #define pFilesSenderList_SIZE 7
 #define pHistoryHeaders_SIZE 5
 #define pHistoryStrings_SIZE 78
@@ -408,6 +409,8 @@ struct LanguageRes
 	const ST::string  str_dead_is_dead_mode_warning;
 	const ST::string  str_dead_is_dead_mode_enter_name;
 	const ST::string* gs_dead_is_dead_mode_tab_name;
+
+	const ST::string* gzIMPSkillTraitsText;
 };
 
 /** Current language resources. */
@@ -638,6 +641,7 @@ extern const LanguageRes* g_langRes;
 #define str_dead_is_dead_mode_enter_name                    (g_langRes->str_dead_is_dead_mode_enter_name)
 #define gs_dead_is_dead_mode_tab_name                       (g_langRes->gs_dead_is_dead_mode_tab_name)
 
+#define  gzIMPSkillTraitsText (g_langRes->gzIMPSkillTraitsText)
 
 /* -------------------------------------------------------------------------------------------- */
 

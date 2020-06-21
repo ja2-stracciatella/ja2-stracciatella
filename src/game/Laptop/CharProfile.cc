@@ -16,6 +16,7 @@
 #include "IMP_Personality_Entrance.h"
 #include "IMP_Attribute_Selection.h"
 #include "IMP_Personality_Quiz.h"
+#include "IMP_SkillTraits.h"
 #include "IMP_Begin_Screen.h"
 #include "IMP_Personality_Finish.h"
 #include "IMP_Confirm.h"
@@ -205,6 +206,9 @@ void HandleCharProfile(void)
 		case( IMP_PERSONALITY_QUIZ ):
 			HandleIMPPersonalityQuiz( );
 			break;
+		case( IMP_SKILLTRAITS ):
+			HandleIMPSkillTrait();
+			break;
 		case( IMP_PERSONALITY_FINISH ):
 			HandleIMPPersonalityFinish( );
 			break;
@@ -263,6 +267,9 @@ void RenderCharProfile(void)
 			break;
 		case( IMP_PERSONALITY_QUIZ ):
 			RenderIMPPersonalityQuiz( );
+			break;
+		case(IMP_SKILLTRAITS):
+			RenderIMPSkillTrait();
 			break;
 		case( IMP_PERSONALITY_FINISH ):
 			RenderIMPPersonalityFinish( );
@@ -342,6 +349,10 @@ static void ExitOldIMPMode(void)
 			DestroyIMPButtons( );
 			ExitIMPPersonalityQuiz( );
 			break;
+		case( IMP_SKILLTRAITS ):
+			DestroyIMPButtons();
+			ExitIMPSkillTrait();
+			break;
 		case( IMP_PERSONALITY_FINISH ):
 			DestroyIMPButtons( );
 			ExitIMPPersonalityFinish( );
@@ -406,6 +417,10 @@ static void EnterNewIMPMode(void)
 		case( IMP_PERSONALITY_QUIZ ):
 			CreateIMPButtons( );
 			EnterIMPPersonalityQuiz( );
+			break;
+		case(IMP_SKILLTRAITS):
+			CreateIMPButtons();
+			EnterIMPSkillTrait();
 			break;
 		case( IMP_PERSONALITY_FINISH ):
 			CreateIMPButtons( );
@@ -624,6 +639,7 @@ static void BtnIMPCancelCallback(GUI_BUTTON *btn, INT32 reason)
 				break;
 
 			case IMP_PERSONALITY_QUIZ:
+			case IMP_SKILLTRAITS:
 			case IMP_PERSONALITY_FINISH:
 				giMaxPersonalityQuizQuestion = 0;
 				fStartOverFlag = TRUE;

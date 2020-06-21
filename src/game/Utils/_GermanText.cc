@@ -1649,6 +1649,7 @@ static const ST::string s_ger_pImpButtonText[pImpButtonText_SIZE] =
 	"Analyse wird durchgeführt",	// analyzing your profile results
 	"OK",
 	"Stimme",
+	"Spezialitäten",			// "Specialties" - the skills selection screen
 };
 
 static const ST::string s_ger_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
@@ -1657,6 +1658,27 @@ static const ST::string s_ger_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 	"Da Sie nun mit der Persönlichkeit fertig sind, wählen Sie Ihre Eigenschaften aus.",
 	"Nach Festlegung der Eigenschaften können Sie nun mit der Porträtauswahl fortfahren.",
 	"Wählen Sie abschließend die Stimmprobe aus, die Ihrer eigenen Stimme am nächsten kommt.",
+};
+
+static const ST::string s_ger_gzIMPSkillTraitsText[gzIMPSkillTraitsText_SIZE] =
+{
+	s_ger_gzMercSkillText[1],
+	"Mann gegen Mann",
+	s_ger_gzMercSkillText[3],
+	L"Nacht-Operationen",
+	s_ger_gzMercSkillText[5],
+	L"Unterrichten",
+	s_ger_gzMercSkillText[7],
+	s_ger_gzMercSkillText[8],
+	s_ger_gzMercSkillText[9],
+	L"Beidhändigkeit",
+	L"Messer",
+	L"Dachtreffer-Bonus",
+	L"Tarnkunst",
+	L"Martial Arts",
+
+	L"Kein",
+	L"B.S.E. Spezialitäten",
 };
 
 static const ST::string s_ger_pFilesTitle = "Akten einsehen";
@@ -3510,6 +3532,8 @@ LanguageRes g_LanguageResGerman = {
 	s_ger_str_dead_is_dead_mode_enter_name,
 
 	s_ger_gs_dead_is_dead_mode_tab_name,
+
+	s_ger_gzIMPSkillTraitsText,
 };
 
 #ifdef WITH_UNITTESTS

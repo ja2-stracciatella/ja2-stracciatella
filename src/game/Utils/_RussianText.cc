@@ -1764,6 +1764,7 @@ static const ST::string s_rus_pImpButtonText[pImpButtonText_SIZE] =
 	"Анализ", 			// analyzing your profile results
 	"OK",
 	"Голос",
+	"Specialties",			// "Specialties" - the skills selection screen
 };
 
 static const ST::string s_rus_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
@@ -1772,6 +1773,27 @@ static const ST::string s_rus_pExtraIMPStrings[pExtraIMPStrings_SIZE] =
 	"Личные качества оценены, переходите к свойствам.",
 	"Свойства зафиксированы, выберите наиболее подходящее вам лицо.",
 	"Чтобы завершить процесс, выберите подходящий голос."
+};
+
+static const ST::string s_rus_gzIMPSkillTraitsText[gzIMPSkillTraitsText_SIZE] =
+{
+	s_rus_gzMercSkillText[1],
+	s_rus_gzMercSkillText[2],
+	s_rus_gzMercSkillText[3],
+	s_rus_gzMercSkillText[4],
+	s_rus_gzMercSkillText[5],
+	s_rus_gzMercSkillText[6],
+	s_rus_gzMercSkillText[7],
+	s_rus_gzMercSkillText[8],
+	s_rus_gzMercSkillText[9],
+	s_rus_gzMercSkillText[10],
+	s_rus_gzMercSkillText[13],
+	s_rus_gzMercSkillText[14],
+	s_rus_gzMercSkillText[15],
+	s_rus_gzMercSkillText[12],
+
+	s_rus_gzMercSkillText[0],
+	"I.M.P. Specialties"
 };
 
 static const ST::string s_rus_pFilesTitle = "Просмотр файлов";
@@ -3742,6 +3764,7 @@ LanguageRes g_LanguageResRussian = {
 	g_eng_str_dead_is_dead_mode_enter_name,
 
 	s_rus_gs_dead_is_dead_mode_tab_name,
+	s_rus_gzIMPSkillTraitsText
 };
 
 
@@ -3970,6 +3993,8 @@ LanguageRes g_LanguageResRussianGold = {
 	g_eng_str_dead_is_dead_mode_enter_name,
 
 	s_rus_gs_dead_is_dead_mode_tab_name,
+
+	s_rus_gzIMPSkillTraitsText,
 };
 
 #ifdef WITH_UNITTESTS

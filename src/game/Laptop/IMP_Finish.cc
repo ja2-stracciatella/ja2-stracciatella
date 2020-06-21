@@ -21,6 +21,9 @@
 #include "ScreenIDs.h"
 #include "VSurface.h"
 #include "Font_Control.h"
+#include "GameInstance.h"
+#include "GamePolicy.h"
+#include "ContentManager.h"
 
 #include <string_theory/string>
 
@@ -131,7 +134,8 @@ static void CreateIMPFinishButtons(void)
 	MakeButton(1, LAPTOPDIR "/button_2.sti", pImpButtonText[6], dx + 136, dy + 114, BtnIMPFinishDoneCallback);
 
 	// the personality button
-	MakeButton(2, LAPTOPDIR "/button_8.sti", pImpButtonText[2], dx +  13, dy + 245, BtnIMPFinishPersonalityCallback);
+	ST::string btnText = gamepolicy(imp_pick_skills_directly) ? pImpButtonText[26] : pImpButtonText[2];
+	MakeButton(2, LAPTOPDIR "/button_8.sti", btnText, dx +  13, dy + 245, BtnIMPFinishPersonalityCallback);
 	giIMPFinishButton[2]->SpecifyIcon(guiANALYSE, 0, 33, 23, FALSE);
 
 	// the attribs button
@@ -226,7 +230,16 @@ static void BtnIMPFinishPersonalityCallback(GUI_BUTTON *btn, INT32 reason)
 		fButtonPendingFlag = TRUE;
 		uiBaseTime = 0;
 		fAnimateFlag = FALSE;
-		btn->SpecifyText(pImpButtonText[2]);
+
+		if (gamepolicy(imp_pick_skills_directly))
+		{
+			iCurrentImpPage = IMP_SKILLTRAITS;
+			btn->SpecifyText(pImpButtonText[26]);
+		}
+		else
+		{
+			btn->SpecifyText(pImpButtonText[2]);
+		}
 	}
 
 	// get amount of time between callbacks
@@ -259,7 +272,9 @@ static void BtnIMPFinishAttributesCallback(GUI_BUTTON *btn, INT32 reason)
 	{
 		iCurrentImpPage = IMP_ATTRIBUTE_PAGE;
 		fButtonPendingFlag = TRUE;
-		giIMPFinishButton[2]->SpecifyText(pImpButtonText[2]);
+
+		auto btnText = gamepolicy(imp_pick_skills_directly) ? pImpButtonText[26] : pImpButtonText[2];
+		giIMPFinishButton[2]->SpecifyText(btnText);
 	}
 }
 
