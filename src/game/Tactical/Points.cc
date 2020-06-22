@@ -456,6 +456,12 @@ BOOLEAN EnoughPoints(const SOLDIERTYPE* pSoldier, INT16 sAPCost, INT16 sBPCost, 
 		return( TRUE );
 	}
 
+	// can't do anything while collapsed
+	if (pSoldier->bCollapsed)
+	{
+		return FALSE;
+	}
+
 	if ( pSoldier->ubQuoteActionID >=QUOTE_ACTION_ID_TRAVERSE_EAST && pSoldier->ubQuoteActionID <= QUOTE_ACTION_ID_TRAVERSE_NORTH )
 	{
 		// AI guy on special move off map
