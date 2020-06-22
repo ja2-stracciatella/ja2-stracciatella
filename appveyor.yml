@@ -3,10 +3,12 @@
 version: "{build}"
 
 environment:
-  SFTP_USER:
-    secure: "uBUgFeI9sHRv0IiMPpA9rg=="
-  SFTP_PASSWORD:
-    secure: "gXqhlT/yjiLd/jTpvg4kcZtBRCZ8RnoOJ3zRTSF5voA="
+  GCLOUD_CREDENTIALS_SALT:
+    secure: "tmDQ9iBheiMMWuKKqA/l7U0kC+S2yFeI05B47pGaHTs="
+  GCLOUD_CREDENTIALS_KEY:
+    secure: "O5HZHcvH48vEP5zAhmhJxbTSohl+6TVVK5hWKKFWwFQBX3cqCsW355pQrS5LGUV9qZ3J34hViLnGcArSEATLiS309BnIsvouH8TaJU99iaA="
+  GCLOUD_CREDENTIALS_IV:
+    secure: "mXNwsLAU0N1u1oFv4e/QwF6HfMCT39c3La/pniJTgOaQB2Y3LvoPWDvU5JbhF4yQ"
   GITHUB_ACCESS_TOKEN:
     secure: "fcDy5AgkBH9bKqdsbwv9piWbN6ksoUKk+iky/DQmk3YG3UNl68BegfkYUzSF3rJ7"
   matrix:
@@ -65,11 +67,13 @@ init:
   - ps: $env:PUBLISH_BINARY = "false";
   - ps: $env:BUILD_TYPE = "Debug";
 
+  - ps: $env:CI_REF = "refs/heads/${env:APPVEYOR_REPO_BRANCH}";
   - ps: >
         if (Test-Path Env:\APPVEYOR_PULL_REQUEST_NUMBER) {
           $env:PUBLISH_BINARY = "true";
           $env:PUBLISH_DIR = "pull-requests/${env:APPVEYOR_PULL_REQUEST_NUMBER}";
           $env:VERSION_TAG = "${env:APPVEYOR_PULL_REQUEST_NUMBER}pullrequest";
+          $env:CI_REF = "refs/pull/${env:APPVEYOR_PULL_REQUEST_NUMBER}";
         }
         true;
   - ps: >
@@ -86,6 +90,7 @@ init:
           $env:PUBLISH_BINARY = "true";
           $env:PUBLISH_DIR = "releases";
           $env:VERSION_TAG = "";
+          $env:CI_REF = "refs/tags/${env:APPVEYOR_REPO_TAG}";
         }
         true;
 
@@ -95,6 +100,8 @@ init:
           $env:BUILD_SWITCHES = "${env:BUILD_SWITCHES} -DWITH_EDITOR_SLF=ON";
         }
         true;
+
+  - ps: $env:CLOUDSDK_CORE_DISABLE_PROMPTS = 1
 
   - cmd: echo "%CMAKE_GENERATOR_NAME%"
 
@@ -110,10 +117,15 @@ install:
   - cmd: rustup-init.exe -y --default-toolchain %RUSTUP_TOOLCHAIN%
   - cmd: set PATH=%PATH%;C:\Users\appveyor\.cargo\bin
 
+  - ps: (New-Object Net.WebClient).DownloadFile("https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-299.0.0-windows-x86.zip", "${env:TEMP}\google-cloud.zip")
+  - ps: Expand-Archive "${env:TEMP}\google-cloud.zip" -DestinationPath "${env:TEMP}"
+  - ps: $env:PATH = "${env:PATH};${env:TEMP}\google-cloud-sdk\bin"
+
   - cmd: echo "%RUSTUP_TOOLCHAIN%"
   - cmd: rustc -V
   - cmd: cargo -V
   - cmd: cmake --version
+  - cmd: gcloud version
 
 before_build:
   - cmd: mkdir ci-build
@@ -131,13 +143,8 @@ test_script:
 
 after_test:
   - ps: cmake --build c:\projects\ja2-stracciatella\ci-build --target package
-  - ps: >
-          if ("$env:PUBLISH_BINARY" -eq "true" -and (Test-Path Env:\SFTP_PASSWORD)) {
-            $binary_paths = Get-ChildItem c:\projects\ja2-stracciatella\ci-build\ja2-stracciatella_*;
-            foreach ($file in $binary_paths) {
-              iex "curl.exe --retry 3 --ftp-create-dirs -T ${file} --ftp-ssl -u ${env:SFTP_USER}:${env:SFTP_PASSWORD} ftp://www61.your-server.de/${env:PUBLISH_DIR}/"
-            }
-          }
+  - ps: cd c:\projects\ja2-stracciatella
+  - ps: bash .github\scripts\ci-publish.sh
 
 artifacts:
   - path: ci-build\ja2-stracciatella_*
