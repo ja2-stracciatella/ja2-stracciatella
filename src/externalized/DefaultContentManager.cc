@@ -224,7 +224,7 @@ void DefaultContentManager::AddVFSLayer(VFS_ORDER order, const ST::string path, 
 
 void DefaultContentManager::init()
 {
-	AddVFSLayer(VFS_ORDER::ASSETS_USERHOME, m_userHomeDir);
+	AddVFSLayer(VFS_ORDER::ASSETS_USERHOME, FileMan::joinPaths(m_userHomeDir, "data"));
 	AddVFSLayer(VFS_ORDER::ASSETS_STRACCIATELLA, m_externalizedDataPath);
 	AddVFSLayer(VFS_ORDER::ASSETS_VANILLA, m_dataDir);
 	
