@@ -113,7 +113,7 @@ pub extern "C" fn checkIfRelativePathExists(
 #[no_mangle]
 pub extern "C" fn findAvailableMods() -> *mut VecCString {
     let mut entries: Vec<_> = Vec::new();
-    
+
     // list all directories under assets dir
     let mut assets_path = get_assets_dir();
     assets_path.push("mods");
@@ -128,10 +128,10 @@ pub extern "C" fn findAvailableMods() -> *mut VecCString {
             paths.for_each(|p| entries.push(p));
         }
     }
-          
+
     let mut mods: Vec<_> = entries
-        .into_iter() 
-        .filter_map(|x| x.ok())  // DirEntry
+        .into_iter()
+        .filter_map(|x| x.ok()) // DirEntry
         .filter_map(|x| {
             if let Ok(metadata) = x.metadata() {
                 if metadata.is_dir() {
