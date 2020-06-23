@@ -112,25 +112,42 @@ pub extern "C" fn checkIfRelativePathExists(
 /// The caller is responsible for the returned memory.
 #[no_mangle]
 pub extern "C" fn findAvailableMods() -> *mut VecCString {
-    let mut path = get_assets_dir();
-    path.push("mods");
-    if let Ok(entries) = path.read_dir() {
-        let mods: Vec<_> = entries
-            .filter_map(|x| x.ok()) // DirEntry
-            .filter_map(|x| {
-                if let Ok(metadata) = x.metadata() {
-                    if metadata.is_dir() {
-                        return x.file_name().into_string().ok();
-                    }
-                }
-                None
-            }) // String
-            .filter_map(|x| CString::new(x.as_bytes().to_owned()).ok()) // CString
-            .collect();
-        into_ptr(VecCString::from(mods))
-    } else {
-        into_ptr(VecCString::default())
+    let mut entries: Vec<_> = Vec::new();
+    
+    // list all directories under assets dir
+    let mut assets_path = get_assets_dir();
+    assets_path.push("mods");
+    if let Ok(paths) = assets_path.read_dir() {
+        paths.for_each(|p| entries.push(p));
     }
+
+    // list all directories under stracc home dir
+    if let Ok(mut home_dir) = find_stracciatella_home() {
+        home_dir.push("mods");
+        if let Ok(paths) = home_dir.read_dir() {
+            paths.for_each(|p| entries.push(p));
+        }
+    }
+          
+    let mut mods: Vec<_> = entries
+        .into_iter() 
+        .filter_map(|x| x.ok())  // DirEntry
+        .filter_map(|x| {
+            if let Ok(metadata) = x.metadata() {
+                if metadata.is_dir() {
+                    return x.file_name().into_string().ok();
+                }
+            }
+            None
+        }) // String
+        .filter_map(|x| CString::new(x.as_bytes().to_owned()).ok()) // CString
+        .collect();
+
+    // remove duplicates
+    mods.sort();
+    mods.dedup();
+
+    into_ptr(VecCString::from(mods))
 }
 
 /// Executes a command.
