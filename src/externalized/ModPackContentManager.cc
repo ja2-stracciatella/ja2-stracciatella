@@ -31,14 +31,14 @@ void ModPackContentManager::loadMod(ST::string modName)
 	ST::string modResFolder = FileMan::joinPaths({ m_userHomeDir, "mods", modName, "data" });
 	if (FileMan::checkPathExistance(modResFolder))
 	{
-		AddVFSLayer(VFS_ORDER::MOD_USERHOME, modResFolder);
+		AddVFSLayer(VFS_ORDER::MOD, modResFolder);
 		isLoaded = true;
 	}
 	
 	modResFolder = FileMan::joinPaths({m_assetsRootPath, "mods", modName, "data"});
 	if (FileMan::checkPathExistance(modResFolder))
 	{
-		AddVFSLayer(VFS_ORDER::MOD_STRACCIATELLA, modResFolder);
+		AddVFSLayer(VFS_ORDER::MOD, modResFolder);
 		isLoaded = true;
 	}
 

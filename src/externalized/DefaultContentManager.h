@@ -16,8 +16,7 @@
 #include <vector>
 
 enum VFS_ORDER : int32_t {
-	MOD_USERHOME           = 100, // mods under user home directory
-	MOD_STRACCIATELLA      = 110, // mods under stracciatella assets directory
+	MOD                    = 100, // assets overriden by mods
 	
 	ASSETS_USERHOME        = 200, // assets in user home directory
 	ASSETS_STRACCIATELLA   = 210, // assets shipped with stracciatella
