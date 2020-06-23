@@ -83,6 +83,9 @@ public:
 	/** Join two path components. */
 	static ST::string joinPaths(const ST::string& first, const ST::string& second);
 
+	/** Join multiple path components. */
+	static ST::string joinPaths(const std::vector<ST::string> parts);
+
 	/** Replace extension of a file. */
 	static ST::string replaceExtension(const ST::string& path, const ST::string& newExtension);
 
@@ -109,6 +112,9 @@ public:
 
 	/** Check file existance. */
 	static bool checkFileExistance(const ST::string& folder, const ST::string& fileName);
+
+	/** Returns if the given path (dir or file) exists */
+	static bool checkPathExistance(const ST::string& path);
 
 	/** Move a file */
 	static void moveFile(const ST::string& from, const ST::string& to);

@@ -157,7 +157,7 @@ static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType
 }
 
 DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
-						const ST::string &configFolder,
+						const ST::string &userHomeDir,
 						const ST::string &gameResRootPath,
 						const ST::string &externalizedDataPath
 	)
@@ -173,7 +173,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	 * exist we should use them.  If doesn't exist, then use lowercased names.
 	 */
 
-	m_configFolder = configFolder;
+	m_userHomeDir = userHomeDir;
 	m_gameResRootPath = gameResRootPath;
 	m_externalizedDataPath = externalizedDataPath;
 
@@ -191,34 +191,47 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_movementCosts = NULL;
 }
 
+
+void DefaultContentManager::AddVFSLayer(VFS_ORDER order, const ST::string path, const bool throwOnError)
+{
+	bool succeeded = false;
+	if (Fs_isDir(path.c_str()))
+	{
+		SLOGI(ST::format("Adding directory to VFS ({}) '{}'", order, path));
+		succeeded = Vfs_addDir(m_vfs.get(), order, path.c_str());
+	}
+	else if (Fs_isFile(path.c_str()) && path.to_lower().ends_with(".slf"))
+	{
+		SLOGI(ST::format("Adding SLF archive to VFS ({}) '{}'", order, path));
+		succeeded = Vfs_addSlf(m_vfs.get(), order, path.c_str());
+	}
+	else
+	{
+		SLOGE("Unsupported file type.");
+		throw std::runtime_error("Failed to add to VFS");
+	}
+
+	if (!succeeded)
+	{
+		RustPointer<char> err{ getRustError() };
+		SLOGE(ST::format("Failed to add to VFS '{}': {}", path, err.get()));
+		if (throwOnError)
+		{
+			throw std::runtime_error("Failed to add to VFS");
+		}
+	}
+}
+
 void DefaultContentManager::init()
 {
-	SLOGI(ST::format("Vfs with stracciatella dir ({}) '{}'", VFS_ORDER_STRACCIATELLA, m_externalizedDataPath));
-	if (!Vfs_addDir(m_vfs.get(), VFS_ORDER_STRACCIATELLA, m_externalizedDataPath.c_str()))
-	{
-		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("DefaultContentManager::init '{}': {}", m_externalizedDataPath, err.get()));
-		throw std::runtime_error("Failed to add stracciatella dir");
-	}
-
-	SLOGI(ST::format("Vfs with vanilla dir ({}) '{}'", VFS_ORDER_VANILLA, m_dataDir));
-	if (!Vfs_addDir(m_vfs.get(), VFS_ORDER_VANILLA, m_dataDir.c_str()))
-	{
-		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("DefaultContentManager::init '{}': {}", m_dataDir, err.get()));
-		throw std::runtime_error("Failed to add vanilla data dir");
-	}
-
+	AddVFSLayer(VFS_ORDER::ASSETS_USERHOME, m_userHomeDir);
+	AddVFSLayer(VFS_ORDER::ASSETS_STRACCIATELLA, m_externalizedDataPath);
+	AddVFSLayer(VFS_ORDER::ASSETS_VANILLA, m_dataDir);
+	
 	std::vector<ST::string> slfs = FindFilesInDir(m_dataDir, "slf", true, false);
 	for (const ST::string& slf : slfs)
 	{
-		SLOGI(ST::format("Vfs with vanilla slf ({}) '{}'", VFS_ORDER_VANILLA, slf));
-		if (!Vfs_addSlf(m_vfs.get(), VFS_ORDER_VANILLA, slf.c_str()))
-		{
-			RustPointer<char> err{getRustError()};
-			SLOGE(ST::format("DefaultContentManager::init '{}': {}", slf, err.get()));
-			throw std::runtime_error("Failed to add vanilla slf");
-		}
+		AddVFSLayer(VFS_ORDER::ASSETS_VANILLA, slf);
 	}
 }
 
@@ -229,12 +242,7 @@ void DefaultContentManager::initOptionalFreeEditorSlf(const ST::string &path)
 		SLOGW(ST::format("Free editor.slf not found in '{}'", path));
 		return;
 	}
-	SLOGI(ST::format("Vfs with fallback slf ({}) '{}'", VFS_ORDER_FALLBACK, path));
-	if (!Vfs_addSlf(m_vfs.get(), VFS_ORDER_FALLBACK, path.c_str()))
-	{
-		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("DefaultContentManager::initOptionalFreeEditorSlf '{}': {}", path, err.get()));
-	}
+	AddVFSLayer(VFS_ORDER::FALLBACK, path, false);
 }
 
 template <class T> 
@@ -565,18 +573,18 @@ bool DefaultContentManager::doesGameResExists(const ST::string &filename) const
 
 ST::string DefaultContentManager::getScreenshotFolder() const
 {
-	return m_configFolder;
+	return m_userHomeDir;
 }
 
 ST::string DefaultContentManager::getVideoCaptureFolder() const
 {
-	return m_configFolder;
+	return m_userHomeDir;
 }
 
 /** Get folder for saved games. */
 ST::string DefaultContentManager::getSavedGamesFolder() const
 {
-	return FileMan::joinPaths(m_configFolder, "SavedGames");
+	return FileMan::joinPaths(m_userHomeDir, "SavedGames");
 }
 
 /** Load encrypted string from game resource file. */
