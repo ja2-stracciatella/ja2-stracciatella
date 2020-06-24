@@ -41,6 +41,26 @@ TEST(FileManTest, joinPaths)
 }
 
 
+TEST(FileManTest, joinPathsMultiple)
+{
+	{
+		ST::string result;
+
+		result = FileMan::joinPaths({});
+		EXPECT_EQ(result, ST::null);
+
+		result = FileMan::joinPaths({ "foo" });
+		EXPECT_EQ(result, "foo");
+
+		result = FileMan::joinPaths({ "foo", "bar" });
+		EXPECT_EQ(result, "foo" PATH_SEPARATOR_STR "bar");
+
+		result = FileMan::joinPaths({ "foo", "bar", "baz" });
+		EXPECT_EQ(result, "foo" PATH_SEPARATOR_STR "bar" PATH_SEPARATOR_STR "baz");
+	}
+}
+
+
 TEST(FileManTest, FindFilesInDir)
 {
 #define PS PATH_SEPARATOR_STR
