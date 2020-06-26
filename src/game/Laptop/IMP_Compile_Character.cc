@@ -28,9 +28,6 @@ static INT32 iLastElementInSkillsList = 0;
 static INT32 PersonalityList[ATTITUDE_LIST_SIZE];
 static INT32 iLastElementInPersonalityList = 0;
 
-extern BOOLEAN fLoadingCharacterForPreviousImpProfile;
-
-
 static void SelectMercFace(void);
 
 
@@ -402,8 +399,6 @@ static BOOLEAN ShouldThisMercHaveABigBody(void);
 
 void HandleMercStatsForChangesInFace(void)
 {
-	if (fLoadingCharacterForPreviousImpProfile) return;
-
 	AddSelectedSkillsToSkillsList();
 
 	CreatePlayerSkills();

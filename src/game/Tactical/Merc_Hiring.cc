@@ -56,6 +56,16 @@ extern BOOLEAN gfFirstHeliRun;
 // Saved in general saved game structure
 INT16 g_merc_arrive_sector = START_SECTOR;
 
+void CreateSpecialItem(SOLDIERTYPE* const s, UINT16 item)
+{
+	OBJECTTYPE o;
+	CreateItem(item, 100, &o);
+	BOOLEAN fReturn = AutoPlaceObject(s, &o, FALSE);
+	if (!fReturn) {
+		// no space, so overwrite an existing item (can happen when importing IMPs)
+		s->inv[SMALLPOCK8POS] = o;
+	}
+}
 
 INT8 HireMerc(MERC_HIRE_STRUCT& h)
 {
@@ -106,14 +116,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 		if (s->ubID == 0)
 		{
 			// OK, give this item to our merc!
-			OBJECTTYPE o;
-			o = OBJECTTYPE{};
-			o.usItem            = LETTER;
-			o.ubNumberOfObjects = 1;
-			o.bStatus[0]        = 100;
-			const BOOLEAN fReturn = AutoPlaceObject(s, &o, FALSE);
-			(void)fReturn;
-			Assert(fReturn);
+			CreateSpecialItem(s, LETTER);
 		}
 
 		// Set insertion for first time in chopper

@@ -12,6 +12,7 @@
 #include "IMP_Compile_Character.h"
 #include "IMP_Text_System.h"
 #include "IMP_Confirm.h"
+#include "Items.h"
 #include "Finances.h"
 #include "Soldier_Profile.h"
 #include "Soldier_Profile_Type.h"
@@ -22,6 +23,7 @@
 #include "Game_Clock.h"
 #include "Game_Event_Hook.h"
 #include "LaptopSave.h"
+#include "SaveLoadGame.h"
 #include "Strategic.h"
 #include "Random.h"
 #include "Button_System.h"
@@ -71,8 +73,6 @@ static const FacePosInfo g_face_info[] =
 	{  5,  6,  5, 26 }
 };
 
-
-BOOLEAN fLoadingCharacterForPreviousImpProfile = FALSE;
 
 static void BtnIMPConfirmNo(GUI_BUTTON *btn, INT32 reason);
 static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason);
@@ -157,10 +157,12 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	MERC_HIRE_STRUCT HireMercStruct;
 
 
-	// last minute chage to make sure merc with right facehas not only the right body but body specific skills...
-	// ie..small mercs have martial arts..but big guys and women don't don't
-
-	HandleMercStatsForChangesInFace( );
+	// last minute change to make sure merc with right face has not only the right body, but body specific skills...
+	// ie. small mercs have martial arts, but big guys and women don't
+	if (!fLoadingCharacterForPreviousImpProfile)
+	{
+		HandleMercStatsForChangesInFace();
+	}
 
 	HireMercStruct = MERC_HIRE_STRUCT{};
 
@@ -220,12 +222,24 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason)
 		}
 
 		// line moved by CJC Nov 28 2002 to AFTER the check for money
-		LaptopSaveInfo.fIMPCompletedFlag = TRUE;
+		LaptopSaveInfo.fIMPCompletedFlag = AddCharacterToPlayersTeam();
+		if (!LaptopSaveInfo.fIMPCompletedFlag) return; // only if merc hiring failed: no charge, give it another go
+
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId);
+		if (!pSoldier) return;
+
+		if (fLoadingCharacterForPreviousImpProfile && gamepolicy(imp_load_keep_inventory))
+		{
+			IMPSavedProfileLoadInventory(gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId].zNickname, pSoldier);
+			// re-add letter, since it just got wiped and almost certainly is not present in the import
+			if (pSoldier->ubID == 0 && FindObj(pSoldier, LETTER) == NO_SLOT) {
+				CreateSpecialItem(pSoldier, LETTER);
+			}
+		}
 
 		// charge the player
 		AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin(), -COST_OF_PROFILE);
 		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), -1, -1);
-		AddCharacterToPlayersTeam();
 
 		// write the created imp merc
 		WriteOutCurrentImpCharacter((UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId));

@@ -1,25 +1,36 @@
-#include "sgp/VObject.h"
 #include "CharProfile.h"
+#include "ContentManager.h"
+#include "Cursors.h"
 #include "Directories.h"
+#include "FileMan.h"
+#include "Font_Control.h"
 #include "Font.h"
+#include "GameInstance.h"
 #include "HImage.h"
 #include "IMP_Begin_Screen.h"
 #include "IMP_MainPage.h"
-#include "SGPStrings.h"
 #include "IMPVideoObjects.h"
-#include "Timer_Control.h"
-#include "Render_Dirty.h"
-#include "Cursors.h"
 #include "Laptop.h"
-#include "IMP_Finish.h"
-#include "Text_Input.h"
-#include "Soldier_Profile_Type.h"
-#include "IMP_Attribute_Selection.h"
+#include "LaptopSave.h"
 #include "Line.h"
+#include "Render_Dirty.h"
+#include "SaveLoadGame.h"
+#include "SGPStrings.h"
+#include "Soldier_Control.h"
+#include "Soldier_Profile_Type.h"
+#include "Soldier_Profile.h"
+#include "IMP_Attribute_Selection.h"
+#include "IMP_Compile_Character.h"
+#include "IMP_Finish.h"
+#include "IMP_Portraits.h"
+#include "Text_Input.h"
 #include "Text.h"
+#include "Timer_Control.h"
 #include "Video.h"
 #include "VSurface.h"
-#include "Font_Control.h"
+
+#include "policy/GamePolicy.h"
+#include "sgp/VObject.h"
 
 #include <string_theory/string>
 
@@ -287,6 +298,16 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 			}
 
 			iCurrentImpPage = IMP_MAIN_PAGE;
+			fButtonPendingFlag = TRUE;
+		}
+		else if (GCM->getGamePolicy()->imp_load_saved_merc_by_nickname && IMPSavedProfileDoesFileExist(pNickNameString))
+		{
+			fLoadingCharacterForPreviousImpProfile = true;
+			LaptopSaveInfo.iVoiceId = IMPSavedProfileLoadMercProfile(pNickNameString.c_str());
+			MERCPROFILESTRUCT& profile_saved = gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
+			iPortraitNumber = profile_saved.ubFaceIndex - 200;
+			fCharacterIsMale = ( profile_saved.bSex == MALE );
+			iCurrentImpPage = IMP_CONFIRM;
 			fButtonPendingFlag = TRUE;
 		}
 		else

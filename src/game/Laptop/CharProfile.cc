@@ -82,6 +82,8 @@ extern int iCurrentVoices;
 extern	INT32 giMaxPersonalityQuizQuestion;
 extern	BOOLEAN fStartOverFlag;
 
+BOOLEAN fLoadingCharacterForPreviousImpProfile = FALSE;
+
 extern void SetAttributes( void );
 
 

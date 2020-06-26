@@ -80,7 +80,14 @@
     //  Enables extra attachments: boosters and break lights on leggings, goggles on helmets.
     "extra_attachments": false,
 
-    //  Enables middle mouse button to trigger a look into cursor direction.
+    //  Load an IMP merc from a previous save game by typing in same nickname on IMP form.
+    //  Make sure to use the same capitalization!
+    //  This setting must be already enabled during saving to enable a later load.
+    //  vanilla setting: false, false
+    "imp_load_saved_merc_by_nickname": false,
+    "imp_load_keep_inventory": false,
+
+    //  Enables middle mouse button to trigger a look into cursor direction
     //  vanilla_setting: false
     "middle_mouse_look": true,
 
