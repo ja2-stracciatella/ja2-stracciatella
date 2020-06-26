@@ -618,7 +618,6 @@ void AddSelectedSkillsToSkillsList()
 
 void HandleLastSelectedTraits( INT8 bNewTrait )
 {
-	INT8	bTemp=-1;
 	//if there are none selected
 	if( gbLastSelectedTraits[ 0 ] == -1 )
 	{
