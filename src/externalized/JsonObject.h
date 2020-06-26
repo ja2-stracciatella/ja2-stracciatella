@@ -69,7 +69,17 @@ public:
 		return m_value[name].GetBool();
 	}
 
-	bool getOptionalBool(const char *name) const
+	double GetDouble(const char *name) const
+	{
+		return m_value[name].GetDouble();
+	}
+
+	const rapidjson::Value &GetValue(const char *name) const
+	{
+		return m_value[name];
+	}
+
+	bool getOptionalBool(const char *name, bool defaultValue = false) const
 	{
 		if(m_value.HasMember(name))
 		{
@@ -77,7 +87,19 @@ public:
 		}
 		else
 		{
-			return false;
+			return defaultValue;
+		}
+	}
+
+	double getOptionalDouble(const char* name, double defaultValue = 0) const
+	{
+		if (m_value.HasMember(name))
+		{
+			return m_value[name].GetDouble();
+		}
+		else
+		{
+			return defaultValue;
 		}
 	}
 
