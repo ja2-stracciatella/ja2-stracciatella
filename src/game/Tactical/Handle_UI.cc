@@ -4113,14 +4113,16 @@ void StopRubberBandedMercFromMoving( )
 }
 
 
-void EndRubberBanding( )
+void EndRubberBanding(BOOLEAN fCancel)
 {
-	if ( gRubberBandActive	)
+	if (gRubberBandActive)
 	{
 		FreeMouseCursor( );
 		gfIgnoreScrolling = FALSE;
-
-		EndMultiSoldierSelection( TRUE );
+		if (!fCancel)
+		{
+			EndMultiSoldierSelection(TRUE);
+		}
 
 		gRubberBandActive = FALSE;
 	}

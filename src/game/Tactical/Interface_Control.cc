@@ -577,8 +577,8 @@ void EraseInterfaceMenus( BOOLEAN fIgnoreUIUnLock )
 	PopDownOpenDoorMenu( );
 	DeleteTalkingMenu( );
 
-	// Stop Rubberbanding every time a menu is erased/opened
-	gRubberBandActive = FALSE;
+	// Cancel Rubberbanding every time a menu is erased/opened
+	EndRubberBanding(true);
 	ResetMultiSelection();
 }
 
@@ -595,8 +595,6 @@ void ResetInterfaceAndUI( )
 	EraseInterfaceMenus( FALSE );
 
 	EraseRenderArrows( );
-
-	EndRubberBanding( );
 
 	//ResetMultiSelection( );
 
