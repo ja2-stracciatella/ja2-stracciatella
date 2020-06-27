@@ -38,10 +38,12 @@ if [[ "${BUILD_TYPE}" != "Debug" ]]; then
 fi
 
 export RUN_TESTS=true
+export RUN_RUST_CHECKS=false
 export RUN_INSTALL_TEST=true
 export RUSTUP_INIT_ARGS="-y --no-modify-path --default-toolchain=$(cat ./rust-toolchain) --profile=minimal"
 if [[ "$CI_TARGET" == "linux" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB"
+  export RUN_RUST_CHECKS=true
 
 elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
   # cross compiling
@@ -77,8 +79,10 @@ if [[ "$RUN_TESTS" == "true" ]]; then
   if [[ "$RUN_INSTALL_TEST" == "true" ]]; then
     sudo $BUILD_CMD --target install
   fi
-  $BUILD_CMD --target cargo-fmt-check
-  $BUILD_CMD --target cargo-clippy
+  if [[ "$RUN_RUST_CHECKS" == "true" ]]; then
+    $BUILD_CMD --target cargo-fmt-check
+    $BUILD_CMD --target cargo-clippy
+  fi
   $BUILD_CMD --target cargo-test
   ./ja2 -unittests
   ./ja2-launcher -help
