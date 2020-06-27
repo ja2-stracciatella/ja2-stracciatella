@@ -195,6 +195,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 void DefaultContentManager::AddVFSLayer(VFS_ORDER order, const ST::string path, const bool throwOnError)
 {
 	bool succeeded = false;
+	ST::string error = ST::null;
 	if (Fs_isDir(path.c_str()))
 	{
 		SLOGI(ST::format("Adding directory to VFS ({}) '{}'", order, path));
@@ -207,24 +208,32 @@ void DefaultContentManager::AddVFSLayer(VFS_ORDER order, const ST::string path, 
 	}
 	else
 	{
-		SLOGE("Unsupported file type.");
-		throw std::runtime_error("Failed to add to VFS");
+		error = Fs_exists(path.c_str()) ? "Unsupported file type" : "Path does not exist";
 	}
 
 	if (!succeeded)
 	{
-		RustPointer<char> err{ getRustError() };
-		SLOGE(ST::format("Failed to add to VFS '{}': {}", path, err.get()));
+		if (error.empty())
+		{ 
+			RustPointer<char> err{ getRustError() };
+			error = err.get();
+		}
+		
 		if (throwOnError)
 		{
+			SLOGE(ST::format("Failed to add to VFS '{}': {}", path, error));
 			throw std::runtime_error("Failed to add to VFS");
+		}
+		else
+		{
+			SLOGI(ST::format("Skipped adding to VFS '{}': {}", path, error));
 		}
 	}
 }
 
 void DefaultContentManager::init()
 {
-	AddVFSLayer(VFS_ORDER::ASSETS_USERHOME, FileMan::joinPaths(m_userHomeDir, "data"));
+	AddVFSLayer(VFS_ORDER::ASSETS_USERHOME, FileMan::joinPaths(m_userHomeDir, "data"), false);
 	AddVFSLayer(VFS_ORDER::ASSETS_STRACCIATELLA, m_externalizedDataPath);
 	AddVFSLayer(VFS_ORDER::ASSETS_VANILLA, m_dataDir);
 	
