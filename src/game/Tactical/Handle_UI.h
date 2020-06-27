@@ -265,7 +265,7 @@ BOOLEAN UIHandleOnMerc( BOOLEAN fMovementMode );
 
 void ChangeInterfaceLevel( INT16 sLevel );
 
-void EndRubberBanding(void);
+void EndRubberBanding(BOOLEAN fCancel = false);
 void ResetMultiSelection(void);
 void EndMultiSoldierSelection( BOOLEAN fAcknowledge );
 void StopRubberBandedMercFromMoving(void);
