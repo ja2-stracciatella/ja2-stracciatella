@@ -328,6 +328,18 @@ ST::string FileMan::joinPaths(const ST::string& first, const ST::string& second)
 	return path.get();
 }
 
+ST::string FileMan::joinPaths(const std::vector<ST::string> parts)
+{
+	if (parts.size() < 1) return ST::null;
+
+	ST::string path = parts[0];
+	for (size_t i = 1; i < parts.size(); i++)
+	{
+		path = joinPaths(path, parts[i]);
+	}
+	return path;
+}
+
 
 SGPFile* FileMan::getSGPFileFromFile(File* f)
 {
@@ -552,7 +564,12 @@ ST::string FileMan::fileReadText(SGPFile* file)
 /** Check file existance. */
 bool FileMan::checkFileExistance(const ST::string& folder, const ST::string& fileName)
 {
-	ST::string path = joinPaths(folder, fileName);
+	return checkPathExistance(joinPaths(folder, fileName));
+}
+
+/**  Check path existence. */
+bool FileMan::checkPathExistance(const ST::string& path)
+{
 	return Fs_exists(path.c_str());
 }
 

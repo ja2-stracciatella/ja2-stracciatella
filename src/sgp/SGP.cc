@@ -432,17 +432,14 @@ int main(int argc, char* argv[])
 	uint32_t n = EngineOptions_getModsLength(params.get());
 	if(n > 0)
 	{
-		std::vector<ST::string> modNames;
-		std::vector<ST::string> modResFolders;
+		std::vector<ST::string> enabledMods;
 		for (uint32_t i = 0; i < n; ++i)
 		{
 			RustPointer<char> modName(EngineOptions_getMod(params.get(), i));
-			ST::string modResFolder = FileMan::joinPaths(FileMan::joinPaths(FileMan::joinPaths(extraDataDir, "mods"), modName.get()), "data");
-			modNames.emplace_back(modName.get());
-			modResFolders.emplace_back(modResFolder);
+			enabledMods.emplace_back(modName.get());
 		}
 		cm = new ModPackContentManager(version,
-						modNames, modResFolders, configFolderPath.get(),
+						enabledMods, extraDataDir, configFolderPath.get(),
 						gameResRootPath.get(), externalizedDataPath);
 		SLOGI("------------------------------------------------------------------------------");
 		SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.get());
@@ -452,12 +449,6 @@ int main(int argc, char* argv[])
 		SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
 		SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
 		SLOGI("------------------------------------------------------------------------------");
-		for (uint32_t i = 0; i < n; ++i)
-		{
-			SLOGI("MOD name:                      '%s'", modNames[i].c_str());
-			SLOGI("MOD resource directory:        '%s'", modResFolders[i].c_str());
-			SLOGI("------------------------------------------------------------------------------");
-		}
 	}
 	else
 	{

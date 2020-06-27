@@ -13,12 +13,7 @@ DefaultContentManagerUT::DefaultContentManagerUT(GameVersion gameVersion,
 void DefaultContentManagerUT::init()
 {
 	// externalized data is used in the tests
-	if (!Vfs_addDir(m_vfs.get(), VFS_ORDER_STRACCIATELLA, m_externalizedDataPath.c_str()))
-	{
-		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("DefaultContentManagerUT::init '{}': {}", m_externalizedDataPath, err.get()));
-		throw std::runtime_error("Failed to add stracciatella dir");
-	}
+	AddVFSLayer(VFS_ORDER::ASSETS_STRACCIATELLA, m_externalizedDataPath);
 }
 
 rapidjson::Document* DefaultContentManagerUT::_readJsonDataFile(const char* fileName) const

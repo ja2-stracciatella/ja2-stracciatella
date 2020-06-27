@@ -10,31 +10,52 @@
 
 ModPackContentManager::ModPackContentManager(GameVersion gameVersion,
 						const std::vector<ST::string> &modNames,
-						const std::vector<ST::string> &modResFolders,
+						const ST::string &assetsRootPath,
 						const ST::string &configFolder,
 						const ST::string &gameResRootPath,
 						const ST::string &externalizedDataPath)
 	:DefaultContentManager(gameVersion, configFolder, gameResRootPath, externalizedDataPath)
 {
 	m_modNames = modNames;
-	m_modResFolders = modResFolders;
+	m_assetsRootPath = assetsRootPath;
 }
 
 ModPackContentManager::~ModPackContentManager()
 {
 }
 
+void ModPackContentManager::loadMod(ST::string modName)
+{
+	bool isLoaded = false;
+
+	ST::string modResFolder = FileMan::joinPaths({ m_userHomeDir, "mods", modName, "data" });
+	if (FileMan::checkPathExistance(modResFolder))
+	{
+		AddVFSLayer(VFS_ORDER::MOD, modResFolder);
+		isLoaded = true;
+	}
+	
+	modResFolder = FileMan::joinPaths({m_assetsRootPath, "mods", modName, "data"});
+	if (FileMan::checkPathExistance(modResFolder))
+	{
+		AddVFSLayer(VFS_ORDER::MOD, modResFolder);
+		isLoaded = true;
+	}
+
+	if (!isLoaded)
+	{
+		SLOGE(ST::format("Unable to locate data directory of mod '{}'", modName));
+		throw std::runtime_error("Failed to load mod");
+	}
+	
+	SLOGI(ST::format("Loaded mod '{}'", modName));
+}
+
 void ModPackContentManager::init()
 {
-	for (const ST::string& dir : m_modResFolders)
+	for (const ST::string& modName :m_modNames)
 	{
-		SLOGI(ST::format("Vfs with mod dir ({}) '{}'", VFS_ORDER_MOD, dir));
-		if (!Vfs_addDir(m_vfs.get(), VFS_ORDER_MOD, dir.c_str()))
-		{
-			RustPointer<char> err{getRustError()};
-			SLOGE(ST::format("ModPackContentManager::init '{}': {}", dir, err.get()));
-			throw std::runtime_error("Failed to add mod dir");
-		}
+		loadMod(modName);
 	}
 	DefaultContentManager::init();
 }
@@ -48,7 +69,7 @@ ST::string ModPackContentManager::getSavedGamesFolder() const
 		folderName += '-';
 		folderName += name;
 	}
-	return FileMan::joinPaths(m_configFolder, folderName);
+	return FileMan::joinPaths(m_userHomeDir, folderName);
 }
 
 /** Load dialogue quote from file. */
