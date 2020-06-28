@@ -3,7 +3,7 @@
     //  The settings in this file have an influence on the game in general.
 
     //  --------------------------------------------------
-    //  New hotkeys
+    //  New hotkeys and input
     //  vanilla setting for all hotkeys: false
     //  --------------------------------------------------
 
@@ -14,6 +14,14 @@
     //  Press 'ctrl+q' to swap hand items
     //  Press 'shift+j' to climb through open window
     "extra_hotkeys": true,
+
+    //  Press d in realtime mode to manually start turn based mode.
+    //  vanilla setting: false
+    "can_enter_turnbased": false,
+
+    //  Enables middle mouse button to trigger a look into cursor direction
+    //  vanilla setting: false
+    "middle_mouse_look": true,
 
     //  --------------------------------------------------
     //  System settings
@@ -79,14 +87,6 @@
 
     //  Enables extra attachments: boosters and break lights on leggings, goggles on helmets.
     "extra_attachments": false,
-
-    //  Enables middle mouse button to trigger a look into cursor direction
-    //  vanilla_setting: false
-    "middle_mouse_look": true,
-
-    //  Press d in realtime mode to manually start turn based mode.
-    //  vanilla_setting: false
-    "can_enter_turnbased": false,
 
     //  Packages at Drassen airport never get stolen, no need to bribe Pablo.
     //  vanilla_setting: false
