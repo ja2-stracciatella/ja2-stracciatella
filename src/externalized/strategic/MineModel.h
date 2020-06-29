@@ -17,8 +17,8 @@ public:
 	bool isAbandoned() const;
 
 	const uint8_t mineId;
-	const uint8_t associatedTownId;
 	const uint8_t entranceSector;
+	const uint8_t associatedTownId;
 	const uint8_t mineType;
 	const uint16_t minimumMineProduction;
 	const bool headMinerAssigned;
