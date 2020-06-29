@@ -45,7 +45,7 @@ ShippingDestinationModel* ShippingDestinationModel::deserialize(JsonObjectReader
 void ShippingDestinationModel::validateData(std::vector<const ShippingDestinationModel*> destinations, std::vector<const ST::string*> destinationNames)
 {
 	int numPrimaryDestinations = 0;
-	for (int i = 0; i < destinations.size(); i++)
+	for (size_t i = 0; i < destinations.size(); i++)
 	{
 		auto dest = destinations[i];
 		if (dest->locationId != i)

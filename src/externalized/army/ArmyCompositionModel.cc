@@ -97,7 +97,7 @@ void ArmyCompositionModel::validateLoadedData(const std::vector<ARMY_COMPOSITION
 	{
 		// Warn if default compositions are altered. It might work, but no guarantee.
 		auto comp = armyCompositions[i];
-		if (comp.iReadability != i)
+		if (comp.iReadability != static_cast<int32_t>(i))
 		{
 			SLOGW(ST::format("Army Composition has incorrect ID. The save might be corrupted. Expected: {}; Actual: {}", i, comp.iReadability));
 		}
