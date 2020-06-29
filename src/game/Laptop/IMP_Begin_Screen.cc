@@ -299,19 +299,15 @@ static void BtnIMPBeginScreenDoneCallback(GUI_BUTTON *btn, INT32 reason)
 			iCurrentImpPage = IMP_MAIN_PAGE;
 			fButtonPendingFlag = TRUE;
 		}
-
-		if(GCM->getGamePolicy()->imp_load_saved_merc_by_nickname)
+		else if (GCM->getGamePolicy()->imp_load_saved_merc_by_nickname && IMPSavedProfileDoesFileExist(pNickNameString.c_str()))
 		{
-			if(IMPSavedProfileDoesFileExist(pNickNameString.c_str()))
-			{
-				fLoadingCharacterForPreviousImpProfile = true;
-				LaptopSaveInfo.iVoiceId = IMPSavedProfileLoadMercProfile(pNickNameString.c_str());
-				MERCPROFILESTRUCT& profile_saved = gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
-				iPortraitNumber = profile_saved.ubFaceIndex - 200;
-				fCharacterIsMale = ( profile_saved.bSex == MALE );
-				iCurrentImpPage = IMP_CONFIRM;
-				fButtonPendingFlag = TRUE;
-			}
+			fLoadingCharacterForPreviousImpProfile = true;
+			LaptopSaveInfo.iVoiceId = IMPSavedProfileLoadMercProfile(pNickNameString.c_str());
+			MERCPROFILESTRUCT& profile_saved = gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId];
+			iPortraitNumber = profile_saved.ubFaceIndex - 200;
+			fCharacterIsMale = ( profile_saved.bSex == MALE );
+			iCurrentImpPage = IMP_CONFIRM;
+			fButtonPendingFlag = TRUE;
 		}
 		else
 		{
