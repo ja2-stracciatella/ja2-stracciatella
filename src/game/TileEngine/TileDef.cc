@@ -138,9 +138,9 @@ void CreateTileDatabase()
 	}
 
 	//Calculate mem usgae
-	SLOGD("Database Sizes: %d vs %d", gTileDatabaseSize, NUMBEROFTILES);
-	SLOGD("Database Types: %d", NUMBEROFTILETYPES);
-	SLOGD("Database Item Mem: %d", gTileDatabaseSize * sizeof(TILE_ELEMENT));
+	SLOGD(ST::format("Database Sizes: {} vs {}", gTileDatabaseSize, NUMBEROFTILES));
+	SLOGD(ST::format("Database Types: {}", NUMBEROFTILETYPES));
+	SLOGD(ST::format("Database Item Mem: {}", gTileDatabaseSize * sizeof(TILE_ELEMENT)));
 }
 
 

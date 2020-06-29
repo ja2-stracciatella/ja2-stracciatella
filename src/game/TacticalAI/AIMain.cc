@@ -600,7 +600,7 @@ void EndAIDeadlock()
 			SLOGD("Ending turn for %d because breaking deadlock", s.ubID);
 		}
 
-		SLOGD("Number of bullets in the air is %ld", guiNumBullets);
+		SLOGD(ST::format("Number of bullets in the air is {}", guiNumBullets));
 		SLOGD("Setting attack busy count to 0 from deadlock break");
 		gTacticalStatus.ubAttackBusyCount = 0;
 
@@ -1325,13 +1325,13 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 	if (gfTurnBasedAI || gTacticalStatus.fAutoBandageMode)
 	{
-		SLOGD("%d does %s (a.d. %d) in %d with %d APs left",
+		SLOGD(ST::format("{} does {} (a.d. {}) in {} with {} APs left",
 			pSoldier->ubID, gzActionStr[pSoldier->bAction], pSoldier->usActionData,
-			pSoldier->sGridNo, pSoldier->bActionPoints);
+			pSoldier->sGridNo, pSoldier->bActionPoints));
 	}
 
-	SLOGD("%d does %s (a.d. %d) at time %ld", pSoldier->ubID,
-		gzActionStr[pSoldier->bAction], pSoldier->usActionData, GetJA2Clock());
+	SLOGD(ST::format("{} does {} (a.d. {}) at time {}", pSoldier->ubID,
+		gzActionStr[pSoldier->bAction], pSoldier->usActionData, GetJA2Clock()));
 
 	switch (pSoldier->bAction)
 	{

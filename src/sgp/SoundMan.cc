@@ -1066,7 +1066,7 @@ static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 
 	if (channel->pSample == NULL) return FALSE;
 
-	SLOGD("stopping channel channel %u", channel - pSoundList);
+	SLOGD(ST::format("stopping channel channel {}", (channel - pSoundList)));
 	channel->State = CHANNEL_STOP;
 	return TRUE;
 }
