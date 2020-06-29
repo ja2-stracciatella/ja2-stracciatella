@@ -1368,7 +1368,7 @@ static void CheckGridNoOfItemsInMapScreenMapInventory(void)
 
 	if( uiNumFlagsNotSet > 0 )
 	{
-		SLOGD("Item with invalid gridno doesnt have flag set: %d", uiNumFlagsNotSet );
+		SLOGD(ST::format("Item with invalid gridno doesnt have flag set: {}", uiNumFlagsNotSet));
 	}
 }
 

@@ -648,7 +648,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		}
 		if( pGroup->fPlayer )
 		{
-			SLOGW("Attempting to process player group thinking it's an enemy group in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID);
+			SLOGW(ST::format("Attempting to process player group thinking it's an enemy group (#{}) in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID));
 			return;
 		}
 		switch( pSoldier->ubSoldierClass )

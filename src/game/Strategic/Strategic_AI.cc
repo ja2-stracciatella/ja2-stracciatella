@@ -1139,15 +1139,15 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 						else
 						{ //Add all the troops to the queen's guard.
 							pSector->ubNumElites += pGroup->ubGroupSize;
-							SLOGD("%d reinforcements have arrived to garrison queen's sector.",
-									pGroup->ubGroupSize, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX );
+							SLOGD(ST::format("{} reinforcements have arrived to garrison queen's sector ({}{}).",
+									pGroup->ubGroupSize, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX));
 						}
 					}
 					else
 					{ //Add all the troops to the reinforcement pool as the queen's guard is at full strength.
 						giReinforcementPool += pGroup->ubGroupSize;
-						SLOGD("%d reinforcements have arrived at queen's sector and have been added to the reinforcement pool.",
-								pGroup->ubGroupSize, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX );
+						SLOGD(ST::format("{} reinforcements have arrived at queen's sector ({}{}) and have been added to the reinforcement pool.",
+								pGroup->ubGroupSize, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX));
 					}
 				}
 

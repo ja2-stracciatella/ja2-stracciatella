@@ -1175,7 +1175,7 @@ const ST::string* DefaultContentManager::getMusicForMode(MusicMode mode) const {
 	const uint32_t index = Random((uint32_t)m_musicMap.find(mode)->second->size());
 	const ST::string* chosen = m_musicMap.find(mode)->second->at(index);
 
-	SLOGD("Choosing music index %d of %d for: '%s'", index, m_musicMap.find(mode)->second->size(), chosen->c_str());
+	SLOGD(ST::format("Choosing music index {} of {} for: '{}'", index, m_musicMap.find(mode)->second->size(), chosen));
 	return chosen;
 }
 
