@@ -1022,7 +1022,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 		NPCSavedProfileLoadNPCProfile(ubCharNum, pNewSoldier);
 	
 	if (gamepolicy(load_saved_npc_inventory))
-		NPCSavedProfileLoadInventory(gMercProfiles[ ubCharNum ].zNickname.c_str(), pNewSoldier);
+		NPCSavedProfileLoadInventory(gMercProfiles[ ubCharNum ].zNickname, pNewSoldier);
 
 	// handle set up any RPC's that will leave us in time
 	if ( ubCharNum == SLAY )
