@@ -26,9 +26,5 @@ pub extern "C" fn Logger_log(level: LogLevel, message: *const c_char, target: *c
     let message = str_from_c_str_or_panic(unsafe_c_str(message));
     let target = str_from_c_str_or_panic(unsafe_c_str(target));
 
-    let mut target = target.replace("\\", "/");
-    if let Some(subpath) = target.rsplit("/src/").next() {
-        target = subpath.to_owned();
-    }
     Logger::log_with_custom_metadata(level, message, &target);
 }
