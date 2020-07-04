@@ -79,12 +79,16 @@ jobs:
         CI_OS: ${{ matrix.cfg.os }}
         CI_TARGET: ${{ matrix.cfg.target }}
         CI_REF: ${{ github.ref }}
-        SFTP_USER: ${{ secrets.SFTP_USER }}
-        SFTP_PASSWORD: ${{ secrets.SFTP_PASSWORD }}
 
     - name: Publish packages
       shell: bash
-      run: ${{ github.workspace }}/.github/scripts/ci-publish.sh 2>&1
+      working-directory: ${{ github.workspace }}
+      run: ${{ github.workspace }}/.ci/ci-publish.sh 2>&1
+      env:
+        CI_REF: ${{ github.ref }}
+        GCLOUD_CREDENTIALS_SALT: ${{ secrets.GCLOUD_CREDENTIALS_SALT }}
+        GCLOUD_CREDENTIALS_KEY: ${{ secrets.GCLOUD_CREDENTIALS_KEY }}
+        GCLOUD_CREDENTIALS_IV: ${{ secrets.GCLOUD_CREDENTIALS_IV }}
 
     - name: Collect artifacts
       shell: bash

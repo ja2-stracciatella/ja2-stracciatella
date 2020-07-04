@@ -56,10 +56,12 @@ before_install:
   - export BUILD_SWITCHES=""
   - export BUILD_TYPE="Debug";
 
+  - export CI_REF="refs/heads/$TRAVIS_BRANCH"
   - if [[ "$TRAVIS_PULL_REQUEST" != "false" ]]; then
       export PUBLISH_BINARY="true";
-      export PUBLISH_DIR="pull-requests/$TRAVIS_PULL_REQUEST";
+      export PUBLISH_DIR="pull-requests/$TRAVIS_PULL_REQUEST/";
       export VERSION_TAG="${TRAVIS_PULL_REQUEST}pullrequest";
+      export CI_REF="refs/pull/${TRAVIS_PULL_REQUEST}";
     fi
   - if [[ "$TRAVIS_BRANCH" = "nightly" ]]; then
       export BUILD_TYPE="Release";
@@ -70,8 +72,9 @@ before_install:
   - if [[ "$TRAVIS_TAG" != "" ]]; then
       export BUILD_TYPE="Release";
       export PUBLISH_BINARY="true";
-      export PUBLISH_DIR="releases";
+      export PUBLISH_DIR="releases/$TRAVIS_TAG/";
       export VERSION_TAG="";
+      export CI_REF="refs/tags/$TRAVIS_TAG";
     fi
 
   - export BUILD_SWITCHES="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVERSION_TAG=$VERSION_TAG"
@@ -104,6 +107,11 @@ before_install:
     fi
   - rustup component add rustfmt
   - rustup component add clippy
+  
+  # Google Cloud SDK for Artifact Upload
+  - export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+  - curl https://sdk.cloud.google.com | bash
+  - source $HOME/google-cloud-sdk/path.bash.inc
 
   - cargo -V
   - rustc -V
@@ -113,6 +121,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
       fakeroot -v;
     fi
+  - gcloud version
 
 script:
   - mkdir ci-build && cd ci-build
@@ -139,9 +148,8 @@ script:
     fi
 
 after_success:
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$SFTP_PASSWORD" != "" ]; then
-      travis_retry curl -v --connect-timeout 60 --max-time 300 --ftp-create-dirs -T $(echo ja2-stracciatella_*) -u $SFTP_USER:$SFTP_PASSWORD ftp://www61.your-server.de/$PUBLISH_DIR/;
-    fi
+  - cd ..
+  - .ci/ci-publish.sh
 
 addons:
   apt:

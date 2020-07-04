@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
 #
-# Publish package artifacts to SFTP
+# Check package contents and publish to storage
+# This script needs to be executed in the workspace that contains the ci-build directory
 #
 # Requires the following environment variables:
 #   CI_REF - full reference of the current branch, tag, or pull request
-# Required for publishing (nightly and releases):
-#   SFTP_USER - ftp username for uploads (secret)
-#   SFTP_PASSWORD - ftp password for uploads (secret)
+# Required for publishing (nightly, pull-requests and releases):
+#   GCLOUD_CREDENTIALS_KEY, GCLOUD_CREDENTIALS_IV, GCLOUD_CREDENTIALS_SALT - values to decrypt gcloud credentials
 
 set -e
-set -x
+
+echo "CI_REF: $CI_REF"
 
 echo "## check environment ##"
 if [[ "${CI_REF}" == "refs/heads/nightly" ]]; then
@@ -17,23 +18,27 @@ if [[ "${CI_REF}" == "refs/heads/nightly" ]]; then
   export PUBLISH_BINARY="true"
   export PUBLISH_DIR="nightlies"
 elif [[ "${CI_REF}" == "refs/tags/"* ]]; then
+  export RELEASE=$(echo "${CI_REF}" | cut -d '/' -f 3)
   echo "-- RELEASE --"
   export PUBLISH_BINARY="true"
-  export PUBLISH_DIR="releases"
+  export PUBLISH_DIR="releases/$RELEASE"
   # assumes that the version is already set up correctly
 elif [[ "${CI_REF}" == "refs/pull/"* ]]; then
   export PULL_REQUEST=$(echo "${CI_REF}" | cut -d '/' -f 3)
   echo "-- PULL REQUEST ${PULL_REQUEST} --"
-  export PUBLISH_BINARY="false" # secrets are not available in pull requests
+  if [[ "$GCLOUD_CREDENTIALS_KEY" == "" ]]; then
+    # secrets are not available for pull requests from forks
+    export PUBLISH_BINARY="false"
+  else
+    export PUBLISH_BINARY="true"
+    export PUBLISH_DIR="pull-requests/$PULL_REQUEST/"
+  fi
 else
   echo "-- QUICK BUILD --"
   export PUBLISH_BINARY="false"
 fi
 
-if [[ "${PUBLISH_BINARY}" == "true" && "${SFTP_PASSWORD}" == "" ]]; then
-  echo "Upload credentials are not set up"
-  exit 1
-fi
+cd ci-build
 
 echo "## publish ##"
 for file in ja2-stracciatella_*; do
@@ -63,14 +68,8 @@ for file in ja2-stracciatella_*; do
   else
     echo "TODO list contents"
   fi
-  if [[ "$PUBLISH_BINARY" == "true" ]]; then
-    curl -v --retry 3 \
-      --connect-timeout 60 --max-time 300 \
-      --ftp-create-dirs -T "$file" -u $SFTP_USER:$SFTP_PASSWORD \
-      ftp://www61.your-server.de/$PUBLISH_DIR/
-  else
-    echo "Skipped"
-  fi
 done
+
+../.ci/upload-artifacts.sh
 
 echo "## done ##"

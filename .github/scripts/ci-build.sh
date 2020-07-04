@@ -12,6 +12,9 @@
 set -e
 set -x
 
+echo "CI_REF: $CI_REF"
+echo "CI_TARGET: $CI_TARGET"
+
 echo "## check environment ##"
 if [[ "${CI_REF}" == "refs/heads/nightly" ]]; then
   echo "-- NIGHTLY --"
