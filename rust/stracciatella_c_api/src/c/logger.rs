@@ -26,5 +26,5 @@ pub extern "C" fn Logger_log(level: LogLevel, message: *const c_char, target: *c
     let message = str_from_c_str_or_panic(unsafe_c_str(message));
     let target = str_from_c_str_or_panic(unsafe_c_str(target));
 
-    Logger::log_with_custom_metadata(level, message, target);
+    Logger::log_with_custom_metadata(level, message, &target);
 }

@@ -11,7 +11,8 @@ use std::path::Path;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use log::{
-    logger, set_boxed_logger, set_max_level, warn, Level, LevelFilter, Log, Metadata, MetadataBuilder, Record,
+    logger, set_boxed_logger, set_max_level, warn, Level, LevelFilter, Log, Metadata,
+    MetadataBuilder, Record,
 };
 use simplelog::{
     CombinedLogger, Config, SharedLogger, SimpleLogger, TermLogger, TerminalMode, WriteLogger,
