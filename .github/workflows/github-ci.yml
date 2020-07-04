@@ -83,7 +83,7 @@ jobs:
     - name: Publish packages
       shell: bash
       working-directory: ${{ github.workspace }}
-      run: ${{ github.workspace }}/.github/scripts/ci-publish.sh 2>&1
+      run: ${{ github.workspace }}/.ci/ci-publish.sh 2>&1
       env:
         CI_REF: ${{ github.ref }}
         GCLOUD_CREDENTIALS_SALT: ${{ secrets.GCLOUD_CREDENTIALS_SALT }}

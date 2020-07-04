@@ -149,7 +149,7 @@ script:
 
 after_success:
   - cd ..
-  - .github/scripts/ci-publish.sh
+  - .ci/ci-publish.sh
 
 addons:
   apt:

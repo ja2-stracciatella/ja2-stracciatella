@@ -57,7 +57,7 @@ for:
           rem build, package, test, publish in msys2
           C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .github/scripts/ci-setup.sh"
           C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .github/scripts/ci-build.sh"
-          C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .github/scripts/ci-publish.sh"
+          C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .ci/ci-publish.sh"
     test_script:
       - cmd: rem test_script override
     after_test:
@@ -144,7 +144,7 @@ test_script:
 after_test:
   - ps: cmake --build c:\projects\ja2-stracciatella\ci-build --target package
   - ps: cd c:\projects\ja2-stracciatella
-  - ps: bash .github\scripts\ci-publish.sh
+  - ps: bash .ci\ci-publish.sh
 
 artifacts:
   - path: ci-build\ja2-stracciatella_*
