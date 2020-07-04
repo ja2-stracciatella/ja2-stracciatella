@@ -11,7 +11,7 @@ use std::path::Path;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use log::{
-    logger, set_boxed_logger, set_max_level, warn, Level, LevelFilter, Log, Metadata, Record,
+    logger, set_boxed_logger, set_max_level, warn, Level, LevelFilter, Log, Metadata, MetadataBuilder, Record,
 };
 use simplelog::{
     CombinedLogger, Config, SharedLogger, SimpleLogger, TermLogger, TerminalMode, WriteLogger,
@@ -141,13 +141,16 @@ impl Logger {
     /// Can be used e.g. in C++ or scripting
     pub fn log_with_custom_metadata(level: LogLevel, message: &str, target: &str) {
         let level = level.into();
+        let logger = logger();
+        let metadata = MetadataBuilder::new().level(level).target(target).build();
 
-        logger().log(
-            &Record::builder()
-                .level(level)
-                .target(target)
-                .args(format_args!("{}", message))
-                .build(),
-        );
+        if logger.enabled(&metadata) {
+            logger.log(
+                &Record::builder()
+                    .metadata(metadata)
+                    .args(format_args!("{}", message))
+                    .build(),
+            );
+        }
     }
 }
