@@ -838,11 +838,13 @@ BOOLEAN UnRecruitEPC(ProfileID const pid)
 
 INT8 WhichBuddy( UINT8 ubCharNum, UINT8 ubBuddy )
 {
-	INT8								bLoop;
+	if (ubCharNum == NO_PROFILE)
+	{
+		return -1;
+	}
 
 	MERCPROFILESTRUCT const& p = GetProfile(ubCharNum);
-
-	for (bLoop = 0; bLoop < 3; bLoop++)
+	for (INT8 bLoop = 0; bLoop < 3; bLoop++)
 	{
 		if (p.bBuddy[bLoop] == ubBuddy)
 		{
