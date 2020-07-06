@@ -68,8 +68,8 @@ for file in ja2-stracciatella_*; do
   else
     echo "TODO list contents"
   fi
+  ../.ci/upload-artifact.sh $file
 done
 
-../.ci/upload-artifacts.sh
 
 echo "## done ##"

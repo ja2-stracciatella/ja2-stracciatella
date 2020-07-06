@@ -9,7 +9,10 @@
 
 set -e
 
+PUBLISH_FILENAME="$1"
+
 echo "CI_REF: $CI_REF"
+echo "PUBLISH_FILENAME: $PUBLISH_FILENAME"
 
 if [[ "$PUBLISH_BINARY" != "true" ]]; then
   echo "Skipping upload of artifacts"
@@ -28,15 +31,15 @@ BUCKET_NAME=ja2-builds
 # Decrypt google cloud key using secret env variables
 openssl aes-256-cbc -K $GCLOUD_CREDENTIALS_KEY -iv $GCLOUD_CREDENTIALS_IV -S $GCLOUD_CREDENTIALS_SALT -in ../.ci/gcloud-key.json.enc -out ./gcloud-key.json -d
 
-# Select file to upload (currently only supports a single file)
-export PUBLISH_FILENAME="$(echo ja2-stracciatella_*)"
+DIR="$PUBLISH_DIR"
+# Set correct subdirectory for nightlies
 if [[ "$CI_REF" = "refs/heads/nightly" ]]; then
-  export PUBLISH_DIR="$PUBLISH_DIR/${PUBLISH_FILENAME%_*}/"
+  DIR="$PUBLISH_DIR/${PUBLISH_FILENAME%_*}/"
 fi
 
 # Login to the gcloud cli (need to redirect stderr to stdout, otherwise powershell might treat the command as failed)
 gcloud auth activate-service-account --key-file=./gcloud-key.json 2>&1
 
 # Upload files (need to redirect stderr to stdout, otherwise powershell might treat the command as failed)
-echo "Uploading $PUBLISH_FILENAME to $PUBLISH_DIR";
-gsutil cp $(pwd)/$PUBLISH_FILENAME gs://$BUCKET_NAME/$PUBLISH_DIR 2>&1
+echo "Uploading $PUBLISH_FILENAME to $DIR";
+gsutil cp $(pwd)/$PUBLISH_FILENAME gs://$BUCKET_NAME/$DIR 2>&1
