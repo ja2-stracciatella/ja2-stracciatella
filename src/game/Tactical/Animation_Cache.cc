@@ -110,21 +110,21 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 			}
 		}
 
-		if (ubLowestIndex != -1)
+		if (ubLowestIndex == -1)
 		{
-			// Bump off lowest index
-			SLOGD("Anim Cache: Bumping %d ( Soldier %d )", ubLowestIndex, usSoldierID);
-			UnLoadAnimationSurface( usSoldierID, pAnimCache->usCachedSurfaces[ ubLowestIndex ] );
+			SLOGW(ST::format("Anim Cache: No perferred cache slot for eviction ( Soldier {} )", usSoldierID));
+			ubLowestIndex = 0;
+		}
+		
+		// Bump off lowest index
+		SLOGD("Anim Cache: Bumping %d ( Soldier %d )", ubLowestIndex, usSoldierID);
+		UnLoadAnimationSurface( usSoldierID, pAnimCache->usCachedSurfaces[ ubLowestIndex ] );
 
-			// Decrement
-			pAnimCache->sCacheHits[ ubLowestIndex ] = 0;
-			pAnimCache->usCachedSurfaces[ ubLowestIndex ] = EMPTY_CACHE_ENTRY;
-			pAnimCache->ubCacheSize--;
-		}
-		else
-		{
-			SLOGW("Anim Cache: No slots can be evicted");
-		}
+		// Decrement
+		pAnimCache->sCacheHits[ ubLowestIndex ] = 0;
+		pAnimCache->usCachedSurfaces[ ubLowestIndex ] = EMPTY_CACHE_ENTRY;
+		pAnimCache->ubCacheSize--;
+
 	}
 
 	// If here, Insert at an empty slot
