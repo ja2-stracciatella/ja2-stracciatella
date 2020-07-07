@@ -1,14 +1,16 @@
+#include "Animation_Cache.h"
+
+#include "Animation_Control.h"
+#include "Animation_Data.h"
+#include "Logger.h"
+#include "MemMan.h"
 #include "Overhead.h"
 #include "Types.h"
-#include "Animation_Cache.h"
-#include "Animation_Data.h"
-#include "Animation_Control.h"
-#include "MemMan.h"
-#include "Logger.h"
+#include <climits>
 
 #define EMPTY_CACHE_ENTRY 65000
 
-static const UINT32 guiCacheSize = MIN_CACHE_SIZE;
+static const UINT32 guiCacheSize = DEFAULT_ANIM_CACHE_SIZE;
 
 
 void InitAnimationCache(UINT16 const usSoldierID, AnimationSurfaceCacheType* const pAnimCache)
@@ -55,8 +57,8 @@ void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimC
 void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheType* const pAnimCache, UINT16 const usSurfaceIndex, UINT16 const usCurrentAnimation)
 {
 	UINT8  cnt;
-	UINT8  ubLowestIndex = 0;
-	INT16  sMostHits = (INT16)32000;
+	UINT8  ubLowestIndex = -1;
+	INT16  sMostHits = INT16_MAX;
 	UINT16 usCurrentAnimSurface;
 
 	// Check to see if surface exists already
@@ -76,8 +78,9 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 	{
 		SLOGD("Anim Cache: Determining Bump Candidate ( Soldier %d )", usSoldierID);
 
-		// Determine exisiting surface used by merc
-		usCurrentAnimSurface = DetermineSoldierAnimationSurface(&GetMan(usSoldierID), usCurrentAnimation);
+		// Determine existing surface used by merc
+		SOLDIERTYPE* pSoldier = &GetMan(usSoldierID);
+		usCurrentAnimSurface = DetermineSoldierAnimationSurface(pSoldier, usCurrentAnimation);
 		// If the surface we are going to bump is our existing animation, reject it as a candidate
 
 		// If we get here, we need to remove an animation, pick the best one
@@ -88,7 +91,14 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 
 			if ( pAnimCache->usCachedSurfaces[ cnt ] == usCurrentAnimSurface )
 			{
-				SLOGD("Anim Cache: REJECTING Slot %d EXISTING ANIM SURFACE ( Soldier %d )", cnt, usSoldierID);
+				SLOGD(ST::format("Anim Cache: REJECTING Slot {} EXISTING ANIM SURFACE ( Soldier {}, Surface {} )", cnt, usSoldierID, usCurrentAnimSurface));
+			}
+			else if (pAnimCache->usCachedSurfaces[cnt] == pSoldier->usAnimSurface)
+			{
+				// The result of DetermineSoldierAnimationSurface may be inconsistent
+				// with the actual usAnimSurface, for example when player is re-assigning
+				// mercs in strategic view.
+				SLOGD(ST::format("Anim Cache: REJECTING Slot {} IN-USE ANIM SURFACE ( Soldier {}, Surface {} )", cnt, usSoldierID, pSoldier->usAnimSurface));
 			}
 			else
 			{
@@ -100,15 +110,21 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 			}
 		}
 
-		// Bump off lowest index
-		SLOGD("Anim Cache: Bumping %d ( Soldier %d )", ubLowestIndex, usSoldierID);
-		UnLoadAnimationSurface( usSoldierID, pAnimCache->usCachedSurfaces[ ubLowestIndex ] );
+		if (ubLowestIndex != -1)
+		{
+			// Bump off lowest index
+			SLOGD("Anim Cache: Bumping %d ( Soldier %d )", ubLowestIndex, usSoldierID);
+			UnLoadAnimationSurface( usSoldierID, pAnimCache->usCachedSurfaces[ ubLowestIndex ] );
 
-		// Decrement
-		pAnimCache->sCacheHits[ ubLowestIndex ] = 0;
-		pAnimCache->usCachedSurfaces[ ubLowestIndex ] = EMPTY_CACHE_ENTRY;
-		pAnimCache->ubCacheSize--;
-
+			// Decrement
+			pAnimCache->sCacheHits[ ubLowestIndex ] = 0;
+			pAnimCache->usCachedSurfaces[ ubLowestIndex ] = EMPTY_CACHE_ENTRY;
+			pAnimCache->ubCacheSize--;
+		}
+		else
+		{
+			SLOGW("Anim Cache: No slots can be evicted");
+		}
 	}
 
 	// If here, Insert at an empty slot
@@ -125,9 +141,11 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 			pAnimCache->usCachedSurfaces[ cnt ] = usSurfaceIndex;
 			pAnimCache->ubCacheSize++;
 
-			break;
+			return;
 		}
 	}
+
+	SLOGW(ST::format("Anim Cache: Failed to find slot to load surface ( Soldier {} )", usSoldierID));
 }
 
 

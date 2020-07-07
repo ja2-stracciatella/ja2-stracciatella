@@ -3,8 +3,7 @@
 
 #include "Types.h"
 
-#define MAX_CACHE_SIZE	20
-#define MIN_CACHE_SIZE	2
+#define DEFAULT_ANIM_CACHE_SIZE	3
 
 
 struct AnimationSurfaceCacheType
