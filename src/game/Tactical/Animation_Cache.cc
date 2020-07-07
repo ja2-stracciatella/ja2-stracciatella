@@ -112,7 +112,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 
 		if (ubLowestIndex == -1)
 		{
-			SLOGW(ST::format("Anim Cache: No perferred cache slot for eviction ( Soldier {} )", usSoldierID));
+			SLOGW(ST::format("Anim Cache: No preferred cache slot for eviction ( Soldier {} )", usSoldierID));
 			ubLowestIndex = 0;
 		}
 		
