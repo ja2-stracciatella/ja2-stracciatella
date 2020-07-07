@@ -11,10 +11,6 @@
 //! ```
 //!
 
-mod file_formats;
-mod res;
-mod unicode;
-
 use std::fmt::Debug;
 use std::fs;
 use std::path::Path;

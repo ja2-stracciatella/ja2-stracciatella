@@ -12,7 +12,7 @@ path = "src/stracciatella.rs"
 
 [[bin]]
 name = "ja2-resource-pack"
-path = "src/bin_resource_pack.rs"
+path = "src/bin/resource_pack.rs"
 required-features = ["bin"]
 
 [dependencies]
