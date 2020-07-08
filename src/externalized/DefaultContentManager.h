@@ -16,17 +16,6 @@
 #include <stdexcept>
 #include <vector>
 
-enum VFS_ORDER : int32_t {
-	MOD                    = 100, // assets overriden by mods
-	
-	ASSETS_USERHOME        = 200, // assets in user home directory
-	ASSETS_STRACCIATELLA   = 210, // assets shipped with stracciatella
-	ASSETS_VANILLA         = 220, // vanilla game data
-
-	FALLBACK               = 400,
-};
-
-
 class DefaultContentManager : public ContentManager, public IGameDataLoader
 {
 public:
