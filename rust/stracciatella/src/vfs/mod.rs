@@ -88,14 +88,17 @@ impl Vfs {
 
     /// Adds an overlay for all SLF files in dir
     pub fn add_slf_files(&mut self, path: &Path, required: bool) -> Result<(), VfsInitError> {
-        let slf_paths =
-            fs::read_dir_paths(path, false).map_err(|error| VfsInitError {
-                path: path.to_owned(),
-                error,
-            })?;
-        let slf_paths: Vec<_> = slf_paths.iter().filter(|path| {
-            path.extension().map(|e| e.to_string_lossy().to_lowercase()) == Some("slf".to_string())
-        }).collect();
+        let slf_paths = fs::read_dir_paths(path, false).map_err(|error| VfsInitError {
+            path: path.to_owned(),
+            error,
+        })?;
+        let slf_paths: Vec<_> = slf_paths
+            .iter()
+            .filter(|path| {
+                path.extension().map(|e| e.to_string_lossy().to_lowercase())
+                    == Some("slf".to_string())
+            })
+            .collect();
         if required && slf_paths.is_empty() {
             return Err(VfsInitError {
                 path: path.join(Path::new("*.slf")),
