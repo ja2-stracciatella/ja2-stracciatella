@@ -86,6 +86,29 @@ impl Vfs {
         Ok(())
     }
 
+    /// Adds an overlay for all SLF files in dir
+    pub fn add_slf_files(&mut self, path: &Path, required: bool) -> Result<(), VfsInitError> {
+        let slf_paths =
+            fs::read_dir_paths(path, false).map_err(|error| VfsInitError {
+                path: path.to_owned(),
+                error,
+            })?;
+        let slf_paths: Vec<_> = slf_paths.iter().filter(|path| {
+            path.extension().map(|e| e.to_string_lossy().to_lowercase()) == Some("slf".to_string())
+        }).collect();
+        if required && slf_paths.is_empty() {
+            return Err(VfsInitError {
+                path: path.join(Path::new("*.slf")),
+                error: ErrorKind::NotFound.into(),
+            });
+        }
+        for path in slf_paths {
+            self.add_slf(&path)?;
+        }
+        Ok(())
+    }
+
+    /// Initializes the VFS overlays from EngineOptions
     pub fn init_from_engine_options(
         &mut self,
         engine_options: &EngineOptions,
@@ -126,13 +149,17 @@ impl Vfs {
                 }
                 (true, false) => {
                     self.add_dir(&mod_in_home)?;
+                    self.add_slf_files(&mod_in_home, false)?;
                 }
                 (false, true) => {
                     self.add_dir(&mod_in_externalized)?;
+                    self.add_slf_files(&mod_in_externalized, false)?;
                 }
                 (true, true) => {
                     self.add_dir(&mod_in_home)?;
+                    self.add_slf_files(&mod_in_home, false)?;
                     self.add_dir(&mod_in_externalized)?;
+                    self.add_slf_files(&mod_in_externalized, false)?;
                 }
             };
         }
@@ -144,17 +171,7 @@ impl Vfs {
         self.add_dir(&vanilla_data_dir)?;
 
         // Next are SLF files in vanilla data dir
-        let slf_paths =
-            fs::read_dir_paths(&vanilla_data_dir, false).map_err(|error| VfsInitError {
-                path: vanilla_data_dir.clone(),
-                error,
-            })?;
-        let slf_paths = slf_paths.iter().filter(|path| {
-            path.extension().map(|e| e.to_string_lossy().to_lowercase()) == Some("slf".to_string())
-        });
-        for path in slf_paths {
-            self.add_slf(&path)?;
-        }
+        self.add_slf_files(&vanilla_data_dir, true)?;
 
         // Last is fallback editor.slf if it exists (does not need to exist)
         if engine_options.run_editor {
