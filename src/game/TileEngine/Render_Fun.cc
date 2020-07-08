@@ -106,14 +106,21 @@ void SetGridNoRevealedFlag(UINT16 const grid_no)
 			if (!(i->fFlags & STRUCTURE_OBSTACLE) || i->fFlags & (STRUCTURE_PERSON | STRUCTURE_CORPSE)) continue;
 		}
 
-		STRUCTURE* const base = FindBaseStructure(i);
-		LEVELNODE* const node = FindLevelNodeBasedOnStructure(base);
-		node->uiFlags |= LEVELNODE_SHOW_THROUGH;
-
-		if (i->fFlags & STRUCTURE_SLANTED_ROOF)
+		try
 		{
-			AddSlantRoofFOVSlot(base->sGridNo);
-			node->uiFlags |= LEVELNODE_HIDDEN;
+			STRUCTURE* const base = FindBaseStructure(i);
+			LEVELNODE* const node = FindLevelNodeBasedOnStructure(base);
+			node->uiFlags |= LEVELNODE_SHOW_THROUGH;
+
+			if (i->fFlags & STRUCTURE_SLANTED_ROOF)
+			{
+				AddSlantRoofFOVSlot(base->sGridNo);
+				node->uiFlags |= LEVELNODE_HIDDEN;
+			}
+		}
+		catch (std::logic_error e)
+		{
+			SLOGW(ST::format("Failed to find LEVELNODE for a structure at grid {}. ({})", grid_no, e.what()));
 		}
 	}
 
