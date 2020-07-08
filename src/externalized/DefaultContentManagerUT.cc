@@ -12,8 +12,7 @@ DefaultContentManagerUT::DefaultContentManagerUT(GameVersion gameVersion,
 
 void DefaultContentManagerUT::init()
 {
-	// externalized data is used in the tests
-	AddVFSLayer(VFS_ORDER::ASSETS_STRACCIATELLA, m_externalizedDataPath);
+	Vfs_addDir(m_vfs.get(), m_externalizedDataPath.c_str());
 }
 
 std::shared_ptr<rapidjson::Document> DefaultContentManagerUT::_readJsonDataFile(const char* fileName) const

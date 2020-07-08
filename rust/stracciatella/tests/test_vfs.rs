@@ -8,7 +8,7 @@ mod vfs {
         create_data_slf(&dir); // data.slf
 
         let mut vfs = Vfs::new();
-        vfs.add_slf(0, &dir.join("data.slf")).unwrap();
+        vfs.add_slf(&dir.join("data.slf")).unwrap();
         let data = read_file_data(&vfs, "foo.txt");
         assert_eq!(&data, b"data.slf");
 
@@ -21,7 +21,7 @@ mod vfs {
         create_data_slf(&dir); // data.slf
 
         let mut vfs = Vfs::new();
-        vfs.add_slf(0, &dir.join("data.slf")).unwrap();
+        vfs.add_slf(&dir.join("data.slf")).unwrap();
         let mut file = vfs.open(&Nfc::caseless_path("foo.txt")).unwrap();
 
         assert_eq!(file.seek(SeekFrom::End(0)).unwrap(), 8);
@@ -40,32 +40,13 @@ mod vfs {
         create_foobar_slf(&dir); // foobar.slf
         create_foo_bar_baz_txt(&dir); // baz.txt
 
-        macro_rules! t {
-            ($a: expr, $b: expr, $c: expr, $data: expr) => {
-                let mut vfs = Vfs::new();
-                vfs.add_dir($a, &dir).expect("dir");
-                vfs.add_slf($b, &dir.join("foo.slf")).expect("foo");
-                vfs.add_slf($c, &dir.join("foobar.slf")).expect("foobar");
-                let data = read_file_data(&vfs, "foo/bar/baz.txt");
-                assert_eq!(&data, $data);
-            };
-        }
+        let mut vfs = Vfs::new();
+        vfs.add_dir(&dir).expect("dir");
+        vfs.add_slf(&dir.join("foo.slf")).expect("foo");
+        vfs.add_slf(&dir.join("foobar.slf")).expect("foobar");
 
-        // integer order
-        t!(0, 1, 2, b"baz.txt");
-        t!(0, 2, 1, b"baz.txt");
-        t!(1, 0, 2, b"foo.slf");
-        t!(1, 2, 0, b"foobar.slf");
-        t!(2, 0, 1, b"foo.slf");
-        t!(2, 1, 0, b"foobar.slf");
-        // when integer is the same, fifo order
-        t!(0, 0, 0, b"baz.txt");
-        t!(0, 0, 1, b"baz.txt");
-        t!(0, 1, 0, b"baz.txt");
-        t!(1, 0, 0, b"foo.slf");
-        t!(1, 1, 0, b"foobar.slf");
-        t!(1, 0, 1, b"foo.slf");
-        t!(1, 1, 1, b"baz.txt");
+        let data = read_file_data(&vfs, "foo/bar/baz.txt");
+        assert_eq!(&data, b"baz.txt");
 
         temp.close().expect("close temp dir");
     }
@@ -76,7 +57,7 @@ mod vfs {
         create_foo_slf(&dir); // foo.slf
 
         let mut vfs = Vfs::new();
-        vfs.add_slf(0, &dir.join("foo.slf")).unwrap();
+        vfs.add_slf(&dir.join("foo.slf")).unwrap();
         // case insensitive
         let data = read_file_data(&vfs, "FOO/bar.txt");
         assert_eq!(&data, b"foo.slf");

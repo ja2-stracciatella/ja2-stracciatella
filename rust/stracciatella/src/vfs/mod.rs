@@ -9,18 +9,29 @@ pub mod slf;
 
 use std::fmt;
 use std::io;
-use std::io::SeekFrom;
-use std::path::Path;
+use std::io::{ErrorKind, SeekFrom};
+use std::path::{Path, PathBuf};
+
+use log::{info, warn};
 
 use crate::unicode::Nfc;
 use crate::vfs::dir::{DirFs, DirFsFile};
 use crate::vfs::slf::{SlfFs, SlfFsFile};
+use crate::EngineOptions;
+use crate::{fs, get_assets_dir};
 
 /// A virtual filesystem that mounts other filesystems.
 #[derive(Debug, Default)]
 pub struct Vfs {
     /// List of entries.
-    pub entries: Vec<VfsEntry>,
+    pub entries: Vec<VfsSource>,
+}
+
+/// A virtual filesystem that mounts other filesystems.
+#[derive(Debug)]
+pub struct VfsInitError {
+    path: PathBuf,
+    error: io::Error,
 }
 
 /// A filesystem entry.
@@ -44,6 +55,11 @@ pub enum VfsFile {
     Slf(SlfFsFile),
 }
 
+static MODS_DIR: &str = "mods";
+static DATA_DIR: &str = "data";
+static EXTERNALIZED_DIR: &str = "externalized";
+static EDITOR_SLF_NAME: &str = "editor.slf";
+
 impl Vfs {
     /// Creates a new virtual filesystem.
     pub fn new() -> Vfs {
@@ -51,27 +67,123 @@ impl Vfs {
     }
 
     /// Adds an overlay filesystem backed by a filesystem directory.
-    pub fn add_dir(&mut self, order: i32, path: &Path) -> io::Result<()> {
-        self.insert_entry(VfsEntry {
-            order,
-            source: VfsSource::Dir(DirFs::new(&path)?),
-        });
+    pub fn add_dir(&mut self, path: &Path) -> Result<(), VfsInitError> {
+        let dir_fs = DirFs::new(&path).map_err(|error| VfsInitError {
+            path: path.to_owned(),
+            error,
+        })?;
+        self.entries.push(VfsSource::Dir(dir_fs));
         Ok(())
     }
 
     /// Adds an overlay filesystem backed by a SLF file.
-    pub fn add_slf(&mut self, order: i32, path: &Path) -> io::Result<()> {
-        self.insert_entry(VfsEntry {
-            order,
-            source: VfsSource::Slf(SlfFs::new(&path)?),
+    pub fn add_slf(&mut self, path: &Path) -> Result<(), VfsInitError> {
+        let slf_fs = SlfFs::new(&path).map_err(|error| VfsInitError {
+            path: path.to_owned(),
+            error,
+        })?;
+        self.entries.push(VfsSource::Slf(slf_fs));
+        Ok(())
+    }
+
+    pub fn init_from_engine_options(
+        &mut self,
+        engine_options: &EngineOptions,
+    ) -> Result<(), VfsInitError> {
+        let vanilla_data_dir = fs::resolve_existing_components(
+            Path::new(DATA_DIR),
+            Some(&engine_options.vanilla_game_dir),
+            true,
+        );
+        let assets_dir = fs::resolve_existing_components(&get_assets_dir(), None, true);
+        let externalized_dir =
+            fs::resolve_existing_components(Path::new(EXTERNALIZED_DIR), Some(&assets_dir), true);
+        let editor_slf_path = fs::resolve_existing_components(
+            &Path::new(EDITOR_SLF_NAME),
+            Some(&externalized_dir),
+            true,
+        );
+
+        // Add mod directories
+        for mod_name in engine_options.mods.iter() {
+            // First are mod directories in home directory then mods in externalized directory (only one of them is required)
+            let mod_path =
+                Path::new(MODS_DIR).join(Path::new(&format!("{}/{}", &mod_name, DATA_DIR)));
+            let mod_in_home = fs::resolve_existing_components(
+                &mod_path,
+                Some(&engine_options.stracciatella_home),
+                true,
+            );
+            let mod_in_externalized =
+                fs::resolve_existing_components(&mod_path, Some(&assets_dir), true);
+
+            match (mod_in_home.exists(), mod_in_externalized.exists()) {
+                (false, false) => {
+                    return Err(VfsInitError {
+                        path: mod_path,
+                        error: ErrorKind::NotFound.into(),
+                    });
+                }
+                (true, false) => {
+                    self.add_dir(&mod_in_home)?;
+                }
+                (false, true) => {
+                    self.add_dir(&mod_in_externalized)?;
+                }
+                (true, true) => {
+                    self.add_dir(&mod_in_home)?;
+                    self.add_dir(&mod_in_externalized)?;
+                }
+            };
+        }
+
+        // Next is externalized data dir (required)
+        self.add_dir(&externalized_dir)?;
+
+        // Next is vanilla data dir (required)
+        self.add_dir(&vanilla_data_dir)?;
+
+        // Next are SLF files in vanilla data dir
+        let slf_paths =
+            fs::read_dir_paths(&vanilla_data_dir, false).map_err(|error| VfsInitError {
+                path: vanilla_data_dir.clone(),
+                error,
+            })?;
+        let slf_paths = slf_paths.iter().filter(|path| {
+            path.extension().map(|e| e.to_string_lossy().to_lowercase()) == Some("slf".to_string())
         });
+        for path in slf_paths {
+            self.add_slf(&path)?;
+        }
+
+        // Last is fallback editor.slf if it exists (does not need to exist)
+        if engine_options.run_editor {
+            if editor_slf_path.exists() {
+                self.add_slf(&editor_slf_path)?;
+            } else {
+                warn!(
+                    "Free editor.slf not found in {:?}, the editor might not work",
+                    assets_dir
+                );
+            }
+        }
+
+        // Print VFS order to console
+        for (index, v) in self.entries.iter().enumerate() {
+            info!(
+                "VFS item with priority {}: {}",
+                self.entries.len() - index,
+                v
+            );
+        }
+
         Ok(())
     }
 
     /// Opens a file.
     pub fn open(&self, file_path: &Nfc) -> io::Result<VfsFile> {
         for entry in self.entries.iter() {
-            let file_result = match &entry.source {
+            let file_result = match &entry {
                 VfsSource::Dir(x) => x.open(&file_path).map(VfsFile::Dir),
                 VfsSource::Slf(x) => x.open(&file_path).map(VfsFile::Slf),
             };
@@ -83,16 +195,6 @@ impl Vfs {
             return file_result;
         }
         Err(io::ErrorKind::NotFound.into())
-    }
-
-    /// Inserts an entry in the position according to the order.
-    fn insert_entry(&mut self, entry: VfsEntry) {
-        let index = self
-            .entries
-            .iter()
-            .position(|x| x.order > entry.order)
-            .unwrap_or_else(|| self.entries.len());
-        self.entries.insert(index, entry);
     }
 }
 
@@ -121,7 +223,7 @@ impl fmt::Display for Vfs {
             if f.alternate() {
                 f.write_str("\n    ")?;
             }
-            write!(f, "{}, ", entry.source)?;
+            write!(f, "{}, ", entry)?;
         }
         if f.alternate() {
             f.write_str("\n}")
@@ -137,6 +239,15 @@ impl fmt::Display for VfsSource {
             VfsSource::Dir(x) => x.fmt(f),
             VfsSource::Slf(x) => x.fmt(f),
         }
+    }
+}
+
+impl fmt::Display for VfsInitError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_fmt(format_args!(
+            "Error initializing VFS for {:?}: {}",
+            self.path, self.error
+        ))
     }
 }
 
