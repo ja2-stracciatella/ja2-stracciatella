@@ -39,6 +39,7 @@
 #define MINE_PRODUCTION_NUMBER_OF_PERIODS 4						// how many times a day mine production is processed
 #define MINE_PRODUCTION_START_TIME				(9 * 60)		// hour of first daily mine production event (in minutes)
 #define MINE_PRODUCTION_PERIOD						(3 * 60)		// time seperating daily mine production events (in minutes)
+#define MINE_PRODUCTION_DAYS_AFTER_HEAD_MINER_WARNING 2.5					// how many more days the mine can still produce after head miner warns of depletion
 
 
 // this table holds mine values that change during the course of the game and must be saved
@@ -144,8 +145,8 @@ void InitializeMines( void )
 			// the mine that runs out has only enough ore for this many days of full production
 			pMineStatus->uiRemainingOreSupply = ubMinDaysBeforeDepletion * (MINE_PRODUCTION_NUMBER_OF_PERIODS * pMineStatus->uiMaxRemovalRate);
 
-			// ore starts running out when reserves drop to less than 25% of the initial supply
-			pMineStatus->uiOreRunningOutPoint = pMineStatus->uiRemainingOreSupply / 4;
+			// ore starts running out when reserves drop to less than 2.5 days worth of supply
+			pMineStatus->uiOreRunningOutPoint = (UINT32)(MINE_PRODUCTION_DAYS_AFTER_HEAD_MINER_WARNING * MINE_PRODUCTION_NUMBER_OF_PERIODS * pMineStatus->uiMaxRemovalRate);
 		}
 		else
 		if (!pMineStatus->fEmpty)
