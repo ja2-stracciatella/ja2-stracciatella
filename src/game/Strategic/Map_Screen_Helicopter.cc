@@ -287,7 +287,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 			StopTimeCompression();
 		}
 
-		if( IsRefuelSiteInSector( CALCULATE_STRATEGIC_INDEX(sX, sY) ) )
+		if (IsRefuelAvailableInSector(CALCULATE_STRATEGIC_INDEX(sX, sY)))
 		{
 			LandHelicopter();
 		}
@@ -606,6 +606,11 @@ bool IsRefuelSiteInSector(INT16 const sector)
 		if (i->sector == sector) return true;
 	}
 	return false;
+}
+
+bool IsRefuelAvailableInSector(INT16 const sector)
+{
+	return NearestRefuelPoint(false).sector == sector;
 }
 
 void UpdateRefuelSiteAvailability( void )
@@ -1420,7 +1425,7 @@ static void MakeHeliReturnToBase(void)
 
 	sectorID = CALCULATE_STRATEGIC_INDEX(v.sSectorX, v.sSectorY);
 	// if already at a refueling point
-	if ( IsRefuelSiteInSector( sectorID ) )
+	if (IsRefuelAvailableInSector(sectorID))
 	{
 		LandHelicopter();
 	}
