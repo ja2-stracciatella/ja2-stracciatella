@@ -2047,7 +2047,7 @@ static void PerformAttachmentComboMerge(OBJECTTYPE& o, ComboMergeInfoStruct cons
 }
 
 
-bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE* const pAttachment)
+bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE* const pAttachment, UINT8 const ubIndexInStack)
 {
 	OBJECTTYPE& target     = *pTargetObj;
 	OBJECTTYPE& attachment = *pAttachment;
@@ -2185,17 +2185,18 @@ bool AttachObject(SOLDIERTYPE* const s, OBJECTTYPE* const pTargetObj, OBJECTTYPE
 			// count down through # of attaching items and add to status of item in position 0
 			for (INT8 bLoop = attachment.ubNumberOfObjects - 1; bLoop >= 0; --bLoop)
 			{
-				if (target.bStatus[0] + attachment.bStatus[bLoop] <= limit)
+				INT8& targetStatus = target.bStatus[ubIndexInStack];
+				if (targetStatus + attachment.bStatus[bLoop] <= limit)
 				{ // Consume this one totally and continue
-					target.bStatus[0] += attachment.bStatus[bLoop];
+					targetStatus += attachment.bStatus[bLoop];
 					RemoveObjFrom(&attachment, bLoop);
 					// reset loop limit
 					bLoop = attachment.ubNumberOfObjects; // add 1 to counteract the -1 from the loop
 				}
 				else
 				{ // Add part of this one and then we're done
-					attachment.bStatus[bLoop] -= limit - target.bStatus[0];
-					target.bStatus[0]          = limit;
+					attachment.bStatus[bLoop] -= limit - targetStatus;
+					targetStatus               = limit;
 					break;
 				}
 			}

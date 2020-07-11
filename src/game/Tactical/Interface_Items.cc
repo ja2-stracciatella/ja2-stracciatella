@@ -2033,7 +2033,7 @@ static void ItemDescAmmoCallback(GUI_BUTTON*  const btn, INT32 const reason)
 
 static void DoAttachment(void)
 {
-	if ( AttachObject( gpItemDescSoldier, gpItemDescObject, gpItemPointer ) )
+	if (AttachObject(gpItemDescSoldier, gpItemDescObject, gpItemPointer, gubItemDescStatusIndex))
 	{
 		if (gpItemPointer->usItem == NOTHING)
 		{
