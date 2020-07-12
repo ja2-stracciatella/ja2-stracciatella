@@ -208,7 +208,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 
 		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_MERC, pid, GetWorldTotalMin(), -1, -1);
 	}
-	else if (pid < MIGUEL)
+	else if (pid <= LAST_IMP_MERC)
 	{
 		s->ubWhatKindOfMercAmI = MERC_TYPE__PLAYER_CHARACTER;
 	}

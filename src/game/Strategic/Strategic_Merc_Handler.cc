@@ -294,7 +294,7 @@ void MercDailyUpdate()
 		// skip anyone currently on the player's team
 		if (IsMercOnTeam(cnt)) continue;
 
-		if (cnt < AIM_AND_MERC_MERCS && p.bMercStatus != MERC_RETURNING_HOME)
+		if (IsProfileIdAnAimOrMERCMerc((UINT8) cnt) && p.bMercStatus != MERC_RETURNING_HOME)
 		{
 			// check if any of his stats improve through working or training
 			HandleUnhiredMercImprovement(p);
@@ -328,7 +328,7 @@ void MercDailyUpdate()
 		}
 		else	// was already available today
 		{
-			if (cnt < AIM_AND_MERC_MERCS)
+			if (IsProfileIdAnAimOrMERCMerc((UINT8) cnt))
 			{
 				// check to see if he goes on another assignment
 				UINT32 uiChance;
