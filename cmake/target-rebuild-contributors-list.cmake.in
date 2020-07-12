@@ -49,6 +49,15 @@ if(GIT_FOUND)
         "Nils R <ml@hxgn.net>"
         "wolf <wolf@5e31c081-6ce3-0310-bb30-f584a8092234>"
         "tron <tron@5e31c081-6ce3-0310-bb30-f584a8092234>"
+        "Czcibor <foo@foo.com>"
+        "vxx <no@e.mail>"
+        "Gregor Z <ketchupy@gmail.com>"
+        "Misanthropos <misanthropos@gmx.de>"
+        "RinneT <thomas.rinsch@arcor.de>"
+        "derSteFfi <der_steffi@gmx.de>"
+        "ja2-derek <sfod_csy@hotmail.com>"
+        "Stefan Lau <selaux@users.noreply.github.com>"
+        "Peinthor Rene <rp@regalis.localdomain>"
     )
     list(APPEND UNIQUE_CONTRIBUTORS
         "Oliver Jankowski"
@@ -56,6 +65,10 @@ if(GIT_FOUND)
         "sunshine from The Bear's Pit Forum"
         "Rebekka Bais (Logo Design)"
         "wolf (committer to the original Tron's svn repository)"
+        "Agatae (https://bitbucket.org/Agatae)"
+        "Richard Fröhning <misanthropos@gmx.de>"
+        "Stefan Lau <github@stefanlau.com>"
+        "Peinthor Rene <peinthor@gmail.com>"
     )
     list(REMOVE_DUPLICATES UNIQUE_CONTRIBUTORS)
 
@@ -68,6 +81,7 @@ if(GIT_FOUND)
     foreach(CONTRIBUTOR ${UNIQUE_CONTRIBUTORS_LOWERCASE})
         foreach(CANDIDATE ${UNIQUE_CONTRIBUTORS})
             string(TOLOWER ${CANDIDATE} LOWER)
+            string(REGEX REPLACE " <[^>]+>" "" CANDIDATE ${CANDIDATE})
             if(CONTRIBUTOR STREQUAL LOWER)
                 list(APPEND SORTED_CONTRIBUTORS ${CANDIDATE})
                 break()
@@ -76,11 +90,11 @@ if(GIT_FOUND)
     endforeach()
 
     set(filename "@CMAKE_SOURCE_DIR@/contributors.txt")
-    file(WRITE ${filename} "Primal author of the project\n" )
-    file(APPEND ${filename} "---------------------------\n\n")
+    file(WRITE ${filename} "Founder of the project\n" )
+    file(APPEND ${filename} "----------------------\n\n")
     file(APPEND ${filename} "Tron\n\n")
     file(APPEND ${filename} "Contributors (sorted alphabetically)\n")
-    file(APPEND ${filename} "------------------------------------\n")
+    file(APPEND ${filename} "------------------------------------\n\n")
     foreach(CONTRIBUTOR ${SORTED_CONTRIBUTORS})
         file(APPEND ${filename} "${CONTRIBUTOR}\n")
     endforeach()
