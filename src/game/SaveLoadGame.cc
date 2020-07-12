@@ -112,6 +112,9 @@
 
 #include <string_theory/string>
 
+#include "policy/GamePolicy.h"
+#include "IMP_Compile_Character.h"
+
 #include <algorithm>
 #include <stdexcept>
 
@@ -185,8 +188,12 @@ static void SaveSoldierStructure(HWFILE hFile);
 static void SaveTacticalStatusToSavedGame(HWFILE);
 static void SaveWatchedLocsToSavedGame(HWFILE);
 
+static void SaveIMPPlayerProfiles();
+
 BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 {
+	if gamepolicy(imp_load_saved_merc_by_nickname)	SaveIMPPlayerProfiles();
+
 	BOOLEAN	fPausedStateBeforeSaving    = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
 
@@ -1132,6 +1139,145 @@ static void SaveMercProfiles(HWFILE const f)
 	}
 }
 
+ST::string IMPSavedProfileCreateFilename(ST::string nickname)
+{
+	return GCM->getSavedGamesFolder() + "/mercprofile." + nickname;;
+}
+
+ST::string NPCSavedProfileCreateFilename(ST::string nickname)
+{
+	return GCM->getSavedGamesFolder() + "/mercprofile_npc." + nickname;
+}
+
+bool IMPSavedProfileDoesFileExist(ST::string nickname)
+{
+	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
+	bool fexists = Fs_exists(profile_filename.c_str());
+	return fexists;
+}
+
+bool NPCSavedProfileDoesFileExist(ST::string nickname)
+{
+	ST::string profile_filename = NPCSavedProfileCreateFilename(nickname);
+	bool fexists = Fs_exists(profile_filename.c_str());
+	return fexists;
+}
+
+SGPFile* const IMPSavedProfileOpenFileForRead(ST::string nickname)
+{
+	if(!IMPSavedProfileDoesFileExist(nickname)) return (SGPFile *)-1;
+	SGPFile *f = FileMan::openForReading(IMPSavedProfileCreateFilename(nickname).c_str());
+	return f;
+}
+
+SGPFile* const NPCSavedProfileOpenFileForRead(ST::string nickname)
+{
+	if(!NPCSavedProfileDoesFileExist(nickname)) return (SGPFile *)-1;
+	SGPFile *f = FileMan::openForReading(NPCSavedProfileCreateFilename(nickname).c_str());
+	return f;
+}
+
+SGPFile* const IMPSavedProfileOpenFileForWrite(ST::string nickname)
+{
+	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
+	SGPFile *f = FileMan::openForWriting(profile_filename.c_str(), true);
+	return f;
+}
+
+SGPFile* const NPCSavedProfileOpenFileForWrite(ST::string nickname)
+{
+	ST::string profile_filename = NPCSavedProfileCreateFilename(nickname);
+	SGPFile *f = FileMan::openForWriting(profile_filename, true);
+	return f;
+}
+
+void NPCSavedProfileLoadNPCProfile(int ubCharNum, SOLDIERTYPE *pSoldier)
+{
+	if(!NPCSavedProfileDoesFileExist(gMercProfiles[ ubCharNum ].zNickname)) return;
+	SGPFile *f = NPCSavedProfileOpenFileForRead(gMercProfiles[ ubCharNum ].zNickname);
+	MERCPROFILESTRUCT *mercprofile = &gMercProfiles[ubCharNum];
+	FileRead(f, mercprofile, sizeof(MERCPROFILESTRUCT));
+	FileClose(f);
+	mercprofile->bMercStatus = MERC_OK;
+	pSoldier->bAgility = mercprofile->bAgility;
+	pSoldier->bDexterity = mercprofile->bDexterity;
+	pSoldier->bExpLevel  = mercprofile->bExpLevel;
+	pSoldier->bExplosive = mercprofile->bExplosive;
+	pSoldier->bLeadership = mercprofile->bLeadership;
+	pSoldier->bLifeMax = mercprofile->bLifeMax;
+	pSoldier->bMarksmanship = mercprofile->bMarksmanship;
+	pSoldier->bMechanical = mercprofile->bMechanical;
+	pSoldier->bMedical = mercprofile->bMedical;
+	pSoldier->bWisdom = mercprofile->bWisdom;
+}
+
+int IMPSavedProfileLoadMercProfile(ST::string nickname)
+{
+	if(!IMPSavedProfileDoesFileExist(nickname)) return -1;
+	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
+	MERCPROFILESTRUCT profile_saved;
+	FileRead(f, &profile_saved, sizeof(MERCPROFILESTRUCT));
+	FileClose(f);
+	int voiceid = profile_saved.ubSuspiciousDeath;
+	MERCPROFILESTRUCT& profile_new = gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + voiceid];
+	profile_new = profile_saved;
+	profile_new.bMercStatus = MERC_OK;
+	return voiceid;
+}
+
+void IMPSavedProfileLoadInventory(ST::string nickname, SOLDIERTYPE *pSoldier)
+{
+	if(!IMPSavedProfileDoesFileExist(nickname)) return;
+	if(!pSoldier) return;
+
+	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
+	FileSeek(f, sizeof(MERCPROFILESTRUCT), FILE_SEEK_FROM_START);
+	FileRead(f, pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
+	FileClose(f);
+}
+
+void NPCSavedProfileLoadInventory(ST::string nickname, SOLDIERTYPE *pSoldier)
+{
+	if(!NPCSavedProfileDoesFileExist(nickname)) return;
+	if(!pSoldier) return;
+
+	SGPFile *f = NPCSavedProfileOpenFileForRead(nickname);
+	FileSeek(f, sizeof(MERCPROFILESTRUCT), FILE_SEEK_FROM_START);
+	FileRead(f, pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
+	FileClose(f);
+}
+
+void SaveIMPPlayerProfiles()
+{
+//	#define LASTIMPPROFILE (PLAYER_GENERATED_CHARACTER_ID+5)
+	#define LASTIMPPROFILE NPC169
+	
+	for (int i = PLAYER_GENERATED_CHARACTER_ID; i <= LASTIMPPROFILE; i++)
+	{
+		MERCPROFILESTRUCT* const mercprofile = &gMercProfiles[i];
+		if (mercprofile->bLife == 0) continue;
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(i);
+		if (!pSoldier) continue;
+		if (pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__PLAYER_CHARACTER && pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__NPC) continue;
+		if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC && !gamepolicy(load_saved_npc)) continue; // load also enables saving
+		if (pSoldier->bTeam != OUR_TEAM) continue;
+
+		SGPFile *f = 0;
+
+		if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__PLAYER_CHARACTER)
+			f = IMPSavedProfileOpenFileForWrite(mercprofile->zNickname.c_str());
+
+		if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__NPC)
+			f = NPCSavedProfileOpenFileForWrite(mercprofile->zNickname);
+
+		if(f == 0) continue;
+
+		mercprofile->ubSuspiciousDeath = i - PLAYER_GENERATED_CHARACTER_ID; // save voice_id, field not used for resuscitated merc
+		FileWrite(f, mercprofile, sizeof(MERCPROFILESTRUCT));
+		FileWrite(f, pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
+		FileClose(f);
+	}
+}
 
 static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version, bool stracLinuxFormat)
 {

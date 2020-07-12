@@ -76,6 +76,9 @@
 
 #define AP_MIN_AIM_ATTACK		0 // minimum permitted extra aiming
 #define AP_MAX_AIM_ATTACK		4 // maximum permitted extra aiming
+#define AP_MAX_AIM_SCOPE_EXTRA		gamepolicy(extra_ap_max_sniperscope) // bonus permitted extra aiming for scope
+#define AP_MAX_AIM_BIPOD_EXTRA		gamepolicy(extra_ap_max_bipod)       // bonus permitted extra aiming for bipod while prone
+#define AP_MAX_AIM_BIPOD_SCOPE_COMBINED_EXTRA	gamepolicy(extra_ap_max_bipod_scope_combined) // bonus permitted extra aiming for using scope and bipod together while prone
 
 #define AP_BURST			5
 

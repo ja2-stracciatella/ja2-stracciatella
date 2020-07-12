@@ -56,6 +56,37 @@ public:
 	int8_t enemy_elite_minimum_level;     // increase challenge: minimum experience level for enemy elite soldier
 	int8_t enemy_elite_maximum_level;     // maximum experience level for enemy elite soldier
 
+	bool imp_load_saved_merc_by_nickname; // IMP merc is saved and can be loaded at IMP creation if has same nickname
+	bool imp_load_keep_inventory;         // IMP merc gets inventory from last save game
+	bool load_saved_npc;                  // NPC merc that was hired gets loaded from last save game if was saved while also enabled
+	bool load_saved_npc_inventory;        // NPC merc gets inventory from last save game if was saved while also enabled
+
+	bool ironman_can_save_realtime;       // Save during real-time even when enemies present "clayman"
+
+	bool accurate_aim_circle;             // Aim circle size and colour corresponds to chance_to_hit
+
+	bool all_skilltraits_mode;            // Allow soldier to get every perk available
+	bool all_skilltraits_just_ours;       // limit to player soldiers
+	int8_t all_skilltraits_wisdom;        // Wisdom required to qualify. Above 100 disables
+	int8_t all_skilltraits_level;         // Level required to qualify. Above 10 disables
+	bool enemy_elite_all_traits;          // Elites from queen's army get all perks
+
+	bool skip_sleep_explanation;          // skip sleep popup
+
+	bool militia_control;                 // 'q' hotkey to recruit militia/release/recruit best/nextbest
+	int32_t militiamerc_salary;           // Daily salary of recruited milita merc
+
+	bool inventory_management_extras;     // 1.13 inventory management hotkeys, shift-f, etc.
+	bool ime_detach_ammo;                 // hotkey detaches magazines from sector weapons
+	bool ime_detach_attachments;          // hotkey removes removable attachments from sector weapons
+	bool ime_refill_canteens;             // hotkey refill sector canteens, drinking does not deplete canteens out of combat
+	bool vehicle_inventory;               // Vehicles have accessable inventories
+
+	bool militia_use_sector_inventory;    // Militia are equiped from sector.inventory
+	bool enemy_defenders_use_sector_inventory; // Enemies add equipment from sector.inventory, even from lockers
+
+	bool perpetual_corpse_queen_crepitus; // Queen crepitus' corpse souvenir
+
 	bool pablo_wont_steal;                // Packages not stolen
 
 	float critical_damage_head_multiplier;//Head damage multiplier. Vanilla 1.5
@@ -63,12 +94,39 @@ public:
 	int8_t chance_to_hit_minimum;         //Minimum chance to hit (0 - chance_to_hit_maximum) vanilla 1
 	int8_t chance_to_hit_maximum;         //Maximum chance to hit (chance_to_hit_minimum - 100) vanilla 99
 
+	int8_t damage_minimum;                // Minimum damage taken i.e. hit by glowstick. Vanilla 1
+	int8_t aim_bonus_per_std_ap;          // Aim bonus % for first 4 AP (aim clicks) spent. Vanilla 10.
+	int8_t aim_bonus_sniperscope;         // Flat bonus after at suitable range. Vanilla 20
+	int8_t range_bonus_silencer;          // Absolute bonus, negative for penalty, to range from silencer attachment. 10 per 1 tile. Vanilla 0.
+	int8_t aim_bonus_per_extra_ap;        // Aim bonus % for extra AP (aim clicks) spent. Not vanilla.
+	int8_t extra_ap_max_sniperscope;      // bonus to maximum AP that can be spent aiming to improve chance to hit. Vanilla 0
+	int8_t extra_ap_max_bipod;            // bonus to maximum AP that can be spent aiming to improve chance to hit. Vanilla 0
+	int8_t extra_ap_max_bipod_scope_combined; // bonus to maximum AP that can be spent aiming to improve chance to hit. Vanilla 0
+
+	bool rocket_rifle_builtin_bipod;         // rocket launcher can only use built-in attachments. Vanilla false
+	bool rocket_rifle_builtin_sniperscope;   // rocket launcher can only use built-in attachments. Vanilla false
+
 	/* IMP */
 	int8_t imp_attribute_max;             // IMP character attribute maximum 0 to 100, vanilla 85
 	int8_t imp_attribute_min;             // IMP character attribute minimum 0 to imp_attribute_max, vanilla 35
 	int32_t imp_attribute_bonus;          // IMP character attribute unallocated bonus points, vanilla 40
 	int32_t imp_attribute_zero_bonus;     // IMP character attribute points given instead of imp_attribute_min, vanilla 15
 	bool imp_pick_skills_directly;        // Use the IMP_SkillTrait selection screen from JA2.5, skipping the personality quiz, vanilla falase
+
+	// Difficulty / Campaign Progress
+	float progress_weight_kills;         // Weight of kill count on campaign progress
+	float progress_weight_control;       // Weight of area control on campaign progress
+	float progress_weight_income;        // Weight of income on campaign progress
+	int8_t kills_per_point_0;             // Kills per point for difficulty Easy
+	int8_t kills_per_point_1;             // Kills per point for difficulty Medium
+	int8_t kills_per_point_2;             // Kills per point for difficulty Hard
+	int8_t progress_event_madlab_min;     // Minimum first progress to trigger event Quest Madlab
+	int8_t progress_event_mike_min;       // Minimum first progress to trigger event Mike
+	int8_t progress_event_iggy_min;       // Minimum first progress to trigger event Iggy
+
+	int8_t unhired_merc_deaths_difficulty_0;       // Maximum unhired mercs KIA difficulty Easy
+	int8_t unhired_merc_deaths_difficulty_1;       // Maximum unhired mercs KIA difficulty Medium
+	int8_t unhired_merc_deaths_difficulty_2;       // Maximum unhired mercs KIA difficulty Hard
 
 	////////////////////////////////////////////////////////////
 	//

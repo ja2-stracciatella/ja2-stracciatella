@@ -43,6 +43,11 @@
 #include <stdexcept>
 #include <vector>
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
+#include "Soldier_Profile.h"
+
 //GAME BALANCING DEFINITIONS FOR CREATURE SPREADING
 //Hopefully, adjusting these following definitions will ease the balancing of the
 //creature spreading.
@@ -570,8 +575,10 @@ void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest )
 		gubNumCreaturesAttackingTown = 5;
 	}
 
+	bool const will_have_player_controlled_militia = GCM->getGamePolicy()->militia_control && (CountAllMilitiaInSector( ubSectorX, ubSectorY )>0);
+
 	//Now that the sector has been chosen, attack it!
-	if( PlayerGroupsInSector( ubSectorX, ubSectorY, 0 ) )
+	if( PlayerGroupsInSector( ubSectorX, ubSectorY, 0 ) || will_have_player_controlled_militia )
 	{ //we have players in the sector
 		if( ubSectorX == gWorldSectorX && ubSectorY == gWorldSectorY && !gbWorldSectorZ )
 		{ //This is the currently loaded sector.  All we have to do is change the music and insert

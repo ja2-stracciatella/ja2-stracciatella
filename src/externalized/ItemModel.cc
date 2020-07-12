@@ -96,6 +96,7 @@ bool ItemModel::isTentacles() const      { return usItemClass == IC_TENTACLES; }
 bool ItemModel::isThrowingKnife() const  { return usItemClass == IC_THROWING_KNIFE; }
 bool ItemModel::isThrown() const         { return usItemClass == IC_THROWN; }
 bool ItemModel::isWeapon() const         { return usItemClass & (IC_GUN | IC_BLADE | IC_THROWING_KNIFE | IC_LAUNCHER | IC_TENTACLES); }
+bool ItemModel::isStackable() const      { return usItemClass & (IC_BLADE | IC_THROWING_KNIFE | IC_GRENADE | IC_AMMO | IC_ARMOUR | IC_MEDKIT | IC_KIT | IC_FACE | IC_MISC); }
 
 bool ItemModel::isTwoHanded() const      { return fFlags & ITEM_TWO_HANDED;             }
 bool ItemModel::isInBigGunList() const   { return fFlags & ITEM_BIGGUNLIST;             }

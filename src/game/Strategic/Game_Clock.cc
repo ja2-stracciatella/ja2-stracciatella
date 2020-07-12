@@ -34,6 +34,9 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 //#define DEBUG_GAME_CLOCK
 

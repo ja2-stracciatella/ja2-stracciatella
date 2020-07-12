@@ -323,12 +323,13 @@ try
 			}
 		}
 
-		// If an army guy has camouflage, roll to determine whether they start
-		// camouflaged
-		if (guiCurrentScreen != AUTORESOLVE_SCREEN &&
+		/* If an army guy has camouflage, roll to determine whether they start
+		 * camouflaged */
+		if((guiCurrentScreen != AUTORESOLVE_SCREEN &&
 				team_id == ENEMY_TEAM                  &&
 				FindObj(s, CAMOUFLAGEKIT) != NO_SLOT   &&
-				Random(5) < SoldierDifficultyLevel(s))
+				Random(5) < SoldierDifficultyLevel(s))  ||
+				HAS_SKILL_TRAIT(s, CAMOUFLAGED))
 		{ // Start camouflaged
 			s->bCamo = 100;
 		}

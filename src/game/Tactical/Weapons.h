@@ -14,6 +14,7 @@ struct CalibreModel;
 #define BAD_DODGE_POSITION_PENALTY			20
 
 #define GUN_BARREL_RANGE_BONUS				100
+#define SILENCER_RANGE_BONUS				(gamepolicy(range_bonus_silencer))
 
 // Special deaths can only occur within a limited distance to the target
 #define MAX_DISTANCE_FOR_MESSY_DEATH			7
@@ -120,7 +121,8 @@ enum
 #define PUNCH_REAL_DAMAGE_PORTION		4
 
 #define AIM_BONUS_SAME_TARGET			10 // chance-to-hit bonus (in %)
-#define AIM_BONUS_PER_AP			10 // chance-to-hit bonus (in %) for aim
+#define AIM_BONUS_PER_AP			gamepolicy(aim_bonus_per_std_ap) // chance-to-hit bonus (in %) for aim
+#define AIM_BONUS_PER_AP_EXTRA			gamepolicy(aim_bonus_per_extra_ap) // chance-to-hit bonus (in %) for aim
 #define AIM_BONUS_CROUCHING			10
 #define AIM_BONUS_PRONE				20
 #define AIM_BONUS_TWO_HANDED_PISTOL		5
@@ -173,7 +175,7 @@ extern void WindowHit( INT16 sGridNo, UINT16 usStructureID, BOOLEAN fBlowWindowS
 extern INT32 BulletImpact( SOLDIERTYPE *pFirer, SOLDIERTYPE * pTarget, UINT8 ubHitLocation, INT32 iImpact, INT16 sHitBy, UINT8 * pubSpecial );
 BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo);
 void ShotMiss(const BULLET* b);
-extern UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos );
+extern UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos, BOOLEAN fModify);
 extern UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos );
 extern UINT32 CalcChanceToPunch(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 ubAimTime);
 extern UINT32 CalcChanceToStab(SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAimTime);

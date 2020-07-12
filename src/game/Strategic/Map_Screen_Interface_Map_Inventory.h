@@ -48,4 +48,6 @@ extern BOOLEAN fMapInventoryItemCompatable[ ];
 
 BOOLEAN IsMapScreenWorldItemVisibleInMapInventory(const WORLDITEM& wi);
 
+BOOLEAN PlaceObjectInInventoryStash(OBJECTTYPE* pInventorySlot, OBJECTTYPE* pItemPtr);
+
 #endif

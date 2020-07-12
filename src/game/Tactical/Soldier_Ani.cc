@@ -1011,13 +1011,10 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// CODE: End PUNCH
 				{
-					BOOLEAN fNPCPunch = FALSE;
 
 					// ATE: Put some code in for NPC punches...
 					if ( pSoldier->uiStatusFlags & SOLDIER_NPC_DOING_PUNCH )
 					{
-						fNPCPunch = TRUE;
-
 						// Turn off
 						pSoldier->uiStatusFlags &= (~SOLDIER_NPC_DOING_PUNCH );
 
@@ -1030,12 +1027,12 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 					{
 						bool const fMartialArtist =
 							pSoldier->ubProfile != NO_PROFILE &&
-							HasSkillTrait(GetProfile(pSoldier->ubProfile), MARTIALARTS);
+							HAS_SKILL_TRAIT(pSoldier, MARTIALARTS);
 
 						UINT16 state;
 						if ( gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_CROUCH )
 						{
-							if ( fNPCPunch )
+							if ( gAnimControl[ pSoldier->usAnimState ].ubHeight == ANIM_CROUCH )
 							{
 								ChangeSoldierStance( pSoldier, ANIM_STAND );
 								return TRUE;
@@ -2966,7 +2963,7 @@ BOOLEAN HandleSoldierDeath( SOLDIERTYPE *pSoldier , BOOLEAN *pfMadeCorpse )
 				{
 					gMercProfiles[assister->ubProfile].usAssists++;
 				}
-				else if (assister->bTeam == MILITIA_TEAM)
+				else if (assister->bTeam == MILITIA_TEAM || assister->ubWhatKindOfMercAmI == MERC_TYPE__MILITA)
 				{
 					// get an assist - 1 points
 					assister->ubMilitiaKills += 1;

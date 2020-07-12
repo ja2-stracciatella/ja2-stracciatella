@@ -221,7 +221,16 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 		}
 		else
 		{
+			#define WEAPON_STATUS_MOD( x )	( (x) >= 85 ? 100 : (((x) * 100) / 85) )
 			ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
+			ubMaxPossibleAimTime += (AP_MAX_AIM_SCOPE_EXTRA) * WEAPON_STATUS_MOD(UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), SNIPERSCOPE)) / 100;
+
+			if( gAnimControl[ pSoldier->usAnimState ].ubEndHeight == ANIM_PRONE )
+			{
+				ubMaxPossibleAimTime += (AP_MAX_AIM_BIPOD_EXTRA) * WEAPON_STATUS_MOD(UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), BIPOD)) / 100;
+				ubMaxPossibleAimTime += (AP_MAX_AIM_BIPOD_SCOPE_COMBINED_EXTRA) * (WEAPON_STATUS_MOD(UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), BIPOD)) * UniqueAttachmentStatusGet(&(pSoldier->inv[HANDPOS]), SNIPERSCOPE)) / 10000;
+			}
+
 		}
 
 		// consider the various aiming times
@@ -907,7 +916,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				}
 
 				// calculate the maximum possible aiming time
-				ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
+				ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK, pSoldier->bActionPoints - ubMinAPcost);
 
 				// calc next attack's minimum AP cost (excludes readying & turning)
 
@@ -941,14 +950,20 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 					}
 				}
 
-				iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / (ubRawAPCost + ubMaxPossibleAimTime);
-
 				// calculate chance to REALLY hit: throw accurately AND get past cover
 				ubChanceToReallyHit = (ubChanceToHit * ubChanceToGetThrough) / 100;
 
 				// if we can't REALLY hit at all
 				if (ubChanceToReallyHit == 0)
 					continue;              // next gridno
+				
+				INT32 iMaxTotalAPCost = (ubRawAPCost + ubMaxPossibleAimTime);
+
+				// hack: bypass:  divide-by-zero
+				if (iMaxTotalAPCost == 0)
+					iMaxTotalAPCost = 1;
+
+				iHitRate = (pSoldier->bActionPoints * ubChanceToHit) / iMaxTotalAPCost;
 
 				// calculate the combined "attack value" for this opponent
 				// maximum possible attack value here should be about 140 million
@@ -1453,8 +1468,8 @@ static INT32 EstimateShotDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 		iDamage += e->ubDamage * NumMercsCloseTo(pOpponent->sGridNo, e->ubRadius) * 3 / 2;
 	}
 
-	if (iDamage < 1)
-		iDamage = 1;  // assume we can do at LEAST 1 pt minimum damage
+	if (iDamage < gamepolicy(damage_minimum))
+		iDamage = gamepolicy(damage_minimum);  // assume we can do at LEAST 1 pt minimum damage
 
 	return( iDamage );
 }
@@ -1512,8 +1527,8 @@ static INT32 EstimateThrowDamage(SOLDIERTYPE* pSoldier, UINT8 ubItemPos, SOLDIER
 		iArmourAmount = ArmourVersusExplosivesPercent( pSoldier );
 		iExplosDamage -= iExplosDamage * iArmourAmount / 100;
 
-		if (iExplosDamage < 1)
-			iExplosDamage = 1;
+		if (iExplosDamage < gamepolicy(damage_minimum))
+			iExplosDamage = gamepolicy(damage_minimum);
 	}
 
 	// if this opponent is standing
@@ -1582,9 +1597,9 @@ static INT32 EstimateStabDamage(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, U
 		iImpact = iImpact / PUNCH_REAL_DAMAGE_PORTION;
 	}
 
-	if (iImpact < 1)
+	if (iImpact < gamepolicy(damage_minimum))
 	{
-		iImpact = 1;
+		iImpact = gamepolicy(damage_minimum);
 	}
 
 	return( iImpact );

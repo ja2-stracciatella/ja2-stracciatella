@@ -857,15 +857,7 @@ UINT8 CalcAPsToBurst(INT8 const bBaseActionPoints, OBJECTTYPE const& o)
 	else
 	{
 		// NB round UP, so 21-25 APs pay full
-		INT8 const bAttachPos = FindAttachment(&o, SPRING_AND_BOLT_UPGRADE );
-		if ( bAttachPos != -1 )
-		{
-			return (__max(3, (AP_BURST * bBaseActionPoints + (AP_MAXIMUM - 1)) / AP_MAXIMUM) * 100) / (100 + o.bAttachStatus[bAttachPos] / 5);
-		}
-		else
-		{
-			return __max(3, (AP_BURST * bBaseActionPoints + (AP_MAXIMUM - 1)) / AP_MAXIMUM);
-		}
+		return (__max(3, (AP_BURST * bBaseActionPoints + (AP_MAXIMUM - 1)) / AP_MAXIMUM) * 100) / (100 + UniqueAttachmentStatusGet(&o, SPRING_AND_BOLT_UPGRADE) / 5);
 	}
 }
 
@@ -1023,11 +1015,7 @@ UINT8 BaseAPsToShootOrStab(INT8 const bAPs, INT8 const bAimSkill, OBJECTTYPE con
 	// NB need to define shots per turn for ALL Weapons then.
 	sBottom = ( ( 50 + (bAimSkill / 2) ) * GCM->getWeapon(o.usItem )->ubShotsPer4Turns ) / 4;
 
-	INT8 const bAttachPos = FindAttachment(&o, SPRING_AND_BOLT_UPGRADE);
-	if ( bAttachPos != -1 )
-	{
-		sBottom = sBottom * (100 + o.bAttachStatus[bAttachPos] / 5) / 100;
-	}
+	sBottom = sBottom * (100 + (UniqueAttachmentStatusGet(&o, SPRING_AND_BOLT_UPGRADE) / 5)) / 100;
 
 	// add minimum aiming time to the overall minimum AP_cost
 	//     This here ROUNDS UP fractions of 0.5 or higher using integer math
@@ -1676,9 +1664,9 @@ INT8 GetAPsToRefuelVehicle( SOLDIERTYPE *pSoldier )
 }
 
 
-#define TOSSES_PER_10TURNS      18      // max # of grenades tossable in 10 turns
-#define AP_MIN_AIM_ATTACK       0       // minimum permitted extra aiming
-#define AP_MAX_AIM_ATTACK       4       // maximum permitted extra aiming
+#define TOSSES_PER_10TURNS		18      // max # of grenades tossable in 10 turns
+#define AP_MIN_AIM_ATTACK		0       // minimum permitted extra aiming
+#define AP_MAX_AIM_ATTACK		4       // maximum permitted extra aiming
 
 
 INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_cost)
