@@ -39,6 +39,7 @@ struct MERC_HIRE_STRUCT
 extern INT16 g_merc_arrive_sector;
 
 
+void CreateSpecialItem(SOLDIERTYPE* const, UINT16);
 INT8 HireMerc(MERC_HIRE_STRUCT&);
 void MercArrivesCallback(SOLDIERTYPE&);
 bool IsMercHireable(MERCPROFILESTRUCT const&);

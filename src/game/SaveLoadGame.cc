@@ -1,114 +1,117 @@
+#include "Air_Raid.h"
+#include "AI.h"
+#include "Animated_ProgressBar.h"
+#include "Animation_Data.h"
+#include "Arms_Dealer_Init.h"
+#include "Assignments.h"
+#include "BobbyR.h"
+#include "BobbyRMailOrder.h"
+#include "Boxing.h"
 #include "Buffer.h"
+#include "Bullets.h"
+#include "Cheats.h"
+#include "Civ_Quotes.h"
+#include "ContentManager.h"
+#include "ContentMusic.h"
+#include "Creature_Spreading.h"
+#include "Debug.h"
+#include "Dialogue_Control.h"
 #include "Directories.h"
+#include "Enemy_Soldier_Save.h"
+#include "Environment.h"
+#include "Explosion_Control.h"
+#include "FileMan.h"
+#include "Files.h"
+#include "Finances.h"
 #include "Font.h"
 #include "Font_Control.h"
+#include "Game_Events.h"
+#include "Game_Clock.h"
+#include "GameInstance.h"
 #include "GameLoop.h"
+#include "GameRes.h"
+#include "GameSettings.h"
+#include "GameVersion.h"
+#include "HelpScreen.h"
+#include "History.h"
+#include "IMP_Compile_Character.h"
+#include "IMP_Confirm.h"
+#include "IMP_Portraits.h"
+#include "Interface_Dialogue.h"
+#include "Interface_Items.h"
+#include "Interface_Panels.h"
+#include "Interface_Utils.h"
+#include "Interface.h"
+#include "JAScreens.h"
+#include "Keys.h"
+#include "Laptop.h"
+#include "Lighting.h"
+#include "LightEffects.h"
+#include "Loading_Screen.h"
 #include "LoadSaveData.h"
 #include "LoadSaveEMail.h"
 #include "LoadSaveMercProfile.h"
 #include "LoadSaveSoldierType.h"
 #include "LoadSaveTacticalStatusType.h"
 #include "Local.h"
-#include "MapScreen.h"
-#include "Timer_Control.h"
-#include "Types.h"
-#include "Soldier_Profile.h"
-#include "FileMan.h"
-#include "Debug.h"
-#include "Overhead.h"
-#include "Keys.h"
-#include "Finances.h"
-#include "History.h"
-#include "Files.h"
-#include "Laptop.h"
-#include "StrategicMap.h"
-#include "Game_Events.h"
-#include "Game_Clock.h"
-#include "Soldier_Create.h"
-#include "WorldDef.h"
+#include "Logger.h"
 #include "LaptopSave.h"
-#include "Queen_Command.h"
-#include "SaveLoadGame.h"
-#include "Tactical_Save.h"
-#include "Squads.h"
-#include "Environment.h"
-#include "Lighting.h"
-#include "Strategic_Movement.h"
-#include "Quests.h"
-#include "OppList.h"
-#include "Message.h"
-#include "NPC.h"
-#include "Merc_Hiring.h"
-#include "SaveLoadScreen.h"
-#include "GameVersion.h"
-#include "GameSettings.h"
-#include "Music_Control.h"
-#include "Options_Screen.h"
-#include "AI.h"
-#include "RenderWorld.h"
-#include "SmokeEffects.h"
-#include "Random.h"
+#include "Map_Screen_Helicopter.h"
 #include "Map_Screen_Interface.h"
 #include "Map_Screen_Interface_Border.h"
 #include "Map_Screen_Interface_Bottom.h"
-#include "Interface.h"
-#include "Map_Screen_Helicopter.h"
-#include "Arms_Dealer_Init.h"
-#include "Tactical_Placement_GUI.h"
-#include "Strategic_Mines.h"
-#include "Strategic_Town_Loyalty.h"
-#include "Vehicles.h"
-#include "Merc_Contract.h"
-#include "Bullets.h"
-#include "Air_Raid.h"
-#include "Physics.h"
-#include "Strategic_Pathing.h"
-#include "TeamTurns.h"
-#include "Explosion_Control.h"
-#include "Creature_Spreading.h"
-#include "Strategic_Status.h"
-#include "PreBattle_Interface.h"
-#include "Boxing.h"
-#include "Strategic_AI.h"
 #include "Map_Screen_Interface_Map.h"
-#include "Meanwhile.h"
-#include "Dialogue_Control.h"
-#include "Text.h"
-#include "LightEffects.h"
-#include "HelpScreen.h"
-#include "Animated_ProgressBar.h"
-#include "MercTextBox.h"
 #include "Map_Information.h"
-#include "Interface_Items.h"
-#include "Civ_Quotes.h"
-#include "Scheduling.h"
-#include "Animation_Data.h"
-#include "Cheats.h"
+#include "MapScreen.h"
+#include "Meanwhile.h"
+#include "Merc_Contract.h"
+#include "Merc_Hiring.h"
+#include "Mercs.h"
+#include "MercTextBox.h"
+#include "MemMan.h"
+#include "Message.h"
+#include "Music_Control.h"
+#include "NPC.h"
+#include "OppList.h"
+#include "Options_Screen.h"
+#include "Overhead.h"
+#include "Physics.h"
+#include "PreBattle_Interface.h"
+#include "Queen_Command.h"
+#include "Quests.h"
+#include "Random.h"
 #include "Render_Dirty.h"
+#include "RenderWorld.h"
+#include "SaveLoadGame.h"
+#include "SaveLoadScreen.h"
+#include "Scheduling.h"
+#include "ShippingDestinationModel.h"
+#include "SmokeEffects.h"
+#include "Soldier_Create.h"
+#include "Soldier_Profile.h"
+#include "Squads.h"
+#include "Strategic_AI.h"
 #include "Strategic_Event_Handler.h"
-#include "Interface_Panels.h"
-#include "Interface_Dialogue.h"
-#include "Assignments.h"
+#include "Strategic_Mines.h"
+#include "Strategic_Movement.h"
+#include "Strategic_Status.h"
+#include "Strategic_Town_Loyalty.h"
+#include "Strategic_Pathing.h"
+#include "StrategicMap.h"
+#include "Tactical_Placement_GUI.h"
+#include "Tactical_Save.h"
+#include "TeamTurns.h"
+#include "Text.h"
+#include "Timer_Control.h"
+#include "Types.h"
+#include "UILayout.h"
+#include "Vehicles.h"
 #include "Video.h"
 #include "VSurface.h"
-#include "MemMan.h"
-#include "ContentMusic.h"
-#include "JAScreens.h"
-#include "BobbyR.h"
-#include "IMP_Portraits.h"
-#include "Loading_Screen.h"
-#include "Interface_Utils.h"
-#include "IMP_Confirm.h"
-#include "Enemy_Soldier_Save.h"
-#include "BobbyRMailOrder.h"
-#include "Mercs.h"
-#include "UILayout.h"
-#include "GameRes.h"
+#include "WorldDef.h"
 
-#include "ContentManager.h"
-#include "GameInstance.h"
-#include "Logger.h"
-#include "ShippingDestinationModel.h"
+#include "policy/GamePolicy.h"
+#include "sgp/StrUtils.h"
 
 #include <string_theory/string>
 
@@ -185,8 +188,12 @@ static void SaveSoldierStructure(HWFILE hFile);
 static void SaveTacticalStatusToSavedGame(HWFILE);
 static void SaveWatchedLocsToSavedGame(HWFILE);
 
+static void SaveIMPPlayerProfiles();
+
 BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 {
+	if (gamepolicy(imp_load_saved_merc_by_nickname)) SaveIMPPlayerProfiles();
+
 	BOOLEAN	fPausedStateBeforeSaving    = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
 
@@ -1132,6 +1139,81 @@ static void SaveMercProfiles(HWFILE const f)
 	}
 }
 
+ST::string IMPSavedProfileCreateFilename(ST::string nickname)
+{
+	return GCM->getSavedGamesFolder() + "/mercprofile." + nickname;;
+}
+
+bool IMPSavedProfileDoesFileExist(ST::string nickname)
+{
+	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
+	bool fexists = Fs_exists(profile_filename.c_str());
+	return fexists;
+}
+
+SGPFile* const IMPSavedProfileOpenFileForRead(ST::string nickname)
+{
+	if (!IMPSavedProfileDoesFileExist(nickname)) {
+		throw std::runtime_error(FormattedString("Lost IMP with nickname '%s'!", nickname.c_str()).to_std_string());
+	}
+	SGPFile *f = FileMan::openForReading(IMPSavedProfileCreateFilename(nickname).c_str());
+	return f;
+}
+
+SGPFile* const IMPSavedProfileOpenFileForWrite(ST::string nickname)
+{
+	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
+	SGPFile *f = FileMan::openForWriting(profile_filename.c_str(), true);
+	return f;
+}
+
+int IMPSavedProfileLoadMercProfile(ST::string nickname)
+{
+	if (!IMPSavedProfileDoesFileExist(nickname)) {
+		throw std::runtime_error(FormattedString("Lost IMP with nickname '%s'!", nickname.c_str()).to_std_string());
+	}
+	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
+	MERCPROFILESTRUCT profile_saved;
+	FileRead(f, &profile_saved, sizeof(MERCPROFILESTRUCT));
+	FileClose(f);
+	int voiceid = profile_saved.ubSuspiciousDeath;
+	MERCPROFILESTRUCT& profile_new = gMercProfiles[PLAYER_GENERATED_CHARACTER_ID + voiceid];
+	profile_new = profile_saved;
+	profile_new.bMercStatus = MERC_OK;
+	return voiceid;
+}
+
+void IMPSavedProfileLoadInventory(ST::string nickname, SOLDIERTYPE *pSoldier)
+{
+	if (!IMPSavedProfileDoesFileExist(nickname)) return;
+	if (!pSoldier) return;
+
+	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
+	FileSeek(f, sizeof(MERCPROFILESTRUCT), FILE_SEEK_FROM_START);
+	FileRead(f, pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
+	FileClose(f);
+}
+
+void SaveIMPPlayerProfiles()
+{
+	for (int i = PLAYER_GENERATED_CHARACTER_ID; i <= LAST_IMP_MERC; i++)
+	{
+		MERCPROFILESTRUCT* const mercprofile = &gMercProfiles[i];
+		if (mercprofile->bLife == 0) continue;
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(i);
+		if (!pSoldier) continue;
+		if (pSoldier->bTeam != OUR_TEAM) continue;
+		if (pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__PLAYER_CHARACTER) continue;
+
+		SGPFile *f = IMPSavedProfileOpenFileForWrite(mercprofile->zNickname.c_str());
+		if (!f) continue;
+
+		mercprofile->ubSuspiciousDeath = i - PLAYER_GENERATED_CHARACTER_ID; // save voice_id, field not used for resuscitated merc
+		FileWrite(f, mercprofile, sizeof(MERCPROFILESTRUCT));
+		FileWrite(f, pSoldier->inv, sizeof(OBJECTTYPE) * NUM_INV_SLOTS);
+		FileClose(f);
+	}
+}
 
 static void LoadSavedMercProfiles(HWFILE const f, UINT32 const savegame_version, bool stracLinuxFormat)
 {

@@ -3,7 +3,7 @@
     //  The settings in this file have an influence on the game in general.
 
     //  --------------------------------------------------
-    //  New hotkeys
+    //  New hotkeys and input
     //  vanilla setting for all hotkeys: false
     //  --------------------------------------------------
 
@@ -14,6 +14,14 @@
     //  Press 'ctrl+q' to swap hand items
     //  Press 'shift+j' to climb through open window
     "extra_hotkeys": true,
+
+    //  Press d in realtime mode to manually start turn based mode.
+    //  vanilla setting: false
+    "can_enter_turnbased": false,
+
+    //  Enables middle mouse button to trigger a look into cursor direction
+    //  vanilla setting: false
+    "middle_mouse_look": true,
 
     //  --------------------------------------------------
     //  System settings
@@ -80,14 +88,6 @@
     //  Enables extra attachments: boosters and break lights on leggings, goggles on helmets.
     "extra_attachments": false,
 
-    //  Enables middle mouse button to trigger a look into cursor direction.
-    //  vanilla_setting: false
-    "middle_mouse_look": true,
-
-    //  Press d in realtime mode to manually start turn based mode.
-    //  vanilla_setting: false
-    "can_enter_turnbased": false,
-
     //  Packages at Drassen airport never get stolen, no need to bribe Pablo.
     //  vanilla_setting: false
     "pablo_wont_steal": false,
@@ -99,14 +99,15 @@
     "tactical_head_damage_multiplier": 1.5,
     "tactical_legs_damage_multiplier": 0.5,
 
-    //  IMP attribute point defaults:
-    //  Warning: Setting min attribute points to a value less than 15 allows
-    //           the creation of a character with less than 15 health. This
-    //           is a dying character!
-    //  Zero attribute point bonus is what you receive for setting a skill to 0.
-    //  Bonus attribute points is your initial pool of points to distribute.
-    //  vanilla_setting: 85, 35, 15, 40
+    //  IMP creation tweaks
     "imp": {
+        //  IMP attribute point defaults:
+        //  Warning: Setting min attribute points to a value less than 15 allows
+        //           the creation of a character with less than 15 health. This
+        //           is a dying character!
+        //  Zero attribute point bonus is what you receive for setting a skill to 0.
+        //  Bonus attribute points is your initial pool of points to distribute.
+        //  vanilla setting: 85, 35, 15, 40
         "max_attribute_points": 85,
         "min_attribute_points": 35,
         "zero_attribute_points_bonus": 15,
@@ -115,6 +116,39 @@
         // Replace the IMP personality quiz with a form to select skills directly
         // NOTE: does not set any personality
         // vanilla setting: false
-        "pick_skills_directly": false
-    }
+        "pick_skills_directly": false,
+
+        //  Load an IMP merc from a previous save game by typing in same nickname on IMP form.
+        //  Make sure to use the same capitalization!
+        //  This setting must be already enabled during saving to enable a later load.
+        //  vanilla setting: false, false
+        "load_saved_merc_by_nickname": false,
+        "load_keep_inventory": false
+    },
+
+    "progress": {
+        //  Progress weight of parameter on campaign progress
+        //  vanilla settings: kills 25, control 25, income 50
+        "weight_kills": 25,
+        "weight_control": 25,
+        "weight_income": 50,
+
+        //  Progress point progression
+        //  vanilla settings: 0_easy 7, 1_medium 10, 2_hard 15
+        "kills_per_point_easy": 7,
+        "kills_per_point_medium": 10,
+        "kills_per_point_hard": 15,
+
+        //  Minimum first time progress to trigger event
+        //  vanilla settings: madlab: 35, mike: 50, iggy: 70
+        "event_madlab_min": 35,
+        "event_mike_min": 50,
+        "event_iggy_min": 70
+    },
+
+    //  Allowed unhired merc deaths at given difficulty level
+    //  vanilla settings: 1, 2, 3
+    "unhired_merc_deaths_easy": 1,
+    "unhired_merc_deaths_medium": 2,
+    "unhired_merc_deaths_hard": 3
 }

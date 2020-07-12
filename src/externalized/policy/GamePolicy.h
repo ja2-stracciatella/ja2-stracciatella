@@ -56,6 +56,8 @@ public:
 	int8_t enemy_elite_minimum_level;     // increase challenge: minimum experience level for enemy elite soldier
 	int8_t enemy_elite_maximum_level;     // maximum experience level for enemy elite soldier
 
+	bool imp_load_saved_merc_by_nickname; // IMP merc is saved and can be loaded at IMP creation if has same nickname
+	bool imp_load_keep_inventory;         // IMP merc gets inventory from last save game
 	bool pablo_wont_steal;                // Packages not stolen
 
 	float critical_damage_head_multiplier;//Head damage multiplier. Vanilla 1.5
@@ -69,6 +71,21 @@ public:
 	int32_t imp_attribute_bonus;          // IMP character attribute unallocated bonus points, vanilla 40
 	int32_t imp_attribute_zero_bonus;     // IMP character attribute points given instead of imp_attribute_min, vanilla 15
 	bool imp_pick_skills_directly;        // Use the IMP_SkillTrait selection screen from JA2.5, skipping the personality quiz, vanilla falase
+
+	// Difficulty / Campaign Progress
+	float progress_weight_kills;         // Weight of kill count on campaign progress
+	float progress_weight_control;       // Weight of area control on campaign progress
+	float progress_weight_income;        // Weight of income on campaign progress
+	int8_t kills_per_point_easy;             // Kills per point for difficulty Easy
+	int8_t kills_per_point_medium;             // Kills per point for difficulty Medium
+	int8_t kills_per_point_hard;             // Kills per point for difficulty Hard
+	int8_t progress_event_madlab_min;     // Minimum first progress to trigger event Quest Madlab
+	int8_t progress_event_mike_min;       // Minimum first progress to trigger event Mike
+	int8_t progress_event_iggy_min;       // Minimum first progress to trigger event Iggy
+
+	int8_t unhired_merc_deaths_easy;       // Maximum unhired mercs KIA difficulty Easy
+	int8_t unhired_merc_deaths_medium;       // Maximum unhired mercs KIA difficulty Medium
+	int8_t unhired_merc_deaths_hard;       // Maximum unhired mercs KIA difficulty Hard
 
 	////////////////////////////////////////////////////////////
 	//

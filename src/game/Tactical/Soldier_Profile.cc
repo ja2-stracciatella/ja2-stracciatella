@@ -470,7 +470,7 @@ static void StartSomeMercsOnAssignment(void)
 	UINT32 uiChance;
 
 	// some randomly picked A.I.M. mercs will start off "on assignment" at the beginning of each new game
-	for( uiCnt = 0; uiCnt < AIM_AND_MERC_MERCS; uiCnt++)
+	for (uiCnt = 0; uiCnt <= AIM_AND_MERC_MERCS; uiCnt++)
 	{
 		MERCPROFILESTRUCT& p = GetProfile(uiCnt);
 
@@ -1067,4 +1067,11 @@ BOOLEAN DoesNPCOwnBuilding( SOLDIERTYPE *pSoldier, INT16 sGridNo )
 	}
 
 	return( FALSE );
+}
+
+BOOLEAN IsProfileIdAnAimOrMERCMerc(UINT8 ubProfileID)
+{
+	// AIM: ubProfileID < BIFF
+	// MERC: ubProfileID >= BIFF && ubProfileID <= BUBBA
+	return ubProfileID <= AIM_AND_MERC_MERCS;
 }
