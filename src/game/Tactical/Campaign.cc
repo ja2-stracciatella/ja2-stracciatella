@@ -1113,13 +1113,13 @@ void HandleUnhiredMercDeaths( INT32 iProfileID )
 	switch( gGameOptions.ubDifficultyLevel )
 	{
 		case DIF_LEVEL_EASY:
-			ubMaxDeaths = gamepolicy(unhired_merc_deaths_difficulty_0);
+			ubMaxDeaths = gamepolicy(unhired_merc_deaths_easy);
 			break;
 		case DIF_LEVEL_MEDIUM:
-			ubMaxDeaths = gamepolicy(unhired_merc_deaths_difficulty_1);
+			ubMaxDeaths = gamepolicy(unhired_merc_deaths_medium);
 			break;
 		case DIF_LEVEL_HARD:
-			ubMaxDeaths = gamepolicy(unhired_merc_deaths_difficulty_2);
+			ubMaxDeaths = gamepolicy(unhired_merc_deaths_hard);
 			break;
 		default:
 			Assert(FALSE);
@@ -1224,13 +1224,13 @@ UINT8 CurrentPlayerProgressPercentage(void)
 	switch( gGameOptions.ubDifficultyLevel )
 	{
 		case DIF_LEVEL_EASY:
-			ubKillsPerPoint = gamepolicy(kills_per_point_0);
+			ubKillsPerPoint = gamepolicy(kills_per_point_easy);
 			break;
 		case DIF_LEVEL_MEDIUM:
-			ubKillsPerPoint = gamepolicy(kills_per_point_1);
+			ubKillsPerPoint = gamepolicy(kills_per_point_medium);
 			break;
 		case DIF_LEVEL_HARD:
-			ubKillsPerPoint = gamepolicy(kills_per_point_2);
+			ubKillsPerPoint = gamepolicy(kills_per_point_hard);
 			break;
 		default:
 			Assert(FALSE);

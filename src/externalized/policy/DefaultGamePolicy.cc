@@ -56,17 +56,17 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	progress_event_mike_min = progress.getOptionalInt("event_mike_min", 50);
 	progress_event_iggy_min = progress.getOptionalInt("event_iggy_min", 70);
 
-	kills_per_point_0 = progress.getOptionalInt("kills_per_point_0", 7);
-	kills_per_point_1 = progress.getOptionalInt("kills_per_point_1", 10);
-	kills_per_point_2 = progress.getOptionalInt("kills_per_point_2", 15);
+	kills_per_point_easy = progress.getOptionalInt("kills_per_point_easy", 7);
+	kills_per_point_medium = progress.getOptionalInt("kills_per_point_medium", 10);
+	kills_per_point_hard = progress.getOptionalInt("kills_per_point_hard", 15);
 
 	progress_weight_kills = progress.getOptionalDouble("weight_kills", 25.0);
 	progress_weight_control = progress.getOptionalDouble("weight_control", 25.0);
 	progress_weight_income = progress.getOptionalDouble("weight_income", 50.0);
 
-	unhired_merc_deaths_difficulty_0 = gp.getOptionalInt("unhired_merc_deaths_difficulty_0", 1);
-	unhired_merc_deaths_difficulty_1 = gp.getOptionalInt("unhired_merc_deaths_difficulty_1", 2);
-	unhired_merc_deaths_difficulty_2 = gp.getOptionalInt("unhired_merc_deaths_difficulty_2", 3);
+	unhired_merc_deaths_easy = gp.getOptionalInt("unhired_merc_deaths_easy", 1);
+	unhired_merc_deaths_medium = gp.getOptionalInt("unhired_merc_deaths_medium", 2);
+	unhired_merc_deaths_hard = gp.getOptionalInt("unhired_merc_deaths_hard", 3);
 }
 
 /** Check if a hotkey is enabled. */

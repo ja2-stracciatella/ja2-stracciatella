@@ -135,9 +135,9 @@
 
         //  Progress point progression
         //  vanilla settings: 0_easy 7, 1_medium 10, 2_hard 15
-        "kills_per_point_0": 7,
-        "kills_per_point_1": 10,
-        "kills_per_point_2": 15,
+        "kills_per_point_easy": 7,
+        "kills_per_point_medium": 10,
+        "kills_per_point_hard": 15,
 
         //  Minimum first time progress to trigger event
         //  vanilla settings: madlab: 35, mike: 50, iggy: 70
@@ -148,7 +148,7 @@
 
     //  Allowed unhired merc deaths at given difficulty level
     //  vanilla settings: 1, 2, 3
-    "unhired_merc_deaths_difficulty_0": 1,
-    "unhired_merc_deaths_difficulty_1": 2,
-    "unhired_merc_deaths_difficulty_2": 3
+    "unhired_merc_deaths_easy": 1,
+    "unhired_merc_deaths_medium": 2,
+    "unhired_merc_deaths_hard": 3
 }
