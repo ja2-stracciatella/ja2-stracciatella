@@ -11,7 +11,7 @@
 * visual inspection of laptop screens
 
 # Release
-* update changes.md
+* update changes.md (run docs/draft-changelog.sh to get started)
   * update man page if necessary
 * bump version
 * github release + tags
