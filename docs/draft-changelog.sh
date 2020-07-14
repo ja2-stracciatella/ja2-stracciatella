@@ -9,7 +9,7 @@ function fetch {
 }
 
 # get issue count, since we'll need to use paging
-count=$(fetch "$baseURL/milestones/4" | jq '.open_issues + .closed_issues')
+count=$(fetch "$baseURL/milestones/$milestoneID" | jq '.open_issues + .closed_issues')
 
 # split into chunks of 100, the API limit
 page=1
