@@ -5,7 +5,7 @@
 
 DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 {
-	JsonObjectReader gp = JsonObjectReader(json->GetObject());
+	JsonObjectReader gp = JsonObjectReader(*json);
 	extra_hotkeys = gp.getOptionalBool("extra_hotkeys", true);
 	can_enter_turnbased = gp.getOptionalBool("can_enter_turnbased");
 	middle_mouse_look = gp.getOptionalBool("middle_mouse_look", true);
