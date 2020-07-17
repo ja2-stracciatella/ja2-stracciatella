@@ -50,6 +50,7 @@ branches:
   only:
     - master
     - nightly
+    - /^v\d+.\d+(.\d+)?(-\S*)?$/
 
 before_install:
   - export PUBLISH_BINARY="false"
