@@ -50,6 +50,7 @@ branches:
   only:
     - master
     - nightly
+    - /^v\d+.\d+(.\d+)?(-\S*)?$/
 
 before_install:
   - export PUBLISH_BINARY="false"
@@ -66,7 +67,7 @@ before_install:
   - if [[ "$TRAVIS_BRANCH" = "nightly" ]]; then
       export BUILD_TYPE="Release";
       export PUBLISH_BINARY="true";
-      export PUBLISH_DIR="nightlies";
+      export PUBLISH_DIR="nightlies/";
       export VERSION_TAG="$(date +%Y%m%d)";
     fi
   - if [[ "$TRAVIS_TAG" != "" ]]; then
