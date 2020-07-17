@@ -71,7 +71,7 @@ init:
   - ps: >
         if (Test-Path Env:\APPVEYOR_PULL_REQUEST_NUMBER) {
           $env:PUBLISH_BINARY = "true";
-          $env:PUBLISH_DIR = "pull-requests/${env:APPVEYOR_PULL_REQUEST_NUMBER}";
+          $env:PUBLISH_DIR = "pull-requests/${env:APPVEYOR_PULL_REQUEST_NUMBER}/";
           $env:VERSION_TAG = "${env:APPVEYOR_PULL_REQUEST_NUMBER}pullrequest";
           $env:CI_REF = "refs/pull/${env:APPVEYOR_PULL_REQUEST_NUMBER}";
         }
@@ -80,7 +80,7 @@ init:
         if ("$env:APPVEYOR_REPO_BRANCH" -eq "nightly") {
           $env:BUILD_TYPE = "Release";
           $env:PUBLISH_BINARY = "true";
-          $env:PUBLISH_DIR = "nightlies";
+          $env:PUBLISH_DIR = "nightlies/";
           $env:VERSION_TAG = "$(Get-Date -UFormat "%Y%m%d")";
         }
         true;
@@ -88,7 +88,7 @@ init:
         if ("$env:APPVEYOR_REPO_TAG" -eq "true") {
           $env:BUILD_TYPE = "Release";
           $env:PUBLISH_BINARY = "true";
-          $env:PUBLISH_DIR = "releases";
+          $env:PUBLISH_DIR = "releases/${env:APPVEYOR_REPO_TAG}/";
           $env:VERSION_TAG = "";
           $env:CI_REF = "refs/tags/${env:APPVEYOR_REPO_TAG}";
         }

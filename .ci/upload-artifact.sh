@@ -34,7 +34,7 @@ openssl aes-256-cbc -K $GCLOUD_CREDENTIALS_KEY -iv $GCLOUD_CREDENTIALS_IV -S $GC
 DIR="$PUBLISH_DIR"
 # Set correct subdirectory for nightlies
 if [[ "$CI_REF" = "refs/heads/nightly" ]]; then
-  DIR="$PUBLISH_DIR/${PUBLISH_FILENAME%_*}/"
+  DIR="$PUBLISH_DIR${PUBLISH_FILENAME%_*}/"
 fi
 
 # Login to the gcloud cli (need to redirect stderr to stdout, otherwise powershell might treat the command as failed)
