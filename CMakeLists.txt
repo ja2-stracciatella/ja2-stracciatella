@@ -40,7 +40,7 @@ set(CMAKE_CXX_STANDARD 11)
 #      breaking change and "<next major>.0.0-dev" with a breaking change.
 
 include(semver-functions)
-semver_set(ja2-stracciatella_VERSION "0.17.0-dev")
+semver_set(ja2-stracciatella_VERSION "0.17.0")
 if (VERSION_TAG)
     semver_set_prerelease(ja2-stracciatella_VERSION_PRERELEASE "-${VERSION_TAG}")
 endif()
