@@ -15,7 +15,7 @@ void LoadCreatureDirectives(HWFILE, UINT32 uiSavedGameVersion);
 
 BOOLEAN PrepareCreaturesForBattle(void);
 void CreatureNightPlanning(void);
-void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest );
+void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector);
 
 void CheckConditionsForTriggeringCreatureQuest( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 

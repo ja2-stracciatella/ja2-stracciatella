@@ -495,7 +495,7 @@ static void AddCreaturesToBattle(UINT8 n_young_males, UINT8 n_young_females, UIN
 }
 
 
-static void ChooseTownSectorToAttack(UINT8 ubSectorID, BOOLEAN fOverrideTest)
+static void ChooseTownSectorToAttack(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 {
 	const CreatureAttackSector* attackDetails = NULL;
 	if (gLairModel == NULL)
@@ -505,9 +505,9 @@ static void ChooseTownSectorToAttack(UINT8 ubSectorID, BOOLEAN fOverrideTest)
 	}
 
 	// determine town sector to attack
-	attackDetails = (fOverrideTest) ?
-		gLairModel->getTownAttackDetails(ubSectorID) : // pick a sector to attack
-		gLairModel->chooseTownSectorToAttack()         // attack the given sector
+	attackDetails = (fSpecificSector) ?
+		gLairModel->getTownAttackDetails(ubSectorID) : // attack the given sector
+		gLairModel->chooseTownSectorToAttack()         // pick a sector to attack
 	;
 	if (!attackDetails)
 	{
@@ -524,7 +524,7 @@ static void ChooseTownSectorToAttack(UINT8 ubSectorID, BOOLEAN fOverrideTest)
 	}
 }
 
-void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest )
+void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 { //This is the launching point of the creature attack.
 	UNDERGROUND_SECTORINFO *pSector;
 	UINT8 ubSectorX, ubSectorY;
@@ -537,22 +537,22 @@ void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest )
 
 	gubCreatureBattleCode = CREATURE_BATTLE_CODE_NONE;
 
-	ubSectorX = (UINT8)((ubSectorID % 16) + 1);
-	ubSectorY = (UINT8)((ubSectorID / 16) + 1);
+	ubSectorX = SECTORX(ubSectorID);
+	ubSectorY = SECTORY(ubSectorID);
 
-	if( !fOverrideTest )
+	if (!fSpecificSector)
 	{
 		//Record the number of creatures in the sector.
 		pSector = FindUnderGroundSector( ubSectorX, ubSectorY, 1 );
 		if( !pSector )
 		{
-			CreatureAttackTown( ubSectorID, TRUE );
+			CreatureAttackTown(ubSectorID, TRUE);
 			return;
 		}
 		gubNumCreaturesAttackingTown = pSector->ubNumCreatures;
 		if( !gubNumCreaturesAttackingTown )
 		{
-			CreatureAttackTown( ubSectorID, TRUE );
+			CreatureAttackTown(ubSectorID, TRUE);
 			return;
 		}
 
@@ -561,12 +561,12 @@ void CreatureAttackTown( UINT8 ubSectorID, BOOLEAN fOverrideTest )
 		//Choose one of the town sectors to attack.  Sectors closer to
 		//the mine entrance have a greater chance of being chosen.
 		ChooseTownSectorToAttack( ubSectorID, FALSE );
-		ubSectorX = (UINT8)((gubSectorIDOfCreatureAttack % 16) + 1);
-		ubSectorY = (UINT8)((gubSectorIDOfCreatureAttack / 16) + 1);
+		ubSectorX = SECTORX(gubSectorIDOfCreatureAttack);
+		ubSectorY = SECTORY(gubSectorIDOfCreatureAttack);
 	}
 	else
 	{
-		ChooseTownSectorToAttack( ubSectorID, TRUE );
+		ChooseTownSectorToAttack(ubSectorID, TRUE);
 		gubNumCreaturesAttackingTown = 5;
 	}
 
