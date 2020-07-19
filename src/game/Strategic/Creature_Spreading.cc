@@ -640,14 +640,6 @@ void DeleteCreatureDirectives()
 	giLairID = 0;
 }
 
-void ClearCreatureQuest()
-{
-	//This will remove all of the underground sector information and reinitialize it.
-	//The only part that doesn't get added are the queen's lair.
-	BuildUndergroundSectorInfoList();
-	DeleteCreatureDirectives();
-}
-
 void EndCreatureQuest()
 {
 	CREATURE_DIRECTIVE *curr;

@@ -7,7 +7,6 @@
 
 void InitCreatureQuest(void);
 void SpreadCreatures(void);
-void ClearCreatureQuest(void);
 void DeleteCreatureDirectives(void);
 
 void SaveCreatureDirectives(HWFILE);
