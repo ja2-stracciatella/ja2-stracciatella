@@ -516,7 +516,7 @@ static void ChooseTownSectorToAttack(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 	}
 
 	// determine how the enemies enter the sector
-	gubSectorIDOfCreatureAttack = ubSectorID;
+	gubSectorIDOfCreatureAttack = attackDetails->sectorId;
 	gsCreatureInsertionCode = attackDetails->insertionCode;
 	if (gsCreatureInsertionCode == INSERTION_CODE_GRIDNO)
 	{
