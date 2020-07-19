@@ -88,9 +88,9 @@ init:
         if ("$env:APPVEYOR_REPO_TAG" -eq "true") {
           $env:BUILD_TYPE = "Release";
           $env:PUBLISH_BINARY = "true";
-          $env:PUBLISH_DIR = "releases/${env:APPVEYOR_REPO_TAG}/";
+          $env:PUBLISH_DIR = "releases/${env:APPVEYOR_REPO_TAG_NAME}/";
           $env:VERSION_TAG = "";
-          $env:CI_REF = "refs/tags/${env:APPVEYOR_REPO_TAG}";
+          $env:CI_REF = "refs/tags/${env:APPVEYOR_REPO_TAG_NAME}";
         }
         true;
 
