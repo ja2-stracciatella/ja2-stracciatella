@@ -221,12 +221,12 @@ void InitBloodCatSectors()
 	};
 	for (auto placements : GCM->getBloodCatPlacements())
 	{
-		INT8 sectorId = placements->sectorId;
+		UINT8 sectorId = placements->sectorId;
 		SectorInfo[ sectorId ].bBloodCatPlacements = placements->bloodCatPlacements;
 	}
 	for (auto spawns : GCM->getBloodCatSpawns())
 	{
-		INT8 sectorId = spawns->sectorId;
+		UINT8 sectorId = spawns->sectorId;
 		INT8 spawnsCount = spawns->getSpawnsByDifficulty(gGameOptions.ubDifficultyLevel);
 		SectorInfo[ sectorId ].bBloodCatPlacements = spawnsCount;
 		SectorInfo[ sectorId ].bBloodCats = spawnsCount;

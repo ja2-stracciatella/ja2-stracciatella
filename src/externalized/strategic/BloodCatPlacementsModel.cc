@@ -7,7 +7,7 @@ BloodCatPlacementsModel::BloodCatPlacementsModel(uint8_t sectorId_, int8_t blood
 
 BloodCatPlacementsModel* BloodCatPlacementsModel::deserialize(JsonObjectReader & obj)
 {
-	int8_t sectorId = SECTOR_FROM_SECTOR_SHORT_STRING( obj.GetString("sector") );
+	uint8_t sectorId = SECTOR_FROM_SECTOR_SHORT_STRING(obj.GetString("sector"));
 	return new BloodCatPlacementsModel(	
 		sectorId,
 		obj.GetInt("bloodCatPlacements")
