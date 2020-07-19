@@ -423,6 +423,9 @@ void ReStartingGame()
 	//Delete all the strategic events
 	DeleteAllStrategicEvents();
 
+	//Delete creature lair, if any
+	DeleteCreatureDirectives();
+
 	//This function gets called when ur in a game a click the quit to main menu button, therefore no game is in progress
 	gTacticalStatus.fHasAGameBeenStarted = FALSE;
 
