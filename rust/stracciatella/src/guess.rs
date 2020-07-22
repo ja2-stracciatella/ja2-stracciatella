@@ -16,6 +16,7 @@ use serde_json;
 
 use crate::config::VanillaVersion;
 use crate::fs::resolve_existing_components;
+use crate::get_assets_dir;
 use crate::res::{
     Resource, ResourceError, ResourcePack, ResourcePackBuilder, ResourcePropertiesExt,
 };
@@ -272,7 +273,12 @@ impl Guess {
 
     /// Find all resource packs in externalized directory
     fn get_pack_paths(&self) -> GuessResult<Vec<PathBuf>> {
-        let dir = Path::new("externalized/resource_packs");
+        let asset_dir = get_assets_dir();
+        let dir = resolve_existing_components(
+            Path::new("externalized/resource_packs"),
+            Some(&asset_dir),
+            true,
+        );
         info!("Searching for resource packs in {:?}", &dir);
         let paths: Vec<PathBuf> = dir
             .read_dir()?
