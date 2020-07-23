@@ -4,6 +4,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "ItemModel.h"
 
 
 void ExtractObject(DataReader& d, OBJECTTYPE* const o)
@@ -12,7 +13,15 @@ void ExtractObject(DataReader& d, OBJECTTYPE* const o)
 	EXTR_U16(d, o->usItem)
 	EXTR_U8(d, o->ubNumberOfObjects)
 	EXTR_SKIP(d, 1)
-	switch (GCM->getItem(o->usItem)->getItemClass())
+
+	const ItemModel* item = GCM->getItem(o->usItem);
+	if (!item)
+	{
+		SLOGW(ST::format("Item (index {}) is not defined and will be ignored. Maybe the file was saved for a different game version", o->usItem));
+		item = GCM->getItem(NONE);
+	}
+
+	switch (item->getItemClass())
 	{
 		case IC_AMMO:
 			EXTR_U8A(d, o->ubShotsLeft, lengthof(o->ubShotsLeft))
