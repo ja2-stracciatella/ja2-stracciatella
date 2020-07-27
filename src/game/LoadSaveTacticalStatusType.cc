@@ -2,6 +2,7 @@
 
 #include "Debug.h"
 #include "FileMan.h"
+#include "GameState.h"
 #include "LoadSaveData.h"
 #include "LoadSaveTacticalStatusType.h"
 #include "Overhead.h"
@@ -133,6 +134,12 @@ void ExtractTacticalStatusTypeFromFile(HWFILE const f, bool stracLinuxFormat)
 	EXTR_SKIP(d, 2)
 	EXTR_U32(d, s->uiCreatureTenseQuoteLastUpdate)
 	Assert(d.getConsumed() == dataSize);
+
+	if (!GameState::getInstance()->debugging())
+	{
+		// Prevent restoring of debug UI modes
+		s->uiFlags &= ~(DEBUGCLIFFS | SHOW_Z_BUFFER);
+	}
 }
 
 
