@@ -47,10 +47,10 @@
 #include "Logger.h"
 #include "Strategic_AI.h"
 
+#include "rapidjson/error/en.h"
 #include <string_theory/format>
 #include <string_theory/string>
 
-#include <memory>
 #include <stdexcept>
 
 #define BASEDATADIR    "data"
@@ -712,34 +712,24 @@ const AmmoTypeModel* DefaultContentManager::getAmmoType(uint8_t index)
 
 bool DefaultContentManager::loadWeapons()
 {
-	AutoSGPFile f(openGameResForReading("weapons.json"));
-	ST::string jsonData = FileMan::fileReadText(f);
+	auto document = readJsonDataFile("weapons.json");
+	if (document->IsArray()) 
+	{
+		const rapidjson::Value& a = document->GetArray();
+		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+		{
+			JsonObjectReader obj(a[i]);
+			WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap);
+			SLOGD("Loaded weapon %d %s", w->getItemIndex(), w->getInternalName().c_str());
 
-	rapidjson::Document document;
-	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
-	{
-		SLOGE("Failed to parse weapons.json");
-		return false;
-	}
-	else
-	{
-		if(document.IsArray()) {
-			const rapidjson::Value& a = document;
-			for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+			if((w->getItemIndex() < 0) || (w->getItemIndex() > MAX_WEAPONS))
 			{
-				JsonObjectReader obj(a[i]);
-				WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap);
-				SLOGD("Loaded weapon %d %s", w->getItemIndex(), w->getInternalName().c_str());
-
-				if((w->getItemIndex() < 0) || (w->getItemIndex() > MAX_WEAPONS))
-				{
-					SLOGE("Weapon index must be in the interval 0 - %d", MAX_WEAPONS);
-					return false;
-				}
-
-				m_items[w->getItemIndex()] = w;
-				m_weaponMap.insert(std::make_pair(w->getInternalName(), w));
+				SLOGE("Weapon index must be in the interval 0 - %d", MAX_WEAPONS);
+				return false;
 			}
+
+			m_items[w->getItemIndex()] = w;
+			m_weaponMap.insert(std::make_pair(w->getInternalName(), w));
 		}
 	}
 
@@ -748,69 +738,48 @@ bool DefaultContentManager::loadWeapons()
 
 bool DefaultContentManager::loadMagazines()
 {
-	AutoSGPFile f(openGameResForReading("magazines.json"));
-	ST::string jsonData = FileMan::fileReadText(f);
+	auto document = readJsonDataFile("magazines.json");
+	if(document->IsArray()) 
+	{
+		const rapidjson::Value& a = document->GetArray();
+		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+		{
+			JsonObjectReader obj(a[i]);
+			MagazineModel *mag = MagazineModel::deserialize(obj, m_calibreMap, m_ammoTypeMap);
+			SLOGD("Loaded magazine %d %s", mag->getItemIndex(), mag->getInternalName().c_str());
 
-	rapidjson::Document document;
-	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
-	{
-		SLOGE("Failed to parse magazines.json");
-		return false;
-	}
-	else
-	{
-		if(document.IsArray()) {
-			const rapidjson::Value& a = document;
-			for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+			if((mag->getItemIndex() < FIRST_AMMO) || (mag->getItemIndex() > LAST_AMMO))
 			{
-				JsonObjectReader obj(a[i]);
-				MagazineModel *mag = MagazineModel::deserialize(obj, m_calibreMap, m_ammoTypeMap);
-				SLOGD("Loaded magazine %d %s", mag->getItemIndex(), mag->getInternalName().c_str());
-
-				if((mag->getItemIndex() < FIRST_AMMO) || (mag->getItemIndex() > LAST_AMMO))
-				{
-					SLOGE("Magazine item index must be in the interval %d - %d", FIRST_AMMO, LAST_AMMO);
-					return false;
-				}
-
-				m_magazines.push_back(mag);
-				m_items[mag->getItemIndex()] = mag;
-				m_magazineMap.insert(std::make_pair(mag->getInternalName(), mag));
+				SLOGE("Magazine item index must be in the interval %d - %d", FIRST_AMMO, LAST_AMMO);
+				return false;
 			}
+
+			m_magazines.push_back(mag);
+			m_items[mag->getItemIndex()] = mag;
+			m_magazineMap.insert(std::make_pair(mag->getInternalName(), mag));
 		}
 	}
-
+	
 	return true;
 }
 
 bool DefaultContentManager::loadCalibres()
 {
-	AutoSGPFile f(openGameResForReading("calibres.json"));
-	ST::string jsonData = FileMan::fileReadText(f);
+	auto document = readJsonDataFile("calibres.json");
+	if (document->IsArray()) {
+		const rapidjson::Value& a = document->GetArray();
+		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+		{
+			JsonObjectReader obj(a[i]);
+			CalibreModel *calibre = CalibreModel::deserialize(obj);
+			SLOGD("Loaded calibre %d %s", calibre->index, calibre->internalName.c_str());
 
-	rapidjson::Document document;
-	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
-	{
-		SLOGE("Failed to parse calibres.json");
-		return false;
-	}
-	else
-	{
-		if(document.IsArray()) {
-			const rapidjson::Value& a = document;
-			for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+			if(m_calibres.size() <= calibre->index)
 			{
-				JsonObjectReader obj(a[i]);
-				CalibreModel *calibre = CalibreModel::deserialize(obj);
-				SLOGD("Loaded calibre %d %s", calibre->index, calibre->internalName.c_str());
-
-				if(m_calibres.size() <= calibre->index)
-				{
-					m_calibres.resize(calibre->index + 1);
-				}
-
-				m_calibres[calibre->index] = calibre;
+				m_calibres.resize(calibre->index + 1);
 			}
+
+			m_calibres[calibre->index] = calibre;
 		}
 	}
 
@@ -824,32 +793,21 @@ bool DefaultContentManager::loadCalibres()
 
 bool DefaultContentManager::loadAmmoTypes()
 {
-	AutoSGPFile f(openGameResForReading("ammo_types.json"));
-	ST::string jsonData = FileMan::fileReadText(f);
+	auto document = readJsonDataFile("ammo_types.json");
+	if(document->IsArray()) {
+		const rapidjson::Value& a = document->GetArray();
+		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+		{
+			JsonObjectReader obj(a[i]);
+			AmmoTypeModel *ammoType = AmmoTypeModel::deserialize(obj);
+			SLOGD("Loaded ammo type %d %s", ammoType->index, ammoType->internalName.c_str());
 
-	rapidjson::Document document;
-	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
-	{
-		SLOGE("Failed to parse ammo_types.json");
-		return false;
-	}
-	else
-	{
-		if(document.IsArray()) {
-			const rapidjson::Value& a = document;
-			for (rapidjson::SizeType i = 0; i < a.Size(); i++)
+			if(m_ammoTypes.size() <= ammoType->index)
 			{
-				JsonObjectReader obj(a[i]);
-				AmmoTypeModel *ammoType = AmmoTypeModel::deserialize(obj);
-				SLOGD("Loaded ammo type %d %s", ammoType->index, ammoType->internalName.c_str());
-
-				if(m_ammoTypes.size() <= ammoType->index)
-				{
-					m_ammoTypes.resize(ammoType->index + 1);
-				}
-
-				m_ammoTypes[ammoType->index] = ammoType;
+				m_ammoTypes.resize(ammoType->index + 1);
 			}
+
+			m_ammoTypes[ammoType->index] = ammoType;
 		}
 	}
 
@@ -880,39 +838,33 @@ bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::V
 
 bool DefaultContentManager::loadMusic()
 {
-	AutoSGPFile f(openGameResForReading("music.json"));
-	ST::string jsonData = FileMan::fileReadText(f);
-
-	rapidjson::Document document;
-	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError()) {
-		SLOGE("Failed to parse music.json");
-		return false;
-	}
-	if(!document.IsObject()) {
+	auto document = readJsonDataFile("music.json");
+	if(!document->IsObject()) {
 		SLOGE("music.json has wrong structure");
 		return false;
 	}
 
+	auto obj = document->GetObject();
 	SLOGD("Loading main_menu music");
-	loadMusicModeList(MUSIC_MAIN_MENU, document["main_menu"]);
+	loadMusicModeList(MUSIC_MAIN_MENU, obj["main_menu"]);
 	SLOGD("Loading main_menu music");
-	loadMusicModeList(MUSIC_LAPTOP, document["laptop"]);
+	loadMusicModeList(MUSIC_LAPTOP, obj["laptop"]);
 	SLOGD("Loading tactical music");
-	loadMusicModeList(MUSIC_TACTICAL_NOTHING, document["tactical"]);
+	loadMusicModeList(MUSIC_TACTICAL_NOTHING, obj["tactical"]);
 	SLOGD("Loading tactical_enemypresent music");
-	loadMusicModeList(MUSIC_TACTICAL_ENEMYPRESENT, document["tactical_enemypresent"]);
+	loadMusicModeList(MUSIC_TACTICAL_ENEMYPRESENT, obj["tactical_enemypresent"]);
 	SLOGD("Loading tactical_battle music");
-	loadMusicModeList(MUSIC_TACTICAL_BATTLE, document["tactical_battle"]);
+	loadMusicModeList(MUSIC_TACTICAL_BATTLE, obj["tactical_battle"]);
 	SLOGD("Loading tactical_creature music");
-	loadMusicModeList(MUSIC_TACTICAL_CREATURE_NOTHING, document["tactical_creature"]);
+	loadMusicModeList(MUSIC_TACTICAL_CREATURE_NOTHING, obj["tactical_creature"]);
 	SLOGD("Loading tactical_creature_enemypresent music");
-	loadMusicModeList(MUSIC_TACTICAL_CREATURE_ENEMYPRESENT, document["tactical_creature_enemypresent"]);
+	loadMusicModeList(MUSIC_TACTICAL_CREATURE_ENEMYPRESENT, obj["tactical_creature_enemypresent"]);
 	SLOGD("Loading tactical_creature_battle music");
-	loadMusicModeList(MUSIC_TACTICAL_CREATURE_BATTLE, document["tactical_creature_battle"]);
+	loadMusicModeList(MUSIC_TACTICAL_CREATURE_BATTLE, obj["tactical_creature_battle"]);
 	SLOGD("Loading tactical_victory music");
-	loadMusicModeList(MUSIC_TACTICAL_VICTORY, document["tactical_victory"]);
+	loadMusicModeList(MUSIC_TACTICAL_VICTORY, obj["tactical_victory"]);
 	SLOGD("Loading tactical_defeat music");
-	loadMusicModeList(MUSIC_TACTICAL_DEFEAT, document["tactical_defeat"]);
+	loadMusicModeList(MUSIC_TACTICAL_DEFEAT, obj["tactical_defeat"]);
 
 	return true;
 }
@@ -921,19 +873,10 @@ bool DefaultContentManager::readWeaponTable(
 	const char *fileName,
 	std::vector<std::vector<const WeaponModel*> > & weaponTable)
 {
-	AutoSGPFile f(openGameResForReading(fileName));
-	ST::string jsonData = FileMan::fileReadText(f);
-
-	rapidjson::Document document;
-	if (document.Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
+	auto document = readJsonDataFile(fileName);
+	if(document->IsArray())
 	{
-		SLOGE("Failed to parse %s", fileName);
-		return false;
-	}
-
-	if(document.IsArray())
-	{
-		const rapidjson::Value& a = document;
+		const rapidjson::Value& a = document->GetArray();
 		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
 		{
 			std::vector<ST::string> weaponNames;
@@ -980,7 +923,7 @@ bool DefaultContentManager::loadArmyData()
 	readWeaponTable("army-gun-choice-normal.json", mNormalGunChoice);
 	readWeaponTable("army-gun-choice-extended.json", mExtendedGunChoice);
 
-	std::shared_ptr<rapidjson::Document> jsonAC(readJsonDataFile("army-compositions.json"));
+	auto jsonAC = readJsonDataFile("army-compositions.json");
 	auto armyCompModels = ArmyCompositionModel::deserialize(*jsonAC);
 	ArmyCompositionModel::validateData(armyCompModels);
 
@@ -992,7 +935,7 @@ bool DefaultContentManager::loadArmyData()
 	}
 	armyCompModels.clear();
 
-	std::shared_ptr<rapidjson::Document> jsonGG(readJsonDataFile("army-garrison-groups.json"));
+	auto jsonGG = readJsonDataFile("army-garrison-groups.json");
 	for (auto& element : jsonGG->GetArray())
 	{
 		auto obj = JsonObjectReader(element);
@@ -1002,7 +945,7 @@ bool DefaultContentManager::loadArmyData()
 	}
 	GarrisonGroupModel::validateData(m_garrisonGroups);
 
-	std::shared_ptr<rapidjson::Document> jsonPG(readJsonDataFile("army-patrol-groups.json"));
+	auto jsonPG = readJsonDataFile("army-patrol-groups.json");
 	for (auto& element : jsonPG->GetArray())
 	{
 		m_patrolGroups.push_back(
@@ -1035,7 +978,7 @@ void DefaultContentManager::loadStringRes(const char *name, std::vector<const ST
 	}
 
 	fullName += ".json";
-	std::shared_ptr<rapidjson::Document> json(readJsonDataFile(fullName.c_str()));
+	auto json = readJsonDataFile(fullName.c_str());
 	std::vector<ST::string> utf8_encoded;
 	JsonUtility::parseListStrings(*json, utf8_encoded);
 	for (const ST::string &str : utf8_encoded)
@@ -1061,20 +1004,20 @@ bool DefaultContentManager::loadGameData()
 		m_itemMap.insert(std::make_pair(item->getInternalName(), item));
 	}
 
-	std::shared_ptr<rapidjson::Document> replacement_json(readJsonDataFile("tactical-map-item-replacements.json"));
+	auto replacement_json = readJsonDataFile("tactical-map-item-replacements.json");
 	m_mapItemReplacements = MapItemReplacementModel::deserialize(replacement_json.get(), this);
 
 	loadAllDealersInventory();
 
-	std::shared_ptr<rapidjson::Document> game_json(readJsonDataFile("game.json"));
+	auto game_json = readJsonDataFile("game.json");
 	m_gamePolicy = new DefaultGamePolicy(game_json.get());
 
-	std::shared_ptr<rapidjson::Document> imp_json(readJsonDataFile("imp.json"));
+	auto imp_json = readJsonDataFile("imp.json");
 	m_impPolicy = new DefaultIMPPolicy(imp_json.get(), this);
 
 	loadStringRes("strings/shipping-destinations", m_shippingDestinationNames);
 
-	std::shared_ptr<rapidjson::Document> shippingDestJson(readJsonDataFile("shipping-destinations.json"));
+	auto shippingDestJson = readJsonDataFile("shipping-destinations.json");
 	for (auto& element : shippingDestJson->GetArray())
 	{
 		auto r = JsonObjectReader(element);
@@ -1093,17 +1036,22 @@ bool DefaultContentManager::loadGameData()
 	return result;
 }
 
-rapidjson::Document* DefaultContentManager::readJsonDataFile(const char *fileName) const
+std::shared_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const char *fileName) const
 {
 	AutoSGPFile f(openGameResForReading(fileName));
 	ST::string jsonData = FileMan::fileReadText(f);
 
-	rapidjson::Document *document = new rapidjson::Document();
+	auto document = std::make_shared<rapidjson::Document>();
 	if (document->Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
 	{
-		SLOGE("Failed to parse '%s'", fileName);
-		delete document;
-		throw std::runtime_error(FormattedString("Failed to parse '%s'", fileName).to_std_string());
+		ST::string errorMessage = ST::format("Failed to parse {} (at location {}) {} ",
+			fileName,
+			document->GetErrorOffset(),
+			rapidjson::GetParseError_En(document->GetParseError())
+		);
+
+		SLOGE(errorMessage);
+		throw std::runtime_error(errorMessage.to_std_string());
 	}
 
 	return document;
@@ -1111,8 +1059,7 @@ rapidjson::Document* DefaultContentManager::readJsonDataFile(const char *fileNam
 
 const DealerInventory * DefaultContentManager::loadDealerInventory(const char *fileName)
 {
-	std::shared_ptr<rapidjson::Document> json(readJsonDataFile(fileName));
-	return new DealerInventory(json.get(), this);
+	return new DealerInventory(readJsonDataFile(fileName).get(), this);
 }
 
 bool DefaultContentManager::loadAllDealersInventory()
@@ -1212,7 +1159,6 @@ bool DefaultContentManager::loadStrategicLayerData() {
 			BloodCatPlacementsModel::deserialize(obj)
 		);
 	}
-	delete json;
 
 	json = readJsonDataFile("strategic-bloodcat-spawns.json");
 	for (auto& element : json->GetArray()) 
@@ -1222,7 +1168,6 @@ bool DefaultContentManager::loadStrategicLayerData() {
 			BloodCatSpawnsModel::deserialize(obj)
 		);
 	}
-	delete json;
 
 	json = readJsonDataFile("strategic-map-creature-lairs.json");
 	for (auto& element : json->GetArray())
@@ -1231,7 +1176,6 @@ bool DefaultContentManager::loadStrategicLayerData() {
 			CreatureLairModel::deserialize(element)
 		);
 	}
-	delete json;
 
 	json = readJsonDataFile("strategic-fact-params.json");
 	for (auto& element : json->GetArray())
@@ -1239,7 +1183,6 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		auto params = FactParamsModel::deserialize(element);
 		m_factParams[params->fact] = params;
 	}
-	delete json;
 
 	json = readJsonDataFile("strategic-mines.json");
 	auto arr = json->GetArray();
@@ -1250,7 +1193,6 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		);
 	}
 	MineModel::validateData(m_mines);
-	delete json;
 
 	json = readJsonDataFile("strategic-map-sam-sites.json");
 	for (auto& element : json->GetArray())
@@ -1259,7 +1201,6 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		m_samSites.push_back(samSite);
 	}
 	SamSiteModel::validateData(m_samSites);
-	delete json;
 
 	json = readJsonDataFile("strategic-map-towns.json");
 	for (auto& element : json->GetArray()) 
@@ -1267,7 +1208,6 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		auto town = TownModel::deserialize(element);
 		m_towns.insert(std::make_pair(town->townId, town));
 	}
-	delete json;
 	
 	loadStringRes("strings/strategic-map-town-names", m_townNames);
 	loadStringRes("strings/strategic-map-town-name-locatives", m_townNameLocatives);
@@ -1279,11 +1219,9 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		m_undergroundSectors.push_back(ugSector);
 	}
 	UndergroundSectorModel::validateData(m_undergroundSectors);
-	delete json;
 
 	json = readJsonDataFile("strategic-map-movement-costs.json");
 	m_movementCosts = MovementCostsModel::deserialize(*json);
-	delete json;
 
 	json = readJsonDataFile("strategic-map-npc-placements.json");
 	for (auto& element : json->GetArray())
@@ -1291,7 +1229,6 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		auto placement = NpcPlacementModel::deserialize(element);
 		m_npcPlacements.insert(std::make_pair(placement->profileId, placement));
 	}
-	delete json;
 
 	CreatureLairModel::validateData(m_creatureLairs, m_undergroundSectors, m_mines.size());
 	return true;
@@ -1305,7 +1242,6 @@ bool DefaultContentManager::loadTacticalLayerData()
 		auto params = NpcActionParamsModel::deserialize(element);
 		m_npcActionParams[params->actionCode] = params;
 	}
-	delete json;
 
 	return true;
 }

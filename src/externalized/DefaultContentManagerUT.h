@@ -11,7 +11,7 @@ public:
 	virtual void init();
 
 	// expose this method to unit tests
-	rapidjson::Document* _readJsonDataFile(const char* fileName) const;
+	std::shared_ptr<rapidjson::Document> _readJsonDataFile(const char* fileName) const;
 
 	/** Create DefaultContentManager for usage in unit testing. */
 	static DefaultContentManagerUT* createDefaultCMForTesting();
