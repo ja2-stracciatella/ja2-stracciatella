@@ -2378,7 +2378,7 @@ try
 
 	if (dMajorMapVersion >= 4.00 && gMapInformation.ubMapVersion != ubMinorMapVersion)
 	{
-		throw new std::runtime_error("map version must match minor version");
+		SLOGW(ST::format("map version must match minor version ({} != {})", gMapInformation.ubMapVersion, ubMinorMapVersion));
 	}
 
 	if (uiFlags & MAP_FULLSOLDIER_SAVED)
