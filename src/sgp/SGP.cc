@@ -565,7 +565,7 @@ void TerminationHandler()
 		}
 		catch (const std::exception& e) 
 		{
-			SLOGE(ST::format("Game has been terminated due to an unrecoverable: {} ({})", e.what(), typeid(e).name()));
+			SLOGE(ST::format("Game has been terminated due to an unrecoverable error: {} ({})", e.what(), typeid(e).name()));
 		}
 		catch (...)
 		{
