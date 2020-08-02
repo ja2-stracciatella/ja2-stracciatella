@@ -7,4 +7,6 @@
  * Call this function if you want to exit the game. */
 void requestGameExit();
 
+/** Handler for set_terminate */
+void TerminationHandler();
 #endif

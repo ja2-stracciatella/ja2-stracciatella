@@ -38,7 +38,7 @@
 #if defined _WIN32
 #	define WIN32_LEAN_AND_MEAN
 #	include <windows.h>
-
+#	include <typeinfo>
 #	include "Local.h"
 #endif
 
@@ -338,6 +338,11 @@ int main(int argc, char* argv[])
 		}
 	}
 
+#if _WIN32
+	// This is only required on Windows, as Linux/Mac prints the details of unhandled exceptions on program abort
+	std::set_terminate(TerminationHandler);
+#endif
+
 	ST::string exeFolder = FileMan::getParentPath(argv[0], true);
 
 	RustPointer<EngineOptions> params(EngineOptions_create(argv, argc));
@@ -546,6 +551,28 @@ int main(int argc, char* argv[])
 	GCM = NULL;
 
 	return EXIT_SUCCESS;
+}
+
+//  Prints the exception message (if any) and abort
+void TerminationHandler()
+{
+	auto ex = std::current_exception();
+	if (ex)
+	{
+		try
+		{
+			std::rethrow_exception(ex);
+		}
+		catch (const std::exception& e) 
+		{
+			SLOGE(ST::format("Game has been terminated due to an unrecoverable: {} ({})", e.what(), typeid(e).name()));
+		}
+		catch (...)
+		{
+			SLOGE("Game has been terminated due to an unknown error");
+		}
+	}
+	std::abort();
 }
 
 /*static void convertDialogQuotesToJson(const DefaultContentManager *cm,
