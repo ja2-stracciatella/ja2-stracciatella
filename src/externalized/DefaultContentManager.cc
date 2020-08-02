@@ -1049,8 +1049,6 @@ std::shared_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(con
 			document->GetErrorOffset(),
 			rapidjson::GetParseError_En(document->GetParseError())
 		);
-
-		SLOGE(errorMessage);
 		throw std::runtime_error(errorMessage.to_std_string());
 	}
 
