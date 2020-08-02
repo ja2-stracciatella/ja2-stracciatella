@@ -16,7 +16,7 @@ void DefaultContentManagerUT::init()
 	AddVFSLayer(VFS_ORDER::ASSETS_STRACCIATELLA, m_externalizedDataPath);
 }
 
-rapidjson::Document* DefaultContentManagerUT::_readJsonDataFile(const char* fileName) const
+std::shared_ptr<rapidjson::Document> DefaultContentManagerUT::_readJsonDataFile(const char* fileName) const
 {
 	return DefaultContentManager::readJsonDataFile(fileName);
 }

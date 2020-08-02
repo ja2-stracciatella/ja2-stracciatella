@@ -12,6 +12,7 @@
 #include <string_theory/string>
 
 #include <map>
+#include <memory>
 #include <stdexcept>
 #include <vector>
 
@@ -262,7 +263,7 @@ protected:
 	bool loadStrategicLayerData();
 	bool loadTacticalLayerData();
 
-	rapidjson::Document* readJsonDataFile(const char *fileName) const;
+	std::shared_ptr<rapidjson::Document> readJsonDataFile(const char *fileName) const;
 	void AddVFSLayer(VFS_ORDER order, const ST::string path, const bool throwOnError = true);
 };
 

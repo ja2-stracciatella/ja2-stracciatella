@@ -144,7 +144,7 @@ TEST(ExternalizedData, readEveryFile)
 	std::vector<ST::string> results = FindFilesInDir(dataPath, "json", true, false, false, true);
 	for (ST::string f : results)
 	{
-		auto json = cm->_readJsonDataFile(f.c_str());
+		auto json = cm->_readJsonDataFile(f.c_str()).get();
 		ASSERT_FALSE(json == NULL);
 	}
 }
