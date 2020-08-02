@@ -288,6 +288,10 @@ std::vector<ST::string> InitGlobalLocale()
 	{
 		problems.emplace_back(std::move(ST::format("SetConsoleCP(CP_UTF8) failed, using input code page {}", GetConsoleCP())));
 	}
+	 
+	// Ensure quick-edit mode is off, or else it will block execution
+	HANDLE hInput = GetStdHandle(STD_INPUT_HANDLE);
+	SetConsoleMode(hInput, ENABLE_EXTENDED_FLAGS);
 #endif
 
 #ifdef WITH_CUSTOM_LOCALE
