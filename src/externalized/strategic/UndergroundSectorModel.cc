@@ -35,8 +35,8 @@ std::array<uint8_t, NUM_DIF_LEVELS> readIntArray(const rapidjson::Value& obj, co
 	auto arr = obj[fieldName].GetArray();
 	if (arr.Size() != NUM_DIF_LEVELS)
 	{
-		SLOGE(ST::format("The number of values in {} is not same as NUM_DIF_LEVELS({})", fieldName, NUM_DIF_LEVELS));
-		throw std::runtime_error("");
+		ST::string err = ST::format("The number of values in {} is not same as NUM_DIF_LEVELS({})", fieldName, NUM_DIF_LEVELS);
+		throw std::runtime_error(err.to_std_string());
 	}
 	for (auto i = 0; i < NUM_DIF_LEVELS; i++)
 	{
@@ -51,15 +51,15 @@ UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Val
 	auto sectorString = obj["sector"].GetString();
 	if (!IS_VALID_SECTOR_SHORT_STRING(sectorString))
 	{
-		SLOGE(ST::format("'{}' is not valid sector", sectorString));
-		throw std::runtime_error("");
+		ST::string err = ST::format("'{}' is not valid sector", sectorString);
+		throw std::runtime_error(err.to_std_string());
 	}
 	uint8_t sectorId = SECTOR_FROM_SECTOR_SHORT_STRING(sectorString);
 	uint8_t sectorZ = obj["sectorLevel"].GetUint();
 	if (sectorZ == 0 || sectorZ > 3)
 	{
-		SLOGE("Sector level must be between 1 and 3");
-		throw std::runtime_error("");
+		ST::string err = "Sector level must be between 1 and 3";
+		throw std::runtime_error(err.to_std_string());
 	}
 
 	uint8_t adjacencyFlag = NO_ADJACENT_SECTOR;
@@ -71,8 +71,8 @@ UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Val
 			const char* adj = el.GetString();
 			if (strlen(adj) != 1)
 			{
-				SLOGE(ST::format("'{}' is not a valid adjacency direction.", adj));
-				throw std::runtime_error("");
+				ST::string err = ST::format("'{}' is not a valid adjacency direction.", adj);
+				throw std::runtime_error(err.to_std_string());
 			}
 			switch (adj[0])
 			{
@@ -89,8 +89,8 @@ UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Val
 				adjacencyFlag |= WEST_ADJACENT_SECTOR;
 				break;
 			default:
-				SLOGE(ST::format("{} is not a valid direction.", adj[0]));
-				throw std::runtime_error("");
+				ST::string err = ST::format("{} is not a valid direction.", adj[0]);
+				throw std::runtime_error(err.to_std_string());
 			}
 		}
 	}
@@ -119,8 +119,8 @@ void UndergroundSectorModel::validateData(const std::vector<const UndergroundSec
 		auto iter = std::find_if(ugSectors.begin(), ugSectors.end(), [sectorId, sectorZ](const UndergroundSectorModel* s) { return (s->sectorId == sectorId && s->sectorZ == sectorZ); });
 		if (iter == ugSectors.end())
 		{
-			SLOGW(ST::format("An underground sector is expected at ({},{},{}), but is not defined.", basementLoc[0], basementLoc[1], basementLoc[2]));
-			throw std::runtime_error("");
+			ST::string err = ST::format("An underground sector is expected at ({},{},{}), but is not defined.", basementLoc[0], basementLoc[1], basementLoc[2]);
+			throw std::runtime_error(err.to_std_string());
 		}
 	}
 }

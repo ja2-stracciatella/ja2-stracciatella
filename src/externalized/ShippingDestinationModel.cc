@@ -50,21 +50,21 @@ void ShippingDestinationModel::validateData(std::vector<const ShippingDestinatio
 		auto dest = destinations[i];
 		if (dest->locationId != i)
 		{
-			SLOGE(ST::format("Wrong locationId at position {}. Got {}.", i, dest->locationId));
-			throw std::runtime_error("");
+			ST::string err = ST::format("Wrong locationId at position {}. Got {}.", i, dest->locationId);
+			throw std::runtime_error(err.to_std_string());
 		}
 		if (dest->isPrimary) numPrimaryDestinations++;
 	}
 
 	if (numPrimaryDestinations != 1)
 	{
-		SLOGE(ST::format("There must be exactly 1 primary Shipping Destination. Got {}.", numPrimaryDestinations));
-		throw std::runtime_error("");
+		ST::string err = ST::format("There must be exactly 1 primary Shipping Destination. Got {}.", numPrimaryDestinations);
+		throw std::runtime_error(err.to_std_string());
 	}
 
 	if (destinations.size() != destinationNames.size())
 	{
-		SLOGE(ST::format("There must be {} Shipping Destinations (Must be same as the number of names in strings/shipping-destinations). Got {}.", destinationNames.size(), destinations.size()));
-		throw std::runtime_error("");
+		ST::string err = ST::format("There must be {} Shipping Destinations (Must be same as the number of names in strings/shipping-destinations). Got {}.", destinationNames.size(), destinations.size());
+		throw std::runtime_error(err.to_std_string());
 	}
 }
