@@ -23,8 +23,8 @@ uint8_t mineTypeFromString(std::string mineType)
 	if (mineType == "GOLD_MINE") return GOLD_MINE;
 	if (mineType == "SILVER_MINE") return SILVER_MINE;
 	
-	SLOGE(ST::format("Unrecognized mine type: '{}'", mineType));
-	throw std::runtime_error("");
+	ST::string err = ST::format("Unrecognized mine type: '{}'", mineType);
+	throw std::runtime_error(err.to_std_string());
 }
 
 std::vector<std::array<uint8_t, 2>> readMineSectors(const rapidjson::Value& sectorsJson)
@@ -56,8 +56,8 @@ MineModel* MineModel::deserialize(uint8_t index, const rapidjson::Value& json)
 	const char* entrance = obj.GetString("entranceSector");
 	if (!IS_VALID_SECTOR_SHORT_STRING(entrance))
 	{
-		SLOGE(ST::format("Invalid mine entrance sector: '{}'", entrance));
-		throw std::runtime_error("");
+		ST::string err = ST::format("Invalid mine entrance sector: '{}'", entrance);
+		throw std::runtime_error(err.to_std_string());
 	}
 
 	auto mineSectors = readMineSectors(json["mineSectors"]);
@@ -85,7 +85,7 @@ void MineModel::validateData(std::vector<const MineModel*> models)
 	if (models.size() < MAX_NUMBER_OF_MINES)
 	{
 		// Mine-related quests use hard-coded enums and may run into problems.
-		SLOGE(ST::format("There are fewer than {} mines defined.", MAX_NUMBER_OF_MINES));
-		throw std::runtime_error("");
+		ST::string err = ST::format("There are fewer than {} mines defined.", MAX_NUMBER_OF_MINES);
+		throw std::runtime_error(err.to_std_string());
 	}
 }

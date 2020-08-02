@@ -22,8 +22,8 @@ uint8_t creatureHabitatFromString(std::string habitat)
 	if (habitat == "FEEDING_GROUNDS") return FEEDING_GROUNDS;
 	if (habitat == "MINE_EXIT") return MINE_EXIT;
 
-	SLOGE(ST::format("Unrecognized creature habitat: '{}'", habitat));
-	throw std::runtime_error("");
+	ST::string err = ST::format("Unrecognized creature habitat: '{}'", habitat);
+	throw std::runtime_error(err.to_std_string());
 }
 
 InsertionCode insertionCodeFromString(std::string code)
@@ -39,8 +39,8 @@ InsertionCode insertionCodeFromString(std::string code)
 	if (code == "SECONDARY_EDGEINDEX") return INSERTION_CODE_SECONDARY_EDGEINDEX;
 	if (code == "CENTER") return INSERTION_CODE_CENTER;
 
-	SLOGE(ST::format("Unrecognized insertion code: '{}'", code));
-	throw std::runtime_error("");
+	ST::string err = ST::format("Unrecognized insertion code: '{}'", code);
+	throw std::runtime_error(err.to_std_string());
 }
 
 std::vector<CreatureLairSector> readLairSectors(const rapidjson::Value& json)
@@ -65,8 +65,8 @@ std::vector<CreatureLairSector> readLairSectors(const rapidjson::Value& json)
 
 	if (sectors.size() == 0)
 	{
-		SLOGE(ST::format("Lair has no lair sectors"));
-		throw std::runtime_error("");
+		ST::string err = ST::format("Lair has no lair sectors");
+		throw std::runtime_error(err.to_std_string());
 	}
 
 	return sectors;
@@ -95,8 +95,8 @@ std::vector<CreatureAttackSector> readAttackSectors(const rapidjson::Value& json
 
 	if (attacks.size() == 0)
 	{
-		SLOGE(ST::format("Lair has no town attack sectors"));
-		throw std::runtime_error("");
+		ST::string err = ST::format("Lair has no town attack sectors");
+		throw std::runtime_error(err.to_std_string());
 	}
 
 	return attacks;
@@ -189,23 +189,23 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 		// checkd for valid lairId, 0 is reserved
 		if (lair->lairId < 1)
 		{
-			SLOGE(ST::format("lairID {} is invalid. Must be greater than 0"));
-			throw std::runtime_error("");
+			ST::string err = ST::format("lairID {} is invalid. Must be greater than 0");
+			throw std::runtime_error(err.to_std_string());
 		}
 
 		// make sure we do not define the same lairId more than once
 		if (distinctLairIds.find(lair->lairId) != distinctLairIds.end())
 		{
-			SLOGE(ST::format("lairID {} is already defined before"));
-			throw std::runtime_error("");
+			ST::string err = ST::format("lairID {} is already defined before");
+			throw std::runtime_error(err.to_std_string());
 		}
 		distinctLairIds.insert(lair->lairId);
 
 		// if the mineId is valid
 		if (lair->associatedMineId > numMines)
 		{
-			SLOGE(ST::format("Invalid mineId {}", lair->associatedMineId));
-			throw std::runtime_error("");
+			ST::string err = ST::format("Invalid mineId {}", lair->associatedMineId);
+			throw std::runtime_error(err.to_std_string());
 		}
 		
 		// The first lair sector in list should be QUEEN_LAIR
@@ -250,8 +250,8 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 			}
 			if (!isDefined)
 			{
-				SLOGE(ST::format("Underground lair sector ({},{}) is not defined as an underground sector. Make sure the data is consistent with strategic-map-underground-sectors.json.", sec.sectorId, sec.sectorLevel));
-				throw std::runtime_error("");
+				ST::string err = ST::format("Underground lair sector ({},{}) is not defined as an underground sector. Make sure the data is consistent with strategic-map-underground-sectors.json.", sec.sectorId, sec.sectorLevel);
+				throw std::runtime_error(err.to_std_string());
 			}
 		}
 	}
