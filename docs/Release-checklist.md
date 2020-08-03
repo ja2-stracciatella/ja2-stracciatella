@@ -1,41 +1,57 @@
-# Pre-release
-* triage newer bugs and open PRs (check the milestone if one exists)
-* fix, revert and delay the release or merges if necessary
-* test a clean build (handled by travis)
+## Pre-release development
 
-## Runtime check
-* IMP creation
-* AIM and extending contracts
-* taking Drassen airport or more
-* buying from Bobby Ray's
-* visual inspection of laptop screens
+- [ ] Fix or postpone issues in the [milestone](https://github.com/ja2-stracciatella/ja2-stracciatella/milestone/6)
+- [ ] Triage open pull requests and recent bugs
+- [ ] Finalise choice of version number
+  - [ ] Decide if this version should be 1.0 #443 
+- [ ] Add new contributors to contributors.txt
+- [ ] Update changes.md (run docs/draft-changelog.sh to get started)
+- [ ] Update man page if necessary
+
+
+## Release candidate
+
+- [ ] Update Version number to `-rc` and tag
+- [ ] Mark the tag as a Github prerelease
+- [ ] Runtime tests of prerelease packages
+  - [ ] Linux
+    - [ ] Ubuntu 20.04 x64
+  - [ ] Windows
+  - [ ] OS X
+  
+Runtime tests:
+ * IMP creation
+ * AIM and extending contracts
+ * taking Drassen airport or more
+ * buying from Bobby Ray's
+ * visual inspection of laptop screens
+
+If you want to build the packages manually:
+
+    $ make clean
+    $ make build-releases # to build all releases
+    $ make build-win-release-on-linux # crosscompile Windows release on Linux
+    $ make build-release-on-mac # build the mac bundle
+    $ make build-debian-package # build the .DEB package
+
 
 # Release
-* update changes.md (run docs/draft-changelog.sh to get started)
-  * update man page if necessary
-* bump version
-* github release + tags
 
-## Build releases for distribution
-To build all releases:
-    $ make clean
-    $ make build-releases
+- [ ] Attach built versions to GitHub release
+  - [ ] Linux, Windows
+  - [ ] OS X
+- [ ] Document new features on the website
+- [ ] Make GitHub prerelase the release, update texts
+- [ ] Announce
+  - [ ] Write main announcement
+  - [ ] Website download page (update frontmatter variables as needed)
+  - [ ] Website news
+  - [ ] Bear's pit
+  - [ ] Moddb
 
-###  Windows release on Linux: 
- 
-    $ make clean 
-    $ make build-win-release-on-linux 
- 
-### On Mac: 
-    $ make clean 
-    $ make build-release-on-mac 
- 
-### Debian packages: 
-For the current architecture:
-      $ make build-debian-package
+  
+## Post-release
+- [ ] Set version to +1 and add the `-dev` suffix
+- [ ] Close this bug and GitHub milestone
+- [ ] Create new milestone if none exists yet
 
-## Announcements
-* website
-* README.md
-* Bear's pit
-* moddb
