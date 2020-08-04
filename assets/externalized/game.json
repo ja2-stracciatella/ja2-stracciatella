@@ -37,6 +37,11 @@
     //  Stracciatella standard value: 25
     "ms_per_game_cycle": 25,
 
+    //  Number of milliseconds for one game time slice.
+    //  Decreasing this value will speed up UI transitions and soldier animations.
+    //  Stracciatella standard value: 10
+    "ms_per_time_slice": 10,
+
     //  --------------------------------------------------
     //  Gameplay settings
     //  --------------------------------------------------

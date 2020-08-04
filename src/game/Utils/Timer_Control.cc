@@ -1,13 +1,17 @@
+#include "Timer_Control.h"
+
+#include "ContentManager.h"
+#include "Debug.h"
+#include "GameInstance.h"
+#include "GamePolicy.h"
+#include "Handle_Items.h"
+#include "MapScreen.h"
+#include "Overhead.h"
+#include "Soldier_Control.h"
+#include "WorldDef.h"
+
 #include <SDL.h>
 #include <stdexcept>
-
-#include "Debug.h"
-#include "MapScreen.h"
-#include "Soldier_Control.h"
-#include "Timer_Control.h"
-#include "Overhead.h"
-#include "Handle_Items.h"
-#include "WorldDef.h"
 
 
 INT32	giClockTimer = -1;
@@ -127,7 +131,6 @@ static UINT32 TimeProc(UINT32 const interval, void*)
 
 void InitializeJA2Clock(void)
 {
-#ifdef CALLBACKTIMER
 	SDL_InitSubSystem(SDL_INIT_TIMER);
 
 	// Init timer delays
@@ -136,17 +139,19 @@ void InitializeJA2Clock(void)
 		giTimerCounters[i] = giTimerIntervals[i];
 	}
 
-	g_timer = SDL_AddTimer(BASETIMESLICE, TimeProc, 0);
+	INT32 msPerTimeSlice = gamepolicy(ms_per_time_slice);
+	if (msPerTimeSlice <= 0)
+	{
+		throw std::runtime_error("ms_per_time_slice must be a positive integer");
+	}
+	g_timer = SDL_AddTimer(msPerTimeSlice, TimeProc, 0);
 	if (!g_timer) throw std::runtime_error("Could not create timer callback");
-#endif
 }
 
 
 void ShutdownJA2Clock(void)
 {
-#ifdef CALLBACKTIMER
 	SDL_RemoveTimer(g_timer);
-#endif
 }
 
 
