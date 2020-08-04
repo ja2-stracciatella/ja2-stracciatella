@@ -1,13 +1,17 @@
+#include "Timer_Control.h"
+
+#include "ContentManager.h"
+#include "Debug.h"
+#include "GameInstance.h"
+#include "GamePolicy.h"
+#include "Handle_Items.h"
+#include "MapScreen.h"
+#include "Overhead.h"
+#include "Soldier_Control.h"
+#include "WorldDef.h"
+
 #include <SDL.h>
 #include <stdexcept>
-
-#include "Debug.h"
-#include "MapScreen.h"
-#include "Soldier_Control.h"
-#include "Timer_Control.h"
-#include "Overhead.h"
-#include "Handle_Items.h"
-#include "WorldDef.h"
 
 
 INT32	giClockTimer = -1;
@@ -136,7 +140,7 @@ void InitializeJA2Clock(void)
 		giTimerCounters[i] = giTimerIntervals[i];
 	}
 
-	g_timer = SDL_AddTimer(BASETIMESLICE, TimeProc, 0);
+	g_timer = SDL_AddTimer(gamepolicy(ms_per_time_slice), TimeProc, 0);
 	if (!g_timer) throw std::runtime_error("Could not create timer callback");
 #endif
 }
