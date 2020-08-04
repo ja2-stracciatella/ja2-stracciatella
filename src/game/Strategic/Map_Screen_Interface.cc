@@ -3880,6 +3880,8 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 			if (gTacticalStatus.uiFlags & INCOMBAT) return ME_COMBAT;
 			// Hostile sector?
 			if (gTacticalStatus.fEnemyInSector) return ME_ENEMY;
+			// Bloodcat ambush?
+			if (gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE && HostileBloodcatsPresent()) return ME_COMBAT;
 			// Air raid in loaded sector where character is?
 			if (InAirRaid()) return ME_AIR_RAID;
 		}
