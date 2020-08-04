@@ -131,7 +131,6 @@ static UINT32 TimeProc(UINT32 const interval, void*)
 
 void InitializeJA2Clock(void)
 {
-#ifdef CALLBACKTIMER
 	SDL_InitSubSystem(SDL_INIT_TIMER);
 
 	// Init timer delays
@@ -142,15 +141,12 @@ void InitializeJA2Clock(void)
 
 	g_timer = SDL_AddTimer(gamepolicy(ms_per_time_slice), TimeProc, 0);
 	if (!g_timer) throw std::runtime_error("Could not create timer callback");
-#endif
 }
 
 
 void ShutdownJA2Clock(void)
 {
-#ifdef CALLBACKTIMER
 	SDL_RemoveTimer(g_timer);
-#endif
 }
 
 

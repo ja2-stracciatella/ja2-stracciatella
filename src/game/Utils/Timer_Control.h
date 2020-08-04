@@ -3,11 +3,6 @@
 
 #include "Types.h"
 
-
-#ifndef CALLBACKTIMER
-#define CALLBACKTIMER
-#endif
-
 typedef void (*CUSTOMIZABLE_TIMER_CALLBACK) ( void );
 
 // TIMER DEFINES
@@ -68,8 +63,6 @@ extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 // MACROS
 // Check if new counter < 0        | set to 0 |        Decrement
 
-#ifdef CALLBACKTIMER
-
 #define UPDATECOUNTER( c )		( ( giTimerCounters[ c ] - BASETIMESLICE ) < 0 ) ?  ( giTimerCounters[ c ] = 0 ) : ( giTimerCounters[ c ] -= BASETIMESLICE )
 #define RESETCOUNTER( c )		( giTimerCounters[ c ] = giTimerIntervals[ c ] )
 #define COUNTERDONE( c )		( giTimerCounters[ c ] == 0 ) ? TRUE : FALSE
@@ -85,19 +78,6 @@ extern CUSTOMIZABLE_TIMER_CALLBACK gpCustomizableTimerCallback;
 
 #define SYNCTIMECOUNTER()		(void)0
 #define ZEROTIMECOUNTER( c )		( c = 0 )
-
-#else
-
-#define UPDATECOUNTER( c )
-#define RESETCOUNTER( c )		( giTimerCounters[ c ] = giClockTimer )
-#define COUNTERDONE( c )		((((giClockTimer = GetJA2Clock()) - giTimerCounters[c]) >  giTimerIntervals[c]) ? TRUE : FALSE)
-
-#define UPDATETIMECOUNTER( c )
-#define RESETTIMECOUNTER( c, d )	( c = giClockTimer )
-#define TIMECOUNTERDONE(c, d)		(giClockTimer - c >  d)
-#define SYNCTIMECOUNTER( )		( giClockTimer = GetJA2Clock() )
-
-#endif
 
 // whenever guiBaseJA2Clock changes, we must reset all the timer variables that
 // use it as a reference
