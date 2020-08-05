@@ -49,6 +49,7 @@
 #define BLUE_MASK 0x001F
 #define ALPHA_MASK 0
 
+#define OVERSAMPLING_SCALE 4
 
 static BOOLEAN gfVideoCapture = FALSE;
 static UINT32  guiFramePeriod = 1000 / 15;
@@ -209,10 +210,23 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 		ScaleQuality = VideoScaleQuality::NEAR_PERFECT;
 #endif
 	}
-	else if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) {
+	else if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) 
+	{
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+		ScaledScreenTexture = SDL_CreateTexture(GameRenderer,
+			SDL_PIXELFORMAT_RGB565,
+			SDL_TEXTUREACCESS_TARGET,
+			SCREEN_WIDTH * OVERSAMPLING_SCALE, SCREEN_HEIGHT * OVERSAMPLING_SCALE);
+
+		if (ScaledScreenTexture == NULL) 
+		{
+			SLOGE("SDL_CreateTexture for ScaledScreenTexture failed: %s\n", SDL_GetError());
+		}
+
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 	}
-	else {
+	else 
+	{
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	}
 
@@ -223,20 +237,6 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 
 	if (ScreenTexture == NULL) {
 		SLOGE("SDL_CreateTexture for ScreenTexture failed: %s\n", SDL_GetError());
-	}
-
-	if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) {
-		int scale = 4;
-
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-		ScaledScreenTexture = SDL_CreateTexture(GameRenderer,
-			SDL_PIXELFORMAT_RGB565,
-			SDL_TEXTUREACCESS_TARGET,
-			SCREEN_WIDTH * scale, SCREEN_HEIGHT * scale);
-
-		if (ScaledScreenTexture == NULL) {
-			SLOGE("SDL_CreateTexture for ScaledScreenTexture failed: %s\n", SDL_GetError());
-		}
 	}
 
 	FrameBuffer = SDL_CreateRGBSurface(
