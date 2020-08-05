@@ -37,6 +37,8 @@ public:
 
 protected:
 
+	void switchHeadGear(std::vector<ITEMDEFINE> from, std::vector<ITEMDEFINE> to);
+
 	const char* getPofileName() const;
 
 	/** Get free head slot or NO_SLOT if the both are occupied. */
