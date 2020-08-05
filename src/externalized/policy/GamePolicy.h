@@ -59,9 +59,6 @@ public:
 
 	bool imp_load_saved_merc_by_nickname; // IMP merc is saved and can be loaded at IMP creation if has same nickname
 	bool imp_load_keep_inventory;         // IMP merc gets inventory from last save game
-
-	bool accurate_aim_circle;             // Aim circle size and colour corresponds to chance_to_hit
-
 	bool pablo_wont_steal;                // Packages not stolen
 
 	float critical_damage_head_multiplier;//Head damage multiplier. Vanilla 1.5
