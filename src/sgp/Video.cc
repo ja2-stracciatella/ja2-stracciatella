@@ -49,6 +49,7 @@
 #define BLUE_MASK 0x001F
 #define ALPHA_MASK 0
 
+#define OVERSAMPLING_SCALE 4
 
 static BOOLEAN gfVideoCapture = FALSE;
 static UINT32  guiFramePeriod = 1000 / 15;
@@ -96,6 +97,20 @@ static VideoScaleQuality ScaleQuality = VideoScaleQuality::LINEAR;
 
 static void RecreateBackBuffer();
 static void DeletePrimaryVideoSurfaces(void);
+
+// returns if desktop resolution larger game resolution
+BOOLEAN IsDesktopLargeEnough()
+{
+	SDL_DisplayMode dm;
+	if (SDL_GetDesktopDisplayMode(0, &dm) == 0)
+	{
+		if (dm.w < SCREEN_WIDTH || dm.h < SCREEN_HEIGHT)
+		{
+			return false;
+		}
+	}
+	return true;
+}
 
 void VideoSetFullScreen(const BOOLEAN enable)
 {
@@ -176,18 +191,42 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 	}
 
 
-	if (ScaleQuality == VideoScaleQuality::PERFECT) {
+	if (ScaleQuality == VideoScaleQuality::PERFECT) 
+	{
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 #if SDL_VERSION_ATLEAST(2,0,5)
+		if (!IsDesktopLargeEnough())
+		{
+			// Pixel-perfect mode cannot handle scaling down, and will 
+			// result in a empty black screen if the window size is 
+			// smaller than logical render resolution.
+			throw std::runtime_error("Game resolution must not be larger than desktop size. "
+				"Please reduce game resolution or choose another scaling mode.");
+		}
+		SDL_SetWindowMinimumSize(g_game_window, SCREEN_WIDTH, SCREEN_HEIGHT);
 		SDL_RenderSetIntegerScale(GameRenderer, SDL_TRUE);
 #else
+		SLOGW("Pixel-perfect scaling is not available");
 		ScaleQuality = VideoScaleQuality::NEAR_PERFECT;
 #endif
 	}
-	else if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) {
+	else if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) 
+	{
+		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
+		ScaledScreenTexture = SDL_CreateTexture(GameRenderer,
+			SDL_PIXELFORMAT_RGB565,
+			SDL_TEXTUREACCESS_TARGET,
+			SCREEN_WIDTH * OVERSAMPLING_SCALE, SCREEN_HEIGHT * OVERSAMPLING_SCALE);
+
+		if (ScaledScreenTexture == NULL) 
+		{
+			SLOGE("SDL_CreateTexture for ScaledScreenTexture failed: %s\n", SDL_GetError());
+		}
+
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
 	}
-	else {
+	else 
+	{
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 	}
 
@@ -198,20 +237,6 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 
 	if (ScreenTexture == NULL) {
 		SLOGE("SDL_CreateTexture for ScreenTexture failed: %s\n", SDL_GetError());
-	}
-
-	if (ScaleQuality == VideoScaleQuality::NEAR_PERFECT) {
-		int scale = 4;
-
-		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
-		ScaledScreenTexture = SDL_CreateTexture(GameRenderer,
-			SDL_PIXELFORMAT_RGB565,
-			SDL_TEXTUREACCESS_TARGET,
-			SCREEN_WIDTH * scale, SCREEN_HEIGHT * scale);
-
-		if (ScaledScreenTexture == NULL) {
-			SLOGE("SDL_CreateTexture for ScaledScreenTexture failed: %s\n", SDL_GetError());
-		}
 	}
 
 	FrameBuffer = SDL_CreateRGBSurface(
