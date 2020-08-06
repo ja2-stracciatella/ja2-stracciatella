@@ -1735,7 +1735,8 @@
         "Sound": "sounds/adult spit.wav",
         "bNotBuyable": true,
         "bNotEditor": true,
-        "bDefaultUndroppable": true
+        "bDefaultUndroppable": true,
+        "usSmokeEffect": 159  // LARGE_CREATURE_GAS
     },
     {
         "itemIndex": 49,
@@ -1984,7 +1985,8 @@
         "Sound": "sounds/adult spit.wav",
         "bNotBuyable": true,
         "bNotEditor": true,
-        "bDefaultUndroppable": true
+        "bDefaultUndroppable": true,
+        "usSmokeEffect": 160  // VERY_SMALL_CREATURE_GAS
     },
     {
         "itemIndex": 58,
@@ -2010,7 +2012,8 @@
         "Sound": "sounds/adult spit.wav",
         "bNotBuyable": true,
         "bNotEditor": true,
-        "bDefaultUndroppable": true
+        "bDefaultUndroppable": true,
+        "usSmokeEffect": 160  // VERY_SMALL_CREATURE_GAS
     },
     {
         "itemIndex": 59,
@@ -2036,7 +2039,8 @@
         "Sound": "sounds/adult spit.wav",
         "bNotBuyable": true,
         "bNotEditor": true,
-        "bDefaultUndroppable": true
+        "bDefaultUndroppable": true,
+        "usSmokeEffect": 158  // SMALL_CREATURE_GAS
     },
     {
         "itemIndex": 60,

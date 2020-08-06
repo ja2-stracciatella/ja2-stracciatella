@@ -1623,16 +1623,12 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 
 		return( TRUE );
 	}
-	else
+	else if (ubAmmoType == AMMO_MONSTER)
 	{
-		UINT16 gas;
-		switch (usItem)
+		UINT16 gas = GCM->getWeapon(usItem)->usSmokeEffect;
+		if (gas == NONE) 
 		{
-			case CREATURE_YOUNG_MALE_SPIT:
-			case CREATURE_INFANT_SPIT:     gas = VERY_SMALL_CREATURE_GAS; break;
-			case CREATURE_OLD_MALE_SPIT:   gas = SMALL_CREATURE_GAS;      break;
-			case CREATURE_QUEEN_SPIT:      gas = LARGE_CREATURE_GAS;      break;
-			default: return FALSE;
+			return FALSE;
 		}
 
 		// Increment attack busy...
