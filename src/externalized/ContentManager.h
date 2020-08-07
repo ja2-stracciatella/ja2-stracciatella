@@ -30,6 +30,7 @@ class NpcActionParamsModel;
 class NpcPlacementModel;
 class PatrolGroupModel;
 class SamSiteModel;
+class SamSiteAirControlModel;
 class ShippingDestinationModel;
 class TownModel;
 class UndergroundSectorModel;
@@ -144,6 +145,10 @@ public:
 	virtual const std::vector<const SamSiteModel*>& getSamSites() const = 0;
 	virtual const int8_t findSamIDBySector(uint8_t sectorId) const = 0;
 	virtual const SamSiteModel* findSamSiteBySector(uint8_t sectorId) const = 0;
+
+	/* returns the index of the controlling SAM site , or -1 if sector is not covered */
+	virtual const int8_t getControllingSamSite(uint8_t sectorId) const = 0;
+
 	virtual const TownModel* getTown(int8_t townId) const = 0;
 	virtual const std::map<int8_t, const TownModel*>& getTowns() const = 0;
 	virtual const ST::string getTownName(uint8_t townId) const = 0;
