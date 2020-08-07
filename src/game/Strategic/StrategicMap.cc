@@ -172,30 +172,6 @@ BOOLEAN fSamSiteFound[ NUMBER_OF_SAMS ]={
 	FALSE,
 };
 
-UINT8 ubSAMControlledSectors[ MAP_WORLD_Y ][ MAP_WORLD_X ] = {
-//       1  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16
-	{ 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0 },
-
-	{ 0,   1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 2, 2, 2, 2, 2, 2,   0 }, // A
-	{ 0,   1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2,   0 }, // B
-	{ 0,   1, 1, 1, 1, 1, 1, 1, 3, 2, 2, 2, 2, 2, 2, 2, 2,   0 }, // C
-	{ 0,   1,01, 1, 1, 1, 1, 1, 3, 3, 2, 2, 2, 2, 2,02, 2,   0 }, // D
-	{ 0,   1, 1, 1, 1, 1, 1, 3, 3, 3, 3, 2, 2, 2, 2, 2, 2,   0 }, // E
-	{ 0,   1, 1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2, 2,   0 }, // F
-	{ 0,   1, 1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2, 2,   0 }, // G
-	{ 0,   1, 1, 1, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2,   0 }, // H
-	{ 0,   1, 1, 3, 3, 3, 3, 3,03, 3, 3, 3, 3, 3, 2, 2, 2,   0 }, // I
-	{ 0,   1, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2,   0 }, // J
-	{ 0,   4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2,   0 }, // K
-	{ 0,   4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 3, 2, 2, 2,   0 }, // L
-	{ 0,   4, 4, 4, 4, 4, 4, 4, 3, 3, 3, 3, 3, 3, 2, 2, 2,   0 }, // M
-	{ 0,   4, 4, 4,04, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2, 2,   0 }, // N
-	{ 0,   4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2, 2,   0 }, // O
-	{ 0,   4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 2,   0 }, // P
-
-	{ 0,   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,   0 }
-};
-
 static INT16 const DirXIncrementer[8] =
 {
 	0,        //N
@@ -2442,41 +2418,26 @@ INT32 GetNumberOfSAMSitesUnderPlayerControl()
 
 void UpdateAirspaceControl( void )
 {
-	INT32 iCounterA = 0, iCounterB = 0;
-	UINT8 ubControllingSAM;
-	StrategicMapElement *pSAMStrategicMap = NULL;
-	BOOLEAN fEnemyControlsAir;
 	auto samList = GCM->getSamSites();
-
-	for( iCounterA = 1; iCounterA < ( INT32 )( MAP_WORLD_X - 1 ); iCounterA++ )
+	for (int x = 1; x < (MAP_WORLD_X - 1); x++)
 	{
-		for( iCounterB = 1; iCounterB < ( INT32 )( MAP_WORLD_Y - 1 ); iCounterB++ )
+		for (int y = 1; y < (MAP_WORLD_Y - 1); y++)
 		{
-			// IMPORTANT: B and A are reverse here, since the table is stored transposed
-			ubControllingSAM = ubSAMControlledSectors[ iCounterB ][ iCounterA ];
-
-			if ( ( ubControllingSAM >= 1 ) && ( ubControllingSAM <= NUMBER_OF_SAMS ) )
+			BOOLEAN fEnemyControlsAir = FALSE;
+			INT8 bControllingSAM = GCM->getControllingSamSite(SECTOR(x, y));
+			if (bControllingSAM >= 0 && bControllingSAM < samList.size())
 			{
-				UINT8 ubSector = samList[ubControllingSAM - 1]->sectorId;
-				pSAMStrategicMap = &( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( ubSector ) ] );
+				UINT8 ubSector = samList[bControllingSAM]->sectorId;
+				StrategicMapElement* pSAMStrategicMap = &( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( ubSector ) ] );
 
 				// if the enemies own the controlling SAM site, and it's in working condition
-				if( ( pSAMStrategicMap->fEnemyControlled ) && ( pSAMStrategicMap->bSAMCondition >= MIN_CONDITION_FOR_SAM_SITE_TO_WORK ) )
+				if ((pSAMStrategicMap->fEnemyControlled) && (pSAMStrategicMap->bSAMCondition >= MIN_CONDITION_FOR_SAM_SITE_TO_WORK))
 				{
 					fEnemyControlsAir = TRUE;
 				}
-				else
-				{
-					fEnemyControlsAir = FALSE;
-				}
-			}
-			else
-			{
-				// no controlling SAM site
-				fEnemyControlsAir = FALSE;
 			}
 
-			StrategicMap[ CALCULATE_STRATEGIC_INDEX( iCounterA, iCounterB ) ].fEnemyAirControlled = fEnemyControlsAir;
+			StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].fEnemyAirControlled = fEnemyControlsAir;
 		}
 	}
 
