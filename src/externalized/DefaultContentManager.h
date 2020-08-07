@@ -179,6 +179,8 @@ public:
 	virtual const std::vector <const UndergroundSectorModel*>& getUndergroundSectors() const override;
 	virtual const MovementCostsModel* getMovementCosts() const override;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
+	virtual const LoadingScreen* getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const override;
+	virtual const LoadingScreen* getLoadingScreen(uint8_t index) const override;
 
 protected:
 	ST::string m_dataDir;
@@ -229,6 +231,7 @@ protected:
 	const IMPPolicy *m_impPolicy;
 	const GamePolicy *m_gamePolicy;
 
+	const LoadingScreenModel* m_loadingScreenModel;
 	const MovementCostsModel* m_movementCosts;
 
 	std::vector<const BloodCatPlacementsModel*> m_bloodCatPlacements;
