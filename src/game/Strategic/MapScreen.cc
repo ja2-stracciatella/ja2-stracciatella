@@ -6604,7 +6604,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 	// if we're locked into paused time compression by some event that enforces that
 	if ( PauseStateLocked() )
 	{
-		SLOGW("Can't compress time, pause state locked (reason %d). OK unless permanent.\n\
+		SLOGD("Can't compress time, pause state locked (reason %d). OK unless permanent.\n\
 			If permanent, take screenshot now, send with *previous* save & describe what happened since.",
 			guiLockPauseStateLastReasonId);
 	}

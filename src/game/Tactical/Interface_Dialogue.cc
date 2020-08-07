@@ -4062,7 +4062,7 @@ add_log:
 				}
 				break;
 			default:
-				SLOGW("No code support for NPC action %d", usActionCode );
+				SLOGD(ST::format("No code support for NPC action {}", usActionCode));
 				break;
 		}
 	}

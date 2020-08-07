@@ -198,12 +198,12 @@ void DefaultContentManager::AddVFSLayer(VFS_ORDER order, const ST::string path, 
 	ST::string error = ST::null;
 	if (Fs_isDir(path.c_str()))
 	{
-		SLOGI(ST::format("Adding directory to VFS ({}) '{}'", order, path));
+		SLOGD(ST::format("Adding directory to VFS ({}) '{}'", order, path));
 		succeeded = Vfs_addDir(m_vfs.get(), order, path.c_str());
 	}
 	else if (Fs_isFile(path.c_str()) && path.to_lower().ends_with(".slf"))
 	{
-		SLOGI(ST::format("Adding SLF archive to VFS ({}) '{}'", order, path));
+		SLOGD(ST::format("Adding SLF archive to VFS ({}) '{}'", order, path));
 		succeeded = Vfs_addSlf(m_vfs.get(), order, path.c_str());
 	}
 	else
@@ -226,7 +226,7 @@ void DefaultContentManager::AddVFSLayer(VFS_ORDER order, const ST::string path, 
 		}
 		else
 		{
-			SLOGI(ST::format("Skipped adding to VFS '{}': {}", path, error));
+			SLOGD(ST::format("Skipped adding to VFS '{}': {}", path, error));
 		}
 	}
 }
