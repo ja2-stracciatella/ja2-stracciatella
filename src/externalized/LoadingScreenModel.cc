@@ -64,7 +64,7 @@ const LoadingScreen* LoadingScreenModel::getByIndex(uint8_t index) const
 
 void LoadingScreenModel::validateData(ContentManager* cm) const
 {
-	for (int i = 0; i < screensList.size(); i++)
+	for (size_t i = 0; i < screensList.size(); i++)
 	{
 		if (cm->doesGameResExists(screensList[i].filename))
 		{
@@ -81,7 +81,7 @@ void LoadingScreenModel::validateData(ContentManager* cm) const
 LoadingScreenModel* LoadingScreenModel::deserialize(const rapidjson::Value& screensList, const rapidjson::Value& screensMapping)
 {
 	std::vector<LoadingScreen> screens = PREDEFINED_SCREENS;
-	int index = screens.size();
+	size_t index = screens.size();
 	for (auto& item : screensList.GetArray())
 	{
 		JsonObjectReader r(item);
@@ -94,7 +94,7 @@ LoadingScreenModel* LoadingScreenModel::deserialize(const rapidjson::Value& scre
 	for (index = 0; index < screens.size(); index++)
 	{
 		std::string name = screens[index].internalName.to_std_string();
-		namesMapping[name] = index;
+		namesMapping[name] = static_cast<uint8_t>(index);
 	}
 	
 

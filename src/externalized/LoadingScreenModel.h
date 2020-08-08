@@ -34,7 +34,7 @@ public:
 	LoadingScreenModel(std::vector<LoadingScreen> screensList, std::vector<LoadingScreenMapping> screensMapping);
 
 	// returns NULL if the given sector is not mapped
-	const LoadingScreen* LoadingScreenModel::getScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const;
+	const LoadingScreen* getScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const;
 
 	// throws out_of_range if index is out of bounds
 	const LoadingScreen* getByIndex(uint8_t index) const;

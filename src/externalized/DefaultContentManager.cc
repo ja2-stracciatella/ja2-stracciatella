@@ -190,6 +190,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_gamePolicy = NULL;
 
 	m_movementCosts = NULL;
+	m_loadingScreenModel = NULL;
 }
 
 
