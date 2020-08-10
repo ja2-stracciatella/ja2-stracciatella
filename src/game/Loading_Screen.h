@@ -1,6 +1,7 @@
 #ifndef LOADING_SCREEN_H
 #define LOADING_SCREEN_H
 
+#include "JA2Types.h"
 
 enum LoadingScreenID
 {
@@ -31,33 +32,19 @@ enum LoadingScreenID
 	LOADINGSCREEN_NIGHTMILITARY,
 	LOADINGSCREEN_DAYSAM,
 	LOADINGSCREEN_NIGHTSAM,
-	LOADINGSCREEN_DAYPRISON,
-	LOADINGSCREEN_NIGHTPRISON,
-	LOADINGSCREEN_DAYHOSPITAL,
-	LOADINGSCREEN_NIGHTHOSPITAL,
-	LOADINGSCREEN_DAYAIRPORT,
-	LOADINGSCREEN_NIGHTAIRPORT,
-	LOADINGSCREEN_DAYLAB,
-	LOADINGSCREEN_NIGHTLAB,
-	LOADINGSCREEN_DAYOMERTA,
-	LOADINGSCREEN_NIGHTOMERTA,
-	LOADINGSCREEN_DAYCHITZENA,
-	LOADINGSCREEN_NIGHTCHITZENA,
-	LOADINGSCREEN_DAYMINE,
-	LOADINGSCREEN_NIGHTMINE,
-	LOADINGSCREEN_DAYBALIME,
-	LOADINGSCREEN_NIGHTBALIME,
+
+	NUM_HARDCODED_LOADING_SCREENS
 };
 
 
 // For use by the game loader, before it can possibly know the situation.
-extern LoadingScreenID gubLastLoadingScreenID;
+extern UINT8 gubLastLoadingScreenID;
 
 // Return the loading screen ID for the specified sector.
-LoadingScreenID GetLoadScreenID(INT16 x, INT16 y, INT8 z);
+UINT8 GetLoadScreenID(INT16 x, INT16 y, INT8 z);
 
 /* Set up the loadscreen with specified ID, draw it to the FRAME_BUFFER, and
  * refresh the screen with it. */
-void DisplayLoadScreenWithID(LoadingScreenID);
+void DisplayLoadScreenWithID(UINT8);
 
 #endif

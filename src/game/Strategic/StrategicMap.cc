@@ -276,7 +276,7 @@ void BeginLoadScreen( )
 	// ( which gets reloaded into gubLastLoadingScreenID )
 	if( !gfGotoSectorTransition )
 	{
-		LoadingScreenID const id = gTacticalStatus.uiFlags & LOADING_SAVED_GAME ?
+		UINT8 const id = gTacticalStatus.uiFlags & LOADING_SAVED_GAME ?
 			gubLastLoadingScreenID :
 			GetLoadScreenID(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		DisplayLoadScreenWithID(id);

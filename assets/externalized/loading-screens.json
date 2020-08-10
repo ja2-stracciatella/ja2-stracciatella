@@ -1,0 +1,43 @@
+/**
+ * Adds more loading screens after the pre-defined ones. The codebase defines 27 loading screens and those have hard-coded references. The screens added here will have indices starting from 28.
+ *
+ * Note that the ordering of this list is important. The ordering generates the screen index, which is used in save games.
+ *
+ * Fields:
+ *  - internalName:    An unique name, referenced by loading-screens-mapping.json
+ *  - filename:        There must be a corresponding image file (.sti) in Data/LoadScreens
+ * 
+ * Pre-defined loading screens:
+ *    NOTHING,  (index 0)
+ *    DAYGENERIC, DAYTOWN1, DAYTOWN2,
+ *    DAYWILD, DAYTROPICAL, DAYFOREST, DAYDESERT,
+ *    DAYPALACE,
+ *    NIGHTGENERIC, NIGHTWILD,
+ *    NIGHTTOWN1, NIGHTTOWN2,
+ *    NIGHTFOREST, NIGHTTROPICAL, NIGHTDESERT, 
+ *    NIGHTPALACE,
+ *    HELI, 
+ *    BASEMENT, MINE,CAVE,
+ *    DAYPINE, NIGHTPINE,
+ *    DAYMILITARY, NIGHTMILITARY,
+ *    DAYSAM,
+ *    NIGHTSAM  (index 27)
+ */
+[
+    {"internalName": "DAYPRISON",     "filename": "/ls_dayprison.sti"     }, // index 28
+    {"internalName": "NIGHTPRISON",   "filename": "/ls_nightprison.sti"   },
+    {"internalName": "DAYHOSPITAL",   "filename": "/ls_dayhospital.sti"   },
+    {"internalName": "NIGHTHOSPITAL", "filename": "/ls_nighthospital.sti" },
+    {"internalName": "DAYAIRPORT",    "filename": "/ls_dayairport.sti"    },
+    {"internalName": "NIGHTAIRPORT",  "filename": "/ls_nightairport.sti"  },
+    {"internalName": "DAYLAB",        "filename": "/ls_daylab.sti"        },
+    {"internalName": "NIGHTLAB",      "filename": "/ls_nightlab.sti"      },
+    {"internalName": "DAYOMERTA",     "filename": "/ls_dayomerta.sti"     },
+    {"internalName": "NIGHTOMERTA",   "filename": "/ls_nightomerta.sti"   },
+    {"internalName": "DAYCHITZENA",   "filename": "/ls_daychitzena.sti"   },
+    {"internalName": "NIGHTCHITZENA", "filename": "/ls_nightchitzena.sti" },
+    {"internalName": "DAYMINE",       "filename": "/ls_daymine.sti"       },
+    {"internalName": "NIGHTMINE",     "filename": "/ls_nightmine.sti"     },
+    {"internalName": "DAYBALIME",     "filename": "/ls_daybalime.sti"     },
+    {"internalName": "NIGHTBALIME",   "filename": "/ls_nightbalime.sti"   }
+]

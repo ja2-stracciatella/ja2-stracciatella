@@ -1,0 +1,45 @@
+/**
+ * This defines the loading screen to use for specific sectors. If the sector loading screen is not defined here, the game falls back to rules to determine loading screen.
+ *
+ * Fields:
+ *   - sector:      The short name of the sector, e.g. A9, B10
+ *   - sectorLevel: The Z-level if sector is underground. Defaults to 0, meaning that the sector is on the surface
+ *   - night:       The internal name of the loading screen to use during night time (see loading-screens.json)
+ *   - day:         The internal name of the loading screen to use during day time
+ */
+[
+    {"sector": "A2",  "night": "NIGHTCHITZENA",  "day": "DAYCHITZENA"},
+    {"sector": "B2",  "night": "NIGHTCHITZENA" , "day": "DAYCHITZENA"},
+
+    {"sector": "A9",  "night": "NIGHTOMERTA",    "day": "DAYOMERTA"},
+    {"sector": "A10", "night": "NIGHTOMERTA",    "day": "DAYOMERTA"},
+
+    {"sector": "P3",  "night": "NIGHTPALACE",    "day": "DAYPALACE"},
+
+    // Military installations
+    {"sector": "H13", "night": "NIGHTMILITARY",  "day": "DAYMILITARY"},
+    {"sector": "H14", "night": "NIGHTMILITARY",  "day": "DAYMILITARY"},
+    {"sector": "I13", "night": "NIGHTMILITARY",  "day": "DAYMILITARY"},
+    {"sector": "N7",  "night": "NIGHTMILITARY",  "day": "DAYMILITARY"},
+    
+    {"sector": "K4",  "night": "NIGHTLAB",       "day": "DAYLAB"},
+    {"sector": "J9",  "night": "NIGHTPRISON",    "day": "DAYPRISON"},
+    {"sector": "F8",  "night": "NIGHTHOSPITAL",  "day": "DAYHOSPITAL"},
+    
+    {"sector": "B13", "night": "NIGHTAIRPORT",   "day": "DAYAIRPORT"},
+    {"sector": "N3",  "night": "NIGHTAIRPORT",   "day": "DAYAIRPORT"},
+    
+    {"sector": "L11", "night": "NIGHTBALIME",    "day": "DAYBALIME"},
+    {"sector": "L12", "night": "NIGHTBALIME",    "day": "DAYBALIME"},
+    
+    {"sector": "H3",  "night": "NIGHTMINE",      "day": "DAYMINE"},
+    {"sector": "H8",  "night": "NIGHTMINE",      "day": "DAYMINE"},
+    {"sector": "D4",  "night": "NIGHTMINE",      "day": "DAYMINE"},
+
+    {"sector": "A10", "sectorLevel": 1, "night": "BASEMENT", "day": "BASEMENT"}, // Miguel's basement
+    {"sector": "I13", "sectorLevel": 1, "night": "BASEMENT", "day": "BASEMENT"}, // Alma prison dungeon
+    {"sector": "J9",  "sectorLevel": 1, "night": "BASEMENT", "day": "BASEMENT"}, // Tixa prison dungeon
+    {"sector": "K4",  "sectorLevel": 1, "night": "BASEMENT", "day": "BASEMENT"}, // Orta weapons plant
+    {"sector": "O3",  "sectorLevel": 1, "night": "BASEMENT", "day": "BASEMENT"}, // Meduna
+    {"sector": "P3",  "sectorLevel": 1, "night": "BASEMENT", "day": "BASEMENT"}  // Meduna
+]

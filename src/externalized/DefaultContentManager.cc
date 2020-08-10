@@ -22,6 +22,7 @@
 #include "DealerInventory.h"
 #include "JsonObject.h"
 #include "JsonUtility.h"
+#include "LoadingScreenModel.h"
 #include "MagazineModel.h"
 #include "RustInterface.h"
 #include "ShippingDestinationModel.h"
@@ -190,6 +191,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_gamePolicy = NULL;
 
 	m_movementCosts = NULL;
+	m_loadingScreenModel = NULL;
 }
 
 
@@ -314,6 +316,7 @@ DefaultContentManager::~DefaultContentManager()
 	delete m_bobbyRayUsedInventory;
 	delete m_impPolicy;
 	delete m_gamePolicy;
+	delete m_loadingScreenModel;
 
 	for (const ST::string *str : m_newStrings)
 	{
@@ -1027,6 +1030,11 @@ bool DefaultContentManager::loadGameData()
 	}
 	ShippingDestinationModel::validateData(m_shippingDestinations, m_shippingDestinationNames);
 
+	auto loadScreensList = readJsonDataFile("loading-screens.json");
+	auto loadScreensMapping = readJsonDataFile("loading-screens-mapping.json");
+	m_loadingScreenModel = LoadingScreenModel::deserialize(*loadScreensList, *loadScreensMapping);
+	m_loadingScreenModel->validateData(this);
+
 	loadStringRes("strings/ammo-calibre", m_calibreNames);
 	loadStringRes("strings/ammo-calibre-bobbyray", m_calibreNamesBobbyRay);
 
@@ -1397,4 +1405,14 @@ const MovementCostsModel* DefaultContentManager::getMovementCosts() const
 const NpcPlacementModel* DefaultContentManager::getNpcPlacement(uint8_t profileId) const
 {
 	return m_npcPlacements.at(profileId);
+}
+
+const LoadingScreen* DefaultContentManager::getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const
+{
+	return m_loadingScreenModel->getScreenForSector(sectorId, sectorLevel, isNight);
+}
+
+const LoadingScreen* DefaultContentManager::getLoadingScreen(uint8_t index) const
+{
+	return m_loadingScreenModel->getByIndex(index);
 }

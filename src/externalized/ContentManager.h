@@ -24,6 +24,7 @@ class FactParamsModel;
 class GamePolicy;
 class GarrisonGroupModel;
 class IMPPolicy;
+class LoadingScreenModel;
 class MineModel;
 class MovementCostsModel;
 class NpcActionParamsModel;
@@ -36,6 +37,7 @@ class TownModel;
 class UndergroundSectorModel;
 struct AmmoTypeModel;
 struct CalibreModel;
+struct LoadingScreen;
 struct MagazineModel;
 struct SGPFile;
 struct WeaponModel;
@@ -163,6 +165,12 @@ public:
 
 	/* Params for the given NPC_ACTION if found, or return an empty instance */
 	virtual const FactParamsModel* getFactParams(Fact fact) const = 0;
+
+	/* Gets loading screen for the sector. Returns NULL if the sector does not have an associated loading screen */
+	virtual const LoadingScreen* getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const = 0;
+
+	/* Gets a loading screen by ID. Never returns NULL, but throws out_of_range if index is invalid */
+	virtual const LoadingScreen* getLoadingScreen(uint8_t index) const = 0;
 
 	virtual const ST::string* getNewString(size_t stringId) const = 0;
 
