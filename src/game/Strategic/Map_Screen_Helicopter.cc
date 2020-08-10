@@ -53,7 +53,6 @@
 
 // current temp path for dest char
 extern PathSt* pTempHelicopterPath;
-extern UINT8 ubSAMControlledSectors[ MAP_WORLD_X ][ MAP_WORLD_Y ];
 
 // whether helicopted variables have been set up
 BOOLEAN fSkyRiderSetUp = FALSE;
@@ -1049,7 +1048,7 @@ static void HeliCrashSoundStopCallback(void* pData)
 
 static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSectorY)
 {
-	UINT8 ubSamNumber = 0;
+	INT8 bSamSiteID = -1;
 	INT8 bSAMCondition;
 	UINT8 ubChance;
 
@@ -1061,17 +1060,17 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
 	}
 
 	// which SAM controls this sector?
-	ubSamNumber = ubSAMControlledSectors[ sSectorX ][ sSectorY ];
+	bSamSiteID = GCM->getControllingSamSite(SECTOR(sSectorX, sSectorY));
 
-	// if none of them
-	if (ubSamNumber == 0)
+	// if none of them (-1 means the sector is not covered by a SAM)
+	if (bSamSiteID < 0)
 	{
-		return( FALSE);
+		return FALSE;
 	}
 
-	// get the condition of that SAM site (NOTE: SAM #s are 1-4, but indexes are 0-3!!!)
-	Assert( ubSamNumber <= NUMBER_OF_SAMS );
-	UINT8 ubSAMSectorID = GCM->getSamSites()[ubSamNumber - 1]->sectorId;
+	// get the condition of that SAM site (NOTE: SAM IDs are 0-3)
+	Assert(bSamSiteID < NUMBER_OF_SAMS );
+	UINT8 ubSAMSectorID = GCM->getSamSites()[bSamSiteID]->sectorId;
 	bSAMCondition = StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX(ubSAMSectorID) ].bSAMCondition;
 
 	// if the SAM site is too damaged to be a threat

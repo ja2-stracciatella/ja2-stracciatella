@@ -37,6 +37,7 @@
 #include "strategic/FactParamsModel.h"
 #include "strategic/MineModel.h"
 #include "strategic/SamSiteModel.h"
+#include "strategic/SamSiteAirControlModel.h"
 #include "strategic/TownModel.h"
 #include "strategic/MovementCostsModel.h"
 #include "strategic/NpcPlacementModel.h"
@@ -343,6 +344,7 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_undergroundSectors);
 
 	delete m_movementCosts;
+	delete m_samSitesAirControl;
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -1149,7 +1151,8 @@ const ST::string* DefaultContentManager::getNewString(size_t stringId) const
 }
 
 
-bool DefaultContentManager::loadStrategicLayerData() {
+bool DefaultContentManager::loadStrategicLayerData() 
+{
 	auto json = readJsonDataFile("strategic-bloodcat-placements.json");
 	for (auto& element : json->GetArray()) {
 		auto obj = JsonObjectReader(element);
@@ -1199,6 +1202,10 @@ bool DefaultContentManager::loadStrategicLayerData() {
 		m_samSites.push_back(samSite);
 	}
 	SamSiteModel::validateData(m_samSites);
+
+	json = readJsonDataFile("strategic-map-sam-sites-air-control.json");
+	m_samSitesAirControl = SamSiteAirControlModel::deserialize(*json);
+	SamSiteAirControlModel::validateData(m_samSitesAirControl, m_samSites.size());
 
 	json = readJsonDataFile("strategic-map-towns.json");
 	for (auto& element : json->GetArray()) 
@@ -1347,6 +1354,11 @@ const SamSiteModel* DefaultContentManager::findSamSiteBySector(uint8_t sectorId)
 {
 	auto i = findSamIDBySector(sectorId);
 	return (i > -1) ? m_samSites[i] : NULL;
+}
+
+const int8_t DefaultContentManager::getControllingSamSite(uint8_t sectorId) const
+{
+	return m_samSitesAirControl->getControllingSamSiteID(sectorId);
 }
 
 const std::map<int8_t, const TownModel*>& DefaultContentManager::getTowns() const

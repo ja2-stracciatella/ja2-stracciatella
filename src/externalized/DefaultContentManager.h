@@ -172,6 +172,7 @@ public:
 	virtual const std::vector<const SamSiteModel*>& getSamSites() const override;
 	virtual const int8_t findSamIDBySector(uint8_t sectorId) const override;
 	virtual const SamSiteModel* findSamSiteBySector(uint8_t sectorId) const override;
+	virtual const int8_t getControllingSamSite(uint8_t sectorId) const override;
 	virtual const TownModel* getTown(int8_t townId) const  override;
 	virtual const std::map<int8_t, const TownModel*>& getTowns() const override;
 	virtual const ST::string getTownName(uint8_t townId) const override;
@@ -236,6 +237,7 @@ protected:
 	std::vector<const CreatureLairModel*> m_creatureLairs;
 	std::vector<const MineModel*> m_mines;
 	std::vector<const SamSiteModel*> m_samSites;
+	const SamSiteAirControlModel* m_samSitesAirControl;
 	std::map<int8_t, const TownModel*> m_towns;
 	std::vector<const ST::string*> m_townNames;
 	std::vector<const ST::string*> m_townNameLocatives;
