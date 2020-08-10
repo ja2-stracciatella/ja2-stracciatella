@@ -81,6 +81,7 @@ struct WeaponModel : ItemModel
 	UINT8    ubHitVolume;
 	SoundID  sReloadSound;
 	SoundID  sLocknLoadSound;
+	UINT16   usSmokeEffect;    // item index of the smoke effect on ammo miss
 
 protected:
 	void serializeAttachments(JsonObject &obj) const;
@@ -362,7 +363,8 @@ struct MonsterSpit : WeaponModel
 			uint16_t Range,
 			uint8_t AttackVolume,
 			uint8_t HitVolume,
-			const char * Sound);
+			const char * Sound,
+			uint16_t smokeEffect);
 
 	virtual void serializeTo(JsonObject &obj) const;
 };

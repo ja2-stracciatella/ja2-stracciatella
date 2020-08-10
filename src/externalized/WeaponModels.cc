@@ -57,6 +57,7 @@ WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor,
 	ubHitVolume          = 0;
 	sReloadSound         = NO_WEAPON_SOUND;
 	sLocknLoadSound      = NO_WEAPON_SOUND;
+	usSmokeEffect        = NONE;
 }
 
 void WeaponModel::serializeTo(JsonObject &obj) const
@@ -552,22 +553,15 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 	else if(!strcmp(internalType, "MONSTSPIT"))
 	{
 		const CalibreModel *calibre = getCalibre(obj.GetString("calibre"), calibreMap);
-		// uint8_t  ReadyTime       = obj.GetInt("ubReadyTime");
 		uint8_t  ShotsPer4Turns  = obj.GetInt("ubShotsPer4Turns");
-		// uint8_t  ShotsPerBurst   = obj.GetInt("ubShotsPerBurst");
-		// uint8_t  BurstPenalty    = obj.GetInt("ubBurstPenalty");
-		// uint8_t  BulletSpeed     = obj.GetInt("ubBulletSpeed");
 		uint8_t  Impact          = obj.GetInt("ubImpact");
 		uint8_t  Deadliness      = obj.GetInt("ubDeadliness");
 		uint8_t  MagSize         = obj.GetInt("ubMagSize");
 		uint16_t Range           = obj.GetInt("usRange");
-		// uint16_t ReloadDelay     = obj.GetInt("usReloadDelay");
 		uint8_t  AttackVolume    = obj.GetInt("ubAttackVolume");
 		uint8_t  HitVolume       = obj.GetInt("ubHitVolume");
 		const char * Sound       = obj.GetString("Sound");
-		// const char * BurstSound  = obj.GetString("BurstSound");
-		// SoundID  ReloadSound     = (SoundID) obj.GetInt("sReloadSound");
-		// SoundID  LocknLoadSound  = (SoundID) obj.GetInt("sLocknLoadSound");
+		uint16_t smokeEffect     = obj.GetInt("usSmokeEffect");
 		wep = new MonsterSpit(itemIndex, internalName,
 					calibre,
 					Impact,
@@ -577,7 +571,8 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 					Range,
 					AttackVolume,
 					HitVolume,
-					Sound);
+					Sound,
+					smokeEffect);
 	}
 
 	if(!wep)
@@ -1352,7 +1347,8 @@ MonsterSpit::MonsterSpit(uint16_t itemIndex, const char * internalName,
 				uint16_t Range,
 				uint8_t AttackVolume,
 				uint8_t HitVolume,
-				const char * Sound)
+				const char * Sound,
+				uint16_t smokeEffect)
 	:WeaponModel(IC_GUN, NOT_GUN, TARGETCURS, itemIndex, internalName, "MONSTSPIT")
 {
 	ubWeaponClass        = MONSTERCLASS;
@@ -1368,6 +1364,7 @@ MonsterSpit::MonsterSpit(uint16_t itemIndex, const char * internalName,
 	ubAttackVolume       = AttackVolume;
 	ubHitVolume          = HitVolume;
 	this->sound          = Sound;
+	usSmokeEffect        = smokeEffect;
 }
 
 void MonsterSpit::serializeTo(JsonObject &obj) const
@@ -1382,6 +1379,7 @@ void MonsterSpit::serializeTo(JsonObject &obj) const
 	obj.AddMember("ubAttackVolume",       ubAttackVolume);
 	obj.AddMember("ubHitVolume",          ubHitVolume);
 	obj.AddMember("Sound",                sound);
+	obj.AddMember("ubSmokeEffect",        usSmokeEffect);
 	serializeAttachments(obj);
 	serializeFlags(obj);
 }
