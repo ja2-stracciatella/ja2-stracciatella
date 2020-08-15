@@ -83,6 +83,10 @@ DEALER_ITEM_HEADER gArmsDealersInventory[ NUM_ARMS_DEALERS ][ MAXITEMS ];
 static void AdjustCertainDealersInventory(void);
 static void InitializeOneArmsDealer(ArmsDealerID);
 
+const ARMS_DEALER_INFO& GetDealer(UINT8 dealerID)
+{
+	return ArmsDealerInfo[dealerID];
+}
 
 void InitAllArmsDealers()
 {
@@ -120,10 +124,10 @@ static void InitializeOneArmsDealer(ArmsDealerID const ubArmsDealer)
 
 
 	//Reset the arms dealers cash on hand to the default initial value
-	gArmsDealerStatus[ ubArmsDealer ].uiArmsDealersCash = ArmsDealerInfo[ ubArmsDealer ].iInitialCash;
+	gArmsDealerStatus[ ubArmsDealer ].uiArmsDealersCash = GetDealer(ubArmsDealer).iInitialCash;
 
 	//if the arms dealer isn't supposed to have any items (includes all repairmen)
-	if( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_HAS_NO_INVENTORY )
+	if( GetDealer(ubArmsDealer).uiFlags & ARMS_DEALER_HAS_NO_INVENTORY )
 	{
 		return;
 	}
@@ -302,7 +306,7 @@ static void SimulateArmsDealerCustomer(void)
 			continue;
 
 		//if the arms dealer isn't supposed to have any items (includes all repairmen)
-		if( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_HAS_NO_INVENTORY )
+		if( GetDealer(ubArmsDealer).uiFlags & ARMS_DEALER_HAS_NO_INVENTORY )
 			continue;
 
 		//loop through all items of the same type
@@ -366,10 +370,10 @@ static void DailyCheckOnItemQuantities(void)
 			continue;
 
 		//Reset the arms dealers cash on hand to the default initial value
-		gArmsDealerStatus[ ubArmsDealer ].uiArmsDealersCash = ArmsDealerInfo[ ubArmsDealer ].iInitialCash;
+		gArmsDealerStatus[ ubArmsDealer ].uiArmsDealersCash = GetDealer(ubArmsDealer).iInitialCash;
 
 		//if the arms dealer isn't supposed to have any items (includes all repairmen)
-		if( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_HAS_NO_INVENTORY )
+		if( GetDealer(ubArmsDealer).uiFlags & ARMS_DEALER_HAS_NO_INVENTORY )
 			continue;
 
 
@@ -886,7 +890,7 @@ BOOLEAN IsMercADealer( UINT8 ubMercID )
 	//loop through the list of arms dealers
 	for( cnt=0; cnt<NUM_ARMS_DEALERS; cnt++ )
 	{
-		if( ArmsDealerInfo[ cnt ].ubShopKeeperID == ubMercID )
+		if( GetDealer(cnt).ubShopKeeperID == ubMercID )
 			return( TRUE );
 	}
 	return( FALSE );
@@ -898,7 +902,7 @@ ArmsDealerID GetArmsDealerIDFromMercID(UINT8 const ubMercID)
 	//loop through the list of arms dealers
 	for (ArmsDealerID cnt = ARMS_DEALER_FIRST; cnt < NUM_ARMS_DEALERS; ++cnt)
 	{
-		if( ArmsDealerInfo[ cnt ].ubShopKeeperID == ubMercID )
+		if( GetDealer(cnt).ubShopKeeperID == ubMercID )
 			return( cnt );
 	}
 
@@ -909,13 +913,13 @@ ArmsDealerID GetArmsDealerIDFromMercID(UINT8 const ubMercID)
 
 UINT8 GetTypeOfArmsDealer( UINT8 ubDealerID )
 {
-	return( ArmsDealerInfo[ ubDealerID ].ubTypeOfArmsDealer );
+	return GetDealer(ubDealerID).ubTypeOfArmsDealer;
 }
 
 
 BOOLEAN	DoesDealerDoRepairs(ArmsDealerID const ubArmsDealer)
 {
-	return ArmsDealerInfo[ ubArmsDealer ].ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS;
+	return GetDealer(ubArmsDealer).ubTypeOfArmsDealer == ARMS_DEALER_REPAIRS;
 }
 
 
@@ -972,7 +976,7 @@ static bool DoesItemAppearInDealerInventoryList(ArmsDealerID, UINT16 usItemIndex
 
 BOOLEAN CanDealerTransactItem(ArmsDealerID const ubArmsDealer, UINT16 const usItemIndex, BOOLEAN const fPurchaseFromPlayer)
 {
-	switch ( ArmsDealerInfo[ ubArmsDealer ].ubTypeOfArmsDealer )
+	switch ( GetDealer(ubArmsDealer).ubTypeOfArmsDealer )
 	{
 		case ARMS_DEALER_SELLS_ONLY:
 			if ( fPurchaseFromPlayer )
@@ -1016,7 +1020,7 @@ BOOLEAN CanDealerTransactItem(ArmsDealerID const ubArmsDealer, UINT16 const usIt
 			return( CanDealerRepairItem( ubArmsDealer, usItemIndex ) );
 
 		default:
-			AssertMsg( FALSE, String( "CanDealerTransactItem(), type of dealer %d.  AM 0.", ArmsDealerInfo[ ubArmsDealer ].ubTypeOfArmsDealer ) );
+			AssertMsg( FALSE, String( "CanDealerTransactItem(), type of dealer %d.  AM 0.", GetDealer(ubArmsDealer).ubTypeOfArmsDealer ) );
 			return(FALSE);
 	}
 
@@ -1144,8 +1148,8 @@ static UINT8 DetermineDealerItemCondition(ArmsDealerID const ubArmsDealer, UINT1
 	if ( ( GCM->getItem(usItemIndex)->getFlags() & ITEM_DAMAGEABLE ) && !ItemContainsLiquid( usItemIndex ) )
 	{
 		// if he ONLY has used items, or 50% of the time if he carries both used & new items
-		if ( ( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_ONLY_USED_ITEMS ) ||
-			( ( ArmsDealerInfo[ ubArmsDealer ].uiFlags & ARMS_DEALER_SOME_USED_ITEMS ) && ( Random( 100 ) < 50 ) ) )
+		if ( ( GetDealer(ubArmsDealer).uiFlags & ARMS_DEALER_ONLY_USED_ITEMS ) ||
+			( ( GetDealer(ubArmsDealer).uiFlags & ARMS_DEALER_SOME_USED_ITEMS ) && ( Random( 100 ) < 50 ) ) )
 		{
 			// make the item a used one
 			ubCondition = (UINT8)(20 + Random( 60 ));
@@ -2018,7 +2022,7 @@ static UINT32 CalculateSimpleItemRepairTime(ArmsDealerID const ubArmsDealer, UIN
 	// For a repairman, his BUY modifier controls his REPAIR SPEED (1.0 means minutes to repair = price in $)
 	// with a REPAIR SPEED of 1.0, typical gun price of $2000, and a REPAIR COST of 0.5 this works out to 16.6 hrs
 	// for a full 100% status repair...  Not bad.
-	uiTimeToRepair = (UINT32)(uiRepairCost * ArmsDealerInfo[ubArmsDealer].u.repair.speed);
+	uiTimeToRepair = (UINT32)(uiRepairCost * GetDealer(ubArmsDealer).u.repair.speed);
 
 	// repairs on electronic items take twice as long if the guy doesn't have the skill
 	// for dealers, this means anyone but Fredo the Electronics guy takes twice as long (but doesn't charge double)
@@ -2071,7 +2075,7 @@ static UINT32 CalculateSimpleItemRepairCost(ArmsDealerID const ubArmsDealer, UIN
 
 	// figure out the full value of the item, modified by this dealer's personal Sell (i.e. repair cost) modifier
 	// don't use CalcShopKeeperItemPrice - we want FULL value!!!
-	uiItemCost = (UINT32)(GCM->getItem(usItemIndex)->getPrice() * ArmsDealerInfo[ubArmsDealer].u.repair.cost);
+	uiItemCost = (UINT32)(GCM->getItem(usItemIndex)->getPrice() * GetDealer(ubArmsDealer).u.repair.cost);
 
 	// get item's repair ease, for each + point is 10% easier, each - point is 10% harder to repair
 	sRepairCostAdj = 100 - ( 10 * GCM->getItem(usItemIndex)->getRepairEase() );
@@ -2383,7 +2387,7 @@ BOOLEAN ItemIsARocketRifle(INT16 sItemIndex)
 
 static BOOLEAN GetArmsDealerShopHours(ArmsDealerID const ubArmsDealer, UINT32* const puiOpeningTime, UINT32* const puiClosingTime)
 {
-	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ArmsDealerInfo[ubArmsDealer].ubShopKeeperID);
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(GetDealer(ubArmsDealer).ubShopKeeperID);
 	if ( pSoldier == NULL )
 	{
 		return( FALSE );
