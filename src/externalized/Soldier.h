@@ -37,6 +37,8 @@ public:
 
 protected:
 
+	void switchHeadGear(int switchDirection);
+
 	const char* getPofileName() const;
 
 	/** Get free head slot or NO_SLOT if the both are occupied. */

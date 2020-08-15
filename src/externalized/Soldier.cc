@@ -14,12 +14,14 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "GamePolicy.h"
 #include "content/NewStrings.h"
 #include "content/npcs.h"
 #include "internals/enums.h"
 
 #include "Logger.h"
 
+#include <vector>
 
 /** Get soldier object from the structure. */
 std::shared_ptr<Soldier> GetSoldier(struct SOLDIERTYPE* s)
@@ -273,118 +275,108 @@ static void showGearRemoveMessage(const SOLDIERTYPE* s, uint16_t usItem)
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, st_format_printf(*GCM->getNewString(NS_SOLDIER_REMOVES_ITEM), s->name, ItemNames[usItem]));
 }
 
+const std::vector<ITEMDEFINE> HEAD_GEARS_DAY   { SUNGOGGLES };
+const std::vector<ITEMDEFINE> HEAD_GEARS_NIGHT { UVGOGGLES, NIGHTGOGGLES };
+
+#define SWITCH_TO_NIGHT_GEAR 0
+#define SWITCH_TO_DAY_GEAR   1
+
 void Soldier::putNightHeadGear()
 {
-	int8_t nightGogglesPos = FindObj(mSoldier, NIGHTGOGGLES);
-	int8_t uvGogglesPos    = FindObj(mSoldier, UVGOGGLES);
-	int8_t sunGogglesPos   = FindObj(mSoldier, SUNGOGGLES);
-	int8_t freeHeadSlot    = getFreeHeadSlot();
-	bool gasMaskEquiped    = IsWearingHeadGear(*mSoldier, GASMASK);
-
-
-	if(isHeadPosition(uvGogglesPos))
-	{
-		// already wearing the best gear; nothing to do
-	}
-	else if((uvGogglesPos != NO_SLOT) && !gasMaskEquiped)
-	{
-		int8_t swapPos = NO_SLOT;
-
-		// have UV googles somewhere in the inventory
-		// need to equip it
-		if(isHeadPosition(nightGogglesPos))
-		{
-			swapPos = nightGogglesPos;
-		}
-		else if(isHeadPosition(sunGogglesPos))
-		{
-			swapPos = sunGogglesPos;
-		}
-		else if(freeHeadSlot != NO_SLOT)
-		{
-			swapPos = freeHeadSlot;
-		}
-
-		if(swapPos != NO_SLOT)
-		{
-			showGearEquipMessage(mSoldier, UVGOGGLES);
-			swapInventorySlots(uvGogglesPos, swapPos);
-		}
-	}
-	else if(isHeadPosition(nightGogglesPos))
-	{
-		// already wearing; nothing to do
-	}
-	else if((nightGogglesPos != NO_SLOT)  && !gasMaskEquiped)
-	{
-		int8_t swapPos = NO_SLOT;
-
-		// have night goggles somewhere in the inventory
-		// need to equip it
-		if(isHeadPosition(sunGogglesPos))
-		{
-			swapPos = sunGogglesPos;
-		}
-		else if(freeHeadSlot != NO_SLOT)
-		{
-			swapPos = freeHeadSlot;
-		}
-
-		if(swapPos != NO_SLOT)
-		{
-			showGearEquipMessage(mSoldier, NIGHTGOGGLES);
-			swapInventorySlots(nightGogglesPos, swapPos);
-		}
-	}
-
-	DirtyMercPanelInterface(mSoldier, DIRTYLEVEL2);
+	switchHeadGear(SWITCH_TO_NIGHT_GEAR);
 }
 
 void Soldier::putDayHeadGear()
 {
-	int8_t uvGogglesPos    = FindObj(mSoldier, UVGOGGLES);
-	int8_t sunGogglesPos   = FindObj(mSoldier, SUNGOGGLES);
-	int8_t freeHeadSlot    = getFreeHeadSlot();
-	bool gasMaskEquiped    = IsWearingHeadGear(*mSoldier, GASMASK);
+	switchHeadGear(SWITCH_TO_DAY_GEAR);
+}
 
-	uint16_t item = NIGHTGOGGLES;
-	int8_t itemPos = FindObj(mSoldier, NIGHTGOGGLES);
-
-	if(isHeadPosition(uvGogglesPos))
+void Soldier::switchHeadGear(int switchDirection)
+{
+	if (IsWearingHeadGear(*mSoldier, GASMASK))
 	{
-		itemPos = uvGogglesPos;
-		item = UVGOGGLES;
+		// Gas mask is not compatible with eye gears
+		return;
 	}
 
-	if(isHeadPosition(itemPos))
-	{
-		// night googles equiped
+	const std::vector<ITEMDEFINE>& fromGears = (switchDirection == SWITCH_TO_NIGHT_GEAR) ? HEAD_GEARS_DAY : HEAD_GEARS_NIGHT;
+	const std::vector<ITEMDEFINE>& toGears   = (switchDirection == SWITCH_TO_NIGHT_GEAR) ? HEAD_GEARS_NIGHT : HEAD_GEARS_DAY;
+	OBJECTTYPE* helmet = &mSoldier->inv[HELMETPOS];
+	OBJECTTYPE  detachedGear{};
 
-		if(sunGogglesPos != NO_SLOT)
+	// find the gear we want to wear
+	OBJECTTYPE* optimalEyeGear = NULL;
+	for (ITEMDEFINE ic : fromGears)
+	{
+		INT8 slot = FindObj(mSoldier, ic);
+		if (slot != NO_SLOT)
 		{
-			showGearEquipMessage(mSoldier, SUNGOGGLES);
-			swapInventorySlots(itemPos, sunGogglesPos);
+			// found one in inventory
+			optimalEyeGear = &(mSoldier->inv[slot]);
+			break;
 		}
-		else
+		slot = FindAttachment(helmet, ic);
+		if (slot != ITEM_NOT_FOUND)
 		{
-			// need to put the goggles into the inventory
-			int8_t freeSlot = getFreePocket();
-			if(freeSlot != NO_SLOT)
-			{
-				showGearRemoveMessage(mSoldier, item);
-				swapInventorySlots(itemPos, freeSlot);
-			}
+			// found one in helmet attachment
+			RemoveAttachment(helmet, slot, &detachedGear);
+			optimalEyeGear = &detachedGear;
 		}
 	}
-	else if((sunGogglesPos != NO_SLOT)
-		&& !isHeadPosition(sunGogglesPos)
-		&& !gasMaskEquiped
-		&& (freeHeadSlot != NO_SLOT))
+
+	// find the eye gear we are currently wearing
+	OBJECTTYPE* currentEyeGear = NULL;
+	for (ITEMDEFINE ic : toGears)
 	{
-		// have sun goggles somewhere in the inventory and
-		// can equip them
-		showGearEquipMessage(mSoldier, SUNGOGGLES);
-		swapInventorySlots(sunGogglesPos, freeHeadSlot);
+		if (mSoldier->inv[HEAD1POS].usItem == ic) currentEyeGear = &mSoldier->inv[HEAD1POS];
+		if (mSoldier->inv[HEAD2POS].usItem == ic) currentEyeGear = &mSoldier->inv[HEAD2POS];
+	}
+
+	if (currentEyeGear == NULL && getFreeHeadSlot() != NO_SLOT)
+	{
+		// not wearing eye gear but slot available
+		currentEyeGear = &mSoldier->inv[getFreeHeadSlot()];
+	}
+	if (currentEyeGear == NULL)
+	{
+		// no room to wear any eye gear
+		return;
+	}
+
+	if (optimalEyeGear != NULL)
+	{
+		// found a suitable eye gear - swap
+		(optimalEyeGear->usItem != NONE)
+			? showGearEquipMessage(mSoldier, optimalEyeGear->usItem)
+			: showGearRemoveMessage(mSoldier, currentEyeGear->usItem);
+
+		SwapObjs(optimalEyeGear, currentEyeGear);
+
+		if (detachedGear.usItem != NONE)
+		{
+			// the gear we want had been detached from helmet and put on; 
+			// now after the object swap, we attach the gear we just put off
+			AttachObject(mSoldier, helmet, &detachedGear);
+		}
+	}
+	else if (currentEyeGear->usItem != NONE)
+	{
+		// no optimal gear, but wearing something wrong
+		INT8 freeSlot = getFreePocket();
+		BOOLEAN canAttachToHelmet = gamepolicy(extra_attachments) && helmet->usItem != NONE;
+		if (freeSlot != NO_SLOT)
+		{
+			// put in inventory
+			showGearRemoveMessage(mSoldier, currentEyeGear->usItem);
+			SwapObjs(currentEyeGear, &mSoldier->inv[freeSlot]);
+		}
+		else if (canAttachToHelmet)
+		{
+			// attach to helmet
+			UINT8 currentItem = currentEyeGear->usItem;
+			BOOLEAN fSuccess = AttachObject(mSoldier, helmet, currentEyeGear);
+			if (fSuccess) showGearRemoveMessage(mSoldier, currentItem);
+		}
 	}
 
 	DirtyMercPanelInterface(mSoldier, DIRTYLEVEL2);
