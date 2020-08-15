@@ -14,6 +14,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "GamePolicy.h"
 #include "content/NewStrings.h"
 #include "content/npcs.h"
 #include "internals/enums.h"
@@ -322,11 +323,6 @@ void Soldier::switchHeadGear(int switchDirection)
 			optimalEyeGear = &detachedGear;
 		}
 	}
-	if (optimalEyeGear == NULL)
-	{
-		// no usable gear found
-		return;
-	}
 
 	// find the eye gear we are currently wearing
 	OBJECTTYPE* currentEyeGear = NULL;
@@ -335,6 +331,7 @@ void Soldier::switchHeadGear(int switchDirection)
 		if (mSoldier->inv[HEAD1POS].usItem == ic) currentEyeGear = &mSoldier->inv[HEAD1POS];
 		if (mSoldier->inv[HEAD2POS].usItem == ic) currentEyeGear = &mSoldier->inv[HEAD2POS];
 	}
+
 	if (currentEyeGear == NULL && getFreeHeadSlot() != NO_SLOT)
 	{
 		// not wearing eye gear but slot available
@@ -346,14 +343,40 @@ void Soldier::switchHeadGear(int switchDirection)
 		return;
 	}
 
-	showGearEquipMessage(mSoldier, optimalEyeGear->usItem);
-	SwapObjs(optimalEyeGear, currentEyeGear);
-
-	if (detachedGear.usItem != NONE)
+	if (optimalEyeGear != NULL)
 	{
-		// the gear we want had been detached from helmet and put on; 
-		// now after the object swap, we attach the gear we just put off
-		AttachObject(mSoldier, helmet, &detachedGear);
+		// found a suitable eye gear - swap
+		(optimalEyeGear->usItem != NONE)
+			? showGearEquipMessage(mSoldier, optimalEyeGear->usItem)
+			: showGearRemoveMessage(mSoldier, currentEyeGear->usItem);
+
+		SwapObjs(optimalEyeGear, currentEyeGear);
+
+		if (detachedGear.usItem != NONE)
+		{
+			// the gear we want had been detached from helmet and put on; 
+			// now after the object swap, we attach the gear we just put off
+			AttachObject(mSoldier, helmet, &detachedGear);
+		}
+	}
+	else if (currentEyeGear->usItem != NONE)
+	{
+		// no optimal gear, but wearing something wrong
+		INT8 freeSlot = getFreePocket();
+		BOOLEAN canAttachToHelmet = gamepolicy(extra_attachments) && helmet->usItem != NONE;
+		if (freeSlot != NO_SLOT)
+		{
+			// put in inventory
+			showGearRemoveMessage(mSoldier, currentEyeGear->usItem);
+			SwapObjs(currentEyeGear, &mSoldier->inv[freeSlot]);
+		}
+		else if (canAttachToHelmet)
+		{
+			// attach to helmet
+			UINT8 currentItem = currentEyeGear->usItem;
+			BOOLEAN fSuccess = AttachObject(mSoldier, helmet, currentEyeGear);
+			if (fSuccess) showGearRemoveMessage(mSoldier, currentItem);
+		}
 	}
 
 	DirtyMercPanelInterface(mSoldier, DIRTYLEVEL2);
