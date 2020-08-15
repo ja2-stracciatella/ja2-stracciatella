@@ -37,7 +37,7 @@ public:
 
 protected:
 
-	void switchHeadGear(std::vector<ITEMDEFINE> from, std::vector<ITEMDEFINE> to);
+	void switchHeadGear(int switchDirection);
 
 	const char* getPofileName() const;
 

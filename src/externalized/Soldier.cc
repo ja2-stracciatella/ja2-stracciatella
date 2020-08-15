@@ -277,17 +277,20 @@ static void showGearRemoveMessage(const SOLDIERTYPE* s, uint16_t usItem)
 const std::vector<ITEMDEFINE> HEAD_GEARS_DAY   { SUNGOGGLES };
 const std::vector<ITEMDEFINE> HEAD_GEARS_NIGHT { UVGOGGLES, NIGHTGOGGLES };
 
+#define SWITCH_TO_NIGHT_GEAR 0
+#define SWITCH_TO_DAY_GEAR   1
+
 void Soldier::putNightHeadGear()
 {
-	switchHeadGear(HEAD_GEARS_DAY, HEAD_GEARS_NIGHT);
+	switchHeadGear(SWITCH_TO_NIGHT_GEAR);
 }
 
 void Soldier::putDayHeadGear()
 {
-	switchHeadGear(HEAD_GEARS_NIGHT, HEAD_GEARS_DAY);
+	switchHeadGear(SWITCH_TO_DAY_GEAR);
 }
 
-void Soldier::switchHeadGear(std::vector<ITEMDEFINE> fromGears, std::vector<ITEMDEFINE> toGears)
+void Soldier::switchHeadGear(int switchDirection)
 {
 	if (IsWearingHeadGear(*mSoldier, GASMASK))
 	{
@@ -295,6 +298,8 @@ void Soldier::switchHeadGear(std::vector<ITEMDEFINE> fromGears, std::vector<ITEM
 		return;
 	}
 
+	const std::vector<ITEMDEFINE>& fromGears = (switchDirection == SWITCH_TO_NIGHT_GEAR) ? HEAD_GEARS_DAY : HEAD_GEARS_NIGHT;
+	const std::vector<ITEMDEFINE>& toGears   = (switchDirection == SWITCH_TO_NIGHT_GEAR) ? HEAD_GEARS_NIGHT : HEAD_GEARS_DAY;
 	OBJECTTYPE* helmet = &mSoldier->inv[HELMETPOS];
 	OBJECTTYPE  detachedGear{};
 
