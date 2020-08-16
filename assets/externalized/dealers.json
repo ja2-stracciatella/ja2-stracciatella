@@ -3,6 +3,7 @@
  *
  * Fields:
  *  - profileID: The shopkeeper merc's profile ID
+ *  - internalName: Name with which we find the dealer's inventory data file
  *  - type: Must be one of BUYS_ONLY, SELLS_ONLY, BUYS_SELLS or REPAIRS
  *  - buyingPrice: Mandatory if this dealer buys from the player. This is a multiplier applied on the item's value
  *  - sellingPrice: Mandatory if this dealer sells to the player. This is a multiplier applied on the item's value
