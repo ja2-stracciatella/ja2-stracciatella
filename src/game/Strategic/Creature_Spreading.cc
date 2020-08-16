@@ -1095,20 +1095,16 @@ bool GetWarpOutOfMineCodes(INT16* const sector_x, INT16* const sector_y, INT8* c
 	if (!gfWorldLoaded)      return false;
 	if (gbWorldSectorZ == 0) return false;
 
-	auto lair = gLairModel;
-	if (lair == NULL && giLairID == -1)
-	{
-		// Quest is finished
-		lair = GCM->getCreatureLair(giDestroyedLairID);
-	}
+	INT32 lair_id = giLairID;
+	if (lair_id == -1) lair_id = giDestroyedLairID;
 
-	// Now make sure the mercs are in the previously infested mine
-	if (lair != NULL && lair->isSectorInLair(gWorldSectorX, gWorldSectorY, gbWorldSectorZ))
+	//:Now make sure the mercs are in the previously infested mine
+	if (gLairModel != NULL && gLairModel->isSectorInLair(gWorldSectorX, gWorldSectorY, gbWorldSectorZ))
 	{
-		*sector_x = SECTORX(lair->warpExitSector);
-		*sector_y = SECTORY(lair->warpExitSector);
+		*sector_x = SECTORX(gLairModel->warpExitSector);
+		*sector_y = SECTORY(gLairModel->warpExitSector);
 		*sector_z = 0;
-		*insertion_grid_no = lair->warpExitGridNo;
+		*insertion_grid_no = gLairModel->warpExitGridNo;
 
 		return true;
 	}
