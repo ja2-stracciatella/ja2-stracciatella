@@ -10,6 +10,7 @@ file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/AmmoTypeModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/CalibreModel.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/DealerModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/DealerInventory.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/DefaultContentManager.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ItemModel.cc

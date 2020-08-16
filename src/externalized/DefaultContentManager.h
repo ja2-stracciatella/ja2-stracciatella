@@ -145,6 +145,10 @@ public:
 	virtual const DealerInventory* getDealerInventory(int dealerId) const override;
 	virtual const DealerInventory* getBobbyRayNewInventory() const override;
 	virtual const DealerInventory* getBobbyRayUsedInventory() const override;
+
+	virtual const DealerModel* getDealer(uint8_t dealerID) const override;
+	virtual const std::vector<const DealerModel*> getDealers() const override;
+
 	virtual const std::vector<const ShippingDestinationModel*>& getShippingDestinations() const override;
 	virtual const ShippingDestinationModel* getShippingDestination(uint8_t locationId) const override;
 	virtual const ShippingDestinationModel* getPrimaryShippingDestination() const override;
@@ -222,6 +226,8 @@ protected:
 	const DealerInventory *m_bobbyRayNewInventory;
 	const DealerInventory *m_bobbyRayUsedInventory;
 
+	std::vector<const DealerModel*> m_dealers;
+
 	std::vector<const ShippingDestinationModel*> m_shippingDestinations;
 	std::vector<const ST::string*> m_shippingDestinationNames;
 
@@ -258,7 +264,7 @@ protected:
 	bool loadMusic();
 
 	const DealerInventory * loadDealerInventory(const char *fileName);
-	bool loadAllDealersInventory();
+	bool loadAllDealersAndInventory();
 	void loadStringRes(const char *name, std::vector<const ST::string*> &strings) const;
 
 	bool readWeaponTable(

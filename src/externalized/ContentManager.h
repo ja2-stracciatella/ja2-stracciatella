@@ -20,6 +20,7 @@ class BloodCatPlacementsModel;
 class BloodCatSpawnsModel;
 class CreatureLairModel;
 class DealerInventory;
+class DealerModel;
 class FactParamsModel;
 class GamePolicy;
 class GarrisonGroupModel;
@@ -121,6 +122,9 @@ public:
 	virtual const std::vector<GARRISON_GROUP>& getGarrisonGroups() const = 0;
 	virtual const std::vector<PATROL_GROUP>& getPatrolGroups() const = 0;
 	virtual const std::vector<ARMY_COMPOSITION>& getArmyCompositions() const = 0;
+
+	virtual const DealerModel* getDealer(uint8_t dealerID) const = 0;
+	virtual const std::vector<const DealerModel*> getDealers() const = 0;
 
 	virtual const DealerInventory* getDealerInventory(int dealerId) const = 0;
 	virtual const DealerInventory* getBobbyRayNewInventory() const = 0;

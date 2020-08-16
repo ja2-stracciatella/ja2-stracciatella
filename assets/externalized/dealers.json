@@ -1,0 +1,277 @@
+/**
+ * List of all the shopkeepers / arms dealers / traders in game.
+ *
+ * Fields:
+ *  - profileID: The shopkeeper merc's profile ID
+ *  - type: Must be one of BUYS_ONLY, SELLS_ONLY, BUYS_SELLS or REPAIRS
+ *  - buyingPrice: Mandatory if this dealer buys from the player. This is a multiplier applied on the item's value
+ *  - sellingPrice: Mandatory if this dealer sells to the player. This is a multiplier applied on the item's value
+ *  - repairSpeed: The speed to repair an item, expressed in minutes per dollar-value. With a speed of 1.0, it takes 16.6 hours to do a full 100% status repair of an $2000 item. Lower value means faster repair. Mandatory for repairmen.
+ *  - repairCost: Cost to repair items, as one of the multipliers to the item's value. Mandatory for repairmen.
+ *  - initialCash: Initial cash the dealer has. It is replenished once a day.
+ *  - flags: Flags describing the dealer. See the below section.
+ *
+ * Currently implemented flags:
+ *   - SOME_USED_ITEMS: can offer used items for sale
+ *   - ONLY_USED_ITEMS: only offers used items
+ *   - GIVES_CHANGE: the dealer gives changes to the player
+ *   - ACCEPTS_GIFTS: accepts gifts (bribes) from player
+ *   - HAS_NO_INVENTORY: no inventory; nothing to sell
+ *   - DELAYS_REPAIR: there is a chance repair jobs are delayed
+ *   - REPAIRS_ELECTRONICS: able to and only repairs electronics
+ *   - SELLS_ALCOHOL: always restocked with alcohol
+ *   - SELLS_FUEL: can sell fuel after the arrangement is made
+ *   - BUYS_EVERYTHING: these guys will buy nearly anything from the player, regardless of what they carry for sale!
+ */
+[
+	/* Tony            */
+    {
+        "profileID": 91,
+        "internalName": "TONY",
+        "type": "BUYS_SELLS",
+        "buyingPrice": 0.75,
+        "sellingPrice": 1.25, 
+        "initialCash": 15000,
+        "flags": [
+            "SOME_USED_ITEMS",
+            "GIVES_CHANGE"
+        ]
+    },
+	/* Franz Hinkle    */
+    {
+        "profileID": 124,
+        "internalName": "FRANK",
+        "type": "BUYS_SELLS",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.5,
+        "initialCash": 5000, 
+        "flags": [
+            "SOME_USED_ITEMS",
+            "GIVES_CHANGE",
+            "BUYS_EVERYTHING"
+        ]
+    },
+	/* Keith Hemps     */
+    {
+        "profileID": 147,
+        "internalName": "KEITH",
+        "type": "BUYS_SELLS",
+        "buyingPrice": 0.75,
+        "sellingPrice": 1.0,
+        "initialCash": 1500,
+        "flags": [
+            "ONLY_USED_ITEMS",
+            "GIVES_CHANGE",
+            "BUYS_EVERYTHING"
+        ]
+    },
+	/* Jake Cameron    */
+    {
+        "profileID": 113,
+        "internalName": "JAKE",
+        "type": "BUYS_SELLS",
+        "buyingPrice": 0.8,
+        "sellingPrice": 1.1,
+        "initialCash": 2500,
+        "flags": [
+            "ONLY_USED_ITEMS",
+            "GIVES_CHANGE",
+            "BUYS_EVERYTHING",
+            "SELLS_FUEL"
+        ]
+    },
+	/* Gabby Mulnick   */
+    {
+        "profileID": 104,
+        "internalName": "GABBY",
+        "type": "BUYS_SELLS",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.0,
+        "initialCash": 3000,
+        "flags": [
+            "GIVES_CHANGE"
+        ]
+    },
+	/* Devin Connell   */
+    {
+        "profileID": 61,
+        "internalName": "DEVIN",
+        "type": "SELLS_ONLY",
+        "buyingPrice": 0.75,
+        "sellingPrice": 1.25,
+        "initialCash": 5000,
+        "flags": [
+            "GIVES_CHANGE"
+        ]
+    },
+	/* Howard Filmore  */
+    {
+        "profileID": 125,
+        "internalName": "HOWARD",
+        "type": "SELLS_ONLY",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.0,
+        "initialCash": 3000,
+        "flags": [
+            "GIVES_CHANGE"
+        ]
+    },
+	/* Sam Rozen       */
+    {
+        "profileID": 126,
+        "internalName": "SAM",
+        "type": "SELLS_ONLY",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.0,
+        "initialCash": 3000, 
+        "flags": [
+            "GIVES_CHANGE"
+        ]
+    },
+	/* Frank           */
+    {
+        "profileID": 92,
+        "internalName": "FRANK",
+        "type": "SELLS_ONLY",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.0,
+        "initialCash": 500, 
+        "flags":  [
+            "ACCEPTS_GIFTS",
+            "SELLS_ALCOHOL"
+        ]
+    },
+	/* Bar Bro 1       */
+    {
+        "profileID": 151,
+        "internalName": "HERVE-SANTOS",
+        "type": "SELLS_ONLY",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.0 ,
+        "initialCash": 250, 
+        "flags": [
+            "ACCEPTS_GIFTS",
+            "SELLS_ALCOHOL"
+        ]
+    },
+	/* Bar Bro 2       */
+    {
+        "profileID": 152,
+        "internalName": "PETER-SANTOS",
+        "type": "SELLS_ONLY",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.0 ,
+        "initialCash": 250, 
+        "flags": [
+            "ACCEPTS_GIFTS",
+            "SELLS_ALCOHOL"
+        ]
+    },
+	/* Bar Bro 3       */
+	{
+        "profileID": 153,
+        "internalName": "ALBERTO-SANTOS",
+        "type": "SELLS_ONLY",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.0 ,
+        "initialCash": 250, 
+        "flags": [
+            "ACCEPTS_GIFTS",
+            "SELLS_ALCOHOL"
+        ]
+    },
+    /* Bar Bro 4       */
+    {
+        "profileID": 154,
+        "internalName": "CARLO-SANTOS",
+        "type": "SELLS_ONLY",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.0 ,
+        "initialCash": 250, 
+        "flags": [
+            "ACCEPTS_GIFTS",
+            "SELLS_ALCOHOL"
+        ]
+    },
+	/* Micky O'Brien   */
+    {
+        "profileID": 96,
+        "internalName": "MICKY",
+        "type": "BUYS_ONLY",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.4,
+        "initialCash": 10000, 
+        "flags": [
+            "HAS_NO_INVENTORY",
+            "GIVES_CHANGE"
+        ]
+    },
+	/* Arnie Brunzwell */
+    {
+        "profileID": 128,
+        "internalName": "ARNIE",
+        "type": "REPAIRS",
+        "repairSpeed": 0.1,
+        "repairCost": 0.8,
+        "initialCash": 1500,
+        "flags": [
+            "HAS_NO_INVENTORY",
+            "GIVES_CHANGE"
+        ]
+    },
+	/* Fredo           */
+    {
+        "profileID": 130,
+        "internalName": "FREDO",
+        "type": "REPAIRS",
+        "repairSpeed": 0.6,
+        "repairCost": 0.6,
+        "initialCash": 1000,
+        "flags": [
+            "HAS_NO_INVENTORY",
+            "GIVES_CHANGE",
+            "REPAIRS_ELECTRONICS",
+            "DELAYS_REPAIR"
+        ]
+    },
+	/* Perko           */
+    {
+        "profileID": 74,
+        "internalName": "PERKO",
+        "type": "REPAIRS",
+        "repairSpeed": 1.0,
+        "repairCost": 0.4,
+        "initialCash": 1000, 
+        "flags": [
+            "HAS_NO_INVENTORY",
+            "GIVES_CHANGE",
+            "DELAYS_REPAIR"
+        ]
+    },
+	/* Elgin / Druggist */
+    {
+        "profileID": 112,
+        "internalName": "ELGIN",
+        "type": "SELLS_ONLY",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.0 ,
+        "initialCash": 500, 
+        "flags": [
+            "ACCEPTS_GIFTS",
+            "SELLS_ALCOHOL"
+        ]
+    },
+	/* Manny           */
+    {
+        "profileID": 155,
+        "internalName": "MANNY",
+        "type": "SELLS_ONLY",
+        "buyingPrice": 1.0,
+        "sellingPrice": 1.0 ,
+        "initialCash": 500, 
+        "flags": [
+            "ACCEPTS_GIFTS",
+            "SELLS_ALCOHOL"
+        ]
+    }
+]
