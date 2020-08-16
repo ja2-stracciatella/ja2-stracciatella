@@ -62,6 +62,7 @@
 #include "UILayout.h"
 #include "CalibreModel.h"
 #include "ContentManager.h"
+#include "DealerModel.h"
 #include "GameInstance.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
@@ -407,9 +408,15 @@ static void HandleShopKeeperInterface(void);
 static void RenderShopKeeperInterface(void);
 
 
-ARMS_DEALER_INFO const& SelectedArmsDealer()
+const DealerModel* SelectedArmsDealer()
 {
-	return ArmsDealerInfo[gbSelectedArmsDealerID];
+	auto dealer = GCM->getDealer(gbSelectedArmsDealerID);
+	if (dealer == NULL)
+	{
+		ST::string err = ST::format("Dealer is NULL ({})", gbSelectedArmsDealerID);
+		throw std::runtime_error(err.to_std_string());
+	}
+	return dealer;
 }
 
 ScreenID ShopKeeperScreenHandle()
@@ -659,7 +666,7 @@ static void EnterShopKeeperInterface(void)
 	std::fill(std::begin(gfCommonQuoteUsedThisSession), std::end(gfCommonQuoteUsedThisSession), FALSE);
 
 	//Init the shopkeepers face
-	InitShopKeepersFace( SelectedArmsDealer().ubShopKeeperID );
+	InitShopKeepersFace( SelectedArmsDealer()->profileID );
 
 	gfDoneBusinessThisSession = FALSE;
 
@@ -746,7 +753,7 @@ static void EnterShopKeeperInterface(void)
 
 static BOOLEAN InitShopKeepersFace(UINT8 ubMercID)
 {
-	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(SelectedArmsDealer().ubShopKeeperID);
+	SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(SelectedArmsDealer()->profileID);
 	FACETYPE& f = InitFace(ubMercID, pSoldier, FACE_BIGFACE);
 	giShopKeeperFaceIndex = &f;
 
@@ -1904,7 +1911,7 @@ static void DisplayArmsDealerCurrentInventoryPage(void)
 				else if (DoesDealerDoRepairs(gbSelectedArmsDealerID))
 				{
 					//if the item is damaged
-					if( SelectedArmsDealer().uiFlags & ARMS_INV_ITEM_NOT_REPAIRED_YET )
+					if (gpTempDealersInventory[usCnt].uiFlags & ARMS_INV_ITEM_NOT_REPAIRED_YET)
 						fDisplayHatchOnItem = TRUE;
 					else
 						fDisplayHatchOnItem = FALSE;
@@ -2046,13 +2053,13 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 	}
 	else if (item_area == ARMS_DEALER_INVENTORY)
 	{
-		ARMS_DEALER_INFO const& dealer_info = SelectedArmsDealer();
+		const DealerModel* dealer_info = SelectedArmsDealer();
 		if (!DoesDealerDoRepairs(gbSelectedArmsDealerID))
 		{
 			if (!hatched_out || item_o.ubNumberOfObjects != 0)
 			{
 				// Show the unit price, not the total value of all if stacked
-				item_cost = CalcShopKeeperItemPrice(DEALER_SELLING, TRUE, item_idx, dealer_info.u.price.sell, &item_o);
+				item_cost = CalcShopKeeperItemPrice(DEALER_SELLING, TRUE, item_idx, dealer_info->sellingPrice, &item_o);
 			}
 		}
 		else
@@ -2067,7 +2074,7 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 	}
 	else // Dealer's offer area
 	{
-		ARMS_DEALER_INFO const& dealer_info = SelectedArmsDealer();
+		const DealerModel* dealer_info = SelectedArmsDealer();
 		if (DoesDealerDoRepairs(gbSelectedArmsDealerID))
 		{
 			// The dealer repairs, there is an item here, therefore display the item's owner's face
@@ -2076,7 +2083,7 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 		}
 		else
 		{
-			item_cost = CalcShopKeeperItemPrice(DEALER_SELLING, FALSE, item_idx, dealer_info.u.price.sell, &item_o);
+			item_cost = CalcShopKeeperItemPrice(DEALER_SELLING, FALSE, item_idx, dealer_info->sellingPrice, &item_o);
 		}
 	}
 
@@ -3046,7 +3053,7 @@ static UINT32 CalculateTotalArmsDealerCost(void)
 			}
 			else
 			{
-				uiTotal += CalcShopKeeperItemPrice(DEALER_SELLING, FALSE, a->sItemIndex, SelectedArmsDealer().u.price.sell, &a->ItemObject);
+				uiTotal += CalcShopKeeperItemPrice(DEALER_SELLING, FALSE, a->sItemIndex, SelectedArmsDealer()->sellingPrice, &a->ItemObject);
 			}
 		}
 	}
@@ -3165,12 +3172,12 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 		StartShopKeeperTalking( SK_QUOTES_DEALER_OFFERED_MONEY_AS_A_GIFT );
 
 		// if the arms dealer is the kind of person who accepts gifts
-		if( SelectedArmsDealer().uiFlags & ARMS_DEALER_ACCEPTS_GIFTS )
+		if( SelectedArmsDealer()->hasFlag(ArmsDealerFlag::ACCEPTS_GIFTS) )
 		{
 			//Move all the players evaluated items to the dealer (also adds it to dealer's cash)
 			MovePlayerOfferedItemsOfValueToArmsDealersInventory();
 
-			DealerGetsBribed( SelectedArmsDealer().ubShopKeeperID, uiMoneyInPlayersOfferArea );
+			DealerGetsBribed( SelectedArmsDealer()->profileID, uiMoneyInPlayersOfferArea );
 		}
 	}
 	else // not a bribe
@@ -3248,7 +3255,7 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 				MovePlayerOfferedItemsOfValueToArmsDealersInventory();
 
 				//if the arms dealer is the type of person to give change
-				if( SelectedArmsDealer().uiFlags & ARMS_DEALER_GIVES_CHANGE )
+				if( SelectedArmsDealer()->hasFlag(ArmsDealerFlag::GIVES_CHANGE) )
 				{
 					//determine the amount of change to give
 					iChangeToGiveToPlayer = ( uiMoneyFromPlayersAccount + uiMoneyInPlayersOfferArea ) - uiArmsDealersItemsCost;
@@ -3286,8 +3293,8 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 
 
 			//if the arms dealer buys stuff
-			if( ( SelectedArmsDealer().ubTypeOfArmsDealer == ARMS_DEALER_BUYS_ONLY ) ||
-				( SelectedArmsDealer().ubTypeOfArmsDealer == ARMS_DEALER_BUYS_SELLS ) )
+			if( ( SelectedArmsDealer()->type == ARMS_DEALER_BUYS_ONLY ) ||
+				( SelectedArmsDealer()->type == ARMS_DEALER_BUYS_SELLS ) )
 			{
 				// but the dealer can't afford this transaction
 				if( iChangeToGiveToPlayer > ( INT32 ) gArmsDealerStatus[ gbSelectedArmsDealerID ].uiArmsDealersCash )
@@ -3313,7 +3320,7 @@ static void PerformTransaction(UINT32 uiMoneyFromPlayersAccount)
 
 
 			//if the arms dealer is the type of person to give change
-			if( SelectedArmsDealer().uiFlags & ARMS_DEALER_GIVES_CHANGE )
+			if( SelectedArmsDealer()->hasFlag(ArmsDealerFlag::GIVES_CHANGE) )
 			{
 				if( iChangeToGiveToPlayer > 0 )
 				{
@@ -3458,7 +3465,7 @@ static void MovePlayerOfferedItemsOfValueToArmsDealersInventory(void)
 				else
 				{
 					//if the dealer doesn't strictly buy items from the player, give the item to the dealer
-					if( SelectedArmsDealer().ubTypeOfArmsDealer != ARMS_DEALER_BUYS_ONLY )
+					if( SelectedArmsDealer()->type != ARMS_DEALER_BUYS_ONLY )
 					{
 						// item cease to be merc-owned during this operation
 						AddObjectToArmsDealerInventory(gbSelectedArmsDealerID, &o->ItemObject);
@@ -4084,7 +4091,7 @@ static BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum)
 	DialogueEvent::Add(new DialogueEventShopkeeperSetQuote(usQuoteNum));
 
 	// post quote dialogue
-	CharacterDialogue(SelectedArmsDealer().ubShopKeeperID, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI, FALSE);
+	CharacterDialogue(SelectedArmsDealer()->profileID, usQuoteNum, giShopKeeperFaceIndex, DIALOGUE_SHOPKEEPER_UI, FALSE);
 
 	// post event to mark shopkeeper dialogue as ended
 	DialogueEvent::Add(new DialogueEventShopkeeperSetQuote(-1));
@@ -4400,7 +4407,7 @@ static void EnableDisableEvaluateAndTransactionButtons(void)
 
 	//ARM: Always permit trying bribes, even if they don't work on a given dealer!
 	// if the arms dealer is the kind of person who accepts gifts, and there is stuff to take
-	//if( SelectedArmsDealer().uiFlags & ARMS_DEALER_ACCEPTS_GIFTS )
+	//if( SelectedArmsDealer()->hasFlag(ArmsDealerFlag::ACCEPTS_GIFTS )
 	{
 		//if the player is giving the dealer money, without buying anything
 		if( IsMoneyTheOnlyItemInThePlayersOfferArea( ) && CountNumberOfItemsInTheArmsDealersOfferArea( ) == 0 )
@@ -4749,7 +4756,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 		switch ( uiEvalResult )
 		{
 			case EVAL_RESULT_DONT_HANDLE:
-				if( SelectedArmsDealer().ubTypeOfArmsDealer == ARMS_DEALER_SELLS_ONLY )
+				if( SelectedArmsDealer()->type == ARMS_DEALER_SELLS_ONLY )
 				{
 					// then he doesn't have quotes 17, 19, or 20, always use 4.  Devin doesn't have 18 either,
 					// while the text of 18 seems wrong for Sam & Howard if offered something they should consider valuable.
@@ -4872,7 +4879,7 @@ void ConfirmToDeductMoneyFromPlayersAccountMessageBoxCallBack(MessageBoxReturnVa
 		//Perform the transaction with the extra money from the players account
 		PerformTransaction( iMoneyToDeduct );
 
-		AddTransactionToPlayersBook( PURCHASED_ITEM_FROM_DEALER, SelectedArmsDealer().ubShopKeeperID, GetWorldTotalMin(), -iMoneyToDeduct );
+		AddTransactionToPlayersBook( PURCHASED_ITEM_FROM_DEALER, SelectedArmsDealer()->profileID, GetWorldTotalMin(), -iMoneyToDeduct );
 	}
 
 	// done, re-enable calls to PerformTransaction()
@@ -5707,7 +5714,7 @@ BOOLEAN CanMercInteractWithSelectedShopkeeper(const SOLDIERTYPE* pSoldier)
 	Assert( pSoldier!= NULL );
 	Assert( gbSelectedArmsDealerID != -1 );
 
-	const SOLDIERTYPE* const pShopkeeper = FindSoldierByProfileID(SelectedArmsDealer().ubShopKeeperID);
+	const SOLDIERTYPE* const pShopkeeper = FindSoldierByProfileID(SelectedArmsDealer()->profileID);
 	Assert( pShopkeeper != NULL );
 	Assert( pShopkeeper->bInSector );
 
@@ -6180,21 +6187,21 @@ static UINT32 EvaluateInvSlot(INVENTORY_IN_SLOT* pInvSlot)
 	//if the dealer is Micky
 	if( gbSelectedArmsDealerID == ARMS_DEALER_MICKY )
 	{
-		const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(SelectedArmsDealer().ubShopKeeperID);
+		const SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(SelectedArmsDealer()->profileID);
 		if (s != NULL && GetDrunkLevel(s) == DRUNK)
 		{
 			//Micky is DRUNK, pays more!
-			dPriceModifier = SelectedArmsDealer().u.price.sell;
+			dPriceModifier = SelectedArmsDealer()->sellingPrice;
 		}
 		else
 		{
 			// Micky isn't drunk, charge regular price
-			dPriceModifier = SelectedArmsDealer().u.price.buy;
+			dPriceModifier = SelectedArmsDealer()->buyingPrice;
 		}
 	}
 	else
 	{
-		dPriceModifier = SelectedArmsDealer().u.price.buy;
+		dPriceModifier = SelectedArmsDealer()->buyingPrice;
 	}
 
 
