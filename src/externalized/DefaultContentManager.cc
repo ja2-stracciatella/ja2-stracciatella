@@ -192,6 +192,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 
 	m_movementCosts = NULL;
 	m_loadingScreenModel = NULL;
+	m_samSitesAirControl = NULL;
 }
 
 
