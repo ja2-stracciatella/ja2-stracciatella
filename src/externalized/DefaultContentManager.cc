@@ -167,7 +167,6 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	:m_gameVersion(gameVersion),
 	mNormalGunChoice(ARMY_GUN_LEVELS),
 	mExtendedGunChoice(ARMY_GUN_LEVELS),
-	m_dealersInventory(NUM_ARMS_DEALERS),
 	m_vfs(Vfs_create())
 {
 	/*
@@ -193,6 +192,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 
 	m_movementCosts = NULL;
 	m_loadingScreenModel = NULL;
+	m_samSitesAirControl = NULL;
 }
 
 
@@ -1090,7 +1090,8 @@ bool DefaultContentManager::loadAllDealersAndInventory()
 		m_dealers.push_back(DealerModel::deserialize(element, index++));
 	}
 	DealerModel::validateData(m_dealers);
-
+	
+	m_dealersInventory = std::vector<const DealerInventory*>(m_dealers.size());
 	for (auto dealer : m_dealers)
 	{
 		ST::string filename = dealer->getInventoryDataFileName();
