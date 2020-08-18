@@ -20,6 +20,7 @@
 #include "CalibreModel.h"
 #include "ContentMusic.h"
 #include "DealerInventory.h"
+#include "DealerModel.h"
 #include "JsonObject.h"
 #include "JsonUtility.h"
 #include "LoadingScreenModel.h"
@@ -166,7 +167,6 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	:m_gameVersion(gameVersion),
 	mNormalGunChoice(ARMY_GUN_LEVELS),
 	mExtendedGunChoice(ARMY_GUN_LEVELS),
-	m_dealersInventory(NUM_ARMS_DEALERS),
 	m_vfs(Vfs_create())
 {
 	/*
@@ -309,12 +309,12 @@ DefaultContentManager::~DefaultContentManager()
 	m_ammoTypes.clear();
 	m_ammoTypeMap.clear();
 
-	for(const DealerInventory* inv : m_dealersInventory)
-	{
-		if(inv) delete inv;
-	}
+	deleteElements(m_dealersInventory);
 	delete m_bobbyRayNewInventory;
 	delete m_bobbyRayUsedInventory;
+
+	deleteElements(m_dealers);
+
 	delete m_impPolicy;
 	delete m_gamePolicy;
 	delete m_loadingScreenModel;
@@ -359,6 +359,16 @@ const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
 const DealerInventory* DefaultContentManager::getBobbyRayUsedInventory() const
 {
 	return m_bobbyRayUsedInventory;
+}
+
+const DealerModel* DefaultContentManager::getDealer(uint8_t dealerID) const
+{
+	return m_dealers[dealerID];
+}
+
+const std::vector<const DealerModel*> DefaultContentManager::getDealers() const
+{
+	return m_dealers;
 }
 
 const std::vector<const ShippingDestinationModel*>& DefaultContentManager::getShippingDestinations() const
@@ -1013,7 +1023,7 @@ bool DefaultContentManager::loadGameData()
 	auto replacement_json = readJsonDataFile("tactical-map-item-replacements.json");
 	m_mapItemReplacements = MapItemReplacementModel::deserialize(replacement_json.get(), this);
 
-	loadAllDealersInventory();
+	loadAllDealersAndInventory();
 
 	auto game_json = readJsonDataFile("game.json");
 	m_gamePolicy = new DefaultGamePolicy(game_json.get());
@@ -1071,27 +1081,22 @@ const DealerInventory * DefaultContentManager::loadDealerInventory(const char *f
 	return new DealerInventory(readJsonDataFile(fileName).get(), this);
 }
 
-bool DefaultContentManager::loadAllDealersInventory()
+bool DefaultContentManager::loadAllDealersAndInventory()
 {
-	m_dealersInventory[ARMS_DEALER_TONY]          = loadDealerInventory("dealer-inventory-tony.json");
-	m_dealersInventory[ARMS_DEALER_FRANK]         = loadDealerInventory("dealer-inventory-frank.json");
-	m_dealersInventory[ARMS_DEALER_MICKY]         = loadDealerInventory("dealer-inventory-micky.json");
-	m_dealersInventory[ARMS_DEALER_ARNIE]         = loadDealerInventory("dealer-inventory-arnie.json");
-	m_dealersInventory[ARMS_DEALER_PERKO]         = loadDealerInventory("dealer-inventory-perko.json");
-	m_dealersInventory[ARMS_DEALER_KEITH]         = loadDealerInventory("dealer-inventory-keith.json");
-	m_dealersInventory[ARMS_DEALER_BAR_BRO_1]     = loadDealerInventory("dealer-inventory-herve-santos.json");
-	m_dealersInventory[ARMS_DEALER_BAR_BRO_2]     = loadDealerInventory("dealer-inventory-peter-santos.json");
-	m_dealersInventory[ARMS_DEALER_BAR_BRO_3]     = loadDealerInventory("dealer-inventory-alberto-santos.json");
-	m_dealersInventory[ARMS_DEALER_BAR_BRO_4]     = loadDealerInventory("dealer-inventory-carlo-santos.json");
-	m_dealersInventory[ARMS_DEALER_JAKE]          = loadDealerInventory("dealer-inventory-jake.json");
-	m_dealersInventory[ARMS_DEALER_FRANZ]         = loadDealerInventory("dealer-inventory-franz.json");
-	m_dealersInventory[ARMS_DEALER_HOWARD]        = loadDealerInventory("dealer-inventory-howard.json");
-	m_dealersInventory[ARMS_DEALER_SAM]           = loadDealerInventory("dealer-inventory-sam.json");
-	m_dealersInventory[ARMS_DEALER_FREDO]         = loadDealerInventory("dealer-inventory-fredo.json");
-	m_dealersInventory[ARMS_DEALER_GABBY]         = loadDealerInventory("dealer-inventory-gabby.json");
-	m_dealersInventory[ARMS_DEALER_DEVIN]         = loadDealerInventory("dealer-inventory-devin.json");
-	m_dealersInventory[ARMS_DEALER_ELGIN]         = loadDealerInventory("dealer-inventory-elgin.json");
-	m_dealersInventory[ARMS_DEALER_MANNY]         = loadDealerInventory("dealer-inventory-manny.json");
+	auto json = readJsonDataFile("dealers.json");
+	int index = 0;
+	for (auto& element : json->GetArray())
+	{
+		m_dealers.push_back(DealerModel::deserialize(element, index++));
+	}
+	DealerModel::validateData(m_dealers);
+	
+	m_dealersInventory = std::vector<const DealerInventory*>(m_dealers.size());
+	for (auto dealer : m_dealers)
+	{
+		ST::string filename = dealer->getInventoryDataFileName();
+		m_dealersInventory[dealer->dealerID] = loadDealerInventory(filename.c_str());
+	}
 	m_bobbyRayNewInventory                        = loadDealerInventory("bobby-ray-inventory-new.json");
 	m_bobbyRayUsedInventory                       = loadDealerInventory("bobby-ray-inventory-used.json");
 	return true;
