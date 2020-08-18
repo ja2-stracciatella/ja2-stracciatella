@@ -1910,11 +1910,8 @@ static void DisplayArmsDealerCurrentInventoryPage(void)
 				//if the dealer repairs
 				else if (DoesDealerDoRepairs(gbSelectedArmsDealerID))
 				{
-					//if the item is damaged
-					if (gpTempDealersInventory[usCnt].uiFlags & ARMS_INV_ITEM_NOT_REPAIRED_YET)
-						fDisplayHatchOnItem = TRUE;
-					else
-						fDisplayHatchOnItem = FALSE;
+					// not displaying the hatch, because it would obscure the repair ETA
+					fDisplayHatchOnItem = FALSE;
 				}
 				else // non-repairman
 				{
