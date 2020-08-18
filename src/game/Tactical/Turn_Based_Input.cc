@@ -1383,7 +1383,7 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 
 		case 'f':
 			// If there is a selected soldier, and the cursor location is valid
-			if (SOLDIERTYPE const* const sel = GetSelectedMan())
+			if (SOLDIERTYPE* sel = GetSelectedMan())
 			{
 				GridNo const grid_no = gUIFullTarget ? gUIFullTarget->sGridNo : GetMouseMapPos();
 				DisplayRangeToTarget(sel, grid_no);
