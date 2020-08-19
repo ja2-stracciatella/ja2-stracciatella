@@ -738,7 +738,7 @@ bool DefaultContentManager::loadWeapons()
 			WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap);
 			SLOGD("Loaded weapon %d %s", w->getItemIndex(), w->getInternalName().c_str());
 
-			if((w->getItemIndex() < 0) || (w->getItemIndex() > MAX_WEAPONS))
+			if (w->getItemIndex() > MAX_WEAPONS)
 			{
 				SLOGE("Weapon index must be in the interval 0 - %d", MAX_WEAPONS);
 				return false;

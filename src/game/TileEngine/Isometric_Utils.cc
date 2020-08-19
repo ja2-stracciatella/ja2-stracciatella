@@ -349,14 +349,14 @@ INT16 NewGridNo(INT16 sGridno, INT16 sDirInc)
 }
 
 
-INT16 DirectionInc(UINT8 sDirection)
+INT16 DirectionInc(UINT8 ubDirection)
 {
-	if ((sDirection < 0) || (sDirection > 7))
+	if (ubDirection > 7)
 	{
 		//direction = random(8);	// replace garbage with random direction
-		sDirection = 1;
+		ubDirection = 1;
 	}
-	return(DirIncrementer[sDirection]);
+	return(DirIncrementer[ubDirection]);
 }
 
 
