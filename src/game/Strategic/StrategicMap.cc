@@ -2425,7 +2425,7 @@ void UpdateAirspaceControl( void )
 		{
 			BOOLEAN fEnemyControlsAir = FALSE;
 			INT8 bControllingSAM = GCM->getControllingSamSite(SECTOR(x, y));
-			if (bControllingSAM >= 0 && bControllingSAM < samList.size())
+			if (bControllingSAM >= 0 && (UINT8)bControllingSAM < samList.size())
 			{
 				UINT8 ubSector = samList[bControllingSAM]->sectorId;
 				StrategicMapElement* pSAMStrategicMap = &( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( ubSector ) ] );
