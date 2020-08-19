@@ -87,6 +87,7 @@ enum ArmsDealerType
 
 
 
+class DealerModel;
 
 // THIS STRUCTURE GETS SAVED/RESTORED/RESET
 struct ARMS_DEALER_STATUS
@@ -182,6 +183,7 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE, UINT32 savegame_version);
 
 void DailyUpdateOfArmsDealersInventory(void);
 
+const DealerModel* GetDealer(UINT8);
 ArmsDealerType GetTypeOfArmsDealer( UINT8 ubDealerID );
 
 BOOLEAN	DoesDealerDoRepairs(ArmsDealerID);
