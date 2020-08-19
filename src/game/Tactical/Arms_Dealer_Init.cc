@@ -1020,15 +1020,15 @@ BOOLEAN CanDealerRepairItem(ArmsDealerID const ubArmsDealer, UINT16 const usItem
 	auto dealer = GetDealer(ubArmsDealer);
 	if (dealer->type == ArmsDealerType::ARMS_DEALER_REPAIRS)
 	{
-		if (!dealer->hasFlag(ArmsDealerFlag::REPAIRS_ELECTRONICS))
-		{
-			// repairs ANYTHING non-electronic
-			return !(uiFlags & ITEM_ELECTRONIC);
-		}
-		else
+		if (dealer->hasFlag(ArmsDealerFlag::REPAIRS_ELECTRONICS))
 		{
 			// repairs ONLY electronics
 			return (uiFlags & ITEM_ELECTRONIC);
+		}
+		else
+		{
+			// repairs ANYTHING non-electronic
+			return !(uiFlags & ITEM_ELECTRONIC);
 		}
 	}
 	else
