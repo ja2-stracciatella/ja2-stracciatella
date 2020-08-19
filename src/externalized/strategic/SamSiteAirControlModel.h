@@ -10,7 +10,7 @@
 class SamSiteAirControlModel
 {
 public:
-	SamSiteAirControlModel(std::array<int8_t, NUM_SECTORS> controlTable_);
+	SamSiteAirControlModel(std::array<int8_t, NUM_SECTORS>& controlTable_);
 
 	// returns the ID of the SAM site covering the sector, or -1 if not covered by any
 	int8_t getControllingSamSiteID(uint16_t sectorId) const;

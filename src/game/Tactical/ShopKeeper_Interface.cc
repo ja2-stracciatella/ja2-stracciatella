@@ -6267,18 +6267,9 @@ static ST::string BuildRepairTimeString(UINT32 uiTimeInMinutesToFixItem)
 	else
 	{
 		// show hours
-
 		// round fractions of 15+ minutes up to next full hour
 		usNumberOfHoursToFixItem = (UINT16) ( ( uiTimeInMinutesToFixItem + 45 ) / 60 );
-
-		if ( usNumberOfHoursToFixItem > 1 )
-		{
-			return st_format_printf(SKI_Text[ SKI_TEXT_PLURAL_HOURS ], usNumberOfHoursToFixItem);
-		}
-		else
-		{
-			return SKI_Text[ SKI_TEXT_ONE_HOUR ];
-		}
+		return st_format_printf(SKI_Text[ SKI_TEXT_PLURAL_HOURS ], usNumberOfHoursToFixItem);
 	}
 }
 

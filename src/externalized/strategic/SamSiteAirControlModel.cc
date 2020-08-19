@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 
-SamSiteAirControlModel::SamSiteAirControlModel(std::array<int8_t, 256> controlTable_)
+SamSiteAirControlModel::SamSiteAirControlModel(std::array<int8_t, 256>& controlTable_)
 	:airControlTable(controlTable_) {}
 
 int8_t SamSiteAirControlModel::getControllingSamSiteID(uint16_t const sectorId) const

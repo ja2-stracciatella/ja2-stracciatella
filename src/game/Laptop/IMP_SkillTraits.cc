@@ -338,7 +338,7 @@ void HandleIMPSkillTraitAnswers( UINT32 uiSkillPressed, BOOLEAN fResetAllButtons
 	}
 
 	//make sure its a valid skill
-	if( uiSkillPressed > IMP_SKILL_TRAITS__NUMBER_SKILLS )
+	if (uiSkillPressed >= IMP_SKILL_TRAITS__NUMBER_SKILLS)
 	{
 		Assert( 0 );
 		return;
