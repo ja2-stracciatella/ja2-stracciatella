@@ -6,12 +6,13 @@
 
 MagazineModel::MagazineModel(uint16_t itemIndex_,
 				const char* internalName_,
+				uint32_t itemClass_,
 				const CalibreModel *calibre_,
 				uint16_t capacity_,
 				const AmmoTypeModel *ammoType_,
 				bool dontUseAsDefaultMagazine_
 )
-	:ItemModel(itemIndex_, internalName_, IC_AMMO, 0, INVALIDCURS),
+	:ItemModel(itemIndex_, internalName_, itemClass_, 0, INVALIDCURS),
 	calibre(calibre_), capacity(capacity_), ammoType(ammoType_),
 	dontUseAsDefaultMagazine(dontUseAsDefaultMagazine_)
 {
@@ -57,10 +58,11 @@ MagazineModel* MagazineModel::deserialize(
 	int itemIndex                 = obj.GetInt("itemIndex");
 	const char *internalName      = obj.GetString("internalName");
 	const CalibreModel *calibre   = getCalibre(obj.GetString("calibre"), calibreMap);
+	uint32_t itemClass            = (calibre->index != NOAMMO) ? IC_AMMO : IC_NONE;
 	uint16_t capacity             = obj.GetInt("capacity");
 	const AmmoTypeModel *ammoType = getAmmoType(obj.GetString("ammoType"), ammoTypeMap);
 	bool dontUseAsDefaultMagazine = obj.getOptionalBool("dontUseAsDefaultMagazine");
-	MagazineModel *mag = new MagazineModel(itemIndex, internalName, calibre, capacity, ammoType,
+	MagazineModel *mag = new MagazineModel(itemIndex, internalName, itemClass, calibre, capacity, ammoType,
 						dontUseAsDefaultMagazine);
 
 	mag->fFlags = mag->deserializeFlags(obj);
