@@ -1,6 +1,32 @@
 #ifndef ARMS_DEALER_H
 #define ARMS_DEALER_H
 
+//the enums for the different kinds of arms dealers
+enum ArmsDealerType
+{
+	NOT_VALID_DEALER = -1,
+	ARMS_DEALER_BUYS_SELLS = 0,
+	ARMS_DEALER_SELLS_ONLY,
+	ARMS_DEALER_BUYS_ONLY,
+	ARMS_DEALER_REPAIRS,
+};
+
+// various flags which control the dealer's operations
+enum ArmsDealerFlag
+{
+	ONLY_USED_ITEMS,
+	SOME_USED_ITEMS,       //The arms dealer can have used items in his inventory
+	GIVES_CHANGE,          //The arms dealer will give the required change when doing a transaction
+	ACCEPTS_GIFTS,         //The arms dealer is the kind of person who will accept gifts
+	HAS_NO_INVENTORY,      //The arms dealer does not carry any inventory
+	DELAYS_REPAIR,
+	REPAIRS_ELECTRONICS,
+	SELLS_ALCOHOL,
+	SELLS_FUEL,
+	BUYS_EVERYTHING,       //these guys will buy nearly anything from the player, regardless of what they carry for sale!
+
+	NUM_FLAGS
+};
 
 //enums for the various arms dealers
 enum ArmsDealerID

@@ -2389,10 +2389,10 @@ static BOOLEAN RepairIsDone(UINT16 usItemIndex, UINT8 ubElement)
 		}
 	}
 
-	// if the item is imprinted (by anyone, even player's mercs), and it's Fredo repairing it
+	// if the item is imprinted (by anyone, even player's mercs), and it's the elctronics guy repairing it
 	if (
 		/*( gArmsDealersInventory[ gbSelectedArmsDealerID ][ usItemIndex ].SpecialItem[ ubElement ].Info.ubImprintID == (NO_PROFILE + 1) ) && */
-		gbSelectedArmsDealerID == ARMS_DEALER_FREDO)
+		GetDealer(gbSelectedArmsDealerID)->hasFlag(ArmsDealerFlag::REPAIRS_ELECTRONICS))
 	{
 		// then reset the imprinting!
 		RepairItem.ItemObject.ubImprintID = NO_PROFILE;
@@ -4691,8 +4691,8 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 						uiEvalResult = EVAL_RESULT_OK_BUT_REALLY_DAMAGED;
 					}
 
-					// check if it's the first time a rocket rifle is being submitted to Fredo
-					if( fRocketRifleWasEvaluated && ( gbSelectedArmsDealerID == ARMS_DEALER_FREDO ) )
+					// check if it's the first time a rocket rifle is being submitted to the electronics guy
+					if (fRocketRifleWasEvaluated && GetDealer(gbSelectedArmsDealerID)->hasFlag(ArmsDealerFlag::REPAIRS_ELECTRONICS))
 					{
 						//if he hasn't yet said his quote
 						if( !( gArmsDealerStatus[ gbSelectedArmsDealerID ].ubSpecificDealerFlags & ARMS_DEALER_FLAG__FREDO_HAS_SAID_ROCKET_RIFLE_QUOTE ) )
@@ -5953,7 +5953,7 @@ static void HandlePossibleRepairDelays(void)
 	// assume there won't be a delay
 	gfStartWithRepairsDelayedQuote = FALSE;
 
-	if (gbSelectedArmsDealerID != ARMS_DEALER_FREDO && gbSelectedArmsDealerID != ARMS_DEALER_PERKO) return;
+	if (!GetDealer(gbSelectedArmsDealerID)->hasFlag(ArmsDealerFlag::DELAYS_REPAIR)) return;
 
 	ARMS_DEALER_STATUS& status = gArmsDealerStatus[gbSelectedArmsDealerID];
 	// because the quotes are so specific, we'll only use them once per game per repairman

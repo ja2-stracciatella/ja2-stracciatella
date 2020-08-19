@@ -452,6 +452,8 @@ static void LimitArmsDealersInventory(ArmsDealerID, UINT32 uiDealerItemType, UIN
 
 static void AdjustCertainDealersInventory(void)
 {
+	auto dealers = GCM->getDealers();
+
 	//Adjust Tony's items (this restocks *instantly* 1/day, doesn't use the reorder system)
 	GuaranteeAtLeastOneItemOfType( ARMS_DEALER_TONY, ARMS_DEALER_BIG_GUNS );
 	LimitArmsDealersInventory( ARMS_DEALER_TONY, ARMS_DEALER_BIG_GUNS, 2 );
@@ -459,13 +461,13 @@ static void AdjustCertainDealersInventory(void)
 	LimitArmsDealersInventory( ARMS_DEALER_TONY, ARMS_DEALER_AMMO, 8 );
 
 	//Adjust all bartenders' alcohol levels to a minimum
-	GuaranteeMinimumAlcohol( ARMS_DEALER_FRANK );
-	GuaranteeMinimumAlcohol( ARMS_DEALER_BAR_BRO_1 );
-	GuaranteeMinimumAlcohol( ARMS_DEALER_BAR_BRO_2 );
-	GuaranteeMinimumAlcohol( ARMS_DEALER_BAR_BRO_3 );
-	GuaranteeMinimumAlcohol( ARMS_DEALER_BAR_BRO_4 );
-	GuaranteeMinimumAlcohol( ARMS_DEALER_ELGIN );
-	GuaranteeMinimumAlcohol( ARMS_DEALER_MANNY );
+	for (auto dealer : dealers)
+	{
+		if (dealer->hasFlag(ArmsDealerFlag::SELLS_ALCOHOL))
+		{
+			GuaranteeMinimumAlcohol((ArmsDealerID)dealer->dealerID);
+		}
+	}
 
 	//make sure Sam (hardware guy) has at least one empty jar
 	GuaranteeAtLeastXItemsOfIndex( ARMS_DEALER_SAM, JAR, 1 );
@@ -473,7 +475,13 @@ static void AdjustCertainDealersInventory(void)
 	if ( CheckFact( FACT_ESTONI_REFUELLING_POSSIBLE, 0 ) )
 	{
 		// gas is restocked regularly, unlike most items
-		GuaranteeAtLeastXItemsOfIndex( ARMS_DEALER_JAKE, GAS_CAN, ( UINT8 ) ( 4 + Random( 3 ) ) );
+		for (auto dealer : dealers)
+		{
+			if (dealer->hasFlag(ArmsDealerFlag::SELLS_FUEL))
+			{
+				GuaranteeAtLeastXItemsOfIndex((ArmsDealerID)dealer->dealerID, GAS_CAN, (UINT8)(4 + Random(3)));
+			}
+		}
 	}
 
 	//If the player hasn't bought a video camera from Franz yet, make sure Franz has one to sell
@@ -970,23 +978,17 @@ BOOLEAN CanDealerTransactItem(ArmsDealerID const ubArmsDealer, UINT16 const usIt
 			break;
 
 		case ARMS_DEALER_BUYS_SELLS:
-			switch ( ubArmsDealer )
+			if (GetDealer(ubArmsDealer)->hasFlag(ArmsDealerFlag::BUYS_EVERYTHING))
 			{
-				case ARMS_DEALER_JAKE:
-				case ARMS_DEALER_KEITH:
-				case ARMS_DEALER_FRANZ:
-					if ( fPurchaseFromPlayer )
-					{
-						// these guys will buy nearly anything from the player, regardless of what they carry for sale!
-						return( CalcValueOfItemToDealer( ubArmsDealer, usItemIndex, FALSE ) > 0 );
-					}
-					//else selling inventory uses their inventory list
-					break;
-
-				default:
-					// the others go by their inventory list
-					break;
+				if ( fPurchaseFromPlayer )
+				{
+					// these guys will buy nearly anything from the player, regardless of what they carry for sale!
+					return( CalcValueOfItemToDealer( ubArmsDealer, usItemIndex, FALSE ) > 0 );
+				}
+				//else selling inventory uses their inventory list
+				break;
 			}
+			// the others go by their inventory list
 			break;
 
 		case ARMS_DEALER_REPAIRS:
@@ -1015,27 +1017,23 @@ BOOLEAN CanDealerRepairItem(ArmsDealerID const ubArmsDealer, UINT16 const usItem
 		return(FALSE);
 	}
 
-	switch ( ubArmsDealer )
+	auto dealer = GetDealer(ubArmsDealer);
+	if (dealer->type == ArmsDealerType::ARMS_DEALER_REPAIRS)
 	{
-		case ARMS_DEALER_ARNIE:
-		case ARMS_DEALER_PERKO:
-			// repairs ANYTHING non-electronic
-			if ( !( uiFlags & ITEM_ELECTRONIC ) )
-			{
-				return(TRUE);
-			}
-			break;
-
-		case ARMS_DEALER_FREDO:
+		if (dealer->hasFlag(ArmsDealerFlag::REPAIRS_ELECTRONICS))
+		{
 			// repairs ONLY electronics
-			if ( uiFlags & ITEM_ELECTRONIC )
-			{
-				return(TRUE);
-			}
-			break;
-
-		default:
-			AssertMsg(FALSE, String("CanDealerRepairItem(), Arms Dealer %d is not a recognized repairman!.  AM 1.", ubArmsDealer));
+			return (uiFlags & ITEM_ELECTRONIC);
+		}
+		else
+		{
+			// repairs ANYTHING non-electronic
+			return !(uiFlags & ITEM_ELECTRONIC);
+		}
+	}
+	else
+	{
+		AssertMsg(FALSE, String("CanDealerRepairItem(), Arms Dealer %d is not a recognized repairman!.  AM 1.", ubArmsDealer));
 	}
 
 	// can't repair this...

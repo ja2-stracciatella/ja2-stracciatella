@@ -8,17 +8,6 @@
 #include <vector>
 
 
-//the enums for the different kinds of arms dealers
-enum ArmsDealerType
-{
-	NOT_VALID_DEALER = -1,
-	ARMS_DEALER_BUYS_SELLS = 0,
-	ARMS_DEALER_SELLS_ONLY,
-	ARMS_DEALER_BUYS_ONLY,
-	ARMS_DEALER_REPAIRS,
-};
-
-
 //The following defines indicate what items can be sold by the arms dealer
 #define ARMS_DEALER_HANDGUNCLASS	0x00000001
 #define ARMS_DEALER_SMGCLASS		0x00000002
@@ -87,6 +76,7 @@ enum ArmsDealerType
 
 
 
+class DealerModel;
 
 // THIS STRUCTURE GETS SAVED/RESTORED/RESET
 struct ARMS_DEALER_STATUS
@@ -182,6 +172,7 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE, UINT32 savegame_version);
 
 void DailyUpdateOfArmsDealersInventory(void);
 
+const DealerModel* GetDealer(UINT8);
 ArmsDealerType GetTypeOfArmsDealer( UINT8 ubDealerID );
 
 BOOLEAN	DoesDealerDoRepairs(ArmsDealerID);
