@@ -8,17 +8,6 @@
 #include <vector>
 
 
-//the enums for the different kinds of arms dealers
-enum ArmsDealerType
-{
-	NOT_VALID_DEALER = -1,
-	ARMS_DEALER_BUYS_SELLS = 0,
-	ARMS_DEALER_SELLS_ONLY,
-	ARMS_DEALER_BUYS_ONLY,
-	ARMS_DEALER_REPAIRS,
-};
-
-
 //The following defines indicate what items can be sold by the arms dealer
 #define ARMS_DEALER_HANDGUNCLASS	0x00000001
 #define ARMS_DEALER_SMGCLASS		0x00000002

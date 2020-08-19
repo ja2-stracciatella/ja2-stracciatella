@@ -1,28 +1,10 @@
 #pragma once
 
-#include "Arms_Dealer_Init.h"
+#include "Arms_Dealer.h"
 #include "JA2Types.h"
 #include <bitset>
 #include <rapidjson/document.h>
 #include <vector>
-
-
-enum ArmsDealerFlag
-{
-	ONLY_USED_ITEMS,
-	SOME_USED_ITEMS,       //The arms dealer can have used items in his inventory
-	GIVES_CHANGE,          //The arms dealer will give the required change when doing a transaction
-	ACCEPTS_GIFTS,         //The arms dealer is the kind of person who will accept gifts
-	HAS_NO_INVENTORY,      //The arms dealer does not carry any inventory
-	DELAYS_REPAIR,
-	REPAIRS_ELECTRONICS,
-	SELLS_ALCOHOL,
-	SELLS_FUEL,
-	BUYS_EVERYTHING,       //these guys will buy nearly anything from the player, regardless of what they carry for sale!
-
-	NUM_FLAGS
-};
-
 
 class DealerModel
 {
