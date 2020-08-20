@@ -3292,6 +3292,7 @@ static const ST::string s_ger_zNewTacticalMessages[] =
 	"(Kann während Kampf nicht speichern)",
 	"(Kann keine vorigen Spielstände laden)",
 	"Dies ist ein Tot ist Tot Spiel und Sie können nicht über den Spiel Speichern Dialog speichern.",
+	"Trefferchance: %d%%, mit Deckung: %d%%", // Stracciatella: chance to hit
 };
 
 //@@@:  New string as of March 3, 2000.

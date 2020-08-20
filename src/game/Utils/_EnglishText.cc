@@ -3467,6 +3467,7 @@ const ST::string g_eng_zNewTacticalMessages[] =
 	"(Cannot save during combat)", //@@@@ new text
 	"(Cannot load previous savegames)", // Stracciatella: New Dead is Dead game mode text
 	"This is a Dead is Dead game and you cannot save through the save screen.",
+	"Chance to hit: %d%%, after cover: %d%%", // Stracciatella: chance to hit
 };
 
 //@@@:  New string as of March 3, 2000.

@@ -3526,6 +3526,7 @@ static const ST::string s_rus_zNewTacticalMessages[] =
 	"(Нельзя сохранять игру в бою)",
 	"(Cannot load previous savegames)",
 	"This is a Dead is Dead game and you cannot save through the save screen.",
+	"точности удара: %d%%, c укрытия: %d%%", // Stracciatella: chance to hit
 };
 
 static const ST::string s_rus_str_iron_man_mode_warning = "Вы выбрали режим СТАЛЬНОЙ ВОЛИ. Эта настройка сильно усложняет игру, так как вы не сможете сохраняться, когда в секторе есть враги. ЖЕЛЕЗНАЯ ВОЛЯ действует в течение всей игры. Уверены, что хотите включить этот режим?";
