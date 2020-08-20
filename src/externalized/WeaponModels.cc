@@ -672,7 +672,7 @@ int WeaponModel::getRateOfFire() const
 ////////////////////////////////////////////////////////////
 
 NoWeapon::NoWeapon(uint16_t itemIndex, const char * internalName, uint16_t Range)
-	:WeaponModel(IC_PUNCH, NOT_GUN, PUNCHCURS, itemIndex, internalName, "NOWEAPON")
+	:WeaponModel(IC_NONE, NOT_GUN, PUNCHCURS, itemIndex, internalName, "NOWEAPON")
 {
 }
 

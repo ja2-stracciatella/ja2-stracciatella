@@ -16,6 +16,7 @@ struct MagazineModel : ItemModel
 {
 	MagazineModel(uint16_t itemIndex,
 			const char* internalName,
+			uint32_t  itemClass,
 			const CalibreModel *calibre,
 			uint16_t capacity,
 			const AmmoTypeModel *ammoType,
