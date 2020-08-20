@@ -62,11 +62,6 @@ WeaponModel::WeaponModel(uint32_t itemClass, uint8_t weaponType, uint8_t cursor,
 
 void WeaponModel::serializeTo(JsonObject &obj) const
 {
-	if(usItemClass & IC_THROWN)
-	{
-		obj.AddMember("thrown", true);
-	}
-
 	obj.AddMember("itemIndex",            itemIndex);
 	obj.AddMember("internalName",         internalName);
 	obj.AddMember("internalType",         internalType);
@@ -107,10 +102,17 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 	const char *internalName = obj.GetString("internalName");
 	const char *internalType = obj.GetString("internalType");
 
-	if(!strcmp(internalType, "NOWEAPON"))
+	if (!strcmp(internalType, WEAPON_TYPE_NOWEAPON))
 	{
-		uint16_t Range           = obj.GetInt("usRange");
-		wep = new NoWeapon(itemIndex, internalName, Range);
+		wep = new NoWeapon(itemIndex, internalName);
+	}
+	else if (!strcmp(internalType, WEAPON_TYPE_PUNCH))
+	{
+		wep = new NoWeapon(itemIndex, internalName, IC_PUNCH, PUNCHCURS);
+	}
+	else if (!strcmp(internalType, WEAPON_TYPE_THROWN))
+	{
+		wep = new NoWeapon(itemIndex, internalName, IC_THROWN, TOSSCURS);
 	}
 	else if(!strcmp(internalType, "PISTOL"))
 	{
@@ -600,11 +602,6 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 	wep->attachSpringAndBoltUpgrade   = obj.getOptionalBool("attachment_SpringAndBoltUpgrade");
 	wep->attachGunBarrelExtender      = obj.getOptionalBool("attachment_GunBarrelExtender");
 
-	if(obj.getOptionalBool("thrown"))
-	{
-		wep->usItemClass = IC_THROWN;
-	}
-
 	wep->fFlags |= wep->deserializeFlags(obj);
 
 	const char *replacement = obj.getOptionalString("standardReplacement");
@@ -671,8 +668,13 @@ int WeaponModel::getRateOfFire() const
 //
 ////////////////////////////////////////////////////////////
 
-NoWeapon::NoWeapon(uint16_t itemIndex, const char * internalName, uint16_t Range)
-	:WeaponModel(IC_NONE, NOT_GUN, PUNCHCURS, itemIndex, internalName, "NOWEAPON")
+NoWeapon::NoWeapon(uint16_t itemIndex, const char * internalName)
+	:NoWeapon(itemIndex, internalName, IC_NONE, INVALIDCURS)
+{
+}
+
+NoWeapon::NoWeapon(uint16_t itemIndex, const char* internalName, uint32_t itemClass, uint8_t cursor)
+	: WeaponModel(itemClass, NOT_GUN, cursor, itemIndex, internalName, WEAPON_TYPE_NOWEAPON)
 {
 }
 

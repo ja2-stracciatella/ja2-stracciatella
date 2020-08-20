@@ -19,6 +19,10 @@ struct MagazineModel;
 #define NO_WEAPON_SOUND ((SoundID)-1)
 #define NO_WEAPON_SOUND_STR ("")
 
+#define WEAPON_TYPE_NOWEAPON ("NOWEAPON")
+#define WEAPON_TYPE_PUNCH ("PUNCH")
+#define WEAPON_TYPE_THROWN ("THROWN")
+
 struct WeaponModel : ItemModel
 {
 	WeaponModel(uint32_t itemClass,
@@ -89,7 +93,9 @@ protected:
 
 struct NoWeapon : WeaponModel
 {
-	NoWeapon(uint16_t indexIndex, const char * internalName, uint16_t Range);
+	NoWeapon(uint16_t indexIndex, const char * internalName);
+
+	NoWeapon(uint16_t itemIndex, const char* internalName, uint32_t itemClass, uint8_t cursor);
 
 	virtual void serializeTo(JsonObject &obj) const;
 };
