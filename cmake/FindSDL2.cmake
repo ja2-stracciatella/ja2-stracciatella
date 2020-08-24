@@ -68,7 +68,9 @@
 message("<FindSDL2.cmake>")
 
 if(WIN32)
-    if(CMAKE_CL_64 OR "$ENV{MSYSTEM}" MATCHES "64" OR CMAKE_C_COMPILER MATCHES "64")
+    if("${CMAKE_GENERATOR_PLATFORM}" MATCHES "(Win32|x86)")
+        SET(SDL_ARCH "x86")
+    elseif("${CMAKE_GENERATOR_PLATFORM}" MATCHES "(Win64|x64)" OR CMAKE_CL_64)
         SET(SDL_ARCH "x64")
     else()
         SET(SDL_ARCH "x86")

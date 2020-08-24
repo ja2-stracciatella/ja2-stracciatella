@@ -1,6 +1,6 @@
 ## Dependencies
 
-- SDL2 >= `2.0.4` (version `2.0.4` is included in this repo for Windows and macOS).
+- SDL2 >= `2.0.4` (version `2.0.8` is included in this repo for Windows and macOS).
   __WARNING__: There is an issue with SDL in version `2.0.6` that causes segfaults when playing sounds.
   Please ensure that you run the game with a different version of the SDL2 library otherwise sound will be
   disabled.
@@ -112,8 +112,14 @@ You now have a zip file with the game, including the dll dependencies.
 
 If you are most familiar using Visual Studio for development you can generate a solution from the sources.
 
+Install Visual C++, CMake tools, MSBuild and Windows SDK with Visual Studio Installer.
+
+Then in Visual Studio's Developer Command Prompt, change to the ja2-stracciatella project directory, and generate the solution with CMake:
+
 ```
-cmake -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake -G "Visual Studio 10" path/to/source
+mkdir _bin
+cd _bin
+cmake -DCMAKE_TOOLCHAIN_FILE=../cmake/toolchain-msvc.cmake ..
 ```
 
 __Note__: If you add, move or delete any files. Please make sure to reflect your changes in the `CMakeLists.txt` files,

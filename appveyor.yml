@@ -13,12 +13,12 @@ environment:
     secure: "fcDy5AgkBH9bKqdsbwv9piWbN6ksoUKk+iky/DQmk3YG3UNl68BegfkYUzSF3rJ7"
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      CI_TARGET: msys2-mingw32
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      CMAKE_GENERATOR_NAME: Visual Studio 14 2015
+      CMAKE_GENERATOR: Visual Studio 16 2019
+      CMAKE_GENERATOR_PLATFORM: Win32
       RUST_TARGET: i686-pc-windows-msvc
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      CMAKE_GENERATOR_NAME: Visual Studio 15 2017 Win64
+    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      CMAKE_GENERATOR: Visual Studio 16 2019
+      CMAKE_GENERATOR_PLATFORM: x64
       RUST_TARGET: x86_64-pc-windows-msvc
 
 branches:
@@ -35,33 +35,6 @@ clone_depth: 1
 skip_commits:
   # appveyor only searches for tags in the first line by default
   message: /\[ci skip\]/
-
-for:
-  -
-    matrix:
-      only:
-        - CI_TARGET: msys2-mingw32
-
-    init:
-      - cmd: rem init override
-    install:
-      - cmd: rem install override
-    before_build:
-      - cmd: rem before_build override
-    build_script:
-      - cmd: |
-          rem update msys2 runtime
-          rem FIXME upgrades disabled until there is a fix for https://github.com/msys2/MSYS2-packages/issues/1141
-          rem C:\msys64\msys2_shell.cmd -defterm -no-start -c "pacman -Syu --noconfirm --needed"
-      - cmd: |
-          rem build, package, test, publish in msys2
-          C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .github/scripts/ci-setup.sh"
-          C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .github/scripts/ci-build.sh"
-          C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .ci/ci-publish.sh"
-    test_script:
-      - cmd: rem test_script override
-    after_test:
-      - cmd: rem after_test override
 
 init:
   - ps: $env:PUBLISH_BINARY = "false";
@@ -103,7 +76,7 @@ init:
 
   - ps: $env:CLOUDSDK_CORE_DISABLE_PROMPTS = 1
 
-  - cmd: echo "%CMAKE_GENERATOR_NAME%"
+  - cmd: echo "%CMAKE_GENERATOR% %CMAKE_GENERATOR_PLATFORM%"
 
   - cmd: echo "%PUBLISH_BINARY%"
   - cmd: echo "%PUBLISH_DIR%"
@@ -130,7 +103,7 @@ install:
 before_build:
   - cmd: mkdir ci-build
   - cmd: cd ci-build
-  - cmd: cmake -G "%CMAKE_GENERATOR_NAME%" cmake %BUILD_SWITCHES% ..
+  - cmd: cmake %BUILD_SWITCHES% ..
 
 build_script:
   - ps: cmake --build c:\projects\ja2-stracciatella\ci-build --target ALL_BUILD --config ${env:BUILD_TYPE}
