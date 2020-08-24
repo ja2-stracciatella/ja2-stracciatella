@@ -102,6 +102,7 @@ if(MSVC)
 			set_property(CACHE "${_var}" PROPERTY VALUE "${_value}")
 		endif()
 	endforeach()
+	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT "ja2")
 endif()
 
 ## Build
