@@ -20,8 +20,7 @@ environment:
       CMAKE_GENERATOR: Visual Studio 16 2019
       CMAKE_GENERATOR_PLATFORM: x64
       RUST_TARGET: x86_64-pc-windows-msvc
-    - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      CI_TARGET: msys2-mingw32
+
 branches:
   only:
     - master
@@ -36,33 +35,6 @@ clone_depth: 1
 skip_commits:
   # appveyor only searches for tags in the first line by default
   message: /\[ci skip\]/
-
-for:
-  -
-    matrix:
-      only:
-        - CI_TARGET: msys2-mingw32
-
-    init:
-      - cmd: rem init override
-    install:
-      - cmd: rem install override
-    before_build:
-      - cmd: rem before_build override
-    build_script:
-      - cmd: |
-          rem update msys2 runtime
-          rem FIXME upgrades disabled until there is a fix for https://github.com/msys2/MSYS2-packages/issues/1141
-          rem C:\msys64\msys2_shell.cmd -defterm -no-start -c "pacman -Syu --noconfirm --needed"
-      - cmd: |
-          rem build, package, test, publish in msys2
-          C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .github/scripts/ci-setup.sh"
-          C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .github/scripts/ci-build.sh"
-          C:\msys64\msys2_shell.cmd -defterm -no-start -mingw32 -here -c "bash .ci/ci-publish.sh"
-    test_script:
-      - cmd: rem test_script override
-    after_test:
-      - cmd: rem after_test override
 
 init:
   - ps: $env:PUBLISH_BINARY = "false";

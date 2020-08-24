@@ -29,18 +29,6 @@ elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
 
     curl https://sdk.cloud.google.com | bash
     source $HOME/google-cloud-sdk/path.bash.inc
-elif [[ "$CI_TARGET" == "msys2-mingw32" ]]; then
-    # FIXME upgrades disabled until there is a fix for https://github.com/msys2/MSYS2-packages/issues/1141
-    #pacman -Syu --noconfirm --needed # assumes the runtime has already been updated
-    pacman -S --noconfirm --needed base-devel unzip
-    pacman -S --noconfirm --needed mingw-w64-i686-toolchain mingw-w64-i686-cmake mingw-w64-i686-SDL2 mingw-w64-i686-fltk
-    export RUSTUP_HOME="$(cygpath -w ~/.rustup)"
-    export CARGO_HOME="$(cygpath -w ~/.cargo)"
-    export RUSTUP_INIT_ARGS="${RUSTUP_INIT_ARGS}-i686-pc-windows-gnu --default-host=i686-pc-windows-gnu"
-
-    curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-299.0.0-windows-x86.zip -o $HOME/gcloud-sdk.zip
-    unzip -d $HOME $HOME/gcloud-sdk.zip
-    export PATH=$PATH:$HOME/google-cloud-sdk/bin
 elif [[ "$CI_TARGET" == "mac" ]]; then
     brew install ccache
     brew cask install google-cloud-sdk
