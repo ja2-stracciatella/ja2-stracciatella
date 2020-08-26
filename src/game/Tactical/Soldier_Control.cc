@@ -122,6 +122,7 @@ enum
 	EX_DIRECTION_IRRELEVANT
 };
 
+static void SetSoldierPersonalLightLevel(SOLDIERTYPE*);
 
 static UINT8 Dir2ExtDir(const UINT8 dir)
 {
@@ -2025,6 +2026,11 @@ static void SetSoldierGridNo(SOLDIERTYPE& s, GridNo new_grid_no, BOOLEAN const f
 			n->ubSumLights         = other.ubSumLights;
 			n->ubMaxLights         = other.ubMaxLights;
 			n->ubNaturalShadeLevel = other.ubNaturalShadeLevel;
+		}
+		else    //The player DOESNT want the mercs to cast the fake lights
+		{
+			//Only light the soldier
+			SetSoldierPersonalLightLevel(&s);
 		}
 
 		HandleAnimationProfile(s, s.usAnimState, FALSE);
@@ -9049,9 +9055,6 @@ void HandlePlayerTogglingLightEffects( BOOLEAN fToggleValue )
 
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
-
-
-static void SetSoldierPersonalLightLevel(SOLDIERTYPE*);
 
 
 static void EnableDisableSoldierLightEffects(BOOLEAN const enable_lights)
