@@ -2217,8 +2217,17 @@ static void HandleArmedObjectImpact(REAL_OBJECT* pObject)
 	{
 		if ( pObject->Obj.usItem == BREAK_LIGHT )
 		{
-			// Add a light effect...
-			NewLightEffect( pObject->sGridNo, LIGHT_FLARE_MARK_1 );
+			//if the light object will be created OFF the ground
+			if (pObject->Position.z > 0)
+			{
+				//we cannot create the light source above the ground, or on a roof.  The system doesnt support it.
+				AddItemToPool(pObject->sGridNo, &(pObject->Obj), VISIBLE, 1, 0, -1);
+			}
+			else
+			{
+				// Add a light effect...
+				NewLightEffect(pObject->sGridNo, LIGHT_FLARE_MARK_1);
+			}
 		}
 		else if ( GCM->getItem(pObject->Obj.usItem)->isGrenade()  )
 		{

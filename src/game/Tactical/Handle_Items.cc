@@ -2939,13 +2939,12 @@ static void BoobyTrapMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 			else
 			{
 				// make sure the item in the world is untrapped
-				OBJECTTYPE& o = wi.o;
-				o.bTrap   = 0;
-				o.fFlags &= ~OBJECT_KNOWN_TO_BE_TRAPPED;
+				// ATE: Copy object into world items
+				wi.o = Object;
 
 				// ATE; If we failed to add to inventory, put failed one in our cursor...
 				gfDontChargeAPsToPickup = TRUE;
-				HandleAutoPlaceFail(gpBoobyTrapSoldier, &o, gsBoobyTrapGridNo);
+				HandleAutoPlaceFail(gpBoobyTrapSoldier, &(wi.o), gsBoobyTrapGridNo);
 				RemoveItemFromPool(wi);
 			}
 		}
