@@ -362,4 +362,8 @@ void InitializeTacticalStatusAtBattleStart(void);
 
 void MakeCharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE&, GridNo location);
 
+void HandleThePlayerBeNotifiedOfSomeoneElseInSector(void);
+
+bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 const x, INT16 const y, INT8 const z);
+
 #endif

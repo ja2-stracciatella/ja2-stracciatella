@@ -3576,7 +3576,6 @@ void PlayerGroupArrivedSafelyInSector(GROUP& g, BOOLEAN const fCheckForNPCs)
 
 
 static void HandlePlayerGroupEnteringSectorToCheckForNPCsOfNoteCallback(MessageBoxReturnValue);
-static bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 x, INT16 y, INT8 z);
 
 
 static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
@@ -3597,15 +3596,6 @@ static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
 	INT16 const y = g.ubSectorY;
 	INT8  const z = g.ubSectorZ;
 
-	// Don't do this for underground sectors.
-	if (z != 0) return false;
-
-	// Skip towns/pseudo-towns (anything that shows up on the map as being special).
-	if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId != BLANK_SECTOR) return false;
-
-	// Skip SAM sites.
-	if (IsThisSectorASAMSector(x, y, z)) return false;
-
 	// Check for profiled NPCs in sector.
 	if (!WildernessSectorWithAllProfiledNPCsNotSpokenWith(x, y, z)) return false;
 
@@ -3625,9 +3615,19 @@ static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
 }
 
 
-static bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 const x, INT16 const y, INT8 const z)
+bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 const x, INT16 const y, INT8 const z)
 {
 	bool found_somebody = false;
+
+	// Don't do this for underground sectors.
+	if (z != 0) return false;
+
+	// Skip towns/pseudo-towns (anything that shows up on the map as being special).
+	if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId != BLANK_SECTOR) return false;
+
+	// Skip SAM sites.
+	if (IsThisSectorASAMSector(x, y, z)) return false;
+
 	for (UINT8 pid = FIRST_RPC; pid != NUM_PROFILES; ++pid)
 	{
 		MERCPROFILESTRUCT const& p = GetProfile(pid);
