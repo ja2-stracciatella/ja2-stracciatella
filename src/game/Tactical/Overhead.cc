@@ -49,6 +49,7 @@
 #include "Structure_Wrap.h"
 #include "Tile_Animation.h"
 #include "Strategic_Merc_Handler.h"
+#include "Strategic_Movement.h"
 #include "Strategic_Turns.h"
 #include "Squads.h"
 #include "Morale.h"
@@ -100,6 +101,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "NewStrings.h"
 #include "Soldier.h"
 #include "Logger.h"
 
@@ -4718,6 +4720,8 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			}
 		}
 
+		SetCustomizableTimerCallbackAndDelay(3000, HandleThePlayerBeNotifiedOfSomeoneElseInSector, FALSE);
+
 		//Whenever returning TRUE, make sure you clear gfBlitBattleSectorLocator;
 		gfBlitBattleSectorLocator = FALSE;
 		return( TRUE );
@@ -6222,6 +6226,29 @@ void MakeCharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE& s, GridNo con
 	};
 
 	DialogueEvent::Add(new CharacterDialogueEventSignalItemLocatorStart(s, location));
+}
+
+void HandleThePlayerBeNotifiedOfSomeoneElseInSector(void)
+{
+	//Is someone important is in this sector
+	if (!WildernessSectorWithAllProfiledNPCsNotSpokenWith(gWorldSectorX, gWorldSectorY, gbWorldSectorZ))
+	{
+		return;
+	}
+
+	//if something else is going on, come back later
+	if (gTacticalStatus.fAutoBandageMode ||
+		DialogueActive() ||
+		gTacticalStatus.fAutoBandagePending ||
+		guiCurrentScreen == MSG_BOX_SCREEN ||
+		AreWeInAUIMenu()
+		)
+	{
+		SetCustomizableTimerCallbackAndDelay(2000, HandleThePlayerBeNotifiedOfSomeoneElseInSector, FALSE);
+		return;
+	}
+	
+	DoMessageBox(MSG_BOX_BASIC_STYLE, *(GCM->getNewString(NS_SOMEONE_ELSE_IN_SECTOR)), GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 }
 
 

@@ -1,6 +1,7 @@
 [
         "%s надел %s",
         "%s снял %s",
+        "There is someone else in the sector...",
 
         "__last_one"
 ]
