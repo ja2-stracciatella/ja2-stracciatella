@@ -66,7 +66,7 @@ enum
 };
 static UINT8 gubCurrentInsInfoSubPage = 0;
 
-static BOOLEAN InsuranceInfoSubPagesVisitedFlag[INS_INFO_LAST_PAGE - 1];
+static BOOLEAN InsuranceInfoSubPagesVisitedFlag[INS_INFO_LAST_PAGE];
 
 
 static BUTTON_PICS* guiInsPrevButtonImage;

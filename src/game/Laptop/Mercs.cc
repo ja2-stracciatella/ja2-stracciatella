@@ -1615,9 +1615,9 @@ static INT16 GetRandomQuoteThatHasBeenSaidTheLeast(void)
 		//if the quote can be said ( the merc has not been hired )
 		if( CanMercQuoteBeSaid( gNumberOfTimesQuoteSaid[cnt].ubQuoteID ) )
 		{
-			//if this quote has been said less times then the last one
-			if( gNumberOfTimesQuoteSaid[cnt].uiNumberOfTimesQuoteSaid < gNumberOfTimesQuoteSaid[ sSmallestNumber ].uiNumberOfTimesQuoteSaid )
-			{
+			if (sSmallestNumber == 255 ||
+				gNumberOfTimesQuoteSaid[cnt].uiNumberOfTimesQuoteSaid < gNumberOfTimesQuoteSaid[sSmallestNumber].uiNumberOfTimesQuoteSaid)
+			{	// if this quote has been said less times then the last one, or this is the first one we check
 				sSmallestNumber = cnt;
 			}
 		}

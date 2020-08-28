@@ -334,18 +334,15 @@ static void ChangingFloristGallerySubPage(UINT8 ubSubPageNumber)
 {
 	fLoadPendingFlag = TRUE;
 
-	//there are 3 flowers per page
-	if( ubSubPageNumber == FLOR_GALLERY_NUMBER_FLORAL_IMAGES )
-		ubSubPageNumber = 4;
-	else
-		ubSubPageNumber = ubSubPageNumber / 3;
+	//there are 3 flowers per page, 4 pages in total
+	UINT8 ubPageNumber = std::min(ubSubPageNumber / 3, 3);
 
-	if (!FloristGallerySubPagesVisitedFlag[ubSubPageNumber])
+	if (!FloristGallerySubPagesVisitedFlag[ubPageNumber])
 	{
 		fConnectingToSubPage = TRUE;
 		fFastLoadFlag = FALSE;
 
-		FloristGallerySubPagesVisitedFlag[ ubSubPageNumber ] = TRUE;
+		FloristGallerySubPagesVisitedFlag[ubPageNumber] = TRUE;
 	}
 	else
 	{
