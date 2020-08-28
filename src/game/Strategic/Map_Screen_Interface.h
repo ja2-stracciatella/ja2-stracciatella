@@ -1,13 +1,18 @@
 #ifndef MAP_SCREEN_INTERFACE_H
 #define MAP_SCREEN_INTERFACE_H
 
-#include "Item_Types.h"
-#include "JA2Types.h"
 #include "MessageBoxScreen.h"
 #include "MouseSystem.h"
 #include "ScreenIDs.h"
-
+#include "Soldier_Control.h"
+#include "Types.h"
+#include "UILayout.h"
 #include <string_theory/string>
+
+class SGPVObject;
+class SGPVSurface;
+struct GROUP;
+struct OBJECTTYPE;
 
 
 // char breath and life position

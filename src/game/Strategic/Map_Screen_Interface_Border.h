@@ -49,12 +49,6 @@ extern BOOLEAN fShowTeamFlag;
 extern BOOLEAN fShowMilitia;
 extern BOOLEAN fShowAircraftFlag;
 extern BOOLEAN fShowItemsFlag;
-extern BOOLEAN fZoomFlag;
-//extern BOOLEAN fShowVehicleFlag;
-
-//extern BOOLEAN fMapScrollDueToPanelButton;
-//extern BOOLEAN fCursorIsOnMapScrollButtons;
-//extern BOOLEAN fDisabledMapBorder;
 
 // scroll animation
 extern INT32 giScrollButtonState;

@@ -2,12 +2,14 @@
 #define __MAPSCREEN_H
 
 #include "Button_System.h"
-#include "Item_Types.h"
-#include "JA2Types.h"
 #include "MessageBoxScreen.h"
 #include "ScreenIDs.h"
-
+#include "Types.h"
 #include <string_theory/string>
+
+struct OBJECTTYPE;
+struct PathSt;
+struct SOLDIERTYPE;
 
 
 // Sector name identifiers

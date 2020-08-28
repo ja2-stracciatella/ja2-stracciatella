@@ -1,106 +1,81 @@
-#include "Directories.h"
-#include "HImage.h"
-#include "Handle_Items.h"
-#include "Local.h"
 #include "MapScreen.h"
-#include "GameLoop.h"
-#include "Merc_Hiring.h"
-#include "Strategic_Movement_Costs.h"
-#include "VObject.h"
-#include "WorldDef.h"
-#include "Input.h"
-#include "Font.h"
-#include "Screens.h"
-#include "Overhead.h"
-#include "SysUtil.h"
-#include "Event_Pump.h"
-#include "Font_Control.h"
-#include "Timer_Control.h"
-#include "Interface.h"
-#include "Handle_UI.h"
-#include "Interface_Items.h"
-#include "Interface_Utils.h"
+#include "Animated_ProgressBar.h"
+#include "Campaign.h"
+#include "Cheats.h"
+#include "ContentManager.h"
+#include "Creature_Spreading.h"
+#include "Cursor_Control.h"
 #include "Cursors.h"
-#include "Soldier_Profile.h"
-#include "Interface_Cursors.h"
-#include "Interface_Panels.h"
+#include "Dialogue_Control.h"
+#include "Directories.h"
+#include "EMail.h"
+#include "English.h"
+#include "Event_Pump.h"
+#include "Explosion_Control.h"
+#include "Fade_Screen.h"
+#include "Finances.h"
+#include "Font.h"
+#include "Font_Control.h"
+#include "Game_Clock.h"
+#include "Game_Init.h"
+#include "GameInstance.h"
+#include "GameLoop.h"
+#include "GamePolicy.h"
+#include "GameRes.h"
+#include "GameSettings.h"
+#include "HelpScreen.h"
+#include "HImage.h"
 #include "Interface_Control.h"
-#include "Sys_Globals.h"
-#include "Environment.h"
+#include "Interface_Items.h"
+#include "Interface_Panels.h"
+#include "Interface_Utils.h"
+#include "Items.h"
+#include "JAScreens.h"
+#include "LaptopSave.h"
+#include "Line.h"
+#include "Map_Screen_Helicopter.h"
+#include "Map_Screen_Interface.h"
+#include "Map_Screen_Interface_Border.h"
+#include "Map_Screen_Interface_Bottom.h"
+#include "Map_Screen_Interface_Map_Inventory.h"
+#include "Map_Screen_Interface_TownMine_Info.h"
+#include "Meanwhile.h"
+#include "Merc_Contract.h"
+#include "Merc_Hiring.h"
+#include "Message.h"
+#include "Options_Screen.h"
+#include "Overhead.h"
+#include "Player_Command.h"
+#include "PopUpBox.h"
+#include "PreBattle_Interface.h"
+#include "Queen_Command.h"
+#include "Quests.h"
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"
-#include "Game_Init.h"
 #include "RenderWorld.h"
-#include "Finances.h"
-#include "Message.h"
-#include "VSurface.h"
-#include "VObject_Blitters.h"
-#include "Faces.h"
-#include "PopUpBox.h"
-#include "Game_Clock.h"
-#include "Items.h"
-#include "Cursor_Control.h"
-#include "Text.h"
-#include "StrategicMap.h"
-#include "Strategic_Pathing.h"
-#include "Map_Screen_Interface_Bottom.h"
-#include "Map_Screen_Interface_Border.h"
-#include "Map_Screen_Interface_Map.h"
-#include "Map_Screen_Interface.h"
-#include "Assignments.h"
-#include "Squads.h"
-#include "Merc_Contract.h"
-#include "Sound_Control.h"
-#include "Strategic_Turns.h"
-#include "Dialogue_Control.h"
-#include "Map_Screen_Interface_TownMine_Info.h"
-#include "PreBattle_Interface.h"
-#include "Personnel.h"
-#include "Animated_ProgressBar.h"
-#include "Queen_Command.h"
-#include "LaptopSave.h"
-#include "Map_Screen_Interface_Map_Inventory.h"
-#include "Vehicles.h"
-#include "Map_Screen_Helicopter.h"
-#include "GameScreen.h"
-#include "Line.h"
-#include "English.h"
-#include "Fade_Screen.h"
-#include "Strategic_Mines.h"
 #include "SaveLoadScreen.h"
-#include "Options_Screen.h"
-#include "Auto_Resolve.h"
-#include "Meanwhile.h"
-#include "Campaign.h"
-#include "Random.h"
-#include "Quests.h"
-#include "Town_Militia.h"
-#include "Weapons.h"
-#include "Player_Command.h"
-#include "Multi_Language_Graphic_Utils.h"
-#include "HelpScreen.h"
 #include "Soldier_Macros.h"
-#include "Cheats.h"
-#include "GameSettings.h"
-#include "Tactical_Save.h"
-#include "Explosion_Control.h"
-#include "Creature_Spreading.h"
+#include "Squads.h"
+#include "Strategic_Movement_Costs.h"
+#include "Strategic_Pathing.h"
 #include "Strategic_Town_Loyalty.h"
-#include "EMail.h"
+#include "Strategic_Turns.h"
+#include "Sys_Globals.h"
+#include "SysUtil.h"
+#include "Tactical_Save.h"
+#include "Text.h"
+#include "Timer_Control.h"
+#include "Town_Militia.h"
 #include "Video.h"
-#include "Debug.h"
-#include "Button_System.h"
-#include "JAScreens.h"
-#include "UILayout.h"
-#include "ContentManager.h"
-#include "GameInstance.h"
-#include "policy/GamePolicy.h"
+#include "VObject.h"
+#include "VObject_Blitters.h"
+#include "VSurface.h"
 
 #include <string_theory/format>
-#include <string_theory/string>
 
-#include <algorithm>
-#include <iterator>
+struct PopUpBox;
+
+
 
 #define MAX_SORT_METHODS					6
 
@@ -2266,12 +2241,7 @@ static void RenderMapCursorsIndexesAnims(void)
 	if ( fHighlightChanged || gfMapPanelWasRedrawn )
 	{
 		// redraw sector index letters and numbers
-/*
-		if( fZoomFlag )
-			DrawMapIndexSmallMap( fSelectedCursorIsYellow );
-		else
-*/
-			DrawMapIndexBigMap( fSelectedCursorIsYellow );
+		DrawMapIndexBigMap( fSelectedCursorIsYellow );
 	}
 }
 
@@ -2337,18 +2307,6 @@ static UINT32 HandleMapUI(void)
 
 		case MAP_EVENT_PLOT_PATH:
 			GetMouseMapXY(&sMapX, &sMapY);
-
-			/*
-			// translate screen values to map grid values for zoomed in
-			if(fZoomFlag)
-			{
-					sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
-					sMapX=sMapX/2;
-					sMapY=(UINT16)iZoomY/MAP_GRID_Y+sMapY;
-					sMapY=sMapY/2;
-			}*/
-
-
 			// plotting for the chopper?
 			if (fPlotForHelicopter)
 			{
@@ -2408,17 +2366,7 @@ static UINT32 HandleMapUI(void)
 			// Get Current mouse position
 			if ( GetMouseMapXY( &sMapX, &sMapY) )
 			{
-				/*
-				if (fZoomFlag)
-				{
-					// convert to zoom out coords from screen coords
-					sMapX = ( INT16 )( iZoomX / MAP_GRID_X + sMapX ) / 2;
-					sMapY = ( INT16 )( iZoomY / MAP_GRID_Y + sMapY ) / 2;
-					//sMapX = ( INT16 ) ( ( ( iZoomX ) / ( MAP_GRID_X * 2) ) + sMapX / 2 );
-					//sMapX = ( INT16 ) ( ( ( iZoomY ) / ( MAP_GRID_Y * 2) ) + sMapY / 2 );
-				}*/
-
-				// not zoomed out, make sure this is a valid sector
+				// make sure this is a valid sector
 				if (!IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY))
 				{
 					// do nothing, return
@@ -2757,15 +2705,6 @@ static void Teleport()
 
 	// can't teleport to where we already are
 	if (sMapX == s.sSectorX && sMapY == s.sSectorY) return;
-
-#if 0 // XXX was commented out
-	if (fZoomFlag)
-	{
-		// convert to zoom out coords from screen coords
-		sMapX = (iZoomX / MAP_GRID_X + sMapX) / 2;
-		sMapY = (iZoomY / MAP_GRID_Y + sMapY) / 2;
-	}
-#endif
 
 	// cancel movement plotting
 	AbortMovementPlottingMode();
@@ -3375,15 +3314,6 @@ BOOLEAN GetMouseMapXY(INT16* psMapWorldX, INT16* psMapWorldY)
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
 
-	if (fZoomFlag)
-	{
-		if (MousePos.iX > MAP_VIEW_START_X + MAP_GRID_X)           MousePos.iX -= MAP_GRID_X;
-		if (MousePos.iX > MAP_VIEW_START_X + MAP_VIEW_WIDTH)       MousePos.iX  = -1;
-		if (MousePos.iY > MAP_VIEW_START_Y + MAP_GRID_Y)           MousePos.iY -= MAP_GRID_Y;
-		if (MousePos.iY > MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - 11) MousePos.iY  = -11;
-		if (MousePos.iY < MAP_VIEW_START_Y)                        MousePos.iY  = -1;
-	}
-
 	return GetMapXY(MousePos.iX, MousePos.iY, psMapWorldX, psMapWorldY);
 }
 
@@ -3396,13 +3326,11 @@ static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorl
 	sMapX = sX - MAP_VIEW_START_X;//+2*MAP_GRID_X;
 	sMapY = sY - MAP_VIEW_START_Y;
 
-	if(!fZoomFlag)
-	{
-		if ( sMapX < MAP_GRID_X || sMapY < MAP_GRID_Y )
+	if ( sMapX < MAP_GRID_X || sMapY < MAP_GRID_Y )
 	{
 		return( FALSE );
 	}
-	}
+
 	if ( sMapX < 0 || sMapY < 0 )
 	{
 		return( FALSE );
@@ -3431,35 +3359,13 @@ static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOO
 	Assert( ( sMapX >= 1 ) && ( sMapX <= 16 ) );
 	Assert( ( sMapY >= 1 ) && ( sMapY <= 16 ) );
 
-	/*
-	if((fZoomFlag)&&((sMapX > MAP_WORLD_X-1)||(sMapY> MAP_WORLD_Y-1)))
-	return;*/
-
 	// if we are not allowed to highlight, leave
-	if (!IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY) && !fZoomFlag)
+	if (!IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY))
 	{
 		return;
 	}
-	/*
-	else if (!IsTheCursorAllowedToHighLightThisSector(sMapX , sMapY) && fZoomFlag && fStationary)
-	{
-		return;
-	}
-	else if (!IsTheCursorAllowedToHighLightThisSector(iZoomX / (MAP_GRID_X * 2) + sMapX / 2, iZoomY / (MAP_GRID_Y * 2) + sMapY / 2) && fZoomFlag && !fStationary)
-	{
-		return;
-	}*/
 
-
-	//if((!fStationary)||(!fZoomFlag))
-	{
-		GetScreenXYFromMapXY( sMapX, sMapY, &sScreenX, &sScreenY );
-	}
-	/*
-	else
-	{
-		GetScreenXYFromMapXYStationary( sMapX, sMapY, &sScreenX, &sScreenY );
-	}*/
+	GetScreenXYFromMapXY( sMapX, sMapY, &sScreenX, &sScreenY );
 
 	// blit in the highlighted sector
 	SGPVSurface::Lock l(FRAME_BUFFER);
@@ -3469,19 +3375,9 @@ static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOO
 	// clip to view region
 	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
 
-	/*
-	if (fZoomFlag)
-	{
-		// draw rectangle for zoom in
-		RectangleDraw( TRUE, sScreenX-MAP_GRID_X,     sScreenY-MAP_GRID_Y - 1, sScreenX +  MAP_GRID_ZOOM_X - MAP_GRID_X, sScreenY +  MAP_GRID_ZOOM_Y - MAP_GRID_Y - 1, usLineColor, pDestBuf );
-		InvalidateRegion(    sScreenX-MAP_GRID_X - 3, sScreenY-MAP_GRID_Y - 4, sScreenX + DMAP_GRID_ZOOM_X - MAP_GRID_X, sScreenY + DMAP_GRID_ZOOM_Y - MAP_GRID_Y - 1 );
-	}
-	else*/
-	{
-		// draw rectangle for zoom out
-		RectangleDraw( TRUE, sScreenX, sScreenY - 1, sScreenX +  MAP_GRID_X, sScreenY +  MAP_GRID_Y - 1, usLineColor, pDestBuf );
-		InvalidateRegion(    sScreenX, sScreenY - 2, sScreenX + DMAP_GRID_X + 1, sScreenY + DMAP_GRID_Y - 1 );
-	}
+	// draw rectangle for zoom out
+	RectangleDraw( TRUE, sScreenX, sScreenY - 1, sScreenX +  MAP_GRID_X, sScreenY +  MAP_GRID_Y - 1, usLineColor, pDestBuf );
+	InvalidateRegion(    sScreenX, sScreenY - 2, sScreenX + DMAP_GRID_X + 1, sScreenY + DMAP_GRID_Y - 1 );
 
 	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
 }
@@ -3547,16 +3443,6 @@ static void PollLeftButtonInMapView(MapEvent& new_event)
 					fEndPlotting = FALSE;
 
 					GetMouseMapXY(&sMapX, &sMapY);
-
-					/*
-					// translate screen values to map grid values for zoomed in
-					if(fZoomFlag)
-					{
-						sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
-						sMapX=sMapX/2;
-						sMapY=(UINT16)iZoomY/MAP_GRID_Y+sMapY;
-						sMapY=sMapY/2;
-					}*/
 
 					// if he clicked on the last sector in his current path
 					if( CheckIfClickOnLastSectorInPath( sMapX, sMapY ) )
@@ -3658,16 +3544,6 @@ static void PollRightButtonInMapView(MapEvent& new_event)
 				{
 					if ( GetMouseMapXY( &sMapX, &sMapY ) )
 					{
-/*
-						if(fZoomFlag)
-						{
-							sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
-							sMapX=sMapX/2;
-							sMapY=(UINT16)iZoomY/MAP_GRID_Y+sMapY;
-							sMapY=sMapY/2;
-						}
-*/
-
 						if( ( sSelMapX != sMapX ) || ( sSelMapY != sMapY ) )
 						{
 							ChangeSelectedMapSector( sMapX, sMapY, ( INT8 )iCurrentMapSectorZ );
@@ -3759,11 +3635,11 @@ static void BltCharInvPanel(void)
 	ST::string sString;
 
 	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
+	Assert(pSoldier);
 	Assert(MapCharacterHasAccessibleInventory(*pSoldier));
 
 	BltVideoObject(guiSAVEBUFFER, guiMAPINV, 0, PLAYER_INFO_X, PLAYER_INFO_Y);
 
-	Assert( pSoldier );
 	CreateDestroyMapInvButton();
 
 	if( gbCheckForMouseOverItemPos != -1 )
@@ -5193,15 +5069,6 @@ static void PlotTemporaryPaths(void)
 		if (fPlotForHelicopter)
 		{
 			Assert(fShowAircraftFlag);
-			/*
-			if( fZoomFlag )
-			{
-				sMapX =  ( INT16 )( ( ( iZoomX ) / ( WORLD_MAP_X ) ) + sMapX );
-				sMapX /= 2;
-
-				sMapY =  ( INT16 )( ( ( iZoomY ) / ( WORLD_MAP_X ) ) + sMapY );
-				sMapY /= 2;
-			}*/
 
 			// plot temp path
 			PlotATemporaryPathForHelicopter( sMapX, sMapY);
@@ -5223,16 +5090,6 @@ static void PlotTemporaryPaths(void)
 		// dest char has been selected,
 		if( bSelectedDestChar != -1 )
 		{
-			/*
-			if( fZoomFlag )
-			{
-				sMapX =  ( INT16 )( ( ( iZoomX ) / ( MAP_GRID_X ) ) + sMapX );
-				sMapX /= 2;
-
-				sMapY =  ( INT16 )( ( ( iZoomY ) / ( MAP_GRID_Y ) ) + sMapY );
-				sMapY /= 2;
-			}*/
-
 			PlotATemporaryPathForCharacter(gCharactersList[bSelectedDestChar].merc, sMapX, sMapY);
 
 			// check to see if we are drawing path
@@ -5983,15 +5840,6 @@ static void UpdateCursorIfInLastSector(void)
 	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		GetMouseMapXY(&sMapX, &sMapY);
-
-		// translate screen values to map grid values for zoomed in
-		if(fZoomFlag)
-		{
-			sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
-			sMapX=sMapX/2;
-			sMapY=(UINT16)iZoomY/MAP_GRID_Y+sMapY;
-			sMapY=sMapY/2;
-		}
 
 		if (!fShowAircraftFlag)
 		{
@@ -7216,16 +7064,6 @@ static void CancelOrShortenPlottedPath(void)
 
 	GetMouseMapXY(&sMapX, &sMapY);
 
-	/*
-	// translate zoom in to zoom out coords
-	if(fZoomFlag)
-	{
-		sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
-		sMapX=sMapX/2;
-		sMapY=(UINT16)iZoomY/MAP_GRID_Y+sMapY;
-		sMapY=sMapY/2;
-	}*/
-
 	// check if we are in aircraft mode
 	if (fShowAircraftFlag)
 	{
@@ -8275,11 +8113,6 @@ static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY)
 
 	sScreenY -= 1;
 
-/*
-	if(fZoomFlag)
-		RestoreExternBackgroundRect( ((INT16)( sScreenX - MAP_GRID_X )), ((INT16)( sScreenY - MAP_GRID_Y )), DMAP_GRID_ZOOM_X, DMAP_GRID_ZOOM_Y);
-	else
-*/
 	RestoreExternBackgroundRect( sScreenX, sScreenY, DMAP_GRID_X, DMAP_GRID_Y );
 }
 

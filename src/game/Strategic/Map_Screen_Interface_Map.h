@@ -1,7 +1,10 @@
 #ifndef _MAP_SCREEN_INTERFACE_MAP_H
 #define _MAP_SCREEN_INTERFACE_MAP_H
 
-#include "JA2Types.h"
+#include "Types.h"
+#include "UILayout.h"
+struct SOLDIERTYPE;
+struct VEHICLETYPE;
 
 
 void InitMapScreenInterfaceMap();
@@ -127,21 +130,12 @@ enum {
 #define MAP_GRID_Y		18
 
 
-// scroll bounds
-#define EAST_ZOOM_BOUND		(STD_SCREEN_X + 378)
-#define WEST_ZOOM_BOUND		(STD_SCREEN_X + 42)
-#define SOUTH_ZOOM_BOUND	(STD_SCREEN_Y + 324)
-#define NORTH_ZOOM_BOUND	(STD_SCREEN_Y + 36)
-
 // map view region
 #define MAP_VIEW_START_X	(STD_SCREEN_X + 270)
 #define MAP_VIEW_START_Y	(STD_SCREEN_Y + 10)
 #define MAP_VIEW_WIDTH		336
 #define MAP_VIEW_HEIGHT		298
 
-// zoomed in grid sizes
-#define MAP_GRID_ZOOM_X		MAP_GRID_X*2
-#define MAP_GRID_ZOOM_Y		MAP_GRID_Y*2
 
 // number of units wide
 #define WORLD_MAP_X		18
@@ -149,8 +143,6 @@ enum {
 // dirty regions for the map
 #define DMAP_GRID_X		( MAP_GRID_X + 1 )
 #define DMAP_GRID_Y		( MAP_GRID_Y + 1 )
-#define DMAP_GRID_ZOOM_X	( MAP_GRID_ZOOM_X+1)
-#define DMAP_GRID_ZOOM_Y	( MAP_GRID_ZOOM_Y+1)
 
 
 // Orta position on the map
@@ -164,10 +156,6 @@ enum {
 // wait time until temp path is drawn, from placing cursor on a map grid
 #define MIN_WAIT_TIME_FOR_TEMP_PATH 200
 
-
-// zoom UL coords
-extern INT32 iZoomX;
-extern INT32 iZoomY;
 
 // the number of militia on the cursor
 extern INT16 sGreensOnCursor;
