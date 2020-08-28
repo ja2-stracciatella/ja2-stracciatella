@@ -1,7 +1,10 @@
 #ifndef _MAP_SCREEN_INTERFACE_MAP_H
 #define _MAP_SCREEN_INTERFACE_MAP_H
 
-#include "JA2Types.h"
+#include "Types.h"
+#include "UILayout.h"
+struct SOLDIERTYPE;
+struct VEHICLETYPE;
 
 
 void InitMapScreenInterfaceMap();
