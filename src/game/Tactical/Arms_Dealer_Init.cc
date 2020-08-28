@@ -51,7 +51,7 @@ static void InitializeOneArmsDealer(ArmsDealerID);
 
 const DealerModel* GetDealer(UINT8 dealerID)
 {
-	if (dealerID < 0 || dealerID >= NUM_ARMS_DEALERS)
+	if (dealerID >= NUM_ARMS_DEALERS)
 	{
 		ST::string err = ST::format("Invalid Dealer ID: {}", dealerID);
 		throw std::runtime_error(err.to_std_string());
@@ -892,7 +892,7 @@ ArmsDealerID GetArmsDealerIDFromMercID(UINT8 const ubMercID)
 
 ArmsDealerType GetTypeOfArmsDealer(UINT8 ubDealerID)
 {
-	if (ubDealerID < 0 || ubDealerID >= NUM_ARMS_DEALERS)
+	if (ubDealerID >= NUM_ARMS_DEALERS)
 	{
 		return ArmsDealerType::NOT_VALID_DEALER;
 	}
