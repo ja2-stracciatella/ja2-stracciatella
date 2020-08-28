@@ -2266,12 +2266,7 @@ static void RenderMapCursorsIndexesAnims(void)
 	if ( fHighlightChanged || gfMapPanelWasRedrawn )
 	{
 		// redraw sector index letters and numbers
-/*
-		if( fZoomFlag )
-			DrawMapIndexSmallMap( fSelectedCursorIsYellow );
-		else
-*/
-			DrawMapIndexBigMap( fSelectedCursorIsYellow );
+		DrawMapIndexBigMap( fSelectedCursorIsYellow );
 	}
 }
 
@@ -2337,18 +2332,6 @@ static UINT32 HandleMapUI(void)
 
 		case MAP_EVENT_PLOT_PATH:
 			GetMouseMapXY(&sMapX, &sMapY);
-
-			/*
-			// translate screen values to map grid values for zoomed in
-			if(fZoomFlag)
-			{
-					sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
-					sMapX=sMapX/2;
-					sMapY=(UINT16)iZoomY/MAP_GRID_Y+sMapY;
-					sMapY=sMapY/2;
-			}*/
-
-
 			// plotting for the chopper?
 			if (fPlotForHelicopter)
 			{
@@ -2408,17 +2391,7 @@ static UINT32 HandleMapUI(void)
 			// Get Current mouse position
 			if ( GetMouseMapXY( &sMapX, &sMapY) )
 			{
-				/*
-				if (fZoomFlag)
-				{
-					// convert to zoom out coords from screen coords
-					sMapX = ( INT16 )( iZoomX / MAP_GRID_X + sMapX ) / 2;
-					sMapY = ( INT16 )( iZoomY / MAP_GRID_Y + sMapY ) / 2;
-					//sMapX = ( INT16 ) ( ( ( iZoomX ) / ( MAP_GRID_X * 2) ) + sMapX / 2 );
-					//sMapX = ( INT16 ) ( ( ( iZoomY ) / ( MAP_GRID_Y * 2) ) + sMapY / 2 );
-				}*/
-
-				// not zoomed out, make sure this is a valid sector
+				// make sure this is a valid sector
 				if (!IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY))
 				{
 					// do nothing, return
@@ -2757,15 +2730,6 @@ static void Teleport()
 
 	// can't teleport to where we already are
 	if (sMapX == s.sSectorX && sMapY == s.sSectorY) return;
-
-#if 0 // XXX was commented out
-	if (fZoomFlag)
-	{
-		// convert to zoom out coords from screen coords
-		sMapX = (iZoomX / MAP_GRID_X + sMapX) / 2;
-		sMapY = (iZoomY / MAP_GRID_Y + sMapY) / 2;
-	}
-#endif
 
 	// cancel movement plotting
 	AbortMovementPlottingMode();
@@ -3375,15 +3339,6 @@ BOOLEAN GetMouseMapXY(INT16* psMapWorldX, INT16* psMapWorldY)
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
 
-	if (fZoomFlag)
-	{
-		if (MousePos.iX > MAP_VIEW_START_X + MAP_GRID_X)           MousePos.iX -= MAP_GRID_X;
-		if (MousePos.iX > MAP_VIEW_START_X + MAP_VIEW_WIDTH)       MousePos.iX  = -1;
-		if (MousePos.iY > MAP_VIEW_START_Y + MAP_GRID_Y)           MousePos.iY -= MAP_GRID_Y;
-		if (MousePos.iY > MAP_VIEW_START_Y + MAP_VIEW_HEIGHT - 11) MousePos.iY  = -11;
-		if (MousePos.iY < MAP_VIEW_START_Y)                        MousePos.iY  = -1;
-	}
-
 	return GetMapXY(MousePos.iX, MousePos.iY, psMapWorldX, psMapWorldY);
 }
 
@@ -3396,13 +3351,11 @@ static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorl
 	sMapX = sX - MAP_VIEW_START_X;//+2*MAP_GRID_X;
 	sMapY = sY - MAP_VIEW_START_Y;
 
-	if(!fZoomFlag)
-	{
-		if ( sMapX < MAP_GRID_X || sMapY < MAP_GRID_Y )
+	if ( sMapX < MAP_GRID_X || sMapY < MAP_GRID_Y )
 	{
 		return( FALSE );
 	}
-	}
+
 	if ( sMapX < 0 || sMapY < 0 )
 	{
 		return( FALSE );
@@ -3431,35 +3384,13 @@ static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOO
 	Assert( ( sMapX >= 1 ) && ( sMapX <= 16 ) );
 	Assert( ( sMapY >= 1 ) && ( sMapY <= 16 ) );
 
-	/*
-	if((fZoomFlag)&&((sMapX > MAP_WORLD_X-1)||(sMapY> MAP_WORLD_Y-1)))
-	return;*/
-
 	// if we are not allowed to highlight, leave
-	if (!IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY) && !fZoomFlag)
+	if (!IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY))
 	{
 		return;
 	}
-	/*
-	else if (!IsTheCursorAllowedToHighLightThisSector(sMapX , sMapY) && fZoomFlag && fStationary)
-	{
-		return;
-	}
-	else if (!IsTheCursorAllowedToHighLightThisSector(iZoomX / (MAP_GRID_X * 2) + sMapX / 2, iZoomY / (MAP_GRID_Y * 2) + sMapY / 2) && fZoomFlag && !fStationary)
-	{
-		return;
-	}*/
 
-
-	//if((!fStationary)||(!fZoomFlag))
-	{
-		GetScreenXYFromMapXY( sMapX, sMapY, &sScreenX, &sScreenY );
-	}
-	/*
-	else
-	{
-		GetScreenXYFromMapXYStationary( sMapX, sMapY, &sScreenX, &sScreenY );
-	}*/
+	GetScreenXYFromMapXY( sMapX, sMapY, &sScreenX, &sScreenY );
 
 	// blit in the highlighted sector
 	SGPVSurface::Lock l(FRAME_BUFFER);
@@ -3469,19 +3400,9 @@ static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOO
 	// clip to view region
 	ClipBlitsToMapViewRegionForRectangleAndABit( uiDestPitchBYTES );
 
-	/*
-	if (fZoomFlag)
-	{
-		// draw rectangle for zoom in
-		RectangleDraw( TRUE, sScreenX-MAP_GRID_X,     sScreenY-MAP_GRID_Y - 1, sScreenX +  MAP_GRID_ZOOM_X - MAP_GRID_X, sScreenY +  MAP_GRID_ZOOM_Y - MAP_GRID_Y - 1, usLineColor, pDestBuf );
-		InvalidateRegion(    sScreenX-MAP_GRID_X - 3, sScreenY-MAP_GRID_Y - 4, sScreenX + DMAP_GRID_ZOOM_X - MAP_GRID_X, sScreenY + DMAP_GRID_ZOOM_Y - MAP_GRID_Y - 1 );
-	}
-	else*/
-	{
-		// draw rectangle for zoom out
-		RectangleDraw( TRUE, sScreenX, sScreenY - 1, sScreenX +  MAP_GRID_X, sScreenY +  MAP_GRID_Y - 1, usLineColor, pDestBuf );
-		InvalidateRegion(    sScreenX, sScreenY - 2, sScreenX + DMAP_GRID_X + 1, sScreenY + DMAP_GRID_Y - 1 );
-	}
+	// draw rectangle for zoom out
+	RectangleDraw( TRUE, sScreenX, sScreenY - 1, sScreenX +  MAP_GRID_X, sScreenY +  MAP_GRID_Y - 1, usLineColor, pDestBuf );
+	InvalidateRegion(    sScreenX, sScreenY - 2, sScreenX + DMAP_GRID_X + 1, sScreenY + DMAP_GRID_Y - 1 );
 
 	RestoreClipRegionToFullScreenForRectangle( uiDestPitchBYTES );
 }
@@ -3547,16 +3468,6 @@ static void PollLeftButtonInMapView(MapEvent& new_event)
 					fEndPlotting = FALSE;
 
 					GetMouseMapXY(&sMapX, &sMapY);
-
-					/*
-					// translate screen values to map grid values for zoomed in
-					if(fZoomFlag)
-					{
-						sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
-						sMapX=sMapX/2;
-						sMapY=(UINT16)iZoomY/MAP_GRID_Y+sMapY;
-						sMapY=sMapY/2;
-					}*/
 
 					// if he clicked on the last sector in his current path
 					if( CheckIfClickOnLastSectorInPath( sMapX, sMapY ) )
@@ -3658,16 +3569,6 @@ static void PollRightButtonInMapView(MapEvent& new_event)
 				{
 					if ( GetMouseMapXY( &sMapX, &sMapY ) )
 					{
-/*
-						if(fZoomFlag)
-						{
-							sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
-							sMapX=sMapX/2;
-							sMapY=(UINT16)iZoomY/MAP_GRID_Y+sMapY;
-							sMapY=sMapY/2;
-						}
-*/
-
 						if( ( sSelMapX != sMapX ) || ( sSelMapY != sMapY ) )
 						{
 							ChangeSelectedMapSector( sMapX, sMapY, ( INT8 )iCurrentMapSectorZ );
@@ -5193,15 +5094,6 @@ static void PlotTemporaryPaths(void)
 		if (fPlotForHelicopter)
 		{
 			Assert(fShowAircraftFlag);
-			/*
-			if( fZoomFlag )
-			{
-				sMapX =  ( INT16 )( ( ( iZoomX ) / ( WORLD_MAP_X ) ) + sMapX );
-				sMapX /= 2;
-
-				sMapY =  ( INT16 )( ( ( iZoomY ) / ( WORLD_MAP_X ) ) + sMapY );
-				sMapY /= 2;
-			}*/
 
 			// plot temp path
 			PlotATemporaryPathForHelicopter( sMapX, sMapY);
@@ -5223,16 +5115,6 @@ static void PlotTemporaryPaths(void)
 		// dest char has been selected,
 		if( bSelectedDestChar != -1 )
 		{
-			/*
-			if( fZoomFlag )
-			{
-				sMapX =  ( INT16 )( ( ( iZoomX ) / ( MAP_GRID_X ) ) + sMapX );
-				sMapX /= 2;
-
-				sMapY =  ( INT16 )( ( ( iZoomY ) / ( MAP_GRID_Y ) ) + sMapY );
-				sMapY /= 2;
-			}*/
-
 			PlotATemporaryPathForCharacter(gCharactersList[bSelectedDestChar].merc, sMapX, sMapY);
 
 			// check to see if we are drawing path
@@ -5983,15 +5865,6 @@ static void UpdateCursorIfInLastSector(void)
 	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
 		GetMouseMapXY(&sMapX, &sMapY);
-
-		// translate screen values to map grid values for zoomed in
-		if(fZoomFlag)
-		{
-			sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
-			sMapX=sMapX/2;
-			sMapY=(UINT16)iZoomY/MAP_GRID_Y+sMapY;
-			sMapY=sMapY/2;
-		}
 
 		if (!fShowAircraftFlag)
 		{
@@ -7216,16 +7089,6 @@ static void CancelOrShortenPlottedPath(void)
 
 	GetMouseMapXY(&sMapX, &sMapY);
 
-	/*
-	// translate zoom in to zoom out coords
-	if(fZoomFlag)
-	{
-		sMapX=(UINT16)iZoomX/MAP_GRID_X+sMapX;
-		sMapX=sMapX/2;
-		sMapY=(UINT16)iZoomY/MAP_GRID_Y+sMapY;
-		sMapY=sMapY/2;
-	}*/
-
 	// check if we are in aircraft mode
 	if (fShowAircraftFlag)
 	{
@@ -8275,11 +8138,6 @@ static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY)
 
 	sScreenY -= 1;
 
-/*
-	if(fZoomFlag)
-		RestoreExternBackgroundRect( ((INT16)( sScreenX - MAP_GRID_X )), ((INT16)( sScreenY - MAP_GRID_Y )), DMAP_GRID_ZOOM_X, DMAP_GRID_ZOOM_Y);
-	else
-*/
 	RestoreExternBackgroundRect( sScreenX, sScreenY, DMAP_GRID_X, DMAP_GRID_Y );
 }
 
