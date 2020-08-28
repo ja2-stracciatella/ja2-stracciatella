@@ -3635,11 +3635,11 @@ static void BltCharInvPanel(void)
 	ST::string sString;
 
 	const SOLDIERTYPE* const pSoldier = GetSelectedInfoChar();
+	Assert(pSoldier);
 	Assert(MapCharacterHasAccessibleInventory(*pSoldier));
 
 	BltVideoObject(guiSAVEBUFFER, guiMAPINV, 0, PLAYER_INFO_X, PLAYER_INFO_Y);
 
-	Assert( pSoldier );
 	CreateDestroyMapInvButton();
 
 	if( gbCheckForMouseOverItemPos != -1 )
