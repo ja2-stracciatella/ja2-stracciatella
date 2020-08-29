@@ -43,6 +43,7 @@
 #include "Merc_Contract.h"
 #include "Merc_Hiring.h"
 #include "Message.h"
+#include "NewStrings.h"
 #include "Options_Screen.h"
 #include "Overhead.h"
 #include "Player_Command.h"
@@ -2369,7 +2370,14 @@ static UINT32 HandleMapUI(void)
 				// make sure this is a valid sector
 				if (!IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY))
 				{
-					// do nothing, return
+					// if we are in the change drop off sector mode
+					if (gfInChangeArrivalSectorMode)
+					{
+						// display a message as to why we can't change
+						const ST::string* sMsgString = GCM->getNewString(NS_INVALID_DROPOFF_SECTOR);
+						BeginMapUIMessage(0, *sMsgString);
+					}
+					// nothing else to do, return
 					return( MAP_SCREEN );
 				}
 

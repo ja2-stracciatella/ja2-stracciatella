@@ -2,6 +2,7 @@
         "%s надел %s",
         "%s снял %s",
         "There is someone else in the sector...",
+        "New Recruits cannot arrive there.",
 
         "__last_one"
 ]
