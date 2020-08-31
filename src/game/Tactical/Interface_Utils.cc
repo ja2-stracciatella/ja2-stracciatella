@@ -1,26 +1,25 @@
-#include "Directories.h"
-#include "Local.h"
-#include "HImage.h"
-#include "VObject.h"
 #include "Interface_Utils.h"
-#include "Render_Dirty.h"
-#include "Interface_Control.h"
-#include "SysUtil.h"
-#include "Faces.h"
-#include "Weapons.h"
-#include "Overhead.h"
-#include "Soldier_Macros.h"
-#include "Line.h"
-#include "Vehicles.h"
-#include "JAScreens.h"
-#include "Video.h"
-#include "VSurface.h"
-#include "ScreenIDs.h"
-#include "UILayout.h"
-
 #include "ContentManager.h"
+#include "Directories.h"
+#include "Faces.h"
 #include "GameInstance.h"
+#include "HImage.h"
+#include "JAScreens.h"
+#include "Line.h"
 #include "MagazineModel.h"
+#include "Overhead.h"
+#include "Render_Dirty.h"
+#include "Soldier_Macros.h"
+#include "SysUtil.h"
+#include "UILayout.h"
+#include "Vehicles.h"
+#include "Video.h"
+#include "VObject.h"
+#include "VSurface.h"
+#include <stdexcept>
+#include <string_theory/format>
+#include <string_theory/string>
+
 
 #define LIFE_BAR_SHADOW		FROMRGB(108, 12, 12)
 #define LIFE_BAR			FROMRGB(200, 0, 0)
