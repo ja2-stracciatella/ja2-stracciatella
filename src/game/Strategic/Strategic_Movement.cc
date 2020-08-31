@@ -2828,7 +2828,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 		else if (dx == -1 && dy ==  0) direction = WEST_STRATEGIC_MOVE;
 		else
 		{
-			SLOGA("Player group attempting illegal retreat from %c%d to %c%d.", g.ubSectorY + 'A' - 1, g.ubSectorX, g.ubNextY + 'A' - 1, g.ubNextX);
+			throw std::runtime_error(ST::format("Player group attempting illegal retreat from {}{} to {}{}.", (char)(g.ubSectorY + 'A' - 1), g.ubSectorX, (char)(g.ubNextY + 'A' - 1), g.ubNextX).to_std_string());
 		}
 	}
 	else

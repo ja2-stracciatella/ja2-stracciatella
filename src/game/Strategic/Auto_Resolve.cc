@@ -1777,16 +1777,9 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		if (!gpCivs[i].pSoldier) continue;
 		SOLDIERTYPE& s = *gpCivs[i].pSoldier;
 
-		UINT8 current_rank = 255;
-		switch (s.ubSoldierClass)
-		{
-			case SOLDIER_CLASS_GREEN_MILITIA: current_rank = GREEN_MILITIA;   break;
-			case SOLDIER_CLASS_REG_MILITIA:   current_rank = REGULAR_MILITIA; break;
-			case SOLDIER_CLASS_ELITE_MILITIA: current_rank = ELITE_MILITIA;   break;
-			default:
-				SLOGE("Removing autoresolve militia with invalid ubSoldierClass %d.", s.ubSoldierClass);
-				break;
-		}
+		UINT8 current_rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
+		if (current_rank >= MAX_MILITIA_LEVELS) throw std::runtime_error(ST::format("Removing autoresolve militia with invalid ubSoldierClass {}.", s.ubSoldierClass).to_std_string());
+
 		if (delete_for_good)
 		{
 			if (s.bLife < OKLIFE / 2)

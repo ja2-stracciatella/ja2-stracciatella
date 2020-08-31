@@ -592,7 +592,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_NPC_OWED_MONEY:
-			gubFact[FACT_NPC_OWED_MONEY] = (gMercProfiles[ubProfileID].iBalance < 0);
+			gubFact[FACT_NPC_OWED_MONEY] = (ubProfileID != NO_PROFILE && gMercProfiles[ubProfileID].iBalance < 0);
 			break;
 
 		case FACT_FATHER_DRUNK:
@@ -799,7 +799,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_LOYALTY_OKAY:
-			bTown = gMercProfiles[ ubProfileID ].bTown;
+			bTown = ubProfileID != NO_PROFILE ? gMercProfiles[ubProfileID].bTown : BLANK_SECTOR;
 			if( ( bTown != BLANK_SECTOR ) && gTownLoyalty[ bTown ].fStarted && gfTownUsesLoyalty[ bTown ])
 			{
 				gubFact[usFact] = ( (gTownLoyalty[ bTown ].ubRating >= LOYALTY_LOW_THRESHOLD ) && (gTownLoyalty[ bTown ].ubRating < LOYALTY_OK_THRESHOLD ) );
@@ -811,7 +811,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_LOYALTY_LOW:
-			bTown = gMercProfiles[ ubProfileID ].bTown;
+			bTown = ubProfileID != NO_PROFILE ? gMercProfiles[ubProfileID].bTown : BLANK_SECTOR;
 			if( ( bTown != BLANK_SECTOR ) && gTownLoyalty[ bTown ].fStarted && gfTownUsesLoyalty[ bTown ])
 			{
 				// if Skyrider, ignore low loyalty until he has monologues, and wait at least a day since the latest monologue to avoid a hot/cold attitude
@@ -832,7 +832,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_LOYALTY_HIGH:
-			bTown = gMercProfiles[ ubProfileID ].bTown;
+			bTown = ubProfileID != NO_PROFILE ? gMercProfiles[ubProfileID].bTown : BLANK_SECTOR;
 			if( ( bTown != BLANK_SECTOR ) && gTownLoyalty[ bTown ].fStarted && gfTownUsesLoyalty[ bTown ])
 			{
 				gubFact[usFact] = (gTownLoyalty[ gMercProfiles[ ubProfileID ].bTown ].ubRating >= LOYALTY_HIGH_THRESHOLD );
@@ -904,19 +904,19 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_FIRST_BARTENDER:
-			gubFact[ usFact ] = ( gMercProfiles[ubProfileID].bNPCData == 1 || (gMercProfiles[ubProfileID].bNPCData == 0 && CountBartenders() == 0) );
+			gubFact[ usFact ] = ubProfileID != NO_PROFILE && (gMercProfiles[ubProfileID].bNPCData == 1 || (gMercProfiles[ubProfileID].bNPCData == 0 && CountBartenders() == 0));
 			break;
 
 		case FACT_SECOND_BARTENDER:
-			gubFact[ usFact ] = ( gMercProfiles[ubProfileID].bNPCData == 2 || (gMercProfiles[ubProfileID].bNPCData == 0 && CountBartenders() == 1) );
+			gubFact[ usFact ] = ubProfileID != NO_PROFILE && (gMercProfiles[ubProfileID].bNPCData == 2 || (gMercProfiles[ubProfileID].bNPCData == 0 && CountBartenders() == 1));
 			break;
 
 		case FACT_THIRD_BARTENDER:
-			gubFact[ usFact ] = ( gMercProfiles[ubProfileID].bNPCData == 3 || (gMercProfiles[ubProfileID].bNPCData == 0 && CountBartenders() == 2) );
+			gubFact[ usFact ] = ubProfileID != NO_PROFILE && (gMercProfiles[ubProfileID].bNPCData == 3 || (gMercProfiles[ubProfileID].bNPCData == 0 && CountBartenders() == 2));
 			break;
 
 		case FACT_FOURTH_BARTENDER:
-			gubFact[ usFact ] = ( gMercProfiles[ubProfileID].bNPCData == 4 || (gMercProfiles[ubProfileID].bNPCData == 0 && CountBartenders() == 3) );
+			gubFact[ usFact ] = ubProfileID != NO_PROFILE && (gMercProfiles[ubProfileID].bNPCData == 4 || (gMercProfiles[ubProfileID].bNPCData == 0 && CountBartenders() == 3));
 			break;
 
 		case FACT_NPC_NOT_UNDER_FIRE:
@@ -993,7 +993,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_NPC_BANDAGED_TODAY:
-			gubFact[usFact] = (gMercProfiles[ ubProfileID ].ubMiscFlags2 & PROFILE_MISC_FLAG2_BANDAGED_TODAY) != 0;
+			gubFact[usFact] = ubProfileID != NO_PROFILE && (gMercProfiles[ ubProfileID ].ubMiscFlags2 & PROFILE_MISC_FLAG2_BANDAGED_TODAY) != 0;
 			break;
 
 		case FACT_PLAYER_IN_SAME_ROOM:

@@ -1160,26 +1160,31 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 	// if the quote is quest-specific, is the player on that quest?
 	if (pNPCQuoteInfo->ubQuest != NO_QUEST)
 	{
-		if (pNPCQuoteInfo->ubQuest > QUEST_DONE_NUM)
+		if ((pNPCQuoteInfo->ubQuest - QUEST_DONE_NUM) < MAX_QUESTS)
 		{
 			if (gubQuest[pNPCQuoteInfo->ubQuest - QUEST_DONE_NUM] != QUESTDONE)
 			{
 				return( FALSE );
 			}
 		}
-		else if (pNPCQuoteInfo->ubQuest > QUEST_NOT_STARTED_NUM)
+		else if ((pNPCQuoteInfo->ubQuest - QUEST_NOT_STARTED_NUM) < MAX_QUESTS)
 		{
 			if (gubQuest[pNPCQuoteInfo->ubQuest - QUEST_NOT_STARTED_NUM] != QUESTNOTSTARTED)
 			{
 				return( FALSE );
 			}
 		}
-		else
+		else if (pNPCQuoteInfo->ubQuest < MAX_QUESTS)
 		{
 			if (gubQuest[pNPCQuoteInfo->ubQuest] != QUESTINPROGRESS)
 			{
 				return( FALSE );
 			}
+		}
+		else
+		{
+			ST::string err = ST::format("invalid quest index: {}", pNPCQuoteInfo->ubQuest);
+			throw std::runtime_error(err.to_std_string());
 		}
 	}
 

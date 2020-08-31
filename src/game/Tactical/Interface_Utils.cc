@@ -212,18 +212,24 @@ void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, c
 	{
 		value = o.bAttachStatus[ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1];
 	}
-	else if (item->isAmmo())
-	{
-		value = 100 * o.ubShotsLeft[ubStatus] / (item->asAmmo()->capacity? item->asAmmo()->capacity: 1);
-		if (value > 100) value = 100;
-	}
 	else if (item->isKey())
 	{
 		value = 100;
 	}
 	else
 	{
-		value = o.bStatus[ubStatus];
+		if (ubStatus >= MAX_OBJECTS_PER_SLOT) 
+			throw std::runtime_error(ST::format("invalid ubStatus value: {}", ubStatus).to_std_string());
+		
+		if (item->isAmmo())
+		{
+			value = 100 * o.ubShotsLeft[ubStatus] / (item->asAmmo()->capacity ? item->asAmmo()->capacity : 1);
+			if (value > 100) value = 100;
+		}
+		else
+		{
+			value = o.bStatus[ubStatus];
+		}
 	}
 
 	{ SGPVSurface::Lock l(uiBuffer);
