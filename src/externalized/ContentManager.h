@@ -6,7 +6,6 @@
 
 #include "Facts.h"
 #include "ItemSystem.h"
-#include "Strategic_AI.h"
 
 #include <string_theory/string>
 
@@ -42,6 +41,9 @@ struct LoadingScreen;
 struct MagazineModel;
 struct SGPFile;
 struct WeaponModel;
+struct ARMY_COMPOSITION;
+struct PATROL_GROUP;
+struct GARRISON_GROUP;
 
 class ContentManager : public ItemSystem
 {

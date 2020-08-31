@@ -1,26 +1,25 @@
-#include "Directories.h"
-#include "Local.h"
-#include "HImage.h"
-#include "VObject.h"
 #include "Interface_Utils.h"
-#include "Render_Dirty.h"
-#include "Interface_Control.h"
-#include "SysUtil.h"
-#include "Faces.h"
-#include "Weapons.h"
-#include "Overhead.h"
-#include "Soldier_Macros.h"
-#include "Line.h"
-#include "Vehicles.h"
-#include "JAScreens.h"
-#include "Video.h"
-#include "VSurface.h"
-#include "ScreenIDs.h"
-#include "UILayout.h"
-
 #include "ContentManager.h"
+#include "Directories.h"
+#include "Faces.h"
 #include "GameInstance.h"
+#include "HImage.h"
+#include "JAScreens.h"
+#include "Line.h"
 #include "MagazineModel.h"
+#include "Overhead.h"
+#include "Render_Dirty.h"
+#include "Soldier_Macros.h"
+#include "SysUtil.h"
+#include "UILayout.h"
+#include "Vehicles.h"
+#include "Video.h"
+#include "VObject.h"
+#include "VSurface.h"
+#include <stdexcept>
+#include <string_theory/format>
+#include <string_theory/string>
+
 
 #define LIFE_BAR_SHADOW		FROMRGB(108, 12, 12)
 #define LIFE_BAR			FROMRGB(200, 0, 0)
@@ -212,18 +211,24 @@ void DrawItemUIBarEx(OBJECTTYPE const& o, const UINT8 ubStatus, const INT16 x, c
 	{
 		value = o.bAttachStatus[ubStatus - DRAW_ITEM_STATUS_ATTACHMENT1];
 	}
-	else if (item->isAmmo())
-	{
-		value = 100 * o.ubShotsLeft[ubStatus] / (item->asAmmo()->capacity? item->asAmmo()->capacity: 1);
-		if (value > 100) value = 100;
-	}
 	else if (item->isKey())
 	{
 		value = 100;
 	}
 	else
 	{
-		value = o.bStatus[ubStatus];
+		if (ubStatus >= MAX_OBJECTS_PER_SLOT) 
+			throw std::runtime_error(ST::format("invalid ubStatus value: {}", ubStatus).to_std_string());
+		
+		if (item->isAmmo())
+		{
+			value = 100 * o.ubShotsLeft[ubStatus] / (item->asAmmo()->capacity ? item->asAmmo()->capacity : 1);
+			if (value > 100) value = 100;
+		}
+		else
+		{
+			value = o.bStatus[ubStatus];
+		}
 	}
 
 	{ SGPVSurface::Lock l(uiBuffer);

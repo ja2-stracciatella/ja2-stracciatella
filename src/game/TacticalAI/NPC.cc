@@ -1,51 +1,41 @@
-#include "Buffer.h"
-#include "Directories.h"
-#include "Font_Control.h"
-#include "LoadSaveData.h"
-#include "Types.h"
-#include "Overhead.h"
-#include "AI.h"
-#include "Soldier_Profile.h"
-#include "Soldier_Control.h"
 #include "NPC.h"
-#include "Isometric_Utils.h"
-#include "Quests.h"
-#include "Interface_Dialogue.h"
-#include "Game_Clock.h"
-#include "FileMan.h"
-#include "Random.h"
-#include "Items.h"
-#include "Interface.h"
-#include "Assignments.h"
-#include "Soldier_Macros.h"
-#include "Dialogue_Control.h"
-#include "Strategic_Town_Loyalty.h"
-#include "Message.h"
-#include "Timer_Control.h"
-#include "Soldier_Add.h"
-#include "Soldier_Tile.h"
-#include "Weapons.h"
-#include "Meanwhile.h"
-#include "QuestText.h"
-#include "SkillCheck.h"
-#include "Render_Fun.h"
-#include "StrategicMap.h"
-#include "Text.h"
-#include "Arms_Dealer_Init.h"
-#include "Interface_Items.h"
-#include "OppList.h"
+#include "AI.h"
 #include "Animation_Control.h"
-#include "Scheduling.h"
-#include "Tactical_Save.h"
-#include "Campaign_Types.h"
-#include "MemMan.h"
-#include "Debug.h"
-#include "GameRes.h"
-
+#include "Arms_Dealer.h"
+#include "Arms_Dealer_Init.h"
+#include "Buffer.h"
 #include "ContentManager.h"
+#include "Dialogue_Control.h"
+#include "Directories.h"
+#include "FileMan.h"
+#include "Font_Control.h"
+#include "Game_Clock.h"
 #include "GameInstance.h"
+#include "GameRes.h"
+#include "Interface_Dialogue.h"
+#include "Interface_Items.h"
+#include "Isometric_Utils.h"
+#include "Items.h"
+#include "LoadSaveData.h"
+#include "Meanwhile.h"
+#include "Message.h"
+#include "OppList.h"
+#include "Overhead.h"
+#include "Quests.h"
+#include "QuestText.h"
+#include "Render_Fun.h"
+#include "Scheduling.h"
+#include "SkillCheck.h"
+#include "Soldier_Add.h"
+#include "Soldier_Macros.h"
+#include "Soldier_Tile.h"
+#include "Strategic_Town_Loyalty.h"
+#include "Tactical_Save.h"
+#include "Text.h"
+#include "Timer_Control.h"
 #include "WeaponModels.h"
-#include "Logger.h"
+#include <string_theory/format>
+#include <string_theory/string>
 
 #define NUM_NPC_QUOTE_RECORDS  50
 #define NUM_CIVQUOTE_SECTORS   20
@@ -1160,26 +1150,31 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 	// if the quote is quest-specific, is the player on that quest?
 	if (pNPCQuoteInfo->ubQuest != NO_QUEST)
 	{
-		if (pNPCQuoteInfo->ubQuest > QUEST_DONE_NUM)
+		if ((pNPCQuoteInfo->ubQuest - QUEST_DONE_NUM) < MAX_QUESTS)
 		{
 			if (gubQuest[pNPCQuoteInfo->ubQuest - QUEST_DONE_NUM] != QUESTDONE)
 			{
 				return( FALSE );
 			}
 		}
-		else if (pNPCQuoteInfo->ubQuest > QUEST_NOT_STARTED_NUM)
+		else if ((pNPCQuoteInfo->ubQuest - QUEST_NOT_STARTED_NUM) < MAX_QUESTS)
 		{
 			if (gubQuest[pNPCQuoteInfo->ubQuest - QUEST_NOT_STARTED_NUM] != QUESTNOTSTARTED)
 			{
 				return( FALSE );
 			}
 		}
-		else
+		else if (pNPCQuoteInfo->ubQuest < MAX_QUESTS)
 		{
 			if (gubQuest[pNPCQuoteInfo->ubQuest] != QUESTINPROGRESS)
 			{
 				return( FALSE );
 			}
+		}
+		else
+		{
+			ST::string err = ST::format("invalid quest index: {}", pNPCQuoteInfo->ubQuest);
+			throw std::runtime_error(err.to_std_string());
 		}
 	}
 

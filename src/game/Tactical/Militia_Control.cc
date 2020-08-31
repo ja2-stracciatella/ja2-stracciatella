@@ -1,11 +1,13 @@
-#include "Soldier_Control.h"
 #include "Militia_Control.h"
-#include "Town_Militia.h"
-#include "Soldier_Init_List.h"
 #include "Campaign_Types.h"
 #include "Overhead.h"
+#include "Overhead_Types.h"
+#include "Soldier_Control.h"
+#include "Soldier_Create.h"
+#include "Soldier_Init_List.h"
 #include "StrategicMap.h"
-#include "PreBattle_Interface.h"
+#include "Town_Militia.h"
+#include <stdexcept>
 
 
 BOOLEAN gfStrategicMilitiaChangesMade = FALSE;
@@ -72,6 +74,8 @@ void HandleMilitiaPromotions()
 		if (s.ubMilitiaKills == 0) continue;
 
 		UINT8 militia_rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
+		if (militia_rank >= MAX_MILITIA_LEVELS)      throw std::logic_error("invalid militia rank");
+
 		UINT8 const promotions   = CheckOneMilitiaForPromotion(gWorldSectorX, gWorldSectorY, militia_rank, s.ubMilitiaKills);
 		if (promotions != 0)
 		{

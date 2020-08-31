@@ -1,80 +1,62 @@
+#include "Auto_Resolve.h"
+#include "Campaign.h"
+#include "ContentManager.h"
+#include "Creature_Spreading.h"
 #include "Directories.h"
+#include "Easings.h"
+#include "English.h"
 #include "Font.h"
+#include "Font_Control.h"
+#include "Game_Clock.h"
+#include "Game_Event_Hook.h"
+#include "GameInstance.h"
+#include "GameLoop.h"
+#include "GameScreen.h"
 #include "HImage.h"
+#include "Input.h"
+#include "Inventory_Choosing.h"
 #include "Isometric_Utils.h"
+#include "Items.h"
+#include "Local.h"
+#include "Map_Information.h"
+#include "MapScreen.h"
+#include "Meanwhile.h"
 #include "MercPortrait.h"
-#include "MessageBoxScreen.h"
+#include "Morale.h"
+#include "Music_Control.h"
+#include "Overhead.h"
+#include "Player_Command.h"
+#include "PreBattle_Interface.h"
+#include "Queen_Command.h"
+#include "Quests.h"
+#include "Render_Dirty.h"
+#include "RT_Time_Defines.h"
+#include "SkillCheck.h"
+#include "Soldier_Macros.h"
+#include "Strategic.h"
+#include "Strategic_AI.h"
+#include "Strategic_Merc_Handler.h"
+#include "Strategic_Status.h"
+#include "Strategic_Town_Loyalty.h"
+#include "SysUtil.h"
+#include "Tactical_Save.h"
+#include "Text.h"
 #include "Timer.h"
 #include "Timer_Control.h"
-#include "Types.h"
-#include "Auto_Resolve.h"
-#include "Local.h"
-#include "Strategic_Movement.h"
-#include "Queen_Command.h"
-#include "Music_Control.h"
-#include "ContentMusic.h"
-#include "PreBattle_Interface.h"
-#include "Player_Command.h"
-#include "MouseSystem.h"
-#include "Button_System.h"
-#include "GameLoop.h"
-#include "MapScreen.h"
-#include "VObject.h"
-#include "VSurface.h"
-#include "Video.h"
-#include "Input.h"
-#include "GameScreen.h"
-#include "Render_Dirty.h"
-#include "VObject_Blitters.h"
-#include "SysUtil.h"
-#include "Font_Control.h"
-#include "Soldier_Create.h"
-#include "Overhead.h"
-#include "Items.h"
-#include "Weapons.h"
-#include "Sound_Control.h"
-#include "Game_Clock.h"
-#include "Soldier_Profile.h"
-#include "Campaign.h"
-#include "Tactical_Save.h"
-#include "Strategic_Status.h"
-#include "Text.h"
-#include "WordWrap.h"
-#include "Random.h"
-#include "Line.h"
-#include "English.h"
-#include "Strategic_Pathing.h"
-#include "Strategic_Merc_Handler.h"
-#include "Strategic.h"
-#include "Message.h"
 #include "Town_Militia.h"
-#include "Animation_Data.h"
-#include "Creature_Spreading.h"
-#include "Strategic_AI.h"
-#include "SkillCheck.h"
-#include "RT_Time_Defines.h"
-#include "Morale.h"
-#include "Strategic_Town_Loyalty.h"
-#include "Soldier_Macros.h"
-#include "StrategicMap.h"
-#include "Quests.h"
-#include "Meanwhile.h"
-#include "Inventory_Choosing.h"
-#include "Game_Event_Hook.h"
-#include "Map_Information.h"
-#include "MemMan.h"
-#include "Debug.h"
 #include "UILayout.h"
+#include "Video.h"
+#include "VObject.h"
+#include "VObject_Blitters.h"
+#include "VSurface.h"
 #include "WeaponModels.h"
-#include "Easings.h"
-#include "ContentManager.h"
-#include "GameInstance.h"
-#include "Logger.h"
-
+#include "WordWrap.h"
+#include <stdexcept>
 #include <string_theory/format>
 #include <string_theory/string>
 
-#include <stdexcept>
+
+struct BUTTON_PICS;
 
 
 //#define INVULNERABILITY
@@ -1777,16 +1759,9 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		if (!gpCivs[i].pSoldier) continue;
 		SOLDIERTYPE& s = *gpCivs[i].pSoldier;
 
-		UINT8 current_rank = 255;
-		switch (s.ubSoldierClass)
-		{
-			case SOLDIER_CLASS_GREEN_MILITIA: current_rank = GREEN_MILITIA;   break;
-			case SOLDIER_CLASS_REG_MILITIA:   current_rank = REGULAR_MILITIA; break;
-			case SOLDIER_CLASS_ELITE_MILITIA: current_rank = ELITE_MILITIA;   break;
-			default:
-				SLOGE("Removing autoresolve militia with invalid ubSoldierClass %d.", s.ubSoldierClass);
-				break;
-		}
+		UINT8 current_rank = SoldierClassToMilitiaRank(s.ubSoldierClass);
+		if (current_rank >= MAX_MILITIA_LEVELS) throw std::runtime_error(ST::format("Removing autoresolve militia with invalid ubSoldierClass {}.", s.ubSoldierClass).to_std_string());
+
 		if (delete_for_good)
 		{
 			if (s.bLife < OKLIFE / 2)
