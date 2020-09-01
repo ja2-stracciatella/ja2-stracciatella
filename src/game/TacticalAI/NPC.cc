@@ -1150,14 +1150,14 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 	// if the quote is quest-specific, is the player on that quest?
 	if (pNPCQuoteInfo->ubQuest != NO_QUEST)
 	{
-		if ((pNPCQuoteInfo->ubQuest - QUEST_DONE_NUM) < MAX_QUESTS)
+		if (pNPCQuoteInfo->ubQuest > QUEST_DONE_NUM && (pNPCQuoteInfo->ubQuest - QUEST_DONE_NUM) < MAX_QUESTS)
 		{
 			if (gubQuest[pNPCQuoteInfo->ubQuest - QUEST_DONE_NUM] != QUESTDONE)
 			{
 				return( FALSE );
 			}
 		}
-		else if ((pNPCQuoteInfo->ubQuest - QUEST_NOT_STARTED_NUM) < MAX_QUESTS)
+		else if (pNPCQuoteInfo->ubQuest > QUEST_NOT_STARTED_NUM && (pNPCQuoteInfo->ubQuest - QUEST_NOT_STARTED_NUM) < MAX_QUESTS)
 		{
 			if (gubQuest[pNPCQuoteInfo->ubQuest - QUEST_NOT_STARTED_NUM] != QUESTNOTSTARTED)
 			{
