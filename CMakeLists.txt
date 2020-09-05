@@ -25,7 +25,7 @@ endif()
 project(ja2-stracciatella)
 set(JA2_BINARY "ja2")
 set(LAUNCHER_BINARY "ja2-launcher")
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 14)
 
 ## Semantic Versioning
 # @see https://semver.org/
