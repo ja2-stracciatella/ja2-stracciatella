@@ -572,6 +572,7 @@ static void LoadTacticalStatusFromSavedGame(HWFILE, bool stracLinuxFormat);
 static void LoadWatchedLocsFromSavedGame(HWFILE);
 static void TruncateStrategicGroupSizes(void);
 static void UpdateMercMercContractInfo(void);
+void InitScriptingEngine();
 
 void LoadSavedGame(UINT8 const save_slot_id)
 {
@@ -611,6 +612,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	 * the player could theoretically enter that sector where it would be in a
 	 * pre-load state. */
 	TrashWorld();
+
+	InitScriptingEngine();
 
 	InitTacticalSave();
 
