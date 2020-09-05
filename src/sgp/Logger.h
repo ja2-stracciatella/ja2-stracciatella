@@ -4,6 +4,7 @@
 #include "RustInterface.h"
 
 #include <string_theory/string>
+#include <stracciatella.h>
 
 void LogMessage(bool isAssert, LogLevel level, const char* file, const ST::string& str);
 void LogMessage(bool isAssert, LogLevel level, const char *file, const char *format, ...);
