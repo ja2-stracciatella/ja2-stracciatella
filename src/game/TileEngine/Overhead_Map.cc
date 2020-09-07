@@ -105,7 +105,7 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 		catch (...)
 		{
 			// Load one we know about
-			vo = AddVideoObjectFromFile(GCM->getTilesetResourceName(0, ST::string("t/") + "grass.sti").c_str());
+			vo = AddVideoObjectFromFile(GCM->getTilesetResourceName(res.tilesetID, ST::string("t/") + "grass.sti").c_str());
 		}
 
 		gSmTileSurf[i].vo = vo;

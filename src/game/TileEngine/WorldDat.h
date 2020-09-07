@@ -23,7 +23,8 @@ struct TILESET
 
 
 
-extern TILESET gTilesets[NUM_TILESETS];
+extern UINT8 gubNumTilesets;
+extern TILESET gTilesets[MAX_NUM_TILESETS];
 
 
 void InitEngineTilesets(void);
