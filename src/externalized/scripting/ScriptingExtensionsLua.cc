@@ -14,6 +14,7 @@
 #include "Quests.h"
 #include "StrategicMap.h"
 #include <set>
+#include <stdexcept>
 #include <string>
 #include <string_theory/format>
 #include <string_theory/string>
@@ -23,7 +24,7 @@
 
 static std::set<std::string> loadedScripts;
 static bool isLuaInitialized = false;
-static bool hasLuaPanicked = false;
+static bool isLuaDisabled = false;
 static sol::state lua;
 
 static void RegisterUserTypes();
@@ -54,7 +55,7 @@ void InitScriptingEngine()
 {
 	loadedScripts.clear();
 	isLuaInitialized = false;
-	hasLuaPanicked = false;
+	isLuaDisabled = false;
 
 	if (!GCM->doesGameResExists(SCRIPTS_DIR "/" ENTRYPOINT_SCRIPT))
 	{
@@ -128,8 +129,6 @@ static void RegisterGlobals()
 	lua["gubQuest"] = &gubQuest;
 	lua["gubFact"] = &gubFact;
 
-	lua.set_function("JA2Require", JA2Require);
-
 	lua.set_function("GetCurrentSector", GetCurrentSector);
 	lua.set_function("GetSectorInfo", GetSectorInfo);
 	lua.set_function("GetUndergroundSectorInfo", GetUndergroundSectorInfo);
@@ -137,6 +136,11 @@ static void RegisterGlobals()
 	lua.set_function("CreateItem", CreateItem);
 	lua.set_function("CreateMoney", CreateMoney);
 	lua.set_function("PlaceItem", PlaceItem);
+
+	lua.set_function("JA2Require", JA2Require);
+	lua.set_function("require",  [](void) { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
+	lua.set_function("dofile",   [](void) { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
+	lua.set_function("loadfile", [](void) { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
 }
 
 static void RegisterLogger()
@@ -158,7 +162,7 @@ static void InvokeFunction(ST::string functionName)
 		SLOGD("Lua scripting is not available");
 		return;
 	}
-	if (hasLuaPanicked)
+	if (isLuaDisabled)
 	{
 		SLOGE("Scripting engine has been disabled due to a previous error"); 
 		return;
@@ -176,7 +180,7 @@ static void InvokeFunction(ST::string functionName)
 	{
 		sol::error err = result;
 		SLOGE(ST::format("Lua script had an error. Scripting engine is now DISABLED. The error was:\n{}", err.what()));
-		hasLuaPanicked = true;
+		isLuaDisabled = true;
 	}
 }
 
