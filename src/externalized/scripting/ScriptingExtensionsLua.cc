@@ -139,8 +139,8 @@ static void RegisterGlobals()
 
 	lua.set_function("JA2Require", JA2Require);
 	lua.set_function("require",  [](void) { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
-	lua.set_function("dofile",   [](void) { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
-	lua.set_function("loadfile", [](void) { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
+	lua.set_function("dofile",   [](void) { throw std::logic_error("dofile is not allowed. Use JA2Require instead"); });
+	lua.set_function("loadfile", [](void) { throw std::logic_error("loadfile is not allowed. Use JA2Require instead"); });
 }
 
 static void RegisterLogger()
