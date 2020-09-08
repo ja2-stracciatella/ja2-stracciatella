@@ -59,7 +59,7 @@ void CreateTileDatabase()
 			NumRegions = gNumTilesPerType[cnt1];
 		}
 
-		SLOGD("Type: %s Size: %d Index: %d", gTileSurfaceName[cnt1], gNumTilesPerType[cnt1], gTileDatabaseSize);
+		SLOGD(ST::format("Type: {} Size: {} Index: {}", gTileSurfaceName[cnt1], gNumTilesPerType[cnt1], gTileDatabaseSize));
 
 		UINT32 cnt2;
 		for (cnt2 = 0; cnt2 < NumRegions; ++cnt2)

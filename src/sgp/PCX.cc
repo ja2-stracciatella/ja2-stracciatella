@@ -33,7 +33,7 @@ struct PcxHeader
 static void BlitPcxToBuffer(UINT8 const* src, UINT8* dst, UINT16 w, UINT16 h);
 
 
-SGPImage* LoadPCXFileToImage(char const* const filename, UINT16 const contents)
+SGPImage* LoadPCXFileToImage(const ST::string filename, UINT16 const contents)
 {
 	AutoSGPFile f(GCM->openGameResForReading(filename));
 

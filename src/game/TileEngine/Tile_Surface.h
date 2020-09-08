@@ -1,16 +1,17 @@
 #ifndef _TILE_SURFACE_H
 #define _TILE_SURFACE_H
 
-#include "WorldDef.h"
-
+#include "TileDat.h"
+#include <string_theory/string>
+struct TILE_IMAGERY;
 
 extern TILE_IMAGERY* gTileSurfaceArray[NUMBEROFTILETYPES];
 
 
-TILE_IMAGERY* LoadTileSurface(const char* cFilename);
+TILE_IMAGERY* LoadTileSurface(const ST::string cFilename);
 
 void DeleteTileSurface(TILE_IMAGERY* pTileSurf);
 
-void SetRaisedObjectFlag(char const* filename, TILE_IMAGERY*);
+void SetRaisedObjectFlag(const ST::string filename, TILE_IMAGERY*);
 
 #endif

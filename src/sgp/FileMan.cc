@@ -88,6 +88,13 @@ void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 	}
 }
 
+ST::string FileReadString(SGPFile* const f, size_t const uiBytesToRead)
+{
+	ST::char_buffer buf(uiBytesToRead, '\0');
+	FileRead(f, buf.data(), uiBytesToRead);
+	return ST::string(buf.c_str(), ST_AUTO_SIZE);
+}
+
 
 void FileWrite(SGPFile* const f, void const* const pDest, size_t const uiBytesToWrite)
 {

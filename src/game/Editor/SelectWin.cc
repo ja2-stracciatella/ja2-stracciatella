@@ -851,17 +851,17 @@ void DisplaySelectionWindowGraphicalInformation()
 	SetFontForeground(FONT_WHITE);
 	if (i)
 	{
-		UINT32      const obj_idx  = i->uiObjIndx;
-		char const* const name     = gTileSurfaceName[obj_idx];
-		char const* const filename = gTilesets[giCurrentTilesetID].TileSurfaceFilenames[obj_idx];
-		if (filename[0] != '\0')
+		UINT32     const obj_idx  = i->uiObjIndx;
+		const ST::string name     = gTileSurfaceName[obj_idx];
+		auto res = GetAdjustedTilesetResource(giCurrentTilesetID, obj_idx);
+		if (!res.isDefaultTileset())
 		{
-			MPrint(2, 2, ST::format("File:  {}, subindex:  {} ({})", filename, i->uiIndex, name));
+			MPrint(2, 2, ST::format("File:  {}, subindex:  {} ({})", res.resourceFileName, i->uiIndex, name));
 		}
 		else
 		{
-			TILESET const& generic = gTilesets[GENERIC_1];
-			MPrint(2, 2, ST::format("{}[{}] is from default tileset {} ({})", generic.TileSurfaceFilenames[obj_idx], i->uiIndex, generic.zName, name));
+			TILESET const& generic = gTilesets[res.tilesetID];
+			MPrint(2, 2, ST::format("{}[{}] is from default tileset {} ({})", res.resourceFileName, i->uiIndex, generic.zName, name));
 		}
 	}
 	MPrint(350, 2, ST::format("Current Tileset:  {}", gTilesets[giCurrentTilesetID].zName));

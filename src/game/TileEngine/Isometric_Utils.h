@@ -1,8 +1,11 @@
 #ifndef __ISOMETRIC_UTILSH
 #define __ISOMETRIC_UTILSH
 
+#include "JA2Types.h"
 #include "Overhead_Types.h"
+#include "Types.h"
 #include "WorldDef.h"
+struct SOLDIERTYPE;
 
 
 #define MAXCOL					WORLD_COLS

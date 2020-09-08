@@ -576,7 +576,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		// Lots of HARD CODING HERE :(
 		UINT32 const tile_type = GetTileType(node->usIndex);
 		// Check if we are a fountain!
-		if (strcasecmp(gTilesets[giCurrentTilesetID].TileSurfaceFilenames[tile_type], "fount1.sti") == 0)
+		if (gTilesets[giCurrentTilesetID].zTileSurfaceFilenames[tile_type].compare("fount1.sti", ST::case_insensitive) == 0)
 		{ // Remove water
 			ApplyMapChangesToMapTempFile app;
 			UINT16 sNewIndex;

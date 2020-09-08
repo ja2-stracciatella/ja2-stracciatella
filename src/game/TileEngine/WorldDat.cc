@@ -49,10 +49,7 @@ try
 	FOR_EACH(TILESET, ts, gTilesets)
 	{
 		//Read name
-		char zName[32];
-		FileRead(f, &zName, sizeof(zName));
-		zName[sizeof(zName) - 1] = '\0';
-		ts->zName = ST::format("{}", zName);
+		ts->zName = FileReadString(f, TILESET_NAME_LENGTH);
 
 		// Read ambience value
 		FileRead(f, &ts->ubAmbientID, sizeof(UINT8));
@@ -61,7 +58,7 @@ try
 		for (UINT32 cnt2 = 0; cnt2 < uiNumFiles; ++cnt2)
 		{
 			// Read file name
-			FileRead(f, ts->TileSurfaceFilenames[cnt2], sizeof(ts->TileSurfaceFilenames[cnt2]));
+			ts->zTileSurfaceFilenames[cnt2] = FileReadString(f, TILE_SURFACE_FILENAME_LENGTH);
 		}
 	}
 

@@ -27,20 +27,19 @@ INT16  gusBlueShift = 0;
 INT16  gusGreenShift = 0;
 
 
-SGPImage* CreateImage(const char* const filename, const UINT16 fContents)
+SGPImage* CreateImage(ST::string filename, const UINT16 fContents)
 {
 	// depending on extension of filename, use different image readers
-	const char* const dot = strstr(filename, ".");
-	if (!dot)
+	ST::string ext = filename.after_last(".");
+	if (ext == filename)
 	{
 		throw std::logic_error("Tried to load image with no extension");
 	}
-	const char* const ext = dot + 1;
 
 	return
-		strcasecmp(ext, "STI") == 0 ? LoadSTCIFileToImage(filename, fContents) :
-		strcasecmp(ext, "PCX") == 0 ? LoadPCXFileToImage( filename, fContents) :
-		strcasecmp(ext, "TGA") == 0 ? LoadTGAFileToImage( filename, fContents) :
+		ext.compare_i("STI") == 0 ? LoadSTCIFileToImage(filename, fContents) :
+		ext.compare_i("PCX") == 0 ? LoadPCXFileToImage( filename, fContents) :
+		ext.compare_i("TGA") == 0 ? LoadTGAFileToImage( filename, fContents) :
 		throw std::logic_error("Tried to load image with unknown extension");
 }
 

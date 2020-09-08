@@ -1,50 +1,51 @@
-#include "Directories.h"
-#include "Font.h"
-#include "HImage.h"
-#include "Handle_Items.h"
-#include "Interface_Items.h"
-#include "Local.h"
-#include "Structure.h"
-#include "VObject.h"
-#include "TileDef.h"
-#include "VSurface.h"
-#include "WorldDef.h"
-#include "Isometric_Utils.h"
-#include "RenderWorld.h"
-#include "WorldDat.h"
-#include "VObject_Blitters.h"
 #include "Overhead_Map.h"
-#include "Interface.h"
-#include "Interface_Control.h"
-#include "Overhead.h"
-#include "Radar_Screen.h"
+#include "Button_System.h"
+#include "ContentManager.h"
 #include "Cursors.h"
-#include "Sys_Globals.h"
-#include "Render_Dirty.h"
-#include "Soldier_Find.h"
+#include "Directories.h"
+#include "Faces.h"
+#include "Font.h"
 #include "Font_Control.h"
 #include "Game_Clock.h"
+#include "GameInstance.h"
+#include "GameLoop.h"
+#include "GameState.h"
+#include "Handle_Items.h"
+#include "Handle_UI.h"
+#include "HImage.h"
+#include "Input.h"
+#include "Interface.h"
+#include "Interface_Control.h"
+#include "Interface_Items.h"
 #include "Interface_Panels.h"
-#include "English.h"
+#include "Isometric_Utils.h"
 #include "Line.h"
 #include "Map_Information.h"
-#include "Tactical_Placement_GUI.h"
-#include "World_Items.h"
-#include "Environment.h"
-#include "Faces.h"
-#include "Squads.h"
-#include "GameLoop.h"
-#include "SysUtil.h"
-#include "Tile_Surface.h"
-#include "Button_System.h"
-#include "Video.h"
-#include "UILayout.h"
-#include "GameState.h"
-
-#include "ContentManager.h"
-#include "GameInstance.h"
-
+#include "MouseSystem.h"
+#include "Overhead.h"
+#include "Overhead_Types.h"
+#include "Radar_Screen.h"
+#include "Render_Dirty.h"
+#include "RenderWorld.h"
+#include "Soldier_Control.h"
 #include "Soldier_Init_List.h"
+#include "Structure.h"
+#include "Structure_Internals.h"
+#include "Sys_Globals.h"
+#include "SysUtil.h"
+#include "Tactical_Placement_GUI.h"
+#include "Tile_Surface.h"
+#include "TileDat.h"
+#include "TileDef.h"
+#include "UILayout.h"
+#include "Video.h"
+#include "VObject.h"
+#include "VObject_Blitters.h"
+#include "VSurface.h"
+#include "World_Items.h"
+#include "WorldDef.h"
+#include <string_theory/string>
+
 extern SOLDIERINITNODE *gpSelected;
 
 // OK, these are values that are calculated in InitRenderParams( ) with normal view settings.
@@ -95,20 +96,11 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 
 	for (UINT32 i = 0; i < NUMBEROFTILETYPES; ++i)
 	{
-		const char* filename    = gTilesets[ubTilesetID].TileSurfaceFilenames[i];
-		TileSetID   use_tileset = ubTilesetID;
-		if (filename[0] == '\0')
-		{
-			// Try loading from default tileset
-			filename    = gTilesets[GENERIC_1].TileSurfaceFilenames[i];
-			use_tileset = GENERIC_1;
-		}
-
-		ST::string adjusted_file(GCM->getTilesetResourceName(use_tileset, ST::string("t/") + filename));
+		auto res = GetAdjustedTilesetResource(ubTilesetID, i, "t/");
 		SGPVObject* vo;
 		try
 		{
-			vo = AddVideoObjectFromFile(adjusted_file.c_str());
+			vo = AddVideoObjectFromFile(res.resourceFileName.c_str());
 		}
 		catch (...)
 		{

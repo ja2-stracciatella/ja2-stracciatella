@@ -1,11 +1,16 @@
 #ifndef __WORLDDEF_H
 #define __WORLDDEF_H
 
-#include "JA2Types.h"
+#include "Types.h"
 #include "World_Tileset_Enums.h"
 
 #include <string_theory/string>
 
+struct ANITILE;
+struct ITEM_POOL;
+struct LIGHT_SPRITE;
+struct SOLDIERTYPE;
+struct STRUCTURE;
 
 #define WORLD_TILE_X		40
 #define WORLD_TILE_Y		20
@@ -221,6 +226,20 @@ struct MAP_ELEMENT
 	UINT8 ubSmellInfo;
 };
 
+/**
+ * Specifies where to load a tile surface.
+ */
+struct TILE_SURFACE_RESOURCE
+{
+	ST::string resourceFileName;  // the exact resource file name on the VFS
+	TileSetID tilesetID;  // the actual Tileset ID, after considering default tileset
+
+	// whether or not the default tileset is being used
+	BOOLEAN isDefaultTileset()
+	{
+		return tilesetID == GENERIC_1;
+	}
+};
 
 // World Data
 extern MAP_ELEMENT* gpWorldLevelData;
@@ -258,6 +277,8 @@ void CompileWorldMovementCosts(void);
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );
 void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );
 
+// Tilesets may not provide all tile types.If a tile type is not available in a tileset, we fall back and use the surface in the default tileset.
+TILE_SURFACE_RESOURCE GetAdjustedTilesetResource(TileSetID tilesetID, UINT32 uiTileType, const ST::string filePrefix = "");
 
 void LoadMapTileset(TileSetID);
 

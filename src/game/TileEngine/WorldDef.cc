@@ -1,72 +1,70 @@
+#include "WorldDef.h"
+#include "Animated_ProgressBar.h"
 #include "Animation_Data.h"
-#include "Buffer.h"
-#include "Directories.h"
+#include "Buildings.h"
+#include "ContentManager.h"
+#include "Debug.h"
+#include "EditorBuildings.h"
+#include "EditorMapInfo.h"
+#include "Environment.h"
+#include "Exit_Grids.h"
+#include "FileMan.h"
+#include "Game_Clock.h"
+#include "GameInstance.h"
+#include "GameRes.h"
+#include "GameState.h"
+#include "Handle_UI.h"
 #include "HImage.h"
+#include "Input.h"
+#include "Isometric_Utils.h"
+#include "JA2Types.h"
+#include "JAScreens.h"
+#include "Keys.h"
+#include "LightEffects.h"
+#include "Lighting.h"
 #include "LoadSaveBasicSoldierCreateStruct.h"
 #include "LoadSaveData.h"
 #include "LoadSaveLightSprite.h"
 #include "LoadSaveSoldierCreate.h"
-#include "TileDef.h"
-#include "Timer_Control.h"
-#include "WorldDef.h"
-#include "WorldDat.h"
-#include "Debug.h"
-#include "Smooth.h"
-#include "WorldMan.h"
-#include "MouseSystem.h"
-#include "Sys_Globals.h"
-#include "ScreenIDs.h"
-#include "Render_Fun.h"
-#include "Lighting.h"
-#include "Structure.h"
-#include "VObject.h"
-#include "Soldier_Control.h"
-#include "Isometric_Utils.h"
-#include "Overhead.h"
-#include "Points.h"
-#include "Handle_UI.h"
+#include "LoadScreen.h"
+#include "Logger.h"
+#include "Map_Edgepoints.h"
+#include "Map_Information.h"
+#include "Meanwhile.h"
 #include "OppList.h"
-#include "World_Items.h"
+#include "Overhead.h"
+#include "Overhead_Map.h"
+#include "Overhead_Types.h"
+#include "PathAI.h"
+#include "Random.h"
+#include "Render_Fun.h"
 #include "RenderWorld.h"
+#include "Rotting_Corpses.h"
+#include "Scheduling.h"
+#include "ScreenIDs.h"
+#include "SGPFile.h"
+#include "SGPStrings.h"
+#include "SmokeEffects.h"
+#include "Soldier_Control.h"
 #include "Soldier_Create.h"
 #include "Soldier_Init_List.h"
-#include "Exit_Grids.h"
-#include "Tile_Surface.h"
-#include "Rotting_Corpses.h"
-#include "Keys.h"
-#include "Map_Information.h"
-#include "Summary_Info.h"
-#include "Animated_ProgressBar.h"
-#include "PathAI.h"
-#include "EditorBuildings.h"
-#include "FileMan.h"
-#include "Map_Edgepoints.h"
-#include "Environment.h"
-#include "Structure_Wrap.h"
-#include "Scheduling.h"
-#include "EditorMapInfo.h"
-#include "Game_Clock.h"
-#include "Buildings.h"
 #include "StrategicMap.h"
-#include "Overhead_Map.h"
-#include "Meanwhile.h"
-#include "SmokeEffects.h"
-#include "LightEffects.h"
-#include "MemMan.h"
-#include "JAScreens.h"
-#include "GameState.h"
-#include "GameRes.h"
-
-#include "ContentManager.h"
-#include "GameInstance.h"
-#include "Logger.h"
-
-#include <string_theory/format>
-#include <string_theory/string>
-
-#include <algorithm>
-#include <iterator>
+#include "Structure.h"
+#include "Structure_Internals.h"
+#include "Summary_Info.h"
+#include "Sys_Globals.h"
+#include "Tile_Animation.h"
+#include "Tile_Surface.h"
+#include "TileDat.h"
+#include "TileDef.h"
+#include "VObject.h"
+#include "World_Items.h"
+#include "WorldDat.h"
+#include "WorldMan.h"
 #include <stdexcept>
+#include <string>
+#include <string_theory/format>
+
 
 #define SET_MOVEMENTCOST( a, b, c, d )		( ( gubWorldMovementCosts[ a ][ b ][ c ] < d ) ? ( gubWorldMovementCosts[ a ][ b ][ c ] = d ) : 0 );
 #define FORCE_SET_MOVEMENTCOST( a, b, c, d )	( gubWorldMovementCosts[ a ][ b ][ c ] = d )
@@ -83,7 +81,6 @@
 #define MAP_AMBIENTLIGHTLEVEL_SAVED		0x00000080
 #define MAP_NPCSCHEDULES_SAVED			0x00000100
 
-#include "LoadScreen.h"
 
 TileSetID giCurrentTilesetID = TILESET_INVALID;
 
@@ -207,10 +204,27 @@ void DeinitializeWorld( )
 }
 
 
-static void AddTileSurface(char const* filename, UINT32 type, TileSetID);
+static void AddTileSurface(const ST::string filename, UINT32 const tileType);
 
+TILE_SURFACE_RESOURCE GetAdjustedTilesetResource(TileSetID tilesetID, UINT32 uiTileType, const ST::string filePrefix)
+{
+	if (tilesetID >= NUM_TILESETS) throw std::logic_error("invavlid tilesetID");
 
-static void LoadTileSurfaces(char const tile_surface_filenames[][32], TileSetID const tileset_id)
+	ST::string  filename = gTilesets[tilesetID].zTileSurfaceFilenames[uiTileType];
+	if (filename.empty())
+	{
+		// Try loading from default tileset
+		filename = gTilesets[GENERIC_1].zTileSurfaceFilenames[uiTileType];
+		tilesetID = GENERIC_1;
+	}
+
+	TILE_SURFACE_RESOURCE res;
+	res.tilesetID = tilesetID;
+	res.resourceFileName = GCM->getTilesetResourceName(tilesetID, filePrefix + filename);
+	return res;
+}
+
+static void LoadTileSurfaces(const ST::string tile_surface_filenames[NUMBEROFTILETYPES], TileSetID const tileset_id)
 try
 {
 	SetRelativeStartAndEndPercentage(0, 1, 35, "Tile Surfaces");
@@ -219,21 +233,16 @@ try
 		UINT32 const percentage = i * 100 / (NUMBEROFTILETYPES - 1);
 		RenderProgressBar(0, percentage);
 
-		char const* filename       = tile_surface_filenames[i];
-		TileSetID   tileset_to_add = tileset_id;
-		if (filename[0] == '\0')
-		{ // Use first tileset value!
+		auto res = GetAdjustedTilesetResource(tileset_id, i);
+		BOOLEAN fUseDefault = res.isDefaultTileset();
 
-			// ATE: If here, don't load default surface if already loaded
-			if (gbDefaultSurfaceUsed[i]) continue;
+		// don't load default surface if already loaded
+		if (fUseDefault && gbDefaultSurfaceUsed[i]) continue;
 
-			filename       = gTilesets[GENERIC_1].TileSurfaceFilenames[i];
-			tileset_to_add = GENERIC_1;
-		}
+		AddTileSurface(res.resourceFileName, i);
 
-		// Adjust for tileset position
-		ST::string adjusted_filename(GCM->getTilesetResourceName(tileset_to_add, filename));
-		AddTileSurface(adjusted_filename.c_str(), i, tileset_to_add);
+		// OK, if we are the default tileset, set value indicating that!
+		gbDefaultSurfaceUsed[i] = fUseDefault;
 	}
 }
 catch (...)
@@ -243,7 +252,7 @@ catch (...)
 }
 
 
-static void AddTileSurface(char const* const filename, UINT32 const type, TileSetID const tileset_id)
+static void AddTileSurface(const ST::string filename, UINT32 const type)
 {
 	TILE_IMAGERY*& slot = gTileSurfaceArray[type];
 
@@ -251,7 +260,7 @@ static void AddTileSurface(char const* const filename, UINT32 const type, TileSe
 	if (slot)
 	{
 		DeleteTileSurface(slot);
-		slot = 0;
+		slot = NULL;
 	}
 
 	TILE_IMAGERY* const t = LoadTileSurface(filename);
@@ -259,9 +268,6 @@ static void AddTileSurface(char const* const filename, UINT32 const type, TileSe
 	SetRaisedObjectFlag(filename, t);
 
 	slot = t;
-
-	// OK, if we are the default tileset, set value indicating that!
-	gbDefaultSurfaceUsed[type] = tileset_id == GENERIC_1;
 
 	gbNewTileSurfaceLoaded[type] = TRUE;
 }
@@ -2638,7 +2644,7 @@ void LoadMapTileset(TileSetID const id)
 	if (id == giCurrentTilesetID) return;
 
 	TILESET const& t = gTilesets[id];
-	LoadTileSurfaces(&t.TileSurfaceFilenames[0], id);
+	LoadTileSurfaces(t.zTileSurfaceFilenames, id);
 
 	// Set terrain costs
 	if (t.MovementCostFnc)

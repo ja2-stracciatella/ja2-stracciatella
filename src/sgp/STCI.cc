@@ -16,7 +16,7 @@ static SGPImage* STCILoadIndexed(UINT16 contents, HWFILE, STCIHeader const*);
 static SGPImage* STCILoadRGB(    UINT16 contents, HWFILE, STCIHeader const*);
 
 
-SGPImage* LoadSTCIFileToImage(char const* const filename, UINT16 const fContents)
+SGPImage* LoadSTCIFileToImage(const ST::string filename, UINT16 const fContents)
 {
 	AutoSGPFile f(GCM->openGameResForReading(filename));
 

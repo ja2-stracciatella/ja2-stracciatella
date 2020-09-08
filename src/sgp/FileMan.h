@@ -13,6 +13,10 @@ void FileDelete(const ST::string &path);
 
 void FileRead( SGPFile*, void*       pDest, size_t uiBytesToRead);
 void FileWrite(SGPFile*, void const* pDest, size_t uiBytesToWrite);
+
+/* Helper method to read a string from file */
+ST::string FileReadString(SGPFile* const f, size_t const uiBytesToRead);
+
 SDL_RWops* FileGetRWOps(SGPFile* const f);
 
 template<typename T, typename U> static inline void FileWriteArray(SGPFile* const f, T const& n, U const* const data)

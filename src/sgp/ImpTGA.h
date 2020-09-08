@@ -4,6 +4,6 @@
 #include "Types.h"
 
 
-SGPImage* LoadTGAFileToImage(char const* filename, UINT16 fContents);
+SGPImage* LoadTGAFileToImage(const ST::string filename, UINT16 fContents);
 
 #endif
