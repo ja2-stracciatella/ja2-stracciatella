@@ -1,10 +1,15 @@
 #ifndef __WORLDMAN_H_
 #define __WORLDMAN_H_
 
+#include "JA2Types.h"
+#include "Types.h"
 #include "WorldDef.h"
 
 #include <exception>
 #include <vector>
+
+struct SOLDIERTYPE;
+struct STRUCTURE;
 
 // memory-accounting function
 void CountLevelNodes( void );

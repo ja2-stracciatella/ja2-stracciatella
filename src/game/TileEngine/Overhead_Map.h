@@ -2,6 +2,7 @@
 #define __OVERHEADMAP_H
 
 #include "JA2Types.h"
+#include "Types.h"
 #include "World_Tileset_Enums.h"
 
 

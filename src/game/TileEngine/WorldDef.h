@@ -1,11 +1,16 @@
 #ifndef __WORLDDEF_H
 #define __WORLDDEF_H
 
-#include "JA2Types.h"
+#include "Types.h"
 #include "World_Tileset_Enums.h"
 
 #include <string_theory/string>
 
+struct ANITILE;
+struct ITEM_POOL;
+struct LIGHT_SPRITE;
+struct SOLDIERTYPE;
+struct STRUCTURE;
 
 #define WORLD_TILE_X		40
 #define WORLD_TILE_Y		20
