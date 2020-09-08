@@ -95,12 +95,12 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 
 	for (UINT32 i = 0; i < NUMBEROFTILETYPES; ++i)
 	{
-		const char* filename    = gTilesets[ubTilesetID].TileSurfaceFilenames[i];
+		ST::string  filename    = gTilesets[ubTilesetID].zTileSurfaceFilenames[i];
 		TileSetID   use_tileset = ubTilesetID;
 		if (filename[0] == '\0')
 		{
 			// Try loading from default tileset
-			filename    = gTilesets[GENERIC_1].TileSurfaceFilenames[i];
+			filename    = gTilesets[GENERIC_1].zTileSurfaceFilenames[i];
 			use_tileset = GENERIC_1;
 		}
 

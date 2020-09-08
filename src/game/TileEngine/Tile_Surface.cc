@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "HImage.h"
 #include "PODObj.h"
 #include "Structure.h"
@@ -16,6 +14,9 @@
 #include "FileMan.h"
 #include "MemMan.h"
 #include "Tile_Cache.h"
+#include <array>
+#include <stdexcept>
+#include <string_theory/format>
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -25,7 +26,7 @@
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 
 
-TILE_IMAGERY* LoadTileSurface(const char* cFilename)
+TILE_IMAGERY* LoadTileSurface(ST::string cFilename)
 try
 {
 	// Add tile surface
@@ -102,10 +103,9 @@ void DeleteTileSurface(TILE_IMAGERY* const pTileSurf)
 }
 
 
-void SetRaisedObjectFlag(char const* const filename, TILE_IMAGERY* const t)
+void SetRaisedObjectFlag(const ST::string filename, TILE_IMAGERY* const t)
 {
-	static char const RaisedObjectFiles[][9] =
-	{
+	static std::array<const ST::string, 11> raisedObjectFiles = {
 		"bones",
 		"bones2",
 		"grass2",
@@ -122,11 +122,13 @@ void SetRaisedObjectFlag(char const* const filename, TILE_IMAGERY* const t)
 	if (DEBRISWOOD != t->fType && t->fType != DEBRISWEEDS && t->fType != DEBRIS2MISC && t->fType != ANOTHERDEBRIS) return;
 
 	// Loop through array of RAISED objecttype imagery and set global value
-	ST::string rootfile(FileMan::getFileNameWithoutExt(filename));
-	for (char const (*i)[9] = RaisedObjectFiles; i != endof(RaisedObjectFiles); ++i)
+	ST::string rootfile = FileMan::getFileNameWithoutExt(filename);
+	for (ST::string i : raisedObjectFiles)
 	{
-		if (strcasecmp(*i, rootfile.c_str()) != 0) continue;
-		t->bRaisedObjectType = TRUE;
-		return;
+		if (i.compare_i(rootfile) == 0)
+		{
+			t->bRaisedObjectType = TRUE;
+			return;
+		}
 	}
 }

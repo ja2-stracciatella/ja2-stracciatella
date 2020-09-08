@@ -2,6 +2,7 @@
 #define __TILEDAT_H
 
 #include "Types.h"
+#include <string_theory/string>
 
 
 enum TileDefines
@@ -3159,7 +3160,7 @@ enum TileTypeDefines
 extern const INT16 gOpenDoorList[];
 extern const INT16 gClosedDoorList[];
 
-extern const char* const gTileSurfaceName[NUMBEROFTILETYPES];
+extern const ST::string gTileSurfaceName[NUMBEROFTILETYPES];
 extern const UINT16 gNumTilesPerType[NUMBEROFTILETYPES];
 extern UINT8 gTileTypeLogicalHeight[NUMBEROFTILETYPES];
 

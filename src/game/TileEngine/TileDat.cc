@@ -187,7 +187,7 @@ static UINT8 const gFullBaseTileValues[] =
 };
 
 
-char const* const gTileSurfaceName[NUMBEROFTILETYPES] =
+const ST::string gTileSurfaceName[NUMBEROFTILETYPES] =
 {
 	"TEXTURE1",
 	"TEXTURE2",

@@ -10,11 +10,13 @@
 
 typedef void (*TILESET_CALLBACK)(void);
 
+#define TILESET_NAME_LENGTH 32
+#define TILE_SURFACE_FILENAME_LENGTH 32
 
 struct TILESET
 {
 	ST::string       zName;
-	CHAR8            TileSurfaceFilenames[NUMBEROFTILETYPES][32];
+	ST::string       zTileSurfaceFilenames[NUMBEROFTILETYPES];
 	UINT8            ubAmbientID;
 	TILESET_CALLBACK MovementCostFnc;
 };

@@ -4,6 +4,6 @@
 #include "Types.h"
 
 
-SGPImage* LoadSTCIFileToImage(char const* filename, UINT16 fContents);
+SGPImage* LoadSTCIFileToImage(const ST::string filename, UINT16 fContents);
 
 #endif

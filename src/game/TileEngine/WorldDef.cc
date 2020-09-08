@@ -207,10 +207,10 @@ void DeinitializeWorld( )
 }
 
 
-static void AddTileSurface(char const* filename, UINT32 type, TileSetID);
+static void AddTileSurface(const ST::string filename, UINT32 type, TileSetID);
 
 
-static void LoadTileSurfaces(char const tile_surface_filenames[][32], TileSetID const tileset_id)
+static void LoadTileSurfaces(const ST::string tile_surface_filenames[NUMBEROFTILETYPES], TileSetID const tileset_id)
 try
 {
 	SetRelativeStartAndEndPercentage(0, 1, 35, "Tile Surfaces");
@@ -219,7 +219,7 @@ try
 		UINT32 const percentage = i * 100 / (NUMBEROFTILETYPES - 1);
 		RenderProgressBar(0, percentage);
 
-		char const* filename       = tile_surface_filenames[i];
+		ST::string  filename       = tile_surface_filenames[i];
 		TileSetID   tileset_to_add = tileset_id;
 		if (filename[0] == '\0')
 		{ // Use first tileset value!
@@ -227,7 +227,7 @@ try
 			// ATE: If here, don't load default surface if already loaded
 			if (gbDefaultSurfaceUsed[i]) continue;
 
-			filename       = gTilesets[GENERIC_1].TileSurfaceFilenames[i];
+			filename       = gTilesets[GENERIC_1].zTileSurfaceFilenames[i];
 			tileset_to_add = GENERIC_1;
 		}
 
@@ -243,7 +243,7 @@ catch (...)
 }
 
 
-static void AddTileSurface(char const* const filename, UINT32 const type, TileSetID const tileset_id)
+static void AddTileSurface(const ST::string filename, UINT32 const type, TileSetID const tileset_id)
 {
 	TILE_IMAGERY*& slot = gTileSurfaceArray[type];
 
@@ -2638,7 +2638,7 @@ void LoadMapTileset(TileSetID const id)
 	if (id == giCurrentTilesetID) return;
 
 	TILESET const& t = gTilesets[id];
-	LoadTileSurfaces(&t.TileSurfaceFilenames[0], id);
+	LoadTileSurfaces(t.zTileSurfaceFilenames, id);
 
 	// Set terrain costs
 	if (t.MovementCostFnc)

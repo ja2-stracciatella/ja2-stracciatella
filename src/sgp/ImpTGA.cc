@@ -18,7 +18,7 @@ static SGPImage* ReadUncompColMapImage(HWFILE, UINT8 uiImgID, UINT8 uiColMap, UI
 static SGPImage* ReadUncompRGBImage(   HWFILE, UINT8 uiImgID, UINT8 uiColMap, UINT16 fContents);
 
 
-SGPImage* LoadTGAFileToImage(char const* const filename, UINT16 const fContents)
+SGPImage* LoadTGAFileToImage(const ST::string filename, UINT16 const fContents)
 {
 	UINT8		uiImgID, uiColMap, uiType;
 
