@@ -1,21 +1,17 @@
+#include "Tile_Cache.h"
+#include "ContentManager.h"
 #include "Directories.h"
+#include "FileMan.h"
+#include "GameInstance.h"
 #include "HImage.h"
 #include "Structure.h"
-#include "TileDef.h"
-#include "Animation_Cache.h"
-#include "Animation_Data.h"
+#include "Structure_Internals.h"
 #include "Tile_Surface.h"
-#include "Tile_Cache.h"
-#include "FileMan.h"
-#include "MemMan.h"
-
-#include "ContentManager.h"
-#include "GameInstance.h"
-
-#include <string_theory/string>
-
+#include "TileDef.h"
+#include "WorldDef.h"
 #include <stdexcept>
 #include <vector>
+struct AuxObjectData;
 
 
 struct TILE_CACHE_STRUCT

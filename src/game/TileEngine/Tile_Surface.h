@@ -1,8 +1,9 @@
 #ifndef _TILE_SURFACE_H
 #define _TILE_SURFACE_H
 
-#include "WorldDef.h"
-
+#include "TileDat.h"
+#include <string_theory/string>
+struct TILE_IMAGERY;
 
 extern TILE_IMAGERY* gTileSurfaceArray[NUMBEROFTILETYPES];
 

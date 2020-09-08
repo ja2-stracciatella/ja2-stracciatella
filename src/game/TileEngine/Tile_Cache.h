@@ -1,9 +1,12 @@
 #ifndef __TILE_CACHE_H
 #define __TILE_CACHE_H
 
-#include "JA2Types.h"
 
+#include "Types.h"
 #include <string_theory/string>
+struct LEVELNODE;
+struct STRUCTURE_FILE_REF;
+struct TILE_IMAGERY;
 
 
 #define TILE_CACHE_START_INDEX 36000

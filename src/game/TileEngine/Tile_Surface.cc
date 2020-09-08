@@ -1,27 +1,21 @@
+#include "Tile_Surface.h"
+#include "ContentManager.h"
+#include "FileMan.h"
+#include "GameInstance.h"
 #include "HImage.h"
+#include "Logger.h"
 #include "PODObj.h"
 #include "Structure.h"
-#include "TileDef.h"
-#include "Tile_Surface.h"
-#include "VObject.h"
-#include "WorldDef.h"
-#include "WorldDat.h"
-#include "Debug.h"
-#include "Smooth.h"
-#include "MouseSystem.h"
+#include "Structure_Internals.h"
 #include "Sys_Globals.h"
-#include "TileDat.h"
-#include "FileMan.h"
-#include "MemMan.h"
-#include "Tile_Cache.h"
+#include "TileDef.h"
+#include "Types.h"
+#include "VObject.h"
 #include <array>
 #include <stdexcept>
 #include <string_theory/format>
 
-#include "ContentManager.h"
-#include "GameInstance.h"
 
-#include "Logger.h"
 
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 
