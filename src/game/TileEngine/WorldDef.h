@@ -221,6 +221,20 @@ struct MAP_ELEMENT
 	UINT8 ubSmellInfo;
 };
 
+/**
+ * Specifies where to load a tile surface.
+ */
+struct TILE_SURFACE_RESOURCE
+{
+	ST::string resourceFileName;  // the exact resource file name on the VFS
+	TileSetID tilesetID;  // the actual Tileset ID, after considering default tileset
+
+	// whether or not the default tileset is being used
+	BOOLEAN isDefaultTileset()
+	{
+		return tilesetID == GENERIC_1;
+	}
+};
 
 // World Data
 extern MAP_ELEMENT* gpWorldLevelData;
@@ -258,6 +272,8 @@ void CompileWorldMovementCosts(void);
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );
 void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );
 
+// Tilesets may not provide all tile types.If a tile type is not available in a tileset, we fall back and use the surface in the default tileset.
+TILE_SURFACE_RESOURCE GetAdjustedTilesetResource(TileSetID tilesetID, UINT32 uiTileType, const ST::string filePrefix = "");
 
 void LoadMapTileset(TileSetID);
 

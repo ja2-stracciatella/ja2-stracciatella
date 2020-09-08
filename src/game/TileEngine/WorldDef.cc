@@ -207,8 +207,25 @@ void DeinitializeWorld( )
 }
 
 
-static void AddTileSurface(const ST::string filename, UINT32 type, TileSetID);
+static void AddTileSurface(const ST::string filename, UINT32 const tileType);
 
+TILE_SURFACE_RESOURCE GetAdjustedTilesetResource(TileSetID tilesetID, UINT32 uiTileType, const ST::string filePrefix)
+{
+	if (tilesetID >= NUM_TILESETS) throw std::logic_error("invavlid tilesetID");
+
+	ST::string  filename = gTilesets[tilesetID].zTileSurfaceFilenames[uiTileType];
+	if (filename.empty())
+	{
+		// Try loading from default tileset
+		filename = gTilesets[GENERIC_1].zTileSurfaceFilenames[uiTileType];
+		tilesetID = GENERIC_1;
+	}
+
+	TILE_SURFACE_RESOURCE res;
+	res.tilesetID = tilesetID;
+	res.resourceFileName = GCM->getTilesetResourceName(tilesetID, filePrefix + filename);
+	return res;
+}
 
 static void LoadTileSurfaces(const ST::string tile_surface_filenames[NUMBEROFTILETYPES], TileSetID const tileset_id)
 try
@@ -219,21 +236,16 @@ try
 		UINT32 const percentage = i * 100 / (NUMBEROFTILETYPES - 1);
 		RenderProgressBar(0, percentage);
 
-		ST::string  filename       = tile_surface_filenames[i];
-		TileSetID   tileset_to_add = tileset_id;
-		if (filename[0] == '\0')
-		{ // Use first tileset value!
+		auto res = GetAdjustedTilesetResource(tileset_id, i);
+		BOOLEAN fUseDefault = res.isDefaultTileset();
 
-			// ATE: If here, don't load default surface if already loaded
-			if (gbDefaultSurfaceUsed[i]) continue;
+		// don't load default surface if already loaded
+		if (fUseDefault && gbDefaultSurfaceUsed[i]) continue;
 
-			filename       = gTilesets[GENERIC_1].zTileSurfaceFilenames[i];
-			tileset_to_add = GENERIC_1;
-		}
+		AddTileSurface(res.resourceFileName, i);
 
-		// Adjust for tileset position
-		ST::string adjusted_filename(GCM->getTilesetResourceName(tileset_to_add, filename));
-		AddTileSurface(adjusted_filename.c_str(), i, tileset_to_add);
+		// OK, if we are the default tileset, set value indicating that!
+		gbDefaultSurfaceUsed[i] = fUseDefault;
 	}
 }
 catch (...)
@@ -243,7 +255,7 @@ catch (...)
 }
 
 
-static void AddTileSurface(const ST::string filename, UINT32 const type, TileSetID const tileset_id)
+static void AddTileSurface(const ST::string filename, UINT32 const type)
 {
 	TILE_IMAGERY*& slot = gTileSurfaceArray[type];
 
@@ -251,7 +263,7 @@ static void AddTileSurface(const ST::string filename, UINT32 const type, TileSet
 	if (slot)
 	{
 		DeleteTileSurface(slot);
-		slot = 0;
+		slot = NULL;
 	}
 
 	TILE_IMAGERY* const t = LoadTileSurface(filename);
@@ -259,9 +271,6 @@ static void AddTileSurface(const ST::string filename, UINT32 const type, TileSet
 	SetRaisedObjectFlag(filename, t);
 
 	slot = t;
-
-	// OK, if we are the default tileset, set value indicating that!
-	gbDefaultSurfaceUsed[type] = tileset_id == GENERIC_1;
 
 	gbNewTileSurfaceLoaded[type] = TRUE;
 }

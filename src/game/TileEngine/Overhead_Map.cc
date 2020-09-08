@@ -12,6 +12,7 @@
 #include "Isometric_Utils.h"
 #include "RenderWorld.h"
 #include "WorldDat.h"
+#include "WorldDef.h"
 #include "VObject_Blitters.h"
 #include "Overhead_Map.h"
 #include "Interface.h"
@@ -95,20 +96,11 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 
 	for (UINT32 i = 0; i < NUMBEROFTILETYPES; ++i)
 	{
-		ST::string  filename    = gTilesets[ubTilesetID].zTileSurfaceFilenames[i];
-		TileSetID   use_tileset = ubTilesetID;
-		if (filename[0] == '\0')
-		{
-			// Try loading from default tileset
-			filename    = gTilesets[GENERIC_1].zTileSurfaceFilenames[i];
-			use_tileset = GENERIC_1;
-		}
-
-		ST::string adjusted_file(GCM->getTilesetResourceName(use_tileset, ST::string("t/") + filename));
+		auto res = GetAdjustedTilesetResource(ubTilesetID, i, "t/");
 		SGPVObject* vo;
 		try
 		{
-			vo = AddVideoObjectFromFile(adjusted_file.c_str());
+			vo = AddVideoObjectFromFile(res.resourceFileName.c_str());
 		}
 		catch (...)
 		{
