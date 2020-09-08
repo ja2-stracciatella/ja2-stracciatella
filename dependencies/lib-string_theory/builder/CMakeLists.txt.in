@@ -18,6 +18,7 @@ externalproject_add(string_theory
         "-G@CMAKE_GENERATOR@"
         "-C@CACHE_FILE@"
         "-DCMAKE_INSTALL_PREFIX=@INSTALL_PREFIX@"
+        "-DCMAKE_SYSTEM_VERSION=${CMAKE_SYSTEM_VERSION}"
         -DCMAKE_BUILD_TYPE=RelWithDebInfo
         -DST_ENABLE_STL_FILESYSTEM:BOOL=OFF
         -DST_BUILD_TESTS:BOOL=OFF

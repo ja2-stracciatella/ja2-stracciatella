@@ -18,6 +18,7 @@ externalproject_add(fltk
         "-G@CMAKE_GENERATOR@"
         "-C@CACHE_FILE@"
         "-DCMAKE_INSTALL_PREFIX=@INSTALL_PREFIX@"
+        "-DCMAKE_SYSTEM_VERSION=${CMAKE_SYSTEM_VERSION}"
         -DCMAKE_BUILD_TYPE=RelWithDebInfo
         -DOPTION_USE_GL=OFF
         -DOPTION_USE_SYSTEM_ZLIB=OFF

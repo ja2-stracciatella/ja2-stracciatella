@@ -67,7 +67,7 @@ init:
         }
         true;
 
-  - ps: $env:BUILD_SWITCHES = "-DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DVERSION_TAG=%VERSION_TAG% -DCPACK_GENERATOR=ZIP;NSIS -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake"
+  - ps: $env:BUILD_SWITCHES = "-DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DVERSION_TAG=%VERSION_TAG% -DCPACK_GENERATOR=ZIP;NSIS -DCMAKE_SYSTEM_VERSION=10.0 -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake"
   - ps: >
         if ("$env:BUILD_TYPE" -eq "Release") {
           $env:BUILD_SWITCHES = "${env:BUILD_SWITCHES} -DWITH_EDITOR_SLF=ON";
