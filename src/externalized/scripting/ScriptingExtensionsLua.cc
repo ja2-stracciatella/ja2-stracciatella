@@ -48,7 +48,7 @@ void JA2Require(std::string scriptFileName)
 	std::string scriptbody = FileMan::fileReadText(
 		AutoSGPFile(GCM->openGameResForReading(SCRIPTS_DIR "/" + scriptFileName))
 	).to_std_string();
-	lua.script(scriptbody);
+	lua.script(scriptbody, ST::format("@{}", scriptFileName).to_std_string());
 }
 
 void InitScriptingEngine()
