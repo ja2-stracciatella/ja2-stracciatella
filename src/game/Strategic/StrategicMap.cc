@@ -119,6 +119,7 @@
 #include <iterator>
 #include <map>
 #include <stdexcept>
+#include "ScriptingExtensions.h"
 
 //Used by PickGridNoToWalkIn
 #define MAX_ATTEMPTS 200
@@ -622,6 +623,8 @@ void PrepareLoadedSector()
 {
 	BOOLEAN fAddCivs = TRUE;
 	INT8 bMineIndex = -1;
+
+	BeforePrepareSector();
 
 	if( !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME ) )
 	{

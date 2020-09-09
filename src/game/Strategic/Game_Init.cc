@@ -69,6 +69,8 @@
 #include "externalized/strategic/BloodCatPlacementsModel.h"
 #include "externalized/strategic/BloodCatSpawnsModel.h"
 
+void InitScriptingEngine();
+
 UINT8			gubScreenCount=0;
 
 
@@ -309,6 +311,8 @@ void InitNewGame()
 
 	ClearTacticalMessageQueue();
 	FreeGlobalMessageList(); // Clear mapscreen messages
+
+	InitScriptingEngine();
 
 	if (gubScreenCount == 0)
 	{ // Our first time, go into laptop

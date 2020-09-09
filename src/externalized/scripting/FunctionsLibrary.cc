@@ -1,0 +1,66 @@
+#include "FunctionsLibrary.h"
+#include "Campaign_Types.h"
+#include "Handle_Items.h"
+#include "Item_Types.h"
+#include "Items.h"
+#include "Queen_Command.h"
+#include "StrategicMap.h"
+#include <stdexcept>
+#include <string>
+#include <string_theory/format>
+#include <string_theory/string>
+
+std::string GetCurrentSector()
+{
+	ST::string str = (gbWorldSectorZ > 0) ?
+		ST::format("{c}{}-{}", (gWorldSectorY + 'A' - 1), gWorldSectorX, gbWorldSectorZ) :
+		ST::format("{c}{}", (gWorldSectorY + 'A' - 1), gWorldSectorX)
+	;
+	return str.to_std_string();
+}
+
+SECTORINFO* GetSectorInfo(const std::string sectorID)
+{
+	if (!IS_VALID_SECTOR_SHORT_STRING(sectorID.c_str()))
+	{
+		ST::string err = ST::format("The given sectorID ('{}') is invalid", sectorID);
+		throw std::runtime_error(err.to_std_string());
+	}
+	UINT8 ubSector = SECTOR_FROM_SECTOR_SHORT_STRING(sectorID.c_str());
+	return &(SectorInfo[ubSector]);
+}
+
+UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(const std::string sectorID)
+{ 
+	auto pos = sectorID.find('-');
+	if (pos == std::string::npos) throw std::runtime_error("Invalid underground sectorID format");
+
+	std::string stSector = sectorID.substr(0, pos);
+	UINT8 ubSectorZ = std::stoi(sectorID.substr(pos + 1));
+	if (!IS_VALID_SECTOR_SHORT_STRING(stSector.c_str()) || ubSectorZ == 0 || ubSectorZ > 3)
+	{
+		throw std::runtime_error("Invalid underground sectorID");
+	}
+
+	UINT8 ubSector = SECTOR_FROM_SECTOR_SHORT_STRING(stSector.c_str());
+	return FindUnderGroundSector(SECTORX(ubSector), SECTORY(ubSector), ubSectorZ);
+}
+
+OBJECTTYPE* CreateItem(const UINT16 usItem, const INT8 bStatus)
+{
+	OBJECTTYPE* o = new OBJECTTYPE{};
+	CreateItem(usItem, bStatus, o);
+	return o;
+}
+
+OBJECTTYPE* CreateMoney(const UINT32 amt)
+{
+	auto o = new OBJECTTYPE{};
+	CreateMoney(amt, o);
+	return o;
+}
+
+void PlaceItem(const INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 ubVisibility)
+{
+	AddItemToPool(sGridNo, pObject, static_cast<Visibility>(ubVisibility), 0, 0, 0);
+}
