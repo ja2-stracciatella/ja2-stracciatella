@@ -12,7 +12,7 @@ configure_file(
 )
 
 # execute getter
-execute_process(COMMAND ${CMAKE_COMMAND} . "-G${CMAKE_GENERATOR}" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/getter")
+execute_process(COMMAND ${CMAKE_COMMAND} . "-G${CMAKE_GENERATOR}" "-DCMAKE_SYSTEM_VERSION=${CMAKE_SYSTEM_VERSION}" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/getter")
 execute_process(COMMAND ${CMAKE_COMMAND} --build "${CMAKE_CURRENT_BINARY_DIR}/getter")
 
 # library
