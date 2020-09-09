@@ -82,7 +82,7 @@ void InitScriptingEngine()
 
 		isLuaInitialized = true;
 	} 
-	catch (std::exception ex)
+	catch (const std::exception &ex)
 	{
 		SLOGE(ST::format("Lua script engine has failed to initialize:\n {}", ex.what()));
 		ST::string err = "The game cannot be started due to an error in the mod scripts. Check the logs for more details.";
