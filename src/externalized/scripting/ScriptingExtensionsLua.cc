@@ -143,16 +143,25 @@ static void RegisterGlobals()
 	lua.set_function("loadfile", [](void) { throw std::logic_error("loadfile is not allowed. Use JA2Require instead"); });
 }
 
+static void LogLuaMessage(LogLevel level, std::string msg) {
+		lua_Debug info;
+		// Stack position 0 is the c function we are in
+		// Stack position 1 is the calling lua script
+		lua_getstack(lua, 1, &info);
+		lua_getinfo(lua, "S", &info);
+		LogMessage(false, level, info.short_src, msg);
+}
+
 static void RegisterLogger()
 {
 	sol::table log = lua["log"].get_or_create<sol::table>();
-	log["debug"] = [](std::string msg) { SLOGD(msg); };
-	log["info"]  = [](std::string msg) { SLOGI(msg); };
-	log["warn"]  = [](std::string msg) { SLOGW(msg); };
-	log["error"] = [](std::string msg) { SLOGE(msg); };
+	log["debug"] = [](std::string msg) { LogLuaMessage(LogLevel::Debug, msg); };
+	log["info"]  = [](std::string msg) { LogLuaMessage(LogLevel::Info, msg); };
+	log["warn"]  = [](std::string msg) { LogLuaMessage(LogLevel::Warn, msg); };
+	log["error"] = [](std::string msg) { LogLuaMessage(LogLevel::Error, msg); };
 
 	// overrides the default print()
-	lua.set_function("print", [](std::string msg) { SLOGI(msg); });
+	lua.set_function("print", [](std::string msg) { LogLuaMessage(LogLevel::Info, msg); });
 }
 
 static void InvokeFunction(ST::string functionName)
