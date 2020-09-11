@@ -237,7 +237,7 @@ struct TILE_SURFACE_RESOURCE
 	// whether or not the default tileset is being used
 	BOOLEAN isDefaultTileset()
 	{
-		return tilesetID == GENERIC_1;
+		return (tilesetID == GENERIC_1 || tilesetID == DEFAULT_JA25_TILESET);
 	}
 };
 

@@ -5,6 +5,7 @@ enum TileSetID
 {
 	TILESET_INVALID = -1,
 
+	// Vanilla tilesets
 	GENERIC_1,
 	CAVES_1,
 	DESERT_1,
@@ -59,8 +60,33 @@ enum TileSetID
 	TEMP_28,
 	TEMP_29,
 	TEMP_30,
+	VANILLA_NUM_TILESETS = 50,
 
-	NUM_TILESETS
+	// Unfinished Business ("JA 2.5") tilesets
+	DEFAULT_JA25_TILESET = 50,
+	TEMP_32,
+	TEMP_33,
+	TEMP_34,
+	TEMP_35,
+	TEMP_36,
+	TEMP_37,
+	TEMP_38,
+	TEMP_39,
+	TEMP_40,
+
+	TEMP_41,
+	TEMP_42,
+	TEMP_43,
+	TEMP_44,
+	TEMP_45,
+	TEMP_46,
+	TEMP_47,
+	TEMP_48,
+	TEMP_49,
+	TEMP_50,
+
+	JA25_NUM_TILESETS = 70,
+	MAX_NUM_TILESETS = 70
 };
 
 

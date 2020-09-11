@@ -14,7 +14,8 @@
 
 // THIS FILE CONTAINS DEFINITIONS FOR TILESET FILES
 
-TILESET gTilesets[NUM_TILESETS];
+UINT8 gubNumTilesets;
+TILESET gTilesets[MAX_NUM_TILESETS];
 
 
 static void SetTilesetFourTerrainValues(void);
@@ -28,10 +29,16 @@ try
 	AutoSGPFile f(GCM->openGameResForReading(GCM->getTilesetDBResName()));
 
 	// READ # TILESETS and compare
-	UINT8 ubNumSets;
-	FileRead(f, &ubNumSets, sizeof(ubNumSets));
-	if (ubNumSets != NUM_TILESETS)
+	FileRead(f, &gubNumTilesets, sizeof(gubNumTilesets));
+	switch (gubNumTilesets)
 	{
+	case VANILLA_NUM_TILESETS:
+		SLOGD("Loading vanilla tilesets");
+		break;
+	case JA25_NUM_TILESETS:
+		SLOGI("Loading tilesets for Unfinished Business");
+		break;
+	default:
 		SET_ERROR("Number of tilesets in code does not match data file");
 		return;
 	}
@@ -46,19 +53,20 @@ try
 	}
 
 	// Loop through each tileset, load name then files
-	FOR_EACH(TILESET, ts, gTilesets)
+	for (UINT8 i = 0; i < gubNumTilesets; i++)
 	{
+		TILESET& ts = gTilesets[i];
 		//Read name
-		ts->zName = FileReadString(f, TILESET_NAME_LENGTH);
+		ts.zName = FileReadString(f, TILESET_NAME_LENGTH);
 
 		// Read ambience value
-		FileRead(f, &ts->ubAmbientID, sizeof(UINT8));
+		FileRead(f, &(ts.ubAmbientID), sizeof(UINT8));
 
 		// Loop for files
 		for (UINT32 cnt2 = 0; cnt2 < uiNumFiles; ++cnt2)
 		{
 			// Read file name
-			ts->zTileSurfaceFilenames[cnt2] = FileReadString(f, TILE_SURFACE_FILENAME_LENGTH);
+			ts.zTileSurfaceFilenames[cnt2] = FileReadString(f, TILE_SURFACE_FILENAME_LENGTH);
 		}
 	}
 

@@ -208,14 +208,17 @@ static void AddTileSurface(const ST::string filename, UINT32 const tileType);
 
 TILE_SURFACE_RESOURCE GetAdjustedTilesetResource(TileSetID tilesetID, UINT32 uiTileType, const ST::string filePrefix)
 {
-	if (tilesetID >= NUM_TILESETS) throw std::logic_error("invavlid tilesetID");
+	if (tilesetID >= gubNumTilesets) throw std::logic_error("invavlid tilesetID");
 
 	ST::string  filename = gTilesets[tilesetID].zTileSurfaceFilenames[uiTileType];
 	if (filename.empty())
 	{
 		// Try loading from default tileset
-		filename = gTilesets[GENERIC_1].zTileSurfaceFilenames[uiTileType];
-		tilesetID = GENERIC_1;
+		tilesetID = (uiTileType >= DEFAULT_JA25_TILESET || (gubNumTilesets == JA25_NUM_TILESETS && uiTileType == SPECIALTILES))
+			? DEFAULT_JA25_TILESET     //If the map uses JA25 tilesets ( 50 - 69 ) or it is SPECIALTILES (and JA25 tilesets available), use DEFAULT_JA25_TILESET
+			: GENERIC_1                //If the map uses tilesets from Ja2 ( 0 - 49 ), use t0 as the default
+		;
+		filename = gTilesets[tilesetID].zTileSurfaceFilenames[uiTileType];
 	}
 
 	TILE_SURFACE_RESOURCE res;
@@ -2633,7 +2636,7 @@ static void TrashMapTile(const INT16 MapTile)
 
 void LoadMapTileset(TileSetID const id)
 {
-	if (id >= NUM_TILESETS)
+	if (id >= gubNumTilesets)
 	{
 		throw std::logic_error("Tried to load tileset with invalid ID");
 	}
