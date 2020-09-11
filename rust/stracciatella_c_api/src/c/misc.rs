@@ -185,6 +185,13 @@ pub extern "C" fn Command_execute(program: *const c_char, args: *mut VecCString)
     no_rust_error()
 }
 
+/// Gets the path to the assets dir.
+/// Can be set via EXTRA_DATA_DIR env variable at compilation time
+#[no_mangle]
+pub extern "C" fn Env_assetsDir() -> *mut c_char {
+    c_string_from_path_or_panic(&get_assets_dir()).into_raw()
+}
+
 /// Gets the path to the current directory.
 /// On error it returns null.
 /// Sets the rust error.

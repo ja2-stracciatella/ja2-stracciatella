@@ -145,7 +145,7 @@ cmake. The supported options are:
 
 | Switch        | Description           | Default  |
 | ------------- |-------------| -----|
-| `EXTRA_DATA_DIR` | Directory to read externalized data from. Useful for creating installable packages that have a fixed data path. | `` |
+| `EXTRA_DATA_DIR` | Directory to read externalized data from relative to binary location. Useful for creating installable packages that have a fixed data path. | `` |
 | `LOCAL_SDL_LIB` | Use SDL library from this directory. | `` |
 | `WITH_UNITTESTS` | Build with unittests | `ON` |
 | `WITH_FIXMES` | Build with fixme messages | `OFF` |

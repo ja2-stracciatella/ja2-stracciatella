@@ -122,9 +122,6 @@ set(BUILD_SHARED_LIBS OFF CACHE BOOL "")
 
 set(GAME_VERSION "v${ja2-stracciatella_VERSION}")
 
-message(STATUS "Setting extra data dir to: ${EXTRA_DATA_DIR}")
-add_definitions(-DEXTRA_DATA_DIR="${EXTRA_DATA_DIR}")
-
 message(STATUS "Setting directory for libraries to: ${INSTALL_LIB_DIR}")
 add_definitions(-DINSTALL_LIB_DIR="${INSTALL_LIB_DIR}")
 
@@ -347,7 +344,7 @@ set(CPACK_NSIS_URL_INFO_ABOUT "https://ja2-stracciatella.github.io/")
 
 if(UNIX AND NOT MINGW AND NOT APPLE)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set(PACKAGE_ARCH "amd64")
+        set(PACKAGE_ARCH "x86_64")
     else()
         set(PACKAGE_ARCH "i386")
     endif()
@@ -439,6 +436,16 @@ if(APPLE)
     install(FILES ${APPLE_DIST_FILES} DESTINATION .)
     install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.8-macos/SDL2.framework DESTINATION .)
 endif()
+
+## Build AppImage
+
+add_custom_target(package-appimage
+    COMMAND rm -rf *.AppImage
+    COMMAND linuxdeploy --appdir AppDir --output appimage
+    COMMAND mv *.AppImage ${PROJECT_NAME}_${CPACK_PACKAGE_VERSION}_${PACKAGE_ARCH}.AppImage
+    WORKING_DIRECTORY "$<TARGET_FILE_DIR:${JA2_BINARY}>"
+    DEPENDS "${JA2_BINARY}"
+)
 
 ## Uninstall
 

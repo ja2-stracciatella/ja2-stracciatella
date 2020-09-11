@@ -43,8 +43,9 @@ cd ci-build
 echo "## publish ##"
 for file in ja2-stracciatella_*; do
   echo "$file"
-  if [[ "$file" == *".deb" ]]; then
-    dpkg -c "$file"
+  if [[ "$file" == *".AppImage" ]]; then
+    export PATH=$PATH:$HOME/linuxdeploy
+    appimagelint $file
   elif [[ "$file" == *".zip" ]]; then
     unzip -l "$file"
   elif [[ "$file" == *".dmg" ]]; then
