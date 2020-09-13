@@ -122,6 +122,11 @@ impl Vfs {
             true,
         );
         let assets_dir = fs::resolve_existing_components(&get_assets_dir(), None, true);
+        let home_data_dir = fs::resolve_existing_components(
+            &PathBuf::from(DATA_DIR),
+            Some(&engine_options.stracciatella_home),
+            true,
+        );
         let externalized_dir =
             fs::resolve_existing_components(Path::new(EXTERNALIZED_DIR), Some(&assets_dir), true);
         let editor_slf_path = fs::resolve_existing_components(
@@ -165,6 +170,13 @@ impl Vfs {
                     self.add_slf_files(&mod_in_externalized, false)?;
                 }
             };
+        }
+
+        // Next is home data dir (does not need to exist)
+        if home_data_dir.exists() {
+            self.add_dir(&home_data_dir)?;
+            // home data dir can include slf files
+            self.add_slf_files(&home_data_dir, false)?;
         }
 
         // Next is externalized data dir (required)
