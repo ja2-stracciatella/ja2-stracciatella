@@ -214,7 +214,7 @@ TILE_SURFACE_RESOURCE GetAdjustedTilesetResource(TileSetID tilesetID, UINT32 uiT
 	if (filename.empty())
 	{
 		// Try loading from default tileset
-		tilesetID = (uiTileType >= DEFAULT_JA25_TILESET || (gubNumTilesets == JA25_NUM_TILESETS && uiTileType == SPECIALTILES))
+		tilesetID = (tilesetID >= DEFAULT_JA25_TILESET || (gubNumTilesets == JA25_NUM_TILESETS && uiTileType == SPECIALTILES))
 			? DEFAULT_JA25_TILESET     //If the map uses JA25 tilesets ( 50 - 69 ) or it is SPECIALTILES (and JA25 tilesets available), use DEFAULT_JA25_TILESET
 			: GENERIC_1                //If the map uses tilesets from Ja2 ( 0 - 49 ), use t0 as the default
 		;
