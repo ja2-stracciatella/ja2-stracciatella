@@ -34,13 +34,6 @@ pub struct VfsInitError {
     error: io::Error,
 }
 
-/// A filesystem entry.
-#[derive(Debug)]
-pub struct VfsEntry {
-    pub order: i32,
-    pub source: VfsSource,
-}
-
 /// A source filesystem.
 #[derive(Debug)]
 pub enum VfsSource {
