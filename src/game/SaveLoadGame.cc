@@ -113,14 +113,16 @@
 #include "policy/GamePolicy.h"
 #include "sgp/StrUtils.h"
 
+#include <string_theory/format>
 #include <string_theory/string>
 
 #include <algorithm>
 #include <stdexcept>
 
-static const char g_quicksave_name[] = "QuickSave";
-static const char g_savegame_name[]  = "SaveGame";
-static const char g_savegame_ext[]   = "sav";
+static const ST::string g_backup_dir     = "Backup";
+static const ST::string g_quicksave_name = "QuickSave";
+static const ST::string g_savegame_name  = "SaveGame";
+static const ST::string g_savegame_ext   = "sav";
 
 //Global variable used
 
@@ -1386,28 +1388,31 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 
 void BackupSavedGame(UINT8 const ubSaveGameID)
 {
-	ST::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder(), "Backup");
-	FileMan::createDir(backupdir.c_str());
-	char zSourceSaveGameName[512];
-	char zSourceBackupSaveGameName[515];
-	char zTargetSaveGameName[515];
-	sprintf(zSourceSaveGameName, "%s%02d.%s", g_savegame_name, ubSaveGameID, g_savegame_ext);
+	// ensure we have the save game directory
+	ST::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder(), g_backup_dir);
+	FileMan::createDir(GCM->getSavedGamesFolder());
+	FileMan::createDir(backupdir);
+
+	ST::string zSourceSaveGameName;
+	ST::string zSourceBackupSaveGameName;
+	ST::string zTargetSaveGameName;
+	zSourceSaveGameName = ST::format("{}{02d}.{}", g_savegame_name, ubSaveGameID, g_savegame_ext);
 	for (int i = NUM_SAVE_GAME_BACKUPS - 1; i >= 0; i--)
 	{
 		if (i==0)
 		{
-			strcpy(zSourceBackupSaveGameName, zSourceSaveGameName);
+			zSourceBackupSaveGameName = zSourceSaveGameName;
 		}
 		else
 		{
-			sprintf(zSourceBackupSaveGameName, "%s.%01d", zSourceSaveGameName, i);
+			zSourceBackupSaveGameName = ST::format("{}.{01d}", zSourceSaveGameName, i);
 		}
-		sprintf(zTargetSaveGameName, "%s.%01d", zSourceSaveGameName, i+1);
+		zTargetSaveGameName = ST::format("{}.{01d}", zSourceSaveGameName, i+1);
 		// Only backup existing savegames
 		if (FileMan::checkFileExistance(i==0 ? GCM->getSavedGamesFolder() : backupdir, zSourceBackupSaveGameName))
 		{
-			FileMan::moveFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder() : backupdir, zSourceBackupSaveGameName).c_str(),
-												FileMan::joinPaths(backupdir,zTargetSaveGameName).c_str());
+			FileMan::moveFile(FileMan::joinPaths(i==0 ? GCM->getSavedGamesFolder() : backupdir, zSourceBackupSaveGameName),
+												FileMan::joinPaths(backupdir,zTargetSaveGameName));
 		}
 	}
 }
@@ -1622,30 +1627,26 @@ static void LoadWatchedLocsFromSavedGame(HWFILE const hFile)
 void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzNewFileName)
 {
 	ST::string dir = GCM->getSavedGamesFolder();
-	char const* const ext = g_savegame_ext;
 
 	switch (ubSaveGameID)
 	{
 		case 0: // we are creating the QuickSave file
 		{
-			char const* const quick = g_quicksave_name;
-			{
-				sprintf(pzNewFileName, "%s/%s.%s", dir.c_str(), quick, ext);
-			}
+			sprintf(pzNewFileName, "%s/%s.%s", dir.c_str(), g_quicksave_name.c_str(), g_savegame_ext.c_str());
 			break;
 		}
 
 		case SAVE__END_TURN_NUM:
-			sprintf(pzNewFileName, "%s/Auto%02d.%s", dir.c_str(), guiLastSaveGameNum, ext);
+			sprintf(pzNewFileName, "%s/Auto%02d.%s", dir.c_str(), guiLastSaveGameNum, g_savegame_ext.c_str());
 			guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
 			break;
 
 		case SAVE__ERROR_NUM:
-			sprintf(pzNewFileName, "%s/error.%s", dir.c_str(), ext);
+			sprintf(pzNewFileName, "%s/error.%s", dir.c_str(), g_savegame_ext.c_str());
 			break;
 
 		default:
-			sprintf(pzNewFileName, "%s/%s%02d.%s", dir.c_str(), g_savegame_name, ubSaveGameID, ext);
+			sprintf(pzNewFileName, "%s/%s%02d.%s", dir.c_str(), g_savegame_name.c_str(), ubSaveGameID, g_savegame_ext.c_str());
 			break;
 	}
 }
@@ -2339,20 +2340,19 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 	fFile2Exist = FALSE;
 
 	//The name of the file
-	char zFileName1[256];
-	sprintf(zFileName1, "%s/Auto%02d.%s", GCM->getSavedGamesFolder().c_str(), 0, g_savegame_ext);
-	char zFileName2[256];
-	sprintf(zFileName2, "%s/Auto%02d.%s", GCM->getSavedGamesFolder().c_str(), 1, g_savegame_ext);
+	ST::string zFileName1 = ST::format("{}/Auto{02d}.{}", GCM->getSavedGamesFolder(), 0, g_savegame_ext);
+	
+	ST::string zFileName2 = ST::format("{}/Auto{02d}.{}", GCM->getSavedGamesFolder(), 1, g_savegame_ext);
 
 	if( GCM->doesGameResExists( zFileName1 ) )
 	{
-		Fs_modifiedSecs( zFileName1, &LastWriteTime1 );
+		Fs_modifiedSecs( zFileName1.c_str(), &LastWriteTime1 );
 		fFile1Exist = TRUE;
 	}
 
 	if( GCM->doesGameResExists( zFileName2 ) )
 	{
-		Fs_modifiedSecs( zFileName2, &LastWriteTime2 );
+		Fs_modifiedSecs( zFileName2.c_str(), &LastWriteTime2 );
 		fFile2Exist = TRUE;
 	}
 
