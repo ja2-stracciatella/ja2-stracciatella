@@ -11,10 +11,6 @@ SGPFile* OpenTestResourceForReading(const char *filePath)
 
 ST::string GetExtraDataDir()
 {
-	ST::string extraDataDir = EXTRA_DATA_DIR;
-	if(extraDataDir.empty())
-	{
-		extraDataDir = ".";
-	}
-	return extraDataDir;
+	RustPointer<char> extraDataDir(Env_assetsDir());
+	return ST::string(extraDataDir.get());
 }

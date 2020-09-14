@@ -16,6 +16,7 @@ pub mod unicode;
 pub mod vfs;
 
 use std::default::Default;
+use std::io::ErrorKind;
 use std::path::PathBuf;
 
 use log::warn;
@@ -45,27 +46,24 @@ pub fn parse_json_config(stracciatella_home: &PathBuf) -> Result<EngineOptions, 
 /// Returns the path to the assets directory.
 /// It contains mods and externalized subdirectories.
 pub fn get_assets_dir() -> PathBuf {
-    if let Some(extra_data_dir) = option_env!("EXTRA_DATA_DIR") {
-        if !extra_data_dir.is_empty() {
-            // use directory defined at compile time
-            return extra_data_dir.into();
-        }
-    }
-    match std::env::current_exe().and_then(canonicalize) {
-        Ok(exe) => {
-            // use directory of the executable
-            if let Some(dir) = exe.parent() {
-                dir.into()
-            } else {
-                ".".into()
-            }
-        }
-        Err(err) => {
+    let extra_data_dir_env = option_env!("EXTRA_DATA_DIR").unwrap_or(".");
+    let extra_data_dir = std::env::current_exe()
+        .and_then(|exe| {
+            exe.parent()
+                .map(|p| p.join(extra_data_dir_env))
+                .ok_or_else(|| ErrorKind::NotFound.into())
+        })
+        .and_then(canonicalize);
+
+    match extra_data_dir {
+        Ok(current_exe_dir) => current_exe_dir,
+        Err(e) => {
             warn!(
-                "Defaulting assets dir to the current directory. Reason: {:?}",
-                err
+                "Defaulting assets dir to {:?} because current exe dir could not determined. Reason: {:?}",
+                extra_data_dir_env,
+                e
             );
-            ".".into()
+            extra_data_dir_env.into()
         }
     }
 }

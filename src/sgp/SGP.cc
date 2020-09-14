@@ -425,14 +425,8 @@ int main(int argc, char* argv[])
 	RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome(params.get()));
 	RustPointer<char> gameResRootPath(EngineOptions_getVanillaGameDir(params.get()));
 
-	ST::string extraDataDir = EXTRA_DATA_DIR;
-	if(extraDataDir.empty())
-	{
-		// use location of the exe file
-		extraDataDir = exeFolder;
-	}
-
-	ST::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
+	RustPointer<char> extraDataDir(Env_assetsDir());
+	ST::string externalizedDataPath = FileMan::joinPaths(extraDataDir.get(), "externalized");
 
 	FileMan::switchTmpFolder(configFolderPath.get());
 
@@ -448,12 +442,12 @@ int main(int argc, char* argv[])
 			enabledMods.emplace_back(modName.get());
 		}
 		cm = new ModPackContentManager(version,
-						enabledMods, extraDataDir, configFolderPath.get(),
+						enabledMods, extraDataDir.get(), configFolderPath.get(),
 						gameResRootPath.get(), externalizedDataPath);
 		SLOGI("------------------------------------------------------------------------------");
 		SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.get());
 		SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
-		SLOGI("Extra data directory:          '%s'", extraDataDir.c_str());
+		SLOGI("Extra data directory:          '%s'", extraDataDir.get());
 		SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
 		SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
 		SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
@@ -467,7 +461,7 @@ int main(int argc, char* argv[])
 		SLOGI("------------------------------------------------------------------------------");
 		SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.get());
 		SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
-		SLOGI("Extra data directory:          '%s'", extraDataDir.c_str());
+		SLOGI("Extra data directory:          '%s'", extraDataDir.get());
 		SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
 		SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
 		SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
@@ -478,7 +472,7 @@ int main(int argc, char* argv[])
 
 	if(EngineOptions_shouldRunEditor(params.get()))
 	{
-		RustPointer<char> path{Path_push(extraDataDir.c_str(), "editor.slf")};
+		RustPointer<char> path{Path_push(extraDataDir.get(), "editor.slf")};
 		cm->initOptionalFreeEditorSlf(path.get());
 	}
 

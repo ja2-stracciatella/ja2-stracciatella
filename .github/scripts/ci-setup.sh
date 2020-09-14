@@ -18,8 +18,19 @@ if [[ "$CI_TARGET" == "linux" ]]; then
     sudo apt-get -yq update
     sudo apt-get -yq install build-essential libsdl2-dev libfltk1.3-dev ccache
 
+    # Google Cloud SDK for Artifact Upload
     curl https://sdk.cloud.google.com | bash
     source $HOME/google-cloud-sdk/path.bash.inc
+
+    # linuxdeploy for appimage build on linux
+    mkdir $HOME/linuxdeploy
+    curl https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage -L -o $HOME/linuxdeploy/linuxdeploy
+    chmod +x $HOME/linuxdeploy/linuxdeploy
+    curl https://github.com/TheAssassin/appimagelint/releases/download/continuous/appimagelint-x86_64.AppImage -L -o $HOME/linuxdeploy/appimagelint
+    chmod +x $HOME/linuxdeploy/appimagelint
+    export PATH=$PATH:$HOME/linuxdeploy
+    linuxdeploy --version
+    appimagelint --version
 elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
     # cross compiling
     sudo apt-get -yq update

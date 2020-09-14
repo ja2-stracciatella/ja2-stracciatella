@@ -42,10 +42,9 @@ fi
 
 export RUN_TESTS=true
 export RUN_RUST_CHECKS=false
-export RUN_INSTALL_TEST=true
 export RUSTUP_INIT_ARGS="-y --no-modify-path --default-toolchain=$(cat ./rust-toolchain) --profile=minimal"
 if [[ "$CI_TARGET" == "linux" ]]; then
-  export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=/usr -DEXTRA_DATA_DIR=/usr/share/ja2 -DCPACK_GENERATOR=DEB"
+  export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=AppDir/usr -DEXTRA_DATA_DIR=../share/ja2"
   export RUN_RUST_CHECKS=true
 
 elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
@@ -67,24 +66,36 @@ cd ci-build
 $CONFIGURE_CMD ..
 cat ./CMakeCache.txt
 $BUILD_CMD $BUILD_TOOL_ARGS
-$BUILD_CMD --target package
 
 echo "## test ##"
 if [[ "$RUN_TESTS" == "true" ]]; then
-  if [[ "$RUN_INSTALL_TEST" == "true" ]]; then
-    sudo $BUILD_CMD --target install
+  if [[ "$CI_TARGET" == "linux" ]]; then
+    $BUILD_CMD --target install
   fi
   if [[ "$RUN_RUST_CHECKS" == "true" ]]; then
     $BUILD_CMD --target cargo-fmt-check
     $BUILD_CMD --target cargo-clippy
   fi
   $BUILD_CMD --target cargo-test
-  ./ja2 -unittests
-  ./ja2-launcher -help
-  if [[ "$RUN_INSTALL_TEST" == "true" ]]; then
-    sudo $BUILD_CMD --target uninstall
+  if [[ "$CI_TARGET" == "linux" ]]; then
+    ./AppDir/usr/bin/ja2 -unittests
+    ./AppDir/usr/bin/ja2-launcher -help
+  else
+    ./ja2 -unittests
+    ./ja2-launcher -help
   fi
 fi
+
+if [[ "$CI_TARGET" != "linux" ]]; then
+  $BUILD_CMD --target package
+else
+  export PATH=$PATH:$HOME/linuxdeploy
+  $BUILD_CMD --target package-appimage
+fi
+
+if [[ "$CI_TARGET" == "linux" ]]; then
+    $BUILD_CMD --target uninstall
+  fi
 
 # print ccache cache statistics
 echo "## print statistics"
