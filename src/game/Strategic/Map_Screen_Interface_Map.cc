@@ -1,6 +1,5 @@
 #include "Map_Screen_Interface_Map.h"
 
-#include "Air_Raid.h"
 #include "Assignments.h"
 #include "AutoPtr.h"
 #include "Button_System.h"
@@ -3998,7 +3997,7 @@ BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSect
 	}
 
 	// if tactically not in combat, hostile sector, or air-raid
-	if( !( gTacticalStatus.uiFlags & INCOMBAT ) && !( gTacticalStatus.fEnemyInSector ) && !InAirRaid( ) )
+	if (!(gTacticalStatus.uiFlags & INCOMBAT) && !(gTacticalStatus.fEnemyInSector))
 	{
 		// ok to redistribute
 		return( TRUE );

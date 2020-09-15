@@ -1,7 +1,6 @@
 file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 
 set(LOCAL_JA2_SOURCES
-    ${CMAKE_CURRENT_SOURCE_DIR}/Air_Raid.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Animation_Cache.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Animation_Control.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Animation_Data.cc

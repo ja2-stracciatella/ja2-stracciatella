@@ -23,7 +23,6 @@
 #include "Scheduling.h"
 #include "BobbyRGuns.h"
 #include "Arms_Dealer_Init.h"
-#include "Air_Raid.h"
 #include "Meanwhile.h"
 #include "Overhead.h"
 #include "Random.h"
@@ -211,9 +210,6 @@ BOOLEAN ExecuteStrategicEvent( STRATEGICEVENT *pEvent )
 
 		case EVENT_MAKE_CIV_GROUP_HOSTILE_ON_NEXT_SECTOR_ENTRANCE:
 			MakeCivGroupHostileOnNextSectorEntrance( (UINT8)pEvent->uiParam );
-			break;
-		case EVENT_BEGIN_AIR_RAID:
-			BeginAirRaid( );
 			break;
 		case EVENT_MEANWHILE:
 			if( !DelayEventIfBattleInProgress( pEvent ) )

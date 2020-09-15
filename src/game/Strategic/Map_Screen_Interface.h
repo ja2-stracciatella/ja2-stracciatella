@@ -451,7 +451,7 @@ enum MoveError
 	ME_BUSY            =   3,
 	ME_POW             =   5,
 	ME_TRANSIT         =   8,
-	ME_AIR_RAID        =  10,
+	ME_AIR_RAID        =  10, /** unused **/
 	ME_COMBAT          =  11,
 	ME_VEHICLE_EMPTY   =  32,
 	ME_MUSEUM          =  34,

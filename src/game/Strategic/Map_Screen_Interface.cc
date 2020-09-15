@@ -1,5 +1,4 @@
 #include "Map_Screen_Interface.h"
-#include "Air_Raid.h"
 #include "ContentManager.h"
 #include "Dialogue_Control.h"
 #include "Directories.h"
@@ -3863,8 +3862,6 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 			if (gTacticalStatus.fEnemyInSector) return ME_ENEMY;
 			// Bloodcat ambush?
 			if (gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE && HostileBloodcatsPresent()) return ME_COMBAT;
-			// Air raid in loaded sector where character is?
-			if (InAirRaid()) return ME_AIR_RAID;
 		}
 
 		// Not necessarily loaded - if there are any hostiles there

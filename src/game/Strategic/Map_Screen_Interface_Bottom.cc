@@ -881,13 +881,6 @@ BOOLEAN AllowedToTimeCompress( void )
 	// no mercs have ever been hired
 	if (!gfAtLeastOneMercWasHired) return FALSE;
 
-/*
-	//in air raid
-	if (InAirRaid())
-	{
-		return( FALSE );
-	}
-*/
 
 	// no usable mercs on team!
 	if ( !AnyUsableRealMercenariesOnTeam() )
@@ -1136,21 +1129,11 @@ BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere const bExitToWhere)
 		return( FALSE );
 	}
 
-/*
-	// air raid starting
-	if( gubAirRaidMode == AIR_RAID_START )
-	{
-		// nope
-		return( FALSE );
-	}
-*/
-
-
 	// the following tests apply to going tactical screen only
 	if ( bExitToWhere == MAP_EXIT_TO_TACTICAL )
 	{
 		// if in battle or bloodcat ambush, the ONLY sector we can go tactical in is the one that's loaded
-		BOOLEAN fBattleGoingOn = gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fEnemyInSector || (gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE && HostileBloodcatsPresent())/*|| InAirRaid( )*/;
+		BOOLEAN fBattleGoingOn = gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fEnemyInSector || (gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE && HostileBloodcatsPresent());
 		BOOLEAN fCurrentSectorSelected = sSelMapX == gWorldSectorX && sSelMapY == gWorldSectorY && ((UINT8)iCurrentMapSectorZ) == gbWorldSectorZ;
 		if (fBattleGoingOn && !fCurrentSectorSelected)
 		{
