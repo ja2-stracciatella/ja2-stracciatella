@@ -36,7 +36,7 @@ enum StrategicEventKind
 	EVENT_BEGINRAINSTORM                                 = 37,
 	EVENT_ENDRAINSTORM                                   = 38,
 	EVENT_MAKE_CIV_GROUP_HOSTILE_ON_NEXT_SECTOR_ENTRANCE = 41,
-	EVENT_BEGIN_AIR_RAID                                 = 42,
+	EVENT_BEGIN_AIR_RAID                                 = 42, /** unused **/
 	EVENT_MEANWHILE                                      = 44,
 	EVENT_CREATURE_SPREAD                                = 46,
 	EVENT_CREATURE_NIGHT_PLANNING                        = 48,

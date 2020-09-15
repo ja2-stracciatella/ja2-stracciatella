@@ -1,4 +1,3 @@
-#include "Air_Raid.h"
 #include "AI.h"
 #include "Animated_ProgressBar.h"
 #include "Animation_Data.h"
@@ -394,7 +393,8 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 
 		SavePhysicsTableToSaveGameFile(f);
 
-		SaveAirRaidInfoToSaveGameFile(f);
+		BYTE emptyData[132] = {};
+		FileWrite(f, emptyData, 132); // it used to be Air Raid data
 
 		SaveTeamTurnsToTheSaveGameFile(f);
 
@@ -807,7 +807,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	BAR(1, "Air Raid Info...");
 	if (version	>= 24)
 	{
-		LoadAirRaidInfoFromSaveGameFile(f);
+		FileSeek(f, 132, FILE_SEEK_FROM_CURRENT);
 	}
 
 	BAR(0, "Team Turn Info...");

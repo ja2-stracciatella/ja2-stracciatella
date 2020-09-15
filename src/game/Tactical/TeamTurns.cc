@@ -29,7 +29,6 @@
 #include "Soldier_Profile_Type.h"
 #include "SmokeEffects.h"
 #include "LightEffects.h"
-#include "Air_Raid.h"
 #include "Meanwhile.h"
 #include "SkillCheck.h"
 #include "AIInternals.h"
@@ -302,17 +301,11 @@ void BeginTeamTurn( UINT8 ubTeam )
 	{
 		if ( ubTeam > LAST_TEAM )
 		{
-			if ( HandleAirRaidEndTurn( ubTeam ) )
-			{
-				// End turn!!
-				ubTeam = OUR_TEAM;
-				gTacticalStatus.ubCurrentTeam = OUR_TEAM;
-				EndTurnEvents();
-			}
-			else
-			{
-				break;
-			}
+			// End turn!!
+			ubTeam = OUR_TEAM;
+			gTacticalStatus.ubCurrentTeam = OUR_TEAM;
+			EndTurnEvents();
+
 		}
 		else if (!IsTeamActive(ubTeam))
 		{

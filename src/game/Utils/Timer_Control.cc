@@ -49,9 +49,6 @@ const INT32 giTimerIntervals[NUMTIMERS] =
 // TIMER COUNTERS
 INT32 giTimerCounters[NUMTIMERS];
 
-INT32 giTimerAirRaidQuote       = 0;
-INT32 giTimerAirRaidDiveStarted = 0;
-INT32 giTimerAirRaidUpdate      = 0;
 INT32 giTimerCustomizable       = 0;
 INT32 giTimerTeamTurnUpdate     = 0;
 
@@ -86,9 +83,6 @@ static UINT32 TimeProc(UINT32 const interval, void*)
 		}
 
 		// Update some specialized countdown timers...
-		UPDATETIMECOUNTER(giTimerAirRaidQuote);
-		UPDATETIMECOUNTER(giTimerAirRaidDiveStarted);
-		UPDATETIMECOUNTER(giTimerAirRaidUpdate);
 		UPDATETIMECOUNTER(giTimerTeamTurnUpdate);
 
 		if (gpCustomizableTimerCallback)

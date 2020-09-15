@@ -88,7 +88,6 @@
 #include "JAScreens.h"
 #include "Arms_Dealer_Init.h"
 #include "Interface_Utils.h"
-#include "Air_Raid.h"
 #include "Civ_Quotes.h"
 #include "Drugs_And_Alcohol.h"
 #include "History.h"
@@ -441,7 +440,6 @@ void InitOverhead()
 		team.last_merc_to_radio = 0;
 	}
 
-	gfInAirRaid                 = FALSE;
 	gpCustomizableTimerCallback = 0;
 
 	// Reset cursor

@@ -28,7 +28,6 @@
 #include "Strategic_Exit_GUI.h"
 #include "Strategic_Movement.h"
 #include "Tactical_Placement_GUI.h"
-#include "Air_Raid.h"
 #include "Game_Clock.h"
 #include "Game_Init.h"
 #include "Interface_Control.h"
@@ -429,11 +428,6 @@ ScreenID MainGameScreenHandle(void)
 	{
 		HandleOverheadMap( );
 		return( GAME_SCREEN );
-	}
-
-	if ( !ARE_IN_FADE_IN( ) )
-	{
-		HandleAirRaid( );
 	}
 
 	if ( gfGameScreenLocateToSoldier )

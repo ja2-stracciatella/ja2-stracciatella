@@ -54,7 +54,6 @@
 #include "Arms_Dealer_Init.h"
 #include "BobbyR.h"
 #include "HelpScreen.h"
-#include "Air_Raid.h"
 #include "Interface.h"
 #include "Cheats.h"
 #include "SoundMan.h"
@@ -416,10 +415,6 @@ void ReStartingGame()
 
 	EmptyDialogueQueue( );
 
-	if ( InAirRaid( ) )
-	{
-		EndAirRaid( );
-	}
 
 	//Make sure the game starts in the TEAM panel ( it wasnt being reset )
 	gsCurInterfacePanel = TEAM_PANEL;
