@@ -613,8 +613,6 @@ void DrawMap(void)
 
 void GetScreenXYFromMapXY( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16 *psY )
 {
-	INT16 sXTempOff=1;
-	INT16 sYTempOff=1;
 	*psX = ( sMapX * MAP_GRID_X ) + MAP_VIEW_START_X;
 	*psY = ( sMapY * MAP_GRID_Y ) + MAP_VIEW_START_Y;
 }
@@ -1497,7 +1495,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	INT32 iArrow=-1;
 	INT32 iX = 0, iY = 0;
 	INT32 iPastX, iPastY;
-	INT16 sX = 0, sY = 0;
 	INT32 iArrowX, iArrowY;
 	INT32 iDeltaA, iDeltaB, iDeltaB1;
 	INT32 iDirection = -1;
@@ -2091,11 +2088,6 @@ void RestoreBackgroundForMapGrid( INT16 sMapX, INT16 sMapY )
 
 void ClipBlitsToMapViewRegion( void )
 {
-	// the standard mapscreen rectangle doesn't work for clipping while zoomed...
-	SGPRect ZoomedMapScreenClipRect={(UINT16)(MAP_VIEW_START_X + MAP_GRID_X),
-						(UINT16)(MAP_VIEW_START_Y + MAP_GRID_Y - 1),
-						(UINT16)(MAP_VIEW_START_X + MAP_VIEW_WIDTH + MAP_GRID_X),
-						(UINT16)(MAP_VIEW_START_Y + MAP_VIEW_HEIGHT + MAP_GRID_Y - 10) };
 	SGPRect *pRectToUse = &MapScreenRect;
 
 	SetClippingRect( pRectToUse );
