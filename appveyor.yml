@@ -32,6 +32,17 @@ matrix:
 clone_folder: c:\projects\ja2-stracciatella
 clone_depth: 1
 
+cache:
+  # rust and cargo
+  - '%USERPROFILE%\.cargo\bin\ -> rust\Cargo.lock, rust\Cargo.toml'
+  - '%USERPROFILE%\.cargo\registry\index\ -> rust\Cargo.lock, rust\Cargo.toml'
+  - '%USERPROFILE%\.cargo\registry\cache\ -> rust\Cargo.lock, rust\Cargo.toml'
+  - '%USERPROFILE%\.cargo\git\db\ -> rust\Cargo.lock, rust\Cargo.toml'
+  - '%USERPROFILE%\.rustup\ -> rust-toolchain'
+  # lib-fltk
+  - 'C:\projects\ja2-stracciatella\ci-build\lib-fltk\ -> dependencies\lib-fltk\CMakeLists.txt, dependencies\lib-fltk\builder\CMakeLists.txt.in'
+  - 'C:\projects\ja2-stracciatella\ci-build\dependencies\lib-fltk\ -> dependencies\lib-fltk\CMakeLists.txt, dependencies\lib-fltk\builder\CMakeLists.txt.in'
+
 skip_commits:
   # appveyor only searches for tags in the first line by default
   message: /\[ci skip\]/
@@ -101,6 +112,7 @@ install:
   - cmd: gcloud version
 
 before_build:
+  - cmd: setlocal enableextensions
   - cmd: mkdir ci-build
   - cmd: cd ci-build
   - cmd: cmake %BUILD_SWITCHES% ..
