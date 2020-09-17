@@ -79,17 +79,14 @@ before_install:
     fi
 
   - export BUILD_SWITCHES="-DCMAKE_BUILD_TYPE=$BUILD_TYPE -DVERSION_TAG=$VERSION_TAG"
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
       export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_INSTALL_PREFIX=AppDir/usr -DEXTRA_DATA_DIR=../share/ja2";
     fi
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" == "true" ]; then
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" == "true" ]; then
       export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP";
     fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
       export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle";
-    fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]] && [ "$TRAVIS_MINGW" == "true" ]; then
-      export BUILD_SWITCHES="$BUILD_SWITCHES -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-mingw.cmake -DCPACK_GENERATOR=ZIP";
     fi
   - if [[ "$BUILD_TYPE" == "Release" ]]; then
       export BUILD_SWITCHES="$BUILD_SWITCHES -DWITH_EDITOR_SLF=ON";
@@ -137,8 +134,8 @@ script:
   - mkdir ci-build && cd ci-build
   - cmake $BUILD_SWITCHES ..;
   - make
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
-      sudo make install;
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
+      make install;
     fi
   - make cargo-fmt-check;
   - if [ "$TRAVIS_MINGW" != "true" ]; then
@@ -148,7 +145,7 @@ script:
       make cargo-test;
     fi
   - if [ "$TRAVIS_MINGW" != "true" ]; then
-      if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      if [ "$TRAVIS_OS_NAME" == "linux" ]; then
         ./AppDir/usr/bin/ja2 -unittests && ./AppDir/usr/bin/ja2-launcher -help;
       else
         ./ja2 -unittests && ./ja2-launcher -help;
@@ -159,8 +156,8 @@ script:
     else
       make package;
     fi
-  - if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
-      sudo make uninstall;
+  - if [ "$TRAVIS_OS_NAME" == "linux" ] && [ "$TRAVIS_MINGW" != "true" ]; then
+      make uninstall;
     fi
 
 after_success:
