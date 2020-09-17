@@ -148,7 +148,7 @@ script:
       make cargo-test;
     fi
   - if [ "$TRAVIS_MINGW" != "true" ]; then
-      if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+      if [ "$PUBLISH_BINARY" == "true" ] && [ "$TRAVIS_OS_NAME" == "linux" ]; then
         ./AppDir/usr/bin/ja2 -unittests && ./AppDir/usr/bin/ja2-launcher -help;
       else
         ./ja2 -unittests && ./ja2-launcher -help;

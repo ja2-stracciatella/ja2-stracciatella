@@ -443,7 +443,7 @@ add_custom_target(package-appimage
     COMMAND rm -rf *.AppImage
     COMMAND linuxdeploy --appdir AppDir --output appimage
     COMMAND mv *.AppImage ${PROJECT_NAME}_${CPACK_PACKAGE_VERSION}_${PACKAGE_ARCH}.AppImage
-    WORKING_DIRECTORY "$<TARGET_FILE_DIR:${JA2_BINARY}>"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
     DEPENDS "${JA2_BINARY}"
 )
 
