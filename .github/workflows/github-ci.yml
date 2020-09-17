@@ -57,13 +57,15 @@ jobs:
       uses: actions/cache@v2
       with:
         path: |
-          ~/.cargo
+          ~/.cargo/bin
+          ~/.cargo/registry/index
+          ~/.cargo/registry/cache
+          ~/.cargo/git/db
           ~/.rustup
-          ${{ github.workspace }}/ci-build/dependencies/lib-stracciatella/target
-        key: ${{ matrix.cfg.target }}-rust-v1-${{ hashFiles('rust') }}
+        key: ${{ matrix.cfg.target }}-rust-v2-${{ hashFiles('rust') }}
         restore-keys: |
-          ${{ matrix.cfg.target }}-rust-v1-${{ hashFiles('rust') }}
-          ${{ matrix.cfg.target }}-rust-v1-
+          ${{ matrix.cfg.target }}-rust-v2-${{ hashFiles('rust') }}
+          ${{ matrix.cfg.target }}-rust-v2-
 
     - name: Set up environment
       shell: bash
