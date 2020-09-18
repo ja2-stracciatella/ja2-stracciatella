@@ -98,6 +98,8 @@ bool IsThisSectorASAMSector(INT16 x, INT16 y, INT8 z);
 
 void InitializeSAMSites();
 
+bool DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const gridno);
+
 // Number of sectors this town takes up
 UINT8 GetTownSectorSize(INT8 town_id);
 

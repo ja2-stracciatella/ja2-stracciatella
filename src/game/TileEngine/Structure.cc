@@ -1258,8 +1258,7 @@ BOOLEAN DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason 
 		damage = 0;
 	}
 
-	// Look for a SAM site, update
-	UpdateAndDamageSAMIfFound(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, grid_no, damage);
+	OnStructureDamaged(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, grid_no, damage);
 
 	// Find the base so we can reduce the hit points!
 	STRUCTURE* const base = FindBaseStructure(s);
