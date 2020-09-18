@@ -349,7 +349,7 @@ set(CPACK_NSIS_URL_INFO_ABOUT "https://ja2-stracciatella.github.io/")
 
 if(UNIX AND NOT MINGW AND NOT APPLE)
     if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-        set(PACKAGE_ARCH "x86_64")
+        set(PACKAGE_ARCH "x86-64")
     else()
         set(PACKAGE_ARCH "i386")
     endif()
