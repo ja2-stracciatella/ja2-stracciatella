@@ -32,6 +32,19 @@ matrix:
 clone_folder: c:\projects\ja2-stracciatella
 clone_depth: 1
 
+cache:
+  # rust and cargo
+  - '%USERPROFILE%\.cargo\bin\ -> rust\Cargo.lock, rust\Cargo.toml'
+  - '%USERPROFILE%\.cargo\registry\index\ -> rust\Cargo.lock, rust\Cargo.toml'
+  - '%USERPROFILE%\.cargo\registry\cache\ -> rust\Cargo.lock, rust\Cargo.toml'
+  - '%USERPROFILE%\.cargo\git\db\ -> rust\Cargo.lock, rust\Cargo.toml'
+  - '%USERPROFILE%\.rustup\ -> rust-toolchain'
+  # lib-fltk
+  - 'C:\projects\ja2-stracciatella\ci-build\lib-fltk\ -> dependencies\lib-fltk\CMakeLists.txt, dependencies\lib-fltk\builder\CMakeLists.txt.in'
+  - 'C:\projects\ja2-stracciatella\ci-build\dependencies\lib-fltk\ -> dependencies\lib-fltk\CMakeLists.txt, dependencies\lib-fltk\builder\CMakeLists.txt.in'
+  # sccache
+  - '%LOCALAPPDATA%\Mozilla\sccache'
+
 skip_commits:
   # appveyor only searches for tags in the first line by default
   message: /\[ci skip\]/
@@ -83,6 +96,9 @@ init:
   - cmd: echo "%BUILD_SWITCHES%"
 
 install:
+  - cmd: choco install sccache
+  - cmd: set SCCACHE_CACHE_SIZE=500M
+
   - ps: $rustVersion = Get-Content .\rust-toolchain -Raw
   - ps: $env:RUSTUP_TOOLCHAIN = "${rustVersion}-${env:RUST_TARGET}";
 
@@ -98,15 +114,18 @@ install:
   - cmd: rustc -V
   - cmd: cargo -V
   - cmd: cmake --version
+  - cmd: sccache -V
   - cmd: gcloud version
 
 before_build:
-  - cmd: mkdir ci-build
+  - cmd: if not exist ci-build md ci-build
   - cmd: cd ci-build
   - cmd: cmake %BUILD_SWITCHES% ..
 
 build_script:
+  - cmd: set RUSTC_WRAPPER=sccache
   - ps: cmake --build c:\projects\ja2-stracciatella\ci-build --target ALL_BUILD --config ${env:BUILD_TYPE}
+  - cmd: sccache -s
 
 test_script:
   - cmd: cmake --build . --target cargo-test
