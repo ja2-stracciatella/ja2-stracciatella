@@ -17,8 +17,13 @@ endmacro()
 
 ## Project Setup
 
+# compiler caching
 find_program(CCACHE_PROGRAM "ccache")
-if(CCACHE_PROGRAM)
+find_program(SCCACHE_PROGRAM "sccache")
+if(SCCACHE_PROGRAM)
+    message(STATUS "sccache found at ${SCCACHE_PROGRAM}")
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${SCCACHE_PROGRAM}")
+elseif(CCACHE_PROGRAM)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
 endif()
 
