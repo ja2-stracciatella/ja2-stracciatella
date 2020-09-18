@@ -13,6 +13,7 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/MercTextBox.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Message.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Music_Control.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/Observable.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/PopUpBox.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Quantize.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/STIConvert.cc

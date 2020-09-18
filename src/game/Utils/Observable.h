@@ -1,7 +1,11 @@
 #pragma once
 
+#include "Logger.h"
 #include <functional>
-#include <vector>
+#include <map>
+#include <stdexcept>
+#include <string_theory/format>
+#include <string_theory/string>
 
 namespace _observable
 {
@@ -20,11 +24,13 @@ class Observable
 public:
 	/**
 	 * @brief Register a function to be called when callback is invoked
+	 * @param key a key identifier one callback. Callback is replaced if there is an existing one with the same key
 	 * @param callback a Callable taking the expected args
+	 * @return the current instance for method chaining
 	 */
-	Observable<ARG1, ARGS...> listen(std::function<void(ARG1, ARGS...)> callback)
+	Observable<ARG1, ARGS...> addListener(const ST::string key, std::function<void(ARG1, ARGS...)> callback)
 	{
-		observers.push_back(callback);
+		listeners[key] = callback;
 		return *this;
 	}
 
@@ -32,21 +38,41 @@ public:
 	 * @brief This override is only available with 'Observable<>'
 	 * @throw logic_error
 	 */
-	Observable<ARG1, ARGS...> listen(std::function<void()> callback)
+	Observable<ARG1, ARGS...> addListener(const ST::string key, const std::function<void()> callback)
 	{
-		throw new std::logic_error("no-args callback only allowed with 'Observable<>'");
+		throw std::logic_error("no-args callback only allowed with 'Observable<>'");
 	}
 
 	/**
-	 * @brief Notifies all the registered callbacks, in the same order as registration
+	 * @brief Un-registers a listen identified by the given key
+	 * @param key 
+	 * @return the current instance for method chaining
+	*/
+	Observable<ARG1, ARGS...> removeListener(const ST::string key)
+	{
+		if (listeners.find(key) == listeners.end())
+		{
+			SLOGW(ST::format("There is no listener for key '{}'", key));
+			return *this;
+		}
+
+		listeners.erase(key);
+		return *this;
+	}
+
+	/**
+	 * @brief Notifies all the registered callbacks, in lexical order of the listener keys
 	 * @tparam ARG1 first argument to the callback; uses default value if skipped
 	 * @tparam ...ARGS the remaining arguments to pass to the callback 
 	 */
 	void notify(ARG1 arg1 = ARG1(), ARGS... args) const
 	{
-		for (auto f : observers)
+	    if (listeners.empty())
+	        SLOGD("Observable has no listeners");
+
+		for (auto l : listeners)
 		{
-			f(arg1, args...);
+			l.second(arg1, args...);
 		}
 	}
 
@@ -66,21 +92,10 @@ public:
 	 */
 	Observable<ARG1, ARGS...>& reset()
 	{
-		observers.clear();
+		listeners.clear();
 		return *this;
 	}
 
 private:
-	std::vector<std::function<void(ARG1, ARGS...)>> observers;
+	std::map<const ST::string, std::function<void(ARG1, ARGS...)>> listeners;
 };
-
-/**
- * @brief Specialized listen() override for no-args callbacks. This can only be used with 'Observable<>'
- * @param callback a Callable taking no arguments
- * @return the current instance for method chaining
-*/
-template<>
-Observable<_observable::Nil> Observable<_observable::Nil>::listen(std::function<void()> f)
-{
-	return listen([f](_observable::Nil) { f(); });
-}
