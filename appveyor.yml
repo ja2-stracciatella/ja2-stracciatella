@@ -11,14 +11,13 @@ environment:
     secure: "mXNwsLAU0N1u1oFv4e/QwF6HfMCT39c3La/pniJTgOaQB2Y3LvoPWDvU5JbhF4yQ"
   GITHUB_ACCESS_TOKEN:
     secure: "fcDy5AgkBH9bKqdsbwv9piWbN6ksoUKk+iky/DQmk3YG3UNl68BegfkYUzSF3rJ7"
+  CMAKE_GENERATOR: Ninja
   matrix:
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      CMAKE_GENERATOR: Visual Studio 16 2019
-      CMAKE_GENERATOR_PLATFORM: Win32
+      CMAKE_GENERATOR_PLATFORM: x86
       RUST_TARGET: i686-pc-windows-msvc
     - APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      CMAKE_GENERATOR: Visual Studio 16 2019
-      CMAKE_GENERATOR_PLATFORM: x64
+      CMAKE_GENERATOR_PLATFORM: amd64
       RUST_TARGET: x86_64-pc-windows-msvc
 
 branches:
@@ -39,9 +38,6 @@ cache:
   - '%USERPROFILE%\.cargo\registry\cache\ -> rust\Cargo.lock, rust\Cargo.toml'
   - '%USERPROFILE%\.cargo\git\db\ -> rust\Cargo.lock, rust\Cargo.toml'
   - '%USERPROFILE%\.rustup\ -> rust-toolchain'
-  # lib-fltk
-  - 'C:\projects\ja2-stracciatella\ci-build\lib-fltk\ -> dependencies\lib-fltk\CMakeLists.txt, dependencies\lib-fltk\builder\CMakeLists.txt.in'
-  - 'C:\projects\ja2-stracciatella\ci-build\dependencies\lib-fltk\ -> dependencies\lib-fltk\CMakeLists.txt, dependencies\lib-fltk\builder\CMakeLists.txt.in'
   # sccache
   - '%LOCALAPPDATA%\Mozilla\sccache'
 
@@ -55,37 +51,37 @@ init:
 
   - ps: $env:CI_REF = "refs/heads/${env:APPVEYOR_REPO_BRANCH}";
   - ps: >
-        if (Test-Path Env:\APPVEYOR_PULL_REQUEST_NUMBER) {
-          $env:PUBLISH_BINARY = "true";
-          $env:PUBLISH_DIR = "pull-requests/${env:APPVEYOR_PULL_REQUEST_NUMBER}/";
-          $env:VERSION_TAG = "${env:APPVEYOR_PULL_REQUEST_NUMBER}pullrequest";
-          $env:CI_REF = "refs/pull/${env:APPVEYOR_PULL_REQUEST_NUMBER}";
-        }
-        true;
+      if (Test-Path Env:\APPVEYOR_PULL_REQUEST_NUMBER) {
+        $env:PUBLISH_BINARY = "true";
+        $env:PUBLISH_DIR = "pull-requests/${env:APPVEYOR_PULL_REQUEST_NUMBER}/";
+        $env:VERSION_TAG = "${env:APPVEYOR_PULL_REQUEST_NUMBER}pullrequest";
+        $env:CI_REF = "refs/pull/${env:APPVEYOR_PULL_REQUEST_NUMBER}";
+      }
+      true;
   - ps: >
-        if ("$env:APPVEYOR_REPO_BRANCH" -eq "nightly") {
-          $env:BUILD_TYPE = "Release";
-          $env:PUBLISH_BINARY = "true";
-          $env:PUBLISH_DIR = "nightlies/";
-          $env:VERSION_TAG = "$(Get-Date -UFormat "%Y%m%d")";
-        }
-        true;
+      if ("$env:APPVEYOR_REPO_BRANCH" -eq "nightly") {
+        $env:BUILD_TYPE = "Release";
+        $env:PUBLISH_BINARY = "true";
+        $env:PUBLISH_DIR = "nightlies/";
+        $env:VERSION_TAG = "$(Get-Date -UFormat "%Y%m%d")";
+      }
+      true;
   - ps: >
-        if ("$env:APPVEYOR_REPO_TAG" -eq "true") {
-          $env:BUILD_TYPE = "Release";
-          $env:PUBLISH_BINARY = "true";
-          $env:PUBLISH_DIR = "releases/${env:APPVEYOR_REPO_TAG_NAME}/";
-          $env:VERSION_TAG = "";
-          $env:CI_REF = "refs/tags/${env:APPVEYOR_REPO_TAG_NAME}";
-        }
-        true;
+      if ("$env:APPVEYOR_REPO_TAG" -eq "true") {
+        $env:BUILD_TYPE = "Release";
+        $env:PUBLISH_BINARY = "true";
+        $env:PUBLISH_DIR = "releases/${env:APPVEYOR_REPO_TAG_NAME}/";
+        $env:VERSION_TAG = "";
+        $env:CI_REF = "refs/tags/${env:APPVEYOR_REPO_TAG_NAME}";
+      }
+      true;
 
-  - ps: $env:BUILD_SWITCHES = "-DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DVERSION_TAG=%VERSION_TAG% -DCPACK_GENERATOR=ZIP;NSIS -DCMAKE_SYSTEM_VERSION=10.0 -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake"
+  - ps: $env:BUILD_SWITCHES = "-DCMAKE_BUILD_TYPE=%BUILD_TYPE% -DVERSION_TAG=%VERSION_TAG% -DCPACK_GENERATOR=ZIP;NSIS -DCMAKE_SYSTEM_VERSION=10.0 -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-msvc.cmake -DLIBSTRACCIATELLA_TARGET=%RUST_TARGET%"
   - ps: >
-        if ("$env:BUILD_TYPE" -eq "Release") {
-          $env:BUILD_SWITCHES = "${env:BUILD_SWITCHES} -DWITH_EDITOR_SLF=ON";
-        }
-        true;
+      if ("$env:BUILD_TYPE" -eq "Release") {
+        $env:BUILD_SWITCHES = "${env:BUILD_SWITCHES} -DWITH_EDITOR_SLF=ON";
+      }
+      true;
 
   - ps: $env:CLOUDSDK_CORE_DISABLE_PROMPTS = 1
 
@@ -120,20 +116,19 @@ install:
 before_build:
   - cmd: if not exist ci-build md ci-build
   - cmd: cd ci-build
-  - cmd: cmake %BUILD_SWITCHES% ..
+  - cmd: '"C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Auxiliary\Build\vcvarsall.bat" %CMAKE_GENERATOR_PLATFORM%'
+  - cmd: cmake -G %CMAKE_GENERATOR% %BUILD_SWITCHES% ..
 
 build_script:
-  - cmd: set RUSTC_WRAPPER=sccache
-  - ps: cmake --build c:\projects\ja2-stracciatella\ci-build --target ALL_BUILD --config ${env:BUILD_TYPE}
-  - cmd: sccache -s
+  - ps: cmake --build c:\projects\ja2-stracciatella\ci-build --target all --config ${env:BUILD_TYPE}
 
 test_script:
   - cmd: cmake --build . --target cargo-test
-  - cmd: cd %BUILD_TYPE%
   - cmd: ja2.exe -unittests
   - cmd: ja2-launcher.exe -help
 
 after_test:
+  - cmd: sccache -s
   - ps: cmake --build c:\projects\ja2-stracciatella\ci-build --target package
   - ps: cd c:\projects\ja2-stracciatella
   - ps: bash .ci\ci-publish.sh

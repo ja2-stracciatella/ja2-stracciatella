@@ -11,12 +11,17 @@ set -x
 echo "CI_TARGET: $CI_TARGET"
 
 export CLOUDSDK_CORE_DISABLE_PROMPTS=1
+SCCACHE_VERSION="0.2.13"
+SCCACHE_LINUX_PACKAGE="sccache-${SCCACHE_VERSION}-x86_64-unknown-linux-musl"
 
 echo "## prepare environment ##"
 export RUSTUP_INIT_ARGS="-y --no-modify-path --default-toolchain=$(cat ./rust-toolchain)"
 if [[ "$CI_TARGET" == "linux" ]]; then
     sudo apt-get -yq update
-    sudo apt-get -yq install build-essential libsdl2-dev libfltk1.3-dev ccache
+    sudo apt-get -yq install build-essential libsdl2-dev libfltk1.3-dev
+    
+    # sccache
+    curl -Ls "https://github.com/mozilla/sccache/releases/download/${SCCACHE_VERSION}/${SCCACHE_LINUX_PACKAGE}.tar.gz" | sudo tar zx --strip-component=1 -C /usr/bin/
 
     # Google Cloud SDK for Artifact Upload
     curl https://sdk.cloud.google.com | bash
@@ -35,13 +40,16 @@ elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
     # cross compiling
     sudo apt-get -yq update
     sudo apt-get -yq install build-essential mingw-w64
-    sudo apt-get -yq install ccache
+
+    # sccache
+    curl -Ls "https://github.com/mozilla/sccache/releases/download/${SCCACHE_VERSION}/${SCCACHE_LINUX_PACKAGE}.tar.gz" | sudo tar zx --strip-component=1 -C /usr/bin/
+    
     export RUSTUP_INIT_ARGS="${RUSTUP_INIT_ARGS} --target=x86_64-pc-windows-gnu"
 
     curl https://sdk.cloud.google.com | bash
     source $HOME/google-cloud-sdk/path.bash.inc
 elif [[ "$CI_TARGET" == "mac" ]]; then
-    brew install ccache
+    brew install sccache
     brew cask install google-cloud-sdk
     source "$(brew --prefix)/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.bash.inc"
 else
@@ -67,5 +75,5 @@ cargo clippy -- -V
 cargo fmt -- -V
 which cmake
 cmake --version
-command -v ccache && ccache -V || echo "ccache not available"
+command -v sccache && sccache -V || echo "sccache not available"
 gcloud version
