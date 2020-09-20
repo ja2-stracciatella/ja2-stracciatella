@@ -94,7 +94,6 @@ enum{
 	REPAIR_MENU_VEHICLE1 = 0,
 	REPAIR_MENU_VEHICLE2,
 	REPAIR_MENU_VEHICLE3,
-//	REPAIR_MENU_SAM_SITE,
 	REPAIR_MENU_ROBOT,
 	REPAIR_MENU_ITEMS,
 	REPAIR_MENU_CANCEL,
@@ -235,26 +234,8 @@ BOOLEAN gfReEvaluateEveryonesNothingToDo = FALSE;
 #define MAX_DISTANCE_FOR_TRAINING		5
 */
 
-/*
-// controls how easily SAM sites are repaired
-// NOTE: A repairman must generate a least this many points / hour to be ABLE to repair a SAM site at all!
-#define SAM_SITE_REPAIR_DIVISOR		10
-
-// minimum condition a SAM site must be in to be fixable
-#define MIN_CONDITION_TO_FIX_SAM 20
-*/
-
-
 // a list of which sectors have characters
 static BOOLEAN fSectorsWithSoldiers[MAP_WORLD_X * MAP_WORLD_Y][4];
-
-
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
-BOOLEAN IsTheSAMSiteInSectorRepairable( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
-BOOLEAN SoldierInSameSectorAsSAM( SOLDIERTYPE *pSoldier );
-BOOLEAN CanSoldierRepairSAM( SOLDIERTYPE *pSoldier, INT8 bRepairPoints );
-BOOLEAN IsSoldierCloseEnoughToSAMControlPanel( SOLDIERTYPE *pSoldier );
-*/
 
 
 void InitSectorsWithSoldiersList( void )
@@ -291,7 +272,6 @@ void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 		// life checks should agree with the assignment
 		pSoldier->bLife = 0;
 	}
-	pSoldier->fFixingSAMSite = FALSE;
 	pSoldier->fFixingRobot = FALSE;
 	pSoldier->bVehicleUnderRepairID = -1;
 
@@ -1616,65 +1596,6 @@ static void HandleRepairmenInSector(INT16 const x, INT16 const y, INT8 const z)
 		HandleRepairBySoldier(s);
 	}
 }
-
-
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
-INT8 HandleRepairOfSAMSite( SOLDIERTYPE *pSoldier, INT8 bPointsAvailable, BOOLEAN * pfNothingLeftToRepair )
-{
-	INT8 bPtsUsed = 0;
-	INT16 sStrategicSector = 0;
-
-	if (!IsThisSectorASAMSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ))
-	{
-		return( bPtsUsed );
-	}
-	else if( ( pSoldier -> sSectorX == gWorldSectorX ) && ( pSoldier -> bSectorZ == gbWorldSectorZ )&&( pSoldier -> sSectorY == gWorldSectorY ) )
-	{
-		if (!CanSoldierRepairSAM(pSoldier, bPointsAvailable))
-		{
-			return( bPtsUsed );
-		}
-	}
-
-	// repair the SAM
-
-	sStrategicSector = CALCULATE_STRATEGIC_INDEX( pSoldier->sSectorX, pSoldier->sSectorY );
-
-	// do we have more than enough?
-	if( 100 - StrategicMap[ sStrategicSector ].bSAMCondition >= bPointsAvailable / SAM_SITE_REPAIR_DIVISOR )
-	{
-		// no, use up all we have
-		StrategicMap[ sStrategicSector ].bSAMCondition += bPointsAvailable / SAM_SITE_REPAIR_DIVISOR;
-		bPtsUsed = bPointsAvailable - ( bPointsAvailable % SAM_SITE_REPAIR_DIVISOR );
-
-		// SAM site may have been put back into working order...
-		UpdateAirspaceControl( );
-	}
-	else
-	{
-		// yep
-		bPtsUsed = SAM_SITE_REPAIR_DIVISOR * ( 100 - StrategicMap[ sStrategicSector ].bSAMCondition );
-		StrategicMap[ sStrategicSector ].bSAMCondition = 100;
-
-//ARM: NOTE THAT IF THIS CODE IS EVER RE-ACTIVATED, THE SAM GRAPHICS SHOULD CHANGE NOT WHEN THE SAM SITE RETURNS TO
-// FULL STRENGTH (condition 100), but as soon as it reaches MIN_CONDITION_TO_FIX_SAM!!!
-
-		// Bring Hit points back up to full, adjust graphic to full graphic.....
-		UpdateSAMDoneRepair( pSoldier -> sSectorX, pSoldier -> sSectorY, pSoldier -> bSectorZ );
-	}
-
-	if ( StrategicMap[ sStrategicSector ].bSAMCondition == 100 )
-	{
-		*pfNothingLeftToRepair = TRUE;
-	}
-	else
-	{
-		*pfNothingLeftToRepair = FALSE;
-	}
-	return( bPtsUsed );
-}
-*/
-
 
 // does another merc have a repairable item on them?
 static INT8 FindRepairableItemOnOtherSoldier(const SOLDIERTYPE* const pSoldier, const UINT8 ubPassType)
@@ -3158,14 +3079,6 @@ static void DisplayRepairMenu(SOLDIERTYPE const& s)
 		}
 	}
 
-#if 0 // No point in allowing SAM site repair any more.  Jan/13/99.  ARM
-	if (IsThisSectorASAMSector(s.sSectorX, s.sSectorY, s.bSectorZ) &&
-			IsTheSAMSiteInSectorRepairable(s.sSectorX, s.sSectorY, s.bSectorZ))
-	{
-		AddMonoString(box, pRepairStrings[1]);
-	}
-#endif
-
 	if (IsRobotInThisSector(s.sSectorX, s.sSectorY, s.bSectorZ))
 	{ // Robot
 		AddMonoString(box, pRepairStrings[3]);
@@ -3204,15 +3117,6 @@ static void HandleShadingOfLinesForRepairMenu()
 			ShadeStringInBox(box, line++, !CanCharacterRepairVehicle(s, v));
 		}
 	}
-
-#if 0 // No point in allowing SAM site repair any more.  Jan/13/99.  ARM
-	if (IsThisSectorASAMSector(s.sSectorX, s.sSectorY, s.bSectorZ) &&
-			IsTheSAMSiteInSectorRepairable(s.sSectorX, s.sSectorY, s.bSectorZ))
-	{
-		// handle enable disable of repair sam option
-		ShadeStringInBox(box, line++, !CanSoldierRepairSAM(&s, SAM_SITE_REPAIR_DIVISOR));
-	}
-#endif
 
 	if (IsRobotInThisSector(s.sSectorX, s.sSectorY, s.bSectorZ))
 	{
@@ -3274,16 +3178,6 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 				y += h;
 			}
 		}
-
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
-		// SAM site
-		if (IsThisSectorASAMSector(s.sSectorX, s.sSectorY, s.bSectorZ) &&
-				IsTheSAMSiteInSectorRepairable(s.sSectorX, s.sSectorY, s.bSectorZ))
-		{
-			MakeRepairRegion(idx++, x, y, w, h, REPAIR_MENU_SAM_SITE);
-			y += h;
-		}
-*/
 
 		// robot
 		if (IsRobotInThisSector(s.sSectorX, s.sSectorY, s.bSectorZ))
@@ -3365,7 +3259,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			// repair VEHICLE
 			PreChangeAssignment(*pSoldier);
 
-			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier -> fFixingRobot ) || ( pSoldier -> fFixingSAMSite ) )
+			if( ( pSoldier->bAssignment != REPAIR )|| ( pSoldier -> fFixingRobot ) )
 			{
 				SetTimeOfAssignmentChangeForMerc( pSoldier );
 			}
@@ -3386,33 +3280,6 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			fShowAssignmentMenu = FALSE;
 
 		}
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
-		else if( iRepairWhat == REPAIR_MENU_SAM_SITE )
-		{
-			// repair SAM site
-
-			// remove from squad
-			RemoveCharacterFromSquads( pSoldier );
-			MakeSureToolKitIsInHand( pSoldier );
-
-			if (pSoldier->bAssignment != REPAIR || !pSoldier->fFixingSAMSite)
-			{
-				SetTimeOfAssignmentChangeForMerc( pSoldier );
-			}
-
-			ChangeSoldiersAssignment( pSoldier, REPAIR );
-			pSoldier -> fFixingSAMSite = TRUE;
-
-			// the second argument is irrelevant here, function looks at pSoldier itself to know what's being repaired
-			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
-			fShowAssignmentMenu = FALSE;
-
-			MakeSureToolKitIsInHand( pSoldier );
-
-			// assign to a movement group
-			AssignMercToAMovementGroup(*pSoldier);
-		}
-*/
 		else if( iRepairWhat == REPAIR_MENU_ROBOT )
 		{
 			// repair ROBOT
@@ -3439,7 +3306,7 @@ static void RepairMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		else if( iRepairWhat == REPAIR_MENU_ITEMS )
 		{
 			// items
-			SetSoldierAssignmentRepair(*pSoldier, FALSE, FALSE, -1);
+			SetSoldierAssignmentRepair(*pSoldier, FALSE, -1);
 
 			// the second argument is irrelevant here, function looks at pSoldier itself to know what's being repaired
 			SetAssignmentForList( ( INT8 ) REPAIR, 0 );
@@ -6085,133 +5952,19 @@ static void SetSoldierAssignmentTrainByOther(SOLDIERTYPE& s, INT8 const stat)
 }
 
 
-void SetSoldierAssignmentRepair(SOLDIERTYPE& s, BOOLEAN const sam, BOOLEAN const robot, INT8 const vehicle_id)
+void SetSoldierAssignmentRepair(SOLDIERTYPE& s, BOOLEAN const robot, INT8 const vehicle_id)
 {
 	if (!CanCharacterRepair(&s)) return;
 	PreSetAssignment(s, REPAIR);
-	if (s.bAssignment != REPAIR || s.fFixingSAMSite != sam || s.fFixingRobot != robot || s.bVehicleUnderRepairID != vehicle_id)
+	if (s.bAssignment != REPAIR || s.fFixingRobot != robot || s.bVehicleUnderRepairID != vehicle_id)
 	{
 		SetTimeOfAssignmentChangeForMerc(&s);
 	}
 	MakeSureToolKitIsInHand(&s);
-	s.fFixingSAMSite        = sam;
 	s.fFixingRobot          = robot;
 	s.bVehicleUnderRepairID = vehicle_id;
 	PostSetAssignment(s, REPAIR);
 }
-
-
-/* No point in allowing SAM site repair any more.  Jan/13/99.  ARM
-BOOLEAN CanSoldierRepairSAM( SOLDIERTYPE *pSoldier, INT8 bRepairPoints)
-{
-	INT16 sGridNoA = 0, sGridNoB = 0;
-
-	// is the soldier in the sector as the SAM
-	if (!SoldierInSameSectorAsSAM(pSoldier))
-	{
-		return( FALSE );
-	}
-
-	// is the soldier close enough to the control panel?
-	if (!IsSoldierCloseEnoughToSAMControlPanel(pSoldier))
-	{
-		return( FALSE );
-	}
-
-	//can it be fixed?
-	if (!IsTheSAMSiteInSectorRepairable(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ))
-	{
-		return( FALSE );
-	}
-
-	// is he good enough?  (Because of the division of repair pts in SAM repair formula, a guy with any less that this
-	// can't make any headway
-	if (bRepairPoints < SAM_SITE_REPAIR_DIVISOR )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
-}
-
-BOOLEAN IsTheSAMSiteInSectorRepairable( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
-{
-	INT32 iCounter = 0;
-	INT8 bSAMCondition;
-
-
-	// is the guy above ground, if not, it can't be fixed, now can it?
-	if( sSectorZ != 0 )
-	{
-		return( FALSE );
-	}
-
-	for( iCounter = 0; iCounter < NUMBER_OF_SAMS; iCounter++ )
-	{
-		if( pSamList[ iCounter ] == SECTOR( sSectorX, sSectorY ) )
-		{
-			bSAMCondition = StrategicMap[ CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].bSAMCondition;
-
-			if( ( bSAMCondition < 100 ) && ( bSAMCondition >= MIN_CONDITION_TO_FIX_SAM ) )
-			{
-				return( TRUE );
-			}
-			else
-			{
-				// it's not broken at all, or it's beyond repair
-				return( FALSE );
-			}
-		}
-	}
-
-	// none found
-	return( FALSE );
-}
-
-BOOLEAN SoldierInSameSectorAsSAM( SOLDIERTYPE *pSoldier )
-{
-	INT32 iCounter = 0;
-
-	// is the soldier on the surface?
-	if( pSoldier -> bSectorZ != 0 )
-	{
-		return( FALSE );
-	}
-
-	// now check each sam site in the list
-	for( iCounter = 0; iCounter < NUMBER_OF_SAMS; iCounter++ )
-	{
-		if( pSamList[ iCounter] == SECTOR( pSoldier -> sSectorX, pSoldier -> sSectorY ) )
-		{
-			return( TRUE );
-		}
-	}
-
-	return( FALSE );
-}
-
-BOOLEAN IsSoldierCloseEnoughToSAMControlPanel( SOLDIERTYPE *pSoldier )
-{
-
-	INT32 iCounter = 0;
-
-		// now check each sam site in the list
-	for( iCounter = 0; iCounter < NUMBER_OF_SAMS; iCounter++ )
-	{
-		if( pSamList[ iCounter ] == SECTOR( pSoldier -> sSectorX, pSoldier -> sSectorY ) )
-		{
-// Assignment distance limits removed.  Sep/11/98.  ARM
-//			if( ( PythSpacesAway( pSamGridNoAList[ iCounter ], pSoldier -> sGridNo ) < MAX_DISTANCE_FOR_REPAIR )||( PythSpacesAway( pSamGridNoBList[ iCounter ], pSoldier -> sGridNo ) < MAX_DISTANCE_FOR_REPAIR ) )
-			{
-				return( TRUE );
-			}
-		}
-	}
-
-	return( FALSE );
-}
-*/
-
 
 static BOOLEAN HandleAssignmentExpansionAndHighLightForAssignMenu(SOLDIERTYPE* pSoldier)
 {
@@ -6833,15 +6586,12 @@ void SetAssignmentForList(INT8 const bAssignment, INT8 const bParam)
 				{
 					// make sure he can repair the SPECIFIC thing being repaired too (must be in its sector, for example)
 					BOOLEAN const fCanFixSpecificTarget =
-#if 0
-						sel->fFixingSAMSite              ? CanSoldierRepairSAM(&s, SAM_SITE_REPAIR_DIVISOR)                     :
-#endif
 						sel->bVehicleUnderRepairID != -1 ? CanCharacterRepairVehicle(s, GetVehicle(sel->bVehicleUnderRepairID)) :
 						s.fFixingRobot                   ? CanCharacterRepairRobot(&s)                                          : // XXX s in condition seems wrong, should probably be sel
 						TRUE;
 					if (fCanFixSpecificTarget)
 					{
-						SetSoldierAssignmentRepair(s, sel->fFixingSAMSite, sel->fFixingRobot, sel->bVehicleUnderRepairID);
+						SetSoldierAssignmentRepair(s, sel->fFixingRobot, sel->bVehicleUnderRepairID);
 						fItWorked = TRUE;
 					}
 				}

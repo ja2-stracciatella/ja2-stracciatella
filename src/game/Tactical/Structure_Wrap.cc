@@ -296,7 +296,7 @@ BOOLEAN IsCuttableWireFenceAtGridNo( INT16 sGridNo )
 }
 
 
-BOOLEAN IsRepairableStructAtGridNo(const INT16 sGridNo, SOLDIERTYPE** const tgt)
+UINT8 IsRepairableStructAtGridNo(const INT16 sGridNo, SOLDIERTYPE** const tgt)
 {
 	// OK, first look for a vehicle....
 	SOLDIERTYPE* const s = WhoIsThere2(sGridNo, 0);
@@ -304,13 +304,6 @@ BOOLEAN IsRepairableStructAtGridNo(const INT16 sGridNo, SOLDIERTYPE** const tgt)
 
 	if (s != NULL && s->uiStatusFlags & SOLDIER_VEHICLE) return 2;
 	// Then for over a robot....
-
-	// then for SAM site....
-	if ( DoesSAMExistHere( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, sGridNo ) )
-	{
-		return( 3 );
-	}
-
 
 	return( FALSE );
 }
