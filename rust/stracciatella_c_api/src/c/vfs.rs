@@ -4,6 +4,7 @@
 
 use std::io::{Read, Seek, SeekFrom, Write};
 
+use stracciatella::config::EngineOptions;
 use stracciatella::unicode::Nfc;
 use stracciatella::vfs::{Vfs, VfsFile};
 
@@ -23,30 +24,36 @@ pub extern "C" fn Vfs_destroy(vfs: *mut Vfs) {
     let _drop_me = from_ptr(vfs);
 }
 
-/// Adds an overlay filesystem backed by a filesystem directory.
+/// Initializes the VFS based on the information in engine_options
 /// Returns true if successful, false otherwise.
 /// Sets the rust error.
 #[no_mangle]
-pub extern "C" fn Vfs_addDir(vfs: *mut Vfs, order: i32, path: *const c_char) -> bool {
+pub extern "C" fn Vfs_init_from_engine_options(
+    vfs: *mut Vfs,
+    engine_options: *const EngineOptions,
+) -> bool {
     forget_rust_error();
     let vfs = unsafe_mut(vfs);
-    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
-    if let Err(err) = vfs.add_dir(order, &path) {
-        remember_rust_error(format!("Vfs_addDir {:?} {:?}: {}", order, path, err));
+    let engine_options = unsafe_ref(engine_options);
+    if let Err(err) = vfs.init_from_engine_options(engine_options) {
+        remember_rust_error(format!(
+            "Vfs_init_from_engine_options {:?}: {}",
+            engine_options, err
+        ));
     }
     no_rust_error()
 }
 
-/// Adds an overlay filesystem backed by a SLF file.
+/// Adds an overlay filesystem backed by a filesystem directory.
 /// Returns true if successful, false otherwise.
 /// Sets the rust error.
 #[no_mangle]
-pub extern "C" fn Vfs_addSlf(vfs: *mut Vfs, order: i32, path: *const c_char) -> bool {
+pub extern "C" fn Vfs_addDir(vfs: *mut Vfs, path: *const c_char) -> bool {
     forget_rust_error();
     let vfs = unsafe_mut(vfs);
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
-    if let Err(err) = vfs.add_slf(order, &path) {
-        remember_rust_error(format!("Vfs_addSlf {:?} {:?}: {}", order, path, err));
+    if let Err(err) = vfs.add_dir(&path) {
+        remember_rust_error(format!("Vfs_addDir {:?}: {}", path, err));
     }
     no_rust_error()
 }

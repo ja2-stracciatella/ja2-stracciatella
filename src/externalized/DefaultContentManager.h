@@ -16,17 +16,6 @@
 #include <stdexcept>
 #include <vector>
 
-enum VFS_ORDER : int32_t {
-	MOD                    = 100, // assets overriden by mods
-	
-	ASSETS_USERHOME        = 200, // assets in user home directory
-	ASSETS_STRACCIATELLA   = 210, // assets shipped with stracciatella
-	ASSETS_VANILLA         = 220, // vanilla game data
-
-	FALLBACK               = 400,
-};
-
-
 class DefaultContentManager : public ContentManager, public IGameDataLoader
 {
 public:
@@ -40,8 +29,7 @@ public:
 
 	/// Called after construction.
 	/// @throw runtime_error
-	virtual void init();
-	void initOptionalFreeEditorSlf(const ST::string &path);
+	virtual void init(EngineOptions* engine_options);
 
 	/** Load the game data. */
 	bool loadGameData();
@@ -275,7 +263,6 @@ protected:
 	bool loadTacticalLayerData();
 
 	std::shared_ptr<rapidjson::Document> readJsonDataFile(const char *fileName) const;
-	void AddVFSLayer(VFS_ORDER order, const ST::string path, const bool throwOnError = true);
 };
 
 class LibraryFileNotFoundException : public std::runtime_error

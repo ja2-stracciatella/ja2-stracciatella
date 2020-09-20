@@ -468,13 +468,7 @@ int main(int argc, char* argv[])
 		SLOGI("------------------------------------------------------------------------------");
 	}
 
-	cm->init();
-
-	if(EngineOptions_shouldRunEditor(params.get()))
-	{
-		RustPointer<char> path{Path_push(extraDataDir.get(), "editor.slf")};
-		cm->initOptionalFreeEditorSlf(path.get());
-	}
+	cm->init(params.get());
 
 	if(!cm->loadGameData())
 	{

@@ -56,11 +56,13 @@
 //!  * 2 byte padding (4 byte alignment)
 //!
 
-use std::io::ErrorKind::{InvalidData, InvalidInput};
+use std::io::ErrorKind::InvalidInput;
 use std::io::{Cursor, Error, Read, Result, Seek, SeekFrom, Write};
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use byteorder::{ReadBytesExt, WriteBytesExt, LE};
+
+use crate::file_formats::{StracciatellaReadExt, StracciatellaWriteExt};
 
 /// Number of bytes of the header in the library file.
 pub const HEADER_BYTES: u32 = 532;
@@ -390,57 +392,6 @@ impl From<u8> for SlfEntryState {
         }
     }
 }
-
-/// Trait that adds extra functions to Read.
-pub trait SlfReadExt: Read {
-    /// Reads and discards unused bytes.
-    fn read_unused(&mut self, num_bytes: usize) -> Result<()> {
-        let mut buffer = vec![0u8; num_bytes];
-        self.read_exact(&mut buffer)?;
-        Ok(())
-    }
-
-    /// Reads a nul terminated fixed size string.
-    fn read_fixed_string(&mut self, num_bytes: usize) -> Result<String> {
-        let mut buffer = vec![0u8; num_bytes];
-        self.read_exact(&mut buffer)?;
-        // must be nul terminated and valid utf8
-        match buffer.iter().position(|&byte| byte == 0) {
-            Some(position) => match ::std::str::from_utf8(&buffer[..position]) {
-                Ok(s) => Ok(s.to_string()),
-                Err(e) => Err(Error::new(InvalidData, e)),
-            },
-            None => Err(Error::new(InvalidData, "string is not nul terminated")),
-        }
-    }
-}
-
-/// Trait that adds extra functions to Write.
-pub trait SlfWriteExt: Write {
-    /// Writes zeroed unused bytes.
-    fn write_unused(&mut self, num_bytes: usize) -> Result<()> {
-        let buffer = vec![0u8; num_bytes];
-        self.write_all(&buffer)
-    }
-
-    /// Write a nul terminated fixed size string, unused space is zeroed.
-    fn write_fixed_string(&mut self, num_bytes: usize, string: &str) -> Result<()> {
-        let mut buffer = vec![0u8; num_bytes];
-        let string_bytes = string.as_bytes();
-        if string_bytes.len() >= buffer.len() {
-            return Err(Error::new(InvalidData, "string is too long"));
-        }
-        buffer[..string_bytes.len()].copy_from_slice(&string_bytes);
-        self.write_all(&buffer)?;
-        Ok(())
-    }
-}
-
-/// Everything that implements Read gets SlfReadExt for free.
-impl<T: Read + ?Sized> SlfReadExt for T {}
-
-/// Everything that implements Write gets SlfWriteExt for free.
-impl<T: Write + ?Sized> SlfWriteExt for T {}
 
 #[cfg(test)]
 mod tests {

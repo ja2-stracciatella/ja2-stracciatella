@@ -19,10 +19,6 @@ public:
 
 	virtual ~ModPackContentManager() override;
 
-	/// Called after construction.
-	/// @throw runtime_error
-	virtual void init() override;
-
 	/** Get folder for saved games. */
 	virtual ST::string getSavedGamesFolder() const override;
 

@@ -195,67 +195,15 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_samSitesAirControl = NULL;
 }
 
-
-void DefaultContentManager::AddVFSLayer(VFS_ORDER order, const ST::string path, const bool throwOnError)
+void DefaultContentManager::init(EngineOptions* engine_options)
 {
-	bool succeeded = false;
-	ST::string error = ST::null;
-	if (Fs_isDir(path.c_str()))
-	{
-		SLOGD(ST::format("Adding directory to VFS ({}) '{}'", order, path));
-		succeeded = Vfs_addDir(m_vfs.get(), order, path.c_str());
+	auto succeeded = Vfs_init_from_engine_options(m_vfs.get(), engine_options);
+	if (!succeeded) {
+		RustPointer<char> err{ getRustError() };
+		auto error = err.get();
+		SLOGE(ST::format("Failed to build virtual file system (VFS): {}", error));
+		throw std::runtime_error("Failed to add to VFS");
 	}
-	else if (Fs_isFile(path.c_str()) && path.to_lower().ends_with(".slf"))
-	{
-		SLOGD(ST::format("Adding SLF archive to VFS ({}) '{}'", order, path));
-		succeeded = Vfs_addSlf(m_vfs.get(), order, path.c_str());
-	}
-	else
-	{
-		error = Fs_exists(path.c_str()) ? "Unsupported file type" : "Path does not exist";
-	}
-
-	if (!succeeded)
-	{
-		if (error.empty())
-		{ 
-			RustPointer<char> err{ getRustError() };
-			error = err.get();
-		}
-		
-		if (throwOnError)
-		{
-			SLOGE(ST::format("Failed to add to VFS '{}': {}", path, error));
-			throw std::runtime_error("Failed to add to VFS");
-		}
-		else
-		{
-			SLOGD(ST::format("Skipped adding to VFS '{}': {}", path, error));
-		}
-	}
-}
-
-void DefaultContentManager::init()
-{
-	AddVFSLayer(VFS_ORDER::ASSETS_USERHOME, FileMan::joinPaths(m_userHomeDir, "data"), false);
-	AddVFSLayer(VFS_ORDER::ASSETS_STRACCIATELLA, m_externalizedDataPath);
-	AddVFSLayer(VFS_ORDER::ASSETS_VANILLA, m_dataDir);
-	
-	std::vector<ST::string> slfs = FindFilesInDir(m_dataDir, "slf", true, false);
-	for (const ST::string& slf : slfs)
-	{
-		AddVFSLayer(VFS_ORDER::ASSETS_VANILLA, slf);
-	}
-}
-
-void DefaultContentManager::initOptionalFreeEditorSlf(const ST::string &path)
-{
-	if (!Fs_exists(path.c_str()))
-	{
-		SLOGW(ST::format("Free editor.slf not found in '{}'", path));
-		return;
-	}
-	AddVFSLayer(VFS_ORDER::FALLBACK, path, false);
 }
 
 template <class T> 

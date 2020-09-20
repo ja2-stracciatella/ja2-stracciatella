@@ -24,42 +24,6 @@ ModPackContentManager::~ModPackContentManager()
 {
 }
 
-void ModPackContentManager::loadMod(ST::string modName)
-{
-	bool isLoaded = false;
-
-	ST::string modResFolder = FileMan::joinPaths({ m_userHomeDir, "mods", modName, "data" });
-	if (FileMan::checkPathExistance(modResFolder))
-	{
-		AddVFSLayer(VFS_ORDER::MOD, modResFolder);
-		isLoaded = true;
-	}
-	
-	modResFolder = FileMan::joinPaths({m_assetsRootPath, "mods", modName, "data"});
-	if (FileMan::checkPathExistance(modResFolder))
-	{
-		AddVFSLayer(VFS_ORDER::MOD, modResFolder);
-		isLoaded = true;
-	}
-
-	if (!isLoaded)
-	{
-		SLOGE(ST::format("Unable to locate data directory of mod '{}'", modName));
-		throw std::runtime_error("Failed to load mod");
-	}
-	
-	SLOGI(ST::format("Loaded mod '{}'", modName));
-}
-
-void ModPackContentManager::init()
-{
-	for (const ST::string& modName :m_modNames)
-	{
-		loadMod(modName);
-	}
-	DefaultContentManager::init();
-}
-
 /** Get folder for saved games. */
 ST::string ModPackContentManager::getSavedGamesFolder() const
 {
