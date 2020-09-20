@@ -1,7 +1,7 @@
 #include "SamSiteModel.h"
 
 #include "Campaign_Types.h"
-#include "StrategicMap.h"
+#include "SAM_Sites.h"
 #include "WorldDef.h"
 
 #include <algorithm>
