@@ -3,7 +3,6 @@
 #include "Logger.h"
 #include <functional>
 #include <map>
-#include <stdexcept>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -36,12 +35,12 @@ public:
 
 	/**
 	 * @brief This override is only available with 'Observable<>'
-	 * @throw logic_error
+	 * @param key a key identifier one callback. Callback is replaced if there is an existing one with the same key
+	 * @param callback a Callable taking no-args
+	 * @return the current instance for method chaining
+	 * @throw logic_error if the current instance is not 'Observable<>'
 	 */
-	Observable<ARG1, ARGS...> addListener(const ST::string key, const std::function<void()> callback)
-	{
-		throw std::logic_error("no-args callback only allowed with 'Observable<>'");
-	}
+	Observable<ARG1, ARGS...> addListener(const ST::string key, const std::function<void()> callback);
 
 	/**
 	 * @brief Un-registers a listen identified by the given key
