@@ -3,8 +3,10 @@
 
 // header for assignment manipulation/updating for characters
 
-#include "JA2Types.h"
-#include "Strategic_Movement.h"
+#include "Types.h"
+struct GROUP;
+struct PopUpBox;
+struct SOLDIERTYPE;
 
 
 // this distinguishes whether we're only looking for patients healable THIS HOUR (those that have been on their assignment

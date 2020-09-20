@@ -63,6 +63,7 @@
 #include "ScreenIDs.h"
 #include "Items.h"
 #include "Shading.h"
+#include "Strategic_Movement.h"
 
 #include "Soldier.h"
 
