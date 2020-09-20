@@ -286,6 +286,7 @@ void BeginLoadScreen( )
 
 static void InitializeMapStructure(void);
 
+static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, UINT8 ubDamage);
 
 void InitStrategicEngine()
 {
@@ -296,6 +297,9 @@ void InitStrategicEngine()
 
 	// set up town stuff
 	BuildListOfTownSectors( );
+
+	// handle SAM site damages
+	OnStructureDamaged.addListener("default", UpdateAndDamageSAMIfFound);
 }
 
 
@@ -3617,4 +3621,49 @@ UINT GetWorldSector()
 {
 	if (gWorldSectorX == 0 || gWorldSectorY == 0) return NO_SECTOR;
 	return SECTOR(gWorldSectorX, gWorldSectorY);
+}
+
+bool
+DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const gridno)
+{
+	// ATE: If we are below, return right away
+	if (z != 0) return false;
+
+	for (auto s : GCM->getSamSites())
+	{
+		if (s->doesSamExistHere(x, y, gridno))
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+// Look for a SAM site, update
+static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, UINT8 ubDamage)
+{
+	INT16 sSectorNo;
+
+	// OK, First check if SAM exists, and if not, return
+	if (!DoesSAMExistHere(sSectorX, sSectorY, sSectorZ, sGridNo))
+	{
+		return;
+	}
+
+	// Damage.....
+	sSectorNo = CALCULATE_STRATEGIC_INDEX(sSectorX, sSectorY);
+	SLOGD(ST::format("SAM site at sector #{} is damaged by {} points", sSectorNo, ubDamage));
+	if (StrategicMap[sSectorNo].bSAMCondition >= ubDamage)
+	{
+		StrategicMap[sSectorNo].bSAMCondition -= ubDamage;
+	}
+	else
+	{
+		StrategicMap[sSectorNo].bSAMCondition = 0;
+	}
+
+	// SAM site may have been put out of commission...
+	UpdateAirspaceControl();
+
+	// ATE: GRAPHICS UPDATE WILL GET DONE VIA NORMAL EXPLOSION CODE.....
 }
