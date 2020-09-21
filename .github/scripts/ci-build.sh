@@ -42,6 +42,7 @@ fi
 
 export RUN_TESTS=true
 export RUN_RUST_CHECKS=false
+export RUSTC_WRAPPER=sccache
 export RUSTUP_INIT_ARGS="-y --no-modify-path --default-toolchain=$(cat ./rust-toolchain) --profile=minimal"
 if [[ "$CI_TARGET" == "linux" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_INSTALL_PREFIX=AppDir/usr -DEXTRA_DATA_DIR=../share/ja2"
@@ -99,8 +100,8 @@ if [[ "$CI_TARGET" == "linux" ]]; then
 
 # print ccache cache statistics
 echo "## print statistics"
-command -v ccache &&
-  ccache -s ||
-  echo "ccache not installed"
+command -v sccache &&
+  sccache -s ||
+  echo "sccache not installed"
 
 echo "## done ##"

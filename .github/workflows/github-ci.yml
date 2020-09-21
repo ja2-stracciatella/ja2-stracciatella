@@ -42,16 +42,17 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: Cache C++ build output
+    - name: Compiler cache (sccache)
       uses: actions/cache@v2
       with:
         path: |
-          ~/.ccache
-        key: ${{ matrix.cfg.target }}-ccache-v1-${{ github.ref }}-${{ github.sha }}
+          ~/.cache/sccache
+          ~/Library/Caches/Mozilla.sccache
+        key: ${{ matrix.cfg.target }}-sccache-v1-${{ github.ref }}-${{ github.sha }}
         restore-keys: |
-          ${{ matrix.cfg.target }}-ccache-v1-${{ github.ref }}-
-          ${{ matrix.cfg.target }}-ccache-v1-refs/heads/master-
-          ${{ matrix.cfg.target }}-ccache-v1-
+          ${{ matrix.cfg.target }}-sccache-v1-${{ github.ref }}-
+          ${{ matrix.cfg.target }}-sccache-v1-refs/heads/master-
+          ${{ matrix.cfg.target }}-sccache-v1-
 
     - name: Cache Rust deps and build output
       uses: actions/cache@v2
