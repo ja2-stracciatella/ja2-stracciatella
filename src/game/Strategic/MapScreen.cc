@@ -794,9 +794,6 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 		case REPAIR:
 			assignment2 =
 				s.fFixingRobot                ? pRepairStrings[3] : // Robot
-#if 0 /* XXX was commented out */
-				s.fFixingSAMSite              ? pRepairStrings[1] : // SAM site
-#endif
 				s.bVehicleUnderRepairID != -1 ? pShortVehicleStrings[GetVehicle(s.bVehicleUnderRepairID).ubVehicleType] : // Vehicle
 				pRepairStrings[0]; // Items
 			break;

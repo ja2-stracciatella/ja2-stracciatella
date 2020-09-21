@@ -2607,39 +2607,6 @@ void LoadExplosionTableFromSavedGameFile(HWFILE const hFile)
 	}
 }
 
-void UpdateSAMDoneRepair(INT16 const x, INT16 const y, INT16 const z)
-{
-	// ATE: If we are below, return right away
-	if (z != 0) return;
-
-	INT16 const sector = SECTOR(x, y);
-	for (INT32 i = 0; i != NUMBER_OF_SAMS; ++i)
-	{
-		auto samSite = GCM->findSamSiteBySector(sector);
-		if (samSite == NULL) continue;
-
-		UINT16 const good_graphic    = GetTileIndexFromTypeSubIndex(EIGHTISTRUCT, samSite->graphicIndex);
-		UINT16 const damaged_graphic = good_graphic - 2; // Damaged one (current) is 2 less
-		GridNo const gridno          = samSite->gridNos[0];
-		if (x == gWorldSectorX && y == gWorldSectorY && z == gbWorldSectorZ)
-		{ // Sector loaded, update graphic
-			ApplyMapChangesToMapTempFile app;
-			RemoveStruct(   gridno, damaged_graphic);
-			AddStructToHead(gridno, good_graphic);
-		}
-		else
-		{ // We add temp changes to map not loaded
-			RemoveStructFromUnLoadedMapTempFile(gridno, damaged_graphic, x, y, z);
-			AddStructToUnLoadedMapTempFile(     gridno, good_graphic,    x, y, z);
-		}
-		break;
-	}
-
-	// SAM site may have been put back into working order
-	UpdateAirspaceControl();
-}
-
-
 // loop through civ team and find
 // anybody who is an NPC and
 // see if they get angry

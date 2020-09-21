@@ -23,7 +23,7 @@ STRUCTURE* GetWallStructOfSameOrientationAtGridno(GridNo, INT8 orientation);
 BOOLEAN CutWireFence( INT16 sGridNo );
 BOOLEAN IsCuttableWireFenceAtGridNo( INT16 sGridNo );
 
-BOOLEAN IsRepairableStructAtGridNo(INT16 sGridNo, SOLDIERTYPE** tgt);
+UINT8 IsRepairableStructAtGridNo(INT16 sGridNo, SOLDIERTYPE** tgt);
 SOLDIERTYPE* GetRefuelableStructAtGridNo(INT16 sGridNo);
 
 

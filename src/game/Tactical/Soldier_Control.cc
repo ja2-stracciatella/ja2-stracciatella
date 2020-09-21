@@ -8380,8 +8380,8 @@ void EVENT_SoldierBeginRepair(SOLDIERTYPE& s, GridNo const gridno, UINT8 const d
 
 	switch (repair_item) // Set mercs's assignment to repair
 	{
-		case 2: /* Vehicle */ SetSoldierAssignmentRepair(s, FALSE, FALSE, tgt->ubID); break;
-		case 3: /* SAM     */ SetSoldierAssignmentRepair(s, TRUE,  FALSE, -1);        break;
+		case 2: /* Vehicle */ SetSoldierAssignmentRepair(s, FALSE, tgt->ubID); break;
+		default:              throw std::runtime_error(ST::string("unknown repair assignment: {}", repair_item).to_std_string());
 	}
 }
 

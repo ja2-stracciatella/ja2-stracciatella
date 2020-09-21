@@ -3,6 +3,7 @@
 // this file is for manipulation of the strategic map structure
 
 #include "JA2Types.h"
+#include "SAM_Sites.h"
 
 #include <string_theory/string>
 
@@ -41,16 +42,9 @@ static inline void SetWorldSectorInvalid()
 	gbWorldSectorZ = -1;
 }
 
-#define NUMBER_OF_SAMS 4
-
 extern BOOLEAN fFoundOrta;
-extern BOOLEAN fSamSiteFound[ NUMBER_OF_SAMS ];
 
 extern	BOOLEAN		gfUseAlternateMap;
-
-
-// min condition for sam site to be functional
-#define MIN_CONDITION_FOR_SAM_SITE_TO_WORK 80
 
 
 // FUNCTIONS FOR DERTERMINING GOOD SECTOR EXIT DATA
@@ -92,14 +86,6 @@ void JumpIntoAdjacentSector( UINT8 ubDirection, UINT8 ubJumpCode, INT16 sAdditio
 
 bool CanGoToTacticalInSector(INT16 x, INT16 y, UINT8 z);
 
-void UpdateAirspaceControl( void );
-
-bool IsThisSectorASAMSector(INT16 x, INT16 y, INT8 z);
-
-void InitializeSAMSites();
-
-bool DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const gridno);
-
 // Number of sectors this town takes up
 UINT8 GetTownSectorSize(INT8 town_id);
 
@@ -132,15 +118,7 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier );
 
 BOOLEAN CheckAndHandleUnloadingOfCurrentWorld(void);
 
-// number of SAM sites under player control
-INT32 GetNumberOfSAMSitesUnderPlayerControl();
-
-// is there a FUNCTIONAL SAM site in this sector?
-bool IsThereAFunctionalSAMSiteInSector(INT16 x, INT16 y, INT8 z);
-
 bool IsSectorDesert(INT16 x, INT16 y);
-
-INT8 GetSAMIdFromSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* s);
 
