@@ -101,6 +101,7 @@ static SOLDIERTYPE* gPersonToSetOffExplosions           = 0;
 #define NUM_EXPLOSION_SLOTS 100
 static EXPLOSIONTYPE gExplosionData[NUM_EXPLOSION_SLOTS];
 
+Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN*> BeforeStructureDamaged = {};
 Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged = {};
 
 static EXPLOSIONTYPE* GetFreeExplosion(void)
@@ -358,12 +359,10 @@ static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags,
 
 static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTURE** const ppNextCurrent, INT16 const grid_no, INT16 const wound_amt, UINT32 const uiDist, BOOLEAN* const pfRecompileMovementCosts, BOOLEAN const only_walls, SOLDIERTYPE* const owner, INT8 const level)
 {
-	/* ATE: Check for O3 statue for special damage
-	 * Note, we do this check every time explosion goes off in game, but it's an
-	 * efficient check */
-	if (DoesO3SectorStatueExistHere(grid_no) && uiDist <= 1)
+	BOOLEAN skipDamage = false;
+	BeforeStructureDamaged(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, grid_no, pCurrent, uiDist, &skipDamage);
+	if (skipDamage)
 	{
-		ChangeO3SectorStatue(TRUE);
 		return true;
 	}
 
@@ -561,18 +560,6 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 					// Move in EAST, looking for attached structures to remove
 					RemoveOnWall(NewGridNo(base_grid_no, DirectionInc(EAST)), STRUCTURE_ON_RIGHT_WALL, 0);
 					break;
-			}
-
-			// CJC, Sept 16: if we destroy any wall of the brothel, make Kingpin's men hostile!
-			if (gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0)
-			{
-				UINT8 room = GetRoom(grid_no);
-				if (room == NO_ROOM) room = GetRoom(grid_no + DirectionInc(SOUTH));
-				if (room == NO_ROOM) room = GetRoom(grid_no + DirectionInc(EAST));
-				if (room != NO_ROOM && IN_BROTHEL(room))
-				{
-					CivilianGroupChangesSides(KINGPIN_CIV_GROUP);
-				}
 			}
 		}
 

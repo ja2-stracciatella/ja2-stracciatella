@@ -48,7 +48,7 @@ INT8 gbLevel;
 
 
 // This function checks if our statue exists in the current sector at given gridno
-BOOLEAN DoesO3SectorStatueExistHere( INT16 sGridNo )
+static BOOLEAN DoesO3SectorStatueExistHere( INT16 sGridNo )
 {
 	INT32 cnt;
 	EXITGRID ExitGrid;
@@ -122,6 +122,17 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 	RecompileLocalMovementCostsFromRadius( 13830, 5 );
 }
 
+void HandleStatueDamaged(INT16 sectorX, INT16 sectorY, INT8 sectorZ, INT16 sGridNo, STRUCTURE *s, UINT32 uiDist, BOOLEAN *skipDamage)
+{
+	/* ATE: Check for O3 statue for special damage
+	 * Note, we do this check every time explosion goes off in game, but it's an
+	 * efficient check */
+	if (DoesO3SectorStatueExistHere(sGridNo) && uiDist <= 1)
+	{
+		ChangeO3SectorStatue(TRUE);
+		*skipDamage = true;
+	}
+}
 
 static void HandleDeidrannaDeath(SOLDIERTYPE* pKillerSoldier, INT16 sGridNo, INT8 bLevel);
 

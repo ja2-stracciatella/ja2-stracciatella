@@ -59,7 +59,19 @@ extern UINT8 gubElementsOnExplosionQueue;
 extern BOOLEAN gfExplosionQueueActive;
 
 /**
- * Callback after a strurture has just been damaged by explosives
+ * Callback right before the structure damange is inflicted.
+ * @oaram INT16 sSectorX
+ * @param INT16 sSectorY
+ * @param INT8 bSectorZ
+ * @param INT16 sGridNo location on map affected by the exploson
+ * @param STRUCTURE* s pointer to the structure to be damaged
+ * @param UINT32 uiDistance (no of grids) from the source of explosion
+ * @param BOOLEAN* fSkipDamage damage processing will be skipped if it is set to TRUE
+ */
+extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN*> BeforeStructureDamaged;
+
+/**
+ * Callback just after a structure has just been damaged by explosives
  * @param INT16 sSectorX
  * @param INT16 sSectorY
  * @param INT8 bSectorZ
