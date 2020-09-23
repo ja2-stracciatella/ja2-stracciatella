@@ -1261,8 +1261,6 @@ StructureDamageResult DamageStructure(STRUCTURE* const s, UINT8 damage, Structur
 		damage = 0;
 	}
 
-	OnStructureDamaged(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, grid_no, damage);
-
 	// Find the base so we can reduce the hit points!
 	STRUCTURE* const base = FindBaseStructure(s);
 	if (!base) return STRUCTURE_NOT_DAMAGED;

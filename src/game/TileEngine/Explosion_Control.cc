@@ -101,7 +101,7 @@ static SOLDIERTYPE* gPersonToSetOffExplosions           = 0;
 #define NUM_EXPLOSION_SLOTS 100
 static EXPLOSIONTYPE gExplosionData[NUM_EXPLOSION_SLOTS];
 
-Observable<INT16, INT16, INT16, INT16, UINT8> OnStructureDamaged = {};
+Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged = {};
 
 static EXPLOSIONTYPE* GetFreeExplosion(void)
 {
@@ -388,6 +388,9 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		INT16 const sY = CenterY(grid_no);
 		INT8 bDamageReturnVal = DamageStructure(pCurrent, wound_amt, STRUCTURE_DAMAGE_EXPLOSION, grid_no, sX, sY, NULL);
 		if (bDamageReturnVal == STRUCTURE_NOT_DAMAGED) return true;
+
+		BOOLEAN fDestroyed = (bDamageReturnVal == STRUCTURE_DESTROYED);
+		OnStructureDamaged(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, grid_no, pCurrent, wound_amt, fDestroyed);
 
 		STRUCTURE* const base         = FindBaseStructure(pCurrent);
 		GridNo     const base_grid_no = base->sGridNo;

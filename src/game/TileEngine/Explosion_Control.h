@@ -62,11 +62,13 @@ extern BOOLEAN gfExplosionQueueActive;
  * Callback after a strurture has just been damaged by explosives
  * @param INT16 sSectorX
  * @param INT16 sSectorY
- * @param INT16 sSectorZ
- * @param INT16 sGridNo
- * @param UINT8 ubDamage
+ * @param INT8 bSectorZ
+ * @param INT16 sGridNo location on map affected by the exploson
+ * @param STRUCTURE* s pointer to the structure being damaged by explosion
+ * @param UINT8 ubDamage damage amount just dealt
+ * @param BOOLEAN fIsDestroyed whether or not the structure has been destroyed
  */
-extern Observable<INT16, INT16, INT16, INT16, UINT8> OnStructureDamaged;
+extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged;
 
 void IgniteExplosion(SOLDIERTYPE* owner, INT16 z, INT16 sGridNo, UINT16 item, INT8 level);
 void IgniteExplosionXY(SOLDIERTYPE* owner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, INT8 bLevel);
