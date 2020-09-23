@@ -29,6 +29,8 @@ public:
 	 */
 	Observable<ARG1, ARGS...> addListener(const ST::string key, std::function<void(ARG1, ARGS...)> callback)
 	{
+		if (!callback) return removeListener(key);
+
 		listeners[key] = callback;
 		return *this;
 	}

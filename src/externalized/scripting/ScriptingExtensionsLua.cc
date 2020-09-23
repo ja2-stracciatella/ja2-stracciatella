@@ -18,6 +18,7 @@
 #include <string>
 #include <string_theory/format>
 #include <string_theory/string>
+#include <game/TileEngine/Explosion_Control.h>
 
 #define SCRIPTS_DIR "scripts"
 #define ENTRYPOINT_SCRIPT "main.lua"
@@ -30,6 +31,10 @@ static sol::state lua;
 static void RegisterUserTypes();
 static void RegisterGlobals();
 static void RegisterLogger();
+static void RegisterListener(const std::string& observable, const std::string& key, const std::string& luaFunctionName);
+static void UnregisterListener(const std::string& observable, const std::string& key);
+
+
 
 void JA2Require(std::string scriptFileName)
 {
@@ -138,9 +143,12 @@ static void RegisterGlobals()
 	lua.set_function("PlaceItem", PlaceItem);
 
 	lua.set_function("JA2Require", JA2Require);
-	lua.set_function("require",  [](void) { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
-	lua.set_function("dofile",   [](void) { throw std::logic_error("dofile is not allowed. Use JA2Require instead"); });
-	lua.set_function("loadfile", [](void) { throw std::logic_error("loadfile is not allowed. Use JA2Require instead"); });
+	lua.set_function("require",  []() { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
+	lua.set_function("dofile",   []() { throw std::logic_error("dofile is not allowed. Use JA2Require instead"); });
+	lua.set_function("loadfile", []() { throw std::logic_error("loadfile is not allowed. Use JA2Require instead"); });
+
+	lua.set_function("RegisterListener", RegisterListener);
+	lua.set_function("UnregisterListener", UnregisterListener);
 }
 
 static void LogLuaMessage(LogLevel level, std::string msg) {
@@ -193,7 +201,51 @@ static void InvokeFunction(ST::string functionName)
 	}
 }
 
-void BeforePrepareSector()
+// Creates a typed std::function out of a Lua function
+template<typename ...A>
+static std::function<void(A...)> wrap(std::string luaFunc)
 {
-	InvokeFunction("BeforePrepareSector");
+	if (luaFunc.empty()) return {};
+
+	sol::protected_function func = lua[luaFunc];
+	if (!func.valid())
+	{
+		ST::string err = ST::format("There is no function '{}' in Lua", luaFunc);
+		throw std::logic_error(err.to_std_string());
+	}
+	return [func](A... args) {
+		func(args...);
+	};
+}
+
+/**
+ * Registers a callback listener with an Observable, to receive notifications in Lua scripts.
+ * @param observable string the name of an instance of Observable
+ * @param key string a unique key identifying the callback listener
+ * @param luaFunc string name to the callback handling lua function
+ */
+static void RegisterListener(const std::string& observable, const std::string& key, const std::string& luaFunc)
+{
+	if (isLuaInitialized)
+	{
+		throw std::runtime_error("RegisterListener is not allowed after initialization");
+	}
+
+	if      (observable == "OnStructureDamage")			OnStructureDamaged.addListener(key, wrap<INT16, INT16, INT16, INT16, UINT8>(luaFunc));
+	else if (observable == "OnAirspaceControlUpdated")		OnAirspaceControlUpdated.addListener(key, wrap<>(luaFunc));
+	else if (observable == "BeforePrepareSector")			BeforePrepareSector.addListener(key, wrap<>(luaFunc));
+	else {
+		ST::string err = ST::format("There is no observable named '{}'", observable);
+		throw std::logic_error(err.to_std_string());
+	}
+}
+
+/**
+ * Unregisters a listener from the Observable
+ * @param observable
+ * @param key
+ */
+void UnregisterListener(const std::string& observable, const std::string& key)
+{
+	RegisterListener(observable, key, "");
 }

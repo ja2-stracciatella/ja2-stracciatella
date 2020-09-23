@@ -38,17 +38,3 @@
  * started or loaded, because there might be states in the lua space.
  */
 void InitScriptingEngine();
-
-/**
- * @defgroup lua Lua functions
- * @brief Lua scripts can implement these methods and C++ will make calls to them.
- */
-/** @name Sectors
- */
-///@{
- /**
-  * This is called after loading map and before setting it up (e.g. placing soldiers)
-  * @ingroup lua
-  */
-void BeforePrepareSector();
-///@}

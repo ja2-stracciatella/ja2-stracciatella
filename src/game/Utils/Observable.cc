@@ -15,5 +15,7 @@ Observable<ARG1, ARGS...> Observable<ARG1, ARGS...>::addListener(const ST::strin
 template<>
 Observable<_observable::Nil> Observable<_observable::Nil>::addListener(const ST::string key, const std::function<void()> f)
 {
+	if (!f) return removeListener(key);
+
 	return addListener(key, [f](_observable::Nil) { f(); });
 }
