@@ -387,7 +387,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		INT16 const sX = CenterX(grid_no);
 		INT16 const sY = CenterY(grid_no);
 		INT8 bDamageReturnVal = DamageStructure(pCurrent, wound_amt, STRUCTURE_DAMAGE_EXPLOSION, grid_no, sX, sY, NULL);
-		if (bDamageReturnVal == 0) return true;
+		if (bDamageReturnVal == STRUCTURE_NOT_DAMAGED) return true;
 
 		STRUCTURE* const base         = FindBaseStructure(pCurrent);
 		GridNo     const base_grid_no = base->sGridNo;
@@ -408,19 +408,19 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		 * should have a in-between explosion partner, make damage code 2 - which
 		 * means only damaged - the normal explosion spreading will cause it do use
 		 * the proper pieces */
-		if (bDamageReturnVal == 1 && orig_destruction_partner < 0)
+		if (bDamageReturnVal == STRUCTURE_DESTROYED && orig_destruction_partner < 0)
 		{
-			bDamageReturnVal = 2;
+			bDamageReturnVal = STRUCTURE_DAMAGED;
 		}
 
 		INT8    destruction_partner = -1;
 		BOOLEAN fContinue           = FALSE;
-		if (bDamageReturnVal == 1)
+		if (bDamageReturnVal == STRUCTURE_DESTROYED)
 		{
 			fContinue = TRUE;
 		}
 		// Check for a damaged looking graphic
-		else if (bDamageReturnVal == 2)
+		else if (bDamageReturnVal == STRUCTURE_DAMAGED)
 		{
 			if (orig_destruction_partner < 0)
 			{
