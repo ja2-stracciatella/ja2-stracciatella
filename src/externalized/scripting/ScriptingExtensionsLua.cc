@@ -3,6 +3,7 @@
 #define SOL_CHECK_ARGUMENTS 1
 #define SOL_PRINT_ERRORS 1
 #include <sol/sol.hpp>  // this needs to be included first
+#include "STStringHandler.h"
 
 #include "Campaign_Types.h"
 #include "ContentManager.h"
