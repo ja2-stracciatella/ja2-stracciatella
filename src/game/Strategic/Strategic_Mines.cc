@@ -72,7 +72,8 @@ void InitializeMines( void )
 	UINT8 ubMinDaysBeforeDepletion = 20;
 
 
-	// set up initial mine statu
+	// set up initial mine status
+	UINT8 numAvailableMines = 0;
 	gMineStatus.clear();
 	for (auto mine : GCM->getMines())
 	{
@@ -82,6 +83,17 @@ void InitializeMines( void )
 		pMineStatus.uiMaxRemovalRate = mine->minimumMineProduction;
 		pMineStatus.fEmpty = (pMineStatus.uiMaxRemovalRate == 0) ? TRUE : FALSE;
 		gMineStatus.push_back(pMineStatus);
+
+		if (!pMineStatus.fEmpty)
+		{
+			numAvailableMines++;
+		}
+	}
+
+	if (numAvailableMines == 0)
+	{
+		// No mines in this game
+		return;
 	}
 
 	// randomize the exact size each mine.  The total production is always the same and depends on the game difficulty,

@@ -2068,7 +2068,7 @@ void SaveStrategicAI(HWFILE const hFile)
 	hFile->write(&gfUseAlternateQueenPosition,        1);
 	hFile->seek(SAI_PADDING_BYTES, FileSeekMode::FILE_SEEK_FROM_CURRENT);
 	//Save the army composition (which does get modified)
-	hFile->write(gArmyComp.data(), gArmyComp.size() * sizeof(ARMY_COMPOSITION));
+	if (!gArmyComp.empty()) hFile->write(gArmyComp.data(), gArmyComp.size() * sizeof(ARMY_COMPOSITION));
 	i = SAVED_ARMY_COMPOSITIONS - gArmyComp.size();
 	while( i-- )
 	{
@@ -2089,9 +2089,9 @@ void SaveStrategicAI(HWFILE const hFile)
 		hFile->write(&gEmptyGarrisonGroup, sizeof(GARRISON_GROUP));
 	}
 
-	hFile->write(gubPatrolReinforcementsDenied, gPatrolGroup.size());
+	if (!gPatrolGroup.empty()) hFile->write(gubPatrolReinforcementsDenied, gPatrolGroup.size());
 
-	hFile->write(gubGarrisonReinforcementsDenied, gGarrisonGroup.size());
+	if (!gGarrisonGroup.empty()) hFile->write(gubGarrisonReinforcementsDenied, gGarrisonGroup.size());
 }
 
 
@@ -2171,7 +2171,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		gubPatrolReinforcementsDenied = NULL;
 	}
 	gubPatrolReinforcementsDenied = new UINT8[iPatrolArraySize]{};
-	hFile->read(gubPatrolReinforcementsDenied, iPatrolArraySize);
+	if (iPatrolArraySize) hFile->read(gubPatrolReinforcementsDenied, iPatrolArraySize);
 
 	//Load the list of reinforcement garrison points.
 	if( gubGarrisonReinforcementsDenied )
@@ -2180,7 +2180,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		gubGarrisonReinforcementsDenied = NULL;
 	}
 	gubGarrisonReinforcementsDenied = new UINT8[iGarrisonArraySize]{};
-	hFile->read(gubGarrisonReinforcementsDenied, iGarrisonArraySize);
+	if (iGarrisonArraySize) hFile->read(gubGarrisonReinforcementsDenied, iGarrisonArraySize);
 
 	if( ubSAIVersion < 6 )
 	{ //Reinitialize the costs since they have changed.

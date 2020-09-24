@@ -76,6 +76,7 @@ void MineModel::validateData(std::vector<const MineModel*>& models)
 	{
 		// Mine-related quests use hard-coded enums and may run into problems.
 		ST::string err = ST::format("There are fewer than {} mines defined.", MAX_NUMBER_OF_MINES);
-		throw std::runtime_error(err.to_std_string());
+		SLOGW(err);
+		//throw std::runtime_error(err.to_std_string());
 	}
 }

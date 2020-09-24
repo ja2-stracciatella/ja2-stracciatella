@@ -97,7 +97,8 @@ void UndergroundSectorModel::validateData(const std::vector<const UndergroundSec
 		if (iter == ugSectors.end())
 		{
 			ST::string err = ST::format("An underground sector is expected at ({}), but is not defined.", basement);
-			throw std::runtime_error(err.to_std_string());
+			//throw std::runtime_error(err.to_std_string());
+			SLOGW(err);
 		}
 	}
 }
