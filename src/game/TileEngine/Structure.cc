@@ -1205,26 +1205,29 @@ BOOLEAN StructureDensity( STRUCTURE * pStructure, UINT8 * pubLevel0, UINT8 * pub
 	return( TRUE );
 }
 
-
-BOOLEAN DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason const reason, GridNo const grid_no, INT16 const x, INT16 const y, SOLDIERTYPE* const owner)
+StructureDamageResult DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason const reason, GridNo const grid_no, INT16 const x, INT16 const y, SOLDIERTYPE* const owner)
 {	// Do damage to a structure; returns TRUE if the structure should be removed
-	CHECKF(s);
+	if (!s)
+	{
+		SLOGW("Structure is not defined");
+		return STRUCTURE_NOT_DAMAGED;
+	}
 
 	if (s->fFlags & (STRUCTURE_PERSON | STRUCTURE_CORPSE))
 	{ // Don't hurt this structure, it's used for hit detection only
-		return FALSE;
+		return STRUCTURE_NOT_DAMAGED;
 	}
 
 	UINT8 const armour_kind = s->pDBStructureRef->pDBStructure->ubArmour;
-	if (armour_kind == MATERIAL_INDESTRUCTABLE_METAL) return FALSE;
-	if (armour_kind == MATERIAL_INDESTRUCTABLE_STONE) return FALSE;
+	if (armour_kind == MATERIAL_INDESTRUCTABLE_METAL) return STRUCTURE_NOT_DAMAGED;
+	if (armour_kind == MATERIAL_INDESTRUCTABLE_STONE) return STRUCTURE_NOT_DAMAGED;
 
 	if (reason == STRUCTURE_DAMAGE_EXPLOSION)
 	{
 		// Account for armour!
 		UINT8 const base_armour = gubMaterialArmour[armour_kind];
 		UINT8 const armour      = s->fFlags & STRUCTURE_EXPLOSIVE ? base_armour / 3 : base_armour / 2;
-		if (damage < armour) return FALSE; // Didn't even scratch the paint
+		if (damage < armour) return STRUCTURE_NOT_DAMAGED; // Didn't even scratch the paint
 		// Did some damage to the structure
 		damage -= armour;
 	}
@@ -1240,8 +1243,8 @@ BOOLEAN DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason 
 
 			IgniteExplosionXY(owner, x, y, 0, grid_no, STRUCTURE_IGNITE, 0);
 
-			// ATE: Return false here, as we are dealing with deleting the graphic here
-			return FALSE;
+			// ATE: Return negative here, as we are dealing with deleting the graphic here
+			return STRUCTURE_NOT_DAMAGED;
 		}
 
 		// Make hit sound
@@ -1251,20 +1254,18 @@ BOOLEAN DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason 
 		if (snd != NO_SOUND) PlayLocationJA2Sample(grid_no, snd, HIGHVOLUME, 1);
 
 		// Don't update damage HPs
-		return TRUE;
+		return STRUCTURE_DESTROYED;
 	}
 	else
 	{
 		damage = 0;
 	}
 
-	OnStructureDamaged(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, grid_no, damage);
-
 	// Find the base so we can reduce the hit points!
 	STRUCTURE* const base = FindBaseStructure(s);
-	CHECKF(base);
+	if (!base) return STRUCTURE_NOT_DAMAGED;
 
-	if (base->ubHitPoints <= damage) return TRUE; // boom! structure destroyed!
+	if (base->ubHitPoints <= damage) return STRUCTURE_DESTROYED; // boom! structure destroyed!
 	base->ubHitPoints -= damage;
 
 	/* Since the structure is being damaged, set the map element that a structure
@@ -1272,7 +1273,7 @@ BOOLEAN DamageStructure(STRUCTURE* const s, UINT8 damage, StructureDamageReason 
 	gpWorldLevelData[grid_no].uiFlags |= MAPELEMENT_STRUCTURE_DAMAGED;
 
 	// We are a little damaged
-	return 2;
+	return STRUCTURE_DAMAGED;
 }
 
 

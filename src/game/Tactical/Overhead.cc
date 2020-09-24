@@ -373,8 +373,9 @@ void MoveSoldierFromAwayToMercSlot(SOLDIERTYPE* const pSoldier)
 	AddMercSlot(pSoldier);
 }
 
+static void HandleBrothelWallDestroyed(INT16 sSectorX, INT16 sSectorY, INT8 sSectorZ, INT16 sGridNo, STRUCTURE* s, UINT8 ubDamage, BOOLEAN fDestroyed);
 
-void InitTacticalEngine(void)
+void InitTacticalEngine()
 {
 	InitRenderParams(0);
 	InitializeTacticalInterface();
@@ -389,6 +390,9 @@ void InitTacticalEngine(void)
 	InitPathAI();
 	InitAI();
 	InitOverhead();
+
+	OnStructureDamaged.addListener("default:overhead", HandleBrothelWallDestroyed);
+	BeforeStructureDamaged.addListener("default", HandleStatueDamaged);
 }
 
 
@@ -6249,6 +6253,20 @@ void HandleThePlayerBeNotifiedOfSomeoneElseInSector(void)
 	DoMessageBox(MSG_BOX_BASIC_STYLE, *(GCM->getNewString(NS_SOMEONE_ELSE_IN_SECTOR)), GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
 }
 
+static void HandleBrothelWallDestroyed(INT16 const sSectorX, INT16 const sSectorY, INT8 const sSectorZ, INT16 const sGridNo, STRUCTURE* const s, UINT8 const ubDamage, BOOLEAN const fDestroyed)
+{
+    // CJC, Sept 16: if we destroy any wall of the brothel, make Kingpin's men hostile!
+    if (sSectorX == 5 && sSectorY == MAP_ROW_C && sSectorZ == 0 && s->fFlags & STRUCTURE_WALLSTUFF && fDestroyed)
+    {
+        UINT8 room = GetRoom(sGridNo);
+        if (room == NO_ROOM) room = GetRoom(sGridNo + DirectionInc(SOUTH));
+        if (room == NO_ROOM) room = GetRoom(sGridNo + DirectionInc(EAST));
+        if (room != NO_ROOM && IN_BROTHEL(room))
+        {
+            CivilianGroupChangesSides(KINGPIN_CIV_GROUP);
+        }
+    }
+}
 
 #ifdef WITH_UNITTESTS
 #undef FAIL

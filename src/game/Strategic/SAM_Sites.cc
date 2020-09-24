@@ -23,7 +23,7 @@ BOOLEAN fSamSiteFound[NUMBER_OF_SAMS] = {
 
 Observable<> OnAirspaceControlUpdated = {};
 
-static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, UINT8 ubDamage);
+static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, void*, UINT8 ubDamage, BOOLEAN fIsDestroyed);
 
 void InitializeSAMSites()
 {
@@ -131,8 +131,6 @@ bool IsThisSectorASAMSector(INT16 const x, INT16 const y, INT8 const z)
 // a -1 will be returned upon failure
 INT8 GetSAMIdFromSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
-	INT16 sSectorValue = 0;
-
 	// check if valid sector
 	if (bSectorZ != 0)
 	{
@@ -140,7 +138,7 @@ INT8 GetSAMIdFromSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 	}
 
 	// get the sector value
-	sSectorValue = SECTOR(sSectorX, sSectorY);
+	INT16 sSectorValue = SECTOR(sSectorX, sSectorY);
 	return GCM->findSamIDBySector(sSectorValue);
 }
 
@@ -160,10 +158,8 @@ bool DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const 
 }
 
 // Look for a SAM site, update
-static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, UINT8 ubDamage)
+static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, void*, UINT8 ubDamage, BOOLEAN fIsDestroyed)
 {
-	INT16 sSectorNo;
-
 	// OK, First check if SAM exists, and if not, return
 	if (!DoesSAMExistHere(sSectorX, sSectorY, sSectorZ, sGridNo))
 	{
@@ -171,7 +167,7 @@ static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSec
 	}
 
 	// Damage.....
-	sSectorNo = CALCULATE_STRATEGIC_INDEX(sSectorX, sSectorY);
+	INT16 sSectorNo = CALCULATE_STRATEGIC_INDEX(sSectorX, sSectorY);
 	SLOGD(ST::format("SAM site at sector #{} is damaged by {} points", sSectorNo, ubDamage));
 	if (StrategicMap[sSectorNo].bSAMCondition >= ubDamage)
 	{
