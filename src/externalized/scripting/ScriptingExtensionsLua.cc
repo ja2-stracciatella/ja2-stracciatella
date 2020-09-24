@@ -126,8 +126,8 @@ static void RegisterUserTypes()
 		);
 
 	lua.new_usertype<OBJECTTYPE>("OBJECTTYPE",
-		"usItem", &OBJECTTYPE::usItem,  // @memberof OBJECTTYPE @public
-		"bTrap", &OBJECTTYPE::bTrap // @memberof OBJECTTYPE @public
+		"usItem", &OBJECTTYPE::usItem,
+		"bTrap", &OBJECTTYPE::bTrap
 		);
 
 	lua.new_usertype<STRUCTURE>("STRUCTURE",
@@ -279,8 +279,6 @@ static void InvokeFunction(ST::string functionName, A... args)
 template<typename ...A>
 static std::function<void(A...)> wrap(std::string luaFunc)
 {
-	if (luaFunc.empty()) return {};
-
 	return [luaFunc](A... args) {
 		InvokeFunction(luaFunc, args...);
 	};

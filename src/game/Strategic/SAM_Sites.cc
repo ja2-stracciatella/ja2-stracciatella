@@ -28,7 +28,7 @@ static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSec
 void InitializeSAMSites()
 {
 	// handle SAM site damages
-	OnStructureDamaged.addListener("default", UpdateAndDamageSAMIfFound);
+	OnStructureDamaged.addListener("default:sam", UpdateAndDamageSAMIfFound);
 
 	// All SAM sites start game in perfect working condition.
 	for (auto samSite : GCM->getSamSites())

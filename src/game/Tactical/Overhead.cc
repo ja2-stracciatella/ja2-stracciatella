@@ -391,7 +391,7 @@ void InitTacticalEngine()
 	InitAI();
 	InitOverhead();
 
-	OnStructureDamaged.addListener("default:overhead", HandleBrothelWallDestroyed);
+	OnStructureDamaged.addListener("default:brothel", HandleBrothelWallDestroyed);
 	BeforeStructureDamaged.addListener("default", HandleStatueDamaged);
 }
 
