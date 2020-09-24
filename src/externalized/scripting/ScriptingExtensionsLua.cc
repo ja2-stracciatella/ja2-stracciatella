@@ -34,6 +34,8 @@ static sol::state lua;
 static void RegisterUserTypes();
 static void RegisterGlobals();
 static void RegisterLogger();
+static void RegisterListener(std::string observable, std::string key, std::string luaFunctionName);
+static void UnregisterListener(std::string observable, std::string key);
 
 void JA2Require(std::string scriptFileName)
 {
@@ -230,13 +232,12 @@ static void RegisterLogger()
 	lua.set_function("print", [](std::string msg) { LogLuaMessage(LogLevel::Info, msg); });
 }
 
-static void InvokeFunction(ST::string functionName)
+/**
+ * Invokes a Lua function by name
+ */
+template<typename ...A>
+static void InvokeFunction(ST::string functionName, A... args)
 {
-	if (!isLuaInitialized)
-	{
-		SLOGD("Lua scripting is not available");
-		return;
-	}
 	if (isLuaDisabled)
 	{
 		SLOGE("Scripting engine has been disabled due to a previous error"); 
@@ -246,11 +247,12 @@ static void InvokeFunction(ST::string functionName)
 	sol::protected_function func = lua[functionName.to_std_string()];
 	if (!func.valid())
 	{
-		SLOGD(ST::format("Function {} is not defined", functionName));
+		SLOGE(ST::format("Function {} is not defined", functionName));
+		isLuaDisabled = true;
 		return;
 	}
 	
-	auto result = func.call();
+	auto result = func.call(args...);
 	if (!result.valid())
 	{
 		sol::error err = result;
@@ -259,7 +261,38 @@ static void InvokeFunction(ST::string functionName)
 	}
 }
 
-void BeforePrepareSector()
+// Creates a typed std::function out of a Lua function
+template<typename ...A>
+static std::function<void(A...)> wrap(std::string luaFunc)
 {
-	InvokeFunction("BeforePrepareSector");
+	if (luaFunc.empty()) return {};
+
+	return [luaFunc](A... args) {
+		InvokeFunction(luaFunc, args...);
+	};
+}
+
+/**
+ * Registers a callback listener with an Observable, to receive notifications in Lua scripts.
+ * @param observable string the name of an instance of Observable
+ * @param key string a unique key identifying the callback listener
+ * @param luaFunc string name to the callback handling lua function
+ */
+static void RegisterListener(std::string observable, std::string key, std::string luaFunc)
+{
+	if (isLuaInitialized)
+	{
+		throw std::runtime_error("RegisterListener is not allowed after initialization");
+	}
+
+	if      (observable == "OnStructureDamaged")         OnStructureDamaged.addListener(key, wrap<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN>(luaFunc));
+	else if (observable == "BeforeStructureDamaged")     BeforeStructureDamaged.addListener(key, wrap<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN*>(luaFunc));
+	else if (observable == "OnAirspaceControlUpdated")   OnAirspaceControlUpdated.addListener(key, wrap<>(luaFunc));
+	else if (observable == "BeforePrepareSector")        BeforePrepareSector.addListener(key, wrap<>(luaFunc));
+	else if (observable == "OnSoldierCreated")           OnSoldierCreated.addListener(key, wrap<SOLDIERTYPE*>(luaFunc));
+	else {
+		ST::string err = ST::format("There is no observable named '{}'", observable);
+		throw std::logic_error(err.to_std_string());
+	}
+{
 }

@@ -1,10 +1,18 @@
 #pragma once
 
 #include "Types.h"
+#include "Observable.h"
 
 struct OBJECTTYPE;
 struct SECTORINFO;
 struct UNDERGROUND_SECTORINFO;
+struct SOLDIERTYPE;
+struct STRUCTURE;
+
+extern Observable<SOLDIERTYPE*> OnSoldierCreated;
+extern Observable<> BeforePrepareSector;
+extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN*> BeforeStructureDamaged;
+extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged;
 
 /**
  * @defgroup cpp C++ functions
