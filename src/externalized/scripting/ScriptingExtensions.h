@@ -16,7 +16,7 @@
  * JA2Require("enums.lua")
  *
  * -- Register a listener with an observable so your code gets called by the game
- * RegisterListener("BeforePrepareSector", "mod:my-awesome-mod", "HandlePrepareSector")
+ * RegisterListener("BeforePrepareSector", "HandlePrepareSector")
  *
  * -- This functions gets called after a sector is loaded, but before we actually put enemies and soldiers in
  * function HandlePrepareSector()

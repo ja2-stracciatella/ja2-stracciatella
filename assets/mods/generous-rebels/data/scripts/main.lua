@@ -1,10 +1,10 @@
 JA2Require("enums.lua")
-RegisterListener("BeforePrepareSector", "mod:generous-rebels", "addItemsToSector")
+RegisterListener("BeforePrepareSector", "add_items_to_sector")
 
 --[[
 Adds extra items in the initial sectors when we load it for the first time.
 --]]
-function addItemsToSector()
+function add_items_to_sector()
 
     local currentSector = GetCurrentSector()
 

@@ -40,10 +40,13 @@ static bool isLuaInitialized = false;
 static bool isLuaDisabled = false;
 static sol::state lua;
 
+// an increment counter used to generate unique keys for listeners
+static unsigned int counter;
+
 static void RegisterUserTypes();
 static void RegisterGlobals();
 static void RegisterLogger();
-static void RegisterListener(std::string observable, std::string key, std::string luaFunctionName);
+static void RegisterListener(std::string observable, std::string luaFunctionName);
 static void UnregisterListener(std::string observable, std::string key);
 
 void JA2Require(std::string scriptFileName)
@@ -71,6 +74,7 @@ void InitScriptingEngine()
 	loadedScripts.clear();
 	isLuaInitialized = false;
 	isLuaDisabled = false;
+	counter = 0;
 
 	if (!GCM->doesGameResExists(SCRIPTS_DIR "/" ENTRYPOINT_SCRIPT))
 	{
@@ -216,6 +220,7 @@ static void RegisterGlobals()
 	lua.set_function("dofile",   []() { throw std::logic_error("dofile is not allowed. Use JA2Require instead"); });
 	lua.set_function("loadfile", []() { throw std::logic_error("loadfile is not allowed. Use JA2Require instead"); });
 
+	lua.set_function("___noop", []() {});
 	lua.set_function("RegisterListener", RegisterListener);
 	lua.set_function("UnregisterListener", UnregisterListener);
 }
@@ -281,15 +286,7 @@ static std::function<void(A...)> wrap(std::string luaFunc)
 	};
 }
 
-/**
- * Registers a callback listener with an Observable, to receive notifications in Lua scripts.
- * This function can only be used during initialization.
- * @param observable the name of an Observable
- * @param key a unique key identifying the callback listener
- * @param luaFunc name of the function handling callback
- * @ingroup funclib-general
- */
-static void RegisterListener(std::string observable, std::string key, std::string luaFunc)
+static void _RegisterListener(std::string observable, std::string luaFunc, ST::string key)
 {
 	if (isLuaInitialized)
 	{
@@ -308,6 +305,19 @@ static void RegisterListener(std::string observable, std::string key, std::strin
 }
 
 /**
+ * Registers a callback listener with an Observable, to receive notifications in Lua scripts.
+ * This function can only be used during initialization.
+ * @param observable the name of an Observable
+ * @param luaFunc name of the function handling callback
+ * @ingroup funclib-general
+ */
+static void RegisterListener(std::string observable, std::string luaFunc)
+{
+	ST::string key = ST::format("mod:{03d}", counter++);
+	_RegisterListener(observable, luaFunc, key);
+}
+
+/**
  * Unregisters a listener from the Observable.
  * This function can only be used during initialization.
  * @param observable
@@ -316,5 +326,5 @@ static void RegisterListener(std::string observable, std::string key, std::strin
  */
 static void UnregisterListener(std::string observable, std::string key)
 {
-	RegisterListener(observable, key, "");
+	_RegisterListener(observable, "___noop", key);
 }
