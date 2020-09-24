@@ -201,18 +201,21 @@ static void RegisterGlobals()
 	lua.set_function("PlaceItem", PlaceItem);
 
 	lua.set_function("JA2Require", JA2Require);
-	lua.set_function("require",  [](void) { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
-	lua.set_function("dofile",   [](void) { throw std::logic_error("dofile is not allowed. Use JA2Require instead"); });
-	lua.set_function("loadfile", [](void) { throw std::logic_error("loadfile is not allowed. Use JA2Require instead"); });
+	lua.set_function("require",  []() { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
+	lua.set_function("dofile",   []() { throw std::logic_error("dofile is not allowed. Use JA2Require instead"); });
+	lua.set_function("loadfile", []() { throw std::logic_error("loadfile is not allowed. Use JA2Require instead"); });
+
+	lua.set_function("RegisterListener", RegisterListener);
+	lua.set_function("UnregisterListener", UnregisterListener);
 }
 
 static void LogLuaMessage(LogLevel level, std::string msg) {
-		lua_Debug info;
-		// Stack position 0 is the c function we are in
-		// Stack position 1 is the calling lua script
-		lua_getstack(lua, 1, &info);
-		lua_getinfo(lua, "S", &info);
-		LogMessage(false, level, info.short_src, msg);
+	lua_Debug info;
+	// Stack position 0 is the c function we are in
+	// Stack position 1 is the calling lua script
+	lua_getstack(lua, 1, &info);
+	lua_getinfo(lua, "S", &info);
+	LogMessage(false, level, info.short_src, msg);
 }
 
 static void RegisterLogger()
