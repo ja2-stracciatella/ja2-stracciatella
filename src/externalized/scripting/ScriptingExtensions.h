@@ -15,14 +15,17 @@
  * -- This gives you access to predefined enum values such as Items or MercsProfiles
  * JA2Require("enums.lua")
  *
+ * -- Register a listener with an observable so your code gets called by the game
+ * RegisterListener("BeforePrepareSector", "mod:my-awesome-mod", "HandlePrepareSector")
+ *
  * -- This functions gets called after a sector is loaded, but before we actually put enemies and soldiers in
- * function BeforePrepareSector()
+ * function HandlePrepareSector()
  *     log.info("Do something before preparing sector")
  * end
  * ```
- * 
+ *
  * ## Logging
- * 
+ *
  * Logger is provided as a global object `log` in the Lua environment. Use it as follows:
  * 
  * ```lua

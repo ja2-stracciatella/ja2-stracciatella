@@ -26,6 +26,15 @@
 #define SCRIPTS_DIR "scripts"
 #define ENTRYPOINT_SCRIPT "main.lua"
 
+/*! \struct GAME_OPTIONS
+    \brief Options which the current game was started with */
+struct GAME_OPTIONS;
+/*! \struct TacticalStatusType
+    \brief Status information of the game
+    \details Accessible via the gTacticalStatusType global variable
+    */
+struct TacticalStatusType;
+
 static std::set<std::string> loadedScripts;
 static bool isLuaInitialized = false;
 static bool isLuaDisabled = false;
@@ -113,8 +122,8 @@ static void RegisterUserTypes()
 		);
 
 	lua.new_usertype<OBJECTTYPE>("OBJECTTYPE",
-		"usItem", &OBJECTTYPE::usItem,
-		"bTrap", &OBJECTTYPE::bTrap
+		"usItem", &OBJECTTYPE::usItem,  // @memberof OBJECTTYPE @public
+		"bTrap", &OBJECTTYPE::bTrap // @memberof OBJECTTYPE @public
 		);
 
 	lua.new_usertype<STRUCTURE>("STRUCTURE",
@@ -274,9 +283,11 @@ static std::function<void(A...)> wrap(std::string luaFunc)
 
 /**
  * Registers a callback listener with an Observable, to receive notifications in Lua scripts.
- * @param observable string the name of an instance of Observable
- * @param key string a unique key identifying the callback listener
- * @param luaFunc string name to the callback handling lua function
+ * This function can only be used during initialization.
+ * @param observable the name of an Observable
+ * @param key a unique key identifying the callback listener
+ * @param luaFunc name of the function handling callback
+ * @ingroup funclib-general
  */
 static void RegisterListener(std::string observable, std::string key, std::string luaFunc)
 {
@@ -297,9 +308,11 @@ static void RegisterListener(std::string observable, std::string key, std::strin
 }
 
 /**
- * Unregisters a listener from the Observable
+ * Unregisters a listener from the Observable.
+ * This function can only be used during initialization.
  * @param observable
  * @param key
+ * @ingroup funclib-general
  */
 static void UnregisterListener(std::string observable, std::string key)
 {
