@@ -294,5 +294,14 @@ static void RegisterListener(std::string observable, std::string key, std::strin
 		ST::string err = ST::format("There is no observable named '{}'", observable);
 		throw std::logic_error(err.to_std_string());
 	}
+}
+
+/**
+ * Unregisters a listener from the Observable
+ * @param observable
+ * @param key
+ */
+static void UnregisterListener(std::string observable, std::string key)
 {
+	RegisterListener(observable, key, "");
 }
