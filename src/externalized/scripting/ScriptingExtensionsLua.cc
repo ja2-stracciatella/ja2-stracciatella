@@ -9,11 +9,14 @@
 #include "ContentManager.h"
 #include "FileMan.h"
 #include "FunctionsLibrary.h"
+#include "Game_Events.h"
 #include "GameInstance.h"
+#include "GameSettings.h"
 #include "Logger.h"
 #include "Overhead.h"
 #include "Quests.h"
 #include "StrategicMap.h"
+#include "Structure.h"
 #include <set>
 #include <stdexcept>
 #include <string>
@@ -112,7 +115,12 @@ static void RegisterUserTypes()
 		"bTrap", &OBJECTTYPE::bTrap
 		);
 
-	lua.new_simple_usertype<StrategicMapElement>("StrategicMapElement",
+	lua.new_usertype<STRUCTURE>("STRUCTURE",
+		"sGridNo", &STRUCTURE::sGridNo,
+		"uiFlags", &STRUCTURE::fFlags
+		);
+
+	lua.new_usertype<StrategicMapElement>("StrategicMapElement",
 		"bNameId", &StrategicMapElement::bNameId,
 		"fEnemyControlled", &StrategicMapElement::fEnemyControlled,
 		"fEnemyAirControlled", &StrategicMapElement::fEnemyAirControlled
@@ -122,6 +130,59 @@ static void RegisterUserTypes()
 		"fEnemyInSector", &TacticalStatusType::fEnemyInSector,
 		"fDidGameJustStart", &TacticalStatusType::fDidGameJustStart
 		);
+
+	lua.new_usertype<STRATEGICEVENT>("STRATEGICEVENT",
+		"uiTimeStamp", &STRATEGICEVENT::uiTimeStamp,
+		"uiParam", &STRATEGICEVENT::uiParam,
+		"uiTimeOffset", &STRATEGICEVENT::uiTimeOffset,
+		"ubEventFrequency", &STRATEGICEVENT::ubEventType,
+		"ubEventKind", &STRATEGICEVENT::ubCallbackID
+		);
+
+	lua.new_usertype<GAME_OPTIONS>("GAME_OPTIONS",
+		"fGunNut", &GAME_OPTIONS::fGunNut,
+		"fSciFi", &GAME_OPTIONS::fSciFi,
+		"ubDifficultyLevel", &GAME_OPTIONS::ubDifficultyLevel,
+		"fTurnTimeLimit", &GAME_OPTIONS::fTurnTimeLimit,
+		"ubGameSaveMode", &GAME_OPTIONS::ubGameSaveMode
+		);
+	
+	lua.new_usertype<SOLDIERTYPE>("SOLDIERTYPE",
+		"ubID", &SOLDIERTYPE::ubID,
+		"ubProfile", &SOLDIERTYPE::ubProfile,
+		"ubBodyType", &SOLDIERTYPE::ubBodyType,
+		"ubSoldierClass", &SOLDIERTYPE::ubSoldierClass,
+		"bTeam", &SOLDIERTYPE::bTeam,
+		"ubCivilianGroup", &SOLDIERTYPE::ubCivilianGroup,
+		"bNeutral", &SOLDIERTYPE::bNeutral,
+
+		"bLifeMax", &SOLDIERTYPE::bLifeMax,
+		"bLife", &SOLDIERTYPE::bLife,
+		"bBreath", &SOLDIERTYPE::bBreath,
+		"bBreathMax", &SOLDIERTYPE::bBreathMax,
+		"bCamo", &SOLDIERTYPE::bCamo,
+
+		"bAgility", &SOLDIERTYPE::bAgility,
+		"bDexterity", &SOLDIERTYPE::bDexterity,
+		"bExplosive", &SOLDIERTYPE::bExplosive,
+		"bLeadership", &SOLDIERTYPE::bLeadership,
+		"bMarksmanship", &SOLDIERTYPE::bMarksmanship,
+		"bMechanical", &SOLDIERTYPE::bMechanical,
+		"bMedical", &SOLDIERTYPE::bMedical,
+		"bStrength", &SOLDIERTYPE::bStrength,
+		"bWisdom", &SOLDIERTYPE::bWisdom,
+
+		"bExpLevel", &SOLDIERTYPE::bExpLevel,
+		"ubSkillTrait1", &SOLDIERTYPE::ubSkillTrait1,
+		"ubSkillTrait2", &SOLDIERTYPE::ubSkillTrait2,
+
+		"HeadPal", &SOLDIERTYPE::HeadPal,
+		"PantsPal", &SOLDIERTYPE::PantsPal,
+		"VestPal", &SOLDIERTYPE::VestPal,
+		"SkinPal", &SOLDIERTYPE::SkinPal,
+
+		"ubBattleSoundID", &SOLDIERTYPE::ubBattleSoundID
+		);
 }
 
 static void RegisterGlobals()
@@ -129,6 +190,7 @@ static void RegisterGlobals()
 	lua["gTacticalStatus"] = &gTacticalStatus;
 	lua["gubQuest"] = &gubQuest;
 	lua["gubFact"] = &gubFact;
+	lua["gGameOptions"] = &gGameOptions;
 
 	lua.set_function("GetCurrentSector", GetCurrentSector);
 	lua.set_function("GetSectorInfo", GetSectorInfo);
