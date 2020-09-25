@@ -1626,7 +1626,7 @@ void GoToPrevCharacterInList( void )
 }
 
 
-void HandleMinerEvent(UINT8 const bMinerNumber, INT16 const sQuoteNumber, BOOLEAN const fForceMapscreen)
+void HandleMinerEvent(ProfileID const ubMinerProfileID, INT16 const sQuoteNumber, BOOLEAN const fForceMapscreen)
 {
 	BOOLEAN fFromMapscreen = FALSE;
 
@@ -1658,7 +1658,7 @@ void HandleMinerEvent(UINT8 const bMinerNumber, INT16 const sQuoteNumber, BOOLEA
 		fMapPanelDirty = TRUE;
 	}
 
-	CharacterDialogue(g_external_face_profile_ids[bMinerNumber], sQuoteNumber, uiExternalStaticNPCFaces[bMinerNumber], DIALOGUE_EXTERNAL_NPC_UI, FALSE);
+	CharacterDialogue(ubMinerProfileID, sQuoteNumber, GetExternalNPCFace(ubMinerProfileID), DIALOGUE_EXTERNAL_NPC_UI, FALSE);
 }
 
 

@@ -212,7 +212,7 @@ void LoadMercProfiles()
 	gfProfileDataLoaded = TRUE;
 
 	// no better place..heh?.. will load faces for profiles that are 'extern'.....won't have soldiertype instances
-	InitalizeStaticExternalNPCFaces();
+	PreloadExternalNPCFaces();
 
 	LoadCarPortraitValues();
 }

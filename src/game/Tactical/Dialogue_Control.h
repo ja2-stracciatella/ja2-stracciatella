@@ -176,20 +176,9 @@ enum DialogueHandler
 };
 
 
-enum{
-	SKYRIDER_EXTERNAL_FACE =0,
-	MINER_FRED_EXTERNAL_FACE,
-	MINER_MATT_EXTERNAL_FACE,
-	MINER_OSWALD_EXTERNAL_FACE,
-	MINER_CALVIN_EXTERNAL_FACE,
-	MINER_CARL_EXTERNAL_FACE,
-	NUMBER_OF_EXTERNAL_NPC_FACES,
-};
-
-
-// the static NPC dialogue faces
-extern FACETYPE*       uiExternalStaticNPCFaces[];
-extern const ProfileID g_external_face_profile_ids[];
+// Gets a external NPC dialogue face by merc profile ID.
+// "External" because the NPC is not on our team and might not even exist as a soldier
+FACETYPE* GetExternalNPCFace(ProfileID);
 
 // Functions for handling dialogue Q
 void InitalizeDialogueControl(void);
@@ -224,9 +213,9 @@ BOOLEAN DialogueQueueIsEmptyAndNobodyIsTalking(void);
 
 
 // set up and shutdown static external NPC faces
-void InitalizeStaticExternalNPCFaces( void );
-void ShutdownStaticExternalNPCFaces();
-
+void PreloadExternalNPCFaces();
+void LoadExternalNPCFace(ProfileID);
+void UnloadExternalNPCFaces();
 
 void SayQuoteFromAnyBodyInSector(UINT16 quote_id);
 void SayQuoteFromAnyBodyInThisSector(INT16 x, INT16 y, INT8 z, UINT16 quote_id);

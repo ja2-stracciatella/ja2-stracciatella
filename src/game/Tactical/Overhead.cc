@@ -403,7 +403,7 @@ void ShutdownTacticalEngine(void)
 	DeleteFacesGraphics();
 	DeleteDialogueControlGraphics();
 	DeletePaletteData();
-	ShutdownStaticExternalNPCFaces();
+	UnloadExternalNPCFaces();
 	ShutDownPathAI();
 	UnLoadCarPortraits();
 	ShutdownNPCQuotes();

@@ -73,9 +73,9 @@ typedef std::queue<DialogueEvent*>DialogueQueue;
 
 BOOLEAN fExternFacesLoaded = FALSE;
 
-FACETYPE* uiExternalStaticNPCFaces[NUMBER_OF_EXTERNAL_NPC_FACES];
-const ProfileID g_external_face_profile_ids[] =
-{
+static std::map<ProfileID, FACETYPE*> externalNPCFaces;
+
+const ProfileID preloadedExternalNPCFaces[] = {
 	SKYRIDER,
 	FRED,
 	MATT,
@@ -170,36 +170,52 @@ void ShutdownDialogueControl()
 	EmptyDialogueQueue();
 
 	// shutdown external static NPC faces
-	ShutdownStaticExternalNPCFaces();
+	UnloadExternalNPCFaces();
 
 	// gte rid of portraits for cars
 	UnLoadCarPortraits();
 }
 
 
-void InitalizeStaticExternalNPCFaces( void )
+void LoadExternalNPCFace(ProfileID mercID)
 {
-	INT32 iCounter = 0;
+	if (externalNPCFaces.find(mercID) == externalNPCFaces.end())
+	{
+		externalNPCFaces[mercID] = &InitFace(mercID, nullptr, FACE_FORCE_SMALL);
+	}
+}
+
+FACETYPE* GetExternalNPCFace(ProfileID mercID)
+{
+	LoadExternalNPCFace(mercID); // ensure we have loaded the face
+	return externalNPCFaces.at(mercID);
+}
+
+void PreloadExternalNPCFaces()
+{
 	// go and grab all external NPC faces that are needed for the game who won't exist as soldiertypes
 
 	if (fExternFacesLoaded) return;
 
 	fExternFacesLoaded = TRUE;
 
-	for( iCounter = 0; iCounter < NUMBER_OF_EXTERNAL_NPC_FACES; iCounter++ )
+	for (int i = 0; i < lengthof(preloadedExternalNPCFaces); i++)
 	{
-		uiExternalStaticNPCFaces[iCounter] = &InitFace(g_external_face_profile_ids[iCounter], 0, FACE_FORCE_SMALL);
+		LoadExternalNPCFace(preloadedExternalNPCFaces[i]);
 	}
 }
 
 
-void ShutdownStaticExternalNPCFaces()
+void UnloadExternalNPCFaces()
 {
 	if (!fExternFacesLoaded) return;
 	fExternFacesLoaded = FALSE;
 
 	// Remove all external NPC faces.
-	FOR_EACH(FACETYPE*, i, uiExternalStaticNPCFaces) DeleteFace(*i);
+	for (auto entry : externalNPCFaces)
+	{
+		DeleteFace(entry.second);
+	}
 }
 
 
@@ -1705,7 +1721,7 @@ void DeleteDialogueControlGraphics()
 
 TEST(DialogueControl, asserts)
 {
-	EXPECT_EQ(lengthof(g_external_face_profile_ids), NUMBER_OF_EXTERNAL_NPC_FACES);
+	EXPECT_EQ(lengthof(preloadedExternalNPCFaces), 6);
 }
 
 #endif

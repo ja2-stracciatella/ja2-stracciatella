@@ -1021,7 +1021,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 #undef BAR
 
-	InitalizeStaticExternalNPCFaces();
+	PreloadExternalNPCFaces();
 	LoadCarPortraitValues();
 
 	// OK, turn OFF show all enemies....
