@@ -36,9 +36,8 @@ tempfile = "3.0"
 version = "0.3"
 features = ["std", "fileapi"]
 
-[target.'cfg(unix)'.dependencies.libc]
-# @see stracciatella::fs::free_space
-version = "0.2"
+[target.'cfg(target_os = "android")'.dependencies.android_logger]
+version = "0.9"
 
 [dev-dependencies]
 regex = "1.0"

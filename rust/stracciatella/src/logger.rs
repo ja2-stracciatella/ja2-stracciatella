@@ -67,11 +67,11 @@ impl From<usize> for LogLevel {
 /// Other log levels should be set to max level in order for the filter
 /// to work properly
 struct RuntimeLevelFilter {
-    logger: Box<CombinedLogger>,
+    logger: Box<Log>,
 }
 
 impl RuntimeLevelFilter {
-    fn init(logger: Box<CombinedLogger>) {
+    fn init(logger: Box<Log>) {
         let filter = RuntimeLevelFilter { logger };
 
         set_max_level(LevelFilter::max());
@@ -110,25 +110,35 @@ impl Logger {
     /// Needs to be called once at start of the game engine. Any log messages send
     /// before will be discarded.
     pub fn init(log_file: &Path) {
-        let mut config = Config::default();
-        config.target = Some(Level::Error);
-        config.thread = None;
-        config.time_format = Some("%FT%T");
-        let logger: Box<dyn SharedLogger>;
-        if let Some(termlogger) = TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed) {
-            logger = termlogger;
-        } else {
-            logger = SimpleLogger::new(LevelFilter::max(), config); // no colors
-        }
-        match File::create(&log_file) {
-            Ok(f) => RuntimeLevelFilter::init(CombinedLogger::new(vec![
-                logger,
-                WriteLogger::new(LevelFilter::max(), config, f),
-            ])),
-            Err(err) => {
-                RuntimeLevelFilter::init(CombinedLogger::new(vec![logger]));
-                warn!("Failed to log to {:?}: {}", &log_file, err);
+        #[cfg(not(target_os = "android"))]
+        {
+            let mut config = Config::default();
+            config.target = Some(Level::Error);
+            config.thread = None;
+            config.time_format = Some("%FT%T");
+            let logger: Box<dyn SharedLogger>;
+
+            if let Some(termlogger) = TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed) {
+                logger = termlogger;
+            } else {
+                logger = SimpleLogger::new(LevelFilter::max(), config); // no colors
             }
+
+            match File::create(&log_file) {
+                Ok(f) => RuntimeLevelFilter::init(CombinedLogger::new(vec![
+                    logger,
+                    WriteLogger::new(LevelFilter::max(), config, f),
+                ])),
+                Err(err) => {
+                    RuntimeLevelFilter::init(CombinedLogger::new(vec![logger]));
+                    warn!("Failed to log to {:?}: {}", &log_file, err);
+                }
+            }
+        }
+        #[cfg(target_os = "android")]
+        {
+            let config = android_logger::Config::default().with_min_level(Level::Trace).with_tag("JA2");
+            RuntimeLevelFilter::init(Box::new(android_logger::AndroidLogger::new(config)));
         }
     }
 
