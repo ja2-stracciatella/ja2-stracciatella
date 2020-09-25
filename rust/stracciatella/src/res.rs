@@ -252,7 +252,7 @@ impl ResourcePackBuilder {
                 }
             })
             .collect();
-        let mut resources: Vec<_> = resources?.into_iter().flat_map(|r| r).collect();
+        let mut resources: Vec<_> = resources?.into_iter().flatten().collect();
         self.pack.resources.append(&mut resources);
 
         let pack = self.pack.to_owned();
@@ -271,7 +271,7 @@ impl ResourcePackBuilder {
             .par_iter()
             .map(|file| self.get_resources_for_file(base, &file))
             .collect();
-        Ok(resources?.into_iter().flat_map(|r| r).collect())
+        Ok(resources?.into_iter().flatten().collect())
     }
 
     /// Adds an OS file as a resource.

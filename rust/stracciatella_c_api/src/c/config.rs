@@ -33,10 +33,7 @@ pub extern "C" fn EngineOptions_create(
             into_ptr(engine_options)
         }
         Err(msg) => {
-            remember_rust_error(format!(
-                "EngineOptions_create: {}",
-                msg
-            ));
+            remember_rust_error(format!("EngineOptions_create: {}", msg));
             ptr::null_mut()
         }
     }
@@ -83,7 +80,7 @@ pub extern "C" fn EngineOptions_setVanillaGameDir(
 ) {
     let engine_options = unsafe_mut(ptr);
     let vanilla_game_dir = path_buf_from_c_str_or_panic(unsafe_c_str(game_dir_ptr));
-    engine_options.vanilla_game_dir = vanilla_game_dir.to_owned();
+    engine_options.vanilla_game_dir = vanilla_game_dir;
 }
 
 /// Gets the length of `EngineOptions.mods`.
@@ -316,7 +313,7 @@ mod tests {
         let stracciatella_home = temp_dir.path().join(".ja2");
         let stracciatella_json = temp_dir.path().join(".ja2/ja2.json");
 
-        engine_options.stracciatella_home = stracciatella_home.clone();
+        engine_options.stracciatella_home = stracciatella_home;
         engine_options.resolution = Resolution(100, 100);
 
         EngineOptions_write(&mut engine_options);

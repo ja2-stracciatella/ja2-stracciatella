@@ -67,11 +67,11 @@ impl From<usize> for LogLevel {
 /// Other log levels should be set to max level in order for the filter
 /// to work properly
 struct RuntimeLevelFilter {
-    logger: Box<Log>,
+    logger: Box<dyn Log>,
 }
 
 impl RuntimeLevelFilter {
-    fn init(logger: Box<Log>) {
+    fn init(logger: Box<dyn Log>) {
         let filter = RuntimeLevelFilter { logger };
 
         set_max_level(LevelFilter::max());
@@ -118,7 +118,9 @@ impl Logger {
             config.time_format = Some("%FT%T");
             let logger: Box<dyn SharedLogger>;
 
-            if let Some(termlogger) = TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed) {
+            if let Some(termlogger) =
+                TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed)
+            {
                 logger = termlogger;
             } else {
                 logger = SimpleLogger::new(LevelFilter::max(), config); // no colors
@@ -137,7 +139,9 @@ impl Logger {
         }
         #[cfg(target_os = "android")]
         {
-            let config = android_logger::Config::default().with_min_level(Level::Trace).with_tag("JA2");
+            let config = android_logger::Config::default()
+                .with_min_level(Level::Trace)
+                .with_tag("JA2");
             RuntimeLevelFilter::init(Box::new(android_logger::AndroidLogger::new(config)));
         }
     }
