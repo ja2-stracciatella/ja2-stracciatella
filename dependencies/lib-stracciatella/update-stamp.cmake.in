@@ -6,6 +6,7 @@
 #  * STAMP_FILE - the stamp file
 
 file(GLOB_RECURSE sources "@CMAKE_SOURCE_DIR@/rust/*")
+list(FILTER sources EXCLUDE REGEX ".*/target/.*$")
 
 # create new stamp
 set(new_stamp "")

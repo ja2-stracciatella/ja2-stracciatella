@@ -97,10 +97,10 @@ if [[ "$CI_TARGET" == "linux" ]]; then
     $BUILD_CMD --target uninstall
   fi
 
-# print ccache cache statistics
-echo "## print statistics"
-command -v ccache &&
-  ccache -s ||
-  echo "ccache not installed"
+# print sccache cache statistics
+echo "## sccache statistics"
+command -v sccache &&
+  sccache -s ||
+  echo "sccache not installed"
 
 echo "## done ##"

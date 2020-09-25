@@ -1,6 +1,6 @@
 # \file CMakeLists.txt
 
-cmake_minimum_required (VERSION 3.1)
+cmake_minimum_required (VERSION 3.4)
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
 
 ## Some macros
@@ -18,13 +18,11 @@ endmacro()
 ## Project Setup
 
 # compiler caching
-find_program(CCACHE_PROGRAM "ccache")
 find_program(SCCACHE_PROGRAM "sccache")
 if(SCCACHE_PROGRAM)
-    message(STATUS "sccache found at ${SCCACHE_PROGRAM}")
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${SCCACHE_PROGRAM}")
-elseif(CCACHE_PROGRAM)
-    set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${CCACHE_PROGRAM}")
+    message(STATUS "Using sccache found at ${SCCACHE_PROGRAM} for caching build results")
+    set(CMAKE_C_COMPILER_LAUNCHER "${SCCACHE_PROGRAM}" CACHE STRING "" FORCE)
+    set(CMAKE_CXX_COMPILER_LAUNCHER "${SCCACHE_PROGRAM}" CACHE STRING "" FORCE)
 endif()
 
 project(ja2-stracciatella)
@@ -103,9 +101,11 @@ if(MSVC)
 	)
 		# force /MD runtime (future note: cmake 3.15 has CMAKE_MSVC_RUNTIME_LIBRARY)
 		string(REGEX REPLACE "/MDd|/MD|/MTd|/MT|/LDd|/LD" "/MD" _value "${${_var}}")
+        # force /Z7 instead of /ZI to include debug information in obj file
+        string(REGEX REPLACE "/Zi|/ZI" "/Z7" _value "${_value}")
 		if(NOT ${_var} STREQUAL _value)
 			set_property(CACHE "${_var}" PROPERTY VALUE "${_value}")
-		endif()
+        endif()
 	endforeach()
 	set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT "ja2")
 endif()
