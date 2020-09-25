@@ -29,10 +29,14 @@ pub extern "C" fn EngineOptions_create(
             if engine_options.show_help {
                 print!("{}", Cli::usage());
             }
+            no_rust_error();
             into_ptr(engine_options)
         }
         Err(msg) => {
-            println!("{}", msg);
+            remember_rust_error(format!(
+                "EngineOptions_create: {}",
+                msg
+            ));
             ptr::null_mut()
         }
     }

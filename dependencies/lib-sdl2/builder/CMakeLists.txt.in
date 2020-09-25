@@ -12,15 +12,17 @@ project(builder NONE)
 
 include(ExternalProject)
 externalproject_add(sdl2
-    URL "https://libsdl.org/release/SDL2-2.0.8.zip"
-    URL_MD5 "ad40c4872a96af519f6e5be698ed6093"
+    URL "https://libsdl.org/release/SDL2-2.0.12.zip"
+    URL_MD5 "4c48ae7867281b30459a38a969c5fbbb"
     CMAKE_ARGS
         "-G@CMAKE_GENERATOR@"
         "-C@CACHE_FILE@"
         "-DCMAKE_INSTALL_PREFIX=@INSTALL_PREFIX@"
-        "-DCMAKE_SYSTEM_VERSION=${CMAKE_SYSTEM_VERSION}"
+        "-DCMAKE_SYSTEM_VERSION=@CMAKE_SYSTEM_VERSION@"
+        "-DCMAKE_TOOLCHAIN_FILE=@CMAKE_TOOLCHAIN_FILE@"
+        "-DANDROID_ABI=@ANDROID_ABI@"
         -DCMAKE_BUILD_TYPE=RelWithDebInfo
-        -DSDL_SHARED=OFF
+        -DSDL_SHARED=ON
     BUILD_COMMAND ${CMAKE_COMMAND} --build . --config RelWithDebInfo
     INSTALL_COMMAND ${CMAKE_COMMAND} --build . --config RelWithDebInfo --target install
     BUILD_ALWAYS 1

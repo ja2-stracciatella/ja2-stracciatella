@@ -176,7 +176,7 @@ pub fn free_space(path: &Path) -> io::Result<u64> {
             _ => Ok(*unsafe { free_bytes.QuadPart() }),
         };
     }
-    #[cfg(unix)]
+    #[cfg(all(unix, not(target_os = "android")))]
     #[allow(clippy::cast_lossless)]
     {
         // use statvfs in unix family
@@ -191,6 +191,11 @@ pub fn free_space(path: &Path) -> io::Result<u64> {
             0 => Ok(data.f_bfree as u64 * data.f_bsize as u64),
             _ => Err(io::Error::last_os_error()),
         };
+    }
+    #[cfg(target_os = "android")]
+    #[allow(clippy::cast_lossless)]
+    {
+        return Ok(1024 * 1024 * 1024);
     }
     Err(io::Error::new(io::ErrorKind::Other, "not implemented"))
 }

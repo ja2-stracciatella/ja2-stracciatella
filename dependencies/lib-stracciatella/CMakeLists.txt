@@ -21,6 +21,19 @@ set(RUSTC_BIN_SUFFIX "${CMAKE_EXECUTABLE_SUFFIX}")
 # setup cargo env
 set(CARGO_BUILD_TARGET_DIR "${CMAKE_CURRENT_BINARY_DIR}/target")
 set(CARGO_BUILD_TARGET "${RUSTC_HOST}" CACHE STRING "The target platform triple for rustc.")
+if (ANDROID)
+    if (ANDROID_ABI STREQUAL "armeabi-v7a")
+        set(CARGO_BUILD_TARGET "armv7-linux-androideabi" CACHE STRING "The target platform triple for rustc." FORCE)
+    elseif(ANDROID_ABI STREQUAL "arm64-v8a")
+        set(CARGO_BUILD_TARGET "aarch64-linux-android" CACHE STRING "The target platform triple for rustc." FORCE)
+    elseif(ANDROID_ABI STREQUAL "x86")
+        set(CARGO_BUILD_TARGET "i686-linux-android" CACHE STRING "The target platform triple for rustc." FORCE)
+    elseif(ANDROID_ABI STREQUAL "x86_64")
+        set(CARGO_BUILD_TARGET "x86_64-linux-android" CACHE STRING "The target platform triple for rustc." FORCE)
+    else()
+        message(FATAL_ERROR "target android abi is not supported: '${ANDROID_ABI}'")
+    endif()
+endif()
 set(CARGO_BUILD_RUSTFLAGS "--print=native-static-libs")
 set(CARGO_ENV
     "HEADER_LOCATION=${STRACCIATELLA_HEADER}"
@@ -30,7 +43,7 @@ set(CARGO_ENV
     "CARGO_BUILD_TARGET_DIR=${CARGO_BUILD_TARGET_DIR}"
     "CARGO_BUILD_RUSTFLAGS=${CARGO_BUILD_RUSTFLAGS}"
 )
-if (MINGW)
+if (MINGW OR ANDROID)
     string(MAKE_C_IDENTIFIER "CARGO_TARGET_${CARGO_BUILD_TARGET}_LINKER" var)
     string(TOUPPER "${var}" var)
     list(APPEND CARGO_ENV "${var}=${CMAKE_C_COMPILER}")
@@ -51,20 +64,33 @@ set(OUT_DIR "${CARGO_BUILD_TARGET_DIR}/${CARGO_BUILD_TARGET}/${OUT_PROFILE}")
 set(OUT_LIB "${OUT_DIR}/${RUSTC_STATICLIB_PREFIX}stracciatella_c_api${RUSTC_STATICLIB_SUFFIX}")
 set(OUT_BIN_ja2-resource-pack "${OUT_DIR}/ja2-resource-pack${RUSTC_BIN_SUFFIX}")
 add_custom_target(stracciatella-update-stamp COMMAND ${CMAKE_COMMAND} -P "${STAMP_SCRIPT_FILE}")
+
+set(RUST_BUILD_OUTPUTS "${STRACCIATELLA_HEADER}" "${STRACCIATELLA_LIB}")
+if(WITH_RUST_BINARIES)
+    list(APPEND RUST_BUILD_OUTPUTS "${STRACCIATELLA_BIN_ja2-resource-pack}")
+endif()
+set(COPY_BINARIES_COMMAND echo "Skipping copy of rust binaries")
+if (WITH_RUST_BINARIES)
+    set(COPY_BINARIES_COMMAND copy_if_different "${OUT_BIN_ja2-resource-pack}" "${STRACCIATELLA_BIN_ja2-resource-pack}")
+endif()
+set(CARGO_WORKSPACE_FLAGS "--all")
+if (NOT WITH_RUST_BINARIES)
+    list(APPEND CARGO_WORKSPACE_FLAGS "--exclude stracciatella_bin")
+endif()
 add_custom_command(
-    OUTPUT "${STRACCIATELLA_HEADER}" "${STRACCIATELLA_LIB}" "${STRACCIATELLA_BIN_ja2-resource-pack}"
+    OUTPUT ${RUST_BUILD_OUTPUTS}
     COMMAND ${CMAKE_COMMAND} --build "${CMAKE_BINARY_DIR}" --target "cargo-build-${OUT_PROFILE}"
     COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OUT_LIB}" "${STRACCIATELLA_LIB}"
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${OUT_BIN_ja2-resource-pack}" "${STRACCIATELLA_BIN_ja2-resource-pack}"
+    COMMAND ${CMAKE_COMMAND} -E ${COPY_BINARIES_COMMAND}
     DEPENDS "${STAMP_FILE}"
     WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}/rust"
     COMMENT "Building stracciatella"
     VERBATIM
 )
-add_custom_target(stracciatella-build DEPENDS stracciatella-update-stamp "${STRACCIATELLA_HEADER}" "${STRACCIATELLA_LIB}" "${STRACCIATELLA_BIN_ja2-resource-pack}")
+add_custom_target(stracciatella-build DEPENDS stracciatella-update-stamp ${RUST_BUILD_OUTPUTS})
 
 # interface library
-if (UNIX AND NOT MINGW)
+if (UNIX AND NOT MINGW AND NOT ANDROID)
     if(${CMAKE_SYSTEM_NAME} MATCHES "OpenBSD")
         set(ADDITIONAL_LIBS pthread)
     else()
@@ -82,7 +108,10 @@ add_dependencies(stracciatella stracciatella-build)
 target_include_directories(stracciatella INTERFACE "${STRACCIATELLA_DIR}/include")
 target_link_libraries(stracciatella INTERFACE "${STRACCIATELLA_LIB}" ${ADDITIONAL_LIBS})
 set(STRACCIATELLA_LIBRARIES stracciatella PARENT_SCOPE)
-set(STRACCIATELLA_EXECUTABLES "${STRACCIATELLA_BIN_ja2-resource-pack}" PARENT_SCOPE)
+set(STRACCIATELLA_EXECUTABLES "" PARENT_SCOPE)
+if (WITH_RUST_BINARIES)
+    set(STRACCIATELLA_EXECUTABLES "${STRACCIATELLA_BIN_ja2-resource-pack}" PARENT_SCOPE)
+endif()
 
 # auxiliary targets
 function (add_cargo_target target command)
@@ -98,8 +127,8 @@ function (add_cargo_target target command)
         message(FATAL_ERROR "not a cargo command: ${command}")
     endif()
 endfunction()
-add_cargo_target(cargo-build-debug "cargo build --verbose")
-add_cargo_target(cargo-build-release "cargo build --verbose --release")
+add_cargo_target(cargo-build-debug "cargo build --verbose ${CARGO_WORKSPACE_FLAGS}")
+add_cargo_target(cargo-build-release "cargo build --verbose --release ${CARGO_WORKSPACE_FLAGS}")
 add_cargo_target(cargo-fmt "cargo fmt --verbose")
 add_cargo_target(cargo-test-debug "cargo test --verbose")
 add_cargo_target(cargo-test-release "cargo test --verbose --release")

@@ -1,0 +1,17 @@
+[package]
+name = "stracciatella_bin"
+version = "0.1.0"
+authors = ["Stefan Lau <github@stefanlau.com>"]
+edition = "2018"
+
+[[bin]]
+name = "ja2-resource-pack"
+path = "src/resource_pack.rs"
+
+[dependencies]
+stracciatella = { path = "../stracciatella" }
+serde_json = { version = "1", features = ["preserve_order"] }
+
+[dependencies.clap]
+version = "~2.33"
+default-features = false

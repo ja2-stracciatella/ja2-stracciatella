@@ -351,6 +351,10 @@ int main(int argc, char* argv[])
 
 	RustPointer<EngineOptions> params(EngineOptions_create(argv, argc));
 	if (params == NULL) {
+		auto rustError = getRustError();
+		if (rustError != NULL) {
+			SLOGE("Failed to load configuration: %s", rustError);
+		}
 		return EXIT_FAILURE;
 	}
 
