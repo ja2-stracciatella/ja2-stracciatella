@@ -43,6 +43,12 @@ set(CARGO_ENV
     "CARGO_BUILD_TARGET_DIR=${CARGO_BUILD_TARGET_DIR}"
     "CARGO_BUILD_RUSTFLAGS=${CARGO_BUILD_RUSTFLAGS}"
 )
+if (SCCACHE_PROGRAM)
+    set(CARGO_ENV
+        ${CARGO_ENV}
+        "RUSTC_WRAPPER=${SCCACHE_PROGRAM}"
+    )
+endif()
 if (MINGW OR ANDROID)
     string(MAKE_C_IDENTIFIER "CARGO_TARGET_${CARGO_BUILD_TARGET}_LINKER" var)
     string(TOUPPER "${var}" var)
@@ -63,7 +69,11 @@ set(OUT_PROFILE "$<$<CONFIG:Debug>:debug>$<$<NOT:$<CONFIG:Debug>>:release>") # X
 set(OUT_DIR "${CARGO_BUILD_TARGET_DIR}/${CARGO_BUILD_TARGET}/${OUT_PROFILE}")
 set(OUT_LIB "${OUT_DIR}/${RUSTC_STATICLIB_PREFIX}stracciatella_c_api${RUSTC_STATICLIB_SUFFIX}")
 set(OUT_BIN_ja2-resource-pack "${OUT_DIR}/ja2-resource-pack${RUSTC_BIN_SUFFIX}")
-add_custom_target(stracciatella-update-stamp COMMAND ${CMAKE_COMMAND} -P "${STAMP_SCRIPT_FILE}")
+add_custom_target(
+    stracciatella-update-stamp
+    COMMAND ${CMAKE_COMMAND} -P "${STAMP_SCRIPT_FILE}"
+    BYPRODUCTS ${STAMP_FILE}
+)
 
 set(RUST_BUILD_OUTPUTS "${STRACCIATELLA_HEADER}" "${STRACCIATELLA_LIB}")
 if(WITH_RUST_BINARIES)
