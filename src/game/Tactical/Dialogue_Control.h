@@ -1,12 +1,14 @@
 #ifndef _DIALOG_CONTROL_H
 #define _DIALOG_CONTROL_H
 
-#include "Faces.h"
 #include "GameScreen.h"
-
-#include "MercProfile.h"
-
+#include "JA2Types.h"
+#include "Types.h"
 #include <string_theory/string>
+struct FACETYPE;
+struct MERCPROFILESTRUCT;
+struct MercPopUpBox;
+struct SOLDIERTYPE;
 
 
 // An enumeration for dialog quotes

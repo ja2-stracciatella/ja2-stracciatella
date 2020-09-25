@@ -44,6 +44,7 @@
 #include "Environment.h"
 #include "Items.h"
 #include "GameRes.h"
+#include "Faces.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
