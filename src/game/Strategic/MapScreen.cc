@@ -12,6 +12,7 @@
 #include "English.h"
 #include "Event_Pump.h"
 #include "Explosion_Control.h"
+#include "Faces.h"
 #include "Fade_Screen.h"
 #include "Finances.h"
 #include "Font.h"
