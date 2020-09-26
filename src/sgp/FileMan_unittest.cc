@@ -209,26 +209,21 @@ TEST(FileManTest, ReplaceExtension)
 	EXPECT_EQ(FileMan::replaceExtension("foo.bar.txt", ".bin"),    "foo.bar..bin");
 	EXPECT_EQ(FileMan::replaceExtension("foo.bar.txt", "bin"),     "foo.bar.bin");
 
-	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", ""),        "c:/a" PATH_SEPARATOR_STR "foo");
-	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", "."),       "c:/a" PATH_SEPARATOR_STR "foo..");
-	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", ".bin"),    "c:/a" PATH_SEPARATOR_STR "foo..bin");
-	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", "bin"),     "c:/a" PATH_SEPARATOR_STR "foo.bin");
+	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", ""),        "c:/a/foo");
+	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", "."),       "c:/a/foo..");
+	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", ".bin"),    "c:/a/foo..bin");
+	EXPECT_EQ(FileMan::replaceExtension("c:/a/foo.txt", "bin"),     "c:/a/foo.bin");
 
-	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", ""),          "/a" PATH_SEPARATOR_STR "foo");
-	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", "."),         "/a" PATH_SEPARATOR_STR "foo..");
-	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", ".bin"),      "/a" PATH_SEPARATOR_STR "foo..bin");
-	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", "bin"),       "/a" PATH_SEPARATOR_STR "foo.bin");
-}
+	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", ""),          "/a/foo");
+	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", "."),         "/a/foo..");
+	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", ".bin"),      "/a/foo..bin");
+	EXPECT_EQ(FileMan::replaceExtension("/a/foo.txt", "bin"),       "/a/foo.bin");
 
-#ifdef __WINDOWS__
-TEST(FileManTest, ReplaceExtensionWin)
-{
-	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", ""),      "c:\\a" PATH_SEPARATOR_STR "foo");
-	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", "."),     "c:\\a" PATH_SEPARATOR_STR "foo..");
-	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", ".bin"),  "c:\\a" PATH_SEPARATOR_STR "foo..bin");
-	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", "bin"),   "c:\\a" PATH_SEPARATOR_STR "foo.bin");
+	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", ""),      "c:\\a\\foo");
+	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", "."),     "c:\\a\\foo..");
+	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", ".bin"),  "c:\\a\\foo..bin");
+	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", "bin"),   "c:\\a\\foo.bin");
 }
-#endif
 
 TEST(FileManTest, SlashifyPath)
 {
