@@ -41,6 +41,13 @@ android {
             version "3.10.2"
         }
     }
+    sourceSets {
+        main {
+            assets {
+                srcDirs = [ "../../assets" ]
+            }
+        }
+    }
 }
 
 dependencies {

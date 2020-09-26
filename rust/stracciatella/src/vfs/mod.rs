@@ -4,6 +4,8 @@
 //! It does not support path components `.` and `..`.
 #![allow(dead_code)]
 
+#[cfg(target_os = "android")]
+pub mod android;
 pub mod dir;
 pub mod slf;
 
@@ -12,6 +14,8 @@ use std::io;
 use std::io::{ErrorKind, SeekFrom};
 use std::path::{Path, PathBuf};
 
+#[cfg(target_os = "android")]
+use jni::JNIEnv;
 use log::{info, warn};
 
 use crate::unicode::Nfc;
@@ -39,6 +43,8 @@ pub struct VfsInitError {
 pub enum VfsSource {
     Dir(DirFs),
     Slf(SlfFs),
+    #[cfg(target_os = "android")]
+    AndroidAssets(android::AssetManagerFs),
 }
 
 /// A virtual file.
@@ -46,6 +52,8 @@ pub enum VfsSource {
 pub enum VfsFile {
     Dir(DirFsFile),
     Slf(SlfFsFile),
+    #[cfg(target_os = "android")]
+    AndroidAssets(android::AssetManagerFsFile),
 }
 
 static MODS_DIR: &str = "mods";
@@ -79,6 +87,45 @@ impl Vfs {
         Ok(())
     }
 
+    /// Adds an overlay filesystem backed by android assets
+    #[cfg(target_os = "android")]
+    pub fn add_android_assets(&mut self, path: &Path, jni_env: JNIEnv) -> Result<(), VfsInitError> {
+        let asset_manager_fs =
+            android::AssetManagerFs::new(&path, jni_env).map_err(|error| VfsInitError {
+                path: path.to_owned(),
+                error,
+            })?;
+        self.entries
+            .push(VfsSource::AndroidAssets(asset_manager_fs));
+        Ok(())
+    }
+
+    #[cfg(target_os = "android")]
+    fn get_android_data_dir(jni_env: JNIEnv) -> jni::errors::Result<PathBuf> {
+        let environment = jni_env.get_static_field(
+            "android/os/Environment",
+            "DIRECTORY_DOWNLOADS",
+            "Ljava/lang/String;",
+        )?;
+        let files_dir = jni_env
+            .call_static_method(
+                "android/os/Environment",
+                "getExternalStoragePublicDirectory",
+                "(Ljava/lang/String;)Ljava/io/File;",
+                &[environment],
+            )?
+            .l()?;
+        let path = jni_env.get_string(
+            jni_env
+                .call_method(files_dir, "getAbsolutePath", "()Ljava/lang/String;", &[])?
+                .l()?
+                .into(),
+        )?;
+        let path_string: String = path.into();
+
+        Ok(PathBuf::from(&path_string))
+    }
+
     /// Adds an overlay for all SLF files in dir
     pub fn add_slf_files(&mut self, path: &Path, required: bool) -> Result<(), VfsInitError> {
         let slf_paths = fs::read_dir_paths(path, false).map_err(|error| VfsInitError {
@@ -108,12 +155,21 @@ impl Vfs {
     pub fn init_from_engine_options(
         &mut self,
         engine_options: &EngineOptions,
+        #[cfg(target_os = "android")] jni_env: JNIEnv<'_>,
     ) -> Result<(), VfsInitError> {
-        let vanilla_data_dir = fs::resolve_existing_components(
-            Path::new(DATA_DIR),
-            Some(&engine_options.vanilla_game_dir),
-            true,
-        );
+        #[cfg(not(target_os = "android"))]
+        let vanilla_game_dir = engine_options.vanilla_game_dir.clone();
+        #[cfg(target_os = "android")]
+        let vanilla_game_dir =
+            Self::get_android_data_dir(jni_env.clone()).map_err(|error| VfsInitError {
+                path: PathBuf::new(),
+                error: io::Error::new(
+                    io::ErrorKind::Other,
+                    format!("Error getting vanilla data dir for Android `{:?}`", error),
+                ),
+            })?;
+        let vanilla_data_dir =
+            fs::resolve_existing_components(Path::new(DATA_DIR), Some(&vanilla_game_dir), true);
         let assets_dir = fs::resolve_existing_components(&get_assets_dir(), None, true);
         let home_data_dir = fs::resolve_existing_components(
             &PathBuf::from(DATA_DIR),
@@ -173,7 +229,11 @@ impl Vfs {
         }
 
         // Next is externalized data dir (required)
+        #[cfg(not(target_os = "android"))]
         self.add_dir(&externalized_dir)?;
+        // On android the externalized dir comes from APK assets
+        #[cfg(target_os = "android")]
+        self.add_android_assets(&Path::new(EXTERNALIZED_DIR), jni_env.clone())?;
 
         // Next is vanilla data dir (required)
         self.add_dir(&vanilla_data_dir)?;
@@ -211,6 +271,8 @@ impl Vfs {
             let file_result = match &entry {
                 VfsSource::Dir(x) => x.open(&file_path).map(VfsFile::Dir),
                 VfsSource::Slf(x) => x.open(&file_path).map(VfsFile::Slf),
+                #[cfg(target_os = "android")]
+                VfsSource::AndroidAssets(x) => x.open(&file_path).map(VfsFile::AndroidAssets),
             };
             if let Err(err) = &file_result {
                 if err.kind() == io::ErrorKind::NotFound {
@@ -229,6 +291,8 @@ impl VfsFile {
         match self {
             VfsFile::Dir(x) => x.len(),
             VfsFile::Slf(x) => Ok(x.len()),
+            #[cfg(target_os = "android")]
+            VfsFile::AndroidAssets(x) => x.len(),
         }
     }
 
@@ -237,6 +301,8 @@ impl VfsFile {
         match self {
             VfsFile::Dir(x) => x.is_empty(),
             VfsFile::Slf(x) => Ok(x.is_empty()),
+            #[cfg(target_os = "android")]
+            VfsFile::AndroidAssets(x) => x.is_empty(),
         }
     }
 }
@@ -263,6 +329,8 @@ impl fmt::Display for VfsSource {
         match self {
             VfsSource::Dir(x) => x.fmt(f),
             VfsSource::Slf(x) => x.fmt(f),
+            #[cfg(target_os = "android")]
+            VfsSource::AndroidAssets(x) => x.fmt(f),
         }
     }
 }
@@ -281,6 +349,8 @@ impl fmt::Display for VfsFile {
         match self {
             VfsFile::Dir(x) => x.fmt(f),
             VfsFile::Slf(x) => x.fmt(f),
+            #[cfg(target_os = "android")]
+            VfsFile::AndroidAssets(x) => x.fmt(f),
         }
     }
 }
@@ -290,6 +360,8 @@ impl io::Read for VfsFile {
         match self {
             VfsFile::Dir(x) => x.read(buf),
             VfsFile::Slf(x) => x.read(buf),
+            #[cfg(target_os = "android")]
+            VfsFile::AndroidAssets(x) => x.read(buf),
         }
     }
 }
@@ -299,6 +371,8 @@ impl io::Seek for VfsFile {
         match self {
             VfsFile::Dir(x) => x.seek(pos),
             VfsFile::Slf(x) => x.seek(pos),
+            #[cfg(target_os = "android")]
+            VfsFile::AndroidAssets(x) => x.seek(pos),
         }
     }
 }
@@ -308,12 +382,16 @@ impl io::Write for VfsFile {
         match self {
             VfsFile::Dir(x) => x.write(buf),
             VfsFile::Slf(x) => x.write(buf),
+            #[cfg(target_os = "android")]
+            VfsFile::AndroidAssets(x) => x.write(buf),
         }
     }
     fn flush(&mut self) -> io::Result<()> {
         match self {
             VfsFile::Dir(x) => x.flush(),
             VfsFile::Slf(x) => x.flush(),
+            #[cfg(target_os = "android")]
+            VfsFile::AndroidAssets(x) => x.flush(),
         }
     }
 }

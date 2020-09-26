@@ -6,7 +6,6 @@ use std::path::PathBuf;
 #[cfg(not(target_os = "android"))]
 pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     use crate::fs::resolve_existing_components;
-    use dirs;
 
     #[cfg(not(windows))]
     let base = dirs::home_dir();
@@ -30,30 +29,7 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
 /// This is a separate function as it needs the jnienv argument
 #[cfg(target_os = "android")]
 pub fn find_stracciatella_home(jni_env: JNIEnv<'_>) -> Result<PathBuf, JNIError> {
-    let current_activity_thread = jni_env
-        .call_static_method(
-            "android/app/ActivityThread",
-            "currentActivityThread",
-            "()Landroid/app/ActivityThread;",
-            &[],
-        )?
-        .l()?;
-    let application = jni_env
-        .call_method(
-            current_activity_thread,
-            "getApplication",
-            "()Landroid/app/Application;",
-            &[],
-        )?
-        .l()?;
-    let context = jni_env
-        .call_method(
-            application,
-            "getApplicationContext",
-            "()Landroid/content/Context;",
-            &[],
-        )?
-        .l()?;
+    let context = crate::android::get_application_context(jni_env.clone())?;
     let files_dir = jni_env
         .call_method(context, "getFilesDir", "()Ljava/io/File;", &[])?
         .l()?;

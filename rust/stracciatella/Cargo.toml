@@ -43,6 +43,10 @@ version = "0.9"
 
 [target.'cfg(target_os = "android")'.dependencies.jni]
 version = "0.14"
+[target.'cfg(target_os = "android")'.dependencies.ndk]
+git = "https://github.com/selaux/android-ndk-rs"
+[target.'cfg(target_os = "android")'.dependencies.ndk-sys]
+git = "https://github.com/selaux/android-ndk-rs"
 
 [dev-dependencies]
 regex = "1.0"

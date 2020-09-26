@@ -4,6 +4,8 @@
 //!
 //! [stracciatella_c_api]: ../stracciatella_c_api/index.html
 
+#[cfg(target_os = "android")]
+pub mod android;
 pub mod config;
 pub mod file_formats;
 pub mod fs;
@@ -75,7 +77,7 @@ mod tests {
 
     use tempfile::TempDir;
 
-    use crate::config::{find_stracciatella_home, VanillaVersion};
+    use crate::config::VanillaVersion;
     use crate::fs;
     use crate::fs::File;
     use crate::*;
@@ -459,6 +461,8 @@ mod tests {
     #[test]
     #[cfg(all(not(windows), not(target_os = "android")))]
     fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_unixlike() {
+        use crate::config::find_stracciatella_home;
+
         let mut engine_options = EngineOptions::default();
         engine_options.stracciatella_home = find_stracciatella_home().unwrap();
         let expected = format!("{}/.ja2", std::env::var("HOME").unwrap());
@@ -469,6 +473,7 @@ mod tests {
     #[test]
     #[cfg(windows)]
     fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_windows() {
+        use crate::config::find_stracciatella_home;
         use regex::Regex;
 
         let mut engine_options = EngineOptions::default();

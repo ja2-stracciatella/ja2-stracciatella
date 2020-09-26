@@ -65,10 +65,10 @@ pub extern "C" fn EngineOptions_destroy(ptr: *mut EngineOptions) {
 pub extern "C" fn EngineOptions_getStracciatellaHome() -> *mut c_char {
     let stracciatella_home = find_stracciatella_home();
 
+    forget_rust_error();
     match stracciatella_home {
         Ok(stracciatella_home) => {
             let stracciatella_home = c_string_from_path_or_panic(&stracciatella_home);
-            no_rust_error();
             stracciatella_home.into_raw()
         }
         Err(e) => {
@@ -80,6 +80,7 @@ pub extern "C" fn EngineOptions_getStracciatellaHome() -> *mut c_char {
 
 /// Gets the `EngineOptions.stracciatella_home` path.
 /// The caller is responsible for the returned memory.
+/// This is the android version that reads stracciatella home via JNI
 ///
 /// # Safety
 ///
@@ -91,10 +92,10 @@ pub unsafe extern "C" fn EngineOptions_getStracciatellaHome(
 ) -> *mut c_char {
     let stracciatella_home = jni::JNIEnv::from_raw(ptr).and_then(find_stracciatella_home);
 
+    forget_rust_error();
     match stracciatella_home {
         Ok(stracciatella_home) => {
             let stracciatella_home = c_string_from_path_or_panic(&stracciatella_home);
-            no_rust_error();
             stracciatella_home.into_raw()
         }
         Err(e) => {

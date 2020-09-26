@@ -487,7 +487,11 @@ int main(int argc, char* argv[])
 		SLOGI("------------------------------------------------------------------------------");
 	}
 
+	#ifdef __ANDROID__
+	cm->init(params.get(), jniEnv);
+	#else
 	cm->init(params.get());
+	#endif
 
 	if(!cm->loadGameData())
 	{
