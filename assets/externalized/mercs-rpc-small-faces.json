@@ -1,0 +1,48 @@
+/**
+ * Defines the offsets of RPC small faces. Small faces are typically used for RPCs' and EPCs' outside of a tactical conversation.
+ *
+ * Fields:
+ *  - profileID: ID of the character's profileID
+ *  - faceXY: an array of 4 integer specifying the offset of the eyes and months. In the order of;
+ *      0: eyesX
+ *      1: eyesY
+ *      2: mouthX
+ *      3: mouthY
+ */
+[
+	{ /* MIGUEL   */ "profileID": 57, "faceXY": [  9, 8,  8, 24] },
+	{ /* CARLOS   */ "profileID": 58, "faceXY": [  8, 8,  7, 24] },
+	{ /* IRA      */ "profileID": 59, "faceXY": [ 10, 8,  8, 26] },
+	{ /* DIMITRI  */ "profileID": 60, "faceXY": [  7, 8,  7, 26] },
+
+	{ /* DEVIN    */ "profileID": 61, "faceXY": [  6, 7,  7, 23] },
+	{ /* ROBOT    */ "profileID": 62, "faceXY": [  0, 0,  0,  0] },
+	{ /* HAMOUS   */ "profileID": 63, "faceXY": [  8, 7,  8, 23] },
+	{ /* SLAY     */ "profileID": 64, "faceXY": [  8, 8,  8, 22] },
+	{ /* RPC65    */ "profileID": 65, "faceXY": [  0, 0,  0,  0] },
+	{ /* DYNAMO   */ "profileID": 66, "faceXY": [  9, 4,  7, 22] },
+	{ /* SHANK    */ "profileID": 67, "faceXY": [  8, 8,  8, 25] },
+	{ /* IGGY     */ "profileID": 68, "faceXY": [  4, 6,  5, 22] },
+	{ /* VINCE    */ "profileID": 69, "faceXY": [  8, 9,  7, 25] },
+	{ /* CONRAD   */ "profileID": 70, "faceXY": [  4, 7,  5, 25] },
+    
+	{ /* RPC71    */ "profileID": 71, "faceXY": [  9, 7,  8, 22] },
+	{ /* MADDOG   */ "profileID": 72, "faceXY": [  9, 7,  9, 25] },
+	{ /* DARREL   */ "profileID": 73, "faceXY": [  0, 0,  0,  0] },
+	{ /* PERKO    */ "profileID": 74, "faceXY": [  0, 0,  0,  0] },
+
+	{ /* MARIA    */ "profileID": 88, "faceXY": [  9, 3,  8, 23] },
+	{ /* JOEY     */ "profileID": 90, "faceXY": [  9, 3,  8, 25] },
+
+	{ /* SKYRIDER */ "profileID": 97, "faceXY": [ 11, 7,  9, 24] },
+
+	{ /* JOHN     */ "profileID": 118, "faceXY": [  6, 4,  6, 24] },
+	{ /* MARY     */ "profileID": 119, "faceXY": [ 12, 4, 10, 24] },
+
+	  /* Miners   */
+	{ /* FRED     */ "profileID": 106, "faceXY": [  9, 5,  7, 23] },
+	{ /* MATT     */ "profileID": 148, "faceXY": [  8, 6,  8, 23] }, 
+	{ /* OSWALD   */ "profileID": 156, "faceXY": [  6, 5,  6, 23] },
+	{ /* CALVIN   */ "profileID": 157, "faceXY": [ 13, 7, 11, 24] }, 
+	{ /* CARL     */ "profileID": 158, "faceXY": [  9, 7,  8, 22] }  
+]
