@@ -457,7 +457,7 @@ mod tests {
     }
 
     #[test]
-    #[cfg(not(windows))]
+    #[cfg(all(not(windows), not(target_os = "android")))]
     fn find_stracciatella_home_should_find_the_correct_stracciatella_home_path_on_unixlike() {
         let mut engine_options = EngineOptions::default();
         engine_options.stracciatella_home = find_stracciatella_home().unwrap();

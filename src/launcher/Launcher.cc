@@ -88,7 +88,15 @@ Launcher::~Launcher() {
 }
 
 void Launcher::loadJa2Json() {
-	this->engine_options.reset(EngineOptions_create(argv, argc));
+	RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome());
+	if (configFolderPath.get() == NULL) {
+		auto rustError = getRustError();
+		if (rustError != NULL) {
+			SLOGE("Failed to find home directory: %s", rustError);
+		}
+	}
+
+	this->engine_options.reset(EngineOptions_create(configFolderPath.get(), argv, argc));
 
 	if (this->engine_options == NULL) {
 		exit(EXIT_FAILURE);
@@ -116,7 +124,7 @@ void Launcher::show() {
 	}
 	fullscreenCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	playSoundsCheckbox->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
-	RustPointer<char> ja2_json_path(findPathFromStracciatellaHome("ja2.json", false, true));
+	RustPointer<char> ja2_json_path(findPathFromStracciatellaHome(this->engine_options.get(), "ja2.json", false, true));
 	if (ja2_json_path) {
 		ja2JsonPathOutput->value(ja2_json_path.get());
 	} else {
@@ -213,7 +221,7 @@ int Launcher::writeJsonFile() {
 }
 
 void Launcher::populateChoices() {
-	RustPointer<VecCString> mods(findAvailableMods());
+	RustPointer<VecCString> mods(findAvailableMods(this->engine_options.get()));
 	size_t nmods = VecCString_len(mods.get());
 	for (size_t i = 0; i < nmods; ++i) {
 		RustPointer<char> mod(VecCString_get(mods.get(), i));

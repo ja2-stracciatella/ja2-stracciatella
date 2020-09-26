@@ -2,6 +2,8 @@
 //!
 //! [`stracciatella::config`]: ../../stracciatella/config/index.html
 
+#[cfg(target_os = "android")]
+use jni;
 use std::ptr;
 
 use stracciatella::config::{
@@ -16,15 +18,17 @@ use crate::c::common::*;
 /// The caller is responsible for the returned memory.
 #[no_mangle]
 pub extern "C" fn EngineOptions_create(
+    stracciatella_home: *const c_char,
     args: *const *const c_char,
     length: size_t,
 ) -> *mut EngineOptions {
+    let stracciatella_home = path_buf_from_c_str_or_panic(unsafe_c_str(stracciatella_home));
     let args: Vec<String> = unsafe_slice(args, length)
         .iter()
         .map(|&x| str_from_c_str_or_panic(unsafe_c_str(x)).to_owned())
         .collect();
 
-    match find_stracciatella_home().and_then(|x| EngineOptions::from_home_and_args(&x, &args)) {
+    match EngineOptions::from_home_and_args(&stracciatella_home, &args) {
         Ok(engine_options) => {
             if engine_options.show_help {
                 print!("{}", Cli::usage());
@@ -57,10 +61,47 @@ pub extern "C" fn EngineOptions_destroy(ptr: *mut EngineOptions) {
 /// Gets the `EngineOptions.stracciatella_home` path.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn EngineOptions_getStracciatellaHome(ptr: *const EngineOptions) -> *mut c_char {
-    let engine_options = unsafe_ref(ptr);
-    let stracciatella_home = c_string_from_path_or_panic(&engine_options.stracciatella_home);
-    stracciatella_home.into_raw()
+#[cfg(not(target_os = "android"))]
+pub extern "C" fn EngineOptions_getStracciatellaHome() -> *mut c_char {
+    let stracciatella_home = find_stracciatella_home();
+
+    match stracciatella_home {
+        Ok(stracciatella_home) => {
+            let stracciatella_home = c_string_from_path_or_panic(&stracciatella_home);
+            no_rust_error();
+            stracciatella_home.into_raw()
+        }
+        Err(e) => {
+            remember_rust_error(format!("EngineOptions_getStracciatellaHome: {:?}", e));
+            std::ptr::null_mut()
+        }
+    }
+}
+
+/// Gets the `EngineOptions.stracciatella_home` path.
+/// The caller is responsible for the returned memory.
+///
+/// # Safety
+///
+/// This function does not do any safety chacks for the passed pointers
+#[no_mangle]
+#[cfg(target_os = "android")]
+pub unsafe extern "C" fn EngineOptions_getStracciatellaHome(
+    ptr: *mut jni::sys::JNIEnv,
+) -> *mut c_char {
+    let stracciatella_home = jni::JNIEnv::from_raw(ptr).and_then(find_stracciatella_home);
+
+    match stracciatella_home {
+        Ok(stracciatella_home) => {
+            let stracciatella_home = c_string_from_path_or_panic(&stracciatella_home);
+            no_rust_error();
+            stracciatella_home.into_raw()
+        }
+        Err(e) => {
+            remember_rust_error(format!("EngineOptions_getStracciatellaHome: {:?}", e));
+            std::ptr::null_mut()
+        }
+    }
 }
 
 /// Gets the `EngineOptions.vanilla_game_dir` path.

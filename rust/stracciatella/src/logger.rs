@@ -6,16 +6,12 @@
 //!
 //! [`stracciatella_c_api::c::logger`]: ../../stracciatella_c_api/c/logger/index.html
 
-use std::fs::File;
 use std::path::Path;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use log::{
-    logger, set_boxed_logger, set_max_level, warn, Level, LevelFilter, Log, Metadata,
-    MetadataBuilder, Record,
-};
-use simplelog::{
-    CombinedLogger, Config, SharedLogger, SimpleLogger, TermLogger, TerminalMode, WriteLogger,
+    logger, set_boxed_logger, set_max_level, Level, LevelFilter, Log, Metadata, MetadataBuilder,
+    Record,
 };
 
 static GLOBAL_LOG_LEVEL: AtomicUsize = AtomicUsize::new(LogLevel::Info as usize);
@@ -112,6 +108,13 @@ impl Logger {
     pub fn init(log_file: &Path) {
         #[cfg(not(target_os = "android"))]
         {
+            use log::warn;
+            use simplelog::{
+                CombinedLogger, Config, SharedLogger, SimpleLogger, TermLogger, TerminalMode,
+                WriteLogger,
+            };
+            use std::fs::File;
+
             let mut config = Config::default();
             config.target = Some(Level::Error);
             config.thread = None;

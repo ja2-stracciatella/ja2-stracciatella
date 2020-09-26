@@ -25,11 +25,13 @@ md-5 = "0.8.0"
 unicode-normalization = "0.1"
 caseless = "0.2"
 log = "0.4"
-simplelog = "0.6"
 rayon = "1.1.0"
 dunce = "1"
 remove_dir_all = "0.5"
 tempfile = "3.0"
+
+[target.'cfg(not(target_os = "android"))'.dependencies.simplelog]
+version = "0.6"
 
 [target.'cfg(windows)'.dependencies.winapi]
 # @see stracciatella::fs::free_space
@@ -38,6 +40,9 @@ features = ["std", "fileapi"]
 
 [target.'cfg(target_os = "android")'.dependencies.android_logger]
 version = "0.9"
+
+[target.'cfg(target_os = "android")'.dependencies.jni]
+version = "0.14"
 
 [dev-dependencies]
 regex = "1.0"

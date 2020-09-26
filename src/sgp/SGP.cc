@@ -342,6 +342,22 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	#ifdef __ANDROID__
+	JNIEnv* jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
+	if (jniEnv == NULL) {
+		SLOGE("Failed to get jni env");
+	}
+	RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome(jniEnv));
+	#else
+	RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome());
+	#endif
+	if (configFolderPath.get() == NULL) {
+		auto rustError = getRustError();
+		if (rustError != NULL) {
+			SLOGE("Failed to find home directory: %s", rustError);
+		}
+	}
+
 #if _WIN32
 	// This is only required on Windows, as Linux/Mac prints the details of unhandled exceptions on program abort
 	std::set_terminate(TerminationHandler);
@@ -349,7 +365,7 @@ int main(int argc, char* argv[])
 
 	ST::string exeFolder = FileMan::getParentPath(argv[0], true);
 
-	RustPointer<EngineOptions> params(EngineOptions_create(argv, argc));
+	RustPointer<EngineOptions> params(EngineOptions_create(configFolderPath.get(), argv, argc));
 	if (params == NULL) {
 		auto rustError = getRustError();
 		if (rustError != NULL) {
@@ -426,7 +442,6 @@ int main(int argc, char* argv[])
 	InitializeMemoryManager();
 
 	SLOGD("Initializing Game Resources");
-	RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome(params.get()));
 	RustPointer<char> gameResRootPath(EngineOptions_getVanillaGameDir(params.get()));
 
 	RustPointer<char> extraDataDir(Env_assetsDir());
