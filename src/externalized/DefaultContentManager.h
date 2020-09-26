@@ -172,6 +172,7 @@ public:
 	virtual const std::vector <const UndergroundSectorModel*>& getUndergroundSectors() const override;
 	virtual const MovementCostsModel* getMovementCosts() const override;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
+	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const override;
 	virtual const LoadingScreen* getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const override;
 	virtual const LoadingScreen* getLoadingScreen(uint8_t index) const override;
 
@@ -240,6 +241,7 @@ protected:
 	std::vector<const ST::string*> m_townNameLocatives;
 	std::vector<const UndergroundSectorModel*> m_undergroundSectors;
 
+	std::map<uint8_t, const RPCSmallFaceModel*> m_rpcSmallFaces;
 
 	RustPointer<Vfs> m_vfs;
 
@@ -261,6 +263,7 @@ protected:
 
 	bool loadStrategicLayerData();
 	bool loadTacticalLayerData();
+	bool loadMercsData();
 
 	std::shared_ptr<rapidjson::Document> readJsonDataFile(const char *fileName) const;
 };
