@@ -21,6 +21,7 @@ externalproject_add(sdl2
         "-DCMAKE_SYSTEM_VERSION=@CMAKE_SYSTEM_VERSION@"
         "-DCMAKE_TOOLCHAIN_FILE=@CMAKE_TOOLCHAIN_FILE@"
         "-DANDROID_ABI=@ANDROID_ABI@"
+        "-DANDROID_APP_PLATFORM=@ANDROID_APP_PLATFORM@"
         -DCMAKE_BUILD_TYPE=RelWithDebInfo
         -DSDL_SHARED=ON
     # Apply Patch for SDL2 2.0.12 to build for armv7, see https://bugzilla.libsdl.org/show_bug.cgi?id=5100
