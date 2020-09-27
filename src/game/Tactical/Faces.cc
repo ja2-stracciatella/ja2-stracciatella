@@ -1,47 +1,52 @@
+#include "Faces.h"
+#include "Assignments.h"
+#include "ContentManager.h"
+#include "Dialogue_Control.h"
 #include "Directories.h"
+#include "Drugs_And_Alcohol.h"
 #include "Font.h"
+#include "Font_Control.h"
+#include "GameInstance.h"
+#include "GameSettings.h"
+#include "Gap.h"
+#include "Handle_UI.h"
 #include "HImage.h"
+#include "Interface.h"
 #include "Interface_Control.h"
+#include "Interface_Items.h"
 #include "Interface_Panels.h"
 #include "Isometric_Utils.h"
-#include "Local.h"
-#include "Timer_Control.h"
-#include "VObject.h"
-#include "WorldDef.h"
-#include "VSurface.h"
-#include "Render_Dirty.h"
-#include "SysUtil.h"
-#include "WCheck.h"
-#include "Video.h"
-#include "Faces.h"
-#include "Overhead.h"
-#include "Gap.h"
-#include "Soldier_Profile.h"
-#include "Sound_Control.h"
-#include "TeamTurns.h"
-#include "Soldier_Macros.h"
-#include "Dialogue_Control.h"
-#include "Font_Control.h"
-#include "Assignments.h"
-#include "Random.h"
-#include "Line.h"
-#include "GameSettings.h"
-#include "Squads.h"
-#include "Interface.h"
-#include "Quests.h"
-#include "Drugs_And_Alcohol.h"
-#include "Interface_Items.h"
-#include "Meanwhile.h"
-#include "Map_Screen_Interface.h"
-#include "SoundMan.h"
 #include "JAScreens.h"
+#include "Line.h"
+#include "Local.h"
+#include "Logger.h"
+#include "Map_Screen_Interface.h"
+#include "Meanwhile.h"
+#include "Overhead.h"
+#include "Overhead_Types.h"
+#include "Quests.h"
+#include "Random.h"
+#include "Render_Dirty.h"
+#include "RPCSmallFaceModel.h"
 #include "ScreenIDs.h"
+#include "Soldier_Control.h"
+#include "Soldier_Macros.h"
+#include "Soldier_Profile.h"
+#include "Soldier_Profile_Type.h"
+#include "Sound_Control.h"
+#include "SoundMan.h"
+#include "Squads.h"
+#include "SysUtil.h"
+#include "TeamTurns.h"
+#include "Timer_Control.h"
 #include "UILayout.h"
-
-#include <string_theory/format>
-#include <string_theory/string>
-
+#include "Video.h"
+#include "VObject.h"
+#include "VSurface.h"
+#include "WCheck.h"
 #include <stdexcept>
+#include <string_theory/format>
+
 
 
 // Defines
@@ -60,53 +65,6 @@ static UINT32   guiNumFaces = 0;
 		++iter)                                                 \
 		if (!iter->fAllocated) continue; else
 
-
-struct RPC_SMALL_FACE_VALUES
-{
-	ProfileID profile;
-	INT8      bEyesX;
-	INT8      bEyesY;
-	INT8      bMouthX;
-	INT8      bMouthY;
-};
-
-
-// TODO0013
-static const RPC_SMALL_FACE_VALUES gRPCSmallFaceValues[] =
-{
-	{ MIGUEL,    9, 8,  8, 24 },
-	{ CARLOS,    8, 8,  7, 24 },
-	{ IRA,      10, 8,  8, 26 },
-	{ DIMITRI,   7, 8,  7, 26 },
-	{ DEVIN,     6, 7,  7, 23 },
-	{ ROBOT,     0, 0,  0,  0 }, // THE RAT  (  62 )
-	{ HAMOUS,    8, 7,  8, 23 },
-	{ SLAY,      8, 8,  8, 22 },
-	{ RPC65,     0, 0,  0,  0 },
-	{ DYNAMO,    9, 4,  7, 22 },
-	{ SHANK,     8, 8,  8, 25 },
-	{ IGGY,      4, 6,  5, 22 },
-	{ VINCE,     8, 9,  7, 25 },
-	{ CONRAD,    4, 7,  5, 25 },
-	{ RPC71,     9, 7,  8, 22 }, // CARL     (  71 )
-	{ MADDOG,    9, 7,  9, 25 },
-	{ DARREL,    0, 0,  0,  0 },
-	{ PERKO,     0, 0,  0,  0 },
-
-	{ MARIA,     9, 3,  8, 23 },
-
-	{ JOEY,      9, 3,  8, 25 },
-
-	{ SKYRIDER, 11, 7,  9, 24 },
-	{ FRED,      9, 5,  7, 23 }, // Miner    ( 106 )
-
-	{ JOHN,      6, 4,  6, 24 },
-	{ MARY,     12, 4, 10, 24 },
-	{ MATT,      8, 6,  8, 23 }, // Miner    ( 148 )
-	{ OSWALD,    6, 5,  6, 23 }, // Miner    ( 156 )
-	{ CALVIN,   13, 7, 11, 24 }, // Miner    ( 157 )
-	{ CARL,      9, 7,  8, 22 }  // Miner    ( 158 )
-};
 
 
 static SGPVObject* guiPORTRAITICONS;
@@ -300,14 +258,13 @@ static void GetFaceRelativeCoordinates(FACETYPE const& f, UINT16* const pusEyesX
 	if (f.uiFlags & FACE_FORCE_SMALL ||
 			(!(f.uiFlags & FACE_BIGFACE) && p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)))
 	{
-		// Loop through all values of available profiles to find ours
-		FOR_EACH(RPC_SMALL_FACE_VALUES const, i, gRPCSmallFaceValues)
+		const RPCSmallFaceModel* face = GCM->getRPCSmallFaceOffsets(pid);
+		if (face)
 		{
-			if (i->profile != pid) continue;
-			*pusEyesX  = i->bEyesX;
-			*pusEyesY  = i->bEyesY;
-			*pusMouthX = i->bMouthX;
-			*pusMouthY = i->bMouthY;
+			*pusEyesX = face->bEyesX;
+			*pusEyesY = face->bEyesY;
+			*pusMouthX = face->bMouthX;
+			*pusMouthY = face->bMouthY;
 			return;
 		}
 	}

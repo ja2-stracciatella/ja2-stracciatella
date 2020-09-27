@@ -39,6 +39,7 @@ struct AmmoTypeModel;
 struct CalibreModel;
 struct LoadingScreen;
 struct MagazineModel;
+struct RPCSmallFaceModel;
 struct SGPFile;
 struct WeaponModel;
 struct ARMY_COMPOSITION;
@@ -171,6 +172,9 @@ public:
 
 	/* Params for the given NPC_ACTION if found, or return an empty instance */
 	virtual const FactParamsModel* getFactParams(Fact fact) const = 0;
+	
+	/* Gets eyes and mouths offsets for the RPC small portraits. Returns null if none defined. */
+	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const = 0;
 
 	/* Gets loading screen for the sector. Returns NULL if the sector does not have an associated loading screen */
 	virtual const LoadingScreen* getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const = 0;

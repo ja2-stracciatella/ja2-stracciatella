@@ -2,9 +2,14 @@
 #define __TALKING_H_
 
 #include "JA2Types.h"
-
+#include "Types.h"
 #include <string_theory/string>
 
+class SGPVObject;
+class SGPVSurface;
+struct GROUP;
+struct SOLDIERTYPE;
+struct VIDEO_OVERLAY;
 
 #define NO_EXPRESSION				0
 #define BLINKING				1
