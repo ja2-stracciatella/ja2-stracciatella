@@ -40,5 +40,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@android:drawable/ic_dialog_email" />
+        android:text="@string/floating_action_button_start_text"
+        app:srcCompat="@android:drawable/ic_media_play" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

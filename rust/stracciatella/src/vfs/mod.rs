@@ -100,32 +100,6 @@ impl Vfs {
         Ok(())
     }
 
-    #[cfg(target_os = "android")]
-    fn get_android_data_dir(jni_env: JNIEnv) -> jni::errors::Result<PathBuf> {
-        let environment = jni_env.get_static_field(
-            "android/os/Environment",
-            "DIRECTORY_DOWNLOADS",
-            "Ljava/lang/String;",
-        )?;
-        let files_dir = jni_env
-            .call_static_method(
-                "android/os/Environment",
-                "getExternalStoragePublicDirectory",
-                "(Ljava/lang/String;)Ljava/io/File;",
-                &[environment],
-            )?
-            .l()?;
-        let path = jni_env.get_string(
-            jni_env
-                .call_method(files_dir, "getAbsolutePath", "()Ljava/lang/String;", &[])?
-                .l()?
-                .into(),
-        )?;
-        let path_string: String = path.into();
-
-        Ok(PathBuf::from(&path_string))
-    }
-
     /// Adds an overlay for all SLF files in dir
     pub fn add_slf_files(&mut self, path: &Path, required: bool) -> Result<(), VfsInitError> {
         let slf_paths = fs::read_dir_paths(path, false).map_err(|error| VfsInitError {
@@ -157,17 +131,7 @@ impl Vfs {
         engine_options: &EngineOptions,
         #[cfg(target_os = "android")] jni_env: JNIEnv<'_>,
     ) -> Result<(), VfsInitError> {
-        #[cfg(not(target_os = "android"))]
         let vanilla_game_dir = engine_options.vanilla_game_dir.clone();
-        #[cfg(target_os = "android")]
-        let vanilla_game_dir =
-            Self::get_android_data_dir(jni_env.clone()).map_err(|error| VfsInitError {
-                path: PathBuf::new(),
-                error: io::Error::new(
-                    io::ErrorKind::Other,
-                    format!("Error getting vanilla data dir for Android `{:?}`", error),
-                ),
-            })?;
         let vanilla_data_dir =
             fs::resolve_existing_components(Path::new(DATA_DIR), Some(&vanilla_game_dir), true);
         let assets_dir = fs::resolve_existing_components(&get_assets_dir(), None, true);
