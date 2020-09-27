@@ -22,3 +22,5 @@ elseif("${_platform}" STREQUAL "")
 else()
 	message(FATAL_ERROR "target platform is not supported: '${_platform}'")
 endif()
+
+set(CMAKE_CXX_FLAGS_INIT "/bigobj")
