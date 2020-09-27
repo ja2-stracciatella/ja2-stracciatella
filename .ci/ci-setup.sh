@@ -50,6 +50,22 @@ elif [[ "$CI_TARGET" == "mac" ]]; then
 
     # Rust via Rustup
     unix-install-rustup
+elif [[ "$CI_TARGET" == windows-* ]]; then
+    # sccache for compilation caching
+    windows-install-via-chocolatey sccache
+
+    # Google Cloud SDK for Artifact Upload
+    windows-install-google-cloud-sdk
+
+    # Rust via Rustup
+    if [[ "$CI_TARGET" == "windows-msvc-x86" ]]; then
+        windows-install-rustup i686-pc-windows-msvc
+    elif [[ "$CI_TARGET" == "windows-msvc-amd64" ]]; then
+        windows-install-rustup x86_64-pc-windows-msvc
+    else
+        echo "unexpected target ${CI_TARGET}"
+        exit 1
+    fi
 else
     echo "unexpected target ${CI_TARGET}"
     exit 1
@@ -66,7 +82,7 @@ cargo clippy -- -V
 cargo fmt -- -V
 which cmake
 cmake --version
-command -v sccache && sccache -V || echo "sccache not available"
+sccache -V
 which gcloud
 gcloud version
 if [[ "$CI_TARGET" == "linux" ]]; then
