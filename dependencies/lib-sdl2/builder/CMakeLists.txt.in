@@ -23,6 +23,8 @@ externalproject_add(sdl2
         "-DANDROID_ABI=@ANDROID_ABI@"
         -DCMAKE_BUILD_TYPE=RelWithDebInfo
         -DSDL_SHARED=ON
+    # Apply Patch for SDL2 2.0.12 to build for armv7, see https://bugzilla.libsdl.org/show_bug.cgi?id=5100
+    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/Bug5100.patch
     BUILD_COMMAND ${CMAKE_COMMAND} --build . --config RelWithDebInfo
     INSTALL_COMMAND ${CMAKE_COMMAND} --build . --config RelWithDebInfo --target install
     BUILD_ALWAYS 1

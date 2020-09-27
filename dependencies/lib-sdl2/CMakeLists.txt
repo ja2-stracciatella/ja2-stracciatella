@@ -15,6 +15,11 @@ configure_file(
     "${CMAKE_CURRENT_BINARY_DIR}/builder/CMakeLists.txt"
     @ONLY
 )
+configure_file(
+    "${CMAKE_CURRENT_SOURCE_DIR}/builder/Bug5100.patch"
+    "${CMAKE_CURRENT_BINARY_DIR}/builder/Bug5100.patch"
+    @ONLY
+)
 
 # execute builder
 execute_process(COMMAND ${CMAKE_COMMAND} . "-G${CMAKE_GENERATOR}" WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/builder")
