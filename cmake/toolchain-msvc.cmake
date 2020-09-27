@@ -14,9 +14,9 @@ if("${_platform}" STREQUAL "" AND "${CMAKE_GENERATOR}" MATCHES "^Visual Studio "
 endif()
 
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(LIBSTRACCIATELLA_TARGET "x86_64-pc-windows-msvc" CACHE STRING "" FORCE)
+	set(CARGO_BUILD_TARGET "x86_64-pc-windows-msvc" CACHE STRING "" FORCE)
 else()
-	set(LIBSTRACCIATELLA_TARGET "i686-pc-windows-msvc" CACHE STRING "" FORCE)
+	set(CARGO_BUILD_TARGET "i686-pc-windows-msvc" CACHE STRING "" FORCE)
 endif()
 
 set(CMAKE_CXX_FLAGS_INIT "/bigobj")

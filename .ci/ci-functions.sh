@@ -59,7 +59,7 @@ windows-install-google-cloud-sdk () {
     local ARCHIVE_PATH="$HOMEPATH\google-cloud.zip"
     local UNZIP_PATH="$USERPROFILE"
     curl -sSf -o "$ARCHIVE_PATH" https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-299.0.0-windows-x86.zip
-    unzip "$ARCHIVE_PATH" -d $UNZIP_PATH -qq
+    unzip -q "$ARCHIVE_PATH" -d $UNZIP_PATH
     export PATH="$PATH;$UNZIP_PATH\google-cloud-sdk\bin"
 }
 
