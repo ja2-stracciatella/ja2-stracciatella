@@ -17,3 +17,4 @@ set(LOCAL_SDL_LIB "dependencies/lib-SDL2-2.0.8-mingw/x86_64-w64-mingw32" CACHE S
 set(LOCAL_FLTK_LIB ON CACHE BOOL "" FORCE)
 set(LOCAL_GTEST_LIB ON CACHE BOOL "" FORCE)
 set(CFLAGS "${CFLAGS} -mwindows -mconsole" CACHE BOOL "" FORCE)
+set(CMAKE_CXX_FLAGS_INIT "-Wa,-mbig-obj")

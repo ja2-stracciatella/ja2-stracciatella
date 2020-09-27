@@ -1,65 +1,66 @@
+#include "Dialogue_Control.h"
+#include "AI.h"
+#include "AIMMembers.h"
+#include "Assignments.h"
+#include "Civ_Quotes.h"
+#include "ContentManager.h"
+#include "Cursors.h"
+#include "Dialogs.h"
 #include "Directories.h"
+#include "Faces.h"
+#include "Facts.h"
 #include "Font.h"
 #include "Font_Control.h"
+#include "Game_Clock.h"
+#include "GameInstance.h"
 #include "GameLoop.h"
+#include "GameRes.h"
+#include "GameScreen.h"
+#include "GameSettings.h"
 #include "Handle_UI.h"
+#include "Interface_Control.h"
+#include "Interface_Dialogue.h"
+#include "Interface_Utils.h"
 #include "Isometric_Utils.h"
+#include "JAScreens.h"
+#include "Logger.h"
+#include "LOS.h"
+#include "Map_Screen_Interface.h"
 #include "MapScreen.h"
-#include "MessageBoxScreen.h"
-#include "Soldier_Control.h"
-#include "Faces.h"
+#include "Meanwhile.h"
+#include "MercProfile.h"
+#include "Mercs.h"
+#include "MercTextBox.h"
+#include "Message.h"
+#include "MouseSystem.h"
+#include "NPC.h"
+#include "OppList.h"
+#include "Overhead.h"
+#include "Overhead_Types.h"
+#include "PreBattle_Interface.h"
+#include "QArray.h"
+#include "Quests.h"
+#include "Random.h"
+#include "Render_Dirty.h"
+#include "RenderWorld.h"
+#include "ScreenIDs.h"
+#include "ShopKeeper_Interface.h"
+#include "SkillCheck.h"
+#include "Soldier_Macros.h"
+#include "SoundMan.h"
+#include "Squads.h"
+#include "StrategicMap.h"
+#include "UILayout.h"
+#include "Video.h"
 #include "VObject.h"
 #include "VSurface.h"
 #include "WCheck.h"
-#include "Overhead.h"
-#include "Dialogue_Control.h"
-#include "Message.h"
-#include "Render_Dirty.h"
-#include "Soldier_Profile.h"
 #include "WordWrap.h"
-#include "AIMMembers.h"
-#include "Mercs.h"
-#include "Interface_Dialogue.h"
-#include "MercTextBox.h"
-#include "RenderWorld.h"
-#include "Soldier_Macros.h"
-#include "Squads.h"
-#include "ScreenIDs.h"
-#include "Interface_Utils.h"
-#include "StrategicMap.h"
-#include "PreBattle_Interface.h"
-#include "Game_Clock.h"
-#include "Quests.h"
-#include "Cursors.h"
-#include "GameScreen.h"
-#include "Random.h"
-#include "GameSettings.h"
-#include "ShopKeeper_Interface.h"
-#include "Map_Screen_Interface.h"
-#include "Meanwhile.h"
-#include "SkillCheck.h"
-#include "Interface_Control.h"
-#include "Civ_Quotes.h"
-#include "OppList.h"
-#include "AI.h"
 #include "WorldMan.h"
-#include "LOS.h"
-#include "QArray.h"
-#include "JAScreens.h"
-#include "Video.h"
-#include "SoundMan.h"
-#include "GameRes.h"
-#include "UILayout.h"
-
-#include "ContentManager.h"
-#include "GameInstance.h"
-#include "MercProfile.h"
-#include "content/Dialogs.h"
-
-#include <string_theory/format>
-#include <string_theory/string>
-
+#include <map>
 #include <queue>
+#include <string_theory/format>
+struct MercPopUpBox;
 
 
 #define QUOTE_MESSAGE_SIZE			520
@@ -72,9 +73,9 @@ typedef std::queue<DialogueEvent*>DialogueQueue;
 
 BOOLEAN fExternFacesLoaded = FALSE;
 
-FACETYPE* uiExternalStaticNPCFaces[NUMBER_OF_EXTERNAL_NPC_FACES];
-const ProfileID g_external_face_profile_ids[] =
-{
+static std::map<ProfileID, FACETYPE*> externalNPCFaces;
+
+const ProfileID preloadedExternalNPCFaces[] = {
 	SKYRIDER,
 	FRED,
 	MATT,
@@ -169,36 +170,52 @@ void ShutdownDialogueControl()
 	EmptyDialogueQueue();
 
 	// shutdown external static NPC faces
-	ShutdownStaticExternalNPCFaces();
+	UnloadExternalNPCFaces();
 
 	// gte rid of portraits for cars
 	UnLoadCarPortraits();
 }
 
 
-void InitalizeStaticExternalNPCFaces( void )
+void LoadExternalNPCFace(ProfileID mercID)
 {
-	INT32 iCounter = 0;
+	if (externalNPCFaces.find(mercID) == externalNPCFaces.end())
+	{
+		externalNPCFaces[mercID] = &InitFace(mercID, nullptr, FACE_FORCE_SMALL);
+	}
+}
+
+FACETYPE* GetExternalNPCFace(ProfileID mercID)
+{
+	LoadExternalNPCFace(mercID); // ensure we have loaded the face
+	return externalNPCFaces.at(mercID);
+}
+
+void PreloadExternalNPCFaces()
+{
 	// go and grab all external NPC faces that are needed for the game who won't exist as soldiertypes
 
 	if (fExternFacesLoaded) return;
 
 	fExternFacesLoaded = TRUE;
 
-	for( iCounter = 0; iCounter < NUMBER_OF_EXTERNAL_NPC_FACES; iCounter++ )
+	for (int i = 0; i < lengthof(preloadedExternalNPCFaces); i++)
 	{
-		uiExternalStaticNPCFaces[iCounter] = &InitFace(g_external_face_profile_ids[iCounter], 0, FACE_FORCE_SMALL);
+		LoadExternalNPCFace(preloadedExternalNPCFaces[i]);
 	}
 }
 
 
-void ShutdownStaticExternalNPCFaces()
+void UnloadExternalNPCFaces()
 {
 	if (!fExternFacesLoaded) return;
 	fExternFacesLoaded = FALSE;
 
 	// Remove all external NPC faces.
-	FOR_EACH(FACETYPE*, i, uiExternalStaticNPCFaces) DeleteFace(*i);
+	for (auto entry : externalNPCFaces)
+	{
+		DeleteFace(entry.second);
+	}
 }
 
 
@@ -1704,7 +1721,7 @@ void DeleteDialogueControlGraphics()
 
 TEST(DialogueControl, asserts)
 {
-	EXPECT_EQ(lengthof(g_external_face_profile_ids), NUMBER_OF_EXTERNAL_NPC_FACES);
+	EXPECT_EQ(lengthof(preloadedExternalNPCFaces), 6);
 }
 
 #endif

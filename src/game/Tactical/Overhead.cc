@@ -391,7 +391,7 @@ void InitTacticalEngine()
 	InitAI();
 	InitOverhead();
 
-	OnStructureDamaged.addListener("default:overhead", HandleBrothelWallDestroyed);
+	OnStructureDamaged.addListener("default:brothel", HandleBrothelWallDestroyed);
 	BeforeStructureDamaged.addListener("default", HandleStatueDamaged);
 }
 
@@ -403,7 +403,7 @@ void ShutdownTacticalEngine(void)
 	DeleteFacesGraphics();
 	DeleteDialogueControlGraphics();
 	DeletePaletteData();
-	ShutdownStaticExternalNPCFaces();
+	UnloadExternalNPCFaces();
 	ShutDownPathAI();
 	UnLoadCarPortraits();
 	ShutdownNPCQuotes();

@@ -18,3 +18,5 @@ if(CMAKE_SIZEOF_VOID_P EQUAL 8)
 else()
 	set(LIBSTRACCIATELLA_TARGET "i686-pc-windows-msvc" CACHE STRING "" FORCE)
 endif()
+
+set(CMAKE_CXX_FLAGS_INIT "/bigobj")

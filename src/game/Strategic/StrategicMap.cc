@@ -119,7 +119,6 @@
 #include <iterator>
 #include <map>
 #include <stdexcept>
-#include "ScriptingExtensions.h"
 
 //Used by PickGridNoToWalkIn
 #define MAX_ATTEMPTS 200
@@ -189,6 +188,7 @@ static INT16 const DirYIncrementer[8] =
 	-1       //NW
 };
 
+Observable<> BeforePrepareSector = {};
 
 extern BOOLEAN gfOverrideSector;
 

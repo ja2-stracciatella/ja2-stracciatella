@@ -58,28 +58,8 @@ struct ExplosionQueueElement
 extern UINT8 gubElementsOnExplosionQueue;
 extern BOOLEAN gfExplosionQueueActive;
 
-/**
- * Callback right before the structure damange is inflicted.
- * @oaram INT16 sSectorX
- * @param INT16 sSectorY
- * @param INT8 bSectorZ
- * @param INT16 sGridNo location on map affected by the exploson
- * @param STRUCTURE* s pointer to the structure to be damaged
- * @param UINT32 uiDistance (no of grids) from the source of explosion
- * @param BOOLEAN* fSkipDamage damage processing will be skipped if it is set to TRUE
- */
-extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN*> BeforeStructureDamaged;
 
-/**
- * Callback just after a structure has just been damaged by explosives
- * @param INT16 sSectorX
- * @param INT16 sSectorY
- * @param INT8 bSectorZ
- * @param INT16 sGridNo location on map affected by the exploson
- * @param STRUCTURE* s pointer to the structure being damaged by explosion
- * @param UINT8 ubDamage damage amount just dealt
- * @param BOOLEAN fIsDestroyed whether or not the structure has been destroyed
- */
+extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN*> BeforeStructureDamaged;
 extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged;
 
 void IgniteExplosion(SOLDIERTYPE* owner, INT16 z, INT16 sGridNo, UINT16 item, INT8 level);

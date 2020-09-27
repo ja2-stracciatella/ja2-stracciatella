@@ -565,7 +565,7 @@ void SetUpHelicopterForMovement( void )
 
 static void SkyriderDialogue(UINT16 const quote)
 {
-	CharacterDialogue(SKYRIDER, quote, uiExternalStaticNPCFaces[SKYRIDER_EXTERNAL_FACE], DIALOGUE_EXTERNAL_NPC_UI, FALSE);
+	CharacterDialogue(SKYRIDER, quote, GetExternalNPCFace(SKYRIDER), DIALOGUE_EXTERNAL_NPC_UI, FALSE);
 }
 
 static void SkyriderDialogueWithSpecialEvent(SkyriderMonologueEvent const event, UINT32 const special_code)

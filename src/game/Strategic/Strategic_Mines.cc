@@ -49,18 +49,17 @@ struct HEAD_MINER_TYPE
 {
 	UINT16 usProfileId;
 	INT8   bQuoteNum[NUM_HEAD_MINER_STRATEGIC_QUOTES];
-	UINT8  ubExternalFace;
 };
 
 
 static const HEAD_MINER_TYPE gHeadMinerData[NUM_HEAD_MINERS] =
 {
-	//	Profile #		running out		creatures!		all dead!		creatures again!		external face graphic
-	{     FRED,   {     17,           18,          27,             26      }, MINER_FRED_EXTERNAL_FACE   },
-	{     MATT,   {     -1,           18,          32,             31      }, MINER_MATT_EXTERNAL_FACE   },
-	{     OSWALD, {     14,           15,          24,             23      }, MINER_OSWALD_EXTERNAL_FACE },
-	{     CALVIN, {     14,           15,          24,             23      }, MINER_CALVIN_EXTERNAL_FACE },
-	{     CARL,   {     14,           15,          24,             23      }, MINER_CARL_EXTERNAL_FACE   }
+	//  Profile #   running out    creatures!   all dead!   creatures again!
+	{   FRED,    {      17,           18,          27,             26      } },
+	{   MATT,    {      -1,           18,          32,             31      } },
+	{   OSWALD,  {      14,           15,          24,             23      } },
+	{   CALVIN,  {      14,           15,          24,             23      } },
+	{   CARL,    {      14,           15,          24,             23      } }
 };
 
 
@@ -798,7 +797,7 @@ void IssueHeadMinerQuote(UINT8 const mine_idx, HeadMinerQuote const quote_type)
 
 	/* Cause this quote to come up for this profile id and an indicator to flash
 	 * over the mine sector */
-	HandleMinerEvent(miner_data.ubExternalFace, bQuoteNum, force_mapscreen);
+	HandleMinerEvent(miner_data.usProfileId, bQuoteNum, force_mapscreen);
 
 	// Stop time compression with any miner quote - these are important events.
 	StopTimeCompression();

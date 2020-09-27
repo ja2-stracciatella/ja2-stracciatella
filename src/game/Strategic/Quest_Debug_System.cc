@@ -43,6 +43,7 @@
 #include "SGP.h"
 #include "Items.h"
 #include "UILayout.h"
+#include "Faces.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"

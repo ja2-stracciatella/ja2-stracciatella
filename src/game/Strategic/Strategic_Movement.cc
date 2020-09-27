@@ -5,6 +5,7 @@
 #include "Campaign.h"
 #include "ContentManager.h"
 #include "Dialogue_Control.h"
+#include "Faces.h"
 #include "FileMan.h"
 #include "Font_Control.h"
 #include "Game_Clock.h"
@@ -272,7 +273,7 @@ BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, 
 	// which direction you're going in!  This becomes critical in case the player reverse directions again before moving!
 
 	// The time it takes to arrive there will be exactly the amount of time we have been moving away from it.
-	SetGroupArrivalTime(*pGroup, pGroup->uiTraverseTime - pGroup->uiArrivalTime + GetWorldTotalMin() * 2);
+	pGroup->setArrivalTime(pGroup->uiTraverseTime - pGroup->uiArrivalTime + GetWorldTotalMin() * 2);
 
 	// if they're not already there
 	if( pGroup->uiArrivalTime > GetWorldTotalMin() )
@@ -1194,7 +1195,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 	}
 
 	g.uiTraverseTime      = 0;
-	SetGroupArrivalTime(g, 0);
+	g.setArrivalTime(0);
 	g.fBetweenSectors     = FALSE;
 	fMapPanelDirty        = TRUE;
 	fMapScreenBottomDirty = TRUE;
@@ -1532,7 +1533,7 @@ static void PrepareGroupsForSimultaneousArrival()
 		/* NOTE: This can cause the arrival time to be > GetWorldTotalMin() +
 		 * TraverseTime, so keep that in mind if you have any code that uses these 3
 		 * values to figure out how far along its route a group is! */
-		SetGroupArrivalTime(g, latest_arrival_time);
+		g.setArrivalTime(latest_arrival_time);
 		AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID);
 
 		if (g.fPlayer && g.uiArrivalTime - ABOUT_TO_ARRIVE_DELAY > GetWorldTotalMin())
@@ -1551,7 +1552,7 @@ static void PrepareGroupsForSimultaneousArrival()
 	first_group.ubNextY         = first_group.ubSectorY;
 	first_group.ubSectorX       = first_group.ubPrevX;
 	first_group.ubSectorY       = first_group.ubPrevY;
-	SetGroupArrivalTime(first_group, latest_arrival_time);
+	first_group.setArrivalTime(latest_arrival_time);
 	first_group.fBetweenSectors = TRUE;
 
 	if (first_group.fVehicle)
@@ -1666,7 +1667,7 @@ static void DelayEnemyGroupsIfPathsCross(GROUP& player_group)
 		/* NOTE: This can cause the arrival time to be > GetWorldTotalMin() +
 		 * TraverseTime, so keep that in mind if you have any code that uses these 3
 		 * values to figure out how far along its route a group is! */
-		SetGroupArrivalTime(g, player_group.uiArrivalTime + 1 + Random(10));
+		g.setArrivalTime(player_group.uiArrivalTime + 1 + Random(10));
 		if (!AddStrategicEvent(EVENT_GROUP_ARRIVAL, g.uiArrivalTime, g.ubGroupID))
 			SLOGA("Failed to add movement event.");
 	}
@@ -1784,7 +1785,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 		// put group between sectors
 		pGroup->fBetweenSectors	= TRUE;
 		// and set it's arrival time
-		SetGroupArrivalTime(*pGroup, GetWorldTotalMin() + pGroup->uiTraverseTime);
+		pGroup->setArrivalTime(GetWorldTotalMin() + pGroup->uiTraverseTime);
 	}
 	// NOTE: if the group is already between sectors, DON'T MESS WITH ITS ARRIVAL TIME!  THAT'S NOT OUR JOB HERE!!!
 
@@ -1794,7 +1795,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	{ //We're initializing the patrol group, so randomize the enemy groups to have extremely quick and varying
 		//arrival times so that their initial positions aren't easily determined.
 		pGroup->uiTraverseTime = 1 + Random( pGroup->uiTraverseTime - 1 );
-		SetGroupArrivalTime(*pGroup, GetWorldTotalMin() + pGroup->uiTraverseTime);
+		pGroup->setArrivalTime(GetWorldTotalMin() + pGroup->uiTraverseTime);
 	}
 
 
@@ -2831,7 +2832,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 	// Because we are in the strategic layer, don't make the arrival instantaneous (towns)
 	if (g.uiTraverseTime == 0) g.uiTraverseTime = 5;
 
-	SetGroupArrivalTime(g, GetWorldTotalMin() + g.uiTraverseTime);
+	g.setArrivalTime(GetWorldTotalMin() + g.uiTraverseTime);
 	g.fBetweenSectors = TRUE;
 	g.uiFlags        |= GROUPFLAG_JUST_RETREATED_FROM_BATTLE;
 
@@ -2997,7 +2998,7 @@ static void ResetMovementForEnemyGroup(GROUP* pGroup)
 		//arbitrarily.  Doesn't really matter if this isn't accurate.
 		pGroup->uiTraverseTime = 90;
 	}
-	SetGroupArrivalTime(*pGroup, GetWorldTotalMin() + pGroup->uiTraverseTime);
+	pGroup->setArrivalTime(GetWorldTotalMin() + pGroup->uiTraverseTime);
 
 	//Add a new event
 	AddStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->uiArrivalTime, pGroup->ubGroupID );
@@ -3452,10 +3453,7 @@ void PlaceGroupInSector(GROUP& g, INT16 const prev_x, INT16 const prev_y, INT16 
 	GroupArrivedAtSector(g, check_for_battle, FALSE);
 }
 
-
-/* ARM: centralized it so we can do a comprehensive Assert on it. Causing
- * problems with helicopter group! */
-void SetGroupArrivalTime(GROUP& g, UINT32 arrival_time)
+void GROUP::setArrivalTime(UINT32 arrival_time)
 {
 	/* Please centralize all changes to the arrival times of groups through here,
 	 * especially the helicopter group! */
@@ -3471,19 +3469,19 @@ void SetGroupArrivalTime(GROUP& g, UINT32 arrival_time)
 	 * player groups via PrepareGroupsForSimultaneousArrival().  So we skip the
 	 * assert. */
 
-	if (IsGroupTheHelicopterGroup(g))
+	if (IsGroupTheHelicopterGroup(*this))
 	{
 		// Make sure it's valid (NOTE: the correct traverse time must be set first!)
 		UINT32 const now = GetWorldTotalMin();
-		if (arrival_time > now + g.uiTraverseTime)
+		if (arrival_time > now + this->uiTraverseTime)
 		{
-			AssertMsg(FALSE, String( "SetGroupArrivalTime: Setting invalid arrival time %d for group %d, WorldTime = %d, TraverseTime = %d", arrival_time, g.ubGroupID, now, g.uiTraverseTime));
+			AssertMsg(FALSE, String( "setArrivalTime: Setting invalid arrival time %d for group %d, WorldTime = %d, TraverseTime = %d", arrival_time, this->ubGroupID, now, this->uiTraverseTime));
 			// Fix it if assertions are disabled
-			arrival_time = now + g.uiTraverseTime;
+			arrival_time = now + this->uiTraverseTime;
 		}
 	}
 
-	g.uiArrivalTime = arrival_time;
+	this->uiArrivalTime = arrival_time;
 }
 
 
@@ -3502,7 +3500,7 @@ static void CancelEmptyPersistentGroupMovement(GROUP& g)
 
 	RemoveGroupWaypoints(g);
 	g.uiTraverseTime  = 0;
-	SetGroupArrivalTime(g, 0);
+	g.setArrivalTime(0);
 	g.fBetweenSectors = FALSE;
 	g.ubPrevX         = 0;
 	g.ubPrevY         = 0;

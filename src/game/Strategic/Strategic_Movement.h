@@ -99,7 +99,7 @@ struct GROUP
 	BOOLEAN fBetweenSectors;			//set only if a group is between sector.
 	UINT8 ubMoveType;							//determines the type of movement (ONE_WAY, CIRCULAR, ENDTOEND, etc.)
 	UINT8 ubNextWaypointID;				//the ID of the next waypoint
-	UINT32 uiArrivalTime;					//the arrival time in world minutes that the group will arrive at the next sector.
+	UINT32 uiArrivalTime;					//the arrival time in world minutes that the group will arrive at the next sector. This should not be set directly; use setArrivalTime instead
 	UINT32 uiTraverseTime;				//the total traversal time from the previous sector to the next sector.
 	WAYPOINT *pWaypoints;					//a list of all of the waypoints in the groups movement.
 	UINT8 ubTransportationMask;		//the mask combining all of the groups transportation methods.
@@ -113,6 +113,9 @@ struct GROUP
 		ENEMYGROUP *pEnemyGroup;		//a structure containing general enemy info
 	};
 	GROUP* next;						//next group
+
+	// ARM: centralized it so we can do a comprehensive Assert on it. Causing problems with helicopter group!
+	void setArrivalTime(UINT32 time);
 };
 
 
@@ -258,8 +261,6 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 void RandomizePatrolGroupLocation( GROUP *pGroup );
 
 void PlaceGroupInSector(GROUP&, INT16 prev_x, INT16 prev_y, INT16 next_x, INT16 next_y, INT8 z, bool check_for_battle);
-
-void SetGroupArrivalTime(GROUP&, UINT32 arrival_time);
 
 void PlayerGroupArrivedSafelyInSector(GROUP&, BOOLEAN fCheckForNPCs);
 

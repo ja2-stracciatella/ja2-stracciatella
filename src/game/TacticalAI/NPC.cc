@@ -7,6 +7,7 @@
 #include "ContentManager.h"
 #include "Dialogue_Control.h"
 #include "Directories.h"
+#include "Faces.h"
 #include "FileMan.h"
 #include "Font_Control.h"
 #include "Game_Clock.h"
