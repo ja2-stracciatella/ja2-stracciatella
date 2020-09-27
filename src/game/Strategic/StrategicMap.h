@@ -46,6 +46,8 @@ extern BOOLEAN fFoundOrta;
 
 extern	BOOLEAN		gfUseAlternateMap;
 
+// This is called after loading map and before setting it up (e.g. placing soldiers)
+extern Observable<> BeforePrepareSector;
 
 // FUNCTIONS FOR DERTERMINING GOOD SECTOR EXIT DATA
 #define CHECK_DIR_X_DELTA			( WORLD_TILE_X * 4 )

@@ -3,16 +3,20 @@
 #define SOL_CHECK_ARGUMENTS 1
 #define SOL_PRINT_ERRORS 1
 #include <sol/sol.hpp>  // this needs to be included first
+#include "STStringHandler.h"
 
 #include "Campaign_Types.h"
 #include "ContentManager.h"
 #include "FileMan.h"
 #include "FunctionsLibrary.h"
+#include "Game_Events.h"
 #include "GameInstance.h"
+#include "GameSettings.h"
 #include "Logger.h"
 #include "Overhead.h"
 #include "Quests.h"
 #include "StrategicMap.h"
+#include "Structure.h"
 #include <set>
 #include <stdexcept>
 #include <string>
@@ -22,14 +26,28 @@
 #define SCRIPTS_DIR "scripts"
 #define ENTRYPOINT_SCRIPT "main.lua"
 
+/*! \struct GAME_OPTIONS
+    \brief Options which the current game was started with */
+struct GAME_OPTIONS;
+/*! \struct TacticalStatusType
+    \brief Status information of the game
+    \details Accessible via the gTacticalStatusType global variable
+    */
+struct TacticalStatusType;
+
 static std::set<std::string> loadedScripts;
 static bool isLuaInitialized = false;
 static bool isLuaDisabled = false;
 static sol::state lua;
 
+// an increment counter used to generate unique keys for listeners
+static unsigned int counter;
+
 static void RegisterUserTypes();
 static void RegisterGlobals();
 static void RegisterLogger();
+static void RegisterListener(std::string observable, std::string luaFunctionName);
+static void UnregisterListener(std::string observable, std::string key);
 
 void JA2Require(std::string scriptFileName)
 {
@@ -56,6 +74,7 @@ void InitScriptingEngine()
 	loadedScripts.clear();
 	isLuaInitialized = false;
 	isLuaDisabled = false;
+	counter = 0;
 
 	if (!GCM->doesGameResExists(SCRIPTS_DIR "/" ENTRYPOINT_SCRIPT))
 	{
@@ -111,7 +130,12 @@ static void RegisterUserTypes()
 		"bTrap", &OBJECTTYPE::bTrap
 		);
 
-	lua.new_simple_usertype<StrategicMapElement>("StrategicMapElement",
+	lua.new_usertype<STRUCTURE>("STRUCTURE",
+		"sGridNo", &STRUCTURE::sGridNo,
+		"uiFlags", &STRUCTURE::fFlags
+		);
+
+	lua.new_usertype<StrategicMapElement>("StrategicMapElement",
 		"bNameId", &StrategicMapElement::bNameId,
 		"fEnemyControlled", &StrategicMapElement::fEnemyControlled,
 		"fEnemyAirControlled", &StrategicMapElement::fEnemyAirControlled
@@ -121,6 +145,59 @@ static void RegisterUserTypes()
 		"fEnemyInSector", &TacticalStatusType::fEnemyInSector,
 		"fDidGameJustStart", &TacticalStatusType::fDidGameJustStart
 		);
+
+	lua.new_usertype<STRATEGICEVENT>("STRATEGICEVENT",
+		"uiTimeStamp", &STRATEGICEVENT::uiTimeStamp,
+		"uiParam", &STRATEGICEVENT::uiParam,
+		"uiTimeOffset", &STRATEGICEVENT::uiTimeOffset,
+		"ubEventFrequency", &STRATEGICEVENT::ubEventType,
+		"ubEventKind", &STRATEGICEVENT::ubCallbackID
+		);
+
+	lua.new_usertype<GAME_OPTIONS>("GAME_OPTIONS",
+		"fGunNut", &GAME_OPTIONS::fGunNut,
+		"fSciFi", &GAME_OPTIONS::fSciFi,
+		"ubDifficultyLevel", &GAME_OPTIONS::ubDifficultyLevel,
+		"fTurnTimeLimit", &GAME_OPTIONS::fTurnTimeLimit,
+		"ubGameSaveMode", &GAME_OPTIONS::ubGameSaveMode
+		);
+	
+	lua.new_usertype<SOLDIERTYPE>("SOLDIERTYPE",
+		"ubID", &SOLDIERTYPE::ubID,
+		"ubProfile", &SOLDIERTYPE::ubProfile,
+		"ubBodyType", &SOLDIERTYPE::ubBodyType,
+		"ubSoldierClass", &SOLDIERTYPE::ubSoldierClass,
+		"bTeam", &SOLDIERTYPE::bTeam,
+		"ubCivilianGroup", &SOLDIERTYPE::ubCivilianGroup,
+		"bNeutral", &SOLDIERTYPE::bNeutral,
+
+		"bLifeMax", &SOLDIERTYPE::bLifeMax,
+		"bLife", &SOLDIERTYPE::bLife,
+		"bBreath", &SOLDIERTYPE::bBreath,
+		"bBreathMax", &SOLDIERTYPE::bBreathMax,
+		"bCamo", &SOLDIERTYPE::bCamo,
+
+		"bAgility", &SOLDIERTYPE::bAgility,
+		"bDexterity", &SOLDIERTYPE::bDexterity,
+		"bExplosive", &SOLDIERTYPE::bExplosive,
+		"bLeadership", &SOLDIERTYPE::bLeadership,
+		"bMarksmanship", &SOLDIERTYPE::bMarksmanship,
+		"bMechanical", &SOLDIERTYPE::bMechanical,
+		"bMedical", &SOLDIERTYPE::bMedical,
+		"bStrength", &SOLDIERTYPE::bStrength,
+		"bWisdom", &SOLDIERTYPE::bWisdom,
+
+		"bExpLevel", &SOLDIERTYPE::bExpLevel,
+		"ubSkillTrait1", &SOLDIERTYPE::ubSkillTrait1,
+		"ubSkillTrait2", &SOLDIERTYPE::ubSkillTrait2,
+
+		"HeadPal", &SOLDIERTYPE::HeadPal,
+		"PantsPal", &SOLDIERTYPE::PantsPal,
+		"VestPal", &SOLDIERTYPE::VestPal,
+		"SkinPal", &SOLDIERTYPE::SkinPal,
+
+		"ubBattleSoundID", &SOLDIERTYPE::ubBattleSoundID
+		);
 }
 
 static void RegisterGlobals()
@@ -128,6 +205,7 @@ static void RegisterGlobals()
 	lua["gTacticalStatus"] = &gTacticalStatus;
 	lua["gubQuest"] = &gubQuest;
 	lua["gubFact"] = &gubFact;
+	lua["gGameOptions"] = &gGameOptions;
 
 	lua.set_function("GetCurrentSector", GetCurrentSector);
 	lua.set_function("GetSectorInfo", GetSectorInfo);
@@ -138,18 +216,22 @@ static void RegisterGlobals()
 	lua.set_function("PlaceItem", PlaceItem);
 
 	lua.set_function("JA2Require", JA2Require);
-	lua.set_function("require",  [](void) { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
-	lua.set_function("dofile",   [](void) { throw std::logic_error("dofile is not allowed. Use JA2Require instead"); });
-	lua.set_function("loadfile", [](void) { throw std::logic_error("loadfile is not allowed. Use JA2Require instead"); });
+	lua.set_function("require",  []() { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
+	lua.set_function("dofile",   []() { throw std::logic_error("dofile is not allowed. Use JA2Require instead"); });
+	lua.set_function("loadfile", []() { throw std::logic_error("loadfile is not allowed. Use JA2Require instead"); });
+
+	lua.set_function("___noop", []() {});
+	lua.set_function("RegisterListener", RegisterListener);
+	lua.set_function("UnregisterListener", UnregisterListener);
 }
 
 static void LogLuaMessage(LogLevel level, std::string msg) {
-		lua_Debug info;
-		// Stack position 0 is the c function we are in
-		// Stack position 1 is the calling lua script
-		lua_getstack(lua, 1, &info);
-		lua_getinfo(lua, "S", &info);
-		LogMessage(false, level, info.short_src, msg);
+	lua_Debug info;
+	// Stack position 0 is the c function we are in
+	// Stack position 1 is the calling lua script
+	lua_getstack(lua, 1, &info);
+	lua_getinfo(lua, "S", &info);
+	LogMessage(false, level, info.short_src, msg);
 }
 
 static void RegisterLogger()
@@ -164,13 +246,12 @@ static void RegisterLogger()
 	lua.set_function("print", [](std::string msg) { LogLuaMessage(LogLevel::Info, msg); });
 }
 
-static void InvokeFunction(ST::string functionName)
+/**
+ * Invokes a Lua function by name
+ */
+template<typename ...A>
+static void InvokeFunction(ST::string functionName, A... args)
 {
-	if (!isLuaInitialized)
-	{
-		SLOGD("Lua scripting is not available");
-		return;
-	}
 	if (isLuaDisabled)
 	{
 		SLOGE("Scripting engine has been disabled due to a previous error"); 
@@ -180,11 +261,12 @@ static void InvokeFunction(ST::string functionName)
 	sol::protected_function func = lua[functionName.to_std_string()];
 	if (!func.valid())
 	{
-		SLOGD(ST::format("Function {} is not defined", functionName));
+		SLOGE(ST::format("Function {} is not defined", functionName));
+		isLuaDisabled = true;
 		return;
 	}
 	
-	auto result = func.call();
+	auto result = func.call(args...);
 	if (!result.valid())
 	{
 		sol::error err = result;
@@ -193,7 +275,54 @@ static void InvokeFunction(ST::string functionName)
 	}
 }
 
-void BeforePrepareSector()
+// Creates a typed std::function out of a Lua function
+template<typename ...A>
+static std::function<void(A...)> wrap(std::string luaFunc)
 {
-	InvokeFunction("BeforePrepareSector");
+	return [luaFunc](A... args) {
+		InvokeFunction(luaFunc, args...);
+	};
+}
+
+static void _RegisterListener(std::string observable, std::string luaFunc, ST::string key)
+{
+	if (isLuaInitialized)
+	{
+		throw std::runtime_error("RegisterListener is not allowed after initialization");
+	}
+
+	if      (observable == "OnStructureDamaged")         OnStructureDamaged.addListener(key, wrap<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN>(luaFunc));
+	else if (observable == "BeforeStructureDamaged")     BeforeStructureDamaged.addListener(key, wrap<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN*>(luaFunc));
+	else if (observable == "OnAirspaceControlUpdated")   OnAirspaceControlUpdated.addListener(key, wrap<>(luaFunc));
+	else if (observable == "BeforePrepareSector")        BeforePrepareSector.addListener(key, wrap<>(luaFunc));
+	else if (observable == "OnSoldierCreated")           OnSoldierCreated.addListener(key, wrap<SOLDIERTYPE*>(luaFunc));
+	else {
+		ST::string err = ST::format("There is no observable named '{}'", observable);
+		throw std::logic_error(err.to_std_string());
+	}
+}
+
+/**
+ * Registers a callback listener with an Observable, to receive notifications in Lua scripts.
+ * This function can only be used during initialization.
+ * @param observable the name of an Observable
+ * @param luaFunc name of the function handling callback
+ * @ingroup funclib-general
+ */
+static void RegisterListener(std::string observable, std::string luaFunc)
+{
+	ST::string key = ST::format("mod:{03d}", counter++);
+	_RegisterListener(observable, luaFunc, key);
+}
+
+/**
+ * Unregisters a listener from the Observable.
+ * This function can only be used during initialization.
+ * @param observable
+ * @param key
+ * @ingroup funclib-general
+ */
+static void UnregisterListener(std::string observable, std::string key)
+{
+	_RegisterListener(observable, "___noop", key);
 }

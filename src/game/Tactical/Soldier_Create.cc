@@ -71,6 +71,8 @@
 #define MAX_PALACE_DISTANCE			20
 
 
+Observable<SOLDIERTYPE*> OnSoldierCreated = {};
+
 BOOLEAN gfProfiledEnemyAdded = FALSE;
 
 UINT32 guiCurrentUniqueSoldierId = 1;
@@ -446,6 +448,8 @@ try
 		s->bSectorZ = 0;
 		return s;
 	}
+
+	OnSoldierCreated(s);
 
 	Assert(s->usAnimState == STANDING);
 
