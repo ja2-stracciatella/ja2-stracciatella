@@ -47,7 +47,9 @@ class DataTabFragment : Fragment() {
         configurationModel.vanillaGameDir.observe(
             viewLifecycleOwner,
             Observer<String> { vanillaGameDir ->
-                tab.gameDirValueText.text = vanillaGameDir
+                if (vanillaGameDir.isNotEmpty()) {
+                    tab.gameDirValueText.text = vanillaGameDir
+                }
             })
         tab.gameDirChooseButton?.setOnClickListener { _ ->
             chooser.show()
