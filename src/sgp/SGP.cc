@@ -42,6 +42,10 @@
 #	include "Local.h"
 #endif
 
+#ifdef __ANDROID__
+#include "jni.h"
+#endif
+
 #include "Multi_Language_Graphic_Utils.h"
 
 #include <string_theory/format>
@@ -332,6 +336,9 @@ std::vector<ST::string> InitGlobalLocale()
 
 int main(int argc, char* argv[])
 {
+#ifdef __ANDROID__
+    try {
+#endif
 	// init locale and logging
 	{
 		std::vector<ST::string> problems = InitGlobalLocale();
@@ -565,9 +572,53 @@ int main(int argc, char* argv[])
 	delete cm;
 	GCM = NULL;
 
+#ifdef __ANDROID__
+	} catch (...) {
+        TerminationHandler();
+        return EXIT_FAILURE;
+	}
+#endif
+
 	return EXIT_SUCCESS;
 }
 
+#ifdef __ANDROID__
+//  Sets the exception on the NativeExceptionContainer in Android
+void TerminationHandler()
+{
+	auto ex = std::current_exception();
+	auto jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
+    jclass exceptionContainer = jniEnv->FindClass("io/github/ja2stracciatella/NativeExceptionContainer");
+    jfieldID singletonFieldId = jniEnv->GetStaticFieldID(exceptionContainer, "INSTANCE", "Lio/github/ja2stracciatella/NativeExceptionContainer;");
+    jobject exceptionContainerSingleton = jniEnv->GetStaticObjectField(exceptionContainer, singletonFieldId);
+    jmethodID setAndroidExceptionMethodId = jniEnv->GetMethodID(exceptionContainer, "setException","(Ljava/lang/String;)V");
+
+	if (ex)
+	{
+		try
+		{
+			std::rethrow_exception(ex);
+		}
+		catch (const std::exception& e)
+		{
+			auto errorMessage = ST::format("Game has been terminated due to an unrecoverable error: {} ({})", e.what(), typeid(e).name());
+            SLOGE(errorMessage.c_str());
+            jniEnv->CallVoidMethod(exceptionContainerSingleton, setAndroidExceptionMethodId,
+                                   jniEnv->NewStringUTF(errorMessage.c_str()));
+            return;
+		}
+		catch (...)
+		{
+			SLOGE("Game has been terminated due to an unknown error");
+            jniEnv->CallVoidMethod(exceptionContainerSingleton, setAndroidExceptionMethodId,
+                                   jniEnv->NewStringUTF("Game has been terminated due to an unknown error"));
+            return;
+		}
+	}
+    jniEnv->CallVoidMethod(exceptionContainerSingleton, setAndroidExceptionMethodId,
+                           jniEnv->NewStringUTF("Game has been terminated due to an unknown error"));
+}
+#else
 //  Prints the exception message (if any) and abort
 void TerminationHandler()
 {
@@ -589,6 +640,7 @@ void TerminationHandler()
 	}
 	std::abort();
 }
+#endif
 
 /*static void convertDialogQuotesToJson(const DefaultContentManager *cm,
 					STRING_ENC_TYPE encType,

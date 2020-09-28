@@ -208,9 +208,9 @@ void DefaultContentManager::init(EngineOptions* engine_options)
 	#endif
 	if (!succeeded) {
 		RustPointer<char> err{ getRustError() };
-		auto error = err.get();
-		SLOGE(ST::format("Failed to build virtual file system (VFS): {}", error));
-		throw std::runtime_error("Failed to add to VFS");
+		auto error = ST::format("Failed to build virtual file system (VFS): {}", err.get());
+		SLOGE(error);
+		throw std::runtime_error(error.c_str());
 	}
 }
 

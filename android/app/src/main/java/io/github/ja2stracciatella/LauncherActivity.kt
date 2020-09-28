@@ -20,7 +20,6 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
 import java.io.IOException
-import java.util.jar.Manifest
 
 
 class LauncherActivity : AppCompatActivity() {
@@ -47,6 +46,21 @@ class LauncherActivity : AppCompatActivity() {
 
         fab.setOnClickListener { _ ->
             startGame()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        val exception = NativeExceptionContainer.getException()
+        Log.i(activityLogTag, "Resuming LauncherActivity, previous exception: $exception")
+        if (exception != null) {
+            Toast.makeText(
+                this,
+                "A exception occured when running the game: $exception",
+                Toast.LENGTH_LONG
+            ).show()
+            NativeExceptionContainer.resetException()
         }
     }
 
