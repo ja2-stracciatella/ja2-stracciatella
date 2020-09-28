@@ -71,7 +71,9 @@ impl RuntimeLevelFilter {
         let filter = RuntimeLevelFilter { logger };
 
         set_max_level(LevelFilter::max());
-        set_boxed_logger(Box::new(filter)).unwrap();
+        if set_boxed_logger(Box::new(filter)).is_err() {
+            log::warn!("Error initializing logger: Logger already set");
+        }
     }
 
     fn get_global_log_level() -> Level {
