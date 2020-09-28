@@ -1,10 +1,13 @@
 package io.github.ja2stracciatella.ui.main
 
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -18,6 +21,8 @@ import kotlinx.android.synthetic.main.fragment_launcher_data_tab.view.*
  * A placeholder fragment containing a simple view.
  */
 class DataTabFragment : Fragment() {
+    private val requestPermissionsCode = 1001
+
     private lateinit var configurationModel: ConfigurationModel
     private lateinit var chooser: StorageChooser
 
@@ -30,7 +35,6 @@ class DataTabFragment : Fragment() {
             .setType(StorageChooser.DIRECTORY_CHOOSER)
             .build();
         chooser.setOnSelectListener { path ->
-            Log.e("TAG", "SELECTED_PATH $path")
             configurationModel.apply {
                 setVanillaGameDir(path)
             }
@@ -46,15 +50,45 @@ class DataTabFragment : Fragment() {
 
         configurationModel.vanillaGameDir.observe(
             viewLifecycleOwner,
-            Observer<String> { vanillaGameDir ->
+            { vanillaGameDir ->
                 if (vanillaGameDir.isNotEmpty()) {
                     tab.gameDirValueText.text = vanillaGameDir
                 }
             })
         tab.gameDirChooseButton?.setOnClickListener { _ ->
-            chooser.show()
+            showGameDirChooser()
         }
         return tab
+    }
+
+    private fun showGameDirChooser() {
+        getPermissionsIfNecessaryForAction {
+            chooser.show()
+        }
+    }
+
+    private fun getPermissionsIfNecessaryForAction(action: () -> Unit) {
+        val permissions = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        val hasAllPermissions = permissions.all { p -> ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED }
+        if (hasAllPermissions)  {
+            action()
+        } else {
+            requestPermissions(permissions, requestPermissionsCode)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == requestPermissionsCode) {
+            if (grantResults.all { r -> r == PackageManager.PERMISSION_GRANTED }) {
+                showGameDirChooser()
+            } else {
+                Toast.makeText(requireContext(), "Cannot select game directory without proper permissions", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     companion object {

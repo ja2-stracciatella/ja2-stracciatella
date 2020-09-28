@@ -1,10 +1,12 @@
 package io.github.ja2stracciatella
 
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -18,10 +20,12 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
 import java.io.IOException
+import java.util.jar.Manifest
 
 
 class LauncherActivity : AppCompatActivity() {
     private val activityLogTag = "LauncherActivity"
+    private val requestPermissionsCode = 1000
     private val jsonFormat = Json {
         prettyPrint = true
     }
@@ -42,15 +46,58 @@ class LauncherActivity : AppCompatActivity() {
         val fab: FloatingActionButton = findViewById(R.id.fab)
 
         fab.setOnClickListener { _ ->
-            try {
+            startGame()
+        }
+    }
+
+    private fun getPermissionsIfNecessaryForAction(action: () -> Unit) {
+        val permissions = arrayOf(
+            android.Manifest.permission.READ_EXTERNAL_STORAGE,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        val hasAllPermissions = permissions.all { p ->
+            ContextCompat.checkSelfPermission(
+                applicationContext,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+        if (hasAllPermissions) {
+            action()
+        } else {
+            requestPermissions(permissions, requestPermissionsCode)
+        }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode == requestPermissionsCode) {
+            if (grantResults.all { r -> r == PackageManager.PERMISSION_GRANTED }) {
+                startGame()
+            } else {
+                Toast.makeText(
+                    this,
+                    "Cannot start the game without proper permissions",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+    }
+
+    private fun startGame() {
+        try {
+            getPermissionsIfNecessaryForAction {
                 saveJA2Json()
                 val intent = Intent(this@LauncherActivity, StracciatellaActivity::class.java)
                 startActivity(intent)
-            } catch (e: IOException) {
-                val message = "Could not write ${ja2JsonPath}: ${e.message}"
-                Log.e(activityLogTag, message)
-                Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             }
+        } catch (e: IOException) {
+            val message = "Could not write ${ja2JsonPath}: ${e.message}"
+            Log.e(activityLogTag, message)
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
         }
     }
 
