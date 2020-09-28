@@ -50,7 +50,7 @@ windows-install-via-chocolatey () {
 windows-install-rustup () {
     # Difference to the Unix version: This only installs the one toolchain we pass in
     curl -sSf -o rustup-init.exe https://win.rustup.rs/
-    ./rustup-init.exe -y --default-toolchain $(cat ./rust-toolchain)-$1
+    ./rustup-init.exe -y --default-toolchain "$(cat ./rust-toolchain)-$1" --default-host "$1"
     export PATH="$PATH;$USERPROFILE\.cargo\bin"
 }
 
