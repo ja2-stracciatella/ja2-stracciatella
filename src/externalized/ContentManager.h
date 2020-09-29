@@ -25,6 +25,7 @@ class GamePolicy;
 class GarrisonGroupModel;
 class IMPPolicy;
 class LoadingScreenModel;
+class MERCListingModel;
 class MineModel;
 class MovementCostsModel;
 class NpcActionParamsModel;
@@ -172,7 +173,10 @@ public:
 
 	/* Params for the given NPC_ACTION if found, or return an empty instance */
 	virtual const FactParamsModel* getFactParams(Fact fact) const = 0;
-	
+
+	/* Returns the full list of profile listings on M.E.R.C. */
+	virtual const std::vector<const MERCListingModel*>& getMERCListings() const = 0;
+
 	/* Gets eyes and mouths offsets for the RPC small portraits. Returns null if none defined. */
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const = 0;
 

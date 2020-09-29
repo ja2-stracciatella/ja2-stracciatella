@@ -1,6 +1,7 @@
 file(GLOB LOCAL_JA2_HEADERS ${CMAKE_CURRENT_SOURCE_DIR}/*.h)
 set(LOCAL_JA2_SOURCES
         ${CMAKE_CURRENT_SOURCE_DIR}/MercProfile.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/MERCListingModel.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/RPCSmallFaceModel.cc
         )
 

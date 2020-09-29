@@ -31,6 +31,7 @@
 #include "army/ArmyCompositionModel.h"
 #include "army/GarrisonGroupModel.h"
 #include "army/PatrolGroupModel.h"
+#include "mercs/MERCListingModel.h"
 #include "mercs/RPCSmallFaceModel.h"
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
@@ -296,6 +297,7 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_townNameLocatives);
 	deleteElements(m_undergroundSectors);
 	deleteElements(m_rpcSmallFaces);
+	deleteElements(m_MERCListings);
 
 	delete m_movementCosts;
 	delete m_samSitesAirControl;
@@ -1225,6 +1227,14 @@ bool DefaultContentManager::loadMercsData()
 		m_rpcSmallFaces[face->ubProfileID] = face;
 	}
 
+	json = readJsonDataFile("mercs-MERC-listings.json");
+	int i = 0;
+	for (auto& element : json->GetArray())
+	{
+		auto item = MERCListingModel::deserialize(i++, element);
+		m_MERCListings.push_back(item);
+	}
+	MERCListingModel::validateData(m_MERCListings);
 	return true;
 }
 
@@ -1383,6 +1393,11 @@ const RPCSmallFaceModel* DefaultContentManager::getRPCSmallFaceOffsets(uint8_t p
 		return NULL;
 	}
 	return m_rpcSmallFaces.at(profileID);
+}
+
+const std::vector<const MERCListingModel*>& DefaultContentManager::getMERCListings() const
+{
+	return m_MERCListings;
 }
 
 const LoadingScreen* DefaultContentManager::getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const
