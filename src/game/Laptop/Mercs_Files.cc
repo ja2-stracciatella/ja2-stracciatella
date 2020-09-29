@@ -192,7 +192,7 @@ void RenderMercsFiles()
 	BltVideoObject(FRAME_BUFFER, guiStatsBox,    0, MERC_FILES_STATS_BOX_X,    MERC_FILES_STATS_BOX_Y);
 	BltVideoObject(FRAME_BUFFER, guiBioBox,      0, MERC_FILES_BIO_BOX_X + 1,  MERC_FILES_BIO_BOX_Y);
 
-	ProfileID         const  pid = GetMercIDFromMERCArray(gubCurMercIndex);
+	ProfileID         const  pid = GetProfileIDFromMERCListingIndex(gubCurMercIndex);
 	MERCPROFILESTRUCT const& p   = GetProfile(pid);
 
 	//Display the mercs face
@@ -230,8 +230,6 @@ static void BtnMercPrevButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if (gubCurMercIndex > 0) gubCurMercIndex--;
-		//Since there are 2 larry roachburns
-		if (gubCurMercIndex == MERC_LARRY_ROACHBURN) gubCurMercIndex--;
 		fReDrawScreenFlag = TRUE;
 		EnableDisableMercFilesNextPreviousButton();
 	}
@@ -243,8 +241,6 @@ static void BtnMercNextButtonCallback(GUI_BUTTON *btn, INT32 reason)
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		if (gubCurMercIndex <= LaptopSaveInfo.gubLastMercIndex - 1) gubCurMercIndex++;
-		//Since there are 2 larry roachburns
-		if (gubCurMercIndex == MERC_LARRY_ROACHBURN) gubCurMercIndex++;
 		fReDrawScreenFlag = TRUE;
 		EnableDisableMercFilesNextPreviousButton( );
 	}
@@ -265,7 +261,7 @@ static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
 			gusMercVideoSpeckSpeech = SPECK_QUOTE_ALTERNATE_OPENING_5_PLAYER_OWES_SPECK_ACCOUNT_SUSPENDED;
 			gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
 		}
-		else if (MercFilesHireMerc(GetMercIDFromMERCArray(gubCurMercIndex)))
+		else if (MercFilesHireMerc(GetProfileIDFromMERCListingIndex(gubCurMercIndex)))
 		{
 			// else try to hire the merc
 			guiCurrentLaptopMode = LAPTOP_MODE_MERC;

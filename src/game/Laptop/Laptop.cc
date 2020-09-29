@@ -3449,6 +3449,9 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	EXTR_SKIP( d, 87)
 	Assert(d.getConsumed() == lengthof(data));
 
+	// Handle old saves in M.E.R.C. module
+	SyncLastMercFromSaveGame();
+
 	if (l.usNumberOfBobbyRayOrderUsed != 0)
 	{ // There is anything in the Bobby Ray Orders on Delivery
 		l.BobbyRayOrdersOnDeliveryArray.resize(BobbyRayOrdersOnDeliveryArraySize);

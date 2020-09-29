@@ -23,6 +23,8 @@
 #include "VSurface.h"
 #include "ScreenIDs.h"
 #include "Font_Control.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -216,19 +218,14 @@ static void DisplayHiredMercs(void)
 	UINT16	usPosY;
 	UINT32	uiContractCharge;
 	ST::string sTemp;
-	UINT8	i;
 	UINT8	ubFontColor;
 
 	giMercTotalContractCharge = 0;
 
 	usPosY = MERC_AC_FIRST_ROW_Y + 3;
-	for(i=0; i<=10; i++)
+	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
-		//if it larry Roach burn advance.  ( cause larry is in twice, a sober larry and a stoned larry )
-		if( i == MERC_LARRY_ROACHBURN )
-			continue;
-
-		ProfileID         const  pid = GetMercIDFromMERCArray(i);
+		ProfileID         const  pid = GetProfileIDFromMERCListing(m);
 		MERCPROFILESTRUCT const& p   = GetProfile(pid);
 
 		//is the merc on the team, or is owed money
@@ -270,16 +267,14 @@ static void DisplayHiredMercs(void)
 static void SettleMercAccounts(void)
 {
 	//SOLDIERTYPE *pSoldier;
-	INT16	i;
-	UINT8 ubMercID;
 	INT32	iPartialPayment=0;
 	INT32	iContractCharge=0;
 
 
 	//loop through all the MERC mercs the player has on the team
-	for(i=0; i<NUMBER_OF_MERCS; i++)
+	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
-		ubMercID = GetMercIDFromMERCArray( (UINT8) i );
+		ProfileID ubMercID = GetProfileIDFromMERCListing(m);
 
 		//if the merc is on the team, or does the player owe money for a fired merc
 		if( IsMercOnTeam( ubMercID ) || ( gMercProfiles[ ubMercID ].iMercMercContractLength != 0 ) )
@@ -309,8 +304,8 @@ static void SettleMercAccounts(void)
 	}
 
 	// add the transaction to the finance page
-	AddTransactionToPlayersBook( PAY_SPECK_FOR_MERC, GetMercIDFromMERCArray( gubCurMercIndex ), GetWorldTotalMin(), -iPartialPayment );
-	AddHistoryToPlayersLog( HISTORY_SETTLED_ACCOUNTS_AT_MERC, GetMercIDFromMERCArray( gubCurMercIndex ), GetWorldTotalMin(), -1, -1 );
+	AddTransactionToPlayersBook( PAY_SPECK_FOR_MERC, GetProfileIDFromMERCListingIndex( gubCurMercIndex ), GetWorldTotalMin(), -iPartialPayment );
+	AddHistoryToPlayersLog( HISTORY_SETTLED_ACCOUNTS_AT_MERC, GetProfileIDFromMERCListingIndex( gubCurMercIndex ), GetWorldTotalMin(), -1, -1 );
 
 	//Increment the amount of money paid to speck
 	LaptopSaveInfo.uiTotalMoneyPaidToSpeck += iPartialPayment;
@@ -432,23 +427,12 @@ static void MercAuthorizePaymentMessageBoxCallBack(MessageBoxReturnValue const b
 
 UINT32	CalculateHowMuchPlayerOwesSpeck()
 {
-	UINT8  i=0;
 	UINT32 uiContractCharge=0;
-	UINT16 usMercID;
-
-
-	for(i=0; i<10; i++)
+	for (auto m : GCM->getMERCListings())
 	{
-		//if it larry Roach burn advance.  ( cause larry is in twice, a sober larry and a stoned larry )
-		if( i == MERC_LARRY_ROACHBURN )
-			continue;
-
-		usMercID = GetMercIDFromMERCArray( i );
-		//if( IsMercOnTeam( (UINT8)usMercID ) )
-		{
-			//Calc salary for the # of days the merc has worked since last paid
-			uiContractCharge += gMercProfiles[ usMercID ].sSalary * gMercProfiles[ usMercID ].iMercMercContractLength;
-		}
+		ProfileID usMercID = GetProfileIDFromMERCListing(m);
+		//Calc salary for the # of days the merc has worked since last paid
+		uiContractCharge += gMercProfiles[ usMercID ].sSalary * gMercProfiles[ usMercID ].iMercMercContractLength;
 	}
 
 	return( uiContractCharge );

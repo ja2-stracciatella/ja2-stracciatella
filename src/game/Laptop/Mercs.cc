@@ -29,6 +29,9 @@
 #include "VSurface.h"
 #include "Debug.h"
 #include "Font_Control.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
+#include "MERCListingModel.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -104,11 +107,6 @@
 
 #define MERC_NUMBER_OF_RANDOM_QUOTES	14
 
-
-#define MERC_FIRST_MERC			BIFF
-#define MERC_LAST_MERC			BUBBA
-
-
 enum
 {
 	MERC_ARRIVES_BUBBA,
@@ -117,21 +115,6 @@ enum
 	MERC_ARRIVES_COUGAR,
 
 	NUM_MERC_ARRIVALS,
-};
-
-struct CONTITION_FOR_MERC_AVAILABLE
-{
-	UINT16 usMoneyPaid;
-	UINT16 usDay;
-	UINT8  ubMercArrayID;
-};
-
-static CONTITION_FOR_MERC_AVAILABLE const gConditionsForMercAvailability[NUM_MERC_ARRIVALS] =
-{
-	{  5000,  8,  6 }, // BUBBA
-	{ 10000, 15,  7 }, // Larry
-	{ 15000, 20,  9 }, // Numb
-	{ 20000, 25, 10 }  // Cougar
 };
 
 
@@ -164,7 +147,6 @@ static SGPVObject* guiMercBackGround;
 static SGPVSurface* guiMercVideoFaceBackground;
 static SGPVObject* guiMercVideoPopupBackground;
 
-UINT8			gubMercArray[ NUMBER_OF_MERCS ];
 UINT8			gubCurMercIndex;
 
 static MercPopUpBox* g_merc_popup_box;
@@ -203,31 +185,8 @@ static BOOLEAN gfRedrawMercSite = FALSE;
 
 static BOOLEAN gfFirstTimeIntoMERCSiteSinceEnteringLaptop = FALSE;
 
-//used for the random quotes to try to balance the ones that are said
-struct NUMBER_TIMES_QUOTE_SAID
-{
-	UINT8  ubQuoteID;
-	UINT32 uiNumberOfTimesQuoteSaid;
-};
-
-static NUMBER_TIMES_QUOTE_SAID gNumberOfTimesQuoteSaid[MERC_NUMBER_OF_RANDOM_QUOTES] =
-{
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_BIFF, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_HAYWIRE, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_GASKET, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_RAZOR, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_FLO, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_GUMPY, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_LARRY, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_COUGER, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_NUMB, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_BUBBA, 0 },
-
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_AIM_SLANDER_1, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_AIM_SLANDER_2, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_AIM_SLANDER_3, 0 },
-	{ SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_AIM_SLANDER_4, 0 },
-};
+// This is not persisted but lasts for the entire game session, and never get reset
+static std::map<UINT8, UINT32> gNumberOfTimesQuoteSaid = {};
 
 
 //
@@ -251,28 +210,14 @@ static GUIButtonRef guiXToCloseMercVideoButton;
 //Mouse region for the subtitles region when the merc is talking
 static MOUSE_REGION gMercSiteSubTitleMouseRegion;
 
+static void MakeNewMercsAvailable(BOOLEAN fShouldNotifyPlayer);
 
 void GameInitMercs()
 {
-	//for(i=0; i<NUMBER_OF_MERCS; i++)
-	//	gubMercArray[ i ] = i+BIFF;
-
-	//can now be out of order
-	gubMercArray[ 0 ] = BIFF;
-	gubMercArray[ 1 ] = HAYWIRE;
-	gubMercArray[ 2 ] = GASKET;
-	gubMercArray[ 3 ] = RAZOR;
-	gubMercArray[ 4 ] = FLO;
-	gubMercArray[ 5 ] = GUMPY;
-	gubMercArray[ 6 ] = BUBBA;
-	gubMercArray[ 7 ] = LARRY_NORMAL;		//if changing this values, change in GetMercIDFromMERCArray()
-	gubMercArray[ 8 ] = LARRY_DRUNK;		//if changing this values, change in GetMercIDFromMERCArray()
-	gubMercArray[ 9 ] = NUMB;
-	gubMercArray[ 10 ] = COUGAR;
-
 	LaptopSaveInfo.gubPlayersMercAccountStatus = MERC_NO_ACCOUNT;
 	gubCurMercIndex = 0;
-	LaptopSaveInfo.gubLastMercIndex = NUMBER_OF_BAD_MERCS;
+
+	MakeNewMercsAvailable(FALSE);
 
 	gubCurrentMercVideoMode = MERC_VIDEO_NO_VIDEO_MODE;
 	gfMercVideoIsBeingDisplayed = FALSE;
@@ -580,7 +525,7 @@ static void BtnFileBoxButtonCallback(GUI_BUTTON *btn, INT32 reason)
 }
 
 
-static void ShouldAnyNewMercMercBecomeAvailable(void);
+static void ScheduleNewMercsToBeAvailable();
 static BOOLEAN ShouldTheMercSiteServerGoDown(void);
 
 
@@ -595,12 +540,9 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 	iNumDays = 0;
 
 	//loop through all of the hired mercs from M.E.R.C.
-	for (INT16 i = 0; i < NUMBER_OF_MERCS; ++i)
+	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
-		//if it larry Roach burn advance.  ( cause larry is in twice, a sober larry and a stoned larry )
-		if (i == MERC_LARRY_ROACHBURN) continue;
-
-		const ProfileID pid = GetMercIDFromMERCArray((UINT8)i);
+		const ProfileID pid = GetProfileIDFromMERCListing(m);
 		if (!IsMercOnTeam(pid)) continue;
 		MERCPROFILESTRUCT& p = GetProfile(pid);
 
@@ -646,7 +588,7 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 
 
 	//Check and act if any new Merc Mercs should become available
-	ShouldAnyNewMercMercBecomeAvailable();
+	ScheduleNewMercsToBeAvailable();
 
 	// If the merc site has never gone down, the number of MERC payment days is above 'X',
 	// and the players account status is ok ( cant have the merc site going down when the player owes him money, player may lose account that way )
@@ -669,43 +611,29 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 
 static BOOLEAN HasLarryRelapsed(void);
 
+/**
+ * Returns the ProfileID of this profile listing.
+ * 
+ * This method handles LARRY logic (LARRY_NORMAL becoming LARRY_DRUNK once 
+ * relapsed), and should always be used instead of directly accessing the 
+ * field profileID
+ */
+ProfileID GetProfileIDFromMERCListing(const MERCListingModel* listing)
+{
+	ProfileID ubMercID = listing->profileID;
+	if (ubMercID == LARRY_NORMAL && HasLarryRelapsed())
+	{
+		return LARRY_DRUNK;
+	}
+	return ubMercID;
+};
 
 //Gets the actual merc id from the array
-UINT8 GetMercIDFromMERCArray(UINT8 ubMercID)
+ProfileID GetProfileIDFromMERCListingIndex(UINT8 ubMercIndex)
 {
-	//if it is one of the regular MERCS
-	if( ubMercID <= 6 )
-	{
-		return( gubMercArray[ ubMercID ] );
-	}
-
-	//if it is Larry, determine if it Stoned larry or straight larry
-	else if( ( ubMercID == 7 ) || ( ubMercID == 8 ) )
-	{
-		if ( HasLarryRelapsed() )
-		{
-			return( gubMercArray[ 8 ] );
-		}
-		else
-		{
-			return( gubMercArray[ 7 ] );
-		}
-	}
-
-	//if it is one of the newer mercs
-	else if( ubMercID <= 10 )
-	{
-		return( gubMercArray[ ubMercID ] );
-	}
-
-	//else its an error
-	else
-	{
-		SLOGA("GetMercIDFromMercArray: invalid MercID");
-		return( TRUE );
-	}
+	auto mercsListing = GCM->getMERCListings();
+	return GetProfileIDFromMERCListing(mercsListing[ubMercIndex]);
 }
-
 
 static void InitMercVideoFace(void)
 {
@@ -1024,7 +952,7 @@ void DisplayTextForSpeckVideoPopUp(const ST::string& str)
 
 static BOOLEAN AreAnyOfTheNewMercsAvailable(void);
 static UINT32 CalcMercDaysServed(void);
-static BOOLEAN CanMercBeAvailableYet(UINT8 ubMercToCheck);
+static BOOLEAN CanMercBeAvailableYet(const MERCListingModel* mercToCheck);
 static UINT8 CountNumberOfMercMercsHired(void);
 static UINT8 CountNumberOfMercMercsWhoAreDead(void);
 static BOOLEAN IsAnyMercMercsDead(void);
@@ -1032,10 +960,24 @@ static BOOLEAN IsAnyMercMercsHired(void);
 static void MakeBiffAwayForCoupleOfDays(void);
 
 
+static BOOLEAN IsSpeckTryingToRecruit()
+{
+	auto listings = GCM->getMERCListings();
+	if (LaptopSaveInfo.gubLastMercIndex >= (listings.size() - 1))
+	{
+		// we have got all mercs already
+		return FALSE;
+	}
+
+	auto nextAvailable = listings[LaptopSaveInfo.gubLastMercIndex + 1];
+	return nextAvailable->minTotalSpending <= LaptopSaveInfo.uiTotalMoneyPaidToSpeck
+		&& CanMercBeAvailableYet(nextAvailable)
+	;
+}
+
 static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 {
 	static UINT16	usQuoteToSay=MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
-	UINT8	ubCnt;
 	BOOLEAN	fCanSayLackOfPaymentQuote = TRUE;
 	BOOLEAN fCanUseIdleTag = FALSE;
 
@@ -1056,7 +998,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 	gfDoneIntroSpeech = TRUE;
 
 	//set the opening quote based on if the player has been here before
-	if( LaptopSaveInfo.ubPlayerBeenToMercSiteStatus == MERC_SITE_FIRST_VISIT && usQuoteToSay <= 8 ) //!= 0 )
+	if( LaptopSaveInfo.ubPlayerBeenToMercSiteStatus == MERC_SITE_FIRST_VISIT && usQuoteToSay <= 8 )
 	{
 		StartSpeckTalking( usQuoteToSay );
 		usQuoteToSay++;
@@ -1134,7 +1076,7 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 			}
 
 			//or if still trying to recruit ( the last recruit hasnt arrived and the player has paid for some of his mercs )
-			else if( ubRandom < 80 && gConditionsForMercAvailability[ LaptopSaveInfo.ubLastMercAvailableId ].usMoneyPaid <= LaptopSaveInfo.uiTotalMoneyPaidToSpeck && CanMercBeAvailableYet( LaptopSaveInfo.ubLastMercAvailableId ) )
+			else if( ubRandom < 80 && IsSpeckTryingToRecruit())
 			{
 				StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_4_TRYING_TO_RECRUIT );
 				fCanUseIdleTag = TRUE;
@@ -1216,9 +1158,10 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 		}
 
 		//loop through all the mercs and see if any are dead and the quote is not said
-		for(ubCnt=MERC_FIRST_MERC ; ubCnt<=MERC_LAST_MERC; ubCnt++ )
+		for (const MERCListingModel* listing : GCM->getMERCListings())
 		{
-			MERCPROFILESTRUCT& p = GetProfile(ubCnt);
+			ProfileID profileID = GetProfileIDFromMERCListing(listing);
+			MERCPROFILESTRUCT& p = GetProfile(profileID);
 			if (!IsMercDead(p)) continue;
 
 			//if the quote has not been said
@@ -1226,47 +1169,23 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 			//set the flag
 			p.ubMiscFlags3 |= PROFILE_MISC_FLAG3_MERC_MERC_IS_DEAD_AND_QUOTE_SAID;
 
-			switch( ubCnt )
+			if (profileID == FLO) // special handling for FLO
 			{
-				case BIFF:
-					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_BIFF_IS_DEAD );
-					break;
-				case HAYWIRE:
-					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_HAYWIRE_IS_DEAD );
-					break;
-				case GASKET:
-					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_GASKET_IS_DEAD );
-					break;
-				case RAZOR:
-					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_RAZOR_IS_DEAD );
-					break;
-				case FLO:
-					//if biff is dead
-					if (IsMercDead(GetProfile(BIFF)))
-						StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_FLO_IS_DEAD_BIFF_IS_DEAD );
-					else
-					{
-						StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_FLO_IS_DEAD_BIFF_ALIVE );
-						MakeBiffAwayForCoupleOfDays();
-					}
-					break;
+				//if biff is dead
+				if (IsMercDead(GetProfile(BIFF)))
+					StartSpeckTalking(SPECK_QUOTE_ALTERNATE_OPENING_TAG_FLO_IS_DEAD_BIFF_IS_DEAD);
+				else
+				{
+					StartSpeckTalking(SPECK_QUOTE_ALTERNATE_OPENING_TAG_FLO_IS_DEAD_BIFF_ALIVE);
+					MakeBiffAwayForCoupleOfDays();
+				}
+				continue;
+			}
 
-				case GUMPY:
-					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_GUMPY_IS_DEAD );
-					break;
-				case LARRY_NORMAL:
-				case LARRY_DRUNK:
-					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_LARRY_IS_DEAD );
-					break;
-				case COUGAR:
-					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_COUGER_IS_DEAD );
-					break;
-				case NUMB:
-					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_NUMB_IS_DEAD );
-					break;
-				case BUBBA:
-					StartSpeckTalking( SPECK_QUOTE_ALTERNATE_OPENING_TAG_BUBBA_IS_DEAD );
-					break;
+			const std::vector<SpeckQuote> quotes = listing->getQuotesByType(SpeckQuoteType::MERC_DEAD);
+			if (!quotes.empty()) // other mercs
+			{
+				StartSpeckTalking(quotes[0]->quoteID);
 			}
 		}
 	}
@@ -1300,13 +1219,10 @@ static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
 
 static BOOLEAN IsAnyMercMercsHired(void)
 {
-	UINT8	ubMercID;
-	UINT8	i;
-
 	//loop through all of the hired mercs from M.E.R.C.
-	for(i=0; i<NUMBER_OF_MERCS; i++)
+	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
-		ubMercID = GetMercIDFromMERCArray( i );
+		ProfileID ubMercID = GetProfileIDFromMERCListing(m);
 		if( IsMercOnTeam( ubMercID ) )
 		{
 			return( TRUE );
@@ -1319,12 +1235,11 @@ static BOOLEAN IsAnyMercMercsHired(void)
 
 static BOOLEAN IsAnyMercMercsDead(void)
 {
-	UINT8	i;
-
 	//loop through all of the hired mercs from M.E.R.C.
-	for(i=0; i<NUMBER_OF_MERCS; i++)
+	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
-		if( gMercProfiles[ i+BIFF ].bMercStatus == MERC_IS_DEAD )
+		ProfileID mercID = GetProfileIDFromMERCListing(m);
+		if (GetProfile(mercID).bMercStatus == MERC_IS_DEAD)
 			return( TRUE );
 	}
 
@@ -1334,14 +1249,12 @@ static BOOLEAN IsAnyMercMercsDead(void)
 
 static UINT8 CountNumberOfMercMercsHired(void)
 {
-	UINT8	ubMercID;
-	UINT8	i;
 	UINT8	ubCount=0;
 
-	//loop through all of the hired mercs from M.E.R.C.
-	for(i=0; i<NUMBER_OF_MERCS; i++)
+	//loop through all of the hired mercs from M.E.R.C
+	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
-		ubMercID = GetMercIDFromMERCArray( i );
+		ProfileID ubMercID = GetProfileIDFromMERCListing(m);
 		if( IsMercOnTeam( ubMercID ) )
 		{
 			ubCount++;
@@ -1354,13 +1267,13 @@ static UINT8 CountNumberOfMercMercsHired(void)
 
 static UINT8 CountNumberOfMercMercsWhoAreDead(void)
 {
-	UINT8	i;
 	UINT8	ubCount=0;
 
 	//loop through all of the hired mercs from M.E.R.C.
-	for(i=0; i<NUMBER_OF_MERCS; i++)
+	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
-		if( gMercProfiles[ i+BIFF ].bMercStatus == MERC_IS_DEAD )
+		ProfileID ubMercID = GetProfileIDFromMERCListing(m);
+		if (GetProfile(ubMercID).bMercStatus == MERC_IS_DEAD)
 		{
 			ubCount++;
 		}
@@ -1398,74 +1311,35 @@ static void RemoveSpeckPopupTextBox(void)
 static BOOLEAN IsMercMercAvailable(UINT8 ubMercID);
 
 
-static void HandlePlayerHiringMerc(UINT8 ubHiredMercID)
+static void HandlePlayerHiringMerc(const MERCListingModel* hired) //UINT8 ubHiredMercI)
 {
 	gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 
-	//if the players is in good finacial standing
-	//DEF: 3/19/99: Dont know why this was done
-	//if( LaptopSaveInfo.iCurrentBalance >= 2000 )
+	auto quotes = hired->getQuotesByType(SpeckQuoteType::CROSS_SELL);
+	for (SpeckQuote quote : quotes)
 	{
-		//determine which quote to say based on the merc that was hired
-		switch( ubHiredMercID )
+		if (IsMercMercAvailable(quote->relatedMercID))
 		{
-			//Biff is hired
-			case BIFF:
-				//if Larry is available, advertise for larry
-				if( IsMercMercAvailable( LARRY_NORMAL ) || IsMercMercAvailable( LARRY_DRUNK ) )
-					StartSpeckTalking( SPECK_QUOTE_PLAYERS_HIRES_BIFF_SPECK_PLUGS_LARRY );
-
-				//if flo is available, advertise for flo
-				if( IsMercMercAvailable( FLO ) )
-					StartSpeckTalking( SPECK_QUOTE_PLAYERS_HIRES_BIFF_SPECK_PLUGS_FLO );
-				break;
-
-			//haywire is hired
-			case HAYWIRE:
-				//if razor is available, advertise for razor
-				if( IsMercMercAvailable( RAZOR ) )
-					StartSpeckTalking( SPECK_QUOTE_PLAYERS_HIRES_HAYWIRE_SPECK_PLUGS_RAZOR );
-				break;
-
-			//razor is hired
-			case RAZOR:
-				//if haywire is available, advertise for haywire
-				if( IsMercMercAvailable( HAYWIRE ) )
-					StartSpeckTalking( SPECK_QUOTE_PLAYERS_HIRES_RAZOR_SPECK_PLUGS_HAYWIRE );
-				break;
-
-
-			//flo is hired
-			case FLO:
-				//if biff is available, advertise for biff
-				if( IsMercMercAvailable( BIFF ) )
-					StartSpeckTalking( SPECK_QUOTE_PLAYERS_HIRES_FLO_SPECK_PLUGS_BIFF );
-				break;
-
-
-			//larry is hired
-			case LARRY_NORMAL:
-			case LARRY_DRUNK:
-				//if biff is available, advertise for biff
-				if( IsMercMercAvailable( BIFF ) )
-					StartSpeckTalking( SPECK_QUOTE_PLAYERS_HIRES_LARRY_SPECK_PLUGS_BIFF );
-				break;
+			StartSpeckTalking(quote->quoteID);
 		}
 	}
 
 	gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
 }
 
-
+// Checks if the merc is available for hire right now
 static BOOLEAN IsMercMercAvailable(UINT8 ubMercID)
 {
-	UINT8	cnt;
-
-	//loop through the array of mercs
-	for( cnt=0; cnt<LaptopSaveInfo.gubLastMercIndex; cnt++ )
+	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
+		if (m->index > LaptopSaveInfo.gubLastMercIndex)
+		{
+			// Not available in M.E.R.C. yet
+			break;
+		}
+
 		//if this is the merc
-		if( GetMercIDFromMERCArray( cnt ) == ubMercID )
+		if (GetProfileIDFromMERCListing(m) == ubMercID)
 		{
 			//if the merc is available, and Not dead
 			if (IsMercHireable(GetProfile(ubMercID)))
@@ -1482,8 +1356,8 @@ static BOOLEAN ShouldSpeckStartTalkingDueToActionOnSubPage(void)
 	//if the merc came from the hire screen
 	if( gfJustHiredAMercMerc )
 	{
-
-		HandlePlayerHiringMerc( GetMercIDFromMERCArray( gubCurMercIndex ) );
+		auto listing = GCM->getMERCListings();
+		HandlePlayerHiringMerc(listing[gubCurMercIndex]);
 
 		//get speck to say the thank you
 		if( Random( 100 ) > 50 )
@@ -1593,48 +1467,33 @@ static void HandleSpeckIdleConversation(BOOLEAN fReset)
 
 
 static BOOLEAN CanMercQuoteBeSaid(UINT32 uiQuoteID);
+static std::vector<UINT8> GetAvailableRandomQuotes();
 
-
-static INT16 GetRandomQuoteThatHasBeenSaidTheLeast(void)
+static INT16 GetRandomQuoteThatHasBeenSaidTheLeast()
 {
-	UINT8	cnt;
-	INT16	sSmallestNumber=255;
+	// random as in random chatter, there has never been any random selection in this fnuction
+	UINT32 sLeastSaidSoFar = UINT_MAX;
+	std::vector<UINT8> quotes = GetAvailableRandomQuotes();
 
-	for( cnt=0; cnt<MERC_NUMBER_OF_RANDOM_QUOTES; cnt++)
+	for (UINT32 quoteID : quotes)
 	{
-		//if the quote can be said ( the merc has not been hired )
-		if( CanMercQuoteBeSaid( gNumberOfTimesQuoteSaid[cnt].ubQuoteID ) )
-		{
-			if (sSmallestNumber == 255 ||
-				gNumberOfTimesQuoteSaid[cnt].uiNumberOfTimesQuoteSaid < gNumberOfTimesQuoteSaid[sSmallestNumber].uiNumberOfTimesQuoteSaid)
-			{	// if this quote has been said less times then the last one, or this is the first one we check
-				sSmallestNumber = cnt;
-			}
+		if (sLeastSaidSoFar == UINT_MAX ||
+			gNumberOfTimesQuoteSaid[quoteID] < gNumberOfTimesQuoteSaid[sLeastSaidSoFar])
+		{	// if this quote has been said less times then the last one, or this is the first one we check
+			sLeastSaidSoFar = quoteID;
 		}
 	}
 
-	if( sSmallestNumber == 255 )
-		return( -1 );
+	if (sLeastSaidSoFar == UINT_MAX)
+		return -1;
 	else
-		return( gNumberOfTimesQuoteSaid[ sSmallestNumber ].ubQuoteID );
+		return sLeastSaidSoFar;
 }
 
 
 static void IncreaseMercRandomQuoteValue(UINT8 ubQuoteID, UINT8 ubValue)
 {
-	UINT8	cnt;
-
-	for( cnt=0; cnt<MERC_NUMBER_OF_RANDOM_QUOTES; cnt++)
-	{
-		if( gNumberOfTimesQuoteSaid[ cnt ].ubQuoteID == ubQuoteID )
-		{
-			if( gNumberOfTimesQuoteSaid[ cnt ].uiNumberOfTimesQuoteSaid + ubValue > 255 )
-				gNumberOfTimesQuoteSaid[ cnt ].uiNumberOfTimesQuoteSaid = 255;
-			else
-				gNumberOfTimesQuoteSaid[ cnt ].uiNumberOfTimesQuoteSaid += ubValue;
-			break;
-		}
-	}
+	gNumberOfTimesQuoteSaid[ubQuoteID] += ubValue;
 }
 
 
@@ -1712,67 +1571,25 @@ void DisableMercSiteButton()
 	guiAccountBoxButton->uiFlags |= BUTTON_FORCE_UNDIRTY;
 }
 
-
-static BOOLEAN CanMercQuoteBeSaid(UINT32 uiQuoteID)
+static std::vector<UINT8> GetAvailableRandomQuotes()
 {
-	BOOLEAN fRetVal = TRUE;
-
-	//switch onb the quote being said, if hes plugging a merc that has already been hired, dont say it
-	switch( uiQuoteID )
+	std::vector<UINT8> quotes = {};
+	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
-		case SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_BIFF:
-			if( !IsMercMercAvailable( BIFF ) )
-				fRetVal = FALSE;
-			break;
-
-		case SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_HAYWIRE:
-			if( !IsMercMercAvailable( HAYWIRE ) )
-				fRetVal = FALSE;
-			break;
-
-		case SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_GASKET:
-			if( !IsMercMercAvailable( GASKET ) )
-				fRetVal = FALSE;
-			break;
-
-		case SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_RAZOR:
-			if( !IsMercMercAvailable( RAZOR ) )
-				fRetVal = FALSE;
-			break;
-
-		case SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_FLO:
-			if( !IsMercMercAvailable( FLO ) )
-				fRetVal = FALSE;
-			break;
-
-		case SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_GUMPY:
-			if( !IsMercMercAvailable( GUMPY ) )
-				fRetVal = FALSE;
-			break;
-
-		case SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_LARRY:
-			if( !IsMercMercAvailable( LARRY_NORMAL ) || IsMercMercAvailable( LARRY_DRUNK ) )
-				fRetVal = FALSE;
-			break;
-
-		case SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_COUGER:
-			if( !IsMercMercAvailable( COUGAR ) )
-				fRetVal = FALSE;
-			break;
-
-		case SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_NUMB:
-			if( !IsMercMercAvailable( NUMB ) )
-				fRetVal = FALSE;
-			break;
-
-		case SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_BUBBA:
-			if( !IsMercMercAvailable( BUBBA ) )
-				fRetVal = FALSE;
-			break;
+		if (!IsMercMercAvailable(GetProfileIDFromMERCListing(m))) continue;
+		for (auto q : m->getQuotesByType(SpeckQuoteType::ADVERTISE))
+		{
+			quotes.push_back(q->quoteID);
+		}
 	}
 
+	// A.I.M. slanders are always available
+	quotes.push_back(SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_AIM_SLANDER_1);
+	quotes.push_back(SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_AIM_SLANDER_2);
+	quotes.push_back(SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_AIM_SLANDER_3);
+	quotes.push_back(SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_AIM_SLANDER_4);
 
-	return( fRetVal );
+	return quotes;
 }
 
 
@@ -1782,19 +1599,17 @@ static void MakeBiffAwayForCoupleOfDays(void)
 }
 
 
+// used in determining Speck's welcome quote
 static BOOLEAN AreAnyOfTheNewMercsAvailable(void)
 {
-	UINT8	i;
-	UINT8	ubMercID;
-
-
 	if( LaptopSaveInfo.fNewMercsAvailableAtMercSite )
 		return( FALSE );
 
-	for(i=(LARRY_NORMAL-BIFF); i<=LaptopSaveInfo.gubLastMercIndex; i++)
+	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
-		ubMercID = GetMercIDFromMERCArray( i );
+		if (m->isAvailableAtStart()) continue;
 
+		ProfileID ubMercID = GetProfileIDFromMERCListing(m);
 		if( IsMercMercAvailable( ubMercID ) )
 			return( TRUE );
 	}
@@ -1802,48 +1617,14 @@ static BOOLEAN AreAnyOfTheNewMercsAvailable(void)
 	return( FALSE );
 }
 
-
-static void ShouldAnyNewMercMercBecomeAvailable(void)
+// Check if any new merc is about to become available
+static void ScheduleNewMercsToBeAvailable(void)
 {
 	BOOLEAN fNewMercAreAvailable = FALSE;
-
-	//for bubba
-	//if( GetMercIDFromMERCArray( LaptopSaveInfo.gubLastMercIndex ) == GUMPY )
+	for (const MERCListingModel* m : GCM->getMERCListings())
 	{
-		if( CanMercBeAvailableYet( MERC_ARRIVES_BUBBA ) )
-		{
-			fNewMercAreAvailable = TRUE;
-		}
+		if (CanMercBeAvailableYet(m)) fNewMercAreAvailable = TRUE;
 	}
-
-	//for Larry
-	//if( GetMercIDFromMERCArray( LaptopSaveInfo.gubLastMercIndex ) == LARRY_NORMAL ||
-	//	GetMercIDFromMERCArray( LaptopSaveInfo.gubLastMercIndex ) == LARRY_DRUNK )
-	{
-		if( CanMercBeAvailableYet( MERC_ARRIVES_LARRY ) )
-		{
-			fNewMercAreAvailable = TRUE;
-		}
-	}
-
-	//for Numb
-	//if( GetMercIDFromMERCArray( LaptopSaveInfo.gubLastMercIndex ) == NUMB )
-	{
-		if( CanMercBeAvailableYet( MERC_ARRIVES_NUMB ) )
-		{
-			fNewMercAreAvailable = TRUE;
-		}
-	}
-
-	//for COUGAR
-	//if( GetMercIDFromMERCArray( LaptopSaveInfo.gubLastMercIndex ) == COUGAR )
-	{
-		if( CanMercBeAvailableYet( MERC_ARRIVES_COUGAR ) )
-		{
-			fNewMercAreAvailable = TRUE;
-		}
-	}
-
 
 	//if there is a new merc available
 	if( fNewMercAreAvailable )
@@ -1853,21 +1634,23 @@ static void ShouldAnyNewMercMercBecomeAvailable(void)
 	}
 }
 
-
-static BOOLEAN CanMercBeAvailableYet(UINT8 ubMercToCheck)
+// Checks if the merc is not yet available for hire, but the conditions for availablilty is already met
+static BOOLEAN CanMercBeAvailableYet(const MERCListingModel* merc)
 {
-	CONTITION_FOR_MERC_AVAILABLE const& c = gConditionsForMercAvailability[ubMercToCheck];
 	//if the merc is already available
-	if (c.ubMercArrayID <= LaptopSaveInfo.gubLastMercIndex)
+	if (merc->index <= LaptopSaveInfo.gubLastMercIndex)
+	{
 		return( FALSE );
+	}
 
 	//if the merc is already hired
-	if (!IsMercHireable(GetProfile(GetMercIDFromMERCArray(c.ubMercArrayID))))
+	ProfileID profileID = GetProfileIDFromMERCListing(merc);
+	if (!IsMercHireable(GetProfile(profileID)))
 		return( FALSE );
 
 	//if player has paid enough money for the merc to be available, and the it is after the current day
-	if (c.usMoneyPaid <= LaptopSaveInfo.uiTotalMoneyPaidToSpeck &&
-			c.usDay <= GetWorldDay())
+	if (merc->minTotalSpending <= LaptopSaveInfo.uiTotalMoneyPaidToSpeck
+		&& merc->minDays <= GetWorldDay())
 	{
 		return( TRUE );
 	}
@@ -1875,71 +1658,86 @@ static BOOLEAN CanMercBeAvailableYet(UINT8 ubMercToCheck)
 	return( FALSE );
 }
 
-void NewMercsAvailableAtMercSiteCallBack( )
+// update the value of ubLastMercAvailableId for save game compatability
+static void SetLastMercArrival(const MERCListingModel* merc) 
 {
-	BOOLEAN fSendEmail=FALSE;
-	//if( GetMercIDFromMERCArray( LaptopSaveInfo.gubLastMercIndex ) == BUBBA )
+	switch (merc->profileID)
 	{
-		if( CanMercBeAvailableYet( MERC_ARRIVES_BUBBA ) )
+	case BUBBA:        LaptopSaveInfo.ubLastMercAvailableId = MERC_ARRIVES_BUBBA; break;
+	case COUGAR:       LaptopSaveInfo.ubLastMercAvailableId = MERC_ARRIVES_COUGAR; break;
+	case NUMB:         LaptopSaveInfo.ubLastMercAvailableId = MERC_ARRIVES_NUMB; break;
+	case LARRY_NORMAL: LaptopSaveInfo.ubLastMercAvailableId = MERC_ARRIVES_LARRY; break;
+	}
+}
+
+// sync last available M.E.R.C. listing from ubLastMercAvailableId for vanilla save compatability
+void SyncLastMercFromSaveGame()
+{
+	// This allows us to load saves from old versions and vanilla
+	//
+	// In the old implementation, the M.E.R.C. list has 2 LARRY profiles (NORMAL and DRUNK), so 
+	// the index is off by 1 for mercs after LARRY
+	//
+	// But this only accounts version upgrade. If you are downgrading, you may need to wait for 
+	// a few days before the last merc becomes available again.
+	int iLastMercID = -1;
+	switch (LaptopSaveInfo.ubLastMercAvailableId)
+	{
+	case MERC_ARRIVES_NUMB:   iLastMercID = NUMB; break;
+	case MERC_ARRIVES_COUGAR: iLastMercID = COUGAR; break;
+	}
+
+	if (iLastMercID <= 0) return;
+	
+	for (const MERCListingModel* merc : GCM->getMERCListings())
+	{
+		// check for exactly the case that we are off by 1 due to LARRY
+		if (merc->profileID == (UINT8)iLastMercID &&
+			(LaptopSaveInfo.gubLastMercIndex - merc->index) == 1)
 		{
-			LaptopSaveInfo.gubLastMercIndex++;
-			LaptopSaveInfo.ubLastMercAvailableId = MERC_ARRIVES_BUBBA;
-			fSendEmail = TRUE;
+			// adjust gubLastMercIndex to match the new listing
+			LaptopSaveInfo.gubLastMercIndex -= 1;
+			break;
+		}
+	}
+}
+
+// make all can-be-available mercs available immediately
+static void MakeNewMercsAvailable(BOOLEAN fShouldNotifyPlayer)
+{
+	BOOLEAN fNewMercAvailable = FALSE;
+	for (const MERCListingModel* merc : GCM->getMERCListings())
+	{
+		if (CanMercBeAvailableYet(merc) && LaptopSaveInfo.gubLastMercIndex < merc->index)
+		{
+			LaptopSaveInfo.gubLastMercIndex = merc->index;
+			SetLastMercArrival(merc);
+			fNewMercAvailable = TRUE;
 		}
 	}
 
-	//for Larry
-	//if( GetMercIDFromMERCArray( LaptopSaveInfo.gubLastMercIndex ) == LARRY_NORMAL ||
-	//		GetMercIDFromMERCArray( LaptopSaveInfo.gubLastMercIndex ) == LARRY_DRUNK )
+	if (fNewMercAvailable && fShouldNotifyPlayer)
 	{
-		if( CanMercBeAvailableYet( MERC_ARRIVES_LARRY ) )
-		{
-			LaptopSaveInfo.gubLastMercIndex++;
-			LaptopSaveInfo.ubLastMercAvailableId = MERC_ARRIVES_LARRY;
-			fSendEmail = TRUE;
-		}
+		AddEmail(NEW_MERCS_AT_MERC, NEW_MERCS_AT_MERC_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin());
+
+		//new mercs are available
+		LaptopSaveInfo.fNewMercsAvailableAtMercSite = TRUE;
 	}
+}
 
-	//for Numb
-	//if( GetMercIDFromMERCArray( LaptopSaveInfo.gubLastMercIndex ) == NUMB )
-	{
-		if( CanMercBeAvailableYet( MERC_ARRIVES_NUMB ) )
-		{
-			LaptopSaveInfo.gubLastMercIndex = 9;
-			LaptopSaveInfo.ubLastMercAvailableId = MERC_ARRIVES_NUMB;
-			fSendEmail = TRUE;
-		}
-	}
-
-	//for COUGAR
-	//if( GetMercIDFromMERCArray( LaptopSaveInfo.gubLastMercIndex ) == COUGAR )
-	{
-		if( CanMercBeAvailableYet( MERC_ARRIVES_COUGAR ) )
-		{
-			LaptopSaveInfo.gubLastMercIndex = 10;
-			LaptopSaveInfo.ubLastMercAvailableId = MERC_ARRIVES_COUGAR;
-			fSendEmail = TRUE;
-		}
-	}
-
-	if( fSendEmail )
-		AddEmail( NEW_MERCS_AT_MERC, NEW_MERCS_AT_MERC_LENGTH, SPECK_FROM_MERC, GetWorldTotalMin());
-
-	//new mercs are available
-	LaptopSaveInfo.fNewMercsAvailableAtMercSite = TRUE;
+void NewMercsAvailableAtMercSiteCallBack()
+{
+	MakeNewMercsAvailable(TRUE);
 }
 
 //used for older saves
 void CalcAproximateAmountPaidToSpeck()
 {
-	UINT8	i, ubMercID;
-
 	//loop through all the mercs and tally up the amount speck should have been paid
-	for(i=0; i<NUMBER_OF_MERCS; i++)
+	for (const MERCListingModel* merc : GCM->getMERCListings())
 	{
 		//get the id
-		ubMercID = GetMercIDFromMERCArray( i );
-
+		ProfileID ubMercID = GetProfileIDFromMERCListing(merc);
 		//increment the amount
 		LaptopSaveInfo.uiTotalMoneyPaidToSpeck += gMercProfiles[ ubMercID ].uiTotalCostToDate;
 	}
@@ -1949,14 +1747,11 @@ void CalcAproximateAmountPaidToSpeck()
 // CJC Dec 1 2002: calculate whether any MERC characters have been used at all
 static UINT32 CalcMercDaysServed(void)
 {
-	UINT8	i, ubMercID;
 	UINT32 uiDaysServed = 0;
-
-	for(i=0; i<NUMBER_OF_MERCS; i++)
+	for (const MERCListingModel* merc : GCM->getMERCListings())
 	{
 		//get the id
-		ubMercID = GetMercIDFromMERCArray( i );
-
+		ProfileID ubMercID = GetProfileIDFromMERCListing(merc);
 		uiDaysServed += gMercProfiles[ ubMercID ].usTotalDaysServed;
 
 	}
