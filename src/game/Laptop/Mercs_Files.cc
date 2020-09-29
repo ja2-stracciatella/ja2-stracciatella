@@ -271,9 +271,6 @@ static void BtnMercHireButtonCallback(GUI_BUTTON *btn, INT32 reason)
 			guiCurrentLaptopMode = LAPTOP_MODE_MERC;
 			gubArrivedFromMercSubSite = MERC_CAME_FROM_HIRE_PAGE;
 
-			//start the merc talking
-			//HandlePlayerHiringMerc(GetMercIDFromMERCArray(gubCurMercIndex));
-
 			gfJustHiredAMercMerc = TRUE;
 			DisplayPopUpBoxExplainingMercArrivalLocationAndTime();
 		}

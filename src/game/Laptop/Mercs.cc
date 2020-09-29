@@ -278,12 +278,6 @@ void GameInitMercs()
 	gfMercVideoIsBeingDisplayed = FALSE;
 
 	gusMercVideoSpeckSpeech = 0;
-
-	/*
-	for( i=0; i<MERC_NUMBER_OF_RANDOM_QUOTES; i++ )
-	{
-		gNumberOfTimesQuoteSaid[i] = 0;
-	}*/
 }
 
 
@@ -663,10 +657,6 @@ void DailyUpdateOfMercSite( UINT16 usDate)
 
 		//Set the fact the site has gone down
 		LaptopSaveInfo.fMercSiteHasGoneDownYet = TRUE;
-
-		//No lnger removing the bookmark, leave it up, and the user will go to the broken link page
-		//Remove the book mark
-		//RemoveBookMark( MERC_BOOKMARK );
 
 		//Get the site up the next day at 6:00 pm
 		uiTimeInMinutes = GetMidnightOfFutureDayInMinutes( 1 ) + 18 * 60;
