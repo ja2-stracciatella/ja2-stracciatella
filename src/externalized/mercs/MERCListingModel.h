@@ -21,10 +21,10 @@ public:
 	const uint32_t minDays;
 
 	bool isAvailableAtStart() const;
-	const std::vector<SpeckQuote> MERCListingModel::getQuotesByType(SpeckQuoteType type) const;
+	const std::vector<SpeckQuote> getQuotesByType(SpeckQuoteType type) const;
 
 	static MERCListingModel* deserialize(uint8_t index, const rapidjson::Value& json);
-	static void MERCListingModel::validateData(std::vector<const MERCListingModel*>);
+	static void validateData(std::vector<const MERCListingModel*>);
 private:
 	std::vector<SpeckQuote> quotes;
 };

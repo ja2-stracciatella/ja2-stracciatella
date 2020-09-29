@@ -32,7 +32,7 @@
 #include "GameInstance.h"
 #include "ContentManager.h"
 #include "MERCListingModel.h"
-
+#include <climits>
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -970,9 +970,7 @@ static BOOLEAN IsSpeckTryingToRecruit()
 	}
 
 	auto nextAvailable = listings[LaptopSaveInfo.gubLastMercIndex + 1];
-	return nextAvailable->minTotalSpending <= LaptopSaveInfo.uiTotalMoneyPaidToSpeck
-		&& CanMercBeAvailableYet(nextAvailable)
-	;
+	return CanMercBeAvailableYet(nextAvailable);
 }
 
 static BOOLEAN GetSpeckConditionalOpening(BOOLEAN fJustEnteredScreen)
@@ -1311,7 +1309,7 @@ static void RemoveSpeckPopupTextBox(void)
 static BOOLEAN IsMercMercAvailable(UINT8 ubMercID);
 
 
-static void HandlePlayerHiringMerc(const MERCListingModel* hired) //UINT8 ubHiredMercI)
+static void HandlePlayerHiringMerc(const MERCListingModel* hired)
 {
 	gusMercVideoSpeckSpeech = MERC_VIDEO_SPECK_SPEECH_NOT_TALKING;
 
