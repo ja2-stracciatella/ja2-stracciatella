@@ -68,7 +68,7 @@ jobs:
           ${{ matrix.cfg.target }}-rust-v2-
     - name: Set up environment
       shell: bash
-      run: ${{ github.workspace }}/.github/scripts/ci-setup.sh 2>&1
+      run: ${{ github.workspace }}/.ci/ci-setup.sh 2>&1
       env:
         CI_TARGET: ${{ matrix.cfg.target }}
 

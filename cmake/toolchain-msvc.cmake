@@ -8,15 +8,4 @@ set(LOCAL_SDL_LIB "dependencies/lib-SDL2-2.0.8-VC" CACHE STRING "" FORCE)
 set(LOCAL_FLTK_LIB ON CACHE BOOL "" FORCE)
 set(LOCAL_GTEST_LIB ON CACHE BOOL "" FORCE)
 
-set(_platform "${CMAKE_GENERATOR_PLATFORM}")
-if("${_platform}" STREQUAL "" AND "${CMAKE_GENERATOR}" MATCHES "^Visual Studio ")
-	set(_platform "${CMAKE_VS_PLATFORM_NAME_DEFAULT}")
-endif()
-
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-	set(LIBSTRACCIATELLA_TARGET "x86_64-pc-windows-msvc" CACHE STRING "" FORCE)
-else()
-	set(LIBSTRACCIATELLA_TARGET "i686-pc-windows-msvc" CACHE STRING "" FORCE)
-endif()
-
 set(CMAKE_CXX_FLAGS_INIT "/bigobj")

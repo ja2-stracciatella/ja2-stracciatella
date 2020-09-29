@@ -1,6 +1,7 @@
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/army")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/content")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/internals")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/mercs")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/policy")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/scripting")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/strategic")
@@ -18,7 +19,6 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/JsonUtility.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/LoadingScreenModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/MagazineModel.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/MercProfile.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ModPackContentManager.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ShippingDestinationModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Soldier.cc

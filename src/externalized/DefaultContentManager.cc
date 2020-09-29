@@ -31,6 +31,7 @@
 #include "army/ArmyCompositionModel.h"
 #include "army/GarrisonGroupModel.h"
 #include "army/PatrolGroupModel.h"
+#include "mercs/RPCSmallFaceModel.h"
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
 #include "strategic/BloodCatPlacementsModel.h"
@@ -302,6 +303,7 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_townNames);
 	deleteElements(m_townNameLocatives);
 	deleteElements(m_undergroundSectors);
+	deleteElements(m_rpcSmallFaces);
 
 	delete m_movementCosts;
 	delete m_samSitesAirControl;
@@ -1009,6 +1011,7 @@ bool DefaultContentManager::loadGameData()
 
 	loadStrategicLayerData();
 	loadTacticalLayerData();
+	loadMercsData();
 
 	return result;
 }
@@ -1221,6 +1224,18 @@ bool DefaultContentManager::loadTacticalLayerData()
 	return true;
 }
 
+bool DefaultContentManager::loadMercsData()
+{
+	auto json = readJsonDataFile("mercs-rpc-small-faces.json");
+	for (auto& element : json->GetArray())
+	{
+		auto face = RPCSmallFaceModel::deserialize(element);
+		m_rpcSmallFaces[face->ubProfileID] = face;
+	}
+
+	return true;
+}
+
 const std::vector<const BloodCatPlacementsModel*>& DefaultContentManager::getBloodCatPlacements() const
 {
 	return m_bloodCatPlacements;
@@ -1367,6 +1382,15 @@ const MovementCostsModel* DefaultContentManager::getMovementCosts() const
 const NpcPlacementModel* DefaultContentManager::getNpcPlacement(uint8_t profileId) const
 {
 	return m_npcPlacements.at(profileId);
+}
+
+const RPCSmallFaceModel* DefaultContentManager::getRPCSmallFaceOffsets(uint8_t profileID) const
+{
+	if (m_rpcSmallFaces.find(profileID) == m_rpcSmallFaces.end())
+	{
+		return NULL;
+	}
+	return m_rpcSmallFaces.at(profileID);
 }
 
 const LoadingScreen* DefaultContentManager::getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const
