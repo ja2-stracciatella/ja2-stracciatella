@@ -66,6 +66,21 @@ elif [[ "$CI_TARGET" == windows-* ]]; then
         echo "unexpected target ${CI_TARGET}"
         exit 1
     fi
+elif [[ "$CI_TARGET" == "android" ]]; then
+    # Ninja build system
+    linux-install-via-apt-get ninja-build
+
+    # sccache for compilation caching
+    linux-install-sccache
+
+    # Google Cloud SDK for Artifact Upload
+    linux-install-google-cloud-sdk
+
+    # Rust via Rustup
+    unix-install-rustup armv7-linux-androideabi aarch64-linux-android i686-linux-android x86_64-linux-android
+
+    # Specific version of Android NDK
+    linux-install-via-android-sdkmanager "ndk;21.0.6113669"
 else
     echo "unexpected target ${CI_TARGET}"
     exit 1

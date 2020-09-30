@@ -6,6 +6,7 @@ apply plugin: 'kotlinx-serialization'
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.2"
+    ndkVersion "21.0.6113669"
 
     lintOptions {
         disable 'NewApi'
@@ -17,7 +18,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 18
-        versionName "0.18.0-dev"
+        versionName "0.18.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
@@ -77,4 +78,10 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+}
+
+tasks.register("projectVersion") {
+    doLast {
+        println(android.defaultConfig.versionName)
+    }
 }

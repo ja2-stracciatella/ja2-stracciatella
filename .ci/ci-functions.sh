@@ -35,6 +35,13 @@ linux-install-appimage-build-tools () {
     sudo chmod +x /usr/bin/appimagelint
 }
 
+linux-install-via-android-sdkmanager () {
+    for var in "$@"
+    do
+        sudo ${ANDROID_HOME}/tools/bin/sdkmanager --install $var
+    done
+}
+
 macOS-install-via-brew () {
     brew install $@
 }

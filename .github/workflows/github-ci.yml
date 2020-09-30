@@ -25,6 +25,10 @@ jobs:
           os: macos-latest
           target: mac
 
+        - name: Android
+          os: ubuntu-latest
+          target: android
+
     name: ${{ matrix.cfg.name }} ${{ github.ref }}
     runs-on: ${{ matrix.cfg.os }}
     steps:
@@ -66,6 +70,17 @@ jobs:
         restore-keys: |
           ${{ matrix.cfg.target }}-rust-v2-${{ hashFiles('rust') }}
           ${{ matrix.cfg.target }}-rust-v2-
+
+    - name: Set up JDK 1.8
+      uses: actions/setup-java@v1
+      if: matrix.cfg.target == 'android'
+      with:
+        java-version: 1.8
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v2
+      if: matrix.cfg.target == 'android'
+
     - name: Set up environment
       shell: bash
       run: ${{ github.workspace }}/.ci/ci-setup.sh 2>&1
@@ -90,6 +105,15 @@ jobs:
         GCLOUD_CREDENTIALS_SALT: ${{ secrets.GCLOUD_CREDENTIALS_SALT }}
         GCLOUD_CREDENTIALS_KEY: ${{ secrets.GCLOUD_CREDENTIALS_KEY }}
         GCLOUD_CREDENTIALS_IV: ${{ secrets.GCLOUD_CREDENTIALS_IV }}
+
+    - name: Upload android cmake logs
+      uses: actions/upload-artifact@v2
+      if: failure() && matrix.cfg.target == 'android'
+      with:
+        name: android-cmake-logs
+        path: |
+          **/*/cmake_server_log.txt
+          **/*/CMakeOutput.log
 
     - name: Collect artifacts
       shell: bash
