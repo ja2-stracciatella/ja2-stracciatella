@@ -73,6 +73,10 @@ public:
 	int32_t imp_attribute_zero_bonus;     // IMP character attribute points given instead of imp_attribute_min, vanilla 15
 	bool imp_pick_skills_directly;        // Use the IMP_SkillTrait selection screen from JA2.5, skipping the personality quiz, vanilla falase
 
+	/* M.E.R.C. */
+	uint8_t merc_online_min_days;         // The earliest day on or after which M.E.R.C. goes online
+	uint8_t merc_online_max_days;         // The latest day on or before which M.E.R.C. goes online
+
 	// Difficulty / Campaign Progress
 	float progress_weight_kills;         // Weight of kill count on campaign progress
 	float progress_weight_control;       // Weight of area control on campaign progress
