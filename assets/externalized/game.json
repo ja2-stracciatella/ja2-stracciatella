@@ -130,6 +130,13 @@
         "load_saved_merc_by_nickname": false,
         "load_keep_inventory": false
     },
+    
+    // When a new game starts, it picks randomly in the range of min and max (both inclusive) 
+    // on which day M.E.R.C. goes online and Speck sends the player an email. If 0 is picked, 
+    // then M.E.R.C. will be available right from the start.
+    // vanilla setting: 1, 2
+    "merc_online_min_days": 1,
+    "merc_online_max_days": 2,
 
     "progress": {
         //  Progress weight of parameter on campaign progress
