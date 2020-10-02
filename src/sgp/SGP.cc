@@ -336,248 +336,239 @@ std::vector<ST::string> InitGlobalLocale()
 
 int main(int argc, char* argv[])
 {
-#ifdef __ANDROID__
     try {
-#endif
-	// init locale and logging
-	{
-		std::vector<ST::string> problems = InitGlobalLocale();
-		Logger_initialize("ja2.log");
-		for (const ST::string& msg : problems)
+		// init locale and logging
 		{
-			SLOGW("%s", msg.c_str());
+			std::vector<ST::string> problems = InitGlobalLocale();
+			Logger_initialize("ja2.log");
+			for (const ST::string& msg : problems)
+			{
+				SLOGW("%s", msg.c_str());
+			}
 		}
-	}
 
-	#ifdef __ANDROID__
-	JNIEnv* jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
-	if (jniEnv == NULL) {
-		SLOGE("Failed to get jni env");
-	}
-	RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome(jniEnv));
-	#else
-	RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome());
-	#endif
-	if (configFolderPath.get() == NULL) {
-		auto rustError = getRustError();
-		if (rustError != NULL) {
-			SLOGE("Failed to find home directory: %s", rustError);
+		#ifdef __ANDROID__
+		JNIEnv* jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
+		if (jniEnv == NULL) {
+			SLOGE("Failed to get jni env");
 		}
-	}
-
-#if _WIN32
-	// This is only required on Windows, as Linux/Mac prints the details of unhandled exceptions on program abort
-	std::set_terminate(TerminationHandler);
-#endif
-
-	ST::string exeFolder = FileMan::getParentPath(argv[0], true);
-
-	RustPointer<EngineOptions> params(EngineOptions_create(configFolderPath.get(), argv, argc));
-	if (params == NULL) {
-		auto rustError = getRustError();
-		if (rustError != NULL) {
-			SLOGE("Failed to load configuration: %s", rustError);
+		RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome(jniEnv));
+		#else
+		RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome());
+		#endif
+		if (configFolderPath.get() == NULL) {
+			auto rustError = getRustError();
+			if (rustError != NULL) {
+				SLOGE("Failed to find home directory: %s", rustError);
+			}
 		}
-		return EXIT_FAILURE;
-	}
 
-	if (EngineOptions_shouldShowHelp(params.get())) {
-		return EXIT_SUCCESS;
-	}
+		ST::string exeFolder = FileMan::getParentPath(argv[0], true);
 
-	if (EngineOptions_shouldStartInFullscreen(params.get())) {
-		VideoSetFullScreen(TRUE);
-	} else if (EngineOptions_shouldStartInWindow(params.get())) {
-		VideoSetFullScreen(FALSE);
-	}
+		RustPointer<EngineOptions> params(EngineOptions_create(configFolderPath.get(), argv, argc));
+		if (params == NULL) {
+			auto rustError = getRustError();
+			if (rustError != NULL) {
+				SLOGE("Failed to load configuration: %s", rustError);
+			}
+			return EXIT_FAILURE;
+		}
 
-	if (EngineOptions_shouldStartWithoutSound(params.get())) {
-		SoundEnableSound(FALSE);
-	}
+		if (EngineOptions_shouldShowHelp(params.get())) {
+			return EXIT_SUCCESS;
+		}
 
-	if (EngineOptions_shouldStartInDebugMode(params.get())) {
-		Logger_setLevel(LogLevel::Debug);
-		GameState::getInstance()->setDebugging(true);
-	}
+		if (EngineOptions_shouldStartInFullscreen(params.get())) {
+			VideoSetFullScreen(TRUE);
+		} else if (EngineOptions_shouldStartInWindow(params.get())) {
+			VideoSetFullScreen(FALSE);
+		}
 
-	if (EngineOptions_shouldRunEditor(params.get())) {
-		GameState::getInstance()->setEditorMode(false);
-	}
+		if (EngineOptions_shouldStartWithoutSound(params.get())) {
+			SoundEnableSound(FALSE);
+		}
 
-	uint16_t width = EngineOptions_getResolutionX(params.get());
-	uint16_t height = EngineOptions_getResolutionY(params.get());
-	bool result = g_ui.setScreenSize(width, height);
-	if(!result)
-	{
-		SLOGE("Failed to set screen resolution %d x %d", width, height);
-		return EXIT_FAILURE;
-	}
+		if (EngineOptions_shouldStartInDebugMode(params.get())) {
+			Logger_setLevel(LogLevel::Debug);
+			GameState::getInstance()->setDebugging(true);
+		}
 
-	if (EngineOptions_shouldRunUnittests(params.get())) {
-#ifdef WITH_UNITTESTS
-		testing::InitGoogleTest(&argc, argv);
-		return RUN_ALL_TESTS();
-#else
-		SLOGW("This executable does not include unit tests.");
-#endif
-	}
+		if (EngineOptions_shouldRunEditor(params.get())) {
+			GameState::getInstance()->setEditorMode(false);
+		}
 
-	GameVersion version = EngineOptions_getResourceVersion(params.get());
-	setGameVersion(version);
-
-	VideoScaleQuality scalingQuality = EngineOptions_getScalingQuality(params.get());
-
-	FLOAT brightness = EngineOptions_getBrightness(params.get());
-
-	////////////////////////////////////////////////////////////
-
-	SDL_Init(SDL_INIT_VIDEO);
-
-	// restore output to the console (on windows when built with MINGW)
-#ifdef __MINGW32__
-	freopen("CON", "w", stdout);
-	freopen("CON", "w", stderr);
-#endif
-
-#ifdef SGP_DEBUG
-	// Initialize the Debug Manager - success doesn't matter
-	InitializeDebugManager();
-#endif
-
-	// this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
-	SLOGD("Initializing Memory Manager");
-	InitializeMemoryManager();
-
-	SLOGD("Initializing Game Resources");
-	RustPointer<char> gameResRootPath(EngineOptions_getVanillaGameDir(params.get()));
-
-	RustPointer<char> extraDataDir(Env_assetsDir());
-	ST::string externalizedDataPath = FileMan::joinPaths(extraDataDir.get(), "externalized");
-
-	FileMan::switchTmpFolder(configFolderPath.get());
-
-	DefaultContentManager *cm;
-
-	uint32_t n = EngineOptions_getModsLength(params.get());
-	if(n > 0)
-	{
-		std::vector<ST::string> enabledMods;
-		for (uint32_t i = 0; i < n; ++i)
+		uint16_t width = EngineOptions_getResolutionX(params.get());
+		uint16_t height = EngineOptions_getResolutionY(params.get());
+		bool result = g_ui.setScreenSize(width, height);
+		if(!result)
 		{
-			RustPointer<char> modName(EngineOptions_getMod(params.get(), i));
-			enabledMods.emplace_back(modName.get());
+			SLOGE("Failed to set screen resolution %d x %d", width, height);
+			return EXIT_FAILURE;
 		}
-		cm = new ModPackContentManager(version,
-						enabledMods, extraDataDir.get(), configFolderPath.get(),
-						gameResRootPath.get(), externalizedDataPath);
-		SLOGI("------------------------------------------------------------------------------");
-		SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.get());
-		SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
-		SLOGI("Extra data directory:          '%s'", extraDataDir.get());
-		SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
-		SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
-		SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
-		SLOGI("------------------------------------------------------------------------------");
-	}
-	else
-	{
-		cm = new DefaultContentManager(version,
-						configFolderPath.get(),
-						gameResRootPath.get(), externalizedDataPath);
-		SLOGI("------------------------------------------------------------------------------");
-		SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.get());
-		SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
-		SLOGI("Extra data directory:          '%s'", extraDataDir.get());
-		SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
-		SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
-		SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
-		SLOGI("------------------------------------------------------------------------------");
-	}
 
-	#ifdef __ANDROID__
-	cm->init(params.get(), jniEnv);
+		if (EngineOptions_shouldRunUnittests(params.get())) {
+	#ifdef WITH_UNITTESTS
+			testing::InitGoogleTest(&argc, argv);
+			return RUN_ALL_TESTS();
 	#else
-	cm->init(params.get());
+			SLOGW("This executable does not include unit tests.");
 	#endif
+		}
 
-	if(!cm->loadGameData())
-	{
-		SLOGI("Failed to load the game data.");
-	}
-	else
-	{
+		GameVersion version = EngineOptions_getResourceVersion(params.get());
+		setGameVersion(version);
 
-		GCM = cm;
+		VideoScaleQuality scalingQuality = EngineOptions_getScalingQuality(params.get());
 
-		SLOGD("Initializing Video Manager");
-		InitializeVideoManager(scalingQuality);
-		VideoSetBrightness(brightness);
-
-		SLOGD("Initializing Video Object Manager");
-		InitializeVideoObjectManager();
-
-		SLOGD("Initializing Video Surface Manager");
-		InitializeVideoSurfaceManager();
-
-		InitJA2SplashScreen();
-
-		// Initialize Font Manager
-		SLOGD("Initializing the Font Manager");
-		// Init the manager and copy the TransTable stuff into it.
-		InitializeFontManager();
-
-		SLOGD("Initializing Sound Manager");
-#ifndef UTIL
-		InitializeSoundManager();
-#endif
-
-		SLOGD("Initializing Random");
-		// Initialize random number generator
-		InitializeRandom(); // no Shutdown
-
-		SLOGD("Initializing Game Manager");
-		// Initialize the Game
-		InitializeGame();
-
-		gfGameInitialized = TRUE;
+		FLOAT brightness = EngineOptions_getBrightness(params.get());
 
 		////////////////////////////////////////////////////////////
 
-		// some data convertion
-		// convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/051.edt", FileMan::joinPaths(exeFolder, "051.edt.json").c_str());
-		// convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/052.edt", FileMan::joinPaths(exeFolder, "052.edt.json").c_str());
-		// convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/055.edt", FileMan::joinPaths(exeFolder, "055.edt.json").c_str());
+		SDL_Init(SDL_INIT_VIDEO);
 
-		// writeWeaponsToJson(FileMan::joinPaths(exeFolder, "externalized/weapons.json").c_str(), MAX_WEAPONS+1);
-		// writeMagazinesToJson(FileMan::joinPaths(exeFolder, "externalized/magazines.json").c_str());
+		// restore output to the console (on windows when built with MINGW)
+	#ifdef __MINGW32__
+		freopen("CON", "w", stdout);
+		freopen("CON", "w", stderr);
+	#endif
 
-		// readWeaponsFromJson(FileMan::joinPaths(exeFolder, "weapon.json").c_str());
-		// readWeaponsFromJson(FileMan::joinPaths(exeFolder, "weapon2.json").c_str());
+	#ifdef SGP_DEBUG
+		// Initialize the Debug Manager - success doesn't matter
+		InitializeDebugManager();
+	#endif
 
-		////////////////////////////////////////////////////////////
+		// this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
+		SLOGD("Initializing Memory Manager");
+		InitializeMemoryManager();
 
-		if(isEnglishVersion())
+		SLOGD("Initializing Game Resources");
+		RustPointer<char> gameResRootPath(EngineOptions_getVanillaGameDir(params.get()));
+
+		RustPointer<char> extraDataDir(Env_assetsDir());
+		ST::string externalizedDataPath = FileMan::joinPaths(extraDataDir.get(), "externalized");
+
+		FileMan::switchTmpFolder(configFolderPath.get());
+
+		DefaultContentManager *cm;
+
+		uint32_t n = EngineOptions_getModsLength(params.get());
+		if(n > 0)
 		{
-			SetIntroType(INTRO_SPLASH);
+			std::vector<ST::string> enabledMods;
+			for (uint32_t i = 0; i < n; ++i)
+			{
+				RustPointer<char> modName(EngineOptions_getMod(params.get(), i));
+				enabledMods.emplace_back(modName.get());
+			}
+			cm = new ModPackContentManager(version,
+							enabledMods, extraDataDir.get(), configFolderPath.get(),
+							gameResRootPath.get(), externalizedDataPath);
+			SLOGI("------------------------------------------------------------------------------");
+			SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.get());
+			SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
+			SLOGI("Extra data directory:          '%s'", extraDataDir.get());
+			SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
+			SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
+			SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
+			SLOGI("------------------------------------------------------------------------------");
+		}
+		else
+		{
+			cm = new DefaultContentManager(version,
+							configFolderPath.get(),
+							gameResRootPath.get(), externalizedDataPath);
+			SLOGI("------------------------------------------------------------------------------");
+			SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.get());
+			SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
+			SLOGI("Extra data directory:          '%s'", extraDataDir.get());
+			SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
+			SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
+			SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
+			SLOGI("------------------------------------------------------------------------------");
 		}
 
-		SLOGD("Running Game");
+		#ifdef __ANDROID__
+		cm->init(params.get(), jniEnv);
+		#else
+		cm->init(params.get());
+		#endif
 
-		/* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
-		 * are available. All we need to do is attend to the gaming mechanics
-		 * themselves */
-		MainLoop(gamepolicy(ms_per_game_cycle));
-	}
+		if(!cm->loadGameData())
+		{
+			SLOGI("Failed to load the game data.");
+		}
+		else
+		{
 
-	delete cm;
-	GCM = NULL;
+			GCM = cm;
 
-#ifdef __ANDROID__
+			SLOGD("Initializing Video Manager");
+			InitializeVideoManager(scalingQuality);
+			VideoSetBrightness(brightness);
+
+			SLOGD("Initializing Video Object Manager");
+			InitializeVideoObjectManager();
+
+			SLOGD("Initializing Video Surface Manager");
+			InitializeVideoSurfaceManager();
+
+			InitJA2SplashScreen();
+
+			// Initialize Font Manager
+			SLOGD("Initializing the Font Manager");
+			// Init the manager and copy the TransTable stuff into it.
+			InitializeFontManager();
+
+			SLOGD("Initializing Sound Manager");
+	#ifndef UTIL
+			InitializeSoundManager();
+	#endif
+
+			SLOGD("Initializing Random");
+			// Initialize random number generator
+			InitializeRandom(); // no Shutdown
+
+			SLOGD("Initializing Game Manager");
+			// Initialize the Game
+			InitializeGame();
+
+			gfGameInitialized = TRUE;
+
+			////////////////////////////////////////////////////////////
+
+			// some data convertion
+			// convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/051.edt", FileMan::joinPaths(exeFolder, "051.edt.json").c_str());
+			// convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/052.edt", FileMan::joinPaths(exeFolder, "052.edt.json").c_str());
+			// convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/055.edt", FileMan::joinPaths(exeFolder, "055.edt.json").c_str());
+
+			// writeWeaponsToJson(FileMan::joinPaths(exeFolder, "externalized/weapons.json").c_str(), MAX_WEAPONS+1);
+			// writeMagazinesToJson(FileMan::joinPaths(exeFolder, "externalized/magazines.json").c_str());
+
+			// readWeaponsFromJson(FileMan::joinPaths(exeFolder, "weapon.json").c_str());
+			// readWeaponsFromJson(FileMan::joinPaths(exeFolder, "weapon2.json").c_str());
+
+			////////////////////////////////////////////////////////////
+
+			if(isEnglishVersion())
+			{
+				SetIntroType(INTRO_SPLASH);
+			}
+
+			SLOGD("Running Game");
+
+			/* At this point the SGP is set up, which means all I/O, Memory, tools, etc.
+			* are available. All we need to do is attend to the gaming mechanics
+			* themselves */
+			MainLoop(gamepolicy(ms_per_game_cycle));
+		}
+
+		delete cm;
+		GCM = NULL;
+
 	} catch (...) {
         TerminationHandler();
         return EXIT_FAILURE;
 	}
-#endif
 
 	return EXIT_SUCCESS;
 }
