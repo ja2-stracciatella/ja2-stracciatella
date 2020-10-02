@@ -267,7 +267,7 @@ protected:
 	bool loadTacticalLayerData();
 	bool loadMercsData();
 
-	std::shared_ptr<rapidjson::Document> readJsonDataFile(const char *fileName) const;
+	std::unique_ptr<rapidjson::Document> readJsonDataFile(const char *fileName) const;
 };
 
 class LibraryFileNotFoundException : public std::runtime_error

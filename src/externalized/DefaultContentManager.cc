@@ -1010,12 +1010,12 @@ bool DefaultContentManager::loadGameData()
 	return result;
 }
 
-std::shared_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const char *fileName) const
+std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const char *fileName) const
 {
 	AutoSGPFile f(openGameResForReading(fileName));
 	ST::string jsonData = FileMan::fileReadText(f);
 
-	auto document = std::make_shared<rapidjson::Document>();
+	auto document = std::make_unique<rapidjson::Document>();
 	if (document->Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
 	{
 		ST::string errorMessage = ST::format("Failed to parse {} (at location {}) {} ",

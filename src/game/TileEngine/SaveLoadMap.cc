@@ -23,6 +23,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include <memory>
 
 #define NUM_REVEALED_BYTES 3200
 
@@ -38,26 +39,26 @@ UINT8				*gpRevealedMap;
 
 
 // Opens the map modification temp file (m_*) of the given sector for append, and marks it in the sector flag.
-static std::shared_ptr<AutoSGPFile> OpenMapModificationTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
+static std::unique_ptr<AutoSGPFile> OpenMapModificationTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
 	SetSectorFlag(sSectorX, sSectorY, bSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS);
 
 	CHAR8 zMapName[128];
 	GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ);	
-	return std::make_shared<AutoSGPFile>(FileMan::openForAppend(zMapName));
+	return std::make_unique<AutoSGPFile>(FileMan::openForAppend(zMapName));
 }
 
 // Writes map modification to the open temp file
-static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, std::shared_ptr<AutoSGPFile> hFile)
+static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, AutoSGPFile& hFile)
 {
-	FileWrite(*hFile, pMap, sizeof(MODIFY_MAP));
+	FileWrite(hFile, pMap, sizeof(MODIFY_MAP));
 }
 
 // Opens the map temp file, writes the modification, then close the file
 static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
-	auto hFile = OpenMapModificationTempFile(sSectorX, sSectorY, bSectorZ);
-	SaveModifiedMapStructToMapTempFile(pMap, hFile);
+	std::unique_ptr<AutoSGPFile> hFile = OpenMapModificationTempFile(sSectorX, sSectorY, bSectorZ);
+	SaveModifiedMapStructToMapTempFile(pMap, *hFile);
 }
 
 
@@ -96,7 +97,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 
 	//Delete the file
 	FileDelete( zMapName );
-	auto tempMapFile = OpenMapModificationTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	std::unique_ptr<AutoSGPFile> tempMapFile = OpenMapModificationTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	for( cnt=0; cnt< uiNumberOfElements; cnt++ )
 	{
@@ -114,7 +115,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 				AddObjectFromMapTempFileToMap( pMap->usGridNo, usIndex );
 
 				// Save this struct back to the temp file
-				SaveModifiedMapStructToMapTempFile(pMap, tempMapFile);
+				SaveModifiedMapStructToMapTempFile(pMap, *tempMapFile);
 
 				//Since the element is being saved back to the temp file, increment the #
 				uiNumberOfElementsSavedBackToFile++;
@@ -130,7 +131,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 				}
 
 				// Save this struct back to the temp file
-				SaveModifiedMapStructToMapTempFile(pMap, tempMapFile);
+				SaveModifiedMapStructToMapTempFile(pMap, *tempMapFile);
 
 				//Since the element is being saved back to the temp file, increment the #
 				uiNumberOfElementsSavedBackToFile++;
@@ -171,7 +172,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 				}
 
 				// Save this struct back to the temp file
-				SaveModifiedMapStructToMapTempFile(pMap, tempMapFile);
+				SaveModifiedMapStructToMapTempFile(pMap, *tempMapFile);
 
 				//Since the element is being saved back to the temp file, increment the #
 				uiNumberOfElementsSavedBackToFile++;
@@ -209,7 +210,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 					gfLoadingExitGrids = FALSE;
 
 					// Save this struct back to the temp file
-					SaveModifiedMapStructToMapTempFile(pMap, tempMapFile);
+					SaveModifiedMapStructToMapTempFile(pMap, *tempMapFile);
 
 					//Since the element is being saved back to the temp file, increment the #
 					uiNumberOfElementsSavedBackToFile++;
@@ -224,7 +225,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 				if ( ModifyWindowStatus( pMap->usGridNo ) )
 				{
 					// Save this struct back to the temp file
-					SaveModifiedMapStructToMapTempFile(pMap, tempMapFile);
+					SaveModifiedMapStructToMapTempFile(pMap, *tempMapFile);
 
 					//Since the element is being saved back to the temp file, increment the #
 					uiNumberOfElementsSavedBackToFile++;
@@ -300,7 +301,7 @@ static void RemoveSavedStructFromMap(UINT32 uiMapIndex, UINT16 usIndex)
 }
 
 
-static void AddOpenableStructStatusToMapTempFile(UINT32 uiMapIndex, BOOLEAN fOpened, std::shared_ptr<AutoSGPFile> hFile);
+static void AddOpenableStructStatusToMapTempFile(UINT32 uiMapIndex, BOOLEAN fOpened, AutoSGPFile& hFile);
 static void SetSectorsRevealedBit(UINT16 usMapIndex);
 
 
@@ -312,7 +313,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 
 	gpRevealedMap = new UINT8[NUM_REVEALED_BYTES]{};
 
-	auto tempFile = OpenMapModificationTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	std::unique_ptr<AutoSGPFile> tempFile = OpenMapModificationTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	//Loop though all the map elements
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -333,7 +334,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 			Map.ubType			= SLM_BLOOD_SMELL;
 
 			//Save the change to the map file
-			SaveModifiedMapStructToMapTempFile(&Map, tempFile);
+			SaveModifiedMapStructToMapTempFile(&Map, *tempFile);
 		}
 
 
@@ -371,7 +372,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 					Map.ubExtra			= pCurrent->ubWallOrientation | ubLevel;
 
 					//Save the change to the map file
-					SaveModifiedMapStructToMapTempFile(&Map, tempFile);
+					SaveModifiedMapStructToMapTempFile(&Map, *tempFile);
 				}
 			}
 		}
@@ -388,7 +389,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 
 				fStatusOnTheMap = ( ( pStructure->fFlags & STRUCTURE_OPEN ) != 0 );
 
-				AddOpenableStructStatusToMapTempFile(cnt, fStatusOnTheMap, tempFile);
+				AddOpenableStructStatusToMapTempFile(cnt, fStatusOnTheMap, *tempFile);
 			}
 		}
 	}
@@ -670,7 +671,7 @@ try
 catch (...) { return FALSE; }
 
 // Appends the status of openable struct status to the map modification temp file (m_*)
-static void AddOpenableStructStatusToMapTempFile(UINT32 uiMapIndex, BOOLEAN fOpened, std::shared_ptr<AutoSGPFile> hFile)
+static void AddOpenableStructStatusToMapTempFile(UINT32 uiMapIndex, BOOLEAN fOpened, AutoSGPFile& hFile)
 {
 	MODIFY_MAP Map;
 
