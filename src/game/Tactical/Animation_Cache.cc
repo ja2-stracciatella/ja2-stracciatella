@@ -57,7 +57,7 @@ void DeleteAnimationCache( UINT16 usSoldierID, AnimationSurfaceCacheType *pAnimC
 void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheType* const pAnimCache, UINT16 const usSurfaceIndex, UINT16 const usCurrentAnimation)
 {
 	UINT8  cnt;
-	UINT8  ubLowestIndex = -1;
+	UINT8  ubLowestIndex = UINT8_MAX;
 	INT16  sMostHits = INT16_MAX;
 	UINT16 usCurrentAnimSurface;
 
@@ -110,7 +110,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 			}
 		}
 
-		if (ubLowestIndex == -1)
+		if (ubLowestIndex == UINT8_MAX)
 		{
 			SLOGW(ST::format("Anim Cache: No preferred cache slot for eviction ( Soldier {} )", usSoldierID));
 			ubLowestIndex = 0;
