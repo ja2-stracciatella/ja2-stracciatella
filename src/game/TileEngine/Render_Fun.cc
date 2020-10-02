@@ -118,7 +118,7 @@ void SetGridNoRevealedFlag(UINT16 const grid_no)
 				node->uiFlags |= LEVELNODE_HIDDEN;
 			}
 		}
-		catch (std::logic_error e)
+		catch (const std::logic_error& e)
 		{
 			SLOGW(ST::format("Failed to find LEVELNODE for a structure at grid {}. ({})", grid_no, e.what()));
 		}

@@ -15,7 +15,7 @@ void DefaultContentManagerUT::init()
 	Vfs_addDir(m_vfs.get(), m_externalizedDataPath.c_str());
 }
 
-std::shared_ptr<rapidjson::Document> DefaultContentManagerUT::_readJsonDataFile(const char* fileName) const
+std::unique_ptr<rapidjson::Document> DefaultContentManagerUT::_readJsonDataFile(const char* fileName) const
 {
 	return DefaultContentManager::readJsonDataFile(fileName);
 }

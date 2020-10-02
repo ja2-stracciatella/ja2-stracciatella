@@ -199,7 +199,7 @@ void PreloadExternalNPCFaces()
 
 	fExternFacesLoaded = TRUE;
 
-	for (int i = 0; i < lengthof(preloadedExternalNPCFaces); i++)
+	for (size_t i = 0; i < lengthof(preloadedExternalNPCFaces); i++)
 	{
 		LoadExternalNPCFace(preloadedExternalNPCFaces[i]);
 	}

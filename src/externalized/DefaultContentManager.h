@@ -173,7 +173,7 @@ public:
 	virtual const MovementCostsModel* getMovementCosts() const override;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const override;
-	virtual const std::vector<const MERCListingModel*>& getMERCListings() const;
+	virtual const std::vector<const MERCListingModel*>& getMERCListings() const override;
 	virtual const LoadingScreen* getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const override;
 	virtual const LoadingScreen* getLoadingScreen(uint8_t index) const override;
 
@@ -267,7 +267,7 @@ protected:
 	bool loadTacticalLayerData();
 	bool loadMercsData();
 
-	std::shared_ptr<rapidjson::Document> readJsonDataFile(const char *fileName) const;
+	std::unique_ptr<rapidjson::Document> readJsonDataFile(const char *fileName) const;
 };
 
 class LibraryFileNotFoundException : public std::runtime_error
