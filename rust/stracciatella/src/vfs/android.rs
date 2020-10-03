@@ -7,7 +7,6 @@ use std::io;
 use std::io::SeekFrom;
 use std::path::{Path, PathBuf};
 
-use jni::JNIEnv;
 use ndk::asset::{Asset, AssetManager};
 
 use crate::android::get_asset_manager;
@@ -35,8 +34,8 @@ pub struct AssetManagerFsFile {
 
 impl AssetManagerFs {
     /// Creates a new virtual filesystem.
-    pub fn new(base_path: &Path, jni_env: JNIEnv) -> io::Result<AssetManagerFs> {
-        let asset_manager = get_asset_manager(jni_env.clone()).map_err(|err| {
+    pub fn new(base_path: &Path) -> io::Result<AssetManagerFs> {
+        let asset_manager = get_asset_manager().map_err(|err| {
             io::Error::new(
                 io::ErrorKind::Other,
                 format!(

@@ -349,13 +349,12 @@ int main(int argc, char* argv[])
 
 		#ifdef __ANDROID__
 		JNIEnv* jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
-		if (jniEnv == NULL) {
-			SLOGE("Failed to get jni env");
+		
+		if (setGlobalJniEnv(jniEnv) == FALSE) {
+			SLOGE("Failed to set global jni env");
 		}
-		RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome(jniEnv));
-		#else
-		RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome());
 		#endif
+		RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome());
 		if (configFolderPath.get() == NULL) {
 			auto rustError = getRustError();
 			if (rustError != NULL) {
@@ -487,11 +486,7 @@ int main(int argc, char* argv[])
 			SLOGI("------------------------------------------------------------------------------");
 		}
 
-		#ifdef __ANDROID__
-		cm->init(params.get(), jniEnv);
-		#else
 		cm->init(params.get());
-		#endif
 
 		if(!cm->loadGameData())
 		{

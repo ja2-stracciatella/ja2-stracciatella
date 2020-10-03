@@ -4,9 +4,6 @@
 
 use std::io::{Read, Seek, SeekFrom, Write};
 
-#[cfg(target_os = "android")]
-use jni;
-
 use stracciatella::config::EngineOptions;
 use stracciatella::unicode::Nfc;
 use stracciatella::vfs::{Vfs, VfsFile};
@@ -31,7 +28,6 @@ pub extern "C" fn Vfs_destroy(vfs: *mut Vfs) {
 /// Returns true if successful, false otherwise.
 /// Sets the rust error.
 #[no_mangle]
-#[cfg(not(target_os = "android"))]
 pub extern "C" fn Vfs_init_from_engine_options(
     vfs: *mut Vfs,
     engine_options: *const EngineOptions,
@@ -45,42 +41,6 @@ pub extern "C" fn Vfs_init_from_engine_options(
             engine_options, err
         ));
     }
-    no_rust_error()
-}
-
-/// Initializes the VFS based on the information in engine_options
-/// Returns true if successful, false otherwise.
-/// This is the android version that sets up reading externalized data from assets via JNI
-/// Sets the rust error.
-#[no_mangle]
-#[cfg(target_os = "android")]
-pub unsafe extern "C" fn Vfs_init_from_engine_options(
-    vfs: *mut Vfs,
-    engine_options: *const EngineOptions,
-    ptr: *mut jni::sys::JNIEnv,
-) -> bool {
-    forget_rust_error();
-    let vfs = unsafe_mut(vfs);
-    let engine_options = unsafe_ref(engine_options);
-    let jni_env = jni::JNIEnv::from_raw(ptr);
-
-    match jni_env {
-        Ok(jni_env) => {
-            if let Err(err) = vfs.init_from_engine_options(engine_options, jni_env) {
-                remember_rust_error(format!(
-                    "Vfs_init_from_engine_options {:?}: {}",
-                    engine_options, err
-                ));
-            }
-        }
-        Err(err) => {
-            remember_rust_error(format!(
-                "Vfs_init_from_engine_options {:?}: {}",
-                engine_options, err
-            ));
-        }
-    }
-
     no_rust_error()
 }
 

@@ -28,7 +28,7 @@ class LauncherActivity : AppCompatActivity() {
     private val jsonFormat = Json {
         prettyPrint = true
     }
-    private val ja2JsonFilename = "ja2.json"
+    private val ja2JsonFilename = ".ja2/ja2.json"
     private val gameDirKey = "game_dir"
 
     override fun onCreate(savedInstanceState: Bundle?) {

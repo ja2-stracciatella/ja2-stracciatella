@@ -29,11 +29,7 @@ public:
 
 	/// Called after construction.
 	/// @throw runtime_error
-	#ifdef __ANDROID__
-	virtual void init(EngineOptions* engine_options, JNIEnv* jniEnv);
-	#else
 	virtual void init(EngineOptions* engine_options);
-	#endif
 
 	/** Load the game data. */
 	bool loadGameData();
