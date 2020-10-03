@@ -2,6 +2,8 @@
 //!
 //! [`stracciatella::config`]: ../../stracciatella/config/index.html
 
+#[cfg(target_os = "android")]
+use jni;
 use std::ptr;
 
 use stracciatella::config::{
@@ -16,23 +18,26 @@ use crate::c::common::*;
 /// The caller is responsible for the returned memory.
 #[no_mangle]
 pub extern "C" fn EngineOptions_create(
+    stracciatella_home: *const c_char,
     args: *const *const c_char,
     length: size_t,
 ) -> *mut EngineOptions {
+    let stracciatella_home = path_buf_from_c_str_or_panic(unsafe_c_str(stracciatella_home));
     let args: Vec<String> = unsafe_slice(args, length)
         .iter()
         .map(|&x| str_from_c_str_or_panic(unsafe_c_str(x)).to_owned())
         .collect();
 
-    match find_stracciatella_home().and_then(|x| EngineOptions::from_home_and_args(&x, &args)) {
+    match EngineOptions::from_home_and_args(&stracciatella_home, &args) {
         Ok(engine_options) => {
             if engine_options.show_help {
                 print!("{}", Cli::usage());
             }
+            no_rust_error();
             into_ptr(engine_options)
         }
         Err(msg) => {
-            println!("{}", msg);
+            remember_rust_error(format!("EngineOptions_create: {}", msg));
             ptr::null_mut()
         }
     }
@@ -56,10 +61,48 @@ pub extern "C" fn EngineOptions_destroy(ptr: *mut EngineOptions) {
 /// Gets the `EngineOptions.stracciatella_home` path.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn EngineOptions_getStracciatellaHome(ptr: *const EngineOptions) -> *mut c_char {
-    let engine_options = unsafe_ref(ptr);
-    let stracciatella_home = c_string_from_path_or_panic(&engine_options.stracciatella_home);
-    stracciatella_home.into_raw()
+#[cfg(not(target_os = "android"))]
+pub extern "C" fn EngineOptions_getStracciatellaHome() -> *mut c_char {
+    let stracciatella_home = find_stracciatella_home();
+
+    forget_rust_error();
+    match stracciatella_home {
+        Ok(stracciatella_home) => {
+            let stracciatella_home = c_string_from_path_or_panic(&stracciatella_home);
+            stracciatella_home.into_raw()
+        }
+        Err(e) => {
+            remember_rust_error(format!("EngineOptions_getStracciatellaHome: {:?}", e));
+            std::ptr::null_mut()
+        }
+    }
+}
+
+/// Gets the `EngineOptions.stracciatella_home` path.
+/// The caller is responsible for the returned memory.
+/// This is the android version that reads stracciatella home via JNI
+///
+/// # Safety
+///
+/// This function does not do any safety chacks for the passed pointers
+#[no_mangle]
+#[cfg(target_os = "android")]
+pub unsafe extern "C" fn EngineOptions_getStracciatellaHome(
+    ptr: *mut jni::sys::JNIEnv,
+) -> *mut c_char {
+    let stracciatella_home = jni::JNIEnv::from_raw(ptr).and_then(find_stracciatella_home);
+
+    forget_rust_error();
+    match stracciatella_home {
+        Ok(stracciatella_home) => {
+            let stracciatella_home = c_string_from_path_or_panic(&stracciatella_home);
+            stracciatella_home.into_raw()
+        }
+        Err(e) => {
+            remember_rust_error(format!("EngineOptions_getStracciatellaHome: {:?}", e));
+            std::ptr::null_mut()
+        }
+    }
 }
 
 /// Gets the `EngineOptions.vanilla_game_dir` path.
@@ -79,7 +122,7 @@ pub extern "C" fn EngineOptions_setVanillaGameDir(
 ) {
     let engine_options = unsafe_mut(ptr);
     let vanilla_game_dir = path_buf_from_c_str_or_panic(unsafe_c_str(game_dir_ptr));
-    engine_options.vanilla_game_dir = vanilla_game_dir.to_owned();
+    engine_options.vanilla_game_dir = vanilla_game_dir;
 }
 
 /// Gets the length of `EngineOptions.mods`.
@@ -312,7 +355,7 @@ mod tests {
         let stracciatella_home = temp_dir.path().join(".ja2");
         let stracciatella_json = temp_dir.path().join(".ja2/ja2.json");
 
-        engine_options.stracciatella_home = stracciatella_home.clone();
+        engine_options.stracciatella_home = stracciatella_home;
         engine_options.resolution = Resolution(100, 100);
 
         EngineOptions_write(&mut engine_options);

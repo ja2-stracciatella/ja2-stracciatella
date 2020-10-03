@@ -8,7 +8,12 @@ sys_includes = [
 
 # Top of stracciatella.h
 header = '''
-#pragma once'''
+#pragma once
+
+#ifdef __ANDROID__
+#include <jni.h>
+#endif
+'''
 
 # Bottom of stracciatella.h
 trailer = '''
@@ -43,3 +48,7 @@ exclude = [
     "HEADER_BYTES",
     "UNIX_EPOCH_AS_FILETIME",
 ]
+
+[defines]
+"target_os = android" = "__ANDROID__"
+"windows" = "_WIN32"

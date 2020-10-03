@@ -197,14 +197,22 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_samSitesAirControl = NULL;
 }
 
+#ifdef __ANDROID__
+void DefaultContentManager::init(EngineOptions* engine_options, JNIEnv* jniEnv)
+#else
 void DefaultContentManager::init(EngineOptions* engine_options)
+#endif
 {
+	#ifdef __ANDROID__
+	auto succeeded = Vfs_init_from_engine_options(m_vfs.get(), engine_options, jniEnv);
+	#else
 	auto succeeded = Vfs_init_from_engine_options(m_vfs.get(), engine_options);
+	#endif
 	if (!succeeded) {
 		RustPointer<char> err{ getRustError() };
-		auto error = err.get();
-		SLOGE(ST::format("Failed to build virtual file system (VFS): {}", error));
-		throw std::runtime_error("Failed to add to VFS");
+		auto error = ST::format("Failed to build virtual file system (VFS): {}", err.get());
+		SLOGE(error);
+		throw std::runtime_error(error.c_str());
 	}
 }
 

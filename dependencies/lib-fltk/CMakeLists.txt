@@ -32,6 +32,7 @@ find_file(FLTK_CONFIG "FLTKConfig.cmake"
         "${INSTALL_PREFIX}/CMake"
         "${INSTALL_PREFIX}/FLTK/.framework/Resources/CMake"
         "${INSTALL_PREFIX}/fltk"
+        "${INSTALL_PREFIX}/share/fltk"
     NO_DEFAULT_PATH
 )
 include("${FLTK_CONFIG}")

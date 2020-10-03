@@ -1,6 +1,7 @@
 [workspace]
 members = [
     "stracciatella",
+    "stracciatella_bin",
     "stracciatella_c_api",
 ]
 

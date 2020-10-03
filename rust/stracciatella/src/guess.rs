@@ -330,7 +330,7 @@ impl Guess {
         for hash in &hashes {
             builder.with_hash(hash);
         }
-        let resources = builder.clone().execute("guess")?.resources;
+        let resources = builder.execute("guess")?.resources;
         let get_compared_path = |resource: &Resource| {
             (
                 resource.get_str("archive_path").map(Nfc::caseless),

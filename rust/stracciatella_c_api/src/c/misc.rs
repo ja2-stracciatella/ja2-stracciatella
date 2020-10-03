@@ -7,8 +7,8 @@ use std::ffi::CString;
 use std::process::Command;
 use std::ptr;
 
-use stracciatella::config::find_stracciatella_home;
-use stracciatella::fs::{canonicalize, resolve_existing_components};
+use stracciatella::config::EngineOptions;
+use stracciatella::fs::resolve_existing_components;
 use stracciatella::get_assets_dir;
 use stracciatella::guess::guess_vanilla_version;
 
@@ -69,28 +69,30 @@ pub extern "C" fn findPathFromAssetsDir(
 /// If test_exists is true, it makes sure the path exists.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
+#[cfg(not(target_os = "android"))]
 pub extern "C" fn findPathFromStracciatellaHome(
+    engine_options: *mut EngineOptions,
     path: *const c_char,
     test_exists: bool,
     caseless: bool,
 ) -> *mut c_char {
-    if let Ok(mut path_buf) = find_stracciatella_home() {
-        if !path.is_null() {
-            let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
-            let path = resolve_existing_components(&path, Some(&path_buf), caseless);
-            path_buf = path;
-        }
-        if test_exists && !path_buf.exists() {
-            ptr::null_mut() // path not found
-        } else {
-            if let Ok(p) = canonicalize(&path_buf) {
-                path_buf = p;
-            }
-            let s: String = path_buf.to_string_lossy().into();
-            CString::new(s).unwrap().into_raw() // path found
-        }
+    use stracciatella::fs::canonicalize;
+
+    let engine_options = unsafe_mut(engine_options);
+    let mut path_buf = engine_options.stracciatella_home.clone();
+    if !path.is_null() {
+        let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+        let path = resolve_existing_components(&path, Some(&path_buf), caseless);
+        path_buf = path;
+    }
+    if test_exists && !path_buf.exists() {
+        ptr::null_mut() // path not found
     } else {
-        ptr::null_mut() // no home
+        if let Ok(p) = canonicalize(&path_buf) {
+            path_buf = p;
+        }
+        let s: String = path_buf.to_string_lossy().into();
+        CString::new(s).unwrap().into_raw() // path found
     }
 }
 
@@ -111,7 +113,8 @@ pub extern "C" fn checkIfRelativePathExists(
 /// Returns a list of available mods.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-pub extern "C" fn findAvailableMods() -> *mut VecCString {
+pub extern "C" fn findAvailableMods(engine_options: *mut EngineOptions) -> *mut VecCString {
+    let engine_options = unsafe_mut(engine_options);
     let mut entries: Vec<_> = Vec::new();
 
     // list all directories under assets dir
@@ -122,11 +125,10 @@ pub extern "C" fn findAvailableMods() -> *mut VecCString {
     }
 
     // list all directories under stracc home dir
-    if let Ok(mut home_dir) = find_stracciatella_home() {
-        home_dir.push("mods");
-        if let Ok(paths) = home_dir.read_dir() {
-            paths.for_each(|p| entries.push(p));
-        }
+    let mut home_dir = engine_options.stracciatella_home.clone();
+    home_dir.push("mods");
+    if let Ok(paths) = home_dir.read_dir() {
+        paths.for_each(|p| entries.push(p));
     }
 
     let mut mods: Vec<_> = entries

@@ -55,6 +55,13 @@ elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
 elif [[ "$CI_TARGET" == "mac" ]]; then
   export CONFIGURE_CMD="${CONFIGURE_CMD} -DCMAKE_TOOLCHAIN_FILE=./cmake/toolchain-macos.cmake -DCPACK_GENERATOR=Bundle"
   export BUILD_TOOL_ARGS="-- -j 4"
+
+elif [[ "$CI_TARGET" == "android" ]]; then
+  export CONFIGURE_CMD="true"
+  export BUILD_CMD="../android/gradlew"
+  export BUILD_TOOL_ARGS="-p ../android assembleDebug -PbuildDir=$(pwd)/ci-build"
+  export RUN_TESTS=false
+  export PACKAGE_NAME="ja2-stracciatella_$(./android/gradlew -q -p ./android projectVersion)-$VERSION_TAG+$(git rev-parse --short HEAD)_android.apk"
 else
   echo "unexpected target ${CI_TARGET}"
   exit 1
@@ -63,8 +70,10 @@ fi
 echo "## configure, build, package ##"
 mkdir -p ci-build
 cd ci-build
-$CONFIGURE_CMD ..
-cat ./CMakeCache.txt
+if [[ "$CI_TARGET" != "android" ]]; then
+  $CONFIGURE_CMD ..
+  cat ./CMakeCache.txt
+fi
 $BUILD_CMD $BUILD_TOOL_ARGS
 
 echo "## test ##"
@@ -86,16 +95,17 @@ if [[ "$RUN_TESTS" == "true" ]]; then
   fi
 fi
 
-if [[ "$CI_TARGET" != "linux" ]]; then
-  $BUILD_CMD --target package
-else
-  export PATH=$PATH:$HOME/linuxdeploy
+if [[ "$CI_TARGET" == "linux" ]]; then
   $BUILD_CMD --target package-appimage
+elif [[ "$CI_TARGET" == "android" ]]; then
+  cp ./outputs/apk/debug/app-debug.apk "./$PACKAGE_NAME"
+else
+  $BUILD_CMD --target package
 fi
 
 if [[ "$CI_TARGET" == "linux" ]]; then
-    $BUILD_CMD --target uninstall
-  fi
+  $BUILD_CMD --target uninstall
+fi
 
 # print sccache cache statistics
 echo "## sccache statistics"

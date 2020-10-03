@@ -6,16 +6,12 @@
 //!
 //! [`stracciatella_c_api::c::logger`]: ../../stracciatella_c_api/c/logger/index.html
 
-use std::fs::File;
 use std::path::Path;
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use log::{
-    logger, set_boxed_logger, set_max_level, warn, Level, LevelFilter, Log, Metadata,
-    MetadataBuilder, Record,
-};
-use simplelog::{
-    CombinedLogger, Config, SharedLogger, SimpleLogger, TermLogger, TerminalMode, WriteLogger,
+    logger, set_boxed_logger, set_max_level, Level, LevelFilter, Log, Metadata, MetadataBuilder,
+    Record,
 };
 
 static GLOBAL_LOG_LEVEL: AtomicUsize = AtomicUsize::new(LogLevel::Info as usize);
@@ -67,15 +63,17 @@ impl From<usize> for LogLevel {
 /// Other log levels should be set to max level in order for the filter
 /// to work properly
 struct RuntimeLevelFilter {
-    logger: Box<CombinedLogger>,
+    logger: Box<dyn Log>,
 }
 
 impl RuntimeLevelFilter {
-    fn init(logger: Box<CombinedLogger>) {
+    fn init(logger: Box<dyn Log>) {
         let filter = RuntimeLevelFilter { logger };
 
         set_max_level(LevelFilter::max());
-        set_boxed_logger(Box::new(filter)).unwrap();
+        if set_boxed_logger(Box::new(filter)).is_err() {
+            log::warn!("Error initializing logger: Logger already set");
+        }
     }
 
     fn get_global_log_level() -> Level {
@@ -110,25 +108,46 @@ impl Logger {
     /// Needs to be called once at start of the game engine. Any log messages send
     /// before will be discarded.
     pub fn init(log_file: &Path) {
-        let mut config = Config::default();
-        config.target = Some(Level::Error);
-        config.thread = None;
-        config.time_format = Some("%FT%T");
-        let logger: Box<dyn SharedLogger>;
-        if let Some(termlogger) = TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed) {
-            logger = termlogger;
-        } else {
-            logger = SimpleLogger::new(LevelFilter::max(), config); // no colors
-        }
-        match File::create(&log_file) {
-            Ok(f) => RuntimeLevelFilter::init(CombinedLogger::new(vec![
-                logger,
-                WriteLogger::new(LevelFilter::max(), config, f),
-            ])),
-            Err(err) => {
-                RuntimeLevelFilter::init(CombinedLogger::new(vec![logger]));
-                warn!("Failed to log to {:?}: {}", &log_file, err);
+        #[cfg(not(target_os = "android"))]
+        {
+            use log::warn;
+            use simplelog::{
+                CombinedLogger, Config, SharedLogger, SimpleLogger, TermLogger, TerminalMode,
+                WriteLogger,
+            };
+            use std::fs::File;
+
+            let mut config = Config::default();
+            config.target = Some(Level::Error);
+            config.thread = None;
+            config.time_format = Some("%FT%T");
+            let logger: Box<dyn SharedLogger>;
+
+            if let Some(termlogger) =
+                TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed)
+            {
+                logger = termlogger;
+            } else {
+                logger = SimpleLogger::new(LevelFilter::max(), config); // no colors
             }
+
+            match File::create(&log_file) {
+                Ok(f) => RuntimeLevelFilter::init(CombinedLogger::new(vec![
+                    logger,
+                    WriteLogger::new(LevelFilter::max(), config, f),
+                ])),
+                Err(err) => {
+                    RuntimeLevelFilter::init(CombinedLogger::new(vec![logger]));
+                    warn!("Failed to log to {:?}: {}", &log_file, err);
+                }
+            }
+        }
+        #[cfg(target_os = "android")]
+        {
+            let config = android_logger::Config::default()
+                .with_min_level(Level::Trace)
+                .with_tag("JA2");
+            RuntimeLevelFilter::init(Box::new(android_logger::AndroidLogger::new(config)));
         }
     }
 

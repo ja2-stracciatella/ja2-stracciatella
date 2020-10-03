@@ -132,9 +132,7 @@ impl fmt::Display for SlfFsFile {
 impl io::Read for SlfFsFile {
     fn read(&mut self, mut buf: &mut [u8]) -> io::Result<usize> {
         let mut slf_file = self.slf_file.lock().expect("slf_file");
-        let available = u64::from(self.length)
-            .checked_sub(self.position)
-            .unwrap_or(0);
+        let available = u64::from(self.length).saturating_sub(self.position);
         if let Ok(available) = usize::try_from(available) {
             if buf.len() > available {
                 buf = &mut buf[..available];
