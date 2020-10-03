@@ -3,13 +3,11 @@
 
 #include <string_theory/string>
 
+class  MERCListingModel;
 
 #define MERC_BUTTON_UP_COLOR			FONT_MCOLOR_WHITE
 #define MERC_BUTTON_DOWN_COLOR			FONT_MCOLOR_DKWHITE
 
-#define NUMBER_OF_MERCS				11
-#define LAST_MERC_ID				10
-#define NUMBER_OF_BAD_MERCS			5
 
 #define MERC_NUM_DAYS_TILL_FIRST_WARNING	7
 #define MERC_NUM_DAYS_TILL_ACCOUNT_SUSPENDED	9
@@ -60,7 +58,8 @@ void InitMercBackGround(void);
 void DrawMecBackGround(void);
 void RemoveMercBackGround(void);
 void DailyUpdateOfMercSite( UINT16 usDate);
-UINT8 GetMercIDFromMERCArray(UINT8 ubMercID);
+ProfileID GetProfileIDFromMERCListingIndex(UINT8 ubMercIndex);
+ProfileID GetProfileIDFromMERCListing(const MERCListingModel* listing);
 void DisplayTextForSpeckVideoPopUp(const ST::string& str);
 
 void EnterInitMercSite(void);
@@ -73,7 +72,6 @@ extern UINT16 gusMercVideoSpeckSpeech;
 
 extern UINT8 gubArrivedFromMercSubSite;
 
-extern UINT8 gubMercArray[ NUMBER_OF_MERCS ];
 extern UINT8 gubCurMercIndex;
 
 extern BOOLEAN gfJustHiredAMercMerc;
@@ -82,4 +80,5 @@ void NewMercsAvailableAtMercSiteCallBack(void);
 
 void CalcAproximateAmountPaidToSpeck(void);
 
+void SyncLastMercFromSaveGame();
 #endif

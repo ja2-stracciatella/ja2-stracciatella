@@ -11,6 +11,8 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Logger.h"
+#include <string_theory/format>
+#include <string_theory/string>
 
 AMBIENTDATA_STRUCT		gAmbData[ MAX_AMBIENT_SOUNDS ];
 INT16									gsNumAmbData = 0;
@@ -19,9 +21,7 @@ INT16									gsNumAmbData = 0;
 static BOOLEAN LoadAmbientControlFile(UINT8 ubAmbientID)
 try
 {
-	SGPFILENAME zFilename;
-	sprintf(zFilename, AMBIENTDIR "/%d.bad", ubAmbientID);
-
+	ST::string zFilename = ST::format("{}/{}.bad", AMBIENTDIR, ubAmbientID);
 	AutoSGPFile hFile(GCM->openGameResForReading(zFilename));
 
 	// READ #
@@ -32,8 +32,9 @@ try
 	{
 		FileRead(hFile, &gAmbData[cnt], sizeof(AMBIENTDATA_STRUCT));
 
-		sprintf(zFilename, AMBIENTDIR "/%s", gAmbData[cnt].zFilename);
-		strcpy(gAmbData[cnt].zFilename, zFilename);
+		zFilename = ST::format("{}/{}", AMBIENTDIR, gAmbData[cnt].zFilename);
+		if (zFilename.size() > SGPFILENAME_LEN) throw std::runtime_error("ambient file name too long");
+		strcpy(gAmbData[cnt].zFilename, zFilename.c_str());
 	}
 
 	return TRUE;

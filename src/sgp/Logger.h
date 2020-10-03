@@ -10,7 +10,7 @@ void LogMessage(bool isAssert, LogLevel level, const char* file, const ST::strin
 void LogMessage(bool isAssert, LogLevel level, const char *file, const char *format, ...);
 
 /** Get filename relative to src directory */
-#define __FILENAME__ (__FILE__ + SOURCE_PATH_SIZE)
+#define __FILENAME__ (&__FILE__[SOURCE_PATH_SIZE])
 
 /** Print debug message macro. */
 #define SLOGD(FORMAT, ...) LogMessage(false, LogLevel::Debug, __FILENAME__, FORMAT, ##__VA_ARGS__)

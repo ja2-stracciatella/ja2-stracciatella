@@ -52,6 +52,9 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	imp_attribute_bonus = imp.getOptionalInt("bonus_attribute_points", 40);
 	imp_pick_skills_directly = imp.getOptionalBool("pick_skills_directly");
 
+	merc_online_min_days = gp.getOptionalUInt("merc_online_min_days", 1);
+	merc_online_max_days = gp.getOptionalUInt("merc_online_max_days", 2);
+
 	JsonObjectReader progress = JsonObjectReader(gp.GetValue("progress"));
 	progress_event_madlab_min = progress.getOptionalInt("event_madlab_min", 35);
 	progress_event_mike_min = progress.getOptionalInt("event_mike_min", 50);

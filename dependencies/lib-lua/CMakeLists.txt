@@ -2,6 +2,10 @@ CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
 
 PROJECT(lua)
 
+if(UNIX AND NOT MINGW)
+    add_compile_definitions("LUA_USE_POSIX")
+endif()
+
 FILE(GLOB LUA_SRC "${CMAKE_CURRENT_SOURCE_DIR}/lua/src/*.c")
 LIST(REMOVE_ITEM LUA_SRC
     "${CMAKE_CURRENT_SOURCE_DIR}/lua/src/lua.c"

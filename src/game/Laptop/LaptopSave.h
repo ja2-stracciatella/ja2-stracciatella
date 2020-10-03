@@ -88,7 +88,7 @@ struct LaptopSaveInfoStruct
 	// MERC site info
 	UINT8  gubPlayersMercAccountStatus;
 	UINT32 guiPlayersMercAccountNumber;
-	UINT8  gubLastMercIndex;
+	UINT8  gubLastMercIndex; //  the index of the last hirable merc profile in M.E.R.C.
 
 
 	// Aim Site
@@ -140,7 +140,7 @@ struct LaptopSaveInfoStruct
 
 	UINT32  uiTotalMoneyPaidToSpeck;
 
-	UINT8   ubLastMercAvailableId;
+	UINT8   ubLastMercAvailableId; // deprecated
 };
 
 
