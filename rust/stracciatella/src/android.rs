@@ -1,7 +1,11 @@
+use std::path::{Path, PathBuf};
 use std::sync::RwLock;
-use std::path::PathBuf;
 
-use jni::{errors::{Result, ErrorKind}, objects::JObject, JNIEnv};
+use jni::{
+    errors::{ErrorKind, Result},
+    objects::{JObject, JString, JValue},
+    JNIEnv,
+};
 use lazy_static::lazy_static;
 use ndk::asset::AssetManager;
 
@@ -36,9 +40,7 @@ pub fn set_global_jni_env(jni_env: *mut jni::sys::JNIEnv) -> Result<()> {
 /// Gets the rust version of the current global jni env
 pub fn get_global_jni_env() -> Result<jni::JNIEnv<'static>> {
     let global_jni_env = GLOBAL_JNI_ENV.try_read().map_err(|_| ErrorKind::TryLock)?;
-    unsafe {
-        JNIEnv::from_raw(global_jni_env.0)
-    }
+    unsafe { JNIEnv::from_raw(global_jni_env.0) }
 }
 
 /// Get current application context form JNI env
@@ -109,4 +111,44 @@ pub fn get_asset_manager() -> Result<AssetManager> {
         );
         AssetManager::from_ptr(std::ptr::NonNull::new(ptr).unwrap())
     })
+}
+
+/// List directory in Assets (including directories)
+pub fn list_asset_dir(dir: &Path) -> Result<Vec<PathBuf>> {
+    let jni_env = get_global_jni_env()?;
+    let context = get_application_context()?;
+    let asset_manager = jni_env
+        .call_method(
+            context,
+            "getAssets",
+            "()Landroid/content/res/AssetManager;",
+            &[],
+        )?
+        .l()?;
+    let path = dir.to_str().map(String::from).ok_or_else(|| {
+        ErrorKind::Msg("Error casting path to string for list_asset_dir".to_owned())
+    })?;
+    let path = JValue::Object(jni_env.new_string(&path)?.into());
+    let list_contents = jni_env
+        .call_method(
+            asset_manager,
+            "list",
+            "(Ljava/lang/String;)[Ljava/lang/String;",
+            &[path],
+        )?
+        .l()?
+        .into_inner();
+
+    let n_elements = jni_env.get_array_length(list_contents)?;
+    let mut results: Vec<PathBuf> = vec![];
+    for l in 0..n_elements {
+        let l: String = jni_env
+            .get_string(JString::from(
+                jni_env.get_object_array_element(list_contents, l)?,
+            ))?
+            .into();
+        results.push(PathBuf::from(&l));
+    }
+
+    Ok(results)
 }

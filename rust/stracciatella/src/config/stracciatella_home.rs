@@ -1,7 +1,5 @@
 use std::path::PathBuf;
 
-use log::error;
-
 /// Find ja2 stracciatella configuration directory inside the user's home directory
 pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     use crate::fs::resolve_existing_components;
@@ -12,7 +10,7 @@ pub fn find_stracciatella_home() -> Result<PathBuf, String> {
     let base = match crate::android::get_android_app_dir() {
         Ok(v) => Some(v),
         Err(e) => {
-            error!("JNI Error: {}", e);
+            log::error!("JNI Error: {}", e);
             None
         }
     };
