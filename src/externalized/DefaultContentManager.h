@@ -178,6 +178,7 @@ public:
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const override;
 	virtual const std::vector<const MERCListingModel*>& getMERCListings() const override;
+	virtual const std::vector<const MercProfile*>& listMercProfiles() const override;
 	virtual const LoadingScreen* getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const override;
 	virtual const LoadingScreen* getLoadingScreen(uint8_t index) const override;
 
@@ -249,6 +250,10 @@ protected:
 	std::map<uint8_t, const RPCSmallFaceModel*> m_rpcSmallFaces;
 	std::vector<const MERCListingModel*> m_MERCListings;
 
+	// List of pre-constructed MercProfile objects; indices of elements are arbitrary (unlike gMercProfiles) and not guaranteed to follow any order
+	std::vector<const MercProfile*> m_mercProfiles;
+	std::map<uint8_t, const MercProfileInfo*> m_mercProfileInfo;
+
 	RustPointer<Vfs> m_vfs;
 
 	bool loadWeapons();
@@ -272,6 +277,14 @@ protected:
 	bool loadMercsData();
 
 	std::unique_ptr<rapidjson::Document> readJsonDataFile(const char *fileName) const;
+
+	/**
+	 * @param profileID
+	 * @return pointer to a MercProfileInfo. Never returns null.
+	 * @throw out_of_range if profileID is beyond the last defined profile
+	 * @throw runtime_error if profile does not exist
+	 */
+	const MercProfileInfo* getMercProfileInfo(uint8_t profileID) const;
 };
 
 class LibraryFileNotFoundException : public std::runtime_error

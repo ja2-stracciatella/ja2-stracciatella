@@ -32,6 +32,7 @@
 #include "army/GarrisonGroupModel.h"
 #include "army/PatrolGroupModel.h"
 #include "mercs/MERCListingModel.h"
+#include "mercs/MercProfileInfo.h"
 #include "mercs/RPCSmallFaceModel.h"
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
@@ -51,6 +52,7 @@
 
 #include "Logger.h"
 #include "Strategic_AI.h"
+#include "Soldier_Profile_Type.h"
 
 #include "rapidjson/error/en.h"
 #include <string_theory/format>
@@ -306,6 +308,8 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_undergroundSectors);
 	deleteElements(m_rpcSmallFaces);
 	deleteElements(m_MERCListings);
+	deleteElements(m_mercProfileInfo);
+	deleteElements(m_mercProfiles);
 
 	delete m_movementCosts;
 	delete m_samSitesAirControl;
@@ -1243,6 +1247,18 @@ bool DefaultContentManager::loadMercsData()
 		m_MERCListings.push_back(item);
 	}
 	MERCListingModel::validateData(m_MERCListings);
+
+	MercProfileInfo::load = [=](uint8_t p) { return this->getMercProfileInfo(p); };
+	json = readJsonDataFile("mercs-profile-info.json");
+	for (auto& element : json->GetArray())
+	{
+		auto profileInfo = MercProfileInfo::deserialize(element);
+		ProfileID profileID = profileInfo->profileID;
+		m_mercProfileInfo[profileID] = profileInfo;
+		m_mercProfiles.push_back(new MercProfile(profileID));
+	}
+	MercProfileInfo::validateData(m_mercProfileInfo);
+
 	return true;
 }
 
@@ -1406,6 +1422,22 @@ const RPCSmallFaceModel* DefaultContentManager::getRPCSmallFaceOffsets(uint8_t p
 const std::vector<const MERCListingModel*>& DefaultContentManager::getMERCListings() const
 {
 	return m_MERCListings;
+}
+
+const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t profileID) const
+{
+	auto profileInfo = m_mercProfileInfo.at(profileID);
+	if (!profileInfo) {
+		ST::string err = ST::format("MercProfileInfo is not defined at {}", profileID);
+		throw std::runtime_error(err.to_std_string());
+	}
+
+	return profileInfo;
+}
+
+const std::vector<const MercProfile*>& DefaultContentManager::listMercProfiles() const
+{
+	return m_mercProfiles;
 }
 
 const LoadingScreen* DefaultContentManager::getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const
