@@ -173,7 +173,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 	}
 
 	// Set the type of merc
-	if (pid < BIFF)
+	if (h.bWhatKindOfMerc == MERC_TYPE__AIM_MERC)
 	{
 		s->ubWhatKindOfMercAmI = MERC_TYPE__AIM_MERC;
 
@@ -200,7 +200,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 		// remember the medical deposit we PAID.  The one in his profile can increase when he levels!
 		s->usMedicalDeposit = p.sMedicalDepositAmount;
 	}
-	else if (pid <= BUBBA)
+	else if (h.bWhatKindOfMerc == MERC_TYPE__MERC)
 	{
 		s->ubWhatKindOfMercAmI = MERC_TYPE__MERC;
 
@@ -211,7 +211,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 
 		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_MERC, pid, GetWorldTotalMin(), -1, -1);
 	}
-	else if (pid <= LAST_IMP_MERC)
+	else if (h.bWhatKindOfMerc == MERC_TYPE__PLAYER_CHARACTER)
 	{
 		s->ubWhatKindOfMercAmI = MERC_TYPE__PLAYER_CHARACTER;
 	}

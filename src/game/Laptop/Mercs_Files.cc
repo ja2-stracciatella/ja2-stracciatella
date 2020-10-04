@@ -433,6 +433,7 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 	}
 
 	HireMercStruct.ubProfileID = ubMercID;
+	HireMercStruct.bWhatKindOfMerc = MERC_TYPE__MERC;
 
 
 	//HireMercStruct.fCopyProfileItemsOver = gfBuyEquipment;
