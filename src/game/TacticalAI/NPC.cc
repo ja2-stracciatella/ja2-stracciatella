@@ -35,6 +35,7 @@
 #include "Text.h"
 #include "Timer_Control.h"
 #include "WeaponModels.h"
+#include "MercProfile.h"
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -276,20 +277,21 @@ static void ConditionalInjectNPCQuoteInfoArrayIntoFile(HWFILE const f, NPCQuoteI
 static NPCQuoteInfo* LoadQuoteFile(UINT8 ubNPC)
 try
 {
-	CHAR8						zFileName[255];
+	ST::string  zFileName;
+	MercProfile profile(ubNPC);
 
 	if ( ubNPC == PETER || ubNPC == ALBERTO || ubNPC == CARLO )
 	{
 		// use a copy of Herve's data file instead!
-		sprintf(zFileName, NPCDATADIR "/%03d.npc", HERVE);
+		zFileName = ST::format("{}/{03d}.npc", NPCDATADIR, HERVE);
 	}
-	else if ( ubNPC < FIRST_RPC || (ubNPC < FIRST_NPC && gMercProfiles[ ubNPC ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED ) )
+	else if (profile.isPlayerMerc() || (profile.isRPC() && profile.isRecruited()))
 	{
-		sprintf(zFileName, NPCDATADIR "/000.npc");
+		zFileName = ST::format("{}/000.npc", NPCDATADIR);
 	}
 	else
 	{
-		sprintf(zFileName, NPCDATADIR "/%03d.npc", ubNPC);
+		zFileName = ST::format("{}/{03d}.npc", NPCDATADIR, ubNPC);
 	}
 
 	// ATE: Put some stuff i here to use a different NPC file if we are in a meanwhile.....
@@ -298,19 +300,24 @@ try
 		// If we are the queen....
 		if ( ubNPC == QUEEN )
 		{
-			sprintf(zFileName, NPCDATADIR "/%03d.npc", gubAlternateNPCFileNumsForQueenMeanwhiles[GetMeanwhileID()]);
+			zFileName = ST::format("{}/{03d}.npc", NPCDATADIR, gubAlternateNPCFileNumsForQueenMeanwhiles[GetMeanwhileID()]);
 		}
 
 		// If we are elliot....
 		if ( ubNPC == ELLIOT )
 		{
-			sprintf(zFileName, NPCDATADIR "/%03d.npc", gubAlternateNPCFileNumsForElliotMeanwhiles[GetMeanwhileID()]);
+			zFileName = ST::format("{}/{03d}.npc", NPCDATADIR, gubAlternateNPCFileNumsForElliotMeanwhiles[GetMeanwhileID()]);
 		}
 
 	}
 
 	AutoSGPFile f(GCM->openGameResForReading(zFileName));
 	return ExtractNPCQuoteInfoArrayFromFile(f);
+}
+catch (const std::exception& e)
+{
+	SLOGW(ST::format("caught exception: {}", e.what()));
+	return 0;
 }
 catch (...) { return 0; }
 
@@ -340,7 +347,7 @@ static NPCQuoteInfo* EnsureQuoteFileLoaded(UINT8 const ubNPC)
 	NPCQuoteInfo*& q         = gpNPCQuoteInfoArray[ubNPC];
 	bool           load_file = !q;
 
-	if (FIRST_RPC <= ubNPC && ubNPC < FIRST_NPC)
+	if (MercProfile(ubNPC).isRPC())
 	{
 		if (GetProfile(ubNPC).ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)
 		{ // recruited
@@ -404,15 +411,14 @@ static void RefreshNPCScriptRecord(UINT8 const ubNPC, UINT8 const record)
 	if (ubNPC == NO_PROFILE)
 	{
 		// loop through all PCs, and refresh their copy of this record
-		for (UINT8 i = 0; i != FIRST_RPC; ++i)
+		for (const MercProfile* p : GCM->listMercProfiles())
 		{
-			RefreshNPCScriptRecord(i, record);
-		}
-		for (UINT8 i = FIRST_RPC; i != FIRST_NPC; ++i)
-		{
-			if (!(GetProfile(i).ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED)) continue;
-			if (!gpBackupNPCQuoteInfoArray[i]) continue;
-			RefreshNPCScriptRecord(i, record);
+			UINT8 ubMercID = p->getNum();
+			if (p->isPlayerMerc() ||
+				(p->isRPC() && p->isRecruited() && gpBackupNPCQuoteInfoArray[ubMercID]))
+			{
+				RefreshNPCScriptRecord(ubMercID, record);
+			}
 		}
 		return;
 	}
@@ -489,16 +495,16 @@ void ShutdownNPCQuotes()
 
 void ReloadAllQuoteFiles(void)
 {
-	UINT8		ubProfile, ubLoop;
-
-	for ( ubProfile = FIRST_RPC; ubProfile < NUM_PROFILES; ubProfile++ )
+	for (const MercProfile* p : GCM->listMercProfiles())
 	{
+		if (!p->isNPCorRPC()) continue;
+
 		// zap backup if any
-		FreeNullArray(gpBackupNPCQuoteInfoArray[ubProfile]);
-		ReloadQuoteFileIfLoaded( ubProfile );
+		FreeNullArray(gpBackupNPCQuoteInfoArray[p->getNum()]);
+		ReloadQuoteFileIfLoaded(p->getNum());
 	}
 	// reload all civ quote files
-	for ( ubLoop = 0; ubLoop < NUM_CIVQUOTE_SECTORS; ubLoop++ )
+	for (UINT8 ubLoop = 0; ubLoop < NUM_CIVQUOTE_SECTORS; ubLoop++ )
 	{
 		ReloadCivQuoteFileIfLoaded( ubLoop );
 	}
@@ -988,7 +994,7 @@ check_give_money:
 				break;
 
 			default:
-				if (item_to_consider == MONEY && (ubNPC == SKYRIDER || (FIRST_RPC <= ubNPC && ubNPC < FIRST_NPC)))
+				if (item_to_consider == MONEY && (ubNPC == SKYRIDER || (ubNPC != NO_PROFILE && MercProfile(ubNPC).isRPC())))
 				{
 					MERCPROFILESTRUCT& p = GetProfile(ubNPC);
 					if (p.iBalance < 0 && q.sActionData != NPC_ACTION_DONT_ACCEPT_ITEM)
@@ -1356,21 +1362,23 @@ void ResetOncePerConvoRecordsForNPC( UINT8 ubNPC )
 
 void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 {
-	UINT8	ubLoop;
-
 	if ( gWorldSectorX == 0 || gWorldSectorY == 0 )
 	{
 		return;
 	}
 
-	for ( ubLoop = FIRST_RPC; ubLoop < NUM_PROFILES; ubLoop++ )
+	for (const MercProfile* p : GCM->listMercProfiles())
 	{
-		if ( gMercProfiles[ ubLoop ].sSectorX == gWorldSectorX &&
-				gMercProfiles[ ubLoop ].sSectorY == gWorldSectorY &&
-				gMercProfiles[ ubLoop ].bSectorZ == gbWorldSectorZ &&
-				gpNPCQuoteInfoArray[ ubLoop ] != NULL )
+		// only RPCs and NPCs
+		if (!p->isNPCorRPC()) continue;
+
+		ProfileID ubMercID = p->getNum();
+		if ( gMercProfiles[ubMercID].sSectorX == gWorldSectorX &&
+				gMercProfiles[ubMercID].sSectorY == gWorldSectorY &&
+				gMercProfiles[ubMercID].bSectorZ == gbWorldSectorZ &&
+				gpNPCQuoteInfoArray[ubMercID] != NULL )
 		{
-			ResetOncePerConvoRecordsForNPC( ubLoop );
+			ResetOncePerConvoRecordsForNPC(ubMercID);
 		}
 	}
 }

@@ -47,6 +47,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "MercProfile.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -534,8 +535,8 @@ void QuestDebugScreenInit()
 	gNpcListBox.usScrollBarWidth							= QUEST_DBS_SCROLL_BAR_WIDTH;
 
 	gNpcListBox.sCurSelectedItem							= -1;
-	gNpcListBox.usItemDisplayedOnTopOfList		= 0;//FIRST_RPC;
-	gNpcListBox.usStartIndex									= 0;//FIRST_RPC;
+	gNpcListBox.usItemDisplayedOnTopOfList		= 0;
+	gNpcListBox.usStartIndex									= 0;
 	gNpcListBox.usMaxArrayIndex								= NUM_PROFILES;
 	gNpcListBox.usNumDisplayedItems						= QUEST_DBS_MAX_DISPLAYED_ENTRIES;
 	gNpcListBox.usMaxNumDisplayedItems				= QUEST_DBS_MAX_DISPLAYED_ENTRIES;
@@ -1459,33 +1460,20 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 			if( fMouseRegionsCreated )
 				break;
 
-			//if the are more entries then can be displayed
-//			if( gpActiveListBox->usMaxArrayIndex > gpActiveListBox->usNumDisplayedItems )
-//			{
-				usPosX = gpActiveListBox->usScrollPosX;
-				usPosY = gpActiveListBox->usScrollPosY;
-
-				//Set the initial value for the box
-//				if( gpActiveListBox == &gNpcListBox )
-//					gpActiveListBox->sCurSelectedItem = FIRST_RPC;
-//				else
-//					gpActiveListBox->sCurSelectedItem = 1;
+			usPosX = gpActiveListBox->usScrollPosX;
+			usPosY = gpActiveListBox->usScrollPosY;
 
 
-				// create the scroll regions
-				for( i=0; i< gpActiveListBox->usNumDisplayedItems; i++)
-				{
-					MSYS_DefineRegion(&gSelectedNpcListRegion[i], usPosX, usPosY, usPosX + gpActiveListBox->usScrollWidth, usPosY + usFontHeight, MSYS_PRIORITY_HIGH + 20, CURSOR_WWW, SelectNpcListMovementCallBack, SelectNpcListRegionCallBack);
-					MSYS_SetRegionUserData( &gSelectedNpcListRegion[ i ], 0, i);
+			// create the scroll regions
+			for( i=0; i< gpActiveListBox->usNumDisplayedItems; i++)
+			{
+				MSYS_DefineRegion(&gSelectedNpcListRegion[i], usPosX, usPosY, usPosX + gpActiveListBox->usScrollWidth, usPosY + usFontHeight, MSYS_PRIORITY_HIGH + 20, CURSOR_WWW, SelectNpcListMovementCallBack, SelectNpcListRegionCallBack);
+				MSYS_SetRegionUserData( &gSelectedNpcListRegion[ i ], 0, i);
 
-					usPosY += usFontHeight;
-				}
+				usPosY += usFontHeight;
+			}
 
-				fMouseRegionsCreated = TRUE;
-//			}
-//			else
-//				fMouseRegionsCreated = FALSE;
-
+			fMouseRegionsCreated = TRUE;
 
 			//Scroll bars
 			usPosX = gpActiveListBox->usScrollPosX + gpActiveListBox->usScrollWidth;
@@ -2609,7 +2597,6 @@ static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, INT32 rea
 
 			gNpcListBox.sCurSelectedItem							= gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ];
 			gNpcListBox.usItemDisplayedOnTopOfList		= gNpcListBox.sCurSelectedItem;
-//			gNpcListBox.usStartIndex									= FIRST_RPC;
 
 			gNpcListBox.usMaxArrayIndex								= NUM_PROFILES;
 			gNpcListBox.usNumDisplayedItems						= QUEST_DBS_MAX_DISPLAYED_ENTRIES;
@@ -2660,7 +2647,8 @@ static void AddNPCsInSectorToArray(void)
 	CFOR_EACH_SOLDIER(pSoldier)
 	{
 		//if soldier is a NPC, add him to the local NPC array
-		if (pSoldier->ubProfile >= FIRST_RPC && pSoldier->ubProfile < NUM_PROFILES)
+		MercProfile profile(pSoldier->ubProfile);
+		if (profile.isNPC() || profile.isRPC() || profile.isVehicle())
 		{
 			gubCurrentNpcInSector[i++] = pSoldier->ubProfile;
 		}
@@ -2827,7 +2815,7 @@ static void RefreshAllNPCInventory(void)
 	FOR_EACH_SOLDIER(s)
 	{
 		//is the merc a rpc or npc
-		if (s->ubProfile >= FIRST_RPC)
+		if (MercProfile(s->ubProfile).isNPCorRPC())
 		{
 			//refresh the mercs inventory
 			for ( usItemCnt = 0; usItemCnt< NUM_INV_SLOTS; usItemCnt++ )
@@ -3097,7 +3085,7 @@ static UINT8 WhichPanelShouldTalkingMercUse(void)
 		return( QDS_NO_PANEL );
 	}
 
-	if( gTalkingMercSoldier->ubProfile < FIRST_RPC )
+	if (MercProfile(gTalkingMercSoldier->ubProfile).isPlayerMerc())
 	{
 		return( QDS_REGULAR_PANEL );
 	}

@@ -23,7 +23,7 @@ const char* Content::GetDialogueTextFilename(const MercProfile &profile,
 			sprintf(zFileName, NPCDATADIR "/d_%03d.edt", profile.getNum());
 		}
 	}
-	else if ( profile.getNum() >= FIRST_RPC
+	else if (profile.isNPCorRPC()
 			&& ( !profile.isRecruited()
 				|| isCurrentlyTalking
 				|| profile.isForcedNPCQuote()))
@@ -69,7 +69,7 @@ const char* Content::GetDialogueVoiceFilename(const MercProfile &profile, uint16
 			sprintf(zFileName, NPC_SPEECHDIR "/d_%03d_%03d.wav", profile.getNum(), usQuoteNum);
 		}
 	}
-	else if ( profile.getNum() >= FIRST_RPC
+	else if (profile.isNPCorRPC()
 			&& ( !profile.isRecruited()
 				|| isCurrentlyTalking
 				|| profile.isForcedNPCQuote()))
@@ -91,7 +91,7 @@ const char* Content::GetDialogueVoiceFilename(const MercProfile &profile, uint16
 		{
 			if(isRussianVersion)
 			{
-				if (profile.getNum() >= FIRST_RPC && profile.isRecruited())
+				if (profile.isNPCorRPC() && profile.isRecruited())
 				{
 					sprintf(zFileName, SPEECHDIR "/r_%03d_%03d.wav", profile.getNum(), usQuoteNum);
 				}

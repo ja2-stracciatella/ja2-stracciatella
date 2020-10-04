@@ -38,6 +38,7 @@
 #include "Map_Screen_Interface_TownMine_Info.h"
 #include "MapScreen.h"
 #include "Merc_Contract.h"
+#include "MercProfile.h"
 #include "Message.h"
 #include "MessageBoxScreen.h"
 #include "MouseSystem.h"
@@ -2539,7 +2540,7 @@ INT16 GetTownTrainPtsForCharacter(const SOLDIERTYPE* pTrainer, UINT16* pusMaxPts
 	}
 
 	// RPCs get a small training bonus for being more familiar with the locals and their customs/needs than outsiders
-	if( pTrainer->ubProfile >= FIRST_RPC )
+	if (MercProfile(pTrainer->ubProfile).isNPCorRPC())
 	{
 		bTrainingBonus += RPC_BONUS_TO_TRAIN;
 	}

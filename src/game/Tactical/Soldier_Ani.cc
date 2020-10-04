@@ -71,6 +71,7 @@
 #include "GameInstance.h"
 #include "WeaponModels.h"
 #include "Logger.h"
+#include "MercProfile.h"
 
 #define NO_JUMP			0
 #define MAX_ANIFRAMES_PER_FLASH	2
@@ -1340,7 +1341,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// CODE: GIVE ITEM
 					SoldierGiveItemFromAnimation( pSoldier );
-					if (pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile >= FIRST_NPC )
+					if (pSoldier->ubProfile != NO_PROFILE && MercProfile(pSoldier->ubProfile).isNPC())
 					{
 						TriggerNPCWithGivenApproach(pSoldier->ubProfile, APPROACH_DONE_GIVING_ITEM);
 					}

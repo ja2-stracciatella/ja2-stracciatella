@@ -8,8 +8,6 @@
 
 
 #define NUM_PROFILES						170
-#define FIRST_RPC						57
-#define FIRST_NPC						75
 
 #define NAME_LENGTH						30
 #define NICKNAME_LENGTH					10

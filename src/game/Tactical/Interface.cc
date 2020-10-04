@@ -51,6 +51,7 @@
 #include "Video.h"
 #include "Items.h"
 #include "GameScreen.h"
+#include "MercProfile.h"
 
 #include "UILayout.h"
 
@@ -1114,7 +1115,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 
 		PrintAboveGuy(sXPos, raise_name ? sYPos - 10 : sYPos, s.name);
 
-		if (s.ubProfile < FIRST_RPC ||
+		if (MercProfile(s.ubProfile).isPlayerMerc() ||
 			RPC_RECRUITED(&s) ||
 			AM_AN_EPC(&s) ||
 			s.uiStatusFlags & SOLDIER_VEHICLE)

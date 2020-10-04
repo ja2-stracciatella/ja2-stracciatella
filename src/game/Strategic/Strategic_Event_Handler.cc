@@ -29,6 +29,8 @@
 #include "GameInstance.h"
 #include "policy/GamePolicy.h"
 #include "strategic/NpcPlacementModel.h"
+#include "MercProfile.h"
+#include "MercProfileInfo.h"
 
 
 UINT32 guiPabloExtraDaysBribed = 0;
@@ -713,12 +715,15 @@ void HandleEarlyMorningEvents( void )
 	UINT32					uiAmount;
 
 	// loop through all *NPCs* and reset "default response used recently" flags
-	for (cnt = FIRST_RPC; cnt < NUM_PROFILES; cnt++)
+	for (const MercProfile* profile : GCM->listMercProfiles())
 	{
-		gMercProfiles[cnt].bFriendlyOrDirectDefaultResponseUsedRecently = FALSE;
-		gMercProfiles[cnt].bRecruitDefaultResponseUsedRecently = FALSE;
-		gMercProfiles[cnt].bThreatenDefaultResponseUsedRecently = FALSE;
-		gMercProfiles[cnt].ubMiscFlags2 &= (~PROFILE_MISC_FLAG2_BANDAGED_TODAY);
+		if (!profile->isNPCorRPC()) continue;
+
+		MERCPROFILESTRUCT& p = profile->getStruct();
+		p.bFriendlyOrDirectDefaultResponseUsedRecently = FALSE;
+		p.bRecruitDefaultResponseUsedRecently = FALSE;
+		p.bThreatenDefaultResponseUsedRecently = FALSE;
+		p.ubMiscFlags2 &= (~PROFILE_MISC_FLAG2_BANDAGED_TODAY);
 	}
 	// reset Father Walker's drunkenness level!
 	gMercProfiles[ FATHER ].bNPCData = (INT8) Random( 4 );

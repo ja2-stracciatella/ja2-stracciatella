@@ -23,6 +23,7 @@
 #include "Map_Screen_Interface_Bottom.h"
 #include "MapScreen.h"
 #include "Meanwhile.h"
+#include "MercProfile.h"
 #include "Message.h"
 #include "Music_Control.h"
 #include "Overhead.h"
@@ -3611,14 +3612,18 @@ bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 const x, INT16 const
 	// Skip SAM sites.
 	if (IsThisSectorASAMSector(x, y, z)) return false;
 
-	for (UINT8 pid = FIRST_RPC; pid != NUM_PROFILES; ++pid)
+	for (const MercProfile* profile : GCM->listMercProfiles())
 	{
-		MERCPROFILESTRUCT const& p = GetProfile(pid);
+		// Skip player mercs
+		if (profile->isPlayerMerc())       continue;
+
+		MERCPROFILESTRUCT const& p = profile->getStruct();
+
 		// Skip dead.
 		if (p.bMercStatus == MERC_IS_DEAD) continue;
 		if (p.bLife <= 0)                  continue;
  		// Skip vehicles.
-		if (PROF_HUMMER <= pid && pid <= PROF_HELICOPTER) continue;
+		if (profile->isVehicle()) continue;
 
 		// In this sector?
 		if (p.sSectorX != x || p.sSectorY != y || p.bSectorZ != z) continue;

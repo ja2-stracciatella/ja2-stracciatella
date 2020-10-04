@@ -81,6 +81,7 @@
 #include "WeaponModels.h"
 #include "policy/GamePolicy.h"
 #include "Logger.h"
+#include "MercProfile.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -3468,11 +3469,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					EndItemPointer( );
 
 					// If we are giving it to somebody not on our team....
-					if (tgt->ubProfile < FIRST_RPC || RPC_RECRUITED(tgt))
-					{
-
-					}
-					else
+					if (!MercProfile(tgt->ubProfile).isPlayerMerc() && !RPC_RECRUITED(tgt))
 					{
 						SetEngagedInConvFromPCAction( gpItemPointerSoldier );
 					}

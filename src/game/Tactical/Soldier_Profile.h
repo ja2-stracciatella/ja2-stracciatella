@@ -188,9 +188,6 @@ enum NPCIDs
 	NPC169
 };
 
-#define AIM_AND_MERC_MERCS BUBBA // A.I.M. is 0-39, M.E.R.C.s are 40-50
-#define LAST_IMP_MERC (MIGUEL - 1)
-
 BOOLEAN IsProfileIdAnAimOrMERCMerc(UINT8 ubProfileID);
 
 void LoadMercProfiles();

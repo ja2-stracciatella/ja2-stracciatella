@@ -89,6 +89,7 @@
 #include "Soldier.h"
 #include "WeaponModels.h"
 #include "Logger.h"
+#include "MercProfile.h"
 
 #include <string_theory/string>
 
@@ -5872,7 +5873,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 	}
 
 	if (attacker != NULL && attacker->bTeam == OUR_TEAM && pSoldier->ubProfile != NO_PROFILE &&
-		pSoldier->ubProfile >= FIRST_RPC)
+		MercProfile(pSoldier->ubProfile).isNPCorRPC())
 	{
 		gMercProfiles[pSoldier->ubProfile].ubMiscFlags |= PROFILE_MISC_FLAG_WOUNDEDBYPLAYER;
 		if (pSoldier->ubProfile == PACOS)
@@ -7022,7 +7023,7 @@ void EVENT_SoldierBeginFirstAid( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 ubD
 		// OK, check if we should play quote...
 		if ( pTSoldier->bTeam != OUR_TEAM )
 		{
-			if ( pTSoldier->ubProfile != NO_PROFILE && pTSoldier->ubProfile >= FIRST_RPC && !RPC_RECRUITED( pTSoldier ) )
+			if (pTSoldier->ubProfile != NO_PROFILE && MercProfile(pTSoldier->ubProfile).isNPCorRPC() && !RPC_RECRUITED(pTSoldier))
 			{
 				fRefused = PCDoesFirstAidOnNPC( pTSoldier->ubProfile );
 			}

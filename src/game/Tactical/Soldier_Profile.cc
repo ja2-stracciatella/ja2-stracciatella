@@ -50,6 +50,7 @@
 #include "GameInstance.h"
 #include "content/ContentMercs.h"
 #include "WeaponModels.h"
+#include "MercProfile.h"
 
 extern BOOLEAN gfProfileDataLoaded;
 
@@ -467,13 +468,14 @@ void MakeRemainingAssassinsTougher()
 
 static void StartSomeMercsOnAssignment(void)
 {
-	UINT32 uiCnt;
 	UINT32 uiChance;
 
 	// some randomly picked A.I.M. mercs will start off "on assignment" at the beginning of each new game
-	for (uiCnt = 0; uiCnt <= AIM_AND_MERC_MERCS; uiCnt++)
+	for (auto profile : GCM->listMercProfiles())
 	{
-		MERCPROFILESTRUCT& p = GetProfile(uiCnt);
+		if (!profile->isAIMMerc() && !profile->isMERCMerc()) continue;
+
+		MERCPROFILESTRUCT& p = profile->getStruct();
 
 		// calc chance to start on assignment
 		uiChance = 5 * p.bExpLevel;
@@ -917,7 +919,7 @@ void UpdateSoldierPointerDataIntoProfile()
 		SOLDIERTYPE const& s = **i;
 		if (s.ubProfile == NO_PROFILE) continue;
 		// If we are above player mercs
-		if (s.ubProfile < FIRST_RPC)   continue;
+		if (MercProfile(s.ubProfile).isPlayerMerc()) continue;
 
 		MERCPROFILESTRUCT& p = GetProfile(s.ubProfile);
 		p.bLife         = s.bLife;
@@ -1074,5 +1076,6 @@ BOOLEAN IsProfileIdAnAimOrMERCMerc(UINT8 ubProfileID)
 {
 	// AIM: ubProfileID < BIFF
 	// MERC: ubProfileID >= BIFF && ubProfileID <= BUBBA
-	return ubProfileID <= AIM_AND_MERC_MERCS;
+	MercProfile p(ubProfileID);
+	return p.isAIMMerc() || p.isMERCMerc();
 }

@@ -77,6 +77,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "Soldier.h"
+#include "MercProfile.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -4490,7 +4491,7 @@ BOOLEAN IsValidTalkableNPC(const SOLDIERTYPE* pSoldier, BOOLEAN fGive, BOOLEAN f
 		}
 	}
 
-	if (pSoldier->ubProfile != NO_PROFILE && pSoldier->ubProfile >= FIRST_RPC &&
+	if (pSoldier->ubProfile != NO_PROFILE && MercProfile(pSoldier->ubProfile).isNPCorRPC() &&
 		!RPC_RECRUITED(pSoldier) && !AM_AN_EPC(pSoldier))
 	{
 		fValidGuy = TRUE;

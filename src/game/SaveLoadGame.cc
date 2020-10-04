@@ -65,6 +65,7 @@
 #include "Meanwhile.h"
 #include "Merc_Contract.h"
 #include "Merc_Hiring.h"
+#include "MercProfile.h"
 #include "Mercs.h"
 #include "MercTextBox.h"
 #include "MemMan.h"
@@ -1201,8 +1202,11 @@ void IMPSavedProfileLoadInventory(ST::string nickname, SOLDIERTYPE *pSoldier)
 
 void SaveIMPPlayerProfiles()
 {
-	for (int i = PLAYER_GENERATED_CHARACTER_ID; i <= LAST_IMP_MERC; i++)
+	for (const MercProfile* p : GCM->listMercProfiles())
 	{
+		if (!p->isIMPMerc()) continue;
+
+		ProfileID i = p->getNum();
 		MERCPROFILESTRUCT* const mercprofile = &gMercProfiles[i];
 		if (mercprofile->bLife == 0) continue;
 		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(i);
@@ -1210,7 +1214,7 @@ void SaveIMPPlayerProfiles()
 		if (pSoldier->bTeam != OUR_TEAM) continue;
 		if (pSoldier->ubWhatKindOfMercAmI != MERC_TYPE__PLAYER_CHARACTER) continue;
 
-		SGPFile *f = IMPSavedProfileOpenFileForWrite(mercprofile->zNickname.c_str());
+		SGPFile *f = IMPSavedProfileOpenFileForWrite(mercprofile->zNickname);
 		if (!f) continue;
 
 		mercprofile->ubSuspiciousDeath = i - PLAYER_GENERATED_CHARACTER_ID; // save voice_id, field not used for resuscitated merc
@@ -2314,17 +2318,19 @@ static void TruncateStrategicGroupSizes(void)
 
 static void UpdateMercMercContractInfo(void)
 {
-	UINT8	ubCnt;
-
-	for( ubCnt=BIFF; ubCnt<= BUBBA; ubCnt++ )
+	for (const MercProfile* profile : GCM->listMercProfiles())
 	{
-		SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubCnt);
+		// only M.E.R.C. mercs
+		if (!profile->isMERCMerc()) continue;
+
+		ProfileID    const ubMercID = profile->getNum();
+		SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 
 		//if the merc is on the team
 		if( pSoldier == NULL )
 			continue;
 
-		gMercProfiles[ ubCnt ].iMercMercContractLength = pSoldier->iTotalContractLength;
+		gMercProfiles[ubMercID].iMercMercContractLength = pSoldier->iTotalContractLength;
 
 		pSoldier->iTotalContractLength = 0;
 	}

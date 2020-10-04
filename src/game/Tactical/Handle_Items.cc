@@ -71,6 +71,7 @@
 #include "GameInstance.h"
 #include "Soldier.h"
 #include "Logger.h"
+#include "MercProfile.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -2338,7 +2339,6 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 {
 	INT8 bInvPos;
 	OBJECTTYPE TempObject;
-	UINT8 ubProfile;
 
 	UINT16 usItemNum;
 	BOOLEAN fToTargetPlayer = FALSE;
@@ -2437,7 +2437,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 		}
 
 		// OK< FOR NOW HANDLE NPC's DIFFERENT!
-		ubProfile = pTSoldier->ubProfile;
+		MercProfile profile(pTSoldier->ubProfile);
 
 		// 1 ) PLayer to NPC = NPC
 		// 2 ) Player to player = player;
@@ -2446,7 +2446,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 
 		// Switch on target...
 		// Are we a player dude.. ( target? )
-		if ( ubProfile < FIRST_RPC || RPC_RECRUITED( pTSoldier ) )
+		if (profile.isPlayerMerc() || RPC_RECRUITED(pTSoldier))
 		{
 			fToTargetPlayer = TRUE;
 		}

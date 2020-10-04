@@ -36,6 +36,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "ShippingDestinationModel.h"
+#include "MercProfile.h"
 
 #include <string_theory/string>
 
@@ -772,8 +773,9 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 
 	ST::string msg;
 	MessageBoxFlags flags;
+	MercProfile     profile(s.ubProfile);
 	INT8 const      sex = GetProfile(s.ubProfile).bSex;
-	if (s.ubProfile < FIRST_RPC || FIRST_NPC <= s.ubProfile)
+	if (!profile.isRPC())
 	{ // The character is not an RPC
 		INT16 const elsewhere =
 			!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(AIRPORT_SECTOR)].fEnemyControlled ? AIRPORT_SECTOR :
