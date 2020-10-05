@@ -75,6 +75,8 @@
 // Boost probably provides this functionality
 #define NEW_TEMP_DIR "temp"
 
+const MercProfileInfo EMPTY_MERC_PROFILE_INFO;
+
 static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType, SGPFile* File, UINT32 seek_chars, UINT32 read_chars)
 {
 	FileSeek(File, seek_chars * 2, FILE_SEEK_FROM_START);
@@ -1424,15 +1426,15 @@ const std::vector<const MERCListingModel*>& DefaultContentManager::getMERCListin
 	return m_MERCListings;
 }
 
-const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t profileID) const
+const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t const profileID) const
 {
-	auto profileInfo = m_mercProfileInfo.at(profileID);
-	if (!profileInfo) {
-		ST::string err = ST::format("MercProfileInfo is not defined at {}", profileID);
-		throw std::runtime_error(err.to_std_string());
+	if (m_mercProfileInfo.find(profileID) != m_mercProfileInfo.end())
+	{
+		return m_mercProfileInfo.at(profileID);
 	}
-
-	return profileInfo;
+	
+	SLOGD(ST::format("MercProfileInfo is not defined at {}", profileID));
+	return &EMPTY_MERC_PROFILE_INFO;
 }
 
 const std::vector<const MercProfile*>& DefaultContentManager::listMercProfiles() const

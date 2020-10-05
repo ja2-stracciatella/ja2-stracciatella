@@ -20,6 +20,9 @@ enum class MercType
 class MercProfileInfo
 {
 public:
+	// Creates an empty instance, of ID NO_PROFILE and type NOT_USED
+	MercProfileInfo();
+
 	const uint8_t profileID;
 	const ST::string internalName;
 	const MercType mercType;

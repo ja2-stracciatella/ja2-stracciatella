@@ -280,9 +280,7 @@ protected:
 
 	/**
 	 * @param profileID
-	 * @return pointer to a MercProfileInfo. Never returns null.
-	 * @throw out_of_range if profileID is beyond the last defined profile
-	 * @throw runtime_error if profile does not exist
+	 * @return pointer to a MercProfileInfo. Never returns null. A pointer to the empty instance is returned if not defined in JSON.
 	 */
 	const MercProfileInfo* getMercProfileInfo(uint8_t profileID) const;
 };

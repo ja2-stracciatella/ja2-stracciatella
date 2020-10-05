@@ -27,6 +27,11 @@ MercProfileInfo::MercProfileInfo(uint8_t profileID_, const char* internalName_, 
 {
 }
 
+MercProfileInfo::MercProfileInfo()
+	: profileID(NO_PROFILE), internalName(""), mercType(MercType::NOT_USED)
+{
+}
+
 MercProfileInfo *MercProfileInfo::deserialize(const rapidjson::Value &json)
 {
 	JsonObjectReader r(json);
