@@ -1,11 +1,8 @@
 #include "Dialogs.h"
-
-#include <stdio.h>
-
-#include "game/Directories.h"
-#include "game/Tactical/Soldier_Profile.h"
-#include "game/Tactical/Soldier_Profile_Type.h"
+#include "Directories.h"
 #include "MercProfile.h"
+#include "Soldier_Profile.h"
+#include <stdio.h>
 
 const char* Content::GetDialogueTextFilename(const MercProfile &profile,
 						bool useAlternateDialogueFile,

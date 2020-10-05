@@ -1,6 +1,7 @@
 #ifndef __AIMMEMBERS_H_
 #define __AIMMEMBERS_H_
 
+#include "JA2Types.h"
 #include <string_theory/string>
 
 

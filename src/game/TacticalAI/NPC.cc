@@ -19,6 +19,7 @@
 #include "Items.h"
 #include "LoadSaveData.h"
 #include "Meanwhile.h"
+#include "MercProfile.h"
 #include "Message.h"
 #include "OppList.h"
 #include "Overhead.h"
@@ -35,7 +36,6 @@
 #include "Text.h"
 #include "Timer_Control.h"
 #include "WeaponModels.h"
-#include "MercProfile.h"
 #include <string_theory/format>
 #include <string_theory/string>
 
