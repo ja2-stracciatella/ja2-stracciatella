@@ -4,10 +4,10 @@
 #include <set>
 #include <string_theory/format>
 
-MERCListingModel::MERCListingModel(uint8_t index_, uint8_t profileID_, 
+MERCListingModel::MERCListingModel(uint8_t index_, uint8_t profileID_, uint8_t bioIndex_,
 	uint32_t minTotalSpending_, uint32_t minDays_, 
 	std::vector<SpeckQuote> quotes_
-	) : index(index_), profileID(profileID_),
+	) : index(index_), profileID(profileID_), bioIndex(bioIndex_),
 	    minTotalSpending(minTotalSpending_), minDays(minDays_),
 	    quotes(quotes_) {}
 
@@ -53,6 +53,7 @@ MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::
 	return new MERCListingModel(
 		index,
 		r.GetUInt("profileID"),
+		r.GetUInt("bioIndex"),
 		r.getOptionalInt("minTotalSpending"), 
 		r.getOptionalInt("minDays"),
 		quotes
