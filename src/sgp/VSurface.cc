@@ -217,7 +217,7 @@ SGPVSurfaceAuto* AddVideoSurfaceFromFile(const char* const Filename)
 		UINT8*  const dst   = l.Buffer<UINT8>();
 		UINT16  const pitch = l.Pitch() / (dst_bpp / 8); // pitch in pixels
 		SGPBox  const box   = { 0, 0, img->usWidth, img->usHeight };
-		BOOLEAN const Ret   = CopyImageToBuffer(img, buffer_bpp, dst, pitch, vs->Height(), 0, 0, &box);
+		BOOLEAN const Ret   = CopyImageToBuffer(img.get(), buffer_bpp, dst, pitch, vs->Height(), 0, 0, &box);
 		if (!Ret)
 		{
 			SLOGE("Error Occured Copying SGPImage to video surface");
@@ -415,15 +415,15 @@ void BltStretchVideoSurface(SGPVSurface* const dst, SGPVSurface const* const src
 
 void BltVideoSurfaceOnce(SGPVSurface* const dst, const char* const filename, INT32 const x, INT32 const y)
 {
-	SGP::AutoPtr<SGPVSurfaceAuto> src(AddVideoSurfaceFromFile(filename));
-	BltVideoSurface(dst, src, x, y, NULL);
+	std::unique_ptr<SGPVSurfaceAuto> src(AddVideoSurfaceFromFile(filename));
+	BltVideoSurface(dst, src.get(), x, y, NULL);
 }
 
 /** Draw image on the video surface stretching the image if necessary. */
 void BltVideoSurfaceOnceWithStretch(SGPVSurface* const dst, const char* const filename)
 {
-	SGP::AutoPtr<SGPVSurfaceAuto> src(AddVideoSurfaceFromFile(filename));
-	FillVideoSurfaceWithStretch(dst, src);
+	std::unique_ptr<SGPVSurfaceAuto> src(AddVideoSurfaceFromFile(filename));
+	FillVideoSurfaceWithStretch(dst, src.get());
 }
 
 /** Fill video surface with another one with stretch. */

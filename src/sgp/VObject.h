@@ -1,9 +1,9 @@
 #ifndef __VOBJECT_H
 #define __VOBJECT_H
 
-#include "AutoPtr.h"
 #include "Buffer.h"
 #include "Types.h"
+#include <memory>
 
 
 // Defines for HVOBJECT limits
@@ -131,6 +131,6 @@ void BltVideoObjectOutlineShadow(SGPVSurface* dst, SGPVObject const* src, UINT16
 /* Loads a video object, blits it once and frees it */
 void BltVideoObjectOnce(SGPVSurface* dst, char const* filename, UINT16 region, INT32 x, INT32 y);
 
-typedef SGP::AutoPtr<SGPVObject> AutoSGPVObject;
+typedef std::unique_ptr<SGPVObject> AutoSGPVObject;
 
 #endif

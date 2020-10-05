@@ -110,7 +110,7 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 		img->fFlags |= IMAGE_BITMAPDATA;
 	}
 
-	return img.Release();
+	return img.release();
 }
 
 

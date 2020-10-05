@@ -25,7 +25,7 @@ try
 {
 	// Add tile surface
 	AutoSGPImage   hImage(CreateImage(cFilename, IMAGE_ALLDATA));
-	AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage));
+	AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage.get()));
 
 	// Load structure data, if any.
 	// Start by hacking the image filename into that for the structure data
@@ -43,7 +43,7 @@ try
 			throw std::runtime_error("Structure file error");
 		}
 
-		AddZStripInfoToVObject(hVObject, pStructureFileRef, FALSE, 0);
+		AddZStripInfoToVObject(hVObject.get(), pStructureFileRef, FALSE, 0);
 	}
 
 	SGP::PODObj<TILE_IMAGERY> pTileSurf;
@@ -64,7 +64,7 @@ try
 		pTileSurf->pAuxData = NULL;
 	}
 
-	pTileSurf->vo                = hVObject.Release();
+	pTileSurf->vo                = hVObject.release();
 	pTileSurf->pStructureFileRef = pStructureFileRef.Release();
 	return pTileSurf.Release();
 }

@@ -87,7 +87,7 @@ static void LoadCursorData(UINT32 uiCursorIndex)
 
 			AutoSGPImage hImage(CreateImage(CFData->Filename, IMAGE_ALLDATA));
 
-			CFData->hVObject = AddVideoObjectFromHImage(hImage);
+			CFData->hVObject = AddVideoObjectFromHImage(hImage.get());
 
 			// Check for animated tile
 			if (hImage->uiAppDataSize > 0)

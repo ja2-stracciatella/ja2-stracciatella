@@ -272,7 +272,7 @@ static
 SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
 {
 	AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
-	return AddStandardVideoObjectFromHImage(hImage);
+	return AddStandardVideoObjectFromHImage(hImage.get());
 }
 
 
@@ -333,7 +333,7 @@ void BltVideoObjectOutlineShadow(SGPVSurface* const dst, const SGPVObject* const
 void BltVideoObjectOnce(SGPVSurface* const dst, char const* const filename, UINT16 const region, INT32 const x, INT32 const y)
 {
 	AutoSGPVObject vo(AddVideoObjectFromFile(filename));
-	BltVideoObject(dst, vo, region, x, y);
+	BltVideoObject(dst, vo.get(), region, x, y);
 }
 
 
