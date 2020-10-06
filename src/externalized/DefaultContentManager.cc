@@ -408,7 +408,7 @@ ST::string DefaultContentManager::getRadarMapResourceName(const ST::string &mapN
 }
 
 /** Get tileset resource name. */
-ST::string DefaultContentManager::getTilesetResourceName(int number, ST::string fileName) const
+ST::string DefaultContentManager::getTilesetResourceName(int number, const ST::string& fileName) const
 {
 	return ST::format("{}/{}/{}", TILESETSDIR, number, fileName);
 }
@@ -445,21 +445,21 @@ std::vector<ST::string> DefaultContentManager::getAllTilecache() const
 }
 
 /** Open temporary file for writing. */
-SGPFile* DefaultContentManager::openTempFileForWriting(const char* filename, bool truncate) const
+SGPFile* DefaultContentManager::openTempFileForWriting(const ST::string& filename, bool truncate) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	return FileMan::openForWriting(path, truncate);
 }
 
 /** Open temporary file for appending. */
-SGPFile* DefaultContentManager::openTempFileForAppend(const char* filename) const
+SGPFile* DefaultContentManager::openTempFileForAppend(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	return FileMan::openForAppend(path);
 }
 
 /* Open temporary file for reading. */
-SGPFile* DefaultContentManager::openTempFileForReading(const char* filename) const
+SGPFile* DefaultContentManager::openTempFileForReading(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	RustPointer<File> file(File_open(path.c_str(), FILE_OPEN_READ));
@@ -474,7 +474,7 @@ SGPFile* DefaultContentManager::openTempFileForReading(const char* filename) con
 }
 
 /** Delete temporary file. */
-void DefaultContentManager::deleteTempFile(const char* filename) const
+void DefaultContentManager::deleteTempFile(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	FileDelete(path);
@@ -487,7 +487,7 @@ void DefaultContentManager::deleteTempFile(const char* filename) const
  * settings directory) and file is present.
  * If file is not found, try to find it relatively to 'Data' directory.
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
-SGPFile* DefaultContentManager::openGameResForReading(const char* filename) const
+SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename) const
 {
 	{
 		RustPointer<File> file = FileMan::openFileForReading(filename);
@@ -498,7 +498,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
 		}
 	}
 
-	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename));
+	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
 	if (!vfile)
 	{
 		RustPointer<char> err{getRustError()};
@@ -525,13 +525,8 @@ SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& 
 	return FileMan::getSGPFileFromFile(file.release());
 }
 
-SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename) const
-{
-	return openGameResForReading(filename.c_str());
-}
-
 /* Checks if a game resource exists. */
-bool DefaultContentManager::doesGameResExists(char const* filename) const
+bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
 {
 	if(FileMan::checkFileExistance(m_externalizedDataPath, filename))
 	{
@@ -539,26 +534,21 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 	}
 	else
 	{
-		RustPointer<File> file(File_open(filename, FILE_OPEN_READ));
+		RustPointer<File> file(File_open(filename.c_str(), FILE_OPEN_READ));
 		if (!file)
 		{
 			char path[512];
-			snprintf(path, lengthof(path), "%s/%s", m_dataDir.c_str(), filename);
+			snprintf(path, lengthof(path), "%s/%s", m_dataDir.c_str(), filename.c_str());
 			file.reset(File_open(path, FILE_OPEN_READ));
 			if (!file)
 			{
-				RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename));
+				RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
 				return static_cast<bool>(vfile);
 			}
 		}
 
 		return true;
 	}
-}
-
-bool DefaultContentManager::doesGameResExists(const ST::string &filename) const
-{
-	return doesGameResExists(filename.c_str());
 }
 
 ST::string DefaultContentManager::getScreenshotFolder() const
@@ -578,7 +568,7 @@ ST::string DefaultContentManager::getSavedGamesFolder() const
 }
 
 /** Load encrypted string from game resource file. */
-ST::string DefaultContentManager::loadEncryptedString(const char* fileName, uint32_t seek_chars, uint32_t read_chars) const
+ST::string DefaultContentManager::loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const
 {
 	AutoSGPFile File(openGameResForReading(fileName));
 	ST::string err_msg;
@@ -603,20 +593,20 @@ ST::string DefaultContentManager::loadEncryptedString(SGPFile* File, uint32_t se
 
 
 /** Load dialogue quote from file. */
-ST::string* DefaultContentManager::loadDialogQuoteFromFile(const char* fileName, int quote_number)
+ST::string* DefaultContentManager::loadDialogQuoteFromFile(const ST::string& fileName, int quote_number)
 {
 	AutoSGPFile File(openGameResForReading(fileName));
 	ST::string err_msg;
 	ST::string quote = LoadEncryptedData(err_msg, getStringEncType(), File, quote_number * DIALOGUESIZE, DIALOGUESIZE);
 	if (!err_msg.empty())
 	{
-		SLOGW("DefaultContentManager::loadDialogQuoteFromFile '%s' %d: %s", fileName, quote_number, err_msg.c_str());
+		SLOGW(ST::format("DefaultContentManager::loadDialogQuoteFromFile '{}' {}: {}", fileName, quote_number, err_msg));
 	}
 	return new ST::string(quote);
 }
 
 /** Load all dialogue quotes for a character. */
-void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* fileName, std::vector<ST::string*> &quotes) const
+void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const ST::string& fileName, std::vector<ST::string*> &quotes) const
 {
 	AutoSGPFile File(openGameResForReading(fileName));
 	uint32_t fileSize = FileGetSize(File);
@@ -851,7 +841,7 @@ bool DefaultContentManager::loadMusic()
 }
 
 bool DefaultContentManager::readWeaponTable(
-	const char *fileName,
+	const ST::string& fileName,
 	std::vector<std::vector<const WeaponModel*> > & weaponTable)
 {
 	auto document = readJsonDataFile(fileName);
@@ -938,7 +928,7 @@ bool DefaultContentManager::loadArmyData()
 	return true;
 }
 
-void DefaultContentManager::loadStringRes(const char *name, std::vector<const ST::string*> &strings) const
+void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<const ST::string*> &strings) const
 {
 	ST::string fullName(name);
 
@@ -1023,7 +1013,7 @@ bool DefaultContentManager::loadGameData()
 	return result;
 }
 
-std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const char *fileName) const
+std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
 {
 	AutoSGPFile f(openGameResForReading(fileName));
 	ST::string jsonData = FileMan::fileReadText(f);
@@ -1042,7 +1032,7 @@ std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(con
 	return document;
 }
 
-const DealerInventory * DefaultContentManager::loadDealerInventory(const char *fileName)
+const DealerInventory * DefaultContentManager::loadDealerInventory(const ST::string& fileName)
 {
 	return new DealerInventory(readJsonDataFile(fileName).get(), this);
 }

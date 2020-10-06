@@ -61,7 +61,7 @@ public:
 	virtual ST::string getRadarMapResourceName(const ST::string &mapName) const = 0;
 
 	/** Get tileset resource name. */
-	virtual ST::string getTilesetResourceName(int number, ST::string fileName) const = 0;
+	virtual ST::string getTilesetResourceName(int number, const ST::string& fileName) const = 0;
 
 	/** Get tileset db resource name. */
 	virtual ST::string getTilesetDBResName() const = 0;
@@ -82,12 +82,10 @@ public:
 	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const = 0;
 
 	/* Open a game resource file for reading. */
-	virtual SGPFile* openGameResForReading(const char* filename) const = 0;
 	virtual SGPFile* openGameResForReading(const ST::string& filename) const = 0;
 
 	/* Checks if a game resource exists. */
-	virtual bool doesGameResExists(char const* filename) const = 0;
-	virtual bool doesGameResExists(const ST::string &filename) const = 0;
+	virtual bool doesGameResExists(const ST::string& filename) const = 0;
 
 	/** Get folder for screenshots. */
 	virtual ST::string getScreenshotFolder() const = 0;
@@ -99,12 +97,12 @@ public:
 	virtual ST::string getSavedGamesFolder() const = 0;
 
 	/** Load encrypted string from game resource file. */
-	virtual ST::string loadEncryptedString(const char* fileName, uint32_t seek_chars, uint32_t read_chars) const = 0;
+	virtual ST::string loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const = 0;
 
 	virtual ST::string loadEncryptedString(SGPFile* File, uint32_t seek_chars, uint32_t read_chars) const = 0;
 
 	/** Load dialogue quote from file. */
-	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number) = 0;
+	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) = 0;
 
 	/** Get weapons with the give index. */
 	virtual const WeaponModel* getWeapon(uint16_t index) = 0;
@@ -194,14 +192,14 @@ public:
 	virtual const ST::string* getNewString(size_t stringId) const = 0;
 
 	/** Open temporary file for writing. */
-	virtual SGPFile* openTempFileForWriting(const char* filename, bool truncate) const = 0;
+	virtual SGPFile* openTempFileForWriting(const ST::string& filename, bool truncate) const = 0;
 
 	/** Open temporary file for reading. */
-	virtual SGPFile* openTempFileForReading(const char* filename) const = 0;
+	virtual SGPFile* openTempFileForReading(const ST::string& filename) const = 0;
 
 	/** Open temporary file for appending. */
-	virtual SGPFile* openTempFileForAppend(const char* filename) const = 0;
+	virtual SGPFile* openTempFileForAppend(const ST::string& filename) const = 0;
 
 	/** Delete temporary file. */
-	virtual void deleteTempFile(const char* filename) const = 0;
+	virtual void deleteTempFile(const ST::string& filename) const = 0;
 };
