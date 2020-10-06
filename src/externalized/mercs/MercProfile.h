@@ -21,7 +21,7 @@ public:
 	MercProfile(MERCPROFILESTRUCT& p);
 
 	// returns ProfileID which is the index to the gMercProfiles array
-	ProfileID getNum() const;
+	ProfileID getID() const;
 
 	// Returns if the RPC is currently recruited into our team. Always returns false if character is not RPC
 	bool isRecruited() const;
@@ -56,6 +56,6 @@ public:
 	operator MERCPROFILESTRUCT&() const;
 
 protected:
-	const ProfileID m_profileNum;
+	const ProfileID m_profileID;
 	MERCPROFILESTRUCT *m_profile;
 };

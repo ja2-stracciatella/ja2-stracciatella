@@ -1,16 +1,16 @@
 #pragma once
 
-#include <stdint.h>
+#include <string_theory/format>
 
 class MercProfile;
 
 namespace Content
 {
-	const char* GetDialogueTextFilename(const MercProfile &profile,
+	ST::string GetDialogueTextFilename(const MercProfile &profile,
 						bool useAlternateDialogueFile,
 						bool isCurrentlyTalking);
 
-	const char* GetDialogueVoiceFilename(const MercProfile &profile, uint16_t usQuoteNum,
+	ST::string GetDialogueVoiceFilename(const MercProfile &profile, uint16_t usQuoteNum,
 						bool useAlternateDialogueFile,
 						bool isCurrentlyTalking,
 						bool isRussianVersion);

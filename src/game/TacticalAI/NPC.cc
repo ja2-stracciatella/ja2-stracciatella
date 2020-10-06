@@ -413,7 +413,7 @@ static void RefreshNPCScriptRecord(UINT8 const ubNPC, UINT8 const record)
 		// loop through all PCs, and refresh their copy of this record
 		for (const MercProfile* p : GCM->listMercProfiles())
 		{
-			UINT8 ubMercID = p->getNum();
+			ProfileID ubMercID = p->getID();
 			if (p->isPlayerMerc() ||
 				(p->isRPC() && p->isRecruited() && gpBackupNPCQuoteInfoArray[ubMercID]))
 			{
@@ -500,8 +500,8 @@ void ReloadAllQuoteFiles(void)
 		if (!p->isNPCorRPC()) continue;
 
 		// zap backup if any
-		FreeNullArray(gpBackupNPCQuoteInfoArray[p->getNum()]);
-		ReloadQuoteFileIfLoaded(p->getNum());
+		FreeNullArray(gpBackupNPCQuoteInfoArray[p->getID()]);
+		ReloadQuoteFileIfLoaded(p->getID());
 	}
 	// reload all civ quote files
 	for (UINT8 ubLoop = 0; ubLoop < NUM_CIVQUOTE_SECTORS; ubLoop++ )
@@ -1372,7 +1372,7 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 		// only RPCs and NPCs
 		if (!p->isNPCorRPC()) continue;
 
-		ProfileID ubMercID = p->getNum();
+		ProfileID ubMercID = p->getID();
 		if ( gMercProfiles[ubMercID].sSectorX == gWorldSectorX &&
 				gMercProfiles[ubMercID].sSectorY == gWorldSectorY &&
 				gMercProfiles[ubMercID].bSectorZ == gbWorldSectorZ &&

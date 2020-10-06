@@ -1206,7 +1206,7 @@ void SaveIMPPlayerProfiles()
 	{
 		if (!p->isIMPMerc()) continue;
 
-		ProfileID i = p->getNum();
+		ProfileID i = p->getID();
 		MERCPROFILESTRUCT* const mercprofile = &gMercProfiles[i];
 		if (mercprofile->bLife == 0) continue;
 		SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(i);
@@ -2323,7 +2323,7 @@ static void UpdateMercMercContractInfo(void)
 		// only M.E.R.C. mercs
 		if (!profile->isMERCMerc()) continue;
 
-		ProfileID    const ubMercID = profile->getNum();
+		ProfileID    const ubMercID = profile->getID();
 		SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubMercID);
 
 		//if the merc is on the team

@@ -4,11 +4,12 @@
 #include "Soldier_Profile_Type.h"
 
 MercProfile::MercProfile(ProfileID profileID)
-	: m_profileNum(profileID), m_profile(&gMercProfiles[profileID])
+	: m_profileID(profileID), m_profile(&gMercProfiles[profileID])
 {
-	if (m_profileNum >= lengthof(gMercProfiles))
+	if (m_profileID >= lengthof(gMercProfiles))
 	{
-		throw std::runtime_error("invalid m_profileNum");
+		ST::string err = ST::format("invalid m_profileID '{}'", m_profileID);
+		throw std::runtime_error(err.to_std_string());
 	}
 }
 
@@ -22,9 +23,9 @@ MercProfile::MercProfile(MERCPROFILESTRUCT& p)
 {
 }
 
-ProfileID MercProfile::getNum() const
+ProfileID MercProfile::getID() const
 {
-	return m_profileNum;
+	return m_profileID;
 }
 
 bool MercProfile::isRecruited() const
@@ -39,7 +40,7 @@ bool MercProfile::isForcedNPCQuote() const
 
 const MercProfileInfo& MercProfile::getInfo() const
 {
-	return *(MercProfileInfo::load(m_profileNum));
+	return *(MercProfileInfo::load(m_profileID));
 }
 
 bool MercProfile::isAIMMerc() const

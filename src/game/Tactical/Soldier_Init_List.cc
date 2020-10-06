@@ -1714,7 +1714,7 @@ void AddProfilesUsingProfileInsertionData()
 		// Perform various checks to make sure the soldier is actually in the same
 		// sector, alive and so on. More importantly, the flag to use profile
 		// insertion data must be set.
-		UINT8                    i = prof->getNum();
+		ProfileID                i = prof->getID();
 		MERCPROFILESTRUCT const& p = prof->getStruct();
 		if (p.sSectorX != gWorldSectorX)                 continue;
 		if (p.sSectorY != gWorldSectorY)                 continue;
