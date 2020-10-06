@@ -316,7 +316,7 @@ try
 }
 catch (const std::exception& e)
 {
-	SLOGW(ST::format("caught exception: {}", e.what()));
+	SLOGE(ST::format("caught exception: {}", e.what()));
 	return 0;
 }
 catch (...) { return 0; }
