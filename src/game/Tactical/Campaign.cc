@@ -28,6 +28,7 @@
 #include "Types.h"
 #include "EMail.h"
 #include "Logger.h"
+#include "MercProfile.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -1164,7 +1165,7 @@ void HandleUnhiredMercDeaths( INT32 iProfileID )
 		gStrategicStatus.ubUnhiredMercDeaths++;
 
 		//send an email as long as the merc is from aim
-		if( iProfileID < BIFF )
+		if (MercProfile(iProfileID).isAIMMerc())
 		{
 			//send an email to the player telling the player that a merc died
 			AddEmailWithSpecialData(MERC_DIED_ON_OTHER_ASSIGNMENT, MERC_DIED_ON_OTHER_ASSIGNMENT_LENGTH, AIM_SITE, GetWorldTotalMin(), 0, iProfileID );

@@ -50,6 +50,7 @@
 #include "Debug.h"
 #include "Items.h"
 #include "GameRes.h"
+#include "MercProfile.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -3014,8 +3015,10 @@ void DebugSoldierPage3()
 
 		// OPIONION OF SELECTED MERC
 		const SOLDIERTYPE* const sel = GetSelectedMan();
+		MercProfile const p          = MercProfile(s->ubProfile);
 		if (sel != NULL &&
-				sel->ubProfile < FIRST_NPC && s->ubProfile != NO_PROFILE)
+				s->ubProfile != NO_PROFILE &&
+				(p.isPlayerMerc() || p.isRPC()))
 		{
 			MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "NPC Opinion:", GetProfile(s->ubProfile).bMercOpinion[sel->ubProfile]);
 		}

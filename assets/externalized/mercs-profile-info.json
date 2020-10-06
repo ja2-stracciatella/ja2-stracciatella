@@ -1,0 +1,182 @@
+/**
+ * Supplementary information to character profiles. this contains information of the character that is static and cannot be updated at run-time.
+ *
+ * There should be an entry for every character in the game.
+ *
+ * Fields:
+ *   - profileID: the merc ID; the index in the gMercProfiles array. It must corresponds to the data file names
+ *   - internalName: the internal name used for logging or mapping other data
+ *   - type: what kind of profile it is (corresponds to the ubWhatkindOfMercAmI). It must be one of:
+ *        - "AIM": soldiers hired via A.I.M.
+ *        - "MERC": soldiers hired via M.E.R.C.
+ *        - "IMP": player-character created on I.M.P.
+ *        - "RPC": Recruitable characters - NPCs that can be recruited
+ *        - "NPC": Non-playing characters, that can never be controlled by the player
+ *        - "NOT_USED": Reserved slots that are not used anywhere
+ */        
+[
+     /* A.I.M. soldiers */
+     { "profileID": 0,  "internalName": "BARRY", "type": "AIM" }
+    ,{ "profileID": 1,  "internalName": "BLOOD", "type": "AIM" }
+    ,{ "profileID": 2,  "internalName": "LYNX", "type": "AIM" }
+    ,{ "profileID": 3,  "internalName": "GRIZZLY", "type": "AIM" }
+    ,{ "profileID": 4,  "internalName": "VICKY", "type": "AIM" }
+    ,{ "profileID": 5,  "internalName": "TREVOR", "type": "AIM" }
+    ,{ "profileID": 6,  "internalName": "GRUNTY", "type": "AIM" }
+    ,{ "profileID": 7,  "internalName": "IVAN", "type": "AIM" }
+    ,{ "profileID": 8,  "internalName": "STEROID", "type": "AIM" }
+    ,{ "profileID": 9,  "internalName": "IGOR", "type": "AIM" }
+    ,{ "profileID": 10, "internalName": "SHADOW", "type": "AIM" }
+    ,{ "profileID": 11, "internalName": "RED", "type": "AIM" }
+    ,{ "profileID": 12, "internalName": "REAPER", "type": "AIM" }
+    ,{ "profileID": 13, "internalName": "FIDEL", "type": "AIM" }
+    ,{ "profileID": 14, "internalName": "FOX", "type": "AIM" }
+    ,{ "profileID": 15, "internalName": "SIDNEY", "type": "AIM" }
+    ,{ "profileID": 16, "internalName": "GUS", "type": "AIM" }
+    ,{ "profileID": 17, "internalName": "BUNS", "type": "AIM" }
+    ,{ "profileID": 18, "internalName": "ICE", "type": "AIM" }
+    ,{ "profileID": 19, "internalName": "SPIDER", "type": "AIM" }
+    ,{ "profileID": 20, "internalName": "CLIFF", "type": "AIM" }
+    ,{ "profileID": 25, "internalName": "RAVEN", "type": "AIM" }
+    ,{ "profileID": 29, "internalName": "MAGIC", "type": "AIM" }
+    ,{ "profileID": 33, "internalName": "DR_Q", "type": "AIM" }
+    ,{ "profileID": 34, "internalName": "NAILS", "type": "AIM" }
+    ,{ "profileID": 36, "internalName": "SCOPE", "type": "AIM" }
+     /* M.E.R.C. soldiers */
+    ,{ "profileID": 40, "internalName": "BIFF", "type": "MERC" }
+    ,{ "profileID": 41, "internalName": "HAYWIRE", "type": "MERC" }
+    ,{ "profileID": 42, "internalName": "GASKET", "type": "MERC" }
+    ,{ "profileID": 43, "internalName": "RAZOR", "type": "MERC" }
+    ,{ "profileID": 44, "internalName": "FLO", "type": "MERC" }
+    ,{ "profileID": 45, "internalName": "GUMPY", "type": "MERC" }
+    ,{ "profileID": 46, "internalName": "LARRY_NORMAL", "type": "MERC" }
+    ,{ "profileID": 47, "internalName": "LARRY_DRUNK", "type": "MERC" }
+    ,{ "profileID": 48, "internalName": "COUGAR", "type": "MERC" }
+    ,{ "profileID": 49, "internalName": "NUMB", "type": "MERC" }
+    ,{ "profileID": 50, "internalName": "BUBBA", "type": "MERC" }
+     /* IMP */
+    ,{ "profileID": 51, "internalName": "PGMALE1", "type": "IMP" }
+    ,{ "profileID": 52, "internalName": "PGMALE2", "type": "IMP" }
+    ,{ "profileID": 53, "internalName": "PGMALE3", "type": "IMP" }
+    ,{ "profileID": 54, "internalName": "PGLADY1", "type": "IMP" }
+    ,{ "profileID": 55, "internalName": "PGLADY2", "type": "IMP" }
+    ,{ "profileID": 56, "internalName": "PGLADY3", "type": "IMP" }
+     /* RPC (rebels) */
+    ,{ "profileID": 57, "internalName": "MIGUEL", "type": "RPC" }
+    ,{ "profileID": 58, "internalName": "CARLOS", "type": "RPC" }
+    ,{ "profileID": 59, "internalName": "IRA", "type": "RPC" }
+    ,{ "profileID": 60, "internalName": "DIMITRI", "type": "RPC" }
+     /* RPC (others) */
+    ,{ "profileID": 61, "internalName": "DEVIN", "type": "RPC" }
+    ,{ "profileID": 62, "internalName": "ROBOT", "type": "RPC" }
+    ,{ "profileID": 63, "internalName": "HAMOUS", "type": "RPC" }
+    ,{ "profileID": 64, "internalName": "SLAY", "type": "RPC" }
+    ,{ "profileID": 65, "internalName": "RPC65", "type": "RPC" }
+    ,{ "profileID": 66, "internalName": "DYNAMO", "type": "RPC" }
+    ,{ "profileID": 67, "internalName": "SHANK", "type": "RPC" }
+    ,{ "profileID": 68, "internalName": "IGGY", "type": "RPC" }
+    ,{ "profileID": 69, "internalName": "VINCE", "type": "RPC" }
+    ,{ "profileID": 70, "internalName": "CONRAD", "type": "RPC" }
+    ,{ "profileID": 71, "internalName": "RPC71", "type": "RPC" }
+    ,{ "profileID": 72, "internalName": "MADDOG", "type": "RPC" }
+    ,{ "profileID": 73, "internalName": "DARREL", "type": "RPC" }
+    ,{ "profileID": 74, "internalName": "PERKO", "type": "RPC" }
+     /* NPC */
+    ,{ "profileID": 75, "internalName": "QUEEN", "type": "NPC" }
+    ,{ "profileID": 76, "internalName": "AUNTIE", "type": "NPC" }
+    ,{ "profileID": 77, "internalName": "ENRICO", "type": "NPC" }
+    ,{ "profileID": 78, "internalName": "CARMEN", "type": "NPC" }
+    ,{ "profileID": 79, "internalName": "JOE", "type": "NPC" }
+    ,{ "profileID": 80, "internalName": "STEVE", "type": "NPC" }
+    ,{ "profileID": 81, "internalName": "RAT", "type": "NPC" }
+    ,{ "profileID": 82, "internalName": "ANNIE", "type": "NPC" }
+    ,{ "profileID": 83, "internalName": "CHRIS", "type": "NPC" }
+    ,{ "profileID": 84, "internalName": "BOB", "type": "NPC" }
+    ,{ "profileID": 85, "internalName": "BRENDA", "type": "NPC" }
+    ,{ "profileID": 86, "internalName": "KINGPIN", "type": "NPC" }
+    ,{ "profileID": 87, "internalName": "DARREN", "type": "NPC" }
+    ,{ "profileID": 88, "internalName": "MARIA", "type": "NPC" }
+    ,{ "profileID": 89, "internalName": "ANGEL", "type": "NPC" }
+    ,{ "profileID": 90, "internalName": "JOEY", "type": "NPC" }
+    ,{ "profileID": 91, "internalName": "TONY", "type": "NPC" }
+    ,{ "profileID": 92, "internalName": "FRANK", "type": "NPC" }
+    ,{ "profileID": 93, "internalName": "SPIKE", "type": "NPC" }
+    ,{ "profileID": 94, "internalName": "DAMON", "type": "NPC" }
+    ,{ "profileID": 95, "internalName": "KYLE", "type": "NPC" }
+    ,{ "profileID": 96, "internalName": "MICKY", "type": "NPC" }
+    ,{ "profileID": 97, "internalName": "SKYRIDER", "type": "NPC" }
+    ,{ "profileID": 98, "internalName": "PABLO", "type": "NPC" }
+    ,{ "profileID": 99, "internalName": "SAL", "type": "NPC" }
+    ,{ "profileID": 100, "internalName": "FATHER", "type": "NPC" }
+    ,{ "profileID": 101, "internalName": "FATIMA", "type": "NPC" }
+    ,{ "profileID": 102, "internalName": "WARDEN", "type": "NPC" }
+    ,{ "profileID": 103, "internalName": "GORDON", "type": "NPC" }
+    ,{ "profileID": 104, "internalName": "GABBY", "type": "NPC" }
+    ,{ "profileID": 105, "internalName": "ERNEST", "type": "NPC" }
+    ,{ "profileID": 106, "internalName": "FRED", "type": "NPC" }
+    ,{ "profileID": 107, "internalName": "MADAME", "type": "NPC" }
+    ,{ "profileID": 108, "internalName": "YANNI", "type": "NPC" }
+    ,{ "profileID": 109, "internalName": "MARTHA", "type": "NPC" }
+    ,{ "profileID": 110, "internalName": "TIFFANY", "type": "NPC" }
+    ,{ "profileID": 111, "internalName": "T_REX", "type": "NPC" }
+    ,{ "profileID": 112, "internalName": "DRUGGIST", "type": "NPC" }
+    ,{ "profileID": 113, "internalName": "JAKE", "type": "NPC" }
+    ,{ "profileID": 114, "internalName": "PACOS", "type": "NPC" }
+    ,{ "profileID": 115, "internalName": "GERARD", "type": "NPC" }
+    ,{ "profileID": 116, "internalName": "SKIPPER", "type": "NPC" }
+    ,{ "profileID": 117, "internalName": "HANS", "type": "NPC" }
+    ,{ "profileID": 118, "internalName": "JOHN", "type": "NPC" }
+    ,{ "profileID": 119, "internalName": "MARY", "type": "NPC" }
+    ,{ "profileID": 120, "internalName": "GENERAL", "type": "NPC" }
+    ,{ "profileID": 121, "internalName": "SERGEANT", "type": "NPC" }
+    ,{ "profileID": 122, "internalName": "ARMAND", "type": "NPC" }
+    ,{ "profileID": 123, "internalName": "LORA", "type": "NPC" }
+    ,{ "profileID": 124, "internalName": "FRANZ", "type": "NPC" }
+    ,{ "profileID": 125, "internalName": "HOWARD", "type": "NPC" }
+    ,{ "profileID": 126, "internalName": "SAM", "type": "NPC" }
+    ,{ "profileID": 127, "internalName": "ELDIN", "type": "NPC" }
+    ,{ "profileID": 128, "internalName": "ARNIE", "type": "NPC" }
+    ,{ "profileID": 129, "internalName": "TINA", "type": "NPC" }
+    ,{ "profileID": 130, "internalName": "FREDO", "type": "NPC" }
+    ,{ "profileID": 131, "internalName": "WALTER", "type": "NPC" }
+    ,{ "profileID": 132, "internalName": "JENNY", "type": "NPC" }
+    ,{ "profileID": 133, "internalName": "BILLY", "type": "NPC" }
+    ,{ "profileID": 134, "internalName": "BREWSTER", "type": "NPC" }
+    ,{ "profileID": 135, "internalName": "ELLIOT", "type": "NPC" }
+    ,{ "profileID": 136, "internalName": "DEREK", "type": "NPC" }
+    ,{ "profileID": 137, "internalName": "OLIVER", "type": "NPC" }
+    ,{ "profileID": 138, "internalName": "WALDO", "type": "NPC" }
+    ,{ "profileID": 139, "internalName": "DOREEN", "type": "NPC" }
+    ,{ "profileID": 140, "internalName": "JIM", "type": "NPC" }
+    ,{ "profileID": 141, "internalName": "JACK", "type": "NPC" }
+    ,{ "profileID": 142, "internalName": "OLAF", "type": "NPC" }
+    ,{ "profileID": 143, "internalName": "RAY", "type": "NPC" }
+    ,{ "profileID": 144, "internalName": "OLGA", "type": "NPC" }
+    ,{ "profileID": 145, "internalName": "TYRONE", "type": "NPC" }
+    ,{ "profileID": 146, "internalName": "MADLAB", "type": "NPC" }
+    ,{ "profileID": 147, "internalName": "KEITH", "type": "NPC" }
+    ,{ "profileID": 148, "internalName": "MATT", "type": "NPC" }
+    ,{ "profileID": 149, "internalName": "MIKE", "type": "NPC" }
+    ,{ "profileID": 150, "internalName": "DARYL", "type": "NPC" }
+    ,{ "profileID": 151, "internalName": "HERVE", "type": "NPC" }
+    ,{ "profileID": 152, "internalName": "PETER", "type": "NPC" }
+    ,{ "profileID": 153, "internalName": "ALBERTO", "type": "NPC" }
+    ,{ "profileID": 154, "internalName": "CARLO", "type": "NPC" }
+    ,{ "profileID": 155, "internalName": "MANNY", "type": "NPC" }
+    ,{ "profileID": 156, "internalName": "OSWALD", "type": "NPC" }
+    ,{ "profileID": 157, "internalName": "CALVIN", "type": "NPC" }
+    ,{ "profileID": 158, "internalName": "CARL", "type": "NPC" }
+    ,{ "profileID": 159, "internalName": "SPECK", "type": "NPC" }
+     /* Vehicles */
+    ,{ "profileID": 160, "internalName": "PROF_HUMMER", "type": "VEHICLE" }
+    ,{ "profileID": 161, "internalName": "PROF_ELDERODO", "type": "VEHICLE" }
+    ,{ "profileID": 162, "internalName": "PROF_ICECREAM", "type": "VEHICLE" }
+    ,{ "profileID": 163, "internalName": "PROF_HELICOPTER", "type": "VEHICLE" }
+     /* Unused slots */
+    ,{ "profileID": 164, "internalName": "NPC164", "type": "NOT_USED" }
+    ,{ "profileID": 165, "internalName": "NPC165", "type": "NOT_USED" }
+    ,{ "profileID": 166, "internalName": "NPC166", "type": "NOT_USED" }
+    ,{ "profileID": 167, "internalName": "NPC167", "type": "NOT_USED" }
+    ,{ "profileID": 168, "internalName": "NPC168", "type": "NOT_USED" }
+    ,{ "profileID": 169, "internalName": "NPC169", "type": "NOT_USED" }
+]

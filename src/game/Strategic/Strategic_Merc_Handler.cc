@@ -39,6 +39,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "MercProfile.h"
 #include "WeaponModels.h"
 #include "Logger.h"
 
@@ -205,7 +206,7 @@ void MercDailyUpdate()
 			p.ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
 
 			//if the character is an RPC
-			if (FIRST_RPC <= s->ubProfile && s->ubProfile < FIRST_NPC)
+			if (MercProfile(s->ubProfile).isRPC())
 			{
 				//increment the number of days the mercs has been on the team
 				++s->iTotalContractLength;

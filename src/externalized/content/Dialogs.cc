@@ -1,17 +1,14 @@
 #include "Dialogs.h"
-
-#include <stdio.h>
-
-#include "game/Directories.h"
-#include "game/Tactical/Soldier_Profile.h"
-#include "game/Tactical/Soldier_Profile_Type.h"
+#include "Directories.h"
 #include "MercProfile.h"
+#include "Soldier_Profile.h"
+#include <string_theory/format>
 
-const char* Content::GetDialogueTextFilename(const MercProfile &profile,
+ST::string Content::GetDialogueTextFilename(const MercProfile &profile,
 						bool useAlternateDialogueFile,
 						bool isCurrentlyTalking)
 {
-	static char zFileName[164];
+	ST::string	zFileName;
 	uint8_t		ubFileNumID;
 
 	// Are we an NPC OR an RPC that has not been recruited?
@@ -20,44 +17,44 @@ const char* Content::GetDialogueTextFilename(const MercProfile &profile,
 	{
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, NPCDATADIR "/d_%03d.edt", profile.getNum());
+			zFileName = ST::format("{}/d_{03d}.edt", NPCDATADIR, profile.getID());
 		}
 	}
-	else if ( profile.getNum() >= FIRST_RPC
+	else if (profile.isNPCorRPC()
 			&& ( !profile.isRecruited()
 				|| isCurrentlyTalking
 				|| profile.isForcedNPCQuote()))
 	{
-		ubFileNumID = profile.getNum();
+		ubFileNumID = profile.getID();
 
 		// ATE: If we are merc profile ID #151-154, all use 151's data....
-		if (profile.getNum() >= HERVE && profile.getNum() <= CARLO)
+		if (profile.getID() >= HERVE && profile.getID() <= CARLO)
 		{
 			ubFileNumID = HERVE;
 		}
 
 		{
 		// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, NPCDATADIR "/%03d.edt", ubFileNumID);
+			zFileName = ST::format("{}/{03d}.edt", NPCDATADIR, ubFileNumID);
 		}
 	}
 	else
 	{
 		{
 			// assume EDT files are in EDT directory on HARD DRIVE
-			sprintf(zFileName, MERCEDTDIR "/%03d.edt", profile.getNum());
+			zFileName = ST::format("{}/{03d}.edt", MERCEDTDIR, profile.getID());
 		}
 	}
 
-	return( zFileName );
+	return zFileName;
 }
 
-const char* Content::GetDialogueVoiceFilename(const MercProfile &profile, uint16_t usQuoteNum,
+ST::string Content::GetDialogueVoiceFilename(const MercProfile &profile, uint16_t usQuoteNum,
 						bool useAlternateDialogueFile,
 						bool isCurrentlyTalking,
 						bool isRussianVersion)
 {
-	static char zFileName[164];
+	ST::string	zFileName;
 	uint8_t		ubFileNumID;
 
 	// Are we an NPC OR an RPC that has not been recruited?
@@ -66,48 +63,46 @@ const char* Content::GetDialogueVoiceFilename(const MercProfile &profile, uint16
 	{
 		{
 			// build name of wav file (characternum + quotenum)
-			sprintf(zFileName, NPC_SPEECHDIR "/d_%03d_%03d.wav", profile.getNum(), usQuoteNum);
+			zFileName =  ST::format("{}/d_{03d}_{03d}.wav", NPC_SPEECHDIR, profile.getID(), usQuoteNum);
 		}
 	}
-	else if ( profile.getNum() >= FIRST_RPC
+	else if (profile.isNPCorRPC()
 			&& ( !profile.isRecruited()
 				|| isCurrentlyTalking
 				|| profile.isForcedNPCQuote()))
 	{
-		ubFileNumID = profile.getNum();
+		ubFileNumID = profile.getID();
 
 		// ATE: If we are merc profile ID #151-154, all use 151's data....
-		if (profile.getNum() >= HERVE && profile.getNum() <= CARLO)
+		if (profile.getID() >= HERVE && profile.getID() <= CARLO)
 		{
 			ubFileNumID = HERVE;
 		}
 
-		{
-			sprintf(zFileName, NPC_SPEECHDIR "/%03d_%03d.wav", ubFileNumID, usQuoteNum);
-		}
+		zFileName = ST::format("{}/{03d}_{03d}.wav", NPC_SPEECHDIR, ubFileNumID, usQuoteNum);
 	}
 	else
 	{
 		{
 			if(isRussianVersion)
 			{
-				if (profile.getNum() >= FIRST_RPC && profile.isRecruited())
+				if (profile.isNPCorRPC() && profile.isRecruited())
 				{
-					sprintf(zFileName, SPEECHDIR "/r_%03d_%03d.wav", profile.getNum(), usQuoteNum);
+					zFileName = ST::format("{}/r_{03d}_{03d}.wav", SPEECHDIR, profile.getID(), usQuoteNum);
 				}
 				else
 				{
 					// build name of wav file (characternum + quotenum)
-					sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", profile.getNum(), usQuoteNum);
+					zFileName = ST::format("{}/{03d}_{03d}.wav", SPEECHDIR, profile.getID(), usQuoteNum);
 				}
 			}
 			else
 			{
 				// build name of wav file (characternum + quotenum)
-				sprintf(zFileName, SPEECHDIR "/%03d_%03d.wav", profile.getNum(), usQuoteNum);
+				zFileName = ST::format("{}/{03d}_{03d}.wav", SPEECHDIR, profile.getID(), usQuoteNum);
 			}
 		}
 	}
 
-	return( zFileName );
+	return zFileName;
 }

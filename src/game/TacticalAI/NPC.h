@@ -2,7 +2,9 @@
 #define NPC_H
 
 #include "Facts.h"
-#include "JA2Types.h"
+#include "Types.h"
+struct OBJECTTYPE;
+struct SOLDIERTYPE;
 
 
 #define NPC_TALK_RADIUS 4

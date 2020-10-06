@@ -32,6 +32,7 @@
 #include "army/GarrisonGroupModel.h"
 #include "army/PatrolGroupModel.h"
 #include "mercs/MERCListingModel.h"
+#include "mercs/MercProfileInfo.h"
 #include "mercs/RPCSmallFaceModel.h"
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
@@ -51,6 +52,7 @@
 
 #include "Logger.h"
 #include "Strategic_AI.h"
+#include "Soldier_Profile_Type.h"
 
 #include "rapidjson/error/en.h"
 #include <string_theory/format>
@@ -72,6 +74,8 @@
 // We need a safe way to create temporary directories - unique and random for every process
 // Boost probably provides this functionality
 #define NEW_TEMP_DIR "temp"
+
+const MercProfileInfo EMPTY_MERC_PROFILE_INFO;
 
 static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType, SGPFile* File, UINT32 seek_chars, UINT32 read_chars)
 {
@@ -306,6 +310,8 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_undergroundSectors);
 	deleteElements(m_rpcSmallFaces);
 	deleteElements(m_MERCListings);
+	deleteElements(m_mercProfileInfo);
+	deleteElements(m_mercProfiles);
 
 	delete m_movementCosts;
 	delete m_samSitesAirControl;
@@ -1243,6 +1249,18 @@ bool DefaultContentManager::loadMercsData()
 		m_MERCListings.push_back(item);
 	}
 	MERCListingModel::validateData(m_MERCListings);
+
+	MercProfileInfo::load = [=](uint8_t p) { return this->getMercProfileInfo(p); };
+	json = readJsonDataFile("mercs-profile-info.json");
+	for (auto& element : json->GetArray())
+	{
+		auto profileInfo = MercProfileInfo::deserialize(element);
+		ProfileID profileID = profileInfo->profileID;
+		m_mercProfileInfo[profileID] = profileInfo;
+		m_mercProfiles.push_back(new MercProfile(profileID));
+	}
+	MercProfileInfo::validateData(m_mercProfileInfo);
+
 	return true;
 }
 
@@ -1406,6 +1424,22 @@ const RPCSmallFaceModel* DefaultContentManager::getRPCSmallFaceOffsets(uint8_t p
 const std::vector<const MERCListingModel*>& DefaultContentManager::getMERCListings() const
 {
 	return m_MERCListings;
+}
+
+const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t const profileID) const
+{
+	if (m_mercProfileInfo.find(profileID) != m_mercProfileInfo.end())
+	{
+		return m_mercProfileInfo.at(profileID);
+	}
+	
+	SLOGD(ST::format("MercProfileInfo is not defined at {}", profileID));
+	return &EMPTY_MERC_PROFILE_INFO;
+}
+
+const std::vector<const MercProfile*>& DefaultContentManager::listMercProfiles() const
+{
+	return m_mercProfiles;
 }
 
 const LoadingScreen* DefaultContentManager::getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const

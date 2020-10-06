@@ -898,15 +898,15 @@ static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::st
 	// first things first  - gDIALOGUESIZErab the text (if player has SUBTITLE PREFERENCE ON)
 	//if ( gGameSettings.fOptions[ TOPTION_SUBTITLES ] )
 	{
-		const char* pFilename = Content::GetDialogueTextFilename(
+		ST::string zFilename = Content::GetDialogueTextFilename(
 						profile,
 						useAlternateDialogueFile,
-						ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()));
+						ProfileCurrentlyTalkingInDialoguePanel(profile.getID()));
 
 		bool success = false;
 		try
 		{
-			ST::string* quote = GCM->loadDialogQuoteFromFile(pFilename, usQuoteNum);
+			ST::string* quote = GCM->loadDialogQuoteFromFile(zFilename.c_str(), usQuoteNum);
 			if(quote)
 			{
 				zDialogueText = *quote;
@@ -917,18 +917,18 @@ static BOOLEAN GetDialogue(const MercProfile &profile, UINT16 usQuoteNum, ST::st
 		catch (...) { success = false; }
 		if (!success)
 		{
-			zDialogueText = ST::format("I have no text in the EDT file ({}) {}", usQuoteNum, pFilename);
+			zDialogueText = ST::format("I have no text in the EDT file ({}) {}", usQuoteNum, zFilename);
 			return( FALSE );
 		}
 	}
 
 	// CHECK IF THE FILE EXISTS, IF NOT, USE DEFAULT!
-	const char* pFilename = Content::GetDialogueVoiceFilename(
+	ST::string zFilename = Content::GetDialogueVoiceFilename(
 		profile, usQuoteNum, useAlternateDialogueFile,
-		ProfileCurrentlyTalkingInDialoguePanel(profile.getNum()),
+		ProfileCurrentlyTalkingInDialoguePanel(profile.getID()),
 		isRussianVersion() || isRussianGoldVersion());
 
-	strcpy( zSoundString, pFilename );
+	strcpy(zSoundString, zFilename.c_str());
 	return(TRUE);
 }
 

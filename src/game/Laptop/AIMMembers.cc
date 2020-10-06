@@ -1217,6 +1217,7 @@ static INT8 AimMemberHireMerc(void)
 	h.ubInsertionCode           = INSERTION_CODE_ARRIVING_GAME;
 	h.fCopyProfileItemsOver     = gfBuyEquipment;
 	h.uiTimeTillMercArrives     = GetMercArrivalTimeOfDay();
+	h.bWhatKindOfMerc           = MERC_TYPE__AIM_MERC;
 
 	INT8  contract_type;
 	INT16 contract_length;

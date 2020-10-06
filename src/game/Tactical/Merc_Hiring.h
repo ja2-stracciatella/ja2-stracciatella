@@ -33,6 +33,7 @@ struct MERC_HIRE_STRUCT
 	UINT8   ubInsertionCode;
 	UINT16  usInsertionData;
 	BOOLEAN fUseLandingZoneForArrival;
+	INT8    bWhatKindOfMerc = -1;
 };
 
 // ATE: Global that dictates where the mercs will land once being hired

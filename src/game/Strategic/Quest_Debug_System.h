@@ -2,6 +2,7 @@
 #define _QUEST_DEBUG_SYSTEM_H_
 
 #include "NPC.h"
+#include "JA2Types.h"
 #include "ScreenIDs.h"
 
 

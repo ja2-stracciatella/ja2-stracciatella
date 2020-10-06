@@ -25,6 +25,8 @@ class GamePolicy;
 class GarrisonGroupModel;
 class IMPPolicy;
 class LoadingScreenModel;
+class MercProfile;
+class MercProfileInfo;
 class MERCListingModel;
 class MineModel;
 class MovementCostsModel;
@@ -176,6 +178,9 @@ public:
 
 	/* Returns the full list of profile listings on M.E.R.C. */
 	virtual const std::vector<const MERCListingModel*>& getMERCListings() const = 0;
+
+	//returns the full list of character profiles
+	virtual const std::vector<const MercProfile*>& listMercProfiles() const = 0;
 
 	/* Gets eyes and mouths offsets for the RPC small portraits. Returns null if none defined. */
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const = 0;

@@ -37,6 +37,7 @@
 #include "GameInstance.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
+#include "MercProfile.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -1850,9 +1851,10 @@ static PastMercInfo GetSelectedPastMercInfo(void)
 	{
 		if (*i == -1 || slot-- != 0) continue;
 		MERCPROFILESTRUCT& p     = GetProfile(*i);
+		MercProfile profile      = MercProfile(p);
 		INT const          state =
 			p.ubMiscFlags2 & PROFILE_MISC_FLAG2_MARRIED_TO_HICKS ? DEPARTED_MARRIED          :
-			*i < BIFF                                            ? DEPARTED_CONTRACT_EXPIRED :
+			profile.isAIMMerc()                                  ? DEPARTED_CONTRACT_EXPIRED :
 			DEPARTED_QUIT;
 		return PastMercInfo(&p, state);
 	}

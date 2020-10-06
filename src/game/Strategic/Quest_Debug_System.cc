@@ -1,53 +1,51 @@
-#include "Directories.h"
-#include "Font.h"
-#include "HImage.h"
-#include "Local.h"
-#include "Types.h"
 #include "Quest_Debug_System.h"
-#include "VObject.h"
-#include "Font_Control.h"
-#include "Video.h"
-#include "Game_Clock.h"
-#include "Render_Dirty.h"
-#include "WordWrap.h"
-#include "Interface.h"
+#include "AIMMembers.h"
+#include "Button_System.h"
+#include "ContentManager.h"
 #include "Cursors.h"
+#include "Debug.h"
+#include "Dialogue_Control.h"
+#include "Directories.h"
+#include "English.h"
+#include "Environment.h"
+#include "Faces.h"
+#include "FileMan.h"
+#include "Font.h"
+#include "Font_Control.h"
+#include "Game_Clock.h"
+#include "GameInstance.h"
+#include "Handle_Items.h"
+#include "HImage.h"
+#include "Interface.h"
+#include "Interface_Dialogue.h"
+#include "Items.h"
+#include "Keys.h"
+#include "Line.h"
+#include "Local.h"
+#include "MercProfile.h"
+#include "Message.h"
+#include "MessageBoxScreen.h"
+#include "OppList.h"
+#include "Overhead.h"
 #include "Quests.h"
 #include "QuestText.h"
+#include "Random.h"
+#include "Render_Dirty.h"
+#include "SGP.h"
+#include "Soldier_Add.h"
+#include "Soldier_Control.h"
+#include "Soldier_Create.h"
 #include "Soldier_Profile.h"
+#include "StrategicMap.h"
+#include "SysUtil.h"
 #include "Text.h"
 #include "Text_Input.h"
-#include "Soldier_Create.h"
-#include "StrategicMap.h"
-#include "Soldier_Add.h"
-#include "OppList.h"
-#include "Handle_Items.h"
-#include "Environment.h"
-#include "Dialogue_Control.h"
-#include "Soldier_Control.h"
-#include "Overhead.h"
-#include "AIMMembers.h"
-#include "MessageBoxScreen.h"
-#include "English.h"
-#include "Line.h"
-#include "Keys.h"
-#include "Interface_Dialogue.h"
-#include "SysUtil.h"
-#include "Message.h"
-#include "Random.h"
-#include <stdarg.h>
-#include "Button_System.h"
-#include "Debug.h"
-#include "VSurface.h"
-#include "FileMan.h"
-#include "SGP.h"
-#include "Items.h"
+#include "Types.h"
 #include "UILayout.h"
-#include "Faces.h"
-
-#include "ContentManager.h"
-#include "GameInstance.h"
-
+#include "Video.h"
+#include "VObject.h"
+#include "VSurface.h"
+#include "WordWrap.h"
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -534,8 +532,8 @@ void QuestDebugScreenInit()
 	gNpcListBox.usScrollBarWidth							= QUEST_DBS_SCROLL_BAR_WIDTH;
 
 	gNpcListBox.sCurSelectedItem							= -1;
-	gNpcListBox.usItemDisplayedOnTopOfList		= 0;//FIRST_RPC;
-	gNpcListBox.usStartIndex									= 0;//FIRST_RPC;
+	gNpcListBox.usItemDisplayedOnTopOfList		= 0;
+	gNpcListBox.usStartIndex									= 0;
 	gNpcListBox.usMaxArrayIndex								= NUM_PROFILES;
 	gNpcListBox.usNumDisplayedItems						= QUEST_DBS_MAX_DISPLAYED_ENTRIES;
 	gNpcListBox.usMaxNumDisplayedItems				= QUEST_DBS_MAX_DISPLAYED_ENTRIES;
@@ -1459,33 +1457,20 @@ static BOOLEAN CreateDestroyDisplaySelectNpcDropDownBox(void)
 			if( fMouseRegionsCreated )
 				break;
 
-			//if the are more entries then can be displayed
-//			if( gpActiveListBox->usMaxArrayIndex > gpActiveListBox->usNumDisplayedItems )
-//			{
-				usPosX = gpActiveListBox->usScrollPosX;
-				usPosY = gpActiveListBox->usScrollPosY;
-
-				//Set the initial value for the box
-//				if( gpActiveListBox == &gNpcListBox )
-//					gpActiveListBox->sCurSelectedItem = FIRST_RPC;
-//				else
-//					gpActiveListBox->sCurSelectedItem = 1;
+			usPosX = gpActiveListBox->usScrollPosX;
+			usPosY = gpActiveListBox->usScrollPosY;
 
 
-				// create the scroll regions
-				for( i=0; i< gpActiveListBox->usNumDisplayedItems; i++)
-				{
-					MSYS_DefineRegion(&gSelectedNpcListRegion[i], usPosX, usPosY, usPosX + gpActiveListBox->usScrollWidth, usPosY + usFontHeight, MSYS_PRIORITY_HIGH + 20, CURSOR_WWW, SelectNpcListMovementCallBack, SelectNpcListRegionCallBack);
-					MSYS_SetRegionUserData( &gSelectedNpcListRegion[ i ], 0, i);
+			// create the scroll regions
+			for( i=0; i< gpActiveListBox->usNumDisplayedItems; i++)
+			{
+				MSYS_DefineRegion(&gSelectedNpcListRegion[i], usPosX, usPosY, usPosX + gpActiveListBox->usScrollWidth, usPosY + usFontHeight, MSYS_PRIORITY_HIGH + 20, CURSOR_WWW, SelectNpcListMovementCallBack, SelectNpcListRegionCallBack);
+				MSYS_SetRegionUserData( &gSelectedNpcListRegion[ i ], 0, i);
 
-					usPosY += usFontHeight;
-				}
+				usPosY += usFontHeight;
+			}
 
-				fMouseRegionsCreated = TRUE;
-//			}
-//			else
-//				fMouseRegionsCreated = FALSE;
-
+			fMouseRegionsCreated = TRUE;
 
 			//Scroll bars
 			usPosX = gpActiveListBox->usScrollPosX + gpActiveListBox->usScrollWidth;
@@ -2609,7 +2594,6 @@ static void BtnQuestDebugAllOrSectorNPCToggleCallback(GUI_BUTTON* btn, INT32 rea
 
 			gNpcListBox.sCurSelectedItem							= gubCurrentNpcInSector[ gNpcListBox.sCurSelectedItem ];
 			gNpcListBox.usItemDisplayedOnTopOfList		= gNpcListBox.sCurSelectedItem;
-//			gNpcListBox.usStartIndex									= FIRST_RPC;
 
 			gNpcListBox.usMaxArrayIndex								= NUM_PROFILES;
 			gNpcListBox.usNumDisplayedItems						= QUEST_DBS_MAX_DISPLAYED_ENTRIES;
@@ -2660,7 +2644,8 @@ static void AddNPCsInSectorToArray(void)
 	CFOR_EACH_SOLDIER(pSoldier)
 	{
 		//if soldier is a NPC, add him to the local NPC array
-		if (pSoldier->ubProfile >= FIRST_RPC && pSoldier->ubProfile < NUM_PROFILES)
+		MercProfile profile(pSoldier->ubProfile);
+		if (profile.isNPC() || profile.isRPC() || profile.isVehicle())
 		{
 			gubCurrentNpcInSector[i++] = pSoldier->ubProfile;
 		}
@@ -2827,7 +2812,7 @@ static void RefreshAllNPCInventory(void)
 	FOR_EACH_SOLDIER(s)
 	{
 		//is the merc a rpc or npc
-		if (s->ubProfile >= FIRST_RPC)
+		if (MercProfile(s->ubProfile).isNPCorRPC())
 		{
 			//refresh the mercs inventory
 			for ( usItemCnt = 0; usItemCnt< NUM_INV_SLOTS; usItemCnt++ )
@@ -3097,7 +3082,7 @@ static UINT8 WhichPanelShouldTalkingMercUse(void)
 		return( QDS_NO_PANEL );
 	}
 
-	if( gTalkingMercSoldier->ubProfile < FIRST_RPC )
+	if (MercProfile(gTalkingMercSoldier->ubProfile).isPlayerMerc())
 	{
 		return( QDS_REGULAR_PANEL );
 	}

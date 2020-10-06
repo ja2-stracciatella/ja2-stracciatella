@@ -33,6 +33,7 @@
 #include "MemMan.h"
 #include "FileMan.h"
 #include "Logger.h"
+#include "MercProfile.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -1706,12 +1707,15 @@ static SOLDIERINITNODE* FindSoldierInitListNodeByProfile(UINT8 ubProfile)
 // doing it this way is the GetProfile(i).fUseProfileInsertionInfo.
 void AddProfilesUsingProfileInsertionData()
 {
-	for (INT32 i = FIRST_RPC; i != PROF_HUMMER; ++i)
+	for (const MercProfile* prof : GCM->listMercProfiles())
 	{
+		if (!prof->isNPCorRPC() && !prof->isVehicle())   continue;
+
 		// Perform various checks to make sure the soldier is actually in the same
 		// sector, alive and so on. More importantly, the flag to use profile
 		// insertion data must be set.
-		MERCPROFILESTRUCT const& p = GetProfile(i);
+		ProfileID                i = prof->getID();
+		MERCPROFILESTRUCT const& p = prof->getStruct();
 		if (p.sSectorX != gWorldSectorX)                 continue;
 		if (p.sSectorY != gWorldSectorY)                 continue;
 		if (p.bSectorZ != gbWorldSectorZ)                continue;
