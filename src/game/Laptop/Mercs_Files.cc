@@ -1,7 +1,6 @@
 #include "Mercs_Files.h"
 #include "AIMMembers.h"
 #include "Assignments.h"
-#include "AutoPtr.h"
 #include "Button_System.h"
 #include "Campaign_Types.h"
 #include "Cheats.h"
