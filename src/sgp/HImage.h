@@ -1,9 +1,9 @@
 #ifndef __IMAGE_H
 #define __IMAGE_H
 
-#include "AutoPtr.h"
 #include "Buffer.h"
 #include "Types.h"
+#include <memory>
 
 // The HIMAGE module provides a common interface for managing image data. This module
 // includes:
@@ -134,6 +134,6 @@ void ConvertRGBDistribution565To655( UINT16 * p16BPPData, UINT32 uiNumberOfPixel
 void ConvertRGBDistribution565To556( UINT16 * p16BPPData, UINT32 uiNumberOfPixels );
 void ConvertRGBDistribution565ToAny( UINT16 * p16BPPData, UINT32 uiNumberOfPixels );
 
-typedef SGP::AutoPtr<SGPImage> AutoSGPImage;
+typedef std::unique_ptr<SGPImage> AutoSGPImage;
 
 #endif

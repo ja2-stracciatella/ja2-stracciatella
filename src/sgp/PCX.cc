@@ -80,7 +80,7 @@ SGPImage* LoadPCXFileToImage(const ST::string filename, UINT16 const contents)
 		img->pui16BPPPalette = Create16BPPPalette(dst);
 	}
 
-	return img.Release();
+	return img.release();
 }
 
 

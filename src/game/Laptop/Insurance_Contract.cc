@@ -421,7 +421,7 @@ try
 		}
 
 		//Get and display the mercs face
-		BltVideoObject(FRAME_BUFFER, uiInsMercFaceImage, 0, dx + INS_CTRCT_OG_FACE_OFFSET_X, dy + INS_CTRCT_OG_FACE_OFFSET_Y);
+		BltVideoObject(FRAME_BUFFER, uiInsMercFaceImage.get(), 0, dx + INS_CTRCT_OG_FACE_OFFSET_X, dy + INS_CTRCT_OG_FACE_OFFSET_Y);
 	}
 
 	//display the mercs nickname

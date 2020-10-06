@@ -484,7 +484,7 @@ try
 			//set the red pallete to the face
 			guiFACE->CurrentShade(0);
 		}
-		BltVideoObject(FRAME_BUFFER, guiFACE, 0, IMAGE_BOX_X, IMAGE_BOX_Y);
+		BltVideoObject(FRAME_BUFFER, guiFACE.get(), 0, IMAGE_BOX_X, IMAGE_BOX_Y);
 	}
 
 	// Display the merc's name on the portrait
@@ -959,7 +959,7 @@ try
 				//set the red pallete to the face
 				guiFACE->CurrentShade(0);
 			}
-			BltVideoObject(FRAME_BUFFER, guiFACE, 0, x, y);
+			BltVideoObject(FRAME_BUFFER, guiFACE.get(), 0, x, y);
 		}
 
 		if (s->bLife <= 0)
@@ -1876,7 +1876,7 @@ try
 
 	const INT32 x = SMALL_PORTRAIT_START_X + iCounter % PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_WIDTH;
 	const INT32 y = SMALL_PORTRAIT_START_Y + iCounter / PERSONNEL_PORTRAIT_NUMBER_WIDTH * SMALL_PORT_HEIGHT;
-	BltVideoObject(FRAME_BUFFER, guiFACE, 0, x, y);
+	BltVideoObject(FRAME_BUFFER, guiFACE.get(), 0, x, y);
 }
 catch (...) { /* XXX ignore */ }
 
@@ -2120,8 +2120,8 @@ try
 	// just show basic panel
 	// bounding
 	AutoSGPVObject uiBox(AddVideoObjectFromFile(LAPTOPDIR "/atmbuttons.sti"));
-	BltVideoObject(FRAME_BUFFER, uiBox, 0, ATM_UL_X,     ATM_UL_Y);
-	BltVideoObject(FRAME_BUFFER, uiBox, 1, ATM_UL_X + 1, ATM_UL_Y + 18);
+	BltVideoObject(FRAME_BUFFER, uiBox.get(), 0, ATM_UL_X,     ATM_UL_Y);
+	BltVideoObject(FRAME_BUFFER, uiBox.get(), 1, ATM_UL_X + 1, ATM_UL_Y + 18);
 }
 catch (...) { /* XXX ignore */ }
 

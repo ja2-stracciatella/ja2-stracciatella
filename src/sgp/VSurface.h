@@ -2,7 +2,6 @@
 #define VSURFACE_H
 
 #include "AutoObj.h"
-#include "AutoPtr.h"
 #include "Buffer.h"
 #include "Types.h"
 #include <SDL.h>

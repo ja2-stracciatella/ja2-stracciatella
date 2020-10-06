@@ -1,7 +1,6 @@
 #include "Map_Screen_Interface_Map.h"
 
 #include "Assignments.h"
-#include "AutoPtr.h"
 #include "Button_System.h"
 #include "Campaign_Types.h"
 #include "ContentManager.h"
@@ -50,6 +49,7 @@
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
+#include <memory>
 #include <stdexcept>
 #include <string_theory/format>
 #include <string_theory/string>
@@ -840,7 +840,7 @@ static void ShadeMapElem(const INT16 sMapX, const INT16 sMapY, const INT32 iColo
 
 void InitializePalettesForMap(void)
 {
-	SGP::AutoPtr<SGPVSurfaceAuto> uiTempMap(AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx"));
+	std::unique_ptr<SGPVSurfaceAuto> uiTempMap(AddVideoSurfaceFromFile(INTERFACEDIR "/b_map.pcx"));
 
 	SGPPaletteEntry const* const pal = uiTempMap->GetPalette();
 

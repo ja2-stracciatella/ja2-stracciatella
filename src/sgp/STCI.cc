@@ -89,7 +89,7 @@ static SGPImage* STCILoadRGB(UINT16 const contents, HWFILE const f, STCIHeader c
 			}
 		}
 	}
-	return img.Release();
+	return img.release();
 }
 
 
@@ -165,7 +165,7 @@ static SGPImage* STCILoadIndexed(UINT16 const contents, HWFILE const f, STCIHead
 		img->uiAppDataSize = 0;
 	}
 
-	return img.Release();
+	return img.release();
 }
 
 

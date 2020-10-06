@@ -1794,28 +1794,28 @@ static void CreateTopMessage(void)
 	{
 		AutoSGPVObject bar_vo(AddVideoObjectFromFile(bar_file));
 
-		BltVideoObject(dst, bar_vo, bar_gfx, STD_SCREEN_X, 0);
+		BltVideoObject(dst, bar_vo.get(), bar_gfx, STD_SCREEN_X, 0);
 
 		if (fDoLimitBar)
 		{
 			INT32 bar_x = bar->x;
 			// Render end piece
-			BltVideoObject(dst, bar_vo, 1, bar_x, bar->y);
+			BltVideoObject(dst, bar_vo.get(), 1, bar_x, bar->y);
 
 			INT32  gfx    = 2;
 			// -3 for the end pieces
 			UINT32 length = (bar->w - 3) * ts->usTactialTurnLimitCounter / ts->usTactialTurnLimitMax;
 			while (length-- != 0)
 			{
-				BltVideoObject(dst, bar_vo, gfx, ++bar_x, bar->y);
+				BltVideoObject(dst, bar_vo.get(), gfx, ++bar_x, bar->y);
 				if (++gfx == 12) gfx = 2;
 			}
 
 			if (ts->usTactialTurnLimitCounter == ts->usTactialTurnLimitMax)
 			{
 				// Render end piece
-				BltVideoObject(dst, bar_vo, gfx, ++bar_x, bar->y);
-				BltVideoObject(dst, bar_vo, 12,  ++bar_x, bar->y);
+				BltVideoObject(dst, bar_vo.get(), gfx, ++bar_x, bar->y);
+				BltVideoObject(dst, bar_vo.get(), 12,  ++bar_x, bar->y);
 			}
 		}
 	}

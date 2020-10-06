@@ -328,7 +328,7 @@ try
 		text   = ST::null;
 	}
 
-	BltVideoObject(FRAME_BUFFER, face, 0, MERC_FACE_X, MERC_FACE_Y);
+	BltVideoObject(FRAME_BUFFER, face.get(), 0, MERC_FACE_X, MERC_FACE_Y);
 
 	if (shaded)
 	{

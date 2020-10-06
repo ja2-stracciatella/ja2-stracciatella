@@ -989,7 +989,7 @@ static void HandleSpecialTerroristFile(INT32 const file_idx)
 		if (giFilesPage == 0 && clause == 4)
 		{
 			AutoSGPVObject vo(LoadBigPortrait(GetProfile(info.profile_id)));
-			BltVideoObject(    FRAME_BUFFER, vo,                               0, FILE_VIEWER_X + 30, FILE_VIEWER_Y + 136);
+			BltVideoObject(    FRAME_BUFFER, vo.get(),                         0, FILE_VIEWER_X + 30, FILE_VIEWER_Y + 136);
 			BltVideoObjectOnce(FRAME_BUFFER, LAPTOPDIR "/interceptborder.sti", 0, FILE_VIEWER_X + 25, FILE_VIEWER_Y + 131);
 		}
 
