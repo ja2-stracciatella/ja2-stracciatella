@@ -197,7 +197,7 @@ void RenderMercsFiles()
 	BltVideoObject(FRAME_BUFFER, guiStatsBox,    0, MERC_FILES_STATS_BOX_X,    MERC_FILES_STATS_BOX_Y);
 	BltVideoObject(FRAME_BUFFER, guiBioBox,      0, MERC_FILES_BIO_BOX_X + 1,  MERC_FILES_BIO_BOX_Y);
 
-	const MERCListingModel*  l   = GCM->getMERCListings()[gubCurMercIndex];
+	const MERCListingModel*  l   = GCM->getMERCListings().at(gubCurMercIndex);
 	ProfileID         const  pid = GetProfileIDFromMERCListing(l);
 	MERCPROFILESTRUCT const& p   = GetProfile(pid);
 

@@ -632,7 +632,7 @@ ProfileID GetProfileIDFromMERCListing(const MERCListingModel* listing)
 ProfileID GetProfileIDFromMERCListingIndex(UINT8 ubMercIndex)
 {
 	auto mercsListing = GCM->getMERCListings();
-	return GetProfileIDFromMERCListing(mercsListing[ubMercIndex]);
+	return GetProfileIDFromMERCListing(mercsListing.at(ubMercIndex));
 }
 
 static void InitMercVideoFace(void)
