@@ -18,6 +18,8 @@
 #include "JA2Types.h"
 #include "Laptop.h"
 #include "LaptopSave.h"
+#include "MERCListingModel.h"
+#include "MercPortrait.h"
 #include "Merc_Hiring.h"
 #include "MercPortrait.h"
 #include "Mercs.h"
@@ -195,7 +197,8 @@ void RenderMercsFiles()
 	BltVideoObject(FRAME_BUFFER, guiStatsBox,    0, MERC_FILES_STATS_BOX_X,    MERC_FILES_STATS_BOX_Y);
 	BltVideoObject(FRAME_BUFFER, guiBioBox,      0, MERC_FILES_BIO_BOX_X + 1,  MERC_FILES_BIO_BOX_Y);
 
-	ProfileID         const  pid = GetProfileIDFromMERCListingIndex(gubCurMercIndex);
+	const MERCListingModel*  l   = GCM->getMERCListings().at(gubCurMercIndex);
+	ProfileID         const  pid = GetProfileIDFromMERCListing(l);
 	MERCPROFILESTRUCT const& p   = GetProfile(pid);
 
 	//Display the mercs face
@@ -205,7 +208,7 @@ void RenderMercsFiles()
 	DrawTextToScreen(p.zName, MERC_NAME_X, MERC_NAME_Y, 0, MERC_NAME_FONT, MERC_NAME_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 
 	//Load and display the mercs bio
-	LoadAndDisplayMercBio((UINT8)(pid - BIFF));
+	LoadAndDisplayMercBio(l->bioIndex);
 
 	//Display the mercs statistic
 	DisplayMercsStats(p);

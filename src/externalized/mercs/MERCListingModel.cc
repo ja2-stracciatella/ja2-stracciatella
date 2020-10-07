@@ -3,20 +3,21 @@
 #include "Soldier_Control.h"
 #include <set>
 #include <string_theory/format>
+#include <utility>
 
-MERCListingModel::MERCListingModel(uint8_t index_, uint8_t profileID_, 
+MERCListingModel::MERCListingModel(uint8_t index_, uint8_t profileID_, uint8_t bioIndex_,
 	uint32_t minTotalSpending_, uint32_t minDays_, 
 	std::vector<SpeckQuote> quotes_
-	) : index(index_), profileID(profileID_),
+	) : index(index_), profileID(profileID_), bioIndex(bioIndex_),
 	    minTotalSpending(minTotalSpending_), minDays(minDays_),
-	    quotes(quotes_) {}
+	    quotes(std::move(quotes_)) {}
 
 bool MERCListingModel::isAvailableAtStart() const
 {
 	return this->minDays == 0 && this->minTotalSpending == 0;
 }
 
-const std::vector<SpeckQuote> MERCListingModel::getQuotesByType(SpeckQuoteType type) const
+std::vector<SpeckQuote> MERCListingModel::getQuotesByType(SpeckQuoteType type) const
 {
 	std::vector<SpeckQuote> filtered;
 	for (auto q : quotes)
@@ -53,6 +54,7 @@ MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::
 	return new MERCListingModel(
 		index,
 		r.GetUInt("profileID"),
+		r.GetUInt("bioIndex"),
 		r.getOptionalInt("minTotalSpending"), 
 		r.getOptionalInt("minDays"),
 		quotes
@@ -60,7 +62,7 @@ MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::
 
 }
 
-void MERCListingModel::validateData(std::vector<const MERCListingModel*> models)
+void MERCListingModel::validateData(const std::vector<const MERCListingModel*>& models)
 {
 	std::set<uint8_t> uniqueProfileIDs;
 	for (auto m : models)
@@ -82,7 +84,7 @@ void MERCListingModel::validateData(std::vector<const MERCListingModel*> models)
 
 	for (auto m : models)
 	{
-		for (auto quote : m->getQuotesByType(SpeckQuoteType::CROSS_SELL))
+		for (const auto& quote : m->getQuotesByType(SpeckQuoteType::CROSS_SELL))
 		{
 			// Check if related merc is set
 			if (!quote->relatedMercID)
