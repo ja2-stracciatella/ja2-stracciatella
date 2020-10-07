@@ -37,11 +37,25 @@
     ,{ "profileID": 18, "internalName": "ICE", "type": "AIM" }
     ,{ "profileID": 19, "internalName": "SPIDER", "type": "AIM" }
     ,{ "profileID": 20, "internalName": "CLIFF", "type": "AIM" }
+    ,{ "profileID": 21, "internalName": "BULL", "type": "AIM" }
+    ,{ "profileID": 22, "internalName": "HITMAN", "type": "AIM" }
+    ,{ "profileID": 23, "internalName": "BUZZ", "type": "AIM" }
+    ,{ "profileID": 24, "internalName": "RAIDER", "type": "AIM" }
     ,{ "profileID": 25, "internalName": "RAVEN", "type": "AIM" }
+    ,{ "profileID": 26, "internalName": "STATIC", "type": "AIM" }
+    ,{ "profileID": 27, "internalName": "LEN", "type": "AIM" }
+    ,{ "profileID": 28, "internalName": "DANNY", "type": "AIM" }
     ,{ "profileID": 29, "internalName": "MAGIC", "type": "AIM" }
+    ,{ "profileID": 30, "internalName": "STEPHEN", "type": "AIM" }
+    ,{ "profileID": 31, "internalName": "SCULLY", "type": "AIM" }
+    ,{ "profileID": 32, "internalName": "MALICE", "type": "AIM" }
     ,{ "profileID": 33, "internalName": "DR_Q", "type": "AIM" }
     ,{ "profileID": 34, "internalName": "NAILS", "type": "AIM" }
+    ,{ "profileID": 35, "internalName": "THOR", "type": "AIM" }
     ,{ "profileID": 36, "internalName": "SCOPE", "type": "AIM" }
+    ,{ "profileID": 37, "internalName": "WOLF", "type": "AIM" }
+    ,{ "profileID": 38, "internalName": "MD", "type": "AIM" }
+    ,{ "profileID": 39, "internalName": "MELTDOWN", "type": "AIM" }
      /* M.E.R.C. soldiers */
     ,{ "profileID": 40, "internalName": "BIFF", "type": "MERC" }
     ,{ "profileID": 41, "internalName": "HAYWIRE", "type": "MERC" }
