@@ -23,7 +23,7 @@ public:
 	virtual ST::string getSavedGamesFolder() const override;
 
 	/** Load dialogue quote from file. */
-	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number) override;
+	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) override;
 
 protected:
 	// path to the assets shipped with Stracciatella

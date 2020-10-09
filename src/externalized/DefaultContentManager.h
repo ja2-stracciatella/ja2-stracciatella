@@ -45,7 +45,7 @@ public:
 	virtual ST::string getRadarMapResourceName(const ST::string &mapName) const override;
 
 	/** Get tileset resource name. */
-	virtual ST::string getTilesetResourceName(int number, ST::string fileName) const override;
+	virtual ST::string getTilesetResourceName(int number, const ST::string& fileName) const override;
 
 	/** Get tileset db resource name. */
 	virtual ST::string getTilesetDBResName() const override;
@@ -63,27 +63,25 @@ public:
 	virtual std::vector<ST::string> getAllTilecache() const override;
 
 	/* Open a game resource file for reading. */
-	virtual SGPFile* openGameResForReading(const char* filename) const override;
 	virtual SGPFile* openGameResForReading(const ST::string& filename) const override;
 
 	/** Open temporary file for writing. */
-	virtual SGPFile* openTempFileForWriting(const char* filename, bool truncate) const override;
+	virtual SGPFile* openTempFileForWriting(const ST::string& filename, bool truncate) const override;
 
 	/** Open temporary file for reading. */
-	virtual SGPFile* openTempFileForReading(const char* filename) const override;
+	virtual SGPFile* openTempFileForReading(const ST::string& filename) const override;
 
 	/** Open temporary file for appending. */
-	virtual SGPFile* openTempFileForAppend(const char* filename) const override;
+	virtual SGPFile* openTempFileForAppend(const ST::string& filename) const override;
 
 	/** Delete temporary file. */
-	virtual void deleteTempFile(const char* filename) const override;
+	virtual void deleteTempFile(const ST::string& filename) const override;
 
 	/** Open user's private file (e.g. saved game, settings) for reading. */
 	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const override;
 
 	/* Checks if a game resource exists. */
-	virtual bool doesGameResExists(char const* filename) const override;
-	virtual bool doesGameResExists(const ST::string &filename) const override;
+	virtual bool doesGameResExists(const ST::string& filename) const override;
 
 	/** Get folder for screenshots. */
 	virtual ST::string getScreenshotFolder() const override;
@@ -100,15 +98,15 @@ public:
 	virtual ST::string getSavedGamesFolder() const override;
 
 	/** Load encrypted string from game resource file. */
-	virtual ST::string loadEncryptedString(const char* fileName, uint32_t seek_chars, uint32_t read_chars) const override;
+	virtual ST::string loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const override;
 
 	virtual ST::string loadEncryptedString(SGPFile* File, uint32_t seek_chars, uint32_t read_chars) const override;
 
 	/** Load dialogue quote from file. */
-	virtual ST::string* loadDialogQuoteFromFile(const char* filename, int quote_number) override;
+	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) override;
 
 	/** Load all dialogue quotes for a character. */
-	void loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* filename, std::vector<ST::string*> &quotes) const;
+	void loadAllDialogQuotes(STRING_ENC_TYPE encType, const ST::string& filename, std::vector<ST::string*> &quotes) const;
 
 	/** Get weapons with the give index. */
 	virtual const WeaponModel* getWeapon(uint16_t index) override;
@@ -264,19 +262,19 @@ protected:
 	bool loadMusicModeList(MusicMode mode, rapidjson::Value &array);
 	bool loadMusic();
 
-	const DealerInventory * loadDealerInventory(const char *fileName);
+	const DealerInventory * loadDealerInventory(const ST::string& fileName);
 	bool loadAllDealersAndInventory();
-	void loadStringRes(const char *name, std::vector<const ST::string*> &strings) const;
+	void loadStringRes(const ST::string& name, std::vector<const ST::string*> &strings) const;
 
 	bool readWeaponTable(
-		const char *fileName,
+		const ST::string& fileName,
 		std::vector<std::vector<const WeaponModel*> > & weaponTable);
 
 	bool loadStrategicLayerData();
 	bool loadTacticalLayerData();
 	bool loadMercsData();
 
-	std::unique_ptr<rapidjson::Document> readJsonDataFile(const char *fileName) const;
+	std::unique_ptr<rapidjson::Document> readJsonDataFile(const ST::string& fileName) const;
 
 	/**
 	 * @param profileID

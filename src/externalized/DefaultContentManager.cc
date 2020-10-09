@@ -14,7 +14,6 @@
 
 #include "sgp/FileMan.h"
 #include "sgp/MemMan.h"
-#include "sgp/StrUtils.h"
 
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
@@ -391,7 +390,7 @@ ST::string DefaultContentManager::getMapPath(const ST::string& mapName) const
 	result += '/';
 	result += mapName.c_str();
 
-	SLOGD("map file %s", result.c_str());
+	SLOGD(ST::format("map file {}", result));
 
 	return result;
 }
@@ -403,15 +402,15 @@ ST::string DefaultContentManager::getRadarMapResourceName(const ST::string &mapN
 	result += "/";
 	result += mapName;
 
-	SLOGD("map file %s", result.c_str());
+	SLOGD(ST::format("map file {}", result));
 
 	return result;
 }
 
 /** Get tileset resource name. */
-ST::string DefaultContentManager::getTilesetResourceName(int number, ST::string fileName) const
+ST::string DefaultContentManager::getTilesetResourceName(int number, const ST::string& fileName) const
 {
-	return FormattedString("%s/%d/%s", TILESETSDIR, number, fileName.c_str());
+	return ST::format("{}/{}/{}", TILESETSDIR, number, fileName);
 }
 
 
@@ -446,36 +445,35 @@ std::vector<ST::string> DefaultContentManager::getAllTilecache() const
 }
 
 /** Open temporary file for writing. */
-SGPFile* DefaultContentManager::openTempFileForWriting(const char* filename, bool truncate) const
+SGPFile* DefaultContentManager::openTempFileForWriting(const ST::string& filename, bool truncate) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	return FileMan::openForWriting(path, truncate);
 }
 
 /** Open temporary file for appending. */
-SGPFile* DefaultContentManager::openTempFileForAppend(const char* filename) const
+SGPFile* DefaultContentManager::openTempFileForAppend(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	return FileMan::openForAppend(path);
 }
 
 /* Open temporary file for reading. */
-SGPFile* DefaultContentManager::openTempFileForReading(const char* filename) const
+SGPFile* DefaultContentManager::openTempFileForReading(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	RustPointer<File> file(File_open(path.c_str(), FILE_OPEN_READ));
 	if (!file)
 	{
 		RustPointer<char> err(getRustError());
-		char buf[128];
-		snprintf(buf, sizeof(buf), "DefaultContentManager::openTempFileForReading: %s", err.get());
-		throw std::runtime_error(buf);
+		ST::string buf = ST::format("DefaultContentManager::openTempFileForReading: {}", err.get());
+		throw std::runtime_error(buf.to_std_string());
 	}
 	return FileMan::getSGPFileFromFile(file.release());
 }
 
 /** Delete temporary file. */
-void DefaultContentManager::deleteTempFile(const char* filename) const
+void DefaultContentManager::deleteTempFile(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	FileDelete(path);
@@ -488,7 +486,7 @@ void DefaultContentManager::deleteTempFile(const char* filename) const
  * settings directory) and file is present.
  * If file is not found, try to find it relatively to 'Data' directory.
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
-SGPFile* DefaultContentManager::openGameResForReading(const char* filename) const
+SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename) const
 {
 	{
 		RustPointer<File> file = FileMan::openFileForReading(filename);
@@ -499,7 +497,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const char* filename) cons
 		}
 	}
 
-	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename));
+	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
 	if (!vfile)
 	{
 		RustPointer<char> err{getRustError()};
@@ -519,20 +517,14 @@ SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& 
 	if (!file)
 	{
 		RustPointer<char> err(getRustError());
-		char buf[128];
-		snprintf(buf, sizeof(buf), "DefaultContentManager::openUserPrivateFileForReading: %s", err.get());
-		throw std::runtime_error(buf);
+		ST::string buf = ST::format("DefaultContentManager::openUserPrivateFileForReading: {}", err.get());
+		throw std::runtime_error(buf.to_std_string());
 	}
 	return FileMan::getSGPFileFromFile(file.release());
 }
 
-SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename) const
-{
-	return openGameResForReading(filename.c_str());
-}
-
 /* Checks if a game resource exists. */
-bool DefaultContentManager::doesGameResExists(char const* filename) const
+bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
 {
 	if(FileMan::checkFileExistance(m_externalizedDataPath, filename))
 	{
@@ -540,26 +532,20 @@ bool DefaultContentManager::doesGameResExists(char const* filename) const
 	}
 	else
 	{
-		RustPointer<File> file(File_open(filename, FILE_OPEN_READ));
+		RustPointer<File> file(File_open(filename.c_str(), FILE_OPEN_READ));
 		if (!file)
 		{
-			char path[512];
-			snprintf(path, lengthof(path), "%s/%s", m_dataDir.c_str(), filename);
-			file.reset(File_open(path, FILE_OPEN_READ));
+			ST::string path = ST::format("{}/{}", m_dataDir, filename);
+			file.reset(File_open(path.c_str(), FILE_OPEN_READ));
 			if (!file)
 			{
-				RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename));
+				RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
 				return static_cast<bool>(vfile);
 			}
 		}
 
 		return true;
 	}
-}
-
-bool DefaultContentManager::doesGameResExists(const ST::string &filename) const
-{
-	return doesGameResExists(filename.c_str());
 }
 
 ST::string DefaultContentManager::getScreenshotFolder() const
@@ -579,14 +565,14 @@ ST::string DefaultContentManager::getSavedGamesFolder() const
 }
 
 /** Load encrypted string from game resource file. */
-ST::string DefaultContentManager::loadEncryptedString(const char* fileName, uint32_t seek_chars, uint32_t read_chars) const
+ST::string DefaultContentManager::loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const
 {
 	AutoSGPFile File(openGameResForReading(fileName));
 	ST::string err_msg;
 	ST::string str = LoadEncryptedData(err_msg, getStringEncType(), File, seek_chars, read_chars);
 	if (!err_msg.empty())
 	{
-		SLOGW("DefaultContentManager::loadEncryptedString '%s' %u %u: %s", fileName, seek_chars, read_chars, err_msg.c_str());
+		SLOGW(ST::format("DefaultContentManager::loadEncryptedString '{}' {} {}: {}", fileName, seek_chars, read_chars, err_msg));
 	}
 	return str;
 }
@@ -597,39 +583,39 @@ ST::string DefaultContentManager::loadEncryptedString(SGPFile* File, uint32_t se
 	ST::string str = LoadEncryptedData(err_msg, getStringEncType(), File, seek_chars, read_chars);
 	if (!err_msg.empty())
 	{
-		SLOGW("DefaultContentManager::loadEncryptedString ? %u %u: %s", seek_chars, read_chars, err_msg.c_str());
+		SLOGW(ST::format("DefaultContentManager::loadEncryptedString ? {} {}: {}", seek_chars, read_chars, err_msg));
 	}
 	return str;
 }
 
 
 /** Load dialogue quote from file. */
-ST::string* DefaultContentManager::loadDialogQuoteFromFile(const char* fileName, int quote_number)
+ST::string* DefaultContentManager::loadDialogQuoteFromFile(const ST::string& fileName, int quote_number)
 {
 	AutoSGPFile File(openGameResForReading(fileName));
 	ST::string err_msg;
 	ST::string quote = LoadEncryptedData(err_msg, getStringEncType(), File, quote_number * DIALOGUESIZE, DIALOGUESIZE);
 	if (!err_msg.empty())
 	{
-		SLOGW("DefaultContentManager::loadDialogQuoteFromFile '%s' %d: %s", fileName, quote_number, err_msg.c_str());
+		SLOGW(ST::format("DefaultContentManager::loadDialogQuoteFromFile '{}' {}: {}", fileName, quote_number, err_msg));
 	}
 	return new ST::string(quote);
 }
 
 /** Load all dialogue quotes for a character. */
-void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const char* fileName, std::vector<ST::string*> &quotes) const
+void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const ST::string& fileName, std::vector<ST::string*> &quotes) const
 {
 	AutoSGPFile File(openGameResForReading(fileName));
 	uint32_t fileSize = FileGetSize(File);
 	uint32_t numQuotes = fileSize / DIALOGUESIZE / 2;
-	// SLOGI("%d quotes in dialog %s", numQuotes, fileName);
+
 	for(uint32_t i = 0; i < numQuotes; i++)
 	{
 		ST::string err;
 		ST::string quote = LoadEncryptedData(err, encType, File, i * DIALOGUESIZE, DIALOGUESIZE);
 		if (!err.empty())
 		{
-			SLOGW("DefaultContentManager::loadAllDialogQuotes '%s' %d: %s", fileName, i, err.c_str());
+			SLOGW(ST::format("DefaultContentManager::loadAllDialogQuotes '{}' {}: {}", fileName, i, err));
 		}
 		quotes.push_back(new ST::string(quote));
 	}
@@ -646,8 +632,8 @@ const WeaponModel* DefaultContentManager::getWeaponByName(const ST::string &inte
 	std::map<ST::string, const WeaponModel*>::const_iterator it = m_weaponMap.find(internalName);
 	if(it == m_weaponMap.end())
 	{
-		SLOGE("weapon '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("weapon '%s' is not found", internalName.c_str()).to_std_string());
+		SLOGE(ST::format("weapon '{}' is not found", internalName));
+		throw std::runtime_error(ST::format("weapon '{}' is not found", internalName).to_std_string());
 	}
 	return it->second;//m_weaponMap[internalName];
 }
@@ -656,8 +642,8 @@ const MagazineModel* DefaultContentManager::getMagazineByName(const ST::string &
 {
 	if(m_magazineMap.find(internalName) == m_magazineMap.end())
 	{
-		SLOGE("magazine '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("magazine '%s' is not found", internalName.c_str()).to_std_string());
+		SLOGE(ST::format("magazine '{}' is not found", internalName));
+		throw std::runtime_error(ST::format("magazine '{}' is not found", internalName).to_std_string());
 	}
 	return m_magazineMap[internalName];
 }
@@ -702,11 +688,11 @@ bool DefaultContentManager::loadWeapons()
 		{
 			JsonObjectReader obj(a[i]);
 			WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap);
-			SLOGD("Loaded weapon %d %s", w->getItemIndex(), w->getInternalName().c_str());
+			SLOGD(ST::format("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName()));
 
 			if (w->getItemIndex() > MAX_WEAPONS)
 			{
-				SLOGE("Weapon index must be in the interval 0 - %d", MAX_WEAPONS);
+				SLOGE(ST::format("Weapon index must be in the interval 0 - {}", MAX_WEAPONS));
 				return false;
 			}
 
@@ -728,11 +714,11 @@ bool DefaultContentManager::loadMagazines()
 		{
 			JsonObjectReader obj(a[i]);
 			MagazineModel *mag = MagazineModel::deserialize(obj, m_calibreMap, m_ammoTypeMap);
-			SLOGD("Loaded magazine %d %s", mag->getItemIndex(), mag->getInternalName().c_str());
+			SLOGD(ST::format("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName()));
 
 			if((mag->getItemIndex() < FIRST_AMMO) || (mag->getItemIndex() > LAST_AMMO))
 			{
-				SLOGE("Magazine item index must be in the interval %d - %d", FIRST_AMMO, LAST_AMMO);
+				SLOGE(ST::format("Magazine item index must be in the interval {} - {}", FIRST_AMMO, LAST_AMMO));
 				return false;
 			}
 
@@ -754,7 +740,7 @@ bool DefaultContentManager::loadCalibres()
 		{
 			JsonObjectReader obj(a[i]);
 			CalibreModel *calibre = CalibreModel::deserialize(obj);
-			SLOGD("Loaded calibre %d %s", calibre->index, calibre->internalName.c_str());
+			SLOGD(ST::format("Loaded calibre {} {}", calibre->index, calibre->internalName));
 
 			if(m_calibres.size() <= calibre->index)
 			{
@@ -782,7 +768,7 @@ bool DefaultContentManager::loadAmmoTypes()
 		{
 			JsonObjectReader obj(a[i]);
 			AmmoTypeModel *ammoType = AmmoTypeModel::deserialize(obj);
-			SLOGD("Loaded ammo type %d %s", ammoType->index, ammoType->internalName.c_str());
+			SLOGD(ST::format("Loaded ammo type {} {}", ammoType->index, ammoType->internalName));
 
 			if(m_ammoTypes.size() <= ammoType->index)
 			{
@@ -810,7 +796,7 @@ bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::V
 	for (const ST::string &str : utf8_encoded)
 	{
 		musicModeList->push_back(new ST::string(str));
-		SLOGD("Loaded music %s", str.c_str());
+		SLOGD(ST::format("Loaded music {}", str));
 	}
 
 	m_musicMap[mode] = musicModeList;
@@ -852,7 +838,7 @@ bool DefaultContentManager::loadMusic()
 }
 
 bool DefaultContentManager::readWeaponTable(
-	const char *fileName,
+	const ST::string& fileName,
 	std::vector<std::vector<const WeaponModel*> > & weaponTable)
 {
 	auto document = readJsonDataFile(fileName);
@@ -939,7 +925,7 @@ bool DefaultContentManager::loadArmyData()
 	return true;
 }
 
-void DefaultContentManager::loadStringRes(const char *name, std::vector<const ST::string*> &strings) const
+void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<const ST::string*> &strings) const
 {
 	ST::string fullName(name);
 
@@ -955,7 +941,7 @@ void DefaultContentManager::loadStringRes(const char *name, std::vector<const ST
 	case GameVersion::RUSSIAN_GOLD: fullName += "-rus";   break;
 	default:
 	{
-		throw std::runtime_error(FormattedString("unknown game version %d", m_gameVersion).to_std_string());
+		throw std::runtime_error(ST::format("unknown game version {}", static_cast<int>(m_gameVersion)).to_std_string());
 	}
 	}
 
@@ -1024,7 +1010,7 @@ bool DefaultContentManager::loadGameData()
 	return result;
 }
 
-std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const char *fileName) const
+std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
 {
 	AutoSGPFile f(openGameResForReading(fileName));
 	ST::string jsonData = FileMan::fileReadText(f);
@@ -1043,7 +1029,7 @@ std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(con
 	return document;
 }
 
-const DealerInventory * DefaultContentManager::loadDealerInventory(const char *fileName)
+const DealerInventory * DefaultContentManager::loadDealerInventory(const ST::string& fileName)
 {
 	return new DealerInventory(readJsonDataFile(fileName).get(), this);
 }
@@ -1083,8 +1069,8 @@ const ItemModel* DefaultContentManager::getItemByName(const ST::string &internal
 	std::map<ST::string, const ItemModel*>::const_iterator it = m_itemMap.find(internalName);
 	if(it == m_itemMap.end())
 	{
-		SLOGE("item '%s' is not found", internalName.c_str());
-		throw std::runtime_error(FormattedString("item '%s' is not found", internalName.c_str()).to_std_string());
+		SLOGE(ST::format("item '{}' is not found", internalName));
+		throw std::runtime_error(ST::format("item '{}' is not found", internalName).to_std_string());
 	}
 	return it->second;
 }
@@ -1382,7 +1368,7 @@ const std::map<int8_t, const TownModel*>& DefaultContentManager::getTowns() cons
 const ST::string DefaultContentManager::getTownName(uint8_t townId) const
 {
 	if (townId >= m_townNames.size()) {
-		SLOGD("Town name not defined for index %d", townId);
+		SLOGD(ST::format("Town name not defined for index {}", townId));
 		return ST::null;
 	}
 	return *m_townNames[townId];
@@ -1391,7 +1377,7 @@ const ST::string DefaultContentManager::getTownName(uint8_t townId) const
 const ST::string DefaultContentManager::getTownLocative(uint8_t townId) const
 {
 	if (townId >= m_townNameLocatives.size()) {
-		SLOGD("Town name locative not defined for index %d", townId);
+		SLOGD(ST::format("Town name locative not defined for index {}", townId));
 		return ST::null;
 	}
 	return *m_townNameLocatives[townId];

@@ -11,7 +11,6 @@
 #include "TranslationTable.h"
 #include "GameState.h"
 #include "EncodingCorrectors.h"
-#include "StrUtils.h"
 
 #include "Logger.h"
 
@@ -402,7 +401,7 @@ char const* GetMLGFilename(MultiLanguageGraphic const id)
 		}
 	}
 
-	throw std::runtime_error(FormattedString("Multilanguage resource %d is not found", id).to_std_string());
+	throw std::runtime_error(ST::format("Multilanguage resource {} is not found", id).to_std_string());
 }
 
 STRING_ENC_TYPE getStringEncType()

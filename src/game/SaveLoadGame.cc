@@ -111,7 +111,6 @@
 #include "WorldDef.h"
 
 #include "policy/GamePolicy.h"
-#include "sgp/StrUtils.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -1145,38 +1144,38 @@ static void SaveMercProfiles(HWFILE const f)
 	}
 }
 
-ST::string IMPSavedProfileCreateFilename(ST::string nickname)
+ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
 {
 	return GCM->getSavedGamesFolder() + "/mercprofile." + nickname;;
 }
 
-bool IMPSavedProfileDoesFileExist(ST::string nickname)
+bool IMPSavedProfileDoesFileExist(const ST::string& nickname)
 {
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
 	bool fexists = Fs_exists(profile_filename.c_str());
 	return fexists;
 }
 
-SGPFile* const IMPSavedProfileOpenFileForRead(ST::string nickname)
+SGPFile* const IMPSavedProfileOpenFileForRead(const ST::string& nickname)
 {
 	if (!IMPSavedProfileDoesFileExist(nickname)) {
-		throw std::runtime_error(FormattedString("Lost IMP with nickname '%s'!", nickname.c_str()).to_std_string());
+		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
 	}
 	SGPFile *f = FileMan::openForReading(IMPSavedProfileCreateFilename(nickname).c_str());
 	return f;
 }
 
-SGPFile* const IMPSavedProfileOpenFileForWrite(ST::string nickname)
+SGPFile* const IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
 {
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
 	SGPFile *f = FileMan::openForWriting(profile_filename.c_str(), true);
 	return f;
 }
 
-int IMPSavedProfileLoadMercProfile(ST::string nickname)
+int IMPSavedProfileLoadMercProfile(const ST::string& nickname)
 {
 	if (!IMPSavedProfileDoesFileExist(nickname)) {
-		throw std::runtime_error(FormattedString("Lost IMP with nickname '%s'!", nickname.c_str()).to_std_string());
+		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
 	}
 	SGPFile *f = IMPSavedProfileOpenFileForRead(nickname);
 	MERCPROFILESTRUCT profile_saved;
@@ -1189,7 +1188,7 @@ int IMPSavedProfileLoadMercProfile(ST::string nickname)
 	return voiceid;
 }
 
-void IMPSavedProfileLoadInventory(ST::string nickname, SOLDIERTYPE *pSoldier)
+void IMPSavedProfileLoadInventory(const ST::string& nickname, SOLDIERTYPE *pSoldier)
 {
 	if (!IMPSavedProfileDoesFileExist(nickname)) return;
 	if (!pSoldier) return;

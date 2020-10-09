@@ -37,7 +37,7 @@ ST::string ModPackContentManager::getSavedGamesFolder() const
 }
 
 /** Load dialogue quote from file. */
-ST::string* ModPackContentManager::loadDialogQuoteFromFile(const char* filename, int quote_number)
+ST::string* ModPackContentManager::loadDialogQuoteFromFile(const ST::string& filename, int quote_number)
 {
 	ST::string jsonFileName = ST::string(filename) + ".json";
 	std::map<ST::string, std::vector<ST::string> >::iterator it = m_dialogQuotesMap.find(jsonFileName);
