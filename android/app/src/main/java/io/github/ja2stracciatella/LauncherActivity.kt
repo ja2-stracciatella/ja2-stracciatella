@@ -44,7 +44,7 @@ class LauncherActivity : AppCompatActivity() {
         tabs.setupWithViewPager(viewPager)
         val fab: FloatingActionButton = findViewById(R.id.fab)
 
-        fab.setOnClickListener { _ ->
+        fab.setOnClickListener {
             startGame()
         }
     }
@@ -69,7 +69,7 @@ class LauncherActivity : AppCompatActivity() {
             android.Manifest.permission.READ_EXTERNAL_STORAGE,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE
         )
-        val hasAllPermissions = permissions.all { p ->
+        val hasAllPermissions = permissions.all {
             ContextCompat.checkSelfPermission(
                 applicationContext,
                 android.Manifest.permission.READ_EXTERNAL_STORAGE
