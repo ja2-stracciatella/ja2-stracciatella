@@ -1,6 +1,7 @@
 #include "DefaultIMPPolicy.h"
 
 #include "ItemSystem.h"
+#include "JsonObject.h"
 #include "JsonUtility.h"
 
 #include <string_theory/string>
@@ -19,10 +20,18 @@ static void readListOfItems(rapidjson::Value &value, std::vector<const ItemModel
 
 DefaultIMPPolicy::DefaultIMPPolicy(rapidjson::Document *json, const ItemSystem *itemSystem)
 {
+	JsonObjectReader r(*json);
+	m_startingLevel = r.getOptionalUInt("starting_level", 1);
+
 	readListOfItems((*json)["inventory"], m_inventory, itemSystem);
 
 	readListOfItems((*json)["if_good_shooter"], m_goodShooterItems, itemSystem);
 	readListOfItems((*json)["if_normal_shooter"], m_normalShooterItems, itemSystem);
+}
+
+uint8_t DefaultIMPPolicy::getStartingLevel() const
+{
+	return m_startingLevel;
 }
 
 const std::vector<const ItemModel *> & DefaultIMPPolicy::getInventory() const

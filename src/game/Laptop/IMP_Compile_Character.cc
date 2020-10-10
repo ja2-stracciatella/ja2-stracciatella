@@ -4,6 +4,7 @@
 #include "Debug.h"
 #include "GameInstance.h"
 #include "GamePolicy.h"
+#include "IMPPolicy.h"
 #include "ContentManager.h"
 #include "Render_Dirty.h"
 #include "IMP_Portraits.h"
@@ -57,7 +58,7 @@ void CreateACharacterFromPlayerEnteredStats(void)
 
 	p.bAttitude = iAttitude;
 
-	p.bExpLevel = 1;
+	p.bExpLevel = GCM->getIMPPolicy()->getStartingLevel();
 
 	// set time away
 	p.bMercStatus = 0;
