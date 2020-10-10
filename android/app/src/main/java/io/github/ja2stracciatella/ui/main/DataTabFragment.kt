@@ -2,14 +2,12 @@ package io.github.ja2stracciatella.ui.main
 
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.codekidlabs.storagechooser.StorageChooser
 import io.github.ja2stracciatella.ConfigurationModel
@@ -28,6 +26,9 @@ class DataTabFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         configurationModel = ViewModelProvider(requireActivity()).get(ConfigurationModel::class.java)
+        // We suppress deprecation for .fragmentManager here as we need the android.app.FragmentManager
+        // and not androidx.fragment.app.FragmentManager for the Storage Chooser
+        @Suppress("DEPRECATION")
         chooser = StorageChooser.Builder()
             .withActivity(activity)
             .withFragmentManager(activity?.fragmentManager)
@@ -69,7 +70,7 @@ class DataTabFragment : Fragment() {
 
     private fun getPermissionsIfNecessaryForAction(action: () -> Unit) {
         val permissions = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-        val hasAllPermissions = permissions.all { p -> ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED }
+        val hasAllPermissions = permissions.all { ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED }
         if (hasAllPermissions)  {
             action()
         } else {

@@ -12,6 +12,9 @@ open class StracciatellaActivity : SDLActivity() {
         );
     }
 
+    // We suppress deprecation warnings here as our Android SDK minimum version
+    // does not have replacements for those APIs yet.
+    @Suppress("DEPRECATION")
     override fun onWindowFocusChanged(hasFocus: Boolean) {
         super.onWindowFocusChanged(hasFocus)
 
