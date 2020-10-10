@@ -1,2 +1,6 @@
 Creative Commons Attribution Non-Commercial License V2.0.
 https://creativecommons.org/licenses/by-nc/2.0
+
+libsmacker was authored by Greg Kennedy.
+libsmacker has been modified to address the needs of ja2-stracciatella:
+- loading and accessing *.smk files through memory buffers.
