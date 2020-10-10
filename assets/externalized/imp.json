@@ -1,6 +1,14 @@
 {
+    // Experience level of a new I.M.P. merc
+    // vanilla setting: 1
+    "starting_level": 1,
+
+    // Basic inventory items of any new I.M.P merc
     "inventory": ["CANTEEN", "FLAK_JACKET"],
 
+    // Additional inventory items of a good shooter (marksmanship >= 80)
     "if_good_shooter": ["MP5K", "CLIP9_30", "CLIP9_30"],
+
+    // Additional inventory items of a normal shooter (marksmanship < 80)
     "if_normal_shooter": ["BERETTA_93R", "CLIP9_15", "CLIP9_15", "CLIP9_15"]
 }
