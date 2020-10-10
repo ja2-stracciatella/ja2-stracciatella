@@ -351,7 +351,11 @@ int main(int argc, char* argv[])
 		JNIEnv* jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
 		
 		if (setGlobalJniEnv(jniEnv) == FALSE) {
-			SLOGE("Failed to set global jni env");
+			auto rustError = getRustError();
+			if (rustError != NULL) {
+				SLOGE("Failed to set global JNI env for Android: %s", rustError);
+			}
+			return EXIT_FAILURE;
 		}
 		#endif
 		RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome());
@@ -360,6 +364,7 @@ int main(int argc, char* argv[])
 			if (rustError != NULL) {
 				SLOGE("Failed to find home directory: %s", rustError);
 			}
+			return EXIT_FAILURE;
 		}
 
 		ST::string exeFolder = FileMan::getParentPath(argv[0], true);
