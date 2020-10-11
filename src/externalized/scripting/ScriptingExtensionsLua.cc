@@ -198,6 +198,13 @@ static void RegisterUserTypes()
 
 		"ubBattleSoundID", &SOLDIERTYPE::ubBattleSoundID
 		);
+
+	lua.new_usertype<BOOLEAN_S>("BOOLEAN_S",
+		"val", &BOOLEAN_S::val
+		);
+	lua.new_usertype<UINT8_S>("UINT8_S",
+		"val", &UINT8_S::val
+		);
 }
 
 static void RegisterGlobals()
@@ -292,7 +299,7 @@ static void _RegisterListener(std::string observable, std::string luaFunc, ST::s
 	}
 
 	if      (observable == "OnStructureDamaged")         OnStructureDamaged.addListener(key, wrap<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN>(luaFunc));
-	else if (observable == "BeforeStructureDamaged")     BeforeStructureDamaged.addListener(key, wrap<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN*>(luaFunc));
+	else if (observable == "BeforeStructureDamaged")     BeforeStructureDamaged.addListener(key, wrap<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*>(luaFunc));
 	else if (observable == "OnAirspaceControlUpdated")   OnAirspaceControlUpdated.addListener(key, wrap<>(luaFunc));
 	else if (observable == "BeforePrepareSector")        BeforePrepareSector.addListener(key, wrap<>(luaFunc));
 	else if (observable == "OnSoldierCreated")           OnSoldierCreated.addListener(key, wrap<SOLDIERTYPE*>(luaFunc));

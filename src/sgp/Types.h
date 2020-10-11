@@ -163,4 +163,25 @@ typedef SGPFile* HWFILE;
 #	define ENUM_BITSET(type)
 #endif
 
+namespace _Types
+{
+	// Object wrapper of a single primitive value.
+	// This is used to implement "pass by reference" of Lua function arguments.
+	// Usage:
+	// - In C++ it can be used as the underlying type
+	// - In Lua, the value is to be read or written with the `.val` member.
+	template<typename T>
+	struct BoxedValue
+	{
+		BoxedValue<T>(T v) : val(v) {};
+
+		operator T() const { return val; }
+
+		T val;
+	};
+}
+
+typedef _Types::BoxedValue<BOOLEAN> BOOLEAN_S;
+typedef _Types::BoxedValue<UINT8>   UINT8_S;
+
 #endif

@@ -51,7 +51,7 @@ extern Observable<> BeforePrepareSector;
  * @param fSkipDamage damage processing will be skipped if it is set to TRUE
  * @ingroup observables
  */
-extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN*> BeforeStructureDamaged;
+extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*> BeforeStructureDamaged;
 
 /**
   * Callback just after a structure has just been damaged by explosives
