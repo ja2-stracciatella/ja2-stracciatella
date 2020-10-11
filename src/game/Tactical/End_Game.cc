@@ -122,7 +122,7 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 	RecompileLocalMovementCostsFromRadius( 13830, 5 );
 }
 
-void HandleStatueDamaged(INT16 sectorX, INT16 sectorY, INT8 sectorZ, INT16 sGridNo, STRUCTURE *s, UINT32 uiDist, BOOLEAN *skipDamage)
+void HandleStatueDamaged(INT16 sectorX, INT16 sectorY, INT8 sectorZ, INT16 sGridNo, STRUCTURE *s, UINT32 uiDist, BOOLEAN_S *skipDamage)
 {
 	/* ATE: Check for O3 statue for special damage
 	 * Note, we do this check every time explosion goes off in game, but it's an

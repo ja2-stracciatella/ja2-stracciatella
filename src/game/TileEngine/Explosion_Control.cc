@@ -101,7 +101,7 @@ static SOLDIERTYPE* gPersonToSetOffExplosions           = 0;
 #define NUM_EXPLOSION_SLOTS 100
 static EXPLOSIONTYPE gExplosionData[NUM_EXPLOSION_SLOTS];
 
-Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN*> BeforeStructureDamaged = {};
+Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*> BeforeStructureDamaged = {};
 Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged = {};
 
 static EXPLOSIONTYPE* GetFreeExplosion(void)
@@ -359,7 +359,7 @@ static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags,
 
 static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTURE** const ppNextCurrent, INT16 const grid_no, INT16 const wound_amt, UINT32 const uiDist, BOOLEAN* const pfRecompileMovementCosts, BOOLEAN const only_walls, SOLDIERTYPE* const owner, INT8 const level)
 {
-	BOOLEAN skipDamage = false;
+	BOOLEAN_S skipDamage = false;
 	BeforeStructureDamaged(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, grid_no, pCurrent, uiDist, &skipDamage);
 	if (skipDamage)
 	{
