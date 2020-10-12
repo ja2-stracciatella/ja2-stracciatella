@@ -15,6 +15,17 @@ use stracciatella::guess::guess_vanilla_version;
 use crate::c::common::*;
 use crate::c::vec::VecCString;
 
+/// Sets the global JNI env for Android
+#[no_mangle]
+#[cfg(target_os = "android")]
+pub extern "C" fn setGlobalJniEnv(jni_env: *mut jni::sys::JNIEnv) -> bool {
+    forget_rust_error();
+    if let Err(e) = stracciatella::android::set_global_jni_env(jni_env) {
+        remember_rust_error(format!("setGlobalJniEnv: {}", e))
+    }
+    no_rust_error()
+}
+
 /// Deletes a CString.
 /// The caller is no longer responsible for the memory.
 #[no_mangle]
@@ -69,7 +80,6 @@ pub extern "C" fn findPathFromAssetsDir(
 /// If test_exists is true, it makes sure the path exists.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-#[cfg(not(target_os = "android"))]
 pub extern "C" fn findPathFromStracciatellaHome(
     engine_options: *mut EngineOptions,
     path: *const c_char,

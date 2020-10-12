@@ -2,8 +2,6 @@
 //!
 //! [`stracciatella::config`]: ../../stracciatella/config/index.html
 
-#[cfg(target_os = "android")]
-use jni;
 use std::ptr;
 
 use stracciatella::config::{
@@ -61,36 +59,8 @@ pub extern "C" fn EngineOptions_destroy(ptr: *mut EngineOptions) {
 /// Gets the `EngineOptions.stracciatella_home` path.
 /// The caller is responsible for the returned memory.
 #[no_mangle]
-#[cfg(not(target_os = "android"))]
 pub extern "C" fn EngineOptions_getStracciatellaHome() -> *mut c_char {
     let stracciatella_home = find_stracciatella_home();
-
-    forget_rust_error();
-    match stracciatella_home {
-        Ok(stracciatella_home) => {
-            let stracciatella_home = c_string_from_path_or_panic(&stracciatella_home);
-            stracciatella_home.into_raw()
-        }
-        Err(e) => {
-            remember_rust_error(format!("EngineOptions_getStracciatellaHome: {:?}", e));
-            std::ptr::null_mut()
-        }
-    }
-}
-
-/// Gets the `EngineOptions.stracciatella_home` path.
-/// The caller is responsible for the returned memory.
-/// This is the android version that reads stracciatella home via JNI
-///
-/// # Safety
-///
-/// This function does not do any safety chacks for the passed pointers
-#[no_mangle]
-#[cfg(target_os = "android")]
-pub unsafe extern "C" fn EngineOptions_getStracciatellaHome(
-    ptr: *mut jni::sys::JNIEnv,
-) -> *mut c_char {
-    let stracciatella_home = jni::JNIEnv::from_raw(ptr).and_then(find_stracciatella_home);
 
     forget_rust_error();
     match stracciatella_home {

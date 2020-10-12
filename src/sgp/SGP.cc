@@ -349,18 +349,22 @@ int main(int argc, char* argv[])
 
 		#ifdef __ANDROID__
 		JNIEnv* jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
-		if (jniEnv == NULL) {
-			SLOGE("Failed to get jni env");
+		
+		if (setGlobalJniEnv(jniEnv) == FALSE) {
+			auto rustError = getRustError();
+			if (rustError != NULL) {
+				SLOGE("Failed to set global JNI env for Android: %s", rustError);
+			}
+			return EXIT_FAILURE;
 		}
-		RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome(jniEnv));
-		#else
-		RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome());
 		#endif
+		RustPointer<char> configFolderPath(EngineOptions_getStracciatellaHome());
 		if (configFolderPath.get() == NULL) {
 			auto rustError = getRustError();
 			if (rustError != NULL) {
 				SLOGE("Failed to find home directory: %s", rustError);
 			}
+			return EXIT_FAILURE;
 		}
 
 		ST::string exeFolder = FileMan::getParentPath(argv[0], true);
@@ -487,11 +491,7 @@ int main(int argc, char* argv[])
 			SLOGI("------------------------------------------------------------------------------");
 		}
 
-		#ifdef __ANDROID__
-		cm->init(params.get(), jniEnv);
-		#else
 		cm->init(params.get());
-		#endif
 
 		if(!cm->loadGameData())
 		{

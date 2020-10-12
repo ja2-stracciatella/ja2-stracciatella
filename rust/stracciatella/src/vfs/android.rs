@@ -7,7 +7,6 @@ use std::io;
 use std::io::SeekFrom;
 use std::path::{Path, PathBuf};
 
-use jni::JNIEnv;
 use ndk::asset::{Asset, AssetManager};
 
 use crate::android::get_asset_manager;
@@ -35,8 +34,8 @@ pub struct AssetManagerFsFile {
 
 impl AssetManagerFs {
     /// Creates a new virtual filesystem.
-    pub fn new(base_path: &Path, jni_env: JNIEnv) -> io::Result<AssetManagerFs> {
-        let asset_manager = get_asset_manager(jni_env.clone()).map_err(|err| {
+    pub fn new(base_path: &Path) -> io::Result<AssetManagerFs> {
+        let asset_manager = get_asset_manager().map_err(|err| {
             io::Error::new(
                 io::ErrorKind::Other,
                 format!(
@@ -61,19 +60,62 @@ impl AssetManagerFs {
     /// Opens a file in the filesystem.
     /// This is currently very basic and not case insensitive
     pub fn open(&self, file_path: &Nfc) -> io::Result<AssetManagerFsFile> {
-        let asset_path = Self::path_to_cstring(&self.base_path.join(file_path.as_str()))?;
-        let asset = self.asset_manager.open(&asset_path).ok_or_else(|| {
-            io::Error::new(
-                io::ErrorKind::NotFound,
-                format!("AssetManagerFs: Asset not found: `{:?}`", asset_path),
-            )
-        })?;
+        let mut candidates = vec![self.base_path.to_owned()];
 
-        Ok(AssetManagerFsFile {
-            file_path: file_path.clone(),
-            base_path: self.base_path.clone(),
-            file: asset,
-        })
+        for want in file_path.split('/') {
+            let mut next = Vec::new();
+            if want == "." || want == ".." {
+                return Err(io::Error::new(
+                    io::ErrorKind::InvalidInput,
+                    "special path components are not supported",
+                ));
+            }
+            for candidate in candidates {
+                let candidate_cstring = Self::path_to_cstring(&candidate)?;
+                let dir_contents = crate::android::list_asset_dir(&candidate).map_err(|e| {
+                    io::Error::new(
+                        io::ErrorKind::Other,
+                        format!("AssetManagerFs: JNI Error: `{:?}`", e),
+                    )
+                })?;
+                if self.asset_manager.open_dir(&candidate_cstring).is_some() {
+                    for entry in dir_contents {
+                        let is_match = entry
+                            .file_name()
+                            .and_then(|x| x.to_str())
+                            .map(|x| want == Nfc::caseless(x).as_str())
+                            .unwrap_or(false);
+                        if is_match {
+                            next.push(candidate.join(&entry));
+                        }
+                    }
+                }
+            }
+            candidates = next;
+            if candidates.is_empty() {
+                break;
+            }
+        }
+        candidates.sort();
+
+        for candidate in candidates {
+            let candidate_cstring = Self::path_to_cstring(&candidate)?;
+            if let Some(file) = self.asset_manager.open(&candidate_cstring) {
+                return Ok(AssetManagerFsFile {
+                    file_path: file_path.clone(),
+                    base_path: self.base_path.clone(),
+                    file,
+                });
+            }
+        }
+
+        Err(io::Error::new(
+            io::ErrorKind::NotFound,
+            format!(
+                "AssetManagerFs: Asset not found: `{:?}`",
+                self.base_path.join(&file_path.as_str())
+            ),
+        ))
     }
 
     /// Maps a path to CString for asset manager

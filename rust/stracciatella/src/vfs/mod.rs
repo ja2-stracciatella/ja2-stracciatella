@@ -14,8 +14,6 @@ use std::io;
 use std::io::{ErrorKind, SeekFrom};
 use std::path::{Path, PathBuf};
 
-#[cfg(target_os = "android")]
-use jni::JNIEnv;
 use log::{info, warn};
 
 use crate::unicode::Nfc;
@@ -89,9 +87,9 @@ impl Vfs {
 
     /// Adds an overlay filesystem backed by android assets
     #[cfg(target_os = "android")]
-    pub fn add_android_assets(&mut self, path: &Path, jni_env: JNIEnv) -> Result<(), VfsInitError> {
+    pub fn add_android_assets(&mut self, path: &Path) -> Result<(), VfsInitError> {
         let asset_manager_fs =
-            android::AssetManagerFs::new(&path, jni_env).map_err(|error| VfsInitError {
+            android::AssetManagerFs::new(&path).map_err(|error| VfsInitError {
                 path: path.to_owned(),
                 error,
             })?;
@@ -129,7 +127,6 @@ impl Vfs {
     pub fn init_from_engine_options(
         &mut self,
         engine_options: &EngineOptions,
-        #[cfg(target_os = "android")] jni_env: JNIEnv<'_>,
     ) -> Result<(), VfsInitError> {
         let vanilla_game_dir = engine_options.vanilla_game_dir.clone();
         let vanilla_data_dir =
@@ -197,7 +194,7 @@ impl Vfs {
         self.add_dir(&externalized_dir)?;
         // On android the externalized dir comes from APK assets
         #[cfg(target_os = "android")]
-        self.add_android_assets(&Path::new(EXTERNALIZED_DIR), jni_env.clone())?;
+        self.add_android_assets(&Path::new(EXTERNALIZED_DIR))?;
 
         // Next is vanilla data dir (required)
         self.add_dir(&vanilla_data_dir)?;
