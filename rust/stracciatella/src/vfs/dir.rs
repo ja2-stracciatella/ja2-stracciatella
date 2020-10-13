@@ -9,6 +9,8 @@ use std::path::{Path, PathBuf};
 use crate::fs;
 use crate::fs::File;
 use crate::unicode::Nfc;
+use crate::vfs::{VfsFile, VfsLayer};
+use std::rc::Rc;
 
 /// A case-insensitive virtual filesystem backed by a filesystem directory.
 #[derive(Debug)]
@@ -30,15 +32,17 @@ pub struct DirFsFile {
 
 impl DirFs {
     /// Creates a new virtual filesystem.
-    pub fn new(path: &Path) -> io::Result<DirFs> {
+    pub fn new(path: &Path) -> io::Result<Rc<DirFs>> {
         fs::read_dir(&path)?;
-        Ok(DirFs {
+        Ok(Rc::new(DirFs {
             dir_path: path.to_owned(),
-        })
+        }))
     }
+}
 
+impl VfsLayer for DirFs {
     /// Opens a file in the filesystem.
-    pub fn open(&self, file_path: &Nfc) -> io::Result<DirFsFile> {
+    fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
         let mut candidates = vec![self.dir_path.to_owned()];
         for want in file_path.split('/') {
             let mut next = Vec::new();
@@ -71,26 +75,21 @@ impl DirFs {
         }
         candidates.sort();
         if let Some(path) = candidates.iter().filter(|x| x.is_file()).nth(0) {
-            Ok(DirFsFile {
+            Ok(Box::new(DirFsFile {
                 file_path: file_path.to_owned(),
                 dir_path: self.dir_path.to_owned(),
                 file: File::open(&path)?,
-            })
+            }))
         } else {
             Err(io::ErrorKind::NotFound.into())
         }
     }
 }
 
-impl DirFsFile {
+impl VfsFile for DirFsFile {
     /// Gets the length of the file.
-    pub fn len(&self) -> io::Result<u64> {
+    fn len(&self) -> io::Result<u64> {
         self.file.metadata().map(|x| x.len())
-    }
-
-    /// Returns true if the file is empty.
-    pub fn is_empty(&self) -> io::Result<bool> {
-        self.len().map(|x| x == 0)
     }
 }
 

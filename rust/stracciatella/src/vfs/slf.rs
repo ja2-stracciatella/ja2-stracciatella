@@ -7,11 +7,13 @@ use std::io;
 use std::io::{Seek, SeekFrom};
 use std::path::{Path, PathBuf};
 use std::sync::{Arc, Mutex};
+use std::rc::Rc;
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
 use crate::fs::File;
 use crate::math::checked_add_u64_i64;
 use crate::unicode::Nfc;
+use crate::vfs::{VfsFile, VfsLayer};
 
 /// A read-only case-insensitive virtual filesystem backed by a SLF file.
 #[derive(Debug)]
@@ -56,7 +58,7 @@ pub struct SlfFsFile {
 
 impl SlfFs {
     /// Creates a new virtual filesystem.
-    pub fn new(path: &Path) -> io::Result<SlfFs> {
+    pub fn new(path: &Path) -> io::Result<Rc<SlfFs>> {
         let mut slf_file = File::open(&path)?;
         let header = SlfHeader::from_input(&mut slf_file)?;
         let entries: Vec<_> = header
@@ -69,16 +71,18 @@ impl SlfFs {
                 length: x.length,
             })
             .collect();
-        Ok(SlfFs {
+        Ok(Rc::new(SlfFs {
             slf_path: path.to_owned(),
             slf_file: Arc::new(Mutex::new(slf_file)),
             prefix: Nfc::caseless_path(&header.library_path),
             entries,
-        })
+        }))
     }
+}
 
+impl VfsLayer for SlfFs {
     /// Opens a file in the filesystem.
-    pub fn open(&self, file_path: &Nfc) -> io::Result<SlfFsFile> {
+    fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
         if file_path.starts_with(self.prefix.as_str()) {
             let (_, want) = file_path.split_at(self.prefix.len());
             let entry_option = self
@@ -87,29 +91,24 @@ impl SlfFs {
                 .filter(|x| x.path.as_str() == want)
                 .nth(0);
             if let Some(entry) = entry_option {
-                return Ok(SlfFsFile {
+                return Ok(Box::new(SlfFsFile {
                     file_path: file_path.to_owned(),
                     slf_path: self.slf_path.to_owned(),
                     slf_file: self.slf_file.to_owned(),
                     offset: entry.offset,
                     length: entry.length,
                     position: 0,
-                });
+                }));
             }
         }
         Err(io::ErrorKind::NotFound.into())
     }
 }
 
-impl SlfFsFile {
+impl VfsFile for SlfFsFile {
     /// Gets the length of the file.
-    pub fn len(&self) -> u64 {
-        u64::from(self.length)
-    }
-
-    /// Returns true if the file is empty.
-    pub fn is_empty(&self) -> bool {
-        self.length == 0
+    fn len(&self) -> io::Result<u64> {
+        Ok(u64::from(self.length))
     }
 }
 

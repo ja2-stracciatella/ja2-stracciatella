@@ -90,7 +90,7 @@ mod vfs {
     use stracciatella::fs;
     use stracciatella::fs::{OpenOptions, TempDir};
     use stracciatella::unicode::Nfc;
-    use stracciatella::vfs::Vfs;
+    use stracciatella::vfs::{Vfs, VfsLayer};
 
     fn read_file_data(vfs: &Vfs, path: &str) -> Vec<u8> {
         let mut file = vfs.open(&Nfc::caseless_path(path)).expect("VfsFile");

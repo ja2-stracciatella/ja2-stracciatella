@@ -11,22 +11,38 @@ pub mod slf;
 
 use std::fmt;
 use std::io;
-use std::io::{ErrorKind, SeekFrom};
+use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
+use std::rc::Rc;
 
 use log::{info, warn};
 
 use crate::unicode::Nfc;
-use crate::vfs::dir::{DirFs, DirFsFile};
-use crate::vfs::slf::{SlfFs, SlfFsFile};
+use crate::vfs::dir::DirFs;
+use crate::vfs::slf::SlfFs;
 use crate::EngineOptions;
 use crate::{fs, get_assets_dir};
+
+pub trait VfsFile: io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display {
+    /// Returns the length of the file
+    fn len(&self) -> io::Result<u64>;
+
+    /// Returns true if the virtual file is empty.
+    fn is_empty(&self) -> io::Result<bool> {
+        Ok(self.len()? == 0)
+    }
+}
+
+pub trait VfsLayer: fmt::Debug + fmt::Display {
+    // Opens a file in the VFS Layer
+    fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>>;
+}
 
 /// A virtual filesystem that mounts other filesystems.
 #[derive(Debug, Default)]
 pub struct Vfs {
     /// List of entries.
-    pub entries: Vec<VfsSource>,
+    pub entries: Vec<Rc<dyn VfsLayer>>,
 }
 
 /// A virtual filesystem that mounts other filesystems.
@@ -34,24 +50,6 @@ pub struct Vfs {
 pub struct VfsInitError {
     path: PathBuf,
     error: io::Error,
-}
-
-/// A source filesystem.
-#[derive(Debug)]
-pub enum VfsSource {
-    Dir(DirFs),
-    Slf(SlfFs),
-    #[cfg(target_os = "android")]
-    AndroidAssets(android::AssetManagerFs),
-}
-
-/// A virtual file.
-#[derive(Debug)]
-pub enum VfsFile {
-    Dir(DirFsFile),
-    Slf(SlfFsFile),
-    #[cfg(target_os = "android")]
-    AndroidAssets(android::AssetManagerFsFile),
 }
 
 static MODS_DIR: &str = "mods";
@@ -66,36 +64,35 @@ impl Vfs {
     }
 
     /// Adds an overlay filesystem backed by a filesystem directory.
-    pub fn add_dir(&mut self, path: &Path) -> Result<(), VfsInitError> {
+    pub fn add_dir(&mut self, path: &Path) -> Result<Rc<dyn VfsLayer>, VfsInitError> {
         let dir_fs = DirFs::new(&path).map_err(|error| VfsInitError {
             path: path.to_owned(),
             error,
         })?;
-        self.entries.push(VfsSource::Dir(dir_fs));
-        Ok(())
+        self.entries.push(dir_fs.clone());
+        Ok(dir_fs)
     }
 
     /// Adds an overlay filesystem backed by a SLF file.
-    pub fn add_slf(&mut self, path: &Path) -> Result<(), VfsInitError> {
+    pub fn add_slf(&mut self, path: &Path) -> Result<Rc<dyn VfsLayer>, VfsInitError> {
         let slf_fs = SlfFs::new(&path).map_err(|error| VfsInitError {
             path: path.to_owned(),
             error,
         })?;
-        self.entries.push(VfsSource::Slf(slf_fs));
-        Ok(())
+        self.entries.push(slf_fs.clone());
+        Ok(slf_fs)
     }
 
     /// Adds an overlay filesystem backed by android assets
     #[cfg(target_os = "android")]
-    pub fn add_android_assets(&mut self, path: &Path) -> Result<(), VfsInitError> {
+    pub fn add_android_assets(&mut self, path: &Path) -> Result<Rc<dyn VfsLayer>, VfsInitError> {
         let asset_manager_fs =
             android::AssetManagerFs::new(&path).map_err(|error| VfsInitError {
                 path: path.to_owned(),
                 error,
             })?;
-        self.entries
-            .push(VfsSource::AndroidAssets(asset_manager_fs));
-        Ok(())
+        self.entries.push(asset_manager_fs.clone());
+        Ok(asset_manager_fs)
     }
 
     /// Adds an overlay for all SLF files in dir
@@ -225,16 +222,13 @@ impl Vfs {
 
         Ok(())
     }
+}
 
+impl VfsLayer for Vfs {
     /// Opens a file.
-    pub fn open(&self, file_path: &Nfc) -> io::Result<VfsFile> {
+    fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
         for entry in self.entries.iter() {
-            let file_result = match &entry {
-                VfsSource::Dir(x) => x.open(&file_path).map(VfsFile::Dir),
-                VfsSource::Slf(x) => x.open(&file_path).map(VfsFile::Slf),
-                #[cfg(target_os = "android")]
-                VfsSource::AndroidAssets(x) => x.open(&file_path).map(VfsFile::AndroidAssets),
-            };
+            let file_result = entry.open(&file_path);
             if let Err(err) = &file_result {
                 if err.kind() == io::ErrorKind::NotFound {
                     continue;
@@ -243,28 +237,6 @@ impl Vfs {
             return file_result;
         }
         Err(io::ErrorKind::NotFound.into())
-    }
-}
-
-impl VfsFile {
-    /// Gets the length of the virtual file.
-    pub fn len(&self) -> io::Result<u64> {
-        match self {
-            VfsFile::Dir(x) => x.len(),
-            VfsFile::Slf(x) => Ok(x.len()),
-            #[cfg(target_os = "android")]
-            VfsFile::AndroidAssets(x) => x.len(),
-        }
-    }
-
-    /// Returns true if the virtual file is empty.
-    pub fn is_empty(&self) -> io::Result<bool> {
-        match self {
-            VfsFile::Dir(x) => x.is_empty(),
-            VfsFile::Slf(x) => Ok(x.is_empty()),
-            #[cfg(target_os = "android")]
-            VfsFile::AndroidAssets(x) => x.is_empty(),
-        }
     }
 }
 
@@ -285,74 +257,11 @@ impl fmt::Display for Vfs {
     }
 }
 
-impl fmt::Display for VfsSource {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            VfsSource::Dir(x) => x.fmt(f),
-            VfsSource::Slf(x) => x.fmt(f),
-            #[cfg(target_os = "android")]
-            VfsSource::AndroidAssets(x) => x.fmt(f),
-        }
-    }
-}
-
 impl fmt::Display for VfsInitError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         f.write_fmt(format_args!(
             "Error initializing VFS for {:?}: {}",
             self.path, self.error
         ))
-    }
-}
-
-impl fmt::Display for VfsFile {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            VfsFile::Dir(x) => x.fmt(f),
-            VfsFile::Slf(x) => x.fmt(f),
-            #[cfg(target_os = "android")]
-            VfsFile::AndroidAssets(x) => x.fmt(f),
-        }
-    }
-}
-
-impl io::Read for VfsFile {
-    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-        match self {
-            VfsFile::Dir(x) => x.read(buf),
-            VfsFile::Slf(x) => x.read(buf),
-            #[cfg(target_os = "android")]
-            VfsFile::AndroidAssets(x) => x.read(buf),
-        }
-    }
-}
-
-impl io::Seek for VfsFile {
-    fn seek(&mut self, pos: SeekFrom) -> io::Result<u64> {
-        match self {
-            VfsFile::Dir(x) => x.seek(pos),
-            VfsFile::Slf(x) => x.seek(pos),
-            #[cfg(target_os = "android")]
-            VfsFile::AndroidAssets(x) => x.seek(pos),
-        }
-    }
-}
-
-impl io::Write for VfsFile {
-    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        match self {
-            VfsFile::Dir(x) => x.write(buf),
-            VfsFile::Slf(x) => x.write(buf),
-            #[cfg(target_os = "android")]
-            VfsFile::AndroidAssets(x) => x.write(buf),
-        }
-    }
-    fn flush(&mut self) -> io::Result<()> {
-        match self {
-            VfsFile::Dir(x) => x.flush(),
-            VfsFile::Slf(x) => x.flush(),
-            #[cfg(target_os = "android")]
-            VfsFile::AndroidAssets(x) => x.flush(),
-        }
     }
 }
