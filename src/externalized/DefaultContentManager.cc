@@ -43,6 +43,7 @@
 #include "strategic/SamSiteModel.h"
 #include "strategic/SamSiteAirControlModel.h"
 #include "strategic/TownModel.h"
+#include "strategic/TraversibilityMapping.h"
 #include "strategic/MovementCostsModel.h"
 #include "strategic/NpcPlacementModel.h"
 #include "strategic/UndergroundSectorModel.h"
@@ -1184,8 +1185,11 @@ bool DefaultContentManager::loadStrategicLayerData()
 	}
 	UndergroundSectorModel::validateData(m_undergroundSectors);
 
+	json = readJsonDataFile("strategic-map-traversibility-ratings.json");
+	auto travRatingMap = TraversibilityMapping::deserialize(*json);
+
 	json = readJsonDataFile("strategic-map-movement-costs.json");
-	m_movementCosts = MovementCostsModel::deserialize(*json);
+	m_movementCosts = MovementCostsModel::deserialize(*json, travRatingMap);
 
 	json = readJsonDataFile("strategic-map-npc-placements.json");
 	for (auto& element : json->GetArray())

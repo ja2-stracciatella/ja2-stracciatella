@@ -1,0 +1,37 @@
+/*
+ * Maps the traversability rating string names into codebase enums.
+ *
+ * This is not directly used in the codebase, but referenced by other JSON mappings.
+ */
+{
+    /* Short names used in movement costs table */
+    "A":  3,   // SAND
+    "AR": 23,  // SAND_ROAD
+    "C":  20,  // COASTAL
+    "CR": 22,  // COASTAL_ROAD
+    "D":  5,   // DENSE
+    "DR": 19,  // DENSE_ROAD
+    "E":  12,  // EDGEOFWORLD
+    "F":  14,  // FARMLAND
+    "FR": 17,  // FARMLAND_ROAD
+    "G":  9,   // GROUNDBARRIER
+    "H":  8,   // HILLS
+    "HR": 21,  // HILLS_ROAD
+    "N":  10,  // NS_RIVER
+    "P":  2,   // PLAINS
+    "PR": 15,  // PLAINS_ROAD
+    "R":  1,   // ROAD
+    "S":  4,   // SPARSE
+    "SR": 16,  // SPARSE_ROAD
+    "T":  13,  // TROPICS
+    "TR": 18,  // TROPICS_ROAD
+    "W":  6,   // SWAMP
+    "WR": 24,  // SWAMP_ROAD
+    "WT": 7,   // WATER
+    "X":  0,   // TOWN
+    /* Below are used for text display only */
+    "SPARSE_SAM_SITE":  25,
+    "SAND_SAM_SITE":    26,
+    "TROPICS_SAM_SITE": 27,
+    "MEDUNA_SAM_SITE":  28
+}
