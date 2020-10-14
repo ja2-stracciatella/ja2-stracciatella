@@ -16,6 +16,7 @@
 #include "Game_Clock.h"
 #include "Soldier_Profile.h"
 #include "StrategicMap.h"
+#include "StrategicMap_Secrets.h"
 #include "Game_Init.h"
 #include "Animation_Data.h"
 #include "Finances.h"

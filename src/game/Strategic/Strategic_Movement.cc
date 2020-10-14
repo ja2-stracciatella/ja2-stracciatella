@@ -34,6 +34,7 @@
 #include "Soldier_Macros.h"
 #include "Squads.h"
 #include "Strategic.h"
+#include "StrategicMap_Secrets.h"
 #include "Strategic_AI.h"
 #include "Strategic_Pathing.h"
 #include "Tactical_Save.h"
@@ -1214,15 +1215,9 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		if (z == 0)
 		{
 			// check for discovering secret locations
-			switch (GetTownIdForSector(SECTOR(x, y)))
+			if (GetMapSecretBySectorID(SECTOR(x, y)))
 			{
-				case ORTA: SetOrtaAsFound(); break;
-				case TIXA: SetTixaAsFound(); break;
-
-				default:
-					INT8 const sam_id = GetSAMIdFromSector(x, y, 0);
-					if (sam_id != -1) SetSAMSiteAsFound(sam_id);
-					break;
+				SetSectorSecretAsFound(SECTOR(x, y));
 			}
 		}
 

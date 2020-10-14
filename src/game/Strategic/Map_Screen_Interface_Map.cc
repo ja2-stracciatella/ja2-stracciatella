@@ -33,6 +33,8 @@
 #include "SGPStrings.h"
 #include "Soldier_Control.h"
 #include "Squads.h"
+#include "StrategicMap_Secrets.h"
+#include "StrategicMapSecretModel.h"
 #include "Strategic_Mines.h"
 #include "Strategic_Movement.h"
 #include "Strategic_Pathing.h"
@@ -237,10 +239,6 @@ enum{
 // the big map .pcx
 static SGPVSurface* guiBIGMAP;
 
-// orta .sti icon
-static SGPVObject* guiORTAICON;
-static SGPVObject* guiTIXAICON;
-
 // boxes for characters on the map
 static SGPVObject* guiCHARICONS;
 
@@ -311,9 +309,6 @@ static SGPVObject* guiSubLevel3;
 // the between sector icons
 static SGPVObject* guiCHARBETWEENSECTORICONS;
 static SGPVObject* guiCHARBETWEENSECTORICONSCLOSE;
-
-// tixa found
-BOOLEAN fFoundTixa = FALSE;
 
 // selected sector
 UINT16 sSelMapX = 9;
@@ -408,6 +403,9 @@ static SGPVObject* guiSAMICON;
 // helicopter icon
 static SGPVObject* guiHelicopterIcon;
 
+// map secret icons
+static std::map<ST::string, SGPVObject*> gSecretSiteIcons;
+
 
 void InitMapScreenInterfaceMap()
 {
@@ -486,8 +484,7 @@ static void BlitMineText(UINT8 mine_idx, INT16 sMapX, INT16 sMapY);
 static void BlitTownGridMarkers(void);
 static void DisplayLevelString(void);
 static void DrawBullseye(void);
-static void DrawOrta(void);
-static void DrawTixa(void);
+static void DrawSecretSite(const StrategicMapSecretModel*);
 static void DrawTownMilitiaForcesOnMap();
 static void HandleLowerLevelMapBlit(void);
 static void ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor);
@@ -558,8 +555,14 @@ void DrawMap(void)
 		 * bigmap, and changes their palette.  blitting icons prior to shading would
 		 * mean they don't show up in airspace view at all. */
 
-		if (fFoundOrta) DrawOrta();
-		if (fFoundTixa) DrawTixa();
+		for (auto s : GCM->getMapSecrets())
+		{
+			if (!s->isSAMSite		 // we have other handling for SAM sites
+				&& IsSecretFoundAt(s->sectorID))
+			{
+				DrawSecretSite(s);
+			}
+		}
 
 		ShowSAMSitesOnStrategicMap();
 
@@ -627,8 +630,7 @@ static void ShowTownText(void)
 	for (INT8 town = FIRST_TOWN; town < NUM_TOWNS; ++town)
 	{
 		// skip Orta/Tixa until found
-		if (town == ORTA && !fFoundOrta) continue;
-		if (town == TIXA && !fFoundTixa) continue;
+		if (!IsTownFound(town)) continue;
 
 		UINT16 x = MAP_VIEW_START_X + MAP_GRID_X;
 		UINT16 y = MAP_VIEW_START_Y + MAP_GRID_Y;
@@ -825,17 +827,11 @@ static void ShadeMapElem(const INT16 sMapX, const INT16 sMapY, const INT32 iColo
 
 	// get original video surface palette
 	SGPVSurface* const map = guiBIGMAP;
-	//SGPVSurface* const mine = guiMINEICON;
-	//SGPVSurface* const sam  = guiSAMICON;
 
 	UINT16* const org_pal = map->p16BPPPalette;
 	map->p16BPPPalette = pal;
-	//mine->p16BPPPalette = pal;
-	//sam->p16BPPPalette  = pal;
 	BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, sScreenX, sScreenY, &clip);
 	map->p16BPPPalette = org_pal;
-	//mine->p16BPPPalette = org_pal;
-	//sam->p16BPPPalette  = org_pal;
 }
 
 void InitializePalettesForMap(void)
@@ -2682,11 +2678,7 @@ static void BlitTownGridMarkers(void)
 	FOR_EACH_TOWN_SECTOR(i)
 	{
 		// skip Orta/Tixa until found
-		switch (i->town)
-		{
-			case ORTA: if (!fFoundOrta) continue; break;
-			case TIXA: if (!fFoundTixa) continue; break;
-		}
+		if (!IsTownFound(i->town)) continue;
 
 		INT32 const sector = i->sector;
 		INT16       x;
@@ -2841,11 +2833,14 @@ void LoadMapScreenInterfaceMapGraphics()
 	guiMilitiaMaps                 = AddVideoObjectFromFile(INTERFACEDIR "/militiamaps.sti");
 	guiMilitiaSectorHighLight      = AddVideoObjectFromFile(INTERFACEDIR "/militiamapsectoroutline2.sti");
 	guiMilitiaSectorOutline        = AddVideoObjectFromFile(INTERFACEDIR "/militiamapsectoroutline.sti");
-	guiORTAICON                    = AddVideoObjectFromFile(INTERFACEDIR "/map_item.sti");
 	guiSubLevel1                   = AddVideoObjectFromFile(INTERFACEDIR "/mine_1.sti");
 	guiSubLevel2                   = AddVideoObjectFromFile(INTERFACEDIR "/mine_2.sti");
 	guiSubLevel3                   = AddVideoObjectFromFile(INTERFACEDIR "/mine_3.sti");
-	guiTIXAICON                    = AddVideoObjectFromFile(INTERFACEDIR "/prison.sti");
+
+	for (auto s : GCM->getMapSecrets())
+	{
+		gSecretSiteIcons[s->secretMapIcon] = AddVideoObjectFromFile(s->secretMapIcon.c_str());
+	}
 }
 
 
@@ -2865,11 +2860,15 @@ void DeleteMapScreenInterfaceMapGraphics()
 	DeleteVideoObject(guiMilitiaMaps);
 	DeleteVideoObject(guiMilitiaSectorHighLight);
 	DeleteVideoObject(guiMilitiaSectorOutline);
-	DeleteVideoObject(guiORTAICON);
 	DeleteVideoObject(guiSubLevel1);
 	DeleteVideoObject(guiSubLevel2);
 	DeleteVideoObject(guiSubLevel3);
-	DeleteVideoObject(guiTIXAICON);
+
+	for (auto& pair : gSecretSiteIcons)
+	{
+		DeleteVideoObject(pair.second);
+	}
+	gSecretSiteIcons.clear();
 }
 
 
@@ -3797,15 +3796,15 @@ static void ShowSAMSitesOnStrategicMap()
 {
 	if (fShowAircraftFlag) BlitSAMGridMarkers();
 
-	BOOLEAN const* found = fSamSiteFound;
 	for (auto s : GCM->getSamSites())
 	{
-		// Has the sam site here been found?
-		if (!*found++) continue;
-
 		INT16 const sector = s->sectorId;
 		INT16 const sec_x  = SECTORX(sector);
 		INT16 const sec_y  = SECTORY(sector);
+
+		// Has the sam site here been found?
+		auto secret = GetMapSecretBySectorID(sector);
+		if (secret && !IsSecretFoundAt(s->sectorId)) continue;
 
 		DrawSite(sec_x, sec_y, guiSAMICON);
 
@@ -3849,11 +3848,10 @@ static void BlitSAMGridMarkers()
 
 	ClipBlitsToMapViewRegionForRectangleAndABit(uiDestPitchBYTES);
 
-	BOOLEAN const* found = fSamSiteFound;
 	for (auto s : GCM->getSamSites())
 	{
 		// Has the sam site here been found?
-		if (!*found++) continue;
+		if (!IsSecretFoundAt(s->sectorId)) continue;
 
 		INT16 x;
 		INT16 y;
@@ -3939,16 +3937,19 @@ static void DrawMapBoxIcon(HVOBJECT const vo, UINT16 const icon, INT16 const sec
 	InvalidateRegion(x, y, x + DMAP_GRID_X, y + DMAP_GRID_Y);
 }
 
-
-static void DrawOrta(void)
+void DrawSecretSite(const StrategicMapSecretModel* secret)
 {
-	DrawSite(ORTA_SECTOR_X, ORTA_SECTOR_Y, guiORTAICON);
-}
+	if (secret->secretMapIcon.empty())
+	{
+		ST::string err = ST::format("Secret site at sector {} has no icon", secret->sectorID);
+		SLOGW(err);
+		return;
+	}
 
-
-static void DrawTixa(void)
-{
-	DrawSite(TIXA_SECTOR_X, TIXA_SECTOR_Y, guiTIXAICON);
+	const SGPVObject* const icon = gSecretSiteIcons.at(secret->secretMapIcon);
+	const INT16 x = SECTORX(secret->sectorID);
+	const INT16 y = SECTORY(secret->sectorID);
+	DrawSite(x, y, icon);
 }
 
 
@@ -3972,14 +3973,6 @@ static void HideExistenceOfUndergroundMapSector(UINT8 ubSectorX, UINT8 ubSectorY
 
 	// fill it with near black
 	ColorFillVideoSurfaceArea( guiSAVEBUFFER, sScreenX + 1, sScreenY, sScreenX + MAP_GRID_X,	sScreenY + MAP_GRID_Y - 1, gusUndergroundNearBlack );
-}
-
-
-void InitMapSecrets()
-{
-	fFoundTixa = FALSE;
-	fFoundOrta = FALSE;
-	FOR_EACH(BOOLEAN, i, fSamSiteFound) *i = FALSE;
 }
 
 

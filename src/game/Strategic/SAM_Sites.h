@@ -8,8 +8,6 @@
 // min condition for sam site to be functional
 #define MIN_CONDITION_FOR_SAM_SITE_TO_WORK 80
 
-extern BOOLEAN fSamSiteFound[NUMBER_OF_SAMS];
-
 extern Observable<> OnAirspaceControlUpdated;
 
 void InitializeSAMSites();

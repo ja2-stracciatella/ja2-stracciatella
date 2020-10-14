@@ -87,6 +87,8 @@
 #include "Sound_Control.h"
 #include "Squads.h"
 #include "Strategic.h"
+#include "StrategicMap_Secrets.h"
+#include "StrategicMapSecretModel.h"
 #include "Strategic_Event_Handler.h"
 #include "Strategic_Mines.h"
 #include "Strategic_Movement.h"
@@ -161,8 +163,6 @@ INT8 gbMilitiaPromotions = 0;
 
 
 BOOLEAN		gfUseAlternateMap = FALSE;
-// whether or not we have found Orta yet
-BOOLEAN fFoundOrta = FALSE;
 
 static INT16 const DirXIncrementer[8] =
 {
@@ -1229,6 +1229,56 @@ static void InitializeStrategicMapSectorTownNames(void)
 	}
 }
 
+ST::string GetSectorLandTypeString(UINT8 const ubSectorID, UINT8 const ubSectorZ, bool const fDetailed)
+{
+	// first consider map secrets and SAM sites
+	auto secret = GetMapSecretBySectorID(ubSectorID);
+	if (ubSectorZ == 0 && secret)
+	{
+		UINT8 ubLandType = secret->getLandType(IsSecretFoundAt(ubSectorID));
+		if (ubLandType != TOWN) // we will handle town sectors separately
+		{
+			return (secret->isSAMSite && !fDetailed)
+					? pLandTypeStrings[SAM_SITE]
+					: pLandTypeStrings[ubLandType];
+		}
+	}
+
+	// special facilities (surface sectors)
+	if (ubSectorZ == 0 && fDetailed) switch (ubSectorID)
+	{
+		case SEC_B13: return pLandTypeStrings[DRASSEN_AIRPORT_SITE];
+		case SEC_F8:  return pLandTypeStrings[CAMBRIA_HOSPITAL_SITE];
+		case SEC_N3:  return pLandTypeStrings[MEDUNA_AIRPORT_SITE];
+		default:      break;
+	}
+
+	// special facilities underground
+	if (ubSectorZ == 1) switch (ubSectorID)
+	{
+		case SEC_A10: return pLandTypeStrings[REBEL_HIDEOUT];
+		case SEC_J9:  return pLandTypeStrings[TIXA_DUNGEON];
+		case SEC_K4:  return pLandTypeStrings[ORTA_BASEMENT];
+		case SEC_O3:  return pLandTypeStrings[TUNNEL];
+		case SEC_P3:  return pLandTypeStrings[SHELTER];
+		default:      break;
+	}
+
+	INT8 const town_name_id = StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(ubSectorID)].bNameId;
+	if (town_name_id != BLANK_SECTOR)
+	{	// show town name
+		return GCM->getTownName(town_name_id);
+	}
+
+	if (ubSectorZ < 0)
+	{	// any other underground sectors (not facility, not part of a mine) are creature lair
+		return pLandTypeStrings[CREATURE_LAIR];
+	}
+
+	// finally consider the sector traversibility
+	UINT8 ubTraversibility = SectorInfo[ubSectorID].ubTraversability[THROUGH_STRATEGIC_MOVE];
+	return pLandTypeStrings[ubTraversibility];
+}
 
 ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)
 {
@@ -1237,8 +1287,6 @@ ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)
 		return ST::null;
 	}
 
-	INT8    const  mine_index = GetIdOfMineForSector(x, y, z);
-	ST::string add;
 	if (z != 0)
 	{
 		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
@@ -1246,93 +1294,26 @@ ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)
 		{ // Display nothing
 			return ST::null;
 		}
+	}
 
-		if (mine_index != -1)
-		{
-			add = GCM->getTownName(GetTownAssociatedWithMine(mine_index));
-		}
-		else switch (SECTOR(x, y))
-		{
-			case SEC_A10: add = pLandTypeStrings[REBEL_HIDEOUT]; break;
-			case SEC_J9:  add = pLandTypeStrings[TIXA_DUNGEON];  break;
-			case SEC_K4:  add = pLandTypeStrings[ORTA_BASEMENT]; break;
-			case SEC_O3:  add = pLandTypeStrings[TUNNEL];        break;
-			case SEC_P3:  add = pLandTypeStrings[SHELTER];       break;
-			default:      add = pLandTypeStrings[CREATURE_LAIR]; break;
+	INT8    const  mine_index = GetIdOfMineForSector(x, y, z);
+	ST::string add;
+	if (mine_index != -1)
+	{
+		add = GCM->getTownName(GetTownAssociatedWithMine(mine_index));
+		if (detailed && mine_index != -1)
+		{	// Append "Mine"
+			add += ST::format(" {}", pwMineStrings[0]);
 		}
 	}
-	else
+
+	if (add.empty())
 	{
 		UINT8 const sector_id = SECTOR(x, y);
-		switch (sector_id)
-		{
-			case SEC_B13:
-				if (!detailed) goto plain_sector;
-				add = pLandTypeStrings[DRASSEN_AIRPORT_SITE];
-				break;
-
-			case SEC_D2: // Chitzena SAM
-				add =
-					!fSamSiteFound[SAM_SITE_ONE] ? pLandTypeStrings[TROPICS]          :
-					detailed                     ? pLandTypeStrings[TROPICS_SAM_SITE] :
-					pLandTypeStrings[SAM_SITE];
-				break;
-
-			case SEC_D15: // Drassen SAM
-				add =
-					!fSamSiteFound[SAM_SITE_TWO] ? pLandTypeStrings[SPARSE]          :
-					detailed                     ? pLandTypeStrings[SPARSE_SAM_SITE] :
-					pLandTypeStrings[SAM_SITE];
-				break;
-
-			case SEC_F8:
-				if (!detailed) goto plain_sector;
-				add = pLandTypeStrings[CAMBRIA_HOSPITAL_SITE];
-				break;
-
-			case SEC_I8: // Cambria SAM
-				add =
-					!fSamSiteFound[SAM_SITE_THREE] ? pLandTypeStrings[SAND]          :
-					detailed                       ? pLandTypeStrings[SAND_SAM_SITE] :
-					pLandTypeStrings[SAM_SITE];
-				break;
-
-			case SEC_J9: // Tixa
-				add = fFoundTixa ? GCM->getTownName(TIXA) : pLandTypeStrings[SAND];
-				break;
-
-			case SEC_K4: // Orta
-				add = fFoundOrta ? GCM->getTownName(ORTA) : pLandTypeStrings[SWAMP];
-				break;
-
-			case SEC_N3:
-				if (!detailed) goto plain_sector;
-				add = pLandTypeStrings[MEDUNA_AIRPORT_SITE];
-				break;
-
-			case SEC_N4: // Meduna's SAM site
-				if (!fSamSiteFound[SAM_SITE_FOUR]) goto plain_sector;
-				add =
-					detailed ? pLandTypeStrings[MEDUNA_SAM_SITE] :
-					pLandTypeStrings[SAM_SITE];
-				break;
-
-			default: // All other towns that are known since beginning of the game.
-plain_sector:;
-				INT8 const town_name_id = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId;
-				add =
-					town_name_id != BLANK_SECTOR ? GCM->getTownName(town_name_id) :
-					pLandTypeStrings[SectorInfo[sector_id].ubTraversability[THROUGH_STRATEGIC_MOVE]];
-				break;
-		}
+		add = GetSectorLandTypeString(sector_id, z, detailed);
 	}
 
-	ST::string buf = ST::format("{c}{}: {}", 'A' + y - 1, x, add);
-	if (detailed && mine_index != -1)
-	{ // Append "Mine"
-		buf += ST::format(" {}", pwMineStrings[0]);
-	}
-	return buf;
+	return ST::format("{c}{}: {}", 'A' + y - 1, x, add);
 }
 
 
@@ -2421,8 +2402,9 @@ void SaveStrategicInfoToSavedFile(HWFILE const f)
 	// Skip the SAM controlled sector information
 	FileSeek(f, MAP_WORLD_X * MAP_WORLD_Y, FILE_SEEK_FROM_CURRENT);
 
-	// Save fFoundOrta
-	FileWrite(f, &fFoundOrta, sizeof(BOOLEAN));
+	// Save the state of the 2nd map secret (fFoundOrta)
+	BOOLEAN fFound = GetMapSecretStateForSave(1);
+	FileWrite(f, &fFound, sizeof(BOOLEAN));
 }
 
 
@@ -2443,8 +2425,10 @@ void LoadStrategicInfoFromSavedFile(HWFILE const f)
 	// Skip the SAM controlled sector information
 	FileSeek(f, MAP_WORLD_X * MAP_WORLD_Y, FILE_SEEK_FROM_CURRENT);
 
-	// Load fFoundOrta
-	FileRead(f, &fFoundOrta, sizeof(BOOLEAN));
+	// Load state of the 2nd map secret (fFoundOrta)
+	BOOLEAN fFound;
+	FileRead(f, &fFound, sizeof(BOOLEAN));
+	SetMapSecretStateFromSave(1, fFound);
 }
 
 

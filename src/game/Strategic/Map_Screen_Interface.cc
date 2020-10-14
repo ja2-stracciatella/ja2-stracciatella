@@ -35,11 +35,13 @@
 #include "Render_Dirty.h"
 #include "Render_Fun.h"
 #include "RenderWorld.h"
+#include "SamSiteModel.h"
 #include "ShippingDestinationModel.h"
 #include "Soldier_Macros.h"
 #include "SoundMan.h"
 #include "Squads.h"
 #include "Strategic.h"
+#include "StrategicMap_Secrets.h"
 #include "Strategic_Mines.h"
 #include "Strategic_Pathing.h"
 #include "SysUtil.h"
@@ -3608,29 +3610,6 @@ void EndUpdateBox( BOOLEAN fContinueTimeCompression )
 		StopTimeCompression();
 	}
 }
-
-
-void SetTixaAsFound( void )
-{
-	// set the town of Tixa as found by the player
-	fFoundTixa = TRUE;
-	fMapPanelDirty = TRUE;
-}
-
-void SetOrtaAsFound( void )
-{
-	// set the town of Orta as found by the player
-	fFoundOrta = TRUE;
-	fMapPanelDirty = TRUE;
-}
-
-void SetSAMSiteAsFound( UINT8 uiSamIndex )
-{
-	// set this SAM site as being found by the player
-	fSamSiteFound[ uiSamIndex ] = TRUE;
-	fMapPanelDirty = TRUE;
-}
-
 
 void InitTimersForMoveMenuMouseRegions()
 {
