@@ -1239,28 +1239,28 @@ ST::string GetSectorLandTypeString(UINT8 const ubSectorID, UINT8 const ubSectorZ
 		if (ubLandType != TOWN) // we will handle town sectors separately
 		{
 			return (secret->isSAMSite && !fDetailed)
-					? pLandTypeStrings[SAM_SITE]
-					: pLandTypeStrings[ubLandType];
+					? GCM->getLandTypeString(SAM_SITE)
+					: GCM->getLandTypeString(ubLandType);
 		}
 	}
 
 	// special facilities (surface sectors)
 	if (ubSectorZ == 0 && fDetailed) switch (ubSectorID)
 	{
-		case SEC_B13: return pLandTypeStrings[DRASSEN_AIRPORT_SITE];
-		case SEC_F8:  return pLandTypeStrings[CAMBRIA_HOSPITAL_SITE];
-		case SEC_N3:  return pLandTypeStrings[MEDUNA_AIRPORT_SITE];
+		case SEC_B13: return GCM->getLandTypeString(DRASSEN_AIRPORT_SITE);
+		case SEC_F8:  return GCM->getLandTypeString(CAMBRIA_HOSPITAL_SITE);
+		case SEC_N3:  return GCM->getLandTypeString(MEDUNA_AIRPORT_SITE);
 		default:      break;
 	}
 
 	// special facilities underground
 	if (ubSectorZ == 1) switch (ubSectorID)
 	{
-		case SEC_A10: return pLandTypeStrings[REBEL_HIDEOUT];
-		case SEC_J9:  return pLandTypeStrings[TIXA_DUNGEON];
-		case SEC_K4:  return pLandTypeStrings[ORTA_BASEMENT];
-		case SEC_O3:  return pLandTypeStrings[TUNNEL];
-		case SEC_P3:  return pLandTypeStrings[SHELTER];
+		case SEC_A10: return GCM->getLandTypeString(REBEL_HIDEOUT);
+		case SEC_J9:  return GCM->getLandTypeString(TIXA_DUNGEON);
+		case SEC_K4:  return GCM->getLandTypeString(ORTA_BASEMENT);
+		case SEC_O3:  return GCM->getLandTypeString(TUNNEL);
+		case SEC_P3:  return GCM->getLandTypeString(SHELTER);
 		default:      break;
 	}
 
@@ -1272,12 +1272,12 @@ ST::string GetSectorLandTypeString(UINT8 const ubSectorID, UINT8 const ubSectorZ
 
 	if (ubSectorZ < 0)
 	{	// any other underground sectors (not facility, not part of a mine) are creature lair
-		return pLandTypeStrings[CREATURE_LAIR];
+		return GCM->getLandTypeString(CREATURE_LAIR);
 	}
 
 	// finally consider the sector traversibility
 	UINT8 ubTraversibility = SectorInfo[ubSectorID].ubTraversability[THROUGH_STRATEGIC_MOVE];
-	return pLandTypeStrings[ubTraversibility];
+	return GCM->getLandTypeString(ubTraversibility);
 }
 
 ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)

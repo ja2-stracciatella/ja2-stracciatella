@@ -273,10 +273,8 @@ DefaultContentManager::~DefaultContentManager()
 	delete m_gamePolicy;
 	delete m_loadingScreenModel;
 
-	for (const ST::string *str : m_newStrings)
-	{
-		delete str;
-	}
+	deleteElements(m_newStrings);
+	deleteElements(m_landTypeStrings);
 	for (const ST::string *str : m_calibreNames)
 	{
 		delete str;
@@ -996,6 +994,7 @@ bool DefaultContentManager::loadGameData()
 	loadStringRes("strings/ammo-calibre-bobbyray", m_calibreNamesBobbyRay);
 
 	loadStringRes("strings/new-strings", m_newStrings);
+	loadStringRes("strings/strategic-map-land-types", m_landTypeStrings);
 
 	loadStrategicLayerData();
 	loadTacticalLayerData();
@@ -1111,6 +1110,10 @@ const ST::string* DefaultContentManager::getNewString(size_t stringId) const
 	}
 }
 
+const ST::string& DefaultContentManager::getLandTypeString(size_t index) const
+{
+	return *m_landTypeStrings.at(index);
+}
 
 bool DefaultContentManager::loadStrategicLayerData() 
 {

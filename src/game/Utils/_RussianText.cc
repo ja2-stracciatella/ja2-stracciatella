@@ -608,56 +608,6 @@ static const ST::string s_rus_pDirectionStr[pDirectionStr_SIZE] =
 	"с СЕВЕРА"
 };
 
-// These are the different terrain types.
-
-static const ST::string s_rus_pLandTypeStrings[pLandTypeStrings_SIZE] =
-{
-	"Город",
-	"Дорога",
-	"Равнина",
-	"Пустыня",
-	"Леса",
-	"Роща",
-	"Болото",
-	"Вода",
-	"Холмы",
-	"Непроходимо",
-	"Река",	//river from north to south
-	"Река",	//river from east to west
-	"Чужая страна",
-	//NONE of the following are used for directional travel, just for the sector description.
-	"Тропики",
-	"Фермы",
-	"Поля, дорога",
-	"Леса, дорога",
-	"Фермы, дорога",
-	"Тропики, дорога",
-	"Роща, дорога",
-	"Берег",
-	"Горы, дорога",
-	"Побережье, дорога",
-	"Пустыня, дорога",
-	"Болото, дорога",
-	"Леса, ПВО",
-	"Пустыня, ПВО",
-	"Тропики, ПВО",
-	"Медуна, ПВО",
-
-	//These are descriptions for special sectors
-	"Госпиталь Камбрии",
-	"Аэропорт Драссена",
-	"Аэропорт Медуны",
-	"База ПВО",
-	"База повстанцев", //The rebel base underground in sector A10
-	"Подземелья Тиксы",	//The basement of the Tixa Prison (J9)
-	"Логово существ",	//Any mine sector with creatures in it
-	"Подвалы Орты",	//The basement of Orta (K4)
-	"Туннель",				//The tunnel access from the maze garden in Meduna
-										//leading to the secret shelter underneath the palace
-	"Убежище",				//The shelter underneath the queen's palace
-	"",							//Unused
-};
-
 static const ST::string s_rus_gpStrategicString[gpStrategicString_SIZE] =
 {
 	"%s обнаружены в секторе %c%d и вот-вот прибудет еще один отряд.", //STR_DETECTED_SINGULAR
@@ -3568,7 +3518,6 @@ LanguageRes g_LanguageResRussian = {
 	s_rus_pDirectionStr,
 	s_rus_pRemoveMercStrings,
 	s_rus_sTimeStrings,
-	s_rus_pLandTypeStrings,
 	s_rus_pInvPanelTitleStrings,
 	s_rus_pPOWStrings,
 	s_rus_pMilitiaString,
@@ -3797,7 +3746,6 @@ LanguageRes g_LanguageResRussianGold = {
 	s_rus_pDirectionStr,
 	s_rus_pRemoveMercStrings,
 	s_rus_sTimeStrings,
-	s_rus_pLandTypeStrings,
 	s_rus_pInvPanelTitleStrings,
 	s_rus_pPOWStrings,
 	s_rus_pMilitiaString,

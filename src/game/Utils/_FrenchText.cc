@@ -608,56 +608,6 @@ static const ST::string s_fr_pDirectionStr[pDirectionStr_SIZE] =
 	"au NORD",
 };
 
-// These are the different terrain types.
-
-static const ST::string s_fr_pLandTypeStrings[pLandTypeStrings_SIZE] =
-{
-	"Ville",
-	"Route",
-	"Plaine",
-	"Désert",
-	"Bois",
-	"Forêt",
-	"Marais",
-	"Eau",
-	"Collines",
-	"Infranchissable",
-	"Rivière",	//river from north to south
-	"Rivière",	//river from east to west
-	"Pays étranger",
-	//NONE of the following are used for directional travel, just for the sector description.
-	"Tropical",
-	"Cultures",
-	"Plaines, route",
-	"Bois, route",
-	"Ferme, route",
-	"Tropical, route",
-	"Forêt, route",
-	"Route côtière",
-	"Montagne, route",
-	"Côte, route",
-	"Désert, route",
-	"Marais, route",
-	"Bois, site SAM",
-	"Désert, site SAM",
-	"Tropical, site SAM",
-	"Meduna, site SAM",
-
-	//These are descriptions for special sectors
-	"Hôpital de Cambria",
-	"Aéroport de Drassen",
-	"Aéroport de Meduna",
-	"Site SAM",
-	"Base rebelle", //The rebel base underground in sector A10
-	"Prison de Tixa",	//The basement of the Tixa Prison (J9)
-	"Repaire de créatures",	//Any mine sector with creatures in it
-	"Sous-sols d'Orta",	//The basement of Orta (K4)
-	"Tunnel",				//The tunnel access from the maze garden in Meduna
-										//leading to the secret shelter underneath the palace
-	"Abri",				//The shelter underneath the queen's palace
-	"",							//Unused
-};
-
 static const ST::string s_fr_gpStrategicString[gpStrategicString_SIZE] =
 {
 	"%s détecté dans le secteur %c%d et une autre escouade est en route.",	//STR_DETECTED_SINGULAR
@@ -3491,7 +3441,6 @@ LanguageRes g_LanguageResFrench = {
 	s_fr_pDirectionStr,
 	s_fr_pRemoveMercStrings,
 	s_fr_sTimeStrings,
-	s_fr_pLandTypeStrings,
 	s_fr_pInvPanelTitleStrings,
 	s_fr_pPOWStrings,
 	s_fr_pMilitiaString,

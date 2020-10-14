@@ -1,0 +1,45 @@
+[
+    "Ville",
+    "Route",
+    "Plaine",
+    "Désert",
+    "Bois",
+    "Forêt",
+    "Marais",
+    "Eau",
+    "Collines",
+    "Infranchissable",
+    "Rivière",     // river from north to south
+    "Rivière",     // river from east to west
+    "Pays étranger",
+    /* NONE of the following are used for directional travel, just for the sector description. */
+    "Tropical",
+    "Cultures",
+    "Plaines, route",
+    "Bois, route",
+    "Ferme, route",
+    "Tropical, route",
+    "Forêt, route",
+    "Route côtière",
+    "Montagne, route",
+    "Côte, route",
+    "Désert, route",
+    "Marais, route",
+    "Bois, site SAM",
+    "Désert, site SAM",
+    "Tropical, site SAM",
+    "Meduna, site SAM",
+    /* These are descriptions for special sectors */
+    "Hôpital de Cambria",
+    "Aéroport de Drassen",
+    "Aéroport de Meduna",
+    "Site SAM",
+    "Base rebelle",           // The rebel base underground in sector A10
+    "Prison de Tixa",         // The basement of the Tixa Prison (J9)
+    "Repaire de créatures",   // Any mine sector with creatures in it
+    "Sous-sols d'Orta",       // The basement of Orta (K4)
+    "Tunnel",                 // The tunnel access from the maze garden in Meduna
+    /* leading to the secret shelter underneath the palace */
+    "Abri",                   // The shelter underneath the queen's palace
+    ""                        // Unused
+]

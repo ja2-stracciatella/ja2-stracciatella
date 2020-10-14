@@ -193,6 +193,8 @@ public:
 
 	virtual const ST::string* getNewString(size_t stringId) const = 0;
 
+	virtual const ST::string& getLandTypeString(size_t index) const = 0;
+
 	/** Open temporary file for writing. */
 	virtual SGPFile* openTempFileForWriting(const ST::string& filename, bool truncate) const = 0;
 

@@ -149,6 +149,7 @@ public:
 	virtual const IMPPolicy* getIMPPolicy() const override;
 
 	virtual const ST::string* getNewString(size_t stringId) const override;
+	virtual const ST::string& getLandTypeString(size_t index) const override;
 
 	virtual const std::vector<const BloodCatPlacementsModel*>& getBloodCatPlacements() const override;
 	virtual const std::vector<const BloodCatSpawnsModel*>& getBloodCatSpawns() const override;
@@ -187,6 +188,7 @@ protected:
 	const GameVersion m_gameVersion;
 
 	std::vector<const ST::string*> m_newStrings;
+	std::vector<const ST::string*> m_landTypeStrings;
 
 	std::vector<const ItemModel*> m_items;
 	std::vector<const MagazineModel*> m_magazines;

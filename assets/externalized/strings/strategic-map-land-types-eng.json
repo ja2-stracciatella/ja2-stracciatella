@@ -1,0 +1,46 @@
+// These are the different terrain types.
+[
+    "Urban",
+    "Road",
+    "Plains",
+    "Desert",
+    "Woods",
+    "Forest",
+    "Swamp",
+    "Water",
+    "Hills",
+    "Impassable",
+    "River",      // river from north to south
+    "River",      // river from east to west
+    "Foreign Country",
+    /* NONE of the following are used for directional travel, just for the sector description. */
+    "Tropical",
+    "Farmland",
+    "Plains, road",
+    "Woods, road",
+    "Farm, road",
+    "Tropical, road",
+    "Forest, road",
+    "Coastline",
+    "Mountain, road",
+    "Coastal, road",
+    "Desert, road",
+    "Swamp, road",
+    "Woods, SAM site",
+    "Desert, SAM site",
+    "Tropical, SAM site",
+    "Meduna, SAM site",
+    /* These are descriptions for special sectors */
+    "Cambria Hospital",
+    "Drassen Airport",
+    "Meduna Airport",
+    "SAM site",
+    "Rebel Hideout",         // The rebel base underground in sector A10
+    "Tixa Dungeon",          // The basement of the Tixa Prison (J9)
+    "Creature Lair",         // Any mine sector with creatures in it
+    "Orta Basement",         // The basement of Orta (K4)
+    "Tunnel",                // The tunnel access from the maze garden in Meduna
+    /* Leading to the secret shelter underneath the palace */
+    "Shelter",               // The shelter underneath the queen's palace
+    ""                       // Unused
+]
