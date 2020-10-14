@@ -169,6 +169,7 @@ public:
 	virtual const ST::string getTownLocative(uint8_t townId) const override;
 	virtual const std::vector <const UndergroundSectorModel*>& getUndergroundSectors() const override;
 	virtual const MovementCostsModel* getMovementCosts() const override;
+	virtual const std::vector<const StrategicMapSecretModel*>& getMapSecrets() const override;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const override;
 	virtual const std::vector<const MERCListingModel*>& getMERCListings() const override;
@@ -236,6 +237,7 @@ protected:
 	std::vector<const MineModel*> m_mines;
 	std::vector<const SamSiteModel*> m_samSites;
 	const SamSiteAirControlModel* m_samSitesAirControl;
+	std::vector<const StrategicMapSecretModel*> m_mapSecrets;
 	std::map<int8_t, const TownModel*> m_towns;
 	std::vector<const ST::string*> m_townNames;
 	std::vector<const ST::string*> m_townNameLocatives;
