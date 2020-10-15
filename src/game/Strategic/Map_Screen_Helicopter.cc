@@ -33,6 +33,7 @@
 #include "Sound_Control.h"
 #include "Squads.h"
 #include "StrategicMap.h"
+#include "StrategicMap_Secrets.h"
 #include "Strategic_Event_Handler.h"
 #include "Strategic_Movement.h"
 #include "Strategic_Pathing.h"

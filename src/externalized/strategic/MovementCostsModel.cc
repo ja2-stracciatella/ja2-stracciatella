@@ -8,7 +8,7 @@
 
 
 // helper functions
-void readTraversibiltyIntoVector(const rapidjson::Value& jsonArray, IntIntVector& vec, std::map<ST::string, uint8_t>& mapping, size_t expectedRows, size_t expectedCols);
+void readTraversibiltyIntoVector(const rapidjson::Value& jsonArray, IntIntVector& vec, const TraversibilityMap& mapping, size_t expectedRows, size_t expectedCols);
 void readIntIntoVector(const rapidjson::Value& jsonArray, IntIntVector& vec, size_t expectedRows, size_t expectedCols);
 
 
@@ -39,15 +39,8 @@ const uint8_t MovementCostsModel::getTravelRating(uint8_t x, uint8_t y) const
 	return travelRatings[y][x];
 }
 
-MovementCostsModel* MovementCostsModel::deserialize(const rapidjson::Document& root)
+MovementCostsModel* MovementCostsModel::deserialize(const rapidjson::Document& root, const TraversibilityMap& mapToEnum)
 {
-	Assert(root.HasMember("mapping") && root["mapping"].IsObject());
-	std::map<ST::string, uint8_t> mapToEnum; // maps from traversibility short name to enum
-	for (auto& iter : root["mapping"].GetObject())
-	{
-		mapToEnum.insert(std::make_pair(ST::string(iter.name.GetString()), iter.value.GetInt()));
-	}
-
 	Assert(root.HasMember("traverseWE") && root["traverseWE"].IsArray());
 	IntIntVector traverseWE_;
 	readTraversibiltyIntoVector(root["traverseWE"], traverseWE_, mapToEnum, 16, 17);
@@ -72,7 +65,7 @@ MovementCostsModel* MovementCostsModel::deserialize(const rapidjson::Document& r
 	);
 }
 
-void readTraversibiltyIntoVector(const rapidjson::Value& jsonArray, IntIntVector& vec, std::map<ST::string, uint8_t>& mapping, size_t expectedRows, size_t expectedCols)
+void readTraversibiltyIntoVector(const rapidjson::Value& jsonArray, IntIntVector& vec, const TraversibilityMap& mapping, size_t expectedRows, size_t expectedCols)
 {
 	for (auto& r : jsonArray.GetArray())
 	{

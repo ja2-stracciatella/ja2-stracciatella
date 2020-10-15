@@ -34,6 +34,7 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Scheduling.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Strategic.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/StrategicMap.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/StrategicMap_Secrets.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Strategic_AI.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Strategic_Event_Handler.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Strategic_Merc_Handler.cc

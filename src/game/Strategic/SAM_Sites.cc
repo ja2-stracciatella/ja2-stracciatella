@@ -4,7 +4,6 @@
 #include "Explosion_Control.h"
 #include "GameInstance.h"
 #include "Logger.h"
-#include "MapScreen.h"
 #include "SamSiteModel.h"
 #include "SaveLoadMap.h"
 #include "StrategicMap.h"
@@ -13,13 +12,6 @@
 #include "WorldMan.h"
 #include <string_theory/format>
 
-// have any of the sam sites been found
-BOOLEAN fSamSiteFound[NUMBER_OF_SAMS] = {
-	FALSE,
-	FALSE,
-	FALSE,
-	FALSE,
-};
 
 Observable<> OnAirspaceControlUpdated = {};
 

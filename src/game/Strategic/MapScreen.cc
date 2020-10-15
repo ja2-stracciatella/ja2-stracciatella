@@ -58,6 +58,7 @@
 #include "SaveLoadScreen.h"
 #include "Soldier_Macros.h"
 #include "Squads.h"
+#include "StrategicMap_Secrets.h"
 #include "Strategic_Movement_Costs.h"
 #include "Strategic_Pathing.h"
 #include "Strategic_Town_Loyalty.h"
@@ -1298,6 +1299,10 @@ static void DisplayCharacterList(void)
 	MarkAllBoxesAsAltered();
 }
 
+static void RefreshMapScreen()
+{
+	fMapPanelDirty = TRUE;
+}
 
 // THIS IS STUFF THAT RUNS *ONCE* DURING APPLICATION EXECUTION, AT INITIAL STARTUP
 void MapScreenInit(void)
@@ -1311,6 +1316,8 @@ void MapScreenInit(void)
 	InitLeaveList( );
 
 	guiUpdatePanelTactical = AddVideoObjectFromFile(INTERFACEDIR "/group_confirm_tactical.sti");
+
+	OnMapSecretFound.addListener("default:MapScreen", [](UINT8) { RefreshMapScreen(); });
 }
 
 
@@ -7675,7 +7682,6 @@ static void DestinationPlottingCompleted(void)
 
 static void HandleMilitiaRedistributionClick(void)
 {
-	BOOLEAN fTownStillHidden;
 	ST::string sString;
 
 
@@ -7683,7 +7689,7 @@ static void HandleMilitiaRedistributionClick(void)
 	if ( iCurrentMapSectorZ == 0 )
 	{
 		INT8 const bTownId = GetTownIdForSector(SECTOR(sSelMapX, sSelMapY));
-		fTownStillHidden = ( ( bTownId == TIXA ) && !fFoundTixa ) || ( ( bTownId == ORTA ) && !fFoundOrta );
+		BOOLEAN fTownStillHidden = !IsTownFound(bTownId);
 
 		if( ( bTownId != BLANK_SECTOR ) && !fTownStillHidden )
 		{
@@ -7714,7 +7720,7 @@ static void HandleMilitiaRedistributionClick(void)
 		else
 		{
 			INT8 const sam_id = GetSAMIdFromSector(sSelMapX, sSelMapY, 0);
-			if (sam_id != -1 && fSamSiteFound[sam_id])
+			if (sam_id != -1 && IsSecretFoundAt(SECTOR(sSelMapX, sSelMapY)))
 			{ // Cannot move militia around sam sites.
 				DoScreenIndependantMessageBox(pMapErrorString[30], MSG_BOX_FLAG_OK, NULL);
 			}

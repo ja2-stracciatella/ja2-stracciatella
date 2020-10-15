@@ -4,6 +4,8 @@
 #include "Map_Screen_Interface_Bottom.h"
 #include "Map_Screen_Interface_TownMine_Info.h"
 #include "StrategicMap.h"
+#include "StrategicMap_Secrets.h"
+#include "StrategicMapSecretModel.h"
 #include "PopUpBox.h"
 #include "Map_Screen_Interface.h"
 #include "Queen_Command.h"
@@ -182,25 +184,8 @@ static void AddTextToTownBox(PopUpBox* const box)
 	UINT8 const ubTownId = GetTownIdForSector(sector);
 	Assert((ubTownId >= FIRST_TOWN) && (ubTownId < NUM_TOWNS));
 
-	ST::string title;
-	switch (sector)
-	{
-		case SEC_B13: title = pLandTypeStrings[DRASSEN_AIRPORT_SITE];                    break;
-		case SEC_F8:  title = pLandTypeStrings[CAMBRIA_HOSPITAL_SITE];                   break;
-		case SEC_J9:  title = (fFoundTixa ? GCM->getTownName(TIXA) : pLandTypeStrings[SAND]);  break;
-		case SEC_K4:  title = (fFoundOrta ? GCM->getTownName(ORTA) : pLandTypeStrings[SWAMP]); break;
-		case SEC_N3:  title = pLandTypeStrings[MEDUNA_AIRPORT_SITE];                     break;
+	ST::string title = GetSectorLandTypeString(sector, 0, true);
 
-		case SEC_N4:
-			if (fSamSiteFound[SAM_SITE_FOUR])
-			{
-				title = pLandTypeStrings[MEDUNA_SAM_SITE];
-				break;
-			}
-			/* FALLTHROUGH */
-
-		default: title = GCM->getTownName(ubTownId); break;
-	}
 	AddMonoString(box, title);
 	// blank line
 	AddMonoString(box, ST::null);
@@ -336,17 +321,8 @@ static void AddTextToBlankSectorBox(PopUpBox* const box)
 	// get the sector value
 	usSectorValue = SECTOR( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
 
-	ST::string title;
-	switch( usSectorValue )
-	{
-		case SEC_D2:  title = (fSamSiteFound[SAM_SITE_ONE]   ? pLandTypeStrings[TROPICS_SAM_SITE] : pLandTypeStrings[TROPICS]); break; // Chitzena SAM
-		case SEC_D15: title = (fSamSiteFound[SAM_SITE_TWO]   ? pLandTypeStrings[SPARSE_SAM_SITE]  : pLandTypeStrings[SPARSE]);  break; // Drassen SAM
-		case SEC_I8:  title = (fSamSiteFound[SAM_SITE_THREE] ? pLandTypeStrings[SAND_SAM_SITE]    : pLandTypeStrings[SAND]);    break; // Cambria SAM
+	ST::string title = GetSectorLandTypeString(usSectorValue, 0, true);
 
-		// SAM Site 4 in Meduna is within town limits, so it's handled in AddTextToTownBox()
-
-		default: title = pLandTypeStrings[SectorInfo[usSectorValue].ubTraversability[THROUGH_STRATEGIC_MOVE]]; break;
-	}
 	AddMonoString(box, title);
 
 	// blank line
@@ -384,24 +360,11 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 	UINT8 ubMilitiaTotal = 0;
 	UINT8 ubNumEnemies;
 
-
-	switch( SECTOR( bCurrentTownMineSectorX, bCurrentTownMineSectorY ) )
+	UINT8 ubSectorID = SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
+	INT8 bSamSiteID = GetSAMIdFromSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY, 0);
+	if (bSamSiteID > 0 && IsSecretFoundAt(ubSectorID))
 	{
-		case SEC_D2: //Chitzena SAM
-			if( !fSamSiteFound[ SAM_SITE_ONE ] )
-				fUnknownSAMSite = TRUE;
-			break;
-		case SEC_D15: //Drassen SAM
-			if( !fSamSiteFound[ SAM_SITE_TWO ] )
-				fUnknownSAMSite = TRUE;
-			break;
-		case SEC_I8: //Cambria SAM
-			if( !fSamSiteFound[ SAM_SITE_THREE ] )
-				fUnknownSAMSite = TRUE;
-			break;
-		// SAM Site 4 in Meduna is within town limits, so it's always controllable
-		default:
-			break;
+		fUnknownSAMSite = TRUE;
 	}
 
 	// in sector where militia can be trained,

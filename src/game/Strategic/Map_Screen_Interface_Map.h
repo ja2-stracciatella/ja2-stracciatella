@@ -108,8 +108,6 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
 //flag.
 void ClearAnySectorsFlashingNumberOfEnemies(void);
 
-void InitMapSecrets();
-
 
 enum {
 	ABORT_PLOTTING = 0,
@@ -145,10 +143,7 @@ enum {
 #define DMAP_GRID_Y		( MAP_GRID_Y + 1 )
 
 
-// Orta position on the map
-#define ORTA_SECTOR_X		4
-#define ORTA_SECTOR_Y		11
-
+// Tixa position on the map
 #define TIXA_SECTOR_X		9
 #define TIXA_SECTOR_Y		10
 
@@ -191,8 +186,6 @@ extern INT16 sSelectedMilitiaTown;
 extern UINT16	sSelMapX;
 extern UINT16	sSelMapY;
 
-
-extern BOOLEAN fFoundTixa;
 
 void    CreateDestroyMilitiaSectorButtons(void);
 BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId);

@@ -74,6 +74,7 @@
 #include "Squads.h"
 #include "Strategic.h"
 #include "StrategicMap.h"
+#include "StrategicMap_Secrets.h"
 #include "Strategic_AI.h"
 #include "Strategic_Mines.h"
 #include "Strategic_Movement.h"
@@ -2986,11 +2987,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			}
 
 			case NPC_ACTION_SHOW_TIXA:
-				SetTixaAsFound();
+				SetTownAsFound(TIXA);
 				AddHistoryToPlayersLog( HISTORY_DISCOVERED_TIXA, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				break;
 			case NPC_ACTION_SHOW_ORTA:
-				SetOrtaAsFound();
+				SetTownAsFound(ORTA);
 				AddHistoryToPlayersLog( HISTORY_DISCOVERED_ORTA, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				break;
 

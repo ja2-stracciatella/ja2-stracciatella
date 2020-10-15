@@ -42,8 +42,6 @@ static inline void SetWorldSectorInvalid()
 	gbWorldSectorZ = -1;
 }
 
-extern BOOLEAN fFoundOrta;
-
 extern	BOOLEAN		gfUseAlternateMap;
 
 // This is called after loading map and before setting it up (e.g. placing soldiers)
@@ -79,6 +77,9 @@ ST::string GetShortSectorString(INT16 sMapX, INT16 sMapY);
 
 // Return a string like 'A9: Omerta'
 ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed);
+
+// Returns a sector description string based on the sector land type
+ST::string GetSectorLandTypeString(UINT8 ubSectorID, UINT8 ubSectorZ, bool fDetailed);
 
 void GetMapFileName(INT16 x, INT16 y, INT8 z, char* buf, BOOLEAN add_alternate_map_letter);
 

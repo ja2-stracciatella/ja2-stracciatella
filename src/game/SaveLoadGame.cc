@@ -98,6 +98,7 @@
 #include "Strategic_Town_Loyalty.h"
 #include "Strategic_Pathing.h"
 #include "StrategicMap.h"
+#include "StrategicMap_Secrets.h"
 #include "Tactical_Placement_GUI.h"
 #include "Tactical_Save.h"
 #include "TeamTurns.h"
@@ -1794,7 +1795,7 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_BOOL( d, fHelicopterDestroyed)
 	INJ_SKIP( d, 1)
 	INJ_I32(  d, giSortStateForMapScreenList)
-	INJ_BOOL( d, fFoundTixa)
+	InjectMapSecretStateToSave(d, 0); // fFoundTixa
 	INJ_SKIP( d, 3)
 	INJ_U32(  d, guiTimeOfLastSkyriderMonologue)
 	INJ_BOOL( d, fShowCambriaHospitalHighLight)
@@ -1822,7 +1823,7 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_BOOL( d, fNewFilesInFileViewer)
 	INJ_BOOL( d, gfLastBoxingMatchWonByPlayer)
 	INJ_SKIP( d, 7)
-	INJ_BOOLA(d, fSamSiteFound, lengthof(fSamSiteFound))
+	InjectSAMSitesFoundToSavedFile(d);
 	INJ_U8(   d, gubNumTerrorists)
 	INJ_U8(   d, gubCambriaMedicalObjects)
 	INJ_BOOL( d, gfDisableTacticalPanelButtons)
@@ -1940,7 +1941,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_BOOL( d, fHelicopterDestroyed)
 	EXTR_SKIP( d, 1)
 	EXTR_I32(  d, giSortStateForMapScreenList)
-	EXTR_BOOL( d, fFoundTixa)
+	ExtractMapSecretStateFromSave(d, 0);  // fFoundTixa
 	EXTR_SKIP( d, 3)
 	EXTR_U32(  d, guiTimeOfLastSkyriderMonologue)
 	EXTR_BOOL( d, fShowCambriaHospitalHighLight)
@@ -1974,7 +1975,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_BOOL( d, fNewFilesInFileViewer)
 	EXTR_BOOL( d, gfLastBoxingMatchWonByPlayer)
 	EXTR_SKIP( d, 7)
-	EXTR_BOOLA(d, fSamSiteFound, lengthof(fSamSiteFound))
+	ExtractSAMSitesFoundFromSavedFile(d);
 	EXTR_U8(   d, gubNumTerrorists)
 	EXTR_U8(   d, gubCambriaMedicalObjects)
 	EXTR_BOOL( d, gfDisableTacticalPanelButtons)

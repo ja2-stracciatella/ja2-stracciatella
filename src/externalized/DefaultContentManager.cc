@@ -2,7 +2,6 @@
 
 #include "game/Directories.h"
 #include "game/Strategic/Strategic_Status.h"
-#include "game/Tactical/Arms_Dealer.h"
 #include "game/Tactical/Items.h"
 #include "game/Tactical/Weapons.h"
 
@@ -42,7 +41,9 @@
 #include "strategic/MineModel.h"
 #include "strategic/SamSiteModel.h"
 #include "strategic/SamSiteAirControlModel.h"
+#include "strategic/StrategicMapSecretModel.h"
 #include "strategic/TownModel.h"
+#include "strategic/TraversibilityMapping.h"
 #include "strategic/MovementCostsModel.h"
 #include "strategic/NpcPlacementModel.h"
 #include "strategic/UndergroundSectorModel.h"
@@ -293,6 +294,7 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_npcActionParams);
 	deleteElements(m_npcPlacements);
 	deleteElements(m_samSites);
+	deleteElements(m_mapSecrets);
 	deleteElements(m_shippingDestinations);
 	deleteElements(m_shippingDestinationNames);
 	deleteElements(m_towns);
@@ -1184,8 +1186,19 @@ bool DefaultContentManager::loadStrategicLayerData()
 	}
 	UndergroundSectorModel::validateData(m_undergroundSectors);
 
+	json = readJsonDataFile("strategic-map-traversibility-ratings.json");
+	auto travRatingMap = TraversibilityMapping::deserialize(*json);
+
 	json = readJsonDataFile("strategic-map-movement-costs.json");
-	m_movementCosts = MovementCostsModel::deserialize(*json);
+	m_movementCosts = MovementCostsModel::deserialize(*json, travRatingMap);
+
+	json = readJsonDataFile("strategic-map-secrets.json");
+	for (auto& element : json->GetArray())
+	{
+		auto secret = StrategicMapSecretModel::deserialize(element, travRatingMap);
+		m_mapSecrets.push_back(secret);
+	}
+	StrategicMapSecretModel::validateData(m_mapSecrets, m_samSites);
 
 	json = readJsonDataFile("strategic-map-npc-placements.json");
 	for (auto& element : json->GetArray())
@@ -1383,6 +1396,11 @@ const std::vector<const UndergroundSectorModel*>& DefaultContentManager::getUnde
 const MovementCostsModel* DefaultContentManager::getMovementCosts() const
 {
 	return m_movementCosts;
+}
+
+const std::vector<const StrategicMapSecretModel*>& DefaultContentManager::getMapSecrets() const
+{
+	return m_mapSecrets;
 }
 
 const NpcPlacementModel* DefaultContentManager::getNpcPlacement(uint8_t profileId) const

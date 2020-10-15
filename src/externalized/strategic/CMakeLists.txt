@@ -11,7 +11,9 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/NpcPlacementModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/SamSiteModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/SamSiteAirControlModel.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/StrategicMapSecretModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/TownModel.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/TraversibilityMapping.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/UndergroundSectorModel.cc
     PARENT_SCOPE
 )
