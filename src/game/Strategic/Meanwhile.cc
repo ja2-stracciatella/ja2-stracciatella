@@ -24,6 +24,7 @@
 #include "MessageBoxScreen.h"
 #include "Music_Control.h"
 #include "NPC.h"
+#include "NpcPlacementModel.h"
 #include "Overhead.h"
 #include "PreBattle_Interface.h"
 #include "Quests.h"
@@ -450,7 +451,7 @@ bool AreInMeanwhile()
 }
 
 
-static void ProcessImplicationsOfMeanwhile(void)
+static void ProcessImplicationsOfMeanwhile()
 {
 	auto samList = GCM->getSamSites();
 	switch( gCurrentMeanwhileDef.ubMeanwhileID )
@@ -479,33 +480,24 @@ static void ProcessImplicationsOfMeanwhile(void)
 			break;
 		case AWOL_SCIENTIST:
 			{
-				INT16	sSectorX, sSectorY; // XXX HACK000E
+				INT16	sSectorX = 0, sSectorY = 0;
 
 				StartQuest( QUEST_FIND_SCIENTIST, -1, -1 );
 				// place Madlab and robot!
-				if ( SectorInfo[ SECTOR( 7, MAP_ROW_H ) ].uiFlags & SF_USE_ALTERNATE_MAP )
+				auto placement = GCM->getNpcPlacement(MADLAB);
+				for (UINT8 s : placement->sectorIds)
 				{
-					sSectorX = 7;
-					sSectorY = MAP_ROW_H;
+					// the sector was already determined at game init, find it...
+					if (SectorInfo[s].uiFlags & SF_USE_ALTERNATE_MAP)
+					{
+						sSectorX = SECTORX(s);
+						sSectorY = SECTORY(s);
+					}
 				}
-				else if ( SectorInfo[ SECTOR( 16, MAP_ROW_H ) ].uiFlags & SF_USE_ALTERNATE_MAP )
+
+				if (!sSectorX && !sSectorY)
 				{
-					sSectorX = 16;
-					sSectorY = MAP_ROW_H;
-				}
-				else if ( SectorInfo[ SECTOR( 11, MAP_ROW_I ) ].uiFlags & SF_USE_ALTERNATE_MAP )
-				{
-					sSectorX = 11;
-					sSectorY = MAP_ROW_I;
-				}
-				else if ( SectorInfo[ SECTOR( 4, MAP_ROW_E ) ].uiFlags & SF_USE_ALTERNATE_MAP )
-				{
-					sSectorX = 4;
-					sSectorY = MAP_ROW_E;
-				}
-				else
-				{
-					abort(); // HACK000E
+					SLOGE("unable to find Madlab's sector");
 				}
 				gMercProfiles[ MADLAB ].sSectorX = sSectorX;
 				gMercProfiles[ MADLAB ].sSectorY = sSectorY;

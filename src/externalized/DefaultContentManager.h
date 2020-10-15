@@ -172,6 +172,7 @@ public:
 	virtual const MovementCostsModel* getMovementCosts() const override;
 	virtual int16_t getSectorLandType(uint8_t sectorID, uint8_t sectorLevel) const override;
 	virtual const std::vector<const StrategicMapSecretModel*>& getMapSecrets() const override;
+	virtual const std::map<uint8_t, const NpcPlacementModel*>& listNpcPlacements() const override;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const override;
 	virtual const std::vector<const MERCListingModel*>& getMERCListings() const override;
