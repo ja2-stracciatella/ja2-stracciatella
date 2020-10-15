@@ -168,6 +168,8 @@ public:
 	virtual const std::vector <const UndergroundSectorModel*> & getUndergroundSectors() const = 0;
 
 	virtual const MovementCostsModel* getMovementCosts() const = 0;
+	/* Returns land type index for special sectors. Return -1 if no special land type is defined */
+	virtual int16_t getSectorLandType(uint8_t sectorID, uint8_t sectorLevel) const = 0;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const = 0;
 	
 	/* Params for the given NPC_ACTION if found, or return an empty instance */

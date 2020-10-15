@@ -1,0 +1,20 @@
+/**
+ * List of all sectors that use special land type descriptions.
+ *
+ * Fields:
+ *  - sector:       Location of sector
+ *  - sectorLevel:  Defaults to 0
+ *  - landType:     Land type for the sector description text. See strategic-map-traversibility-ratings
+ */
+[
+    /* Special sectors */
+    { "sector": "B13", "landType": "DRASSEN_AIRPORT_SITE" },
+    { "sector": "F8",  "landType": "CAMBRIA_HOSPITAL_SITE" },
+    { "sector": "N3",  "landType": "MEDUNA_AIRPORT_SITE" },
+    /* Underground facilities */
+    { "sector": "A10", "sectorLevel": 1, "landType": "REBEL_HIDEOUT" },
+    { "sector": "J9",  "sectorLevel": 1, "landType": "TIXA_DUNGEON" },
+    { "sector": "K4",  "sectorLevel": 1, "landType": "ORTA_BASEMENT" },
+    { "sector": "O3",  "sectorLevel": 1, "landType": "TUNNEL" },
+    { "sector": "P3",  "sectorLevel": 1, "landType": "SHELTER" }
+]

@@ -1244,24 +1244,14 @@ ST::string GetSectorLandTypeString(UINT8 const ubSectorID, UINT8 const ubSectorZ
 		}
 	}
 
-	// special facilities (surface sectors)
-	if (ubSectorZ == 0 && fDetailed) switch (ubSectorID)
+	// special facilities
+	if (ubSectorZ > 0 || fDetailed)
 	{
-		case SEC_B13: return GCM->getLandTypeString(DRASSEN_AIRPORT_SITE);
-		case SEC_F8:  return GCM->getLandTypeString(CAMBRIA_HOSPITAL_SITE);
-		case SEC_N3:  return GCM->getLandTypeString(MEDUNA_AIRPORT_SITE);
-		default:      break;
-	}
-
-	// special facilities underground
-	if (ubSectorZ == 1) switch (ubSectorID)
-	{
-		case SEC_A10: return GCM->getLandTypeString(REBEL_HIDEOUT);
-		case SEC_J9:  return GCM->getLandTypeString(TIXA_DUNGEON);
-		case SEC_K4:  return GCM->getLandTypeString(ORTA_BASEMENT);
-		case SEC_O3:  return GCM->getLandTypeString(TUNNEL);
-		case SEC_P3:  return GCM->getLandTypeString(SHELTER);
-		default:      break;
+		int16_t landType = GCM->getSectorLandType(ubSectorID, ubSectorZ);
+		if (landType >= 0)
+		{
+			return GCM->getLandTypeString(landType);
+		}
 	}
 
 	INT8 const town_name_id = StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(ubSectorID)].bNameId;
