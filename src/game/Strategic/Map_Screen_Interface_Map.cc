@@ -2839,7 +2839,11 @@ void LoadMapScreenInterfaceMapGraphics()
 
 	for (auto s : GCM->getMapSecrets())
 	{
-		gSecretSiteIcons[s->secretMapIcon] = AddVideoObjectFromFile(s->secretMapIcon.c_str());
+		const ST::string& path = s->secretMapIcon;
+		if (!path.empty() && gSecretSiteIcons.find(path) == gSecretSiteIcons.end())
+		{
+			gSecretSiteIcons[path] = AddVideoObjectFromFile(path.c_str());
+		}
 	}
 }
 
@@ -3939,17 +3943,13 @@ static void DrawMapBoxIcon(HVOBJECT const vo, UINT16 const icon, INT16 const sec
 
 void DrawSecretSite(const StrategicMapSecretModel* secret)
 {
-	if (secret->secretMapIcon.empty())
+	if (!secret->secretMapIcon.empty())
 	{
-		ST::string err = ST::format("Secret site at sector {} has no icon", secret->sectorID);
-		SLOGW(err);
-		return;
+		const SGPVObject *const icon = gSecretSiteIcons.at(secret->secretMapIcon);
+		const INT16 x = SECTORX(secret->sectorID);
+		const INT16 y = SECTORY(secret->sectorID);
+		DrawSite(x, y, icon);
 	}
-
-	const SGPVObject* const icon = gSecretSiteIcons.at(secret->secretMapIcon);
-	const INT16 x = SECTORX(secret->sectorID);
-	const INT16 y = SECTORY(secret->sectorID);
-	DrawSite(x, y, icon);
 }
 
 

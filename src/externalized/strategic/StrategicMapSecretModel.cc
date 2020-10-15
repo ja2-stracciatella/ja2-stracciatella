@@ -30,7 +30,7 @@ StrategicMapSecretModel* StrategicMapSecretModel::deserialize(const rapidjson::V
 	return new StrategicMapSecretModel(
 		SECTOR_FROM_SECTOR_SHORT_STRING(sector),
 		r.getOptionalBool("isSAMSite"),
-		r.GetString("secretMapIcon"),
+		r.getOptionalString("secretMapIcon") ,
 		secretLandType,
 		foundLandType
 	);
