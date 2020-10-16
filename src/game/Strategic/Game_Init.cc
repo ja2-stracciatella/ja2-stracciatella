@@ -1,204 +1,105 @@
-#include <stdexcept>
-
-#include "Font_Control.h"
-#include "JAScreens.h"
-#include "Laptop.h"
-#include "MapScreen.h"
-#include "Meanwhile.h"
-#include "Merc_Hiring.h"
-#include "Queen_Command.h"
-#include "ShopKeeper_Interface.h"
-#include "Timer_Control.h"
-#include "WorldDef.h"
-#include "Soldier_Control.h"
-#include "Overhead.h"
-#include "EMail.h"
-#include "Game_Clock.h"
-#include "Soldier_Profile.h"
-#include "StrategicMap.h"
-#include "StrategicMap_Secrets.h"
 #include "Game_Init.h"
-#include "Animation_Data.h"
-#include "Finances.h"
-#include "Soldier_Create.h"
-#include "Soldier_Init_List.h"
-#include "Strategic.h"
-#include "History.h"
-#include "Merc_Entering.h"
-#include "Squads.h"
-#include "Campaign_Init.h"
-#include "Strategic_Town_Loyalty.h"
-#include "Strategic_Mines.h"
-#include "GameLoop.h"
-#include "Random.h"
-#include "Map_Screen_Interface.h"
-#include "Tactical_Save.h"
-#include "Campaign_Types.h"
-#include "Message.h"
-#include "Game_Event_Hook.h"
-#include "Strategic_Movement.h"
-#include "Creature_Spreading.h"
-#include "Quests.h"
-#include "Strategic_AI.h"
-#include "LaptopSave.h"
-#include "AIMMembers.h"
-#include "Dialogue_Control.h"
-#include "NPC.h"
-#include "OppList.h"
-#include "GameSettings.h"
-#include "Interface_Dialogue.h"
-#include "Map_Screen_Interface_Border.h"
-#include "Map_Screen_Helicopter.h"
-#include "Vehicles.h"
-#include "Map_Screen_Interface_Map.h"
-#include "PreBattle_Interface.h"
 #include "Arms_Dealer_Init.h"
+#include "BloodCatPlacementsModel.h"
+#include "BloodCatSpawnsModel.h"
 #include "BobbyR.h"
+#include "Campaign_Init.h"
+#include "Campaign_Types.h"
+#include "Cheats.h"
+#include "ContentManager.h"
+#include "ContentMusic.h"
+#include "Creature_Spreading.h"
+#include "Dialogue_Control.h"
+#include "EMail.h"
+#include "Finances.h"
+#include "Game_Clock.h"
+#include "Game_Event_Hook.h"
+#include "GameInstance.h"
+#include "GameLoop.h"
+#include "GamePolicy.h"
+#include "GameSettings.h"
 #include "HelpScreen.h"
 #include "Interface.h"
-#include "Cheats.h"
-#include "SoundMan.h"
-#include "Debug.h"
-#include "ScreenIDs.h"
+#include "Interface_Dialogue.h"
+#include "Laptop.h"
+#include "Logger.h"
+#include "Map_Screen_Helicopter.h"
+#include "Map_Screen_Interface.h"
+#include "Map_Screen_Interface_Border.h"
+#include "Map_Screen_Interface_Map.h"
+#include "MapScreen.h"
+#include "Meanwhile.h"
+#include "Merc_Entering.h"
+#include "Message.h"
 #include "Music_Control.h"
-
-#include "ContentManager.h"
-#include "GameInstance.h"
-#include "policy/GamePolicy.h"
-
-#include "externalized/strategic/BloodCatPlacementsModel.h"
-#include "externalized/strategic/BloodCatSpawnsModel.h"
+#include "NPC.h"
+#include "NpcPlacementModel.h"
+#include "OppList.h"
+#include "Overhead.h"
+#include "Overhead_Types.h"
+#include "PreBattle_Interface.h"
+#include "Queen_Command.h"
+#include "Quests.h"
+#include "Random.h"
+#include "SAM_Sites.h"
+#include "ScreenIDs.h"
+#include "ShopKeeper_Interface.h"
+#include "Soldier_Control.h"
+#include "Soldier_Create.h"
+#include "Soldier_Profile.h"
+#include "Soldier_Profile_Type.h"
+#include "SoundMan.h"
+#include "Squads.h"
+#include "Strategic_AI.h"
+#include "Strategic_Mines.h"
+#include "Strategic_Movement.h"
+#include "Strategic_Town_Loyalty.h"
+#include "StrategicMap.h"
+#include "StrategicMap_Secrets.h"
+#include "Tactical_Save.h"
+#include "Timer_Control.h"
+#include "Vehicles.h"
+#include "WorldDef.h"
+#include <stdexcept>
+#include <string_theory/format>
 
 void InitScriptingEngine();
 
 UINT8			gubScreenCount=0;
 
 
-static void InitNPCs(void)
+static void InitNPCs()
 {
-	{ // add the pilot at a random location!
-		MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
-		switch (Random(4))
-		{
-			case 0:
-				p.sSectorX = 15;
-				p.sSectorY = MAP_ROW_B;
-				p.bSectorZ = 0;
-				break;
-			case 1:
-				p.sSectorX = 14;
-				p.sSectorY = MAP_ROW_E;
-				p.bSectorZ = 0;
-				break;
-			case 2:
-				p.sSectorX = 12;
-				p.sSectorY = MAP_ROW_D;
-				p.bSectorZ = 0;
-				break;
-			case 3:
-				p.sSectorX = 16;
-				p.sSectorY = MAP_ROW_C;
-				p.bSectorZ = 0;
-				break;
-		}
-		SLOGD("Skyrider in %c %d", 'A' + p.sSectorY - 1, p.sSectorX);
-		// use alternate map, with Skyrider's shack, in this sector
-		SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
-	}
-
-
-	// set up Madlab's secret lab (he'll be added when the meanwhile scene occurs)
-
-	switch( Random( 4 ) )
+	for (auto p : GCM->listNpcPlacements())
 	{
-		case 0:
-			// use alternate map in this sector
-			SectorInfo[ SECTOR( 7, MAP_ROW_H ) ].uiFlags |= SF_USE_ALTERNATE_MAP;
-			break;
-		case 1:
-			SectorInfo[ SECTOR( 16, MAP_ROW_H ) ].uiFlags |= SF_USE_ALTERNATE_MAP;
-			break;
-		case 2:
-			SectorInfo[ SECTOR( 11, MAP_ROW_I ) ].uiFlags |= SF_USE_ALTERNATE_MAP;
-			break;
-		case 3:
-			SectorInfo[ SECTOR( 4, MAP_ROW_E ) ].uiFlags |= SF_USE_ALTERNATE_MAP;
-			break;
-	}
-
-	{ // add Micky in random location
-		MERCPROFILESTRUCT& p = GetProfile(MICKY);
-		switch (Random(5))
+		const NpcPlacementModel* placement = p.second;
+		if (placement->isSciFiOnly && !gGameOptions.fSciFi)
 		{
-			case 0:
-				p.sSectorX = 9;
-				p.sSectorY = MAP_ROW_G;
-				p.bSectorZ = 0;
-				break;
-			case 1:
-				p.sSectorX = 13;
-				p.sSectorY = MAP_ROW_D;
-				p.bSectorZ = 0;
-				break;
-			case 2:
-				p.sSectorX = 5;
-				p.sSectorY = MAP_ROW_C;
-				p.bSectorZ = 0;
-				break;
-			case 3:
-				p.sSectorX = 2;
-				p.sSectorY = MAP_ROW_H;
-				p.bSectorZ = 0;
-				break;
-			case 4:
-				p.sSectorX = 6;
-				p.sSectorY = MAP_ROW_C;
-				p.bSectorZ = 0;
-				break;
+			continue;
 		}
-		SLOGD("%s in %c %d", p.zNickname.c_str(), 'A' + p.sSectorY - 1, p.sSectorX);
 
-		// use alternate map in this sector
-		//SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
+		UINT8 sector = placement->pickPlacementSector();
+		if (placement->useAlternateMap)
+		{
+			SectorInfo[sector].uiFlags |= SF_USE_ALTERNATE_MAP;
+			SLOGD(ST::format("Alternate map in {}", SECTOR_SHORT_STRING(sector)));
+		}
+		if (placement->isPlacedAtStart)
+		{
+			MERCPROFILESTRUCT& merc = GetProfile(placement->profileId);
+			merc.sSectorX = SECTORX(sector);
+			merc.sSectorY = SECTORY(sector);
+			merc.bSectorZ = 0;
+			SLOGD(ST::format("{} in {}", merc.zNickname, SECTOR_SHORT_STRING(sector)));
+		}
 	}
 
 	gfPlayerTeamSawJoey = FALSE;
 
-
-	if ( gGameOptions.fSciFi )
-	{
-		{ // add Bob
-			MERCPROFILESTRUCT& p = GetProfile(BOB);
-			p.sSectorX = 8;
-			p.sSectorY = MAP_ROW_F;
-			p.bSectorZ = 0;
-		}
-
-		{ // add Gabby in random location
-			MERCPROFILESTRUCT& p = gMercProfiles[GABBY];
-			switch( Random( 2 ) )
-			{
-				case 0:
-					p.sSectorX = 11;
-					p.sSectorY = MAP_ROW_H;
-					p.bSectorZ = 0;
-					break;
-				case 1:
-					p.sSectorX = 4;
-					p.sSectorY = MAP_ROW_I;
-					p.bSectorZ = 0;
-					break;
-			}
-			SLOGD("%s in %c %d", p.zNickname.c_str(), 'A' + p.sSectorY - 1, p.sSectorX);
-
-			// use alternate map in this sector
-			SectorInfo[SECTOR(p.sSectorX, p.sSectorY)].uiFlags |= SF_USE_ALTERNATE_MAP;
-		}
-	}
-	else
+	if (!gGameOptions.fSciFi)
 	{ //not scifi, so use alternate map in Tixa's b1 level that doesn't have the stairs going down to the caves.
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector( 9, 10, 1 ); //j9_b1
+		pSector = FindUnderGroundSector( TIXA_SECTOR_X, TIXA_SECTOR_Y, 1 ); //j9_b1
 		if( pSector )
 		{
 			pSector->uiFlags |= SF_USE_ALTERNATE_MAP;

@@ -72,6 +72,7 @@
 #include "Message.h"
 #include "Music_Control.h"
 #include "NPC.h"
+#include "NpcPlacementModel.h"
 #include "OppList.h"
 #include "Options_Screen.h"
 #include "Overhead.h"
@@ -1050,15 +1051,15 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		if (s) TacticalRemoveSoldier(*s);
 
 		// add the pilot at a random location!
-		INT16 x;
-		INT16 y;
-		switch (Random(4))
+		INT16 x = 0, y = 0;
+		auto placement = GCM->getNpcPlacement(SKYRIDER);
+		if (placement)
 		{
-			case 0: x = 15; y = MAP_ROW_B; break;
-			case 1: x = 14; y = MAP_ROW_E; break;
-			case 2: x = 12; y = MAP_ROW_D; break;
-			case 3: x = 16; y = MAP_ROW_C; break;
-			default: abort(); // HACK000E
+			auto sector = placement->pickPlacementSector();
+
+			if (placement->useAlternateMap) SectorInfo[sector].uiFlags |= SF_USE_ALTERNATE_MAP;
+			x = SECTORX(sector);
+			y = SECTORY(sector);
 		}
 		MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
 		p.sSectorX = x;

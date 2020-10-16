@@ -1427,6 +1427,11 @@ const NpcPlacementModel* DefaultContentManager::getNpcPlacement(uint8_t profileI
 	return m_npcPlacements.at(profileId);
 }
 
+const std::map<uint8_t, const NpcPlacementModel*>& DefaultContentManager::listNpcPlacements() const
+{
+	return m_npcPlacements;
+}
+
 const RPCSmallFaceModel* DefaultContentManager::getRPCSmallFaceOffsets(uint8_t profileID) const
 {
 	if (m_rpcSmallFaces.find(profileID) == m_rpcSmallFaces.end())
