@@ -1260,7 +1260,7 @@ ST::string GetSectorLandTypeString(UINT8 const ubSectorID, UINT8 const ubSectorZ
 		return GCM->getTownName(town_name_id);
 	}
 
-	if (ubSectorZ < 0)
+	if (ubSectorZ > 0)
 	{	// any other underground sectors (not facility, not part of a mine) are creature lair
 		return GCM->getLandTypeString(CREATURE_LAIR);
 	}
