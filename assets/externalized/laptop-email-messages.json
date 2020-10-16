@@ -1,0 +1,15 @@
+//INT32 iMessageOffset, INT32 iMessageLength, UINT8 ubSender, INT32 iDate
+
+{
+    [
+        "emailID": 1,
+        "emailName": ,
+        "sender": 1,
+        "messageOffset": 0,
+        "messageLength": 0,
+        "sender": "MAIL_ENRICO",
+        "isPreReceived": true,
+        "isPreRead": false,
+        "overrideText": ""
+    ]
+}

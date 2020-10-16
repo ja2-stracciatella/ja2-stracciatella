@@ -1,0 +1,56 @@
+/**
+	[
+        "internalName": "MAIL_ENRICO",
+        "index": 0,
+	[
+        "internalName": "CHAR_PROFILE_SITE",
+        "index": ,
+	[
+        "internalName": "GAME_HELP",
+        "index":
+	[
+        "internalName": "IMP_PROFILE_RESULTS",
+        "index":
+	[
+        "internalName": "SPECK_FROM_MERC",
+        "index":
+	[
+        "internalName": "RIS_EMAIL",
+        "index":
+	[
+        "internalName": "BARRY_MAIL",
+        "index":
+        //... AIM mercs
+	[
+        "internalName": "MELTDOWN_MAIL",
+        "index":  = BARRY_MAIL+ 39,
+	[
+        "internalName": "INSUR=ANCE_COMPANY",
+        "index":
+	[
+        "internalName": "BOBBY_R",
+        "index":
+	[
+        "internalName": "KING_PIN",
+        "index":
+	[
+        "internalName": "JOHN_KULBA",
+        "index":
+	[
+        "internalName": "AIM_SITE",
+        "index":
+};
+*/
+{
+    [
+        "internalName": "MAIL_ENRICO",
+        "nameOffset": 0
+    ],
+        "messageOffset": 0,
+        "messageLength": 0,
+        "sender": "MAIL_ENRICO",
+        "isPreReceived": true,
+        "isPreRead": false,
+        "overrideText": ""
+    ]
+}

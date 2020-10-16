@@ -1,0 +1,73 @@
+{
+    //If tex is in the game
+    "TEX_MOVIE_ATTACK_CLYDESDALES": 0,
+    "TEX_MOVIE_WILD_EAST": 0,
+    "TEX_MOVIE_HAVE_HONDA": 0,
+
+    // things that she WILL be able to sell, but not until after the BLOOD CAT  quest
+    "FIRSTAIDKIT": 5,
+    "MEDICKIT": 3,
+    "COMPOUND18": 1,
+    "CERAMIC_PLATES": 1,
+    "LAME_BOY": 1,
+
+    //for the laptop quest
+    "LAPTOP_TRANSMITTER": 0,
+
+    "PORNOS": 1,
+
+    "COMBAT_KNIFE": 2,
+    "THROWING_KNIFE": 3,
+    "MACHETE": 1,
+
+    "FLAK_JACKET": 2,
+    "STEEL_HELMET": 3,
+    "LEATHER_JACKET": 1,
+    "SUNGOGGLES": 3,
+    "GASMASK": 1,
+    "NIGHTGOGGLES": 3,
+    "EXTENDEDEAR": 2,
+
+    "CAMOUFLAGEKIT": 2,
+
+//	    "LASERSCOPE": 3,
+
+    "CANTEEN": 5,
+    "CROWBAR": 1,
+    "JAR": 3,
+
+
+//	    "METALDETECTOR": 2,
+    "WIRECUTTERS": 1,
+
+    "DUCT_TAPE": 1,
+    "LOCKSMITHKIT": 4,
+    "TOOLKIT": 3,
+
+//	    "SILVER_PLATTER": 1,
+    "WALKMAN": 1,
+    "PORTABLETV": 1,
+    "FUMBLE_PAK": 1,
+    "GOLDWATCH": 1,
+    "GOLFCLUBS": 1,
+    "QUICK_GLUE": 1,
+    "COPPER_WIRE": 2,
+    "BATTERIES": 3,
+
+    "BREAK_LIGHT": 5,		// flares
+
+    "TSHIRT": 2,
+    "CIGARS": 3,
+
+//	    "XRAY_BULB": 1,
+
+    "CHEWING_GUM": 1,
+    "BEER": 2,
+    "WINE": 2,
+    "ALCOHOL": 2,
+
+    "MERC_WRISTWATCH": 0,
+    "CHE_GUEVARA_CANTEEN": 0,
+    "SAM_GARVER_COMBAT_KNIFE": 0,
+    "MERC_UMBRELLA": 0
+}

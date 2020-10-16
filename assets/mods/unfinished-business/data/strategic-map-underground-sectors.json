@@ -1,0 +1,90 @@
+[
+	//Mine Sector Level 1
+    {
+        "sector": "I13",
+        "sectorLevel": 1,
+        "adjacentSectors": ["S"],
+        
+        "numTroops": [0, 0, 0],
+        "numTroopsVariance": [0, 0, 0],
+        "numElites": [0, 0, 0],
+        "numElitesVariance": [0, 0, 0]
+    },
+    //Power Generator Level 1
+    {
+        "sector": "J13",
+        "sectorLevel": 1,
+        "adjacentSectors": ["N"],
+        
+        "numTroops": [0, 0, 0],
+        "numTroopsVariance": [0, 0, 0],
+        "numElites": [0, 0, 0],
+        "numElitesVariance": [0, 0, 0]
+    },
+	//Tunnel First Part, Level 1 (to be added dynamically)
+    {
+        "sector": "J14",
+        "sectorLevel": 1,
+        "adjacentSectors": ["S"],
+        
+        "numTroops": [0, 0, 0],
+        "numTroopsVariance": [0, 0, 0],
+        "numElites": [0, 0, 0],
+        "numElitesVariance": [0, 0, 0]
+    },
+	//Tunnel Second Part, Level 1 (to be added dynamically)
+    {
+        "sector": "K14",
+        "sectorLevel": 1,
+        "adjacentSectors": ["N", "E"],
+        
+        "numTroops": [0, 0, 0],
+        "numTroopsVariance": [0, 0, 0],
+        "numElites": [0, 0, 0],
+        "numElitesVariance": [0, 0, 0]
+    },
+	//Complex, Level 1, K15
+    {
+        "sector": "K15",
+        "sectorLevel": 1,
+        "adjacentSectors": ["N", "E"],
+        
+        "numTroops": [14, 14, 15],
+        "numTroopsVariance": [6, 4, 4],
+        "numElites": [0, 4, 6],
+        "numElitesVariance": [0, 3, 4]
+    },
+	//Complex, Level 2, K15
+    {
+        "sector": "K15",
+        "sectorLevel": 2,
+        "adjacentSectors": ["S"],
+        
+        "numTroops": [10, 15, 12],
+        "numTroopsVariance": [3, 2, 3],
+        "numElites": [0, 5, 10],
+        "numElitesVariance": [0, 2, 2]
+    },
+	//Complex, Level 2, L15
+    {
+        "sector": "L15",
+        "sectorLevel": 2,
+        "adjacentSectors": ["N"],
+        
+        "numTroops": [12, 17, 10],
+        "numTroopsVariance": [2, 2, 3],
+        "numElites": [1, 5, 14],
+        "numElitesVariance": [0, 2, 2]
+    },
+	//Complex, Level 3, L15
+	{
+        "sector": "L15",
+        "sectorLevel": 3,
+        "adjacentSectors": [],
+        
+        "numTroops": [26, 20, 13],
+        "numTroopsVariance": [0, 0, 0],
+        "numElites": [2, 8, 15],
+        "numElitesVariance": [0, 0, 0]
+    }
+]

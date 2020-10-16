@@ -1,0 +1,10 @@
+[
+	{
+		"sector": "I10",
+		"isLair": false,
+		"isArena": false,
+		"bloodCatsSpawnsEasy": 3, 
+		"bloodCatsSpawnsMedium": 4,
+		"bloodCatsSpawnsHard": 5
+	}
+]

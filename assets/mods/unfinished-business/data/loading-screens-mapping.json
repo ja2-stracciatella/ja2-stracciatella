@@ -1,0 +1,25 @@
+[
+    /* initial sectors */
+    { "sector": "H7", "night": "NIGHT_SNOW", "day": "HELI_CRASH" },  //TODO: HELI_CRASH only if H8 is not yet visited;
+    { "sector": "H8", "night": "NIGHT_SNOW", "day": "DAY_SNOW" },
+
+    /* guard post */
+    { "sector": "H9", "night": "GUARDPOST_NIGHT", "day": "GUARDPOST_DAY" },
+
+    { "sector": "H11", "night": "NIGHTGENERIC", "day": "DAYGENERIC" },
+
+    { "sector": "K16", "night": "NIGHTPINE", "day": "DAYPINE" },
+    { "sector": "H10", "night": "NIGHTPINE", "day": "DAYPINE" },
+    { "sector": "I9",  "night": "NIGHTPINE", "day": "DAYPINE" },
+
+    { "sector": "I12", "night": "NIGHTWILD", "day": "DAYWILD" },
+    { "sector": "J11", "night": "NIGHTWILD", "day": "DAYWILD" },
+
+    { "sector": "J12", "night": "NIGHTFOREST", "day": "DAYFOREST" },
+    { "sector": "I13", "night": "NIGHTMINE", "day": "DAYMINE" },
+
+    /* Power plant */
+    { "sector": "J13", "night": "POWERPLANT_NIGHT", "day": "POWERPLANT_DAY" },
+    /* Complex */
+    { "sector": "K15", "night": "COMPLEX_TOP_LEVEL_NIGHT", "day": "COMPLEX_TOP_LEVEL_DAY" }
+]

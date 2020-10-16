@@ -1,0 +1,7 @@
+{
+    //  Should the intro video be played when the campaign starts?
+    //  vanilla settings: true
+    "intro_video": true,
+
+    "allow_scifi": true
+}

@@ -1,0 +1,28 @@
+[
+    {"profile": "GASTON",  "eyesXY": [13, 5], "mouthXY": [ 10, 25 ]},      // Gaston  ( 58 )
+    {"profile": "STOGIE",  "eyesXY": [9,  4], "mouthXY": [  8, 22 ]},      // Stogie  ( 59 )
+    {"profile": "MANUEL",  "eyesXY": [14, 2], "mouthXY": [ 13, 22 ]},      // Manuel  ( 60 )
+    {"profile": "BIGGENS",  "eyesXY": [5,  6], "mouthXY": [  5, 25 ]},      // Biggens ( 61 )
+    {"profile": "JOHN_K",  "eyesXY": [6,  4], "mouthXY": [  6, 24 ]},      // J Kulba ( 62 )
+
+    {"profile": "TEX",  "eyesXY": [3,  6], "mouthXY": [  3, 23 ]},      // Tex     ( 64 )
+    // {"profile": 65,  "eyesXY": [8,  8], "mouthXY": [  8, 22 ]},      // SLAY    ( 65 )
+    // {"profile": 66,  "eyesXY": [9,  4], "mouthXY": [  7, 22 ]},      // DYNAMO  ( 66 )
+    // {"profile": 67,  "eyesXY": [8,  8], "mouthXY": [  8, 25 ]},      // SHANK   ( 67 )
+    // {"profile": 68,  "eyesXY": [4,  6], "mouthXY": [  5, 22 ]},      // IGGY    ( 68 )
+    // {"profile": 69,  "eyesXY": [8,  9], "mouthXY": [  7, 25 ]},      // VINCE   ( 69 )
+    // {"profile": 70,  "eyesXY": [4,  7], "mouthXY": [  5, 25 ]},      // CONRAD  ( 70 )
+    // {"profile": 71,  "eyesXY": [9,  7], "mouthXY": [  8, 22 ]},      // CARL    ( 71 )
+    // {"profile": 72,  "eyesXY": [9,  7], "mouthXY": [  9, 25 ]},      // MADDOG  ( 72 )
+    {"profile": "JERRY",  "eyesXY": [9,  3], "mouthXY": [  8, 25 ]}      // Jerry Milo  ( 76 )
+
+    // {"profile": 90,  "eyesXY": [9,  3], "mouthXY": [  8, 25 ]},      // JOEY     ( 90 )
+    // {"profile": 97,  "eyesXY": [11, 7], "mouthXY": [  9, 24 ]},      // SKYRIDER ( 97 )
+    // {"profile": 106, "eyesXY": [9,  5], "mouthXY": [  7, 23 ]},      // Miner    ( 106 )
+    // {"profile": 118, "eyesXY": [6,  4], "mouthXY": [  6, 24 ]},      // JOHN     ( 118 )
+    // {"profile": 119, "eyesXY": [12, 4], "mouthXY": [ 10, 24 ]},      //       ( 119 )
+    // {"profile": 148, "eyesXY": [8,  6], "mouthXY": [  8, 23 ]},      // Miner ( 148 )
+    // {"profile": 156, "eyesXY": [6,  5], "mouthXY": [  6, 23 ]},      // Miner ( 156 )
+    // {"profile": 157, "eyesXY": [13, 7], "mouthXY": [ 11, 24 ]},      // Miner ( 157 )
+    // {"profile": 158, "eyesXY": [9,  7], "mouthXY": [  8, 22 ]}       // Miner ( 158 )
+]

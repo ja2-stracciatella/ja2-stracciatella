@@ -1,0 +1,3243 @@
+[
+    {
+        "itemIndex": 0,
+        "internalName": "Nothing",
+        "internalType": "PUNCH",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
+        "ubWeight": 0,
+        "ubPerPocket": 0,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 0,
+        "usRange": 0,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
+    },
+    {
+        "itemIndex": 1,
+        "internalName": "GLOCK_17",
+        "internalType": "PISTOL",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 1
+            },
+            "big": {
+                "path": "bigitems/gun01.sti"
+            }
+        },
+        "ubWeight": 6,
+        "ubPerPocket": 1,
+        "usPrice": 350,
+        "ubCoolness": 2,
+        "bReliability": 2,
+        "bRepairEase": 2,
+        "rateOfFire": 40,
+        "calibre": "AMMO9",
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 14,
+        "ubBulletSpeed": 24,
+        "ubImpact": 21,
+        "ubDeadliness": 8,
+        "ubMagSize": 15,
+        "usRange": 120,
+        "ubAttackVolume": 60,
+        "ubHitVolume": 5,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 2
+        }
+    },
+    {
+        "itemIndex": 2,
+        "internalName": "GLOCK_18",
+        "internalType": "M_PISTOL",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 2
+            },
+            "big": {
+                "path": "bigitems/gun02.sti"
+            }
+        },
+        "ubWeight": 6,
+        "ubPerPocket": 1,
+        "usPrice": 480,
+        "ubCoolness": 2,
+        "bReliability": 1,
+        "bRepairEase": 1,
+        "rateOfFire": 1300,
+        "standardReplacement": "BERETTA_93R",
+        "calibre": "AMMO9",
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 14,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 15,
+        "ubBulletSpeed": 24,
+        "ubImpact": 21,
+        "ubDeadliness": 9,
+        "ubMagSize": 15,
+        "usRange": 120,
+        "ubAttackVolume": 60,
+        "ubHitVolume": 5,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 3
+        }
+    },
+    {
+        "itemIndex": 3,
+        "internalName": "BERETTA_92F",
+        "internalType": "PISTOL",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 3
+            },
+            "big": {
+                "path": "bigitems/gun03.sti"
+            }
+        },
+        "ubWeight": 11,
+        "ubPerPocket": 1,
+        "usPrice": 450,
+        "ubCoolness": 2,
+        "bReliability": -1,
+        "bRepairEase": -1,
+        "rateOfFire": 45,
+        "standardReplacement": "GLOCK_17",
+        "calibre": "AMMO9",
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 16,
+        "ubBulletSpeed": 23,
+        "ubImpact": 22,
+        "ubDeadliness": 9,
+        "ubMagSize": 15,
+        "usRange": 120,
+        "ubAttackVolume": 60,
+        "ubHitVolume": 5,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 4
+        }
+    },
+    {
+        "itemIndex": 4,
+        "internalName": "BERETTA_93R",
+        "internalType": "M_PISTOL",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 4
+            },
+            "big": {
+                "path": "bigitems/gun04.sti"
+            }
+        },
+        "ubWeight": 11,
+        "ubPerPocket": 1,
+        "usPrice": 470,
+        "ubCoolness": 2,
+        "bReliability": -2,
+        "bRepairEase": -2,
+        "rateOfFire": 1100,
+        "calibre": "AMMO9",
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 13,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 15,
+        "ubBulletSpeed": 23,
+        "ubImpact": 22,
+        "ubDeadliness": 9,
+        "ubMagSize": 15,
+        "usRange": 120,
+        "ubAttackVolume": 60,
+        "ubHitVolume": 5,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 5
+        }
+    },
+    {
+        "itemIndex": 5,
+        "internalName": "SW38",
+        "internalType": "PISTOL",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 5
+            },
+            "big": {
+                "path": "bigitems/gun05.sti"
+            }
+        },
+        "ubWeight": 11,
+        "ubPerPocket": 1,
+        "usPrice": 250,
+        "ubCoolness": 1,
+        "bReliability": 4,
+        "bRepairEase": 4,
+        "rateOfFire": 25,
+        "calibre": "AMMO38",
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 11,
+        "ubBulletSpeed": 23,
+        "ubImpact": 22,
+        "ubDeadliness": 6,
+        "ubMagSize": 6,
+        "usRange": 130,
+        "ubAttackVolume": 63,
+        "ubHitVolume": 5,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 6
+        }
+    },
+    {
+        "itemIndex": 6,
+        "internalName": "BARRACUDA",
+        "internalType": "PISTOL",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 6
+            },
+            "big": {
+                "path": "bigitems/gun06.sti"
+            }
+        },
+        "ubWeight": 10,
+        "ubPerPocket": 1,
+        "usPrice": 300,
+        "ubCoolness": 1,
+        "bReliability": 3,
+        "bRepairEase": 3,
+        "rateOfFire": 23,
+        "standardReplacement": "DESERTEAGLE",
+        "calibre": "AMMO357",
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 11,
+        "ubBulletSpeed": 23,
+        "ubImpact": 24,
+        "ubDeadliness": 7,
+        "ubMagSize": 6,
+        "usRange": 135,
+        "ubAttackVolume": 66,
+        "ubHitVolume": 6,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 7
+        }
+    },
+    {
+        "itemIndex": 7,
+        "internalName": "DESERTEAGLE",
+        "internalType": "PISTOL",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 7
+            },
+            "big": {
+                "path": "bigitems/gun07.sti"
+            }
+        },
+        "ubWeight": 17,
+        "ubPerPocket": 1,
+        "usPrice": 300,
+        "ubCoolness": 1,
+        "bReliability": -1,
+        "bRepairEase": -1,
+        "rateOfFire": 27,
+        "calibre": "AMMO357",
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 11,
+        "ubBulletSpeed": 24,
+        "ubImpact": 24,
+        "ubDeadliness": 7,
+        "ubMagSize": 9,
+        "usRange": 135,
+        "ubAttackVolume": 66,
+        "ubHitVolume": 6,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 8
+        }
+    },
+    {
+        "itemIndex": 8,
+        "internalName": "M1911",
+        "internalType": "PISTOL",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 8
+            },
+            "big": {
+                "path": "bigitems/gun08.sti"
+            }
+        },
+        "ubWeight": 11,
+        "ubPerPocket": 1,
+        "usPrice": 400,
+        "ubCoolness": 2,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 35,
+        "standardReplacement": "GLOCK_17",
+        "calibre": "AMMO45",
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 13,
+        "ubBulletSpeed": 24,
+        "ubImpact": 23,
+        "ubDeadliness": 9,
+        "ubMagSize": 7,
+        "usRange": 125,
+        "ubAttackVolume": 69,
+        "ubHitVolume": 6,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 9
+        }
+    },
+    {
+        "itemIndex": 9,
+        "internalName": "MP5K",
+        "internalType": "SMG",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 9
+            },
+            "big": {
+                "path": "bigitems/gun09.sti"
+            }
+        },
+        "ubWeight": 21,
+        "ubPerPocket": 0,
+        "usPrice": 980,
+        "ubCoolness": 3,
+        "bReliability": -1,
+        "bRepairEase": 0,
+        "rateOfFire": 900,
+        "calibre": "AMMO9",
+        "ubReadyTime": 1,
+        "ubShotsPer4Turns": 15,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 23,
+        "ubImpact": 23,
+        "ubDeadliness": 17,
+        "ubMagSize": 30,
+        "usRange": 200,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 7,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 10
+        }
+    },
+    {
+        "itemIndex": 10,
+        "internalName": "MAC10",
+        "internalType": "SMG",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 10
+            },
+            "big": {
+                "path": "bigitems/gun10.sti"
+            }
+        },
+        "ubWeight": 28,
+        "ubPerPocket": 0,
+        "usPrice": 1170,
+        "ubCoolness": 4,
+        "bReliability": -2,
+        "bRepairEase": -1,
+        "rateOfFire": 1090,
+        "calibre": "AMMO45",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 13,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 23,
+        "ubImpact": 27,
+        "ubDeadliness": 20,
+        "ubMagSize": 30,
+        "usRange": 200,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 7,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 11
+        }
+    },
+    {
+        "itemIndex": 11,
+        "internalName": "THOMPSON",
+        "internalType": "SMG",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 11
+            },
+            "big": {
+                "path": "bigitems/gun11.sti"
+            }
+        },
+        "ubWeight": 48,
+        "ubPerPocket": 0,
+        "usPrice": 700,
+        "ubCoolness": 3,
+        "bReliability": 3,
+        "bRepairEase": -3,
+        "rateOfFire": 700,
+        "standardReplacement": "MP5K",
+        "calibre": "AMMO45",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 10,
+        "ubShotsPerBurst": 4,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 23,
+        "ubImpact": 24,
+        "ubDeadliness": 14,
+        "ubMagSize": 30,
+        "usRange": 200,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 7,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 12
+        }
+    },
+    {
+        "itemIndex": 12,
+        "internalName": "COMMANDO",
+        "internalType": "SMG",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 12
+            },
+            "big": {
+                "path": "bigitems/gun12.sti"
+            }
+        },
+        "ubWeight": 26,
+        "ubPerPocket": 0,
+        "usPrice": 1330,
+        "ubCoolness": 5,
+        "bReliability": 0,
+        "bRepairEase": -1,
+        "rateOfFire": 900,
+        "calibre": "AMMO556",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 15,
+        "ubShotsPerBurst": 4,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 20,
+        "ubImpact": 29,
+        "ubDeadliness": 23,
+        "ubMagSize": 30,
+        "usRange": 200,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 7,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 13
+        }
+    },
+    {
+        "itemIndex": 13,
+        "internalName": "MP53",
+        "internalType": "SMG",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 13
+            },
+            "big": {
+                "path": "bigitems/gun13.sti"
+            }
+        },
+        "ubWeight": 31,
+        "ubPerPocket": 0,
+        "usPrice": 770,
+        "ubCoolness": 3,
+        "bReliability": -1,
+        "bRepairEase": -1,
+        "rateOfFire": 700,
+        "standardReplacement": "MP5K",
+        "calibre": "AMMO556",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 12,
+        "ubShotsPerBurst": 3,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 22,
+        "ubImpact": 25,
+        "ubDeadliness": 15,
+        "ubMagSize": 30,
+        "usRange": 200,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 7,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 14
+        }
+    },
+    {
+        "itemIndex": 14,
+        "internalName": "AKSU74",
+        "internalType": "SMG",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 14
+            },
+            "big": {
+                "path": "bigitems/gun14.sti"
+            }
+        },
+        "ubWeight": 39,
+        "ubPerPocket": 0,
+        "usPrice": 1180,
+        "ubCoolness": 4,
+        "bReliability": -2,
+        "bRepairEase": -1,
+        "rateOfFire": 800,
+        "standardReplacement": "MAC10",
+        "calibre": "AMMO545",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 17,
+        "ubShotsPerBurst": 4,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 21,
+        "ubImpact": 26,
+        "ubDeadliness": 21,
+        "ubMagSize": 30,
+        "usRange": 200,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 7,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 15
+        }
+    },
+    {
+        "itemIndex": 15,
+        "internalName": "P90",
+        "internalType": "SMG",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 15
+            },
+            "big": {
+                "path": "bigitems/gun15.sti"
+            }
+        },
+        "ubWeight": 28,
+        "ubPerPocket": 0,
+        "usPrice": 2750,
+        "ubCoolness": 9,
+        "bReliability": -2,
+        "bRepairEase": -4,
+        "rateOfFire": 900,
+        "calibre": "AMMO57",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 15,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 21,
+        "ubImpact": 30,
+        "ubDeadliness": 42,
+        "ubMagSize": 50,
+        "usRange": 225,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 7,
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 16
+        }
+    },
+    {
+        "itemIndex": 16,
+        "internalName": "TYPE85",
+        "internalType": "SMG",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 16
+            },
+            "big": {
+                "path": "bigitems/gun16.sti"
+            }
+        },
+        "ubWeight": 19,
+        "ubPerPocket": 0,
+        "usPrice": 620,
+        "ubCoolness": 3,
+        "bReliability": -4,
+        "bRepairEase": 2,
+        "rateOfFire": 780,
+        "standardReplacement": "BERETTA_93R",
+        "calibre": "AMMO762W",
+        "ubReadyTime": 1,
+        "ubShotsPer4Turns": 10,
+        "ubShotsPerBurst": 4,
+        "ubBurstPenalty": 11,
+        "ubBulletSpeed": 23,
+        "ubImpact": 23,
+        "ubDeadliness": 12,
+        "ubMagSize": 30,
+        "usRange": 200,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 7,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 17
+        }
+    },
+    {
+        "itemIndex": 17,
+        "internalName": "SKS",
+        "internalType": "RIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 17
+            },
+            "big": {
+                "path": "bigitems/gun17.sti"
+            }
+        },
+        "ubWeight": 39,
+        "ubPerPocket": 0,
+        "usPrice": 1350,
+        "ubCoolness": 5,
+        "bReliability": -4,
+        "bRepairEase": -2,
+        "rateOfFire": 40,
+        "standardReplacement": "MINI14",
+        "calibre": "AMMO762W",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 13,
+        "ubBulletSpeed": 22,
+        "ubImpact": 31,
+        "ubDeadliness": 24,
+        "ubMagSize": 10,
+        "usRange": 300,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 18
+        }
+    },
+    {
+        "itemIndex": 18,
+        "internalName": "DRAGUNOV",
+        "internalType": "SN_RIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 18
+            },
+            "big": {
+                "path": "bigitems/gun18.sti"
+            }
+        },
+        "ubWeight": 43,
+        "ubPerPocket": 0,
+        "usPrice": 1930,
+        "ubCoolness": 6,
+        "bReliability": 2,
+        "bRepairEase": 2,
+        "rateOfFire": 20,
+        "standardReplacement": "M24",
+        "calibre": "AMMO762W",
+        "ubReadyTime": 5,
+        "ubShotsPer4Turns": 11,
+        "ubBulletSpeed": 21,
+        "ubImpact": 36,
+        "ubDeadliness": 32,
+        "ubMagSize": 10,
+        "usRange": 750,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 19
+        }
+    },
+    {
+        "itemIndex": 19,
+        "internalName": "M24",
+        "internalType": "SN_RIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 19
+            },
+            "big": {
+                "path": "bigitems/gun19.sti"
+            }
+        },
+        "ubWeight": 66,
+        "ubPerPocket": 0,
+        "usPrice": 1950,
+        "ubCoolness": 6,
+        "bReliability": 4,
+        "bRepairEase": 4,
+        "rateOfFire": 20,
+        "calibre": "AMMO762N",
+        "ubReadyTime": 5,
+        "ubShotsPer4Turns": 8,
+        "ubBulletSpeed": 21,
+        "ubImpact": 36,
+        "ubDeadliness": 32,
+        "ubMagSize": 5,
+        "usRange": 800,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 20
+        }
+    },
+    {
+        "itemIndex": 20,
+        "internalName": "AUG",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 20
+            },
+            "big": {
+                "path": "bigitems/gun20.sti"
+            }
+        },
+        "ubWeight": 36,
+        "ubPerPocket": 0,
+        "usPrice": 2380,
+        "ubCoolness": 8,
+        "bReliability": 1,
+        "bRepairEase": -2,
+        "rateOfFire": 650,
+        "standardReplacement": "C7",
+        "calibre": "AMMO556",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 13,
+        "ubShotsPerBurst": 3,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 20,
+        "ubImpact": 30,
+        "ubDeadliness": 38,
+        "ubMagSize": 30,
+        "usRange": 500,
+        "ubAttackVolume": 77,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 21
+        }
+    },
+    {
+        "itemIndex": 21,
+        "internalName": "G41",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 21
+            },
+            "big": {
+                "path": "bigitems/gun21.sti"
+            }
+        },
+        "ubWeight": 41,
+        "ubPerPocket": 0,
+        "usPrice": 1620,
+        "ubCoolness": 6,
+        "bReliability": 1,
+        "bRepairEase": -1,
+        "rateOfFire": 850,
+        "calibre": "AMMO556",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 13,
+        "ubShotsPerBurst": 4,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 20,
+        "ubImpact": 29,
+        "ubDeadliness": 27,
+        "ubMagSize": 30,
+        "usRange": 300,
+        "ubAttackVolume": 77,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 22
+        }
+    },
+    {
+        "itemIndex": 22,
+        "internalName": "MINI14",
+        "internalType": "RIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 22
+            },
+            "big": {
+                "path": "bigitems/gun22.sti"
+            }
+        },
+        "ubWeight": 29,
+        "ubPerPocket": 0,
+        "usPrice": 1100,
+        "ubCoolness": 4,
+        "bReliability": 0,
+        "bRepairEase": -1,
+        "rateOfFire": 750,
+        "calibre": "AMMO556",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 13,
+        "ubBulletSpeed": 20,
+        "ubImpact": 30,
+        "ubDeadliness": 20,
+        "ubMagSize": 30,
+        "usRange": 250,
+        "ubAttackVolume": 77,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 23
+        }
+    },
+    {
+        "itemIndex": 23,
+        "internalName": "C7",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 23
+            },
+            "big": {
+                "path": "bigitems/gun23.sti"
+            }
+        },
+        "ubWeight": 36,
+        "ubPerPocket": 0,
+        "usPrice": 2680,
+        "ubCoolness": 8,
+        "bReliability": -1,
+        "bRepairEase": -1,
+        "rateOfFire": 600,
+        "calibre": "AMMO556",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 15,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 20,
+        "ubImpact": 30,
+        "ubDeadliness": 41,
+        "ubMagSize": 30,
+        "usRange": 400,
+        "ubAttackVolume": 77,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 24
+        }
+    },
+    {
+        "itemIndex": 24,
+        "internalName": "FAMAS",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 24
+            },
+            "big": {
+                "path": "bigitems/gun24.sti"
+            }
+        },
+        "ubWeight": 36,
+        "ubPerPocket": 0,
+        "usPrice": 1970,
+        "ubCoolness": 7,
+        "bReliability": -2,
+        "bRepairEase": -2,
+        "rateOfFire": 900,
+        "standardReplacement": "M14",
+        "calibre": "AMMO556",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 17,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 20,
+        "ubImpact": 30,
+        "ubDeadliness": 32,
+        "ubMagSize": 30,
+        "usRange": 250,
+        "ubAttackVolume": 77,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 25
+        }
+    },
+    {
+        "itemIndex": 25,
+        "internalName": "AK74",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 25
+            },
+            "big": {
+                "path": "bigitems/gun25.sti"
+            }
+        },
+        "ubWeight": 36,
+        "ubPerPocket": 0,
+        "usPrice": 1830,
+        "ubCoolness": 6,
+        "bReliability": -1,
+        "bRepairEase": -2,
+        "rateOfFire": 650,
+        "standardReplacement": "G41",
+        "calibre": "AMMO545",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 17,
+        "ubShotsPerBurst": 3,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 20,
+        "ubImpact": 28,
+        "ubDeadliness": 30,
+        "ubMagSize": 30,
+        "usRange": 350,
+        "ubAttackVolume": 77,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 26
+        }
+    },
+    {
+        "itemIndex": 26,
+        "internalName": "AKM",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 26
+            },
+            "big": {
+                "path": "bigitems/gun26.sti"
+            }
+        },
+        "ubWeight": 43,
+        "ubPerPocket": 0,
+        "usPrice": 1450,
+        "ubCoolness": 5,
+        "bReliability": 2,
+        "bRepairEase": 2,
+        "rateOfFire": 600,
+        "standardReplacement": "G41",
+        "calibre": "AMMO762W",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 17,
+        "ubShotsPerBurst": 3,
+        "ubBurstPenalty": 11,
+        "ubBulletSpeed": 22,
+        "ubImpact": 29,
+        "ubDeadliness": 25,
+        "ubMagSize": 30,
+        "usRange": 250,
+        "ubAttackVolume": 77,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 27
+        }
+    },
+    {
+        "itemIndex": 27,
+        "internalName": "M14",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 27
+            },
+            "big": {
+                "path": "bigitems/gun27.sti"
+            }
+        },
+        "ubWeight": 29,
+        "ubPerPocket": 0,
+        "usPrice": 2120,
+        "ubCoolness": 7,
+        "bReliability": 1,
+        "bRepairEase": -1,
+        "rateOfFire": 750,
+        "calibre": "AMMO762N",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 13,
+        "ubShotsPerBurst": 4,
+        "ubBurstPenalty": 11,
+        "ubBulletSpeed": 20,
+        "ubImpact": 33,
+        "ubDeadliness": 33,
+        "ubMagSize": 20,
+        "usRange": 330,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 28
+        }
+    },
+    {
+        "itemIndex": 28,
+        "internalName": "FNFAL",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 28
+            },
+            "big": {
+                "path": "bigitems/gun28.sti"
+            }
+        },
+        "ubWeight": 43,
+        "ubPerPocket": 0,
+        "usPrice": 2680,
+        "ubCoolness": 8,
+        "bReliability": 0,
+        "bRepairEase": -1,
+        "rateOfFire": 650,
+        "calibre": "AMMO762N",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 17,
+        "ubShotsPerBurst": 3,
+        "ubBurstPenalty": 11,
+        "ubBulletSpeed": 20,
+        "ubImpact": 32,
+        "ubDeadliness": 41,
+        "ubMagSize": 20,
+        "usRange": 425,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 29
+        }
+    },
+    {
+        "itemIndex": 29,
+        "internalName": "G3A3",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 29
+            },
+            "big": {
+                "path": "bigitems/gun29.sti"
+            }
+        },
+        "ubWeight": 44,
+        "ubPerPocket": 0,
+        "usPrice": 1570,
+        "ubCoolness": 5,
+        "bReliability": 1,
+        "bRepairEase": -1,
+        "rateOfFire": 500,
+        "standardReplacement": "G41",
+        "calibre": "AMMO762N",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 13,
+        "ubShotsPerBurst": 3,
+        "ubBurstPenalty": 11,
+        "ubBulletSpeed": 21,
+        "ubImpact": 31,
+        "ubDeadliness": 26,
+        "ubMagSize": 20,
+        "usRange": 300,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 30
+        }
+    },
+    {
+        "itemIndex": 30,
+        "internalName": "G11",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 30
+            },
+            "big": {
+                "path": "bigitems/gun30.sti"
+            }
+        },
+        "ubWeight": 38,
+        "ubPerPocket": 0,
+        "usPrice": 2530,
+        "ubCoolness": 8,
+        "bReliability": 3,
+        "bRepairEase": -4,
+        "rateOfFire": 600,
+        "calibre": "AMMO47",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 13,
+        "ubShotsPerBurst": 3,
+        "ubBurstPenalty": 0,
+        "ubBulletSpeed": 20,
+        "ubImpact": 27,
+        "ubDeadliness": 40,
+        "ubMagSize": 50,
+        "usRange": 300,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 31
+        }
+    },
+    {
+        "itemIndex": 31,
+        "internalName": "M870",
+        "internalType": "SHOTGUN",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 31
+            },
+            "big": {
+                "path": "bigitems/gun31.sti"
+            }
+        },
+        "ubWeight": 36,
+        "ubPerPocket": 0,
+        "usPrice": 670,
+        "ubCoolness": 3,
+        "bReliability": 3,
+        "bRepairEase": 3,
+        "rateOfFire": 21,
+        "calibre": "AMMO12G",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 7,
+        "ubShotsPerBurst": 0,
+        "ubBurstPenalty": 0,
+        "ubBulletSpeed": 24,
+        "ubImpact": 32,
+        "ubDeadliness": 14,
+        "ubMagSize": 7,
+        "usRange": 135,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Duckbill": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 32
+        }
+    },
+    {
+        "itemIndex": 32,
+        "internalName": "SPAS15",
+        "internalType": "SHOTGUN",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 32
+            },
+            "big": {
+                "path": "bigitems/gun32.sti"
+            }
+        },
+        "ubWeight": 38,
+        "ubPerPocket": 0,
+        "usPrice": 980,
+        "ubCoolness": 4,
+        "bReliability": -2,
+        "bRepairEase": -2,
+        "rateOfFire": 30,
+        "standardReplacement": "M870",
+        "calibre": "AMMO12G",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 10,
+        "ubShotsPerBurst": 0,
+        "ubBurstPenalty": 0,
+        "ubBulletSpeed": 24,
+        "ubImpact": 32,
+        "ubDeadliness": 18,
+        "ubMagSize": 7,
+        "usRange": 135,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Duckbill": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 33
+        }
+    },
+    {
+        "itemIndex": 33,
+        "internalName": "CAWS",
+        "internalType": "SHOTGUN",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 33
+            },
+            "big": {
+                "path": "bigitems/gun33.sti"
+            }
+        },
+        "ubWeight": 41,
+        "ubPerPocket": 0,
+        "usPrice": 2900,
+        "ubCoolness": 9,
+        "bReliability": -3,
+        "bRepairEase": -3,
+        "rateOfFire": -1,
+        "calibre": "AMMOCAWS",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 10,
+        "ubShotsPerBurst": 3,
+        "ubBurstPenalty": 11,
+        "ubBulletSpeed": 24,
+        "ubImpact": 40,
+        "ubDeadliness": 44,
+        "ubMagSize": 10,
+        "usRange": 135,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_Duckbill": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 34
+        }
+    },
+    {
+        "itemIndex": 34,
+        "internalName": "MINIMI",
+        "internalType": "LMG",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 34
+            },
+            "big": {
+                "path": "bigitems/gun34.sti"
+            }
+        },
+        "ubWeight": 68,
+        "ubPerPocket": 0,
+        "usPrice": 3100,
+        "ubCoolness": 10,
+        "bReliability": -1,
+        "bRepairEase": -2,
+        "rateOfFire": 750,
+        "calibre": "AMMO556",
+        "ubReadyTime": 3,
+        "ubShotsPer4Turns": 13,
+        "ubShotsPerBurst": 6,
+        "ubBurstPenalty": 5,
+        "ubBulletSpeed": 20,
+        "ubImpact": 28,
+        "ubDeadliness": 48,
+        "ubMagSize": 30,
+        "usRange": 500,
+        "ubAttackVolume": 82,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 35
+        }
+    },
+    {
+        "itemIndex": 35,
+        "internalName": "RPK74",
+        "internalType": "LMG",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 35
+            },
+            "big": {
+                "path": "bigitems/gun35.sti"
+            }
+        },
+        "ubWeight": 48,
+        "ubPerPocket": 0,
+        "usPrice": 3180,
+        "ubCoolness": 10,
+        "bReliability": -1,
+        "bRepairEase": -2,
+        "rateOfFire": 800,
+        "standardReplacement": "MINIMI",
+        "calibre": "AMMO545",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 13,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 5,
+        "ubBulletSpeed": 21,
+        "ubImpact": 30,
+        "ubDeadliness": 49,
+        "ubMagSize": 30,
+        "usRange": 500,
+        "ubAttackVolume": 82,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 36
+        }
+    },
+    {
+        "itemIndex": 36,
+        "internalName": "HK21E",
+        "internalType": "LMG",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 36
+            },
+            "big": {
+                "path": "bigitems/gun36.sti"
+            }
+        },
+        "ubWeight": 93,
+        "ubPerPocket": 0,
+        "usPrice": 3420,
+        "ubCoolness": 10,
+        "bReliability": 2,
+        "bRepairEase": 1,
+        "rateOfFire": 800,
+        "standardReplacement": "MINIMI",
+        "calibre": "AMMO762N",
+        "ubReadyTime": 3,
+        "ubShotsPer4Turns": 13,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 7,
+        "ubBulletSpeed": 21,
+        "ubImpact": 32,
+        "ubDeadliness": 52,
+        "ubMagSize": 20,
+        "usRange": 500,
+        "ubAttackVolume": 82,
+        "ubHitVolume": 8,
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_UnderGLauncher": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 37
+        }
+    },
+    {
+        "itemIndex": 37,
+        "internalName": "COMBAT_KNIFE",
+        "internalType": "BLADE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 79
+            },
+            "big": {
+                "path": "bigitems/p1item79.sti"
+            }
+        },
+        "ubWeight": 9,
+        "ubPerPocket": 2,
+        "usPrice": 100,
+        "ubCoolness": 2,
+        "bReliability": 2,
+        "bRepairEase": 2,
+        "rateOfFire": 0,
+        "ubShotsPer4Turns": 12,
+        "ubImpact": 18,
+        "ubDeadliness": 5,
+        "usRange": 40,
+        "ubAttackVolume": 2,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 80
+        }
+    },
+    {
+        "itemIndex": 38,
+        "internalName": "THROWING_KNIFE",
+        "internalType": "THROWINGBLADE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 53
+            },
+            "big": {
+                "path": "bigitems/p1item53.sti"
+            }
+        },
+        "ubWeight": 1,
+        "ubPerPocket": 4,
+        "usPrice": 50,
+        "ubCoolness": 3,
+        "bReliability": -1,
+        "bRepairEase": -1,
+        "rateOfFire": 0,
+        "ubShotsPer4Turns": 12,
+        "ubImpact": 15,
+        "ubDeadliness": 4,
+        "usRange": 150,
+        "ubAttackVolume": 2,
+        "sound": "sounds/weapons/knife throw swoosh.wav",
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 54
+        }
+    },
+    {
+        "itemIndex": 39,
+        "internalName": "ROCK",
+        "internalType": "THROWN",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 57
+            },
+            "big": {
+                "path": "bigitems/p1item57.sti"
+            }
+        },
+        "ubWeight": 5,
+        "ubPerPocket": 2,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 0,
+        "usRange": 0,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 58
+        }
+    },
+    {
+        "itemIndex": 40,
+        "internalName": "GLAUNCHER",
+        "internalType": "LAUNCHER",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 37
+            },
+            "big": {
+                "path": "bigitems/gun37.sti"
+            }
+        },
+        "ubWeight": 26,
+        "ubPerPocket": 0,
+        "usPrice": 900,
+        "ubCoolness": 7,
+        "bReliability": 0,
+        "bRepairEase": -1,
+        "rateOfFire": 1,
+        "ubReadyTime": 3,
+        "ubShotsPer4Turns": 5,
+        "ubBulletSpeed": 30,
+        "ubDeadliness": 80,
+        "usRange": 500,
+        "ubAttackVolume": 20,
+        "ubHitVolume": 10,
+        "sound": "sounds/weapons/mortar fire 01.wav",
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 38
+        }
+    },
+    {
+        "itemIndex": 41,
+        "internalName": "MORTAR",
+        "internalType": "LAUNCHER",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
+        "ubWeight": 77,
+        "ubPerPocket": 0,
+        "usPrice": 1800,
+        "ubCoolness": 10,
+        "bReliability": 0,
+        "bRepairEase": -2,
+        "rateOfFire": 1,
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 5,
+        "ubBulletSpeed": 30,
+        "ubDeadliness": 100,
+        "usRange": 550,
+        "ubAttackVolume": 20,
+        "ubHitVolume": 10,
+        "sound": "sounds/weapons/mortar fire 01.wav",
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
+    },
+    {
+        "itemIndex": 42,
+        "internalName": "ROCK2",
+        "internalType": "THROWN",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 60
+            },
+            "big": {
+                "path": "bigitems/p1item60.sti"
+            }
+        },
+        "ubWeight": 4,
+        "ubPerPocket": 3,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 0,
+        "usRange": 0,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 61
+        }
+    },
+    {
+        "itemIndex": 43,
+        "internalName": "BARRETT",
+        "internalType": "SN_RIFLE",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 50,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 50
+            },
+            "big": {
+                "path": "bigitems/gun50.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 51
+        },
+        "ubWeight": 122,
+        "ubPerPocket": 0,
+        "usPrice": 6200,
+        "ubCoolness": 10,
+        "bReliability": 1,
+        "bRepairEase": -1,
+        "rateOfFire": 0,
+        "calibre": "AMMO50",
+        "ubReadyTime": 7,
+        "ubShotsPer4Turns": 10,
+        "ubBulletSpeed": 20,
+        "ubImpact": 44,
+        "ubDeadliness": 166,
+        "ubMagSize": 11,
+        "usRange": 1500,
+        "ubAttackVolume": 100,
+        "ubHitVolume": 10,
+        "Sound": "sounds/weapons/50CAL.wav",
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDefaultUndroppable": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true
+    },
+    {
+        "itemIndex": 44,
+        "internalName": "CALICO_960",
+        "internalType": "SMG",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 51,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 51
+            },
+            "big": {
+                "path": "bigitems/gun51.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 52
+        },
+        "ubWeight":22,
+        "ubPerPocket": 0,
+        "usPrice": 900,
+        "ubCoolness": 7,
+        "bReliability": 1,
+        "bRepairEase": -1,
+        "rateOfFire": 0,
+        "calibre": "AMMO9",
+        "ubReadyTime": 1,
+        "ubShotsPer4Turns": 15,
+        "ubShotsPerBurst": 4,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 23,
+        "ubImpact": 26,
+        "ubDeadliness": 24,
+        "ubMagSize": 50,
+        "usRange": 250,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 7,
+        "Sound": "sounds/weapons/9mm SINGLE SHOT.WAV",
+        "BurstSound": "sounds/weapons/bursttype1.wav",
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDefaultUndroppable": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true
+    },
+    {
+        "itemIndex": 45,
+        "internalName": "PSG1",
+        "internalType": "SN_RIFLE",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 52,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 52
+            },
+            "big": {
+                "path": "bigitems/gun52.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 53
+        },
+        "ubWeight": 80,
+        "ubPerPocket": 0,
+        "usPrice": 2700,
+        "ubCoolness": 8,
+        "bReliability": 4,
+        "bRepairEase": 4,
+        "rateOfFire": 0,
+        "calibre": "AMMO762N",
+        "ubReadyTime": 5,
+        "ubShotsPer4Turns": 11,
+        "ubBulletSpeed": 20,
+        "ubImpact": 38,
+        "ubDeadliness": 32,
+        "ubMagSize": 20,
+        "usRange": 800,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 8,
+        "Sound": "sounds/weapons/7,62 nato single shot.wav",
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDefaultUndroppable": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true
+    },
+    {
+        "itemIndex": 46,
+        "internalName": "L85",
+        "internalType": "ASRIFLE",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 53,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 53
+            },
+            "big": {
+                "path": "bigitems/gun53.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 54
+        },
+        "ubWeight": 38,
+        "ubPerPocket": 0,
+        "usPrice": 1300,
+        "ubCoolness": 6,
+        "bReliability": 0,
+        "bRepairEase": 1,
+        "rateOfFire": 0,
+        "calibre": "AMMO556",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 15,
+        "ubShotsPerBurst": 4,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 20,
+        "ubImpact":30,
+        "ubDeadliness": 1,
+        "ubMagSize": 30,
+        "usRange": 350,
+        "ubAttackVolume": 77,
+        "ubHitVolume":8,
+        "Sound": "sounds/weapons/5,56 SINGLE SHOT.WAV",
+        "BurstSound": "sounds/weapons/bursttype1.wav",
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "attachment_UnderGLauncher": true,
+        "bDefaultUndroppable": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true
+    },
+    {
+        "itemIndex": 47,
+        "internalName": "TAR21",
+        "internalType": "ASRIFLE",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 54,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 54
+            },
+            "big": {
+                "path": "bigitems/gun54.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 55
+        },
+        "ubWeight": 24,
+        "ubPerPocket": 0,
+        "usPrice": 2100,
+        "ubCoolness": 8,
+        "bReliability": 3,
+        "bRepairEase":-1,
+        "rateOfFire": 0,
+        "calibre": "AMMO556",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 17,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 6,
+        "ubBulletSpeed": 21,
+        "ubImpact": 30,
+        "ubDeadliness": 1,
+        "ubMagSize": 30,
+        "usRange": 350,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 8,
+        "Sound": "sounds/weapons/5,56 SINGLE SHOT.WAV",
+        "BurstSound": "sounds/weapons/bursttype1.wav",
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDefaultUndroppable": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true
+    },
+    {
+        "itemIndex": 48,
+        "internalName": "VAL_SILENT",
+        "internalType": "SN_RIFLE",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 55,
+
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 55
+            },
+            "big": {
+                "path": "bigitems/gun55.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 56
+        },
+        "ubWeight": 25,
+        "ubPerPocket": 0,
+        "usPrice": 4100,
+        "ubCoolness": 9,
+        "bReliability": -3,
+        "bRepairEase": -3,
+        "rateOfFire": 0,
+        "calibre": "AMMO9_VAL",
+        "ubReadyTime": 3,
+        "ubShotsPer4Turns": 12,
+        "ubBulletSpeed": 20,
+        "ubImpact": 29,
+        "ubDeadliness": 32,
+        "ubMagSize": 20,
+        "usRange": 400,
+        "ubAttackVolume": 30,
+        "ubHitVolume": 8,
+        "Sound": "sounds/weapons/ValSilent.WAV",
+        "attachment_SniperScope": true,
+        "attachment_LaserScope": true,
+        "attachment_Bipod": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDefaultUndroppable": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true
+    },
+    {
+        "itemIndex": 49,
+        "internalName": "BRASS_KNUCKLES",
+        "internalType": "PUNCHWEAPON",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 102
+            },
+            "big": {
+                "path": "bigitems/p1item102.sti"
+            }
+        },
+        "ubWeight": 1,
+        "ubPerPocket": 4,
+        "usPrice": 20,
+        "ubCoolness": 2,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 0,
+        "ubShotsPer4Turns": 15,
+        "ubImpact": 12,
+        "ubDeadliness": 1,
+        "ubAttackVolume": 0,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 103
+        }
+    },
+    {
+        "itemIndex": 50,
+        "internalName": "UNDER_GLAUNCHER",
+        "internalType": "LAUNCHER",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 39
+            },
+            "big": {
+                "path": "bigitems/gun39.sti"
+            }
+        },
+        "ubWeight": 13,
+        "ubPerPocket": 0,
+        "usPrice": 500,
+        "ubCoolness": 8,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 1,
+        "ubReadyTime": 3,
+        "ubShotsPer4Turns": 7,
+        "ubBulletSpeed": 30,
+        "ubDeadliness": 80,
+        "usRange": 450,
+        "ubAttackVolume": 20,
+        "ubHitVolume": 10,
+        "sound": "sounds/weapons/mortar fire 01.wav",
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 40
+        }
+    },
+    {
+        "itemIndex": 51,
+        "internalName": "ROCKET_LAUNCHER",
+        "internalType": "LAW",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 38
+            },
+            "big": {
+                "path": "bigitems/gun38.sti"
+            }
+        },
+        "ubWeight": 21,
+        "ubPerPocket": 0,
+        "usPrice": 500,
+        "ubCoolness": 9,
+        "bReliability": 0,
+        "bRepairEase": -3,
+        "rateOfFire": 1,
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 5,
+        "ubBulletSpeed": 30,
+        "ubDeadliness": 80,
+        "usRange": 500,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 10,
+        "sound": "sounds/weapons/rocket launcher.wav",
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 39
+        }
+    },
+    {
+        "itemIndex": 52,
+        "internalName": "BLOODCAT_CLAW_ATTACK",
+        "internalType": "BLADE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
+        "ubWeight": 0,
+        "ubPerPocket": 1,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 0,
+        "ubShotsPer4Turns": 14,
+        "ubImpact": 12,
+        "ubDeadliness": 1,
+        "usRange": 10,
+        "ubAttackVolume": 2,
+        "bNotBuyable": true,
+        "bNotEditor": true,
+        "bDefaultUndroppable": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
+    },
+    {
+        "itemIndex": 53,
+        "internalName": "BLOODCAT_BITE",
+        "internalType": "BLADE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
+        "ubWeight": 0,
+        "ubPerPocket": 1,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 0,
+        "ubShotsPer4Turns": 10,
+        "ubImpact": 24,
+        "ubDeadliness": 1,
+        "usRange": 10,
+        "ubAttackVolume": 2,
+        "bNotBuyable": true,
+        "bNotEditor": true,
+        "bDefaultUndroppable": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
+    },
+    {
+        "itemIndex": 54,
+        "internalName": "MACHETE",
+        "internalType": "BLADE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 41
+            },
+            "big": {
+                "path": "bigitems/gun41.sti"
+            }
+        },
+        "ubWeight": 13,
+        "ubPerPocket": 0,
+        "usPrice": 200,
+        "ubCoolness": 3,
+        "bReliability": 0,
+        "bRepairEase": 3,
+        "rateOfFire": 0,
+        "ubShotsPer4Turns": 9,
+        "ubImpact": 24,
+        "ubDeadliness": 6,
+        "usRange": 40,
+        "ubAttackVolume": 2,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 42
+        }
+    },
+    {
+        "itemIndex": 55,
+        "internalName": "ROCKET_RIFLE",
+        "internalType": "RIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 45
+            },
+            "big": {
+                "path": "bigitems/gun45.sti"
+            }
+        },
+        "ubWeight": 40,
+        "ubPerPocket": 0,
+        "usPrice": 5000,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": -5,
+        "rateOfFire": 1,
+        "calibre": "AMMOROCKET",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 10,
+        "ubBulletSpeed": 20,
+        "ubImpact": 38,
+        "ubDeadliness": 62,
+        "ubMagSize": 5,
+        "usRange": 600,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 10,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bNotBuyable": true,
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 46
+        }
+    },
+    {
+        "itemIndex": 56,
+        "internalName": "AUTOMAG_III",
+        "internalType": "PISTOL",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/gun40.sti"
+            }
+        },
+        "ubWeight": 12,
+        "ubPerPocket": 0,
+        "usPrice": 1000,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": -2,
+        "rateOfFire": 666,
+        "calibre": "AMMO762N",
+        "ubReadyTime": 1,
+        "ubShotsPer4Turns": 9,
+        "ubBulletSpeed": 24,
+        "ubImpact": 29,
+        "ubDeadliness": 13,
+        "ubMagSize": 5,
+        "usRange": 220,
+        "ubAttackVolume": 72,
+        "ubHitVolume": 6,
+        "sound": "sounds/weapons/automag single.wav",
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "attachment_Silencer": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 41
+        }
+    },
+    {
+        "itemIndex": 57,
+        "internalName": "MICRO_UZI",
+        "internalType": "SMG",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 58,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 58
+            },
+            "big": {
+                "path": "bigitems/gun58.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 59
+        },
+        "ubWeight": 21,
+        "ubPerPocket": 1,
+        "usPrice": 980,
+        "ubCoolness": 3,
+        "bReliability": -1,
+        "bRepairEase": 0,
+        "rateOfFire": 900,
+        "calibre": "AMMO9",
+        "ubReadyTime": 1,
+        "ubShotsPer4Turns": 15,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 8,
+        "ubBulletSpeed": 23,
+        "ubImpact": 23,
+        "ubDeadliness": 17,
+        "ubMagSize": 30,
+        "usRange": 200,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 7,
+        "Sound": "sounds/weapons/9mm single shot.wav",
+        "BurstSound": "sounds/weapons/bursttype1.wav",
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true
+    },
+    {
+        "itemIndex": 58,
+        "internalName": "CREATURE_YOUNG_MALE_SPIT",
+        "internalType": "MONSTSPIT",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
+        "ubWeight": 0,
+        "ubPerPocket": 0,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 0,
+        "calibre": "AMMOMONST",
+        "ubShotsPer4Turns": 10,
+        "ubImpact": 16,
+        "ubDeadliness": 1,
+        "ubMagSize": 10,
+        "usRange": 200,
+        "ubAttackVolume": 10,
+        "ubHitVolume": 5,
+        "bNotBuyable": true,
+        "bNotEditor": true,
+        "bDefaultUndroppable": true,
+        "usSmokeEffect": 160,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
+    },
+    {
+        "itemIndex": 59,
+        "internalName": "CREATURE_OLD_MALE_SPIT",
+        "internalType": "MONSTSPIT",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
+        "ubWeight": 0,
+        "ubPerPocket": 0,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 0,
+        "calibre": "AMMOMONST",
+        "ubShotsPer4Turns": 10,
+        "ubImpact": 20,
+        "ubDeadliness": 1,
+        "ubMagSize": 20,
+        "usRange": 200,
+        "ubAttackVolume": 10,
+        "ubHitVolume": 5,
+        "bNotBuyable": true,
+        "bNotEditor": true,
+        "bDefaultUndroppable": true,
+        "usSmokeEffect": 158,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
+    },
+    {
+        "itemIndex": 60,
+        "internalName": "TANK_CANNON",
+        "internalType": "CANNON",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 37
+            },
+            "big": {
+                "path": "bigitems/gun37.sti"
+            }
+        },
+        "ubWeight": 26,
+        "ubPerPocket": 0,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 1,
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 8,
+        "ubBulletSpeed": 30,
+        "ubDeadliness": 80,
+        "usRange": 800,
+        "ubAttackVolume": 90,
+        "ubHitVolume": 10,
+        "sound": "sounds/weapons/tank_cannon.wav",
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 38
+        }
+    },
+    {
+        "itemIndex": 61,
+        "internalName": "DART_GUN",
+        "internalType": "PISTOL",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 46
+            },
+            "big": {
+                "path": "bigitems/gun46.sti"
+            }
+        },
+        "ubWeight": 12,
+        "ubPerPocket": 1,
+        "usPrice": 500,
+        "ubCoolness": 5,
+        "bReliability": 0,
+        "bRepairEase": 3,
+        "rateOfFire": 1,
+        "calibre": "AMMODART",
+        "ubReadyTime": 1,
+        "ubShotsPer4Turns": 13,
+        "ubBulletSpeed": 25,
+        "ubImpact": 2,
+        "ubDeadliness": 10,
+        "ubMagSize": 1,
+        "usRange": 200,
+        "ubAttackVolume": 0,
+        "ubHitVolume": 0,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 47
+        }
+    },
+    {
+        "itemIndex": 62,
+        "internalName": "BLOODY_THROWING_KNIFE",
+        "internalType": "THROWINGBLADE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 95
+            },
+            "big": {
+                "path": "bigitems/p1item95.sti"
+            }
+        },
+        "ubWeight": 1,
+        "ubPerPocket": 4,
+        "usPrice": 50,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 4,
+        "rateOfFire": 0,
+        "ubShotsPer4Turns": 12,
+        "ubImpact": 15,
+        "ubDeadliness": 3,
+        "usRange": 150,
+        "ubAttackVolume": 2,
+        "sound": "sounds/weapons/knife throw swoosh.wav",
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 96
+        }
+    },
+    {
+        "itemIndex": 63,
+        "internalName": "HAND_CANNON",
+        "internalType": "SHOTGUN",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 48,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 48
+            },
+            "big": {
+                "path": "bigitems/gun48.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 49
+        },
+        "ubWeight": 18,
+        "ubPerPocket": 0,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "rateOfFire": 0,
+        "calibre": "AMMO_CB",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 10,
+        "ubShotsPerBurst": 0,
+        "ubBurstPenalty": 0,
+        "ubBulletSpeed": 24,
+        "ubImpact": 60,
+        "ubDeadliness": 53,
+        "ubMagSize": 1,
+        "usRange": 130,
+        "ubAttackVolume": 40,
+        "ubHitVolume": 8,
+        "Sound": "sounds/weapons/HANDCANNON.wav",
+        "BurstSound": "",
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bNotBuyable": true
+    },
+    {
+        "itemIndex": 64,
+        "internalName": "CROWBAR",
+        "internalType": "PUNCHWEAPON",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 85
+            },
+            "big": {
+                "path": "bigitems/p1item85.sti"
+            }
+        },
+        "ubWeight": 30,
+        "ubPerPocket": 0,
+        "usPrice": 40,
+        "ubCoolness": 1,
+        "bReliability": 0,
+        "bRepairEase": -4,
+        "rateOfFire": 0,
+        "ubShotsPer4Turns": 10,
+        "ubImpact": 25,
+        "ubDeadliness": 4,
+        "ubAttackVolume": 0,
+        "bDamageable": true,
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 86
+        }
+    },
+    {
+        "itemIndex": 65,
+        "internalName": "AUTO_ROCKET_RIFLE",
+        "internalType": "ASRIFLE",
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 45
+            },
+            "big": {
+                "path": "bigitems/gun45.sti"
+            }
+        },
+        "ubWeight": 40,
+        "ubPerPocket": 0,
+        "usPrice": 10000,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": -5,
+        "rateOfFire": 0,
+        "calibre": "AMMOROCKET",
+        "ubReadyTime": 2,
+        "ubShotsPer4Turns": 12,
+        "ubShotsPerBurst": 5,
+        "ubBurstPenalty": 10,
+        "ubBulletSpeed": 20,
+        "ubImpact": 38,
+        "ubDeadliness": 97,
+        "ubMagSize": 5,
+        "usRange": 600,
+        "ubAttackVolume": 80,
+        "ubHitVolume": 10,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true,
+        "bNotBuyable": true,
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 46
+        }
+    },
+    {
+        "itemIndex": 66,
+        "internalName": "CALICO_950",
+        "internalType": "PISTOL",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 56,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 56
+            },
+            "big": {
+                "path": "bigitems/gun56.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 57
+        },
+        "ubWeight": 10,
+        "ubPerPocket": 0,
+        "usPrice": 400,
+        "ubCoolness": 6,
+        "bReliability": 1,
+        "bRepairEase": -1,
+        "rateOfFire": 0,
+        "calibre": "AMMO9",
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 15,
+        "ubShotsPerBurst": 0,
+        "ubBurstPenalty": 4,
+        "ubBulletSpeed": 23,
+        "ubImpact": 22,
+        "ubDeadliness": 11,
+        "ubMagSize": 50,
+        "usRange": 150,
+        "ubAttackVolume": 65,
+        "ubHitVolume": 7,
+        "Sound": "sounds/weapons/9mm SINGLE SHOT.WAV",
+        "BurstSound": "sounds/weapons/bursttype1.wav",
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true
+    },
+    {
+        "itemIndex": 67,
+        "internalName": "CALICO_900",
+        "internalType": "ASRIFLE",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 57,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 57
+            },
+            "big": {
+                "path": "bigitems/gun57.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 58
+        },
+        "ubWeight": 22,
+        "ubPerPocket": 0,
+        "usPrice": 900,
+        "ubCoolness": 80,
+        "bReliability": 1,
+        "bRepairEase": -1,
+        "rateOfFire": 0,
+        "calibre": "AMMO9",
+        "ubReadyTime": 3,
+        "ubShotsPer4Turns": 14,
+        "ubBulletSpeed": 25,
+        "ubShotsPerBurst": 0,
+        "ubBurstPenalty": 0,
+        "ubImpact": 25,
+        "ubDeadliness": 51,
+        "ubMagSize": 50,
+        "usRange": 350,
+        "ubAttackVolume": 77,
+        "ubHitVolume": 8,
+        "Sound": "sounds/weapons/9mm SINGLE SHOT.WAV",
+        "BurstSound": "",
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true,
+        "bTwoHanded": true
+    },
+    {
+        "itemIndex": 68,
+        "internalName": "HARTFORD_6_SHOOTER",  //Tex's guns
+        "internalType": "PISTOL",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 65,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 65
+            },
+            "big": {
+                "path": "bigitems/gun65.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 66
+        },
+        "ubWeight": 16,
+        "ubPerPocket": 1,
+        "usPrice": 2250,
+        "ubCoolness": 9,
+        "bReliability": 1,
+        "bRepairEase": -1,
+        "rateOfFire": 0,
+        "calibre": "AMMO357",
+        "ubReadyTime": 0,
+        "ubShotsPer4Turns": 11,
+        "ubBulletSpeed": 27,
+        "ubImpact": 25,
+        "ubDeadliness": 10,
+        "ubMagSize": 6,
+        "usRange": 175,
+        "ubAttackVolume": 75,
+        "ubHitVolume": 10,
+        "Sound": "sounds/weapons/357 SINGLE SHOT.WAV",
+        "attachment_Silencer": true,
+        "attachment_LaserScope": true,
+        "attachment_SpringAndBoltUpgrade": true,
+        "attachment_GunBarrelExtender": true,
+        "bDamageable": true,
+        "bRepairable": true,
+        "bWaterDamages": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true
+    },
+    {
+        "itemIndex": 69,
+        "internalName": "SAM_GARVER_COMBAT_KNIFE",
+        "internalType": "BLADE",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 69,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 69
+            },
+            "big": {
+                "path": "bigitems/gun69.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 70
+        },
+        "ubWeight": 9,
+        "ubPerPocket": 2,
+        "usPrice": 350,
+        "ubCoolness": 4,
+        "bReliability": 1,
+        "bRepairEase": -1,
+        "rateOfFire": 0,
+        "ubShotsPer4Turns": 12,
+        "ubImpact": 20,
+        "ubDeadliness": 6,
+        "usRange": 40,
+        "ubAttackVolume": 2,
+        "Sound": "",
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true
+    },
+    {
+        "itemIndex": 70,
+        "internalName": "MERC_UMBRELLA",
+        "internalType": "BLADE",
+        // "ubGraphicType": 0,
+        // "ubGraphicNum": 68,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 69
+            },
+            "big": {
+                "path": "bigitems/gun69.sti"
+            }
+        },
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 69
+        },
+        "ubWeight": 6,
+        "ubPerPocket": 1,
+        "usPrice": 20,
+        "ubCoolness": 1,
+        "bReliability": -1,
+        "bRepairEase": -3,
+        "rateOfFire": 15,
+        "ubShotsPer4Turns": 10,
+        "ubImpact": 12,
+        "ubDeadliness": 5,
+        "usRange": 40,
+        "ubAttackVolume": 2,
+        "Sound": "",
+        "bDamageable": true,
+        "bRepairable": true,
+        "bMetal": true,
+        "bSinks": true,
+        "bShowStatus": true
+    }
+]

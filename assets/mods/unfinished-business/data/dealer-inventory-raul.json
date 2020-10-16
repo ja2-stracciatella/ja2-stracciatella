@@ -1,0 +1,155 @@
+{
+    // TODO: double-check against gRaulInventory in UB source
+    "ROCKET_RIFLE": 0,
+    "AUTO_ROCKET_RIFLE": 0,
+    "AUTOMAG_III": 0,
+
+    "GLOCK_17": 1,
+    "GLOCK_18": 1,
+    "BERETTA_92F": 1,
+    "BERETTA_93R": 1,
+    "SW38": 1,
+    "BARRACUDA": 1,
+    "DESERTEAGLE": 1,
+    "M1911": 1,
+    "MP5K": 1,
+    "MAC10": 1,
+
+    "THOMPSON": 1,
+    "COMMANDO": 1,
+    "MP53": 1,
+    "AKSU74": 1,
+    "TYPE85": 1,
+    "SKS": 1,
+    "DRAGUNOV": 1,
+    "M24": 1,
+    "AUG": 1,
+
+    "G41": 1,
+    "MINI14": 1,
+    "C7": 1,
+    "FAMAS": 1,
+    "AK74": 1,
+    "AKM": 1,
+    "M14": 1,
+    "G3A3": 1,
+    "FNFAL": 1,
+
+    "MINIMI": 1,
+    "RPK74": 1,
+    "HK21E": 1,
+
+    "M870": 1,
+    "SPAS15": 1,
+
+    "GLAUNCHER": 1,
+    "UNDER_GLAUNCHER": 1,
+    "ROCKET_LAUNCHER": 1,
+    "MORTAR": 1,
+
+    "G11": 1,
+    "CAWS": 1,
+    "P90": 1,
+
+    "DART_GUN": 1,
+
+    "CLIP9_15": 8,
+    "CLIP9_30": 6,
+    "CLIP9_15_AP": 3,
+    "CLIP9_30_AP": 3,
+    "CLIP9_15_HP": 3,
+    "CLIP9_30_HP": 3,
+
+    "CLIP38_6": 10,
+    "CLIP38_6_AP": 5,
+    "CLIP38_6_HP": 5,
+
+    "CLIP45_7": 6,
+
+    "CLIP45_30": 8,
+    "CLIP45_7_AP": 3,
+    "CLIP45_30_AP": 3,
+    "CLIP45_7_HP": 3,
+    "CLIP45_30_HP": 3,
+
+    "CLIP357_6": 6,
+    "CLIP357_9": 5,
+    "CLIP357_6_AP": 3,
+    "CLIP357_9_AP": 3,
+    "CLIP357_6_HP": 3,
+    "CLIP357_9_HP": 3,
+
+    "CLIP545_30_AP": 6,
+    "CLIP545_30_HP": 3,
+
+    "CLIP556_30_AP": 6,
+    "CLIP556_30_HP": 3,
+
+    "CLIP762W_10_AP": 6,
+    "CLIP762W_30_AP": 5,
+    "CLIP762W_10_HP": 3,
+    "CLIP762W_30_HP": 3,
+
+    "CLIP762N_5_AP": 8,
+    "CLIP762N_20_AP": 5,
+    "CLIP762N_5_HP": 3,
+    "CLIP762N_20_HP": 3,
+
+    "CLIP47_50_SAP": 5,
+
+    "CLIP57_50_AP": 6,
+    "CLIP57_50_HP": 3,
+
+    "CLIP12G_7": 9,
+    "CLIP12G_7_BUCKSHOT": 9,
+
+    "CLIPCAWS_10_SAP": 5,
+    "CLIPCAWS_10_FLECH": 3,
+
+    "CLIPROCKET_AP": 3,
+    "CLIPROCKET_HE": 1,
+    "CLIPROCKET_HEAT": 1,
+
+    "CLIPDART_SLEEP": 5,
+
+    "GL_HE_GRENADE": 2,
+    "GL_TEARGAS_GRENADE": 2,
+    "GL_STUN_GRENADE": 2,
+    "GL_SMOKE_GRENADE": 2,
+    "MORTAR_SHELL": 1,
+
+    "COMBAT_KNIFE": 3,
+    "THROWING_KNIFE": 6,
+    "BRASS_KNUCKLES": 1,
+    "MACHETE": 1,
+
+    "SILENCER": 3,
+    "SNIPERSCOPE": 3,
+    "LASERSCOPE": 1,
+    "BIPOD": 3,
+    "DUCKBILL": 2,
+
+    /** Added in UB **/
+    "BARRETT": 1,
+    "CALICO_960": 1,
+    "PSG1": 1,
+    "L85": 1,
+    "TAR21": 1,
+    "VAL_SILENT": 0,
+    "MICRO_UZI": 3,
+    "CALICO_950": 1,
+    "CALICO_900": 1,
+    "HARTFORD_6_SHOOTER": 0,
+
+    "CLIP50_11_SAP": 3,
+    "CLIP9_50": 4,
+    "CLIP9_50_AP": 6,
+    "CLIP9_50_HP": 6,
+    "CLIP9VAL_20": 6,
+
+    "HAND_CANNON": 0,
+    "CLIP_CANNON_BALL": 0,
+
+    "SAM_GARVER_COMBAT_KNIFE": 0,
+    "GL_FLARE": 3
+}

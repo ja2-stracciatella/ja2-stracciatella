@@ -1,0 +1,22 @@
+[
+    /* Base game load screens */
+    { "internalName": "DAYMINE", "filename": "/ls_daymine.sti" },
+    { "internalName": "NIGHTMINE", "filename": "/ls_nightmine.sti" },
+    /* New load screens */
+    { "internalName": "HELI_CRASH", "filename": "/LS_HeliCrash.sti"},
+    { "internalName": "DAY_SNOW", "filename": "/LS_Snow_day1.sti" },
+    { "internalName": "NIGHT_SNOW", "filename": "/LS_Snow_Night1.sti" },
+    { "internalName": "GUARDPOST_DAY", "filename": "/LS_Guardpostday.sti"},
+    { "internalName": "GUARDPOST_NIGHT", "filename": "/LS_Guardpostnight.sti"},
+    { "internalName": "POWERPLANT_DAY", "filename": "/LS_PowerPlantDay.sti"},
+    { "internalName": "POWERPLANT_NIGHT", "filename": "/LS_PowerPlantNight.sti"},
+    { "internalName": "DOWN_STAIRS", "filename": "/LS_Basement.sti"},
+    { "internalName": "UP_STAIRS", "filename": "/LS_UpStairs.sti"},
+    { "internalName": "COMPLEX_BASEMENT", "filename": "/ls_Complexbsmnt.sti"},
+    { "internalName": "COMPLEX_BASEMENT_GENERIC", "filename": "/LS_Basement_Generic.sti"},
+    { "internalName": "TUNNELS", "filename": "/ls_tunnels.sti"},
+    { "internalName": "COMPLEX_TOP_LEVEL_DAY", "filename": "/LS_MissleDay.sti"},
+    { "internalName": "COMPLEX_TOP_LEVEL_NIGHT", "filename": "/LS_MissleNight.sti"},
+    /* Placeholder */
+    { "internalName": "NOTHING", "filename": "/LS_Heli.sti"}
+]

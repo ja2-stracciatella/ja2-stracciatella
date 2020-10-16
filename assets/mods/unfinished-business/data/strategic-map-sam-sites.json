@@ -1,0 +1,18 @@
+[
+    {   // SAM_SITE_ONE
+        "sector": "A1",
+        "gridNos": [ 1, 2 ]
+    },
+    {   // SAM_SITE_TWO
+        "sector": "A2",
+        "gridNos": [ 1, 2 ]
+    },
+    {   // SAM_SITE_THREE
+        "sector": "A3",
+        "gridNos": [ 1, 2 ]
+    },
+    {   // SAM_SITE_FOUR
+        "sector": "A4",
+        "gridNos": [ 1, 2 ]
+    }
+]

@@ -1,0 +1,16 @@
+[
+	// Verraz
+	{ 
+		"townId": 1,
+		"sectors": [ "I10", "I11", "H11" ],
+		"townPoint": { "x": 100, "y": 80 },
+		"isMilitiaTrainingAllowed": false
+	},
+	// Abandoned mine sector
+	{
+		"townId": 2,
+		"sectors": ["I13"],
+		"townPoint": { "x": 100, "y": 80 },
+		"isMilitiaTrainingAllowed": false
+	}
+]

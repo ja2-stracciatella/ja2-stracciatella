@@ -1,0 +1,71 @@
+[
+    {
+        "index": 0,
+        "internalName": "AMMO_REGULAR"
+    },
+    {
+        "index": 1,
+        "internalName": "AMMO_HP"
+    },
+    {
+        "index": 2,
+        "internalName": "AMMO_AP"
+    },
+    {
+        "index": 3,
+        "internalName": "AMMO_SUPER_AP"
+    },
+    {
+        "index": 4,
+        "internalName": "AMMO_BUCKSHOT"
+    },
+    {
+        "index": 5,
+        "internalName": "AMMO_FLECHETTE"
+    },
+    {
+        "index": 6,
+        "internalName": "AMMO_GRENADE"
+    },
+    {
+        "index": 7,
+        "internalName": "AMMO_MONSTER"
+    },
+    {
+        "index": 8,
+        "internalName": "AMMO_KNIFE"
+    },
+    {
+        "index": 9,
+        "internalName": "AMMO_HE"
+    },
+    {
+        "index": 10,
+        "internalName": "AMMO_HEAT"
+    },
+    {
+        "index": 11,
+        "internalName": "AMMO_SLEEP_DART"
+    },
+    {
+        "index": 12,
+        "internalName": "AMMO_FLAME"
+    },
+    // added in UB
+    {
+        "index": 13,
+        "internalName": "AMMO_CB"		//Cannon ball
+    },
+	{
+        "index": 14,
+        "internalName": "AMMO50"
+    },
+	{
+        "index": 15,
+        "internalName": "AMMOCALICO_50"
+    },
+	{
+        "index": 16,
+        "internalName": "AMMO9_VAL"
+    }
+]

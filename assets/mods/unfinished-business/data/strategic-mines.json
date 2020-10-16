@@ -1,0 +1,11 @@
+[
+    { // Varraz
+        "entranceSector": "I13",
+        "associatedTownId": 2,
+        "mineType": "GOLD_MINE",
+        "minimumMineProduction": 0, // abandoned
+        "mineSectors": [
+            ["I13", 1], ["J13", 1]
+        ]
+    }
+]

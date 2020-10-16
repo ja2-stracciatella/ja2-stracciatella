@@ -1,0 +1,9 @@
+{
+    "activation_codes" : [ "GP97SL", "gp97sl" ],
+
+    "starting_level": 4,
+    "inventory": ["CANTEEN", "FLAK_JACKET"],
+
+    "if_good_shooter": ["CALICO_950", "CLIP9_50"],
+    "if_normal_shooter": ["CALICO_950", "CLIP9_50"]
+}

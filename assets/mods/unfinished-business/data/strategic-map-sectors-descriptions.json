@@ -1,0 +1,23 @@
+/**
+ * List of all sectors that use special land type descriptions.
+ *
+ * Fields:
+ *  - sector:       Location of sector
+ *  - sectorLevel:  Defaults to 0
+ *  - landType:     Land type for the sector description text. See strategic-map-traversibility-ratings
+ */
+[
+    /* Special sectors */
+    { "sector": "B13", "landType": "DRASSEN_AIRPORT_SITE" },
+    { "sector": "F8",  "landType": "CAMBRIA_HOSPITAL_SITE" },
+    { "sector": "N3",  "landType": "MEDUNA_AIRPORT_SITE" },
+    /* Underground facilities */
+    { "sector": "K15", "sectorLevel": 1, "landType": "FINAL_COMPLEX" },
+    { "sector": "K15",  "sectorLevel": 2, "landType": "FINAL_COMPLEX" },
+    { "sector": "L15",  "sectorLevel": 1, "landType": "FINAL_COMPLEX" },
+    { "sector": "L15",  "sectorLevel": 2, "landType": "FINAL_COMPLEX" },
+    { "sector": "L15",  "sectorLevel": 3, "landType": "FINAL_COMPLEX" },
+    { "sector": "J13",  "sectorLevel": 1, "landType": "X" }, // power plant underground, show town name
+    { "sector": "J14",  "sectorLevel": 1, "landType": "TUNNEL" },
+    { "sector": "K14",  "sectorLevel": 1, "landType": "TUNNEL" }
+]
