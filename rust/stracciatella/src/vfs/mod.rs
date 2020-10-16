@@ -18,11 +18,11 @@ use std::rc::Rc;
 
 use log::{info, warn};
 
+use crate::fs;
 use crate::unicode::Nfc;
 use crate::vfs::dir::DirFs;
 use crate::vfs::slf::SlfFs;
 use crate::EngineOptions;
-use crate::fs;
 
 pub trait VfsFile: io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display {
     /// Returns the length of the file

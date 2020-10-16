@@ -158,8 +158,8 @@ impl VfsFile for SlfFsFile {
 
 impl fmt::Display for SlfFs {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str("SlfFs { ")?;
-        write!(f, "{:?}", self.slf_path)?;
+        f.write_str("SlfFs { source: ")?;
+        write!(f, "{}", self.slf_path)?;
         f.write_str(" }")
     }
 }
