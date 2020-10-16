@@ -22,7 +22,7 @@ use crate::unicode::Nfc;
 use crate::vfs::dir::DirFs;
 use crate::vfs::slf::SlfFs;
 use crate::EngineOptions;
-use crate::{fs, get_assets_dir};
+use crate::fs;
 
 pub trait VfsFile: io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display {
     /// Returns the length of the file
@@ -159,7 +159,8 @@ impl Vfs {
         let vanilla_game_dir = engine_options.vanilla_game_dir.clone();
         let vanilla_data_dir =
             fs::resolve_existing_components(Path::new(DATA_DIR), Some(&vanilla_game_dir), true);
-        let assets_dir = fs::resolve_existing_components(&get_assets_dir(), None, true);
+        #[cfg(not(target_os = "android"))]
+        let assets_dir = fs::resolve_existing_components(&crate::get_assets_dir(), None, true);
         let home_data_dir = fs::resolve_existing_components(
             &PathBuf::from(DATA_DIR),
             Some(&engine_options.stracciatella_home),
@@ -176,29 +177,40 @@ impl Vfs {
                 Some(&engine_options.stracciatella_home),
                 true,
             );
+            #[cfg(not(target_os = "android"))]
+            let mod_in_externalized = DirFs::new(&fs::resolve_existing_components(
+                &mod_path,
+                Some(&assets_dir),
+                true,
+            ));
+            #[cfg(target_os = "android")]
+            let mod_in_externalized = android::AssetManagerFs::new(&mod_path);
             let mod_in_externalized =
-                fs::resolve_existing_components(&mod_path, Some(&assets_dir), true);
+                map_not_found_to_option(mod_in_externalized).map_err(|e| VfsInitError {
+                    path: mod_path.clone(),
+                    error: e,
+                })?;
 
-            match (mod_in_home.exists(), mod_in_externalized.exists()) {
-                (false, false) => {
+            match (mod_in_home.exists(), mod_in_externalized) {
+                (false, None) => {
                     return Err(VfsInitError {
                         path: mod_path,
                         error: ErrorKind::NotFound.into(),
                     });
                 }
-                (true, false) => {
+                (true, None) => {
                     let layer = self.add_dir(&mod_in_home)?;
                     self.add_slf_files_from(layer, false)?;
                 }
-                (false, true) => {
-                    let layer = self.add_dir(&mod_in_externalized)?;
-                    self.add_slf_files_from(layer, false)?;
+                (false, Some(mod_in_externalized)) => {
+                    self.entries.push(mod_in_externalized.clone());
+                    self.add_slf_files_from(mod_in_externalized, false)?;
                 }
-                (true, true) => {
+                (true, Some(mod_in_externalized)) => {
                     let layer = self.add_dir(&mod_in_home)?;
                     self.add_slf_files_from(layer, false)?;
-                    let layer = self.add_dir(&mod_in_externalized)?;
-                    self.add_slf_files_from(layer, false)?;
+                    self.entries.push(mod_in_externalized.clone());
+                    self.add_slf_files_from(mod_in_externalized, false)?;
                 }
             };
         }
