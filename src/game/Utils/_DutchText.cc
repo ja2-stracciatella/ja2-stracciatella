@@ -622,56 +622,6 @@ static const ST::string s_dut_pDirectionStr[pDirectionStr_SIZE] =
 	"het NOORDEN",
 };
 
-// These are the different terrain types.
-
-static const ST::string s_dut_pLandTypeStrings[pLandTypeStrings_SIZE] =
-{
-	"Stad",
-	"Weg",
-	"Vlaktes",
-	"Woestijn",
-	"Bossen",
-	"Woud",
-	"Moeras",
-	"Water",
-	"Heuvels",
-	"Onbegaanbaar",
-	"Rivier",	//river from north to south
-	"Rivier",	//river from east to west
-	"Buitenland",
-	//NONE of the following are used for directional travel, just for the sector description.
-	"Tropisch",
-	"Landbouwgrond",
-	"Vlaktes, weg",
-	"Bossen, weg",
-	"Boerderij, weg",
-	"Tropisch, weg",
-	"Woud, weg",
-	"Kustlijn",
-	"Bergen, weg",
-	"Kust-, weg",
-	"Woestijn, weg",
-	"Moeras, weg",
-	"Bossen, SAM-stelling",
-	"Woestijn, SAM-stelling",
-	"Tropisch, SAM-stelling",
-	"Meduna, SAM-stelling",
-
-	//These are descriptions for special sectors
-	"Cambria Ziekenhuis",
-	"Drassen Vliegveld",
-	"Meduna Vliegveld",
-	"SAM-stelling",
-	"Schuilplaats Rebellen",	//The rebel base underground in sector A10
-	"Tixa Kerker",			//The basement of the Tixa Prison (J9)
-	"Hol Beest",			//Any mine sector with creatures in it
-	"Orta Basis",			//The basement of Orta (K4)
-	"Tunnel",				//The tunnel access from the maze garden in Meduna
-										//leading to the secret shelter underneath the palace
-	"Schuilplaats",			//The shelter underneath the queen's palace
-	"",					//Unused
-};
-
 static const ST::string s_dut_gpStrategicString[gpStrategicString_SIZE] =
 {
 	"%s zijn ontdekt in sector %c%d en een ander team arriveert binnenkort.",	//STR_DETECTED_SINGULAR
@@ -3505,7 +3455,6 @@ LanguageRes g_LanguageResDutch = {
 	s_dut_pDirectionStr,
 	s_dut_pRemoveMercStrings,
 	s_dut_sTimeStrings,
-	s_dut_pLandTypeStrings,
 	s_dut_pInvPanelTitleStrings,
 	s_dut_pPOWStrings,
 	s_dut_pMilitiaString,

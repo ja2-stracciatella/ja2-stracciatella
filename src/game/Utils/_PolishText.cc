@@ -608,56 +608,6 @@ static const ST::string s_pl_pDirectionStr[pDirectionStr_SIZE] =
 	"PŁN"
 };
 
-// These are the different terrain types.
-
-static const ST::string s_pl_pLandTypeStrings[pLandTypeStrings_SIZE] =
-{
-	"Miasto",
-	"Droga",
-	"Otwarty teren",
-	"Pustynia",
-	"Las",
-	"Las",
-	"Bagno",
-	"Woda",
-	"Wzgórza",
-	"Teren nieprzejezdny",
-	"Rzeka",	//river from north to south
-	"Rzeka",	//river from east to west
-	"Terytorium innego kraju",
-	//NONE of the following are used for directional travel, just for the sector description.
-	"Tropiki",
-	"Pola uprawne",
-	"Otwarty teren, droga",
-	"Las, droga",
-	"Las, droga",
-	"Tropiki, droga",
-	"Las, droga",
-	"Wybrzeże",
-	"Góry, droga",
-	"Wybrzeże, droga",
-	"Pustynia, droga",
-	"Bagno, droga",
-	"Las, Rakiety Z-P",
-	"Pustynia, Rakiety Z-P",
-	"Tropiki, Rakiety Z-P",
-	"Meduna, Rakiety Z-P",
-
-	//These are descriptions for special sectors
-	"Szpital w Cambrii",
-	"Lotnisko w Drassen",
-	"Lotnisko w Medunie",
-	"Rakiety Z-P",
-	"Kryjówka rebeliantów", //The rebel base underground in sector A10
-	"Tixa - Lochy",	//The basement of the Tixa Prison (J9)
-	"Gniazdo stworzeń",	//Any mine sector with creatures in it
-	"Orta - Piwnica",	//The basement of Orta (K4)
-	"Tunel",				//The tunnel access from the maze garden in Meduna
-						//leading to the secret shelter underneath the palace
-	"Schron",				//The shelter underneath the queen's palace
-	"",							//Unused
-};
-
 static const ST::string s_pl_gpStrategicString[gpStrategicString_SIZE] =
 {
 	"%s wykryto w sektorze %c%d, a inny oddział jest w drodze.",	//STR_DETECTED_SINGULAR
@@ -3493,7 +3443,6 @@ LanguageRes g_LanguageResPolish = {
 	s_pl_pDirectionStr,
 	s_pl_pRemoveMercStrings,
 	s_pl_sTimeStrings,
-	s_pl_pLandTypeStrings,
 	s_pl_pInvPanelTitleStrings,
 	s_pl_pPOWStrings,
 	s_pl_pMilitiaString,

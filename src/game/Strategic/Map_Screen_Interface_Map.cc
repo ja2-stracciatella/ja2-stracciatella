@@ -3820,7 +3820,7 @@ static void ShowSAMSitesOnStrategicMap()
 			x += 11;
 			y += 19;
 
-			ST::string sam_site = pLandTypeStrings[SAM_SITE];
+			const ST::string& sam_site = GCM->getLandTypeString(SAM_SITE);
 
 			// Center the first string around x.
 			x -= StringPixLength(sam_site, MAP_FONT) / 2;

@@ -149,6 +149,7 @@ public:
 	virtual const IMPPolicy* getIMPPolicy() const override;
 
 	virtual const ST::string* getNewString(size_t stringId) const override;
+	virtual const ST::string& getLandTypeString(size_t index) const override;
 
 	virtual const std::vector<const BloodCatPlacementsModel*>& getBloodCatPlacements() const override;
 	virtual const std::vector<const BloodCatSpawnsModel*>& getBloodCatSpawns() const override;
@@ -169,6 +170,7 @@ public:
 	virtual const ST::string getTownLocative(uint8_t townId) const override;
 	virtual const std::vector <const UndergroundSectorModel*>& getUndergroundSectors() const override;
 	virtual const MovementCostsModel* getMovementCosts() const override;
+	virtual int16_t getSectorLandType(uint8_t sectorID, uint8_t sectorLevel) const override;
 	virtual const std::vector<const StrategicMapSecretModel*>& getMapSecrets() const override;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const override;
@@ -187,6 +189,7 @@ protected:
 	const GameVersion m_gameVersion;
 
 	std::vector<const ST::string*> m_newStrings;
+	std::vector<const ST::string*> m_landTypeStrings;
 
 	std::vector<const ItemModel*> m_items;
 	std::vector<const MagazineModel*> m_magazines;
@@ -230,6 +233,7 @@ protected:
 
 	const LoadingScreenModel* m_loadingScreenModel;
 	const MovementCostsModel* m_movementCosts;
+	std::map<std::tuple<uint8_t, uint8_t>, uint8_t> m_sectorLandTypes;
 
 	std::vector<const BloodCatPlacementsModel*> m_bloodCatPlacements;
 	std::vector<const BloodCatSpawnsModel*> m_bloodCatSpawns;

@@ -41,6 +41,7 @@
 #include "strategic/MineModel.h"
 #include "strategic/SamSiteModel.h"
 #include "strategic/SamSiteAirControlModel.h"
+#include "strategic/SectorLandTypes.h"
 #include "strategic/StrategicMapSecretModel.h"
 #include "strategic/TownModel.h"
 #include "strategic/TraversibilityMapping.h"
@@ -273,10 +274,8 @@ DefaultContentManager::~DefaultContentManager()
 	delete m_gamePolicy;
 	delete m_loadingScreenModel;
 
-	for (const ST::string *str : m_newStrings)
-	{
-		delete str;
-	}
+	deleteElements(m_newStrings);
+	deleteElements(m_landTypeStrings);
 	for (const ST::string *str : m_calibreNames)
 	{
 		delete str;
@@ -305,6 +304,8 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_MERCListings);
 	deleteElements(m_mercProfileInfo);
 	deleteElements(m_mercProfiles);
+
+	m_sectorLandTypes.clear();
 
 	delete m_movementCosts;
 	delete m_samSitesAirControl;
@@ -996,6 +997,7 @@ bool DefaultContentManager::loadGameData()
 	loadStringRes("strings/ammo-calibre-bobbyray", m_calibreNamesBobbyRay);
 
 	loadStringRes("strings/new-strings", m_newStrings);
+	loadStringRes("strings/strategic-map-land-types", m_landTypeStrings);
 
 	loadStrategicLayerData();
 	loadTacticalLayerData();
@@ -1111,6 +1113,10 @@ const ST::string* DefaultContentManager::getNewString(size_t stringId) const
 	}
 }
 
+const ST::string& DefaultContentManager::getLandTypeString(size_t index) const
+{
+	return *m_landTypeStrings.at(index);
+}
 
 bool DefaultContentManager::loadStrategicLayerData() 
 {
@@ -1191,6 +1197,9 @@ bool DefaultContentManager::loadStrategicLayerData()
 
 	json = readJsonDataFile("strategic-map-movement-costs.json");
 	m_movementCosts = MovementCostsModel::deserialize(*json, travRatingMap);
+
+	json = readJsonDataFile("strategic-map-sectors-descriptions.json");
+	m_sectorLandTypes = SectorLandTypes::deserialize(*json, travRatingMap);
 
 	json = readJsonDataFile("strategic-map-secrets.json");
 	for (auto& element : json->GetArray())
@@ -1396,6 +1405,16 @@ const std::vector<const UndergroundSectorModel*>& DefaultContentManager::getUnde
 const MovementCostsModel* DefaultContentManager::getMovementCosts() const
 {
 	return m_movementCosts;
+}
+
+int16_t DefaultContentManager::getSectorLandType(uint8_t const sectorID, uint8_t const sectorLevel) const
+{
+	SectorKey key(sectorID, sectorLevel);
+	if (m_sectorLandTypes.find(key) == m_sectorLandTypes.end())
+	{
+		return -1;
+	}
+	return m_sectorLandTypes.at(key);
 }
 
 const std::vector<const StrategicMapSecretModel*>& DefaultContentManager::getMapSecrets() const

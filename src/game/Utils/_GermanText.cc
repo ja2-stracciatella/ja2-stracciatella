@@ -592,55 +592,6 @@ static const ST::string s_ger_pDirectionStr[pDirectionStr_SIZE] =
 	"NORDEN",
 };
 
-// These are the different terrain types.
-static const ST::string s_ger_pLandTypeStrings[pLandTypeStrings_SIZE] =
-{
-	"Stadt",
-	"Straße",
-	"Ebene",
-	"Wüste",
-	"Lichter Wald",
-	"Dichter Wald",
-	"Sumpf",
-	"See/Ozean",
-	"Hügel",
-	"Unpassierbar",
-	"Fluss",		//river from north to south
-	"Fluss",		//river from east to west
-	"Fremdes Land",
-	//NONE of the following are used for directional travel, just for the sector description.
-	"Tropen",
-	"Farmland",
-	"Ebene, Straße",
-	"Wald, Straße",
-	"Farm, Straße",
-	"Tropen, Straße",
-	"Wald, Straße",
-	"Küste",
-	"Berge, Straße",
-	"Küste, Straße",
-	"Wüste, Straße",
-	"Sumpf, Straße",
-	"Wald, Raketen",
-	"Wüste, Raketen",
-	"Tropen, Raketen",
-	"Meduna, Raketen",
-
-	//These are descriptions for special sectors
-	"Cambria Hospital",
-	"Drassen Flugplatz",
-	"Meduna Flugplatz",
-	"Raketen",
-	"Rebellenlager", //The rebel base underground in sector A10
-	"Tixa, Keller",	//The basement of the Tixa Prison (J9)
-	"Monsterhöhle",	//Any mine sector with creatures in it
-	"Orta, Keller",	//The basement of Orta (K4)
-	"Tunnel",				//The tunnel access from the maze garden in Meduna
-										//leading to the secret shelter underneath the palace
-	"Bunker",				//The shelter underneath the queen's palace
-	"",							//Unused
-};
-
 static const ST::string s_ger_gpStrategicString[gpStrategicString_SIZE] =
 {
 	"%s wurden entdeckt in Sektor %c%d und ein weiterer Trupp wird gleich ankommen.",	//STR_DETECTED_SINGULAR
@@ -3336,7 +3287,6 @@ LanguageRes g_LanguageResGerman = {
 	s_ger_pDirectionStr,
 	s_ger_pRemoveMercStrings,
 	s_ger_sTimeStrings,
-	s_ger_pLandTypeStrings,
 	s_ger_pInvPanelTitleStrings,
 	s_ger_pPOWStrings,
 	s_ger_pMilitiaString,

@@ -48,7 +48,6 @@ extern const ST::string g_eng_str_dead_is_dead_mode_enter_name;
 #define pNoiseVolStr_SIZE 4
 #define pNoiseTypeStr_SIZE 12
 #define pDirectionStr_SIZE 8
-#define pLandTypeStrings_SIZE 40
 #define gpStrategicString_SIZE 69
 #define sKeyDescriptionStrings_SIZE 2
 #define gWeaponStatsDesc_SIZE 7
@@ -213,7 +212,6 @@ struct LanguageRes
 	const ST::string* pDirectionStr;
 	const ST::string* pRemoveMercStrings;
 	const ST::string* sTimeStrings;
-	const ST::string* pLandTypeStrings;
 	const ST::string* pInvPanelTitleStrings;
 	const ST::string* pPOWStrings;
 	const ST::string* pMilitiaString;
@@ -444,7 +442,6 @@ extern const LanguageRes* g_langRes;
 #define pDirectionStr                                       (g_langRes->pDirectionStr)
 #define pRemoveMercStrings                                  (g_langRes->pRemoveMercStrings)
 #define sTimeStrings                                        (g_langRes->sTimeStrings)
-#define pLandTypeStrings                                    (g_langRes->pLandTypeStrings)
 #define pInvPanelTitleStrings                               (g_langRes->pInvPanelTitleStrings)
 #define pPOWStrings                                         (g_langRes->pPOWStrings)
 #define pMilitiaString                                      (g_langRes->pMilitiaString)
