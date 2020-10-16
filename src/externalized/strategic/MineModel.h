@@ -30,5 +30,5 @@ public:
 	const int16_t faceDisplayYOffset;
 	
 	static MineModel* deserialize(uint8_t index, const rapidjson::Value& json);
-	static void validateData(std::vector<const MineModel*> models);
+	static void validateData(std::vector<const MineModel*>& models);
 };

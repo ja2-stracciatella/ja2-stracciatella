@@ -2,7 +2,7 @@
 #include "Campaign_Types.h"
 #include "JsonUtility.h"
 
-void ReadPatrolPoints(const rapidjson::Value& arr, uint8_t (&points)[4])
+static void ReadPatrolPoints(const rapidjson::Value& arr, uint8_t (&points)[4])
 {
 	if (!arr.IsArray())
 	{
@@ -31,7 +31,7 @@ PATROL_GROUP PatrolGroupModel::deserialize(const rapidjson::Value& val)
 	return g;
 }
 
-void PatrolGroupModel::validateData(std::vector<PATROL_GROUP> patrolGroups)
+void PatrolGroupModel::validateData(const std::vector<PATROL_GROUP>& patrolGroups)
 {
 	if (patrolGroups.size() > SAVED_PATROL_GROUPS)
 	{

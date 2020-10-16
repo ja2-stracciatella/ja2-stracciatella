@@ -80,7 +80,7 @@ UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Val
 	);
 }
 
-void UndergroundSectorModel::validateData(const std::vector<const UndergroundSectorModel*> ugSectors)
+void UndergroundSectorModel::validateData(const std::vector<const UndergroundSectorModel*>& ugSectors)
 {
 	// check for existence of hard-coded references
 	// the list below is based on the occurrences of FindUnderGroundSector in codebase

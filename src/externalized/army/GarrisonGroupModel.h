@@ -11,6 +11,6 @@
 class GarrisonGroupModel
 {
 public:
-	static GARRISON_GROUP deserialize(JsonObjectReader& obj, std::map<std::string, uint8_t> armyCompMapping);
-	static void validateData(std::vector<GARRISON_GROUP> garrisonGroups);
+	static GARRISON_GROUP deserialize(JsonObjectReader& obj, const std::map<std::string, uint8_t>& armyCompMapping);
+	static void validateData(const std::vector<GARRISON_GROUP>& garrisonGroups);
 };

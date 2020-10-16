@@ -13,7 +13,7 @@ CreatureLairModel::CreatureLairModel(const uint8_t lairId_, const uint8_t associ
 	lairSectors(lairSectors_), attackSectors(attackSectors_),
 	warpExitSector(warpExitSector_), warpExitGridNo(warpExitGridNo_) {}
 
-uint8_t creatureHabitatFromString(std::string habitat)
+uint8_t creatureHabitatFromString(const std::string& habitat)
 {
 	if (habitat == "QUEEN_LAIR") return QUEEN_LAIR;
 	if (habitat == "LAIR") return LAIR;
@@ -27,7 +27,7 @@ uint8_t creatureHabitatFromString(std::string habitat)
 	throw std::runtime_error(err.to_std_string());
 }
 
-InsertionCode insertionCodeFromString(std::string code)
+InsertionCode insertionCodeFromString(const std::string& code)
 {
 	if (code == "NORTH") return INSERTION_CODE_NORTH;
 	if (code == "SOUTH") return INSERTION_CODE_SOUTH;

@@ -2,7 +2,7 @@
 
 #include "JsonUtility.h"
 #include "Strategic_Mines.h"
-
+#include <utility>
 
 MineModel::MineModel(const uint8_t mineId_, const uint8_t entranceSector_, const uint8_t associatedTownId_, 
 	const uint8_t mineType_, const uint16_t minimumMineProduction_, const bool headMinerAssigned_,
@@ -11,14 +11,14 @@ MineModel::MineModel(const uint8_t mineId_, const uint8_t entranceSector_, const
 		mineId(mineId_), entranceSector(entranceSector_), associatedTownId(associatedTownId_),
 		mineType(mineType_), minimumMineProduction(minimumMineProduction_), headMinerAssigned(headMinerAssigned_),
 		noDepletion(noDepletion_), delayDepletion(delayDepletion_),
-		mineSectors(mineSectors_), faceDisplayYOffset(faceDisplayYOffset_) {}
+		mineSectors(std::move(mineSectors_)), faceDisplayYOffset(faceDisplayYOffset_) {}
 
 bool MineModel::isAbandoned() const
 {
 	return minimumMineProduction == 0;
 }
 
-uint8_t mineTypeFromString(std::string mineType)
+uint8_t mineTypeFromString(const std::string& mineType)
 {
 	if (mineType == "GOLD_MINE") return GOLD_MINE;
 	if (mineType == "SILVER_MINE") return SILVER_MINE;
@@ -33,7 +33,7 @@ std::vector<std::array<uint8_t, 2>> readMineSectors(const rapidjson::Value& sect
 	for (auto& s: sectorsJson.GetArray())
 	{
 		auto sector = s.GetArray();
-		if (sector.Size() != 2) throw new std::runtime_error("Elements in mineSector must be arrays of 2");
+		if (sector.Size() != 2) throw std::runtime_error("Elements in mineSector must be arrays of 2");
 
 		auto sectorString = sector[0].GetString();
 		auto sectorLevel = sector[1].GetUint();
@@ -66,7 +66,7 @@ MineModel* MineModel::deserialize(uint8_t index, const rapidjson::Value& json)
 	);
 }
 
-void MineModel::validateData(std::vector<const MineModel*> models)
+void MineModel::validateData(std::vector<const MineModel*>& models)
 {
 	if (models.size() != MAX_NUMBER_OF_MINES)
 	{
