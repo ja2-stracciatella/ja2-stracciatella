@@ -44,7 +44,7 @@ MercProfileInfo *MercProfileInfo::deserialize(const rapidjson::Value &json)
 
 void MercProfileInfo::validateData(const std::map<uint8_t, const MercProfileInfo*> &models)
 {
-	if (models.size() < 0)
+	if (models.empty())
 	{
 		throw std::runtime_error("No merc profile info defined");
 	}
