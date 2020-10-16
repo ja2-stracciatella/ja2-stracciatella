@@ -6,8 +6,9 @@ use std::fmt;
 use std::io;
 use std::io::{Seek, SeekFrom};
 use std::path::{Path, PathBuf};
-use std::sync::{Arc, Mutex};
 use std::rc::Rc;
+use std::sync::{Arc, Mutex};
+use std::collections::HashSet;
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
 use crate::fs::File;
@@ -74,34 +75,74 @@ impl SlfFs {
         Ok(Rc::new(SlfFs {
             slf_path: path.to_owned(),
             slf_file: Arc::new(Mutex::new(slf_file)),
-            prefix: Nfc::caseless_path(&header.library_path),
+            prefix: Nfc::caseless_path(Nfc::caseless_path(&header.library_path).trim_end_matches('/')),
             entries,
         }))
+    }
+
+    /// Canonicalizes to inner path (strips path prefix)
+    fn get_slf_path(&self, file_path: &str) -> io::Result<Nfc> {
+        if !file_path.starts_with(self.prefix.as_str()) {
+            Err(io::ErrorKind::NotFound.into())
+        } else {
+            let (_, want) = file_path.split_at(self.prefix.len());
+            Ok(Nfc::caseless_path(want))
+        }
     }
 }
 
 impl VfsLayer for SlfFs {
     /// Opens a file in the filesystem.
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
-        if file_path.starts_with(self.prefix.as_str()) {
-            let (_, want) = file_path.split_at(self.prefix.len());
-            let entry_option = self
-                .entries
-                .iter()
-                .filter(|x| x.path.as_str() == want)
-                .nth(0);
-            if let Some(entry) = entry_option {
-                return Ok(Box::new(SlfFsFile {
-                    file_path: file_path.to_owned(),
-                    slf_path: self.slf_path.to_owned(),
-                    slf_file: self.slf_file.to_owned(),
-                    offset: entry.offset,
-                    length: entry.length,
-                    position: 0,
-                }));
+        let want = self.get_slf_path(file_path)?;
+        let entry_option = self.entries.iter().filter(|x| x.path.as_str() == want.trim_start_matches('/')).nth(0);
+        match entry_option {
+            Some(entry) => Ok(Box::new(SlfFsFile {
+                file_path: file_path.to_owned(),
+                slf_path: self.slf_path.to_owned(),
+                slf_file: self.slf_file.to_owned(),
+                offset: entry.offset,
+                length: entry.length,
+                position: 0,
+            })),
+            None => Err(io::ErrorKind::NotFound.into()),
+        }
+    }
+
+    fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {
+        let file_path = file_path.trim_end_matches('/');
+        if file_path.len() < self.prefix.len() && self.prefix.starts_with(file_path) {
+            // Special case if our prefix is larger than the requested path to list
+            // We still need to return parts of the prefix
+            let (_, path) = self.prefix.split_at(file_path.len());
+            let path = path.trim_start_matches('/');
+            if let Some(path) = path.split('/').nth(0) {
+                if !path.is_empty() {
+                    let mut result = HashSet::new();
+                    result.insert(Nfc::caseless_path(path));
+                    return Ok(result);
+                }
             }
         }
-        Err(io::ErrorKind::NotFound.into())
+        let want = self.get_slf_path(file_path)?;
+        let entries: HashSet<Nfc> = self
+            .entries
+            .iter()
+            .flat_map(|x| {
+                if !x.path.starts_with(&want.as_str()) {
+                    // This is not part of the listed directory
+                    return None;
+                }
+                // Either a file or subdirectory, so we only return the first path segment
+                x.path.split('/').nth(0).map(Nfc::caseless_path)
+            })
+            .collect();
+
+        if entries.is_empty() {
+            Err(io::ErrorKind::NotFound.into())
+        } else {
+            Ok(entries)
+        }
     }
 }
 

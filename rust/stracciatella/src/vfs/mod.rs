@@ -14,6 +14,7 @@ use std::io;
 use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
+use std::collections::HashSet;
 
 use log::{info, warn};
 
@@ -36,6 +37,8 @@ pub trait VfsFile: io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display {
 pub trait VfsLayer: fmt::Debug + fmt::Display {
     // Opens a file in the VFS Layer
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>>;
+    // Lists a directory in the VFS Layer
+    fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>>;
 }
 
 /// A virtual filesystem that mounts other filesystems.
@@ -225,7 +228,6 @@ impl Vfs {
 }
 
 impl VfsLayer for Vfs {
-    /// Opens a file.
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
         for entry in self.entries.iter() {
             let file_result = entry.open(&file_path);
@@ -237,6 +239,27 @@ impl VfsLayer for Vfs {
             return file_result;
         }
         Err(io::ErrorKind::NotFound.into())
+    }
+
+    fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {
+        let mut entries = HashSet::new();
+        for entry in self.entries.iter() {
+            let layer_result = entry.read_dir(&file_path);
+            if let Err(err) = &layer_result {
+                if err.kind() == io::ErrorKind::NotFound {
+                    continue;
+                }
+            }
+            let layer_result = layer_result?;
+            for result in layer_result {
+                entries.insert(result);
+            }
+        }
+        if entries.is_empty() {
+            Err(io::ErrorKind::NotFound.into())
+        } else {
+            Ok(entries)
+        }
     }
 }
 

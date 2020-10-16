@@ -11,6 +11,7 @@ use crate::fs::File;
 use crate::unicode::Nfc;
 use crate::vfs::{VfsFile, VfsLayer};
 use std::rc::Rc;
+use std::collections::HashSet;
 
 /// A case-insensitive virtual filesystem backed by a filesystem directory.
 #[derive(Debug)]
@@ -42,8 +43,13 @@ impl DirFs {
     /// Maps a path to all candidates that might match the path case insensitively
     ///
     /// The returned paths are already containing the dir path
-    fn canonicalize(&self, file_path: &Nfc) -> io::Result<Vec<PathBuf>> {
+    fn canonicalize(&self, file_path: &str) -> io::Result<Vec<PathBuf>> {
         let mut candidates = vec![self.dir_path.to_owned()];
+
+        if file_path.is_empty() {
+            return Ok(candidates);
+        }
+
         for want in file_path.split('/') {
             let mut next = Vec::new();
             if want == "." || want == ".." {
@@ -80,7 +86,6 @@ impl DirFs {
 }
 
 impl VfsLayer for DirFs {
-    /// Opens a file in the filesystem.
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
         let candidates = self.canonicalize(file_path)?;
         if let Some(path) = candidates.iter().filter(|x| x.is_file()).nth(0) {
@@ -92,6 +97,34 @@ impl VfsLayer for DirFs {
         } else {
             Err(io::ErrorKind::NotFound.into())
         }
+    }
+
+    fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {
+        let file_path = file_path.trim_end_matches('/');
+        let candidates = self.canonicalize(file_path)?;
+        let mut result = HashSet::new();
+
+        for candidate in candidates {
+            let dir_contents = fs::read_dir(&candidate)?;
+
+            for entry in dir_contents {
+                let entry = entry?;
+                let file_name_nfc =
+                    Nfc::caseless_path(&entry.file_name().to_owned().into_string().map_err(|err| {
+                        io::Error::new(
+                            io::ErrorKind::InvalidInput,
+                            format!(
+                                "Could not convert path {:?} to NFC for DirFs: {:?}",
+                                entry.file_name(),
+                                err
+                            ),
+                        )
+                    })?);
+                result.insert(file_name_nfc);
+            }
+        }
+
+        Ok(result)
     }
 }
 

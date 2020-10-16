@@ -7,6 +7,7 @@ use std::io;
 use std::io::SeekFrom;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
+use std::collections::HashSet;
 
 use ndk::asset::{Asset, AssetManager};
 
@@ -62,8 +63,12 @@ impl AssetManagerFs {
     /// Maps a path to all candidates that might match the path case insensitively
     ///
     /// The returned paths are already containing the base path
-    fn canonicalize(&self, file_path: &Nfc) -> io::Result<Vec<PathBuf>> {
+    fn canonicalize(&self, file_path: &str) -> io::Result<Vec<PathBuf>> {
         let mut candidates = vec![self.base_path.to_owned()];
+
+        if file_path.is_empty() {
+            return Ok(candidates);
+        }
 
         for want in file_path.split('/') {
             let mut next = Vec::new();
@@ -132,7 +137,6 @@ impl AssetManagerFs {
 }
 
 impl VfsLayer for AssetManagerFs {
-    /// Opens a file in the filesystem.
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
         let candidates = self.canonicalize(file_path)?;
 
@@ -154,6 +158,34 @@ impl VfsLayer for AssetManagerFs {
                 self.base_path.join(&file_path.as_str())
             ),
         ))
+    }
+
+    fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {
+        let file_path = file_path.trim_end_matches('/');
+        let candidates = self.canonicalize(file_path)?;
+        let mut result = HashSet::new();
+
+        for candidate in candidates {
+            let dir_contents = crate::android::list_asset_dir(&candidate).map_err(|e| {
+                io::Error::new(
+                    io::ErrorKind::Other,
+                    format!("AssetManagerFs: JNI Error: `{:?}`", e),
+                )
+            })?;
+
+            for file_name in dir_contents {
+                let file_name_nfc =
+                    Nfc::caseless_path(&file_name.into_os_string().into_string().map_err(|err| {
+                        io::Error::new(
+                            io::ErrorKind::InvalidInput,
+                            format!("Could not convert path to NFC for AssetManager: {:?}", err),
+                        )
+                    })?);
+                result.insert(file_name_nfc);
+            }
+        }
+
+        Ok(result)
     }
 }
 
