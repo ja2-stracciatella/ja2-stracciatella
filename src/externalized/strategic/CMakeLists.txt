@@ -4,6 +4,7 @@ set(JA2_SOURCES
     ${LOCAL_JA2_HEADERS}
     ${CMAKE_CURRENT_SOURCE_DIR}/BloodCatPlacementsModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/BloodCatSpawnsModel.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/CacheSectorsModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/CreatureLairModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/FactParamsModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/MineModel.cc

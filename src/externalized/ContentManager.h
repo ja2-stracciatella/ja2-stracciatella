@@ -17,6 +17,7 @@
 class ArmyCompositionModel;
 class BloodCatPlacementsModel;
 class BloodCatSpawnsModel;
+class CacheSectorsModel;
 class CreatureLairModel;
 class DealerInventory;
 class DealerModel;
@@ -166,7 +167,7 @@ public:
 	virtual const ST::string getTownName(uint8_t townId) const = 0;
 	virtual const ST::string getTownLocative(uint8_t townId) const = 0;
 	virtual const std::vector <const UndergroundSectorModel*> & getUndergroundSectors() const = 0;
-
+	virtual const CacheSectorsModel* getCacheSectors() const = 0;
 	virtual const MovementCostsModel* getMovementCosts() const = 0;
 	/* Returns land type index for special sectors. Return -1 if no special land type is defined */
 	virtual int16_t getSectorLandType(uint8_t sectorID, uint8_t sectorLevel) const = 0;

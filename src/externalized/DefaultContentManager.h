@@ -172,6 +172,7 @@ public:
 	virtual const MovementCostsModel* getMovementCosts() const override;
 	virtual int16_t getSectorLandType(uint8_t sectorID, uint8_t sectorLevel) const override;
 	virtual const std::vector<const StrategicMapSecretModel*>& getMapSecrets() const override;
+	virtual const CacheSectorsModel* getCacheSectors() const override;
 	virtual const std::map<uint8_t, const NpcPlacementModel*>& listNpcPlacements() const override;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const override;
@@ -232,6 +233,7 @@ protected:
 	const IMPPolicy *m_impPolicy;
 	const GamePolicy *m_gamePolicy;
 
+	const CacheSectorsModel* m_cacheSectors;
 	const LoadingScreenModel* m_loadingScreenModel;
 	const MovementCostsModel* m_movementCosts;
 	std::map<std::tuple<uint8_t, uint8_t>, uint8_t> m_sectorLandTypes;
