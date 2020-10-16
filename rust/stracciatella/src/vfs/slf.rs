@@ -1,17 +1,15 @@
 //! This module contains a virtual filesystem backed by a SLF file.
 #![allow(dead_code)]
 
+use std::collections::HashSet;
 use std::convert::TryFrom;
 use std::fmt;
 use std::io;
 use std::io::{Seek, SeekFrom};
-use std::path::{Path, PathBuf};
 use std::rc::Rc;
 use std::sync::{Arc, Mutex};
-use std::collections::HashSet;
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
-use crate::fs::File;
 use crate::math::checked_add_u64_i64;
 use crate::unicode::Nfc;
 use crate::vfs::{VfsFile, VfsLayer};
@@ -20,9 +18,9 @@ use crate::vfs::{VfsFile, VfsLayer};
 #[derive(Debug)]
 pub struct SlfFs {
     /// Display info.
-    pub slf_path: PathBuf,
+    pub slf_path: String,
     /// SLF archive open for reading.
-    pub slf_file: Arc<Mutex<File>>,
+    pub slf_file: Arc<Mutex<Box<dyn VfsFile>>>,
     /// Case-insensitive base path.
     pub prefix: Nfc,
     /// List of entries
@@ -46,9 +44,9 @@ pub struct SlfFsFile {
     /// Display info.
     pub file_path: Nfc,
     /// Display info.
-    pub slf_path: PathBuf,
+    pub slf_path: String,
     /// SLF archive open for reading.
-    pub slf_file: Arc<Mutex<File>>,
+    pub slf_file: Arc<Mutex<Box<dyn VfsFile>>>,
     /// Start of the data.
     pub offset: u32,
     /// Length of the data.
@@ -59,8 +57,7 @@ pub struct SlfFsFile {
 
 impl SlfFs {
     /// Creates a new virtual filesystem.
-    pub fn new(path: &Path) -> io::Result<Rc<SlfFs>> {
-        let mut slf_file = File::open(&path)?;
+    pub fn new(mut slf_file: Box<dyn VfsFile>) -> io::Result<Rc<SlfFs>> {
         let header = SlfHeader::from_input(&mut slf_file)?;
         let entries: Vec<_> = header
             .entries_from_input(&mut slf_file)?
@@ -73,9 +70,11 @@ impl SlfFs {
             })
             .collect();
         Ok(Rc::new(SlfFs {
-            slf_path: path.to_owned(),
+            slf_path: format!("{}", slf_file),
             slf_file: Arc::new(Mutex::new(slf_file)),
-            prefix: Nfc::caseless_path(Nfc::caseless_path(&header.library_path).trim_end_matches('/')),
+            prefix: Nfc::caseless_path(
+                Nfc::caseless_path(&header.library_path).trim_end_matches('/'),
+            ),
             entries,
         }))
     }
@@ -95,12 +94,16 @@ impl VfsLayer for SlfFs {
     /// Opens a file in the filesystem.
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
         let want = self.get_slf_path(file_path)?;
-        let entry_option = self.entries.iter().filter(|x| x.path.as_str() == want.trim_start_matches('/')).nth(0);
+        let entry_option = self
+            .entries
+            .iter()
+            .filter(|x| x.path.as_str() == want.trim_start_matches('/'))
+            .nth(0);
         match entry_option {
             Some(entry) => Ok(Box::new(SlfFsFile {
                 file_path: file_path.to_owned(),
                 slf_path: self.slf_path.to_owned(),
-                slf_file: self.slf_file.to_owned(),
+                slf_file: self.slf_file.clone(),
                 offset: entry.offset,
                 length: entry.length,
                 position: 0,

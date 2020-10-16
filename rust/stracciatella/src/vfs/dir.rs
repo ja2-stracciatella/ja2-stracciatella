@@ -10,8 +10,8 @@ use crate::fs;
 use crate::fs::File;
 use crate::unicode::Nfc;
 use crate::vfs::{VfsFile, VfsLayer};
-use std::rc::Rc;
 use std::collections::HashSet;
+use std::rc::Rc;
 
 /// A case-insensitive virtual filesystem backed by a filesystem directory.
 #[derive(Debug)]
@@ -109,8 +109,8 @@ impl VfsLayer for DirFs {
 
             for entry in dir_contents {
                 let entry = entry?;
-                let file_name_nfc =
-                    Nfc::caseless_path(&entry.file_name().to_owned().into_string().map_err(|err| {
+                let file_name_nfc = Nfc::caseless_path(
+                    &entry.file_name().to_owned().into_string().map_err(|err| {
                         io::Error::new(
                             io::ErrorKind::InvalidInput,
                             format!(
@@ -119,7 +119,8 @@ impl VfsLayer for DirFs {
                                 err
                             ),
                         )
-                    })?);
+                    })?,
+                );
                 result.insert(file_name_nfc);
             }
         }

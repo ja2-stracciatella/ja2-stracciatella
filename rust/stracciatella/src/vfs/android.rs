@@ -1,13 +1,13 @@
 //! This module contains a virtual filesystem backed by a SLF file.
 #![allow(dead_code)]
 
+use std::collections::HashSet;
 use std::ffi::CString;
 use std::fmt;
 use std::io;
 use std::io::SeekFrom;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
-use std::collections::HashSet;
 
 use ndk::asset::{Asset, AssetManager};
 
@@ -174,13 +174,14 @@ impl VfsLayer for AssetManagerFs {
             })?;
 
             for file_name in dir_contents {
-                let file_name_nfc =
-                    Nfc::caseless_path(&file_name.into_os_string().into_string().map_err(|err| {
+                let file_name_nfc = Nfc::caseless_path(
+                    &file_name.into_os_string().into_string().map_err(|err| {
                         io::Error::new(
                             io::ErrorKind::InvalidInput,
                             format!("Could not convert path to NFC for AssetManager: {:?}", err),
                         )
-                    })?);
+                    })?,
+                );
                 result.insert(file_name_nfc);
             }
         }

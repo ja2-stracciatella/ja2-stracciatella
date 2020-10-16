@@ -9,12 +9,12 @@ pub mod android;
 pub mod dir;
 pub mod slf;
 
+use std::collections::HashSet;
 use std::fmt;
 use std::io;
 use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
-use std::collections::HashSet;
 
 use log::{info, warn};
 
@@ -77,11 +77,9 @@ impl Vfs {
     }
 
     /// Adds an overlay filesystem backed by a SLF file.
-    pub fn add_slf(&mut self, path: &Path) -> Result<Rc<dyn VfsLayer>, VfsInitError> {
-        let slf_fs = SlfFs::new(&path).map_err(|error| VfsInitError {
-            path: path.to_owned(),
-            error,
-        })?;
+    pub fn add_slf(&mut self, file: Box<dyn VfsFile>) -> Result<Rc<dyn VfsLayer>, VfsInitError> {
+        let path = PathBuf::from(format!("{}", file));
+        let slf_fs = SlfFs::new(file).map_err(|error| VfsInitError { path, error })?;
         self.entries.push(slf_fs.clone());
         Ok(slf_fs)
     }
@@ -99,27 +97,57 @@ impl Vfs {
     }
 
     /// Adds an overlay for all SLF files in dir
-    pub fn add_slf_files(&mut self, path: &Path, required: bool) -> Result<(), VfsInitError> {
-        let slf_paths = fs::read_dir_paths(path, false).map_err(|error| VfsInitError {
-            path: path.to_owned(),
-            error,
-        })?;
+    pub fn add_slf_files_from(
+        &mut self,
+        layer: Rc<dyn VfsLayer>,
+        required: bool,
+    ) -> Result<(), VfsInitError> {
+        let slf_paths = layer
+            .read_dir(&Nfc::caseless_path("/"))
+            .map_err(|error| VfsInitError {
+                path: PathBuf::from(format!("Error listing SLF files in {}", layer)),
+                error,
+            })?;
         let slf_paths: Vec<_> = slf_paths
             .iter()
-            .filter(|path| {
-                path.extension().map(|e| e.to_string_lossy().to_lowercase())
-                    == Some("slf".to_string())
-            })
+            .filter(|path| path.ends_with(".slf"))
             .collect();
         if required && slf_paths.is_empty() {
             return Err(VfsInitError {
-                path: path.join(Path::new("*.slf")),
+                path: PathBuf::from(format!("*.slf in {}", layer)),
                 error: ErrorKind::NotFound.into(),
             });
         }
         for path in slf_paths {
-            self.add_slf(&path)?;
+            self.add_slf(layer.open(path).map_err(|error| VfsInitError {
+                path: PathBuf::from(format!("{} in {}", path, layer)),
+                error,
+            })?)?;
         }
+        Ok(())
+    }
+
+    /// Adds the editor.slf layer to VFS
+    fn add_editor_slf_layer(
+        &mut self,
+        externalized_layer: Rc<dyn VfsLayer>,
+    ) -> Result<(), VfsInitError> {
+        let editor_slf =
+            map_not_found_to_option(externalized_layer.open(&Nfc::caseless_path(EDITOR_SLF_NAME)))
+                .map_err(|e| VfsInitError {
+                    path: PathBuf::from(format!("{} in {}", EDITOR_SLF_NAME, externalized_layer)),
+                    error: e,
+                })?;
+
+        if let Some(editor_slf) = editor_slf {
+            self.add_slf(editor_slf)?;
+        } else {
+            warn!(
+                "Free editor.slf not found in {}, the editor might not work",
+                externalized_layer
+            );
+        }
+
         Ok(())
     }
 
@@ -135,13 +163,6 @@ impl Vfs {
         let home_data_dir = fs::resolve_existing_components(
             &PathBuf::from(DATA_DIR),
             Some(&engine_options.stracciatella_home),
-            true,
-        );
-        let externalized_dir =
-            fs::resolve_existing_components(Path::new(EXTERNALIZED_DIR), Some(&assets_dir), true);
-        let editor_slf_path = fs::resolve_existing_components(
-            &Path::new(EDITOR_SLF_NAME),
-            Some(&externalized_dir),
             true,
         );
 
@@ -166,52 +187,52 @@ impl Vfs {
                     });
                 }
                 (true, false) => {
-                    self.add_dir(&mod_in_home)?;
-                    self.add_slf_files(&mod_in_home, false)?;
+                    let layer = self.add_dir(&mod_in_home)?;
+                    self.add_slf_files_from(layer, false)?;
                 }
                 (false, true) => {
-                    self.add_dir(&mod_in_externalized)?;
-                    self.add_slf_files(&mod_in_externalized, false)?;
+                    let layer = self.add_dir(&mod_in_externalized)?;
+                    self.add_slf_files_from(layer, false)?;
                 }
                 (true, true) => {
-                    self.add_dir(&mod_in_home)?;
-                    self.add_slf_files(&mod_in_home, false)?;
-                    self.add_dir(&mod_in_externalized)?;
-                    self.add_slf_files(&mod_in_externalized, false)?;
+                    let layer = self.add_dir(&mod_in_home)?;
+                    self.add_slf_files_from(layer, false)?;
+                    let layer = self.add_dir(&mod_in_externalized)?;
+                    self.add_slf_files_from(layer, false)?;
                 }
             };
         }
 
         // Next is home data dir (does not need to exist)
         if home_data_dir.exists() {
-            self.add_dir(&home_data_dir)?;
+            let layer = self.add_dir(&home_data_dir)?;
             // home data dir can include slf files
-            self.add_slf_files(&home_data_dir, false)?;
+            self.add_slf_files_from(layer, false)?;
         }
 
         // Next is externalized data dir (required)
         #[cfg(not(target_os = "android"))]
-        self.add_dir(&externalized_dir)?;
+        let externalized_layer = {
+            let externalized_dir = fs::resolve_existing_components(
+                Path::new(EXTERNALIZED_DIR),
+                Some(&assets_dir),
+                true,
+            );
+            self.add_dir(&externalized_dir)
+        }?;
         // On android the externalized dir comes from APK assets
         #[cfg(target_os = "android")]
-        self.add_android_assets(&Path::new(EXTERNALIZED_DIR))?;
+        let externalized_layer = self.add_android_assets(&Path::new(EXTERNALIZED_DIR))?;
 
         // Next is vanilla data dir (required)
-        self.add_dir(&vanilla_data_dir)?;
+        let data_dir_layer = self.add_dir(&vanilla_data_dir)?;
 
         // Next are SLF files in vanilla data dir
-        self.add_slf_files(&vanilla_data_dir, true)?;
+        self.add_slf_files_from(data_dir_layer, true)?;
 
         // Last is fallback editor.slf if it exists (does not need to exist)
         if engine_options.run_editor {
-            if editor_slf_path.exists() {
-                self.add_slf(&editor_slf_path)?;
-            } else {
-                warn!(
-                    "Free editor.slf not found in {:?}, the editor might not work",
-                    assets_dir
-                );
-            }
+            self.add_editor_slf_layer(externalized_layer)?;
         }
 
         // Print VFS order to console
@@ -286,5 +307,18 @@ impl fmt::Display for VfsInitError {
             "Error initializing VFS for {:?}: {}",
             self.path, self.error
         ))
+    }
+}
+
+fn map_not_found_to_option<T>(result: io::Result<T>) -> io::Result<Option<T>> {
+    match result {
+        Ok(t) => Ok(Some(t)),
+        Err(e) => {
+            if e.kind() == ErrorKind::NotFound {
+                Ok(None)
+            } else {
+                Err(e)
+            }
+        }
     }
 }
