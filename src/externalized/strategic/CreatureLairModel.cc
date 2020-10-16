@@ -2,6 +2,7 @@
 
 #include "Campaign_Types.h"
 #include "Creature_Spreading.h"
+#include "JsonUtility.h"
 #include "Random.h"
 #include <set>
 
@@ -50,13 +51,9 @@ std::vector<CreatureLairSector> readLairSectors(const rapidjson::Value& json)
 	{
 		auto arr = el.GetArray();
 		auto sectorString = arr[0].GetString();
-		if (!IS_VALID_SECTOR_SHORT_STRING(sectorString))
-		{
-			throw new std::runtime_error("Creature lair sector is invalid");
-		}
 
 		CreatureLairSector sec = {};
-		sec.sectorId = SECTOR_FROM_SECTOR_SHORT_STRING(sectorString);
+		sec.sectorId = JsonUtility::parseSectorID(sectorString);
 		sec.sectorLevel = arr[1].GetUint();
 		sec.habitatType = creatureHabitatFromString(arr[2].GetString());
 
@@ -78,18 +75,13 @@ std::vector<CreatureAttackSector> readAttackSectors(const rapidjson::Value& json
 	for (auto& el : json.GetArray())
 	{
 		JsonObjectReader obj(el);
-
 		auto sectorString = obj.GetString("sector");
-		if (!IS_VALID_SECTOR_SHORT_STRING(sectorString))
-		{
-			throw new std::runtime_error("Creature attack sector is invalid");
-		}
 
-		CreatureAttackSector sectorAttack;
+		CreatureAttackSector sectorAttack = {};
 		sectorAttack.chance = obj.GetUInt("chance");
 		sectorAttack.insertionCode = insertionCodeFromString(obj.GetString("insertionCode"));
 		sectorAttack.insertionGridNo = obj.getOptionalInt("insertionGridNo");
-		sectorAttack.sectorId = SECTOR_FROM_SECTOR_SHORT_STRING(sectorString);
+		sectorAttack.sectorId = JsonUtility::parseSectorID(sectorString);
 		attacks.push_back(sectorAttack);
 	}
 
@@ -155,20 +147,12 @@ CreatureLairModel* CreatureLairModel::deserialize(const rapidjson::Value& json)
 
 	auto entrance = json["entranceSector"].GetArray();
 	auto sectorString = entrance[0].GetString();
-	if (!IS_VALID_SECTOR_SHORT_STRING(sectorString))
-	{
-		throw new std::runtime_error("Entrance sector is invalid");
-	}
-	uint8_t entranceSector = SECTOR_FROM_SECTOR_SHORT_STRING(sectorString);
+	uint8_t entranceSector = JsonUtility::parseSectorID(sectorString);
 	uint8_t entranceSectorLevel = entrance[1].GetUint();
 
 	auto warpExit = JsonObjectReader(json["warpExit"]);
 	sectorString = warpExit.GetString("sector");
-	if (!IS_VALID_SECTOR_SHORT_STRING(sectorString))
-	{
-		throw new std::runtime_error("Warp exit sector is invalid");
-	}
-	uint8_t warpExitSector = SECTOR_FROM_SECTOR_SHORT_STRING(sectorString);
+	uint8_t warpExitSector = JsonUtility::parseSectorID(sectorString);
 	uint16_t warpExitGridNo = warpExit.GetUInt("gridNo");
 
 	return new CreatureLairModel(

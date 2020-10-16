@@ -1,5 +1,5 @@
 #include "NpcPlacementModel.h"
-#include "Campaign_Types.h"
+#include "JsonUtility.h"
 #include "Random.h"
 #include <utility>
 
@@ -10,16 +10,7 @@ NpcPlacementModel::NpcPlacementModel(uint8_t profileId_, std::vector<uint8_t> se
 
 NpcPlacementModel* NpcPlacementModel::deserialize(const rapidjson::Value& element)
 {
-	std::vector<uint8_t> sectorIds;
-	for (auto& sector : element["sectors"].GetArray())
-	{
-		auto sectorString = sector.GetString();
-		if (!IS_VALID_SECTOR_SHORT_STRING(sectorString))
-		{
-			throw std::runtime_error("Invalid sector string");
-		}
-		sectorIds.push_back(SECTOR_FROM_SECTOR_SHORT_STRING(sectorString));
-	}
+	std::vector<uint8_t> sectorIds = JsonUtility::parseSectorList(element, "sectors");
 
 	JsonObjectReader r(element);
 	return new NpcPlacementModel(

@@ -1,9 +1,9 @@
 #include "SamSiteModel.h"
 
 #include "Campaign_Types.h"
+#include "JsonUtility.h"
 #include "SAM_Sites.h"
 #include "WorldDef.h"
-
 #include <algorithm>
 
 
@@ -28,11 +28,7 @@ const bool SamSiteModel::doesSamExistHere(INT16 const x, INT16 const y, GridNo c
 SamSiteModel* SamSiteModel::deserialize(const rapidjson::Value& obj)
 {
 	const char* sector = obj["sector"].GetString();
-	if (!IS_VALID_SECTOR_SHORT_STRING(sector))
-	{
-		throw std::runtime_error("SAM site sector is not a valid string");
-	}
-	uint8_t sectorId = SECTOR_FROM_SECTOR_SHORT_STRING(sector);
+	uint8_t sectorId = JsonUtility::parseSectorID(sector);
 
 	auto g = obj["gridNos"].GetArray();
 	if (g.Size() != 2)

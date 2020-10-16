@@ -1,11 +1,12 @@
-#include "Debug.h"
 #include "JsonUtility.h"
+#include "Campaign_Types.h"
+#include "Debug.h"
 #include "RustInterface.h"
 
 #include "rapidjson/document.h"
 #include "rapidjson/ostreamwrapper.h"
 #include "rapidjson/prettywriter.h"
-
+#include <array>
 #include <sstream>
 
 /** Write list of strings to file. */
@@ -58,3 +59,62 @@ bool JsonUtility::parseListStrings(const rapidjson::Value &value, std::vector<ST
 	return false;
 }
 
+uint8_t JsonUtility::parseSectorID(const char* sectorString)
+{
+	if (!IS_VALID_SECTOR_SHORT_STRING(sectorString))
+	{
+		ST::string err = ST::format("{} is not a valid sector", sectorString);
+		throw std::runtime_error(err.to_std_string());
+	}
+	return SECTOR_FROM_SECTOR_SHORT_STRING(sectorString);
+}
+
+uint8_t JsonUtility::parseSectorID(const rapidjson::Value& json, const char* fieldName)
+{
+	if (!json.HasMember(fieldName) || !json[fieldName].IsString())
+	{
+		ST::string err = ST::format("expecting string value in field '{}'", fieldName);
+		throw std::runtime_error(err.to_std_string());
+	}
+	return JsonUtility::parseSectorID(json.GetString());
+}
+
+std::vector<uint8_t> JsonUtility::parseSectorList(const rapidjson::Value& json, const char* fieldName)
+{
+	if (!json.HasMember(fieldName) || !json[fieldName].IsArray())
+	{
+		ST::string err = ST::format("field '{}' is not an array", fieldName);
+		throw std::runtime_error(err.to_std_string());
+	}
+	std::vector<uint8_t> sectorIds;
+	for (const auto& sector : json[fieldName].GetArray())
+	{
+		if (!sector.IsString())
+		{
+			throw std::runtime_error("sector list must contain only strings");
+		}
+		sectorIds.push_back(JsonUtility::parseSectorID(sector.GetString()));
+	}
+	return sectorIds;
+}
+
+std::array<uint8_t, NUM_DIF_LEVELS> JsonUtility::readIntArrayByDiff(const rapidjson::Value& obj, const char* fieldName)
+{
+	std::array<uint8_t, NUM_DIF_LEVELS> vals = {};
+	if (!obj.HasMember(fieldName))
+	{
+		return vals;
+	}
+	const auto& arr = obj[fieldName].GetArray();
+	if (arr.Size() != NUM_DIF_LEVELS)
+	{
+		ST::string err = ST::format("The number of values in {} is not same as NUM_DIF_LEVELS({})", fieldName, NUM_DIF_LEVELS);
+		throw std::runtime_error(err.to_std_string());
+	}
+	for (unsigned int i = 0; i < NUM_DIF_LEVELS; i++)
+	{
+		vals[i] = static_cast<uint8_t>(arr[i].GetUint());
+	}
+
+	return vals;
+}

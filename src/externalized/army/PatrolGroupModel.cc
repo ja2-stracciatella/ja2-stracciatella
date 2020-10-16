@@ -1,5 +1,6 @@
 #include "PatrolGroupModel.h"
 #include "Campaign_Types.h"
+#include "JsonUtility.h"
 
 void ReadPatrolPoints(const rapidjson::Value& arr, uint8_t (&points)[4])
 {
@@ -15,11 +16,7 @@ void ReadPatrolPoints(const rapidjson::Value& arr, uint8_t (&points)[4])
 	for (rapidjson::SizeType i = 0; i < arraySize; i++)
 	{
 		auto sector = arr[i].GetString();
-		if (!IS_VALID_SECTOR_SHORT_STRING(sector))
-		{
-			throw std::runtime_error("Invalid sector string given");
-		}
-		points[i] = SECTOR_FROM_SECTOR_SHORT_STRING(sector);
+		points[i] = JsonUtility::parseSectorID(sector);
 	}
 }
 
