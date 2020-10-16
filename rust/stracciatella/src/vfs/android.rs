@@ -59,36 +59,10 @@ impl AssetManagerFs {
         }))
     }
 
-    /// Maps a path to CString for asset manager
-    fn path_to_cstring(path: &Path) -> io::Result<CString> {
-        let path = path
-            .to_owned()
-            .into_os_string()
-            .into_string()
-            .map_err(|err| {
-                io::Error::new(
-                    io::ErrorKind::InvalidInput,
-                    format!(
-                        "Could not convert path to string for AssetManager: {:?}",
-                        err
-                    ),
-                )
-            })?;
-        CString::new(path.as_bytes()).map_err(|err| {
-            io::Error::new(
-                io::ErrorKind::InvalidInput,
-                format!(
-                    "Could not convert path to string for AssetManager: {:?}",
-                    err
-                ),
-            )
-        })
-    }
-}
-
-impl VfsLayer for AssetManagerFs {
-    /// Opens a file in the filesystem.
-    fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
+    /// Maps a path to all candidates that might match the path case insensitively
+    ///
+    /// The returned paths are already containing the base path
+    fn canonicalize(&self, file_path: &Nfc) -> io::Result<Vec<PathBuf>> {
         let mut candidates = vec![self.base_path.to_owned()];
 
         for want in file_path.split('/') {
@@ -126,6 +100,41 @@ impl VfsLayer for AssetManagerFs {
             }
         }
         candidates.sort();
+
+        Ok(candidates)
+    }
+
+    /// Maps a path to CString for asset manager
+    fn path_to_cstring(path: &Path) -> io::Result<CString> {
+        let path = path
+            .to_owned()
+            .into_os_string()
+            .into_string()
+            .map_err(|err| {
+                io::Error::new(
+                    io::ErrorKind::InvalidInput,
+                    format!(
+                        "Could not convert path to string for AssetManager: {:?}",
+                        err
+                    ),
+                )
+            })?;
+        CString::new(path.as_bytes()).map_err(|err| {
+            io::Error::new(
+                io::ErrorKind::InvalidInput,
+                format!(
+                    "Could not convert path to string for AssetManager: {:?}",
+                    err
+                ),
+            )
+        })
+    }
+}
+
+impl VfsLayer for AssetManagerFs {
+    /// Opens a file in the filesystem.
+    fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
+        let candidates = self.canonicalize(file_path)?;
 
         for candidate in candidates {
             let candidate_cstring = Self::path_to_cstring(&candidate)?;

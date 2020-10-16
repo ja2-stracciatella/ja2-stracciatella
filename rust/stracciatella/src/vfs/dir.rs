@@ -38,11 +38,11 @@ impl DirFs {
             dir_path: path.to_owned(),
         }))
     }
-}
 
-impl VfsLayer for DirFs {
-    /// Opens a file in the filesystem.
-    fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
+    /// Maps a path to all candidates that might match the path case insensitively
+    ///
+    /// The returned paths are already containing the dir path
+    fn canonicalize(&self, file_path: &Nfc) -> io::Result<Vec<PathBuf>> {
         let mut candidates = vec![self.dir_path.to_owned()];
         for want in file_path.split('/') {
             let mut next = Vec::new();
@@ -74,6 +74,15 @@ impl VfsLayer for DirFs {
             }
         }
         candidates.sort();
+
+        Ok(candidates)
+    }
+}
+
+impl VfsLayer for DirFs {
+    /// Opens a file in the filesystem.
+    fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
+        let candidates = self.canonicalize(file_path)?;
         if let Some(path) = candidates.iter().filter(|x| x.is_file()).nth(0) {
             Ok(Box::new(DirFsFile {
                 file_path: file_path.to_owned(),
