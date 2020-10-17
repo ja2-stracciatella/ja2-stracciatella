@@ -32,6 +32,7 @@
 #include "ContentManager.h"
 #include "ArmyCompositionModel.h"
 #include "GarrisonGroupModel.h"
+#include "CacheSectorsModel.h"
 #include "MemMan.h"
 #include "Debug.h"
 #include "FileMan.h"
@@ -643,10 +644,15 @@ void InitStrategicAI()
 	 * set up the flags to use the alternate map, then place 8-12 regular troops
 	 * there (no AI though). Changing MAX_STRATEGIC_TEAM_SIZE may require changes
 	 * to to the defending force here. */
-	static UINT8 const cache_sectors[] = { SEC_E11, SEC_H5, SEC_H10, SEC_J12, SEC_M9 };
-	SECTORINFO& si = SectorInfo[cache_sectors[Random(lengthof(cache_sectors))]];
-	si.uiFlags     |= SF_USE_ALTERNATE_MAP;
-	si.ubNumTroops  = 6 + difficulty * 2;
+	auto model = GCM->getCacheSectors();
+	INT16 sSectorID = model->pickSector();
+	if (sSectorID >= 0)
+	{
+		SECTORINFO &si = SectorInfo[sSectorID];
+		si.uiFlags |= SF_USE_ALTERNATE_MAP;
+		si.ubNumTroops = model->getNumTroops(difficulty);
+		SLOGD(ST::format("Weapon cache is at {}", SECTOR_SHORT_STRING(sSectorID)));
+	}
 }
 
 

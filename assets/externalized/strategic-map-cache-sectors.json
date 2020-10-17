@@ -1,0 +1,18 @@
+/**
+ * Choose one cache map out of five possible maps. Select the sector randomly,
+ * set up the flags to use the alternate map, then place 8-12 regular troops
+ * there (no AI though).
+ *
+ * Number of enemies and variances are specified as array of integer, in the
+ * form of [ n_EASY, n_MEDIUM, n_HARD]. defaults to [0,0,0] if not given.
+ *
+ * Fields:
+ *  - sectors:    Locations of all the possible cache sectors
+ *  - numTroops:    The number of troops in cache sector, by game difficulty
+ *  - numTroopsVariance:    The max number of extra troops in sector, by game difficulty
+ */
+{
+    "sectors": [ "E11", "H5", "H10", "J12", "M9" ],
+    "numTroops": [ 8, 10, 12 ],
+    "numTroopsVariance": [ 0, 0, 0 ]
+}

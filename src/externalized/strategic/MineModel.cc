@@ -1,8 +1,8 @@
 #include "MineModel.h"
 
-#include "Campaign_Types.h"
+#include "JsonUtility.h"
 #include "Strategic_Mines.h"
-
+#include <utility>
 
 MineModel::MineModel(const uint8_t mineId_, const uint8_t entranceSector_, const uint8_t associatedTownId_, 
 	const uint8_t mineType_, const uint16_t minimumMineProduction_, const bool headMinerAssigned_,
@@ -11,14 +11,14 @@ MineModel::MineModel(const uint8_t mineId_, const uint8_t entranceSector_, const
 		mineId(mineId_), entranceSector(entranceSector_), associatedTownId(associatedTownId_),
 		mineType(mineType_), minimumMineProduction(minimumMineProduction_), headMinerAssigned(headMinerAssigned_),
 		noDepletion(noDepletion_), delayDepletion(delayDepletion_),
-		mineSectors(mineSectors_), faceDisplayYOffset(faceDisplayYOffset_) {}
+		mineSectors(std::move(mineSectors_)), faceDisplayYOffset(faceDisplayYOffset_) {}
 
 bool MineModel::isAbandoned() const
 {
 	return minimumMineProduction == 0;
 }
 
-uint8_t mineTypeFromString(std::string mineType)
+uint8_t mineTypeFromString(const std::string& mineType)
 {
 	if (mineType == "GOLD_MINE") return GOLD_MINE;
 	if (mineType == "SILVER_MINE") return SILVER_MINE;
@@ -33,17 +33,13 @@ std::vector<std::array<uint8_t, 2>> readMineSectors(const rapidjson::Value& sect
 	for (auto& s: sectorsJson.GetArray())
 	{
 		auto sector = s.GetArray();
-		if (sector.Size() != 2) throw new std::runtime_error("Elements in mineSector must be arrays of 2");
+		if (sector.Size() != 2) throw std::runtime_error("Elements in mineSector must be arrays of 2");
 
 		auto sectorString = sector[0].GetString();
 		auto sectorLevel = sector[1].GetUint();
-		if (!IS_VALID_SECTOR_SHORT_STRING(sectorString))
-		{
-			throw new std::runtime_error("mineSector given is not a valid sector string");
-		}
 
 		sectors.push_back(std::array<uint8_t, 2> {
-			SECTOR_FROM_SECTOR_SHORT_STRING(sectorString),
+			JsonUtility::parseSectorID(sectorString),
 			static_cast<uint8_t>(sectorLevel)
 		});
 	}
@@ -53,18 +49,12 @@ std::vector<std::array<uint8_t, 2>> readMineSectors(const rapidjson::Value& sect
 MineModel* MineModel::deserialize(uint8_t index, const rapidjson::Value& json)
 {
 	auto obj = JsonObjectReader(json);
-	const char* entrance = obj.GetString("entranceSector");
-	if (!IS_VALID_SECTOR_SHORT_STRING(entrance))
-	{
-		ST::string err = ST::format("Invalid mine entrance sector: '{}'", entrance);
-		throw std::runtime_error(err.to_std_string());
-	}
-
+	auto entrance = JsonUtility::parseSectorID(obj.GetString("entranceSector"));
 	auto mineSectors = readMineSectors(json["mineSectors"]);
 
 	return new MineModel(
 		index,
-		SECTOR_FROM_SECTOR_SHORT_STRING(entrance),
+		entrance,
 		obj.GetUInt("associatedTownId"),
 		mineTypeFromString(obj.GetString("mineType")),
 		obj.GetUInt("minimumMineProduction"),
@@ -76,7 +66,7 @@ MineModel* MineModel::deserialize(uint8_t index, const rapidjson::Value& json)
 	);
 }
 
-void MineModel::validateData(std::vector<const MineModel*> models)
+void MineModel::validateData(std::vector<const MineModel*>& models)
 {
 	if (models.size() != MAX_NUMBER_OF_MINES)
 	{

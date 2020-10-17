@@ -1,5 +1,6 @@
 #include "UndergroundSectorModel.h"
 
+#include "JsonUtility.h"
 #include "Random.h"
 
 UndergroundSectorModel::UndergroundSectorModel(uint8_t sectorId_, uint8_t sectorZ_, uint8_t adjacentSectors_, 
@@ -25,36 +26,9 @@ UNDERGROUND_SECTORINFO* UndergroundSectorModel::createUndergroundSectorInfo(uint
 	return u;
 }
 
-std::array<uint8_t, NUM_DIF_LEVELS> readIntArray(const rapidjson::Value& obj, const char* fieldName)
-{
-	std::array<uint8_t, NUM_DIF_LEVELS> vals = {};
-	if (!obj.HasMember(fieldName))
-	{
-		return vals;
-	}
-	auto arr = obj[fieldName].GetArray();
-	if (arr.Size() != NUM_DIF_LEVELS)
-	{
-		ST::string err = ST::format("The number of values in {} is not same as NUM_DIF_LEVELS({})", fieldName, NUM_DIF_LEVELS);
-		throw std::runtime_error(err.to_std_string());
-	}
-	for (auto i = 0; i < NUM_DIF_LEVELS; i++)
-	{
-		vals[i] = static_cast<uint8_t>(arr[i].GetUint());
-	}
-
-	return vals;
-}
-
 UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Value& obj)
 {
-	auto sectorString = obj["sector"].GetString();
-	if (!IS_VALID_SECTOR_SHORT_STRING(sectorString))
-	{
-		ST::string err = ST::format("'{}' is not valid sector", sectorString);
-		throw std::runtime_error(err.to_std_string());
-	}
-	uint8_t sectorId = SECTOR_FROM_SECTOR_SHORT_STRING(sectorString);
+	uint8_t sectorId = JsonUtility::parseSectorID(obj["sector"].GetString());
 	uint8_t sectorZ = obj["sectorLevel"].GetUint();
 	if (sectorZ == 0 || sectorZ > 3)
 	{
@@ -97,12 +71,16 @@ UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Val
 	
 	return new UndergroundSectorModel(
 		sectorId, sectorZ, adjacencyFlag,
-		readIntArray(obj, "numTroops"), readIntArray(obj, "numElites"), readIntArray(obj, "numCreatures"),
-		readIntArray(obj, "numTroopsVariance"), readIntArray(obj, "numElitesVariance"), readIntArray(obj, "numCreaturesVariance")
+		JsonUtility::readIntArrayByDiff(obj, "numTroops"),
+		JsonUtility::readIntArrayByDiff(obj, "numElites"),
+		JsonUtility::readIntArrayByDiff(obj, "numCreatures"),
+		JsonUtility::readIntArrayByDiff(obj, "numTroopsVariance"),
+		JsonUtility::readIntArrayByDiff(obj, "numElitesVariance"),
+		JsonUtility::readIntArrayByDiff(obj, "numCreaturesVariance")
 	);
 }
 
-void UndergroundSectorModel::validateData(const std::vector<const UndergroundSectorModel*> ugSectors)
+void UndergroundSectorModel::validateData(const std::vector<const UndergroundSectorModel*>& ugSectors)
 {
 	// check for existence of hard-coded references
 	// the list below is based on the occurrences of FindUnderGroundSector in codebase

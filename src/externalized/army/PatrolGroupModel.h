@@ -9,5 +9,5 @@ class PatrolGroupModel
 {
 public:
 	static PATROL_GROUP deserialize(const rapidjson::Value& val);
-	static void validateData(std::vector<PATROL_GROUP> patrolGroups);
+	static void validateData(const std::vector<PATROL_GROUP>& patrolGroups);
 };

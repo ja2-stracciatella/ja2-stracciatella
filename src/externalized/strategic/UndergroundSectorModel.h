@@ -24,7 +24,7 @@ public:
 	UNDERGROUND_SECTORINFO* createUndergroundSectorInfo(uint8_t difficultyLevel) const;
 
 	static UndergroundSectorModel* deserialize(const rapidjson::Value& obj);
-	static void validateData(const std::vector<const UndergroundSectorModel*> ugSectors);
+	static void validateData(const std::vector<const UndergroundSectorModel*>& ugSectors);
 
 	uint8_t sectorId;
 	uint8_t sectorZ;

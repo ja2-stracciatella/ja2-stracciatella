@@ -15,6 +15,7 @@
 #include "sgp/MemMan.h"
 
 #include "AmmoTypeModel.h"
+#include "CacheSectorsModel.h"
 #include "CalibreModel.h"
 #include "ContentMusic.h"
 #include "DealerInventory.h"
@@ -197,6 +198,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_impPolicy = NULL;
 	m_gamePolicy = NULL;
 
+	m_cacheSectors = NULL;
 	m_movementCosts = NULL;
 	m_loadingScreenModel = NULL;
 	m_samSitesAirControl = NULL;
@@ -307,6 +309,7 @@ DefaultContentManager::~DefaultContentManager()
 
 	m_sectorLandTypes.clear();
 
+	delete m_cacheSectors;
 	delete m_movementCosts;
 	delete m_samSitesAirControl;
 }
@@ -1217,6 +1220,10 @@ bool DefaultContentManager::loadStrategicLayerData()
 	}
 
 	CreatureLairModel::validateData(m_creatureLairs, m_undergroundSectors, m_mines.size());
+
+	json = readJsonDataFile("strategic-map-cache-sectors.json");
+	m_cacheSectors = CacheSectorsModel::deserialize(*json);
+
 	return true;
 }
 
@@ -1415,6 +1422,11 @@ int16_t DefaultContentManager::getSectorLandType(uint8_t const sectorID, uint8_t
 		return -1;
 	}
 	return m_sectorLandTypes.at(key);
+}
+
+const CacheSectorsModel* DefaultContentManager::getCacheSectors() const
+{
+	return m_cacheSectors;
 }
 
 const std::vector<const StrategicMapSecretModel*>& DefaultContentManager::getMapSecrets() const

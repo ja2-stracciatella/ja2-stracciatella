@@ -1,6 +1,7 @@
 #include "StrategicMapSecretModel.h"
 #include "Campaign_Types.h"
 #include "JsonObject.h"
+#include "JsonUtility.h"
 #include "SamSiteModel.h"
 #include <set>
 #include <stdexcept>
@@ -15,12 +16,7 @@ StrategicMapSecretModel::StrategicMapSecretModel(
 StrategicMapSecretModel* StrategicMapSecretModel::deserialize(const rapidjson::Value& json, const TraversibilityMap &mapping)
 {
 	JsonObjectReader r(json);
-	auto sector = r.GetString("sector");
-	if (!IS_VALID_SECTOR_SHORT_STRING(sector))
-	{
-		throw std::runtime_error("not a valid sector");
-	}
-
+	auto sector         = JsonUtility::parseSectorID(r.GetString("sector"));
 	auto landTypeString = r.GetString("secretLandType");
 	auto secretLandType = mapping.at(landTypeString);
 
@@ -28,7 +24,7 @@ StrategicMapSecretModel* StrategicMapSecretModel::deserialize(const rapidjson::V
 	auto foundLandType = mapping.at(landTypeString);
 
 	return new StrategicMapSecretModel(
-		SECTOR_FROM_SECTOR_SHORT_STRING(sector),
+		sector,
 		r.getOptionalBool("isSAMSite"),
 		r.getOptionalString("secretMapIcon") ,
 		secretLandType,
