@@ -61,7 +61,7 @@ use std::fmt;
 use std::ops;
 
 use caseless::Caseless;
-use unicode_normalization::{is_nfc, UnicodeNormalization};
+use unicode_normalization::{is_nfc, is_nfc_quick, IsNormalized, UnicodeNormalization};
 
 /// A unicode string normalized with NFC.
 ///
@@ -76,37 +76,26 @@ pub struct Nfc {
 impl Nfc {
     /// Creates a normalized caseless string.
     pub fn caseless(s: &str) -> Self {
-        let string = s.chars().nfc().default_case_fold().nfc().collect();
-        Self { inner: string }
+        let string: String = if s.is_ascii() {
+            s.to_ascii_lowercase()
+        } else {
+            s.chars().default_case_fold().collect()
+        };
+        Self::from(string)
     }
 
     /// Creates a normalized path string.
     /// Converts '\\' to '/'.
     pub fn path(s: &str) -> Self {
-        if is_nfc(s) && !s.contains('\\') {
-            let string = s.to_owned();
-            Self { inner: string }
-        } else {
-            let string = s
-                .chars()
-                .map(|x| if x == '\\' { '/' } else { x })
-                .nfc()
-                .collect();
-            Self { inner: string }
-        }
+        let s = s.replace('\\', "/");
+        Self::from(s)
     }
 
     /// Creates a normalized caseless path string.
     /// Converts '\\' to '/'.
     pub fn caseless_path(s: &str) -> Self {
-        let string = s
-            .chars()
-            .map(|x| if x == '\\' { '/' } else { x })
-            .nfc()
-            .default_case_fold()
-            .nfc()
-            .collect();
-        Self { inner: string }
+        let s = s.replace('\\', "/");
+        Self::caseless(&s)
     }
 
     /// Match `String::as_str()`.
@@ -129,13 +118,7 @@ impl AsRef<str> for Nfc {
 
 impl From<&str> for Nfc {
     fn from(s: &str) -> Self {
-        if is_nfc(s) {
-            let string = s.to_owned();
-            Self { inner: string }
-        } else {
-            let string = s.chars().nfc().collect();
-            Self { inner: string }
-        }
+        Self::from(s.to_owned())
     }
 }
 
@@ -143,11 +126,13 @@ impl From<&str> for Nfc {
 /// Consumes the original string.
 impl From<String> for Nfc {
     fn from(string: String) -> Self {
-        if is_nfc(&string) {
-            Self { inner: string }
-        } else {
-            let string = string.chars().nfc().collect();
-            Self { inner: string }
+        match is_nfc_quick(string.chars()) {
+            IsNormalized::Yes => Self { inner: string },
+            IsNormalized::Maybe if is_nfc(&string) => Self { inner: string },
+            _ => {
+                let string = string.chars().nfc().collect();
+                Self { inner: string }
+            }
         }
     }
 }
