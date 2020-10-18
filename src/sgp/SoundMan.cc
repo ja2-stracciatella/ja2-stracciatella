@@ -464,9 +464,6 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			}
 			// We stream from file
 			framesRead = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, bytesToWrite);
-			if (framesRead < bytesToWrite) {
-				// TODO: Reached the end -> Loop when sound is looped
-			}
 		} else if (sample->pInMemoryBuffer != NULL) {
 			auto posInBytes = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, channel->Pos);
 			auto requiredInputFrameCount = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite);
@@ -490,6 +487,15 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 		result = ma_pcm_rb_commit_write(channel->pRingBuffer, framesRead, pFramesInClientFormat);
 		if (result != MA_SUCCESS) {
 			throw std::runtime_error(ST::format("ma_pcm_rb_commit_write: {}", ma_result_description(result)).c_str());
+		}
+
+		channel->Pos += framesRead;
+		if (framesRead < bytesToWrite) {
+			// If the sound is looped, continue to fill buffer in the next iteration
+			if (channel->Loops > 1) {
+				channel->Loops -= 1;
+				channel->Pos = 0;
+			}
 		}
 	} catch (const std::runtime_error& err) {
 		SLOGE(ST::format(
@@ -862,8 +868,6 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 
 				if (samples < want_samples) {
 					Sound->State = CHANNEL_DEAD;
-				} else {
-					Sound->Pos += samples;
 				}
 
 				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples, (void**)src);
