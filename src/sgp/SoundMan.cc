@@ -154,6 +154,7 @@ static BOOLEAN gfEnableStartup  = TRUE;  // Allow hardware to start up
 static std::vector<INT32> gMixBuffer;
 
 SDL_AudioSpec gTargetAudioSpec;
+ma_decoder_config gTargetDecoderConfig;
 
 // Sample cache list for files loaded
 static SAMPLETAG pSampleList[SOUND_MAX_CACHED];
@@ -832,7 +833,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		SDL_RWseek(rwOps, 0, RW_SEEK_SET);
 
 		decoder = (ma_decoder*)ma_malloc(sizeof(ma_decoder), NULL);
-		auto result = ma_decoder_init(MiniaudioReadProc, MiniaudioSeekProc, rwOps, NULL, decoder);
+		auto result = ma_decoder_init(MiniaudioReadProc, MiniaudioSeekProc, rwOps, &gTargetDecoderConfig, decoder);
 		if (result != MA_SUCCESS) {
 			throw std::runtime_error(ST::format(
 				"Error initializing sound decoder for file \"{}\"- {}",
@@ -1002,22 +1003,10 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 
 mixing:
 				amount = MIN(samples, s->n_samples - Sound->pos);
-				if (s->uiFlags & SAMPLE_STEREO)
+				for (UINT32 i = 0; i < amount; ++i)
 				{
-					for (UINT32 i = 0; i < amount; ++i)
-					{
-						gMixBuffer[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
-						gMixBuffer[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
-					}
-				}
-				else
-				{
-					for (UINT32 i = 0; i < amount; i++)
-					{
-						const INT data = src[i];
-						gMixBuffer[2 * i + 0] += data * vol_l >> 7;
-						gMixBuffer[2 * i + 1] += data * vol_r >> 7;
-					}
+					gMixBuffer[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
+					gMixBuffer[2 * i + 1] += src[2 * i + 1] * vol_r >> 7;
 				}
 
 				Sound->pos += amount;
@@ -1078,6 +1067,8 @@ static BOOLEAN SoundInitHardware(void)
 
 	if (SDL_OpenAudio(&gTargetAudioSpec, NULL) != 0) return FALSE;
 
+	gTargetDecoderConfig = ma_decoder_config_init(SOUND_MA_SOUND_FORMAT, gTargetAudioSpec.channels, gTargetAudioSpec.freq);
+
 	std::fill(std::begin(pSoundList), std::end(pSoundList), SOUNDTAG{});
 	SDL_PauseAudio(0);
 	return TRUE;
@@ -1135,10 +1126,19 @@ static void FillRingBuffer(SAMPLETAG* sample, SOUNDTAG* channel) {
 	}
 	ma_uint64 framesRead = 0;
 	if (sample->pSource != NULL) {
+		auto result = ma_decoder_seek_to_pcm_frame(sample->pDecoder, channel->pos);
+		if (result != MA_SUCCESS) {
+			SLOGE(ST::format(
+				"Could not seek to current sound position for {} sample {} file \"{}\" available_write {}: {}",
+				channel - pSoundList, sample - pSampleList, sample->pName, available_write,
+				ma_result_description(result)
+			).c_str());
+			return;
+		}
 		// We stream from file
 		framesRead = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, available_write);
 		if (framesRead < available_write) {
-			// TODO: Reached the end.
+			// TODO: Reached the end -> Loop when sound is looped
 		}
 	}
 	result = ma_pcm_rb_commit_write(channel->pRingBuffer, framesRead, pFramesInClientFormat);
@@ -1170,16 +1170,19 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volu
 	channel->pCallbackData = data;
 
 	// Allocate ring buffer
-	Assert(channel->pRingBuffer == NULL);
-	channel->pRingBuffer = (ma_pcm_rb*)ma_malloc(sizeof(ma_pcm_rb), NULL);
-	ma_result result = ma_pcm_rb_init(SOUND_MA_SOUND_FORMAT, SOUND_CHANNELS, SOUND_RING_BUFFER_SIZE, NULL, NULL, channel->pRingBuffer);
-	if (result != MA_SUCCESS) {
-		SLOGE(ST::format(
-				"Error initializing ring buffer for channel {} sample {} file \"{}\": {}",
-				channel - pSoundList, sample - pSampleList, sample->pName,
-				ma_result_description(result)
-			).c_str());
-		return SOUND_ERROR;
+	if (channel->pRingBuffer == NULL) {
+		channel->pRingBuffer = (ma_pcm_rb*)ma_malloc(sizeof(ma_pcm_rb), NULL);
+		ma_result result = ma_pcm_rb_init(SOUND_MA_SOUND_FORMAT, SOUND_CHANNELS, SOUND_RING_BUFFER_SIZE, NULL, NULL, channel->pRingBuffer);
+		if (result != MA_SUCCESS) {
+			SLOGE(ST::format(
+					"Error initializing ring buffer for channel {} sample {} file \"{}\": {}",
+					channel - pSoundList, sample - pSampleList, sample->pName,
+					ma_result_description(result)
+				).c_str());
+			return SOUND_ERROR;
+		}
+	} else {
+		ma_pcm_rb_reset(channel->pRingBuffer);
 	}
 	// Fill ring buffer with initial data
 	FillRingBuffer(sample, channel);
@@ -1222,6 +1225,7 @@ static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 
 	SLOGD(ST::format("stopping channel channel {}", (channel - pSoundList)));
 	if (channel->pRingBuffer != NULL) {
+		ma_pcm_rb_uninit(channel->pRingBuffer);
 		ma_free(channel->pRingBuffer, NULL);
 		channel->pRingBuffer = NULL;
 	}
