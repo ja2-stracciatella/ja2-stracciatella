@@ -984,7 +984,6 @@ static Record* GetFirstRecordOnThisPage(Record* const RecordList, INT32 const iP
 static void DisplayEmailMessageSubjectDateFromLines(Email* pMail, INT32 iViewerY);
 static void DisplayNumberOfPagesToThisEmail(INT32 iViewerY);
 static void DrawEmailMessageDisplayTitleText(INT32 iViewerY);
-static void HandleAnySpecialEmailMessageEvents(INT32 iMessageId);
 static void HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail);
 static void PreProcessEmail(Email* pMail);
 
@@ -1000,7 +999,6 @@ static INT32 DisplayEmailMessage(Email* const m)
 	m->fRead = TRUE;
 
 	INT32 const offset = m->usOffset;
-	HandleAnySpecialEmailMessageEvents(offset);
 	HandleMailSpecialMessages(offset, m);
 
 	PreProcessEmail(m);
@@ -1649,20 +1647,6 @@ static void UpDateMessageRecordList(void)
 }
 
 
-static void HandleAnySpecialEmailMessageEvents(INT32 iMessageId)
-{
-	// handles any special message events
-	switch( iMessageId )
-	{
-		case( IMP_EMAIL_AGAIN ):
-			SetBookMark(IMP_BOOKMARK);
-			break;
-		case( IMP_EMAIL_INTRO ):
-			SetBookMark(IMP_BOOKMARK);
-			break;
-	}
-}
-
 
 static void ReDisplayBoxes(void)
 {
@@ -1726,6 +1710,13 @@ static void HandleMailSpecialMessages(UINT16 usMessageId, Email* pMail)
 		case AIM_MEDICAL_DEPOSIT_NO_REFUND:
 		case AIM_MEDICAL_DEPOSIT_PARTIAL_REFUND:
 			ModifyInsuranceEmails(usMessageId, pMail, AIM_MEDICAL_DEPOSIT_REFUND_LENGTH);
+			break;
+
+		default:
+			if (pMail->ubSender == CHAR_PROFILE_SITE)
+			{
+				SetBookMark(IMP_BOOKMARK);
+			}
 			break;
 	}
 }
