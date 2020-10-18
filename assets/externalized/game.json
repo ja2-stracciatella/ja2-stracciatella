@@ -78,7 +78,11 @@
         "better_aiming_choice": false,
         "go_prone_more_often": false,
         "threshold_cth_head": 67,
-        "threshold_cth_legs": 67
+        "threshold_cth_legs": 67,
+
+        //  Enemy guards on rooftop are disallowed to climb down
+        //  vanilla value: false
+        "stay_on_rooftop": false
     },
 
     //  How much variation should there be in elite soldier xp level?
