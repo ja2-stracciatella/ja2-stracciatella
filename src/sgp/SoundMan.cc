@@ -88,8 +88,12 @@ enum
 // The audio device will be opened with the following values
 #define SOUND_FREQ      44100
 #define SOUND_FORMAT    AUDIO_S16SYS
+#define SOUND_MA_SOUND_FORMAT ma_format::ma_format_s16
 #define SOUND_CHANNELS  2
 #define SOUND_SAMPLES   1024
+
+// Buffer size for a single channel in the sound system
+#define SOUND_RING_BUFFER_SIZE (512 * SOUND_SAMPLES)
 
 // Struct definition for sample slots in the cache
 // Holds the regular sample data, as well as the data for the random samples
@@ -985,12 +989,21 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 				const INT vol_r   = Sound->uiFadeVolume * (  0 + Sound->Pan) / MAXVOLUME;
 				UINT32    samples = want_samples;
 				UINT32    amount;
+				const INT16* src;
+				auto rbResult = ma_pcm_rb_acquire_read(Sound->pRingBuffer, &samples, (void**)&src);
+				if (rbResult != MA_SUCCESS) {
+					SLOGE(ST::format(
+						"Could not aquire read pointer for {} sample {} file \"{}\": {}",
+						Sound - pSoundList, s - pSampleList, s->pName,
+						ma_result_description(rbResult)
+					).c_str());
+					continue;
+				}
 
 mixing:
 				amount = MIN(samples, s->n_samples - Sound->pos);
 				if (s->uiFlags & SAMPLE_STEREO)
 				{
-					const INT16* const src = (const INT16*)s->pData + Sound->pos * 2;
 					for (UINT32 i = 0; i < amount; ++i)
 					{
 						gMixBuffer[2 * i + 0] += src[2 * i + 0] * vol_l >> 7;
@@ -999,7 +1012,6 @@ mixing:
 				}
 				else
 				{
-					const INT16* const src = (const INT16*)s->pData + Sound->pos;
 					for (UINT32 i = 0; i < amount; i++)
 					{
 						const INT data = src[i];
@@ -1022,6 +1034,16 @@ mixing:
 					{
 						Sound->State = CHANNEL_DEAD;
 					}
+				}
+
+				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples, (void**)src);
+				if (rbResult != MA_SUCCESS) {
+					SLOGE(ST::format(
+						"Could not commit read pointer for {} sample {} file \"{}\": {}",
+						Sound - pSoundList, s - pSampleList, s->pName,
+						ma_result_description(rbResult)
+					).c_str());
+					continue;
 				}
 			}
 		}
@@ -1085,6 +1107,51 @@ static SOUNDTAG* SoundGetFreeChannel(void)
 static UINT32 SoundGetUniqueID(void);
 
 
+static void FillRingBuffer(SAMPLETAG* sample, SOUNDTAG* channel) {
+	Assert(channel->pRingBuffer != NULL);
+
+	auto available_write = ma_pcm_rb_available_write(channel->pRingBuffer);
+	if (available_write < SOUND_RING_BUFFER_SIZE / 2) {
+		// If the ring buffer is still filled more than half the way, do nothing
+		return;
+	}
+	if (available_write < 0) {
+		SLOGE(ST::format(
+			"Read pointer is after write pointer for {} sample {} file \"{}\" available_write {}: {}",
+			channel - pSoundList, sample - pSampleList, sample->pName, available_write
+		).c_str());
+		return;
+	}
+
+	void* pFramesInClientFormat;
+	auto result = ma_pcm_rb_acquire_write(channel->pRingBuffer, &available_write, &pFramesInClientFormat);
+	if (result != MA_SUCCESS) {
+		SLOGE(ST::format(
+			"Could not aquire write pointer for {} sample {} file \"{}\" available_write {}: {}",
+			channel - pSoundList, sample - pSampleList, sample->pName, available_write,
+			ma_result_description(result)
+		).c_str());
+		return;
+	}
+	ma_uint64 framesRead = 0;
+	if (sample->pSource != NULL) {
+		// We stream from file
+		framesRead = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, available_write);
+		if (framesRead < available_write) {
+			// TODO: Reached the end.
+		}
+	}
+	result = ma_pcm_rb_commit_write(channel->pRingBuffer, framesRead, pFramesInClientFormat);
+	if (result != MA_SUCCESS) {
+		SLOGE(ST::format(
+			"Could not commit write for {} sample {} file \"{}\" available_write {}: {}",
+			channel - pSoundList, sample - pSampleList, sample->pName, available_write,
+			ma_result_description(result)
+		).c_str());
+		return;
+	}
+}
+
 /* Starts up a sample on the specified channel. Override parameters are passed
  * in through the structure pointer pParms. Any entry with a value of 0xffffffff
  * will be filled in by the system.
@@ -1101,6 +1168,21 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volu
 	channel->Pan           = pan;
 	channel->EOSCallback   = end_callback;
 	channel->pCallbackData = data;
+
+	// Allocate ring buffer
+	Assert(channel->pRingBuffer == NULL);
+	channel->pRingBuffer = (ma_pcm_rb*)ma_malloc(sizeof(ma_pcm_rb), NULL);
+	ma_result result = ma_pcm_rb_init(SOUND_MA_SOUND_FORMAT, SOUND_CHANNELS, SOUND_RING_BUFFER_SIZE, NULL, NULL, channel->pRingBuffer);
+	if (result != MA_SUCCESS) {
+		SLOGE(ST::format(
+				"Error initializing ring buffer for channel {} sample {} file \"{}\": {}",
+				channel - pSoundList, sample - pSampleList, sample->pName,
+				ma_result_description(result)
+			).c_str());
+		return SOUND_ERROR;
+	}
+	// Fill ring buffer with initial data
+	FillRingBuffer(sample, channel);
 
 	UINT32 uiSoundID = SoundGetUniqueID();
 	channel->uiSoundID    = uiSoundID;
@@ -1139,6 +1221,10 @@ static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 	if (channel->pSample == NULL) return FALSE;
 
 	SLOGD(ST::format("stopping channel channel {}", (channel - pSoundList)));
+	if (channel->pRingBuffer != NULL) {
+		ma_free(channel->pRingBuffer, NULL);
+		channel->pRingBuffer = NULL;
+	}
 	channel->State = CHANNEL_STOP;
 	return TRUE;
 }
