@@ -504,81 +504,61 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 
 	Assert(channel->pRingBuffer != NULL);
 
-	auto bytesToWrite = ma_pcm_rb_available_write(channel->pRingBuffer);
-	if (bytesToWrite < SOUND_RING_BUFFER_SIZE / 2) {
-		// If the ring buffer is still filled more than half the way, do nothing
-		return;
-	}
-	if (bytesToWrite < 0) {
-		SLOGE(ST::format(
-			"Read pointer is after write pointer for {} sample {} file \"{}\" bytesToWrite {}: {}",
-			channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite
-		).c_str());
-		return;
-	}
+	try {
+		auto bytesToWrite = ma_pcm_rb_available_write(channel->pRingBuffer);
+		if (bytesToWrite < SOUND_RING_BUFFER_SIZE / 2) {
+			// If the ring buffer is still filled more than half the way, do nothing
+			return;
+		}
+		if (bytesToWrite < 0) {
+			throw std::runtime_error("Read pointer is after write pointer, this should not happen");
+		}
 
-	void* pFramesInClientFormat;
-	auto result = ma_pcm_rb_acquire_write(channel->pRingBuffer, &bytesToWrite, &pFramesInClientFormat);
-	if (result != MA_SUCCESS) {
-		SLOGE(ST::format(
-			"Could not aquire write pointer for {} sample {} file \"{}\" bytesToWrite {}: {}",
-			channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite,
-			ma_result_description(result)
-		).c_str());
-		return;
-	}
-	ma_uint64 framesRead = 0;
-	if (sample->pFile != NULL) {
-		auto result = ma_decoder_seek_to_pcm_frame(sample->pDecoder, channel->pos);
+		void* pFramesInClientFormat;
+		auto result = ma_pcm_rb_acquire_write(channel->pRingBuffer, &bytesToWrite, &pFramesInClientFormat);
 		if (result != MA_SUCCESS) {
-			SLOGE(ST::format(
-				"Could not seek to current sound position for {} sample {} file \"{}\" bytesToWrite {}: {}",
-				channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite,
-				ma_result_description(result)
-			).c_str());
-			return;
+			throw std::runtime_error(ST::format("ma_pcm_rb_acquire_write: {}", ma_result_description(result)).c_str());
 		}
-		// We stream from file
-		framesRead = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, bytesToWrite);
-		if (framesRead < bytesToWrite) {
-			// TODO: Reached the end -> Loop when sound is looped
+		ma_uint64 framesRead = 0;
+		if (sample->pFile != NULL) {
+			auto result = ma_decoder_seek_to_pcm_frame(sample->pDecoder, channel->pos);
+			if (result != MA_SUCCESS) {
+				throw std::runtime_error(ST::format("ma_decoder_seek_to_pcm_frame: {}", ma_result_description(result)).c_str());
+			}
+			// We stream from file
+			framesRead = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, bytesToWrite);
+			if (framesRead < bytesToWrite) {
+				// TODO: Reached the end -> Loop when sound is looped
+			}
+		} else if (sample->pInMemoryBuffer != NULL) {
+			auto requiredInputFrameCount = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite);
+			auto availableBytes = MIN(requiredInputFrameCount, sample->uiBufferSize - channel->pos);
+			auto expectedOutputFrameCount = ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableBytes);
+			
+			auto result = ma_data_converter_process_pcm_frames(
+				sample->pDataConverter,
+				sample->pInMemoryBuffer + channel->pos,
+				&availableBytes,
+				pFramesInClientFormat,
+				&expectedOutputFrameCount
+			);
+			if (result != MA_SUCCESS) {
+				throw std::runtime_error(ST::format("ma_data_converter_process_pcm_frames: {}", ma_result_description(result)).c_str());
+			}
+			framesRead = expectedOutputFrameCount;
+		} else {
+			throw std::runtime_error("Dont know how to process ring buffer");
 		}
-	} else if (sample->pInMemoryBuffer != NULL) {
-		auto requiredInputFrameCount = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite);
-		auto availableBytes = MIN(requiredInputFrameCount, sample->uiBufferSize - channel->pos);
-		auto expectedOutputFrameCount = ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableBytes);
-		
-		auto result = ma_data_converter_process_pcm_frames(
-			sample->pDataConverter,
-			sample->pInMemoryBuffer + channel->pos,
-			&availableBytes,
-			pFramesInClientFormat,
-			&expectedOutputFrameCount
-		);
+		result = ma_pcm_rb_commit_write(channel->pRingBuffer, framesRead, pFramesInClientFormat);
 		if (result != MA_SUCCESS) {
-			SLOGE(ST::format(
-				"Error converting data for {} sample {} file \"{}\" bytesToWrite {}: {}",
-				channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite,
-				ma_result_description(result)
-			).c_str());
-			return;
+			throw std::runtime_error(ST::format("ma_pcm_rb_commit_write: {}", ma_result_description(result)).c_str());
 		}
-		framesRead = expectedOutputFrameCount;
-	} else {
+	} catch (const std::runtime_error& err) {
 		SLOGE(ST::format(
-			"Dont know how to fill stream for {} sample {} file \"{}\" bytesToWrite {}: {}",
-			channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite,
-			ma_result_description(result)
+			"Error processing audio stream for channel {}, sample {}, file \"{}\": {}",
+			channel - pSoundList, sample - pSampleList, sample->pName,
+			err.what()
 		).c_str());
-	}
-	result = ma_pcm_rb_commit_write(channel->pRingBuffer, framesRead, pFramesInClientFormat);
-	if (result != MA_SUCCESS) {
-		SLOGE(ST::format(
-			"Could not commit write for {} sample {} file \"{}\" bytesToWrite {}: {}",
-			channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite,
-			ma_result_description(result)
-		).c_str());
-		return;
 	}
 }
 
@@ -806,38 +786,38 @@ static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8>& buf, SDL_AudioFormat forma
 {
 	SAMPLETAG* s = SoundGetEmptySample();
 
-	// if we don't have a sample slot
-	if (s == NULL)
-	{
-		SLOGE("SoundLoadBuffer Error: sound channels are full");
+	try {
+		// if we don't have a sample slot
+		if (s == NULL)
+		{
+			throw std::runtime_error("sound channels are full");
+		}
+
+		UINT8* inMemoryBuffer = new UINT8[buf.size()]{};
+		memcpy(inMemoryBuffer, buf.data(), buf.size());
+
+		ma_data_converter_config config = ma_data_converter_config_init(
+			// TODO: Fix sound format
+			SOUND_MA_SOUND_FORMAT,
+			SOUND_MA_SOUND_FORMAT,
+			channels,
+			gTargetAudioSpec.channels,
+			freq,
+			gTargetAudioSpec.freq
+		);
+		ma_data_converter* converter = (ma_data_converter*)ma_malloc(sizeof(ma_data_converter), NULL);
+		auto result = ma_data_converter_init(&config, converter);
+		if (result != MA_SUCCESS) {
+			throw std::runtime_error(ST::format("ma_data_converter_init: {}", ma_result_description(result)).c_str());
+		}
+
+		s->pInMemoryBuffer = inMemoryBuffer;
+		s->uiBufferSize = buf.size();
+		s->pDataConverter = converter;
+	} catch (const std::runtime_error& err) {
+		SLOGE("SoundLoadBuffer Error: {}", err.what());
 		return NULL;
 	}
-
-	UINT8* inMemoryBuffer = new UINT8[buf.size()]{};
-	memcpy(inMemoryBuffer, buf.data(), buf.size());
-
-	ma_data_converter_config config = ma_data_converter_config_init(
-		// TODO: Fix sound format
-		SOUND_MA_SOUND_FORMAT,
-		SOUND_MA_SOUND_FORMAT,
-		channels,
-		gTargetAudioSpec.channels,
-		freq,
-		gTargetAudioSpec.freq
-	);
-	ma_data_converter* converter = (ma_data_converter*)ma_malloc(sizeof(ma_data_converter), NULL);
-	auto result = ma_data_converter_init(&config, converter);
-	if (result != MA_SUCCESS) {
-		SLOGE(ST::format(
-			"Error initializing sound converter for buffer: {}",
-			ma_result_description(result)
-		));
-		return NULL;
-	}
-
-	s->pInMemoryBuffer = inMemoryBuffer;
-	s->uiBufferSize = buf.size();
-	s->pDataConverter = converter;
 
 	UINT8 samplechannels = std::min(channels, gTargetAudioSpec.channels);
 	bool ok = SoundConvertBuffer(buf, format, channels, freq, gTargetAudioSpec.format, samplechannels, gTargetAudioSpec.freq);
