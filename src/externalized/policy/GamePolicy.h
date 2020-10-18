@@ -54,6 +54,8 @@ public:
 	bool ai_go_prone_more_often;          // especially when already facing the right direction
 	int8_t threshold_cth_head;            // threshold AI always take head shots, increase game difficulty
 	int8_t threshold_cth_legs;            // threshold AI switch to leg shots from torso
+
+	bool avoid_ambushes;                  // AI able to recognize and avoid ambushes on seeing friendlies' corpses
 	bool stay_on_rooftop;                 // AI on guard on rooftop are disallowed to go down
 
 	int8_t enemy_elite_minimum_level;     // increase challenge: minimum experience level for enemy elite soldier

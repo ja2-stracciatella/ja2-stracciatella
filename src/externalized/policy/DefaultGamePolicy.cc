@@ -30,6 +30,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	ai_go_prone_more_often = ai.getOptionalBool("go_prone_more_often");
 	threshold_cth_head = ai.getOptionalInt("threshold_cth_head", 67);
 	threshold_cth_legs = ai.getOptionalInt("threshold_cth_legs", 67);
+
+	avoid_ambushes = ai.getOptionalBool("avoid_ambushes");
 	stay_on_rooftop = ai.getOptionalBool("stay_on_rooftop");
 
 	enemy_elite_minimum_level = gp.getOptionalInt("enemy_elite_minimum_level", 6);

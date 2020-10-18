@@ -80,6 +80,11 @@
         "threshold_cth_head": 67,
         "threshold_cth_legs": 67,
 
+        //  AI is capable of knowing and avoid of an ambush on seeing corpses of friendlies, but
+        //  it was not enabled in the original game due to a bug
+        //  vanilla value: false
+        "avoid_ambushes": false,
+
         //  Enemy guards on rooftop are disallowed to climb down
         //  vanilla value: false
         "stay_on_rooftop": false

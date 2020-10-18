@@ -1984,12 +1984,14 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 						if (pSoldier->usActionData != NOWHERE)
 						{
 							// Check for a trap
-							if ( !ArmySeesOpponents() )
+							if (gamepolicy(avoid_ambushes) && !ArmySeesOpponents())
 							{
-								if ( GetNearestRottingCorpseAIWarning( pSoldier->usActionData ) > 0 )
+								UINT8 ubWarnLevel = GetNearestRottingCorpseAIWarning(pSoldier->usActionData);
+								if (ubWarnLevel > 0)
 								{
 									// abort! abort!
 									pSoldier->usActionData = NOWHERE;
+									SLOGD(ST::format("TacticalAI: soldier #{} avoiding ambush trap on seeing corpses (warning level {})", pSoldier->ubID, ubWarnLevel));
 								}
 							}
 						}

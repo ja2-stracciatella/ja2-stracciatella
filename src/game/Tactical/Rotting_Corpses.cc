@@ -498,6 +498,7 @@ try
 
 	c->fActivated = TRUE;
 	ani->v.user.uiData = CORPSE2ID(c);
+	c->def.ubAIWarningValue = CORPSE_WARNING_MAX;
 
 	SetRenderFlags(RENDER_FLAG_FULL);
 
