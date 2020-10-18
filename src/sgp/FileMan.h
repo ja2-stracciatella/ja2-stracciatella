@@ -12,6 +12,7 @@
 void FileDelete(const ST::string &path);
 
 void FileRead( SGPFile*, void*       pDest, size_t uiBytesToRead);
+size_t FileReadAtMost( SGPFile*, void*       pDest, size_t uiBytesToRead);
 void FileWrite(SGPFile*, void const* pDest, size_t uiBytesToWrite);
 
 /* Helper method to read a string from file */

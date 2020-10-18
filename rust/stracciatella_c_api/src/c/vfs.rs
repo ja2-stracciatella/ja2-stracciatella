@@ -3,6 +3,7 @@
 //! [`stracciatella::vfs`]: ../../../stracciatella/vfs/index.html
 
 use std::io::{Read, Seek, SeekFrom, Write};
+use std::usize;
 
 use stracciatella::config::EngineOptions;
 use stracciatella::unicode::Nfc;
@@ -113,6 +114,25 @@ pub extern "C" fn VfsFile_readExact(file: *mut VfsFile, buffer: *mut u8, length:
         remember_rust_error(format!("VfsFile_readExact {} {}: {}", file, length, err));
     }
     no_rust_error()
+}
+
+/// Reads data from the virtual file might return less bytes than requested
+/// Returns the number of bytes read or ´usize::MAX´ if there is an error.
+/// Sets the rust error.
+#[no_mangle]
+pub unsafe extern "C" fn VfsFile_read(file: *mut VfsFile, buffer: *mut u8, length: usize) -> usize {
+    forget_rust_error();
+    let file = unsafe_mut(file);
+    let buffer = unsafe_slice_mut(buffer, length);
+    match file.read(buffer) {
+        Ok(b) => {
+            return b;
+        },
+        Err(err) => {
+            remember_rust_error(format!("VfsFile_readExact {} {}: {}", file, length, err));
+            return usize::MAX;
+        }
+    };
 }
 
 /// Seeks to an offset relative to the start of the virtual file.

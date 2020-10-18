@@ -88,6 +88,28 @@ void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
 	}
 }
 
+size_t FileReadAtMost(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
+{
+	size_t bytesRead = 0;
+	if (f->flags & SGPFILE_REAL)
+	{
+		bytesRead = File_read(f->u.file, reinterpret_cast<uint8_t*>(pDest), uiBytesToRead);
+	}
+	else
+	{
+		bytesRead = VfsFile_read(f->u.vfile, static_cast<uint8_t*>(pDest), uiBytesToRead);
+	}
+
+	if (bytesRead == SIZE_MAX)
+	{
+		RustPointer<char> err{getRustError()};
+		SLOGE("FileReadAtMost: %s", err.get());
+		throw std::runtime_error("Reading from file failed");
+	}
+
+	return bytesRead;
+}
+
 ST::string FileReadString(SGPFile* const f, size_t const uiBytesToRead)
 {
 	ST::char_buffer buf(uiBytesToRead, '\0');
@@ -146,13 +168,7 @@ static int64_t SGPSizeRW(SDL_RWops *context)
 static size_t SGPReadRW(SDL_RWops *context, void *ptr, size_t size, size_t maxnum)
 {
 	SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
-	UINT32 posBefore = UINT32(FileGetPos(sgpFile));
-
-	FileRead(sgpFile, ptr, size * maxnum);
-
-	UINT32 posAfter = UINT32(FileGetPos(sgpFile));
-
-	return (posAfter - posBefore) / size;
+	return FileReadAtMost(sgpFile, ptr, size * maxnum) / size;
 }
 
 static size_t SGPWriteRW(SDL_RWops *context, const void *ptr, size_t size, size_t num)
