@@ -28,6 +28,22 @@
 #include <iterator>
 #include <stdexcept>
 
+// Miniaudio includes needs some defines
+
+#define STB_VORBIS_HEADER_ONLY
+#include "extras/stb_vorbis.c"
+
+#define MINIAUDIO_IMPLEMENTATION
+
+#define MA_NO_DEVICE_IO
+#define MA_NO_GENERATION
+#define MA_NO_ENCODING
+#include <miniaudio.h>
+
+#undef STB_VORBIS_HEADER_ONLY
+#include "extras/stb_vorbis.c"
+
+#undef MINIAUDIO_IMPLEMENTATION
 
 /*
  * from\to FREE PLAY STOP DEAD
@@ -81,8 +97,12 @@ struct SAMPLETAG
 {
 	ST::string pName;  // Path to sample data
 	UINT32  n_samples;
+	UINT8*  pData;       // pointer to sample data memory (if playing from an in-memory buffer)
+	SGPFile* pSource;  // pointer to a SDL_RWops representing the file that we stream from
+	SDL_RWops* pRWOps; // RWOps on either pData or pSource
+	ma_decoder* pDecoder; // pointer to a decoder that decodes the data from the SDL_RWops
+
 	UINT32  uiFlags;     // Status flags
-	UINT8*  pData;       // pointer to sample data memory
 	UINT32  uiCacheHits;
 
 	// Random sound data
@@ -103,6 +123,7 @@ struct SAMPLETAG
 struct SOUNDTAG
 {
 	volatile UINT State;
+	ma_pcm_rb*    pRingBuffer; // Pointer to the ring buffer that holds decoded and transformed data
 	SAMPLETAG*    pSample;
 	UINT32        uiSoundID;
 	void          (*EOSCallback)(void*);
@@ -745,6 +766,25 @@ static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8>& buf, SDL_AudioFormat forma
 	return s;
 }
 
+size_t MiniaudioReadProc(ma_decoder* pDecoder, void* pBufferOut, size_t bytesToRead) {
+	auto rwOps = (SDL_RWops*)pDecoder->pUserData;
+	return SDL_RWread(rwOps, pBufferOut, sizeof(UINT8), bytesToRead);
+}
+
+ma_bool32 MiniaudioSeekProc(ma_decoder* pDecoder, int byteOffset, ma_seek_origin origin) {
+	auto rwOps = (SDL_RWops*)pDecoder->pUserData;
+	auto sdlOrigin = RW_SEEK_SET;
+	if (origin == ma_seek_origin::ma_seek_origin_current) {
+		sdlOrigin = RW_SEEK_CUR;
+	}
+	if (origin == ma_seek_origin::ma_seek_origin_end) {
+		sdlOrigin = RW_SEEK_END;
+	}
+
+	return SDL_RWseek(rwOps, byteOffset, sdlOrigin);
+}
+
+
 /* Loads a sound file from disk into the cache, allocating memory and a slot
  * for storage.
  *
@@ -759,42 +799,65 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		return NULL;
 	}
 
-	AutoSGPFile hFile;
+	SGPFile* hFile = NULL;
+	SDL_RWops* rwOps = NULL;
+	ma_decoder* decoder = NULL;
 
 	try
 	{
 		hFile = GCM->openGameResForReading(pFilename);
+		rwOps = FileGetRWOps(hFile);
+
+		SDL_AudioSpec wavSpec;
+		Uint32 wavLength;
+		Uint8 *wavBuffer;
+
+		if (SDL_LoadWAV_RW(rwOps, 0,  &wavSpec, &wavBuffer, &wavLength) == NULL) {
+			throw std::runtime_error(ST::format("Error reading WAV file \"{}\"- {}", pFilename, SDL_GetError()).c_str());
+		}
+
+		std::vector<UINT8> buf(wavBuffer, wavBuffer + wavLength);
+		SDL_FreeWAV(wavBuffer);
+
+		SAMPLETAG* s = SoundLoadBuffer(buf, wavSpec.format, wavSpec.channels, wavSpec.freq);
+		if (s == NULL)
+		{
+			throw std::runtime_error(ST::format("Error converting sound file \"%s\"", pFilename).c_str());
+		}
+
+		SDL_RWseek(rwOps, 0, RW_SEEK_SET);
+
+		decoder = (ma_decoder*)ma_malloc(sizeof(ma_decoder), NULL);
+		auto result = ma_decoder_init(MiniaudioReadProc, MiniaudioSeekProc, rwOps, NULL, decoder);
+		if (result != MA_SUCCESS) {
+			throw std::runtime_error(ST::format(
+				"Error initializing sound decoder for file \"{}\"- {}",
+				pFilename,
+				ma_result_description(result)
+			).c_str());
+		}
+		s->pSource = hFile;
+		s->pDecoder = decoder;
+		s->pName = pFilename;
+
+		SLOGD("SoundLoadDisk Success for file \"%s\"", pFilename);
+		return s;
 	}
 	catch (const std::runtime_error& err)
 	{
-		SLOGA("SoundLoadDisk Error: %s", err.what());
+		SLOGE("SoundLoadDisk Error: %s", err.what());
+		// Clean up possible allocations
+		if (hFile != NULL) {
+			FileClose(hFile);
+		}
+		if (rwOps != NULL) {
+			SDL_FreeRW(rwOps);
+		}
+		if (decoder != NULL) {
+			ma_free(decoder, NULL);
+		}
 		return NULL;
 	}
-
-	SDL_RWops* rwOps = FileGetRWOps(hFile);
-	SDL_AudioSpec wavSpec;
-	Uint32 wavLength;
-	Uint8 *wavBuffer;
-
-	if (SDL_LoadWAV_RW(rwOps, 0,  &wavSpec, &wavBuffer, &wavLength) == NULL) {
-		SLOGE("SoundLoadDisk Error: Error loading file \"%s\"- %s", pFilename, SDL_GetError());
-		return NULL;
-	}
-
-	std::vector<UINT8> buf(wavBuffer, wavBuffer + wavLength);
-	SDL_FreeWAV(wavBuffer);
-	SDL_FreeRW(rwOps);
-
-	SAMPLETAG* s = SoundLoadBuffer(buf, wavSpec.format, wavSpec.channels, wavSpec.freq);
-	if (s == NULL)
-	{
-		SLOGE("SoundLoadDisk: Error converting sound file \"%s\"", pFilename);
-		return NULL;
-	}
-
-	s->pName = pFilename;
-
-	return s;
 }
 
 
@@ -855,7 +918,16 @@ static void SoundFreeSample(SAMPLETAG* s)
 	assert(s->uiInstances == 0);
 
 	DecreaseSoundMemoryUsedBySample(s);
-	delete[] s->pData;
+	delete s->pDecoder;
+	if (s->pRWOps != NULL) {
+		SDL_FreeRW(s->pRWOps);
+	}
+	if (s->pSource != NULL) {
+		FileClose(s->pSource);
+	}
+	if (s->pData != NULL) {
+		delete[] s->pData;
+	}
 	*s = SAMPLETAG{};
 }
 
