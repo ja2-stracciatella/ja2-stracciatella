@@ -20,6 +20,8 @@ static void readListOfItems(rapidjson::Value &value, std::vector<const ItemModel
 
 DefaultIMPPolicy::DefaultIMPPolicy(rapidjson::Document *json, const ItemSystem *itemSystem)
 {
+	JsonUtility::parseListStrings((*json)["activation_codes"], m_activationCodes);
+
 	JsonObjectReader r(*json);
 	m_startingLevel = r.getOptionalUInt("starting_level", 1);
 
@@ -27,6 +29,15 @@ DefaultIMPPolicy::DefaultIMPPolicy(rapidjson::Document *json, const ItemSystem *
 
 	readListOfItems((*json)["if_good_shooter"], m_goodShooterItems, itemSystem);
 	readListOfItems((*json)["if_normal_shooter"], m_normalShooterItems, itemSystem);
+}
+
+bool DefaultIMPPolicy::isCodeAccepted(const ST::string& code) const
+{
+	for (auto& s : m_activationCodes)
+	{
+		if (s == code) return true;
+	}
+	return false;
 }
 
 uint8_t DefaultIMPPolicy::getStartingLevel() const

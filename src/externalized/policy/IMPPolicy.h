@@ -9,6 +9,7 @@ class ItemSystem;
 class IMPPolicy
 {
 public:
+	virtual bool isCodeAccepted(const ST::string& code) const = 0;
 	virtual uint8_t getStartingLevel() const = 0;
 	virtual const std::vector<const ItemModel *> & getInventory() const = 0;
 	virtual const std::vector<const ItemModel *> & getGoodShooterItems() const = 0;
