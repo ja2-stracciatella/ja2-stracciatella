@@ -101,8 +101,14 @@ struct SAMPLETAG
 {
 	ST::string pName;  // Path to sample data
 	UINT32  n_samples;
+
 	UINT8*  pData;       // pointer to sample data memory (if playing from an in-memory buffer)
-	SGPFile* pSource;  // pointer to a SDL_RWops representing the file that we stream from
+
+	UINT8* pInMemoryBuffer; // pointer to sample data memory (if playing from an in-memory buffer)
+	UINT32 uiBufferSize;
+	ma_data_converter* pDataConverter; // pointer to a data converter that decodes the data from pData
+
+	SGPFile* pFile;  // pointer to a SDL_RWops representing the file that we stream from
 	SDL_RWops* pRWOps; // RWOps on either pData or pSource
 	ma_decoder* pDecoder; // pointer to a decoder that decodes the data from the SDL_RWops
 
@@ -714,6 +720,41 @@ static bool SoundConvertBuffer(std::vector<UINT8>& buf,
  * Returns: The sample if successful, NULL otherwise. */
 static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8>& buf, SDL_AudioFormat format, UINT8 channels, int freq)
 {
+	SAMPLETAG* s = SoundGetEmptySample();
+
+	// if we don't have a sample slot
+	if (s == NULL)
+	{
+		SLOGE("SoundLoadBuffer Error: sound channels are full");
+		return NULL;
+	}
+
+	UINT8* inMemoryBuffer = new UINT8[buf.size()]{};
+	memcpy(inMemoryBuffer, buf.data(), buf.size());
+
+	ma_data_converter_config config = ma_data_converter_config_init(
+		// TODO: Fix sound format
+		SOUND_MA_SOUND_FORMAT,
+		SOUND_MA_SOUND_FORMAT,
+		channels,
+		gTargetAudioSpec.channels,
+		freq,
+		gTargetAudioSpec.freq
+	);
+	ma_data_converter* converter = (ma_data_converter*)ma_malloc(sizeof(ma_data_converter), NULL);
+	auto result = ma_data_converter_init(&config, converter);
+	if (result != MA_SUCCESS) {
+		SLOGE(ST::format(
+			"Error initializing sound converter for buffer: {}",
+			ma_result_description(result)
+		));
+		return NULL;
+	}
+
+	s->pInMemoryBuffer = inMemoryBuffer;
+	s->uiBufferSize = buf.size();
+	s->pDataConverter = converter;
+
 	UINT8 samplechannels = std::min(channels, gTargetAudioSpec.channels);
 	bool ok = SoundConvertBuffer(buf, format, channels, freq, gTargetAudioSpec.format, samplechannels, gTargetAudioSpec.freq);
 	if (!ok)
@@ -740,30 +781,11 @@ static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8>& buf, SDL_AudioFormat forma
 		}
 	}
 
-	// if all the sample slots are full, unloading one
-	SAMPLETAG* s = SoundGetEmptySample();
-	if (s == NULL)
-	{
-		SoundCleanCache();
-		s = SoundGetEmptySample();
-	}
-
-	// if we still don't have a sample slot
-	if (s == NULL)
-	{
-		SLOGE("SoundLoadBuffer Error: sound channels are full");
-		return NULL;
-	}
-
 	UINT8* sampledata = new UINT8[samplesize]{};
 	memcpy(sampledata, buf.data(), samplesize);
 
 	s->pData = sampledata;
 	s->uiFlags |= SAMPLE_ALLOCATED;
-	if (samplechannels != 1) {
-		Assert(samplechannels == 2);
-		s->uiFlags |= SAMPLE_STEREO;
-	}
 	s->n_samples = UINT32(samplesize / GetSampleSize(s));
 
 	IncreaseSoundMemoryUsedBySample(s);
@@ -841,7 +863,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 				ma_result_description(result)
 			).c_str());
 		}
-		s->pSource = hFile;
+		s->pFile = hFile;
 		s->pDecoder = decoder;
 		s->pName = pFilename;
 
@@ -901,7 +923,7 @@ static BOOLEAN SoundCleanCache(void)
 }
 
 
-/* Returns an available sample.
+/* Returns an available sample. Clears out other samples if necessary
  *
  * Returns: A free sample or NULL if none are left. */
 static SAMPLETAG* SoundGetEmptySample(void)
@@ -911,9 +933,16 @@ static SAMPLETAG* SoundGetEmptySample(void)
 		if (!(i->uiFlags & SAMPLE_ALLOCATED)) return i;
 	}
 
+	// Clean cache if no sample has been found yet and try again
+	SoundCleanCache();
+
+	FOR_EACH(SAMPLETAG, i, pSampleList)
+	{
+		if (!(i->uiFlags & SAMPLE_ALLOCATED)) return i;
+	}
+
 	return NULL;
 }
-
 
 // Frees up a sample referred to by its index slot number.
 static void SoundFreeSample(SAMPLETAG* s)
@@ -927,8 +956,8 @@ static void SoundFreeSample(SAMPLETAG* s)
 	if (s->pRWOps != NULL) {
 		SDL_FreeRW(s->pRWOps);
 	}
-	if (s->pSource != NULL) {
-		FileClose(s->pSource);
+	if (s->pFile != NULL) {
+		FileClose(s->pFile);
 	}
 	if (s->pData != NULL) {
 		delete[] s->pData;
@@ -1097,55 +1126,81 @@ static SOUNDTAG* SoundGetFreeChannel(void)
 
 static UINT32 SoundGetUniqueID(void);
 
-
 static void FillRingBuffer(SAMPLETAG* sample, SOUNDTAG* channel) {
 	Assert(channel->pRingBuffer != NULL);
 
-	auto available_write = ma_pcm_rb_available_write(channel->pRingBuffer);
-	if (available_write < SOUND_RING_BUFFER_SIZE / 2) {
+	auto bytesToWrite = ma_pcm_rb_available_write(channel->pRingBuffer);
+	if (bytesToWrite < SOUND_RING_BUFFER_SIZE / 2) {
 		// If the ring buffer is still filled more than half the way, do nothing
 		return;
 	}
-	if (available_write < 0) {
+	if (bytesToWrite < 0) {
 		SLOGE(ST::format(
-			"Read pointer is after write pointer for {} sample {} file \"{}\" available_write {}: {}",
-			channel - pSoundList, sample - pSampleList, sample->pName, available_write
+			"Read pointer is after write pointer for {} sample {} file \"{}\" bytesToWrite {}: {}",
+			channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite
 		).c_str());
 		return;
 	}
 
 	void* pFramesInClientFormat;
-	auto result = ma_pcm_rb_acquire_write(channel->pRingBuffer, &available_write, &pFramesInClientFormat);
+	auto result = ma_pcm_rb_acquire_write(channel->pRingBuffer, &bytesToWrite, &pFramesInClientFormat);
 	if (result != MA_SUCCESS) {
 		SLOGE(ST::format(
-			"Could not aquire write pointer for {} sample {} file \"{}\" available_write {}: {}",
-			channel - pSoundList, sample - pSampleList, sample->pName, available_write,
+			"Could not aquire write pointer for {} sample {} file \"{}\" bytesToWrite {}: {}",
+			channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite,
 			ma_result_description(result)
 		).c_str());
 		return;
 	}
 	ma_uint64 framesRead = 0;
-	if (sample->pSource != NULL) {
+	if (sample->pFile != NULL) {
 		auto result = ma_decoder_seek_to_pcm_frame(sample->pDecoder, channel->pos);
 		if (result != MA_SUCCESS) {
 			SLOGE(ST::format(
-				"Could not seek to current sound position for {} sample {} file \"{}\" available_write {}: {}",
-				channel - pSoundList, sample - pSampleList, sample->pName, available_write,
+				"Could not seek to current sound position for {} sample {} file \"{}\" bytesToWrite {}: {}",
+				channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite,
 				ma_result_description(result)
 			).c_str());
 			return;
 		}
 		// We stream from file
-		framesRead = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, available_write);
-		if (framesRead < available_write) {
+		framesRead = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, bytesToWrite);
+		if (framesRead < bytesToWrite) {
 			// TODO: Reached the end -> Loop when sound is looped
 		}
+	} else if (sample->pInMemoryBuffer != NULL) {
+		auto requiredInputFrameCount = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite);
+		auto availableBytes = MIN(requiredInputFrameCount, sample->uiBufferSize - channel->pos);
+		auto expectedOutputFrameCount = ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableBytes);
+		
+		auto result = ma_data_converter_process_pcm_frames(
+			sample->pDataConverter,
+			sample->pInMemoryBuffer + channel->pos,
+			&availableBytes,
+			pFramesInClientFormat,
+			&expectedOutputFrameCount
+		);
+		if (result != MA_SUCCESS) {
+			SLOGE(ST::format(
+				"Error converting data for {} sample {} file \"{}\" bytesToWrite {}: {}",
+				channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite,
+				ma_result_description(result)
+			).c_str());
+			return;
+		}
+		framesRead = expectedOutputFrameCount;
+	} else {
+		SLOGE(ST::format(
+			"Dont know how to fill stream for {} sample {} file \"{}\" bytesToWrite {}: {}",
+			channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite,
+			ma_result_description(result)
+		).c_str());
 	}
 	result = ma_pcm_rb_commit_write(channel->pRingBuffer, framesRead, pFramesInClientFormat);
 	if (result != MA_SUCCESS) {
 		SLOGE(ST::format(
-			"Could not commit write for {} sample {} file \"{}\" available_write {}: {}",
-			channel - pSoundList, sample - pSampleList, sample->pName, available_write,
+			"Could not commit write for {} sample {} file \"{}\" bytesToWrite {}: {}",
+			channel - pSoundList, sample - pSampleList, sample->pName, bytesToWrite,
 			ma_result_description(result)
 		).c_str());
 		return;
@@ -1184,14 +1239,16 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volu
 	} else {
 		ma_pcm_rb_reset(channel->pRingBuffer);
 	}
-	// Fill ring buffer with initial data
-	FillRingBuffer(sample, channel);
 
 	UINT32 uiSoundID = SoundGetUniqueID();
 	channel->uiSoundID    = uiSoundID;
 	channel->pSample      = sample;
 	channel->uiTimeStamp  = GetClock();
 	channel->pos          = 0;
+
+	// Fill ring buffer with initial data
+	FillRingBuffer(sample, channel);
+
 	channel->State        = CHANNEL_PLAY;
 
 	sample->uiInstances++;
@@ -1224,6 +1281,7 @@ static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 	if (channel->pSample == NULL) return FALSE;
 
 	SLOGD(ST::format("stopping channel channel {}", (channel - pSoundList)));
+	// TODO: Probably not necessary, we can also just reset the buffer
 	if (channel->pRingBuffer != NULL) {
 		ma_pcm_rb_uninit(channel->pRingBuffer);
 		ma_free(channel->pRingBuffer, NULL);
