@@ -28,8 +28,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	JsonObjectReader ai = JsonObjectReader(gp.GetValue("ai"));
 	ai_better_aiming_choice = ai.getOptionalBool("better_aiming_choice");
 	ai_go_prone_more_often = ai.getOptionalBool("go_prone_more_often");
-	threshold_cth_head = gp.getOptionalInt("threshold_cth_head", 67);
-	threshold_cth_legs = gp.getOptionalInt("threshold_cth_legs", 67);
+	threshold_cth_head = ai.getOptionalInt("threshold_cth_head", 67);
+	threshold_cth_legs = ai.getOptionalInt("threshold_cth_legs", 67);
 	enemy_elite_minimum_level = gp.getOptionalInt("enemy_elite_minimum_level", 6);
 	enemy_elite_maximum_level = gp.getOptionalInt("enemy_elite_maximum_level", 10);
 
