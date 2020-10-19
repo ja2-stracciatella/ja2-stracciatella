@@ -17,8 +17,8 @@ android {
         applicationId "io.github.ja2stracciatella"
         minSdkVersion 19
         targetSdkVersion 26
-        versionCode 18
-        versionName "0.18.0"
+        versionCode 17
+        versionName "0.17.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
