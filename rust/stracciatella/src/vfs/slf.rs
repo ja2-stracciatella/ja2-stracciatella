@@ -1,6 +1,7 @@
 //! This module contains a virtual filesystem backed by a SLF file.
 #![allow(dead_code)]
 
+use std::collections::HashMap;
 use std::collections::HashSet;
 use std::convert::TryFrom;
 use std::fmt;
@@ -24,7 +25,7 @@ pub struct SlfFs {
     /// Case-insensitive base path.
     pub prefix: Nfc,
     /// List of entries
-    pub entries: Vec<SlfFsEntry>,
+    pub entries: HashMap<Nfc, SlfFsEntry>,
 }
 
 /// A file entry.
@@ -59,47 +60,35 @@ impl SlfFs {
     /// Creates a new virtual filesystem.
     pub fn new(mut slf_file: Box<dyn VfsFile>) -> io::Result<Rc<SlfFs>> {
         let header = SlfHeader::from_input(&mut slf_file)?;
-        let entries: Vec<_> = header
+        let prefix = Nfc::caseless_path(&header.library_path.trim_end_matches('/'));
+        let entries: HashMap<_, _> = header
             .entries_from_input(&mut slf_file)?
             .into_iter()
             .filter(|x| x.state == SlfEntryState::Ok)
-            .map(|x| SlfFsEntry {
-                path: Nfc::caseless_path(&x.file_path),
-                offset: x.offset,
-                length: x.length,
+            .map(|x| {
+                let path = Nfc::caseless_path(&x.file_path.trim_start_matches('/'));
+                let full_path = prefix.clone() + &path;
+                let entry = SlfFsEntry {
+                    path,
+                    offset: x.offset,
+                    length: x.length,
+                };
+                (full_path, entry)
             })
             .collect();
         Ok(Rc::new(SlfFs {
             slf_path: format!("{}", slf_file),
             slf_file: Arc::new(Mutex::new(slf_file)),
-            prefix: Nfc::caseless_path(
-                Nfc::caseless_path(&header.library_path).trim_end_matches('/'),
-            ),
+            prefix,
             entries,
         }))
-    }
-
-    /// Canonicalizes to inner path (strips path prefix)
-    fn get_slf_path(&self, file_path: &str) -> io::Result<Nfc> {
-        if !file_path.starts_with(self.prefix.as_str()) {
-            Err(io::ErrorKind::NotFound.into())
-        } else {
-            let (_, want) = file_path.split_at(self.prefix.len());
-            Ok(Nfc::caseless_path(want))
-        }
     }
 }
 
 impl VfsLayer for SlfFs {
     /// Opens a file in the filesystem.
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
-        let want = self.get_slf_path(file_path)?;
-        let entry_option = self
-            .entries
-            .iter()
-            .filter(|x| x.path.as_str() == want.trim_start_matches('/'))
-            .nth(0);
-        match entry_option {
+        match self.entries.get(file_path) {
             Some(entry) => Ok(Box::new(SlfFsFile {
                 file_path: file_path.to_owned(),
                 slf_path: self.slf_path.to_owned(),
@@ -112,35 +101,30 @@ impl VfsLayer for SlfFs {
         }
     }
 
-    fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {
-        let file_path = file_path.trim_end_matches('/');
-        if file_path.len() < self.prefix.len() && self.prefix.starts_with(file_path) {
-            // Special case if our prefix is larger than the requested path to list
-            // We still need to return parts of the prefix
-            let (_, path) = self.prefix.split_at(file_path.len());
-            let path = path.trim_start_matches('/');
-            if let Some(path) = path.split('/').nth(0) {
-                if !path.is_empty() {
-                    let mut result = HashSet::new();
-                    result.insert(Nfc::caseless_path(path));
-                    return Ok(result);
-                }
-            }
-        }
-        let want = self.get_slf_path(file_path)?;
+    fn read_dir(&self, path: &Nfc) -> io::Result<HashSet<Nfc>> {
+        // Remove trailing slashes from directories
+        let path = path.trim_end_matches('/');
         let entries: HashSet<Nfc> = self
             .entries
-            .iter()
+            .keys()
             .flat_map(|x| {
-                if !x.path.starts_with(&want.as_str()) {
-                    // This is not part of the listed directory
-                    return None;
+                if path.is_empty() {
+                    // If the root path is requested, just return the first path segment
+                    x.split('/').nth(0).map(Nfc::from)
+                } else {
+                    if !x.starts_with(&path) {
+                        // This is not part of the listed directory
+                        return None;
+                    }
+                    // Either a file or subdirectory, so we only return the first path segment
+                    // As the entries already use Nfc::caseless_path, we dont need to use Nfc::caseless_path again
+                    x.split_at(path.len()).1.split('/').nth(1).map(Nfc::from)
                 }
-                // Either a file or subdirectory, so we only return the first path segment
-                x.path.split('/').nth(0).map(Nfc::caseless_path)
             })
             .collect();
 
+        // As we dont really have directories in the SLF file, if we have no
+        // matching paths, we assume the directory does not exist
         if entries.is_empty() {
             Err(io::ErrorKind::NotFound.into())
         } else {

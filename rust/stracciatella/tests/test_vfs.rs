@@ -67,6 +67,8 @@ mod vfs {
         assert_eq!(&data, b"foo.slf");
         let data = read_file_data(&vfs, "foo/bar/BAZ.TXT");
         assert_eq!(&data, b"foo.slf");
+        let data = read_file_data(&vfs, "foo\\bar/ὈΔΥΣΣΕΎΣ.baz");
+        assert_eq!(&data, b"foo.slf");
         // separators
         let data = read_file_data(&vfs, "foo/bar/baz.txt");
         assert_eq!(&data, b"foo.slf");
@@ -75,6 +77,8 @@ mod vfs {
         let data = read_file_data(&vfs, "foo\\bar\\baz.txt");
         assert_eq!(&data, b"foo.slf");
         let data = read_file_data(&vfs, "foo\\bar/baz.txt");
+        assert_eq!(&data, b"foo.slf");
+        let data = read_file_data(&vfs, "foo\\bar/ὀδυσσεύς.baz");
         assert_eq!(&data, b"foo.slf");
 
         temp.close().expect("close temp dir");
@@ -86,8 +90,11 @@ mod vfs {
         create_foo_slf(&dir); // foo.slf
         create_foobar_slf(&dir); // foobar.slf
         create_file(&dir.join("foo/foo1.txt"));
-        create_file(&dir.join("foo/foo2.txt"));
-        create_file(&dir.join("foo/foo3.txt"));
+        create_file(&dir.join("foo/Foo2.txt"));
+        // Non-ascii paths
+        create_file(&dir.join("foo/ὈΔΥΣΣΕΎΣ.txt"));
+        create_file(&dir.join("foo/ХЦЧ"));
+        create_file(&dir.join("foo/农历新年.txt"));
 
         let mut vfs = Vfs::new();
         vfs.add_dir(&dir).expect("dir");
@@ -95,8 +102,16 @@ mod vfs {
         add_slf(&mut vfs, &dir_fs, "foobar.slf");
 
         let root_paths = ["foo", "foo.slf", "foobar.slf"];
-        let foo_paths = ["foo3.txt", "foo2.txt", "foo1.txt", "bar.txt", "bar"];
-        let foo_bar_paths = ["baz.txt"];
+        let foo_paths = [
+            "农历新年.txt",
+            "хцч",
+            "ὀδυσσεύς.txt",
+            "foo2.txt",
+            "foo1.txt",
+            "bar.txt",
+            "bar",
+        ];
+        let foo_bar_paths = ["baz.txt", "ὀδυσσεύς.baz"];
         // case insensitive
         assert_vfs_read_dir(&vfs, "foo", &foo_paths);
         assert_vfs_read_dir(&vfs, "FOO", &foo_paths);
@@ -119,13 +134,18 @@ mod vfs {
         assert_vfs_read_dir(&vfs, "", &root_paths);
         assert_vfs_read_dir(&vfs, "/", &root_paths);
 
-        // it should be possible to list root paths in slfs only
         let mut vfs = Vfs::new();
-        add_slf(&mut vfs, &dir_fs, "foo.slf");
+        add_slf(&mut vfs, &dir_fs, "foobar.slf");
 
+        // it should be possible to list root paths in vfs just consisting of slf
         let root_paths = ["foo"];
         assert_vfs_read_dir(&vfs, "", &root_paths);
         assert_vfs_read_dir(&vfs, "/", &root_paths);
+
+        // it should be possible to list paths that only exist in an slf prefix
+        let foo_paths = ["bar"];
+        assert_vfs_read_dir(&vfs, "foo", &foo_paths);
+        assert_vfs_read_dir(&vfs, "foo/", &foo_paths);
 
         temp.close().expect("close temp dir");
     }
@@ -221,7 +241,12 @@ mod vfs {
 
     /// The inner file data is "foo.slf".
     fn create_foo_slf(dir: &Path) {
-        create_slf(&dir, "foo.slf", "foo\\", &["bar.txt", "bar\\baz.txt"]);
+        create_slf(
+            &dir,
+            "foo.slf",
+            "foo\\",
+            &["bar.txt", "bar\\baz.txt", "bar\\ὈΔΥΣΣΕΎΣ.baz"],
+        );
     }
 
     /// The inner file data "data.slf".
