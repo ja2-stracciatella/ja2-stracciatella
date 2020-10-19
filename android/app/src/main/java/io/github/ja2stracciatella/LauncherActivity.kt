@@ -16,6 +16,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import java.io.File
@@ -156,6 +157,10 @@ class LauncherActivity : AppCompatActivity() {
         }
         jsonMap["game_dir"] = JsonPrimitive(configurationModel.vanillaGameDir.value)
         Log.i(activityLogTag, "Starting with ja2.json: $jsonMap")
+        val parentDir = File(ja2JsonPath).parentFile;
+        if (parentDir?.exists() != true) {
+            parentDir?.mkdirs()
+        }
         File(ja2JsonPath).writeText(jsonFormat.encodeToString(jsonMap))
     }
 }
