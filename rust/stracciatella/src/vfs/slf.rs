@@ -1,29 +1,31 @@
 //! This module contains a virtual filesystem backed by a SLF file.
 #![allow(dead_code)]
 
+use std::collections::HashMap;
+use std::collections::HashSet;
 use std::convert::TryFrom;
 use std::fmt;
 use std::io;
 use std::io::{Seek, SeekFrom};
-use std::path::{Path, PathBuf};
+use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
-use crate::fs::File;
 use crate::math::checked_add_u64_i64;
 use crate::unicode::Nfc;
+use crate::vfs::{VfsFile, VfsLayer};
 
 /// A read-only case-insensitive virtual filesystem backed by a SLF file.
 #[derive(Debug)]
 pub struct SlfFs {
     /// Display info.
-    pub slf_path: PathBuf,
+    pub slf_path: String,
     /// SLF archive open for reading.
-    pub slf_file: Arc<Mutex<File>>,
+    pub slf_file: Arc<Mutex<Box<dyn VfsFile>>>,
     /// Case-insensitive base path.
     pub prefix: Nfc,
     /// List of entries
-    pub entries: Vec<SlfFsEntry>,
+    pub entries: HashMap<Nfc, SlfFsEntry>,
 }
 
 /// A file entry.
@@ -43,9 +45,9 @@ pub struct SlfFsFile {
     /// Display info.
     pub file_path: Nfc,
     /// Display info.
-    pub slf_path: PathBuf,
+    pub slf_path: String,
     /// SLF archive open for reading.
-    pub slf_file: Arc<Mutex<File>>,
+    pub slf_file: Arc<Mutex<Box<dyn VfsFile>>>,
     /// Start of the data.
     pub offset: u32,
     /// Length of the data.
@@ -56,67 +58,92 @@ pub struct SlfFsFile {
 
 impl SlfFs {
     /// Creates a new virtual filesystem.
-    pub fn new(path: &Path) -> io::Result<SlfFs> {
-        let mut slf_file = File::open(&path)?;
+    pub fn new(mut slf_file: Box<dyn VfsFile>) -> io::Result<Rc<SlfFs>> {
         let header = SlfHeader::from_input(&mut slf_file)?;
-        let entries: Vec<_> = header
+        let prefix = Nfc::caseless_path(&header.library_path.trim_end_matches('/'));
+        let entries: HashMap<_, _> = header
             .entries_from_input(&mut slf_file)?
             .into_iter()
             .filter(|x| x.state == SlfEntryState::Ok)
-            .map(|x| SlfFsEntry {
-                path: Nfc::caseless_path(&x.file_path),
-                offset: x.offset,
-                length: x.length,
+            .map(|x| {
+                let path = Nfc::caseless_path(&x.file_path.trim_start_matches('/'));
+                let full_path = prefix.clone() + &path;
+                let entry = SlfFsEntry {
+                    path,
+                    offset: x.offset,
+                    length: x.length,
+                };
+                (full_path, entry)
             })
             .collect();
-        Ok(SlfFs {
-            slf_path: path.to_owned(),
+        Ok(Rc::new(SlfFs {
+            slf_path: format!("{}", slf_file),
             slf_file: Arc::new(Mutex::new(slf_file)),
-            prefix: Nfc::caseless_path(&header.library_path),
+            prefix,
             entries,
-        })
-    }
-
-    /// Opens a file in the filesystem.
-    pub fn open(&self, file_path: &Nfc) -> io::Result<SlfFsFile> {
-        if file_path.starts_with(self.prefix.as_str()) {
-            let (_, want) = file_path.split_at(self.prefix.len());
-            let entry_option = self
-                .entries
-                .iter()
-                .filter(|x| x.path.as_str() == want)
-                .nth(0);
-            if let Some(entry) = entry_option {
-                return Ok(SlfFsFile {
-                    file_path: file_path.to_owned(),
-                    slf_path: self.slf_path.to_owned(),
-                    slf_file: self.slf_file.to_owned(),
-                    offset: entry.offset,
-                    length: entry.length,
-                    position: 0,
-                });
-            }
-        }
-        Err(io::ErrorKind::NotFound.into())
+        }))
     }
 }
 
-impl SlfFsFile {
-    /// Gets the length of the file.
-    pub fn len(&self) -> u64 {
-        u64::from(self.length)
+impl VfsLayer for SlfFs {
+    /// Opens a file in the filesystem.
+    fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
+        match self.entries.get(file_path) {
+            Some(entry) => Ok(Box::new(SlfFsFile {
+                file_path: file_path.to_owned(),
+                slf_path: self.slf_path.to_owned(),
+                slf_file: self.slf_file.clone(),
+                offset: entry.offset,
+                length: entry.length,
+                position: 0,
+            })),
+            None => Err(io::ErrorKind::NotFound.into()),
+        }
     }
 
-    /// Returns true if the file is empty.
-    pub fn is_empty(&self) -> bool {
-        self.length == 0
+    fn read_dir(&self, path: &Nfc) -> io::Result<HashSet<Nfc>> {
+        // Remove trailing slashes from directories
+        let path = path.trim_end_matches('/');
+        let entries: HashSet<Nfc> = self
+            .entries
+            .keys()
+            .flat_map(|x| {
+                if path.is_empty() {
+                    // If the root path is requested, just return the first path segment
+                    x.split('/').nth(0).map(Nfc::from)
+                } else {
+                    if !x.starts_with(&path) {
+                        // This is not part of the listed directory
+                        return None;
+                    }
+                    // Either a file or subdirectory, so we only return the first path segment
+                    // As the entries already use Nfc::caseless_path, we dont need to use Nfc::caseless_path again
+                    x.split_at(path.len()).1.split('/').nth(1).map(Nfc::from)
+                }
+            })
+            .collect();
+
+        // As we dont really have directories in the SLF file, if we have no
+        // matching paths, we assume the directory does not exist
+        if entries.is_empty() {
+            Err(io::ErrorKind::NotFound.into())
+        } else {
+            Ok(entries)
+        }
+    }
+}
+
+impl VfsFile for SlfFsFile {
+    /// Gets the length of the file.
+    fn len(&self) -> io::Result<u64> {
+        Ok(u64::from(self.length))
     }
 }
 
 impl fmt::Display for SlfFs {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        f.write_str("SlfFs { ")?;
-        write!(f, "{:?}", self.slf_path)?;
+        f.write_str("SlfFs { source: ")?;
+        write!(f, "{}", self.slf_path)?;
         f.write_str(" }")
     }
 }

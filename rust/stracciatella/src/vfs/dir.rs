@@ -9,6 +9,9 @@ use std::path::{Path, PathBuf};
 use crate::fs;
 use crate::fs::File;
 use crate::unicode::Nfc;
+use crate::vfs::{VfsFile, VfsLayer};
+use std::collections::HashSet;
+use std::rc::Rc;
 
 /// A case-insensitive virtual filesystem backed by a filesystem directory.
 #[derive(Debug)]
@@ -30,16 +33,23 @@ pub struct DirFsFile {
 
 impl DirFs {
     /// Creates a new virtual filesystem.
-    pub fn new(path: &Path) -> io::Result<DirFs> {
+    pub fn new(path: &Path) -> io::Result<Rc<DirFs>> {
         fs::read_dir(&path)?;
-        Ok(DirFs {
+        Ok(Rc::new(DirFs {
             dir_path: path.to_owned(),
-        })
+        }))
     }
 
-    /// Opens a file in the filesystem.
-    pub fn open(&self, file_path: &Nfc) -> io::Result<DirFsFile> {
+    /// Maps a path to all candidates that might match the path case insensitively
+    ///
+    /// The returned paths are already containing the dir path
+    fn canonicalize(&self, file_path: &str) -> io::Result<Vec<PathBuf>> {
         let mut candidates = vec![self.dir_path.to_owned()];
+
+        if file_path.is_empty() {
+            return Ok(candidates);
+        }
+
         for want in file_path.split('/') {
             let mut next = Vec::new();
             if want == "." || want == ".." {
@@ -70,27 +80,59 @@ impl DirFs {
             }
         }
         candidates.sort();
+
+        Ok(candidates)
+    }
+}
+
+impl VfsLayer for DirFs {
+    fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
+        let candidates = self.canonicalize(file_path)?;
         if let Some(path) = candidates.iter().filter(|x| x.is_file()).nth(0) {
-            Ok(DirFsFile {
+            Ok(Box::new(DirFsFile {
                 file_path: file_path.to_owned(),
                 dir_path: self.dir_path.to_owned(),
                 file: File::open(&path)?,
-            })
+            }))
         } else {
             Err(io::ErrorKind::NotFound.into())
         }
     }
+
+    fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {
+        let file_path = file_path.trim_end_matches('/');
+        let candidates = self.canonicalize(file_path)?;
+        let mut result = HashSet::new();
+
+        for candidate in candidates {
+            let dir_contents = fs::read_dir(&candidate)?;
+
+            for entry in dir_contents {
+                let entry = entry?;
+                let file_name_nfc = Nfc::caseless_path(
+                    &entry.file_name().to_owned().into_string().map_err(|err| {
+                        io::Error::new(
+                            io::ErrorKind::InvalidInput,
+                            format!(
+                                "Could not convert path {:?} to NFC for DirFs: {:?}",
+                                entry.file_name(),
+                                err
+                            ),
+                        )
+                    })?,
+                );
+                result.insert(file_name_nfc);
+            }
+        }
+
+        Ok(result)
+    }
 }
 
-impl DirFsFile {
+impl VfsFile for DirFsFile {
     /// Gets the length of the file.
-    pub fn len(&self) -> io::Result<u64> {
+    fn len(&self) -> io::Result<u64> {
         self.file.metadata().map(|x| x.len())
-    }
-
-    /// Returns true if the file is empty.
-    pub fn is_empty(&self) -> io::Result<bool> {
-        self.len().map(|x| x == 0)
     }
 }
 

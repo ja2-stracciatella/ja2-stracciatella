@@ -1,16 +1,19 @@
 //! This module contains a virtual filesystem backed by a SLF file.
 #![allow(dead_code)]
 
+use std::collections::HashSet;
 use std::ffi::CString;
 use std::fmt;
 use std::io;
 use std::io::SeekFrom;
 use std::path::{Path, PathBuf};
+use std::rc::Rc;
 
 use ndk::asset::{Asset, AssetManager};
 
 use crate::android::get_asset_manager;
 use crate::unicode::Nfc;
+use crate::vfs::{VfsFile, VfsLayer};
 
 /// A case-insensitive virtual filesystem backed by a filesystem directory.
 #[derive(Debug)]
@@ -34,7 +37,7 @@ pub struct AssetManagerFsFile {
 
 impl AssetManagerFs {
     /// Creates a new virtual filesystem.
-    pub fn new(base_path: &Path) -> io::Result<AssetManagerFs> {
+    pub fn new(base_path: &Path) -> io::Result<Rc<AssetManagerFs>> {
         let asset_manager = get_asset_manager().map_err(|err| {
             io::Error::new(
                 io::ErrorKind::Other,
@@ -51,16 +54,21 @@ impl AssetManagerFs {
                 format!("AssetManagerFs: Error testing base path `{:?}`", base_path),
             )
         })?;
-        Ok(AssetManagerFs {
+        Ok(Rc::new(AssetManagerFs {
             base_path: base_path.to_owned(),
             asset_manager,
-        })
+        }))
     }
 
-    /// Opens a file in the filesystem.
-    /// This is currently very basic and not case insensitive
-    pub fn open(&self, file_path: &Nfc) -> io::Result<AssetManagerFsFile> {
+    /// Maps a path to all candidates that might match the path case insensitively
+    ///
+    /// The returned paths are already containing the base path
+    fn canonicalize(&self, file_path: &str) -> io::Result<Vec<PathBuf>> {
         let mut candidates = vec![self.base_path.to_owned()];
+
+        if file_path.is_empty() {
+            return Ok(candidates);
+        }
 
         for want in file_path.split('/') {
             let mut next = Vec::new();
@@ -98,24 +106,7 @@ impl AssetManagerFs {
         }
         candidates.sort();
 
-        for candidate in candidates {
-            let candidate_cstring = Self::path_to_cstring(&candidate)?;
-            if let Some(file) = self.asset_manager.open(&candidate_cstring) {
-                return Ok(AssetManagerFsFile {
-                    file_path: file_path.clone(),
-                    base_path: self.base_path.clone(),
-                    file,
-                });
-            }
-        }
-
-        Err(io::Error::new(
-            io::ErrorKind::NotFound,
-            format!(
-                "AssetManagerFs: Asset not found: `{:?}`",
-                self.base_path.join(&file_path.as_str())
-            ),
-        ))
+        Ok(candidates)
     }
 
     /// Maps a path to CString for asset manager
@@ -145,15 +136,64 @@ impl AssetManagerFs {
     }
 }
 
-impl AssetManagerFsFile {
-    /// Gets the length of the file.
-    pub fn len(&self) -> io::Result<u64> {
-        Ok(self.file.get_length() as u64)
+impl VfsLayer for AssetManagerFs {
+    fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
+        let candidates = self.canonicalize(file_path)?;
+
+        for candidate in candidates {
+            let candidate_cstring = Self::path_to_cstring(&candidate)?;
+            if let Some(file) = self.asset_manager.open(&candidate_cstring) {
+                return Ok(Box::new(AssetManagerFsFile {
+                    file_path: file_path.clone(),
+                    base_path: self.base_path.clone(),
+                    file,
+                }));
+            }
+        }
+
+        Err(io::Error::new(
+            io::ErrorKind::NotFound,
+            format!(
+                "AssetManagerFs: Asset not found: `{:?}`",
+                self.base_path.join(&file_path.as_str())
+            ),
+        ))
     }
 
-    /// Returns true if the file is empty.
-    pub fn is_empty(&self) -> io::Result<bool> {
-        self.len().map(|x| x == 0)
+    fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>> {
+        let file_path = file_path.trim_end_matches('/');
+        let candidates = self.canonicalize(file_path)?;
+        let mut result = HashSet::new();
+
+        for candidate in candidates {
+            let dir_contents = crate::android::list_asset_dir(&candidate).map_err(|e| {
+                io::Error::new(
+                    io::ErrorKind::Other,
+                    format!("AssetManagerFs: JNI Error: `{:?}`", e),
+                )
+            })?;
+
+            for file_name in dir_contents {
+                let file_name_nfc = Nfc::caseless_path(
+                    &file_name.into_os_string().into_string().map_err(|err| {
+                        io::Error::new(
+                            io::ErrorKind::InvalidInput,
+                            format!("Could not convert path to NFC for AssetManager: {:?}", err),
+                        )
+                    })?,
+                );
+                result.insert(file_name_nfc);
+            }
+        }
+
+        Ok(result)
+    }
+}
+
+impl VfsFile for AssetManagerFsFile {
+    /// Gets the length of the file.
+    fn len(&self) -> io::Result<u64> {
+        Ok(self.file.get_length() as u64)
     }
 }
 
