@@ -7,9 +7,12 @@ use std::usize;
 
 use stracciatella::config::EngineOptions;
 use stracciatella::unicode::Nfc;
-use stracciatella::vfs::{Vfs, VfsFile};
+use stracciatella::vfs::{Vfs, VfsFile as RVfsFile, VfsLayer};
 
 use crate::c::common::*;
+
+/// Concrete Type for a VFS file as we cannot return Box<dyn xxx> in the C API
+pub struct VfsFile(Box<dyn RVfsFile>);
 
 /// Creates a virtual filesystem.
 /// coverity[+alloc]
@@ -73,7 +76,7 @@ pub extern "C" fn VfsFile_open(vfs: *mut Vfs, path: *const c_char) -> *mut VfsFi
             remember_rust_error(format!("VfsFile_open {:?}: {}", path, err));
             std::ptr::null_mut()
         }
-        Ok(file) => into_ptr(file),
+        Ok(file) => into_ptr(VfsFile(file)),
     }
 }
 
@@ -90,7 +93,7 @@ pub extern "C" fn VfsFile_close(file: *mut VfsFile) {
 #[no_mangle]
 pub extern "C" fn VfsFile_len(file: *mut VfsFile, len: *mut u64) -> bool {
     forget_rust_error();
-    let file = unsafe_mut(file);
+    let file = &mut unsafe_mut(file).0;
     let len = unsafe_mut(len);
     match file.len() {
         Err(err) => {
@@ -108,7 +111,7 @@ pub extern "C" fn VfsFile_len(file: *mut VfsFile, len: *mut u64) -> bool {
 #[no_mangle]
 pub extern "C" fn VfsFile_readExact(file: *mut VfsFile, buffer: *mut u8, length: usize) -> bool {
     forget_rust_error();
-    let file = unsafe_mut(file);
+    let file = &mut unsafe_mut(file).0;
     let buffer = unsafe_slice_mut(buffer, length);
     if let Err(err) = file.read_exact(buffer) {
         remember_rust_error(format!("VfsFile_readExact {} {}: {}", file, length, err));
@@ -122,14 +125,14 @@ pub extern "C" fn VfsFile_readExact(file: *mut VfsFile, buffer: *mut u8, length:
 #[no_mangle]
 pub unsafe extern "C" fn VfsFile_read(file: *mut VfsFile, buffer: *mut u8, length: usize) -> usize {
     forget_rust_error();
-    let file = unsafe_mut(file);
+    let file = &mut unsafe_mut(file).0;
     let buffer = unsafe_slice_mut(buffer, length);
     match file.read(buffer) {
         Ok(b) => {
             return b;
         },
         Err(err) => {
-            remember_rust_error(format!("VfsFile_readExact {} {}: {}", file, length, err));
+            remember_rust_error(format!("VfsFile_read {} {}: {}", file, length, err));
             return usize::MAX;
         }
     };
@@ -146,7 +149,7 @@ pub extern "C" fn VfsFile_seekFromStart(
     out_position: *mut u64,
 ) -> bool {
     forget_rust_error();
-    let file = unsafe_mut(file);
+    let file = &mut unsafe_mut(file).0;
     let out_position = unsafe_mut_option(out_position);
     match file.seek(SeekFrom::Start(offset)) {
         Err(err) => {
@@ -172,7 +175,7 @@ pub extern "C" fn VfsFile_seekFromEnd(
     out_position: *mut u64,
 ) -> bool {
     forget_rust_error();
-    let file = unsafe_mut(file);
+    let file = &mut unsafe_mut(file).0;
     let out_position = unsafe_mut_option(out_position);
     match file.seek(SeekFrom::End(offset)) {
         Err(err) => {
@@ -198,7 +201,7 @@ pub extern "C" fn VfsFile_seekFromCurrent(
     out_position: *mut u64,
 ) -> bool {
     forget_rust_error();
-    let file = unsafe_mut(file);
+    let file = &mut unsafe_mut(file).0;
     let out_position = unsafe_mut_option(out_position);
     match file.seek(SeekFrom::Current(offset)) {
         Err(err) => {
@@ -218,7 +221,7 @@ pub extern "C" fn VfsFile_seekFromCurrent(
 #[no_mangle]
 pub extern "C" fn VfsFile_writeAll(file: *mut VfsFile, buffer: *const u8, length: usize) -> bool {
     forget_rust_error();
-    let file = unsafe_mut(file);
+    let file = &mut unsafe_mut(file).0;
     let buffer = unsafe_slice(buffer, length);
     while let Err(err) = file.write_all(buffer) {
         remember_rust_error(format!("VfsFile_writeAll {}: {}", length, err));

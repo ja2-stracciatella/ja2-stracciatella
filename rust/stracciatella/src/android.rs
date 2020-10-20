@@ -43,48 +43,53 @@ pub fn get_global_jni_env() -> Result<jni::JNIEnv<'static>> {
     unsafe { JNIEnv::from_raw(global_jni_env.0) }
 }
 
+/// Arbitraily chosen value for a small JNI frame
+const SMALL_JNI_FRAME_SIZE: i32 = 16;
+
 /// Get current application context form JNI env
 pub fn get_application_context() -> Result<JObject<'static>> {
     let jni_env = get_global_jni_env()?;
-    let current_activity_thread = jni_env
-        .call_static_method(
-            "android/app/ActivityThread",
-            "currentActivityThread",
-            "()Landroid/app/ActivityThread;",
-            &[],
-        )?
-        .l()?;
-    let application = jni_env
-        .call_method(
-            current_activity_thread,
-            "getApplication",
-            "()Landroid/app/Application;",
-            &[],
-        )?
-        .l()?;
-    jni_env
-        .call_method(
-            application,
-            "getApplicationContext",
-            "()Landroid/content/Context;",
-            &[],
-        )?
-        .l()
+    jni_env.with_local_frame(SMALL_JNI_FRAME_SIZE, || {
+        let current_activity_thread = jni_env
+            .call_static_method(
+                "android/app/ActivityThread",
+                "currentActivityThread",
+                "()Landroid/app/ActivityThread;",
+                &[],
+            )?
+            .l()?;
+        let application = jni_env
+            .call_method(
+                current_activity_thread,
+                "getApplication",
+                "()Landroid/app/Application;",
+                &[],
+            )?
+            .l()?;
+        jni_env
+            .call_method(
+                application,
+                "getApplicationContext",
+                "()Landroid/content/Context;",
+                &[],
+            )?
+            .l()
+    })
 }
 
 /// Find ja2 stracciatella configuration directory for android
 pub fn get_android_app_dir() -> Result<PathBuf> {
     let jni_env = crate::android::get_global_jni_env()?;
-    let context = crate::android::get_application_context()?;
-    let files_dir = jni_env
-        .call_method(context, "getFilesDir", "()Ljava/io/File;", &[])?
-        .l()?;
-    let path = jni_env.get_string(
+    let path_obj = jni_env.auto_local(jni_env.with_local_frame(SMALL_JNI_FRAME_SIZE, || {
+        let context = crate::android::get_application_context()?;
+        let files_dir = jni_env
+            .call_method(context, "getFilesDir", "()Ljava/io/File;", &[])?
+            .l()?;
         jni_env
             .call_method(files_dir, "getAbsolutePath", "()Ljava/lang/String;", &[])?
-            .l()?
-            .into(),
-    )?;
+            .l()
+    })?);
+    let path = jni_env.get_string(path_obj.as_obj().into())?;
     let path_string: String = path.into();
 
     Ok(PathBuf::from(&path_string))
@@ -93,15 +98,18 @@ pub fn get_android_app_dir() -> Result<PathBuf> {
 /// Get asset manager from JNI env
 pub fn get_asset_manager() -> Result<AssetManager> {
     let jni_env = get_global_jni_env()?;
-    let context = get_application_context()?;
-    let asset_manager = jni_env
-        .call_method(
-            context,
-            "getAssets",
-            "()Landroid/content/res/AssetManager;",
-            &[],
-        )?
-        .l()?;
+    // Not using AutoLocal for asset_manager, because we dont want it to be cleaned up
+    let asset_manager = jni_env.with_local_frame(SMALL_JNI_FRAME_SIZE, || {
+        let context = get_application_context()?;
+        jni_env
+            .call_method(
+                context,
+                "getAssets",
+                "()Landroid/content/res/AssetManager;",
+                &[],
+            )?
+            .l()
+    })?;
     Ok(unsafe {
         // This is the cast of death
         let ptr = ndk_sys::AAssetManager_fromJava(
@@ -116,39 +124,42 @@ pub fn get_asset_manager() -> Result<AssetManager> {
 /// List directory in Assets (including directories)
 pub fn list_asset_dir(dir: &Path) -> Result<Vec<PathBuf>> {
     let jni_env = get_global_jni_env()?;
-    let context = get_application_context()?;
-    let asset_manager = jni_env
-        .call_method(
-            context,
-            "getAssets",
-            "()Landroid/content/res/AssetManager;",
-            &[],
-        )?
-        .l()?;
-    let path = dir.to_str().map(String::from).ok_or_else(|| {
-        ErrorKind::Msg("Error casting path to string for list_asset_dir".to_owned())
-    })?;
-    let path = JValue::Object(jni_env.new_string(&path)?.into());
-    let list_contents = jni_env
-        .call_method(
-            asset_manager,
-            "list",
-            "(Ljava/lang/String;)[Ljava/lang/String;",
-            &[path],
-        )?
-        .l()?
-        .into_inner();
-
-    let n_elements = jni_env.get_array_length(list_contents)?;
     let mut results: Vec<PathBuf> = vec![];
-    for l in 0..n_elements {
-        let l: String = jni_env
-            .get_string(JString::from(
-                jni_env.get_object_array_element(list_contents, l)?,
-            ))?
-            .into();
-        results.push(PathBuf::from(&l));
-    }
+
+    jni_env.auto_local(jni_env.with_local_frame(SMALL_JNI_FRAME_SIZE, || {
+        let context = get_application_context()?;
+        let asset_manager = jni_env
+            .call_method(
+                context,
+                "getAssets",
+                "()Landroid/content/res/AssetManager;",
+                &[],
+            )?
+            .l()?;
+        let path = dir.to_str().map(String::from).ok_or_else(|| {
+            ErrorKind::Msg("Error casting path to string for list_asset_dir".to_owned())
+        })?;
+        let path_obj = jni_env.new_string(&path)?.into();
+        let path = JValue::Object(path_obj);
+        let list_contents_obj = jni_env
+            .call_method(
+                asset_manager,
+                "list",
+                "(Ljava/lang/String;)[Ljava/lang/String;",
+                &[path],
+            )?
+            .l()?;
+        let list_contents = list_contents_obj.into_inner();
+
+        let n_elements = jni_env.get_array_length(list_contents)?;
+        for i in 0..n_elements {
+            let path = jni_env.auto_local(jni_env.get_object_array_element(list_contents, i)?);
+            let l: String = jni_env.get_string(JString::from(path.as_obj()))?.into();
+            results.push(PathBuf::from(&l));
+        }
+
+        Ok(list_contents_obj)
+    })?);
 
     Ok(results)
 }
