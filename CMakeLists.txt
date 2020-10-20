@@ -42,8 +42,12 @@ set(CMAKE_CXX_STANDARD 14)
 #      The master branch version will be "<major>.<next minor>.0-dev" before a
 #      breaking change and "<next major>.0.0-dev" with a breaking change.
 
+file(READ "version" BASE_SEMVER_VERSION)
+# Trim leading and trailing whitespace / newlines
+string(STRIP "${BASE_SEMVER_VERSION}" BASE_SEMVER_VERSION)
+
 include(semver-functions)
-semver_set(ja2-stracciatella_VERSION "0.17.1-git")
+semver_set(ja2-stracciatella_VERSION "${BASE_SEMVER_VERSION}-git")
 if (VERSION_TAG)
     semver_set_prerelease(ja2-stracciatella_VERSION_PRERELEASE "-${VERSION_TAG}")
 endif()
