@@ -18,9 +18,17 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
 
-        File versionFile = file('../../version')
-        versionCode 17
-        versionName versionFile.text
+        // Version name is the semver version
+        String version = file('../../version').text.trim()
+        logger.info('Stracciatella Version Name: "{}".', version)
+        // Version code is build from semver
+        // pad each semver part to 3 characters -> join -> parse as int
+        // Example: 0.17.1 -> [ "000", "017", "001" ] -> "000017001" -> 17001
+        Integer versionCodeFromVersion = version.split('\\.').collect({ it.padLeft(3, '0') }).join('').toInteger()
+        logger.info('Stracciatella Version Code: "{}".', versionCodeFromVersion)
+
+        versionName version
+        versionCode versionCodeFromVersion
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
