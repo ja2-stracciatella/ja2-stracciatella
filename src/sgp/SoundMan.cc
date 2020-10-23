@@ -695,6 +695,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 
 	try
 	{
+		auto isStreamed = TRUE;
 		SAMPLETAG* s = SoundGetEmptySample();
 		
 		// if we don't have a sample slot
@@ -708,13 +709,14 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		auto hFileLen = FileGetSize(hFile);
 		if (hFileLen <= SOUND_FILE_STREAMING_THRESHOLD) {
 			// If the file length is below the streaming threshold we store the raw data in the inMemoryBuffer
-			inMemoryBuffer = MALLOCN(UINT8, hFileLen);
+			inMemoryBuffer = new UINT8[hFileLen]{};
 			if (SDL_RWread(rwOps, inMemoryBuffer, sizeof(UINT8), hFileLen) != hFileLen) {
 				throw std::runtime_error("Could not read the whole file");
 			}
 			SDL_RWclose(rwOps);
 			rwOps = SDL_RWFromConstMem(inMemoryBuffer, hFileLen);
 			hFile = NULL;
+			isStreamed = FALSE;
 		}
 
 		// Initialize decoder to convert WAV/MP3/OGG data to raw sample data
@@ -725,12 +727,17 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		}
 		s->pFile = hFile;
 		s->pInMemoryBuffer = inMemoryBuffer;
+		s->pRWOps = rwOps;
 		s->pDecoder = decoder;
 		s->pName = pFilename;
 
 		s->uiFlags |= SAMPLE_ALLOCATED;
 
-		SLOGD("SoundLoadDisk Success for \"%s\"", pFilename);
+		if (isStreamed) {
+			SLOGD("SoundLoadDisk success creating file stream for \"%s\"", pFilename);
+		} else {
+			SLOGD("SoundLoadDisk success creating in-memory stream for \"%s\"", pFilename);
+		}
 		return s;
 	}
 	catch (const std::runtime_error& err)
@@ -812,6 +819,8 @@ static void SoundFreeSample(SAMPLETAG* s)
 {
 	if (!(s->uiFlags & SAMPLE_ALLOCATED)) return;
 
+	SLOGD("SoundFreeSample: Freeing sample %d", s - pSampleList);
+
 	assert(s->uiInstances == 0);
 
 	if (s->pDecoder != NULL) {
@@ -825,10 +834,7 @@ static void SoundFreeSample(SAMPLETAG* s)
 	if (s->pRWOps != NULL) {
 		SDL_RWclose(s->pRWOps);
 	}
-	if (s->pFile != NULL) {
-		// File is closed by SDL_RWclose implicitly, so we can just free it
-		delete s->pFile;
-	}
+	// Note: s->pFile is closed and deleted by SDL_RWclose implicitly, but s->pInMemoryBuffer is not
 	if (s->pInMemoryBuffer != NULL) {
 		delete[] s->pInMemoryBuffer;
 	}
