@@ -28,6 +28,8 @@
 #include <iterator>
 #include <stdexcept>
 #include <atomic>
+#include <mutex>
+#include <condition_variable>
 
 // Miniaudio includes needs some defines
 
@@ -82,10 +84,6 @@ enum
 #define SOUND_MAX_CACHED 128 // number of cache slots
 #define SOUND_MAX_CHANNELS 16 // number of mixer channels
 
-#define SOUND_DEFAULT_MEMORY (32 * 1024 * 1024) // default memory limit
-#define SOUND_DEFAULT_THRESH ( 2 * 1024 * 1024) // size for sample to be double-buffered
-#define SOUND_DEFAULT_STREAM (64 * 1024)        // double-buffered buffer size
-
 // The audio device will be opened with the following values
 #define SOUND_FREQ      44100
 #define SOUND_FORMAT    AUDIO_S16SYS
@@ -96,7 +94,7 @@ enum
 // Threshold from which a sound is streamed from file instead of from memory (currently 1 MB)
 #define SOUND_FILE_STREAMING_THRESHOLD (1024 * 1024)
 // Buffer size for a single channel in the sound system
-#define SOUND_RING_BUFFER_SIZE (512 * SOUND_SAMPLES)
+#define SOUND_RING_BUFFER_SIZE (128 * SOUND_SAMPLES)
 
 // Struct definition for sample slots in the cache
 // Holds the regular sample data, as well as the data for the random samples
@@ -160,6 +158,17 @@ static std::vector<INT32> gMixBuffer;
 SDL_AudioSpec gTargetAudioSpec;
 ma_decoder_config gTargetDecoderConfig;
 
+// These synchronization primitives are used to signal between the buffer servicing thread and the sound callback thread
+// When the callback thread notices that the buffer for a channel is less than half filled, it will notify the stream processing
+// thread that it needs to do some processing through the condition_variable
+// When the system needs to be shut down, fShutdownBufferServiceThread needs to be set to true and the buffer servicing thread
+// needs to be notified using the condition_variable
+SDL_Thread *bufferServiceThread = NULL;
+std::mutex mutexBuffersNeedService;
+std::condition_variable conditionBuffersNeedService;
+BOOLEAN fBuffersNeedService = FALSE;
+BOOLEAN fShutdownBufferServiceThread = FALSE;
+
 // Sample cache list for files loaded
 static SAMPLETAG pSampleList[SOUND_MAX_CACHED];
 // Sound channel list for output channels
@@ -179,7 +188,7 @@ bool IsSoundEnabled()
 
 static void    SoundInitCache(void);
 static BOOLEAN SoundInitHardware(void);
-
+static int SoundServiceBuffers(void *_ptr);
 
 void InitializeSoundManager(void)
 {
@@ -453,17 +462,20 @@ void SoundStopAllRandom(void)
 	}
 }
 
+static BOOLEAN DoesChannelRingBufferNeedService(SOUNDTAG* channel) {
+	auto bytesToWrite = ma_pcm_rb_available_write(channel->pRingBuffer);
+	// If the ring buffer is still filled more than half the way, we dont need to service the stream
+	return bytesToWrite >= SOUND_RING_BUFFER_SIZE / 2;
+}
+
 static void FillRingBuffer(SOUNDTAG* channel) {
 	auto sample = channel->pSample;
 
-	Assert(channel->pRingBuffer != NULL);
-
 	try {
-		auto bytesToWrite = ma_pcm_rb_available_write(channel->pRingBuffer);
-		if (bytesToWrite < SOUND_RING_BUFFER_SIZE / 2) {
-			// If the ring buffer is still filled more than half the way, do nothing
+		if (!DoesChannelRingBufferNeedService(channel)) {
 			return;
 		}
+		auto bytesToWrite = ma_pcm_rb_available_write(channel->pRingBuffer);
 		if (bytesToWrite < 0) {
 			throw std::runtime_error("Read pointer is after write pointer, this should not happen");
 		}
@@ -485,6 +497,7 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			auto bytesPerFrame = ma_get_bytes_per_frame(sample->eInMemoryFormat, sample->uiInMemoryChannels);
 			auto posInBytes = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, channel->Pos) * bytesPerFrame;
 			auto requiredInputFrameCount = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite);
+			// We might not have as many bytes available
 			auto availableFrames = MIN(requiredInputFrameCount * bytesPerFrame, sample->uiBufferSize - posInBytes) / bytesPerFrame;
 			auto expectedOutputFrameCount = ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableFrames);
 			
@@ -524,6 +537,32 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 	}
 }
 
+static int SoundServiceBuffers(void *_ptr)
+{
+	SLOGD("Started SoundManBufferServiceThread");
+	while (1) {
+		std::unique_lock<std::mutex> lk(mutexBuffersNeedService);
+		conditionBuffersNeedService.wait(lk, []{
+			return fBuffersNeedService || fShutdownBufferServiceThread;
+		});
+		if (fShutdownBufferServiceThread) {
+			SLOGD("Stopped SoundManBufferServiceThread");
+			return 0;
+		}
+		if (fBuffersNeedService) {
+			for (UINT32 i = 0; i < lengthof(pSoundList); i++)
+			{
+				SOUNDTAG* Sound = &pSoundList[i];
+				if (Sound->State == CHANNEL_PLAY) {
+					FillRingBuffer(Sound);
+				}
+			}
+			fBuffersNeedService = FALSE;
+		}
+		lk.unlock();
+	}
+}
+
 void SoundServiceStreams(void)
 {
 	if (!fSoundSystemInit) return;
@@ -540,12 +579,9 @@ void SoundServiceStreams(void)
 			Sound->pSample   = NULL;
 			Sound->uiSoundID = SOUND_ERROR;
 			Sound->State     = CHANNEL_FREE;
-		} else if (Sound->State == CHANNEL_PLAY) {
-			FillRingBuffer(Sound);
 		}
 	}
 }
-
 
 UINT32 SoundGetPosition(UINT32 uiSoundID)
 {
@@ -647,7 +683,7 @@ static SAMPLETAG* SoundLoadBuffer(UINT8* inMemoryBuffer, UINT32 uiBufferSize, ma
 
 		s->uiFlags |= SAMPLE_ALLOCATED;
 
-		SLOGD("SoundLoadDisk Success");
+		SLOGD("SoundLoadBuffer Success");
 		return s;
 	} catch (const std::runtime_error& err) {
 		SLOGE("SoundLoadBuffer Error: {}", err.what());
@@ -872,6 +908,8 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 
 	gMixBuffer.assign(want_values, 0);
 
+	auto ringBuffersNeedService = FALSE;
+
 	// Mix sounds
 	for (UINT32 i = 0; i < lengthof(pSoundList); i++)
 	{
@@ -913,6 +951,8 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples, (void**)src);
 				if (rbResult != MA_SUCCESS) {
 					SLOGE("Could not commit read pointer for channel %d: %s", Sound - pSoundList, ma_result_description(rbResult));
+				} else {
+					ringBuffersNeedService |= DoesChannelRingBufferNeedService(Sound);
 				}
 			}
 		}
@@ -931,6 +971,14 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 	// see: https://wiki.libsdl.org/SDL_AudioSpec
 	UINT32 have_bytes = want_values * sizeof(INT16);
 	std::fill_n(stream + have_bytes, want_bytes - have_bytes, 0);
+
+	if (ringBuffersNeedService) {
+		{
+			std::lock_guard<std::mutex> lk(mutexBuffersNeedService);
+			fBuffersNeedService = true;
+		}
+		conditionBuffersNeedService.notify_one();
+	}
 }
 
 
@@ -969,6 +1017,13 @@ static BOOLEAN SoundInitHardware(void)
 				).c_str());
 			}
 		}
+
+		fShutdownBufferServiceThread = FALSE;
+		bufferServiceThread = SDL_CreateThread(SoundServiceBuffers, "SoundManBufferServiceThread", (void *)NULL);
+		if (bufferServiceThread == NULL) {
+			throw std::runtime_error(ST::format("SDL_CreateThread for SoundManBufferServiceThread returned error: {}", SDL_GetError()).c_str());
+		}
+
 		SDL_PauseAudio(0);
 		return TRUE;
 		
@@ -988,6 +1043,18 @@ static BOOLEAN SoundInitHardware(void)
  */
 static void SoundShutdownHardware(void)
 {
+	if (bufferServiceThread != NULL) {
+		{
+			std::lock_guard<std::mutex> lk(mutexBuffersNeedService);
+			fShutdownBufferServiceThread = true;
+		}
+		conditionBuffersNeedService.notify_one();
+		int returnValue = 1;
+		SDL_WaitThread(bufferServiceThread, &returnValue);
+		if (returnValue != 0) {
+			SLOGE("SoundManBufferServiceThread exited with code: %d", returnValue);
+		}
+	}
 	for(auto channel = std::begin(pSoundList); channel != std::end(pSoundList); ++channel) {
 		if (channel->pRingBuffer != NULL) {
 			ma_pcm_rb_uninit(channel->pRingBuffer);
