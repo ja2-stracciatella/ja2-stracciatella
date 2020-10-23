@@ -350,11 +350,13 @@ void InvalidateBackgroundRects(void)
 
 void ShutdownBackgroundRects(void)
 {
-	for (UINT32 i = 0; i < guiNumBackSaves; ++i)
+	for (auto backgroundSave : gBackSaves)
 	{
-		BACKGROUND_SAVE* const b = gBackSaves[i];
-		if (b->fAllocated) FreeBackgroundRectNow(b);
+		if (backgroundSave->fAllocated) FreeBackgroundRectNow(backgroundSave);
+		delete backgroundSave;
 	}
+	gBackSaves.clear();
+	guiNumBackSaves = 0;
 }
 
 
