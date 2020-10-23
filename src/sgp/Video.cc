@@ -281,9 +281,34 @@ void ShutdownVideoManager(void)
 	/* Toggle the state of the video manager to indicate to the refresh thread
 	 * that it needs to shut itself down */
 
-	SDL_QuitSubSystem(SDL_INIT_VIDEO);
-
 	guiVideoManagerState = VIDEO_OFF;
+
+	if (ScreenBuffer != NULL) {
+		SDL_FreeSurface(ScreenBuffer);
+		ScreenBuffer = NULL;
+	}
+
+	if (ScreenTexture != NULL) {
+		SDL_DestroyTexture(ScreenTexture);
+		ScreenTexture = NULL;
+	}
+
+	if (ScaledScreenTexture != NULL) {
+		SDL_DestroyTexture(ScaledScreenTexture);
+		ScaledScreenTexture = NULL;
+	}
+
+	if (GameRenderer != NULL) {
+		SDL_DestroyRenderer(GameRenderer);
+		GameRenderer = NULL;
+	}
+
+	if (g_game_window != NULL) {
+		SDL_DestroyWindow(g_game_window);
+		g_game_window = NULL;
+	}
+
+	SDL_QuitSubSystem(SDL_INIT_VIDEO);
 
 	// ATE: Release mouse cursor!
 	FreeMouseCursor();
