@@ -899,6 +899,7 @@ bool DefaultContentManager::loadArmyData()
 		mapping[armyComp->name] = armyComp->compositionId;
 		m_armyCompositions.push_back(armyComp->toArmyComposition());
 	}
+	deleteElements(armyCompModels);
 	armyCompModels.clear();
 
 	auto jsonGG = readJsonDataFile("army-garrison-groups.json");
