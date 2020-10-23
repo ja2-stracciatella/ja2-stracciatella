@@ -164,8 +164,6 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 	status = smk_enable_all(sf->smacker, SMK_VIDEO_TRACK);
 	Assert(status == 0);
 	sf->status = smk_first(sf->smacker);
-	sf->start_tick = SDL_GetTicks();
-	sf->frame_no = 0;
 	for (uint8_t i = 0; i < 7; i++)
 	{
 		if (audio[i].empty() || !IsSoundEnabled())
@@ -180,6 +178,9 @@ SMKFLIC* SmkPlayFlic(const char* const filename, const UINT32 left, const UINT32
 		}
 	}
 
+	// We have started to play the flick, so set start time and frame number
+	sf->start_tick = SDL_GetTicks();
+	sf->frame_no = 0;
 	// We're now playing, flag the flic for the poller to update
 	sf->flags |= SMK_FLIC_PLAYING;
 	if (auto_close) sf->flags |= SMK_FLIC_AUTOCLOSE;

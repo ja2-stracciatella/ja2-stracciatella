@@ -43,7 +43,7 @@ pub extern "C" fn CString_destroy(s: *mut c_char) {
 /// Converts a UINT16 buffer from little endian to native endian
 /// The conversion is done in place, so no new allocations are done
 #[no_mangle]
-#[allow(clippy::not_unsafe_ptr_arg_deref)]
+#[cfg(not(target_endian = "little"))]
 pub unsafe extern "C" fn convertLittleEndianBufferToNativeEndianU16(buf: *mut u8, buf_len: u32) {
     if buf.is_null() {
         log::warn!("convertLittleEndianU16BufferToNativeEndian: Called with null ptr, doing nothing");
@@ -54,6 +54,14 @@ pub unsafe extern "C" fn convertLittleEndianBufferToNativeEndianU16(buf: *mut u8
         let current_value = LittleEndian::read_u16(chunk);
         NativeEndian::write_u16(chunk, current_value);
     }
+}
+
+/// Converts a UINT16 buffer from little endian to native endian
+/// The conversion is done in place, so no new allocations are done
+#[no_mangle]
+#[cfg(target_endian = "little")]
+pub unsafe extern "C" fn convertLittleEndianBufferToNativeEndianU16(buf: *mut u8, buf_len: u32) {
+    log::debug!("convertLittleEndianU16BufferToNativeEndian: Native format is little endian");
 }
 
 /// Guesses the resource version from the contents of the game directory.
