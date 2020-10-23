@@ -94,20 +94,22 @@ pub extern "C" fn File_len(file: *mut File) -> u64 {
 /// Returns the number of bytes read or ´usize::MAX´ if there is an error.
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/io/trait.Read.html#tymethod.read
+///
+/// # Safety
+///
+/// The function panics if the passed in pointers are not valid
 #[no_mangle]
 pub unsafe extern "C" fn File_read(file: *mut File, buf: *mut u8, buf_len: usize) -> usize {
     forget_rust_error();
     let file = unsafe_mut(file);
     let buf = unsafe_slice_mut(buf, buf_len);
     match file.inner.read(buf) {
-        Ok(n) => {
-            return n;
-        },
+        Ok(n) => n,
         Err(err) => {
             remember_rust_error(format!("File_read {}: {}", buf_len, err));
-            return usize::MAX;
+            usize::MAX
         }
-    };
+    }
 }
 
 /// Reads data from the file to the buffer until it is full.

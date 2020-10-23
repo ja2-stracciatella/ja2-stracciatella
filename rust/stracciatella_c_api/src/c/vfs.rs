@@ -122,20 +122,22 @@ pub extern "C" fn VfsFile_readExact(file: *mut VfsFile, buffer: *mut u8, length:
 /// Reads data from the virtual file might return less bytes than requested
 /// Returns the number of bytes read or ´usize::MAX´ if there is an error.
 /// Sets the rust error.
+///
+/// # Safety
+///
+/// The function panics if the passed in pointers are not valid
 #[no_mangle]
 pub unsafe extern "C" fn VfsFile_read(file: *mut VfsFile, buffer: *mut u8, length: usize) -> usize {
     forget_rust_error();
     let file = &mut unsafe_mut(file).0;
     let buffer = unsafe_slice_mut(buffer, length);
     match file.read(buffer) {
-        Ok(b) => {
-            return b;
-        },
+        Ok(b) => b,
         Err(err) => {
             remember_rust_error(format!("VfsFile_read {} {}: {}", file, length, err));
-            return usize::MAX;
+            usize::MAX
         }
-    };
+    }
 }
 
 /// Seeks to an offset relative to the start of the virtual file.

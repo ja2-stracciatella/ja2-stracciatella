@@ -7,7 +7,6 @@ use std::ffi::CString;
 use std::process::Command;
 use std::ptr;
 
-use byteorder::{ByteOrder, LittleEndian, NativeEndian};
 use log;
 
 use stracciatella::config::EngineOptions;
@@ -42,11 +41,20 @@ pub extern "C" fn CString_destroy(s: *mut c_char) {
 
 /// Converts a UINT16 buffer from little endian to native endian
 /// The conversion is done in place, so no new allocations are done
+///
+/// # Safety
+///
+/// The function is a noop when the passed in pointer is null
+/// It panics when the length does not match
 #[no_mangle]
 #[cfg(not(target_endian = "little"))]
 pub unsafe extern "C" fn convertLittleEndianBufferToNativeEndianU16(buf: *mut u8, buf_len: u32) {
+    use byteorder::{ByteOrder, LittleEndian, NativeEndian};
+
     if buf.is_null() {
-        log::warn!("convertLittleEndianU16BufferToNativeEndian: Called with null ptr, doing nothing");
+        log::warn!(
+            "convertLittleEndianU16BufferToNativeEndian: Called with null ptr, doing nothing"
+        );
         return;
     }
     let buf = std::slice::from_raw_parts_mut(buf, buf_len as usize);
@@ -60,8 +68,8 @@ pub unsafe extern "C" fn convertLittleEndianBufferToNativeEndianU16(buf: *mut u8
 /// The conversion is done in place, so no new allocations are done
 #[no_mangle]
 #[cfg(target_endian = "little")]
-pub unsafe extern "C" fn convertLittleEndianBufferToNativeEndianU16(buf: *mut u8, buf_len: u32) {
-    log::debug!("convertLittleEndianU16BufferToNativeEndian: Native format is little endian");
+pub extern "C" fn convertLittleEndianBufferToNativeEndianU16(_buf: *mut u8, _buf_len: u32) {
+    log::debug!("convertLittleEndianU16BufferToNativeEndian: Native format is little endian so this is a noop");
 }
 
 /// Guesses the resource version from the contents of the game directory.
