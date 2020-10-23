@@ -149,6 +149,7 @@ struct SOUNDTAG
 	ma_pcm_rb*    pRingBuffer; // Pointer to the ring buffer that holds decoded and converted data
 	UINT32 State; // This represents the state of the sound (PLAYING / DEAD)
 	UINT32 Pos; // This represents the position of the sound that we are currently at (in samples)
+	BOOLEAN DoneServicing;
 };
 
 static BOOLEAN fSoundSystemInit = FALSE; // Startup called
@@ -463,6 +464,9 @@ void SoundStopAllRandom(void)
 }
 
 static BOOLEAN DoesChannelRingBufferNeedService(SOUNDTAG* channel) {
+	if (channel->DoneServicing) {
+		return FALSE;
+	}
 	auto bytesToWrite = ma_pcm_rb_available_write(channel->pRingBuffer);
 	// If the ring buffer is still filled more than half the way, we dont need to service the stream
 	return bytesToWrite >= SOUND_RING_BUFFER_SIZE / 2;
@@ -526,6 +530,8 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			if (channel->Loops > 1) {
 				channel->Loops -= 1;
 				channel->Pos = 0;
+			} else {
+				channel->DoneServicing = TRUE;
 			}
 		}
 	} catch (const std::runtime_error& err) {
@@ -1106,6 +1112,7 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volu
 	channel->pSample      = sample;
 	channel->uiTimeStamp  = GetClock();
 	channel->Pos          = 0;
+	channel->DoneServicing = FALSE;
 
 	// Reset ring buffer
 	ma_pcm_rb_reset(channel->pRingBuffer);
