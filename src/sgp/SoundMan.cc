@@ -712,7 +712,7 @@ ma_bool32 MiniaudioSeekProc(ma_decoder* pDecoder, int byteOffset, ma_seek_origin
 		sdlOrigin = RW_SEEK_END;
 	}
 
-	return SDL_RWseek(rwOps, byteOffset, sdlOrigin);
+	return SDL_RWseek(rwOps, byteOffset, sdlOrigin) != -1;
 }
 
 
