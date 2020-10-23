@@ -1,36 +1,57 @@
+/**
+ * Defines the different music tracks played throughout the game.
+ *
+ * Currently the following formats for sounds are supported
+ * - WAV
+ * - OGG
+ * - MP3
+ * - FLAC
+ *
+ * Any file size should be supported
+ */
 {
+  // Tracks played in the main menu
   "main_menu": [
     "music/menumix1.wav"
   ],
+  // Tracks played in the laptop
   "laptop": [
     "music/marimbad 2.wav"
   ],
+  // Tracks played in tactical mode, when there are no soldier enemies present
   "tactical": [
     "music/nothing a.wav",
     "music/nothing b.wav",
     "music/nothing c.wav",
     "music/nothing d.wav"
   ],
+  // Tracks played in tactical mode, when soldier enemies are present, but there is currently no battle
   "tactical_enemypresent": [
     "music/tensor a.wav",
     "music/tensor b.wav",
     "music/tensor c.wav"
   ],
+  // Tracks played in tactical mode when battle is happening
   "tactical_battle": [
     "music/battle a.wav"
   ],
+  // Tracks played in tactical mode when creatures are attacking a town sector
   "tactical_creature": [
     "music/creepy.wav"
   ],
+  // Tracks played in tactical mode when creatures are present in a creature-owned sector
   "tactical_creature_enemypresent": [
     "music/creepy.wav"
   ],
+  // Tracks played in tactical mode when in battle in a creature-owned sector
   "tactical_creature_battle": [
     "music/creature battle.wav"
   ],
+  // Tracks played after a victory
   "tactical_victory": [
     "music/triumph.wav"
   ],
+  // Tracks played after a defeat
   "tactical_defeat": [
     "music/death.wav"
   ]
