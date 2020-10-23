@@ -7,6 +7,9 @@ use std::ffi::CString;
 use std::process::Command;
 use std::ptr;
 
+use byteorder::{ByteOrder, LittleEndian, NativeEndian};
+use log;
+
 use stracciatella::config::EngineOptions;
 use stracciatella::fs::resolve_existing_components;
 use stracciatella::get_assets_dir;
@@ -35,6 +38,22 @@ pub extern "C" fn CString_destroy(s: *mut c_char) {
         return;
     }
     unsafe { CString::from_raw(s) };
+}
+
+/// Converts a UINT16 buffer from little endian to native endian
+/// The conversion is done in place, so no new allocations are done
+#[no_mangle]
+#[allow(clippy::not_unsafe_ptr_arg_deref)]
+pub unsafe extern "C" fn convertLittleEndianBufferToNativeEndianU16(buf: *mut u8, buf_len: u32) {
+    if buf.is_null() {
+        log::warn!("convertLittleEndianU16BufferToNativeEndian: Called with null ptr, doing nothing");
+        return;
+    }
+    let buf = std::slice::from_raw_parts_mut(buf, buf_len as usize);
+    for chunk in buf.chunks_exact_mut(2) {
+        let current_value = LittleEndian::read_u16(chunk);
+        NativeEndian::write_u16(chunk, current_value);
+    }
 }
 
 /// Guesses the resource version from the contents of the game directory.

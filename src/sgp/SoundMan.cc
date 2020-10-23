@@ -104,6 +104,9 @@ struct SAMPLETAG
 
 	UINT8* pInMemoryBuffer; // pointer to sample data memory (if playing from an in-memory buffer)
 	UINT32 uiBufferSize; // The size of the in-memory buffer
+	ma_format eInMemoryFormat;
+	UINT32 uiInMemoryChannels;
+	
 	ma_data_converter* pDataConverter; // pointer to a data converter that decodes the data from pData
 
 	SGPFile* pFile;  // pointer to a SDL_RWops representing the file that we stream from
@@ -220,24 +223,36 @@ UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, 
 	return SoundStartSample(sample, channel, volume, pan, loop, end_callback, data);
 }
 
-static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8>& buf, SDL_AudioFormat format, UINT8 channels, int freq);
+static SAMPLETAG* SoundLoadBuffer(UINT8* buf, UINT32 bufSize, ma_format format, UINT32 channels, int freq);
 static BOOLEAN    SoundCleanCache(void);
 static SAMPLETAG* SoundGetEmptySample(void);
 
+/* Play a sound sample from a Smacker Flick
+ *
+ * Allocates space for the sound sample within the sound system
+ */
 UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UINT32 rate, std::vector<UINT8>& buf, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
-	SDL_AudioFormat format;
+	ma_format format;
 
 	if (buf.empty()) return SOUND_ERROR;
 
 	//Originaly Sound Blaster could only play mono unsigned 8-bit PCM data.
 	//Later it became capable of playing 16-bit audio data, but needed to be signed and LSB.
 	//They were the de facto standard so I'm assuming smacker uses the same.
-	if (depth == 8) format = AUDIO_U8;
-	else if (depth == 16) format = AUDIO_S16LSB;
+	if (depth == 8) format = ma_format_u8;
+	else if (depth == 16) format = ma_format_s16;
 	else return SOUND_ERROR;
 
-	SAMPLETAG* s = SoundLoadBuffer(buf, format, channels, rate);
+	UINT32 uiBufferSize = buf.size();
+	UINT8* inMemoryBuffer = new UINT8[uiBufferSize]{};
+	memcpy(inMemoryBuffer, buf.data(), uiBufferSize);
+	if (format == ma_format_s16) {
+		// We expect the Endianess for the Smacker buffer to be little endian, but ma_format_s16 is native endian, so we need to do some conversion
+		convertLittleEndianBufferToNativeEndianU16(inMemoryBuffer, uiBufferSize);
+	}
+
+	SAMPLETAG* s = SoundLoadBuffer(inMemoryBuffer, uiBufferSize, format, channels, rate);
 	if (s == NULL) return SOUND_ERROR;
 
 	s->pName           = name;
@@ -465,15 +480,16 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			// We stream from file
 			framesRead = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, bytesToWrite);
 		} else if (sample->pInMemoryBuffer != NULL) {
-			auto posInBytes = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, channel->Pos);
+			auto bytesPerFrame = ma_get_bytes_per_frame(sample->eInMemoryFormat, sample->uiInMemoryChannels);
+			auto posInBytes = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, channel->Pos) * bytesPerFrame;
 			auto requiredInputFrameCount = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite);
-			auto availableBytes = MIN(requiredInputFrameCount, sample->uiBufferSize - channel->Pos);
-			auto expectedOutputFrameCount = ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableBytes);
+			auto availableFrames = MIN(requiredInputFrameCount * bytesPerFrame, sample->uiBufferSize - posInBytes) / bytesPerFrame;
+			auto expectedOutputFrameCount = ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableFrames);
 			
 			auto result = ma_data_converter_process_pcm_frames(
 				sample->pDataConverter,
 				sample->pInMemoryBuffer + posInBytes,
-				&availableBytes,
+				&availableFrames,
 				pFramesInClientFormat,
 				&expectedOutputFrameCount
 			);
@@ -592,10 +608,11 @@ static SAMPLETAG* SoundGetCached(const char* pFilename)
 	return NULL;
 }
 
-/* Loads a sound from a buffer into the cache, allocating memory and a slot for storage.
+/* Loads a sound from a buffer into the cache.
+ * The sound system will take over ownership over the buffer
  *
  * Returns: The sample if successful, NULL otherwise. */
-static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8>& buf, SDL_AudioFormat format, UINT8 channels, int freq)
+static SAMPLETAG* SoundLoadBuffer(UINT8* inMemoryBuffer, UINT32 uiBufferSize, ma_format format, UINT32 channels, int freq)
 {
 	try {
 		SAMPLETAG* s = SoundGetEmptySample();
@@ -606,12 +623,8 @@ static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8>& buf, SDL_AudioFormat forma
 			throw std::runtime_error("sound channels are full");
 		}
 
-		UINT8* inMemoryBuffer = new UINT8[buf.size()]{};
-		memcpy(inMemoryBuffer, buf.data(), buf.size());
-
 		ma_data_converter_config config = ma_data_converter_config_init(
-			// TODO: Fix sound format
-			SOUND_MA_SOUND_FORMAT,
+			format,
 			SOUND_MA_SOUND_FORMAT,
 			channels,
 			gTargetAudioSpec.channels,
@@ -625,8 +638,10 @@ static SAMPLETAG* SoundLoadBuffer(std::vector<UINT8>& buf, SDL_AudioFormat forma
 		}
 
 		s->pInMemoryBuffer = inMemoryBuffer;
-		s->uiBufferSize = buf.size();
+		s->uiBufferSize = uiBufferSize;
 		s->pDataConverter = converter;
+		s->eInMemoryFormat = format;
+		s->uiInMemoryChannels = channels;
 
 		s->uiFlags |= SAMPLE_ALLOCATED;
 
