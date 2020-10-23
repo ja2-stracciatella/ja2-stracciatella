@@ -909,30 +909,70 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 }
 
 
+/*
+ * Initializes SDL Audio Subsystem and the channel ring buffers
+ */
 static BOOLEAN SoundInitHardware(void)
 {
-	SDL_InitSubSystem(SDL_INIT_AUDIO);
+	try {
+		if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0) {
+			throw std::runtime_error(ST::format("SDL_InitSubSystem returned error: {}", SDL_GetError()).c_str());
+		}
 
-	gTargetAudioSpec.freq     = SOUND_FREQ;
-	gTargetAudioSpec.format   = SOUND_FORMAT;
-	gTargetAudioSpec.channels = SOUND_CHANNELS;
-	gTargetAudioSpec.samples  = SOUND_SAMPLES;
-	gTargetAudioSpec.callback = SoundCallback;
-	gTargetAudioSpec.userdata = NULL;
+		gTargetAudioSpec.freq     = SOUND_FREQ;
+		gTargetAudioSpec.format   = SOUND_FORMAT;
+		gTargetAudioSpec.channels = SOUND_CHANNELS;
+		gTargetAudioSpec.samples  = SOUND_SAMPLES;
+		gTargetAudioSpec.callback = SoundCallback;
+		gTargetAudioSpec.userdata = NULL;
 
-	if (SDL_OpenAudio(&gTargetAudioSpec, NULL) != 0) return FALSE;
+		if (SDL_OpenAudio(&gTargetAudioSpec, NULL) != 0) {
+			throw std::runtime_error(ST::format("SDL_OpenAudio returned error: {}", SDL_GetError()).c_str());
+		}
 
-	gTargetDecoderConfig = ma_decoder_config_init(SOUND_MA_SOUND_FORMAT, gTargetAudioSpec.channels, gTargetAudioSpec.freq);
+		gTargetDecoderConfig = ma_decoder_config_init(SOUND_MA_SOUND_FORMAT, gTargetAudioSpec.channels, gTargetAudioSpec.freq);
 
-	std::fill(std::begin(pSoundList), std::end(pSoundList), SOUNDTAG{});
-	SDL_PauseAudio(0);
-	return TRUE;
+		std::fill(std::begin(pSoundList), std::end(pSoundList), SOUNDTAG{});
+		for(auto channel = std::begin(pSoundList); channel != std::end(pSoundList); ++channel) {
+			channel->pRingBuffer = (ma_pcm_rb*)ma_malloc(sizeof(ma_pcm_rb), NULL);
+			ma_result result = ma_pcm_rb_init(SOUND_MA_SOUND_FORMAT, SOUND_CHANNELS, SOUND_RING_BUFFER_SIZE, NULL, NULL, channel->pRingBuffer);
+			if (result != MA_SUCCESS) {
+				throw std::runtime_error(ST::format(
+					"ma_pcm_rb_init for channel {} returned error: {}",
+					channel - pSoundList,
+					ma_result_description(result)
+				).c_str());
+			}
+		}
+		SDL_PauseAudio(0);
+		return TRUE;
+		
+	} catch (const std::runtime_error& err) {
+		SLOGE(ST::format(
+			"SoundInitHardware: {}",
+			err.what()
+		).c_str());
+		SoundShutdownHardware();
+		return FALSE;
+	}
 }
 
 
+/*
+ * Shutdown SDL Audio Subsystem, if initialized and the channel ring buffers if initialized
+ */
 static void SoundShutdownHardware(void)
 {
-	SDL_QuitSubSystem(SDL_INIT_AUDIO);
+	for(auto channel = std::begin(pSoundList); channel != std::end(pSoundList); ++channel) {
+		if (channel->pRingBuffer != NULL) {
+			ma_pcm_rb_uninit(channel->pRingBuffer);
+			ma_free(channel->pRingBuffer, NULL);
+			channel->pRingBuffer = NULL;
+		}
+	}
+	if (SDL_WasInit(SDL_INIT_AUDIO) != 0) {
+		SDL_QuitSubSystem(SDL_INIT_AUDIO);
+	}
 }
 
 
@@ -969,24 +1009,14 @@ static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volu
 	channel->EOSCallback   = end_callback;
 	channel->pCallbackData = data;
 
-	// Allocate ring buffer
-	if (channel->pRingBuffer == NULL) {
-		channel->pRingBuffer = (ma_pcm_rb*)ma_malloc(sizeof(ma_pcm_rb), NULL);
-		ma_result result = ma_pcm_rb_init(SOUND_MA_SOUND_FORMAT, SOUND_CHANNELS, SOUND_RING_BUFFER_SIZE, NULL, NULL, channel->pRingBuffer);
-		if (result != MA_SUCCESS) {
-			SLOGE("Error initializing ring buffer for channel %d: %s", channel - pSoundList, ma_result_description(result));
-			return SOUND_ERROR;
-		}
-	} else {
-		ma_pcm_rb_reset(channel->pRingBuffer);
-	}
-
 	UINT32 uiSoundID = SoundGetUniqueID();
 	channel->uiSoundID    = uiSoundID;
 	channel->pSample      = sample;
 	channel->uiTimeStamp  = GetClock();
 	channel->Pos          = 0;
 
+	// Reset ring buffer
+	ma_pcm_rb_reset(channel->pRingBuffer);
 	// Fill ring buffer with initial data
 	FillRingBuffer(channel);
 
@@ -1022,12 +1052,6 @@ static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 	if (channel->pSample == NULL) return FALSE;
 
 	SLOGD(ST::format("stopping channel channel {}", (channel - pSoundList)));
-	// TODO: Probably not necessary, we can also just reset the buffer
-	if (channel->pRingBuffer != NULL) {
-		ma_pcm_rb_uninit(channel->pRingBuffer);
-		ma_free(channel->pRingBuffer, NULL);
-		channel->pRingBuffer = NULL;
-	}
 	channel->State = CHANNEL_STOP;
 	return TRUE;
 }
