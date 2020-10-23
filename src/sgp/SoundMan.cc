@@ -93,6 +93,8 @@ enum
 #define SOUND_CHANNELS  2
 #define SOUND_SAMPLES   1024
 
+// Threshold from which a sound is streamed from file instead of from memory (currently 1 MB)
+#define SOUND_FILE_STREAMING_THRESHOLD (1024 * 1024)
 // Buffer size for a single channel in the sound system
 #define SOUND_RING_BUFFER_SIZE (512 * SOUND_SAMPLES)
 
@@ -267,7 +269,7 @@ UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UIN
 
 UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
-	// All sounds are streamed, so this is an alias to SoundPlay
+	// All sounds might be streamed, so this is an alias to SoundPlay
 	return SoundPlay(pFilename, volume, pan, loop, end_callback, data);
 }
 
@@ -472,14 +474,14 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			throw std::runtime_error(ST::format("ma_pcm_rb_acquire_write: {}", ma_result_description(result)).c_str());
 		}
 		ma_uint64 framesRead = 0;
-		if (sample->pFile != NULL) {
+		if (sample->pDecoder != NULL) {
 			auto result = ma_decoder_seek_to_pcm_frame(sample->pDecoder, channel->Pos);
 			if (result != MA_SUCCESS) {
 				throw std::runtime_error(ST::format("ma_decoder_seek_to_pcm_frame: {}", ma_result_description(result)).c_str());
 			}
 			// We stream from file
 			framesRead = ma_decoder_read_pcm_frames(sample->pDecoder, pFramesInClientFormat, bytesToWrite);
-		} else if (sample->pInMemoryBuffer != NULL) {
+		} else if (sample->pDataConverter != NULL) {
 			auto bytesPerFrame = ma_get_bytes_per_frame(sample->eInMemoryFormat, sample->uiInMemoryChannels);
 			auto posInBytes = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, channel->Pos) * bytesPerFrame;
 			auto requiredInputFrameCount = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite);
@@ -686,6 +688,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		return NULL;
 	}
 
+	UINT8* inMemoryBuffer = NULL;
 	SGPFile* hFile = NULL;
 	SDL_RWops* rwOps = NULL;
 	ma_decoder* decoder = NULL;
@@ -702,24 +705,37 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 
 		hFile = GCM->openGameResForReading(pFilename);
 		rwOps = FileGetRWOps(hFile);
+		auto hFileLen = FileGetSize(hFile);
+		if (hFileLen <= SOUND_FILE_STREAMING_THRESHOLD) {
+			// If the file length is below the streaming threshold we store the raw data in the inMemoryBuffer
+			inMemoryBuffer = MALLOCN(UINT8, hFileLen);
+			if (SDL_RWread(rwOps, inMemoryBuffer, sizeof(UINT8), hFileLen) != hFileLen) {
+				throw std::runtime_error("Could not read the whole file");
+			}
+			SDL_RWclose(rwOps);
+			rwOps = SDL_RWFromConstMem(inMemoryBuffer, hFileLen);
+			hFile = NULL;
+		}
 
+		// Initialize decoder to convert WAV/MP3/OGG data to raw sample data
 		decoder = (ma_decoder*)ma_malloc(sizeof(ma_decoder), NULL);
 		auto result = ma_decoder_init(MiniaudioReadProc, MiniaudioSeekProc, rwOps, &gTargetDecoderConfig, decoder);
 		if (result != MA_SUCCESS) {
 			throw std::runtime_error(ST::format("Error initializing sound decoder for file \"{}\"- {}", pFilename, ma_result_description(result)).c_str());
 		}
 		s->pFile = hFile;
+		s->pInMemoryBuffer = inMemoryBuffer;
 		s->pDecoder = decoder;
 		s->pName = pFilename;
 
 		s->uiFlags |= SAMPLE_ALLOCATED;
 
-		SLOGD("SoundLoadDisk Success: \"%s\"", pFilename);
+		SLOGD("SoundLoadDisk Success for \"%s\"", pFilename);
 		return s;
 	}
 	catch (const std::runtime_error& err)
 	{
-		SLOGE("SoundLoadDisk Error: %s", err.what());
+		SLOGE("SoundLoadDisk Error for \"%s\": %s", pFilename, err.what());
 		// Clean up possible allocations
 		if (hFile != NULL) {
 			FileClose(hFile);
@@ -800,15 +816,18 @@ static void SoundFreeSample(SAMPLETAG* s)
 
 	if (s->pDecoder != NULL) {
 		ma_decoder_uninit(s->pDecoder);
-	}
-	if (s->pRWOps != NULL) {
-		SDL_FreeRW(s->pRWOps);
-	}
-	if (s->pFile != NULL) {
-		FileClose(s->pFile);
+		ma_free(s->pDecoder, NULL);
 	}
 	if (s->pDataConverter != NULL) {
 		ma_data_converter_uninit(s->pDataConverter);
+		ma_free(s->pDataConverter, NULL);
+	}
+	if (s->pRWOps != NULL) {
+		SDL_RWclose(s->pRWOps);
+	}
+	if (s->pFile != NULL) {
+		// File is closed by SDL_RWclose implicitly, so we can just free it
+		delete s->pFile;
 	}
 	if (s->pInMemoryBuffer != NULL) {
 		delete[] s->pInMemoryBuffer;
