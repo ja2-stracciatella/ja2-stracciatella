@@ -115,9 +115,9 @@ impl AssetManagerFs {
                     cache_entry
                 } else if self.asset_manager.open_dir(&candidate_cstring).is_none() {
                     canonicalization_cache.put(candidate.clone(), vec![]);
-                    canonicalization_cache
-                        .get(&candidate)
-                        .expect("we should be able to get a cache key that was just set")
+                    canonicalization_cache.get(&candidate).expect(
+                        "AssetManagerFs: We should be able to get a cache key that was just set",
+                    )
                 } else {
                     let entries: Vec<_> = crate::android::list_asset_dir(&candidate)
                         .map_err(|e| {
@@ -134,9 +134,9 @@ impl AssetManagerFs {
                         })
                         .collect();
                     canonicalization_cache.put(candidate.clone(), entries);
-                    canonicalization_cache
-                        .get(&candidate)
-                        .expect("we should be able to get a cache key that was just set")
+                    canonicalization_cache.get(&candidate).expect(
+                        "AssetManagerFs: We should be able to get a cache key that was just set",
+                    )
                 };
 
                 for (nfc, os_string) in entries {
@@ -165,7 +165,7 @@ impl AssetManagerFs {
                 io::Error::new(
                     io::ErrorKind::InvalidInput,
                     format!(
-                        "Could not convert path to string for AssetManager: {:?}",
+                        "AssetManagerFs: Could not convert path to string: {:?}",
                         err
                     ),
                 )
@@ -174,7 +174,7 @@ impl AssetManagerFs {
             io::Error::new(
                 io::ErrorKind::InvalidInput,
                 format!(
-                    "Could not convert path to string for AssetManager: {:?}",
+                    "AssetManagerFs: Could not convert path to string: {:?}",
                     err
                 ),
             )
@@ -224,7 +224,7 @@ impl VfsLayer for AssetManagerFs {
                     &file_name.into_os_string().into_string().map_err(|err| {
                         io::Error::new(
                             io::ErrorKind::InvalidInput,
-                            format!("Could not convert path to NFC for AssetManager: {:?}", err),
+                            format!("AssetManagerFs: Could not convert path to NFC: {:?}", err),
                         )
                     })?,
                 );

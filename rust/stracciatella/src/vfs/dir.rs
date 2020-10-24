@@ -81,7 +81,7 @@ impl DirFs {
             if want == "." || want == ".." {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidInput,
-                    "special path components are not supported",
+                    "DirFs: Special path components are not supported",
                 ));
             }
             for candidate in candidates {
@@ -91,7 +91,7 @@ impl DirFs {
                     canonicalization_cache.put(candidate.clone(), vec![]);
                     canonicalization_cache
                         .get(&candidate)
-                        .expect("we should be able to get a cache key that was just set")
+                        .expect("DirFs: We should be able to get a cache key that was just set")
                 } else {
                     let entries: io::Result<Vec<_>> = fs::read_dir(&candidate)?
                         .map(|entry_result| {
@@ -106,7 +106,7 @@ impl DirFs {
                                     .ok_or_else(|| {
                                         io::Error::new(
                                             io::ErrorKind::InvalidInput,
-                                            "missing file name when listing files",
+                                            "DirFs: Missing file name when listing files",
                                         )
                                     })
                             })
@@ -116,7 +116,7 @@ impl DirFs {
                     canonicalization_cache.put(candidate.clone(), entries);
                     canonicalization_cache
                         .get(&candidate)
-                        .expect("we should be able to get a cache key that was just set")
+                        .expect("DirFs: We should be able to get a cache key that was just set")
                 };
 
                 for (nfc, os_string) in entries {
@@ -165,7 +165,7 @@ impl VfsLayer for DirFs {
                         io::Error::new(
                             io::ErrorKind::InvalidInput,
                             format!(
-                                "Could not convert path {:?} to NFC for DirFs: {:?}",
+                                "DirFs: Could not convert path {:?} to NFC: {:?}",
                                 entry.file_name(),
                                 err
                             ),

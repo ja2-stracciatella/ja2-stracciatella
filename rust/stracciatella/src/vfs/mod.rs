@@ -118,7 +118,7 @@ impl Vfs {
         let slf_paths = layer
             .read_dir(&Nfc::caseless_path("/"))
             .map_err(|error| VfsInitError {
-                path: PathBuf::from(format!("Error listing SLF files in {}", layer)),
+                path: PathBuf::from(format!("Vfs: Error listing SLF files in {}", layer)),
                 error,
             })?;
         let slf_paths: Vec<_> = slf_paths
