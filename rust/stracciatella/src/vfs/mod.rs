@@ -1,7 +1,14 @@
-//! This module implements virtual filesystems.
+//! This module contains the virtual filesystem used for data files in JA2 Stracciatella
 //!
-//! The paths are case insensitive.
-//! It does not support path components `.` and `..`.
+//! It is a layered filesystem that can load resources from multiple locations.
+//!
+//! ## Assumptions
+//!
+//! There are some assumptions we make about the AssetManager in oder to make everything work smoothly.
+//!
+//! - All sub-file systems dont change file / directory structure
+//! - All paths within the file system can be de- and encoded to UTF-8
+//!
 #![allow(dead_code)]
 
 #[cfg(target_os = "android")]
@@ -24,6 +31,9 @@ use crate::vfs::dir::DirFs;
 use crate::vfs::slf::SlfFs;
 use crate::EngineOptions;
 
+/// This is the trait that every File within the file system needs to implement.
+///
+/// In addition to basic std::io traits, fmt::Display and some convenience functions for length need to be implemented.
 pub trait VfsFile: io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display {
     /// Returns the length of the file
     fn len(&self) -> io::Result<u64>;
@@ -34,6 +44,9 @@ pub trait VfsFile: io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display {
     }
 }
 
+/// This is the trait a VFS Layer within the file system needs to implement
+///
+/// The whole VFS implements this layer as well and its functions are used to access the VFS in general.
 pub trait VfsLayer: fmt::Debug + fmt::Display {
     // Opens a file in the VFS Layer
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>>;

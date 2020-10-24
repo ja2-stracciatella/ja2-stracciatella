@@ -1,4 +1,15 @@
-//! This module contains a virtual filesystem backed by a SLF file.
+//! This module contains a virtual filesystem backed by the Android Asset Manager
+//!
+//! All paths opened in this VFS are relative to the base asset directory passed in `new`. They should
+//! not start with a `/`.
+//!
+//! ## Assumptions
+//!
+//! There are some assumptions we make about the AssetManager in oder to make everything work smoothly.
+//!
+//! - The directory and file structure within Android assets does not change during a single run of the game
+//! - All paths within the Android assets can be de- and encoded to UTF-8
+//!
 #![allow(dead_code)]
 
 use std::collections::HashSet;
@@ -37,6 +48,8 @@ pub struct AssetManagerFsFile {
 
 impl AssetManagerFs {
     /// Creates a new virtual filesystem.
+    ///
+    /// Note: The base_path will not be canonicalized. This means it has to exist exactly as specified in `new`.
     pub fn new(base_path: &Path) -> io::Result<Rc<AssetManagerFs>> {
         let asset_manager = get_asset_manager().map_err(|err| {
             io::Error::new(

@@ -1,4 +1,15 @@
-//! This module contains a virtual filesystem backed by a SLF file.
+//! This module contains a virtual filesystem backed by a specific directory in the file system.
+//!
+//! All paths opened in this VFS are relative to the base directory passed in `new`. They should
+//! not start with a `/`.
+//!
+//! ## Assumptions
+//!
+//! There are some assumptions we make about the directory in oder to make everything work smoothly.
+//!
+//! - The directory and file structure within the directory does not change during a single run of the game
+//! - All paths within the directory can be de- and encoded to UTF-8
+//!
 #![allow(dead_code)]
 
 use std::fmt;
