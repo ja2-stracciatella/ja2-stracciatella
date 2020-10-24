@@ -1,23 +1,31 @@
 //! This module contains a virtual filesystem backed by a SLF file.
 #![allow(dead_code)]
 
+use lru::LruCache;
+use std::collections::HashSet;
+use std::ffi::OsString;
 use std::fmt;
 use std::io;
 use std::io::SeekFrom;
 use std::path::{Path, PathBuf};
+use std::rc::Rc;
+use std::sync::Mutex;
 
 use crate::fs;
 use crate::fs::File;
 use crate::unicode::Nfc;
 use crate::vfs::{VfsFile, VfsLayer};
-use std::collections::HashSet;
-use std::rc::Rc;
+
+/// The size of the cache used for canonicalization
+const CANONICALIZATION_CACHE_SIZE: usize = 256;
 
 /// A case-insensitive virtual filesystem backed by a filesystem directory.
 #[derive(Debug)]
 pub struct DirFs {
     /// Path to the directory.
     pub dir_path: PathBuf,
+    /// Cache that is used for canonicalization. It will contain an entry for each path that is listed during path canonicalization
+    canonicalization_cache: Mutex<LruCache<PathBuf, Vec<(Nfc, OsString)>>>,
 }
 
 /// A virtual file.
@@ -37,6 +45,7 @@ impl DirFs {
         fs::read_dir(&path)?;
         Ok(Rc::new(DirFs {
             dir_path: path.to_owned(),
+            canonicalization_cache: Mutex::new(LruCache::new(CANONICALIZATION_CACHE_SIZE)),
         }))
     }
 
@@ -45,6 +54,12 @@ impl DirFs {
     /// The returned paths are already containing the dir path
     fn canonicalize(&self, file_path: &str) -> io::Result<Vec<PathBuf>> {
         let mut candidates = vec![self.dir_path.to_owned()];
+        let mut canonicalization_cache = self.canonicalization_cache.lock().map_err(|err| {
+            io::Error::new(
+                io::ErrorKind::Other,
+                format!("DirFs: Error locking canonicalization cache: `{}`", err),
+            )
+        })?;
 
         if file_path.is_empty() {
             return Ok(candidates);
@@ -59,18 +74,43 @@ impl DirFs {
                 ));
             }
             for candidate in candidates {
-                if !candidate.is_dir() {
-                    continue;
-                }
-                for entry_result in fs::read_dir(&candidate)? {
-                    let path = entry_result?.path();
-                    let is_match = path
-                        .file_name()
-                        .and_then(|x| x.to_str())
-                        .map(|x| want == Nfc::caseless(x).as_str())
-                        .unwrap_or(false);
-                    if is_match {
-                        next.push(path);
+                let entries = if let Some(cache_entry) = canonicalization_cache.get(&candidate) {
+                    cache_entry
+                } else if !candidate.is_dir() {
+                    canonicalization_cache.put(candidate.clone(), vec![]);
+                    canonicalization_cache
+                        .get(&candidate)
+                        .expect("we should be able to get a cache key that was just set")
+                } else {
+                    let entries: io::Result<Vec<_>> = fs::read_dir(&candidate)?
+                        .map(|entry_result| {
+                            entry_result.and_then(|e| {
+                                e.path()
+                                    .file_name()
+                                    .and_then(|os_string| {
+                                        os_string
+                                            .to_str()
+                                            .map(|s| (Nfc::caseless(s), os_string.to_owned()))
+                                    })
+                                    .ok_or_else(|| {
+                                        io::Error::new(
+                                            io::ErrorKind::InvalidInput,
+                                            "missing file name when listing files",
+                                        )
+                                    })
+                            })
+                        })
+                        .collect();
+                    let entries = entries?;
+                    canonicalization_cache.put(candidate.clone(), entries);
+                    canonicalization_cache
+                        .get(&candidate)
+                        .expect("we should be able to get a cache key that was just set")
+                };
+
+                for (nfc, os_string) in entries {
+                    if want == nfc.as_str() {
+                        next.push(candidate.join(&os_string));
                     }
                 }
             }
