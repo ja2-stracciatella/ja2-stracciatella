@@ -14,17 +14,23 @@
 
 use std::collections::HashSet;
 use std::ffi::CString;
+use std::ffi::OsString;
 use std::fmt;
 use std::io;
 use std::io::SeekFrom;
 use std::path::{Path, PathBuf};
 use std::rc::Rc;
+use std::sync::Mutex;
 
+use lru::LruCache;
 use ndk::asset::{Asset, AssetManager};
 
 use crate::android::get_asset_manager;
 use crate::unicode::Nfc;
 use crate::vfs::{VfsFile, VfsLayer};
+
+/// The size of the cache used for canonicalization
+const CANONICALIZATION_CACHE_SIZE: usize = 256;
 
 /// A case-insensitive virtual filesystem backed by a filesystem directory.
 #[derive(Debug)]
@@ -33,6 +39,8 @@ pub struct AssetManagerFs {
     pub base_path: PathBuf,
     /// A local reference to the android asset manager
     asset_manager: AssetManager,
+    /// Cache that is used for canonicalization. It will contain an entry for each path that is listed during path canonicalization
+    canonicalization_cache: Mutex<LruCache<PathBuf, Vec<(Nfc, OsString)>>>,
 }
 
 /// A virtual file.
@@ -70,6 +78,7 @@ impl AssetManagerFs {
         Ok(Rc::new(AssetManagerFs {
             base_path: base_path.to_owned(),
             asset_manager,
+            canonicalization_cache: Mutex::new(LruCache::new(CANONICALIZATION_CACHE_SIZE)),
         }))
     }
 
@@ -78,6 +87,15 @@ impl AssetManagerFs {
     /// The returned paths are already containing the base path
     fn canonicalize(&self, file_path: &str) -> io::Result<Vec<PathBuf>> {
         let mut candidates = vec![self.base_path.to_owned()];
+        let mut canonicalization_cache = self.canonicalization_cache.lock().map_err(|err| {
+            io::Error::new(
+                io::ErrorKind::Other,
+                format!(
+                    "AssetManagerFs: Error locking canonicalization cache: `{}`",
+                    err
+                ),
+            )
+        })?;
 
         if file_path.is_empty() {
             return Ok(candidates);
@@ -88,27 +106,42 @@ impl AssetManagerFs {
             if want == "." || want == ".." {
                 return Err(io::Error::new(
                     io::ErrorKind::InvalidInput,
-                    "special path components are not supported",
+                    "AssetManagerFs: Special path components are not supported",
                 ));
             }
             for candidate in candidates {
                 let candidate_cstring = Self::path_to_cstring(&candidate)?;
-                let dir_contents = crate::android::list_asset_dir(&candidate).map_err(|e| {
-                    io::Error::new(
-                        io::ErrorKind::Other,
-                        format!("AssetManagerFs: JNI Error: `{:?}`", e),
-                    )
-                })?;
-                if self.asset_manager.open_dir(&candidate_cstring).is_some() {
-                    for entry in dir_contents {
-                        let is_match = entry
-                            .file_name()
-                            .and_then(|x| x.to_str())
-                            .map(|x| want == Nfc::caseless(x).as_str())
-                            .unwrap_or(false);
-                        if is_match {
-                            next.push(candidate.join(&entry));
-                        }
+                let entries = if let Some(cache_entry) = canonicalization_cache.get(&candidate) {
+                    cache_entry
+                } else if self.asset_manager.open_dir(&candidate_cstring).is_none() {
+                    canonicalization_cache.put(candidate.clone(), vec![]);
+                    canonicalization_cache
+                        .get(&candidate)
+                        .expect("we should be able to get a cache key that was just set")
+                } else {
+                    let entries: Vec<_> = crate::android::list_asset_dir(&candidate)
+                        .map_err(|e| {
+                            io::Error::new(
+                                io::ErrorKind::Other,
+                                format!("AssetManagerFs: JNI Error: `{:?}`", e),
+                            )
+                        })?
+                        .iter()
+                        .flat_map(|path_buf| {
+                            path_buf
+                                .to_str()
+                                .map(|s| (Nfc::caseless(s), path_buf.into()))
+                        })
+                        .collect();
+                    canonicalization_cache.put(candidate.clone(), entries);
+                    canonicalization_cache
+                        .get(&candidate)
+                        .expect("we should be able to get a cache key that was just set")
+                };
+
+                for (nfc, os_string) in entries {
+                    if want == nfc.as_str() {
+                        next.push(candidate.join(&os_string));
                     }
                 }
             }
