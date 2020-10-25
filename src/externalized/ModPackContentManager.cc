@@ -33,7 +33,7 @@ ST::string ModPackContentManager::getSavedGamesFolder() const
 		folderName += '-';
 		folderName += name;
 	}
-	return FileMan::joinPaths(m_userHomeDir, folderName);
+	return folderName;
 }
 
 /** Load dialogue quote from file. */

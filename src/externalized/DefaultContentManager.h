@@ -79,8 +79,20 @@ public:
 	/** Delete temporary file. */
 	virtual void deleteTempFile(const ST::string& filename) const override;
 
+	/** Open user's private file (e.g. saved game, settings) for writing. */
+	virtual SGPFile* openUserPrivateFileForWriting(const ST::string& filename, bool truncate) const override;
+
 	/** Open user's private file (e.g. saved game, settings) for reading. */
 	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const override;
+
+	/** Open user's private file (e.g. saved game, settings) for appending. */
+	virtual SGPFile* openUserPrivateFileForAppend(const ST::string& filename) const override;
+
+	/** Does user's private file (e.g. saved game, settings) exist. */
+	virtual BOOLEAN doesUserPrivateFileExist(const ST::string& filename) const override;
+
+	/** Delete users private file. */
+	virtual void deleteUserPrivateFile(const ST::string& filename) const override;
 
 	/* Checks if a game resource exists. */
 	virtual bool doesGameResExists(const ST::string& filename) const override;

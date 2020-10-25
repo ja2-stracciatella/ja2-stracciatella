@@ -265,12 +265,9 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 			header.sSavedGameDesc = gameDesc;
 		}
 
-		FileMan::createDir(GCM->getSavedGamesFolder().c_str());
-
 		// Create the save game file
-		char savegame_name[512];
-		CreateSavedGameFileNameFromNumber(ubSaveGameID, savegame_name);
-		AutoSGPFile f(FileMan::openForWriting(savegame_name));
+		auto savegameName = CreateSavedGameFileNameFromNumber(ubSaveGameID);
+		AutoSGPFile f(GCM->openUserPrivateFileForWriting(savegameName, true));
 
 		/* If there are no enemy or civilians to save, we have to check BEFORE
 		 * saving the sector info struct because the
@@ -624,9 +621,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	// ATE: Added to empty dialogue q
 	EmptyDialogueQueue();
 
-	char zSaveGameName[512];
-	CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
-	AutoSGPFile f(GCM->openUserPrivateFileForReading(zSaveGameName));
+	auto savegameName = CreateSavedGameFileNameFromNumber(save_slot_id);
+	AutoSGPFile f(GCM->openUserPrivateFileForReading(savegameName));
 
 	SAVED_GAME_HEADER SaveGameHeader;
 	bool stracLinuxFormat;
@@ -1155,7 +1151,7 @@ ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
 bool IMPSavedProfileDoesFileExist(const ST::string& nickname)
 {
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
-	bool fexists = Fs_exists(profile_filename.c_str());
+	bool fexists = GCM->doesUserPrivateFileExist(profile_filename);
 	return fexists;
 }
 
@@ -1164,14 +1160,14 @@ SGPFile* const IMPSavedProfileOpenFileForRead(const ST::string& nickname)
 	if (!IMPSavedProfileDoesFileExist(nickname)) {
 		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
 	}
-	SGPFile *f = FileMan::openForReading(IMPSavedProfileCreateFilename(nickname).c_str());
+	SGPFile *f = GCM->openUserPrivateFileForReading(IMPSavedProfileCreateFilename(nickname));
 	return f;
 }
 
 SGPFile* const IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
 {
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
-	SGPFile *f = FileMan::openForWriting(profile_filename.c_str(), true);
+	SGPFile *f = GCM->openUserPrivateFileForWriting(profile_filename, true);
 	return f;
 }
 
@@ -1633,7 +1629,7 @@ static void LoadWatchedLocsFromSavedGame(HWFILE const hFile)
 }
 
 
-void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzNewFileName)
+ST::string CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID)
 {
 	ST::string dir = GCM->getSavedGamesFolder();
 
@@ -1641,22 +1637,22 @@ void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzN
 	{
 		case 0: // we are creating the QuickSave file
 		{
-			sprintf(pzNewFileName, "%s/%s.%s", dir.c_str(), g_quicksave_name.c_str(), g_savegame_ext.c_str());
-			break;
+			return FileMan::joinPaths(dir, ST::format("{}.{}", g_quicksave_name, g_savegame_ext));
 		}
 
 		case SAVE__END_TURN_NUM:
-			sprintf(pzNewFileName, "%s/Auto%02d.%s", dir.c_str(), guiLastSaveGameNum, g_savegame_ext.c_str());
+		{
+			auto saveGameName = FileMan::joinPaths(dir, ST::format("Auto{02}.{}", guiLastSaveGameNum, g_savegame_ext));
 			guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
-			break;
+			return saveGameName;
+		}
+			
 
 		case SAVE__ERROR_NUM:
-			sprintf(pzNewFileName, "%s/error.%s", dir.c_str(), g_savegame_ext.c_str());
-			break;
+			return FileMan::joinPaths(dir, ST::format("error.{}", g_savegame_ext));
 
 		default:
-			sprintf(pzNewFileName, "%s/%s%02d.%s", dir.c_str(), g_savegame_name.c_str(), ubSaveGameID, g_savegame_ext.c_str());
-			break;
+			return FileMan::joinPaths(dir, ST::format("{}{02}.{}", g_savegame_name, ubSaveGameID, g_savegame_ext));
 	}
 }
 

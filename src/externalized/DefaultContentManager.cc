@@ -210,13 +210,8 @@ void DefaultContentManager::init(EngineOptions* engine_options)
 		SLOGE(error);
 		throw std::runtime_error(error.c_str());
 	}
-	succeeded = Fs_createDir(NEW_TEMP_DIR);
-	if (!succeeded) {
-		RustPointer<char> err{ getRustError() };
-		auto error = ST::format("Failed to create temporary directory: {}", err.get());
-		SLOGE(error);
-		throw std::runtime_error(error.c_str());
-	}
+	FileMan::createDir(NEW_TEMP_DIR);
+	FileMan::createDir(FileMan::joinPaths(m_userHomeDir, getSavedGamesFolder()));
 }
 
 template <class T> 
@@ -431,7 +426,8 @@ SGPFile* DefaultContentManager::openMapForReading(const ST::string& mapName) con
 /** Get directory for storing new map file. */
 ST::string DefaultContentManager::getNewMapFolder() const
 {
-	return FileMan::joinPaths(m_dataDir, MAPSDIR);
+	// TODO: Where to store maps?
+	return ST::string(MAPSDIR);
 }
 
 /** Get all available maps. */
@@ -548,18 +544,51 @@ SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename
 	return file;
 }
 
-/** Open user's private file (e.g. saved game, settings) for reading. */
+/** Open user's private file (e.g. saved game, settings) for writing. */
+SGPFile* DefaultContentManager::openUserPrivateFileForWriting(const ST::string& filename, bool truncate) const
+{
+	auto path = FileMan::joinPaths(m_userHomeDir, filename);
+	auto file = FileMan::openForWriting(path, truncate);
+	SLOGD(ST::format("Opened user private file for writing: '{}'", filename));
+	return file;
+}
+
+/** Open temporary file for appending. */
+SGPFile* DefaultContentManager::openUserPrivateFileForAppend(const ST::string& filename) const
+{
+	auto path = FileMan::joinPaths(m_userHomeDir, filename);
+	auto file = FileMan::openForAppend(path);
+	SLOGD(ST::format("Opened user private file for append: '{}'", filename));
+	return file;
+}
+
+/* Open temporary file for reading. */
 SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& filename) const
 {
-	RustPointer<File> file = FileMan::openFileForReading(filename);
+	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
+	RustPointer<File> file(File_open(path.c_str(), FILE_OPEN_READ));
 	if (!file)
 	{
 		RustPointer<char> err(getRustError());
 		ST::string buf = ST::format("DefaultContentManager::openUserPrivateFileForReading: {}", err.get());
 		throw std::runtime_error(buf.to_std_string());
 	}
-	SLOGD(ST::format("Opened private file for reading: '{}'", filename));
+	SLOGD(ST::format("Opened user private file for reading: '{}'", filename));
 	return FileMan::getSGPFileFromFile(file.release());
+}
+
+/** Does a user private file exist. */
+BOOLEAN DefaultContentManager::doesUserPrivateFileExist(const ST::string& filename) const
+{
+	return FileMan::checkFileExistance(m_userHomeDir, filename);
+}
+
+/** Delete a user private file. */
+void DefaultContentManager::deleteUserPrivateFile(const ST::string& filename) const
+{
+	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
+	FileDelete(path);
+	SLOGD(ST::format("Deleted user private file: '{}'", filename));
 }
 
 /* Checks if a game resource exists. */
@@ -600,7 +629,7 @@ ST::string DefaultContentManager::getVideoCaptureFolder() const
 /** Get folder for saved games. */
 ST::string DefaultContentManager::getSavedGamesFolder() const
 {
-	return FileMan::joinPaths(m_userHomeDir, "SavedGames");
+	return "SavedGames";
 }
 
 /** Load encrypted string from game resource file. */

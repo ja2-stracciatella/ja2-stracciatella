@@ -1351,6 +1351,7 @@ try
 	ST::string path = GCM->getNewMapFolder();
 	FileMan::createDir(path.c_str());
 	path = FileMan::joinPaths(path, filename);
+	// TODO: Where to store maps, when saving from editor?
 	AutoSGPFile f(FileMan::openForWriting(path));
 
 	// Write JA2 Version ID

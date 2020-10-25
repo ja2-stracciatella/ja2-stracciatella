@@ -1849,7 +1849,8 @@ void LightSave(LightTemplate const* const t, char const* const pFilename)
 	if (t->lights.empty()) throw std::logic_error("Tried to save invalid light template");
 
 	const char* const pName = (pFilename != NULL ? pFilename : t->name);
-	AutoSGPFile f(FileMan::openForWriting(pName));
+	// TODO: What is a light template and where to store?
+	AutoSGPFile f(GCM->openTempFileForWriting(pName, true));
 	Assert(t->lights.size() <= UINT16_MAX);
 	UINT16 numLights = static_cast<UINT16>(t->lights.size());
 	FileWriteArray(f, numLights, t->lights.data());
