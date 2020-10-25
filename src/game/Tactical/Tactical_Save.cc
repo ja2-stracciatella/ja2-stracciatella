@@ -649,9 +649,8 @@ void InitTacticalSave()
 
 static void SaveRottingCorpsesToTempCorpseFile(INT16 const x, INT16 const y, INT8 const z)
 {
-	char map_name[128];
 	auto mapName = GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, x, y, z);
-	AutoSGPFile f(GCM->openTempFileForWriting(map_name, true));
+	AutoSGPFile f(GCM->openTempFileForWriting(mapName, true));
 
 	// Save the number of the rotting corpses
 	UINT32 n_corpses = 0;
@@ -799,7 +798,7 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16
 {
 	auto mapName = GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ);
 
-	AutoSGPFile f(GCM->openTempFileForWriting(mapName, false));
+	AutoSGPFile f(GCM->openTempFileForReadWrite(mapName));
 
 	UINT32 corpse_count;
 	if (FileGetSize(f) != 0)

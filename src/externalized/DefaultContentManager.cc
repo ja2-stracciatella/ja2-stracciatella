@@ -483,6 +483,15 @@ SGPFile* DefaultContentManager::openTempFileForWriting(const ST::string& filenam
 	return file;
 }
 
+/** Open temporary file for read write. */
+SGPFile* DefaultContentManager::openTempFileForReadWrite(const ST::string& filename) const
+{
+	auto path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	auto file = FileMan::openForReadWrite(path);
+	SLOGD(ST::format("Opened temp file for read/write: '{}'", filename));
+	return file;
+}
+
 /** Open temporary file for appending. */
 SGPFile* DefaultContentManager::openTempFileForAppend(const ST::string& filename) const
 {
@@ -496,15 +505,9 @@ SGPFile* DefaultContentManager::openTempFileForAppend(const ST::string& filename
 SGPFile* DefaultContentManager::openTempFileForReading(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
-	RustPointer<File> file(File_open(path.c_str(), FILE_OPEN_READ));
-	if (!file)
-	{
-		RustPointer<char> err(getRustError());
-		ST::string buf = ST::format("DefaultContentManager::openTempFileForReading: {}", err.get());
-		throw std::runtime_error(buf.to_std_string());
-	}
+	auto file = FileMan::openForReading(path);
 	SLOGD(ST::format("Opened temp file for reading: '{}'", filename));
-	return FileMan::getSGPFileFromFile(file.release());
+	return file;
 }
 
 /** Does temp file exist. */
@@ -562,19 +565,22 @@ SGPFile* DefaultContentManager::openUserPrivateFileForAppend(const ST::string& f
 	return file;
 }
 
+/** Open temporary file for read write. */
+SGPFile* DefaultContentManager::openUserPrivateFileForReadWrite(const ST::string& filename) const
+{
+	auto path = FileMan::joinPaths(m_userHomeDir, filename);
+	auto file = FileMan::openForReadWrite(path);
+	SLOGD(ST::format("Opened temp file for read/write: '{}'", filename));
+	return file;
+}
+
 /* Open temporary file for reading. */
 SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
-	RustPointer<File> file(File_open(path.c_str(), FILE_OPEN_READ));
-	if (!file)
-	{
-		RustPointer<char> err(getRustError());
-		ST::string buf = ST::format("DefaultContentManager::openUserPrivateFileForReading: {}", err.get());
-		throw std::runtime_error(buf.to_std_string());
-	}
+	auto file = FileMan::openForReading(path);
 	SLOGD(ST::format("Opened user private file for reading: '{}'", filename));
-	return FileMan::getSGPFileFromFile(file.release());
+	return file;
 }
 
 /** Does a user private file exist. */

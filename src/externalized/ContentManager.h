@@ -208,6 +208,9 @@ public:
 	/** Open temporary file for appending. */
 	virtual SGPFile* openTempFileForAppend(const ST::string& filename) const = 0;
 
+	/** Open temporary file for read/write. */
+	virtual SGPFile* openTempFileForReadWrite(const ST::string& filename) const = 0;
+
 	/** Check if temporary file exists. */
 	virtual BOOLEAN doesTempFileExist(const ST::string& filename) const = 0;
 
@@ -219,6 +222,9 @@ public:
 
 	/** Open user's private file (e.g. saved game, settings) for reading. */
 	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const = 0;
+
+	/** Open user's private file (e.g. saved game, settings) for read/write. */
+	virtual SGPFile* openUserPrivateFileForReadWrite(const ST::string& filename) const = 0;
 
 	/** Open user's private file (e.g. saved game, settings) for appending. */
 	virtual SGPFile* openUserPrivateFileForAppend(const ST::string& filename) const = 0;

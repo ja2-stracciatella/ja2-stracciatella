@@ -425,8 +425,10 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 
 		NewWayOfSavingBobbyRMailOrdersToSaveGameFile(f);
 	}
-	catch (...)
+	catch (const std::exception& e)
 	{
+		SLOGE(ST::format("Error saving game: {}", e.what(), typeid(e).name()));
+
 		if (fWePausedIt) UnPauseAfterSaveGame();
 
 		// Delete the failed attempt at saving
@@ -550,8 +552,7 @@ void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h, bool *
 			return;
 		}
 	}
-	catch (...) {}
-
+	catch (const std::exception& e)
 	{
 		// trying vanilla format
 		BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE];
@@ -1477,8 +1478,8 @@ void LoadTempFileFromSavedGame(const char* tempFileName, HWFILE const hFile)
 void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
 	auto fileName = ST::string(pSrcFileName);
-	AutoSGPFile hSrcFile(GCM->openTempFileForWriting(fileName, true));
-	LoadFileFromSavedGame(hSrcFile, hFile);
+	AutoSGPFile fileToWrite(GCM->openTempFileForWriting(fileName, true));
+	LoadFileFromSavedGame(fileToWrite, hFile);
 }
 
 static void SaveTacticalStatusToSavedGame(HWFILE const f)
@@ -2351,13 +2352,13 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 	
 	ST::string zFileName2 = ST::format("{}/Auto{02d}.{}", GCM->getSavedGamesFolder(), 1, g_savegame_ext);
 
-	if( GCM->doesGameResExists( zFileName1 ) )
+	if( GCM->doesUserPrivateFileExist( zFileName1 ) )
 	{
 		Fs_modifiedSecs( zFileName1.c_str(), &LastWriteTime1 );
 		fFile1Exist = TRUE;
 	}
 
-	if( GCM->doesGameResExists( zFileName2 ) )
+	if( GCM->doesUserPrivateFileExist( zFileName2 ) )
 	{
 		Fs_modifiedSecs( zFileName2.c_str(), &LastWriteTime2 );
 		fFile2Exist = TRUE;

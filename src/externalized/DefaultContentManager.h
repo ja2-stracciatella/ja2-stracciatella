@@ -70,6 +70,9 @@ public:
 	/** Open temporary file for reading. */
 	virtual SGPFile* openTempFileForReading(const ST::string& filename) const override;
 
+	/** Open temporary file for read/write. */
+	virtual SGPFile* openTempFileForReadWrite(const ST::string& filename) const override;
+
 	/** Open temporary file for appending. */
 	virtual SGPFile* openTempFileForAppend(const ST::string& filename) const override;
 
@@ -84,6 +87,9 @@ public:
 
 	/** Open user's private file (e.g. saved game, settings) for reading. */
 	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const override;
+
+	/** Open user's private file (e.g. saved game, settings) for read/write. */
+	virtual SGPFile* openUserPrivateFileForReadWrite(const ST::string& filename) const override;
 
 	/** Open user's private file (e.g. saved game, settings) for appending. */
 	virtual SGPFile* openUserPrivateFileForAppend(const ST::string& filename) const override;

@@ -55,7 +55,11 @@ pub trait VfsLayer: fmt::Debug + fmt::Display {
     /// Lists files with a specific extension in a directory in the VFS Layer
     ///
     /// The extension has to be specified without a dot (e.g. "slf")
-    fn read_dir_with_extension(&self, file_path: &Nfc, extension: &Nfc) -> io::Result<HashSet<Nfc>> {
+    fn read_dir_with_extension(
+        &self,
+        file_path: &Nfc,
+        extension: &Nfc,
+    ) -> io::Result<HashSet<Nfc>> {
         let extension = Nfc::caseless(&format!(".{}", extension));
         Ok(self
             .read_dir(file_path)?
