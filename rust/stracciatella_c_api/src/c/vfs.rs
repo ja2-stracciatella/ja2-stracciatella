@@ -3,12 +3,14 @@
 //! [`stracciatella::vfs`]: ../../../stracciatella/vfs/index.html
 
 use std::io::{Read, Seek, SeekFrom, Write};
+use std::ffi::CString;
 
 use stracciatella::config::EngineOptions;
 use stracciatella::unicode::Nfc;
 use stracciatella::vfs::{Vfs, VfsFile as RVfsFile, VfsLayer};
 
 use crate::c::common::*;
+use crate::c::vec::VecCString;
 
 /// Concrete Type for a VFS file as we cannot return Box<dyn xxx> in the C API
 pub struct VfsFile(Box<dyn RVfsFile>);
@@ -45,6 +47,68 @@ pub extern "C" fn Vfs_init_from_engine_options(
         ));
     }
     no_rust_error()
+}
+
+/// Reads a directory within the VFS
+/// Returns null if an error occurs
+/// Sets the rust error.
+/// 
+/// # Safety
+/// 
+/// Crashes when one of the passed in pointers is null
+#[no_mangle]
+pub unsafe extern "C" fn Vfs_readDir(
+    vfs: *mut Vfs,
+    path: *const c_char,
+) -> *mut VecCString {
+    forget_rust_error();
+    let vfs = unsafe_mut(vfs);
+    let path = str_from_c_str_or_panic(unsafe_c_str(path));
+    match vfs.read_dir(&Nfc::caseless_path(path)) {
+        Ok(paths) => {
+            let paths: Vec<_> = paths.into_iter().flat_map(|str| CString::new(str).ok()).collect();
+            into_ptr(paths.into())
+        },
+        Err(err) => {
+            remember_rust_error(format!(
+                "Vfs_readDir `{}`: {}",
+                path, err
+            ));
+            std::ptr::null_mut()
+        }
+    }
+}
+
+/// Reads a directory within the VFS
+/// Returns null if an error occurs
+/// Sets the rust error.
+/// 
+/// # Safety
+/// 
+/// Crashes when one of the passed in pointers is null
+#[no_mangle]
+pub unsafe extern "C" fn Vfs_readDirWithExtension(
+    vfs: *mut Vfs,
+    path: *const c_char,
+    extension: *const c_char,
+) -> *mut VecCString {
+    forget_rust_error();
+    let vfs = unsafe_mut(vfs);
+    let path = str_from_c_str_or_panic(unsafe_c_str(path));
+    let extension = str_from_c_str_or_panic(unsafe_c_str(extension));
+    match vfs.read_dir_with_extension(&Nfc::caseless_path(path), &Nfc::caseless_path(extension)) {
+        Ok(paths) => {
+            let paths: Vec<_> = paths.into_iter().flat_map(|str| CString::new(str).ok()).collect();
+            into_ptr(paths.into())
+        },
+        Err(err) => {
+            remember_rust_error(format!(
+                "Vfs_readDir `{}`: {}",
+                path, err
+            ));
+            std::ptr::null_mut()
+        }
+    }
 }
 
 /// Adds an overlay filesystem backed by a filesystem directory.

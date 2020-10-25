@@ -190,9 +190,6 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	RustPointer<char> path{Fs_resolveExistingComponents(BASEDATADIR, m_gameResRootPath.c_str(), true)};
 	m_dataDir = path.get();
 
-	path.reset(Fs_resolveExistingComponents(TILECACHEDIR, m_dataDir.c_str(), true));
-	m_tileDir = path.get();
-
 	m_bobbyRayNewInventory = NULL;
 	m_bobbyRayUsedInventory = NULL;
 	m_impPolicy = NULL;
@@ -210,6 +207,13 @@ void DefaultContentManager::init(EngineOptions* engine_options)
 	if (!succeeded) {
 		RustPointer<char> err{ getRustError() };
 		auto error = ST::format("Failed to build virtual file system (VFS): {}", err.get());
+		SLOGE(error);
+		throw std::runtime_error(error.c_str());
+	}
+	succeeded = Fs_createDir(NEW_TEMP_DIR);
+	if (!succeeded) {
+		RustPointer<char> err{ getRustError() };
+		auto error = ST::format("Failed to create temporary directory: {}", err.get());
 		SLOGE(error);
 		throw std::runtime_error(error.c_str());
 	}
@@ -433,27 +437,63 @@ ST::string DefaultContentManager::getNewMapFolder() const
 /** Get all available maps. */
 std::vector<ST::string> DefaultContentManager::getAllMaps() const
 {
-	return FindFilesInDir(MAPSDIR, "dat", true, true, true);
+	RustPointer<VecCString> rustMapNames(Vfs_readDirWithExtension(m_vfs.get(), MAPSDIR, "dat"));
+	if (rustMapNames.get() == NULL) {
+		RustPointer<char> err(getRustError());
+		throw std::runtime_error(ST::format("getAllMaps: Error listing '{}' dir: {}", MAPSDIR, err.get()).c_str());
+	}
+	std::vector<ST::string> mapNames;
+	size_t len = VecCString_len(rustMapNames.get());
+	mapNames.reserve(len);
+	for (size_t i = 0; i < len; i++)
+	{
+		RustPointer<char> path{VecCString_get(rustMapNames.get(), i)};
+		mapNames.push_back(ST::string(path.get()));
+	}
+	return mapNames;
 }
 
 /** Get all available tilecache. */
 std::vector<ST::string> DefaultContentManager::getAllTilecache() const
 {
-	return FindFilesInDir(m_tileDir, "jsd", true, false);
+	RustPointer<VecCString> rustMapNames(Vfs_readDirWithExtension(m_vfs.get(), TILECACHEDIR, "jsd"));
+	if (rustMapNames.get() == NULL) {
+		RustPointer<char> err(getRustError());
+		throw std::runtime_error(ST::format("getAllMaps: Error listing '{}' dir: {}", MAPSDIR, err.get()).c_str());
+	}
+	std::vector<ST::string> mapNames;
+	size_t len = VecCString_len(rustMapNames.get());
+	mapNames.reserve(len);
+	for (size_t i = 0; i < len; i++)
+	{
+		RustPointer<char> path{VecCString_get(rustMapNames.get(), i)};
+		mapNames.push_back(ST::format("{}/{}", TILECACHEDIR, path.get()));
+	}
+	return mapNames;
+}
+
+/** Gets the temporary directory. */
+ST::string DefaultContentManager::getTempDir() const
+{
+	return ST::string(NEW_TEMP_DIR);
 }
 
 /** Open temporary file for writing. */
 SGPFile* DefaultContentManager::openTempFileForWriting(const ST::string& filename, bool truncate) const
 {
-	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
-	return FileMan::openForWriting(path, truncate);
+	auto path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	auto file = FileMan::openForWriting(path, truncate);
+	SLOGD(ST::format("Opened temp file for writing: '{}'", filename));
+	return file;
 }
 
 /** Open temporary file for appending. */
 SGPFile* DefaultContentManager::openTempFileForAppend(const ST::string& filename) const
 {
-	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
-	return FileMan::openForAppend(path);
+	auto path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	auto file = FileMan::openForAppend(path);
+	SLOGD(ST::format("Opened temp file for append: '{}'", filename));
+	return file;
 }
 
 /* Open temporary file for reading. */
@@ -467,7 +507,15 @@ SGPFile* DefaultContentManager::openTempFileForReading(const ST::string& filenam
 		ST::string buf = ST::format("DefaultContentManager::openTempFileForReading: {}", err.get());
 		throw std::runtime_error(buf.to_std_string());
 	}
+	SLOGD(ST::format("Opened temp file for reading: '{}'", filename));
 	return FileMan::getSGPFileFromFile(file.release());
+}
+
+/** Does temp file exist. */
+BOOLEAN DefaultContentManager::doesTempFileExist(const ST::string& filename) const
+{
+	auto tempDir = getTempDir();
+	return FileMan::checkFileExistance(tempDir, filename);
 }
 
 /** Delete temporary file. */
@@ -475,6 +523,7 @@ void DefaultContentManager::deleteTempFile(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
 	FileDelete(path);
+	SLOGD(ST::format("Deleted temp file: '{}'", filename));
 }
 
 /* Open a game resource file for reading.
@@ -486,22 +535,13 @@ void DefaultContentManager::deleteTempFile(const ST::string& filename) const
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
 SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename) const
 {
-	{
-		RustPointer<File> file = FileMan::openFileForReading(filename);
-		if (file)
-		{
-			SLOGD(ST::format("Opened file (current dir): '{}'", filename));
-			return FileMan::getSGPFileFromFile(file.release());
-		}
-	}
-
 	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
 	if (!vfile)
 	{
 		RustPointer<char> err{getRustError()};
 		throw std::runtime_error(ST::format("openGameResForReading: {}", err.get()).to_std_string());
 	}
-	SLOGD(ST::format("Opened file (vfs): '{}'", filename));
+	SLOGD(ST::format("Opened game resource for reading: '{}'", filename));
 	SGPFile *file = new SGPFile{};
 	file->flags = SGPFILE_NONE;
 	file->u.vfile = vfile.release();
@@ -518,6 +558,7 @@ SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& 
 		ST::string buf = ST::format("DefaultContentManager::openUserPrivateFileForReading: {}", err.get());
 		throw std::runtime_error(buf.to_std_string());
 	}
+	SLOGD(ST::format("Opened private file for reading: '{}'", filename));
 	return FileMan::getSGPFileFromFile(file.release());
 }
 

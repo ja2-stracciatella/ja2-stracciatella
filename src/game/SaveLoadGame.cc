@@ -351,9 +351,9 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 
 		SaveTempFileToSavedGame(NEWTMP_FINANCES_DATA_FILE, f);
 
-		SaveFilesToSavedGame(HISTORY_DATA_FILE, f);
+		SaveTempFileToSavedGame(HISTORY_DATA_FILE, f);
 
-		SaveFilesToSavedGame(FILES_DAT_FILE, f);
+		SaveTempFileToSavedGame(FILES_DAT_FILE, f);
 
 		SaveEmailToSavedGame(f);
 
@@ -722,13 +722,14 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	LoadSoldierStructure(f, version, stracLinuxFormat);
 
 	BAR(1, "Finances Data File...");
+	const auto financesDataFile = ST::string(NEWTMP_FINANCES_DATA_FILE);
 	LoadTempFileFromSavedGame(NEWTMP_FINANCES_DATA_FILE, f);
 
 	BAR(1, "History File...");
-	LoadFilesFromSavedGame(HISTORY_DATA_FILE, f);
+	LoadTempFileFromSavedGame(HISTORY_DATA_FILE, f);
 
 	BAR(1, "The Laptop FILES file...");
-	LoadFilesFromSavedGame(FILES_DAT_FILE, f);
+	LoadTempFileFromSavedGame(FILES_DAT_FILE, f);
 
 	BAR(1, "Email...");
 	LoadEmailFromSavedGame(f);
@@ -1440,18 +1441,19 @@ static void SaveFileToSavedGame(SGPFile* fileToSave, HWFILE const hFile)
 	FileWrite(hFile, pData, uiFileSize);
 }
 
-static void SaveTempFileToSavedGame(const char* fileName, HWFILE const hFile)
+static void SaveTempFileToSavedGame(const char* tempFileName, HWFILE const hFile)
 {
+	auto fileName = ST::string(tempFileName);
 	AutoSGPFile fileToSave(GCM->openTempFileForReading(fileName));
 	SaveFileToSavedGame(fileToSave, hFile);
 }
 
 void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
-	AutoSGPFile hSrcFile(GCM->openGameResForReading(pSrcFileName));
+	auto fileName = ST::string(pSrcFileName);
+	AutoSGPFile hSrcFile(GCM->openTempFileForReading(fileName));
 	SaveFileToSavedGame(hSrcFile, hFile);
 }
-
 
 static void LoadFileFromSavedGame(SGPFile* fileToWrite, HWFILE const hFile)
 {
@@ -1471,13 +1473,15 @@ static void LoadFileFromSavedGame(SGPFile* fileToWrite, HWFILE const hFile)
 
 void LoadTempFileFromSavedGame(const char* tempFileName, HWFILE const hFile)
 {
-	AutoSGPFile fileToWrite(GCM->openTempFileForWriting(tempFileName, true));
+	auto fileName = ST::string(tempFileName);
+	AutoSGPFile fileToWrite(GCM->openTempFileForWriting(fileName, true));
 	LoadFileFromSavedGame(fileToWrite, hFile);
 }
 
 void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
-	AutoSGPFile hSrcFile(FileMan::openForWriting(pSrcFileName));
+	auto fileName = ST::string(pSrcFileName);
+	AutoSGPFile hSrcFile(GCM->openTempFileForWriting(fileName, true));
 	LoadFileFromSavedGame(hSrcFile, hFile);
 }
 

@@ -198,13 +198,12 @@ void LoadLightEffectsFromLoadGameFile(HWFILE const hFile)
 void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	UINT32	uiNumLightEffects=0;
-	CHAR8		zMapName[ 128 ];
-
+	
 	//get the name of the map
-	GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
+	auto mapName = GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
 
 	//delete file the file.
-	FileDelete( zMapName );
+	GCM->deleteTempFile( mapName );
 
 	//loop through and count the number of Light effects
 	CFOR_EACH_LIGHTEFFECT(l)
@@ -220,7 +219,7 @@ void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 		return;
 	}
 
-	AutoSGPFile hFile(FileMan::openForWriting(zMapName));
+	AutoSGPFile hFile(GCM->openTempFileForWriting(mapName, true));
 
 	//Save the Number of Light Effects
 	FileWrite(hFile, &uiNumLightEffects, sizeof(UINT32));
@@ -238,11 +237,10 @@ void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 void LoadLightEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	UINT32	uiCnt=0;
-	CHAR8		zMapName[ 128 ];
 
-	GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
+	auto mapName = GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
 
-	AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
+	AutoSGPFile hFile(GCM->openTempFileForReading(mapName));
 
 	//Clear out the old list
 	ResetLightEffects();

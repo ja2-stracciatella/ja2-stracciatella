@@ -1,7 +1,7 @@
 #ifndef __FILES_H
 #define __FILES_H
 
-#define FILES_DAT_FILE TEMPDIR "/files.dat"
+#define FILES_DAT_FILE "files.dat"
 
 void GameInitFiles(void);
 void EnterFiles(void);

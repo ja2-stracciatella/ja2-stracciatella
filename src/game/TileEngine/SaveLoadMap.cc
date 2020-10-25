@@ -43,9 +43,8 @@ static std::unique_ptr<AutoSGPFile> OpenMapModificationTempFile(INT16 const sSec
 {
 	SetSectorFlag(sSectorX, sSectorY, bSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS);
 
-	CHAR8 zMapName[128];
-	GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ);	
-	return std::make_unique<AutoSGPFile>(FileMan::openForAppend(zMapName));
+	auto mapName = GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ);	
+	return std::make_unique<AutoSGPFile>(GCM->openTempFileForAppend(mapName));
 }
 
 // Writes map modification to the open temp file
@@ -72,20 +71,19 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 
 void LoadAllMapChangesFromMapTempFileAndApplyThem()
 {
-	CHAR8      zMapName[ 128 ];
 	UINT32     uiNumberOfElementsSavedBackToFile = 0; // added becuase if no files get saved back to disk, the flag needs to be erased
 	UINT32     cnt;
 	MODIFY_MAP *pMap;
 
-	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	auto mapName = GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
-	if (!GCM->doesGameResExists(zMapName)) return;
+	if (!GCM->doesTempFileExist(mapName)) return;
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
+		AutoSGPFile hFile(GCM->openTempFileForReading(mapName));
 
 		//Get the size of the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -96,7 +94,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 	}
 
 	//Delete the file
-	FileDelete( zMapName );
+	GCM->deleteTempFile( mapName );
 	std::unique_ptr<AutoSGPFile> tempMapFile = OpenMapModificationTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	for( cnt=0; cnt< uiNumberOfElements; cnt++ )
@@ -417,13 +415,11 @@ static void AddBloodOrSmellFromMapTempFileToMap(MODIFY_MAP* pMap)
 
 void SaveRevealedStatusArrayToRevealedTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
 {
-	CHAR8		zMapName[ 128 ];
-
 	Assert( gpRevealedMap != NULL );
 
-	GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, bSectorZ );
+	auto mapName = GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ );
 
-	AutoSGPFile hFile(FileMan::openForWriting(zMapName));
+	AutoSGPFile hFile(GCM->openTempFileForWriting(mapName, true));
 
 	//Write the revealed array to the Revealed temp file
 	FileWrite(hFile, gpRevealedMap, NUM_REVEALED_BYTES);
@@ -440,15 +436,13 @@ static void SetMapRevealedStatus(void);
 
 void LoadRevealedStatusArrayFromRevealedTempFile()
 {
-	CHAR8		zMapName[ 128 ];
-
-	GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	auto mapName = GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
-	if (!GCM->doesGameResExists(zMapName)) return;
+	if (!GCM->doesTempFileExist(mapName)) return;
 
 	{
-		AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
+		AutoSGPFile hFile(GCM->openTempFileForReading(mapName));
 
 		Assert( gpRevealedMap == NULL );
 		gpRevealedMap = new UINT8[NUM_REVEALED_BYTES]{};
@@ -622,17 +616,16 @@ void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSect
 BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ )
 try
 {
-	CHAR8		zMapName[ 128 ];
 	MODIFY_MAP *pMap;
 	BOOLEAN	fRetVal=FALSE;
 	UINT32	cnt;
 
-	GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, zMapName, sSectorX, sSectorY, ubSectorZ );
+	auto mapName = GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSectorX, sSectorY, ubSectorZ );
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
+		AutoSGPFile hFile(GCM->openTempFileForReading(mapName));
 
 		//Get the number of elements in the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -643,7 +636,7 @@ try
 	}
 
 	//Delete the file
-	FileDelete( zMapName );
+	GCM->deleteTempFile( mapName );
 
 	//Get the image type and subindex
 	const UINT32 uiType     = GetTileType(usIndex);
@@ -759,17 +752,16 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 
 void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16 const usSectorY, INT8 const bSectorZ, UINT16 const usGridNo, BOOLEAN const fChangeToOpen)
 {
-	char map_name[128];
-	GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, map_name, usSectorX, usSectorY, bSectorZ);
+	auto mapName = GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, usSectorX, usSectorY, bSectorZ);
 
 	// If the file doesn't exists, it's no problem.
-	if (!GCM->doesGameResExists(map_name)) return;
+	if (!GCM->doesTempFileExist(mapName)) return;
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> mm;
 	{
 		// Read the map temp file into a buffer
-		AutoSGPFile src(GCM->openGameResForReading(map_name));
+		AutoSGPFile src(GCM->openTempFileForReading(mapName));
 
 		uiNumberOfElements = FileGetSize(src) / sizeof(MODIFY_MAP);
 
@@ -788,6 +780,6 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 		break;
 	}
 
-	AutoSGPFile dst(FileMan::openForWriting(map_name));
+	AutoSGPFile dst(GCM->openTempFileForWriting(mapName, true));
 	FileWrite(dst, mm, sizeof(*mm) * uiNumberOfElements);
 }

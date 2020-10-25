@@ -472,7 +472,6 @@ int main(int argc, char* argv[])
 			SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
 			SLOGI("Extra data directory:          '%s'", extraDataDir.get());
 			SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
-			SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
 			SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
 			SLOGI("------------------------------------------------------------------------------");
 		}
@@ -486,7 +485,6 @@ int main(int argc, char* argv[])
 			SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
 			SLOGI("Extra data directory:          '%s'", extraDataDir.get());
 			SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
-			SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
 			SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
 			SLOGI("------------------------------------------------------------------------------");
 		}

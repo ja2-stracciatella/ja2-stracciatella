@@ -21,7 +21,6 @@
 #define SOUNDSDIR      "sounds"
 #define SPEECHDIR      "speech"
 #define STSOUNDSDIR    "stsounds"
-#define TEMPDIR        "temp"
 #define TILECACHEDIR   "tilecache"
 
 #endif

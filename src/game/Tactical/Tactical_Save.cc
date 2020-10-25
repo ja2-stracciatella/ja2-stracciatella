@@ -64,9 +64,8 @@ static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, SectorFla
 {
 	if (!(flags & type)) return;
 
-	char map_name[128];
-	GetMapTempFileName(type, map_name, x, y, z);
-	SaveFilesToSavedGame(map_name, f);
+	ST::string mapName = GetMapTempFileName(type, x, y, z);
+	SaveFilesToSavedGame(mapName.c_str(), f);
 }
 
 
@@ -116,9 +115,8 @@ static void RetrieveTempFileFromSavedGame(HWFILE const f, UINT32 const flags, Se
 {
 	if (!(flags & type)) return;
 
-	char map_name[128];
-	GetMapTempFileName(type, map_name, x, y, z);
-	LoadFilesFromSavedGame(map_name, f);
+	auto mapName = GetMapTempFileName(type, x, y, z);
+	LoadFilesFromSavedGame(mapName.c_str(), f);
 }
 
 
@@ -146,9 +144,8 @@ static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 
 	if (flags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS && savegame_version < 78)
 	{
 		// Delete the file, because it is corrupted
-		char map_name[128];
-		GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
-		FileDelete(map_name);
+		auto mapName = GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z);
+		GCM->deleteTempFile(mapName);
 		flags &= ~SF_CIV_PRESERVED_TEMP_FILE_EXISTS;
 	}
 }
@@ -218,9 +215,8 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_ver
 void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, const std::vector<WORLDITEM>& items)
 {
 	{
-		char filename[128];
-		GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, sMapX, sMapY, bMapZ);
-		AutoSGPFile f(FileMan::openForWriting(filename));
+		auto fileName = GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ);
+		AutoSGPFile f(GCM->openTempFileForWriting(fileName, true));
 		Assert(items.size() <= UINT32_MAX);
 		UINT32 numItems = static_cast<UINT32>(items.size());
 		FileWriteArray(f, numItems, items.data());
@@ -235,14 +231,13 @@ void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 con
 
 std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const y, INT8 const z)
 {
-	char filename[128];
-	GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, filename, x, y, z);
+	auto fileName = GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, x, y, z);
 
 	std::vector<WORLDITEM> l_items;
 	// If the file doesn't exists, it's no problem
-	if (GCM->doesGameResExists(filename))
+	if (GCM->doesTempFileExist(fileName))
 	{
-		AutoSGPFile f(GCM->openGameResForReading(filename));
+		AutoSGPFile f(GCM->openTempFileForReading(fileName));
 
 		UINT32 numItems = 0;
 		FileRead(f, &numItems, sizeof(UINT32));
@@ -647,16 +642,16 @@ static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMap
 
 void InitTacticalSave()
 {
-	FileMan::createDir(TEMPDIR);
-	EraseDirectory(TEMPDIR);
+	auto tempDir = GCM->getTempDir();
+	EraseDirectory(tempDir);
 }
 
 
 static void SaveRottingCorpsesToTempCorpseFile(INT16 const x, INT16 const y, INT8 const z)
 {
 	char map_name[128];
-	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileMan::openForWriting(map_name));
+	auto mapName = GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, x, y, z);
+	AutoSGPFile f(GCM->openTempFileForWriting(map_name, true));
 
 	// Save the number of the rotting corpses
 	UINT32 n_corpses = 0;
@@ -677,13 +672,12 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 {
 	RemoveCorpses();
 
-	char map_name[128];
-	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, x, y, z);
+	auto mapName = GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, x, y, z);
 
 	// If the file doesn't exist, it's no problem.
-	if (!GCM->doesGameResExists(map_name)) return;
+	if (!GCM->doesTempFileExist(mapName)) return;
 
-	AutoSGPFile f(GCM->openGameResForReading(map_name));
+	AutoSGPFile f(GCM->openTempFileForReading(mapName));
 
 	// Load the number of Rotting corpses
 	UINT32 n_corpses;
@@ -803,10 +797,9 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT& p, INT16 sSectorX, INT16 sSec
 
 void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, ROTTING_CORPSE_DEFINITION const* const corpse_def)
 {
-	char map_name[128];
-	GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, map_name, sMapX, sMapY, bMapZ);
+	auto mapName = GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ);
 
-	AutoSGPFile f(FileMan::openForReadWrite(map_name));
+	AutoSGPFile f(GCM->openTempFileForWriting(mapName, false));
 
 	UINT32 corpse_count;
 	if (FileGetSize(f) != 0)
@@ -1075,7 +1068,7 @@ void JA2EncryptedFileWrite(HWFILE const hFile, BYTE const* const data, UINT32 co
 }
 
 
-void GetMapTempFileName(SectorFlags const uiType, char* const pMapName, INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
+ST::string GetMapTempFileName(SectorFlags const uiType, INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	// Convert the current sector location into a file name
 	char zTempName[512];
@@ -1095,9 +1088,10 @@ void GetMapTempFileName(SectorFlags const uiType, char* const pMapName, INT16 co
 		case SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS:  prefix = "l";  break;
 		case SF_CIV_PRESERVED_TEMP_FILE_EXISTS:     prefix = "c";  break;
 
-		default: SLOGA("GetMapTempFileName: invalid Type"); return;
+		default: throw std::runtime_error("GetMapTempFileName: invalid Type");
 	}
-	sprintf(pMapName, TEMPDIR "/%s_%s", prefix, zTempName);
+
+	return ST::format("{}_{}", prefix, zTempName);
 }
 
 
