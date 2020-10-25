@@ -150,7 +150,6 @@ impl AssetManagerFs {
                 break;
             }
         }
-        candidates.sort();
 
         Ok(candidates)
     }

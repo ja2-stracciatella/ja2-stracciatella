@@ -130,7 +130,6 @@ impl DirFs {
                 break;
             }
         }
-        candidates.sort();
 
         Ok(candidates)
     }
