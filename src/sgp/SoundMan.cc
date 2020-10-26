@@ -979,11 +979,12 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 	std::fill_n(stream + have_bytes, want_bytes - have_bytes, 0);
 
 	if (ringBuffersNeedService) {
-		{
-			std::lock_guard<std::mutex> lk(mutexBuffersNeedService);
+		// We try to lock the mutex. If it is already locked, buffers are already serviced
+		if (mutexBuffersNeedService.try_lock()) {
 			fBuffersNeedService = true;
+			mutexBuffersNeedService.unlock();
+			conditionBuffersNeedService.notify_one();
 		}
-		conditionBuffersNeedService.notify_one();
 	}
 }
 
