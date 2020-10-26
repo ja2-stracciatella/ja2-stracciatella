@@ -45,7 +45,7 @@ void MusicPlay(const ST::string* pFilename)
 {
 	MusicStop();
 
-	uiMusicHandle = SoundPlayStreamedFile(pFilename->c_str(), 0, 64, 1, MusicStopCallback, NULL);
+	uiMusicHandle = SoundPlay(pFilename->c_str(), 0, 64, 1, MusicStopCallback, NULL);
 
 	if(uiMusicHandle!=SOUND_ERROR)
 	{

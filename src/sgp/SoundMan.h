@@ -31,16 +31,8 @@ UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UIN
  * Returns: If the sound was started, it returns a sound ID unique to that
  *          instance of the sound If an error occured, SOUND_ERROR will be
  *          returned
- *
- * !!Note:  Can no longer play streamed files */
+ */
 UINT32 SoundPlay(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
-
-/* The sample will be played as a double-buffered sample.
- *
- * Returns: If the sound was started, it returns a sound ID unique to that
- *          instance of the sound If an error occured, SOUND_ERROR will be
- *          returned */
-UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data);
 
 /* Registers a sample to be played randomly within the specified parameters.
  *

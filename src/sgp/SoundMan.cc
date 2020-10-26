@@ -277,12 +277,6 @@ UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UIN
 	return SoundStartSample(s, channel, volume, pan, loop, end_callback, data);
 }
 
-UINT32 SoundPlayStreamedFile(const char* pFilename, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
-{
-	// All sounds might be streamed, so this is an alias to SoundPlay
-	return SoundPlay(pFilename, volume, pan, loop, end_callback, data);
-}
-
 
 UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max, UINT32 max_instances)
 {

@@ -130,5 +130,5 @@ UINT32 PlayJA2GapSample(const char* zSoundFile, UINT32 ubVolume, UINT32 ubLoops,
 	if (pData != NULL) AudioGapListInit(zSoundFile, pData);
 
 	const UINT32 vol = CalculateSpeechVolume(ubVolume);
-	return SoundPlayStreamedFile(zSoundFile, vol, uiPan, ubLoops, NULL, NULL);
+	return SoundPlay(zSoundFile, vol, uiPan, ubLoops, NULL, NULL);
 }
