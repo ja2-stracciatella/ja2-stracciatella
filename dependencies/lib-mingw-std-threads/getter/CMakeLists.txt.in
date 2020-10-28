@@ -1,0 +1,25 @@
+# \file dependencies/lib-mingw-std-threads/getter/CMakeLists.txt.in
+# Configured by @CMAKE_CURRENT_LIST_FILE@
+#
+# @ONLY variables:
+#  * CMAKE_GENERATOR - which generator to use
+#  * SRC_DIR - where to extract the archive
+#  * BUILD_DIR - where the integrated sources are built
+
+cmake_minimum_required(VERSION 3.1)
+
+project(getter NONE)
+
+include(ExternalProject)
+externalproject_add(get-mingw-std-threads
+    URL "https://github.com/meganz/mingw-std-threads/archive/bee085c0a6cb32c59f0b55c7bba976fe6dcfca7f.zip"
+    URL_MD5 "7775ac08de00fa86472dc30891c35c5b"
+    CMAKE_ARGS
+        "-G@CMAKE_GENERATOR@"
+        SOURCE_DIR          "@SRC_DIR@"
+        BINARY_DIR          "@BUILD_DIR@"
+        CONFIGURE_COMMAND   ""
+        BUILD_COMMAND       ""
+        INSTALL_COMMAND     ""
+        TEST_COMMAND        ""
+)
