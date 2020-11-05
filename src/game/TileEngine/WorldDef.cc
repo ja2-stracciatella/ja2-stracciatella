@@ -206,17 +206,23 @@ void DeinitializeWorld( )
 
 static void AddTileSurface(const ST::string filename, UINT32 const tileType);
 
+TileSetID GetDefaultTileset() {
+	return (gubNumTilesets == JA25_NUM_TILESETS) // If we have the number of tilesets for JA25 useJA25 default, else vanilla default
+		? DEFAULT_JA25_TILESET
+		: GENERIC_1;
+}
+
 TILE_SURFACE_RESOURCE GetAdjustedTilesetResource(TileSetID tilesetID, UINT32 uiTileType, const ST::string filePrefix)
 {
-	if (tilesetID >= gubNumTilesets) throw std::logic_error("invavlid tilesetID");
+	if (tilesetID >= gubNumTilesets) throw std::logic_error("invalid tilesetID");
 
 	ST::string  filename = gTilesets[tilesetID].zTileSurfaceFilenames[uiTileType];
 	if (filename.empty())
 	{
 		// Try loading from default tileset
-		tilesetID = (tilesetID >= DEFAULT_JA25_TILESET || (gubNumTilesets == JA25_NUM_TILESETS && uiTileType == SPECIALTILES))
-			? DEFAULT_JA25_TILESET     //If the map uses JA25 tilesets ( 50 - 69 ) or it is SPECIALTILES (and JA25 tilesets available), use DEFAULT_JA25_TILESET
-			: GENERIC_1                //If the map uses tilesets from Ja2 ( 0 - 49 ), use t0 as the default
+		tilesetID = (gubNumTilesets == JA25_NUM_TILESETS && uiTileType == SPECIALTILES)
+			? DEFAULT_JA25_TILESET     // If the map is SPECIALTILES (and JA25 tilesets available), use DEFAULT_JA25_TILESET
+			: GetDefaultTileset()      // Else use default
 		;
 		filename = gTilesets[tilesetID].zTileSurfaceFilenames[uiTileType];
 	}
