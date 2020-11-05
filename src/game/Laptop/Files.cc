@@ -192,8 +192,7 @@ static void ClearFilesList(void);
 
 void GameInitFiles(void)
 {
-	const auto filesDatFile = ST::string(FILES_DAT_FILE);
-	GCM->deleteTempFile(filesDatFile);
+	GCM->deleteTempFile(FILES_DAT_FILE);
 	ClearFilesList( );
 
 	// add background check by RIS
@@ -362,8 +361,10 @@ static void OpenAndReadFilesFile(void)
 	AutoSGPFile f;
 	try
 	{
-		const auto filesDatFile = ST::string(FILES_DAT_FILE);
-		f = GCM->openTempFileForReading(filesDatFile);
+		if (!GCM->doesTempFileExist(FILES_DAT_FILE)) {
+			return;
+		}
+		f = GCM->openTempFileForReading(FILES_DAT_FILE);
 	}
 	catch (...) { return; /* XXX TODO0019 ignore */ }
 

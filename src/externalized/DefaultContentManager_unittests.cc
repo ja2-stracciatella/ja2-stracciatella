@@ -141,10 +141,11 @@ TEST(ExternalizedData, readEveryFile)
 	DefaultContentManagerUT* cm = DefaultContentManagerUT::createDefaultCMForTesting();
 
 	ST::string dataPath = ST::format("{}/externalized", GetExtraDataDir());
-	std::vector<ST::string> results = FindFilesInDir(dataPath, "json", true, false, false, true);
+	std::vector<ST::string> results = FindFilesInDir(dataPath, "json", true, true, false, true);
 	for (ST::string f : results)
 	{
-		auto json = cm->_readJsonDataFile(f.c_str()).get();
+		auto relativePath = f.substr(dataPath.size() + 1);
+		auto json = cm->_readJsonDataFile(relativePath.c_str()).get();
 		ASSERT_FALSE(json == NULL);
 	}
 }

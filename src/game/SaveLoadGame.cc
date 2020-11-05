@@ -546,11 +546,11 @@ void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h, bool *
 		BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN];
 		FileRead(f, data, sizeof(data));
 		ParseSavedGameHeader(data, h, true);
-		if(isValidSavedGameHeader(h))
+		if(!isValidSavedGameHeader(h))
 		{
-			*stracLinuxFormat = true;
-			return;
+			throw std::runtime_error("Not a valid stracciatella save game header");
 		}
+		*stracLinuxFormat = true;
 	}
 	catch (const std::exception& e)
 	{

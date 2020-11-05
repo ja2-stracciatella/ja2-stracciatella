@@ -1122,6 +1122,9 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 
 		try
 		{
+			if (!GCM->doesUserPrivateFileExist(savegameName)) {
+				throw std::runtime_error("Tried to read savegame that does not exist");
+			}
 			bool stracLinuxFormat;
 			AutoSGPFile f(GCM->openUserPrivateFileForReading(savegameName));
 			ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
