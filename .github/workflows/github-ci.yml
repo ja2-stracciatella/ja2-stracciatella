@@ -89,7 +89,7 @@ jobs:
 
     - name: Build and run tests
       shell: bash
-      run: ${{ github.workspace }}/.github/scripts/ci-build.sh 2>&1
+      run: ${{ github.workspace }}/.ci/ci-build.sh 2>&1
       env:
         CI_NAME: ${{ matrix.cfg.name }}
         CI_OS: ${{ matrix.cfg.os }}
