@@ -4,25 +4,35 @@ on:
   schedule:
     - cron:  '0 2 * * *'
 
+env:
+  NIGHTLY: nightly
+  TRUNK: master
+
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    
     steps:
     - name: Checkout nightly
-      uses: actions/checkout@v1
+      uses: actions/checkout@v2
       with:
-        ref: nightly
+        ref: ${{ env.NIGHTLY_BRANCH }}
+        fetch-depth: 0
+        persist-credentials: false
+
     - name: Update nightly
       run: |
         # user and email are required for pushing
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
+        git config --local user.email "madlab-bot@ja2-stracciatella.github.io"
+        git config --local user.name  "Madlab's bot"
         # fast forward to current master
-        git merge origin/master --ff-only
+        git fetch origin ${TRUNK}
+        git merge origin/${TRUNK} --ff-only
+
     - name: Push nightly
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        branch: nightly
+      run: |
+        # push new commits to nightly
+        REMOTE="https://${BOT_USERNAME}:${BOT_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+        git push origin HEAD:${NIGHTLY}
+      env:
+        BOT_USERNAME: madlab-bot
+        BOT_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
