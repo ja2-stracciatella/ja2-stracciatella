@@ -19,7 +19,8 @@ endmacro()
 
 # compiler caching
 find_program(SCCACHE_PROGRAM "sccache")
-if(SCCACHE_PROGRAM)
+set(USE_SCCACHE ON CACHE BOOL "Set to OFF to not cache compiler outputs")
+if(SCCACHE_PROGRAM AND USE_SCCACHE)
     message(STATUS "Using sccache found at ${SCCACHE_PROGRAM} for caching build results")
     set(CMAKE_C_COMPILER_LAUNCHER "${SCCACHE_PROGRAM}" CACHE STRING "" FORCE)
     set(CMAKE_CXX_COMPILER_LAUNCHER "${SCCACHE_PROGRAM}" CACHE STRING "" FORCE)
