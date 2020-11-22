@@ -1,0 +1,70 @@
+name: Coverity Scan
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'  ## every Monday morning
+
+env:
+  COVERITY_SCAN_TOKEN: ${{ secrets.COVERITY_SCAN_TOKEN }}
+  COVERITY_SCAN_EMAIL: github@stefanlau.com
+  COVERITY_PROJECT: ja2-stracciatella/ja2-stracciatella
+  COV_TOOLS_DIR: ${{ github.workspace }}/cov-analysis-linux64
+  COV_BUILD_DIR: ${{ github.workspace }}/coverity-build
+  COV_RESULTS_DIR: coverity-results
+  COV_RESULTS_FILE: analysis-results.tgz
+
+jobs:
+  coverity_scan:
+    runs-on: ubuntu-16.04
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up environment
+        shell: bash
+        run: ${{ github.workspace }}/.ci/ci-setup.sh 2>&1
+        env:
+          CI_TARGET: linux
+
+      - name: Download and install Coverity Build Tool
+        run: |
+          wget -q https://scan.coverity.com/download/cxx/linux64 \
+                --post-data "token=${COVERITY_SCAN_TOKEN}&project=${COVERITY_PROJECT}" \
+                -O cov-analysis-linux64.tar.gz
+          mkdir ${COV_TOOLS_DIR}
+          tar xzf cov-analysis-linux64.tar.gz --strip 1 -C ${COV_TOOLS_DIR}
+
+      - name: Prepare CMake build
+        run: |
+          mkdir ${COV_BUILD_DIR}
+          cd ${COV_BUILD_DIR}
+          cmake ${CMAKE_BUILD_OPTIONS} ..
+        env:
+          CMAKE_BUILD_OPTIONS: "-DCMAKE_BUILD_TYPE=Release -DUSE_SCCACHE=OFF"
+
+      - name: Run Coverity Scan Analysis Tool
+        run: |
+          export PATH=${COV_TOOLS_DIR}/bin:$PATH
+          cd ${COV_BUILD_DIR}
+          cov-build --dir ${COV_RESULTS_DIR} make -j 2
+          cov-import-scm --dir ${COV_RESULTS_DIR} --scm git --log ${COV_RESULTS_DIR}/scm-log.txt 2>&1
+
+      - name: Upload Coverity Scan Analysis results
+        run: |
+          cd ${COV_BUILD_DIR}
+          tar czf ${COV_RESULTS_FILE} ${COV_RESULTS_DIR}
+          curl \
+            --form project=${COVERITY_PROJECT} \
+            --form token=${COVERITY_SCAN_TOKEN} \
+            --form email=${COVERITY_SCAN_EMAIL} \
+            --form file=@${COV_RESULTS_FILE} \
+            --form version=${GITHUB_SHA} \
+            --form description="GitHub nightly" \
+              https://scan.coverity.com/builds?project=${COVERITY_PROJECT}
+
+      - name: Upload scan logs as artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: scan-logs
+          path: |
+            ${{ env.COV_BUILD_DIR }}/${{ env.COV_RESULTS_DIR }}/scm-log.txt
+            ${{ env.COV_BUILD_DIR }}/${{ env.COV_RESULTS_DIR }}/build-log.txt
