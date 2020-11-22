@@ -83,7 +83,9 @@ jobs:
 
     - name: Set up environment
       shell: bash
-      run: ${{ github.workspace }}/.ci/ci-setup.sh 2>&1
+      run: |
+        . ${{ github.workspace }}/.ci/ci-setup.sh 2>&1
+        echo "PATH=$PATH" >> $GITHUB_ENV
       env:
         CI_TARGET: ${{ matrix.cfg.target }}
 
@@ -125,7 +127,7 @@ jobs:
           cp "${file}" artifacts/
         done
     - name: Upload artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: artifacts
         path: ${{ github.workspace }}/artifacts
