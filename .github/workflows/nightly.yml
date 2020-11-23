@@ -15,7 +15,7 @@ jobs:
     - name: Checkout nightly
       uses: actions/checkout@v2
       with:
-        ref: ${{ env.NIGHTLY_BRANCH }}
+        ref: ${{ env.NIGHTLY }}
         fetch-depth: 0
         persist-credentials: false
 
@@ -32,7 +32,7 @@ jobs:
       run: |
         # push new commits to nightly
         REMOTE="https://${BOT_USERNAME}:${BOT_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-        git push origin HEAD:${NIGHTLY}
+        git push "${REMOTE}" "HEAD:${NIGHTLY}"
       env:
         BOT_USERNAME: madlab-bot
         BOT_TOKEN: ${{ secrets.BOT_GITHUB_TOKEN }}
