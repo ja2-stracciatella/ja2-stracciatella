@@ -144,6 +144,13 @@ impl Into<String> for Nfc {
     }
 }
 
+/// Unwraps the inner string into byte vector
+impl Into<Vec<u8>> for Nfc {
+    fn into(self) -> Vec<u8> {
+        self.inner.into()
+    }
+}
+
 /// Inherits all the methods of `str`.
 impl ops::Deref for Nfc {
     type Target = str;

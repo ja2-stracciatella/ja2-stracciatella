@@ -277,6 +277,7 @@ void CompileWorldMovementCosts(void);
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );
 void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );
 
+TileSetID GetDefaultTileset();
 // Tilesets may not provide all tile types.If a tile type is not available in a tileset, we fall back and use the surface in the default tileset.
 TILE_SURFACE_RESOURCE GetAdjustedTilesetResource(TileSetID tilesetID, UINT32 uiTileType, const ST::string filePrefix = "");
 

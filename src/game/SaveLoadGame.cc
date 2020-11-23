@@ -265,12 +265,9 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 			header.sSavedGameDesc = gameDesc;
 		}
 
-		FileMan::createDir(GCM->getSavedGamesFolder().c_str());
-
 		// Create the save game file
-		char savegame_name[512];
-		CreateSavedGameFileNameFromNumber(ubSaveGameID, savegame_name);
-		AutoSGPFile f(FileMan::openForWriting(savegame_name));
+		auto savegameName = CreateSavedGameFileNameFromNumber(ubSaveGameID);
+		AutoSGPFile f(GCM->openUserPrivateFileForWriting(savegameName, true));
 
 		/* If there are no enemy or civilians to save, we have to check BEFORE
 		 * saving the sector info struct because the
@@ -351,9 +348,9 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 
 		SaveTempFileToSavedGame(NEWTMP_FINANCES_DATA_FILE, f);
 
-		SaveFilesToSavedGame(HISTORY_DATA_FILE, f);
+		SaveTempFileToSavedGame(HISTORY_DATA_FILE, f);
 
-		SaveFilesToSavedGame(FILES_DAT_FILE, f);
+		SaveTempFileToSavedGame(FILES_DAT_FILE, f);
 
 		SaveEmailToSavedGame(f);
 
@@ -428,8 +425,10 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 
 		NewWayOfSavingBobbyRMailOrdersToSaveGameFile(f);
 	}
-	catch (...)
+	catch (const std::exception& e)
 	{
+		SLOGE(ST::format("Error saving game: {}", e.what(), typeid(e).name()));
+
 		if (fWePausedIt) UnPauseAfterSaveGame();
 
 		// Delete the failed attempt at saving
@@ -547,14 +546,13 @@ void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h, bool *
 		BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE_STRAC_LIN];
 		FileRead(f, data, sizeof(data));
 		ParseSavedGameHeader(data, h, true);
-		if(isValidSavedGameHeader(h))
+		if(!isValidSavedGameHeader(h))
 		{
-			*stracLinuxFormat = true;
-			return;
+			throw std::runtime_error("Not a valid stracciatella save game header");
 		}
+		*stracLinuxFormat = true;
 	}
-	catch (...) {}
-
+	catch (const std::exception& e)
 	{
 		// trying vanilla format
 		BYTE data[SAVED_GAME_HEADER_ON_DISK_SIZE];
@@ -624,9 +622,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	// ATE: Added to empty dialogue q
 	EmptyDialogueQueue();
 
-	char zSaveGameName[512];
-	CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
-	AutoSGPFile f(GCM->openUserPrivateFileForReading(zSaveGameName));
+	auto savegameName = CreateSavedGameFileNameFromNumber(save_slot_id);
+	AutoSGPFile f(GCM->openUserPrivateFileForReading(savegameName));
 
 	SAVED_GAME_HEADER SaveGameHeader;
 	bool stracLinuxFormat;
@@ -722,13 +719,14 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	LoadSoldierStructure(f, version, stracLinuxFormat);
 
 	BAR(1, "Finances Data File...");
+	const auto financesDataFile = ST::string(NEWTMP_FINANCES_DATA_FILE);
 	LoadTempFileFromSavedGame(NEWTMP_FINANCES_DATA_FILE, f);
 
 	BAR(1, "History File...");
-	LoadFilesFromSavedGame(HISTORY_DATA_FILE, f);
+	LoadTempFileFromSavedGame(HISTORY_DATA_FILE, f);
 
 	BAR(1, "The Laptop FILES file...");
-	LoadFilesFromSavedGame(FILES_DAT_FILE, f);
+	LoadTempFileFromSavedGame(FILES_DAT_FILE, f);
 
 	BAR(1, "Email...");
 	LoadEmailFromSavedGame(f);
@@ -1154,7 +1152,7 @@ ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
 bool IMPSavedProfileDoesFileExist(const ST::string& nickname)
 {
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
-	bool fexists = Fs_exists(profile_filename.c_str());
+	bool fexists = GCM->doesUserPrivateFileExist(profile_filename);
 	return fexists;
 }
 
@@ -1163,14 +1161,14 @@ SGPFile* const IMPSavedProfileOpenFileForRead(const ST::string& nickname)
 	if (!IMPSavedProfileDoesFileExist(nickname)) {
 		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
 	}
-	SGPFile *f = FileMan::openForReading(IMPSavedProfileCreateFilename(nickname).c_str());
+	SGPFile *f = GCM->openUserPrivateFileForReading(IMPSavedProfileCreateFilename(nickname));
 	return f;
 }
 
 SGPFile* const IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
 {
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
-	SGPFile *f = FileMan::openForWriting(profile_filename.c_str(), true);
+	SGPFile *f = GCM->openUserPrivateFileForWriting(profile_filename, true);
 	return f;
 }
 
@@ -1440,18 +1438,19 @@ static void SaveFileToSavedGame(SGPFile* fileToSave, HWFILE const hFile)
 	FileWrite(hFile, pData, uiFileSize);
 }
 
-static void SaveTempFileToSavedGame(const char* fileName, HWFILE const hFile)
+static void SaveTempFileToSavedGame(const char* tempFileName, HWFILE const hFile)
 {
+	auto fileName = ST::string(tempFileName);
 	AutoSGPFile fileToSave(GCM->openTempFileForReading(fileName));
 	SaveFileToSavedGame(fileToSave, hFile);
 }
 
 void SaveFilesToSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
-	AutoSGPFile hSrcFile(GCM->openGameResForReading(pSrcFileName));
+	auto fileName = ST::string(pSrcFileName);
+	AutoSGPFile hSrcFile(GCM->openTempFileForReading(fileName));
 	SaveFileToSavedGame(hSrcFile, hFile);
 }
-
 
 static void LoadFileFromSavedGame(SGPFile* fileToWrite, HWFILE const hFile)
 {
@@ -1471,14 +1470,16 @@ static void LoadFileFromSavedGame(SGPFile* fileToWrite, HWFILE const hFile)
 
 void LoadTempFileFromSavedGame(const char* tempFileName, HWFILE const hFile)
 {
-	AutoSGPFile fileToWrite(GCM->openTempFileForWriting(tempFileName, true));
+	auto fileName = ST::string(tempFileName);
+	AutoSGPFile fileToWrite(GCM->openTempFileForWriting(fileName, true));
 	LoadFileFromSavedGame(fileToWrite, hFile);
 }
 
 void LoadFilesFromSavedGame(char const* const pSrcFileName, HWFILE const hFile)
 {
-	AutoSGPFile hSrcFile(FileMan::openForWriting(pSrcFileName));
-	LoadFileFromSavedGame(hSrcFile, hFile);
+	auto fileName = ST::string(pSrcFileName);
+	AutoSGPFile fileToWrite(GCM->openTempFileForWriting(fileName, true));
+	LoadFileFromSavedGame(fileToWrite, hFile);
 }
 
 static void SaveTacticalStatusToSavedGame(HWFILE const f)
@@ -1629,7 +1630,7 @@ static void LoadWatchedLocsFromSavedGame(HWFILE const hFile)
 }
 
 
-void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzNewFileName)
+ST::string CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID)
 {
 	ST::string dir = GCM->getSavedGamesFolder();
 
@@ -1637,22 +1638,22 @@ void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzN
 	{
 		case 0: // we are creating the QuickSave file
 		{
-			sprintf(pzNewFileName, "%s/%s.%s", dir.c_str(), g_quicksave_name.c_str(), g_savegame_ext.c_str());
-			break;
+			return FileMan::joinPaths(dir, ST::format("{}.{}", g_quicksave_name, g_savegame_ext));
 		}
 
 		case SAVE__END_TURN_NUM:
-			sprintf(pzNewFileName, "%s/Auto%02d.%s", dir.c_str(), guiLastSaveGameNum, g_savegame_ext.c_str());
+		{
+			auto saveGameName = FileMan::joinPaths(dir, ST::format("Auto{02}.{}", guiLastSaveGameNum, g_savegame_ext));
 			guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
-			break;
+			return saveGameName;
+		}
+			
 
 		case SAVE__ERROR_NUM:
-			sprintf(pzNewFileName, "%s/error.%s", dir.c_str(), g_savegame_ext.c_str());
-			break;
+			return FileMan::joinPaths(dir, ST::format("error.{}", g_savegame_ext));
 
 		default:
-			sprintf(pzNewFileName, "%s/%s%02d.%s", dir.c_str(), g_savegame_name.c_str(), ubSaveGameID, g_savegame_ext.c_str());
-			break;
+			return FileMan::joinPaths(dir, ST::format("{}{02}.{}", g_savegame_name, ubSaveGameID, g_savegame_ext));
 	}
 }
 
@@ -2351,13 +2352,13 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 	
 	ST::string zFileName2 = ST::format("{}/Auto{02d}.{}", GCM->getSavedGamesFolder(), 1, g_savegame_ext);
 
-	if( GCM->doesGameResExists( zFileName1 ) )
+	if( GCM->doesUserPrivateFileExist( zFileName1 ) )
 	{
 		Fs_modifiedSecs( zFileName1.c_str(), &LastWriteTime1 );
 		fFile1Exist = TRUE;
 	}
 
-	if( GCM->doesGameResExists( zFileName2 ) )
+	if( GCM->doesUserPrivateFileExist( zFileName2 ) )
 	{
 		Fs_modifiedSecs( zFileName2.c_str(), &LastWriteTime2 );
 		fFile2Exist = TRUE;

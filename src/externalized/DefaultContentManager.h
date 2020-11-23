@@ -61,20 +61,44 @@ public:
 	/* Open a game resource file for reading. */
 	virtual SGPFile* openGameResForReading(const ST::string& filename) const override;
 
+	/** Get Path to temp dir. */
+	virtual ST::string getTempDir() const override;
+
 	/** Open temporary file for writing. */
 	virtual SGPFile* openTempFileForWriting(const ST::string& filename, bool truncate) const override;
 
 	/** Open temporary file for reading. */
 	virtual SGPFile* openTempFileForReading(const ST::string& filename) const override;
 
+	/** Open temporary file for read/write. */
+	virtual SGPFile* openTempFileForReadWrite(const ST::string& filename) const override;
+
 	/** Open temporary file for appending. */
 	virtual SGPFile* openTempFileForAppend(const ST::string& filename) const override;
+
+	/** Does a temporary file exist. */
+	virtual BOOLEAN doesTempFileExist(const ST::string& filename) const override;
 
 	/** Delete temporary file. */
 	virtual void deleteTempFile(const ST::string& filename) const override;
 
+	/** Open user's private file (e.g. saved game, settings) for writing. */
+	virtual SGPFile* openUserPrivateFileForWriting(const ST::string& filename, bool truncate) const override;
+
 	/** Open user's private file (e.g. saved game, settings) for reading. */
 	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const override;
+
+	/** Open user's private file (e.g. saved game, settings) for read/write. */
+	virtual SGPFile* openUserPrivateFileForReadWrite(const ST::string& filename) const override;
+
+	/** Open user's private file (e.g. saved game, settings) for appending. */
+	virtual SGPFile* openUserPrivateFileForAppend(const ST::string& filename) const override;
+
+	/** Does user's private file (e.g. saved game, settings) exist. */
+	virtual BOOLEAN doesUserPrivateFileExist(const ST::string& filename) const override;
+
+	/** Delete users private file. */
+	virtual void deleteUserPrivateFile(const ST::string& filename) const override;
 
 	/* Checks if a game resource exists. */
 	virtual bool doesGameResExists(const ST::string& filename) const override;
@@ -86,7 +110,6 @@ public:
 	virtual ST::string getVideoCaptureFolder() const override;
 
 	const ST::string& getDataDir() { return m_dataDir; }
-	const ST::string& getTileDir() { return m_tileDir; }
 
 	const ST::string& getExternalizedDataDir() { return m_externalizedDataPath; }
 
@@ -183,7 +206,6 @@ public:
 
 protected:
 	ST::string m_dataDir;
-	ST::string m_tileDir;
 	ST::string m_userHomeDir;
 	ST::string m_gameResRootPath;
 	ST::string m_externalizedDataPath;

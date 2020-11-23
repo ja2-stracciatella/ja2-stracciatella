@@ -30,7 +30,7 @@
 #include <string_theory/format>
 
 
-#define GAME_SETTINGS_FILE "../Ja2.set"
+#define GAME_SETTINGS_FILE "Ja2.set"
 
 GAME_SETTINGS		gGameSettings;
 GAME_OPTIONS		gGameOptions;
@@ -135,7 +135,7 @@ void SaveGameSettings(void)
 	INJ_SKIP(d, 20)
 	Assert(d.getConsumed() == lengthof(data));
 
-	AutoSGPFile f(FileMan::openForWriting(GAME_SETTINGS_FILE));
+	AutoSGPFile f(GCM->openUserPrivateFileForWriting(GAME_SETTINGS_FILE, true));
 	FileWrite(f, data, sizeof(data));
 }
 

@@ -784,9 +784,8 @@ void UpdateDoorPerceivedValue( DOOR *pDoor )
 
 void SaveDoorTableToDoorTableTempFile(INT16 const x, INT16 const y, INT8 const z)
 {
-	char map_name[128];
-	GetMapTempFileName(SF_DOOR_TABLE_TEMP_FILES_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileMan::openForWriting(map_name));
+	auto mapName = GetMapTempFileName(SF_DOOR_TABLE_TEMP_FILES_EXISTS, x, y, z);
+	AutoSGPFile f(GCM->openTempFileForWriting(mapName, true));
 	Assert(DoorTable.size() <= UINT8_MAX);
 	UINT8 numDoors = static_cast<UINT8>(DoorTable.size());
 	FileWriteArray(f, numDoors, DoorTable.data());
@@ -797,19 +796,15 @@ void SaveDoorTableToDoorTableTempFile(INT16 const x, INT16 const y, INT8 const z
 
 void LoadDoorTableFromDoorTableTempFile()
 {
-	CHAR8 zMapName[ 128 ];
-
-	//return( TRUE );
-
-	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	auto mapName = GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
-	if (!GCM->doesGameResExists(zMapName)) return;
+	if (!GCM->doesTempFileExist(mapName)) return;
 
 	//Get rid of the existing door table
 	TrashDoorTable();
 
-	AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
+	AutoSGPFile hFile(GCM->openTempFileForReading(mapName));
 
 	//Read in the number of doors
 	UINT8 numDoors = 0;
@@ -1157,9 +1152,8 @@ void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const x, INT16 const y, INT8 
 	// Turn off any door busy flags
 	FOR_EACH_DOOR_STATUS(d) d.ubFlags &= ~DOOR_BUSY;
 
-	char map_name[128];
-	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileMan::openForWriting(map_name));
+	auto mapName = GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, x, y, z);
+	AutoSGPFile f(GCM->openTempFileForWriting(mapName, true));
 	Assert(gpDoorStatus.size() <= UINT8_MAX);
 	UINT8 numDoorStatus = static_cast<UINT8>(gpDoorStatus.size());
 	FileWriteArray(f, numDoorStatus, gpDoorStatus.data());
@@ -1173,9 +1167,8 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 {
 	TrashDoorStatusArray();
 
-	char map_name[128];
-	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-	AutoSGPFile f(GCM->openGameResForReading(map_name));
+	auto mapName = GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	AutoSGPFile f(GCM->openTempFileForReading(mapName));
 
 	// Load the number of elements in the door status array
 	UINT8 numDoorStatus = 0;

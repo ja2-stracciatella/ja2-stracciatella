@@ -80,9 +80,6 @@ public:
 	/** Open map for reading. */
 	virtual SGPFile* openMapForReading(const ST::string& mapName) const = 0;
 
-	/** Open user's private file (e.g. saved game, settings) for reading. */
-	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const = 0;
-
 	/* Open a game resource file for reading. */
 	virtual SGPFile* openGameResForReading(const ST::string& filename) const = 0;
 
@@ -199,6 +196,9 @@ public:
 
 	virtual const ST::string& getLandTypeString(size_t index) const = 0;
 
+	/** Get temporary directory. */
+	virtual ST::string getTempDir() const = 0;
+
 	/** Open temporary file for writing. */
 	virtual SGPFile* openTempFileForWriting(const ST::string& filename, bool truncate) const = 0;
 
@@ -208,6 +208,30 @@ public:
 	/** Open temporary file for appending. */
 	virtual SGPFile* openTempFileForAppend(const ST::string& filename) const = 0;
 
+	/** Open temporary file for read/write. */
+	virtual SGPFile* openTempFileForReadWrite(const ST::string& filename) const = 0;
+
+	/** Check if temporary file exists. */
+	virtual BOOLEAN doesTempFileExist(const ST::string& filename) const = 0;
+
 	/** Delete temporary file. */
 	virtual void deleteTempFile(const ST::string& filename) const = 0;
+
+	/** Open user's private file (e.g. saved game, settings) for writing. */
+	virtual SGPFile* openUserPrivateFileForWriting(const ST::string& filename, bool truncate) const = 0;
+
+	/** Open user's private file (e.g. saved game, settings) for reading. */
+	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const = 0;
+
+	/** Open user's private file (e.g. saved game, settings) for read/write. */
+	virtual SGPFile* openUserPrivateFileForReadWrite(const ST::string& filename) const = 0;
+
+	/** Open user's private file (e.g. saved game, settings) for appending. */
+	virtual SGPFile* openUserPrivateFileForAppend(const ST::string& filename) const = 0;
+
+	/** Does user's private file (e.g. saved game, settings) exist. */
+	virtual BOOLEAN doesUserPrivateFileExist(const ST::string& filename) const = 0;
+
+	/** Delete users private file. */
+	virtual void deleteUserPrivateFile(const ST::string& filename) const = 0;
 };

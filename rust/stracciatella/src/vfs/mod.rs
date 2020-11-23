@@ -1,7 +1,14 @@
-//! This module implements virtual filesystems.
+//! This module contains the virtual filesystem used for data files in JA2 Stracciatella
 //!
-//! The paths are case insensitive.
-//! It does not support path components `.` and `..`.
+//! It is a layered filesystem that can load resources from multiple locations.
+//!
+//! ## Assumptions
+//!
+//! There are some assumptions we make about the AssetManager in oder to make everything work smoothly.
+//!
+//! - All sub-file systems dont change file / directory structure
+//! - All paths within the file system can be de- and encoded to UTF-8
+//!
 #![allow(dead_code)]
 
 #[cfg(target_os = "android")]
@@ -24,6 +31,9 @@ use crate::vfs::dir::DirFs;
 use crate::vfs::slf::SlfFs;
 use crate::EngineOptions;
 
+/// This is the trait that every File within the file system needs to implement.
+///
+/// In addition to basic std::io traits, fmt::Display and some convenience functions for length need to be implemented.
 pub trait VfsFile: io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display {
     /// Returns the length of the file
     fn len(&self) -> io::Result<u64>;
@@ -34,11 +44,29 @@ pub trait VfsFile: io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display {
     }
 }
 
+/// This is the trait a VFS Layer within the file system needs to implement
+///
+/// The whole VFS implements this layer as well and its functions are used to access the VFS in general.
 pub trait VfsLayer: fmt::Debug + fmt::Display {
-    // Opens a file in the VFS Layer
+    /// Opens a file in the VFS Layer
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>>;
-    // Lists a directory in the VFS Layer
+    /// Lists a directory in the VFS Layer
     fn read_dir(&self, file_path: &Nfc) -> io::Result<HashSet<Nfc>>;
+    /// Lists files with a specific extension in a directory in the VFS Layer
+    ///
+    /// The extension has to be specified without a dot (e.g. "slf")
+    fn read_dir_with_extension(
+        &self,
+        file_path: &Nfc,
+        extension: &Nfc,
+    ) -> io::Result<HashSet<Nfc>> {
+        let extension = Nfc::caseless(&format!(".{}", extension));
+        Ok(self
+            .read_dir(file_path)?
+            .into_iter()
+            .filter(|path| path.ends_with(extension.as_str()))
+            .collect())
+    }
 }
 
 /// A virtual filesystem that mounts other filesystems.
@@ -103,22 +131,18 @@ impl Vfs {
         required: bool,
     ) -> Result<(), VfsInitError> {
         let slf_paths = layer
-            .read_dir(&Nfc::caseless_path("/"))
+            .read_dir_with_extension(&Nfc::caseless_path("/"), &Nfc::caseless_path("slf"))
             .map_err(|error| VfsInitError {
-                path: PathBuf::from(format!("Error listing SLF files in {}", layer)),
+                path: PathBuf::from(format!("Vfs: Error listing SLF files in {}", layer)),
                 error,
             })?;
-        let slf_paths: Vec<_> = slf_paths
-            .iter()
-            .filter(|path| path.ends_with(".slf"))
-            .collect();
         if required && slf_paths.is_empty() {
             return Err(VfsInitError {
                 path: PathBuf::from(format!("*.slf in {}", layer)),
                 error: ErrorKind::NotFound.into(),
             });
         }
-        for path in slf_paths {
+        for path in &slf_paths {
             self.add_slf(layer.open(path).map_err(|error| VfsInitError {
                 path: PathBuf::from(format!("{} in {}", path, layer)),
                 error,

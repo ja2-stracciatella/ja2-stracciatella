@@ -1,4 +1,14 @@
-//! This module contains a virtual filesystem backed by a SLF file.
+//! This module contains a virtual filesystem backed by a SLF File.
+//!
+//! The paths that are contained in this filesystem will be prefixed with the SLF files library path (e.g. `interface` for `Interface.slf`)
+//!
+//! ## Assumptions
+//!
+//! There are some assumptions we make about the AssetManager in oder to make everything work smoothly.
+//!
+//! - The SLF file does not change during a single run of the game
+//! - All paths within the SLF file can be de- and encoded to UTF-8
+//!
 #![allow(dead_code)]
 
 use std::collections::HashMap;

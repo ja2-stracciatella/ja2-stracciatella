@@ -58,9 +58,6 @@ char const* GetMLGFilename(MultiLanguageGraphic);
 /** Choose game version. */
 void setGameVersion(GameVersion ver);
 
-/** Get list of resource libraries. */
-std::vector<ST::string> GetResourceLibraries(const ST::string &dataDir);
-
 /**
  * Get encoding corrector for strings in data files.
  * @return NULL when no encoding corrector is required */

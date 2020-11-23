@@ -445,7 +445,7 @@ static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, UINT16 const u
 static void WriteOutCurrentImpCharacter(INT32 iProfileId)
 {
 	// grab the profile number and write out what is contained there in
-	AutoSGPFile hFile(FileMan::openForWriting(IMP_MERC_FILE));
+	AutoSGPFile hFile(GCM->openUserPrivateFileForWriting(IMP_MERC_FILE, true));
 
 	// Write the profile id, portrait id and the profile itself. Abort on error
 	FileWrite(hFile, &iProfileId,      sizeof(INT32));
