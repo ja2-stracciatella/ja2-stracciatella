@@ -5,12 +5,13 @@
 
 #include "JsonObject.h"
 #include "rapidjson/document.h"
+#include <string_theory/string>
 
 
 class ArmyCompositionModel
 {
 public:
-	ArmyCompositionModel(uint8_t compositionId_, const char* name_, int8_t priority_,
+	ArmyCompositionModel(uint8_t compositionId_, ST::string name_, int8_t priority_,
 		int8_t adminPercentage_, int8_t elitePercentage_, int8_t troopPercentage_,
 		int8_t desiredPopulation_, int8_t startPopulation_
 	);
@@ -25,7 +26,7 @@ public:
 	static void validateLoadedData(const std::vector<ARMY_COMPOSITION>& armyCompositions);
 
 	uint8_t compositionId;
-	const char* name;
+	ST::string name;
 	int8_t priority;
 	int8_t adminPercentage;
 	int8_t elitePercentage;

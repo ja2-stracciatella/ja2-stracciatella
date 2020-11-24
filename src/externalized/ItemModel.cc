@@ -1,18 +1,20 @@
 #include "ItemModel.h"
 
+#include <utility>
+
 #include "JsonObject.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
 
 
 ItemModel::ItemModel(uint16_t itemIndex,
-			const char* internalName,
+			ST::string internalName,
 			uint32_t usItemClass,
 			uint8_t classIndex,
 			ItemCursor cursor)
 {
 	this->itemIndex             = itemIndex;
-	this->internalName          = internalName;
+	this->internalName          = std::move(internalName);
 	this->usItemClass           = usItemClass;
 	this->ubClassIndex          = classIndex;
 	this->ubCursor              = cursor;
@@ -28,7 +30,7 @@ ItemModel::ItemModel(uint16_t itemIndex,
 }
 
 ItemModel::ItemModel(uint16_t   itemIndex,
-			const char* internalName,
+			ST::string internalName,
 			uint32_t   usItemClass,
 			uint8_t    ubClassIndex,
 			ItemCursor ubCursor,
@@ -58,8 +60,7 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 	this->fFlags                = fFlags;
 }
 
-// This could be default in C++11
-ItemModel::~ItemModel() {}
+ItemModel::~ItemModel() = default;
 
 const ST::string& ItemModel::getInternalName() const  { return internalName;          }
 

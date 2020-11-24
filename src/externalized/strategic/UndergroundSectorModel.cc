@@ -42,8 +42,8 @@ UndergroundSectorModel* UndergroundSectorModel::deserialize(const rapidjson::Val
 		auto adjacencies = obj["adjacentSectors"].GetArray();
 		for (auto& el : adjacencies)
 		{
-			const char* adj = el.GetString();
-			if (strlen(adj) != 1)
+			ST::string adj = el.GetString();
+			if (adj.size() != 1)
 			{
 				ST::string err = ST::format("'{}' is not a valid adjacency direction.", adj);
 				throw std::runtime_error(err.to_std_string());

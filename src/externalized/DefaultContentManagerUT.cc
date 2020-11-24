@@ -10,7 +10,7 @@ DefaultContentManagerUT::DefaultContentManagerUT(GameVersion gameVersion,
 	: DefaultContentManager(gameVersion, configFolder, gameResRootPath, externalizedDataPath)
 {}
 
-void DefaultContentManagerUT::init()
+void DefaultContentManagerUT::init(EngineOptions* engine_options)
 {
 	Vfs_addDir(m_vfs.get(), m_externalizedDataPath.c_str());
 }
@@ -30,7 +30,7 @@ DefaultContentManagerUT* DefaultContentManagerUT::createDefaultCMForTesting()
 	DefaultContentManagerUT* cm = new DefaultContentManagerUT(GameVersion::ENGLISH,
 					configFolderPath,
 					gameResRootPath, externalizedDataPath);
-	cm->init();
+	cm->init(NULL);
 
 	return cm;
 }

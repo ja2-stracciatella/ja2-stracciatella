@@ -15,7 +15,7 @@ struct CalibreModel;
 struct MagazineModel : ItemModel
 {
 	MagazineModel(uint16_t itemIndex,
-			const char* internalName,
+			ST::string internalName,
 			uint32_t  itemClass,
 			const CalibreModel *calibre,
 			uint16_t capacity,

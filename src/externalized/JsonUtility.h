@@ -19,7 +19,7 @@ namespace JsonUtility
 	bool parseListStrings(const rapidjson::Value &value, std::vector<ST::string> &strings);
 
 	/** Parse a sector string to sector ID */
-	uint8_t parseSectorID(const char* sectorShortString);
+	uint8_t parseSectorID(const ST::string& sectorShortString);
 
 	/** Parse a given string field to sector ID */
 	uint8_t parseSectorID(const rapidjson::Value& json, const char* fieldName);

@@ -59,14 +59,14 @@ bool JsonUtility::parseListStrings(const rapidjson::Value &value, std::vector<ST
 	return false;
 }
 
-uint8_t JsonUtility::parseSectorID(const char* sectorString)
+uint8_t JsonUtility::parseSectorID(const ST::string& sectorString)
 {
 	if (!IS_VALID_SECTOR_SHORT_STRING(sectorString))
 	{
 		ST::string err = ST::format("{} is not a valid sector", sectorString);
 		throw std::runtime_error(err.to_std_string());
 	}
-	return SECTOR_FROM_SECTOR_SHORT_STRING(sectorString);
+	return SECTOR_FROM_SECTOR_SHORT_STRING(sectorString.c_str());
 }
 
 uint8_t JsonUtility::parseSectorID(const rapidjson::Value& json, const char* fieldName)

@@ -1,7 +1,5 @@
 #pragma once
-
-#include "game/Tactical/Item_Types.h"
-
+#include "Item_Types.h"
 #include <string_theory/string>
 
 class JsonObject;
@@ -13,14 +11,14 @@ struct ItemModel
 {
 	ItemModel(
 		uint16_t itemIndex,
-		const char* internalName,
+		ST::string internalName,
 		uint32_t usItemClass,
 		uint8_t classIndex=0,
 		ItemCursor cursor=INVALIDCURS);
 
 	ItemModel(
 		uint16_t   itemIndex,
-		const char* internalName,
+		ST::string internalName,
 		uint32_t   usItemClass,
 		uint8_t    ubClassIndex,
 		ItemCursor ubCursor,

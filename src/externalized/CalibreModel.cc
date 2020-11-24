@@ -1,31 +1,28 @@
 #include "CalibreModel.h"
-
-#include "game/Utils/Text.h"
-
-#include "JsonObject.h"
-
 #include "ContentManager.h"
 #include "GameInstance.h"
-
+#include "JsonObject.h"
+#include "Text.h"
 #include <string_theory/format>
-
+#include <string_theory/string>
 #include <stdexcept>
+#include <utility>
 
 CalibreModel::CalibreModel(uint16_t index_,
-				const char* internalName_,
-				const char* burstSoundString_,
+				ST::string internalName_,
+				ST::string burstSoundString_,
 				bool showInHelpText_,
 				bool monsterWeapon_,
 				int silencerSound_)
-	:index(index_), internalName(internalName_),
-	burstSoundString(burstSoundString_),
+	:index(index_), internalName(std::move(internalName_)),
+	burstSoundString(std::move(burstSoundString_)),
 	showInHelpText(showInHelpText_),
 	monsterWeapon(monsterWeapon_),
 	silencerSound(silencerSound_)
 {
 }
 
-CalibreModel::~CalibreModel() {}
+CalibreModel::~CalibreModel() = default;
 
 void CalibreModel::serializeTo(JsonObject &obj) const
 {
@@ -40,8 +37,8 @@ void CalibreModel::serializeTo(JsonObject &obj) const
 CalibreModel* CalibreModel::deserialize(JsonObjectReader &obj)
 {
 	int index = obj.GetInt("index");
-	const char *internalName = obj.GetString("internalName");
-	const char *burstSoundString = obj.GetString("burstSoundString");
+	ST::string internalName = obj.GetString("internalName");
+	ST::string burstSoundString = obj.GetString("burstSoundString");
 	return new CalibreModel(index, internalName, burstSoundString,
 				obj.GetBool("showInHelpText"),
 				obj.GetBool("monsterWeapon"),
@@ -61,10 +58,10 @@ const CalibreModel* CalibreModel::getNoCalibreObject()
 }
 
 
-const CalibreModel* getCalibre(const char *calibreName,
+const CalibreModel* getCalibre(const ST::string& calibreName,
 				const std::map<ST::string, const CalibreModel*> &calibreMap)
 {
-	std::map<ST::string, const CalibreModel*>::const_iterator it = calibreMap.find(calibreName);
+	auto it = calibreMap.find(calibreName);
 	if(it != calibreMap.end())
 	{
 		return it->second;

@@ -3,16 +3,17 @@
 #include "AmmoTypeModel.h"
 #include "CalibreModel.h"
 #include "JsonObject.h"
+#include <utility>
 
 MagazineModel::MagazineModel(uint16_t itemIndex_,
-				const char* internalName_,
+				ST::string internalName_,
 				uint32_t itemClass_,
 				const CalibreModel *calibre_,
 				uint16_t capacity_,
 				const AmmoTypeModel *ammoType_,
 				bool dontUseAsDefaultMagazine_
 )
-	:ItemModel(itemIndex_, internalName_, itemClass_, 0, INVALIDCURS),
+	:ItemModel(itemIndex_, std::move(internalName_), itemClass_, 0, INVALIDCURS),
 	calibre(calibre_), capacity(capacity_), ammoType(ammoType_),
 	dontUseAsDefaultMagazine(dontUseAsDefaultMagazine_)
 {
@@ -56,7 +57,7 @@ MagazineModel* MagazineModel::deserialize(
 	const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap)
 {
 	int itemIndex                 = obj.GetInt("itemIndex");
-	const char *internalName      = obj.GetString("internalName");
+	ST::string internalName       = obj.GetString("internalName");
 	const CalibreModel *calibre   = getCalibre(obj.GetString("calibre"), calibreMap);
 	uint32_t itemClass            = (calibre->index != NOAMMO) ? IC_AMMO : IC_NONE;
 	uint16_t capacity             = obj.GetInt("capacity");
@@ -74,8 +75,8 @@ MagazineModel* MagazineModel::deserialize(
 	mag->usPrice          = obj.GetInt("usPrice");
 	mag->ubCoolness       = obj.GetInt("ubCoolness");
 
-	const char *replacement = obj.getOptionalString("standardReplacement");
-	if(replacement)
+	ST::string replacement = obj.getOptionalString("standardReplacement");
+	if (!replacement.empty())
 	{
 		mag->standardReplacement = replacement;
 	}

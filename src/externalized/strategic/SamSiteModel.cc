@@ -27,7 +27,7 @@ const bool SamSiteModel::doesSamExistHere(INT16 const x, INT16 const y, GridNo c
 
 SamSiteModel* SamSiteModel::deserialize(const rapidjson::Value& obj)
 {
-	const char* sector = obj["sector"].GetString();
+	ST::string sector = obj["sector"].GetString();
 	uint8_t sectorId = JsonUtility::parseSectorID(sector);
 
 	auto g = obj["gridNos"].GetArray();

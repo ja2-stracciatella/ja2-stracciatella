@@ -1,19 +1,16 @@
 #include "AmmoTypeModel.h"
-
 #include "JsonObject.h"
-
-#include <string_theory/format>
-
 #include <stdexcept>
+#include <string_theory/format>
+#include <utility>
 
 AmmoTypeModel::AmmoTypeModel(uint16_t index_,
-				const char* internalName_)
-	:index(index_), internalName(internalName_)
+				ST::string internalName_)
+	:index(index_), internalName(std::move(internalName_))
 {
 }
 
-// This could be default in C++11
-AmmoTypeModel::~AmmoTypeModel() {}
+AmmoTypeModel::~AmmoTypeModel() = default;
 
 void AmmoTypeModel::serializeTo(JsonObject &obj) const
 {
@@ -24,15 +21,15 @@ void AmmoTypeModel::serializeTo(JsonObject &obj) const
 AmmoTypeModel* AmmoTypeModel::deserialize(JsonObjectReader &obj)
 {
 	int index = obj.GetInt("index");
-	const char *internalName = obj.GetString("internalName");
+	ST::string internalName = obj.GetString("internalName");
 	return new AmmoTypeModel(index, internalName);
 }
 
 
-const AmmoTypeModel* getAmmoType(const char *ammoTypeName,
+const AmmoTypeModel* getAmmoType(const ST::string& ammoTypeName,
 					const std::map<ST::string, const AmmoTypeModel*> &ammoTypeMap)
 {
-	std::map<ST::string, const AmmoTypeModel*>::const_iterator it = ammoTypeMap.find(ammoTypeName);
+	auto it = ammoTypeMap.find(ammoTypeName);
 	if(it != ammoTypeMap.end())
 	{
 		return it->second;
