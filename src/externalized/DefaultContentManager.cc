@@ -893,7 +893,7 @@ bool DefaultContentManager::loadArmyData()
 	auto armyCompModels = ArmyCompositionModel::deserialize(*jsonAC);
 	ArmyCompositionModel::validateData(armyCompModels);
 
-	std::map<std::string, uint8_t> mapping;
+	std::map<ST::string, uint8_t> mapping;
 	for (auto& armyComp : armyCompModels)
 	{
 		mapping[armyComp->name] = armyComp->compositionId;

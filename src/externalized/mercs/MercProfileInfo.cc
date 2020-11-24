@@ -4,6 +4,7 @@
 #include "Soldier_Profile_Type.h"
 #include <string_theory/format>
 #include <string_theory/string>
+#include <utility>
 
 
 std::function<const MercProfileInfo*(ProfileID)> MercProfileInfo::load = {};
@@ -22,8 +23,8 @@ static MercType MercTypeFromString(const std::string& name)
 	throw std::runtime_error(err.to_std_string());
 }
 
-MercProfileInfo::MercProfileInfo(uint8_t profileID_, const char* internalName_, MercType mercType_)
-	: profileID(profileID_), internalName(ST::string(internalName_)), mercType(mercType_)
+MercProfileInfo::MercProfileInfo(uint8_t profileID_, ST::string internalName_, MercType mercType_)
+	: profileID(profileID_), internalName(std::move(internalName_)), mercType(mercType_)
 {
 }
 

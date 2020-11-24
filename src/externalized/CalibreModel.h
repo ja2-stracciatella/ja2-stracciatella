@@ -14,8 +14,8 @@ class JsonObjectReader;
 struct CalibreModel
 {
 	CalibreModel(uint16_t index,
-			const char* internalName,
-			const char* burstSoundString,
+			ST::string internalName,
+			ST::string burstSoundString,
 			bool showInHelpText,
 			bool monsterWeapon,
 			int silencerSound
@@ -39,5 +39,5 @@ struct CalibreModel
 	int silencerSound;
 };
 
-const CalibreModel* getCalibre(const char *calibreName,
+const CalibreModel* getCalibre(const ST::string& calibreName,
 				const std::map<ST::string, const CalibreModel*> &calibreMap);

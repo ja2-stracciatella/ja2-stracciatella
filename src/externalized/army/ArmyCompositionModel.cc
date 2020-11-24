@@ -1,10 +1,12 @@
 #include "ArmyCompositionModel.h"
+#include "Logger.h"
+#include <utility>
 
 
-ArmyCompositionModel::ArmyCompositionModel(uint8_t compositionId_, const char* name_, int8_t priority_,
+ArmyCompositionModel::ArmyCompositionModel(uint8_t compositionId_, ST::string name_, int8_t priority_,
 		int8_t adminPercentage_, int8_t elitePercentage_, int8_t troopPercentage_,
 		int8_t desiredPopulation_, int8_t startPopulation_) :
-			compositionId(compositionId_), name(name_), priority(priority_),
+			compositionId(compositionId_), name(std::move(name_)), priority(priority_),
 			adminPercentage(adminPercentage_), elitePercentage(elitePercentage_), troopPercentage(troopPercentage_),
 			desiredPopulation(desiredPopulation_), startPopulation(startPopulation_) {}
 
@@ -43,7 +45,7 @@ std::vector<const ArmyCompositionModel*> ArmyCompositionModel::deserialize(const
 }
 
 #define EXPECTS_STR(s) \
-	if (strcmp(s, comp->name) != 0) SLOGW(ST::format("Army Composition has an unexpected name. We recommmend leaving the default army compositions unchanged. Expected: {}; Actual: {}", comp->name, s));
+	if (comp->name != s) SLOGW(ST::format("Army Composition has an unexpected name. We recommend leaving the default army compositions unchanged. Expected: {}; Actual: {}", comp->name, s));
 
 void ArmyCompositionModel::validateData(const std::vector<const ArmyCompositionModel*> compositions)
 {

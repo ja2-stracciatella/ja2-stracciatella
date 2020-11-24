@@ -35,5 +35,5 @@ public:
 	static void validateData(const std::map<uint8_t, const MercProfileInfo*>& models);
 
 protected:
-	MercProfileInfo(uint8_t profileID_, const char* internalName_, MercType mercType_);
+	MercProfileInfo(uint8_t profileID_, ST::string internalName_, MercType mercType_);
 };

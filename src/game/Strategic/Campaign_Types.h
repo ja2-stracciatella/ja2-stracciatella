@@ -16,9 +16,9 @@ static inline UINT8 SECTOR(UINT8 const x, UINT8 const y)
 	return (y - 1) * 16 + x - 1;
 }
 
-static inline bool IS_VALID_SECTOR_SHORT_STRING(const char* shortString)
+static inline bool IS_VALID_SECTOR_SHORT_STRING(ST::string shortString)
 {
-	size_t len = strlen(shortString);
+	size_t len = shortString.size();
 	if (len < 2 || len > 3) return false;
 
 	char y = shortString[0], x = shortString[1];
