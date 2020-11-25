@@ -1,4 +1,7 @@
 {
+    // I.M.P. homepage activation code
+    "activation_codes": ["XEP624", "xep624"],
+
     // Experience level of a new I.M.P. merc
     // vanilla setting: 1
     "starting_level": 1,

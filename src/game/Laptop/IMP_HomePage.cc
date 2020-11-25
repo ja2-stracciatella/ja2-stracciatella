@@ -12,6 +12,9 @@
 #include "Text_Input.h"
 #include "LaptopSave.h"
 #include "Font_Control.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
+#include "IMPPolicy.h"
 
 #include <string_theory/string>
 
@@ -55,7 +58,7 @@ static void InitImpHomepageTextInputBoxes(void) {
 static void ProcessPlayerInputActivationString(void)
 {
 	ST::string str = GetStringFromField(0);
-	bool stringMatchesCode = str == "XEP624" || str == "xep624";
+	bool stringMatchesCode = GCM->getIMPPolicy()->isCodeAccepted(str);
 
 	if (stringMatchesCode && !LaptopSaveInfo.fIMPCompletedFlag) {
 		iCurrentImpPage = IMP_MAIN_PAGE;
