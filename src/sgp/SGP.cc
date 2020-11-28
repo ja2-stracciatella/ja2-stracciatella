@@ -134,27 +134,19 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 static BOOLEAN gfGameInitialized = FALSE;
 
 /** Deinitialize the game an exit. */
-static void deinitGameAndExit()
+static void shutdownGame()
 {
-	SLOGD("Deinitializing Game");
-	// If we are in Dead is Dead mode, save before exit
-	// Does this code also fire on crash? Let's hope not!
-	DoDeadIsDeadSaveIfNecessary();
-
-	SoundServiceStreams();
-
 	if (gfGameInitialized)
 	{
+		SLOGD("Shutting Down Game Manager");
 		ShutdownGame();
 	}
 	SLOGD("Shutting Down Button System");
 	ShutdownButtonSystem();
 	MSYS_Shutdown();
 
-#ifndef UTIL
 	SLOGD("Shutting Down Sound Manager");
 	ShutdownSoundManager();
-#endif
 
 #ifdef SGP_VIDEO_DEBUGGING
 	SLOGD("Dumping Video Info");
@@ -172,6 +164,17 @@ static void deinitGameAndExit()
 
 	SLOGD("Shutting Down SDL");
 	SDL_Quit();
+}
+
+/** Deinitialize the game an exit. */
+static void deinitGameAndExit()
+{
+	SLOGD("Deinitializing Game");
+	// If we are in Dead is Dead mode, save before exit
+	// Does this code also fire on crash? Let's hope not!
+	DoDeadIsDeadSaveIfNecessary();
+
+	shutdownGame();
 
 	exit(0);
 }
@@ -520,9 +523,7 @@ int main(int argc, char* argv[])
 			InitializeFontManager();
 
 			SLOGD("Initializing Sound Manager");
-	#ifndef UTIL
 			InitializeSoundManager();
-	#endif
 
 			SLOGD("Initializing Random");
 			// Initialize random number generator
@@ -573,16 +574,18 @@ int main(int argc, char* argv[])
 	return EXIT_SUCCESS;
 }
 
-#ifdef __ANDROID__
-//  Sets the exception on the NativeExceptionContainer in Android
 void TerminationHandler()
 {
 	auto ex = std::current_exception();
+	auto errorMessage = ST::string("Game has been terminated due to an unknown error");
+	#ifdef __ANDROID__
+	// Pull out some methods from JNI to set error on NativeExceptionContainer
 	auto jniEnv = (JNIEnv*)SDL_AndroidGetJNIEnv();
     jclass exceptionContainer = jniEnv->FindClass("io/github/ja2stracciatella/NativeExceptionContainer");
     jfieldID singletonFieldId = jniEnv->GetStaticFieldID(exceptionContainer, "INSTANCE", "Lio/github/ja2stracciatella/NativeExceptionContainer;");
     jobject exceptionContainerSingleton = jniEnv->GetStaticObjectField(exceptionContainer, singletonFieldId);
     jmethodID setAndroidExceptionMethodId = jniEnv->GetMethodID(exceptionContainer, "setException","(Ljava/lang/String;)V");
+	#endif
 
 	if (ex)
 	{
@@ -592,46 +595,22 @@ void TerminationHandler()
 		}
 		catch (const std::exception& e)
 		{
-			auto errorMessage = ST::format("Game has been terminated due to an unrecoverable error: {} ({})", e.what(), typeid(e).name());
-            SLOGE(errorMessage.c_str());
-            jniEnv->CallVoidMethod(exceptionContainerSingleton, setAndroidExceptionMethodId,
+			errorMessage = ST::format("Game has been terminated due to an unrecoverable error: {} ({})", e.what(), typeid(e).name());
+		}
+		catch (...)
+		{
+		}
+	}
+	SLOGE(errorMessage.c_str());
+	#ifdef __ANDROID__
+	jniEnv->CallVoidMethod(exceptionContainerSingleton, setAndroidExceptionMethodId,
                                    jniEnv->NewStringUTF(errorMessage.c_str()));
-            return;
-		}
-		catch (...)
-		{
-			SLOGE("Game has been terminated due to an unknown error");
-            jniEnv->CallVoidMethod(exceptionContainerSingleton, setAndroidExceptionMethodId,
-                                   jniEnv->NewStringUTF("Game has been terminated due to an unknown error"));
-            return;
-		}
-	}
-    jniEnv->CallVoidMethod(exceptionContainerSingleton, setAndroidExceptionMethodId,
-                           jniEnv->NewStringUTF("Game has been terminated due to an unknown error"));
-}
-#else
-//  Prints the exception message (if any) and abort
-void TerminationHandler()
-{
-	auto ex = std::current_exception();
-	if (ex)
-	{
-		try
-		{
-			std::rethrow_exception(ex);
-		}
-		catch (const std::exception& e) 
-		{
-			SLOGE(ST::format("Game has been terminated due to an unrecoverable error: {} ({})", e.what(), typeid(e).name()));
-		}
-		catch (...)
-		{
-			SLOGE("Game has been terminated due to an unknown error");
-		}
-	}
+	#endif
+	shutdownGame();
+	#ifndef __ANDROID__
 	std::abort();
+	#endif
 }
-#endif
 
 /*static void convertDialogQuotesToJson(const DefaultContentManager *cm,
 					STRING_ENC_TYPE encType,

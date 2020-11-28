@@ -365,7 +365,7 @@ UINT32 PlayJA2Sample(const char *sample, UINT32 const ubVolume, UINT32 const ubL
 UINT32 PlayJA2StreamingSample(SoundID const usNum, UINT32 const ubVolume, UINT32 const ubLoops, UINT32 const uiPan)
 {
 	UINT32 const vol = CalculateSoundEffectsVolume(ubVolume);
-	return SoundPlayStreamedFile(szSoundEffects[usNum], vol, uiPan, ubLoops, NULL, NULL);
+	return SoundPlay(szSoundEffects[usNum], vol, uiPan, ubLoops, NULL, NULL);
 }
 
 
@@ -381,7 +381,7 @@ UINT32 PlayJA2StreamingSampleFromFile(char const* const szFileName, UINT32 const
 {
 	// does the same thing as PlayJA2Sound, but one only has to pass the filename, not the index of the sound array
 	UINT32 const vol = CalculateSoundEffectsVolume(ubVolume);
-	return SoundPlayStreamedFile(szFileName, vol, uiPan, ubLoops, EndsCallback, NULL);
+	return SoundPlay(szFileName, vol, uiPan, ubLoops, EndsCallback, NULL);
 }
 
 

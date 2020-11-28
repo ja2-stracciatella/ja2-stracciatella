@@ -202,6 +202,10 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-lua")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-stracciatella")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-string_theory")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-miniaudio")
+if (MINGW)
+    add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-mingw-std-threads")
+endif()
 
 if(BUILD_LAUNCHER)
     set(LAUNCHER_INCLUDES ${FLTK_INCLUDE_DIR})
@@ -220,6 +224,7 @@ include_directories(
     ${SOL_INCLUDE_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-lua/lua/src
+    ${MINIAUDIO_INCLUDE_DIRS}
 )
 
 if(BUILD_LAUNCHER)
@@ -259,12 +264,26 @@ endif()
 string(LENGTH "${CMAKE_SOURCE_DIR}/src/" SOURCE_PATH_SIZE)
 add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
 
+set(
+    JA2_LIBRARIES
+    ${SDL2_LIBRARY}
+    ${GTEST_LIBRARIES}
+    smacker
+    ${STRACCIATELLA_LIBRARIES}
+    string_theory-internal
+    lua
+)
+if (MINGW)
+    LIST(APPEND JA2_LIBRARIES mingw_stdthreads)
+endif()
+
 if(ANDROID)
     add_library(${JA2_BINARY} SHARED ${JA2_SOURCES})
 else()
     add_executable(${JA2_BINARY} ${JA2_SOURCES})
 endif()
-target_link_libraries(${JA2_BINARY} ${SDL2_LIBRARY} ${GTEST_LIBRARIES} smacker ${STRACCIATELLA_LIBRARIES} string_theory-internal lua)
+target_link_libraries(${JA2_BINARY} ${JA2_LIBRARIES})
+
 add_dependencies(${JA2_BINARY} stracciatella)
 set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/game/GameVersion.cc APPEND PROPERTY COMPILE_DEFINITIONS "GAME_VERSION=v${ja2-stracciatella_VERSION}")
 
