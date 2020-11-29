@@ -84,6 +84,7 @@
 #include "Render_Dirty.h"
 #include "RenderWorld.h"
 #include "SaveLoadGame.h"
+#include "SaveLoadGameStates.h"
 #include "SaveLoadScreen.h"
 #include "Scheduling.h"
 #include "ShippingDestinationModel.h"
@@ -425,6 +426,8 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		SaveLeaveItemList(f);
 
 		NewWayOfSavingBobbyRMailOrdersToSaveGameFile(f);
+
+		SaveStatesToSaveGameFile(f);
 	}
 	catch (...)
 	{
@@ -960,6 +963,11 @@ void LoadSavedGame(UINT8 const save_slot_id)
 			InitExitGameDialogBecauseFileHackDetected();
 			return;
 		}
+	}
+
+	if (version >= 101)
+	{
+		LoadStatesFromSaveFile(f);
 	}
 
 	BAR(1, "Final Checks...");
