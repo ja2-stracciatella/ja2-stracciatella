@@ -28,7 +28,7 @@
 #include "Button_System.h"
 #include "Font_Control.h"
 #include "UILayout.h"
-#include "GameState.h"
+#include "GameMode.h"
 #include "sgp/FileMan.h"
 #include "Logger.h"
 
@@ -221,7 +221,7 @@ catch (std::exception const& e)
 	char const* success = "failed";
 	char const* attach  = "";
 
-	if (gfEditMode && GameState::getInstance()->isEditorMode())
+	if (gfEditMode && GameMode::getInstance()->isEditorMode())
 	{
 		what = "map";
 		if (SaveWorldAbsolute("error.dat"))

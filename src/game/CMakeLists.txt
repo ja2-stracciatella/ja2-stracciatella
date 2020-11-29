@@ -15,7 +15,7 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/GameInitOptionsScreen.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GameLoop.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GameRes.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/GameState.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/GameMode.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GameScreen.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GameSettings.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GameVersion.cc
