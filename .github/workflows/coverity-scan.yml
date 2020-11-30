@@ -10,7 +10,7 @@ env:
   COVERITY_PROJECT: ja2-stracciatella/ja2-stracciatella
   COV_TOOLS_DIR: ${{ github.workspace }}/cov-analysis-linux64
   COV_BUILD_DIR: ${{ github.workspace }}/coverity-build
-  COV_RESULTS_DIR: coverity-results
+  COV_RESULTS_DIR: cov-int
   COV_RESULTS_FILE: analysis-results.tgz
 
 jobs:
