@@ -222,8 +222,8 @@ include_directories(
     ${RAPIDJSON_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
     ${SOL_INCLUDE_DIR}
+    ${LUA_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
-    ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-lua/lua/src
     ${MINIAUDIO_INCLUDE_DIRS}
 )
 
