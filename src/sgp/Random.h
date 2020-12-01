@@ -2,6 +2,7 @@
 #define __RANDOM_
 
 #include "Types.h"
+#include <random>
 
 
 extern void InitializeRandom(void);
@@ -22,3 +23,5 @@ extern UINT32 guiPreRandomIndex;
 extern UINT32 guiPreRandomNums[ MAX_PREGENERATED_NUMS ];
 
 #endif
+
+extern std::mt19937 gRandomEngine;

@@ -5039,7 +5039,7 @@ void LoadPaletteData()
 
 		ST::char_buffer buf{PaletteRepID_LENGTH, '\0'};
 		FileRead(hFile, buf.data(), buf.size() * sizeof(char));
-		gpPalRep[cnt].ID = ST::string{buf.c_str(), ST::substitute_invalid};
+		gpPalRep[cnt].ID = ST::string(buf.c_str(), ST_AUTO_SIZE, ST::substitute_invalid);
 
 		// # entries
 		FileRead(hFile, &gpPalRep[cnt].ubPaletteSize, sizeof(gpPalRep[cnt].ubPaletteSize));
