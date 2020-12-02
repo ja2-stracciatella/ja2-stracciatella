@@ -4,7 +4,7 @@
 #include <random>
 
 /// Pseudo-random number engine.
-static std::mt19937 gRandomEngine;
+std::mt19937 gRandomEngine;
 
 /// Uniform distribution in the range [0,UINT32_MAX].
 static std::uniform_int_distribution<UINT32> guiDistribution(0, UINT32_MAX);

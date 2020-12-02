@@ -99,7 +99,7 @@ ST::string DataReader::readUTF8(size_t numChars, ST::utf_validation_t validation
 {
 	ST::char_buffer buf{numChars, '\0'};
 	readArray(buf.data(), numChars);
-	return ST::string{buf.c_str(), validation};
+	return ST::string(buf.c_str(), ST_AUTO_SIZE, validation);
 }
 
 ST::string DataReader::readUTF16(size_t numChars, const IEncodingCorrector* fixer, ST::utf_validation_t validation)
@@ -117,14 +117,14 @@ ST::string DataReader::readUTF16(size_t numChars, const IEncodingCorrector* fixe
 			}
 		}
 	}
-	return ST::string{buf.c_str(), validation};
+	return ST::string(buf.c_str(), ST_AUTO_SIZE, validation);
 }
 
 ST::string DataReader::readUTF32(size_t numChars, ST::utf_validation_t validation)
 {
 	ST::utf32_buffer buf{numChars, U'\0'};
 	readArray(buf.data(), numChars);
-	return ST::string{buf.c_str(), validation};
+	return ST::string(buf.c_str(), ST_AUTO_SIZE, validation);
 }
 
 uint8_t DataReader::readU8()

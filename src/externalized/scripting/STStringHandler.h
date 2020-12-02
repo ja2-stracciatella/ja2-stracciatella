@@ -1,41 +1,35 @@
 #pragma once
-
+#define SOL_ALL_SAFETIES_ON 1
 #include <sol/sol.hpp>
 #include <string_theory/string>
 #include <string>
 
 // Implements pusher and getter for string_theory/string. It should be handled just like a std::string
-// @see https://github.com/ThePhD/sol2/blob/v2.20.6/examples/customization.cpp
-
-namespace sol {
-	template <>
-	struct lua_type_of<ST::string> : std::integral_constant<sol::type, sol::type::string> {};
-
-	namespace stack {
-		template <>
-		struct checker<ST::string> {
-			template <typename Handler>
-			static bool check(lua_State* L, int index, Handler&& handler, record& tracking) {
-				int absolute_index = lua_absindex(L, index);
-				bool success = stack::check<std::string>(L, absolute_index, handler);
-				return success;
-			}
-		};
-
-		template <>
-		struct getter<ST::string> {
-			static ST::string get(lua_State* L, int index, record& tracking) {
-				int absolute_index = lua_absindex(L, index);
-				std::string str = stack::get<std::string>(L, absolute_index);
-				return ST::string(str);
-			}
-		};
-
-		template <>
-		struct pusher<ST::string> {
-			static int push(lua_State* L, const ST::string& st) {
-				return stack::push(L, st.to_std_string());
-			}
-		};
+// @see https://sol2.readthedocs.io/en/latest/tutorial/customization.html
+template <typename Handler>
+bool sol_lua_check(sol::types<ST::string>, lua_State* L, int index, Handler&& handler, sol::stack::record& tracking)
+{
+	// check_usertype is a backdoor for directly checking sol3 usertypes
+	if (!sol::stack::check_usertype<ST::string>(L, index)
+		&& !sol::stack::check<std::string>(L, index)) {
+		handler(L, index, sol::type_of(L, index), sol::type::userdata, "expected a ST::string or a string");
+		return false;
 	}
+	tracking.use(1);
+	return true;
+}
+
+ST::string sol_lua_get(sol::types<ST::string>, lua_State* L, int index, sol::stack::record& tracking)
+{
+	if (sol::stack::check_usertype<ST::string>(L, index)) {
+		ST::string& ns = sol::stack::get_usertype<ST::string>(L, index, tracking);
+		return ns;
+	}
+	std::string str = sol::stack::get<std::string>(L, index, tracking);
+	return ST::string(str);
+}
+
+int sol_lua_push(sol::types<ST::string>, lua_State* L, const ST::string& st)
+{
+	return sol::stack::push(L, st.to_std_string());
 }

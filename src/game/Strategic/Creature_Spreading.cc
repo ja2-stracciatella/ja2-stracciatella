@@ -458,7 +458,7 @@ static void AddCreaturesToBattle(UINT8 n_young_males, UINT8 n_young_females, UIN
 	bodies.insert(bodies.end(), n_young_females, YAF_MONSTER);
 	bodies.insert(bodies.end(), n_adult_males, AM_MONSTER);
 	bodies.insert(bodies.end(), n_adult_females, ADULTFEMALEMONSTER);
-	std::random_shuffle(bodies.begin(), bodies.end(), Random);
+	std::shuffle(bodies.begin(), bodies.end(), gRandomEngine);
 
 	UINT8 slot = 0;
 	for (SoldierBodyType const body : bodies)

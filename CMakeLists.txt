@@ -29,7 +29,7 @@ endif()
 project(ja2-stracciatella)
 set(JA2_BINARY "ja2")
 set(LAUNCHER_BINARY "ja2-launcher")
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 
 ## Semantic Versioning
 # @see https://semver.org/
@@ -172,8 +172,6 @@ else()
     set(RAPIDJSON_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-rapidjson/rapidjson-1.1.0/include")
 endif()
 
-set(SOL_INCLUDE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-sol2/sol2-2.20.6/include")
-
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     add_definitions(-DENABLE_ASSERTS)
 endif()
@@ -199,6 +197,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/externalized")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/game")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/src/sgp")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-lua")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-sol2")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-stracciatella")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-string_theory")
@@ -222,8 +221,8 @@ include_directories(
     ${RAPIDJSON_INCLUDE_DIRS}
     ${SDL2_INCLUDE_DIR}
     ${SOL_INCLUDE_DIR}
+    ${LUA_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-smacker/libsmacker
-    ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-lua/lua/src
     ${MINIAUDIO_INCLUDE_DIRS}
 )
 
