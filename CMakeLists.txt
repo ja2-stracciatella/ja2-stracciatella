@@ -259,10 +259,6 @@ if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wno-missing-braces -Wno-unused-function")
 endif()
 
-# This is used for performant log calls from C++ to Rust that use non-absolute file name
-string(LENGTH "${CMAKE_SOURCE_DIR}/src/" SOURCE_PATH_SIZE)
-add_definitions("-DSOURCE_PATH_SIZE=${SOURCE_PATH_SIZE}")
-
 set(
     JA2_LIBRARIES
     ${SDL2_LIBRARY}
