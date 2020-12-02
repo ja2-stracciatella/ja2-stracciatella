@@ -17,6 +17,12 @@
 #define PATH_SEPARATOR_STR  "/"
 #endif
 
+#if defined(_WIN32) && !defined(__MINGW32__)
+#define SOURCE_ROOT ("src\\")
+#else
+#define SOURCE_ROOT ("src/")
+#endif
+
 /* #if CASE_SENSITIVE_FS */
 /* #include <dirent.h> */
 /* #endif */
