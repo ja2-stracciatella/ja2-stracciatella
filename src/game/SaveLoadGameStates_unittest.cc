@@ -2,8 +2,9 @@
 
 #include "SaveLoadGameStates.h"
 #include <string_theory/string>
+#include <vector>
 
-TEST(SaveLoadGameTest, getSetGameStates)
+TEST(SaveLoadGameStatesTest, getSetGameStates)
 {
 	SavedGameStates states;
 
@@ -20,7 +21,35 @@ TEST(SaveLoadGameTest, getSetGameStates)
 	EXPECT_STREQ(states.Get<ST::string>("test_STRING_LIT").c_str(), "def");
 }
 
-TEST(SaveLoadGameTest, edgeCases)
+TEST(SaveLoadGameStatesTest, getSetVectors)
+{
+	SavedGameStates states;
+
+	states.SetVector("vec_int", std::vector{1,2});
+	auto vec = states.GetVector<int32_t>("vec_int");
+	EXPECT_EQ(vec[0], 1);
+	EXPECT_EQ(vec[1], 2);
+
+	states.SetVector("vec_str", std::vector{ST::string("abc")});
+	auto vec2 = states.GetVector<ST::string>("vec_str");
+	EXPECT_EQ(vec2[0], "abc");
+}
+
+TEST(SaveLoadGameStatesTest, getSetMaps)
+{
+	SavedGameStates states;
+
+	states.SetMap("M1", std::map<int32_t, bool>{{3, true},{2, false}});
+	auto map1 = states.GetMap<int32_t, bool>("M1");
+	EXPECT_EQ(map1[3], true);
+	EXPECT_EQ(map1[2], false);
+
+	states.SetMap("M2", std::map<ST::string, float>{{"a", 0.5f}});
+	auto map2 = states.GetMap<ST::string, float>("M2");
+	EXPECT_DOUBLE_EQ(map2["a"], 0.5f);
+}
+
+TEST(SaveLoadGameStatesTest, edgeCases)
 {
 	SavedGameStates states;
 	states.Set("K", true);
@@ -31,7 +60,7 @@ TEST(SaveLoadGameTest, edgeCases)
 	ASSERT_THROW(states.Get<float>("K"), std::bad_variant_access);
 }
 
-TEST(SaveLoadGameTest, serializeJSON)
+TEST(SaveLoadGameStatesTest, serializeJSON)
 {
 	SavedGameStates s;
 	s.Set("B", true);
@@ -44,7 +73,28 @@ TEST(SaveLoadGameTest, serializeJSON)
 	EXPECT_EQ(ss.str(), "{\"B\":true,\"F\":6.5,\"I\":987,\"S\":\"abc\"}");
 }
 
-TEST(SaveLoadGameTest, deserializeEmpty)
+TEST(SaveLoadGameStatesTest, serializeJSONVector)
+{
+	SavedGameStates s;
+	s.SetVector("B", std::vector<bool>{false, true});
+	s.SetVector("S", std::vector<ST::string>{"a", "b"});
+
+	std::stringstream ss;
+	s.Serialize(ss);
+	EXPECT_EQ(ss.str(), "{\"B\":[false,true],\"S\":[\"a\",\"b\"]}");
+}
+
+TEST(SaveLoadGameStatesTest, serializeJSONMap)
+{
+	SavedGameStates s;
+	s.SetMap("M", std::map<ST::string, int32_t>{{"one", 1}});
+
+	std::stringstream ss;
+	s.Serialize(ss);
+	EXPECT_EQ(ss.str(), "{\"M\":{\"one\":1}}");
+}
+
+TEST(SaveLoadGameStatesTest, deserializeEmpty)
 {
 	std::string json = "{}";
 	std::stringstream ss(json);
@@ -54,7 +104,7 @@ TEST(SaveLoadGameTest, deserializeEmpty)
 	EXPECT_EQ(s.GetAll().size(), 0);
 }
 
-TEST(SaveLoadGameTest, deserializeJSON)
+TEST(SaveLoadGameStatesTest, deserializeJSON)
 {
 	std::string json = R"({"B":true,"F":3.4,"I":567,"S":"xyz"})";
 	std::stringstream ss(json);
