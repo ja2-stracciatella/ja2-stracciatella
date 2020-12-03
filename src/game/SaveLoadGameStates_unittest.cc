@@ -25,7 +25,7 @@ TEST(SaveLoadGameStatesTest, getSetVectors)
 {
 	SavedGameStates states;
 
-	states.SetVector("vec_int", std::vector{1,2});
+	states.SetVector("vec_int", std::vector<int32_t>{1,2});
 	auto vec = states.GetVector<int32_t>("vec_int");
 	EXPECT_EQ(vec[0], 1);
 	EXPECT_EQ(vec[1], 2);
@@ -77,11 +77,13 @@ TEST(SaveLoadGameStatesTest, serializeJSONVector)
 {
 	SavedGameStates s;
 	s.SetVector("B", std::vector<bool>{false, true});
+	s.SetVector("I", std::vector<int32_t>{3});
+	s.SetVector("F", std::vector<float>{4.5f});
 	s.SetVector("S", std::vector<ST::string>{"a", "b"});
 
 	std::stringstream ss;
 	s.Serialize(ss);
-	EXPECT_EQ(ss.str(), "{\"B\":[false,true],\"S\":[\"a\",\"b\"]}");
+	EXPECT_EQ(ss.str(), R"({"B":[false,true],"F":[4.5],"I":[3],"S":["a","b"]})");
 }
 
 TEST(SaveLoadGameStatesTest, serializeJSONMap)

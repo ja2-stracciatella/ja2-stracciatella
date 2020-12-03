@@ -3,6 +3,7 @@
 #include "Types.h"
 #include <map>
 #include <string_theory/string>
+#include <utility>
 #include <variant>
 
 class DataReader;
@@ -12,12 +13,12 @@ class SavedGameStates;
 /**
  * Variant on the primitive types compatible with JSON
  */
-typedef std::variant<int32_t, float, bool, ST::string> PRIMITIVE_VALUE;
+typedef std::variant<bool, int32_t, float, ST::string> PRIMITIVE_VALUE;
 
 /**
  * Variant on all the data types we support storing in save games
  */
-typedef std::variant<int32_t, float, bool, ST::string, std::vector<PRIMITIVE_VALUE>, std::map<PRIMITIVE_VALUE, PRIMITIVE_VALUE>> STORABLE_TYPE;
+typedef std::variant<bool, int32_t, float, ST::string, std::vector<PRIMITIVE_VALUE>, std::map<PRIMITIVE_VALUE, PRIMITIVE_VALUE>> STORABLE_TYPE;
 
 typedef std::map<ST::string, STORABLE_TYPE> StateTable;
 
@@ -77,7 +78,11 @@ public:
 	void SetVector(const ST::string& key, std::vector<T> vec)
 	{
 		std::vector<PRIMITIVE_VALUE> stored;
-		std::copy(vec.begin(), vec.end(), std::back_inserter(stored));
+		for (auto v : vec)
+		{
+			PRIMITIVE_VALUE var{std::in_place_type<T>, v};
+			stored.push_back(var);
+		}
 		Set(key, STORABLE_TYPE{stored});
 	}
 

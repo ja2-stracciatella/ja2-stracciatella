@@ -102,10 +102,10 @@ static STORABLE_TYPE ReadFromJSON(const rapidjson::Value& v)
 #undef RETURN_PRIMITIVE
 
 #define WRITE_PRIMITIVE(v, w) \
-	if      (auto *i = std::get_if<int32_t>(&v))    w.Int(*i); \
+	if      (auto *b = std::get_if<bool>(&v))       w.Bool(*b); \
+	else if (auto *i = std::get_if<int32_t>(&v))    w.Int(*i); \
 	else if (auto *s = std::get_if<ST::string>(&v)) w.String(s->c_str()); \
-	else if (auto *f = std::get_if<float>(&v))      w.Double(*f); \
-	else if (auto *b = std::get_if<bool>(&v))       w.Bool(*b);
+	else if (auto *f = std::get_if<float>(&v))      w.Double(*f);
 
 static void WriteToJSON(const STORABLE_TYPE& v, rapidjson::Writer<rapidjson::OStreamWrapper>& w)
 {
