@@ -28,8 +28,10 @@
 #include "ModPackContentManager.h"
 #include "policy/GamePolicy.h"
 #include "RustInterface.h"
+#include "EnumCodeGen.h"
 
 #include "Logger.h"
+#include <iostream>
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
@@ -398,6 +400,10 @@ int main(int argc, char* argv[])
 		if (EngineOptions_shouldStartInDebugMode(params.get())) {
 			Logger_setLevel(LogLevel::Debug);
 			GameState::getInstance()->setDebugging(true);
+
+			//TODO: temp workaround
+			PrintAllJA2Enums(std::cout);
+			return 0;
 		}
 
 		if (EngineOptions_shouldRunEditor(params.get())) {

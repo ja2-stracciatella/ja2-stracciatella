@@ -1,0 +1,25 @@
+# \file dependencies/lib-magic_enum/getter/CMakeLists.txt.in
+# Configured by @CMAKE_CURRENT_LIST_FILE@
+#
+# @ONLY variables:
+#  * CMAKE_GENERATOR - which generator to use
+#  * SRC_DIR - where to extract the archive
+#  * BUILD_DIR - where the integrated sources are built
+
+cmake_minimum_required(VERSION 3.1)
+
+project(getter NONE)
+
+include(ExternalProject)
+externalproject_add(get-sol2
+    URL "https://github.com/Neargye/magic_enum/archive/v0.7.1.zip"
+    URL_MD5 "df019c4821fe9a747a52e5480b2649c4"
+    CMAKE_ARGS
+        "-G@CMAKE_GENERATOR@"
+        SOURCE_DIR          "@SRC_DIR@"
+        BINARY_DIR          "@BUILD_DIR@"
+        CONFIGURE_COMMAND   ""
+        BUILD_COMMAND       ""
+        INSTALL_COMMAND     ""
+        TEST_COMMAND        ""
+)
