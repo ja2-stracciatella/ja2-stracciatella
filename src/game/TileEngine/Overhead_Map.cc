@@ -104,7 +104,7 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 		}
 		catch (std::exception &e)
 		{
-			SLOGE("%s", e.what());
+			SLOGD(ST::string(e.what()));
 			// Load one we know about
 			vo = AddVideoObjectFromFile(GCM->getTilesetResourceName(GetDefaultTileset(), ST::string("t/") + "grass.sti").c_str());
 		}
