@@ -37,6 +37,6 @@ All of this makes reviewing and bisecting for regressions easier.
 
 ### For maintainers
 
-1. Merge a PR only after it has at least one other approval and it builds successfully on all buildbots (currently AppVeyor and Travis).
-2. Squash merge only if the history is a mess or it makes more sense (eg. the whitespace sync PR). 
+1. Merge a PR only after it has at least one other approval and it builds successfully on all buildbots (currently AppVeyor and GitHub Actions).
+2. Squash merge only if the history is a mess or it makes more sense (eg. the whitespace sync PR).
 3. For release planning check the milestones (copied over each time) and the [checklist](https://github.com/ja2-stracciatella/ja2-stracciatella/blob/master/docs/Release-checklist.md)
