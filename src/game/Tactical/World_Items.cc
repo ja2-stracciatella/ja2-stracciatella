@@ -279,18 +279,18 @@ void LoadWorldItemsFromMap(HWFILE const f)
 				auto item = itemReplacements.at(o.usItem);
 				if (item == 0) 
 				{
-					SLOGW(ST::format("Map item #{} removed", o.usItem));
+					STLOGW("Map item #{} removed", o.usItem);
 					continue;
 				}
 
-				SLOGD(ST::format("Map item #{} replaced by #{}", o.usItem, item));
+				STLOGD("Map item #{} replaced by #{}", o.usItem, item);
 				o.usItem = item;
 			}
 
 			const ItemModel* item = GCM->getItem(o.usItem);
 			if (item->getFlags() & ITEM_NOT_EDITOR) {
 				// This item is not placable by Editor. Maybe the map was created for a different item set.
-				SLOGW(ST::format("Skipping non-Editor item #{}({}) at gridNo {}", item->getItemIndex(), item->getInternalName(), wi.sGridNo));
+				STLOGW("Skipping non-Editor item #{}({}) at gridNo {}", item->getItemIndex(), item->getInternalName(), wi.sGridNo);
 				continue;
 			}
 

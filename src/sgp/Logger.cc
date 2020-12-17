@@ -33,7 +33,7 @@ void LogMessage(bool isAssert, LogLevel level, const char *file, const char *for
 	ST::string str = st_checked_buffer_to_string(err_msg, ST::char_buffer(message, lengthof(message)));
 	if (!err_msg.empty())
 	{
-		SLOGW(ST::format("LogMessage: {}", err_msg));
+		STLOGW("LogMessage: {}", err_msg);
 	}
 	LogMessage(isAssert, level, file, str);
 }

@@ -1042,7 +1042,7 @@ void LoadCreatureDirectives(HWFILE const hFile, UINT32 const uiSavedGameVersion)
 		auto lair = GCM->getCreatureLair(giLairID);
 		if (!lair)
 		{
-			SLOGE(ST::format("Invalid restoration of creature lair ID of {}.  Save game potentially hosed.", giLairID));
+			STLOGE("Invalid restoration of creature lair ID of {}.  Save game potentially hosed.", giLairID);
 			break;
 		}
 		InitCreatureLair(lair);

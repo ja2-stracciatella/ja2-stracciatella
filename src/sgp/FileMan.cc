@@ -26,13 +26,13 @@ void FileMan::switchTmpFolder(const ST::string& home)
 	if (!Fs_isDir(tmpPath.get()) && !Fs_createDir(tmpPath.get()))
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("Unable to create tmp directory '{}': {}", tmpPath.get(), err.get()));
+		STLOGE("Unable to create tmp directory '{}': {}", tmpPath.get(), err.get());
 		throw std::runtime_error("Unable to create tmp directory");
 	}
 	if (!Env_setCurrentDir(tmpPath.get()))
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("Unable to switch to tmp directory '{}': {}", tmpPath.get(), err.get()));
+		STLOGE("Unable to switch to tmp directory '{}': {}", tmpPath.get(), err.get());
 		throw std::runtime_error("Unable to switch to tmp directory");
 	}
 }
@@ -49,7 +49,7 @@ void FileDelete(const ST::string& path)
 	if (Fs_exists(path.c_str()) && !Fs_removeFile(path.c_str()))
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("Deleting file '{}' failed: {}", path, err.get()));
+		STLOGE("Deleting file '{}' failed: {}", path, err.get());
 		throw std::runtime_error("Deleting file failed");
 	}
 }
@@ -249,12 +249,12 @@ INT32 FileGetPos(const SGPFile* f)
 	if (!success)
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("FileGetPos: {}", err.get()));
+		STLOGE("FileGetPos: {}", err.get());
 		throw std::runtime_error("Getting file position failed");
 	}
 	if (position > INT32_MAX)
 	{
-		SLOGW(ST::format("FileGetPos: truncating from {} to {}", position, INT32_MAX));
+		STLOGW("FileGetPos: truncating from {} to {}", position, INT32_MAX);
 		position = INT32_MAX;
 	}
 	return static_cast<INT32>(position);
@@ -278,12 +278,12 @@ UINT32 FileGetSize(const SGPFile* f)
 	if (!success)
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("FileGetSize: {}", err.get()));
+		STLOGE("FileGetSize: {}", err.get());
 		throw std::runtime_error("Getting file size failed");
 	}
 	if (len > UINT32_MAX)
 	{
-		SLOGW(ST::format("FileGetSize: truncating from {} to {}", len, UINT32_MAX));
+		STLOGW("FileGetSize: truncating from {} to {}", len, UINT32_MAX);
 		len = UINT32_MAX;
 	}
 	return static_cast<UINT32>(len);
@@ -295,7 +295,7 @@ void FileMan::createDir(const ST::string& path)
 	if (!Fs_isDir(path.c_str()) && !Fs_createDir(path.c_str()))
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("Failed to created directory '{}': {}", path, err.get()));
+		STLOGE("Failed to created directory '{}': {}", path, err.get());
 		throw std::runtime_error("Failed to create directory");
 	}
 }
@@ -313,7 +313,7 @@ void EraseDirectory(const ST::string& dirPath)
 		catch (const std::runtime_error& ex)
 		{
 			if (Fs_isDir(path.c_str())) continue;
-			SLOGE(ST::format("EraseDirectory '{}' '{}': {}", dirPath, path, ex.what()));
+			STLOGE("EraseDirectory '{}' '{}': {}", dirPath, path, ex.what());
 			throw;
 		}
 	}
@@ -389,7 +389,7 @@ SGPFile* FileMan::openForWriting(const ST::string& filename, bool truncate)
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("FileMan::openForWriting '{}' {}: {}", filename, truncate, err.get()));
+		STLOGE("FileMan::openForWriting '{}' {}: {}", filename, truncate, err.get());
 		throw std::runtime_error("FileMan::openForWriting failed");
 	}
 	return getSGPFileFromFile(file.release());
@@ -404,7 +404,7 @@ SGPFile* FileMan::openForAppend(const ST::string& filename)
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("FileMan::openForAppend '{}': {}", filename, err.get()));
+		STLOGE("FileMan::openForAppend '{}': {}", filename, err.get());
 		throw std::runtime_error("FileMan::openForAppend failed");
 	}
 	return getSGPFileFromFile(file.release());
@@ -419,7 +419,7 @@ SGPFile* FileMan::openForReadWrite(const ST::string& filename)
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("FileMan::openForReadWrite '{}': {}", filename, err.get()));
+		STLOGE("FileMan::openForReadWrite '{}': {}", filename, err.get());
 		throw std::runtime_error("FileMan::openForReadWrite failed");
 	}
 	return getSGPFileFromFile(file.release());
@@ -432,7 +432,7 @@ SGPFile* FileMan::openForReading(const ST::string &filename)
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("FileMan::openForReading '{}': {}", filename, err.get()));
+		STLOGE("FileMan::openForReading '{}': {}", filename, err.get());
 		throw std::runtime_error("FileMan::openForReading failed");
 	}
 	return getSGPFileFromFile(file.release());
@@ -497,7 +497,7 @@ FindAllFilesInDir(const ST::string& dirPath, bool sortResults, bool recursive)
 	if (!vec)
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGW(ST::format("FindAllFilesInDir: {}", err.get()));
+		STLOGW("FindAllFilesInDir: {}", err.get());
 		return paths;
 	}
 	size_t len = VecCString_len(vec.get());
@@ -601,7 +601,7 @@ void FileMan::moveFile(const ST::string& from, const ST::string& to)
 	if (!Fs_rename(from.c_str(), to.c_str()))
 	{
 		RustPointer<char> err{getRustError()};
-		SLOGE(ST::format("FileMan::moveFile '{}' '{}': {}", from, to, err.get()));
+		STLOGE("FileMan::moveFile '{}' '{}': {}", from, to, err.get());
 		throw std::runtime_error("FileMan::moveFile failed");
 	}
 }

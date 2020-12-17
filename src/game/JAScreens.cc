@@ -118,7 +118,7 @@ ScreenID ErrorScreenHandle(void)
 
 	if ( !fFirstTime )
 	{
-		SLOGE(ST::format("Runtime Error: {} ", gubErrorText));
+		STLOGE("Runtime Error: {} ", gubErrorText);
 		fFirstTime = TRUE;
 	}
 

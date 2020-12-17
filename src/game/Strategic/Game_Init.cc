@@ -82,7 +82,7 @@ static void InitNPCs()
 		if (placement->useAlternateMap)
 		{
 			SectorInfo[sector].uiFlags |= SF_USE_ALTERNATE_MAP;
-			SLOGD(ST::format("Alternate map in {}", SECTOR_SHORT_STRING(sector)));
+			STLOGD("Alternate map in {}", SECTOR_SHORT_STRING(sector));
 		}
 		if (placement->isPlacedAtStart)
 		{
@@ -90,7 +90,7 @@ static void InitNPCs()
 			merc.sSectorX = SECTORX(sector);
 			merc.sSectorY = SECTORY(sector);
 			merc.bSectorZ = 0;
-			SLOGD(ST::format("{} in {}", merc.zNickname, SECTOR_SHORT_STRING(sector)));
+			STLOGD("{} in {}", merc.zNickname, SECTOR_SHORT_STRING(sector));
 		}
 	}
 

@@ -70,7 +70,7 @@ void MineModel::validateData(std::vector<const MineModel*>& models)
 {
 	if (models.size() != MAX_NUMBER_OF_MINES)
 	{
-		SLOGW(ST::format("There are {} mines defined. Expected {} mines. This breaks vanilla save compatability", models.size(), MAX_NUMBER_OF_MINES));
+		STLOGW("There are {} mines defined. Expected {} mines. This breaks vanilla save compatability", models.size(), MAX_NUMBER_OF_MINES);
 	}
 	if (models.size() < MAX_NUMBER_OF_MINES)
 	{

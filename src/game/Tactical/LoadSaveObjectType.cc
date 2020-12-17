@@ -17,7 +17,7 @@ void ExtractObject(DataReader& d, OBJECTTYPE* const o)
 	const ItemModel* item = GCM->getItem(o->usItem);
 	if (!item)
 	{
-		SLOGW(ST::format("Item (index {}) is not defined and will be ignored. Maybe the file was saved for a different game version", o->usItem));
+		STLOGW("Item (index {}) is not defined and will be ignored. Maybe the file was saved for a different game version", o->usItem);
 		item = GCM->getItem(NONE);
 	}
 

@@ -1007,7 +1007,7 @@ static void SynchronizeDoorStatusToStructureData(DOOR_STATUS const& d)
 	STRUCTURE *base = FindBaseStructure(s);
 	if (!base)
 	{
-		SLOGW(ST::format("Door structure data at {} was not found", d.sGridNo));
+		STLOGW("Door structure data at {} was not found", d.sGridNo);
 		return;
 	}
 	INT16 sBaseGridNo = base->sGridNo;

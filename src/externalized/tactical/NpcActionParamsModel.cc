@@ -10,7 +10,7 @@ int16_t NpcActionParamsModel::getGridNo(const int16_t defaultValue) const
 {
 	if (gridNo <= 0)
 	{
-		SLOGW(ST::format("Falling back to default gridNo for NPC_ACTION #{}. Param values should always be defined in JSON.", actionCode));
+		STLOGW("Falling back to default gridNo for NPC_ACTION #{}. Param values should always be defined in JSON.", actionCode);
 		return defaultValue;
 	}
 	return gridNo;
@@ -20,7 +20,7 @@ int32_t NpcActionParamsModel::getAmount(const int32_t defaultValue) const
 {
 	if (amount == 0)
 	{
-		SLOGW(ST::format("Falling back to default amount for NPC_ACTION #{}. Param values should always be defined in JSON.", actionCode));
+		STLOGW("Falling back to default amount for NPC_ACTION #{}. Param values should always be defined in JSON.", actionCode);
 		return defaultValue;
 	}
 	return amount;
