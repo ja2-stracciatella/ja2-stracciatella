@@ -316,7 +316,7 @@ try
 }
 catch (const std::exception& e)
 {
-	SLOGE(ST::format("caught exception: {}", e.what()));
+	STLOGE("caught exception: {}", e.what());
 	return 0;
 }
 catch (...) { return 0; }
@@ -1614,7 +1614,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 					break;
 				case TRIGGER_NPC:
 					// if triggering, pass in the approach data as the record to consider
-					SLOGD(ST::format("Handling trigger {}/{} at {}", gMercProfiles[ubNPC].zNickname.c_str(), approach_record, GetJA2Clock()));
+					STLOGD("Handling trigger {}/{} at {}", gMercProfiles[ubNPC].zNickname.c_str(), approach_record, GetJA2Clock());
 					NPCConsiderTalking(ubNPC, ubMerc, bApproach, approach_record, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum);
 					break;
 				default:

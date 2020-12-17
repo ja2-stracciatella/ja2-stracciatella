@@ -2469,7 +2469,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 		// check a particular tile
 		// retrieve values from world for this particular tile
 		iGridNo = pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS;
-		SLOGD(ST::format("CTGT now at {}", iGridNo));
+		STLOGD("CTGT now at {}", iGridNo);
 		pMapElement = &(gpWorldLevelData[ iGridNo ] );
 		qLandHeight = INT32_TO_FIXEDPT( CONVERT_PIXELS_TO_HEIGHTUNITS( pMapElement->sHeight ) );
 		qWallHeight = gqStandardWallHeight + qLandHeight;

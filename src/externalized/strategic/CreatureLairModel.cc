@@ -195,7 +195,7 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 		// The first lair sector in list should be QUEEN_LAIR
 		if (lair->lairSectors.size() < 1 || lair->lairSectors[0].habitatType != QUEEN_LAIR)
 		{
-			SLOGW(ST::format("The list of lair sectors should be non-empty and begin with the QUEEN_LAIR. Lair ID: {}", lair->lairId));
+			STLOGW("The list of lair sectors should be non-empty and begin with the QUEEN_LAIR. Lair ID: {}", lair->lairId);
 		}
 
 		// all lair sectors should be adjacent and defined as underground sector
@@ -207,7 +207,7 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 				int distance = abs(SECTORX(sec.sectorId) - x) + abs(SECTORY(sec.sectorId) - y) + abs(sec.sectorLevel - z);
 				if (distance != 1)
 				{
-					SLOGW(ST::format("The current lair sector ({},{}) is not adjacent to the previous. This may indicate data issues", sec.sectorId, sec.sectorLevel));
+					STLOGW("The current lair sector ({},{}) is not adjacent to the previous. This may indicate data issues", sec.sectorId, sec.sectorLevel);
 				}
 			}
 			x = SECTORX(sec.sectorId);
@@ -220,7 +220,7 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 		{
 			if (sec.sectorLevel == 0)
 			{
-				SLOGW(ST::format("Lair sector ({}) is not in the underground. This may cause problems.", sec.sectorId));
+				STLOGW("Lair sector ({}) is not in the underground. This may cause problems.", sec.sectorId);
 				continue;
 			}
 			bool isDefined = false;

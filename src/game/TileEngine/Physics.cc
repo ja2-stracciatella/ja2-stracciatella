@@ -832,7 +832,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 			if ( !pObject->fTestObject )
 			{
 				// Break window!
-				SLOGD(ST::format("Object {}: Collision Window", REALOBJ2ID(pObject)));
+				STLOGD("Object {}: Collision Window", REALOBJ2ID(pObject));
 
 				sGridNo = MAPROWCOLTOPOS( ( (INT16)pObject->Position.y / CELL_Y_SIZE ), ( (INT16)pObject->Position.x / CELL_X_SIZE ) );
 
@@ -1034,7 +1034,7 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 
 			if ( pObject->fPotentialForDebug )
 			{
-				SLOGD(ST::format("Object {}: Collision {}", REALOBJ2ID(pObject), iCollisionCode));
+				STLOGD("Object {}: Collision {}", REALOBJ2ID(pObject), iCollisionCode);
 				SLOGD(ST::format("Object {}: Collision Normal {} {} {}", REALOBJ2ID(pObject),
 					vTemp.x, vTemp.y, vTemp.z));
 				SLOGD(ST::format("Object {}: Collision OldPos {} {} {}", REALOBJ2ID(pObject),
@@ -1195,7 +1195,7 @@ static BOOLEAN PhysicsMoveObject(REAL_OBJECT* pObject)
 
 		if ( pObject->fPotentialForDebug )
 		{
-			SLOGD(ST::format("Object {}d: uiNumTilesMoved: {}", REALOBJ2ID(pObject), pObject->uiNumTilesMoved));
+			STLOGD("Object {}d: uiNumTilesMoved: {}", REALOBJ2ID(pObject), pObject->uiNumTilesMoved);
 		}
 	}
 
@@ -1311,7 +1311,7 @@ static vector_3 FindBestForceForTrajectory(INT16 sSrcGridNo, INT16 sGridNo, INT1
 	{
 		(*pdMagForce) = dForce;
 	}
-	SLOGD(ST::format("Number of integration: {}", iNumChecks));
+	STLOGD("Number of integration: {}", iNumChecks);
 
 	return( vForce );
 }

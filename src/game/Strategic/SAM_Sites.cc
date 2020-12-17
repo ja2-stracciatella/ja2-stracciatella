@@ -41,7 +41,7 @@ void UpdateSAMDoneRepair(INT16 const x, INT16 const y, INT16 const z)
 	auto samSite = GCM->findSamSiteBySector(sector);
 	if (samSite == NULL)
 	{
-		SLOGW(ST::format("There is no SAM site at sector {}", GetShortSectorString(x, y)));
+		STLOGW("There is no SAM site at sector {}", GetShortSectorString(x, y));
 		return;
 	}
 
@@ -160,7 +160,7 @@ static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSec
 
 	// Damage.....
 	INT16 sSectorNo = CALCULATE_STRATEGIC_INDEX(sSectorX, sSectorY);
-	SLOGD(ST::format("SAM site at sector #{} is damaged by {} points", sSectorNo, ubDamage));
+	STLOGD("SAM site at sector #{} is damaged by {} points", sSectorNo, ubDamage);
 	if (StrategicMap[sSectorNo].bSAMCondition >= ubDamage)
 	{
 		StrategicMap[sSectorNo].bSAMCondition -= ubDamage;

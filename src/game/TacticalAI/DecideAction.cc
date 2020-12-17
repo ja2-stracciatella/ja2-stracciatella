@@ -177,7 +177,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 							}
 							else
 							{
-								SLOGW(ST::format("Schedule involved locked door at {} but there's no lock there!", usGridNo1));
+								STLOGW("Schedule involved locked door at {} but there's no lock there!", usGridNo1);
 								fDoUseDoor = FALSE;
 							}
 						}
@@ -297,7 +297,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 									else
 									{
 										// WTF?  Warning time!
-										SLOGW(ST::format("Schedule involved locked door at {} but there's no lock there!", usGridNo1));
+										STLOGW("Schedule involved locked door at {} but there's no lock there!", usGridNo1);
 										fDoUseDoor = FALSE;
 									}
 								}
@@ -1991,7 +1991,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 								{
 									// abort! abort!
 									pSoldier->usActionData = NOWHERE;
-									SLOGD(ST::format("TacticalAI: soldier #{} avoiding ambush trap on seeing corpses (warning level {})", pSoldier->ubID, ubWarnLevel));
+									STLOGD("TacticalAI: soldier #{} avoiding ambush trap on seeing corpses (warning level {})", pSoldier->ubID, ubWarnLevel);
 								}
 							}
 						}
@@ -3044,7 +3044,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			if ( ( (pSoldier->bTeam == MILITIA_TEAM) && (PreRandom( 20 ) > BestAttack.ubChanceToReallyHit) )
 				|| ( (pSoldier->bTeam != MILITIA_TEAM) && (PreRandom( 40 ) > BestAttack.ubChanceToReallyHit) ) )
 			{
-				SLOGD(ST::format("AI {} allowing cover check, chance to hit is only {}, at range {}", pSoldier->ubID, BestAttack.ubChanceToReallyHit, PythSpacesAway(pSoldier->sGridNo, BestAttack.sTarget)));
+				STLOGD("AI {} allowing cover check, chance to hit is only {}, at range {}", pSoldier->ubID, BestAttack.ubChanceToReallyHit, PythSpacesAway(pSoldier->sGridNo, BestAttack.sTarget));
 				// maybe taking cover would be better!
 				fAllowCoverCheck = TRUE;
 				if ( PreRandom( 10 ) > BestAttack.ubChanceToReallyHit )
