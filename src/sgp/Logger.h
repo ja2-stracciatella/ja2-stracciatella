@@ -4,6 +4,7 @@
 #include "Platform.h"
 #include "RustInterface.h"
 #include <string_view>
+#include <string_theory/format>
 #include <string_theory/string>
 #include <stracciatella.h>
 
@@ -42,7 +43,33 @@ template <size_t p> constexpr const char* ToRelativePath(const char* filename)
 /** Print error message macro. */
 #define SLOGE(FORMAT, ...) LogMessage(false, LogLevel::Error, __FILENAME__, FORMAT, ##__VA_ARGS__)
 
-/** Print error message macro. */
+/** Print error message macro and assert if ENABLE_ASSERTS is defined. */
 #define SLOGA(FORMAT, ...) LogMessage(true, LogLevel::Error, __FILENAME__, FORMAT, ##__VA_ARGS__)
+
+/*
+
+   As above, but for string_theory style formatted strings.
+
+*/
+
+template<typename... Args>
+constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Args... args)
+{
+	LogMessage(isAssert, level, file, ST::format(args...));
+}
+/** Print debug message macro. */
+#define STLOGD(...) LogMessageST(false, LogLevel::Debug, __FILENAME__, ##__VA_ARGS__)
+
+/** Print info message macro. */
+#define STLOGI(...) LogMessageST(false, LogLevel::Info,  __FILENAME__, ##__VA_ARGS__)
+
+/** Print warning message macro. */
+#define STLOGW(...) LogMessageST(false, LogLevel::Warn, __FILENAME__, ##__VA_ARGS__)
+
+/** Print error message macro. */
+#define STLOGE(...) LogMessageST(false, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
+
+/** Print error message macro and assert if ENABLE_ASSERTS is defined. */
+#define STLOGA(...) LogMessageST(true,  LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
 
 #endif//SGP_LOGGER_H_
