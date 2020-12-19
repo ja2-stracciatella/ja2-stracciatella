@@ -600,7 +600,7 @@ void EndAIDeadlock()
 			SLOGD("Ending turn for %d because breaking deadlock", s.ubID);
 		}
 
-		SLOGD(ST::format("Number of bullets in the air is {}", guiNumBullets));
+		STLOGD("Number of bullets in the air is {}", guiNumBullets);
 		SLOGD("Setting attack busy count to 0 from deadlock break");
 		gTacticalStatus.ubAttackBusyCount = 0;
 

@@ -91,14 +91,14 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 
 			if ( pAnimCache->usCachedSurfaces[ cnt ] == usCurrentAnimSurface )
 			{
-				SLOGD(ST::format("Anim Cache: REJECTING Slot {} EXISTING ANIM SURFACE ( Soldier {}, Surface {} )", cnt, usSoldierID, usCurrentAnimSurface));
+				STLOGD("Anim Cache: REJECTING Slot {} EXISTING ANIM SURFACE ( Soldier {}, Surface {} )", cnt, usSoldierID, usCurrentAnimSurface);
 			}
 			else if (pAnimCache->usCachedSurfaces[cnt] == pSoldier->usAnimSurface)
 			{
 				// The result of DetermineSoldierAnimationSurface may be inconsistent
 				// with the actual usAnimSurface, for example when player is re-assigning
 				// mercs in strategic view.
-				SLOGD(ST::format("Anim Cache: REJECTING Slot {} IN-USE ANIM SURFACE ( Soldier {}, Surface {} )", cnt, usSoldierID, pSoldier->usAnimSurface));
+				STLOGD("Anim Cache: REJECTING Slot {} IN-USE ANIM SURFACE ( Soldier {}, Surface {} )", cnt, usSoldierID, pSoldier->usAnimSurface);
 			}
 			else
 			{
@@ -112,7 +112,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 
 		if (ubLowestIndex == UINT8_MAX)
 		{
-			SLOGW(ST::format("Anim Cache: No preferred cache slot for eviction ( Soldier {} )", usSoldierID));
+			STLOGW("Anim Cache: No preferred cache slot for eviction ( Soldier {} )", usSoldierID);
 			ubLowestIndex = 0;
 		}
 		
@@ -145,7 +145,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 		}
 	}
 
-	SLOGW(ST::format("Anim Cache: Failed to find slot to load surface ( Soldier {} )", usSoldierID));
+	STLOGW("Anim Cache: Failed to find slot to load surface ( Soldier {} )", usSoldierID);
 }
 
 

@@ -2194,7 +2194,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					OBJECTTYPE Object;
 					INT16      sGridNo  = params->getGridNo(14952);
 					UINT32     uiAmount = params->getAmount(10000);
-					SLOGI(ST::format("add a money item with ${} to tile {} in front of Kyle", uiAmount, sGridNo));
+					STLOGI("add a money item with ${} to tile {} in front of Kyle", uiAmount, sGridNo);
 
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 					if (pSoldier)
@@ -4063,7 +4063,7 @@ add_log:
 				}
 				break;
 			default:
-				SLOGD(ST::format("No code support for NPC action {}", usActionCode));
+				STLOGD("No code support for NPC action {}", usActionCode);
 				break;
 		}
 	}

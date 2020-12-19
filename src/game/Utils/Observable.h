@@ -51,7 +51,7 @@ public:
 	{
 		if (listeners.find(key) == listeners.end())
 		{
-			SLOGW(ST::format("There is no listener for key '{}'", key));
+			STLOGW("There is no listener for key '{}'", key);
 			return *this;
 		}
 

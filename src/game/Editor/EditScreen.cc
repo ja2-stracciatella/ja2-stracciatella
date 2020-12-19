@@ -1410,7 +1410,7 @@ static void HandleKeyboardShortcuts(void)
 
 				case SDLK_F4:
 					MusicPlay( GCM->getMusicForMode(giMusicMode) );
-					SLOGD(ST::format("Testing music {}", GCM->getMusicForMode(giMusicMode)));
+					STLOGD("Testing music {}", GCM->getMusicForMode(giMusicMode));
 					giMusicMode = (MusicMode)(giMusicMode + 1);
 					if( giMusicMode >= MAX_MUSIC_MODES )
 						giMusicMode = MUSIC_MAIN_MENU;

@@ -221,7 +221,7 @@ static void CreatePlayerSkills(void)
 		else if (iLastElementInSkillsList > 2)
 		{
 			// This should be impossible
-			SLOGA(ST::format("Invalid number ({}) of skills selected", iLastElementInSkillsList));
+			STLOGA("Invalid number ({}) of skills selected", iLastElementInSkillsList);
 		}
 	
 		return;

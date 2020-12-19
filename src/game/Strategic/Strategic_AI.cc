@@ -651,7 +651,7 @@ void InitStrategicAI()
 		SECTORINFO &si = SectorInfo[sSectorID];
 		si.uiFlags |= SF_USE_ALTERNATE_MAP;
 		si.ubNumTroops = model->getNumTroops(difficulty);
-		SLOGD(ST::format("Weapon cache is at {}", SECTOR_SHORT_STRING(sSectorID)));
+		STLOGD("Weapon cache is at {}", SECTOR_SHORT_STRING(sSectorID));
 	}
 }
 
@@ -2296,7 +2296,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	//Restore the patrol group definitions
 	if (iPatrolArraySize != GCM->getPatrolGroups().size())
 	{
-		SLOGW(ST::format("Number of Patrol Groups in save ({}) is different from definition ({}). Save might not work properly.", iPatrolArraySize, GCM->getPatrolGroups().size()));
+		STLOGW("Number of Patrol Groups in save ({}) is different from definition ({}). Save might not work properly.", iPatrolArraySize, GCM->getPatrolGroups().size());
 	}
 	auto buffPG = new PATROL_GROUP[SAVED_PATROL_GROUPS]{};
 	FileRead(hFile, buffPG, SAVED_PATROL_GROUPS * sizeof(PATROL_GROUP));
@@ -2307,7 +2307,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	//Load the garrison information!
 	if (iGarrisonArraySize != GCM->getGarrisonGroups().size())
 	{
-		SLOGW(ST::format("Number of Garrison Groups in save ({}) is different from definition ({}). Save might not work properly.", iGarrisonArraySize, GCM->getGarrisonGroups().size()));
+		STLOGW("Number of Garrison Groups in save ({}) is different from definition ({}). Save might not work properly.", iGarrisonArraySize, GCM->getGarrisonGroups().size());
 	}
 	auto buffGG = new GARRISON_GROUP[SAVED_GARRISON_GROUPS]{};
 	FileRead(hFile, buffGG, SAVED_GARRISON_GROUPS * sizeof(GARRISON_GROUP));
@@ -2323,7 +2323,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	gArmyComp.resize(numArmyCompositions);
 	if (gArmyComp.size() != GCM->getArmyCompositions().size())
 	{
-		SLOGW(ST::format("Number of Army Compositions in save ({}) is different from definition ({}). Save might not work properly.", gArmyComp.size(), GCM->getArmyCompositions().size()));
+		STLOGW("Number of Army Compositions in save ({}) is different from definition ({}). Save might not work properly.", gArmyComp.size(), GCM->getArmyCompositions().size());
 	}
 	ArmyCompositionModel::validateLoadedData(gArmyComp);
 

@@ -59,11 +59,11 @@ void JA2Require(std::string scriptFileName)
 
 	if (loadedScripts.find(scriptFileName) != loadedScripts.end())
 	{
-		SLOGW(ST::format("Script file '{}' has already been loaded", scriptFileName));
+		STLOGW("Script file '{}' has already been loaded", scriptFileName);
 		return;
 	}
 	
-	SLOGD(ST::format("Loading LUA script file: {}", scriptFileName));
+	STLOGD("Loading LUA script file: {}", scriptFileName);
 	std::string scriptbody = FileMan::fileReadText(
 		AutoSGPFile(GCM->openGameResForReading(SCRIPTS_DIR "/" + scriptFileName))
 	).to_std_string();
@@ -104,7 +104,7 @@ void InitScriptingEngine()
 	} 
 	catch (const std::exception &ex)
 	{
-		SLOGE(ST::format("Lua script engine has failed to initialize:\n {}", ex.what()));
+		STLOGE("Lua script engine has failed to initialize:\n {}", ex.what());
 		ST::string err = "The game cannot be started due to an error in the mod scripts. Check the logs for more details.";
 		std::throw_with_nested(std::runtime_error(err.to_std_string()));
 	}
@@ -269,7 +269,7 @@ static void InvokeFunction(ST::string functionName, A... args)
 	sol::protected_function func = lua[functionName.to_std_string()];
 	if (!func.valid())
 	{
-		SLOGE(ST::format("Function {} is not defined", functionName));
+		STLOGE("Function {} is not defined", functionName);
 		isLuaDisabled = true;
 		return;
 	}
@@ -278,7 +278,7 @@ static void InvokeFunction(ST::string functionName, A... args)
 	if (!result.valid())
 	{
 		sol::error err = result;
-		SLOGE(ST::format("Lua script had an error. Scripting engine is now DISABLED. The error was:\n{}", err.what()));
+		STLOGE("Lua script had an error. Scripting engine is now DISABLED. The error was:\n{}", err.what());
 		isLuaDisabled = true;
 	}
 }
