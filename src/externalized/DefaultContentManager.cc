@@ -1,5 +1,6 @@
 #include "DefaultContentManager.h"
 
+#include "Exceptions.h"
 #include "game/Directories.h"
 #include "game/Strategic/Strategic_Status.h"
 #include "game/Tactical/Items.h"
@@ -697,6 +698,26 @@ bool DefaultContentManager::loadWeapons()
 			m_items[w->getItemIndex()] = w;
 			m_weaponMap.insert(std::make_pair(w->getInternalName(), w));
 		}
+	}
+
+	return true;
+}
+
+bool DefaultContentManager::loadItems()
+{
+	auto document = readJsonDataFile("items.json");
+	for (auto& el : document->GetArray())
+	{
+		JsonObjectReader obj(el);
+		auto *item = ItemModel::deserialize(obj);
+		if (item->getItemIndex() <= MAX_WEAPONS || item->getItemIndex() >= MAXITEMS)
+		{
+			ST::string err = ST::format("Item index must be in the interval {} - {}", MAX_WEAPONS+1, MAXITEMS - 1);
+			throw DataError(err);
+		}
+
+		m_items[item->getItemIndex()] = item;
+		m_itemMap.insert(std::make_pair(item->getInternalName(), item));
 	}
 
 	return true;

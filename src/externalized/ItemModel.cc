@@ -167,3 +167,25 @@ void ItemModel::serializeTo(JsonObject &obj) const
 
     serializeFlags(obj);
 }
+
+const ItemModel* ItemModel::deserialize(JsonObjectReader &obj)
+{
+	auto* item = new ItemModel(
+		obj.GetUInt("itemIndex"),
+		obj.GetString("internalName"),
+		obj.GetUInt("usItemClass"),
+		obj.GetUInt("ubClassIndex"),
+		(ItemCursor)obj.GetUInt("ubCursor"),
+		obj.GetUInt("ubGraphicType"),
+		obj.GetUInt("ubGraphicNum"),
+		obj.GetUInt("ubWeight"),
+		obj.GetUInt("ubPerPocket"),
+		obj.GetUInt("usPrice"),
+		obj.GetUInt("ubCoolness"),
+		obj.GetInt("bReliability"),
+		obj.GetInt("bRepairEase"),
+		0
+	);
+	item->fFlags = item->deserializeFlags(obj);
+	return item;
+}

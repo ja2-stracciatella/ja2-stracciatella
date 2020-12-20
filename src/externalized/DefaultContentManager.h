@@ -260,6 +260,7 @@ protected:
 	RustPointer<Vfs> m_vfs;
 
 	bool loadWeapons();
+	bool loadItems();
 	bool loadMagazines();
 	bool loadCalibres();
 	bool loadAmmoTypes();
@@ -286,13 +287,4 @@ protected:
 	 * @return pointer to a MercProfileInfo. Never returns null. A pointer to the empty instance is returned if not defined in JSON.
 	 */
 	const MercProfileInfo* getMercProfileInfo(uint8_t profileID) const;
-};
-
-class LibraryFileNotFoundException : public std::runtime_error
-{
-public:
-	LibraryFileNotFoundException(const ST::string& what_arg)
-		:std::runtime_error(what_arg.to_std_string())
-	{
-	}
 };

@@ -81,6 +81,7 @@ struct ItemModel
 	virtual bool canBeAttached(uint16_t attachment) const;
 
 	virtual void serializeTo(JsonObject &obj) const;
+	static const ItemModel* deserialize(JsonObjectReader &obj);
 
 protected:
 	uint16_t   itemIndex;
