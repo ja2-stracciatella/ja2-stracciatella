@@ -709,15 +709,14 @@ bool DefaultContentManager::loadItems()
 	for (auto& el : document->GetArray())
 	{
 		JsonObjectReader obj(el);
-		auto *item = ItemModel::deserialize(obj);
-		if (item->getItemIndex() <= MAX_WEAPONS || item->getItemIndex() >= MAXITEMS)
+		auto* item = ItemModel::deserialize(obj);
+		if (item->getItemIndex() <= MAX_WEAPONS || item->getItemIndex() > MAXITEMS)
 		{
-			ST::string err = ST::format("Item index must be in the interval {} - {}", MAX_WEAPONS+1, MAXITEMS - 1);
+			ST::string err = ST::format("Item index must be in the interval {} - {}", MAX_WEAPONS+1, MAXITEMS);
 			throw DataError(err);
 		}
 
 		m_items[item->getItemIndex()] = item;
-		m_itemMap.insert(std::make_pair(item->getInternalName(), item));
 	}
 
 	return true;
@@ -978,9 +977,9 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<co
 /** Load the game data. */
 bool DefaultContentManager::loadGameData()
 {
-	createAllHardcodedItemModels(m_items);
-
-	bool result = loadCalibres()
+	m_items.resize(MAXITEMS);
+	bool result = loadItems()
+		&& loadCalibres()
 		&& loadAmmoTypes()
 		&& loadMagazines()
 		&& loadWeapons()
