@@ -1,4 +1,11 @@
+/**
+ * Notes:
+ *  - Items must be in range between 131 and 350 (inclusive). Adding new items is not supported.
+ *  - You may also want to update the EDT and texts if you change an item
+ *  - Many of the items are quest related and referenced in the code.
+ */
 [
+    // EXPLOSIVES
     {
         "itemIndex": 131,
         "internalName": "STUN_GRENADE",
@@ -429,7 +436,7 @@
     },
     {
         "itemIndex": 155,
-        "internalName": "STRUCTURE_EXPLOSION",
+        "internalName": "STRUCTURE_EXPLOSION", /* fake struct xplod*/
         "usItemClass": 512,
         "ubClassIndex": 24,
         "ubCursor": 0,
@@ -447,7 +454,7 @@
     },
     {
         "itemIndex": 156,
-        "internalName": "GREAT_BIG_EXPLOSION",
+        "internalName": "GREAT_BIG_EXPLOSION", /* fake vehicle xplod*/
         "usItemClass": 512,
         "ubClassIndex": 25,
         "ubCursor": 0,
@@ -530,6 +537,7 @@
         "bRepairEase": 0,
         "bNotEditor": true
     },
+    // ARMOUR
     {
         "itemIndex": 161,
         "internalName": "FLAK_JACKET",
@@ -1484,6 +1492,7 @@
         "bMetal": true,
         "bAttachment": true
     },
+    // HEAD ITEMS
     {
         "itemIndex": 210,
         "internalName": "EXTENDEDEAR",
@@ -1556,6 +1565,7 @@
         "bDamageable": true,
         "bRepairable": true
     },
+    // MISC
     {
         "itemIndex": 214,
         "internalName": "CANTEEN",
@@ -2148,7 +2158,7 @@
     },
     {
         "itemIndex": 248,
-        "internalName": "HEAD_1",
+        "internalName": "HEAD_1", /* head - generic */
         "usItemClass": 0,
         "ubClassIndex": 0,
         "ubCursor": 0,
@@ -2164,7 +2174,7 @@
     },
     {
         "itemIndex": 249,
-        "internalName": "HEAD_2",
+        "internalName": "HEAD_2", /* head - Imposter*/
         "usItemClass": 0,
         "ubClassIndex": 0,
         "ubCursor": 0,
@@ -2180,7 +2190,7 @@
     },
     {
         "itemIndex": 250,
-        "internalName": "HEAD_3",
+        "internalName": "HEAD_3", /* head - T-Rex */
         "usItemClass": 0,
         "ubClassIndex": 0,
         "ubCursor": 0,
@@ -2196,7 +2206,7 @@
     },
     {
         "itemIndex": 251,
-        "internalName": "HEAD_4",
+        "internalName": "HEAD_4", /* head - Slay */
         "usItemClass": 0,
         "ubClassIndex": 0,
         "ubCursor": 0,
@@ -2212,7 +2222,7 @@
     },
     {
         "itemIndex": 252,
-        "internalName": "HEAD_5",
+        "internalName": "HEAD_5", /* head - Druggist */
         "usItemClass": 0,
         "ubClassIndex": 0,
         "ubCursor": 0,
@@ -2228,7 +2238,7 @@
     },
     {
         "itemIndex": 253,
-        "internalName": "HEAD_6",
+        "internalName": "HEAD_6", /* head - Matron */
         "usItemClass": 0,
         "ubClassIndex": 0,
         "ubCursor": 0,
@@ -2244,7 +2254,7 @@
     },
     {
         "itemIndex": 254,
-        "internalName": "HEAD_7",
+        "internalName": "HEAD_7", /* head - Tiffany */
         "usItemClass": 0,
         "ubClassIndex": 0,
         "ubCursor": 0,
@@ -2532,9 +2542,10 @@
         "bReliability": 0,
         "bRepairEase": 0
     },
+    // KEYS
     {
         "itemIndex": 271,
-        "internalName": "KEY_1",
+        "internalName": "KEY_1", /* dull gold key */
         "usItemClass": 0,
         "ubClassIndex": 0,
         "ubCursor": 0,
@@ -2551,7 +2562,7 @@
     },
     {
         "itemIndex": 272,
-        "internalName": "KEY_2",
+        "internalName": "KEY_2", /* silver key */
         "usItemClass": 0,
         "ubClassIndex": 1,
         "ubCursor": 0,
@@ -2568,7 +2579,7 @@
     },
     {
         "itemIndex": 273,
-        "internalName": "KEY_3",
+        "internalName": "KEY_3", /* diamond-shpd key */
         "usItemClass": 0,
         "ubClassIndex": 2,
         "ubCursor": 0,
@@ -2585,7 +2596,7 @@
     },
     {
         "itemIndex": 274,
-        "internalName": "KEY_4",
+        "internalName": "KEY_4", /* bright gold key */
         "usItemClass": 0,
         "ubClassIndex": 3,
         "ubCursor": 0,
@@ -2602,7 +2613,7 @@
     },
     {
         "itemIndex": 275,
-        "internalName": "KEY_5",
+        "internalName": "KEY_5", /* gold key */
         "usItemClass": 0,
         "ubClassIndex": 4,
         "ubCursor": 0,
@@ -2619,7 +2630,7 @@
     },
     {
         "itemIndex": 276,
-        "internalName": "KEY_6",
+        "internalName": "KEY_6", /* small gold key */
         "usItemClass": 0,
         "ubClassIndex": 5,
         "ubCursor": 0,
@@ -2636,7 +2647,7 @@
     },
     {
         "itemIndex": 277,
-        "internalName": "KEY_7",
+        "internalName": "KEY_7", /* electronic */
         "usItemClass": 0,
         "ubClassIndex": 6,
         "ubCursor": 0,
@@ -2654,7 +2665,7 @@
     },
     {
         "itemIndex": 278,
-        "internalName": "KEY_8",
+        "internalName": "KEY_8", /* passcard */
         "usItemClass": 0,
         "ubClassIndex": 7,
         "ubCursor": 0,
