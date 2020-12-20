@@ -354,7 +354,7 @@ const ShippingDestinationModel* DefaultContentManager::getPrimaryShippingDestina
 			return dest;
 		}
 	}
-	throw std::runtime_error("Bobby Ray primary destination is not defined");
+	throw DataError("Bobby Ray primary destination is not defined");
 }
 
 const ST::string* DefaultContentManager::getShippingDestinationName(uint8_t index) const
@@ -1043,7 +1043,7 @@ std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(con
 			document->GetErrorOffset(),
 			rapidjson::GetParseError_En(document->GetParseError())
 		);
-		throw std::runtime_error(errorMessage.to_std_string());
+		throw DataError(errorMessage);
 	}
 
 	return document;
