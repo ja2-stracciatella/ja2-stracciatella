@@ -148,3 +148,22 @@ bool ItemModel::canBeAttached(uint16_t attachment) const
 {
 	return false;
 }
+
+void ItemModel::serializeTo(JsonObject &obj) const
+{
+    obj.AddMember("itemIndex", itemIndex);
+    obj.AddMember("internalName", internalName);
+    obj.AddMember("usItemClass", (uint16_t)getItemClass());
+    obj.AddMember("ubClassIndex", getClassIndex());
+    obj.AddMember("ubCursor",  getCursor());
+    obj.AddMember("ubGraphicType", getGraphicType());
+    obj.AddMember("ubGraphicNum", getGraphicNum());
+    obj.AddMember("ubWeight", getWeight());
+    obj.AddMember("ubPerPocket", getPerPocket());
+    obj.AddMember("usPrice", getPrice());
+    obj.AddMember("ubCoolness", getCoolness());
+    obj.AddMember("bReliability", getReliability());
+    obj.AddMember("bRepairEase", getRepairEase());
+
+    serializeFlags(obj);
+}
