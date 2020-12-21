@@ -8,7 +8,6 @@
 #define SHOW_FULL_FPS	1
 
 extern ST::string gubErrorText;
-extern BOOLEAN gfAniEditMode;
 extern BOOLEAN gfEditMode;
 extern BOOLEAN fFirstTimeInGameScreen;
 extern INT8    gbFPSDisplay;

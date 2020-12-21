@@ -1,4 +1,3 @@
-#include "AniViewScreen.h"
 #include "Auto_Resolve.h"
 #include "Credits.h"
 #include "EditScreen.h"
@@ -28,7 +27,7 @@ Screens const GameScreens[] =
 	{ NULL,                 ErrorScreenHandle,           NULL                     }, // Title Screen
 	{ NULL,                 InitScreenHandle,            NULL                     }, // Title Screen
 	{ MainGameScreenInit,   MainGameScreenHandle,        MainGameScreenShutdown   },
-	{ NULL,                 AniEditScreenHandle,         NULL                     },
+	{ NULL,                 NULL,                        NULL                     }, // was AniEditScreen
 	{ NULL,                 PalEditScreenHandle,         NULL                     },
 	{ NULL,                 DebugScreenHandle,           NULL                     },
 	{ MapScreenInit,        MapScreenHandle,             MapScreenShutdown        },
