@@ -25,7 +25,7 @@ private:
 public:
 	/** Constructor.
 	 * @param buf Pointer to the buffer for writing data. */
-	DataWriter(void* buf);
+	explicit DataWriter(uint8_t* buf);
 
 	/** Write UTF-8 encoded string.
 	 * @param str      String to write
@@ -73,8 +73,8 @@ public:
 	size_t getConsumed() const;
 
 protected:
-	void* m_buf;
-	void* m_original;
+	uint8_t* m_buf;
+	uint8_t* m_original;
 
 	/** Move pointer to \a numBytes bytes forward. */
 	void move(size_t numBytes);
@@ -96,7 +96,7 @@ private:
 public:
 	/** Constructor.
 	 * @param buf Pointer to the buffer for writing data. */
-	DataReader(const void* buf);
+	explicit DataReader(const uint8_t* buf);
 
 	/** Read UTF-8 encoded string.
 	 * @param numChars Number of `char` characters to read.
@@ -150,8 +150,8 @@ public:
 	size_t getConsumed() const;
 
 protected:
-	const void* m_buf;
-	const void* m_original;
+	const uint8_t* m_buf;
+	const uint8_t* m_original;
 
 	/** Move pointer to \a numBytes bytes forward. */
 	void move(size_t numBytes);

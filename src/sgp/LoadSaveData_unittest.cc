@@ -10,7 +10,7 @@
 
 TEST(LoadSaveData, integers)
 {
-	char buf[100];
+	BYTE buf[100];
 
 	{
 		DataWriter writer(buf);
@@ -60,7 +60,7 @@ TEST(LoadSaveData, integers)
 
 TEST(LoadSaveData, writeUTF16English)
 {
-	char buf[100];
+	BYTE buf[100];
 
 	DataWriter writer(buf);
 	writer.writeUTF16("test", 5);
@@ -81,7 +81,7 @@ TEST(LoadSaveData, writeUTF16English)
 
 TEST(LoadSaveData, writeUTF16Russian)
 {
-	char buf[100];
+	BYTE buf[100];
 
 	DataWriter writer(buf);
 	writer.writeUTF16("тест", 5);
@@ -99,7 +99,7 @@ TEST(LoadSaveData, writeUTF16Russian)
 
 TEST(LoadSaveData, readUTF16)
 {
-	char buf[100];
+	BYTE buf[100];
 	DataWriter writer(buf);
 
 	writer.writeU16(0x0442);
@@ -119,7 +119,7 @@ TEST(LoadSaveData, readUTF16)
 
 TEST(LoadSaveData, readUTF32)
 {
-	char buf[100];
+	BYTE buf[100];
 	DataWriter writer(buf);
 
 	writer.writeU32(0x00000442);
