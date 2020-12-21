@@ -12,7 +12,7 @@
 
 /** Constructor.
  * @param buf Pointer to the buffer for writing data. */
-DataWriter::DataWriter(void* buf)
+DataWriter::DataWriter(uint8_t* buf)
 	:m_buf(buf), m_original(buf)
 {
 }
@@ -69,20 +69,20 @@ void DataWriter::writeU32(uint32_t value)
 
 void DataWriter::skip(size_t numBytes)
 {
-	std::fill_n(reinterpret_cast<uint8_t*>(m_buf), numBytes, 0);
+	std::fill_n(m_buf, numBytes, 0);
 	move(numBytes);
 }
 
 /** Move pointer to \a numBytes bytes forward. */
 void DataWriter::move(size_t numBytes)
 {
-	m_buf = reinterpret_cast<uint8_t*>(m_buf) + numBytes;
+	m_buf += numBytes;
 }
 
 /** Get number of the consumed bytes during writing. */
 size_t DataWriter::getConsumed() const
 {
-	return reinterpret_cast<uint8_t*>(m_buf) - reinterpret_cast<uint8_t*>(m_original);
+	return m_buf - m_original;
 }
 
 ////////////////////////////////////////////////////////////////////////////
@@ -90,7 +90,7 @@ size_t DataWriter::getConsumed() const
 ////////////////////////////////////////////////////////////////////////////
 
 
-DataReader::DataReader(const void* buf)
+DataReader::DataReader(const uint8_t* buf)
 	: m_buf(buf), m_original(buf)
 {
 }
@@ -149,12 +149,12 @@ void DataReader::skip(size_t numBytes)
 
 void DataReader::move(size_t numBytes)
 {
-	m_buf = reinterpret_cast<const uint8_t*>(m_buf) + numBytes;
+	m_buf += numBytes;
 }
 
 size_t DataReader::getConsumed() const
 {
-	return reinterpret_cast<const uint8_t*>(m_buf) - reinterpret_cast<const uint8_t*>(m_original);
+	return m_buf - m_original;
 }
 
 ////////////////////////////////////////////////////////////////////////////
