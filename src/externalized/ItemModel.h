@@ -80,6 +80,9 @@ struct ItemModel
 	/** Check if the given attachment can be attached to the item. */
 	virtual bool canBeAttached(uint16_t attachment) const;
 
+	virtual void serializeTo(JsonObject &obj) const;
+	static const ItemModel* deserialize(JsonObjectReader &obj);
+
 protected:
 	uint16_t   itemIndex;
 	ST::string internalName;

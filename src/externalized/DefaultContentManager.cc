@@ -1,5 +1,6 @@
 #include "DefaultContentManager.h"
 
+#include "Exceptions.h"
 #include "game/Directories.h"
 #include "game/Strategic/Strategic_Status.h"
 #include "game/Tactical/Items.h"
@@ -353,7 +354,7 @@ const ShippingDestinationModel* DefaultContentManager::getPrimaryShippingDestina
 			return dest;
 		}
 	}
-	throw std::runtime_error("Bobby Ray primary destination is not defined");
+	throw DataError("Bobby Ray primary destination is not defined");
 }
 
 const ST::string* DefaultContentManager::getShippingDestinationName(uint8_t index) const
@@ -702,6 +703,25 @@ bool DefaultContentManager::loadWeapons()
 	return true;
 }
 
+bool DefaultContentManager::loadItems()
+{
+	auto document = readJsonDataFile("items.json");
+	for (auto& el : document->GetArray())
+	{
+		JsonObjectReader obj(el);
+		auto* item = ItemModel::deserialize(obj);
+		if (item->getItemIndex() <= MAX_WEAPONS || item->getItemIndex() > MAXITEMS)
+		{
+			ST::string err = ST::format("Item index must be in the interval {} - {}", MAX_WEAPONS+1, MAXITEMS);
+			throw DataError(err);
+		}
+
+		m_items[item->getItemIndex()] = item;
+	}
+
+	return true;
+}
+
 bool DefaultContentManager::loadMagazines()
 {
 	auto document = readJsonDataFile("magazines.json");
@@ -957,9 +977,9 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<co
 /** Load the game data. */
 bool DefaultContentManager::loadGameData()
 {
-	createAllHardcodedItemModels(m_items);
-
-	bool result = loadCalibres()
+	m_items.resize(MAXITEMS);
+	bool result = loadItems()
+		&& loadCalibres()
 		&& loadAmmoTypes()
 		&& loadMagazines()
 		&& loadWeapons()
@@ -1023,7 +1043,7 @@ std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(con
 			document->GetErrorOffset(),
 			rapidjson::GetParseError_En(document->GetParseError())
 		);
-		throw std::runtime_error(errorMessage.to_std_string());
+		throw DataError(errorMessage);
 	}
 
 	return document;

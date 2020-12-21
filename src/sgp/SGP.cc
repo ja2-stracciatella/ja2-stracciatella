@@ -62,42 +62,42 @@ extern BOOLEAN gfPauseDueToPlayerGamePause;
 ////////////////////////////////////////////////////////////////////////////
 
 // #include "JsonObject.h"
+// #include "ItemModel.h"
 // #include "MagazineModel.h"
 // #include "WeaponModels.h"
 // #include "Weapons.h"
 // #include "rapidjson/document.h"
-// #include "rapidjson/filestream.h"
+// #include <rapidjson/ostreamwrapper.h>
 // #include "rapidjson/prettywriter.h"
 // #include "stdio.h"
+// #include <fstream>
 
-// bool writeWeaponsToJson(const char *name/*, const struct WEAPONTYPE *weapon*/, int weaponCount)
-// {
-//   FILE *f = fopen(name, "wt");
-//   if(f)
-//   {
-//     rapidjson::FileStream os(f);
-//     rapidjson::PrettyWriter<rapidjson::FileStream> writer(os);
-
-//     rapidjson::Document document;
-//     document.SetArray();
-//     rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
-
-//     for(int i = 0; i < weaponCount; i++)
-//     {
-//       // printf("%d\n", i);
-//       const WeaponModel *w = GCM->getWeapon(i);
-//       JsonObject obj(allocator);
-//       w->serializeTo(obj);
-//       document.PushBack(obj.getValue(), allocator);
-//     }
-
-//     document.Accept(writer);
-
-//     fputs("\n", f);
-//     return fclose(f) == 0;
-//   }
-//   return false;
-// }
+//bool writeItemsToJson(const char *name, uint16_t from, uint16_t until)
+//{
+//	std::ofstream ofs(name);
+//	rapidjson::OStreamWrapper os(ofs);
+//	rapidjson::PrettyWriter<rapidjson::OStreamWrapper> writer(os);
+//
+//	rapidjson::Document document;
+//	document.SetArray();
+//	rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+//
+//	for (int i = from; i < until; i++)
+//	{
+//		// printf("%d\n", i);
+//		auto item = GCM->getItem(i);
+//		JsonObject obj(allocator);
+//		item->serializeTo(obj);
+//		document.PushBack(obj.getValue(), allocator);
+//	}
+//
+//	document.Accept(writer);
+//
+//	ofs << std::endl;
+//	ofs.close();
+//
+//	return true;
+//}
 
 // bool writeMagazinesToJson(const char *name)
 // {
@@ -542,8 +542,9 @@ int main(int argc, char* argv[])
 			// convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/052.edt", FileMan::joinPaths(exeFolder, "052.edt.json").c_str());
 			// convertDialogQuotesToJson(cm, SE_RUSSIAN, "mercedt/055.edt", FileMan::joinPaths(exeFolder, "055.edt.json").c_str());
 
-			// writeWeaponsToJson(FileMan::joinPaths(exeFolder, "externalized/weapons.json").c_str(), MAX_WEAPONS+1);
+			// writeItemsToJson(FileMan::joinPaths(exeFolder, "externalized/weapons.json").c_str(), FIRST_WEAPON, MAX_WEAPONS);
 			// writeMagazinesToJson(FileMan::joinPaths(exeFolder, "externalized/magazines.json").c_str());
+			// writeItemsToJson(FileMan::joinPaths(exeFolder, "externalized/items.json").c_str(), FIRST_EXPLOSIVE, MAXITEMS);
 
 			// readWeaponsFromJson(FileMan::joinPaths(exeFolder, "weapon.json").c_str());
 			// readWeaponsFromJson(FileMan::joinPaths(exeFolder, "weapon2.json").c_str());

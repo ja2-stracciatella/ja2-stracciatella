@@ -174,7 +174,4 @@ bool ItemIsCool(OBJECTTYPE const&);
 
 bool HasObjectImprint(OBJECTTYPE const&);
 
-// Fill the vector with all hardcoded item models.
-void createAllHardcodedItemModels(std::vector<const ItemModel*> &items);
-
 #endif
