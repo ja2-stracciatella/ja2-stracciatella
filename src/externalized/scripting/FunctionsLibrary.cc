@@ -4,6 +4,7 @@
 #include "Item_Types.h"
 #include "Items.h"
 #include "Queen_Command.h"
+#include "SaveLoadGameStates.h"
 #include "StrategicMap.h"
 #include <stdexcept>
 #include <string>
@@ -63,4 +64,41 @@ OBJECTTYPE* CreateMoney(const UINT32 amt)
 void PlaceItem(const INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 ubVisibility)
 {
 	AddItemToPool(sGridNo, pObject, static_cast<Visibility>(ubVisibility), 0, 0, 0);
+}
+
+ExtraGameStatesTable GetGameStates(const std::string key)
+{
+	auto stateKey = ST::format("scripts:{}", key);
+	if (!g_gameStates.HasKey(stateKey))
+	{
+		return ExtraGameStatesTable{};
+	}
+
+	auto storedStates = g_gameStates.Get<std::map<ST::string, PRIMITIVE_VALUE>>(stateKey);
+	ExtraGameStatesTable table{};
+	for (auto& s : storedStates)
+	{
+		auto k = s.first.to_std_string();
+		auto v = s.second;
+		if (auto *b = std::get_if<bool>(&v)) table[k] = *b;
+		else if (auto *i = std::get_if<int32_t>(&v)) table[k] = *i;
+		else if (auto *str = std::get_if<ST::string>(&v)) table[k] = str->to_std_string();
+		else if (auto *f = std::get_if<float>(&v)) table[k] = *f;
+	}
+	return table;
+}
+
+void PutGameStates(const std::string key, ExtraGameStatesTable const states)
+{
+	std::map<ST::string, PRIMITIVE_VALUE> storables{};
+	for (auto &pair: states)
+	{
+		auto k = pair.first;
+		auto v = pair.second;
+		if (auto *b = std::get_if<bool>(&v)) storables[k] = *b;
+		else if (auto *i = std::get_if<int32_t>(&v)) storables[k] = *i;
+		else if (auto *s = std::get_if<std::string>(&v)) storables[k] = ST::string(*s);
+		else if (auto *f = std::get_if<float>(&v)) storables[k] = *f;
+	}
+	g_gameStates.Set(ST::format("scripts:{}", key), storables);
 }

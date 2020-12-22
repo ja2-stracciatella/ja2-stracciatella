@@ -73,6 +73,7 @@
 #include "Music_Control.h"
 #include "NPC.h"
 #include "NpcPlacementModel.h"
+#include "Observable.h"
 #include "OppList.h"
 #include "Options_Screen.h"
 #include "Overhead.h"
@@ -191,8 +192,13 @@ static void SaveWatchedLocsToSavedGame(HWFILE);
 
 static void SaveIMPPlayerProfiles();
 
+Observable<> BeforeGameSaved;
+Observable<> OnGameLoaded;
+
 BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 {
+	BeforeGameSaved();
+
 	BOOLEAN	fPausedStateBeforeSaving    = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
 
@@ -1133,6 +1139,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	// 2. the ai may ignoring the CallAvailableEnemiesTo(...) because it wasn't
 	//		fully analyzed before
 	CallAvailableTeamEnemiesToAmbush(gMapInformation.sCenterGridNo);
+
+	OnGameLoaded();
 }
 
 
