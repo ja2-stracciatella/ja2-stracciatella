@@ -33,8 +33,7 @@ void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 
 	LIGHT_SPRITE* const l = LightSpriteCreate(template_name);
 	// if this fails, then we will ignore the light.
-	// ATE: Don't add ANY lights of mapscreen util is on
-	if (l != NULL && guiCurrentScreen != MAPUTILITY_SCREEN)
+	if (l)
 	{
 		// power only valid lights
 		if (gfEditMode ||

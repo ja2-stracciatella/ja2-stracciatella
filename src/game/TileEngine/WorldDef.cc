@@ -2367,7 +2367,7 @@ try
 	{ // We are above ground.
 		gfBasement = FALSE;
 		gfCaves    = FALSE;
-		if (!gfEditMode && guiCurrentScreen != MAPUTILITY_SCREEN)
+		if (!gfEditMode)
 		{
 			ubAmbientLightLevel = GetTimeOfDayAmbientLightLevel();
 		}
@@ -2495,9 +2495,6 @@ try
 	{
 		strlcpy(g_filename, filename, lengthof(g_filename));
 	}
-
-	// ATE: Not while updating maps!
-	if (guiCurrentScreen != MAPUTILITY_SCREEN) GenerateBuildings();
 
 	RenderProgressBar(0, 100);
 	DequeueAllKeyBoardEvents();
