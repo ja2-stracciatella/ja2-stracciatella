@@ -1423,7 +1423,7 @@
     {
         "itemIndex": 206,
         "internalName": "BOOBYTRAPKIT",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -1438,7 +1438,7 @@
     {
         "itemIndex": 207,
         "internalName": "SILENCER",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1457,7 +1457,7 @@
     {
         "itemIndex": 208,
         "internalName": "SNIPERSCOPE",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1476,7 +1476,7 @@
     {
         "itemIndex": 209,
         "internalName": "BIPOD",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1585,7 +1585,7 @@
     {
         "itemIndex": 215,
         "internalName": "METALDETECTOR",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1604,7 +1604,7 @@
     {
         "itemIndex": 216,
         "internalName": "COMPOUND18",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -1620,7 +1620,7 @@
     {
         "itemIndex": 217,
         "internalName": "JAR_QUEEN_CREATURE_BLOOD",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -1637,7 +1637,7 @@
     {
         "itemIndex": 218,
         "internalName": "JAR_ELIXIR",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -1653,7 +1653,7 @@
     {
         "itemIndex": 219,
         "internalName": "MONEY",
-        "usItemClass": 0,
+        "usItemClass": 536870912,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -1670,7 +1670,7 @@
     {
         "itemIndex": 220,
         "internalName": "JAR",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 21,
         "ubGraphicType": 1,
@@ -1686,7 +1686,7 @@
     {
         "itemIndex": 221,
         "internalName": "JAR_CREATURE_BLOOD",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1703,7 +1703,7 @@
     {
         "itemIndex": 222,
         "internalName": "ADRENALINE_BOOSTER",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1720,7 +1720,7 @@
     {
         "itemIndex": 223,
         "internalName": "DETONATOR",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1739,7 +1739,7 @@
     {
         "itemIndex": 224,
         "internalName": "REMDETONATOR",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1759,7 +1759,7 @@
     {
         "itemIndex": 225,
         "internalName": "VIDEOTAPE",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1775,7 +1775,7 @@
     {
         "itemIndex": 226,
         "internalName": "DEED",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1792,7 +1792,7 @@
     {
         "itemIndex": 227,
         "internalName": "LETTER",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1809,7 +1809,7 @@
     {
         "itemIndex": 228,
         "internalName": "TERRORIST_INFO",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1825,7 +1825,7 @@
     {
         "itemIndex": 229,
         "internalName": "CHALICE",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1841,7 +1841,7 @@
     {
         "itemIndex": 230,
         "internalName": "BLOODCAT_CLAWS",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1858,7 +1858,7 @@
     {
         "itemIndex": 231,
         "internalName": "BLOODCAT_TEETH",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1875,7 +1875,7 @@
     {
         "itemIndex": 232,
         "internalName": "BLOODCAT_PELT",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 3,
@@ -1892,7 +1892,7 @@
     {
         "itemIndex": 233,
         "internalName": "SWITCH",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1909,7 +1909,7 @@
     {
         "itemIndex": 234,
         "internalName": "ACTION_ITEM",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1925,7 +1925,7 @@
     {
         "itemIndex": 235,
         "internalName": "REGEN_BOOSTER",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1942,7 +1942,7 @@
     {
         "itemIndex": 236,
         "internalName": "SYRINGE_3",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1959,7 +1959,7 @@
     {
         "itemIndex": 237,
         "internalName": "SYRINGE_4",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1976,7 +1976,7 @@
     {
         "itemIndex": 238,
         "internalName": "SYRINGE_5",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -1993,7 +1993,7 @@
     {
         "itemIndex": 239,
         "internalName": "JAR_HUMAN_BLOOD",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2009,7 +2009,7 @@
     {
         "itemIndex": 240,
         "internalName": "OWNERSHIP",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2025,7 +2025,7 @@
     {
         "itemIndex": 241,
         "internalName": "LASERSCOPE",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2045,7 +2045,7 @@
     {
         "itemIndex": 242,
         "internalName": "REMOTEBOMBTRIGGER",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 17,
         "ubGraphicType": 1,
@@ -2064,7 +2064,7 @@
     {
         "itemIndex": 243,
         "internalName": "WIRECUTTERS",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 16,
         "ubGraphicType": 1,
@@ -2082,7 +2082,7 @@
     {
         "itemIndex": 244,
         "internalName": "DUCKBILL",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2101,7 +2101,7 @@
     {
         "itemIndex": 245,
         "internalName": "ALCOHOL",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2136,7 +2136,7 @@
     {
         "itemIndex": 247,
         "internalName": "DISCARDED_LAW",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2159,7 +2159,7 @@
     {
         "itemIndex": 248,
         "internalName": "HEAD_1", /* head - generic */
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 3,
@@ -2175,7 +2175,7 @@
     {
         "itemIndex": 249,
         "internalName": "HEAD_2", /* head - Imposter*/
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 3,
@@ -2191,7 +2191,7 @@
     {
         "itemIndex": 250,
         "internalName": "HEAD_3", /* head - T-Rex */
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 3,
@@ -2207,7 +2207,7 @@
     {
         "itemIndex": 251,
         "internalName": "HEAD_4", /* head - Slay */
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 3,
@@ -2223,7 +2223,7 @@
     {
         "itemIndex": 252,
         "internalName": "HEAD_5", /* head - Druggist */
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 3,
@@ -2239,7 +2239,7 @@
     {
         "itemIndex": 253,
         "internalName": "HEAD_6", /* head - Matron */
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 3,
@@ -2255,7 +2255,7 @@
     {
         "itemIndex": 254,
         "internalName": "HEAD_7", /* head - Tiffany */
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 3,
@@ -2271,7 +2271,7 @@
     {
         "itemIndex": 255,
         "internalName": "WINE",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2287,7 +2287,7 @@
     {
         "itemIndex": 256,
         "internalName": "BEER",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2303,7 +2303,7 @@
     {
         "itemIndex": 257,
         "internalName": "PORNOS",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2319,7 +2319,7 @@
     {
         "itemIndex": 258,
         "internalName": "VIDEO_CAMERA",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2357,7 +2357,7 @@
     {
         "itemIndex": 260,
         "internalName": "CREATURE_PART_CLAWS",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2374,7 +2374,7 @@
     {
         "itemIndex": 261,
         "internalName": "CREATURE_PART_FLESH",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 3,
@@ -2391,7 +2391,7 @@
     {
         "itemIndex": 262,
         "internalName": "CREATURE_PART_ORGAN",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2408,7 +2408,7 @@
     {
         "itemIndex": 263,
         "internalName": "REMOTETRIGGER",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 17,
         "ubGraphicType": 1,
@@ -2426,7 +2426,7 @@
     {
         "itemIndex": 264,
         "internalName": "GOLDWATCH",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2444,7 +2444,7 @@
     {
         "itemIndex": 265,
         "internalName": "GOLFCLUBS",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2481,7 +2481,7 @@
     {
         "itemIndex": 267,
         "internalName": "PORTABLETV",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 3,
@@ -2514,7 +2514,7 @@
     {
         "itemIndex": 269,
         "internalName": "CIGARS",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 3,
@@ -2546,7 +2546,7 @@
     {
         "itemIndex": 271,
         "internalName": "KEY_1", /* dull gold key */
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2563,7 +2563,7 @@
     {
         "itemIndex": 272,
         "internalName": "KEY_2", /* silver key */
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 1,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2580,7 +2580,7 @@
     {
         "itemIndex": 273,
         "internalName": "KEY_3", /* diamond-shpd key */
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 2,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2597,7 +2597,7 @@
     {
         "itemIndex": 274,
         "internalName": "KEY_4", /* bright gold key */
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 3,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2614,7 +2614,7 @@
     {
         "itemIndex": 275,
         "internalName": "KEY_5", /* gold key */
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 4,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2631,7 +2631,7 @@
     {
         "itemIndex": 276,
         "internalName": "KEY_6", /* small gold key */
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 5,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2648,7 +2648,7 @@
     {
         "itemIndex": 277,
         "internalName": "KEY_7", /* electronic */
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 6,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2666,7 +2666,7 @@
     {
         "itemIndex": 278,
         "internalName": "KEY_8", /* passcard */
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 7,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -2683,7 +2683,7 @@
     {
         "itemIndex": 279,
         "internalName": "KEY_9",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 8,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2700,7 +2700,7 @@
     {
         "itemIndex": 280,
         "internalName": "KEY_10",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 9,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2717,7 +2717,7 @@
     {
         "itemIndex": 281,
         "internalName": "KEY_11",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 10,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2734,7 +2734,7 @@
     {
         "itemIndex": 282,
         "internalName": "KEY_12",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 11,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2751,7 +2751,7 @@
     {
         "itemIndex": 283,
         "internalName": "KEY_13",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 12,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2768,7 +2768,7 @@
     {
         "itemIndex": 284,
         "internalName": "KEY_14",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 13,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2785,7 +2785,7 @@
     {
         "itemIndex": 285,
         "internalName": "KEY_15",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 14,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2802,7 +2802,7 @@
     {
         "itemIndex": 286,
         "internalName": "KEY_16",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 15,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2819,7 +2819,7 @@
     {
         "itemIndex": 287,
         "internalName": "KEY_17",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 16,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2836,7 +2836,7 @@
     {
         "itemIndex": 288,
         "internalName": "KEY_18",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 17,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2853,7 +2853,7 @@
     {
         "itemIndex": 289,
         "internalName": "KEY_19",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 18,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2870,7 +2870,7 @@
     {
         "itemIndex": 290,
         "internalName": "KEY_20",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 19,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2887,7 +2887,7 @@
     {
         "itemIndex": 291,
         "internalName": "KEY_21",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 20,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2904,7 +2904,7 @@
     {
         "itemIndex": 292,
         "internalName": "KEY_22",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 21,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2921,7 +2921,7 @@
     {
         "itemIndex": 293,
         "internalName": "KEY_23",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 22,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2938,7 +2938,7 @@
     {
         "itemIndex": 294,
         "internalName": "KEY_24",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 23,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2955,7 +2955,7 @@
     {
         "itemIndex": 295,
         "internalName": "KEY_25",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 24,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2972,7 +2972,7 @@
     {
         "itemIndex": 296,
         "internalName": "KEY_26",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 25,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -2989,7 +2989,7 @@
     {
         "itemIndex": 297,
         "internalName": "KEY_27",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 26,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -3006,7 +3006,7 @@
     {
         "itemIndex": 298,
         "internalName": "KEY_28",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 27,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -3023,7 +3023,7 @@
     {
         "itemIndex": 299,
         "internalName": "KEY_29",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 28,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -3040,7 +3040,7 @@
     {
         "itemIndex": 300,
         "internalName": "KEY_30",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 29,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -3057,7 +3057,7 @@
     {
         "itemIndex": 301,
         "internalName": "KEY_31",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 30,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -3074,7 +3074,7 @@
     {
         "itemIndex": 302,
         "internalName": "KEY_32",
-        "usItemClass": 0,
+        "usItemClass": 65536,
         "ubClassIndex": 31,
         "ubCursor": 0,
         "ubGraphicType": 0,
@@ -3091,7 +3091,7 @@
     {
         "itemIndex": 303,
         "internalName": "SILVER_PLATTER",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -3108,7 +3108,7 @@
     {
         "itemIndex": 304,
         "internalName": "DUCT_TAPE",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -3125,7 +3125,7 @@
     {
         "itemIndex": 305,
         "internalName": "ALUMINUM_ROD",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -3144,7 +3144,7 @@
     {
         "itemIndex": 306,
         "internalName": "SPRING",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -3164,7 +3164,7 @@
     {
         "itemIndex": 307,
         "internalName": "SPRING_AND_BOLT_UPGRADE",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -3184,7 +3184,7 @@
     {
         "itemIndex": 308,
         "internalName": "STEEL_ROD",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -3203,7 +3203,7 @@
     {
         "itemIndex": 309,
         "internalName": "QUICK_GLUE",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -3220,7 +3220,7 @@
     {
         "itemIndex": 310,
         "internalName": "GUN_BARREL_EXTENDER",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -3240,7 +3240,7 @@
     {
         "itemIndex": 311,
         "internalName": "STRING",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -3258,7 +3258,7 @@
     {
         "itemIndex": 312,
         "internalName": "TIN_CAN",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -3276,7 +3276,7 @@
     {
         "itemIndex": 313,
         "internalName": "STRING_TIED_TO_TIN_CAN",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 22,
         "ubGraphicType": 2,
@@ -3293,7 +3293,7 @@
     {
         "itemIndex": 314,
         "internalName": "MARBLES",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -3310,7 +3310,7 @@
     {
         "itemIndex": 315,
         "internalName": "LAME_BOY",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -3329,7 +3329,7 @@
     {
         "itemIndex": 316,
         "internalName": "COPPER_WIRE",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -3346,7 +3346,7 @@
     {
         "itemIndex": 317,
         "internalName": "DISPLAY_UNIT",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -3366,7 +3366,7 @@
     {
         "itemIndex": 318,
         "internalName": "FUMBLE_PAK",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -3384,7 +3384,7 @@
     {
         "itemIndex": 319,
         "internalName": "XRAY_BULB",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -3401,7 +3401,7 @@
     {
         "itemIndex": 320,
         "internalName": "CHEWING_GUM",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -3418,7 +3418,7 @@
     {
         "itemIndex": 321,
         "internalName": "FLASH_DEVICE",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -3439,7 +3439,7 @@
     {
         "itemIndex": 322,
         "internalName": "BATTERIES",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -3455,7 +3455,7 @@
     {
         "itemIndex": 323,
         "internalName": "ELASTIC",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
@@ -3472,7 +3472,7 @@
     {
         "itemIndex": 324,
         "internalName": "XRAY_DEVICE",
-        "usItemClass": 0,
+        "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 17,
         "ubGraphicType": 1,
@@ -3492,7 +3492,7 @@
     {
         "itemIndex": 325,
         "internalName": "SILVER",
-        "usItemClass": 0,
+        "usItemClass": 536870912,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 2,
@@ -3509,7 +3509,7 @@
     {
         "itemIndex": 326,
         "internalName": "GOLD",
-        "usItemClass": 0,
+        "usItemClass": 536870912,
         "ubClassIndex": 0,
         "ubCursor": 0,
         "ubGraphicType": 1,
