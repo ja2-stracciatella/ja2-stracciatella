@@ -153,7 +153,7 @@ void ItemModel::serializeTo(JsonObject &obj) const
 {
     obj.AddMember("itemIndex", itemIndex);
     obj.AddMember("internalName", internalName);
-    obj.AddMember("usItemClass", (uint16_t)getItemClass());
+    obj.AddMember("usItemClass", (uint32_t)getItemClass());
     obj.AddMember("ubClassIndex", getClassIndex());
     obj.AddMember("ubCursor",  getCursor());
     obj.AddMember("ubGraphicType", getGraphicType());

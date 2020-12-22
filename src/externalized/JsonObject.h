@@ -16,6 +16,7 @@ public:
 	void AddMember(const char *name, int         value) { m_value.AddMember<int>(rapidjson::StringRef(name), value, m_alloc); }
 	void AddMember(const char *name, uint8_t     value) { m_value.AddMember<uint8_t>(rapidjson::StringRef(name), value, m_alloc); }
 	void AddMember(const char *name, uint16_t    value) { m_value.AddMember<uint16_t>(rapidjson::StringRef(name), value, m_alloc); }
+	void AddMember(const char *name, uint32_t    value) { m_value.AddMember<uint32_t>(rapidjson::StringRef(name), value, m_alloc); }
 	void AddMember(const char *name, bool        value) { m_value.AddMember<bool>(rapidjson::StringRef(name), value, m_alloc); }
 
 	void AddMember(const char *name, const ST::string &value)
