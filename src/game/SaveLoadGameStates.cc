@@ -91,7 +91,7 @@ static STORABLE_TYPE ReadFromJSON(const rapidjson::Value& v)
 		{
 			auto key = readVal(el.name);
 			auto val = readVal(el.value);
-			map.at(key) = val;
+			map[key] = val;
 		}
 		return map;
 	}
