@@ -20,9 +20,6 @@ enum class EventQueueID
 
 constexpr UINT32 EVENT_EXPIRED = 0x00000002;
 
-void InitializeEventManager(void);
-void ShutdownEventManager(void);
-
 void    AddEvent(GAMEEVENT const& gameEvent, UINT16 usDelay, EventQueueID);
 EVENT*  RemoveEvent(UINT32 uiIndex, EventQueueID);
 EVENT*  PeekEvent(UINT32 uiIndex, EventQueueID);

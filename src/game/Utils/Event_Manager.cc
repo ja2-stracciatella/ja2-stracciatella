@@ -11,19 +11,6 @@ static EventList hDelayEventQueue;
 static EventList hDemandEventQueue;
 
 
-void InitializeEventManager(void)
-{
-}
-
-
-void ShutdownEventManager(void)
-{
-	hEventQueue.clear();
-	hDelayEventQueue.clear();
-	hDemandEventQueue.clear();
-}
-
-
 static EventList& GetQueue(EventQueueID ubQueueID);
 
 
@@ -85,4 +72,6 @@ static EventList& GetQueue(EventQueueID const ubQueueID)
 		case EventQueueID::SECONDARY_EVENT_QUEUE: return hDelayEventQueue;
 		case EventQueueID::DEMAND_EVENT_QUEUE:    return hDemandEventQueue;
 	}
+	// Never reached, squelches GCC -Wreturn-type warning
+	return hEventQueue;
 }
