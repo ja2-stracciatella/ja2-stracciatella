@@ -1,6 +1,3 @@
-#include <stdexcept>
-
-#include "Event_Manager.h"
 #include "Timer_Control.h"
 #include "Event_Pump.h"
 #include "Soldier_Control.h"
@@ -9,6 +6,91 @@
 #include "OppList.h"
 #include "Debug.h"
 #include "Logger.h"
+
+#include <stdexcept>
+#include <vector>
+
+struct EVENT
+{
+	UINT32 TimeStamp;
+	UINT16 usDelay;
+	bool eventExpired;
+	GAMEEVENT gameEvent;
+};
+
+enum class EventQueueID
+{
+	PRIMARY_EVENT_QUEUE,
+	SECONDARY_EVENT_QUEUE,
+	DEMAND_EVENT_QUEUE
+};
+
+
+typedef std::vector<EVENT*>EventList;
+static EventList hEventQueue;
+static EventList hDelayEventQueue;
+static EventList hDemandEventQueue;
+
+
+static EventList& GetQueue(EventQueueID ubQueueID);
+
+
+static void AddEvent(GAMEEVENT const& gameEvent, UINT16 const usDelay, EventQueueID const ubQueueID)
+{
+	EVENT* pEvent = new EVENT{};
+	pEvent->TimeStamp  = GetJA2Clock();
+	pEvent->usDelay    = usDelay;
+	pEvent->eventExpired = false;
+	pEvent->gameEvent  = gameEvent;
+	GetQueue(ubQueueID).push_back(pEvent);
+}
+
+
+static EVENT* RemoveEvent(UINT32 uiIndex, EventQueueID ubQueueID)
+try
+{
+	EventList& queue = GetQueue(ubQueueID);
+	EVENT* ret = queue[uiIndex];
+	queue.erase(queue.begin() + uiIndex);
+	return ret;
+}
+catch (const std::exception&)
+{
+	return 0;
+}
+
+
+static EVENT* PeekEvent(UINT32 uiIndex, EventQueueID ubQueueID)
+{
+	return GetQueue(ubQueueID)[uiIndex];
+}
+
+
+static BOOLEAN FreeEvent(EVENT* pEvent)
+{
+	if (!pEvent) return FALSE;
+	delete pEvent;
+	return TRUE;
+}
+
+
+static UINT32 EventQueueSize(EventQueueID ubQueueID)
+{
+	return static_cast<UINT32>(GetQueue(ubQueueID).size());
+}
+
+
+static EventList& GetQueue(EventQueueID const ubQueueID)
+{
+	switch (ubQueueID)
+	{
+		case EventQueueID::PRIMARY_EVENT_QUEUE:   return hEventQueue;
+		case EventQueueID::SECONDARY_EVENT_QUEUE: return hDelayEventQueue;
+		case EventQueueID::DEMAND_EVENT_QUEUE:    return hDemandEventQueue;
+	}
+	// Never reached, squelches GCC -Wreturn-type warning
+	return hEventQueue;
+}
 
 
 void AddGameEvent(GAMEEVENT const& gameEvent, UINT16 usDelay)
@@ -60,7 +142,7 @@ BOOLEAN DequeAllGameEvents(void)
 		if (GetJA2Clock() - pEvent->TimeStamp > pEvent->usDelay)
 		{
 			ExecuteGameEvent(pEvent);
-			pEvent->uiFlags = EVENT_EXPIRED;
+			pEvent->eventExpired = true;
 		}
 	}
 
@@ -76,7 +158,7 @@ BOOLEAN DequeAllGameEvents(void)
 			}
 
 			// Check time
-			if (pEvent->uiFlags & EVENT_EXPIRED)
+			if (pEvent->eventExpired)
 			{
 				pEvent = RemoveEvent(cnt, EventQueueID::SECONDARY_EVENT_QUEUE);
 				FreeEvent(pEvent);

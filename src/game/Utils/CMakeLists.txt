@@ -6,7 +6,6 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/Cinematics.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Cursors.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Debug_Pages.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/Event_Manager.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Event_Pump.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Font_Control.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/MercTextBox.cc
