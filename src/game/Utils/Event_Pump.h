@@ -1,21 +1,13 @@
 #ifndef EVENT_PROCESSOR_H
 #define EVENT_PROCESSOR_H
 
-// Enumerate all events for JA2
-enum GameEvent
-{
-	S_SETDESIREDDIRECTION,
-	S_BEGINFIREWEAPON,
-	S_FIREWEAPON,
-	S_WEAPONHIT,
-	S_NOISE,
-	S_GETNEWPATH
-};
+#include "Types.h"
+#include <variant>
 
 // This definition is used to denote events with a special delay value;
 // it indicates that these events will not be processed until specifically
 // called for in a special loop.
-#define DEMAND_EVENT_DELAY 0xFFFF
+constexpr UINT16 DEMAND_EVENT_DELAY = 0xFFFF;
 
 
 struct EV_S_GETNEWPATH
@@ -78,8 +70,16 @@ struct EV_S_NOISE
 	UINT8 ubNoiseType;
 };
 
+using GAMEEVENT = std::variant<
+	EV_S_GETNEWPATH,
+	EV_S_SETDESIREDDIRECTION,
+	EV_S_BEGINFIREWEAPON,
+	EV_S_FIREWEAPON,
+	EV_S_WEAPONHIT,
+	EV_S_NOISE>;
 
-void    AddGameEvent(GameEvent, UINT16 usDelay, PTR pEventData);
+
+void    AddGameEvent(GAMEEVENT const&, UINT16 usDelay);
 BOOLEAN DequeAllGameEvents(void);
 BOOLEAN DequeueAllDemandGameEvents(void);
 

@@ -1,10 +1,8 @@
+#include "Event_Manager.h"
+#include "Timer_Control.h"
 #include <stdexcept>
 #include <vector>
 
-#include "WCheck.h"
-#include "Event_Manager.h"
-#include "Timer_Control.h"
-#include "MemMan.h"
 
 typedef std::vector<EVENT*>EventList;
 
@@ -29,17 +27,13 @@ void ShutdownEventManager(void)
 static EventList& GetQueue(EventQueueID ubQueueID);
 
 
-void AddEvent(UINT32 const uiEvent, UINT16 const usDelay, PTR const pEventData, UINT32 const uiDataSize, EventQueueID const ubQueueID)
+void AddEvent(GAMEEVENT const& gameEvent, UINT16 const usDelay, EventQueueID const ubQueueID)
 {
 	EVENT* pEvent = new EVENT{};
 	pEvent->TimeStamp  = GetJA2Clock();
 	pEvent->usDelay    = usDelay;
-	pEvent->uiEvent    = uiEvent;
 	pEvent->uiFlags    = 0;
-	UINT8* data = static_cast<UINT8*>(pEventData);
-	pEvent->Data.assign(data, data + uiDataSize);
-
-	// Add event to queue
+	pEvent->gameEvent  = gameEvent;
 	GetQueue(ubQueueID).push_back(pEvent);
 }
 
@@ -71,7 +65,7 @@ catch (const std::exception&)
 
 BOOLEAN FreeEvent(EVENT* pEvent)
 {
-	CHECKF(pEvent != NULL);
+	if (!pEvent) return FALSE;
 	delete pEvent;
 	return TRUE;
 }
@@ -79,7 +73,7 @@ BOOLEAN FreeEvent(EVENT* pEvent)
 
 UINT32 EventQueueSize(EventQueueID ubQueueID)
 {
-	return (UINT32)GetQueue(ubQueueID).size();
+	return static_cast<UINT32>(GetQueue(ubQueueID).size());
 }
 
 
@@ -87,10 +81,8 @@ static EventList& GetQueue(EventQueueID const ubQueueID)
 {
 	switch (ubQueueID)
 	{
-		case PRIMARY_EVENT_QUEUE:   return hEventQueue;
-		case SECONDARY_EVENT_QUEUE: return hDelayEventQueue;
-		case DEMAND_EVENT_QUEUE:    return hDemandEventQueue;
-
-		default: throw std::logic_error("Tried to get non-existent event queue");
+		case EventQueueID::PRIMARY_EVENT_QUEUE:   return hEventQueue;
+		case EventQueueID::SECONDARY_EVENT_QUEUE: return hDelayEventQueue;
+		case EventQueueID::DEMAND_EVENT_QUEUE:    return hDemandEventQueue;
 	}
 }

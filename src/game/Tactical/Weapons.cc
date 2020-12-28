@@ -1136,7 +1136,7 @@ static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 			SWeaponHit.sRange = 1;
 			SWeaponHit.ubAttackerID = pSoldier->ubID;
 			SWeaponHit.ubSpecial = FIRE_WEAPON_NO_SPECIAL;
-			AddGameEvent( S_WEAPONHIT, (UINT16) 20, &SWeaponHit );
+			AddGameEvent(SWeaponHit, 20);
 		}
 		else
 		{
@@ -1387,7 +1387,7 @@ void UseHandToHand(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo, BOOLE
 				SWeaponHit.sRange = 1;
 				SWeaponHit.ubAttackerID = pSoldier->ubID;
 				SWeaponHit.ubSpecial = FIRE_WEAPON_NO_SPECIAL;
-				AddGameEvent( S_WEAPONHIT, (UINT16) 20, &SWeaponHit );
+				AddGameEvent(SWeaponHit, 20);
 			}
 			else
 			{

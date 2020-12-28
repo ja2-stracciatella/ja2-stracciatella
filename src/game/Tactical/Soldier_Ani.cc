@@ -99,8 +99,6 @@ static BOOLEAN HandleUnjamAnimation(SOLDIERTYPE* pSoldier);
 
 BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 {
-	EV_S_FIREWEAPON SFireWeapon;
-
 	UINT16 sNewAniFrame, anAniFrame;
 	INT8 ubCurrentHeight;
 	UINT16 usOldAnimState;
@@ -327,12 +325,13 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 					// SHOOT GUN
 					// MAKE AN EVENT, BUT ONLY DO STUFF IF WE OWN THE GUY!
+					EV_S_FIREWEAPON SFireWeapon;
 					SFireWeapon.usSoldierID = pSoldier->ubID;
 					SFireWeapon.uiUniqueId = pSoldier->uiUniqueSoldierIdValue;
 					SFireWeapon.sTargetGridNo = pSoldier->sTargetGridNo;
 					SFireWeapon.bTargetLevel = pSoldier->bTargetLevel;
 					SFireWeapon.bTargetCubeLevel= pSoldier->bTargetCubeLevel;
-					AddGameEvent( S_FIREWEAPON, 0, &SFireWeapon );
+					AddGameEvent(SFireWeapon, 0);
 					break;
 
 				case 431:

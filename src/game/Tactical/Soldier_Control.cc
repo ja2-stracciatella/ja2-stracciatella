@@ -6503,8 +6503,7 @@ void SendSoldierSetDesiredDirectionEvent(const SOLDIERTYPE* pSoldier, UINT16 usD
 	SSetDesiredDirection.usDesiredDirection = usDesiredDirection;
 	SSetDesiredDirection.uiUniqueId = pSoldier -> uiUniqueSoldierIdValue;
 
-	AddGameEvent( S_SETDESIREDDIRECTION, 0, &SSetDesiredDirection );
-
+	AddGameEvent(SSetDesiredDirection, 0);
 }
 
 
@@ -6517,13 +6516,13 @@ void SendGetNewSoldierPathEvent(SOLDIERTYPE* const pSoldier, UINT16 const sDestG
 	SGetNewPath.usMovementAnim = pSoldier->usUIMovementMode;
 	SGetNewPath.uiUniqueId = pSoldier -> uiUniqueSoldierIdValue;
 
-	AddGameEvent( S_GETNEWPATH, 0, &SGetNewPath );
+	AddGameEvent(SGetNewPath, 0);
 }
 
 
 void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 {
-	EV_S_BEGINFIREWEAPON		SBeginFireWeapon;
+	EV_S_BEGINFIREWEAPON SBeginFireWeapon;
 
 	SBeginFireWeapon.usSoldierID = pSoldier->ubID;
 	SBeginFireWeapon.sTargetGridNo = sTargetGridNo;
@@ -6531,8 +6530,7 @@ void SendBeginFireWeaponEvent( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	SBeginFireWeapon.bTargetCubeLevel = pSoldier->bTargetCubeLevel;
 	SBeginFireWeapon.uiUniqueId = pSoldier -> uiUniqueSoldierIdValue;
 
-	AddGameEvent( S_BEGINFIREWEAPON, 0, &SBeginFireWeapon );
-
+	AddGameEvent(SBeginFireWeapon, 0);
 }
 
 // This function just encapolates the check for turnbased and having an attacker in the first place
