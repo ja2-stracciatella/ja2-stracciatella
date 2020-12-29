@@ -206,88 +206,68 @@ static SOLDIERTYPE* GetSoldier(const UINT16 soldier_idx)
 }
 
 
-// Copied from https://stackoverflow.com/posts/52303671/revisions
-// Author: Barry
-template<typename VariantType, typename T, std::size_t index = 0>
-    constexpr std::size_t variant_index() {
-        if constexpr (index == std::variant_size_v<VariantType>) {
-            return index;
-        } else if constexpr (std::is_same_v<std::variant_alternative_t<index, VariantType>, T>) {
-            return index;
-		} else {
-			return variant_index<VariantType, T, index + 1>();
-	    }
-	}
-
+// Source: https://en.cppreference.com/w/cpp/utility/variant/visit
+template<class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
+// explicit deduction guide (not needed as of C++20)
+template<class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 static void ExecuteGameEvent(EVENT* pEvent)
 {
 	// Switch on event type
-	switch (pEvent->gameEvent.index())
-	{
-		case variant_index<GAMEEVENT, EV_S_GETNEWPATH>():
+	std::visit(overloaded{
+		[](EV_S_GETNEWPATH const& SGetNewPath)
 		{
-			auto const& SGetNewPath = std::get<EV_S_GETNEWPATH>(pEvent->gameEvent);
-
 			SOLDIERTYPE* pSoldier = GetSoldier(SGetNewPath.usSoldierID);
 			if (pSoldier == NULL)
 			{
 				// Handle Error?
 				SLOGE("Invalid Soldier ID");
-				break;
+				return;
 			}
 
 			// check for error
 			if (pSoldier->uiUniqueSoldierIdValue != SGetNewPath.uiUniqueId)
 			{
-				break;
+				return;
 			}
 			// Call soldier function
 			SLOGD("GetNewPath");
 			EVENT_GetNewSoldierPath(pSoldier, SGetNewPath.sDestGridNo, SGetNewPath.usMovementAnim);
-			break;
-		}
-
-		case variant_index<GAMEEVENT, EV_S_SETDESIREDDIRECTION>():
+		},
+		[](EV_S_SETDESIREDDIRECTION const& SSetDesiredDirection)
 		{
-			auto const& SSetDesiredDirection = std::get<EV_S_SETDESIREDDIRECTION>(pEvent->gameEvent);
-
 			SOLDIERTYPE* pSoldier = GetSoldier(SSetDesiredDirection.usSoldierID);
 			if (pSoldier == NULL)
 			{
 				// Handle Error?
 				SLOGE("Invalid Soldier ID");
-				break;
+				return;
 			}
 
 			// check for error
 			if (pSoldier-> uiUniqueSoldierIdValue != SSetDesiredDirection.uiUniqueId)
 			{
-				break;
+				return;
 			}
 
 			// Call soldier function
 			SLOGD("SetDesiredDirection: Dir( %d )", SSetDesiredDirection.usDesiredDirection);
 			EVENT_SetSoldierDesiredDirection(pSoldier, SSetDesiredDirection.usDesiredDirection);
-			break;
-		}
-
-		case variant_index<GAMEEVENT, EV_S_BEGINFIREWEAPON>():
+		},
+		[](EV_S_BEGINFIREWEAPON const& SBeginFireWeapon)
 		{
-			auto const& SBeginFireWeapon = std::get<EV_S_BEGINFIREWEAPON>(pEvent->gameEvent);
-
 			SOLDIERTYPE* pSoldier = GetSoldier(SBeginFireWeapon.usSoldierID);
 			if (pSoldier == NULL)
 			{
 				// Handle Error?
 				SLOGE("Invalid Soldier ID");
-				break;
+				return;
 			}
 
 			// check for error
 			if (pSoldier->uiUniqueSoldierIdValue != SBeginFireWeapon.uiUniqueId)
 			{
-				break;
+				return;
 			}
 
 			// Call soldier function
@@ -296,27 +276,22 @@ static void ExecuteGameEvent(EVENT* pEvent)
 			pSoldier->bTargetLevel     = SBeginFireWeapon.bTargetLevel;
 			pSoldier->bTargetCubeLevel = SBeginFireWeapon.bTargetCubeLevel;
 			EVENT_FireSoldierWeapon(pSoldier, SBeginFireWeapon.sTargetGridNo);
-			break;
-		}
-
-		case variant_index<GAMEEVENT, EV_S_FIREWEAPON>():
+		},
+		[](EV_S_FIREWEAPON const& SFireWeapon)
 		{
-			auto const& SFireWeapon = std::get<EV_S_FIREWEAPON>(pEvent->gameEvent);
-
 			SOLDIERTYPE* pSoldier = GetSoldier(SFireWeapon.usSoldierID);
 			if (pSoldier == NULL)
 			{
 				// Handle Error?
 				SLOGE("Invalid Soldier ID");
-				break;
+				return;
 			}
 
 			// check for error
 			if (pSoldier->uiUniqueSoldierIdValue != SFireWeapon.uiUniqueId)
 			{
-				break;
+				return;
 			}
-
 
 			// Call soldier function
 			SLOGD("FireWeapon");
@@ -324,27 +299,21 @@ static void ExecuteGameEvent(EVENT* pEvent)
 			pSoldier->bTargetLevel     = SFireWeapon.bTargetLevel;
 			pSoldier->bTargetCubeLevel = SFireWeapon.bTargetCubeLevel;
 			FireWeapon(pSoldier, SFireWeapon.sTargetGridNo);
-			break;
-		}
 
-		case variant_index<GAMEEVENT, EV_S_WEAPONHIT>():
+		},
+		[](EV_S_WEAPONHIT const& SWeaponHit)
 		{
-			auto const& SWeaponHit = std::get<EV_S_WEAPONHIT>(pEvent->gameEvent);
 			SLOGD("WeaponHit %d Damage", SWeaponHit.sDamage);
 			WeaponHit(&GetMan(SWeaponHit.usSoldierID), SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, &GetMan(SWeaponHit.ubAttackerID), SWeaponHit.ubSpecial, SWeaponHit.ubLocation);
-			break;
-		}
-
-		case variant_index<GAMEEVENT, EV_S_NOISE>():
+		},
+		[](EV_S_NOISE const& SNoise)
 		{
-			auto const& SNoise = std::get<EV_S_NOISE>(pEvent->gameEvent);
 			SLOGD("Noise from %d at %d/%d, type %d volume %d",
 						SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel,
 						SNoise.ubNoiseType, SNoise.ubVolume);
 			OurNoise(ID2SOLDIER(SNoise.ubNoiseMaker), SNoise.sGridNo, SNoise.bLevel, SNoise.ubVolume, static_cast<NoiseKind>(SNoise.ubNoiseType));
-			break;
 		}
-	}
+	}, pEvent->gameEvent);
 }
 
 
