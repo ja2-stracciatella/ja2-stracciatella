@@ -196,7 +196,7 @@ static SMKFLIC* SmkOpenFlic(const char* const filename)
 
 	try
 	{
-		if (!sf) throw new std::runtime_error("no free slots");
+		if (!sf) throw std::runtime_error("no free slots");
 
 		Assert(sf->file_in_memory == nullptr);
 		Assert(sf->smacker == nullptr);
@@ -204,13 +204,13 @@ static SMKFLIC* SmkOpenFlic(const char* const filename)
 		// read file to memory
 		AutoSGPFile file(GCM->openGameResForReading(filename));
 		unsigned long bytes = FileGetSize(file);
-		if (bytes == 0) throw new std::runtime_error("empty file");
+		if (bytes == 0) throw std::runtime_error("empty file");
 		sf->file_in_memory = new unsigned char[bytes]{};
 		FileRead(file, sf->file_in_memory, bytes);
 
 		// open with smacker
 		sf->smacker = smk_open_memory(sf->file_in_memory, bytes);
-		if (sf->smacker == nullptr) throw new std::runtime_error("smk_open_memory failed");
+		if (sf->smacker == nullptr) throw std::runtime_error("smk_open_memory failed");
 		sf->flags |= SMK_FLIC_OPEN;
 		return sf;
 	}
