@@ -1,4 +1,3 @@
-#include "Event_Manager.h"
 #include "HImage.h"
 #include "Init.h"
 #include "Local.h"
@@ -86,9 +85,6 @@ try
 
 	// INit intensity tables
 	BuildIntensityTable( );
-
-	// Init Event Manager
-	InitializeEventManager();
 
 	// Initailize World
 	InitializeWorld();
@@ -183,8 +179,6 @@ void ShutdownJA2(void)
 	ShutdownFonts();
 
 	ShutdownJA2Sound( );
-
-	ShutdownEventManager( );
 
 	ClearOutVehicleList();
 }
