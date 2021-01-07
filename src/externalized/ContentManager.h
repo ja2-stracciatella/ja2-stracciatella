@@ -37,6 +37,7 @@ class PatrolGroupModel;
 class SamSiteModel;
 class SamSiteAirControlModel;
 class ShippingDestinationModel;
+class StrategicAIPolicy;
 class StrategicMapSecretModel;
 class TownModel;
 class UndergroundSectorModel;
@@ -144,6 +145,7 @@ public:
 
 	virtual const GamePolicy* getGamePolicy() const = 0;
 	virtual const IMPPolicy* getIMPPolicy() const = 0;
+	virtual const StrategicAIPolicy* getStrategicAIPolicy() const = 0;
 
 	virtual const std::vector<const BloodCatPlacementsModel*> & getBloodCatPlacements() const = 0;
 	virtual const std::vector<const BloodCatSpawnsModel*> & getBloodCatSpawns() const = 0;

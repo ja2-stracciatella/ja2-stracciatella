@@ -37,6 +37,7 @@
 #include "Debug.h"
 #include "FileMan.h"
 #include "Logger.h"
+#include "StrategicAIPolicy.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -92,65 +93,6 @@ then the weight will be positive, meaning they are requesting reinforcements.
 The weight generated will range between -100 and +100.  The calculated weight is modified by the priority
 of the group.  If the priority of the group is high, they
 */
-
-//Modifies the number of troops the queen has at the beginning of the game on top
-//of all of the garrison and patrol groups.  Additionally, there are a total of
-//16 sectors that are LEVEL 1, 2, or 3 garrison groups.  The lower the level, the more
-//troops stay in that sector, and the rest will also be used as a secondary pool when
-//the primary pool runs dry.  So basically, this number is only part of the equation.
-#define EASY_QUEENS_POOL_OF_TROOPS		150
-#define NORMAL_QUEENS_POOL_OF_TROOPS		200
-#define HARD_QUEENS_POOL_OF_TROOPS		400
-
-//Modifies the starting values as well as the desired values for all of the garrisons.
-#define EASY_INITIAL_GARRISON_PERCENTAGES	70
-#define NORMAL_INITIAL_GARRISON_PERCENTAGES	100
-#define HARD_INITIAL_GARRISON_PERCENTAGES	125
-
-#define EASY_MIN_ENEMY_GROUP_SIZE		3
-#define NORMAL_MIN_ENEMY_GROUP_SIZE		4
-#define HARD_MIN_ENEMY_GROUP_SIZE		6
-
-//Sets the starting alert chances.  Everytime an enemy arrives in a new sector, or the player,
-//this is the chance the enemy will detect the player in adjacent sectors.  This chance is associated
-//with each side checked.  Stationary groups do this check periodically.
-#define EASY_ENEMY_STARTING_ALERT_LEVEL		5
-#define NORMAL_ENEMY_STARTING_ALERT_LEVEL	20
-#define HARD_ENEMY_STARTING_ALERT_LEVEL		60
-
-//When an enemy spots and chases a player group, the alertness value decrements by this value.  The
-//higher the value, the less of a chance the enemy will spot and attack subsequent groups.  This
-//minimizes the aggressiveness of the enemy.  Ranges from 1-100 (but recommend 20-60).
-#define EASY_ENEMY_STARTING_ALERT_DECAY		75
-#define NORMAL_ENEMY_STARTING_ALERT_DECAY	50
-#define HARD_ENEMY_STARTING_ALERT_DECAY		25
-//The base time that the queen can think about reinforcements for refilling lost patrol groups,
-//town garrisons, etc. She only is allowed one action per 'turn'.
-#define EASY_TIME_EVALUATE_IN_MINUTES		480
-#define NORMAL_TIME_EVALUATE_IN_MINUTES		360
-#define HARD_TIME_EVALUATE_IN_MINUTES		180
-//The variance added on.
-#define EASY_TIME_EVALUATE_VARIANCE		240
-#define NORMAL_TIME_EVALUATE_VARIANCE		180
-#define HARD_TIME_EVALUATE_VARIANCE		120
-
-//When a player takes control of a sector, don't allow any enemy reinforcements to enter the sector for a
-//limited amount of time.  This essentially dumbs down the AI, making it less aggressive.
-#define EASY_GRACE_PERIOD_IN_HOURS		144 // 6 days
-#define NORMAL_GRACE_PERIOD_IN_HOURS		96 // 4 days
-#define HARD_GRACE_PERIOD_IN_HOURS		48 // 2 days
-
-//Defines how many days must pass before the queen is willing to refill a defeated patrol group.
-#define EASY_PATROL_GRACE_PERIOD_IN_DAYS	16
-#define NORMAL_PATROL_GRACE_PERIOD_IN_DAYS	12
-#define HARD_PATROL_GRACE_PERIOD_IN_DAYS	8
-
-//Certain conditions can cause the queen to go into a "full alert" mode.  This means that temporarily, the queen's
-//forces will automatically succeed adjacent checks until x number of enemy initiated battles occur.  The same variable
-//is what is used to determine the free checks.
-#define EASY_NUM_AWARE_BATTLES			1
-#define NORMAL_NUM_AWARE_BATTLES		2
-#define HARD_NUM_AWARE_BATTLES			3
 
 BOOLEAN gfAutoAIAware = FALSE;
 
@@ -396,41 +338,15 @@ void InitStrategicAI()
 	// 475 is 7:55am in minutes since midnight, the time the game starts on day 1
 	UINT32      evaluate_time = 475;
 	UINT8 const difficulty    = gGameOptions.ubDifficultyLevel;
-	switch (difficulty)
-	{
-		case DIF_LEVEL_EASY:
-			giReinforcementPool		= EASY_QUEENS_POOL_OF_TROOPS;
-			giForcePercentage			= EASY_INITIAL_GARRISON_PERCENTAGES;
-			giArmyAlertness				= EASY_ENEMY_STARTING_ALERT_LEVEL;
-			giArmyAlertnessDecay	= EASY_ENEMY_STARTING_ALERT_DECAY;
-			gubMinEnemyGroupSize	= EASY_MIN_ENEMY_GROUP_SIZE;
-			gubHoursGracePeriod   = EASY_GRACE_PERIOD_IN_HOURS;
-			evaluate_time += EASY_TIME_EVALUATE_IN_MINUTES + Random(EASY_TIME_EVALUATE_VARIANCE);
-			break;
 
-		case DIF_LEVEL_MEDIUM:
-			giReinforcementPool		= NORMAL_QUEENS_POOL_OF_TROOPS;
-			giForcePercentage			= NORMAL_INITIAL_GARRISON_PERCENTAGES;
-			giArmyAlertness				= NORMAL_ENEMY_STARTING_ALERT_LEVEL;
-			giArmyAlertnessDecay	= NORMAL_ENEMY_STARTING_ALERT_DECAY;
-			gubMinEnemyGroupSize	= NORMAL_MIN_ENEMY_GROUP_SIZE;
-			gubHoursGracePeriod   = NORMAL_GRACE_PERIOD_IN_HOURS;
-			evaluate_time += NORMAL_TIME_EVALUATE_IN_MINUTES + Random(NORMAL_TIME_EVALUATE_VARIANCE);
-			break;
-
-		case DIF_LEVEL_HARD:
-			giReinforcementPool		= HARD_QUEENS_POOL_OF_TROOPS;
-			giForcePercentage			= HARD_INITIAL_GARRISON_PERCENTAGES;
-			giArmyAlertness				= HARD_ENEMY_STARTING_ALERT_LEVEL;
-			giArmyAlertnessDecay	= HARD_ENEMY_STARTING_ALERT_DECAY;
-			gubMinEnemyGroupSize	= HARD_MIN_ENEMY_GROUP_SIZE;
-			gubHoursGracePeriod   = HARD_GRACE_PERIOD_IN_HOURS;
-			evaluate_time += HARD_TIME_EVALUATE_IN_MINUTES + Random(HARD_TIME_EVALUATE_VARIANCE);
-			break;
-
-		default:
-			throw std::logic_error("invalid difficulty level");
-	}
+	giReinforcementPool   = saipolicy(queens_pool_of_troops);
+	giForcePercentage     = saipolicy(initial_garrison_percentages);
+	giArmyAlertness       = saipolicy(enemy_starting_alert_level);
+	giArmyAlertnessDecay  = saipolicy(enemy_starting_alert_decay);
+	gubMinEnemyGroupSize  = saipolicy(min_enemy_group_size);
+	gubHoursGracePeriod   = saipolicy(grace_period_in_hours);
+	evaluate_time        += saipolicy(time_evaluate_in_minutes) + Random(saipolicy(time_evaluate_variance));
+	
 	AddStrategicEvent(EVENT_EVALUATE_QUEEN_SITUATION, evaluate_time, 0);
 
 	//Initialize the sectorinfo structure so all sectors don't point to a garrisonID.
@@ -2102,18 +2018,7 @@ void EvaluateQueenSituation()
 	// This can increase the decision intervals by up to 500 extra minutes (> 8 hrs)
 	uiOffset = MAX( 100 - giRequestPoints, 0);
 	uiOffset = uiOffset + Random( uiOffset * 4 );
-	switch( gGameOptions.ubDifficultyLevel )
-	{
-		case DIF_LEVEL_EASY:
-			uiOffset += EASY_TIME_EVALUATE_IN_MINUTES + Random( EASY_TIME_EVALUATE_VARIANCE );
-			break;
-		case DIF_LEVEL_MEDIUM:
-			uiOffset += NORMAL_TIME_EVALUATE_IN_MINUTES + Random( NORMAL_TIME_EVALUATE_VARIANCE );
-			break;
-		case DIF_LEVEL_HARD:
-			uiOffset += HARD_TIME_EVALUATE_IN_MINUTES + Random( HARD_TIME_EVALUATE_VARIANCE );
-			break;
-	}
+	uiOffset += saipolicy(time_evaluate_in_minutes) + Random(saipolicy(time_evaluate_variance));
 
 	if( !giReinforcementPool )
 	{ //Queen has run out of reinforcements.  Simulate recruiting and training new troops
@@ -3023,18 +2928,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			break;
 		case NPC_ACTION_GIVE_KNOWLEDGE_OF_ALL_MERCS:
 			//temporarily make the queen's forces more aware (high alert)
-			switch( gGameOptions.ubDifficultyLevel )
-			{
-				case DIF_LEVEL_EASY:
-					gubNumAwareBattles = EASY_NUM_AWARE_BATTLES;
-					break;
-				case DIF_LEVEL_MEDIUM:
-					gubNumAwareBattles = NORMAL_NUM_AWARE_BATTLES;
-					break;
-				case DIF_LEVEL_HARD:
-					gubNumAwareBattles = HARD_NUM_AWARE_BATTLES;
-					break;
-			}
+			gubNumAwareBattles = saipolicy(num_aware_battles);
 			break;
 		default:
 			SLOGD("QueenAI failed to handle action code %d.", usActionCode );
@@ -3780,14 +3674,7 @@ static void TagSAIGroupWithGracePeriod(GROUP const& g)
 	size_t const patrol_id = FindPatrolGroupIndexForGroupID(g.ubGroupID);
 	if (patrol_id == (size_t)-1) return;
 
-	UINT32 grace_period;
-	switch (gGameOptions.ubDifficultyLevel)
-	{
-		case DIF_LEVEL_EASY:   grace_period = EASY_PATROL_GRACE_PERIOD_IN_DAYS;   break;
-		case DIF_LEVEL_MEDIUM: grace_period = NORMAL_PATROL_GRACE_PERIOD_IN_DAYS; break;
-		case DIF_LEVEL_HARD:   grace_period = HARD_PATROL_GRACE_PERIOD_IN_DAYS;   break;
-		default:               return;
-	}
+	UINT32 grace_period = saipolicy(patrol_grace_period_in_days);
 	gPatrolGroup[patrol_id].bFillPermittedAfterDayMod100 = (GetWorldDay() + grace_period) % 100;
 }
 

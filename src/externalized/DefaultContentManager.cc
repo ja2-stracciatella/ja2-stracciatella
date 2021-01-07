@@ -36,6 +36,7 @@
 #include "mercs/RPCSmallFaceModel.h"
 #include "policy/DefaultGamePolicy.h"
 #include "policy/DefaultIMPPolicy.h"
+#include "policy/DefaultStrategicAIPolicy.h"
 #include "strategic/BloodCatPlacementsModel.h"
 #include "strategic/BloodCatSpawnsModel.h"
 #include "strategic/CreatureLairModel.h"
@@ -198,6 +199,7 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_bobbyRayUsedInventory = NULL;
 	m_impPolicy = NULL;
 	m_gamePolicy = NULL;
+	m_strategicAIPolicy = NULL;
 
 	m_cacheSectors = NULL;
 	m_movementCosts = NULL;
@@ -275,6 +277,7 @@ DefaultContentManager::~DefaultContentManager()
 
 	delete m_impPolicy;
 	delete m_gamePolicy;
+	delete m_strategicAIPolicy;
 	delete m_loadingScreenModel;
 
 	deleteElements(m_newStrings);
@@ -1002,6 +1005,9 @@ bool DefaultContentManager::loadGameData()
 	auto imp_json = readJsonDataFile("imp.json");
 	m_impPolicy = new DefaultIMPPolicy(imp_json.get(), this);
 
+	auto sai_json = readJsonDataFile("strategic-ai-policy.json");
+	m_strategicAIPolicy = new DefaultStrategicAIPolicy(sai_json.get());
+
 	loadStringRes("strings/shipping-destinations", m_shippingDestinationNames);
 
 	auto shippingDestJson = readJsonDataFile("shipping-destinations.json");
@@ -1121,6 +1127,11 @@ const IMPPolicy* DefaultContentManager::getIMPPolicy() const
 const GamePolicy* DefaultContentManager::getGamePolicy() const
 {
 	return m_gamePolicy;
+}
+
+const StrategicAIPolicy* DefaultContentManager::getStrategicAIPolicy() const
+{
+	return m_strategicAIPolicy;
 }
 
 const ST::string* DefaultContentManager::getNewString(size_t stringId) const
