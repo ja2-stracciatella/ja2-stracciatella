@@ -147,6 +147,7 @@ public:
 
 	virtual const GamePolicy* getGamePolicy() const override;
 	virtual const IMPPolicy* getIMPPolicy() const override;
+	virtual const StrategicAIPolicy* getStrategicAIPolicy() const override;
 
 	virtual const ST::string* getNewString(size_t stringId) const override;
 	virtual const ST::string& getLandTypeString(size_t index) const override;
@@ -232,6 +233,7 @@ protected:
 
 	const IMPPolicy *m_impPolicy;
 	const GamePolicy *m_gamePolicy;
+	const StrategicAIPolicy *m_strategicAIPolicy;
 
 	const CacheSectorsModel* m_cacheSectors;
 	const LoadingScreenModel* m_loadingScreenModel;

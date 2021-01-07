@@ -1,0 +1,94 @@
+/**
+ * Game policies governing Strategic AI behaviour.
+ *
+ * Most of the settings here are set at the start of a  campaign. Changes will only take 
+ * effect in a new game.
+ */
+{
+    //  Modifies the number of troops the queen has at the beginning of the game on top of
+    //  all of the garrison and patrol groups.  Additionally, there are a total of 16 sectors
+    //  that are LEVEL 1, 2, or 3 garrison groups.  The lower the level, the more troops stay
+    //  in that sector, and the rest will also be used as a secondary pool when the primary
+    //  pool runs dry.  So basically, this number is only part of the equation.
+    //
+    //  vanilla values: 150, 200, 400
+    "queens_pool_of_troops_easy": 150,
+    "queens_pool_of_troops_medium": 200,
+    "queens_pool_of_troops_hard": 400,
+
+    //  Modifies the starting values as well as the desired values for all of the garrisons.
+    //
+    //  vanilla values: 70, 100, 125
+    "initial_garrison_percentages_easy": 70,
+    "initial_garrison_percentages_medium": 100,
+    "initial_garrison_percentages_hard": 125,
+
+    //  vanilla values: 3, 4, 6
+    "min_enemy_group_size_easy": 3,
+    "min_enemy_group_size_medium": 4,
+    "min_enemy_group_size_hard": 6,
+
+    //  Sets the starting alert chances.  Every time an enemy arrives in a new sector, or the 
+    //  player, this is the chance the enemy will detect the player in adjacent sectors. This
+    //  chance is associated with each side checked.  Stationary groups do this check 
+    //  periodically.
+    //
+    //  vanilla values: 5, 20, 60
+    "enemy_starting_alert_level_easy": 5,
+    "enemy_starting_alert_level_medium": 20,
+    "enemy_starting_alert_level_hard": 60,
+
+    //  When an enemy spots and chases a player group, the alertness value decrements by this
+    //  value.  The higher the value, the less of a chance the enemy will spot and attack
+    //  subsequent groups.  This minimizes the aggressiveness of the enemy.
+    //
+    //  Ranges from 1 - 100 (but recommend 20-60).
+    //
+    //  vanilla values: 75, 50, 25
+    "enemy_starting_alert_decay_easy": 75,
+    "enemy_starting_alert_decay_medium": 50,
+    "enemy_starting_alert_decay_hard": 25,
+    
+    //  The base time that the queen can think about reinforcements for refilling lost patrol
+    //  groups, town garrisons, etc. She only is allowed one action per 'turn'.
+    //
+    //  vanilla values: 480, 360, 180
+    "time_evaluate_in_minutes_easy": 480,
+    "time_evaluate_in_minutes_medium": 360,
+    "time_evaluate_in_minutes_hard": 180,
+
+
+    //  The variance added on time_evaluate_in_minutes.
+    //
+    //  vanilla values: 240, 180, 120
+    "time_evaluate_variance_easy": 240,
+    "time_evaluate_variance_medium": 180,
+    "time_evaluate_variance_hard": 120,
+
+    //  When a player takes control of a sector, don't allow any enemy reinforcements to enter
+    //  the sector for a limited amount of time.  This essentially dumbs down the AI, making
+    //  it less aggressive.
+    //
+    //  vanilla values: 144, 96, 48
+    "grace_period_in_hours_easy": 144,  // 6 days
+    "grace_period_in_hours_medium": 96, // 4 days
+    "grace_period_in_hours_hard": 48,   // 2 days
+
+    //  Defines how many days must pass before the queen is willing to refill a defeated patrol
+    //  group.
+    //
+    //  vanilla values: 16, 12, 8
+    "patrol_grace_period_in_days_easy": 16,
+    "patrol_grace_period_in_days_medium": 12,
+    "patrol_grace_period_in_days_hard": 8,
+
+    //  Certain conditions can cause the queen to go into a "full alert" mode.  This means that
+    //  temporarily, the queen's forces will automatically succeed adjacent checks until x number
+    //  of enemy initiated battles occur.  The same variable is what is used to determine the
+    //  free checks.
+    //
+    //  vanilla values: 1, 2, 3
+    "num_aware_battles_easy": 1,
+    "num_aware_battles_medium": 2,
+    "num_aware_battles_hard": 3
+}
