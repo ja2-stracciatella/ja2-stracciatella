@@ -1,7 +1,8 @@
 #ifndef __STRATEGIC_AI_H
 #define __STRATEGIC_AI_H
 
-#include "Strategic_Movement.h"
+#include "Types.h"
+struct GROUP;
 
 #define SAVED_ARMY_COMPOSITIONS		60
 #define SAVED_GARRISON_GROUPS		100
