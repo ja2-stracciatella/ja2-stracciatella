@@ -102,7 +102,7 @@ void DebugSoldierPage2(void);
 void DebugSoldierPage3(void);
 void DebugSoldierPage4(void);
 
-UINT8 MovementNoise( SOLDIERTYPE *pSoldier );
+UINT8 MovementNoise( SOLDIERTYPE const *pSoldier );
 UINT8 DoorOpeningNoise( SOLDIERTYPE *pSoldier );
 void MakeNoise(SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, NoiseKind);
 void OurNoise(SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, NoiseKind);
