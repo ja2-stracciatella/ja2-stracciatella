@@ -50,6 +50,7 @@ static void AddEvent(GAMEEVENT const& gameEvent, UINT16 const usDelay, EventQueu
 static EVENT* PopFrontEvent(EventQueueID ubQueueID)
 {
 	EventList& queue = GetQueue(ubQueueID);
+	Assert(!queue.empty());
 	EVENT* const ret = queue.front();
 	queue.erase(queue.begin());
 	return ret;
