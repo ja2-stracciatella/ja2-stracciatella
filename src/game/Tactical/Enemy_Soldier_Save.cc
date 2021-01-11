@@ -35,9 +35,7 @@ static void RemoveTempFile(INT16 const x, INT16 const y, INT8 const z, SectorFla
 
 	// Delete any temp file that is here and toast the flag that says one exists.
 	ReSetSectorFlag(x, y, z, file_flag);
-	char filename[128];
-	GetMapTempFileName(file_flag, filename, x, y, z);
-	FileDelete(filename);
+	FileDelete(GetMapTempFileName(file_flag, x, y, z));
 }
 
 
@@ -51,9 +49,7 @@ void LoadEnemySoldiersFromTempFile()
 	INT8  const z = gbWorldSectorZ;
 
 	// STEP ONE: Set up the temp file to read from.
-	char map_name[128];
-	GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(GCM->openGameResForReading(map_name));
+	AutoSGPFile f(GCM->openGameResForReading(GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z)));
 
 	// STEP TWO: Determine whether or not we should use this data.  Because it
 	// is the demo, it is automatically used.
@@ -319,9 +315,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	ubNumCreatures = 0;
 
 	// STEP ONE:  Set up the temp file to read from.
-	char map_name[128];
-	GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(GCM->openGameResForReading(map_name));
+	AutoSGPFile f(GCM->openGameResForReading(GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z)));
 
 	// STEP TWO:  Determine whether or not we should use this data.  Because it
 	// is the demo, it is automatically used.
@@ -505,9 +499,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	INT8  const z = gbWorldSectorZ;
 
 	// STEP ONE: Set up the temp file to read from.
-	char map_name[128];
-	GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(GCM->openGameResForReading(map_name));
+	AutoSGPFile f(GCM->openGameResForReading(GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z)));
 
 	// STEP TWO:  Determine whether or not we should use this data.  Because it
 	// is the demo, it is automatically used.
@@ -788,9 +780,7 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 
 	// STEP TWO:  Set up the temp file to write to.
 
-	char map_name[128];
-	GetMapTempFileName(file_flag, map_name, sSectorX, sSectorY, bSectorZ);
-	AutoSGPFile f(FileMan::openForWriting(map_name));
+	AutoSGPFile f(FileMan::openForWriting(GetMapTempFileName(file_flag, sSectorX, sSectorY, bSectorZ)));
 
 	FileWrite(f, &sSectorY, 2);
 
@@ -862,9 +852,7 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 	INT8  const z = gbWorldSectorZ;
 
 	// STEP ONE: Set up the temp file to read from.
-	char map_name[128];
-	GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(GCM->openGameResForReading(map_name));
+	AutoSGPFile f(GCM->openGameResForReading(GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z)));
 
 	// STEP TWO: Determine whether or not we should use this data.  Because it
 	// is the demo, it is automatically used.

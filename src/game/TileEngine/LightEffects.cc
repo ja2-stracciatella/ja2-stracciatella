@@ -198,10 +198,9 @@ void LoadLightEffectsFromLoadGameFile(HWFILE const hFile)
 void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	UINT32	uiNumLightEffects=0;
-	CHAR8		zMapName[ 128 ];
 
 	//get the name of the map
-	GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
+	ST::string const zMapName = GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
 
 	//delete file the file.
 	FileDelete( zMapName );
@@ -238,9 +237,8 @@ void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 void LoadLightEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	UINT32	uiCnt=0;
-	CHAR8		zMapName[ 128 ];
 
-	GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, zMapName, sMapX, sMapY, bMapZ );
+	ST::string const zMapName = GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
 
 	AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
 

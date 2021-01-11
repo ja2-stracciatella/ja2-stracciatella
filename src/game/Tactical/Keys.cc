@@ -784,9 +784,7 @@ void UpdateDoorPerceivedValue( DOOR *pDoor )
 
 void SaveDoorTableToDoorTableTempFile(INT16 const x, INT16 const y, INT8 const z)
 {
-	char map_name[128];
-	GetMapTempFileName(SF_DOOR_TABLE_TEMP_FILES_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileMan::openForWriting(map_name));
+	AutoSGPFile f(FileMan::openForWriting(GetMapTempFileName(SF_DOOR_TABLE_TEMP_FILES_EXISTS, x, y, z)));
 	Assert(DoorTable.size() <= UINT8_MAX);
 	UINT8 numDoors = static_cast<UINT8>(DoorTable.size());
 	FileWriteArray(f, numDoors, DoorTable.data());
@@ -797,11 +795,7 @@ void SaveDoorTableToDoorTableTempFile(INT16 const x, INT16 const y, INT8 const z
 
 void LoadDoorTableFromDoorTableTempFile()
 {
-	CHAR8 zMapName[ 128 ];
-
-	//return( TRUE );
-
-	GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, zMapName, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	ST::string const zMapName = GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
 	if (!GCM->doesGameResExists(zMapName)) return;
@@ -1157,9 +1151,7 @@ void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const x, INT16 const y, INT8 
 	// Turn off any door busy flags
 	FOR_EACH_DOOR_STATUS(d) d.ubFlags &= ~DOOR_BUSY;
 
-	char map_name[128];
-	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, x, y, z);
-	AutoSGPFile f(FileMan::openForWriting(map_name));
+	AutoSGPFile f(FileMan::openForWriting(GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, x, y, z)));
 	Assert(gpDoorStatus.size() <= UINT8_MAX);
 	UINT8 numDoorStatus = static_cast<UINT8>(gpDoorStatus.size());
 	FileWriteArray(f, numDoorStatus, gpDoorStatus.data());
@@ -1173,9 +1165,7 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 {
 	TrashDoorStatusArray();
 
-	char map_name[128];
-	GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, map_name, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
-	AutoSGPFile f(GCM->openGameResForReading(map_name));
+	AutoSGPFile f(GCM->openGameResForReading(GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ)));
 
 	// Load the number of elements in the door status array
 	UINT8 numDoorStatus = 0;
