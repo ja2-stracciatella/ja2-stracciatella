@@ -79,11 +79,11 @@ using GAMEEVENT = std::variant<
 	EV_S_NOISE>;
 
 
-void    AddGameEvent(GAMEEVENT const&, UINT16 usDelay);
-BOOLEAN DequeAllGameEvents(void);
-BOOLEAN DequeueAllDemandGameEvents(void);
+void AddGameEvent(GAMEEVENT const&, UINT16 usDelay);
+void DequeAllGameEvents(void);
+void DequeueAllDemandGameEvents(void);
 
 // clean out the event queue
-BOOLEAN ClearEventQueue(void);
+void ClearEventQueue(void);
 
 #endif

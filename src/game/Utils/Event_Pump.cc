@@ -45,32 +45,15 @@ static void AddEvent(GAMEEVENT const& gameEvent, UINT16 const usDelay, EventQueu
 	GetQueue(ubQueueID).push_back(pEvent);
 }
 
-
-static EVENT* RemoveEvent(UINT32 uiIndex, EventQueueID ubQueueID)
-try
+// Remove the first element from a queue and return it.
+// Calling this function on an empty queue is undefined behavior, don't do it.
+static EVENT* PopFrontEvent(EventQueueID ubQueueID)
 {
 	EventList& queue = GetQueue(ubQueueID);
-	EVENT* ret = queue[uiIndex];
-	queue.erase(queue.begin() + uiIndex);
+	Assert(!queue.empty());
+	EVENT* const ret = queue.front();
+	queue.erase(queue.begin());
 	return ret;
-}
-catch (const std::exception&)
-{
-	return 0;
-}
-
-
-static EVENT* PeekEvent(UINT32 uiIndex, EventQueueID ubQueueID)
-{
-	return GetQueue(ubQueueID)[uiIndex];
-}
-
-
-static BOOLEAN FreeEvent(EVENT* pEvent)
-{
-	if (!pEvent) return FALSE;
-	delete pEvent;
-	return TRUE;
 }
 
 
@@ -107,16 +90,12 @@ void AddGameEvent(GAMEEVENT const& gameEvent, UINT16 usDelay)
 
 static void ExecuteGameEvent(EVENT* pEvent);
 
-BOOLEAN DequeAllGameEvents(void)
+void DequeAllGameEvents(void)
 {
-	UINT32  uiQueueSize;
-	UINT32  cnt;
-
 	// First dequeue all primary events
 	while (EventQueueSize(EventQueueID::PRIMARY_EVENT_QUEUE) > 0)
 	{
-		EVENT* pEvent = RemoveEvent(0, EventQueueID::PRIMARY_EVENT_QUEUE);
-		if (pEvent == NULL) return FALSE;
+		EVENT* pEvent = PopFrontEvent(EventQueueID::PRIMARY_EVENT_QUEUE);
 
 		// Check if event has a delay and add to secondary queue if so
 		if (pEvent->usDelay > 0)
@@ -128,16 +107,13 @@ BOOLEAN DequeAllGameEvents(void)
 			ExecuteGameEvent(pEvent);
 		}
 
-		FreeEvent(pEvent);
+		delete pEvent;
 	}
 
 	// NOW CHECK SECONDARY QUEUE FOR ANY EXPRIED EVENTS
-	uiQueueSize = EventQueueSize(EventQueueID::SECONDARY_EVENT_QUEUE);
-	for (cnt = 0; cnt < uiQueueSize; cnt++)
+	EventList& queue = GetQueue(EventQueueID::SECONDARY_EVENT_QUEUE);
+	for (EVENT* const pEvent : queue)
 	{
-		EVENT* pEvent = PeekEvent(cnt, EventQueueID::SECONDARY_EVENT_QUEUE);
-		if (pEvent == NULL) return FALSE;
-
 		// Check time
 		if (GetJA2Clock() - pEvent->TimeStamp > pEvent->usDelay)
 		{
@@ -146,40 +122,24 @@ BOOLEAN DequeAllGameEvents(void)
 		}
 	}
 
-	do
-	{
-		uiQueueSize = EventQueueSize(EventQueueID::SECONDARY_EVENT_QUEUE);
-		for (cnt = 0; cnt < uiQueueSize; cnt++)
+	// Remove and free all expired events from the secondary queue.
+	queue.erase(std::remove_if(queue.begin(), queue.end(),
+		[](EVENT* const ep)
 		{
-			EVENT* pEvent = PeekEvent(cnt, EventQueueID::SECONDARY_EVENT_QUEUE);
-			if (pEvent == NULL)
-			{
-				return FALSE;
-			}
-
-			// Check time
-			if (pEvent->eventExpired)
-			{
-				pEvent = RemoveEvent(cnt, EventQueueID::SECONDARY_EVENT_QUEUE);
-				FreeEvent(pEvent);
-				// Restart loop
-				break;
-			}
-		}
-	} while (cnt != uiQueueSize);
-
-	return TRUE;
+			if (!ep->eventExpired) return false;
+			delete ep;
+			return true;
+		}), queue.end());
 }
 
 
-BOOLEAN DequeueAllDemandGameEvents(void)
+void DequeueAllDemandGameEvents(void)
 {
 	// Dequeue all events on the demand queue (only)
 
 	while (EventQueueSize(EventQueueID::DEMAND_EVENT_QUEUE) > 0)
 	{
-		EVENT* pEvent = RemoveEvent(0, EventQueueID::DEMAND_EVENT_QUEUE);
-		if (pEvent == NULL) return FALSE;
+		EVENT* pEvent = PopFrontEvent(EventQueueID::DEMAND_EVENT_QUEUE);
 
 		// Check if event has a delay and add to secondary queue if so
 		if (pEvent->usDelay > 0)
@@ -191,10 +151,8 @@ BOOLEAN DequeueAllDemandGameEvents(void)
 			ExecuteGameEvent(pEvent);
 		}
 
-		FreeEvent(pEvent);
+		delete pEvent;
 	}
-
-	return TRUE;
 }
 
 
@@ -317,15 +275,10 @@ static void ExecuteGameEvent(EVENT* pEvent)
 }
 
 
-BOOLEAN ClearEventQueue(void)
+void ClearEventQueue(void)
 {
 	// clear out the event queue
-	while (EventQueueSize(EventQueueID::PRIMARY_EVENT_QUEUE) > 0)
-	{
-		EVENT* Event = RemoveEvent(0, EventQueueID::PRIMARY_EVENT_QUEUE);
-		if (Event == NULL) return FALSE;
-		FreeEvent(Event);
-	}
-
-	return TRUE;
+	EventList& queue = GetQueue(EventQueueID::PRIMARY_EVENT_QUEUE);
+	for (EVENT *pEvent : queue) delete pEvent;
+	queue.clear();
 }

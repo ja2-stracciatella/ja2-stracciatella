@@ -3272,20 +3272,16 @@ void DebugSoldierPage4()
 // Noise stuff
 //
 
-#define MAX_MOVEMENT_NOISE			9
-
-UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
+UINT8 MovementNoise(SOLDIERTYPE const * const pSoldier)
 {
-	INT32 iStealthSkill, iRoll;
-	UINT8 ubMaxVolume, ubVolume, ubBandaged, ubEffLife;
-	INT8  bInWater = Water( pSoldier->sGridNo );
+	constexpr UINT8 MAX_MOVEMENT_NOISE = 9;
 
 	if ( pSoldier->bTeam == ENEMY_TEAM )
 	{
 		return( (UINT8) (MAX_MOVEMENT_NOISE - PreRandom( 2 )) );
 	}
 
-	iStealthSkill = 20 + 4 * EffectiveExpLevel( pSoldier ) + ((EffectiveDexterity( pSoldier ) * 4) / 10); // 24-100
+	INT32 iStealthSkill = 20 + 4 * EffectiveExpLevel( pSoldier ) + ((EffectiveDexterity( pSoldier ) * 4) / 10); // 24-100
 
 	// big bonus for those "extra stealthy" mercs
 	if ( pSoldier->ubBodyType == BLOODCAT )
@@ -3297,8 +3293,8 @@ UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 		iStealthSkill += 25 * NUM_SKILL_TRAITS(pSoldier, STEALTHY);
 	}
 
-	ubBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
-	ubEffLife = pSoldier->bLife + (ubBandaged / 2);
+	UINT8 const ubBandaged = pSoldier->bLifeMax - pSoldier->bLife - pSoldier->bBleeding;
+	UINT8 const ubEffLife = pSoldier->bLife + (ubBandaged / 2);
 
 	// IF "SNEAKER'S" "EFFECTIVE LIFE" IS AT LESS THAN 50
 	if (ubEffLife < 50)
@@ -3315,45 +3311,37 @@ UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 	}
 
 	// if sneaker is moving through water
-	if ( bInWater )
+	// DeepWater() must be checked first because Water() matches all types of water
+	if (DeepWater(pSoldier->sGridNo))
 	{
-		iStealthSkill -= 10; // 10% penalty
+		iStealthSkill -= 20;
 	}
-	else if (DeepWater( pSoldier->sGridNo ) )
+	else if (Water(pSoldier->sGridNo))
 	{
-		iStealthSkill -= 20; // 20% penalty
-	}
-
-	if ( pSoldier->bDrugEffect[ DRUG_TYPE_ADRENALINE ] )
-	{
-		// minus 3 percent per bonus AP from adrenaline
-		iStealthSkill -= 3 * pSoldier->bDrugEffect[ DRUG_TYPE_ADRENALINE ];
+		iStealthSkill -= 10;
 	}
 
-	/*
-	// if sneaker is too eager and impatient to "do it right"
-	if ((pSoldier->bTrait == OVER_ENTHUS) || (pSoldier->bAttitude == AGGRESSIVE))
-	{
-		ubStealthSkill -= 10;	// 10% penalty
-	}*/
+	// minus 3 percent per bonus AP from adrenaline
+	iStealthSkill -= 3 * pSoldier->bDrugEffect[ DRUG_TYPE_ADRENALINE ];
 
-	iStealthSkill = __max( iStealthSkill, 0 );
+	iStealthSkill = std::max(iStealthSkill, 0);
 
+	UINT8 ubVolume;
 	if (!pSoldier->bStealthMode)	// REGULAR movement
 	{
-		ubMaxVolume = MAX_MOVEMENT_NOISE - (iStealthSkill / 16); // 9 - (0 to 6) => 3 to 9
+		UINT8 ubMaxVolume = MAX_MOVEMENT_NOISE - (iStealthSkill / 16); // 9 - (0 to 9) => 0 to 9
 
-		if (bInWater)
+		if (Water(pSoldier->sGridNo))
 		{
 			ubMaxVolume++; // in water, can be even louder
 		}
 		switch (pSoldier->usAnimState)
 		{
 			case CRAWLING:
-				ubMaxVolume -= 2;
+				ubMaxVolume = ubMaxVolume <= 2 ? 0 : ubMaxVolume - 2;
 				break;
 			case SWATTING:
-				ubMaxVolume -= 1;
+				ubMaxVolume = ubMaxVolume <= 1 ? 0 : ubMaxVolume - 1;
 				break;
 			case RUNNING:
 				ubMaxVolume += 3;
@@ -3371,7 +3359,7 @@ UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 	}
 	else // in STEALTH mode
 	{
-		iRoll = (INT32) PreRandom(100);	// roll them bones!
+		INT32 iRoll = (INT32) PreRandom(100);	// roll them bones!
 
 		if (iRoll >= iStealthSkill)   // v1.13 modification: give a second chance!
 		{
@@ -3388,7 +3376,7 @@ UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 			switch (pSoldier->usAnimState)
 			{
 				case CRAWLING:
-					ubVolume -= 2;
+					ubVolume = ubVolume <= 2 ? 0 : ubVolume - 2;
 					break;
 				case SWATTING:
 					ubVolume -= 1;
@@ -3396,10 +3384,6 @@ UINT8 MovementNoise(SOLDIERTYPE* pSoldier) // XXX TODO000B
 				case RUNNING:
 					ubVolume += 3;
 					break;
-			}
-			if (ubVolume < 1)
-			{
-				ubVolume = 0;
 			}
 		}
 	}
