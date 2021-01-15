@@ -89,7 +89,7 @@ extern BOOLEAN gfDisableTacticalPanelButtons;
 
 
 //Used when the shop keeper interface is active
-void DisableSMPpanelButtonsWhenInShopKeeperInterface(void);
+void ShopKeeperInterface_SetSMpanelButtonsState(bool enabled);
 
 void ReEvaluateDisabledINVPanelButtons(void);
 

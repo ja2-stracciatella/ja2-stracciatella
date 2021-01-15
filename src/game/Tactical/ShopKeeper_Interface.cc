@@ -479,7 +479,7 @@ ScreenID ShopKeeperScreenHandle()
 	}
 
 	// render buttons marked dirty
-	DisableSMPpanelButtonsWhenInShopKeeperInterface();
+	ShopKeeperInterface_SetSMpanelButtonsState(false);
 	RenderButtons( );
 
 	// render help
@@ -846,6 +846,7 @@ static void ExitShopKeeperInterface(void)
 	gRadarRegion.Enable();
 
 	gfSMDisableForItems = FALSE;
+	ShopKeeperInterface_SetSMpanelButtonsState(true);
 }
 
 static void DisplayArmsDealerCurrentInventoryPage(void);
@@ -867,7 +868,7 @@ static void HandleShopKeeperInterface(void)
 	//if we are in the item desc panel, disable the buttons
 	if( InItemDescriptionBox( ) && pShopKeeperItemDescObject != NULL )
 	{
-		DisableSMPpanelButtonsWhenInShopKeeperInterface();
+		ShopKeeperInterface_SetSMpanelButtonsState(false);
 		DisableButton( guiSKI_InvPageUpButton );
 		DisableButton( guiSKI_InvPageDownButton );
 		DisableButton( guiSKI_TransactionButton );
