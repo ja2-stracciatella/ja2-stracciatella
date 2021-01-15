@@ -1023,12 +1023,12 @@ BOOLEAN CanDealerRepairItem(ArmsDealerID const ubArmsDealer, UINT16 const usItem
 		if (dealer->hasFlag(ArmsDealerFlag::REPAIRS_ELECTRONICS))
 		{
 			// repairs ONLY electronics
-			return (uiFlags & ITEM_ELECTRONIC);
+			return (uiFlags & ITEM_ELECTRONIC) > 0;
 		}
 		else
 		{
 			// repairs ANYTHING non-electronic
-			return !(uiFlags & ITEM_ELECTRONIC);
+			return (uiFlags & ITEM_ELECTRONIC) == 0;
 		}
 	}
 	else
