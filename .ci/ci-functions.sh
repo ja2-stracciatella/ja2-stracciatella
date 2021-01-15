@@ -47,7 +47,7 @@ macOS-install-via-brew () {
 }
 
 macOS-install-via-brew-cask () {
-    brew cask install google-cloud-sdk
+    brew install --cask google-cloud-sdk
 }
 
 windows-install-via-chocolatey () {
