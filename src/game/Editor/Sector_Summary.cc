@@ -47,7 +47,6 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
-#include <algorithm>
 #include <vector>
 
 #define DEVINFO_DIR "../DevInfo"
@@ -594,7 +593,6 @@ static void RenderItemDetails(void)
 	OBJECTTYPE *pItem;
 	INT32 index, i;
 	UINT32 uiQuantity, uiExistChance, uiStatus;
-	UINT32 uiTriggerQuantity[8], uiActionQuantity[8], uiTriggerExistChance[8], uiActionExistChance[8];
 	UINT32 xp, yp;
 	INT8 bFreqIndex;
 	SetFontAttributes(FONT10ARIAL, FONT_GRAY2);
@@ -605,10 +603,10 @@ static void RenderItemDetails(void)
 	xp = 5;
 	if (gubSummaryItemMode != ITEMMODE_ENEMY)
 	{
-		std::fill_n(uiTriggerQuantity, 32, 0);
-		std::fill_n(uiActionQuantity, 32, 0);
-		std::fill_n(uiTriggerExistChance, 32, 0);
-		std::fill_n(uiActionExistChance, 32, 0);
+		UINT32 uiTriggerQuantity[8] {};
+		UINT32 uiActionQuantity[8] {};
+		UINT32 uiTriggerExistChance[8] {};
+		UINT32 uiActionExistChance[8] {};
 		for( index = 1; index < MAXITEMS; index++ )
 		{
 			uiQuantity = 0;
