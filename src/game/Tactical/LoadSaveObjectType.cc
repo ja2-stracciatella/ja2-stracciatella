@@ -7,6 +7,16 @@
 #include "ItemModel.h"
 
 
+static void ReplaceInvalidItem(UINT16 & usItem)
+{
+	const ItemModel* item = GCM->getItem(usItem);
+	if (!item)
+	{
+		STLOGW("Item (index {}) is not defined and will be ignored. Maybe the file was saved for a different game version", usItem);
+		usItem = NONE;
+	}
+}
+
 void ExtractObject(DataReader& d, OBJECTTYPE* const o)
 {
 	size_t start = d.getConsumed();
@@ -14,13 +24,8 @@ void ExtractObject(DataReader& d, OBJECTTYPE* const o)
 	EXTR_U8(d, o->ubNumberOfObjects)
 	EXTR_SKIP(d, 1)
 
+	ReplaceInvalidItem(o->usItem);
 	const ItemModel* item = GCM->getItem(o->usItem);
-	if (!item)
-	{
-		STLOGW("Item (index {}) is not defined and will be ignored. Maybe the file was saved for a different game version", o->usItem);
-		item = GCM->getItem(NONE);
-	}
-
 	switch (item->getItemClass())
 	{
 		case IC_AMMO:
@@ -106,6 +111,12 @@ extract_status:
 	EXTR_U8(d, o->fUsed)
 	EXTR_SKIP(d, 2)
 	Assert(d.getConsumed() == start + 36);
+
+	// Check and remove invalid items in attachment slots
+	for (UINT16 & i : o->usAttachItem)
+	{
+		ReplaceInvalidItem(i);
+	}
 }
 
 
