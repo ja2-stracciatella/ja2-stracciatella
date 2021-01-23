@@ -3566,38 +3566,38 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 }
 
 
-void DisableSMPpanelButtonsWhenInShopKeeperInterface(void)
+void ShopKeeperInterface_SetSMpanelButtonsState(bool const enabled)
 {
 	//Go through the buttons that will be under the ShopKeepers ATM panel and disable them
-	DisableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
-	DisableButton( iSMPanelButtons[ UPDOWN_BUTTON ] );
-	DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
-	DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
-	DisableButton( iSMPanelButtons[ HANDCURSOR_BUTTON ] );
-	DisableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
-	DisableButton( iSMPanelButtons[ LOOK_BUTTON ] );
-	DisableButton( iSMPanelButtons[ TALK_BUTTON ] );
-	DisableButton( iSMPanelButtons[ MUTE_BUTTON ] );
+	EnableButton( iSMPanelButtons[ STANCEUP_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ UPDOWN_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ CLIMB_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ HANDCURSOR_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ BURSTMODE_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ LOOK_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ TALK_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ MUTE_BUTTON ], enabled );
 
-	DisableButton( giSMStealthButton );
+	EnableButton( giSMStealthButton, enabled );
 
 	//Make sure the options button is disabled
-	DisableButton( iSMPanelButtons[ OPTIONS_BUTTON ] );
+	EnableButton( iSMPanelButtons[ OPTIONS_BUTTON ], enabled );
 
 	//Make sure the mapscreen button is disabled
-	DisableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ] );
+	EnableButton( iSMPanelButtons[ SM_MAP_SCREEN_BUTTON ], enabled );
 
-	DisableButton( iSMPanelButtons[ STANCEUP_BUTTON ] );
-	DisableButton( iSMPanelButtons[ UPDOWN_BUTTON ] );
-	DisableButton( iSMPanelButtons[ CLIMB_BUTTON ] );
-	DisableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ] );
-	DisableButton( iSMPanelButtons[ HANDCURSOR_BUTTON ] );
-	DisableButton( iSMPanelButtons[ BURSTMODE_BUTTON ] );
-	DisableButton( iSMPanelButtons[ LOOK_BUTTON ] );
-	DisableButton( iSMPanelButtons[ TALK_BUTTON ] );
-	DisableButton( iSMPanelButtons[ MUTE_BUTTON ] );
+	EnableButton( iSMPanelButtons[ STANCEUP_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ UPDOWN_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ CLIMB_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ STANCEDOWN_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ HANDCURSOR_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ BURSTMODE_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ LOOK_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ TALK_BUTTON ], enabled );
+	EnableButton( iSMPanelButtons[ MUTE_BUTTON ], enabled );
 
-	DisableButton( giSMStealthButton );
+	EnableButton( giSMStealthButton, enabled );
 }
 
 
