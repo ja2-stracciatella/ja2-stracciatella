@@ -1874,7 +1874,6 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			{
 				SLOGD("Entering Level Node Debug Mode");
 				*new_event = I_LEVELNODEDEBUG;
-				CountLevelNodes();
 			}
 			break;
 

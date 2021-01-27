@@ -24,23 +24,8 @@
 
 #include <string_theory/format>
 #include <string_theory/string>
-
+#include <numeric>
 #include <stdexcept>
-
-
-static UINT32 guiLNCount[9];
-static const ST::string gzLevelString[] =
-{
-	"",
-	"Land",
-	"Object",
-	"Struct",
-	"Shadow",
-	"Merc",
-	"Roof",
-	"Onroof",
-	"Topmost",
-};
 
 
 // LEVEL NODE MANIPLULATION FUNCTIONS
@@ -57,13 +42,8 @@ static LEVELNODE* CreateLevelNode(void)
 }
 
 
-void CountLevelNodes(void)
+static void CountLevelNodes(int (&guiLNCount)[9])
 {
-	for (UINT32 uiLoop2 = 0; uiLoop2 < 9; uiLoop2++)
-	{
-		guiLNCount[uiLoop2] = 0;
-	}
-
 	FOR_EACH_WORLD_TILE(pME)
 	{
 		// start at 1 to skip land head ptr; 0 stores total
@@ -72,22 +52,36 @@ void CountLevelNodes(void)
 			for (const LEVELNODE* pLN = pME->pLevelNodes[uiLoop2]; pLN != NULL; pLN = pLN->pNext)
 			{
 				guiLNCount[uiLoop2]++;
-				guiLNCount[0]++;
 			}
 		}
 	}
+	guiLNCount[0] = std::accumulate(guiLNCount + 1, guiLNCount + 9, 0);
 }
 
 
 void DebugLevelNodePage(void)
 {
+	int guiLNCount[9] {};
+	const ST::string levelString[]
+	{
+		ST_LITERAL("Land"),
+		ST_LITERAL("Object"),
+		ST_LITERAL("Struct"),
+		ST_LITERAL("Shadow"),
+		ST_LITERAL("Merc"),
+		ST_LITERAL("Roof"),
+		ST_LITERAL("Onroof"),
+		ST_LITERAL("Topmost")
+	};
+
 	MPageHeader("DEBUG LEVELNODES PAGE 1 OF 1");
 	INT32 y = DEBUG_PAGE_START_Y;
 	INT32 h = DEBUG_PAGE_LINE_HEIGHT;
+	CountLevelNodes(guiLNCount);
 
 	for (UINT32 uiLoop = 1; uiLoop < 9; uiLoop++)
 	{
-		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, gzLevelString[uiLoop], guiLNCount[uiLoop]);
+		MPrintStat(DEBUG_PAGE_FIRST_COLUMN, y += h, levelString[uiLoop - 1], guiLNCount[uiLoop]);
 	}
 	MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, ST::format("{} land nodes in excess of world max (25600)", guiLNCount[1] - WORLD_MAX));
 	MPrint(DEBUG_PAGE_FIRST_COLUMN, y += h, ST::format("Total # levelnodes {}, {} bytes each", guiLNCount[0], sizeof(LEVELNODE)));

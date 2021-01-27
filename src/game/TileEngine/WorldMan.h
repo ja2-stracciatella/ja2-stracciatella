@@ -8,12 +8,6 @@
 #include <exception>
 #include <vector>
 
-struct SOLDIERTYPE;
-struct STRUCTURE;
-
-// memory-accounting function
-void CountLevelNodes( void );
-
 
 class FailedToAddNode : public std::exception
 {
