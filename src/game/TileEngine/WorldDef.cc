@@ -204,7 +204,7 @@ void DeinitializeWorld( )
 }
 
 
-static void AddTileSurface(const ST::string filename, UINT32 const tileType);
+static void AddTileSurface(ST::string const& filename, UINT32 const tileType);
 
 TileSetID GetDefaultTileset() {
 	return (gubNumTilesets == JA25_NUM_TILESETS) // If we have the number of tilesets for JA25 useJA25 default, else vanilla default
@@ -212,28 +212,28 @@ TileSetID GetDefaultTileset() {
 		: GENERIC_1;
 }
 
-TILE_SURFACE_RESOURCE GetAdjustedTilesetResource(TileSetID tilesetID, UINT32 uiTileType, const ST::string filePrefix)
+TILE_SURFACE_RESOURCE GetAdjustedTilesetResource(TileSetID tilesetID, UINT32 uiTileType, ST::string const& filePrefix)
 {
 	if (tilesetID >= gubNumTilesets) throw std::logic_error("invalid tilesetID");
 
-	ST::string  filename = gTilesets[tilesetID].zTileSurfaceFilenames[uiTileType];
-	if (filename.empty())
+	ST::string *filename = &gTilesets[tilesetID].zTileSurfaceFilenames[uiTileType];
+	if (filename->empty())
 	{
 		// Try loading from default tileset
 		tilesetID = (gubNumTilesets == JA25_NUM_TILESETS && uiTileType == SPECIALTILES)
 			? DEFAULT_JA25_TILESET     // If the map is SPECIALTILES (and JA25 tilesets available), use DEFAULT_JA25_TILESET
 			: GetDefaultTileset()      // Else use default
 		;
-		filename = gTilesets[tilesetID].zTileSurfaceFilenames[uiTileType];
+		filename = &gTilesets[tilesetID].zTileSurfaceFilenames[uiTileType];
 	}
 
 	TILE_SURFACE_RESOURCE res;
 	res.tilesetID = tilesetID;
-	res.resourceFileName = GCM->getTilesetResourceName(tilesetID, filePrefix + filename);
+	res.resourceFileName = GCM->getTilesetResourceName(tilesetID, filePrefix + *filename);
 	return res;
 }
 
-static void LoadTileSurfaces(const ST::string tile_surface_filenames[NUMBEROFTILETYPES], TileSetID const tileset_id)
+static void LoadTileSurfaces(TileSetID const tileset_id)
 try
 {
 	SetRelativeStartAndEndPercentage(0, 1, 35, "Tile Surfaces");
@@ -261,7 +261,7 @@ catch (...)
 }
 
 
-static void AddTileSurface(const ST::string filename, UINT32 const type)
+static void AddTileSurface(ST::string const& filename, UINT32 const type)
 {
 	TILE_IMAGERY*& slot = gTileSurfaceArray[type];
 
@@ -411,9 +411,6 @@ static void CompileTileMovementCosts(UINT16 usGridNo)
 	{
 		return;
 	}
-
-/*
-*/
 
 	if ( GridNoOnVisibleWorldTile( usGridNo ) )
 	{
@@ -2650,7 +2647,7 @@ void LoadMapTileset(TileSetID const id)
 	if (id == giCurrentTilesetID) return;
 
 	TILESET const& t = gTilesets[id];
-	LoadTileSurfaces(t.zTileSurfaceFilenames, id);
+	LoadTileSurfaces(id);
 
 	// Set terrain costs
 	if (t.MovementCostFnc)

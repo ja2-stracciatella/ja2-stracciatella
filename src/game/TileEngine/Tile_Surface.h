@@ -8,10 +8,10 @@ struct TILE_IMAGERY;
 extern TILE_IMAGERY* gTileSurfaceArray[NUMBEROFTILETYPES];
 
 
-TILE_IMAGERY* LoadTileSurface(const ST::string cFilename);
+TILE_IMAGERY* LoadTileSurface(ST::string const& cFilename);
 
 void DeleteTileSurface(TILE_IMAGERY* pTileSurf);
 
-void SetRaisedObjectFlag(const ST::string filename, TILE_IMAGERY*);
+void SetRaisedObjectFlag(ST::string const& filename, TILE_IMAGERY*);
 
 #endif
