@@ -20,7 +20,7 @@
 TILE_IMAGERY				*gTileSurfaceArray[ NUMBEROFTILETYPES ];
 
 
-TILE_IMAGERY* LoadTileSurface(ST::string cFilename)
+TILE_IMAGERY* LoadTileSurface(ST::string const& cFilename)
 try
 {
 	// Add tile surface
@@ -97,27 +97,27 @@ void DeleteTileSurface(TILE_IMAGERY* const pTileSurf)
 }
 
 
-void SetRaisedObjectFlag(const ST::string filename, TILE_IMAGERY* const t)
+void SetRaisedObjectFlag(ST::string const& filename, TILE_IMAGERY* const t)
 {
-	static std::array<const ST::string, 11> raisedObjectFiles = {
-		"bones",
-		"bones2",
-		"grass2",
-		"grass3",
-		"l_weed3",
-		"litter",
-		"miniweed",
-		"sblast",
-		"sweeds",
-		"twigs",
-		"wing"
+	static std::array<const ST::string, 11> const raisedObjectFiles = {
+		ST_LITERAL("bones"),
+		ST_LITERAL("bones2"),
+		ST_LITERAL("grass2"),
+		ST_LITERAL("grass3"),
+		ST_LITERAL("l_weed3"),
+		ST_LITERAL("litter"),
+		ST_LITERAL("miniweed"),
+		ST_LITERAL("sblast"),
+		ST_LITERAL("sweeds"),
+		ST_LITERAL("twigs"),
+		ST_LITERAL("wing")
 	};
 
 	if (DEBRISWOOD != t->fType && t->fType != DEBRISWEEDS && t->fType != DEBRIS2MISC && t->fType != ANOTHERDEBRIS) return;
 
 	// Loop through array of RAISED objecttype imagery and set global value
-	ST::string rootfile = FileMan::getFileNameWithoutExt(filename);
-	for (ST::string i : raisedObjectFiles)
+	ST::string const rootfile = FileMan::getFileNameWithoutExt(filename);
+	for (ST::string const& i : raisedObjectFiles)
 	{
 		if (i.compare_i(rootfile) == 0)
 		{
