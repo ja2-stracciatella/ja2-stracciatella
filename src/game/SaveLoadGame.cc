@@ -701,13 +701,13 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	SetProgressBarColor(0, 0, 0, 150);
 
 	UINT32 uiRelStartPerc = 0;
-	UINT32 uiRelEndPerc   = 0;
 
-#define BAR(delta, text)                                                     \
-	(uiRelEndPerc += (delta),                                                  \
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, (text)), \
-	RenderProgressBar(0, 100),                                                 \
-	uiRelStartPerc = uiRelEndPerc)                                             \
+	auto const BAR = [&](UINT32 const delta, char const* const text)
+	{
+		SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelStartPerc + delta, text);
+		RenderProgressBar(0, 100);
+		uiRelStartPerc += delta;
+	};
 
 	BAR(1, "Strategic Events...");
 	LoadStrategicEventsFromSavedGame(f);
@@ -1021,8 +1021,6 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	BAR(1, "Final Checks...");
 
-#undef BAR
-
 	PreloadExternalNPCFaces();
 	LoadCarPortraitValues();
 
@@ -1099,8 +1097,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	gfLoadedGame = TRUE;
 
-	uiRelEndPerc = 100;
-	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, uiRelEndPerc, "Done!");
+	SetRelativeStartAndEndPercentage(0, uiRelStartPerc, 100, "Done!");
 	RenderProgressBar(0, 100);
 
 	RemoveLoadingScreenProgressBar();
