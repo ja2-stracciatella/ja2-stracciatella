@@ -6,9 +6,8 @@
 #include "World_Items.h"
 #include "WorldDef.h"
 #include "Rotting_Corpses.h"
-
 #include "Soldier_Profile_Type.h"
-
+#include <string_theory/string>
 #include <vector>
 
 
@@ -86,7 +85,7 @@ void InitExitGameDialogBecauseFileHackDetected(void);
 
 void HandleAllReachAbleItemsInTheSector(INT16 x, INT16 y, INT8 z);
 
-void GetMapTempFileName(SectorFlags uiType, char* pMapName, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+ST::string GetMapTempFileName(SectorFlags uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
 UINT32	GetNumberOfVisibleWorldItemsFromSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
