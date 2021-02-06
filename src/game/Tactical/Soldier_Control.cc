@@ -90,6 +90,7 @@
 #include "WeaponModels.h"
 #include "Logger.h"
 #include "MercProfile.h"
+#include "enums.h"
 
 #include <string_theory/string>
 
@@ -7386,17 +7387,34 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 		return;
 	}
 
+	// Whether or not we are about to throw an object
+	bool fIsThrowing = (pSoldier->pTempObject != NULL);
+
+	// Below are the animations for attacks which do not involve an object.
+	// We use fTurningToShoot and pTempObject to check for other attacks.
+	bool fIsAttacking = pSoldier->usPendingAnimation == THROW_KNIFE ||
+			 pSoldier->usPendingAnimation == SLICE ||
+			 pSoldier->usPendingAnimation == STAB ||
+			 pSoldier->usPendingAnimation == CROUCH_STAB ||
+			 pSoldier->usPendingAnimation == PUNCH ||
+			 pSoldier->usPendingAnimation == PUNCH_LOW ||
+			 pSoldier->usPendingAnimation == CROWBAR_ATTACK;
+
 	// OK, check if we were going to throw something, and give it back if so!
-	if ( pSoldier->pTempObject != NULL && fFromSightingEnemy )
+	if (fIsThrowing && fFromSightingEnemy)
 	{
 		// Place it back into inv....
 		AutoPlaceObject( pSoldier, pSoldier->pTempObject, FALSE );
 		delete pSoldier->pTempObject;
 		pSoldier->pTempObject        = NULL;
 		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+	}
 
+	// Here, we need to handle the situation when we're in the middle of an attack animation we see somebody
+	if ((fIsThrowing && fFromSightingEnemy) || fIsAttacking)
+	{
 		// Decrement attack counter...
-		SLOGD("Reducing attacker busy count..., ending throw because saw something");
+		STLOGD("Reducing attacker busy count..., ending attack ({}) because saw something", Internals::getAnimationName(pSoldier->usPendingAnimation));
 		ReduceAttackBusyCount(pSoldier, FALSE);
 
 		// ATE: Goto stationary stance......
@@ -7451,7 +7469,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	}
 
 	// Unset UI!
-	if ( fFromSightingEnemy || ( pSoldier->pTempObject == NULL && !pSoldier->fTurningToShoot ) )
+	if ( fFromSightingEnemy || ( fIsThrowing && !pSoldier->fTurningToShoot ) )
 	{
 		UnSetUIBusy(pSoldier);
 	}
