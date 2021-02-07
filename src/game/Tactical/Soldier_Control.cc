@@ -1,100 +1,93 @@
-#include "Directories.h"
-#include "Font_Control.h"
-#include "HImage.h"
-#include "Handle_Items.h"
-#include "MapScreen.h"
-#include "Overhead.h"
-#include "Soldier_Find.h"
-#include "Structure.h"
-#include "TileDef.h"
-#include "Timer_Control.h"
-#include "VObject.h"
-#include "WCheck.h"
-#include "Render_Fun.h"
-#include "Debug.h"
-#include "MemMan.h"
-#include "Overhead_Types.h"
 #include "Soldier_Control.h"
-#include "Animation_Cache.h"
-#include "Animation_Data.h"
-#include "Animation_Control.h"
-#include <math.h>
-#include "PathAI.h"
-#include "Random.h"
-#include "WorldMan.h"
-#include "Isometric_Utils.h"
-#include "Render_Dirty.h"
-#include "RenderWorld.h"
-#include "Points.h"
-#include "Sound_Control.h"
-#include "Weapons.h"
-#include "Handle_UI.h"
-#include "Soldier_Ani.h"
-#include "Event_Pump.h"
-#include "OppList.h"
 #include "AI.h"
-#include "Interface.h"
-#include "Lighting.h"
-#include "Faces.h"
-#include "Soldier_Profile.h"
-#include "Campaign.h"
-#include "Soldier_Macros.h"
-#include "English.h"
-#include "Squads.h"
-#include "Structure_Wrap.h"
-#include "Items.h"
-#include "SoundMan.h"
-#include "Utilities.h"
-#include "Strategic.h"
-#include "Soldier_Tile.h"
-#include "Smell.h"
-#include "Keys.h"
-#include "Dialogue_Control.h"
-#include "Soldier_Functions.h"
-#include "RT_Time_Defines.h"
-#include "Exit_Grids.h"
-#include "Quests.h"
-#include "Message.h"
-#include "NPC.h"
-#include "SkillCheck.h"
-#include "Handle_Doors.h"
-#include "Interface_Dialogue.h"
-#include "SmokeEffects.h"
-#include "GameSettings.h"
-#include "Tile_Animation.h"
-#include "ShopKeeper_Interface.h"
+#include "Animation_Cache.h"
+#include "Animation_Control.h"
+#include "Animation_Data.h"
 #include "Arms_Dealer_Init.h"
-#include "Vehicles.h"
-#include "Rotting_Corpses.h"
-#include "StrategicMap.h"
-#include "Morale.h"
-#include "Meanwhile.h"
-#include "Drugs_And_Alcohol.h"
 #include "Boxing.h"
-#include "Overhead_Map.h"
-#include "Map_Information.h"
-#include "Game_Clock.h"
-#include "Explosion_Control.h"
-#include "Text.h"
-#include "Strategic_Merc_Handler.h"
+#include "Campaign.h"
 #include "Campaign_Types.h"
-#include "Strategic_Status.h"
 #include "Civ_Quotes.h"
-#include "JAScreens.h"
-#include "ScreenIDs.h"
-#include "FileMan.h"
-
 #include "ContentManager.h"
+#include "Debug.h"
+#include "Dialogue_Control.h"
+#include "Directories.h"
+#include "Drugs_And_Alcohol.h"
+#include "Event_Pump.h"
+#include "Explosion_Control.h"
+#include "Faces.h"
+#include "FileMan.h"
+#include "Font_Control.h"
 #include "GameInstance.h"
-#include "Soldier.h"
-#include "WeaponModels.h"
+#include "GameSettings.h"
+#include "Game_Clock.h"
+#include "HImage.h"
+#include "Handle_Doors.h"
+#include "Handle_Items.h"
+#include "Handle_UI.h"
+#include "Interface.h"
+#include "Interface_Dialogue.h"
+#include "Isometric_Utils.h"
+#include "Items.h"
+#include "JAScreens.h"
+#include "Keys.h"
+#include "Lighting.h"
 #include "Logger.h"
+#include "MapScreen.h"
+#include "Map_Information.h"
+#include "Meanwhile.h"
 #include "MercProfile.h"
-
-#include <string_theory/string>
-
-#include <algorithm>
+#include "Message.h"
+#include "Morale.h"
+#include "NPC.h"
+#include "OppList.h"
+#include "Overhead.h"
+#include "Overhead_Map.h"
+#include "Overhead_Types.h"
+#include "PathAI.h"
+#include "Points.h"
+#include "Quests.h"
+#include "RT_Time_Defines.h"
+#include "Random.h"
+#include "RenderWorld.h"
+#include "Render_Dirty.h"
+#include "Render_Fun.h"
+#include "Rotting_Corpses.h"
+#include "ScreenIDs.h"
+#include "SkillCheck.h"
+#include "Smell.h"
+#include "SmokeEffects.h"
+#include "Soldier.h"
+#include "Soldier_Ani.h"
+#include "Soldier_Find.h"
+#include "Soldier_Functions.h"
+#include "Soldier_Macros.h"
+#include "Soldier_Profile.h"
+#include "Soldier_Tile.h"
+#include "SoundMan.h"
+#include "Sound_Control.h"
+#include "Squads.h"
+#include "Strategic.h"
+#include "StrategicMap.h"
+#include "Strategic_Merc_Handler.h"
+#include "Strategic_Status.h"
+#include "Structure.h"
+#include "Structure_Wrap.h"
+#include "Text.h"
+#include "TileDef.h"
+#include "Tile_Animation.h"
+#include "Timer_Control.h"
+#include "Utilities.h"
+#include "VObject.h"
+#include "Vehicles.h"
+#include "WCheck.h"
+#include "WeaponModels.h"
+#include "Weapons.h"
+#include "WorldMan.h"
+#include "enums.h"
+#include <cmath>
 #include <stdexcept>
+#include <string_theory/string>
 
 #define PALETTEFILENAME			BINARYDATADIR "/ja2pal.dat"
 
@@ -7386,17 +7379,34 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 		return;
 	}
 
+	// Whether or not we are about to throw an object
+	bool fIsThrowing = (pSoldier->pTempObject != NULL);
+
+	// Below are the animations for attacks which do not involve an object.
+	// We use fTurningToShoot and pTempObject to check for other attacks.
+	bool fIsAttacking = pSoldier->usPendingAnimation == THROW_KNIFE ||
+			 pSoldier->usPendingAnimation == SLICE ||
+			 pSoldier->usPendingAnimation == STAB ||
+			 pSoldier->usPendingAnimation == CROUCH_STAB ||
+			 pSoldier->usPendingAnimation == PUNCH ||
+			 pSoldier->usPendingAnimation == PUNCH_LOW ||
+			 pSoldier->usPendingAnimation == CROWBAR_ATTACK;
+
 	// OK, check if we were going to throw something, and give it back if so!
-	if ( pSoldier->pTempObject != NULL && fFromSightingEnemy )
+	if (fIsThrowing && fFromSightingEnemy)
 	{
 		// Place it back into inv....
 		AutoPlaceObject( pSoldier, pSoldier->pTempObject, FALSE );
 		delete pSoldier->pTempObject;
 		pSoldier->pTempObject        = NULL;
 		pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
+	}
 
+	// Here, we need to handle the situation when we're in the middle of an attack animation we see somebody
+	if ((fIsThrowing && fFromSightingEnemy) || fIsAttacking)
+	{
 		// Decrement attack counter...
-		SLOGD("Reducing attacker busy count..., ending throw because saw something");
+		STLOGD("Reducing attacker busy count..., ending attack ({}) because saw something", Internals::getAnimationName(pSoldier->usPendingAnimation));
 		ReduceAttackBusyCount(pSoldier, FALSE);
 
 		// ATE: Goto stationary stance......
@@ -7451,7 +7461,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	}
 
 	// Unset UI!
-	if ( fFromSightingEnemy || ( pSoldier->pTempObject == NULL && !pSoldier->fTurningToShoot ) )
+	if ( fFromSightingEnemy || ( fIsThrowing && !pSoldier->fTurningToShoot ) )
 	{
 		UnSetUIBusy(pSoldier);
 	}
