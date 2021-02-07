@@ -4,6 +4,7 @@
 #include "English.h"
 #include "FileMan.h"
 #include "Game_Init.h"
+#include "GameSettings.h"
 #include "Input.h"
 #include "Intro.h"
 #include "Local.h"
@@ -22,8 +23,6 @@
 #include "VSurface.h"
 #include "UILayout.h"
 
-#include "GameSettings.h"
-#include "MessageBoxScreen.h"
 
 static BOOLEAN gfIntroScreenEntry = TRUE;
 static BOOLEAN gfIntroScreenExit;
@@ -349,15 +348,10 @@ static void StartPlayingIntroFlic(INT32 iIndexOfFlicToPlay)
 		//start playing a flic
 		gpSmackFlic = SmkPlayFlic( gpzSmackerFileNames[ iIndexOfFlicToPlay ], STD_SCREEN_X, STD_SCREEN_Y , TRUE );
 
-		if( gpSmackFlic != NULL )
-		{
-			giCurrentIntroBeingPlayed = iIndexOfFlicToPlay;
-		}
-		else
-		{
-			//do a check
-			DoScreenIndependantMessageBox(gzIntroScreen, MSG_BOX_FLAG_OK, CDromEjectionErrorMessageBoxCallBack);
-		}
+		// Urban Chaos support: UC contains some quasi-empty smacker videos for which
+		// SmkPlayFlic returns nullptr. Ignoring this result will cause us to continue
+		// with the next video.
+		giCurrentIntroBeingPlayed = iIndexOfFlicToPlay;
 	}
 }
 

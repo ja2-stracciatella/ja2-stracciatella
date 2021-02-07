@@ -486,8 +486,11 @@ void smk_close(smk s)
 	{
 		for (u = 0; u < 4; u ++)
 		{
-			smk_huff_free(s->video->tree[u]->t);
-			smk_free(s->video->tree[u]);
+			if (s->video->tree[u])
+			{
+				smk_huff_free(s->video->tree[u]->t);
+				smk_free(s->video->tree[u]);
+			}
 		}
 		smk_free(s->video->palette);
 		smk_free(s->video->frame);
