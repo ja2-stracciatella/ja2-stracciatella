@@ -21,7 +21,6 @@ void         InvalidateRegion(INT32 iLeft, INT32 iTop, INT32 iRight, INT32 iBott
 void         InvalidateScreen(void);
 void         GetPrimaryRGBDistributionMasks(UINT32* RedBitMask, UINT32* GreenBitMask, UINT32* BlueBitMask);
 void         EndFrameBufferRender(void);
-void         PrintScreen(void);
 
 void VideoSetBrightness(float brightness);
 

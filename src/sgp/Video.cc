@@ -1,10 +1,12 @@
+#include "ContentManager.h"
 #include "Debug.h"
 #include "Fade_Screen.h"
 #include "FileMan.h"
+#include "GameInstance.h"
 #include "HImage.h"
 #include "Input.h"
 #include "Local.h"
-#include "MemMan.h"
+#include "Logger.h"
 #include "RenderWorld.h"
 #include "Render_Dirty.h"
 #include "Timer.h"
@@ -14,20 +16,10 @@
 #include "VSurface.h"
 #include "Video.h"
 #include "UILayout.h"
-#include "PlatformIO.h"
 #include "Font.h"
 #include "Icon.h"
-
-#include "ContentManager.h"
-#include "GameInstance.h"
-
-#include "Logger.h"
-
 #include <algorithm>
 #include <ctime>
-#include <errno.h>
-#include <fcntl.h>
-#include <stdarg.h>
 #include <stdexcept>
 
 #define BUFFER_READY      0x00
@@ -42,20 +34,12 @@
 #define VIDEO_ON          0x01
 #define VIDEO_SUSPENDED   0x04
 
-#define MAX_NUM_FRAMES    25
-
 #define RED_MASK 0xF800
 #define GREEN_MASK 0x07E0
 #define BLUE_MASK 0x001F
 #define ALPHA_MASK 0
 
 #define OVERSAMPLING_SCALE 4
-
-static BOOLEAN gfVideoCapture = FALSE;
-static UINT32  guiFramePeriod = 1000 / 15;
-static UINT32  guiLastFrame;
-static UINT16* gpFrameData[MAX_NUM_FRAMES];
-static INT32   giNumFrames = 0;
 
 
 // Globals for mouse cursor
@@ -78,10 +62,6 @@ static BOOLEAN  gfForceFullScreenRefresh;
 
 static SDL_Rect DirtyRegionsEx[MAX_DIRTY_REGIONS];
 static UINT32   guiDirtyRegionExCount;
-
-// Screen output stuff
-static BOOLEAN gfPrintFrameBuffer;
-static UINT32  guiPrintFrameBufferIndex;
 
 
 static SDL_Surface* MouseCursor;
@@ -267,8 +247,6 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 	guiVideoManagerState     = VIDEO_ON;
 	guiDirtyRegionCount      = 0;
 	gfForceFullScreenRefresh = TRUE;
-	gfPrintFrameBuffer       = FALSE;
-	guiPrintFrameBufferIndex = 0;
 
 	// This function must be called to setup RGB information
 	GetRGBDistribution();
@@ -543,109 +521,6 @@ static void ScrollJA2Background(INT16 sScrollXIncrement, INT16 sScrollYIncrement
 }
 
 
-static void WriteTGAHeader(File* file)
-{
-	/*
-	 *  0 byte ID length
-	 *  1 byte colour map type
-	 *  2 byte targa type
-	 *  3 word colour map origin
-	 *  5 word colour map length
-	 *  7 byte colour map entry size
-	 *  8 word origin x
-	 * 10 word origin y
-	 * 12 word image width
-	 * 14 word image height
-	 * 16 byte bits per pixel
-	 * 17 byte image descriptor
-	 */
-	static const BYTE data[] =
-	{
-		0,
-		0,
-		2,
-		0, 0,
-		0, 0,
-		0,
-		0, 0,
-		0, 0,
-		(UINT8) (SCREEN_WIDTH  % 256), (UINT8) (SCREEN_WIDTH  / 256),
-		(UINT8) (SCREEN_HEIGHT % 256), (UINT8) (SCREEN_HEIGHT / 256),
-		PIXEL_DEPTH,
-		0
-	};
-	if (!File_writeAll(file, data, sizeof(data)))
-	{
-		RustPointer<char> err(getRustError());
-		SLOGW("WriteTGAHeader: %s", err.get());
-	}
-}
-
-
-/* Create a file for a screenshot, which is guaranteed not to exist yet. */
-static RustPointer<File> CreateScreenshotFile(void)
-{
-	const ST::string exec_dir = GCM->getScreenshotFolder();
-	while (true)
-	{
-		char filename[2048];
-		sprintf(filename, "%s/SCREEN%03d.TGA", exec_dir.c_str(), guiPrintFrameBufferIndex++);
-		RustPointer<File> file(File_open(filename, FILE_OPEN_WRITE | FILE_OPEN_CREATE_NEW));
-		if (file)
-		{
-			return file;
-		}
-	}
-}
-
-
-static void TakeScreenshot()
-{
-	RustPointer<File> file = CreateScreenshotFile();
-	if (!file)
-	{
-		RustPointer<char> err(getRustError());
-		SLOGE("TakeScreenshot: %s", err.get());
-		return;
-	}
-
-	WriteTGAHeader(file.get());
-
-	// If not 5/5/5, create buffer
-	UINT16* buf = 0;
-	if (gusRedMask != 0x7C00 || gusGreenMask != 0x03E0 || gusBlueMask != 0x001F)
-	{
-		buf = new UINT16[SCREEN_WIDTH]{};
-	}
-
-	UINT16 const* src = static_cast<UINT16 const*>(ScreenBuffer->pixels);
-	for (INT32 y = SCREEN_HEIGHT - 1; y >= 0; --y)
-	{
-		if (buf)
-		{ // ATE: Fix this such that it converts pixel format to 5/5/5
-			memcpy(buf, src + y * SCREEN_WIDTH, SCREEN_WIDTH * sizeof(*buf));
-			ConvertRGBDistribution565To555(buf, SCREEN_WIDTH);
-			if (!File_writeAll(file.get(), reinterpret_cast<const UINT8*>(buf), sizeof(*buf) * SCREEN_WIDTH))
-			{
-				RustPointer<char> err(getRustError());
-				SLOGW("TakeScreenshot: %s", err.get());
-			}
-		}
-		else
-		{
-			if (!File_writeAll(file.get(), reinterpret_cast<const UINT8*>(src + y * SCREEN_WIDTH), sizeof(*buf) * SCREEN_WIDTH))
-			{
-				RustPointer<char> err(getRustError());
-				SLOGW("TakeScreenshot: %s", err.get());
-			}
-		}
-	}
-
-	if (buf) delete[] buf;
-}
-
-static void SnapshotSmall(void);
-
 void RefreshScreen(void)
 {
 	if (guiVideoManagerState != VIDEO_ON) return;
@@ -715,22 +590,6 @@ void RefreshScreen(void)
 		}
 		gfIgnoreScrollDueToCenterAdjust = FALSE;
 		guiFrameBufferState = BUFFER_READY;
-	}
-
-	if (gfVideoCapture)
-	{
-		UINT32 uiTime = GetClock();
-		if (uiTime < guiLastFrame || uiTime > guiLastFrame + guiFramePeriod)
-		{
-			SnapshotSmall();
-			guiLastFrame = uiTime;
-		}
-	}
-
-	if (gfPrintFrameBuffer)
-	{
-		TakeScreenshot();
-		gfPrintFrameBuffer = FALSE;
 	}
 
 	SGPPoint MousePos;
@@ -810,90 +669,6 @@ void SetMouseCursorProperties(INT16 sOffsetX, INT16 sOffsetY, UINT16 usCursorHei
 void EndFrameBufferRender(void)
 {
 	guiFrameBufferState = BUFFER_DIRTY;
-}
-
-
-void PrintScreen(void)
-{
-	gfPrintFrameBuffer = TRUE;
-}
-
-
-/*******************************************************************************
- * SnapshotSmall
- *
- * Grabs a screen from the primary surface, and stuffs it into a 16-bit
- * (RGB 5,5,5), uncompressed Targa file. Each time the routine is called, it
- * increments the file number by one. The files are create in the current
- * directory, usually the EXE directory. This routine produces 1/4 sized images.
- *
- ******************************************************************************/
-
-
-static void RefreshMovieCache(void);
-
-
-static void SnapshotSmall(void)
-{
-	// Get the write pointer
-	const UINT16* pVideo = (UINT16*)ScreenBuffer->pixels;
-
-	UINT16* pDest = gpFrameData[giNumFrames];
-
-	for (INT32 iCountY = SCREEN_HEIGHT - 1; iCountY >= 0; iCountY--)
-	{
-		for (INT32 iCountX = 0; iCountX < SCREEN_WIDTH; iCountX++)
-		{
-			pDest[iCountY * SCREEN_WIDTH + iCountX] = pVideo[iCountY * SCREEN_WIDTH + iCountX];
-		}
-	}
-
-	giNumFrames++;
-
-	if (giNumFrames == MAX_NUM_FRAMES) RefreshMovieCache();
-}
-
-static void RefreshMovieCache(void)
-{
-	static UINT32 uiPicNum = 0;
-
-	PauseTime(TRUE);
-
-	const ST::string exec_dir = GCM->getVideoCaptureFolder();
-
-	for (INT32 cnt = 0; cnt < giNumFrames; cnt++)
-	{
-		CHAR8 cFilename[2048];
-		sprintf(cFilename, "%s/JA%5.5d.TGA", exec_dir.c_str(), uiPicNum++);
-
-		RustPointer<File> file(File_open(cFilename, FILE_OPEN_WRITE));
-		if (!file)
-		{
-			RustPointer<char> err(getRustError());
-			SLOGE("RefreshMovieCache: %s", err.get());
-			return;
-		}
-
-		WriteTGAHeader(file.get());
-
-		UINT16* pDest = gpFrameData[cnt];
-
-		for (INT32 iCountY = SCREEN_HEIGHT - 1; iCountY >= 0; iCountY -= 1)
-		{
-			for (INT32 iCountX = 0; iCountX < SCREEN_WIDTH; iCountX ++)
-			{
-				if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(pDest + iCountY * SCREEN_WIDTH + iCountX), sizeof(UINT16)))
-				{
-					RustPointer<char> err(getRustError());
-					SLOGW("RefreshMovieCache: %s", err.get());
-				}
-			}
-		}
-	}
-
-	PauseTime(FALSE);
-
-	giNumFrames = 0;
 }
 
 
