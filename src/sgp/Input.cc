@@ -344,10 +344,6 @@ void KeyUp(const SDL_Keysym* KeySym)
 			gfKeyState.reset(ALT);
 			break;
 
-		case SDLK_PRINTSCREEN:
-			PrintScreen();
-			break;
-
 		case SDLK_SCROLLLOCK:
 			SDL_SetWindowGrab
 			(
