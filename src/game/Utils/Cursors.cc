@@ -472,7 +472,7 @@ static CursorData CursorDatabase[] =
 		SUBNONE(),
 		SUBNONE(),
 		SUBNONE(),
-		1,	0,  0, 0, 0									, 0, 0 },
+		1,	4,  0, 0, 0									, 0, 0 },
 
 	{ SUBNORM(C_LAPTOPSCREEN,        0),
 		SUBNONE(),
