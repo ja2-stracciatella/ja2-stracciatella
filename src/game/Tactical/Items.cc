@@ -100,132 +100,35 @@ static const AttachmentInfoStruct AttachmentInfo[] =
 	{NONE,				0,		0,						0}
 };
 
-static UINT16 const g_attachments[][2] =
+static std::map<UINT16, std::set<UINT16> const> const g_attachments
 {
-	{DETONATOR, TNT},
-	{DETONATOR, HMX},
-	{DETONATOR, C1},
-	{DETONATOR, C4},
-
-	{REMDETONATOR, TNT},
-	{REMDETONATOR, HMX},
-	{REMDETONATOR, C1},
-	{REMDETONATOR, C4},
-
-	{CERAMIC_PLATES, FLAK_JACKET},
-	{CERAMIC_PLATES, FLAK_JACKET_18},
-	{CERAMIC_PLATES, FLAK_JACKET_Y},
-	{CERAMIC_PLATES, KEVLAR_VEST},
-	{CERAMIC_PLATES, KEVLAR_VEST_18},
-	{CERAMIC_PLATES, KEVLAR_VEST_Y},
-	{CERAMIC_PLATES, SPECTRA_VEST},
-	{CERAMIC_PLATES, SPECTRA_VEST_18},
-	{CERAMIC_PLATES, SPECTRA_VEST_Y},
-	{CERAMIC_PLATES, KEVLAR2_VEST},
-	{CERAMIC_PLATES, KEVLAR2_VEST_18},
-	{CERAMIC_PLATES, KEVLAR2_VEST_Y},
-
-	{SPRING, ALUMINUM_ROD},
-	{QUICK_GLUE, STEEL_ROD},
-	{DUCT_TAPE, STEEL_ROD},
-	{XRAY_BULB, FUMBLE_PAK},
-	{CHEWING_GUM, FUMBLE_PAK},
-	{BATTERIES, XRAY_DEVICE},
-	{COPPER_WIRE, LAME_BOY},
-
-	{0, 0}
+	{DETONATOR, {TNT, HMX, C1, C4}},
+	{REMDETONATOR, {TNT, HMX, C1, C4}},
+	{CERAMIC_PLATES, {FLAK_JACKET, FLAK_JACKET_18, FLAK_JACKET_Y, KEVLAR_VEST, KEVLAR_VEST_18, KEVLAR_VEST_Y,
+	                  KEVLAR2_VEST, KEVLAR2_VEST_18, KEVLAR2_VEST_Y, SPECTRA_VEST, SPECTRA_VEST_18, SPECTRA_VEST_Y}},
+	{SPRING, {ALUMINUM_ROD}},
+	{QUICK_GLUE, {STEEL_ROD}},
+	{DUCT_TAPE, {STEEL_ROD}},
+	{XRAY_BULB, {FUMBLE_PAK}},
+	{CHEWING_GUM, {FUMBLE_PAK}},
+	{BATTERIES, {XRAY_DEVICE}},
+	{COPPER_WIRE, {LAME_BOY}}
 };
 
-static UINT16 const g_attachments_mod[][2] =
+// additional possible attachments if the extra_attachments game policy is set
+static std::set<UINT16> const g_helmets {STEEL_HELMET, KEVLAR_HELMET, KEVLAR_HELMET_18, KEVLAR_HELMET_Y, SPECTRA_HELMET, SPECTRA_HELMET_18, SPECTRA_HELMET_Y};
+static std::set<UINT16> const g_leggings {KEVLAR_LEGGINGS, KEVLAR_LEGGINGS_18, KEVLAR_LEGGINGS_Y, SPECTRA_LEGGINGS, SPECTRA_LEGGINGS_18, SPECTRA_LEGGINGS_Y};
+static std::map<UINT16, decltype(g_helmets) *> const g_attachments_mod
 {
-	{DETONATOR, TNT},
-	{DETONATOR, HMX},
-	{DETONATOR, C1},
-	{DETONATOR, C4},
+	{NIGHTGOGGLES, &g_helmets},
+	{UVGOGGLES, &g_helmets},
+	{SUNGOGGLES, &g_helmets},
+	{ROBOT_REMOTE_CONTROL, &g_helmets},
 
-	{REMDETONATOR, TNT},
-	{REMDETONATOR, HMX},
-	{REMDETONATOR, C1},
-	{REMDETONATOR, C4},
-
-	{CERAMIC_PLATES, FLAK_JACKET},
-	{CERAMIC_PLATES, FLAK_JACKET_18},
-	{CERAMIC_PLATES, FLAK_JACKET_Y},
-	{CERAMIC_PLATES, KEVLAR_VEST},
-	{CERAMIC_PLATES, KEVLAR_VEST_18},
-	{CERAMIC_PLATES, KEVLAR_VEST_Y},
-	{CERAMIC_PLATES, SPECTRA_VEST},
-	{CERAMIC_PLATES, SPECTRA_VEST_18},
-	{CERAMIC_PLATES, SPECTRA_VEST_Y},
-	{CERAMIC_PLATES, KEVLAR2_VEST},
-	{CERAMIC_PLATES, KEVLAR2_VEST_18},
-	{CERAMIC_PLATES, KEVLAR2_VEST_Y},
-
-	{SPRING, ALUMINUM_ROD},
-	{QUICK_GLUE, STEEL_ROD},
-	{DUCT_TAPE, STEEL_ROD},
-	{XRAY_BULB, FUMBLE_PAK},
-	{CHEWING_GUM, FUMBLE_PAK},
-	{BATTERIES, XRAY_DEVICE},
-	{COPPER_WIRE, LAME_BOY},
-
-	// extras
-	{NIGHTGOGGLES, STEEL_HELMET},
-	{NIGHTGOGGLES, KEVLAR_HELMET},
-	{NIGHTGOGGLES, KEVLAR_HELMET_18},
-	{NIGHTGOGGLES, KEVLAR_HELMET_Y},
-	{NIGHTGOGGLES, SPECTRA_HELMET},
-	{NIGHTGOGGLES, SPECTRA_HELMET_18},
-	{NIGHTGOGGLES, SPECTRA_HELMET_Y},
-
-	{UVGOGGLES, STEEL_HELMET},
-	{UVGOGGLES, KEVLAR_HELMET},
-	{UVGOGGLES, KEVLAR_HELMET_18},
-	{UVGOGGLES, KEVLAR_HELMET_Y},
-	{UVGOGGLES, SPECTRA_HELMET},
-	{UVGOGGLES, SPECTRA_HELMET_18},
-	{UVGOGGLES, SPECTRA_HELMET_Y},
-
-	{SUNGOGGLES, STEEL_HELMET},
-	{SUNGOGGLES, KEVLAR_HELMET},
-	{SUNGOGGLES, KEVLAR_HELMET_18},
-	{SUNGOGGLES, KEVLAR_HELMET_Y},
-	{SUNGOGGLES, SPECTRA_HELMET},
-	{SUNGOGGLES, SPECTRA_HELMET_18},
-	{SUNGOGGLES, SPECTRA_HELMET_Y},
-
-	{ROBOT_REMOTE_CONTROL, STEEL_HELMET},
-	{ROBOT_REMOTE_CONTROL, KEVLAR_HELMET},
-	{ROBOT_REMOTE_CONTROL, KEVLAR_HELMET_18},
-	{ROBOT_REMOTE_CONTROL, KEVLAR_HELMET_Y},
-	{ROBOT_REMOTE_CONTROL, SPECTRA_HELMET},
-	{ROBOT_REMOTE_CONTROL, SPECTRA_HELMET_18},
-	{ROBOT_REMOTE_CONTROL, SPECTRA_HELMET_Y},
-
-	{BREAK_LIGHT, KEVLAR_LEGGINGS},
-	{BREAK_LIGHT, KEVLAR_LEGGINGS_18},
-	{BREAK_LIGHT, KEVLAR_LEGGINGS_Y},
-	{BREAK_LIGHT, SPECTRA_LEGGINGS},
-	{BREAK_LIGHT, SPECTRA_LEGGINGS_18},
-	{BREAK_LIGHT, SPECTRA_LEGGINGS_Y},
-
-	{REGEN_BOOSTER, KEVLAR_LEGGINGS},
-	{REGEN_BOOSTER, KEVLAR_LEGGINGS_18},
-	{REGEN_BOOSTER, KEVLAR_LEGGINGS_Y},
-	{REGEN_BOOSTER, SPECTRA_LEGGINGS},
-	{REGEN_BOOSTER, SPECTRA_LEGGINGS_18},
-	{REGEN_BOOSTER, SPECTRA_LEGGINGS_Y},
-
-	{ADRENALINE_BOOSTER, KEVLAR_LEGGINGS},
-	{ADRENALINE_BOOSTER, KEVLAR_LEGGINGS_18},
-	{ADRENALINE_BOOSTER, KEVLAR_LEGGINGS_Y},
-	{ADRENALINE_BOOSTER, SPECTRA_LEGGINGS},
-	{ADRENALINE_BOOSTER, SPECTRA_LEGGINGS_18},
-	{ADRENALINE_BOOSTER, SPECTRA_LEGGINGS_Y},
-
-	{0, 0}
+	{BREAK_LIGHT, &g_leggings},
+	{REGEN_BOOSTER, &g_leggings},
+	{ADRENALINE_BOOSTER, &g_leggings}
 };
-
 
 static std::map<UINT16, std::set<UINT16> const> const Launchable
 {
@@ -236,7 +139,6 @@ static std::map<UINT16, std::set<UINT16> const> const Launchable
 	{MORTAR_SHELL, {MORTAR}},
 	{TANK_SHELL, {TANK_CANNON}}
 };
-
 
 static UINT16 const CompatibleFaceItems[][2] =
 {
@@ -792,24 +694,23 @@ static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
 bool ValidAttachment(UINT16 const attachment, UINT16 const item)
 {
 	const ItemModel *itemModel = GCM->getItem(item);
-	if(itemModel->canBeAttached(attachment))
+	if (itemModel && itemModel->canBeAttached(attachment))
 	{
 		return true;
 	}
 
-	UINT16 const (*i)[2] = gamepolicy(extra_attachments) ? g_attachments_mod : g_attachments;
-	for (;; ++i)
 	{
-		UINT16 const (&a)[2] = *i;
-		if (a[0] == NOTHING)    return false; // Cannot be attached to anything
-		if (a[0] == attachment) break;
+		auto const it = g_attachments.find(attachment);
+		if (it != g_attachments.end() && it->second.count(item) == 1) return true;
 	}
-	for (;; ++i)
+
+	if (gamepolicy(extra_attachments))
 	{
-		UINT16 const (&a)[2] = *i;
-		if (a[0] != attachment) return false; // Cannot be attached to item
-		if (a[1] == item)       return true;
+		auto const it = g_attachments_mod.find(attachment);
+		if (it != g_attachments_mod.end() && (*it->second).count(item) == 1) return true;
 	}
+
+	return false;
 }
 
 
@@ -960,7 +861,7 @@ BOOLEAN ValidLaunchable( UINT16 usLaunchable, UINT16 usItem )
 	auto const it = Launchable.find(usLaunchable);
 	if (it != Launchable.end())
 	{
-		return it->second.find(usItem) != it->second.end();
+		return it->second.count(usItem) == 1;
 	}
 
 	return FALSE;
