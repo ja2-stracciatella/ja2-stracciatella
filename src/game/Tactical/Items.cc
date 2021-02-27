@@ -49,6 +49,8 @@
 #include "ItemModel.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
+#include <map>
+#include <set>
 
 #define ANY_MAGSIZE 255
 
@@ -224,20 +226,17 @@ static UINT16 const g_attachments_mod[][2] =
 	{0, 0}
 };
 
-UINT16 Launchable[][2] =
+
+static std::map<UINT16, std::set<UINT16> const> const Launchable
 {
-	{GL_HE_GRENADE, GLAUNCHER},
-	{GL_HE_GRENADE, UNDER_GLAUNCHER},
-	{GL_TEARGAS_GRENADE, GLAUNCHER},
-	{GL_TEARGAS_GRENADE, UNDER_GLAUNCHER},
-	{GL_STUN_GRENADE, GLAUNCHER},
-	{GL_STUN_GRENADE, UNDER_GLAUNCHER},
-	{GL_SMOKE_GRENADE, GLAUNCHER},
-	{GL_SMOKE_GRENADE, UNDER_GLAUNCHER},
-	{MORTAR_SHELL, MORTAR},
-	{TANK_SHELL, TANK_CANNON},
-	{0, 0}
+	{GL_HE_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
+	{GL_TEARGAS_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
+	{GL_STUN_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
+	{GL_SMOKE_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
+	{MORTAR_SHELL, {MORTAR}},
+	{TANK_SHELL, {TANK_CANNON}}
 };
+
 
 static UINT16 const CompatibleFaceItems[][2] =
 {
@@ -955,62 +954,23 @@ static BOOLEAN TwoHandedItem(UINT16 usItem)
 	return FALSE;
 }
 
+
 BOOLEAN ValidLaunchable( UINT16 usLaunchable, UINT16 usItem )
 {
-	INT32 iLoop = 0;
+	auto const it = Launchable.find(usLaunchable);
+	if (it != Launchable.end())
+	{
+		return it->second.find(usItem) != it->second.end();
+	}
 
-	// look for the section of the array pertaining to this launchable item...
-	while( 1 )
-	{
-		if (Launchable[iLoop][0] == usLaunchable)
-		{
-			break;
-		}
-		iLoop++;
-		if (Launchable[iLoop][0] == 0)
-		{
-			// the proposed item cannot be attached to anything!
-			return( FALSE );
-		}
-	}
-	// now look through this section for the item in question
-	while( 1 )
-	{
-		if (Launchable[iLoop][1] == usItem)
-		{
-			break;
-		}
-		iLoop++;
-		if (Launchable[iLoop][0] != usLaunchable)
-		{
-			// the proposed item cannot be attached to the item in question
-			return( FALSE );
-		}
-	}
-	return( TRUE );
+	return FALSE;
 }
 
 
 UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable )
 {
-	INT32 iLoop = 0;
-
-	// look for the section of the array pertaining to this launchable item...
-	while( 1 )
-	{
-		if (Launchable[iLoop][0] == usLaunchable)
-		{
-			break;
-		}
-		iLoop++;
-		if (Launchable[iLoop][0] == 0)
-		{
-			// the proposed item cannot be attached to anything!
-			return( NOTHING );
-		}
-	}
-
-	return( Launchable[iLoop][1] );
+	auto const it = Launchable.find(usLaunchable);
+	return it != Launchable.end() ? *it->second.begin() : NOTHING;
 }
 
 

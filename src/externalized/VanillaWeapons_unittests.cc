@@ -104,4 +104,30 @@ TEST(Items, bug120_spas15DefaultMag)
 	delete cm;
 }
 
+TEST(Items, ValidLaunchable)
+{
+	EXPECT_TRUE(ValidLaunchable(MORTAR_SHELL, MORTAR));
+	EXPECT_FALSE(ValidLaunchable(MORTAR_SHELL, MORTAR_SHELL));
+	EXPECT_FALSE(ValidLaunchable(MORTAR_SHELL, TANK_CANNON));
+	EXPECT_FALSE(ValidLaunchable(MORTAR, MORTAR_SHELL));
+	EXPECT_TRUE(ValidLaunchable(GL_HE_GRENADE, GLAUNCHER));
+	EXPECT_TRUE(ValidLaunchable(GL_HE_GRENADE, UNDER_GLAUNCHER));
+
+	// Check if the function handles some random garbage input
+	EXPECT_FALSE(ValidLaunchable(BATTERIES, WINE));
+	EXPECT_FALSE(ValidLaunchable(0xf123, 0x97b2));
+}
+
+TEST(Items, GetLauncherFromLaunchable)
+{
+	EXPECT_EQ(GetLauncherFromLaunchable(GL_TEARGAS_GRENADE), GLAUNCHER);
+	EXPECT_EQ(GetLauncherFromLaunchable(MORTAR_SHELL), MORTAR);
+	EXPECT_EQ(GetLauncherFromLaunchable(TANK_SHELL), TANK_CANNON);
+	EXPECT_EQ(GetLauncherFromLaunchable(TANK_CANNON), NOTHING);
+
+	// Check if the function handles some random garbage input
+	EXPECT_EQ(GetLauncherFromLaunchable(G11), NOTHING);
+	EXPECT_EQ(GetLauncherFromLaunchable(0xe941), NOTHING);
+}
+
 #endif
