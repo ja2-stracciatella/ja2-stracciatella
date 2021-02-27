@@ -174,4 +174,19 @@ TEST(Items, ValidAttachment)
 	GCM = oldGCM;
 }
 
+TEST(Items, CompatibleFaceItem)
+{
+	EXPECT_TRUE(CompatibleFaceItem(ITEMDEFINE::NIGHTGOGGLES, ITEMDEFINE::EXTENDEDEAR));
+	EXPECT_TRUE(CompatibleFaceItem(ITEMDEFINE::EXTENDEDEAR, ITEMDEFINE::NIGHTGOGGLES));
+	EXPECT_FALSE(CompatibleFaceItem(ITEMDEFINE::EXTENDEDEAR, ITEMDEFINE::EXTENDEDEAR));
+	EXPECT_TRUE(CompatibleFaceItem(ITEMDEFINE::WALKMAN, ITEMDEFINE::GASMASK));
+	EXPECT_FALSE(CompatibleFaceItem(ITEMDEFINE::UVGOGGLES, ITEMDEFINE::RDX));
+	EXPECT_TRUE(CompatibleFaceItem(0xda83, NOTHING)); // item2 == NOTHING is a special case
+	EXPECT_FALSE(CompatibleFaceItem(0x75e4, 0xcafe));
+	for (int i = 0; i <= 0xffff; ++i)
+	{
+		EXPECT_FALSE(CompatibleFaceItem(i, ITEMDEFINE::STEEL_HELMET));
+	}
+}
+
 #endif

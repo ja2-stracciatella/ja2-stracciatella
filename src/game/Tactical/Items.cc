@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Items.h"
@@ -39,7 +37,6 @@
 #include "StrategicMap.h"
 #include "Campaign_Types.h"
 #include "Soldier_Macros.h"
-#include "MemMan.h"
 #include "Debug.h"
 
 #include "AmmoTypeModel.h"
@@ -49,14 +46,15 @@
 #include "ItemModel.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
+#include <array>
+#include <initializer_list>
 #include <map>
+#include <optional>
 #include <set>
+#include <stdexcept>
+#include <utility>
 
-#define ANY_MAGSIZE 255
-
-
-// weight units are 100g each
-
+constexpr UINT8 ANY_MAGSIZE = 255; // magic number for FindAmmo's mag_size parameter
 
 struct AttachmentInfoStruct
 {
@@ -82,7 +80,6 @@ static const AttachmentInfoStruct AttachmentInfo[] =
 	{GUN_BARREL_EXTENDER,		IC_GUN,		ATTACHING_SPECIAL_ITEM_CHECK,			0},
 	{DETONATOR,			IC_BOMB,	ATTACHING_DETONATOR_CHECK,			0},
 	{REMDETONATOR,			IC_BOMB,	ATTACHING_REMOTE_DETONATOR_CHECK,		-10},
-	{REMDETONATOR,			IC_BOMB,	ATTACHING_REMOTE_DETONATOR_CHECK,		-10},
 	{XRAY_BULB,			IC_NONE,	ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK,	-15},
 	{COPPER_WIRE,			IC_NONE,	ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK,	+20},
 	{CERAMIC_PLATES,		IC_ARMOUR,	NO_CHECK,					0},
@@ -96,8 +93,6 @@ static const AttachmentInfoStruct AttachmentInfo[] =
 	{ADRENALINE_BOOSTER,		IC_ARMOUR,	NO_CHECK,								0},
 	{REGEN_BOOSTER,				IC_ARMOUR,	NO_CHECK,								0},
 	{BREAK_LIGHT,				IC_ARMOUR,	NO_CHECK,								0},
-
-	{NONE,				0,		0,						0}
 };
 
 static std::map<UINT16, std::set<UINT16> const> const g_attachments
@@ -140,7 +135,7 @@ static std::map<UINT16, std::set<UINT16> const> const Launchable
 	{TANK_SHELL, {TANK_CANNON}}
 };
 
-static UINT16 const CompatibleFaceItems[][2] =
+static std::initializer_list<std::array<UINT16, 2> const> const CompatibleFaceItems
 {
 	{ NIGHTGOGGLES, EXTENDEDEAR },
 	{ NIGHTGOGGLES, WALKMAN     },
@@ -149,9 +144,7 @@ static UINT16 const CompatibleFaceItems[][2] =
 	{ UVGOGGLES,    EXTENDEDEAR },
 	{ UVGOGGLES,    WALKMAN     },
 	{ GASMASK,      EXTENDEDEAR },
-	{ GASMASK,      WALKMAN     },
-
-	{ NOTHING,      NOTHING     }
+	{ GASMASK,      WALKMAN     }
 };
 
 
@@ -171,7 +164,7 @@ struct MergeInfo
 	UINT16 item1;
 	UINT16 item2;
 	UINT16 result;
-	UINT16 action;
+	MergeType action;
 };
 
 
@@ -237,8 +230,6 @@ static MergeInfo const Merge[] =
 
 	{FLASH_DEVICE,			DISPLAY_UNIT,			XRAY_DEVICE,			ELECTRONIC_MERGE},
 	{DISPLAY_UNIT,			FLASH_DEVICE,			XRAY_DEVICE,			ELECTRONIC_MERGE},
-
-	{ NOTHING,  NOTHING, NOTHING, DESTRUCTION}
 };
 
 struct ComboMergeInfoStruct
@@ -249,14 +240,13 @@ struct ComboMergeInfoStruct
 };
 
 
-ComboMergeInfoStruct AttachmentComboMerge[] =
+static ComboMergeInfoStruct const AttachmentComboMerge[] =
 {
 	// base item	attach 1	attach 2	result
 	{ALUMINUM_ROD,	{SPRING,	NOTHING},	SPRING_AND_BOLT_UPGRADE},
 	{STEEL_ROD,	{QUICK_GLUE,	DUCT_TAPE},	GUN_BARREL_EXTENDER},
 	{FUMBLE_PAK,	{XRAY_BULB,	CHEWING_GUM},	FLASH_DEVICE},
 	{LAME_BOY,	{COPPER_WIRE,	NOTHING},	DISPLAY_UNIT},
-	{NOTHING,	{NOTHING,	NOTHING},	NOTHING},
 };
 
 
@@ -667,12 +657,12 @@ bool ItemHasAttachments(OBJECTTYPE const& o)
 // (i.e. to any item in the class)
 static BOOLEAN ValidAttachmentClass(UINT16 usAttachment, UINT16 usItem)
 {
-	for (const AttachmentInfoStruct* i = AttachmentInfo; i->usItem != NONE; ++i)
+	for (auto const& ai : AttachmentInfo)
 	{
 		// see comment for AttachmentInfo array for why we skip IC_NONE
-		if (i->uiItemClass == IC_NONE) continue;
+		if (ai.uiItemClass == IC_NONE) continue;
 
-		if (i->usItem == usAttachment && i->uiItemClass == GCM->getItem(usItem)->getItemClass())
+		if (ai.usItem == usAttachment && ai.uiItemClass == GCM->getItem(usItem)->getItemClass())
 		{
 			return TRUE;
 		}
@@ -683,9 +673,9 @@ static BOOLEAN ValidAttachmentClass(UINT16 usAttachment, UINT16 usItem)
 
 static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
 {
-	for (const AttachmentInfoStruct* i = AttachmentInfo; i->usItem != NONE; ++i)
+	for (auto const& ai : AttachmentInfo)
 	{
-		if (i->usItem == usItem) return i;
+		if (ai.usItem == usItem) return &ai;
 	}
 	return NULL;
 }
@@ -836,21 +826,10 @@ bool ValidAmmoType( UINT16 usItem, UINT16 usAmmoType )
 BOOLEAN CompatibleFaceItem(UINT16 const item1, UINT16 const item2)
 {
 	if (item2 == NOTHING) return TRUE;
-	for (UINT16 const (*i)[2] = CompatibleFaceItems; (*i)[0] != NOTHING; ++i)
+	for (auto const& i : CompatibleFaceItems)
 	{
-		if ((*i)[0] == item1 && (*i)[1] == item2) return TRUE;
-		if ((*i)[0] == item2 && (*i)[1] == item1) return TRUE;
-	}
-	return FALSE;
-}
-
-
-//Determines if this item is a two handed item.
-static BOOLEAN TwoHandedItem(UINT16 usItem)
-{
-	if (GCM->getItem(usItem)->isTwoHanded())
-	{
-		return( TRUE );
+		if (i[0] == item1 && i[1] == item2) return TRUE;
+		if (i[0] == item2 && i[1] == item1) return TRUE;
 	}
 	return FALSE;
 }
@@ -887,13 +866,13 @@ static BOOLEAN EvaluateValidMerge(UINT16 const usMerge, UINT16 const usItem, UIN
 		return TRUE;
 	}
 
-	for (MergeInfo const* m = Merge; m->item1 != NOTHING; ++m)
+	for (auto const& m : Merge)
 	{
-		if (m->item1 != usMerge) continue;
-		if (m->item2 != usItem)  continue;
+		if (m.item1 != usMerge) continue;
+		if (m.item2 != usItem)  continue;
 
-		*pusResult = m->result;
-		*pubType   = m->action;
+		*pusResult = m.result;
+		*pubType   = m.action;
 		return TRUE;
 	}
 
@@ -1609,9 +1588,8 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 
 static ComboMergeInfoStruct const* GetAttachmentComboMerge(OBJECTTYPE const& o)
 {
-	for (ComboMergeInfoStruct const* i = AttachmentComboMerge;; ++i)
+	for (auto const& m : AttachmentComboMerge)
 	{
-		ComboMergeInfoStruct const& m = *i;
 		if (m.usItem == NOTHING) break;
 		if (m.usItem != o.usItem) continue;
 
@@ -1620,13 +1598,13 @@ static ComboMergeInfoStruct const* GetAttachmentComboMerge(OBJECTTYPE const& o)
 		{
 			UINT16 const attachment = *k;
 			if (attachment == NOTHING) continue;
-			if (FindAttachment(&o, attachment) == -1) return 0; // Didn't find something required
+			if (FindAttachment(&o, attachment) == -1) return nullptr; // Didn't find something required
 		}
 
 		return &m; // Found everything required
 	}
 
-	return 0;
+	return nullptr;
 }
 
 
@@ -3463,7 +3441,7 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 	}
 	else
 	{
-		if (TwoHandedItem( pSoldier->inv[SECONDHANDPOS].usItem ) )
+		if ( GCM->getItem( pSoldier->inv[SECONDHANDPOS].usItem )->isTwoHanded() )
 		{
 			// must move the item in the main hand elsewhere in the inventory
 			fOk = InternalAutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE, HANDPOS );
@@ -3482,7 +3460,7 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 void WaterDamage(SOLDIERTYPE& s)
 {
 	// damage guy's equipment and camouflage due to water
-	INT8   bDamage, bDieSize;
+	INT8   bDieSize;
 	UINT32 uiRoll;
 
 	if (s.bOverTerrainType == DEEP_WATER)
@@ -3499,14 +3477,8 @@ void WaterDamage(SOLDIERTYPE& s)
 				if (uiRoll < 10)
 				{
 					// lose between 1 and 10 status points each time
-					bDamage = (INT8) (10 - uiRoll);
-
 					// but don't let anything drop lower than 1%
-					i->bStatus[0] -= bDamage;
-					if (i->bStatus[0] < 1)
-					{
-						i->bStatus[0] = 1;
-					}
+					i->bStatus[0] = std::max<INT8>(1, i->bStatus[0] - 10 + uiRoll);
 				}
 			}
 		}
