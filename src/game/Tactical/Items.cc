@@ -49,10 +49,8 @@
 #include <array>
 #include <initializer_list>
 #include <map>
-#include <optional>
 #include <set>
 #include <stdexcept>
-#include <utility>
 
 constexpr UINT8 ANY_MAGSIZE = 255; // magic number for FindAmmo's mag_size parameter
 
@@ -715,22 +713,6 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 		if ( (FindAttachment( pObj, UNDER_GLAUNCHER ) != ITEM_NOT_FOUND) && ValidLaunchable( usAttachment, UNDER_GLAUNCHER ) )
 		{
 			return ( TRUE );
-			/*
-			if ( fAttemptingAttachment )
-			{
-				// if there is no other grenade attached already, then we can attach it
-				if (FindAttachmentByClass( pObj, IC_GRENADE) != ITEM_NOT_FOUND)
-				{
-					return( FALSE );
-				}
-				// keep going, it can be attached to the grenade launcher
-			}
-			else
-			{
-				// logically, can be added
-				return( TRUE );
-			}
-			*/
 		}
 		else
 		{
@@ -767,20 +749,6 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 				usSimilarItem = BIPOD;
 			}
 			break;
-	/*
-		case LASERSCOPE:
-			if (FindAttachment( pObj, SNIPERSCOPE ) != ITEM_NOT_FOUND)
-			{
-				return( FALSE );
-			}
-			break;
-		case SNIPERSCOPE:
-			if (FindAttachment( pObj, LASERSCOPE ) != ITEM_NOT_FOUND)
-			{
-				return( FALSE );
-			}
-			break;
-			*/
 		case DETONATOR:
 			if( FindAttachment( pObj, REMDETONATOR ) != ITEM_NOT_FOUND )
 			{
@@ -1427,51 +1395,6 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 		return( FALSE );
 	}
 }
-
-/*
-BOOLEAN ReloadLauncher( OBJECTTYPE * pLauncher, OBJECTTYPE * pAmmo )
-{
-	BOOLEAN    fOldAmmo;
-	OBJECTTYPE OldAmmo;
-
-	if (pLauncher->ubGunShotsLeft == 0)
-	{
-		fOldAmmo = FALSE;
-	}
-	else
-	{
-		if (pAmmo->ubNumberOfObjects > 1)
-		{
-			// can't do the swap out to the cursor
-			return( FALSE );
-		}
-		// otherwise temporarily store the launcher's old ammo
-		OldAmmo = OBJECTTYPE{};
-		fOldAmmo = TRUE;
-		OldAmmo.usItem = pLauncher->usGunAmmoItem;
-		OldAmmo.ubNumberOfObjects = 1;
-		OldAmmo.bStatus[0] = pLauncher->bGunAmmoStatus;
-	}
-
-	// put the new ammo in the gun
-	pLauncher->usGunAmmoItem = pAmmo->usItem;
-	pLauncher->ubGunShotsLeft = 1;
-	pLauncher->ubGunAmmoType = AMMO_GRENADE;
-	pLauncher->bGunAmmoStatus = pAmmo->bStatus[0];
-
-
-	if (fOldAmmo)
-	{
-		// copy the old ammo back to the item in the cursor
-		*pAmmo = OldAmmo;
-	}
-	else
-	{
-		// reduce the number of objects in the cursor by 1
-		RemoveObjs( pAmmo, 1 );
-	}
-	return( TRUE );
-}*/
 
 
 INT8 FindAmmo(const SOLDIERTYPE* s, const CalibreModel * calibre, UINT8 const mag_size, INT8 const exclude_slot)
@@ -2132,7 +2055,6 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 						{
 							// invalid ammo
 							break;
-							//return( FALSE );
 						}
 					}
 					break;
@@ -2727,12 +2649,6 @@ static void CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 		pObj->ubGunAmmoType = GCM->getItem(usAmmo)->asAmmo()->ammoType->index;
 		pObj->bGunAmmoStatus = 100;
 		pObj->ubGunShotsLeft = GCM->getItem(usAmmo)->asAmmo()->capacity;
-		/*
-		if (usItem == CAWS)
-		{
-			pObj->usAttachItem[0] = DUCKBILL;
-			pObj->bAttachStatus[0] = 100;
-		}*/
 	}
 }
 
@@ -3058,12 +2974,9 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 		}
 	}
 
-	//uiMoneyAmount
 	if ( fReturnVal )
 	{
 		// ATE: Manage soldier pointer as well....
-		//pSoldier = FindSoldierByProfileID(ubProfile);
-
 		// Do we have a valid profile?
 		if ( pSoldier != NULL )
 		{
@@ -3141,9 +3054,7 @@ BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 
 void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney )
 {
-	//INT8 bSlot;
 	OBJECTTYPE Object;
-	//SOLDIERTYPE *pSoldier;
 	BOOLEAN fRet;
 
 	// remove all money from soldier
