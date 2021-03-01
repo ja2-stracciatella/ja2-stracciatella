@@ -1,5 +1,3 @@
-#include <stdexcept>
-
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Items.h"
@@ -39,7 +37,6 @@
 #include "StrategicMap.h"
 #include "Campaign_Types.h"
 #include "Soldier_Macros.h"
-#include "MemMan.h"
 #include "Debug.h"
 
 #include "AmmoTypeModel.h"
@@ -49,12 +46,13 @@
 #include "ItemModel.h"
 #include "MagazineModel.h"
 #include "WeaponModels.h"
+#include <array>
+#include <initializer_list>
+#include <map>
+#include <set>
+#include <stdexcept>
 
-#define ANY_MAGSIZE 255
-
-
-// weight units are 100g each
-
+constexpr UINT8 ANY_MAGSIZE = 255; // magic number for FindAmmo's mag_size parameter
 
 struct AttachmentInfoStruct
 {
@@ -80,7 +78,6 @@ static const AttachmentInfoStruct AttachmentInfo[] =
 	{GUN_BARREL_EXTENDER,		IC_GUN,		ATTACHING_SPECIAL_ITEM_CHECK,			0},
 	{DETONATOR,			IC_BOMB,	ATTACHING_DETONATOR_CHECK,			0},
 	{REMDETONATOR,			IC_BOMB,	ATTACHING_REMOTE_DETONATOR_CHECK,		-10},
-	{REMDETONATOR,			IC_BOMB,	ATTACHING_REMOTE_DETONATOR_CHECK,		-10},
 	{XRAY_BULB,			IC_NONE,	ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK,	-15},
 	{COPPER_WIRE,			IC_NONE,	ATTACHING_SPECIAL_ELECTRONIC_ITEM_CHECK,	+20},
 	{CERAMIC_PLATES,		IC_ARMOUR,	NO_CHECK,					0},
@@ -94,152 +91,49 @@ static const AttachmentInfoStruct AttachmentInfo[] =
 	{ADRENALINE_BOOSTER,		IC_ARMOUR,	NO_CHECK,								0},
 	{REGEN_BOOSTER,				IC_ARMOUR,	NO_CHECK,								0},
 	{BREAK_LIGHT,				IC_ARMOUR,	NO_CHECK,								0},
-
-	{NONE,				0,		0,						0}
 };
 
-static UINT16 const g_attachments[][2] =
+static std::map<UINT16, std::set<UINT16> const> const g_attachments
 {
-	{DETONATOR, TNT},
-	{DETONATOR, HMX},
-	{DETONATOR, C1},
-	{DETONATOR, C4},
-
-	{REMDETONATOR, TNT},
-	{REMDETONATOR, HMX},
-	{REMDETONATOR, C1},
-	{REMDETONATOR, C4},
-
-	{CERAMIC_PLATES, FLAK_JACKET},
-	{CERAMIC_PLATES, FLAK_JACKET_18},
-	{CERAMIC_PLATES, FLAK_JACKET_Y},
-	{CERAMIC_PLATES, KEVLAR_VEST},
-	{CERAMIC_PLATES, KEVLAR_VEST_18},
-	{CERAMIC_PLATES, KEVLAR_VEST_Y},
-	{CERAMIC_PLATES, SPECTRA_VEST},
-	{CERAMIC_PLATES, SPECTRA_VEST_18},
-	{CERAMIC_PLATES, SPECTRA_VEST_Y},
-	{CERAMIC_PLATES, KEVLAR2_VEST},
-	{CERAMIC_PLATES, KEVLAR2_VEST_18},
-	{CERAMIC_PLATES, KEVLAR2_VEST_Y},
-
-	{SPRING, ALUMINUM_ROD},
-	{QUICK_GLUE, STEEL_ROD},
-	{DUCT_TAPE, STEEL_ROD},
-	{XRAY_BULB, FUMBLE_PAK},
-	{CHEWING_GUM, FUMBLE_PAK},
-	{BATTERIES, XRAY_DEVICE},
-	{COPPER_WIRE, LAME_BOY},
-
-	{0, 0}
+	{DETONATOR, {TNT, HMX, C1, C4}},
+	{REMDETONATOR, {TNT, HMX, C1, C4}},
+	{CERAMIC_PLATES, {FLAK_JACKET, FLAK_JACKET_18, FLAK_JACKET_Y, KEVLAR_VEST, KEVLAR_VEST_18, KEVLAR_VEST_Y,
+	                  KEVLAR2_VEST, KEVLAR2_VEST_18, KEVLAR2_VEST_Y, SPECTRA_VEST, SPECTRA_VEST_18, SPECTRA_VEST_Y}},
+	{SPRING, {ALUMINUM_ROD}},
+	{QUICK_GLUE, {STEEL_ROD}},
+	{DUCT_TAPE, {STEEL_ROD}},
+	{XRAY_BULB, {FUMBLE_PAK}},
+	{CHEWING_GUM, {FUMBLE_PAK}},
+	{BATTERIES, {XRAY_DEVICE}},
+	{COPPER_WIRE, {LAME_BOY}}
 };
 
-static UINT16 const g_attachments_mod[][2] =
+// additional possible attachments if the extra_attachments game policy is set
+static std::set<UINT16> const g_helmets {STEEL_HELMET, KEVLAR_HELMET, KEVLAR_HELMET_18, KEVLAR_HELMET_Y, SPECTRA_HELMET, SPECTRA_HELMET_18, SPECTRA_HELMET_Y};
+static std::set<UINT16> const g_leggings {KEVLAR_LEGGINGS, KEVLAR_LEGGINGS_18, KEVLAR_LEGGINGS_Y, SPECTRA_LEGGINGS, SPECTRA_LEGGINGS_18, SPECTRA_LEGGINGS_Y};
+static std::map<UINT16, decltype(g_helmets) *> const g_attachments_mod
 {
-	{DETONATOR, TNT},
-	{DETONATOR, HMX},
-	{DETONATOR, C1},
-	{DETONATOR, C4},
+	{NIGHTGOGGLES, &g_helmets},
+	{UVGOGGLES, &g_helmets},
+	{SUNGOGGLES, &g_helmets},
+	{ROBOT_REMOTE_CONTROL, &g_helmets},
 
-	{REMDETONATOR, TNT},
-	{REMDETONATOR, HMX},
-	{REMDETONATOR, C1},
-	{REMDETONATOR, C4},
-
-	{CERAMIC_PLATES, FLAK_JACKET},
-	{CERAMIC_PLATES, FLAK_JACKET_18},
-	{CERAMIC_PLATES, FLAK_JACKET_Y},
-	{CERAMIC_PLATES, KEVLAR_VEST},
-	{CERAMIC_PLATES, KEVLAR_VEST_18},
-	{CERAMIC_PLATES, KEVLAR_VEST_Y},
-	{CERAMIC_PLATES, SPECTRA_VEST},
-	{CERAMIC_PLATES, SPECTRA_VEST_18},
-	{CERAMIC_PLATES, SPECTRA_VEST_Y},
-	{CERAMIC_PLATES, KEVLAR2_VEST},
-	{CERAMIC_PLATES, KEVLAR2_VEST_18},
-	{CERAMIC_PLATES, KEVLAR2_VEST_Y},
-
-	{SPRING, ALUMINUM_ROD},
-	{QUICK_GLUE, STEEL_ROD},
-	{DUCT_TAPE, STEEL_ROD},
-	{XRAY_BULB, FUMBLE_PAK},
-	{CHEWING_GUM, FUMBLE_PAK},
-	{BATTERIES, XRAY_DEVICE},
-	{COPPER_WIRE, LAME_BOY},
-
-	// extras
-	{NIGHTGOGGLES, STEEL_HELMET},
-	{NIGHTGOGGLES, KEVLAR_HELMET},
-	{NIGHTGOGGLES, KEVLAR_HELMET_18},
-	{NIGHTGOGGLES, KEVLAR_HELMET_Y},
-	{NIGHTGOGGLES, SPECTRA_HELMET},
-	{NIGHTGOGGLES, SPECTRA_HELMET_18},
-	{NIGHTGOGGLES, SPECTRA_HELMET_Y},
-
-	{UVGOGGLES, STEEL_HELMET},
-	{UVGOGGLES, KEVLAR_HELMET},
-	{UVGOGGLES, KEVLAR_HELMET_18},
-	{UVGOGGLES, KEVLAR_HELMET_Y},
-	{UVGOGGLES, SPECTRA_HELMET},
-	{UVGOGGLES, SPECTRA_HELMET_18},
-	{UVGOGGLES, SPECTRA_HELMET_Y},
-
-	{SUNGOGGLES, STEEL_HELMET},
-	{SUNGOGGLES, KEVLAR_HELMET},
-	{SUNGOGGLES, KEVLAR_HELMET_18},
-	{SUNGOGGLES, KEVLAR_HELMET_Y},
-	{SUNGOGGLES, SPECTRA_HELMET},
-	{SUNGOGGLES, SPECTRA_HELMET_18},
-	{SUNGOGGLES, SPECTRA_HELMET_Y},
-
-	{ROBOT_REMOTE_CONTROL, STEEL_HELMET},
-	{ROBOT_REMOTE_CONTROL, KEVLAR_HELMET},
-	{ROBOT_REMOTE_CONTROL, KEVLAR_HELMET_18},
-	{ROBOT_REMOTE_CONTROL, KEVLAR_HELMET_Y},
-	{ROBOT_REMOTE_CONTROL, SPECTRA_HELMET},
-	{ROBOT_REMOTE_CONTROL, SPECTRA_HELMET_18},
-	{ROBOT_REMOTE_CONTROL, SPECTRA_HELMET_Y},
-
-	{BREAK_LIGHT, KEVLAR_LEGGINGS},
-	{BREAK_LIGHT, KEVLAR_LEGGINGS_18},
-	{BREAK_LIGHT, KEVLAR_LEGGINGS_Y},
-	{BREAK_LIGHT, SPECTRA_LEGGINGS},
-	{BREAK_LIGHT, SPECTRA_LEGGINGS_18},
-	{BREAK_LIGHT, SPECTRA_LEGGINGS_Y},
-
-	{REGEN_BOOSTER, KEVLAR_LEGGINGS},
-	{REGEN_BOOSTER, KEVLAR_LEGGINGS_18},
-	{REGEN_BOOSTER, KEVLAR_LEGGINGS_Y},
-	{REGEN_BOOSTER, SPECTRA_LEGGINGS},
-	{REGEN_BOOSTER, SPECTRA_LEGGINGS_18},
-	{REGEN_BOOSTER, SPECTRA_LEGGINGS_Y},
-
-	{ADRENALINE_BOOSTER, KEVLAR_LEGGINGS},
-	{ADRENALINE_BOOSTER, KEVLAR_LEGGINGS_18},
-	{ADRENALINE_BOOSTER, KEVLAR_LEGGINGS_Y},
-	{ADRENALINE_BOOSTER, SPECTRA_LEGGINGS},
-	{ADRENALINE_BOOSTER, SPECTRA_LEGGINGS_18},
-	{ADRENALINE_BOOSTER, SPECTRA_LEGGINGS_Y},
-
-	{0, 0}
+	{BREAK_LIGHT, &g_leggings},
+	{REGEN_BOOSTER, &g_leggings},
+	{ADRENALINE_BOOSTER, &g_leggings}
 };
 
-UINT16 Launchable[][2] =
+static std::map<UINT16, std::set<UINT16> const> const Launchable
 {
-	{GL_HE_GRENADE, GLAUNCHER},
-	{GL_HE_GRENADE, UNDER_GLAUNCHER},
-	{GL_TEARGAS_GRENADE, GLAUNCHER},
-	{GL_TEARGAS_GRENADE, UNDER_GLAUNCHER},
-	{GL_STUN_GRENADE, GLAUNCHER},
-	{GL_STUN_GRENADE, UNDER_GLAUNCHER},
-	{GL_SMOKE_GRENADE, GLAUNCHER},
-	{GL_SMOKE_GRENADE, UNDER_GLAUNCHER},
-	{MORTAR_SHELL, MORTAR},
-	{TANK_SHELL, TANK_CANNON},
-	{0, 0}
+	{GL_HE_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
+	{GL_TEARGAS_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
+	{GL_STUN_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
+	{GL_SMOKE_GRENADE, {GLAUNCHER, UNDER_GLAUNCHER}},
+	{MORTAR_SHELL, {MORTAR}},
+	{TANK_SHELL, {TANK_CANNON}}
 };
 
-static UINT16 const CompatibleFaceItems[][2] =
+static std::initializer_list<std::array<UINT16, 2> const> const CompatibleFaceItems
 {
 	{ NIGHTGOGGLES, EXTENDEDEAR },
 	{ NIGHTGOGGLES, WALKMAN     },
@@ -248,9 +142,7 @@ static UINT16 const CompatibleFaceItems[][2] =
 	{ UVGOGGLES,    EXTENDEDEAR },
 	{ UVGOGGLES,    WALKMAN     },
 	{ GASMASK,      EXTENDEDEAR },
-	{ GASMASK,      WALKMAN     },
-
-	{ NOTHING,      NOTHING     }
+	{ GASMASK,      WALKMAN     }
 };
 
 
@@ -270,7 +162,7 @@ struct MergeInfo
 	UINT16 item1;
 	UINT16 item2;
 	UINT16 result;
-	UINT16 action;
+	MergeType action;
 };
 
 
@@ -336,8 +228,6 @@ static MergeInfo const Merge[] =
 
 	{FLASH_DEVICE,			DISPLAY_UNIT,			XRAY_DEVICE,			ELECTRONIC_MERGE},
 	{DISPLAY_UNIT,			FLASH_DEVICE,			XRAY_DEVICE,			ELECTRONIC_MERGE},
-
-	{ NOTHING,  NOTHING, NOTHING, DESTRUCTION}
 };
 
 struct ComboMergeInfoStruct
@@ -348,14 +238,13 @@ struct ComboMergeInfoStruct
 };
 
 
-ComboMergeInfoStruct AttachmentComboMerge[] =
+static ComboMergeInfoStruct const AttachmentComboMerge[] =
 {
 	// base item	attach 1	attach 2	result
 	{ALUMINUM_ROD,	{SPRING,	NOTHING},	SPRING_AND_BOLT_UPGRADE},
 	{STEEL_ROD,	{QUICK_GLUE,	DUCT_TAPE},	GUN_BARREL_EXTENDER},
 	{FUMBLE_PAK,	{XRAY_BULB,	CHEWING_GUM},	FLASH_DEVICE},
 	{LAME_BOY,	{COPPER_WIRE,	NOTHING},	DISPLAY_UNIT},
-	{NOTHING,	{NOTHING,	NOTHING},	NOTHING},
 };
 
 
@@ -766,12 +655,12 @@ bool ItemHasAttachments(OBJECTTYPE const& o)
 // (i.e. to any item in the class)
 static BOOLEAN ValidAttachmentClass(UINT16 usAttachment, UINT16 usItem)
 {
-	for (const AttachmentInfoStruct* i = AttachmentInfo; i->usItem != NONE; ++i)
+	for (auto const& ai : AttachmentInfo)
 	{
 		// see comment for AttachmentInfo array for why we skip IC_NONE
-		if (i->uiItemClass == IC_NONE) continue;
+		if (ai.uiItemClass == IC_NONE) continue;
 
-		if (i->usItem == usAttachment && i->uiItemClass == GCM->getItem(usItem)->getItemClass())
+		if (ai.usItem == usAttachment && ai.uiItemClass == GCM->getItem(usItem)->getItemClass())
 		{
 			return TRUE;
 		}
@@ -782,9 +671,9 @@ static BOOLEAN ValidAttachmentClass(UINT16 usAttachment, UINT16 usItem)
 
 static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
 {
-	for (const AttachmentInfoStruct* i = AttachmentInfo; i->usItem != NONE; ++i)
+	for (auto const& ai : AttachmentInfo)
 	{
-		if (i->usItem == usItem) return i;
+		if (ai.usItem == usItem) return &ai;
 	}
 	return NULL;
 }
@@ -793,24 +682,23 @@ static const AttachmentInfoStruct* GetAttachmentInfo(const UINT16 usItem)
 bool ValidAttachment(UINT16 const attachment, UINT16 const item)
 {
 	const ItemModel *itemModel = GCM->getItem(item);
-	if(itemModel->canBeAttached(attachment))
+	if (itemModel && itemModel->canBeAttached(attachment))
 	{
 		return true;
 	}
 
-	UINT16 const (*i)[2] = gamepolicy(extra_attachments) ? g_attachments_mod : g_attachments;
-	for (;; ++i)
 	{
-		UINT16 const (&a)[2] = *i;
-		if (a[0] == NOTHING)    return false; // Cannot be attached to anything
-		if (a[0] == attachment) break;
+		auto const it = g_attachments.find(attachment);
+		if (it != g_attachments.end() && it->second.count(item) == 1) return true;
 	}
-	for (;; ++i)
+
+	if (gamepolicy(extra_attachments))
 	{
-		UINT16 const (&a)[2] = *i;
-		if (a[0] != attachment) return false; // Cannot be attached to item
-		if (a[1] == item)       return true;
+		auto const it = g_attachments_mod.find(attachment);
+		if (it != g_attachments_mod.end() && (*it->second).count(item) == 1) return true;
 	}
+
+	return false;
 }
 
 
@@ -825,22 +713,6 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 		if ( (FindAttachment( pObj, UNDER_GLAUNCHER ) != ITEM_NOT_FOUND) && ValidLaunchable( usAttachment, UNDER_GLAUNCHER ) )
 		{
 			return ( TRUE );
-			/*
-			if ( fAttemptingAttachment )
-			{
-				// if there is no other grenade attached already, then we can attach it
-				if (FindAttachmentByClass( pObj, IC_GRENADE) != ITEM_NOT_FOUND)
-				{
-					return( FALSE );
-				}
-				// keep going, it can be attached to the grenade launcher
-			}
-			else
-			{
-				// logically, can be added
-				return( TRUE );
-			}
-			*/
 		}
 		else
 		{
@@ -877,20 +749,6 @@ BOOLEAN ValidItemAttachment(const OBJECTTYPE* const pObj, const UINT16 usAttachm
 				usSimilarItem = BIPOD;
 			}
 			break;
-	/*
-		case LASERSCOPE:
-			if (FindAttachment( pObj, SNIPERSCOPE ) != ITEM_NOT_FOUND)
-			{
-				return( FALSE );
-			}
-			break;
-		case SNIPERSCOPE:
-			if (FindAttachment( pObj, LASERSCOPE ) != ITEM_NOT_FOUND)
-			{
-				return( FALSE );
-			}
-			break;
-			*/
 		case DETONATOR:
 			if( FindAttachment( pObj, REMDETONATOR ) != ITEM_NOT_FOUND )
 			{
@@ -936,81 +794,31 @@ bool ValidAmmoType( UINT16 usItem, UINT16 usAmmoType )
 BOOLEAN CompatibleFaceItem(UINT16 const item1, UINT16 const item2)
 {
 	if (item2 == NOTHING) return TRUE;
-	for (UINT16 const (*i)[2] = CompatibleFaceItems; (*i)[0] != NOTHING; ++i)
+	for (auto const& i : CompatibleFaceItems)
 	{
-		if ((*i)[0] == item1 && (*i)[1] == item2) return TRUE;
-		if ((*i)[0] == item2 && (*i)[1] == item1) return TRUE;
+		if (i[0] == item1 && i[1] == item2) return TRUE;
+		if (i[0] == item2 && i[1] == item1) return TRUE;
 	}
 	return FALSE;
 }
 
-
-//Determines if this item is a two handed item.
-static BOOLEAN TwoHandedItem(UINT16 usItem)
-{
-	if (GCM->getItem(usItem)->isTwoHanded())
-	{
-		return( TRUE );
-	}
-	return FALSE;
-}
 
 BOOLEAN ValidLaunchable( UINT16 usLaunchable, UINT16 usItem )
 {
-	INT32 iLoop = 0;
+	auto const it = Launchable.find(usLaunchable);
+	if (it != Launchable.end())
+	{
+		return it->second.count(usItem) == 1;
+	}
 
-	// look for the section of the array pertaining to this launchable item...
-	while( 1 )
-	{
-		if (Launchable[iLoop][0] == usLaunchable)
-		{
-			break;
-		}
-		iLoop++;
-		if (Launchable[iLoop][0] == 0)
-		{
-			// the proposed item cannot be attached to anything!
-			return( FALSE );
-		}
-	}
-	// now look through this section for the item in question
-	while( 1 )
-	{
-		if (Launchable[iLoop][1] == usItem)
-		{
-			break;
-		}
-		iLoop++;
-		if (Launchable[iLoop][0] != usLaunchable)
-		{
-			// the proposed item cannot be attached to the item in question
-			return( FALSE );
-		}
-	}
-	return( TRUE );
+	return FALSE;
 }
 
 
 UINT16 GetLauncherFromLaunchable( UINT16 usLaunchable )
 {
-	INT32 iLoop = 0;
-
-	// look for the section of the array pertaining to this launchable item...
-	while( 1 )
-	{
-		if (Launchable[iLoop][0] == usLaunchable)
-		{
-			break;
-		}
-		iLoop++;
-		if (Launchable[iLoop][0] == 0)
-		{
-			// the proposed item cannot be attached to anything!
-			return( NOTHING );
-		}
-	}
-
-	return( Launchable[iLoop][1] );
+	auto const it = Launchable.find(usLaunchable);
+	return it != Launchable.end() ? *it->second.begin() : NOTHING;
 }
 
 
@@ -1026,13 +834,13 @@ static BOOLEAN EvaluateValidMerge(UINT16 const usMerge, UINT16 const usItem, UIN
 		return TRUE;
 	}
 
-	for (MergeInfo const* m = Merge; m->item1 != NOTHING; ++m)
+	for (auto const& m : Merge)
 	{
-		if (m->item1 != usMerge) continue;
-		if (m->item2 != usItem)  continue;
+		if (m.item1 != usMerge) continue;
+		if (m.item2 != usItem)  continue;
 
-		*pusResult = m->result;
-		*pubType   = m->action;
+		*pusResult = m.result;
+		*pubType   = m.action;
 		return TRUE;
 	}
 
@@ -1588,51 +1396,6 @@ BOOLEAN EmptyWeaponMagazine( OBJECTTYPE * pWeapon, OBJECTTYPE *pAmmo )
 	}
 }
 
-/*
-BOOLEAN ReloadLauncher( OBJECTTYPE * pLauncher, OBJECTTYPE * pAmmo )
-{
-	BOOLEAN    fOldAmmo;
-	OBJECTTYPE OldAmmo;
-
-	if (pLauncher->ubGunShotsLeft == 0)
-	{
-		fOldAmmo = FALSE;
-	}
-	else
-	{
-		if (pAmmo->ubNumberOfObjects > 1)
-		{
-			// can't do the swap out to the cursor
-			return( FALSE );
-		}
-		// otherwise temporarily store the launcher's old ammo
-		OldAmmo = OBJECTTYPE{};
-		fOldAmmo = TRUE;
-		OldAmmo.usItem = pLauncher->usGunAmmoItem;
-		OldAmmo.ubNumberOfObjects = 1;
-		OldAmmo.bStatus[0] = pLauncher->bGunAmmoStatus;
-	}
-
-	// put the new ammo in the gun
-	pLauncher->usGunAmmoItem = pAmmo->usItem;
-	pLauncher->ubGunShotsLeft = 1;
-	pLauncher->ubGunAmmoType = AMMO_GRENADE;
-	pLauncher->bGunAmmoStatus = pAmmo->bStatus[0];
-
-
-	if (fOldAmmo)
-	{
-		// copy the old ammo back to the item in the cursor
-		*pAmmo = OldAmmo;
-	}
-	else
-	{
-		// reduce the number of objects in the cursor by 1
-		RemoveObjs( pAmmo, 1 );
-	}
-	return( TRUE );
-}*/
-
 
 INT8 FindAmmo(const SOLDIERTYPE* s, const CalibreModel * calibre, UINT8 const mag_size, INT8 const exclude_slot)
 {
@@ -1748,9 +1511,8 @@ BOOLEAN AutoReload( SOLDIERTYPE * pSoldier )
 
 static ComboMergeInfoStruct const* GetAttachmentComboMerge(OBJECTTYPE const& o)
 {
-	for (ComboMergeInfoStruct const* i = AttachmentComboMerge;; ++i)
+	for (auto const& m : AttachmentComboMerge)
 	{
-		ComboMergeInfoStruct const& m = *i;
 		if (m.usItem == NOTHING) break;
 		if (m.usItem != o.usItem) continue;
 
@@ -1759,13 +1521,13 @@ static ComboMergeInfoStruct const* GetAttachmentComboMerge(OBJECTTYPE const& o)
 		{
 			UINT16 const attachment = *k;
 			if (attachment == NOTHING) continue;
-			if (FindAttachment(&o, attachment) == -1) return 0; // Didn't find something required
+			if (FindAttachment(&o, attachment) == -1) return nullptr; // Didn't find something required
 		}
 
 		return &m; // Found everything required
 	}
 
-	return 0;
+	return nullptr;
 }
 
 
@@ -2293,7 +2055,6 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 						{
 							// invalid ammo
 							break;
-							//return( FALSE );
 						}
 					}
 					break;
@@ -2888,12 +2649,6 @@ static void CreateGun(UINT16 usItem, INT8 bStatus, OBJECTTYPE* pObj)
 		pObj->ubGunAmmoType = GCM->getItem(usAmmo)->asAmmo()->ammoType->index;
 		pObj->bGunAmmoStatus = 100;
 		pObj->ubGunShotsLeft = GCM->getItem(usAmmo)->asAmmo()->capacity;
-		/*
-		if (usItem == CAWS)
-		{
-			pObj->usAttachItem[0] = DUCKBILL;
-			pObj->bAttachStatus[0] = 100;
-		}*/
 	}
 }
 
@@ -3219,12 +2974,9 @@ BOOLEAN PlaceObjectInSoldierProfile( UINT8 ubProfile, OBJECTTYPE *pObject )
 		}
 	}
 
-	//uiMoneyAmount
 	if ( fReturnVal )
 	{
 		// ATE: Manage soldier pointer as well....
-		//pSoldier = FindSoldierByProfileID(ubProfile);
-
 		// Do we have a valid profile?
 		if ( pSoldier != NULL )
 		{
@@ -3302,9 +3054,7 @@ BOOLEAN RemoveObjectFromSoldierProfile( UINT8 ubProfile, UINT16 usItem )
 
 void SetMoneyInSoldierProfile( UINT8 ubProfile, UINT32 uiMoney )
 {
-	//INT8 bSlot;
 	OBJECTTYPE Object;
-	//SOLDIERTYPE *pSoldier;
 	BOOLEAN fRet;
 
 	// remove all money from soldier
@@ -3602,7 +3352,7 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 	}
 	else
 	{
-		if (TwoHandedItem( pSoldier->inv[SECONDHANDPOS].usItem ) )
+		if ( GCM->getItem( pSoldier->inv[SECONDHANDPOS].usItem )->isTwoHanded() )
 		{
 			// must move the item in the main hand elsewhere in the inventory
 			fOk = InternalAutoPlaceObject( pSoldier, &(pSoldier->inv[HANDPOS]), FALSE, HANDPOS );
@@ -3621,7 +3371,7 @@ void SwapHandItems( SOLDIERTYPE * pSoldier )
 void WaterDamage(SOLDIERTYPE& s)
 {
 	// damage guy's equipment and camouflage due to water
-	INT8   bDamage, bDieSize;
+	INT8   bDieSize;
 	UINT32 uiRoll;
 
 	if (s.bOverTerrainType == DEEP_WATER)
@@ -3638,14 +3388,8 @@ void WaterDamage(SOLDIERTYPE& s)
 				if (uiRoll < 10)
 				{
 					// lose between 1 and 10 status points each time
-					bDamage = (INT8) (10 - uiRoll);
-
 					// but don't let anything drop lower than 1%
-					i->bStatus[0] -= bDamage;
-					if (i->bStatus[0] < 1)
-					{
-						i->bStatus[0] = 1;
-					}
+					i->bStatus[0] = std::max<INT8>(1, i->bStatus[0] - 10 + uiRoll);
 				}
 			}
 		}
