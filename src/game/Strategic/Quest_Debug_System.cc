@@ -2644,10 +2644,13 @@ static void AddNPCsInSectorToArray(void)
 	CFOR_EACH_SOLDIER(pSoldier)
 	{
 		//if soldier is a NPC, add him to the local NPC array
-		MercProfile profile(pSoldier->ubProfile);
-		if (profile.isNPC() || profile.isRPC() || profile.isVehicle())
+		if (pSoldier->ubProfile != NO_PROFILE)
 		{
-			gubCurrentNpcInSector[i++] = pSoldier->ubProfile;
+			MercProfile profile(pSoldier->ubProfile);
+			if (profile.isNPC() || profile.isRPC() || profile.isVehicle())
+			{
+				gubCurrentNpcInSector[i++] = pSoldier->ubProfile;
+			}
 		}
 	}
 	gubNumNPCinSector = (UINT8)i;
@@ -2812,7 +2815,7 @@ static void RefreshAllNPCInventory(void)
 	FOR_EACH_SOLDIER(s)
 	{
 		//is the merc a rpc or npc
-		if (MercProfile(s->ubProfile).isNPCorRPC())
+		if (s->ubProfile != NO_PROFILE && MercProfile(s->ubProfile).isNPCorRPC())
 		{
 			//refresh the mercs inventory
 			for ( usItemCnt = 0; usItemCnt< NUM_INV_SLOTS; usItemCnt++ )
@@ -3082,7 +3085,7 @@ static UINT8 WhichPanelShouldTalkingMercUse(void)
 		return( QDS_NO_PANEL );
 	}
 
-	if (MercProfile(gTalkingMercSoldier->ubProfile).isPlayerMerc())
+	if (gTalkingMercSoldier->ubProfile != NO_PROFILE && MercProfile(gTalkingMercSoldier->ubProfile).isPlayerMerc())
 	{
 		return( QDS_REGULAR_PANEL );
 	}
