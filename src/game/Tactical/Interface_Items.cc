@@ -3469,7 +3469,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 					EndItemPointer( );
 
 					// If we are giving it to somebody not on our team....
-					if (!MercProfile(tgt->ubProfile).isPlayerMerc() && !RPC_RECRUITED(tgt))
+					if (tgt->ubProfile != NO_PROFILE && !MercProfile(tgt->ubProfile).isPlayerMerc() && !RPC_RECRUITED(tgt))
 					{
 						SetEngagedInConvFromPCAction( gpItemPointerSoldier );
 					}

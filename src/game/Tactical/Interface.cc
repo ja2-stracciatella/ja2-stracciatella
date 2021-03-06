@@ -1115,7 +1115,7 @@ void DrawSelectedUIAboveGuy(SOLDIERTYPE& s)
 
 		PrintAboveGuy(sXPos, raise_name ? sYPos - 10 : sYPos, s.name);
 
-		if (MercProfile(s.ubProfile).isPlayerMerc() ||
+		if ((s.ubProfile != NO_PROFILE && MercProfile(s.ubProfile).isPlayerMerc()) ||
 			RPC_RECRUITED(&s) ||
 			AM_AN_EPC(&s) ||
 			s.uiStatusFlags & SOLDIER_VEHICLE)
