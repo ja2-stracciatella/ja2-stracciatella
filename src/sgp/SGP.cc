@@ -55,6 +55,26 @@
 #include <new>
 #include <utility>
 
+#ifdef __ANDROID__
+	static inline ST::string get_temp_filename(void)
+	{
+		return "ja2.log";
+	}
+#else
+	#if defined(__GNUC__) && __GNUC__ < 8
+	#include <experimental/filesystem>
+	using std::experimental::filesystem::temp_directory_path;
+	#else
+	#include <filesystem>
+	using std::filesystem::temp_directory_path;
+	#endif
+
+	static inline ST::string get_temp_filename(void)
+	{
+		return ST::string{temp_directory_path().append("ja2.log")};
+	}
+#endif
+
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 
 ////////////////////////////////////////////////////////////////////////////
@@ -343,7 +363,8 @@ int main(int argc, char* argv[])
 		// init locale and logging
 		{
 			std::vector<ST::string> problems = InitGlobalLocale();
-			Logger_initialize("ja2.log");
+			ST::string const tempFilename{get_temp_filename()};
+			Logger_initialize(tempFilename.c_str());
 			for (const ST::string& msg : problems)
 			{
 				SLOGW("%s", msg.c_str());
@@ -437,11 +458,6 @@ int main(int argc, char* argv[])
 	#ifdef __MINGW32__
 		freopen("CON", "w", stdout);
 		freopen("CON", "w", stderr);
-	#endif
-
-	#ifdef SGP_DEBUG
-		// Initialize the Debug Manager - success doesn't matter
-		InitializeDebugManager();
 	#endif
 
 		// this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
