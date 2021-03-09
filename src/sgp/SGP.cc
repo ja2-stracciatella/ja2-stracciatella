@@ -63,15 +63,15 @@
 #else
 	#if defined(__GNUC__) && __GNUC__ < 8
 	#include <experimental/filesystem>
-	using std::experimental::filesystem::temp_directory_path;
+	namespace fs = std::experimental::filesystem;
 	#else
 	#include <filesystem>
-	using std::filesystem::temp_directory_path;
+	namespace fs = std::filesystem;
 	#endif
 
 	static inline ST::string get_temp_filename(void)
 	{
-		return ST::string{temp_directory_path().append("ja2.log")};
+		return ST::string{fs::temp_directory_path().append("ja2.log")};
 	}
 #endif
 
@@ -890,5 +890,19 @@ TEST(cpp_language, sizeof_type)
 	EXPECT_EQ(sizeof(char16_t), 2);
 	EXPECT_EQ(sizeof(char32_t), 4);
 }
+
+#ifndef __ANDROID__
+TEST(cpp_language, filesystem)
+{
+	EXPECT_FALSE(fs::temp_directory_path().empty());
+	EXPECT_TRUE(fs::temp_directory_path().is_absolute());
+
+	auto const tmpFilename{fs::temp_directory_path().append("ja2.log")};
+	EXPECT_EQ(tmpFilename, fs::temp_directory_path() / "ja2.log");
+	EXPECT_EQ(tmpFilename.filename(), "ja2.log");
+	EXPECT_EQ(tmpFilename.extension(), ".log");
+	EXPECT_EQ(tmpFilename.stem(), "ja2");
+}
+#endif
 
 #endif // WITH_UNITTESTS
