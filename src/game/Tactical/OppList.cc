@@ -3013,14 +3013,15 @@ void DebugSoldierPage3()
 		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "Anim non-int:",       s->fInNonintAnim);
 		MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "RT Anim non-int:",    s->fRTInNonintAnim);
 
-		// OPIONION OF SELECTED MERC
+		// OPINION OF SELECTED MERC
 		const SOLDIERTYPE* const sel = GetSelectedMan();
-		MercProfile const p          = MercProfile(s->ubProfile);
-		if (sel != NULL &&
-				s->ubProfile != NO_PROFILE &&
-				(p.isPlayerMerc() || p.isRPC()))
+		if (sel != NULL && s->ubProfile != NO_PROFILE)
 		{
-			MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "NPC Opinion:", GetProfile(s->ubProfile).bMercOpinion[sel->ubProfile]);
+			MercProfile const p = MercProfile(s->ubProfile);
+			if (p.isPlayerMerc() || p.isRPC())
+			{
+				MPrintStat(DEBUG_PAGE_SECOND_COLUMN, y += h, "NPC Opinion:", GetProfile(s->ubProfile).bMercOpinion[sel->ubProfile]);
+			}
 		}
 	}
 	else

@@ -177,6 +177,7 @@ void MercDailyUpdate()
 			if (--s->bCorpseQuoteTolerance < 0) s->bCorpseQuoteTolerance = 0;
 
 			MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
+			MercProfile const profile(s->ubProfile);
 
 			// CJC: For some personalities, reset personality quote said flag
 			switch (p.bPersonalityTrait)
@@ -206,7 +207,7 @@ void MercDailyUpdate()
 			p.ubMiscFlags3 |= PROFILE_MISC_FLAG3_PLAYER_HAD_CHANCE_TO_HIRE;
 
 			//if the character is an RPC
-			if (MercProfile(s->ubProfile).isRPC())
+			if (profile.isRPC())
 			{
 				//increment the number of days the mercs has been on the team
 				++s->iTotalContractLength;

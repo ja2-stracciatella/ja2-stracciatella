@@ -2437,7 +2437,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 		}
 
 		// OK< FOR NOW HANDLE NPC's DIFFERENT!
-		MercProfile profile(pTSoldier->ubProfile);
+		UINT8 const ubProfileID = pTSoldier->ubProfile;
 
 		// 1 ) PLayer to NPC = NPC
 		// 2 ) Player to player = player;
@@ -2446,7 +2446,7 @@ void SoldierGiveItemFromAnimation( SOLDIERTYPE *pSoldier )
 
 		// Switch on target...
 		// Are we a player dude.. ( target? )
-		if (profile.isPlayerMerc() || RPC_RECRUITED(pTSoldier))
+		if ((ubProfileID != NO_PROFILE && MercProfile(ubProfileID).isPlayerMerc()) || RPC_RECRUITED(pTSoldier))
 		{
 			fToTargetPlayer = TRUE;
 		}
