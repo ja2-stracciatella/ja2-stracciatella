@@ -55,6 +55,26 @@
 #include <new>
 #include <utility>
 
+#ifdef __ANDROID__
+	static inline ST::string get_temp_filename(void)
+	{
+		return "ja2.log";
+	}
+#else
+	#if defined(__GNUC__) && __GNUC__ < 8
+	#include <experimental/filesystem>
+	namespace fs = std::experimental::filesystem;
+	#else
+	#include <filesystem>
+	namespace fs = std::filesystem;
+	#endif
+
+	static inline ST::string get_temp_filename(void)
+	{
+		return ST::string{fs::temp_directory_path().append("ja2.log")};
+	}
+#endif
+
 extern BOOLEAN gfPauseDueToPlayerGamePause;
 
 ////////////////////////////////////////////////////////////////////////////
@@ -343,7 +363,8 @@ int main(int argc, char* argv[])
 		// init locale and logging
 		{
 			std::vector<ST::string> problems = InitGlobalLocale();
-			Logger_initialize("ja2.log");
+			ST::string const tempFilename{get_temp_filename()};
+			Logger_initialize(tempFilename.c_str());
 			for (const ST::string& msg : problems)
 			{
 				SLOGW("%s", msg.c_str());
@@ -437,11 +458,6 @@ int main(int argc, char* argv[])
 	#ifdef __MINGW32__
 		freopen("CON", "w", stdout);
 		freopen("CON", "w", stderr);
-	#endif
-
-	#ifdef SGP_DEBUG
-		// Initialize the Debug Manager - success doesn't matter
-		InitializeDebugManager();
 	#endif
 
 		// this one needs to go ahead of all others (except Debug), for MemDebugCounter to work right...
@@ -874,5 +890,19 @@ TEST(cpp_language, sizeof_type)
 	EXPECT_EQ(sizeof(char16_t), 2);
 	EXPECT_EQ(sizeof(char32_t), 4);
 }
+
+#ifndef __ANDROID__
+TEST(cpp_language, filesystem)
+{
+	EXPECT_FALSE(fs::temp_directory_path().empty());
+	EXPECT_TRUE(fs::temp_directory_path().is_absolute());
+
+	auto const tmpFilename{fs::temp_directory_path().append("ja2.log")};
+	EXPECT_EQ(tmpFilename, fs::temp_directory_path() / "ja2.log");
+	EXPECT_EQ(tmpFilename.filename(), "ja2.log");
+	EXPECT_EQ(tmpFilename.extension(), ".log");
+	EXPECT_EQ(tmpFilename.stem(), "ja2");
+}
+#endif
 
 #endif // WITH_UNITTESTS

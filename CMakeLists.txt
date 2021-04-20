@@ -273,6 +273,10 @@ if (MINGW)
     LIST(APPEND JA2_LIBRARIES mingw_stdthreads)
 endif()
 
+if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    LIST(APPEND JA2_LIBRARIES stdc++fs)
+endif()
+
 if(ANDROID)
     add_library(${JA2_BINARY} SHARED ${JA2_SOURCES})
 else()
