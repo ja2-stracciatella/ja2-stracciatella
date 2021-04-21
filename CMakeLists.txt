@@ -269,12 +269,17 @@ set(
     string_theory-internal
     lua
 )
+set(
+    LAUNCHER_LIBRARIES
+    string_theory-internal
+)
 if (MINGW)
     LIST(APPEND JA2_LIBRARIES mingw_stdthreads)
 endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     LIST(APPEND JA2_LIBRARIES stdc++fs)
+    LIST(APPEND LAUNCHER_LIBRARIES stdc++fs)
 endif()
 
 if(ANDROID)
@@ -289,7 +294,7 @@ set_property(SOURCE ${CMAKE_SOURCE_DIR}/src/game/GameVersion.cc APPEND PROPERTY 
 
 if(BUILD_LAUNCHER)
     add_executable(${LAUNCHER_BINARY} ${LAUNCHER_SOURCES})
-    target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} ${STRACCIATELLA_LIBRARIES} string_theory-internal)
+    target_link_libraries(${LAUNCHER_BINARY} ${FLTK_LIBRARIES} ${STRACCIATELLA_LIBRARIES} ${LAUNCHER_LIBRARIES})
     add_dependencies(${LAUNCHER_BINARY} stracciatella)
 endif()
 
