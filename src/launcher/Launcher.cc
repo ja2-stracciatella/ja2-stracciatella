@@ -359,7 +359,7 @@ void Launcher::startEditor(Fl_Widget* btn, void* userdata) {
 		RustPointer<char> assets_dir(findPathFromAssetsDir(nullptr, false, false));
 		if (assets_dir) {
 			// free editor.slf
-			has_editor_slf = checkIfRelativePathExists(assets_dir.get(), "editor.slf", true);
+			has_editor_slf = checkIfRelativePathExists(assets_dir.get(), "externalized/editor.slf", true);
 		}
 	}
 	if (!has_editor_slf) {
