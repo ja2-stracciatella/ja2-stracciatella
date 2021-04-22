@@ -97,6 +97,7 @@ jobs:
         CI_OS: ${{ matrix.cfg.os }}
         CI_TARGET: ${{ matrix.cfg.target }}
         CI_REF: ${{ github.ref }}
+        GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Publish packages
       shell: bash
