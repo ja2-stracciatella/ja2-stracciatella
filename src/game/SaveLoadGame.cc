@@ -195,8 +195,6 @@ static void SaveIMPPlayerProfiles();
 
 BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 {
-	if (gamepolicy(imp_load_saved_merc_by_nickname)) SaveIMPPlayerProfiles();
-
 	BOOLEAN	fPausedStateBeforeSaving    = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
 
@@ -266,6 +264,9 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		}
 
 		FileMan::createDir(GCM->getSavedGamesFolder().c_str());
+
+		// Save IMP merc(s)
+		if (gamepolicy(imp_load_saved_merc_by_nickname)) SaveIMPPlayerProfiles();
 
 		// Create the save game file
 		char savegame_name[512];
