@@ -3,17 +3,9 @@
 #include "sgp/FileMan.h"
 #include "externalized/TestUtils.h"
 
-DefaultContentManagerUT::DefaultContentManagerUT(GameVersion gameVersion,
-			const ST::string& configFolder,
-			const ST::string& gameResRootPath,
-			const ST::string& externalizedDataPath)
-	: DefaultContentManager(gameVersion, configFolder, gameResRootPath, externalizedDataPath)
+DefaultContentManagerUT::DefaultContentManagerUT(RustPointer<EngineOptions> engineOptions)
+	: DefaultContentManager(move(engineOptions))
 {}
-
-void DefaultContentManagerUT::init(EngineOptions* engine_options)
-{
-	Vfs_addDir(m_vfs.get(), m_externalizedDataPath.c_str());
-}
 
 std::unique_ptr<rapidjson::Document> DefaultContentManagerUT::_readJsonDataFile(const char* fileName) const
 {
@@ -22,15 +14,13 @@ std::unique_ptr<rapidjson::Document> DefaultContentManagerUT::_readJsonDataFile(
 
 DefaultContentManagerUT* DefaultContentManagerUT::createDefaultCMForTesting()
 {
+	RustPointer<EngineOptions> engineOptions(EngineOptions_default());
 	ST::string extraDataDir = GetExtraDataDir();
-	ST::string configFolderPath = FileMan::joinPaths(extraDataDir, "unittests");
 	ST::string gameResRootPath = FileMan::joinPaths(extraDataDir, "unittests");
-	ST::string externalizedDataPath = FileMan::joinPaths(extraDataDir, "externalized");
+	
+	EngineOptions_setVanillaGameDir(engineOptions.get(), gameResRootPath.c_str());
 
-	DefaultContentManagerUT* cm = new DefaultContentManagerUT(GameVersion::ENGLISH,
-					configFolderPath,
-					gameResRootPath, externalizedDataPath);
-	cm->init(NULL);
+	DefaultContentManagerUT* cm = new DefaultContentManagerUT(move(engineOptions));
 
 	return cm;
 }

@@ -41,6 +41,12 @@ pub extern "C" fn EngineOptions_create(
     }
 }
 
+/// Creates empty engine options
+#[no_mangle]
+pub extern "C" fn EngineOptions_default() -> *mut EngineOptions {
+    into_ptr(EngineOptions::default())
+}
+
 /// Writes `EngineOptions` to `(stracciatella_home)/ja2.json`.
 /// Returns true on success, false otherwise.
 #[no_mangle]
@@ -81,6 +87,15 @@ pub extern "C" fn EngineOptions_getStracciatellaHome() -> *mut c_char {
 pub extern "C" fn EngineOptions_getVanillaGameDir(ptr: *const EngineOptions) -> *mut c_char {
     let engine_options = unsafe_ref(ptr);
     let vanilla_game_dir = c_string_from_path_or_panic(&engine_options.vanilla_game_dir);
+    vanilla_game_dir.into_raw()
+}
+
+/// Gets the `EngineOptions.assets_dir` path.
+/// The caller is responsible for the returned memory.
+#[no_mangle]
+pub extern "C" fn EngineOptions_getAssetsDir(ptr: *const EngineOptions) -> *mut c_char {
+    let engine_options = unsafe_ref(ptr);
+    let vanilla_game_dir = c_string_from_path_or_panic(&engine_options.assets_dir);
     vanilla_game_dir.into_raw()
 }
 

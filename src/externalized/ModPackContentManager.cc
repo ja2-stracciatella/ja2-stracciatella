@@ -8,20 +8,32 @@
 
 #define DEBUG_PRINT_OPENING_FILES (1)
 
-ModPackContentManager::ModPackContentManager(GameVersion gameVersion,
-						const std::vector<ST::string> &modNames,
-						const ST::string &assetsRootPath,
-						const ST::string &configFolder,
-						const ST::string &gameResRootPath,
-						const ST::string &externalizedDataPath)
-	:DefaultContentManager(gameVersion, configFolder, gameResRootPath, externalizedDataPath)
+ModPackContentManager::ModPackContentManager(RustPointer<EngineOptions> engineOptions)
+	:DefaultContentManager(move(engineOptions))
 {
+	uint32_t nMods = EngineOptions_getModsLength(m_engineOptions.get());
+	std::vector<ST::string> modNames;
+	for (uint32_t i = 0; i < nMods; ++i)
+	{
+		RustPointer<char> modName(EngineOptions_getMod(m_engineOptions.get(), i));
+		modNames.emplace_back(modName.get());
+	}
 	m_modNames = modNames;
-	m_assetsRootPath = assetsRootPath;
 }
 
 ModPackContentManager::~ModPackContentManager()
 {
+}
+
+void ModPackContentManager::logConfiguration() const {
+	ST::string joinedModList;
+    for(const auto &s : m_modNames) {
+        if(!joinedModList.empty())
+            joinedModList += ", ";
+        joinedModList += s;
+    }
+	DefaultContentManager::logConfiguration();
+	STLOGI("Enabled mods                    '{}'", joinedModList);
 }
 
 /** Get folder for saved games. */

@@ -57,6 +57,8 @@ class ContentManager : public ItemSystem
 public:
 	virtual ~ContentManager() {};
 
+	virtual void logConfiguration() const = 0;
+
 	/** Get map file path. */
 	virtual ST::string getMapPath(const ST::string& mapName) const = 0;
 

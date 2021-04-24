@@ -10,12 +10,7 @@
 class ModPackContentManager : public DefaultContentManager
 {
 public:
-	ModPackContentManager(GameVersion gameVersion,
-				const std::vector<ST::string> &modNames,
-				const ST::string &assetsRootPath,
-				const ST::string &configFolder,
-				const ST::string &gameResRootPath,
-				const ST::string &externalizedDataPath);
+	ModPackContentManager(RustPointer<EngineOptions> engineOptions);
 
 	virtual ~ModPackContentManager() override;
 
@@ -26,8 +21,7 @@ public:
 	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) override;
 
 protected:
-	// path to the assets shipped with Stracciatella
-	ST::string m_assetsRootPath;
+	void logConfiguration() const override;
 
 	// list of enabled mods
 	std::vector<ST::string> m_modNames;

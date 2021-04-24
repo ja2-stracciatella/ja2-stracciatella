@@ -391,8 +391,6 @@ int main(int argc, char* argv[])
 			return EXIT_FAILURE;
 		}
 
-		ST::string exeFolder = FileMan::getParentPath(argv[0], true);
-
 		RustPointer<EngineOptions> params(EngineOptions_create(configFolderPath.get(), argv, argc));
 		if (params == NULL) {
 			auto rustError = getRustError();
@@ -465,11 +463,6 @@ int main(int argc, char* argv[])
 		InitializeMemoryManager();
 
 		SLOGD("Initializing Game Resources");
-		RustPointer<char> gameResRootPath(EngineOptions_getVanillaGameDir(params.get()));
-
-		RustPointer<char> extraDataDir(Env_assetsDir());
-		ST::string externalizedDataPath = FileMan::joinPaths(extraDataDir.get(), "externalized");
-
 		FileMan::switchTmpFolder(configFolderPath.get());
 
 		DefaultContentManager *cm;
@@ -477,40 +470,14 @@ int main(int argc, char* argv[])
 		uint32_t n = EngineOptions_getModsLength(params.get());
 		if(n > 0)
 		{
-			std::vector<ST::string> enabledMods;
-			for (uint32_t i = 0; i < n; ++i)
-			{
-				RustPointer<char> modName(EngineOptions_getMod(params.get(), i));
-				enabledMods.emplace_back(modName.get());
-			}
-			cm = new ModPackContentManager(version,
-							enabledMods, extraDataDir.get(), configFolderPath.get(),
-							gameResRootPath.get(), externalizedDataPath);
-			SLOGI("------------------------------------------------------------------------------");
-			SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.get());
-			SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
-			SLOGI("Extra data directory:          '%s'", extraDataDir.get());
-			SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
-			SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
-			SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
-			SLOGI("------------------------------------------------------------------------------");
+			cm = new ModPackContentManager(move(params));
 		}
 		else
 		{
-			cm = new DefaultContentManager(version,
-							configFolderPath.get(),
-							gameResRootPath.get(), externalizedDataPath);
-			SLOGI("------------------------------------------------------------------------------");
-			SLOGI("JA2 Home Dir:                  '%s'", configFolderPath.get());
-			SLOGI("Root game resources directory: '%s'", gameResRootPath.get());
-			SLOGI("Extra data directory:          '%s'", extraDataDir.get());
-			SLOGI("Data directory:                '%s'", cm->getDataDir().c_str());
-			SLOGI("Tilecache directory:           '%s'", cm->getTileDir().c_str());
-			SLOGI("Saved games directory:         '%s'", cm->getSavedGamesFolder().c_str());
-			SLOGI("------------------------------------------------------------------------------");
+			cm = new DefaultContentManager(move(params));
 		}
 
-		cm->init(params.get());
+		cm->logConfiguration();
 
 		if(!cm->loadGameData())
 		{
