@@ -31,6 +31,9 @@
 #include "Music_Control.h"
 #include "ContentMusic.h"
 #include "UILayout.h"
+#include "GamePolicy.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
 
 
 #define MAX_MERC_IN_HELI		20
@@ -468,7 +471,7 @@ void HandleHeliDrop( )
 				// Add merc to sector
 				SOLDIERTYPE& s = *gHeliSeats[cnt];
 				s.ubStrategicInsertionCode = INSERTION_CODE_NORTH;
-				UpdateMercInSector(s, SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
+				UpdateMercInSector(s, SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
 
 				// Check for merc arrives quotes...
 				HandleMercArrivesQuotes(s);
@@ -601,7 +604,7 @@ void HandleHeliDrop( )
 						// Change insertion code
 						s.ubStrategicInsertionCode = INSERTION_CODE_NORTH;
 
-						UpdateMercInSector(s, SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
+						UpdateMercInSector(s, SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
 
 						// IF the first guy down, set squad!
 						if ( gfFirstGuyDown )

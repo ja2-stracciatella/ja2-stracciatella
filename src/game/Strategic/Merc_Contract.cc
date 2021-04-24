@@ -37,6 +37,7 @@
 #include "GameInstance.h"
 #include "ShippingDestinationModel.h"
 #include "MercProfile.h"
+#include "GamePolicy.h"
 
 #include <string_theory/string>
 
@@ -779,7 +780,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 	{ // The character is not an RPC
 		INT16 const elsewhere =
 			!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(AIRPORT_SECTOR)].fEnemyControlled ? AIRPORT_SECTOR :
-			START_SECTOR;
+			gamepolicy(start_sector);
 		if (elsewhere == SECTOR(x, y) && z == 0) goto no_choice;
 
 		// Set strings for generic buttons

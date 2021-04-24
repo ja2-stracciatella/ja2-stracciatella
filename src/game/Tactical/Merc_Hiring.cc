@@ -42,6 +42,9 @@
 #include "Map_Screen_Interface_Bottom.h"
 #include "Quests.h"
 #include "Logger.h"
+#include "GamePolicy.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
 
 #include <string_theory/string>
 
@@ -54,7 +57,7 @@ extern BOOLEAN gfFirstHeliRun;
 // ATE: Globals that dictate where the mercs will land once being hired
 // Default to start sector
 // Saved in general saved game structure
-INT16 g_merc_arrive_sector = START_SECTOR;
+INT16 g_merc_arrive_sector = 0;
 
 void CreateSpecialItem(SOLDIERTYPE* const s, UINT16 item)
 {
@@ -235,13 +238,13 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 {
 	UINT32 uiTimeOfPost;
 
-	if (!DidGameJustStart() && g_merc_arrive_sector == START_SECTOR)
+	if (!DidGameJustStart() && g_merc_arrive_sector == gamepolicy(start_sector))
 	{
 		// Mercs arriving in start sector. This sector has been deemed as the always
 		// safe sector. Seeing we don't support entry into a hostile sector (except
 		// for the beginning), we will nuke any enemies in this sector first.
-		if (gWorldSectorX != SECTORX(START_SECTOR) ||
-			gWorldSectorY != SECTORY(START_SECTOR) ||
+		if (gWorldSectorX != SECTORX(gamepolicy(start_sector)) ||
+			gWorldSectorY != SECTORY(gamepolicy(start_sector)) ||
 			gbWorldSectorZ != 0)
 		{
 			EliminateAllEnemies(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector));
@@ -274,7 +277,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 		// ( which means we are at beginning of game if so )
 		// Setup chopper....
 		if (s.ubStrategicInsertionCode != INSERTION_CODE_CHOPPER &&
-				SECTOR(s.sSectorX, s.sSectorY) == START_SECTOR)
+				SECTOR(s.sSectorX, s.sSectorY) == gamepolicy(start_sector))
 		{
 			gfTacticalDoHeliRun = TRUE;
 

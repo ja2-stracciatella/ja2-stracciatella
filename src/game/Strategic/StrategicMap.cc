@@ -29,6 +29,7 @@
 #include "Font_Control.h"
 #include "GameInstance.h"
 #include "GameLoop.h"
+#include "GamePolicy.h"
 #include "GameScreen.h"
 #include "GameSettings.h"
 #include "Game_Clock.h"
@@ -1183,8 +1184,8 @@ check_entry:
 
 		case INSERTION_CODE_ARRIVING_GAME:
 			// Are we in the start sector?
-			if (SECTOR(x,             y)             == START_SECTOR && z              == 0 &&
-					SECTOR(gWorldSectorX, gWorldSectorY) == START_SECTOR && gbWorldSectorZ == 0)
+			if (SECTOR(x,             y)             == gamepolicy(start_sector) && z              == 0 &&
+					SECTOR(gWorldSectorX, gWorldSectorY) == gamepolicy(start_sector) && gbWorldSectorZ == 0)
 			{ // Try another location and walk into map
 				gridno = 4379;
 			}
@@ -2307,7 +2308,7 @@ void SetupNewStrategicGame()
 	StrategicTurnsNewGame();
 
 	// Move the landing zone over to the start sector.
-	g_merc_arrive_sector = START_SECTOR;
+	g_merc_arrive_sector = gamepolicy(start_sector);
 }
 
 
@@ -2352,7 +2353,7 @@ static void HandleAirspaceControlUpdated()
 		ST::string sMsgSubString1 = GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, FALSE);
 
 		// Move the landing zone over to the start sector.
-		g_merc_arrive_sector = START_SECTOR;
+		g_merc_arrive_sector = gamepolicy(start_sector);
 
 		// get the name of the new sector
 		ST::string sMsgSubString2 = GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, FALSE);
@@ -3278,7 +3279,7 @@ try
 		return FALSE;
 	}
 
-	if (DidGameJustStart() && SECTOR(gWorldSectorX, gWorldSectorY) == START_SECTOR && gbWorldSectorZ == 0)
+	if (DidGameJustStart() && SECTOR(gWorldSectorX, gWorldSectorY) == gamepolicy(start_sector) && gbWorldSectorZ == 0)
 	{
 		return FALSE;
 	}

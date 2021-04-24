@@ -11,6 +11,7 @@
 #include "Game_Event_Hook.h"
 #include "Game_Init.h"
 #include "GameInstance.h"
+#include "GamePolicy.h"
 #include "GameSettings.h"
 #include "HImage.h"
 #include "Interface_Items.h"
@@ -1074,7 +1075,7 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, INT const sector, GridNo 
 
 void HandleEquipmentLeftInOmerta(const UINT32 uiSlotIndex)
 {
-	HandleEquipmentLeft(uiSlotIndex, START_SECTOR, START_SECTOR_LEAVE_EQUIP_GRIDNO);
+	HandleEquipmentLeft(uiSlotIndex, gamepolicy(start_sector), START_SECTOR_LEAVE_EQUIP_GRIDNO);
 }
 
 
@@ -3678,12 +3679,12 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 	if (!DidGameJustStart()) return FALSE;
 
 	// Select starting sector.
-	ChangeSelectedMapSector(SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
+	ChangeSelectedMapSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
 
 	// load starting sector
 	try
 	{
-		SetCurrentWorldSector(SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
+		SetCurrentWorldSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
 	}
 	catch (...) /* XXX exception should probably propagate; caller ignores return value */
 	{
@@ -3693,8 +3694,8 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 	//Setup variables in the PBI for this first battle.  We need to support the
 	//non-persistant PBI in case the user goes to mapscreen.
 	gfBlitBattleSectorLocator = TRUE;
-	gubPBSectorX = SECTORX(START_SECTOR);
-	gubPBSectorY = SECTORY(START_SECTOR);
+	gubPBSectorX = SECTORX(gamepolicy(start_sector));
+	gubPBSectorY = SECTORY(gamepolicy(start_sector));
 	gubPBSectorZ = 0;
 	gubEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
 

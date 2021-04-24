@@ -199,7 +199,6 @@ enum Quests
 #define PABLOS_STOLEN_DEST_GRIDNO	1
 #define LOST_SHIPMENT_GRIDNO		2
 
-#define START_SECTOR			SEC_A9
 #define START_SECTOR_LEAVE_EQUIP_GRIDNO	4868
 
 // NB brothel rooms 88-90 removed because they are the antechamber

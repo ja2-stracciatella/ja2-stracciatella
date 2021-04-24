@@ -172,5 +172,17 @@
     //  vanilla settings: 1, 2, 3
     "unhired_merc_deaths_easy": 1,
     "unhired_merc_deaths_medium": 2,
-    "unhired_merc_deaths_hard": 3
+    "unhired_merc_deaths_hard": 3,
+
+    //  Settings for newly started campaigns.
+    //  Most probably you do not need to change these unless you are running a full conversion mod.
+    "campaign": {
+        //  The sector where your team lands at the start.
+        //  vanilla settings: A9
+        "start_sector": "A9",
+
+        //  Is the start sector revealed at game start?
+        //  vanilla settings: true
+        "start_sector_revealed": true
+    }
 }
