@@ -1996,7 +1996,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	g_merc_arrive_sector =
 		1 <= merc_arrive_x && merc_arrive_x <= 16 &&
 		1 <= merc_arrive_y && merc_arrive_y <= 16 ? SECTOR(merc_arrive_x, merc_arrive_y) :
-		START_SECTOR;
+		gamepolicy(start_sector);
 	EXTR_BOOL( d, gfCreatureMeanwhileScenePlayed)
 	EXTR_SKIP_U8(d)
 	EXTR_BOOL( d, gfPersistantPBI)

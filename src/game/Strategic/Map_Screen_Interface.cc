@@ -11,6 +11,7 @@
 #include "Game_Event_Hook.h"
 #include "Game_Init.h"
 #include "GameInstance.h"
+#include "GamePolicy.h"
 #include "GameSettings.h"
 #include "HImage.h"
 #include "Interface_Items.h"
@@ -1074,7 +1075,7 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, INT const sector, GridNo 
 
 void HandleEquipmentLeftInOmerta(const UINT32 uiSlotIndex)
 {
-	HandleEquipmentLeft(uiSlotIndex, START_SECTOR, START_SECTOR_LEAVE_EQUIP_GRIDNO);
+	HandleEquipmentLeft(uiSlotIndex, gamepolicy(start_sector), START_SECTOR_LEAVE_EQUIP_GRIDNO);
 }
 
 
@@ -3677,26 +3678,33 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 	// make sure the game just started
 	if (!DidGameJustStart()) return FALSE;
 
+	UINT8 usStartSectorX = SECTORX(gamepolicy(start_sector));
+	UINT8 usStartSectorY = SECTORY(gamepolicy(start_sector));
+
 	// Select starting sector.
-	ChangeSelectedMapSector(SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
+	ChangeSelectedMapSector(usStartSectorX, usStartSectorY, 0);
 
 	// load starting sector
 	try
 	{
-		SetCurrentWorldSector(SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
+		SetCurrentWorldSector(usStartSectorX, usStartSectorY, 0);
 	}
 	catch (...) /* XXX exception should probably propagate; caller ignores return value */
 	{
 		return FALSE;
 	}
 
-	//Setup variables in the PBI for this first battle.  We need to support the
-	//non-persistant PBI in case the user goes to mapscreen.
-	gfBlitBattleSectorLocator = TRUE;
-	gubPBSectorX = SECTORX(START_SECTOR);
-	gubPBSectorY = SECTORY(START_SECTOR);
-	gubPBSectorZ = 0;
-	gubEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
+	if (NumEnemiesInSector(usStartSectorX, usStartSectorY) > 0)
+	{
+		//Setup variables in the PBI for this first battle.  We need to support the
+		//non-persistant PBI in case the user goes to mapscreen.
+		gfBlitBattleSectorLocator = TRUE;
+		gubPBSectorX = SECTORX(gamepolicy(start_sector));
+		gubPBSectorY = SECTORY(gamepolicy(start_sector));
+		gubPBSectorZ = 0;
+
+		gubEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
+	}
 
 	InitHelicopterEntranceByMercs( );
 

@@ -96,6 +96,9 @@ public:
 	int8_t unhired_merc_deaths_medium;       // Maximum unhired mercs KIA difficulty Medium
 	int8_t unhired_merc_deaths_hard;       // Maximum unhired mercs KIA difficulty Hard
 
+	uint16_t start_sector;        // Starting sector
+	bool reveal_start_sector;     // Should the start sector radar map be shown at start
+
 	////////////////////////////////////////////////////////////
 	//
 	////////////////////////////////////////////////////////////

@@ -1,7 +1,7 @@
 #include "DefaultGamePolicy.h"
+#include "Campaign_Types.h"
 #include "JsonObject.h"
 
-#include "game/Tactical/Item_Types.h"
 
 DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 {
@@ -75,6 +75,11 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 	unhired_merc_deaths_easy = gp.getOptionalInt("unhired_merc_deaths_easy", 1);
 	unhired_merc_deaths_medium = gp.getOptionalInt("unhired_merc_deaths_medium", 2);
 	unhired_merc_deaths_hard = gp.getOptionalInt("unhired_merc_deaths_hard", 3);
+
+	JsonObjectReader campaign = JsonObjectReader(gp.GetValue("campaign"));
+	const char* sector_string = campaign.getOptionalString("start_sector");
+	start_sector = SECTOR_FROM_SECTOR_SHORT_STRING(sector_string != NULL ? sector_string : "A9");
+	reveal_start_sector = campaign.getOptionalBool("start_sector_revealed", false);
 }
 
 /** Check if a hotkey is enabled. */

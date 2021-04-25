@@ -1459,7 +1459,7 @@ try
 		if (!AnyMercsHired())
 		{
 			// Select starting sector.
-			ChangeSelectedMapSector(SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
+			ChangeSelectedMapSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
 		}
 		else if( ( gWorldSectorX > 0 ) && ( gWorldSectorY > 0 ) && ( gbWorldSectorZ != -1 ) )
 		{
@@ -1471,7 +1471,7 @@ try
 			// Only select start sector, if there is no current selection, otherwise leave it as is.
 			if ( ( sSelMapX == 0 ) || ( sSelMapY == 0 ) || ( iCurrentMapSectorZ == -1 ) )
 			{
-				ChangeSelectedMapSector(SECTORX(START_SECTOR), SECTORY(START_SECTOR), 0);
+				ChangeSelectedMapSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
 			}
 		}
 
