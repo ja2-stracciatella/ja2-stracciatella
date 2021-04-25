@@ -792,8 +792,11 @@ static void HandleFirstHeliDropOfGame(void)
 		// Call people to area
 		CallAvailableEnemiesTo( gsGridNoSweetSpot );
 
-		// Say quote.....
-		SayQuoteFromAnyBodyInSector( QUOTE_ENEMY_PRESENCE );
+		if (NumEnemyInSector() > 0)
+		{
+			// Say quote.....
+			SayQuoteFromAnyBodyInSector(QUOTE_ENEMY_PRESENCE);
+		}
 
 		// Start music
 		SetMusicMode( MUSIC_TACTICAL_ENEMYPRESENT );

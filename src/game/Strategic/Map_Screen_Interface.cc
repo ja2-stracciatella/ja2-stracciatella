@@ -3678,26 +3678,33 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 	// make sure the game just started
 	if (!DidGameJustStart()) return FALSE;
 
+	UINT8 usStartSectorX = SECTORX(gamepolicy(start_sector));
+	UINT8 usStartSectorY = SECTORY(gamepolicy(start_sector));
+
 	// Select starting sector.
-	ChangeSelectedMapSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
+	ChangeSelectedMapSector(usStartSectorX, usStartSectorY, 0);
 
 	// load starting sector
 	try
 	{
-		SetCurrentWorldSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
+		SetCurrentWorldSector(usStartSectorX, usStartSectorY, 0);
 	}
 	catch (...) /* XXX exception should probably propagate; caller ignores return value */
 	{
 		return FALSE;
 	}
 
-	//Setup variables in the PBI for this first battle.  We need to support the
-	//non-persistant PBI in case the user goes to mapscreen.
-	gfBlitBattleSectorLocator = TRUE;
-	gubPBSectorX = SECTORX(gamepolicy(start_sector));
-	gubPBSectorY = SECTORY(gamepolicy(start_sector));
-	gubPBSectorZ = 0;
-	gubEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
+	if (NumEnemiesInSector(usStartSectorX, usStartSectorY) > 0)
+	{
+		//Setup variables in the PBI for this first battle.  We need to support the
+		//non-persistant PBI in case the user goes to mapscreen.
+		gfBlitBattleSectorLocator = TRUE;
+		gubPBSectorX = SECTORX(gamepolicy(start_sector));
+		gubPBSectorY = SECTORY(gamepolicy(start_sector));
+		gubPBSectorZ = 0;
+
+		gubEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
+	}
 
 	InitHelicopterEntranceByMercs( );
 
