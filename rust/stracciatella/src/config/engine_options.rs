@@ -1,7 +1,8 @@
 use std::path::PathBuf;
 
 use crate::config::{Resolution, ScalingQuality, VanillaVersion};
-use crate::{ensure_json_config_existence, parse_args, parse_json_config};
+use crate::fs::resolve_existing_components;
+use crate::{ensure_json_config_existence, get_assets_dir, parse_args, parse_json_config};
 
 /// Struct that is used to store the engines configuration parameters
 #[derive(Debug, PartialEq)]
@@ -10,6 +11,8 @@ pub struct EngineOptions {
     pub stracciatella_home: PathBuf,
     /// Path to the vanilla game directory
     pub vanilla_game_dir: PathBuf,
+    /// Path to the assets directory included with Stracciatella
+    pub assets_dir: PathBuf,
     /// List of enabled mods
     pub mods: Vec<String>,
     /// Resolution the game will start in
@@ -41,6 +44,7 @@ impl Default for EngineOptions {
         EngineOptions {
             stracciatella_home: PathBuf::from(""),
             vanilla_game_dir: PathBuf::from(""),
+            assets_dir: PathBuf::from(""),
             mods: vec![],
             resolution: Resolution::default(),
             brightness: 1.0,
@@ -70,8 +74,6 @@ impl EngineOptions {
 
         let mut engine_options = parse_json_config(&stracciatella_home)?;
 
-        engine_options.stracciatella_home = stracciatella_home.clone();
-
         match parse_args(&mut engine_options, args) {
             None => Ok(()),
             Some(str) => Err(str),
@@ -80,6 +82,12 @@ impl EngineOptions {
         if engine_options.vanilla_game_dir == PathBuf::from("") {
             return Err(String::from("Vanilla data directory has to be set either in config file or per command line switch"));
         }
+
+        engine_options.stracciatella_home =
+            resolve_existing_components(stracciatella_home, None, true);
+        engine_options.assets_dir = resolve_existing_components(&get_assets_dir(), None, true);
+        engine_options.vanilla_game_dir =
+            resolve_existing_components(&engine_options.vanilla_game_dir, None, true);
 
         Ok(engine_options)
     }

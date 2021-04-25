@@ -159,8 +159,6 @@ impl Vfs {
         let vanilla_game_dir = engine_options.vanilla_game_dir.clone();
         let vanilla_data_dir =
             fs::resolve_existing_components(Path::new(DATA_DIR), Some(&vanilla_game_dir), true);
-        #[cfg(not(target_os = "android"))]
-        let assets_dir = fs::resolve_existing_components(&crate::get_assets_dir(), None, true);
         let home_data_dir = fs::resolve_existing_components(
             &PathBuf::from(DATA_DIR),
             Some(&engine_options.stracciatella_home),
@@ -180,7 +178,7 @@ impl Vfs {
             #[cfg(not(target_os = "android"))]
             let mod_in_externalized = DirFs::new(&fs::resolve_existing_components(
                 &mod_path,
-                Some(&assets_dir),
+                Some(&engine_options.assets_dir),
                 true,
             ));
             #[cfg(target_os = "android")]
@@ -227,7 +225,7 @@ impl Vfs {
         let externalized_layer = {
             let externalized_dir = fs::resolve_existing_components(
                 Path::new(EXTERNALIZED_DIR),
-                Some(&assets_dir),
+                Some(&engine_options.assets_dir),
                 true,
             );
             self.add_dir(&externalized_dir)

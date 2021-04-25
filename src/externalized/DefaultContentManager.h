@@ -19,17 +19,11 @@
 class DefaultContentManager : public ContentManager, public IGameDataLoader
 {
 public:
-
-	DefaultContentManager(GameVersion gameVersion,
-				const ST::string &userHomeDir,
-				const ST::string &gameResRootPath,
-				const ST::string &externalizedDataPath);
+	DefaultContentManager(RustPointer<EngineOptions> engineOptions);
 
 	virtual ~DefaultContentManager() override;
 
-	/// Called after construction.
-	/// @throw runtime_error
-	virtual void init(EngineOptions* engine_options);
+	void logConfiguration() const override;
 
 	/** Load the game data. */
 	bool loadGameData();
@@ -183,13 +177,13 @@ public:
 	virtual const LoadingScreen* getLoadingScreen(uint8_t index) const override;
 
 protected:
+	RustPointer<EngineOptions> m_engineOptions;
 	ST::string m_dataDir;
 	ST::string m_tileDir;
 	ST::string m_userHomeDir;
-	ST::string m_gameResRootPath;
 	ST::string m_externalizedDataPath;
 
-	const GameVersion m_gameVersion;
+	GameVersion m_gameVersion;
 
 	std::vector<const ST::string*> m_newStrings;
 	std::vector<const ST::string*> m_landTypeStrings;

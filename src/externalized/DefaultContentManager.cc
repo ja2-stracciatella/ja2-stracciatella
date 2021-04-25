@@ -169,13 +169,8 @@ static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType
 	return st_checked_buffer_to_string(err_msg, buf);
 }
 
-DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
-						const ST::string &userHomeDir,
-						const ST::string &gameResRootPath,
-						const ST::string &externalizedDataPath
-	)
-	:m_gameVersion(gameVersion),
-	mNormalGunChoice(ARMY_GUN_LEVELS),
+DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOptions)
+	:mNormalGunChoice(ARMY_GUN_LEVELS),
 	mExtendedGunChoice(ARMY_GUN_LEVELS),
 	m_vfs(Vfs_create())
 {
@@ -185,15 +180,20 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	 * exist we should use them.  If doesn't exist, then use lowercased names.
 	 */
 
-	m_userHomeDir = userHomeDir;
-	m_gameResRootPath = gameResRootPath;
-	m_externalizedDataPath = externalizedDataPath;
+	m_engineOptions = move(engineOptions);
 
-	RustPointer<char> path{Fs_resolveExistingComponents(BASEDATADIR, m_gameResRootPath.c_str(), true)};
-	m_dataDir = path.get();
+	RustPointer<char> vanillaGameDir{EngineOptions_getVanillaGameDir(m_engineOptions.get())};
 
-	path.reset(Fs_resolveExistingComponents(TILECACHEDIR, m_dataDir.c_str(), true));
-	m_tileDir = path.get();
+	RustPointer<char> stracciatellaHome{EngineOptions_getStracciatellaHome()};
+	m_userHomeDir = stracciatellaHome.get();
+
+	RustPointer<char> dataDir{Fs_resolveExistingComponents(BASEDATADIR, vanillaGameDir.get(), true)};
+	m_dataDir = dataDir.get();
+
+	RustPointer<char> tileDir{Fs_resolveExistingComponents(TILECACHEDIR, m_dataDir.c_str(), true)};
+	m_tileDir = tileDir.get();
+
+	m_gameVersion = EngineOptions_getResourceVersion(m_engineOptions.get());
 
 	m_bobbyRayNewInventory = NULL;
 	m_bobbyRayUsedInventory = NULL;
@@ -205,17 +205,26 @@ DefaultContentManager::DefaultContentManager(GameVersion gameVersion,
 	m_movementCosts = NULL;
 	m_loadingScreenModel = NULL;
 	m_samSitesAirControl = NULL;
-}
 
-void DefaultContentManager::init(EngineOptions* engine_options)
-{
-	auto succeeded = Vfs_init_from_engine_options(m_vfs.get(), engine_options);
+	auto succeeded = Vfs_init_from_engine_options(m_vfs.get(), m_engineOptions.get());
 	if (!succeeded) {
 		RustPointer<char> err{ getRustError() };
 		auto error = ST::format("Failed to build virtual file system (VFS): {}", err.get());
 		SLOGE(error);
 		throw std::runtime_error(error.c_str());
 	}
+}
+
+void DefaultContentManager::logConfiguration() const {
+	RustPointer<char> vanillaGameDir{EngineOptions_getVanillaGameDir(m_engineOptions.get())};
+	RustPointer<char> assetsDir{EngineOptions_getAssetsDir(m_engineOptions.get())};
+
+	STLOGI("JA2 Home Dir:                  '{}'", m_userHomeDir);
+	STLOGI("Root game resources directory: '{}'", vanillaGameDir.get());
+	STLOGI("Extra data directory:          '{}'", assetsDir.get());
+	STLOGI("Data directory:                '{}'", m_dataDir);
+	STLOGI("Tilecache directory:           '{}'", m_tileDir);
+	STLOGI("Saved games directory:         '{}'", getSavedGamesFolder());
 }
 
 template <class T> 
@@ -537,7 +546,7 @@ bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
 		RustPointer<File> file(File_open(filename.c_str(), FILE_OPEN_READ));
 		if (!file)
 		{
-			ST::string path = ST::format("{}/{}", m_dataDir, filename);
+			ST::string path = ST::format("{}/{}",m_dataDir, filename);
 			file.reset(File_open(path.c_str(), FILE_OPEN_READ));
 			if (!file)
 			{

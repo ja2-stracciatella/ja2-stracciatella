@@ -8,9 +8,7 @@ struct EngineOptions;
 class DefaultContentManagerUT : public DefaultContentManager
 {
 public:
-	DefaultContentManagerUT(GameVersion gameVersion, const ST::string& configFolder, const ST::string& gameResRootPath, const ST::string& externalizedDataPath);
-	
-	virtual void init(EngineOptions*);
+	DefaultContentManagerUT(RustPointer<EngineOptions> engineOptions);
 
 	// expose this method to unit tests
 	std::unique_ptr<rapidjson::Document> _readJsonDataFile(const char* fileName) const;
