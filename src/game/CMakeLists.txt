@@ -15,7 +15,7 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/GameInitOptionsScreen.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GameLoop.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GameRes.cc
-    ${CMAKE_CURRENT_SOURCE_DIR}/GameState.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/GameMode.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GameScreen.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GameSettings.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/GameVersion.cc
@@ -32,6 +32,7 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/MessageBoxScreen.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Options_Screen.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/SaveLoadGame.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/SaveLoadGameStates.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/SaveLoadScreen.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Screens.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Sys_Globals.cc
@@ -41,6 +42,7 @@ if (WITH_UNITTESTS)
     set(LOCAL_JA2_SOURCES
         ${LOCAL_JA2_SOURCES}
         ${CMAKE_CURRENT_SOURCE_DIR}/SaveLoadGame_unittest.cc
+        ${CMAKE_CURRENT_SOURCE_DIR}/SaveLoadGameStates_unittest.cc
         ${CMAKE_CURRENT_SOURCE_DIR}/VanillaDataStructures_unittest.cc
     )
 endif()

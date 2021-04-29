@@ -12,7 +12,7 @@
 #include "Game_Clock.h"
 #include "GameInstance.h"
 #include "GameRes.h"
-#include "GameState.h"
+#include "GameMode.h"
 #include "Handle_UI.h"
 #include "HImage.h"
 #include "Input.h"
@@ -300,7 +300,7 @@ void BuildTileShadeTables()
 		if (!t) continue;
 
 		// Don't create shade tables if default were already used once!
-		if(GameState::getInstance()->isEditorMode())
+		if(GameMode::getInstance()->isEditorMode())
 		{
 			if (!gbNewTileSurfaceLoaded[i] && !gfEditorForceShadeTableRebuild) continue;
 		}
@@ -322,7 +322,7 @@ void DestroyTileShadeTables(void)
 		if (ti == NULL) continue;
 
 		// Don't delete shade tables if default are still being used...
-		if(GameState::getInstance()->isEditorMode())
+		if(GameMode::getInstance()->isEditorMode())
 		{
 			if (gbNewTileSurfaceLoaded[i] || gfEditorForceShadeTableRebuild)
 			{
@@ -2329,7 +2329,7 @@ try
 
 	FileRead(f, gubWorldRoomInfo, sizeof(gubWorldRoomInfo));
 
-	if(GameState::getInstance()->isEditorMode())
+	if(GameMode::getInstance()->isEditorMode())
 	{
 		UINT8 max_room_no = 0;
 		for (INT32 cnt = 0; cnt != WORLD_MAX; ++cnt)
@@ -2488,7 +2488,7 @@ try
 
 	gfWorldLoaded = TRUE;
 
-	if(GameState::getInstance()->isEditorMode())
+	if(GameMode::getInstance()->isEditorMode())
 	{
 		strlcpy(g_filename, filename, lengthof(g_filename));
 	}
@@ -2607,7 +2607,7 @@ void TrashWorld(void)
 	TrashDoorStatusArray();
 
 	gfWorldLoaded = FALSE;
-	if(GameState::getInstance()->isEditorMode())
+	if(GameMode::getInstance()->isEditorMode())
 	{
 		strcpy(g_filename, "none");
 	}

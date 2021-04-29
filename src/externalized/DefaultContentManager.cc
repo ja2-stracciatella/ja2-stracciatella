@@ -10,7 +10,7 @@
 #include "game/GameRes.h"
 
 // XXX
-#include "game/GameState.h"
+#include "game/GameMode.h"
 
 #include "sgp/FileMan.h"
 #include "sgp/MemMan.h"

@@ -48,7 +48,7 @@
 #include "Video.h"
 #include "WorldDef.h"
 #include "UILayout.h"
-#include "GameState.h"
+#include "GameMode.h"
 #include "GameRes.h"
 
 #include "ContentManager.h"

@@ -58,7 +58,7 @@
 #include "Video.h"
 #include "JAScreens.h"
 #include "UILayout.h"
-#include "GameState.h"
+#include "GameMode.h"
 #include "EditScreen.h"
 #include "Logger.h"
 
@@ -500,7 +500,7 @@ ScreenID MainGameScreenHandle(void)
 
 		if (uiNewScreen != GAME_SCREEN) return uiNewScreen;
 	}
-	else if (gfIntendOnEnteringEditor && GameState::getInstance()->isEditorMode())
+	else if (gfIntendOnEnteringEditor && GameMode::getInstance()->isEditorMode())
 	{
 		SLOGI("Aborting normal game mode and entering editor mode...");
 		SetPendingNewScreen(NO_PENDING_SCREEN);

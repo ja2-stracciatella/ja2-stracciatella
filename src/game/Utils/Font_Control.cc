@@ -7,7 +7,7 @@
 #include "Font_Control.h"
 #include "MemMan.h"
 #include "GameRes.h"
-#include "GameState.h"
+#include "GameMode.h"
 
 
 SGPFont gp10PointArial;
@@ -53,7 +53,7 @@ void InitializeFonts(void)
 	M(gpSmallFontType1,        FONTSDIR "/smallfont1.sti");
 	M(gpTinyFontType1,         FONTSDIR "/tinyfont1.sti");
 
-	if(GameState::getInstance()->isEditorMode() && isEnglishVersion())
+	if(GameMode::getInstance()->isEditorMode() && isEnglishVersion())
 	{
 		M(gpHugeFont, FONTSDIR "/hugefont.sti");
 	}
@@ -83,7 +83,7 @@ void ShutdownFonts(void)
 	UnloadFont(gpSmallFontType1);
 	UnloadFont(gpTinyFontType1);
 
-	if(GameState::getInstance()->isEditorMode() && isEnglishVersion())
+	if(GameMode::getInstance()->isEditorMode() && isEnglishVersion())
 	{
 		UnloadFont(gpHugeFont);
 	}

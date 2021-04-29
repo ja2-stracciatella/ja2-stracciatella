@@ -87,7 +87,7 @@
 #include "Button_System.h"
 #include "Items.h"
 #include "GameRes.h"
-#include "GameState.h"
+#include "GameMode.h"
 #include "Game_Init.h"
 
 #include "Logger.h"
@@ -1665,7 +1665,7 @@ static void HandleModCtrl(UINT32 const key, UIEventKind* const new_event)
 		case 'c': if (CHEATER_CHEAT_LEVEL()) ToggleCliffDebug(); break;
 
 	case 'e':
-		if(GameState::getInstance()->isEditorMode())
+		if(GameMode::getInstance()->isEditorMode())
 		{
 			ToggleMapEdgepoints();
 		}

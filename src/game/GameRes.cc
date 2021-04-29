@@ -9,7 +9,7 @@
 #include "Multi_Language_Graphic_Utils.h"
 #include "Text.h"
 #include "TranslationTable.h"
-#include "GameState.h"
+#include "GameMode.h"
 #include "EncodingCorrectors.h"
 
 #include "Logger.h"
