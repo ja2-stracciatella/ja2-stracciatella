@@ -46,9 +46,6 @@ public:
 	/** Get directory for storing new map file. */
 	virtual ST::string getNewMapFolder() const override;
 
-	/** Get all available maps. */
-	virtual std::vector<ST::string> getAllMaps() const override;
-
 	/** Get all available tilecache. */
 	virtual std::vector<ST::string> getAllTilecache() const override;
 

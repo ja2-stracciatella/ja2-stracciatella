@@ -23,6 +23,7 @@
 #include "Overhead_Map.h"
 #include "Cursor_Modes.h"
 #include "EditScreen.h"
+#include "LoadScreen.h"
 #include "EditorTerrain.h"
 #include "EditorItems.h"
 #include "EditorMercs.h"
@@ -800,10 +801,12 @@ static void RenderEditorInfo(void)
 	switch( iCurrentTaskbar )
 	{
 		case TASK_OPTIONS:
-			if( !gfWorldLoaded || giCurrentTilesetID < 0 )
+			if( !gfWorldLoaded || giCurrentTilesetID < 0 ) {
 				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, "No map currently loaded.");
-			else
-				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, ST::format("File:  {}, Current Tileset:  {}", g_filename, gTilesets[giCurrentTilesetID].zName));
+			} else {
+				RustPointer<char> filename(Path_filename(gFileForIO.c_str()));
+				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, ST::format("File:  {}, Current Tileset:  {}", filename.get(), gTilesets[giCurrentTilesetID].zName));
+			}
 			break;
 		case TASK_TERRAIN:
 			if( gusSelectionType == LINESELECTION )

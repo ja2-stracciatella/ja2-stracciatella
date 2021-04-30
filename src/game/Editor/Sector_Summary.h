@@ -19,6 +19,8 @@ extern BOOLEAN gfGlobalSummaryExists;
 
 extern BOOLEAN gfSummaryWindowActive;
 
+extern BOOLEAN gfSummaryWindowSaveRequested;
+
 void AutoLoadMap(void);
 
 BOOLEAN HandleSummaryInput(InputAtom*);

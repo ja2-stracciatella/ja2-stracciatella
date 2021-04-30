@@ -59,6 +59,7 @@
 
 #include <cstdarg>
 
+ST::string gFileForIO;
 
 static BOOLEAN gfErrorCatch            = FALSE;
 static ST::string gzErrorCatchString;
@@ -79,31 +80,40 @@ enum{
 	DIALOG_DELETE
 };
 
-static INT32 iTotalFiles;
+enum{
+	FILEDIALOG_BACKGROUND,
+	FILEDIALOG_OK,
+	FILEDIALOG_CANCEL,
+	FILEDIALOG_SCROLL_UP,
+	FILEDIALOG_SCROLL_DOWN,
+	FILEDIALOG_LIST_BACKGROUND,
+	FILEDIALOG_TITLE,
+	FILEDIALOG_UPDATE_WORLD_INFO_CHECKBOX,
+	NUM_FILEDIALOG_BUTTONS
+};
+static GUIButtonRef iFileDlgButtons[NUM_FILEDIALOG_BUTTONS];
+
 static INT32 iTopFileShown;
 static INT32 iCurrFileShown;
-static INT32	iLastFileClicked;
+static INT32 iLastFileClicked;
 static INT32 iLastClickTime;
 
-static ST::string gzFilename;
-
-static FDLG_LIST* FileList = NULL;
+static std::vector<FileDialogEntry> gFileList;
 
 static INT32 iFDlgState = DIALOG_NONE;
-static GUIButtonRef iFileDlgButtons[7];
 
 static BOOLEAN gfLoadError;
 static bool gfReadOnly;
 static BOOLEAN gfFileExists;
 static BOOLEAN gfIllegalName;
 static BOOLEAN gfDeleteFile;
-static BOOLEAN gfNoFiles;
 
 static BOOLEAN fEnteringLoadSaveScreen = TRUE;
 
 static MOUSE_REGION BlanketRegion;
 
-static ST::string gMapFileForRemoval;
+static ST::string gCurrentDirectory;
+static ST::string gCurrentFilename;
 
 enum{
 	IOSTATUS_NONE,
@@ -118,67 +128,79 @@ static bool gfUpdateSummaryInfo = true;
 
 
 static void CreateFileDialog(const ST::string& zTitle);
-static void TrashFDlgList(FDLG_LIST*);
 
+static void ChangeDirectory(const ST::string directory, bool resetState) {
+	gCurrentDirectory = directory;
+
+	gfReadOnly = FALSE;
+	gfFileExists = FALSE;
+	gfLoadError = FALSE;
+	gfIllegalName = FALSE;
+	gfDeleteFile = FALSE;
+
+	gFileList.clear();
+
+	if (resetState) {
+		iTopFileShown = iLastClickTime = 0;
+		iCurrFileShown = iLastFileClicked = -1;
+	}
+
+	RustPointer<char> filename(Path_filename(gFileForIO.c_str()));
+	gCurrentFilename = ST::format("{}", filename.get());
+
+	SetInputFieldString(0, gCurrentFilename);
+	SetInputFieldString(2, gCurrentDirectory);
+
+	try
+	{
+		if (FileMan::getParentPath(gCurrentDirectory, false) != "") {
+			gFileList.push_back(FileDialogEntry { FileType::Parent, ".." });
+		}
+		std::vector<ST::string> dirs = FindAllDirsInDir(directory.c_str(), true, false, true);
+		for (const ST::string &dir : dirs)
+		{
+			gFileList.push_back(FileDialogEntry { FileType::Directory, dir });
+		}
+		std::vector<ST::string> files = FindAllFilesInDir(directory.c_str(), true, false, true);
+		for (const ST::string &file : files)
+		{
+			gFileList.push_back(FileDialogEntry { FileType::File, file });
+		}
+	}
+	catch (...) { /* XXX ignore */ }
+}
 
 static void LoadSaveScreenEntry(void)
 {
 	fEnteringLoadSaveScreen = FALSE;
 	gbCurrentFileIOStatus	= IOSTATUS_NONE;
 
-	gfReadOnly = false;
-	gfFileExists = FALSE;
-	gfLoadError = FALSE;
-	gfIllegalName = FALSE;
-	gfDeleteFile = FALSE;
-	gfNoFiles = FALSE;
-
-	// setup filename dialog box
-	// (*.dat and *.map) as file filter
-
-	// If user clicks on a filename in the window, then turn off string focus and re-init the string with the new name.
-	// If user hits ENTER or presses OK, then continue with the file loading/saving
-
-	if( FileList )
-		TrashFDlgList( FileList );
-
-	iTopFileShown = iTotalFiles = 0;
-	try
-	{
-		std::vector<ST::string> files = GCM->getAllMaps();
-		for (const ST::string &file : files)
-		{
-			FileList = AddToFDlgList(FileList, file.c_str());
-			++iTotalFiles;
-		}
-	}
-	catch (...) { /* XXX ignore */ }
-
-	gzFilename = ST::format("{}", g_filename);
-
 	CreateFileDialog(iCurrentAction == ACTION_SAVE_MAP ? "Save Map (*.dat)" : "Load Map (*.dat)");
 
-	if( !iTotalFiles )
+	if (gCurrentDirectory == "") {
+		RustPointer<char> currentDirectory(EngineOptions_getStracciatellaHome());
+		ChangeDirectory(currentDirectory.get(), true);
+	} else {
+		ChangeDirectory(gCurrentDirectory, true);
+	}
+
+	if( gFileList.empty() )
 	{
-		gfNoFiles = TRUE;
 		if( iCurrentAction == ACTION_LOAD_MAP )
-			DisableButton( iFileDlgButtons[0] );
+			DisableButton( iFileDlgButtons[FILEDIALOG_OK] );
 	}
 
 	iLastFileClicked = -1;
 	iLastClickTime = 0;
-
 }
 
 
 static void RemoveFileDialog(void);
-static void RemoveFromFDlgList(FDLG_LIST** head, FDLG_LIST* node);
-static BOOLEAN ValidFilename(void);
+static BOOLEAN ValidMapName(const ST::string &path);
 
 
 static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 {
-	FDLG_LIST *curr, *temp;
 	gfRenderWorld = TRUE;
 	RemoveMessageBox();
 	if( gfIllegalName )
@@ -193,40 +215,30 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 		if( gfMessageBoxResult )
 		{ //delete file
 			INT32 x;
-			curr = FileList;
-			for( x = 0; x < iCurrFileShown && x < iTotalFiles && curr; x++ )
+			auto curr = gFileList.begin();
+			for( x = 0; x < iCurrFileShown && curr != gFileList.end(); x++ )
 			{
-				curr = curr->pNext;
+				curr++;
 			}
-			if( curr )
+			if( curr != gFileList.end() )
 			{
-				FileDelete(gMapFileForRemoval);
-
-				//File is deleted so redo the text fields so they show the
-				//next file in the list.
-				temp = curr->pNext;
-				if( !temp )
-					temp = curr->pPrev;
-				if( !temp )
-					gzFilename = ST::null;
-				else
-					gzFilename = ST::format("{}", temp->filename);
-				if (!ValidFilename()) gzFilename = ST::null;
-				SetInputFieldString(0, gzFilename);
-				RemoveFromFDlgList( &FileList, curr );
-				iTotalFiles--;
-				if( !iTotalFiles )
-				{
-					gfNoFiles = TRUE;
-					if( iCurrentAction == ACTION_LOAD_MAP )
-						DisableButton( iFileDlgButtons[0] );
+				try {
+					FileDelete(gFileForIO);
+					ChangeDirectory(gCurrentDirectory, false);
+					if( gFileList.empty() )
+					{
+						if( iCurrentAction == ACTION_LOAD_MAP )
+							DisableButton( iFileDlgButtons[FILEDIALOG_OK] );
+					}
+					if( iCurrFileShown >= gFileList.size() )
+						iCurrFileShown--;
+					if( iCurrFileShown < iTopFileShown )
+						iTopFileShown -= 8;
+					if( iTopFileShown < 0 )
+						iTopFileShown = 0;
+				} catch (const std::runtime_error& err) {
+					STLOGW("Could not remove file: {}", err.what());
 				}
-				if( iCurrFileShown >= iTotalFiles )
-					iCurrFileShown--;
-				if( iCurrFileShown < iTopFileShown )
-					iTopFileShown -= 8;
-				if( iTopFileShown < 0 )
-					iTopFileShown = 0;
 			}
 		}
 		MarkWorldDirty();
@@ -264,14 +276,13 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 
 
 static void DrawFileDialog(void);
-static BOOLEAN ExtractFilenameFromFields(void);
+static ST::string ExtractFilenameFromFields(void);
 static void HandleMainKeyEvents(InputAtom* pEvent);
 static ScreenID ProcessFileIO(void);
 
 
 ScreenID LoadSaveScreenHandle(void)
 {
-	FDLG_LIST *FListNode;
 	INT32 x;
 	InputAtom DialogEvent;
 	ST::string zOrigName;
@@ -308,34 +319,44 @@ ScreenID LoadSaveScreenHandle(void)
 	DrawFileDialog();
 
 	// Skip to first filename to show
-	FListNode = FileList;
-	for(x=0;x<iTopFileShown && x<iTotalFiles && FListNode != NULL;x++)
+	auto curr = gFileList.begin();
+	for(x=0;x<iTopFileShown && curr != gFileList.end();x++)
 	{
-		FListNode = FListNode->pNext;
+		curr++;
 	}
 
 	// Show up to 8 filenames in the window
-	SetFont( FONT12POINT1 );
-	if( gfNoFiles )
+	SetFont( FONT12ARIAL );
+	if( gFileList.empty() )
 	{
 		SetFontForeground( FONT_LTRED );
 		SetFontBackground( 142 );
-		MPrint(226, 126, "NO FILES IN /MAPS DIRECTORY");
+		MPrint(226 + 24, 126, "NO FILES IN CURRENT DIRECTORY");
 	}
-	else for(x=iTopFileShown;x<(iTopFileShown+8) && x<iTotalFiles && FListNode != NULL; x++)
+	else for(x=iTopFileShown;x<(iTopFileShown+8) && curr != gFileList.end(); x++)
 	{
 		if( !EditingText() && x == iCurrFileShown  )
 		{
-			SetFontForeground( FONT_GRAY2 );
-			SetFontBackground( FONT_METALGRAY );
+			if (curr->type == FileType::File) {
+				SetFontAttributes(FONT12ARIAL, FONT_GRAY2, 2, FONT_METALGRAY);
+			} else {
+				SetFontAttributes(FONT12ARIAL, FONT_DKYELLOW, 2, FONT_METALGRAY);
+			}
 		}
 		else
 		{
-			SetFontForeground( FONT_BLACK );
-			SetFontBackground( 142 );
+			if (curr->type == FileType::File) {
+				SetFontAttributes(FONT12ARIAL, FONT_BLACK, 0, 142);
+			} else {
+				SetFontAttributes(FONT12ARIAL, FONT_DKYELLOW, 0, 142);
+			}
 		}
-		MPrint(186, 73 + (x - iTopFileShown) * 15, ST::format("{}", FListNode->filename));
-		FListNode = FListNode->pNext;
+		auto label = ST::format("{.35}", curr->filename);
+		if (curr->filename.size() > 35) {
+			label += "...";
+		}
+		MPrint(186, 73 + 24 + (x - iTopFileShown) * 15, label);
+		curr++;
 	}
 
 	RenderAllTextFields();
@@ -353,38 +374,52 @@ ScreenID LoadSaveScreenHandle(void)
 
 		case DIALOG_DELETE:
 		{
-			gMapFileForRemoval = GCM->getMapPath(gzFilename);
+			auto filename = ExtractFilenameFromFields();
+			auto absolutePath = FileMan::joinPaths(gCurrentDirectory, filename);
 			bool readonly = false;
-			if (Fs_getReadOnly(gMapFileForRemoval.c_str(), &readonly))
-			{
-				ST::string str;
-				if (readonly)
-				{
-					str = ST::format(" Delete READ-ONLY file {}? ", gzFilename);
-				}
-				else
-					str = ST::format(" Delete file {}? ", gzFilename);
-				gfDeleteFile = TRUE;
-				CreateMessageBox( str );
+			bool readonlySucceeded = Fs_getReadOnly(gFileForIO.c_str(), &readonly);
+			if (!readonlySucceeded) {
+				STLOGE("Error determining readonly status for file {}: {}", gFileForIO, getRustError());
 			}
+			ST::string str;
+			if (readonly)
+			{
+				str = ST::format(" Delete READ-ONLY file {}? ", filename);
+			}
+			else
+				str = ST::format(" Delete file {}? ", filename);
+			gfDeleteFile = TRUE;
+			gFileForIO = absolutePath;
+			CreateMessageBox( str );
 			return LOADSAVE_SCREEN;
 		}
 
 		case DIALOG_SAVE:
 		{
-			if( !ExtractFilenameFromFields() )
+			
+			auto filename = ExtractFilenameFromFields();
+			auto absolutePath = FileMan::joinPaths(gCurrentDirectory, filename);
+			if (filename == "..") {
+				absolutePath = FileMan::getParentPath(gCurrentDirectory, false);
+			}
+			if (Fs_isDir(absolutePath.c_str())) {
+				ChangeDirectory(absolutePath, true);
+				iFDlgState = DIALOG_NONE;
+				return LOADSAVE_SCREEN;
+			}
+			if( !ValidMapName(absolutePath) )
 			{
 				CreateMessageBox( " Illegal filename.  Try another filename? " );
 				gfIllegalName = TRUE;
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
 			}
-			ST::string filename(GCM->getMapPath(gzFilename));
-			if ( GCM->doesGameResExists(filename.c_str()) )
+			gFileForIO = absolutePath;
+			if ( Fs_exists(absolutePath.c_str()) )
 			{
 				gfFileExists = TRUE;
 				gfReadOnly = false;
-				Fs_getReadOnly(filename.c_str(), &gfReadOnly);
+				Fs_getReadOnly(absolutePath.c_str(), &gfReadOnly);
 				if( gfReadOnly )
 					CreateMessageBox( " File is read only!  Choose a different name? " );
 				else
@@ -396,7 +431,18 @@ ScreenID LoadSaveScreenHandle(void)
 			return LOADSAVE_SCREEN ;
 		}
 		case DIALOG_LOAD:
-			if( !ExtractFilenameFromFields() )
+		{
+			auto filename = ExtractFilenameFromFields();
+			auto absolutePath = FileMan::joinPaths(gCurrentDirectory, filename);
+			if (filename == "..") {
+				absolutePath = FileMan::getParentPath(gCurrentDirectory, false);
+			}
+			if (Fs_isDir(absolutePath.c_str())) {
+				ChangeDirectory(absolutePath, true);
+				iFDlgState = DIALOG_NONE;
+				return LOADSAVE_SCREEN;
+			}
+			if( !ValidMapName(absolutePath) )
 			{
 				CreateMessageBox( " Illegal filename.  Try another filename? " );
 				gfIllegalName = TRUE;
@@ -406,10 +452,12 @@ ScreenID LoadSaveScreenHandle(void)
 			RemoveFileDialog();
 			CreateProgressBar(0, 118, 183, 404, 19);
 			DefineProgressBarPanel( 0, 65, 79, 94, 100, 155, 540, 235 );
-			zOrigName = ST::format("Loading map:  {}", gzFilename);
+			zOrigName = ST::format("Loading map:  {}", filename);
 			SetProgressBarTitle( 0, zOrigName, BLOCKFONT2, FONT_RED, FONT_NEARBLACK );
+			gFileForIO = absolutePath;
 			gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
-			return LOADSAVE_SCREEN ;
+			return LOADSAVE_SCREEN;
+		}
 		default:
 			iFDlgState = DIALOG_NONE;
 	}
@@ -418,9 +466,9 @@ ScreenID LoadSaveScreenHandle(void)
 }
 
 
-static GUIButtonRef MakeButtonArrow(const char* const gfx, const INT16 y, const GUI_CALLBACK click)
+static GUIButtonRef MakeButtonArrow(const char* const gfx, const INT16 y, const INT16 priority, const GUI_CALLBACK click)
 {
-	GUIButtonRef const btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, 426, y, MSYS_PRIORITY_HIGH, click);
+	GUIButtonRef const btn = QuickCreateButtonImg(gfx, -1, 1, 2, 3, 4, 426, y, priority, click);
 	btn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_SHADED);
 	return btn;
 }
@@ -437,40 +485,47 @@ static void UpdateWorldInfoCallback(GUI_BUTTON* b, INT32 reason);
 
 static void CreateFileDialog(const ST::string& zTitle)
 {
+	const INT16 basePriority = MSYS_PRIORITY_HIGH + 5;
 
 	iFDlgState = DIALOG_NONE;
 
 	DisableEditorTaskbar();
 
-	MSYS_DefineRegion( &BlanketRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_HIGH - 5, 0, 0, 0 );
+	MSYS_DefineRegion( &BlanketRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, basePriority, 0, 0, 0 );
 
-	//Okay and cancel buttons
-	iFileDlgButtons[0] = CreateTextButton("Okay",   FONT12POINT1, FONT_BLACK, FONT_BLACK, 354, 225, 50, 30, MSYS_PRIORITY_HIGH, FDlgOkCallback);
-	iFileDlgButtons[1] = CreateTextButton("Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, 406, 225, 50, 30, MSYS_PRIORITY_HIGH, FDlgCancelCallback);
+	//Title button
+	iFileDlgButtons[FILEDIALOG_TITLE] = CreateLabel(zTitle, FONT16ARIAL, FONT_LTKHAKI, FONT_DKKHAKI, 179, 44, 281, 30, basePriority+1);
 
-	//Scroll buttons
-	iFileDlgButtons[2] = MakeButtonArrow(EDITORDIR "/uparrow.sti",    92, FDlgUpCallback);
-	iFileDlgButtons[3] = MakeButtonArrow(EDITORDIR "/downarrow.sti", 182, FDlgDwnCallback);
+	//Background
+	iFileDlgButtons[FILEDIALOG_BACKGROUND] = CreateLabel(ST::null, FONT16ARIAL, 0, 0, 179, 69, 281, 216, basePriority+1);
 
 	//File list window
-	iFileDlgButtons[4] = CreateHotSpot(179 + 4, 69 + 3, 179 + 4 + 240, 69 + 120 + 3, MSYS_PRIORITY_HIGH - 1, FDlgNamesCallback);
-	//Title button
-	iFileDlgButtons[5] = CreateLabel(zTitle, HUGEFONT, FONT_LTKHAKI, FONT_DKKHAKI, 179, 39, 281, 30, MSYS_PRIORITY_HIGH - 2);
+	iFileDlgButtons[FILEDIALOG_LIST_BACKGROUND] = CreateHotSpot(179 + 4, 69 + 3 + 24, 179 + 4 + 240, 69 + 120 + 3, basePriority+2, FDlgNamesCallback);
+
+	//Okay and cancel buttons
+	iFileDlgButtons[FILEDIALOG_OK] = CreateTextButton("Okay",   FONT12POINT1, FONT_BLACK, FONT_BLACK, 354, 225 + 18, 50, 30, basePriority+3, FDlgOkCallback);
+	iFileDlgButtons[FILEDIALOG_CANCEL] = CreateTextButton("Cancel", FONT12POINT1, FONT_BLACK, FONT_BLACK, 406, 225 + 18, 50, 30, basePriority+3, FDlgCancelCallback);
+
+	//Scroll buttons
+	iFileDlgButtons[FILEDIALOG_SCROLL_UP] = MakeButtonArrow(EDITORDIR "/uparrow.sti",    92 + 5, basePriority+3, FDlgUpCallback);
+	iFileDlgButtons[FILEDIALOG_SCROLL_DOWN] = MakeButtonArrow(EDITORDIR "/downarrow.sti", 182 + 4, basePriority+3, FDlgDwnCallback);
 
 	if( iCurrentAction == ACTION_SAVE_MAP )
 	{	//checkboxes
 		//The update world info checkbox
-		iFileDlgButtons[6] = CreateCheckBoxButton( 183, 229, EDITORDIR "/smcheckbox.sti", MSYS_PRIORITY_HIGH, UpdateWorldInfoCallback );
+		iFileDlgButtons[FILEDIALOG_UPDATE_WORLD_INFO_CHECKBOX] = CreateCheckBoxButton( 183, 229 + 14, EDITORDIR "/smcheckbox.sti", basePriority+3, UpdateWorldInfoCallback );
 		if( gfUpdateSummaryInfo )
-			iFileDlgButtons[6]->uiFlags |= BUTTON_CLICKED_ON;
+			iFileDlgButtons[FILEDIALOG_UPDATE_WORLD_INFO_CHECKBOX]->uiFlags |= BUTTON_CLICKED_ON;
 	}
 
 	//Add the text input fields
 	InitTextInputModeWithScheme( DEFAULT_SCHEME );
 	//field 1 (filename)
-	AddTextInputField(/*233*/183, 195, 190, 20, MSYS_PRIORITY_HIGH, gzFilename, 30, INPUTTYPE_DOSFILENAME);
+	AddTextInputField(/*233*/183 + 46, 195 + 24, 273 - 46, 20, basePriority+3, gCurrentFilename, 30, INPUTTYPE_FULL_TEXT);
 	//field 2 -- user field that allows mouse/key interaction with the filename list
 	AddUserInputField( FileDialogModeCallback );
+	//field 3 -- directory input
+	AddTextInputField(183 + 46, 74, 273 - 46, 20, basePriority+3, gCurrentDirectory, 40, INPUTTYPE_FULL_TEXT);
 }
 
 
@@ -487,25 +542,23 @@ static void UpdateWorldInfoCallback(GUI_BUTTON* b, INT32 reason)
 static void FileDialogModeCallback(UINT8 ubID, BOOLEAN fEntering)
 {
 	INT32 x;
-	FDLG_LIST *FListNode;
 	if( fEntering )
 	{
 		// Skip to first filename
-		FListNode = FileList;
-		for(x=0;x<iTopFileShown && x<iTotalFiles && FListNode != NULL;x++)
+		auto curr = gFileList.begin();
+		for(x=0;x<iTopFileShown && curr != gFileList.end();x++)
 		{
-			FListNode = FListNode->pNext;
+			curr++;
 		}
 		// Find the already selected filename
-		for(x = iTopFileShown; x < iTopFileShown + 8 && x < iTotalFiles && FListNode != NULL; x++ )
+		for(x = iTopFileShown; x < iTopFileShown + 8 && curr != gFileList.end(); x++ )
 		{
 			if( iCurrFileShown == (x-iTopFileShown) )
 			{
-				FListNode->filename[30] = '\0';
-				SetInputFieldString(0, FListNode->filename);
+				SetInputFieldString(0, curr->filename);
 				return;
 			}
-			FListNode = FListNode->pNext;
+			curr++;
 		}
 	}
 }
@@ -517,15 +570,14 @@ static void RemoveFileDialog(void)
 
 	MSYS_RemoveRegion( &BlanketRegion );
 
-	for(x=0; x<6; x++)
+	for(x=0; x<NUM_FILEDIALOG_BUTTONS; x++)
 	{
-		RemoveButton(iFileDlgButtons[x]);
+		if (iFileDlgButtons[x]) {
+			RemoveButton(iFileDlgButtons[x]);
+		}
 	}
 
-	if (iFileDlgButtons[6]) RemoveButton(iFileDlgButtons[6]);
-
-	TrashFDlgList( FileList );
-	FileList = NULL;
+	gFileList.clear();
 
 	InvalidateScreen( );
 
@@ -538,22 +590,26 @@ static void RemoveFileDialog(void)
 
 static void DrawFileDialog(void)
 {
-	ColorFillVideoSurfaceArea(FRAME_BUFFER,	179, 69, (179+281), 261, Get16BPPColor(FROMRGB(136, 138, 135)) );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER,	180, 70, (179+281), 261, Get16BPPColor(FROMRGB(24, 61, 81)) );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER,	180, 70, (179+280), 260, Get16BPPColor(FROMRGB(65, 79, 94)) );
-
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+4), (69+3), (179+4+240), (69+123), Get16BPPColor(FROMRGB(24, 61, 81)) );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+5), (69+4), (179+4+240), (69+123), Get16BPPColor(FROMRGB(136, 138, 135)) );
-	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+5), (69+4), (179+3+240), (69+122), Get16BPPColor(FROMRGB(250, 240, 188)) );
-
 	MarkButtonsDirty();
-	RenderButtons();
+
+	iFileDlgButtons[FILEDIALOG_BACKGROUND]->Draw();
+
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+4), (69+3+24), (179+4+240), (69+123+24), Get16BPPColor(FROMRGB(24, 61, 81)) );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+5), (69+4+24), (179+4+240), (69+123+24), Get16BPPColor(FROMRGB(136, 138, 135)) );
+	ColorFillVideoSurfaceArea(FRAME_BUFFER, (179+5), (69+4+24), (179+3+240), (69+122+24), Get16BPPColor(FROMRGB(250, 240, 188)) );
+
+	for (auto i = 1; i < NUM_FILEDIALOG_BUTTONS; i++) {
+		if (iFileDlgButtons[i]) {
+			iFileDlgButtons[i]->Draw();
+		}
+	}
 	RenderButtonsFastHelp();
 
 	SetFontAttributes(FONT10ARIAL, FONT_LTKHAKI, FONT_DKKHAKI);
-	MPrint(183, 217, "Filename");
+	MPrint(185, 80, "Directory");
+	MPrint(185, 224, "Filename");
 
-	if (iFileDlgButtons[6]) MPrint(200, 231, "Update world info");
+	if (iFileDlgButtons[FILEDIALOG_UPDATE_WORLD_INFO_CHECKBOX]) MPrint(200, 231 + 14, "Update world info");
 }
 
 
@@ -563,7 +619,6 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 {
 	INT16 sSelName;
 	INT32 x;
-	FDLG_LIST *FListNode;
 
 	sSelName = usRelativeYPos / 15;
 
@@ -571,22 +626,20 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 	SetActiveField( 1 );
 
 	// Skip to first filename
-	FListNode = FileList;
-	for(x=0;x<iTopFileShown && x<iTotalFiles && FListNode != NULL;x++)
+	auto curr = gFileList.begin();
+	for(x=0;x<iTopFileShown && curr != gFileList.end();x++)
 	{
-		FListNode = FListNode->pNext;
+		curr++;
 	}
 
-	for(x=iTopFileShown;x<(iTopFileShown+8) && x<iTotalFiles && FListNode != NULL; x++)
+	for(x=iTopFileShown;x<(iTopFileShown+8) && curr != gFileList.end(); x++)
 	{
 		if( (INT32)sSelName == (x-iTopFileShown) )
 		{
 			INT32 iCurrClickTime;
 			iCurrFileShown = x;
-			FListNode->filename[30] = '\0';
-			gzFilename = ST::format("{}", FListNode->filename);
-			if (!ValidFilename()) gzFilename = ST::null;
-			SetInputFieldString(0, gzFilename);
+			gCurrentFilename = ST::format("{}", curr->filename);
+			SetInputFieldString(0, gCurrentFilename);
 
 			RenderInactiveTextField( 0 );
 
@@ -599,67 +652,21 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 			iLastClickTime = iCurrClickTime;
 			iLastFileClicked = x;
 		}
-		FListNode = FListNode->pNext;
+		curr++;
 	}
 }
-
-
-FDLG_LIST* AddToFDlgList(FDLG_LIST* const list, char const* const filename)
-{ // Add and sort alphabetically without regard to case
-	FDLG_LIST* prev = 0;
-	FDLG_LIST* i;
-	for (i = list; i; prev = i, i = i->pNext)
-	{
-		if (strcasecmp(i->filename, filename) > 0) break;
-	}
-	FDLG_LIST* const n = new FDLG_LIST{};
-	strlcpy(n->filename, filename, lengthof(n->filename));
-	n->pPrev = prev;
-	n->pNext = i;
-	if (i)    i->pPrev    = n;
-	if (prev) prev->pNext = n;
-	return prev ? list : n;
-}
-
-
-static void RemoveFromFDlgList(FDLG_LIST** const head, FDLG_LIST* const node)
-{
-	for (FDLG_LIST* i = *head; i; i = i->pNext)
-	{
-		if (i != node) continue;
-		if (*head == node) *head = (*head)->pNext;
-		FDLG_LIST* const prev = i->pPrev;
-		FDLG_LIST* const next = i->pNext;
-		if (prev) prev->pNext = next;
-		if (next) next->pPrev = prev;
-		delete node;
-		break;
-	}
-}
-
-
-static void TrashFDlgList(FDLG_LIST* i)
-{
-	while (i)
-	{
-		FDLG_LIST* const del = i;
-		i = i->pNext;
-		delete del;
-	}
-}
-
 
 static void SetTopFileToLetter(UINT16 usLetter)
 {
 	UINT32 x;
-	FDLG_LIST *curr;
-	FDLG_LIST *prev;
+	std::vector<FileDialogEntry>::iterator curr;
+	std::vector<FileDialogEntry>::iterator prev;
 	UINT16 usNodeLetter;
 
 	// Skip to first filename
 	x = 0;
-	curr = prev = FileList;
-	while( curr )
+	curr = prev = gFileList.begin();
+	while( curr != gFileList.end() )
 	{
 		usNodeLetter = curr->filename[0]; //first letter of filename.
 		if( usNodeLetter < 'a' )
@@ -667,15 +674,15 @@ static void SetTopFileToLetter(UINT16 usLetter)
 		if( usLetter <= usNodeLetter )
 			break;
 		prev = curr;
-		curr = curr->pNext;
+		curr++;
 		x++;
 	}
-	if( FileList )
+	if( !gFileList.empty() )
 	{
 		iCurrFileShown = x;
 		iTopFileShown = x;
-		if( iTopFileShown > iTotalFiles - 7 )
-			iTopFileShown = iTotalFiles - 7;
+		if( iTopFileShown > gFileList.size() - 7 )
+			iTopFileShown = gFileList.size() - 7;
 		SetInputFieldString(0, prev->filename);
 	}
 }
@@ -690,9 +697,14 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 	switch( pEvent->usParam )
 	{
 		case SDLK_RETURN:
-			if( gfNoFiles && iCurrentAction == ACTION_LOAD_MAP )
+			if( gFileList.empty() && iCurrentAction == ACTION_LOAD_MAP )
 				break;
-			iFDlgState = iCurrentAction == ACTION_SAVE_MAP ? DIALOG_SAVE : DIALOG_LOAD;
+			if (GetActiveFieldID() == 2) {
+				auto directory = GetStringFromField(2);
+				ChangeDirectory(directory, true);
+			} else {
+				iFDlgState = iCurrentAction == ACTION_SAVE_MAP ? DIALOG_SAVE : DIALOG_LOAD;
+			}
 			break;
 
 		case SDLK_ESCAPE:
@@ -715,10 +727,10 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 		case SDLK_PAGEDOWN:
 			iTopFileShown += 7;
 			iCurrFileShown += 7;
-			if( iTopFileShown > iTotalFiles-7 )
-				iTopFileShown = iTotalFiles - 7;
-			if( iCurrFileShown >= iTotalFiles )
-				iCurrFileShown = iTotalFiles - 1;
+			if( iTopFileShown > gFileList.size()-7 )
+				iTopFileShown = gFileList.size() - 7;
+			if( iCurrFileShown >= gFileList.size() )
+				iCurrFileShown = gFileList.size() - 1;
 			break;
 
 		case SDLK_UP:
@@ -730,8 +742,8 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 
 		case SDLK_DOWN:
 			iCurrFileShown++;
-			if( iCurrFileShown >= iTotalFiles )
-				iCurrFileShown = iTotalFiles - 1;
+			if( iCurrFileShown >= gFileList.size() )
+				iCurrFileShown = gFileList.size() - 1;
 			else if( iTopFileShown < iCurrFileShown-7 )
 				iTopFileShown++;
 			break;
@@ -742,8 +754,8 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 			break;
 
 		case SDLK_END:
-			iTopFileShown = iTotalFiles-7;
-			iCurrFileShown = iTotalFiles-1;
+			iTopFileShown = gFileList.size()-7;
+			iCurrFileShown = gFileList.size()-1;
 			break;
 
 		case SDLK_DELETE: iFDlgState = DIALOG_DELETE; break;
@@ -760,27 +772,26 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 	if( iCurrFileShown != iPrevFileShown )
 	{
 		INT32 x;
-		FDLG_LIST *curr;
 		x = 0;
-		curr = FileList;
-		while( curr && x != iCurrFileShown )
+		auto curr = gFileList.begin();
+		while( curr != gFileList.end() && x != iCurrFileShown )
 		{
-			curr = curr->pNext;
+			curr++;
 			x++;
 		}
-		if( curr )
+		if( curr != gFileList.end() )
 		{
-			SetInputFieldString(0, curr->filename);
-			gzFilename = ST::format("{}", curr->filename);
+			gCurrentFilename = ST::format("{}", curr->filename);
+			SetInputFieldString(0, gCurrentFilename);
 		}
 	}
 }
 
 
 // Editor doesn't care about the z value. It uses its own methods.
-static void SetGlobalSectorValues()
+static void SetGlobalSectorValues(const ST::string& filename)
 {
-	{ const char* f = gzFilename.c_str();
+	{ const char* f = filename.c_str();
 
 		INT16 y;
 		if ('A' <= f[0] && f[0] <= 'P')
@@ -837,28 +848,27 @@ static void InitErrorCatchDialog(void)
 static ScreenID ProcessFileIO(void)
 {
 	INT16 usStartX, usStartY;
-	ST::string ubNewFilename;
-	ST::string zOrigName;
+	ST::string label;
+	RustPointer<char> ioFilename(Path_filename(gFileForIO.c_str()));
 	switch( gbCurrentFileIOStatus )
 	{
 		case INITIATE_MAP_SAVE:	//draw save message
 			SaveFontSettings();
-			SetFontAttributes(HUGEFONT, FONT_LTKHAKI, FONT_DKKHAKI);
-			zOrigName = ST::format("Saving map:  {}", gzFilename);
-			usStartX = (SCREEN_WIDTH - StringPixLength(zOrigName, HUGEFONT)) / 2;
-			usStartY = 180 - GetFontHeight(HUGEFONT) / 2;
-			MPrint(usStartX, usStartY, zOrigName);
+			SetFontAttributes(FONT16ARIAL, FONT_LTKHAKI, FONT_DKKHAKI);
+			label = ST::format("Saving map:  {}", ioFilename.get());
+			usStartX = (SCREEN_WIDTH - StringPixLength(label, FONT16ARIAL)) / 2;
+			usStartY = 180 - GetFontHeight(FONT16ARIAL) / 2;
+			MPrint(usStartX, usStartY, label);
 
 			InvalidateScreen( );
 			gbCurrentFileIOStatus = SAVING_MAP;
 			return LOADSAVE_SCREEN;
 		case SAVING_MAP: //save map
-			ubNewFilename = ST::format("{}", gzFilename);
 			RaiseWorldLand();
 			if( gfShowPits )
 				RemoveAllPits();
 			OptimizeSchedules();
-			if ( !SaveWorld( ubNewFilename.c_str() ) )
+			if ( !SaveWorldAbsolute( gFileForIO.c_str() ) )
 			{
 				if( gfErrorCatch )
 				{
@@ -870,10 +880,10 @@ static ScreenID ProcessFileIO(void)
 			if( gfShowPits )
 				AddAllPits();
 
-			SetGlobalSectorValues();
+			SetGlobalSectorValues(ioFilename.get());
 
 			if( gfGlobalSummaryExists )
-				UpdateSectorSummary( gzFilename, gfUpdateSummaryInfo );
+				UpdateSectorSummary( ioFilename.get(), gfUpdateSummaryInfo );
 
 			iCurrentAction = ACTION_NULL;
 			gbCurrentFileIOStatus = IOSTATUS_NONE;
@@ -898,14 +908,18 @@ static ScreenID ProcessFileIO(void)
 			return LOADSAVE_SCREEN;
 		case LOADING_MAP: //load map
 			DisableUndo();
-			ubNewFilename = ST::format("{}", gzFilename);
-
+			
 			RemoveMercsInSector( );
 
 			try
 			{
 				UINT32 const start = SDL_GetTicks();
-				LoadWorld(ubNewFilename.c_str());
+				if (!Path_isAbsolute(gFileForIO.c_str())) {
+					LoadWorld(gFileForIO);
+				} else {
+					LoadWorldAbsolute(gFileForIO);
+				}
+				
 				fprintf(stderr, "---> %u\n", SDL_GetTicks() - start);
 			}
 			catch (...)
@@ -919,7 +933,7 @@ static ScreenID ProcessFileIO(void)
 				CreateMessageBox( " Error loading file.  Try another filename?" );
 				return LOADSAVE_SCREEN;
 			}
-			SetGlobalSectorValues();
+			SetGlobalSectorValues(ioFilename.get());
 
 			RestoreFontSettings();
 
@@ -989,6 +1003,14 @@ static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason)
 	{
 		SelectFileDialogYPos(butn->RelativeY());
 	}
+	if( reason & (MSYS_CALLBACK_REASON_WHEEL_UP) ) {
+		if(iTopFileShown > 0)
+			iTopFileShown--;
+	}
+	if( reason & (MSYS_CALLBACK_REASON_WHEEL_DOWN) ) {
+		if( (iTopFileShown+7) < gFileList.size() )
+			iTopFileShown++;
+	}
 }
 
 
@@ -1024,57 +1046,32 @@ static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
-		if( (iTopFileShown+7) < iTotalFiles )
+		if( (iTopFileShown+7) < gFileList.size() )
 			iTopFileShown++;
 	}
 }
 
 
-static BOOLEAN ExtractFilenameFromFields(void)
+static ST::string ExtractFilenameFromFields(void)
 {
-	gzFilename = GetStringFromField(0);
-	return ValidFilename();
+	return GetStringFromField(0);
 }
 
 
-static BOOLEAN ValidFilename(void)
+static BOOLEAN ValidMapName(const ST::string &path)
 {
-	if (!gzFilename.empty())
-	{
-		auto pos = gzFilename.find(".dat");
-		if (pos > 0 && gzFilename[pos + 4] == '\0' )
-			return TRUE;
-	}
-	return FALSE;
+	return path.ends_with(".dat", ST::case_sensitivity_t::case_insensitive);
 }
 
 BOOLEAN ExternalLoadMap(const ST::string& szFilename)
 {
 	if (szFilename.empty())
 		return FALSE;
-	gzFilename = szFilename;
-	if( !ValidFilename() )
+	if( !ValidMapName(szFilename) )
 		return FALSE;
+	gFileForIO = szFilename;
 	gbCurrentFileIOStatus = INITIATE_MAP_LOAD;
 	ProcessFileIO(); //always returns loadsave_screen and changes iostatus to loading_map.
-	ExecuteBaseDirtyRectQueue();
-	EndFrameBufferRender();
-	RefreshScreen();
-	if( ProcessFileIO() == EDIT_SCREEN )
-		return TRUE;
-	return FALSE;
-}
-
-BOOLEAN ExternalSaveMap(const ST::string& szFilename)
-{
-	if (szFilename.empty())
-		return FALSE;
-	gzFilename = szFilename;
-	if( !ValidFilename() )
-		return FALSE;
-	gbCurrentFileIOStatus = INITIATE_MAP_SAVE;
-	if( ProcessFileIO() == ERROR_SCREEN )
-		return FALSE;
 	ExecuteBaseDirtyRectQueue();
 	EndFrameBufferRender();
 	RefreshScreen();

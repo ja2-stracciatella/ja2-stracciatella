@@ -114,8 +114,6 @@ try
 			SLOGI("Beginning JA2 using -editorauto commandline argument...");
 			gfAutoLoadA9 = TRUE;
 editor:
-			//For editor purposes, need to know the default map file.
-			strcpy(g_filename, "none");
 			//also set the sector
 			SetWorldSectorInvalid();
 			gfIntendOnEnteringEditor = TRUE;

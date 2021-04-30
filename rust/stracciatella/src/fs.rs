@@ -126,19 +126,51 @@ pub fn resolve_existing_components(path: &Path, base: Option<&Path>, caseless: b
 }
 
 /// Gets the paths of the directory entries.
-pub fn read_dir_paths(dir: &Path, ignore_entry_errors: bool) -> io::Result<Vec<PathBuf>> {
+pub fn find_all_files_in_dir(
+    dir: &Path,
+    sort_results: bool,
+    recursive: bool,
+) -> io::Result<Vec<PathBuf>> {
     let mut vec = Vec::new();
     for entry_result in read_dir(&dir)? {
-        match entry_result {
-            Ok(entry) => {
-                vec.push(entry.path());
-            }
-            Err(err) => {
-                if !ignore_entry_errors {
-                    return Err(err);
-                }
+        let entry_result = entry_result?;
+        if entry_result.path().is_file() {
+            vec.push(entry_result.path().to_owned());
+        } else if entry_result.path().is_dir() && recursive {
+            let mut subdir_results =
+                find_all_files_in_dir(&entry_result.path(), sort_results, recursive)?;
+            vec.append(&mut subdir_results);
+        }
+    }
+    if sort_results {
+        vec.sort_by(|s1, s2| {
+            Nfc::caseless(&s1.to_string_lossy()).cmp(&Nfc::caseless(&s2.to_string_lossy()))
+        });
+    }
+    Ok(vec)
+}
+
+/// Gets the paths of the directory entries.
+pub fn find_all_dirs_in_dir(
+    dir: &Path,
+    sort_results: bool,
+    recursive: bool,
+) -> io::Result<Vec<PathBuf>> {
+    let mut vec = Vec::new();
+    for entry_result in read_dir(&dir)? {
+        let entry_result = entry_result?;
+        if entry_result.path().is_dir() {
+            vec.push(entry_result.path().to_owned());
+            if recursive {
+                let mut subdir_results = find_all_dirs_in_dir(&dir, sort_results, recursive)?;
+                vec.append(&mut subdir_results);
             }
         }
+    }
+    if sort_results {
+        vec.sort_by(|s1, s2| {
+            Nfc::caseless(&s1.to_string_lossy()).cmp(&Nfc::caseless(&s2.to_string_lossy()))
+        });
     }
     Ok(vec)
 }

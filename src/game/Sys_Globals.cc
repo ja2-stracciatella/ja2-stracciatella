@@ -5,8 +5,6 @@
 #include "GameLoop.h"
 
 
-char g_filename[200];
-
 ST::string gubErrorText;
 BOOLEAN gfEditMode             = FALSE;
 BOOLEAN fFirstTimeInGameScreen = TRUE;

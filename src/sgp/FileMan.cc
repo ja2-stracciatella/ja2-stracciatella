@@ -490,10 +490,10 @@ FindFilesInDir(const ST::string& dirPath,
 }
 
 std::vector<ST::string>
-FindAllFilesInDir(const ST::string& dirPath, bool sortResults, bool recursive)
+FindAllFilesInDir(const ST::string& dirPath, bool sortResults, bool recursive, bool returnOnlyNames)
 {
 	std::vector<ST::string> paths;
-	RustPointer<VecCString> vec{Fs_readDirPaths(dirPath.c_str(), false)};
+	RustPointer<VecCString> vec{Fs_findAllFilesInDir(dirPath.c_str(), sortResults, recursive)};
 	if (!vec)
 	{
 		RustPointer<char> err{getRustError()};
@@ -504,19 +504,37 @@ FindAllFilesInDir(const ST::string& dirPath, bool sortResults, bool recursive)
 	for (size_t i = 0; i < len; i++)
 	{
 		RustPointer<char> path{VecCString_get(vec.get(), i)};
-		if (Fs_isFile(path.get()))
-		{
+		if (returnOnlyNames) {
+			RustPointer<char> filename{Path_filename(path.get())};
+			paths.emplace_back(filename.get());
+		} else {
 			paths.emplace_back(path.get());
 		}
-		else if (recursive && Fs_isDir(path.get()))
-		{
-			std::vector<ST::string> subDirFiles = FindAllFilesInDir(path.get(), false, true);
-			paths.insert(paths.end(), subDirFiles.begin(), subDirFiles.end());
-		}
 	}
-	if(sortResults)
+	return paths;
+}
+
+std::vector<ST::string>
+FindAllDirsInDir(const ST::string& dirPath, bool sortResults, bool recursive, bool returnOnlyNames)
+{
+	std::vector<ST::string> paths;
+	RustPointer<VecCString> vec{Fs_findAllDirsInDir(dirPath.c_str(), sortResults, recursive)};
+	if (!vec)
 	{
-		std::sort(paths.begin(), paths.end());
+		RustPointer<char> err{getRustError()};
+		STLOGW("FindAllDirsInDir: {}", err.get());
+		return paths;
+	}
+	size_t len = VecCString_len(vec.get());
+	for (size_t i = 0; i < len; i++)
+	{
+		RustPointer<char> path{VecCString_get(vec.get(), i)};
+		if (returnOnlyNames) {
+			RustPointer<char> filename{Path_filename(path.get())};
+			paths.emplace_back(filename.get());
+		} else {
+			paths.emplace_back(path.get());
+		}
 	}
 	return paths;
 }
@@ -541,7 +559,7 @@ ST::string FileMan::getParentPath(const ST::string &path, bool absolute)
 		{
 			RustPointer<char> msg(getRustError());
 			SLOGW("%s", msg.get());
-			throw new std::runtime_error("expected the current directory");
+			throw std::runtime_error("expected the current directory");
 		}
 		return joinPaths(dir.get(), parent.get());
 	}

@@ -17,6 +17,4 @@ extern UINT32  guiGameCycleCounter;
 
 void SET_ERROR(const ST::string& msg);
 
-extern char g_filename[200];
-
 #endif
