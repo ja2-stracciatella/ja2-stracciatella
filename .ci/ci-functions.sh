@@ -43,10 +43,10 @@ linux-install-via-android-sdkmanager () {
 }
 
 linux-set-gcc-version () {
-    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 9
-    sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-9 9
-    sudo update-alternatives --set gcc "/usr/bin/gcc-9"
-    sudo update-alternatives --set g++ "/usr/bin/g++-9"
+    sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-8 8
+    sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-8 8
+    sudo update-alternatives --set gcc "/usr/bin/gcc-8"
+    sudo update-alternatives --set g++ "/usr/bin/g++-8"
 }
 
 macOS-install-via-brew () {
