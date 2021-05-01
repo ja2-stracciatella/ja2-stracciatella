@@ -14,12 +14,14 @@ source "$(dirname "${BASH_SOURCE[0]}")/ci-functions.sh"
 
 echo "## prepare environment ##"
 if [[ "$CI_TARGET" == "linux" ]]; then
-    # choose a new-enough gcc version
-    linux-set-gcc-version
+    GCC_VER="${TARGET_GCC_MAJOR_VERSION:-8}"
 
     # SDL2 and FLTK to link against
-    linux-install-via-apt-get libsdl2-dev libfltk1.3-dev
-    
+    linux-install-via-apt-get libsdl2-dev libfltk1.3-dev "gcc-$GCC_VER" "g++-$GCC_VER"
+
+    # choose a new-enough gcc version
+    linux-set-gcc-version "$GCC_VER"
+
     # sccache for compilation caching
     linux-install-sccache
 
@@ -32,11 +34,13 @@ if [[ "$CI_TARGET" == "linux" ]]; then
     # Appimage build tools (linuxdeploy and appimagelint)
     linux-install-appimage-build-tools
 elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
-    # choose a new-enough version of gcc
-    linux-set-gcc-version
+    GCC_VER="${TARGET_GCC_MAJOR_VERSION:-8}"
 
     # MinGW compiler for cross-compiling
-    linux-install-via-apt-get build-essential mingw-w64
+    linux-install-via-apt-get build-essential mingw-w64 "gcc-$GCC_VER" "g++-$GCC_VER"
+
+    # choose a new-enough version of gcc
+    linux-set-gcc-version "$GCC_VER"
 
     # sccache for compilation caching
     linux-install-sccache

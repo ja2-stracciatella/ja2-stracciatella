@@ -89,6 +89,13 @@ if [[ "$RUN_TESTS" == "true" ]]; then
   if [[ "$CI_TARGET" == "linux" ]]; then
     ./AppDir/usr/bin/ja2 -unittests
     ./AppDir/usr/bin/ja2-launcher -help
+
+    # Smoke test to check if the binary can run on older distros
+    DISTRO_IMAGE="debian:10"
+    PACKAGES="libfontconfig1 libx11-6 libsdl2-2.0.0 libfltk1.3 libfltk-images1.3"
+    SETUP_COMMAND="apt-get update && apt-get -yq install $PACKAGES"
+    docker run -v "$(pwd)/AppDir/usr/bin:/ja2" "$DISTRO_IMAGE" bash -c "$SETUP_COMMAND && /ja2/ja2 -help"
+
   else
     ./ja2 -unittests
     ./ja2-launcher -help
