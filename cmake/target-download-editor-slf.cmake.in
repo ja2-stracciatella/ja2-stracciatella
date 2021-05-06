@@ -8,6 +8,8 @@ set(EDITORSLF_MD5_URL "@EDITORSLF_MD5_URL@")
 message("-- Target file: ${EDITORSLF_FILE}")
 
 # get md5
+get_filename_component(EDITORSLF_FILE_DIR "${EDITORSLF_FILE}" DIRECTORY)
+file(MAKE_DIRECTORY "${EDITORSLF_FILE_DIR}")
 curl_download(
     URL "${EDITORSLF_MD5_URL}"
     FILE "${EDITORSLF_FILE}.md5"

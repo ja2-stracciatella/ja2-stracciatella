@@ -3272,6 +3272,12 @@ ScreenID EditScreenHandle(void)
 	if ( fSelectionWindow )
 		return( WaitForSelectionWindowResponse( ) );
 
+	if (gfSummaryWindowSaveRequested) {
+		gfSummaryWindowSaveRequested = FALSE;
+		iCurrentAction = ACTION_SAVE_MAP;
+		return LOADSAVE_SCREEN;
+	}
+
 	// If editing mercs, handle that stuff
 	ProcessMercEditing();
 
@@ -3405,6 +3411,5 @@ static void UpdateLastActionBeforeLeaving(void)
 
 static void ReloadMap(void)
 {
-	ST::string szFilename = ST::format("{}", g_filename);
-	ExternalLoadMap( szFilename );
+	ExternalLoadMap( gFileForIO );
 }

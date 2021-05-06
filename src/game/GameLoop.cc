@@ -224,7 +224,7 @@ catch (std::exception const& e)
 	if (gfEditMode && GameState::getInstance()->isEditorMode())
 	{
 		what = "map";
-		if (SaveWorld("error.dat"))
+		if (SaveWorldAbsolute("error.dat"))
 		{
 			success = "succeeded (error.dat)";
 			attach  = " Do not forget to attach the map.";

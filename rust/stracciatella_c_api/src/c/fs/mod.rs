@@ -68,19 +68,43 @@ pub extern "C" fn Fs_isFile(path: *const c_char) -> bool {
     fs::metadata(&path).map(|x| x.is_file()).unwrap_or(false)
 }
 
-/// Gets the paths of the directory entries.
-/// Returns null on error.
-/// Sets the rust error.
+/// Finds all files in directory
 #[no_mangle]
-pub extern "C" fn Fs_readDirPaths(
+pub extern "C" fn Fs_findAllFilesInDir(
     dir: *const c_char,
-    ignore_entry_errors: bool,
+    sort_results: bool,
+    recursive: bool,
 ) -> *mut VecCString {
     forget_rust_error();
     let dir = path_buf_from_c_str_or_panic(unsafe_c_str(dir));
-    match fs::read_dir_paths(&dir, ignore_entry_errors) {
+    match fs::find_all_files_in_dir(&dir, sort_results, recursive) {
         Err(err) => {
-            remember_rust_error(format!("Fs_readDirPaths {:?}: {}", dir, err));
+            remember_rust_error(format!("Fs_findAllFilesInDir {:?}: {}", dir, err));
+            ptr::null_mut()
+        }
+        Ok(vec) => {
+            let vec: Vec<_> = vec
+                .iter()
+                .map(|x| c_string_from_path_or_panic(&x))
+                .collect();
+            let c_vec = VecCString::from(vec);
+            into_ptr(c_vec)
+        }
+    }
+}
+
+/// Finds all directories
+#[no_mangle]
+pub extern "C" fn Fs_findAllDirsInDir(
+    dir: *const c_char,
+    sort_results: bool,
+    recursive: bool,
+) -> *mut VecCString {
+    forget_rust_error();
+    let dir = path_buf_from_c_str_or_panic(unsafe_c_str(dir));
+    match fs::find_all_dirs_in_dir(&dir, sort_results, recursive) {
+        Err(err) => {
+            remember_rust_error(format!("Fs_findAllDirsInDir {:?}: {}", dir, err));
             ptr::null_mut()
         }
         Ok(vec) => {

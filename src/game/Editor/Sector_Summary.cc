@@ -117,6 +117,8 @@ static BOOLEAN gfDeniedSummaryCreation;
 static BOOLEAN gfRenderSummary;
 //Used externally to determine if the summary window is up or not.
 BOOLEAN gfSummaryWindowActive;
+//Used externally to determine if the current summary map should be saved.
+BOOLEAN gfSummaryWindowSaveRequested;
 //When set, the summary window stays up until told otherwise.  When clear, the summary will disappear
 //when the assigned key (F5) is released.  The latter mode is initiated when F5 is held down for longer
 //than .4 seconds, and is useful for quickly looking at the information in the current map being edited.
@@ -1966,28 +1968,8 @@ static void SummarySaveMapCallback(GUI_BUTTON* btn, INT32 reason)
 {
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
+		gfSummaryWindowSaveRequested = TRUE;
 		gfRenderSummary = TRUE;
-		if (gubOverrideStatus == INACTIVE || gfOverride)
-		{
-			if( gubOverrideStatus == READONLY )
-			{
-				ST::string path = GCM->getMapPath(gszDisplayName);
-				if (!Fs_setReadOnly(path.c_str(), false))
-				{
-					RustPointer<char> msg(getRustError());
-					SLOGW("%s", msg.get());
-				}
-			}
-			if(	ExternalSaveMap( gszDisplayName ) )
-			{
-				if( gsSelSectorX && gsSelSectorY )
-				{
-					gsSectorX = gsSelSectorX;
-					gsSectorY = gsSelSectorY;
-					gfOverrideDirty = TRUE;
-				}
-			}
-		}
 	}
 }
 

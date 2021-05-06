@@ -270,9 +270,10 @@ void TrashWorld(void);
 /* Deletes everything then re-creates the world with simple ground tiles */
 void NewWorld(void);
 
-BOOLEAN SaveWorld(const char *puiFilename);
+BOOLEAN SaveWorldAbsolute(const ST::string &absolutePath);
 
-void LoadWorld(char const* filename);
+void LoadWorldAbsolute(const ST::string &absolutePath);
+void LoadWorld(const ST::string &name);
 void CompileWorldMovementCosts(void);
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );
 void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );

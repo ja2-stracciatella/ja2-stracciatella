@@ -309,7 +309,7 @@ copy_assets_dir_to_ja2_binary_after_build("unittests")
 copy_assets_dir_to_ja2_binary_after_build("mods")
 
 if(WITH_EDITOR_SLF)
-    set(EDITORSLF_FILE "${CMAKE_CURRENT_BINARY_DIR}/editor.slf")
+    set(EDITORSLF_FILE "${CMAKE_CURRENT_BINARY_DIR}/externalized/editor.slf")
     find_package(EditorSlf REQUIRED)
     add_custom_templated_target(download-editor-slf)
     add_dependencies(${JA2_BINARY} download-editor-slf)

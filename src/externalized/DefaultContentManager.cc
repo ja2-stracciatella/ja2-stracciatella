@@ -443,12 +443,6 @@ ST::string DefaultContentManager::getNewMapFolder() const
 	return FileMan::joinPaths(m_dataDir, MAPSDIR);
 }
 
-/** Get all available maps. */
-std::vector<ST::string> DefaultContentManager::getAllMaps() const
-{
-	return FindFilesInDir(MAPSDIR, "dat", true, true, true);
-}
-
 /** Get all available tilecache. */
 std::vector<ST::string> DefaultContentManager::getAllTilecache() const
 {

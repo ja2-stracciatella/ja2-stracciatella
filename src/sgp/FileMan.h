@@ -153,6 +153,15 @@ FindFilesInDir(const ST::string& dirPath,
  * @param recursive When True, recurse into subs.
  * @return List of paths (dir + filename). */
 std::vector<ST::string>
-FindAllFilesInDir(const ST::string& dirPath, bool sortResults = false, bool recursive = false);
+FindAllFilesInDir(const ST::string& dirPath, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
+
+/**
+ * Find all directories in directory
+ * @param dirPath Path to the directory
+ * @param sortResults When True, sort found paths.
+ * @param recursive When True, recurse into subs.
+ * @return List of paths (dir + filename). */
+std::vector<ST::string>
+FindAllDirsInDir(const ST::string& dirPath, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
 
 #endif

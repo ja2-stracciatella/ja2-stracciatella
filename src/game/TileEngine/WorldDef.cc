@@ -1347,14 +1347,10 @@ static void RemoveWorldWireFrameTiles();
 static void SaveMapLights(HWFILE);
 
 
-BOOLEAN SaveWorld(char const* const filename)
+BOOLEAN SaveWorldAbsolute(const ST::string &absolutePath)
 try
 {
-	// Let's save map into Data/maps
-	ST::string path = GCM->getNewMapFolder();
-	FileMan::createDir(path.c_str());
-	path = FileMan::joinPaths(path, filename);
-	AutoSGPFile f(FileMan::openForWriting(path));
+	AutoSGPFile f(FileMan::openForWriting(absolutePath));
 
 	// Write JA2 Version ID
 	FLOAT mapVersion = getMajorMapVersion();
@@ -1623,7 +1619,6 @@ try
 		SaveSchedules(f);
 	}
 
-	strlcpy(g_filename, filename, lengthof(g_filename));
 	return TRUE;
 }
 catch (...) { return FALSE; }
@@ -1725,7 +1720,7 @@ try
 	if (gfMajorUpdate)
 	{
 		LoadWorld(filename);
-		SaveWorld(filename);
+		SaveWorldAbsolute(filename);
 	}
 
 	AutoSGPFile f(GCM->openMapForReading(filename));
@@ -2044,17 +2039,45 @@ catch (...) { return FALSE; }
 
 static void LoadMapLights(HWFILE);
 
+void LoadWorldInternal(SGPFile *f);
 
-void LoadWorld(char const* const filename)
+void LoadWorld(const ST::string &name)
 try
+{
+	AutoSGPFile f(GCM->openMapForReading(name));
+	LoadWorldInternal(f);
+}
+catch (const std::runtime_error& err)
+{
+	SET_ERROR(ST::format("Could not load map with name '{}': {}", name, err.what()));
+	throw;
+}
+
+void LoadWorldAbsolute(const ST::string &absolutePath)
+try
+{
+	auto rawFile = FileMan::openFileForReading(absolutePath);
+	if (!rawFile) {
+		auto err = ST::format("LoadWorldAbsolute: Could not open map from absolute path: {}: {}", absolutePath, getRustError());
+		throw std::runtime_error(err.c_str());
+	}
+	AutoSGPFile f(FileMan::getSGPFileFromFile(rawFile.release()));
+	LoadWorldInternal(f);
+}
+catch (const std::runtime_error& err)
+{
+	SET_ERROR(ST::format("Could not load map from absolute file '{}': {}", absolutePath, err.what()));
+	throw;
+}
+
+/// Internal load world that reads from sgp file
+void LoadWorldInternal(SGPFile *f)
 {
 	LoadShadeTablesFromTextFile();
 
 	// Reset flags for outdoors/indoors
 	gfBasement = FALSE;
 	gfCaves    = FALSE;
-
-	AutoSGPFile f(GCM->openMapForReading(filename));
 
 	SetRelativeStartAndEndPercentage(0, 0, 1, "Trashing world...");
 	TrashWorld();
@@ -2390,7 +2413,7 @@ try
 
 	if (dMajorMapVersion >= 4.00 && gMapInformation.ubMapVersion != ubMinorMapVersion)
 	{
-		throw new std::runtime_error("map version must match minor version");
+		throw std::runtime_error("map version must match minor version");
 	}
 
 	if (uiFlags & MAP_FULLSOLDIER_SAVED)
@@ -2434,21 +2457,21 @@ try
 	if (dMajorMapVersion == 6.00 && ubMinorMapVersion == 26)
 	{
 		// the unknown data is skipped
-		SLOGD("%s is a russian ja2 map", filename);
+		SLOGD("Map is a russian ja2 map");
 	}
 	else if (dMajorMapVersion == 5.00 && ubMinorMapVersion >= 24 && ubMinorMapVersion <= 25)
 	{
-		SLOGD("%s is a non-russian ja2 map", filename);
+		SLOGD("Map is a non-russian ja2 map");
 	}
 	else if (dMajorMapVersion == 5.00 && ubMinorMapVersion == 26)
 	{
 		// file structure is the same but the game has different items
-		SLOGW("%s is a ja2 wildfire map, expect problems", filename);
+		SLOGW("Map is a ja2 wildfire map, expect problems");
 	}
 	else
 	{
 		// ja2 demo has 3.13
-		SLOGW("%s has an unexpected version (%f %u), expect problems", filename, dMajorMapVersion, gMapInformation.ubMapVersion);
+		SLOGW("Map has an unexpected version (%f %u), expect problems", dMajorMapVersion, gMapInformation.ubMapVersion);
 	}
 
 	ValidateAndUpdateMapVersionIfNecessary();
@@ -2488,18 +2511,8 @@ try
 
 	gfWorldLoaded = TRUE;
 
-	if(GameState::getInstance()->isEditorMode())
-	{
-		strlcpy(g_filename, filename, lengthof(g_filename));
-	}
-
 	RenderProgressBar(0, 100);
 	DequeueAllKeyBoardEvents();
-}
-catch (const std::runtime_error& err)
-{
-	SET_ERROR(ST::format("Could not load map file '{}': {}", filename, err.what()));
-	throw;
 }
 
 
@@ -2607,10 +2620,6 @@ void TrashWorld(void)
 	TrashDoorStatusArray();
 
 	gfWorldLoaded = FALSE;
-	if(GameState::getInstance()->isEditorMode())
-	{
-		strcpy(g_filename, "none");
-	}
 }
 
 static void TrashMapTile(const INT16 MapTile)
@@ -2952,17 +2961,17 @@ void ReloadTileset(TileSetID const ubID)
 	giCurrentTilesetID = ubID;
 
 	// Save Map
-	SaveWorld( TEMP_FILE_FOR_TILESET_CHANGE );
+	SaveWorldAbsolute( TEMP_FILE_FOR_TILESET_CHANGE );
 
 	//IMPORTANT:  If this is not set, the LoadTileset() will assume that
 	//it is loading the same tileset and ignore it...
 	giCurrentTilesetID = iCurrTilesetID;
 
 	// Load Map with new tileset
-	LoadWorld( TEMP_FILE_FOR_TILESET_CHANGE );
+	LoadWorldAbsolute( TEMP_FILE_FOR_TILESET_CHANGE );
 
 	// Delete file
-	FileDelete(GCM->getMapPath(TEMP_FILE_FOR_TILESET_CHANGE).c_str());
+	FileDelete( TEMP_FILE_FOR_TILESET_CHANGE );
 }
 
 
