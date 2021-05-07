@@ -134,20 +134,6 @@ FLOAT getMajorMapVersion()
 	return (s_gameVersion == GameVersion::RUSSIAN) ? 6.00 : 5.00;
 }
 
-/** Get list of resource libraries. */
-std::vector<ST::string> GetResourceLibraries(const ST::string &dataDir)
-{
-	std::vector<ST::string> libraries = FindFilesInDir(dataDir, "slf", true, true);
-
-	// for (int i = 0; i < libraries.size(); i++)
-	// {
-	//   SLOGW("%s", libraries[i].c_str());
-	// }
-
-	return libraries;
-}
-
-
 #define STI(LNG, x) LNG "/" x "_" LNG ".sti"
 #define PCX(LNG, x) LNG "/" x "_" LNG ".pcx"
 

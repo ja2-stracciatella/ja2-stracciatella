@@ -43,9 +43,6 @@ public:
 	/** Open map for reading. */
 	virtual SGPFile* openMapForReading(const ST::string& mapName) const override;
 
-	/** Get directory for storing new map file. */
-	virtual ST::string getNewMapFolder() const override;
-
 	/** Get all available tilecache. */
 	virtual std::vector<ST::string> getAllTilecache() const override;
 
@@ -77,7 +74,6 @@ public:
 	virtual ST::string getVideoCaptureFolder() const override;
 
 	const ST::string& getDataDir() { return m_dataDir; }
-	const ST::string& getTileDir() { return m_tileDir; }
 
 	const ST::string& getExternalizedDataDir() { return m_externalizedDataPath; }
 
@@ -176,7 +172,6 @@ public:
 protected:
 	RustPointer<EngineOptions> m_engineOptions;
 	ST::string m_dataDir;
-	ST::string m_tileDir;
 	ST::string m_userHomeDir;
 	ST::string m_externalizedDataPath;
 

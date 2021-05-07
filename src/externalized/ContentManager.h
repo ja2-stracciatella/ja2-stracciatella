@@ -71,9 +71,6 @@ public:
 	/** Get tileset db resource name. */
 	virtual ST::string getTilesetDBResName() const = 0;
 
-	/** Get directory for storing new map file. */
-	virtual ST::string getNewMapFolder() const = 0;
-
 	/** Get all available tilecache. */
 	virtual std::vector<ST::string> getAllTilecache() const = 0;
 
