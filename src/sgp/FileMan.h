@@ -112,9 +112,6 @@ public:
 	/** Convert File to HWFile. */
 	static SGPFile* getSGPFileFromFile(File* f);
 
-	/** Replace all \ with / */
-	static void slashifyPath(ST::string &path);
-
 	/** Check file existance. */
 	static bool checkFileExistance(const ST::string& folder, const ST::string& fileName);
 

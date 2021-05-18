@@ -10,6 +10,7 @@ use stracciatella::unicode::Nfc;
 use stracciatella::vfs::{Vfs, VfsFile as RVfsFile, VfsLayer};
 
 use crate::c::common::*;
+use crate::c::vec::VecCString;
 
 /// Concrete Type for a VFS file as we cannot return Box<dyn xxx> in the C API
 pub struct VfsFile(Box<dyn RVfsFile>);
@@ -60,6 +61,43 @@ pub extern "C" fn Vfs_addDir(vfs: *mut Vfs, path: *const c_char) -> bool {
         remember_rust_error(format!("Vfs_addDir {:?}: {}", path, err));
     }
     no_rust_error()
+}
+
+/// Lists a directory in the VFS with an optional filter on the extension (pass null otherwise).
+/// Returns a list of files on success and null otherwise
+/// Sets the rust error.
+/// coverity[+alloc]
+#[no_mangle]
+pub extern "C" fn Vfs_readDir(
+    vfs: *mut Vfs,
+    path: *const c_char,
+    extension: *const c_char,
+) -> *mut VecCString {
+    forget_rust_error();
+    let vfs = unsafe_mut(vfs);
+    let path = Nfc::caseless_path(str_from_c_str_or_panic(unsafe_c_str(path)));
+    let extension = if extension.is_null() {
+        None
+    } else {
+        Some(Nfc::caseless(str_from_c_str_or_panic(unsafe_c_str(
+            extension,
+        ))))
+    };
+    let res = match &extension {
+        Some(ext) => vfs.read_dir_with_extension(&path, &ext),
+        None => vfs.read_dir(&path),
+    };
+    match res {
+        Err(err) => {
+            remember_rust_error(format!("VfsFile_readDir {:?}: {}", path, err));
+            std::ptr::null_mut()
+        }
+        Ok(files) => {
+            let vec: Vec<_> = files.into_iter().map(|x| c_string_from_str(&x)).collect();
+            let c_vec = VecCString::from(vec);
+            into_ptr(c_vec)
+        }
+    }
 }
 
 /// Opens a virtual file for reading.

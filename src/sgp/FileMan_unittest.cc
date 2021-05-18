@@ -225,13 +225,6 @@ TEST(FileManTest, ReplaceExtension)
 	EXPECT_EQ(FileMan::replaceExtension("c:\\a\\foo.txt", "bin"),   "c:\\a\\foo.bin");
 }
 
-TEST(FileManTest, SlashifyPath)
-{
-	ST::string test("foo\\bar\\baz");
-	FileMan::slashifyPath(test);
-	EXPECT_STREQ(test.c_str(), "foo/bar/baz");
-}
-
 TEST(FileManTest, FreeSpace)
 {
 	EXPECT_NE(GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(), 0u);

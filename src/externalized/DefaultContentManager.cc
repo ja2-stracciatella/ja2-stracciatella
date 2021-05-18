@@ -190,9 +190,6 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	RustPointer<char> dataDir{Fs_resolveExistingComponents(BASEDATADIR, vanillaGameDir.get(), true)};
 	m_dataDir = dataDir.get();
 
-	RustPointer<char> tileDir{Fs_resolveExistingComponents(TILECACHEDIR, m_dataDir.c_str(), true)};
-	m_tileDir = tileDir.get();
-
 	m_gameVersion = EngineOptions_getResourceVersion(m_engineOptions.get());
 
 	m_bobbyRayNewInventory = NULL;
@@ -223,7 +220,6 @@ void DefaultContentManager::logConfiguration() const {
 	STLOGI("Root game resources directory: '{}'", vanillaGameDir.get());
 	STLOGI("Extra data directory:          '{}'", assetsDir.get());
 	STLOGI("Data directory:                '{}'", m_dataDir);
-	STLOGI("Tilecache directory:           '{}'", m_tileDir);
 	STLOGI("Saved games directory:         '{}'", getSavedGamesFolder());
 }
 
@@ -437,16 +433,21 @@ SGPFile* DefaultContentManager::openMapForReading(const ST::string& mapName) con
 	return openGameResForReading(getMapPath(mapName));
 }
 
-/** Get directory for storing new map file. */
-ST::string DefaultContentManager::getNewMapFolder() const
-{
-	return FileMan::joinPaths(m_dataDir, MAPSDIR);
-}
-
 /** Get all available tilecache. */
 std::vector<ST::string> DefaultContentManager::getAllTilecache() const
 {
-	return FindFilesInDir(m_tileDir, "jsd", true, false);
+	RustPointer<VecCString> vec(Vfs_readDir(m_vfs.get(), TILECACHEDIR, "jsd"));
+	if (vec.get() == NULL) {
+		throw std::runtime_error(ST::format("DefaultContentManager::getAllTilecache: {}", getRustError()).c_str());
+	}
+	auto len = VecCString_len(vec.get());
+	std::vector<ST::string> paths;
+	for (size_t i = 0; i < len; i++)
+	{
+		RustPointer<char> path{VecCString_get(vec.get(), i)};
+		paths.emplace_back(FileMan::joinPaths(TILECACHEDIR, path.get()));
+	}
+	return paths;
 }
 
 /** Open temporary file for writing. */
