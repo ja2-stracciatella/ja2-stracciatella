@@ -5,6 +5,9 @@
 #include "VObject.h"
 #include "Video.h"
 #include "VSurface.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -189,6 +192,8 @@ void CursorDatabaseClear(void)
 
 BOOLEAN SetCurrentCursorFromDatabase(UINT32 uiCursorIndex)
 {
+	uiCursorIndex = ReturnCursorIndex(uiCursorIndex);
+	
 	if (uiCursorIndex == VIDEO_NO_CURSOR)
 	{
 		SetMouseCursorProperties(0, 0, 0, 0);
@@ -356,4 +361,17 @@ void SetExternMouseCursor(SGPVObject const& vo, UINT16 const region_idx)
 {
 	guiExternVo         = &vo;
 	gusExternVoSubIndex = region_idx;
+}
+
+// Checks if uiCursorIndex is VIDEO_DEFAULT_TO_NO_CURSOR. If so, we parse it as VIDEO_NO_CURSOR or 0 (generic cursor)
+UINT32 ReturnCursorIndex(UINT32 uiCursorIndex)
+{
+	if (uiCursorIndex == VIDEO_DEFAULT_TO_NO_CURSOR)
+	{
+		if (gamepolicy(always_show_cursor_in_tactical))
+			return 0;
+		else
+			return VIDEO_NO_CURSOR;
+	}
+	return uiCursorIndex;
 }

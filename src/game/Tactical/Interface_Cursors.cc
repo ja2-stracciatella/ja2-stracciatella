@@ -45,11 +45,11 @@ const UICursor gUICursors[NUM_UI_CURSORS] =
 	{ALL_MOVE_PRONE_UICURSOR,            UICURSOR_SNAPPING | UICURSOR_SHOWTILE | UICURSOR_DONTSHOW2NDLEVEL,                                    0,                         FIRSTPOINTERS5  },
 	{ALL_MOVE_VEHICLE_UICURSOR,          UICURSOR_SNAPPING | UICURSOR_SHOWTILE | UICURSOR_DONTSHOW2NDLEVEL,                                    0,                         FIRSTPOINTERS5  },
 
-	{MOVE_REALTIME_UICURSOR,             UICURSOR_FREEFLOWING | UICURSOR_SHOWTILEAPDEPENDENT | UICURSOR_DONTSHOW2NDLEVEL,                      VIDEO_NO_CURSOR,           FIRSTPOINTERS2  },
-	{MOVE_RUN_REALTIME_UICURSOR,         UICURSOR_FREEFLOWING | UICURSOR_SHOWTILE | UICURSOR_DONTSHOW2NDLEVEL,                                 VIDEO_NO_CURSOR,           FIRSTPOINTERS7  },
+	{MOVE_REALTIME_UICURSOR,             UICURSOR_FREEFLOWING | UICURSOR_SHOWTILEAPDEPENDENT | UICURSOR_DONTSHOW2NDLEVEL,                      VIDEO_DEFAULT_TO_NO_CURSOR,           FIRSTPOINTERS2  },
+	{MOVE_RUN_REALTIME_UICURSOR,         UICURSOR_FREEFLOWING | UICURSOR_SHOWTILE | UICURSOR_DONTSHOW2NDLEVEL,                                 VIDEO_DEFAULT_TO_NO_CURSOR,           FIRSTPOINTERS7  },
 
-	{CONFIRM_MOVE_REALTIME_UICURSOR,     UICURSOR_FREEFLOWING | UICURSOR_SHOWTILE | UICURSOR_DONTSHOW2NDLEVEL,                                 VIDEO_NO_CURSOR,           FIRSTPOINTERS4  },
-	{ALL_MOVE_REALTIME_UICURSOR,         UICURSOR_FREEFLOWING | UICURSOR_SHOWTILE | UICURSOR_DONTSHOW2NDLEVEL,                                 VIDEO_NO_CURSOR,           FIRSTPOINTERS5  },
+	{CONFIRM_MOVE_REALTIME_UICURSOR,     UICURSOR_FREEFLOWING | UICURSOR_SHOWTILE | UICURSOR_DONTSHOW2NDLEVEL,                                 VIDEO_DEFAULT_TO_NO_CURSOR,           FIRSTPOINTERS4  },
+	{ALL_MOVE_REALTIME_UICURSOR,         UICURSOR_FREEFLOWING | UICURSOR_SHOWTILE | UICURSOR_DONTSHOW2NDLEVEL,                                 VIDEO_DEFAULT_TO_NO_CURSOR,           FIRSTPOINTERS5  },
 
 	{ON_OWNED_MERC_UICURSOR,             UICURSOR_SNAPPING,                                                                                    0,                         0               },
 	{ON_OWNED_SELMERC_UICURSOR,          UICURSOR_SNAPPING,                                                                                    0,                         0               },
@@ -238,7 +238,7 @@ void DrawUICursor()
 
 		if ( guiCurUICursor == NO_UICURSOR )
 		{
-			gViewportRegion.ChangeCursor(VIDEO_NO_CURSOR);
+			gViewportRegion.ChangeCursor(VIDEO_DEFAULT_TO_NO_CURSOR);
 			return;
 		}
 
@@ -338,7 +338,7 @@ void DrawUICursor()
 		if ( gUICursors[ guiCurUICursor ].uiFlags & UICURSOR_SNAPPING )
 		{
 			// Hide mouse region cursor
-			gViewportRegion.ChangeCursor(VIDEO_NO_CURSOR);
+			gViewportRegion.ChangeCursor(VIDEO_DEFAULT_TO_NO_CURSOR);
 
 			// Set Snapping Cursor
 			DrawSnappingCursor( );
