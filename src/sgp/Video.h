@@ -6,6 +6,7 @@
 #include "stracciatella.h"
 
 
+#define VIDEO_DEFAULT_TO_NO_CURSOR 0xFFFE // VIDEO_DEFAULT_TO_NO_CURSOR is equal to VIDEO_NO_CURSOR unless always_show_cursor_in_tactical is true
 #define VIDEO_NO_CURSOR 0xFFFF
 #define GAME_WINDOW g_game_window
 
