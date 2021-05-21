@@ -77,6 +77,6 @@ void SetMouseBltHook(MOUSEBLT_HOOK pMouseBltOverride);
 
 void SetExternVOData(UINT32 uiCursorIndex, HVOBJECT hVObject, UINT16 usSubIndex);
 
-UINT32 ReturnCursorIndex(UINT32 uiCursorIndex);
+UINT32 ModifyCursorIndex(UINT32 uiCursorIndex);
 
 #endif

@@ -1413,7 +1413,7 @@ static void DrawMouseText(void)
 
 void UpdateAnimatedCursorFrames(UINT32 uiCursorIndex)
 {
-	uiCursorIndex = ReturnCursorIndex(uiCursorIndex);
+	uiCursorIndex = ModifyCursorIndex(uiCursorIndex);
 	if (uiCursorIndex == VIDEO_NO_CURSOR) return;
 
 	CursorData* pCurData = &CursorDatabase[uiCursorIndex];
@@ -1436,7 +1436,7 @@ void UpdateAnimatedCursorFrames(UINT32 uiCursorIndex)
 
 static void UpdateFlashingCursorFrames(UINT32 uiCursorIndex)
 {
-	uiCursorIndex = ReturnCursorIndex(uiCursorIndex);
+	uiCursorIndex = ModifyCursorIndex(uiCursorIndex);
 	if (uiCursorIndex == VIDEO_NO_CURSOR) return;
 
 	CursorData* pCurData = &CursorDatabase[uiCursorIndex];
