@@ -2554,6 +2554,9 @@ void TrashWorld(void)
 
 	TrashWorldItems();
 	TrashOverheadMap();
+
+	DecaySmokeEffects(0xffffff);
+	DecayLightEffects(0xffffff);
 	ResetSmokeEffects();
 	ResetLightEffects();
 

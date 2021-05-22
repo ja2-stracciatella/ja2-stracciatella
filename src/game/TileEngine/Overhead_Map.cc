@@ -19,6 +19,7 @@
 #include "Interface_Items.h"
 #include "Interface_Panels.h"
 #include "Isometric_Utils.h"
+#include "LightEffects.h"
 #include "Line.h"
 #include "Map_Information.h"
 #include "MouseSystem.h"
@@ -27,6 +28,7 @@
 #include "Radar_Screen.h"
 #include "Render_Dirty.h"
 #include "RenderWorld.h"
+#include "SmokeEffects.h"
 #include "Soldier_Control.h"
 #include "Soldier_Init_List.h"
 #include "Structure.h"
@@ -271,6 +273,13 @@ void HandleOverheadMap(void)
 	InitNewOverheadDB(giCurrentTilesetID);
 
 	RestoreBackgroundRects();
+
+	// clear for broken saves before TrashWorld took care of this
+	if (!gfEditMode && gfTacticalPlacementGUIActive)
+	{
+		DecaySmokeEffects(GetWorldTotalSeconds());
+		DecayLightEffects(GetWorldTotalSeconds());
+	}
 
 	RenderOverheadMap(0, WORLD_COLS / 2, STD_SCREEN_X, STD_SCREEN_Y, STD_SCREEN_X + 640, STD_SCREEN_Y + 320, FALSE);
 
