@@ -74,11 +74,6 @@
 
 #define DIALOGUESIZE 240
 
-// XXX: Issue #135
-// We need a safe way to create temporary directories - unique and random for every process
-// Boost probably provides this functionality
-#define NEW_TEMP_DIR "temp"
-
 const MercProfileInfo EMPTY_MERC_PROFILE_INFO;
 
 static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType, SGPFile* File, UINT32 seek_chars, UINT32 read_chars)
@@ -203,11 +198,22 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	m_loadingScreenModel = NULL;
 	m_samSitesAirControl = NULL;
 
+	// Initialize temp dir
+	RustPointer<TempDir> tempDir(TempDir_create());
+	if (tempDir.get() == NULL) {
+		RustPointer<char> err{ getRustError() };
+		auto error = ST::format("Failed to create temporary directory: {}", err.get());
+		throw std::runtime_error(error.c_str());
+	}
+	m_tempDir = move(tempDir);
+	RustPointer<char> tempDirPath(TempDir_path(m_tempDir.get()));
+	m_tempDirPath = tempDirPath.get();
+
+	// Initialize VFS
 	auto succeeded = Vfs_init_from_engine_options(m_vfs.get(), m_engineOptions.get());
 	if (!succeeded) {
 		RustPointer<char> err{ getRustError() };
 		auto error = ST::format("Failed to build virtual file system (VFS): {}", err.get());
-		SLOGE(error);
 		throw std::runtime_error(error.c_str());
 	}
 }
@@ -221,6 +227,7 @@ void DefaultContentManager::logConfiguration() const {
 	STLOGI("Extra data directory:          '{}'", assetsDir.get());
 	STLOGI("Data directory:                '{}'", m_dataDir);
 	STLOGI("Saved games directory:         '{}'", getSavedGamesFolder());
+	STLOGI("Temporary directory:           '{}'", m_tempDirPath);
 }
 
 template <class T> 
@@ -245,6 +252,7 @@ void deleteElements(std::map<K, const V*> map)
 
 DefaultContentManager::~DefaultContentManager()
 {
+	SLOGD("Shutting Down Content Manager");
 	for (const ItemModel* item : m_items)
 	{
 		delete item;
@@ -321,6 +329,10 @@ DefaultContentManager::~DefaultContentManager()
 	delete m_cacheSectors;
 	delete m_movementCosts;
 	delete m_samSitesAirControl;
+
+	m_vfs.reset();
+	m_tempDir.reset();
+	m_engineOptions.reset();
 }
 
 const DealerInventory* DefaultContentManager::getBobbyRayNewInventory() const
@@ -450,39 +462,66 @@ std::vector<ST::string> DefaultContentManager::getAllTilecache() const
 	return paths;
 }
 
+/** Does temp file exist. */
+bool DefaultContentManager::doesTempFileExist(const ST::string& filename) const
+{
+	return FileMan::checkFileExistance(m_tempDirPath, filename);
+}
+
 /** Open temporary file for writing. */
 SGPFile* DefaultContentManager::openTempFileForWriting(const ST::string& filename, bool truncate) const
 {
-	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
 	return FileMan::openForWriting(path, truncate);
-}
-
-/** Open temporary file for appending. */
-SGPFile* DefaultContentManager::openTempFileForAppend(const ST::string& filename) const
-{
-	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
-	return FileMan::openForAppend(path);
 }
 
 /* Open temporary file for reading. */
 SGPFile* DefaultContentManager::openTempFileForReading(const ST::string& filename) const
 {
-	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
-	RustPointer<File> file(File_open(path.c_str(), FILE_OPEN_READ));
-	if (!file)
-	{
-		RustPointer<char> err(getRustError());
-		ST::string buf = ST::format("DefaultContentManager::openTempFileForReading: {}", err.get());
-		throw std::runtime_error(buf.to_std_string());
-	}
-	return FileMan::getSGPFileFromFile(file.release());
+	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
+	return FileMan::openForReading(path);
+}
+
+/** Open temporary file for read/write. */
+SGPFile* DefaultContentManager::openTempFileForReadWrite(const ST::string& filename) const
+{
+	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
+	return FileMan::openForReadWrite(path);
+}
+
+/** Open temporary file for appending. */
+SGPFile* DefaultContentManager::openTempFileForAppend(const ST::string& filename) const
+{
+	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
+	return FileMan::openForAppend(path);
 }
 
 /** Delete temporary file. */
 void DefaultContentManager::deleteTempFile(const ST::string& filename) const
 {
-	ST::string path = FileMan::joinPaths(NEW_TEMP_DIR, filename);
+	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
 	FileDelete(path);
+}
+
+/** Create temporary directory. Does not fail if it exists already. */
+void DefaultContentManager::createTempDir(const ST::string& dirname) const
+{
+	ST::string path = FileMan::joinPaths(m_tempDirPath, dirname);
+	FileMan::createDir(path);
+}
+
+/** List temporary directory. Pass empty string to list the temp dir itself. */
+std::vector<ST::string> DefaultContentManager::findAllFilesInTempDir(const ST::string& dirname, bool sortResults, bool recursive, bool returnOnlyNames) const
+{
+	ST::string path = dirname.size() == 0 ? m_tempDirPath : FileMan::joinPaths(m_tempDirPath, dirname);
+	return FindAllFilesInDir(path, sortResults, recursive, returnOnlyNames);
+}
+
+/** Erase all files within temporary directory. */
+void DefaultContentManager::eraseTempDir(const ST::string& dirname) const
+{
+	ST::string path = FileMan::joinPaths(m_tempDirPath, dirname);
+	EraseDirectory(path);
 }
 
 /* Open a game resource file for reading.

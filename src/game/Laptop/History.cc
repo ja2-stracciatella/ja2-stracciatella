@@ -125,7 +125,7 @@ void AddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSecondCode, const 
 
 void GameInitHistory()
 {
-	FileDelete(HISTORY_DATA_FILE);
+	GCM->deleteTempFile(HISTORY_DATA_FILE);
 }
 
 
@@ -348,7 +348,7 @@ static void OpenAndReadHistoryFile(void)
 {
 	ClearHistoryList();
 
-	AutoSGPFile f(GCM->openGameResForReading(HISTORY_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForReading(HISTORY_DATA_FILE));
 
 	UINT entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
 	while (entry_count-- > 0)
@@ -684,7 +684,7 @@ try
 	// check if bad page
 	if (uiPage == 0) return FALSE;
 
-	AutoSGPFile f(GCM->openGameResForReading(HISTORY_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForReading(HISTORY_DATA_FILE));
 
 	UINT       entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
 	UINT const skip        = (uiPage - 1) * NUM_RECORDS_PER_PAGE;
@@ -749,7 +749,7 @@ static void LoadPreviousHistoryPage(void)
 
 static void AppendHistoryToEndOfFile(void)
 {
-	AutoSGPFile f(FileMan::openForAppend(HISTORY_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForAppend(HISTORY_DATA_FILE));
 
 	const HistoryUnit* const h = pHistoryListHead;
 
@@ -804,7 +804,7 @@ static ST::string GetQuestEndedString(const UINT8 ubQuestValue)
 
 static INT32 GetNumberOfHistoryPages(void)
 {
-	AutoSGPFile f(GCM->openGameResForReading(HISTORY_DATA_FILE));
+	AutoSGPFile f(GCM->openTempFileForReading(HISTORY_DATA_FILE));
 
 	const UINT32 uiFileSize = FileGetSize(f);
 

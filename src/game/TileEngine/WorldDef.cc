@@ -1346,12 +1346,9 @@ static void WriteLevelNode(HWFILE const f, LEVELNODE const* const n)
 static void RemoveWorldWireFrameTiles();
 static void SaveMapLights(HWFILE);
 
-
-BOOLEAN SaveWorldAbsolute(const ST::string &absolutePath)
+BOOLEAN SaveWorldToSGPFile(SGPFile* f)
 try
 {
-	AutoSGPFile f(FileMan::openForWriting(absolutePath));
-
 	// Write JA2 Version ID
 	FLOAT mapVersion = getMajorMapVersion();
 	FileWrite(f, &mapVersion, sizeof(FLOAT));
@@ -1623,7 +1620,13 @@ try
 }
 catch (...) { return FALSE; }
 
-
+BOOLEAN SaveWorldAbsolute(const ST::string &absolutePath)
+try
+{
+	AutoSGPFile f(FileMan::openForWriting(absolutePath));
+	return SaveWorldToSGPFile(f);
+}
+catch (...) { return FALSE; }
 
 static void OptimizeMapForShadows()
 {
@@ -2039,13 +2042,13 @@ catch (...) { return FALSE; }
 
 static void LoadMapLights(HWFILE);
 
-void LoadWorldInternal(SGPFile *f);
+void LoadWorldFromSGPFile(SGPFile *f);
 
 void LoadWorld(const ST::string &name)
 try
 {
 	AutoSGPFile f(GCM->openMapForReading(name));
-	LoadWorldInternal(f);
+	LoadWorldFromSGPFile(f);
 }
 catch (const std::runtime_error& err)
 {
@@ -2062,7 +2065,7 @@ try
 		throw std::runtime_error(err.c_str());
 	}
 	AutoSGPFile f(FileMan::getSGPFileFromFile(rawFile.release()));
-	LoadWorldInternal(f);
+	LoadWorldFromSGPFile(f);
 }
 catch (const std::runtime_error& err)
 {
@@ -2071,7 +2074,7 @@ catch (const std::runtime_error& err)
 }
 
 /// Internal load world that reads from sgp file
-void LoadWorldInternal(SGPFile *f)
+void LoadWorldFromSGPFile(SGPFile *f)
 {
 	LoadShadeTablesFromTextFile();
 
@@ -2964,17 +2967,21 @@ void ReloadTileset(TileSetID const ubID)
 	giCurrentTilesetID = ubID;
 
 	// Save Map
-	SaveWorldAbsolute( TEMP_FILE_FOR_TILESET_CHANGE );
+	AutoSGPFile f1(GCM->openTempFileForWriting(TEMP_FILE_FOR_TILESET_CHANGE, true));
+	SaveWorldToSGPFile(f1);
+	f1.Deallocate();
 
 	//IMPORTANT:  If this is not set, the LoadTileset() will assume that
 	//it is loading the same tileset and ignore it...
 	giCurrentTilesetID = iCurrTilesetID;
 
 	// Load Map with new tileset
-	LoadWorldAbsolute( TEMP_FILE_FOR_TILESET_CHANGE );
+	AutoSGPFile f2(GCM->openTempFileForReading(TEMP_FILE_FOR_TILESET_CHANGE));
+	LoadWorldFromSGPFile(f2);
+	f2.Deallocate();
 
 	// Delete file
-	FileDelete( TEMP_FILE_FOR_TILESET_CHANGE );
+	GCM->deleteTempFile(TEMP_FILE_FOR_TILESET_CHANGE);
 }
 
 

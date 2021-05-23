@@ -77,13 +77,12 @@ pub fn get_application_context() -> Result<JObject<'static>> {
     })
 }
 
-/// Find ja2 stracciatella configuration directory for android
-pub fn get_android_app_dir() -> Result<PathBuf> {
+fn get_dir_from_application_context(method_name: &'static str) -> Result<PathBuf> {
     let jni_env = crate::android::get_global_jni_env()?;
     let path_obj = jni_env.auto_local(jni_env.with_local_frame(SMALL_JNI_FRAME_SIZE, || {
         let context = crate::android::get_application_context()?;
         let files_dir = jni_env
-            .call_method(context, "getFilesDir", "()Ljava/io/File;", &[])?
+            .call_method(context, method_name, "()Ljava/io/File;", &[])?
             .l()?;
         jni_env
             .call_method(files_dir, "getAbsolutePath", "()Ljava/lang/String;", &[])?
@@ -93,6 +92,16 @@ pub fn get_android_app_dir() -> Result<PathBuf> {
     let path_string: String = path.into();
 
     Ok(PathBuf::from(&path_string))
+}
+
+/// Find ja2 stracciatella configuration directory for android
+pub fn get_android_app_dir() -> Result<PathBuf> {
+    get_dir_from_application_context("getFilesDir")
+}
+
+/// Find cache directory for android
+pub fn get_android_cache_dir() -> Result<PathBuf> {
+    get_dir_from_application_context("getCacheDir")
 }
 
 /// Get asset manager from JNI env

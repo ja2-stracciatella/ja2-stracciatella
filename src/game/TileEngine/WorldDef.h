@@ -271,9 +271,11 @@ void TrashWorld(void);
 void NewWorld(void);
 
 BOOLEAN SaveWorldAbsolute(const ST::string &absolutePath);
+BOOLEAN SaveWorldToSGPFile(SGPFile* f);
 
 void LoadWorldAbsolute(const ST::string &absolutePath);
 void LoadWorld(const ST::string &name);
+void LoadWorldFromSGPFile(SGPFile* f);
 void CompileWorldMovementCosts(void);
 void RecompileLocalMovementCosts( INT16 sCentreGridNo );
 void RecompileLocalMovementCostsFromRadius( INT16 sCentreGridNo, INT8 bRadius );

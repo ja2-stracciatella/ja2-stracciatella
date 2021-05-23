@@ -27,7 +27,7 @@ pub use std::fs::write;
 pub use std::fs::File;
 pub use std::fs::OpenOptions;
 
-pub use tempfile::TempDir;
+pub use tempfile::{Builder as TempBuilder, NamedTempFile, TempDir};
 
 //--------------
 // replacements
