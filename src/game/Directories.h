@@ -21,7 +21,8 @@
 #define SOUNDSDIR      "sounds"
 #define SPEECHDIR      "speech"
 #define STSOUNDSDIR    "stsounds"
-#define TEMPDIR        "temp"
 #define TILECACHEDIR   "tilecache"
+
+#define TACTICAL_SAVE_TEMPDIR  "tactical-save"
 
 #endif

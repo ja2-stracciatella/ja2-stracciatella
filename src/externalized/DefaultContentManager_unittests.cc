@@ -7,34 +7,24 @@
 
 #include "gtest/gtest.h"
 
-
-#define TMPDIR "temp"
-
-#define PS PATH_SEPARATOR_STR
-
 TEST(TempFiles, createFile)
 {
 	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
-	Fs_removeDirAll(TMPDIR);
-	FileMan::createDir(TMPDIR);
 
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
 	}
 
-	std::vector<ST::string> results = FindFilesInDir(TMPDIR, "txt", false, false);
+	std::vector<ST::string> results = cm->findAllFilesInTempDir(ST::string(""), false, false, true);
 	ASSERT_EQ(results.size(), 1u);
-	EXPECT_STREQ(results[0].c_str(), TMPDIR PS "foo.txt");
+	EXPECT_STREQ(results[0].c_str(), "foo.txt");
 
-	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, writeToFile)
 {
 	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
-	Fs_removeDirAll(TMPDIR);
-	FileMan::createDir(TMPDIR);
 
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
@@ -53,17 +43,12 @@ TEST(TempFiles, writeToFile)
 		ASSERT_EQ(FileGetSize(file), 0u);
 	}
 
-	// // void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
-
-	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, writeAndRead)
 {
 	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
-	Fs_removeDirAll(TMPDIR);
-	FileMan::createDir(TMPDIR);
 
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
@@ -78,15 +63,12 @@ TEST(TempFiles, writeAndRead)
 		ASSERT_STREQ(buf, "hello");
 	}
 
-	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, append)
 {
 	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
-	Fs_removeDirAll(TMPDIR);
-	FileMan::createDir(TMPDIR);
 
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
@@ -103,29 +85,25 @@ TEST(TempFiles, append)
 		ASSERT_EQ(FileGetSize(file), 10u);
 	}
 
-	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 
 TEST(TempFiles, deleteFile)
 {
 	DefaultContentManager * cm = DefaultContentManagerUT::createDefaultCMForTesting();
-	Fs_removeDirAll(TMPDIR);
-	FileMan::createDir(TMPDIR);
 
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
 	}
 
-	std::vector<ST::string> results = FindFilesInDir(TMPDIR, "txt", false, false);
+	std::vector<ST::string> results = cm->findAllFilesInTempDir("", false, false, true);
 	ASSERT_EQ(results.size(), 1u);
 
 	cm->deleteTempFile("foo.txt");
 
-	results = FindFilesInDir(TMPDIR, "txt", false, false);
+	results = cm->findAllFilesInTempDir("", false, false, true);
 	ASSERT_EQ(results.size(), 0u);
 
-	Fs_removeDirAll(TMPDIR);
 	delete cm;
 }
 

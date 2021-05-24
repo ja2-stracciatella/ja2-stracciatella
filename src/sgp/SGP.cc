@@ -161,6 +161,10 @@ static void shutdownGame()
 		SLOGD("Shutting Down Game Manager");
 		ShutdownGame();
 	}
+
+	delete GCM;
+	GCM = NULL;
+
 	SLOGD("Shutting Down Button System");
 	ShutdownButtonSystem();
 	MSYS_Shutdown();
@@ -434,6 +438,7 @@ int main(int argc, char* argv[])
 
 		if (EngineOptions_shouldRunUnittests(params.get())) {
 	#ifdef WITH_UNITTESTS
+			Logger_setLevel(LogLevel::Error);
 			testing::InitGoogleTest(&argc, argv);
 			return RUN_ALL_TESTS();
 	#else
@@ -549,7 +554,6 @@ int main(int argc, char* argv[])
 
 		delete cm;
 		GCM = NULL;
-
 	} catch (...) {
         TerminationHandler();
         return EXIT_FAILURE;

@@ -192,7 +192,7 @@ static void ClearFilesList(void);
 
 void GameInitFiles(void)
 {
-	FileDelete(FILES_DAT_FILE);
+	GCM->deleteTempFile(FILES_DATA_FILE);
 	ClearFilesList( );
 
 	// add background check by RIS
@@ -358,14 +358,13 @@ static void OpenAndReadFilesFile(void)
 {
 	ClearFilesList();
 
-	AutoSGPFile f;
-	try
-	{
-		f = GCM->openGameResForReading(FILES_DAT_FILE);
+	if (!GCM->doesTempFileExist(FILES_DATA_FILE)) {
+		return;
 	}
-	catch (...) { return; /* XXX TODO0019 ignore */ }
 
 	// file exists, read in data, continue until file end
+	AutoSGPFile f(GCM->openTempFileForReading(FILES_DATA_FILE));
+
 	for (UINT i = FileGetSize(f) / FILE_ENTRY_SIZE; i != 0; --i)
 	{
 		BYTE data[FILE_ENTRY_SIZE];
@@ -387,7 +386,7 @@ static void OpenAndReadFilesFile(void)
 
 static void OpenAndWriteFilesFile(void)
 {
-	AutoSGPFile f(FileMan::openForWriting(FILES_DAT_FILE));
+	AutoSGPFile f(GCM->openTempFileForWriting(FILES_DATA_FILE, true));
 
 	for (const FilesUnit* i = pFilesListHead; i; i = i->Next)
 	{

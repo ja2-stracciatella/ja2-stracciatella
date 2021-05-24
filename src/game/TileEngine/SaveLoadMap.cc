@@ -43,7 +43,7 @@ static std::unique_ptr<AutoSGPFile> OpenMapModificationTempFile(INT16 const sSec
 {
 	SetSectorFlag(sSectorX, sSectorY, bSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS);
 
-	return std::make_unique<AutoSGPFile>(FileMan::openForAppend(GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ)));
+	return std::make_unique<AutoSGPFile>(GCM->openTempFileForAppend(GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ)));
 }
 
 // Writes map modification to the open temp file
@@ -77,12 +77,12 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 	ST::string const zMapName = GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
-	if (!GCM->doesGameResExists(zMapName)) return;
+	if (!GCM->doesTempFileExist(zMapName)) return;
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
+		AutoSGPFile hFile(GCM->openTempFileForReading(zMapName));
 
 		//Get the size of the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -93,7 +93,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 	}
 
 	//Delete the file
-	FileDelete( zMapName );
+	GCM->deleteTempFile( zMapName );
 	std::unique_ptr<AutoSGPFile> tempMapFile = OpenMapModificationTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	for( cnt=0; cnt< uiNumberOfElements; cnt++ )
@@ -416,7 +416,7 @@ void SaveRevealedStatusArrayToRevealedTempFile(INT16 const sSectorX, INT16 const
 {
 	Assert( gpRevealedMap != NULL );
 
-	AutoSGPFile hFile(FileMan::openForWriting(GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ )));
+	AutoSGPFile hFile(GCM->openTempFileForWriting(GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ ), true));
 
 	//Write the revealed array to the Revealed temp file
 	FileWrite(hFile, gpRevealedMap, NUM_REVEALED_BYTES);
@@ -436,10 +436,10 @@ void LoadRevealedStatusArrayFromRevealedTempFile()
 	ST::string const zMapName = GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
-	if (!GCM->doesGameResExists(zMapName)) return;
+	if (!GCM->doesTempFileExist(zMapName)) return;
 
 	{
-		AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
+		AutoSGPFile hFile(GCM->openTempFileForReading(zMapName));
 
 		Assert( gpRevealedMap == NULL );
 		gpRevealedMap = new UINT8[NUM_REVEALED_BYTES]{};
@@ -622,7 +622,7 @@ try
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(GCM->openGameResForReading(zMapName));
+		AutoSGPFile hFile(GCM->openTempFileForReading(zMapName));
 
 		//Get the number of elements in the file
 		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
@@ -633,7 +633,7 @@ try
 	}
 
 	//Delete the file
-	FileDelete( zMapName );
+	GCM->deleteTempFile( zMapName );
 
 	//Get the image type and subindex
 	const UINT32 uiType     = GetTileType(usIndex);
@@ -752,13 +752,13 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 	ST::string const map_name = GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, usSectorX, usSectorY, bSectorZ);
 
 	// If the file doesn't exists, it's no problem.
-	if (!GCM->doesGameResExists(map_name)) return;
+	if (!GCM->doesTempFileExist(map_name)) return;
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> mm;
 	{
 		// Read the map temp file into a buffer
-		AutoSGPFile src(GCM->openGameResForReading(map_name));
+		AutoSGPFile src(GCM->openTempFileForReading(map_name));
 
 		uiNumberOfElements = FileGetSize(src) / sizeof(MODIFY_MAP);
 
@@ -777,6 +777,6 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 		break;
 	}
 
-	AutoSGPFile dst(FileMan::openForWriting(map_name));
+	AutoSGPFile dst(GCM->openTempFileForWriting(map_name, true));
 	FileWrite(dst, mm, sizeof(*mm) * uiNumberOfElements);
 }

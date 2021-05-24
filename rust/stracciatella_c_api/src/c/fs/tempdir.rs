@@ -19,7 +19,21 @@ pub struct TempDir {
 #[no_mangle]
 pub extern "C" fn TempDir_create() -> *mut TempDir {
     forget_rust_error();
-    match fs::TempDir::new() {
+    let mut builder = fs::TempBuilder::new();
+    builder.prefix("ja2-stracciatella-");
+    builder.rand_bytes(8);
+
+    #[cfg(target_os = "android")]
+    let tempdir = {
+        use stracciatella::android;
+        android::get_android_cache_dir()
+            .map_err(|e| e.to_string())
+            .and_then(|v| builder.tempdir_in(v).map_err(|e| e.to_string()))
+    };
+    #[cfg(not(target_os = "android"))]
+    let tempdir = builder.tempdir().map_err(|e| e.to_string());
+
+    match tempdir {
         Err(err) => {
             remember_rust_error(format!("TempDir_create: {}", err));
             ptr::null_mut()
