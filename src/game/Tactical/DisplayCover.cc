@@ -416,7 +416,7 @@ void DisplayRangeToTarget(SOLDIERTYPE* s, INT16 const sTargetGridNo)
 				st_format_printf(zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE],
 				GCM->getWeapon(s->inv[HANDPOS].usItem)->usRange / 10, usRange));
 		// Get the chance to hit
-		UINT32 const uiHitChance = CalcChanceToHitGun(s, sTargetGridNo, s->bAimTime, s->bAimShotLocation, false );
+		UINT32 const uiHitChance = CalcChanceToHitGun(s, sTargetGridNo, s->bShownAimTime / 2, s->bAimShotLocation, false );
 		// Get the cover modifier chance from a soldier to a grid location
 		UINT8 ubChanceToGetThrough = SoldierToLocationChanceToGetThrough(s, sTargetGridNo, s->bTargetLevel, s->bTargetCubeLevel, 0);
 		//display a string with the weapons range, then range to target
