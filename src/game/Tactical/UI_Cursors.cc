@@ -28,6 +28,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #include <string_theory/string>
 
@@ -51,7 +52,9 @@ static UICursorID HandleTinCanCursor(            SOLDIERTYPE*, GridNo map_pos, M
 
 static BOOLEAN gfCannotGetThrough = FALSE;
 static BOOLEAN gfDisplayFullCountRing = FALSE;
-
+static int giHitChance = 0; // If value is -1 then we skip showing hit chance
+static int giLastBodyLocationTargeted = 0;
+static int giLastAimTime = 0;
 
 BOOLEAN GetMouseRecalcAndShowAPFlags(MouseMoveState* const puiCursorFlags, BOOLEAN* const pfShowAPs)
 {
@@ -239,6 +242,26 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			tgt ? SoldierToSoldierBodyPartChanceToGetThrough(s, tgt, s->bAimShotLocation) :
 			SoldierToLocationChanceToGetThrough(s, map_pos, gsInterfaceLevel, s->bTargetCubeLevel, 0);
 		gfCannotGetThrough = chance < OK_CHANCE_TO_GET_THROUGH;
+	}
+
+	if(gamepolicy(show_hit_chance))
+	{
+		// Calculate chance to hit
+		if (recalc || giLastBodyLocationTargeted != s->bAimShotLocation || giLastAimTime != s->bShownAimTime)
+		{
+			GridNo targetTile = gUIFullTarget ? gUIFullTarget->sGridNo : map_pos;
+			giHitChance = is_throwing_knife ? CalcThrownChanceToHit(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation) :
+				CalcChanceToHitGun(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation, false);
+			giHitChance *= SoldierToLocationChanceToGetThrough(s, targetTile, s->bTargetLevel, s->bTargetCubeLevel, 0) / 100.0f;
+		}
+	
+		// Attach chance-to-hit to mouse cursor
+		if(giHitChance != -1)
+		{
+			SetChanceToHitText(st_format_printf("%d%%", giHitChance));
+			giLastBodyLocationTargeted = s->bAimShotLocation;
+			giLastAimTime = s->bShownAimTime;
+		}
 	}
 
 	UICursorID cursor = NO_UICURSOR;
@@ -577,6 +600,13 @@ static UICursorID HandleKnifeCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 	{
 		DetermineCursorBodyLocation(s, TRUE, TRUE);
 
+		// Calculate chance to hit
+		if (gamepolicy(show_hit_chance) && gUIFullTarget)
+		{
+			UINT32 uiHitChance = CalcChanceToStab(s, gUIFullTarget, s->bShownAimTime / 2);
+			SetChanceToHitText(st_format_printf("%d%%", uiHitChance));
+		}
+
 		if (gfUIHandleShowMoveGrid) gfUIHandleShowMoveGrid = 2;
 
 		// Calculate action points
@@ -654,6 +684,13 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 	if (activated)
 	{
 		DetermineCursorBodyLocation(s, TRUE, TRUE);
+
+		// Calculate chance to hit
+		if (gamepolicy(show_hit_chance) && gUIFullTarget)
+		{ 
+			UINT32 uiHitChance = CalcChanceToPunch(s, gUIFullTarget, s->bShownAimTime / 2, true);
+			SetChanceToHitText(st_format_printf("%d%%", uiHitChance));
+		}
 
 		if (gfUIHandleShowMoveGrid) gfUIHandleShowMoveGrid = 2;
 
@@ -776,12 +813,18 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 	}
 
 	// If we begin to move, reset the cursor
-	if (uiCursorFlags != MOUSE_STATIONARY) EndPhysicsTrajectoryUI();
+	if (uiCursorFlags != MOUSE_STATIONARY)
+	{
+		giHitChance = -1;
+		EndPhysicsTrajectoryUI();
+	}
 
 	gfUIHandlePhysicsTrajectory = TRUE;
 
 	if (recalc)
 	{
+		INT16 final_grid_no = 0;
+
 		// Calculate chance to throw here
 		if (map_pos == s->sGridNo)
 		{
@@ -812,12 +855,24 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 				}
 			}
 
-			INT16 final_grid_no;
 			INT8  level;
 			bad_ctgh = !CalculateLaunchItemChanceToGetThrough(s, &TempObject, map_pos, gsInterfaceLevel, gsInterfaceLevel * 256, &final_grid_no, armed, &level, TRUE);
 			BeginPhysicsTrajectoryUI(final_grid_no, level, bad_ctgh);
 		}
+
+		// Calculate chance to hit
+		if (gamepolicy(show_hit_chance))
+		{
+			if (bad_ctgh)
+				giHitChance = 0;
+			else
+				giHitChance = CalcThrownChanceToHit(s, final_grid_no, s->bShownAimTime / 2, AIM_SHOT_TORSO);
+		}
 	}
+
+	// Attach chance-to-hit to mouse cursor
+	if (gamepolicy(show_hit_chance) && giHitChance != -1)
+		SetChanceToHitText(st_format_printf("%d%%", giHitChance));
 
 	return bad_ctgh ? BAD_THROW_UICURSOR : GOOD_THROW_UICURSOR;
 }

@@ -1237,6 +1237,7 @@ static void BltJA2CursorData(void)
 static ST::string gzLocation;
 static ST::string gzIntTileLocation;
 static ST::string gzIntTileLocation2;
+static ST::string gzHitChance;
 
 
 void SetHitLocationText(const ST::string& str)
@@ -1268,6 +1269,10 @@ const ST::string& GetIntTileLocation2Text(void)
 	return gzIntTileLocation2;
 }
 
+void SetChanceToHitText(const ST::string& str)
+{
+	gzHitChance = str;
+}
 
 static void DrawMouseText(void)
 {
@@ -1277,6 +1282,8 @@ static void DrawMouseText(void)
 	INT16 sX;
 	INT16 sY;
 
+	gsMouseSizeYModifier = 0;
+
 	if (!gzLocation.empty())
 	{
 		// Set dest for gprintf to be different
@@ -1284,7 +1291,7 @@ static void DrawMouseText(void)
 
 		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzLocation, TINYFONT1, &sX, &sY);
 		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-		MPrint(sX, sY + 12, gzLocation);
+		MPrint(sX, sY + 12, gzLocation); // Below cursor
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER);
 	}
@@ -1309,6 +1316,24 @@ static void DrawMouseText(void)
 		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzIntTileLocation2, TINYFONT1, &sX, &sY);
 		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
 		MPrint(sX, sY - 2, gzIntTileLocation2);
+		// reset
+		SetFontDestBuffer(FRAME_BUFFER);
+	}
+
+	if (!gzHitChance.empty())
+	{
+		// Set dest for gprintf to be different
+		SetFontDestBuffer(MOUSE_BUFFER);
+		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzHitChance, TINYFONT1, &sX, &sY);
+		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
+		if(gzLocation.empty())
+			MPrint(sX, sY + 12, gzHitChance); // Below cursor
+		else
+		{
+			MPrint(sX, sY + 20, gzHitChance); // Below hit location text
+			gsMouseSizeYModifier = 8 + GetFontHeight(TINYFONT1);
+		}
+
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER);
 	}
