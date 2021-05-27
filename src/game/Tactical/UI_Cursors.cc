@@ -357,6 +357,26 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			case REFINE_AIM_MID3: cursor = ACTION_TARGETAIM6_UICURSOR; break;
 			case REFINE_AIM_MID4: cursor = ACTION_TARGETAIM8_UICURSOR; break;
 		}
+
+		//Fluffy Feature test: Adjust aim circle based on aim percentage
+		if ((cursor >= ACTION_TARGETAIM1_UICURSOR && cursor <= ACTION_TARGETAIM9_UICURSOR)
+			|| (cursor >= ACTION_TARGETAIMFULL_UICURSOR && cursor <= ACTION_TARGETAIMYELLOW4_UICURSOR))
+		{
+			if (!gfDisplayFullCountRing)
+			{
+				if (giHitChance >= 100)
+					cursor = ACTION_THROWAIM9_UICURSOR;
+				else
+					cursor = (UICursorID) ( (int) ACTION_TARGETAIM1_UICURSOR + ((giHitChance / 20) * 2));
+			}
+			else
+			{
+				if (giHitChance >= 80)
+					cursor = ACTION_TARGETAIMFULL_UICURSOR;
+				else
+					cursor = (UICursorID) ( (int) ACTION_TARGETAIMYELLOW1_UICURSOR + (giHitChance / 20));
+			}
+		}
 	}
 
 	if (!max_point_limit_hit)
