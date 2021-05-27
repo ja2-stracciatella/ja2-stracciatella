@@ -175,7 +175,7 @@ BOOLEAN InRange(const SOLDIERTYPE* pSoldier, INT16 sGridNo);
 void ShotMiss(const BULLET* b);
 extern UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos, BOOLEAN fModify);
 extern UINT32 AICalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime, UINT8 ubAimPos );
-extern UINT32 CalcChanceToPunch(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 ubAimTime);
+extern UINT32 CalcChanceToPunch(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 ubAimTime, bool skipSafetyCheck = false); //Fluffy (ShowChanceToHit)
 extern UINT32 CalcChanceToStab(SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ubAimTime);
 void ReloadWeapon(SOLDIERTYPE*, UINT8 inv_pos);
 bool IsGunBurstCapable(SOLDIERTYPE const*, UINT8 inv_pos);

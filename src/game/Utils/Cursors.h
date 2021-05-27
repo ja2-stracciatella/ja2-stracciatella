@@ -250,6 +250,7 @@ void RemoveCursorFlags(UINT32 uiCursor, UINT8 ubFlags);
 void SetHitLocationText(const ST::string& str);
 void SetIntTileLocationText(const ST::string& str);
 void SetIntTileLocation2Text(const ST::string& str);
+void SetChanceToHitText(const ST::string& str); //Fluffy (ShowChanceToHit)
 
 const ST::string& GetIntTileLocationText(void);
 const ST::string& GetIntTileLocation2Text(void);
