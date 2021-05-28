@@ -52,9 +52,9 @@ static UICursorID HandleTinCanCursor(            SOLDIERTYPE*, GridNo map_pos, M
 
 static BOOLEAN gfCannotGetThrough = FALSE;
 static BOOLEAN gfDisplayFullCountRing = FALSE;
-static int giHitChance = 0; //Fluffy (ShowChanceToHit): If value is -1, then we skip showing hit chance
-static int giLastBodyLocationTargeted = 0; //Fluffy (ShowChanceToHit)
-static int giLastAimTime = 0; //Fluffy (ShowChanceToHit)
+static int giHitChance = 0; // If value is -1, then we skip showing hit chance
+static int giLastBodyLocationTargeted = 0;
+static int giLastAimTime = 0;
 
 BOOLEAN GetMouseRecalcAndShowAPFlags(MouseMoveState* const puiCursorFlags, BOOLEAN* const pfShowAPs)
 {
@@ -246,7 +246,7 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 
 	if(gamepolicy(show_hit_chance))
 	{
-		//Fluffy (ShowChanceToHit): Calculate chance to hit
+		// Calculate chance to hit
 		if (recalc || giLastBodyLocationTargeted != s->bAimShotLocation || giLastAimTime != s->bShownAimTime)
 		{
 			GridNo targetTile = gUIFullTarget ? gUIFullTarget->sGridNo : map_pos;
@@ -255,7 +255,7 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 			giHitChance *= SoldierToLocationChanceToGetThrough(s, targetTile, s->bTargetLevel, s->bTargetCubeLevel, 0) / 100.0f;
 		}
 	
-		//Fluffy (ShowChanceToHit): Attach chance-to-hit to mouse cursor
+		// Attach chance-to-hit to mouse cursor
 		if(giHitChance != -1)
 		{
 			SetChanceToHitText(st_format_printf("%d%%", giHitChance));
@@ -600,7 +600,7 @@ static UICursorID HandleKnifeCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 	{
 		DetermineCursorBodyLocation(s, TRUE, TRUE);
 
-		//Fluffy (ShowChanceToHit): Calculate chance to hit
+		// Calculate chance to hit
 		if (gamepolicy(show_hit_chance) && gUIFullTarget)
 		{
 			UINT32 uiHitChance = CalcChanceToStab(s, gUIFullTarget, s->bShownAimTime / 2);
@@ -685,7 +685,7 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 	{
 		DetermineCursorBodyLocation(s, TRUE, TRUE);
 
-		//Fluffy (ShowChanceToHit): Calculate chance to hit
+		// Calculate chance to hit
 		if (gamepolicy(show_hit_chance) && gUIFullTarget)
 		{ 
 			UINT32 uiHitChance = CalcChanceToPunch(s, gUIFullTarget, s->bShownAimTime / 2, true);
@@ -815,7 +815,7 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 	// If we begin to move, reset the cursor
 	if (uiCursorFlags != MOUSE_STATIONARY)
 	{
-		giHitChance = -1; //Fluffy (ShowChanceToHit)
+		giHitChance = -1;
 		EndPhysicsTrajectoryUI();
 	}
 
@@ -823,7 +823,7 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 
 	if (recalc)
 	{
-		INT16 final_grid_no = 0; //Fluffy (ShowChanceToHit)
+		INT16 final_grid_no = 0;
 
 		// Calculate chance to throw here
 		if (map_pos == s->sGridNo)
@@ -860,7 +860,7 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 			BeginPhysicsTrajectoryUI(final_grid_no, level, bad_ctgh);
 		}
 
-		//Fluffy (ShowChanceToHit): Calculate chance to hit
+		// Calculate chance to hit
 		if (gamepolicy(show_hit_chance))
 		{
 			if (bad_ctgh)
@@ -870,7 +870,7 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 		}
 	}
 
-	//Fluffy (ShowChanceToHit): Attach chance-to-hit to mouse cursor
+	// Attach chance-to-hit to mouse cursor
 	if (gamepolicy(show_hit_chance) && giHitChance != -1)
 		SetChanceToHitText(st_format_printf("%d%%", giHitChance));
 

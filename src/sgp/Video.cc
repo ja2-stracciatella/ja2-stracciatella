@@ -47,8 +47,7 @@ static UINT16 gusMouseCursorWidth;
 static UINT16 gusMouseCursorHeight;
 static INT16  gsMouseCursorXOffset;
 static INT16  gsMouseCursorYOffset;
-
-INT16 gsMouseSizeYModifier = 0; //Fluffy (ShowChanceToHit)
+INT16 gsMouseSizeYModifier = 0;
 
 static SDL_Rect MouseBackground = { 0, 0, 0, 0 };
 
@@ -600,7 +599,7 @@ void RefreshScreen(void)
 	src.x = 0;
 	src.y = 0;
 	src.w = gusMouseCursorWidth;
-	src.h = gusMouseCursorHeight + gsMouseSizeYModifier; //Fluffy (ShowChanceToHit)
+	src.h = gusMouseCursorHeight + gsMouseSizeYModifier;
 	SDL_Rect dst;
 	dst.x = MousePos.iX - gsMouseCursorXOffset;
 	dst.y = MousePos.iY - gsMouseCursorYOffset;

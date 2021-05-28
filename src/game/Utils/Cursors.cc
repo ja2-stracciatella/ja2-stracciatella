@@ -1237,7 +1237,7 @@ static void BltJA2CursorData(void)
 static ST::string gzLocation;
 static ST::string gzIntTileLocation;
 static ST::string gzIntTileLocation2;
-static ST::string gzHitChance; //Fluffy (ShowChanceToHit)
+static ST::string gzHitChance;
 
 
 void SetHitLocationText(const ST::string& str)
@@ -1269,7 +1269,7 @@ const ST::string& GetIntTileLocation2Text(void)
 	return gzIntTileLocation2;
 }
 
-void SetChanceToHitText(const ST::string& str) //Fluffy (ShowChanceToHit)
+void SetChanceToHitText(const ST::string& str)
 {
 	gzHitChance = str;
 }
@@ -1289,8 +1289,8 @@ static void DrawMouseText(void)
 
 		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzLocation, TINYFONT1, &sX, &sY);
 		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-		MPrint(sX, sY + 12, gzLocation); //Fluffy (ShowChanceToHit): Below
-		//MPrint(sX, sY + 20, gzLocation); //Fluffy (ShowChanceToHit): Two slots below
+		MPrint(sX, sY + 12, gzLocation); // Below
+		//MPrint(sX, sY + 20, gzLocation); // Two slots below
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER);
 	}
@@ -1319,25 +1319,25 @@ static void DrawMouseText(void)
 		SetFontDestBuffer(FRAME_BUFFER);
 	}
 
-	if (!gzHitChance.empty()) //Fluffy (ShowChanceToHit)
+	if (!gzHitChance.empty())
 	{
 		// Set dest for gprintf to be different
 		SetFontDestBuffer(MOUSE_BUFFER);
 		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzHitChance, TINYFONT1, &sX, &sY);
 		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-		//MPrint(sX, sY - 14, gzHitChance); //Fluffy (ShowChanceToHit): Above
+		//MPrint(sX, sY - 14, gzHitChance); // Above
 		if(gzLocation.empty())
 		{
-			MPrint(sX, sY + 12, gzHitChance); //Fluffy (ShowChanceToHit): Below
+			MPrint(sX, sY + 12, gzHitChance); // Below
 			gsMouseSizeYModifier = 0;
 		}
 		else
 		{
-			MPrint(sX, sY + 20, gzHitChance); //Fluffy (ShowChanceToHit): Two slots below
+			MPrint(sX, sY + 20, gzHitChance); // Two slots below
 			gsMouseSizeYModifier = 8 + GetFontHeight(TINYFONT1);
 		}
-		//MPrint((gsCurMouseWidth / 2) + 12, (gsCurMouseHeight / 2) - 4, gzHitChance); //Fluffy (ShowChanceToHit): To the right
-		//MPrint((gsCurMouseWidth / 2) - 30, (gsCurMouseHeight / 2) - 4, gzHitChance); //Fluffy (ShowChanceToHit): To the left
+		//MPrint((gsCurMouseWidth / 2) + 12, (gsCurMouseHeight / 2) - 4, gzHitChance); // To the right
+		//MPrint((gsCurMouseWidth / 2) - 30, (gsCurMouseHeight / 2) - 4, gzHitChance); // To the left
 
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER);

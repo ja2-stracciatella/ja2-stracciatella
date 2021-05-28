@@ -3296,7 +3296,7 @@ void ShotMiss(const BULLET* const b)
 }
 
 
-static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT8 ubAimTime, UINT8 ubMode, bool skipSafetyCheck = false) //Fluffy (ShowChanceToHit): Added skipSafetyCheck so we can get punch calculation without "punch" item equipped
+static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT8 ubAimTime, UINT8 ubMode, bool skipSafetyCheck = false)
 {
 	UINT16 usInHand;
 	UINT8  ubBandaged;
@@ -3311,7 +3311,7 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 		return( 100 );
 	}
 
-	if (!skipSafetyCheck) //Fluffy (ShowChanceToHit): Added skipSafetyCheck so we can get punch calculation without "punch" item equipped
+	if (!skipSafetyCheck) // Added this check so we can get punch calculation without "punch item" equipped
 	{
 		if (ubMode == HTH_MODE_STAB)
 		{
@@ -3582,9 +3582,9 @@ UINT32 CalcChanceToStab(SOLDIERTYPE * pAttacker,SOLDIERTYPE *pDefender, UINT8 ub
 	return( CalcChanceHTH( pAttacker, pDefender, ubAimTime, HTH_MODE_STAB ) );
 }
 
-UINT32 CalcChanceToPunch(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 ubAimTime, bool skipSafetyCheck) //Fluffy (ShowChanceToHit)
+UINT32 CalcChanceToPunch(SOLDIERTYPE *pAttacker, SOLDIERTYPE * pDefender, UINT8 ubAimTime, bool skipSafetyCheck)
 {
-	return( CalcChanceHTH( pAttacker, pDefender, ubAimTime, HTH_MODE_PUNCH, skipSafetyCheck) ); //Fluffy (ShowChanceToHit)
+	return( CalcChanceHTH( pAttacker, pDefender, ubAimTime, HTH_MODE_PUNCH, skipSafetyCheck) );
 }
 
 

@@ -417,7 +417,7 @@ void DisplayRangeToTarget(SOLDIERTYPE* s, INT16 const sTargetGridNo)
 				st_format_printf(zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE],
 				GCM->getWeapon(s->inv[HANDPOS].usItem)->usRange / 10, usRange));
 
-		if (gamepolicy(show_hit_chance)) //Fluffy (ShowChanceToHit): Only show chance-to-hit if the setting for it is turned on
+		if (gamepolicy(show_hit_chance)) // Only show chance-to-hit if the setting for it is turned on
 		{
 			// Get the chance to hit
 			UINT32 const uiHitChance = CalcChanceToHitGun(s, sTargetGridNo, s->bShownAimTime / 2, s->bAimShotLocation, false );
