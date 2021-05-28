@@ -3311,7 +3311,7 @@ static UINT32 CalcChanceHTH(SOLDIERTYPE* pAttacker, SOLDIERTYPE* pDefender, UINT
 		return( 100 );
 	}
 
-	if(!skipSafetyCheck) //Fluffy (ShowChanceToHit): Added skipSafetyCheck so we can get punch calculation without "punch" item equipped
+	if (!skipSafetyCheck) //Fluffy (ShowChanceToHit): Added skipSafetyCheck so we can get punch calculation without "punch" item equipped
 	{
 		if (ubMode == HTH_MODE_STAB)
 		{

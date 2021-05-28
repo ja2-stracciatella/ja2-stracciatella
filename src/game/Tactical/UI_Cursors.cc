@@ -28,6 +28,7 @@
 
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "policy/GamePolicy.h"
 
 #include <string_theory/string>
 
@@ -243,21 +244,24 @@ static UICursorID HandleActivatedTargetCursor(SOLDIERTYPE* const s, GridNo const
 		gfCannotGetThrough = chance < OK_CHANCE_TO_GET_THROUGH;
 	}
 
-	//Fluffy (ShowChanceToHit): Calculate chance to hit
-	if (recalc || giLastBodyLocationTargeted != s->bAimShotLocation || giLastAimTime != s->bShownAimTime)
+	if(gamepolicy(show_hit_chance))
 	{
-		GridNo targetTile = gUIFullTarget ? gUIFullTarget->sGridNo : map_pos;
-		giHitChance = is_throwing_knife ? CalcThrownChanceToHit(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation) :
-			CalcChanceToHitGun(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation, false);
-		giHitChance *= SoldierToLocationChanceToGetThrough(s, targetTile, s->bTargetLevel, s->bTargetCubeLevel, 0) / 100.0f;
-	}
+		//Fluffy (ShowChanceToHit): Calculate chance to hit
+		if (recalc || giLastBodyLocationTargeted != s->bAimShotLocation || giLastAimTime != s->bShownAimTime)
+		{
+			GridNo targetTile = gUIFullTarget ? gUIFullTarget->sGridNo : map_pos;
+			giHitChance = is_throwing_knife ? CalcThrownChanceToHit(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation) :
+				CalcChanceToHitGun(s, targetTile, s->bShownAimTime / 2, s->bAimShotLocation, false);
+			giHitChance *= SoldierToLocationChanceToGetThrough(s, targetTile, s->bTargetLevel, s->bTargetCubeLevel, 0) / 100.0f;
+		}
 	
-	//Fluffy (ShowChanceToHit): Attach chance-to-hit to mouse cursor
-	if(giHitChance != -1)
-	{
-		SetChanceToHitText(st_format_printf("%d%%", giHitChance));
-		giLastBodyLocationTargeted = s->bAimShotLocation;
-		giLastAimTime = s->bShownAimTime;
+		//Fluffy (ShowChanceToHit): Attach chance-to-hit to mouse cursor
+		if(giHitChance != -1)
+		{
+			SetChanceToHitText(st_format_printf("%d%%", giHitChance));
+			giLastBodyLocationTargeted = s->bAimShotLocation;
+			giLastAimTime = s->bShownAimTime;
+		}
 	}
 
 	UICursorID cursor = NO_UICURSOR;
@@ -597,7 +601,7 @@ static UICursorID HandleKnifeCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 		DetermineCursorBodyLocation(s, TRUE, TRUE);
 
 		//Fluffy (ShowChanceToHit): Calculate chance to hit
-		if (gUIFullTarget)
+		if (gamepolicy(show_hit_chance) && gUIFullTarget)
 		{
 			UINT32 uiHitChance = CalcChanceToStab(s, gUIFullTarget, s->bShownAimTime / 2);
 			SetChanceToHitText(st_format_printf("%d%%", uiHitChance));
@@ -682,7 +686,7 @@ static UICursorID HandlePunchCursor(SOLDIERTYPE* const s, GridNo const map_pos, 
 		DetermineCursorBodyLocation(s, TRUE, TRUE);
 
 		//Fluffy (ShowChanceToHit): Calculate chance to hit
-		if (gUIFullTarget)
+		if (gamepolicy(show_hit_chance) && gUIFullTarget)
 		{ 
 			UINT32 uiHitChance = CalcChanceToPunch(s, gUIFullTarget, s->bShownAimTime / 2, true);
 			SetChanceToHitText(st_format_printf("%d%%", uiHitChance));
@@ -857,14 +861,17 @@ static UICursorID HandleNonActivatedTossCursor(SOLDIERTYPE* const s, GridNo cons
 		}
 
 		//Fluffy (ShowChanceToHit): Calculate chance to hit
-		if (bad_ctgh)
-			giHitChance = 0;
-		else
-			giHitChance = CalcThrownChanceToHit(s, final_grid_no, s->bShownAimTime / 2, AIM_SHOT_TORSO);
+		if (gamepolicy(show_hit_chance))
+		{
+			if (bad_ctgh)
+				giHitChance = 0;
+			else
+				giHitChance = CalcThrownChanceToHit(s, final_grid_no, s->bShownAimTime / 2, AIM_SHOT_TORSO);
+		}
 	}
 
 	//Fluffy (ShowChanceToHit): Attach chance-to-hit to mouse cursor
-	if(giHitChance != -1)
+	if (gamepolicy(show_hit_chance) && giHitChance != -1)
 		SetChanceToHitText(st_format_printf("%d%%", giHitChance));
 
 	return bad_ctgh ? BAD_THROW_UICURSOR : GOOD_THROW_UICURSOR;
