@@ -1327,7 +1327,10 @@ static void DrawMouseText(void)
 		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
 		//MPrint(sX, sY - 14, gzHitChance); //Fluffy (ShowChanceToHit): Above
 		if(gzLocation.empty())
+		{
 			MPrint(sX, sY + 12, gzHitChance); //Fluffy (ShowChanceToHit): Below
+			gsMouseSizeYModifier = 0;
+		}
 		else
 		{
 			MPrint(sX, sY + 20, gzHitChance); //Fluffy (ShowChanceToHit): Two slots below
