@@ -600,9 +600,7 @@ void RefreshScreen(void)
 	src.x = 0;
 	src.y = 0;
 	src.w = gusMouseCursorWidth;
-	src.h = gusMouseCursorHeight;
-	if(gsMouseSizeYModifier) //Fluffy (ShowChanceToHit)
-		src.h += gsMouseSizeYModifier;
+	src.h = gusMouseCursorHeight + gsMouseSizeYModifier; //Fluffy (ShowChanceToHit)
 	SDL_Rect dst;
 	dst.x = MousePos.iX - gsMouseCursorXOffset;
 	dst.y = MousePos.iY - gsMouseCursorYOffset;
