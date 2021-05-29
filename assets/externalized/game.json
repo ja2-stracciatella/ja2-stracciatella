@@ -118,7 +118,7 @@
 	//  vanilla setting: false
 	"always_show_cursor_in_tactical": false,
 	
-	//  Show chance-to-hit when pressing 'F' and next to mouse cursor when preparing an attack
+	//  Show chance-to-hit next to mouse cursor when preparing an attack
 	//  vanilla setting: false
 	"show_hit_chance": true,
 
