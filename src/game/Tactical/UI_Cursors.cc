@@ -52,7 +52,7 @@ static UICursorID HandleTinCanCursor(            SOLDIERTYPE*, GridNo map_pos, M
 
 static BOOLEAN gfCannotGetThrough = FALSE;
 static BOOLEAN gfDisplayFullCountRing = FALSE;
-static int giHitChance = 0; // If value is -1, then we skip showing hit chance
+static int giHitChance = 0; // If value is -1 then we skip showing hit chance
 static int giLastBodyLocationTargeted = 0;
 static int giLastAimTime = 0;
 
