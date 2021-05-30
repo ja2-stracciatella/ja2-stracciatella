@@ -47,7 +47,7 @@ static UINT16 gusMouseCursorWidth;
 static UINT16 gusMouseCursorHeight;
 static INT16  gsMouseCursorXOffset;
 static INT16  gsMouseCursorYOffset;
-INT16 gsMouseSizeYModifier = 0;
+INT16 gsMouseSizeYModifier = 0; // This can increase the size of gusMouseCursorHeight so image data (ie, text) outside the normal height of the mouse cursor can be copied onto screen buffer
 
 static SDL_Rect MouseBackground = { 0, 0, 0, 0 };
 
