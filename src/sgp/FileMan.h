@@ -121,6 +121,8 @@ public:
 	/** Move a file */
 	static void moveFile(const ST::string& from, const ST::string& to);
 
+	/** Get last modified time in seconds since UNIX epoch */
+	static double getLastModifiedTime(const ST::string& path);
 private:
 	/** Private constructor to avoid instantiation. */
 	FileMan() {};

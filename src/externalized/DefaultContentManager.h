@@ -52,6 +52,9 @@ public:
 	/* Open a game resource file for reading. */
 	virtual SGPFile* openGameResForReading(const ST::string& filename) const override;
 
+	/* Checks if a game resource exists. */
+	virtual bool doesGameResExists(const ST::string& filename) const override;
+
 	/** Open temporary file for writing. */
 	virtual SGPFile* openTempFileForWriting(const ST::string& filename, bool truncate) const override;
 
@@ -79,8 +82,17 @@ public:
 	/** Open user's private file (e.g. saved game, settings) for reading. */
 	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const override;
 
-	/* Checks if a game resource exists. */
-	virtual bool doesGameResExists(const ST::string& filename) const override;
+	/** Open user's private file (e.g. saved game, settings) for writing. */
+	virtual SGPFile* openUserPrivateFileForWriting(const ST::string& filename, bool truncate) const override;
+
+	/** Delete user's private file (e.g. saved game, settings). */
+	virtual void deleteUserPrivateFile(const ST::string& filename) const override;
+
+	/* Checks if a user's private file exists. */
+	virtual bool doesUserPrivateFileExist(const ST::string& filename) const override;
+
+	/* Get last modified time of a user's private file. */
+	virtual double getUserPrivateFileLastModifiedTime(const ST::string& filename) const override;
 
 	/** Get folder for screenshots. */
 	virtual ST::string getScreenshotFolder() const override;

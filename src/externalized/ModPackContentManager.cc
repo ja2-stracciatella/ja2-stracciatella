@@ -6,8 +6,6 @@
 #include "Debug.h"
 #include "Logger.h"
 
-#define DEBUG_PRINT_OPENING_FILES (1)
-
 ModPackContentManager::ModPackContentManager(RustPointer<EngineOptions> engineOptions)
 	:DefaultContentManager(move(engineOptions))
 {
@@ -45,7 +43,7 @@ ST::string ModPackContentManager::getSavedGamesFolder() const
 		folderName += '-';
 		folderName += name;
 	}
-	return FileMan::joinPaths(m_userHomeDir, folderName);
+	return folderName;
 }
 
 /** Load dialogue quote from file. */

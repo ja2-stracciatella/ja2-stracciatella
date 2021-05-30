@@ -617,3 +617,13 @@ void FileMan::moveFile(const ST::string& from, const ST::string& to)
 		throw std::runtime_error("FileMan::moveFile failed");
 	}
 }
+
+double FileMan::getLastModifiedTime(const ST::string& path)
+{
+	double lastModified = 0;
+	if (!Fs_modifiedSecs( path.c_str(), &lastModified ))
+	{
+		RustPointer<char> err{getRustError()};
+		throw std::runtime_error(ST::format("FileMan::getLastModifiedTime: {}", err.get()).c_str());
+	}
+}

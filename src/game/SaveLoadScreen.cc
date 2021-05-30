@@ -1118,13 +1118,12 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 	// make sure the entry is valid
 	if (0 <= bEntry && bEntry < NUM_SAVE_GAMES)
 	{
-		char zSavedGameName[512];
-		CreateSavedGameFileNameFromNumber(gfActiveTab ? (bEntry + NUM_SAVE_GAMES) : bEntry, zSavedGameName);
+		ST::string savegameName = CreateSavedGameFileNameFromNumber(gfActiveTab ? (bEntry + NUM_SAVE_GAMES) : bEntry);
 
 		try
 		{
 			bool stracLinuxFormat;
-			AutoSGPFile f(GCM->openUserPrivateFileForReading(zSavedGameName));
+			AutoSGPFile f(GCM->openUserPrivateFileForReading(savegameName));
 			ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
 			endof(header->zGameVersionNumber)[-1] =  '\0';
 			return TRUE;
@@ -1503,9 +1502,8 @@ static void DeleteAllSaveGameFile(void)
 
 void DeleteSaveGameNumber(UINT8 const save_slot_id)
 {
-	char filename[512];
-	CreateSavedGameFileNameFromNumber(save_slot_id, filename);
-	FileDelete(filename);
+	ST::string savegameName = CreateSavedGameFileNameFromNumber(save_slot_id);
+	GCM->deleteUserPrivateFile(savegameName);
 }
 
 
@@ -1740,9 +1738,8 @@ bool AreThereAnySavedGameFiles()
 {
 	for (INT8 i = 0; i != (NUM_SAVE_GAMES_TABS * NUM_SAVE_GAMES); ++i)
 	{
-		char filename[512];
-		CreateSavedGameFileNameFromNumber(i, filename);
-		if (GCM->doesGameResExists(filename)) return true;
+		ST::string savegameName = CreateSavedGameFileNameFromNumber(i);
+		if (GCM->doesUserPrivateFileExist(savegameName)) return true;
 	}
 	return false;
 }

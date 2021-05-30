@@ -70,8 +70,6 @@
 #define RADARMAPSDIR   "radarmaps"
 #define TILESETSDIR    "tilesets"
 
-#define PRINT_OPENING_FILES (0)
-
 #define DIALOGUESIZE 240
 
 const MercProfileInfo EMPTY_MERC_PROFILE_INFO;
@@ -533,32 +531,31 @@ void DefaultContentManager::eraseTempDir(const ST::string& dirname) const
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
 SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename) const
 {
-	{
-		RustPointer<File> file = FileMan::openFileForReading(filename);
-		if (file)
-		{
-			STLOGD("Opened file (current dir): '{}'", filename);
-			return FileMan::getSGPFileFromFile(file.release());
-		}
-	}
-
 	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
 	if (!vfile)
 	{
 		RustPointer<char> err{getRustError()};
 		throw std::runtime_error(ST::format("openGameResForReading: {}", err.get()).to_std_string());
 	}
-	STLOGD("Opened file (vfs): '{}'", filename);
+	STLOGD("Opened resource file from VFS: '{}'", filename);
 	SGPFile *file = new SGPFile{};
 	file->flags = SGPFILE_NONE;
 	file->u.vfile = vfile.release();
 	return file;
 }
 
+/* Checks if a game resource exists. */
+bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
+{
+	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
+	return static_cast<bool>(vfile.get());
+}
+
 /** Open user's private file (e.g. saved game, settings) for reading. */
 SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& filename) const
 {
-	RustPointer<File> file = FileMan::openFileForReading(filename);
+	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
+	RustPointer<File> file = FileMan::openFileForReading(path);
 	if (!file)
 	{
 		RustPointer<char> err(getRustError());
@@ -568,29 +565,31 @@ SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& 
 	return FileMan::getSGPFileFromFile(file.release());
 }
 
-/* Checks if a game resource exists. */
-bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
+/** Open user's private file (e.g. saved game, settings) for writing. */
+SGPFile* DefaultContentManager::openUserPrivateFileForWriting(const ST::string& filename, bool truncate) const
 {
-	if(FileMan::checkFileExistance(m_externalizedDataPath, filename))
-	{
-		return true;
-	}
-	else
-	{
-		RustPointer<File> file(File_open(filename.c_str(), FILE_OPEN_READ));
-		if (!file)
-		{
-			ST::string path = ST::format("{}/{}",m_dataDir, filename);
-			file.reset(File_open(path.c_str(), FILE_OPEN_READ));
-			if (!file)
-			{
-				RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
-				return static_cast<bool>(vfile);
-			}
-		}
+	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
+	return FileMan::openForWriting(path, truncate);
+}
 
-		return true;
-	}
+/** Delete user's private file (e.g. saved game, settings). */
+void DefaultContentManager::deleteUserPrivateFile(const ST::string& filename) const
+{
+	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
+	FileDelete(path);
+}
+
+/** Does user's private file exist. */
+bool DefaultContentManager::doesUserPrivateFileExist(const ST::string& filename) const
+{
+	return FileMan::checkFileExistance(m_userHomeDir, filename);
+}
+
+/* Get last modified time of a user's private file. */
+double DefaultContentManager::getUserPrivateFileLastModifiedTime(const ST::string& filename) const
+{
+	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
+	return FileMan::getLastModifiedTime(path);
 }
 
 ST::string DefaultContentManager::getScreenshotFolder() const
@@ -606,7 +605,7 @@ ST::string DefaultContentManager::getVideoCaptureFolder() const
 /** Get folder for saved games. */
 ST::string DefaultContentManager::getSavedGamesFolder() const
 {
-	return FileMan::joinPaths(m_userHomeDir, "SavedGames");
+	return "SavedGames";
 }
 
 /** Load encrypted string from game resource file. */

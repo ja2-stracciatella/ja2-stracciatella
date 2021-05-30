@@ -266,9 +266,8 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		if (gamepolicy(imp_load_saved_merc_by_nickname)) SaveIMPPlayerProfiles();
 
 		// Create the save game file
-		char savegame_name[512];
-		CreateSavedGameFileNameFromNumber(ubSaveGameID, savegame_name);
-		AutoSGPFile f(FileMan::openForWriting(savegame_name));
+		ST::string savegameName = CreateSavedGameFileNameFromNumber(ubSaveGameID);
+		AutoSGPFile f(GCM->openUserPrivateFileForWriting(savegameName, true));
 
 		/* If there are no enemy or civilians to save, we have to check BEFORE
 		 * saving the sector info struct because the
@@ -622,9 +621,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	// ATE: Added to empty dialogue q
 	EmptyDialogueQueue();
 
-	char zSaveGameName[512];
-	CreateSavedGameFileNameFromNumber(save_slot_id, zSaveGameName);
-	AutoSGPFile f(GCM->openUserPrivateFileForReading(zSaveGameName));
+	ST::string savegameName = CreateSavedGameFileNameFromNumber(save_slot_id);
+	AutoSGPFile f(GCM->openUserPrivateFileForReading(savegameName));
 
 	SAVED_GAME_HEADER SaveGameHeader;
 	bool stracLinuxFormat;
@@ -1149,7 +1147,7 @@ ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
 bool IMPSavedProfileDoesFileExist(const ST::string& nickname)
 {
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
-	bool fexists = Fs_exists(profile_filename.c_str());
+	bool fexists = GCM->doesUserPrivateFileExist(profile_filename);
 	return fexists;
 }
 
@@ -1158,14 +1156,14 @@ SGPFile* const IMPSavedProfileOpenFileForRead(const ST::string& nickname)
 	if (!IMPSavedProfileDoesFileExist(nickname)) {
 		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
 	}
-	SGPFile *f = FileMan::openForReading(IMPSavedProfileCreateFilename(nickname).c_str());
+	SGPFile *f = GCM->openUserPrivateFileForReading(IMPSavedProfileCreateFilename(nickname));
 	return f;
 }
 
 SGPFile* const IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
 {
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
-	SGPFile *f = FileMan::openForWriting(profile_filename.c_str(), true);
+	SGPFile *f = GCM->openUserPrivateFileForWriting(profile_filename, true);
 	return f;
 }
 
@@ -1612,30 +1610,21 @@ static void LoadWatchedLocsFromSavedGame(HWFILE const hFile)
 }
 
 
-void CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID, char* const pzNewFileName)
+ST::string CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID)
 {
 	ST::string dir = GCM->getSavedGamesFolder();
 
 	switch (ubSaveGameID)
 	{
 		case 0: // we are creating the QuickSave file
-		{
-			sprintf(pzNewFileName, "%s/%s.%s", dir.c_str(), g_quicksave_name.c_str(), g_savegame_ext.c_str());
-			break;
-		}
-
+			return ST::format("{}/{}.{}", dir, g_quicksave_name, g_savegame_ext);
 		case SAVE__END_TURN_NUM:
-			sprintf(pzNewFileName, "%s/Auto%02d.%s", dir.c_str(), guiLastSaveGameNum, g_savegame_ext.c_str());
 			guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
-			break;
-
-		case SAVE__ERROR_NUM:
-			sprintf(pzNewFileName, "%s/error.%s", dir.c_str(), g_savegame_ext.c_str());
-			break;
-
+			return ST::format("{}/Auto{02}.{}", dir, g_quicksave_name, g_savegame_ext);
+		case SAVE__ERROR_NUM:\
+			return ST::format("{}/error.{}", dir, g_savegame_ext);
 		default:
-			sprintf(pzNewFileName, "%s/%s%02d.%s", dir.c_str(), g_savegame_name.c_str(), ubSaveGameID, g_savegame_ext.c_str());
-			break;
+			return ST::format("{}/{}{02}.{}", dir, g_savegame_name, ubSaveGameID, g_savegame_ext);
 	}
 }
 
@@ -2323,8 +2312,8 @@ static void UpdateMercMercContractInfo(void)
 INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 {
 	BOOLEAN	fFile1Exist, fFile2Exist;
-	double	LastWriteTime1;
-	double	LastWriteTime2;
+	double	LastWriteTime1 = 0;
+	double	LastWriteTime2 = 0;
 
 	fFile1Exist = FALSE;
 	fFile2Exist = FALSE;
@@ -2334,15 +2323,15 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 	
 	ST::string zFileName2 = ST::format("{}/Auto{02d}.{}", GCM->getSavedGamesFolder(), 1, g_savegame_ext);
 
-	if( GCM->doesGameResExists( zFileName1 ) )
+	if( GCM->doesUserPrivateFileExist( zFileName1 ) )
 	{
-		Fs_modifiedSecs( zFileName1.c_str(), &LastWriteTime1 );
+		LastWriteTime1 = GCM->getUserPrivateFileLastModifiedTime( zFileName1 );
 		fFile1Exist = TRUE;
 	}
 
-	if( GCM->doesGameResExists( zFileName2 ) )
+	if( GCM->doesUserPrivateFileExist( zFileName2 ) )
 	{
-		Fs_modifiedSecs( zFileName2.c_str(), &LastWriteTime2 );
+		LastWriteTime2 = GCM->getUserPrivateFileLastModifiedTime( zFileName2 );
 		fFile2Exist = TRUE;
 	}
 

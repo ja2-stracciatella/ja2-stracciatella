@@ -77,8 +77,20 @@ public:
 	/** Open map for reading. */
 	virtual SGPFile* openMapForReading(const ST::string& mapName) const = 0;
 
-	/** Open user's private file (e.g. saved game, settings) for reading. */
+	/** Open user's private file (e.g. settings) for reading. */
 	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const = 0;
+
+	/** Open user's private file (e.g. settings) for writing. */
+	virtual SGPFile* openUserPrivateFileForWriting(const ST::string& filename, bool truncate) const = 0;
+
+	/** Delete user's private file (e.g. settings). */
+	virtual void deleteUserPrivateFile(const ST::string& filename) const = 0;
+
+	/* Checks if a user's private file exists. */
+	virtual bool doesUserPrivateFileExist(const ST::string& filename) const = 0;
+
+	/* Get last modified time of a user's private file. */
+	virtual double getUserPrivateFileLastModifiedTime(const ST::string& filename) const = 0;
 
 	/* Open a game resource file for reading. */
 	virtual SGPFile* openGameResForReading(const ST::string& filename) const = 0;

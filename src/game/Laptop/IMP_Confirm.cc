@@ -39,8 +39,6 @@
 #include <string_theory/string>
 
 
-#define IMP_MERC_FILE "imp.dat"
-
 static BUTTON_PICS* giIMPConfirmButtonImage[2];
 GUIButtonRef giIMPConfirmButton[2];
 
@@ -202,10 +200,6 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 	}
 }
 
-
-static void WriteOutCurrentImpCharacter(INT32 iProfileId);
-
-
 static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason)
 {
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
@@ -241,9 +235,6 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason)
 		// charge the player
 		AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin(), -COST_OF_PROFILE);
 		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), -1, -1);
-
-		// write the created imp merc
-		WriteOutCurrentImpCharacter((UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId));
 
 		fButtonPendingFlag = TRUE;
 		iCurrentImpPage = IMP_HOME_PAGE;
@@ -439,18 +430,6 @@ static INT32 FirstFreeBigEnoughPocket(MERCPROFILESTRUCT const& p, UINT16 const u
 
 
 	return(-1);
-}
-
-
-static void WriteOutCurrentImpCharacter(INT32 iProfileId)
-{
-	// grab the profile number and write out what is contained there in
-	AutoSGPFile hFile(FileMan::openForWriting(IMP_MERC_FILE));
-
-	// Write the profile id, portrait id and the profile itself. Abort on error
-	FileWrite(hFile, &iProfileId,      sizeof(INT32));
-	FileWrite(hFile, &iPortraitNumber, sizeof(INT32));
-	InjectMercProfileIntoFile(hFile, gMercProfiles[iProfileId]);
 }
 
 void ResetIMPCharactersEyesAndMouthOffsets(const UINT8 ubMercProfileID)
