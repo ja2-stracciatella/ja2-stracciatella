@@ -1282,6 +1282,8 @@ static void DrawMouseText(void)
 	INT16 sX;
 	INT16 sY;
 
+	gsMouseSizeYModifier = 0;
+
 	if (!gzLocation.empty())
 	{
 		// Set dest for gprintf to be different
@@ -1289,8 +1291,7 @@ static void DrawMouseText(void)
 
 		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzLocation, TINYFONT1, &sX, &sY);
 		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-		MPrint(sX, sY + 12, gzLocation); // Below
-		//MPrint(sX, sY + 20, gzLocation); // Two slots below
+		MPrint(sX, sY + 12, gzLocation); // Below cursor
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER);
 	}
@@ -1325,25 +1326,17 @@ static void DrawMouseText(void)
 		SetFontDestBuffer(MOUSE_BUFFER);
 		FindFontCenterCoordinates(0, 0, gsCurMouseWidth, gsCurMouseHeight, gzHitChance, TINYFONT1, &sX, &sY);
 		SetFontAttributes(TINYFONT1, FONT_MCOLOR_WHITE);
-		//MPrint(sX, sY - 14, gzHitChance); // Above
 		if(gzLocation.empty())
-		{
-			MPrint(sX, sY + 12, gzHitChance); // Below
-			gsMouseSizeYModifier = 0;
-		}
+			MPrint(sX, sY + 12, gzHitChance); // Below cursor
 		else
 		{
-			MPrint(sX, sY + 20, gzHitChance); // Two slots below
+			MPrint(sX, sY + 20, gzHitChance); // Below hit location text
 			gsMouseSizeYModifier = 8 + GetFontHeight(TINYFONT1);
 		}
-		//MPrint((gsCurMouseWidth / 2) + 12, (gsCurMouseHeight / 2) - 4, gzHitChance); // To the right
-		//MPrint((gsCurMouseWidth / 2) - 30, (gsCurMouseHeight / 2) - 4, gzHitChance); // To the left
 
 		// reset
 		SetFontDestBuffer(FRAME_BUFFER);
 	}
-	else
-		gsMouseSizeYModifier = 0;
 
 	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	{

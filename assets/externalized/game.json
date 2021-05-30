@@ -120,7 +120,7 @@
 	
 	//  Show chance-to-hit next to mouse cursor when preparing an attack
 	//  vanilla setting: false
-	"show_hit_chance": true,
+	"show_hit_chance": false,
 
     //  IMP creation tweaks
     "imp": {
