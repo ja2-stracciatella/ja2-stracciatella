@@ -117,6 +117,10 @@
 	//  Always show mouse cursor during tactical view (if false, no mourse cursor is shown when moving in real-time mode, selecting a merc, etc)
 	//  vanilla setting: false
 	"always_show_cursor_in_tactical": false,
+	
+	//  Show chance-to-hit next to mouse cursor when preparing an attack
+	//  vanilla setting: false
+	"show_hit_chance": false,
 
     //  IMP creation tweaks
     "imp": {

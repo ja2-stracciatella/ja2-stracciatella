@@ -24,6 +24,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "WeaponModels.h"
+#include "policy/GamePolicy.h"
 
 #include <algorithm>
 
@@ -415,14 +416,6 @@ void DisplayRangeToTarget(SOLDIERTYPE* s, INT16 const sTargetGridNo)
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
 				st_format_printf(zNewTacticalMessages[TCTL_MSG__RANGE_TO_TARGET_AND_GUN_RANGE],
 				GCM->getWeapon(s->inv[HANDPOS].usItem)->usRange / 10, usRange));
-		// Get the chance to hit
-		UINT32 const uiHitChance = CalcChanceToHitGun(s, sTargetGridNo, s->bAimTime, s->bAimShotLocation, false );
-		// Get the cover modifier chance from a soldier to a grid location
-		UINT8 ubChanceToGetThrough = SoldierToLocationChanceToGetThrough(s, sTargetGridNo, s->bTargetLevel, s->bTargetCubeLevel, 0);
-		//display a string with the weapons range, then range to target
-		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE,
-				st_format_printf(zNewTacticalMessages[TCTL_MSG__CHANCE_TO_HIT_TARGET],
-				uiHitChance, uiHitChance*ubChanceToGetThrough/100.0f));
 	}
 	else
 	{
