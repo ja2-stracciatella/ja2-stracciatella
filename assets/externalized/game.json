@@ -122,9 +122,9 @@
   //  vanilla setting: false
   "show_hit_chance": false,
 
-  //  Scale the loading speed of websites on the laptop. Setting this to 0.0 removes the loading entirely.
+  //  Scales the loading time of websites on the laptop. Lower value means faster loading. Setting this to 0.0 removes the loading entirely.
   //  vanilla setting: 1.0
-  "website_loading_speed_scale": 1.0,
+  "website_loading_time_scale": 1.0,
 
   //  IMP creation tweaks
   "imp": {
