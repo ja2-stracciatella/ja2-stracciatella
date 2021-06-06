@@ -1,196 +1,200 @@
 {
-    //  game.json
-    //  The settings in this file have an influence on the game in general.
+  //  game.json
+  //  The settings in this file have an influence on the game in general.
 
-    //  --------------------------------------------------
-    //  New hotkeys and input
-    //  vanilla setting for all hotkeys: false
-    //  --------------------------------------------------
+  //  --------------------------------------------------
+  //  New hotkeys and input
+  //  vanilla setting for all hotkeys: false
+  //  --------------------------------------------------
 
-    //  Press 'ctrl+i' to show sector inventory of selected sector in strategic view.
-    //  Press 'j' to jump over fences, climb on rooftops etc.
-    //  Press 'ctrl+n' to swap the squad's head gear from night mode (NV or UV Goggles) to day mode (sun goggles) and back.
-    //  Press 'alt+r' to reload
-    //  Press 'ctrl+q' to swap hand items
-    //  Press 'shift+j' to climb through open window
-    "extra_hotkeys": true,
+  //  Press 'ctrl+i' to show sector inventory of selected sector in strategic view.
+  //  Press 'j' to jump over fences, climb on rooftops etc.
+  //  Press 'ctrl+n' to swap the squad's head gear from night mode (NV or UV Goggles) to day mode (sun goggles) and back.
+  //  Press 'alt+r' to reload
+  //  Press 'ctrl+q' to swap hand items
+  //  Press 'shift+j' to climb through open window
+  "extra_hotkeys": true,
 
-    //  Press d in realtime mode to manually start turn based mode.
-    //  vanilla setting: false
-    "can_enter_turnbased": false,
+  //  Press d in realtime mode to manually start turn based mode.
+  //  vanilla setting: false
+  "can_enter_turnbased": false,
 
-    //  Enables middle mouse button to trigger a look into cursor direction
-    //  vanilla setting: false
-    "middle_mouse_look": true,
+  //  Enables middle mouse button to trigger a look into cursor direction
+  //  vanilla setting: false
+  "middle_mouse_look": true,
 
-    //  --------------------------------------------------
-    //  System settings
-    //  --------------------------------------------------
+  //  --------------------------------------------------
+  //  System settings
+  //  --------------------------------------------------
 
-    //  Automatically draw a shadow for all items in a merc's inventory.
-    //  vanilla setting: true
-    "draw_item_shadow": true,
+  //  Automatically draw a shadow for all items in a merc's inventory.
+  //  vanilla setting: true
+  "draw_item_shadow": true,
 
-    //  Number of milliseconds for one game cycle.
-    //  25 ms gives approx. 40 cycles per second (and 40 frames per second, since the screen is updated on every cycle).
-    //  Decreasing this value will increase the speed of the game (enemy movement, bullets speed, etc).
-    //  Stracciatella standard value: 25
-    "ms_per_game_cycle": 25,
+  //  Number of milliseconds for one game cycle.
+  //  25 ms gives approx. 40 cycles per second (and 40 frames per second, since the screen is updated on every cycle).
+  //  Decreasing this value will increase the speed of the game (enemy movement, bullets speed, etc).
+  //  Stracciatella standard value: 25
+  "ms_per_game_cycle": 25,
 
-    //  Number of milliseconds for one game time slice.
-    //  Decreasing this value will speed up UI transitions and soldier animations.
-    //  Stracciatella standard value: 10
-    "ms_per_time_slice": 10,
+  //  Number of milliseconds for one game time slice.
+  //  Decreasing this value will speed up UI transitions and soldier animations.
+  //  Stracciatella standard value: 10
+  "ms_per_time_slice": 10,
 
-    //  --------------------------------------------------
-    //  Gameplay settings
-    //  --------------------------------------------------
+  //  --------------------------------------------------
+  //  Gameplay settings
+  //  --------------------------------------------------
 
-    //  Amount of money the player starts the game with on each difficulty.
-    //  vanilla values: 45000/35000/30000 (easy/medium/hard)
-    "starting_cash_easy":   45000,
-    "starting_cash_medium": 35000,
-    "starting_cash_hard":   30000,
+  //  Amount of money the player starts the game with on each difficulty.
+  //  vanilla values: 45000/35000/30000 (easy/medium/hard)
+  "starting_cash_easy": 45000,
+  "starting_cash_medium": 35000,
+  "starting_cash_hard": 30000,
 
-    //  Will enemies drop ALL of their equipment when they die?
-    //  vanilla setting: false
-    "drop_everything": false,
+  //  Will enemies drop ALL of their equipment when they die?
+  //  vanilla setting: false
+  "drop_everything": false,
 
-    //  Will dropped items always be visible to the player, regardless of distance?
-    //  vanilla setting: false
-    "all_drops_visible": false,
+  //  Will dropped items always be visible to the player, regardless of distance?
+  //  vanilla setting: false
+  "all_drops_visible": false,
 
-    //  Everyone will be able to interrupt multiple times in the same turn. Vanilla behaviour is that if you skipped reacting to the first interrupt
-    //  (say your buddies took care of it), you'd still get skipped for any further interrupts. Annoying in ambushes or when sneaking.
-    //  vanilla setting: false
-    "multiple_interrupts": false,
+  //  Everyone will be able to interrupt multiple times in the same turn. Vanilla behaviour is that if you skipped reacting to the first interrupt
+  //  (say your buddies took care of it), you'd still get skipped for any further interrupts. Annoying in ambushes or when sneaking.
+  //  vanilla setting: false
+  "multiple_interrupts": false,
 
-    //  Minimal status in % for each gun in the hand of enemy soldiers. Note that this value has no influence on enemy behaviour (CtH, jams).
-    //  vanilla value: 0
-    "enemy_weapon_minimal_status": 0,
+  //  Minimal status in % for each gun in the hand of enemy soldiers. Note that this value has no influence on enemy behaviour (CtH, jams).
+  //  vanilla value: 0
+  "enemy_weapon_minimal_status": 0,
 
-    // Enable improvements over vanilla game's tactical AI
-    "ai": {
-        //  Make the AI a bit smarter and let it target heads and legs sometimes.
-        //  Aiming: will choose other body parts when appropriate and random choice was selected.
-        //  Prone: when already facing its focus, lay down if nothing else.
-        //  vanilla values: false, false, 0 ,0
-        "better_aiming_choice": false,
-        "go_prone_more_often": false,
-        "threshold_cth_head": 67,
-        "threshold_cth_legs": 67,
+  // Enable improvements over vanilla game's tactical AI
+  "ai": {
+    //  Make the AI a bit smarter and let it target heads and legs sometimes.
+    //  Aiming: will choose other body parts when appropriate and random choice was selected.
+    //  Prone: when already facing its focus, lay down if nothing else.
+    //  vanilla values: false, false, 0 ,0
+    "better_aiming_choice": false,
+    "go_prone_more_often": false,
+    "threshold_cth_head": 67,
+    "threshold_cth_legs": 67,
 
-        //  AI is capable of knowing and avoid of an ambush on seeing corpses of friendlies, but
-        //  it was not enabled in the original game due to a bug
-        //  vanilla value: false
-        "avoid_ambushes": false,
+    //  AI is capable of knowing and avoid of an ambush on seeing corpses of friendlies, but
+    //  it was not enabled in the original game due to a bug
+    //  vanilla value: false
+    "avoid_ambushes": false,
 
-        //  Enemy guards on rooftop are disallowed to climb down
-        //  vanilla value: false
-        "stay_on_rooftop": false
-    },
+    //  Enemy guards on rooftop are disallowed to climb down
+    //  vanilla value: false
+    "stay_on_rooftop": false
+  },
 
-    //  How much variation should there be in elite soldier xp level?
-    //  vanilla_setting: 6, 10
-    "enemy_elite_minimum_level": 6,
-    "enemy_elite_maximum_level": 10,
+  //  How much variation should there be in elite soldier xp level?
+  //  vanilla_setting: 6, 10
+  "enemy_elite_minimum_level": 6,
+  "enemy_elite_maximum_level": 10,
 
-    //  Enables extra GUI features. Currently includes:
-    //  Progress Bars for the Mercs stats in tactical Mode.
-    //  vanilla_setting: false
-    "gui_extras": true,
+  //  Enables extra GUI features. Currently includes:
+  //  Progress Bars for the Mercs stats in tactical Mode.
+  //  vanilla_setting: false
+  "gui_extras": true,
 
-    //  Enables extra attachments: boosters and break lights on leggings, goggles on helmets.
-    "extra_attachments": false,
+  //  Enables extra attachments: boosters and break lights on leggings, goggles on helmets.
+  "extra_attachments": false,
 
-    //  Packages at Drassen airport never get stolen, no need to bribe Pablo.
-    //  vanilla_setting: false
-    "pablo_wont_steal": false,
+  //  Packages at Drassen airport never get stolen, no need to bribe Pablo.
+  //  vanilla_setting: false
+  "pablo_wont_steal": false,
 
-    //  Min/max chance to hit and headshot damage multiplier.
-    //  vanilla_setting: 1, 99, 1.5, 0.5
-    "chance_to_hit_minimum": 1,
-    "chance_to_hit_maximum": 99,
-    "tactical_head_damage_multiplier": 1.5,
-    "tactical_legs_damage_multiplier": 0.5,
-	
-	//  Always show mouse cursor during tactical view (if false, no mourse cursor is shown when moving in real-time mode, selecting a merc, etc)
-	//  vanilla setting: false
-	"always_show_cursor_in_tactical": false,
-	
-	//  Show chance-to-hit next to mouse cursor when preparing an attack
-	//  vanilla setting: false
-	"show_hit_chance": false,
+  //  Min/max chance to hit and headshot damage multiplier.
+  //  vanilla_setting: 1, 99, 1.5, 0.5
+  "chance_to_hit_minimum": 1,
+  "chance_to_hit_maximum": 99,
+  "tactical_head_damage_multiplier": 1.5,
+  "tactical_legs_damage_multiplier": 0.5,
 
-    //  IMP creation tweaks
-    "imp": {
-        //  IMP attribute point defaults:
-        //  Warning: Setting min attribute points to a value less than 15 allows
-        //           the creation of a character with less than 15 health. This
-        //           is a dying character!
-        //  Zero attribute point bonus is what you receive for setting a skill to 0.
-        //  Bonus attribute points is your initial pool of points to distribute.
-        //  vanilla setting: 85, 35, 15, 40
-        "max_attribute_points": 85,
-        "min_attribute_points": 35,
-        "zero_attribute_points_bonus": 15,
-        "bonus_attribute_points": 40,
+  //  Always show mouse cursor during tactical view (if false, no mourse cursor is shown when moving in real-time mode, selecting a merc, etc)
+  //  vanilla setting: false
+  "always_show_cursor_in_tactical": false,
 
-        // Replace the IMP personality quiz with a form to select skills directly
-        // NOTE: does not set any personality
-        // vanilla setting: false
-        "pick_skills_directly": false,
+  //  Show chance-to-hit next to mouse cursor when preparing an attack
+  //  vanilla setting: false
+  "show_hit_chance": false,
 
-        //  Load an IMP merc from a previous save game by typing in same nickname on IMP form.
-        //  Make sure to use the same capitalization!
-        //  This setting must be already enabled during saving to enable a later load.
-        //  vanilla setting: false, false
-        "load_saved_merc_by_nickname": false,
-        "load_keep_inventory": false
-    },
-    
-    // When a new game starts, it picks randomly in the range of min and max (both inclusive) 
-    // on which day M.E.R.C. goes online and Speck sends the player an email. If 0 is picked, 
-    // then M.E.R.C. will be available right from the start.
-    // vanilla setting: 1, 2
-    "merc_online_min_days": 1,
-    "merc_online_max_days": 2,
+  //  Scales the loading time of websites on the laptop. Lower value means faster loading. Setting this to 0.0 removes the loading entirely.
+  //  vanilla setting: 1.0
+  "website_loading_time_scale": 1.0,
 
-    "progress": {
-        //  Progress weight of parameter on campaign progress
-        //  vanilla settings: kills 25, control 25, income 50
-        "weight_kills": 25,
-        "weight_control": 25,
-        "weight_income": 50,
+  //  IMP creation tweaks
+  "imp": {
+    //  IMP attribute point defaults:
+    //  Warning: Setting min attribute points to a value less than 15 allows
+    //           the creation of a character with less than 15 health. This
+    //           is a dying character!
+    //  Zero attribute point bonus is what you receive for setting a skill to 0.
+    //  Bonus attribute points is your initial pool of points to distribute.
+    //  vanilla setting: 85, 35, 15, 40
+    "max_attribute_points": 85,
+    "min_attribute_points": 35,
+    "zero_attribute_points_bonus": 15,
+    "bonus_attribute_points": 40,
 
-        //  Progress point progression
-        //  vanilla settings: 0_easy 7, 1_medium 10, 2_hard 15
-        "kills_per_point_easy": 7,
-        "kills_per_point_medium": 10,
-        "kills_per_point_hard": 15,
+    // Replace the IMP personality quiz with a form to select skills directly
+    // NOTE: does not set any personality
+    // vanilla setting: false
+    "pick_skills_directly": false,
 
-        //  Minimum first time progress to trigger event
-        //  vanilla settings: madlab: 35, mike: 50, iggy: 70
-        "event_madlab_min": 35,
-        "event_mike_min": 50,
-        "event_iggy_min": 70
-    },
+    //  Load an IMP merc from a previous save game by typing in same nickname on IMP form.
+    //  Make sure to use the same capitalization!
+    //  This setting must be already enabled during saving to enable a later load.
+    //  vanilla setting: false, false
+    "load_saved_merc_by_nickname": false,
+    "load_keep_inventory": false
+  },
 
-    //  Allowed unhired merc deaths at given difficulty level
-    //  vanilla settings: 1, 2, 3
-    "unhired_merc_deaths_easy": 1,
-    "unhired_merc_deaths_medium": 2,
-    "unhired_merc_deaths_hard": 3,
+  // When a new game starts, it picks randomly in the range of min and max (both inclusive) 
+  // on which day M.E.R.C. goes online and Speck sends the player an email. If 0 is picked, 
+  // then M.E.R.C. will be available right from the start.
+  // vanilla setting: 1, 2
+  "merc_online_min_days": 1,
+  "merc_online_max_days": 2,
 
-    //  Settings for newly started campaigns.
-    //  Most probably you do not need to change these unless you are running a full conversion mod.
-    "campaign": {
-        //  The sector where your team lands at the start.
-        //  vanilla settings: A9
-        "start_sector": "A9",
+  "progress": {
+    //  Progress weight of parameter on campaign progress
+    //  vanilla settings: kills 25, control 25, income 50
+    "weight_kills": 25,
+    "weight_control": 25,
+    "weight_income": 50,
 
-        //  Is the start sector revealed at game start?
-        //  vanilla settings: true
-        "start_sector_revealed": true
-    }
+    //  Progress point progression
+    //  vanilla settings: 0_easy 7, 1_medium 10, 2_hard 15
+    "kills_per_point_easy": 7,
+    "kills_per_point_medium": 10,
+    "kills_per_point_hard": 15,
+
+    //  Minimum first time progress to trigger event
+    //  vanilla settings: madlab: 35, mike: 50, iggy: 70
+    "event_madlab_min": 35,
+    "event_mike_min": 50,
+    "event_iggy_min": 70
+  },
+
+  //  Allowed unhired merc deaths at given difficulty level
+  //  vanilla settings: 1, 2, 3
+  "unhired_merc_deaths_easy": 1,
+  "unhired_merc_deaths_medium": 2,
+  "unhired_merc_deaths_hard": 3,
+
+  //  Settings for newly started campaigns.
+  //  Most probably you do not need to change these unless you are running a full conversion mod.
+  "campaign": {
+    //  The sector where your team lands at the start.
+    //  vanilla settings: A9
+    "start_sector": "A9",
+
+    //  Is the start sector revealed at game start?
+    //  vanilla settings: true
+    "start_sector_revealed": true
+  }
 }

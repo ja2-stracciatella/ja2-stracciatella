@@ -90,6 +90,8 @@
 #include "JAScreens.h"
 #include "UILayout.h"
 
+#include "policy/GamePolicy.h"
+
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -1921,6 +1923,10 @@ static void DisplayLoadPending(void)
 	}
 
 	iUnitTime += WWaitDelayIncreasedIfRaining(iUnitTime);
+
+	// Adjust loading time based on config var
+	iUnitTime *= gamepolicy(website_loading_time_scale);
+
 	iLoadTime  = iUnitTime * 30;
 
 	// we are now waiting on a web page to download, reset counter

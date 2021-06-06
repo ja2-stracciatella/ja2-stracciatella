@@ -49,6 +49,7 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 
 	always_show_cursor_in_tactical = gp.getOptionalBool("always_show_cursor_in_tactical", false);
 	show_hit_chance = gp.getOptionalBool("show_hit_chance", false);
+	website_loading_time_scale = gp.getOptionalDouble("website_loading_time_scale", 1.0);
 
 	JsonObjectReader imp = JsonObjectReader(gp.GetValue("imp"));
 	imp_load_saved_merc_by_nickname = imp.getOptionalBool("load_saved_merc_by_nickname");
