@@ -6,7 +6,6 @@ use std::f64;
 use std::ptr;
 use std::time;
 use std::u64;
-use std::usize;
 
 use stracciatella::fs;
 
@@ -256,19 +255,4 @@ pub extern "C" fn Fs_read(path: *const c_char) -> *mut VecU8 {
         }
         Ok(vec) => into_ptr(VecU8::from(vec)),
     }
-}
-
-/// Writes the bytes to a file.
-/// The file will be created if it does not exist.
-/// Sets the rust error.
-/// @see https://doc.rust-lang.org/std/fs/fn.write.html
-#[no_mangle]
-pub extern "C" fn Fs_write(path: *const c_char, buf: *const u8, buf_len: usize) -> bool {
-    forget_rust_error();
-    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
-    let buf = unsafe_slice(buf, buf_len);
-    if let Err(err) = fs::write(&path, buf) {
-        remember_rust_error(format!("Fs_write {:?} {}: {}", path, buf_len, err));
-    }
-    no_rust_error()
 }

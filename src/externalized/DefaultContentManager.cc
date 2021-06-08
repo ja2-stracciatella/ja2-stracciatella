@@ -180,8 +180,7 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	RustPointer<char> stracciatellaHome{EngineOptions_getStracciatellaHome()};
 	m_userHomeDir = stracciatellaHome.get();
 
-	RustPointer<char> dataDir{Fs_resolveExistingComponents(BASEDATADIR, vanillaGameDir.get(), true)};
-	m_dataDir = dataDir.get();
+	m_dataDir = FileMan::resolveExistingComponents(FileMan::joinPaths(vanillaGameDir.get(), BASEDATADIR));
 
 	m_gameVersion = EngineOptions_getResourceVersion(m_engineOptions.get());
 
@@ -498,7 +497,7 @@ SGPFile* DefaultContentManager::openTempFileForAppend(const ST::string& filename
 void DefaultContentManager::deleteTempFile(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
-	FileDelete(path);
+	FileMan::deleteFile(path);
 }
 
 /** Create temporary directory. Does not fail if it exists already. */
@@ -512,14 +511,14 @@ void DefaultContentManager::createTempDir(const ST::string& dirname) const
 std::vector<ST::string> DefaultContentManager::findAllFilesInTempDir(const ST::string& dirname, bool sortResults, bool recursive, bool returnOnlyNames) const
 {
 	ST::string path = dirname.size() == 0 ? m_tempDirPath : FileMan::joinPaths(m_tempDirPath, dirname);
-	return FindAllFilesInDir(path, sortResults, recursive, returnOnlyNames);
+	return FileMan::findAllFilesInDir(path, sortResults, recursive, returnOnlyNames);
 }
 
 /** Erase all files within temporary directory. */
 void DefaultContentManager::eraseTempDir(const ST::string& dirname) const
 {
 	ST::string path = FileMan::joinPaths(m_tempDirPath, dirname);
-	EraseDirectory(path);
+	FileMan::eraseDirectory(path);
 }
 
 /* Open a game resource file for reading.
@@ -576,7 +575,7 @@ SGPFile* DefaultContentManager::openUserPrivateFileForWriting(const ST::string& 
 void DefaultContentManager::deleteUserPrivateFile(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
-	FileDelete(path);
+	FileMan::deleteFile(path);
 }
 
 /** Does user's private file exist. */
@@ -590,6 +589,20 @@ double DefaultContentManager::getUserPrivateFileLastModifiedTime(const ST::strin
 {
 	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
 	return FileMan::getLastModifiedTime(path);
+}
+
+/** Create user private directory. Does not fail if it exists already. */
+void DefaultContentManager::createUserPrivateDirectory(const ST::string& dirname) const
+{
+	ST::string path = FileMan::joinPaths(m_userHomeDir, dirname);
+	FileMan::createDir(path);
+}
+
+/** Check if user private directory exists and is a directory. */
+bool DefaultContentManager::isUserPrivateDir(const ST::string& dirname) const
+{
+	ST::string path = FileMan::joinPaths(m_userHomeDir, dirname);
+	return FileMan::isDir(path);
 }
 
 ST::string DefaultContentManager::getScreenshotFolder() const
@@ -1081,7 +1094,7 @@ bool DefaultContentManager::loadGameData()
 std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
 {
 	AutoSGPFile f(openGameResForReading(fileName));
-	ST::string jsonData = FileMan::fileReadText(f);
+	ST::string jsonData = FileReadAsText(f);
 
 	auto document = std::make_unique<rapidjson::Document>();
 	if (document->Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())

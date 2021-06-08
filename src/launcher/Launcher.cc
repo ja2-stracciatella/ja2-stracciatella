@@ -1,6 +1,7 @@
 #include "logo32.png.h"
 #include "Logger.h"
 #include "RustInterface.h"
+#include "FileMan.h"
 #include "Types.h"
 #include "GameRes.h"
 #include "Video.h"
@@ -298,7 +299,7 @@ void Launcher::startExecutable(bool asEditor) {
 	}
 	newFilename = newFilename.replace(target, "");
 	exePath.reset(Path_setFilename(exePath.get(), newFilename.c_str()));
-	if (!Fs_exists(exePath.get())) {
+	if (!FileMan::checkPathExistance(exePath.get())) {
 		fl_message_title("Not found");
 		fl_alert("%s", exePath.get());
 		return;

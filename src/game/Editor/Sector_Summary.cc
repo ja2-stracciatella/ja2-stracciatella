@@ -49,7 +49,7 @@
 
 #include <vector>
 
-#define DEVINFO_DIR "../DevInfo"
+#define DEVINFO_DIR "DevInfo"
 
 
 #define MAP_SIZE			208
@@ -1749,18 +1749,15 @@ static void CreateGlobalSummary(void)
 
 	gfGlobalSummaryExists = FALSE;
 
-	FileMan::createDir(DEVINFO_DIR);
+	GCM->createUserPrivateDirectory(DEVINFO_DIR);
 
 	// Generate a simple readme file.
 	const char* readme = ""
 		"This information is used in conjunction with the editor.\n"
 		"This directory or its contents shouldn't be included with final release.\n";
-	if (!Fs_write(DEVINFO_DIR "/readme.txt", reinterpret_cast<const uint8_t*>(readme), strlen(readme)))
-	{
-		RustPointer<char> err(getRustError());
-		SLOGA("CreateGlobalSummary: %s", err.get());
-		return;
-	}
+	AutoSGPFile file{GCM->openUserPrivateFileForWriting(DEVINFO_DIR "/readme.txt", true)};
+
+	FileWrite(file, readme, strlen(readme));
 
 	LoadGlobalSummary();
 	RegenerateSummaryInfoForAllOutdatedMaps();
@@ -2011,9 +2008,9 @@ static void CalculateOverrideStatus(void)
 
 	gszDisplayName = ST::format("{}", FileMan::getFileName(filename));
 
-	bool readonly = false;
-	if (Fs_getReadOnly(filename.c_str(), &readonly))
-	{
+	try {
+		bool readonly = FileMan::isReadOnly(filename);
+
 		if( gfWorldLoaded )
 		{
 			gubOverrideStatus = (readonly ? READONLY : OVERWRITE);
@@ -2023,9 +2020,7 @@ static void CalculateOverrideStatus(void)
 		}
 		if( gfTempFile )
 			EnableButton( iSummaryButton[ SUMMARY_LOAD ] );
-	}
-	else
-	{
+	} catch (const std::runtime_error& ex) {
 		gubOverrideStatus = INACTIVE;
 		HideButton( iSummaryButton[ SUMMARY_OVERRIDE ] );
 		if( gfWorldLoaded )
@@ -2057,22 +2052,18 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		FileRead(f_map, &dMajorMapVersion, sizeof(FLOAT));
 	}
 
-	RustPointer<File> file(File_open(summary_filename, FILE_OPEN_READ));
-	if (!file)
-	{
-		++gusNumEntriesWithOutdatedOrNoSummaryInfo;
-	}
-	else
-	{
+	try {
+		AutoSGPFile file{GCM->openUserPrivateFileForReading(summary_filename)};
+
 		/* Even if the info is outdated (but existing), allocate the structure, but
 		 * indicate that the info is bad. */
 		SUMMARYFILE* const sum = new SUMMARYFILE{};
-		if (!File_readExact(file.get(), reinterpret_cast<uint8_t*>(sum), sizeof(SUMMARYFILE)))
-		{
+		try {
+			FileReadExact(file, reinterpret_cast<uint8_t*>(sum), sizeof(SUMMARYFILE));
+		} catch (const std::runtime_error& err) {
 			// failed, initialize and force update
 			*sum = SUMMARYFILE{};
 		}
-		file.reset(nullptr);
 
 		if (sum->ubSummaryVersion < MINIMUMVERSION ||
 				dMajorMapVersion      < getMajorMapVersion())
@@ -2089,6 +2080,8 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 
 		if (sum->ubSummaryVersion < GLOBAL_SUMMARY_VERSION)
 			++gusNumEntriesWithOutdatedOrNoSummaryInfo;
+	} catch (const std::runtime_error& ex) {
+		++gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	}
 
 	return TRUE;
@@ -2102,10 +2095,10 @@ static void LoadGlobalSummary(void)
 	gfMustForceUpdateAllMaps        = FALSE;
 	gusNumberOfMapsToBeForceUpdated = 0;
 
-	gfGlobalSummaryExists = Fs_isDir(DEVINFO_DIR);
+	gfGlobalSummaryExists = GCM->isUserPrivateDir(DEVINFO_DIR);
 	if (!gfGlobalSummaryExists)
 	{
-		SLOGW("LoadGlobalSummary() aborted -- doesn't exist on this local computer.");
+		SLOGI("LoadGlobalSummary() aborted -- doesn't exist on this local computer.");
 		return;
 	}
 
@@ -2144,20 +2137,17 @@ static void LoadGlobalSummary(void)
 static void UpdateMasterProgress(void);
 
 
-void WriteSectorSummaryUpdate(const char* const filename, const UINT8 ubLevel, SUMMARYFILE* const sf)
+void WriteSectorSummaryUpdate(const ST::string &filename, const UINT8 ubLevel, SUMMARYFILE* const sf)
 {
-	const char* const ext = strstr(filename, ".dat");
+	bool ext = filename.ends_with(".dat", ST::case_insensitive);
 	AssertMsg(ext, "Illegal sector summary filename.");
 
-	STRING512 summary_filename;
-	snprintf(summary_filename, lengthof(summary_filename), DEVINFO_DIR "/%.*s.sum", (int)(ext - filename), filename);
+	;
+	ST::string summary_filename = ST::format("{}/{}.sum", DEVINFO_DIR, FileMan::getFileNameWithoutExt(filename));
+	
+	AutoSGPFile file{GCM->openUserPrivateFileForWriting(summary_filename, true)};
 
-	if (!Fs_write(summary_filename, reinterpret_cast<const uint8_t*>(sf), sizeof(*sf)))
-	{
-		RustPointer<char> err(getRustError());
-		SLOGA("WriteSectorSummaryUpdate: %s", err.get());
-		return;
-	}
+	FileWrite(file, sf, sizeof(*sf));
 
 	--gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	UpdateMasterProgress();

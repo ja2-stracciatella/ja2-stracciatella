@@ -44,7 +44,7 @@ RustPointer<File> FileMan::openFileCaseInsensitive(const ST::string& folderPath,
 	return RustPointer<File>{File_open(path.get(), open_options)};
 }
 
-void FileDelete(const ST::string& path)
+void FileMan::deleteFile(const ST::string& path)
 {
 	if (Fs_exists(path.c_str()) && !Fs_removeFile(path.c_str()))
 	{
@@ -110,11 +110,38 @@ size_t FileReadAtMost(SGPFile* const f, void* const pDest, size_t const uiBytesT
 	return bytesRead;
 }
 
+void FileReadExact(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
+{
+	bool success = false;
+	if (f->flags & SGPFILE_REAL)
+	{
+		success = File_readExact(f->u.file, reinterpret_cast<uint8_t*>(pDest), uiBytesToRead);
+	}
+	else
+	{
+		success = VfsFile_readExact(f->u.vfile, static_cast<uint8_t*>(pDest), uiBytesToRead);
+	}
+
+	if (!success)
+	{
+		RustPointer<char> err{getRustError()};
+		throw std::runtime_error(ST::format("FileReadAtMost: {}", err.get()).c_str());
+	}
+}
+
 ST::string FileReadString(SGPFile* const f, size_t const uiBytesToRead)
 {
 	ST::char_buffer buf(uiBytesToRead, '\0');
 	FileRead(f, buf.data(), uiBytesToRead);
 	return ST::string(buf.c_str(), ST_AUTO_SIZE);
+}
+
+ST::string FileReadAsText(SGPFile* file)
+{
+	uint32_t size = FileGetSize(file);
+	ST::char_buffer buf{size, '\0'};
+	FileRead(file, buf.data(), size);
+	return ST::string{buf};
 }
 
 
@@ -301,14 +328,14 @@ void FileMan::createDir(const ST::string& path)
 }
 
 
-void EraseDirectory(const ST::string& dirPath)
+void FileMan::eraseDirectory(const ST::string& dirPath)
 {
-	std::vector<ST::string> paths = FindAllFilesInDir(dirPath);
+	std::vector<ST::string> paths = FileMan::findAllFilesInDir(dirPath);
 	for (const ST::string& path : paths)
 	{
 		try
 		{
-			FileDelete(path);
+			FileMan::deleteFile(path);
 		}
 		catch (const std::runtime_error& ex)
 		{
@@ -319,13 +346,7 @@ void EraseDirectory(const ST::string& dirPath)
 	}
 }
 
-
-File* GetRealFileHandleFromFileManFileHandle(const SGPFile* f)
-{
-	return f->flags & SGPFILE_REAL ? f->u.file : nullptr;
-}
-
-uint64_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
+uint64_t FileMan::getFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 {
 	RustPointer<char> path(Env_currentDir());
 	if (!path)
@@ -361,6 +382,16 @@ ST::string FileMan::joinPaths(const std::vector<ST::string> parts)
 		path = joinPaths(path, parts[i]);
 	}
 	return path;
+}
+
+ST::string FileMan::resolveExistingComponents(const ST::string& path)
+{
+	RustPointer<char> resolved{Fs_resolveExistingComponents(path.c_str(), NULL, true)};
+	if (resolved.get() == NULL) {
+		RustPointer<char> err{getRustError()};
+		throw std::runtime_error(ST::format("FileMan::resolveExistingComponents: {}", err.get()).c_str()); 	
+	}
+	return resolved.get();
 }
 
 
@@ -445,7 +476,7 @@ RustPointer<File> FileMan::openForReadingCaseInsensitive(const ST::string& folde
 }
 
 std::vector<ST::string>
-FindFilesInDir(const ST::string& dirPath,
+FileMan::findFilesInDir(const ST::string& dirPath,
 		const ST::string& ext,
 		bool caseInsensitive,
 		bool returnOnlyNames,
@@ -453,7 +484,7 @@ FindFilesInDir(const ST::string& dirPath,
 		bool recursive)
 {
 	std::vector<ST::string> results;
-	std::vector<ST::string> paths = FindAllFilesInDir(dirPath, sortResults, recursive);
+	std::vector<ST::string> paths = FileMan::findAllFilesInDir(dirPath, sortResults, recursive);
 	for (ST::string& path : paths)
 	{
 		// the extension must match
@@ -490,7 +521,7 @@ FindFilesInDir(const ST::string& dirPath,
 }
 
 std::vector<ST::string>
-FindAllFilesInDir(const ST::string& dirPath, bool sortResults, bool recursive, bool returnOnlyNames)
+FileMan::findAllFilesInDir(const ST::string& dirPath, bool sortResults, bool recursive, bool returnOnlyNames)
 {
 	std::vector<ST::string> paths;
 	RustPointer<VecCString> vec{Fs_findAllFilesInDir(dirPath.c_str(), sortResults, recursive)};
@@ -515,14 +546,14 @@ FindAllFilesInDir(const ST::string& dirPath, bool sortResults, bool recursive, b
 }
 
 std::vector<ST::string>
-FindAllDirsInDir(const ST::string& dirPath, bool sortResults, bool recursive, bool returnOnlyNames)
+FileMan::findAllDirsInDir(const ST::string& dirPath, bool sortResults, bool recursive, bool returnOnlyNames)
 {
 	std::vector<ST::string> paths;
 	RustPointer<VecCString> vec{Fs_findAllDirsInDir(dirPath.c_str(), sortResults, recursive)};
 	if (!vec)
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGW("FindAllDirsInDir: {}", err.get());
+		STLOGW("FileMan::findAllDirsInDir: {}", err.get());
 		return paths;
 	}
 	size_t len = VecCString_len(vec.get());
@@ -588,12 +619,22 @@ RustPointer<File> FileMan::openFileForReading(const ST::string& path)
 	return RustPointer<File>{File_open(path.c_str(), FILE_OPEN_READ)};
 }
 
-ST::string FileMan::fileReadText(SGPFile* file)
-{
-	uint32_t size = FileGetSize(file);
-	ST::char_buffer buf{size, '\0'};
-	FileRead(file, buf.data(), size);
-	return ST::string{buf};
+bool FileMan::isFile(const ST::string& path) {
+	return Fs_isFile(path.c_str());
+}
+
+bool FileMan::isDir(const ST::string& path) {
+	return Fs_isDir(path.c_str());
+}
+
+bool FileMan::isReadOnly(const ST::string& path) {
+	bool readonly = false;
+	bool success = Fs_getReadOnly(path.c_str(), &readonly);
+	if (!success) {
+		RustPointer<char> err{getRustError()};
+		throw std::runtime_error(ST::format("FileMan::isReadOnly: {}", err.get()).c_str());
+	}
+	return readonly;
 }
 
 /** Check file existance. */
@@ -626,4 +667,5 @@ double FileMan::getLastModifiedTime(const ST::string& path)
 		RustPointer<char> err{getRustError()};
 		throw std::runtime_error(ST::format("FileMan::getLastModifiedTime: {}", err.get()).c_str());
 	}
+	return lastModified;
 }

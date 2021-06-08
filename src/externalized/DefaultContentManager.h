@@ -94,6 +94,12 @@ public:
 	/* Get last modified time of a user's private file. */
 	virtual double getUserPrivateFileLastModifiedTime(const ST::string& filename) const override;
 
+	/** Create user private directory. */
+	virtual void createUserPrivateDirectory(const ST::string& dirname) const override;
+
+	/** Check if user private directory exists and is a directory. */
+	virtual bool isUserPrivateDir(const ST::string& dirname) const override;
+
 	/** Get folder for screenshots. */
 	virtual ST::string getScreenshotFolder() const override;
 

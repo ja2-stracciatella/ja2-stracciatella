@@ -1,5 +1,4 @@
-#ifndef FILEMAN_H
-#define FILEMAN_H
+#pragma once
 
 #include "sgp/SGPFile.h"
 #include "sgp/Types.h"
@@ -8,15 +7,16 @@
 
 #include <vector>
 
-/* Delete the file at path. */
-void FileDelete(const ST::string &path);
-
 void FileRead( SGPFile*, void*       pDest, size_t uiBytesToRead);
 size_t FileReadAtMost( SGPFile*, void*       pDest, size_t uiBytesToRead);
+void FileReadExact(SGPFile* const f, void* const pDest, size_t const uiBytesToRead);
 void FileWrite(SGPFile*, void const* pDest, size_t uiBytesToWrite);
 
 /* Helper method to read a string from file */
 ST::string FileReadString(SGPFile* const f, size_t const uiBytesToRead);
+
+/** Read the whole file as text. */
+ST::string FileReadAsText(SGPFile*);
 
 SDL_RWops* FileGetRWOps(SGPFile* const f);
 
@@ -30,18 +30,6 @@ void  FileSeek(SGPFile*, INT32 distance, FileSeekMode);
 INT32 FileGetPos(const SGPFile*);
 
 UINT32 FileGetSize(const SGPFile*);
-
-/* Removes ALL FILES in the specified directory, but leaves the directory alone.
- * Does not affect any subdirectories! */
-void EraseDirectory(const ST::string& dirPath);
-
-/* Pass in the Fileman file handle of an OPEN file and it will return..
- * - if its a Real File, the return will be the handle of the REAL file
- * - if its a LIBRARY file, the return will be null */
-File* GetRealFileHandleFromFileManFileHandle(const SGPFile* hFile);
-
-//Gets the amount of free space on the hard drive that the main executeablt is runnning from
-uint64_t GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 
 /***
  * New file manager.
@@ -70,11 +58,11 @@ public:
 	/** Open file for reading. */
 	static SGPFile* openForReading(const ST::string &filename);
 
-	/** Read the whole file as text. */
-	static ST::string fileReadText(SGPFile*);
-
 	/** Open file in the 'Data' directory in case-insensitive manner. */
 	static RustPointer<File> openForReadingCaseInsensitive(const ST::string& folderPath, const ST::string& filename);
+
+	/* Delete the file at path. */
+	static void deleteFile(const ST::string &path);
 
 	/* ------------------------------------------------------------
 	 * Other operations
@@ -84,6 +72,45 @@ public:
 	 * If directory already exists, do nothing.
 	 * If failed to create, raise an exception. */
 	static void createDir(const ST::string& path);
+
+	/* Removes ALL FILES in the specified directory, but leaves the directory alone.
+ 	 * Does not affect any subdirectories! */
+	static void eraseDirectory(const ST::string& dirPath);
+
+	/**
+	 * Find all files with the given extension in the given directory.
+	 * @param dirPath Path to the directory
+	 * @param extension Extension (e.g. "txt")
+	 * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems.
+	 * @param returnOnlyNames When True, return only names (without the directory path) except when resursive is True
+	 * @param sortResults When True, sort found paths.
+	 * @param recursive When True, recurse into subs. Function returns full path regardless of returnOnlyNames
+	 * @return List of paths (dir + filename) or filenames. */
+	static std::vector<ST::string>
+	findFilesInDir(const ST::string& dirPath,
+			const ST::string& ext,
+			bool caseInsensitive,
+			bool returnOnlyNames,
+			bool sortResults = false,
+			bool recursive = false);
+
+	/**
+	 * Find all files in a directory.
+	 * @param dirPath Path to the directory
+	 * @param sortResults When True, sort found paths.
+	 * @param recursive When True, recurse into subs.
+	 * @return List of paths (dir + filename). */
+	static std::vector<ST::string>
+	findAllFilesInDir(const ST::string& dirPath, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
+
+	/**
+	 * Find all directories in directory
+	 * @param dirPath Path to the directory
+	 * @param sortResults When True, sort found paths.
+	 * @param recursive When True, recurse into subs.
+	 * @return List of paths (dir + filename). */
+	static std::vector<ST::string>
+	findAllDirsInDir(const ST::string& dirPath, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
 
 	/** Join two path components. */
 	static ST::string joinPaths(const ST::string& first, const ST::string& second);
@@ -103,6 +130,9 @@ public:
 	/** Get filename from the path without extension. */
 	static ST::string getFileNameWithoutExt(const ST::string& path);
 
+	/* Resolve existing components of a path in a case insensitive manner */
+	static ST::string resolveExistingComponents(const ST::string& path);
+
 	static RustPointer<File> openFileForReading(const ST::string& path);
 
 	/** Open file in the given folder in case-insensitive manner.
@@ -111,6 +141,15 @@ public:
 
 	/** Convert File to HWFile. */
 	static SGPFile* getSGPFileFromFile(File* f);
+
+	/** Check if path exists and is a file */
+	static bool isFile(const ST::string& path);
+
+	/** Check if path exists and is a directory */
+	static bool isDir(const ST::string& path);
+
+	/** Check if path is read only. Throws when path does not exist */
+	static bool isReadOnly(const ST::string& path);
 
 	/** Check file existance. */
 	static bool checkFileExistance(const ST::string& folder, const ST::string& fileName);
@@ -123,44 +162,10 @@ public:
 
 	/** Get last modified time in seconds since UNIX epoch */
 	static double getLastModifiedTime(const ST::string& path);
+
+	//Gets the amount of free space on the hard drive that the main executeablt is runnning from
+	static uint64_t getFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
 private:
 	/** Private constructor to avoid instantiation. */
 	FileMan() {};
 };
-
-/**
- * Find all files with the given extension in the given directory.
- * @param dirPath Path to the directory
- * @param extension Extension (e.g. "txt")
- * @param caseIncensitive When True, do case-insensitive search even of case-sensitive file-systems.
- * @param returnOnlyNames When True, return only names (without the directory path) except when resursive is True
- * @param sortResults When True, sort found paths.
- * @param recursive When True, recurse into subs. Function returns full path regardless of returnOnlyNames
- * @return List of paths (dir + filename) or filenames. */
-std::vector<ST::string>
-FindFilesInDir(const ST::string& dirPath,
-		const ST::string& ext,
-		bool caseInsensitive,
-		bool returnOnlyNames,
-		bool sortResults = false,
-		bool recursive = false);
-
-/**
- * Find all files in a directory.
- * @param dirPath Path to the directory
- * @param sortResults When True, sort found paths.
- * @param recursive When True, recurse into subs.
- * @return List of paths (dir + filename). */
-std::vector<ST::string>
-FindAllFilesInDir(const ST::string& dirPath, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
-
-/**
- * Find all directories in directory
- * @param dirPath Path to the directory
- * @param sortResults When True, sort found paths.
- * @param recursive When True, recurse into subs.
- * @return List of paths (dir + filename). */
-std::vector<ST::string>
-FindAllDirsInDir(const ST::string& dirPath, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
-
-#endif

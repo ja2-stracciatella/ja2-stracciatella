@@ -92,6 +92,12 @@ public:
 	/* Get last modified time of a user's private file. */
 	virtual double getUserPrivateFileLastModifiedTime(const ST::string& filename) const = 0;
 
+	/** Create user private directory. */
+	virtual void createUserPrivateDirectory(const ST::string& dirname) const = 0;
+
+	/** Check if user private directory exists and is a directory. */
+	virtual bool isUserPrivateDir(const ST::string& dirname) const = 0;
+
 	/* Open a game resource file for reading. */
 	virtual SGPFile* openGameResForReading(const ST::string& filename) const = 0;
 

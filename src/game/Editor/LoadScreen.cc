@@ -156,12 +156,12 @@ static void ChangeDirectory(const ST::string directory, bool resetState) {
 		if (FileMan::getParentPath(gCurrentDirectory, false) != "") {
 			gFileList.push_back(FileDialogEntry { FileType::Parent, ".." });
 		}
-		std::vector<ST::string> dirs = FindAllDirsInDir(directory.c_str(), true, false, true);
+		std::vector<ST::string> dirs = FileMan::findAllDirsInDir(directory.c_str(), true, false, true);
 		for (const ST::string &dir : dirs)
 		{
 			gFileList.push_back(FileDialogEntry { FileType::Directory, dir });
 		}
-		std::vector<ST::string> files = FindAllFilesInDir(directory.c_str(), true, false, true);
+		std::vector<ST::string> files = FileMan::findAllFilesInDir(directory.c_str(), true, false, true);
 		for (const ST::string &file : files)
 		{
 			gFileList.push_back(FileDialogEntry { FileType::File, file });
@@ -223,7 +223,7 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 			if( curr != gFileList.end() )
 			{
 				try {
-					FileDelete(gFileForIO);
+					FileMan::deleteFile(gFileForIO);
 					ChangeDirectory(gCurrentDirectory, false);
 					if( gFileList.empty() )
 					{
@@ -377,9 +377,10 @@ ScreenID LoadSaveScreenHandle(void)
 			auto filename = ExtractFilenameFromFields();
 			auto absolutePath = FileMan::joinPaths(gCurrentDirectory, filename);
 			bool readonly = false;
-			bool readonlySucceeded = Fs_getReadOnly(gFileForIO.c_str(), &readonly);
-			if (!readonlySucceeded) {
-				STLOGE("Error determining readonly status for file {}: {}", gFileForIO, getRustError());
+			try {
+				readonly = FileMan::isReadOnly(absolutePath);
+			} catch (const std::runtime_error& ex) {
+				STLOGE("Error determining readonly status for file {}: {}", absolutePath, ex.what());
 			}
 			ST::string str;
 			if (readonly)
@@ -402,7 +403,7 @@ ScreenID LoadSaveScreenHandle(void)
 			if (filename == "..") {
 				absolutePath = FileMan::getParentPath(gCurrentDirectory, false);
 			}
-			if (Fs_isDir(absolutePath.c_str())) {
+			if (FileMan::isDir(absolutePath)) {
 				ChangeDirectory(absolutePath, true);
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
@@ -415,11 +416,15 @@ ScreenID LoadSaveScreenHandle(void)
 				return LOADSAVE_SCREEN;
 			}
 			gFileForIO = absolutePath;
-			if ( Fs_exists(absolutePath.c_str()) )
+			if ( FileMan::checkPathExistance(absolutePath) )
 			{
 				gfFileExists = TRUE;
 				gfReadOnly = false;
-				Fs_getReadOnly(absolutePath.c_str(), &gfReadOnly);
+				try {
+					gfReadOnly = FileMan::isReadOnly(absolutePath);
+				} catch (const std::runtime_error& ex) {
+					STLOGE("Error determining readonly status for file {}: {}", absolutePath, ex.what());
+				}
 				if( gfReadOnly )
 					CreateMessageBox( " File is read only!  Choose a different name? " );
 				else
@@ -437,7 +442,7 @@ ScreenID LoadSaveScreenHandle(void)
 			if (filename == "..") {
 				absolutePath = FileMan::getParentPath(gCurrentDirectory, false);
 			}
-			if (Fs_isDir(absolutePath.c_str())) {
+			if (FileMan::isDir(absolutePath)) {
 				ChangeDirectory(absolutePath, true);
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;

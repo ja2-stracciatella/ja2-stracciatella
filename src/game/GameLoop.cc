@@ -140,7 +140,7 @@ try
 		if( guiCurrentScreen == MAP_SCREEN || guiCurrentScreen == GAME_SCREEN || guiCurrentScreen == SAVE_LOAD_SCREEN )
 		{
 			// Make sure the user has enough hard drive space
-			uint64_t uiSpaceOnDrive = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom();
+			uint64_t uiSpaceOnDrive = FileMan::getFreeSpaceOnHardDriveWhereGameIsRunningFrom();
 			if( uiSpaceOnDrive < REQUIRED_FREE_SPACE )
 			{
 				ST::string zSpaceOnDrive = ST::format("{.2f}", uiSpaceOnDrive / (FLOAT)BYTESINMEGABYTE);
