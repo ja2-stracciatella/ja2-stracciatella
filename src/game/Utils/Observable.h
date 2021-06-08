@@ -66,8 +66,9 @@ public:
 	 */
 	void notify(ARG1 arg1 = ARG1(), ARGS... args) const
 	{
-	    if (listeners.empty())
+	    if (listeners.empty()) {
 	        SLOGD("Observable has no listeners");
+		}
 
 		for (auto l : listeners)
 		{

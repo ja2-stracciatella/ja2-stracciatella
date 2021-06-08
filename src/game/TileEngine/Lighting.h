@@ -158,6 +158,4 @@ const char* LightSpriteGetTypeName(const LIGHT_SPRITE*);
 
 void CreateBiasedShadedPalettes(UINT16* Shades[16], const SGPPaletteEntry ShadePal[256]);
 
-void LoadShadeTablesFromTextFile(void);
-
 #endif

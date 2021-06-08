@@ -180,8 +180,6 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	RustPointer<char> stracciatellaHome{EngineOptions_getStracciatellaHome()};
 	m_userHomeDir = stracciatellaHome.get();
 
-	m_dataDir = FileMan::resolveExistingComponents(FileMan::joinPaths(vanillaGameDir.get(), BASEDATADIR));
-
 	m_gameVersion = EngineOptions_getResourceVersion(m_engineOptions.get());
 
 	m_bobbyRayNewInventory = NULL;
@@ -222,7 +220,6 @@ void DefaultContentManager::logConfiguration() const {
 	STLOGI("JA2 Home Dir:                  '{}'", m_userHomeDir);
 	STLOGI("Root game resources directory: '{}'", vanillaGameDir.get());
 	STLOGI("Extra data directory:          '{}'", assetsDir.get());
-	STLOGI("Data directory:                '{}'", m_dataDir);
 	STLOGI("Saved games directory:         '{}'", getSavedGamesFolder());
 	STLOGI("Temporary directory:           '{}'", m_tempDirPath);
 }
@@ -554,14 +551,8 @@ bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
 SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& filename) const
 {
 	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
-	RustPointer<File> file = FileMan::openFileForReading(path);
-	if (!file)
-	{
-		RustPointer<char> err(getRustError());
-		ST::string buf = ST::format("DefaultContentManager::openUserPrivateFileForReading: {}", err.get());
-		throw std::runtime_error(buf.to_std_string());
-	}
-	return FileMan::getSGPFileFromFile(file.release());
+	SGPFile* file = FileMan::openForReading(path);
+	return file;
 }
 
 /** Open user's private file (e.g. saved game, settings) for writing. */
@@ -1094,7 +1085,7 @@ bool DefaultContentManager::loadGameData()
 std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
 {
 	AutoSGPFile f(openGameResForReading(fileName));
-	ST::string jsonData = FileReadAsText(f);
+	ST::string jsonData = FileReadStringToEnd(f);
 
 	auto document = std::make_unique<rapidjson::Document>();
 	if (document->Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())

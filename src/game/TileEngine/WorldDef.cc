@@ -281,19 +281,8 @@ static void AddTileSurface(ST::string const& filename, UINT32 const type)
 	gbNewTileSurfaceLoaded[type] = TRUE;
 }
 
-
-extern BOOLEAN gfLoadShadeTablesFromTextFile;
-
-
 void BuildTileShadeTables()
 {
-	if (gfLoadShadeTablesFromTextFile)
-	{ /* Because we're tweaking the RGB values in the text file, always force
-		 * rebuild the shadetables so that the user can tweak them in the same exe
-		 * session. */
-		std::fill(std::begin(gbNewTileSurfaceLoaded), std::end(gbNewTileSurfaceLoaded), 1);
-	}
-
 	for (UINT32 i = 0; i != NUMBEROFTILETYPES; ++i)
 	{
 		TILE_IMAGERY const* const t = gTileSurfaceArray[i];
@@ -2059,12 +2048,7 @@ catch (const std::runtime_error& err)
 void LoadWorldAbsolute(const ST::string &absolutePath)
 try
 {
-	auto rawFile = FileMan::openFileForReading(absolutePath);
-	if (!rawFile) {
-		auto err = ST::format("LoadWorldAbsolute: Could not open map from absolute path: {}: {}", absolutePath, getRustError());
-		throw std::runtime_error(err.c_str());
-	}
-	AutoSGPFile f(FileMan::getSGPFileFromFile(rawFile.release()));
+	AutoSGPFile f{FileMan::openForReading(absolutePath)};
 	LoadWorldFromSGPFile(f);
 }
 catch (const std::runtime_error& err)
@@ -2076,8 +2060,6 @@ catch (const std::runtime_error& err)
 /// Internal load world that reads from sgp file
 void LoadWorldFromSGPFile(SGPFile *f)
 {
-	LoadShadeTablesFromTextFile();
-
 	// Reset flags for outdoors/indoors
 	gfBasement = FALSE;
 	gfCaves    = FALSE;

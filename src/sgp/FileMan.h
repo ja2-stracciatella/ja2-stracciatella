@@ -8,6 +8,7 @@
 #include <vector>
 
 void FileRead( SGPFile*, void*       pDest, size_t uiBytesToRead);
+std::vector<uint8_t> FileReadToEnd(SGPFile* const f);
 size_t FileReadAtMost( SGPFile*, void*       pDest, size_t uiBytesToRead);
 void FileReadExact(SGPFile* const f, void* const pDest, size_t const uiBytesToRead);
 void FileWrite(SGPFile*, void const* pDest, size_t uiBytesToWrite);
@@ -16,8 +17,7 @@ void FileWrite(SGPFile*, void const* pDest, size_t uiBytesToWrite);
 ST::string FileReadString(SGPFile* const f, size_t const uiBytesToRead);
 
 /** Read the whole file as text. */
-ST::string FileReadAsText(SGPFile*);
-
+ST::string FileReadStringToEnd(SGPFile*);
 SDL_RWops* FileGetRWOps(SGPFile* const f);
 
 template<typename T, typename U> static inline void FileWriteArray(SGPFile* const f, T const& n, U const* const data)
@@ -38,10 +38,6 @@ UINT32 FileGetSize(const SGPFile*);
 class FileMan
 {
 public:
-
-	/** Find config folder and switch into it. */
-	static void switchTmpFolder(const ST::string& homeDir);
-
 	/** Open file for writing.
 	 * If file is missing it will be created.
 	 * If file exists, it's content will be removed. */
@@ -57,9 +53,6 @@ public:
 
 	/** Open file for reading. */
 	static SGPFile* openForReading(const ST::string &filename);
-
-	/** Open file in the 'Data' directory in case-insensitive manner. */
-	static RustPointer<File> openForReadingCaseInsensitive(const ST::string& folderPath, const ST::string& filename);
 
 	/* Delete the file at path. */
 	static void deleteFile(const ST::string &path);
@@ -133,20 +126,14 @@ public:
 	/* Resolve existing components of a path in a case insensitive manner */
 	static ST::string resolveExistingComponents(const ST::string& path);
 
-	static RustPointer<File> openFileForReading(const ST::string& path);
-
-	/** Open file in the given folder in case-insensitive manner.
-	 * @return file descriptor or null if file is not found. */
-	static RustPointer<File> openFileCaseInsensitive(const ST::string& folderPath, const ST::string& filename, uint8_t open_options);
-
-	/** Convert File to HWFile. */
-	static SGPFile* getSGPFileFromFile(File* f);
-
 	/** Check if path exists and is a file */
 	static bool isFile(const ST::string& path);
 
 	/** Check if path exists and is a directory */
 	static bool isDir(const ST::string& path);
+
+	/** Check if path is absolute */
+	static bool isAbsolute(const ST::string& path);
 
 	/** Check if path is read only. Throws when path does not exist */
 	static bool isReadOnly(const ST::string& path);

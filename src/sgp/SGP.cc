@@ -468,7 +468,6 @@ int main(int argc, char* argv[])
 		InitializeMemoryManager();
 
 		SLOGD("Initializing Game Resources");
-		FileMan::switchTmpFolder(configFolderPath.get());
 
 		DefaultContentManager *cm;
 

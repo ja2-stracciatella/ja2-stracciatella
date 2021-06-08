@@ -163,7 +163,7 @@ TEST(FileManTest, ReadTextFile)
 
 	SGPFile* forReading = FileMan::openForReading(pathA);
 	ASSERT_NE(forReading, nullptr);
-	ST::string content = FileReadAsText(forReading);
+	ST::string content = FileReadStringToEnd(forReading);
 	ASSERT_STREQ(content.c_str(), "foo bar baz");
 	FileClose(forReading);
 }

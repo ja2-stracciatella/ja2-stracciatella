@@ -145,8 +145,8 @@ static void ChangeDirectory(const ST::string directory, bool resetState) {
 		iCurrFileShown = iLastFileClicked = -1;
 	}
 
-	RustPointer<char> filename(Path_filename(gFileForIO.c_str()));
-	gCurrentFilename = ST::format("{}", filename.get());
+	ST::string filename = FileMan::getFileName(gFileForIO);
+	gCurrentFilename = filename;
 
 	SetInputFieldString(0, gCurrentFilename);
 	SetInputFieldString(2, gCurrentDirectory);
@@ -854,13 +854,13 @@ static ScreenID ProcessFileIO(void)
 {
 	INT16 usStartX, usStartY;
 	ST::string label;
-	RustPointer<char> ioFilename(Path_filename(gFileForIO.c_str()));
+	ST::string ioFilename(FileMan::getFileName(gFileForIO));
 	switch( gbCurrentFileIOStatus )
 	{
 		case INITIATE_MAP_SAVE:	//draw save message
 			SaveFontSettings();
 			SetFontAttributes(FONT16ARIAL, FONT_LTKHAKI, FONT_DKKHAKI);
-			label = ST::format("Saving map:  {}", ioFilename.get());
+			label = ST::format("Saving map:  {}", ioFilename);
 			usStartX = (SCREEN_WIDTH - StringPixLength(label, FONT16ARIAL)) / 2;
 			usStartY = 180 - GetFontHeight(FONT16ARIAL) / 2;
 			MPrint(usStartX, usStartY, label);
@@ -885,10 +885,10 @@ static ScreenID ProcessFileIO(void)
 			if( gfShowPits )
 				AddAllPits();
 
-			SetGlobalSectorValues(ioFilename.get());
+			SetGlobalSectorValues(ioFilename);
 
 			if( gfGlobalSummaryExists )
-				UpdateSectorSummary( ioFilename.get(), gfUpdateSummaryInfo );
+				UpdateSectorSummary( ioFilename, gfUpdateSummaryInfo );
 
 			iCurrentAction = ACTION_NULL;
 			gbCurrentFileIOStatus = IOSTATUS_NONE;
@@ -919,7 +919,7 @@ static ScreenID ProcessFileIO(void)
 			try
 			{
 				UINT32 const start = SDL_GetTicks();
-				if (!Path_isAbsolute(gFileForIO.c_str())) {
+				if (!FileMan::isAbsolute(gFileForIO)) {
 					LoadWorld(gFileForIO);
 				} else {
 					LoadWorldAbsolute(gFileForIO);
@@ -938,7 +938,7 @@ static ScreenID ProcessFileIO(void)
 				CreateMessageBox( " Error loading file.  Try another filename?" );
 				return LOADSAVE_SCREEN;
 			}
-			SetGlobalSectorValues(ioFilename.get());
+			SetGlobalSectorValues(ioFilename);
 
 			RestoreFontSettings();
 

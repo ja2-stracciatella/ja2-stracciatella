@@ -12,6 +12,8 @@ use stracciatella::vfs::{Vfs, VfsFile as RVfsFile, VfsLayer};
 use crate::c::common::*;
 use crate::c::vec::VecCString;
 
+use super::vec::VecU8;
+
 /// Concrete Type for a VFS file as we cannot return Box<dyn xxx> in the C API
 pub struct VfsFile(Box<dyn RVfsFile>);
 
@@ -174,6 +176,27 @@ pub unsafe extern "C" fn VfsFile_read(file: *mut VfsFile, buffer: *mut u8, lengt
         Err(err) => {
             remember_rust_error(format!("VfsFile_read {} {}: {}", file, length, err));
             usize::MAX
+        }
+    }
+}
+
+/// Reads all available data from the virtual file.
+/// Returns the number of bytes read or ´usize::MAX´ if there is an error.
+/// Sets the rust error.
+///
+/// # Safety
+///
+/// The function panics if the passed in pointers are not valid
+#[no_mangle]
+pub unsafe extern "C" fn VfsFile_readToEnd(file: *mut VfsFile) -> *mut VecU8 {
+    forget_rust_error();
+    let file = &mut unsafe_mut(file).0;
+    let mut b: Vec<u8> = vec![];
+    match file.read_to_end(&mut b) {
+        Ok(_) => into_ptr(VecU8::from(b)),
+        Err(err) => {
+            remember_rust_error(format!("VfsFile_readToEnd {}: {}", file, err));
+            std::ptr::null_mut()
         }
     }
 }

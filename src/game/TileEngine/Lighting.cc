@@ -184,48 +184,6 @@ static UINT16 gusShadeLevels[16][3] =
 	{  48, 222,  48 }
 };
 
-//Set this true if you want the shadetables to be loaded from the text file.
-BOOLEAN gfLoadShadeTablesFromTextFile = FALSE;
-
-void LoadShadeTablesFromTextFile()
-{
-	INT32 i, j;
-	INT32 num;
-	if( gfLoadShadeTablesFromTextFile )
-	{
-		RustPointer<VecU8> vec(Fs_read("ShadeTables.txt"));
-		if (!vec)
-		{
-			RustPointer<char> err(getRustError());
-			SLOGA("LoadShadeTablesFromTextFile: %s", err.get());
-			return;
-		}
-		if (vec)
-		{
-			ST::string data(reinterpret_cast<const char*>(VecU8_as_ptr(vec.get())), VecU8_len(vec.get()));
-			vec.reset(nullptr);
-
-			std::stringstream ss(data.c_str());
-			for( i = 0; i < 16; i++ )
-			{
-				for( j = 0; j < 3; j++ )
-				{
-					ST::string str;
-					if (ss >> str && sscanf(str.c_str(), "%d", &num) == 1)
-					{
-						gusShadeLevels[i][j] = (UINT16)num;
-					}
-					else
-					{
-						gusShadeLevels[i][j] = 0;
-					}
-				}
-			}
-		}
-	}
-}
-
-
 static LightTemplate* LightLoad(const char* pFilename);
 
 
@@ -237,8 +195,6 @@ InitLightingSystem
 ***************************************************************************************/
 void InitLightingSystem(void)
 {
-	LoadShadeTablesFromTextFile();
-
 	// init all light lists
 	std::fill(std::begin(g_light_templates), std::end(g_light_templates), LightTemplate{});
 

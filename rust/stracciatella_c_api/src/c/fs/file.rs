@@ -9,6 +9,7 @@ use std::usize;
 use stracciatella::fs;
 
 use crate::c::common::*;
+use crate::c::vec::VecU8;
 
 /// Opens the file for reading.
 /// @see https://doc.rust-lang.org/std/fs/struct.OpenOptions.html#method.read
@@ -108,6 +109,27 @@ pub unsafe extern "C" fn File_read(file: *mut File, buf: *mut u8, buf_len: usize
         Err(err) => {
             remember_rust_error(format!("File_read {}: {}", buf_len, err));
             usize::MAX
+        }
+    }
+}
+
+/// Reads all available data from the file to the buffer.
+/// Sets the rust error.
+/// @see https://doc.rust-lang.org/std/io/trait.Read.html#tymethod.read
+///
+/// # Safety
+///
+/// The function panics if the passed in pointers are not valid
+#[no_mangle]
+pub unsafe extern "C" fn File_readToEnd(file: *mut File) -> *mut VecU8 {
+    forget_rust_error();
+    let file = unsafe_mut(file);
+    let mut buf = vec![];
+    match file.inner.read_to_end(&mut buf) {
+        Ok(_) => into_ptr(VecU8::from(buf)),
+        Err(err) => {
+            remember_rust_error(format!("File_readToEnd: {}", err));
+            ptr::null_mut()
         }
     }
 }

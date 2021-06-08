@@ -3,6 +3,7 @@
 #define SOL_CHECK_ARGUMENTS 1
 #define SOL_PRINT_ERRORS 1
 #define SOL_ALL_SAFETIES_ON 1
+#include <limits>
 #include <sol/sol.hpp>  // this needs to be included first
 #include "STStringHandler.h"
 
@@ -64,7 +65,7 @@ void JA2Require(std::string scriptFileName)
 	}
 	
 	STLOGD("Loading LUA script file: {}", scriptFileName);
-	std::string scriptbody = FileReadAsText(
+	std::string scriptbody = FileReadStringToEnd(
 		AutoSGPFile(GCM->openGameResForReading(SCRIPTS_DIR "/" + scriptFileName))
 	).to_std_string();
 	lua.script(scriptbody, ST::format("@{}", scriptFileName).to_std_string());
