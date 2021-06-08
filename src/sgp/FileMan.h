@@ -38,10 +38,6 @@ UINT32 FileGetSize(const SGPFile*);
 class FileMan
 {
 public:
-
-	/** Find config folder and switch into it. */
-	static void switchTmpFolder(const ST::string& homeDir);
-
 	/** Open file for writing.
 	 * If file is missing it will be created.
 	 * If file exists, it's content will be removed. */
@@ -57,9 +53,6 @@ public:
 
 	/** Open file for reading. */
 	static SGPFile* openForReading(const ST::string &filename);
-
-	/** Open file in the 'Data' directory in case-insensitive manner. */
-	static RustPointer<File> openForReadingCaseInsensitive(const ST::string& folderPath, const ST::string& filename);
 
 	/* Delete the file at path. */
 	static void deleteFile(const ST::string &path);
@@ -134,13 +127,6 @@ public:
 	static ST::string resolveExistingComponents(const ST::string& path);
 
 	static RustPointer<File> openFileForReading(const ST::string& path);
-
-	/** Open file in the given folder in case-insensitive manner.
-	 * @return file descriptor or null if file is not found. */
-	static RustPointer<File> openFileCaseInsensitive(const ST::string& folderPath, const ST::string& filename, uint8_t open_options);
-
-	/** Convert File to HWFile. */
-	static SGPFile* getSGPFileFromFile(File* f);
 
 	/** Check if path exists and is a file */
 	static bool isFile(const ST::string& path);

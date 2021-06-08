@@ -106,10 +106,6 @@ public:
 	/** Get folder for video capture. */
 	virtual ST::string getVideoCaptureFolder() const override;
 
-	const ST::string& getDataDir() { return m_dataDir; }
-
-	const ST::string& getExternalizedDataDir() { return m_externalizedDataPath; }
-
 	/** Get folder for saved games. */
 	virtual ST::string getSavedGamesFolder() const override;
 
@@ -204,9 +200,7 @@ public:
 
 protected:
 	RustPointer<EngineOptions> m_engineOptions;
-	ST::string m_dataDir;
 	ST::string m_userHomeDir;
-	ST::string m_externalizedDataPath;
 
 	RustPointer<TempDir> m_tempDir;
 	ST::string m_tempDirPath;

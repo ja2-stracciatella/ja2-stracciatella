@@ -14,47 +14,6 @@
 #define LOCAL_CURRENT_DIR "tmp"
 #define SDL_RWOPS_SGP 222
 
-
-/** Find config folder and switch into it. */
-void FileMan::switchTmpFolder(const ST::string& home)
-{
-	// Create another directory and set is as the current directory for the process
-	// Temporary files will be created in this directory.
-	// ----------------------------------------------------------------------------
-
-	RustPointer<char> tmpPath{Path_push(home.c_str(), LOCAL_CURRENT_DIR)};
-	if (!Fs_isDir(tmpPath.get()) && !Fs_createDir(tmpPath.get()))
-	{
-		RustPointer<char> err{getRustError()};
-		STLOGE("Unable to create tmp directory '{}': {}", tmpPath.get(), err.get());
-		throw std::runtime_error("Unable to create tmp directory");
-	}
-	if (!Env_setCurrentDir(tmpPath.get()))
-	{
-		RustPointer<char> err{getRustError()};
-		STLOGE("Unable to switch to tmp directory '{}': {}", tmpPath.get(), err.get());
-		throw std::runtime_error("Unable to switch to tmp directory");
-	}
-}
-
-
-RustPointer<File> FileMan::openFileCaseInsensitive(const ST::string& folderPath, const ST::string& filename, uint8_t open_options)
-{
-	RustPointer<char> path{Fs_resolveExistingComponents(filename.c_str(), folderPath.c_str(), true)};
-	return RustPointer<File>{File_open(path.get(), open_options)};
-}
-
-void FileMan::deleteFile(const ST::string& path)
-{
-	if (Fs_exists(path.c_str()) && !Fs_removeFile(path.c_str()))
-	{
-		RustPointer<char> err{getRustError()};
-		STLOGE("Deleting file '{}' failed: {}", path, err.get());
-		throw std::runtime_error("Deleting file failed");
-	}
-}
-
-
 void FileClose(SGPFile* f)
 {
 	if (f->flags & SGPFILE_REAL)
@@ -163,6 +122,15 @@ void FileWrite(SGPFile* const f, void const* const pDest, size_t const uiBytesTo
 		SLOGE("FileWrite: %s", err.get());
 		throw std::runtime_error("Writing to file failed");
 	}
+}
+
+SGPFile* GetSGPFileFromFile(File* f)
+{
+	Assert(f);
+	SGPFile *sgp_file = new SGPFile{};
+	sgp_file->flags  = SGPFILE_REAL;
+	sgp_file->u.file = f;
+	return sgp_file;
 }
 
 static int64_t SGPSeekRW(SDL_RWops *context, int64_t offset, int whence)
@@ -316,6 +284,15 @@ UINT32 FileGetSize(const SGPFile* f)
 	return static_cast<UINT32>(len);
 }
 
+void FileMan::deleteFile(const ST::string& path)
+{
+	if (Fs_exists(path.c_str()) && !Fs_removeFile(path.c_str()))
+	{
+		RustPointer<char> err{getRustError()};
+		STLOGE("Deleting file '{}' failed: {}", path, err.get());
+		throw std::runtime_error("Deleting file failed");
+	}
+}
 
 void FileMan::createDir(const ST::string& path)
 {
@@ -394,17 +371,6 @@ ST::string FileMan::resolveExistingComponents(const ST::string& path)
 	return resolved.get();
 }
 
-
-SGPFile* FileMan::getSGPFileFromFile(File* f)
-{
-	Assert(f);
-	SGPFile *sgp_file = new SGPFile{};
-	sgp_file->flags  = SGPFILE_REAL;
-	sgp_file->u.file = f;
-	return sgp_file;
-}
-
-
 /** Open file for writing.
  * If file is missing it will be created.
  * If file exists, it's content will be removed. */
@@ -423,7 +389,7 @@ SGPFile* FileMan::openForWriting(const ST::string& filename, bool truncate)
 		STLOGE("FileMan::openForWriting '{}' {}: {}", filename, truncate, err.get());
 		throw std::runtime_error("FileMan::openForWriting failed");
 	}
-	return getSGPFileFromFile(file.release());
+	return GetSGPFileFromFile(file.release());
 }
 
 
@@ -438,7 +404,7 @@ SGPFile* FileMan::openForAppend(const ST::string& filename)
 		STLOGE("FileMan::openForAppend '{}': {}", filename, err.get());
 		throw std::runtime_error("FileMan::openForAppend failed");
 	}
-	return getSGPFileFromFile(file.release());
+	return GetSGPFileFromFile(file.release());
 }
 
 
@@ -453,7 +419,7 @@ SGPFile* FileMan::openForReadWrite(const ST::string& filename)
 		STLOGE("FileMan::openForReadWrite '{}': {}", filename, err.get());
 		throw std::runtime_error("FileMan::openForReadWrite failed");
 	}
-	return getSGPFileFromFile(file.release());
+	return GetSGPFileFromFile(file.release());
 }
 
 /** Open file for reading. */
@@ -466,13 +432,7 @@ SGPFile* FileMan::openForReading(const ST::string &filename)
 		STLOGE("FileMan::openForReading '{}': {}", filename, err.get());
 		throw std::runtime_error("FileMan::openForReading failed");
 	}
-	return getSGPFileFromFile(file.release());
-}
-
-/** Open file for reading.  Look file in folderPath in case-insensitive manner. */
-RustPointer<File> FileMan::openForReadingCaseInsensitive(const ST::string& folderPath, const ST::string& filename)
-{
-	return openFileCaseInsensitive(folderPath, filename, FILE_OPEN_READ);
+	return GetSGPFileFromFile(file.release());
 }
 
 std::vector<ST::string>

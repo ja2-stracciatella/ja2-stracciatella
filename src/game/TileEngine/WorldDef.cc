@@ -2059,12 +2059,7 @@ catch (const std::runtime_error& err)
 void LoadWorldAbsolute(const ST::string &absolutePath)
 try
 {
-	auto rawFile = FileMan::openFileForReading(absolutePath);
-	if (!rawFile) {
-		auto err = ST::format("LoadWorldAbsolute: Could not open map from absolute path: {}: {}", absolutePath, getRustError());
-		throw std::runtime_error(err.c_str());
-	}
-	AutoSGPFile f(FileMan::getSGPFileFromFile(rawFile.release()));
+	AutoSGPFile f{FileMan::openForReading(absolutePath)};
 	LoadWorldFromSGPFile(f);
 }
 catch (const std::runtime_error& err)
