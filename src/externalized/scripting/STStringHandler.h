@@ -1,5 +1,6 @@
 #pragma once
 #define SOL_ALL_SAFETIES_ON 1
+#include <limits>
 #include <sol/sol.hpp>
 #include <string_theory/string>
 #include <string>
