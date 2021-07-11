@@ -28,6 +28,15 @@
 BOOLEAN gfRestoringEnemySoldiersFromTempFile = FALSE;
 BOOLEAN gfRestoringCiviliansFromTempFile = FALSE;
 
+static void RemoveTempFile(SectorFlags const file_flag, INT16 const x, INT16 const y, INT8 const z)
+{
+	if (!GetSectorFlagStatus(x, y, z, file_flag)) return;
+
+	// Delete any temp file that is here and toast the flag that says one exists.
+	ReSetSectorFlag(x, y, z, file_flag);
+	GCM->deleteTempFile(GetMapTempFileName(file_flag, x, y, z));
+}
+
 // OLD SAVE METHOD:  This is the old way of loading the enemies and civilians
 void LoadEnemySoldiersFromTempFile()
 {
@@ -80,7 +89,7 @@ void LoadEnemySoldiersFromTempFile()
 	{
 		// The file has aged.  Use the regular method for adding soldiers.
 		f.Deallocate(); // Close the file before deleting it
-		GCM->deleteTempFile(mapFileName);
+		RemoveTempFile(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z);
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		return;
 	}
@@ -294,7 +303,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 			ubStrategicAdmins != ubNumAdmins ||
 			ubStrategicCreatures != ubNumCreatures)
 		{
-			GCM->deleteTempFile(mapFileName);
+			RemoveTempFile(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z);
 			return;
 		}
 	}
@@ -347,7 +356,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	{
 		// The file has aged.  Use the regular method for adding soldiers.
 		f.Deallocate(); // Close the file before deleting it
-		GCM->deleteTempFile(mapFileName);
+		RemoveTempFile(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z);
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		return;
 	}
@@ -764,7 +773,7 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 	if (slots == 0)
 	{
 		// No need to save anything, so return successfully
-		GCM->deleteTempFile(mapFileName);
+		RemoveTempFile(file_flag, sSectorX, sSectorY, bSectorZ);
 		return;
 	}
 
