@@ -71,6 +71,9 @@ public:
 	int8_t chance_to_hit_maximum;         //Maximum chance to hit (chance_to_hit_minimum - 100) vanilla 99
 
 	bool always_show_cursor_in_tactical;  // Always show mouse cursor during tactical view (if false, no mourse cursor is shown when moving in real-time mode, selecting a merc, etc)
+	bool show_hit_chance;                 // Show chance-to-hit when pressing 'F' and next to mouse cursor when preparing an attack
+
+	float website_loading_time_scale;     // Scales the loading time of websites on the laptop. Lower value means faster loading. Setting this to 0.0 removes the loading entirely.
 
 	/* IMP */
 	int8_t imp_attribute_max;             // IMP character attribute maximum 0 to 100, vanilla 85
