@@ -57,7 +57,7 @@ impl Cli {
         opts.optopt(
             "",
             "brightness",
-            "Screen brightness (gamma multiplier) value to set where 0.0 is completely dark and 1.0 is normal brightness. Default value is 1.0",
+            "Screen brightness (gamma multiplier) value to set where 0.0 is completely dark and 1.0 is normal brightness. Set to a negative value to disable brightness adjustment. Default value is -1",
             "GAMMA_VALUE"
         );
         opts.optopt(
