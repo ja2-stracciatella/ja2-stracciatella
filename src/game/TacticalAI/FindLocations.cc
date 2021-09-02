@@ -488,7 +488,7 @@ static UINT8 NumberOfTeamMatesAdjacent(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 		sTempGridNo = NewGridNo( sGridNo, DirectionInc( ubLoop ) );
 		if ( sTempGridNo != sGridNo )
 		{
-			const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bLevel);
+			const SOLDIERTYPE* const tgt = WhoIsThere2(sTempGridNo, pSoldier->bLevel);
 			if (tgt != NULL && tgt != pSoldier && tgt->bTeam == pSoldier->bTeam)
 			{
 				ubCount++;
