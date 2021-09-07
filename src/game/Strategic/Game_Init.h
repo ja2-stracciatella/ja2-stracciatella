@@ -2,6 +2,8 @@
 #define __GAME_INIT_H
 #include "Types.h"
 
+void InitGameEngine();
+
 void InitNewGame();
 BOOLEAN AnyMercsHired(void);
 

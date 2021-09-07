@@ -65,13 +65,6 @@ void StrategicMapSecretModel::validateData(const std::vector<const StrategicMapS
 		}
 		uniqueSectors.insert(m->sectorID);
 	}
-
-	if (countNonSAMSites > 2)
-	{
-		// Limitation for now, to maintain vanilla game compatibility.
-		// If there is a need, we can use something like a bitset to provide more map secret slots in saves.
-		SLOGW("There are more than 2 map secrets that are not SAM sites. Only the first 2 will be persisted in saves");
-	}
 }
 
 uint8_t StrategicMapSecretModel::getLandType(bool isSecretFound) const

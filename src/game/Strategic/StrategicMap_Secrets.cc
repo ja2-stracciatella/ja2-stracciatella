@@ -3,14 +3,31 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "LoadSaveData.h"
+#include "Observable.h"
 #include "SamSiteModel.h"
+#include "SaveLoadGameStates.h"
 #include "StrategicMapSecretModel.h"
 #include "TownModel.h"
 
 std::map<uint8_t, BOOLEAN> isSecretFound;
 Observable<UINT8> OnMapSecretFound;
+extern Observable<> BeforeGameSaved;
+extern Observable<> OnGameLoaded;
 
+#define MAPSECRETS_GAMESTATE_KEY "strategicmap_secrets"
+
+static void HandleGameSaved();
+static void HandleGameLoaded();
+
+// on game engine start
 void InitMapSecrets()
+{
+	BeforeGameSaved.addListener("strategicmap_secrets", HandleGameSaved);
+	OnGameLoaded.addListener("strategicmap_secrets", HandleGameLoaded);
+}
+
+// on starting a new campaign
+void ResetMapSecrets()
 {
 	isSecretFound.clear();
 	for (auto s : GCM->getMapSecrets())
@@ -165,4 +182,38 @@ void SetMapSecretStateFromSave(unsigned int const index, BOOLEAN const fFound)
 		}
 	}
 	SLOGW("There is no secret at slot #{}", index);
+}
+
+static void HandleGameSaved()
+{
+	unsigned int i = 0;
+	std::map<ST::string, bool> secretsFound;
+	for (auto s : GCM->getMapSecrets())
+	{
+		if (!s->isSAMSite && (++i > 1))
+		{
+			// the vanilla save format only allows saving 2 map secrets, we will use the extra
+			// data section in saves if we have more
+			ST::string sector = SGPSector{s->sectorID}.AsShortString();
+			secretsFound[sector] = IsSecretFoundAt(s->sectorID);
+		}
+	}
+	if (!secretsFound.empty())
+	{
+		SLOGD("Saving extra map secrets ({} items)", secretsFound.size());
+		g_gameStates.SetMap(MAPSECRETS_GAMESTATE_KEY, secretsFound);
+	}
+}
+
+static void HandleGameLoaded()
+{
+	if (g_gameStates.HasKey(MAPSECRETS_GAMESTATE_KEY))
+	{
+		auto secretsFound = g_gameStates.GetMap<bool>(MAPSECRETS_GAMESTATE_KEY);
+		for (const auto& secretStatus : secretsFound)
+		{
+			SGPSector sector = SGPSector::FromShortString(secretStatus.first);
+			SetSectorSecretAsFound(sector.AsByte(), secretStatus.second);
+		}
+	}
 }

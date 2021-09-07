@@ -7,8 +7,11 @@ class StrategicMapSecretModel;
 
 extern Observable<UINT8> OnMapSecretFound;
 
-// Reset the state of all map secrets
+// Initialize callback hooks, etc
 void InitMapSecrets();
+
+// Reset the state of all map secrets
+void ResetMapSecrets();
 
 // Whether the town was found by the player. Returns TRUE if the town is not hidden (i.e. not defined in map secrets)
 BOOLEAN IsTownFound(INT8 bTownID);
