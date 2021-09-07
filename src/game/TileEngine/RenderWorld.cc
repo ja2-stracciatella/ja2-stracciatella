@@ -33,7 +33,7 @@
 #include "VSurface.h"
 #include "WCheck.h"
 #include "UILayout.h"
-#include "GameState.h"
+#include "GameMode.h"
 #include "Logger.h"
 
 #include <string_theory/format>
@@ -1942,7 +1942,7 @@ static void RenderDynamicWorld(void)
 	sLevelIDs[8] = RENDER_DYNAMIC_TOPMOST;
 	RenderTiles(TILES_DIRTY, gsStartPointX_M, gsStartPointY_M, gsStartPointX_S, gsStartPointY_S, gsEndXS, gsEndYS, 9, sLevelIDs);
 
-	if (!GameState::getInstance()->isEditorMode() || !gfEditMode)
+	if (!GameMode::getInstance()->isEditorMode() || !gfEditMode)
 	{
 		RenderTacticalInterface();
 	}
