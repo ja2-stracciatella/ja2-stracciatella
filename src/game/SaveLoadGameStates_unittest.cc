@@ -39,13 +39,13 @@ TEST(SaveLoadGameStatesTest, getSetMaps)
 {
 	SavedGameStates states;
 
-	states.SetMap("M1", std::map<int32_t, bool>{{3, true},{2, false}});
-	auto map1 = states.GetMap<int32_t, bool>("M1");
-	EXPECT_EQ(map1[3], true);
-	EXPECT_EQ(map1[2], false);
+	states.SetMap("M1", std::map<ST::string, bool>{{"3", true},{"2", false}});
+	auto map1 = states.GetMap<bool>("M1");
+	EXPECT_EQ(map1["3"], true);
+	EXPECT_EQ(map1["2"], false);
 
 	states.SetMap("M2", std::map<ST::string, float>{{"a", 0.5f}});
-	auto map2 = states.GetMap<ST::string, float>("M2");
+	auto map2 = states.GetMap<float>("M2");
 	EXPECT_DOUBLE_EQ(map2["a"], 0.5f);
 }
 
@@ -147,7 +147,7 @@ TEST(SaveLoadGameStatesTest, vectorOfVariant)
 TEST(SaveLoadGameStatesTest, mapOfVariants)
 {
 	SavedGameStates states;
-	auto map = std::map<PRIMITIVE_VALUE, PRIMITIVE_VALUE> {
+	auto map = std::map<ST::string, PRIMITIVE_VALUE> {
 		{ ST::string("f"), 1.5f },
 		{ ST::string("i"), 1 },
 		{ ST::string("b"), false },
@@ -161,7 +161,7 @@ TEST(SaveLoadGameStatesTest, mapOfVariants)
 
 	std::stringstream is(ss.str());
 	states.Deserialize(is);
-	auto map2 = states.Get<std::map<PRIMITIVE_VALUE,PRIMITIVE_VALUE>>("m");
+	auto map2 = states.Get<std::map<ST::string, PRIMITIVE_VALUE>>("m");
 	EXPECT_EQ(std::get<int  >(map2[ST::string("i")]), 1);
 	EXPECT_EQ(std::get<float>(map2[ST::string("f")]), 1.5f);
 	EXPECT_EQ(std::get<bool >(map2[ST::string("b")]), false);

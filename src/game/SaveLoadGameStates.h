@@ -18,7 +18,7 @@ typedef std::variant<bool, int32_t, float, ST::string> PRIMITIVE_VALUE;
 /**
  * Variant on all the data types we support storing in save games
  */
-typedef std::variant<bool, int32_t, float, ST::string, std::vector<PRIMITIVE_VALUE>, std::map<PRIMITIVE_VALUE, PRIMITIVE_VALUE>> STORABLE_TYPE;
+typedef std::variant<bool, int32_t, float, ST::string, std::vector<PRIMITIVE_VALUE>, std::map<ST::string, PRIMITIVE_VALUE>> STORABLE_TYPE;
 
 typedef std::map<ST::string, STORABLE_TYPE> StateTable;
 
@@ -92,23 +92,23 @@ public:
 	 * @param key
 	 * @return a copy of the map
 	 */
-	template<typename K, typename V>
-	std::map<K, V> GetMap(const ST::string& key)
+	template<typename V>
+	std::map<ST::string, V> GetMap(const ST::string& key)
 	{
-		auto stored = std::get<std::map<PRIMITIVE_VALUE, PRIMITIVE_VALUE>>(states.at(key));
-		std::map<K, V> map;
+		auto stored = std::get<std::map<ST::string, PRIMITIVE_VALUE>>(states.at(key));
+		std::map<ST::string, V> map;
 		for (auto& pair : stored)
 		{
-			auto k = std::get<K>(pair.first);
+			auto k = pair.first;
 			map[k] = std::get<V>(pair.second);
 		}
 		return map;
 	}
 
-	template<typename K, typename V>
-	void SetMap(const ST::string& key, std::map<K, V> vec)
+	template<typename T>
+	void SetMap(const ST::string& key, std::map<ST::string, T> vec)
 	{
-		std::map<PRIMITIVE_VALUE, PRIMITIVE_VALUE> stored;
+		std::map<ST::string, PRIMITIVE_VALUE> stored;
 		stored.insert(vec.begin(), vec.end());
 		Set(key, STORABLE_TYPE{stored});
 	}

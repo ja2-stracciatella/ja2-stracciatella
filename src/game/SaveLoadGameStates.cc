@@ -86,12 +86,11 @@ static STORABLE_TYPE ReadFromJSON(const rapidjson::Value& v)
 	}
 	if (v.IsObject())
 	{
-		std::map<PRIMITIVE_VALUE, PRIMITIVE_VALUE> map;
+		std::map<ST::string, PRIMITIVE_VALUE> map;
 		for (auto& el : v.GetObject())
 		{
-			auto key = readVal(el.name);
-			auto val = readVal(el.value);
-			map[key] = val;
+			auto key = ST::string(el.name.GetString());
+			map[key] = readVal(el.value);
 		}
 		return map;
 	}
@@ -121,7 +120,7 @@ static void WriteToJSON(const STORABLE_TYPE& v, rapidjson::Writer<rapidjson::OSt
 		}
 		w.EndArray();
 	}
-	else if (auto *map = std::get_if<std::map<PRIMITIVE_VALUE, PRIMITIVE_VALUE>>(&v)) {
+	else if (auto *map = std::get_if<std::map<ST::string, PRIMITIVE_VALUE>>(&v)) {
 		w.StartObject();
 		for (auto& pair : *map) {
 			writeJSON(pair.first);
