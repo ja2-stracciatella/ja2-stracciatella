@@ -37,7 +37,7 @@ be automatically selected.
 If you don't want to use rustup, you can always look up the currently required version in the
 [rust-toolchain file](https://github.com/ja2-stracciatella/ja2-stracciatella/blob/master/rust-toolchain)
 
-## Build on Linux or freeBSD/openBSD
+## Build on Linux or freeBSD
 
 ```
 cmake path/to/source
@@ -46,6 +46,22 @@ make
 
 If you want to be able to install the resulting binary on your system, please ensure that `CMAKE_INSTALL_PREFIX` matches
 with `EXTRA_DATA_DIR`. Example: `cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DEXTRA_DATA_DIR=/usr/local/share/ja2 path/to/source`
+
+## Build on OpenBSD (tested on -current as of mid-August 2021)
+
+```
+# The bundled/downloaded GTest sources fail to build.
+doas pkg_add gtest
+
+# miniaudio requires some feature test macros to build properly on OpenBSD
+FEATURE_TEST_MACROS='-D_POSIX_C_SOURCE=200809L -D_BSD_SOURCE'
+
+cmake path/to/source \
+	-DCMAKE_CXX_FLAGS="$FEATURE_TEST_MACROS" \
+	-DCMAKE_C_FLAGS="$FEATURE_TEST_MACROS" \
+	-DLOCAL_GTEST_LIB=0
+make
+```
 
 ## Build for Windows on Linux using MinGW (cross build)
 
