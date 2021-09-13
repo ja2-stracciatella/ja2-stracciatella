@@ -25,7 +25,7 @@ BOOLEAN IsTownFound(INT8 const bTownID)
 	auto town = GCM->getTown(bTownID);
 	if (!town)
 	{
-		SLOGW("Town #{} not found", bTownID);
+		SLOGD("Town #{} not found", bTownID);
 		return FALSE;
 	}
 

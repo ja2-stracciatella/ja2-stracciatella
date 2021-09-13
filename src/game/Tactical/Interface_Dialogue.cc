@@ -4050,7 +4050,7 @@ add_log:
 				}
 				break;
 			default:
-				SLOGD("No code support for NPC action {}", usActionCode);
+				SLOGW("No code support for NPC action {}", usActionCode);
 				break;
 		}
 	}
