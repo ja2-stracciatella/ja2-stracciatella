@@ -4,6 +4,8 @@
 #include "Handle_Items.h"
 #include "Item_Types.h"
 #include "Items.h"
+#include "JAScreens.h"
+#include "MessageBoxScreen.h"
 #include "Queen_Command.h"
 #include "SaveLoadGameStates.h"
 #include "StrategicMap.h"
@@ -125,4 +127,16 @@ std::vector<DEALER_ITEM_HEADER*> GetDealerInventory(UINT8 ubDealerID)
 		items.push_back(&i);
 	}
 	return items;
+}
+
+void DoScreenIndependantMessageBox(const ST::string &, MessageBoxFlags, MSGBOX_CALLBACK);
+void DoBasicMessageBox(const ST::string text)
+{
+	DoScreenIndependantMessageBox(text, MSG_BOX_FLAG_OK, NULL);
+}
+
+void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, const ST::string &pString);
+void ExecuteTacticalTextBox_(INT16 sLeftPosition, INT16 sTopPosition, ST::string pString)
+{
+	ExecuteTacticalTextBox(sLeftPosition, sTopPosition, pString);
 }

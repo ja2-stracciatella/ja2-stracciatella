@@ -949,7 +949,7 @@ static void HandleTacticalNPCTextUI(UINT8 ubCharacterNum, const ST::string& zQuo
 }
 
 
-static void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, const ST::string& pString);
+void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, const ST::string& pString);
 
 
 // Handlers for tactical UI stuff
@@ -1002,7 +1002,7 @@ static void RenderSubtitleBoxOverlay(VIDEO_OVERLAY* pBlitter);
 static void TextOverlayClickCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-static void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, const ST::string& pString)
+void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, const ST::string& pString)
 {
 	// check if mouse region created, if so, do not recreate
 	if (fTextBoxMouseRegionCreated) return;

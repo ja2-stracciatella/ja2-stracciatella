@@ -255,6 +255,9 @@ static void RegisterGlobals()
 	lua.set_function("CreateMoney", CreateMoney);
 	lua.set_function("PlaceItem", PlaceItem);
 
+	lua.set_function("DoBasicMessageBox", DoBasicMessageBox);
+	lua.set_function("ExecuteTacticalTextBox", ExecuteTacticalTextBox_);
+
 	lua.set_function("GetGameStates", GetGameStates);
 	lua.set_function("PutGameStates", PutGameStates);
 

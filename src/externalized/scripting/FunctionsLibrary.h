@@ -220,3 +220,26 @@ BOOLEAN StartShopKeeperTalking(UINT16 usQuoteNum);
 
 /** @ingroup funclib-dealers */
 void EnterShopKeeperInterfaceScreen(UINT8 ubArmsDealer);
+
+/**
+ * @defgroup ui-control UI controls
+ * @brief Functions for controlling the game UI
+ */
+
+/**
+ * Pops up a basic message box with only the text and an OK button. There is no callback on close and returns the control
+ * flow to the current screen. This is for messages that requires player's immediate attention.
+ * @param text
+ * @ingroup ui-control
+ */
+void DoBasicMessageBox(ST::string text);
+
+/**
+ * Displays a pop-up text box in the tactical view. This is suitable for storytelling, or describing a scene, situation
+ * or items. In Lua, this function is ExecuteTacticalTextBox.
+ * @param sLeftPosition On-screen X-position of the text box
+ * @param sTopPosition On-screen Y-position of the text box
+ * @param pString Text to display
+ * @ingroup ui-control
+ */
+void ExecuteTacticalTextBox_(INT16 sLeftPosition, INT16 sTopPosition, ST::string pString);
