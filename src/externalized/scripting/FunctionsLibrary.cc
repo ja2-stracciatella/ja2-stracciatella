@@ -144,7 +144,12 @@ void StrategicNPCDialogue(UINT8 const ubProfileID, UINT16 const usQuoteNum)
 	CharacterDialogue(ubProfileID, usQuoteNum, GetExternalNPCFace(ubProfileID), DIALOGUE_EXTERNAL_NPC_UI, FALSE, true);
 }
 
-std::vector<SOLDIERTYPE *> ListSoldiersFromTeam(UINT8 const ubTeamID)
+BOOLEAN DoMercBattleSound_(SOLDIERTYPE* const s, UINT8 const battle_snd_id)
+{
+	return DoMercBattleSound(s, (BattleSound)battle_snd_id);
+}
+
+std::vector<SOLDIERTYPE*> ListSoldiersFromTeam(UINT8 const ubTeamID)
 {
 	std::vector<SOLDIERTYPE *> soldiers;
 	FOR_EACH_IN_TEAM(s, ubTeamID)

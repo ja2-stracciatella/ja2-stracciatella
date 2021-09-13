@@ -218,7 +218,7 @@ static void RegisterUserTypes()
 
 		"ubWhatKindOfMercAmI", &SOLDIERTYPE::ubWhatKindOfMercAmI,
 		"bActive", &SOLDIERTYPE::bActive,
-
+		"bVisible", &SOLDIERTYPE::bVisible,
 		"ubBodyType", &SOLDIERTYPE::ubBodyType,
 		"ubSoldierClass", &SOLDIERTYPE::ubSoldierClass,
 		"uiAnimSubFlags", &SOLDIERTYPE::uiAnimSubFlags,
@@ -233,7 +233,10 @@ static void RegisterUserTypes()
 		"sBreathRed", &SOLDIERTYPE::sBreathRed,
 		"bActionPoints", &SOLDIERTYPE::bActionPoints,
 		"bCamo", &SOLDIERTYPE::bCamo,
+
 		"bCollapsed", &SOLDIERTYPE::bCollapsed,
+		"fMercAsleep", &SOLDIERTYPE::fMercAsleep,
+		"fMercCollapsedFlag", &SOLDIERTYPE::fMercCollapsedFlag,
 
 		"bAgility", &SOLDIERTYPE::bAgility,
 		"bDexterity", &SOLDIERTYPE::bDexterity,
@@ -259,8 +262,15 @@ static void RegisterUserTypes()
 		"sSector", &SOLDIERTYPE::sSector,
 		"fBetweenSectors", &SOLDIERTYPE::fBetweenSectors,
 
+		"sGridNo", &SOLDIERTYPE::sGridNo,
+		"bLevel", &SOLDIERTYPE::bLevel,
+		"sInitialGridNo", &SOLDIERTYPE::sInitialGridNo,
+
+		"usAnimState", &SOLDIERTYPE::usAnimState,
+
 		"ubStrategicInsertionCode", &SOLDIERTYPE::ubStrategicInsertionCode,
 		"usStrategicInsertionData", &SOLDIERTYPE::usStrategicInsertionData,
+		"ubInsertionDirection", &SOLDIERTYPE::ubInsertionDirection,
 
 		"iTotalContractLength", &SOLDIERTYPE::iTotalContractLength,
 		"iEndofContractTime", &SOLDIERTYPE::iEndofContractTime
@@ -315,8 +325,11 @@ static void RegisterUserTypes()
 		"sMedicalDepositAmount", &MERCPROFILESTRUCT::sMedicalDepositAmount,
 		"usOptionalGearCost", &MERCPROFILESTRUCT::usOptionalGearCost,
 
-		"iBalance", &MERCPROFILESTRUCT::iBalance
-		"ubLastDateSpokenTo", &MERCPROFILESTRUCT::ubLastDateSpokenTo
+		"iBalance", &MERCPROFILESTRUCT::iBalance,
+		"ubLastDateSpokenTo", &MERCPROFILESTRUCT::ubLastDateSpokenTo,
+
+		"bSkillTrait", &MERCPROFILESTRUCT::bSkillTrait,
+		"bSkillTrait2", &MERCPROFILESTRUCT::bSkillTrait2
 		);
 
 	lua.new_usertype<GROUP>("GROUP",
@@ -373,22 +386,31 @@ static void RegisterGlobals()
 	lua.set_function("CreateItem", CreateItem);
 	lua.set_function("CreateMoney", CreateMoney);
 	lua.set_function("PlaceItem", PlaceItem);
+	lua.set_function("RemoveAllUnburiedItems", RemoveAllUnburiedItems);
 
 	lua.set_function("DoBasicMessageBox", DoBasicMessageBox);
 	lua.set_function("ExecuteTacticalTextBox", ExecuteTacticalTextBox_);
 
 	lua.set_function("GetMercProfile", GetMercProfile);
 	lua.set_function("CenterAtGridNo", CenterAtGridNo);
+	lua.set_function("PythSpacesAway", PythSpacesAway);
 
 	lua.set_function("ListSoldiersFromTeam", ListSoldiersFromTeam);
 	lua.set_function("FindSoldierByProfileID", FindSoldierByProfileID);
 
 	lua.set_function("ChangeSoldierState", ChangeSoldierState);
+	lua.set_function("RemoveObjectFromSoldierProfile", RemoveObjectFromSoldierProfile);
 
 	lua.set_function("TriggerNPCRecord", TriggerNPCRecord);
 	lua.set_function("StrategicNPCDialogue", StrategicNPCDialogue);
 	lua.set_function("TacticalCharacterDialogue", TacticalCharacterDialogue);
 	lua.set_function("DeleteTalkingMenu", DeleteTalkingMenu);
+	lua.set_function("PlayJA2SampleFromFile", PlayJA2SampleFromFile);
+	lua.set_function("DoMercBattleSound", DoMercBattleSound_);
+
+	lua.set_function("IgniteExplosion", IgniteExplosion);
+	lua.set_function("ChangeSoldierStance", ChangeSoldierStance);
+	lua.set_function("ChangeSoldierState", ChangeSoldierState);
 
 	lua.set_function("CreateNewEnemyGroupDepartingSector", CreateNewEnemyGroupDepartingSector);
 

@@ -329,12 +329,17 @@ OBJECTTYPE* CreateMoney(UINT32 amt);
  * @ingroup funclib-items
  */
 void PlaceItem(INT16 sGridNo, OBJECTTYPE* pObject, INT8 bVisibility);
+void RemoveAllUnburiedItems(INT16 sGridNo, UINT8 ubLevel);
+
+BOOLEAN RemoveObjectFromSoldierProfile(UINT8 ubProfile, UINT16 usItem);
 
 MERCPROFILESTRUCT* GetMercProfile(UINT8 ubProfileID);
 SOLDIERTYPE* FindSoldierByProfileID(UINT8 profileID);
 std::vector<SOLDIERTYPE*> ListSoldiersFromTeam(UINT8 ubTeamID);
 
 void CenterAtGridNo(INT16 sGridNo, bool fForce);
+INT16 PythSpacesAway(INT16 sGridNo1, INT16 sGridNo2);
+void IgniteExplosion(SOLDIERTYPE* owner, INT16 z, INT16 sGridNo, UINT16 item, INT8 level);
 
 void TriggerNPCRecord(UINT8 ubTriggerNPC, UINT8 record);
 void StrategicNPCDialogue(UINT8 ubProfileID, UINT16 usQuoteNum);
@@ -344,6 +349,13 @@ BOOLEAN TacticalCharacterDialogue(const SOLDIERTYPE* pSoldier, UINT16 usQuoteNum
  * Closes the dialogue menu with an NPC.
  */
 void DeleteTalkingMenu();
+
+BOOLEAN DoMercBattleSound_(SOLDIERTYPE* s, UINT8 battle_snd_id);
+
+void ChangeSoldierStance(SOLDIERTYPE *pSoldier, UINT8 ubDesiredStance);
+void ChangeSoldierState(SOLDIERTYPE* pSoldier, UINT16 usNewState, UINT16 usStartingAniCode, BOOLEAN fForce);
+
+UINT32 PlayJA2SampleFromFile(const char* szFileName, UINT32 ubVolume, UINT32 ubLoops, UINT32 uiPan);
 
 /**
  * Adds a recurring event that happens at the same time every day.
