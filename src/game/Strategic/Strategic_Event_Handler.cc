@@ -768,8 +768,11 @@ void HandleEarlyMorningEvents( void )
 				// ok, Devin's sector not loaded, so time to move!
 				// might be same sector as before, if so, oh well!
 				auto placement = GCM->getNpcPlacement(DEVIN);
-				UINT8 sector   = placement->pickPlacementSector();
-				gMercProfiles[DEVIN].sSector = SGPSector(sector);
+				INT16 sector = placement->pickPlacementSector();
+				if (sector != -1)
+				{
+					gMercProfiles[DEVIN].sSector = SGPSector(sector);
+				}
 			}
 		}
 	}
@@ -786,9 +789,12 @@ void HandleEarlyMorningEvents( void )
 		// ok, HAMOUS's sector not loaded, so time to move!
 		// might be same sector as before, if so, oh well!
 		auto placement = GCM->getNpcPlacement(HAMOUS);
-		UINT8 sector   = placement->pickPlacementSector();
-		gMercProfiles[HAMOUS].sSector = SGPSector(sector);
-		gMercProfiles[PROF_ICECREAM].sSector = SGPSector(sector);
+		INT16 sector   = placement->pickPlacementSector();
+		if (sector != -1)
+		{
+			gMercProfiles[HAMOUS].sSector = SGPSector(sector);
+			gMercProfiles[PROF_ICECREAM].sSector = SGPSector(sector);
+		}
 	}
 
 	// Does Rat take off?
@@ -845,9 +851,11 @@ void HandleEarlyMorningEvents( void )
 		if (gWorldSector != gMercProfiles[CARMEN].sSector)
 		{
 			auto placement = GCM->getNpcPlacement(CARMEN);
-			UINT8 sector   = placement->pickPlacementSector();
-			gMercProfiles[CARMEN].sSector = SGPSector(sector);
-
+			INT16 sector   = placement->pickPlacementSector();
+			if (sector != -1)
+			{
+				gMercProfiles[CARMEN].sSector = SGPSector(sector);
+			}
 			// he should have $5000... unless the player forgot to meet him
 			if (gMercProfiles[ CARMEN ].uiMoney < 5000)
 			{
