@@ -102,6 +102,7 @@ static EXPLOSIONTYPE gExplosionData[NUM_EXPLOSION_SLOTS];
 
 Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*> BeforeStructureDamaged = {};
 Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged = {};
+Observable<INT16, OBJECTTYPE*, BOOLEAN_S*> OnItemAction = {};
 
 static EXPLOSIONTYPE* GetFreeExplosion(void)
 {
@@ -1802,6 +1803,12 @@ static BOOLEAN HookerInRoom(UINT8 ubRoom)
 
 static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 {
+	BOOLEAN_S processed = FALSE;
+	OnItemAction(sGridNo, pObj, &processed);
+	if (processed) {
+		return;
+	}
+
 	STRUCTURE * pStructure;
 
 	switch( pObj->bActionValue )
@@ -2171,7 +2178,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			break;
 		default:
 			// error message here
-			SLOGW("Action item with invalid action in gridno {}!", sGridNo);
+			SLOGW("Action item with invalid action ({}) in gridno {}!", pObj->bActionValue, sGridNo);
 			break;
 	}
 }

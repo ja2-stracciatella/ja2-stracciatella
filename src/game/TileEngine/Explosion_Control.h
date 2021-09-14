@@ -61,6 +61,7 @@ extern BOOLEAN gfExplosionQueueActive;
 
 extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*> BeforeStructureDamaged;
 extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged;
+extern Observable<INT16, OBJECTTYPE*, BOOLEAN_S*> OnItemAction;
 
 void IgniteExplosion(SOLDIERTYPE* owner, INT16 z, INT16 sGridNo, UINT16 item, INT8 level);
 void IgniteExplosionXY(SOLDIERTYPE* owner, INT16 sX, INT16 sY, INT16 sZ, INT16 sGridNo, UINT16 usItem, INT8 bLevel);

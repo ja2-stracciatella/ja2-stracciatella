@@ -84,6 +84,8 @@ extern Observable<> BeforePrepareSector;
  */
 extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*> BeforeStructureDamaged;
 
+
+extern Observable<INT16, OBJECTTYPE*, BOOLEAN_S*> OnItemAction;
 /**
   * Callback just after a structure has just been damaged by explosives
   * @param sSectorX

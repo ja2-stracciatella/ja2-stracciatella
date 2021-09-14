@@ -168,7 +168,8 @@ static void RegisterUserTypes()
 
 	lua.new_usertype<OBJECTTYPE>("OBJECTTYPE",
 		"usItem", &OBJECTTYPE::usItem,
-		"bTrap", &OBJECTTYPE::bTrap
+		"bTrap", &OBJECTTYPE::bTrap,
+		"bActionValue", &OBJECTTYPE::bActionValue
 		);
 
 	lua.new_usertype<STRUCTURE>("STRUCTURE",
@@ -522,6 +523,7 @@ static void _RegisterListener(const std::string& observable, const std::string& 
 
 	if      (observable == "OnStructureDamaged")         OnStructureDamaged.addListener(key, wrap<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN>(luaFunc));
 	else if (observable == "BeforeStructureDamaged")     BeforeStructureDamaged.addListener(key, wrap<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*>(luaFunc));
+	else if (observable == "OnItemAction")               OnItemAction.addListener(key, wrap<INT16, OBJECTTYPE*, BOOLEAN_S*>(luaFunc));
 	else if (observable == "OnAirspaceControlUpdated")   OnAirspaceControlUpdated.addListener(key, wrap<>(luaFunc));
 	else if (observable == "BeforePrepareSector")        BeforePrepareSector.addListener(key, wrap<>(luaFunc));
 	else if (observable == "OnEnterSector")              OnEnterSector.addListener(key, wrap<INT16,INT16,INT8>(luaFunc));
