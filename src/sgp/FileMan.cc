@@ -1,16 +1,12 @@
 #include "Debug.h"
 #include "FileMan.h"
 #include "Logger.h"
-#include "MemMan.h"
 #include "RustInterface.h"
 #include "Exceptions.h"
 
-#include <SDL_rwops.h>
 #include <string_theory/string>
 
 #include <stdexcept>
-
-// XXX: remove FileMan class and make it into a namespace
 
 void FileMan::deleteFile(const ST::string& path)
 {
