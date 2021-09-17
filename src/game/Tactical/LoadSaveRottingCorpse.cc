@@ -7,7 +7,7 @@
 void ExtractRottingCorpseFromFile(HWFILE const file, ROTTING_CORPSE_DEFINITION* const c)
 {
 	BYTE data[160];
-	FileRead(file, data, sizeof(data));
+	file->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_U8(d, c->ubType)
@@ -61,5 +61,5 @@ void InjectRottingCorpseIntoFile(HWFILE const file, ROTTING_CORPSE_DEFINITION co
 	INJ_SKIP(d, 12)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(file, data, sizeof(data));
+	file->write(data, sizeof(data));
 }

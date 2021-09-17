@@ -28,7 +28,7 @@ bool JsonUtility::writeToFile(const ST::string &name, const std::vector<ST::stri
 	try {
 		AutoSGPFile file{FileMan::openForWriting(name)};
 
-		FileWrite(file, buf.c_str(), buf.size());
+		file->write(buf.c_str(), buf.size());
 	} catch (const std::runtime_error& ex) {
 		SLOGE("JsonUtility::writeToFile: %s", ex.what());
 		return false;

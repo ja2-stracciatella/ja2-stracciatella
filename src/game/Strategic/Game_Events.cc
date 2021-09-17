@@ -341,7 +341,7 @@ void SaveStrategicEventsToSavedGame(HWFILE const f)
 	{
 		++n_game_events;
 	}
-	FileWrite(f, &n_game_events, sizeof(UINT32));
+	f->write(&n_game_events, sizeof(UINT32));
 
 	for (STRATEGICEVENT* i = gpEventList; i; i = i->next)
 	{
@@ -357,7 +357,7 @@ void SaveStrategicEventsToSavedGame(HWFILE const f)
 		INJ_SKIP(d, 9)
 		Assert(d.getConsumed() == lengthof(data));
 
-		FileWrite(f, data, sizeof(data));
+		f->write(data, sizeof(data));
 	}
 }
 
@@ -369,13 +369,13 @@ void LoadStrategicEventsFromSavedGame(HWFILE const f)
 
 	// Read the number of strategic events
 	UINT32 n_game_events;
-	FileRead(f, &n_game_events, sizeof(UINT32));
+	f->read(&n_game_events, sizeof(UINT32));
 
 	STRATEGICEVENT** anchor = &gpEventList;
 	for (size_t n = n_game_events; n != 0; --n)
 	{
 		BYTE data[28];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		STRATEGICEVENT* const sev = new STRATEGICEVENT{};
 		DataReader d{data};

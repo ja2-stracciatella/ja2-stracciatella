@@ -7,7 +7,7 @@
 void ExtractSectorInfoFromFile(HWFILE const f, SECTORINFO& s)
 {
 	BYTE data[116];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_U32( d, s.uiFlags)
@@ -88,5 +88,5 @@ void InjectSectorInfoIntoFile(HWFILE const f, SECTORINFO const& s)
 	INJ_SKIP(d, 44)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }

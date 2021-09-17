@@ -2110,52 +2110,52 @@ void SaveStrategicAI(HWFILE const hFile)
 	gEmptyArmyComp = ARMY_COMPOSITION{};
 	gEmptyGarrisonGroup = GARRISON_GROUP{};
 
-	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
-	FileWrite(hFile, &gfExtraElites,                      1);
-	FileWrite(hFile, &iGarrisonArraySize,                 4);
-	FileWrite(hFile, &iPatrolArraySize,                   4);
-	FileWrite(hFile, &giReinforcementPool,                4);
-	FileWrite(hFile, &giForcePercentage,                  4);
-	FileWrite(hFile, &giArmyAlertness,                    4);
-	FileWrite(hFile, &giArmyAlertnessDecay,               4);
-	FileWrite(hFile, &gfQueenAIAwake,                     1);
-	FileWrite(hFile, &giReinforcementPoints,              4);
-	FileWrite(hFile, &giRequestPoints,                    4);
-	FileWrite(hFile, &gubNumAwareBattles,                 1);
-	FileWrite(hFile, &gubSAIVersion,                      1);
-	FileWrite(hFile, &gubQueenPriorityPhase,              1);
-	FileWrite(hFile, &gfFirstBattleMeanwhileScenePending, 1);
-	FileWrite(hFile, &gfMassFortificationOrdered,         1);
-	FileWrite(hFile, &gubMinEnemyGroupSize,               1);
-	FileWrite(hFile, &gubHoursGracePeriod,                1);
-	FileWrite(hFile, &gusPlayerBattleVictories,           2);
-	FileWrite(hFile, &gfUseAlternateQueenPosition,        1);
-	FileWrite(hFile, gbPadding,           SAI_PADDING_BYTES);
+	hFile->seek(3, FILE_SEEK_FROM_CURRENT);
+	hFile->write(&gfExtraElites,                      1);
+	hFile->write(&iGarrisonArraySize,                 4);
+	hFile->write(&iPatrolArraySize,                   4);
+	hFile->write(&giReinforcementPool,                4);
+	hFile->write(&giForcePercentage,                  4);
+	hFile->write(&giArmyAlertness,                    4);
+	hFile->write(&giArmyAlertnessDecay,               4);
+	hFile->write(&gfQueenAIAwake,                     1);
+	hFile->write(&giReinforcementPoints,              4);
+	hFile->write(&giRequestPoints,                    4);
+	hFile->write(&gubNumAwareBattles,                 1);
+	hFile->write(&gubSAIVersion,                      1);
+	hFile->write(&gubQueenPriorityPhase,              1);
+	hFile->write(&gfFirstBattleMeanwhileScenePending, 1);
+	hFile->write(&gfMassFortificationOrdered,         1);
+	hFile->write(&gubMinEnemyGroupSize,               1);
+	hFile->write(&gubHoursGracePeriod,                1);
+	hFile->write(&gusPlayerBattleVictories,           2);
+	hFile->write(&gfUseAlternateQueenPosition,        1);
+	hFile->write(gbPadding,           SAI_PADDING_BYTES);
 	//Save the army composition (which does get modified)
-	FileWrite(hFile, gArmyComp.data(), gArmyComp.size() * sizeof(ARMY_COMPOSITION));
+	hFile->write(gArmyComp.data(), gArmyComp.size() * sizeof(ARMY_COMPOSITION));
 	i = SAVED_ARMY_COMPOSITIONS - gArmyComp.size();
 	while( i-- )
 	{
-		FileWrite(hFile, &gEmptyArmyComp, sizeof(ARMY_COMPOSITION));
+		hFile->write(&gEmptyArmyComp, sizeof(ARMY_COMPOSITION));
 	}
 	//Save the patrol group definitions
-	if (!gPatrolGroup.empty()) FileWrite(hFile, gPatrolGroup.data(), gPatrolGroup.size() * sizeof(PATROL_GROUP));
+	if (!gPatrolGroup.empty()) hFile->write(gPatrolGroup.data(), gPatrolGroup.size() * sizeof(PATROL_GROUP));
 	i = SAVED_PATROL_GROUPS - gPatrolGroup.size();
 	while( i-- )
 	{
-		FileWrite(hFile, &gEmptyPatrolGroup, sizeof(PATROL_GROUP));
+		hFile->write(&gEmptyPatrolGroup, sizeof(PATROL_GROUP));
 	}
 	//Save the garrison information!
-	if (!gGarrisonGroup.empty()) FileWrite(hFile, gGarrisonGroup.data(), gGarrisonGroup.size() * sizeof(GARRISON_GROUP));
+	if (!gGarrisonGroup.empty()) hFile->write(gGarrisonGroup.data(), gGarrisonGroup.size() * sizeof(GARRISON_GROUP));
 	i = SAVED_GARRISON_GROUPS - gGarrisonGroup.size();
 	while( i-- )
 	{
-		FileWrite(hFile, &gEmptyGarrisonGroup, sizeof(GARRISON_GROUP));
+		hFile->write(&gEmptyGarrisonGroup, sizeof(GARRISON_GROUP));
 	}
 
-	FileWrite(hFile, gubPatrolReinforcementsDenied, gPatrolGroup.size());
+	hFile->write(gubPatrolReinforcementsDenied, gPatrolGroup.size());
 
-	FileWrite(hFile, gubGarrisonReinforcementsDenied, gGarrisonGroup.size());
+	hFile->write(gubGarrisonReinforcementsDenied, gGarrisonGroup.size());
 }
 
 
@@ -2168,31 +2168,31 @@ void LoadStrategicAI(HWFILE const hFile)
 	UINT8 ubSAIVersion;
 	UINT32 iPatrolArraySize, iGarrisonArraySize;
 
-	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
-	FileRead(hFile, &gfExtraElites,                      1);
-	FileRead(hFile, &iGarrisonArraySize,                 4);
-	FileRead(hFile, &iPatrolArraySize,                   4);
-	FileRead(hFile, &giReinforcementPool,                4);
-	FileRead(hFile, &giForcePercentage,                  4);
-	FileRead(hFile, &giArmyAlertness,                    4);
-	FileRead(hFile, &giArmyAlertnessDecay,               4);
-	FileRead(hFile, &gfQueenAIAwake,                     1);
-	FileRead(hFile, &giReinforcementPoints,              4);
-	FileRead(hFile, &giRequestPoints,                    4);
-	FileRead(hFile, &gubNumAwareBattles,                 1);
-	FileRead(hFile, &ubSAIVersion,                       1);
-	FileRead(hFile, &gubQueenPriorityPhase,              1);
-	FileRead(hFile, &gfFirstBattleMeanwhileScenePending, 1);
-	FileRead(hFile, &gfMassFortificationOrdered,         1);
-	FileRead(hFile, &gubMinEnemyGroupSize,               1);
-	FileRead(hFile, &gubHoursGracePeriod,                1);
-	FileRead(hFile, &gusPlayerBattleVictories,           2);
-	FileRead(hFile, &gfUseAlternateQueenPosition,        1);
-	FileRead(hFile, gbPadding,           SAI_PADDING_BYTES);
+	hFile->seek(3, FILE_SEEK_FROM_CURRENT);
+	hFile->read(&gfExtraElites,                      1);
+	hFile->read(&iGarrisonArraySize,                 4);
+	hFile->read(&iPatrolArraySize,                   4);
+	hFile->read(&giReinforcementPool,                4);
+	hFile->read(&giForcePercentage,                  4);
+	hFile->read(&giArmyAlertness,                    4);
+	hFile->read(&giArmyAlertnessDecay,               4);
+	hFile->read(&gfQueenAIAwake,                     1);
+	hFile->read(&giReinforcementPoints,              4);
+	hFile->read(&giRequestPoints,                    4);
+	hFile->read(&gubNumAwareBattles,                 1);
+	hFile->read(&ubSAIVersion,                       1);
+	hFile->read(&gubQueenPriorityPhase,              1);
+	hFile->read(&gfFirstBattleMeanwhileScenePending, 1);
+	hFile->read(&gfMassFortificationOrdered,         1);
+	hFile->read(&gubMinEnemyGroupSize,               1);
+	hFile->read(&gubHoursGracePeriod,                1);
+	hFile->read(&gusPlayerBattleVictories,           2);
+	hFile->read(&gfUseAlternateQueenPosition,        1);
+	hFile->read(gbPadding,           SAI_PADDING_BYTES);
 	//Restore the army composition
 	gArmyComp.clear();
 	gArmyComp.assign(SAVED_ARMY_COMPOSITIONS, ARMY_COMPOSITION{});
-	FileRead(hFile, gArmyComp.data(), SAVED_ARMY_COMPOSITIONS * sizeof(ARMY_COMPOSITION)); // read everything first, will discard what we don't need when we have also the Garrison Groups
+	hFile->read(gArmyComp.data(), SAVED_ARMY_COMPOSITIONS * sizeof(ARMY_COMPOSITION)); // read everything first, will discard what we don't need when we have also the Garrison Groups
 
 	//Restore the patrol group definitions
 	if (iPatrolArraySize != GCM->getPatrolGroups().size())
@@ -2200,7 +2200,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		STLOGW("Number of Patrol Groups in save ({}) is different from definition ({}). Save might not work properly.", iPatrolArraySize, GCM->getPatrolGroups().size());
 	}
 	auto buffPG = new PATROL_GROUP[SAVED_PATROL_GROUPS]{};
-	FileRead(hFile, buffPG, SAVED_PATROL_GROUPS * sizeof(PATROL_GROUP));
+	hFile->read(buffPG, SAVED_PATROL_GROUPS * sizeof(PATROL_GROUP));
 	gPatrolGroup = std::vector<PATROL_GROUP>(buffPG, buffPG + iPatrolArraySize);
 	delete[] buffPG;
 
@@ -2211,7 +2211,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		STLOGW("Number of Garrison Groups in save ({}) is different from definition ({}). Save might not work properly.", iGarrisonArraySize, GCM->getGarrisonGroups().size());
 	}
 	auto buffGG = new GARRISON_GROUP[SAVED_GARRISON_GROUPS]{};
-	FileRead(hFile, buffGG, SAVED_GARRISON_GROUPS * sizeof(GARRISON_GROUP));
+	hFile->read(buffGG, SAVED_GARRISON_GROUPS * sizeof(GARRISON_GROUP));
 	gGarrisonGroup = std::vector<GARRISON_GROUP>(buffGG, buffGG + iGarrisonArraySize);
 	delete[] buffGG;
 
@@ -2235,7 +2235,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		gubPatrolReinforcementsDenied = NULL;
 	}
 	gubPatrolReinforcementsDenied = new UINT8[iPatrolArraySize]{};
-	FileRead(hFile, gubPatrolReinforcementsDenied, iPatrolArraySize);
+	hFile->read(gubPatrolReinforcementsDenied, iPatrolArraySize);
 
 	//Load the list of reinforcement garrison points.
 	if( gubGarrisonReinforcementsDenied )
@@ -2244,7 +2244,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		gubGarrisonReinforcementsDenied = NULL;
 	}
 	gubGarrisonReinforcementsDenied = new UINT8[iGarrisonArraySize]{};
-	FileRead(hFile, gubGarrisonReinforcementsDenied, iGarrisonArraySize);
+	hFile->read(gubGarrisonReinforcementsDenied, iGarrisonArraySize);
 
 	if( ubSAIVersion < 6 )
 	{ //Reinitialize the costs since they have changed.

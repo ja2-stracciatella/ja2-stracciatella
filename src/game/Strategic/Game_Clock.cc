@@ -726,51 +726,51 @@ void UpdateClock()
 
 void SaveGameClock(HWFILE const hFile, BOOLEAN const fGamePaused, BOOLEAN const fLockPauseState)
 {
-	FileWrite(hFile, &giTimeCompressMode,                sizeof(INT32));
-	FileWrite(hFile, &gubClockResolution,                sizeof(UINT8));
-	FileWrite(hFile, &fGamePaused,                       sizeof(BOOLEAN));
-	FileWrite(hFile, &gfTimeInterrupt,                   sizeof(BOOLEAN));
-	FileWrite(hFile, &fSuperCompression,                 sizeof(BOOLEAN));
-	FileWrite(hFile, &guiGameClock,                      sizeof(UINT32));
-	FileWrite(hFile, &guiGameSecondsPerRealSecond,       sizeof(UINT32));
-	FileWrite(hFile, &ubAmbientLightLevel,               sizeof(UINT8));
-	FileWrite(hFile, &guiEnvTime,                        sizeof(UINT32));
-	FileWrite(hFile, &guiEnvDay,                         sizeof(UINT32));
-	FileWrite(hFile, &gubEnvLightValue,                  sizeof(UINT8));
-	FileWrite(hFile, &guiTimeOfLastEventQuery,           sizeof(UINT32));
-	FileWrite(hFile, &fLockPauseState,                   sizeof(BOOLEAN));
-	FileWrite(hFile, &gfPauseDueToPlayerGamePause,       sizeof(BOOLEAN));
-	FileWrite(hFile, &gfResetAllPlayerKnowsEnemiesFlags, sizeof(BOOLEAN));
-	FileWrite(hFile, &gfTimeCompressionOn,               sizeof(BOOLEAN));
-	FileWrite(hFile, &guiPreviousGameClock,              sizeof(UINT32));
-	FileWrite(hFile, &guiLockPauseStateLastReasonId,     sizeof(UINT32));
+	hFile->write(&giTimeCompressMode,                sizeof(INT32));
+	hFile->write(&gubClockResolution,                sizeof(UINT8));
+	hFile->write(&fGamePaused,                       sizeof(BOOLEAN));
+	hFile->write(&gfTimeInterrupt,                   sizeof(BOOLEAN));
+	hFile->write(&fSuperCompression,                 sizeof(BOOLEAN));
+	hFile->write(&guiGameClock,                      sizeof(UINT32));
+	hFile->write(&guiGameSecondsPerRealSecond,       sizeof(UINT32));
+	hFile->write(&ubAmbientLightLevel,               sizeof(UINT8));
+	hFile->write(&guiEnvTime,                        sizeof(UINT32));
+	hFile->write(&guiEnvDay,                         sizeof(UINT32));
+	hFile->write(&gubEnvLightValue,                  sizeof(UINT8));
+	hFile->write(&guiTimeOfLastEventQuery,           sizeof(UINT32));
+	hFile->write(&fLockPauseState,                   sizeof(BOOLEAN));
+	hFile->write(&gfPauseDueToPlayerGamePause,       sizeof(BOOLEAN));
+	hFile->write(&gfResetAllPlayerKnowsEnemiesFlags, sizeof(BOOLEAN));
+	hFile->write(&gfTimeCompressionOn,               sizeof(BOOLEAN));
+	hFile->write(&guiPreviousGameClock,              sizeof(UINT32));
+	hFile->write(&guiLockPauseStateLastReasonId,     sizeof(UINT32));
 
-	FileSeek(hFile, TIME_PADDINGBYTES, FILE_SEEK_FROM_CURRENT);
+	hFile->seek(TIME_PADDINGBYTES, FILE_SEEK_FROM_CURRENT);
 }
 
 
 void LoadGameClock(HWFILE const hFile)
 {
-	FileRead(hFile, &giTimeCompressMode,                sizeof(INT32));
-	FileRead(hFile, &gubClockResolution,                sizeof(UINT8));
-	FileRead(hFile, &gfGamePaused,                      sizeof(BOOLEAN));
-	FileRead(hFile, &gfTimeInterrupt,                   sizeof(BOOLEAN));
-	FileRead(hFile, &fSuperCompression,                 sizeof(BOOLEAN));
-	FileRead(hFile, &guiGameClock,                      sizeof(UINT32));
-	FileRead(hFile, &guiGameSecondsPerRealSecond,       sizeof(UINT32));
-	FileRead(hFile, &ubAmbientLightLevel,               sizeof(UINT8));
-	FileRead(hFile, &guiEnvTime,                        sizeof(UINT32));
-	FileRead(hFile, &guiEnvDay,                         sizeof(UINT32));
-	FileRead(hFile, &gubEnvLightValue,                  sizeof(UINT8));
-	FileRead(hFile, &guiTimeOfLastEventQuery,           sizeof(UINT32));
-	FileRead(hFile, &gfLockPauseState,                  sizeof(BOOLEAN));
-	FileRead(hFile, &gfPauseDueToPlayerGamePause,       sizeof(BOOLEAN));
-	FileRead(hFile, &gfResetAllPlayerKnowsEnemiesFlags, sizeof(BOOLEAN));
-	FileRead(hFile, &gfTimeCompressionOn,               sizeof(BOOLEAN));
-	FileRead(hFile, &guiPreviousGameClock,              sizeof(UINT32));
-	FileRead(hFile, &guiLockPauseStateLastReasonId,     sizeof(UINT32));
+	hFile->read(&giTimeCompressMode,                sizeof(INT32));
+	hFile->read(&gubClockResolution,                sizeof(UINT8));
+	hFile->read(&gfGamePaused,                      sizeof(BOOLEAN));
+	hFile->read(&gfTimeInterrupt,                   sizeof(BOOLEAN));
+	hFile->read(&fSuperCompression,                 sizeof(BOOLEAN));
+	hFile->read(&guiGameClock,                      sizeof(UINT32));
+	hFile->read(&guiGameSecondsPerRealSecond,       sizeof(UINT32));
+	hFile->read(&ubAmbientLightLevel,               sizeof(UINT8));
+	hFile->read(&guiEnvTime,                        sizeof(UINT32));
+	hFile->read(&guiEnvDay,                         sizeof(UINT32));
+	hFile->read(&gubEnvLightValue,                  sizeof(UINT8));
+	hFile->read(&guiTimeOfLastEventQuery,           sizeof(UINT32));
+	hFile->read(&gfLockPauseState,                  sizeof(BOOLEAN));
+	hFile->read(&gfPauseDueToPlayerGamePause,       sizeof(BOOLEAN));
+	hFile->read(&gfResetAllPlayerKnowsEnemiesFlags, sizeof(BOOLEAN));
+	hFile->read(&gfTimeCompressionOn,               sizeof(BOOLEAN));
+	hFile->read(&guiPreviousGameClock,              sizeof(UINT32));
+	hFile->read(&guiLockPauseStateLastReasonId,     sizeof(UINT32));
 
-	FileSeek(hFile, TIME_PADDINGBYTES, FILE_SEEK_FROM_CURRENT);
+	hFile->seek(TIME_PADDINGBYTES, FILE_SEEK_FROM_CURRENT);
 
 	//Update the game clock
 	guiDay = ( guiGameClock / NUM_SEC_IN_DAY );

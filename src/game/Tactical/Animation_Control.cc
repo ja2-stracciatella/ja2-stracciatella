@@ -2405,7 +2405,7 @@ void InitAnimationSurfacesPerBodytype( )
 void LoadAnimationStateInstructions()
 {
 	AutoSGPFile hFile(GCM->openGameResForReading(ANIMFILENAME));
-	FileRead(hFile, gusAnimInst, sizeof(gusAnimInst));
+	hFile->read(gusAnimInst, sizeof(gusAnimInst));
 }
 
 

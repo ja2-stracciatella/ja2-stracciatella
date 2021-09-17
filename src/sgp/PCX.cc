@@ -38,20 +38,20 @@ SGPImage* LoadPCXFileToImage(const ST::string filename, UINT16 const contents)
 	AutoSGPFile f(GCM->openGameResForReading(filename));
 
 	PcxHeader header;
-	FileRead(f, &header, sizeof(header));
+	f->read(&header, sizeof(header));
 	if (header.ubManufacturer != 10 || header.ubEncoding != 1)
 	{
 		throw std::runtime_error("PCX file has invalid header");
 	}
 
-	UINT32 const file_size   = FileGetSize(f);
+	UINT32 const file_size   = f->size();
 	UINT32 const buffer_size = file_size - sizeof(PcxHeader) - 768;
 
 	SGP::Buffer<UINT8> pcx_buffer(buffer_size);
-	FileRead(f, pcx_buffer, buffer_size);
+	f->read(pcx_buffer, buffer_size);
 
 	UINT8 palette[768];
-	FileRead(f, palette, sizeof(palette));
+	f->read(palette, sizeof(palette));
 
 	UINT16 const w = header.usRight  - header.usLeft + 1;
 	UINT16 const h = header.usBottom - header.usTop  + 1;

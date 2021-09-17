@@ -50,8 +50,8 @@ void LoadGameSettings(void)
 		AutoSGPFile f(GCM->openUserPrivateFileForReading(GAME_SETTINGS_FILE));
 
 		BYTE data[76];
-		if (FileGetSize(f) != sizeof(data)) goto fail;
-		FileRead(f, data, sizeof(data));
+		if (f->size() != sizeof(data)) goto fail;
+		f->read(data, sizeof(data));
 
 		UINT8          music_volume;
 		UINT8          sound_volume;
@@ -136,7 +136,7 @@ void SaveGameSettings(void)
 	Assert(d.getConsumed() == lengthof(data));
 
 	AutoSGPFile f(GCM->openUserPrivateFileForWriting(GAME_SETTINGS_FILE, true));
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }
 
 

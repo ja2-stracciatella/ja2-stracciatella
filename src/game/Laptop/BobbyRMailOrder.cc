@@ -1890,13 +1890,13 @@ void NewWayOfSavingBobbyRMailOrdersToSaveGameFile(HWFILE const hFile)
 	//Write the number of orders
 	Assert(gpNewBobbyrShipments.size() <= INT32_MAX);
 	INT32 numNewBobbyrShipments = static_cast<INT32>(gpNewBobbyrShipments.size());
-	FileWrite(hFile, &numNewBobbyrShipments, sizeof(INT32));
+	hFile->write(&numNewBobbyrShipments, sizeof(INT32));
 
 	//loop through and save all the mail order slots
 	for (iCnt = 0; iCnt < numNewBobbyrShipments; iCnt++)
 	{
 		//Write the order
-		FileWrite(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct));
+		hFile->write(&gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct));
 	}
 }
 
@@ -1911,7 +1911,7 @@ void NewWayOfLoadingBobbyRMailOrdersToSaveGameFile(HWFILE const hFile)
 
 	//Read the number of orders
 	INT32 numNewBobbyrShipments = 0;
-	FileRead(hFile, &numNewBobbyrShipments, sizeof(INT32));
+	hFile->read(&numNewBobbyrShipments, sizeof(INT32));
 
 	if (numNewBobbyrShipments == 0)
 	{
@@ -1925,7 +1925,7 @@ void NewWayOfLoadingBobbyRMailOrdersToSaveGameFile(HWFILE const hFile)
 		for (iCnt = 0; iCnt < numNewBobbyrShipments; iCnt++)
 		{
 			//Read the order
-			FileRead(hFile, &gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct));
+			hFile->read(&gpNewBobbyrShipments[iCnt], sizeof(NewBobbyRayOrderStruct));
 		}
 	}
 }

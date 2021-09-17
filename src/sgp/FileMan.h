@@ -7,30 +7,6 @@
 
 #include <vector>
 
-void FileRead( SGPFile*, void*       pDest, size_t uiBytesToRead);
-std::vector<uint8_t> FileReadToEnd(SGPFile* const f);
-size_t FileReadAtMost( SGPFile*, void*       pDest, size_t uiBytesToRead);
-void FileReadExact(SGPFile* const f, void* const pDest, size_t const uiBytesToRead);
-void FileWrite(SGPFile*, void const* pDest, size_t uiBytesToWrite);
-
-/* Helper method to read a string from file */
-ST::string FileReadString(SGPFile* const f, size_t const uiBytesToRead);
-
-/** Read the whole file as text. */
-ST::string FileReadStringToEnd(SGPFile*);
-SDL_RWops* FileGetRWOps(SGPFile* const f);
-
-template<typename T, typename U> static inline void FileWriteArray(SGPFile* const f, T const& n, U const* const data)
-{
-	FileWrite(f, &n, sizeof(n));
-	if (n != 0) FileWrite(f, data, sizeof(*data) * n);
-}
-
-void  FileSeek(SGPFile*, INT32 distance, FileSeekMode);
-INT32 FileGetPos(const SGPFile*);
-
-UINT32 FileGetSize(const SGPFile*);
-
 /***
  * New file manager.
  *

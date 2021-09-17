@@ -515,13 +515,13 @@ static void PlayNewMessageSound(void)
 static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLinuxFormat)
 {
 	UINT32 size;
-	FileRead(f, &size, sizeof(size));
+	f->read(&size, sizeof(size));
 	if (size == 0) return 0;
 
 	SGP::PODObj<ScrollStringSt> s;
 	{
 		SGP::Buffer<uint8_t> data(size);
-		FileRead(f, data, size);
+		f->read(data, size);
 		DataReader reader(data);
 		if(stracLinuxFormat)
 		{
@@ -536,7 +536,7 @@ static ScrollStringSt* ExtractScrollStringFromFile(HWFILE const f, bool stracLin
 	}
 
 	BYTE data[28];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_SKIP(d, 4)
@@ -556,14 +556,14 @@ static void InjectScrollStringIntoFile(HWFILE const f, ScrollStringSt const* con
 	if(!s)
 	{
 		UINT32 const size = 0;
-		FileWrite(f, &size, sizeof(size));
+		f->write(&size, sizeof(size));
 		return;
 	}
 
 	ST::utf16_buffer utf16data = s->pString.to_utf16();
 	UINT32 const size = static_cast<UINT32>(2 * (utf16data.size() + 1));
-	FileWrite(f, &size, sizeof(size));
-	FileWrite(f, utf16data.c_str(), size);
+	f->write(&size, sizeof(size));
+	f->write(utf16data.c_str(), size);
 
 	BYTE data[28];
 	DataWriter d{data};
@@ -575,19 +575,19 @@ static void InjectScrollStringIntoFile(HWFILE const f, ScrollStringSt const* con
 	INJ_SKIP(d, 1)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }
 
 
 void SaveMapScreenMessagesToSaveGameFile(HWFILE const hFile)
 {
 	// write to the begining of the message list
-	FileWrite(hFile, &gubEndOfMapScreenMessageList, sizeof(UINT8));
+	hFile->write(&gubEndOfMapScreenMessageList, sizeof(UINT8));
 
-	FileWrite(hFile, &gubStartOfMapScreenMessageList, sizeof(UINT8));
+	hFile->write(&gubStartOfMapScreenMessageList, sizeof(UINT8));
 
 	// write the current message string
-	FileWrite(hFile, &gubCurrentMapMessageString, sizeof(UINT8));
+	hFile->write(&gubCurrentMapMessageString, sizeof(UINT8));
 
 	//Loopthrough all the messages
 	FOR_EACH(ScrollStringSt* const, i, gMapScreenMessageList)
@@ -607,13 +607,13 @@ void LoadMapScreenMessagesFromSaveGameFile(HWFILE const hFile, bool stracLinuxFo
 	gubCurrentMapMessageString     = 0;
 
 	// Read to the begining of the message list
-	FileRead(hFile, &gubEndOfMapScreenMessageList, sizeof(UINT8));
+	hFile->read(&gubEndOfMapScreenMessageList, sizeof(UINT8));
 
 	// Read the current message string
-	FileRead(hFile, &gubStartOfMapScreenMessageList, sizeof(UINT8));
+	hFile->read(&gubStartOfMapScreenMessageList, sizeof(UINT8));
 
 	// Read the current message string
-	FileRead(hFile, &gubCurrentMapMessageString, sizeof(UINT8));
+	hFile->read(&gubCurrentMapMessageString, sizeof(UINT8));
 
 	//Loopthrough all the messages
 	FOR_EACH(ScrollStringSt*, i, gMapScreenMessageList)

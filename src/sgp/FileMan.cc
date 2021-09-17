@@ -11,295 +11,6 @@
 
 // XXX: remove FileMan class and make it into a namespace
 
-#define LOCAL_CURRENT_DIR "tmp"
-#define SDL_RWOPS_SGP 222
-
-void FileClose(SGPFile* f)
-{
-	if (f->flags & SGPFILE_REAL)
-	{
-		File_close(f->u.file);
-	}
-	else
-	{
-		VfsFile_close(f->u.vfile);
-	}
-	delete f;
-}
-
-void FileRead(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
-{
-	bool success;
-	if (f->flags & SGPFILE_REAL)
-	{
-		success = File_readExact(f->u.file, reinterpret_cast<uint8_t*>(pDest), uiBytesToRead);
-	}
-	else
-	{
-		success = VfsFile_readExact(f->u.vfile, static_cast<uint8_t *>(pDest), uiBytesToRead);
-	}
-
-	if (!success)
-	{
-		RustPointer<char> err{getRustError()};
-		SLOGE("FileRead: %s", err.get());
-		throw std::runtime_error("Reading from file failed");
-	}
-}
-
-std::vector<uint8_t> FileReadToEnd(SGPFile* const f) {
-	RustPointer<VecU8> vec;
-	if (f->flags & SGPFILE_REAL)
-	{
-		vec.reset(File_readToEnd(f->u.file));
-	} else {
-		vec.reset(VfsFile_readToEnd(f->u.vfile));
-	}
-	if (vec.get() == NULL) {
-		RustPointer<char> err{getRustError()};
-		throw std::runtime_error(ST::format("FileReadToEnd: {}", err.get()).c_str());
-	}
-	auto bytes = VecU8_as_ptr(vec.get());
-	auto len = VecU8_len(vec.get());
-	return std::vector<uint8_t>(bytes, bytes + len);
-}
-
-size_t FileReadAtMost(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
-{
-	size_t bytesRead = 0;
-	if (f->flags & SGPFILE_REAL)
-	{
-		bytesRead = File_read(f->u.file, reinterpret_cast<uint8_t*>(pDest), uiBytesToRead);
-	}
-	else
-	{
-		bytesRead = VfsFile_read(f->u.vfile, static_cast<uint8_t*>(pDest), uiBytesToRead);
-	}
-
-	if (bytesRead == SIZE_MAX)
-	{
-		RustPointer<char> err{getRustError()};
-		SLOGE("FileReadAtMost: %s", err.get());
-		throw std::runtime_error("Reading from file failed");
-	}
-
-	return bytesRead;
-}
-
-void FileReadExact(SGPFile* const f, void* const pDest, size_t const uiBytesToRead)
-{
-	bool success = false;
-	if (f->flags & SGPFILE_REAL)
-	{
-		success = File_readExact(f->u.file, reinterpret_cast<uint8_t*>(pDest), uiBytesToRead);
-	}
-	else
-	{
-		success = VfsFile_readExact(f->u.vfile, static_cast<uint8_t*>(pDest), uiBytesToRead);
-	}
-
-	if (!success)
-	{
-		RustPointer<char> err{getRustError()};
-		throw std::runtime_error(ST::format("FileReadAtMost: {}", err.get()).c_str());
-	}
-}
-
-ST::string FileReadString(SGPFile* const f, size_t const uiBytesToRead)
-{
-	ST::char_buffer buf(uiBytesToRead, '\0');
-	FileRead(f, buf.data(), uiBytesToRead);
-	return ST::string(buf.c_str(), ST_AUTO_SIZE);
-}
-
-ST::string FileReadStringToEnd(SGPFile* file)
-{
-	uint32_t size = FileGetSize(file);
-	ST::char_buffer buf{size, '\0'};
-	FileRead(file, buf.data(), size);
-	return ST::string{buf};
-}
-
-void FileWrite(SGPFile* const f, void const* const pDest, size_t const uiBytesToWrite)
-{
-	bool success;
-	if (f->flags & SGPFILE_REAL)
-	{
-		success = File_writeAll(f->u.file, reinterpret_cast<const uint8_t*>(pDest), uiBytesToWrite);
-	}
-	else
-	{
-		success = VfsFile_writeAll(f->u.vfile, reinterpret_cast<const uint8_t *>(pDest), uiBytesToWrite);
-	}
-
-	if (!success)
-	{
-		RustPointer<char> err{getRustError()};
-		SLOGE("FileWrite: %s", err.get());
-		throw std::runtime_error("Writing to file failed");
-	}
-}
-
-SGPFile* GetSGPFileFromFile(File* f)
-{
-	Assert(f);
-	SGPFile *sgp_file = new SGPFile{};
-	sgp_file->flags  = SGPFILE_REAL;
-	sgp_file->u.file = f;
-	return sgp_file;
-}
-
-static int64_t SGPSeekRW(SDL_RWops *context, int64_t offset, int whence)
-{
-	SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
-	FileSeekMode mode = FILE_SEEK_FROM_CURRENT;
-	switch (whence) {
-		case RW_SEEK_SET:
-			mode = FILE_SEEK_FROM_START;
-			break;
-		case RW_SEEK_END:
-			mode = FILE_SEEK_FROM_END;
-			break;
-		default:
-			break;
-	}
-
-	FileSeek(sgpFile, offset, mode);
-
-	return int64_t(FileGetPos(sgpFile));
-}
-
-static int64_t SGPSizeRW(SDL_RWops *context)
-{
-	SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
-
-	return FileGetSize(sgpFile);
-}
-
-static size_t SGPReadRW(SDL_RWops *context, void *ptr, size_t size, size_t maxnum)
-{
-	SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
-	return FileReadAtMost(sgpFile, ptr, size * maxnum) / size;
-}
-
-static size_t SGPWriteRW(SDL_RWops *context, const void *ptr, size_t size, size_t num)
-{
-	AssertMsg(false, "SGPWriteRW not supported");
-	return 0;
-}
-
-static int SGPCloseRW(SDL_RWops *context)
-{
-	if(context->type != SDL_RWOPS_SGP)
-	{
-		return SDL_SetError("Wrong kind of SDL_RWops for SGPCloseRW()");
-	}
-	SGPFile* sgpFile = (SGPFile*)(context->hidden.unknown.data1);
-
-	FileClose(sgpFile);
-	SDL_FreeRW(context);
-
-	return 0;
-}
-
-SDL_RWops* FileGetRWOps(SGPFile* const f) {
-	SDL_RWops* rwOps = SDL_AllocRW();
-	if(rwOps == NULL) {
-		return NULL;
-	}
-	rwOps->type = SDL_RWOPS_SGP;
-	rwOps->size = SGPSizeRW;
-	rwOps->seek = SGPSeekRW;
-	rwOps->read = SGPReadRW;
-	rwOps->write= SGPWriteRW;
-	rwOps->close= SGPCloseRW;
-	rwOps->hidden.unknown.data1 = f;
-
-	return rwOps;
-}
-
-void FileSeek(SGPFile* const f, INT32 distance, FileSeekMode const how)
-{
-	bool success;
-	if (f->flags & SGPFILE_REAL)
-	{
-		switch (how)
-		{
-			case FILE_SEEK_FROM_START: success = distance >= 0 && File_seekFromStart(f->u.file, static_cast<uint64_t>(distance)) != UINT64_MAX; break;
-			case FILE_SEEK_FROM_END:   success = File_seekFromEnd(f->u.file, distance) != UINT64_MAX; break;
-			default:                   success = File_seekFromCurrent(f->u.file, distance) != UINT64_MAX; break;
-		}
-	}
-	else
-	{
-		switch (how)
-		{
-			case FILE_SEEK_FROM_START: success = distance >= 0 && VfsFile_seekFromStart(f->u.vfile, static_cast<uint64_t>(distance), nullptr); break;
-			case FILE_SEEK_FROM_END:   success = VfsFile_seekFromEnd(f->u.vfile, distance, nullptr); break;
-			default:                   success = VfsFile_seekFromCurrent(f->u.vfile, distance, nullptr); break;
-		}
-	}
-	if (!success) throw std::runtime_error("Seek in file failed");
-}
-
-
-INT32 FileGetPos(const SGPFile* f)
-{
-	bool success;
-	uint64_t position = 0;
-	if (f->flags & SGPFILE_REAL)
-	{
-		position = File_seekFromCurrent(f->u.file, 0);
-		success = position != UINT64_MAX;
-	}
-	else
-	{
-		success = VfsFile_seekFromCurrent(f->u.vfile, 0, &position);
-	}
-
-	if (!success)
-	{
-		RustPointer<char> err{getRustError()};
-		STLOGE("FileGetPos: {}", err.get());
-		throw std::runtime_error("Getting file position failed");
-	}
-	if (position > INT32_MAX)
-	{
-		STLOGW("FileGetPos: truncating from {} to {}", position, INT32_MAX);
-		position = INT32_MAX;
-	}
-	return static_cast<INT32>(position);
-}
-
-
-UINT32 FileGetSize(const SGPFile* f)
-{
-	bool success;
-	uint64_t len = 0;
-	if (f->flags & SGPFILE_REAL)
-	{
-		len = File_len(f->u.file);
-		success = len != UINT64_MAX;
-	}
-	else
-	{
-		success = VfsFile_len(f->u.vfile, &len);
-	}
-
-	if (!success)
-	{
-		RustPointer<char> err{getRustError()};
-		STLOGE("FileGetSize: {}", err.get());
-		throw std::runtime_error("Getting file size failed");
-	}
-	if (len > UINT32_MAX)
-	{
-		STLOGW("FileGetSize: truncating from {} to {}", len, UINT32_MAX);
-		len = UINT32_MAX;
-	}
-	return static_cast<UINT32>(len);
-}
-
 void FileMan::deleteFile(const ST::string& path)
 {
 	if (Fs_exists(path.c_str()) && !Fs_removeFile(path.c_str()))
@@ -405,7 +116,7 @@ SGPFile* FileMan::openForWriting(const ST::string& filename, bool truncate)
 		STLOGE("FileMan::openForWriting '{}' {}: {}", filename, truncate, err.get());
 		throw std::runtime_error("FileMan::openForWriting failed");
 	}
-	return GetSGPFileFromFile(file.release());
+	return new SGPFile(file.release());
 }
 
 
@@ -420,7 +131,7 @@ SGPFile* FileMan::openForAppend(const ST::string& filename)
 		STLOGE("FileMan::openForAppend '{}': {}", filename, err.get());
 		throw std::runtime_error("FileMan::openForAppend failed");
 	}
-	return GetSGPFileFromFile(file.release());
+	return new SGPFile(file.release());
 }
 
 
@@ -435,7 +146,7 @@ SGPFile* FileMan::openForReadWrite(const ST::string& filename)
 		STLOGE("FileMan::openForReadWrite '{}': {}", filename, err.get());
 		throw std::runtime_error("FileMan::openForReadWrite failed");
 	}
-	return GetSGPFileFromFile(file.release());
+	return new SGPFile(file.release());
 }
 
 /** Open file for reading. */
@@ -448,7 +159,7 @@ SGPFile* FileMan::openForReading(const ST::string &filename)
 		STLOGE("FileMan::openForReading '{}': {}", filename, err.get());
 		throw std::runtime_error("FileMan::openForReading failed");
 	}
-	return GetSGPFileFromFile(file.release());
+	return new SGPFile(file.release());
 }
 
 std::vector<ST::string>

@@ -741,8 +741,8 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		}
 
 		hFile = GCM->openGameResForReading(pFilename);
-		rwOps = FileGetRWOps(hFile);
-		auto hFileLen = FileGetSize(hFile);
+		rwOps = hFile->getRwOps();
+		auto hFileLen = hFile->size();
 		if (hFileLen <= SOUND_FILE_STREAMING_THRESHOLD) {
 			// If the file length is below the streaming threshold we store the raw data in the inMemoryBuffer
 			inMemoryBuffer = new UINT8[hFileLen]{};
@@ -781,7 +781,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		SLOGE("SoundLoadDisk Error for \"%s\": %s", pFilename, err.what());
 		// Clean up possible allocations
 		if (hFile != NULL) {
-			FileClose(hFile);
+			delete hFile;
 		}
 		if (rwOps != NULL) {
 			SDL_FreeRW(rwOps);

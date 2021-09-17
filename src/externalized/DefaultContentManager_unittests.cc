@@ -28,19 +28,19 @@ TEST(TempFiles, writeToFile)
 
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
-		FileWrite(file, "hello", 5);
+		file->write("hello", 5);
 	}
 
 	// open for writing, but don't truncate
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", false));
-		ASSERT_EQ(FileGetSize(file), 5u);
+		ASSERT_EQ(file->size(), 5u);
 	}
 
 	// open with truncate and check that it is empty
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
-		ASSERT_EQ(FileGetSize(file), 0u);
+		ASSERT_EQ(file->size(), 0u);
 	}
 
 	delete cm;
@@ -52,13 +52,13 @@ TEST(TempFiles, writeAndRead)
 
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
-		FileWrite(file, "hello", 5);
+		file->write("hello", 5);
 	}
 
 	{
 		char buf[10];
 		AutoSGPFile file(cm->openTempFileForReading("foo.txt"));
-		FileRead(file, buf, 5);
+		file->read(buf, 5);
 		buf[5] = 0;
 		ASSERT_STREQ(buf, "hello");
 	}
@@ -72,17 +72,17 @@ TEST(TempFiles, append)
 
 	{
 		AutoSGPFile file(cm->openTempFileForWriting("foo.txt", true));
-		FileWrite(file, "hello", 5);
+		file->write("hello", 5);
 	}
 
 	{
 		AutoSGPFile file(cm->openTempFileForAppend("foo.txt"));
-		FileWrite(file, "hello", 5);
+		file->write("hello", 5);
 	}
 
 	{
 		AutoSGPFile file(cm->openTempFileForReading("foo.txt"));
-		ASSERT_EQ(FileGetSize(file), 10u);
+		ASSERT_EQ(file->size(), 10u);
 	}
 
 	delete cm;

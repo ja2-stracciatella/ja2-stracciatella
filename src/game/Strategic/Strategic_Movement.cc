@@ -2460,7 +2460,7 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE const f)
 	// Save the number of movement groups to the saved game file
 	UINT32 uiNumberOfGroups = 0;
 	CFOR_EACH_GROUP(g) ++uiNumberOfGroups;
-	FileWrite(f, &uiNumberOfGroups, sizeof(UINT32));
+	f->write(&uiNumberOfGroups, sizeof(UINT32));
 
 	CFOR_EACH_GROUP(g)
 	{
@@ -2495,7 +2495,7 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE const f)
 		INJ_SKIP(d, 38)
 		Assert(d.getConsumed() == lengthof(data));
 
-		FileWrite(f, data, sizeof(data));
+		f->write(data, sizeof(data));
 
 		// Save the linked list, for the current type of group
 		if (g->fPlayer)
@@ -2511,7 +2511,7 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE const f)
 	}
 
 	// Save the unique id mask
-	FileWrite(f, uniqueIDMask, sizeof(uniqueIDMask));
+	f->write(uniqueIDMask, sizeof(uniqueIDMask));
 }
 
 
@@ -2526,7 +2526,7 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 
 	// Load the number of nodes in the list
 	UINT32 uiNumberOfGroups;
-	FileRead(f, &uiNumberOfGroups, sizeof(UINT32));
+	f->read(&uiNumberOfGroups, sizeof(UINT32));
 
 	//loop through all the nodes and add them to the LL
 	GROUP** anchor = &gpGroupList;
@@ -2535,7 +2535,7 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 		GROUP* const g = new GROUP{};
 
 		BYTE data[84];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		DataReader d{data};
 		EXTR_BOOL(d, g->fDebugGroup)
@@ -2596,7 +2596,7 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 	}
 
 	// Skip over saved unique id mask
-	FileSeek(f, 32, FILE_SEEK_FROM_CURRENT);
+	f->seek(32, FILE_SEEK_FROM_CURRENT);
 }
 
 
@@ -2606,14 +2606,14 @@ static void SavePlayerGroupList(HWFILE const f, GROUP const* const g)
 	// Save the number of nodes in the list
 	UINT32 uiNumberOfNodesInList = 0;
 	CFOR_EACH_PLAYER_IN_GROUP(p, g) ++uiNumberOfNodesInList;
-	FileWrite(f, &uiNumberOfNodesInList, sizeof(UINT32));
+	f->write(&uiNumberOfNodesInList, sizeof(UINT32));
 
 	// Loop through and save only the players profile id
 	CFOR_EACH_PLAYER_IN_GROUP(p, g)
 	{
 		// Save the ubProfile ID for this node
 		const UINT32 uiProfileID = p->pSoldier->ubProfile;
-		FileWrite(f, &uiProfileID, sizeof(UINT32));
+		f->write(&uiProfileID, sizeof(UINT32));
 	}
 }
 
@@ -2623,7 +2623,7 @@ static void LoadPlayerGroupList(HWFILE const f, GROUP* const g)
 {
 	// Load the number of nodes in the player list
 	UINT32 node_count;
-	FileRead(f, &node_count, sizeof(UINT32));
+	f->read(&node_count, sizeof(UINT32));
 
 	PLAYERGROUP** anchor = &g->pPlayerList;
 	for (UINT32 i = node_count; i != 0; --i)
@@ -2631,7 +2631,7 @@ static void LoadPlayerGroupList(HWFILE const f, GROUP* const g)
 		PLAYERGROUP* const pg = new PLAYERGROUP{};
 
 		UINT32 profile_id;
-		FileRead(f, &profile_id, sizeof(UINT32));
+		f->read(&profile_id, sizeof(UINT32));
 
 		SOLDIERTYPE* const s = FindSoldierByProfileIDOnPlayerTeam(profile_id);
 		//Should never happen
@@ -2663,7 +2663,7 @@ static void SaveEnemyGroupStruct(HWFILE const f, GROUP const& g)
 	INJ_SKIP(d, 20)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }
 
 
@@ -2671,7 +2671,7 @@ static void SaveEnemyGroupStruct(HWFILE const f, GROUP const& g)
 static void LoadEnemyGroupStructFromSavedGame(HWFILE const f, GROUP& g)
 {
 	BYTE data[29];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	ENEMYGROUP* const eg = new ENEMYGROUP{};
 	DataReader d{data};
@@ -2699,7 +2699,7 @@ static void SaveWayPointList(HWFILE const f, GROUP const* const g)
 	{
 		++uiNumberOfWayPoints;
 	}
-	FileWrite(f, &uiNumberOfWayPoints, sizeof(UINT32));
+	f->write(&uiNumberOfWayPoints, sizeof(UINT32));
 
 	for (const WAYPOINT* w = g->pWaypoints; w != NULL; w = w->next)
 	{
@@ -2710,7 +2710,7 @@ static void SaveWayPointList(HWFILE const f, GROUP const* const g)
 		INJ_SKIP(d, 6)
 		Assert(d.getConsumed() == lengthof(data));
 
-		FileWrite(f, data, sizeof(data));
+		f->write(data, sizeof(data));
 	}
 }
 
@@ -2719,7 +2719,7 @@ static void LoadWayPointList(HWFILE const f, GROUP* const g)
 {
 	// Load the number of waypoints
 	UINT32 uiNumberOfWayPoints;
-	FileRead(f, &uiNumberOfWayPoints, sizeof(UINT32));
+	f->read(&uiNumberOfWayPoints, sizeof(UINT32));
 
 	WAYPOINT** anchor = &g->pWaypoints;
 	for (UINT32 i = uiNumberOfWayPoints; i != 0; --i)
@@ -2727,7 +2727,7 @@ static void LoadWayPointList(HWFILE const f, GROUP* const g)
 		WAYPOINT* const w = new WAYPOINT{};
 
 		BYTE data[8];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		DataReader d{data};
 		EXTR_U8(  d, w->x)

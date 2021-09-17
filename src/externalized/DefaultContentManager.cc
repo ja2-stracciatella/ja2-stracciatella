@@ -76,10 +76,10 @@ const MercProfileInfo EMPTY_MERC_PROFILE_INFO;
 
 static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType, SGPFile* File, UINT32 seek_chars, UINT32 read_chars)
 {
-	FileSeek(File, seek_chars * 2, FILE_SEEK_FROM_START);
+	File->seek(seek_chars * 2, FILE_SEEK_FROM_START);
 
 	ST::utf16_buffer buf(read_chars, u'\0');
-	FileRead(File, buf.data(), sizeof(char16_t) * read_chars);
+	File->read(buf.data(), sizeof(char16_t) * read_chars);
 
 	buf[read_chars - 1] = u'\0';
 	for (char16_t* i = buf.data(); *i != u'\0'; ++i)
@@ -534,10 +534,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename
 		throw std::runtime_error(ST::format("openGameResForReading: {}", err.get()).to_std_string());
 	}
 	STLOGD("Opened resource file from VFS: '{}'", filename);
-	SGPFile *file = new SGPFile{};
-	file->flags = SGPFILE_NONE;
-	file->u.vfile = vfile.release();
-	return file;
+	return new SGPFile(vfile.release());
 }
 
 /* Checks if a game resource exists. */
@@ -654,7 +651,7 @@ ST::string* DefaultContentManager::loadDialogQuoteFromFile(const ST::string& fil
 void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const ST::string& fileName, std::vector<ST::string*> &quotes) const
 {
 	AutoSGPFile File(openGameResForReading(fileName));
-	uint32_t fileSize = FileGetSize(File);
+	uint32_t fileSize = File->size();
 	uint32_t numQuotes = fileSize / DIALOGUESIZE / 2;
 
 	for(uint32_t i = 0; i < numQuotes; i++)
@@ -1085,7 +1082,7 @@ bool DefaultContentManager::loadGameData()
 std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
 {
 	AutoSGPFile f(openGameResForReading(fileName));
-	ST::string jsonData = FileReadStringToEnd(f);
+	ST::string jsonData = f->readStringToEnd();
 
 	auto document = std::make_unique<rapidjson::Document>();
 	if (document->Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())

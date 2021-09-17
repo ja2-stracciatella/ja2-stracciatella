@@ -1201,18 +1201,18 @@ void CheckForQuests( UINT32 uiDay )
 void SaveQuestInfoToSavedGameFile(HWFILE const hFile)
 {
 	//Save all the states if the Quests
-	FileWrite(hFile, gubQuest, MAX_QUESTS);
+	hFile->write(gubQuest, MAX_QUESTS);
 
 	//Save all the states for the facts
-	FileWrite(hFile, gubFact, NUM_FACTS);
+	hFile->write(gubFact, NUM_FACTS);
 }
 
 
 void LoadQuestInfoFromSavedGameFile(HWFILE const hFile)
 {
 	//Save all the states if the Quests
-	FileRead(hFile, gubQuest, MAX_QUESTS);
+	hFile->read(gubQuest, MAX_QUESTS);
 
 	//Save all the states for the facts
-	FileRead(hFile, gubFact, NUM_FACTS);
+	hFile->read(gubFact, NUM_FACTS);
 }

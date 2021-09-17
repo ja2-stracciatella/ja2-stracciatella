@@ -24,7 +24,7 @@ try
 	AutoSGPFile f(GCM->openGameResForReading(col_file));
 
 	BYTE data[776];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_SKIP(d, 8); // skip header

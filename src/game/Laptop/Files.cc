@@ -365,10 +365,10 @@ static void OpenAndReadFilesFile(void)
 	// file exists, read in data, continue until file end
 	AutoSGPFile f(GCM->openTempFileForReading(FILES_DATA_FILE));
 
-	for (UINT i = FileGetSize(f) / FILE_ENTRY_SIZE; i != 0; --i)
+	for (UINT i = f->size() / FILE_ENTRY_SIZE; i != 0; --i)
 	{
 		BYTE data[FILE_ENTRY_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT8 code;
 		UINT8 already_read;
@@ -397,7 +397,7 @@ static void OpenAndWriteFilesFile(void)
 		INJ_U8(d, i->fRead)
 		Assert(d.getConsumed() == lengthof(data));
 
-		FileWrite(f, data, sizeof(data));
+		f->write(data, sizeof(data));
 	}
 
 	ClearFilesList();

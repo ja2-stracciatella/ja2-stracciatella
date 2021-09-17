@@ -458,7 +458,7 @@ void LoadSmokeEffectsFromLoadGameFile(HWFILE const hFile, UINT32 const savegame_
 	std::fill_n(gSmokeEffectData, NUM_SMOKE_EFFECT_SLOTS, SMOKEEFFECT{});
 
 	//Load the Number of Smoke Effects
-	FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32));
+	hFile->read(&guiNumSmokeEffects, sizeof(UINT32));
 
 	//This is a TEMP hack to allow us to use the saves
 	if (savegame_version < 37 && guiNumSmokeEffects == 0)
@@ -509,7 +509,7 @@ void SaveSmokeEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 	AutoSGPFile hFile(GCM->openTempFileForWriting(zMapName, true));
 
 	//Save the Number of Smoke Effects
-	FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32));
+	hFile->write(&uiNumSmokeEffects, sizeof(UINT32));
 
 	CFOR_EACH_SMOKE_EFFECT(s)
 	{
@@ -533,7 +533,7 @@ void LoadSmokeEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 
 
 	//Load the Number of Smoke Effects
-	FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32));
+	hFile->read(&guiNumSmokeEffects, sizeof(UINT32));
 
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)

@@ -222,13 +222,13 @@ void ExtractMercProfile(BYTE const* const Src, MERCPROFILESTRUCT& p, bool stracL
 * If saved checksum is not correct, exception will be thrown. */
 void ExtractImpProfileFromFile(SGPFile *hFile, INT32 *iProfileId, INT32 *iPortraitNumber, MERCPROFILESTRUCT& p)
 {
-	UINT32 fileSize = FileGetSize(hFile);
+	UINT32 fileSize = hFile->size();
 
 	// read in the profile
-	FileRead(hFile, iProfileId, sizeof(INT32));
+	hFile->read(iProfileId, sizeof(INT32));
 
 	// read in the portrait
-	FileRead(hFile, iPortraitNumber, sizeof(INT32));
+	hFile->read(iPortraitNumber, sizeof(INT32));
 
 	// read in the profile
 	// not checking the checksum
@@ -236,13 +236,13 @@ void ExtractImpProfileFromFile(SGPFile *hFile, INT32 *iProfileId, INT32 *iPortra
 	if(fileSize >= MERC_PROFILE_SIZE_STRAC_LINUX)
 	{
 		std::vector<BYTE> data(MERC_PROFILE_SIZE_STRAC_LINUX);
-		FileRead(hFile, data.data(), MERC_PROFILE_SIZE_STRAC_LINUX);
+		hFile->read(data.data(), MERC_PROFILE_SIZE_STRAC_LINUX);
 		ExtractMercProfile(data.data(), p, true, &checksum, NULL);
 	}
 	else
 	{
 		std::vector<BYTE> data(MERC_PROFILE_SIZE);
-		FileRead(hFile, data.data(), MERC_PROFILE_SIZE);
+		hFile->read(data.data(), MERC_PROFILE_SIZE);
 		ExtractMercProfile(data.data(), p, false, &checksum, NULL);
 	}
 }
@@ -419,7 +419,7 @@ void InjectMercProfileIntoFile(HWFILE const f, MERCPROFILESTRUCT const& p)
 {
 	BYTE Data[716];
 	InjectMercProfile(Data, p);
-	FileWrite(f, Data, sizeof(Data));
+	f->write(Data, sizeof(Data));
 }
 
 

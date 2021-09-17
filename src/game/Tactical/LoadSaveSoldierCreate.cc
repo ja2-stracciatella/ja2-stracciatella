@@ -116,13 +116,13 @@ void ExtractSoldierCreateFromFile(HWFILE const f, SOLDIERCREATE_STRUCT* const c,
 	if(stracLinuxFormat)
 	{
 		BYTE data[1060];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 		ExtractSoldierCreate(data, c, stracLinuxFormat);
 	}
 	else
 	{
 		BYTE data[1040];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 		ExtractSoldierCreate(data, c, stracLinuxFormat);
 	}
 }
@@ -135,9 +135,9 @@ void ExtractSoldierCreateFromFileWithChecksumAndGuess(HWFILE f, SOLDIERCREATE_ST
 	// First trying to load the windows format.
 	// If checksum doesn't match, trying to load linux format.
 
-	const INT32 pos = FileGetPos(f);
+	const INT32 pos = f->pos();
 	ExtractSoldierCreateFromFile(f, c, false);
-	FileRead(f, checksum, 2);
+	f->read(checksum, 2);
 
 	UINT16 const fresh_checksum = CalcSoldierCreateCheckSum(c);
 	if(*checksum != fresh_checksum)
@@ -146,9 +146,9 @@ void ExtractSoldierCreateFromFileWithChecksumAndGuess(HWFILE f, SOLDIERCREATE_ST
 
 		// trying linux format
 		// not validating the checksum - it will be the job of the caller
-		FileSeek(f, pos, FILE_SEEK_FROM_START);
+		f->seek(pos, FILE_SEEK_FROM_START);
 		ExtractSoldierCreateFromFile(f, c, true);
-		FileRead(f, checksum, 2);
+		f->read(checksum, 2);
 	}
 }
 
@@ -215,5 +215,5 @@ void InjectSoldierCreateIntoFile(HWFILE const f, SOLDIERCREATE_STRUCT const* con
 {
 	BYTE data[1040];
 	InjectSoldierCreate(data, c);
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }

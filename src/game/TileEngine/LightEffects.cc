@@ -175,7 +175,7 @@ void LoadLightEffectsFromLoadGameFile(HWFILE const hFile)
 	std::fill_n(gLightEffectData, NUM_LIGHT_EFFECT_SLOTS, LIGHTEFFECT{});
 
 	//Load the Number of Light Effects
-	FileRead(hFile, &guiNumLightEffects, sizeof(UINT32));
+	hFile->read(&guiNumLightEffects, sizeof(UINT32));
 
 	//if there are lights saved.
 	if( guiNumLightEffects != 0 )
@@ -222,7 +222,7 @@ void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 	AutoSGPFile hFile(GCM->openTempFileForWriting(zMapName, true));
 
 	//Save the Number of Light Effects
-	FileWrite(hFile, &uiNumLightEffects, sizeof(UINT32));
+	hFile->write(&uiNumLightEffects, sizeof(UINT32));
 
 	//loop through and save the number of Light effects
 	CFOR_EACH_LIGHTEFFECT(l)
@@ -246,7 +246,7 @@ void LoadLightEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 	ResetLightEffects();
 
 	//Load the Number of Light Effects
-	FileRead(hFile, &guiNumLightEffects, sizeof(UINT32));
+	hFile->read(&guiNumLightEffects, sizeof(UINT32));
 
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumLightEffects;uiCnt++)

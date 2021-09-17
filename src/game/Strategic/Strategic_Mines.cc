@@ -653,7 +653,7 @@ void SaveMineStatusToSaveGameFile(HWFILE const f)
 		INJ_SKIP(d, 12)
 		Assert(d.getConsumed() == lengthof(data));
 
-		FileWrite(f, data, sizeof(data));
+		f->write(data, sizeof(data));
 	}
 }
 
@@ -666,7 +666,7 @@ void LoadMineStatusFromSavedGameFile(HWFILE const f)
 	for (auto& i : gMineStatus)
 	{
 		BYTE  data[44];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		DataReader d{data};
 		EXTR_U8(  d, i.ubMineType)

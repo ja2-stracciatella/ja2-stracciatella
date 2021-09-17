@@ -875,7 +875,7 @@ static void WriteBalanceToDisk(void)
 {
 	// will write the current balance to disk
 	AutoSGPFile hFileHandle(GCM->openTempFileForWriting(FINANCES_DATA_FILE, false));
-	FileWrite(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
+	hFileHandle->write(&LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 }
 
 
@@ -889,7 +889,7 @@ static void GetBalanceFromDisk(void)
 	}
 	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
 	// get balance from disk first
-	FileRead(f, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
+	f->read(&LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 }
 
 
@@ -908,7 +908,7 @@ static void AppendFinanceToEndOfFile(void)
 	INJ_I32(d, fu->iBalanceToDate);
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }
 
 
@@ -917,7 +917,7 @@ static void SetLastPageInRecords(void)
 {
 	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
 
-	const UINT32 size = FileGetSize(f);
+	const UINT32 size = f->size();
 
 	if (size < FINANCE_HEADER_SIZE + FINANCE_RECORD_SIZE)
 	{
@@ -956,7 +956,7 @@ static void LoadInRecords(UINT32 const page)
 
 	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
 
-	UINT32 const size = FileGetSize(f);
+	UINT32 const size = f->size();
 	if (size < FINANCE_HEADER_SIZE) return;
 
 	UINT32       records      = (size - FINANCE_HEADER_SIZE) / FINANCE_RECORD_SIZE;
@@ -964,13 +964,13 @@ static void LoadInRecords(UINT32 const page)
 	if (records <= skip_records) return;
 
 	records -= skip_records;
-	FileSeek(f, FINANCE_HEADER_SIZE + FINANCE_RECORD_SIZE * skip_records, FILE_SEEK_FROM_START);
+	f->seek(FINANCE_HEADER_SIZE + FINANCE_RECORD_SIZE * skip_records, FILE_SEEK_FROM_START);
 
 	if (records > NUM_RECORDS_PER_PAGE) records = NUM_RECORDS_PER_PAGE;
 	for (; records > 0; --records)
 	{
 		BYTE data[FINANCE_RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT8  code;
 		UINT8  second_code;
@@ -1037,12 +1037,12 @@ static INT32 GetPreviousDaysBalance(void)
 	INT32 balance = 0;
 	// start at the end, move back until Date / 24 * 60 on the record equals date_in_days - 2
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT32 date;
 		INT32 balance_to_date;
@@ -1077,12 +1077,12 @@ static INT32 GetTodaysBalance(void)
 
 	INT32 balance = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT32 date;
 		INT32 balance_to_date;
@@ -1118,12 +1118,12 @@ static INT32 GetPreviousDaysIncome(void)
 	// start at the end, move back until Date / 24 * 60 on the record is = date_in_days - 2
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT8  code;
 		UINT32 date;
@@ -1163,12 +1163,12 @@ static INT32 GetTodaysDaysIncome(void)
 	INT32 iTotalIncome = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT8  code;
 		UINT32 date;
@@ -1224,12 +1224,12 @@ static INT32 GetTodaysOtherDeposits(void)
 	INT32 iTotalIncome = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT8  code;
 		UINT32 date;
@@ -1273,12 +1273,12 @@ static INT32 GetYesterdaysOtherDeposits(void)
 	// start at the end, move back until Date / 24 * 60 on the record is =  date_in_days - 2
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT8  code;
 		UINT32 date;

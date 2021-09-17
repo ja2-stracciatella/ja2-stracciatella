@@ -24,9 +24,9 @@ SGPImage* LoadTGAFileToImage(const ST::string filename, UINT16 const fContents)
 
 	AutoSGPFile hFile(GCM->openGameResForReading(filename));
 
-	FileRead(hFile, &uiImgID,  sizeof(UINT8));
-	FileRead(hFile, &uiColMap, sizeof(UINT8));
-	FileRead(hFile, &uiType,   sizeof(UINT8));
+	hFile->read(&uiImgID,  sizeof(UINT8));
+	hFile->read(&uiColMap, sizeof(UINT8));
+	hFile->read(&uiType,   sizeof(UINT8));
 
 	switch (uiType)
 	{
@@ -53,7 +53,7 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 	UINT8		uiImagePixelSize;
 
 	BYTE data[15];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_SKIP(d, 2)              // colour map origin
@@ -66,12 +66,12 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 	Assert(d.getConsumed() == lengthof(data));
 
 	// skip the id
-	FileSeek(f, uiImgID, FILE_SEEK_FROM_CURRENT);
+	f->seek(uiImgID, FILE_SEEK_FROM_CURRENT);
 
 	// skip the colour map
 	if (uiColMap != 0)
 	{
-		FileSeek(f, uiColMapLength * (uiImagePixelSize / 8), FILE_SEEK_FROM_CURRENT);
+		f->seek(uiColMapLength * (uiImagePixelSize / 8), FILE_SEEK_FROM_CURRENT);
 	}
 
 	AutoSGPImage img(new SGPImage(uiWidth, uiHeight, uiImagePixelSize));
@@ -84,7 +84,7 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 			// Data is stored top-bottom - reverse for SGPImage format
 			for (size_t y = uiHeight; y != 0;)
 			{
-				FileRead(f, &img_data[uiWidth * --y], uiWidth * 2);
+				f->read(&img_data[uiWidth * --y], uiWidth * 2);
 			}
 		}
 		else if (uiImagePixelSize == 24)
@@ -96,7 +96,7 @@ static SGPImage* ReadUncompRGBImage(HWFILE const f, UINT8 const uiImgID, UINT8 c
 				for (UINT32 x = 0 ; x < uiWidth; ++x)
 				{
 					UINT8 bgr[3];
-					FileRead(f, bgr, sizeof(bgr));
+					f->read(bgr, sizeof(bgr));
 					line[x * 3    ] = bgr[2];
 					line[x * 3 + 1] = bgr[1];
 					line[x * 3 + 2] = bgr[0];

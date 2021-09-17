@@ -130,11 +130,11 @@ TEST(FileManTest, RemoveAllFilesInDir)
 	SGPFile* fileB = FileMan::openForWriting(pathB);
 	ASSERT_NE(fileB, nullptr);
 
-	FileWrite(fileA, "foo", 3);
-	FileWrite(fileB, "bar", 3);
+	fileA->write("foo", 3);
+	fileB->write("bar", 3);
 
-	FileClose(fileA);
-	FileClose(fileB);
+	delete fileA;
+	delete fileB;
 
 	std::vector<ST::string> results = FileMan::findAllFilesInDir(tempPath.get(), true);
 	ASSERT_EQ(results.size(), 2u);
@@ -158,14 +158,14 @@ TEST(FileManTest, ReadTextFile)
 
 	SGPFile* fileA = FileMan::openForWriting(pathA);
 	ASSERT_NE(fileA, nullptr);
-	FileWrite(fileA, "foo bar baz", 11);
-	FileClose(fileA);
+	fileA->write("foo bar baz", 11);
+	delete fileA;
 
 	SGPFile* forReading = FileMan::openForReading(pathA);
 	ASSERT_NE(forReading, nullptr);
-	ST::string content = FileReadStringToEnd(forReading);
+	ST::string content = forReading->readStringToEnd();
 	ASSERT_STREQ(content.c_str(), "foo bar baz");
-	FileClose(forReading);
+	delete forReading;
 }
 
 TEST(FileManTest, GetFileName)

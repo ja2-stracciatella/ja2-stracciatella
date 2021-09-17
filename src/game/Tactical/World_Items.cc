@@ -227,9 +227,9 @@ void TrashWorldItems()
 void SaveWorldItemsToMap(HWFILE const f)
 {
 	UINT32 const n_actual_world_items = GetNumUsedWorldItems();
-	FileWrite(f, &n_actual_world_items, sizeof(n_actual_world_items));
+	f->write(&n_actual_world_items, sizeof(n_actual_world_items));
 
-	CFOR_EACH_WORLD_ITEM(wi) FileWrite(f, &wi, sizeof(WORLDITEM));
+	CFOR_EACH_WORLD_ITEM(wi) f->write(&wi, sizeof(WORLDITEM));
 }
 
 
@@ -245,14 +245,14 @@ void LoadWorldItemsFromMap(HWFILE const f)
 	// Read the number of items that were saved in the map
 	UINT32 n_world_items;
 	auto itemReplacements = GCM->getMapItemReplacements();
-	FileRead(f, &n_world_items, sizeof(n_world_items));
+	f->read(&n_world_items, sizeof(n_world_items));
 
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME && !gfEditMode)
 	{
 		// The sector has already been visited. The items are saved in a different
 		// format that will be loaded later on. So, all we need to do is skip the
 		// data entirely.
-		FileSeek(f, sizeof(WORLDITEM) * n_world_items, FILE_SEEK_FROM_CURRENT);
+		f->seek(sizeof(WORLDITEM) * n_world_items, FILE_SEEK_FROM_CURRENT);
 		return;
 	}
 
@@ -261,7 +261,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 		// Add all of the items to the world indirectly through AddItemToPool, but
 		// only if the chance associated with them succeed.
 		WORLDITEM wi;
-		FileRead(f, &wi, sizeof(wi));
+		f->read(&wi, sizeof(wi));
 		OBJECTTYPE& o = wi.o;
 
 		if (o.usItem == OWNERSHIP) wi.ubNonExistChance = 0;

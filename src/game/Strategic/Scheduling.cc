@@ -341,14 +341,14 @@ void LoadSchedules(HWFILE const f)
 	if (gpScheduleList) DestroyAllSchedules();
 
 	UINT8 n_schedules;
-	FileRead(f, &n_schedules, sizeof(n_schedules));
+	f->read(&n_schedules, sizeof(n_schedules));
 
 	gubScheduleID = 1;
 	SCHEDULENODE** anchor = &gpScheduleList;
 	for (UINT8 n = n_schedules; n != 0; --n)
 	{
 		BYTE data[36];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		SCHEDULENODE* const node = new SCHEDULENODE{};
 
@@ -375,7 +375,7 @@ void LoadSchedules(HWFILE const f)
 void LoadSchedulesFromSave(HWFILE const f)
 {
 	UINT8 n_schedules_saved;
-	FileRead(f, &n_schedules_saved, sizeof(n_schedules_saved));
+	f->read(&n_schedules_saved, sizeof(n_schedules_saved));
 
 	// Hack problem with schedules getting misaligned.
 	UINT32 n_schedules = n_schedules_saved;
@@ -385,7 +385,7 @@ void LoadSchedulesFromSave(HWFILE const f)
 	for (; n_schedules != 0; --n_schedules)
 	{
 		BYTE data[36];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		SCHEDULENODE* const node = new SCHEDULENODE{};
 
@@ -467,7 +467,7 @@ void SaveSchedules(HWFILE const f)
 	}
 
 	UINT8 n_to_save = MIN(n_schedules, 32);
-	FileWrite(f, &n_to_save, sizeof(UINT8));
+	f->write(&n_to_save, sizeof(UINT8));
 
 	// Save each schedule
 	for (SCHEDULENODE const* i = gpScheduleList; i; i = i->next)
@@ -489,7 +489,7 @@ void SaveSchedules(HWFILE const f)
 		INJ_U16(    d, i->usFlags)
 		Assert(d.getConsumed() == lengthof(data));
 
-		FileWrite(f, data, sizeof(data));
+		f->write(data, sizeof(data));
 	}
 }
 

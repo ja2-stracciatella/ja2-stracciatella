@@ -176,7 +176,7 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 
 	{
 		AutoSGPFile file{FileMan::openForReading(floatsPath)};
-		std::vector<uint8_t> buf = FileReadToEnd(file);
+		std::vector<uint8_t> buf = file->readToEnd();
 		ASSERT_EQ(buf.size(), sizeof(float) * 5);
 		float f;
 
@@ -191,7 +191,7 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 
 	{
 		AutoSGPFile file{FileMan::openForReading(doublesPath)};
-		std::vector<uint8_t> buf = FileReadToEnd(file);
+		std::vector<uint8_t> buf = file->readToEnd();
 		ASSERT_EQ(buf.size(), sizeof(double) * 5);
 		double d;
 

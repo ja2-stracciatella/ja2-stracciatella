@@ -7,7 +7,7 @@
 void ExtractStrategicMapElementFromFile(HWFILE const f, StrategicMapElement& e)
 {
 	BYTE data[41];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_SKIP(d, 16)
@@ -34,5 +34,5 @@ void InjectStrategicMapElementIntoFile(HWFILE const f, StrategicMapElement const
 	INJ_SKIP(d, 20)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }

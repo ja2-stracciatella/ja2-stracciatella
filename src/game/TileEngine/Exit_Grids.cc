@@ -122,13 +122,13 @@ void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 	EXITGRID exitGrid;
 	UINT16 usNumSaved = 0;
 	UINT16 x;
-	FileWrite(fp, &usNumExitGrids, 2);
+	fp->write(&usNumExitGrids, 2);
 	for( x = 0; x < WORLD_MAX; x++ )
 	{
 		if( GetExitGrid( x, &exitGrid ) )
 		{
-			FileWrite(fp, &x, 2);
-			FileWrite(fp, &exitGrid, 5);
+			fp->write(&x, 2);
+			fp->write(&exitGrid, 5);
 			usNumSaved++;
 		}
 	}
@@ -144,11 +144,11 @@ void LoadExitGrids(HWFILE const f)
 	UINT16 usNumSaved;
 	UINT16 usMapIndex;
 	gfLoadingExitGrids = TRUE;
-	FileRead(f, &usNumSaved, sizeof(usNumSaved));
+	f->read(&usNumSaved, sizeof(usNumSaved));
 	for( x = 0; x < usNumSaved; x++ )
 	{
-		FileRead(f, &usMapIndex, sizeof(usMapIndex));
-		FileRead(f, &exitGrid,   5);
+		f->read(&usMapIndex, sizeof(usMapIndex));
+		f->read(&exitGrid,   5);
 		AddExitGridToWorld( usMapIndex, &exitGrid );
 	}
 	gfLoadingExitGrids = FALSE;

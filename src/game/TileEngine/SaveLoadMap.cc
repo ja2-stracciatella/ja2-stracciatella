@@ -49,7 +49,7 @@ static std::unique_ptr<AutoSGPFile> OpenMapModificationTempFile(INT16 const sSec
 // Writes map modification to the open temp file
 static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, AutoSGPFile& hFile)
 {
-	FileWrite(hFile, pMap, sizeof(MODIFY_MAP));
+	hFile->write(pMap, sizeof(MODIFY_MAP));
 }
 
 // Opens the map temp file, writes the modification, then close the file
@@ -85,11 +85,11 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 		AutoSGPFile hFile(GCM->openTempFileForReading(zMapName));
 
 		//Get the size of the file
-		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
+		uiNumberOfElements = hFile->size() / sizeof(MODIFY_MAP);
 
 		//Read the map temp file into a buffer
 		pTempArrayOfMaps.Allocate(uiNumberOfElements);
-		FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements);
+		hFile->read(pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements);
 	}
 
 	//Delete the file
@@ -419,7 +419,7 @@ void SaveRevealedStatusArrayToRevealedTempFile(INT16 const sSectorX, INT16 const
 	AutoSGPFile hFile(GCM->openTempFileForWriting(GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ ), true));
 
 	//Write the revealed array to the Revealed temp file
-	FileWrite(hFile, gpRevealedMap, NUM_REVEALED_BYTES);
+	hFile->write(gpRevealedMap, NUM_REVEALED_BYTES);
 
 	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_REVEALED_STATUS_TEMP_FILE_EXISTS );
 
@@ -445,7 +445,7 @@ void LoadRevealedStatusArrayFromRevealedTempFile()
 		gpRevealedMap = new UINT8[NUM_REVEALED_BYTES]{};
 
 		// Load the Reveal map array structure
-		FileRead(hFile, gpRevealedMap, NUM_REVEALED_BYTES);
+		hFile->read(gpRevealedMap, NUM_REVEALED_BYTES);
 	}
 
 	//Loop through and set the bits in the map that are revealed
@@ -625,11 +625,11 @@ try
 		AutoSGPFile hFile(GCM->openTempFileForReading(zMapName));
 
 		//Get the number of elements in the file
-		uiNumberOfElements = FileGetSize(hFile) / sizeof(MODIFY_MAP);
+		uiNumberOfElements = hFile->size() / sizeof(MODIFY_MAP);
 
 		//Read the map temp file into a buffer
 		pTempArrayOfMaps.Allocate(uiNumberOfElements);
-		FileRead(hFile, pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements);
+		hFile->read(pTempArrayOfMaps, sizeof(*pTempArrayOfMaps) * uiNumberOfElements);
 	}
 
 	//Delete the file
@@ -760,10 +760,10 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 		// Read the map temp file into a buffer
 		AutoSGPFile src(GCM->openTempFileForReading(map_name));
 
-		uiNumberOfElements = FileGetSize(src) / sizeof(MODIFY_MAP);
+		uiNumberOfElements = src->size() / sizeof(MODIFY_MAP);
 
 		mm.Allocate(uiNumberOfElements);
-		FileRead(src, mm, sizeof(*mm) * uiNumberOfElements);
+		src->read(mm, sizeof(*mm) * uiNumberOfElements);
 	}
 
 	for (UINT32 i = 0; i < uiNumberOfElements; ++i)
@@ -778,5 +778,5 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 	}
 
 	AutoSGPFile dst(GCM->openTempFileForWriting(map_name, true));
-	FileWrite(dst, mm, sizeof(*mm) * uiNumberOfElements);
+	dst->write(mm, sizeof(*mm) * uiNumberOfElements);
 }

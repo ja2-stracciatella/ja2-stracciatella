@@ -3369,17 +3369,17 @@ void SaveLaptopInfoToSavedGame(HWFILE const f)
 	INJ_SKIP( d, 87)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 
 	if (l.usNumberOfBobbyRayOrderUsed != 0)
 	{ // There is anything in the Bobby Ray Orders on delivery
 		size_t const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray.data()) * l.BobbyRayOrdersOnDeliveryArray.size();
-		FileWrite(f, l.BobbyRayOrdersOnDeliveryArray.data(), size);
+		f->write(l.BobbyRayOrdersOnDeliveryArray.data(), size);
 	}
 
 	if (l.ubNumberLifeInsurancePayoutUsed != 0)
 	{ // There are any insurance payouts in progress
-		FileWrite(f, l.pLifeInsurancePayouts.data(), sizeof(LIFE_INSURANCE_PAYOUT) * l.pLifeInsurancePayouts.size());
+		f->write(l.pLifeInsurancePayouts.data(), sizeof(LIFE_INSURANCE_PAYOUT) * l.pLifeInsurancePayouts.size());
 	}
 }
 
@@ -3393,7 +3393,7 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	l.pLifeInsurancePayouts.clear();
 
 	BYTE data[7440];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_BOOL( d, l.gfNewGameLaptop)
@@ -3463,7 +3463,7 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	{ // There is anything in the Bobby Ray Orders on Delivery
 		l.BobbyRayOrdersOnDeliveryArray.resize(BobbyRayOrdersOnDeliveryArraySize);
 		size_t const size = sizeof(*l.BobbyRayOrdersOnDeliveryArray.data()) * BobbyRayOrdersOnDeliveryArraySize;
-		FileRead(f, l.BobbyRayOrdersOnDeliveryArray.data(), size);
+		f->read(l.BobbyRayOrdersOnDeliveryArray.data(), size);
 	}
 	else
 	{
@@ -3473,7 +3473,7 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 	if (l.ubNumberLifeInsurancePayoutUsed != 0)
 	{ // There are any Insurance Payouts in progress
 		l.pLifeInsurancePayouts.assign(numLifeInsurancePayouts, LIFE_INSURANCE_PAYOUT{});
-		FileRead(f, l.pLifeInsurancePayouts.data(), sizeof(LIFE_INSURANCE_PAYOUT) * numLifeInsurancePayouts);
+		f->read(l.pLifeInsurancePayouts.data(), sizeof(LIFE_INSURANCE_PAYOUT) * numLifeInsurancePayouts);
 	}
 	else
 	{

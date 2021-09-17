@@ -350,7 +350,7 @@ static void OpenAndReadHistoryFile(void)
 
 	AutoSGPFile f(GCM->openTempFileForReading(HISTORY_DATA_FILE));
 
-	UINT entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
+	UINT entry_count = f->size() / SIZE_OF_HISTORY_FILE_RECORD;
 	while (entry_count-- > 0)
 	{
 		UINT8  ubCode;
@@ -360,13 +360,13 @@ static void OpenAndReadHistoryFile(void)
 		INT16  sSectorY;
 		INT8   bSectorZ;
 
-		FileRead(f, &ubCode,       sizeof(UINT8));
-		FileRead(f, &ubSecondCode, sizeof(UINT8));
-		FileRead(f, &uiDate,       sizeof(UINT32));
-		FileRead(f, &sSectorX,     sizeof(INT16));
-		FileRead(f, &sSectorY,     sizeof(INT16));
-		FileRead(f, &bSectorZ,     sizeof(INT8));
-		FileSeek(f, 1, FILE_SEEK_FROM_CURRENT);
+		f->read(&ubCode,       sizeof(UINT8));
+		f->read(&ubSecondCode, sizeof(UINT8));
+		f->read(&uiDate,       sizeof(UINT32));
+		f->read(&sSectorX,     sizeof(INT16));
+		f->read(&sSectorY,     sizeof(INT16));
+		f->read(&bSectorZ,     sizeof(INT8));
+		f->seek(1, FILE_SEEK_FROM_CURRENT);
 
 		ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, bSectorZ);
 	}
@@ -686,11 +686,11 @@ try
 
 	AutoSGPFile f(GCM->openTempFileForReading(HISTORY_DATA_FILE));
 
-	UINT       entry_count = FileGetSize(f) / SIZE_OF_HISTORY_FILE_RECORD;
+	UINT       entry_count = f->size() / SIZE_OF_HISTORY_FILE_RECORD;
 	UINT const skip        = (uiPage - 1) * NUM_RECORDS_PER_PAGE;
 	if (entry_count <= skip) return FALSE;
 
-	FileSeek(f, skip * SIZE_OF_HISTORY_FILE_RECORD, FILE_SEEK_FROM_START);
+	f->seek(skip * SIZE_OF_HISTORY_FILE_RECORD, FILE_SEEK_FROM_START);
 	entry_count -= skip;
 
 	if (entry_count > NUM_RECORDS_PER_PAGE) entry_count = NUM_RECORDS_PER_PAGE;
@@ -704,13 +704,13 @@ try
 		INT16  sSectorY;
 		INT8   bSectorZ;
 
-		FileRead(f, &ubCode,       sizeof(UINT8));
-		FileRead(f, &ubSecondCode, sizeof(UINT8));
-		FileRead(f, &uiDate,       sizeof(UINT32));
-		FileRead(f, &sSectorX,     sizeof(INT16));
-		FileRead(f, &sSectorY,     sizeof(INT16));
-		FileRead(f, &bSectorZ,     sizeof(INT8));
-		FileSeek(f, 1, FILE_SEEK_FROM_CURRENT);
+		f->read(&ubCode,       sizeof(UINT8));
+		f->read(&ubSecondCode, sizeof(UINT8));
+		f->read(&uiDate,       sizeof(UINT32));
+		f->read(&sSectorX,     sizeof(INT16));
+		f->read(&sSectorY,     sizeof(INT16));
+		f->read(&bSectorZ,     sizeof(INT8));
+		f->seek(1, FILE_SEEK_FROM_CURRENT);
 
 		ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, bSectorZ);
 	}
@@ -764,7 +764,7 @@ static void AppendHistoryToEndOfFile(void)
 	INJ_SKIP(d, 1)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }
 
 
@@ -806,7 +806,7 @@ static INT32 GetNumberOfHistoryPages(void)
 {
 	AutoSGPFile f(GCM->openTempFileForReading(HISTORY_DATA_FILE));
 
-	const UINT32 uiFileSize = FileGetSize(f);
+	const UINT32 uiFileSize = f->size();
 
 	if (uiFileSize == 0) return 1;
 

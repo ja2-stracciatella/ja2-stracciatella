@@ -10,7 +10,7 @@
 void ExtractVehicleTypeFromFile(HWFILE const file, VEHICLETYPE* const v, UINT32 const savegame_version)
 {
 	BYTE data[128];
-	FileRead(file, data, sizeof(data));
+	file->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_PTR(d, v->pMercPath)
@@ -72,5 +72,5 @@ void InjectVehicleTypeIntoFile(HWFILE const file, VEHICLETYPE const* const v)
 	INJ_SKIP(d, 2)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(file, data, sizeof(data));
+	file->write(data, sizeof(data));
 }

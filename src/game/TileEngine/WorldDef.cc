@@ -1328,7 +1328,7 @@ static void WriteLevelNode(HWFILE const f, LEVELNODE const* const n)
 	INJ_U8(d, (UINT8)type)
 	INJ_U8(d, (UINT8)type_sub_index)
 	Assert(d.getConsumed() == lengthof(data));
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }
 
 
@@ -1340,10 +1340,10 @@ try
 {
 	// Write JA2 Version ID
 	FLOAT mapVersion = getMajorMapVersion();
-	FileWrite(f, &mapVersion, sizeof(FLOAT));
+	f->write(&mapVersion, sizeof(FLOAT));
 	if (mapVersion >= 4.00)
 	{
-		FileWrite(f, &gubMinorMapVersion, sizeof(UINT8));
+		f->write(&gubMinorMapVersion, sizeof(UINT8));
 	}
 
 	// Write FLAGS FOR WORLD
@@ -1358,14 +1358,14 @@ try
 	if (gfBasement || gfCaves)
 		flags |= MAP_AMBIENTLIGHTLEVEL_SAVED;
 
-	FileWrite(f, &flags, sizeof(INT32));
+	f->write(&flags, sizeof(INT32));
 
 	// Write tileset ID
-	FileWrite(f, &giCurrentTilesetID, sizeof(INT32));
+	f->write(&giCurrentTilesetID, sizeof(INT32));
 
 	// Write soldier control size
 	UINT32 const uiSoldierSize = sizeof(SOLDIERTYPE);
-	FileWrite(f, &uiSoldierSize, sizeof(UINT32));
+	f->write(&uiSoldierSize, sizeof(UINT32));
 
 	// Remove world visibility tiles
 	RemoveWorldWireFrameTiles();
@@ -1379,7 +1379,7 @@ try
 			heights[2 * i]     = world_data[i].sHeight;
 			heights[2 * i + 1] = 0; // Filler byte
 		}
-		FileWrite(f, heights, sizeof(heights));
+		f->write(heights, sizeof(heights));
 	}
 
 	// Write out # values - we'll have no more than 15 per level!
@@ -1396,7 +1396,7 @@ try
 
 		// Combine # of land layers with worlddef flags (first 4 bits)
 		ubCombine = (n_layers & 0xf) | ((e.uiFlags & 0xf) << 4);
-		FileWrite(f, &ubCombine, sizeof(ubCombine));
+		f->write(&ubCombine, sizeof(ubCombine));
 
 
 		// Determine # of objects
@@ -1423,7 +1423,7 @@ try
 		if (!LimitCheck(n_structs, cnt, n_warnings, "Struct")) return FALSE;
 
 		ubCombine = (n_objects & 0xf) | ((n_structs & 0xf) << 4);
-		FileWrite(f, &ubCombine, sizeof(ubCombine));
+		f->write(&ubCombine, sizeof(ubCombine));
 
 
 		// Determine # of shadows
@@ -1447,7 +1447,7 @@ try
 		if (!LimitCheck(n_roofs, cnt, n_warnings, "Roof")) return FALSE;
 
 		ubCombine = (n_shadows & 0xf) | ((n_roofs & 0xf) << 4);
-		FileWrite(f, &ubCombine, sizeof(ubCombine));
+		f->write(&ubCombine, sizeof(ubCombine));
 
 
 		// Determine # of OnRoofs
@@ -1460,14 +1460,14 @@ try
 
 		// Write combination of onroof and nothing
 		ubCombine = n_on_roofs & 0xf;
-		FileWrite(f, &ubCombine, sizeof(ubCombine));
+		f->write(&ubCombine, sizeof(ubCombine));
 	}
 
 	if(getMajorMapVersion() == 6.00 && gubMinorMapVersion == 26)
 	{
 		// the data appears to be 37 INT32/UINT32 numbers and is present in russian ja2 maps
 		UINT8 data[148] = {0};
-		FileWrite(f, &data, sizeof(data));
+		f->write(&data, sizeof(data));
 	}
 
 	UINT8 const test[] = { 1, 1 };
@@ -1476,7 +1476,7 @@ try
 		LEVELNODE const* i = e->pLandHead;
 		if (!i)
 		{
-			FileWrite(f, &test, sizeof(test));
+			f->write(&test, sizeof(test));
 		}
 		else
 		{ // Write out land pieces backwards so that they are loaded properly
@@ -1509,7 +1509,7 @@ try
 			INJ_U8( d, (UINT8)type)
 			INJ_U16(d, type_sub_index) // XXX misaligned
 			Assert(d.getConsumed() == lengthof(data));
-			FileWrite(f, data, sizeof(data));
+			f->write(data, sizeof(data));
 		}
 	}
 
@@ -1561,7 +1561,7 @@ try
 	}
 
 	// Write out room information
-	FileWrite(f, gubWorldRoomInfo, sizeof(gubWorldRoomInfo));
+	f->write(gubWorldRoomInfo, sizeof(gubWorldRoomInfo));
 
 	if (flags & MAP_WORLDITEMS_SAVED)
 	{
@@ -1570,9 +1570,9 @@ try
 
 	if (flags & MAP_AMBIENTLIGHTLEVEL_SAVED)
 	{
-		FileWrite(f, &gfBasement,          1);
-		FileWrite(f, &gfCaves,             1);
-		FileWrite(f, &ubAmbientLightLevel, 1);
+		f->write(&gfBasement,          1);
+		f->write(&gfCaves,             1);
+		f->write(&ubAmbientLightLevel, 1);
 	}
 
 	if (flags & MAP_WORLDLIGHTS_SAVED)
@@ -1736,23 +1736,23 @@ try
 
 	//skip JA2 Version ID
 	FLOAT	dMajorMapVersion;
-	FileRead(f, &dMajorMapVersion, sizeof(dMajorMapVersion));
+	f->read(&dMajorMapVersion, sizeof(dMajorMapVersion));
 	if (dMajorMapVersion >= 4.00)
 	{
-		FileSeek(f, sizeof(UINT8), FILE_SEEK_FROM_CURRENT);
+		f->seek(sizeof(UINT8), FILE_SEEK_FROM_CURRENT);
 	}
 
 	//Read FLAGS FOR WORLD
 	UINT32 uiFlags;
-	FileRead(f, &uiFlags, sizeof(uiFlags));
+	f->read(&uiFlags, sizeof(uiFlags));
 
 	//Read tilesetID
 	INT32 iTilesetID;
-	FileRead(f, &iTilesetID, sizeof(iTilesetID));
+	f->read(&iTilesetID, sizeof(iTilesetID));
 	pSummary->ubTilesetID = (UINT8)iTilesetID;
 
 	// Skip soldier size and height values
-	FileSeek(f, sizeof(UINT32) + (1 + 1) * WORLD_MAX, FILE_SEEK_FROM_CURRENT);
+	f->seek(sizeof(UINT32) + (1 + 1) * WORLD_MAX, FILE_SEEK_FROM_CURRENT);
 
 	// Skip all layers
 	INT32 skip = 0;
@@ -1761,7 +1761,7 @@ try
 		if (row % 16 == 0) RenderProgressBar(0, row * 90 / WORLD_ROWS + 1); // 1 - 90
 
 		UINT8 combine[WORLD_COLS][4];
-		FileRead(f, combine, sizeof(combine));
+		f->read(combine, sizeof(combine));
 		for (UINT8 const (*i)[4] = combine; i != endof(combine); ++i)
 		{
 			skip +=
@@ -1773,14 +1773,14 @@ try
 				((*i)[3] & 0x0F) * 2;  // #on roof
 		}
 	}
-	FileSeek(f, skip, FILE_SEEK_FROM_CURRENT);
+	f->seek(skip, FILE_SEEK_FROM_CURRENT);
 
 	//extract highest room number
 	UINT8 max_room = 0;
 	for (INT32 row = 0; row != WORLD_ROWS; ++row)
 	{
 		UINT8 room[WORLD_COLS];
-		FileRead(f, room, sizeof(room));
+		f->read(room, sizeof(room));
 		for (INT32 col = 0; col != WORLD_COLS; ++col)
 		{
 			if (max_room < room[col]) max_room = room[col];
@@ -1793,16 +1793,16 @@ try
 		RenderProgressBar(0, 91);
 		//Important:  Saves the file position (byte offset) of the position where the numitems
 		//            resides.  Checking this value and comparing to usNumItems will ensure validity.
-		pSummary->uiNumItemsPosition = FileGetPos(f);
+		pSummary->uiNumItemsPosition = f->pos();
 		//get number of items (for now)
 		UINT32 n_items;
-		FileRead(f, &n_items, sizeof(n_items));
+		f->read(&n_items, sizeof(n_items));
 		pSummary->usNumItems = n_items;
 		//Skip the contents of the world items.
-		FileSeek(f, sizeof(WORLDITEM) * n_items, FILE_SEEK_FROM_CURRENT);
+		f->seek(sizeof(WORLDITEM) * n_items, FILE_SEEK_FROM_CURRENT);
 	}
 
-	if (uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED) FileSeek(f, 3, FILE_SEEK_FROM_CURRENT);
+	if (uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED) f->seek(3, FILE_SEEK_FROM_CURRENT);
 
 	if (uiFlags & MAP_WORLDLIGHTS_SAVED)
 	{
@@ -1810,29 +1810,29 @@ try
 
 		//skip number of light palette entries
 		UINT8 n_light_colours;
-		FileRead(f, &n_light_colours, sizeof(n_light_colours));
-		FileSeek(f, sizeof(SGPPaletteEntry) * n_light_colours, FILE_SEEK_FROM_CURRENT);
+		f->read(&n_light_colours, sizeof(n_light_colours));
+		f->seek(sizeof(SGPPaletteEntry) * n_light_colours, FILE_SEEK_FROM_CURRENT);
 
 		//get number of lights
-		FileRead(f, &pSummary->usNumLights, sizeof(pSummary->usNumLights));
+		f->read(&pSummary->usNumLights, sizeof(pSummary->usNumLights));
 		//skip the light loading
 		for (INT32 n = pSummary->usNumLights; n != 0; --n)
 		{
-			FileSeek(f, 24 /* size of a LIGHT_SPRITE on disk */, FILE_SEEK_FROM_CURRENT);
+			f->seek(24 /* size of a LIGHT_SPRITE on disk */, FILE_SEEK_FROM_CURRENT);
 			UINT8 ubStrLen;
-			FileRead(f, &ubStrLen, sizeof(ubStrLen));
-			FileSeek(f, ubStrLen, FILE_SEEK_FROM_CURRENT);
+			f->read(&ubStrLen, sizeof(ubStrLen));
+			f->seek(ubStrLen, FILE_SEEK_FROM_CURRENT);
 		}
 	}
 
 	//read the mapinformation
-	FileRead(f, &pSummary->MapInfo, sizeof(pSummary->MapInfo));
+	f->read(&pSummary->MapInfo, sizeof(pSummary->MapInfo));
 
 	if (uiFlags & MAP_FULLSOLDIER_SAVED)
 	{
 		RenderProgressBar(0, 94);
 
-		pSummary->uiEnemyPlacementPosition = FileGetPos(f);
+		pSummary->uiEnemyPlacementPosition = f->pos();
 
 		for (INT32 i = 0; i < pSummary->MapInfo.ubNumIndividuals; ++i)
 		{
@@ -1959,14 +1959,14 @@ try
 		RenderProgressBar(0, 98);
 
 		UINT16 cnt;
-		FileRead(f, &cnt, sizeof(cnt));
+		f->read(&cnt, sizeof(cnt));
 
 		for (INT32 n = cnt; n != 0; --n)
 		{
 			UINT16 usMapIndex;
-			FileRead(f, &usMapIndex, sizeof(usMapIndex));
+			f->read(&usMapIndex, sizeof(usMapIndex));
 			EXITGRID exitGrid;
-			FileRead(f, &exitGrid, 5 /* XXX sic! The 6th byte luckily is padding */);
+			f->read(&exitGrid, 5 /* XXX sic! The 6th byte luckily is padding */);
 			for (INT32 loop = 0;; ++loop)
 			{
 				if (loop >= pSummary->ubNumExitGridDests)
@@ -2008,12 +2008,12 @@ try
 
 	if (uiFlags & MAP_DOORTABLE_SAVED)
 	{
-		FileRead(f, &pSummary->ubNumDoors, sizeof(pSummary->ubNumDoors));
+		f->read(&pSummary->ubNumDoors, sizeof(pSummary->ubNumDoors));
 
 		for (INT32 n = pSummary->ubNumDoors; n != 0; --n)
 		{
 			DOOR Door;
-			FileRead(f, &Door, sizeof(Door));
+			f->read(&Door, sizeof(Door));
 
 			if      (Door.ubLockID && Door.ubTrapID) ++pSummary->ubNumDoorsLockedAndTrapped;
 			else if (Door.ubLockID)                  ++pSummary->ubNumDoorsLocked;
@@ -2071,14 +2071,14 @@ void LoadWorldFromSGPFile(SGPFile *f)
 
 	// Read JA2 Version ID
 	FLOAT dMajorMapVersion;
-	FileRead(f, &dMajorMapVersion, sizeof(dMajorMapVersion));
+	f->read(&dMajorMapVersion, sizeof(dMajorMapVersion));
 
 	UINT8 ubMinorMapVersion;
 	if (dMajorMapVersion >= 4.00)
 	{
 		// major version 4 probably started in minor version 15 since
 		// this value is needed to detect the change in the object layer
-		FileRead(f, &ubMinorMapVersion, sizeof(ubMinorMapVersion));
+		f->read(&ubMinorMapVersion, sizeof(ubMinorMapVersion));
 	}
 	else
 	{
@@ -2092,22 +2092,22 @@ void LoadWorldFromSGPFile(SGPFile *f)
 
 	// Read flags for world
 	UINT32 uiFlags;
-	FileRead(f, &uiFlags, sizeof(uiFlags));
+	f->read(&uiFlags, sizeof(uiFlags));
 
 	INT32 iTilesetID;
-	FileRead(f, &iTilesetID, sizeof(iTilesetID));
+	f->read(&iTilesetID, sizeof(iTilesetID));
 
 	LoadMapTileset(static_cast<TileSetID>(iTilesetID));
 
 	// Skip soldier size
-	FileSeek(f, 4, FILE_SEEK_FROM_CURRENT);
+	f->seek(4, FILE_SEEK_FROM_CURRENT);
 
 	{ // Read height values
 		MAP_ELEMENT* world = gpWorldLevelData;
 		for (UINT32 row = 0; row != WORLD_ROWS; ++row)
 		{
 			BYTE height[WORLD_COLS * 2];
-			FileRead(f, height, sizeof(height));
+			f->read(height, sizeof(height));
 			for (BYTE const* i = height; i != endof(height); i += 2)
 			{
 				(world++)->sHeight = *i;
@@ -2125,7 +2125,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 		for (UINT32 row = 0; row != WORLD_ROWS; ++row)
 		{
 			BYTE combine[WORLD_COLS][4];
-			FileRead(f, combine, sizeof(combine));
+			f->read(combine, sizeof(combine));
 			for (UINT8 const (*i)[4] = combine; i != endof(combine); ++world, ++cnt, ++i)
 			{
 				// Read combination of land/world flags
@@ -2154,7 +2154,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 		for (INT32 n = bCounts[cnt][0]; n != 0; --n)
 		{
 			BYTE data[2];
-			FileRead(f, data, sizeof(data));
+			f->read(data, sizeof(data));
 
 			UINT8       ubType;
 			UINT8       ubSubIndex;
@@ -2178,7 +2178,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 			for (INT32 n = bCounts[cnt][1]; n != 0; --n)
 			{
 				BYTE data[2];
-				FileRead(f, data, sizeof(data));
+				f->read(data, sizeof(data));
 
 				UINT8       ubType;
 				UINT8       ubSubIndex;
@@ -2201,7 +2201,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 			for (INT32 n = bCounts[cnt][1]; n != 0; --n)
 			{
 				BYTE data[3];
-				FileRead(f, data, sizeof(data));
+				f->read(data, sizeof(data));
 
 				UINT8       ubType;
 				UINT16      usTypeSubIndex;
@@ -2225,7 +2225,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 		for (INT32 n = bCounts[cnt][2]; n != 0; --n)
 		{
 			BYTE data[2];
-			FileRead(f, data, sizeof(data));
+			f->read(data, sizeof(data));
 
 			UINT8       ubType;
 			UINT8       ubSubIndex;
@@ -2268,7 +2268,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 		for (INT32 n = bCounts[cnt][3]; n != 0; --n)
 		{
 			BYTE data[2];
-			FileRead(f, data, sizeof(data));
+			f->read(data, sizeof(data));
 
 			UINT8       ubType;
 			UINT8       ubSubIndex;
@@ -2290,7 +2290,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 		for (INT32 n = bCounts[cnt][4]; n != 0; --n)
 		{
 			BYTE data[2];
-			FileRead(f, data, sizeof(data));
+			f->read(data, sizeof(data));
 
 			UINT8       ubType;
 			UINT8       ubSubIndex;
@@ -2312,7 +2312,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 		for (INT32 n = bCounts[cnt][5]; n != 0; --n)
 		{
 			BYTE data[2];
-			FileRead(f, data, sizeof(data));
+			f->read(data, sizeof(data));
 
 			UINT8       ubType;
 			UINT8       ubSubIndex;
@@ -2329,13 +2329,13 @@ void LoadWorldFromSGPFile(SGPFile *f)
 	if(dMajorMapVersion == 6.00 && ubMinorMapVersion == 26)
 	{
 		// the data appears to be 37 INT32/UINT32 numbers and is present in russian ja2 maps
-		FileSeek(f, 148, FILE_SEEK_FROM_CURRENT);
+		f->seek(148, FILE_SEEK_FROM_CURRENT);
 	}
 
 	SetRelativeStartAndEndPercentage(0, 58, 59, "Loading room information...");
 	RenderProgressBar(0, 100);
 
-	FileRead(f, gubWorldRoomInfo, sizeof(gubWorldRoomInfo));
+	f->read(gubWorldRoomInfo, sizeof(gubWorldRoomInfo));
 
 	if(GameState::getInstance()->isEditorMode())
 	{
@@ -2364,9 +2364,9 @@ void LoadWorldFromSGPFile(SGPFile *f)
 
 	if (uiFlags & MAP_AMBIENTLIGHTLEVEL_SAVED)
 	{ // Ambient light levels are only saved in underground levels
-		FileRead(f, &gfBasement,          sizeof(gfBasement));
-		FileRead(f, &gfCaves,             sizeof(gfCaves));
-		FileRead(f, &ubAmbientLightLevel, sizeof(ubAmbientLightLevel));
+		f->read(&gfBasement,          sizeof(gfBasement));
+		f->read(&gfCaves,             sizeof(gfCaves));
+		f->read(&ubAmbientLightLevel, sizeof(ubAmbientLightLevel));
 	}
 	else
 	{ // We are above ground.
@@ -2983,9 +2983,9 @@ static void SaveMapLights(HWFILE hfile)
 
 	// Save the current light colors!
 	const UINT8 ubNumColors = 1;
-	FileWrite(hfile, &ubNumColors, 1);
+	hfile->write(&ubNumColors, 1);
 	const SGPPaletteEntry* LColor = LightGetColor();
-	FileWrite(hfile, LColor, sizeof(*LColor));
+	hfile->write(LColor, sizeof(*LColor));
 
 	//count number of non-merc lights.
 	CFOR_EACH_LIGHT_SPRITE(l)
@@ -2994,7 +2994,7 @@ static void SaveMapLights(HWFILE hfile)
 	}
 
 	//save the number of lights.
-	FileWrite(hfile, &usNumLights, 2);
+	hfile->write(&usNumLights, 2);
 
 	CFOR_EACH_LIGHT_SPRITE(l)
 	{
@@ -3013,8 +3013,8 @@ static void LoadMapLights(HWFILE const f)
 	LightReset();
 
 	// read in the light colors!
-	FileRead(f, &ubNumColors, sizeof(ubNumColors));
-	FileRead(f, LColors,      sizeof(*LColors) * ubNumColors); // XXX buffer overflow if ubNumColors is too large
+	f->read(&ubNumColors, sizeof(ubNumColors));
+	f->read(LColors,      sizeof(*LColors) * ubNumColors); // XXX buffer overflow if ubNumColors is too large
 
 	LightSetColor(LColors);
 
@@ -3033,7 +3033,7 @@ static void LoadMapLights(HWFILE const f)
 		}
 	}
 
-	FileRead(f, &usNumLights, sizeof(usNumLights));
+	f->read(&usNumLights, sizeof(usNumLights));
 	for (INT32 cnt = 0; cnt < usNumLights; ++cnt)
 	{
 		ExtractLightSprite(f, light_time);

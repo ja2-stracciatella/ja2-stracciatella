@@ -65,9 +65,8 @@ void JA2Require(std::string scriptFileName)
 	}
 	
 	STLOGD("Loading LUA script file: {}", scriptFileName);
-	std::string scriptbody = FileReadStringToEnd(
-		AutoSGPFile(GCM->openGameResForReading(SCRIPTS_DIR "/" + scriptFileName))
-	).to_std_string();
+	AutoSGPFile f{GCM->openGameResForReading(SCRIPTS_DIR "/" + scriptFileName)};
+	std::string scriptbody = f->readStringToEnd().to_std_string();
 	lua.script(scriptbody, ST::format("@{}", scriptFileName).to_std_string());
 }
 

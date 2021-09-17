@@ -29,13 +29,13 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 
 		// gap file exists
 		// now read in the AUDIO_GAPs
-		const UINT32 size = FileGetSize(f);
+		const UINT32 size = f->size();
 
 		const UINT32 count = size / 8;
 		if (count > 0)
 		{
 			BYTE *data = new BYTE[size]{};
-			FileRead(f, data, size);
+			f->read(data, size);
 
 			AUDIO_GAP* const gaps  = new AUDIO_GAP[count]{};
 

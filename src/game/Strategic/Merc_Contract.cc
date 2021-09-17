@@ -75,15 +75,15 @@ BOOLEAN										gfInContractMenuFromRenewSequence = FALSE;
 
 void SaveContractRenewalDataToSaveGameFile(HWFILE const hFile)
 {
-	FileWrite(hFile, ContractRenewalList,    sizeof(ContractRenewalList));
-	FileWrite(hFile, &ubNumContractRenewals, sizeof(ubNumContractRenewals));
+	hFile->write(ContractRenewalList,    sizeof(ContractRenewalList));
+	hFile->write(&ubNumContractRenewals, sizeof(ubNumContractRenewals));
 }
 
 
 void LoadContractRenewalDataFromSaveGameFile(HWFILE const hFile)
 {
-	FileRead(hFile, ContractRenewalList,    sizeof(ContractRenewalList));
-	FileRead(hFile, &ubNumContractRenewals, sizeof(ubNumContractRenewals));
+	hFile->read(ContractRenewalList,    sizeof(ContractRenewalList));
+	hFile->read(&ubNumContractRenewals, sizeof(ubNumContractRenewals));
 }
 
 

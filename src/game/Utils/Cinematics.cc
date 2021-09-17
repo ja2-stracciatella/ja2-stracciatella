@@ -203,10 +203,10 @@ static SMKFLIC* SmkOpenFlic(const char* const filename)
 
 		// read file to memory
 		AutoSGPFile file(GCM->openGameResForReading(filename));
-		unsigned long bytes = FileGetSize(file);
+		unsigned long bytes = file->size();
 		if (bytes == 0) throw std::runtime_error("empty file");
 		sf->file_in_memory = new unsigned char[bytes]{};
-		FileRead(file, sf->file_in_memory, bytes);
+		file->read(sf->file_in_memory, bytes);
 
 		// open with smacker
 		sf->smacker = smk_open_memory(sf->file_in_memory, bytes);

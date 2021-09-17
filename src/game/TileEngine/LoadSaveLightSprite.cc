@@ -16,7 +16,7 @@ void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 	UINT8  str_len;
 
 	BYTE data[25];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_I16(d, x)
@@ -28,7 +28,7 @@ void ExtractLightSprite(HWFILE const f, UINT32 const light_time)
 	Assert(d.getConsumed() == lengthof(data));
 
 	char *template_name = new char[str_len]{};
-	FileRead(f, template_name, str_len);
+	f->read(template_name, str_len);
 	template_name[str_len - 1] = '\0';
 
 	LIGHT_SPRITE* const l = LightSpriteCreate(template_name);
@@ -70,10 +70,10 @@ void InjectLightSpriteIntoFile(HWFILE const file, LIGHT_SPRITE const* const l)
 	INJ_SKIP(d, 4)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(file, data, sizeof(data));
+	file->write(data, sizeof(data));
 
 	const char* const light_name = LightSpriteGetTypeName(l);
 	const UINT8       str_len    = static_cast<UINT8>(strlen(light_name) + 1);
-	FileWrite(file, &str_len,   sizeof(str_len));
-	FileWrite(file, light_name, str_len);
+	file->write(&str_len,   sizeof(str_len));
+	file->write(light_name, str_len);
 }

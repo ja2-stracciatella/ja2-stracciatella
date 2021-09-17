@@ -4998,7 +4998,7 @@ void LoadPaletteData()
 	AutoSGPFile hFile(GCM->openGameResForReading(PALETTEFILENAME));
 
 	// Read # of types
-	FileRead(hFile, &guiNumPaletteSubRanges, sizeof(guiNumPaletteSubRanges));
+	hFile->read(&guiNumPaletteSubRanges, sizeof(guiNumPaletteSubRanges));
 
 	// Malloc!
 	gpPaletteSubRanges          = new PaletteSubRangeType[guiNumPaletteSubRanges]{};
@@ -5007,19 +5007,19 @@ void LoadPaletteData()
 	// Read # of types for each!
 	for ( cnt = 0; cnt < guiNumPaletteSubRanges; cnt++ )
 	{
-		FileRead(hFile, &gubpNumReplacementsPerRange[cnt], sizeof(UINT8));
+		hFile->read(&gubpNumReplacementsPerRange[cnt], sizeof(UINT8));
 	}
 
 	// Loop for each one, read in data
 	for ( cnt = 0; cnt < guiNumPaletteSubRanges; cnt++ )
 	{
-		FileRead(hFile, &gpPaletteSubRanges[cnt].ubStart, sizeof(UINT8));
-		FileRead(hFile, &gpPaletteSubRanges[cnt].ubEnd,   sizeof(UINT8));
+		hFile->read(&gpPaletteSubRanges[cnt].ubStart, sizeof(UINT8));
+		hFile->read(&gpPaletteSubRanges[cnt].ubEnd,   sizeof(UINT8));
 	}
 
 
 	// Read # of palettes
-	FileRead(hFile, &guiNumReplacements, sizeof(guiNumReplacements));
+	hFile->read(&guiNumReplacements, sizeof(guiNumReplacements));
 
 	// Malloc!
 	gpPalRep = new PaletteReplacementType[guiNumReplacements]{};
@@ -5028,23 +5028,23 @@ void LoadPaletteData()
 	for ( cnt = 0; cnt < guiNumReplacements; cnt++ )
 	{
 		// type
-		FileRead(hFile, &gpPalRep[cnt].ubType, sizeof(gpPalRep[cnt].ubType));
+		hFile->read(&gpPalRep[cnt].ubType, sizeof(gpPalRep[cnt].ubType));
 
 		ST::char_buffer buf{PaletteRepID_LENGTH, '\0'};
-		FileRead(hFile, buf.data(), buf.size() * sizeof(char));
+		hFile->read(buf.data(), buf.size() * sizeof(char));
 		gpPalRep[cnt].ID = ST::string(buf.c_str(), ST_AUTO_SIZE, ST::substitute_invalid);
 
 		// # entries
-		FileRead(hFile, &gpPalRep[cnt].ubPaletteSize, sizeof(gpPalRep[cnt].ubPaletteSize));
+		hFile->read(&gpPalRep[cnt].ubPaletteSize, sizeof(gpPalRep[cnt].ubPaletteSize));
 
 		SGPPaletteEntry* const Pal = new SGPPaletteEntry[gpPalRep[cnt].ubPaletteSize]{};
 		gpPalRep[cnt].rgb = Pal;
 
 		for( cnt2 = 0; cnt2 < gpPalRep[ cnt ].ubPaletteSize; cnt2++ )
 		{
-			FileRead(hFile, &Pal[cnt2].r, sizeof(Pal[cnt2].r));
-			FileRead(hFile, &Pal[cnt2].g, sizeof(Pal[cnt2].g));
-			FileRead(hFile, &Pal[cnt2].b, sizeof(Pal[cnt2].b));
+			hFile->read(&Pal[cnt2].r, sizeof(Pal[cnt2].r));
+			hFile->read(&Pal[cnt2].g, sizeof(Pal[cnt2].g));
+			hFile->read(&Pal[cnt2].b, sizeof(Pal[cnt2].b));
 		}
 
 	}

@@ -61,7 +61,7 @@ ST::string* ModPackContentManager::loadDialogQuoteFromFile(const ST::string& fil
 		if(doesGameResExists(jsonFileName.c_str()))
 		{
 			AutoSGPFile f(openGameResForReading(jsonFileName));
-			ST::string jsonQuotes = FileReadStringToEnd(f);
+			ST::string jsonQuotes = f->readStringToEnd();
 			std::vector<ST::string> quotes;
 			JsonUtility::parseJsonToListStrings(jsonQuotes.c_str(), quotes);
 			m_dialogQuotesMap[jsonFileName] = quotes;

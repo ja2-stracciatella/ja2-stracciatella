@@ -1757,7 +1757,7 @@ static void CreateGlobalSummary(void)
 		"This directory or its contents shouldn't be included with final release.\n";
 	AutoSGPFile file{GCM->openUserPrivateFileForWriting(DEVINFO_DIR "/readme.txt", true)};
 
-	FileWrite(file, readme, strlen(readme));
+	file->write(readme, strlen(readme));
 
 	LoadGlobalSummary();
 	RegenerateSummaryInfoForAllOutdatedMaps();
@@ -2049,7 +2049,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 			return FALSE;
 		}
 
-		FileRead(f_map, &dMajorMapVersion, sizeof(FLOAT));
+		f_map->read(&dMajorMapVersion, sizeof(FLOAT));
 	}
 
 	try {
@@ -2059,7 +2059,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		 * indicate that the info is bad. */
 		SUMMARYFILE* const sum = new SUMMARYFILE{};
 		try {
-			FileReadExact(file, reinterpret_cast<uint8_t*>(sum), sizeof(SUMMARYFILE));
+			file->read(reinterpret_cast<uint8_t*>(sum), sizeof(SUMMARYFILE));
 		} catch (const std::runtime_error& err) {
 			// failed, initialize and force update
 			*sum = SUMMARYFILE{};
@@ -2147,7 +2147,7 @@ void WriteSectorSummaryUpdate(const ST::string &filename, const UINT8 ubLevel, S
 	
 	AutoSGPFile file{GCM->openUserPrivateFileForWriting(summary_filename, true)};
 
-	FileWrite(file, sf, sizeof(*sf));
+	file->write(sf, sizeof(*sf));
 
 	--gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	UpdateMasterProgress();
@@ -2494,9 +2494,9 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//Open the original map for the sector
 	AutoSGPFile hfile(GCM->openMapForReading(gszFilename));
 	//Now fileseek directly to the file position where the number of world items are stored
-	FileSeek(hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START);
+	hfile->seek(gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START);
 	//Now load the number of world items from the map.
-	FileRead(hfile, &uiNumItems, 4);
+	hfile->read(&uiNumItems, 4);
 	//Now compare this number with the number the summary thinks we should have.  If they are different,
 	//the the summary doesn't match the map.  What we will do is force regenerate the map so that they do
 	//match
@@ -2514,7 +2514,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	if (gpCurrentSectorSummary->usNumItems != 0)
 	{
 		gpWorldItemsSummaryArray.assign(uiNumItems, WORLDITEM{});
-		FileRead(hfile, gpWorldItemsSummaryArray.data(), sizeof(WORLDITEM) * uiNumItems);
+		hfile->read(gpWorldItemsSummaryArray.data(), sizeof(WORLDITEM) * uiNumItems);
 	}
 
 	//NOW, do the enemy's items!
@@ -2525,7 +2525,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//summary information, then the second pass will repeat the process, except it will record the actual items.
 
 	//PASS #1
-	FileSeek(hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
+	hfile->seek(gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
 		BASIC_SOLDIERCREATE_STRUCT basic;
@@ -2577,7 +2577,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//PASS #2
 	//During this pass, simply copy all the data instead of counting it, now that we have already done so.
 	usPEnemyIndex = usNEnemyIndex = 0;
-	FileSeek(hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
+	hfile->seek(gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
 		BASIC_SOLDIERCREATE_STRUCT basic;

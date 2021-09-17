@@ -769,13 +769,13 @@ void SaveVehicleInformationToSaveGameFile(HWFILE const f)
 	//Save the number of elements
 	Assert(pVehicleList.size() <= UINT8_MAX);
 	UINT8 numVehicles = static_cast<UINT8>(pVehicleList.size());
-	FileWrite(f, &numVehicles, sizeof(UINT8));
+	f->write(&numVehicles, sizeof(UINT8));
 
 	//loop through all the vehicles and save each one
 	for (const VEHICLETYPE& v : pVehicleList)
 	{
 		//save if the vehicle spot is valid
-		FileWrite(f, &v.fValid, sizeof(BOOLEAN));
+		f->write(&v.fValid, sizeof(BOOLEAN));
 		if (!v.fValid) continue;
 
 		InjectVehicleTypeIntoFile(f, &v);
@@ -790,7 +790,7 @@ void LoadVehicleInformationFromSavedGameFile(HWFILE const hFile, UINT32 const ui
 
 	//Load the number of elements
 	UINT8 numVehicles = 0;
-	FileRead(hFile, &numVehicles, sizeof(UINT8));
+	hFile->read(&numVehicles, sizeof(UINT8));
 	if (numVehicles == 0) return;
 
 	//allocate memory to hold the vehicle list
@@ -800,7 +800,7 @@ void LoadVehicleInformationFromSavedGameFile(HWFILE const hFile, UINT32 const ui
 	for (VEHICLETYPE& v : pVehicleList)
 	{
 		//Load if the vehicle spot is valid
-		FileRead(hFile, &v.fValid, sizeof(BOOLEAN));
+		hFile->read(&v.fValid, sizeof(BOOLEAN));
 		if (!v.fValid) continue;
 
 		ExtractVehicleTypeFromFile(hFile, &v, uiSavedGameVersion);
@@ -848,7 +848,7 @@ void LoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 	INT32 cnt;
 
 	//Load in the Squad movement id's
-	FileRead(hFile, gubVehicleMovementGroups, sizeof(INT8) * 5);
+	hFile->read(gubVehicleMovementGroups, sizeof(INT8) * 5);
 
 	for( cnt = 5; cnt <  MAX_VEHICLES; cnt++ )
 	{
@@ -863,14 +863,14 @@ void LoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 void NewSaveVehicleMovementInfoToSavedGameFile(HWFILE const hFile)
 {
 	//Save all the vehicle movement id's
-	FileWrite(hFile, gubVehicleMovementGroups, sizeof(INT8) * MAX_VEHICLES);
+	hFile->write(gubVehicleMovementGroups, sizeof(INT8) * MAX_VEHICLES);
 }
 
 
 void NewLoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 {
 	//Load in the Squad movement id's
-	FileRead(hFile, gubVehicleMovementGroups, sizeof(INT8) * MAX_VEHICLES);
+	hFile->read(gubVehicleMovementGroups, sizeof(INT8) * MAX_VEHICLES);
 }
 
 
