@@ -1112,8 +1112,7 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 	return TRUE;
 }
 
-
-static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const header)
+static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER *const header)
 {
 	// make sure the entry is valid
 	if (0 <= bEntry && bEntry < NUM_SAVE_GAMES)
@@ -1122,13 +1121,19 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const h
 
 		try
 		{
-			bool stracLinuxFormat;
-			AutoSGPFile f(GCM->openUserPrivateFileForReading(savegameName));
-			ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
-			endof(header->zGameVersionNumber)[-1] =  '\0';
-			return TRUE;
+			if (GCM->doesUserPrivateFileExist(savegameName))
+			{
+				bool stracLinuxFormat;
+				AutoSGPFile f(GCM->openUserPrivateFileForReading(savegameName));
+				ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
+				endof(header->zGameVersionNumber)[-1] = '\0';
+				return TRUE;
+			}
 		}
-		catch (...) { /* Handled below */ }
+		catch (const std::runtime_error &ex)
+		{
+			STLOGW("Error loading save game header: {}", ex.what());
+		}
 
 		gbSaveGameArray[bEntry] = FALSE;
 	}
