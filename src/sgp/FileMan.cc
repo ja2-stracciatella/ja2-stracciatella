@@ -3,6 +3,7 @@
 #include "Logger.h"
 #include "MemMan.h"
 #include "RustInterface.h"
+#include "Exceptions.h"
 
 #include <SDL_rwops.h>
 #include <string_theory/string>
@@ -16,8 +17,7 @@ void FileMan::deleteFile(const ST::string& path)
 	if (Fs_exists(path.c_str()) && !Fs_removeFile(path.c_str()))
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGE("Deleting file '{}' failed: {}", path, err.get());
-		throw std::runtime_error("Deleting file failed");
+		throw IoException(ST::format("FileMan::deleteFile('{}') failed: {}", path, err.get()));
 	}
 }
 
@@ -26,8 +26,7 @@ void FileMan::createDir(const ST::string& path)
 	if (!Fs_isDir(path.c_str()) && !Fs_createDir(path.c_str()))
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGE("Failed to created directory '{}': {}", path, err.get());
-		throw std::runtime_error("Failed to create directory");
+		throw IoException(ST::format("FileMan::createDir('{}') failed: {}", path, err.get()));
 	}
 }
 
@@ -37,15 +36,14 @@ void FileMan::eraseDirectory(const ST::string& dirPath)
 	std::vector<ST::string> paths = FileMan::findAllFilesInDir(dirPath);
 	for (const ST::string& path : paths)
 	{
+		if (FileMan::isDir(path)) continue;
 		try
 		{
 			FileMan::deleteFile(path);
 		}
-		catch (const std::runtime_error& ex)
+		catch (const IoException& ex)
 		{
-			if (Fs_isDir(path.c_str())) continue;
-			STLOGE("EraseDirectory '{}' '{}': {}", dirPath, path, ex.what());
-			throw;
+			throw IoException(ST::format("FileMan::eraseDirectory('{}') failed because {}", dirPath, ex.what()));;
 		}
 	}
 }
@@ -56,14 +54,14 @@ uint64_t FileMan::getFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
 	if (!path)
 	{
 		RustPointer<char> msg(getRustError());
-		SLOGW("%s", msg.get());
+		SLOGW("FileMan::getFreeSpaceOnHardDriveWhereGameIsRunningFrom() failed: %s", msg.get());
 		return 0;
 	}
 	uint64_t bytes;
 	if (!Fs_freeSpace(path.get(), &bytes))
 	{
 		RustPointer<char> msg(getRustError());
-		SLOGW("%s", msg.get());
+		SLOGW("FileMan::getFreeSpaceOnHardDriveWhereGameIsRunningFrom() failed: %s", msg.get());
 		return 0;
 	}
 	return bytes;
@@ -93,7 +91,7 @@ ST::string FileMan::resolveExistingComponents(const ST::string& path)
 	RustPointer<char> resolved{Fs_resolveExistingComponents(path.c_str(), NULL, true)};
 	if (resolved.get() == NULL) {
 		RustPointer<char> err{getRustError()};
-		throw std::runtime_error(ST::format("FileMan::resolveExistingComponents: {}", err.get()).c_str()); 	
+		throw IoException(ST::format("FileMan::resolveExistingComponents('{}') failed: {}", path, err.get())); 	
 	}
 	return resolved.get();
 }
@@ -113,8 +111,7 @@ SGPFile* FileMan::openForWriting(const ST::string& filename, bool truncate)
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGE("FileMan::openForWriting '{}' {}: {}", filename, truncate, err.get());
-		throw std::runtime_error("FileMan::openForWriting failed");
+		throw IoException(ST::format("FileMan::openForWriting('{}') failed: {}", filename, err.get()));
 	}
 	return new SGPFile(file.release());
 }
@@ -128,8 +125,7 @@ SGPFile* FileMan::openForAppend(const ST::string& filename)
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGE("FileMan::openForAppend '{}': {}", filename, err.get());
-		throw std::runtime_error("FileMan::openForAppend failed");
+		throw IoException(ST::format("FileMan::openForAppend('{}') failed: {}", filename, err.get()));
 	}
 	return new SGPFile(file.release());
 }
@@ -143,8 +139,7 @@ SGPFile* FileMan::openForReadWrite(const ST::string& filename)
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGE("FileMan::openForReadWrite '{}': {}", filename, err.get());
-		throw std::runtime_error("FileMan::openForReadWrite failed");
+		throw IoException(ST::format("FileMan::openForReadWrite('{}') failed: {}", filename, err.get()));
 	}
 	return new SGPFile(file.release());
 }
@@ -156,8 +151,7 @@ SGPFile* FileMan::openForReading(const ST::string &filename)
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGE("FileMan::openForReading '{}': {}", filename, err.get());
-		throw std::runtime_error("FileMan::openForReading failed");
+		throw IoException(ST::format("FileMan::openForReading('{}') failed: {}", filename, err.get()));
 	}
 	return new SGPFile(file.release());
 }
@@ -215,7 +209,7 @@ FileMan::findAllFilesInDir(const ST::string& dirPath, bool sortResults, bool rec
 	if (!vec)
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGW("FindAllFilesInDir: {}", err.get());
+		STLOGW("FileMan::findAllFilesInDir({}) failed: {}", dirPath, err.get());
 		return paths;
 	}
 	size_t len = VecCString_len(vec.get());
@@ -240,7 +234,7 @@ FileMan::findAllDirsInDir(const ST::string& dirPath, bool sortResults, bool recu
 	if (!vec)
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGW("FileMan::findAllDirsInDir: {}", err.get());
+		STLOGW("FileMan::findAllDirsInDir({}) failed: {}", dirPath, err.get());
 		return paths;
 	}
 	size_t len = VecCString_len(vec.get());
@@ -275,9 +269,8 @@ ST::string FileMan::getParentPath(const ST::string &path, bool absolute)
 		RustPointer<char> dir(Env_currentDir());
 		if (!dir)
 		{
-			RustPointer<char> msg(getRustError());
-			SLOGW("%s", msg.get());
-			throw std::runtime_error("expected the current directory");
+			RustPointer<char> err(getRustError());
+			throw IoException(ST::format("FileMan::getParentPath('{}') failed: {}", path, err.get()));
 		}
 		return joinPaths(dir.get(), parent.get());
 	}
@@ -318,7 +311,7 @@ bool FileMan::isReadOnly(const ST::string& path) {
 	bool success = Fs_getReadOnly(path.c_str(), &readonly);
 	if (!success) {
 		RustPointer<char> err{getRustError()};
-		throw std::runtime_error(ST::format("FileMan::isReadOnly: {}", err.get()).c_str());
+		throw IoException(ST::format("FileMan::isReadOnly('{}') failed: {}", path, err.get()));
 	}
 	return readonly;
 }
@@ -340,8 +333,7 @@ void FileMan::moveFile(const ST::string& from, const ST::string& to)
 	if (!Fs_rename(from.c_str(), to.c_str()))
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGE("FileMan::moveFile '{}' '{}': {}", from, to, err.get());
-		throw std::runtime_error("FileMan::moveFile failed");
+		throw IoException(ST::format("FileMan::moveFile('{}', '{}') failed: {}", from, to, err.get()));
 	}
 }
 
@@ -351,7 +343,7 @@ double FileMan::getLastModifiedTime(const ST::string& path)
 	if (!Fs_modifiedSecs( path.c_str(), &lastModified ))
 	{
 		RustPointer<char> err{getRustError()};
-		throw std::runtime_error(ST::format("FileMan::getLastModifiedTime: {}", err.get()).c_str());
+		throw IoException(ST::format("FileMan::getLastModifiedTime('{}') failed: {}", path, err.get()));
 	}
 	return lastModified;
 }
