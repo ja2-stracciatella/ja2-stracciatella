@@ -3271,9 +3271,9 @@ static void HandleWebBookMarkNotifyTimer(void)
 void ClearOutTempLaptopFiles(void)
 {
 	// clear out all temp files from laptop
-	GCM->deleteTempFile(FILES_DATA_FILE);
-	GCM->deleteTempFile(FINANCES_DATA_FILE);
-	GCM->deleteTempFile(HISTORY_DATA_FILE);
+	GCM->tempFiles()->deleteFile(FILES_DATA_FILE);
+	GCM->tempFiles()->deleteFile(FINANCES_DATA_FILE);
+	GCM->tempFiles()->deleteFile(HISTORY_DATA_FILE);
 }
 
 

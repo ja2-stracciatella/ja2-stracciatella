@@ -47,7 +47,7 @@ void LoadGameSettings(void)
 {
 	try
 	{
-		AutoSGPFile f(GCM->openUserPrivateFileForReading(GAME_SETTINGS_FILE));
+		AutoSGPFile f(GCM->userPrivateFiles()->openForReading(GAME_SETTINGS_FILE));
 
 		BYTE data[76];
 		if (f->size() != sizeof(data)) goto fail;
@@ -135,7 +135,7 @@ void SaveGameSettings(void)
 	INJ_SKIP(d, 20)
 	Assert(d.getConsumed() == lengthof(data));
 
-	AutoSGPFile f(GCM->openUserPrivateFileForWriting(GAME_SETTINGS_FILE, true));
+	AutoSGPFile f(GCM->userPrivateFiles()->openForWriting(GAME_SETTINGS_FILE, true));
 	f->write(data, sizeof(data));
 }
 

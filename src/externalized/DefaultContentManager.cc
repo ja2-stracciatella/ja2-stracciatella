@@ -178,7 +178,8 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	RustPointer<char> vanillaGameDir{EngineOptions_getVanillaGameDir(m_engineOptions.get())};
 
 	RustPointer<char> stracciatellaHome{EngineOptions_getStracciatellaHome()};
-	m_userHomeDir = stracciatellaHome.get();
+
+	m_userPrivateFiles = std::unique_ptr<DirFs>(new DirFs(stracciatellaHome.get()));
 
 	m_gameVersion = EngineOptions_getResourceVersion(m_engineOptions.get());
 
@@ -202,7 +203,7 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	}
 	m_tempDir = move(tempDir);
 	RustPointer<char> tempDirPath(TempDir_path(m_tempDir.get()));
-	m_tempDirPath = tempDirPath.get();
+	m_tempFiles = std::unique_ptr<DirFs>(new DirFs(tempDirPath.get()));
 
 	// Initialize VFS
 	auto succeeded = Vfs_init_from_engine_options(m_vfs.get(), m_engineOptions.get());
@@ -217,11 +218,11 @@ void DefaultContentManager::logConfiguration() const {
 	RustPointer<char> vanillaGameDir{EngineOptions_getVanillaGameDir(m_engineOptions.get())};
 	RustPointer<char> assetsDir{EngineOptions_getAssetsDir(m_engineOptions.get())};
 
-	STLOGI("JA2 Home Dir:                  '{}'", m_userHomeDir);
+	STLOGI("JA2 Home Dir:                  '{}'", m_userPrivateFiles.get()->basePath());
 	STLOGI("Root game resources directory: '{}'", vanillaGameDir.get());
 	STLOGI("Extra data directory:          '{}'", assetsDir.get());
 	STLOGI("Saved games directory:         '{}'", getSavedGamesFolder());
-	STLOGI("Temporary directory:           '{}'", m_tempDirPath);
+	STLOGI("Temporary directory:           '{}'", m_tempFiles.get()->basePath());
 }
 
 template <class T> 
@@ -456,68 +457,6 @@ std::vector<ST::string> DefaultContentManager::getAllTilecache() const
 	return paths;
 }
 
-/** Does temp file exist. */
-bool DefaultContentManager::doesTempFileExist(const ST::string& filename) const
-{
-	return FileMan::checkFileExistance(m_tempDirPath, filename);
-}
-
-/** Open temporary file for writing. */
-SGPFile* DefaultContentManager::openTempFileForWriting(const ST::string& filename, bool truncate) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
-	return FileMan::openForWriting(path, truncate);
-}
-
-/* Open temporary file for reading. */
-SGPFile* DefaultContentManager::openTempFileForReading(const ST::string& filename) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
-	return FileMan::openForReading(path);
-}
-
-/** Open temporary file for read/write. */
-SGPFile* DefaultContentManager::openTempFileForReadWrite(const ST::string& filename) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
-	return FileMan::openForReadWrite(path);
-}
-
-/** Open temporary file for appending. */
-SGPFile* DefaultContentManager::openTempFileForAppend(const ST::string& filename) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
-	return FileMan::openForAppend(path);
-}
-
-/** Delete temporary file. */
-void DefaultContentManager::deleteTempFile(const ST::string& filename) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
-	FileMan::deleteFile(path);
-}
-
-/** Create temporary directory. Does not fail if it exists already. */
-void DefaultContentManager::createTempDir(const ST::string& dirname) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, dirname);
-	FileMan::createDir(path);
-}
-
-/** List temporary directory. Pass empty string to list the temp dir itself. */
-std::vector<ST::string> DefaultContentManager::findAllFilesInTempDir(const ST::string& dirname, bool sortResults, bool recursive, bool returnOnlyNames) const
-{
-	ST::string path = dirname.size() == 0 ? m_tempDirPath : FileMan::joinPaths(m_tempDirPath, dirname);
-	return FileMan::findAllFilesInDir(path, sortResults, recursive, returnOnlyNames);
-}
-
-/** Erase all files within temporary directory. */
-void DefaultContentManager::eraseTempDir(const ST::string& dirname) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, dirname);
-	FileMan::eraseDirectory(path);
-}
-
 /* Open a game resource file for reading.
  *
  * First trying to open the file normally. It will work if the path is absolute
@@ -544,64 +483,16 @@ bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
 	return static_cast<bool>(vfile.get());
 }
 
-/** Open user's private file (e.g. saved game, settings) for reading. */
-SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& filename) const
+DirFs *DefaultContentManager::tempFiles() const
 {
-	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
-	SGPFile* file = FileMan::openForReading(path);
-	return file;
+	return m_tempFiles.get();
 }
 
-/** Open user's private file (e.g. saved game, settings) for writing. */
-SGPFile* DefaultContentManager::openUserPrivateFileForWriting(const ST::string& filename, bool truncate) const
+DirFs *DefaultContentManager::userPrivateFiles() const
 {
-	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
-	return FileMan::openForWriting(path, truncate);
+	return m_userPrivateFiles.get();
 }
 
-/** Delete user's private file (e.g. saved game, settings). */
-void DefaultContentManager::deleteUserPrivateFile(const ST::string& filename) const
-{
-	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
-	FileMan::deleteFile(path);
-}
-
-/** Does user's private file exist. */
-bool DefaultContentManager::doesUserPrivateFileExist(const ST::string& filename) const
-{
-	return FileMan::checkFileExistance(m_userHomeDir, filename);
-}
-
-/* Get last modified time of a user's private file. */
-double DefaultContentManager::getUserPrivateFileLastModifiedTime(const ST::string& filename) const
-{
-	ST::string path = FileMan::joinPaths(m_userHomeDir, filename);
-	return FileMan::getLastModifiedTime(path);
-}
-
-/** Create user private directory. Does not fail if it exists already. */
-void DefaultContentManager::createUserPrivateDirectory(const ST::string& dirname) const
-{
-	ST::string path = FileMan::joinPaths(m_userHomeDir, dirname);
-	FileMan::createDir(path);
-}
-
-/** Check if user private directory exists and is a directory. */
-bool DefaultContentManager::isUserPrivateDir(const ST::string& dirname) const
-{
-	ST::string path = FileMan::joinPaths(m_userHomeDir, dirname);
-	return FileMan::isDir(path);
-}
-
-ST::string DefaultContentManager::getScreenshotFolder() const
-{
-	return m_userHomeDir;
-}
-
-ST::string DefaultContentManager::getVideoCaptureFolder() const
-{
-	return m_userHomeDir;
-}
 
 /** Get folder for saved games. */
 ST::string DefaultContentManager::getSavedGamesFolder() const

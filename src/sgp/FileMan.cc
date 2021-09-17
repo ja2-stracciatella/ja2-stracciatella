@@ -27,7 +27,7 @@ void FileMan::createDir(const ST::string& path)
 }
 
 
-void FileMan::eraseDirectory(const ST::string& dirPath)
+void FileMan::eraseDir(const ST::string& dirPath)
 {
 	std::vector<ST::string> paths = FileMan::findAllFilesInDir(dirPath);
 	for (const ST::string& path : paths)
@@ -39,7 +39,7 @@ void FileMan::eraseDirectory(const ST::string& dirPath)
 		}
 		catch (const IoException& ex)
 		{
-			throw IoException(ST::format("FileMan::eraseDirectory('{}') failed because {}", dirPath, ex.what()));;
+			throw IoException(ST::format("FileMan::eraseDir('{}') failed because {}", dirPath, ex.what()));;
 		}
 	}
 }
@@ -312,14 +312,8 @@ bool FileMan::isReadOnly(const ST::string& path) {
 	return readonly;
 }
 
-/** Check file existance. */
-bool FileMan::checkFileExistance(const ST::string& folder, const ST::string& fileName)
-{
-	return checkPathExistance(joinPaths(folder, fileName));
-}
-
 /**  Check path existence. */
-bool FileMan::checkPathExistance(const ST::string& path)
+bool FileMan::exists(const ST::string& path)
 {
 	return Fs_exists(path.c_str());
 }

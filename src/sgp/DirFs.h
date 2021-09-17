@@ -1,32 +1,42 @@
 #pragma once
 
-#include "sgp/SGPFile.h"
-#include "sgp/Types.h"
+#include "SGPFile.h"
 
 #include <string_theory/string>
 
-#include <vector>
 
-/***
- * The file manager namespace provides functions to interact with files
+/** Provides oprations for files within a subdirectory.
+ *  Should be kept in sync with FileMan namespace to provide the same interface.
  */
-namespace FileMan
+class DirFs
 {
+private:
+	ST::string m_basePath;
+public:
+	/** Create a DirFs with base path */
+	DirFs(const ST::string& path) : m_basePath(path) {};
+
+	/** Return absolute path for file within DirFs */
+	ST::string basePath();
+
+	/** Return absolute path for file within DirFs */
+	ST::string absolutePath(const ST::string &path);
+
 	/** Open file for writing.
 	 * If file is missing it will be created.
 	 * If file exists, it's content will be removed. */
-	SGPFile* openForWriting(const ST::string& filename, bool truncate=true);
+	SGPFile *openForWriting(const ST::string &path, bool truncate = true);
 
 	/** Open file for appending data.
 	 * If file doesn't exist, it will be created. */
-	SGPFile* openForAppend(const ST::string& filename);
+	SGPFile *openForAppend(const ST::string &path);
 
 	/** Open file for reading and writing.
 	 * If file doesn't exist, it will be created. */
-	SGPFile* openForReadWrite(const ST::string& filename);
+	SGPFile *openForReadWrite(const ST::string &path);
 
 	/** Open file for reading. */
-	SGPFile* openForReading(const ST::string &filename);
+	SGPFile *openForReading(const ST::string &path);
 
 	/* Delete the file at path. */
 	void deleteFile(const ST::string &path);
@@ -38,11 +48,11 @@ namespace FileMan
 	/** Create directory.
 	 * If directory already exists, do nothing.
 	 * If failed to create, raise an exception. */
-	void createDir(const ST::string& path);
+	void createDir(const ST::string &path);
 
 	/* Removes ALL FILES in the specified directory, but leaves the directory alone.
  	 * Does not affect any subdirectories! */
-	void eraseDir(const ST::string& dirPath);
+	void eraseDir(const ST::string &path);
 
 	/**
 	 * Find all files with the given extension in the given directory.
@@ -54,12 +64,12 @@ namespace FileMan
 	 * @param recursive When True, recurse into subs. Function returns full path regardless of returnOnlyNames
 	 * @return List of paths (dir + filename) or filenames. */
 	std::vector<ST::string>
-	findFilesInDir(const ST::string& dirPath,
-			const ST::string& ext,
-			bool caseInsensitive,
-			bool returnOnlyNames,
-			bool sortResults = false,
-			bool recursive = false);
+	findFilesInDir(const ST::string &path,
+				   const ST::string &ext,
+				   bool caseInsensitive,
+				   bool returnOnlyNames,
+				   bool sortResults = false,
+				   bool recursive = false);
 
 	/**
 	 * Find all files in a directory.
@@ -68,7 +78,7 @@ namespace FileMan
 	 * @param recursive When True, recurse into subs.
 	 * @return List of paths (dir + filename). */
 	std::vector<ST::string>
-	findAllFilesInDir(const ST::string& dirPath, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
+	findAllFilesInDir(const ST::string &path, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
 
 	/**
 	 * Find all directories in directory
@@ -77,50 +87,26 @@ namespace FileMan
 	 * @param recursive When True, recurse into subs.
 	 * @return List of paths (dir + filename). */
 	std::vector<ST::string>
-	findAllDirsInDir(const ST::string& dirPath, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
-
-	/** Join two path components. */
-	ST::string joinPaths(const ST::string& first, const ST::string& second);
-
-	/** Join multiple path components. */
-	ST::string joinPaths(const std::vector<ST::string> parts);
-
-	/** Replace extension of a file. */
-	ST::string replaceExtension(const ST::string& path, const ST::string& newExtension);
-
-	/** Get parent path (e.g. directory path from the full path). */
-	ST::string getParentPath(const ST::string &path, bool absolute);
-
-	/** Get filename from the path. */
-	ST::string getFileName(const ST::string &path);
-
-	/** Get filename from the path without extension. */
-	ST::string getFileNameWithoutExt(const ST::string& path);
+	findAllDirsInDir(const ST::string &path, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false);
 
 	/* Resolve existing components of a path in a case insensitive manner */
-	ST::string resolveExistingComponents(const ST::string& path);
+	ST::string resolveExistingComponents(const ST::string &path);
 
 	/** Check if path exists and is a file */
-	bool isFile(const ST::string& path);
+	bool isFile(const ST::string &path);
 
 	/** Check if path exists and is a directory */
-	bool isDir(const ST::string& path);
-
-	/** Check if path is absolute */
-	bool isAbsolute(const ST::string& path);
+	bool isDir(const ST::string &path);
 
 	/** Check if path is read only. Throws when path does not exist */
-	bool isReadOnly(const ST::string& path);
+	bool isReadOnly(const ST::string &path);
 
 	/** Returns if the given path (dir or file) exists */
-	bool exists(const ST::string& path);
+	bool exists(const ST::string &path);
 
 	/** Move a file */
-	void moveFile(const ST::string& from, const ST::string& to);
+	void moveFile(const ST::string &from, const ST::string &to);
 
 	/** Get last modified time in seconds since UNIX epoch */
-	double getLastModifiedTime(const ST::string& path);
-
-	//Gets the amount of free space on the hard drive that the main executeablt is runnning from
-	uint64_t getFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
+	double getLastModifiedTime(const ST::string &path);
 };

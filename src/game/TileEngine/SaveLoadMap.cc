@@ -43,7 +43,7 @@ static std::unique_ptr<AutoSGPFile> OpenMapModificationTempFile(INT16 const sSec
 {
 	SetSectorFlag(sSectorX, sSectorY, bSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS);
 
-	return std::make_unique<AutoSGPFile>(GCM->openTempFileForAppend(GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ)));
+	return std::make_unique<AutoSGPFile>(GCM->tempFiles()->openForAppend(GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ)));
 }
 
 // Writes map modification to the open temp file
@@ -77,12 +77,12 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 	ST::string const zMapName = GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
-	if (!GCM->doesTempFileExist(zMapName)) return;
+	if (!GCM->tempFiles()->exists(zMapName)) return;
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(GCM->openTempFileForReading(zMapName));
+		AutoSGPFile hFile(GCM->tempFiles()->openForReading(zMapName));
 
 		//Get the size of the file
 		uiNumberOfElements = hFile->size() / sizeof(MODIFY_MAP);
@@ -93,7 +93,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 	}
 
 	//Delete the file
-	GCM->deleteTempFile( zMapName );
+	GCM->tempFiles()->deleteFile( zMapName );
 	std::unique_ptr<AutoSGPFile> tempMapFile = OpenMapModificationTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 	for( cnt=0; cnt< uiNumberOfElements; cnt++ )
@@ -416,7 +416,7 @@ void SaveRevealedStatusArrayToRevealedTempFile(INT16 const sSectorX, INT16 const
 {
 	Assert( gpRevealedMap != NULL );
 
-	AutoSGPFile hFile(GCM->openTempFileForWriting(GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ ), true));
+	AutoSGPFile hFile(GCM->tempFiles()->openForWriting(GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ ), true));
 
 	//Write the revealed array to the Revealed temp file
 	hFile->write(gpRevealedMap, NUM_REVEALED_BYTES);
@@ -436,10 +436,10 @@ void LoadRevealedStatusArrayFromRevealedTempFile()
 	ST::string const zMapName = GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 	//If the file doesnt exists, its no problem.
-	if (!GCM->doesTempFileExist(zMapName)) return;
+	if (!GCM->tempFiles()->exists(zMapName)) return;
 
 	{
-		AutoSGPFile hFile(GCM->openTempFileForReading(zMapName));
+		AutoSGPFile hFile(GCM->tempFiles()->openForReading(zMapName));
 
 		Assert( gpRevealedMap == NULL );
 		gpRevealedMap = new UINT8[NUM_REVEALED_BYTES]{};
@@ -622,7 +622,7 @@ try
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
 	{
-		AutoSGPFile hFile(GCM->openTempFileForReading(zMapName));
+		AutoSGPFile hFile(GCM->tempFiles()->openForReading(zMapName));
 
 		//Get the number of elements in the file
 		uiNumberOfElements = hFile->size() / sizeof(MODIFY_MAP);
@@ -633,7 +633,7 @@ try
 	}
 
 	//Delete the file
-	GCM->deleteTempFile( zMapName );
+	GCM->tempFiles()->deleteFile( zMapName );
 
 	//Get the image type and subindex
 	const UINT32 uiType     = GetTileType(usIndex);
@@ -752,13 +752,13 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 	ST::string const map_name = GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, usSectorX, usSectorY, bSectorZ);
 
 	// If the file doesn't exists, it's no problem.
-	if (!GCM->doesTempFileExist(map_name)) return;
+	if (!GCM->tempFiles()->exists(map_name)) return;
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> mm;
 	{
 		// Read the map temp file into a buffer
-		AutoSGPFile src(GCM->openTempFileForReading(map_name));
+		AutoSGPFile src(GCM->tempFiles()->openForReading(map_name));
 
 		uiNumberOfElements = src->size() / sizeof(MODIFY_MAP);
 
@@ -777,6 +777,6 @@ void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16
 		break;
 	}
 
-	AutoSGPFile dst(GCM->openTempFileForWriting(map_name, true));
+	AutoSGPFile dst(GCM->tempFiles()->openForWriting(map_name, true));
 	dst->write(mm, sizeof(*mm) * uiNumberOfElements);
 }

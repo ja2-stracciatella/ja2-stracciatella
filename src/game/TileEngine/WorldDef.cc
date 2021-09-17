@@ -2949,7 +2949,7 @@ void ReloadTileset(TileSetID const ubID)
 	giCurrentTilesetID = ubID;
 
 	// Save Map
-	AutoSGPFile f1(GCM->openTempFileForWriting(TEMP_FILE_FOR_TILESET_CHANGE, true));
+	AutoSGPFile f1(GCM->tempFiles()->openForWriting(TEMP_FILE_FOR_TILESET_CHANGE, true));
 	SaveWorldToSGPFile(f1);
 	f1.Deallocate();
 
@@ -2958,12 +2958,12 @@ void ReloadTileset(TileSetID const ubID)
 	giCurrentTilesetID = iCurrTilesetID;
 
 	// Load Map with new tileset
-	AutoSGPFile f2(GCM->openTempFileForReading(TEMP_FILE_FOR_TILESET_CHANGE));
+	AutoSGPFile f2(GCM->tempFiles()->openForReading(TEMP_FILE_FOR_TILESET_CHANGE));
 	LoadWorldFromSGPFile(f2);
 	f2.Deallocate();
 
 	// Delete file
-	GCM->deleteTempFile(TEMP_FILE_FOR_TILESET_CHANGE);
+	GCM->tempFiles()->deleteFile(TEMP_FILE_FOR_TILESET_CHANGE);
 }
 
 

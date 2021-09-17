@@ -6,6 +6,7 @@
 
 #include "Facts.h"
 #include "ItemSystem.h"
+#include "DirFs.h"
 
 #include <string_theory/string>
 
@@ -77,38 +78,17 @@ public:
 	/** Open map for reading. */
 	virtual SGPFile* openMapForReading(const ST::string& mapName) const = 0;
 
-	/** Open user's private file (e.g. settings) for reading. */
-	virtual SGPFile* openUserPrivateFileForReading(const ST::string& filename) const = 0;
-
-	/** Open user's private file (e.g. settings) for writing. */
-	virtual SGPFile* openUserPrivateFileForWriting(const ST::string& filename, bool truncate) const = 0;
-
-	/** Delete user's private file (e.g. settings). */
-	virtual void deleteUserPrivateFile(const ST::string& filename) const = 0;
-
-	/* Checks if a user's private file exists. */
-	virtual bool doesUserPrivateFileExist(const ST::string& filename) const = 0;
-
-	/* Get last modified time of a user's private file. */
-	virtual double getUserPrivateFileLastModifiedTime(const ST::string& filename) const = 0;
-
-	/** Create user private directory. */
-	virtual void createUserPrivateDirectory(const ST::string& dirname) const = 0;
-
-	/** Check if user private directory exists and is a directory. */
-	virtual bool isUserPrivateDir(const ST::string& dirname) const = 0;
-
 	/* Open a game resource file for reading. */
 	virtual SGPFile* openGameResForReading(const ST::string& filename) const = 0;
 
 	/* Checks if a game resource exists. */
 	virtual bool doesGameResExists(const ST::string& filename) const = 0;
 
-	/** Get folder for screenshots. */
-	virtual ST::string getScreenshotFolder() const = 0;
+	/** User private file (e.g. settings) */
+	virtual DirFs* userPrivateFiles() const = 0;
 
-	/** Get folder for video capture. */
-	virtual ST::string getVideoCaptureFolder() const = 0;
+	/** Temp files */
+	virtual DirFs* tempFiles() const = 0;
 
 	/** Get folder for saved games. */
 	virtual ST::string getSavedGamesFolder() const = 0;
@@ -214,31 +194,4 @@ public:
 	virtual const ST::string* getNewString(size_t stringId) const = 0;
 
 	virtual const ST::string& getLandTypeString(size_t index) const = 0;
-
-	/** Does temp file exist. */
-	virtual bool doesTempFileExist(const ST::string& filename) const = 0;
-
-	/** Open temporary file for writing. */
-	virtual SGPFile* openTempFileForWriting(const ST::string& filename, bool truncate) const = 0;
-
-	/** Open temporary file for reading. */
-	virtual SGPFile* openTempFileForReading(const ST::string& filename) const = 0;
-
-	/** Open temporary file for read/write. */
-	virtual SGPFile* openTempFileForReadWrite(const ST::string& filename) const = 0;
-
-	/** Open temporary file for appending. */
-	virtual SGPFile* openTempFileForAppend(const ST::string& filename) const = 0;
-
-	/** Delete temporary file. */
-	virtual void deleteTempFile(const ST::string& filename) const = 0;
-
-	/** Create temporary directory. Does not fail if it exists already. */
-	virtual void createTempDir(const ST::string& dirname) const = 0;
-
-	/** List temporary directory. Pass empty string to list the temp dir itself. */
-	virtual std::vector<ST::string> findAllFilesInTempDir(const ST::string& dirname, bool sortResults = false, bool recursive = false, bool returnOnlyNames = false) const = 0;
-
-	/** Erase all files within temporary directory. */
-	virtual void eraseTempDir(const ST::string& dirname) const = 0;
 };

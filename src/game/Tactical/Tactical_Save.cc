@@ -144,7 +144,7 @@ static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 
 	if (flags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS && savegame_version < 78)
 	{
 		// Delete the file, because it is corrupted
-		GCM->deleteTempFile(GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z));
+		GCM->tempFiles()->deleteFile(GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z));
 		flags &= ~SF_CIV_PRESERVED_TEMP_FILE_EXISTS;
 	}
 }
@@ -214,7 +214,7 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_ver
 void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, const std::vector<WORLDITEM>& items)
 {
 	{
-		AutoSGPFile f(GCM->openTempFileForWriting(GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ), true));
+		AutoSGPFile f(GCM->tempFiles()->openForWriting(GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ), true));
 		Assert(items.size() <= UINT32_MAX);
 		UINT32 numItems = static_cast<UINT32>(items.size());
 		f->writeArray(numItems, items.data());
@@ -233,9 +233,9 @@ std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const
 
 	std::vector<WORLDITEM> l_items;
 	// If the file doesn't exists, it's no problem
-	if (GCM->doesTempFileExist(filename))
+	if (GCM->tempFiles()->exists(filename))
 	{
-		AutoSGPFile f(GCM->openTempFileForReading(filename));
+		AutoSGPFile f(GCM->tempFiles()->openForReading(filename));
 
 		UINT32 numItems = 0;
 		f->read(&numItems, sizeof(UINT32));
@@ -640,14 +640,14 @@ static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMap
 
 void InitTacticalSave()
 {
-	GCM->createTempDir(TACTICAL_SAVE_TEMPDIR);
-	GCM->eraseTempDir(TACTICAL_SAVE_TEMPDIR);
+	GCM->tempFiles()->createDir(TACTICAL_SAVE_TEMPDIR);
+	GCM->tempFiles()->eraseDir(TACTICAL_SAVE_TEMPDIR);
 }
 
 
 static void SaveRottingCorpsesToTempCorpseFile(INT16 const x, INT16 const y, INT8 const z)
 {
-	AutoSGPFile f(GCM->openTempFileForWriting(GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, x, y, z), true));
+	AutoSGPFile f(GCM->tempFiles()->openForWriting(GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, x, y, z), true));
 
 	// Save the number of the rotting corpses
 	UINT32 n_corpses = 0;
@@ -671,9 +671,9 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 	ST::string const map_name = GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, x, y, z);
 
 	// If the file doesn't exist, it's no problem.
-	if (!GCM->doesTempFileExist(map_name)) return;
+	if (!GCM->tempFiles()->exists(map_name)) return;
 
-	AutoSGPFile f(GCM->openTempFileForReading(map_name));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(map_name));
 
 	// Load the number of Rotting corpses
 	UINT32 n_corpses;
@@ -793,7 +793,7 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT& p, INT16 sSectorX, INT16 sSec
 
 void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, ROTTING_CORPSE_DEFINITION const* const corpse_def)
 {
-	AutoSGPFile f(GCM->openTempFileForReadWrite(GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ)));
+	AutoSGPFile f(GCM->tempFiles()->openForReadWrite(GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ)));
 
 	UINT32 corpse_count;
 	if (f->size() != 0)

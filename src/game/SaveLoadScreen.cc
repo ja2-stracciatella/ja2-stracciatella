@@ -1121,10 +1121,10 @@ static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER *const h
 
 		try
 		{
-			if (GCM->doesUserPrivateFileExist(savegameName))
+			if (GCM->userPrivateFiles()->exists(savegameName))
 			{
 				bool stracLinuxFormat;
-				AutoSGPFile f(GCM->openUserPrivateFileForReading(savegameName));
+				AutoSGPFile f(GCM->userPrivateFiles()->openForReading(savegameName));
 				ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
 				endof(header->zGameVersionNumber)[-1] = '\0';
 				return TRUE;
@@ -1508,7 +1508,7 @@ static void DeleteAllSaveGameFile(void)
 void DeleteSaveGameNumber(UINT8 const save_slot_id)
 {
 	ST::string savegameName = CreateSavedGameFileNameFromNumber(save_slot_id);
-	GCM->deleteUserPrivateFile(savegameName);
+	GCM->tempFiles()->deleteFile(savegameName);
 }
 
 
@@ -1744,7 +1744,7 @@ bool AreThereAnySavedGameFiles()
 	for (INT8 i = 0; i != (NUM_SAVE_GAMES_TABS * NUM_SAVE_GAMES); ++i)
 	{
 		ST::string savegameName = CreateSavedGameFileNameFromNumber(i);
-		if (GCM->doesUserPrivateFileExist(savegameName)) return true;
+		if (GCM->userPrivateFiles()->exists(savegameName)) return true;
 	}
 	return false;
 }

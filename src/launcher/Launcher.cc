@@ -299,7 +299,7 @@ void Launcher::startExecutable(bool asEditor) {
 	}
 	newFilename = newFilename.replace(target, "");
 	exePath.reset(Path_setFilename(exePath.get(), newFilename.c_str()));
-	if (!FileMan::checkPathExistance(exePath.get())) {
+	if (!FileMan::exists(exePath.get())) {
 		fl_message_title("Not found");
 		fl_alert("%s", exePath.get());
 		return;

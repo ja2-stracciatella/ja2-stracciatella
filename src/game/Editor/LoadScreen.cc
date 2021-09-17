@@ -416,7 +416,7 @@ ScreenID LoadSaveScreenHandle(void)
 				return LOADSAVE_SCREEN;
 			}
 			gFileForIO = absolutePath;
-			if ( FileMan::checkPathExistance(absolutePath) )
+			if ( FileMan::exists(absolutePath) )
 			{
 				gfFileExists = TRUE;
 				gfReadOnly = false;

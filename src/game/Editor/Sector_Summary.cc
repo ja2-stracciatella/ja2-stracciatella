@@ -1749,13 +1749,13 @@ static void CreateGlobalSummary(void)
 
 	gfGlobalSummaryExists = FALSE;
 
-	GCM->createUserPrivateDirectory(DEVINFO_DIR);
+	GCM->userPrivateFiles()->createDir(DEVINFO_DIR);
 
 	// Generate a simple readme file.
 	const char* readme = ""
 		"This information is used in conjunction with the editor.\n"
 		"This directory or its contents shouldn't be included with final release.\n";
-	AutoSGPFile file{GCM->openUserPrivateFileForWriting(DEVINFO_DIR "/readme.txt", true)};
+	AutoSGPFile file{GCM->userPrivateFiles()->openForWriting(DEVINFO_DIR "/readme.txt", true)};
 
 	file->write(readme, strlen(readme));
 
@@ -2053,7 +2053,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 	}
 
 	try {
-		AutoSGPFile file{GCM->openUserPrivateFileForReading(summary_filename)};
+		AutoSGPFile file{GCM->userPrivateFiles()->openForReading(summary_filename)};
 
 		/* Even if the info is outdated (but existing), allocate the structure, but
 		 * indicate that the info is bad. */
@@ -2095,7 +2095,7 @@ static void LoadGlobalSummary(void)
 	gfMustForceUpdateAllMaps        = FALSE;
 	gusNumberOfMapsToBeForceUpdated = 0;
 
-	gfGlobalSummaryExists = GCM->isUserPrivateDir(DEVINFO_DIR);
+	gfGlobalSummaryExists = GCM->userPrivateFiles()->isDir(DEVINFO_DIR);
 	if (!gfGlobalSummaryExists)
 	{
 		SLOGI("LoadGlobalSummary() aborted -- doesn't exist on this local computer.");
@@ -2145,7 +2145,7 @@ void WriteSectorSummaryUpdate(const ST::string &filename, const UINT8 ubLevel, S
 	;
 	ST::string summary_filename = ST::format("{}/{}.sum", DEVINFO_DIR, FileMan::getFileNameWithoutExt(filename));
 	
-	AutoSGPFile file{GCM->openUserPrivateFileForWriting(summary_filename, true)};
+	AutoSGPFile file{GCM->userPrivateFiles()->openForWriting(summary_filename, true)};
 
 	file->write(sf, sizeof(*sf));
 

@@ -139,7 +139,7 @@ TEST(FileManTest, RemoveAllFilesInDir)
 	std::vector<ST::string> results = FileMan::findAllFilesInDir(tempPath.get(), true);
 	ASSERT_EQ(results.size(), 2u);
 
-	FileMan::eraseDirectory(tempPath.get());
+	FileMan::eraseDir(tempPath.get());
 
 	// check that the subdirectory is still there
 	ASSERT_EQ(FileMan::isDir(subDir), true);
