@@ -1,6 +1,7 @@
 #include "Debug.h"
 #include "HImage.h"
 #include "MemMan.h"
+#include "FileMan.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
 #include "VSurface.h"
@@ -354,13 +355,13 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 {
 	if (guiVObjectSize == 0) return;
 
-	RustPointer<File> file(File_open(filename, fAppend ? FILE_OPEN_APPEND : FILE_OPEN_WRITE));
-	if (!file)
-	{
-		RustPointer<char> err(getRustError());
-		SLOGA("DumpVObjectInfoIntoFile: %s", err.get());
-		return;
+	SGPFile *f;
+	if (fAppend) {
+		f = FileMan::openForAppend(filename);
+	} else {
+		f = FileMan::openForReading(filename);
 	}
+	AutoSGPFile file{f};
 
 	//Allocate enough strings and counters for each node.
 	DUMPINFO* const Info = new DUMPINFO[guiVObjectSize]{};
@@ -403,11 +404,7 @@ static void DumpVObjectInfoIntoFile(const char* filename, BOOLEAN fAppend)
 
 	//Free all memory associated with this operation.
 	delete[] Info;
-	if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(buf.c_str()), buf.size()))
-	{
-		RustPointer<char> err(getRustError());
-		SLOGW("DumpVObjectInfoIntoFile: %s", err.get());
-	}
+	file->write(reinterpret_cast<const uint8_t*>(buf.c_str()), buf.size())
 }
 
 
