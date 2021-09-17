@@ -7,7 +7,7 @@
 
 void ExtractExplosionTypeFromFile(HWFILE const file, EXPLOSIONTYPE* const e)
 {
-	BYTE src[36];
+	BYTE src[36] = { 0 };
 	DataReader s{src};
 
 	file->read(src, sizeof(src));

@@ -230,7 +230,7 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 						if( iCurrentAction == ACTION_LOAD_MAP )
 							DisableButton( iFileDlgButtons[FILEDIALOG_OK] );
 					}
-					if( iCurrFileShown >= gFileList.size() )
+					if( iCurrFileShown >= (INT32)gFileList.size() )
 						iCurrFileShown--;
 					if( iCurrFileShown < iTopFileShown )
 						iTopFileShown -= 8;
@@ -686,8 +686,8 @@ static void SetTopFileToLetter(UINT16 usLetter)
 	{
 		iCurrFileShown = x;
 		iTopFileShown = x;
-		if( iTopFileShown > gFileList.size() - 7 )
-			iTopFileShown = gFileList.size() - 7;
+		if( iTopFileShown > (INT32)gFileList.size() - 7 )
+			iTopFileShown = (INT32)gFileList.size() - 7;
 		SetInputFieldString(0, prev->filename);
 	}
 }
@@ -695,6 +695,7 @@ static void SetTopFileToLetter(UINT16 usLetter)
 
 static void HandleMainKeyEvents(InputAtom* pEvent)
 {
+	INT32 iFileListSize = gFileList.size();
 	INT32 iPrevFileShown = iCurrFileShown;
 	//Replace Alt-x press with ESC.
 	if( pEvent->usKeyState & ALT_DOWN && pEvent->usParam == 'x' )
@@ -732,10 +733,10 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 		case SDLK_PAGEDOWN:
 			iTopFileShown += 7;
 			iCurrFileShown += 7;
-			if( iTopFileShown > gFileList.size()-7 )
-				iTopFileShown = gFileList.size() - 7;
-			if( iCurrFileShown >= gFileList.size() )
-				iCurrFileShown = gFileList.size() - 1;
+			if( iTopFileShown > iFileListSize-7 )
+				iTopFileShown = iFileListSize - 7;
+			if( iCurrFileShown >= iFileListSize )
+				iCurrFileShown = iFileListSize - 1;
 			break;
 
 		case SDLK_UP:
@@ -747,8 +748,8 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 
 		case SDLK_DOWN:
 			iCurrFileShown++;
-			if( iCurrFileShown >= gFileList.size() )
-				iCurrFileShown = gFileList.size() - 1;
+			if( iCurrFileShown >= iFileListSize )
+				iCurrFileShown = iFileListSize - 1;
 			else if( iTopFileShown < iCurrFileShown-7 )
 				iTopFileShown++;
 			break;
@@ -759,8 +760,8 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 			break;
 
 		case SDLK_END:
-			iTopFileShown = gFileList.size()-7;
-			iCurrFileShown = gFileList.size()-1;
+			iTopFileShown = iFileListSize-7;
+			iCurrFileShown = iFileListSize-1;
 			break;
 
 		case SDLK_DELETE: iFDlgState = DIALOG_DELETE; break;
@@ -1013,7 +1014,7 @@ static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason)
 			iTopFileShown--;
 	}
 	if( reason & (MSYS_CALLBACK_REASON_WHEEL_DOWN) ) {
-		if( (iTopFileShown+7) < gFileList.size() )
+		if( (iTopFileShown+7) < (INT32)gFileList.size() )
 			iTopFileShown++;
 	}
 }
@@ -1051,7 +1052,7 @@ static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
-		if( (iTopFileShown+7) < gFileList.size() )
+		if( (iTopFileShown+7) < (INT32)gFileList.size() )
 			iTopFileShown++;
 	}
 }

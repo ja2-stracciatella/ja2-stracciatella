@@ -7,7 +7,7 @@
 
 void ExtractBulletFromFile(HWFILE const file, BULLET* const b)
 {
-	BYTE src[128];
+	BYTE src[128] = { 0 };
 	DataReader s{src};
 
 	file->read(src, sizeof(src));

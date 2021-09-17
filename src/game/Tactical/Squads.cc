@@ -676,7 +676,7 @@ void SaveSquadInfoToSavedGameFile(HWFILE const f)
 void LoadSquadInfoFromSavedGameFile(HWFILE const f)
 {
 	// Load in the squad info
-	BYTE data[NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD * 12];
+	BYTE data[NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD * 12] = { 0 };
 	DataReader d{data};
 	f->read(data, sizeof(data));
 	for (INT32 squad = 0; squad != NUMBER_OF_SQUADS; ++squad)
