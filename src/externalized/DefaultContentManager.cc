@@ -212,6 +212,8 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 		auto error = ST::format("Failed to build virtual file system (VFS): {}", err.get());
 		throw std::runtime_error(error.c_str());
 	}
+
+	m_userPrivateFiles->createDir(getSavedGamesFolder());
 }
 
 void DefaultContentManager::logConfiguration() const {

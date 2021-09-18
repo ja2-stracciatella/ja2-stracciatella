@@ -1561,8 +1561,9 @@ static void DoneFadeOutForSaveLoadScreen(void)
 			FadeInGameScreen();
 		}
 	}
-	catch (std::exception const& e)
+	catch (std::runtime_error const& e)
 	{
+		STLOGE("Error loading game: {}", e.what());
 		ST::string msg = st_format_printf(zSaveLoadText[SLG_LOAD_GAME_ERROR], e.what());
 		DoSaveLoadMessageBox(msg, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
 		NextLoopCheckForEnoughFreeHardDriveSpace();

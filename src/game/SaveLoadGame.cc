@@ -434,8 +434,10 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 
 		SaveStatesToSaveGameFile(f);
 	}
-	catch (...)
+	catch (std::runtime_error const& e)
 	{
+		STLOGE("Error saving game: {}", e.what());
+
 		if (fWePausedIt) UnPauseAfterSaveGame();
 
 		// Delete the failed attempt at saving
