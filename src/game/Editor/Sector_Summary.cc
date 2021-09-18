@@ -2142,7 +2142,6 @@ void WriteSectorSummaryUpdate(const ST::string &filename, const UINT8 ubLevel, S
 	bool ext = filename.ends_with(".dat", ST::case_insensitive);
 	AssertMsg(ext, "Illegal sector summary filename.");
 
-	;
 	ST::string summary_filename = ST::format("{}/{}.sum", DEVINFO_DIR, FileMan::getFileNameWithoutExt(filename));
 	
 	AutoSGPFile file{GCM->userPrivateFiles()->openForWriting(summary_filename, true)};

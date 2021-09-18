@@ -263,11 +263,11 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		FileMan::createDir(GCM->getSavedGamesFolder().c_str());
 
 		// Save IMP merc(s)
-		if (gamepolicy(imp_load_saved_merc_by_nickname)) SaveIMPPlayerProfiles();
+		SaveIMPPlayerProfiles();
 
 		// Create the save game file
 		ST::string savegameName = CreateSavedGameFileNameFromNumber(ubSaveGameID);
-		AutoSGPFile f(GCM->userPrivateFiles()->openForWriting(savegameName, true));
+		AutoSGPFile f(GCM->userPrivateFiles()->openForWriting(savegameName));
 
 		/* If there are no enemy or civilians to save, we have to check BEFORE
 		 * saving the sector info struct because the
