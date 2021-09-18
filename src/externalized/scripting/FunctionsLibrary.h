@@ -2,6 +2,9 @@
 
 #include "Types.h"
 #include "Observable.h"
+#include <variant>
+
+typedef std::map<std::string, std::variant<std::string, int32_t, float, bool>> ExtraGameStatesTable;
 
 /*! \file FunctionsLibrary.h */
 
@@ -72,6 +75,16 @@ extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStruc
  */
 
 /**
+ * When the game about to be saved. This is the place to persist mod game states.
+ */
+extern Observable<> BeforeGameSaved;
+
+/**
+ * Right after a game is loaded. This is the place to restore game states from a saved game.
+ */
+extern Observable<> OnGameLoaded;
+
+/**
  * Loads the specified script file into Lua space. The file is loaded via the VFS sub-system.
  * This function can only be used during initialization.
  * @param scriptFileName the name to the lua script file, e.g. enums.lua
@@ -135,3 +148,18 @@ OBJECTTYPE* CreateMoney(const UINT32 amt);
  * @ingroup funclib-items
  */
 void PlaceItem(const INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisibility);
+
+/**
+ * Retrieves a key-value mapping from saved game states.
+ * @param key provide a unique key so it will not clash with other mods
+ * @return
+ */
+ExtraGameStatesTable GetGameStates(std::string key);
+
+/**
+ * Copies the key-value mapping into the game states. Game states are
+ * persisted in game saves, and can be retrieved with GetGameStates.
+ * @param key provide a unique key so it will not clash with other mods
+ * @param states a map of primitive types (string, numeric or boolean)
+ */
+void PutGameStates(std::string key, ExtraGameStatesTable states);

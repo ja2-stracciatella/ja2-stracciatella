@@ -353,7 +353,7 @@ mod tests {
   "game_dir": "",
   "mods": [],
   "res": "100x100",
-  "brightness": 1.0,
+  "brightness": -1.0,
   "resversion": "ENGLISH",
   "fullscreen": false,
   "scaling": "PERFECT",

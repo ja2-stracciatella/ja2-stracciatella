@@ -119,7 +119,12 @@ void VideoToggleFullScreen(void)
 
 void VideoSetBrightness(float brightness)
 {
-	SDL_SetWindowBrightness(g_game_window, brightness);
+	if (brightness >= 0)
+	{
+		// Do not set the brightness unless explicitly requested
+		// On Windows, setting the brightness resets color profile and some other disply options.
+		SDL_SetWindowBrightness(g_game_window, brightness);
+	}
 }
 
 

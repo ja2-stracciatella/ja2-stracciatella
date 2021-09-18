@@ -73,6 +73,7 @@
 #include "Music_Control.h"
 #include "NPC.h"
 #include "NpcPlacementModel.h"
+#include "Observable.h"
 #include "OppList.h"
 #include "Options_Screen.h"
 #include "Overhead.h"
@@ -84,6 +85,7 @@
 #include "Render_Dirty.h"
 #include "RenderWorld.h"
 #include "SaveLoadGame.h"
+#include "SaveLoadGameStates.h"
 #include "SaveLoadScreen.h"
 #include "Scheduling.h"
 #include "ShippingDestinationModel.h"
@@ -190,8 +192,13 @@ static void SaveWatchedLocsToSavedGame(HWFILE);
 
 static void SaveIMPPlayerProfiles();
 
+Observable<> BeforeGameSaved;
+Observable<> OnGameLoaded;
+
 BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 {
+	BeforeGameSaved();
+
 	BOOLEAN	fPausedStateBeforeSaving    = gfGamePaused;
 	BOOLEAN	fLockPauseStateBeforeSaving = gfLockPauseState;
 
@@ -424,6 +431,8 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		SaveLeaveItemList(f);
 
 		NewWayOfSavingBobbyRMailOrdersToSaveGameFile(f);
+
+		SaveStatesToSaveGameFile(f);
 	}
 	catch (...)
 	{
@@ -960,6 +969,11 @@ void LoadSavedGame(UINT8 const save_slot_id)
 		}
 	}
 
+	if (version >= 101)
+	{
+		LoadStatesFromSaveFile(f);
+	}
+
 	BAR(1, "Final Checks...");
 
 	InitAI();
@@ -1123,6 +1137,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	// 2. the ai may ignoring the CallAvailableEnemiesTo(...) because it wasn't
 	//		fully analyzed before
 	CallAvailableTeamEnemiesToAmbush(gMapInformation.sCenterGridNo);
+
+	OnGameLoaded();
 }
 
 

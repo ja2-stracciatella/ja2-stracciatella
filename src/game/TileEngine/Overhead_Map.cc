@@ -9,7 +9,7 @@
 #include "Game_Clock.h"
 #include "GameInstance.h"
 #include "GameLoop.h"
-#include "GameState.h"
+#include "GameMode.h"
 #include "Handle_Items.h"
 #include "Handle_UI.h"
 #include "HImage.h"
@@ -783,7 +783,7 @@ static void RenderOverheadOverlays(void)
 			0;
 		marker->CurrentShade(shade);
 
-		if (gfEditMode && GameState::getInstance()->isEditorMode() && gpSelected && gpSelected->pSoldier == &s)
+		if (gfEditMode && GameMode::getInstance()->isEditorMode() && gpSelected && gpSelected->pSoldier == &s)
 		{ //editor:  show the selected edited merc as the yellow one.
 			Blt8BPPDataTo16BPPBufferTransparent(pDestBuf, uiDestPitchBYTES, marker, sX, sY, 0);
 		}

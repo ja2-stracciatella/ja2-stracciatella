@@ -47,7 +47,7 @@ impl Default for EngineOptions {
             assets_dir: PathBuf::from(""),
             mods: vec![],
             resolution: Resolution::default(),
-            brightness: 1.0,
+            brightness: -1.0,
             resource_version: VanillaVersion::ENGLISH,
             show_help: false,
             run_unittests: false,

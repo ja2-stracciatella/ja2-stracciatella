@@ -43,7 +43,7 @@ extern SGPFont gpHugeFont;
 #define BLOCKFONTNARROW	gpBlockFontNarrow
 #define FONT14HUMANIST		gp14PointHumanist
 
-#define HUGEFONT		((GameState::getInstance()->isEditorMode() && isEnglishVersion()) ? gpHugeFont : gp16PointArial)
+#define HUGEFONT		((GameMode::getInstance()->isEditorMode() && isEnglishVersion()) ? gpHugeFont : gp16PointArial)
 
 #define FONT_MCOLOR_BLACK	0
 #define FONT_MCOLOR_WHITE	208

@@ -19,7 +19,7 @@
 #include <SDL.h>
 #include "UILayout.h"
 #include "GameRes.h"
-#include "GameState.h"
+#include "GameMode.h"
 #include "Timer.h"
 
 #include "DefaultContentManager.h"
@@ -420,11 +420,11 @@ int main(int argc, char* argv[])
 
 		if (EngineOptions_shouldStartInDebugMode(params.get())) {
 			Logger_setLevel(LogLevel::Debug);
-			GameState::getInstance()->setDebugging(true);
+			GameMode::getInstance()->setDebugging(true);
 		}
 
 		if (EngineOptions_shouldRunEditor(params.get())) {
-			GameState::getInstance()->setEditorMode(false);
+			GameMode::getInstance()->setEditorMode(false);
 		}
 
 		uint16_t width = EngineOptions_getResolutionX(params.get());

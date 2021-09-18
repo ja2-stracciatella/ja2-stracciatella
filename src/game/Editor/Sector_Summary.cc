@@ -38,7 +38,7 @@
 #include "Video.h"
 #include "UILayout.h"
 #include "GameRes.h"
-#include "GameState.h"
+#include "GameMode.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"

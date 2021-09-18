@@ -223,6 +223,9 @@ static void RegisterGlobals()
 	lua.set_function("CreateMoney", CreateMoney);
 	lua.set_function("PlaceItem", PlaceItem);
 
+	lua.set_function("GetGameStates", GetGameStates);
+	lua.set_function("PutGameStates", PutGameStates);
+
 	lua.set_function("JA2Require", JA2Require);
 	lua.set_function("require",  []() { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
 	lua.set_function("dofile",   []() { throw std::logic_error("dofile is not allowed. Use JA2Require instead"); });
@@ -304,6 +307,8 @@ static void _RegisterListener(std::string observable, std::string luaFunc, ST::s
 	else if (observable == "OnAirspaceControlUpdated")   OnAirspaceControlUpdated.addListener(key, wrap<>(luaFunc));
 	else if (observable == "BeforePrepareSector")        BeforePrepareSector.addListener(key, wrap<>(luaFunc));
 	else if (observable == "OnSoldierCreated")           OnSoldierCreated.addListener(key, wrap<SOLDIERTYPE*>(luaFunc));
+	else if (observable == "BeforeGameSaved")            BeforeGameSaved.addListener(key, wrap<>(luaFunc));
+	else if (observable == "OnGameLoaded")               OnGameLoaded.addListener(key, wrap<>(luaFunc));
 	else {
 		ST::string err = ST::format("There is no observable named '{}'", observable);
 		throw std::logic_error(err.to_std_string());

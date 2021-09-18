@@ -29,7 +29,7 @@
 #include "Buildings.h"
 #include "Random.h"
 #include "Tile_Animation.h"
-#include "GameState.h"
+#include "GameMode.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -731,7 +731,7 @@ try
 		s->sGridNo = sBaseGridNo + t->sPosRelToBase;
 		if (i != BASE_TILE)
 		{
-			if(GameState::getInstance()->isEditorMode())
+			if(GameMode::getInstance()->isEditorMode())
 			{
 				/* Kris:
 				* Added this undo code if in the editor.

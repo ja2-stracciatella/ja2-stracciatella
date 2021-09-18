@@ -1,6 +1,6 @@
 #pragma once
 
-enum GameMode
+enum GameRunMode
 {
 	GAME_MODE_GAME,
 	GAME_MODE_EDITOR,
@@ -9,16 +9,16 @@ enum GameMode
 };
 
 
-/** Global game state (singleton). */
-class GameState
+/** Singleton data object about how the game was run. */
+class GameMode
 {
 public:
 
 	/** Get instance of the object. */
-	static GameState* getInstance();
+	static GameMode* getInstance();
 
 	/** Get current game mode. */
-	GameMode getMode();
+	GameRunMode getMode();
 
 	/** Set editor mode. */
 	void setEditorMode(bool autoLoad);
@@ -30,12 +30,12 @@ public:
 
 private:
 
-	GameMode m_mode;
+	GameRunMode m_mode;
 	bool debug;
 
 	/** Private constructor to avoid instantiation. */
-	GameState();
+	GameMode();
 
-	GameState(GameState const&);
-	void operator=(GameState const&);
+	GameMode(GameMode const&);
+	void operator=(GameMode const&);
 };

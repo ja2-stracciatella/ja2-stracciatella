@@ -27,7 +27,7 @@
 #include "Quests.h"
 #include "MemMan.h"
 #include "ScreenIDs.h"
-#include "GameState.h"
+#include "GameMode.h"
 #include "Logger.h"
 #include "EditorMercs.h"
 
@@ -586,7 +586,7 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 
 	SOLDIERTYPE* const pSoldier = pSchedule->soldier;
 
-	if(GameState::getInstance()->isEditorMode())
+	if(GameMode::getInstance()->isEditorMode())
 	{
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
