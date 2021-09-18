@@ -176,11 +176,14 @@ public:
 	virtual int16_t getSectorLandType(uint8_t sectorID, uint8_t sectorLevel) const override;
 	virtual const std::vector<const StrategicMapSecretModel*>& getMapSecrets() const override;
 	virtual const CacheSectorsModel* getCacheSectors() const override;
+
 	virtual const std::map<uint8_t, const NpcPlacementModel*>& listNpcPlacements() const override;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const override;
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const override;
 	virtual const std::vector<const MERCListingModel*>& getMERCListings() const override;
 	virtual const std::vector<const MercProfile*>& listMercProfiles() const override;
+	virtual const VehicleModel* getVehicle(uint8_t vehicleID) const override;
+
 	virtual const LoadingScreen* getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const override;
 	virtual const LoadingScreen* getLoadingScreen(uint8_t index) const override;
 
@@ -258,6 +261,7 @@ protected:
 
 	std::map<uint8_t, const RPCSmallFaceModel*> m_rpcSmallFaces;
 	std::vector<const MERCListingModel*> m_MERCListings;
+	std::vector<const VehicleModel*> m_vehicles;
 
 	// List of pre-constructed MercProfile objects; indices of elements are arbitrary (unlike gMercProfiles) and not guaranteed to follow any order
 	std::vector<const MercProfile*> m_mercProfiles;
@@ -285,6 +289,7 @@ protected:
 	bool loadStrategicLayerData();
 	bool loadTacticalLayerData();
 	bool loadMercsData();
+	void loadVehicles();
 
 	std::unique_ptr<rapidjson::Document> readJsonDataFile(const ST::string& fileName) const;
 

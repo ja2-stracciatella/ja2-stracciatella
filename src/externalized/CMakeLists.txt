@@ -22,6 +22,7 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/ModPackContentManager.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ShippingDestinationModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/Soldier.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/VehicleModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/WeaponModels.cc
 )
 

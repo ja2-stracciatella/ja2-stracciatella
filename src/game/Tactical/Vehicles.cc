@@ -40,6 +40,7 @@
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "ShippingDestinationModel.h"
+#include "VehicleModel.h"
 
 #include <stdexcept>
 #include <vector>
@@ -49,31 +50,6 @@ INT8 gubVehicleMovementGroups[ MAX_VEHICLES ];
 
 // the list of vehicle slots
 std::vector<VEHICLETYPE> pVehicleList;
-
-
-//ATE: These arrays below should all be in a large LUT which contains
-// static info for each vehicle....
-
-
-struct VehicleTypeInfo
-{
-	SoundID   enter_sound;
-	SoundID   move_sound;
-	ProfileID profile;
-	UINT8     movement_type;
-	UINT16    armour_type;
-	UINT8     seats;
-};
-
-static const VehicleTypeInfo g_vehicle_type_info[] =
-{
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ELDERODO,   CAR, KEVLAR_VEST,  6 }, // Eldorado
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HUMMER,     CAR, SPECTRA_VEST, 6 }, // Hummer
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_ICECREAM,   CAR, KEVLAR_VEST,  6 }, // Ice cream truck
-	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR, KEVLAR_VEST,  6 }, // Jeep
-	{ S_VECH1_INTO, S_VECH1_MOVE, NPC164,          CAR, SPECTRA_VEST, 6 }, // Tank
-	{ S_VECH1_INTO, S_VECH1_MOVE, PROF_HELICOPTER, AIR, KEVLAR_VEST,  6 }  // Helicopter
-};
 
 
 // Loop through and create a few soldier squad ID's for vehicles ( max # 3 )
@@ -94,7 +70,7 @@ void SetVehicleValuesIntoSoldierType(SOLDIERTYPE* const vs)
 {
 	const VEHICLETYPE* const v = &pVehicleList[vs->bVehicleID];
 	vs->name = zVehicleName[v->ubVehicleType];
-	vs->ubProfile           = g_vehicle_type_info[v->ubVehicleType].profile;
+	vs->ubProfile           = GCM->getVehicle(v->ubVehicleType)->profile;
 	vs->sBreathRed          = 10000; // Init fuel
 	vs->bBreath             = 100;
 	vs->ubWhatKindOfMercAmI = MERC_TYPE__VEHICLE;
@@ -136,7 +112,7 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 	Assert(g);
 
 	// ARM: setup group movement defaults
-	g->ubTransportationMask = g_vehicle_type_info[ubType].movement_type;
+	g->ubTransportationMask = GCM->getVehicle(ubType)->movement_type;
 	g->ubSectorX            = sMapX;
 	g->ubNextX              = sMapX;
 	g->ubSectorY            = sMapY;
@@ -175,7 +151,7 @@ bool IsThisVehicleAccessibleToSoldier(SOLDIERTYPE const& s, VEHICLETYPE const& v
 		s.sSectorX == v.sSectorX &&
 		s.sSectorY == v.sSectorY &&
 		s.bSectorZ == v.sSectorZ &&
-		OKUseVehicle(g_vehicle_type_info[v.ubVehicleType].profile);
+		OKUseVehicle(GCM->getVehicle(v.ubVehicleType)->profile);
 }
 
 
@@ -234,7 +210,7 @@ static bool AddSoldierToVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 			SelectSoldier(vs, SELSOLDIER_FORCE_RESELECT);
 		}
 
-		PlayLocationJA2Sample(vs->sGridNo, g_vehicle_type_info[v.ubVehicleType].enter_sound, HIGHVOLUME, 1);
+		PlayLocationJA2Sample(vs->sGridNo, GCM->getVehicle(v.ubVehicleType)->enter_sound, HIGHVOLUME, 1);
 	}
 
 	INT32 const seats = GetVehicleSeats(v);
@@ -621,7 +597,8 @@ BOOLEAN ExitVehicle(SOLDIERTYPE* const s)
 		SelectSoldier(s, SELSOLDIER_FORCE_RESELECT);
 	}
 
-	PlayLocationJA2Sample(vs.sGridNo, g_vehicle_type_info[pVehicleList[vs.bVehicleID].ubVehicleType].enter_sound, HIGHVOLUME, 1);
+	UINT8 ubVehicleType = pVehicleList[vs.bVehicleID].ubVehicleType;
+	PlayLocationJA2Sample(vs.sGridNo, GCM->getVehicle(ubVehicleType)->enter_sound, HIGHVOLUME, 1);
 	return TRUE;
 }
 
@@ -814,7 +791,8 @@ void SetVehicleSectorValues(VEHICLETYPE& v, UINT8 const x, UINT8 const y)
 	v.sSectorX = x;
 	v.sSectorY = y;
 
-	MERCPROFILESTRUCT& p = GetProfile(g_vehicle_type_info[v.ubVehicleType].profile);
+	ProfileID vehicleProfile = GCM->getVehicle(v.ubVehicleType)->profile;
+	MERCPROFILESTRUCT& p = GetProfile(vehicleProfile);
 	p.sSectorX = x;
 	p.sSectorY = y;
 
@@ -1058,7 +1036,7 @@ void HandleVehicleMovementSound(const SOLDIERTYPE* const s, const BOOLEAN fOn)
 	{
 		if (v->uiMovementSoundID == NO_SAMPLE)
 		{
-			v->uiMovementSoundID = PlayLocationJA2Sample(s->sGridNo, g_vehicle_type_info[v->ubVehicleType].move_sound, HIGHVOLUME, 1);
+			v->uiMovementSoundID = PlayLocationJA2Sample(s->sGridNo, GCM->getVehicle(v->ubVehicleType)->move_sound, HIGHVOLUME, 1);
 		}
 	}
 	else
@@ -1074,11 +1052,12 @@ void HandleVehicleMovementSound(const SOLDIERTYPE* const s, const BOOLEAN fOn)
 
 UINT8 GetVehicleArmourType(const UINT8 vehicle_id)
 {
-	return GCM->getItem(g_vehicle_type_info[pVehicleList[vehicle_id].ubVehicleType].armour_type)->getClassIndex();
+	auto armourItemIndex = GCM->getVehicle(pVehicleList[vehicle_id].ubVehicleType)->armour_type;
+	return GCM->getItem(armourItemIndex)->getClassIndex();
 }
 
 
 UINT8 GetVehicleSeats(VEHICLETYPE const& v)
 {
-	return g_vehicle_type_info[v.ubVehicleType].seats;
+	return GCM->getVehicle(v.ubVehicleType)->seats;
 }

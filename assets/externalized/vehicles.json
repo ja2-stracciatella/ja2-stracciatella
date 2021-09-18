@@ -1,0 +1,72 @@
+/**
+ * Definitions of player-controllable transport vehicles.
+ *
+ * The ordering in this list is important, and the game has hard-coded references to the
+ * vehicles. For example, the game expects the HELICOPTER to be the 6th vehicle.
+ *
+ * In base vanilla game, only the Hummer, Ice-cream truck and Helicopter are available.
+ *
+ * Fields:
+ * - enterSound: Sound file to play when a soldier enters the vehicle.
+ * - moveSound: Sound file to play when the vehicle moves.
+ * - profileID: Profile ID associated to the vehicle.
+ * - movementType: Determines if the vehicle can travel through map sectors and how fast. Must be one of FOOT, CAR, TRUCK, TRACKED or AIR.
+ * - armourType: Determines the vehicle's protection against damage. Use the internal name of any armour items.
+ * - seats: Maximum number of soldiers allowed in the vehicle. Must not be greater than 10.
+ */
+[
+    // Eldorado (unused)
+    {
+        "enterSound": "sounds/into vehicle.wav", // S_VECH1_INTO
+        "moveSound": "sounds/driving 01.wav", // S_VECH1_MOVE
+        "profileID": 161, // PROF_ELDERODO
+        "movementType": "CAR",
+        "armourType": "KEVLAR_VEST",
+        "seats": 6
+    },
+    // Hummer
+    {
+        "enterSound": "sounds/into vehicle.wav",
+        "moveSound": "sounds/driving 01.wav",
+        "profileID": 160, // PROF_HUMMER
+        "movementType": "CAR",
+        "armourType": "SPECTRA_VEST",
+        "seats": 6
+    },
+    // Ice cream truck
+    {
+        "enterSound": "sounds/into vehicle.wav",
+        "moveSound": "sounds/driving 01.wav",
+        "profileID": 162, // PROF_ICECREAM
+        "movementType": "CAR",
+        "armourType": "KEVLAR_VEST",
+        "seats": 6
+    },
+    // Jeep (unused)
+    {
+        "enterSound": "sounds/into vehicle.wav",
+        "moveSound": "sounds/driving 01.wav",
+        "profileID": 164, // NPC_164
+        "movementType": "CAR",
+        "armourType": "KEVLAR_VEST",
+        "seats":  6
+    },
+    // Tank (unused)
+    {
+        "enterSound": "sounds/into vehicle.wav",
+        "moveSound": "sounds/driving 01.wav",
+        "profileID": 164, // NPC_164
+        "movementType": "CAR",
+        "armourType": "SPECTRA_VEST",
+        "seats": 6
+    },
+    // Helicopter
+    {
+        "enterSound": "sounds/into vehicle.wav",
+        "moveSound": "sounds/driving 01.wav",
+        "profileID": 163,  // HELICOPTER
+        "movementType": "AIR",
+        "armourType": "KEVLAR_VEST",
+        "seats":6
+    }
+]

@@ -8,6 +8,7 @@
 
 
 #define MAX_VEHICLES 10
+#define MAX_PASSENGERS_IN_VEHICLE 10
 
 // type of vehicles
 enum{
@@ -32,7 +33,7 @@ struct VEHICLETYPE
 	INT16   sSectorZ;
 	BOOLEAN fBetweenSectors; // between sectors?
 	INT16   sGridNo; // location in tactical
-	SOLDIERTYPE *pPassengers[ 10 ];
+	SOLDIERTYPE *pPassengers[MAX_PASSENGERS_IN_VEHICLE];
 	BOOLEAN fDestroyed;
 	UINT32  uiMovementSoundID;
 	BOOLEAN fValid;
