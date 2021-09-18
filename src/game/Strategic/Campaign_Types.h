@@ -135,11 +135,14 @@ enum
 
 
 //Vehicle types
-#define FOOT				0x01 //anywhere
-#define CAR					0x02 //roads
-#define TRUCK				0x04 //roads, plains, sparse
-#define TRACKED			0x08 //roads, plains, sand, sparse
-#define AIR					0x10 //can traverse all terrains at 100%
+enum VehicleMovementType
+{
+	FOOT = 0x01,		//anywhere
+	CAR = 0x02,		//roads
+	TRUCK = 0x04,		//roads, plains, sparse
+	TRACKED = 0x08,		//roads, plains, sand, sparse
+	AIR = 0x10		//can traverse all terrains at 100%
+};
 
 //Traversability ratings
 enum
