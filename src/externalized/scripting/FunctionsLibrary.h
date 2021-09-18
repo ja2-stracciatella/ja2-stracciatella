@@ -84,14 +84,6 @@ extern Observable<> BeforeGameSaved;
  */
 extern Observable<> OnGameLoaded;
 
-/**
- * Loads the specified script file into Lua space. The file is loaded via the VFS sub-system.
- * This function can only be used during initialization.
- * @param scriptFileName the name to the lua script file, e.g. enums.lua
- * @ingroup funclib-general
- */
-void JA2Require(std::string scriptFileName);
-
 /** @defgroup funclib-sectors Map sectors
  *  @brief Access and alter sectors' stratgic-level data
  */

@@ -37,7 +37,6 @@ struct GAME_OPTIONS;
     */
 struct TacticalStatusType;
 
-static std::set<std::string> loadedScripts;
 static bool isLuaInitialized = false;
 static bool isLuaDisabled = false;
 static sol::state lua;
@@ -51,28 +50,44 @@ static void RegisterLogger();
 static void RegisterListener(std::string observable, std::string luaFunctionName);
 static void UnregisterListener(std::string observable, std::string key);
 
-void JA2Require(std::string scriptFileName)
+int StracciatellaLoadFileRequire(lua_State* L)
 {
-	if (isLuaInitialized)
-	{
-		throw std::runtime_error("JA2Require is not allowed after initialization");
-	}
+	ST::string path = sol::stack::get<std::string>(L);
+	STLOGD("Loading LUA script file: {}", path);
 
-	if (loadedScripts.find(scriptFileName) != loadedScripts.end())
-	{
-		STLOGW("Script file '{}' has already been loaded", scriptFileName);
-		return;
+	try {
+		AutoSGPFile file(GCM->openGameResForReading(SCRIPTS_DIR "/" + path));
+		std::string script = file->readStringToEnd().to_std_string();
+
+		luaL_loadbuffer(L, script.data(), script.size(), ST::format("@{}", path).c_str());
+		return 1;
+	} catch (const std::runtime_error& ex) {
+		auto errorMessage = ST::format("Error loading lua required file `{}`: {}", path, ex.what());
+		sol::stack::push(L, errorMessage.c_str());
+		return 1;
 	}
+}
+
+void RunEntryPoint()
+{
+	auto luaName = ENTRYPOINT_SCRIPT;
+	auto fileName = SCRIPTS_DIR "/" ENTRYPOINT_SCRIPT;
 	
-	STLOGD("Loading LUA script file: {}", scriptFileName);
-	AutoSGPFile f{GCM->openGameResForReading(SCRIPTS_DIR "/" + scriptFileName)};
+	STLOGD("Loading LUA script file: {}", luaName);
+	AutoSGPFile f{GCM->openGameResForReading(fileName)};
 	std::string scriptbody = f->readStringToEnd().to_std_string();
-	lua.script(scriptbody, ST::format("@{}", scriptFileName).to_std_string());
+	auto result = lua.safe_script(scriptbody, ST::format("@{}", luaName).to_std_string());
+	if (!result.valid())
+	{
+		sol::error err = result;
+		SLOGE("Lua script had an error. Scripting engine is now DISABLED. The error was:");
+		SLOGE(err.what());
+		isLuaDisabled = true;
+	}
 }
 
 void InitScriptingEngine()
 {
-	loadedScripts.clear();
 	isLuaInitialized = false;
 	isLuaDisabled = false;
 	counter = 0;
@@ -89,16 +104,20 @@ void InitScriptingEngine()
 		lua = sol::state();
 		lua.open_libraries(
 			sol::lib::base,
+			sol::lib::package,
 			sol::lib::math,
 			sol::lib::string,
 			sol::lib::table
 		);
 
+		lua.clear_package_loaders();
+		lua.add_package_loader(StracciatellaLoadFileRequire);
+
 		RegisterUserTypes();
 		RegisterGlobals();
 		RegisterLogger();
 
-		JA2Require(ENTRYPOINT_SCRIPT);
+		RunEntryPoint();
 
 		isLuaInitialized = true;
 	} 
@@ -226,10 +245,8 @@ static void RegisterGlobals()
 	lua.set_function("GetGameStates", GetGameStates);
 	lua.set_function("PutGameStates", PutGameStates);
 
-	lua.set_function("JA2Require", JA2Require);
-	lua.set_function("require",  []() { throw std::logic_error("require is not allowed. Use JA2Require instead"); });
-	lua.set_function("dofile",   []() { throw std::logic_error("dofile is not allowed. Use JA2Require instead"); });
-	lua.set_function("loadfile", []() { throw std::logic_error("loadfile is not allowed. Use JA2Require instead"); });
+	lua.set_function("dofile",   []() { throw std::logic_error("dofile is not allowed. Use require instead"); });
+	lua.set_function("loadfile", []() { throw std::logic_error("loadfile is not allowed. Use require instead"); });
 
 	lua.set_function("___noop", []() {});
 	lua.set_function("RegisterListener", RegisterListener);
@@ -272,6 +289,7 @@ static void InvokeFunction(ST::string functionName, A... args)
 	sol::protected_function func = lua[functionName.to_std_string()];
 	if (!func.valid())
 	{
+		SLOGE("Lua script had an error. Scripting engine is now DISABLED. The error was:");
 		STLOGE("Function {} is not defined", functionName);
 		isLuaDisabled = true;
 		return;
@@ -281,7 +299,8 @@ static void InvokeFunction(ST::string functionName, A... args)
 	if (!result.valid())
 	{
 		sol::error err = result;
-		STLOGE("Lua script had an error. Scripting engine is now DISABLED. The error was:\n{}", err.what());
+		SLOGE("Lua script had an error. Scripting engine is now DISABLED. The error was:");
+		SLOGE(err.what());
 		isLuaDisabled = true;
 	}
 }
