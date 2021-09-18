@@ -5,20 +5,11 @@
 #include "JsonObject.h"
 #include "Vehicles.h"
 
-VehicleModel::VehicleModel(SoundID enterSound, SoundID movementSound,
+VehicleModel::VehicleModel(ST::string enterSound, ST::string movementSound,
                            ProfileID profileID, VehicleMovementType movementType,
                            uint16_t armourType, uint8_t seats_)
     : enter_sound(enterSound), move_sound(movementSound), profile(profileID),
       movement_type(movementType), armour_type(armourType), seats(seats_) {}
-
-static SoundID toSoundID(int soundID)
-{
-	if (soundID < -1 || soundID >= NUM_SAMPLES)
-	{
-		throw DataError(ST::format("{} is not a valid SoundID", soundID));
-	}
-	return static_cast<SoundID>(soundID);
-}
 
 static ProfileID toProfileID(unsigned int profileID)
 {
@@ -57,8 +48,8 @@ const VehicleModel* VehicleModel::deserialize(JsonObjectReader &obj, const ItemS
 	}
 
 	return new VehicleModel(
-		toSoundID(obj.GetInt("enterSound")),
-		toSoundID(obj.GetInt("moveSound")),
+		obj.GetString("enterSound"),
+		obj.GetString("moveSound"),
 		toProfileID(obj.GetUInt("profileID")),
 		toMovementType(obj.GetString("movementType")),
 		armour->getItemIndex(),

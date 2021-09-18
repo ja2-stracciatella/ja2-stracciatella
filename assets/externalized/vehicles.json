@@ -7,8 +7,8 @@
  * In base vanilla game, only the Hummer, Ice-cream truck and Helicopter are available.
  *
  * Fields:
- * - enterSound: Sound to play when a soldier enters the vehicle. The value must be a valid SoundID.
- * - moveSound: Sound to play when the vehicle moves. The value must be a valid SoundID.
+ * - enterSound: Sound file to play when a soldier enters the vehicle.
+ * - moveSound: Sound file to play when the vehicle moves.
  * - profileID: Profile ID associated to the vehicle.
  * - movementType: Determines if the vehicle can travel through map sectors and how fast. Must be one of FOOT, CAR, TRUCK, TRACKED or AIR.
  * - armourType: Determines the vehicle's protection against damage. Use the internal name of any armour items.
@@ -17,8 +17,8 @@
 [
     // Eldorado (unused)
     {
-        "enterSound": 85, // S_VECH1_INTO
-        "moveSound": 82, // S_VECH1_MOVE
+        "enterSound": "sounds/into vehicle.wav", // S_VECH1_INTO
+        "moveSound": "sounds/driving 01.wav", // S_VECH1_MOVE
         "profileID": 161, // PROF_ELDERODO
         "movementType": "CAR",
         "armourType": "KEVLAR_VEST",
@@ -26,8 +26,8 @@
     },
     // Hummer
     {
-        "enterSound": 85,
-        "moveSound": 82,
+        "enterSound": "sounds/into vehicle.wav",
+        "moveSound": "sounds/driving 01.wav",
         "profileID": 160, // PROF_HUMMER
         "movementType": "CAR",
         "armourType": "SPECTRA_VEST",
@@ -35,8 +35,8 @@
     },
     // Ice cream truck
     {
-        "enterSound": 85,
-        "moveSound": 82,
+        "enterSound": "sounds/into vehicle.wav",
+        "moveSound": "sounds/driving 01.wav",
         "profileID": 162, // PROF_ICECREAM
         "movementType": "CAR",
         "armourType": "KEVLAR_VEST",
@@ -44,8 +44,8 @@
     },
     // Jeep (unused)
     {
-        "enterSound": 85,
-        "moveSound": 82,
+        "enterSound": "sounds/into vehicle.wav",
+        "moveSound": "sounds/driving 01.wav",
         "profileID": 164, // NPC_164
         "movementType": "CAR",
         "armourType": "KEVLAR_VEST",
@@ -53,8 +53,8 @@
     },
     // Tank (unused)
     {
-        "enterSound": 85,
-        "moveSound": 82,
+        "enterSound": "sounds/into vehicle.wav",
+        "moveSound": "sounds/driving 01.wav",
         "profileID": 164, // NPC_164
         "movementType": "CAR",
         "armourType": "SPECTRA_VEST",
@@ -62,8 +62,8 @@
     },
     // Helicopter
     {
-        "enterSound": 85,
-        "moveSound": 82,
+        "enterSound": "sounds/into vehicle.wav",
+        "moveSound": "sounds/driving 01.wav",
         "profileID": 163,  // HELICOPTER
         "movementType": "AIR",
         "armourType": "KEVLAR_VEST",
