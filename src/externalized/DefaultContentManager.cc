@@ -27,6 +27,7 @@
 #include "MagazineModel.h"
 #include "RustInterface.h"
 #include "ShippingDestinationModel.h"
+#include "VehicleModel.h"
 #include "WeaponModels.h"
 #include "army/ArmyCompositionModel.h"
 #include "army/GarrisonGroupModel.h"
@@ -323,6 +324,7 @@ DefaultContentManager::~DefaultContentManager()
 	deleteElements(m_MERCListings);
 	deleteElements(m_mercProfileInfo);
 	deleteElements(m_mercProfiles);
+	deleteElements(m_vehicles);
 
 	m_sectorLandTypes.clear();
 
@@ -1075,6 +1077,7 @@ bool DefaultContentManager::loadGameData()
 	loadStrategicLayerData();
 	loadTacticalLayerData();
 	loadMercsData();
+	loadVehicles();
 
 	return result;
 }
@@ -1346,6 +1349,18 @@ bool DefaultContentManager::loadMercsData()
 	return true;
 }
 
+void DefaultContentManager::loadVehicles()
+{
+	auto json = readJsonDataFile("vehicles.json");
+	for (auto& element : json->GetArray())
+	{
+		JsonObjectReader obj(element);
+		auto vehicleTypeInfo = VehicleModel::deserialize(obj, this);
+		m_vehicles.push_back(vehicleTypeInfo);
+	}
+	VehicleModel::validateData(m_vehicles);
+}
+
 const std::vector<const BloodCatPlacementsModel*>& DefaultContentManager::getBloodCatPlacements() const
 {
 	return m_bloodCatPlacements;
@@ -1547,6 +1562,16 @@ const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t const p
 const std::vector<const MercProfile*>& DefaultContentManager::listMercProfiles() const
 {
 	return m_mercProfiles;
+}
+
+const VehicleModel* DefaultContentManager::getVehicle(uint8_t const vehicleID) const
+{
+	if (vehicleID > m_vehicles.size())
+	{
+		ST::string error = ST::format("Vehicle #{} is not defined", vehicleID);
+		throw std::out_of_range(error.to_std_string());
+	}
+	return m_vehicles[vehicleID];
 }
 
 const LoadingScreen* DefaultContentManager::getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const

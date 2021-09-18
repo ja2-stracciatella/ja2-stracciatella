@@ -41,6 +41,7 @@ class StrategicAIPolicy;
 class StrategicMapSecretModel;
 class TownModel;
 class UndergroundSectorModel;
+class VehicleModel;
 struct AmmoTypeModel;
 struct CalibreModel;
 struct LoadingScreen;
@@ -186,6 +187,9 @@ public:
 
 	/* Gets eyes and mouths offsets for the RPC small portraits. Returns null if none defined. */
 	virtual const RPCSmallFaceModel* getRPCSmallFaceOffsets(uint8_t profileID) const = 0;
+
+	/* Gets all vehicle types */
+	virtual const VehicleModel* getVehicle(uint8_t vehicleID) const = 0;
 
 	/* Gets loading screen for the sector. Returns NULL if the sector does not have an associated loading screen */
 	virtual const LoadingScreen* getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const = 0;
