@@ -79,3 +79,7 @@ void DirFs::moveFile(const ST::string &from, const ST::string &to) {
 double DirFs::getLastModifiedTime(const ST::string &path) {
     return FileMan::getLastModifiedTime(absolutePath(path));
 }
+
+uint64_t DirFs::getFreeSpace(const ST::string& path) {
+    return FileMan::getFreeSpace(absolutePath(path));
+}

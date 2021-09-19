@@ -227,5 +227,9 @@ TEST(FileManTest, ReplaceExtension)
 
 TEST(FileManTest, FreeSpace)
 {
-	EXPECT_NE(FileMan::getFreeSpaceOnHardDriveWhereGameIsRunningFrom(), 0u);
+	RustPointer<TempDir> tempDir(TempDir_create());
+	ASSERT_NE(tempDir.get(), nullptr);
+	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
+	ASSERT_NE(tempPath.get(), nullptr);
+	EXPECT_NE(FileMan::getFreeSpace(tempPath.get()), 0u);
 }

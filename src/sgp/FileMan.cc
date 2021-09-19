@@ -44,20 +44,13 @@ void FileMan::eraseDir(const ST::string& dirPath)
 	}
 }
 
-uint64_t FileMan::getFreeSpaceOnHardDriveWhereGameIsRunningFrom(void)
+uint64_t FileMan::getFreeSpace(const ST::string& path)
 {
-	RustPointer<char> path(Env_currentDir());
-	if (!path)
-	{
-		RustPointer<char> msg(getRustError());
-		SLOGW("FileMan::getFreeSpaceOnHardDriveWhereGameIsRunningFrom() failed: %s", msg.get());
-		return 0;
-	}
 	uint64_t bytes;
-	if (!Fs_freeSpace(path.get(), &bytes))
+	if (!Fs_freeSpace(path.c_str(), &bytes))
 	{
-		RustPointer<char> msg(getRustError());
-		SLOGW("FileMan::getFreeSpaceOnHardDriveWhereGameIsRunningFrom() failed: %s", msg.get());
+		RustPointer<char> err(getRustError());
+		STLOGW("FileMan::getFreeSpace('{}') failed: %s", path, err.get());
 		return 0;
 	}
 	return bytes;

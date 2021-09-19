@@ -109,4 +109,7 @@ public:
 
 	/** Get last modified time in seconds since UNIX epoch */
 	double getLastModifiedTime(const ST::string &path);
+
+	/** Gets the amount of free space on the harddrive in a directory */
+	uint64_t getFreeSpace(const ST::string& path);
 };

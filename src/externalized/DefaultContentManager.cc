@@ -179,7 +179,7 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 
 	RustPointer<char> stracciatellaHome{EngineOptions_getStracciatellaHome()};
 
-	m_userPrivateFiles = std::unique_ptr<DirFs>(new DirFs(stracciatellaHome.get()));
+	m_userPrivateFiles = std::make_unique<DirFs>(stracciatellaHome.get());
 
 	m_gameVersion = EngineOptions_getResourceVersion(m_engineOptions.get());
 
@@ -203,7 +203,7 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	}
 	m_tempDir = move(tempDir);
 	RustPointer<char> tempDirPath(TempDir_path(m_tempDir.get()));
-	m_tempFiles = std::unique_ptr<DirFs>(new DirFs(tempDirPath.get()));
+	m_tempFiles = std::make_unique<DirFs>(tempDirPath.get());
 
 	// Initialize VFS
 	auto succeeded = Vfs_init_from_engine_options(m_vfs.get(), m_engineOptions.get());

@@ -121,6 +121,6 @@ namespace FileMan
 	/** Get last modified time in seconds since UNIX epoch */
 	double getLastModifiedTime(const ST::string& path);
 
-	//Gets the amount of free space on the hard drive that the main executeablt is runnning from
-	uint64_t getFreeSpaceOnHardDriveWhereGameIsRunningFrom(void);
+	/** Gets the amount of free space on the harddrive in a directory */
+	uint64_t getFreeSpace(const ST::string& path);
 };
