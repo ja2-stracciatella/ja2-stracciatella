@@ -12,7 +12,7 @@ void ExtractTacticalStatusTypeFromFile(HWFILE const f, bool stracLinuxFormat)
 {
 	UINT32 dataSize = stracLinuxFormat ? TACTICAL_STATUS_TYPE_SIZE_STRAC_LINUX : TACTICAL_STATUS_TYPE_SIZE;
 	std::vector<BYTE> data(dataSize);
-	FileRead(f, data.data(), dataSize);
+	f->read(data.data(), dataSize);
 
 	TacticalStatusType* const s = &gTacticalStatus;
 	DataReader d{data.data()};
@@ -256,5 +256,5 @@ void InjectTacticalStatusTypeIntoFile(HWFILE const f)
 	INJ_U32(d, s->uiCreatureTenseQuoteLastUpdate)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }

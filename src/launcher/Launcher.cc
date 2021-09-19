@@ -1,6 +1,7 @@
 #include "logo32.png.h"
 #include "Logger.h"
 #include "RustInterface.h"
+#include "FileMan.h"
 #include "Types.h"
 #include "GameRes.h"
 #include "Video.h"
@@ -283,15 +284,15 @@ void Launcher::startExecutable(bool asEditor) {
 		showRustError();
 		return;
 	}
-	RustPointer<char> filename(Path_filename(exePath.get()));
-	if (!filename) {
+	ST::string filename = FileMan::getFileName(exePath.get());
+	if (filename.size() == 0) {
 		fl_message_title("No filename");
 		fl_alert("%s", exePath.get());
 		return;
 	}
 	ST::string target("-launcher");
-	ST::string newFilename(filename.get());
-	auto pos = newFilename.find(target);
+	ST::string newFilename(filename);
+	auto pos = newFilename.find_last(target);
 	if (pos == -1) {
 		fl_message_title("Not launcher");
 		fl_alert("%s", exePath.get());
@@ -299,7 +300,7 @@ void Launcher::startExecutable(bool asEditor) {
 	}
 	newFilename = newFilename.replace(target, "");
 	exePath.reset(Path_setFilename(exePath.get(), newFilename.c_str()));
-	if (!Fs_exists(exePath.get())) {
+	if (!FileMan::exists(exePath.get())) {
 		fl_message_title("Not found");
 		fl_alert("%s", exePath.get());
 		return;

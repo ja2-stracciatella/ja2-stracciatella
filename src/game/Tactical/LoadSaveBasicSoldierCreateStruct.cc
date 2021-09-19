@@ -8,7 +8,7 @@
 void ExtractBasicSoldierCreateStructFromFile(HWFILE const f, BASIC_SOLDIERCREATE_STRUCT& b)
 {
 	BYTE data[52];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_BOOL(d, b.fDetailedPlacement)
@@ -59,5 +59,5 @@ void InjectBasicSoldierCreateStructIntoFile(HWFILE const f, BASIC_SOLDIERCREATE_
 	INJ_SKIP(d, 14)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }

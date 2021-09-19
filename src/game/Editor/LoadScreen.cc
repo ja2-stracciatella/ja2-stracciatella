@@ -145,8 +145,8 @@ static void ChangeDirectory(const ST::string directory, bool resetState) {
 		iCurrFileShown = iLastFileClicked = -1;
 	}
 
-	RustPointer<char> filename(Path_filename(gFileForIO.c_str()));
-	gCurrentFilename = ST::format("{}", filename.get());
+	ST::string filename = FileMan::getFileName(gFileForIO);
+	gCurrentFilename = filename;
 
 	SetInputFieldString(0, gCurrentFilename);
 	SetInputFieldString(2, gCurrentDirectory);
@@ -156,12 +156,12 @@ static void ChangeDirectory(const ST::string directory, bool resetState) {
 		if (FileMan::getParentPath(gCurrentDirectory, false) != "") {
 			gFileList.push_back(FileDialogEntry { FileType::Parent, ".." });
 		}
-		std::vector<ST::string> dirs = FindAllDirsInDir(directory.c_str(), true, false, true);
+		std::vector<ST::string> dirs = FileMan::findAllDirsInDir(directory.c_str(), true, false, true);
 		for (const ST::string &dir : dirs)
 		{
 			gFileList.push_back(FileDialogEntry { FileType::Directory, dir });
 		}
-		std::vector<ST::string> files = FindAllFilesInDir(directory.c_str(), true, false, true);
+		std::vector<ST::string> files = FileMan::findAllFilesInDir(directory.c_str(), true, false, true);
 		for (const ST::string &file : files)
 		{
 			gFileList.push_back(FileDialogEntry { FileType::File, file });
@@ -223,14 +223,14 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 			if( curr != gFileList.end() )
 			{
 				try {
-					FileDelete(gFileForIO);
+					FileMan::deleteFile(gFileForIO);
 					ChangeDirectory(gCurrentDirectory, false);
 					if( gFileList.empty() )
 					{
 						if( iCurrentAction == ACTION_LOAD_MAP )
 							DisableButton( iFileDlgButtons[FILEDIALOG_OK] );
 					}
-					if( iCurrFileShown >= gFileList.size() )
+					if( iCurrFileShown >= (INT32)gFileList.size() )
 						iCurrFileShown--;
 					if( iCurrFileShown < iTopFileShown )
 						iTopFileShown -= 8;
@@ -377,9 +377,10 @@ ScreenID LoadSaveScreenHandle(void)
 			auto filename = ExtractFilenameFromFields();
 			auto absolutePath = FileMan::joinPaths(gCurrentDirectory, filename);
 			bool readonly = false;
-			bool readonlySucceeded = Fs_getReadOnly(gFileForIO.c_str(), &readonly);
-			if (!readonlySucceeded) {
-				STLOGE("Error determining readonly status for file {}: {}", gFileForIO, getRustError());
+			try {
+				readonly = FileMan::isReadOnly(absolutePath);
+			} catch (const std::runtime_error& ex) {
+				STLOGE("Error determining readonly status for file {}: {}", absolutePath, ex.what());
 			}
 			ST::string str;
 			if (readonly)
@@ -402,7 +403,7 @@ ScreenID LoadSaveScreenHandle(void)
 			if (filename == "..") {
 				absolutePath = FileMan::getParentPath(gCurrentDirectory, false);
 			}
-			if (Fs_isDir(absolutePath.c_str())) {
+			if (FileMan::isDir(absolutePath)) {
 				ChangeDirectory(absolutePath, true);
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
@@ -415,11 +416,15 @@ ScreenID LoadSaveScreenHandle(void)
 				return LOADSAVE_SCREEN;
 			}
 			gFileForIO = absolutePath;
-			if ( Fs_exists(absolutePath.c_str()) )
+			if ( FileMan::exists(absolutePath) )
 			{
 				gfFileExists = TRUE;
 				gfReadOnly = false;
-				Fs_getReadOnly(absolutePath.c_str(), &gfReadOnly);
+				try {
+					gfReadOnly = FileMan::isReadOnly(absolutePath);
+				} catch (const std::runtime_error& ex) {
+					STLOGE("Error determining readonly status for file {}: {}", absolutePath, ex.what());
+				}
 				if( gfReadOnly )
 					CreateMessageBox( " File is read only!  Choose a different name? " );
 				else
@@ -437,7 +442,7 @@ ScreenID LoadSaveScreenHandle(void)
 			if (filename == "..") {
 				absolutePath = FileMan::getParentPath(gCurrentDirectory, false);
 			}
-			if (Fs_isDir(absolutePath.c_str())) {
+			if (FileMan::isDir(absolutePath)) {
 				ChangeDirectory(absolutePath, true);
 				iFDlgState = DIALOG_NONE;
 				return LOADSAVE_SCREEN;
@@ -681,8 +686,8 @@ static void SetTopFileToLetter(UINT16 usLetter)
 	{
 		iCurrFileShown = x;
 		iTopFileShown = x;
-		if( iTopFileShown > gFileList.size() - 7 )
-			iTopFileShown = gFileList.size() - 7;
+		if( iTopFileShown > (INT32)gFileList.size() - 7 )
+			iTopFileShown = (INT32)gFileList.size() - 7;
 		SetInputFieldString(0, prev->filename);
 	}
 }
@@ -690,6 +695,7 @@ static void SetTopFileToLetter(UINT16 usLetter)
 
 static void HandleMainKeyEvents(InputAtom* pEvent)
 {
+	INT32 iFileListSize = gFileList.size();
 	INT32 iPrevFileShown = iCurrFileShown;
 	//Replace Alt-x press with ESC.
 	if( pEvent->usKeyState & ALT_DOWN && pEvent->usParam == 'x' )
@@ -727,10 +733,10 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 		case SDLK_PAGEDOWN:
 			iTopFileShown += 7;
 			iCurrFileShown += 7;
-			if( iTopFileShown > gFileList.size()-7 )
-				iTopFileShown = gFileList.size() - 7;
-			if( iCurrFileShown >= gFileList.size() )
-				iCurrFileShown = gFileList.size() - 1;
+			if( iTopFileShown > iFileListSize-7 )
+				iTopFileShown = iFileListSize - 7;
+			if( iCurrFileShown >= iFileListSize )
+				iCurrFileShown = iFileListSize - 1;
 			break;
 
 		case SDLK_UP:
@@ -742,8 +748,8 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 
 		case SDLK_DOWN:
 			iCurrFileShown++;
-			if( iCurrFileShown >= gFileList.size() )
-				iCurrFileShown = gFileList.size() - 1;
+			if( iCurrFileShown >= iFileListSize )
+				iCurrFileShown = iFileListSize - 1;
 			else if( iTopFileShown < iCurrFileShown-7 )
 				iTopFileShown++;
 			break;
@@ -754,8 +760,8 @@ static void HandleMainKeyEvents(InputAtom* pEvent)
 			break;
 
 		case SDLK_END:
-			iTopFileShown = gFileList.size()-7;
-			iCurrFileShown = gFileList.size()-1;
+			iTopFileShown = iFileListSize-7;
+			iCurrFileShown = iFileListSize-1;
 			break;
 
 		case SDLK_DELETE: iFDlgState = DIALOG_DELETE; break;
@@ -849,13 +855,13 @@ static ScreenID ProcessFileIO(void)
 {
 	INT16 usStartX, usStartY;
 	ST::string label;
-	RustPointer<char> ioFilename(Path_filename(gFileForIO.c_str()));
+	ST::string ioFilename(FileMan::getFileName(gFileForIO));
 	switch( gbCurrentFileIOStatus )
 	{
 		case INITIATE_MAP_SAVE:	//draw save message
 			SaveFontSettings();
 			SetFontAttributes(FONT16ARIAL, FONT_LTKHAKI, FONT_DKKHAKI);
-			label = ST::format("Saving map:  {}", ioFilename.get());
+			label = ST::format("Saving map:  {}", ioFilename);
 			usStartX = (SCREEN_WIDTH - StringPixLength(label, FONT16ARIAL)) / 2;
 			usStartY = 180 - GetFontHeight(FONT16ARIAL) / 2;
 			MPrint(usStartX, usStartY, label);
@@ -880,10 +886,10 @@ static ScreenID ProcessFileIO(void)
 			if( gfShowPits )
 				AddAllPits();
 
-			SetGlobalSectorValues(ioFilename.get());
+			SetGlobalSectorValues(ioFilename);
 
 			if( gfGlobalSummaryExists )
-				UpdateSectorSummary( ioFilename.get(), gfUpdateSummaryInfo );
+				UpdateSectorSummary( ioFilename, gfUpdateSummaryInfo );
 
 			iCurrentAction = ACTION_NULL;
 			gbCurrentFileIOStatus = IOSTATUS_NONE;
@@ -914,7 +920,7 @@ static ScreenID ProcessFileIO(void)
 			try
 			{
 				UINT32 const start = SDL_GetTicks();
-				if (!Path_isAbsolute(gFileForIO.c_str())) {
+				if (!FileMan::isAbsolute(gFileForIO)) {
 					LoadWorld(gFileForIO);
 				} else {
 					LoadWorldAbsolute(gFileForIO);
@@ -933,7 +939,7 @@ static ScreenID ProcessFileIO(void)
 				CreateMessageBox( " Error loading file.  Try another filename?" );
 				return LOADSAVE_SCREEN;
 			}
-			SetGlobalSectorValues(ioFilename.get());
+			SetGlobalSectorValues(ioFilename);
 
 			RestoreFontSettings();
 
@@ -1008,7 +1014,7 @@ static void FDlgNamesCallback(GUI_BUTTON* butn, INT32 reason)
 			iTopFileShown--;
 	}
 	if( reason & (MSYS_CALLBACK_REASON_WHEEL_DOWN) ) {
-		if( (iTopFileShown+7) < gFileList.size() )
+		if( (iTopFileShown+7) < (INT32)gFileList.size() )
 			iTopFileShown++;
 	}
 }
@@ -1046,7 +1052,7 @@ static void FDlgDwnCallback(GUI_BUTTON* butn, INT32 reason)
 {
 	if( reason & (MSYS_CALLBACK_REASON_LBUTTON_UP) )
 	{
-		if( (iTopFileShown+7) < gFileList.size() )
+		if( (iTopFileShown+7) < (INT32)gFileList.size() )
 			iTopFileShown++;
 	}
 }

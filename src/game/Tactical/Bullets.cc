@@ -383,7 +383,7 @@ void SaveBulletStructureToSaveGameFile(HWFILE const hFile)
 	}
 
 	//Save the number of Bullets in the array
-	FileWrite(hFile, &uiBulletCount, sizeof(UINT32));
+	hFile->write(&uiBulletCount, sizeof(UINT32));
 
 	if( uiBulletCount != 0 )
 	{
@@ -406,7 +406,7 @@ void LoadBulletStructureFromSavedGameFile(HWFILE const hFile)
 	std::fill(std::begin(gBullets), std::end(gBullets), BULLET{});
 
 	//Load the number of Bullets in the array
-	FileRead(hFile, &guiNumBullets, sizeof(UINT32));
+	hFile->read(&guiNumBullets, sizeof(UINT32));
 
 	for (UINT i = 0; i < guiNumBullets; ++i)
 	{

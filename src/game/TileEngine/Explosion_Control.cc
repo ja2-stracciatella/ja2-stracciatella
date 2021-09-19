@@ -2510,8 +2510,8 @@ void SaveExplosionTableToSaveGameFile(HWFILE const hFile)
 
 
 	//Write the number of explosion queues
-	FileWrite(hFile, &gubElementsOnExplosionQueue, sizeof(gubElementsOnExplosionQueue));
-	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
+	hFile->write(&gubElementsOnExplosionQueue, sizeof(gubElementsOnExplosionQueue));
+	hFile->seek(3, FILE_SEEK_FROM_CURRENT);
 
 	//loop through and add all the explosions
 	FOR_EACH(ExplosionQueueElement const, i, gExplosionQueue)
@@ -2524,7 +2524,7 @@ void SaveExplosionTableToSaveGameFile(HWFILE const hFile)
 		INJ_U8(  d, e.fExists)
 		INJ_SKIP(d, 3)
 		Assert(d.getConsumed() == lengthof(data));
-		FileWrite(hFile, data, sizeof(data));
+		hFile->write(data, sizeof(data));
 	}
 
 	//
@@ -2542,7 +2542,7 @@ void SaveExplosionTableToSaveGameFile(HWFILE const hFile)
 	}
 
 	//Save the number of explosions
-	FileWrite(hFile, &uiExplosionCount, sizeof(UINT32));
+	hFile->write(&uiExplosionCount, sizeof(UINT32));
 
 	//loop through and count all the active explosions
 	for( uiCnt=0; uiCnt< NUM_EXPLOSION_SLOTS; uiCnt++)
@@ -2563,14 +2563,14 @@ void LoadExplosionTableFromSavedGameFile(HWFILE const hFile)
 	//
 
 	//Read the number of explosions queue's
-	FileRead(hFile, &gubElementsOnExplosionQueue, sizeof(gubElementsOnExplosionQueue));
-	FileSeek(hFile, 3, FILE_SEEK_FROM_CURRENT);
+	hFile->read(&gubElementsOnExplosionQueue, sizeof(gubElementsOnExplosionQueue));
+	hFile->seek(3, FILE_SEEK_FROM_CURRENT);
 
 	//loop through read all the active explosions fro the file
 	FOR_EACH(ExplosionQueueElement, i, gExplosionQueue)
 	{
 		BYTE  data[12];
-		FileRead(hFile, data, sizeof(data));
+		hFile->read(data, sizeof(data));
 		DataReader d{data};
 		ExplosionQueueElement& e = *i;
 		EXTR_U32( d, e.uiWorldBombIndex)
@@ -2586,7 +2586,7 @@ void LoadExplosionTableFromSavedGameFile(HWFILE const hFile)
 
 	//Load the number of explosions
 	UINT32 num_explosions;
-	FileRead(hFile, &num_explosions, sizeof(num_explosions));
+	hFile->read(&num_explosions, sizeof(num_explosions));
 
 	//loop through and load all the active explosions
 	const EXPLOSIONTYPE* const end = gExplosionData + num_explosions;

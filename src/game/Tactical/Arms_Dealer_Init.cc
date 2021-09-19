@@ -148,7 +148,7 @@ void ShutDownArmsDealers()
 
 void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 {
-	FileWrite(f, gArmsDealerStatus, sizeof(gArmsDealerStatus));
+	f->write(gArmsDealerStatus, sizeof(gArmsDealerStatus));
 
 	for (DEALER_ITEM_HEADER const (*dealer)[MAXITEMS] = gArmsDealersInventory; dealer != endof(gArmsDealersInventory); ++dealer)
 	{
@@ -168,7 +168,7 @@ void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 			INJ_SKIP(d, 2)
 			Assert(d.getConsumed() == lengthof(data));
 
-			FileWrite(f, data, sizeof(data));
+			f->write(data, sizeof(data));
 		}
 	}
 
@@ -179,7 +179,7 @@ void SaveArmsDealerInventoryToSaveGameFile(HWFILE const f)
 		{
 			DEALER_ITEM_HEADER const& di = gArmsDealersInventory[dealer][item_idx];
 			if (di.SpecialItem.size() == 0) continue;
-			FileWrite(f, di.SpecialItem.data(), sizeof(DEALER_SPECIAL_ITEM) * di.SpecialItem.size());
+			f->write(di.SpecialItem.data(), sizeof(DEALER_SPECIAL_ITEM) * di.SpecialItem.size());
 		}
 	}
 }
@@ -200,14 +200,14 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, UINT32 const saveg
 		savegame_version < 55 ? NUM_ARMS_DEALERS - 1 : // without Manny
 		NUM_ARMS_DEALERS;
 
-	FileRead(f, gArmsDealerStatus, n_dealers_saved * sizeof(*gArmsDealerStatus));
+	f->read(gArmsDealerStatus, n_dealers_saved * sizeof(*gArmsDealerStatus));
 
 	for (DEALER_ITEM_HEADER (*dealer)[MAXITEMS] = gArmsDealersInventory; dealer != gArmsDealersInventory + n_dealers_saved; ++dealer)
 	{
 		FOR_EACH(DEALER_ITEM_HEADER, item, *dealer)
 		{
 			BYTE data[16];
-			FileRead(f, data, sizeof(data));
+			f->read(data, sizeof(data));
 
 			DataReader d{data};
 			EXTR_U8(  d, item->ubTotalItems)
@@ -235,7 +235,7 @@ void LoadArmsDealerInventoryFromSavedGameFile(HWFILE const f, UINT32 const saveg
 		{
 			DEALER_ITEM_HEADER& di = gArmsDealersInventory[dealer][item_idx];
 			if (di.SpecialItem.size() == 0) continue;
-			FileRead(f, di.SpecialItem.data(), sizeof(DEALER_SPECIAL_ITEM) * di.SpecialItem.size());
+			f->read(di.SpecialItem.data(), sizeof(DEALER_SPECIAL_ITEM) * di.SpecialItem.size());
 		}
 	}
 }

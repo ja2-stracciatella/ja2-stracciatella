@@ -49,7 +49,7 @@
 
 #include <vector>
 
-#define DEVINFO_DIR "../DevInfo"
+#define DEVINFO_DIR "DevInfo"
 
 
 #define MAP_SIZE			208
@@ -1749,18 +1749,15 @@ static void CreateGlobalSummary(void)
 
 	gfGlobalSummaryExists = FALSE;
 
-	FileMan::createDir(DEVINFO_DIR);
+	GCM->userPrivateFiles()->createDir(DEVINFO_DIR);
 
 	// Generate a simple readme file.
 	const char* readme = ""
 		"This information is used in conjunction with the editor.\n"
 		"This directory or its contents shouldn't be included with final release.\n";
-	if (!Fs_write(DEVINFO_DIR "/readme.txt", reinterpret_cast<const uint8_t*>(readme), strlen(readme)))
-	{
-		RustPointer<char> err(getRustError());
-		SLOGA("CreateGlobalSummary: %s", err.get());
-		return;
-	}
+	AutoSGPFile file{GCM->userPrivateFiles()->openForWriting(DEVINFO_DIR "/readme.txt", true)};
+
+	file->write(readme, strlen(readme));
 
 	LoadGlobalSummary();
 	RegenerateSummaryInfoForAllOutdatedMaps();
@@ -2011,9 +2008,9 @@ static void CalculateOverrideStatus(void)
 
 	gszDisplayName = ST::format("{}", FileMan::getFileName(filename));
 
-	bool readonly = false;
-	if (Fs_getReadOnly(filename.c_str(), &readonly))
-	{
+	try {
+		bool readonly = FileMan::isReadOnly(filename);
+
 		if( gfWorldLoaded )
 		{
 			gubOverrideStatus = (readonly ? READONLY : OVERWRITE);
@@ -2023,9 +2020,7 @@ static void CalculateOverrideStatus(void)
 		}
 		if( gfTempFile )
 			EnableButton( iSummaryButton[ SUMMARY_LOAD ] );
-	}
-	else
-	{
+	} catch (const std::runtime_error& ex) {
 		gubOverrideStatus = INACTIVE;
 		HideButton( iSummaryButton[ SUMMARY_OVERRIDE ] );
 		if( gfWorldLoaded )
@@ -2054,25 +2049,21 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 			return FALSE;
 		}
 
-		FileRead(f_map, &dMajorMapVersion, sizeof(FLOAT));
+		f_map->read(&dMajorMapVersion, sizeof(FLOAT));
 	}
 
-	RustPointer<File> file(File_open(summary_filename, FILE_OPEN_READ));
-	if (!file)
-	{
-		++gusNumEntriesWithOutdatedOrNoSummaryInfo;
-	}
-	else
-	{
+	try {
+		AutoSGPFile file{GCM->userPrivateFiles()->openForReading(summary_filename)};
+
 		/* Even if the info is outdated (but existing), allocate the structure, but
 		 * indicate that the info is bad. */
 		SUMMARYFILE* const sum = new SUMMARYFILE{};
-		if (!File_readExact(file.get(), reinterpret_cast<uint8_t*>(sum), sizeof(SUMMARYFILE)))
-		{
+		try {
+			file->read(reinterpret_cast<uint8_t*>(sum), sizeof(SUMMARYFILE));
+		} catch (const std::runtime_error& err) {
 			// failed, initialize and force update
 			*sum = SUMMARYFILE{};
 		}
-		file.reset(nullptr);
 
 		if (sum->ubSummaryVersion < MINIMUMVERSION ||
 				dMajorMapVersion      < getMajorMapVersion())
@@ -2089,6 +2080,8 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 
 		if (sum->ubSummaryVersion < GLOBAL_SUMMARY_VERSION)
 			++gusNumEntriesWithOutdatedOrNoSummaryInfo;
+	} catch (const std::runtime_error& ex) {
+		++gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	}
 
 	return TRUE;
@@ -2102,10 +2095,10 @@ static void LoadGlobalSummary(void)
 	gfMustForceUpdateAllMaps        = FALSE;
 	gusNumberOfMapsToBeForceUpdated = 0;
 
-	gfGlobalSummaryExists = Fs_isDir(DEVINFO_DIR);
+	gfGlobalSummaryExists = GCM->userPrivateFiles()->isDir(DEVINFO_DIR);
 	if (!gfGlobalSummaryExists)
 	{
-		SLOGW("LoadGlobalSummary() aborted -- doesn't exist on this local computer.");
+		SLOGI("LoadGlobalSummary() aborted -- doesn't exist on this local computer.");
 		return;
 	}
 
@@ -2144,20 +2137,16 @@ static void LoadGlobalSummary(void)
 static void UpdateMasterProgress(void);
 
 
-void WriteSectorSummaryUpdate(const char* const filename, const UINT8 ubLevel, SUMMARYFILE* const sf)
+void WriteSectorSummaryUpdate(const ST::string &filename, const UINT8 ubLevel, SUMMARYFILE* const sf)
 {
-	const char* const ext = strstr(filename, ".dat");
+	bool ext = filename.ends_with(".dat", ST::case_insensitive);
 	AssertMsg(ext, "Illegal sector summary filename.");
 
-	STRING512 summary_filename;
-	snprintf(summary_filename, lengthof(summary_filename), DEVINFO_DIR "/%.*s.sum", (int)(ext - filename), filename);
+	ST::string summary_filename = ST::format("{}/{}.sum", DEVINFO_DIR, FileMan::getFileNameWithoutExt(filename));
+	
+	AutoSGPFile file{GCM->userPrivateFiles()->openForWriting(summary_filename, true)};
 
-	if (!Fs_write(summary_filename, reinterpret_cast<const uint8_t*>(sf), sizeof(*sf)))
-	{
-		RustPointer<char> err(getRustError());
-		SLOGA("WriteSectorSummaryUpdate: %s", err.get());
-		return;
-	}
+	file->write(sf, sizeof(*sf));
 
 	--gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	UpdateMasterProgress();
@@ -2504,9 +2493,9 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//Open the original map for the sector
 	AutoSGPFile hfile(GCM->openMapForReading(gszFilename));
 	//Now fileseek directly to the file position where the number of world items are stored
-	FileSeek(hfile, gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START);
+	hfile->seek(gpCurrentSectorSummary->uiNumItemsPosition, FILE_SEEK_FROM_START);
 	//Now load the number of world items from the map.
-	FileRead(hfile, &uiNumItems, 4);
+	hfile->read(&uiNumItems, 4);
 	//Now compare this number with the number the summary thinks we should have.  If they are different,
 	//the the summary doesn't match the map.  What we will do is force regenerate the map so that they do
 	//match
@@ -2524,7 +2513,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	if (gpCurrentSectorSummary->usNumItems != 0)
 	{
 		gpWorldItemsSummaryArray.assign(uiNumItems, WORLDITEM{});
-		FileRead(hfile, gpWorldItemsSummaryArray.data(), sizeof(WORLDITEM) * uiNumItems);
+		hfile->read(gpWorldItemsSummaryArray.data(), sizeof(WORLDITEM) * uiNumItems);
 	}
 
 	//NOW, do the enemy's items!
@@ -2535,7 +2524,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//summary information, then the second pass will repeat the process, except it will record the actual items.
 
 	//PASS #1
-	FileSeek(hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
+	hfile->seek(gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
 		BASIC_SOLDIERCREATE_STRUCT basic;
@@ -2587,7 +2576,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 	//PASS #2
 	//During this pass, simply copy all the data instead of counting it, now that we have already done so.
 	usPEnemyIndex = usNEnemyIndex = 0;
-	FileSeek(hfile, gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
+	hfile->seek(gpCurrentSectorSummary->uiEnemyPlacementPosition, FILE_SEEK_FROM_START);
 	for( i = 0; i < gpCurrentSectorSummary->MapInfo.ubNumIndividuals ; i++ )
 	{
 		BASIC_SOLDIERCREATE_STRUCT basic;

@@ -144,7 +144,7 @@ static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 
 	if (flags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS && savegame_version < 78)
 	{
 		// Delete the file, because it is corrupted
-		GCM->deleteTempFile(GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z));
+		GCM->tempFiles()->deleteFile(GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z));
 		flags &= ~SF_CIV_PRESERVED_TEMP_FILE_EXISTS;
 	}
 }
@@ -214,10 +214,10 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_ver
 void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, const std::vector<WORLDITEM>& items)
 {
 	{
-		AutoSGPFile f(GCM->openTempFileForWriting(GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ), true));
+		AutoSGPFile f(GCM->tempFiles()->openForWriting(GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ), true));
 		Assert(items.size() <= UINT32_MAX);
 		UINT32 numItems = static_cast<UINT32>(items.size());
-		FileWriteArray(f, numItems, items.data());
+		f->writeArray(numItems, items.data());
 		// Close the file before
 		// SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems() reads it
 	}
@@ -233,16 +233,16 @@ std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const
 
 	std::vector<WORLDITEM> l_items;
 	// If the file doesn't exists, it's no problem
-	if (GCM->doesTempFileExist(filename))
+	if (GCM->tempFiles()->exists(filename))
 	{
-		AutoSGPFile f(GCM->openTempFileForReading(filename));
+		AutoSGPFile f(GCM->tempFiles()->openForReading(filename));
 
 		UINT32 numItems = 0;
-		FileRead(f, &numItems, sizeof(UINT32));
+		f->read(&numItems, sizeof(UINT32));
 		if (numItems != 0)
 		{
 			l_items.assign(numItems, WORLDITEM{});
-			FileRead(f, l_items.data(), numItems * sizeof(WORLDITEM));
+			f->read(l_items.data(), numItems * sizeof(WORLDITEM));
 		}
 	}
 	return l_items;
@@ -640,19 +640,19 @@ static void LoadAndAddWorldItemsFromTempFile(INT16 const sMapX, INT16 const sMap
 
 void InitTacticalSave()
 {
-	GCM->createTempDir(TACTICAL_SAVE_TEMPDIR);
-	GCM->eraseTempDir(TACTICAL_SAVE_TEMPDIR);
+	GCM->tempFiles()->createDir(TACTICAL_SAVE_TEMPDIR);
+	GCM->tempFiles()->eraseDir(TACTICAL_SAVE_TEMPDIR);
 }
 
 
 static void SaveRottingCorpsesToTempCorpseFile(INT16 const x, INT16 const y, INT8 const z)
 {
-	AutoSGPFile f(GCM->openTempFileForWriting(GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, x, y, z), true));
+	AutoSGPFile f(GCM->tempFiles()->openForWriting(GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, x, y, z), true));
 
 	// Save the number of the rotting corpses
 	UINT32 n_corpses = 0;
 	CFOR_EACH_ROTTING_CORPSE(c) ++n_corpses;
-	FileWrite(f, &n_corpses, sizeof(UINT32));
+	f->write(&n_corpses, sizeof(UINT32));
 
 	// Loop through all the carcases in the array and save the active ones
 	CFOR_EACH_ROTTING_CORPSE(c)
@@ -671,13 +671,13 @@ static void LoadRottingCorpsesFromTempCorpseFile(INT16 const x, INT16 const y, I
 	ST::string const map_name = GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, x, y, z);
 
 	// If the file doesn't exist, it's no problem.
-	if (!GCM->doesTempFileExist(map_name)) return;
+	if (!GCM->tempFiles()->exists(map_name)) return;
 
-	AutoSGPFile f(GCM->openTempFileForReading(map_name));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(map_name));
 
 	// Load the number of Rotting corpses
 	UINT32 n_corpses;
-	FileRead(f, &n_corpses, sizeof(UINT32));
+	f->read(&n_corpses, sizeof(UINT32));
 
 	bool const maybe_dont_add = !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) &&
 					z == 0 && GetTownIdForSector(SECTOR(x, y)) != BLANK_SECTOR; // In town?
@@ -793,13 +793,13 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT& p, INT16 sSectorX, INT16 sSec
 
 void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, ROTTING_CORPSE_DEFINITION const* const corpse_def)
 {
-	AutoSGPFile f(GCM->openTempFileForReadWrite(GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ)));
+	AutoSGPFile f(GCM->tempFiles()->openForReadWrite(GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ)));
 
 	UINT32 corpse_count;
-	if (FileGetSize(f) != 0)
+	if (f->size() != 0)
 	{
-		FileRead(f, &corpse_count, sizeof(corpse_count));
-		FileSeek(f, 0, FILE_SEEK_FROM_START);
+		f->read(&corpse_count, sizeof(corpse_count));
+		f->seek(0, FILE_SEEK_FROM_START);
 	}
 	else
 	{
@@ -807,9 +807,9 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16
 	}
 
 	++corpse_count;
-	FileWrite(f, &corpse_count, sizeof(corpse_count));
+	f->write(&corpse_count, sizeof(corpse_count));
 
-	FileSeek(f, 0, FILE_SEEK_FROM_END);
+	f->seek(0, FILE_SEEK_FROM_END);
 	InjectRottingCorpseIntoFile(f, corpse_def);
 
 	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS);
@@ -962,7 +962,7 @@ void SaveTempNpcQuoteArrayToSaveGameFile(HWFILE const f)
 {
 	// Write zero size marker for the obsolescent temporary NPC quote file.
 	UINT32 const size = 0;
-	FileWrite(f, &size, sizeof(size));
+	f->write(&size, sizeof(size));
 }
 
 
@@ -970,8 +970,8 @@ void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE const f)
 {
 	// Skip obsolescent temporary NPC quote file.
 	UINT32 size;
-	FileRead(f, &size, sizeof(size));
-	FileSeek(f, size, FILE_SEEK_FROM_CURRENT);
+	f->read(&size, sizeof(size));
+	f->seek(size, FILE_SEEK_FROM_CURRENT);
 }
 
 
@@ -995,7 +995,7 @@ static UINT8 const* GetRotationArray();
 
 void NewJA2EncryptedFileRead(HWFILE const f, BYTE* const pDest, UINT32 const uiBytesToRead)
 {
-	FileRead(f, pDest, uiBytesToRead);
+	f->read(pDest, uiBytesToRead);
 
 	const UINT8* const pubRotationArray = GetRotationArray();
 	UINT8              ubArrayIndex     = 0;
@@ -1023,7 +1023,7 @@ void NewJA2EncryptedFileWrite(HWFILE const hFile, BYTE const* const data, UINT32
 		if (++ubArrayIndex >= NEW_ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 	}
 
-	FileWrite(hFile, buf, uiBytesToWrite);
+	hFile->write(buf, uiBytesToWrite);
 }
 
 
@@ -1032,7 +1032,7 @@ static const UINT8 ubRotationArray[46] = { 132, 235, 125, 99, 15, 220, 140, 89, 
 
 void JA2EncryptedFileRead(HWFILE const f, BYTE* const pDest, UINT32 const uiBytesToRead)
 {
-	FileRead(f, pDest, uiBytesToRead);
+	f->read(pDest, uiBytesToRead);
 
 	UINT8 ubArrayIndex = 0;
 	UINT8 ubLastByte   = 0;
@@ -1058,7 +1058,7 @@ void JA2EncryptedFileWrite(HWFILE const hFile, BYTE const* const data, UINT32 co
 		if (++ubArrayIndex >= ROTATION_ARRAY_SIZE) ubArrayIndex = 0;
 	}
 
-	FileWrite(hFile, buf, uiBytesToWrite);
+	hFile->write(buf, uiBytesToWrite);
 }
 
 

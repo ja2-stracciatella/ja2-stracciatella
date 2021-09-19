@@ -1507,7 +1507,7 @@ void SaveSoldierInitListLinks(HWFILE const hfile)
 	//count the number of soldier init nodes...
 	CFOR_EACH_SOLDIERINITNODE(curr) ++ubSlots;
 	//...and save it.
-	FileWrite(hfile, &ubSlots, 1);
+	hfile->write(&ubSlots, 1);
 	//Now, go through each node, and save just the ubSoldierID, if that soldier is alive.
 	FOR_EACH_SOLDIERINITNODE(curr)
 	{
@@ -1515,8 +1515,8 @@ void SaveSoldierInitListLinks(HWFILE const hfile)
 		{
 			curr->ubSoldierID = 0;
 		}
-		FileWrite(hfile, &curr->ubNodeID,    1);
-		FileWrite(hfile, &curr->ubSoldierID, 1);
+		hfile->write(&curr->ubNodeID,    1);
+		hfile->write(&curr->ubSoldierID, 1);
 	}
 }
 
@@ -1524,13 +1524,13 @@ void SaveSoldierInitListLinks(HWFILE const hfile)
 void LoadSoldierInitListLinks(HWFILE const f)
 {
 	UINT8 slots;
-	FileRead(f, &slots, 1);
+	f->read(&slots, 1);
 	for (UINT8 n = slots; n != 0; --n)
 	{
 		UINT8 node_id;
 		UINT8 soldier_id;
-		FileRead(f, &node_id,    1);
-		FileRead(f, &soldier_id, 1);
+		f->read(&node_id,    1);
+		f->read(&soldier_id, 1);
 
 		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME)) continue;
 
@@ -1798,13 +1798,13 @@ void AddProfilesNotUsingProfileInsertionData()
 void NewWayOfLoadingEnemySoldierInitListLinks(HWFILE const f)
 {
 	UINT8 slots;
-	FileRead(f, &slots, 1);
+	f->read(&slots, 1);
 	for (UINT8 n = slots; n != 0; --n)
 	{
 		UINT8 node_id;
 		UINT8 soldier_id;
-		FileRead(f, &node_id,    1);
-		FileRead(f, &soldier_id, 1);
+		f->read(&node_id,    1);
+		f->read(&soldier_id, 1);
 
 		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME)) continue;
 
@@ -1825,13 +1825,13 @@ void NewWayOfLoadingEnemySoldierInitListLinks(HWFILE const f)
 void NewWayOfLoadingCivilianInitListLinks(HWFILE const f)
 {
 	UINT8 slots;
-	FileRead(f, &slots, 1);
+	f->read(&slots, 1);
 	for (UINT8 n = slots; n != 0; --n)
 	{
 		UINT8 node_id;
 		UINT8 soldier_id;
-		FileRead(f, &node_id,    1);
-		FileRead(f, &soldier_id, 1);
+		f->read(&node_id,    1);
+		f->read(&soldier_id, 1);
 
 		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME)) continue;
 

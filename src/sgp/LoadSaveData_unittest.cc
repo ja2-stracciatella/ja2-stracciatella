@@ -175,12 +175,12 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 	ASSERT_EQ(sizeof(double), 8u);
 
 	{
-		RustPointer<VecU8> buf(Fs_read(floatsPath.c_str()));
-		ASSERT_TRUE(buf);
-		ASSERT_EQ(VecU8_len(buf.get()), sizeof(float) * 5);
+		AutoSGPFile file{FileMan::openForReading(floatsPath)};
+		std::vector<uint8_t> buf = file->readToEnd();
+		ASSERT_EQ(buf.size(), sizeof(float) * 5);
 		float f;
 
-		DataReader S{VecU8_as_ptr(buf.get())};
+		DataReader S{&buf[0]};
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 0         );
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, 1         );
 		EXTR_FLOAT(S, f); EXPECT_EQ(f, -1        );
@@ -190,12 +190,12 @@ TEST(LoadSaveData, floatAndDoubleFormat)
 	}
 
 	{
-		RustPointer<VecU8> buf(Fs_read(doublesPath.c_str()));
-		ASSERT_TRUE(buf);
-		ASSERT_EQ(VecU8_len(buf.get()), sizeof(double) * 5);
+		AutoSGPFile file{FileMan::openForReading(doublesPath)};
+		std::vector<uint8_t> buf = file->readToEnd();
+		ASSERT_EQ(buf.size(), sizeof(double) * 5);
 		double d;
 
-		DataReader S{VecU8_as_ptr(buf.get())};
+		DataReader S{&buf[0]};
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 0         );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, 1         );
 		EXTR_DOUBLE(S, d); EXPECT_EQ(d, -1        );

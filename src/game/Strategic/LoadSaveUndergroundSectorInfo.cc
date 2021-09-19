@@ -7,7 +7,7 @@
 void ExtractUndergroundSectorInfoFromFile(HWFILE const file, UNDERGROUND_SECTORINFO* const u)
 {
 	BYTE data[72];
-	FileRead(file, data, sizeof(data));
+	file->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_U32(d, u->uiFlags)
@@ -60,5 +60,5 @@ void InjectUndergroundSectorInfoIntoFile(HWFILE const file, UNDERGROUND_SECTORIN
 	INJ_SKIP(d, 36)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(file, data, sizeof(data));
+	file->write(data, sizeof(data));
 }

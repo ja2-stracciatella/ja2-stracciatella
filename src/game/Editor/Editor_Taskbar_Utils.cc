@@ -45,6 +45,7 @@
 #include "JAScreens.h"
 #include "Video.h"
 #include "VSurface.h"
+#include "FileMan.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -804,8 +805,8 @@ static void RenderEditorInfo(void)
 			if( !gfWorldLoaded || giCurrentTilesetID < 0 ) {
 				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, "No map currently loaded.");
 			} else {
-				RustPointer<char> filename(Path_filename(gFileForIO.c_str()));
-				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, ST::format("File:  {}, Current Tileset:  {}", filename.get(), gTilesets[giCurrentTilesetID].zName));
+				ST::string filename = FileMan::getFileName(gFileForIO);
+				MPrint(260, EDITOR_TASKBAR_POS_Y + 85, ST::format("File:  {}, Current Tileset:  {}", filename, gTilesets[giCurrentTilesetID].zName));
 			}
 			break;
 		case TASK_TERRAIN:

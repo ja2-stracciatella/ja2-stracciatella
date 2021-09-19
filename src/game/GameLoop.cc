@@ -17,6 +17,8 @@
 #include "Tactical_Save.h"
 #include "Interface.h"
 #include "GameSettings.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
 #include "Text.h"
 #include "HelpScreen.h"
 #include "SaveLoadGame.h"
@@ -139,8 +141,10 @@ try
 		//only if we are in a screen that can get this check
 		if( guiCurrentScreen == MAP_SCREEN || guiCurrentScreen == GAME_SCREEN || guiCurrentScreen == SAVE_LOAD_SCREEN )
 		{
-			// Make sure the user has enough hard drive space
-			uint64_t uiSpaceOnDrive = GetFreeSpaceOnHardDriveWhereGameIsRunningFrom();
+			// Make sure the user has enough hard drive space in home and temp dir
+			uint64_t uiSpaceOnDrivePrivate = GCM->userPrivateFiles()->getFreeSpace("");
+			uint64_t uiSpaceOnDriveTemp = GCM->tempFiles()->getFreeSpace("");
+			uint64_t uiSpaceOnDrive = std::min(uiSpaceOnDrivePrivate, uiSpaceOnDriveTemp);
 			if( uiSpaceOnDrive < REQUIRED_FREE_SPACE )
 			{
 				ST::string zSpaceOnDrive = ST::format("{.2f}", uiSpaceOnDrive / (FLOAT)BYTESINMEGABYTE);

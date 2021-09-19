@@ -1685,14 +1685,14 @@ void SaveTeamTurnsToTheSaveGameFile(HWFILE const f)
 	INJ_SKIP(   d, 17)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }
 
 
 void LoadTeamTurnsFromTheSavedGameFile(HWFILE const f)
 {
 	BYTE data[174];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_SKIP(d, 1)

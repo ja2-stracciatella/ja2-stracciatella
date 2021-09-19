@@ -5,7 +5,9 @@
 
 DefaultContentManagerUT::DefaultContentManagerUT(RustPointer<EngineOptions> engineOptions)
 	: DefaultContentManager(move(engineOptions))
-{}
+{
+	m_userPrivateFiles->createDir(getSavedGamesFolder());
+}
 
 std::unique_ptr<rapidjson::Document> DefaultContentManagerUT::_readJsonDataFile(const char* fileName) const
 {

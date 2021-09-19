@@ -65,7 +65,6 @@ LoadEnemySoldiersFromTempFile(): ubStrategicCreatures > ubNumCreatures
 LoadSaveScreenHandle(): Investigate if the duplication can be removed
 LoadSavedGameHeader(): invalid use of strlen()
 LoadSavedGameWarningMessageBoxCallBack(): users
-LoadShadeTablesFromTextFile(): *scanf()
 LoadSummary(): filename yuck
 MAPInvClickCamoCallback(): empty
 MAPInvMoveCamoCallback(): empty

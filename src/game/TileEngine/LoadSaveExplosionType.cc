@@ -7,10 +7,10 @@
 
 void ExtractExplosionTypeFromFile(HWFILE const file, EXPLOSIONTYPE* const e)
 {
-	BYTE src[36];
+	BYTE src[36] = { 0 };
 	DataReader s{src};
 
-	FileRead(file, src, sizeof(src));
+	file->read(src, sizeof(src));
 
 	EXTR_SKIP(s, 4)
 	EXTR_SOLDIER(s, e->owner)
@@ -55,5 +55,5 @@ void InjectExplosionTypeIntoFile(HWFILE const file, EXPLOSIONTYPE const* e)
 	INJ_SKIP(d, 12)
 	Assert(d.getConsumed() == lengthof(dst));
 
-	FileWrite(file, dst, sizeof(dst));
+	file->write(dst, sizeof(dst));
 }

@@ -6,6 +6,7 @@
 #include "STIConvert.h"
 #include "WCheck.h"
 #include "MemMan.h"
+#include "FileMan.h"
 
 #include <vector>
 
@@ -105,19 +106,11 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 	// save file
 	//
 
-	RustPointer<File> file(File_open(cOutputName, FILE_OPEN_WRITE));
-	if (!file)
-	{
-		RustPointer<char> err(getRustError());
-		SLOGE("WriteSTIFile: %s", err.get());
-		return;
-	}
+	AutoSGPFile f{FileMan::openForWriting(cOutputName)};
+
 	// write header
-	if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(&Header), sizeof(Header)))
-	{
-		RustPointer<char> err(getRustError());
-		SLOGW("WriteSTIFile: %s", err.get());
-	}
+	f->write(reinterpret_cast<const uint8_t*>(&Header), sizeof(Header));
+
 	// write palette and subimage structs, if any
 	if (Header.fFlags & STCI_INDEXED)
 	{
@@ -130,41 +123,25 @@ void WriteSTIFile(UINT8* const pData, SGPPaletteEntry* const pPalette, const INT
 				STCIPaletteEntry.ubRed   = pSGPPaletteEntry[uiLoop].r;
 				STCIPaletteEntry.ubGreen = pSGPPaletteEntry[uiLoop].g;
 				STCIPaletteEntry.ubBlue  = pSGPPaletteEntry[uiLoop].b;
-				if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(&STCIPaletteEntry), sizeof(STCIPaletteEntry)))
-				{
-					RustPointer<char> err(getRustError());
-					SLOGW("WriteSTIFile: %s", err.get());
-				}
+				f->write(reinterpret_cast<const uint8_t*>(&STCIPaletteEntry), sizeof(STCIPaletteEntry));
 			}
 		}
 		if (Header.fFlags & STCI_ETRLE_COMPRESSED)
 		{
-			if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(subImages.data()), subImages.size() * sizeof(STCISubImage)))
-			{
-				RustPointer<char> err(getRustError());
-				SLOGW("WriteSTIFile: %s", err.get());
-			}
+			f->write(reinterpret_cast<const uint8_t*>(subImages.data()), subImages.size() * sizeof(STCISubImage));
 		}
 	}
 
 	// write file data
 	Assert(Header.fFlags & STCI_ETRLE_COMPRESSED);
 	Assert(pOutputBuffer);
-	if (!File_writeAll(file.get(), reinterpret_cast<const uint8_t*>(pOutputBuffer), Header.uiStoredSize))
-	{
-		RustPointer<char> err(getRustError());
-		SLOGW("WriteSTIFile: %s", err.get());
-	}
+	f->write(reinterpret_cast<const uint8_t*>(pOutputBuffer), Header.uiStoredSize);
 
 	// write app-specific data (blanked to 0)
 	const uint8_t zero = 0;
 	for (uiLoop = 0; uiLoop < Header.uiAppDataSize; uiLoop++)
 	{
-		if (!File_writeAll(file.get(), &zero, sizeof(zero)))
-		{
-			RustPointer<char> err(getRustError());
-			SLOGW("WriteSTIFile: %s", err.get());
-		}
+		f->write(&zero, sizeof(zero));
 	}
 
 	if( pOutputBuffer != NULL )

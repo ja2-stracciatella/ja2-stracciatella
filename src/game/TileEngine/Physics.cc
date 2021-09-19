@@ -2271,7 +2271,7 @@ void SavePhysicsTableToSaveGameFile(HWFILE const hFile)
 
 
 	//Save the number of REAL_OBJECTs in the array
-	FileWrite(hFile, &usPhysicsCount, sizeof(UINT32));
+	hFile->write(&usPhysicsCount, sizeof(UINT32));
 
 	if( usPhysicsCount != 0 )
 	{
@@ -2292,7 +2292,7 @@ void LoadPhysicsTableFromSavedGameFile(HWFILE const hFile)
 	std::fill_n(ObjectSlots, NUM_OBJECT_SLOTS, REAL_OBJECT{});
 
 	//Load the number of REAL_OBJECTs in the array
-	FileRead(hFile, &guiNumObjectSlots, sizeof(UINT32));
+	hFile->read(&guiNumObjectSlots, sizeof(UINT32));
 
 	//loop through and add the objects
 	for( usCnt=0; usCnt<guiNumObjectSlots; usCnt++ )

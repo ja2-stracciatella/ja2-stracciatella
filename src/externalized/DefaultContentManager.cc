@@ -71,18 +71,16 @@
 #define RADARMAPSDIR   "radarmaps"
 #define TILESETSDIR    "tilesets"
 
-#define PRINT_OPENING_FILES (0)
-
 #define DIALOGUESIZE 240
 
 const MercProfileInfo EMPTY_MERC_PROFILE_INFO;
 
 static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType, SGPFile* File, UINT32 seek_chars, UINT32 read_chars)
 {
-	FileSeek(File, seek_chars * 2, FILE_SEEK_FROM_START);
+	File->seek(seek_chars * 2, FILE_SEEK_FROM_START);
 
 	ST::utf16_buffer buf(read_chars, u'\0');
-	FileRead(File, buf.data(), sizeof(char16_t) * read_chars);
+	File->read(buf.data(), sizeof(char16_t) * read_chars);
 
 	buf[read_chars - 1] = u'\0';
 	for (char16_t* i = buf.data(); *i != u'\0'; ++i)
@@ -181,10 +179,8 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	RustPointer<char> vanillaGameDir{EngineOptions_getVanillaGameDir(m_engineOptions.get())};
 
 	RustPointer<char> stracciatellaHome{EngineOptions_getStracciatellaHome()};
-	m_userHomeDir = stracciatellaHome.get();
 
-	RustPointer<char> dataDir{Fs_resolveExistingComponents(BASEDATADIR, vanillaGameDir.get(), true)};
-	m_dataDir = dataDir.get();
+	m_userPrivateFiles = std::make_unique<DirFs>(stracciatellaHome.get());
 
 	m_gameVersion = EngineOptions_getResourceVersion(m_engineOptions.get());
 
@@ -208,7 +204,7 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	}
 	m_tempDir = move(tempDir);
 	RustPointer<char> tempDirPath(TempDir_path(m_tempDir.get()));
-	m_tempDirPath = tempDirPath.get();
+	m_tempFiles = std::make_unique<DirFs>(tempDirPath.get());
 
 	// Initialize VFS
 	auto succeeded = Vfs_init_from_engine_options(m_vfs.get(), m_engineOptions.get());
@@ -217,18 +213,19 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 		auto error = ST::format("Failed to build virtual file system (VFS): {}", err.get());
 		throw std::runtime_error(error.c_str());
 	}
+
+	m_userPrivateFiles->createDir(getSavedGamesFolder());
 }
 
 void DefaultContentManager::logConfiguration() const {
 	RustPointer<char> vanillaGameDir{EngineOptions_getVanillaGameDir(m_engineOptions.get())};
 	RustPointer<char> assetsDir{EngineOptions_getAssetsDir(m_engineOptions.get())};
 
-	STLOGI("JA2 Home Dir:                  '{}'", m_userHomeDir);
+	STLOGI("JA2 Home Dir:                  '{}'", m_userPrivateFiles.get()->basePath());
 	STLOGI("Root game resources directory: '{}'", vanillaGameDir.get());
 	STLOGI("Extra data directory:          '{}'", assetsDir.get());
-	STLOGI("Data directory:                '{}'", m_dataDir);
 	STLOGI("Saved games directory:         '{}'", getSavedGamesFolder());
-	STLOGI("Temporary directory:           '{}'", m_tempDirPath);
+	STLOGI("Temporary directory:           '{}'", m_tempFiles.get()->basePath());
 }
 
 template <class T> 
@@ -464,68 +461,6 @@ std::vector<ST::string> DefaultContentManager::getAllTilecache() const
 	return paths;
 }
 
-/** Does temp file exist. */
-bool DefaultContentManager::doesTempFileExist(const ST::string& filename) const
-{
-	return FileMan::checkFileExistance(m_tempDirPath, filename);
-}
-
-/** Open temporary file for writing. */
-SGPFile* DefaultContentManager::openTempFileForWriting(const ST::string& filename, bool truncate) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
-	return FileMan::openForWriting(path, truncate);
-}
-
-/* Open temporary file for reading. */
-SGPFile* DefaultContentManager::openTempFileForReading(const ST::string& filename) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
-	return FileMan::openForReading(path);
-}
-
-/** Open temporary file for read/write. */
-SGPFile* DefaultContentManager::openTempFileForReadWrite(const ST::string& filename) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
-	return FileMan::openForReadWrite(path);
-}
-
-/** Open temporary file for appending. */
-SGPFile* DefaultContentManager::openTempFileForAppend(const ST::string& filename) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
-	return FileMan::openForAppend(path);
-}
-
-/** Delete temporary file. */
-void DefaultContentManager::deleteTempFile(const ST::string& filename) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, filename);
-	FileDelete(path);
-}
-
-/** Create temporary directory. Does not fail if it exists already. */
-void DefaultContentManager::createTempDir(const ST::string& dirname) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, dirname);
-	FileMan::createDir(path);
-}
-
-/** List temporary directory. Pass empty string to list the temp dir itself. */
-std::vector<ST::string> DefaultContentManager::findAllFilesInTempDir(const ST::string& dirname, bool sortResults, bool recursive, bool returnOnlyNames) const
-{
-	ST::string path = dirname.size() == 0 ? m_tempDirPath : FileMan::joinPaths(m_tempDirPath, dirname);
-	return FindAllFilesInDir(path, sortResults, recursive, returnOnlyNames);
-}
-
-/** Erase all files within temporary directory. */
-void DefaultContentManager::eraseTempDir(const ST::string& dirname) const
-{
-	ST::string path = FileMan::joinPaths(m_tempDirPath, dirname);
-	EraseDirectory(path);
-}
-
 /* Open a game resource file for reading.
  *
  * First trying to open the file normally. It will work if the path is absolute
@@ -535,80 +470,38 @@ void DefaultContentManager::eraseTempDir(const ST::string& dirname) const
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
 SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename) const
 {
-	{
-		RustPointer<File> file = FileMan::openFileForReading(filename);
-		if (file)
-		{
-			STLOGD("Opened file (current dir): '{}'", filename);
-			return FileMan::getSGPFileFromFile(file.release());
-		}
-	}
-
 	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
 	if (!vfile)
 	{
 		RustPointer<char> err{getRustError()};
 		throw std::runtime_error(ST::format("openGameResForReading: {}", err.get()).to_std_string());
 	}
-	STLOGD("Opened file (vfs): '{}'", filename);
-	SGPFile *file = new SGPFile{};
-	file->flags = SGPFILE_NONE;
-	file->u.vfile = vfile.release();
-	return file;
-}
-
-/** Open user's private file (e.g. saved game, settings) for reading. */
-SGPFile* DefaultContentManager::openUserPrivateFileForReading(const ST::string& filename) const
-{
-	RustPointer<File> file = FileMan::openFileForReading(filename);
-	if (!file)
-	{
-		RustPointer<char> err(getRustError());
-		ST::string buf = ST::format("DefaultContentManager::openUserPrivateFileForReading: {}", err.get());
-		throw std::runtime_error(buf.to_std_string());
-	}
-	return FileMan::getSGPFileFromFile(file.release());
+	STLOGD("Opened resource file from VFS: '{}'", filename);
+	return new SGPFile(vfile.release());
 }
 
 /* Checks if a game resource exists. */
 bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
 {
-	if(FileMan::checkFileExistance(m_externalizedDataPath, filename))
-	{
-		return true;
-	}
-	else
-	{
-		RustPointer<File> file(File_open(filename.c_str(), FILE_OPEN_READ));
-		if (!file)
-		{
-			ST::string path = ST::format("{}/{}",m_dataDir, filename);
-			file.reset(File_open(path.c_str(), FILE_OPEN_READ));
-			if (!file)
-			{
-				RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
-				return static_cast<bool>(vfile);
-			}
-		}
-
-		return true;
-	}
+	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
+	return static_cast<bool>(vfile.get());
 }
 
-ST::string DefaultContentManager::getScreenshotFolder() const
+DirFs *DefaultContentManager::tempFiles() const
 {
-	return m_userHomeDir;
+	return m_tempFiles.get();
 }
 
-ST::string DefaultContentManager::getVideoCaptureFolder() const
+DirFs *DefaultContentManager::userPrivateFiles() const
 {
-	return m_userHomeDir;
+	return m_userPrivateFiles.get();
 }
+
 
 /** Get folder for saved games. */
 ST::string DefaultContentManager::getSavedGamesFolder() const
 {
-	return FileMan::joinPaths(m_userHomeDir, "SavedGames");
+	return "SavedGames";
 }
 
 /** Load encrypted string from game resource file. */
@@ -653,7 +546,7 @@ ST::string* DefaultContentManager::loadDialogQuoteFromFile(const ST::string& fil
 void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const ST::string& fileName, std::vector<ST::string*> &quotes) const
 {
 	AutoSGPFile File(openGameResForReading(fileName));
-	uint32_t fileSize = FileGetSize(File);
+	uint32_t fileSize = File->size();
 	uint32_t numQuotes = fileSize / DIALOGUESIZE / 2;
 
 	for(uint32_t i = 0; i < numQuotes; i++)
@@ -1085,7 +978,7 @@ bool DefaultContentManager::loadGameData()
 std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
 {
 	AutoSGPFile f(openGameResForReading(fileName));
-	ST::string jsonData = FileMan::fileReadText(f);
+	ST::string jsonData = f->readStringToEnd();
 
 	auto document = std::make_unique<rapidjson::Document>();
 	if (document->Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())

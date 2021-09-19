@@ -5330,7 +5330,7 @@ void CancelItemPointer( )
 void LoadItemCursorFromSavedGame(HWFILE const f)
 {
 	BYTE data[44];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	BOOLEAN      active;
 	SOLDIERTYPE* soldier;
@@ -5366,7 +5366,7 @@ void SaveItemCursorToSavedGame(HWFILE const f)
 	INJ_SKIP(   d, 5)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }
 
 

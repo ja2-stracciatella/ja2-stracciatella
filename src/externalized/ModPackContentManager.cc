@@ -6,8 +6,6 @@
 #include "Debug.h"
 #include "Logger.h"
 
-#define DEBUG_PRINT_OPENING_FILES (1)
-
 ModPackContentManager::ModPackContentManager(RustPointer<EngineOptions> engineOptions)
 	:DefaultContentManager(move(engineOptions))
 {
@@ -19,6 +17,7 @@ ModPackContentManager::ModPackContentManager(RustPointer<EngineOptions> engineOp
 		modNames.emplace_back(modName.get());
 	}
 	m_modNames = modNames;
+	m_userPrivateFiles->createDir(getSavedGamesFolder());
 }
 
 ModPackContentManager::~ModPackContentManager()
@@ -45,7 +44,7 @@ ST::string ModPackContentManager::getSavedGamesFolder() const
 		folderName += '-';
 		folderName += name;
 	}
-	return FileMan::joinPaths(m_userHomeDir, folderName);
+	return folderName;
 }
 
 /** Load dialogue quote from file. */
@@ -63,7 +62,7 @@ ST::string* ModPackContentManager::loadDialogQuoteFromFile(const ST::string& fil
 		if(doesGameResExists(jsonFileName.c_str()))
 		{
 			AutoSGPFile f(openGameResForReading(jsonFileName));
-			ST::string jsonQuotes = FileMan::fileReadText(f);
+			ST::string jsonQuotes = f->readStringToEnd();
 			std::vector<ST::string> quotes;
 			JsonUtility::parseJsonToListStrings(jsonQuotes.c_str(), quotes);
 			m_dialogQuotesMap[jsonFileName] = quotes;

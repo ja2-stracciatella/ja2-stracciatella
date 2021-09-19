@@ -175,7 +175,7 @@ void LoadLightEffectsFromLoadGameFile(HWFILE const hFile)
 	std::fill_n(gLightEffectData, NUM_LIGHT_EFFECT_SLOTS, LIGHTEFFECT{});
 
 	//Load the Number of Light Effects
-	FileRead(hFile, &guiNumLightEffects, sizeof(UINT32));
+	hFile->read(&guiNumLightEffects, sizeof(UINT32));
 
 	//if there are lights saved.
 	if( guiNumLightEffects != 0 )
@@ -203,7 +203,7 @@ void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 	ST::string const zMapName = GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
 
 	//delete file the file.
-	GCM->deleteTempFile( zMapName );
+	GCM->tempFiles()->deleteFile( zMapName );
 
 	//loop through and count the number of Light effects
 	CFOR_EACH_LIGHTEFFECT(l)
@@ -219,10 +219,10 @@ void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 		return;
 	}
 
-	AutoSGPFile hFile(GCM->openTempFileForWriting(zMapName, true));
+	AutoSGPFile hFile(GCM->tempFiles()->openForWriting(zMapName, true));
 
 	//Save the Number of Light Effects
-	FileWrite(hFile, &uiNumLightEffects, sizeof(UINT32));
+	hFile->write(&uiNumLightEffects, sizeof(UINT32));
 
 	//loop through and save the number of Light effects
 	CFOR_EACH_LIGHTEFFECT(l)
@@ -240,13 +240,13 @@ void LoadLightEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 
 	ST::string const zMapName = GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
 
-	AutoSGPFile hFile(GCM->openTempFileForReading(zMapName));
+	AutoSGPFile hFile(GCM->tempFiles()->openForReading(zMapName));
 
 	//Clear out the old list
 	ResetLightEffects();
 
 	//Load the Number of Light Effects
-	FileRead(hFile, &guiNumLightEffects, sizeof(UINT32));
+	hFile->read(&guiNumLightEffects, sizeof(UINT32));
 
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumLightEffects;uiCnt++)

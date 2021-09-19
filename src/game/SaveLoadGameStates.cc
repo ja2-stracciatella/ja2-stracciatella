@@ -20,17 +20,17 @@ void SaveStatesToSaveGameFile(HWFILE const hFile)
 
 	std::string data = ss.str();
 	UINT32      len  = data.length();
-	FileWrite(hFile, &len, sizeof(UINT32));
-	FileWrite(hFile, data.c_str(), len);
+	hFile->write(&len, sizeof(UINT32));
+	hFile->write(data.c_str(), len);
 }
 
 void LoadStatesFromSaveFile(HWFILE const hFile)
 {
 	UINT32 len;
-	FileRead(hFile, &len, sizeof(UINT32));
+	hFile->read(&len, sizeof(UINT32));
 
 	ST::char_buffer buff{len, '\0'};
-	FileRead(hFile, buff.data(), len);
+	hFile->read(buff.data(), len);
 
 	std::stringstream ss(buff.c_str());
 	g_gameStates.Deserialize(ss);

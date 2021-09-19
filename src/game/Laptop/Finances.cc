@@ -254,7 +254,7 @@ INT32 GetProjectedTotalDailyIncome( void )
 void GameInitFinances()
 {
 	// initialize finances on game start up
-	GCM->deleteTempFile(FINANCES_DATA_FILE);
+	GCM->tempFiles()->deleteFile(FINANCES_DATA_FILE);
 	GetBalanceFromDisk( );
 }
 
@@ -874,8 +874,8 @@ static void DisplayFinancePageNumberAndDateRange(void)
 static void WriteBalanceToDisk(void)
 {
 	// will write the current balance to disk
-	AutoSGPFile hFileHandle(GCM->openTempFileForWriting(FINANCES_DATA_FILE, false));
-	FileWrite(hFileHandle, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
+	AutoSGPFile hFileHandle(GCM->tempFiles()->openForWriting(FINANCES_DATA_FILE, false));
+	hFileHandle->write(&LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 }
 
 
@@ -883,20 +883,20 @@ static void WriteBalanceToDisk(void)
 // this procedure will open and read in data to the finance list	
 static void GetBalanceFromDisk(void)
 {
-	if (!GCM->doesTempFileExist(FINANCES_DATA_FILE)) {
+	if (!GCM->tempFiles()->exists(FINANCES_DATA_FILE)) {
 		LaptopSaveInfo.iCurrentBalance = 0;
 		return;
 	}
-	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(FINANCES_DATA_FILE));
 	// get balance from disk first
-	FileRead(f, &LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
+	f->read(&LaptopSaveInfo.iCurrentBalance, sizeof(INT32));
 }
 
 
 // will write the current finance to disk
 static void AppendFinanceToEndOfFile(void)
 {
-	AutoSGPFile f(GCM->openTempFileForAppend(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->tempFiles()->openForAppend(FINANCES_DATA_FILE));
 
 	const FinanceUnit* const fu = pFinanceListHead;
 	BYTE  data[FINANCE_RECORD_SIZE];
@@ -908,16 +908,16 @@ static void AppendFinanceToEndOfFile(void)
 	INJ_I32(d, fu->iBalanceToDate);
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 }
 
 
 // Grabs the size of the file and interprets number of pages it will take up
 static void SetLastPageInRecords(void)
 {
-	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(FINANCES_DATA_FILE));
 
-	const UINT32 size = FileGetSize(f);
+	const UINT32 size = f->size();
 
 	if (size < FINANCE_HEADER_SIZE + FINANCE_RECORD_SIZE)
 	{
@@ -954,9 +954,9 @@ static void LoadInRecords(UINT32 const page)
 	ClearFinanceList();
 	if (page == 0) return; // check if bad page
 
-	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(FINANCES_DATA_FILE));
 
-	UINT32 const size = FileGetSize(f);
+	UINT32 const size = f->size();
 	if (size < FINANCE_HEADER_SIZE) return;
 
 	UINT32       records      = (size - FINANCE_HEADER_SIZE) / FINANCE_RECORD_SIZE;
@@ -964,13 +964,13 @@ static void LoadInRecords(UINT32 const page)
 	if (records <= skip_records) return;
 
 	records -= skip_records;
-	FileSeek(f, FINANCE_HEADER_SIZE + FINANCE_RECORD_SIZE * skip_records, FILE_SEEK_FROM_START);
+	f->seek(FINANCE_HEADER_SIZE + FINANCE_RECORD_SIZE * skip_records, FILE_SEEK_FROM_START);
 
 	if (records > NUM_RECORDS_PER_PAGE) records = NUM_RECORDS_PER_PAGE;
 	for (; records > 0; --records)
 	{
 		BYTE data[FINANCE_RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT8  code;
 		UINT8  second_code;
@@ -1032,17 +1032,17 @@ static INT32 GetPreviousDaysBalance(void)
 
 	if (date_in_days < 2) return 0;
 
-	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(FINANCES_DATA_FILE));
 
 	INT32 balance = 0;
 	// start at the end, move back until Date / 24 * 60 on the record equals date_in_days - 2
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT32 date;
 		INT32 balance_to_date;
@@ -1073,16 +1073,16 @@ static INT32 GetTodaysBalance(void)
 	const UINT32 date_in_minutes = GetWorldTotalMin();
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(FINANCES_DATA_FILE));
 
 	INT32 balance = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT32 date;
 		INT32 balance_to_date;
@@ -1112,18 +1112,18 @@ static INT32 GetPreviousDaysIncome(void)
 	const UINT32 date_in_minutes = GetWorldTotalMin();
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(FINANCES_DATA_FILE));
 
 	INT32 iTotalPreviousIncome = 0;
 	// start at the end, move back until Date / 24 * 60 on the record is = date_in_days - 2
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT8  code;
 		UINT32 date;
@@ -1158,17 +1158,17 @@ static INT32 GetTodaysDaysIncome(void)
 	const UINT32 date_in_minutes = GetWorldTotalMin();
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(FINANCES_DATA_FILE));
 
 	INT32 iTotalIncome = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT8  code;
 		UINT32 date;
@@ -1219,17 +1219,17 @@ static INT32 GetTodaysOtherDeposits(void)
 	const UINT32 date_in_minutes = GetWorldTotalMin();
 	const UINT32 date_in_days    = date_in_minutes / (24 * 60);
 
-	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(FINANCES_DATA_FILE));
 
 	INT32 iTotalIncome = 0;
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT8  code;
 		UINT32 date;
@@ -1267,18 +1267,18 @@ static INT32 GetYesterdaysOtherDeposits(void)
 	const UINT32 iDateInMinutes = GetWorldTotalMin();
 	const UINT32 date_in_days   = iDateInMinutes / (24 * 60);
 
-	AutoSGPFile f(GCM->openTempFileForReading(FINANCES_DATA_FILE));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(FINANCES_DATA_FILE));
 
 	INT32 iTotalPreviousIncome = 0;
 	// start at the end, move back until Date / 24 * 60 on the record is =  date_in_days - 2
 	// loop, make sure we don't pass beginning of file, if so, we have an error, and check for condifition above
 	BOOLEAN fOkToIncrement = FALSE;
-	for (UINT32 pos = FileGetSize(f); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
+	for (UINT32 pos = f->size(); pos >= FINANCE_HEADER_SIZE + RECORD_SIZE;)
 	{
-		FileSeek(f, pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
+		f->seek(pos -= RECORD_SIZE, FILE_SEEK_FROM_START);
 
 		BYTE data[RECORD_SIZE];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		UINT8  code;
 		UINT32 date;

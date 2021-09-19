@@ -1,7 +1,8 @@
 #include "JsonUtility.h"
 #include "Campaign_Types.h"
 #include "Debug.h"
-#include "RustInterface.h"
+#include "SGPFile.h"
+#include "FileMan.h"
 
 #include "rapidjson/document.h"
 #include "rapidjson/ostreamwrapper.h"
@@ -10,7 +11,7 @@
 #include <sstream>
 
 /** Write list of strings to file. */
-bool JsonUtility::writeToFile(const char *name, const std::vector<ST::string> &strings)
+bool JsonUtility::writeToFile(const ST::string &name, const std::vector<ST::string> &strings)
 {
 	std::stringstream ss;
 	rapidjson::OStreamWrapper os(ss);
@@ -24,10 +25,12 @@ bool JsonUtility::writeToFile(const char *name, const std::vector<ST::string> &s
 	ss << std::endl;
 
 	ST::string buf = ss.str();
-	if (!Fs_write(name, reinterpret_cast<const uint8_t*>(buf.c_str()), buf.size()))
-	{
-		RustPointer<char> err(getRustError());
-		SLOGE("JsonUtility::writeToFile: %s", err.get());
+	try {
+		AutoSGPFile file{FileMan::openForWriting(name)};
+
+		file->write(buf.c_str(), buf.size());
+	} catch (const std::runtime_error& ex) {
+		SLOGE("JsonUtility::writeToFile: %s", ex.what());
 		return false;
 	}
 	return true;

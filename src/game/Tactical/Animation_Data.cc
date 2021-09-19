@@ -767,7 +767,7 @@ try
 {
 	AutoSGPFile f(GCM->openGameResForReading(ANIMPROFILEFILENAME));
 
-	FileRead(f, &gubNumAnimProfiles, sizeof(gubNumAnimProfiles));
+	f->read(&gubNumAnimProfiles, sizeof(gubNumAnimProfiles));
 
 	ANIM_PROF* const aps = new ANIM_PROF[gubNumAnimProfiles]{};
 	gpAnimProfiles = aps;
@@ -779,16 +779,16 @@ try
 		{
 			ANIM_PROF_DIR* const apd = &ap->Dirs[direction_idx];
 
-			FileRead(f, &apd->ubNumTiles, sizeof(UINT8));
+			f->read(&apd->ubNumTiles, sizeof(UINT8));
 			ANIM_PROF_TILE* const apts = new ANIM_PROF_TILE[apd->ubNumTiles]{};
 			apd->pTiles = apts;
 
 			for (INT32 tile_idx = 0; tile_idx < apd->ubNumTiles; ++tile_idx)
 			{
 				ANIM_PROF_TILE* const apt = &apts[tile_idx];
-				FileRead(f, &apt->usTileFlags, sizeof(UINT16));
-				FileRead(f, &apt->bTileX,      sizeof(INT8));
-				FileRead(f, &apt->bTileY,      sizeof(INT8));
+				f->read(&apt->usTileFlags, sizeof(UINT16));
+				f->read(&apt->bTileX,      sizeof(INT8));
+				f->read(&apt->bTileY,      sizeof(INT8));
 			}
 		}
 	}

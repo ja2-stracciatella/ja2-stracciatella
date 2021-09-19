@@ -458,7 +458,7 @@ void LoadSmokeEffectsFromLoadGameFile(HWFILE const hFile, UINT32 const savegame_
 	std::fill_n(gSmokeEffectData, NUM_SMOKE_EFFECT_SLOTS, SMOKEEFFECT{});
 
 	//Load the Number of Smoke Effects
-	FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32));
+	hFile->read(&guiNumSmokeEffects, sizeof(UINT32));
 
 	//This is a TEMP hack to allow us to use the saves
 	if (savegame_version < 37 && guiNumSmokeEffects == 0)
@@ -493,7 +493,7 @@ void SaveSmokeEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 	ST::string const zMapName = GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
 
 	//delete file the file.
-	GCM->deleteTempFile( zMapName );
+	GCM->tempFiles()->deleteFile( zMapName );
 
 	//loop through and count the number of smoke effects
 	CFOR_EACH_SMOKE_EFFECT(s) ++uiNumSmokeEffects;
@@ -506,10 +506,10 @@ void SaveSmokeEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 		return;
 	}
 
-	AutoSGPFile hFile(GCM->openTempFileForWriting(zMapName, true));
+	AutoSGPFile hFile(GCM->tempFiles()->openForWriting(zMapName, true));
 
 	//Save the Number of Smoke Effects
-	FileWrite(hFile, &uiNumSmokeEffects, sizeof(UINT32));
+	hFile->write(&uiNumSmokeEffects, sizeof(UINT32));
 
 	CFOR_EACH_SMOKE_EFFECT(s)
 	{
@@ -526,14 +526,14 @@ void LoadSmokeEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 
 
 	ST::string const zMapName = GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
 
-	AutoSGPFile hFile(GCM->openTempFileForReading(zMapName));
+	AutoSGPFile hFile(GCM->tempFiles()->openForReading(zMapName));
 
 	//Clear out the old list
 	ResetSmokeEffects();
 
 
 	//Load the Number of Smoke Effects
-	FileRead(hFile, &guiNumSmokeEffects, sizeof(UINT32));
+	hFile->read(&guiNumSmokeEffects, sizeof(UINT32));
 
 	//loop through and load the list
 	for( uiCnt=0; uiCnt<guiNumSmokeEffects;uiCnt++)

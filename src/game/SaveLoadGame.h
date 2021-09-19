@@ -74,7 +74,7 @@ void ExtractSavedGameHeaderFromFile(HWFILE, SAVED_GAME_HEADER&, bool *stracLinux
 
 extern ScreenID guiScreenToGotoAfterLoadingSavedGame;
 
-void CreateSavedGameFileNameFromNumber(UINT8 ubSaveGameID, char* pzNewFileName);
+ST::string CreateSavedGameFileNameFromNumber(UINT8 ubSaveGameID);
 
 
 BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc);

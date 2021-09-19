@@ -34,7 +34,7 @@ static void RemoveTempFile(SectorFlags const file_flag, INT16 const x, INT16 con
 
 	// Delete any temp file that is here and toast the flag that says one exists.
 	ReSetSectorFlag(x, y, z, file_flag);
-	GCM->deleteTempFile(GetMapTempFileName(file_flag, x, y, z));
+	GCM->tempFiles()->deleteFile(GetMapTempFileName(file_flag, x, y, z));
 }
 
 // OLD SAVE METHOD:  This is the old way of loading the enemies and civilians
@@ -48,13 +48,13 @@ void LoadEnemySoldiersFromTempFile()
 
 	auto mapFileName = GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z);
 	// STEP ONE: Set up the temp file to read from.
-	AutoSGPFile f(GCM->openTempFileForReading(mapFileName));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(mapFileName));
 
 	// STEP TWO: Determine whether or not we should use this data.  Because it
 	// is the demo, it is automatically used.
 
 	INT16 saved_y;
-	FileRead(f, &saved_y, 2);
+	f->read(&saved_y, 2);
 	if (y != saved_y)
 	{
 		throw std::runtime_error("Sector Y mismatch");
@@ -65,21 +65,21 @@ void LoadEnemySoldiersFromTempFile()
 	// STEP THREE: Read the data
 
 	INT16 saved_x;
-	FileRead(f, &saved_x, 2);
+	f->read(&saved_x, 2);
 	if (x != saved_x)
 	{
 		throw std::runtime_error("Sector X mismatch");
 	}
 
 	INT32 saved_slots;
-	FileRead(f, &saved_slots, 4);
+	f->read(&saved_slots, 4);
 	INT32 const slots = saved_slots;
 
 	UINT32 timestamp;
-	FileRead(f, &timestamp, 4);
+	f->read(&timestamp, 4);
 
 	INT8 saved_z;
-	FileRead(f, &saved_z, 1);
+	f->read(&saved_z, 1);
 	if (z != saved_z)
 	{
 		throw std::runtime_error("Sector Z mismatch");
@@ -233,7 +233,7 @@ no_add:
 	}
 
 	UINT8 saved_sector_id;
-	FileRead(f, &saved_sector_id, 1);
+	f->read(&saved_sector_id, 1);
 	if (saved_sector_id != SECTOR(x, y))
 	{
 		throw std::runtime_error("Sector ID mismatch");
@@ -315,13 +315,13 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	ubNumCreatures = 0;
 
 	// STEP ONE:  Set up the temp file to read from.
-	AutoSGPFile f(GCM->openTempFileForReading(mapFileName));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(mapFileName));
 
 	// STEP TWO:  Determine whether or not we should use this data.  Because it
 	// is the demo, it is automatically used.
 
 	INT16 saved_y;
-	FileRead(f, &saved_y, 2);
+	f->read(&saved_y, 2);
 	if (y != saved_y)
 	{
 		throw std::runtime_error("Sector Y mismatch");
@@ -332,21 +332,21 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	// STEP THREE:  read the data
 
 	INT16 saved_x;
-	FileRead(f, &saved_x, 2);
+	f->read(&saved_x, 2);
 	if (x != saved_x)
 	{
 		throw std::runtime_error("Sector X mismatch");
 	}
 
 	INT32 saved_slots;
-	FileRead(f, &saved_slots, 4);
+	f->read(&saved_slots, 4);
 	INT32 const slots = saved_slots;
 
 	UINT32 timestamp;
-	FileRead(f, &timestamp, 4);
+	f->read(&timestamp, 4);
 
 	INT8 saved_z;
-	FileRead(f, &saved_z, 1);
+	f->read(&saved_z, 1);
 	if (z != saved_z)
 	{
 		throw std::runtime_error("Sector Z mismatch");
@@ -471,7 +471,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	}
 
 	UINT8 saved_sector_id;
-	FileRead(f, &saved_sector_id, 1);
+	f->read(&saved_sector_id, 1);
 	if (saved_sector_id != SECTOR(x, y))
 	{
 		throw std::runtime_error("Sector ID mismatch");
@@ -499,13 +499,13 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	INT8  const z = gbWorldSectorZ;
 
 	// STEP ONE: Set up the temp file to read from.
-	AutoSGPFile f(GCM->openTempFileForReading(GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z)));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z)));
 
 	// STEP TWO:  Determine whether or not we should use this data.  Because it
 	// is the demo, it is automatically used.
 
 	INT16 saved_y;
-	FileRead(f, &saved_y, 2);
+	f->read(&saved_y, 2);
 	if (y != saved_y)
 	{
 		throw std::runtime_error("Sector Y mismatch");
@@ -516,22 +516,22 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	// STEP THREE:  read the data
 
 	INT16 saved_x;
-	FileRead(f, &saved_x, 2);
+	f->read(&saved_x, 2);
 	if (x != saved_x)
 	{
 		throw std::runtime_error("Sector X mismatch");
 	}
 
 	INT32 saved_slots;
-	FileRead(f, &saved_slots, 4);
+	f->read(&saved_slots, 4);
 	INT32 const slots = saved_slots;
 
 	UINT32 timestamp;
-	FileRead(f, &timestamp, 4);
+	f->read(&timestamp, 4);
 	UINT32 const time_since_last_loaded = GetWorldTotalMin() - timestamp;
 
 	INT8 saved_z;
-	FileRead(f, &saved_z, 1);
+	f->read(&saved_z, 1);
 	if (z != saved_z)
 	{
 		throw std::runtime_error("Sector Z mismatch");
@@ -638,7 +638,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 	}
 
 	UINT8 saved_sector_id;
-	FileRead(f, &saved_sector_id, 1);
+	f->read(&saved_sector_id, 1);
 #if 0 // XXX was commented out
 	if (saved_sector_id != SECTOR(sSectorX, sSectorY))
 	{
@@ -781,16 +781,16 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 
 	// STEP TWO:  Set up the temp file to write to.
 
-	AutoSGPFile f(GCM->openTempFileForWriting(mapFileName, true));
+	AutoSGPFile f(GCM->tempFiles()->openForWriting(mapFileName, true));
 
-	FileWrite(f, &sSectorY, 2);
+	f->write(&sSectorY, 2);
 
 	// STEP THREE:  Save the data
 
 	// This works for both civs and enemies
 	SaveSoldierInitListLinks(f);
 
-	FileWrite(f, &sSectorX, 2);
+	f->write(&sSectorX, 2);
 
 	// This check may appear confusing.  It is intended to abort if the player is
 	// saving the game.  It is only supposed to preserve the links to the
@@ -802,12 +802,12 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 		slots = 0;
 	}
 
-	FileWrite(f, &slots, 4);
+	f->write(&slots, 4);
 
 	UINT32 const timestamp = GetWorldTotalMin();
-	FileWrite(f, &timestamp, 4);
+	f->write(&timestamp, 4);
 
-	FileWrite(f, &bSectorZ, 1);
+	f->write(&bSectorZ, 1);
 
 	// If we are saving the game, we don't need to preserve the soldier
 	// information, just preserve the links to the placement list.
@@ -829,11 +829,11 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const 
 			InjectSoldierCreateIntoFile(f, dp);
 			// Insert a checksum equation (anti-hack)
 			UINT16 const checksum = CalcSoldierCreateCheckSum(dp);
-			FileWrite(f, &checksum, 2);
+			f->write(&checksum, 2);
 		}
 
 		UINT8 const sector_id = SECTOR(sSectorX, sSectorY);
-		FileWrite(f, &sector_id, 1);
+		f->write(&sector_id, 1);
 	}
 
 	SetSectorFlag(sSectorX, sSectorY, bSectorZ, file_flag);
@@ -853,13 +853,13 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 	INT8  const z = gbWorldSectorZ;
 
 	// STEP ONE: Set up the temp file to read from.
-	AutoSGPFile f(GCM->openTempFileForReading(GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z)));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z)));
 
 	// STEP TWO: Determine whether or not we should use this data.  Because it
 	// is the demo, it is automatically used.
 
 	INT16 saved_y;
-	FileRead(f, &saved_y, 2);
+	f->read(&saved_y, 2);
 	if (y != saved_y)
 	{
 		throw std::runtime_error("Sector Y mismatch");
@@ -870,21 +870,21 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 	// STEP THREE: Read the data
 
 	INT16 saved_x;
-	FileRead(f, &saved_x, 2);
+	f->read(&saved_x, 2);
 	if (x != saved_x)
 	{
 		throw std::runtime_error("Sector X mismatch");
 	}
 
 	INT32 saved_slots = 0;
-	FileRead(f, &saved_slots, 4);
+	f->read(&saved_slots, 4);
 	INT32 slots = saved_slots;
 
 	// Skip timestamp
-	FileSeek(f, 4, FILE_SEEK_FROM_CURRENT);
+	f->seek(4, FILE_SEEK_FROM_CURRENT);
 
 	INT8 saved_z;
-	FileRead(f, &saved_z, 1);
+	f->read(&saved_z, 1);
 	if (z != saved_z)
 	{
 		throw std::runtime_error("Sector Z mismatch");
@@ -927,7 +927,7 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 	}
 
 	UINT8 saved_sector_id;
-	FileRead(f, &saved_sector_id, 1);
+	f->read(&saved_sector_id, 1);
 	if (saved_sector_id != SECTOR(x, y))
 	{
 		throw std::runtime_error("Sector ID mismatch");

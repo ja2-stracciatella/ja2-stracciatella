@@ -708,7 +708,7 @@ void SaveStrategicTownLoyaltyToSaveGameFile(HWFILE const f)
 		INJ_SKIP(d, 19)
 		Assert(d.getConsumed() == lengthof(data));
 
-		FileWrite(f, data, sizeof(data));
+		f->write(data, sizeof(data));
 	}
 }
 
@@ -719,7 +719,7 @@ void LoadStrategicTownLoyaltyFromSavedGameFile(HWFILE const f)
 	FOR_EACH(TOWN_LOYALTY, i, gTownLoyalty)
 	{
 		BYTE data[26];
-		FileRead(f, data, sizeof(data));
+		f->read(data, sizeof(data));
 
 		DataReader d{data};
 		EXTR_U8(  d, i->ubRating)

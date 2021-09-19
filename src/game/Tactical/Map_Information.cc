@@ -97,13 +97,13 @@ BOOLEAN ValidateEntryPointGridNo( INT16 *sGridNo )
 void SaveMapInformation( HWFILE fp )
 {
 	gMapInformation.ubMapVersion = MINOR_MAP_VERSION;
-	FileWrite(fp, &gMapInformation, sizeof(MAPCREATE_STRUCT));
+	fp->write(&gMapInformation, sizeof(MAPCREATE_STRUCT));
 }
 
 
 void LoadMapInformation(HWFILE const f)
 {
-	FileRead(f, &gMapInformation, sizeof(gMapInformation));
+	f->read(&gMapInformation, sizeof(gMapInformation));
 
 	// ATE: OK, do some handling here for basement level scroll restrictions
 	// Calcuate world scrolling restrictions

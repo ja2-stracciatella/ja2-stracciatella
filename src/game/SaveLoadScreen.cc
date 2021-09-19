@@ -1112,24 +1112,28 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 	return TRUE;
 }
 
-
-static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER* const header)
+static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER *const header)
 {
 	// make sure the entry is valid
 	if (0 <= bEntry && bEntry < NUM_SAVE_GAMES)
 	{
-		char zSavedGameName[512];
-		CreateSavedGameFileNameFromNumber(gfActiveTab ? (bEntry + NUM_SAVE_GAMES) : bEntry, zSavedGameName);
+		ST::string savegameName = CreateSavedGameFileNameFromNumber(gfActiveTab ? (bEntry + NUM_SAVE_GAMES) : bEntry);
 
 		try
 		{
-			bool stracLinuxFormat;
-			AutoSGPFile f(GCM->openUserPrivateFileForReading(zSavedGameName));
-			ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
-			endof(header->zGameVersionNumber)[-1] =  '\0';
-			return TRUE;
+			if (GCM->userPrivateFiles()->exists(savegameName))
+			{
+				bool stracLinuxFormat;
+				AutoSGPFile f(GCM->userPrivateFiles()->openForReading(savegameName));
+				ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
+				endof(header->zGameVersionNumber)[-1] = '\0';
+				return TRUE;
+			}
 		}
-		catch (...) { /* Handled below */ }
+		catch (const std::runtime_error &ex)
+		{
+			STLOGW("Error loading save game header: {}", ex.what());
+		}
 
 		gbSaveGameArray[bEntry] = FALSE;
 	}
@@ -1503,9 +1507,8 @@ static void DeleteAllSaveGameFile(void)
 
 void DeleteSaveGameNumber(UINT8 const save_slot_id)
 {
-	char filename[512];
-	CreateSavedGameFileNameFromNumber(save_slot_id, filename);
-	FileDelete(filename);
+	ST::string savegameName = CreateSavedGameFileNameFromNumber(save_slot_id);
+	GCM->tempFiles()->deleteFile(savegameName);
 }
 
 
@@ -1558,8 +1561,9 @@ static void DoneFadeOutForSaveLoadScreen(void)
 			FadeInGameScreen();
 		}
 	}
-	catch (std::exception const& e)
+	catch (std::runtime_error const& e)
 	{
+		STLOGE("Error loading game: {}", e.what());
 		ST::string msg = st_format_printf(zSaveLoadText[SLG_LOAD_GAME_ERROR], e.what());
 		DoSaveLoadMessageBox(msg, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
 		NextLoopCheckForEnoughFreeHardDriveSpace();
@@ -1740,9 +1744,8 @@ bool AreThereAnySavedGameFiles()
 {
 	for (INT8 i = 0; i != (NUM_SAVE_GAMES_TABS * NUM_SAVE_GAMES); ++i)
 	{
-		char filename[512];
-		CreateSavedGameFileNameFromNumber(i, filename);
-		if (GCM->doesGameResExists(filename)) return true;
+		ST::string savegameName = CreateSavedGameFileNameFromNumber(i);
+		if (GCM->userPrivateFiles()->exists(savegameName)) return true;
 	}
 	return false;
 }

@@ -9,7 +9,7 @@
 void ExtractRealObjectFromFile(HWFILE const file, REAL_OBJECT* const o)
 {
 	BYTE data[256];
-	FileRead(file, data, sizeof(data));
+	file->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_BOOL(d, o->fAllocated)
@@ -137,5 +137,5 @@ void InjectRealObjectIntoFile(HWFILE const file, REAL_OBJECT const* const o)
 	INJ_SKIP(d, 3)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(file, data, sizeof(data));
+	file->write(data, sizeof(data));
 }

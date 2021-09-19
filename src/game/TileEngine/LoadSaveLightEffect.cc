@@ -7,7 +7,7 @@
 void ExtractLightEffectFromFile(HWFILE const file, LIGHTEFFECT* const l)
 {
 	BYTE data[16];
-	FileRead(file, data, sizeof(data));
+	file->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_I16(d, l->sGridNo)
@@ -39,5 +39,5 @@ void InjectLightEffectIntoFile(HWFILE const file, const LIGHTEFFECT* const l)
 	INJ_U32(d, l->uiTimeOfLastUpdate)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(file, data, sizeof(data));
+	file->write(data, sizeof(data));
 }

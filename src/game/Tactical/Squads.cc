@@ -666,19 +666,19 @@ void SaveSquadInfoToSavedGameFile(HWFILE const f)
 		}
 	}
 	Assert(d.getConsumed() == lengthof(data));
-	FileWrite(f, data, sizeof(data));
+	f->write(data, sizeof(data));
 
 	// Save all the squad movement IDs
-	FileWrite(f, SquadMovementGroups, sizeof(SquadMovementGroups));
+	f->write(SquadMovementGroups, sizeof(SquadMovementGroups));
 }
 
 
 void LoadSquadInfoFromSavedGameFile(HWFILE const f)
 {
 	// Load in the squad info
-	BYTE data[NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD * 12];
+	BYTE data[NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD * 12] = { 0 };
 	DataReader d{data};
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 	for (INT32 squad = 0; squad != NUMBER_OF_SQUADS; ++squad)
 	{
 		FOR_EACH_SLOT_IN_SQUAD(slot, squad)
@@ -692,7 +692,7 @@ void LoadSquadInfoFromSavedGameFile(HWFILE const f)
 	Assert(d.getConsumed() == lengthof(data));
 
 	// Load in the Squad movement IDs
-	FileRead(f, SquadMovementGroups, sizeof(SquadMovementGroups));
+	f->read(SquadMovementGroups, sizeof(SquadMovementGroups));
 }
 
 

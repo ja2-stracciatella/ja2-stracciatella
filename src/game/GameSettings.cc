@@ -30,7 +30,7 @@
 #include <string_theory/format>
 
 
-#define GAME_SETTINGS_FILE "../Ja2.set"
+#define GAME_SETTINGS_FILE "Ja2.set"
 
 GAME_SETTINGS		gGameSettings;
 GAME_OPTIONS		gGameOptions;
@@ -47,11 +47,11 @@ void LoadGameSettings(void)
 {
 	try
 	{
-		AutoSGPFile f(GCM->openUserPrivateFileForReading(GAME_SETTINGS_FILE));
+		AutoSGPFile f(GCM->userPrivateFiles()->openForReading(GAME_SETTINGS_FILE));
 
 		BYTE data[76];
-		if (FileGetSize(f) != sizeof(data)) goto fail;
-		FileRead(f, data, sizeof(data));
+		if (f->size() != sizeof(data)) goto fail;
+		f->read(data, sizeof(data));
 
 		UINT8          music_volume;
 		UINT8          sound_volume;
@@ -135,8 +135,8 @@ void SaveGameSettings(void)
 	INJ_SKIP(d, 20)
 	Assert(d.getConsumed() == lengthof(data));
 
-	AutoSGPFile f(FileMan::openForWriting(GAME_SETTINGS_FILE));
-	FileWrite(f, data, sizeof(data));
+	AutoSGPFile f(GCM->userPrivateFiles()->openForWriting(GAME_SETTINGS_FILE, true));
+	f->write(data, sizeof(data));
 }
 
 

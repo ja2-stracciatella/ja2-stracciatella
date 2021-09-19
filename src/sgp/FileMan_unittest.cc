@@ -61,7 +61,7 @@ TEST(FileManTest, joinPathsMultiple)
 }
 
 
-TEST(FileManTest, FindFilesInDir)
+TEST(FileManTest, findFilesInDir)
 {
 #define PS PATH_SEPARATOR_STR
 
@@ -71,39 +71,39 @@ TEST(FileManTest, FindFilesInDir)
 
 	ST::string testDir = FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files");
 
-	std::vector<ST::string> results = FindFilesInDir(testDir, "txt", false, false);
+	std::vector<ST::string> results = FileMan::findFilesInDir(testDir, "txt", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 
-	results = FindFilesInDir(FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files"), "txt", false, false);
+	results = FileMan::findFilesInDir(FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files"), "txt", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests" PS "find-files" PS "lowercase-ext.txt").c_str());
 
-	results = FindFilesInDir(testDir, "TXT", false, false);
+	results = FileMan::findFilesInDir(testDir, "TXT", false, false);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
-	results = FindFilesInDir(testDir, "TXT", false, true);
+	results = FileMan::findFilesInDir(testDir, "TXT", false, true);
 	ASSERT_EQ(results.size(), 1u);
 	EXPECT_STREQ(results[0].c_str(), "uppercase-ext.TXT");
 
-	results = FindFilesInDir(testDir, "tXt", true, false);
+	results = FileMan::findFilesInDir(testDir, "tXt", true, false);
 	std::sort(results.begin(), results.end());
 	ASSERT_EQ(results.size(), 2u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 	EXPECT_STREQ(results[1].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
-	results = FindFilesInDir(testDir, "tXt", true, false, true);
+	results = FileMan::findFilesInDir(testDir, "tXt", true, false, true);
 	ASSERT_EQ(results.size(), 2u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
 	EXPECT_STREQ(results[1].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "uppercase-ext.TXT").c_str());
 
-	results = FindFilesInDir(testDir, "tXt", true, true, true);
+	results = FileMan::findFilesInDir(testDir, "tXt", true, true, true);
 	ASSERT_EQ(results.size(), 2u);
 	EXPECT_STREQ(results[0].c_str(), "lowercase-ext.txt");
 	EXPECT_STREQ(results[1].c_str(), "uppercase-ext.TXT");
 
-	results = FindAllFilesInDir(testDir, true);
+	results = FileMan::findAllFilesInDir(testDir, true);
 	ASSERT_EQ(results.size(), 3u);
 	EXPECT_STREQ(results[0].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "file-without-extension").c_str());
 	EXPECT_STREQ(results[1].c_str(), FileMan::joinPaths(GetExtraDataDir(), "unittests/find-files" PS "lowercase-ext.txt").c_str());
@@ -120,7 +120,7 @@ TEST(FileManTest, RemoveAllFilesInDir)
 	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
 	ASSERT_NE(tempPath.get(), nullptr);
 	ST::string subDir = FileMan::joinPaths(tempPath.get(), "subdir");
-	ASSERT_EQ(Fs_createDir(subDir.c_str()), true);
+	FileMan::createDir(subDir);
 
 	ST::string pathA = FileMan::joinPaths(tempPath.get(), "foo.txt");
 	ST::string pathB = FileMan::joinPaths(tempPath.get(), "bar.txt");
@@ -130,21 +130,21 @@ TEST(FileManTest, RemoveAllFilesInDir)
 	SGPFile* fileB = FileMan::openForWriting(pathB);
 	ASSERT_NE(fileB, nullptr);
 
-	FileWrite(fileA, "foo", 3);
-	FileWrite(fileB, "bar", 3);
+	fileA->write("foo", 3);
+	fileB->write("bar", 3);
 
-	FileClose(fileA);
-	FileClose(fileB);
+	delete fileA;
+	delete fileB;
 
-	std::vector<ST::string> results = FindAllFilesInDir(tempPath.get(), true);
+	std::vector<ST::string> results = FileMan::findAllFilesInDir(tempPath.get(), true);
 	ASSERT_EQ(results.size(), 2u);
 
-	EraseDirectory(tempPath.get());
+	FileMan::eraseDir(tempPath.get());
 
 	// check that the subdirectory is still there
-	ASSERT_EQ(Fs_isDir(subDir.c_str()), true);
+	ASSERT_EQ(FileMan::isDir(subDir), true);
 
-	results = FindAllFilesInDir(tempPath.get(), true);
+	results = FileMan::findAllFilesInDir(tempPath.get(), true);
 	ASSERT_EQ(results.size(), 0u);
 }
 
@@ -158,14 +158,14 @@ TEST(FileManTest, ReadTextFile)
 
 	SGPFile* fileA = FileMan::openForWriting(pathA);
 	ASSERT_NE(fileA, nullptr);
-	FileWrite(fileA, "foo bar baz", 11);
-	FileClose(fileA);
+	fileA->write("foo bar baz", 11);
+	delete fileA;
 
 	SGPFile* forReading = FileMan::openForReading(pathA);
 	ASSERT_NE(forReading, nullptr);
-	ST::string content = FileMan::fileReadText(forReading);
+	ST::string content = forReading->readStringToEnd();
 	ASSERT_STREQ(content.c_str(), "foo bar baz");
-	FileClose(forReading);
+	delete forReading;
 }
 
 TEST(FileManTest, GetFileName)
@@ -227,5 +227,9 @@ TEST(FileManTest, ReplaceExtension)
 
 TEST(FileManTest, FreeSpace)
 {
-	EXPECT_NE(GetFreeSpaceOnHardDriveWhereGameIsRunningFrom(), 0u);
+	RustPointer<TempDir> tempDir(TempDir_create());
+	ASSERT_NE(tempDir.get(), nullptr);
+	RustPointer<char> tempPath(TempDir_path(tempDir.get()));
+	ASSERT_NE(tempPath.get(), nullptr);
+	EXPECT_NE(FileMan::getFreeSpace(tempPath.get()), 0u);
 }

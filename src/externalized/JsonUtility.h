@@ -10,7 +10,7 @@
 namespace JsonUtility
 {
 	/** Write list of strings to file. */
-	bool writeToFile(const char *name, const std::vector<ST::string> &strings);
+	bool writeToFile(const ST::string &name, const std::vector<ST::string> &strings);
 
 	/** Parse json to a list of strings. */
 	bool parseJsonToListStrings(const char* jsonData, std::vector<ST::string> &strings);

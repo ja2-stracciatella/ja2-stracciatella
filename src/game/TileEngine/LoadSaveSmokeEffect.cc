@@ -9,7 +9,7 @@
 void ExtractSmokeEffectFromFile(HWFILE const file, SMOKEEFFECT* const s)
 {
 	BYTE data[16];
-	FileRead(file, data, sizeof(data));
+	file->read(data, sizeof(data));
 
 	DataReader d{data};
 	EXTR_I16(d, s->sGridNo)
@@ -45,5 +45,5 @@ void InjectSmokeEffectIntoFile(HWFILE const file, SMOKEEFFECT const* const s)
 	INJ_U32(d, s->uiTimeOfLastUpdate)
 	Assert(d.getConsumed() == lengthof(data));
 
-	FileWrite(file, data, sizeof(data));
+	file->write(data, sizeof(data));
 }

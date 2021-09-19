@@ -771,11 +771,11 @@ void InitCivQuoteSystem( )
 
 void SaveCivQuotesToSaveGameFile(HWFILE const f)
 {
-	FileSeek(f, NUM_CIV_QUOTES * 2, FILE_SEEK_FROM_CURRENT);
+	f->seek(NUM_CIV_QUOTES * 2, FILE_SEEK_FROM_CURRENT);
 }
 
 
 void LoadCivQuotesFromLoadGameFile(HWFILE const f)
 {
-	FileSeek(f, NUM_CIV_QUOTES * 2, FILE_SEEK_FROM_CURRENT);
+	f->seek(NUM_CIV_QUOTES * 2, FILE_SEEK_FROM_CURRENT);
 }

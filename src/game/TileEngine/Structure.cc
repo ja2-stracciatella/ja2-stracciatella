@@ -243,7 +243,7 @@ static void LoadStructureData(char const* const filename, STRUCTURE_FILE_REF* co
 	AutoSGPFile f(GCM->openGameResForReading(filename));
 
 	BYTE data[16];
-	FileRead(f, data, sizeof(data));
+	f->read(data, sizeof(data));
 
 	char   id[4];
 	UINT16 n_structures;
@@ -274,12 +274,12 @@ static void LoadStructureData(char const* const filename, STRUCTURE_FILE_REF* co
 	if (flags & STRUCTURE_FILE_CONTAINS_AUXIMAGEDATA)
 	{
 		aux_data.Allocate(n_structures);
-		FileRead(f, aux_data, sizeof(*aux_data) * n_structures);
+		f->read(aux_data, sizeof(*aux_data) * n_structures);
 
 		if (n_tile_locs_stored > 0)
 		{
 			tile_loc_data.Allocate(n_tile_locs_stored);
-			FileRead(f, tile_loc_data, sizeof(*tile_loc_data) * n_tile_locs_stored);
+			f->read(tile_loc_data, sizeof(*tile_loc_data) * n_tile_locs_stored);
 		}
 	}
 
@@ -288,7 +288,7 @@ static void LoadStructureData(char const* const filename, STRUCTURE_FILE_REF* co
 	{
 		sfr->usNumberOfStructuresStored = n_structures_stored;
 		structure_data.Allocate(data_size);
-		FileRead(f, structure_data, data_size);
+		f->read(structure_data, data_size);
 
 		*structure_data_size = data_size;
 	}
