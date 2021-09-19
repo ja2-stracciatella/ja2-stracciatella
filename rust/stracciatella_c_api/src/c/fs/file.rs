@@ -7,6 +7,7 @@ use std::u64;
 use std::usize;
 
 use stracciatella::fs;
+use stracciatella::vfile::VFile;
 
 use crate::c::common::*;
 use crate::c::vec::VecU8;
@@ -39,19 +40,14 @@ pub const FILE_OPEN_CREATE: u8 = 0x10;
 /// @see https://doc.rust-lang.org/std/fs/struct.OpenOptions.html#method.create_new
 pub const FILE_OPEN_CREATE_NEW: u8 = 0x20;
 
-/// A wrapper around [`File`] for C.
-/// @see https://doc.rust-lang.org/std/fs/struct.File.html
-pub struct File {
-    inner: fs::File,
-}
-
 /// Opens a file according to the options.
 /// Sets the rust error.
 /// @see FILE_OPEN_*
 #[no_mangle]
-pub extern "C" fn File_open(path: *const c_char, options: u8) -> *mut File {
+pub extern "C" fn File_open(path: *const c_char, options: u8) -> *mut VFile {
     forget_rust_error();
     let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
+    let is_write_or_append = (options & FILE_OPEN_WRITE) != 0 || (options & FILE_OPEN_APPEND) != 0;
     let file_result = fs::OpenOptions::new()
         .read((options & FILE_OPEN_READ) != 0)
         .write((options & FILE_OPEN_WRITE) != 0)
@@ -65,13 +61,17 @@ pub extern "C" fn File_open(path: *const c_char, options: u8) -> *mut File {
             remember_rust_error(format!("File_open {:?} {:#02x}: {}", path, options, err));
             ptr::null_mut()
         }
-        Ok(file) => into_ptr(File { inner: file }),
+        Ok(file) => into_ptr(if is_write_or_append {
+            file.into()
+        } else {
+            VFile::buf_file(file)
+        }),
     }
 }
 
 /// Closes the file.
 #[no_mangle]
-pub extern "C" fn File_close(file: *mut File) {
+pub extern "C" fn File_close(file: *mut VFile) {
     let _drop_me = from_ptr(file);
 }
 
@@ -79,15 +79,15 @@ pub extern "C" fn File_close(file: *mut File) {
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/fs/struct.Metadata.html#method.len
 #[no_mangle]
-pub extern "C" fn File_len(file: *mut File) -> u64 {
+pub extern "C" fn File_len(file: *mut VFile) -> u64 {
     forget_rust_error();
     let file = unsafe_ref(file);
-    match file.inner.metadata() {
+    match file.len() {
         Err(err) => {
             remember_rust_error(format!("File_len: {}", err));
             u64::MAX
         }
-        Ok(metadata) => metadata.len(),
+        Ok(len) => len,
     }
 }
 
@@ -100,11 +100,11 @@ pub extern "C" fn File_len(file: *mut File) -> u64 {
 ///
 /// The function panics if the passed in pointers are not valid
 #[no_mangle]
-pub unsafe extern "C" fn File_read(file: *mut File, buf: *mut u8, buf_len: usize) -> usize {
+pub unsafe extern "C" fn File_read(file: *mut VFile, buf: *mut u8, buf_len: usize) -> usize {
     forget_rust_error();
     let file = unsafe_mut(file);
     let buf = unsafe_slice_mut(buf, buf_len);
-    match file.inner.read(buf) {
+    match file.read(buf) {
         Ok(n) => n,
         Err(err) => {
             remember_rust_error(format!("File_read {}: {}", buf_len, err));
@@ -121,11 +121,11 @@ pub unsafe extern "C" fn File_read(file: *mut File, buf: *mut u8, buf_len: usize
 ///
 /// The function panics if the passed in pointers are not valid
 #[no_mangle]
-pub unsafe extern "C" fn File_readToEnd(file: *mut File) -> *mut VecU8 {
+pub unsafe extern "C" fn File_readToEnd(file: *mut VFile) -> *mut VecU8 {
     forget_rust_error();
     let file = unsafe_mut(file);
     let mut buf = vec![];
-    match file.inner.read_to_end(&mut buf) {
+    match file.read_to_end(&mut buf) {
         Ok(_) => into_ptr(VecU8::from(buf)),
         Err(err) => {
             remember_rust_error(format!("File_readToEnd: {}", err));
@@ -138,11 +138,11 @@ pub unsafe extern "C" fn File_readToEnd(file: *mut File) -> *mut VecU8 {
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/io/trait.Read.html#method.read_exact
 #[no_mangle]
-pub extern "C" fn File_readExact(file: *mut File, buf: *mut u8, buf_len: usize) -> bool {
+pub extern "C" fn File_readExact(file: *mut VFile, buf: *mut u8, buf_len: usize) -> bool {
     forget_rust_error();
     let file = unsafe_mut(file);
     let buf = unsafe_slice_mut(buf, buf_len);
-    while let Err(err) = file.inner.read_exact(buf) {
+    while let Err(err) = file.read_exact(buf) {
         if err.kind() != io::ErrorKind::Interrupted {
             remember_rust_error(format!("File_readExact {}: {}", buf_len, err));
             break;
@@ -156,12 +156,12 @@ pub extern "C" fn File_readExact(file: *mut File, buf: *mut u8, buf_len: usize) 
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/io/trait.Write.html#tymethod.write
 #[no_mangle]
-pub extern "C" fn File_write(file: *mut File, buf: *const u8, buf_len: usize) -> usize {
+pub extern "C" fn File_write(file: *mut VFile, buf: *const u8, buf_len: usize) -> usize {
     forget_rust_error();
     let file = unsafe_mut(file);
     let buf = unsafe_slice(buf, buf_len);
     loop {
-        match file.inner.write(buf) {
+        match file.write(buf) {
             Err(err) => {
                 if err.kind() != io::ErrorKind::Interrupted {
                     remember_rust_error(format!("File_write {}: {}", buf_len, err));
@@ -177,11 +177,11 @@ pub extern "C" fn File_write(file: *mut File, buf: *const u8, buf_len: usize) ->
 /// Sets the rust error.
 /// @see https://doc.rust-lang.org/std/io/trait.Write.html#method.write_all
 #[no_mangle]
-pub extern "C" fn File_writeAll(file: *mut File, buf: *const u8, buf_len: usize) -> bool {
+pub extern "C" fn File_writeAll(file: *mut VFile, buf: *const u8, buf_len: usize) -> bool {
     forget_rust_error();
     let file = unsafe_mut(file);
     let buf = unsafe_slice(buf, buf_len);
-    while let Err(err) = file.inner.write_all(buf) {
+    while let Err(err) = file.write_all(buf) {
         if err.kind() == io::ErrorKind::Interrupted {
             continue;
         }
@@ -196,10 +196,10 @@ pub extern "C" fn File_writeAll(file: *mut File, buf: *const u8, buf_len: usize)
 /// @see https://doc.rust-lang.org/std/io/trait.Seek.html#tymethod.seek
 /// @see https://doc.rust-lang.org/std/io/enum.SeekFrom.html#variant.Start
 #[no_mangle]
-pub extern "C" fn File_seekFromStart(file: *mut File, offset: u64) -> u64 {
+pub extern "C" fn File_seekFromStart(file: *mut VFile, offset: u64) -> u64 {
     forget_rust_error();
     let file = unsafe_mut(file);
-    match file.inner.seek(io::SeekFrom::Start(offset)) {
+    match file.seek(io::SeekFrom::Start(offset)) {
         Err(err) => {
             remember_rust_error(format!("File_seekFromStart {}: {}", offset, err));
             u64::MAX
@@ -214,10 +214,10 @@ pub extern "C" fn File_seekFromStart(file: *mut File, offset: u64) -> u64 {
 /// @see https://doc.rust-lang.org/std/io/trait.Seek.html#tymethod.seek
 /// @see https://doc.rust-lang.org/std/io/enum.SeekFrom.html#variant.End
 #[no_mangle]
-pub extern "C" fn File_seekFromEnd(file: *mut File, offset: i64) -> u64 {
+pub extern "C" fn File_seekFromEnd(file: *mut VFile, offset: i64) -> u64 {
     forget_rust_error();
     let file = unsafe_mut(file);
-    match file.inner.seek(io::SeekFrom::End(offset)) {
+    match file.seek(io::SeekFrom::End(offset)) {
         Err(err) => {
             remember_rust_error(format!("File_seekFromEnd {}: {}", offset, err));
             u64::MAX
@@ -232,10 +232,10 @@ pub extern "C" fn File_seekFromEnd(file: *mut File, offset: i64) -> u64 {
 /// @see https://doc.rust-lang.org/std/io/trait.Seek.html#tymethod.seek
 /// @see https://doc.rust-lang.org/std/io/enum.SeekFrom.html#variant.Current
 #[no_mangle]
-pub extern "C" fn File_seekFromCurrent(file: *mut File, offset: i64) -> u64 {
+pub extern "C" fn File_seekFromCurrent(file: *mut VFile, offset: i64) -> u64 {
     forget_rust_error();
     let file = unsafe_mut(file);
-    match file.inner.seek(io::SeekFrom::Current(offset)) {
+    match file.seek(io::SeekFrom::Current(offset)) {
         Err(err) => {
             remember_rust_error(format!("File_seekFromCurrent {}: {}", offset, err));
             u64::MAX

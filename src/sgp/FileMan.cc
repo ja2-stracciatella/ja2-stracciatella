@@ -96,7 +96,7 @@ SGPFile* FileMan::openForWriting(const ST::string& filename, bool truncate)
 		open_options |= FILE_OPEN_TRUNCATE;
 	}
 
-	RustPointer<File> file{File_open(filename.c_str(), open_options)};
+	RustPointer<VFile> file{File_open(filename.c_str(), open_options)};
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};
@@ -110,7 +110,7 @@ SGPFile* FileMan::openForWriting(const ST::string& filename, bool truncate)
  * If file doesn't exist, it will be created. */
 SGPFile* FileMan::openForAppend(const ST::string& filename)
 {
-	RustPointer<File> file{File_open(filename.c_str(), FILE_OPEN_APPEND | FILE_OPEN_CREATE)};
+	RustPointer<VFile> file{File_open(filename.c_str(), FILE_OPEN_APPEND | FILE_OPEN_CREATE)};
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};
@@ -124,7 +124,7 @@ SGPFile* FileMan::openForAppend(const ST::string& filename)
  * If file doesn't exist, it will be created. */
 SGPFile* FileMan::openForReadWrite(const ST::string& filename)
 {
-	RustPointer<File> file{File_open(filename.c_str(), FILE_OPEN_READ | FILE_OPEN_WRITE | FILE_OPEN_CREATE)};
+	RustPointer<VFile> file{File_open(filename.c_str(), FILE_OPEN_READ | FILE_OPEN_WRITE | FILE_OPEN_CREATE)};
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};
@@ -136,7 +136,7 @@ SGPFile* FileMan::openForReadWrite(const ST::string& filename)
 /** Open file for reading. */
 SGPFile* FileMan::openForReading(const ST::string &filename)
 {
-	RustPointer<File> file{File_open(filename.c_str(), FILE_OPEN_READ)};
+	RustPointer<VFile> file{File_open(filename.c_str(), FILE_OPEN_READ)};
 	if (!file)
 	{
 		RustPointer<char> err{getRustError()};

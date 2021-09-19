@@ -470,7 +470,7 @@ std::vector<ST::string> DefaultContentManager::getAllTilecache() const
  * If file is not found, try to find the file in libraries located in 'Data' directory; */
 SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename) const
 {
-	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
+	RustPointer<VFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
 	if (!vfile)
 	{
 		RustPointer<char> err{getRustError()};
@@ -483,7 +483,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename
 /* Checks if a game resource exists. */
 bool DefaultContentManager::doesGameResExists(const ST::string& filename) const
 {
-	RustPointer<VfsFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
+	RustPointer<VFile> vfile(VfsFile_open(m_vfs.get(), filename.c_str()));
 	return static_cast<bool>(vfile.get());
 }
 
