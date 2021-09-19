@@ -97,7 +97,7 @@ public:
 
 	UINT16                m_VIEWPORT_WINDOW_END_Y;
 
-	SGPRect               m_wordlClippingRect;
+	SGPRect               m_worldClippingRect;
 
 	SGPPoint              m_versionPosition;
 	SGPPoint              m_contractPosition;

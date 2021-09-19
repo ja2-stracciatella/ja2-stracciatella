@@ -118,7 +118,7 @@ void UILayout::recalculatePositions()
 	m_tacticalMapCenterX          = (m_VIEWPORT_END_X - m_VIEWPORT_START_X) / 2;
 	m_tacticalMapCenterY          = (m_VIEWPORT_END_Y - m_VIEWPORT_START_Y) / 2;
 
-	m_wordlClippingRect.set(0, 0, m_screenWidth, m_screenHeight - 120);
+	m_worldClippingRect.set(0, 0, m_screenWidth, m_screenHeight - 120);
 
 	m_contractPosition.set(       m_stdScreenOffsetX + 120, m_stdScreenOffsetY +  50);
 	m_attributePosition.set(      m_stdScreenOffsetX + 220, m_stdScreenOffsetY + 150);
