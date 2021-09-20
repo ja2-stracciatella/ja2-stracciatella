@@ -84,7 +84,7 @@ static void RestoreButtonBackGrounds(void);
 
 ScreenID MainMenuScreenHandle(void)
 {
-	if (guiSplashStartTime + 4000 > GetJA2Clock())
+	if (guiSplashStartTime + INTRO_SPLASH_DURATION > GetJA2Clock())
 	{
 		SetCurrentCursorFromDatabase(VIDEO_NO_CURSOR);
 		SetMusicMode(MUSIC_NONE);

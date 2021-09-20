@@ -202,7 +202,7 @@ ScreenID InitScreenHandle(void)
 	{
 		// wait 3 seconds since the splash displayed and then switch
 		// to the main menu
-		if((GetClock() - splashDisplayedMoment) >= 3000)
+		if((GetClock() - splashDisplayedMoment) >= INTRO_SPLASH_DURATION)
 		{
 			InitMainMenu( );
 			ubCurrentScreen = 3;
