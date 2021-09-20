@@ -145,7 +145,7 @@ class SGPVSurface;
 
 struct BUTTON_PICS;
 
-struct SGPFile;
+class SGPFile;
 typedef SGPFile* HWFILE;
 
 
