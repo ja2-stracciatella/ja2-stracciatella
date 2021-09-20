@@ -15,7 +15,8 @@
 #define SCREEN_HEIGHT                   (g_ui.m_screenHeight)
 #define SCREEN_WIDTH                    (g_ui.m_screenWidth)
 #define INV_INTERFACE_START_Y           (g_ui.get_INV_INTERFACE_START_Y())
-#define INTERFACE_START_Y               (g_ui.get_INTERFACE_START_Y())
+#define INTERFACE_START_X               (g_ui.m_teamPanelPosition.iX)
+#define INTERFACE_START_Y               (g_ui.m_teamPanelPosition.iY)
 #define gsVIEWPORT_START_X              (g_ui.m_VIEWPORT_START_X)
 #define gsVIEWPORT_START_Y              (g_ui.m_VIEWPORT_START_Y)
 #define gsVIEWPORT_WINDOW_START_Y       (g_ui.m_VIEWPORT_WINDOW_START_Y)
@@ -27,7 +28,7 @@
 #define MAP_SCREEN_WIDTH                (g_ui.m_mapScreenWidth)
 #define MAP_SCREEN_HEIGHT               (g_ui.m_mapScreenHeight)
 
-#define SM_BODYINV_X                    (244)
+#define SM_BODYINV_X                    (INTERFACE_START_X + 244)
 #define SM_BODYINV_Y                    (INV_INTERFACE_START_Y + 6)
 
 #define EDITOR_TASKBAR_HEIGHT           (120)
@@ -35,6 +36,9 @@
 
 #define DEFAULT_EXTERN_PANEL_X_POS      (STD_SCREEN_X + 320)
 #define DEFAULT_EXTERN_PANEL_Y_POS      (STD_SCREEN_Y + 40)
+
+#define TEAMPANEL_SLOT_WIDTH            (83)     // width of one slot in the bottom team panel
+#define TEAMPANEL_BUTTONSBOX_WIDTH      (142)    // width of the container of the buttons on the right of team panel
 
 /////////////////////////////////////////////////////////////
 // type definitions
@@ -99,6 +103,7 @@ public:
 
 	SGPRect               m_worldClippingRect;
 
+	// Map screen interface
 	SGPPoint              m_versionPosition;
 	SGPPoint              m_contractPosition;
 	SGPPoint              m_attributePosition;
@@ -107,6 +112,13 @@ public:
 	SGPPoint              m_repairPosition;
 	SGPPoint              m_assignmentPosition ;
 	SGPPoint              m_squadPosition ;
+
+	// Tactical screen bottom bar
+	// It can be in the "team" (TEAM) or the "single merc inventory" (SM or INV_) mode. Both modes have the same
+	// width, but the single-merc mode is slightly taller.
+	SGPPoint              m_teamPanelPosition;              // offset position of the bottom bar
+	UINT16                m_teamPanelSlotsTotalWidth;       // total width of all team slots in the bottom team panel
+	UINT16                m_teamPanelWidth;                 // width of the entire team panel including slots and buttons
 
 	UINT16                m_stdScreenOffsetX;             /** Offset of the standard (640x480) window */
 	UINT16                m_stdScreenOffsetY;             /** Offset of the standard (640x480) window */
@@ -126,7 +138,6 @@ public:
 	UINT16 currentHeight();
 	UINT16 get_CLOCK_X();
 	UINT16 get_CLOCK_Y();
-	UINT16 get_INTERFACE_START_Y();
 	UINT16 get_INV_INTERFACE_START_Y();
 	UINT16 get_RADAR_WINDOW_X();
 	UINT16 get_RADAR_WINDOW_TM_Y();

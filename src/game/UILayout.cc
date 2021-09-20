@@ -2,6 +2,7 @@
 
 #include "MapScreen.h"
 #include "Soldier_Control.h"
+#include "Squads.h"
 #include "JAScreens.h"
 
 #define MIN_INTERFACE_WIDTH       640
@@ -45,42 +46,48 @@ bool UILayout::isBigScreen()
 
 
 UINT16 UILayout::currentHeight()             { return fInMapMode ? (STD_SCREEN_Y + m_mapScreenHeight) : m_screenHeight; }
-UINT16 UILayout::get_CLOCK_X()               { return fInMapMode ? (STD_SCREEN_X + 554) : 554;               }
+UINT16 UILayout::get_CLOCK_X()               { return fInMapMode ? (STD_SCREEN_X + 554) : m_teamPanelPosition.iX + m_teamPanelSlotsTotalWidth + 56; }
 UINT16 UILayout::get_CLOCK_Y()               { return currentHeight() - 23;                                  }
-UINT16 UILayout::get_RADAR_WINDOW_X()        { return fInMapMode ? (STD_SCREEN_X + 543) : 543;               }
+UINT16 UILayout::get_RADAR_WINDOW_X()        { return fInMapMode ? (STD_SCREEN_X + 543) : m_teamPanelPosition.iX + m_teamPanelSlotsTotalWidth + 45; }
 UINT16 UILayout::get_RADAR_WINDOW_TM_Y()     { return currentHeight() - 107;                                 }
-UINT16 UILayout::get_INTERFACE_START_Y()     { return m_screenHeight - 120;                                  }
 UINT16 UILayout::get_INV_INTERFACE_START_Y() { return m_screenHeight - 140;                                  }
 
 
 /** Recalculate UI elements' positions after changing screen size. */
 void UILayout::recalculatePositions()
 {
+	m_teamPanelSlotsTotalWidth = NUMBER_OF_SOLDIERS_PER_SQUAD * TEAMPANEL_SLOT_WIDTH;
+	UINT16 tpXOffset = (m_screenWidth - m_teamPanelSlotsTotalWidth - TEAMPANEL_BUTTONSBOX_WIDTH) / 2;
+	UINT16 tpYOffset = m_screenHeight - 120;
+	m_teamPanelPosition.set(tpXOffset, tpYOffset);
+	m_teamPanelWidth = m_teamPanelSlotsTotalWidth + TEAMPANEL_BUTTONSBOX_WIDTH;
+
 	UINT16 startInvY = get_INV_INTERFACE_START_Y();
+	UINT16 startX    = INTERFACE_START_X;
 
 	m_stdScreenOffsetX            = (m_screenWidth - MIN_INTERFACE_WIDTH) / 2;
 	m_stdScreenOffsetY            = (m_screenHeight - MIN_INTERFACE_HEIGHT) / 2;
 
 	// tactical screen inventory position
-	m_invSlotPositionTac[HELMETPOS           ].set(344, startInvY +   6);
-	m_invSlotPositionTac[VESTPOS             ].set(344, startInvY +  35);
-	m_invSlotPositionTac[LEGPOS              ].set(344, startInvY +  95);
-	m_invSlotPositionTac[HEAD1POS            ].set(226, startInvY +   6);
-	m_invSlotPositionTac[HEAD2POS            ].set(226, startInvY +  30);
-	m_invSlotPositionTac[HANDPOS             ].set(226, startInvY +  84);
-	m_invSlotPositionTac[SECONDHANDPOS       ].set(226, startInvY + 108);
-	m_invSlotPositionTac[BIGPOCK1POS         ].set(468, startInvY +   5);
-	m_invSlotPositionTac[BIGPOCK2POS         ].set(468, startInvY +  29);
-	m_invSlotPositionTac[BIGPOCK3POS         ].set(468, startInvY +  53);
-	m_invSlotPositionTac[BIGPOCK4POS         ].set(468, startInvY +  77);
-	m_invSlotPositionTac[SMALLPOCK1POS       ].set(396, startInvY +   5);
-	m_invSlotPositionTac[SMALLPOCK2POS       ].set(396, startInvY +  29);
-	m_invSlotPositionTac[SMALLPOCK3POS       ].set(396, startInvY +  53);
-	m_invSlotPositionTac[SMALLPOCK4POS       ].set(396, startInvY +  77);
-	m_invSlotPositionTac[SMALLPOCK5POS       ].set(432, startInvY +   5);
-	m_invSlotPositionTac[SMALLPOCK6POS       ].set(432, startInvY +  29);
-	m_invSlotPositionTac[SMALLPOCK7POS       ].set(432, startInvY +  53);
-	m_invSlotPositionTac[SMALLPOCK8POS       ].set(432, startInvY +  77);
+	m_invSlotPositionTac[HELMETPOS           ].set(startX + 344, startInvY +   6);
+	m_invSlotPositionTac[VESTPOS             ].set(startX + 344, startInvY +  35);
+	m_invSlotPositionTac[LEGPOS              ].set(startX + 344, startInvY +  95);
+	m_invSlotPositionTac[HEAD1POS            ].set(startX + 226, startInvY +   6);
+	m_invSlotPositionTac[HEAD2POS            ].set(startX + 226, startInvY +  30);
+	m_invSlotPositionTac[HANDPOS             ].set(startX + 226, startInvY +  84);
+	m_invSlotPositionTac[SECONDHANDPOS       ].set(startX + 226, startInvY + 108);
+	m_invSlotPositionTac[BIGPOCK1POS         ].set(startX + 468, startInvY +   5);
+	m_invSlotPositionTac[BIGPOCK2POS         ].set(startX + 468, startInvY +  29);
+	m_invSlotPositionTac[BIGPOCK3POS         ].set(startX + 468, startInvY +  53);
+	m_invSlotPositionTac[BIGPOCK4POS         ].set(startX + 468, startInvY +  77);
+	m_invSlotPositionTac[SMALLPOCK1POS       ].set(startX + 396, startInvY +   5);
+	m_invSlotPositionTac[SMALLPOCK2POS       ].set(startX + 396, startInvY +  29);
+	m_invSlotPositionTac[SMALLPOCK3POS       ].set(startX + 396, startInvY +  53);
+	m_invSlotPositionTac[SMALLPOCK4POS       ].set(startX + 396, startInvY +  77);
+	m_invSlotPositionTac[SMALLPOCK5POS       ].set(startX + 432, startInvY +   5);
+	m_invSlotPositionTac[SMALLPOCK6POS       ].set(startX + 432, startInvY +  29);
+	m_invSlotPositionTac[SMALLPOCK7POS       ].set(startX + 432, startInvY +  53);
+	m_invSlotPositionTac[SMALLPOCK8POS       ].set(startX + 432, startInvY +  77);
 
 	// map screen inventory position
 	m_invSlotPositionMap[HELMETPOS           ].set(m_stdScreenOffsetX + 204, m_stdScreenOffsetY + 116);
@@ -106,7 +113,7 @@ void UILayout::recalculatePositions()
 	m_invCamoRegion.set(SM_BODYINV_X, SM_BODYINV_Y);
 
 	m_progress_bar_box.set(STD_SCREEN_X + 5, 2, MIN_INTERFACE_WIDTH - 10, 12);
-	m_moneyButtonLoc.set(343, startInvY + 11);
+	m_moneyButtonLoc.set(startX + 343, startInvY + 11);
 	m_MoneyButtonLocMap.set(m_stdScreenOffsetX + 174, m_stdScreenOffsetY + 115);
 
 	m_VIEWPORT_START_X            = 0;
