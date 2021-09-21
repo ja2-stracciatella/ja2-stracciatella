@@ -50,13 +50,16 @@ UINT16 UILayout::get_CLOCK_X() const               { return fInMapMode ? (STD_SC
 UINT16 UILayout::get_CLOCK_Y() const               { return currentHeight() - 23;                                  }
 UINT16 UILayout::get_RADAR_WINDOW_X() const        { return fInMapMode ? (STD_SCREEN_X + 543) : m_teamPanelPosition.iX + m_teamPanelSlotsTotalWidth + 45; }
 UINT16 UILayout::get_RADAR_WINDOW_TM_Y() const     { return currentHeight() - 107;                                 }
-UINT16 UILayout::get_INV_INTERFACE_START_Y() const { return m_screenHeight - 140;                                  }
+UINT16 UILayout::get_INV_INTERFACE_START_Y() const { return m_screenHeight - INV_INTERFACE_HEIGHT;                                  }
 
 
 /** Recalculate UI elements' positions after changing screen size. */
 void UILayout::recalculatePositions()
 {
-	m_teamPanelSlotsTotalWidth = NUMBER_OF_SOLDIERS_PER_SQUAD * TEAMPANEL_SLOT_WIDTH;
+	m_teamPanelNumSlots = std::min({NUMBER_OF_SOLDIERS_PER_SQUAD, (m_screenWidth - TEAMPANEL_BUTTONSBOX_WIDTH) / TEAMPANEL_SLOT_WIDTH, 12});
+	m_teamPanelNumSlots = std::max((int)m_teamPanelNumSlots, 6);
+
+	m_teamPanelSlotsTotalWidth = m_teamPanelNumSlots * TEAMPANEL_SLOT_WIDTH;
 	UINT16 tpXOffset = (m_screenWidth - m_teamPanelSlotsTotalWidth - TEAMPANEL_BUTTONSBOX_WIDTH) / 2;
 	UINT16 tpYOffset = m_screenHeight - 120;
 	m_teamPanelPosition.set(tpXOffset, tpYOffset);

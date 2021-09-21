@@ -15,6 +15,7 @@
 #define SCREEN_HEIGHT                   (g_ui.m_screenHeight)
 #define SCREEN_WIDTH                    (g_ui.m_screenWidth)
 #define INV_INTERFACE_START_Y           (g_ui.get_INV_INTERFACE_START_Y())
+#define INV_INTERFACE_HEIGHT            (140)                                 // height of the bottom bar single-merc inventory panel
 #define INTERFACE_START_X               (g_ui.m_teamPanelPosition.iX)
 #define INTERFACE_START_Y               (g_ui.m_teamPanelPosition.iY)
 #define gsVIEWPORT_START_X              (g_ui.m_VIEWPORT_START_X)
@@ -30,6 +31,7 @@
 
 #define SM_BODYINV_X                    (INTERFACE_START_X + 244)
 #define SM_BODYINV_Y                    (INV_INTERFACE_START_Y + 6)
+#define SM_INVINTERFACE_WIDTH           (532)    // width of the single-merc inventory panel excluding the right-side buttons and minimap
 
 #define EDITOR_TASKBAR_HEIGHT           (120)
 #define EDITOR_TASKBAR_POS_Y            (UINT16)(SCREEN_HEIGHT - EDITOR_TASKBAR_HEIGHT)
@@ -39,6 +41,8 @@
 
 #define TEAMPANEL_SLOT_WIDTH            (83)     // width of one slot in the bottom team panel
 #define TEAMPANEL_BUTTONSBOX_WIDTH      (142)    // width of the container of the buttons on the right of team panel
+#define TEAMPANEL_HEIGHT                (120)    // height of the bottom bar team panel
+
 
 /////////////////////////////////////////////////////////////
 // type definitions
@@ -119,6 +123,7 @@ public:
 	SGPPoint              m_teamPanelPosition;              // offset position of the bottom bar
 	UINT16                m_teamPanelSlotsTotalWidth;       // total width of all team slots in the bottom team panel
 	UINT16                m_teamPanelWidth;                 // width of the entire team panel including slots and buttons
+	UINT8                 m_teamPanelNumSlots;              // number of soldier slots to show on team panel
 
 	UINT16                m_stdScreenOffsetX;             /** Offset of the standard (640x480) window */
 	UINT16                m_stdScreenOffsetY;             /** Offset of the standard (640x480) window */
