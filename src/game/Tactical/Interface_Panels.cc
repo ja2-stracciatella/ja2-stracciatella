@@ -3334,7 +3334,7 @@ void KeyRingItemPanelButtonCallback(MOUSE_REGION* pRegion, INT32 iReason)
 		}
 		else
 		{
-			InitKeyRingPopup( pSoldier, 0, sStartYPosition, sWidth, sHeight );
+			InitKeyRingPopup( pSoldier, INTERFACE_START_X, sStartYPosition, sWidth, sHeight );
 		}
 	}
 }
