@@ -14,7 +14,7 @@ use std::fmt;
 use std::io;
 use std::io::ErrorKind;
 use std::path::{Path, PathBuf};
-use std::rc::Rc;
+use std::sync::Arc;
 
 use log::{info, warn};
 
@@ -26,7 +26,9 @@ use crate::vfs::dir::DirFs;
 use crate::vfs::slf::SlfFs;
 use crate::EngineOptions;
 
-pub trait VfsFile: io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display {
+pub trait VfsFile:
+    io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display + Send + Sync
+{
     /// Returns the length of the file
     fn len(&self) -> io::Result<u64>;
 
@@ -36,7 +38,7 @@ pub trait VfsFile: io::Read + io::Seek + io::Write + fmt::Debug + fmt::Display {
     }
 }
 
-pub trait VfsLayer: fmt::Debug + fmt::Display {
+pub trait VfsLayer: fmt::Debug + fmt::Display + Send + Sync {
     // Opens a file in the VFS Layer
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>>;
     // Lists a directory in the VFS Layer
@@ -62,7 +64,7 @@ pub trait VfsLayer: fmt::Debug + fmt::Display {
 #[derive(Debug, Default)]
 pub struct Vfs {
     /// List of entries.
-    pub entries: Vec<Rc<dyn VfsLayer>>,
+    pub entries: Vec<Arc<dyn VfsLayer + Send + Sync>>,
 }
 
 /// A virtual filesystem that mounts other filesystems.
@@ -84,7 +86,7 @@ impl Vfs {
     }
 
     /// Adds an overlay filesystem backed by a filesystem directory.
-    pub fn add_dir(&mut self, path: &Path) -> Result<Rc<dyn VfsLayer>, VfsInitError> {
+    pub fn add_dir(&mut self, path: &Path) -> Result<Arc<dyn VfsLayer>, VfsInitError> {
         let dir_fs = DirFs::new(&path).map_err(|error| VfsInitError {
             path: path.to_owned(),
             error,
@@ -94,7 +96,7 @@ impl Vfs {
     }
 
     /// Adds an overlay filesystem backed by a SLF file.
-    pub fn add_slf(&mut self, file: Box<dyn VfsFile>) -> Result<Rc<dyn VfsLayer>, VfsInitError> {
+    pub fn add_slf(&mut self, file: Box<dyn VfsFile>) -> Result<Arc<dyn VfsLayer>, VfsInitError> {
         let path = PathBuf::from(format!("{}", file));
         let slf_fs = SlfFs::new(file).map_err(|error| VfsInitError { path, error })?;
         self.entries.push(slf_fs.clone());
@@ -103,7 +105,7 @@ impl Vfs {
 
     /// Adds an overlay filesystem backed by android assets
     #[cfg(target_os = "android")]
-    pub fn add_android_assets(&mut self, path: &Path) -> Result<Rc<dyn VfsLayer>, VfsInitError> {
+    pub fn add_android_assets(&mut self, path: &Path) -> Result<Arc<dyn VfsLayer>, VfsInitError> {
         let asset_manager_fs =
             android::AssetManagerFs::new(&path).map_err(|error| VfsInitError {
                 path: path.to_owned(),
@@ -116,7 +118,7 @@ impl Vfs {
     /// Adds an overlay for all SLF files in dir
     pub fn add_slf_files_from(
         &mut self,
-        layer: Rc<dyn VfsLayer>,
+        layer: Arc<dyn VfsLayer>,
         required: bool,
     ) -> Result<(), VfsInitError> {
         let slf_paths = layer
@@ -143,7 +145,7 @@ impl Vfs {
     /// Adds the editor.slf layer to VFS
     fn add_editor_slf_layer(
         &mut self,
-        externalized_layer: Rc<dyn VfsLayer>,
+        externalized_layer: Arc<dyn VfsLayer>,
     ) -> Result<(), VfsInitError> {
         let editor_slf =
             map_not_found_to_option(externalized_layer.open(&Nfc::caseless_path(EDITOR_SLF_NAME)))

@@ -1,0 +1,104 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+items:
+  type: object
+  properties:
+    itemIndex:
+      title: Internal numeric id
+      $ref: types/uint16.schema.yaml
+    internalName:
+      title: Internal name
+      $ref: types/id.schema.yaml
+    calibre:
+      title: Calibre
+      $ref: types/id.schema.yaml
+    capacity:
+      title: Capacity
+      $ref: types/uint16.schema.yaml
+    ammoType:
+      title: Ammo Type
+      $ref: types/id.schema.yaml
+    standardReplacement:
+      title: Standard Replacement
+      $ref: types/id.schema.yaml
+    dontUseAsDefaultMagazine:
+      title: Dont use as default magazine?
+      type: boolean
+    ubGraphicType:
+      title: Graphic Type
+      $ref: types/uint8.schema.yaml
+    ubGraphicNum:
+      title: Graphic Number
+      $ref: types/uint8.schema.yaml
+    ubWeight:
+      title: Weight
+      $ref: types/uint8.schema.yaml
+    ubPerPocket:
+      title: Per Pocket
+      $ref: types/uint8.schema.yaml
+    usPrice:
+      title: Price
+      $ref: types/uint16.schema.yaml
+    ubCoolness:
+      title: Coolness
+      $ref: types/uint8.schema.yaml
+    bDamageable:
+      title: Is damageable?
+      type: boolean
+    bRepairable:
+      title: Is repairable?
+      type: boolean
+    bWaterDamages:
+      title: Is damaged by water?
+      type: boolean
+    bMetal:
+      title: Is metal?
+      type: boolean
+    bSinks:
+      title: Sinks in water?
+      type: boolean
+    bShowStatus:
+      title: Show status?
+      type: boolean
+    bHiddenAddon:
+      title: Is hidden addon?
+      type: boolean
+    bTwoHanded:
+      title: Is two handed?
+      type: boolean
+    bNotBuyable:
+      title: Is not buyable?
+      type: boolean
+    bAttachment:
+      title: Is attachment?
+      type: boolean
+    bBigGunList:
+      title: Is in big gun list?
+      type: boolean
+    bNotEditor:
+      title: Dont show in editor?
+      type: boolean
+    bDefaultUndroppable:
+      title: Is undroppable by default?
+      type: boolean
+    bUnaerodynamic:
+      title: Is unaerodynamic?
+      type: boolean
+    bElectronic:
+      title: Is electronic?
+      type: boolean
+    bInseparable:
+      title: Is inseparable?
+      type: boolean
+  required:
+  - itemIndex
+  - internalName
+  - calibre
+  - capacity
+  - ammoType
+  - ubGraphicType
+  - ubGraphicNum
+  - ubWeight
+  - ubPerPocket
+  - usPrice
+  - ubCoolness

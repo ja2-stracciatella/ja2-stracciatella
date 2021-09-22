@@ -1,0 +1,94 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Strategic Map Underground Sectors
+items:
+  type: object
+  title: Strategic Map Underground Sector
+  description: |
+    Defines the underground sectors that can be occupied by enemies, creatures,
+    etc. It also contains the network of cave connections critical for strategic
+    creature spreading, as we can't know how the levels connect without loading
+    the maps. Any changes to the maps, require changes accordingly.
+
+    Number of enemies and variances are specified as array of integer, in the
+    form of [ n_EASY, n_MEDIUM, n_HARD]. defaults to [0,0,0] if not given.
+
+    Variances can be specified to add per-game randomness. It is specified as
+    arrays of integers: [ var_EASY,  var_MEDIUM, var_HARD ]. Also defaults to
+    [0,0,0] if not given.
+
+    The formula to calculate the number of enemies is:
+       ( n_DIFLEVEL + Random(var_DIFLEVEL) )
+    where Random is a function returning a random number between 0 and
+    (var_DIFLEVEL - 1) inclusively.
+  properties:
+    sector:
+      title: Sector
+      $ref: types/sector-id.schema.yaml
+    sectorLevel:
+      title: Sector Level
+      description: Sector Z, an integer between 1 and 3
+      minimum: 1
+      maximum: 3
+      $ref: types/uint8.schema.yaml
+    adjacentSectors:
+      title: Adjacent sectors
+      description: Directions to the adjacent sectors, as an array of directions, e.g. ["N","E","S","W"]
+      type: array
+      items:
+        type: string
+        enum:
+        - N
+        - S
+        - W
+        - E
+    numTroops:
+      title: Number of troops
+      description: |
+        The numbers of enemy troops in sector, as an array of 3 integers, e.g. [1,2,3] meaning: 1 enemy on DIF_LEVEL_EASY; 2 on DIF_LEVEL_MEDIUM; 3 on DIF_LEVEL_HARD
+      type: array
+      items:
+        $ref: types/uint8.schema.yaml
+    numTroopsVariance:
+      title: Number of troops variance
+      description: The variance added to numTroops, by game difficulty.
+      minItems: 3
+      maxItems: 3
+      type: array
+      items:
+        $ref: types/uint8.schema.yaml
+    numElites:
+      title: Number of elites
+      description: The numbers of enemy elites in sector, by game difficulty
+      minItems: 3
+      maxItems: 3
+      type: array
+      items:
+        $ref: types/uint8.schema.yaml
+    numElitesVariance:
+      title: Number of elites variance
+      description: The variance added to numElites.
+      minItems: 3
+      maxItems: 3
+      type: array
+      items:
+        $ref: types/uint8.schema.yaml
+    numCreatures:
+      title: Number of creatures
+      description: The numbers of Crepitus in sector, by game difficulty. (SciFi mode only)
+      minItems: 3
+      maxItems: 3
+      type: array
+      items:
+        $ref: types/uint8.schema.yaml
+    numCreaturesVariance:
+      title: Number of creatures variance
+      description: The variance added to numCreatures.
+      minItems: 3
+      maxItems: 3
+      type: array
+      items:
+        $ref: types/uint8.schema.yaml
+  required:
+  - sector
+  - sectorLevel

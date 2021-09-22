@@ -1,0 +1,8 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: object
+title: Dealer Inventory
+description: Mapping from item id to max item count for the dealer.
+patternProperties:
+  ^[a-zA-Z0-9_\-]+$:
+    description: The maximum amount of stock of this item that a dealer can have.
+    type: integer

@@ -15,6 +15,7 @@ pub mod logger;
 pub mod math;
 pub mod mods;
 pub mod res;
+pub mod schemas;
 pub mod unicode;
 pub mod vfile;
 pub mod vfs;

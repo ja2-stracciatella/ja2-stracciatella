@@ -1,0 +1,62 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Army Compositions
+description: |
+  **Limitations**: Do not remove, rename or re-order the default army compositions, or you
+  risk crashing the game. Adding or removing army compositions may cause problems
+  with previous saves. There can be at most 60 army compositions.
+maxLength: 60
+items:
+  type: object
+  title: Army Composition
+  description: An army composition defines attributes for a garrison. This is desired
+    population and its composition, as well as importance to the queen for reinforcements.
+  properties:
+    id:
+      title: Internal numeric id.
+      $ref: types/uint8.schema.yaml
+    name:
+      title: Internal name
+      $ref: types/id.schema.yaml
+    priority:
+      title: Priority
+      description: The priority reflects how important the sector is to the queen.
+      $ref: types/percentage.schema.yaml
+    elitePercentage:
+      title: Elite percentage
+      description: How many percent of troops are elite. Note that `elitePercentage`
+        and `troopPercentage` need to add up to 100.
+      $ref: types/percentage.schema.yaml
+    troopPercentage:
+      title: Troop percentage
+      description: How many percent of troops are regular troops. Note that `elitePercentage`
+        and `troopPercentage` need to add up to 100.
+      $ref: types/percentage.schema.yaml
+    adminPercentage:
+      title: Admin percentage
+      description: The admin percentage has recently been changed to reflect the starting
+        percentage of the garrison that are administrators. If the admin% is non-zero,
+        then that garrison is assigned only admin% of the force as admins, with NO
+        troops or elites.
+      $ref: types/percentage.schema.yaml
+    desiredPopulation:
+      title: Desired population
+      description: The desired number of members in this composition. If you change
+        the `MAX_STRATEGIC_TEAM_SIZE`, then `desiredPopulation` will have to be changed
+        accordingly.
+      $ref: types/int8.schema.yaml
+    startPopulation:
+      title: Start population
+      description: The starting number of members in this composition. If you change
+        the `MAX_STRATEGIC_TEAM_SIZE`, then `startPopulation` will have to be changed
+        accordingly.
+      $ref: types/int8.schema.yaml
+  required:
+  - id
+  - name
+  - priority
+  - elitePercentage
+  - troopPercentage
+  - adminPercentage
+  - desiredPopulation
+  - startPopulation

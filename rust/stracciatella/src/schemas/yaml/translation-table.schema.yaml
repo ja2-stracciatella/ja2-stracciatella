@@ -1,0 +1,6 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Translation Table
+description: Translation table for a specific language. Will map characters to indexes for fonts.
+items:
+  type: string

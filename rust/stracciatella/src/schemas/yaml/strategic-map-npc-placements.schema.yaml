@@ -1,0 +1,45 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Strategic Map Npc Placements
+items:
+  type: object
+  title: Strategic Map Npc Placement
+  description: |
+    Lists the sectors where randomly placed NPCs can appear.
+    
+    Note: the base game has daily event for placing HAMOUS, DEVIN and CARMEN
+  properties:
+    profileId:
+      title: Profile ID
+      description:  The numeric ID of the NPC merc profile.
+      $ref: types/uint8.schema.yaml
+    sectors:
+      title: Sectors
+      description: |
+        Sectors in which the NPC can appear. If empty, the NPC will never appear.
+        
+        All of these sectors should have the NPC merc preplaced, or else the NPC may get "assigned" to a sector but not appear.
+      type: array
+      items:
+        $ref: types/sector-id.schema.yaml
+    placedAtStart:
+      title: Placed at start?
+      description: |
+        If true, the NPC will be randomly placed at one of the sectors at game init.
+        Otherwise, the NPC will be placed by his own corresponding sections in codebase.
+      type: boolean
+    useAlternateMap:
+      title: Use alternate map?
+      description: If true, one sector is chosen at game start and marked to use alternate. NPC is placed only if placedAtStart is also true.
+      type: boolean
+    sciFiOnly:
+      title: Scifi only?
+      description: |
+        The NPC is ignored at realistic game mode. Only applicable to NPCs placed at start.
+        
+        Default is `false`
+      type: boolean
+  required:
+  - profileId
+  - sectors
+  - placedAtStart

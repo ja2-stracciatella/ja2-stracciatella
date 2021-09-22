@@ -1,0 +1,26 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Tactical NPC Action Params
+items:
+  type: object
+  title: Tactical NPC Action Param
+  description: |
+    Externalized parameter to NPC actions in HandleNPCDoAction. Refer to the
+    source code to understand what each entry actually does.
+ 
+    You can alter the values here, but you should not add or remove any entries.
+  properties:
+    actionCode:
+      title: Action code
+      description: Code of the NPC action (one of the NPC_ACTION_ enum)
+      $ref: types/uint16.schema.yaml
+    gridNo:
+      title: Grid Number
+      description: A tile in current sector
+      $ref: types/uint16.schema.yaml
+    amount:
+      title: Amount
+      description: A non-zero amount of money involved
+      $ref: types/uint16.schema.yaml
+  required:
+  - actionCode

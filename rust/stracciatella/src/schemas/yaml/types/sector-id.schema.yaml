@@ -1,0 +1,4 @@
+type: string
+title: Sector ID
+description: String representation of sector ids, such as `A1`, `A2`, `B1` etc.
+pattern: ^[A-P]([1-9]|1[0-6])$

@@ -1,0 +1,44 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Mercs profile info
+description: |
+  **Note**: There should be an entry for every character in the game.
+items:
+  type: object
+  title: Merc profile info
+  description: |
+    Merc profile info defines supplementary information to character profiles.
+    This contains information of the character that is static and cannot be updated at run-time.
+  properties:
+    profileID:
+      title: Profile ID
+      minimum: 1
+      maximum: 200
+      $ref: types/uint8.schema.yaml
+    internalName:
+      title: Internal name
+      $ref: types/id.schema.yaml
+    type:
+      title: Type
+      description: |
+        What kind of profile it is (corresponds to the ubWhatkindOfMercAmI). It must be one of:
+
+        - `AIM`: soldiers hired via A.I.M.
+        - `MERC`: soldiers hired via M.E.R.C.
+        - `IMP`: player-character created on I.M.P.
+        - `RPC`: Recruitable characters - NPCs that can be recruited
+        - `NPC`: Non-playing characters, that can never be controlled by the player
+        - `NOT_USED`: Reserved slots that are not used anywhere
+      type: string
+      enum:
+      - NOT_USED
+      - VEHICLE
+      - NPC
+      - RPC
+      - IMP
+      - MERC
+      - AIM
+  required:
+  - profileID
+  - internalName
+  - type

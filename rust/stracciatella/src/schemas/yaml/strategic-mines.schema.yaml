@@ -1,0 +1,76 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Strategic Mines
+description: |
+  **NOTE**: changing the number of mines breaks save compatibility!
+
+  **NOTE**: changing the order of the mines breaks vanilla game quests.
+items:
+  type: object
+  title: Strategic Mine
+  description: Definition of a mine (in production or abandoned) on strategic map.
+  properties:
+    entranceSector:
+      title: Entrance Sector
+      description: Sector of the mine entrance on the surface level.
+      $ref: types/sector-id.schema.yaml
+    associatedTownId:
+      title: Associated Town ID
+      description: ID of the associated town, refer to strategic-map-towns.json.
+      $ref: types/uint8.schema.yaml
+    mineType:
+      title: Mine Type
+      description: Type of mine.
+      type: string
+      enum:
+      - GOLD_MINE
+      - SILVER_MINE
+    minimumMineProduction:
+      title: Minimum Mine Production
+      description: Production rate (money value per period) of the mine before any random increase.
+      $ref: types/uint16.schema.yaml
+    mineSectors:
+      title: Mine Sectors
+      description: |
+        List of underground sectors belonging to this mine.
+        
+        Sector defined as: ["<SECTORXY>", <LEVEL>].
+        
+        These sectors must also be defined in strategic-map-underground-sectors.json.
+      type: array
+      items:
+        type: array
+        minItems: 2
+        maxItems: 2
+        items:
+          oneOf:
+          - $ref: types/sector-id.schema.yaml
+          - $ref: types/uint8.schema.yaml
+    faceDisplayYOffset:
+      title: Face display Y offset
+      description: Y-offset to the screen position, where the head miner's face and text box should be in order to not obscure the mine he's in as it flashes. See IssueHeadMinerQuote()
+      $ref: types/int16.schema.yaml
+    headMinerAssigned:
+      title: Head miner assigned?
+      description: |
+        True if there is a specific head miner assigned (in merc profile) to the entrance sector. If not, a head miner will be randomly assigned.
+        
+        Either way, the mine entrance sector must have the head miner slot(s) placed, unless it is abandoned.
+      type: boolean
+    delayDepletion:
+      title: Delay depletion?
+      description: If the mine is chosen for depletion, delay it.
+      type: boolean
+    noDepletion:
+      title: No depletion?
+      description: |
+        Mines (Alma in Vanilla) can be set to never deplete, so there will always be head miner giving quest.
+        
+        Defaults to `false`, so the mine may be randomly chosen for depletion.
+      type: boolean
+  required:
+  - entranceSector
+  - associatedTownId
+  - mineType
+  - minimumMineProduction
+  - mineSectors

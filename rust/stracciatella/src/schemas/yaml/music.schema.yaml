@@ -1,0 +1,86 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: object
+title: Music
+description: |
+  Defines the different music tracks played throughout the game.
+
+  Currently the following formats for sounds are supported:
+  
+  - WAV
+  - OGG
+  - MP3
+  - FLAC
+
+  Any file size and track length should be supported.
+properties:
+  main_menu:
+    type: array
+    title: Main Menu
+    description: Tracks that are played in main menu
+    items:
+      $ref: types/resource-path.schema.yaml
+  laptop:
+    title: Laptop
+    description: Tracks that are played in laptop
+    type: array
+    items:
+      $ref: types/resource-path.schema.yaml
+  tactical:
+    title: Tactical
+    description: Tracks played in tactical mode, when there are no soldier enemies present
+    type: array
+    items:
+      $ref: types/resource-path.schema.yaml
+  tactical_enemypresent:
+    title: Tactical when enemy present
+    description: Tracks played in tactical mode, when soldier enemies are present, but there is currently no battle
+    type: array
+    items:
+      $ref: types/resource-path.schema.yaml
+  tactical_battle:
+    title: Tactical battle
+    description: Tracks played in tactical mode when battle is happening
+    type: array
+    items:
+      $ref: types/resource-path.schema.yaml
+  tactical_creature:
+    title: Tactical creature
+    description: Tracks played in tactical mode when creatures are attacking a town sector
+    type: array
+    items:
+      $ref: types/resource-path.schema.yaml
+  tactical_creature_enemypresent:
+    title: Tactical creature when enemy present
+    description: Tracks played in tactical mode when creatures are present in a creature-owned sector
+    type: array
+    items:
+      $ref: types/resource-path.schema.yaml
+  tactical_creature_battle:
+    title: Tactical creature battle
+    description: Tracks played in tactical mode when in battle in a creature-owned sector
+    type: array
+    items:
+      $ref: types/resource-path.schema.yaml
+  tactical_victory:
+    title: Tactical victory
+    description: Tracks played after a victory
+    type: array
+    items:
+      $ref: types/resource-path.schema.yaml
+  tactical_defeat:
+    title: Tactical defeat
+    description: Tracks played after a defeat
+    type: array
+    items:
+      $ref: types/resource-path.schema.yaml
+required:
+- main_menu
+- laptop
+- tactical
+- tactical_enemypresent
+- tactical_battle
+- tactical_creature
+- tactical_creature_enemypresent
+- tactical_creature_battle
+- tactical_victory
+- tactical_defeat

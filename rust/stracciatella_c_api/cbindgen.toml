@@ -29,6 +29,7 @@ struct RustDelete
 	void operator()(Vfs* ptr) const { Vfs_destroy(ptr); }
 	void operator()(ModManager* ptr) const { ModManager_destroy(ptr); }
 	void operator()(Mod* ptr) const { Mod_destroy(ptr); }
+	void operator()(SchemaManager* ptr) const { SchemaManager_destroy(ptr); }
 };
 
 /// Alias to a std::unique_ptr that deletes with RustDelete.

@@ -1,0 +1,31 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+description: Spawn blood cats at specific locations (lair and arena), based on difficulty
+items:
+  type: object
+  properties:
+    sector:
+      title: Sector
+      $ref: types/sector-id.schema.yaml
+    isLair:
+      type: boolean
+      title: Is lair?
+    isArena:
+      type: boolean
+      title: Is arena?
+    bloodCatsSpawnsEasy:
+      title: Bloodcat spawns easy
+      $ref: types/int8.schema.yaml
+    bloodCatsSpawnsMedium:
+      title: Bloodcat spawns medium
+      $ref: types/int8.schema.yaml
+    bloodCatsSpawnsHard:
+      title: Bloodcat spawns hard
+      $ref: types/int8.schema.yaml
+  required:
+  - sector
+  - isLair
+  - isArena
+  - bloodCatsSpawnsEasy
+  - bloodCatsSpawnsMedium
+  - bloodCatsSpawnsHard

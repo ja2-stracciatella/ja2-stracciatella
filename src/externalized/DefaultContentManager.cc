@@ -60,6 +60,9 @@
 #include "Soldier_Profile_Type.h"
 
 #include "rapidjson/error/en.h"
+#include "rapidjson/schema.h"
+#include "rapidjson/stringbuffer.h"
+
 #include <string_theory/format>
 #include <string_theory/string>
 
@@ -110,6 +113,7 @@ static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType
 					case 135: c = 0x00E7; break; // ç
 				}
 			}
+
 			else if(encType == SE_POLISH)
 			{
 				/* The Polish data files are incorrectly encoded. The original texts seem to
@@ -166,7 +170,8 @@ static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType
 DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOptions)
 	:mNormalGunChoice(ARMY_GUN_LEVELS),
 	mExtendedGunChoice(ARMY_GUN_LEVELS),
-	m_vfs(Vfs_create())
+	m_vfs(Vfs_create()),
+	m_schemaManager(SchemaManager_create())
 {
 	m_engineOptions = move(engineOptions);
 	m_modManager.reset(ModManager_create(m_engineOptions.get()));
@@ -619,7 +624,7 @@ const AmmoTypeModel* DefaultContentManager::getAmmoType(uint8_t index)
 
 bool DefaultContentManager::loadWeapons()
 {
-	auto document = readJsonDataFile("weapons.json");
+	auto document = readJsonDataFileWithSchema("weapons.json");
 	if (document->IsArray()) 
 	{
 		const rapidjson::Value& a = document->GetArray();
@@ -645,7 +650,7 @@ bool DefaultContentManager::loadWeapons()
 
 bool DefaultContentManager::loadItems()
 {
-	auto document = readJsonDataFile("items.json");
+	auto document = readJsonDataFileWithSchema("items.json");
 	for (auto& el : document->GetArray())
 	{
 		JsonObjectReader obj(el);
@@ -664,7 +669,7 @@ bool DefaultContentManager::loadItems()
 
 bool DefaultContentManager::loadMagazines()
 {
-	auto document = readJsonDataFile("magazines.json");
+	auto document = readJsonDataFileWithSchema("magazines.json");
 	if(document->IsArray()) 
 	{
 		const rapidjson::Value& a = document->GetArray();
@@ -691,7 +696,7 @@ bool DefaultContentManager::loadMagazines()
 
 bool DefaultContentManager::loadCalibres()
 {
-	auto document = readJsonDataFile("calibres.json");
+	auto document = readJsonDataFileWithSchema("calibres.json");
 	if (document->IsArray()) {
 		const rapidjson::Value& a = document->GetArray();
 		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
@@ -719,7 +724,7 @@ bool DefaultContentManager::loadCalibres()
 
 bool DefaultContentManager::loadAmmoTypes()
 {
-	auto document = readJsonDataFile("ammo_types.json");
+	auto document = readJsonDataFileWithSchema("ammo-types.json");
 	if(document->IsArray()) {
 		const rapidjson::Value& a = document->GetArray();
 		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
@@ -764,7 +769,7 @@ bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::V
 
 bool DefaultContentManager::loadMusic()
 {
-	auto document = readJsonDataFile("music.json");
+	auto document = readJsonDataFileWithSchema("music.json");
 	if(!document->IsObject()) {
 		SLOGE("music.json has wrong structure");
 		return false;
@@ -799,7 +804,7 @@ bool DefaultContentManager::readWeaponTable(
 	const ST::string& fileName,
 	std::vector<std::vector<const WeaponModel*> > & weaponTable)
 {
-	auto document = readJsonDataFile(fileName);
+	auto document = readJsonDataFileWithSchema(fileName);
 	if(document->IsArray())
 	{
 		const rapidjson::Value& a = document->GetArray();
@@ -849,7 +854,7 @@ bool DefaultContentManager::loadArmyData()
 	readWeaponTable("army-gun-choice-normal.json", mNormalGunChoice);
 	readWeaponTable("army-gun-choice-extended.json", mExtendedGunChoice);
 
-	auto jsonAC = readJsonDataFile("army-compositions.json");
+	auto jsonAC = readJsonDataFileWithSchema("army-compositions.json");
 	auto armyCompModels = ArmyCompositionModel::deserialize(*jsonAC);
 	ArmyCompositionModel::validateData(armyCompModels);
 
@@ -862,7 +867,7 @@ bool DefaultContentManager::loadArmyData()
 	deleteElements(armyCompModels);
 	armyCompModels.clear();
 
-	auto jsonGG = readJsonDataFile("army-garrison-groups.json");
+	auto jsonGG = readJsonDataFileWithSchema("army-garrison-groups.json");
 	for (auto& element : jsonGG->GetArray())
 	{
 		auto obj = JsonObjectReader(element);
@@ -872,7 +877,8 @@ bool DefaultContentManager::loadArmyData()
 	}
 	GarrisonGroupModel::validateData(m_garrisonGroups);
 
-	auto jsonPG = readJsonDataFile("army-patrol-groups.json");
+	auto jsonPG = readJsonDataFileWithSchema("army-patrol-groups.json");
+
 	for (auto& element : jsonPG->GetArray())
 	{
 		m_patrolGroups.push_back(
@@ -906,7 +912,7 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<co
 	}
 
 	fullName += ".json";
-	auto json = readJsonDataFile(fullName.c_str());
+	auto json = readJsonDataFileWithSchema(fullName.c_str());
 	std::vector<ST::string> utf8_encoded;
 	JsonUtility::parseListStrings(*json, utf8_encoded);
 	for (const ST::string &str : utf8_encoded)
@@ -932,23 +938,25 @@ bool DefaultContentManager::loadGameData()
 		m_itemMap.insert(std::make_pair(item->getInternalName(), item));
 	}
 
-	auto replacement_json = readJsonDataFile("tactical-map-item-replacements.json");
+	auto replacement_json = readJsonDataFileWithSchema("tactical-map-item-replacements.json");
+
 	m_mapItemReplacements = MapItemReplacementModel::deserialize(replacement_json.get(), this);
 
 	loadAllDealersAndInventory();
 
-	auto game_json = readJsonDataFile("game.json");
+	auto game_json = readJsonDataFileWithSchema("game.json");
+	
 	m_gamePolicy = new DefaultGamePolicy(game_json.get());
 
-	auto imp_json = readJsonDataFile("imp.json");
+	auto imp_json = readJsonDataFileWithSchema("imp.json");
 	m_impPolicy = new DefaultIMPPolicy(imp_json.get(), this);
 
-	auto sai_json = readJsonDataFile("strategic-ai-policy.json");
+	auto sai_json = readJsonDataFileWithSchema("strategic-ai-policy.json");
 	m_strategicAIPolicy = new DefaultStrategicAIPolicy(sai_json.get());
 
 	loadStringRes("strings/shipping-destinations", m_shippingDestinationNames);
 
-	auto shippingDestJson = readJsonDataFile("shipping-destinations.json");
+	auto shippingDestJson = readJsonDataFileWithSchema("shipping-destinations.json");
 	for (auto& element : shippingDestJson->GetArray())
 	{
 		auto r = JsonObjectReader(element);
@@ -956,8 +964,9 @@ bool DefaultContentManager::loadGameData()
 	}
 	ShippingDestinationModel::validateData(m_shippingDestinations, m_shippingDestinationNames);
 
-	auto loadScreensList = readJsonDataFile("loading-screens.json");
-	auto loadScreensMapping = readJsonDataFile("loading-screens-mapping.json");
+	auto loadScreensList = readJsonDataFileWithSchema("loading-screens.json");
+	auto loadScreensMapping = readJsonDataFileWithSchema("loading-screens-mapping.json");
+	
 	m_loadingScreenModel = LoadingScreenModel::deserialize(*loadScreensList, *loadScreensMapping);
 	m_loadingScreenModel->validateData(this);
 
@@ -977,16 +986,13 @@ bool DefaultContentManager::loadGameData()
 	return result;
 }
 
-std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
+std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonFromString(const ST::string& jsonData, const ST::string& label) const
 {
-	AutoSGPFile f(openGameResForReading(fileName));
-	ST::string jsonData = f->readStringToEnd();
-
 	auto document = std::make_unique<rapidjson::Document>();
 	if (document->Parse<rapidjson::kParseCommentsFlag>(jsonData.c_str()).HasParseError())
 	{
 		ST::string errorMessage = ST::format("Failed to parse {} (at location {}) {} ",
-			fileName,
+			label,
 			document->GetErrorOffset(),
 			rapidjson::GetParseError_En(document->GetParseError())
 		);
@@ -996,14 +1002,156 @@ std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(con
 	return document;
 }
 
+std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFile(const ST::string& fileName) const
+{
+	AutoSGPFile f(openGameResForReading(fileName));
+	ST::string jsonData = f->readStringToEnd();
+
+	return readJsonFromString(jsonData, fileName);
+}
+
+ST::string typeToString(rapidjson::Type t) {
+	switch (t) {
+		case rapidjson::kNullType:
+			return "null";
+		case rapidjson::kTrueType:
+		case rapidjson::kFalseType:
+			return "boolean";
+		case rapidjson::kNumberType:
+			return "number";
+		case rapidjson::kStringType:
+			return "string";
+		case rapidjson::kArrayType:
+			return "array";
+		case rapidjson::kObjectType:
+			return "object";
+		default:
+			return "unknown";
+	}
+}
+
+std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFileWithSchema(const ST::string& jsonPath) const
+{
+	auto schemaString = RustPointer<char>(SchemaManager_getSchemaForPath(m_schemaManager.get(), jsonPath.c_str()));
+	if (schemaString.get() == NULL) {
+		throw DataError(ST::format("Could not find json schema for path `{}`", jsonPath));
+	}
+	auto schemaDocument = readJsonFromString(schemaString.get(), "<schema>");
+	
+	rapidjson::SchemaDocument schema(*schemaDocument.get());
+	rapidjson::SchemaValidator validator(schema);
+
+	auto document = readJsonDataFile(jsonPath);
+	
+	if (!document->Accept(validator)) {
+		ST::string errorKeyword = validator.GetInvalidSchemaKeyword();
+		auto errorDocumentPointer = validator.GetInvalidDocumentPointer();
+		auto errorDocument = validator.GetInvalidDocumentPointer().Get(*document.get());
+		auto schemaObject = validator.GetInvalidSchemaPointer().Get(*schemaDocument.get())->GetObject();
+
+		rapidjson::StringBuffer errorPathBuffer;
+		errorDocumentPointer.StringifyUriFragment(errorPathBuffer);
+		ST::string errorPath = errorPathBuffer.GetString();
+
+		auto errorMessage = ST::format("`{}` not satisfied.", errorKeyword);
+		// Specific error messages for known keywords
+		if (errorKeyword == "type") {
+			auto documentType = typeToString(errorDocument->GetType());
+			auto schemaType = schemaObject["type"].GetString();
+			errorMessage = ST::format("type is `{}` but `{}` is expected", documentType, schemaType);
+		}
+		if (errorKeyword == "required") {
+			std::vector<ST::string> documentMembers = {};
+			for (auto i = errorDocument->GetObject().MemberBegin(); i < errorDocument->GetObject().MemberEnd(); i++) {
+				ST::string m = i->name.GetString();
+				documentMembers.push_back(m);
+			}
+			ST::string missingMembers = "";
+			auto schemaMembers = schemaObject["required"].GetArray();
+			for (auto i = schemaMembers.begin(); i < schemaMembers.end(); i++) {
+				ST::string m = i->GetString();
+				auto found = false;
+				for (auto i = documentMembers.begin(); i < documentMembers.end(); i++) {
+					if (*i == m) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
+					if (missingMembers.size() != 0) {
+						missingMembers += ", ";
+					}
+					missingMembers += ST::format("`{}`", m);
+				}
+				errorMessage = ST::format("missing required properties {}", missingMembers);
+			}
+		}
+		if (errorKeyword == "pattern") {
+			auto documentString = errorDocument->GetString();
+			auto pattern = schemaObject["pattern"].GetString();
+			errorMessage = ST::format("value `{}` does not match pattern `{}`", documentString, pattern);
+		}
+		if (errorKeyword == "enum") {
+			auto documentString = errorDocument->GetString();
+			auto enumArr = schemaObject["enum"].GetArray();
+			ST::string enums = "";
+			for (auto i = enumArr.begin(); i < enumArr.end(); i++) {
+				if (enums.size() != 0) {
+					enums += ", ";
+				}
+				enums += ST::format("`{}`", i->GetString());				
+			}
+			errorMessage = ST::format("value `{}` is not one of {}", documentString, enums);
+		}
+		if (errorKeyword == "minimum") {
+			auto ty = schemaObject["type"].GetString();
+			if (ty == "integer") {
+				auto actual = errorDocument->GetInt64();
+				auto minimum = schemaObject["minimum"].GetInt64();
+				errorMessage = ST::format("should be larger or equal to {} but is {}", minimum, actual);
+			} else {
+				auto actual = errorDocument->GetDouble();
+				auto minimum = schemaObject["minimum"].GetFloat();
+				errorMessage = ST::format("should be larger or equal to {} but is {}", minimum, actual);
+			}
+		}
+		if (errorKeyword == "maximum") {
+			auto ty = schemaObject["type"].GetString();
+			if (ty == "integer") {
+				auto actual = errorDocument->GetInt64();
+				auto maximum = schemaObject["maximum"].GetInt64();
+				errorMessage = ST::format("should be smaller or equal to {} but is {}", maximum, actual);
+			} else {
+				auto actual = errorDocument->GetDouble();
+				auto maximum = schemaObject["maximum"].GetFloat();
+				errorMessage = ST::format("should be smaller or equal to {} but is {}", maximum, actual);
+			}
+		}
+
+		if (errorKeyword == "minItems") {
+			auto size = errorDocument->GetArray().Size();
+			auto minItems = schemaObject["minItems"].GetUint();
+			errorMessage = ST::format("should have a minimum of {} item(s) but has {}", minItems, size);
+		}
+		if (errorKeyword == "maxItems") {
+			auto size = errorDocument->GetArray().Size();
+			auto maxItems = schemaObject["maxItems"].GetUint();
+			errorMessage = ST::format("should have a maximum of {} item(s) but has {}", maxItems, size);
+		}
+		
+		throw DataError(ST::format("Validation error when validating json file `{}`: Path `{}` is invalid: {}", jsonPath, errorPath, errorMessage));
+	}
+	return document;
+}
+
 const DealerInventory * DefaultContentManager::loadDealerInventory(const ST::string& fileName)
 {
-	return new DealerInventory(readJsonDataFile(fileName).get(), this);
+	return new DealerInventory(readJsonDataFileWithSchema(fileName).get(), this);
 }
 
 bool DefaultContentManager::loadAllDealersAndInventory()
 {
-	auto json = readJsonDataFile("dealers.json");
+	auto json = readJsonDataFileWithSchema("dealers.json");
 	int index = 0;
 	for (auto& element : json->GetArray())
 	{
@@ -1096,7 +1244,7 @@ const ST::string& DefaultContentManager::getLandTypeString(size_t index) const
 
 bool DefaultContentManager::loadStrategicLayerData() 
 {
-	auto json = readJsonDataFile("strategic-bloodcat-placements.json");
+	auto json = readJsonDataFileWithSchema("strategic-bloodcat-placements.json");
 	for (auto& element : json->GetArray()) {
 		auto obj = JsonObjectReader(element);
 		m_bloodCatPlacements.push_back(
@@ -1104,7 +1252,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 		);
 	}
 
-	json = readJsonDataFile("strategic-bloodcat-spawns.json");
+	json = readJsonDataFileWithSchema("strategic-bloodcat-spawns.json");
 	for (auto& element : json->GetArray()) 
 	{
 		auto obj = JsonObjectReader(element);
@@ -1113,7 +1261,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 		);
 	}
 
-	json = readJsonDataFile("strategic-map-creature-lairs.json");
+	json = readJsonDataFileWithSchema("strategic-map-creature-lairs.json");
 	for (auto& element : json->GetArray())
 	{
 		m_creatureLairs.push_back(
@@ -1121,14 +1269,15 @@ bool DefaultContentManager::loadStrategicLayerData()
 		);
 	}
 
-	json = readJsonDataFile("strategic-fact-params.json");
+	json = readJsonDataFileWithSchema("strategic-fact-params.json");
 	for (auto& element : json->GetArray())
 	{
 		auto params = FactParamsModel::deserialize(element);
 		m_factParams[params->fact] = params;
 	}
 
-	json = readJsonDataFile("strategic-mines.json");
+	json = readJsonDataFileWithSchema("strategic-mines.json");
+
 	auto arr = json->GetArray();
 	for (rapidjson::SizeType i = 0; i < arr.Size(); i++)
 	{
@@ -1138,7 +1287,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 	}
 	MineModel::validateData(m_mines);
 
-	json = readJsonDataFile("strategic-map-sam-sites.json");
+	json = readJsonDataFileWithSchema("strategic-map-sam-sites.json");
 	for (auto& element : json->GetArray())
 	{
 		auto samSite = SamSiteModel::deserialize(element);
@@ -1146,11 +1295,11 @@ bool DefaultContentManager::loadStrategicLayerData()
 	}
 	SamSiteModel::validateData(m_samSites);
 
-	json = readJsonDataFile("strategic-map-sam-sites-air-control.json");
+	json = readJsonDataFileWithSchema("strategic-map-sam-sites-air-control.json");
 	m_samSitesAirControl = SamSiteAirControlModel::deserialize(*json);
 	SamSiteAirControlModel::validateData(m_samSitesAirControl, m_samSites.size());
 
-	json = readJsonDataFile("strategic-map-towns.json");
+	json = readJsonDataFileWithSchema("strategic-map-towns.json");
 	for (auto& element : json->GetArray()) 
 	{
 		auto town = TownModel::deserialize(element);
@@ -1160,7 +1309,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 	loadStringRes("strings/strategic-map-town-names", m_townNames);
 	loadStringRes("strings/strategic-map-town-name-locatives", m_townNameLocatives);
 
-	json = readJsonDataFile("strategic-map-underground-sectors.json");
+	json = readJsonDataFileWithSchema("strategic-map-underground-sectors.json");
 	for (auto& element : json->GetArray())
 	{
 		auto ugSector = UndergroundSectorModel::deserialize(element);
@@ -1168,16 +1317,16 @@ bool DefaultContentManager::loadStrategicLayerData()
 	}
 	UndergroundSectorModel::validateData(m_undergroundSectors);
 
-	json = readJsonDataFile("strategic-map-traversibility-ratings.json");
+	json = readJsonDataFileWithSchema("strategic-map-traversibility-ratings.json");
 	auto travRatingMap = TraversibilityMapping::deserialize(*json);
 
-	json = readJsonDataFile("strategic-map-movement-costs.json");
+	json = readJsonDataFileWithSchema("strategic-map-movement-costs.json");
 	m_movementCosts = MovementCostsModel::deserialize(*json, travRatingMap);
 
-	json = readJsonDataFile("strategic-map-sectors-descriptions.json");
+	json = readJsonDataFileWithSchema("strategic-map-sectors-descriptions.json");
 	m_sectorLandTypes = SectorLandTypes::deserialize(*json, travRatingMap);
 
-	json = readJsonDataFile("strategic-map-secrets.json");
+	json = readJsonDataFileWithSchema("strategic-map-secrets.json");
 	for (auto& element : json->GetArray())
 	{
 		auto secret = StrategicMapSecretModel::deserialize(element, travRatingMap);
@@ -1185,7 +1334,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 	}
 	StrategicMapSecretModel::validateData(m_mapSecrets, m_samSites);
 
-	json = readJsonDataFile("strategic-map-npc-placements.json");
+	json = readJsonDataFileWithSchema("strategic-map-npc-placements.json");
 	for (auto& element : json->GetArray())
 	{
 		auto placement = NpcPlacementModel::deserialize(element);
@@ -1194,7 +1343,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 
 	CreatureLairModel::validateData(m_creatureLairs, m_undergroundSectors, m_mines.size());
 
-	json = readJsonDataFile("strategic-map-cache-sectors.json");
+	json = readJsonDataFileWithSchema("strategic-map-cache-sectors.json");
 	m_cacheSectors = CacheSectorsModel::deserialize(*json);
 
 	return true;
@@ -1202,7 +1351,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 
 bool DefaultContentManager::loadTacticalLayerData() 
 {
-	auto json = readJsonDataFile("tactical-npc-action-params.json");
+	auto json = readJsonDataFileWithSchema("tactical-npc-action-params.json");
 	for (auto& element : json->GetArray())
 	{
 		auto params = NpcActionParamsModel::deserialize(element);
@@ -1214,14 +1363,15 @@ bool DefaultContentManager::loadTacticalLayerData()
 
 bool DefaultContentManager::loadMercsData()
 {
-	auto json = readJsonDataFile("mercs-rpc-small-faces.json");
+	auto json = readJsonDataFileWithSchema("mercs-rpc-small-faces.json");
+
 	for (auto& element : json->GetArray())
 	{
 		auto face = RPCSmallFaceModel::deserialize(element);
 		m_rpcSmallFaces[face->ubProfileID] = face;
 	}
 
-	json = readJsonDataFile("mercs-MERC-listings.json");
+	json = readJsonDataFileWithSchema("mercs-MERC-listings.json");
 	int i = 0;
 	for (auto& element : json->GetArray())
 	{
@@ -1231,7 +1381,7 @@ bool DefaultContentManager::loadMercsData()
 	MERCListingModel::validateData(m_MERCListings);
 
 	MercProfileInfo::load = [=](uint8_t p) { return this->getMercProfileInfo(p); };
-	json = readJsonDataFile("mercs-profile-info.json");
+	json = readJsonDataFileWithSchema("mercs-profile-info.json");
 	for (auto& element : json->GetArray())
 	{
 		auto profileInfo = MercProfileInfo::deserialize(element);
@@ -1246,7 +1396,7 @@ bool DefaultContentManager::loadMercsData()
 
 void DefaultContentManager::loadVehicles()
 {
-	auto json = readJsonDataFile("vehicles.json");
+	auto json = readJsonDataFileWithSchema("vehicles.json");
 	for (auto& element : json->GetArray())
 	{
 		JsonObjectReader obj(element);
@@ -1298,7 +1448,7 @@ void DefaultContentManager::loadTranslationTable()
 
 	m_translationTable.assign(tableSize, 0);
 
-	auto json = readJsonDataFile(fullName);
+	auto json = readJsonDataFileWithSchema(fullName);
 	int count = 0;
 	for (auto& element : json->GetArray())
 	{

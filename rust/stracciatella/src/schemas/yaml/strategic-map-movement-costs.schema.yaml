@@ -1,0 +1,60 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: object
+title: Strategic Map Movement Costs
+description: Movement costs of moving across the strategic map
+properties:
+  traverseWE:
+    title: Traverse WE
+    description: West-east traversibility between adjacent sectors
+    type: array
+    minItems: 16
+    maxItems: 16
+    items:
+      type: array
+      minItems: 17
+      maxItems: 17
+      items:
+        $ref: types/id.schema.yaml
+  traverseNS:
+    title: Traverse NS
+    description: North-south traversibility between adjacent sectors
+    type: array
+    minItems: 17
+    maxItems: 17
+    items:
+      type: array
+      minItems: 16
+      maxItems: 16
+      items:
+        $ref: types/id.schema.yaml
+  traverseThrough:
+    title: Traverse through
+    description: Traversiblity of going through the sector without entering it
+    type: array
+    minItems: 16
+    maxItems: 16
+    items:
+      type: array
+      minItems: 16
+      maxItems: 16
+      items:
+        $ref: types/id.schema.yaml
+  travelRatings:
+    title: Travel ratings
+    description: |
+      It is supposed to mean how travelled a sector is. The higher the travel rating, the more people go near it.
+      Currently not used in code, however.
+    type: array
+    minItems: 16
+    maxItems: 16
+    items:
+      type: array
+      minItems: 16
+      maxItems: 16
+      items:
+        $ref: types/uint8.schema.yaml
+required:
+- traverseWE
+- traverseNS
+- traverseThrough
+- travelRatings

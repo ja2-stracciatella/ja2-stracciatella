@@ -157,7 +157,7 @@ mod vfs {
     use std::io::{Read, Seek, SeekFrom, Write};
     use std::iter::FromIterator;
     use std::path::{Path, PathBuf};
-    use std::rc::Rc;
+    use std::sync::Arc;
 
     use stracciatella::file_formats::slf::{SlfEntry, SlfEntryState, SlfHeader};
     use stracciatella::fs;
@@ -255,13 +255,13 @@ mod vfs {
     }
 
     /// Add an slf to vfs
-    fn add_slf(vfs: &mut Vfs, dir_fs: &Rc<dyn VfsLayer>, name: &str) {
+    fn add_slf(vfs: &mut Vfs, dir_fs: &Arc<dyn VfsLayer>, name: &str) {
         vfs.add_slf(dir_fs.open(&name.into()).expect("DirFs::open"))
             .expect("add_slf");
     }
 
     /// The temporary dir and it's contents are removed when TempDir is closed or goes out of scope.
-    fn create_temp_dir() -> (TempDir, PathBuf, Rc<dyn VfsLayer>) {
+    fn create_temp_dir() -> (TempDir, PathBuf, Arc<dyn VfsLayer>) {
         let temp = TempDir::new().expect("TempDir");
         let dir = temp.path().to_owned();
         let dir_fs = DirFs::new(&dir).expect("DirFs");

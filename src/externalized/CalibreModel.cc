@@ -57,7 +57,6 @@ const CalibreModel* CalibreModel::getNoCalibreObject()
 	return &noCalibre;
 }
 
-
 const CalibreModel* getCalibre(const ST::string& calibreName,
 				const std::map<ST::string, const CalibreModel*> &calibreMap)
 {

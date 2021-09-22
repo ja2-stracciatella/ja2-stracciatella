@@ -1,0 +1,22 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Army Garrison Groups
+items:
+  type: object
+  title: Army Garrison Group
+  description: |
+    An army garrison group defines stationary enemy troops that should be
+    present at game start at a specific sector.
+  properties:
+    sector:
+      title: Sector
+      description: The sector that is garrisoned.
+      $ref: types/sector-id.schema.yaml
+    composition:
+      title: Composition
+      description: What army composision to use for the garrison.
+      $ref: types/id.schema.yaml
+      x-references: army-compositions
+  required:
+  - sector
+  - composition

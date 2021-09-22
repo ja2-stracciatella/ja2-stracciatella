@@ -1,0 +1,28 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Strategic Map Sam Sites
+items:
+  type: object
+  title: Strategic Map Sam Site
+  description: |
+    Defines the locations of SAM sites on map. There must be exactly 4 SAM sites
+
+    You should not change the order or the sector of the SAM sites, or you may
+    get inconsistencies with things like terrain types, NPC dialogues and
+    airspace control.
+  properties:
+    gridNos:
+      title: Controller Grid Numbers
+      description: The 2 adjacent map tiles where the controller computer is. Damages to these gridNos can disable the SAM site.
+      type: array
+      minLength: 2
+      maxLength: 2
+      items:
+        $ref: types/uint16.schema.yaml
+    sector:
+      title: Sector
+      description: Sector where the SAM site is in. The game expects SAM sites in the order of D2, D15, I8 and N4.
+      $ref: types/sector-id.schema.yaml
+  required:
+  - gridNos
+  - sector

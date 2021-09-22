@@ -1,0 +1,35 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Army Patrol Groups
+description: |
+  **Limitations**: A point to sector A1 is ignored by the code, as the code assumes nobody
+  is using A1 in any of the patrol groups.
+maxLength: 50
+items:
+  type: object
+  title: Patrol Group
+  description: |
+    An army patrol groups is a group of enemies that patrol around the strategic map. It is defined at the start of the game.
+    All reinforcements use the composition of the troop/elite for refilling.
+  properties:
+    size:
+      title: Size
+      description: Desired size for the patrol group.
+      $ref: types/int8.schema.yaml
+    priority:
+      title: Priority
+      description: How important this patrol group is to the queen.
+      $ref: types/int8.schema.yaml
+    points:
+      type: array
+      title: Points
+      description: Where the patrol moves. Patrol points must not overlap with garrisoned
+        sectors.
+      minItems: 2
+      maxItems: 4
+      items:
+        $ref: types/sector-id.schema.yaml
+  required:
+  - size
+  - priority
+  - points

@@ -1,0 +1,21 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Ammo Types
+description: | 
+  **Limitations**: Ammo types currently cannot be changed, because they are referenced
+  in source code.
+items:
+  type: object
+  title: Ammo Type
+  description: |
+    An ammo type is an abstract definition of a type of ammo used for a gun.
+  properties:
+    index:
+      title: Internal numeric id
+      $ref: types/uint16.schema.yaml
+    internalName:
+      title: Internal name
+      $ref: types/id.schema.yaml
+  required:
+  - index
+  - internalName

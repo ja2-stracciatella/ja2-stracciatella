@@ -1,0 +1,183 @@
+$schema: http://json-schema.org/schema#
+type: array
+title: Weapons
+items:
+  type: object
+  title: Weapon
+  properties:
+    itemIndex:
+      title: Item index
+      $ref: types/uint8.schema.yaml
+    internalName:
+      title: Internal name
+      $ref: types/id.schema.yaml
+    internalType:
+      title: Internal type
+      type: string
+      enum:
+      - PUNCH
+      - PISTOL
+      - M_PISTOL
+      - SMG
+      - RIFLE
+      - SN_RIFLE
+      - ASRIFLE
+      - SHOTGUN
+      - LMG
+      - BLADE
+      - THROWINGBLADE
+      - THROWN
+      - LAUNCHER
+      - MONSTSPIT
+      - PUNCHWEAPON
+      - LAW
+      - CANNON
+      - NOWEAPON
+    ubGraphicType:
+      title: Graphic type
+      $ref: types/uint8.schema.yaml
+    ubGraphicNum:
+      title: Graphic number
+      $ref: types/uint8.schema.yaml
+    ubWeight:
+      title: Weight
+      $ref: types/uint8.schema.yaml
+    ubPerPocket:
+      title: Per pocket
+      $ref: types/uint8.schema.yaml
+    usPrice:
+      title: Price
+      $ref: types/uint16.schema.yaml
+    ubCoolness:
+      title: Coolness
+      $ref: types/uint8.schema.yaml
+    bReliability:
+      title: Reliability
+      $ref: types/int8.schema.yaml
+    bRepairEase:
+      title: Repair ease
+      $ref: types/int8.schema.yaml
+    rateOfFire:
+      title: Rate of fire
+      $ref: types/int32.schema.yaml
+    usRange:
+      title: Range
+      $ref: types/uint16.schema.yaml
+    bNotBuyable:
+      title: Not buyable?
+      type: boolean
+    calibre:
+      title: Calibre
+      $ref: types/id.schema.yaml
+    ubReadyTime:
+      title: Ready time
+      $ref: types/uint8.schema.yaml
+    ubShotsPer4Turns:
+      title: Shots per 4 turns
+      $ref: types/uint8.schema.yaml
+    ubBulletSpeed:
+      title: Bullet speed
+      $ref: types/uint8.schema.yaml
+    ubImpact:
+      title: Impact
+      $ref: types/uint8.schema.yaml
+    ubDeadliness:
+      title: Deadliness
+      $ref: types/uint8.schema.yaml
+    ubMagSize:
+      title: Magazine size
+      $ref: types/uint8.schema.yaml
+    ubAttackVolume:
+      title: Attack volume
+      $ref: types/uint8.schema.yaml
+    ubHitVolume:
+      title: Hit volume
+      $ref: types/uint8.schema.yaml
+    Sound:
+      title: Sound
+      $ref: types/resource-path.schema.yaml
+    attachment_Silencer:
+      title: Attachment silencer?
+      type: boolean
+    attachment_LaserScope:
+      title: Attachment laser scope?
+      type: boolean
+    attachment_SpringAndBoltUpgrade:
+      title: Attachment spring and bolt?
+      type: boolean
+    attachment_GunBarrelExtender:
+      title: Attachment gun barrel extender?
+      type: boolean
+    bDamageable:
+      title: Is damageable?
+      type: boolean
+    bRepairable:
+      title: Is repairable?
+      type: boolean
+    bWaterDamages:
+      title: Damaged by water?
+      type: boolean
+    bMetal:
+      title: Is metal?
+      type: boolean
+    bSinks:
+      title: Sinks in water?
+      type: boolean
+    bShowStatus:
+      title: Show status?
+      type: boolean
+    standardReplacement:
+      title: Standard replacement
+      $ref: types/id.schema.yaml
+    ubShotsPerBurst:
+      title: Shots per burst
+      $ref: types/uint8.schema.yaml
+    ubBurstPenalty:
+      title: Burst penalty
+      $ref: types/uint8.schema.yaml
+    BurstSound:
+      title: Burst sound
+      $ref: types/resource-path.schema.yaml
+    bBigGunList:
+      title: Big gun list?
+      type: boolean
+    bTwoHanded:
+      title: Is two handed?
+      type: boolean
+    attachment_SniperScope:
+      title: Attachment sniper scope?
+      type: boolean
+    attachment_UnderGLauncher:
+      title: Attachment under grenade launcher?
+      type: boolean
+    attachment_Bipod:
+      title: Attachment bipod?
+      type: boolean
+    attachment_Duckbill:
+      title: Attachment duckbill?
+      type: boolean
+    bNotEditor:
+      title: Dont show in editor?
+      type: boolean
+    bDefaultUndroppable:
+      title: Undroppable by default?
+      type: boolean
+    usSmokeEffect:
+      title: Smoke effect
+      $ref: types/uint16.schema.yaml
+    bElectronic:
+      title: Is electronic?
+      type: boolean
+  required:
+  - bReliability
+  - bRepairEase
+  - internalName
+  - internalType
+  - itemIndex
+  - rateOfFire
+  - ubCoolness
+  - ubGraphicNum
+  - ubGraphicType
+  - ubPerPocket
+  - ubWeight
+  - usPrice

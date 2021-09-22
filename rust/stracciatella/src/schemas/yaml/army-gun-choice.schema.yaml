@@ -1,0 +1,16 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Army Gun Choice
+description: What guns the army chooses to use. It depends on which weapon class (a
+  value between `0` and `11`) is assigned to the specific soldier (meaning how well
+  he will be equipped).
+minItems: 11
+maxItems: 11
+items:
+  type: array
+  title: Gun choices
+  description: Which guns the army will use. The array goes from lowest to highest
+    gun level.
+  items:
+    description: A gun to use.
+    $ref: types/id.schema.yaml
