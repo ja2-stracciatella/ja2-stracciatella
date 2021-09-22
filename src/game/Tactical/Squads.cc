@@ -654,16 +654,38 @@ INT32 GetLastSquadActive( void )
 void SaveSquadInfoToSavedGameFile(HWFILE const f)
 {
 	// Save the squad info to the Saved Game File
-	BYTE data[NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD * 12];
+	BYTE data[SQUAD_INFO_NUM_RECORDS * 12];
 	DataWriter d{data};
-	for (INT32 squad = 0; squad < NUMBER_OF_SQUADS; ++squad)
+
+	// fill in with squad info
+	int numRecords = 0;
+	for (INT8 squad = 0; squad < NUMBER_OF_SQUADS; squad++)
 	{
-		FOR_EACH_SLOT_IN_SQUAD(slot, squad)
+		for (int slot = 0;; slot++)
 		{
-			SOLDIERTYPE const* const s = *slot;
+			// We write all soldiers in squad, and then we fill up the end of
+			// squad up to multiples of 6 for save compatability.
+			const SOLDIERTYPE *const s = (slot < NUMBER_OF_SOLDIERS_PER_SQUAD) ? Squad[squad][slot] : NULL;
+#if NUMBER_OF_SOLDIERS_PER_SQUAD <= 6
+			if (slot == 6) break;                    // always write 6 slots per squad
+#else
+			if (s == NULL && (slot % 6) == 0) break; // writes none, or multiples of 6
+#endif
 			INJ_I16(d, s ? s->ubID : -1)
-			INJ_SKIP(d, 10)
+			INJ_U8(d, SQUAD_INFO_FORMAT_VERSION)
+			INJ_I8(d, squad)
+			INJ_SKIP(d, 8)
+			numRecords++;
 		}
+	}
+	Assert(numRecords <= SQUAD_INFO_NUM_RECORDS);
+
+	// fill up the remaining unused space
+	for (; numRecords < SQUAD_INFO_NUM_RECORDS; numRecords++)
+	{
+		INJ_I16(d,  -1)
+		INJ_U8(d, SQUAD_INFO_FORMAT_VERSION)
+		INJ_SKIP(d, 9)
 	}
 	Assert(d.getConsumed() == lengthof(data));
 	f->write(data, sizeof(data));
@@ -676,18 +698,39 @@ void SaveSquadInfoToSavedGameFile(HWFILE const f)
 void LoadSquadInfoFromSavedGameFile(HWFILE const f)
 {
 	// Load in the squad info
-	BYTE data[NUMBER_OF_SQUADS * NUMBER_OF_SOLDIERS_PER_SQUAD * 12] = { 0 };
+	BYTE data[SQUAD_INFO_NUM_RECORDS * 12] = { 0 };
 	DataReader d{data};
 	f->read(data, sizeof(data));
-	for (INT32 squad = 0; squad != NUMBER_OF_SQUADS; ++squad)
+
+	// reset the Squad array
+	for (int squad = 0; squad != NUMBER_OF_SQUADS; ++squad)
 	{
-		FOR_EACH_SLOT_IN_SQUAD(slot, squad)
-		{
-			INT16 id;
-			EXTR_I16(d, id)
-			EXTR_SKIP(d, 10)
-			*slot = id != -1 ? &GetMan(id) : 0;
-		}
+		FOR_EACH_SLOT_IN_SQUAD(slot, squad) *slot = 0;
+	}
+
+	int extraSquads = 0; // if the save has larger squads than us, we will split into extra squads
+	int slotPos[NUMBER_OF_SQUADS] = {}; // next available slot per squad
+	for (int i = 0; i < SQUAD_INFO_NUM_RECORDS; i++)
+	{
+		INT16 id;
+		UINT8 ubFormatVersion, ubSquadID;
+		EXTR_I16(d, id)
+		EXTR_U8(d, ubFormatVersion)
+		EXTR_I8(d, ubSquadID)
+		EXTR_SKIP(d, 8)
+
+		if (id < 0) continue; // skip empty slot
+
+		if (ubFormatVersion == 0) ubSquadID = i / 6; // use the implicit squadID
+
+		if (slotPos[ubSquadID + extraSquads] == NUMBER_OF_SOLDIERS_PER_SQUAD) extraSquads++; // squad already full, split to a new one
+
+		ubSquadID += extraSquads;
+		int slot = slotPos[ubSquadID]++;
+		SOLDIERTYPE* s = &GetMan(id);
+		Squad[ubSquadID][slot] = s;
+
+		if (extraSquads > 0) s->bAssignment = static_cast<INT8>(ubSquadID); // fix soldier's assignment if we created extra squads
 	}
 	Assert(d.getConsumed() == lengthof(data));
 
