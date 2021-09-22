@@ -1567,6 +1567,10 @@ static void HandleModNone(UINT32 const key, UIEventKind* const new_event)
 		case SDLK_F4:
 		case SDLK_F5:
 		case SDLK_F6:
+		case SDLK_F7:
+		case SDLK_F8:
+		case SDLK_F9:
+		case SDLK_F10:
 		{
 			UINT const idx = key - SDLK_F1;
 			HandleSelectMercSlot(idx, true);
@@ -1635,6 +1639,10 @@ static void HandleModShift(UINT32 const key, UIEventKind* const new_event)
 		case SDLK_F4:
 		case SDLK_F5:
 		case SDLK_F6:
+		case SDLK_F7:
+		case SDLK_F8:
+		case SDLK_F9:
+		case SDLK_F10:
 		{
 			UINT const idx = key - SDLK_F1;
 			HandleSelectMercSlot(idx, false);
