@@ -25,7 +25,7 @@
 SOLDIERTYPE *Squad[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
 
 // list of dead guys for squads...in id values -> -1 means no one home
-INT16 sDeadMercs[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
+INT16 sDeadMercs[ NUMBER_OF_SQUADS ][ NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD ];
 
 // the movement group ids
 INT8 SquadMovementGroups[ NUMBER_OF_SQUADS ];
@@ -56,7 +56,7 @@ void InitSquads( void )
 
 	for (int i = 0; i < NUMBER_OF_SQUADS; ++i)
 	{
-		std::fill_n(sDeadMercs[i], NUMBER_OF_SOLDIERS_PER_SQUAD, -1);
+		std::fill_n(sDeadMercs[i], NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD, -1);
 	}
 }
 
@@ -549,7 +549,7 @@ void RebuildCurrentSquad( void )
 			CheckForAndAddMercToTeamPanel(*i);
 		}
 
-		for (INT32 iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; ++iCounter)
+		for (INT32 iCounter = 0; iCounter < NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD; ++iCounter)
 		{
 			const INT16 dead_id = sDeadMercs[iCurrentTacticalSquad][iCounter];
 			if (dead_id == -1) continue;
@@ -751,7 +751,7 @@ static void UpdateCurrentlySelectedMerc(SOLDIERTYPE* pSoldier, INT8 bSquadValue)
 
 static BOOLEAN IsDeadGuyOnSquad(const ProfileID pid, const INT8 squad)
 {
-	for (INT32 i = 0; i < NUMBER_OF_SOLDIERS_PER_SQUAD; ++i)
+	for (INT32 i = 0; i < NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD; ++i)
 	{
 		if (sDeadMercs[squad][i] == pid) return TRUE;
 	}
@@ -770,7 +770,7 @@ static BOOLEAN AddDeadCharacterToSquadDeadGuys(SOLDIERTYPE* pSoldier, INT32 iSqu
 	if (IsDeadGuyOnSquad(pSoldier->ubProfile, iSquadValue)) return TRUE;
 
 	// now insert the guy
-	for (int iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++)
+	for (int iCounter = 0; iCounter < NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD; iCounter++)
 	{
 		const INT16 dead_id = sDeadMercs[iSquadValue][iCounter];
 		if (dead_id == -1 || FindSoldierByProfileIDOnPlayerTeam(dead_id) == NULL)
@@ -807,7 +807,7 @@ BOOLEAN SoldierIsDeadAndWasOnSquad( SOLDIERTYPE *pSoldier, INT8 bSquadValue )
 
 void ResetDeadSquadMemberList(INT32 const iSquadValue)
 {
-	std::fill_n(sDeadMercs[ iSquadValue ], NUMBER_OF_SOLDIERS_PER_SQUAD, -1);
+	std::fill_n(sDeadMercs[ iSquadValue ], NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD, -1);
 }
 
 

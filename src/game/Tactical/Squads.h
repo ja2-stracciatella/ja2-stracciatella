@@ -6,6 +6,8 @@
 
 // header for squad management system
 #define NUMBER_OF_SOLDIERS_PER_SQUAD		6
+#define NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD	6
+
 
 // enums for squads
 enum{
