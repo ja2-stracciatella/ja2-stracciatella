@@ -19,7 +19,6 @@ use crate::unicode::Nfc;
 pub use std::fs::create_dir;
 pub use std::fs::create_dir_all;
 pub use std::fs::metadata;
-pub use std::fs::read;
 pub use std::fs::read_dir;
 pub use std::fs::rename;
 pub use std::fs::set_permissions;

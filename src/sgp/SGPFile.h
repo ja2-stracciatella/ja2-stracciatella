@@ -33,17 +33,11 @@ class SGPFile
 {
 private:
 	SGPFileFlags flags;
-	union
-	{
-		File *file;
-		VfsFile *vfile;
-	} u;
+	VFile *file;
 
 public:
-	/** Create a SGP file from a physical file on disk. */
-	SGPFile(File *file);
-	/** Create a SGP file from a virtual file. */
-	SGPFile(VfsFile *vfile);
+	/** Create a SGP file from a file on disk. */
+	SGPFile(VFile *file);
 	/** Closes file. */
 	~SGPFile();
 

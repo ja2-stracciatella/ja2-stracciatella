@@ -22,12 +22,11 @@ struct RustDelete
 {
 	void operator()(char* ptr) const { CString_destroy(ptr); }
 	void operator()(EngineOptions* ptr) const { EngineOptions_destroy(ptr); }
-	void operator()(File* ptr) const { File_close(ptr); }
+	void operator()(VFile* ptr) const { File_close(ptr); }
 	void operator()(TempDir* ptr) const { TempDir_destroy(ptr); }
 	void operator()(VecCString* ptr) const { VecCString_destroy(ptr); }
 	void operator()(VecU8* ptr) const { VecU8_destroy(ptr); }
 	void operator()(Vfs* ptr) const { Vfs_destroy(ptr); }
-	void operator()(VfsFile* ptr) const { VfsFile_close(ptr); }
 };
 
 /// Alias to a std::unique_ptr that deletes with RustDelete.

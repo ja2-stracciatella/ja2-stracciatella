@@ -66,41 +66,20 @@ static int SGPCloseRW(SDL_RWops *context)
 	return 0;
 }
 
-SGPFile::SGPFile(File *f)
+SGPFile::SGPFile(VFile *f)
 {
     this->flags = SGPFILE_REAL;
-    this->u.file = f;
-}
-
-SGPFile::SGPFile(VfsFile *f)
-{
-    this->flags = SGPFILE_NONE;
-    this->u.vfile = f;
+    this->file = f;
 }
 
 SGPFile::~SGPFile()
 {
-    if (this->flags & SGPFILE_REAL)
-    {
-        File_close(this->u.file);
-    }
-    else
-    {
-        VfsFile_close(this->u.vfile);
-    }
+    File_close(this->file);
 }
 
 void SGPFile::read(void *const pDest, size_t const uiBytesToRead)
 {
-    bool success;
-    if (this->flags & SGPFILE_REAL)
-    {
-        success = File_readExact(this->u.file, reinterpret_cast<uint8_t *>(pDest), uiBytesToRead);
-    }
-    else
-    {
-        success = VfsFile_readExact(this->u.vfile, static_cast<uint8_t *>(pDest), uiBytesToRead);
-    }
+    bool success = File_readExact(this->file, reinterpret_cast<uint8_t *>(pDest), uiBytesToRead);
 
     if (!success)
     {
@@ -112,14 +91,8 @@ void SGPFile::read(void *const pDest, size_t const uiBytesToRead)
 std::vector<uint8_t> SGPFile::readToEnd()
 {
     RustPointer<VecU8> vec;
-    if (this->flags & SGPFILE_REAL)
-    {
-        vec.reset(File_readToEnd(this->u.file));
-    }
-    else
-    {
-        vec.reset(VfsFile_readToEnd(this->u.vfile));
-    }
+    vec.reset(File_readToEnd(this->file));
+
     if (vec.get() == NULL)
     {
         RustPointer<char> err{getRustError()};
@@ -132,15 +105,7 @@ std::vector<uint8_t> SGPFile::readToEnd()
 
 size_t SGPFile::readAtMost(void *const pDest, size_t const uiBytesToRead)
 {
-    size_t bytesRead = 0;
-    if (this->flags & SGPFILE_REAL)
-    {
-        bytesRead = File_read(this->u.file, reinterpret_cast<uint8_t *>(pDest), uiBytesToRead);
-    }
-    else
-    {
-        bytesRead = VfsFile_read(this->u.vfile, static_cast<uint8_t *>(pDest), uiBytesToRead);
-    }
+    size_t bytesRead = File_read(this->file, reinterpret_cast<uint8_t *>(pDest), uiBytesToRead);
 
     if (bytesRead == SIZE_MAX)
     {
@@ -168,15 +133,7 @@ ST::string SGPFile::readStringToEnd()
 
 void SGPFile::write(void const *const pDest, size_t const uiBytesToWrite)
 {
-    bool success;
-    if (this->flags & SGPFILE_REAL)
-    {
-        success = File_writeAll(this->u.file, reinterpret_cast<const uint8_t *>(pDest), uiBytesToWrite);
-    }
-    else
-    {
-        success = VfsFile_writeAll(this->u.vfile, reinterpret_cast<const uint8_t *>(pDest), uiBytesToWrite);
-    }
+    bool success = File_writeAll(this->file, reinterpret_cast<const uint8_t *>(pDest), uiBytesToWrite);
 
     if (!success)
     {
@@ -188,36 +145,19 @@ void SGPFile::write(void const *const pDest, size_t const uiBytesToWrite)
 void SGPFile::seek(INT32 distance, FileSeekMode const how)
 {
     bool success;
-    if (this->flags & SGPFILE_REAL)
+    switch (how)
     {
-        switch (how)
-        {
-        case FILE_SEEK_FROM_START:
-            success = distance >= 0 && File_seekFromStart(this->u.file, static_cast<uint64_t>(distance)) != UINT64_MAX;
-            break;
-        case FILE_SEEK_FROM_END:
-            success = File_seekFromEnd(this->u.file, distance) != UINT64_MAX;
-            break;
-        default:
-            success = File_seekFromCurrent(this->u.file, distance) != UINT64_MAX;
-            break;
-        }
+    case FILE_SEEK_FROM_START:
+        success = distance >= 0 && File_seekFromStart(this->file, static_cast<uint64_t>(distance)) != UINT64_MAX;
+        break;
+    case FILE_SEEK_FROM_END:
+        success = File_seekFromEnd(this->file, distance) != UINT64_MAX;
+        break;
+    default:
+        success = File_seekFromCurrent(this->file, distance) != UINT64_MAX;
+        break;
     }
-    else
-    {
-        switch (how)
-        {
-        case FILE_SEEK_FROM_START:
-            success = distance >= 0 && VfsFile_seekFromStart(this->u.vfile, static_cast<uint64_t>(distance), nullptr);
-            break;
-        case FILE_SEEK_FROM_END:
-            success = VfsFile_seekFromEnd(this->u.vfile, distance, nullptr);
-            break;
-        default:
-            success = VfsFile_seekFromCurrent(this->u.vfile, distance, nullptr);
-            break;
-        }
-    }
+
     if (!success)
     {
         RustPointer<char> err{getRustError()};
@@ -227,17 +167,8 @@ void SGPFile::seek(INT32 distance, FileSeekMode const how)
 
 INT32 SGPFile::pos() const
 {
-    bool success;
-    uint64_t position = 0;
-    if (this->flags & SGPFILE_REAL)
-    {
-        position = File_seekFromCurrent(this->u.file, 0);
-        success = position != UINT64_MAX;
-    }
-    else
-    {
-        success = VfsFile_seekFromCurrent(this->u.vfile, 0, &position);
-    }
+    uint64_t position = File_seekFromCurrent(this->file, 0);
+    bool success = position != UINT64_MAX;
 
     if (!success)
     {
@@ -254,17 +185,9 @@ INT32 SGPFile::pos() const
 
 UINT32 SGPFile::size() const
 {
-    bool success;
-    uint64_t len = 0;
-    if (this->flags & SGPFILE_REAL)
-    {
-        len = File_len(this->u.file);
-        success = len != UINT64_MAX;
-    }
-    else
-    {
-        success = VfsFile_len(this->u.vfile, &len);
-    }
+
+    uint64_t len = File_len(this->file);
+    bool success = len != UINT64_MAX;
 
     if (!success)
     {
