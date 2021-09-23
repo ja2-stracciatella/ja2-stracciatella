@@ -181,7 +181,7 @@ INT16 gsScrollYIncrement;
 // Rendering flags (full, partial, etc.)
 static RenderFlags gRenderFlags = RENDER_FLAG_NONE;
 
-#define gClippingRect (g_ui.m_wordlClippingRect)
+#define gClippingRect (g_ui.m_worldClippingRect)
 static SGPRect gOldClipRect;
 INT16   gsRenderCenterX;
 INT16   gsRenderCenterY;

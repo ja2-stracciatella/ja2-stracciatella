@@ -117,8 +117,8 @@
 #define ITEM_STATS_HEIGHT				8
 #define MAX_STACK_POPUP_WIDTH				6
 
-#define ITEMDESC_START_X				214
-#define ITEMDESC_START_Y				1 + INV_INTERFACE_START_Y
+#define ITEMDESC_START_X				(INTERFACE_START_X + 214)
+#define ITEMDESC_START_Y				(1 + INV_INTERFACE_START_Y)
 #define ITEMDESC_HEIGHT				133
 #define ITEMDESC_WIDTH					320
 #define MAP_ITEMDESC_HEIGHT				268
@@ -178,7 +178,7 @@ static const SGPBox g_map_itemdesc_item_status_box = { 18,  54,   2, 42 };
 #define BAD_RELIABILITY				-2
 #define BAD_REPAIR_EASE				-2
 
-#define KEYRING_X      496
+#define KEYRING_X      (INTERFACE_START_X + 496)
 #define KEYRING_Y      (INV_INTERFACE_START_Y + 106)
 #define MAP_KEYRING_X (STD_SCREEN_X + 217)
 #define MAP_KEYRING_Y (STD_SCREEN_Y + 271)
@@ -821,7 +821,7 @@ static void INVRenderINVPanelItem(SOLDIERTYPE const& s, INT16 const pocket, Dirt
 			}
 			else
 			{
-				INT32 const x = 217;
+				INT32 const x = INTERFACE_START_X + 217;
 				INT32 const y = INV_INTERFACE_START_Y + 108;
 				BltVideoObject(guiSAVEBUFFER, guiSecItemHiddenVO, 0, x, y);
 				RestoreExternBackgroundRect(x, y, 72, 28);
@@ -1726,7 +1726,7 @@ void CycleItemDescriptionItem( )
 
 	CreateItem( (UINT16)usOldItem, 100, &( gpItemDescSoldier->inv[ HANDPOS ] ) );
 
-	InternalInitItemDescriptionBox( &( gpItemDescSoldier->inv[ HANDPOS ] ), 214, (INT16)(INV_INTERFACE_START_Y + 1 ), gubItemDescStatusIndex, gpItemDescSoldier );
+	InternalInitItemDescriptionBox( &( gpItemDescSoldier->inv[ HANDPOS ] ), INTERFACE_START_X + 214, (INT16)(INV_INTERFACE_START_Y + 1 ), gubItemDescStatusIndex, gpItemDescSoldier );
 }
 
 

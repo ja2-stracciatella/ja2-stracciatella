@@ -374,8 +374,8 @@ static void CreateDestroyMouseRegionsForSquadList(void)
 
 	if (!fRenderRadarScreen && !fCreated)
 	{
-		BltVideoObjectOnce(guiSAVEBUFFER, INTERFACEDIR "/squadpanel.sti", 0, 538, gsVIEWPORT_END_Y);
-		RestoreExternBackgroundRect(538, gsVIEWPORT_END_Y, 102, 120);
+		BltVideoObjectOnce(guiSAVEBUFFER, INTERFACEDIR "/squadpanel.sti", 0, INTERFACE_START_X + 538, gsVIEWPORT_END_Y);
+		RestoreExternBackgroundRect(INTERFACE_START_X + 538, gsVIEWPORT_END_Y, 102, 120);
 
 		// create regions
 		INT16 const w = RADAR_WINDOW_WIDTH / 2 - 1;
