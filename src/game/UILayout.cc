@@ -39,18 +39,18 @@ bool UILayout::setScreenSize(UINT16 width, UINT16 height)
 
 
 /** Check if the screen is bigger than original 640x480. */
-bool UILayout::isBigScreen()
+bool UILayout::isBigScreen() const
 {
 	return (m_screenWidth > 640) || (m_screenHeight > 480);
 }
 
 
-UINT16 UILayout::currentHeight()             { return fInMapMode ? (STD_SCREEN_Y + m_mapScreenHeight) : m_screenHeight; }
-UINT16 UILayout::get_CLOCK_X()               { return fInMapMode ? (STD_SCREEN_X + 554) : m_teamPanelPosition.iX + m_teamPanelSlotsTotalWidth + 56; }
-UINT16 UILayout::get_CLOCK_Y()               { return currentHeight() - 23;                                  }
-UINT16 UILayout::get_RADAR_WINDOW_X()        { return fInMapMode ? (STD_SCREEN_X + 543) : m_teamPanelPosition.iX + m_teamPanelSlotsTotalWidth + 45; }
-UINT16 UILayout::get_RADAR_WINDOW_TM_Y()     { return currentHeight() - 107;                                 }
-UINT16 UILayout::get_INV_INTERFACE_START_Y() { return m_screenHeight - 140;                                  }
+UINT16 UILayout::currentHeight() const             { return fInMapMode ? (STD_SCREEN_Y + m_mapScreenHeight) : m_screenHeight; }
+UINT16 UILayout::get_CLOCK_X() const               { return fInMapMode ? (STD_SCREEN_X + 554) : m_teamPanelPosition.iX + m_teamPanelSlotsTotalWidth + 56; }
+UINT16 UILayout::get_CLOCK_Y() const               { return currentHeight() - 23;                                  }
+UINT16 UILayout::get_RADAR_WINDOW_X() const        { return fInMapMode ? (STD_SCREEN_X + 543) : m_teamPanelPosition.iX + m_teamPanelSlotsTotalWidth + 45; }
+UINT16 UILayout::get_RADAR_WINDOW_TM_Y() const     { return currentHeight() - 107;                                 }
+UINT16 UILayout::get_INV_INTERFACE_START_Y() const { return m_screenHeight - 140;                                  }
 
 
 /** Recalculate UI elements' positions after changing screen size. */
@@ -138,7 +138,7 @@ void UILayout::recalculatePositions()
 }
 
 /** Get X position of tactical textbox. */
-UINT16 UILayout::getTacticalTextBoxX()
+UINT16 UILayout::getTacticalTextBoxX() const
 {
 
 	if ( guiCurrentScreen == MAP_SCREEN )
@@ -152,7 +152,7 @@ UINT16 UILayout::getTacticalTextBoxX()
 }
 
 /** Get Y position of tactical textbox. */
-UINT16 UILayout::getTacticalTextBoxY()
+UINT16 UILayout::getTacticalTextBoxY() const
 {
 	if ( guiCurrentScreen == MAP_SCREEN )
 	{

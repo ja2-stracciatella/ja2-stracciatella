@@ -133,20 +133,20 @@ public:
 	bool setScreenSize(UINT16 width, UINT16 height);
 
 	/** Check if the screen is bigger than original 640x480. */
-	bool isBigScreen();
+	bool isBigScreen() const;
 
-	UINT16 currentHeight();
-	UINT16 get_CLOCK_X();
-	UINT16 get_CLOCK_Y();
-	UINT16 get_INV_INTERFACE_START_Y();
-	UINT16 get_RADAR_WINDOW_X();
-	UINT16 get_RADAR_WINDOW_TM_Y();
+	UINT16 currentHeight() const;
+	UINT16 get_CLOCK_X() const;
+	UINT16 get_CLOCK_Y() const;
+	UINT16 get_INV_INTERFACE_START_Y() const;
+	UINT16 get_RADAR_WINDOW_X() const;
+	UINT16 get_RADAR_WINDOW_TM_Y() const;
 
 	/** Get X position of tactical textbox. */
-	UINT16 getTacticalTextBoxX();
+	UINT16 getTacticalTextBoxX() const;
 
 	/** Get Y position of tactical textbox. */
-	UINT16 getTacticalTextBoxY();
+	UINT16 getTacticalTextBoxY() const;
 
 protected:
 	/** Recalculate UI elements' positions after changing screen size. */
