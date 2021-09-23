@@ -1,4 +1,4 @@
-JA2Require("enums.lua")
+require("enums.lua")
 RegisterListener("BeforePrepareSector", "add_items_to_sector")
 
 --[[

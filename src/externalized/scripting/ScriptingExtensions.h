@@ -13,7 +13,7 @@
  * ```lua
  * -- Imports the enums.lua provided by the base game
  * -- This gives you access to predefined enum values such as Items or MercsProfiles
- * JA2Require("enums.lua")
+ * require("enums.lua")
  *
  * -- Register a listener with an observable so your code gets called by the game
  * RegisterListener("BeforePrepareSector", "HandlePrepareSector")
