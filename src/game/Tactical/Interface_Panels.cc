@@ -6,6 +6,7 @@
 #include "Soldier_Ani.h"
 #include "Timer_Control.h"
 #include "VObject.h"
+#include "VSurface.h"
 #include "SysUtil.h"
 #include "Overhead.h"
 #include "MouseSystem.h"
@@ -309,11 +310,12 @@ GUIButtonRef iSMPanelButtons[NUM_SM_BUTTONS];
 GUIButtonRef iTEAMPanelButtons[NUM_TEAM_BUTTONS];
 
 // Video Surface for Single Merc Panel
-static SGPVObject* guiSMPanel;
+static SGPVSurfaceAuto* guiSMPanel;
 static SGPVObject* guiSMObjects;
 static SGPVObject* guiSMObjects2;
 
-static SGPVObject* guiTEAMPanel;
+// Video surface for Team panel
+static SGPVSurfaceAuto* guiTEAMPanel;
 static SGPVObject* guiTEAMObjects;
 static SGPVObject* guiVEHINV;
 
@@ -326,6 +328,7 @@ MOUSE_REGION        gSM_SELMERCMoneyRegion;
 static MOUSE_REGION gSM_SELMERCEnemyIndicatorRegion;
 static MOUSE_REGION gTEAM_PanelRegion;
 
+static SGPVSurfaceAuto* CreateVideoSurfaceFromObjectFile(const ST::string& filename, UINT16 usRegionIndex);
 
 // Globals - for one - the current merc here
 SOLDIERTYPE *gpSMCurrentMerc = NULL;
@@ -344,9 +347,7 @@ struct TeamPanelSlot
 	MOUSE_REGION second_hand;
 };
 
-static TeamPanelSlot gTeamPanel[NUM_TEAM_SLOTS];
-
-#define FOR_EACH_TEAM_PANEL_SLOT(iter)		FOR_EACH(TeamPanelSlot, iter, gTeamPanel)
+static std::vector<TeamPanelSlot> gTeamPanel;
 
 
 // Wraps up check for AP-s get from a different soldier for in a vehicle...
@@ -526,11 +527,11 @@ void UpdateForContOverPortrait( SOLDIERTYPE *pSoldier, BOOLEAN fOn )
 	}
 	else
 	{
-		FOR_EACH_TEAM_PANEL_SLOT(i)
+		for (TeamPanelSlot& i : gTeamPanel)
 		{
-			if (i->merc != pSoldier)
+			if (i.merc != pSoldier)
 				continue;
-			if (!IsMouseInRegion(i->face))
+			if (!IsMouseInRegion(i.face))
 				continue;
 			HandleMouseOverSoldierFaceForContMove(pSoldier, fOn);
 		}
@@ -862,9 +863,43 @@ static void FillEmptySpaceAtBottom()
 	}
 }
 
-void InitializeSMPanel(void)
+/** Fill up some space with a textured space filler */
+static void DrawFillerOnSurface(SGPVSurface* vsSurface, SGPBox const &dest)
 {
-	guiSMPanel    = AddVideoObjectFromFile(INTERFACEDIR "/inventory_bottom_panel.sti");
+	SGPVSurfaceAuto* vsFiller = CreateVideoSurfaceFromObjectFile(INTERFACEDIR "/overheadinterface.sti", 0);
+
+	// clip and blit the big panel from the overheadinterface graphics
+	SGPBox const src  = {80, 42, (UINT16)MIN(dest.w, 560), (UINT16)MIN(dest.h, 112)};
+	BltStretchVideoSurface(vsSurface, vsFiller, &src, &dest);
+
+	delete vsFiller;
+}
+
+void InitializeSMPanel()
+{
+	// Assemble the SMPanel from graphic objects.
+	// For visual consistency, the SMPanel should fill up the same width as the TEAMPanel, that the buttons and
+	// minimap are in the bottom-right corner.
+	SGPVObject* voSMPanel = AddVideoObjectFromFile(INTERFACEDIR "/inventory_bottom_panel.sti");
+	guiSMPanel = new SGPVSurfaceAuto(g_ui.m_teamPanelWidth, INV_INTERFACE_HEIGHT, PIXEL_DEPTH);
+	if (g_ui.m_teamPanelWidth > 640)
+	{
+		// The team panel is longer than default
+		// need a second blit, and we will start from the right
+		BltVideoObject(guiSMPanel, voSMPanel, 0, g_ui.m_teamPanelWidth - 640, 0);
+	}
+	// draw the basic Single-Merc panel
+	BltVideoObject(guiSMPanel, voSMPanel, 0, 0, 0);
+	DeleteVideoObject(voSMPanel);
+
+	INT16 sFillerWidth = g_ui.m_teamPanelWidth - 640;
+	if (sFillerWidth > 0)
+	{
+		// draw a space filler if needed
+		SGPBox const dest = {SM_INVINTERFACE_WIDTH, 2, static_cast<UINT16>(sFillerWidth), INV_INTERFACE_HEIGHT - 6};
+		DrawFillerOnSurface(guiSMPanel, dest);
+	}
+
 	guiSMObjects  = AddVideoObjectFromFile(INTERFACEDIR "/inventory_gold_front.sti");
 	guiSMObjects2 = AddVideoObjectFromFile(INTERFACEDIR "/inv_frn.sti");
 
@@ -1058,11 +1093,11 @@ void RemoveSMPanelButtons(void)
 }
 
 
-void ShutdownSMPanel(void)
+void ShutdownSMPanel()
 {
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
 	// We may want to delete them at the interm as well, to free up room for other panels
-	DeleteVideoObject(guiSMPanel);
+	delete guiSMPanel;
 	DeleteVideoObject(guiSMObjects);
 	DeleteVideoObject(guiSMObjects2);
 
@@ -1220,7 +1255,7 @@ void RenderSMPanel(DirtyLevel* const dirty_level)
 
 	if (*dirty_level == DIRTYLEVEL2)
 	{
-		BltVideoObject(guiSAVEBUFFER, guiSMPanel, 0, dx, dy);
+		BltVideoSurface(guiSAVEBUFFER, guiSMPanel, dx, dy, NULL);
 
 		{
 			SGPVObject const* gfx;
@@ -2246,14 +2281,26 @@ static void TMClickFirstHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason);
 static void TMClickSecondHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason);
 
 
-void InitializeTEAMPanel(void)
+void InitializeTEAMPanel()
 {
 	// INit viewport region
 	// Set global mouse regions
 	// Define region for viewport
 	MSYS_DefineRegion(&gViewportRegion, 0, 0, gsVIEWPORT_END_X, gsVIEWPORT_END_Y, MSYS_PRIORITY_NORMAL, VIDEO_NO_CURSOR, MSYS_NO_CALLBACK, MSYS_NO_CALLBACK);
 
-	guiTEAMPanel   = AddVideoObjectFromFile(INTERFACEDIR "/bottom_bar.sti");
+	// Create the TEAMpanel from graphic objects.
+	guiTEAMPanel = new SGPVSurfaceAuto(g_ui.m_teamPanelWidth, TEAMPANEL_HEIGHT, PIXEL_DEPTH);
+
+	SGPVSurfaceAuto* vsTEAMPanel = CreateVideoSurfaceFromObjectFile(INTERFACEDIR "/bottom_bar.sti", 0);
+	BltVideoSurface(guiTEAMPanel, vsTEAMPanel, 0, 0, NULL);
+	for (int i = 6; i < NUM_TEAM_SLOTS; i++)
+	{	// extend the panel if needed
+		SGPBox const rect = {5 * TEAMPANEL_SLOT_WIDTH, 0,
+					TEAMPANEL_SLOT_WIDTH + TEAMPANEL_BUTTONSBOX_WIDTH, TEAMPANEL_HEIGHT};
+		BltVideoSurface(guiTEAMPanel, vsTEAMPanel, i * TEAMPANEL_SLOT_WIDTH, 0, &rect);
+	}
+	delete vsTEAMPanel;
+
 	guiTEAMObjects = AddVideoObjectFromFile(INTERFACEDIR "/gold_front.sti");
 	guiVEHINV      = AddVideoObjectFromFile(INTERFACEDIR "/inventor.sti");
 
@@ -2268,10 +2315,8 @@ void InitializeTEAMPanel(void)
 
 	INT32       dx = INTERFACE_START_X;
 	INT32 const dy = INTERFACE_START_Y;
-	FOR_EACH_TEAM_PANEL_SLOT(i)
+	for (TeamPanelSlot& tp : gTeamPanel)
 	{
-		TeamPanelSlot& tp = *i;
-
 		INT32 const face_x = dx + TM_FACE_X;
 		INT32 const face_y = dy + TM_FACE_Y;
 		MakeRegion(tp, tp.face, face_x, face_y, TM_FACE_WIDTH, TM_FACE_HEIGHT,
@@ -2302,27 +2347,27 @@ void InitializeTEAMPanel(void)
 }
 
 
-void ShutdownTEAMPanel(void)
+void ShutdownTEAMPanel()
 {
 	// All buttons and regions and video objects and video surfaces will be deleted at shutddown of SGM
 	// We may want to delete them at the interm as well, to free up room for other panels
-	DeleteVideoObject(guiTEAMPanel);
+	delete guiTEAMPanel;
 	DeleteVideoObject(guiTEAMObjects);
 	DeleteVideoObject(guiVEHINV);
 
 	MSYS_RemoveRegion(&gTEAM_PanelRegion);
 	MSYS_RemoveRegion(&gViewportRegion);
 
-	FOR_EACH_TEAM_PANEL_SLOT(i)
+	for (TeamPanelSlot& i : gTeamPanel)
 	{
-		MSYS_RemoveRegion(&i->face);
-		MSYS_RemoveRegion(&i->enemy_indicator);
-		MSYS_RemoveRegion(&i->bars);
-		MSYS_RemoveRegion(&i->left_bars);
-		MSYS_RemoveRegion(&i->first_hand);
-		MSYS_RemoveRegion(&i->second_hand);
+		MSYS_RemoveRegion(&i.face);
+		MSYS_RemoveRegion(&i.enemy_indicator);
+		MSYS_RemoveRegion(&i.bars);
+		MSYS_RemoveRegion(&i.left_bars);
+		MSYS_RemoveRegion(&i.first_hand);
+		MSYS_RemoveRegion(&i.second_hand);
 
-		SOLDIERTYPE* const s = i->merc;
+		SOLDIERTYPE* const s = i.merc;
 		if (s) HandleMouseOverSoldierFaceForContMove(s, FALSE);
 	}
 
@@ -2358,14 +2403,14 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 		MarkAButtonDirty(iTEAMPanelButtons[TEAM_MAP_SCREEN_BUTTON]);
 		MarkAButtonDirty(iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]);
 
-		BltVideoObject(guiSAVEBUFFER, guiTEAMPanel, 0, INTERFACE_START_X, INTERFACE_START_Y);
+		BltVideoSurface(guiSAVEBUFFER, guiTEAMPanel, INTERFACE_START_X, INTERFACE_START_Y, NULL);
 
 		// LOOP THROUGH ALL MERCS ON TEAM PANEL
 		INT32       dx = INTERFACE_START_X;
 		INT32 const dy = INTERFACE_START_Y;
-		FOR_EACH_TEAM_PANEL_SLOT(i)
+		for (TeamPanelSlot& i : gTeamPanel)
 		{
-			SOLDIERTYPE const* const s  = i->merc;
+			SOLDIERTYPE const* const s  = i.merc;
 			if (s)
 			{
 				RenderSoldierFace(*s, dx + TM_FACE_X, dy + TM_FACE_Y);
@@ -2401,7 +2446,7 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 					help_buf = GetHelpTextForItem(s->inv[HANDPOS]);
 					help = help_buf;
 				}
-				i->first_hand.SetFastHelpText(help);
+				i.first_hand.SetFastHelpText(help);
 
 				// Add text for seonc hand popup
 				if (s->uiStatusFlags & (SOLDIER_PASSENGER | SOLDIER_DRIVER))
@@ -2417,7 +2462,7 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 					help_buf = GetHelpTextForItem(s->inv[SECONDHANDPOS]);
 					help = help_buf;
 				}
-				i->second_hand.SetFastHelpText(help);
+				i.second_hand.SetFastHelpText(help);
 
 				// Restore AP/LIFE POSIITONS
 
@@ -2448,9 +2493,9 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 	// Loop through all mercs and make go
 	INT32       dx = INTERFACE_START_X;
 	INT32 const dy = INTERFACE_START_Y;
-	FOR_EACH_TEAM_PANEL_SLOT(i)
+	for (TeamPanelSlot& i : gTeamPanel)
 	{
-		SOLDIERTYPE* const s = i->merc;
+		SOLDIERTYPE* const s = i.merc;
 		if (s)
 		{
 			// Update animations....
@@ -2463,7 +2508,7 @@ void RenderTEAMPanel(DirtyLevel const dirty_level)
 			if (dirty_level != DIRTYLEVEL0)
 			{
 				// Update stats!
-				if (dirty_level == DIRTYLEVEL2) SetStatsHelp(i->bars, *s);
+				if (dirty_level == DIRTYLEVEL2) SetStatsHelp(i.bars, *s);
 
 				const INT32 x = dx + TM_AP_X;
 				const INT32 y = dy + TM_AP_Y;
@@ -2595,11 +2640,11 @@ static void UpdateTEAMPanel(void)
 		DisableButton(iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]);
 
 		// OK, disable item regions.......
-		FOR_EACH_TEAM_PANEL_SLOT(i)
+		for (TeamPanelSlot& i : gTeamPanel)
 		{
-			i->enemy_indicator.Disable();
-			i->first_hand.Disable();
-			i->second_hand.Disable();
+			i.enemy_indicator.Disable();
+			i.first_hand.Disable();
+			i.second_hand.Disable();
 		}
 
 		//disable the radar map region
@@ -2610,11 +2655,11 @@ static void UpdateTEAMPanel(void)
 	{
 		EnableButton(iTEAMPanelButtons[CHANGE_SQUAD_BUTTON]);
 
-		FOR_EACH_TEAM_PANEL_SLOT(i)
+		for (TeamPanelSlot& i : gTeamPanel)
 		{
-			i->enemy_indicator.Enable();
-			i->first_hand.Enable();
-			i->second_hand.Enable();
+			i.enemy_indicator.Enable();
+			i.first_hand.Enable();
+			i.second_hand.Enable();
 		}
 
 		gRadarRegion.Enable();
@@ -3093,9 +3138,9 @@ static void TMClickSecondHandInvCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static BOOLEAN PlayerExistsInSlot(const SOLDIERTYPE* const s)
 {
-	FOR_EACH_TEAM_PANEL_SLOT(i)
+	for (TeamPanelSlot& i : gTeamPanel)
 	{
-		if (i->merc == s) return TRUE;
+		if (i.merc == s) return TRUE;
 	}
 	return FALSE;
 }
@@ -3106,10 +3151,10 @@ static void RemovePlayerFromInterfaceTeamSlot(TeamPanelSlot&);
 
 BOOLEAN RemovePlayerFromTeamSlot(const SOLDIERTYPE* const s)
 {
-	FOR_EACH_TEAM_PANEL_SLOT(i)
+	for (TeamPanelSlot& i : gTeamPanel)
 	{
-		if (i->merc != s) continue;
-		RemovePlayerFromInterfaceTeamSlot(*i);
+		if (i.merc != s) continue;
+		RemovePlayerFromInterfaceTeamSlot(i);
 		return TRUE;
 	}
 	return FALSE;
@@ -3121,19 +3166,25 @@ static void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
 	if (PlayerExistsInSlot(s)) return;
 
 	// Find a free slot
-	FOR_EACH_TEAM_PANEL_SLOT(i)
+	for (TeamPanelSlot& i : gTeamPanel)
 	{
-		if (i->merc) continue;
-		i->merc = s;
+		if (i.merc) continue;
+		i.merc = s;
 		fInterfacePanelDirty = DIRTYLEVEL2;
 		break;
 	}
 }
 
 
-void InitTEAMSlots(void)
+void InitTEAMSlots()
 {
-	FOR_EACH_TEAM_PANEL_SLOT(i) i->merc = 0;
+	if (NUM_TEAM_SLOTS < NUMBER_OF_SOLDIERS_PER_SQUAD)
+	{
+		SLOGW("The team panel does not have enough space to display all soldiers in a squad. "
+		      "You should either increase the game resolution or decrease the squad size");
+	}
+	gTeamPanel.resize(NUM_TEAM_SLOTS);
+	std::fill_n(gTeamPanel.begin(), NUM_TEAM_SLOTS, TeamPanelSlot{NULL});
 }
 
 
@@ -3144,12 +3195,12 @@ SOLDIERTYPE* GetPlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot)
 }
 
 
-void RemoveAllPlayersFromSlot(void)
+void RemoveAllPlayersFromSlot()
 {
-	FOR_EACH_TEAM_PANEL_SLOT(i)
+	for (TeamPanelSlot& i : gTeamPanel)
 	{
-		if (!i->merc) continue;
-		RemovePlayerFromInterfaceTeamSlot(*i);
+		if (!i.merc) continue;
+		RemovePlayerFromInterfaceTeamSlot(i);
 	}
 }
 
@@ -3157,7 +3208,7 @@ void RemoveAllPlayersFromSlot(void)
 static void RemovePlayerFromInterfaceTeamSlot(TeamPanelSlot& tp)
 {
 	SOLDIERTYPE* const s = tp.merc;
-	tp.merc = 0;
+	tp.merc = NULL;
 
 	if (!(s->uiStatusFlags & SOLDIER_DEAD))
 	{
@@ -3230,9 +3281,9 @@ SOLDIERTYPE* FindNextMercInTeamPanel(SOLDIERTYPE* const prev)
 {
 	bool         seen_prev = false;
 	SOLDIERTYPE* before    = 0;
-	FOR_EACH_TEAM_PANEL_SLOT(i)
+	for (TeamPanelSlot& i : gTeamPanel)
 	{
-		SOLDIERTYPE* const s = i->merc;
+		SOLDIERTYPE* const s = i.merc;
 		if (!s) continue;
 
 		if (s == prev)
@@ -3796,4 +3847,15 @@ void LoadInterfacePanelGraphics()
 void DeleteInterfacePanelGraphics()
 {
 	DeleteVideoObject(guiCLOSE);
+}
+
+static SGPVSurfaceAuto* CreateVideoSurfaceFromObjectFile(const ST::string& filename, UINT16 usRegionIndex)
+{
+	SGPVObject* vo = AddVideoObjectFromFile(filename.c_str());
+	auto r = vo->SubregionProperties(usRegionIndex);
+	auto* sf = new SGPVSurfaceAuto(r.usWidth, r.usHeight, PIXEL_DEPTH);
+	BltVideoObject(sf, vo, usRegionIndex, 0, 0);
+	DeleteVideoObject(vo);
+
+	return sf;
 }

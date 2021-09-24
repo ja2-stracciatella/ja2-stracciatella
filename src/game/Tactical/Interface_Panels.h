@@ -38,7 +38,7 @@ enum
 
 #define NEW_ITEM_CYCLE_COUNT			19
 #define NEW_ITEM_CYCLES			4
-#define NUM_TEAM_SLOTS				6
+#define NUM_TEAM_SLOTS				(g_ui.m_teamPanelNumSlots)
 
 
 #define PASSING_ITEM_DISTANCE_OKLIFE		3
@@ -49,25 +49,25 @@ enum
 
 void CreateSMPanelButtons(void);
 void RemoveSMPanelButtons(void);
-void InitializeSMPanel(void);
-void ShutdownSMPanel(void);
+void InitializeSMPanel();
+void ShutdownSMPanel();
 void RenderSMPanel(DirtyLevel*);
 void EnableSMPanelButtons(BOOLEAN fEnable, BOOLEAN fFromItemPickup);
 
 
 void CreateTEAMPanelButtons(void);
 void RemoveTEAMPanelButtons(void);
-void InitializeTEAMPanel(void);
-void ShutdownTEAMPanel(void);
+void InitializeTEAMPanel();
+void ShutdownTEAMPanel();
 void RenderTEAMPanel(DirtyLevel);
 
 
 void SetSMPanelCurrentMerc(SOLDIERTYPE* s);
 void SetTEAMPanelCurrentMerc(void);
 
-void         InitTEAMSlots(void);
+void         InitTEAMSlots();
 SOLDIERTYPE* GetPlayerFromInterfaceTeamSlot(UINT8 ubPanelSlot);
-void    RemoveAllPlayersFromSlot(void);
+void    RemoveAllPlayersFromSlot();
 BOOLEAN      RemovePlayerFromTeamSlot(const SOLDIERTYPE* s);
 void    CheckForAndAddMercToTeamPanel(SOLDIERTYPE* s);
 
