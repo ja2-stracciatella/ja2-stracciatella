@@ -25,6 +25,8 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 
 	enemy_weapon_minimal_status = gp.getOptionalInt("enemy_weapon_minimal_status", 0);
 
+	squad_size = gp.getOptionalUInt("squad_size", 6);
+
 	JsonObjectReader ai = JsonObjectReader(gp.GetValue("ai"));
 	ai_better_aiming_choice = ai.getOptionalBool("better_aiming_choice");
 	ai_go_prone_more_often = ai.getOptionalBool("go_prone_more_often");
