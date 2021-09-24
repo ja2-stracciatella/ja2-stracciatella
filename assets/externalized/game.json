@@ -146,7 +146,7 @@
     "pick_skills_directly": false,
 
     //  Load an IMP merc from a previous save game by typing in same nickname on IMP form.
-    //  Make sure to use the same capitalization!
+    //  Make sure to put in only the nickname and use the same capitalization!
     //  This setting must be already enabled during saving to enable a later load.
     //  vanilla setting: false, false
     "load_saved_merc_by_nickname": false,
