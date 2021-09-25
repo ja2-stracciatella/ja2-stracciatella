@@ -485,6 +485,8 @@ int main(int argc, char* argv[])
 
 		GCM = cm;
 
+		g_ui.recalculatePositions();
+
 		SLOGD("Initializing Video Manager");
 		InitializeVideoManager(scalingQuality);
 		VideoSetBrightness(brightness);

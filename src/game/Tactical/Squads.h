@@ -5,7 +5,6 @@
 
 
 // header for squad management system
-#define NUMBER_OF_SOLDIERS_PER_SQUAD		6
 #define NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD	6
 #define SQUAD_INFO_FORMAT_VERSION		(1)                    // extending the Squad save format for dynamic squad sizes
 #define SQUAD_INFO_NUM_RECORDS			(NUMBER_OF_SQUADS * 6)
@@ -45,10 +44,10 @@ enum{
 // ptrs to soldier types of squads and their members
 
 // squads
-extern SOLDIERTYPE *Squad[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
+extern std::vector<SOLDIERTYPE*> Squad[NUMBER_OF_SQUADS];
 
 #define FOR_EACH_SLOT_IN_SQUAD(iter, squad) \
-	for (SOLDIERTYPE** iter = Squad[(squad)], *const * const iter##__end = endof(Squad[(squad)]); iter != iter##__end; ++iter)
+	for (auto iter = Squad[(squad)].begin(); iter != Squad[(squad)].end(); ++iter)
 
 #define FOR_EACH_IN_SQUAD(iter, squad) \
 	FOR_EACH_SLOT_IN_SQUAD(iter, squad) \
@@ -60,7 +59,7 @@ extern INT32 iCurrentTacticalSquad;
 
 
 // will initialize the squad lists for game initalization
-void InitSquads( void );
+void InitSquads();
 
 // add character to squad
 BOOLEAN AddCharacterToSquad( SOLDIERTYPE *pCharacter, INT8 bSquadValue );

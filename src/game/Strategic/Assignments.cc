@@ -15,6 +15,7 @@
 #include "Game_Clock.h"
 #include "Game_Event_Hook.h"
 #include "GameInstance.h"
+#include "GamePolicy.h"
 #include "GameSettings.h"
 #include "Handle_UI.h"
 #include "History.h"
@@ -877,7 +878,7 @@ static JoinSquadResult CanCharacterSquad(SOLDIERTYPE const& s, INT8 const squad_
 	{
 		return CHARACTER_CANT_JOIN_SQUAD_VEHICLE;
 	}
-	else if (NumberOfPeopleInSquad(squad_no) >= NUMBER_OF_SOLDIERS_PER_SQUAD)
+	else if (NumberOfPeopleInSquad(squad_no) >= gamepolicy(squad_size))
 	{
 		return CHARACTER_CANT_JOIN_SQUAD_FULL;
 	}
@@ -5085,7 +5086,7 @@ static void CreateSquadBox(void)
 	for (UINT32 i = 0; i <= uiMaxSquad; ++i)
 	{
 		// get info about current squad and put in  string
-		ST::string buf = ST::format("{} ( {}/{} )", pSquadMenuStrings[i], NumberOfPeopleInSquad(i), NUMBER_OF_SOLDIERS_PER_SQUAD);
+		ST::string buf = ST::format("{} ( {}/{} )", pSquadMenuStrings[i], NumberOfPeopleInSquad(i), gamepolicy(squad_size));
 		AddMonoString(box, buf);
 	}
 

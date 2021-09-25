@@ -74,7 +74,7 @@
 #include "WeaponModels.h"
 #include "Logger.h"
 
-#include "policy/GamePolicy.h"
+#include "GamePolicy.h"
 #include "HImage.h"
 
 #include <string_theory/format>
@@ -3178,7 +3178,7 @@ static void AddPlayerToInterfaceTeamSlot(SOLDIERTYPE* const s)
 
 void InitTEAMSlots()
 {
-	if (NUM_TEAM_SLOTS < NUMBER_OF_SOLDIERS_PER_SQUAD)
+	if (NUM_TEAM_SLOTS < gamepolicy(squad_size))
 	{
 		SLOGW("The team panel does not have enough space to display all soldiers in a squad. "
 		      "You should either increase the game resolution or decrease the squad size");

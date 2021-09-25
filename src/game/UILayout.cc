@@ -4,6 +4,9 @@
 #include "Soldier_Control.h"
 #include "Squads.h"
 #include "JAScreens.h"
+#include "ContentManager.h"
+#include "GameInstance.h"
+#include "GamePolicy.h"
 
 #define MIN_INTERFACE_WIDTH       640
 #define MIN_INTERFACE_HEIGHT      480
@@ -19,12 +22,9 @@ UILayout::UILayout(UINT16 screenWidth, UINT16 screenHeight)
 	:m_mapScreenWidth(MIN_INTERFACE_WIDTH), m_mapScreenHeight(MIN_INTERFACE_HEIGHT),
 	m_screenWidth(screenWidth), m_screenHeight(screenHeight)
 {
-	recalculatePositions();
 }
 
 
-/** Set new screen size.
- * This method should be called before most of the application initialization is done. */
 void UILayout::setScreenSize(UINT16 width, UINT16 height)
 {
 	if (width < MIN_INTERFACE_WIDTH || height < MIN_INTERFACE_HEIGHT)
@@ -34,7 +34,6 @@ void UILayout::setScreenSize(UINT16 width, UINT16 height)
 	}
 	m_screenWidth = width;
 	m_screenHeight = height;
-	recalculatePositions();
 }
 
 
@@ -53,15 +52,11 @@ UINT16 UILayout::get_RADAR_WINDOW_TM_Y() const     { return currentHeight() - 10
 UINT16 UILayout::get_INV_INTERFACE_START_Y() const { return m_screenHeight - INV_INTERFACE_HEIGHT;                                  }
 
 
-/** Recalculate UI elements' positions after changing screen size. */
 void UILayout::recalculatePositions()
 {
-	m_teamPanelNumSlots = std::min({NUMBER_OF_SOLDIERS_PER_SQUAD, (m_screenWidth - TEAMPANEL_BUTTONSBOX_WIDTH) / TEAMPANEL_SLOT_WIDTH, 12});
-	m_teamPanelNumSlots = std::max((int)m_teamPanelNumSlots, 6);
-
-	m_teamPanelSlotsTotalWidth = m_teamPanelNumSlots * TEAMPANEL_SLOT_WIDTH;
+	m_teamPanelSlotsTotalWidth = getTeamPanelNumSlots() * TEAMPANEL_SLOT_WIDTH;
 	UINT16 tpXOffset = (m_screenWidth - m_teamPanelSlotsTotalWidth - TEAMPANEL_BUTTONSBOX_WIDTH) / 2;
-	UINT16 tpYOffset = m_screenHeight - 120;
+	UINT16 tpYOffset = m_screenHeight - TEAMPANEL_HEIGHT;
 	m_teamPanelPosition.set(tpXOffset, tpYOffset);
 	m_teamPanelWidth = m_teamPanelSlotsTotalWidth + TEAMPANEL_BUTTONSBOX_WIDTH;
 
@@ -165,4 +160,16 @@ UINT16 UILayout::getTacticalTextBoxY() const
 	{
 		return 20;
 	}
+}
+
+UINT16 UILayout::getTeamPanelNumSlots() const
+{
+	if (!GCM || !GCM->getGamePolicy())
+	{
+		throw std::runtime_error("ContentManager is not initialized yet. Unable to determine num of team slots");
+	}
+
+	int numSlots = std::min({(int)gamepolicy(squad_size), (m_screenWidth - TEAMPANEL_BUTTONSBOX_WIDTH) / TEAMPANEL_SLOT_WIDTH, 12});
+	numSlots = std::max((int)numSlots, 6);
+	return numSlots;
 }
