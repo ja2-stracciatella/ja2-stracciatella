@@ -778,6 +778,7 @@ static BOOLEAN AddDeadCharacterToSquadDeadGuys(SOLDIERTYPE* pSoldier, INT32 iSqu
 		if (dead_id == -1 || FindSoldierByProfileIDOnPlayerTeam(dead_id) == NULL)
 		{
 			sDeadMercs[iSquadValue][iCounter] = pSoldier->ubProfile;
+			return TRUE;
 		}
 	}
 
