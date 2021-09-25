@@ -764,25 +764,24 @@ static BOOLEAN IsDeadGuyOnAnySquad(SOLDIERTYPE* pSoldier);
 
 static BOOLEAN AddDeadCharacterToSquadDeadGuys(SOLDIERTYPE* pSoldier, INT32 iSquadValue)
 {
-	INT32 iCounter = 0;
-
 	// is dead guy in any squad
 	if (IsDeadGuyOnAnySquad(pSoldier)) return TRUE;
 
 	if (IsDeadGuyOnSquad(pSoldier->ubProfile, iSquadValue)) return TRUE;
 
 	// now insert the guy
-	for( iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++ )
+	for (int iCounter = 0; iCounter < NUMBER_OF_SOLDIERS_PER_SQUAD; iCounter++)
 	{
 		const INT16 dead_id = sDeadMercs[iSquadValue][iCounter];
 		if (dead_id == -1 || FindSoldierByProfileIDOnPlayerTeam(dead_id) == NULL)
 		{
 			sDeadMercs[iSquadValue][iCounter] = pSoldier->ubProfile;
+			return TRUE;
 		}
 	}
 
 	// no go
-	return( FALSE );
+	return FALSE;
 }
 
 
