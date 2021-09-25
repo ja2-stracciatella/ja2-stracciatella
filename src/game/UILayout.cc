@@ -1,12 +1,14 @@
 #include "UILayout.h"
 
-#include "MapScreen.h"
-#include "Soldier_Control.h"
-#include "Squads.h"
-#include "JAScreens.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
 #include "GamePolicy.h"
+#include "JAScreens.h"
+#include "MapScreen.h"
+#include "ScreenIDs.h"
+#include "Soldier_Control.h"
+#include <stdexcept>
+#include <string_theory/string>
 
 #define MIN_INTERFACE_WIDTH       640
 #define MIN_INTERFACE_HEIGHT      480
