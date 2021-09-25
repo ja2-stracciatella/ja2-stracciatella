@@ -25,16 +25,16 @@ UILayout::UILayout(UINT16 screenWidth, UINT16 screenHeight)
 
 /** Set new screen size.
  * This method should be called before most of the application initialization is done. */
-bool UILayout::setScreenSize(UINT16 width, UINT16 height)
+void UILayout::setScreenSize(UINT16 width, UINT16 height)
 {
-	if((width >= MIN_INTERFACE_WIDTH) && (height >= MIN_INTERFACE_HEIGHT))
+	if (width < MIN_INTERFACE_WIDTH || height < MIN_INTERFACE_HEIGHT)
 	{
-		m_screenWidth = width;
-		m_screenHeight = height;
-		recalculatePositions();
-		return true;
+		ST::string err = ST::format("Failed to set screen resolution {} x {}", width, height);
+		throw std::runtime_error(err.to_std_string());
 	}
-	return false;
+	m_screenWidth = width;
+	m_screenHeight = height;
+	recalculatePositions();
 }
 
 

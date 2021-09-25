@@ -135,7 +135,7 @@ public:
 
 	/** Set new screen size.
 	 * This method should be called before most of the application initialization is done. */
-	bool setScreenSize(UINT16 width, UINT16 height);
+	void setScreenSize(UINT16 width, UINT16 height);
 
 	/** Check if the screen is bigger than original 640x480. */
 	bool isBigScreen() const;
