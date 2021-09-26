@@ -7461,7 +7461,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	}
 
 	// Unset UI!
-	if ( fFromSightingEnemy || ( fIsThrowing && !pSoldier->fTurningToShoot ) )
+	if ( fFromSightingEnemy || ( !fIsThrowing && !pSoldier->fTurningToShoot ) )
 	{
 		UnSetUIBusy(pSoldier);
 	}
