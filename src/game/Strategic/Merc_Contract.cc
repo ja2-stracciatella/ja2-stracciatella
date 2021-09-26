@@ -737,7 +737,7 @@ static void CalculateMedicalDepositRefund(SOLDIERTYPE const& s)
 	}
 	else if (s.bLife > 0)
 	{ // The merc is injured, refund a partial amount
-		refund = (2 * refund * s.bLifeMax / s.bLifeMax + 1) / 2;
+		refund = (2 * refund * s.bLife / s.bLifeMax + 1) / 2;
 		AddTransactionToPlayersBook(PARTIAL_MEDICAL_REFUND, pid, now, refund);
 		msg_offset = AIM_MEDICAL_DEPOSIT_PARTIAL_REFUND;
 		msg_length = AIM_MEDICAL_DEPOSIT_PARTIAL_REFUND_LENGTH;
