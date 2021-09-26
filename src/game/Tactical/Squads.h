@@ -6,6 +6,10 @@
 
 // header for squad management system
 #define NUMBER_OF_SOLDIERS_PER_SQUAD		6
+#define NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD	6
+#define SQUAD_INFO_FORMAT_VERSION		(1)                    // extending the Squad save format for dynamic squad sizes
+#define SQUAD_INFO_NUM_RECORDS			(NUMBER_OF_SQUADS * 6)
+
 
 // enums for squads
 enum{

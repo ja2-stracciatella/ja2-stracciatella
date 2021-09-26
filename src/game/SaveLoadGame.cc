@@ -130,7 +130,7 @@ static const ST::string g_savegame_ext   = "sav";
 //Global variable used
 
 extern		INT32					giSortStateForMapScreenList;
-extern		INT16					sDeadMercs[ NUMBER_OF_SQUADS ][ NUMBER_OF_SOLDIERS_PER_SQUAD ];
+extern		INT16					sDeadMercs[ NUMBER_OF_SQUADS ][ NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD ];
 extern		INT32					giRTAILastUpdateTime;
 extern		BOOLEAN				gfRedrawSaveLoadScreen;
 extern		UINT8					gubScreenCount;
@@ -1800,7 +1800,7 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_BOOL( d, gfMeanwhileTryingToStart)
 	INJ_BOOL( d, gfInMeanwhile)
 	INJ_SKIP( d, 1)
-	for (INT16 (* i)[NUMBER_OF_SOLDIERS_PER_SQUAD] = sDeadMercs; i != endof(sDeadMercs); ++i)
+	for (INT16 (* i)[NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD] = sDeadMercs; i != endof(sDeadMercs); ++i)
 	{
 		INJ_I16A(d, *i, lengthof(*i))
 	}
@@ -1949,7 +1949,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	// Preventing the value to be saved in the first place leads to odd behaviour during the commencing cutscene
 	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) gfInMeanwhile = FALSE;
 	EXTR_SKIP( d, 1)
-	for (INT16 (* i)[NUMBER_OF_SOLDIERS_PER_SQUAD] = sDeadMercs; i != endof(sDeadMercs); ++i)
+	for (INT16 (* i)[NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD] = sDeadMercs; i != endof(sDeadMercs); ++i)
 	{
 		EXTR_I16A(d, *i, lengthof(*i))
 	}
