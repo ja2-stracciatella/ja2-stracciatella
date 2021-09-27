@@ -488,7 +488,7 @@ static UINT8 NumberOfTeamMatesAdjacent(SOLDIERTYPE* pSoldier, INT16 sGridNo)
 		sTempGridNo = NewGridNo( sGridNo, DirectionInc( ubLoop ) );
 		if ( sTempGridNo != sGridNo )
 		{
-			const SOLDIERTYPE* const tgt = WhoIsThere2(sGridNo, pSoldier->bLevel);
+			const SOLDIERTYPE* const tgt = WhoIsThere2(sTempGridNo, pSoldier->bLevel);
 			if (tgt != NULL && tgt != pSoldier && tgt->bTeam == pSoldier->bTeam)
 			{
 				ubCount++;
@@ -1620,8 +1620,11 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 							else
 							{
 								INT8 const new_rating = EffectiveArmour(&o);
-								if (EffectiveArmour(&s.inv[HELMETPOS]) <= new_rating) continue; // XXX makes no sense: always compare with helmet and only consider when worse
-								temp_value = 100 * new_rating / EffectiveArmour(&cur_armour);
+								INT8 current_rating = EffectiveArmour(&cur_armour);
+								if (current_rating >= new_rating) continue; // the new armour isn't better, skip
+								if (current_rating == 0) current_rating = 1; // avoid division by zero
+
+								temp_value = 100 * new_rating / current_rating;
 							}
 						}
 						/* FALLTHROUGH */

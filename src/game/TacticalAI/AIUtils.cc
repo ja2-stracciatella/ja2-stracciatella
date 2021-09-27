@@ -357,7 +357,7 @@ void NewDest(SOLDIERTYPE *pSoldier, UINT16 usGridNo)
 	//pSoldier->sDestination = usGridNo;
 	BOOLEAN fSet = FALSE;
 
-	if ( IS_MERC_BODY_TYPE( pSoldier ) && pSoldier->bAction == AI_ACTION_TAKE_COVER && (pSoldier->bOrders == DEFENSIVE || pSoldier->bOrders == CUNNINGSOLO || pSoldier->bOrders == CUNNINGAID ) && (SoldierDifficultyLevel( pSoldier ) >= 2) )
+	if ( IS_MERC_BODY_TYPE( pSoldier ) && pSoldier->bAction == AI_ACTION_TAKE_COVER && (pSoldier->bAttitude == DEFENSIVE || pSoldier->bAttitude == CUNNINGSOLO || pSoldier->bAttitude == CUNNINGAID ) && (SoldierDifficultyLevel( pSoldier ) >= 2) )
 	{
 		UINT16 usMovementMode;
 

@@ -702,7 +702,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				if ( PythSpacesAway( pSoldier->sGridNo, sGridNo ) > iTossRange )
 				{
 					// can't throw there!
-					return;
+					continue;
 				}
 
 				// if considering a gas/smoke grenade, check to see if there is such stuff already there!
