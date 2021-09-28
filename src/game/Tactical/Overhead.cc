@@ -112,7 +112,7 @@
 #define RT_DELAY_BETWEEN_AI_HANDLING	50
 #define RT_AI_TIMESLICE			10
 
-INT32         giRTAILastUpdateTime = 0;
+UINT32        guiRTAILastUpdateTime = 0;
 static UINT32 guiAISlotToHandle    = 0;
 #define HANDLE_OFF_MAP_MERC		0xFFFF
 #define RESET_HANDLE_OF_OFF_MAP_MERCS	0xFFFF
@@ -121,7 +121,7 @@ static UINT32 guiAIAwaySlotToHandle = RESET_HANDLE_OF_OFF_MAP_MERCS;
 #define PAUSE_ALL_AI_DELAY		1500
 
 static BOOLEAN gfPauseAllAI      = FALSE;
-static INT32   giPauseAllAITimer = 0;
+static UINT32  guiPauseAllAITimer = 0;
 
 
 BOOLEAN gfSurrendered = FALSE;
@@ -529,14 +529,14 @@ static BOOLEAN NextAIToHandle(UINT32 uiCurrAISlot)
 void PauseAITemporarily(void)
 {
 	gfPauseAllAI      = TRUE;
-	giPauseAllAITimer = GetJA2Clock();
+	guiPauseAllAITimer = GetJA2Clock();
 }
 
 
 void PauseAIUntilManuallyUnpaused(void)
 {
 	gfPauseAllAI      = TRUE;
-	giPauseAllAITimer = 0;
+	guiPauseAllAITimer = 0;
 }
 
 
@@ -544,7 +544,7 @@ void UnPauseAI(void)
 {
 	// overrides any timer too
 	gfPauseAllAI      = FALSE;
-	giPauseAllAITimer = 0;
+	guiPauseAllAITimer = 0;
 }
 
 
@@ -565,9 +565,9 @@ void ExecuteOverhead(void)
 		RESETCOUNTER(TOVERHEAD);
 
 		// Diagnostic Stuff
-		INT32 iTimerVal = GetJA2Clock();
-		giTimerDiag = iTimerVal - iTimerTest;
-		iTimerTest  = iTimerVal;
+		UINT32 uiTimerVal = GetJA2Clock();
+		guiTimerDiag = uiTimerVal - iTimerTest;
+		iTimerTest  = uiTimerVal;
 
 		// ANIMATED TILE STUFF
 		UpdateAniTiles();
@@ -579,7 +579,7 @@ void ExecuteOverhead(void)
 
 		CheckHostileOrSayQuoteList();
 
-		if (gfPauseAllAI && giPauseAllAITimer && iTimerVal - giPauseAllAITimer > PAUSE_ALL_AI_DELAY)
+		if (gfPauseAllAI && guiPauseAllAITimer && uiTimerVal - guiPauseAllAITimer > PAUSE_ALL_AI_DELAY)
 		{
 			// ok, stop pausing the AI!
 			gfPauseAllAI = FALSE;
@@ -591,9 +591,9 @@ void ExecuteOverhead(void)
 			// AI limiting crap
 			if (!(gTacticalStatus.uiFlags & INCOMBAT))
 			{
-				if (iTimerVal - giRTAILastUpdateTime > RT_DELAY_BETWEEN_AI_HANDLING)
+				if (uiTimerVal - guiRTAILastUpdateTime > RT_DELAY_BETWEEN_AI_HANDLING)
 				{
-					giRTAILastUpdateTime = iTimerVal;
+					guiRTAILastUpdateTime = uiTimerVal;
 					// figure out which AI guy to handle this time around,
 					// starting with the slot AFTER the current AI guy
 					fHandleAI = NextAIToHandle(guiAISlotToHandle);
@@ -1137,7 +1137,7 @@ void ExecuteOverhead(void)
 					HandleSoldierAI(pSoldier);
 					if (!(gTacticalStatus.uiFlags & INCOMBAT))
 					{
-						if (GetJA2Clock() - iTimerVal > RT_AI_TIMESLICE)
+						if (GetJA2Clock() - uiTimerVal > RT_AI_TIMESLICE)
 						{
 							// don't do any more AI this time!
 							fHandleAI = FALSE;
@@ -6134,7 +6134,7 @@ static void HandleCreatureTenseQuote(void)
 	if (!(gTacticalStatus.uiFlags & IN_CREATURE_LAIR)) return;
 	if (gTacticalStatus.uiFlags & INCOMBAT) return;
 
-	INT32 uiTime = GetJA2Clock();
+	UINT32 uiTime = GetJA2Clock();
 	if (uiTime - gTacticalStatus.uiCreatureTenseQuoteLastUpdate > (UINT32)(gTacticalStatus.sCreatureTenseQuoteDelay * 1000))
 	{
 		gTacticalStatus.uiCreatureTenseQuoteLastUpdate = uiTime;

@@ -131,7 +131,7 @@ static const ST::string g_savegame_ext   = "sav";
 
 extern		INT32					giSortStateForMapScreenList;
 extern		INT16					sDeadMercs[ NUMBER_OF_SQUADS ][ NUMBER_OF_DEAD_SOLDIERS_ON_SQUAD ];
-extern		INT32					giRTAILastUpdateTime;
+extern		UINT32					guiRTAILastUpdateTime;
 extern		BOOLEAN				gfRedrawSaveLoadScreen;
 extern		UINT8					gubScreenCount;
 extern		INT16					sWorldSectorLocationOfFirstBattle;
@@ -1021,7 +1021,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	BAR(1, "Final Checks...");
 
 	// Reset the AI Timer clock
-	giRTAILastUpdateTime = 0;
+	guiRTAILastUpdateTime = 0;
 
 	// If we are in tactical
 	if (guiScreenToGotoAfterLoadingSavedGame == GAME_SCREEN)

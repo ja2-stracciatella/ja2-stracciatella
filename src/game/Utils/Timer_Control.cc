@@ -14,8 +14,8 @@
 #include <stdexcept>
 
 
-INT32	giClockTimer = -1;
-INT32	giTimerDiag  =  0;
+UINT32	guiClockTimer = UINT32_MAX;
+UINT32	guiTimerDiag  =  0;
 
 UINT32 guiBaseJA2Clock = 0;
 
@@ -59,16 +59,16 @@ static SDL_TimerID g_timer;
 
 
 extern UINT32 guiCompressionStringBaseTime;
-extern INT32  giFlashHighlightedItemBaseTime;
-extern INT32  giCompatibleItemBaseTime;
-extern INT32  giAnimateRouteBaseTime;
-extern INT32  giPotHeliPathBaseTime;
+extern UINT32 guiFlashHighlightedItemBaseTime;
+extern UINT32 guiCompatibleItemBaseTime;
+extern UINT32 guiAnimateRouteBaseTime;
+extern UINT32 guiPotHeliPathBaseTime;
 extern UINT32 guiSectorLocatorBaseTime;
-extern INT32  giCommonGlowBaseTime;
-extern INT32  giFlashAssignBaseTime;
-extern INT32  giFlashContractBaseTime;
+extern UINT32 guiCommonGlowBaseTime;
+extern UINT32 guiFlashAssignBaseTime;
+extern UINT32 guiFlashContractBaseTime;
 extern UINT32 guiFlashCursorBaseTime;
-extern INT32  giPotCharPathBaseTime;
+extern UINT32 guiPotCharPathBaseTime;
 
 
 static UINT32 TimeProc(UINT32 const interval, void*)
@@ -185,16 +185,16 @@ void ResetJA2ClockGlobalTimers(void)
 {
 	UINT32 const now = GetJA2Clock();
 
-	guiCompressionStringBaseTime   = now;
-	giFlashHighlightedItemBaseTime = now;
-	giCompatibleItemBaseTime       = now;
-	giAnimateRouteBaseTime         = now;
-	giPotHeliPathBaseTime          = now;
-	guiSectorLocatorBaseTime       = now;
+	guiCompressionStringBaseTime    = now;
+	guiFlashHighlightedItemBaseTime = now;
+	guiCompatibleItemBaseTime       = now;
+	guiAnimateRouteBaseTime         = now;
+	guiPotHeliPathBaseTime          = now;
+	guiSectorLocatorBaseTime        = now;
 
-	giCommonGlowBaseTime           = now;
-	giFlashAssignBaseTime          = now;
-	giFlashContractBaseTime        = now;
-	guiFlashCursorBaseTime         = now;
-	giPotCharPathBaseTime          = now;
+	guiCommonGlowBaseTime           = now;
+	guiFlashAssignBaseTime          = now;
+	guiFlashContractBaseTime        = now;
+	guiFlashCursorBaseTime          = now;
+	guiPotCharPathBaseTime          = now;
 }

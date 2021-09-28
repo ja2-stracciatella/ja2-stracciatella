@@ -394,8 +394,8 @@ static UINT16 gusUndergroundNearBlack;
 
 BOOLEAN gfMilitiaPopupCreated = FALSE;
 
-INT32 giAnimateRouteBaseTime = 0;
-INT32 giPotHeliPathBaseTime = 0;
+UINT32 guiAnimateRouteBaseTime = 0;
+UINT32 guiPotHeliPathBaseTime = 0;
 
 // sam and mine icons
 static SGPVObject* guiSAMICON;
@@ -1529,14 +1529,14 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	}
 
 	// Check Timer
-	if (giAnimateRouteBaseTime==0)
+	if (guiAnimateRouteBaseTime==0)
 	{
-		giAnimateRouteBaseTime=GetJA2Clock();
+		guiAnimateRouteBaseTime=GetJA2Clock();
 		return FALSE;
 	}
 
 	// check difference in time
-	iDifference=GetJA2Clock()-giAnimateRouteBaseTime;
+	iDifference=GetJA2Clock()-guiAnimateRouteBaseTime;
 
 	// if pause flag, check time, if time passed, reset, continue on, else return
 	if(fPauseFlag)
@@ -1548,7 +1548,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 		else
 		{
 			fPauseFlag=FALSE;
-		giAnimateRouteBaseTime=GetJA2Clock();
+		guiAnimateRouteBaseTime=GetJA2Clock();
 		}
 	}
 
@@ -1564,7 +1564,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 		else
 		{
 			// sufficient time, update base time
-			giAnimateRouteBaseTime=GetJA2Clock();
+			guiAnimateRouteBaseTime=GetJA2Clock();
 			fUpDateFlag=!fUpDateFlag;
 
 			fNextNode=TRUE;
@@ -2020,7 +2020,7 @@ void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 	if( fOldShowAirCraft != fShowAircraftFlag )
 	{
 		fOldShowAirCraft = fShowAircraftFlag;
-		giPotHeliPathBaseTime = GetJA2Clock( );
+		guiPotHeliPathBaseTime = GetJA2Clock( );
 
 		sOldMapX = sMapX;
 		sOldMapY = sMapY;
@@ -2031,7 +2031,7 @@ void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 
 	if( ( sMapX != sOldMapX) || ( sMapY != sOldMapY ) )
 	{
-		giPotHeliPathBaseTime = GetJA2Clock( );
+		guiPotHeliPathBaseTime = GetJA2Clock( );
 
 		sOldMapX = sMapX;
 		sOldMapY = sMapY;
@@ -2046,7 +2046,7 @@ void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 		fDrawTempHeliPath = FALSE;
 	}
 
-	iDifference = GetJA2Clock( ) - giPotHeliPathBaseTime ;
+	iDifference = GetJA2Clock( ) - guiPotHeliPathBaseTime ;
 
 	if( fTempPathAlreadyDrawn )
 	{
@@ -2056,7 +2056,7 @@ void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 	if( iDifference > MIN_WAIT_TIME_FOR_TEMP_PATH )
 	{
 		fDrawTempHeliPath = TRUE;
-		giPotHeliPathBaseTime = GetJA2Clock( );
+		guiPotHeliPathBaseTime = GetJA2Clock( );
 		fTempPathAlreadyDrawn = TRUE;
 	}
 }

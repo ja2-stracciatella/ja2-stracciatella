@@ -96,7 +96,7 @@ static GUIButtonRef iFileDlgButtons[NUM_FILEDIALOG_BUTTONS];
 static INT32 iTopFileShown;
 static INT32 iCurrFileShown;
 static INT32 iLastFileClicked;
-static INT32 iLastClickTime;
+static UINT32 uiLastClickTime;
 
 static std::vector<FileDialogEntry> gFileList;
 
@@ -141,7 +141,7 @@ static void ChangeDirectory(const ST::string directory, bool resetState) {
 	gFileList.clear();
 
 	if (resetState) {
-		iTopFileShown = iLastClickTime = 0;
+		iTopFileShown = uiLastClickTime = 0;
 		iCurrFileShown = iLastFileClicked = -1;
 	}
 
@@ -191,7 +191,7 @@ static void LoadSaveScreenEntry(void)
 	}
 
 	iLastFileClicked = -1;
-	iLastClickTime = 0;
+	uiLastClickTime = 0;
 }
 
 
@@ -641,7 +641,7 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 	{
 		if( (INT32)sSelName == (x-iTopFileShown) )
 		{
-			INT32 iCurrClickTime;
+			UINT32 uiCurrClickTime;
 			iCurrFileShown = x;
 			gCurrentFilename = ST::format("{}", curr->filename);
 			SetInputFieldString(0, gCurrentFilename);
@@ -649,12 +649,12 @@ static void SelectFileDialogYPos(UINT16 usRelativeYPos)
 			RenderInactiveTextField( 0 );
 
 			//Calculate and process any double clicking...
-			iCurrClickTime = GetJA2Clock();
-			if( iCurrClickTime - iLastClickTime < 400 && x == iLastFileClicked )
+			uiCurrClickTime = GetJA2Clock();
+			if (uiCurrClickTime - uiLastClickTime < 400 && x == iLastFileClicked)
 			{ //Considered a double click, so activate load/save this filename.
 				iFDlgState = iCurrentAction == ACTION_SAVE_MAP ? DIALOG_SAVE : DIALOG_LOAD;
 			}
-			iLastClickTime = iCurrClickTime;
+			uiLastClickTime = uiCurrClickTime;
 			iLastFileClicked = x;
 		}
 		curr++;

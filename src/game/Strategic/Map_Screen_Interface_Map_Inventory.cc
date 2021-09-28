@@ -106,8 +106,8 @@ static BOOLEAN      fChangedInventorySlots = FALSE;
 // the unseen items list...have to save this
 static std::vector<WORLDITEM> pUnSeenItems;
 
-INT32 giFlashHighlightedItemBaseTime = 0;
-INT32 giCompatibleItemBaseTime = 0;
+UINT32 guiFlashHighlightedItemBaseTime = 0;
+UINT32 guiCompatibleItemBaseTime = 0;
 
 static GUIButtonRef guiMapInvenButton[3];
 
@@ -1171,7 +1171,7 @@ static void DrawTextOnSectorInventory(void)
 
 void HandleFlashForHighLightedItem( void )
 {
-	INT32 iCurrentTime = 0;
+	UINT32 uiCurrentTime = 0;
 	INT32 iDifference = 0;
 
 
@@ -1179,25 +1179,25 @@ void HandleFlashForHighLightedItem( void )
 	if( iCurrentlyHighLightedItem == -1 )
 	{
 		fFlashHighLightInventoryItemOnradarMap = FALSE;
-		giFlashHighlightedItemBaseTime = 0;
+		guiFlashHighlightedItemBaseTime = 0;
 	}
 
 	// get the current time
-	iCurrentTime = GetJA2Clock();
+	uiCurrentTime = GetJA2Clock();
 
 	// if there basetime is uninit
-	if( giFlashHighlightedItemBaseTime == 0 )
+	if( guiFlashHighlightedItemBaseTime == 0 )
 	{
-		giFlashHighlightedItemBaseTime = iCurrentTime;
+		guiFlashHighlightedItemBaseTime = uiCurrentTime;
 	}
 
 
-	iDifference = iCurrentTime - giFlashHighlightedItemBaseTime;
+	iDifference = uiCurrentTime - guiFlashHighlightedItemBaseTime;
 
 	if( iDifference > DELAY_FOR_HIGHLIGHT_ITEM_FLASH )
 	{
 		// reset timer
-		giFlashHighlightedItemBaseTime = iCurrentTime;
+		guiFlashHighlightedItemBaseTime = uiCurrentTime;
 
 		// flip flag
 		fFlashHighLightInventoryItemOnradarMap = !fFlashHighLightInventoryItemOnradarMap;
@@ -1219,19 +1219,19 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 
 	if( iCurrentSlot == -1 )
 	{
-		giCompatibleItemBaseTime = 0;
+		guiCompatibleItemBaseTime = 0;
 	}
 
 	if (fChangedInventorySlots)
 	{
-		giCompatibleItemBaseTime = 0;
+		guiCompatibleItemBaseTime = 0;
 		fChangedInventorySlots = FALSE;
 	}
 
 	// reset the base time to the current game clock
-	if( giCompatibleItemBaseTime == 0 )
+	if( guiCompatibleItemBaseTime == 0 )
 	{
-		giCompatibleItemBaseTime = GetJA2Clock( );
+		guiCompatibleItemBaseTime = GetJA2Clock( );
 
 		if (fItemWasHighLighted)
 		{
@@ -1260,7 +1260,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 			{
 				if( HandleCompatibleAmmoUIForMapScreen( pSoldier, iCurrentSlot + ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ), TRUE, FALSE ) )
 				{
-					if( GetJA2Clock( ) - giCompatibleItemBaseTime > 100 )
+					if( GetJA2Clock( ) - guiCompatibleItemBaseTime > 100 )
 					{
 						if (!fItemWasHighLighted)
 						{
@@ -1273,7 +1273,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 		}
 		else
 		{
-			giCompatibleItemBaseTime = 0;
+			guiCompatibleItemBaseTime = 0;
 		}
 	}
 
@@ -1286,7 +1286,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 		{
 			if( HandleCompatibleAmmoUIForMapInventory( pSoldier, iCurrentSlot, ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ) , TRUE, FALSE ) )
 			{
-				if( GetJA2Clock( ) - giCompatibleItemBaseTime > 100 )
+				if( GetJA2Clock( ) - guiCompatibleItemBaseTime > 100 )
 				{
 					if (!fItemWasHighLighted)
 					{
@@ -1298,7 +1298,7 @@ static void HandleMouseInCompatableItemForMapSectorInventory(INT32 iCurrentSlot)
 		}
 		else
 		{
-			giCompatibleItemBaseTime = 0;
+			guiCompatibleItemBaseTime = 0;
 		}
 	}
 }
