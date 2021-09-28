@@ -2590,7 +2590,7 @@ void RenderItemDescriptionBox(void)
 		if (item->isAmmo())
 		{
 			// Ammo - print amount
-			pStr = ST::format("{}/{}", obj.ubShotsLeft[0], item->asAmmo()->capacity);
+			pStr = ST::format("{}/{}", obj.ubShotsLeft[gubItemDescStatusIndex], item->asAmmo()->capacity);
 			FindFontRightCoordinates(dx + ids[1].sX + ids[1].sValDx, dy + ids[1].sY, ITEM_STATS_WIDTH, ITEM_STATS_HEIGHT, pStr, BLOCKFONT2, &usX, &usY);
 			MPrint(usX, usY, pStr);
 		}
