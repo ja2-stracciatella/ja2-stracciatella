@@ -1996,10 +1996,10 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 		}
 		iDamage = BulletImpact(pFirer, &tgt, ubHitLocation, iImpact, sHitBy, &ubSpecial);
 		// handle hit here...
-		if( pFirer->bTeam == 0 )
+		if (pFirer->bTeam == 0)
 		{
 			// issue #1140 : sync usShotsFired with usShotsHit and so that merc statistic <= 100%
-			if (pFirer->target->bLife > 0) gMercProfiles[ pFirer->ubProfile ].usShotsHit++;
+			if (pFirer->target && pFirer->target->bLife > 0) gMercProfiles[ pFirer->ubProfile ].usShotsHit++;
 		}
 
 		// intentionally shot
