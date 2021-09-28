@@ -18,9 +18,10 @@
 #include "Logger.h"
 #include "Overhead.h"
 #include "Quests.h"
+#include "Soldier_Profile.h"
+#include "Soldier_Profile_Type.h"
 #include "StrategicMap.h"
 #include "Structure.h"
-#include <set>
 #include <stdexcept>
 #include <string>
 #include <string_theory/format>
@@ -192,8 +193,14 @@ static void RegisterUserTypes()
 	lua.new_usertype<SOLDIERTYPE>("SOLDIERTYPE",
 		"ubID", &SOLDIERTYPE::ubID,
 		"ubProfile", &SOLDIERTYPE::ubProfile,
+		"name", &SOLDIERTYPE::name,
+
+		"ubWhatKindOfMercAmI", &SOLDIERTYPE::ubWhatKindOfMercAmI,
+		"bActive", &SOLDIERTYPE::bActive,
+
 		"ubBodyType", &SOLDIERTYPE::ubBodyType,
 		"ubSoldierClass", &SOLDIERTYPE::ubSoldierClass,
+		"uiAnimSubFlags", &SOLDIERTYPE::uiAnimSubFlags,
 		"bTeam", &SOLDIERTYPE::bTeam,
 		"ubCivilianGroup", &SOLDIERTYPE::ubCivilianGroup,
 		"bNeutral", &SOLDIERTYPE::bNeutral,
@@ -202,6 +209,7 @@ static void RegisterUserTypes()
 		"bLife", &SOLDIERTYPE::bLife,
 		"bBreath", &SOLDIERTYPE::bBreath,
 		"bBreathMax", &SOLDIERTYPE::bBreathMax,
+		"sBreathRed", &SOLDIERTYPE::sBreathRed,
 		"bCamo", &SOLDIERTYPE::bCamo,
 
 		"bAgility", &SOLDIERTYPE::bAgility,
@@ -223,8 +231,56 @@ static void RegisterUserTypes()
 		"VestPal", &SOLDIERTYPE::VestPal,
 		"SkinPal", &SOLDIERTYPE::SkinPal,
 
-		"ubBattleSoundID", &SOLDIERTYPE::ubBattleSoundID
-		);
+		"ubBattleSoundID", &SOLDIERTYPE::ubBattleSoundID,
+
+		"sSector", &SOLDIERTYPE::sSector,
+		"fBetweenSectors", &SOLDIERTYPE::fBetweenSectors,
+
+		"iTotalContractLength", &SOLDIERTYPE::iTotalContractLength,
+		"iEndofContractTime", &SOLDIERTYPE::iEndofContractTime
+	);
+
+	lua.new_usertype<MERCPROFILESTRUCT>("MERCPROFILESTRUCT",
+		"zNickname", &MERCPROFILESTRUCT::zNickname,
+		"zName", &MERCPROFILESTRUCT::zName,
+
+		"ubBodyType", &MERCPROFILESTRUCT::ubBodyType,
+		"ubFaceIndex", &MERCPROFILESTRUCT::ubFaceIndex,
+		"usEyesX", &MERCPROFILESTRUCT::usEyesX,
+		"usEyesY", &MERCPROFILESTRUCT::usEyesY,
+		"usMouthX", &MERCPROFILESTRUCT::usMouthX,
+		"usMouthY", &MERCPROFILESTRUCT::usMouthY,
+
+		"ubNeedForSleep", &MERCPROFILESTRUCT::ubNeedForSleep,
+
+		"bSkillTrait", &MERCPROFILESTRUCT::bSkillTrait,
+		"bSkillTrait2", &MERCPROFILESTRUCT::bSkillTrait2,
+
+		"bAgility", &MERCPROFILESTRUCT::bAgility,
+		"bDexterity", &MERCPROFILESTRUCT::bDexterity,
+		"bExplosive", &MERCPROFILESTRUCT::bExplosive,
+		"bLeadership", &MERCPROFILESTRUCT::bLeadership,
+		"bMarksmanship", &MERCPROFILESTRUCT::bMarksmanship,
+		"bMechanical", &MERCPROFILESTRUCT::bMechanical,
+		"bMedical", &MERCPROFILESTRUCT::bMedical,
+		"bStrength", &MERCPROFILESTRUCT::bStrength,
+		"bWisdom", &MERCPROFILESTRUCT::bWisdom,
+
+		"bTown", &MERCPROFILESTRUCT::bTown,
+		"sSector", &MERCPROFILESTRUCT::sSector,
+		"sGridNo", &MERCPROFILESTRUCT::sGridNo,
+		"ubLastDateSpokenTo", &MERCPROFILESTRUCT::ubLastDateSpokenTo,
+
+		"iMercMercContractLength", &MERCPROFILESTRUCT::iMercMercContractLength,
+		"sSalary", &MERCPROFILESTRUCT::sSalary,
+		"uiWeeklySalary", &MERCPROFILESTRUCT::uiWeeklySalary,
+		"uiBiWeeklySalary", &MERCPROFILESTRUCT::uiBiWeeklySalary,
+		"bMedicalDeposit", &MERCPROFILESTRUCT::bMedicalDeposit,
+		"sMedicalDepositAmount", &MERCPROFILESTRUCT::sMedicalDepositAmount,
+		"usOptionalGearCost", &MERCPROFILESTRUCT::usOptionalGearCost,
+
+		"iBalance", &MERCPROFILESTRUCT::iBalance
+	);
 
 	lua.new_usertype<DEALER_ITEM_HEADER>("DEALER_ITEM_HEADER",
 		"ubTotalItems", &DEALER_ITEM_HEADER::ubTotalItems,
@@ -263,6 +319,8 @@ static void RegisterGlobals()
 
 	lua.set_function("DoBasicMessageBox", DoBasicMessageBox);
 	lua.set_function("ExecuteTacticalTextBox", ExecuteTacticalTextBox_);
+
+	lua.set_function("GetMercProfile", GetMercProfile);
 
 	lua.set_function("GetGameStates", GetGameStates);
 	lua.set_function("PutGameStates", PutGameStates);
@@ -360,6 +418,8 @@ static void _RegisterListener(std::string observable, std::string luaFunc, ST::s
 	else if (observable == "OnDealerInventoryUpdated")   OnDealerInventoryUpdated.addListener(key, wrap<>(luaFunc));
 	else if (observable == "OnItemTransacted")           OnItemTransacted.addListener(key, wrap<INT8, UINT16, BOOLEAN>(luaFunc));
 	else if (observable == "OnItemPriced")               OnItemPriced.addListener(key, wrap<INT8, UINT16, BOOLEAN, UINT32_S*>(luaFunc));
+	else if (observable == "OnMercHired")                OnMercHired.addListener(key, wrap<SOLDIERTYPE*>(luaFunc));
+	else if (observable == "OnRPCRecruited")             OnRPCRecruited.addListener(key, wrap<SOLDIERTYPE*>(luaFunc));
 	else {
 		ST::string err = ST::format("There is no observable named '{}'", observable);
 		throw std::logic_error(err.to_std_string());

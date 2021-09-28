@@ -25,6 +25,9 @@ struct SOLDIERTYPE;
 /*! \struct STRUCTURE
     \brief An structure element on the tactical map */
 struct STRUCTURE;
+/*! \struct MERCPROFILESTRUCT
+    \brief Profile of a character in game; controls soldier's name, appearance and others */
+struct MERCPROFILESTRUCT;
 
 /*! \defgroup funclib-dealers Shops and arms dealers
     \brief Manage behavior, inventory and prices of dealers */
@@ -79,11 +82,6 @@ extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT32, BOOLEAN_S*> Bef
 extern Observable<INT16, INT16, INT8, INT16, STRUCTURE*, UINT8, BOOLEAN> OnStructureDamaged;
 
 /**
- * @defgroup funclib-general General 
- * @brief Functions to compose mod modules
- */
-
-/**
  * When the game about to be saved. This is the place to persist mod game states.
  * @ingroup observables
  */
@@ -121,6 +119,30 @@ extern Observable<INT8, UINT16, BOOLEAN> OnItemTransacted;
  * @ingroup observables
  */
 extern Observable<INT8, UINT16, BOOLEAN, UINT32_S*> OnItemPriced;
+
+ /*
+ * When a merc has just be hired and the soldier was just created in the world.
+ * @param soldier the soldier being hired
+ * @ingroup observables
+ */
+extern Observable<SOLDIERTYPE*> OnMercHired;
+
+/**
+ * When an RPC has been recruited into our team.
+ * @param soldier the RPC just recruited
+ * @ingroup observables
+ */
+extern Observable<SOLDIERTYPE*> OnRPCRecruited;
+
+/**
+ * @defgroup funclib-general General
+ * @brief Functions to compose mod modules
+ */
+
+/**
+ * @defgroup funclib-mercs Personnel
+ * @brief Functions to access soldiers and characters in the game
+ */
 
 /** @defgroup funclib-sectors Map sectors
  *  @brief Access and alter sectors' strategic-level data
@@ -180,9 +202,18 @@ OBJECTTYPE* CreateMoney(const UINT32 amt);
 void PlaceItem(const INT16 sGridNo, OBJECTTYPE* const pObject, const INT8 bVisibility);
 
 /**
+ * Gets the Merc Profile data object by profile ID
+ * @param ubProfileID a valid Profile ID
+ * @return pointer to a MERCPROFILESTRUCT struct
+ * @ingroup funclib-mercs
+ */
+MERCPROFILESTRUCT* GetMercProfile(UINT8 ubProfileID);
+
+/**
  * Retrieves a key-value mapping from saved game states.
  * @param key provide a unique key so it will not clash with other mods
  * @return
+ * @ingroup funclib-general
  */
 ExtraGameStatesTable GetGameStates(std::string key);
 
@@ -191,6 +222,7 @@ ExtraGameStatesTable GetGameStates(std::string key);
  * persisted in game saves, and can be retrieved with GetGameStates.
  * @param key provide a unique key so it will not clash with other mods
  * @param states a map of primitive types (string, numeric or boolean)
+ * @ingroup funclib-general
  */
 void PutGameStates(std::string key, ExtraGameStatesTable states);
 

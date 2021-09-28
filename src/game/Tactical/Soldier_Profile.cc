@@ -45,6 +45,7 @@
 #include "Items.h"
 #include "GameRes.h"
 #include "Faces.h"
+#include "Observable.h"
 
 #include "ContentManager.h"
 #include "GameInstance.h"
@@ -54,6 +55,7 @@
 
 extern BOOLEAN gfProfileDataLoaded;
 
+Observable<SOLDIERTYPE*> OnRPCRecruited;
 
 BOOLEAN	gfPotentialTeamChangeDuringDeath = FALSE;
 
@@ -742,6 +744,8 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 
 	//remove the merc from the Personnel screens departed list ( if they have never been hired before, its ok to call it )
 	RemoveNewlyHiredMercFromPersonnelDepartedList( pSoldier->ubProfile );
+
+	OnRPCRecruited(pNewSoldier);
 
 	return( TRUE );
 }
