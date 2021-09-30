@@ -3279,6 +3279,10 @@ static BOOLEAN PatrolRequestingMinimumReinforcements(INT32 iPatrolID)
 			return TRUE;
 		}
 	}
+	else if (saipolicy(refill_defeated_patrol_groups))
+	{ // we want to refill totally defeated patrols too
+		return TRUE;
+	}
 	return FALSE;
 }
 
