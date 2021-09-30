@@ -1,7 +1,7 @@
 /**
  * Game policies governing Strategic AI behaviour.
  *
- * Most of the settings here are set at the start of a  campaign. Changes will only take 
+ * Most of the settings here are set at the start of a campaign. Changes will only take
  * effect in a new game.
  */
 {
@@ -73,6 +73,12 @@
     "grace_period_in_hours_easy": 144,  // 6 days
     "grace_period_in_hours_medium": 96, // 4 days
     "grace_period_in_hours_hard": 48,   // 2 days
+
+    //  Whether or not the queen would send new groups of army to replace defeated patrols. By
+    //  default, the queen only reinforces active patrol groups.
+    //
+    //  vanilla value: false
+    "refill_defeated_patrol_groups": false,
 
     //  Defines how many days must pass before the queen is willing to refill a defeated patrol
     //  group.
