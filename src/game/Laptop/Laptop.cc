@@ -2436,21 +2436,21 @@ static void ShowLights(void)
 
 static void FlickerHDLight(void)
 {
-	static INT32 iBaseTime        = 0;
-	static INT32 iTotalDifference = 0;
+	static UINT32 uiBaseTime       = 0;
+	static INT32  iTotalDifference = 0;
 
 	if (fLoadPendingFlag) fFlickerHD = TRUE;
 	if (!fFlickerHD) return;
 
-	if (iBaseTime == 0) iBaseTime = GetJA2Clock();
+	if (uiBaseTime == 0) uiBaseTime = GetJA2Clock();
 
-	const INT32 iDifference = GetJA2Clock() - iBaseTime;
+	const INT32 iDifference = GetJA2Clock() - uiBaseTime;
 
 	if (iTotalDifference > HD_FLICKER_TIME && !fLoadPendingFlag)
 	{
-		iBaseTime         = GetJA2Clock();
+		uiBaseTime         = GetJA2Clock();
 		fHardDriveLightOn = FALSE;
-		iBaseTime         = 0;
+		uiBaseTime         = 0;
 		iTotalDifference  = 0;
 		fFlickerHD        = FALSE;
 		InvalidateRegion(88, 466, 102, 477);
@@ -2473,24 +2473,24 @@ static BOOLEAN ExitLaptopDone(void)
 {
 	// check if this is the first time, to reset counter
 	static BOOLEAN fOldLeaveLaptopState = FALSE;
-	static INT32 iBaseTime              = 0;
+	static UINT32  uiBaseTime            = 0;
 
 	if (!fOldLeaveLaptopState)
 	{
 		fOldLeaveLaptopState = TRUE;
-		iBaseTime = GetJA2Clock();
+		uiBaseTime = GetJA2Clock();
 	}
 
 	fPowerLightOn = FALSE;
 
 	InvalidateRegion(44, 466, 58, 477);
 	// get the current difference
-	const INT32 iDifference = GetJA2Clock() - iBaseTime;
+	const INT32 iDifference = GetJA2Clock() - uiBaseTime;
 
 	// did we wait long enough?
 	if (iDifference > EXIT_LAPTOP_DELAY_TIME)
 	{
-		iBaseTime = 0;
+		uiBaseTime = 0;
 		fOldLeaveLaptopState = FALSE;
 		return TRUE;
 	}
@@ -3215,7 +3215,7 @@ static void DisplayWebBookMarkNotify(void)
 // handle timer for bookmark notify
 static void HandleWebBookMarkNotifyTimer(void)
 {
-	static INT32 iBaseTime              = 0;
+	static UINT32  uiBaseTime            = 0;
 	static BOOLEAN fOldShowBookMarkInfo = FALSE;
 
 	// check if maxing or mining?
@@ -3244,25 +3244,25 @@ static void HandleWebBookMarkNotifyTimer(void)
 	// check if flag false, is so, leave
 	if (!fShowBookmarkInfo)
 	{
-		iBaseTime = 0;
+		uiBaseTime = 0;
 		return;
 	}
 
 	// check if this is the first time in here
-	if (iBaseTime == 0)
+	if (uiBaseTime == 0)
 	{
-		iBaseTime = GetJA2Clock();
+		uiBaseTime = GetJA2Clock();
 		return;
 	}
 
-	const INT32 iDifference = GetJA2Clock() - iBaseTime;
+	const INT32 iDifference = GetJA2Clock() - uiBaseTime;
 
 	fReDrawBookMarkInfo = TRUE;
 
 	if (iDifference > DISPLAY_TIME_FOR_WEB_BOOKMARK_NOTIFY)
 	{
 		// waited long enough, stop showing
-		iBaseTime = 0;
+		uiBaseTime = 0;
 		fShowBookmarkInfo = FALSE;
 	}
 }

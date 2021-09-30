@@ -429,13 +429,13 @@ static void BtnTimeCompressLessMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	static INT32 iLastRepeatScrollTime = 0;
+	static UINT32 uiLastRepeatScrollTime = 0;
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		// redraw region
 		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
-		iLastRepeatScrollTime = 0;
+		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -445,17 +445,17 @@ static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
-		if (GetJA2Clock() - iLastRepeatScrollTime >= MESSAGE_BTN_SCROLL_TIME)
+		if (GetJA2Clock() - uiLastRepeatScrollTime >= MESSAGE_BTN_SCROLL_TIME)
 		{
 			MapScreenMsgScrollDown(1);
-			iLastRepeatScrollTime = GetJA2Clock();
+			uiLastRepeatScrollTime = GetJA2Clock();
 		}
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		// redraw region
 		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
-		iLastRepeatScrollTime = 0;
+		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
@@ -465,10 +465,10 @@ static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_REPEAT)
 	{
-		if (GetJA2Clock() - iLastRepeatScrollTime >= MESSAGE_BTN_SCROLL_TIME)
+		if (GetJA2Clock() - uiLastRepeatScrollTime >= MESSAGE_BTN_SCROLL_TIME)
 		{
 			MapScreenMsgScrollDown(MAX_MESSAGES_ON_MAP_BOTTOM);
-			iLastRepeatScrollTime = GetJA2Clock();
+			uiLastRepeatScrollTime = GetJA2Clock();
 		}
 	}
 }
@@ -476,13 +476,13 @@ static void BtnMessageDownMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 
 static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 {
-	static INT32 iLastRepeatScrollTime = 0;
+	static UINT32 uiLastRepeatScrollTime = 0;
 
 	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN)
 	{
 		// redraw region
 		if (btn->Area.uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
-		iLastRepeatScrollTime = 0;
+		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
@@ -492,17 +492,17 @@ static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT)
 	{
-		if (GetJA2Clock() - iLastRepeatScrollTime >= MESSAGE_BTN_SCROLL_TIME)
+		if (GetJA2Clock() - uiLastRepeatScrollTime >= MESSAGE_BTN_SCROLL_TIME)
 		{
 			MapScreenMsgScrollUp(1);
-			iLastRepeatScrollTime = GetJA2Clock();
+			uiLastRepeatScrollTime = GetJA2Clock();
 		}
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_DWN)
 	{
 		// redraw region
 		if (btn->uiFlags & MSYS_HAS_BACKRECT) fMapScreenBottomDirty = TRUE;
-		iLastRepeatScrollTime = 0;
+		uiLastRepeatScrollTime = 0;
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
@@ -512,10 +512,10 @@ static void BtnMessageUpMapScreenCallback(GUI_BUTTON *btn, INT32 reason)
 	}
 	else if (reason & MSYS_CALLBACK_REASON_RBUTTON_REPEAT)
 	{
-		if (GetJA2Clock() - iLastRepeatScrollTime >= MESSAGE_BTN_SCROLL_TIME)
+		if (GetJA2Clock() - uiLastRepeatScrollTime >= MESSAGE_BTN_SCROLL_TIME)
 		{
 			MapScreenMsgScrollUp(MAX_MESSAGES_ON_MAP_BOTTOM);
-			iLastRepeatScrollTime = GetJA2Clock();
+			uiLastRepeatScrollTime = GetJA2Clock();
 		}
 	}
 }

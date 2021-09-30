@@ -39,9 +39,9 @@ extern const INT32 giTimerIntervals[NUMTIMERS];
 extern INT32       giTimerCounters[NUMTIMERS];
 
 // GLOBAL SYNC TEMP TIME
-extern INT32 giClockTimer;
+extern UINT32 guiClockTimer;
 
-extern INT32 giTimerDiag;
+extern UINT32 guiTimerDiag;
 
 extern INT32 giTimerTeamTurnUpdate;
 

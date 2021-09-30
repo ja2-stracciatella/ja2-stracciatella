@@ -185,7 +185,7 @@ static INT16 gsSelSectorY;
 
 //Used to determine how long the F5 key has been held down for to determine whether or not the
 //summary is going to be persistant or not.
-static UINT32 giInitTimer;
+static UINT32 guiInitTimer;
 
 static ST::string gszFilename;
 static ST::string gszTempFilename;
@@ -268,7 +268,7 @@ void CreateSummaryWindow()
 	gsSelSectorY = gWorldSectorY;
 	gfSummaryWindowActive = TRUE;
 	gfPersistantSummary = FALSE;
-	giInitTimer = GetJA2Clock();
+	guiInitTimer = GetJA2Clock();
 	gfDeniedSummaryCreation = FALSE;
 	gfRenderSummary = TRUE;
 	//Create all of the buttons here
@@ -371,7 +371,7 @@ static void ReleaseSummaryWindow(void)
 	if( !gfSummaryWindowActive || gfPersistantSummary )
 		return;
 	uiCurrTimer = GetJA2Clock();
-	if( !gfWorldLoaded || uiCurrTimer - giInitTimer < 400 )
+	if( !gfWorldLoaded || uiCurrTimer - guiInitTimer < 400 )
 	{ //make window persistant
 		for( i = 1; i < NUM_SUMMARY_BUTTONS; i++ )
 			ShowButton( iSummaryButton[ i ] );
