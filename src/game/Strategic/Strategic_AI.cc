@@ -2164,7 +2164,7 @@ void LoadStrategicAI(HWFILE const hFile)
 {
 	size_t i;
 	UINT8 ubSAIVersion;
-	UINT32 iPatrolArraySize, iGarrisonArraySize;
+	INT32 iPatrolArraySize, iGarrisonArraySize;
 
 	hFile->seek(3, FILE_SEEK_FROM_CURRENT);
 	hFile->read(&gfExtraElites,                      1);
@@ -2193,7 +2193,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	hFile->read(gArmyComp.data(), SAVED_ARMY_COMPOSITIONS * sizeof(ARMY_COMPOSITION)); // read everything first, will discard what we don't need when we have also the Garrison Groups
 
 	//Restore the patrol group definitions
-	if (iPatrolArraySize != GCM->getPatrolGroups().size())
+	if (GCM->getPatrolGroups().size() != (size_t)iPatrolArraySize)
 	{
 		STLOGW("Number of Patrol Groups in save ({}) is different from definition ({}). Save might not work properly.", iPatrolArraySize, GCM->getPatrolGroups().size());
 	}
@@ -2204,7 +2204,7 @@ void LoadStrategicAI(HWFILE const hFile)
 
 	gubSAIVersion = SAI_VERSION;
 	//Load the garrison information!
-	if (iGarrisonArraySize != GCM->getGarrisonGroups().size())
+	if (GCM->getGarrisonGroups().size() != (size_t)iGarrisonArraySize)
 	{
 		STLOGW("Number of Garrison Groups in save ({}) is different from definition ({}). Save might not work properly.", iGarrisonArraySize, GCM->getGarrisonGroups().size());
 	}
