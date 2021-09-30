@@ -374,10 +374,10 @@ void InitStrategicAI()
 
 	// Initialize the garrison group definitions
 	auto origGarrisonGroups = GCM->getGarrisonGroups();
-	auto iGarrisonArraySize = origGarrisonGroups.size();
+	size_t uiGarrisonArraySize = origGarrisonGroups.size();
 	gGarrisonGroup = origGarrisonGroups;
 	
-	gubGarrisonReinforcementsDenied = new UINT8[iGarrisonArraySize]{};
+	gubGarrisonReinforcementsDenied = new UINT8[uiGarrisonArraySize]{};
 
 	// Modify initial force sizes?
 	INT32 const force_percentage = giForcePercentage;
@@ -412,7 +412,7 @@ void InitStrategicAI()
 
 	/* Initialize the garrisons based on the initial sizes (all variances are plus
 	 * or minus 1). */
-	for (UINT32 i = 0; i != iGarrisonArraySize; ++i)
+	for (UINT32 i = 0; i != uiGarrisonArraySize; ++i)
 	{
 		GARRISON_GROUP& gg = gGarrisonGroup[i];
 		SECTORINFO&     si = SectorInfo[gg.ubSectorID];
@@ -1598,11 +1598,11 @@ static BOOLEAN GarrisonCanProvideMinimumReinforcements(INT32 iGarrisonID);
 
 static INT32 ChooseSuitableGarrisonToProvideReinforcements(INT32 iDstGarrisonID, INT32 iReinforcementsRequested)
 {
-	UINT32 iSrcGarrisonID, iBestGarrisonID = NO_GARRISON;
+	UINT32 uiSrcGarrisonID, uiBestGarrisonID = NO_GARRISON;
 	INT32 iReinforcementsAvailable, iWeight, iRandom;
 	INT8 bBestWeight;
 	UINT8 ubSectorID;
-	size_t iGarrisonArraySize = gGarrisonGroup.size();
+	size_t uiGarrisonArraySize = gGarrisonGroup.size();
 
 	//Check to see if we could send reinforcements from Alma.  Only Drassen/Cambria get preferred
 	//service from Alma, due to it's proximity and Alma's purpose as a forward military base.
@@ -1619,27 +1619,27 @@ static INT32 ChooseSuitableGarrisonToProvideReinforcements(INT32 iDstGarrisonID,
 				if( gGarrisonGroup[ i ].ubComposition == ALMA_DEFENCE )
 					break;
 			}
-			iSrcGarrisonID = i;
+			uiSrcGarrisonID = i;
 			//which of these 4 Alma garrisons have the most reinforcements available?  It is
 			//possible that none of these garrisons can provide any reinforcements.
 			bBestWeight = 0;
-			for( i = iSrcGarrisonID; i < iSrcGarrisonID + 4; i++ )
+			for( i = uiSrcGarrisonID; i < uiSrcGarrisonID + 4; i++ )
 			{
 				RecalculateGarrisonWeight( i );
 				if( bBestWeight > gGarrisonGroup[ i ].bWeight && GarrisonCanProvideMinimumReinforcements( i ) )
 				{
 					bBestWeight = gGarrisonGroup[ i ].bWeight;
-					iBestGarrisonID = i;
+					uiBestGarrisonID = i;
 				}
 			}
 			//If we can provide reinforcements from Alma, then make sure that it can provide at least 67% of
 			//the requested reinforcements.
 			if( bBestWeight < 0 )
 			{
-				iReinforcementsAvailable = ReinforcementsAvailable( iBestGarrisonID );
+				iReinforcementsAvailable = ReinforcementsAvailable( uiBestGarrisonID );
 				if( iReinforcementsAvailable * 100 >= iReinforcementsRequested * 67 )
 				{ //This is the approved group to provide the reinforcements.
-					return iBestGarrisonID;
+					return uiBestGarrisonID;
 				}
 			}
 			break;
@@ -1647,18 +1647,18 @@ static INT32 ChooseSuitableGarrisonToProvideReinforcements(INT32 iDstGarrisonID,
 
 	//The Alma case either wasn't applicable or failed to have the right reinforcements.  Do a general weighted search.
 	iRandom = Random( giReinforcementPoints );
-	for( iSrcGarrisonID = 0; iSrcGarrisonID < iGarrisonArraySize; iSrcGarrisonID++ )
+	for( uiSrcGarrisonID = 0; uiSrcGarrisonID < uiGarrisonArraySize; uiSrcGarrisonID++ )
 	{ //go through the garrisons
-		RecalculateGarrisonWeight( iSrcGarrisonID );
-		iWeight = -gGarrisonGroup[ iSrcGarrisonID ].bWeight;
+		RecalculateGarrisonWeight( uiSrcGarrisonID );
+		iWeight = -gGarrisonGroup[ uiSrcGarrisonID ].bWeight;
 		if( iWeight > 0 )
 		{ //if group is able to provide reinforcements.
-			if( iRandom < iWeight && GarrisonCanProvideMinimumReinforcements( iSrcGarrisonID ) )
+			if( iRandom < iWeight && GarrisonCanProvideMinimumReinforcements( uiSrcGarrisonID ) )
 			{
-				iReinforcementsAvailable = ReinforcementsAvailable( iSrcGarrisonID );
+				iReinforcementsAvailable = ReinforcementsAvailable( uiSrcGarrisonID );
 				if( iReinforcementsAvailable * 100 >= iReinforcementsRequested * 67 )
 				{ //This is the approved group to provide the reinforcements.
-					return iSrcGarrisonID;
+					return uiSrcGarrisonID;
 				}
 			}
 			iRandom -= iWeight;
@@ -1667,32 +1667,32 @@ static INT32 ChooseSuitableGarrisonToProvideReinforcements(INT32 iDstGarrisonID,
 
 	//So far we have failed on all accounts.  Now, simply process all the garrisons, and return the first garrison that can
 	//provide the reinforcements.
-	for( iSrcGarrisonID = 0; iSrcGarrisonID < iGarrisonArraySize; iSrcGarrisonID++ )
+	for( uiSrcGarrisonID = 0; uiSrcGarrisonID < uiGarrisonArraySize; uiSrcGarrisonID++ )
 	{ //go through the garrisons
-		RecalculateGarrisonWeight( iSrcGarrisonID );
-		iWeight = -gGarrisonGroup[ iSrcGarrisonID ].bWeight;
-		if( iWeight > 0 && GarrisonCanProvideMinimumReinforcements( iSrcGarrisonID ) )
+		RecalculateGarrisonWeight( uiSrcGarrisonID );
+		iWeight = -gGarrisonGroup[ uiSrcGarrisonID ].bWeight;
+		if( iWeight > 0 && GarrisonCanProvideMinimumReinforcements( uiSrcGarrisonID ) )
 		{ //if group is able to provide reinforcements.
-			iReinforcementsAvailable = ReinforcementsAvailable( iSrcGarrisonID );
+			iReinforcementsAvailable = ReinforcementsAvailable( uiSrcGarrisonID );
 			if( iReinforcementsAvailable * 100 >= iReinforcementsRequested * 67 )
 			{ //This is the approved group to provide the reinforcements.
-				return iSrcGarrisonID;
+				return uiSrcGarrisonID;
 			}
 		}
 	}
 
 	//Well, if we get this far, the queen must be low on troops.  Send whatever we can.
 	iRandom = Random( giReinforcementPoints );
-	for( iSrcGarrisonID = 0; iSrcGarrisonID < iGarrisonArraySize; iSrcGarrisonID++ )
+	for( uiSrcGarrisonID = 0; uiSrcGarrisonID < uiGarrisonArraySize; uiSrcGarrisonID++ )
 	{ //go through the garrisons
-		RecalculateGarrisonWeight( iSrcGarrisonID );
-		iWeight = -gGarrisonGroup[ iSrcGarrisonID ].bWeight;
-		if( iWeight > 0 && GarrisonCanProvideMinimumReinforcements( iSrcGarrisonID ) )
+		RecalculateGarrisonWeight( uiSrcGarrisonID );
+		iWeight = -gGarrisonGroup[ uiSrcGarrisonID ].bWeight;
+		if( iWeight > 0 && GarrisonCanProvideMinimumReinforcements( uiSrcGarrisonID ) )
 		{ //if group is able to provide reinforcements.
 			if( iRandom < iWeight )
 			{
-				iReinforcementsAvailable = ReinforcementsAvailable( iSrcGarrisonID );
-				return iSrcGarrisonID;
+				iReinforcementsAvailable = ReinforcementsAvailable( uiSrcGarrisonID );
+				return uiSrcGarrisonID;
 			}
 			iRandom -= iWeight;
 		}
@@ -1902,7 +1902,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 {
 	GROUP *pGroup;
 	INT32 iRandom, iWeight;
-	UINT32 iSrcGarrisonID;
+	UINT32 uiSrcGarrisonID;
 	INT32 iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
 	UINT8 ubSrcSectorX, ubSrcSectorY;
 
@@ -1954,26 +1954,26 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 	else
 	{
 		iRandom -= giReinforcementPool;
-		for( iSrcGarrisonID = 0; iSrcGarrisonID < gGarrisonGroup.size(); iSrcGarrisonID++ )
+		for( uiSrcGarrisonID = 0; uiSrcGarrisonID < gGarrisonGroup.size(); uiSrcGarrisonID++ )
 		{ //go through the garrisons
-			RecalculateGarrisonWeight( iSrcGarrisonID );
-			iWeight = -gGarrisonGroup[ iSrcGarrisonID ].bWeight;
+			RecalculateGarrisonWeight( uiSrcGarrisonID );
+			iWeight = -gGarrisonGroup[ uiSrcGarrisonID ].bWeight;
 			if( iWeight > 0 )
 			{ //if group is able to provide reinforcements.
 				if( iRandom < iWeight )
 				{ //This is the group that gets the reinforcements!
-					ubSrcSectorX = (UINT8)SECTORX(gGarrisonGroup[ iSrcGarrisonID ].ubSectorID );
-					ubSrcSectorY = (UINT8)SECTORY(gGarrisonGroup[ iSrcGarrisonID ].ubSectorID );
+					ubSrcSectorX = (UINT8)SECTORX(gGarrisonGroup[ uiSrcGarrisonID ].ubSectorID );
+					ubSrcSectorY = (UINT8)SECTORY(gGarrisonGroup[ uiSrcGarrisonID ].ubSectorID );
 					if( ubSrcSectorX != gWorldSectorX || ubSrcSectorY != gWorldSectorY || gbWorldSectorZ > 0 )
 					{ //The reinforcements aren't coming from the currently loaded sector!
-						iReinforcementsAvailable = ReinforcementsAvailable( iSrcGarrisonID );
+						iReinforcementsAvailable = ReinforcementsAvailable( uiSrcGarrisonID );
 						//Send the lowest of the two:  number requested or number available
 						iReinforcementsApproved = MIN( iReinforcementsRequested, iReinforcementsAvailable );
-						pGroup = CreateNewEnemyGroupDepartingFromSector( gGarrisonGroup[ iSrcGarrisonID ].ubSectorID, 0, (UINT8)iReinforcementsApproved, 0 );
+						pGroup = CreateNewEnemyGroupDepartingFromSector( gGarrisonGroup[ uiSrcGarrisonID ].ubSectorID, 0, (UINT8)iReinforcementsApproved, 0 );
 						pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 						pg->ubPendingGroupID = pGroup->ubGroupID;
 
-						RemoveSoldiersFromGarrisonBasedOnComposition( iSrcGarrisonID, pGroup->ubGroupSize );
+						RemoveSoldiersFromGarrisonBasedOnComposition( uiSrcGarrisonID, pGroup->ubGroupSize );
 
 						SLOGD("%d troops have been sent from garrison sector %c%d to patrol area near sector %c%d",
 								pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
@@ -3009,13 +3009,13 @@ static UINT8 SectorDistance(UINT8 ubSectorID1, UINT8 ubSectorID2)
 
 static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 ubSoldiersRequested)
 {
-	size_t i, iBestIndex;
+	size_t i, uiBestIndex;
 	GROUP *pGroup;
 	UINT8 ubBestDist, ubDist;
 	UINT8 ubDstSectorX, ubDstSectorY;
 	//AssertMsg( gPatrolGroup.size() == GCM->getPatrolGroups().size(), "Strategic AI -- Patrol group definition mismatch." );
 	ubBestDist = 255;
-	iBestIndex = -1;
+	uiBestIndex = -1;
 	for( i = 0; i < gPatrolGroup.size(); i++ )
 	{
 		if( gPatrolGroup[ i ].ubGroupID )
@@ -3027,16 +3027,16 @@ static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 
 				if( ubDist < ubBestDist )
 				{
 					ubBestDist = ubDist;
-					iBestIndex = i;
+					uiBestIndex = i;
 				}
 			}
 		}
 	}
 	ubDstSectorX = (UINT8)SECTORX( gGarrisonGroup[ iGarrisonID ].ubSectorID );
 	ubDstSectorY = (UINT8)SECTORY( gGarrisonGroup[ iGarrisonID ].ubSectorID );
-	if( iBestIndex != (size_t)-1 )
+	if( uiBestIndex != (size_t)-1 )
 	{ //Send the group to the garrison
-		pGroup = GetGroup( gPatrolGroup[ iBestIndex ].ubGroupID );
+		pGroup = GetGroup( gPatrolGroup[ uiBestIndex ].ubGroupID );
 		if( pGroup->ubGroupSize > ubSoldiersRequested && pGroup->ubGroupSize - ubSoldiersRequested >= gubMinEnemyGroupSize )
 		{ //Split the group, and send to location
 			GROUP *pNewGroup;
@@ -3091,16 +3091,16 @@ static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 
 			}
 			pNewGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 			gGarrisonGroup[ iGarrisonID ].ubPendingGroupID = pNewGroup->ubGroupID;
-			RecalculatePatrolWeight(gPatrolGroup[iBestIndex]);
+			RecalculatePatrolWeight(gPatrolGroup[uiBestIndex]);
 
 			MoveSAIGroupToSector( &pNewGroup, gGarrisonGroup[ iGarrisonID ].ubSectorID, EVASIVE, REINFORCEMENTS );
 		}
 		else
 		{ //Send the whole group and kill it's patrol assignment.
-			gPatrolGroup[ iBestIndex ].ubGroupID = 0;
+			gPatrolGroup[ uiBestIndex ].ubGroupID = 0;
 			gGarrisonGroup[ iGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
 			pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
-			RecalculatePatrolWeight(gPatrolGroup[iBestIndex]);
+			RecalculatePatrolWeight(gPatrolGroup[uiBestIndex]);
 			//The ONLY case where the group is told to move somewhere else when they could be BETWEEN sectors.  The movegroup functions
 			//don't work if this is the case.  Teleporting them to their previous sector is the best and easiest way to deal with this.
 			SetEnemyGroupSector(*pGroup, SECTOR(pGroup->ubSectorX, pGroup->ubSectorY));
@@ -3535,7 +3535,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 {
 	INT32 iWeight, iRandom;
 	UINT16 usDefencePoints;
-	size_t iReloopLastIndex = -1;
+	size_t uiReloopLastIndex = -1;
 	UINT8 ubSectorID;
 
 	ubSectorID = (UINT8)SECTOR( (*pGroup)->ubSectorX, (*pGroup)->ubSectorY );
@@ -3579,9 +3579,9 @@ static void ReassignAIGroup(GROUP** pGroup)
 						return;
 					}
 				}
-				if( iReloopLastIndex == (size_t)-1 )
+				if( uiReloopLastIndex == (size_t)-1 )
 				{ //go to the next garrison and clear the iRandom value so it attempts to use all subsequent groups.
-					iReloopLastIndex = i - 1;
+					uiReloopLastIndex = i - 1;
 					iRandom = 0;
 				}
 			}
@@ -3590,10 +3590,10 @@ static void ReassignAIGroup(GROUP** pGroup)
 			iRandom -= iWeight;
 		}
 	}
-	if( iReloopLastIndex >= 0 )
+	if( uiReloopLastIndex >= 0 )
 	{ //Process the loop again to the point where the original random slot started considering, and consider
 		//all of the garrisons.  If this fails, all patrol groups will be considered next.
-		for (size_t i = 0; i <= iReloopLastIndex; i++)
+		for (size_t i = 0; i <= uiReloopLastIndex; i++)
 		{
 			RecalculateGarrisonWeight( i );
 			iWeight = gGarrisonGroup[ i ].bWeight;
@@ -3612,7 +3612,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 			}
 		}
 	}
-	if( iReloopLastIndex == (size_t)-1 )
+	if( uiReloopLastIndex == (size_t)-1 )
 	{
 		//go through the patrol groups
 		for (size_t i = 0; i < gPatrolGroup.size(); i++)
@@ -3629,9 +3629,9 @@ static void ReassignAIGroup(GROUP** pGroup)
 						return;
 					}
 				}
-				if( iReloopLastIndex == (size_t)-1 )
+				if( uiReloopLastIndex == (size_t)-1 )
 				{
-					iReloopLastIndex = i - 1;
+					uiReloopLastIndex = i - 1;
 					iRandom = 0;
 				}
 				iRandom -= iWeight;
@@ -3640,10 +3640,10 @@ static void ReassignAIGroup(GROUP** pGroup)
 	}
 	else
 	{
-		iReloopLastIndex = gPatrolGroup.size() - 1;
+		uiReloopLastIndex = gPatrolGroup.size() - 1;
 	}
 
-	for (size_t i = 0; i <= iReloopLastIndex; i++)
+	for (size_t i = 0; i <= uiReloopLastIndex; i++)
 	{
 		RecalculatePatrolWeight(gPatrolGroup[i]);
 		iWeight = gPatrolGroup[ i ].bWeight;
@@ -3889,7 +3889,7 @@ static void ReinitializeUnvisitedGarrisons(void)
 	SECTORINFO *pSector;
 	ARMY_COMPOSITION *pArmyComp;
 	GROUP *pGroup;
-	UINT32 i, cnt, iEliteChance, iAdminChance;
+	UINT32 i, cnt, uiEliteChance, uiAdminChance;
 
 	//Recreate the compositions
 	gArmyComp = GCM->getArmyCompositions();
@@ -3934,15 +3934,15 @@ static void ReinitializeUnvisitedGarrisons(void)
 				}
 			}
 
-			iEliteChance = pArmyComp->bElitePercentage;
-			iAdminChance = pArmyComp->bAdminPercentage;
-			if( iAdminChance && !gfQueenAIAwake && cnt )
+			uiEliteChance = pArmyComp->bElitePercentage;
+			uiAdminChance = pArmyComp->bAdminPercentage;
+			if( uiAdminChance && !gfQueenAIAwake && cnt )
 			{
-				pSector->ubNumAdmins = iAdminChance * cnt / 100;
+				pSector->ubNumAdmins = uiAdminChance * cnt / 100;
 			}
 			else while( cnt-- )
 			{ //for each person, randomly determine the types of each soldier.
-				if( Chance( iEliteChance ) )
+				if( Chance( uiEliteChance ) )
 				{
 					pSector->ubNumElites++;
 				}
