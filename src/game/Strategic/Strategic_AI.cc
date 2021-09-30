@@ -1599,8 +1599,7 @@ static BOOLEAN GarrisonCanProvideMinimumReinforcements(INT32 iGarrisonID);
 static INT32 ChooseSuitableGarrisonToProvideReinforcements(INT32 iDstGarrisonID, INT32 iReinforcementsRequested)
 {
 	UINT32 iSrcGarrisonID, iBestGarrisonID = NO_GARRISON;
-	INT32 iReinforcementsAvailable;
-	UINT32 i, iRandom, iWeight;
+	INT32 iReinforcementsAvailable, iWeight, iRandom;
 	INT8 bBestWeight;
 	UINT8 ubSectorID;
 	size_t iGarrisonArraySize = gGarrisonGroup.size();
@@ -1613,7 +1612,7 @@ static INT32 ChooseSuitableGarrisonToProvideReinforcements(INT32 iDstGarrisonID,
 		case SEC_B13: case SEC_C13: case SEC_D13: case SEC_D15:								//Drassen + nearby SAM site
 		case SEC_F8:  case SEC_F9:  case SEC_G8:  case SEC_G9:  case SEC_H8:	//Cambria
 			//reinforcements will be primarily sent from Alma whenever possible.
-
+			size_t i;
 			//find which the first sector that contains Alma soldiers.
 			for( i = 0; i < gGarrisonGroup.size(); i++ )
 			{
@@ -2002,8 +2001,7 @@ static void UpgradeAdminsToTroops();
 //reinforcements, new patrol groups, planned assaults, etc.
 void EvaluateQueenSituation()
 {
-	UINT32 i, iRandom;
-	UINT32 iWeight;
+	INT32 iRandom, iWeight;
 	UINT32 uiOffset;
 	UINT16 usDefencePoints;
 	INT32 iSumOfAllWeights = 0;
@@ -2049,7 +2047,7 @@ void EvaluateQueenSituation()
 	iRandom = Random( giRequestPoints );
 
 	//go through garrisons first
-	for( i = 0; i < gGarrisonGroup.size(); i++ )
+	for (size_t i = 0; i < gGarrisonGroup.size(); i++)
 	{
 		RecalculateGarrisonWeight( i );
 		iWeight = gGarrisonGroup[ i ].bWeight;
@@ -2078,7 +2076,7 @@ void EvaluateQueenSituation()
 	}
 
 	//go through the patrol groups
-	for( i = 0; i < gPatrolGroup.size(); i++ )
+	for (size_t i = 0; i < gPatrolGroup.size(); i++)
 	{
 		RecalculatePatrolWeight(gPatrolGroup[i]);
 		iWeight = gPatrolGroup[ i ].bWeight;
@@ -3535,8 +3533,7 @@ static void SendGroupToPool(GROUP** pGroup)
 
 static void ReassignAIGroup(GROUP** pGroup)
 {
-	UINT32 i, iRandom;
-	UINT32 iWeight;
+	INT32 iWeight, iRandom;
 	UINT16 usDefencePoints;
 	size_t iReloopLastIndex = -1;
 	UINT8 ubSectorID;
@@ -3564,7 +3561,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 	//go through garrisons first and begin considering where the random value dictates.  If that garrison doesn't require
 	//reinforcements, it'll continue on considering all subsequent garrisons till the end of the array.  If it fails at that
 	//point, it'll restart the loop at zero, and consider all garrisons to the index that was first considered by the random value.
-	for( i = 0; i < gGarrisonGroup.size(); i++ )
+	for (size_t i = 0; i < gGarrisonGroup.size(); i++)
 	{
 		RecalculateGarrisonWeight( i );
 		iWeight = gGarrisonGroup[ i ].bWeight;
@@ -3596,7 +3593,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 	if( iReloopLastIndex >= 0 )
 	{ //Process the loop again to the point where the original random slot started considering, and consider
 		//all of the garrisons.  If this fails, all patrol groups will be considered next.
-		for( i = 0; i <= iReloopLastIndex; i++ )
+		for (size_t i = 0; i <= iReloopLastIndex; i++)
 		{
 			RecalculateGarrisonWeight( i );
 			iWeight = gGarrisonGroup[ i ].bWeight;
@@ -3618,7 +3615,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 	if( iReloopLastIndex == (size_t)-1 )
 	{
 		//go through the patrol groups
-		for( i = 0; i < gPatrolGroup.size(); i++ )
+		for (size_t i = 0; i < gPatrolGroup.size(); i++)
 		{
 			RecalculatePatrolWeight(gPatrolGroup[i]);
 			iWeight = gPatrolGroup[ i ].bWeight;
@@ -3646,7 +3643,7 @@ static void ReassignAIGroup(GROUP** pGroup)
 		iReloopLastIndex = gPatrolGroup.size() - 1;
 	}
 
-	for( i = 0; i <= iReloopLastIndex; i++ )
+	for (size_t i = 0; i <= iReloopLastIndex; i++)
 	{
 		RecalculatePatrolWeight(gPatrolGroup[i]);
 		iWeight = gPatrolGroup[ i ].bWeight;
