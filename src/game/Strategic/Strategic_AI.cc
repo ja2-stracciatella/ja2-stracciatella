@@ -335,13 +335,13 @@ void InitStrategicAI()
 	UINT32      evaluate_time = 475;
 	UINT8 const difficulty    = gGameOptions.ubDifficultyLevel;
 
-	giReinforcementPool   = saipolicy(queens_pool_of_troops);
-	giForcePercentage     = saipolicy(initial_garrison_percentages);
-	giArmyAlertness       = saipolicy(enemy_starting_alert_level);
-	giArmyAlertnessDecay  = saipolicy(enemy_starting_alert_decay);
-	gubMinEnemyGroupSize  = saipolicy(min_enemy_group_size);
-	gubHoursGracePeriod   = saipolicy(grace_period_in_hours);
-	evaluate_time        += saipolicy(time_evaluate_in_minutes) + Random(saipolicy(time_evaluate_variance));
+	giReinforcementPool   = saipolicy_by_diff(queens_pool_of_troops);
+	giForcePercentage     = saipolicy_by_diff(initial_garrison_percentages);
+	giArmyAlertness       = saipolicy_by_diff(enemy_starting_alert_level);
+	giArmyAlertnessDecay  = saipolicy_by_diff(enemy_starting_alert_decay);
+	gubMinEnemyGroupSize  = saipolicy_by_diff(min_enemy_group_size);
+	gubHoursGracePeriod   = saipolicy_by_diff(grace_period_in_hours);
+	evaluate_time        += saipolicy_by_diff(time_evaluate_in_minutes) + Random(saipolicy_by_diff(time_evaluate_variance));
 	
 	AddStrategicEvent(EVENT_EVALUATE_QUEEN_SITUATION, evaluate_time, 0);
 
@@ -2012,7 +2012,7 @@ void EvaluateQueenSituation()
 	// This can increase the decision intervals by up to 500 extra minutes (> 8 hrs)
 	uiOffset = MAX( 100 - giRequestPoints, 0);
 	uiOffset = uiOffset + Random( uiOffset * 4 );
-	uiOffset += saipolicy(time_evaluate_in_minutes) + Random(saipolicy(time_evaluate_variance));
+	uiOffset += saipolicy_by_diff(time_evaluate_in_minutes) + Random(saipolicy_by_diff(time_evaluate_variance));
 
 	if( !giReinforcementPool )
 	{ //Queen has run out of reinforcements.  Simulate recruiting and training new troops
@@ -2922,7 +2922,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			break;
 		case NPC_ACTION_GIVE_KNOWLEDGE_OF_ALL_MERCS:
 			//temporarily make the queen's forces more aware (high alert)
-			gubNumAwareBattles = saipolicy(num_aware_battles);
+			gubNumAwareBattles = saipolicy_by_diff(num_aware_battles);
 			break;
 		default:
 			SLOGD("QueenAI failed to handle action code %d.", usActionCode );
@@ -3278,6 +3278,10 @@ static BOOLEAN PatrolRequestingMinimumReinforcements(INT32 iPatrolID)
 		{
 			return TRUE;
 		}
+	}
+	else if (saipolicy(refill_defeated_patrol_groups))
+	{ // we want to refill totally defeated patrols too
+		return TRUE;
 	}
 	return FALSE;
 }
@@ -3667,7 +3671,7 @@ static void TagSAIGroupWithGracePeriod(GROUP const& g)
 	size_t const patrol_id = FindPatrolGroupIndexForGroupID(g.ubGroupID);
 	if (patrol_id == (size_t)-1) return;
 
-	UINT32 grace_period = saipolicy(patrol_grace_period_in_days);
+	UINT32 grace_period = saipolicy_by_diff(patrol_grace_period_in_days);
 	gPatrolGroup[patrol_id].bFillPermittedAfterDayMod100 = (GetWorldDay() + grace_period) % 100;
 }
 

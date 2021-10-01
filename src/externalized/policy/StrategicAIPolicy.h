@@ -7,7 +7,8 @@
 #include <string_theory/string>
 
 // gets the Strategic AI policy value for the current game difficulty
-#define saipolicy(element) ( GCM->getStrategicAIPolicy()->element[gGameOptions.ubDifficultyLevel - 1] )
+#define saipolicy(element) ( GCM->getStrategicAIPolicy()->element )
+#define saipolicy_by_diff(element) ( saipolicy(element)[gGameOptions.ubDifficultyLevel - 1] )
 
 // Refer to strategic-ai-policy.json for the definition of each value
 class StrategicAIPolicy
@@ -23,4 +24,6 @@ public:
 	std::array<unsigned int, NUM_DIF_LEVELS>    grace_period_in_hours;
 	std::array<unsigned int, NUM_DIF_LEVELS>    patrol_grace_period_in_days;
 	std::array<unsigned int, NUM_DIF_LEVELS>    num_aware_battles;
+
+	bool refill_defeated_patrol_groups;
 };

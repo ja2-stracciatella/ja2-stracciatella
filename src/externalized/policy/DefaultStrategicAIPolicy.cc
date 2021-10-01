@@ -28,5 +28,8 @@ DefaultStrategicAIPolicy::DefaultStrategicAIPolicy(rapidjson::Document* json)
 	grace_period_in_hours        = ReadSAIPolicy<unsigned int>(*json, "grace_period_in_hours");
 	patrol_grace_period_in_days  = ReadSAIPolicy<unsigned int>(*json, "patrol_grace_period_in_days");
 	num_aware_battles            = ReadSAIPolicy<unsigned int>(*json, "num_aware_battles");
+
+	JsonObjectReader r(*json);
+	refill_defeated_patrol_groups = r.getOptionalBool("refill_defeated_patrol_groups", false);
 }
 
