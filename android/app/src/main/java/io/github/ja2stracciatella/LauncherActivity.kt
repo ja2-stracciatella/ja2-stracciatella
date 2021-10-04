@@ -118,7 +118,7 @@ class LauncherActivity : AppCompatActivity() {
 
     private val ja2JsonPath: String
         get() {
-            return "${applicationContext.filesDir.absolutePath}/$ja2JsonFilename"
+            return "${applicationContext.dataDir.absolutePath}/$ja2JsonFilename"
         }
 
     private fun loadJA2Json() {
