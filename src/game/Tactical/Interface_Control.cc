@@ -534,13 +534,13 @@ static void StartViewportOverlays(void)
 	gOldDirtyClippingRect = ClippingRect;
 
 	// Set bottom clipping value for blitter clipping rect
-	ClippingRect.iLeft   = INTERFACE_START_X;
+	ClippingRect.iLeft   = gsVIEWPORT_START_X;
 	ClippingRect.iTop    = gsVIEWPORT_WINDOW_START_Y;
 	ClippingRect.iRight  = SCREEN_WIDTH;
 	ClippingRect.iBottom = gsVIEWPORT_WINDOW_END_Y;
 
 	// Set values for dirty rect clipping rect
-	gDirtyClipRect.iLeft   = INTERFACE_START_X;
+	gDirtyClipRect.iLeft   = gsVIEWPORT_START_X;
 	gDirtyClipRect.iTop    = gsVIEWPORT_WINDOW_START_Y;
 	gDirtyClipRect.iRight  = SCREEN_WIDTH;
 	gDirtyClipRect.iBottom = gsVIEWPORT_WINDOW_END_Y;
