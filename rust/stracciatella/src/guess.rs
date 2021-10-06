@@ -420,14 +420,11 @@ struct GuessError {
 }
 
 impl Error for GuessError {
-    fn description(&self) -> &str {
-        &self.desc
-    }
 }
 
 impl fmt::Display for GuessError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "GuessError({})", self.description())
+        write!(f, "GuessError({})", &self.desc)
     }
 }
 

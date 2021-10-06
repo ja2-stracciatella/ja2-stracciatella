@@ -1,4 +1,3 @@
-use std::error::Error;
 use std::fs;
 use std::fs::File;
 use std::io::Write;
@@ -45,7 +44,7 @@ impl Ja2Json {
 
     fn get_content(&self) -> Result<Ja2JsonContent, String> {
         let s = fs::read_to_string(&self.path)
-            .map_err(|x| format!("Error reading ja2.json config file: {}", x.description()))?;
+            .map_err(|x| format!("Error reading ja2.json config file: {}", x.to_string()))?;
         json::de::from_string(&s).map_err(|x| format!("Error parsing ja2.json config file: {}", x))
     }
 
@@ -118,10 +117,10 @@ impl Ja2Json {
         let json = json::ser::to_string(&content)
             .map_err(|x| format!("Error creating contents of ja2.json config file: {}", x))?;
         let mut f = File::create(&self.path)
-            .map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))?;
+            .map_err(|s| format!("Error creating ja2.json config file: {}", s.to_string()))?;
 
         f.write_all(json.as_bytes())
-            .map_err(|s| format!("Error creating ja2.json config file: {}", s.description()))
+            .map_err(|s| format!("Error creating ja2.json config file: {}", s.to_string()))
     }
 
     /// Ensures that the JSON configuration file exists and write a default one if it doesn't
