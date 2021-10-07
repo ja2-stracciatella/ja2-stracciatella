@@ -7,6 +7,7 @@ set(SDL2MAIN_LIBRARY "@SDL2MAIN_LIBRARY@")
 # these dlls will never be installed
 set(MINGW_CORE_DLLS
     "advapi32.dll"
+    "bcrypt.dll"
     "comctl32.dll"
     "comdlg32.dll"
     "gdi32.dll"
