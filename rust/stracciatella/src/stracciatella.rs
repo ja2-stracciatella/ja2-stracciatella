@@ -323,7 +323,9 @@ mod tests {
     fn parse_json_config_should_fail_with_missing_file() {
         let temp_dir = TempDir::new().unwrap();
         let stracciatella_home = temp_dir.path().to_owned();
-        let expected = Err("Error reading ja2.json config file: No such file or directory (os error 2)".to_owned());
+        let expected = Err(
+            "Error reading ja2.json config file: No such file or directory (os error 2)".to_owned(),
+        );
 
         assert_eq!(parse_json_config(&stracciatella_home), expected);
     }

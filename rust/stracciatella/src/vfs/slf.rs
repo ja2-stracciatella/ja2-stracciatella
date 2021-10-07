@@ -110,7 +110,7 @@ impl VfsLayer for SlfFs {
             .flat_map(|x| {
                 if path.is_empty() {
                     // If the root path is requested, just return the first path segment
-                    x.split('/').nth(0).map(Nfc::from)
+                    x.split('/').next().map(Nfc::from)
                 } else {
                     if !x.starts_with(&path) {
                         // This is not part of the listed directory

@@ -12,7 +12,6 @@ use std::str::FromStr;
 
 use log::{error, info};
 use rayon::prelude::*;
-use serde_json;
 
 use crate::config::VanillaVersion;
 use crate::fs::resolve_existing_components;
@@ -87,26 +86,18 @@ impl From<&MatchResourcesResult> for Percentages {
         let count_differences = |filter: &dyn Fn(&&Difference) -> bool| {
             result.differences.iter().filter(filter).count()
         };
-        let num_only_in_datadir = count_differences(&|d| match d {
-            Difference::OnlyExistsInDataDir(_, _) => true,
-            _ => false,
-        });
+        let num_only_in_datadir =
+            count_differences(&|d| matches!(d, Difference::OnlyExistsInPack(_, _)));
         let percentage_only_in_datadir = num_only_in_datadir as f64 / number_of_resources as f64;
-        let num_only_in_pack = count_differences(&|d| match d {
-            Difference::OnlyExistsInPack(_, _) => true,
-            _ => false,
-        });
+        let num_only_in_pack =
+            count_differences(&|d| matches!(d, Difference::OnlyExistsInPack(_, _)));
         let percentage_only_in_pack = num_only_in_pack as f64 / number_of_resources as f64;
-        let num_file_size_mismatch = count_differences(&|d| match d {
-            Difference::FileSizeMismatch(_, _, _) => true,
-            _ => false,
-        });
+        let num_file_size_mismatch =
+            count_differences(&|d| matches!(d, Difference::FileSizeMismatch(_, _, _)));
         let percentage_file_size_mismatch =
             num_file_size_mismatch as f64 / number_of_resources as f64;
-        let num_hash_mismatch = count_differences(&|d| match d {
-            Difference::HashMismatch(_, _, _, _) => true,
-            _ => false,
-        });
+        let num_hash_mismatch =
+            count_differences(&|d| matches!(d, Difference::HashMismatch(_, _, _, _)));
         let percentage_hash_mismatch = num_hash_mismatch as f64 / number_of_resources as f64;
         let total = percentage_only_in_datadir
             + percentage_only_in_pack
@@ -419,8 +410,7 @@ struct GuessError {
     desc: String,
 }
 
-impl Error for GuessError {
-}
+impl Error for GuessError {}
 
 impl fmt::Display for GuessError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {

@@ -112,8 +112,8 @@ impl Logger {
         {
             use log::warn;
             use simplelog::{
-                CombinedLogger, ConfigBuilder, SharedLogger, TermLogger, TerminalMode,
-                WriteLogger, ThreadLogMode, ColorChoice
+                ColorChoice, CombinedLogger, ConfigBuilder, SharedLogger, TermLogger, TerminalMode,
+                ThreadLogMode, WriteLogger,
             };
             use std::fs::File;
 
@@ -122,7 +122,12 @@ impl Logger {
             config.set_thread_mode(ThreadLogMode::IDs);
             config.set_time_format_str("%FT%T");
             let config = config.build();
-            let logger: Box<dyn SharedLogger> = TermLogger::new(LevelFilter::max(), config.clone(), TerminalMode::Mixed, ColorChoice::Auto);
+            let logger: Box<dyn SharedLogger> = TermLogger::new(
+                LevelFilter::max(),
+                config.clone(),
+                TerminalMode::Mixed,
+                ColorChoice::Auto,
+            );
 
             match File::create(&log_file) {
                 Ok(f) => RuntimeLevelFilter::init(CombinedLogger::new(vec![

@@ -59,7 +59,6 @@ use std::io;
 use std::path::{Path, PathBuf};
 
 use digest::Digest;
-use hex;
 use md5::Md5;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -631,7 +630,6 @@ mod tests {
         use std::time::{Duration, SystemTime};
 
         use digest::Digest;
-        use hex;
         use md5::Md5;
 
         fn data_for_hasher() -> Vec<u8> {

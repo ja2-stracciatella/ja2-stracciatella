@@ -7,8 +7,6 @@ use std::ffi::CString;
 use std::process::Command;
 use std::ptr;
 
-use log;
-
 use stracciatella::config::EngineOptions;
 use stracciatella::fs::resolve_existing_components;
 use stracciatella::get_assets_dir;

@@ -22,8 +22,6 @@ use std::fmt;
 use std::path::{Path, PathBuf};
 use std::str;
 
-use hex;
-
 /// Unicode string that is compatible with `CString`.
 /// It can encode `Path`, `[u8]` and `[u16]`.
 #[derive(Clone, Default, Hash, Eq, PartialEq, Ord, PartialOrd)]
@@ -196,10 +194,7 @@ impl AnyPath {
         percent_split(self.inner.as_str())
             .expect("percent_split")
             .iter()
-            .all(|x| match x {
-                PercentSplit::U16(_) => false,
-                _ => true,
-            })
+            .all(|x| !matches!(x, PercentSplit::U16(_)))
     }
 
     /// Returns true if it can be decoded to a `Vec<u16>`.

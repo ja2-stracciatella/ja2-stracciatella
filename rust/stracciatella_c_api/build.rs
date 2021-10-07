@@ -1,8 +1,6 @@
 use std::env;
 use std::path::PathBuf;
 
-use cbindgen;
-
 /// Generates the `stracciatella.h` header according to `cbindgen.toml`.
 /// The header file will only be updated if the generated text is different from the existing text.
 fn stracciatella_h() {
