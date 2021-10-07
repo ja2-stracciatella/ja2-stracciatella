@@ -11,28 +11,28 @@ name = "stracciatella"
 path = "src/stracciatella.rs"
 
 [dependencies]
-getopts = "0.2.15"
+getopts = "0.2"
 libc = "0.2"
 serde = { version = "1", features = ["derive"] }
-serde_derive = "1, ~1.0.85"
+serde_derive = "1"
 serde_json = { version = "1", features = ["preserve_order"] }
 json_comments = "0.2"
-dirs = "1"
-byteorder = "1.3.1"
-hex = "0.3.2"
-digest = "0.8.0"
-md-5 = "0.8.0"
+dirs = "4.0"
+byteorder = "1.4"
+hex = "0.4"
+digest = "0.9"
+md-5 = "0.9"
 unicode-normalization = "0.1"
 caseless = "0.2"
 log = "0.4"
-lru = "0.6"
-rayon = "1.1.0"
+lru = "0.7"
+rayon = "1.5"
 dunce = "1"
-remove_dir_all = "0.5"
-tempfile = "3.0"
+remove_dir_all = "0.7"
+tempfile = "3.2"
 
 [target.'cfg(not(target_os = "android"))'.dependencies.simplelog]
-version = "0.6"
+version = "0.10"
 
 [target.'cfg(windows)'.dependencies.winapi]
 # @see stracciatella::fs::free_space
@@ -40,7 +40,7 @@ version = "0.3"
 features = ["std", "fileapi"]
 
 [target.'cfg(target_os = "android")'.dependencies.android_logger]
-version = "0.9"
+version = "0.10"
 [target.'cfg(target_os = "android")'.dependencies.lazy_static]
 version = "1.4"
 [target.'cfg(target_os = "android")'.dependencies.jni]
@@ -51,5 +51,5 @@ git = "https://github.com/selaux/android-ndk-rs"
 git = "https://github.com/selaux/android-ndk-rs"
 
 [dev-dependencies]
-regex = "1.0"
+regex = "1.5"
 
