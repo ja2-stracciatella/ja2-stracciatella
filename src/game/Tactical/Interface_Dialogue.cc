@@ -244,8 +244,9 @@ void HandlePendingInitConv( )
 	if ( gfConversationPending )
 	{
 		// OK, if pending, remove and now call........
+		OBJECTTYPE* pPendingObject = (g_pending_approach_object.usItem != NONE) ? &g_pending_approach_object : NULL;
 		InternalInitiateConversation(gpPendingDestSoldier, gpPendingSrcSoldier, gbPendingApproach,
-						g_pending_approach_record, &g_pending_approach_object);
+						g_pending_approach_record, pPendingObject);
 	}
 }
 
