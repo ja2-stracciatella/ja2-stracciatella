@@ -172,7 +172,7 @@ static SOLDIERTYPE* gpPendingDestSoldier;
 static SOLDIERTYPE* gpPendingSrcSoldier;
 static Approach     gbPendingApproach;
 static UINT8        g_pending_approach_record;
-static OBJECTTYPE*  g_pending_approach_object;
+static OBJECTTYPE   g_pending_approach_object;
 
 INT32 giHospitalTempBalance; // stores amount of money for current doctoring
 INT32 giHospitalRefund; // stores amount of money given to hospital for doctoring that wasn't used
@@ -214,7 +214,7 @@ try
 		gpPendingSrcSoldier       = pSrcSoldier;
 		gbPendingApproach         = bApproach;
 		g_pending_approach_record = approach_record;
-		g_pending_approach_object = approach_object;
+		g_pending_approach_object = approach_object ? *approach_object : OBJECTTYPE{};
 
 		//Engaged on conv...
 		gTacticalStatus.uiFlags |= ENGAGED_IN_CONV;
@@ -245,7 +245,7 @@ void HandlePendingInitConv( )
 	{
 		// OK, if pending, remove and now call........
 		InternalInitiateConversation(gpPendingDestSoldier, gpPendingSrcSoldier, gbPendingApproach,
-						g_pending_approach_record, g_pending_approach_object);
+						g_pending_approach_record, &g_pending_approach_object);
 	}
 }
 
