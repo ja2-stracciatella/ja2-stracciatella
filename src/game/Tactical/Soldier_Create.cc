@@ -437,13 +437,14 @@ try
 			break;
 	}
 
+	OnSoldierCreated(s);
+
 	if (guiCurrentScreen == AUTORESOLVE_SCREEN)
 	{
 		s->sSector = SGPSector(GetAutoResolveSectorID());
 		return s;
 	}
 
-	OnSoldierCreated(s);
 
 	Assert(s->usAnimState == STANDING);
 
