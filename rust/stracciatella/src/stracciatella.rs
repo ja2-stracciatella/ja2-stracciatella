@@ -323,9 +323,16 @@ mod tests {
     fn parse_json_config_should_fail_with_missing_file() {
         let temp_dir = TempDir::new().unwrap();
         let stracciatella_home = temp_dir.path().to_owned();
-        let expected = Err("Error reading ja2.json config file: entity not found".to_owned());
+        let result = parse_json_config(&stracciatella_home);
 
-        assert_eq!(parse_json_config(&stracciatella_home), expected);
+        assert!(result.is_err());
+        assert!(
+            result
+                .err()
+                .unwrap()
+                .starts_with("Error reading ja2.json config file:"),
+            "error didn't start with correct string"
+        );
     }
 
     #[test]

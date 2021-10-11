@@ -112,24 +112,22 @@ impl Logger {
         {
             use log::warn;
             use simplelog::{
-                CombinedLogger, Config, SharedLogger, SimpleLogger, TermLogger, TerminalMode,
-                WriteLogger,
+                ColorChoice, CombinedLogger, ConfigBuilder, SharedLogger, TermLogger, TerminalMode,
+                ThreadLogMode, WriteLogger,
             };
             use std::fs::File;
 
-            let mut config = Config::default();
-            config.target = Some(Level::Error);
-            config.thread = None;
-            config.time_format = Some("%FT%T");
-            let logger: Box<dyn SharedLogger>;
-
-            if let Some(termlogger) =
-                TermLogger::new(LevelFilter::max(), config, TerminalMode::Mixed)
-            {
-                logger = termlogger;
-            } else {
-                logger = SimpleLogger::new(LevelFilter::max(), config); // no colors
-            }
+            let mut config = ConfigBuilder::default();
+            config.set_target_level(LevelFilter::Error);
+            config.set_thread_mode(ThreadLogMode::IDs);
+            config.set_time_format_str("%FT%T");
+            let config = config.build();
+            let logger: Box<dyn SharedLogger> = TermLogger::new(
+                LevelFilter::max(),
+                config.clone(),
+                TerminalMode::Mixed,
+                ColorChoice::Auto,
+            );
 
             match File::create(&log_file) {
                 Ok(f) => RuntimeLevelFilter::init(CombinedLogger::new(vec![

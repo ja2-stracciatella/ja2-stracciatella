@@ -419,7 +419,7 @@ mod tests {
             version: 0x0200,
             contains_subdirectories: 1,
         };
-        let test_data = "file contents\n".as_bytes().to_vec();
+        let test_data = b"file contents\n".to_vec();
         let test_data_len = test_data.len() as u32;
         let test_entries = vec![SlfEntry {
             file_path: "file.ext".to_string(),

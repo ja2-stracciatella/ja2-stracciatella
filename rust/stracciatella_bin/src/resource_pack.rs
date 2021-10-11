@@ -17,7 +17,6 @@ use std::path::Path;
 use std::process;
 
 use clap::{crate_version, App, Arg, ArgMatches, SubCommand};
-use serde_json;
 
 use stracciatella::fs::resolve_existing_components;
 use stracciatella::res::{ResourcePackBuilder, ResourcePropertiesExt};

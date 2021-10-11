@@ -22,7 +22,6 @@ pub mod de {
 
     use json_comments::StripComments;
     use serde::de::DeserializeOwned;
-    use serde_json;
 
     /// Converts a string containing json with comments to a value.
     pub fn from_string<T>(json: &str) -> Result<T, String>
@@ -42,7 +41,6 @@ pub mod ser {
     //! [`serde_json`]: https://crates.io/crates/serde_json
 
     use serde::Serialize;
-    use serde_json;
     use serde_json::Value;
 
     use crate::json::skip;

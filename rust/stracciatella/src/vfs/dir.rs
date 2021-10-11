@@ -128,7 +128,7 @@ impl DirFs {
 impl VfsLayer for DirFs {
     fn open(&self, file_path: &Nfc) -> io::Result<Box<dyn VfsFile>> {
         let candidates = self.canonicalize(file_path)?;
-        if let Some(path) = candidates.iter().filter(|x| x.is_file()).nth(0) {
+        if let Some(path) = candidates.iter().find(|x| x.is_file()) {
             Ok(Box::new(DirFsFile {
                 file_path: file_path.to_owned(),
                 dir_path: self.dir_path.to_owned(),

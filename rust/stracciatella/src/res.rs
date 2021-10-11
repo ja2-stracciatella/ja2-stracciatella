@@ -54,13 +54,11 @@
 
 use std::collections::{HashSet, VecDeque};
 use std::convert::From;
-use std::error::Error;
 use std::fmt;
 use std::io;
 use std::path::{Path, PathBuf};
 
 use digest::Digest;
-use hex;
 use md5::Md5;
 use rayon::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -372,18 +370,15 @@ pub enum ResourceError {
     IoError(io::Error),
 }
 
-impl Error for ResourceError {
-    fn description(&self) -> &str {
-        match self {
-            ResourceError::Text(desc) => desc,
-            ResourceError::IoError(err) => err.description(),
-        }
-    }
-}
-
 impl fmt::Display for ResourceError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "ResourceError({})", self.description())
+        write!(f, "ResourceError(")?;
+        match self {
+            ResourceError::Text(desc) => write!(f, "{}", desc),
+            ResourceError::IoError(err) => err.fmt(f),
+        }?;
+        write!(f, ")")?;
+        Ok(())
     }
 }
 
@@ -635,7 +630,6 @@ mod tests {
         use std::time::{Duration, SystemTime};
 
         use digest::Digest;
-        use hex;
         use md5::Md5;
 
         fn data_for_hasher() -> Vec<u8> {

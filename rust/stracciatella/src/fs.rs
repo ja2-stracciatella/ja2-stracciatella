@@ -8,8 +8,6 @@
 use std::io;
 use std::path::{Component, Path, PathBuf};
 
-use dunce;
-
 use crate::unicode::Nfc;
 
 //------------
