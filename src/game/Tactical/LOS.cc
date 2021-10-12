@@ -3388,7 +3388,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 			ddVerticAngle = ddOrigVerticAngle;
 
 			// first bullet, roll to hit...
-			if ( sHitBy >= 0 )
+			if (sHitBy > 0)
 			{
 				// calculate by hand (well, without angles) to match LOS
 				pBullet->qIncrX = FloatToFixed( dDeltaX / (FLOAT)iDistance );
@@ -3440,7 +3440,7 @@ INT8 FireBulletGivenTarget(SOLDIERTYPE* const pFirer, const FLOAT dEndX, const F
 
 		// NB we can only apply correction for leftovers if the bullet is going to hit
 		// because otherwise the increments are not right for the calculations!
-		if ( pBullet->sHitBy >= 0 )
+		if (pBullet->sHitBy > 0)
 		{
 			pBullet->qCurrX += ( FloatToFixed( dDeltaX ) - pBullet->qIncrX * iDistance ) / 2;
 			pBullet->qCurrY += ( FloatToFixed( dDeltaY ) - pBullet->qIncrY * iDistance ) / 2;

@@ -951,7 +951,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	}
 
 	FireBulletGivenTarget(pSoldier, dTargetX, dTargetY, dTargetZ, pSoldier->usAttackingWeapon,
-				(UINT16) (uiHitChance - uiDiceRoll), fBuckshot, FALSE);
+				(INT16) (uiHitChance - uiDiceRoll), fBuckshot, FALSE);
 
 	ubVolume = GCM->getWeapon( pSoldier->usAttackingWeapon )->ubAttackVolume;
 
