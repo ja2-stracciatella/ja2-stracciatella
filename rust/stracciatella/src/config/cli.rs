@@ -121,7 +121,8 @@ impl Cli {
                 }
 
                 if !m.opt_strs("mod").is_empty() {
-                    engine_options.mods = m.opt_strs("mod");
+                    engine_options.mods =
+                        m.opt_strs("mod").iter().map(|v| v.to_lowercase()).collect();
                 }
 
                 if let Some(s) = m.opt_str("res") {

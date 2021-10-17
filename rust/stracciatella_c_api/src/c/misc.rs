@@ -184,7 +184,8 @@ pub extern "C" fn findAvailableMods(engine_options: *mut EngineOptions) -> *mut 
                 }
             }
             None
-        }) // String
+        })
+        .map(|s| s.to_lowercase()) // String
         .filter_map(|x| CString::new(x.as_bytes().to_owned()).ok()) // CString
         .collect();
 

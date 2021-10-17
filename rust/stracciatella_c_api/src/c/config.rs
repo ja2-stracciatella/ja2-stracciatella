@@ -110,6 +110,14 @@ pub extern "C" fn EngineOptions_setVanillaGameDir(
     engine_options.vanilla_game_dir = vanilla_game_dir;
 }
 
+/// Checks if mod is enabled
+#[no_mangle]
+pub extern "C" fn EngineOptions_isModEnabled(ptr: *mut EngineOptions, name: *const c_char) -> bool {
+    let engine_options = unsafe_mut(ptr);
+    let name = str_from_c_str_or_panic(unsafe_c_str(name)).to_owned();
+    engine_options.is_mod_enabled(&name)
+}
+
 /// Gets the length of `EngineOptions.mods`.
 #[no_mangle]
 pub extern "C" fn EngineOptions_getModsLength(ptr: *const EngineOptions) -> u32 {
