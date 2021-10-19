@@ -14,8 +14,8 @@ class StracciatellaLauncher {open
         xywh {0 0 520 350} align 9 resizable
       } {
         Fl_Group {} {
-          label {@> Play  }
-          xywh {0 50 520 300} labelsize 16 labelcolor 24 hide
+          label {@> Play  } selected
+          xywh {0 50 520 300} labelsize 16 labelcolor 24
         } {
           Fl_Button editorButton {
             label {Start Map Editor}
@@ -61,7 +61,7 @@ class StracciatellaLauncher {open
         }
         Fl_Group {} {
           label {@-> Mods } open
-          xywh {0 50 520 300} labelcolor 24
+          xywh {0 50 520 300} labelcolor 24 hide
         } {
           Fl_Group {} {open
             xywh {10 60 500 165}
@@ -75,7 +75,7 @@ class StracciatellaLauncher {open
               tooltip {Enable one or multiple mods.} xywh {245 75 30 30} deactivate
             }
             Fl_Button disableModsButton {
-              label {@>} selected
+              label {@>}
               tooltip {Disable one or multiple mods.} xywh {245 115 30 30} deactivate
             }
             Fl_Button moveUpModsButton {
