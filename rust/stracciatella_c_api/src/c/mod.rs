@@ -7,6 +7,7 @@ pub mod config;
 pub mod fs;
 pub mod logger;
 pub mod misc;
+pub mod mod_manager;
 pub mod path;
 pub mod vec;
 pub mod vfs;

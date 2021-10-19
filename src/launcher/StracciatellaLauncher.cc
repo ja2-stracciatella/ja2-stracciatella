@@ -80,6 +80,10 @@ le from the mod with the highest priority is used.");
           } // Fl_Browser* availableModsBrowser
           o->end();
         } // Fl_Group* o
+        { modDetails = new Fl_Text_Display(20, 235, 480, 100);
+          modDetails->color((Fl_Color)55);
+          modDetails->hide();
+        } // Fl_Text_Display* modDetails
         o->end();
       } // Fl_Group* o
       { Fl_Group* o = new Fl_Group(0, 50, 520, 300, "@menu Settings ");

@@ -63,7 +63,7 @@ class StracciatellaLauncher {open
           label {@-> Mods } open
           xywh {0 50 520 300} labelcolor 24 hide
         } {
-          Fl_Group {} {open
+          Fl_Group {} {
             xywh {10 60 500 165}
           } {
             Fl_Browser enabledModsBrowser {
@@ -90,6 +90,9 @@ class StracciatellaLauncher {open
               label {Disabled Mods:}
               xywh {285 75 215 150} type Multi align 5
             }
+          }
+          Fl_Text_Display modDetails {
+            xywh {20 235 480 100} color 55 hide
           }
         }
         Fl_Group {} {
