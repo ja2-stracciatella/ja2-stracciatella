@@ -10,7 +10,6 @@ StracciatellaLauncher::StracciatellaLauncher() {
       { Fl_Group* o = new Fl_Group(0, 50, 520, 300, "@> Play  ");
         o->labelsize(16);
         o->labelcolor((Fl_Color)24);
-        o->hide();
         { editorButton = new Fl_Button(160, 150, 200, 25, "Start Map Editor");
         } // Fl_Button* editorButton
         { playButton = new Fl_Button(160, 185, 200, 55, "Play Ja2 Stracciatella");
@@ -51,6 +50,7 @@ StracciatellaLauncher::StracciatellaLauncher() {
       } // Fl_Group* o
       { Fl_Group* o = new Fl_Group(0, 50, 520, 300, "@-> Mods ");
         o->labelcolor((Fl_Color)24);
+        o->hide();
         { Fl_Group* o = new Fl_Group(10, 60, 500, 165);
           { enabledModsBrowser = new Fl_Browser(20, 75, 215, 150, "Enabled Mods:");
             enabledModsBrowser->type(3);
