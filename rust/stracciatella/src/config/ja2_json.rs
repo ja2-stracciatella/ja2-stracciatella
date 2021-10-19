@@ -71,7 +71,12 @@ impl Ja2Json {
         copy_to!(content.game_dir, engine_options.vanilla_game_dir);
         engine_options.vanilla_game_dir =
             resolve_existing_components(&engine_options.vanilla_game_dir, None, true);
-        copy_to!(content.mods, engine_options.mods);
+        copy_to!(
+            content
+                .mods
+                .map(|c| c.iter().map(|v| v.to_lowercase()).collect()),
+            engine_options.mods
+        );
         copy_to!(content.res, engine_options.resolution);
         copy_to!(content.brightness, engine_options.brightness);
         copy_to!(content.resversion, engine_options.resource_version);

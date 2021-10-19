@@ -133,10 +133,19 @@ void Launcher::show() {
 	}
 	ja2JsonReloadBtn->callback( (Fl_Callback*)reloadJa2Json, (void*)(this) );
 	ja2JsonSaveBtn->callback( (Fl_Callback*)saveJa2Json, (void*)(this) );
-	addModMenuButton->callback( (Fl_Callback*)addMod, (void*)(this) );
+
+	RustPointer<VecCString> mods(findAvailableMods(this->engine_options.get()));
+	size_t nmods = VecCString_len(mods.get());
+	for (size_t i = 0; i < nmods; ++i) {
+		RustPointer<char> mod(VecCString_get(mods.get(), i));
+		availableMods.insert(mod.get());
+	}
+	availableModsBrowser->callback( (Fl_Callback*)selectAvailableMods, (void*)(this) );
+	enabledModsBrowser->callback( (Fl_Callback*)selectEnabledMods, (void*)(this) );
+	enableModsButton->callback( (Fl_Callback*)enableMods, (void*)(this) );
+	disableModsButton->callback( (Fl_Callback*)disableMods, (void*)(this) );
 	moveDownModsButton->callback( (Fl_Callback*)moveDownMods, (void*)(this) );
 	moveUpModsButton->callback( (Fl_Callback*)moveUpMods, (void*)(this) );
-	removeModsButton->callback( (Fl_Callback*)removeMods, (void*)(this) );
 
 	populateChoices();
 	initializeInputsFromDefaults();
@@ -151,9 +160,17 @@ void Launcher::initializeInputsFromDefaults() {
 	gameDirectoryInput->value(rustResRootPath.get());
 
 	uint32_t n = EngineOptions_getModsLength(this->engine_options.get());
-	modsCheckBrowser->clear();
+	enabledModsBrowser->clear();
 	for (uint32_t i = 0; i < n; ++i) {
-		modsCheckBrowser->add(EngineOptions_getMod(this->engine_options.get(), i));
+		enabledModsBrowser->add(EngineOptions_getMod(this->engine_options.get(), i));
+	}
+
+	availableModsBrowser->clear();
+	for (auto i = availableMods.begin(); i != availableMods.end(); i++) {
+		availableModsBrowser->add((*i).c_str());
+		if (EngineOptions_isModEnabled(this->engine_options.get(), (*i).c_str())) {
+			availableModsBrowser->hide(availableModsBrowser->size());
+		}
 	}
 
 	GameVersion rustResVersion = EngineOptions_getResourceVersion(this->engine_options.get());
@@ -194,9 +211,9 @@ int Launcher::writeJsonFile() {
 	EngineOptions_setVanillaGameDir(this->engine_options.get(), gameDirectoryInput->value());
 
 	EngineOptions_clearMods(this->engine_options.get());
-	int nitems = modsCheckBrowser->nitems();
+	int nitems = enabledModsBrowser->size();
 	for (int item = 1; item <= nitems; ++item) {
-		EngineOptions_pushMod(this->engine_options.get(), modsCheckBrowser->text(item));
+		EngineOptions_pushMod(this->engine_options.get(), enabledModsBrowser->text(item));
 	}
 
 	int x = (int)resolutionXInput->value();
@@ -227,7 +244,7 @@ void Launcher::populateChoices() {
 	size_t nmods = VecCString_len(mods.get());
 	for (size_t i = 0; i < nmods; ++i) {
 		RustPointer<char> mod(VecCString_get(mods.get(), i));
-		addModMenuButton->insert(-1, mod.get(), 0, addMod, this, 0);
+		availableModsBrowser->add(mod.get());
 	}
 
 	for(GameVersion version : predefinedVersions) {
@@ -430,101 +447,114 @@ void Launcher::saveJa2Json(Fl_Widget* widget, void* userdata) {
 	window->writeJsonFile();
 }
 
-void Launcher::addMod(Fl_Widget* widget, void* userdata) {
-	Fl_Menu_Button* menuButton = static_cast< Fl_Menu_Button* >( widget );
+void Launcher::selectAvailableMods(Fl_Widget* widget, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
 
-	const char* mod = menuButton->mvalue()->label();
-	window->modsCheckBrowser->add(mod);
-	window->modsCheckBrowser->redraw();
-	window->update(true, widget);
+	window->enableModsButton->activate();
+	window->disableModsButton->deactivate();
+	window->moveUpModsButton->deactivate();
+	window->moveDownModsButton->deactivate();
+	auto nitems = window->enabledModsBrowser->size();
+	for (auto i = 1; i <= nitems; i++) {
+		window->enabledModsBrowser->select(i, 0);
+	}
+}
+
+void Launcher::selectEnabledMods(Fl_Widget* widget, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+
+	window->enableModsButton->deactivate();
+	window->disableModsButton->activate();
+	window->moveUpModsButton->activate();
+	window->moveDownModsButton->activate();
+	auto nitems = window->availableModsBrowser->size();
+	for (auto i = 1; i <= nitems; i++) {
+		window->availableModsBrowser->select(i, 0);
+	}
+}
+
+void Launcher::enableMods(Fl_Widget* widget, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+
+	bool updated = false;
+	for (auto i = window->availableModsBrowser->size(); i > 0; i--) {
+		if (window->availableModsBrowser->selected(i) && window->availableModsBrowser->visible(i)) {
+			updated = true;
+			window->enabledModsBrowser->insert(0, window->availableModsBrowser->text(i));
+			window->enabledModsBrowser->select(1, 1);
+			window->availableModsBrowser->hide(i);
+		}
+	}
+
+	if (updated) {
+		window->selectEnabledMods(widget, userdata);
+		window->enabledModsBrowser->redraw();
+		window->availableModsBrowser->redraw();
+		window->update(true, widget);
+	}
+}
+
+void Launcher::disableMods(Fl_Widget* widget, void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+
+	bool updated = false;
+	for (auto i = window->enabledModsBrowser->size(); i > 0; i--) {
+		if (window->enabledModsBrowser->selected(i)) {
+			updated = true;
+
+			auto text = ST::string(window->enabledModsBrowser->text(i));
+			window->enabledModsBrowser->remove(i);
+			for (auto j = window->availableModsBrowser->size(); j > 0; j--) {
+				if (text == window->availableModsBrowser->text(j)) {
+					window->availableModsBrowser->show(j);
+					window->availableModsBrowser->select(j, 1);
+				}
+			}
+		}
+	}
+
+	if (updated) {
+		window->selectAvailableMods(widget, userdata);
+		window->enabledModsBrowser->redraw();
+		window->availableModsBrowser->redraw();
+		window->update(true, widget);
+	}
 }
 
 void Launcher::moveUpMods(Fl_Widget* widget, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
-	int nitems = window->modsCheckBrowser->nitems();
-	int nchecked = window->modsCheckBrowser->nchecked();
-	if (nchecked == 0 || nchecked == nitems) {
-		return; // nothing to do
+	int nitems = window->enabledModsBrowser->size();
+
+	if (nitems <= 1) {
+		return;
 	}
 
-	std::vector<int> order;
-	for (int item = 1; item <= nitems; ++item) {
-		if (window->modsCheckBrowser->checked(item)) {
-			if (!order.empty() && !window->modsCheckBrowser->checked(order.back())) {
-				order.insert(order.end() - 1, item); // move up
-				continue;
-			}
+	// Fltk line indexing is 1 based
+	for (auto i = 2; i <= nitems; i++) {
+		if (window->enabledModsBrowser->selected(i) && !window->enabledModsBrowser->selected(i-1)) {
+			window->enabledModsBrowser->swap(i, i-1);
 		}
-		order.emplace_back(item);
 	}
 
-	std::vector<ST::string> text;
-	std::vector<int> checked;
-	for (int item : order) {
-		text.emplace_back(window->modsCheckBrowser->text(item));
-		checked.emplace_back(window->modsCheckBrowser->checked(item));
-	}
-
-	window->modsCheckBrowser->clear();
-	for (int i = 0; i < nitems; ++i) {
-		window->modsCheckBrowser->add(text[i].c_str(), checked[i]);
-	}
+	window->enabledModsBrowser->redraw();
 	window->update(true, widget);
 }
 
 void Launcher::moveDownMods(Fl_Widget* widget, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
-	int nitems = window->modsCheckBrowser->nitems();
-	int nchecked = window->modsCheckBrowser->nchecked();
-	if (nchecked == 0 || nchecked == nitems) {
-		return; // nothing to do
+	int nitems = window->enabledModsBrowser->size();
+
+	if (nitems <= 1) {
+		return;
 	}
 
-	std::vector<int> order;
-	for (int item = nitems; item >= 1; --item) {
-		if (window->modsCheckBrowser->checked(item)) {
-			if (!order.empty() && !window->modsCheckBrowser->checked(order.back())) {
-				order.insert(order.end() - 1, item); // move down
-				continue;
-			}
-		}
-		order.emplace_back(item);
-	}
-	std::reverse(order.begin(), order.end());
-
-	std::vector<ST::string> text;
-	std::vector<int> checked;
-	for (int item : order) {
-		text.emplace_back(window->modsCheckBrowser->text(item));
-		checked.emplace_back(window->modsCheckBrowser->checked(item));
-	}
-
-	window->modsCheckBrowser->clear();
-	for (int i = 0; i < nitems; ++i) {
-		window->modsCheckBrowser->add(text[i].c_str(), checked[i]);
-	}
-	window->update(true, widget);
-}
-
-void Launcher::removeMods(Fl_Widget* widget, void* userdata) {
-	Launcher* window = static_cast< Launcher* >( userdata );
-	int nchecked = window->modsCheckBrowser->nchecked();
-	if (nchecked == 0) {
-		return; // nothing to do
-	}
-
-	std::vector<ST::string> text;
-	int nitems = window->modsCheckBrowser->nitems();
-	for (int item = 1; item <= nitems; ++item) {
-		if (!window->modsCheckBrowser->checked(item)) {
-			text.emplace_back(window->modsCheckBrowser->text(item));
+	// Fltk line indexing is 1 based
+	for (auto i = nitems - 1; i > 0; i--) {
+		if (window->enabledModsBrowser->selected(i) && !window->enabledModsBrowser->selected(i+1)) {
+			window->enabledModsBrowser->swap(i, i+1);
 		}
 	}
 
-	window->modsCheckBrowser->clear();
-	for (size_t i = 0; i < text.size(); ++i) {
-		window->modsCheckBrowser->add(text[i].c_str());
-	}
+	window->enabledModsBrowser->redraw();
 	window->update(true, widget);
 }

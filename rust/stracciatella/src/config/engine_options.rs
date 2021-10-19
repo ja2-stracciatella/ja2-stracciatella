@@ -91,4 +91,9 @@ impl EngineOptions {
 
         Ok(engine_options)
     }
+
+    /// Checks whether a specific mod is enabled
+    pub fn is_mod_enabled(&self, name: &str) -> bool {
+        self.mods.contains(&name.to_lowercase())
+    }
 }
