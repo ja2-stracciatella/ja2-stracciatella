@@ -33,6 +33,8 @@ linux-install-appimage-build-tools () {
     sudo chmod +x /usr/bin/linuxdeploy
     sudo curl -sSfL -o /usr/bin/appimagelint https://github.com/TheAssassin/appimagelint/releases/download/continuous/appimagelint-x86_64.AppImage
     sudo chmod +x /usr/bin/appimagelint
+
+    linux-install-via-apt-get zstd
 }
 
 linux-install-via-android-sdkmanager () {
