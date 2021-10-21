@@ -4,19 +4,37 @@ use stracciatella::{config::EngineOptions, get_assets_dir};
 pub use stracciatella::mods::{Mod, ModManager};
 
 use super::common::{
-    c_string_from_str, from_ptr, into_ptr, str_from_c_str_or_panic, unsafe_c_str, unsafe_ref,
+    c_string_from_str, forget_rust_error, from_ptr, into_ptr, remember_rust_error,
+    str_from_c_str_or_panic, unsafe_c_str, unsafe_ref,
 };
 
 /// Creates a `ModManager` instance
 #[no_mangle]
 pub extern "C" fn ModManager_create(engine_options: *const EngineOptions) -> *mut ModManager {
+    forget_rust_error();
     let assets_dir = get_assets_dir();
     let engine_options = unsafe_ref(engine_options);
+    let mod_manager = ModManager::new(&engine_options, &assets_dir);
 
-    into_ptr(ModManager::new(
-        &engine_options.stracciatella_home,
-        &assets_dir,
-    ))
+    match mod_manager {
+        Ok(mod_manager) => into_ptr(mod_manager),
+        Err(e) => {
+            remember_rust_error(format!("{}", e));
+            std::ptr::null_mut()
+        }
+    }
+}
+
+/// Creates a `ModManager` instance, without checking wether enabled mods exist
+#[no_mangle]
+pub extern "C" fn ModManager_createUnchecked(
+    engine_options: *const EngineOptions,
+) -> *mut ModManager {
+    let assets_dir = get_assets_dir();
+    let engine_options = unsafe_ref(engine_options);
+    let mod_manager = ModManager::new_unchecked(&engine_options, &assets_dir);
+
+    into_ptr(mod_manager)
 }
 
 /// Destroys the ModManager instance.
@@ -89,7 +107,7 @@ pub extern "C" fn Mod_getVersionString(ptr: *const Mod) -> *mut c_char {
     c_string_from_str(ptr.version()).into_raw()
 }
 
-/// Gets a mods version string
+/// Gets a mods description
 #[no_mangle]
 pub extern "C" fn Mod_getDescription(ptr: *const Mod) -> *mut c_char {
     let ptr = unsafe_ref(ptr);

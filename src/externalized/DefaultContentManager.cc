@@ -170,6 +170,10 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 {
 	m_engineOptions = move(engineOptions);
 	m_modManager.reset(ModManager_create(m_engineOptions.get()));
+	if (m_modManager.get() == NULL) {
+		RustPointer<char> err{ getRustError() };
+		throw std::runtime_error(err.get());
+	}
 
 	RustPointer<char> vanillaGameDir{EngineOptions_getVanillaGameDir(m_engineOptions.get())};
 

@@ -103,7 +103,7 @@ void Launcher::loadJa2Json() {
 	}
 
 	this->engineOptions.reset(EngineOptions_create(configFolderPath.get(), argv, argc));
-	this->modManager.reset(ModManager_create(this->engineOptions.get()));
+	this->modManager.reset(ModManager_createUnchecked(this->engineOptions.get()));
 
 	if (this->engineOptions == NULL) {
 		exit(EXIT_FAILURE);
