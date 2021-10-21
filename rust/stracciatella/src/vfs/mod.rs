@@ -181,20 +181,26 @@ impl Vfs {
 
         // Add mod directories
         for mod_id in engine_options.mods.iter() {
-            let mod_path = mod_manager.get_mod_by_id(mod_id).map(|m| m.path()).ok_or_else(|| VfsInitError {
-                path: mod_id.into(),
-                error: ErrorKind::NotFound.into(),
-            })?;
+            let mod_path = mod_manager
+                .get_mod_by_id(mod_id)
+                .map(|m| m.path())
+                .ok_or_else(|| VfsInitError {
+                    path: mod_id.into(),
+                    error: ErrorKind::NotFound.into(),
+                })?;
             let mod_path = mod_path.join(DATA_DIR);
 
             match mod_path {
                 ModPath::Path(p) => {
                     let layer = self.add_dir(&p)?;
                     self.add_slf_files_from(layer, false)?;
-                },
+                }
                 #[cfg(target_os = "android")]
-                ModPath::AndroidAssetPath(p) =>  {
-                    let layer = android::AssetManagerFs::new(&mod_path);
+                ModPath::AndroidAssetPath(p) => {
+                    let layer = android::AssetManagerFs::new(&p).map_err(|e| VfsInitError {
+                        path: p.into(),
+                        error: e,
+                    })?;
                     self.entries.push(layer.clone());
                     self.add_slf_files_from(layer, false)?;
                 }

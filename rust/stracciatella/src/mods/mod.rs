@@ -15,7 +15,7 @@ pub enum ModPath {
 
 impl ModPath {
     pub fn join<P: AsRef<Path>>(&self, p: P) -> ModPath {
-        match self  {
+        match self {
             ModPath::Path(s) => ModPath::Path(s.join(p)),
             #[cfg(target_os = "android")]
             ModPath::AndroidAssetPath(s) => ModPath::AndroidAssetPath(s.join(p)),
@@ -53,7 +53,10 @@ impl Mod {
             crate::fs::resolve_existing_components(Path::new("manifest.json"), Some(path), true);
         match std::fs::read_to_string(&manifest_path) {
             Ok(s) => match crate::json::de::from_string::<ModManifestJson>(&s) {
-                Ok(json) => Ok(Mod::new_with_mod_manifest(ModPath::Path(path.to_owned()), json)),
+                Ok(json) => Ok(Mod::new_with_mod_manifest(
+                    ModPath::Path(path.to_owned()),
+                    json,
+                )),
                 Err(e) => {
                     log::warn!(
                         "Could not read mod manifest for `{}` at location `{:?}`: {}",
@@ -73,6 +76,48 @@ impl Mod {
                 );
                 Ok(Mod::new_with_id(ModPath::Path(path.to_owned()), &id))
             }
+        }
+    }
+
+    #[cfg(target_os = "android")]
+    pub fn from_android_assets(path: &Path) -> io::Result<Self> {
+        use std::ffi::CString;
+        use std::io::Read;
+
+        let manifest_path = path.join("manifest.json");
+        let asset_manager = crate::android::get_asset_manager().map_err(|e| {
+            io::Error::new(
+                io::ErrorKind::Other,
+                format!("Could not get asset manager: {}", e),
+            )
+        })?;
+        let manifest_path_cstring = CString::new(manifest_path.to_string_lossy().as_bytes())
+            .expect("should not contain 0 byte");
+
+        if let Some(mut file) = asset_manager.open(&manifest_path_cstring) {
+            let mut s = Default::default();
+            file.read_to_string(&mut s)?;
+            match crate::json::de::from_string::<ModManifestJson>(&s) {
+                Ok(json) => Ok(Mod::new_with_mod_manifest(
+                    ModPath::Path(path.to_owned()),
+                    json,
+                )),
+                Err(e) => Err(io::Error::new(
+                    io::ErrorKind::NotFound,
+                    format!(
+                        "Mod manifest `{:?}` could not be read in android asset fs: {}",
+                        manifest_path, e
+                    ),
+                )),
+            }
+        } else {
+            Err(io::Error::new(
+                io::ErrorKind::NotFound,
+                format!(
+                    "Mod manifest `{:?}` not found in android asset fs",
+                    manifest_path
+                ),
+            ))
         }
     }
 
@@ -124,22 +169,49 @@ pub struct ModManager {
 
 impl ModManager {
     pub fn new(home_dir: &Path, assets_dir: &Path) -> ModManager {
-        let home_dir =
-            crate::fs::resolve_existing_components(Path::new("mods"), Some(home_dir), true);
-        let assets_dir =
-            crate::fs::resolve_existing_components(Path::new("mods"), Some(assets_dir), true);
+        let mods_dir = Path::new("mods");
+        let home_dir = crate::fs::resolve_existing_components(mods_dir, Some(home_dir), true);
+        #[cfg(not(target_os = "android"))]
+        let assets_dir = crate::fs::resolve_existing_components(mods_dir, Some(assets_dir), true);
         let mut available_mods = HashMap::new();
 
-        for dir in &[&assets_dir, &home_dir] {
+        #[cfg(target_os = "android")]
+        let dirs = [home_dir];
+        #[cfg(not(target_os = "android"))]
+        let dirs = [assets_dir, home_dir];
+
+        #[cfg(target_os = "android")]
+        {
+            // Android special case. List mods from assetfs. All stracciatella included mods MUST provide a `manifest.json`.
+            match crate::android::list_asset_dir(&mods_dir) {
+                Ok(paths) => {
+                    for path in paths {
+                        let path = mods_dir.join(path);
+                        match Mod::from_android_assets(&path) {
+                            Ok(m) => {
+                                log::debug!("Found mod: {:?}", m);
+                                available_mods.insert(m.id().to_owned(), m);
+                            }
+                            Err(e) => {
+                                log::warn!("Error loading mod directory: {}", e);
+                            }
+                        }
+                    }
+                }
+                Err(e) => log::error!("Could not list mods directory in android asset fs"),
+            }
+        }
+
+        for dir in &dirs {
             if let Ok(paths) = dir.read_dir() {
                 for entry in paths {
                     if let Some(false) = entry.as_ref().map(|e| e.path().is_dir()).ok() {
                         continue;
                     }
                     match entry.and_then(|dir_entry| Mod::from_path(&dir_entry.path())) {
-                        Ok(manifest) => {
-                            log::debug!("Found mod: {:?}", manifest);
-                            available_mods.insert(manifest.id().to_owned(), manifest);
+                        Ok(m) => {
+                            log::debug!("Found mod: {:?}", m);
+                            available_mods.insert(m.id().to_owned(), m);
                         }
                         Err(e) => {
                             log::warn!("Error loading mod directory: {}", e);
