@@ -168,13 +168,8 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	mExtendedGunChoice(ARMY_GUN_LEVELS),
 	m_vfs(Vfs_create())
 {
-	/*
-	 * Searching actual paths to directories 'Data' and 'Data/Tilecache', 'Data/Maps'
-	 * On case-sensitive filesystems that might be tricky: if such directories
-	 * exist we should use them.  If doesn't exist, then use lowercased names.
-	 */
-
 	m_engineOptions = move(engineOptions);
+	m_modManager.reset(ModManager_create(m_engineOptions.get()));
 
 	RustPointer<char> vanillaGameDir{EngineOptions_getVanillaGameDir(m_engineOptions.get())};
 
@@ -207,7 +202,7 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	m_tempFiles = std::make_unique<DirFs>(tempDirPath.get());
 
 	// Initialize VFS
-	auto succeeded = Vfs_init_from_engine_options(m_vfs.get(), m_engineOptions.get());
+	auto succeeded = Vfs_init(m_vfs.get(), m_engineOptions.get(), m_modManager.get());
 	if (!succeeded) {
 		RustPointer<char> err{ getRustError() };
 		auto error = ST::format("Failed to build virtual file system (VFS): {}", err.get());

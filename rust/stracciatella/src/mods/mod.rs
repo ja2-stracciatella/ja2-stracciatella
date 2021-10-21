@@ -6,6 +6,23 @@ mod mod_manifest;
 
 use mod_manifest::ModManifestJson;
 
+#[derive(Debug, Clone)]
+pub enum ModPath {
+    Path(PathBuf),
+    #[cfg(target_os = "android")]
+    AndroidAssetPath(PathBuf),
+}
+
+impl ModPath {
+    pub fn join<P: AsRef<Path>>(&self, p: P) -> ModPath {
+        match self  {
+            ModPath::Path(s) => ModPath::Path(s.join(p)),
+            #[cfg(target_os = "android")]
+            ModPath::AndroidAssetPath(s) => ModPath::AndroidAssetPath(s.join(p)),
+        }
+    }
+}
+
 /// Information about a mod
 #[derive(Debug, Clone)]
 pub struct Mod {
@@ -13,7 +30,7 @@ pub struct Mod {
     name: Option<String>,
     description: Option<String>,
     version: Option<String>,
-    path: PathBuf,
+    path: ModPath,
 }
 
 impl Mod {
@@ -36,7 +53,7 @@ impl Mod {
             crate::fs::resolve_existing_components(Path::new("manifest.json"), Some(path), true);
         match std::fs::read_to_string(&manifest_path) {
             Ok(s) => match crate::json::de::from_string::<ModManifestJson>(&s) {
-                Ok(json) => Ok(Mod::new_with_mod_manifest(path, json)),
+                Ok(json) => Ok(Mod::new_with_mod_manifest(ModPath::Path(path.to_owned()), json)),
                 Err(e) => {
                     log::warn!(
                         "Could not read mod manifest for `{}` at location `{:?}`: {}",
@@ -44,7 +61,7 @@ impl Mod {
                         manifest_path,
                         e
                     );
-                    Ok(Mod::new_with_id(path, &id))
+                    Ok(Mod::new_with_id(ModPath::Path(path.to_owned()), &id))
                 }
             },
             Err(e) => {
@@ -54,28 +71,28 @@ impl Mod {
                     manifest_path,
                     e
                 );
-                Ok(Mod::new_with_id(path, &id))
+                Ok(Mod::new_with_id(ModPath::Path(path.to_owned()), &id))
             }
         }
     }
 
-    fn new_with_id(path: &Path, id: &str) -> Self {
+    fn new_with_id(path: ModPath, id: &str) -> Self {
         Mod {
             id: id.to_owned(),
             name: None,
             description: None,
             version: None,
-            path: path.to_owned(),
+            path: path.clone(),
         }
     }
 
-    fn new_with_mod_manifest(path: &Path, json: ModManifestJson) -> Self {
+    fn new_with_mod_manifest(path: ModPath, json: ModManifestJson) -> Self {
         Mod {
             id: json.id,
             name: Some(json.name),
             description: json.description,
             version: Some(json.version),
-            path: path.to_owned(),
+            path: path.clone(),
         }
     }
 
@@ -95,7 +112,7 @@ impl Mod {
         self.version.as_deref().unwrap_or("unknown")
     }
 
-    pub fn path(&self) -> &Path {
+    pub fn path(&self) -> &ModPath {
         &self.path
     }
 }

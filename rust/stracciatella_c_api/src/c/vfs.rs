@@ -3,6 +3,7 @@
 //! [`stracciatella::vfs`]: ../../../stracciatella/vfs/index.html
 
 use stracciatella::config::EngineOptions;
+use stracciatella::mods::ModManager;
 use stracciatella::unicode::Nfc;
 use stracciatella::vfile::VFile;
 use stracciatella::vfs::{Vfs, VfsLayer};
@@ -28,14 +29,16 @@ pub extern "C" fn Vfs_destroy(vfs: *mut Vfs) {
 /// Returns true if successful, false otherwise.
 /// Sets the rust error.
 #[no_mangle]
-pub extern "C" fn Vfs_init_from_engine_options(
+pub extern "C" fn Vfs_init(
     vfs: *mut Vfs,
     engine_options: *const EngineOptions,
+    mod_manager: *const ModManager,
 ) -> bool {
     forget_rust_error();
     let vfs = unsafe_mut(vfs);
     let engine_options = unsafe_ref(engine_options);
-    if let Err(err) = vfs.init_from_engine_options(engine_options) {
+    let mod_manager = unsafe_ref(mod_manager);
+    if let Err(err) = vfs.init(engine_options, mod_manager) {
         remember_rust_error(format!(
             "Vfs_init_from_engine_options {:?}: {}",
             engine_options, err
