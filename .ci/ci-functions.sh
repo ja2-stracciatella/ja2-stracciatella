@@ -34,7 +34,16 @@ linux-install-appimage-build-tools () {
     sudo curl -sSfL -o /usr/bin/appimagelint https://github.com/TheAssassin/appimagelint/releases/download/continuous/appimagelint-x86_64.AppImage
     sudo chmod +x /usr/bin/appimagelint
 
+    ###
+    ### See #1431. This whole block can be removed when CI runners use Ubuntu 21.04 or newer
     linux-install-via-apt-get zstd
+    curl -sL -o "tar-1.34.tar.gz" https://ftp.gnu.org/gnu/tar/tar-1.34.tar.gz
+    tar zxf "tar-1.34.tar.gz"
+    cd tar-1.34 && ./configure && make && sudo make install
+    sudo cp /usr/local/bin/tar /usr/bin/tar
+    which tar
+    tar --version
+    ###
 }
 
 linux-install-via-android-sdkmanager () {
