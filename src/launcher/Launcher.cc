@@ -21,6 +21,7 @@
 const Fl_Text_Display::Style_Table_Entry styleTable[] = {
 	{  FL_BLACK,		FL_COURIER_BOLD,	14 }, // A - Header
 	{  FL_BLACK,		FL_COURIER,			14 }, // B - Text
+	{  FL_DARK_RED,		FL_COURIER,			14 }, // B - Error Text
 };
 
 const char* defaultResolution = "640x480";
@@ -168,12 +169,16 @@ void Launcher::initializeInputsFromDefaults() {
 	for (uint32_t i = 0; i < n; ++i) {
 		RustPointer<char> modId(EngineOptions_getMod(this->engineOptions.get(), i));
 		RustPointer<Mod> mod(ModManager_getAvailableModById(this->modManager.get(), modId.get()));
-		if (mod.get() == NULL) {
-			// TODO: Handle missing mod
+		if (mod.get() != NULL) {
+			RustPointer<char> modName(Mod_getName(mod.get()));
+
+			enabledModsBrowser->add(modName.get());
+			enabledModsBrowser->data(enabledModsBrowser->size(), modId.release());
+		} else {
+			// @C72 is dark red, should be highlighted because it is not available
+			enabledModsBrowser->add(ST::format("@C72{}", modId.get()).c_str());
+			enabledModsBrowser->data(enabledModsBrowser->size(), modId.release());
 		}
-		RustPointer<char> modName(Mod_getName(mod.get()));
-		enabledModsBrowser->add(modName.get());
-		enabledModsBrowser->data(enabledModsBrowser->size(), modId.release());
 	}
 
 	availableModsBrowser->clear();
@@ -303,6 +308,28 @@ void Launcher::startExecutable(bool asEditor) {
 		fl_alert("Invalid custom resolution %dx%d.\nJA2 Stracciatella needs a resolution of at least 640x480.",
 			(int) resolutionXInput->value(),
 			(int) resolutionYInput->value());
+		return;
+	}
+
+	auto nenabled = this->enabledModsBrowser->size();
+	std::vector<ST::string> invalidMods;
+	for (auto i = 1; i <= nenabled; i++) {
+		ST::string modId = static_cast<char*>(this->enabledModsBrowser->data(i));
+		if (ModManager_getAvailableModById(this->modManager.get(), modId.c_str()) == NULL) {
+			invalidMods.push_back(modId);
+		}
+	}
+	if (invalidMods.size() > 0) {
+		ST::string message = "The following mods are enabled, but dont exist on the filesystem: ";
+		for (auto i = invalidMods.begin(); i < invalidMods.end(); i++) {
+			if (i != invalidMods.begin()) {
+				message += ", ";
+			}
+			message += *i;
+		}
+
+		fl_message_title("Invalid mods");
+		fl_alert(message.c_str());
 		return;
 	}
 
@@ -463,7 +490,6 @@ void Launcher::showModDetails(const ST::string& modId) {
     Fl_Text_Buffer *styleBuffer = new Fl_Text_Buffer();
 	RustPointer<Mod> mod(ModManager_getAvailableModById(this->modManager.get(), modId.c_str()));
 	if (mod.get() != NULL) {
-		ST::string modId(RustPointer<char>(Mod_getId(mod.get())).get());
 		ST::string modName(RustPointer<char>(Mod_getName(mod.get())).get());
 		ST::string modVersion(RustPointer<char>(Mod_getVersionString(mod.get())).get());
 		ST::string modDescription(RustPointer<char>(Mod_getDescription(mod.get())).get());
@@ -487,14 +513,22 @@ void Launcher::showModDetails(const ST::string& modId) {
 
 		textBuffer->text(modDetails.c_str());
 		styleBuffer->text(modDetailsStyle.c_str());
-
-		this->modDetails->buffer(textBuffer);
-		this->modDetails->highlight_data(styleBuffer, styleTable, styleTableSize, 'A', 0, 0);
-		this->modDetails->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
-		this->modDetails->show();
 	} else {
-		this->modDetails->hide();
+		auto error = ST::format("Error: Could not find mod '{}'", modId);
+
+		ST::string errorStyle;
+		for (size_t i = 0; i < error.size(); i++) {
+			errorStyle += "C";
+		}
+
+		textBuffer->text(error.c_str());
+		styleBuffer->text(errorStyle.c_str());
 	}
+
+	this->modDetails->buffer(textBuffer);
+	this->modDetails->highlight_data(styleBuffer, styleTable, styleTableSize, 'A', 0, 0);
+	this->modDetails->wrap_mode(Fl_Text_Display::WRAP_AT_BOUNDS, 0);
+	this->modDetails->show();
 }
 
 void Launcher::hideModDetails() {
@@ -540,7 +574,7 @@ void Launcher::selectEnabledMods(Fl_Widget* widget, void* userdata) {
 	std::vector<ST::string> selectedMods;
 	auto nenabled = window->enabledModsBrowser->size();
 	for (auto i = 1; i <= nenabled; i++) {
-		if (window->enabledModsBrowser->selected(i)) {
+		if (window->enabledModsBrowser->visible(i) && window->enabledModsBrowser->selected(i)) {
 			selectedMods.push_back(ST::string(static_cast<char*>(window->enabledModsBrowser->data(i))));
 		}
 	}

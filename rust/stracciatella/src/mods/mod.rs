@@ -223,10 +223,6 @@ impl ModManager {
 
         let mut available_mods: Vec<_> = available_mods.into_iter().map(|(_, v)| v).collect();
         available_mods.sort_by(|v1, v2| v1.name().to_lowercase().cmp(&v2.name().to_lowercase()));
-        log::info!(
-            "{:?}",
-            available_mods.iter().map(|v| v.name()).collect::<Vec<_>>()
-        );
         ModManager { available_mods }
     }
 

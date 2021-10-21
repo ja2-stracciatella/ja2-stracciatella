@@ -2,5 +2,5 @@
     "id": "test-json-dialogs",
     "name": "Test JSON dialogs",
     "description": "This mod replaces all of Igor's dialog quotes with 'Test quote XXX'",
-    "version": "0.0.1"
+    "version": "1.0.0"
 }
