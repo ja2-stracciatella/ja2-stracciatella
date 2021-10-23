@@ -1,6 +1,8 @@
 #include "SaveLoadGameStates.h"
 #include "Buffer.h"
+#include "ContentManager.h"
 #include "FileMan.h"
+#include "GameInstance.h"
 #include <cmath>
 #include <rapidjson/document.h>
 #include <rapidjson/error/en.h>
@@ -36,9 +38,19 @@ void LoadStatesFromSaveFile(HWFILE const hFile)
 	g_gameStates.Deserialize(ss);
 }
 
-void ClearGameStates()
+void AddModInfoToGameStates() {
+	auto mods = GCM->getEnabledMods();
+	std::vector<ST::string> modState;
+	for (auto i = mods.begin(); i < mods.end(); i++) {
+		modState.push_back(ST::format("{}!{}", (*i).first, (*i).second));
+	}
+	g_gameStates.SetVector("stracciatella:mods", modState);
+}
+
+void ResetGameStates()
 {
 	g_gameStates.Clear();
+	AddModInfoToGameStates();
 }
 
 bool SavedGameStates::HasKey(const ST::string& key)

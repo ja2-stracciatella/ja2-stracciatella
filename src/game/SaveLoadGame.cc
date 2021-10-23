@@ -625,6 +625,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	 * pre-load state. */
 	TrashWorld();
 
+	ResetGameStates();
 	InitScriptingEngine();
 
 	InitTacticalSave();

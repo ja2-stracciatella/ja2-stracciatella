@@ -35,7 +35,7 @@ extern SavedGameStates g_gameStates;
 
 void SaveStatesToSaveGameFile(HWFILE);
 void LoadStatesFromSaveFile(HWFILE);
-void ClearGameStates();
+void ResetGameStates();
 
 class SavedGameStates
 {
