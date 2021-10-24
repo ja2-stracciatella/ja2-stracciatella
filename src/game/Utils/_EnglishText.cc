@@ -2955,7 +2955,7 @@ static const ST::string s_eng_pMessageStrings[pMessageStrings_SIZE] =
 	"%s has arrived in sector %s%s",	//Name/Squad has arrived in sector A9.  Order must not
 						//change without notifyingSirTech
 	"Version",
-	"Empty Quick Save Slot",
+	"Create new savegame",
 	"This slot is reserved for Quick Saves made from the tactical and map screens using ALT+S.",
 	"Opened",
 	"Closed",

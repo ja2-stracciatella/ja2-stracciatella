@@ -2956,7 +2956,7 @@ static const ST::string s_pl_pMessageStrings[pMessageStrings_SIZE] =
 	"%s przybył(a) do sektora %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	"Wersja",
-	"Wolna pozycja na szybki zapis",
+	"Utwórz nowy zapis gry",
 	"Ta pozycja zarezerwowana jest na szybkie zapisy wykonywane podczas gry kombinacją klawiszy ALT+S.",
 	"Otw.",
 	"Zamkn.",

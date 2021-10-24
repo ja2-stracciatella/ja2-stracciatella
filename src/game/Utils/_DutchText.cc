@@ -2970,7 +2970,7 @@ static const ST::string s_dut_pMessageStrings[pMessageStrings_SIZE] =
 	"%s is gearriveerd in sector %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	"Versie",
-	"Leeg SnelBewaarSlot",
+	"Nieuwe savegame maken",
 	"Dit slot is gereserveerd voor SnelBewaren tijdens tactische en kaartoverzichten m.b.v. ALT+S.",
 	"Geopend",
 	"Gesloten",

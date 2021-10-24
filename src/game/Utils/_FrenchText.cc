@@ -2956,7 +2956,7 @@ static const ST::string s_fr_pMessageStrings[pMessageStrings_SIZE] =
 	"%s est arrivé dans le secteur %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	"Version",
-	"Emplacement de sauvegarde rapide vide",
+	"Créer une nouvelle sauvegarde",
 	"Cet emplacement est réservé aux sauvegardes rapides effectuées depuis l'écran tactique (ALT+S).",
 	"Ouverte",
 	"Fermée",

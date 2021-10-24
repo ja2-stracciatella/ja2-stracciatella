@@ -52,6 +52,8 @@
 #include <string_theory/string>
 
 #include <exception>
+#include <regex>
+#include <ctime>
 
 
 #define SAVE_LOAD_TITLE_FONT				FONT14ARIAL
@@ -60,12 +62,6 @@
 #define SAVE_LOAD_NORMAL_FONT				FONT12ARIAL
 #define SAVE_LOAD_NORMAL_COLOR				2//FONT_MCOLOR_DKWHITE//2//FONT_MCOLOR_WHITE
 #define SAVE_LOAD_NORMAL_SHADOW_COLOR			118//121//118//125
-/*#define SAVE_LOAD_NORMAL_FONT			FONT12ARIAL
-#define SAVE_LOAD_NORMAL_COLOR				FONT_MCOLOR_DKWHITE//2//FONT_MCOLOR_WHITE
-#define SAVE_LOAD_NORMAL_SHADOW_COLOR			2//125*/
-
-#define SAVE_LOAD_QUICKSAVE_COLOR			2//FONT_MCOLOR_DKGRAY//FONT_MCOLOR_WHITE
-#define SAVE_LOAD_QUICKSAVE_SHADOW_COLOR		189//248//2
 
 #define SAVE_LOAD_EMPTYSLOT_COLOR			2//125//FONT_MCOLOR_WHITE
 #define SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR		121//118
@@ -75,14 +71,6 @@
 
 #define SAVE_LOAD_SELECTED_COLOR			2//145//FONT_MCOLOR_WHITE
 #define SAVE_LOAD_SELECTED_SHADOW_COLOR		130//2
-
-
-
-#define SAVE_LOAD_NUMBER_FONT				FONT12ARIAL
-#define SAVE_LOAD_NUMBER_COLOR				FONT_MCOLOR_WHITE
-
-#define SLG_SELECTED_COLOR				FONT_MCOLOR_WHITE
-#define SLG_UNSELECTED_COLOR				FONT_MCOLOR_DKWHITE
 
 #define SLG_SAVELOCATION_WIDTH				605
 #define SLG_SAVELOCATION_HEIGHT			30//46
@@ -116,8 +104,6 @@
 #define SLG_SELECTED_SLOT_GRAPHICS_NUMBER		3
 #define SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER		2
 
-#define SLG_DOUBLE_CLICK_DELAY				500
-
 //defines for saved game version status
 enum
 {
@@ -127,46 +113,28 @@ enum
 	SLS_BOTH_SAVE_GAME_AND_GAME_VERSION_OUT_OF_DATE,
 };
 
-// enums for the selected Loadscreen Tab (used with giLoadscreenTab[])
-enum
-{
-	SLS_TAB_NORMAL,
-	SLS_TAB_DEAD_IS_DEAD,
-	SLS_TAB_LENGTH,
-};
-
-
 static BOOLEAN gfSaveLoadScreenEntry = TRUE;
 static BOOLEAN gfSaveLoadScreenExit	= FALSE;
 BOOLEAN        gfRedrawSaveLoadScreen = TRUE;
 
 static ScreenID guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 
-
-//Contains the array of valid save game locations
-static BOOLEAN gbSaveGameArray[NUM_SAVE_GAMES];
-static BOOLEAN gbActiveSaveGameTabs[NUM_SAVE_GAMES_TABS];
+static std::vector<std::pair<ST::string, SAVED_GAME_HEADER>> gSavedGamesList;
+static size_t gCurrentScrollTop = 0;
+static INT32 gbSelectedSaveLocation = -1;
+static INT32 gbHighLightedLocation  = -1;
 
 static BOOLEAN gfDoingQuickLoad = FALSE;
 
-//This flag is used to diferentiate between loading a game and saveing a game.
+//This flag is used to differentiate between loading a game and saving a game.
 // gfSaveGame=TRUE		For saving a game
 // gfSaveGame=FALSE		For loading a game
 BOOLEAN		gfSaveGame=TRUE;
-static INT8 gfActiveTab=0;
 
 static BOOLEAN gfSaveLoadScreenButtonsCreated = FALSE;
 
-static INT8 gbSelectedSaveLocation = -1;
-static INT8 gbHighLightedLocation  = -1;
-
 static SGPVObject* guiSlgBackGroundImage;
 static SGPVObject* guiBackGroundAddOns;
-
-
-// The string that will contain the game desc text
-static ST::string gzGameDescTextField;
-
 
 static BOOLEAN gfUserInTextInputMode = FALSE;
 static UINT8   gubSaveGameNextPass   = 0;
@@ -197,10 +165,6 @@ static GUIButtonRef guiSlgCancelBtn;
 static BUTTON_PICS* guiSaveLoadImage;
 static GUIButtonRef guiSlgSaveLoadBtn;
 
-// buttons for Tabs
-static BUTTON_PICS* giLoadscreenTabButtonImage[2];
-static GUIButtonRef giLoadscreenTab[2];
-
 //Mouse regions for the currently selected save game
 static MOUSE_REGION gSelectedSaveRegion[NUM_SAVE_GAMES];
 
@@ -211,9 +175,9 @@ static void EnterSaveLoadScreen();
 static void ExitSaveLoadScreen(void);
 static void GetSaveLoadScreenUserInput(void);
 static void RenderSaveLoadScreen(void);
-static void SaveLoadGameNumber();
+static void SaveLoadSelectedSave();
+static void SaveNewSave();
 static BOOLEAN IsDeadIsDeadTab(INT8 tabNo);
-static void LoadTab(INT8 tabNo);
 
 
 ScreenID SaveLoadScreenHandle()
@@ -262,7 +226,7 @@ ScreenID SaveLoadScreenHandle()
 		if( gubSaveGameNextPass == 5 )
 		{
 			gubSaveGameNextPass = 0;
-			SaveLoadGameNumber();
+			SaveLoadSelectedSave();
 		}
 	}
 
@@ -362,109 +326,23 @@ static GUIButtonRef MakeButton(BUTTON_PICS* img, const ST::string& text, INT16 x
 	return CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, SLG_BTN_POS_Y, MSYS_PRIORITY_HIGH, click);
 }
 
-static void MakeTab(UINT idx, INT16 x, GUI_CALLBACK click, const ST::string& text)
-{
-	BUTTON_PICS* const img = LoadButtonImage( "sti/interface/loadscreentab.sti", idx, idx+2);
-	giLoadscreenTabButtonImage[idx] = img;
-	GUIButtonRef const btn = QuickCreateButtonNoMove(img, STD_SCREEN_X + x, STD_SCREEN_Y + 8, MSYS_PRIORITY_HIGHEST - 1, click);
-	giLoadscreenTab[idx] = btn;
-	btn->SpecifyGeneralTextAttributes(text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW);
-}
-
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, INT32 reason);
 static void ClearSelectedSaveSlot(void);
 static void InitSaveGameArray(void);
-static BOOLEAN LoadSavedGameHeader(INT8 bEntry, SAVED_GAME_HEADER* pSaveGameHeader);
+static BOOLEAN LoadSavedGameHeaderFromFile(const ST::string &fileName, SAVED_GAME_HEADER* pSaveGameHeader);
 static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
 static void StartFadeOutForSaveLoadScreen(void);
 
-static void CreateLoadscreenTab()
-{
-	MakeTab(0,        20, BtnSlgNormalGameTabCallback, gs_dead_is_dead_mode_tab_name[0]);
-	MakeTab(1, 90, BtnSlgDeadIsDeadTabCallback,    gs_dead_is_dead_mode_tab_name[1]);
-	// Render the Normal Tab as selected after create
-	giLoadscreenTab[SLS_TAB_NORMAL]->uiFlags |= BUTTON_CLICKED_ON;
-}
-
-static void RemoveLoadscreenTab()
-{
-	for (int i = 0; i < SLS_TAB_LENGTH; i++)
-	{
-		RemoveButton(giLoadscreenTab[i]);
-		UnloadButtonImage(giLoadscreenTabButtonImage[i]);
-	}
-}
-
-static void updateTabActiveState()
-{
-	for (INT8 i = 0; i < NUM_SAVE_GAMES_TABS; i++)
-	{
-		gfActiveTab = i;
-		InitSaveGameArray(); // Load the savegames for the current tab
-		// Check if the lastSavedGameSlot exists
-
-		bool tabHasSaves = FALSE;
-		for (INT8 j = 0; j != NUM_SAVE_GAMES; ++j)
-		{
-			if (gbSaveGameArray[j])
-			{
-				tabHasSaves = TRUE;
-				break;
-			}
-		}
-		gbActiveSaveGameTabs[i] = tabHasSaves;
-		if (!tabHasSaves)
-		{
-			DisableButton(giLoadscreenTab[i]);
-		}
-	}
-}
-// This function determines which tab to activate in the load Screen.
-// Depending on:
-// In which tab is the last save
-// Are there any saves in the tab
-// It also deactivates tabs with no saves
-static void selectActiveTab()
-{
-	INT8 const lastSaveInTab = (INT8) (gGameSettings.bLastSavedGameSlot / NUM_SAVE_GAMES);
-
-	updateTabActiveState();
-
-	gfActiveTab = 0;
-	InitSaveGameArray();
-	// If the lastSavedGameSlot exists, switch to the appropriate tab, otherwise select the first available save
-	if (gGameSettings.bLastSavedGameSlot != -1 && gbActiveSaveGameTabs[lastSaveInTab])
-	{
-		GUI_BUTTON* const b = ButtonList[giLoadscreenTab[lastSaveInTab].ID()];
-		b->ClickCallback(b,MSYS_CALLBACK_REASON_LBUTTON_UP);
-	}
-	else
-	{
-		// This code doesn't make sense until there are more than two tabs
-		for (int i = 1; i < NUM_SAVE_GAMES_TABS; i++)
-		{
-			if (gbActiveSaveGameTabs[i])
-			{
-				GUI_BUTTON* const b = ButtonList[giLoadscreenTab[i].ID()];
-				b->ClickCallback(b,MSYS_CALLBACK_REASON_LBUTTON_UP);
-				break;
-			}
-		}
-	}
-}
-
 static void EnterSaveLoadScreen()
 {
-	gfActiveTab= 0;
 	// Display Dead Is Dead games for saving by default if we are to choose the Dead is Dead Slot
 	if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
 	{
-		gfActiveTab = DEAD_IS_DEAD_TAB_NO;
 		gfSaveGame = TRUE;
 	}
 
@@ -487,8 +365,8 @@ static void EnterSaveLoadScreen()
 	if (gfLoadGameUponEntry)
 	{
 		// Make sure the save is valid
-		INT8 const last_slot = gfActiveTab ? gGameSettings.bLastSavedGameSlot-NUM_SAVE_GAMES : gGameSettings.bLastSavedGameSlot;
-		if (last_slot != -1 && gbSaveGameArray[last_slot])
+		INT8 const last_slot = gGameSettings.bLastSavedGameSlot;
+		if (last_slot != -1 && gSavedGamesList.begin() + last_slot < gSavedGamesList.end())
 		{
 			gbSelectedSaveLocation = last_slot;
 			StartFadeOutForSaveLoadScreen();
@@ -531,57 +409,32 @@ static void EnterSaveLoadScreen()
 		MSYS_DefineRegion(&r, x, y, x + SLG_SAVELOCATION_WIDTH, y + SLG_SAVELOCATION_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectedSaveRegionMovementCallBack, SelectedSaveRegionCallBack);
 		MSYS_SetRegionUserData(&r, 0, i);
 
-		// We cannot load a game that has not been saved
-		if (!gfSaveGame && !gbSaveGameArray[i]) r.Disable();
-
 		y += SLG_GAP_BETWEEN_LOCATIONS;
 	}
 
 	// Create the screen mask to enable ability to right click to cancel the save game
 	MSYS_DefineRegion(&gSLSEntireScreenRegion, 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, MSYS_PRIORITY_HIGH - 10, CURSOR_NORMAL, MSYS_NO_CALLBACK, SelectedSLSEntireRegionCallBack);
 
-	// Display DiD Tab Button if We are in load game
-	if (!gfSaveGame)
-	{
-		CreateLoadscreenTab();
-		selectActiveTab();
-	}
-
 	ClearSelectedSaveSlot();
 
 	RemoveMouseRegionForPauseOfClock();
 
 	gbHighLightedLocation  = -1;
-	gzGameDescTextField = ST::null;
-
-	// If the last saved game slot is ok, set the selected slot to the last saved slot
-	INT8 const last_slot = gfActiveTab ? gGameSettings.bLastSavedGameSlot-NUM_SAVE_GAMES : gGameSettings.bLastSavedGameSlot;
-	if (last_slot != -1            &&
-			gbSaveGameArray[last_slot] &&
-			(!gfSaveGame || last_slot != 0)) // If it is not the quicksave slot, and we are loading
-	{
-		SAVED_GAME_HEADER SaveGameHeader;
-		if (LoadSavedGameHeader(last_slot, &SaveGameHeader))
-		{
-			gzGameDescTextField = SaveGameHeader.sSavedGameDesc;
-			gbSelectedSaveLocation = last_slot;
-		}
-		else
-		{
-			gGameSettings.bLastSavedGameSlot = -1;
+	// Select the first, which is the last updated, item by default
+	gbSelectedSaveLocation = gSavedGamesList.size() > 0 ? 0 : -1;
+	if (!gGameSettings.sCurrentSavedGameName.empty()) {
+		for (auto i = gSavedGamesList.begin(); i < gSavedGamesList.end(); i++) {
+			// If a current save name is used select it
+			if ((*i).first == gGameSettings.sCurrentSavedGameName) {
+				gbSelectedSaveLocation = std::distance(gSavedGamesList.begin(), i);
+				break;
+			}
 		}
 	}
 
 	EnableButton(guiSlgSaveLoadBtn, gbSelectedSaveLocation != -1);
 	// Mark all buttons dirty, required for redrawing with the Tab system
 	guiSlgCancelBtn->uiFlags |= BUTTON_DIRTY;
-	if (!gfSaveGame)
-	{
-		for (INT8 i = 0; i < SLS_TAB_LENGTH; i++)
-		{
-			giLoadscreenTab[i]->uiFlags |= BUTTON_DIRTY;
-		}
-	}
 
 	RenderSaveLoadScreen();
 
@@ -628,11 +481,6 @@ static void ExitSaveLoadScreen(void)
 	{
 		RemoveButton( guiSlgSaveLoadBtn );
 		UnloadButtonImage( guiSaveLoadImage );
-	}
-	// Remove the Dead is Dead button
-	if(!gfSaveGame)
-	{
-		RemoveLoadscreenTab();
 	}
 
 	for(i=0; i<NUM_SAVE_GAMES; i++)
@@ -688,21 +536,19 @@ static void RenderSaveLoadScreen(void)
 }
 
 
-static bool GetGameDescription()
+static ST::string GetGameDescription()
 {
 	INT8 const id = GetActiveFieldID();
-	if (id == 0 || id == -1) return false;
+	if (id <= 0) return ST::null;
 
-	gzGameDescTextField = GetStringFromField(id);
-	return true;
+	return GetStringFromField(id);
 }
 
 
-static void DisplayOnScreenNumber(BOOLEAN display);
-static BOOLEAN DisplaySaveGameEntry(INT8 bEntryID);
+static BOOLEAN DisplaySaveGameEntry(const std::vector<std::pair<ST::string, SAVED_GAME_HEADER>>::iterator& entry);
 static void MoveSelectionDown();
 static void MoveSelectionUp();
-static void SetSelection(UINT8 ubNewSelection);
+static void InitSaveLoadScreenTextInputBoxes(void);
 
 
 static void GetSaveLoadScreenUserInput(void)
@@ -712,11 +558,9 @@ static void GetSaveLoadScreenUserInput(void)
 	// If we are going to be instantly leaving the screen, dont draw the numbers
 	if (gfLoadGameUponEntry) return;
 
-	DisplayOnScreenNumber(_KeyDown(ALT));
-
 	if (_KeyDown(CTRL) || fWasCtrlHeldDownLastFrame)
 	{
-		DisplaySaveGameEntry(gbSelectedSaveLocation);
+		DisplaySaveGameEntry(gSavedGamesList.begin() + gbSelectedSaveLocation);
 	}
 	fWasCtrlHeldDownLastFrame = _KeyDown(CTRL);
 
@@ -729,53 +573,17 @@ static void GetSaveLoadScreenUserInput(void)
 		MouseSystemHook(e.usEvent, mouse_pos.iX, mouse_pos.iY);
 		if (HandleTextInput(&e)) continue;
 
-		if (e.usEvent == KEY_DOWN)
-		{
+		if (e.usEvent == KEY_REPEAT || e.usEvent == KEY_DOWN) {
 			switch (e.usParam)
 			{
-				case '1': SetSelection( 1); break;
-				case '2': SetSelection( 2); break;
-				case '3': SetSelection( 3); break;
-				case '4': SetSelection( 4); break;
-				case '5': SetSelection( 5); break;
-				case '6': SetSelection( 6); break;
-				case '7': SetSelection( 7); break;
-				case '8': SetSelection( 8); break;
-				case '9': SetSelection( 9); break;
-				case '0': SetSelection(10); break;
-			}
-		}
-		else if (e.usEvent == KEY_UP)
-		{
-			switch (e.usParam)
-			{
-				case 'a':
-					if (_KeyDown(ALT) && !gfSaveGame)
-					{
-						INT8 const slot = GetNumberForAutoSave(TRUE);
-						if (slot == -1) break;
-
-						guiLastSaveGameNum     = slot;
-						gbSelectedSaveLocation = SAVE__END_TURN_NUM;
-						StartFadeOutForSaveLoadScreen();
-					}
-					break;
-
-				case 'b':
-					if (_KeyDown(ALT) && !gfSaveGame)
-					{
-						INT8 const slot = GetNumberForAutoSave(FALSE);
-						if (slot == -1) break;
-
-						guiLastSaveGameNum     = 1 - slot;
-						gbSelectedSaveLocation = SAVE__END_TURN_NUM;
-						StartFadeOutForSaveLoadScreen();
-					}
-					break;
-
 				case SDLK_UP:   MoveSelectionUp();   break;
 				case SDLK_DOWN: MoveSelectionDown(); break;
-
+			}
+		}
+		if (e.usEvent == KEY_UP)
+		{
+			switch (e.usParam)
+			{
 				case SDLK_ESCAPE:
 					if (gbSelectedSaveLocation == -1)
 					{
@@ -791,19 +599,17 @@ static void GetSaveLoadScreenUserInput(void)
 					break;
 
 				case SDLK_RETURN:
-					if (!gfSaveGame)
+					if (gfSaveGame && gbSelectedSaveLocation == 0)
 					{
-						SaveLoadGameNumber();
-					}
-					else if (GetGameDescription())
-					{
-						SetActiveField(0);
-						DestroySaveLoadTextInputBoxes();
-						SaveLoadGameNumber();
+						if (gfUserInTextInputMode) {
+							SaveNewSave();
+						} else {
+							InitSaveLoadScreenTextInputBoxes();
+						}
 					}
 					else if (gbSelectedSaveLocation != -1)
 					{
-						SaveLoadGameNumber();
+						SaveLoadSelectedSave();
 					}
 					else
 					{
@@ -816,36 +622,42 @@ static void GetSaveLoadScreenUserInput(void)
 }
 
 
-static UINT8 CompareSaveGameVersion(INT8 bSaveGameID);
+static UINT8 CompareSaveGameVersion(INT32 bSaveGameID);
 static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue);
 static void LoadSavedGameWarningMessageBoxCallBack(MessageBoxReturnValue);
-static void SaveGameToSlotNum(void);
+static void DoSaveGame(const ST::string &saveName, const ST::string &saveDescription);
 
 
-static void SaveLoadGameNumber()
+static void SaveNewSave() {
+	time_t now;
+    time(&now);
+    char buf[sizeof "2011-10-08T07:07:09Z"];
+    strftime(buf, sizeof buf, "%FT%TZ", gmtime(&now));
+	auto description = GetGameDescription();
+	// Building the filename from date and description should never lead to conflicts
+	auto filename = ST::format("{}-{}", buf, description.to_lower());
+
+	DoSaveGame(filename, description);
+}
+
+static void SaveLoadSelectedSave()
 {
-	INT8 const save_slot_id = gbSelectedSaveLocation;
-	if (save_slot_id < 0 || NUM_SAVE_GAMES <= save_slot_id) return;
+	if (gbSelectedSaveLocation < 0) {
+		return;
+	}
+	if (gfSaveGame && gbSelectedSaveLocation == 0) {
+		return;
+	}
 
 	if (gfSaveGame)
 	{
-		GetGameDescription();
-
-		// If there is save game in the slot, ask for confirmation before overwriting
-		if (gbSaveGameArray[save_slot_id])
-		{
-			ST::string sText = st_format_printf(zSaveLoadText[SLG_CONFIRM_SAVE], save_slot_id);
-			DoSaveLoadMessageBox(sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmSavedGameMessageBoxCallBack);
-		}
-		else
-		{ // else do NOT put up a confirmation
-			SaveGameToSlotNum();
-		}
+		ST::string sText = st_format_printf(zSaveLoadText[SLG_CONFIRM_SAVE], gbSelectedSaveLocation);
+		DoSaveLoadMessageBox(sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmSavedGameMessageBoxCallBack);
 	}
 	else
 	{
 		// Check to see if the save game headers are the same
-		UINT8 const ret = CompareSaveGameVersion(save_slot_id);
+		UINT8 const ret = CompareSaveGameVersion(gbSelectedSaveLocation);
 		if (ret != SLS_HEADER_OK)
 		{
 			ST::string msg =
@@ -860,53 +672,6 @@ static void SaveLoadGameNumber()
 		}
 	}
 }
-BOOLEAN IsDeadIsDeadTab(INT8 tabNo)
-{
-	return tabNo == DEAD_IS_DEAD_TAB_NO;
-}
-
-
-// Switch between normal Load game and Dead is Dead
-void LoadTab(INT8 tabNo)
-{
-	if (gfActiveTab != tabNo)
-	{
-		gfActiveTab = tabNo;
-
-		// Reinit the savegame array and redraw the save load screen
-		InitSaveGameArray();
-		// Reinit the mouse region for selections, otherwise we can't select the save slots
-		gbSelectedSaveLocation = -1;
-		UINT16 const x = SLG_FIRST_SAVED_SPOT_X;
-		UINT16       y = SLG_FIRST_SAVED_SPOT_Y;
-		for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
-		{
-			// Deinitialize first
-			MSYS_RemoveRegion( &gSelectedSaveRegion[i]);
-			// Reinitialize
-			MOUSE_REGION& r = gSelectedSaveRegion[i];
-			MSYS_DefineRegion(&r, x, y, x + SLG_SAVELOCATION_WIDTH, y + SLG_SAVELOCATION_HEIGHT, MSYS_PRIORITY_HIGH, CURSOR_NORMAL, SelectedSaveRegionMovementCallBack, SelectedSaveRegionCallBack);
-			MSYS_SetRegionUserData(&r, 0, i);
-
-			// Disable unused slots and select the first used slot
-			if (!gbSaveGameArray[i])
-			{
-				r.Disable();
-			} else if(gbSelectedSaveLocation == -1)
-			{
-				gbSelectedSaveLocation = i;
-			}
-
-			y += SLG_GAP_BETWEEN_LOCATIONS;
-		}
-		RenderSaveLoadScreen();
-
-		// Render the buttons
-		MarkButtonsDirty( );
-		RenderButtons();
-	}
-}
-
 
 void DoSaveLoadMessageBoxWithRect(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback, SGPBox const* centering_rect)
 {
@@ -920,115 +685,137 @@ void DoSaveLoadMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageB
 	DoSaveLoadMessageBoxWithRect(str, uiExitScreen, usFlags, ReturnCallback, NULL);
 }
 
+bool isReservedName(ST::string &saveName) {
+	return IsAutoSaveName(saveName) || IsQuickSaveName(saveName) || IsErrorSaveName(saveName);
+}
+
+bool compareSaveGames(std::pair<ST::string, SAVED_GAME_HEADER> i, std::pair<ST::string, SAVED_GAME_HEADER> j) {
+	auto savegameDir = GCM->getSavedGamesFolder();
+	auto lastModifiedI = GCM->userPrivateFiles()->getLastModifiedTime(GetSaveGamePath(i.first));
+	auto lastModifiedJ = GCM->userPrivateFiles()->getLastModifiedTime(GetSaveGamePath(j.first));
+	return (lastModifiedI > lastModifiedJ);
+}
+
+std::vector<std::pair<ST::string, SAVED_GAME_HEADER>> GetValidSaveGames()
+{
+	auto savegameDir = GCM->getSavedGamesFolder();
+	auto savegameNames = GCM->userPrivateFiles()->findAllFilesInDir(savegameDir, false, false, true);
+	std::vector<std::pair<ST::string, SAVED_GAME_HEADER>> validSaves;
+
+	for (auto i = savegameNames.begin(); i < savegameNames.end(); i++) {
+		if (!HasSaveGameExtension(*i)) {
+			// Ignore non savegame files in save directory
+			continue;
+		}
+		auto saveName = FileMan::getFileNameWithoutExt(*i);
+		SAVED_GAME_HEADER saveGameHeader;
+		if (LoadSavedGameHeaderFromFile(saveName, &saveGameHeader)) {
+			validSaves.push_back(std::pair(saveName, std::move(saveGameHeader)));
+		}
+	}
+
+	return validSaves;
+}
 
 static void InitSaveGameArray(void)
 {
-	for (INT8 cnt = 0; cnt < NUM_SAVE_GAMES; ++cnt)
-	{
-		SAVED_GAME_HEADER SaveGameHeader;
-		gbSaveGameArray[cnt] = LoadSavedGameHeader(cnt, &SaveGameHeader);
+	auto validSaveGames = GetValidSaveGames();
+	
+	gSavedGamesList.clear();
+	for (auto i = validSaveGames.begin(); i < validSaveGames.end(); i++) {
+		if (gfSaveGame && (IsAutoSaveName((*i).first) || IsQuickSaveName((*i).first))) {
+			// Dont display quick- and autosaves when saving game
+			continue;
+		}
+		gSavedGamesList.push_back(std::move(*i));
+	}
+
+	std::sort(gSavedGamesList.begin(), gSavedGamesList.end(), compareSaveGames);
+	if (gfSaveGame) {
+		// Insert empty value at the beginning to create a new save
+		gSavedGamesList.insert(gSavedGamesList.begin(), std::pair(ST::null, SAVED_GAME_HEADER{}));
 	}
 }
 
 
 static void DisplaySaveGameList(void)
 {
-	for (INT8 i = 0; i != NUM_SAVE_GAMES; ++i)
+	auto start = gSavedGamesList.begin() + gCurrentScrollTop;
+	auto end = std::min(start + NUM_SAVE_GAMES, gSavedGamesList.end());
+	for (auto i = start; i < end; ++i)
 	{ // Display all the information from the header
 		DisplaySaveGameEntry(i);
 	}
 }
 
 
-static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
+static BOOLEAN DisplaySaveGameEntry(const std::vector<std::pair<ST::string, SAVED_GAME_HEADER>>::iterator& entry)
 {
-	if (entry_idx == -1) return TRUE;
+	if (entry < gSavedGamesList.begin() || entry >= gSavedGamesList.end()) return TRUE;
 	// If we are going to be instantly leaving the screen, dont draw the numbers
 	if (gfLoadGameUponEntry) return TRUE;
 	// If we are currently fading out, leave
 	if (gfStartedFadingOut) return TRUE;
 
-	UINT16 const bx = SLG_FIRST_SAVED_SPOT_X;
-	UINT16 const by = SLG_FIRST_SAVED_SPOT_Y + SLG_GAP_BETWEEN_LOCATIONS * entry_idx;
+	auto start = gSavedGamesList.begin() + gCurrentScrollTop;
+	auto index = std::distance(gSavedGamesList.begin(), entry);
+	auto indexFromScrollTop = std::distance(start, entry);
 
-	bool const is_selected = entry_idx == gbSelectedSaveLocation;
-	bool const save_exists = gbSaveGameArray[entry_idx];
+	auto isNewSave = (*entry).first.empty();
+	auto isSelected = index == gbSelectedSaveLocation;
+
+	UINT16 const bx = SLG_FIRST_SAVED_SPOT_X;
+	UINT16 const by = SLG_FIRST_SAVED_SPOT_Y + SLG_GAP_BETWEEN_LOCATIONS * indexFromScrollTop;
 
 	// Background
-	UINT16 const gfx = is_selected ?
+	UINT16 const gfx = isSelected ?
 		SLG_SELECTED_SLOT_GRAPHICS_NUMBER : SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
 	BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, gfx, bx, by);
 
 	SGPFont  font = SAVE_LOAD_NORMAL_FONT;
 	UINT8 foreground;
 	UINT8 shadow;
-	if (entry_idx == 0 && gfSaveGame && gfActiveTab == 0)
-	{ // The QuickSave slot
-		FRAME_BUFFER->ShadowRect(bx, by, bx + SLG_SAVELOCATION_WIDTH, by + SLG_SAVELOCATION_HEIGHT);
-		foreground = SAVE_LOAD_QUICKSAVE_COLOR;
-		shadow     = SAVE_LOAD_QUICKSAVE_SHADOW_COLOR;
+	if (gfSaveGame && isNewSave) {
+		// The new save game slot
+		foreground = SAVE_LOAD_EMPTYSLOT_COLOR;
+		shadow     = SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR;
 	}
-	else if (is_selected)
+	else if (isSelected)
 	{ // The currently selected location
 		foreground = SAVE_LOAD_SELECTED_COLOR;
 		shadow     = SAVE_LOAD_SELECTED_SHADOW_COLOR;
 	}
-	else if (entry_idx == gbHighLightedLocation)
+	else if (indexFromScrollTop == gbHighLightedLocation)
 	{ // The highlighted slot
 		foreground = SAVE_LOAD_HIGHLIGHTED_COLOR;
 		shadow     = SAVE_LOAD_HIGHLIGHTED_SHADOW_COLOR;
 	}
-	else if (save_exists)
+	else
 	{ // The file exists
 		foreground = SAVE_LOAD_NORMAL_COLOR;
 		shadow     = SAVE_LOAD_NORMAL_SHADOW_COLOR;
 	}
-	else if (gfSaveGame)
-	{ // We are saving a game
-		foreground = SAVE_LOAD_EMPTYSLOT_COLOR;
-		shadow     = SAVE_LOAD_EMPTYSLOT_SHADOW_COLOR;
-	}
-	else
-	{
-		FRAME_BUFFER->ShadowRect(bx, by, bx + SLG_SAVELOCATION_WIDTH, by + SLG_SAVELOCATION_HEIGHT);
-		foreground = SAVE_LOAD_QUICKSAVE_COLOR;
-		shadow     = SAVE_LOAD_QUICKSAVE_SHADOW_COLOR;
-	}
 	SetFontShadow(shadow);
 
-	if (save_exists || is_selected)
-	{ // Setup the strings to be displayed
-		SAVED_GAME_HEADER header;
-		if (gfSaveGame && is_selected)
-		{ // The user has selected a spot to save.  Fill out all the required information
-			header.sSavedGameDesc = gzGameDescTextField;
-			header.uiDay                     = GetWorldDay();
-			header.ubHour                    = GetWorldHour();
-			header.ubMin                     = guiMin;
-			GetBestPossibleSectorXYZValues(&header.sSectorX, &header.sSectorY, &header.bSectorZ);
-			header.ubNumOfMercsOnPlayersTeam = NumberOfMercsOnPlayerTeam();
-			header.iCurrentBalance           = LaptopSaveInfo.iCurrentBalance;
-			header.sInitialGameOptions       = gGameOptions;
+	if (isNewSave) {
+		if (!gfUserInTextInputMode) {
+			// If this is the new save slot
+			DrawTextToScreen(pMessageStrings[MSG_NEW_SAVE], bx, by + SLG_DATE_OFFSET_Y, 609, font, foreground, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
-		else if (!LoadSavedGameHeader(entry_idx, &header))
-		{
-			return FALSE;
-		}
+	} else {
+		SAVED_GAME_HEADER header = (*entry).second;
 
 		UINT16 x = bx;
 		UINT16 y = by + SLG_DATE_OFFSET_Y;
-		if (is_selected)
+		if (isSelected)
 		{ // This is the currently selected location, move the text up a bit
 			x++;
 			y--;
 		}
 
-		if (!gfSaveGame && _KeyDown(CTRL) && is_selected)
-		{ // The user is LOADING and holding down the CTRL key, display the additional info
-			// Create a string for difficulty level
+		MOUSE_REGION& region = gSelectedSaveRegion[indexFromScrollTop];
+		if (!gfSaveGame) {
 			ST::string difficulty = ST::format("{} {}", gzGIOScreenText[GIO_EASY_TEXT + header.sInitialGameOptions.ubDifficultyLevel - 1], zSaveLoadText[SLG_DIFF]);
-
-			// Make a string containing the extended options
 			UINT8 gameModeText;
 			switch (header.sInitialGameOptions.ubGameSaveMode)
 			{
@@ -1036,73 +823,59 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 				case DIF_DEAD_IS_DEAD: gameModeText = GIO_DEAD_IS_DEAD_TEXT; break;
 				default: gameModeText = GIO_SAVE_ANYWHERE_TEXT;
 			}
-			ST::string options = ST::format("{20}     {22}     {22}     {22}",
+			ST::string options = ST::format("{}\n{}\n{}\n{}",
 				difficulty,
-				/*gzGIOScreenText[GIO_TIMED_TURN_TITLE_TEXT + header.sInitialGameOptions.fTurnTimeLimit + 1],*/
 				gzGIOScreenText[gameModeText],
 				header.sInitialGameOptions.fGunNut      ? zSaveLoadText[SLG_ADDITIONAL_GUNS] : zSaveLoadText[SLG_NORMAL_GUNS],
 				header.sInitialGameOptions.fSciFi       ? zSaveLoadText[SLG_SCIFI]           : zSaveLoadText[SLG_REALISTIC]
 			);
 
-			// The date
-			DrawTextToScreen(options, x + SLG_DATE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+			region.SetFastHelpText(options);
+		} else {
+			region.SetFastHelpText(ST::null);
+		}
+
+		// Display the Saved game information
+		// The date
+		ST::string date = ST::format("{} {}, {02d}:{02d}", pMessageStrings[MSG_DAY], header.uiDay, header.ubHour, header.ubMin);
+		DrawTextToScreen(date, x + SLG_DATE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+
+		// The sector
+		ST::string location;
+		if (header.sSectorX != -1 && header.sSectorY != -1 && header.bSectorZ >= 0)
+		{
+			gfGettingNameFromSaveLoadScreen = TRUE;
+			location = GetSectorIDString(header.sSectorX, header.sSectorY, header.bSectorZ, FALSE);
+			gfGettingNameFromSaveLoadScreen = FALSE;
+		}
+		else if (header.uiDay * NUM_SEC_IN_DAY + header.ubHour * NUM_SEC_IN_HOUR + header.ubMin * NUM_SEC_IN_MIN <= STARTING_TIME)
+		{
+			location = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
 		}
 		else
-		{ // Display the Saved game information
-			// The date
-			ST::string date = ST::format("{} {}, {02d}:{02d}", pMessageStrings[MSG_DAY], header.uiDay, header.ubHour, header.ubMin);
-			DrawTextToScreen(date, x + SLG_DATE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-			// The sector
-			ST::string location;
-			if (header.sSectorX != -1 && header.sSectorY != -1 && header.bSectorZ >= 0)
-			{
-				gfGettingNameFromSaveLoadScreen = TRUE;
-				location = GetSectorIDString(header.sSectorX, header.sSectorY, header.bSectorZ, FALSE);
-				gfGettingNameFromSaveLoadScreen = FALSE;
-			}
-			else if (header.uiDay * NUM_SEC_IN_DAY + header.ubHour * NUM_SEC_IN_HOUR + header.ubMin * NUM_SEC_IN_MIN <= STARTING_TIME)
-			{
-				location = gpStrategicString[STR_PB_NOTAPPLICABLE_ABBREVIATION];
-			}
-			else
-			{
-				location = gzLateLocalizedString[STR_LATE_14];
-			}
-			location = ReduceStringLength(location, SLG_SECTOR_WIDTH, font);
-			DrawTextToScreen(location, x + SLG_SECTOR_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-			// Number of mercs on the team
-			// If only 1 merc is on the team use "merc" else "mercs"
-			UINT8          const n_mercs = header.ubNumOfMercsOnPlayersTeam;
-			ST::string merc = n_mercs == 1 ?
-				MercAccountText[MERC_ACCOUNT_MERC] :
-				pMessageStrings[MSG_MERCS];
-			ST::string merc_count = ST::format("{} {}", n_mercs, merc);
-			DrawTextToScreen(merc_count, x + SLG_NUM_MERCS_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-			// The balance
-			DrawTextToScreen(SPrintMoney(header.iCurrentBalance), x + SLG_BALANCE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-
-			if (save_exists || (gfSaveGame && !gfUserInTextInputMode && is_selected))
-			{
-				// The saved game description
-				DrawTextToScreen(header.sSavedGameDesc, x + SLG_SAVE_GAME_DESC_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-			}
-		}
-	}
-	else
-	{
-		// If this is the quick save slot
-		ST::string txt;
-		if (entry_idx == 0 && gfActiveTab == 0)
 		{
-			txt = pMessageStrings[MSG_EMPTY_QUICK_SAVE_SLOT];
-		} else
-		{
-			txt = pMessageStrings[MSG_EMPTYSLOT];
+			location = gzLateLocalizedString[STR_LATE_14];
 		}
-		DrawTextToScreen(txt, bx, by + SLG_DATE_OFFSET_Y, 609, font, foreground, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
+		location = ReduceStringLength(location, SLG_SECTOR_WIDTH, font);
+		DrawTextToScreen(location, x + SLG_SECTOR_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+
+		// Number of mercs on the team
+		// If only 1 merc is on the team use "merc" else "mercs"
+		UINT8          const n_mercs = header.ubNumOfMercsOnPlayersTeam;
+		ST::string merc = n_mercs == 1 ?
+			MercAccountText[MERC_ACCOUNT_MERC] :
+			pMessageStrings[MSG_MERCS];
+		ST::string merc_count = ST::format("{} {}", n_mercs, merc);
+		DrawTextToScreen(merc_count, x + SLG_NUM_MERCS_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+
+		// The balance
+		DrawTextToScreen(SPrintMoney(header.iCurrentBalance), x + SLG_BALANCE_OFFSET_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+
+		if (!(gfSaveGame && gfUserInTextInputMode && isSelected))
+		{
+			// The saved game description
+			DrawTextToScreen(header.sSavedGameDesc, x + SLG_SAVE_GAME_DESC_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
+		}
 	}
 
 	// Reset the shadow color
@@ -1112,35 +885,31 @@ static BOOLEAN DisplaySaveGameEntry(INT8 const entry_idx)
 	return TRUE;
 }
 
-static BOOLEAN LoadSavedGameHeader(const INT8 bEntry, SAVED_GAME_HEADER *const header)
-{
-	// make sure the entry is valid
-	if (0 <= bEntry && bEntry < NUM_SAVE_GAMES)
+static BOOLEAN LoadSavedGameHeaderFromFile(const ST::string& saveName, SAVED_GAME_HEADER *const header) {
+	try {
+		bool stracLinuxFormat;
+		ExtractSavedGameHeaderFromSave(saveName, *header, &stracLinuxFormat);
+		endof(header->zGameVersionNumber)[-1] = '\0';
+		return TRUE;
+	} catch (const std::runtime_error &ex)
 	{
-		ST::string savegameName = CreateSavedGameFileNameFromNumber(gfActiveTab ? (bEntry + NUM_SAVE_GAMES) : bEntry);
-
-		try
-		{
-			if (GCM->userPrivateFiles()->exists(savegameName))
-			{
-				bool stracLinuxFormat;
-				AutoSGPFile f(GCM->userPrivateFiles()->openForReading(savegameName));
-				ExtractSavedGameHeaderFromFile(f, *header, &stracLinuxFormat);
-				endof(header->zGameVersionNumber)[-1] = '\0';
-				return TRUE;
-			}
-		}
-		catch (const std::runtime_error &ex)
-		{
-			STLOGW("Error loading save game header: {}", ex.what());
-		}
-
-		gbSaveGameArray[bEntry] = FALSE;
+		STLOGW("Error loading save game header: {}", ex.what());
 	}
-	*header = SAVED_GAME_HEADER{};
 	return FALSE;
 }
 
+static void HandleScrollEvent(INT32 const reason) {
+	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP && !gfUserInTextInputMode)
+	{
+		gCurrentScrollTop = gCurrentScrollTop > 0 ? gCurrentScrollTop - 1 : 0;
+		gfRedrawSaveLoadScreen = true;
+	}
+	if (reason & MSYS_CALLBACK_REASON_WHEEL_DOWN && !gfUserInTextInputMode)
+	{
+		gCurrentScrollTop = std::min(gSavedGamesList.size() - NUM_SAVE_GAMES, gCurrentScrollTop + 1);
+		gfRedrawSaveLoadScreen = true;
+	}
+}
 
 static void BtnSlgCancelCallback(GUI_BUTTON* const btn, INT32 const reason)
 {
@@ -1148,180 +917,65 @@ static void BtnSlgCancelCallback(GUI_BUTTON* const btn, INT32 const reason)
 	{
 		LeaveSaveLoadScreen();
 	}
+	HandleScrollEvent(reason);
 }
 
 
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason)
 {
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
+	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		SaveLoadGameNumber();
-	}
-}
-
-static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		giLoadscreenTab[SLS_TAB_DEAD_IS_DEAD]->uiFlags       &= ~BUTTON_CLICKED_ON;
-		if (IsDeadIsDeadTab(gfActiveTab))
-		{
-			LoadTab(0);
+		if (gfSaveGame && gbSelectedSaveLocation && gfUserInTextInputMode) {
+			SaveNewSave();
+		} else {
+			SaveLoadSelectedSave();
 		}
+	} else {
+		HandleScrollEvent(reason);
 	}
 }
-
-static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, INT32 reason)
-{
-	if(reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
-	{
-		btn->uiFlags |= BUTTON_CLICKED_ON;
-		giLoadscreenTab[SLS_TAB_NORMAL]->uiFlags       &= ~BUTTON_CLICKED_ON;
-		if (!IsDeadIsDeadTab(gfActiveTab))
-		{
-			LoadTab(1);
-		}
-	}
-}
-
 
 static void DisableSelectedSlot(void);
-static void InitSaveLoadScreenTextInputBoxes(void);
 static void RedrawSaveLoadScreenAfterMessageBox(MessageBoxReturnValue);
 
 
 static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
-	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
+	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK) {
+		INT32	bSelected = gCurrentScrollTop + MSYS_GetRegionUserData( pRegion, 0 );
+		if (gbSelectedSaveLocation == bSelected && !gfUserInTextInputMode) {
+			SaveLoadSelectedSave();
+		}
+	}
+	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		UINT8	bSelected = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
-		static UINT32	uiLastTime = 0;
-		UINT32	uiCurTime = GetJA2Clock();
-
-/*
-		//If we are saving and this is the quick save slot
-		if( gfSaveGame && bSelected == 0 )
-		{
-			//Display a pop up telling user what the quick save slot is
-			DoSaveLoadMessageBox(pMessageStrings[MSG_QUICK_SAVE_RESERVED_FOR_TACTICAL], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, RedrawSaveLoadScreenAfterMessageBox);
-			return;
-		}
-
-		SetSelection( bSelected );
-*/
-
-		//If we are saving and this is the quick save slot
-		if( gfSaveGame && bSelected == 0 && gfActiveTab == 0)
-		{
-			//Display a pop up telling user what the quick save slot is
-			DoSaveLoadMessageBox(pMessageStrings[MSG_QUICK_SAVE_RESERVED_FOR_TACTICAL], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, RedrawSaveLoadScreenAfterMessageBox);
-			return;
-		}
-
-		//if the user is selecting an unselected saved game slot
-		if( gbSelectedSaveLocation != bSelected )
-		{
-			//Destroy the previous region
-			DestroySaveLoadTextInputBoxes();
-
+		INT32	bSelected = gCurrentScrollTop + MSYS_GetRegionUserData( pRegion, 0 );
+		
+		if( gbSelectedSaveLocation != bSelected ) {
 			gbSelectedSaveLocation = bSelected;
 
-			//Reset the global string
-			gzGameDescTextField = ST::null;
+			EnableButton(guiSlgSaveLoadBtn);
 
-			//Init the text field for the game desc
-			InitSaveLoadScreenTextInputBoxes();
-
-			//If we are Loading the game
-//			if( !gfSaveGame )
-			{
-				//Enable the save/load button
-				EnableButton( guiSlgSaveLoadBtn );
-			}
-
-			//If we are saving the game, disbale the button
-//			if( gfSaveGame )
-//					DisableButton( guiSlgSaveLoadBtn );
-//			else
-			{
-				//Set the time in which the button was first pressed
-				uiLastTime = GetJA2Clock();
+			DestroySaveLoadTextInputBoxes();
+			if (gfSaveGame && gbSelectedSaveLocation == 0) {
+				// If the first entry is selected we need to input a new name
+				InitSaveLoadScreenTextInputBoxes();
 			}
 
 			gfRedrawSaveLoadScreen = TRUE;
-
-			uiLastTime = GetJA2Clock();
-		}
-
-		//the user is selecting the selected save game slot
-		else
-		{
-			//if we are saving a game
-			if( gfSaveGame )
-			{
-				//if the user is not currently editing the game desc
-				if( !gfUserInTextInputMode )
-				{
-					if( ( uiCurTime - uiLastTime ) < SLG_DOUBLE_CLICK_DELAY )
-					{
-						//Load the saved game
-						SaveLoadGameNumber();
-					}
-					else
-					{
-						uiLastTime = GetJA2Clock();
-					}
-
-					InitSaveLoadScreenTextInputBoxes();
-
-					gfRedrawSaveLoadScreen = TRUE;
-
-				}
-				else
-				{
-					if (GetGameDescription())
-					{
-						SetActiveField(0);
-
-						DestroySaveLoadTextInputBoxes();
-
-//						gfRedrawSaveLoadScreen = TRUE;
-
-//						EnableButton( guiSlgSaveLoadBtn );
-
-						gfRedrawSaveLoadScreen = TRUE;
-
-
-						if( ( uiCurTime - uiLastTime ) < SLG_DOUBLE_CLICK_DELAY )
-						{
-							gubSaveGameNextPass = 1;
-						}
-						else
-						{
-							uiLastTime = GetJA2Clock();
-						}
-					}
-				}
-			}
-			//else we are loading
-			else
-			{
-				if( ( uiCurTime - uiLastTime ) < SLG_DOUBLE_CLICK_DELAY )
-				{
-					//Load the saved game
-					SaveLoadGameNumber();
-				}
-				else
-				{
-					uiLastTime = GetJA2Clock();
-				}
-			}
+		} else if (gfSaveGame && bSelected == 0 && !gfUserInTextInputMode) {
+			// Clicking twice on the new save item shows input
+			InitSaveLoadScreenTextInputBoxes();
+			gfRedrawSaveLoadScreen = true;
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		DisableSelectedSlot();
+	}
+	else
+	{
+		HandleScrollEvent(iReason);
 	}
 }
 
@@ -1330,21 +984,13 @@ static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reas
 {
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		INT8 bTemp = gbHighLightedLocation;
 		gbHighLightedLocation = -1;
-//		DisplaySaveGameList();
-		DisplaySaveGameEntry( bTemp );
+		gfRedrawSaveLoadScreen = true;
 	}
 	else if( reason & MSYS_CALLBACK_REASON_GAIN_MOUSE )
 	{
-		//If we are saving and this is the quick save slot, leave
-		if( gfSaveGame )
-		{
-			return;
-		}
-
 		gbHighLightedLocation = (UINT8)MSYS_GetRegionUserData( pRegion, 0 );
-		DisplaySaveGameEntry( gbHighLightedLocation );//, usPosY );
+		gfRedrawSaveLoadScreen = true;
 	}
 }
 
@@ -1368,22 +1014,10 @@ static void InitSaveLoadScreenTextInputBoxes(void)
 
 	AddUserInputField(NULL);
 
-	// If we are modifying a previously modifed string, use it
-	if (!gbSaveGameArray[gbSelectedSaveLocation])
-	{
-		gzGameDescTextField = ST::null;
-	}
-	else if (gzGameDescTextField.empty())
-	{
-		SAVED_GAME_HEADER SaveGameHeader;
-		LoadSavedGameHeader(gbSelectedSaveLocation, &SaveGameHeader);
-		gzGameDescTextField = SaveGameHeader.sSavedGameDesc;
-	}
-
 	// Game Desc Field
 	INT16 const x = SLG_FIRST_SAVED_SPOT_X + SLG_SAVE_GAME_DESC_X;
 	INT16 const y = SLG_FIRST_SAVED_SPOT_Y + SLG_SAVE_GAME_DESC_Y - 5 + SLG_GAP_BETWEEN_LOCATIONS * gbSelectedSaveLocation;
-	AddTextInputField(x, y, SLG_SAVELOCATION_WIDTH - SLG_SAVE_GAME_DESC_X - 7, 17, MSYS_PRIORITY_HIGH + 2, gzGameDescTextField, 46, INPUTTYPE_FULL_TEXT);
+	AddTextInputField(x, y, SLG_SAVELOCATION_WIDTH - SLG_SAVE_GAME_DESC_X - 7, 17, MSYS_PRIORITY_HIGH + 2, ST::null, 46, INPUTTYPE_FULL_TEXT);
 	SetActiveField(1);
 
 	gfUserInTextInputMode = TRUE;
@@ -1392,54 +1026,25 @@ static void InitSaveLoadScreenTextInputBoxes(void)
 
 static void DestroySaveLoadTextInputBoxes(void)
 {
+	SetActiveField(-1);
 	gfUserInTextInputMode = FALSE;
 	KillAllTextInputModes();
 	SetTextInputCursor( CURSOR_IBEAM );
 }
 
-
-static void SetSelection(UINT8 const new_selection)
-{
-	// If we are loading and there is no entry, return
-	if (!gfSaveGame && !gbSaveGameArray[new_selection]) return;
-
-	gfRedrawSaveLoadScreen = TRUE;
-	DestroySaveLoadTextInputBoxes();
-
-	INT8 const old_slot = gbSelectedSaveLocation;
-	gbSelectedSaveLocation = new_selection;
-
-	if (gfSaveGame && old_slot != new_selection)
-	{
-		DestroySaveLoadTextInputBoxes();
-
-		// Null out the current description
-		gzGameDescTextField = ST::null;
-
-		//Init the text field for the game desc
-		InitSaveLoadScreenTextInputBoxes();
-	}
-
-	EnableButton(guiSlgSaveLoadBtn);
-}
-
-
-static UINT8 CompareSaveGameVersion(INT8 bSaveGameID)
+static UINT8 CompareSaveGameVersion(INT32 bSaveGameID)
 {
 	UINT8 ubRetVal=SLS_HEADER_OK;
 
-	SAVED_GAME_HEADER SaveGameHeader;
-
-	//Get the heade for the saved game
-	LoadSavedGameHeader( bSaveGameID, &SaveGameHeader );
+	SAVED_GAME_HEADER saveGameHeader = (*(gSavedGamesList.begin() + bSaveGameID)).second;
 
 	// check to see if the saved game version in the header is the same as the current version
-	if( SaveGameHeader.uiSavedGameVersion != guiSavedGameVersion )
+	if( saveGameHeader.uiSavedGameVersion != guiSavedGameVersion )
 	{
 		ubRetVal = SLS_SAVED_GAME_VERSION_OUT_OF_DATE;
 	}
 
-	if (strcmp(SaveGameHeader.zGameVersionNumber, g_version_number)!= 0)
+	if (strcmp(saveGameHeader.zGameVersionNumber, g_version_number)!= 0)
 	{
 		if( ubRetVal == SLS_SAVED_GAME_VERSION_OUT_OF_DATE )
 			ubRetVal = SLS_BOTH_SAVE_GAME_AND_GAME_VERSION_OUT_OF_DATE;
@@ -1511,29 +1116,6 @@ void DeleteSaveGameNumber(UINT8 const save_slot_id)
 	GCM->tempFiles()->deleteFile(savegameName);
 }
 
-
-static void DisplayOnScreenNumber(BOOLEAN display)
-{
-	// Start at 1 - don't diplay it for the quicksave
-	for (INT8 bLoopNum = 1; bLoopNum < NUM_SAVE_GAMES; ++bLoopNum)
-	{
-		const UINT16 usPosX = STD_SCREEN_X + 6;
-		const UINT16 usPosY = SLG_FIRST_SAVED_SPOT_Y + SLG_GAP_BETWEEN_LOCATIONS * bLoopNum;
-
-		BlitBufferToBuffer(guiSAVEBUFFER, FRAME_BUFFER, usPosX, usPosY + SLG_DATE_OFFSET_Y, 10, 10);
-
-		if (display)
-		{
-			const INT8 bNum = (bLoopNum == 10 ? 0 : bLoopNum);
-			ST::string zTempString = ST::format("{2d}", bNum);
-			DrawTextToScreen(zTempString, usPosX, usPosY + SLG_DATE_OFFSET_Y, 0, SAVE_LOAD_NUMBER_FONT, SAVE_LOAD_NUMBER_COLOR, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
-		}
-
-		InvalidateRegion(usPosX, usPosY + SLG_DATE_OFFSET_Y, usPosX + 10, usPosY + SLG_DATE_OFFSET_Y + 10);
-	}
-}
-
-
 static void DoneFadeInForSaveLoadScreen(void);
 static void FailedLoadingGameCallBack(MessageBoxReturnValue);
 
@@ -1545,7 +1127,8 @@ static void DoneFadeOutForSaveLoadScreen(void)
 
 	try
 	{
-		LoadSavedGame(IsDeadIsDeadTab(gfActiveTab) ? gbSelectedSaveLocation + NUM_SAVE_GAMES : gbSelectedSaveLocation);
+		auto saveName = (*(gSavedGamesList.begin() + gbSelectedSaveLocation)).first;
+		LoadSavedGame(saveName);
 
 		gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
 
@@ -1596,10 +1179,6 @@ static void DoneFadeInForSaveLoadScreen(void)
 			HandlePlayerPauseUnPauseOfGame();
 			HandlePlayerPauseUnPauseOfGame();
 		}
-
-//		UnLockPauseState( );
-//		UnPauseGame( );
-
 	}
 }
 
@@ -1609,6 +1188,8 @@ static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason
 	if (iReason & MSYS_CALLBACK_REASON_RBUTTON_UP)
 	{
 		DisableSelectedSlot();
+	} else {
+		HandleScrollEvent(iReason);
 	}
 }
 
@@ -1630,11 +1211,13 @@ static void DisableSelectedSlot(void)
 
 static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
-	Assert( gbSelectedSaveLocation != -1 );
+	Assert( gbSelectedSaveLocation != -1 && gbSelectedSaveLocation != 0 );
+	
+	auto save = *(gSavedGamesList.begin() + gbSelectedSaveLocation);
 
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
-		SaveGameToSlotNum();
+		DoSaveGame(save.first, save.second.sSavedGameDesc);
 	}
 }
 
@@ -1671,7 +1254,28 @@ void DoQuickSave()
 		DoDeadIsDeadSave();
 	} else
 	{
-		if (SaveGame(0, ST::null)) return;
+		if (SaveGame(GetQuickSaveName(), ST::null)) return;
+
+		if (guiPreviousOptionScreen == MAP_SCREEN)
+		{
+			DoMapMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], MAP_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		} else
+		{
+			DoMessageBox(MSG_BOX_BASIC_STYLE, zSaveLoadText[SLG_SAVE_GAME_ERROR], GAME_SCREEN, MSG_BOX_FLAG_OK, NULL, NULL);
+		}
+	}
+}
+
+void DoAutoSave()
+{
+	// Use the Dead is Dead function if we are in DiD
+	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD)
+	{
+		DoDeadIsDeadSave();
+	}
+	else
+	{
+		if (SaveGame(GetNextAutoSaveName(), ST::null)) return;
 
 		if (guiPreviousOptionScreen == MAP_SCREEN)
 		{
@@ -1686,6 +1290,9 @@ void DoQuickSave()
 // Save function for Dead Is Dead
 void DoDeadIsDeadSave()
 {
+	// Reload saves
+	InitSaveGameArray();
+	
 	// Check if we are in a sane state! Do not save if:
 	// - we are in an AI Turn
 	// - we are in a Dialogue
@@ -1695,7 +1302,7 @@ void DoDeadIsDeadSave()
 	if (gTacticalStatus.ubCurrentTeam == OUR_TEAM && !gfInTalkPanel && !gfInMeanwhile && !gfPreBattleInterfaceActive && guiPreviousOptionScreen != MSG_BOX_SCREEN && gCurrentUIMode != LOCKUI_MODE)
 	{
 		// Backup old saves
-		BackupSavedGame(gGameSettings.bLastSavedGameSlot);
+		BackupSavedGame(gGameSettings.sCurrentSavedGameName);
 		// Save the previous option screen State to reset it after saving
 		ScreenID tmpGuiPreviousOptionScreen = guiPreviousOptionScreen;
 		// We want to save the current screen we are in. Unless we are in Options, Laptop, or others
@@ -1709,7 +1316,7 @@ void DoDeadIsDeadSave()
 			}
 		}
 
-		BOOLEAN tmpSuccess = SaveGame(gGameSettings.bLastSavedGameSlot, gGameSettings.sCurrentSavedGameName);
+		BOOLEAN tmpSuccess = SaveGame(gGameSettings.sCurrentSavedGameName, gGameSettings.sCurrentSavedGameDescription);
 
 		// Reset the previous option screen
 		guiPreviousOptionScreen = tmpGuiPreviousOptionScreen;
@@ -1728,12 +1335,18 @@ void DoDeadIsDeadSave()
 
 void DoQuickLoad()
 {
-	// If there is no save in the quick save slot
+	// Reload saves
 	InitSaveGameArray();
-	if (!gbSaveGameArray[0]) return;
 
-	// Set the selection to be the quick save slot
-	gbSelectedSaveLocation = 0;
+	gbSelectedSaveLocation = -1;
+	for (auto i = gSavedGamesList.begin(); i < gSavedGamesList.end(); i++) {
+		auto saveName = (*i).first;
+		if (IsQuickSaveName(saveName)) {
+			gbSelectedSaveLocation = std::distance(gSavedGamesList.begin(), i);
+		}
+	}
+
+	if (gbSelectedSaveLocation == -1) return;
 
 	StartFadeOutForSaveLoadScreen();
 	gfDoingQuickLoad = TRUE;
@@ -1742,12 +1355,7 @@ void DoQuickLoad()
 
 bool AreThereAnySavedGameFiles()
 {
-	for (INT8 i = 0; i != (NUM_SAVE_GAMES_TABS * NUM_SAVE_GAMES); ++i)
-	{
-		ST::string savegameName = CreateSavedGameFileNameFromNumber(i);
-		if (GCM->userPrivateFiles()->exists(savegameName)) return true;
-	}
-	return false;
+	return GetValidSaveGames().size() > 0;
 }
 
 
@@ -1759,52 +1367,27 @@ static void RedrawSaveLoadScreenAfterMessageBox(MessageBoxReturnValue const bExi
 
 static void MoveSelectionDown()
 {
-	INT8 const slot = gbSelectedSaveLocation;
-	if (gfSaveGame)
-	{ // We are saving, any slot other then the quick save slot is valid
-		if (slot == -1)
-		{
-			SetSelection(1);
+	auto newSelectedSaveLocation = std::min((INT32)gSavedGamesList.size() - 1, gbSelectedSaveLocation + 1);
+	if (newSelectedSaveLocation != gbSelectedSaveLocation) {
+		gbSelectedSaveLocation = newSelectedSaveLocation;
+		if (gbSelectedSaveLocation >= (INT32)gCurrentScrollTop + NUM_SAVE_GAMES) {
+			gCurrentScrollTop += 1;
 		}
-		else if (slot < NUM_SAVE_GAMES - 1)
-		{
-			SetSelection(slot + 1);
-		}
-	}
-	else
-	{
-		for (INT32 i = slot != -1 ? slot + 1 : 0; i != NUM_SAVE_GAMES; ++i)
-		{
-			if (!gbSaveGameArray[i]) continue;
-			SetSelection(i);
-			break;
-		}
+		gfRedrawSaveLoadScreen = TRUE;
 	}
 }
 
 
 static void MoveSelectionUp()
 {
-	INT8 const slot = gbSelectedSaveLocation;
-	if (gfSaveGame)
-	{ // We are saving, any slot other then the quick save slot is valid
-		if (slot == -1)
-		{
-			SetSelection(NUM_SAVE_GAMES - 1);
+	auto newSelectedSaveLocation = std::max(0, gbSelectedSaveLocation - 1);
+	if (newSelectedSaveLocation != gbSelectedSaveLocation) {
+		gbSelectedSaveLocation = newSelectedSaveLocation;
+
+		if (gbSelectedSaveLocation < (INT32)gCurrentScrollTop) {
+			gCurrentScrollTop -= 1;
 		}
-		else if (slot > 1)
-		{
-			SetSelection(slot - 1);
-		}
-	}
-	else
-	{
-		for (INT32 i = slot != -1 ? slot - 1 : NUM_SAVE_GAMES - 1; i >= 0; --i)
-		{
-			if (!gbSaveGameArray[i]) continue;
-			SetSelection(i);
-			break;
-		}
+		gfRedrawSaveLoadScreen = TRUE;
 	}
 }
 
@@ -1815,7 +1398,7 @@ static void ClearSelectedSaveSlot(void)
 }
 
 
-static void SaveGameToSlotNum(void)
+static void DoSaveGame(const ST::string &saveName, const ST::string &saveDescription)
 {
 	//Redraw the save load screen
 	RenderSaveLoadScreen();
@@ -1829,12 +1412,16 @@ static void SaveGameToSlotNum(void)
 	if (guiPreviousOptionScreen == GAME_INIT_OPTIONS_SCREEN)
 	{
 		guiPreviousOptionScreen = INTRO_SCREEN;
-		gGameSettings.bLastSavedGameSlot = (gbSelectedSaveLocation + NUM_SAVE_GAMES);
-		gGameSettings.sCurrentSavedGameName = gzGameDescTextField;
+		// This is not used anymore, we use the last updated timestamp now
+		gGameSettings.bLastSavedGameSlot = 0;
+		gGameSettings.sCurrentSavedGameName = saveName;
+		gGameSettings.sCurrentSavedGameDescription = saveDescription;
 	}
-	else if( !SaveGame(gbSelectedSaveLocation, gzGameDescTextField ) )
+	else
 	{
-		DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		if( !SaveGame(saveName, saveDescription)) {
+			DoSaveLoadMessageBox(zSaveLoadText[SLG_SAVE_GAME_ERROR], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, NULL);
+		}
 	}
 
 	SetSaveLoadExitScreen( guiPreviousOptionScreen );

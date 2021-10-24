@@ -2789,7 +2789,7 @@ static const ST::string s_ger_pMessageStrings[pMessageStrings_SIZE] =
 	"Inzwischen",		//Meanwhile
 	"%s ist im Sektor %s%s angekommen", //Name/Squad has arrived in sector A9. Order must not change without notifying SirTech
 	"Version",
-	"Leerer Quick-Save-Slot",
+	"Neuen Spielstand anlegen",
 	"Dieser Slot ist nur für Quick-Saves aus den Map Screens und dem Taktik-Bildschirm. Speichern mit ALT+S",
 	"offen",
 	"zu",

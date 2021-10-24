@@ -3015,7 +3015,7 @@ static const ST::string s_rus_pMessageStrings[pMessageStrings_SIZE] =
 	"%s теперь в секторе %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	"Версия",
-	"Пустая ячейка быстрого сохр",
+	"Создать новое сохранение",
 	"Эта ячейка предназначена для быстрого сохранения игры (с помощью ALT+S).",
 	"Открытая", //doors definitions
 	"Закрытая", //doors definitions

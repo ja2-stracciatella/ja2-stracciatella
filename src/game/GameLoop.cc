@@ -237,9 +237,10 @@ catch (std::exception const& e)
 	else
 	{
 		what = "savegame";
-		if (SaveGame(SAVE__ERROR_NUM, "error savegame"))
+		auto saveName = GetErrorSaveName();
+		if (SaveGame(saveName, "error savegame"))
 		{
-			success = "succeeded (error.sav)";
+			success = ST::format("succeeded ({}.sav)", saveName).c_str();
 			attach  = " Do not forget to attach the savegame.";
 		}
 	}

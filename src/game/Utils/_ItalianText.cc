@@ -2956,7 +2956,7 @@ static const ST::string s_it_pMessageStrings[pMessageStrings_SIZE] =
 	"%s si trova ora nel settore %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	"Versione",
-	"Slot di salvataggio rapido vuoto",
+	"Crea un nuovo salvataggio",
 	"Questo slot è riservato ai salvataggi rapidi fatti dalle schermate tattiche e dalla mappa utilizzando ALT+S.",
 	"Aperto",
 	"Chiuso",
