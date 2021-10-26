@@ -5,9 +5,11 @@ use std::path::{Path, PathBuf};
 mod mod_manifest;
 
 use mod_manifest::ModManifestJson;
+use regex::Regex;
 
 use crate::config::EngineOptions;
 
+/// Path to a mod
 #[derive(Debug, Clone)]
 pub enum ModPath {
     Path(PathBuf),
@@ -16,11 +18,42 @@ pub enum ModPath {
 }
 
 impl ModPath {
+    /// Joins the mod path with another path
     pub fn join<P: AsRef<Path>>(&self, p: P) -> ModPath {
         match self {
             ModPath::Path(s) => ModPath::Path(s.join(p)),
             #[cfg(target_os = "android")]
             ModPath::AndroidAssetPath(s) => ModPath::AndroidAssetPath(s.join(p)),
+        }
+    }
+
+    /// Extracts the mod id from the mod path
+    pub fn id(&self) -> std::io::Result<String> {
+        let dir_name = match self {
+            ModPath::Path(s) => s,
+            #[cfg(target_os = "android")]
+            ModPath::AndroidAssetPath(s) => s,
+        }
+        .file_name()
+        .ok_or_else(|| {
+            io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!("Mod path {:?} does not contain dir name", self),
+            )
+        })?;
+        let dir_name = dir_name.to_string_lossy();
+
+        let mod_id_regex = Regex::new(r"^[a-z0-9\-]+$").unwrap();
+        if mod_id_regex.is_match(&dir_name) {
+            Ok(dir_name.into())
+        } else {
+            Err(io::Error::new(
+                io::ErrorKind::InvalidData,
+                format!(
+                    "Mod directory {:?} does conform to mod id format: {}",
+                    self, mod_id_regex
+                ),
+            ))
         }
     }
 }
@@ -38,28 +71,14 @@ pub struct Mod {
 impl Mod {
     /// Create a mod instance from a path on disk
     pub fn from_path(path: &Path) -> io::Result<Self> {
-        let invalid_mod_id = || {
-            io::Error::new(
-                io::ErrorKind::InvalidData,
-                "Directory name is not a valid mod id".to_owned(),
-            )
-        };
-        let id = path
-            .file_name()
-            .map(|f| f.to_string_lossy())
-            .ok_or_else(invalid_mod_id)?;
-        if id.contains(std::char::REPLACEMENT_CHARACTER) {
-            return Err(invalid_mod_id());
-        }
-
         let manifest_path =
             crate::fs::resolve_existing_components(Path::new("manifest.json"), Some(path), true);
+        let path = ModPath::Path(path.to_owned());
+        let id = path.id()?;
+
         match std::fs::read_to_string(&manifest_path) {
             Ok(s) => match crate::json::de::from_string::<ModManifestJson>(&s) {
-                Ok(json) => Ok(Mod::new_with_mod_manifest(
-                    ModPath::Path(path.to_owned()),
-                    json,
-                )),
+                Ok(json) => Ok(Mod::new_with_mod_manifest(path, id, json)),
                 Err(e) => {
                     log::warn!(
                         "Could not read mod manifest for `{}` at location `{:?}`: {}",
@@ -67,7 +86,7 @@ impl Mod {
                         manifest_path,
                         e
                     );
-                    Ok(Mod::new_with_id(ModPath::Path(path.to_owned()), &id))
+                    Ok(Mod::new_with_id(path, id))
                 }
             },
             Err(e) => {
@@ -77,7 +96,7 @@ impl Mod {
                     manifest_path,
                     e
                 );
-                Ok(Mod::new_with_id(ModPath::Path(path.to_owned()), &id))
+                Ok(Mod::new_with_id(path, id))
             }
         }
     }
@@ -97,15 +116,14 @@ impl Mod {
         })?;
         let manifest_path_cstring = CString::new(manifest_path.to_string_lossy().as_bytes())
             .expect("should not contain 0 byte");
+        let path = ModPath::AndroidAssetPath(path.to_owned());
+        let id = path.id()?;
 
         if let Some(mut file) = asset_manager.open(&manifest_path_cstring) {
             let mut s = Default::default();
             file.read_to_string(&mut s)?;
             match crate::json::de::from_string::<ModManifestJson>(&s) {
-                Ok(json) => Ok(Mod::new_with_mod_manifest(
-                    ModPath::Path(path.to_owned()),
-                    json,
-                )),
+                Ok(json) => Ok(Mod::new_with_mod_manifest(path, id, json)),
                 Err(e) => Err(io::Error::new(
                     io::ErrorKind::NotFound,
                     format!(
@@ -126,9 +144,9 @@ impl Mod {
     }
 
     /// Create minimal mod with only id (used as fallback for mods without manifests)
-    fn new_with_id(path: ModPath, id: &str) -> Self {
+    fn new_with_id(path: ModPath, id: String) -> Self {
         Mod {
-            id: id.to_owned(),
+            id,
             name: None,
             description: None,
             version: None,
@@ -137,9 +155,9 @@ impl Mod {
     }
 
     /// Create mod from a json manifest
-    fn new_with_mod_manifest(path: ModPath, json: ModManifestJson) -> Self {
+    fn new_with_mod_manifest(path: ModPath, id: String, json: ModManifestJson) -> Self {
         Mod {
-            id: json.id,
+            id,
             name: Some(json.name),
             description: json.description,
             version: Some(json.version),
