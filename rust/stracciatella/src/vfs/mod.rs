@@ -19,6 +19,8 @@ use std::rc::Rc;
 use log::{info, warn};
 
 use crate::fs;
+use crate::mods::ModManager;
+use crate::mods::ModPath;
 use crate::unicode::Nfc;
 use crate::vfs::dir::DirFs;
 use crate::vfs::slf::SlfFs;
@@ -163,9 +165,10 @@ impl Vfs {
     }
 
     /// Initializes the VFS overlays from EngineOptions
-    pub fn init_from_engine_options(
+    pub fn init(
         &mut self,
         engine_options: &EngineOptions,
+        mod_manager: &ModManager,
     ) -> Result<(), VfsInitError> {
         let vanilla_game_dir = engine_options.vanilla_game_dir.clone();
         let vanilla_data_dir =
@@ -177,51 +180,31 @@ impl Vfs {
         );
 
         // Add mod directories
-        for mod_name in engine_options.mods.iter() {
-            // First are mod directories in home directory then mods in externalized directory (only one of them is required)
-            let mod_path =
-                Path::new(MODS_DIR).join(Path::new(&format!("{}/{}", &mod_name, DATA_DIR)));
-            let mod_in_home = fs::resolve_existing_components(
-                &mod_path,
-                Some(&engine_options.stracciatella_home),
-                true,
-            );
-            #[cfg(not(target_os = "android"))]
-            let mod_in_externalized = DirFs::new(&fs::resolve_existing_components(
-                &mod_path,
-                Some(&engine_options.assets_dir),
-                true,
-            ));
-            #[cfg(target_os = "android")]
-            let mod_in_externalized = android::AssetManagerFs::new(&mod_path);
-            let mod_in_externalized =
-                map_not_found_to_option(mod_in_externalized).map_err(|e| VfsInitError {
-                    path: mod_path.clone(),
-                    error: e,
+        for mod_id in engine_options.mods.iter() {
+            let mod_path = mod_manager
+                .get_mod_by_id(mod_id)
+                .map(|m| m.path())
+                .ok_or_else(|| VfsInitError {
+                    path: mod_id.into(),
+                    error: ErrorKind::NotFound.into(),
                 })?;
+            let mod_path = mod_path.join(DATA_DIR);
 
-            match (mod_in_home.exists(), mod_in_externalized) {
-                (false, None) => {
-                    return Err(VfsInitError {
-                        path: mod_path,
-                        error: ErrorKind::NotFound.into(),
-                    });
-                }
-                (true, None) => {
-                    let layer = self.add_dir(&mod_in_home)?;
+            match mod_path {
+                ModPath::Path(p) => {
+                    let layer = self.add_dir(&p)?;
                     self.add_slf_files_from(layer, false)?;
                 }
-                (false, Some(mod_in_externalized)) => {
-                    self.entries.push(mod_in_externalized.clone());
-                    self.add_slf_files_from(mod_in_externalized, false)?;
-                }
-                (true, Some(mod_in_externalized)) => {
-                    let layer = self.add_dir(&mod_in_home)?;
+                #[cfg(target_os = "android")]
+                ModPath::AndroidAssetPath(p) => {
+                    let layer = android::AssetManagerFs::new(&p).map_err(|e| VfsInitError {
+                        path: p.into(),
+                        error: e,
+                    })?;
+                    self.entries.push(layer.clone());
                     self.add_slf_files_from(layer, false)?;
-                    self.entries.push(mod_in_externalized.clone());
-                    self.add_slf_files_from(mod_in_externalized, false)?;
                 }
-            };
+            }
         }
 
         // Next is home data dir (does not need to exist)

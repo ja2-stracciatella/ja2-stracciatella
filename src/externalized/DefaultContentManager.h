@@ -155,6 +155,7 @@ public:
 
 protected:
 	RustPointer<EngineOptions> m_engineOptions;
+	RustPointer<ModManager> m_modManager;
 	
 	RustPointer<TempDir> m_tempDir;
 	std::unique_ptr<DirFs> m_tempFiles;

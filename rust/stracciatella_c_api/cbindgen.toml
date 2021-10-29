@@ -27,6 +27,8 @@ struct RustDelete
 	void operator()(VecCString* ptr) const { VecCString_destroy(ptr); }
 	void operator()(VecU8* ptr) const { VecU8_destroy(ptr); }
 	void operator()(Vfs* ptr) const { Vfs_destroy(ptr); }
+	void operator()(ModManager* ptr) const { ModManager_destroy(ptr); }
+	void operator()(Mod* ptr) const { Mod_destroy(ptr); }
 };
 
 /// Alias to a std::unique_ptr that deletes with RustDelete.

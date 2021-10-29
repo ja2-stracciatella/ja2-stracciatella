@@ -28,13 +28,15 @@ public:
 private:
 	int argc;
 	char** argv;
-	RustPointer<EngineOptions> engine_options;
-	std::set<ST::string, sortMods> availableMods;
+	RustPointer<EngineOptions> engineOptions;
+	RustPointer<ModManager> modManager;
 
 	void populateChoices();
 	void startExecutable(bool asEditor);
 	bool resolutionIsInvalid();
 	void update(bool changed, Fl_Widget *widget);
+	void showModDetails(const ST::string& modName);
+	void hideModDetails();
 	static void openGameDirectorySelector(Fl_Widget *btn, void *userdata);
 	static void startGame(Fl_Widget* btn, void* userdata);
 	static void startEditor(Fl_Widget* btn, void* userdata);

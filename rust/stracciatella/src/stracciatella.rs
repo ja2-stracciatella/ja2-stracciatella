@@ -13,6 +13,7 @@ pub mod guess;
 pub mod json;
 pub mod logger;
 pub mod math;
+pub mod mods;
 pub mod res;
 pub mod unicode;
 pub mod vfile;

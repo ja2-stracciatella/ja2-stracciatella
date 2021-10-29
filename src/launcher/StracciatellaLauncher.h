@@ -10,6 +10,7 @@
 #include <FL/Fl_Input.H>
 #include <FL/Fl_Choice.H>
 #include <FL/Fl_Browser.H>
+#include <FL/Fl_Text_Display.H>
 #include <FL/Fl_Output.H>
 #include <FL/Fl_Value_Input.H>
 #include <FL/Fl_Box.H>
@@ -32,6 +33,7 @@ public:
   Fl_Button *moveUpModsButton;
   Fl_Button *moveDownModsButton;
   Fl_Browser *availableModsBrowser;
+  Fl_Text_Display *modDetails;
   Fl_Output *gameSettingsOutput;
   Fl_Choice *scalingModeChoice;
   Fl_Value_Input *resolutionXInput;
