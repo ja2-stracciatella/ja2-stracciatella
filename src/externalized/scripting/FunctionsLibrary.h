@@ -264,6 +264,12 @@ extern Observable<SOLDIERTYPE*> OnRPCRecruited;
  * @brief Functions to access soldiers and characters in the game
  */
 
+/**
+ * Called when we are about to go to a web page on the Laptop.
+ * @param iPageId ID of the page we want to go to
+ */
+extern Observable<INT32> OnGoToWebPage;
+
 /** @defgroup funclib-sectors Map sectors
  *  @brief Access and alter sectors' strategic-level data
  */
@@ -402,6 +408,13 @@ void AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, con
  * @ingroup funclib-mercs
  */
 MERCPROFILESTRUCT* GetMercProfile(UINT8 ubProfileID);
+
+/**
+ * Sets the current laptop and WWW modes.
+ * @param uiLaptopMode
+ * @param uiWWWMode
+ */
+void SetLaptopModes(UINT32 uiLaptopMode, UINT32 uiWWWMode);
 
 /**
  * Retrieves a key-value mapping from saved game states.

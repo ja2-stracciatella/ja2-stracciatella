@@ -7,6 +7,7 @@
 #include "Item_Types.h"
 #include "Items.h"
 #include "JAScreens.h"
+#include "Laptop.h"
 #include "MessageBoxScreen.h"
 #include "Overhead.h"
 #include "Queen_Command.h"
@@ -243,4 +244,13 @@ void ExecuteTacticalTextBox(INT16 sLeftPosition, INT16 sTopPosition, const ST::s
 void ExecuteTacticalTextBox_(INT16 sLeftPosition, INT16 sTopPosition, ST::string pString)
 {
 	ExecuteTacticalTextBox(sLeftPosition, sTopPosition, pString);
+}
+
+extern LaptopMode guiCurrentWWWMode;
+extern LaptopMode guiCurrentLaptopMode;
+
+void SetLaptopModes(UINT32 uiLaptopMode, UINT32 uiWWWMode)
+{
+	guiCurrentLaptopMode = static_cast<LaptopMode>(uiLaptopMode);
+	guiCurrentWWWMode = static_cast<LaptopMode>(uiWWWMode);
 }
