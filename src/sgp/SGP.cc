@@ -29,8 +29,10 @@
 #include "ModPackContentManager.h"
 #include "policy/GamePolicy.h"
 #include "RustInterface.h"
+#include "EnumCodeGen.h"
 
 #include "Logger.h"
+#include <iostream>
 
 #ifdef WITH_UNITTESTS
 #include "gtest/gtest.h"
@@ -402,6 +404,11 @@ int main(int argc, char* argv[])
 		}
 
 		if (EngineOptions_shouldShowHelp(params.get())) {
+			return EXIT_SUCCESS;
+		}
+
+		if (EngineOptions_shouldRunEnumGen(params.get())) {
+			PrintAllJA2Enums(std::cout);
 			return EXIT_SUCCESS;
 		}
 

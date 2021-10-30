@@ -311,6 +311,13 @@ pub extern "C" fn EngineOptions_setStartWithoutSound(ptr: *mut EngineOptions, va
     engine_options.start_without_sound = val
 }
 
+/// Gets `EngineOptions.run_enum_gen`.
+#[no_mangle]
+pub extern "C" fn EngineOptions_shouldRunEnumGen(ptr: *const EngineOptions) -> bool {
+    let engine_options = unsafe_ref(ptr);
+    engine_options.run_enum_gen
+}
+
 /// Gets the string representation of the `ScalingQuality` value.
 /// The caller is responsible for the returned memory.
 #[no_mangle]

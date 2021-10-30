@@ -107,6 +107,7 @@ impl Cli {
         opts.optflag("", "nosound", "Turn the sound and music off");
         opts.optflag("", "window", "Start the game in a window");
         opts.optflag("", "debug", "Enable Debug Mode");
+        opts.optflag("", "enumgen", "Generate enums for Lua and exit");
         opts.optflag("h", "help", "print this help menu");
 
         Cli {
@@ -209,6 +210,10 @@ impl Cli {
 
                 if m.opt_present("debug") {
                     engine_options.start_in_debug_mode = true;
+                }
+
+                if m.opt_present("enumgen") {
+                    engine_options.run_enum_gen = true;
                 }
 
                 Ok(())
