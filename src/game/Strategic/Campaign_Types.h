@@ -55,7 +55,7 @@ static inline ST::string SECTOR_SHORT_STRING(UINT8 sector)
 //
 //NOTE: These use the 0-255 SectorInfo[] numbering system, and CAN'T be used as indexes into the StrategicMap[] array
 //Use SECTOR_INFO_TO_STRATEGIC_INDEX() macro to convert...
-enum
+enum SectorIndex
 {
 	SEC_A1,	SEC_A2,	SEC_A3, SEC_A4,	SEC_A5, SEC_A6,	SEC_A7,	SEC_A8,	SEC_A9, SEC_A10, SEC_A11, SEC_A12, SEC_A13, SEC_A14, SEC_A15, SEC_A16,
 	SEC_B1,	SEC_B2,	SEC_B3, SEC_B4,	SEC_B5, SEC_B6,	SEC_B7,	SEC_B8,	SEC_B9, SEC_B10, SEC_B11, SEC_B12, SEC_B13, SEC_B14, SEC_B15, SEC_B16,
@@ -112,7 +112,7 @@ enum SectorFlags
 
 
 // town militia experience categories
-enum
+enum MilitiaLevel
 {
 	GREEN_MILITIA = 0,
 	REGULAR_MILITIA,

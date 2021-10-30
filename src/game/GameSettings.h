@@ -76,7 +76,7 @@ struct GAME_SETTINGS
 
 
 //Enums for the difficulty levels
-enum
+enum DifficultyLevel
 {
 	DIF_LEVEL_EASY = 1,
 	DIF_LEVEL_MEDIUM = 2,
@@ -85,7 +85,7 @@ enum
 };
 
 //Enums for the difficulty levels
-enum
+enum GameSaveMode
 {
 	DIF_CAN_SAVE,
 	DIF_IRON_MAN,
