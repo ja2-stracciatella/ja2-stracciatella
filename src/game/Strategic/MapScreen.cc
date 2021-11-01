@@ -3722,6 +3722,13 @@ static void HandleCursorOverRifleAmmo(void)
 {
 	if (!fShowInventoryFlag) return;
 
+	// make sure sector inventory is updated if visible
+	if( fShowMapInventoryPool )	{
+		if(( GetJA2Clock() - guiMouseOverItemTime ) > 100 ) {
+			fMapPanelDirty = TRUE;
+		}
+	}
+
 	if( gbCheckForMouseOverItemPos == -1 )
 	{
 		return;
@@ -3735,6 +3742,11 @@ static void HandleCursorOverRifleAmmo(void)
 			{
 				fTeamPanelDirty = TRUE;
 			}
+		}
+
+		// also highlight in sector inventory
+		if( fShowMapInventoryPool )	{
+			HandleCompatibleAmmoUIForMapInventory( GetSelectedInfoChar(), gbCheckForMouseOverItemPos, ( iCurrentInventoryPoolPage * MAP_INVENTORY_POOL_SLOT_COUNT ), TRUE, TRUE );
 		}
 	}
 }
