@@ -44,6 +44,9 @@ cmake path/to/source
 make
 ```
 
+If you want to be able to install the resulting binary on your system, please ensure that `CMAKE_INSTALL_PREFIX` matches
+with `EXTRA_DATA_DIR`. Example: `cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DEXTRA_DATA_DIR=/usr/local/share/ja2 path/to/source`
+
 ## Build for Windows on Linux using MinGW (cross build)
 
 Additional requirements: MinGW compiler
