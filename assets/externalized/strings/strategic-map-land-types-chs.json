@@ -1,0 +1,47 @@
+// These are the different terrain types.
+[
+ 	"城市",
+	"公路",
+	"平原",
+	"沙漠",
+	"灌木",
+	"森林",
+	"沼泽",
+	"湖泊",
+	"山地",
+	"不可通行",
+	"河流",	//river from north to south
+	"河流",	//river from east to west
+	"外国",
+	//NONE of the following are used for directional travel, just for the sector description.
+	"热带",
+	"农田",
+	"平原，公路",
+	"灌木，公路",
+	"农庄，公路",
+	"热带，公路",
+	"森林，公路",
+	"海滨",
+	"山地，公路",
+	"海滨，公路",
+	"沙漠，公路",
+	"沼泽，公路",
+	"灌木，SAM导弹基地",
+	"沙漠，SAM导弹基地",
+	"热带，SAM导弹基地",
+	"Meduna, SAM导弹基地",
+
+	//These are descriptions for special sectors
+	"Cambria医院",
+	"Drassen机场",
+	"Meduna机场",
+	"SAM导弹基地",
+	"抵抗军隐蔽处",//The rebel base underground in sector A10
+	"Tixa地牢",//The basement of the Tixa Prison (J9)
+	"异形巢穴",//Any mine sector with creatures in it
+	"Orta地下室",	//The basement of Orta (K4)
+	"地道",		//The tunnel access from the maze garden in Meduna
+										//leading to the secret shelter underneath the palace
+	"地下掩体",				//The shelter underneath the queen's palace
+	""						//Unused
+]

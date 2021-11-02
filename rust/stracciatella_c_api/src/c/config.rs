@@ -388,5 +388,6 @@ mod tests {
         t!(VanillaVersion::POLISH, "Polish");
         t!(VanillaVersion::RUSSIAN, "Russian");
         t!(VanillaVersion::RUSSIAN_GOLD, "Russian (Gold)");
+        t!(VanillaVersion::SIMPLIFIED_CHINESE, "Simplified Chinese");
     }
 }

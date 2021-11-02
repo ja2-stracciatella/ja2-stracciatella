@@ -148,7 +148,7 @@ ScreenID InitScreenHandle(void)
 
 	if ( ubCurrentScreen == 255 )
 	{
-		if(isEnglishVersion())
+		if(isEnglishVersion() || isChineseVersion())
 		{
 			if( gfDoneWithSplashScreen )
 			{

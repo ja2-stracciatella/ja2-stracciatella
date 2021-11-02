@@ -5,7 +5,6 @@
 #include "MemMan.h"
 #include "Font.h"
 #include "Debug.h"
-#include "TranslationTable.h"
 #include "VSurface.h"
 #include "VObject.h"
 #include "VObject_Blitters.h"
@@ -13,7 +12,7 @@
 #include "GameRes.h"
 #include "Logger.h"
 
-typedef UINT8 GlyphIdx;
+typedef UINT16 GlyphIdx;
 
 
 // Destination printing parameters
@@ -32,6 +31,8 @@ static UINT16       SaveFontForeground16 = 0;
 static UINT16       SaveFontShadow16     = 0;
 static UINT16       SaveFontBackground16 = 0;
 
+/** Character->Glyph translation table for the current language. */
+std::vector<UINT16> const* TranslationTable = nullptr;
 
 /* Sets both the foreground and the background colors of the current font. The
  * top byte of the parameter word is the background color, and the bottom byte
@@ -164,8 +165,8 @@ UINT16 GetFontHeight(SGPFont const font)
 
 bool IsPrintableChar(char32_t c)
 {
-	if (TRANSLATION_TABLE_SIZE <= c) return false;
-	return TranslationTable[c] != 0 || c == getZeroGlyphChar();
+	if (TranslationTable->size() <= c) return false;
+	return (*TranslationTable)[c] != 0 || c == getZeroGlyphChar();
 }
 
 
@@ -173,13 +174,13 @@ bool IsPrintableChar(char32_t c)
  * exists for the requested codepoint, the glyph index of '?' is returned. */
 static GlyphIdx GetGlyphIndex(char32_t c)
 {
-	if (c < TRANSLATION_TABLE_SIZE)
+	if (c < TranslationTable->size())
 	{
-		GlyphIdx const idx = TranslationTable[c];
+		GlyphIdx const idx = (*TranslationTable)[c];
 		if (idx != 0 || c == getZeroGlyphChar()) return idx;
 	}
 	SLOGE("Invalid character given U+%04X", c);
-	return TranslationTable[L'?'];
+	return (*TranslationTable)[L'?'];
 }
 
 

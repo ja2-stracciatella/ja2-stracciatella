@@ -153,6 +153,8 @@ public:
 	virtual const LoadingScreen* getLoadingScreenForSector(uint8_t sectorId, uint8_t sectorLevel, bool isNight) const override;
 	virtual const LoadingScreen* getLoadingScreen(uint8_t index) const override;
 
+	virtual const std::vector<UINT16>* getTranslationTable() const override;
+
 protected:
 	RustPointer<EngineOptions> m_engineOptions;
 	RustPointer<ModManager> m_modManager;
@@ -232,6 +234,7 @@ protected:
 	// List of pre-constructed MercProfile objects; indices of elements are arbitrary (unlike gMercProfiles) and not guaranteed to follow any order
 	std::vector<const MercProfile*> m_mercProfiles;
 	std::map<uint8_t, const MercProfileInfo*> m_mercProfileInfo;
+	std::vector<UINT16> m_translationTable;
 
 	RustPointer<Vfs> m_vfs;
 
@@ -256,6 +259,7 @@ protected:
 	bool loadTacticalLayerData();
 	bool loadMercsData();
 	void loadVehicles();
+	void loadTranslationTable();
 
 	std::unique_ptr<rapidjson::Document> readJsonDataFile(const ST::string& fileName) const;
 

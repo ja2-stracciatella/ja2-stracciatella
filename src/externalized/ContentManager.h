@@ -198,4 +198,6 @@ public:
 	virtual const ST::string* getNewString(size_t stringId) const = 0;
 
 	virtual const ST::string& getLandTypeString(size_t index) const = 0;
+
+	virtual const std::vector<UINT16>* getTranslationTable() const = 0;
 };

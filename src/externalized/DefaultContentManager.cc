@@ -898,6 +898,7 @@ void DefaultContentManager::loadStringRes(const ST::string& name, std::vector<co
 	case GameVersion::POLISH:       fullName += "-pl";    break;
 	case GameVersion::RUSSIAN:
 	case GameVersion::RUSSIAN_GOLD: fullName += "-rus";   break;
+	case GameVersion::SIMPLIFIED_CHINESE: fullName += "-chs";   break;
 	default:
 	{
 		throw std::runtime_error(ST::format("unknown game version {}", static_cast<int>(m_gameVersion)).to_std_string());
@@ -970,6 +971,8 @@ bool DefaultContentManager::loadGameData()
 	loadTacticalLayerData();
 	loadMercsData();
 	loadVehicles();
+
+	loadTranslationTable();
 
 	return result;
 }
@@ -1253,6 +1256,56 @@ void DefaultContentManager::loadVehicles()
 	VehicleModel::validateData(m_vehicles);
 }
 
+void DefaultContentManager::loadTranslationTable()
+{
+#define TRANSLATION_TABLE_SIZE (0x452)
+#define TRANSLATION_FULL_TABLE_SIZE (0x10000)
+
+	m_translationTable.clear();
+	ST::string fullName = "translation_tables/";
+	int tableSize = TRANSLATION_TABLE_SIZE;
+	switch (m_gameVersion)
+	{
+	case GameVersion::DUTCH:
+	case GameVersion::ENGLISH:
+	case GameVersion::GERMAN:
+	case GameVersion::ITALIAN:
+	case GameVersion::POLISH:
+		fullName += "english";
+		break;
+
+	case GameVersion::FRENCH:
+		fullName += "french";
+		break;
+
+	case GameVersion::RUSSIAN:
+		fullName += "russion";
+		break;
+
+	case GameVersion::RUSSIAN_GOLD:
+		fullName += "russion-gold";
+		break;
+
+	case GameVersion::SIMPLIFIED_CHINESE:
+		fullName += "simplifed-chinese";
+		tableSize = TRANSLATION_FULL_TABLE_SIZE;
+		break;
+
+	default:
+		throw std::runtime_error(ST::format("unknown game version {}", static_cast<int>(m_gameVersion)).to_std_string());
+	}
+	fullName += "-translation-table.json";
+
+	m_translationTable.assign(tableSize, 0);
+
+	auto json = readJsonDataFile(fullName);
+	int count = 0;
+	for (auto& element : json->GetArray())
+	{
+		m_translationTable[ST::string(element.GetString()).to_utf16()[0]] = count++;
+	}
+}
+
 const std::vector<const BloodCatPlacementsModel*>& DefaultContentManager::getBloodCatPlacements() const
 {
 	return m_bloodCatPlacements;
@@ -1474,4 +1527,9 @@ const LoadingScreen* DefaultContentManager::getLoadingScreenForSector(uint8_t se
 const LoadingScreen* DefaultContentManager::getLoadingScreen(uint8_t index) const
 {
 	return m_loadingScreenModel->getByIndex(index);
+}
+
+const std::vector<UINT16>* DefaultContentManager::getTranslationTable() const
+{
+	return &m_translationTable;
 }

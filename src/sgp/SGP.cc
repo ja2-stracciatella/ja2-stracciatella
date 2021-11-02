@@ -21,6 +21,7 @@
 #include "GameRes.h"
 #include "GameMode.h"
 #include "Timer.h"
+#include "Font.h"
 
 #include "DefaultContentManager.h"
 #include "GameInstance.h"
@@ -483,6 +484,7 @@ int main(int argc, char* argv[])
 			throw std::runtime_error("Failed to load the game data.");
 		}
 
+		TranslationTable = cm->getTranslationTable();
 		GCM = cm;
 
 		g_ui.recalculatePositions();
@@ -517,7 +519,7 @@ int main(int argc, char* argv[])
 
 		gfGameInitialized = TRUE;
 
-		if(isEnglishVersion())
+		if(isEnglishVersion() || isChineseVersion())
 		{
 			SetIntroType(INTRO_SPLASH);
 		}

@@ -30,6 +30,7 @@ set(JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/_ItalianText.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/_PolishText.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/_RussianText.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/_ChineseText.cc
     PARENT_SCOPE
 )
 set(JA2_INCLUDES

@@ -8,6 +8,27 @@
 
 #include <string_theory/string>
 
+inline bool IsChineseCharacter(char32_t c)
+{
+	return c >= 0x4e00;
+}
+
+inline bool IsControlCharacter(char32_t c)
+{
+	return c == TEXT_CODE_NEWLINE
+		|| c == TEXT_CODE_BOLD
+		|| c == TEXT_CODE_CENTER
+		|| c == TEXT_CODE_NEWCOLOR
+		|| c == TEXT_CODE_DEFCOLOR;
+}
+
+inline void SkipSpace(const char32_t** codepoints)
+{
+	if (*(*codepoints + 1) == TEXT_SPACE)
+	{
+		++(*codepoints);
+	}
+}
 
 static WRAPPED_STRING* AllocWrappedString(const char32_t* data, size_t size)
 {
@@ -76,6 +97,12 @@ WRAPPED_STRING* LineWrap(SGPFont font, UINT16 usLineWidthPixels, const ST::utf32
 			line_end   = i + 1;
 			word_start = i + 1;
 			word_w     = 0;
+		}
+		if (IsChineseCharacter(*i)) // Chinese character
+		{
+			word_start = i;
+			line_end = i;
+			word_w = w;
 		}
 	}
 }
@@ -180,12 +207,7 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 	UINT16         justification  = LEFT_JUSTIFIED;
 	do
 	{
-		// each character goes towards building a new word
-		const char32_t* word_start = i;
-		while (*i != TEXT_SPACE && *i != U'\0') ++i;
-
-		// we hit a space (or end of record), so this is the END of a word!
-		switch (word_start[0])
+		switch (*i)
 		{
 			case TEXT_CODE_CENTER:
 				if (justification != CENTER_JUSTIFIED)
@@ -207,6 +229,8 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 				// reset the line
 				line_buf = ST::null;
 				line_w   = 0;
+				
+				SkipSpace(&i);
 				break;
 
 			case TEXT_CODE_NEWLINE:
@@ -222,6 +246,8 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 
 				// reset width
 				cur_max_w = max_w;
+
+				SkipSpace(&i);
 				break;
 
 			case TEXT_CODE_BOLD:
@@ -246,6 +272,8 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 
 				// erase line string
 				line_buf = ST::null;
+
+				SkipSpace(&i);
 				break;
 
 			case TEXT_CODE_NEWCOLOR:
@@ -255,8 +283,9 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 				x += StringPixLength(line_buf, cur_font);
 
 				// the new color value is the next character in the word
-				if (word_start[1] != TEXT_SPACE && word_start[1] < 256)
-					cur_foreground = (UINT8)word_start[1];
+				++i;
+				if (*i != TEXT_SPACE && *i < 256)
+					cur_foreground = (UINT8)*i;
 
 				cur_foreground = 184;
 
@@ -265,6 +294,8 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 
 				// erase line string
 				line_buf = ST::null;
+
+				SkipSpace(&i);
 				break;
 
 			case TEXT_CODE_DEFCOLOR:
@@ -281,15 +312,25 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 
 				// change color back to default color
 				cur_foreground = foreground;
+
+				SkipSpace(&i);
 				break;
 
 			default: // not a special character
 				// get the length (in pixels) of this word
 				UINT16 word_w = 0;
-				for (const char32_t* k = word_start; k != i; ++k)
+				// each character goes towards building a new word
+				const char32_t* word_start = i;
+
+				do
 				{
-					word_w += GetCharWidth(cur_font, *k);
+					word_w += GetCharWidth(cur_font, *i);
+					i++;
 				}
+				while (*i != TEXT_SPACE
+						&& !IsChineseCharacter(*i)
+						&& !IsControlCharacter(*i)
+						&& *i != U'\0');
 
 				// can we fit it onto the length of our "line"?
 				if (line_w + word_w >= max_w)
@@ -307,17 +348,28 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 					// reset width
 					cur_max_w = max_w;
 				}
+				
+				// calc new pixel length for the line
+				line_w += word_w;
 
 				// add the word (with the space) to the line
 				while (word_start != i) line_buf += *word_start++;
-				line_buf += U' ';
 
-				// calc new pixel length for the line
-				line_w += word_w + GetCharWidth(cur_font, U' ');
+				if (IsChineseCharacter(*i) || IsControlCharacter(*i))
+				{
+					//fallback one char, cause 'i' will increase one char at loop
+					--i;
+				}
+				else if (*i != U'\0')
+				{
+					line_buf += u' ';
+					line_w += GetCharWidth(cur_font, u' ');
+				}
+
 				break;
 		}
 	}
-	while (*i++ != U'\0');
+	while (*i != U'\0' && *(++i) != U'\0');
 
 	// draw the paragraph
 	IanDrawTextToScreen(line_buf, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
@@ -379,12 +431,8 @@ UINT16 IanWrappedStringHeight(UINT16 max_w, UINT8 gap, SGPFont font, const ST::u
 	const char32_t* i = codepoints.c_str();
 	do
 	{
-		// each character goes towards building a new word
-		const char32_t* word_start = i;
-		while (*i != TEXT_SPACE && *i != U'\0') i++;
-
 		// we hit a space (or end of record), so this is the END of a word!
-		switch (word_start[0])
+		switch (*i)
 		{
 			case TEXT_CODE_CENTER:
 				if (justification != CENTER_JUSTIFIED)
@@ -402,6 +450,11 @@ UINT16 IanWrappedStringHeight(UINT16 max_w, UINT8 gap, SGPFont font, const ST::u
 
 				// reset the line length
 				line_w = 0;
+
+				if (*(i + 1) == TEXT_SPACE)
+				{
+					i++;
+				}
 				break;
 
 			case TEXT_CODE_NEWLINE:
@@ -410,6 +463,10 @@ UINT16 IanWrappedStringHeight(UINT16 max_w, UINT8 gap, SGPFont font, const ST::u
 
 				// reset the line length
 				line_w = 0;
+				if (*(i + 1) == TEXT_SPACE)
+				{
+					i++;
+				}
 				break;
 
 			case TEXT_CODE_BOLD:
@@ -422,19 +479,35 @@ UINT16 IanWrappedStringHeight(UINT16 max_w, UINT8 gap, SGPFont font, const ST::u
 				{ // turn bold OFF
 					cur_font = font;
 				}
+
+				if (*(i + 1) == TEXT_SPACE)
+				{
+					i++;
+				}
 				break;
 
 			case TEXT_CODE_NEWCOLOR:
 			case TEXT_CODE_DEFCOLOR:
+				if (*(i + 1) == TEXT_SPACE)
+				{
+					i++;
+				}
 				break;
 
 			default:
 				// get the length (in pixels) of this word
 				UINT16 word_w = 0;
-				for (const char32_t* k = word_start; k != i; ++k)
+				// each character goes towards building a new word
+				const char32_t* word_start = i;
+
+				do
 				{
-					word_w += GetCharWidth(cur_font, *k);
-				}
+					word_w += GetCharWidth(cur_font, *i);
+					i++;
+				} while (*i != TEXT_SPACE
+						&& !IsChineseCharacter(*i)
+						&& !IsControlCharacter(*i)
+						&& *i != U'\0');
 
 				// can we fit it onto the length of our "line"?
 				if (line_w + word_w > max_w)
@@ -448,10 +521,19 @@ UINT16 IanWrappedStringHeight(UINT16 max_w, UINT8 gap, SGPFont font, const ST::u
 				}
 
 				// calc new pixel length for the line
-				line_w += word_w + GetCharWidth(cur_font, U' ');
+				line_w += word_w;
+				if (IsChineseCharacter(*i) || IsControlCharacter(*i))
+				{
+					//fallback one char, cause 'i' will increase one char at loop
+					--i;
+				}
+				else if (*i != U'\0')
+				{
+					line_w += GetCharWidth(cur_font, u' ');
+				}
 		}
 	}
-	while (*i++ != U'\0');
+	while (*i != U'\0' && *(++i) != U'\0');
 
 	// return how many Y pixels we used
 	return n_lines * (GetFontHeight(font) + gap);
