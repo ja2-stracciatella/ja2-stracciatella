@@ -39,10 +39,7 @@ pub extern "C" fn Vfs_init(
     let engine_options = unsafe_ref(engine_options);
     let mod_manager = unsafe_ref(mod_manager);
     if let Err(err) = vfs.init(engine_options, mod_manager) {
-        remember_rust_error(format!(
-            "Vfs_init_from_engine_options {:?}: {}",
-            engine_options, err
-        ));
+        remember_rust_error(format!("Vfs_init_from_engine_options: {}", err));
     }
     no_rust_error()
 }

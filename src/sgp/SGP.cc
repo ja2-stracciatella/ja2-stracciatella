@@ -566,7 +566,7 @@ void TerminationHandler()
 		{
 		}
 	}
-	SLOGE(errorMessage.c_str());
+	STLOGE(errorMessage.c_str());
 	#ifdef __ANDROID__
 	jniEnv->CallVoidMethod(exceptionContainerSingleton, setAndroidExceptionMethodId,
                                    jniEnv->NewStringUTF(errorMessage.c_str()));
