@@ -2010,7 +2010,10 @@ static BOOLEAN HandleScrollDirections(UINT32 ScrollFlags, INT16 sScrollXStep, IN
 	}
 
 	const BOOLEAN fAGoodMove = (scroll_x != 0 || scroll_y != 0);
-	if (fAGoodMove && !fCheckOnly) ScrollBackground(scroll_x, scroll_y);
+
+	if( fAGoodMove && !fCheckOnly && !( gRenderFlags & RENDER_FLAG_FULL )) {
+		ScrollBackground( scroll_x, scroll_y );
+	}
 
 	return fAGoodMove;
 }

@@ -61,6 +61,7 @@
 #include "GameMode.h"
 #include "EditScreen.h"
 #include "Logger.h"
+#include "GameSettings.h"
 
 #define ARE_IN_FADE_IN( )		( gfFadeIn || gfFadeInitialized )
 
@@ -525,6 +526,10 @@ ScreenID MainGameScreenHandle(void)
 		// Handle Interface Stuff
 		SetUpInterface( );
 		HandleTacticalPanelSwitch( );
+	} else {
+		if( gGameSettings.fOptions[TOPTION_MERC_CASTS_LIGHT] && NightTime()) {
+			SetRenderFlags( RENDER_FLAG_FULL );
+		}
 	}
 
 	// Handle Scroll Of World
