@@ -37,7 +37,7 @@ be automatically selected.
 If you don't want to use rustup, you can always look up the currently required version in the
 [rust-toolchain file](https://github.com/ja2-stracciatella/ja2-stracciatella/blob/master/rust-toolchain)
 
-## Build on Linux or freeBSD/openBSD
+## Build on Linux or freeBSD
 
 ```
 cmake path/to/source
@@ -46,6 +46,16 @@ make
 
 If you want to be able to install the resulting binary on your system, please ensure that `CMAKE_INSTALL_PREFIX` matches
 with `EXTRA_DATA_DIR`. Example: `cmake -DCMAKE_INSTALL_PREFIX=/usr/local -DEXTRA_DATA_DIR=/usr/local/share/ja2 path/to/source`
+
+## Build on OpenBSD (tested on -current as of mid-November 2021)
+
+```
+# The bundled/downloaded GTest sources fail to build.
+doas pkg_add gtest
+
+cmake path/to/source -DCMAKE_TOOLCHAIN_FILE=cmake/toolchain-openbsd.cmake
+make
+```
 
 ## Build for Windows on Linux using MinGW (cross build)
 
