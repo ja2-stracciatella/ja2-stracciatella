@@ -24,6 +24,11 @@ if [[ "$PUBLISH_DIR" == "" ]]; then
   exit 1
 fi
 
+if [[ "$CI_TARGET" == windows-msvc-* ]]; then
+  # Fix used python version for google cloud sdk
+  export CLOUDSDK_PYTHON="C:\\Python39\\python.exe"
+fi
+
 
 # Bucket Name to upload to
 BUCKET_NAME=ja2-builds
