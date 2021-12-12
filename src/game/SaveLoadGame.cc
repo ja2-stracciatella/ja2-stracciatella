@@ -267,7 +267,7 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 			header.sSavedGameDesc = gameDesc;
 		}
 
-		FileMan::createDir(GCM->getSavedGamesFolder().c_str());
+		GCM->userPrivateFiles()->createDir(GCM->getSavedGamesFolder());
 
 		// Save IMP merc(s)
 		SaveIMPPlayerProfiles();
@@ -1406,8 +1406,8 @@ void BackupSavedGame(UINT8 const ubSaveGameID)
 {
 	// ensure we have the save game directory
 	ST::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder(), g_backup_dir);
-	FileMan::createDir(GCM->getSavedGamesFolder());
-	FileMan::createDir(backupdir);
+	GCM->userPrivateFiles()->createDir(GCM->getSavedGamesFolder());
+	GCM->userPrivateFiles()->createDir(backupdir);
 
 	ST::string zSourceSaveGameName;
 	ST::string zSourceBackupSaveGameName;
