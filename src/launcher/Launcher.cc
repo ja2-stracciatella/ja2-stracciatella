@@ -34,7 +34,8 @@ const std::vector<GameVersion> predefinedVersions = {
 	GameVersion::ITALIAN,
 	GameVersion::POLISH,
 	GameVersion::RUSSIAN,
-	GameVersion::RUSSIAN_GOLD
+	GameVersion::RUSSIAN_GOLD,
+	GameVersion::SIMPLIFIED_CHINESE
 };
 const std::vector< std::pair<int, int> > predefinedResolutions = {
 	std::make_pair(640,  480),
@@ -118,7 +119,7 @@ void Launcher::show() {
 	playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
 	gameDirectoryInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	browseJa2DirectoryButton->callback((Fl_Callback *) openGameDirectorySelector, (void *) (this));
-	gameVersionInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	gameVersionInput->callback( (Fl_Callback*)selectGameVersion, (void*)(this) );
 	guessVersionButton->callback( (Fl_Callback*)guessVersion, (void*)(this) );
 	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	resolutionXInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
@@ -670,5 +671,34 @@ void Launcher::moveDownMods(Fl_Widget* widget, void* userdata) {
 	}
 
 	window->enabledModsBrowser->redraw();
+	window->update(true, widget);
+}
+
+void Launcher::selectGameVersion(Fl_Widget* widget, void* userdata)
+{
+	Launcher* window = static_cast<Launcher*>(userdata);
+	int currentResourceVersionIndex = window->gameVersionInput->value();
+	GameVersion currentResourceVersion = predefinedVersions.at(currentResourceVersionIndex);
+	if (currentResourceVersion == GameVersion::SIMPLIFIED_CHINESE)
+	{
+		//force enalbe Simplified Chinese Mod
+		for (auto i = window->availableModsBrowser->size(); i > 0; i--)
+		{
+			char* modId = static_cast<char*>(window->availableModsBrowser->data(i));
+			window->availableModsBrowser->select(i, strcmp(modId, SIMPLIFIED_CHINESE_MOD_NAME) == 0 ? 1 : 0);
+		}
+		enableMods(window->enableModsButton, userdata);
+	}
+	else
+	{
+		//force diable Simplified Chinese Mod
+		for (auto i = window->enabledModsBrowser->size(); i > 0; i--)
+		{
+			char* modId = static_cast<char*>(window->enabledModsBrowser->data(i));
+			window->enabledModsBrowser->select(i, strcmp(modId, SIMPLIFIED_CHINESE_MOD_NAME) == 0 ? 1 : 0);
+		}
+		disableMods(window->disableModsButton, userdata);
+	}
+
 	window->update(true, widget);
 }

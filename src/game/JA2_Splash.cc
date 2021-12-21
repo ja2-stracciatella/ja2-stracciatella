@@ -15,7 +15,7 @@ void InitJA2SplashScreen(void)
 {
 	InitializeJA2Clock();
 
-	if(isEnglishVersion())
+	if(isEnglishVersion() || isChineseVersion())
 	{
 		ClearMainMenu();
 	}

@@ -25,6 +25,8 @@ pub enum VanillaVersion {
     RUSSIAN,
     // Russian Version ("Gold" release)
     RUSSIAN_GOLD,
+    // CHINESE Version
+    SIMPLIFIED_CHINESE,
 }
 
 impl FromStr for VanillaVersion {
@@ -40,6 +42,7 @@ impl FromStr for VanillaVersion {
             "POLISH" => Ok(VanillaVersion::POLISH),
             "RUSSIAN" => Ok(VanillaVersion::RUSSIAN),
             "RUSSIAN_GOLD" => Ok(VanillaVersion::RUSSIAN_GOLD),
+            "SIMPLIFIED_CHINESE" => Ok(VanillaVersion::SIMPLIFIED_CHINESE),
             _ => Err(format!("Resource version {} is unknown", s)),
         }
     }
@@ -59,6 +62,7 @@ impl Display for VanillaVersion {
                 VanillaVersion::POLISH => "Polish",
                 VanillaVersion::RUSSIAN => "Russian",
                 VanillaVersion::RUSSIAN_GOLD => "Russian (Gold)",
+                VanillaVersion::SIMPLIFIED_CHINESE => "Simplified Chinese",
             }
         )
     }

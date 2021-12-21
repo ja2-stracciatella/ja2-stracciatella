@@ -16,6 +16,8 @@ struct sortMods {
     }
 };
 
+#define SIMPLIFIED_CHINESE_MOD_NAME "simplified-chinese-localization"
+
 class Launcher : public StracciatellaLauncher {
 public:
 	Launcher(int argc, char* argv[]);
@@ -51,6 +53,7 @@ private:
 	static void disableMods(Fl_Widget* widget, void* userdata);
 	static void moveUpMods(Fl_Widget* widget, void* userdata);
 	static void moveDownMods(Fl_Widget* widget, void* userdata);
+	static void selectGameVersion(Fl_Widget* widget, void* userdata);
 };
 
 #endif //JA2_LAUNCHER_H_H

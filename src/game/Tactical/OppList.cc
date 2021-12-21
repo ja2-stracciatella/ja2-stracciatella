@@ -2427,7 +2427,7 @@ static void SaySeenQuote(SOLDIERTYPE* pSoldier, BOOLEAN fSeenCreature, BOOLEAN f
 		}
 		else
 		{
-			if(isEnglishVersion())
+			if(isEnglishVersion() || isChineseVersion())
 			{
 				if ( Random( 100 ) < 30 )
 				{
