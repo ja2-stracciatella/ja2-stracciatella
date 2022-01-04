@@ -1,0 +1,306 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: object
+title: Strategic AI policy
+description: |
+  Game policies governing Strategic AI behaviour.
+
+  Most of the settings here are set at the start of a campaign. Changes will only take
+  effect in a new game.
+properties:
+  queens_pool_of_troops_easy:
+    title: Queens Pool of Troops Easy
+    description: |
+      Modifies the number of troops the queen has at the beginning of the game on top of
+      all of the garrison and patrol groups.  Additionally, there are a total of 16 sectors
+      that are LEVEL 1, 2, or 3 garrison groups.  The lower the level, the more troops stay
+      in that sector, and the rest will also be used as a secondary pool when the primary
+      pool runs dry.  So basically, this number is only part of the equation.
+
+      Vanilla value: `150``
+    $ref: types/uint32.schema.yaml
+  queens_pool_of_troops_medium:
+    title: Queens Pool of Troops Medium
+    description: |
+      Modifies the number of troops the queen has at the beginning of the game on top of
+      all of the garrison and patrol groups.  Additionally, there are a total of 16 sectors
+      that are LEVEL 1, 2, or 3 garrison groups.  The lower the level, the more troops stay
+      in that sector, and the rest will also be used as a secondary pool when the primary
+      pool runs dry.  So basically, this number is only part of the equation.
+
+      Vanilla value: `200`
+    $ref: types/uint32.schema.yaml
+  queens_pool_of_troops_hard:
+    title: Queens Pool of Troops Hard
+    description: |
+      Modifies the number of troops the queen has at the beginning of the game on top of
+      all of the garrison and patrol groups.  Additionally, there are a total of 16 sectors
+      that are LEVEL 1, 2, or 3 garrison groups.  The lower the level, the more troops stay
+      in that sector, and the rest will also be used as a secondary pool when the primary
+      pool runs dry.  So basically, this number is only part of the equation.
+
+      Vanilla value: `400`
+    $ref: types/uint32.schema.yaml
+  initial_garrison_percentages_easy:
+    title: Initial Garrison Percentages Easy
+    description: |
+      Modifies the starting values as well as the desired values for all of the garrisons.
+
+      Vanilla value: `70`
+    $ref: types/uint32.schema.yaml
+  initial_garrison_percentages_medium:
+    title: Initial Garrison Percentages Easy
+    description: |
+      Modifies the starting values as well as the desired values for all of the garrisons.
+
+      Vanilla value: `100`
+    $ref: types/uint32.schema.yaml
+  initial_garrison_percentages_hard:
+    title: Initial Garrison Percentages Easy
+    description: |
+      Modifies the starting values as well as the desired values for all of the garrisons.
+
+      Vanilla value: `125`
+    $ref: types/uint32.schema.yaml
+  min_enemy_group_size_easy:
+    title: minimum enemy group size easy
+    description: |
+      Vanilla value: `3`
+    $ref: types/uint32.schema.yaml
+  min_enemy_group_size_medium:
+    title: minimum enemy group size medium
+    description: |
+      Vanilla value: `4`
+    $ref: types/uint32.schema.yaml
+  min_enemy_group_size_hard:
+    title: minimum enemy group size hard
+    description: |
+      Vanilla value: `6`
+    $ref: types/uint32.schema.yaml
+  enemy_starting_alert_level_easy:
+    title: Enemy starting alert level easy
+    description: |
+      Sets the starting alert chances.  Every time an enemy arrives in a new sector, or the 
+      player, this is the chance the enemy will detect the player in adjacent sectors. This
+      chance is associated with each side checked.  Stationary groups do this check 
+      periodically.
+
+      Vanilla value: `5`
+    $ref: types/uint32.schema.yaml
+  enemy_starting_alert_level_medium:
+    title: Enemy starting alert level medium
+    description: |
+      Sets the starting alert chances.  Every time an enemy arrives in a new sector, or the 
+      player, this is the chance the enemy will detect the player in adjacent sectors. This
+      chance is associated with each side checked.  Stationary groups do this check 
+      periodically.
+
+      Vanilla value: `20`
+    $ref: types/uint32.schema.yaml
+  enemy_starting_alert_level_hard:
+    title: Enemy starting alert level hard
+    description: |
+      Sets the starting alert chances.  Every time an enemy arrives in a new sector, or the 
+      player, this is the chance the enemy will detect the player in adjacent sectors. This
+      chance is associated with each side checked.  Stationary groups do this check 
+      periodically.
+
+      Vanilla value: `60`
+    $ref: types/uint32.schema.yaml
+  enemy_starting_alert_decay_easy:
+    title: Enemy starting alert decay level easy
+    description: |
+      When an enemy spots and chases a player group, the alertness value decrements by this
+      value.  The higher the value, the less of a chance the enemy will spot and attack
+      subsequent groups.  This minimizes the aggressiveness of the enemy.
+
+      Ranges from 1 - 100 (but recommend 20-60).
+
+      Vanilla value: `75`
+    $ref: types/uint32.schema.yaml
+  enemy_starting_alert_decay_medium:
+    title: Enemy starting alert decay level medium
+    description: |
+      When an enemy spots and chases a player group, the alertness value decrements by this
+      value.  The higher the value, the less of a chance the enemy will spot and attack
+      subsequent groups.  This minimizes the aggressiveness of the enemy.
+
+      Ranges from 1 - 100 (but recommend 20-60).
+
+      Vanilla value: `50`
+    $ref: types/uint32.schema.yaml
+  enemy_starting_alert_decay_hard:
+    title: Enemy starting alert decay level hard
+    description: |
+      When an enemy spots and chases a player group, the alertness value decrements by this
+      value.  The higher the value, the less of a chance the enemy will spot and attack
+      subsequent groups.  This minimizes the aggressiveness of the enemy.
+
+      Ranges from 1 - 100 (but recommend 20-60).
+
+      Vanilla value: `25`
+    $ref: types/uint32.schema.yaml
+  time_evaluate_in_minutes_easy:
+    title: Time evaluate in minutes easy
+    description: |
+      The base time that the queen can think about reinforcements for refilling lost patrol
+      groups, town garrisons, etc. She only is allowed one action per 'turn'.
+
+      Vanilla value: `480`
+    $ref: types/uint32.schema.yaml
+  time_evaluate_in_minutes_medium:
+    title: Time evaluate in minutes medium
+    description: |
+      The base time that the queen can think about reinforcements for refilling lost patrol
+      groups, town garrisons, etc. She only is allowed one action per 'turn'.
+
+      Vanilla value: `360`
+    $ref: types/uint32.schema.yaml
+  time_evaluate_in_minutes_hard:
+    title: Time evaluate in minutes hard
+    description: |
+      The base time that the queen can think about reinforcements for refilling lost patrol
+      groups, town garrisons, etc. She only is allowed one action per 'turn'.
+
+      Vanilla value: `180`
+    $ref: types/uint32.schema.yaml
+  time_evaluate_variance_easy:
+    title: Time evaluate variance easy
+    description: |
+      The variance added on time_evaluate_in_minutes.
+
+      Vanilla value: `240`
+    $ref: types/int32.schema.yaml
+  time_evaluate_variance_medium:
+    title: Time evaluate variance medium
+    description: |
+      The variance added on time_evaluate_in_minutes.
+
+      Vanilla value: `180`
+    $ref: types/int32.schema.yaml
+  time_evaluate_variance_hard:
+    title: Time evaluate variance hard
+    description: |
+      The variance added on time_evaluate_in_minutes.
+
+      Vanilla value: `120`
+    $ref: types/int32.schema.yaml
+  grace_period_in_hours_easy:
+    title: Grace period in hours easy
+    description: |
+      When a player takes control of a sector, don't allow any enemy reinforcements to enter
+      the sector for a limited amount of time.  This essentially dumbs down the AI, making
+      it less aggressive.
+
+      Vanilla value: `144`
+    $ref: types/uint32.schema.yaml
+  grace_period_in_hours_medium:
+    title: Grace period in hours medium
+    description: |
+      When a player takes control of a sector, don't allow any enemy reinforcements to enter
+      the sector for a limited amount of time.  This essentially dumbs down the AI, making
+      it less aggressive.
+
+      Vanilla value: `144`
+    $ref: types/uint32.schema.yaml
+  grace_period_in_hours_hard:
+    title: Grace period in hours hard
+    description: |
+      When a player takes control of a sector, don't allow any enemy reinforcements to enter
+      the sector for a limited amount of time.  This essentially dumbs down the AI, making
+      it less aggressive.
+
+      Vanilla value: `144`
+    $ref: types/uint32.schema.yaml
+  refill_defeated_patrol_groups:
+    title: Refill defeated patrol groups
+    description: |
+      Whether or not the queen would send new groups of army to replace defeated patrols. By
+      default, the queen only reinforces active patrol groups.
+
+      Vanilla value: `false`
+    type: boolean
+  patrol_grace_period_in_days_easy:
+    title: Patrol grace period in days easy
+    description: |
+      Defines how many days must pass before the queen is willing to refill a defeated patrol
+      group.
+
+      Vanilla value: `16`
+    $ref: types/uint32.schema.yaml
+  patrol_grace_period_in_days_medium:
+    title: Patrol grace period in days medium
+    description: |
+      Defines how many days must pass before the queen is willing to refill a defeated patrol
+      group.
+
+      Vanilla value: `12`
+    $ref: types/uint32.schema.yaml
+  patrol_grace_period_in_days_hard:
+    title: Patrol grace period in days hard
+    description: |
+      Defines how many days must pass before the queen is willing to refill a defeated patrol
+      group.
+
+      Vanilla value: `8`
+    $ref: types/uint32.schema.yaml
+  num_aware_battles_easy:
+    title: Num aware battles easy
+    description: |
+      Certain conditions can cause the queen to go into a "full alert" mode.  This means that
+      temporarily, the queen's forces will automatically succeed adjacent checks until x number
+      of enemy initiated battles occur.  The same variable is what is used to determine the
+      free checks.
+
+      Vanilla value: `1`
+    $ref: types/uint32.schema.yaml
+  num_aware_battles_medium:
+    title: Num aware battles medium
+    description: |
+      Certain conditions can cause the queen to go into a "full alert" mode.  This means that
+      temporarily, the queen's forces will automatically succeed adjacent checks until x number
+      of enemy initiated battles occur.  The same variable is what is used to determine the
+      free checks.
+
+      Vanilla value: `2`
+    $ref: types/uint32.schema.yaml
+  num_aware_battles_hard:
+    title: Num aware battles hard
+    description: |
+      Certain conditions can cause the queen to go into a "full alert" mode.  This means that
+      temporarily, the queen's forces will automatically succeed adjacent checks until x number
+      of enemy initiated battles occur.  The same variable is what is used to determine the
+      free checks.
+
+      Vanilla value: `3`
+    $ref: types/uint32.schema.yaml
+required:
+- queens_pool_of_troops_easy
+- queens_pool_of_troops_medium
+- queens_pool_of_troops_hard
+- initial_garrison_percentages_easy
+- initial_garrison_percentages_medium
+- initial_garrison_percentages_hard
+- min_enemy_group_size_easy
+- min_enemy_group_size_medium
+- min_enemy_group_size_hard
+- enemy_starting_alert_level_easy
+- enemy_starting_alert_level_medium
+- enemy_starting_alert_level_hard
+- enemy_starting_alert_decay_easy
+- enemy_starting_alert_decay_medium
+- enemy_starting_alert_decay_hard
+- time_evaluate_in_minutes_easy
+- time_evaluate_in_minutes_medium
+- time_evaluate_in_minutes_hard
+- time_evaluate_variance_easy
+- time_evaluate_variance_medium
+- time_evaluate_variance_hard
+- grace_period_in_hours_easy
+- grace_period_in_hours_medium
+- grace_period_in_hours_hard
+- patrol_grace_period_in_days_easy
+- patrol_grace_period_in_days_medium
+- patrol_grace_period_in_days_hard
+- num_aware_battles_easy
+- num_aware_battles_medium
+- num_aware_battles_hard

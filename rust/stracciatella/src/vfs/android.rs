@@ -8,11 +8,12 @@ use std::fmt;
 use std::io;
 use std::io::SeekFrom;
 use std::path::{Path, PathBuf};
-use std::rc::Rc;
+use std::sync::Arc;
 use std::sync::Mutex;
 
 use lru::LruCache;
 use ndk::asset::{Asset, AssetManager};
+use send_wrapper::SendWrapper;
 
 use crate::android::get_asset_manager;
 use crate::unicode::Nfc;
@@ -40,12 +41,12 @@ pub struct AssetManagerFsFile {
     /// Display info.
     pub base_path: PathBuf,
     /// Asset that is open.
-    pub file: Asset,
+    pub file: Arc<Mutex<SendWrapper<Asset>>>,
 }
 
 impl AssetManagerFs {
     /// Creates a new virtual filesystem.
-    pub fn new(base_path: &Path) -> io::Result<Rc<AssetManagerFs>> {
+    pub fn new(base_path: &Path) -> io::Result<Arc<AssetManagerFs>> {
         let asset_manager = get_asset_manager().map_err(|err| {
             io::Error::new(
                 io::ErrorKind::Other,
@@ -62,7 +63,7 @@ impl AssetManagerFs {
                 format!("AssetManagerFs: Error testing base path `{:?}`", base_path),
             )
         })?;
-        Ok(Rc::new(AssetManagerFs {
+        Ok(Arc::new(AssetManagerFs {
             base_path: base_path.to_owned(),
             asset_manager,
             canonicalization_cache: Mutex::new(LruCache::new(CANONICALIZATION_CACHE_SIZE)),
@@ -179,7 +180,7 @@ impl VfsLayer for AssetManagerFs {
                 return Ok(Box::new(AssetManagerFsFile {
                     file_path: file_path.clone(),
                     base_path: self.base_path.clone(),
-                    file,
+                    file: Arc::new(Mutex::new(SendWrapper::new(file))),
                 }));
             }
         }
@@ -226,7 +227,8 @@ impl VfsLayer for AssetManagerFs {
 impl VfsFile for AssetManagerFsFile {
     /// Gets the length of the file.
     fn len(&self) -> io::Result<u64> {
-        Ok(self.file.get_length() as u64)
+        let file = self.file.lock().expect("android asset file");
+        Ok(file.get_length() as u64)
     }
 }
 
@@ -248,13 +250,15 @@ impl fmt::Display for AssetManagerFsFile {
 
 impl io::Read for AssetManagerFsFile {
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
-        self.file.read(buf)
+        let mut file = self.file.lock().expect("android asset file");
+        file.read(buf)
     }
 }
 
 impl io::Seek for AssetManagerFsFile {
     fn seek(&mut self, pos: SeekFrom) -> io::Result<u64> {
-        self.file.seek(pos)
+        let mut file = self.file.lock().expect("android asset file");
+        file.seek(pos)
     }
 }
 

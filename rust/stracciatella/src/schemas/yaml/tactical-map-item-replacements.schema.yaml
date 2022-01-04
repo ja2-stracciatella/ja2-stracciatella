@@ -1,0 +1,33 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Tactical Map Item Replacements
+items:
+  type: object
+  title: Tactical Map Item Replacement
+  description:
+    Mapping of Item ID for pre-placed items on maps. This allows mods to
+    replace items with something else, or ignore totally. This does not affect
+    items created from other means.
+
+    This is intended for compatibility and for maps that was originally built 
+    for different item sets (e.g. Wildfire maps).
+
+    Items are identified by either item index (if given integer), or internal 
+    name (if given string). Items mapped to 0 ("Nothing") are removed from map 
+    placements.
+  properties:
+    from:
+      oneOf:
+        - title: Internal ID
+          $ref: types/id.schema.yaml
+        - title: Internal numeric ID
+          $ref: types/uint8.schema.yaml
+    to:
+      oneOf:
+        - title: Internal ID
+          $ref: types/id.schema.yaml
+        - title: Internal numeric ID
+          $ref: types/uint8.schema.yaml
+  required:
+  - from
+  - to

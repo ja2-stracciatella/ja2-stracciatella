@@ -1,0 +1,14 @@
+type: array
+title: Strategic Map Sam Sites Air Control
+description:
+  The SAM sites' airspace control table, each value in table indicates which SAM site controls the airspace of the sector.
+  
+  A value of 0 means the sector is covered by any SAM site. Otherwise, the value should be 'Sam Site ID + 1', of one of the sites defined in strategic-map-sam-sites.
+minItems: 16
+maxItems: 16
+items:
+  type: array
+  minItems: 16
+  maxItems: 16
+  items:
+    $ref: types/uint8.schema.yaml

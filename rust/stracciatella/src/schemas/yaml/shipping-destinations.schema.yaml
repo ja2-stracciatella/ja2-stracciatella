@@ -1,0 +1,72 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Shipping Destinations
+items:
+  type: object
+  title: Shipping Destination
+  properties:
+    locationId:
+      title: Location ID
+      description: |
+        The ID of the destination city, in the dropdown in Bobby Ray checkout screen.
+        The on-screen display name comes from translation string files.
+        It must match the item index within the list.
+      $ref: types/uint8.schema.yaml
+    chargeRateOverNight:
+      title: Charge rate "Overnight Express"
+      description: Delivery charge per kg for Bobby Ray's "Overnight Express" service
+      $ref: types/uint16.schema.yaml
+    chargeRate2Days:
+      title: Charge rate "2 Business Days"
+      description: Delivery charge per kg for Bobby Ray's "2 Business Days" service
+      $ref: types/uint16.schema.yaml
+    chargeRateStandard:
+      title: Charge rate "Standard"
+      description: Delivery charge per kg for Bobby Ray's "Standard" service
+      $ref: types/uint16.schema.yaml
+    flowersNextDayDeliveryCost:
+      title: Flowers "Next Day Delivery" cost
+      description: Delivery charge for Florist's "Next Day Delivery" service
+      $ref: types/uint16.schema.yaml
+    flowersWhenItGetsThereCost:
+      title: Flowers "When it gets there" cost
+      description: Delivery charge for Florist's "When it gets there" service
+      $ref: types/uint16.schema.yaml
+    canDeliver:
+      title: Can deliver?
+      description: If the destination is in Arulco and can actually be delivered to
+      type: boolean
+    isPrimary:
+      title: Is primary?
+      description: |
+        The primary delivery destination, i.e. Drassen.
+        
+        This is the place where John Kulba sends his gifts, where shipments gets stolen. Pablo must be placed in the delivery sector.
+      type: boolean
+    deliverySector:
+      title: Delivery sector
+      description: Which sector the delivery arrives at
+      $ref: types/sector-id.schema.yaml
+    deliverySectorZ:
+      title: Delivery sector Z
+      description: Should be 0, unless it is an underground sector
+      $ref: types/uint8.schema.yaml
+    deliverySectorGridNo:
+      title: Delivery sector grid no
+      description: Location to place delivery items in the destination sector. It should be a crate.
+      $ref: types/uint16.schema.yaml
+    emailOffset:
+      title: Email offset
+      description: Offset in the EMAIL.EDT file, to get the email message from Bobby Ray when order is delivered
+      $ref: types/int32.schema.yaml
+    emailLength:
+      title: Email length
+      description: Length (number of lines) of delivered email in EMAIL.EDT
+      $ref: types/int32.schema.yaml
+  required:
+  - locationId
+  - chargeRateOverNight
+  - chargeRate2Days
+  - chargeRateStandard
+  - flowersNextDayDeliveryCost
+  - flowersWhenItGetsThereCost

@@ -1,0 +1,10 @@
+$schema: http://json-schema.org/draft-04/schema#
+title: Strategic Map Traversability Ratings
+description: |
+  Maps the traversability rating string names into codebase enums.
+
+  This is not directly used in the codebase, but referenced by other JSON mappings.
+type: object
+patternProperties:
+  ^[a-zA-Z0-9_\-]+$:
+    $ref: types/uint8.schema.yaml

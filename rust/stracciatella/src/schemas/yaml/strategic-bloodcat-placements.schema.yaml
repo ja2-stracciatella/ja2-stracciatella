@@ -1,0 +1,20 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Strategic Bloodcat Placements
+description: |
+  Externalized table of bloodcat populations.  We don't have
+  access to the real population (if different) until we physically
+  load the map.  If the real population is different, then an error
+  will be reported.
+items:
+  type: object
+  properties:
+    sector:
+      title: Sector
+      $ref: types/sector-id.schema.yaml
+    bloodCatPlacements:
+      title: Number of bloodcat placements
+      $ref: types/int8.schema.yaml
+  required:
+  - sector
+  - bloodCatPlacements

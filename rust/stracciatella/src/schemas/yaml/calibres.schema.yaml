@@ -1,0 +1,37 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Calibres
+items:
+  type: object
+  title: Calibre
+  description: A calibre for weapons in the game.
+  properties:
+    index:
+      title: Internal numeric id
+      $ref: types/uint16.schema.yaml
+    internalName:
+      title: Internal name
+      $ref: types/id.schema.yaml
+    burstSoundString:
+      title: Burst sound
+      description: Path to burst sound for this calibre
+      $ref: types/resource-path.schema.yaml
+    showInHelpText:
+      type: boolean
+      title: Show in help text
+      description: Show the calibre in a guns help text
+    monsterWeapon:
+      type: boolean
+      title: Is monster weapon
+      description: Is this calibre used for monster attacks
+    silencerSound:
+      title: Silencer sound
+      description: Sound id of the silenced sound for this calibre
+      $ref: types/int32.schema.yaml
+  required:
+  - index
+  - internalName
+  - burstSoundString
+  - showInHelpText
+  - monsterWeapon
+  - silencerSound

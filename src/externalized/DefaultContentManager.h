@@ -155,9 +155,11 @@ public:
 
 	virtual const std::vector<UINT16>* getTranslationTable() const override;
 
+	std::unique_ptr<rapidjson::Document> readJsonDataFile(const ST::string& fileName) const;
 protected:
 	RustPointer<EngineOptions> m_engineOptions;
 	RustPointer<ModManager> m_modManager;
+	RustPointer<SchemaManager> m_schemaManager;
 	
 	RustPointer<TempDir> m_tempDir;
 	std::unique_ptr<DirFs> m_tempFiles;
@@ -261,7 +263,8 @@ protected:
 	void loadVehicles();
 	void loadTranslationTable();
 
-	std::unique_ptr<rapidjson::Document> readJsonDataFile(const ST::string& fileName) const;
+	std::unique_ptr<rapidjson::Document> readJsonFromString(const ST::string& jsonData, const ST::string& label) const;
+	std::unique_ptr<rapidjson::Document> readJsonDataFileWithSchema(const ST::string& jsonPath) const;
 
 	/**
 	 * @param profileID

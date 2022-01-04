@@ -1,0 +1,85 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Dealers
+items:
+  type: object
+  description: |
+    Dealers define NPCs that are able to trade with or repair for the player.
+  properties:
+    profileID:
+      title: Profile ID
+      description: Profile ID of the dealer
+      $ref: types/uint8.schema.yaml
+    internalName:
+      title: Internal name
+      $ref: types/id.schema.yaml
+    type:
+      type: string
+      title: Type
+      description: What kind of deals the dealer has to offer.
+      enum:
+      - BUYS_SELLS
+      - SELLS_ONLY
+      - BUYS_ONLY
+      - REPAIRS
+    buyingPrice:
+      title: Buying price
+      description: This is a multiplier applied on the item's value when the dealer
+        is buying items. Mandatory if this dealer buys from the player.
+      type: number
+    sellingPrice:
+      title: Selling price
+      description: This is a multiplier applied on the item's value when the dealer
+        is selling items. Mandatory if this dealer sells to the player.
+      type: number
+    repairSpeed:
+      title: Repair speed
+      description: The speed to repair an item, expressed in minutes per dollar-value.
+        With a speed of 1.0, it takes 16.6 hours to do a full 100% status repair of
+        an $2000 item. Lower value means faster repair. Mandatory if this dealer provides
+        repairs.
+      type: number
+    repairCost:
+      type: number
+      title: Repair cost
+      description: This is a multiplier applied on the item's value when the dealer
+        is repairing items. Mandatory if this dealer repairs for the player.
+    initialCash:
+      title: Initial cash
+      description: Initial cash the dealer has. It is replenished once a day.
+      $ref: types/int32.schema.yaml
+    flags:
+      title: Flags
+      description: |
+        Flags describing the behavior of the dealer.
+        
+        - `SOME_USED_ITEMS`: Can offer used items for sale.
+        - `ONLY_USED_ITEMS`: Only offers used items.
+        - `GIVES_CHANGE`: The dealer gives changes to the player.
+        - `ACCEPTS_GIFTS`: Accepts gifts (bribes) from player.
+        - `HAS_NO_INVENTORY`: Has no inventory to sell.
+        - `DELAYS_REPAIR`: There is a chance repair jobs are delayed.
+        - `REPAIRS_ELECTRONICS`: Able to and only repairs electronics.
+        - `SELLS_ALCOHOL`: Always restocked with alcohol.
+        - `SELLS_FUEL`: Can sell fuel after the arrangement is made.
+        - `BUYS_EVERYTHING`: these guys will buy nearly anything from the player, regardless of what they carry for sale.
+      type: array
+      items:
+        type: string
+        enum:
+        - ONLY_USED_ITEMS
+        - SOME_USED_ITEMS
+        - GIVES_CHANGE
+        - ACCEPTS_GIFTS
+        - HAS_NO_INVENTORY
+        - DELAYS_REPAIR
+        - REPAIRS_ELECTRONICS
+        - SELLS_ALCOHOL
+        - SELLS_FUEL
+        - BUYS_EVERYTHING
+  required:
+  - profileID
+  - internalName
+  - type
+  - initialCash
+  - flags

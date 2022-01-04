@@ -1,0 +1,488 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: object
+title: Game Settings
+description: The settings in this file have an influence on the game in general.
+properties:
+  extra_hotkeys:
+    type: boolean
+    title: Extra Hotkeys
+    description: |
+      Enable new hotkeys introduced in JA2 Stracciatella
+
+      - `ctrl+i` to show sector inventory of selected sector in strategic view.
+      - `j` to jump over fences, climb on rooftops etc.
+      - `ctrl+n` to swap the squads head gear from night mode (NV or UV Goggles) to day mode (sun goggles) and back.
+      - `alt+r` to reload
+      - `ctrl+q` to swap hand items
+      - `shift+j` to climb through open window
+
+      Vanilla setting: `false`
+  can_enter_turnbased:
+    type: boolean
+    title: Can enter turnbased
+    description: |
+      Press d in realtime mode to manually start turn based mode.
+
+      Vanilla setting: `false`
+  middle_mouse_look:
+    type: boolean
+    title: Middle mouse button look
+    description: |
+      Enables middle mouse button to trigger a look into cursor direction.
+
+      Vanilla setting: `false`
+  draw_item_shadow:
+    type: boolean
+    title: Draw item shadow
+    description: |
+      Automatically draw a shadow for all items in a merc's inventory.
+
+      Vanilla setting: `true`
+  ms_per_game_cycle:
+    $ref: types/int32.schema.yaml
+    title: Milliseconds per game cycle
+    description: |
+      Number of milliseconds for one game cycle.
+
+      25 ms gives approx. 40 cycles per second (and 40 frames per second, since the screen is updated on every cycle).
+      Decreasing this value will increase the speed of the game (enemy movement, bullets speed, etc).
+
+      Stracciatella default value: `25`
+  ms_per_time_slice:
+    $ref: types/int32.schema.yaml
+    title: Milliseconds per time slice
+    description: |
+      Number of milliseconds for one game time slice.
+
+      Decreasing this value will speed up UI transitions and soldier animations.
+
+      Stracciatella default value: `10`
+  starting_cash_easy:
+    $ref: types/int32.schema.yaml
+    title: Starting cash on easy difficulty
+    description: |
+      Amount of money the player starts the game with on easy difficulty.
+
+      Vanilla setting: `45000`
+  starting_cash_medium:
+    $ref: types/int32.schema.yaml
+    title: Starting cash on medium difficulty
+    description: |
+      Amount of money the player starts the game with on medium difficulty.
+
+      Vanilla setting: `35000`
+  starting_cash_hard:
+    $ref: types/int32.schema.yaml
+    title: Starting cash on hard difficulty
+    description: |
+      Amount of money the player starts the game with on hard difficulty.
+
+      Vanilla setting: `30000`
+  drop_everything:
+    type: boolean
+    title: Drop everything on death
+    description: |
+      Will enemies drop ALL of their equipment when they die?
+
+      Vanilla setting: `false`
+  all_drops_visible:
+    type: boolean
+    title: All drops visible
+    description: |
+      Will dropped items always be visible to the player, regardless of distance?
+
+      Vanilla setting: `false`
+  multiple_interrupts:
+    type: boolean
+    title: Multiple interrupts
+    description: |
+      Everyone will be able to interrupt multiple times in the same turn. Vanilla behaviour is that if you skipped reacting to the first interrupt
+      (say your buddies took care of it), you'd still get skipped for any further interrupts. Annoying in ambushes or when sneaking.
+
+      Vanilla setting: `false`
+  enemy_weapon_minimal_status:
+    $ref: types/percentage.schema.yaml
+    title: Minimal status of enemy weapons
+    description: |
+      Minimal status in % for each gun in the hand of enemy soldiers. Note that this value has no influence on enemy behaviour (CtH, jams).
+
+      Vanilla setting: `0`
+  squad_size:
+    $ref: types/uint16.schema.yaml
+    title: Maximum Squad Size
+    description: |
+      Maximum number of soldiers in one squad.
+
+      Note: Larger squad sizes requires the wider screen to display all members. For a squad size of n, the screen must be at
+      least (640 + (n-6)*83) pixels wide. For example, squad size of 8 requires the screen to be at least 806px wide.
+      
+      Vanilla setting: `6`
+  ai:
+    type: object
+    title: AI Settings
+    description: AI specific settings
+    properties:
+      better_aiming_choice:
+        type: boolean
+        title: Better aiming choice
+        description: |
+          AI will choose other body parts to shoot at when appropriate and random choice was selected.
+
+          Vanilla setting: `false`
+      go_prone_more_often:
+        type: boolean
+        title: Go prone more often
+        description: |
+          When already facing its focus, lay down if nothing else.
+
+          Vanilla setting: `false`
+      threshold_cth_head:
+        $ref: types/int8.schema.yaml
+        title: Threshold chance-to-hit head
+        description: AI will choose to target head if CTH is over this threshold
+      threshold_cth_legs:
+        $ref: types/int8.schema.yaml
+        title: Threshold chance-to-hit legs
+        description: AI will choose to target legs if CTH is over this threshold
+      avoid_ambushes:
+        type: boolean
+        title: Avoid ambushes
+        description: |
+          AI is capable of knowing and avoid of an ambush on seeing corpses of friendlies, but
+          it was not enabled in the original game due to a bug
+          
+          Vanilla setting: `false`
+      stay_on_rooftop:
+        type: boolean
+        title: Stay on rooftop
+        description: |
+          Enemy guards on rooftop are disallowed to climb down
+          
+          Vanilla setting: `false`
+    required:
+      - better_aiming_choice
+      - go_prone_more_often
+      - threshold_cth_head
+      - threshold_cth_legs
+      - avoid_ambushes
+      - stay_on_rooftop
+  enemy_elite_minimum_level:
+    $ref: types/int8.schema.yaml
+    title: Elite enemies minimum level
+    description: |
+      What should be the minimum elite soldier xp level?
+
+      Vanilla setting: `6`
+  enemy_elite_maximum_level:
+    $ref: types/int8.schema.yaml
+    title: Elite enemies maximum level
+    description: |
+      What should be the maximum elite soldier xp level?
+
+      Vanilla setting: `10`
+  gui_extras:
+    type: boolean
+    title: GUI extras
+    description: |
+      Enables extra GUI features. Currently includes:
+
+      - Progress bars for the mercs stats in tactical mode.
+
+      Vanilla setting: `false`
+  extra_attachments:
+    type: boolean
+    title: Extra attachments
+    description: |
+      Enables extra attachments:
+        
+        - boosters and break lights on leggings
+        - goggles on helmets
+
+      Vanilla setting: `false`
+  pablo_wont_steal:
+    type: boolean
+    title: Pablo won't steal
+    description: |
+      Packages at Drassen airport never get stolen, no need to bribe Pablo.
+
+      Vanilla setting: `false`
+  chance_to_hit_minimum:
+    type: integer
+    title: Chance-to-hit minimum
+    description: |
+      Value below which chance-to-hit can never go
+
+      Vanilla setting: `1`
+  chance_to_hit_maximum:
+    type: integer
+    title: Chance-to-hit maximum
+    description: |
+      Value above which chance-to-hit can never go
+
+      Vanilla setting: `99`
+  tactical_head_damage_multiplier:
+    type: number
+    title: Damage multiplier head
+    description: |
+      Multiplier for damage that is inflicted on the head
+
+      Vanilla setting: `1.5`
+  tactical_legs_damage_multiplier:
+    type: number
+    title: Damage multiplier legs
+    description: |
+      Multiplier for damage that is inflicted on the legs
+
+      Vanilla setting: `0.5`
+  always_show_cursor_in_tactical:
+    type: boolean
+    title: Always show cursor in tactical
+    description: |
+      Always show mouse cursor during tactical view (if false, no mourse cursor is shown when moving in real-time mode, selecting a merc, etc)
+      
+      Vanilla setting: `false`
+  show_hit_chance:
+    type: boolean
+    title: Show chance-to-hit
+    description: |
+      Show chance-to-hit next to mouse cursor when preparing an attack
+      
+      Vanilla setting: `false`
+  website_loading_time_scale:
+    type: number
+    title: Website loading time scale
+    description: |
+      Scales the loading time of websites on the laptop. Lower value means faster loading. Setting this to 0.0 removes the loading entirely.
+
+      Vanilla setting: `1.0`
+  imp:
+    type: object
+    title: IMP specific settings
+    properties:
+      max_attribute_points:
+        $ref: types/int8.schema.yaml
+        title: Maximum attribute points
+        description: |
+          Maximum attribute points value that can be set in IMP
+
+          Vanilla setting: `85`
+      min_attribute_points:
+        $ref: types/int8.schema.yaml
+        title: Minimum attribute points
+        description: |
+          Maximum attribute points value that can be set in IMP
+
+          Note: Setting this to a value less than 15 allows the creation of a character with less than 15 health. This is a dying character!
+
+          Vanilla setting: `35`
+      zero_attribute_points_bonus:
+        $ref: types/int32.schema.yaml
+        title: Zero attribute points bonus
+        description: |
+          Zero attribute point bonus is what you receive for setting a skill to 0.
+
+          Vanilla setting: `15`
+      bonus_attribute_points:
+        $ref: types/int32.schema.yaml
+        title: Bonus attribute points
+        description: |
+          Bonus attribute points is your initial pool of points to distribute.
+
+          Vanilla setting: `40`
+      pick_skills_directly:
+        type: boolean
+        title: Pick skills directly
+        description: |
+          Replace the IMP personality quiz with a form to select skills directly
+          
+          Note: does not set any personality
+
+          Vanilla setting: `false`
+      load_saved_merc_by_nickname:
+        type: boolean
+        title: Allow to load saved merc by nickname
+        description: |
+          Load an IMP merc from a previous save game by typing in same nickname on IMP form.
+          
+          Note: Make sure to put in only the nickname and use the same capitalization!
+
+          Vanilla setting: `false`
+      load_keep_inventory:
+        type: boolean
+        title: Keep inventory when loading saved merc
+        description: |
+          Whether to keep the inventory of a saved merc when loading by nickname
+    required:
+      - max_attribute_points
+      - min_attribute_points
+      - zero_attribute_points_bonus
+      - bonus_attribute_points
+      - pick_skills_directly
+      - load_saved_merc_by_nickname
+      - load_keep_inventory
+  merc_online_min_days:
+    $ref: types/uint8.schema.yaml
+    title: M.E.R.C. Online Min Days
+    description: |
+      When a new game starts, it picks randomly in the range of min and max (both inclusive) 
+      on which day M.E.R.C. goes online and Speck sends the player an email. If 0 is picked, 
+      then M.E.R.C. will be available right from the start.
+      
+      Vanilla setting: 1
+  merc_online_max_days:
+    $ref: types/uint8.schema.yaml
+    title: M.E.R.C. Online Max Days
+    description: |
+      When a new game starts, it picks randomly in the range of min and max (both inclusive) 
+      on which day M.E.R.C. goes online and Speck sends the player an email. If 0 is picked, 
+      then M.E.R.C. will be available right from the start.
+      
+      Vanilla setting: 2
+  progress:
+    type: object
+    title: Campaign progress specific settings
+    properties:
+      weight_kills:
+        type: number
+        title: Weight for kills
+        description: |
+          Progress weight for kills
+
+          Vanilla setting: `25`
+      weight_control:
+        type: number
+        title: Weight for sector control
+        description: |
+          Progress weight for sector control
+
+          Vanilla setting: `25`
+      weight_income:
+        type: number
+        title: Weight for income
+        description: |
+          Progress weight for income
+
+          Vanilla setting: `50`
+      kills_per_point_easy:
+        $ref: types/int8.schema.yaml
+        title: Kills per point on easy difficulty
+        description: |
+          Vanilla setting: `7`
+      kills_per_point_medium:
+        $ref: types/int8.schema.yaml
+        title: Kills per point on medium difficulty
+        description: |
+          Vanilla setting: `10`
+      kills_per_point_hard:
+        $ref: types/int8.schema.yaml
+        title: Kills per point on hard difficulty
+        description: |
+          Vanilla setting: `15`
+      event_madlab_min:
+        $ref: types/int8.schema.yaml
+        title: Event "Madlab" min progress
+        description: |
+          Minimum first progress to trigger "Madlab" event
+
+          Vanilla setting: `35`
+      event_mike_min:
+        $ref: types/int8.schema.yaml
+        title: Event "Mike" min progress
+        description: |
+          Minimum first progress to trigger "Mike" event
+
+          Vanilla setting: `50`
+      event_iggy_min:
+        $ref: types/int8.schema.yaml
+        title: Event "Iggy" min progress
+        description: |
+          Minimum first progress to trigger "Iggy" event
+
+          Vanilla setting: `75`
+    required:
+      - weight_kills
+      - weight_control
+      - weight_income
+      - kills_per_point_easy
+      - kills_per_point_medium
+      - kills_per_point_hard
+      - event_madlab_min
+      - event_mike_min
+      - event_iggy_min         
+  unhired_merc_deaths_easy:
+    $ref: types/int8.schema.yaml
+    title: Unhired merc deaths on easy difficulty
+    description: |
+      Max number of unhired merc deaths on easy difficulty
+
+      Vanilla setting: `1`
+  unhired_merc_deaths_medium:
+    $ref: types/int8.schema.yaml
+    title: Unhired merc deaths on medium difficulty
+    description: |
+      Max number of unhired merc deaths on medium difficulty
+
+      Vanilla setting: `2`
+  unhired_merc_deaths_hard:
+    $ref: types/int8.schema.yaml
+    title: Unhired merc deaths on hard difficulty
+    description: |
+      Max number of unhired merc deaths on hard difficulty
+
+      Vanilla setting: `3`
+  campaign:
+    type: object
+    properties:
+      start_sector:
+        $ref: types/sector-id.schema.yaml
+        title: Start sector
+        description: |
+          The sector where your team lands at the start.
+
+          Vanilla setting: `A9`
+      start_sector_revealed:
+        type: boolean
+        title: Start sector revealed
+        description: |
+          Whether the start sector is revealed
+
+          Vanilla setting: `true`
+    required:
+      - start_sector
+      - start_sector_revealed
+required:
+  - extra_hotkeys
+  - can_enter_turnbased
+  - middle_mouse_look
+  - draw_item_shadow
+  - ms_per_game_cycle
+  - ms_per_time_slice
+  - starting_cash_easy
+  - starting_cash_medium
+  - starting_cash_hard
+  - drop_everything
+  - all_drops_visible
+  - multiple_interrupts
+  - enemy_weapon_minimal_status
+  - squad_size
+  - ai
+  - enemy_elite_minimum_level
+  - enemy_elite_maximum_level
+  - gui_extras
+  - extra_attachments
+  - pablo_wont_steal
+  - chance_to_hit_minimum
+  - chance_to_hit_maximum
+  - tactical_head_damage_multiplier
+  - tactical_legs_damage_multiplier
+  - always_show_cursor_in_tactical
+  - show_hit_chance
+  - website_loading_time_scale
+  - imp
+  - merc_online_min_days
+  - merc_online_max_days
+  - progress
+  - unhired_merc_deaths_easy
+  - unhired_merc_deaths_medium
+  - unhired_merc_deaths_hard
+  - campaign

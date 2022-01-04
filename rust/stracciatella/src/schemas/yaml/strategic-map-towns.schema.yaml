@@ -1,0 +1,45 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Strategic Map Towns
+items:
+  type: object
+  title: Strategic Map Town
+  description: This defines the towns and their sectors.
+  properties:
+    townId:
+      title: Town ID
+      description: The numeric ID of the town as set in codebase
+      $ref: types/int8.schema.yaml
+    sectors:
+      title: Sectors
+      description: List of sectors belonging to the town.
+      type: array
+      minItems: 1
+      items:
+        $ref: types/sector-id.schema.yaml
+    townPoint:
+      title: Town Point
+      description: |
+        Position of town names on the map.
+
+        These are no longer PIXELS, but 10 * the X,Y position in SECTORS (fractions possible) to the X-CENTER of the town.
+      type: object
+      properties:
+        x:
+          title: X
+          $ref: types/uint16.schema.yaml
+        y:
+          title: Y
+          $ref: types/uint16.schema.yaml
+      required:
+      - x
+      - y
+    isMilitiaTrainingAllowed:
+      title: Is militia training allowed?
+      description: Whether or not militia is allowed in town
+      type: boolean
+  required:
+  - townId
+  - sectors
+  - townPoint
+  - isMilitiaTrainingAllowed

@@ -1,0 +1,68 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Mercs M.E.R.C. Listings
+description: |
+  Defines the profile listings on the M.E.R.C. website, and also some of the things Speck says.
+  This only controls how the profiles show up on M.E.R.C. and not the soldier profiles themselves.
+
+  Notes on mercs' availability:
+
+  - If both minDays and minTotalSpending are 0, the merc is available as soon as the M.E.R.C. site is up
+  - New merc checks happens at random intervals, so it will not happen exactly at minDays
+  - Merc availability is tracked by index to the latest available merc, so the ordering here is important. Also, it means that if one merc is made available, every other earlier mercs in the list are also available.
+
+  **Limitations**: There is some special logic in the code for LARRY_NORMAL(46) and FLO(44).
+items:
+  type: object
+  properties:
+    profileID:
+      title: Profile ID
+      description: The profile ID of the merc
+      $ref: types/uint8.schema.yaml
+    bioIndex:
+      title: Biography Index
+      description: The start location offset to the merc's bio in the mercbios.edt
+      $ref: types/uint8.schema.yaml
+    minDays:
+      title: Min Days
+      description: The day (in-game days) after which this merc may be available. Defaults to `0`.
+      $ref: types/uint32.schema.yaml
+    minTotalSpending:
+      title: Minimum Total Spending
+      description: The player must spend this amount before this merc is available for hire. Defaults to `0`.
+      $ref: types/uint32.schema.yaml
+    quotes:
+      type: array
+      title: Quotes
+      description: A list of quotes that Speck make regarding this merc
+      items:
+        type: object
+        properties:
+          type:
+            title: Type
+            description: |
+              Type of quote, can be one of:
+
+              - `ADVERTISE`: Used randomly to sell the merc when the UI is idle
+              - `MERC_DEAD`: Used as the opening tag when the merc is dead
+              - `CROSS_SELL`: Used when the merc is just hired, and if the other merc is also available for hire. The first available quote is used if there are multiple.
+            type: string
+            enum:
+            - ADVERTISE
+            - MERC_DEAD
+            - CROSS_SELL
+          quoteID:
+            title: Quote ID
+            description: ID of the quote in code. See Speck_Quotes.h
+            $ref: types/uint8.schema.yaml
+          profileID:
+            title: Profile ID (other Merc)
+            description: ID of the other merc. Only used in CROSS_SELL quotes
+            $ref: types/uint8.schema.yaml
+        required:
+        - type
+        - quoteID
+  required:
+  - profileID
+  - bioIndex
+  - quotes

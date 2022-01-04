@@ -1,0 +1,17 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Loading Screens
+items:
+  type: object
+  title: Loading Screen
+  description: A loading screen allows to specify an image that can be displayed as a loading screen.
+  properties:
+    internalName:
+      title: Internal name
+      $ref: types/id.schema.yaml
+    filename:
+      title: File Name
+      $ref: types/resource-path.schema.yaml
+  required:
+  - internalName
+  - filename

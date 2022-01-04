@@ -1,0 +1,22 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Strategic Map Sector Descriptions
+items:
+  title: Strategic Map Sector Description
+  description: A sector that uses a special land type description.
+  type: object
+  properties:
+    sector:
+      title: Sector
+      $ref: types/sector-id.schema.yaml
+    landType:
+      title: Land Type
+      description: Land type for the sector description text. See strategic-map-traversibility-ratings
+      $ref: types/id.schema.yaml
+    sectorLevel:
+      title: Sector Level
+      description: Defaults to 0
+      $ref: types/uint8.schema.yaml
+  required:
+  - sector
+  - landType

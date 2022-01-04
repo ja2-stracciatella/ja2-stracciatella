@@ -1,0 +1,38 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: object
+title: I.M.P.
+description: This defines IMP specific settings for the game.
+properties:
+  activation_codes:
+    type: array
+    title: Activation codes
+    description: A list of I.M.P. homepage activation codes that can be used to enter IMP. They are case-sensitive.
+    items:
+      type: string
+  starting_level:
+    $ref: types/uint8.schema.yaml
+    title: Starting level
+    description: The starting level of a created IMP merc.
+  inventory:
+    type: array
+    title: Inventory
+    description: The default inventory of a created IMP merc.
+    items:
+      $ref: types/id.schema.yaml
+  if_good_shooter:
+    type: array
+    title: Additional inventory if good shooter
+    description: Additional inventory items of a good shooter (marksmanship >= 80)
+    items:
+      $ref: types/id.schema.yaml
+  if_normal_shooter:
+    type: array
+    title: Additional inventory if normal shooter
+    description: Additional inventory items of a normal shooter (marksmanship < 80)
+    items:
+      $ref: types/id.schema.yaml
+required:
+- activation_codes
+- inventory
+- if_good_shooter
+- if_normal_shooter

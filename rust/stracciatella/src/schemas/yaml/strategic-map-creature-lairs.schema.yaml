@@ -1,0 +1,129 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Strategic Map Creature Lairs
+items:
+  type: object
+  title: Strategic Map Creature Lair
+  description:
+    Defines all the possible Crepitus creature lairs and spreading. There can be at most 1 lair activated in each (Sci-Fi) game.
+  properties:
+    associatedMineId:
+      title: Associated Mine ID
+      description: Creature lair must be located and associated with one mine.
+      $ref: types/uint8.schema.yaml
+    lairId:
+      title: Lair ID
+      description: A unique numeric ID for the lair. Must be an integer greater than zero.
+      $ref: types/uint8.schema.yaml
+    sectors:
+      type: array
+      title: Sectors
+      description: |
+        This should be a consecutive, non-branching, ordered list of underground sectors making up the lair, specified as an array of [sector, sectorZ, habitatType].
+        
+        This list should start with the innermost sector, which is the QUEEN_LAIR. The creatures will spread out outwards.
+        Each sector must have a corresponding map file and defined in strategic-map-underground-sectors.json
+        
+        "habitatType" must be one of:
+
+          - `QUEEN_LAIR`
+          - `LAIR`
+          - `LAIR_ENTRANCE`
+          - `INNER_MINE`
+          - `OUTER_MINE`
+          - `FEEDING_GROUNDS`
+          - `MINE_EXIT`.
+          
+        See Creature_Spreading.h for details.
+      items:
+        type: array
+        minItems: 3
+        maxItems: 3
+        items:
+          oneOf:
+          - $ref: types/sector-id.schema.yaml
+          - $ref: types/uint8.schema.yaml
+          - type: string
+            enum:
+            - QUEEN_LAIR
+            - LAIR
+            - LAIR_ENTRANCE
+            - INNER_MINE
+            - OUTER_MINE
+            - FEEDING_GROUNDS
+            - MINE_EXIT
+    entranceSector:
+      title: Entrance sector
+      description: Where the lair entrance is located. There must be an alternate map file (*_a.dat), which will be activated at lair initialization.
+      type: array
+      minItems: 2
+      maxItems: 2
+      items:
+        oneOf:
+        - $ref: types/sector-id.schema.yaml
+        - $ref: types/uint8.schema.yaml
+    warpExit:
+      title: Warp Exit
+      description: Destination for the "Travel to surface?" warp from deep underground
+      type: object
+      properties:
+        sector:
+          title: Sector
+          $ref: types/sector-id.schema.yaml
+        gridNo:
+          title: Grid Number
+          $ref: types/uint16.schema.yaml
+      required:
+      - sector
+      - gridNo
+    attackSectors:
+      title: Attack Sectors
+      description: |
+        List of town sectors and enemy insertion. Used by creatures to make town attacks.
+        
+        Each entry can have four fields:
+          
+        1. sector, which should be a nearby town sector;
+        2. chance, which is an ; 3) insertionCode: any one from the INSERTION_CODE_* enum but without the prefix, such as "GRIDNO", "NORTH", "CENTER"; 4) insertionGridNo: optional GridNo, required only if the insertionCode is "GRIDNO"
+      type: array
+      items:
+        type: object
+        properties:
+          sector:
+            title: Sector
+            description: Should be a nearby town sector that might be chosen for the next attack.
+            $ref: types/sector-id.schema.yaml
+          chance:
+            title: Chance
+            description: Integer weight on how likely the sector is chosen for the next attack.
+            $ref: types/uint8.schema.yaml
+          insertionCode:
+            title: Insertion Code
+            description: How to choose entry point for the attack.
+            type: string
+            enum:
+            - NORTH
+            - SOUTH
+            - EAST
+            - WEST
+            - GRIDNO
+            - ARRIVING_GAME
+            - CHOPPER
+            - PRIMARY_EDGEINDEX
+            - SECONDARY_EDGEINDEX
+            - CENTER
+          insertionGridNo:
+            title: Insertion code grid number
+            description: Optional GridNo, required only if the insertionCode is "GRIDNO"
+            $ref: types/uint16.schema.yaml
+        required:
+        - sector
+        - chance
+        - insertionCode
+  required:
+  - associatedMineId
+  - lairId
+  - sectors
+  - entranceSector
+  - warpExit
+  - attackSectors

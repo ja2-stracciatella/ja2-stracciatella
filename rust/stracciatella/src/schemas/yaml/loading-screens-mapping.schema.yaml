@@ -1,0 +1,28 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Loading Screens Mappings
+items:
+  title: Loading Screens Mapping
+  description: A loading screen mapping allows to map specific loading screens to sectors
+  type: object
+  properties:
+    sector:
+      title: Sector
+      description: The sector affected by this mapping
+      $ref: types/sector-id.schema.yaml
+    sectorLevel:
+      title: Sector Level
+      description: The level of the sector affected by this mapping. Only needs to be defined if the target sector is not a surface sector.
+      $ref: types/uint8.schema.yaml
+    day:
+      title: Day
+      description: Loading screen shown at daytime.
+      $ref: types/id.schema.yaml
+    night:
+      title: Night
+      description: Loading screen shown at nighttime.
+      $ref: types/id.schema.yaml
+  required:
+  - sector
+  - day
+  - night

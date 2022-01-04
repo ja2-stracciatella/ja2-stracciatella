@@ -40,6 +40,8 @@ version = "0.10"
 version = "0.3"
 features = ["std", "fileapi"]
 
+[target.'cfg(target_os = "android")'.dependencies.send_wrapper]
+version = "0.5"
 [target.'cfg(target_os = "android")'.dependencies.android_logger]
 version = "0.10"
 [target.'cfg(target_os = "android")'.dependencies.lazy_static]
@@ -50,3 +52,8 @@ version = "0.14"
 git = "https://github.com/selaux/android-ndk-rs"
 [target.'cfg(target_os = "android")'.dependencies.ndk-sys]
 git = "https://github.com/selaux/android-ndk-rs"
+
+[build-dependencies]
+serde = "1.0"
+serde_json = "1.0"
+serde_yaml = "0.8"

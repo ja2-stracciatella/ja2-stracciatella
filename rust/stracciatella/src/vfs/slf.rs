@@ -7,7 +7,6 @@ use std::convert::TryFrom;
 use std::fmt;
 use std::io;
 use std::io::{Seek, SeekFrom};
-use std::rc::Rc;
 use std::sync::{Arc, Mutex};
 
 use crate::file_formats::slf::{SlfEntryState, SlfHeader};
@@ -58,7 +57,7 @@ pub struct SlfFsFile {
 
 impl SlfFs {
     /// Creates a new virtual filesystem.
-    pub fn new(mut slf_file: Box<dyn VfsFile>) -> io::Result<Rc<SlfFs>> {
+    pub fn new(mut slf_file: Box<dyn VfsFile>) -> io::Result<Arc<SlfFs>> {
         let header = SlfHeader::from_input(&mut slf_file)?;
         let prefix = Nfc::caseless_path(&header.library_path.trim_end_matches('/'));
         let entries: HashMap<_, _> = header
@@ -76,7 +75,7 @@ impl SlfFs {
                 (full_path, entry)
             })
             .collect();
-        Ok(Rc::new(SlfFs {
+        Ok(Arc::new(SlfFs {
             slf_path: format!("{}", slf_file),
             slf_file: Arc::new(Mutex::new(slf_file)),
             prefix,

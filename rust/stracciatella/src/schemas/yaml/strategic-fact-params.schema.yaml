@@ -1,0 +1,21 @@
+$schema: http://json-schema.org/draft-04/schema#
+title: Strategic Fact Params
+type: array
+items:
+  title: Strategic Fact Param
+  description: |
+    Externalized parameter to CheckFact function. Refer to the source code 
+    to understand what each entry means.
+  type: object
+  properties:
+    fact:
+      title: Fact
+      description: ID of a Fact. It must be one of values from Fact enum
+      $ref: types/int32.schema.yaml
+    gridNo:
+      title: Grid Number
+      description: A location on the tactical map
+      $ref: types/int16.schema.yaml
+  required:
+  - fact
+  - gridNo

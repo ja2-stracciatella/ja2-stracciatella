@@ -9,6 +9,7 @@ pub mod logger;
 pub mod misc;
 pub mod mod_manager;
 pub mod path;
+pub mod schema_manager;
 pub mod vec;
 pub mod vfs;
 

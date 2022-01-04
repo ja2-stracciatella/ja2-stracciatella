@@ -8,7 +8,7 @@ use std::fmt;
 use std::io;
 use std::io::SeekFrom;
 use std::path::{Path, PathBuf};
-use std::rc::Rc;
+use std::sync::Arc;
 use std::sync::Mutex;
 
 use crate::fs;
@@ -41,9 +41,9 @@ pub struct DirFsFile {
 
 impl DirFs {
     /// Creates a new virtual filesystem.
-    pub fn new(path: &Path) -> io::Result<Rc<DirFs>> {
+    pub fn new(path: &Path) -> io::Result<Arc<DirFs>> {
         fs::read_dir(&path)?;
-        Ok(Rc::new(DirFs {
+        Ok(Arc::new(DirFs {
             dir_path: path.to_owned(),
             canonicalization_cache: Mutex::new(LruCache::new(CANONICALIZATION_CACHE_SIZE)),
         }))

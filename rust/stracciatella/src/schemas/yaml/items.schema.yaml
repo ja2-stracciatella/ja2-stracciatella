@@ -1,0 +1,114 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: array
+title: Items
+description: |
+  **Limitations**: Some items are still referenced in source code, so they should not be changed.
+items:
+  title: Item
+  description: | 
+    An item defines item properties of an item available in the game.
+
+    Note that weapons and magazines are not part of this list, but have their own definitions.
+  type: object
+  properties:
+    itemIndex:
+      title: Item Index
+      $ref: types/uint16.schema.yaml
+    internalName:
+      title: Internal name
+      $ref: types/id.schema.yaml
+    usItemClass:
+      title: Item class
+      $ref: types/uint32.schema.yaml
+    ubClassIndex:
+      title: Item class index
+      $ref: types/uint8.schema.yaml
+    ubCursor:
+      title: Cursor
+      $ref: types/uint8.schema.yaml
+    ubGraphicType:
+      title: Graphic type
+      $ref: types/uint8.schema.yaml
+    ubGraphicNum:
+      title: Graphic number
+      $ref: types/uint8.schema.yaml
+    ubWeight:
+      title: Weight
+      $ref: types/uint8.schema.yaml
+    ubPerPocket:
+      title: Per pocket
+      $ref: types/uint8.schema.yaml
+    usPrice:
+      title: Price
+      $ref: types/uint16.schema.yaml
+    ubCoolness:
+      title: Coolness
+      $ref: types/uint8.schema.yaml
+    bReliability:
+      title: Reliability
+      $ref: types/int8.schema.yaml
+    bRepairEase:
+      title: Repair ease
+      $ref: types/int8.schema.yaml
+    bDamageable:
+      title: Is damageable?
+      type: boolean
+    bRepairable:
+      title: Is repairable?
+      type: boolean
+    bWaterDamages:
+      title: Is damaged by water?
+      type: boolean
+    bMetal:
+      title: Is metal?
+      type: boolean
+    bSinks:
+      title: Sinks in water?
+      type: boolean
+    bShowStatus:
+      title: Show status?
+      type: boolean
+    bHiddenAddon:
+      title: Is hidden addon?
+      type: boolean
+    bTwoHanded:
+      title: Is two handed?
+      type: boolean
+    bNotBuyable:
+      title: Is not buyable?
+      type: boolean
+    bAttachment:
+      title: Is an attachment?
+      type: boolean
+    bBigGunList:
+      title: Is a big gun?
+      type: boolean
+    bNotEditor:
+      title: Dont show in editor?
+      type: boolean
+    bDefaultUndroppable:
+      title: Is not droppable by default?
+      type: boolean
+    bUnaerodynamic:
+      title: Is unaerodynamic?
+      type: boolean
+    bElectronic:
+      title: Is electronic?
+      type: boolean
+    bInseparable:
+      title: Is inseparable?
+      type: boolean
+  required:
+  - itemIndex
+  - internalName
+  - usItemClass
+  - ubClassIndex
+  - ubCursor
+  - ubGraphicType
+  - ubGraphicNum
+  - ubWeight
+  - ubPerPocket
+  - usPrice
+  - ubCoolness
+  - bReliability
+  - bRepairEase

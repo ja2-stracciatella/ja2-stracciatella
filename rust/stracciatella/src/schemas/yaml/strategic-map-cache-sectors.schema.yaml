@@ -1,0 +1,40 @@
+$schema: http://json-schema.org/draft-04/schema#
+type: object
+title: Strategic Map Cache Sectors
+description:
+  Choose one cache map out of five possible maps. Select the sector randomly,
+  set up the flags to use the alternate map, then place 8-12 regular troops
+  there (no AI though).
+properties:
+  sectors:
+    type: array
+    title: Sectors
+    description: Locations of all the possible cache sectors
+    items:
+      $ref: types/sector-id.schema.yaml
+  numTroops:
+    title: Number of troops
+    description: |
+      The number of troops in cache sector, by game difficulty
+
+      In the form of [EASY, MEDIUM, HARD]
+    type: array
+    minItems: 3
+    maxItems: 3
+    items:
+      $ref: types/uint8.schema.yaml
+  numTroopsVariance:
+    title: Number of troops variance
+    description: |
+      The max number of extra troops in sector, by game difficulty
+
+      In the form of [EASY, MEDIUM, HARD]
+    type: array
+    minItems: 3
+    maxItems: 3
+    items:
+      $ref: types/uint8.schema.yaml
+required:
+- sectors
+- numTroops
+- numTroopsVariance
