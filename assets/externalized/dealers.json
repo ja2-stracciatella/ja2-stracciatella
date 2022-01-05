@@ -2,8 +2,7 @@
  * List of all the shopkeepers / arms dealers / traders in game.
  *
  * Fields:
- *  - profileID: The shopkeeper merc's profile ID
- *  - internalName: Name with which we find the dealer's inventory data file
+ *  - profile: Merc profile of the dealer (must occur in `mercs-profile-info.json`)
  *  - type: Must be one of BUYS_ONLY, SELLS_ONLY, BUYS_SELLS or REPAIRS
  *  - buyingPrice: Mandatory if this dealer buys from the player. This is a multiplier applied on the item's value
  *  - sellingPrice: Mandatory if this dealer sells to the player. This is a multiplier applied on the item's value
@@ -27,8 +26,7 @@
 [
 	/* Tony            */
     {
-        "profileID": 91,
-        "internalName": "TONY",
+        "profile": "TONY",
         "type": "BUYS_SELLS",
         "buyingPrice": 0.75,
         "sellingPrice": 1.25, 
@@ -40,8 +38,7 @@
     },
 	/* Franz Hinkle    */
     {
-        "profileID": 124,
-        "internalName": "FRANZ",
+        "profile": "FRANZ",
         "type": "BUYS_SELLS",
         "buyingPrice": 1.0,
         "sellingPrice": 1.5,
@@ -54,8 +51,7 @@
     },
 	/* Keith Hemps     */
     {
-        "profileID": 147,
-        "internalName": "KEITH",
+        "profile": "KEITH",
         "type": "BUYS_SELLS",
         "buyingPrice": 0.75,
         "sellingPrice": 1.0,
@@ -68,8 +64,7 @@
     },
 	/* Jake Cameron    */
     {
-        "profileID": 113,
-        "internalName": "JAKE",
+        "profile": "JAKE",
         "type": "BUYS_SELLS",
         "buyingPrice": 0.8,
         "sellingPrice": 1.1,
@@ -83,8 +78,7 @@
     },
 	/* Gabby Mulnick   */
     {
-        "profileID": 104,
-        "internalName": "GABBY",
+        "profile": "GABBY",
         "type": "BUYS_SELLS",
         "buyingPrice": 1.0,
         "sellingPrice": 1.0,
@@ -95,8 +89,7 @@
     },
 	/* Devin Connell   */
     {
-        "profileID": 61,
-        "internalName": "DEVIN",
+        "profile": "DEVIN",
         "type": "SELLS_ONLY",
         "buyingPrice": 0.75,
         "sellingPrice": 1.25,
@@ -107,8 +100,7 @@
     },
 	/* Howard Filmore  */
     {
-        "profileID": 125,
-        "internalName": "HOWARD",
+        "profile": "HOWARD",
         "type": "SELLS_ONLY",
         "buyingPrice": 1.0,
         "sellingPrice": 1.0,
@@ -119,8 +111,7 @@
     },
 	/* Sam Rozen       */
     {
-        "profileID": 126,
-        "internalName": "SAM",
+        "profile": "SAM",
         "type": "SELLS_ONLY",
         "buyingPrice": 1.0,
         "sellingPrice": 1.0,
@@ -131,8 +122,7 @@
     },
 	/* Frank           */
     {
-        "profileID": 92,
-        "internalName": "FRANK",
+        "profile": "FRANK",
         "type": "SELLS_ONLY",
         "buyingPrice": 1.0,
         "sellingPrice": 1.0,
@@ -144,8 +134,7 @@
     },
 	/* Bar Bro 1       */
     {
-        "profileID": 151,
-        "internalName": "HERVE-SANTOS",
+        "profile": "HERVE",
         "type": "SELLS_ONLY",
         "buyingPrice": 1.0,
         "sellingPrice": 1.0 ,
@@ -157,8 +146,7 @@
     },
 	/* Bar Bro 2       */
     {
-        "profileID": 152,
-        "internalName": "PETER-SANTOS",
+        "profile": "PETER",
         "type": "SELLS_ONLY",
         "buyingPrice": 1.0,
         "sellingPrice": 1.0 ,
@@ -170,8 +158,7 @@
     },
 	/* Bar Bro 3       */
 	{
-        "profileID": 153,
-        "internalName": "ALBERTO-SANTOS",
+        "profile": "ALBERTO",
         "type": "SELLS_ONLY",
         "buyingPrice": 1.0,
         "sellingPrice": 1.0 ,
@@ -183,8 +170,7 @@
     },
     /* Bar Bro 4       */
     {
-        "profileID": 154,
-        "internalName": "CARLO-SANTOS",
+        "profile": "CARLO",
         "type": "SELLS_ONLY",
         "buyingPrice": 1.0,
         "sellingPrice": 1.0 ,
@@ -196,8 +182,7 @@
     },
 	/* Micky O'Brien   */
     {
-        "profileID": 96,
-        "internalName": "MICKY",
+        "profile": "MICKY",
         "type": "BUYS_ONLY",
         "buyingPrice": 1.0,
         "sellingPrice": 1.4,
@@ -209,8 +194,7 @@
     },
 	/* Arnie Brunzwell */
     {
-        "profileID": 128,
-        "internalName": "ARNIE",
+        "profile": "ARNIE",
         "type": "REPAIRS",
         "repairSpeed": 0.1,
         "repairCost": 0.8,
@@ -222,8 +206,7 @@
     },
 	/* Fredo           */
     {
-        "profileID": 130,
-        "internalName": "FREDO",
+        "profile": "FREDO",
         "type": "REPAIRS",
         "repairSpeed": 0.6,
         "repairCost": 0.6,
@@ -237,8 +220,7 @@
     },
 	/* Perko           */
     {
-        "profileID": 74,
-        "internalName": "PERKO",
+        "profile": "PERKO",
         "type": "REPAIRS",
         "repairSpeed": 1.0,
         "repairCost": 0.4,
@@ -251,8 +233,7 @@
     },
 	/* Elgin / Druggist */
     {
-        "profileID": 112,
-        "internalName": "ELGIN",
+        "profile": "DRUGGIST",
         "type": "SELLS_ONLY",
         "buyingPrice": 1.0,
         "sellingPrice": 1.0 ,
@@ -264,8 +245,7 @@
     },
 	/* Manny           */
     {
-        "profileID": 155,
-        "internalName": "MANNY",
+        "profile": "MANNY",
         "type": "SELLS_ONLY",
         "buyingPrice": 1.0,
         "sellingPrice": 1.0 ,

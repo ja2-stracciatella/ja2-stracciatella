@@ -6,12 +6,9 @@ items:
   description: |
     Dealers define NPCs that are able to trade with or repair for the player.
   properties:
-    profileID:
-      title: Profile ID
-      description: Profile ID of the dealer
-      $ref: types/uint8.schema.yaml
-    internalName:
-      title: Internal name
+    profile:
+      title: Profile
+      description: Merc profile of the dealer (must occur in `mercs-profile-info.json`).
       $ref: types/id.schema.yaml
     type:
       type: string
@@ -78,8 +75,7 @@ items:
         - SELLS_FUEL
         - BUYS_EVERYTHING
   required:
-  - profileID
-  - internalName
+  - profile
   - type
   - initialCash
   - flags

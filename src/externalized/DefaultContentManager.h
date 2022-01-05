@@ -271,4 +271,9 @@ protected:
 	 * @return pointer to a MercProfileInfo. Never returns null. A pointer to the empty instance is returned if not defined in JSON.
 	 */
 	const MercProfileInfo* getMercProfileInfo(uint8_t profileID) const;
+	/**
+	 * @param profile
+	 * @return pointer to a MercProfileInfo. Returns null if not defined in JSON
+	 */
+	const MercProfileInfo* getMercProfileInfoByName(const ST::string& profile) const;
 };

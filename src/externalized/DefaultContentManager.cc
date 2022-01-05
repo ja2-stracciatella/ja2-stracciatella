@@ -942,6 +942,7 @@ bool DefaultContentManager::loadGameData()
 
 	m_mapItemReplacements = MapItemReplacementModel::deserialize(replacement_json.get(), this);
 
+	loadMercsData();
 	loadAllDealersAndInventory();
 
 	auto game_json = readJsonDataFileWithSchema("game.json");
@@ -978,7 +979,6 @@ bool DefaultContentManager::loadGameData()
 
 	loadStrategicLayerData();
 	loadTacticalLayerData();
-	loadMercsData();
 	loadVehicles();
 
 	loadTranslationTable();
@@ -1155,14 +1155,14 @@ bool DefaultContentManager::loadAllDealersAndInventory()
 	int index = 0;
 	for (auto& element : json->GetArray())
 	{
-		m_dealers.push_back(DealerModel::deserialize(element, index++));
+		m_dealers.push_back(DealerModel::deserialize(element, this, index++));
 	}
-	DealerModel::validateData(m_dealers);
+	DealerModel::validateData(m_dealers, this);
 	
 	m_dealersInventory = std::vector<const DealerInventory*>(m_dealers.size());
 	for (auto dealer : m_dealers)
 	{
-		ST::string filename = dealer->getInventoryDataFileName();
+		ST::string filename = dealer->getInventoryDataFileName(this);
 		m_dealersInventory[dealer->dealerID] = loadDealerInventory(filename.c_str());
 	}
 	m_bobbyRayNewInventory                        = loadDealerInventory("bobby-ray-inventory-new.json");
@@ -1337,7 +1337,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 	json = readJsonDataFileWithSchema("strategic-map-npc-placements.json");
 	for (auto& element : json->GetArray())
 	{
-		auto placement = NpcPlacementModel::deserialize(element);
+		auto placement = NpcPlacementModel::deserialize(element, this);
 		m_npcPlacements.insert(std::make_pair(placement->profileId, placement));
 	}
 
@@ -1363,25 +1363,8 @@ bool DefaultContentManager::loadTacticalLayerData()
 
 bool DefaultContentManager::loadMercsData()
 {
-	auto json = readJsonDataFileWithSchema("mercs-rpc-small-faces.json");
-
-	for (auto& element : json->GetArray())
-	{
-		auto face = RPCSmallFaceModel::deserialize(element);
-		m_rpcSmallFaces[face->ubProfileID] = face;
-	}
-
-	json = readJsonDataFileWithSchema("mercs-MERC-listings.json");
-	int i = 0;
-	for (auto& element : json->GetArray())
-	{
-		auto item = MERCListingModel::deserialize(i++, element);
-		m_MERCListings.push_back(item);
-	}
-	MERCListingModel::validateData(m_MERCListings);
-
 	MercProfileInfo::load = [=](uint8_t p) { return this->getMercProfileInfo(p); };
-	json = readJsonDataFileWithSchema("mercs-profile-info.json");
+	auto json = readJsonDataFileWithSchema("mercs-profile-info.json");
 	for (auto& element : json->GetArray())
 	{
 		auto profileInfo = MercProfileInfo::deserialize(element);
@@ -1390,6 +1373,23 @@ bool DefaultContentManager::loadMercsData()
 		m_mercProfiles.push_back(new MercProfile(profileID));
 	}
 	MercProfileInfo::validateData(m_mercProfileInfo);
+
+	json = readJsonDataFileWithSchema("mercs-rpc-small-faces.json");
+
+	for (auto& element : json->GetArray())
+	{
+		auto face = RPCSmallFaceModel::deserialize(element, this);
+		m_rpcSmallFaces[face->ubProfileID] = face;
+	}
+
+	json = readJsonDataFileWithSchema("mercs-MERC-listings.json");
+	int i = 0;
+	for (auto& element : json->GetArray())
+	{
+		auto item = MERCListingModel::deserialize(i++, element, this);
+		m_MERCListings.push_back(item);
+	}
+	MERCListingModel::validateData(m_MERCListings);
 
 	return true;
 }
@@ -1400,7 +1400,7 @@ void DefaultContentManager::loadVehicles()
 	for (auto& element : json->GetArray())
 	{
 		JsonObjectReader obj(element);
-		auto vehicleTypeInfo = VehicleModel::deserialize(obj, this);
+		auto vehicleTypeInfo = VehicleModel::deserialize(obj, this, this);
 		m_vehicles.push_back(vehicleTypeInfo);
 	}
 	VehicleModel::validateData(m_vehicles);
@@ -1641,6 +1641,18 @@ const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t const p
 	
 	STLOGD("MercProfileInfo is not defined at {}", profileID);
 	return &EMPTY_MERC_PROFILE_INFO;
+}
+
+const MercProfileInfo* DefaultContentManager::getMercProfileInfoByName(const ST::string& name) const
+{
+	for (auto i = m_mercProfileInfo.begin(); i != m_mercProfileInfo.end(); i++) {
+		if (i->second->internalName == name) {
+			return i->second;
+		}
+	}
+	
+	STLOGW("MercProfileInfo is not defined for {}", name);
+	return NULL;
 }
 
 const std::vector<const MercProfile*>& DefaultContentManager::listMercProfiles() const

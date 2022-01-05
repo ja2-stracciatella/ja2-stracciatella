@@ -9,10 +9,10 @@ items:
     
     Note: the base game has daily event for placing HAMOUS, DEVIN and CARMEN
   properties:
-    profileId:
-      title: Profile ID
-      description:  The numeric ID of the NPC merc profile.
-      $ref: types/uint8.schema.yaml
+    profile:
+      title: Profile
+      description:  The profile of the placed merc.
+      $ref: types/id.schema.yaml
     sectors:
       title: Sectors
       description: |
@@ -40,6 +40,6 @@ items:
         Default is `false`
       type: boolean
   required:
-  - profileId
+  - profile
   - sectors
   - placedAtStart

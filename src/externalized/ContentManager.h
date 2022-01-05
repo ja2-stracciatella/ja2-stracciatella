@@ -6,6 +6,7 @@
 
 #include "Facts.h"
 #include "ItemSystem.h"
+#include "MercSystem.h"
 #include "DirFs.h"
 
 #include <string_theory/string>
@@ -54,7 +55,7 @@ struct ARMY_COMPOSITION;
 struct PATROL_GROUP;
 struct GARRISON_GROUP;
 
-class ContentManager : public ItemSystem
+class ContentManager : public ItemSystem, public MercSystem
 {
 public:
 	virtual ~ContentManager() {};

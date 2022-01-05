@@ -36,16 +36,43 @@ static SpeckQuoteType SpeckQuoteTypefromString(std::string s)
 	throw std::runtime_error("unsupported quote type: " + s);
 }
 
-MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::Value& json)
+MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::Value& json, const MercSystem* mercSystem)
 {
+	ST::string profileName = json["profile"].GetString();
+	auto profile = mercSystem->getMercProfileInfoByName(profileName);
+	if (profile == NULL) {
+		throw std::runtime_error(ST::format("'{}' does not refer to a valid profile", profile).c_str());
+	}
+	if (profile->mercType != MercType::MERC) {
+		throw std::runtime_error(ST::format("Profile '{}' does not refer to a M.E.R.C. profile", profile).c_str());
+	}
+
 	std::vector<SpeckQuote> quotes;
 	for (auto& elem : json["quotes"].GetArray())
 	{
 		JsonObjectReader r(elem);
+		auto quoteType = SpeckQuoteTypefromString(r.GetString("type"));
+		ST::string crossSellName = r.getOptionalString("profile");
+
+		uint8_t crossSellID = 0;
+		if (quoteType == SpeckQuoteType::CROSS_SELL) {
+			if (profileName.empty()) {
+				throw std::runtime_error(ST::format("Profile '{}' has a CROSS_SELL quote without M.E.R.C. profile", profileName).c_str());
+			}
+			auto crossSellProfile = mercSystem->getMercProfileInfoByName(crossSellName);
+			if (crossSellProfile == NULL) {
+				throw std::runtime_error(ST::format("Profile '{}' has a CROSS_SELL quote '{}' that does not refer to a valid profile", profileName, crossSellName).c_str());
+			}
+			if (crossSellProfile->mercType != MercType::MERC) {
+				throw std::runtime_error(ST::format("Profile '{}' has a CROSS_SELL quote '{}' that does not refer to a M.E.R.C. profile", profileName, crossSellName).c_str());
+			}
+			crossSellID = crossSellProfile->profileID;
+		}
+		
 		auto quote = std::make_shared<MERCSpeckQuote>(
 			r.GetUInt("quoteID"),
-			SpeckQuoteTypefromString(r.GetString("type")),
-			static_cast<uint8_t>(r.getOptionalInt("profileID"))
+			quoteType,
+			crossSellID
 		);
 		quotes.push_back(quote);
 	}
@@ -53,7 +80,7 @@ MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::
 	JsonObjectReader r(json);
 	return new MERCListingModel(
 		index,
-		r.GetUInt("profileID"),
+		profile->profileID,
 		r.GetUInt("bioIndex"),
 		r.getOptionalInt("minTotalSpending"), 
 		r.getOptionalInt("minDays"),

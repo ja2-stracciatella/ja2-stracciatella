@@ -8,13 +8,19 @@ NpcPlacementModel::NpcPlacementModel(uint8_t profileId_, std::vector<uint8_t> se
 	:profileId(profileId_),  sectorIds(std::move(sectorIds_)),
 	isPlacedAtStart(isPlacedAtStart_), useAlternateMap(useAlternateMap_), isSciFiOnly(isSciFiOnly_) {}
 
-NpcPlacementModel* NpcPlacementModel::deserialize(const rapidjson::Value& element)
+NpcPlacementModel* NpcPlacementModel::deserialize(const rapidjson::Value& element, const MercSystem* mercSystem)
 {
 	std::vector<uint8_t> sectorIds = JsonUtility::parseSectorList(element, "sectors");
+	ST::string profile = element["profile"].GetString();
+	auto mercProfile = mercSystem->getMercProfileInfoByName(profile);
+	if (mercProfile == NULL) {
+		ST::string err = ST::format("`{}` does not refer to a valid profile.", profile);
+		throw std::runtime_error(err.to_std_string());
+	}
 
 	JsonObjectReader r(element);
 	return new NpcPlacementModel(
-		r.GetUInt("profileId"),
+		mercProfile->profileID,
 		sectorIds,
 		r.GetBool("placedAtStart"),
 		r.getOptionalBool("useAlternateMap"),
