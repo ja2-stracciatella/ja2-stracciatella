@@ -168,10 +168,10 @@ static ST::string LoadEncryptedData(ST::string& err_msg, STRING_ENC_TYPE encType
 }
 
 DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOptions)
-	:mNormalGunChoice(ARMY_GUN_LEVELS),
+	:m_schemaManager(SchemaManager_create()),
+	mNormalGunChoice(ARMY_GUN_LEVELS),
 	mExtendedGunChoice(ARMY_GUN_LEVELS),
-	m_vfs(Vfs_create()),
-	m_schemaManager(SchemaManager_create())
+	m_vfs(Vfs_create())
 {
 	m_engineOptions = move(engineOptions);
 	m_modManager.reset(ModManager_create(m_engineOptions.get()));
@@ -1104,7 +1104,7 @@ std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFileWith
 			errorMessage = ST::format("value `{}` is not one of {}", documentString, enums);
 		}
 		if (errorKeyword == "minimum") {
-			auto ty = schemaObject["type"].GetString();
+			ST::string ty = schemaObject["type"].GetString();
 			if (ty == "integer") {
 				auto actual = errorDocument->GetInt64();
 				auto minimum = schemaObject["minimum"].GetInt64();
@@ -1116,7 +1116,7 @@ std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFileWith
 			}
 		}
 		if (errorKeyword == "maximum") {
-			auto ty = schemaObject["type"].GetString();
+			ST::string ty = schemaObject["type"].GetString();
 			if (ty == "integer") {
 				auto actual = errorDocument->GetInt64();
 				auto maximum = schemaObject["maximum"].GetInt64();
@@ -1381,6 +1381,7 @@ bool DefaultContentManager::loadMercsData()
 		auto face = RPCSmallFaceModel::deserialize(element, this);
 		m_rpcSmallFaces[face->ubProfileID] = face;
 	}
+
 
 	json = readJsonDataFileWithSchema("mercs-MERC-listings.json");
 	int i = 0;
