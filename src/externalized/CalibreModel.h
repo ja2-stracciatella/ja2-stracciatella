@@ -15,10 +15,12 @@ struct CalibreModel
 {
 	CalibreModel(uint16_t index,
 			ST::string internalName,
-			ST::string burstSoundString,
+			ST::string sound,
+			ST::string burstSound,
+			ST::string silencedSound,
+			ST::string silencedBurstSound,
 			bool showInHelpText,
-			bool monsterWeapon,
-			int silencerSound
+			bool monsterWeapon
 	);
 
 	// This could be default in C++11
@@ -33,10 +35,12 @@ struct CalibreModel
 
 	uint16_t index;
 	ST::string internalName;
-	ST::string burstSoundString;
+	ST::string sound;
+	ST::string burstSound;
+	ST::string silencedSound;
+	ST::string silencedBurstSound;
 	bool showInHelpText;
 	bool monsterWeapon;
-	int silencerSound;
 };
 
 const CalibreModel* getCalibre(const ST::string& calibreName,

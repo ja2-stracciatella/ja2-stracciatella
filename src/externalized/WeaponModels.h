@@ -43,9 +43,6 @@ struct WeaponModel : ItemModel
 	bool matches(const MagazineModel *mag) const;
 	bool isSameMagCapacity(const MagazineModel *mag) const;
 
-	bool hasSound() const;
-	bool hasBurstSound() const;
-
 	/** Check if the given attachment can be attached to the item. */
 	virtual bool canBeAttached(uint16_t attachment) const;
 
@@ -56,6 +53,8 @@ struct WeaponModel : ItemModel
 
 	ST::string sound;
 	ST::string burstSound;
+	ST::string silencedSound;
+	ST::string silencedBurstSound;
 	ST::string standardReplacement;
 	bool attachSilencer;
 	bool attachSniperScope;
@@ -113,7 +112,8 @@ struct Pistol : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound);
+		ST::string Sound,
+		ST::string SilencedSound);
 
 	void serializeTo(JsonObject &obj) const override;
 };
@@ -136,7 +136,9 @@ struct MPistol : WeaponModel
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
 		ST::string Sound,
-		ST::string BurstSound);
+		ST::string BurstSound,
+		ST::string SilencedSound,
+		ST::string SilencedBurstSound);
 
 	void serializeTo(JsonObject &obj) const override;
 };
@@ -159,7 +161,9 @@ struct SMG : WeaponModel
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
 		ST::string Sound,
-		ST::string BurstSound);
+		ST::string BurstSound,
+		ST::string SilencedSound,
+		ST::string SilencedBurstSound);
 
 	void serializeTo(JsonObject &obj) const override;
 };
@@ -178,7 +182,8 @@ struct SniperRifle : WeaponModel
 			uint16_t Range,
 			uint8_t AttackVolume,
 			uint8_t HitVolume,
-			ST::string Sound);
+			ST::string Sound,
+			ST::string SilencedSound);
 
 	void serializeTo(JsonObject &obj) const override;
 };
@@ -197,7 +202,8 @@ struct Rifle : WeaponModel
 		uint16_t Range,
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
-		ST::string Sound);
+		ST::string Sound,
+		ST::string SilencedSound);
 
 	void serializeTo(JsonObject &obj) const override;
 };
@@ -219,7 +225,9 @@ struct AssaultRifle : WeaponModel
 			uint8_t AttackVolume,
 			uint8_t HitVolume,
 			ST::string Sound,
-			ST::string BurstSound);
+			ST::string BurstSound,
+			ST::string SilencedSound,
+			ST::string SilencedBurstSound);
 
 	void serializeTo(JsonObject &obj) const override;
 };
@@ -241,7 +249,9 @@ struct Shotgun : WeaponModel
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
 		ST::string Sound,
-		ST::string BurstSound);
+		ST::string BurstSound,
+		ST::string SilencedSound,
+		ST::string SilencedBurstSound);
 
 	void serializeTo(JsonObject &obj) const override;
 };
@@ -263,7 +273,9 @@ struct LMG : WeaponModel
 		uint8_t AttackVolume,
 		uint8_t HitVolume,
 		ST::string Sound,
-		ST::string BurstSound);
+		ST::string BurstSound,
+		ST::string SilencedSound,
+		ST::string SilencedBurstSound);
 
 	void serializeTo(JsonObject &obj) const override;
 };
