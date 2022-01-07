@@ -129,7 +129,7 @@ ETRLEObject const& SGPVObject::SubregionProperties(size_t const idx) const
 {
 	if (idx >= SubregionCount())
 	{
-		throw std::logic_error("Tried to access invalid subregion in video object");
+		throw std::logic_error(ST::format("Tried to access invalid subregion in video object: Maximum is {}, got {}", SubregionCount()-1, idx).c_str());
 	}
 	return etrle_object_[idx];
 }

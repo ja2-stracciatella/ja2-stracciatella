@@ -3,6 +3,7 @@
 
 #include "Types.h"
 
+#include <map>
 #include <string_theory/string>
 
 
@@ -24,7 +25,6 @@
 
 
 extern SGPFont FontDefault;
-extern std::vector<UINT16> const* TranslationTable;
 
 void SetFontColors(UINT16 usColors);
 void SetFontForeground(UINT8 ubForeground);

@@ -1408,51 +1408,40 @@ void DefaultContentManager::loadVehicles()
 
 void DefaultContentManager::loadTranslationTable()
 {
-#define TRANSLATION_TABLE_SIZE (0x452)
-#define TRANSLATION_FULL_TABLE_SIZE (0x10000)
-
 	m_translationTable.clear();
-	ST::string fullName = "translation_tables/";
-	int tableSize = TRANSLATION_TABLE_SIZE;
+	ST::string name = "translation_tables/translation-table";
+	ST::string suffix = "eng";
 	switch (m_gameVersion)
 	{
-	case GameVersion::DUTCH:
-	case GameVersion::ENGLISH:
-	case GameVersion::GERMAN:
-	case GameVersion::ITALIAN:
-	case GameVersion::POLISH:
-		fullName += "english";
-		break;
-
 	case GameVersion::FRENCH:
-		fullName += "french";
+		suffix = "fr";
 		break;
 
 	case GameVersion::RUSSIAN:
-		fullName += "russion";
+		suffix = "rus";
 		break;
 
 	case GameVersion::RUSSIAN_GOLD:
-		fullName += "russion-gold";
+		suffix = "rus-gold";
 		break;
 
 	case GameVersion::SIMPLIFIED_CHINESE:
-		fullName += "simplifed-chinese";
-		tableSize = TRANSLATION_FULL_TABLE_SIZE;
+		suffix = "chs";
 		break;
-
-	default:
-		throw std::runtime_error(ST::format("unknown game version {}", static_cast<int>(m_gameVersion)).to_std_string());
 	}
-	fullName += "-translation-table.json";
-
-	m_translationTable.assign(tableSize, 0);
+	
+	auto fullName = ST::format("{}-{}.json", name, suffix);
 
 	auto json = readJsonDataFileWithSchema(fullName);
 	int count = 0;
-	for (auto& element : json->GetArray())
+	for (auto& element : json->GetObject())
 	{
-		m_translationTable[ST::string(element.GetString()).to_utf16()[0]] = count++;
+		ST::string c = element.name.GetString();
+		auto fixedC = c.to_utf32();
+		if (fixedC.size() != 1) {
+			throw DataError(ST::format("Translation table entry needs to be a single character string was {}", fixedC.size()));
+		}
+		m_translationTable[fixedC[0]] = element.value.GetUint();
 	}
 }
 
@@ -1679,7 +1668,7 @@ const LoadingScreen* DefaultContentManager::getLoadingScreen(uint8_t index) cons
 	return m_loadingScreenModel->getByIndex(index);
 }
 
-const std::vector<UINT16>* DefaultContentManager::getTranslationTable() const
+const std::map<UINT32, UINT16>* DefaultContentManager::getTranslationTable() const
 {
 	return &m_translationTable;
 }
