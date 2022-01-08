@@ -10,6 +10,8 @@
 #include "VObject_Blitters.h"
 #include "UILayout.h"
 #include "GameRes.h"
+#include "GameInstance.h"
+#include "ContentManager.h"
 #include "Logger.h"
 
 typedef UINT16 GlyphIdx;
@@ -30,9 +32,6 @@ static SGPRect      SaveFontDestRegion   = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT }
 static UINT16       SaveFontForeground16 = 0;
 static UINT16       SaveFontShadow16     = 0;
 static UINT16       SaveFontBackground16 = 0;
-
-/** Character->Glyph translation table for the current language. */
-std::vector<UINT16> const* TranslationTable = nullptr;
 
 /* Sets both the foreground and the background colors of the current font. The
  * top byte of the parameter word is the background color, and the bottom byte
@@ -165,8 +164,9 @@ UINT16 GetFontHeight(SGPFont const font)
 
 bool IsPrintableChar(char32_t c)
 {
-	if (TranslationTable->size() <= c) return false;
-	return (*TranslationTable)[c] != 0 || c == getZeroGlyphChar();
+	auto translationTable = GCM->getTranslationTable();
+	auto result = translationTable->find(c);
+	return result != translationTable->end();
 }
 
 
@@ -174,13 +174,14 @@ bool IsPrintableChar(char32_t c)
  * exists for the requested codepoint, the glyph index of '?' is returned. */
 static GlyphIdx GetGlyphIndex(char32_t c)
 {
-	if (c < TranslationTable->size())
-	{
-		GlyphIdx const idx = (*TranslationTable)[c];
-		if (idx != 0 || c == getZeroGlyphChar()) return idx;
+	auto translationTable = GCM->getTranslationTable();
+	auto result = translationTable->find(c);
+	if (result != translationTable->end()) {
+		return result->second;
 	}
 	SLOGE("Invalid character given U+%04X", c);
-	return (*TranslationTable)[L'?'];
+	auto questionMark = translationTable->find(L'?')->second;
+	return questionMark;
 }
 
 

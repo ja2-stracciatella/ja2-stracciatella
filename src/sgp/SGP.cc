@@ -484,7 +484,6 @@ int main(int argc, char* argv[])
 			throw std::runtime_error("Failed to load the game data.");
 		}
 
-		TranslationTable = cm->getTranslationTable();
 		GCM = cm;
 
 		g_ui.recalculatePositions();

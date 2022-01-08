@@ -1,6 +1,8 @@
 $schema: http://json-schema.org/draft-04/schema#
-type: array
+type: object
 title: Translation Table
-description: Translation table for a specific language. Will map characters to indexes for fonts.
-items:
-  type: string
+description: Translation table for a specific language. Will map characters to subimage indexes in fonts.
+patternProperties:
+  ^.$`:
+    type:
+      $ref: types/uint8.schema.yaml

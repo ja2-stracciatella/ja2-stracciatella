@@ -84,8 +84,6 @@ bool isChineseVersion();
 /** Get major map version. */
 FLOAT getMajorMapVersion();
 
-char32_t getZeroGlyphChar();
-
 /*************************************************************
  *
  ************************************************************/

@@ -30,19 +30,6 @@ static GameVersion s_gameVersion = GameVersion::ENGLISH;
 /** Current language resources. */
 const LanguageRes* g_langRes = &g_LanguageResEnglish;
 
-char32_t getZeroGlyphChar()
-{
-	if(s_gameVersion == GameVersion::RUSSIAN)
-	{
-		return U' ';
-	}
-	else
-	{
-		return U'A';
-	}
-}
-
-
 /** Set language resources. */
 static void setResources(const LanguageRes* langRes)
 {

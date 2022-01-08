@@ -199,5 +199,5 @@ public:
 
 	virtual const ST::string& getLandTypeString(size_t index) const = 0;
 
-	virtual const std::vector<UINT16>* getTranslationTable() const = 0;
+	virtual const std::map<UINT32, UINT16>* getTranslationTable() const = 0;
 };
