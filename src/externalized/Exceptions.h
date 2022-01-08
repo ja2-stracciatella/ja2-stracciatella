@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string_theory/string>
 #include <stdexcept>
 
 class IoException : public std::runtime_error

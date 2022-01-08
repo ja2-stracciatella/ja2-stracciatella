@@ -1,5 +1,5 @@
 #include "DealerModel.h"
-
+#include "Exceptions.h"
 #include "JsonObject.h"
 
 
@@ -33,8 +33,7 @@ ArmsDealerType parseType(const std::string str)
 	if (str == "BUYS_SELLS") return ArmsDealerType::ARMS_DEALER_BUYS_SELLS;
 	if (str == "REPAIRS") return ArmsDealerType::ARMS_DEALER_REPAIRS;
 
-	ST::string err = ST::format("Unrecognized dealer type: '{}'", str);
-	throw std::runtime_error(err.to_std_string());
+	throw DataError(ST::format("Unrecognized dealer type: '{}'", str));
 }
 
 ArmsDealerFlag parseFlag(const std::string str)
@@ -50,8 +49,7 @@ ArmsDealerFlag parseFlag(const std::string str)
 	if (str == "SELLS_FUEL") return ArmsDealerFlag::SELLS_FUEL;
 	if (str == "BUYS_EVERYTHING") return ArmsDealerFlag::BUYS_EVERYTHING;
 	
-	ST::string err = ST::format("Unrecognized dealer flag: '{}'", str);
-	throw std::runtime_error(err.to_std_string());
+	throw DataError(ST::format("Unrecognized dealer flag: '{}'", str));
 }
 
 const DealerModel* DealerModel::deserialize(rapidjson::Value& val, const MercSystem* mercSystem, UINT8 dealerIndex)
@@ -68,8 +66,7 @@ const DealerModel* DealerModel::deserialize(rapidjson::Value& val, const MercSys
 	ST::string profile = obj.GetString("profile");
 	auto mercProfile = mercSystem->getMercProfileInfoByName(profile);
 	if (mercProfile == NULL) {
-		ST::string err = ST::format("dealer `{}` does not refer to a valid profile.", profile);
-		throw std::runtime_error(err.to_std_string());
+		throw DataError(ST::format("dealer `{}` does not refer to a valid profile.", profile));
 	}
 	auto profileId = mercProfile->profileID;
 
@@ -91,8 +88,7 @@ void DealerModel::validateData(std::vector<const DealerModel*> models, const Mer
 	if (models.size() < NUM_ARMS_DEALERS)
 	{
 		// because of we still have hard-coded references, and also for save compatibility with vanilla
-		ST::string err = ST::format("Number of Arms Dealers must be {}. Got {}", NUM_ARMS_DEALERS, models.size());
-		throw std::runtime_error(err.to_std_string());
+		throw DataError(ST::format("Number of Arms Dealers must be {}. Got {}", NUM_ARMS_DEALERS, models.size()));
 	}
 
 	int i = -1;
@@ -104,32 +100,28 @@ void DealerModel::validateData(std::vector<const DealerModel*> models, const Mer
 		if (dealer->dealerID != ++i)
 		{
 			ST::string err = ST::format("Inconsistent dealer ID for dealer `{}`. Expected {} but got {}", profile, i, dealer->dealerID);
-			throw std::runtime_error(err.to_std_string());
+			throw DataError(err.to_std_string());
 		}
 
 		if (dealer->type == ArmsDealerType::ARMS_DEALER_REPAIRS 
 			&& (dealer->repairCost == 0.0 || dealer->repairSpeed == 0.0))
 		{
-			ST::string err = ST::format("Dealer `{}` is a repairman, but repair cost or speed is not set", profile);
-			throw std::runtime_error(err.to_std_string());
+			throw DataError(ST::format("Dealer `{}` is a repairman, but repair cost or speed is not set", profile));
 		}
 		else if (dealer->type == ArmsDealerType::ARMS_DEALER_BUYS_ONLY 
 			&& (dealer->buyingPrice == 0.0))
 		{
-			ST::string err = ST::format("Dealer `{}` is a buyer, but buying price is not set", profile);
-			throw std::runtime_error(err.to_std_string());
+			throw DataError(ST::format("Dealer `{}` is a buyer, but buying price is not set", profile));
 		}
 		else if (dealer->type == ArmsDealerType::ARMS_DEALER_SELLS_ONLY 
 			&& (dealer->sellingPrice == 0.0))
 		{
-			ST::string err = ST::format("Dealer `{}` is a seller, but selling price is not set", profile);
-			throw std::runtime_error(err.to_std_string());
+			throw DataError(ST::format("Dealer `{}` is a seller, but selling price is not set", profile));
 		}
 		else if (dealer->type == ArmsDealerType::ARMS_DEALER_BUYS_ONLY 
 			&& (dealer->buyingPrice == 0.0 || dealer->sellingPrice == 0.0))
 		{
-			ST::string err = ST::format("Dealer `{}` is a trader, but buying price or selling price is not set", profile);
-			throw std::runtime_error(err.to_std_string());
+			throw DataError(ST::format("Dealer `{}` is a trader, but buying price or selling price is not set", profile));
 		}
 	}
 }

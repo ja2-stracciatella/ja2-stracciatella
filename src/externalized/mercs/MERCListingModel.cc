@@ -1,6 +1,8 @@
-#include "MERCListingModel.h"
+#include "Exceptions.h"
 #include "JsonObject.h"
+#include "MERCListingModel.h"
 #include "Soldier_Control.h"
+
 #include <set>
 #include <string_theory/format>
 #include <utility>
@@ -33,7 +35,7 @@ static SpeckQuoteType SpeckQuoteTypefromString(std::string s)
 	if (s == "MERC_DEAD") return SpeckQuoteType::MERC_DEAD;
 	if (s == "CROSS_SELL") return SpeckQuoteType::CROSS_SELL;
 
-	throw std::runtime_error("unsupported quote type: " + s);
+	throw DataError(ST::format("unknown quote type: {}", s));
 }
 
 MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::Value& json, const MercSystem* mercSystem)
@@ -41,10 +43,10 @@ MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::
 	ST::string profileName = json["profile"].GetString();
 	auto profile = mercSystem->getMercProfileInfoByName(profileName);
 	if (profile == NULL) {
-		throw std::runtime_error(ST::format("'{}' does not refer to a valid profile", profile).c_str());
+		throw DataError(ST::format("'{}' does not refer to a valid profile", profile));
 	}
 	if (profile->mercType != MercType::MERC) {
-		throw std::runtime_error(ST::format("Profile '{}' does not refer to a M.E.R.C. profile", profile).c_str());
+		throw DataError(ST::format("Profile '{}' does not refer to a M.E.R.C. profile", profile));
 	}
 
 	std::vector<SpeckQuote> quotes;
@@ -57,14 +59,14 @@ MERCListingModel* MERCListingModel::deserialize(uint8_t index, const rapidjson::
 		uint8_t crossSellID = 0;
 		if (quoteType == SpeckQuoteType::CROSS_SELL) {
 			if (profileName.empty()) {
-				throw std::runtime_error(ST::format("Profile '{}' has a CROSS_SELL quote without M.E.R.C. profile", profileName).c_str());
+				throw DataError(ST::format("Profile '{}' has a CROSS_SELL quote without M.E.R.C. profile", profileName));
 			}
 			auto crossSellProfile = mercSystem->getMercProfileInfoByName(crossSellName);
 			if (crossSellProfile == NULL) {
-				throw std::runtime_error(ST::format("Profile '{}' has a CROSS_SELL quote '{}' that does not refer to a valid profile", profileName, crossSellName).c_str());
+				throw DataError(ST::format("Profile '{}' has a CROSS_SELL quote '{}' that does not refer to a valid profile", profileName, crossSellName));
 			}
 			if (crossSellProfile->mercType != MercType::MERC) {
-				throw std::runtime_error(ST::format("Profile '{}' has a CROSS_SELL quote '{}' that does not refer to a M.E.R.C. profile", profileName, crossSellName).c_str());
+				throw DataError(ST::format("Profile '{}' has a CROSS_SELL quote '{}' that does not refer to a M.E.R.C. profile", profileName, crossSellName));
 			}
 			crossSellID = crossSellProfile->profileID;
 		}
@@ -96,15 +98,13 @@ void MERCListingModel::validateData(const std::vector<const MERCListingModel*>& 
 	{
 		if (m->profileID == 0 || m->profileID >= NO_PROFILE)
 		{
-			ST::string err = ST::format("Invalid profileID '{}'", m->profileID);
-			throw std::runtime_error(err.to_std_string());
+			throw DataError(ST::format("Invalid profileID '{}'", m->profileID));
 		}
 
 		// Check if we have duplicates
 		if (uniqueProfileIDs.find(m->profileID) != uniqueProfileIDs.end())
 		{
-			ST::string err = ST::format("profileID {} has been listed more than once", m->profileID);
-			throw std::runtime_error(err.to_std_string());
+			throw DataError(ST::format("profileID {} has been listed more than once", m->profileID));
 		}
 		uniqueProfileIDs.insert(m->profileID);
 	}
@@ -116,8 +116,7 @@ void MERCListingModel::validateData(const std::vector<const MERCListingModel*>& 
 			// Check if related merc is set
 			if (!quote->relatedMercID)
 			{
-				ST::string err = ST::format("No related merc ID set for a CROSS_SELL quote ({})", m->profileID);
-				throw std::runtime_error(err.to_std_string());
+				throw DataError(ST::format("No related merc ID set for a CROSS_SELL quote ({})", m->profileID));
 			}
 		}
 	}
