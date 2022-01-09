@@ -330,7 +330,7 @@ void Launcher::startExecutable(bool asEditor) {
 		}
 
 		fl_message_title("Invalid mods");
-		fl_alert(message.c_str());
+		fl_alert("%s", message.c_str());
 		return;
 	}
 
