@@ -50,6 +50,14 @@ elif [[ "$CI_TARGET" == "linux-mingw64" ]]; then
     
     # Rust via Rustup
     unix-install-rustup x86_64-pc-windows-gnu
+
+    # Use CMake 3.21 instead of the default installed.
+    # This is a workaround for the packaging target failing since CMake v3.22 (#1451)
+    curl -sL https://cmake.org/files/v3.21/cmake-3.21.4-linux-x86_64.sh -o cmakeinstall.sh \
+        && chmod +x cmakeinstall.sh \
+        && sudo ./cmakeinstall.sh --prefix=/usr/local --exclude-subdir \
+        && rm cmakeinstall.sh
+
 elif [[ "$CI_TARGET" == "mac" ]]; then
     # sccache for compilation caching
     macOS-install-via-brew sccache
