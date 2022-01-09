@@ -397,7 +397,7 @@ static void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT
  * MUST CALL InitFriendlyTownSectorServer() before using! */
 static bool ServeNextFriendlySectorInTown(INT16* const neighbour_x, INT16* const neighbour_y)
 {
-	while (g_town_sectors[gubTownSectorServerIndex].town != BLANK_SECTOR)
+	while (gubTownSectorServerIndex < g_town_sectors.size() && g_town_sectors[gubTownSectorServerIndex].town != BLANK_SECTOR)
 	{
 		INT32 const sector = g_town_sectors[gubTownSectorServerIndex++].sector;
 
