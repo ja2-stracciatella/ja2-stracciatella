@@ -1,18 +1,19 @@
 #include "DealerModel.h"
-
+#include "Exceptions.h"
 #include "JsonObject.h"
 
 
-DealerModel::DealerModel(UINT8 dealerID_, UINT8 mercID_, ST::string internalName_, ArmsDealerType dealerType_, 
+DealerModel::DealerModel(UINT8 dealerID_, UINT8 mercID_, ArmsDealerType dealerType_, 
 	FLOAT buyingPrice_, FLOAT sellingPrice_, FLOAT repairSpeed_, FLOAT repairCost_, 
 	INT32 initialCash_, std::bitset<ArmsDealerFlag::NUM_FLAGS> flags_)
-	: dealerID(dealerID_), profileID(mercID_), internalName(internalName_), type(dealerType_), 
+	: dealerID(dealerID_), profileID(mercID_), type(dealerType_), 
 		buyingPrice(buyingPrice_), sellingPrice(sellingPrice_), repairSpeed(repairSpeed_), repairCost(repairCost_),
 		initialCash(initialCash_), flags(flags_) {}
 
-ST::string DealerModel::getInventoryDataFileName() const
+ST::string DealerModel::getInventoryDataFileName(const MercSystem* mercSystem) const
 {
-	return ST::format("dealer-inventory-{}.json", internalName.to_lower());
+	auto mercProfile = mercSystem->getMercProfileInfo(profileID);
+	return ST::format("dealer-inventory-{}.json", mercProfile->internalName.to_lower());
 }
 
 BOOLEAN DealerModel::hasFlag(ArmsDealerFlag flag) const
@@ -32,8 +33,7 @@ ArmsDealerType parseType(const std::string str)
 	if (str == "BUYS_SELLS") return ArmsDealerType::ARMS_DEALER_BUYS_SELLS;
 	if (str == "REPAIRS") return ArmsDealerType::ARMS_DEALER_REPAIRS;
 
-	ST::string err = ST::format("Unrecognized dealer type: '{}'", str);
-	throw std::runtime_error(err.to_std_string());
+	throw DataError(ST::format("Unrecognized dealer type: '{}'", str));
 }
 
 ArmsDealerFlag parseFlag(const std::string str)
@@ -49,11 +49,10 @@ ArmsDealerFlag parseFlag(const std::string str)
 	if (str == "SELLS_FUEL") return ArmsDealerFlag::SELLS_FUEL;
 	if (str == "BUYS_EVERYTHING") return ArmsDealerFlag::BUYS_EVERYTHING;
 	
-	ST::string err = ST::format("Unrecognized dealer flag: '{}'", str);
-	throw std::runtime_error(err.to_std_string());
+	throw DataError(ST::format("Unrecognized dealer flag: '{}'", str));
 }
 
-const DealerModel* DealerModel::deserialize(rapidjson::Value& val, UINT8 dealerIndex)
+const DealerModel* DealerModel::deserialize(rapidjson::Value& val, const MercSystem* mercSystem, UINT8 dealerIndex)
 {
 	std::bitset<ArmsDealerFlag::NUM_FLAGS> flags;
 	auto flagsArray = val["flags"].GetArray();
@@ -64,10 +63,16 @@ const DealerModel* DealerModel::deserialize(rapidjson::Value& val, UINT8 dealerI
 	}
 
 	JsonObjectReader obj(val);
+	ST::string profile = obj.GetString("profile");
+	auto mercProfile = mercSystem->getMercProfileInfoByName(profile);
+	if (mercProfile == NULL) {
+		throw DataError(ST::format("dealer `{}` does not refer to a valid profile.", profile));
+	}
+	auto profileId = mercProfile->profileID;
+
 	return new DealerModel(
 		dealerIndex,
-		obj.GetUInt("profileID"),
-		obj.GetString("internalName"),
+		profileId,
 		parseType(obj.GetString("type")),
 		obj.getOptionalDouble("buyingPrice"),
 		obj.getOptionalDouble("sellingPrice"),
@@ -78,47 +83,45 @@ const DealerModel* DealerModel::deserialize(rapidjson::Value& val, UINT8 dealerI
 	);
 }
 
-void DealerModel::validateData(std::vector<const DealerModel*> models)
+void DealerModel::validateData(std::vector<const DealerModel*> models, const MercSystem* mercSystem)
 {
 	if (models.size() < NUM_ARMS_DEALERS)
 	{
 		// because of we still have hard-coded references, and also for save compatibility with vanilla
-		ST::string err = ST::format("Number of Arms Dealers must be {}. Got {}", NUM_ARMS_DEALERS, models.size());
-		throw std::runtime_error(err.to_std_string());
+		throw DataError(ST::format("Number of Arms Dealers must be {}. Got {}", NUM_ARMS_DEALERS, models.size()));
 	}
 
 	int i = -1;
 	for (auto dealer: models)
 	{
+		auto mercProfile = mercSystem->getMercProfileInfo(dealer->profileID);
+		auto profile = mercProfile->internalName;
+
 		if (dealer->dealerID != ++i)
 		{
-			ST::string err = ST::format("Inconsistent Dealer ID. Expected {} but got {}", i, dealer->dealerID);
-			throw std::runtime_error(err.to_std_string());
+			ST::string err = ST::format("Inconsistent dealer ID for dealer `{}`. Expected {} but got {}", profile, i, dealer->dealerID);
+			throw DataError(err.to_std_string());
 		}
 
 		if (dealer->type == ArmsDealerType::ARMS_DEALER_REPAIRS 
 			&& (dealer->repairCost == 0.0 || dealer->repairSpeed == 0.0))
 		{
-			ST::string err = ST::format("Dealer #{} is a repairman, but repair cost or speed is not set", dealer->dealerID);
-			throw std::runtime_error(err.to_std_string());
+			throw DataError(ST::format("Dealer `{}` is a repairman, but repair cost or speed is not set", profile));
 		}
 		else if (dealer->type == ArmsDealerType::ARMS_DEALER_BUYS_ONLY 
 			&& (dealer->buyingPrice == 0.0))
 		{
-			ST::string err = ST::format("Dealer is a buyer, but buying price is not set", dealer->dealerID);
-			throw std::runtime_error(err.to_std_string());
+			throw DataError(ST::format("Dealer `{}` is a buyer, but buying price is not set", profile));
 		}
 		else if (dealer->type == ArmsDealerType::ARMS_DEALER_SELLS_ONLY 
 			&& (dealer->sellingPrice == 0.0))
 		{
-			ST::string err = ST::format("Dealer #{} is a seller, but selling price is not set", dealer->dealerID);
-			throw std::runtime_error(err.to_std_string());
+			throw DataError(ST::format("Dealer `{}` is a seller, but selling price is not set", profile));
 		}
 		else if (dealer->type == ArmsDealerType::ARMS_DEALER_BUYS_ONLY 
 			&& (dealer->buyingPrice == 0.0 || dealer->sellingPrice == 0.0))
 		{
-			ST::string err = ST::format("Dealer #{} is a trader, but buying price or selling price is not set", dealer->dealerID);
-			throw std::runtime_error(err.to_std_string());
+			throw DataError(ST::format("Dealer `{}` is a trader, but buying price or selling price is not set", profile));
 		}
 	}
 }

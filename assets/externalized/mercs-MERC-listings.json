@@ -4,13 +4,13 @@
  * This only controls how the profiles show up on M.E.R.C. and not the soldier profiles themselves.
  *
  * Fields:
- *  - profileID:        The profile ID of the merc
+ *  - profile:        The profile of the merc
  *  - bioIndex:         The start location offset to the merc's bio in the mercbios.edt
  *  - minTotalSpending: The player must spend this amount before this merc is available for hire; Defaults to 0
  *  - minDays:          The day (in-game days) after which this merc may be available; Defaults to 0
  *  - quotes:           A list of quotes that Speck make regarding this merc
  *     - quoteID:       ID of the quote. See Speck_Quotes.h
- *     - profileID:     ID of the other merc. Only used in CROSS_SELL quotes
+ *     - profile:     ID of the other merc. Only used in CROSS_SELL quotes
  *     - type:          Type of quote:
  *                         - "ADVERTISE" quotes are said randomly to sell the merc when the UI is idle
  *                         - "MERC_DEAD" quotes are said as the opening tag when the merc is dead
@@ -24,72 +24,65 @@
  * There are some special logic in the code for LARRY_NORMAL(46) and FLO(44).
  */
 [
-    // BIFF
     {
-        "profileID": 40,
+        "profile": "BIFF",
         "bioIndex": 0,
         "quotes": [
-             { "type": "ADVERTISE",  "quoteID": 47 }                                     // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_BIFF
-            ,{ "type": "MERC_DEAD",  "quoteID": 28 }                                     // SPECK_QUOTE_ALTERNATE_OPENING_TAG_BIFF_IS_DEAD
-            ,{ "type": "CROSS_SELL", "quoteID": 63, "profileID": 46 /* LARRY_NORMAL */}  // SPECK_QUOTE_PLAYERS_HIRES_BIFF_SPECK_PLUGS_LARRY
-            ,{ "type": "CROSS_SELL", "quoteID": 63, "profileID": 47 /* LARRY_DRUNK  */}  // SPECK_QUOTE_PLAYERS_HIRES_BIFF_SPECK_PLUGS_LARRY
-            ,{ "type": "CROSS_SELL", "quoteID": 64, "profileID": 44 /* FLO */         }  // SPECK_QUOTE_PLAYERS_HIRES_BIFF_SPECK_PLUGS_FLO
+             { "type": "ADVERTISE",  "quoteID": 47 }                            // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_BIFF
+            ,{ "type": "MERC_DEAD",  "quoteID": 28 }                            // SPECK_QUOTE_ALTERNATE_OPENING_TAG_BIFF_IS_DEAD
+            ,{ "type": "CROSS_SELL", "quoteID": 63, "profile": "LARRY_NORMAL" } // SPECK_QUOTE_PLAYERS_HIRES_BIFF_SPECK_PLUGS_LARRY
+            ,{ "type": "CROSS_SELL", "quoteID": 63, "profile": "LARRY_DRUNK" }  // SPECK_QUOTE_PLAYERS_HIRES_BIFF_SPECK_PLUGS_LARRY
+            ,{ "type": "CROSS_SELL", "quoteID": 64, "profile": "FLO" }          // SPECK_QUOTE_PLAYERS_HIRES_BIFF_SPECK_PLUGS_FLO
         ]
     },
-    // HAYWIRE
     {
-        "profileID": 41,
+        "profile": "HAYWIRE",
         "bioIndex": 1,
         "quotes": [
-             { "type": "ADVERTISE",  "quoteID": 48 }                              // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_HAYWIRE
-            ,{ "type": "MERC_DEAD",  "quoteID": 29 }                              // SPECK_QUOTE_ALTERNATE_OPENING_TAG_HAYWIRE_IS_DEAD
-            ,{ "type": "CROSS_SELL", "quoteID": 65, "profileID": 43 /* RAZOR */ } // SPECK_QUOTE_PLAYERS_HIRES_HAYWIRE_SPECK_PLUGS_RAZOR
+             { "type": "ADVERTISE",  "quoteID": 48 }                        // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_HAYWIRE
+            ,{ "type": "MERC_DEAD",  "quoteID": 29 }                        // SPECK_QUOTE_ALTERNATE_OPENING_TAG_HAYWIRE_IS_DEAD
+            ,{ "type": "CROSS_SELL", "quoteID": 65, "profile": "RAZOR" }    // SPECK_QUOTE_PLAYERS_HIRES_HAYWIRE_SPECK_PLUGS_RAZOR
         ]
     },
-    // GASKET
     {
-        "profileID": 42,
+        "profile": "GASKET",
         "bioIndex": 2,
         "quotes": [
              { "type": "ADVERTISE", "quoteID": 49 }        // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_GASKET
             ,{ "type": "MERC_DEAD", "quoteID": 30 }        // SPECK_QUOTE_ALTERNATE_OPENING_TAG_GASKET_IS_DEAD
         ]
     },
-    // RAZOR
     {
-        "profileID": 43,
+        "profile": "RAZOR",
         "bioIndex": 3,
         "quotes": [
-             { "type": "ADVERTISE",  "quoteID": 50 }                                // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_RAZOR
-            ,{ "type": "MERC_DEAD",  "quoteID": 31 }                                // SPECK_QUOTE_ALTERNATE_OPENING_TAG_RAZOR_IS_DEAD
-            ,{ "type": "CROSS_SELL", "quoteID": 66, "profileID": 41 /* HAYWIRE */ } // SPECK_QUOTE_PLAYERS_HIRES_RAZOR_SPECK_PLUGS_HAYWIRE
+             { "type": "ADVERTISE",  "quoteID": 50 }                       // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_RAZOR
+            ,{ "type": "MERC_DEAD",  "quoteID": 31 }                       // SPECK_QUOTE_ALTERNATE_OPENING_TAG_RAZOR_IS_DEAD
+            ,{ "type": "CROSS_SELL", "quoteID": 66, "profile": "HAYWIRE" } // SPECK_QUOTE_PLAYERS_HIRES_RAZOR_SPECK_PLUGS_HAYWIRE
         ]
     },
-    // FLO
     {
-        "profileID": 44,
+        "profile": "FLO",
         "bioIndex": 4,
         "quotes": [
-             { "type": "ADVERTISE",  "quoteID": 51 }                             // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_FLO
-            ,{ "type": "CROSS_SELL", "quoteID": 67, "profileID": 40 /* BIFF */ } // SPECK_QUOTE_PLAYERS_HIRES_FLO_SPECK_PLUGS_BIFF
+             { "type": "ADVERTISE",  "quoteID": 51 }                    // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_FLO
+            ,{ "type": "CROSS_SELL", "quoteID": 67, "profile": "BIFF" } // SPECK_QUOTE_PLAYERS_HIRES_FLO_SPECK_PLUGS_BIFF
              /*
               * FLO has situational MERC_DEAD quotes, which depends on and may have an
               * effect on BIFF, and that is handled as a special case in code
               */
         ]
     },
-    // GUMPY
     {
-        "profileID": 45,
+        "profile": "GUMPY",
         "bioIndex": 5,
         "quotes" : [
              { "type": "ADVERTISE", "quoteID": 52 }             // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_GUMPY},
             ,{ "type": "MERC_DEAD", "quoteID": 35 }             // SPECK_QUOTE_ALTERNATE_OPENING_TAG_GUMPY_IS_DEAD
         ]
     },
-    // BUBBA
     {
-        "profileID": 50,
+        "profile": "BUBBA",
         "bioIndex": 10,
         "minTotalSpending": 5000,
         "minDays": 8,
@@ -98,25 +91,23 @@
             ,{ "type": "MERC_DEAD", "quoteID": 40 }             // SPECK_QUOTE_ALTERNATE_OPENING_TAG_BUBBA_IS_DEAD
         ]
     },
-    // LARRY_NORMAL
     {
         /*
          * By default Larry is sober (LARRY_NORMAL).
-         * We will handle his relapse in the code, and we will replace the profileID with LARRY_DRUNK (47)
+         * We will handle his relapse in the code, and we will replace the profile with LARRY_DRUNK (47)
          */
-        "profileID": 46,
+        "profile": "LARRY_NORMAL",
         "bioIndex": 6,
         "minTotalSpending": 10000,
         "minDays": 15,
         "quotes" : [
-             { "type": "ADVERTISE",  "quoteID": 53 }                              // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_LARRY
-            ,{ "type": "MERC_DEAD",  "quoteID": 36 }                              // SPECK_QUOTE_ALTERNATE_OPENING_TAG_LARRY_IS_DEAD
-            ,{ "type": "CROSS_SELL", "quoteID": 63, "profileID": 40 /* BIFF */ }  // SPECK_QUOTE_PLAYERS_HIRES_BIFF_SPECK_PLUGS_LARRY
+             { "type": "ADVERTISE",  "quoteID": 53 }                     // SPECK_QUOTE_PLAYER_NOT_DOING_ANYTHING_SPECK_SELLS_LARRY
+            ,{ "type": "MERC_DEAD",  "quoteID": 36 }                     // SPECK_QUOTE_ALTERNATE_OPENING_TAG_LARRY_IS_DEAD
+            ,{ "type": "CROSS_SELL", "quoteID": 63, "profile": "BIFF" }  // SPECK_QUOTE_PLAYERS_HIRES_BIFF_SPECK_PLUGS_LARRY
         ]
     },
-    // NUMB
     {
-        "profileID": 49,
+        "profile": "NUMB",
         "bioIndex": 9,
         "minTotalSpending": 15000,
         "minDays": 20,
@@ -125,9 +116,8 @@
               ,{ "type": "MERC_DEAD", "quoteID": 39 }                 // SPECK_QUOTE_ALTERNATE_OPENING_TAG_NUMB_IS_DEAD
         ]
     },
-    // COUGAR
     {
-        "profileID": 48,
+        "profile": "COUGAR",
         "bioIndex": 8,
         "minTotalSpending": 20000,
         "minDays": 25,

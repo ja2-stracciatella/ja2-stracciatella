@@ -2,44 +2,44 @@
  * Defines the offsets of RPC small faces. Small faces are typically used for RPCs' and EPCs' outside of a tactical conversation.
  *
  * Fields:
- *  - profileID: ID of the character's profileID
+ *  - profile: The profile for which to define the small face
  *  - eyesXY  [x,y]: the XY offset of the eyes animation
  *  - mouthXY [x,y]: the XY offset of the mouth animation
  */
 [
-	{ /* MIGUEL   */ "profileID": 57,  "eyesXY": [ 9, 8 ],  "mouthXY": [ 8, 24 ] },
-	{ /* CARLOS   */ "profileID": 58,  "eyesXY": [ 8, 8 ],  "mouthXY": [ 7, 24 ] },
-	{ /* IRA      */ "profileID": 59,  "eyesXY": [ 10, 8 ], "mouthXY": [ 8, 26 ] },
-	{ /* DIMITRI  */ "profileID": 60,  "eyesXY": [ 7, 8 ],  "mouthXY": [ 7, 26 ] },
+	{ "profile": "MIGUEL",  "eyesXY": [ 9, 8 ],  "mouthXY": [ 8, 24 ] },
+	{ "profile": "CARLOS",  "eyesXY": [ 8, 8 ],  "mouthXY": [ 7, 24 ] },
+	{ "profile": "IRA",  "eyesXY": [ 10, 8 ], "mouthXY": [ 8, 26 ] },
+	{ "profile": "DIMITRI",  "eyesXY": [ 7, 8 ],  "mouthXY": [ 7, 26 ] },
 
-	{ /* DEVIN    */ "profileID": 61,  "eyesXY": [ 6, 7 ],  "mouthXY": [ 7, 23 ] },
-	{ /* ROBOT    */ "profileID": 62,  "eyesXY": [ 0, 0 ],  "mouthXY": [ 0,  0 ] },
-	{ /* HAMOUS   */ "profileID": 63,  "eyesXY": [ 8, 7 ],  "mouthXY": [ 8, 23 ] },
-	{ /* SLAY     */ "profileID": 64,  "eyesXY": [ 8, 8 ],  "mouthXY": [ 8, 22 ] },
-	{ /* RPC65    */ "profileID": 65,  "eyesXY": [ 0, 0 ],  "mouthXY": [ 0,  0 ] },
-	{ /* DYNAMO   */ "profileID": 66,  "eyesXY": [ 9, 4 ],  "mouthXY": [ 7, 22 ] },
-	{ /* SHANK    */ "profileID": 67,  "eyesXY": [ 8, 8 ],  "mouthXY": [ 8, 25 ] },
-	{ /* IGGY     */ "profileID": 68,  "eyesXY": [ 4, 6 ],  "mouthXY": [ 5, 22 ] },
-	{ /* VINCE    */ "profileID": 69,  "eyesXY": [ 8, 9 ],  "mouthXY": [ 7, 25 ] },
-	{ /* CONRAD   */ "profileID": 70,  "eyesXY": [ 4, 7 ],  "mouthXY": [ 5, 25 ] },
+	{ "profile": "DEVIN",  "eyesXY": [ 6, 7 ],  "mouthXY": [ 7, 23 ] },
+	{ "profile": "ROBOT",  "eyesXY": [ 0, 0 ],  "mouthXY": [ 0,  0 ] },
+	{ "profile": "HAMOUS",  "eyesXY": [ 8, 7 ],  "mouthXY": [ 8, 23 ] },
+	{ "profile": "SLAY",  "eyesXY": [ 8, 8 ],  "mouthXY": [ 8, 22 ] },
+	{ "profile": "RPC65",  "eyesXY": [ 0, 0 ],  "mouthXY": [ 0,  0 ] },
+	{ "profile": "DYNAMO",  "eyesXY": [ 9, 4 ],  "mouthXY": [ 7, 22 ] },
+	{ "profile": "SHANK",  "eyesXY": [ 8, 8 ],  "mouthXY": [ 8, 25 ] },
+	{ "profile": "IGGY",  "eyesXY": [ 4, 6 ],  "mouthXY": [ 5, 22 ] },
+	{ "profile": "VINCE",  "eyesXY": [ 8, 9 ],  "mouthXY": [ 7, 25 ] },
+	{ "profile": "CONRAD",  "eyesXY": [ 4, 7 ],  "mouthXY": [ 5, 25 ] },
 
-	{ /* RPC71    */ "profileID": 71,  "eyesXY": [ 9, 7 ],  "mouthXY": [ 8, 22 ] },
-	{ /* MADDOG   */ "profileID": 72,  "eyesXY": [ 9, 7 ],  "mouthXY": [ 9, 25 ] },
-	{ /* DARREL   */ "profileID": 73,  "eyesXY": [ 0, 0 ],  "mouthXY": [ 0,  0 ] },
-	{ /* PERKO    */ "profileID": 74,  "eyesXY": [ 0, 0 ],  "mouthXY": [ 0,  0 ] },
+	{ "profile": "RPC71",  "eyesXY": [ 9, 7 ],  "mouthXY": [ 8, 22 ] },
+	{ "profile": "MADDOG",  "eyesXY": [ 9, 7 ],  "mouthXY": [ 9, 25 ] },
+	{ "profile": "DARREL",  "eyesXY": [ 0, 0 ],  "mouthXY": [ 0,  0 ] },
+	{ "profile": "PERKO",  "eyesXY": [ 0, 0 ],  "mouthXY": [ 0,  0 ] },
 
-	{ /* MARIA    */ "profileID": 88,  "eyesXY": [ 9, 3 ],  "mouthXY": [ 8, 23 ] },
-	{ /* JOEY     */ "profileID": 90,  "eyesXY": [ 9, 3 ],  "mouthXY": [ 8, 25 ] },
+	{ "profile": "MARIA",  "eyesXY": [ 9, 3 ],  "mouthXY": [ 8, 23 ] },
+	{ "profile": "JOEY",  "eyesXY": [ 9, 3 ],  "mouthXY": [ 8, 25 ] },
 
-	{ /* SKYRIDER */ "profileID": 97,  "eyesXY": [ 11, 7 ], "mouthXY": [ 9, 24 ] },
+	{ "profile": "SKYRIDER",  "eyesXY": [ 11, 7 ], "mouthXY": [ 9, 24 ] },
 
-	{ /* JOHN     */ "profileID": 118, "eyesXY": [ 6, 4 ],  "mouthXY": [ 6, 24 ] },
-	{ /* MARY     */ "profileID": 119, "eyesXY": [ 12, 4 ], "mouthXY": [ 10, 24 ] },
+	{ "profile": "JOHN", "eyesXY": [ 6, 4 ],  "mouthXY": [ 6, 24 ] },
+	{ "profile": "MARY", "eyesXY": [ 12, 4 ], "mouthXY": [ 10, 24 ] },
 
-	  /* Miners   */
-	{ /* FRED     */ "profileID": 106, "eyesXY": [ 9, 5 ],  "mouthXY": [ 7, 23 ] },
-	{ /* MATT     */ "profileID": 148, "eyesXY": [ 8, 6 ],  "mouthXY": [ 8, 23 ] }, 
-	{ /* OSWALD   */ "profileID": 156, "eyesXY": [ 6, 5 ],  "mouthXY": [ 6, 23 ] },
-	{ /* CALVIN   */ "profileID": 157, "eyesXY": [ 13, 7 ], "mouthXY": [ 11, 24 ] }, 
-	{ /* CARL     */ "profileID": 158, "eyesXY": [ 9, 7 ],  "mouthXY": [ 8, 22 ] }  
+	/* Miners   */
+	{ "profile": "FRED", "eyesXY": [ 9, 5 ],  "mouthXY": [ 7, 23 ] },
+	{ "profile": "MATT", "eyesXY": [ 8, 6 ],  "mouthXY": [ 8, 23 ] }, 
+	{ "profile": "OSWALD", "eyesXY": [ 6, 5 ],  "mouthXY": [ 6, 23 ] },
+	{ "profile": "CALVIN", "eyesXY": [ 13, 7 ], "mouthXY": [ 11, 24 ] }, 
+	{ "profile": "CARL", "eyesXY": [ 9, 7 ],  "mouthXY": [ 8, 22 ] }  
 ]

@@ -1,6 +1,8 @@
-#include "NpcPlacementModel.h"
+#include "Exceptions.h"
 #include "JsonUtility.h"
+#include "NpcPlacementModel.h"
 #include "Random.h"
+
 #include <utility>
 
 NpcPlacementModel::NpcPlacementModel(uint8_t profileId_, std::vector<uint8_t> sectorIds_,
@@ -8,13 +10,18 @@ NpcPlacementModel::NpcPlacementModel(uint8_t profileId_, std::vector<uint8_t> se
 	:profileId(profileId_),  sectorIds(std::move(sectorIds_)),
 	isPlacedAtStart(isPlacedAtStart_), useAlternateMap(useAlternateMap_), isSciFiOnly(isSciFiOnly_) {}
 
-NpcPlacementModel* NpcPlacementModel::deserialize(const rapidjson::Value& element)
+NpcPlacementModel* NpcPlacementModel::deserialize(const rapidjson::Value& element, const MercSystem* mercSystem)
 {
 	std::vector<uint8_t> sectorIds = JsonUtility::parseSectorList(element, "sectors");
+	ST::string profile = element["profile"].GetString();
+	auto mercProfile = mercSystem->getMercProfileInfoByName(profile);
+	if (mercProfile == NULL) {
+		throw DataError(ST::format("`{}` does not refer to a valid profile.", profile));
+	}
 
 	JsonObjectReader r(element);
 	return new NpcPlacementModel(
-		r.GetUInt("profileId"),
+		mercProfile->profileID,
 		sectorIds,
 		r.GetBool("placedAtStart"),
 		r.getOptionalBool("useAlternateMap"),

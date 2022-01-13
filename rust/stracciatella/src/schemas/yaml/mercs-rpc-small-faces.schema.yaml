@@ -7,9 +7,10 @@ items:
     Defines the offsets of RPC small face image. Small faces are typically used for RPCs' and EPCs' outside of a tactical conversation.
   type: object
   properties:
-    profileID:
-      title: Profile ID
-      $ref: types/uint8.schema.yaml
+    profile:
+      title: Profile
+      description: The profile for which to define the small face
+      $ref: types/id.schema.yaml
     eyesXY:
       title: Eyes Offset
       description: The XY offset of the eyes animation frame.
@@ -27,6 +28,6 @@ items:
       items:
         $ref: types/int8.schema.yaml
   required:
-  - profileID
+  - profile
   - eyesXY
   - mouthXY

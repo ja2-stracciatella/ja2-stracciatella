@@ -15,10 +15,10 @@ description: |
 items:
   type: object
   properties:
-    profileID:
-      title: Profile ID
-      description: The profile ID of the merc
-      $ref: types/uint8.schema.yaml
+    profile:
+      title: Profile
+      description: The profile ID of the M.E.R.C. merc
+      $ref: types/id.schema.yaml
     bioIndex:
       title: Biography Index
       description: The start location offset to the merc's bio in the mercbios.edt
@@ -55,14 +55,14 @@ items:
             title: Quote ID
             description: ID of the quote in code. See Speck_Quotes.h
             $ref: types/uint8.schema.yaml
-          profileID:
-            title: Profile ID (other Merc)
-            description: ID of the other merc. Only used in CROSS_SELL quotes
-            $ref: types/uint8.schema.yaml
+          profile:
+            title: Profile for the cross selled M.E.R.C. merc
+            description: Only required for `CROSS_SELL` quotes
+            $ref: types/id.schema.yaml
         required:
         - type
         - quoteID
   required:
-  - profileID
+  - profile
   - bioIndex
   - quotes

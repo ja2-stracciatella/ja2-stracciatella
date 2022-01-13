@@ -4,7 +4,7 @@
  * Note: the base game has daily event for placing HAMOUS, DEVIN and CARMEN
  *
  * Fields:
- *  - profileId:    The numeric ID of the NPC merc profile.
+ *  - profile:    The profile of the placed merc.
  *  - sectors:    Sectors in which the NPC can appear. If empty, the NPC will never appear. All of these sectors should have the NPC merc preplaced, or else the NPC may get "assigned" to a sector but not appear.
  *  - sectorLevel:    Place the NPC in underground sectors if set to non-zero. Default is 0.
  *  - placedAtStart:    If true, the NPC will be randomly placed at one of the sectors at game init; Otherwise, the NPC will be placed by his own corresponding sections in codebase.
@@ -14,47 +14,47 @@
 [
 	/* NPCs that may move around the map */
 	{
-		"profileId": 63,    // HAMOUS, together with his Ice-cream truck (PROF_ICECREAM, 162)
+		"profile": "HAMOUS",    // HAMOUS, together with his Ice-cream truck (PROF_ICECREAM, 162)
 		"sectors": [ "G6", "F12", "D7", "D3", "D9" ],
 		"placedAtStart": false
 	},
 	{
-		"profileId": 61,    // DEVIN
+		"profile": "DEVIN",    // DEVIN
 		"sectors": [ "G9", "D13", "C5", "H2", "C6" ],
 		"placedAtStart": false
 	},
 	{
-		"profileId": 78,    // CARMEN
+		"profile": "CARMEN",    // CARMEN
 		"sectors": [ "C5", "C13", "G9" ], // he is hard-coded to go to C13 on the day after receiving a head
 		"placedAtStart": false
 	},
 	/* NPCs randomly placed at game start */
 	{
-		"profileId": 97,    // SKYRIDER
+		"profile": "SKYRIDER",    // SKYRIDER
 		"sectors": [ "B15", "E14", "D12", "C16" ],
 		"placedAtStart": true,
 		"useAlternateMap": true
 	},
 	{
-		"profileId": 146,   // MADLAB (and ROBOT)
+		"profile": "MADLAB",   // MADLAB (and ROBOT)
 		"sectors": [ "H7", "H16", "I11", "E4" ],
 		"placedAtStart": false,
 		"useAlternateMap": true
 	},
 	{
-		"profileId": 96,    // MICKY
+		"profile": "MICKY",    // MICKY
 		"sectors": [ "G9", "D13", "C5", "H2", "C6" ],
 		"placedAtStart": true
 	},
 	/* Sci-fi mode only NPCs */
 	{
-		"profileId": 84,    // BOB
+		"profile": "BOB",    // BOB
 		"sectors": [ "F8" ],
 		"placedAtStart": true,
 		"sciFiOnly": true
 	},
 	{
-		"profileId": 104,   // GABBY
+		"profile": "GABBY",   // GABBY
 		"sectors": [ "H11", "I4" ],
 		"placedAtStart": true,
 		"sciFiOnly": true,

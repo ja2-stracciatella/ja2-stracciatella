@@ -1,4 +1,5 @@
 #pragma once
+#include "MercSystem.h"
 #include <rapidjson/document.h>
 #include <stdint.h>
 
@@ -11,5 +12,5 @@ public:
 	int8_t bMouthX;
 	int8_t bMouthY;
 
-	static RPCSmallFaceModel* deserialize(const rapidjson::Value& json);
+	static RPCSmallFaceModel* deserialize(const rapidjson::Value& json, const MercSystem* mercSystem);
 };

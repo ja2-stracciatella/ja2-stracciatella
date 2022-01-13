@@ -1,5 +1,6 @@
 #pragma once
 #include "MercProfile.h"
+#include "MercSystem.h"
 #include "MERCSpeckQuote.h"
 #include <memory>
 #include <rapidjson/document.h>
@@ -24,7 +25,7 @@ public:
 	bool isAvailableAtStart() const;
 	std::vector<SpeckQuote> getQuotesByType(SpeckQuoteType type) const;
 
-	static MERCListingModel* deserialize(uint8_t index, const rapidjson::Value& json);
+	static MERCListingModel* deserialize(uint8_t index, const rapidjson::Value& json, const MercSystem* mercSystem);
 	static void validateData(const std::vector<const MERCListingModel*>&);
 private:
 	const std::vector<SpeckQuote> quotes;

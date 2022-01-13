@@ -12,6 +12,10 @@ items:
 
     In base vanilla game, only the Hummer, Ice-cream truck and Helicopter are available.
   properties:
+    profile:
+      title: Profile
+      description: Profile associated to the vehicle.
+      $ref: types/id.schema.yaml
     enterSound:
       title: Enter sound
       description: Sound file to play when a soldier enters the vehicle.
@@ -20,10 +24,6 @@ items:
       title: Move sound
       description: Sound file to play when the vehicle moves.
       $ref: types/resource-path.schema.yaml
-    profileID:
-      title: Profile ID
-      description: Profile ID associated to the vehicle.
-      $ref: types/uint8.schema.yaml
     movementType:
       title: Movement type
       description: Determines if the vehicle can travel through map sectors and how fast.
@@ -43,9 +43,9 @@ items:
       description: Maximum number of soldiers allowed in the vehicle. Must not be greater than 10.
       $ref: types/uint8.schema.yaml
   required:
+  - profile
   - enterSound
   - moveSound
-  - profileID
   - movementType
   - armourType
   - seats

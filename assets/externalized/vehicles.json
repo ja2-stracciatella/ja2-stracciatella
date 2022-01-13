@@ -9,7 +9,7 @@
  * Fields:
  * - enterSound: Sound file to play when a soldier enters the vehicle.
  * - moveSound: Sound file to play when the vehicle moves.
- * - profileID: Profile ID associated to the vehicle.
+ * - profile: Profile associated to the vehicle.
  * - movementType: Determines if the vehicle can travel through map sectors and how fast. Must be one of FOOT, CAR, TRUCK, TRACKED or AIR.
  * - armourType: Determines the vehicle's protection against damage. Use the internal name of any armour items.
  * - seats: Maximum number of soldiers allowed in the vehicle. Must not be greater than 10.
@@ -19,7 +19,7 @@
     {
         "enterSound": "sounds/into vehicle.wav", // S_VECH1_INTO
         "moveSound": "sounds/driving 01.wav", // S_VECH1_MOVE
-        "profileID": 161, // PROF_ELDERODO
+        "profile": "PROF_ELDERODO",
         "movementType": "CAR",
         "armourType": "KEVLAR_VEST",
         "seats": 6
@@ -28,7 +28,7 @@
     {
         "enterSound": "sounds/into vehicle.wav",
         "moveSound": "sounds/driving 01.wav",
-        "profileID": 160, // PROF_HUMMER
+        "profile": "PROF_HUMMER",
         "movementType": "CAR",
         "armourType": "SPECTRA_VEST",
         "seats": 6
@@ -37,7 +37,7 @@
     {
         "enterSound": "sounds/into vehicle.wav",
         "moveSound": "sounds/driving 01.wav",
-        "profileID": 162, // PROF_ICECREAM
+        "profile": "PROF_ICECREAM",
         "movementType": "CAR",
         "armourType": "KEVLAR_VEST",
         "seats": 6
@@ -46,7 +46,7 @@
     {
         "enterSound": "sounds/into vehicle.wav",
         "moveSound": "sounds/driving 01.wav",
-        "profileID": 164, // NPC_164
+        "profile": "NPC164",
         "movementType": "CAR",
         "armourType": "KEVLAR_VEST",
         "seats":  6
@@ -55,7 +55,7 @@
     {
         "enterSound": "sounds/into vehicle.wav",
         "moveSound": "sounds/driving 01.wav",
-        "profileID": 164, // NPC_164
+        "profile": "NPC164",
         "movementType": "CAR",
         "armourType": "SPECTRA_VEST",
         "seats": 6
@@ -64,7 +64,7 @@
     {
         "enterSound": "sounds/into vehicle.wav",
         "moveSound": "sounds/driving 01.wav",
-        "profileID": 163,  // HELICOPTER
+        "profile": "PROF_HELICOPTER",
         "movementType": "AIR",
         "armourType": "KEVLAR_VEST",
         "seats":6
