@@ -2,137 +2,154 @@
     {
         "index": 0,
         "internalName": "NOAMMO",
-        "burstSoundString": "",
         "showInHelpText": false,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 1,
         "internalName": "AMMO38",
-        "burstSoundString": "",
+        "sound": "sounds/weapons/38 caliber.wav",
+        "silencedSound": "sounds/weapons/silencer 02.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 156
+        "monsterWeapon": false
     },
     {
         "index": 2,
         "internalName": "AMMO9",
-        "burstSoundString": "9mm burst ",
+        "sound": "sounds/weapons/9mm single shot.wav",
+        "burstSound": "sounds/weapons/9mm burst %d.wav",
+        "silencedSound": "sounds/weapons/silencer 02.wav",
+        "silencedBurstSound": "sounds/weapons/silencer burst %d.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 156
+        "monsterWeapon": false
     },
     {
         "index": 3,
         "internalName": "AMMO45",
-        "burstSoundString": "45 caliber burst ",
+        "sound": "sounds/weapons/45 caliber single shot.wav",
+        "burstSound": "sounds/weapons/45 caliber burst %d.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
+        "silencedBurstSound": "sounds/weapons/silencer burst %d.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 4,
         "internalName": "AMMO357",
-        "burstSoundString": "",
+        "sound": "sounds/weapons/357 single shot.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 5,
         "internalName": "AMMO12G",
-        "burstSoundString": "",
+        "sound": "sounds/weapons/shotgun single shot.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 6,
         "internalName": "AMMOCAWS",
-        "burstSoundString": "shotgun burst ",
+        "sound": "sounds/weapons/shotgun single shot.wav",
+        "burstSound": "sounds/weapons/shotgun burst %d.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
+        "silencedBurstSound": "sounds/weapons/silencer burst %d.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 7,
         "internalName": "AMMO545",
-        "burstSoundString": "5,45 burst ",
+        "sound": "sounds/weapons/5,45 single shot.wav",
+        "burstSound": "sounds/weapons/5,45 burst %d.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
+        "silencedBurstSound": "sounds/weapons/silencer burst %d.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 8,
         "internalName": "AMMO556",
-        "burstSoundString": "5,56 burst ",
+        "sound": "sounds/weapons/5,56 single shot.wav",
+        "burstSound": "sounds/weapons/5,56 burst %d.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
+        "silencedBurstSound": "sounds/weapons/silencer burst %d.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 9,
         "internalName": "AMMO762N",
-        "burstSoundString": "7,62 nato burst ",
+        "sound": "sounds/weapons/7,62 nato single shot.wav",
+        "burstSound": "sounds/weapons/7,62 nato burst %d.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
+        "silencedBurstSound": "sounds/weapons/silencer burst %d.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 10,
         "internalName": "AMMO762W",
-        "burstSoundString": "7,62 wp burst ",
+        "sound": "sounds/weapons/7,62 wp single shot.wav",
+        "burstSound": "sounds/weapons/7,62 wp burst %d.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
+        "silencedBurstSound": "sounds/weapons/silencer burst %d.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 11,
         "internalName": "AMMO47",
-        "burstSoundString": "4,7 caliber burst ",
+        "sound": "sounds/weapons/4,7 single shot.wav",
+        "burstSound": "sounds/weapons/4,7 caliber burst %d.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
+        "silencedBurstSound": "sounds/weapons/silencer burst %d.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 12,
         "internalName": "AMMO57",
-        "burstSoundString": "5,7 burst ",
+        "sound": "sounds/weapons/5,7 single shot.wav",
+        "burstSound": "sounds/weapons/5,7 burst %d.wav",
+        "silencedSound": "sounds/weapons/silencer 02.wav",
+        "silencedBurstSound": "sounds/weapons/silencer burst %d.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 156
+        "monsterWeapon": false
     },
     {
         "index": 13,
         "internalName": "AMMOMONST",
-        "burstSoundString": "",
+        "sound": "sounds/adult spit.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
         "showInHelpText": true,
-        "monsterWeapon": true,
-        "silencerSound": 157
+        "monsterWeapon": true
     },
     {
         "index": 14,
         "internalName": "AMMOROCKET",
-        "burstSoundString": "rl automatic ",
+        "sound": "sounds/weapons/small rocket launcher.wav",
+        "burstSound": "sounds/weapons/rl automatic %d.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
+        "silencedBurstSound": "sounds/weapons/silencer burst %d.wav",
         "showInHelpText": false,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 15,
         "internalName": "AMMODART",
-        "burstSoundString": "",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     },
     {
         "index": 16,
         "internalName": "AMMOFLAME",
-        "burstSoundString": "",
+        "sound": "sounds/weapons/shotgun single shot.wav",
+        "silencedSound": "sounds/weapons/silencer 03.wav",
         "showInHelpText": true,
-        "monsterWeapon": false,
-        "silencerSound": 157
+        "monsterWeapon": false
     }
 ]

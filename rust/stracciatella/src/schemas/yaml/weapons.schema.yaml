@@ -33,6 +33,26 @@ items:
       - LAW
       - CANNON
       - NOWEAPON
+    sound:
+      title: Shot sound
+      description: Path to sound that is played when a single shot is fired.
+    burstSound:
+      title: Burst sound
+      description: |
+        Path to sounds that are played as burst sounds for this calibre.
+        
+        %d will replaced with the amount of bullets left in the gun.
+      $ref: types/resource-path.schema.yaml
+    silencedSound:
+      title: Silenced shot sound
+      description: Path to sound that is played when a single shot is fired and gun is silenced somehow.
+      $ref: types/int32.schema.yaml
+    silencedBurstSound:
+      title: Silenced burst sound
+      description: |
+        Path to sounds that are played as burst sounds for this calibre when the gun is silenced somehow.
+        
+        %d will replaced with the amount of bullets left in the gun.
     ubGraphicType:
       title: Graphic type
       $ref: types/uint8.schema.yaml
@@ -93,9 +113,6 @@ items:
     ubHitVolume:
       title: Hit volume
       $ref: types/uint8.schema.yaml
-    Sound:
-      title: Sound
-      $ref: types/resource-path.schema.yaml
     attachment_Silencer:
       title: Attachment silencer?
       type: boolean
@@ -135,9 +152,6 @@ items:
     ubBurstPenalty:
       title: Burst penalty
       $ref: types/uint8.schema.yaml
-    BurstSound:
-      title: Burst sound
-      $ref: types/resource-path.schema.yaml
     bBigGunList:
       title: Big gun list?
       type: boolean

@@ -708,7 +708,6 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 	BOOLEAN fBuckshot;
 	UINT8   ubVolume;
 	INT8    bSilencerPos;
-	char    zBurstString[50];
 	UINT8   ubDirection;
 	INT16   sNewGridNo;
 	BOOLEAN fGonnaHit = FALSE;
@@ -725,33 +724,16 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		// ONly deduct points once
 		if ( pSoldier->bDoBurst == 1 )
 		{
-			if ( GCM->getWeapon( usItemNum )->hasBurstSound() )
-			{
-				// IF we are silenced?
-				if( FindAttachment( &( pSoldier->inv[ pSoldier->ubAttackingHand ] ), SILENCER ) != NO_SLOT )
-				{
-					// Pick sound file baed on how many bullets we are going to fire...
-					sprintf( zBurstString, SOUNDSDIR "/weapons/silencer burst %d.wav", pSoldier->bBulletsLeft );
+			auto weapon = GCM->getWeapon( usItemNum );
+			auto burstSound = &weapon->burstSound;
+			auto isSilenced = FindAttachment( &( pSoldier->inv[ pSoldier->ubAttackingHand ] ), SILENCER ) != NO_SLOT;
+			if (isSilenced) {
+				burstSound = &weapon->silencedBurstSound;
+			}
 
-					// Try playing sound...
-					pSoldier->uiBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);
-				}
-				else
-				{
-					// Pick sound file baed on how many bullets we are going to fire...
-					sprintf(zBurstString, SOUNDSDIR "/weapons/%s%d.wav",
-							GCM->getWeapon(usItemNum)->calibre->burstSoundString.c_str(),
-							pSoldier->bBulletsLeft);
-
-					// Try playing sound...
-					pSoldier->uiBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, zBurstString, HIGHVOLUME, 1);
-				}
-
-				if ( pSoldier->uiBurstSoundID == NO_SAMPLE )
-				{
-					// If failed, play normal default....
-					pSoldier->uiBurstSoundID = PlayLocationJA2Sample(pSoldier->sGridNo, GCM->getWeapon(usItemNum)->burstSound, HIGHVOLUME, 1);
-				}
+			if (!burstSound->empty()) {
+				auto renderedBurstSound = burstSound->replace("%d", ST::format("{}", pSoldier->bBulletsLeft));
+				pSoldier->uiBurstSoundID = PlayLocationJA2SampleFromFile(pSoldier->sGridNo, renderedBurstSound.c_str(), HIGHVOLUME, 1);
 			}
 
 			DeductPoints( pSoldier, sAPCost, 0 );
@@ -774,19 +756,24 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			DeductPoints( pSoldier, sAPCost, 0 );
 		}
 
+		auto weapon = GCM->getWeapon( usItemNum );
 		//PLAY SOUND
 		// ( For throwing knife.. it's earlier in the animation
-		if ( GCM->getWeapon( usItemNum )->hasSound() && GCM->getItem(usItemNum)->getItemClass() != IC_THROWING_KNIFE )
+		if ( GCM->getItem(usItemNum)->getItemClass() != IC_THROWING_KNIFE )
 		{
 			// Switch on silencer...
 			if( FindAttachment( &( pSoldier->inv[ pSoldier->ubAttackingHand ] ), SILENCER ) != NO_SLOT )
 			{
-				SoundID uiSound = (SoundID) GCM->getWeapon( usItemNum )->calibre->silencerSound;
-				PlayLocationJA2Sample(pSoldier->sGridNo, uiSound, HIGHVOLUME, 1);
+				if (!weapon->silencedSound.empty()) {
+					PlayLocationJA2Sample(pSoldier->sGridNo, weapon->silencedSound, HIGHVOLUME, 1);
+				}
+				
 			}
 			else
 			{
-				PlayLocationJA2Sample(pSoldier->sGridNo, GCM->getWeapon(usItemNum)->sound, HIGHVOLUME, 1);
+				if (!weapon->sound.empty()) {
+					PlayLocationJA2Sample(pSoldier->sGridNo, weapon->sound, HIGHVOLUME, 1);
+				}
 			}
 		}
 	}
@@ -1538,8 +1525,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		return( FALSE );
 	}
 
-
-	if ( GCM->getWeapon( usItemNum )->hasSound()  )
+	if ( !GCM->getWeapon( usItemNum )->sound.empty()  )
 	{
 		PlayLocationJA2Sample(pSoldier->sGridNo, GCM->getWeapon(usItemNum)->sound, HIGHVOLUME, 1);
 	}
