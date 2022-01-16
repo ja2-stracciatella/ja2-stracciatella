@@ -186,7 +186,7 @@ static void DrawItemCentered(const ItemModel * item, SGPVSurface* const vs, INT3
 {
 	// Calculate the center position of the graphic in a 60 pixel wide area.
 	SGPVObject  const& vo  = GetInterfaceGraphicForItem(item);
-	UINT        const  gfx = item->getGraphicNum();
+	UINT        const  gfx = item->getInventoryGraphicSmall().getSubImageIndex();
 	ETRLEObject const& e   = vo.SubregionProperties(gfx);
 	x += (60 - e.usWidth) / 2 - e.sOffsetX;
 	BltVideoObjectOutline(vs, &vo, gfx, x, y, outline);

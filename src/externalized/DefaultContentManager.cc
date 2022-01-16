@@ -1190,6 +1190,21 @@ const ItemModel* DefaultContentManager::getItemByName(const ST::string &internal
 	return it->second;
 }
 
+std::vector<ST::string> DefaultContentManager::getAllSmallInventoryGraphicPaths() const
+{
+	std::vector<ST::string> v = {};
+
+	for (auto item : m_items) {
+		auto& path = item->getInventoryGraphicSmall().getPath();
+		auto existing = std::find(v.begin(), v.end(), path);
+		if (existing == v.end()) {
+			v.push_back(item->getInventoryGraphicSmall().getPath());
+		}
+	}
+
+	return v;
+}
+
 const std::map<uint16_t, uint16_t> DefaultContentManager::getMapItemReplacements() const
 {
 	return m_mapItemReplacements;

@@ -104,7 +104,7 @@ struct SGPImage
 #define SGPGetGValue(rgb)   ((BYTE) (((UINT16) (rgb)) >> 8))
 
 
-SGPImage* CreateImage(const ST::string ImageFile, UINT16 fContents);
+SGPImage* CreateImage(const ST::string& ImageFile, UINT16 fContents);
 
 // This function will run the appropriate copy function based on the type of SGPImage object
 BOOLEAN CopyImageToBuffer(SGPImage const*, UINT32 fBufferType, BYTE* pDestBuf, UINT16 usDestWidth, UINT16 usDestHeight, UINT16 usX, UINT16 usY, SGPBox const* src_rect);

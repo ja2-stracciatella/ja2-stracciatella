@@ -1,12 +1,23 @@
 #pragma once
 
 #include <string_theory/string>
+#include <vector>
+#include <map>
 
 struct ItemModel;
 
 class ItemSystem
 {
 public:
+	// Returns an item by internal name
 	virtual const ItemModel* getItemByName(const ST::string &internalName) const = 0;
+
+	// Returns an item by numeric id
 	virtual const ItemModel* getItem(uint16_t itemIndex) const = 0;
+
+	// Returns all paths to small inventory images
+	virtual std::vector<ST::string> getAllSmallInventoryGraphicPaths() const = 0;
+
+	// Returns item replacements for maps
+	virtual const std::map<uint16_t, uint16_t> getMapItemReplacements() const = 0;
 };

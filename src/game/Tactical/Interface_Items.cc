@@ -427,10 +427,7 @@ INT8 gbCompatibleApplyItem = FALSE;
 
 static SGPVObject *guiMapInvSecondHandBlockout;
 static SGPVObject *guiSecItemHiddenVO;
-static SGPVObject *guiGUNSM;
-static SGPVObject *guiP1ITEMS;
-static SGPVObject *guiP2ITEMS;
-static SGPVObject *guiP3ITEMS;
+static std::map<ST::string, SGPVObject*> allInventoryGraphics;
 
 
 static BOOLEAN AttemptToAddSubstring(ST::string& zDest, const ST::string& zTemp, UINT32* puiStringLength, UINT32 uiPixLimit)
@@ -1571,7 +1568,7 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 	{
 		// Center the object in the slot
 		SGPVObject  const& item_vo = GetInterfaceGraphicForItem(item);
-		UINT8       const  gfx_idx = item->getGraphicNum();
+		UINT8       const  gfx_idx = item->getInventoryGraphicSmall().getSubImageIndex();
 		ETRLEObject const& e       = item_vo.SubregionProperties(gfx_idx);
 		INT16       const  cx      = sX + (sWidth  - e.usWidth)  / 2 - e.sOffsetX;
 		INT16       const  cy      = sY + (sHeight - e.usHeight) / 2 - e.sOffsetY;
@@ -4120,66 +4117,25 @@ void DeleteKeyRingPopup(void)
 
 SGPVObject const& GetInterfaceGraphicForItem(const ItemModel *item)
 {
-	// CHECK SUBCLASS
-	switch (item->getGraphicType())
-	{
-		case 0:
-			return *guiGUNSM;
-		case 1:
-			return *guiP1ITEMS;
-		case 2:
-			return *guiP2ITEMS;
-		default:
-			return *guiP3ITEMS;
+	auto index = item->getInventoryGraphicSmall().getPath().to_lower();
+	auto i = allInventoryGraphics.find(index);
+	if (i == allInventoryGraphics.end()) {
+		auto message = ST::format("Could not find inventory graphic for item `{}`", item->getInternalName());
+		throw std::runtime_error(message.c_str());
 	}
+	return *i->second;
 }
 
 
 UINT16 GetTileGraphicForItem(const ItemModel * item)
 {
-	UINT32 Type;
-	switch (item->getGraphicType())
-	{
-		case 0:
-			Type = GUNS;
-			break;
-		case 1:
-			Type = P1ITEMS;
-			break;
-		case 2:
-			Type = P2ITEMS;
-			break;
-		default:
-			Type = P3ITEMS;
-			break;
-	}
-	return GetTileIndexFromTypeSubIndex(Type, item->getGraphicNum() + 1);
+	return GetTileIndexFromTypeSubIndex(item->getTileGraphic().tileType, item->getTileGraphic().subIndex);
 }
 
 
 SGPVObject* LoadTileGraphicForItem(const ItemModel * item)
 {
-	const char* Prefix;
-	switch (item->getGraphicType())
-	{
-		case 0:
-			Prefix = "gun";
-			break;
-		case 1:
-			Prefix = "p1item";
-			break;
-		case 2:
-			Prefix = "p2item";
-			break;
-		default:
-			Prefix = "p3item";
-			break;
-	}
-
-	//Load item
-	SGPFILENAME ImageFile;
-	sprintf(ImageFile, BIGITEMSDIR "/%s%02d.sti", Prefix, item->getGraphicNum());
-	return AddVideoObjectFromFile(ImageFile);
+	return AddVideoObjectFromFile(item->getInventoryGraphicBig().c_str());
 }
 
 
@@ -5394,7 +5350,7 @@ void SetMouseCursorFromItem(UINT16 const item_idx)
 {
 	const ItemModel * item = GCM->getItem(item_idx);
 	SGPVObject const& vo   = GetInterfaceGraphicForItem(item);
-	SetExternMouseCursor(vo, item->getGraphicNum());
+	SetExternMouseCursor(vo, item->getInventoryGraphicSmall().getSubImageIndex());
 	SetCurrentCursorFromDatabase(EXTERN_CURSOR);
 }
 
@@ -5416,10 +5372,12 @@ void LoadInterfaceItemsGraphics()
 {
 	guiMapInvSecondHandBlockout = AddVideoObjectFromFile(INTERFACEDIR "/map_inv_2nd_gun_cover.sti");
 	guiSecItemHiddenVO          = AddVideoObjectFromFile(INTERFACEDIR "/secondary_gun_hidden.sti");
-	guiGUNSM                    = AddVideoObjectFromFile(INTERFACEDIR "/mdguns.sti");    // interface gun pictures
-	guiP1ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp1items.sti"); // interface item pictures
-	guiP2ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp2items.sti"); // interface item pictures
-	guiP3ITEMS                  = AddVideoObjectFromFile(INTERFACEDIR "/mdp3items.sti"); // interface item pictures
+
+	for (auto item : GCM->getAllSmallInventoryGraphicPaths()) {
+		auto path = item.to_lower();
+		auto vObject = AddVideoObjectFromFile(item.c_str());
+		allInventoryGraphics.insert_or_assign(path, vObject);
+	}
 
 	// Build a sawtooth black-white-black colour gradient
 	size_t const length = lengthof(us16BPPItemCyclePlacedItemColors);
@@ -5437,8 +5395,8 @@ void DeleteInterfaceItemsGraphics()
 {
 	DeleteVideoObject(guiMapInvSecondHandBlockout);
 	DeleteVideoObject(guiSecItemHiddenVO);
-	DeleteVideoObject(guiGUNSM);
-	DeleteVideoObject(guiP1ITEMS);
-	DeleteVideoObject(guiP2ITEMS);
-	DeleteVideoObject(guiP3ITEMS);
+	for (auto v : allInventoryGraphics) {
+		DeleteVideoObject(v.second);
+	}
+	allInventoryGraphics.clear();
 }

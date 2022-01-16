@@ -63,9 +63,8 @@ void WeaponModel::serializeTo(JsonObject &obj) const
 	obj.AddMember("itemIndex",            itemIndex);
 	obj.AddMember("internalName",         internalName);
 	obj.AddMember("internalType",         internalType);
-
-	obj.AddMember("ubGraphicType", getGraphicType());
-	obj.AddMember("ubGraphicNum", getGraphicNum());
+	obj.AddMember("inventoryGraphics",    inventoryGraphics.serialize(obj.getAllocator()).getValue());
+	obj.AddMember("tileGraphic", tileGraphic.serialize(obj.getAllocator()).getValue());
 	obj.AddMember("ubWeight", getWeight());
 	obj.AddMember("ubPerPocket", getPerPocket());
 	obj.AddMember("usPrice", getPrice());
@@ -553,8 +552,16 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 		return wep;
 	}
 
-	wep->ubGraphicType    = obj.GetInt("ubGraphicType");
-	wep->ubGraphicNum     = obj.GetInt("ubGraphicNum");
+	const rapidjson::Value& igSource = obj.GetValue("inventoryGraphics");
+	JsonObjectReader igReader(igSource);
+	const auto inventoryGraphics = InventoryGraphicsModel::deserialize(igReader);
+	wep->inventoryGraphics  = inventoryGraphics;
+
+	const rapidjson::Value& tgSource = obj.GetValue("tileGraphic");
+	JsonObjectReader tgReader(tgSource);
+	const auto tileGraphic = TilesetTileIndexModel::deserialize(tgReader);
+	wep->tileGraphic = tileGraphic;
+
 	wep->ubWeight         = obj.GetInt("ubWeight");
 	wep->ubPerPocket      = obj.GetInt("ubPerPocket");
 	wep->usPrice          = obj.GetInt("usPrice");

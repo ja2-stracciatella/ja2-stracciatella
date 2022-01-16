@@ -24,12 +24,26 @@ items:
     dontUseAsDefaultMagazine:
       title: Dont use as default magazine?
       type: boolean
-    ubGraphicType:
-      title: Graphic Type
-      $ref: types/uint8.schema.yaml
-    ubGraphicNum:
-      title: Graphic Number
-      $ref: types/uint8.schema.yaml
+    inventoryGraphics:
+      title: Inventory Graphics
+      description: Graphics that are used in the inventory interface for this item
+      type: object
+      properties:
+        small:
+          title: Small
+          description: Small graphics. Used e.g. in strategic & tactical inventory
+          $ref: types/sub-image.schema.yaml
+        big:
+          title: Big
+          description: Big graphics. Used e.g. in item detail view
+          $ref: types/resource-path.schema.yaml
+      required:
+        - small
+        - big
+    tileGraphic:
+      title: Tile graphic index
+      description: Graphic that is used when the item is shown on the tactical map
+      $ref: types/tileset-tile-index.yaml
     ubWeight:
       title: Weight
       $ref: types/uint8.schema.yaml
@@ -96,8 +110,8 @@ items:
   - calibre
   - capacity
   - ammoType
-  - ubGraphicType
-  - ubGraphicNum
+  - inventoryGraphics
+  - tileGraphic
   - ubWeight
   - ubPerPocket
   - usPrice

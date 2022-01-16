@@ -730,10 +730,11 @@ static void RenderSelectedItemBlownUp(void)
 
 	// Display the enlarged item graphic
 	SGPVObject  const& vo = GetInterfaceGraphicForItem(item);
-	ETRLEObject const& e  = vo.SubregionProperties(item->getGraphicNum());
+	auto index = item->getInventoryGraphicSmall().getSubImageIndex();
+	ETRLEObject const& e  = vo.SubregionProperties(index);
 	x = screen_x - e.sOffsetX + (40 - e.usWidth)  / 2;
 	y = screen_y - e.sOffsetY + (20 - e.usHeight) / 2;
-	BltVideoObjectOutline(FRAME_BUFFER, &vo, item->getGraphicNum(), x, y, Get16BPPColor(FROMRGB(0, 140, 170)));
+	BltVideoObjectOutline(FRAME_BUFFER, &vo, index, x, y, Get16BPPColor(FROMRGB(0, 140, 170)));
 
 	// Display the item name above it
 	SetFontAttributes(FONT10ARIAL, FONT_YELLOW);

@@ -1155,10 +1155,11 @@ static void DisplayCharInventory(SOLDIERTYPE const& s)
 		const ItemModel * item = GCM->getItem(item_idx);
 
 		SGPVObject  const& gfx   = GetInterfaceGraphicForItem(item);
-		ETRLEObject const& pTrav = gfx.SubregionProperties(item->getGraphicNum());
+		auto index = item->getInventoryGraphicSmall().getSubImageIndex();
+		ETRLEObject const& pTrav = gfx.SubregionProperties(index);
 		INT16       const  cen_x = PosX + ABS(57 - pTrav.usWidth)  / 2 - pTrav.sOffsetX;
 		INT16       const  cen_y = PosY + ABS(22 - pTrav.usHeight) / 2 - pTrav.sOffsetY;
-		BltVideoObjectOutline(FRAME_BUFFER, &gfx, item->getGraphicNum(), cen_x, cen_y, SGP_TRANSPARENT);
+		BltVideoObjectOutline(FRAME_BUFFER, &gfx, index, cen_x, cen_y, SGP_TRANSPARENT);
 
 		SetFontDestBuffer(FRAME_BUFFER);
 

@@ -11,15 +11,15 @@ ItemModel::ItemModel(uint16_t itemIndex,
 			ST::string internalName,
 			uint32_t usItemClass,
 			uint8_t classIndex,
-			ItemCursor cursor)
+			ItemCursor cursor) :
+	inventoryGraphics(InventoryGraphicsModel(SubImageModel("interface/mdguns.sti", 0), "bigitems/gun00.sti")),
+	tileGraphic(TilesetTileIndexModel(TileTypeDefines::GUNS, 1))
 {
 	this->itemIndex             = itemIndex;
 	this->internalName          = std::move(internalName);
 	this->usItemClass           = usItemClass;
 	this->ubClassIndex          = classIndex;
 	this->ubCursor              = cursor;
-	this->ubGraphicType         = 0;
-	this->ubGraphicNum          = 0;
 	this->ubWeight              = 0;
 	this->ubPerPocket           = 0;
 	this->usPrice               = 0;
@@ -34,23 +34,21 @@ ItemModel::ItemModel(uint16_t   itemIndex,
 			uint32_t   usItemClass,
 			uint8_t    ubClassIndex,
 			ItemCursor ubCursor,
-			uint8_t    ubGraphicType,
-			uint8_t    ubGraphicNum,
+			InventoryGraphicsModel inventoryGraphics_,
+			TilesetTileIndexModel tileGraphic_,
 			uint8_t    ubWeight,
 			uint8_t    ubPerPocket,
 			uint16_t   usPrice,
 			uint8_t    ubCoolness,
 			int8_t     bReliability,
 			int8_t     bRepairEase,
-			uint16_t   fFlags)
+			uint16_t   fFlags) : inventoryGraphics(inventoryGraphics_), tileGraphic(tileGraphic_)
 {
 	this->itemIndex             = itemIndex;
 	this->internalName          = internalName;
 	this->usItemClass           = usItemClass;
 	this->ubClassIndex          = ubClassIndex;
 	this->ubCursor              = ubCursor;
-	this->ubGraphicType         = ubGraphicType;
-	this->ubGraphicNum          = ubGraphicNum;
 	this->ubWeight              = ubWeight;
 	this->ubPerPocket           = ubPerPocket;
 	this->usPrice               = usPrice;
@@ -68,8 +66,6 @@ uint16_t        ItemModel::getItemIndex() const        { return itemIndex;      
 uint32_t        ItemModel::getItemClass() const        { return usItemClass;           }
 uint8_t         ItemModel::getClassIndex() const       { return ubClassIndex;          }
 ItemCursor      ItemModel::getCursor() const           { return ubCursor;              }
-uint8_t         ItemModel::getGraphicType() const      { return ubGraphicType;         }
-uint8_t         ItemModel::getGraphicNum() const       { return ubGraphicNum;          }
 uint8_t         ItemModel::getWeight() const           { return ubWeight;              }
 uint8_t         ItemModel::getPerPocket() const        { return ubPerPocket;           }
 uint16_t        ItemModel::getPrice() const            { return usPrice;               }
@@ -77,6 +73,9 @@ uint8_t         ItemModel::getCoolness() const         { return ubCoolness;     
 int8_t          ItemModel::getReliability() const      { return bReliability;          }
 int8_t          ItemModel::getRepairEase() const       { return bRepairEase;           }
 uint16_t        ItemModel::getFlags() const            { return fFlags;                }
+const SubImageModel& ItemModel::getInventoryGraphicSmall() const { return inventoryGraphics.small; }
+const ST::string& ItemModel::getInventoryGraphicBig() const { return inventoryGraphics.big; }
+const TilesetTileIndexModel& ItemModel::getTileGraphic() const { return tileGraphic; }
 
 bool ItemModel::isAmmo() const           { return usItemClass == IC_AMMO; }
 bool ItemModel::isArmour() const         { return usItemClass == IC_ARMOUR; }
@@ -156,8 +155,8 @@ void ItemModel::serializeTo(JsonObject &obj) const
     obj.AddMember("usItemClass", (uint32_t)getItemClass());
     obj.AddMember("ubClassIndex", getClassIndex());
     obj.AddMember("ubCursor",  getCursor());
-    obj.AddMember("ubGraphicType", getGraphicType());
-    obj.AddMember("ubGraphicNum", getGraphicNum());
+    obj.AddMember("inventoryGraphics", inventoryGraphics.serialize(obj.getAllocator()).getValue());
+	obj.AddMember("tileGraphic", tileGraphic.serialize(obj.getAllocator()).getValue());
     obj.AddMember("ubWeight", getWeight());
     obj.AddMember("ubPerPocket", getPerPocket());
     obj.AddMember("usPrice", getPrice());
@@ -170,14 +169,22 @@ void ItemModel::serializeTo(JsonObject &obj) const
 
 const ItemModel* ItemModel::deserialize(JsonObjectReader &obj)
 {
+	const rapidjson::Value& igSource = obj.GetValue("inventoryGraphics");
+	JsonObjectReader igGreader(igSource);
+	auto inventoryGraphics = InventoryGraphicsModel::deserialize(igGreader);
+
+	const rapidjson::Value& tgSource = obj.GetValue("tileGraphic");
+	JsonObjectReader tgReader(tgSource);
+	auto tileGraphic = TilesetTileIndexModel::deserialize(tgReader);
+
 	auto* item = new ItemModel(
 		obj.GetUInt("itemIndex"),
 		obj.GetString("internalName"),
 		obj.GetUInt("usItemClass"),
 		obj.GetUInt("ubClassIndex"),
 		(ItemCursor)obj.GetUInt("ubCursor"),
-		obj.GetUInt("ubGraphicType"),
-		obj.GetUInt("ubGraphicNum"),
+		inventoryGraphics,
+		tileGraphic,
 		obj.GetUInt("ubWeight"),
 		obj.GetUInt("ubPerPocket"),
 		obj.GetUInt("usPrice"),

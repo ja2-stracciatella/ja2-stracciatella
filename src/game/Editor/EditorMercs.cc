@@ -2168,10 +2168,11 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	//now draw the fullsize item into the temp buffer
 	const ItemModel * item = GCM->getItem(gusMercsNewItemIndex);
 	SGPVObject const& vo   = GetInterfaceGraphicForItem(item);
-	BltVideoObjectOutline(uiSrcID, &vo, item->getGraphicNum(), 0, 0, SGP_TRANSPARENT);
+	auto index = item->getInventoryGraphicSmall().getSubImageIndex();
+	BltVideoObjectOutline(uiSrcID, &vo, index, 0, 0, SGP_TRANSPARENT);
 
 	//crop the source image
-	ETRLEObject const& pObject    = vo.SubregionProperties(item->getGraphicNum());
+	ETRLEObject const& pObject    = vo.SubregionProperties(index);
 	UINT16      const  uSrcWidth  = pObject.usWidth;
 	UINT16      const  uSrcHeight = pObject.usHeight;
 	SGPBox      const  src_rect   =
