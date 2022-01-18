@@ -1198,7 +1198,7 @@ std::vector<ST::string> DefaultContentManager::getAllSmallInventoryGraphicPaths(
 		auto& path = item->getInventoryGraphicSmall().getPath();
 		auto existing = std::find(v.begin(), v.end(), path);
 		if (existing == v.end()) {
-			v.push_back(item->getInventoryGraphicSmall().getPath());
+			v.push_back(path);
 		}
 	}
 

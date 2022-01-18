@@ -10,7 +10,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 38
             },
-            "big": "bigitems/p1item38.sti"
+            "big": {
+                "path": "bigitems/p1item38.sti"
+            }
         },
         "ubWeight": 6,
         "ubPerPocket": 4,
@@ -37,7 +39,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 48
             },
-            "big": "bigitems/p1item48.sti"
+            "big": {
+                "path": "bigitems/p1item48.sti"
+            }
         },
         "ubWeight": 6,
         "ubPerPocket": 4,
@@ -64,7 +68,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 41
             },
-            "big": "bigitems/p1item41.sti"
+            "big": {
+                "path": "bigitems/p1item41.sti"
+            }
         },
         "ubWeight": 6,
         "ubPerPocket": 4,
@@ -91,7 +97,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 50
             },
-            "big": "bigitems/p1item50.sti"
+            "big": {
+                "path": "bigitems/p1item50.sti"
+            }
         },
         "ubWeight": 3,
         "ubPerPocket": 6,
@@ -118,7 +126,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 49
             },
-            "big": "bigitems/p1item49.sti"
+            "big": {
+                "path": "bigitems/p1item49.sti"
+            }
         },
         "ubWeight": 6,
         "ubPerPocket": 4,
@@ -145,7 +155,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 3
             },
-            "big": "bigitems/p2item03.sti"
+            "big": {
+                "path": "bigitems/p2item03.sti"
+            }
         },
         "ubWeight": 11,
         "ubPerPocket": 2,
@@ -171,7 +183,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/p2item00.sti"
+            "big": {
+                "path": "bigitems/p2item00.sti"
+            }
         },
         "ubWeight": 11,
         "ubPerPocket": 1,
@@ -197,7 +211,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 23
             },
-            "big": "bigitems/p2item23.sti"
+            "big": {
+                "path": "bigitems/p2item23.sti"
+            }
         },
         "ubWeight": 11,
         "ubPerPocket": 1,
@@ -223,7 +239,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 45
             },
-            "big": "bigitems/p1item45.sti"
+            "big": {
+                "path": "bigitems/p1item45.sti"
+            }
         },
         "ubWeight": 11,
         "ubPerPocket": 1,
@@ -249,7 +267,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 40
             },
-            "big": "bigitems/p1item40.sti"
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
         },
         "ubWeight": 41,
         "ubPerPocket": 2,
@@ -276,7 +296,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 46
             },
-            "big": "bigitems/p1item46.sti"
+            "big": {
+                "path": "bigitems/p1item46.sti"
+            }
         },
         "ubWeight": 8,
         "ubPerPocket": 1,
@@ -303,7 +325,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 44
             },
-            "big": "bigitems/p1item44.sti"
+            "big": {
+                "path": "bigitems/p1item44.sti"
+            }
         },
         "ubWeight": 11,
         "ubPerPocket": 1,
@@ -329,7 +353,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 42
             },
-            "big": "bigitems/p1item42.sti"
+            "big": {
+                "path": "bigitems/p1item42.sti"
+            }
         },
         "ubWeight": 4,
         "ubPerPocket": 2,
@@ -357,7 +383,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 43
             },
-            "big": "bigitems/p1item43.sti"
+            "big": {
+                "path": "bigitems/p1item43.sti"
+            }
         },
         "ubWeight": 4,
         "ubPerPocket": 2,
@@ -385,7 +413,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 107
             },
-            "big": "bigitems/p1item107.sti"
+            "big": {
+                "path": "bigitems/p1item107.sti"
+            }
         },
         "ubWeight": 2,
         "ubPerPocket": 4,
@@ -412,7 +442,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 24
             },
-            "big": "bigitems/p2item24.sti"
+            "big": {
+                "path": "bigitems/p2item24.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 6,
@@ -438,7 +470,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 97
             },
-            "big": "bigitems/p1item97.sti"
+            "big": {
+                "path": "bigitems/p1item97.sti"
+            }
         },
         "ubWeight": 10,
         "ubPerPocket": 4,
@@ -465,7 +499,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 111
             },
-            "big": "bigitems/p1item111.sti"
+            "big": {
+                "path": "bigitems/p1item111.sti"
+            }
         },
         "ubWeight": 10,
         "ubPerPocket": 4,
@@ -492,7 +528,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 113
             },
-            "big": "bigitems/p1item113.sti"
+            "big": {
+                "path": "bigitems/p1item113.sti"
+            }
         },
         "ubWeight": 10,
         "ubPerPocket": 4,
@@ -519,7 +557,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 112
             },
-            "big": "bigitems/p1item112.sti"
+            "big": {
+                "path": "bigitems/p1item112.sti"
+            }
         },
         "ubWeight": 10,
         "ubPerPocket": 4,
@@ -546,7 +586,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 98
             },
-            "big": "bigitems/p1item98.sti"
+            "big": {
+                "path": "bigitems/p1item98.sti"
+            }
         },
         "ubWeight": 6,
         "ubPerPocket": 4,
@@ -573,7 +615,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 40
             },
-            "big": "bigitems/p1item40.sti"
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
         },
         "ubWeight": 41,
         "ubPerPocket": 8,
@@ -601,7 +645,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 40
             },
-            "big": "bigitems/p1item40.sti"
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
         },
         "ubWeight": 41,
         "ubPerPocket": 2,
@@ -628,7 +674,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 37
             },
-            "big": "bigitems/p2item37.sti"
+            "big": {
+                "path": "bigitems/p2item37.sti"
+            }
         },
         "ubWeight": 6,
         "ubPerPocket": 4,
@@ -654,7 +702,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 40
             },
-            "big": "bigitems/p1item40.sti"
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
         },
         "ubWeight": 41,
         "ubPerPocket": 2,
@@ -681,7 +731,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 40
             },
-            "big": "bigitems/p1item40.sti"
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
         },
         "ubWeight": 41,
         "ubPerPocket": 2,
@@ -708,7 +760,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 48
             },
-            "big": "bigitems/p1item48.sti"
+            "big": {
+                "path": "bigitems/p1item48.sti"
+            }
         },
         "ubWeight": 6,
         "ubPerPocket": 4,
@@ -736,7 +790,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -761,7 +817,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -786,7 +844,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -811,7 +871,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 66
             },
-            "big": "bigitems/p1item66.sti"
+            "big": {
+                "path": "bigitems/p1item66.sti"
+            }
         },
         "ubWeight": 20,
         "ubPerPocket": 0,
@@ -839,7 +901,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 18
             },
-            "big": "bigitems/p2item18.sti"
+            "big": {
+                "path": "bigitems/p2item18.sti"
+            }
         },
         "ubWeight": 22,
         "ubPerPocket": 0,
@@ -868,7 +932,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 11
             },
-            "big": "bigitems/p2item11.sti"
+            "big": {
+                "path": "bigitems/p2item11.sti"
+            }
         },
         "ubWeight": 18,
         "ubPerPocket": 0,
@@ -897,7 +963,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 64
             },
-            "big": "bigitems/p1item64.sti"
+            "big": {
+                "path": "bigitems/p1item64.sti"
+            }
         },
         "ubWeight": 32,
         "ubPerPocket": 0,
@@ -925,7 +993,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 16
             },
-            "big": "bigitems/p2item16.sti"
+            "big": {
+                "path": "bigitems/p2item16.sti"
+            }
         },
         "ubWeight": 35,
         "ubPerPocket": 0,
@@ -954,7 +1024,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 9
             },
-            "big": "bigitems/p2item09.sti"
+            "big": {
+                "path": "bigitems/p2item09.sti"
+            }
         },
         "ubWeight": 29,
         "ubPerPocket": 0,
@@ -983,7 +1055,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 65
             },
-            "big": "bigitems/p1item65.sti"
+            "big": {
+                "path": "bigitems/p1item65.sti"
+            }
         },
         "ubWeight": 32,
         "ubPerPocket": 0,
@@ -1011,7 +1085,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 17
             },
-            "big": "bigitems/p2item17.sti"
+            "big": {
+                "path": "bigitems/p2item17.sti"
+            }
         },
         "ubWeight": 35,
         "ubPerPocket": 0,
@@ -1040,7 +1116,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 10
             },
-            "big": "bigitems/p2item10.sti"
+            "big": {
+                "path": "bigitems/p2item10.sti"
+            }
         },
         "ubWeight": 29,
         "ubPerPocket": 0,
@@ -1069,7 +1147,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 67
             },
-            "big": "bigitems/p1item67.sti"
+            "big": {
+                "path": "bigitems/p1item67.sti"
+            }
         },
         "ubWeight": 39,
         "ubPerPocket": 0,
@@ -1097,7 +1177,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 19
             },
-            "big": "bigitems/p2item19.sti"
+            "big": {
+                "path": "bigitems/p2item19.sti"
+            }
         },
         "ubWeight": 43,
         "ubPerPocket": 0,
@@ -1126,7 +1208,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 12
             },
-            "big": "bigitems/p2item12.sti"
+            "big": {
+                "path": "bigitems/p2item12.sti"
+            }
         },
         "ubWeight": 35,
         "ubPerPocket": 0,
@@ -1155,7 +1239,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 68
             },
-            "big": "bigitems/p1item68.sti"
+            "big": {
+                "path": "bigitems/p1item68.sti"
+            }
         },
         "ubWeight": 39,
         "ubPerPocket": 0,
@@ -1183,7 +1269,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 20
             },
-            "big": "bigitems/p2item20.sti"
+            "big": {
+                "path": "bigitems/p2item20.sti"
+            }
         },
         "ubWeight": 43,
         "ubPerPocket": 0,
@@ -1212,7 +1300,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 13
             },
-            "big": "bigitems/p2item13.sti"
+            "big": {
+                "path": "bigitems/p2item13.sti"
+            }
         },
         "ubWeight": 35,
         "ubPerPocket": 0,
@@ -1241,7 +1331,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 61
             },
-            "big": "bigitems/p1item61.sti"
+            "big": {
+                "path": "bigitems/p1item61.sti"
+            }
         },
         "ubWeight": 14,
         "ubPerPocket": 0,
@@ -1270,7 +1362,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 63
             },
-            "big": "bigitems/p1item63.sti"
+            "big": {
+                "path": "bigitems/p1item63.sti"
+            }
         },
         "ubWeight": 14,
         "ubPerPocket": 0,
@@ -1298,7 +1392,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 15
             },
-            "big": "bigitems/p2item15.sti"
+            "big": {
+                "path": "bigitems/p2item15.sti"
+            }
         },
         "ubWeight": 15,
         "ubPerPocket": 0,
@@ -1327,7 +1423,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 8
             },
-            "big": "bigitems/p2item08.sti"
+            "big": {
+                "path": "bigitems/p2item08.sti"
+            }
         },
         "ubWeight": 13,
         "ubPerPocket": 0,
@@ -1356,7 +1454,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 62
             },
-            "big": "bigitems/p1item62.sti"
+            "big": {
+                "path": "bigitems/p1item62.sti"
+            }
         },
         "ubWeight": 14,
         "ubPerPocket": 0,
@@ -1384,7 +1484,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 14
             },
-            "big": "bigitems/p2item14.sti"
+            "big": {
+                "path": "bigitems/p2item14.sti"
+            }
         },
         "ubWeight": 15,
         "ubPerPocket": 0,
@@ -1413,7 +1515,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 7
             },
-            "big": "bigitems/p2item07.sti"
+            "big": {
+                "path": "bigitems/p2item07.sti"
+            }
         },
         "ubWeight": 13,
         "ubPerPocket": 0,
@@ -1442,7 +1546,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 81
             },
-            "big": "bigitems/p1item81.sti"
+            "big": {
+                "path": "bigitems/p1item81.sti"
+            }
         },
         "ubWeight": 12,
         "ubPerPocket": 2,
@@ -1470,7 +1576,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/p1item00.sti"
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -1501,7 +1609,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/p1item00.sti"
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -1532,7 +1642,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/p1item00.sti"
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -1563,7 +1675,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/p1item00.sti"
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -1594,7 +1708,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 96
             },
-            "big": "bigitems/p1item96.sti"
+            "big": {
+                "path": "bigitems/p1item96.sti"
+            }
         },
         "ubWeight": 20,
         "ubPerPocket": 0,
@@ -1622,7 +1738,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 116
             },
-            "big": "bigitems/p1item116.sti"
+            "big": {
+                "path": "bigitems/p1item116.sti"
+            }
         },
         "ubWeight": 20,
         "ubPerPocket": 0,
@@ -1651,7 +1769,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 117
             },
-            "big": "bigitems/p1item117.sti"
+            "big": {
+                "path": "bigitems/p1item117.sti"
+            }
         },
         "ubWeight": 20,
         "ubPerPocket": 0,
@@ -1680,7 +1800,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 118
             },
-            "big": "bigitems/p1item118.sti"
+            "big": {
+                "path": "bigitems/p1item118.sti"
+            }
         },
         "ubWeight": 20,
         "ubPerPocket": 0,
@@ -1709,7 +1831,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/p1item00.sti"
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -1740,7 +1864,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/p1item00.sti"
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -1771,7 +1897,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 25
             },
-            "big": "bigitems/p2item25.sti"
+            "big": {
+                "path": "bigitems/p2item25.sti"
+            }
         },
         "ubWeight": 3,
         "ubPerPocket": 1,
@@ -1798,7 +1926,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 34
             },
-            "big": "bigitems/p2item34.sti"
+            "big": {
+                "path": "bigitems/p2item34.sti"
+            }
         },
         "ubWeight": 3,
         "ubPerPocket": 1,
@@ -1825,7 +1955,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 137
             },
-            "big": "bigitems/p1item137.sti"
+            "big": {
+                "path": "bigitems/p1item137.sti"
+            }
         },
         "ubWeight": 32,
         "ubPerPocket": 0,
@@ -1853,7 +1985,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 40
             },
-            "big": "bigitems/p2item40.sti"
+            "big": {
+                "path": "bigitems/p2item40.sti"
+            }
         },
         "ubWeight": 35,
         "ubPerPocket": 0,
@@ -1882,7 +2016,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 41
             },
-            "big": "bigitems/p2item41.sti"
+            "big": {
+                "path": "bigitems/p2item41.sti"
+            }
         },
         "ubWeight": 29,
         "ubPerPocket": 0,
@@ -1911,7 +2047,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -1935,7 +2073,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -1959,7 +2099,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 73
             },
-            "big": "bigitems/p1item73.sti"
+            "big": {
+                "path": "bigitems/p1item73.sti"
+            }
         },
         "ubWeight": 5,
         "ubPerPocket": 4,
@@ -1986,7 +2128,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 86
             },
-            "big": "bigitems/p1item86.sti"
+            "big": {
+                "path": "bigitems/p1item86.sti"
+            }
         },
         "ubWeight": 18,
         "ubPerPocket": 0,
@@ -2014,7 +2158,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 21
             },
-            "big": "bigitems/p2item21.sti"
+            "big": {
+                "path": "bigitems/p2item21.sti"
+            }
         },
         "ubWeight": 50,
         "ubPerPocket": 0,
@@ -2042,7 +2188,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 78
             },
-            "big": "bigitems/p1item78.sti"
+            "big": {
+                "path": "bigitems/p1item78.sti"
+            }
         },
         "ubWeight": 3,
         "ubPerPocket": 1,
@@ -2071,7 +2219,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 58
             },
-            "big": "bigitems/p1item58.sti"
+            "big": {
+                "path": "bigitems/p1item58.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 4,
@@ -2098,7 +2248,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -2122,7 +2274,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 52
             },
-            "big": "bigitems/p1item52.sti"
+            "big": {
+                "path": "bigitems/p1item52.sti"
+            }
         },
         "ubWeight": 5,
         "ubPerPocket": 4,
@@ -2150,7 +2304,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 76
             },
-            "big": "bigitems/p1item76.sti"
+            "big": {
+                "path": "bigitems/p1item76.sti"
+            }
         },
         "ubWeight": 9,
         "ubPerPocket": 4,
@@ -2178,7 +2334,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 69
             },
-            "big": "bigitems/p1item69.sti"
+            "big": {
+                "path": "bigitems/p1item69.sti"
+            }
         },
         "ubWeight": 5,
         "ubPerPocket": 2,
@@ -2206,7 +2364,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 77
             },
-            "big": "bigitems/p1item77.sti"
+            "big": {
+                "path": "bigitems/p1item77.sti"
+            }
         },
         "ubWeight": 9,
         "ubPerPocket": 1,
@@ -2234,7 +2394,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 74
             },
-            "big": "bigitems/p1item74.sti"
+            "big": {
+                "path": "bigitems/p1item74.sti"
+            }
         },
         "ubWeight": 9,
         "ubPerPocket": 1,
@@ -2262,7 +2424,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 55
             },
-            "big": "bigitems/p1item55.sti"
+            "big": {
+                "path": "bigitems/p1item55.sti"
+            }
         },
         "ubWeight": 2,
         "ubPerPocket": 4,
@@ -2288,7 +2452,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 75
             },
-            "big": "bigitems/p1item75.sti"
+            "big": {
+                "path": "bigitems/p1item75.sti"
+            }
         },
         "ubWeight": 9,
         "ubPerPocket": 1,
@@ -2314,7 +2480,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 5
             },
-            "big": "bigitems/p2item05.sti"
+            "big": {
+                "path": "bigitems/p2item05.sti"
+            }
         },
         "ubWeight": 10,
         "ubPerPocket": 4,
@@ -2339,7 +2507,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 80
             },
-            "big": "bigitems/p1item80.sti"
+            "big": {
+                "path": "bigitems/p1item80.sti"
+            }
         },
         "ubWeight": 10,
         "ubPerPocket": 1,
@@ -2367,7 +2537,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 6
             },
-            "big": "bigitems/p2item06.sti"
+            "big": {
+                "path": "bigitems/p2item06.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 4,
@@ -2392,7 +2564,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 42
             },
-            "big": "bigitems/p2item42.sti"
+            "big": {
+                "path": "bigitems/p2item42.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 4,
@@ -2418,7 +2592,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 2
             },
-            "big": "bigitems/p2item02.sti"
+            "big": {
+                "path": "bigitems/p2item02.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 4,
@@ -2443,7 +2619,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 1
             },
-            "big": "bigitems/p2item01.sti"
+            "big": {
+                "path": "bigitems/p2item01.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 1,
@@ -2469,7 +2647,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 71
             },
-            "big": "bigitems/p1item71.sti"
+            "big": {
+                "path": "bigitems/p1item71.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 2,
@@ -2494,7 +2674,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 72
             },
-            "big": "bigitems/p1item72.sti"
+            "big": {
+                "path": "bigitems/p1item72.sti"
+            }
         },
         "ubWeight": 5,
         "ubPerPocket": 2,
@@ -2520,7 +2702,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 70
             },
-            "big": "bigitems/p1item70.sti"
+            "big": {
+                "path": "bigitems/p1item70.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -2546,7 +2730,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 47
             },
-            "big": "bigitems/p1item47.sti"
+            "big": {
+                "path": "bigitems/p1item47.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 4,
@@ -2574,7 +2760,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 47
             },
-            "big": "bigitems/p1item47.sti"
+            "big": {
+                "path": "bigitems/p1item47.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 4,
@@ -2603,7 +2791,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 93
             },
-            "big": "bigitems/p1item93.sti"
+            "big": {
+                "path": "bigitems/p1item93.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -2628,7 +2818,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 94
             },
-            "big": "bigitems/p1item94.sti"
+            "big": {
+                "path": "bigitems/p1item94.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -2654,7 +2846,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 56
             },
-            "big": "bigitems/p1item56.sti"
+            "big": {
+                "path": "bigitems/p1item56.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 1,
@@ -2680,7 +2874,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 59
             },
-            "big": "bigitems/p1item59.sti"
+            "big": {
+                "path": "bigitems/p1item59.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 1,
@@ -2705,7 +2901,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 124
             },
-            "big": "bigitems/p1item124.sti"
+            "big": {
+                "path": "bigitems/p1item124.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 1,
@@ -2730,7 +2928,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 120
             },
-            "big": "bigitems/p1item120.sti"
+            "big": {
+                "path": "bigitems/p1item120.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 4,
@@ -2756,7 +2956,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 121
             },
-            "big": "bigitems/p1item121.sti"
+            "big": {
+                "path": "bigitems/p1item121.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 4,
@@ -2782,7 +2984,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 9
             },
-            "big": "bigitems/p3item09.sti"
+            "big": {
+                "path": "bigitems/p3item09.sti"
+            }
         },
         "ubWeight": 60,
         "ubPerPocket": 0,
@@ -2808,7 +3012,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 54
             },
-            "big": "bigitems/p1item54.sti"
+            "big": {
+                "path": "bigitems/p1item54.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 99,
@@ -2834,7 +3040,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 47
             },
-            "big": "bigitems/p1item47.sti"
+            "big": {
+                "path": "bigitems/p1item47.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 99,
@@ -2859,7 +3067,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 70
             },
-            "big": "bigitems/p1item70.sti"
+            "big": {
+                "path": "bigitems/p1item70.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 6,
@@ -2885,7 +3095,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 70
             },
-            "big": "bigitems/p1item70.sti"
+            "big": {
+                "path": "bigitems/p1item70.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 99,
@@ -2911,7 +3123,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 70
             },
-            "big": "bigitems/p1item70.sti"
+            "big": {
+                "path": "bigitems/p1item70.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 99,
@@ -2937,7 +3151,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 70
             },
-            "big": "bigitems/p1item70.sti"
+            "big": {
+                "path": "bigitems/p1item70.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 99,
@@ -2963,7 +3179,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 72
             },
-            "big": "bigitems/p1item72.sti"
+            "big": {
+                "path": "bigitems/p1item72.sti"
+            }
         },
         "ubWeight": 5,
         "ubPerPocket": 2,
@@ -2988,7 +3206,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/p1item00.sti"
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -3013,7 +3233,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 51
             },
-            "big": "bigitems/p1item51.sti"
+            "big": {
+                "path": "bigitems/p1item51.sti"
+            }
         },
         "ubWeight": 4,
         "ubPerPocket": 4,
@@ -3042,7 +3264,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 54
             },
-            "big": "bigitems/p1item54.sti"
+            "big": {
+                "path": "bigitems/p1item54.sti"
+            }
         },
         "ubWeight": 9,
         "ubPerPocket": 4,
@@ -3070,7 +3294,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 88
             },
-            "big": "bigitems/p1item88.sti"
+            "big": {
+                "path": "bigitems/p1item88.sti"
+            }
         },
         "ubWeight": 4,
         "ubPerPocket": 2,
@@ -3097,7 +3323,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 90
             },
-            "big": "bigitems/p1item90.sti"
+            "big": {
+                "path": "bigitems/p1item90.sti"
+            }
         },
         "ubWeight": 9,
         "ubPerPocket": 4,
@@ -3125,7 +3353,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 106
             },
-            "big": "bigitems/p1item106.sti"
+            "big": {
+                "path": "bigitems/p1item106.sti"
+            }
         },
         "ubWeight": 20,
         "ubPerPocket": 1,
@@ -3150,7 +3380,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 74
             },
-            "big": "bigitems/p1item74.sti"
+            "big": {
+                "path": "bigitems/p1item74.sti"
+            }
         },
         "ubWeight": 11,
         "ubPerPocket": 1,
@@ -3178,7 +3410,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 44
             },
-            "big": "bigitems/gun44.sti"
+            "big": {
+                "path": "bigitems/gun44.sti"
+            }
         },
         "ubWeight": 21,
         "ubPerPocket": 0,
@@ -3210,7 +3444,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/p3item00.sti"
+            "big": {
+                "path": "bigitems/p3item00.sti"
+            }
         },
         "ubWeight": 40,
         "ubPerPocket": 0,
@@ -3235,7 +3471,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 1
             },
-            "big": "bigitems/p3item01.sti"
+            "big": {
+                "path": "bigitems/p3item01.sti"
+            }
         },
         "ubWeight": 40,
         "ubPerPocket": 0,
@@ -3260,7 +3498,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 2
             },
-            "big": "bigitems/p3item02.sti"
+            "big": {
+                "path": "bigitems/p3item02.sti"
+            }
         },
         "ubWeight": 40,
         "ubPerPocket": 0,
@@ -3285,7 +3525,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 3
             },
-            "big": "bigitems/p3item03.sti"
+            "big": {
+                "path": "bigitems/p3item03.sti"
+            }
         },
         "ubWeight": 40,
         "ubPerPocket": 0,
@@ -3310,7 +3552,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 4
             },
-            "big": "bigitems/p3item04.sti"
+            "big": {
+                "path": "bigitems/p3item04.sti"
+            }
         },
         "ubWeight": 40,
         "ubPerPocket": 0,
@@ -3335,7 +3579,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 5
             },
-            "big": "bigitems/p3item05.sti"
+            "big": {
+                "path": "bigitems/p3item05.sti"
+            }
         },
         "ubWeight": 40,
         "ubPerPocket": 0,
@@ -3360,7 +3606,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 6
             },
-            "big": "bigitems/p3item06.sti"
+            "big": {
+                "path": "bigitems/p3item06.sti"
+            }
         },
         "ubWeight": 40,
         "ubPerPocket": 0,
@@ -3385,7 +3633,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 100
             },
-            "big": "bigitems/p1item100.sti"
+            "big": {
+                "path": "bigitems/p1item100.sti"
+            }
         },
         "ubWeight": 12,
         "ubPerPocket": 1,
@@ -3410,7 +3660,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 101
             },
-            "big": "bigitems/p1item101.sti"
+            "big": {
+                "path": "bigitems/p1item101.sti"
+            }
         },
         "ubWeight": 4,
         "ubPerPocket": 4,
@@ -3435,7 +3687,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 99
             },
-            "big": "bigitems/p1item99.sti"
+            "big": {
+                "path": "bigitems/p1item99.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 2,
@@ -3460,7 +3714,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 43
             },
-            "big": "bigitems/gun43.sti"
+            "big": {
+                "path": "bigitems/gun43.sti"
+            }
         },
         "ubWeight": 20,
         "ubPerPocket": 0,
@@ -3488,7 +3744,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 42
             },
-            "big": "bigitems/gun42.sti"
+            "big": {
+                "path": "bigitems/gun42.sti"
+            }
         },
         "ubWeight": 5,
         "ubPerPocket": 1,
@@ -3516,7 +3774,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 103
             },
-            "big": "bigitems/p1item103.sti"
+            "big": {
+                "path": "bigitems/p1item103.sti"
+            }
         },
         "ubWeight": 20,
         "ubPerPocket": 0,
@@ -3542,7 +3802,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 7
             },
-            "big": "bigitems/p3item07.sti"
+            "big": {
+                "path": "bigitems/p3item07.sti"
+            }
         },
         "ubWeight": 40,
         "ubPerPocket": 0,
@@ -3568,7 +3830,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 104
             },
-            "big": "bigitems/p1item104.sti"
+            "big": {
+                "path": "bigitems/p1item104.sti"
+            }
         },
         "ubWeight": 10,
         "ubPerPocket": 0,
@@ -3594,7 +3858,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 54
             },
-            "big": "bigitems/p1item54.sti"
+            "big": {
+                "path": "bigitems/p1item54.sti"
+            }
         },
         "ubWeight": 9,
         "ubPerPocket": 4,
@@ -3621,7 +3887,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 47
             },
-            "big": "bigitems/gun47.sti"
+            "big": {
+                "path": "bigitems/gun47.sti"
+            }
         },
         "ubWeight": 2,
         "ubPerPocket": 8,
@@ -3648,7 +3916,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 136
             },
-            "big": "bigitems/p1item136.sti"
+            "big": {
+                "path": "bigitems/p1item136.sti"
+            }
         },
         "ubWeight": 100,
         "ubPerPocket": 0,
@@ -3675,7 +3945,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 11
             },
-            "big": "bigitems/p3item11.sti"
+            "big": {
+                "path": "bigitems/p3item11.sti"
+            }
         },
         "ubWeight": 5,
         "ubPerPocket": 1,
@@ -3703,7 +3975,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 8
             },
-            "big": "bigitems/p3item08.sti"
+            "big": {
+                "path": "bigitems/p3item08.sti"
+            }
         },
         "ubWeight": 50,
         "ubPerPocket": 0,
@@ -3730,7 +4004,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -3754,7 +4030,9 @@
                 "path": "interface/mdp3items.sti",
                 "subImageIndex": 10
             },
-            "big": "bigitems/p3item10.sti"
+            "big": {
+                "path": "bigitems/p3item10.sti"
+            }
         },
         "ubWeight": 10,
         "ubPerPocket": 1,
@@ -3779,7 +4057,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -3803,7 +4083,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 82
             },
-            "big": "bigitems/p1item82.sti"
+            "big": {
+                "path": "bigitems/p1item82.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -3829,7 +4111,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 83
             },
-            "big": "bigitems/p1item83.sti"
+            "big": {
+                "path": "bigitems/p1item83.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -3855,7 +4139,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 84
             },
-            "big": "bigitems/p1item84.sti"
+            "big": {
+                "path": "bigitems/p1item84.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -3881,7 +4167,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 87
             },
-            "big": "bigitems/p1item87.sti"
+            "big": {
+                "path": "bigitems/p1item87.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -3907,7 +4195,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 91
             },
-            "big": "bigitems/p1item91.sti"
+            "big": {
+                "path": "bigitems/p1item91.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -3933,7 +4223,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 92
             },
-            "big": "bigitems/p1item92.sti"
+            "big": {
+                "path": "bigitems/p1item92.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -3959,7 +4251,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 108
             },
-            "big": "bigitems/p1item108.sti"
+            "big": {
+                "path": "bigitems/p1item108.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -3986,7 +4280,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 109
             },
-            "big": "bigitems/p1item109.sti"
+            "big": {
+                "path": "bigitems/p1item109.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -4012,7 +4308,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4038,7 +4336,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4064,7 +4364,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4090,7 +4392,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4116,7 +4420,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4142,7 +4448,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4168,7 +4476,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4194,7 +4504,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4220,7 +4532,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4246,7 +4560,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4272,7 +4588,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4298,7 +4616,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4324,7 +4644,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4350,7 +4672,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4376,7 +4700,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4402,7 +4728,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4428,7 +4756,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4454,7 +4784,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4480,7 +4812,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4506,7 +4840,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4532,7 +4868,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4558,7 +4896,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4584,7 +4924,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4610,7 +4952,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -4636,7 +4980,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 31
             },
-            "big": "bigitems/p2item31.sti"
+            "big": {
+                "path": "bigitems/p2item31.sti"
+            }
         },
         "ubWeight": 4,
         "ubPerPocket": 0,
@@ -4662,7 +5008,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 30
             },
-            "big": "bigitems/p2item30.sti"
+            "big": {
+                "path": "bigitems/p2item30.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 6,
@@ -4688,7 +5036,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 28
             },
-            "big": "bigitems/p2item28.sti"
+            "big": {
+                "path": "bigitems/p2item28.sti"
+            }
         },
         "ubWeight": 3,
         "ubPerPocket": 1,
@@ -4716,7 +5066,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 32
             },
-            "big": "bigitems/p2item32.sti"
+            "big": {
+                "path": "bigitems/p2item32.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -4745,7 +5097,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 33
             },
-            "big": "bigitems/p2item33.sti"
+            "big": {
+                "path": "bigitems/p2item33.sti"
+            }
         },
         "ubWeight": 4,
         "ubPerPocket": 1,
@@ -4774,7 +5128,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 133
             },
-            "big": "bigitems/p1item133.sti"
+            "big": {
+                "path": "bigitems/p1item133.sti"
+            }
         },
         "ubWeight": 4,
         "ubPerPocket": 1,
@@ -4802,7 +5158,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 132
             },
-            "big": "bigitems/p1item132.sti"
+            "big": {
+                "path": "bigitems/p1item132.sti"
+            }
         },
         "ubWeight": 2,
         "ubPerPocket": 6,
@@ -4828,7 +5186,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 134
             },
-            "big": "bigitems/p1item134.sti"
+            "big": {
+                "path": "bigitems/p1item134.sti"
+            }
         },
         "ubWeight": 6,
         "ubPerPocket": 1,
@@ -4857,7 +5217,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 35
             },
-            "big": "bigitems/p2item35.sti"
+            "big": {
+                "path": "bigitems/p2item35.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -4884,7 +5246,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 27
             },
-            "big": "bigitems/p2item27.sti"
+            "big": {
+                "path": "bigitems/p2item27.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 1,
@@ -4911,7 +5275,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 36
             },
-            "big": "bigitems/p2item36.sti"
+            "big": {
+                "path": "bigitems/p2item36.sti"
+            }
         },
         "ubWeight": 2,
         "ubPerPocket": 4,
@@ -4937,7 +5303,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 122
             },
-            "big": "bigitems/p1item122.sti"
+            "big": {
+                "path": "bigitems/p1item122.sti"
+            }
         },
         "ubWeight": 3,
         "ubPerPocket": 6,
@@ -4963,7 +5331,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 127
             },
-            "big": "bigitems/p1item127.sti"
+            "big": {
+                "path": "bigitems/p1item127.sti"
+            }
         },
         "ubWeight": 6,
         "ubPerPocket": 1,
@@ -4991,7 +5361,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 128
             },
-            "big": "bigitems/p1item128.sti"
+            "big": {
+                "path": "bigitems/p1item128.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -5017,7 +5389,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 126
             },
-            "big": "bigitems/p1item126.sti"
+            "big": {
+                "path": "bigitems/p1item126.sti"
+            }
         },
         "ubWeight": 7,
         "ubPerPocket": 1,
@@ -5046,7 +5420,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 130
             },
-            "big": "bigitems/p1item130.sti"
+            "big": {
+                "path": "bigitems/p1item130.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 1,
@@ -5073,7 +5449,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 131
             },
-            "big": "bigitems/p1item131.sti"
+            "big": {
+                "path": "bigitems/p1item131.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 2,
@@ -5099,7 +5477,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 29
             },
-            "big": "bigitems/p2item29.sti"
+            "big": {
+                "path": "bigitems/p2item29.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -5125,7 +5505,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 129
             },
-            "big": "bigitems/p1item129.sti"
+            "big": {
+                "path": "bigitems/p1item129.sti"
+            }
         },
         "ubWeight": 3,
         "ubPerPocket": 1,
@@ -5155,7 +5537,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 26
             },
-            "big": "bigitems/p2item26.sti"
+            "big": {
+                "path": "bigitems/p2item26.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 6,
@@ -5180,7 +5564,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 123
             },
-            "big": "bigitems/p1item123.sti"
+            "big": {
+                "path": "bigitems/p1item123.sti"
+            }
         },
         "ubWeight": 1,
         "ubPerPocket": 8,
@@ -5206,7 +5592,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 125
             },
-            "big": "bigitems/p1item125.sti"
+            "big": {
+                "path": "bigitems/p1item125.sti"
+            }
         },
         "ubWeight": 10,
         "ubPerPocket": 1,
@@ -5235,7 +5623,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 38
             },
-            "big": "bigitems/p2item38.sti"
+            "big": {
+                "path": "bigitems/p2item38.sti"
+            }
         },
         "ubWeight": 2,
         "ubPerPocket": 1,
@@ -5261,7 +5651,9 @@
                 "path": "interface/mdp1items.sti",
                 "subImageIndex": 135
             },
-            "big": "bigitems/p1item135.sti"
+            "big": {
+                "path": "bigitems/p1item135.sti"
+            }
         },
         "ubWeight": 2,
         "ubPerPocket": 1,
@@ -5287,7 +5679,9 @@
                 "path": "interface/mdp2items.sti",
                 "subImageIndex": 39
             },
-            "big": "bigitems/p2item39.sti"
+            "big": {
+                "path": "bigitems/p2item39.sti"
+            }
         },
         "ubWeight": 20,
         "ubPerPocket": 0,
@@ -5312,7 +5706,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5336,7 +5732,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5360,7 +5758,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5384,7 +5784,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5408,7 +5810,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5432,7 +5836,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5456,7 +5862,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5480,7 +5888,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5504,7 +5914,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5528,7 +5940,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5552,7 +5966,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5576,7 +5992,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5600,7 +6018,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5624,7 +6044,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5648,7 +6070,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5672,7 +6096,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5696,7 +6122,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5720,7 +6148,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5744,7 +6174,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5768,7 +6200,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5792,7 +6226,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5816,7 +6252,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,
@@ -5840,7 +6278,9 @@
                 "path": "interface/mdguns.sti",
                 "subImageIndex": 0
             },
-            "big": "bigitems/gun00.sti"
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
         },
         "ubWeight": 0,
         "ubPerPocket": 0,

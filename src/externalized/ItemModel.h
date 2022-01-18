@@ -43,8 +43,8 @@ struct ItemModel
 	virtual uint32_t        getItemClass() const;
 	virtual uint8_t         getClassIndex() const;
 	virtual ItemCursor      getCursor() const;
-	virtual const SubImageModel& getInventoryGraphicSmall() const;
-	virtual const ST::string& getInventoryGraphicBig() const;
+	virtual const GraphicModel& getInventoryGraphicSmall() const;
+	virtual const GraphicModel& getInventoryGraphicBig() const;
 	virtual const TilesetTileIndexModel& getTileGraphic() const;
 	virtual uint8_t         getWeight() const;
 	virtual uint8_t         getPerPocket() const;

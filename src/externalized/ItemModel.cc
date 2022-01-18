@@ -12,7 +12,7 @@ ItemModel::ItemModel(uint16_t itemIndex,
 			uint32_t usItemClass,
 			uint8_t classIndex,
 			ItemCursor cursor) :
-	inventoryGraphics(InventoryGraphicsModel(SubImageModel("interface/mdguns.sti", 0), "bigitems/gun00.sti")),
+	inventoryGraphics(InventoryGraphicsModel(GraphicModel("interface/mdguns.sti", 0), GraphicModel("bigitems/gun00.sti", 0))),
 	tileGraphic(TilesetTileIndexModel(TileTypeDefines::GUNS, 1))
 {
 	this->itemIndex             = itemIndex;
@@ -73,8 +73,8 @@ uint8_t         ItemModel::getCoolness() const         { return ubCoolness;     
 int8_t          ItemModel::getReliability() const      { return bReliability;          }
 int8_t          ItemModel::getRepairEase() const       { return bRepairEase;           }
 uint16_t        ItemModel::getFlags() const            { return fFlags;                }
-const SubImageModel& ItemModel::getInventoryGraphicSmall() const { return inventoryGraphics.small; }
-const ST::string& ItemModel::getInventoryGraphicBig() const { return inventoryGraphics.big; }
+const GraphicModel& ItemModel::getInventoryGraphicSmall() const { return inventoryGraphics.small; }
+const GraphicModel& ItemModel::getInventoryGraphicBig() const { return inventoryGraphics.big; }
 const TilesetTileIndexModel& ItemModel::getTileGraphic() const { return tileGraphic; }
 
 bool ItemModel::isAmmo() const           { return usItemClass == IC_AMMO; }

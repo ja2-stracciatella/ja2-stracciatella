@@ -712,10 +712,12 @@ static void DisplayBigItemImage(const ItemModel* item, const UINT16 PosY)
 {
 	INT16 PosX = BOBBYR_GRID_PIC_X;
 
-	AutoSGPVObject uiImage(LoadTileGraphicForItem(item));
+	auto graphic = GetBigInventoryGraphicForItem(item);
+	AutoSGPVObject uiImage(graphic.first);
+	auto subImageIndex = graphic.second;
 
 	//center picture in frame
-	ETRLEObject const& pTrav   = uiImage->SubregionProperties(0);
+	ETRLEObject const& pTrav   = uiImage->SubregionProperties(subImageIndex);
 	UINT32      const  usWidth = pTrav.usWidth;
 	INT16       const  sCenX   = PosX + ABS(BOBBYR_GRID_PIC_WIDTH - usWidth) / 2 - pTrav.sOffsetX;
 	INT16       const  sCenY   = PosY + 8;
@@ -723,10 +725,10 @@ static void DisplayBigItemImage(const ItemModel* item, const UINT16 PosY)
 	if (gamepolicy(f_draw_item_shadow))
 	{
 		//blt the shadow of the item
-		BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage.get(), 0, sCenX - 2, sCenY + 2);
+		BltVideoObjectOutlineShadow(FRAME_BUFFER, uiImage.get(), subImageIndex, sCenX - 2, sCenY + 2);
 	}
 
-	BltVideoObject(FRAME_BUFFER, uiImage.get(), 0, sCenX, sCenY);
+	BltVideoObject(FRAME_BUFFER, uiImage.get(), subImageIndex, sCenX, sCenY);
 }
 
 

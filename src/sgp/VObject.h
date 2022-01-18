@@ -103,14 +103,14 @@ void ShutdownVideoObjectManager(void);
 #ifdef SGP_VIDEO_DEBUGGING
 extern UINT32 guiVObjectSize;
 
-	void PerformVideoInfoDumpIntoFile(const char* filename, BOOLEAN fAppend);
-	SGPVObject* AddAndRecordVObjectFromHImage(SGPImage*, UINT32 uiLineNum, const char* pSourceFile);
-	SGPVObject* AddAndRecordVObjectFromFile(const char* ImageFile, UINT32 uiLineNum, const char* pSourceFile);
+	void PerformVideoInfoDumpIntoFile(const ST::string& filename, BOOLEAN fAppend);
+	SGPVObject* AddAndRecordVObjectFromHImage(SGPImage*, UINT32 uiLineNum, const ST::string& pSourceFile);
+	SGPVObject* AddAndRecordVObjectFromFile(const ST::string& ImageFile, UINT32 uiLineNum, const ST::string& pSourceFile);
 	#define AddVideoObjectFromHImage(a) AddAndRecordVObjectFromHImage(a, __LINE__, __FILE__)
 	#define AddVideoObjectFromFile(a)   AddAndRecordVObjectFromFile(  a, __LINE__, __FILE__)
 #else
 	SGPVObject* AddStandardVideoObjectFromHImage(SGPImage*);
-	SGPVObject* AddStandardVideoObjectFromFile(const char* ImageFile);
+	SGPVObject* AddStandardVideoObjectFromFile(const ST::string& ImageFile);
 	#define AddVideoObjectFromHImage(a) AddStandardVideoObjectFromHImage(a)
 	#define AddVideoObjectFromFile(a)   AddStandardVideoObjectFromFile(a)
 #endif

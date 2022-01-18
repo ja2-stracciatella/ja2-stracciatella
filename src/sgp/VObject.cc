@@ -270,7 +270,7 @@ SGPVObject* AddStandardVideoObjectFromHImage(SGPImage* const img)
 #ifdef SGP_VIDEO_DEBUGGING
 static
 #endif
-SGPVObject* AddStandardVideoObjectFromFile(const char* const ImageFile)
+SGPVObject* AddStandardVideoObjectFromFile(const ST::string& ImageFile)
 {
 	AutoSGPImage hImage(CreateImage(ImageFile, IMAGE_ALLIMAGEDATA));
 	return AddStandardVideoObjectFromHImage(hImage.get());

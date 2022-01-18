@@ -34,23 +34,28 @@ items:
         small:
           title: Small
           description: Small graphics. Used e.g. in strategic & tactical inventory
-          $ref: types/sub-image.schema.yaml
+          $ref: types/graphic.schema.yaml
         big:
           title: Big
           description: Big graphics. Used e.g. in item detail view
-          $ref: types/resource-path.schema.yaml
+          $ref: types/graphic.schema.yaml
       required:
         - small
         - big
     tileGraphic:
       title: Tile graphic index
       description: Graphic that is used when the item is shown on the tactical map
-      $ref: types/tileset-tile-index.yaml
+      $ref: types/tileset-tile-index.schema.yaml
     ubWeight:
       title: Weight
       $ref: types/uint8.schema.yaml
     ubPerPocket:
       title: Per pocket
+      description: |
+        Defines item size and amount per inventory slot
+
+        - Items with value `0` are big and only fit into big pockets
+        - Items with value a value above `0` are small. The value determines how many stack into one small pocket.
       $ref: types/uint8.schema.yaml
     usPrice:
       title: Price

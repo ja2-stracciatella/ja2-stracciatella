@@ -9,7 +9,7 @@ properties:
   subImageIndex:
     title: Subimage index
     description: Index of the subimage inside the graphic file
+    default: 0
     $ref: types/uint8.schema.yaml
 required:
   - path
-  - subImageIndex

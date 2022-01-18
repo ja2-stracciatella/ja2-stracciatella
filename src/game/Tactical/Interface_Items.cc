@@ -213,6 +213,7 @@ static BOOLEAN gbItemPointerLocateGood = FALSE;
 static SGPVObject *guiItemDescBox;
 static SGPVObject *guiMapItemDescBox;
 static SGPVObject *guiItemGraphic;
+static UINT8 guiItemGraphicIndex;
 static SGPVObject *guiMoneyGraphicsForDescBox;
 static SGPVObject *guiBullet;
 BOOLEAN gfInItemDescBox = FALSE;
@@ -427,8 +428,10 @@ INT8 gbCompatibleApplyItem = FALSE;
 
 static SGPVObject *guiMapInvSecondHandBlockout;
 static SGPVObject *guiSecItemHiddenVO;
+static SGPVObject *guiSmallInventoryGraphicMissingSmallPocket;
+static SGPVObject *guiSmallInventoryGraphicMissingBigPocket;
 static std::map<ST::string, SGPVObject*> allInventoryGraphics;
-
+const ST::string guiBigInventoryGraphicMissingPath = "sti/interface/inventory/inventory-graphic-not-found-big.sti";
 
 static BOOLEAN AttemptToAddSubstring(ST::string& zDest, const ST::string& zTemp, UINT32* puiStringLength, UINT32 uiPixLimit)
 {
@@ -1567,17 +1570,18 @@ void INVRenderItem(SGPVSurface* const buffer, SOLDIERTYPE const* const s, OBJECT
 	if (dirty_level == DIRTYLEVEL2)
 	{
 		// Center the object in the slot
-		SGPVObject  const& item_vo = GetInterfaceGraphicForItem(item);
-		UINT8       const  gfx_idx = item->getInventoryGraphicSmall().getSubImageIndex();
-		ETRLEObject const& e       = item_vo.SubregionProperties(gfx_idx);
+		auto graphic = GetSmallInventoryGraphicForItem(item);
+		auto item_vo = graphic.first;
+		auto gfx_idx = graphic.second;
+		ETRLEObject const& e       = item_vo->SubregionProperties(gfx_idx);
 		INT16       const  cx      = sX + (sWidth  - e.usWidth)  / 2 - e.sOffsetX;
 		INT16       const  cy      = sY + (sHeight - e.usHeight) / 2 - e.sOffsetY;
 
 		if (gamepolicy(f_draw_item_shadow))
 		{
-			BltVideoObjectOutlineShadow(buffer, &item_vo, gfx_idx, cx - 2, cy + 2);
+			BltVideoObjectOutlineShadow(buffer, item_vo, gfx_idx, cx - 2, cy + 2);
 		}
-		BltVideoObjectOutline(      buffer, &item_vo, gfx_idx, cx,     cy, outline_colour);
+		BltVideoObjectOutline(buffer, item_vo, gfx_idx, cx,     cy, outline_colour);
 
 		if (buffer == FRAME_BUFFER)
 		{
@@ -1981,7 +1985,9 @@ void InternalInitItemDescriptionBox(OBJECTTYPE* const o, const INT16 sX, const I
 
 static void ReloadItemDesc(void)
 {
-	guiItemGraphic = LoadTileGraphicForItem(GCM->getItem(gpItemDescObject->usItem));
+	auto graphic = GetBigInventoryGraphicForItem(GCM->getItem(gpItemDescObject->usItem));
+	guiItemGraphic = graphic.first;
+	guiItemGraphicIndex = graphic.second;
 
 	//
 	// Load name, desc
@@ -2246,15 +2252,15 @@ void RenderItemDescriptionBox(void)
 	{
 		// Display item
 		// center in slot, remove offsets
-		ETRLEObject const& e  = guiItemGraphic->SubregionProperties(0);
+		ETRLEObject const& e  = guiItemGraphic->SubregionProperties(guiItemGraphicIndex);
 		SGPBox      const& xy = in_map ? g_desc_item_box_map: g_desc_item_box;
 		INT32       const  x  = dx + xy.x + (xy.w - e.usWidth)  / 2 - e.sOffsetX;
 		INT32       const  y  = dy + xy.y + (xy.h - e.usHeight) / 2 - e.sOffsetY;
 		if (gamepolicy(f_draw_item_shadow))
 		{
-			BltVideoObjectOutlineShadow(guiSAVEBUFFER, guiItemGraphic, 0, x - 2, y + 2);
+			BltVideoObjectOutlineShadow(guiSAVEBUFFER, guiItemGraphic, guiItemGraphicIndex, x - 2, y + 2);
 		}
-		BltVideoObject(guiSAVEBUFFER, guiItemGraphic, 0, x, y);
+		BltVideoObject(guiSAVEBUFFER, guiItemGraphic, guiItemGraphicIndex, x, y);
 	}
 
 	{ // Display status
@@ -4114,28 +4120,69 @@ void DeleteKeyRingPopup(void)
 	FreeMouseCursor();
 }
 
-
-SGPVObject const& GetInterfaceGraphicForItem(const ItemModel *item)
-{
-	auto index = item->getInventoryGraphicSmall().getPath().to_lower();
-	auto i = allInventoryGraphics.find(index);
-	if (i == allInventoryGraphics.end()) {
-		auto message = ST::format("Could not find inventory graphic for item `{}`", item->getInternalName());
-		throw std::runtime_error(message.c_str());
+std::pair<const SGPVObject*, UINT8> GetFallbackSmallInventoryGraphicForItem(const ItemModel *item) {
+	if (item->getPerPocket() != 0) {
+		return std::make_pair(guiSmallInventoryGraphicMissingSmallPocket, 0);
 	}
-	return *i->second;
+	return std::make_pair(guiSmallInventoryGraphicMissingBigPocket, 0);
 }
 
+std::pair<const SGPVObject*, UINT8> GetSmallInventoryGraphicForItem(const ItemModel *item)
+{
+	auto path = item->getInventoryGraphicSmall().getPath().to_lower();
+	auto subImageIndex = item->getInventoryGraphicSmall().getSubImageIndex();
+	auto i = allInventoryGraphics.find(path);
+	if (i == allInventoryGraphics.end()) {
+		STLOGE("Could not find small inventory graphic for item `{}`", item->getInternalName());
+		return GetFallbackSmallInventoryGraphicForItem(item);
+	}
+	if (subImageIndex >= i->second->SubregionCount()) {
+		STLOGE(
+			"subImageIndex out of range for small inventory graphic `{}` for item `{}`: subregion count is `{}`, subImageIndex is `{}`",
+			path,
+			item->getInternalName(),
+			i->second->SubregionCount(),
+			subImageIndex
+		);
+		return GetFallbackSmallInventoryGraphicForItem(item);
+	}
+	return std::make_pair(i->second, subImageIndex);
+}
 
 UINT16 GetTileGraphicForItem(const ItemModel * item)
 {
 	return GetTileIndexFromTypeSubIndex(item->getTileGraphic().tileType, item->getTileGraphic().subIndex);
 }
 
+std::pair<SGPVObject*, UINT8> GetFallbackBigInventoryGraphic() {
+	return std::make_pair(AddVideoObjectFromFile(guiBigInventoryGraphicMissingPath), 0);
+}
 
-SGPVObject* LoadTileGraphicForItem(const ItemModel * item)
+std::pair<SGPVObject*, UINT8> GetBigInventoryGraphicForItem(const ItemModel * item)
 {
-	return AddVideoObjectFromFile(item->getInventoryGraphicBig().c_str());
+	auto path = item->getInventoryGraphicBig().getPath();
+	auto subImageIndex = item->getInventoryGraphicBig().getSubImageIndex();
+
+	SGPVObject* vObject = NULL;
+	try {
+		vObject = AddVideoObjectFromFile(path);
+	} catch (const std::runtime_error &ex) {
+		STLOGE("Error loading big inventory graphic for item `{}`", item->getInternalName());
+	}
+	if (vObject == NULL) {
+		return GetFallbackBigInventoryGraphic();
+	}
+	if (subImageIndex >= vObject->SubregionCount()) {
+		STLOGE(
+			"subImageIndex out of range for big inventory graphic `{}` for item `{}`: subregion count is `{}`, subImageIndex is `{}`",
+			path,
+			item->getInternalName(),
+			vObject->SubregionCount(),
+			subImageIndex
+		);
+		return GetFallbackBigInventoryGraphic();
+	}
+	return std::make_pair(vObject, subImageIndex);
 }
 
 
@@ -5349,8 +5396,9 @@ void UpdateItemHatches(void)
 void SetMouseCursorFromItem(UINT16 const item_idx)
 {
 	const ItemModel * item = GCM->getItem(item_idx);
-	SGPVObject const& vo   = GetInterfaceGraphicForItem(item);
-	SetExternMouseCursor(vo, item->getInventoryGraphicSmall().getSubImageIndex());
+	auto graphic = GetSmallInventoryGraphicForItem(item);
+	auto vo = graphic.first;
+	SetExternMouseCursor(*vo, graphic.second);
 	SetCurrentCursorFromDatabase(EXTERN_CURSOR);
 }
 
@@ -5372,11 +5420,19 @@ void LoadInterfaceItemsGraphics()
 {
 	guiMapInvSecondHandBlockout = AddVideoObjectFromFile(INTERFACEDIR "/map_inv_2nd_gun_cover.sti");
 	guiSecItemHiddenVO          = AddVideoObjectFromFile(INTERFACEDIR "/secondary_gun_hidden.sti");
+	guiSmallInventoryGraphicMissingSmallPocket = AddVideoObjectFromFile("sti/interface/inventory/inventory-graphic-not-found-small-sp.sti");
+	guiSmallInventoryGraphicMissingBigPocket = AddVideoObjectFromFile("sti/interface/inventory/inventory-graphic-not-found-small-bp.sti");
 
 	for (auto item : GCM->getAllSmallInventoryGraphicPaths()) {
 		auto path = item.to_lower();
-		auto vObject = AddVideoObjectFromFile(item.c_str());
-		allInventoryGraphics.insert_or_assign(path, vObject);
+		if (allInventoryGraphics.find(path) == allInventoryGraphics.end()) {
+			try {
+				auto vObject = AddVideoObjectFromFile(item.c_str());
+				allInventoryGraphics.insert_or_assign(path, vObject);
+			} catch (const std::runtime_error &ex) {
+				STLOGE("Error loading small inventory graphic `{}`: {}", item, ex.what());
+			}
+		}
 	}
 
 	// Build a sawtooth black-white-black colour gradient
@@ -5395,6 +5451,8 @@ void DeleteInterfaceItemsGraphics()
 {
 	DeleteVideoObject(guiMapInvSecondHandBlockout);
 	DeleteVideoObject(guiSecItemHiddenVO);
+	DeleteVideoObject(guiSmallInventoryGraphicMissingSmallPocket);
+	DeleteVideoObject(guiSmallInventoryGraphicMissingBigPocket);
 	for (auto v : allInventoryGraphics) {
 		DeleteVideoObject(v.second);
 	}

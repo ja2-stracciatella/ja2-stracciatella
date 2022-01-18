@@ -881,20 +881,21 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		if (usItem == NOTHING) continue;
 
 		const ItemModel * item = GCM->getItem(usItem);
-		SGPVObject  const& item_vo  = GetInterfaceGraphicForItem(item);
-		auto index = item->getInventoryGraphicSmall().getSubImageIndex();
-		ETRLEObject const& e        = item_vo.SubregionProperties(index);
+		auto graphic = GetSmallInventoryGraphicForItem(item);
+		auto item_vo  = graphic.first;
+		auto index = graphic.second;
+		ETRLEObject const& e        = item_vo->SubregionProperties(index);
 		INT16       const  sCenX    = x + ABS(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
 		INT16       const  sCenY    = y + ABS(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
 
 		if (gamepolicy(f_draw_item_shadow))
 		{
 			// Blt the shadow of the item
-			BltVideoObjectOutlineShadow(FRAME_BUFFER, &item_vo, index, sCenX - 2, sCenY + 2);
+			BltVideoObjectOutlineShadow(FRAME_BUFFER, item_vo, index, sCenX - 2, sCenY + 2);
 		}
 
 		// Blt the item
-		BltVideoObjectOutline(      FRAME_BUFFER, &item_vo, index, sCenX,     sCenY, SGP_TRANSPARENT);
+		BltVideoObjectOutline(      FRAME_BUFFER, item_vo, index, sCenX,     sCenY, SGP_TRANSPARENT);
 
 		// If there are more then 1 piece of equipment in the current slot, display
 		// how many there are

@@ -185,11 +185,12 @@ void EntryInitEditorItemsInfo()
 static void DrawItemCentered(const ItemModel * item, SGPVSurface* const vs, INT32 x, INT32 const y, INT16 const outline)
 {
 	// Calculate the center position of the graphic in a 60 pixel wide area.
-	SGPVObject  const& vo  = GetInterfaceGraphicForItem(item);
-	UINT        const  gfx = item->getInventoryGraphicSmall().getSubImageIndex();
-	ETRLEObject const& e   = vo.SubregionProperties(gfx);
+	auto graphic = GetSmallInventoryGraphicForItem(item);
+	auto vo  = graphic.first;
+	auto gfx = graphic.second;
+	ETRLEObject const& e   = vo->SubregionProperties(gfx);
 	x += (60 - e.usWidth) / 2 - e.sOffsetX;
-	BltVideoObjectOutline(vs, &vo, gfx, x, y, outline);
+	BltVideoObjectOutline(vs, vo, gfx, x, y, outline);
 }
 
 
