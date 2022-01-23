@@ -1,0 +1,19 @@
+root = true
+
+# Basic settings for line endings, charset and indentation
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+indent_size = 4
+trim_trailing_whitespace = true
+
+# C++ sources and LUA use tabs
+[*.{cc,h, lua}]
+indent_style = tab
+
+# YAML uses 2 paces for better readability
+[*.yaml]
+indent_style = space
+indent_size = 2
