@@ -5,6 +5,7 @@ add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/mercs")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/policy")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/scripting")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/strategic")
+add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tileset")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/tactical")
 add_subdirectory("${CMAKE_CURRENT_SOURCE_DIR}/ui")
 
@@ -15,6 +16,8 @@ set(LOCAL_JA2_SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/DealerModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/DealerInventory.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/DefaultContentManager.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/GraphicModel.cc
+    ${CMAKE_CURRENT_SOURCE_DIR}/InventoryGraphicsModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/ItemModel.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/JsonUtility.cc
     ${CMAKE_CURRENT_SOURCE_DIR}/LoadingScreenModel.cc

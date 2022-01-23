@@ -1,0 +1,15 @@
+type: object
+title: Sub Image
+description: Used whenever a specific sub image of an image resource is referenced
+properties:
+  path:
+    title: Path
+    description: Path to file containing the graphic
+    $ref: types/resource-path.schema.yaml
+  subImageIndex:
+    title: Subimage index
+    description: Index of the subimage inside the graphic file
+    default: 0
+    $ref: types/uint8.schema.yaml
+required:
+  - path

@@ -9,6 +9,7 @@
 #include "UILayout.h"
 
 #include <string_theory/string>
+#include <utility>
 
 
 struct ItemModel;
@@ -104,9 +105,9 @@ void DrawItemFreeCursor(void);
 void DrawItemTileCursor(void);
 BOOLEAN HandleItemPointerClick( UINT16 usMapPos );
 UINT8 GetAttachmentHintColor(const OBJECTTYPE* pObj);
-SGPVObject const& GetInterfaceGraphicForItem(const ItemModel *item);
+std::pair<const SGPVObject*, UINT8> GetSmallInventoryGraphicForItem(const ItemModel *item);
+std::pair<SGPVObject*, UINT8> GetBigInventoryGraphicForItem(const ItemModel *item);
 UINT16            GetTileGraphicForItem(const ItemModel *item);
-SGPVObject*       LoadTileGraphicForItem(const ItemModel *item);
 
 ST::string GetHelpTextForItem(const OBJECTTYPE& obj);
 

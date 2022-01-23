@@ -1,19 +1,19 @@
-/**
- * Notes:
- *  - Items must be in range between 131 and 350 (inclusive). Adding new items is not supported.
- *  - You may also want to update the EDT and texts if you change an item
- *  - Many of the items are quest related and referenced in the code.
- */
 [
-    // EXPLOSIVES
     {
         "itemIndex": 131,
         "internalName": "STUN_GRENADE",
         "usItemClass": 256,
         "ubClassIndex": 0,
         "ubCursor": 6,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 38,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 38
+            },
+            "big": {
+                "path": "bigitems/p1item38.sti"
+            }
+        },
         "ubWeight": 6,
         "ubPerPocket": 4,
         "usPrice": 100,
@@ -22,7 +22,11 @@
         "bRepairEase": -2,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 39
+        }
     },
     {
         "itemIndex": 132,
@@ -30,8 +34,15 @@
         "usItemClass": 256,
         "ubClassIndex": 1,
         "ubCursor": 6,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 48,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 48
+            },
+            "big": {
+                "path": "bigitems/p1item48.sti"
+            }
+        },
         "ubWeight": 6,
         "ubPerPocket": 4,
         "usPrice": 120,
@@ -40,7 +51,11 @@
         "bRepairEase": -2,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 49
+        }
     },
     {
         "itemIndex": 133,
@@ -48,8 +63,15 @@
         "usItemClass": 256,
         "ubClassIndex": 2,
         "ubCursor": 6,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 41,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 41
+            },
+            "big": {
+                "path": "bigitems/p1item41.sti"
+            }
+        },
         "ubWeight": 6,
         "ubPerPocket": 4,
         "usPrice": 500,
@@ -58,7 +80,11 @@
         "bRepairEase": -3,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 42
+        }
     },
     {
         "itemIndex": 134,
@@ -66,8 +92,15 @@
         "usItemClass": 256,
         "ubClassIndex": 3,
         "ubCursor": 6,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 50,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 50
+            },
+            "big": {
+                "path": "bigitems/p1item50.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 6,
         "usPrice": 150,
@@ -76,7 +109,11 @@
         "bRepairEase": -4,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 51
+        }
     },
     {
         "itemIndex": 135,
@@ -84,8 +121,15 @@
         "usItemClass": 256,
         "ubClassIndex": 4,
         "ubCursor": 6,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 49,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 49
+            },
+            "big": {
+                "path": "bigitems/p1item49.sti"
+            }
+        },
         "ubWeight": 6,
         "ubPerPocket": 4,
         "usPrice": 200,
@@ -94,7 +138,11 @@
         "bRepairEase": -4,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 50
+        }
     },
     {
         "itemIndex": 136,
@@ -102,8 +150,15 @@
         "usItemClass": 512,
         "ubClassIndex": 5,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 3,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 3
+            },
+            "big": {
+                "path": "bigitems/p2item03.sti"
+            }
+        },
         "ubWeight": 11,
         "ubPerPocket": 2,
         "usPrice": 400,
@@ -111,7 +166,11 @@
         "bReliability": 0,
         "bRepairEase": -4,
         "bDamageable": true,
-        "bRepairable": true
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 4
+        }
     },
     {
         "itemIndex": 137,
@@ -119,8 +178,15 @@
         "usItemClass": 512,
         "ubClassIndex": 6,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/p2item00.sti"
+            }
+        },
         "ubWeight": 11,
         "ubPerPocket": 1,
         "usPrice": 500,
@@ -128,7 +194,11 @@
         "bReliability": 0,
         "bRepairEase": -4,
         "bDamageable": true,
-        "bRepairable": true
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 138,
@@ -136,8 +206,15 @@
         "usItemClass": 512,
         "ubClassIndex": 7,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 23,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 23
+            },
+            "big": {
+                "path": "bigitems/p2item23.sti"
+            }
+        },
         "ubWeight": 11,
         "ubPerPocket": 1,
         "usPrice": 1000,
@@ -145,7 +222,11 @@
         "bReliability": 0,
         "bRepairEase": -4,
         "bDamageable": true,
-        "bRepairable": true
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 24
+        }
     },
     {
         "itemIndex": 139,
@@ -153,8 +234,15 @@
         "usItemClass": 512,
         "ubClassIndex": 8,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 45,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 45
+            },
+            "big": {
+                "path": "bigitems/p1item45.sti"
+            }
+        },
         "ubWeight": 11,
         "ubPerPocket": 1,
         "usPrice": 750,
@@ -162,7 +250,11 @@
         "bReliability": 0,
         "bRepairEase": -4,
         "bDamageable": true,
-        "bRepairable": true
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 46
+        }
     },
     {
         "itemIndex": 140,
@@ -170,8 +262,15 @@
         "usItemClass": 512,
         "ubClassIndex": 9,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 40,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
+        },
         "ubWeight": 41,
         "ubPerPocket": 2,
         "usPrice": 400,
@@ -180,7 +279,11 @@
         "bRepairEase": -4,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 41
+        }
     },
     {
         "itemIndex": 141,
@@ -188,8 +291,15 @@
         "usItemClass": 512,
         "ubClassIndex": 10,
         "ubCursor": 18,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 46,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 46
+            },
+            "big": {
+                "path": "bigitems/p1item46.sti"
+            }
+        },
         "ubWeight": 8,
         "ubPerPocket": 1,
         "usPrice": 300,
@@ -198,7 +308,11 @@
         "bRepairEase": -4,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 47
+        }
     },
     {
         "itemIndex": 142,
@@ -206,8 +320,15 @@
         "usItemClass": 512,
         "ubClassIndex": 11,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 44,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 44
+            },
+            "big": {
+                "path": "bigitems/p1item44.sti"
+            }
+        },
         "ubWeight": 11,
         "ubPerPocket": 1,
         "usPrice": 1500,
@@ -215,7 +336,11 @@
         "bReliability": 0,
         "bRepairEase": -4,
         "bDamageable": true,
-        "bRepairable": true
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 45
+        }
     },
     {
         "itemIndex": 143,
@@ -223,8 +348,15 @@
         "usItemClass": 512,
         "ubClassIndex": 12,
         "ubCursor": 18,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 42,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 42
+            },
+            "big": {
+                "path": "bigitems/p1item42.sti"
+            }
+        },
         "ubWeight": 4,
         "ubPerPocket": 2,
         "usPrice": 0,
@@ -234,7 +366,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 43
+        }
     },
     {
         "itemIndex": 144,
@@ -242,8 +378,15 @@
         "usItemClass": 512,
         "ubClassIndex": 13,
         "ubCursor": 18,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 43,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 43
+            },
+            "big": {
+                "path": "bigitems/p1item43.sti"
+            }
+        },
         "ubWeight": 4,
         "ubPerPocket": 2,
         "usPrice": 0,
@@ -253,7 +396,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 44
+        }
     },
     {
         "itemIndex": 145,
@@ -261,8 +408,15 @@
         "usItemClass": 512,
         "ubClassIndex": 14,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 107,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 107
+            },
+            "big": {
+                "path": "bigitems/p1item107.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 4,
         "usPrice": 250,
@@ -271,7 +425,11 @@
         "bRepairEase": -4,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 108
+        }
     },
     {
         "itemIndex": 146,
@@ -279,8 +437,15 @@
         "usItemClass": 256,
         "ubClassIndex": 15,
         "ubCursor": 6,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 24,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 24
+            },
+            "big": {
+                "path": "bigitems/p2item24.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 6,
         "usPrice": 50,
@@ -288,7 +453,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bRepairable": true
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 25
+        }
     },
     {
         "itemIndex": 147,
@@ -296,8 +465,15 @@
         "usItemClass": 256,
         "ubClassIndex": 16,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 97,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 97
+            },
+            "big": {
+                "path": "bigitems/p1item97.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 4,
         "usPrice": 400,
@@ -306,7 +482,11 @@
         "bRepairEase": -4,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 98
+        }
     },
     {
         "itemIndex": 148,
@@ -314,8 +494,15 @@
         "usItemClass": 256,
         "ubClassIndex": 17,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 111,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 111
+            },
+            "big": {
+                "path": "bigitems/p1item111.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 4,
         "usPrice": 250,
@@ -324,7 +511,11 @@
         "bRepairEase": -2,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 112
+        }
     },
     {
         "itemIndex": 149,
@@ -332,8 +523,15 @@
         "usItemClass": 256,
         "ubClassIndex": 18,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 113,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 113
+            },
+            "big": {
+                "path": "bigitems/p1item113.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 4,
         "usPrice": 200,
@@ -342,7 +540,11 @@
         "bRepairEase": -2,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 114
+        }
     },
     {
         "itemIndex": 150,
@@ -350,8 +552,15 @@
         "usItemClass": 256,
         "ubClassIndex": 19,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 112,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 112
+            },
+            "big": {
+                "path": "bigitems/p1item112.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 4,
         "usPrice": 100,
@@ -360,7 +569,11 @@
         "bRepairEase": -2,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 113
+        }
     },
     {
         "itemIndex": 151,
@@ -368,8 +581,15 @@
         "usItemClass": 256,
         "ubClassIndex": 20,
         "ubCursor": 6,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 98,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 98
+            },
+            "big": {
+                "path": "bigitems/p1item98.sti"
+            }
+        },
         "ubWeight": 6,
         "ubPerPocket": 4,
         "usPrice": 50,
@@ -378,7 +598,11 @@
         "bRepairEase": -2,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 99
+        }
     },
     {
         "itemIndex": 152,
@@ -386,8 +610,15 @@
         "usItemClass": 512,
         "ubClassIndex": 21,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 40,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
+        },
         "ubWeight": 41,
         "ubPerPocket": 8,
         "usPrice": 450,
@@ -397,7 +628,11 @@
         "bDamageable": true,
         "bMetal": true,
         "bNotBuyable": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 41
+        }
     },
     {
         "itemIndex": 153,
@@ -405,8 +640,15 @@
         "usItemClass": 512,
         "ubClassIndex": 22,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 40,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
+        },
         "ubWeight": 41,
         "ubPerPocket": 2,
         "usPrice": 450,
@@ -415,7 +657,11 @@
         "bRepairEase": -4,
         "bDamageable": true,
         "bMetal": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 41
+        }
     },
     {
         "itemIndex": 154,
@@ -423,8 +669,15 @@
         "usItemClass": 256,
         "ubClassIndex": 23,
         "ubCursor": 6,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 37,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 37
+            },
+            "big": {
+                "path": "bigitems/p2item37.sti"
+            }
+        },
         "ubWeight": 6,
         "ubPerPocket": 4,
         "usPrice": 50,
@@ -432,16 +685,27 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 38
+        }
     },
     {
         "itemIndex": 155,
-        "internalName": "STRUCTURE_EXPLOSION", /* fake struct xplod*/
+        "internalName": "STRUCTURE_EXPLOSION",
         "usItemClass": 512,
         "ubClassIndex": 24,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 40,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
+        },
         "ubWeight": 41,
         "ubPerPocket": 2,
         "usPrice": 450,
@@ -450,16 +714,27 @@
         "bRepairEase": -4,
         "bDamageable": true,
         "bMetal": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 41
+        }
     },
     {
         "itemIndex": 156,
-        "internalName": "GREAT_BIG_EXPLOSION", /* fake vehicle xplod*/
+        "internalName": "GREAT_BIG_EXPLOSION",
         "usItemClass": 512,
         "ubClassIndex": 25,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 40,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/p1item40.sti"
+            }
+        },
         "ubWeight": 41,
         "ubPerPocket": 2,
         "usPrice": 450,
@@ -468,7 +743,11 @@
         "bRepairEase": -4,
         "bDamageable": true,
         "bMetal": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 41
+        }
     },
     {
         "itemIndex": 157,
@@ -476,8 +755,15 @@
         "usItemClass": 256,
         "ubClassIndex": 26,
         "ubCursor": 6,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 48,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 48
+            },
+            "big": {
+                "path": "bigitems/p1item48.sti"
+            }
+        },
         "ubWeight": 6,
         "ubPerPocket": 4,
         "usPrice": 0,
@@ -487,7 +773,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 49
+        }
     },
     {
         "itemIndex": 158,
@@ -495,15 +785,26 @@
         "usItemClass": 256,
         "ubClassIndex": 27,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 159,
@@ -511,15 +812,26 @@
         "usItemClass": 256,
         "ubClassIndex": 28,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 160,
@@ -527,25 +839,42 @@
         "usItemClass": 256,
         "ubClassIndex": 29,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
-    // ARMOUR
     {
         "itemIndex": 161,
         "internalName": "FLAK_JACKET",
         "usItemClass": 2048,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 66,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 66
+            },
+            "big": {
+                "path": "bigitems/p1item66.sti"
+            }
+        },
         "ubWeight": 20,
         "ubPerPocket": 0,
         "usPrice": 300,
@@ -555,7 +884,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 67
+        }
     },
     {
         "itemIndex": 162,
@@ -563,8 +896,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 1,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 18,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 18
+            },
+            "big": {
+                "path": "bigitems/p2item18.sti"
+            }
+        },
         "ubWeight": 22,
         "ubPerPocket": 0,
         "usPrice": 350,
@@ -575,7 +915,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 19
+        }
     },
     {
         "itemIndex": 163,
@@ -583,8 +927,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 2,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 11,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 11
+            },
+            "big": {
+                "path": "bigitems/p2item11.sti"
+            }
+        },
         "ubWeight": 18,
         "ubPerPocket": 0,
         "usPrice": 400,
@@ -595,7 +946,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 12
+        }
     },
     {
         "itemIndex": 164,
@@ -603,8 +958,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 3,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 64,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 64
+            },
+            "big": {
+                "path": "bigitems/p1item64.sti"
+            }
+        },
         "ubWeight": 32,
         "ubPerPocket": 0,
         "usPrice": 500,
@@ -614,7 +976,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 65
+        }
     },
     {
         "itemIndex": 165,
@@ -622,8 +988,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 4,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 16,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 16
+            },
+            "big": {
+                "path": "bigitems/p2item16.sti"
+            }
+        },
         "ubWeight": 35,
         "ubPerPocket": 0,
         "usPrice": 600,
@@ -634,7 +1007,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 17
+        }
     },
     {
         "itemIndex": 166,
@@ -642,8 +1019,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 5,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 9,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 9
+            },
+            "big": {
+                "path": "bigitems/p2item09.sti"
+            }
+        },
         "ubWeight": 29,
         "ubPerPocket": 0,
         "usPrice": 700,
@@ -654,7 +1038,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 10
+        }
     },
     {
         "itemIndex": 167,
@@ -662,8 +1050,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 6,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 65,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 65
+            },
+            "big": {
+                "path": "bigitems/p1item65.sti"
+            }
+        },
         "ubWeight": 32,
         "ubPerPocket": 0,
         "usPrice": 1000,
@@ -673,7 +1068,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 66
+        }
     },
     {
         "itemIndex": 168,
@@ -681,8 +1080,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 7,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 17,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 17
+            },
+            "big": {
+                "path": "bigitems/p2item17.sti"
+            }
+        },
         "ubWeight": 35,
         "ubPerPocket": 0,
         "usPrice": 1100,
@@ -693,7 +1099,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 18
+        }
     },
     {
         "itemIndex": 169,
@@ -701,8 +1111,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 8,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 10,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 10
+            },
+            "big": {
+                "path": "bigitems/p2item10.sti"
+            }
+        },
         "ubWeight": 29,
         "ubPerPocket": 0,
         "usPrice": 1200,
@@ -713,7 +1130,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 11
+        }
     },
     {
         "itemIndex": 170,
@@ -721,8 +1142,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 9,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 67,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 67
+            },
+            "big": {
+                "path": "bigitems/p1item67.sti"
+            }
+        },
         "ubWeight": 39,
         "ubPerPocket": 0,
         "usPrice": 650,
@@ -732,7 +1160,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 68
+        }
     },
     {
         "itemIndex": 171,
@@ -740,8 +1172,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 10,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 19,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 19
+            },
+            "big": {
+                "path": "bigitems/p2item19.sti"
+            }
+        },
         "ubWeight": 43,
         "ubPerPocket": 0,
         "usPrice": 800,
@@ -752,7 +1191,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 20
+        }
     },
     {
         "itemIndex": 172,
@@ -760,8 +1203,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 11,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 12,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 12
+            },
+            "big": {
+                "path": "bigitems/p2item12.sti"
+            }
+        },
         "ubWeight": 35,
         "ubPerPocket": 0,
         "usPrice": 950,
@@ -772,7 +1222,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 13
+        }
     },
     {
         "itemIndex": 173,
@@ -780,8 +1234,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 12,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 68,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 68
+            },
+            "big": {
+                "path": "bigitems/p1item68.sti"
+            }
+        },
         "ubWeight": 39,
         "ubPerPocket": 0,
         "usPrice": 900,
@@ -791,7 +1252,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 69
+        }
     },
     {
         "itemIndex": 174,
@@ -799,8 +1264,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 13,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 20,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 20
+            },
+            "big": {
+                "path": "bigitems/p2item20.sti"
+            }
+        },
         "ubWeight": 43,
         "ubPerPocket": 0,
         "usPrice": 1100,
@@ -811,7 +1283,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 21
+        }
     },
     {
         "itemIndex": 175,
@@ -819,8 +1295,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 14,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 13,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 13
+            },
+            "big": {
+                "path": "bigitems/p2item13.sti"
+            }
+        },
         "ubWeight": 35,
         "ubPerPocket": 0,
         "usPrice": 1300,
@@ -831,7 +1314,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 14
+        }
     },
     {
         "itemIndex": 176,
@@ -839,8 +1326,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 15,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 61,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 61
+            },
+            "big": {
+                "path": "bigitems/p1item61.sti"
+            }
+        },
         "ubWeight": 14,
         "ubPerPocket": 0,
         "usPrice": 50,
@@ -851,7 +1345,11 @@
         "bRepairable": true,
         "bMetal": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 62
+        }
     },
     {
         "itemIndex": 177,
@@ -859,8 +1357,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 16,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 63,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 63
+            },
+            "big": {
+                "path": "bigitems/p1item63.sti"
+            }
+        },
         "ubWeight": 14,
         "ubPerPocket": 0,
         "usPrice": 200,
@@ -870,7 +1375,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 64
+        }
     },
     {
         "itemIndex": 178,
@@ -878,8 +1387,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 17,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 15,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 15
+            },
+            "big": {
+                "path": "bigitems/p2item15.sti"
+            }
+        },
         "ubWeight": 15,
         "ubPerPocket": 0,
         "usPrice": 250,
@@ -890,7 +1406,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 16
+        }
     },
     {
         "itemIndex": 179,
@@ -898,8 +1418,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 18,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 8,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 8
+            },
+            "big": {
+                "path": "bigitems/p2item08.sti"
+            }
+        },
         "ubWeight": 13,
         "ubPerPocket": 0,
         "usPrice": 300,
@@ -910,7 +1437,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 9
+        }
     },
     {
         "itemIndex": 180,
@@ -918,8 +1449,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 19,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 62,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 62
+            },
+            "big": {
+                "path": "bigitems/p1item62.sti"
+            }
+        },
         "ubWeight": 14,
         "ubPerPocket": 0,
         "usPrice": 450,
@@ -929,7 +1467,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 63
+        }
     },
     {
         "itemIndex": 181,
@@ -937,8 +1479,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 20,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 14,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 14
+            },
+            "big": {
+                "path": "bigitems/p2item14.sti"
+            }
+        },
         "ubWeight": 15,
         "ubPerPocket": 0,
         "usPrice": 550,
@@ -949,7 +1498,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 15
+        }
     },
     {
         "itemIndex": 182,
@@ -957,8 +1510,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 21,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 7,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 7
+            },
+            "big": {
+                "path": "bigitems/p2item07.sti"
+            }
+        },
         "ubWeight": 13,
         "ubPerPocket": 0,
         "usPrice": 650,
@@ -969,7 +1529,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 8
+        }
     },
     {
         "itemIndex": 183,
@@ -977,8 +1541,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 22,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 81,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 81
+            },
+            "big": {
+                "path": "bigitems/p1item81.sti"
+            }
+        },
         "ubWeight": 12,
         "ubPerPocket": 2,
         "usPrice": 250,
@@ -988,7 +1559,11 @@
         "bDamageable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bAttachment": true
+        "bAttachment": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 82
+        }
     },
     {
         "itemIndex": 184,
@@ -996,8 +1571,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 23,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -1010,7 +1592,11 @@
         "bShowStatus": true,
         "bNotBuyable": true,
         "bNotEditor": true,
-        "bDefaultUndroppable": true
+        "bDefaultUndroppable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 185,
@@ -1018,8 +1604,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 24,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -1032,7 +1625,11 @@
         "bShowStatus": true,
         "bNotBuyable": true,
         "bNotEditor": true,
-        "bDefaultUndroppable": true
+        "bDefaultUndroppable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 186,
@@ -1040,8 +1637,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 25,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -1054,7 +1658,11 @@
         "bShowStatus": true,
         "bNotBuyable": true,
         "bNotEditor": true,
-        "bDefaultUndroppable": true
+        "bDefaultUndroppable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 187,
@@ -1062,8 +1670,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 26,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -1076,7 +1691,11 @@
         "bShowStatus": true,
         "bNotBuyable": true,
         "bNotEditor": true,
-        "bDefaultUndroppable": true
+        "bDefaultUndroppable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 188,
@@ -1084,8 +1703,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 27,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 96,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 96
+            },
+            "big": {
+                "path": "bigitems/p1item96.sti"
+            }
+        },
         "ubWeight": 20,
         "ubPerPocket": 0,
         "usPrice": 200,
@@ -1095,7 +1721,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 97
+        }
     },
     {
         "itemIndex": 189,
@@ -1103,8 +1733,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 28,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 116,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 116
+            },
+            "big": {
+                "path": "bigitems/p1item116.sti"
+            }
+        },
         "ubWeight": 20,
         "ubPerPocket": 0,
         "usPrice": 950,
@@ -1115,7 +1752,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 117
+        }
     },
     {
         "itemIndex": 190,
@@ -1123,8 +1764,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 29,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 117,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 117
+            },
+            "big": {
+                "path": "bigitems/p1item117.sti"
+            }
+        },
         "ubWeight": 20,
         "ubPerPocket": 0,
         "usPrice": 1200,
@@ -1135,7 +1783,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 118
+        }
     },
     {
         "itemIndex": 191,
@@ -1143,8 +1795,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 30,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 118,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 118
+            },
+            "big": {
+                "path": "bigitems/p1item118.sti"
+            }
+        },
         "ubWeight": 20,
         "ubPerPocket": 0,
         "usPrice": 1500,
@@ -1155,7 +1814,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 119
+        }
     },
     {
         "itemIndex": 192,
@@ -1163,8 +1826,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 31,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -1177,7 +1847,11 @@
         "bShowStatus": true,
         "bNotBuyable": true,
         "bNotEditor": true,
-        "bDefaultUndroppable": true
+        "bDefaultUndroppable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 193,
@@ -1185,8 +1859,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 32,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -1199,7 +1880,11 @@
         "bShowStatus": true,
         "bNotBuyable": true,
         "bNotEditor": true,
-        "bDefaultUndroppable": true
+        "bDefaultUndroppable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 194,
@@ -1207,8 +1892,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 33,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 25,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 25
+            },
+            "big": {
+                "path": "bigitems/p2item25.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 1,
         "usPrice": 10,
@@ -1217,7 +1909,11 @@
         "bRepairEase": 0,
         "bDamageable": true,
         "bShowStatus": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 26
+        }
     },
     {
         "itemIndex": 195,
@@ -1225,8 +1921,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 33,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 34,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 34
+            },
+            "big": {
+                "path": "bigitems/p2item34.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 1,
         "usPrice": 10,
@@ -1235,7 +1938,11 @@
         "bRepairEase": 0,
         "bDamageable": true,
         "bShowStatus": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 35
+        }
     },
     {
         "itemIndex": 196,
@@ -1243,8 +1950,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 34,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 137,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 137
+            },
+            "big": {
+                "path": "bigitems/p1item137.sti"
+            }
+        },
         "ubWeight": 32,
         "ubPerPocket": 0,
         "usPrice": 700,
@@ -1254,7 +1968,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 138
+        }
     },
     {
         "itemIndex": 197,
@@ -1262,8 +1980,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 35,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 40,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 40
+            },
+            "big": {
+                "path": "bigitems/p2item40.sti"
+            }
+        },
         "ubWeight": 35,
         "ubPerPocket": 0,
         "usPrice": 800,
@@ -1274,7 +1999,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 41
+        }
     },
     {
         "itemIndex": 198,
@@ -1282,8 +2011,15 @@
         "usItemClass": 2048,
         "ubClassIndex": 36,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 41,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 41
+            },
+            "big": {
+                "path": "bigitems/p2item41.sti"
+            }
+        },
         "ubWeight": 29,
         "ubPerPocket": 0,
         "usPrice": 900,
@@ -1294,7 +2030,11 @@
         "bRepairable": true,
         "bSinks": true,
         "bShowStatus": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 42
+        }
     },
     {
         "itemIndex": 199,
@@ -1302,14 +2042,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 200,
@@ -1317,14 +2068,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 201,
@@ -1332,8 +2094,15 @@
         "usItemClass": 4096,
         "ubClassIndex": 0,
         "ubCursor": 5,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 73,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 73
+            },
+            "big": {
+                "path": "bigitems/p1item73.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 4,
         "usPrice": 100,
@@ -1342,7 +2111,11 @@
         "bRepairEase": 0,
         "bDamageable": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 74
+        }
     },
     {
         "itemIndex": 202,
@@ -1350,8 +2123,15 @@
         "usItemClass": 4096,
         "ubClassIndex": 0,
         "ubCursor": 5,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 86,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 86
+            },
+            "big": {
+                "path": "bigitems/p1item86.sti"
+            }
+        },
         "ubWeight": 18,
         "ubPerPocket": 0,
         "usPrice": 300,
@@ -1361,7 +2141,11 @@
         "bDamageable": true,
         "bMetal": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 87
+        }
     },
     {
         "itemIndex": 203,
@@ -1369,8 +2153,15 @@
         "usItemClass": 8192,
         "ubClassIndex": 0,
         "ubCursor": 19,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 21,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 21
+            },
+            "big": {
+                "path": "bigitems/p2item21.sti"
+            }
+        },
         "ubWeight": 50,
         "ubPerPocket": 0,
         "usPrice": 250,
@@ -1380,7 +2171,11 @@
         "bDamageable": true,
         "bMetal": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 22
+        }
     },
     {
         "itemIndex": 204,
@@ -1388,8 +2183,15 @@
         "usItemClass": 8192,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 78,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 78
+            },
+            "big": {
+                "path": "bigitems/p1item78.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 1,
         "usPrice": 250,
@@ -1400,7 +2202,11 @@
         "bRepairable": true,
         "bMetal": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 79
+        }
     },
     {
         "itemIndex": 205,
@@ -1408,8 +2214,15 @@
         "usItemClass": 8192,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 58,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 58
+            },
+            "big": {
+                "path": "bigitems/p1item58.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 4,
         "usPrice": 250,
@@ -1418,7 +2231,11 @@
         "bRepairEase": 0,
         "bDamageable": true,
         "bSinks": true,
-        "bShowStatus": true
+        "bShowStatus": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 59
+        }
     },
     {
         "itemIndex": 206,
@@ -1426,14 +2243,25 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 207,
@@ -1441,8 +2269,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 52,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 52
+            },
+            "big": {
+                "path": "bigitems/p1item52.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 4,
         "usPrice": 300,
@@ -1452,7 +2287,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bAttachment": true
+        "bAttachment": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 53
+        }
     },
     {
         "itemIndex": 208,
@@ -1460,8 +2299,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 76,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 76
+            },
+            "big": {
+                "path": "bigitems/p1item76.sti"
+            }
+        },
         "ubWeight": 9,
         "ubPerPocket": 4,
         "usPrice": 500,
@@ -1471,7 +2317,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bAttachment": true
+        "bAttachment": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 77
+        }
     },
     {
         "itemIndex": 209,
@@ -1479,8 +2329,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 69,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 69
+            },
+            "big": {
+                "path": "bigitems/p1item69.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 2,
         "usPrice": 50,
@@ -1490,17 +2347,27 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bAttachment": true
+        "bAttachment": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 70
+        }
     },
-    // HEAD ITEMS
     {
         "itemIndex": 210,
         "internalName": "EXTENDEDEAR",
         "usItemClass": 32768,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 77,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 77
+            },
+            "big": {
+                "path": "bigitems/p1item77.sti"
+            }
+        },
         "ubWeight": 9,
         "ubPerPocket": 1,
         "usPrice": 400,
@@ -1510,7 +2377,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 78
+        }
     },
     {
         "itemIndex": 211,
@@ -1518,8 +2389,15 @@
         "usItemClass": 32768,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 74,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 74
+            },
+            "big": {
+                "path": "bigitems/p1item74.sti"
+            }
+        },
         "ubWeight": 9,
         "ubPerPocket": 1,
         "usPrice": 800,
@@ -1529,7 +2407,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 75
+        }
     },
     {
         "itemIndex": 212,
@@ -1537,8 +2419,15 @@
         "usItemClass": 32768,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 55,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 55
+            },
+            "big": {
+                "path": "bigitems/p1item55.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 4,
         "usPrice": 150,
@@ -1546,7 +2435,11 @@
         "bReliability": 0,
         "bRepairEase": 3,
         "bDamageable": true,
-        "bRepairable": true
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 56
+        }
     },
     {
         "itemIndex": 213,
@@ -1554,8 +2447,15 @@
         "usItemClass": 32768,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 75,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 75
+            },
+            "big": {
+                "path": "bigitems/p1item75.sti"
+            }
+        },
         "ubWeight": 9,
         "ubPerPocket": 1,
         "usPrice": 100,
@@ -1563,24 +2463,38 @@
         "bReliability": 0,
         "bRepairEase": 1,
         "bDamageable": true,
-        "bRepairable": true
+        "bRepairable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 76
+        }
     },
-    // MISC
     {
         "itemIndex": 214,
         "internalName": "CANTEEN",
         "usItemClass": 8192,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 5,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 5
+            },
+            "big": {
+                "path": "bigitems/p2item05.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 4,
         "usPrice": 10,
         "ubCoolness": 1,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 6
+        }
     },
     {
         "itemIndex": 215,
@@ -1588,8 +2502,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 80,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 80
+            },
+            "big": {
+                "path": "bigitems/p1item80.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 1,
         "usPrice": 200,
@@ -1599,7 +2520,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 81
+        }
     },
     {
         "itemIndex": 216,
@@ -1607,15 +2532,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 6,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 6
+            },
+            "big": {
+                "path": "bigitems/p2item06.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 4,
         "usPrice": 900,
         "ubCoolness": 7,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 7
+        }
     },
     {
         "itemIndex": 217,
@@ -1623,8 +2559,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 42,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 42
+            },
+            "big": {
+                "path": "bigitems/p2item42.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 4,
         "usPrice": 2500,
@@ -1632,7 +2575,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 43
+        }
     },
     {
         "itemIndex": 218,
@@ -1640,15 +2587,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 2,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 2
+            },
+            "big": {
+                "path": "bigitems/p2item02.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 4,
         "usPrice": 500,
         "ubCoolness": 1,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 3
+        }
     },
     {
         "itemIndex": 219,
@@ -1656,8 +2614,15 @@
         "usItemClass": 536870912,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 1,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 1
+            },
+            "big": {
+                "path": "bigitems/p2item01.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 1,
         "usPrice": 0,
@@ -1665,7 +2630,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bNotBuyable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 2
+        }
     },
     {
         "itemIndex": 220,
@@ -1673,15 +2642,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 21,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 71,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 71
+            },
+            "big": {
+                "path": "bigitems/p1item71.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 2,
         "usPrice": 10,
         "ubCoolness": 1,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 72
+        }
     },
     {
         "itemIndex": 221,
@@ -1689,8 +2669,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 72,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 72
+            },
+            "big": {
+                "path": "bigitems/p1item72.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 2,
         "usPrice": 50,
@@ -1698,7 +2685,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 73
+        }
     },
     {
         "itemIndex": 222,
@@ -1706,8 +2697,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 70,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 70
+            },
+            "big": {
+                "path": "bigitems/p1item70.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 150,
@@ -1715,7 +2713,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 71
+        }
     },
     {
         "itemIndex": 223,
@@ -1723,8 +2725,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 47,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 47
+            },
+            "big": {
+                "path": "bigitems/p1item47.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 4,
         "usPrice": 100,
@@ -1734,7 +2743,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bAttachment": true
+        "bAttachment": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 48
+        }
     },
     {
         "itemIndex": 224,
@@ -1742,8 +2755,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 47,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 47
+            },
+            "big": {
+                "path": "bigitems/p1item47.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 4,
         "usPrice": 200,
@@ -1754,7 +2774,11 @@
         "bRepairable": true,
         "bMetal": true,
         "bAttachment": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 48
+        }
     },
     {
         "itemIndex": 225,
@@ -1762,15 +2786,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 93,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 93
+            },
+            "big": {
+                "path": "bigitems/p1item93.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 94
+        }
     },
     {
         "itemIndex": 226,
@@ -1778,8 +2813,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 94,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 94
+            },
+            "big": {
+                "path": "bigitems/p1item94.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 0,
@@ -1787,7 +2829,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bNotBuyable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 95
+        }
     },
     {
         "itemIndex": 227,
@@ -1795,8 +2841,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 56,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 56
+            },
+            "big": {
+                "path": "bigitems/p1item56.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 1,
         "usPrice": 0,
@@ -1804,7 +2857,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bNotBuyable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 57
+        }
     },
     {
         "itemIndex": 228,
@@ -1812,15 +2869,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 59,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 59
+            },
+            "big": {
+                "path": "bigitems/p1item59.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 1,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 60
+        }
     },
     {
         "itemIndex": 229,
@@ -1828,15 +2896,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 124,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 124
+            },
+            "big": {
+                "path": "bigitems/p1item124.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 1,
         "usPrice": 3000,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 125
+        }
     },
     {
         "itemIndex": 230,
@@ -1844,8 +2923,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 120,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 120
+            },
+            "big": {
+                "path": "bigitems/p1item120.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 4,
         "usPrice": 50,
@@ -1853,7 +2939,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 121
+        }
     },
     {
         "itemIndex": 231,
@@ -1861,8 +2951,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 121,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 121
+            },
+            "big": {
+                "path": "bigitems/p1item121.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 4,
         "usPrice": 100,
@@ -1870,7 +2967,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 122
+        }
     },
     {
         "itemIndex": 232,
@@ -1878,8 +2979,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 9,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 9
+            },
+            "big": {
+                "path": "bigitems/p3item09.sti"
+            }
+        },
         "ubWeight": 60,
         "ubPerPocket": 0,
         "usPrice": 400,
@@ -1887,7 +2995,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 10
+        }
     },
     {
         "itemIndex": 233,
@@ -1895,8 +3007,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 54,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 54
+            },
+            "big": {
+                "path": "bigitems/p1item54.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 99,
         "usPrice": 0,
@@ -1904,7 +3023,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 55
+        }
     },
     {
         "itemIndex": 234,
@@ -1912,15 +3035,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 47,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 47
+            },
+            "big": {
+                "path": "bigitems/p1item47.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 99,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 48
+        }
     },
     {
         "itemIndex": 235,
@@ -1928,8 +3062,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 70,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 70
+            },
+            "big": {
+                "path": "bigitems/p1item70.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 6,
         "usPrice": 300,
@@ -1937,7 +3078,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 71
+        }
     },
     {
         "itemIndex": 236,
@@ -1945,8 +3090,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 70,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 70
+            },
+            "big": {
+                "path": "bigitems/p1item70.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 99,
         "usPrice": 0,
@@ -1954,7 +3106,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bNotBuyable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 71
+        }
     },
     {
         "itemIndex": 237,
@@ -1962,8 +3118,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 70,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 70
+            },
+            "big": {
+                "path": "bigitems/p1item70.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 99,
         "usPrice": 0,
@@ -1971,7 +3134,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bNotBuyable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 71
+        }
     },
     {
         "itemIndex": 238,
@@ -1979,8 +3146,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 70,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 70
+            },
+            "big": {
+                "path": "bigitems/p1item70.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 99,
         "usPrice": 0,
@@ -1988,7 +3162,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bNotBuyable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 71
+        }
     },
     {
         "itemIndex": 239,
@@ -1996,15 +3174,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 72,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 72
+            },
+            "big": {
+                "path": "bigitems/p1item72.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 2,
         "usPrice": 10,
         "ubCoolness": 1,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 73
+        }
     },
     {
         "itemIndex": 240,
@@ -2012,15 +3201,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 241,
@@ -2028,8 +3228,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 51,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 51
+            },
+            "big": {
+                "path": "bigitems/p1item51.sti"
+            }
+        },
         "ubWeight": 4,
         "ubPerPocket": 4,
         "usPrice": 750,
@@ -2040,7 +3247,11 @@
         "bRepairable": true,
         "bMetal": true,
         "bAttachment": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 52
+        }
     },
     {
         "itemIndex": 242,
@@ -2048,8 +3259,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 17,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 54,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 54
+            },
+            "big": {
+                "path": "bigitems/p1item54.sti"
+            }
+        },
         "ubWeight": 9,
         "ubPerPocket": 4,
         "usPrice": 400,
@@ -2059,7 +3277,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 55
+        }
     },
     {
         "itemIndex": 243,
@@ -2067,8 +3289,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 16,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 88,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 88
+            },
+            "big": {
+                "path": "bigitems/p1item88.sti"
+            }
+        },
         "ubWeight": 4,
         "ubPerPocket": 2,
         "usPrice": 20,
@@ -2077,7 +3306,11 @@
         "bRepairEase": -4,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 89
+        }
     },
     {
         "itemIndex": 244,
@@ -2085,8 +3318,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 90,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 90
+            },
+            "big": {
+                "path": "bigitems/p1item90.sti"
+            }
+        },
         "ubWeight": 9,
         "ubPerPocket": 4,
         "usPrice": 30,
@@ -2096,7 +3336,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bAttachment": true
+        "bAttachment": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 91
+        }
     },
     {
         "itemIndex": 245,
@@ -2104,15 +3348,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 106,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 106
+            },
+            "big": {
+                "path": "bigitems/p1item106.sti"
+            }
+        },
         "ubWeight": 20,
         "ubPerPocket": 1,
         "usPrice": 30,
         "ubCoolness": 1,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 107
+        }
     },
     {
         "itemIndex": 246,
@@ -2120,8 +3375,15 @@
         "usItemClass": 32768,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 74,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 74
+            },
+            "big": {
+                "path": "bigitems/p1item74.sti"
+            }
+        },
         "ubWeight": 11,
         "ubPerPocket": 1,
         "usPrice": 1500,
@@ -2131,7 +3393,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 75
+        }
     },
     {
         "itemIndex": 247,
@@ -2139,8 +3405,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 44,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 44
+            },
+            "big": {
+                "path": "bigitems/gun44.sti"
+            }
+        },
         "ubWeight": 21,
         "ubPerPocket": 0,
         "usPrice": 30,
@@ -2154,119 +3427,200 @@
         "bSinks": true,
         "bShowStatus": true,
         "bTwoHanded": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 45
+        }
     },
     {
         "itemIndex": 248,
-        "internalName": "HEAD_1", /* head - generic */
+        "internalName": "HEAD_1",
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/p3item00.sti"
+            }
+        },
         "ubWeight": 40,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 249,
-        "internalName": "HEAD_2", /* head - Imposter*/
+        "internalName": "HEAD_2",
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 1,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 1
+            },
+            "big": {
+                "path": "bigitems/p3item01.sti"
+            }
+        },
         "ubWeight": 40,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 2
+        }
     },
     {
         "itemIndex": 250,
-        "internalName": "HEAD_3", /* head - T-Rex */
+        "internalName": "HEAD_3",
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 2,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 2
+            },
+            "big": {
+                "path": "bigitems/p3item02.sti"
+            }
+        },
         "ubWeight": 40,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 3
+        }
     },
     {
         "itemIndex": 251,
-        "internalName": "HEAD_4", /* head - Slay */
+        "internalName": "HEAD_4",
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 3,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 3
+            },
+            "big": {
+                "path": "bigitems/p3item03.sti"
+            }
+        },
         "ubWeight": 40,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 4
+        }
     },
     {
         "itemIndex": 252,
-        "internalName": "HEAD_5", /* head - Druggist */
+        "internalName": "HEAD_5",
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 4,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 4
+            },
+            "big": {
+                "path": "bigitems/p3item04.sti"
+            }
+        },
         "ubWeight": 40,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 5
+        }
     },
     {
         "itemIndex": 253,
-        "internalName": "HEAD_6", /* head - Matron */
+        "internalName": "HEAD_6",
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 5,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 5
+            },
+            "big": {
+                "path": "bigitems/p3item05.sti"
+            }
+        },
         "ubWeight": 40,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 6
+        }
     },
     {
         "itemIndex": 254,
-        "internalName": "HEAD_7", /* head - Tiffany */
+        "internalName": "HEAD_7",
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 6,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 6
+            },
+            "big": {
+                "path": "bigitems/p3item06.sti"
+            }
+        },
         "ubWeight": 40,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 7
+        }
     },
     {
         "itemIndex": 255,
@@ -2274,15 +3628,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 100,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 100
+            },
+            "big": {
+                "path": "bigitems/p1item100.sti"
+            }
+        },
         "ubWeight": 12,
         "ubPerPocket": 1,
         "usPrice": 20,
         "ubCoolness": 1,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 101
+        }
     },
     {
         "itemIndex": 256,
@@ -2290,15 +3655,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 101,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 101
+            },
+            "big": {
+                "path": "bigitems/p1item101.sti"
+            }
+        },
         "ubWeight": 4,
         "ubPerPocket": 4,
         "usPrice": 10,
         "ubCoolness": 1,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 102
+        }
     },
     {
         "itemIndex": 257,
@@ -2306,15 +3682,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 99,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 99
+            },
+            "big": {
+                "path": "bigitems/p1item99.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 2,
         "usPrice": 20,
         "ubCoolness": 3,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 100
+        }
     },
     {
         "itemIndex": 258,
@@ -2322,8 +3709,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 43,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 43
+            },
+            "big": {
+                "path": "bigitems/gun43.sti"
+            }
+        },
         "ubWeight": 20,
         "ubPerPocket": 0,
         "usPrice": 900,
@@ -2333,7 +3727,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 44
+        }
     },
     {
         "itemIndex": 259,
@@ -2341,8 +3739,15 @@
         "usItemClass": 32768,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 42,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 42
+            },
+            "big": {
+                "path": "bigitems/gun42.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 1,
         "usPrice": 2500,
@@ -2352,7 +3757,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 43
+        }
     },
     {
         "itemIndex": 260,
@@ -2360,8 +3769,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 103,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 103
+            },
+            "big": {
+                "path": "bigitems/p1item103.sti"
+            }
+        },
         "ubWeight": 20,
         "ubPerPocket": 0,
         "usPrice": 500,
@@ -2369,7 +3785,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 104
+        }
     },
     {
         "itemIndex": 261,
@@ -2377,8 +3797,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 7,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 7
+            },
+            "big": {
+                "path": "bigitems/p3item07.sti"
+            }
+        },
         "ubWeight": 40,
         "ubPerPocket": 0,
         "usPrice": 250,
@@ -2386,7 +3813,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 8
+        }
     },
     {
         "itemIndex": 262,
@@ -2394,8 +3825,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 104,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 104
+            },
+            "big": {
+                "path": "bigitems/p1item104.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 0,
         "usPrice": 1000,
@@ -2403,7 +3841,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 105
+        }
     },
     {
         "itemIndex": 263,
@@ -2411,8 +3853,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 17,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 54,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 54
+            },
+            "big": {
+                "path": "bigitems/p1item54.sti"
+            }
+        },
         "ubWeight": 9,
         "ubPerPocket": 4,
         "usPrice": 400,
@@ -2421,7 +3870,11 @@
         "bRepairEase": -2,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 55
+        }
     },
     {
         "itemIndex": 264,
@@ -2429,8 +3882,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 47,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 47
+            },
+            "big": {
+                "path": "bigitems/gun47.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 8,
         "usPrice": 500,
@@ -2439,7 +3899,11 @@
         "bRepairEase": -4,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 48
+        }
     },
     {
         "itemIndex": 265,
@@ -2447,8 +3911,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 136,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 136
+            },
+            "big": {
+                "path": "bigitems/p1item136.sti"
+            }
+        },
         "ubWeight": 100,
         "ubPerPocket": 0,
         "usPrice": 200,
@@ -2457,7 +3928,11 @@
         "bRepairEase": 0,
         "bDamageable": true,
         "bRepairable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 137
+        }
     },
     {
         "itemIndex": 266,
@@ -2465,8 +3940,15 @@
         "usItemClass": 32768,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 11,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 11
+            },
+            "big": {
+                "path": "bigitems/p3item11.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 1,
         "usPrice": 100,
@@ -2476,7 +3958,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bMetal": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 12
+        }
     },
     {
         "itemIndex": 267,
@@ -2484,8 +3970,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 8,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 8
+            },
+            "big": {
+                "path": "bigitems/p3item08.sti"
+            }
+        },
         "ubWeight": 50,
         "ubPerPocket": 0,
         "usPrice": 300,
@@ -2494,7 +3987,11 @@
         "bRepairEase": -3,
         "bDamageable": true,
         "bRepairable": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 9
+        }
     },
     {
         "itemIndex": 268,
@@ -2502,14 +3999,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 269,
@@ -2517,15 +4025,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 3,
-        "ubGraphicNum": 10,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp3items.sti",
+                "subImageIndex": 10
+            },
+            "big": {
+                "path": "bigitems/p3item10.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 1,
         "usPrice": 30,
         "ubCoolness": 1,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P3ITEMS",
+            "subIndex": 11
+        }
     },
     {
         "itemIndex": 270,
@@ -2533,126 +4052,41 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
-    // KEYS
     {
         "itemIndex": 271,
-        "internalName": "KEY_1", /* dull gold key */
+        "internalName": "KEY_1",
         "usItemClass": 65536,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 82,
-        "ubWeight": 1,
-        "ubPerPocket": 8,
-        "usPrice": 0,
-        "ubCoolness": 0,
-        "bReliability": 0,
-        "bRepairEase": 0,
-        "bMetal": true,
-        "bNotBuyable": true
-    },
-    {
-        "itemIndex": 272,
-        "internalName": "KEY_2", /* silver key */
-        "usItemClass": 65536,
-        "ubClassIndex": 1,
-        "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 83,
-        "ubWeight": 1,
-        "ubPerPocket": 8,
-        "usPrice": 0,
-        "ubCoolness": 0,
-        "bReliability": 0,
-        "bRepairEase": 0,
-        "bMetal": true,
-        "bNotBuyable": true
-    },
-    {
-        "itemIndex": 273,
-        "internalName": "KEY_3", /* diamond-shpd key */
-        "usItemClass": 65536,
-        "ubClassIndex": 2,
-        "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 84,
-        "ubWeight": 1,
-        "ubPerPocket": 8,
-        "usPrice": 0,
-        "ubCoolness": 0,
-        "bReliability": 0,
-        "bRepairEase": 0,
-        "bMetal": true,
-        "bNotBuyable": true
-    },
-    {
-        "itemIndex": 274,
-        "internalName": "KEY_4", /* bright gold key */
-        "usItemClass": 65536,
-        "ubClassIndex": 3,
-        "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 87,
-        "ubWeight": 1,
-        "ubPerPocket": 8,
-        "usPrice": 0,
-        "ubCoolness": 0,
-        "bReliability": 0,
-        "bRepairEase": 0,
-        "bMetal": true,
-        "bNotBuyable": true
-    },
-    {
-        "itemIndex": 275,
-        "internalName": "KEY_5", /* gold key */
-        "usItemClass": 65536,
-        "ubClassIndex": 4,
-        "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 91,
-        "ubWeight": 1,
-        "ubPerPocket": 8,
-        "usPrice": 0,
-        "ubCoolness": 0,
-        "bReliability": 0,
-        "bRepairEase": 0,
-        "bMetal": true,
-        "bNotBuyable": true
-    },
-    {
-        "itemIndex": 276,
-        "internalName": "KEY_6", /* small gold key */
-        "usItemClass": 65536,
-        "ubClassIndex": 5,
-        "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 92,
-        "ubWeight": 1,
-        "ubPerPocket": 8,
-        "usPrice": 0,
-        "ubCoolness": 0,
-        "bReliability": 0,
-        "bRepairEase": 0,
-        "bMetal": true,
-        "bNotBuyable": true
-    },
-    {
-        "itemIndex": 277,
-        "internalName": "KEY_7", /* electronic */
-        "usItemClass": 65536,
-        "ubClassIndex": 6,
-        "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 108,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 82
+            },
+            "big": {
+                "path": "bigitems/p1item82.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 0,
@@ -2661,16 +4095,26 @@
         "bRepairEase": 0,
         "bMetal": true,
         "bNotBuyable": true,
-        "bElectronic": true
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 83
+        }
     },
     {
-        "itemIndex": 278,
-        "internalName": "KEY_8", /* passcard */
+        "itemIndex": 272,
+        "internalName": "KEY_2",
         "usItemClass": 65536,
-        "ubClassIndex": 7,
+        "ubClassIndex": 1,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 109,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 83
+            },
+            "big": {
+                "path": "bigitems/p1item83.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 0,
@@ -2678,7 +4122,180 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 84
+        }
+    },
+    {
+        "itemIndex": 273,
+        "internalName": "KEY_3",
+        "usItemClass": 65536,
+        "ubClassIndex": 2,
+        "ubCursor": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 84
+            },
+            "big": {
+                "path": "bigitems/p1item84.sti"
+            }
+        },
+        "ubWeight": 1,
+        "ubPerPocket": 8,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 85
+        }
+    },
+    {
+        "itemIndex": 274,
+        "internalName": "KEY_4",
+        "usItemClass": 65536,
+        "ubClassIndex": 3,
+        "ubCursor": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 87
+            },
+            "big": {
+                "path": "bigitems/p1item87.sti"
+            }
+        },
+        "ubWeight": 1,
+        "ubPerPocket": 8,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 88
+        }
+    },
+    {
+        "itemIndex": 275,
+        "internalName": "KEY_5",
+        "usItemClass": 65536,
+        "ubClassIndex": 4,
+        "ubCursor": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 91
+            },
+            "big": {
+                "path": "bigitems/p1item91.sti"
+            }
+        },
+        "ubWeight": 1,
+        "ubPerPocket": 8,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 92
+        }
+    },
+    {
+        "itemIndex": 276,
+        "internalName": "KEY_6",
+        "usItemClass": 65536,
+        "ubClassIndex": 5,
+        "ubCursor": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 92
+            },
+            "big": {
+                "path": "bigitems/p1item92.sti"
+            }
+        },
+        "ubWeight": 1,
+        "ubPerPocket": 8,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 93
+        }
+    },
+    {
+        "itemIndex": 277,
+        "internalName": "KEY_7",
+        "usItemClass": 65536,
+        "ubClassIndex": 6,
+        "ubCursor": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 108
+            },
+            "big": {
+                "path": "bigitems/p1item108.sti"
+            }
+        },
+        "ubWeight": 1,
+        "ubPerPocket": 8,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 109
+        }
+    },
+    {
+        "itemIndex": 278,
+        "internalName": "KEY_8",
+        "usItemClass": 65536,
+        "ubClassIndex": 7,
+        "ubCursor": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 109
+            },
+            "big": {
+                "path": "bigitems/p1item109.sti"
+            }
+        },
+        "ubWeight": 1,
+        "ubPerPocket": 8,
+        "usPrice": 0,
+        "ubCoolness": 0,
+        "bReliability": 0,
+        "bRepairEase": 0,
+        "bMetal": true,
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 110
+        }
     },
     {
         "itemIndex": 279,
@@ -2686,8 +4303,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 8,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2695,7 +4319,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 280,
@@ -2703,8 +4331,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 9,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2712,7 +4347,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 281,
@@ -2720,8 +4359,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 10,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2729,7 +4375,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 282,
@@ -2737,8 +4387,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 11,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2746,7 +4403,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 283,
@@ -2754,8 +4415,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 12,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2763,7 +4431,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 284,
@@ -2771,8 +4443,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 13,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2780,7 +4459,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 285,
@@ -2788,8 +4471,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 14,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2797,7 +4487,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 286,
@@ -2805,8 +4499,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 15,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2814,7 +4515,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 287,
@@ -2822,8 +4527,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 16,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2831,7 +4543,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 288,
@@ -2839,8 +4555,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 17,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2848,7 +4571,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 289,
@@ -2856,8 +4583,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 18,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2865,7 +4599,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 290,
@@ -2873,8 +4611,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 19,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2882,7 +4627,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 291,
@@ -2890,8 +4639,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 20,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2899,7 +4655,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 292,
@@ -2907,8 +4667,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 21,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2916,7 +4683,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 293,
@@ -2924,8 +4695,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 22,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2933,7 +4711,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 294,
@@ -2941,8 +4723,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 23,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2950,7 +4739,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 295,
@@ -2958,8 +4751,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 24,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2967,7 +4767,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 296,
@@ -2975,8 +4779,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 25,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -2984,7 +4795,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 297,
@@ -2992,8 +4807,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 26,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -3001,7 +4823,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 298,
@@ -3009,8 +4835,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 27,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -3018,7 +4851,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 299,
@@ -3026,8 +4863,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 28,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -3035,7 +4879,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 300,
@@ -3043,8 +4891,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 29,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -3052,7 +4907,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 301,
@@ -3060,8 +4919,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 30,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -3069,7 +4935,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 302,
@@ -3077,8 +4947,15 @@
         "usItemClass": 65536,
         "ubClassIndex": 31,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
@@ -3086,7 +4963,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bNotEditor": true
+        "bNotEditor": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 303,
@@ -3094,8 +4975,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 31,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 31
+            },
+            "big": {
+                "path": "bigitems/p2item31.sti"
+            }
+        },
         "ubWeight": 4,
         "ubPerPocket": 0,
         "usPrice": 150,
@@ -3103,7 +4991,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bMetal": true
+        "bMetal": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 32
+        }
     },
     {
         "itemIndex": 304,
@@ -3111,8 +5003,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 30,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 30
+            },
+            "big": {
+                "path": "bigitems/p2item30.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 6,
         "usPrice": 5,
@@ -3120,7 +5019,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bHiddenAddon": true
+        "bHiddenAddon": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 31
+        }
     },
     {
         "itemIndex": 305,
@@ -3128,8 +5031,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 28,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 28
+            },
+            "big": {
+                "path": "bigitems/p2item28.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 1,
         "usPrice": 20,
@@ -3139,7 +5049,11 @@
         "bDamageable": true,
         "bMetal": true,
         "bHiddenAddon": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 29
+        }
     },
     {
         "itemIndex": 306,
@@ -3147,8 +5061,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 32,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 32
+            },
+            "big": {
+                "path": "bigitems/p2item32.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 0,
@@ -3159,7 +5080,11 @@
         "bMetal": true,
         "bHiddenAddon": true,
         "bNotBuyable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 33
+        }
     },
     {
         "itemIndex": 307,
@@ -3167,8 +5092,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 33,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 33
+            },
+            "big": {
+                "path": "bigitems/p2item33.sti"
+            }
+        },
         "ubWeight": 4,
         "ubPerPocket": 1,
         "usPrice": 25,
@@ -3179,7 +5111,11 @@
         "bRepairable": true,
         "bMetal": true,
         "bNotBuyable": true,
-        "bInseparable": true
+        "bInseparable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 34
+        }
     },
     {
         "itemIndex": 308,
@@ -3187,8 +5123,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 133,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 133
+            },
+            "big": {
+                "path": "bigitems/p1item133.sti"
+            }
+        },
         "ubWeight": 4,
         "ubPerPocket": 1,
         "usPrice": 20,
@@ -3198,7 +5141,11 @@
         "bDamageable": true,
         "bMetal": true,
         "bHiddenAddon": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 134
+        }
     },
     {
         "itemIndex": 309,
@@ -3206,8 +5153,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 132,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 132
+            },
+            "big": {
+                "path": "bigitems/p1item132.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 6,
         "usPrice": 5,
@@ -3215,7 +5169,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bHiddenAddon": true
+        "bHiddenAddon": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 133
+        }
     },
     {
         "itemIndex": 310,
@@ -3223,8 +5181,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 134,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 134
+            },
+            "big": {
+                "path": "bigitems/p1item134.sti"
+            }
+        },
         "ubWeight": 6,
         "ubPerPocket": 1,
         "usPrice": 150,
@@ -3235,7 +5200,11 @@
         "bRepairable": true,
         "bMetal": true,
         "bNotBuyable": true,
-        "bInseparable": true
+        "bInseparable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 135
+        }
     },
     {
         "itemIndex": 311,
@@ -3243,8 +5212,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 35,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 35
+            },
+            "big": {
+                "path": "bigitems/p2item35.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 0,
@@ -3253,7 +5229,11 @@
         "bRepairEase": 0,
         "bHiddenAddon": true,
         "bNotBuyable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 36
+        }
     },
     {
         "itemIndex": 312,
@@ -3261,8 +5241,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 27,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 27
+            },
+            "big": {
+                "path": "bigitems/p2item27.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 1,
         "usPrice": 0,
@@ -3271,7 +5258,11 @@
         "bRepairEase": 0,
         "bHiddenAddon": true,
         "bNotBuyable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 28
+        }
     },
     {
         "itemIndex": 313,
@@ -3279,8 +5270,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 22,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 36,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 36
+            },
+            "big": {
+                "path": "bigitems/p2item36.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 4,
         "usPrice": 0,
@@ -3288,7 +5286,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bNotBuyable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 37
+        }
     },
     {
         "itemIndex": 314,
@@ -3296,8 +5298,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 122,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 122
+            },
+            "big": {
+                "path": "bigitems/p1item122.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 6,
         "usPrice": 5,
@@ -3305,7 +5314,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 123
+        }
     },
     {
         "itemIndex": 315,
@@ -3313,8 +5326,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 127,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 127
+            },
+            "big": {
+                "path": "bigitems/p1item127.sti"
+            }
+        },
         "ubWeight": 6,
         "ubPerPocket": 1,
         "usPrice": 200,
@@ -3324,7 +5344,11 @@
         "bDamageable": true,
         "bRepairable": true,
         "bHiddenAddon": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 128
+        }
     },
     {
         "itemIndex": 316,
@@ -3332,8 +5356,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 128,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 128
+            },
+            "big": {
+                "path": "bigitems/p1item128.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 5,
@@ -3341,7 +5372,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bMetal": true,
-        "bHiddenAddon": true
+        "bHiddenAddon": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 129
+        }
     },
     {
         "itemIndex": 317,
@@ -3349,8 +5384,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 126,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 126
+            },
+            "big": {
+                "path": "bigitems/p1item126.sti"
+            }
+        },
         "ubWeight": 7,
         "ubPerPocket": 1,
         "usPrice": 50,
@@ -3361,7 +5403,11 @@
         "bRepairable": true,
         "bHiddenAddon": true,
         "bNotBuyable": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 127
+        }
     },
     {
         "itemIndex": 318,
@@ -3369,8 +5415,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 130,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 130
+            },
+            "big": {
+                "path": "bigitems/p1item130.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 1,
         "usPrice": 100,
@@ -3379,7 +5432,11 @@
         "bRepairEase": 0,
         "bDamageable": true,
         "bRepairable": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 131
+        }
     },
     {
         "itemIndex": 319,
@@ -3387,8 +5444,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 131,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 131
+            },
+            "big": {
+                "path": "bigitems/p1item131.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 2,
         "usPrice": 10,
@@ -3396,7 +5460,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bHiddenAddon": true
+        "bHiddenAddon": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 132
+        }
     },
     {
         "itemIndex": 320,
@@ -3404,8 +5472,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 29,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 29
+            },
+            "big": {
+                "path": "bigitems/p2item29.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 1,
@@ -3413,7 +5488,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bHiddenAddon": true
+        "bHiddenAddon": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 30
+        }
     },
     {
         "itemIndex": 321,
@@ -3421,8 +5500,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 129,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 129
+            },
+            "big": {
+                "path": "bigitems/p1item129.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 1,
         "usPrice": 100,
@@ -3434,7 +5520,11 @@
         "bMetal": true,
         "bHiddenAddon": true,
         "bNotBuyable": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 130
+        }
     },
     {
         "itemIndex": 322,
@@ -3442,15 +5532,26 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 26,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 26
+            },
+            "big": {
+                "path": "bigitems/p2item26.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 6,
         "usPrice": 5,
         "ubCoolness": 1,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 27
+        }
     },
     {
         "itemIndex": 323,
@@ -3458,8 +5559,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 123,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 123
+            },
+            "big": {
+                "path": "bigitems/p1item123.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 0,
@@ -3467,7 +5575,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bNotBuyable": true,
-        "bUnaerodynamic": true
+        "bUnaerodynamic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 124
+        }
     },
     {
         "itemIndex": 324,
@@ -3475,8 +5587,15 @@
         "usItemClass": 268435456,
         "ubClassIndex": 0,
         "ubCursor": 17,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 125,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 125
+            },
+            "big": {
+                "path": "bigitems/p1item125.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 1,
         "usPrice": 2500,
@@ -3487,7 +5606,11 @@
         "bRepairable": true,
         "bMetal": true,
         "bNotBuyable": true,
-        "bElectronic": true
+        "bElectronic": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 126
+        }
     },
     {
         "itemIndex": 325,
@@ -3495,8 +5618,15 @@
         "usItemClass": 536870912,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 38,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 38
+            },
+            "big": {
+                "path": "bigitems/p2item38.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 1,
         "usPrice": 100,
@@ -3504,7 +5634,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 39
+        }
     },
     {
         "itemIndex": 326,
@@ -3512,8 +5646,15 @@
         "usItemClass": 536870912,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 1,
-        "ubGraphicNum": 135,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 135
+            },
+            "big": {
+                "path": "bigitems/p1item135.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 1,
         "usPrice": 300,
@@ -3521,7 +5662,11 @@
         "bReliability": 0,
         "bRepairEase": 0,
         "bDamageable": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 136
+        }
     },
     {
         "itemIndex": 327,
@@ -3529,15 +5674,26 @@
         "usItemClass": 8192,
         "ubClassIndex": 0,
         "ubCursor": 23,
-        "ubGraphicType": 2,
-        "ubGraphicNum": 39,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 39
+            },
+            "big": {
+                "path": "bigitems/p2item39.sti"
+            }
+        },
         "ubWeight": 20,
         "ubPerPocket": 0,
         "usPrice": 250,
         "ubCoolness": 0,
         "bReliability": 0,
         "bRepairEase": 0,
-        "bDamageable": true
+        "bDamageable": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 40
+        }
     },
     {
         "itemIndex": 328,
@@ -3545,14 +5701,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 329,
@@ -3560,14 +5727,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 330,
@@ -3575,14 +5753,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 331,
@@ -3590,14 +5779,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 332,
@@ -3605,14 +5805,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 333,
@@ -3620,14 +5831,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 334,
@@ -3635,14 +5857,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 335,
@@ -3650,14 +5883,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 336,
@@ -3665,14 +5909,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 337,
@@ -3680,14 +5935,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 338,
@@ -3695,14 +5961,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 339,
@@ -3710,14 +5987,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 340,
@@ -3725,14 +6013,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 341,
@@ -3740,14 +6039,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 342,
@@ -3755,14 +6065,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 343,
@@ -3770,14 +6091,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 344,
@@ -3785,14 +6117,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 345,
@@ -3800,14 +6143,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 346,
@@ -3815,14 +6169,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 347,
@@ -3830,14 +6195,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 348,
@@ -3845,14 +6221,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 349,
@@ -3860,14 +6247,25 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 350,
@@ -3875,13 +6273,24 @@
         "usItemClass": 1,
         "ubClassIndex": 0,
         "ubCursor": 0,
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
         "ubCoolness": 0,
         "bReliability": 0,
-        "bRepairEase": 0
+        "bRepairEase": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     }
 ]

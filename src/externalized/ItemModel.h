@@ -1,5 +1,7 @@
 #pragma once
 #include "Item_Types.h"
+#include "InventoryGraphicsModel.h"
+#include "TilesetTileIndexModel.h"
 #include <string_theory/string>
 
 class JsonObject;
@@ -22,8 +24,8 @@ struct ItemModel
 		uint32_t   usItemClass,
 		uint8_t    ubClassIndex,
 		ItemCursor ubCursor,
-		uint8_t    ubGraphicType,
-		uint8_t    ubGraphicNum,
+		InventoryGraphicsModel inventoryGraphics,
+		TilesetTileIndexModel tileGraphic,
 		uint8_t    ubWeight,
 		uint8_t    ubPerPocket,
 		uint16_t   usPrice,
@@ -41,8 +43,9 @@ struct ItemModel
 	virtual uint32_t        getItemClass() const;
 	virtual uint8_t         getClassIndex() const;
 	virtual ItemCursor      getCursor() const;
-	virtual uint8_t         getGraphicType() const;
-	virtual uint8_t         getGraphicNum() const;
+	virtual const GraphicModel& getInventoryGraphicSmall() const;
+	virtual const GraphicModel& getInventoryGraphicBig() const;
+	virtual const TilesetTileIndexModel& getTileGraphic() const;
 	virtual uint8_t         getWeight() const;
 	virtual uint8_t         getPerPocket() const;
 	virtual uint16_t        getPrice() const;
@@ -89,8 +92,8 @@ protected:
 	uint32_t   usItemClass;
 	uint8_t    ubClassIndex;
 	ItemCursor ubCursor;
-	uint8_t    ubGraphicType;
-	uint8_t    ubGraphicNum;
+	InventoryGraphicsModel inventoryGraphics;
+	TilesetTileIndexModel tileGraphic;
 	uint8_t    ubWeight; //2 units per kilogram; roughly 1 unit per pound
 	uint8_t    ubPerPocket;
 	uint16_t   usPrice;

@@ -31,8 +31,8 @@ void MagazineModel::serializeTo(JsonObject &obj) const
 	obj.AddMember("capacity",             capacity);
 	obj.AddMember("ammoType",             ammoType->internalName);
 
-	obj.AddMember("ubGraphicType",        getGraphicType());
-	obj.AddMember("ubGraphicNum",         getGraphicNum());
+	obj.AddMember("inventoryGraphics",      inventoryGraphics.serialize(obj.getAllocator()).getValue());
+	obj.AddMember("tileGraphic",      tileGraphic.serialize(obj.getAllocator()).getValue());
 	obj.AddMember("ubWeight",             getWeight());
 	obj.AddMember("ubPerPocket",          getPerPocket());
 	obj.AddMember("usPrice",              getPrice());
@@ -68,8 +68,16 @@ MagazineModel* MagazineModel::deserialize(
 
 	mag->fFlags = mag->deserializeFlags(obj);
 
-	mag->ubGraphicType    = obj.GetInt("ubGraphicType");
-	mag->ubGraphicNum     = obj.GetInt("ubGraphicNum");
+	const rapidjson::Value& igSource = obj.GetValue("inventoryGraphics");
+	JsonObjectReader igReader(igSource);
+	const auto inventoryGraphics = InventoryGraphicsModel::deserialize(igReader);
+	mag->inventoryGraphics  = inventoryGraphics;
+
+	const rapidjson::Value& tgSource = obj.GetValue("tileGraphic");
+	JsonObjectReader tgReader(tgSource);
+	const auto tileGraphic = TilesetTileIndexModel::deserialize(tgReader);
+	mag->tileGraphic = tileGraphic;
+
 	mag->ubWeight         = obj.GetInt("ubWeight");
 	mag->ubPerPocket      = obj.GetInt("ubPerPocket");
 	mag->usPrice          = obj.GetInt("usPrice");

@@ -5,14 +5,25 @@
         "calibre": "AMMO9",
         "capacity": 15,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 32,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 32
+            },
+            "big": {
+                "path": "bigitems/p1item32.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 8,
         "usPrice": 15,
         "ubCoolness": 2,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 33
+        }
     },
     {
         "itemIndex": 72,
@@ -20,14 +31,25 @@
         "calibre": "AMMO9",
         "capacity": 30,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 35,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 35
+            },
+            "big": {
+                "path": "bigitems/p1item35.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 4,
         "usPrice": 30,
         "ubCoolness": 4,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 36
+        }
     },
     {
         "itemIndex": 73,
@@ -35,14 +57,25 @@
         "calibre": "AMMO9",
         "capacity": 15,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 33,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 33
+            },
+            "big": {
+                "path": "bigitems/p1item33.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 8,
         "usPrice": 45,
         "ubCoolness": 4,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 34
+        }
     },
     {
         "itemIndex": 74,
@@ -50,14 +83,25 @@
         "calibre": "AMMO9",
         "capacity": 30,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 36,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 36
+            },
+            "big": {
+                "path": "bigitems/p1item36.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 4,
         "usPrice": 90,
         "ubCoolness": 6,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 37
+        }
     },
     {
         "itemIndex": 75,
@@ -65,14 +109,25 @@
         "calibre": "AMMO9",
         "capacity": 15,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 34,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 34
+            },
+            "big": {
+                "path": "bigitems/p1item34.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 8,
         "usPrice": 30,
         "ubCoolness": 3,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 35
+        }
     },
     {
         "itemIndex": 76,
@@ -80,14 +135,25 @@
         "calibre": "AMMO9",
         "capacity": 30,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 37,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 37
+            },
+            "big": {
+                "path": "bigitems/p1item37.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 4,
         "usPrice": 60,
         "ubCoolness": 5,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 38
+        }
     },
     {
         "itemIndex": 77,
@@ -95,14 +161,25 @@
         "calibre": "AMMO38",
         "capacity": 6,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 24,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 24
+            },
+            "big": {
+                "path": "bigitems/p1item24.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 5,
         "ubCoolness": 1,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 25
+        }
     },
     {
         "itemIndex": 78,
@@ -110,14 +187,25 @@
         "calibre": "AMMO38",
         "capacity": 6,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 25,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 25
+            },
+            "big": {
+                "path": "bigitems/p1item25.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 15,
         "ubCoolness": 3,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 26
+        }
     },
     {
         "itemIndex": 79,
@@ -125,14 +213,25 @@
         "calibre": "AMMO38",
         "capacity": 6,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 26,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 26
+            },
+            "big": {
+                "path": "bigitems/p1item26.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 10,
         "ubCoolness": 2,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 27
+        }
     },
     {
         "itemIndex": 80,
@@ -140,14 +239,25 @@
         "calibre": "AMMO45",
         "capacity": 7,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 14,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 14
+            },
+            "big": {
+                "path": "bigitems/p1item14.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 8,
         "usPrice": 10,
         "ubCoolness": 2,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 15
+        }
     },
     {
         "itemIndex": 81,
@@ -155,14 +265,25 @@
         "calibre": "AMMO45",
         "capacity": 30,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 4,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 4
+            },
+            "big": {
+                "path": "bigitems/p1item04.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 4,
         "usPrice": 45,
         "ubCoolness": 3,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 5
+        }
     },
     {
         "itemIndex": 82,
@@ -170,14 +291,25 @@
         "calibre": "AMMO45",
         "capacity": 7,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 15,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 15
+            },
+            "big": {
+                "path": "bigitems/p1item15.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 8,
         "usPrice": 45,
         "ubCoolness": 4,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 16
+        }
     },
     {
         "itemIndex": 83,
@@ -185,14 +317,25 @@
         "calibre": "AMMO45",
         "capacity": 30,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 5,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 5
+            },
+            "big": {
+                "path": "bigitems/p1item05.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 4,
         "usPrice": 135,
         "ubCoolness": 5,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 6
+        }
     },
     {
         "itemIndex": 84,
@@ -200,14 +343,25 @@
         "calibre": "AMMO45",
         "capacity": 7,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 16,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 16
+            },
+            "big": {
+                "path": "bigitems/p1item16.sti"
+            }
+        },
         "ubWeight": 2,
         "ubPerPocket": 8,
         "usPrice": 30,
         "ubCoolness": 3,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 17
+        }
     },
     {
         "itemIndex": 85,
@@ -215,14 +369,25 @@
         "calibre": "AMMO45",
         "capacity": 30,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 6,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 6
+            },
+            "big": {
+                "path": "bigitems/p1item06.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 4,
         "usPrice": 90,
         "ubCoolness": 4,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 7
+        }
     },
     {
         "itemIndex": 86,
@@ -230,14 +395,25 @@
         "calibre": "AMMO357",
         "capacity": 6,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 11,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 11
+            },
+            "big": {
+                "path": "bigitems/p1item11.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 10,
         "ubCoolness": 1,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 12
+        }
     },
     {
         "itemIndex": 87,
@@ -245,14 +421,25 @@
         "calibre": "AMMO357",
         "capacity": 9,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 17,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 17
+            },
+            "big": {
+                "path": "bigitems/p1item17.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 8,
         "usPrice": 15,
         "ubCoolness": 1,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 18
+        }
     },
     {
         "itemIndex": 88,
@@ -260,14 +447,25 @@
         "calibre": "AMMO357",
         "capacity": 6,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 12,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 12
+            },
+            "big": {
+                "path": "bigitems/p1item12.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 30,
         "ubCoolness": 3,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 13
+        }
     },
     {
         "itemIndex": 89,
@@ -275,14 +473,25 @@
         "calibre": "AMMO357",
         "capacity": 9,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 18,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 18
+            },
+            "big": {
+                "path": "bigitems/p1item18.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 8,
         "usPrice": 45,
         "ubCoolness": 3,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 19
+        }
     },
     {
         "itemIndex": 90,
@@ -290,14 +499,25 @@
         "calibre": "AMMO357",
         "capacity": 6,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 13,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 13
+            },
+            "big": {
+                "path": "bigitems/p1item13.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 20,
         "ubCoolness": 2,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 14
+        }
     },
     {
         "itemIndex": 91,
@@ -305,14 +525,25 @@
         "calibre": "AMMO357",
         "capacity": 9,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 19,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 19
+            },
+            "big": {
+                "path": "bigitems/p1item19.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 8,
         "usPrice": 30,
         "ubCoolness": 2,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 20
+        }
     },
     {
         "itemIndex": 92,
@@ -320,8 +551,15 @@
         "calibre": "AMMO545",
         "capacity": 30,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 9,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 9
+            },
+            "big": {
+                "path": "bigitems/p1item09.sti"
+            }
+        },
         "ubWeight": 6,
         "ubPerPocket": 4,
         "usPrice": 150,
@@ -329,7 +567,11 @@
         "standardReplacement": "CLIP556_30_AP",
         "bMetal": true,
         "bSinks": true,
-        "bBigGunList": true
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 10
+        }
     },
     {
         "itemIndex": 93,
@@ -337,8 +579,15 @@
         "calibre": "AMMO545",
         "capacity": 30,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 10,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 10
+            },
+            "big": {
+                "path": "bigitems/p1item10.sti"
+            }
+        },
         "ubWeight": 6,
         "ubPerPocket": 4,
         "usPrice": 100,
@@ -346,7 +595,11 @@
         "standardReplacement": "CLIP556_30_HP",
         "bMetal": true,
         "bSinks": true,
-        "bBigGunList": true
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 11
+        }
     },
     {
         "itemIndex": 94,
@@ -354,14 +607,25 @@
         "calibre": "AMMO556",
         "capacity": 30,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 7,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 7
+            },
+            "big": {
+                "path": "bigitems/p1item07.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 4,
         "usPrice": 150,
         "ubCoolness": 4,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 8
+        }
     },
     {
         "itemIndex": 95,
@@ -369,14 +633,25 @@
         "calibre": "AMMO556",
         "capacity": 30,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 8,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 8
+            },
+            "big": {
+                "path": "bigitems/p1item08.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 4,
         "usPrice": 100,
         "ubCoolness": 3,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 9
+        }
     },
     {
         "itemIndex": 96,
@@ -384,8 +659,15 @@
         "calibre": "AMMO762W",
         "capacity": 10,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 22,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 22
+            },
+            "big": {
+                "path": "bigitems/p1item22.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 6,
         "usPrice": 60,
@@ -393,7 +675,11 @@
         "standardReplacement": "CLIP762N_5_AP",
         "bMetal": true,
         "bSinks": true,
-        "bBigGunList": true
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 23
+        }
     },
     {
         "itemIndex": 97,
@@ -401,8 +687,15 @@
         "calibre": "AMMO762W",
         "capacity": 30,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 29,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 29
+            },
+            "big": {
+                "path": "bigitems/p1item29.sti"
+            }
+        },
         "ubWeight": 8,
         "ubPerPocket": 4,
         "usPrice": 180,
@@ -410,7 +703,11 @@
         "standardReplacement": "CLIP762N_20_AP",
         "bMetal": true,
         "bSinks": true,
-        "bBigGunList": true
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 30
+        }
     },
     {
         "itemIndex": 98,
@@ -418,8 +715,15 @@
         "calibre": "AMMO762W",
         "capacity": 10,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 23,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 23
+            },
+            "big": {
+                "path": "bigitems/p1item23.sti"
+            }
+        },
         "ubWeight": 3,
         "ubPerPocket": 6,
         "usPrice": 40,
@@ -427,7 +731,11 @@
         "standardReplacement": "CLIP762N_5_HP",
         "bMetal": true,
         "bSinks": true,
-        "bBigGunList": true
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 24
+        }
     },
     {
         "itemIndex": 99,
@@ -435,8 +743,15 @@
         "calibre": "AMMO762W",
         "capacity": 30,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 30,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 30
+            },
+            "big": {
+                "path": "bigitems/p1item30.sti"
+            }
+        },
         "ubWeight": 8,
         "ubPerPocket": 4,
         "usPrice": 120,
@@ -444,7 +759,11 @@
         "standardReplacement": "CLIP762N_20_HP",
         "bMetal": true,
         "bSinks": true,
-        "bBigGunList": true
+        "bBigGunList": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 31
+        }
     },
     {
         "itemIndex": 100,
@@ -452,14 +771,25 @@
         "calibre": "AMMO762N",
         "capacity": 5,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 3,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 3
+            },
+            "big": {
+                "path": "bigitems/p1item03.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 6,
         "usPrice": 30,
         "ubCoolness": 7,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 4
+        }
     },
     {
         "itemIndex": 101,
@@ -467,14 +797,25 @@
         "calibre": "AMMO762N",
         "capacity": 20,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 27,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 27
+            },
+            "big": {
+                "path": "bigitems/p1item27.sti"
+            }
+        },
         "ubWeight": 8,
         "ubPerPocket": 4,
         "usPrice": 120,
         "ubCoolness": 6,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 28
+        }
     },
     {
         "itemIndex": 102,
@@ -482,14 +823,25 @@
         "calibre": "AMMO762N",
         "capacity": 5,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 2,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 2
+            },
+            "big": {
+                "path": "bigitems/p1item02.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 6,
         "usPrice": 20,
         "ubCoolness": 6,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 3
+        }
     },
     {
         "itemIndex": 103,
@@ -497,14 +849,25 @@
         "calibre": "AMMO762N",
         "capacity": 20,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 28,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 28
+            },
+            "big": {
+                "path": "bigitems/p1item28.sti"
+            }
+        },
         "ubWeight": 8,
         "ubPerPocket": 4,
         "usPrice": 80,
         "ubCoolness": 5,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 29
+        }
     },
     {
         "itemIndex": 104,
@@ -512,14 +875,25 @@
         "calibre": "AMMO47",
         "capacity": 50,
         "ammoType": "AMMO_SUPER_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 31,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 31
+            },
+            "big": {
+                "path": "bigitems/p1item31.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 4,
         "usPrice": 700,
         "ubCoolness": 8,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 32
+        }
     },
     {
         "itemIndex": 105,
@@ -527,14 +901,25 @@
         "calibre": "AMMO57",
         "capacity": 50,
         "ammoType": "AMMO_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 20,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 20
+            },
+            "big": {
+                "path": "bigitems/p1item20.sti"
+            }
+        },
         "ubWeight": 9,
         "ubPerPocket": 4,
         "usPrice": 750,
         "ubCoolness": 9,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 21
+        }
     },
     {
         "itemIndex": 106,
@@ -542,14 +927,25 @@
         "calibre": "AMMO57",
         "capacity": 50,
         "ammoType": "AMMO_HP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 21,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 21
+            },
+            "big": {
+                "path": "bigitems/p1item21.sti"
+            }
+        },
         "ubWeight": 9,
         "ubPerPocket": 4,
         "usPrice": 500,
         "ubCoolness": 9,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 22
+        }
     },
     {
         "itemIndex": 107,
@@ -557,15 +953,26 @@
         "calibre": "AMMO12G",
         "capacity": 7,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 2,
-        "ubGraphicNum": 22,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 22
+            },
+            "big": {
+                "path": "bigitems/p2item22.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 6,
         "usPrice": 20,
         "ubCoolness": 3,
         "bMetal": true,
         "bSinks": true,
-        "dontUseAsDefaultMagazine": true
+        "dontUseAsDefaultMagazine": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 23
+        }
     },
     {
         "itemIndex": 108,
@@ -573,14 +980,25 @@
         "calibre": "AMMO12G",
         "capacity": 7,
         "ammoType": "AMMO_BUCKSHOT",
-        "ubGraphicType": 2,
-        "ubGraphicNum": 4,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp2items.sti",
+                "subImageIndex": 4
+            },
+            "big": {
+                "path": "bigitems/p2item04.sti"
+            }
+        },
         "ubWeight": 5,
         "ubPerPocket": 6,
         "usPrice": 20,
         "ubCoolness": 3,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P2ITEMS",
+            "subIndex": 5
+        }
     },
     {
         "itemIndex": 109,
@@ -588,15 +1006,26 @@
         "calibre": "AMMOCAWS",
         "capacity": 10,
         "ammoType": "AMMO_SUPER_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/p1item00.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 6,
         "usPrice": 300,
         "ubCoolness": 9,
         "bMetal": true,
         "bSinks": true,
-        "dontUseAsDefaultMagazine": true
+        "dontUseAsDefaultMagazine": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 110,
@@ -604,14 +1033,25 @@
         "calibre": "AMMOCAWS",
         "capacity": 10,
         "ammoType": "AMMO_BUCKSHOT",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 1,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 1
+            },
+            "big": {
+                "path": "bigitems/p1item01.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 6,
         "usPrice": 300,
         "ubCoolness": 9,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 2
+        }
     },
     {
         "itemIndex": 111,
@@ -619,14 +1059,25 @@
         "calibre": "AMMOROCKET",
         "capacity": 5,
         "ammoType": "AMMO_SUPER_AP",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 110,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 110
+            },
+            "big": {
+                "path": "bigitems/p1item110.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 4,
         "usPrice": 500,
         "ubCoolness": 9,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 111
+        }
     },
     {
         "itemIndex": 112,
@@ -634,14 +1085,25 @@
         "calibre": "AMMOROCKET",
         "capacity": 5,
         "ammoType": "AMMO_HE",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 115,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 115
+            },
+            "big": {
+                "path": "bigitems/p1item115.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 4,
         "usPrice": 500,
         "ubCoolness": 9,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 116
+        }
     },
     {
         "itemIndex": 113,
@@ -649,14 +1111,25 @@
         "calibre": "AMMOROCKET",
         "capacity": 5,
         "ammoType": "AMMO_HEAT",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 114,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 114
+            },
+            "big": {
+                "path": "bigitems/p1item114.sti"
+            }
+        },
         "ubWeight": 10,
         "ubPerPocket": 4,
         "usPrice": 500,
         "ubCoolness": 9,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 115
+        }
     },
     {
         "itemIndex": 114,
@@ -664,14 +1137,25 @@
         "calibre": "AMMODART",
         "capacity": 1,
         "ammoType": "AMMO_SLEEP_DART",
-        "ubGraphicType": 1,
-        "ubGraphicNum": 119,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdp1items.sti",
+                "subImageIndex": 119
+            },
+            "big": {
+                "path": "bigitems/p1item119.sti"
+            }
+        },
         "ubWeight": 1,
         "ubPerPocket": 8,
         "usPrice": 10,
         "ubCoolness": 4,
         "bMetal": true,
-        "bSinks": true
+        "bSinks": true,
+        "tileGraphic": {
+            "type": "P1ITEMS",
+            "subIndex": 120
+        }
     },
     {
         "itemIndex": 115,
@@ -679,15 +1163,26 @@
         "calibre": "AMMOFLAME",
         "capacity": 5,
         "ammoType": "AMMO_BUCKSHOT",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 49,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 49
+            },
+            "big": {
+                "path": "bigitems/gun49.sti"
+            }
+        },
         "ubWeight": 8,
         "ubPerPocket": 4,
         "usPrice": 0,
         "ubCoolness": 0,
         "bMetal": true,
         "bSinks": true,
-        "bNotBuyable": true
+        "bNotBuyable": true,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 50
+        }
     },
     {
         "itemIndex": 116,
@@ -695,12 +1190,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 117,
@@ -708,12 +1214,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 118,
@@ -721,12 +1238,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 119,
@@ -734,12 +1262,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 120,
@@ -747,12 +1286,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 121,
@@ -760,12 +1310,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 122,
@@ -773,12 +1334,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 123,
@@ -786,12 +1358,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 124,
@@ -799,12 +1382,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 125,
@@ -812,12 +1406,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 126,
@@ -825,12 +1430,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 127,
@@ -838,12 +1454,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 128,
@@ -851,12 +1478,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 129,
@@ -864,12 +1502,23 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     },
     {
         "itemIndex": 130,
@@ -877,11 +1526,22 @@
         "calibre": "NOAMMO",
         "capacity": 0,
         "ammoType": "AMMO_REGULAR",
-        "ubGraphicType": 0,
-        "ubGraphicNum": 0,
+        "inventoryGraphics": {
+            "small": {
+                "path": "interface/mdguns.sti",
+                "subImageIndex": 0
+            },
+            "big": {
+                "path": "bigitems/gun00.sti"
+            }
+        },
         "ubWeight": 0,
         "ubPerPocket": 0,
         "usPrice": 0,
-        "ubCoolness": 0
+        "ubCoolness": 0,
+        "tileGraphic": {
+            "type": "GUNS",
+            "subIndex": 1
+        }
     }
 ]

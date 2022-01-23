@@ -18,6 +18,7 @@ public:
 	void AddMember(const char *name, uint16_t    value) { m_value.AddMember<uint16_t>(rapidjson::StringRef(name), value, m_alloc); }
 	void AddMember(const char *name, uint32_t    value) { m_value.AddMember<uint32_t>(rapidjson::StringRef(name), value, m_alloc); }
 	void AddMember(const char *name, bool        value) { m_value.AddMember<bool>(rapidjson::StringRef(name), value, m_alloc); }
+	void AddMember(const char *name, rapidjson::Value &value) { m_value.AddMember(rapidjson::StringRef(name), value, m_alloc); }
 
 	void AddMember(const char *name, const ST::string &value)
 	{
@@ -37,6 +38,10 @@ public:
 		return m_value;
 	}
 
+	rapidjson::Document::AllocatorType& getAllocator()
+	{
+		return m_alloc;
+	}
 protected:
 	rapidjson::Value m_value;
 	rapidjson::Document::AllocatorType& m_alloc;
