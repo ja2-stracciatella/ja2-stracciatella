@@ -16,7 +16,6 @@
 #include "GameInstance.h"
 #include "GamePolicy.h"
 #include "content/NewStrings.h"
-#include "content/npcs.h"
 #include "internals/enums.h"
 
 #include "Logger.h"
@@ -46,7 +45,7 @@ void Soldier::removePendingAction()
 	if(mSoldier->ubPendingAction != NO_PENDING_ACTION)
 	{
 		SLOGD("%s: remove pending action %s",
-			getPofileName(),
+			getPofileName().c_str(),
 			Internals::getActionName(mSoldier->ubPendingAction));
 
 		mSoldier->ubPendingAction = NO_PENDING_ACTION;
@@ -92,7 +91,7 @@ bool Soldier::anyoneHasPendingAction(UINT8 action, UINT8 team)
 void Soldier::setPendingAction(UINT8 action)
 {
 	SLOGD("%s: set pending action %s (previous %s)",
-		getPofileName(),
+		getPofileName().c_str(),
 		Internals::getActionName(action),
 		Internals::getActionName(mSoldier->ubPendingAction));
 
@@ -101,9 +100,10 @@ void Soldier::setPendingAction(UINT8 action)
 }
 
 
-const char* Soldier::getPofileName() const
+const ST::string& Soldier::getPofileName() const
 {
-	return Content::getNpcName((NPCIDs)mSoldier->ubProfile);
+	auto profile = GCM->getMercProfileInfo(mSoldier->ubProfile);
+	return profile->internalName;
 }
 
 
