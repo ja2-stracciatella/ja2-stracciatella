@@ -3468,7 +3468,7 @@ void OurNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, INT8 const bL
 
 
 static void HearNoise(SOLDIERTYPE* pSoldier, SOLDIERTYPE* noise_maker, UINT16 sGridNo, INT8 bLevel, UINT8 ubVolume, NoiseKind, BOOLEAN* ubSeen);
-static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, NoiseKind, UINT8 ubBaseVolume, UINT8 bCheckTerrain, UINT8 ubTerrType1, UINT8 ubTerrType2);
+static UINT8 CalcEffVolume(const SOLDIERTYPE* pSoldier, INT16 sGridNo, INT8 bLevel, NoiseKind, UINT8 ubBaseVolume, UINT8 ubTerrType1, UINT8 ubTerrType2);
 static void TellPlayerAboutNoise(SOLDIERTYPE* pSoldier, const SOLDIERTYPE* noise_maker, INT16 sGridNo, INT8 bLevel, UINT8 ubVolume, NoiseKind, UINT8 ubNoiseDir);
 
 
@@ -3476,7 +3476,6 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 {
 	UINT8 ubLoudestEffVolume, ubEffVolume;
 	//UINT8 ubPlayVolume;
-	INT8 bCheckTerrain = FALSE;
 	UINT8 ubNoiseDir        = (UINT8)-1; // XXX HACK000E probably ubLoudestNoiseDir should be used
 	UINT8 ubLoudestNoiseDir = (UINT8)-1; // XXX HACK000E
 
@@ -3510,15 +3509,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 
 
 	// DETERMINE THE TERRAIN TYPE OF THE GRIDNO WHERE NOISE IS COMING FROM
-
 	const UINT8 ubSourceTerrType = gpWorldLevelData[sGridNo].ubTerrainID;
-
-	// if we have now somehow obtained a valid terrain type
-	if ((ubSourceTerrType >= FLAT_GROUND) || (ubSourceTerrType <= DEEP_WATER))
-	{
-		bCheckTerrain = TRUE;
-	}
-	// else give up trying to get terrain type, just assume sound isn't muffled
 
 
 	// DETERMINE THE *PERCEIVED* SOURCE OF THE NOISE
@@ -3737,8 +3728,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 
 			// Can the listener hear noise of that volume given his circumstances?
 			ubEffVolume = CalcEffVolume(pSoldier, sGridNo, bLevel, ubNoiseType,
-							ubBaseVolume, bCheckTerrain,
-							pSoldier->bOverTerrainType, ubSourceTerrType);
+							ubBaseVolume, pSoldier->bOverTerrainType, ubSourceTerrType);
 
 			if (ubEffVolume > 0)
 			{
@@ -3828,7 +3818,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 }
 
 
-static UINT8 CalcEffVolume(SOLDIERTYPE const* const pSoldier, INT16 const sGridNo, INT8 const bLevel, NoiseKind const ubNoiseType, UINT8 const ubBaseVolume, UINT8 const bCheckTerrain, UINT8 const ubTerrType1, UINT8 const ubTerrType2)
+static UINT8 CalcEffVolume(SOLDIERTYPE const* const pSoldier, INT16 const sGridNo, INT8 const bLevel, NoiseKind const ubNoiseType, UINT8 const ubBaseVolume, UINT8 const ubTerrType1, UINT8 const ubTerrType2)
 {
 	INT32 iEffVolume, iDistance;
 
@@ -3926,8 +3916,6 @@ static UINT8 CalcEffVolume(SOLDIERTYPE const* const pSoldier, INT16 const sGridN
 	// if we still have a chance of hearing this, and the terrain types are known
 	if (iEffVolume > 0)
 	{
-		if (bCheckTerrain)
-		{
 			// if, between noise and listener, one is outside and one is inside
 
 			// NOTE: This is a pretty dumb way of doing things, since it won't detect
@@ -3940,8 +3928,6 @@ static UINT8 CalcEffVolume(SOLDIERTYPE const* const pSoldier, INT16 const sGridN
 				// sound is muffled, reduce the effective volume of the noise
 				iEffVolume -= 5;
 			}
-		}
-
 	}
 	if (iEffVolume > 0)
 	{
