@@ -15,6 +15,15 @@
 
 SavedGameStates g_gameStates;
 
+uint32_t SaveStatesSize()
+{
+	std::stringstream ss;
+	g_gameStates.Serialize(ss);
+
+	std::string data = ss.str();
+	return data.length();
+}
+
 void SaveStatesToSaveGameFile(HWFILE const hFile)
 {
 	std::stringstream ss;
@@ -26,7 +35,7 @@ void SaveStatesToSaveGameFile(HWFILE const hFile)
 	hFile->write(data.c_str(), len);
 }
 
-void LoadStatesFromSaveFile(HWFILE const hFile)
+void LoadStatesFromSaveFile(HWFILE const hFile, SavedGameStates &states)
 {
 	UINT32 len;
 	hFile->read(&len, sizeof(UINT32));
@@ -35,25 +44,18 @@ void LoadStatesFromSaveFile(HWFILE const hFile)
 	hFile->read(buff.data(), len);
 
 	std::stringstream ss(buff.c_str());
-	g_gameStates.Deserialize(ss);
+	states.Deserialize(ss);
 }
 
-void AddModInfoToGameStates() {
-	auto mods = GCM->getEnabledMods();
-	std::vector<ST::string> modState;
-	for (auto i = mods.begin(); i < mods.end(); i++) {
-		modState.push_back(ST::format("{}!{}", (*i).first, (*i).second));
-	}
-	g_gameStates.SetVector("stracciatella:mods", modState);
-}
+const ST::string MODS_KEY = "stracciatella:mods";
 
 void ResetGameStates()
 {
 	g_gameStates.Clear();
-	AddModInfoToGameStates();
+	AddModInfoToGameStates(g_gameStates);
 }
 
-bool SavedGameStates::HasKey(const ST::string& key)
+bool SavedGameStates::HasKey(const ST::string& key) const
 {
 	return states.find(key) != states.end();
 }
@@ -157,7 +159,7 @@ void SavedGameStates::Deserialize(std::stringstream& ss)
 		throw std::runtime_error(err.to_std_string());
 	}
 
-	states.clear();
+	this->Clear();
 	for (const auto& entry : doc.GetObject())
 	{
 		ST::string key = entry.name.GetString();
@@ -187,4 +189,64 @@ void SavedGameStates::Clear()
 StateTable SavedGameStates::GetAll()
 {
 	return states;
+}
+
+void AddModInfoToGameStates(SavedGameStates &states) {
+	auto mods = GCM->getEnabledMods();
+	std::stringstream ss;
+	rapidjson::OStreamWrapper os(ss);
+	rapidjson::Writer<rapidjson::OStreamWrapper> writer(os);
+
+	writer.StartArray();
+	for (auto i = mods.begin(); i < mods.end(); i++) {
+		writer.StartObject();
+		writer.String("name");
+		writer.String((*i).first.c_str());
+		writer.String("version");
+		writer.String((*i).second.c_str());
+		writer.EndObject();
+	}
+	writer.EndArray();
+
+	ST::string result = ss.str();
+	g_gameStates.Set(MODS_KEY, result);
+}
+
+std::vector<std::pair<ST::string, ST::string>> GetModInfoFromGameStates(const SavedGameStates &states) {
+	std::vector<std::pair<ST::string, ST::string>> mods;
+	if (!states.HasKey(MODS_KEY)) {
+		auto errorMsg = ST::format("Failed to parse JSON from saved game states for mods: missing `{}` key", MODS_KEY);
+		throw std::runtime_error(errorMsg.c_str());
+	}
+	auto modsJson = states.Get<ST::string>(MODS_KEY);
+	std::stringstream ss(modsJson.c_str());
+	rapidjson::IStreamWrapper is(ss);
+	rapidjson::Document doc;
+	doc.ParseStream(is);
+	if (doc.HasParseError())
+	{
+		auto errorMsg = ST::format("Failed to parse JSON from saved game states for mods: {}", rapidjson::GetParseError_En(doc.GetParseError()));
+		throw std::runtime_error(errorMsg.c_str());
+	}
+
+	if (!doc.IsArray()) {
+		auto errorMsg = ST::format("Failed to parse JSON from saved game states for mods: root is not an array");
+		throw std::runtime_error(errorMsg.c_str());
+	}
+
+	auto array = doc.GetArray();
+	for (auto val = array.begin(); val < array.end(); val++) {
+		if (!val->IsObject()) {
+			auto errorMsg = ST::format("Failed to parse JSON from saved game states for mods: item is not an object");
+			return mods;
+		}
+
+		auto obj = val->GetObject();
+		ST::string name = obj["name"].GetString();
+		ST::string version = obj["version"].GetString();
+
+		mods.push_back(std::pair<ST::string, ST::string>(name, version));
+	}
+
+	return mods;
 }

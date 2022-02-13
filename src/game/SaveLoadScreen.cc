@@ -119,7 +119,7 @@ BOOLEAN        gfRedrawSaveLoadScreen = TRUE;
 
 static ScreenID guiSaveLoadExitScreen = SAVE_LOAD_SCREEN;
 
-static std::vector<std::pair<ST::string, SAVED_GAME_HEADER>> gSavedGamesList;
+static std::vector<SaveGameInfo> gSavedGamesList;
 static size_t gCurrentScrollTop = 0;
 static INT32 gbSelectedSaveLocation = -1;
 static INT32 gbHighLightedLocation  = -1;
@@ -332,7 +332,6 @@ static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgDeadIsDeadTabCallback(GUI_BUTTON* btn, INT32 reason);
 static void ClearSelectedSaveSlot(void);
 static void InitSaveGameArray(void);
-static BOOLEAN LoadSavedGameHeaderFromFile(const ST::string &fileName, SAVED_GAME_HEADER* pSaveGameHeader);
 static void SelectedSLSEntireRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason);
 static void SelectedSaveRegionMovementCallBack(MOUSE_REGION* pRegion, INT32 reason);
@@ -425,7 +424,7 @@ static void EnterSaveLoadScreen()
 	if (!gGameSettings.sCurrentSavedGameName.empty()) {
 		for (auto i = gSavedGamesList.begin(); i < gSavedGamesList.end(); i++) {
 			// If a current save name is used select it
-			if ((*i).first == gGameSettings.sCurrentSavedGameName) {
+			if ((*i).name() == gGameSettings.sCurrentSavedGameName) {
 				gbSelectedSaveLocation = std::distance(gSavedGamesList.begin(), i);
 				break;
 			}
@@ -545,7 +544,7 @@ static ST::string GetGameDescription()
 }
 
 
-static BOOLEAN DisplaySaveGameEntry(const std::vector<std::pair<ST::string, SAVED_GAME_HEADER>>::iterator& entry);
+static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& entry);
 static void MoveSelectionDown();
 static void MoveSelectionUp();
 static void InitSaveLoadScreenTextInputBoxes(void);
@@ -623,6 +622,7 @@ static void GetSaveLoadScreenUserInput(void)
 
 
 static UINT8 CompareSaveGameVersion(INT32 bSaveGameID);
+static bool AreModsEqualToEnabled(INT32 bSaveGameID);
 static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue);
 static void LoadSavedGameWarningMessageBoxCallBack(MessageBoxReturnValue);
 static void DoSaveGame(const ST::string &saveName, const ST::string &saveDescription);
@@ -657,13 +657,23 @@ static void SaveLoadSelectedSave()
 	else
 	{
 		// Check to see if the save game headers are the same
-		UINT8 const ret = CompareSaveGameVersion(gbSelectedSaveLocation);
-		if (ret != SLS_HEADER_OK)
+		auto versionResult = CompareSaveGameVersion(gbSelectedSaveLocation);
+		auto modsEqual = AreModsEqualToEnabled(gbSelectedSaveLocation);
+		ST::string msg = "";
+		if (versionResult != SLS_HEADER_OK)
 		{
-			ST::string msg =
-				ret == SLS_GAME_VERSION_OUT_OF_DATE       ? zSaveLoadText[SLG_GAME_VERSION_DIF] :
-				ret == SLS_SAVED_GAME_VERSION_OUT_OF_DATE ? zSaveLoadText[SLG_SAVED_GAME_VERSION_DIF] :
+			msg +=
+				versionResult == SLS_GAME_VERSION_OUT_OF_DATE       ? zSaveLoadText[SLG_GAME_VERSION_DIF] :
+				versionResult == SLS_SAVED_GAME_VERSION_OUT_OF_DATE ? zSaveLoadText[SLG_SAVED_GAME_VERSION_DIF] :
 				zSaveLoadText[SLG_BOTH_GAME_AND_SAVED_GAME_DIF];
+		}
+		if (!modsEqual) {
+			if (!msg.empty()) {
+				msg += " ";
+			}
+			msg += "Mods in save game do not match currently enabled mods. Continue anyways???";
+		}
+		if (!msg.empty()) {
 			DoSaveLoadMessageBox(msg, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, LoadSavedGameWarningMessageBoxCallBack);
 		}
 		else
@@ -689,18 +699,18 @@ bool isReservedName(ST::string &saveName) {
 	return IsAutoSaveName(saveName) || IsQuickSaveName(saveName) || IsErrorSaveName(saveName);
 }
 
-bool compareSaveGames(std::pair<ST::string, SAVED_GAME_HEADER> i, std::pair<ST::string, SAVED_GAME_HEADER> j) {
+bool compareSaveGames(SaveGameInfo i, SaveGameInfo j) {
 	auto savegameDir = GCM->getSavedGamesFolder();
-	auto lastModifiedI = GCM->userPrivateFiles()->getLastModifiedTime(GetSaveGamePath(i.first));
-	auto lastModifiedJ = GCM->userPrivateFiles()->getLastModifiedTime(GetSaveGamePath(j.first));
+	auto lastModifiedI = GCM->userPrivateFiles()->getLastModifiedTime(GetSaveGamePath(i.name()));
+	auto lastModifiedJ = GCM->userPrivateFiles()->getLastModifiedTime(GetSaveGamePath(j.name()));
 	return (lastModifiedI > lastModifiedJ);
 }
 
-std::vector<std::pair<ST::string, SAVED_GAME_HEADER>> GetValidSaveGames()
+std::vector<SaveGameInfo> GetValidSaveGames()
 {
 	auto savegameDir = GCM->getSavedGamesFolder();
 	auto savegameNames = GCM->userPrivateFiles()->findAllFilesInDir(savegameDir, false, false, true);
-	std::vector<std::pair<ST::string, SAVED_GAME_HEADER>> validSaves;
+	std::vector<SaveGameInfo> validSaves;
 
 	for (auto i = savegameNames.begin(); i < savegameNames.end(); i++) {
 		if (!HasSaveGameExtension(*i)) {
@@ -708,9 +718,12 @@ std::vector<std::pair<ST::string, SAVED_GAME_HEADER>> GetValidSaveGames()
 			continue;
 		}
 		auto saveName = FileMan::getFileNameWithoutExt(*i);
-		SAVED_GAME_HEADER saveGameHeader;
-		if (LoadSavedGameHeaderFromFile(saveName, &saveGameHeader)) {
-			validSaves.push_back(std::pair(saveName, std::move(saveGameHeader)));
+		AutoSGPFile file(GCM->userPrivateFiles()->openForReading(FileMan::joinPaths(savegameDir, *i)));
+		try {
+			validSaves.push_back(SaveGameInfo(saveName, file));
+		} catch (const std::runtime_error &ex) {
+			STLOGW("Could not read save game info for file `{}`: {}", *i, ex.what());
+			continue;
 		}
 	}
 
@@ -720,10 +733,10 @@ std::vector<std::pair<ST::string, SAVED_GAME_HEADER>> GetValidSaveGames()
 static void InitSaveGameArray(void)
 {
 	auto validSaveGames = GetValidSaveGames();
-	
+
 	gSavedGamesList.clear();
 	for (auto i = validSaveGames.begin(); i < validSaveGames.end(); i++) {
-		if (gfSaveGame && (IsAutoSaveName((*i).first) || IsQuickSaveName((*i).first))) {
+		if (gfSaveGame && (IsAutoSaveName((*i).name()) || IsQuickSaveName((*i).name()))) {
 			// Dont display quick- and autosaves when saving game
 			continue;
 		}
@@ -733,7 +746,7 @@ static void InitSaveGameArray(void)
 	std::sort(gSavedGamesList.begin(), gSavedGamesList.end(), compareSaveGames);
 	if (gfSaveGame) {
 		// Insert empty value at the beginning to create a new save
-		gSavedGamesList.insert(gSavedGamesList.begin(), std::pair(ST::null, SAVED_GAME_HEADER{}));
+		gSavedGamesList.insert(gSavedGamesList.begin(), SaveGameInfo());
 	}
 }
 
@@ -749,7 +762,7 @@ static void DisplaySaveGameList(void)
 }
 
 
-static BOOLEAN DisplaySaveGameEntry(const std::vector<std::pair<ST::string, SAVED_GAME_HEADER>>::iterator& entry)
+static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& entry)
 {
 	if (entry < gSavedGamesList.begin() || entry >= gSavedGamesList.end()) return TRUE;
 	// If we are going to be instantly leaving the screen, dont draw the numbers
@@ -761,7 +774,7 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<std::pair<ST::string, SAVE
 	auto index = std::distance(gSavedGamesList.begin(), entry);
 	auto indexFromScrollTop = std::distance(start, entry);
 
-	auto isNewSave = (*entry).first.empty();
+	auto isNewSave = (*entry).name().empty();
 	auto isSelected = index == gbSelectedSaveLocation;
 
 	UINT16 const bx = SLG_FIRST_SAVED_SPOT_X;
@@ -803,7 +816,8 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<std::pair<ST::string, SAVE
 			DrawTextToScreen(pMessageStrings[MSG_NEW_SAVE], bx, by + SLG_DATE_OFFSET_Y, 609, font, foreground, FONT_MCOLOR_BLACK, CENTER_JUSTIFIED);
 		}
 	} else {
-		SAVED_GAME_HEADER header = (*entry).second;
+		auto &header = (*entry).header();
+		auto &mods = (*entry).mods();
 
 		UINT16 x = bx;
 		UINT16 y = by + SLG_DATE_OFFSET_Y;
@@ -823,11 +837,22 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<std::pair<ST::string, SAVE
 				case DIF_DEAD_IS_DEAD: gameModeText = GIO_DEAD_IS_DEAD_TEXT; break;
 				default: gameModeText = GIO_SAVE_ANYWHERE_TEXT;
 			}
-			ST::string options = ST::format("{}\n{}\n{}\n{}",
+			ST::string modsText = ST::format("Mods: ");
+			if (mods.size() == 0) {
+				modsText = "No mods enabled";
+			} else {
+				auto i = 0;
+				for (auto &mod : mods) {
+					modsText += ST::format("{}{} ({})", i == 0 ? "" : ", ", mod.first, mod.second);
+					i++;
+				}
+			}
+			ST::string options = ST::format("{}\n{}\n{}\n{}\n{}",
 				difficulty,
 				gzGIOScreenText[gameModeText],
 				header.sInitialGameOptions.fGunNut      ? zSaveLoadText[SLG_ADDITIONAL_GUNS] : zSaveLoadText[SLG_NORMAL_GUNS],
-				header.sInitialGameOptions.fSciFi       ? zSaveLoadText[SLG_SCIFI]           : zSaveLoadText[SLG_REALISTIC]
+				header.sInitialGameOptions.fSciFi       ? zSaveLoadText[SLG_SCIFI]           : zSaveLoadText[SLG_REALISTIC],
+				modsText
 			);
 
 			region.SetFastHelpText(options);
@@ -885,19 +910,6 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<std::pair<ST::string, SAVE
 	return TRUE;
 }
 
-static BOOLEAN LoadSavedGameHeaderFromFile(const ST::string& saveName, SAVED_GAME_HEADER *const header) {
-	try {
-		bool stracLinuxFormat;
-		ExtractSavedGameHeaderFromSave(saveName, *header, &stracLinuxFormat);
-		endof(header->zGameVersionNumber)[-1] = '\0';
-		return TRUE;
-	} catch (const std::runtime_error &ex)
-	{
-		STLOGW("Error loading save game header: {}", ex.what());
-	}
-	return FALSE;
-}
-
 static void HandleScrollEvent(INT32 const reason) {
 	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP && !gfUserInTextInputMode)
 	{
@@ -950,7 +962,7 @@ static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
 		INT32	bSelected = gCurrentScrollTop + MSYS_GetRegionUserData( pRegion, 0 );
-		
+
 		if( gbSelectedSaveLocation != bSelected ) {
 			gbSelectedSaveLocation = bSelected;
 
@@ -1036,15 +1048,15 @@ static UINT8 CompareSaveGameVersion(INT32 bSaveGameID)
 {
 	UINT8 ubRetVal=SLS_HEADER_OK;
 
-	SAVED_GAME_HEADER saveGameHeader = (*(gSavedGamesList.begin() + bSaveGameID)).second;
+	auto& saveGameInfo = (*(gSavedGamesList.begin() + bSaveGameID));
 
 	// check to see if the saved game version in the header is the same as the current version
-	if( saveGameHeader.uiSavedGameVersion != guiSavedGameVersion )
+	if( saveGameInfo.header().uiSavedGameVersion != guiSavedGameVersion )
 	{
 		ubRetVal = SLS_SAVED_GAME_VERSION_OUT_OF_DATE;
 	}
 
-	if (strcmp(saveGameHeader.zGameVersionNumber, g_version_number)!= 0)
+	if (strcmp(saveGameInfo.header().zGameVersionNumber, g_version_number)!= 0)
 	{
 		if( ubRetVal == SLS_SAVED_GAME_VERSION_OUT_OF_DATE )
 			ubRetVal = SLS_BOTH_SAVE_GAME_AND_GAME_VERSION_OUT_OF_DATE;
@@ -1053,6 +1065,11 @@ static UINT8 CompareSaveGameVersion(INT32 bSaveGameID)
 	}
 
 	return( ubRetVal );
+}
+
+bool AreModsEqualToEnabled(INT32 bSaveGameID) {
+	auto& saveGameInfo = (*(gSavedGamesList.begin() + bSaveGameID));
+	return GCM->getEnabledMods() == saveGameInfo.mods();
 }
 
 
@@ -1127,7 +1144,7 @@ static void DoneFadeOutForSaveLoadScreen(void)
 
 	try
 	{
-		auto saveName = (*(gSavedGamesList.begin() + gbSelectedSaveLocation)).first;
+		auto& saveName = (*(gSavedGamesList.begin() + gbSelectedSaveLocation)).name();
 		LoadSavedGame(saveName);
 
 		gFadeInDoneCallback = DoneFadeInForSaveLoadScreen;
@@ -1212,12 +1229,12 @@ static void DisableSelectedSlot(void)
 static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	Assert( gbSelectedSaveLocation != -1 && gbSelectedSaveLocation != 0 );
-	
-	auto save = *(gSavedGamesList.begin() + gbSelectedSaveLocation);
+
+	auto& save = *(gSavedGamesList.begin() + gbSelectedSaveLocation);
 
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
-		DoSaveGame(save.first, save.second.sSavedGameDesc);
+		DoSaveGame(save.name(), save.header().sSavedGameDesc);
 	}
 }
 
@@ -1292,7 +1309,7 @@ void DoDeadIsDeadSave()
 {
 	// Reload saves
 	InitSaveGameArray();
-	
+
 	// Check if we are in a sane state! Do not save if:
 	// - we are in an AI Turn
 	// - we are in a Dialogue
@@ -1340,8 +1357,7 @@ void DoQuickLoad()
 
 	gbSelectedSaveLocation = -1;
 	for (auto i = gSavedGamesList.begin(); i < gSavedGamesList.end(); i++) {
-		auto saveName = (*i).first;
-		if (IsQuickSaveName(saveName)) {
+		if (IsQuickSaveName((*i).name())) {
 			gbSelectedSaveLocation = std::distance(gSavedGamesList.begin(), i);
 		}
 	}

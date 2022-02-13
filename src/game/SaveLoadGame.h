@@ -52,6 +52,7 @@ struct SAVED_GAME_HEADER
 	GAME_OPTIONS	sInitialGameOptions;	//need these in the header so we can get the info from it on the save load screen.
 
 	UINT32	uiRandom;
+	UINT32  uiSaveStateSize;
 
 	/* (vanilla) UINT8		ubFiller[110]; */
 };
@@ -115,5 +116,26 @@ bool IMPSavedProfileDoesFileExist(const ST::string& nickname);
 SGPFile* const IMPSavedProfileOpenFileForRead(const ST::string& nickname);
 int IMPSavedProfileLoadMercProfile(const ST::string& nickname);
 void IMPSavedProfileLoadInventory(const ST::string& nickname, SOLDIERTYPE *pSoldier);
+
+class SaveGameInfo {
+	public:
+		SaveGameInfo() {
+			this->savedGameHeader = SAVED_GAME_HEADER{};
+		};
+		SaveGameInfo(ST::string name, HWFILE file);
+		const SAVED_GAME_HEADER& header() const {
+			return savedGameHeader;
+		};
+		const std::vector<std::pair<ST::string, ST::string>>& mods() const {
+			return enabledMods;
+		};
+		const ST::string& name() const {
+			return saveName;
+		}
+	private:
+		ST::string saveName;
+		SAVED_GAME_HEADER savedGameHeader;
+		std::vector<std::pair<ST::string, ST::string>> enabledMods;
+};
 
 #endif

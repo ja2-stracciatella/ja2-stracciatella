@@ -35,18 +35,6 @@ void ModPackContentManager::logConfiguration() const {
 	STLOGI("Enabled mods                    '{}'", joinedModList);
 }
 
-/** Get folder for saved games. */
-ST::string ModPackContentManager::getSavedGamesFolder() const
-{
-	ST::string folderName("SavedGames");
-	for (const auto& name : m_modNames)
-	{
-		folderName += '-';
-		folderName += name;
-	}
-	return folderName;
-}
-
 /** Load dialogue quote from file. */
 ST::string* ModPackContentManager::loadDialogQuoteFromFile(const ST::string& filename, int quote_number)
 {

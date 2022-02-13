@@ -348,6 +348,7 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		}
 
 		header.uiRandom = Random(RAND_MAX);
+		header.uiSaveStateSize = SaveStatesSize();
 
 		// Save the savegame header
 		BYTE  data[432];
@@ -371,7 +372,8 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		InjectGameOptions(d, header.sInitialGameOptions);
 		INJ_SKIP(  d, 1)
 		INJ_U32(   d, header.uiRandom)
-		INJ_SKIP(  d, 112)
+		INJ_U32(   d, header.uiSaveStateSize)
+		INJ_SKIP(  d, 108)
 		Assert(d.getConsumed() == lengthof(data));
 
 		f->write(data, sizeof(data));
@@ -557,7 +559,12 @@ void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinu
 	ExtractGameOptions(d, h.sInitialGameOptions);
 	EXTR_SKIP(  d, 1)
 	EXTR_U32(   d, h.uiRandom)
-	EXTR_SKIP(  d, 112)
+	if (h.uiSavedGameVersion >= 102) {
+		EXTR_U32(d, h.uiSaveStateSize)
+		EXTR_SKIP(  d, 108)
+	} else {
+		EXTR_SKIP(  d, 112)
+	}
 	// XXX: this assert doesn't work anymore
 	// Assert(d.getConsumed() == lengthof(data));
 }
@@ -1024,7 +1031,8 @@ void LoadSavedGame(const ST::string &saveName)
 
 	if (version >= 101)
 	{
-		LoadStatesFromSaveFile(f);
+		LoadStatesFromSaveFile(f, g_gameStates);
+		AddModInfoToGameStates(g_gameStates);
 	}
 
 	BAR(1, "Final Checks...");
@@ -2518,4 +2526,26 @@ static void CalcJA2EncryptionSet(SAVED_GAME_HEADER const& h)
 
 	Assert(set < BASE_NUMBER_OF_ROTATION_ARRAYS * 12);
 	guiJA2EncryptionSet = set;
+}
+
+SaveGameInfo::SaveGameInfo(ST::string name_, HWFILE file) : saveName(name_) {
+	bool stracciatellaFormat = false;
+	auto savedGameHeader = SAVED_GAME_HEADER{};
+	file->seek(0, FileSeekMode::FILE_SEEK_FROM_START);
+	ExtractSavedGameHeaderFromFile(file, savedGameHeader, &stracciatellaFormat);
+
+	this->savedGameHeader = savedGameHeader;
+	if (savedGameHeader.uiSavedGameVersion >= 102) {
+		try {
+			if (savedGameHeader.uiSaveStateSize == 0) {
+				throw std::runtime_error("save state size was 0");
+			}
+			file->seek(-savedGameHeader.uiSaveStateSize - sizeof(UINT32), FileSeekMode::FILE_SEEK_FROM_END);
+			SavedGameStates states;
+			LoadStatesFromSaveFile(file, states);
+			this->enabledMods = GetModInfoFromGameStates(states);
+		} catch (const std::runtime_error &ex) {
+			STLOGW("Could not read mods from save game: {}", ex.what());
+		}
+	}
 }
