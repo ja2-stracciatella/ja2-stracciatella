@@ -2711,19 +2711,15 @@ static const ST::string s_pl_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Gra została pomyślnie odczytana",
 	"BŁĄD podczas odczytu gry: \"%s\"",
 
-	"Wersja gry w zapisanym pliku różni się od bieżącej. Prawdopodobnie można bezpiecznie kontynuować. Kontynuować?",
-	"Zapisane pliki gier mogą być uszkodzone. Czy chcesz je usunąć?",
+	"Wersja gry w zapisanym pliku różni się od bieżącej. Prawdopodobnie można bezpiecznie kontynuować.",
+	"Czy na pewno chcesz usunąć zapisaną grę o nazwie \"%s\"?",
 
-	"Próba odczytu starszej wersji zapisu gry.  Zaktualizować ten zapis i odczytać grę?",
+	"Uwaga:",
+	"Próba wczytania zapisu ze starszej wersji. Kontynuacja spowoduje automatyczną aktualizację zapisu.",
+	"Masz włączone inne mody, niż zapis gry. Mody mogą nie działać poprawnie.",
+	"Kontynuować?",
 
-	"Próba odczytu starszej wersji zapisu gry.  Zaktualizować ten zapis i odczytać grę?",
-
-	"Czy na pewno chcesz nadpisać grę na pozycji %d?",
-
-
-	//The first %d is a number that contains the amount of free space on the users hard drive,
-	//the second is the recommended amount of free space.
-	"Brak miejsca na dysku twardym.  Na dysku wolne jest %d MB, a wymagane jest przynajmniej %d MB.",
+	"Czy na pewno chcesz nadpisać zapisaną grę o nazwie \"%s\"?",
 
 	"Zapisuję...",			//When saving a game, a message box with this string appears on the screen
 
@@ -2731,8 +2727,10 @@ static const ST::string s_pl_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Całe mnóstwo broni",
 	"Realistyczna gra",
 	"Elementy S-F",
-
 	"Stopień trudności",
+
+	"Brak włączonych modów",
+	"Mody:"
 };
 
 

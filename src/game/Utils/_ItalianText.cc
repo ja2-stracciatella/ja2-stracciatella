@@ -2711,19 +2711,15 @@ static const ST::string s_it_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Partita caricata con successo",
 	"ERRORE durante il caricamento: \"%s\"",
 
-	"La versione del gioco nel file della partita salvata è diverso dalla versione attuale. È abbastanza sicuro proseguire. Continuate?",
-	"I file della partita salvata potrebbero essere annullati. Volete cancellarli tutti?",
+	"La versione del gioco nel file della partita salvata è diverso dalla versione attuale. È abbastanza sicuro proseguire.",
+	"Sei sicuro di voler eliminare la partita salvata denominata \"%s\"",
 
-	"Tentativo di caricare una versione salvata più vecchia. Aggiornate e caricate automaticamente quella salvata?",
+	"Attenzione:",
+	"Tentativo di caricare la partita salvata da una versione precedente. Continuando aggiornerà automaticamente la partita salvata.",
+	"Hai diverse mod abilitate, rispetto a quelle con cui è stato salvata la partita. Le mod potrebbero non funzionare correttamente.",
+	"Vuoi continuare?",
 
-	"Tentativo di caricare una vecchia versione salvata. Aggiornate e caricate automaticamente quella salvata?",
-
-	"Siete sicuri di volere sovrascrivere la partita salvata nello slot #%d?",
-
-
-	//The first %d is a number that contains the amount of free space on the users hard drive,
-	//the second is the recommended amount of free space.
-	"Lo spazio su disco si sta esaurendo. Sono disponibili solo %d MB, mentre per giocare a Jagged dovrebbero esserci almeno %d MB liberi .",
+	"Sei sicuro di voler sovrascrivere la partita salvata denominata \"%s\"?",
 
 	"Salvataggio in corso...",			//When saving a game, a message box with this string appears on the screen
 
@@ -2731,8 +2727,10 @@ static const ST::string s_it_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Tonn. di armi",
 	"Stile realistico",
 	"Stile fantascientifico",
-
 	"Difficoltà",
+
+	"Nessuna mod abilitata",
+	"Mods:"
 };
 
 

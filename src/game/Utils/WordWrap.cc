@@ -184,7 +184,7 @@ static void IanDrawTextToScreen(const ST::string& str, UINT16 x, UINT16 y, UINT1
 {
 	if (ian_flags & IAN_WRAP_NO_SHADOW) SetFontShadow(NO_SHADOW);
 	flags |= ian_flags & MARK_DIRTY;
-	DrawTextToScreen(str, x, y, w, font, foreground, background, flags);
+	DrawTextToScreen(CleanOutControlCodesFromString(str), x, y, w, font, foreground, background, flags);
 	if (ian_flags & IAN_WRAP_NO_SHADOW) SetFontShadow(DEFAULT_SHADOW);
 }
 
@@ -229,7 +229,7 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 				// reset the line
 				line_buf = ST::null;
 				line_w   = 0;
-				
+
 				SkipSpace(&i);
 				break;
 
@@ -348,7 +348,7 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 					// reset width
 					cur_max_w = max_w;
 				}
-				
+
 				// calc new pixel length for the line
 				line_w += word_w;
 

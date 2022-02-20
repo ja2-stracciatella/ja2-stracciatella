@@ -2712,18 +2712,14 @@ static const ST::string s_fr_zSaveLoadText[zSaveLoadText_SIZE] =
 	"ERREUR lors du chargement: \"%s\"",
 
 	"La version de la sauvegarde est différente de celle du jeu. Désirez-vous continuer ?",
-	"Les fichiers de sauvegarde sont peut-être altérés. Voulez-vous les effacer ?",
+	"Êtes-vous sûr de vouloir supprimer la sauvegarde nommée \"%s\"?",
 
-	"Tentative de chargement d'une sauvegarde de version précédente. Voulez-vous effectuer une mise à jour ?",
+	"Attention:",
+	"Tentative de chargement de la sauvegarde à partir d'une ancienne version. Continuer mettra automatiquement à jour la sauvegarde.",
+	"Vous avez activé différents mods avec lesquels la sauvegarde a été enregistrée. Les mods peuvent ne pas fonctionner correctement.",
+	"Voulez-vous continuer?",
 
-	"Tentative de chargement d'une sauvegarde de version précédente. Voulez-vous effectuer une mise à jour ?",
-
-	"Etes-vous sûr de vouloir écraser la sauvegarde #%d ?",
-
-
-	//The first %d is a number that contains the amount of free space on the users hard drive,
-	//the second is the recommended amount of free space.
-	"Votre risquez de manquer d'espace disque. Il ne vous reste que %d Mo de libre alors que le jeu nécessite %d Mo d'espace libre.",
+	"Etes-vous sûr de vouloir écraser la sauvegarde nommée \"%s\"?",
 
 	"Enregistrement...",			//When saving a game, a message box with this string appears on the screen
 
@@ -2731,8 +2727,10 @@ static const ST::string s_fr_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Beaucoup d'armes",
 	"Style réaliste",
 	"Style SF",
-
 	"Difficulté",
+
+	"Aucun mod activé",
+	"Mods:"
 };
 
 

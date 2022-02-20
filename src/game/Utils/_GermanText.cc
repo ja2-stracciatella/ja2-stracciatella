@@ -2540,26 +2540,19 @@ static const ST::string s_ger_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Auswahl laden",
 
 	"Spiel erfolgreich gespeichert",
-	"FEHLER beim Speichern des Spiels!",
+	"Fehler beim Speichern des Spiels!",
 	"Spiel erfolgreich geladen",
-	"FEHLER beim Laden des Spiels: \"%s\"",
+	"Fehler beim Laden des Spiels: \"%s\"",
 
+	"Der Version des Spielstands unterscheidet sich vom aktuellen Spielstand. Es kann wahrscheinlich nichts passieren.",
+	"Spielstand mit Namen \"%s\" wirklich löschen?",
 
-	"Der gespeicherte Spielstand unterscheidet sich vom aktuellen Spielstand. Es kann wahrscheinlich nichts passieren. Weiter?",
-	"Die gespeicherten Spielstände sind evtl. beschädigt Wollen Sie sie alle löschen?",
+	"Achtung:",
+	"Versuche, älteren Spielstand zu laden. Das Laden wird den Spielstand automatisch aktualisieren.",
+	"Der Spielstand wurde mit anderen Mods geschrieben as aktuell aktiviert sind.",
+	"Möchten Sie fortfahren?"
 
-
-	"Versuche, älteren Spielstand zu laden. Laden und automatisch aktualisieren?",
-
-	"Versuche, älteren Spielstand zu laden. Laden und automatisch aktualisieren?",
-
-	"Gespeichertes Spiel in Slot #%d wirklich überschreiben?",
-
-	//The first %d is a number that contains the amount of free space on the users hard drive,
-	//the second is the recommended amount of free space.
-	//
-	"Sie haben zu wenig Festplattenspeicher. Sie haben nur %d MB frei und JA2 benötigt mindestens %d MB.",
-
+	"Spielstand mit Namen \"%s\" wirklich überschreiben?",
 
 	"Speichere...",	//While the game is saving this message appears.
 
@@ -2568,6 +2561,9 @@ static const ST::string s_ger_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Real-Stil",
 	"SciFi-Stil",
 	"Schwierigkeit",
+
+	"Keine Mods aktiviert",
+	"Mods:"
 };
 
 //MapScreen

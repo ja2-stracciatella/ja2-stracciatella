@@ -140,7 +140,7 @@ extern const ST::string g_eng_str_dead_is_dead_mode_enter_name;
 #define SKI_SIZE 14
 #define SkiMessageBoxText_SIZE 7
 #define zOptionsText_SIZE 9
-#define zSaveLoadText_SIZE 21
+#define zSaveLoadText_SIZE 24
 #define zMarksMapScreenText_SIZE 23
 #define pMilitiaConfirmStrings_SIZE 10
 #define gpDemoString_SIZE 41
@@ -1551,18 +1551,20 @@ enum
 	SLG_LOAD_GAME_OK,
 	SLG_LOAD_GAME_ERROR,
 	SLG_GAME_VERSION_DIF,
-	SLG_DELETE_ALL_SAVE_GAMES,	//10
+	SLG_CONFIRM_DELETE,	//10
+	SLG_SAVED_GAME_ISSUE,
 	SLG_SAVED_GAME_VERSION_DIF,
-	SLG_BOTH_GAME_AND_SAVED_GAME_DIF,
+	SLG_SAVED_GAME_MODS_DIF,
+	SLG_SAVED_GAME_CONTINUE_ANYWAYS,
 	SLG_CONFIRM_SAVE,
-	SLG_NOT_ENOUGH_HARD_DRIVE_SPACE,
 	SLG_SAVING_GAME_MESSAGE,
 	SLG_NORMAL_GUNS,
 	SLG_ADDITIONAL_GUNS,
 	SLG_REALISTIC,
 	SLG_SCIFI,
-
 	SLG_DIFF,
+	SLG_NO_MODS,
+	SLG_MODS
 };
 
 

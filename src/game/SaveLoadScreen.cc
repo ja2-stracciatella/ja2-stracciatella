@@ -47,6 +47,7 @@
 #include "PreBattle_Interface.h"
 #include "ContentManager.h"
 #include "GameInstance.h"
+#include "VObject_Blitters.h"
 
 #include <string_theory/format>
 #include <string_theory/string>
@@ -106,6 +107,7 @@
 #define SLG_SCROLLBAR_POS_X (SLG_FIRST_SAVED_SPOT_X + 582)
 #define SLG_SCROLLBAR_POS_Y (SLG_FIRST_SAVED_SPOT_Y)
 #define SLG_SCROLLBAR_HEIGHT 378
+#define SLG_SCROLLBAR_WIDTH 23
 #define SLG_SCROLLBAR_BTN_HEIGHT 23
 #define SLG_SCROLLBAR_INDICATOR_HEIGHT 19
 #define SLG_SCROLLBAR_INNER_HEIGHT (SLG_SCROLLBAR_HEIGHT - 2 * SLG_SCROLLBAR_BTN_HEIGHT)
@@ -114,15 +116,16 @@
 
 #define SLG_SELECTED_SLOT_GRAPHICS_NUMBER		1
 #define SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER		0
-#define SLG_SCROLL_UP_GRAPHICS_NUMBER_UP 2
-#define SLG_SCROLL_UP_GRAPHICS_NUMBER_DOWN 3
-#define SLG_SCROLL_DOWN_GRAPHICS_NUMBER_UP 4
-#define SLG_SCROLL_DOWN_GRAPHICS_NUMBER_DOWN 5
-#define SLG_SCROLL_BAR_INNER_GRAPHICS_NUMBER 6
-#define SLG_SCROLL_BAR_INDICATOR_GRAPHICS_NUMBER 7
-#define SLG_SKULL_DEFAULT_GRAPHICS_NUMBER 8
-#define SLG_SKULL_SELECTED_GRAPHICS_NUMBER 9
-#define SLG_SKULL_HIGHLIGHTED_GRAPHICS_NUMBER 10
+#define SLG_SKULL_DEFAULT_GRAPHICS_NUMBER 2
+#define SLG_SKULL_SELECTED_GRAPHICS_NUMBER 3
+#define SLG_SKULL_HIGHLIGHTED_GRAPHICS_NUMBER 4
+
+#define SLG_SCROLL_UP_GRAPHICS_NUMBER_UP 0
+#define SLG_SCROLL_UP_GRAPHICS_NUMBER_DOWN 1
+#define SLG_SCROLL_DOWN_GRAPHICS_NUMBER_UP 2
+#define SLG_SCROLL_DOWN_GRAPHICS_NUMBER_DOWN 3
+#define SLG_SCROLL_BAR_INNER_GRAPHICS_NUMBER 4
+#define SLG_SCROLL_BAR_INDICATOR_GRAPHICS_NUMBER 5
 
 //defines for saved game version status
 enum
@@ -156,6 +159,7 @@ static BOOLEAN gfSaveLoadScreenButtonsCreated = FALSE;
 static SGPVObject* guiSlgBackGroundImage;
 static SGPVObject* guiBackGroundAddOns;
 static SGPVObject* guiSlgAddonsStracciatella;
+static SGPVObject* guiSlgScrollbarStracciatella;
 
 static BOOLEAN gfUserInTextInputMode = FALSE;
 static UINT8   gubSaveGameNextPass   = 0;
@@ -404,11 +408,12 @@ static void EnterSaveLoadScreen()
 	guiSlgBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/loadscreen.sti");
 	guiBackGroundAddOns   = AddVideoObjectFromFile(GetMLGFilename(MLG_LOADSAVEHEADER));
 	guiSlgAddonsStracciatella = AddVideoObjectFromFile("sti/interface/save-load-addons.sti");
+	guiSlgScrollbarStracciatella = AddVideoObjectFromFile("sti/interface/scroll-bar.sti");
 
-	guiSlgScrollUpBtn = QuickCreateButtonImg("sti/interface/save-load-addons.sti", SLG_SCROLL_UP_GRAPHICS_NUMBER_UP, SLG_SCROLL_UP_GRAPHICS_NUMBER_DOWN, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollUpCallback);
+	guiSlgScrollUpBtn = QuickCreateButtonImg("sti/interface/scroll-bar.sti", SLG_SCROLL_UP_GRAPHICS_NUMBER_UP, SLG_SCROLL_UP_GRAPHICS_NUMBER_DOWN, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollUpCallback);
 	guiSlgScrollUpBtn->SetFastHelpText("Scroll up");
 	guiSlgScrollUpBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
-	guiSlgScrollDownBtn = QuickCreateButtonImg("sti/interface/save-load-addons.sti", SLG_SCROLL_DOWN_GRAPHICS_NUMBER_UP, SLG_SCROLL_DOWN_GRAPHICS_NUMBER_DOWN, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_BTN_SCROLL_DOWN_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollDownCallback);
+	guiSlgScrollDownBtn = QuickCreateButtonImg("sti/interface/scroll-bar.sti", SLG_SCROLL_DOWN_GRAPHICS_NUMBER_UP, SLG_SCROLL_DOWN_GRAPHICS_NUMBER_DOWN, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_BTN_SCROLL_DOWN_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollDownCallback);
 	guiSlgScrollDownBtn->SetFastHelpText("Scroll down");
 	guiSlgScrollDownBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
@@ -523,6 +528,7 @@ static void ExitSaveLoadScreen(void)
 	DeleteVideoObject(guiSlgBackGroundImage);
 	DeleteVideoObject(guiBackGroundAddOns);
 	DeleteVideoObject(guiSlgAddonsStracciatella);
+	DeleteVideoObject(guiSlgScrollbarStracciatella);
 
 	//Destroy the text fields ( if created )
 	DestroySaveLoadTextInputBoxes();
@@ -570,7 +576,16 @@ static void RenderSaveLoadScreen(void)
 }
 
 static void RenderScrollBar(void) {
-	BltVideoObject(FRAME_BUFFER, guiSlgAddonsStracciatella, SLG_SCROLL_BAR_INNER_GRAPHICS_NUMBER, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_INNER_POS_Y);
+	SGPRect	previousClippingRect, clippingRect;
+	GetClippingRect(&previousClippingRect);
+	clippingRect.set(SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_INNER_POS_Y, SLG_SCROLLBAR_POS_X + SLG_SCROLLBAR_WIDTH, SLG_SCROLLBAR_INNER_POS_Y + SLG_SCROLLBAR_INNER_HEIGHT);
+	SetClippingRect(&clippingRect);
+	auto tileHeight = guiSlgScrollbarStracciatella->SubregionProperties(SLG_SCROLL_BAR_INNER_GRAPHICS_NUMBER).usHeight;
+	auto repetitions = uint32_t(ceil(double(SLG_SCROLLBAR_INNER_HEIGHT) / double(tileHeight)));
+	for (uint32_t i = 0; i < repetitions; i++) {
+		BltVideoObject(FRAME_BUFFER, guiSlgScrollbarStracciatella, SLG_SCROLL_BAR_INNER_GRAPHICS_NUMBER, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_INNER_POS_Y + i * tileHeight);
+	}
+	SetClippingRect(&previousClippingRect);
 
 	auto maxTop = gSavedGamesList.size() - NUM_SAVE_GAMES;
 	auto currentTop = gCurrentScrollTop;
@@ -580,7 +595,7 @@ static void RenderScrollBar(void) {
 	indicatorPosition = MAX(0, indicatorPosition);
 	indicatorPosition = MIN(indicatorPosition, maxYPos);
 
-	BltVideoObject(FRAME_BUFFER, guiSlgAddonsStracciatella, SLG_SCROLL_BAR_INDICATOR_GRAPHICS_NUMBER, SLG_SCROLLBAR_POS_X + 2, SLG_SCROLLBAR_INNER_POS_Y + indicatorPosition + 1);
+	BltVideoObject(FRAME_BUFFER, guiSlgScrollbarStracciatella, SLG_SCROLL_BAR_INDICATOR_GRAPHICS_NUMBER, SLG_SCROLLBAR_POS_X + 2, SLG_SCROLLBAR_INNER_POS_Y + indicatorPosition + 1);
 }
 
 
@@ -602,16 +617,8 @@ static void InitSaveLoadScreenTextInputBoxes(void);
 
 static void GetSaveLoadScreenUserInput(void)
 {
-	static BOOLEAN fWasCtrlHeldDownLastFrame = FALSE;
-
 	// If we are going to be instantly leaving the screen, dont draw the numbers
 	if (gfLoadGameUponEntry) return;
-
-	if (_KeyDown(CTRL) || fWasCtrlHeldDownLastFrame)
-	{
-		DisplaySaveGameEntry(gSavedGamesList.begin() + gbSelectedSaveLocation);
-	}
-	fWasCtrlHeldDownLastFrame = _KeyDown(CTRL);
 
 	SGPPoint mouse_pos;
 	GetMousePos(&mouse_pos);
@@ -672,7 +679,7 @@ static void GetSaveLoadScreenUserInput(void)
 						auto isNewSave = save.name().empty();
 
 						if (!isNewSave) {
-							auto msg = ST::format("Do you want to delete the save game labeled \"{}\"?", save.header().sSavedGameDesc);
+							auto msg = st_format_printf(zSaveLoadText[SLG_CONFIRM_DELETE], save.header().sSavedGameDesc);
 							DoSaveLoadMessageBox(msg, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmDeleteSavedGameCallBack);
 						}
 					}
@@ -722,21 +729,22 @@ static void SaveLoadSelectedSave()
 		// Check to see if the save game headers are the same
 		auto versionResult = CompareSaveGameVersion(gbSelectedSaveLocation);
 		auto modsEqual = AreModsEqualToEnabled(gbSelectedSaveLocation);
-		ST::string msg = "";
+
+		// ± seems to cause proper line breaks
+		auto msg = ST::format("{}±", zSaveLoadText[SLG_SAVED_GAME_ISSUE]);
+		auto showMsg = false;
+
 		if (versionResult != SLS_HEADER_OK)
 		{
-			msg +=
-				versionResult == SLS_GAME_VERSION_OUT_OF_DATE       ? zSaveLoadText[SLG_GAME_VERSION_DIF] :
-				versionResult == SLS_SAVED_GAME_VERSION_OUT_OF_DATE ? zSaveLoadText[SLG_SAVED_GAME_VERSION_DIF] :
-				zSaveLoadText[SLG_BOTH_GAME_AND_SAVED_GAME_DIF];
+			showMsg = true;
+			msg += ST::format("- {}±", versionResult == SLS_GAME_VERSION_OUT_OF_DATE ? zSaveLoadText[SLG_GAME_VERSION_DIF] : zSaveLoadText[SLG_SAVED_GAME_VERSION_DIF]);
 		}
 		if (!modsEqual) {
-			if (!msg.empty()) {
-				msg += " ";
-			}
-			msg += "Mods in save game do not match currently enabled mods. Continue anyways???";
+			showMsg = true;
+			msg += ST::format("- {}±", zSaveLoadText[SLG_SAVED_GAME_MODS_DIF]);
 		}
-		if (!msg.empty()) {
+		msg += zSaveLoadText[SLG_SAVED_GAME_CONTINUE_ANYWAYS];
+		if (showMsg) {
 			DoSaveLoadMessageBox(msg, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, LoadSavedGameWarningMessageBoxCallBack);
 		}
 		else
@@ -896,9 +904,9 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 				case DIF_DEAD_IS_DEAD: gameModeText = GIO_DEAD_IS_DEAD_TEXT; break;
 				default: gameModeText = GIO_SAVE_ANYWHERE_TEXT;
 			}
-			ST::string modsText = ST::format("Mods: ");
+			ST::string modsText = ST::format("{} ", zSaveLoadText[SLG_MODS]);
 			if (mods.size() == 0) {
-				modsText = "No mods enabled";
+				modsText = zSaveLoadText[SLG_NO_MODS];
 			} else {
 				auto i = 0;
 				for (auto &mod : mods) {
@@ -1168,9 +1176,6 @@ bool AreModsEqualToEnabled(INT32 bSaveGameID) {
 }
 
 
-static void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack(MessageBoxReturnValue);
-
-
 static void LoadSavedGameWarningMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
 {
 	// yes, load the game
@@ -1179,54 +1184,8 @@ static void LoadSavedGameWarningMessageBoxCallBack(MessageBoxReturnValue const b
 		//Setup up the fade routines
 		StartFadeOutForSaveLoadScreen();
 	}
-
-	//The user does NOT want to continue..
-	else
-	{
-		//ask if the user wants to delete all the saved game files
-		DoSaveLoadMessageBox(zSaveLoadText[SLG_DELETE_ALL_SAVE_GAMES], SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, LoadSavedGameDeleteAllSaveGameMessageBoxCallBack);
-	}
 }
 
-
-static void DeleteAllSaveGameFile(void);
-
-
-static void LoadSavedGameDeleteAllSaveGameMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
-{
-	// yes, Delete all the save game files
-	if( bExitValue == MSG_BOX_RETURN_YES )
-	{
-		DeleteAllSaveGameFile( );
-		gfSaveLoadScreenExit = TRUE;
-	}
-
-	SetSaveLoadExitScreen( OPTIONS_SCREEN );
-
-	gbSelectedSaveLocation=-1;
-}
-
-
-static void DeleteAllSaveGameFile(void)
-{
-	UINT8	cnt;
-
-	for( cnt=0; cnt<NUM_SAVE_GAMES; cnt++)
-	{
-		DeleteSaveGameNumber( cnt );
-	}
-
-	gGameSettings.bLastSavedGameSlot = -1;
-
-	InitSaveGameArray();
-}
-
-
-void DeleteSaveGameNumber(UINT8 const save_slot_id)
-{
-	ST::string savegameName = CreateSavedGameFileNameFromNumber(save_slot_id);
-	GCM->tempFiles()->deleteFile(savegameName);
-}
 
 static void DoneFadeInForSaveLoadScreen(void);
 static void FailedLoadingGameCallBack(MessageBoxReturnValue);
