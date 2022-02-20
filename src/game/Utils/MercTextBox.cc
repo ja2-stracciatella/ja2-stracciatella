@@ -149,7 +149,7 @@ MercPopUpBox* PrepareMercPopupBox(MercPopUpBox* box, MercPopUpBackground ubBackg
 		}
 	}
 
-	UINT16 const usStringPixLength = StringPixLength(codepoints, TEXT_POPUP_FONT);
+	UINT16 const usStringPixLength = StringPixLength(CleanOutControlCodesFromString(codepoints), TEXT_POPUP_FONT);
 	UINT16       usTextWidth;
 	if (usStringPixLength < usWidth - MERC_TEXT_POPUP_WINDOW_TEXT_OFFSET_X * 2)
 	{

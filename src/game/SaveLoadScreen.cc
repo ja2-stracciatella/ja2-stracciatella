@@ -72,7 +72,7 @@
 #define SAVE_LOAD_SELECTED_COLOR			2//145//FONT_MCOLOR_WHITE
 #define SAVE_LOAD_SELECTED_SHADOW_COLOR		130//2
 
-#define SLG_SAVELOCATION_WIDTH				605
+#define SLG_SAVELOCATION_WIDTH				575
 #define SLG_SAVELOCATION_HEIGHT			30//46
 #define SLG_FIRST_SAVED_SPOT_X				(STD_SCREEN_X + 17)
 #define SLG_FIRST_SAVED_SPOT_Y				(STD_SCREEN_Y + 49)
@@ -92,6 +92,8 @@
 
 #define SLG_SAVE_GAME_DESC_X				318//320//204
 #define SLG_SAVE_GAME_DESC_Y				SLG_DATE_OFFSET_Y//SLG_DATE_OFFSET_Y + 7
+#define SLG_SAVE_GAME_SKULL_X				552
+#define SLG_SAVE_GAME_SKULL_Y				-3
 
 #define SLG_TITLE_POS_X				(STD_SCREEN_X)
 #define SLG_TITLE_POS_Y				(STD_SCREEN_Y)
@@ -101,8 +103,26 @@
 #define SLG_SAVE_LOAD_BTN_POS_X				(123 + STD_SCREEN_X)
 #define SLG_BTN_POS_Y					(438 + STD_SCREEN_Y)
 
-#define SLG_SELECTED_SLOT_GRAPHICS_NUMBER		3
-#define SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER		2
+#define SLG_SCROLLBAR_POS_X (SLG_FIRST_SAVED_SPOT_X + 582)
+#define SLG_SCROLLBAR_POS_Y (SLG_FIRST_SAVED_SPOT_Y)
+#define SLG_SCROLLBAR_HEIGHT 378
+#define SLG_SCROLLBAR_BTN_HEIGHT 23
+#define SLG_SCROLLBAR_INDICATOR_HEIGHT 19
+#define SLG_SCROLLBAR_INNER_HEIGHT (SLG_SCROLLBAR_HEIGHT - 2 * SLG_SCROLLBAR_BTN_HEIGHT)
+#define SLG_SCROLLBAR_INNER_POS_Y (SLG_SCROLLBAR_POS_Y + SLG_SCROLLBAR_BTN_HEIGHT)
+#define SLG_SCROLLBAR_BTN_SCROLL_DOWN_POS_Y (SLG_SCROLLBAR_POS_Y + SLG_SCROLLBAR_HEIGHT - SLG_SCROLLBAR_BTN_HEIGHT)
+
+#define SLG_SELECTED_SLOT_GRAPHICS_NUMBER		1
+#define SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER		0
+#define SLG_SCROLL_UP_GRAPHICS_NUMBER_UP 2
+#define SLG_SCROLL_UP_GRAPHICS_NUMBER_DOWN 3
+#define SLG_SCROLL_DOWN_GRAPHICS_NUMBER_UP 4
+#define SLG_SCROLL_DOWN_GRAPHICS_NUMBER_DOWN 5
+#define SLG_SCROLL_BAR_INNER_GRAPHICS_NUMBER 6
+#define SLG_SCROLL_BAR_INDICATOR_GRAPHICS_NUMBER 7
+#define SLG_SKULL_DEFAULT_GRAPHICS_NUMBER 8
+#define SLG_SKULL_SELECTED_GRAPHICS_NUMBER 9
+#define SLG_SKULL_HIGHLIGHTED_GRAPHICS_NUMBER 10
 
 //defines for saved game version status
 enum
@@ -135,6 +155,7 @@ static BOOLEAN gfSaveLoadScreenButtonsCreated = FALSE;
 
 static SGPVObject* guiSlgBackGroundImage;
 static SGPVObject* guiBackGroundAddOns;
+static SGPVObject* guiSlgAddonsStracciatella;
 
 static BOOLEAN gfUserInTextInputMode = FALSE;
 static UINT8   gubSaveGameNextPass   = 0;
@@ -157,13 +178,14 @@ static BOOLEAN gfHadToMakeBasementLevels = FALSE;
 //
 static BUTTON_PICS* guiSlgButtonImage;
 
-
 // Cancel Button
 static GUIButtonRef guiSlgCancelBtn;
 
 // Save game Button
 static BUTTON_PICS* guiSaveLoadImage;
 static GUIButtonRef guiSlgSaveLoadBtn;
+static GUIButtonRef guiSlgScrollUpBtn;
+static GUIButtonRef guiSlgScrollDownBtn;
 
 //Mouse regions for the currently selected save game
 static MOUSE_REGION gSelectedSaveRegion[NUM_SAVE_GAMES];
@@ -175,6 +197,7 @@ static void EnterSaveLoadScreen();
 static void ExitSaveLoadScreen(void);
 static void GetSaveLoadScreenUserInput(void);
 static void RenderSaveLoadScreen(void);
+static void RenderScrollBar(void);
 static void SaveLoadSelectedSave();
 static void SaveNewSave();
 static BOOLEAN IsDeadIsDeadTab(INT8 tabNo);
@@ -208,8 +231,6 @@ ScreenID SaveLoadScreenHandle()
 	if( !gfSaveLoadScreenButtonsCreated )
 		return( guiSaveLoadExitScreen );
 
-	RenderAllTextFields();
-
 	if( gfRedrawSaveLoadScreen )
 	{
 		RenderSaveLoadScreen();
@@ -218,6 +239,7 @@ ScreenID SaveLoadScreenHandle()
 
 		gfRedrawSaveLoadScreen = FALSE;
 	}
+	RenderAllTextFields();
 
 	if( gubSaveGameNextPass != 0 )
 	{
@@ -326,6 +348,8 @@ static GUIButtonRef MakeButton(BUTTON_PICS* img, const ST::string& text, INT16 x
 	return CreateIconAndTextButton(img, text, OPT_BUTTON_FONT, OPT_BUTTON_ON_COLOR, DEFAULT_SHADOW, OPT_BUTTON_OFF_COLOR, DEFAULT_SHADOW, x, SLG_BTN_POS_Y, MSYS_PRIORITY_HIGH, click);
 }
 
+static void BtnScrollUpCallback(GUI_BUTTON* btn, INT32 reason);
+static void BtnScrollDownCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgCancelCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgSaveLoadCallback(GUI_BUTTON* btn, INT32 reason);
 static void BtnSlgNormalGameTabCallback(GUI_BUTTON* btn, INT32 reason);
@@ -379,10 +403,17 @@ static void EnterSaveLoadScreen()
 	// Load main background and add ons graphic
 	guiSlgBackGroundImage = AddVideoObjectFromFile(INTERFACEDIR "/loadscreen.sti");
 	guiBackGroundAddOns   = AddVideoObjectFromFile(GetMLGFilename(MLG_LOADSAVEHEADER));
+	guiSlgAddonsStracciatella = AddVideoObjectFromFile("sti/interface/save-load-addons.sti");
+
+	guiSlgScrollUpBtn = QuickCreateButtonImg("sti/interface/save-load-addons.sti", SLG_SCROLL_UP_GRAPHICS_NUMBER_UP, SLG_SCROLL_UP_GRAPHICS_NUMBER_DOWN, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollUpCallback);
+	guiSlgScrollUpBtn->SetFastHelpText("Scroll up");
+	guiSlgScrollUpBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
+	guiSlgScrollDownBtn = QuickCreateButtonImg("sti/interface/save-load-addons.sti", SLG_SCROLL_DOWN_GRAPHICS_NUMBER_UP, SLG_SCROLL_DOWN_GRAPHICS_NUMBER_DOWN, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_BTN_SCROLL_DOWN_POS_Y, MSYS_PRIORITY_HIGH, BtnScrollDownCallback);
+	guiSlgScrollDownBtn->SetFastHelpText("Scroll down");
+	guiSlgScrollDownBtn->SpecifyDisabledStyle(GUI_BUTTON::DISABLED_STYLE_HATCHED);
 
 	guiSlgButtonImage = LoadButtonImage(INTERFACEDIR "/loadscreenaddons.sti", 6, 9);
 	guiSlgCancelBtn   = MakeButton(guiSlgButtonImage, zSaveLoadText[SLG_CANCEL], SLG_LOAD_CANCEL_POS_X, BtnSlgCancelCallback);
-
 	// Either the save or load button
 	INT32          gfx;
 	ST::string text;
@@ -473,6 +504,8 @@ static void ExitSaveLoadScreen(void)
 
 	UnloadButtonImage( guiSlgButtonImage );
 
+	RemoveButton( guiSlgScrollUpBtn );
+	RemoveButton( guiSlgScrollDownBtn );
 	RemoveButton( guiSlgCancelBtn );
 
 	//Remove the save / load button
@@ -489,6 +522,7 @@ static void ExitSaveLoadScreen(void)
 
 	DeleteVideoObject(guiSlgBackGroundImage);
 	DeleteVideoObject(guiBackGroundAddOns);
+	DeleteVideoObject(guiSlgAddonsStracciatella);
 
 	//Destroy the text fields ( if created )
 	DestroySaveLoadTextInputBoxes();
@@ -530,8 +564,23 @@ static void RenderSaveLoadScreen(void)
 	UINT16 const gfx = gfSaveGame ? 1 : 0;
 	BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, gfx, SLG_TITLE_POS_X, SLG_TITLE_POS_Y);
 
+	RenderScrollBar();
 	DisplaySaveGameList();
 	InvalidateScreen();
+}
+
+static void RenderScrollBar(void) {
+	BltVideoObject(FRAME_BUFFER, guiSlgAddonsStracciatella, SLG_SCROLL_BAR_INNER_GRAPHICS_NUMBER, SLG_SCROLLBAR_POS_X, SLG_SCROLLBAR_INNER_POS_Y);
+
+	auto maxTop = gSavedGamesList.size() - NUM_SAVE_GAMES;
+	auto currentTop = gCurrentScrollTop;
+	auto maxYPos = SLG_SCROLLBAR_INNER_HEIGHT - SLG_SCROLLBAR_INDICATOR_HEIGHT - 2;
+	auto indicatorPosition = int(round(double_t(maxYPos) * double_t(currentTop) / double_t(maxTop)));
+
+	indicatorPosition = MAX(0, indicatorPosition);
+	indicatorPosition = MIN(indicatorPosition, maxYPos);
+
+	BltVideoObject(FRAME_BUFFER, guiSlgAddonsStracciatella, SLG_SCROLL_BAR_INDICATOR_GRAPHICS_NUMBER, SLG_SCROLLBAR_POS_X + 2, SLG_SCROLLBAR_INNER_POS_Y + indicatorPosition + 1);
 }
 
 
@@ -547,6 +596,7 @@ static ST::string GetGameDescription()
 static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& entry);
 static void MoveSelectionDown();
 static void MoveSelectionUp();
+static void ConfirmDeleteSavedGameCallBack(MessageBoxReturnValue const bExitValue);
 static void InitSaveLoadScreenTextInputBoxes(void);
 
 
@@ -615,6 +665,18 @@ static void GetSaveLoadScreenUserInput(void)
 						gfRedrawSaveLoadScreen = TRUE;
 					}
 					break;
+
+				case SDLK_DELETE:
+					if (gbSelectedSaveLocation >= 0) {
+						auto& save = *(gSavedGamesList.begin() + gbSelectedSaveLocation);
+						auto isNewSave = save.name().empty();
+
+						if (!isNewSave) {
+							auto msg = ST::format("Do you want to delete the save game labeled \"{}\"?", save.header().sSavedGameDesc);
+							DoSaveLoadMessageBox(msg, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmDeleteSavedGameCallBack);
+						}
+					}
+					break;
 			}
 		}
 	}
@@ -651,7 +713,8 @@ static void SaveLoadSelectedSave()
 
 	if (gfSaveGame)
 	{
-		ST::string sText = st_format_printf(zSaveLoadText[SLG_CONFIRM_SAVE], gbSelectedSaveLocation);
+		auto& saveGameInfo = (*(gSavedGamesList.begin() + gbSelectedSaveLocation));
+		ST::string sText = st_format_printf(zSaveLoadText[SLG_CONFIRM_SAVE], saveGameInfo.header().sSavedGameDesc);
 		DoSaveLoadMessageBox(sText, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_YESNO, ConfirmSavedGameMessageBoxCallBack);
 	}
 	else
@@ -693,10 +756,6 @@ void DoSaveLoadMessageBoxWithRect(const ST::string& str, ScreenID uiExitScreen, 
 void DoSaveLoadMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageBoxFlags usFlags, MSGBOX_CALLBACK ReturnCallback)
 {
 	DoSaveLoadMessageBoxWithRect(str, uiExitScreen, usFlags, ReturnCallback, NULL);
-}
-
-bool isReservedName(ST::string &saveName) {
-	return IsAutoSaveName(saveName) || IsQuickSaveName(saveName) || IsErrorSaveName(saveName);
 }
 
 bool compareSaveGames(SaveGameInfo i, SaveGameInfo j) {
@@ -783,7 +842,7 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 	// Background
 	UINT16 const gfx = isSelected ?
 		SLG_SELECTED_SLOT_GRAPHICS_NUMBER : SLG_UNSELECTED_SLOT_GRAPHICS_NUMBER;
-	BltVideoObject(FRAME_BUFFER, guiBackGroundAddOns, gfx, bx, by);
+	BltVideoObject(FRAME_BUFFER, guiSlgAddonsStracciatella, gfx, bx, by);
 
 	SGPFont  font = SAVE_LOAD_NORMAL_FONT;
 	UINT8 foreground;
@@ -901,6 +960,17 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 			// The saved game description
 			DrawTextToScreen(header.sSavedGameDesc, x + SLG_SAVE_GAME_DESC_X, y, 0, font, foreground, FONT_MCOLOR_BLACK, LEFT_JUSTIFIED);
 		}
+
+		if (header.sInitialGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
+				UINT16 gfx = SLG_SKULL_DEFAULT_GRAPHICS_NUMBER;
+				if (indexFromScrollTop == gbHighLightedLocation) {
+					gfx = SLG_SKULL_HIGHLIGHTED_GRAPHICS_NUMBER;
+				}
+				if (isSelected) {
+					gfx = SLG_SKULL_SELECTED_GRAPHICS_NUMBER;
+				}
+				BltVideoObject(FRAME_BUFFER, guiSlgAddonsStracciatella, gfx, x + SLG_SAVE_GAME_SKULL_X, y + SLG_SAVE_GAME_SKULL_Y);
+		}
 	}
 
 	// Reset the shadow color
@@ -910,16 +980,41 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 	return TRUE;
 }
 
-static void HandleScrollEvent(INT32 const reason) {
-	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP && !gfUserInTextInputMode)
-	{
-		gCurrentScrollTop = gCurrentScrollTop > 0 ? gCurrentScrollTop - 1 : 0;
+static void ScrollUp() {
+	if (gCurrentScrollTop != 0 && !gfUserInTextInputMode) {
+		gCurrentScrollTop = gCurrentScrollTop - 1;
 		gfRedrawSaveLoadScreen = true;
 	}
-	if (reason & MSYS_CALLBACK_REASON_WHEEL_DOWN && !gfUserInTextInputMode)
-	{
-		gCurrentScrollTop = std::min(gSavedGamesList.size() - NUM_SAVE_GAMES, gCurrentScrollTop + 1);
+}
+
+static void ScrollDown() {
+	auto nextScrollTop = std::min(gSavedGamesList.size() - NUM_SAVE_GAMES, gCurrentScrollTop + 1);
+	if (nextScrollTop != gCurrentScrollTop && !gfUserInTextInputMode) {
+		gCurrentScrollTop = nextScrollTop;
 		gfRedrawSaveLoadScreen = true;
+	}
+}
+
+static void HandleScrollEvent(INT32 const reason) {
+	if (reason & MSYS_CALLBACK_REASON_WHEEL_UP)
+	{
+		ScrollUp();
+	}
+	if (reason & MSYS_CALLBACK_REASON_WHEEL_DOWN)
+	{
+		ScrollDown();
+	}
+}
+
+static void BtnScrollUpCallback(GUI_BUTTON* btn, INT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN || reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT) {
+		ScrollUp();
+	}
+}
+
+static void BtnScrollDownCallback(GUI_BUTTON* btn, INT32 reason) {
+	if (reason & MSYS_CALLBACK_REASON_LBUTTON_DWN || reason & MSYS_CALLBACK_REASON_LBUTTON_REPEAT) {
+		ScrollDown();
 	}
 }
 
@@ -1238,6 +1333,24 @@ static void ConfirmSavedGameMessageBoxCallBack(MessageBoxReturnValue const bExit
 	}
 }
 
+static void ConfirmDeleteSavedGameCallBack(MessageBoxReturnValue const bExitValue)
+{
+	Assert( gbSelectedSaveLocation != -1 );
+
+	auto& save = *(gSavedGamesList.begin() + gbSelectedSaveLocation);
+	if( bExitValue == MSG_BOX_RETURN_YES )
+	{
+		try {
+			GCM->userPrivateFiles()->deleteFile(GetSaveGamePath(save.name()));
+			gSavedGamesList.erase(gSavedGamesList.begin() + gbSelectedSaveLocation);
+		} catch (const std::runtime_error& err) {
+			STLOGE("Error deleting save game {}: {}", save.name(), err.what());
+		}
+		gbSelectedSaveLocation = -1;
+		gfRedrawSaveLoadScreen = true;
+	}
+}
+
 
 static void FailedLoadingGameCallBack(MessageBoxReturnValue const bExitValue)
 {
@@ -1271,7 +1384,7 @@ void DoQuickSave()
 		DoDeadIsDeadSave();
 	} else
 	{
-		if (SaveGame(GetQuickSaveName(), ST::null)) return;
+		if (SaveGame(GetQuickSaveName(), GetQuickSaveName())) return;
 
 		if (guiPreviousOptionScreen == MAP_SCREEN)
 		{
