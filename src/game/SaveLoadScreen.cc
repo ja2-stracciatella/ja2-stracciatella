@@ -1364,7 +1364,8 @@ void DoAutoSave()
 	}
 	else
 	{
-		if (SaveGame(GetNextAutoSaveName(), ST::null)) return;
+		auto saveName = GetAutoSaveName(GetNextIndexForAutoSave());
+		if (SaveGame(saveName, saveName)) return;
 
 		if (guiPreviousOptionScreen == MAP_SCREEN)
 		{

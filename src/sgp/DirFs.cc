@@ -53,7 +53,7 @@ DirFs::findAllDirsInDir(const ST::string &path, bool sortResults, bool recursive
 }
 
 ST::string DirFs::resolveExistingComponents(const ST::string &path) {
-    return FileMan::resolveExistingComponents(absolutePath(path));
+    return FileMan::resolveExistingComponents(absolutePath(path)).substr(m_basePath.size() + 1);
 }
 
 bool DirFs::isFile(const ST::string &path) {

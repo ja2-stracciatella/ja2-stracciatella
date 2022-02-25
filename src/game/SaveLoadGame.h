@@ -79,12 +79,10 @@ void ExtractSavedGameHeaderFromSave(const ST::string &saveName, SAVED_GAME_HEADE
 
 extern ScreenID guiScreenToGotoAfterLoadingSavedGame;
 
-ST::string CreateSavedGameFileNameFromNumber(UINT8 ubSaveGameID);
-
 ST::string GetSaveGamePath(const ST::string &saveName);
 BOOLEAN HasSaveGameExtension(const ST::string &fileName);
 
-ST::string GetNextAutoSaveName();
+ST::string GetAutoSaveName(uint32_t index);
 BOOLEAN IsAutoSaveName(const ST::string &saveName);
 
 ST::string GetQuickSaveName();
@@ -106,7 +104,7 @@ void SaveMercPath(HWFILE, PathSt const* head);
 void LoadMercPath(HWFILE, PathSt** head);
 
 extern UINT32 guiLastSaveGameNum;
-INT8		GetNumberForAutoSave( BOOLEAN fLatestAutoSave );
+INT8		GetNextIndexForAutoSave();
 
 extern UINT32 guiJA2EncryptionSet;
 

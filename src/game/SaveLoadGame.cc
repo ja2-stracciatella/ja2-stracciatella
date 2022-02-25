@@ -164,9 +164,8 @@ BOOLEAN HasSaveGameExtension(const ST::string &fileName) {
 	return fileName.ends_with(ST::format(".{}", g_savegame_ext), ST::case_insensitive);
 }
 
-ST::string GetNextAutoSaveName() {
-	guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
-	return ST::format("Auto{02}", g_autosave_prefix, guiLastSaveGameNum);
+ST::string GetAutoSaveName(uint32_t index) {
+	return ST::format("{}{02}", g_autosave_prefix, index);
 };
 
 BOOLEAN IsAutoSaveName(const ST::string &saveName) {
@@ -1691,26 +1690,6 @@ static void LoadWatchedLocsFromSavedGame(HWFILE const hFile)
 	hFile->read(gfWatchedLocReset, uiLoadSize);
 }
 
-
-ST::string CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID)
-{
-	ST::string dir = GCM->getSavedGamesFolder();
-
-	switch (ubSaveGameID)
-	{
-		case 0: // we are creating the QuickSave file
-			return ST::format("{}/{}.{}", dir, g_quicksave_name, g_savegame_ext);
-		case SAVE__END_TURN_NUM:
-			guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
-			return ST::format("{}/Auto{02}.{}", dir, g_quicksave_name, g_savegame_ext);
-		case SAVE__ERROR_NUM:\
-			return ST::format("{}/error.{}", dir, g_savegame_ext);
-		default:
-			return ST::format("{}/{}{02}.{}", dir, g_savegame_name, ubSaveGameID, g_savegame_ext);
-	}
-}
-
-
 void SaveMercPath(HWFILE const f, PathSt const* const head)
 {
 	UINT32 n_nodes = 0;
@@ -2391,7 +2370,7 @@ static void UpdateMercMercContractInfo(void)
 	}
 }
 
-INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
+INT8 GetNextIndexForAutoSave()
 {
 	BOOLEAN	fFile1Exist, fFile2Exist;
 	double	LastWriteTime1 = 0;
@@ -2401,45 +2380,33 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 	fFile2Exist = FALSE;
 
 	//The name of the file
-	ST::string zFileName1 = ST::format("{}/Auto{02d}.{}", GCM->getSavedGamesFolder(), 0, g_savegame_ext);
-
-	ST::string zFileName2 = ST::format("{}/Auto{02d}.{}", GCM->getSavedGamesFolder(), 1, g_savegame_ext);
+	ST::string zFileName1 = GCM->userPrivateFiles()->resolveExistingComponents(GetSaveGamePath(GetAutoSaveName(1)));
+	ST::string zFileName2 = GCM->userPrivateFiles()->resolveExistingComponents(GetSaveGamePath(GetAutoSaveName(2)));
 
 	if( GCM->userPrivateFiles()->exists( zFileName1 ) )
 	{
-		LastWriteTime1 = GCM->tempFiles()->getLastModifiedTime( zFileName1 );
+		LastWriteTime1 = GCM->userPrivateFiles()->getLastModifiedTime( zFileName1 );
 		fFile1Exist = TRUE;
 	}
 
 	if( GCM->userPrivateFiles()->exists( zFileName2 ) )
 	{
-		LastWriteTime2 = GCM->tempFiles()->getLastModifiedTime( zFileName2 );
+		LastWriteTime2 = GCM->userPrivateFiles()->getLastModifiedTime( zFileName2 );
 		fFile2Exist = TRUE;
 	}
 
-	if( !fFile1Exist && !fFile2Exist )
-		return( -1 );
-	else if( fFile1Exist && !fFile2Exist )
-	{
-		if( fLatestAutoSave )
-			return( 0 );
-		else
-			return( -1 );
+	if(fFile1Exist && fFile2Exist) {
+		return LastWriteTime1 < LastWriteTime2 ? 1 : 2;
 	}
-	else if( !fFile1Exist && fFile2Exist )
+	else if (fFile1Exist)
 	{
-		if( fLatestAutoSave )
-			return( 1 );
-		else
-			return( -1 );
+		return 2;
 	}
-	else
+	else if (fFile2Exist)
 	{
-		if( LastWriteTime1 > LastWriteTime2 )
-			return( 0 );
-		else
-			return( 1 );
+		return 1;
 	}
+	return 1;
 }
 
 
