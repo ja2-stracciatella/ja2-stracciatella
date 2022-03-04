@@ -62,7 +62,7 @@
 #include "Campaign_Types.h"
 #include "Queen_Command.h"
 #include "Options_Screen.h"
-#include "SaveLoadGame.h"
+#include "SaveLoadScreen.h"
 #include "Spread_Burst.h"
 #include "AI.h"
 #include "Game_Clock.h"
@@ -1034,11 +1034,12 @@ ScreenID UIHandleEndTurn(UI_EVENT* pUIEvent)
 	}
 	else
 	{
-		if( GCM->doesGameResExists( "../AutoSave.pls" ) && CanGameBeSaved() )
+		auto autosavePls = GCM->userPrivateFiles()->resolveExistingComponents("AutoSave.pls");
+		if( GCM->userPrivateFiles()->isFile(autosavePls) && CanGameBeSaved() )
 		{
 			//Save the game
 			guiPreviousOptionScreen = guiCurrentScreen;
-			SaveGame( SAVE__END_TURN_NUM, "End Turn Auto Save" );
+			DoAutoSave();
 		}
 
 		// End our turn!

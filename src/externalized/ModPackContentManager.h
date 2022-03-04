@@ -14,9 +14,6 @@ public:
 
 	virtual ~ModPackContentManager() override;
 
-	/** Get folder for saved games. */
-	virtual ST::string getSavedGamesFolder() const override;
-
 	/** Load dialogue quote from file. */
 	virtual ST::string* loadDialogQuoteFromFile(const ST::string& filename, int quote_number) override;
 

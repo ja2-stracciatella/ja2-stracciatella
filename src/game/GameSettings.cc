@@ -77,7 +77,7 @@ void LoadGameSettings(void)
 		if (settings_version < GAME_SETTING_CURRENT_VERSION) goto fail;
 
 		// Do checking to make sure the settings are valid
-		if (g.bLastSavedGameSlot < 0 || (NUM_SAVE_GAMES * NUM_SAVE_GAMES_TABS) <= g.bLastSavedGameSlot) g.bLastSavedGameSlot = -1;
+		if (g.bLastSavedGameSlot < 0) g.bLastSavedGameSlot = -1;
 
 		// Make sure that at least subtitles or speech is enabled
 		if (!g.fOptions[TOPTION_SUBTITLES] && !g.fOptions[TOPTION_SPEECH])
@@ -193,25 +193,6 @@ void InitGameOptions()
 	gGameOptions.ubGameSaveMode    = DIF_CAN_SAVE;
 
 }
-
-
-void CDromEjectionErrorMessageBoxCallBack(MessageBoxReturnValue const bExitValue)
-{
-	if( bExitValue == MSG_BOX_RETURN_OK )
-	{
-		guiPreviousOptionScreen = GAME_SCREEN;
-
-		//if we are in a game, save the game
-		if( gTacticalStatus.fHasAGameBeenStarted )
-		{
-			SaveGame( SAVE__ERROR_NUM, pMessageStrings[ MSG_CDROM_SAVE ] );
-		}
-
- 		//quit the game
-		requestGameExit();
-	}
-}
-
 
 void DisplayGameSettings( )
 {

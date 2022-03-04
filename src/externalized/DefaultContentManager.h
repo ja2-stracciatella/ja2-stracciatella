@@ -157,11 +157,14 @@ public:
 	virtual const std::map<UINT32, UINT16>* getTranslationTable() const override;
 
 	std::unique_ptr<rapidjson::Document> readJsonDataFile(const ST::string& fileName) const;
+
+	/* Gets the enabled mods and their version strings */
+	virtual const std::vector<std::pair<ST::string, ST::string>> getEnabledMods() const override;
 protected:
 	RustPointer<EngineOptions> m_engineOptions;
 	RustPointer<ModManager> m_modManager;
 	RustPointer<SchemaManager> m_schemaManager;
-	
+
 	RustPointer<TempDir> m_tempDir;
 	std::unique_ptr<DirFs> m_tempFiles;
 

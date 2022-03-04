@@ -2725,19 +2725,15 @@ static const ST::string s_dut_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Spel laden succesvol",
 	"FOUT bij laden spel: \"%s\"",
 
-	"De spelversie van het bewaarde spel verschilt van de huidige versie. Waarschijnlijk is het veilig om door te gaan. Doorgaan?",
-	"De bewaarde spelen zijn waarschijnlijk ongeldig. Deze verwijderen?",
+	"De spelversie van het bewaarde spel verschilt van de huidige versie. Waarschijnlijk is het veilig om door te gaan.",
+	"Weet je zeker dat je het opgeslagen spel met de naam \"%s\" wilt verwijderen?",
 
-	"Attempting to load an older version save.  Automatically update and load the save?",
+	"Aandacht:",
+	"Poging om de opslag van een oudere versie te laden. Als u doorgaat, wordt de opslag automatisch bijgewerkt.",
+	"Je hebt andere mods ingeschakeld dan waarmee de savegame is opgeslagen. De mods werken mogelijk niet correct.",
+	"Doorgaan?",
 
-	"Attempting to load an older version save.  Automatically update and load the save?",
-
-	"Weet je zeker dat je het spel in slot #%d wil overschrijven?",
-
-
-	//The first %d is a number that contains the amount of free space on the users hard drive,
-	//the second is the recommended amount of free space.
-	"Er is te weinig ruimte op de harde schijf. Er is maar %d MB vrij en Jagged heeft tenminste %d MB nodig.",
+	"Weet je zeker dat je het spel met de naam \"%s\" wil overschrijven?",
 
 	"Bewaren...",			//When saving a game, a message box with this string appears on the screen
 
@@ -2745,8 +2741,10 @@ static const ST::string s_dut_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Stapels Wapens",
 	"Realistische stijl",
 	"SF stijl",
-
 	"Moeilijkheid",
+
+	"Geen mod ingeschakeld",
+	"Mods:"
 };
 
 
@@ -2970,7 +2968,7 @@ static const ST::string s_dut_pMessageStrings[pMessageStrings_SIZE] =
 	"%s is gearriveerd in sector %s%s", //Name/Squad has arrived in sector A9.  Order must not change without notifying
 																		//SirTech
 	"Versie",
-	"Leeg SnelBewaarSlot",
+	"Nieuwe savegame maken",
 	"Dit slot is gereserveerd voor SnelBewaren tijdens tactische en kaartoverzichten m.b.v. ALT+S.",
 	"Geopend",
 	"Gesloten",

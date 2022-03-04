@@ -18,7 +18,6 @@ pub use std::fs::create_dir;
 pub use std::fs::create_dir_all;
 pub use std::fs::metadata;
 pub use std::fs::read_dir;
-pub use std::fs::rename;
 pub use std::fs::set_permissions;
 pub use std::fs::write;
 pub use std::fs::File;
@@ -54,6 +53,20 @@ pub fn remove_file<P: AsRef<Path>>(path: P) -> Result<(), io::Error> {
         }
     }
     std::fs::remove_file(path)
+}
+
+/// An implementation of `std::fs::rename` that handles files on separate file systems
+pub fn rename<P: AsRef<Path>>(from: P, to: P) -> Result<(), io::Error> {
+    if let Err(err) = std::fs::rename(&from, &to) {
+        if err.kind() == std::io::ErrorKind::Other {
+            // Fallback in case files are on separate filesystems on linux
+            std::fs::copy(&from, &to).and_then(|_| remove_file(&from))
+        } else {
+            Err(err)
+        }
+    } else {
+        Ok(())
+    }
 }
 
 //-------

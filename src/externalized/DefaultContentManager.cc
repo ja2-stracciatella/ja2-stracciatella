@@ -232,7 +232,7 @@ void DefaultContentManager::logConfiguration() const {
 	STLOGI("Temporary directory:           '{}'", m_tempFiles.get()->basePath());
 }
 
-template <class T> 
+template <class T>
 void deleteElements(std::vector<const T*> vec)
 {
 	for (auto elem : vec)
@@ -625,7 +625,7 @@ const AmmoTypeModel* DefaultContentManager::getAmmoType(uint8_t index)
 bool DefaultContentManager::loadWeapons()
 {
 	auto document = readJsonDataFileWithSchema("weapons.json");
-	if (document->IsArray()) 
+	if (document->IsArray())
 	{
 		const rapidjson::Value& a = document->GetArray();
 		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
@@ -670,7 +670,7 @@ bool DefaultContentManager::loadItems()
 bool DefaultContentManager::loadMagazines()
 {
 	auto document = readJsonDataFileWithSchema("magazines.json");
-	if(document->IsArray()) 
+	if(document->IsArray())
 	{
 		const rapidjson::Value& a = document->GetArray();
 		for (rapidjson::SizeType i = 0; i < a.Size(); i++)
@@ -690,7 +690,7 @@ bool DefaultContentManager::loadMagazines()
 			m_magazineMap.insert(std::make_pair(mag->getInternalName(), mag));
 		}
 	}
-	
+
 	return true;
 }
 
@@ -946,7 +946,7 @@ bool DefaultContentManager::loadGameData()
 	loadAllDealersAndInventory();
 
 	auto game_json = readJsonDataFileWithSchema("game.json");
-	
+
 	m_gamePolicy = new DefaultGamePolicy(game_json.get());
 
 	auto imp_json = readJsonDataFileWithSchema("imp.json");
@@ -967,7 +967,7 @@ bool DefaultContentManager::loadGameData()
 
 	auto loadScreensList = readJsonDataFileWithSchema("loading-screens.json");
 	auto loadScreensMapping = readJsonDataFileWithSchema("loading-screens-mapping.json");
-	
+
 	m_loadingScreenModel = LoadingScreenModel::deserialize(*loadScreensList, *loadScreensMapping);
 	m_loadingScreenModel->validateData(this);
 
@@ -1037,12 +1037,12 @@ std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFileWith
 		throw DataError(ST::format("Could not find json schema for path `{}`", jsonPath));
 	}
 	auto schemaDocument = readJsonFromString(schemaString.get(), "<schema>");
-	
+
 	rapidjson::SchemaDocument schema(*schemaDocument.get());
 	rapidjson::SchemaValidator validator(schema);
 
 	auto document = readJsonDataFile(jsonPath);
-	
+
 	if (!document->Accept(validator)) {
 		ST::string errorKeyword = validator.GetInvalidSchemaKeyword();
 		auto errorDocumentPointer = validator.GetInvalidDocumentPointer();
@@ -1099,7 +1099,7 @@ std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFileWith
 				if (enums.size() != 0) {
 					enums += ", ";
 				}
-				enums += ST::format("`{}`", i->GetString());				
+				enums += ST::format("`{}`", i->GetString());
 			}
 			errorMessage = ST::format("value `{}` is not one of {}", documentString, enums);
 		}
@@ -1138,7 +1138,7 @@ std::unique_ptr<rapidjson::Document> DefaultContentManager::readJsonDataFileWith
 			auto maxItems = schemaObject["maxItems"].GetUint();
 			errorMessage = ST::format("should have a maximum of {} item(s) but has {}", maxItems, size);
 		}
-		
+
 		throw DataError(ST::format("Validation error when validating json file `{}`: Path `{}` is invalid: {}", jsonPath, errorPath, errorMessage));
 	}
 	return document;
@@ -1158,7 +1158,7 @@ bool DefaultContentManager::loadAllDealersAndInventory()
 		m_dealers.push_back(DealerModel::deserialize(element, this, index++));
 	}
 	DealerModel::validateData(m_dealers, this);
-	
+
 	m_dealersInventory = std::vector<const DealerInventory*>(m_dealers.size());
 	for (auto dealer : m_dealers)
 	{
@@ -1257,7 +1257,7 @@ const ST::string& DefaultContentManager::getLandTypeString(size_t index) const
 	return *m_landTypeStrings.at(index);
 }
 
-bool DefaultContentManager::loadStrategicLayerData() 
+bool DefaultContentManager::loadStrategicLayerData()
 {
 	auto json = readJsonDataFileWithSchema("strategic-bloodcat-placements.json");
 	for (auto& element : json->GetArray()) {
@@ -1268,7 +1268,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 	}
 
 	json = readJsonDataFileWithSchema("strategic-bloodcat-spawns.json");
-	for (auto& element : json->GetArray()) 
+	for (auto& element : json->GetArray())
 	{
 		auto obj = JsonObjectReader(element);
 		m_bloodCatSpawns.push_back(
@@ -1315,12 +1315,12 @@ bool DefaultContentManager::loadStrategicLayerData()
 	SamSiteAirControlModel::validateData(m_samSitesAirControl, m_samSites.size());
 
 	json = readJsonDataFileWithSchema("strategic-map-towns.json");
-	for (auto& element : json->GetArray()) 
+	for (auto& element : json->GetArray())
 	{
 		auto town = TownModel::deserialize(element);
 		m_towns.insert(std::make_pair(town->townId, town));
 	}
-	
+
 	loadStringRes("strings/strategic-map-town-names", m_townNames);
 	loadStringRes("strings/strategic-map-town-name-locatives", m_townNameLocatives);
 
@@ -1364,7 +1364,7 @@ bool DefaultContentManager::loadStrategicLayerData()
 	return true;
 }
 
-bool DefaultContentManager::loadTacticalLayerData() 
+bool DefaultContentManager::loadTacticalLayerData()
 {
 	auto json = readJsonDataFileWithSchema("tactical-npc-action-params.json");
 	for (auto& element : json->GetArray())
@@ -1445,7 +1445,7 @@ void DefaultContentManager::loadTranslationTable()
 		suffix = "chs";
 		break;
 	}
-	
+
 	auto fullName = ST::format("{}-{}.json", name, suffix);
 
 	auto json = readJsonDataFileWithSchema(fullName);
@@ -1504,7 +1504,7 @@ const CreatureLairModel* DefaultContentManager::getCreatureLairByMineId(uint8_t 
 {
 	for (auto lair : m_creatureLairs)
 	{
-		if (lair->associatedMineId == mineId) 
+		if (lair->associatedMineId == mineId)
 		{
 			return lair;
 		}
@@ -1654,7 +1654,7 @@ const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t const p
 	{
 		return m_mercProfileInfo.at(profileID);
 	}
-	
+
 	STLOGD("MercProfileInfo is not defined at {}", profileID);
 	return &EMPTY_MERC_PROFILE_INFO;
 }
@@ -1666,7 +1666,7 @@ const MercProfileInfo* DefaultContentManager::getMercProfileInfoByName(const ST:
 			return i->second;
 		}
 	}
-	
+
 	STLOGW("MercProfileInfo is not defined for {}", name);
 	return NULL;
 }
@@ -1699,4 +1699,19 @@ const LoadingScreen* DefaultContentManager::getLoadingScreen(uint8_t index) cons
 const std::map<UINT32, UINT16>* DefaultContentManager::getTranslationTable() const
 {
 	return &m_translationTable;
+}
+
+const std::vector<std::pair<ST::string, ST::string>> DefaultContentManager::getEnabledMods() const
+{
+	std::vector<std::pair<ST::string, ST::string>> mods;
+	auto nmods = EngineOptions_getModsLength(this->m_engineOptions.get());
+	for (UINT32 i = 0; i < nmods; i++) {
+		RustPointer<char> modId(EngineOptions_getMod(this->m_engineOptions.get(), i));
+		RustPointer<Mod> mod(ModManager_getAvailableModById(this->m_modManager.get(), modId.get()));
+		RustPointer<char> modVersion(Mod_getVersionString(mod.get()));
+
+		mods.push_back(std::pair(modId.get(), modVersion.get()));
+	}
+
+	return mods;
 }

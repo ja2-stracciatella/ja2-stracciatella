@@ -42,6 +42,7 @@
 #include "Quests.h"
 #include "Random.h"
 #include "SAM_Sites.h"
+#include "SaveLoadGameStates.h"
 #include "ScreenIDs.h"
 #include "ShopKeeper_Interface.h"
 #include "Soldier_Control.h"
@@ -213,6 +214,7 @@ void InitNewGame()
 	ClearTacticalMessageQueue();
 	FreeGlobalMessageList(); // Clear mapscreen messages
 
+	ResetGameStates();
 	InitScriptingEngine();
 
 	if (gubScreenCount == 0)

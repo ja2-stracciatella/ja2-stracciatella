@@ -33,14 +33,15 @@ typedef std::map<ST::string, STORABLE_TYPE> StateTable;
  */
 extern SavedGameStates g_gameStates;
 
+uint32_t SaveStatesSize();
 void SaveStatesToSaveGameFile(HWFILE);
-void LoadStatesFromSaveFile(HWFILE);
-void ClearGameStates();
+void LoadStatesFromSaveFile(HWFILE, SavedGameStates &states);
+void ResetGameStates();
 
 class SavedGameStates
 {
 public:
-	bool HasKey(const ST::string& key);
+	bool HasKey(const ST::string& key) const;
 
 	/**
 	 * Gets state value of the specified type, by key
@@ -49,7 +50,7 @@ public:
 	 * @return
 	 * @throws std::out_of_range if the key was never set; throws std::bad_variant_access if the data type is different from what was set.
 	 */
-	template<typename T> T Get(const ST::string& key)
+	template<typename T> T Get(const ST::string& key) const
 	{
 		return std::get<T>(states.at(key));
 	}
@@ -124,3 +125,6 @@ public:
 private:
 	StateTable states;
 };
+
+std::vector<std::pair<ST::string, ST::string>> GetModInfoFromGameStates(const SavedGameStates &states);
+void AddModInfoToGameStates(SavedGameStates &states);
