@@ -118,7 +118,9 @@ void Launcher::show() {
 	editorButton->callback( (Fl_Callback*)startEditor, (void*)(this) );
 	playButton->callback( (Fl_Callback*)startGame, (void*)(this) );
 	gameDirectoryInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
+	saveGameDirectoryInput->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
 	browseJa2DirectoryButton->callback((Fl_Callback *) openGameDirectorySelector, (void *) (this));
+	browseSaveGameDirectoryButton->callback((Fl_Callback *) openSaveGameDirectorySelector, (void *) (this));
 	gameVersionInput->callback( (Fl_Callback*)selectGameVersion, (void*)(this) );
 	guessVersionButton->callback( (Fl_Callback*)guessVersion, (void*)(this) );
 	scalingModeChoice->callback( (Fl_Callback*)widgetChanged, (void*)(this) );
@@ -164,6 +166,8 @@ void Launcher::show() {
 void Launcher::initializeInputsFromDefaults() {
 	RustPointer<char> rustResRootPath(EngineOptions_getVanillaGameDir(this->engineOptions.get()));
 	gameDirectoryInput->value(rustResRootPath.get());
+	RustPointer<char> rustSaveGamePath(EngineOptions_getSaveGameDir(this->engineOptions.get()));
+	saveGameDirectoryInput->value(rustSaveGamePath.get());
 
 	uint32_t n = EngineOptions_getModsLength(this->engineOptions.get());
 	enabledModsBrowser->clear();
@@ -231,6 +235,7 @@ int Launcher::writeJsonFile() {
 	EngineOptions_setStartWithoutSound(this->engineOptions.get(), !playSoundsCheckbox->value());
 
 	EngineOptions_setVanillaGameDir(this->engineOptions.get(), gameDirectoryInput->value());
+	EngineOptions_setSaveGameDir(this->engineOptions.get(), saveGameDirectoryInput->value());
 
 	EngineOptions_clearMods(this->engineOptions.get());
 	int nitems = enabledModsBrowser->size();
@@ -297,6 +302,29 @@ void Launcher::openGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 			ST::string encoded = encodePath(fnfc.filename());
 			window->gameDirectoryInput->value(encoded.c_str());
 			window->update(true, window->gameDirectoryInput);
+			break; // FILE CHOSEN
+		}
+	}
+}
+
+void Launcher::openSaveGameDirectorySelector(Fl_Widget *btn, void *userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+	Fl_Native_File_Chooser fnfc;
+	fnfc.title("Select your save game directory");
+	fnfc.type(Fl_Native_File_Chooser::BROWSE_DIRECTORY);
+	ST::char_buffer decoded = decodePath(window->saveGameDirectoryInput->value());
+	fnfc.directory(decoded.empty() ? nullptr : decoded.c_str());
+
+	switch ( fnfc.show() ) {
+		case -1:
+			break; // ERROR
+		case  1:
+			break; // CANCEL
+		default:
+		{
+			ST::string encoded = encodePath(fnfc.filename());
+			window->saveGameDirectoryInput->value(encoded.c_str());
+			window->update(true, window->saveGameDirectoryInput);
 			break; // FILE CHOSEN
 		}
 	}
@@ -399,7 +427,7 @@ void Launcher::startGame(Fl_Widget* btn, void* userdata) {
 	window->writeJsonFile();
 	if (!checkIfRelativePathExists(window->gameDirectoryInput->value(), "Data", true)) {
 		fl_message_title(window->playButton->label());
-		int choice = fl_choice("Data dir not found.\nAre you sure you want to continue?", "Stop", "Continue", 0);
+		int choice = fl_choice("Data directory not found within game directory.\nAre you sure you want to continue?", "Stop", "Continue", 0);
 		if (choice != 1) {
 			return;
 		}

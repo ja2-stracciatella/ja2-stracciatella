@@ -704,7 +704,8 @@ static void SaveNewSave() {
     strftime(buf, sizeof buf, "%FT%TZ", gmtime(&now));
 	auto description = GetGameDescription();
 	// Building the filename from date and description should never lead to conflicts
-	auto filename = ST::format("{}-{}", buf, description.to_lower());
+	// We need to sanitize the filename afterwards
+	auto filename = FileMan::cleanBasename(ST::format("{}-{}", buf, description.to_lower()));
 
 	DoSaveGame(filename, description);
 }
@@ -767,16 +768,14 @@ void DoSaveLoadMessageBox(const ST::string& str, ScreenID uiExitScreen, MessageB
 }
 
 bool compareSaveGames(SaveGameInfo i, SaveGameInfo j) {
-	auto savegameDir = GCM->getSavedGamesFolder();
-	auto lastModifiedI = GCM->userPrivateFiles()->getLastModifiedTime(GetSaveGamePath(i.name()));
-	auto lastModifiedJ = GCM->userPrivateFiles()->getLastModifiedTime(GetSaveGamePath(j.name()));
+	auto lastModifiedI = GCM->saveGameFiles()->getLastModifiedTime(GetSaveGamePath(i.name()));
+	auto lastModifiedJ = GCM->saveGameFiles()->getLastModifiedTime(GetSaveGamePath(j.name()));
 	return (lastModifiedI > lastModifiedJ);
 }
 
 std::vector<SaveGameInfo> GetValidSaveGames()
 {
-	auto savegameDir = GCM->getSavedGamesFolder();
-	auto savegameNames = GCM->userPrivateFiles()->findAllFilesInDir(savegameDir, false, false, true);
+	auto savegameNames = GCM->saveGameFiles()->findAllFilesInDir("", false, false, true);
 	std::vector<SaveGameInfo> validSaves;
 
 	for (auto i = savegameNames.begin(); i < savegameNames.end(); i++) {
@@ -785,7 +784,7 @@ std::vector<SaveGameInfo> GetValidSaveGames()
 			continue;
 		}
 		auto saveName = FileMan::getFileNameWithoutExt(*i);
-		AutoSGPFile file(GCM->userPrivateFiles()->openForReading(FileMan::joinPaths(savegameDir, *i)));
+		AutoSGPFile file(GCM->saveGameFiles()->openForReading(*i));
 		try {
 			validSaves.push_back(SaveGameInfo(saveName, file));
 		} catch (const std::runtime_error &ex) {
@@ -1300,7 +1299,7 @@ static void ConfirmDeleteSavedGameCallBack(MessageBoxReturnValue const bExitValu
 	if( bExitValue == MSG_BOX_RETURN_YES )
 	{
 		try {
-			GCM->userPrivateFiles()->deleteFile(GetSaveGamePath(save.name()));
+			GCM->saveGameFiles()->deleteFile(GetSaveGamePath(save.name()));
 			gSavedGamesList.erase(gSavedGamesList.begin() + gbSelectedSaveLocation);
 		} catch (const std::runtime_error& err) {
 			STLOGE("Error deleting save game {}: {}", save.name(), err.what());

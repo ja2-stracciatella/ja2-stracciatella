@@ -19,27 +19,15 @@ import kotlinx.android.synthetic.main.fragment_launcher_data_tab.view.*
  * A placeholder fragment containing a simple view.
  */
 class DataTabFragment : Fragment() {
-    private val requestPermissionsCode = 1001
+    // Request permissions for game dir
+    private val requestPermissionsCodeGameDir = 1001
+    // Request permissions for save dir
+    private val requestPermissionsCodeSaveGameDir = 1002
 
     private lateinit var configurationModel: ConfigurationModel
-    private lateinit var chooser: StorageChooser
 
     override fun onCreate(savedInstanceState: Bundle?) {
         configurationModel = ViewModelProvider(requireActivity()).get(ConfigurationModel::class.java)
-        // We suppress deprecation for .fragmentManager here as we need the android.app.FragmentManager
-        // and not androidx.fragment.app.FragmentManager for the Storage Chooser
-        @Suppress("DEPRECATION")
-        chooser = StorageChooser.Builder()
-            .withActivity(activity)
-            .withFragmentManager(activity?.fragmentManager)
-            .allowCustomPath(true)
-            .setType(StorageChooser.DIRECTORY_CHOOSER)
-            .build();
-        chooser.setOnSelectListener { path ->
-            configurationModel.apply {
-                setVanillaGameDir(path)
-            }
-        }
         super.onCreate(savedInstanceState)
     }
 
@@ -50,31 +38,75 @@ class DataTabFragment : Fragment() {
         val tab = inflater.inflate(R.layout.fragment_launcher_data_tab, container, false)
 
         configurationModel.vanillaGameDir.observe(
-            viewLifecycleOwner,
-            { vanillaGameDir ->
-                if (vanillaGameDir.isNotEmpty()) {
-                    tab.gameDirValueText.text = vanillaGameDir
-                }
-            })
+            viewLifecycleOwner
+        ) { vanillaGameDir ->
+            if (vanillaGameDir.isNotEmpty()) {
+                tab.gameDirValueText.text = vanillaGameDir
+            }
+        }
+        configurationModel.saveGameDir.observe(
+            viewLifecycleOwner
+        ) { saveGameDir ->
+            if (saveGameDir.isNotEmpty()) {
+                tab.saveGameDirValueText.text = saveGameDir
+            }
+        }
         tab.gameDirChooseButton?.setOnClickListener { _ ->
             showGameDirChooser()
+        }
+        tab.saveGameDirChooseButton?.setOnClickListener { _ ->
+            showSaveGameDirChooser()
         }
         return tab
     }
 
     private fun showGameDirChooser() {
-        getPermissionsIfNecessaryForAction {
-            chooser.show()
+        getPermissionsIfNecessaryForAction(requestPermissionsCodeGameDir) {
+            // We suppress deprecation for .fragmentManager here as we need the android.app.FragmentManager
+            // and not androidx.fragment.app.FragmentManager for the Storage Chooser
+            @Suppress("DEPRECATION")
+            val directoryChooser = StorageChooser.Builder()
+                .withActivity(activity)
+                .withFragmentManager(activity?.fragmentManager)
+                .allowCustomPath(true)
+                .setType(StorageChooser.DIRECTORY_CHOOSER)
+                .build();
+            directoryChooser.setOnSelectListener { path ->
+                configurationModel.apply {
+                    setVanillaGameDir(path)
+                }
+            }
+            directoryChooser.show()
         }
     }
 
-    private fun getPermissionsIfNecessaryForAction(action: () -> Unit) {
+    private fun showSaveGameDirChooser() {
+        getPermissionsIfNecessaryForAction(requestPermissionsCodeSaveGameDir) {
+            // We suppress deprecation for .fragmentManager here as we need the android.app.FragmentManager
+            // and not androidx.fragment.app.FragmentManager for the Storage Chooser
+            @Suppress("DEPRECATION")
+            val directoryChooser = StorageChooser.Builder()
+                .withActivity(activity)
+                .withFragmentManager(activity?.fragmentManager)
+                .allowCustomPath(true)
+                .setType(StorageChooser.DIRECTORY_CHOOSER)
+                .build();
+            directoryChooser.setOnSelectListener { path ->
+                configurationModel.apply {
+                    setSaveGameDir(path)
+                }
+            }
+            directoryChooser.show()
+        }
+    }
+
+    private fun getPermissionsIfNecessaryForAction(permissionsCode: Int, action: () -> Unit) {
         val permissions = arrayOf(android.Manifest.permission.READ_EXTERNAL_STORAGE, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
         val hasAllPermissions = permissions.all { ContextCompat.checkSelfPermission(requireContext(), android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED }
         if (hasAllPermissions)  {
             action()
         } else {
-            requestPermissions(permissions, requestPermissionsCode)
+            requestPermissions(permissions, permissionsCode)
         }
     }
 
@@ -83,11 +115,18 @@ class DataTabFragment : Fragment() {
         permissions: Array<out String>,
         grantResults: IntArray
     ) {
-        if (requestCode == requestPermissionsCode) {
+        if (requestCode == requestPermissionsCodeGameDir) {
             if (grantResults.all { r -> r == PackageManager.PERMISSION_GRANTED }) {
                 showGameDirChooser()
             } else {
                 Toast.makeText(requireContext(), "Cannot select game directory without proper permissions", Toast.LENGTH_SHORT).show()
+            }
+        }
+        if (requestCode == requestPermissionsCodeSaveGameDir) {
+            if (grantResults.all { r -> r == PackageManager.PERMISSION_GRANTED }) {
+                showSaveGameDirChooser()
+            } else {
+                Toast.makeText(requireContext(), "Cannot select save game directory without proper permissions", Toast.LENGTH_SHORT).show()
             }
         }
     }

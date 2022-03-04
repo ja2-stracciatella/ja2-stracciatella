@@ -535,4 +535,39 @@ mod tests {
             Err(String::from(expected_error_message))
         );
     }
+
+    #[test]
+    fn build_engine_options_from_home_and_args_should_ensure_default_save_game_dir() {
+        let temp_dir =
+            write_temp_folder_with_ja2_json(b"{ \"game_dir\": \"/some/place/where/the/data/is\", \"res\": \"1024x768\", \"fullscreen\": true }");
+        let args = vec![String::from("ja2")];
+        let home = temp_dir.path().join(".ja2");
+
+        let engine_options = EngineOptions::from_home_and_args(&home, &args).unwrap();
+        let expected_save_game_dir = temp_dir.path().join(".ja2/SavedGames");
+
+        assert!(expected_save_game_dir.is_dir());
+        assert_eq!(engine_options.save_game_dir, expected_save_game_dir);
+    }
+
+    #[test]
+    fn build_engine_options_from_home_and_args_should_use_custom_save_game_dir() {
+        let save_temp_dir = TempDir::new().unwrap();
+        let ja2_json = format!(
+            "{{ \"save_game_dir\": {}, \"game_dir\": \"/some/place/where/the/data/is\", \"res\": \"1024x768\", \"fullscreen\": true }}",
+            serde_json::to_string(&save_temp_dir.path().join("saves").to_string_lossy()).unwrap()
+        );
+        let temp_dir = write_temp_folder_with_ja2_json(ja2_json.as_bytes());
+        let args = vec![String::from("ja2")];
+        let home = temp_dir.path().join(".ja2");
+        let save_dir = save_temp_dir.path().join("Saves");
+
+        std::fs::create_dir(&save_dir).unwrap();
+        std::fs::write(save_dir.join("testfile"), "").unwrap();
+
+        let engine_options = EngineOptions::from_home_and_args(&home, &args).unwrap();
+
+        assert!(engine_options.save_game_dir.is_dir());
+        assert!(save_dir.join("testfile").exists())
+    }
 }

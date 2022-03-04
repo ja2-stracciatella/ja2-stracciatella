@@ -89,11 +89,11 @@ public:
 	/** User private file (e.g. settings) */
 	virtual DirFs* userPrivateFiles() const = 0;
 
+	/** Save game files */
+	virtual DirFs* saveGameFiles() const = 0;
+
 	/** Temp files */
 	virtual DirFs* tempFiles() const = 0;
-
-	/** Get folder for saved games. */
-	virtual ST::string getSavedGamesFolder() const = 0;
 
 	/** Load encrypted string from game resource file. */
 	virtual ST::string loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const = 0;

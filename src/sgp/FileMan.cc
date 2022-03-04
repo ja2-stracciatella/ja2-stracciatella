@@ -7,6 +7,13 @@
 #include <string_theory/string>
 
 #include <stdexcept>
+#include <regex>
+
+ST::string FileMan::cleanBasename(const ST::string& pathSegment)
+{
+	RustPointer<char> replaced{Fs_cleanBasename(pathSegment.c_str())};
+	return replaced.get();
+}
 
 void FileMan::deleteFile(const ST::string& path)
 {
@@ -80,7 +87,7 @@ ST::string FileMan::resolveExistingComponents(const ST::string& path)
 	RustPointer<char> resolved{Fs_resolveExistingComponents(path.c_str(), NULL, true)};
 	if (resolved.get() == NULL) {
 		RustPointer<char> err{getRustError()};
-		throw IoException(ST::format("FileMan::resolveExistingComponents('{}') failed: {}", path, err.get())); 	
+		throw IoException(ST::format("FileMan::resolveExistingComponents('{}') failed: {}", path, err.get()));
 	}
 	return resolved.get();
 }

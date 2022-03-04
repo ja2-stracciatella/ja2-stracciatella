@@ -4,6 +4,7 @@
     <string name="floating_action_button_start_text">Start the game</string>
     <string name="tab_text_data">Data</string>
     <string name="tab_text_settings">Settings</string>
+    <string name="select_directory_button_label">Choose</string>
     <string name="game_dir_title_text">Original Jagged Alliance 2 Game Directory</string>
     <string name="game_dir_info_text">
         In order to get Jagged Alliance 2 Stracciatella to run, you need to copy the original game files
@@ -11,5 +12,9 @@
         This directory should contain e.g. the .exe files and a Data directory.
     </string>
     <string name="game_dir_empty_text">No directory chosen yet</string>
-    <string name="game_dir_select_button_label">Choose</string>
+    <string name="save_game_dir_title_text">Save Game Directory</string>
+    <string name="save_game_dir_info_text">
+        Change the save game directory. This allows e.g. synchronizing your saves with the cloud.
+    </string>
+    <string name="save_game_dir_empty_text">Use default directory</string>
 </resources>
