@@ -434,7 +434,7 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 #ifdef _DEBUG
 			if (_KeyDown(SDLK_NUMLOCKCLEAR))
 			{
-				int cnt = GetJA2Clock( );
+				unsigned int cnt = GetJA2Clock();
 
 				gubFOVDebugInfoInfo[ marker ] = (UINT8)markercnt;
 				RenderFOVDebug( );

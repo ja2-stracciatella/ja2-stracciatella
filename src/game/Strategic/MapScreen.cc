@@ -4133,8 +4133,6 @@ static void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInt
 	// simply check if we want to refresh the screen to display path
 	static INT8 bOldDestChar = -1;
 	static INT16  sPrevMapX, sPrevMapY;
-	INT32 iDifference = 0;
-
 
 	if( bOldDestChar != bSelectedDestChar )
 	{
@@ -4162,11 +4160,11 @@ static void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInt
 		fDrawTempPath = FALSE;
 	}
 
-	iDifference = GetJA2Clock( ) - guiPotCharPathBaseTime ;
+	UINT32 uiDifference = GetJA2Clock() - guiPotCharPathBaseTime;
 
 	if (fTempPathAlreadyDrawn) return;
 
-	if( iDifference > MIN_WAIT_TIME_FOR_TEMP_PATH )
+	if (uiDifference > MIN_WAIT_TIME_FOR_TEMP_PATH)
 	{
 		fDrawTempPath = TRUE;
 		guiPotCharPathBaseTime = GetJA2Clock( );

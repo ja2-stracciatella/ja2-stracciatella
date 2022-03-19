@@ -953,11 +953,11 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		InvalidateScreen( );
 		RefreshScreen();
 		/*
-		iLoop = GetJA2Clock();
+		uiLoop = GetJA2Clock();
 		do
 		{
 
-		} while( ( GetJA2Clock( ) - iLoop ) < 2000 );
+		} while (GetJA2Clock() - uiLoop < 2000);
 		*/
 	}
 	#endif
