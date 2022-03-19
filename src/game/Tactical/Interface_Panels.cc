@@ -3459,8 +3459,8 @@ void KeyRingSlotInvClickCallback( MOUSE_REGION * pRegion, INT32 iReason )
 			BOOLEAN fOKToGo = FALSE;
 			BOOLEAN fDeductPoints = FALSE;
 
-			if( ( gpItemPointer ->usItem < FIRST_KEY ) || ( gpItemPointer ->usItem > KEY_32 ) )
-			{
+			// return if item is not a key
+			if (GCM->getItem(gpItemPointer->usItem)->getItemClass() != IC_KEY) {
 				return;
 			}
 

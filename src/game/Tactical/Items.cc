@@ -2444,7 +2444,12 @@ void SwapKeysToSlot(SOLDIERTYPE& s, INT8 const key_ring_pos, OBJECTTYPE& key)
 
 void CreateKeyObject(OBJECTTYPE* const pObj, UINT8 const ubNumberOfKeys, UINT8 const ubKeyID)
 {
-	CreateItems(FIRST_KEY + LockTable[ubKeyID].usKeyItem, 100, ubNumberOfKeys, pObj);
+	auto keyId = LockTable[ubKeyID].usKeyItem;
+	auto item = GCM->getKeyItemForKeyId(keyId);
+	if (item == NULL) {
+		throw std::runtime_error(ST::format("Could not find key item for key id `{}` when creating key object", keyId).to_std_string());
+	}
+	CreateItems(item->getItemIndex(), 100, ubNumberOfKeys, pObj);
 	pObj->ubKeyID = ubKeyID;
 }
 

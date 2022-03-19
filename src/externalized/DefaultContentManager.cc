@@ -679,12 +679,6 @@ bool DefaultContentManager::loadMagazines()
 			MagazineModel *mag = MagazineModel::deserialize(obj, m_calibreMap, m_ammoTypeMap);
 			STLOGD("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName());
 
-			if((mag->getItemIndex() < FIRST_AMMO) || (mag->getItemIndex() > LAST_AMMO))
-			{
-				STLOGE("Magazine item index must be in the interval {} - {}", FIRST_AMMO, LAST_AMMO);
-				return false;
-			}
-
 			m_magazines.push_back(mag);
 			m_items[mag->getItemIndex()] = mag;
 			m_magazineMap.insert(std::make_pair(mag->getInternalName(), mag));
@@ -1188,6 +1182,16 @@ const ItemModel* DefaultContentManager::getItemByName(const ST::string &internal
 		throw std::runtime_error(ST::format("item '{}' is not found", internalName).to_std_string());
 	}
 	return it->second;
+}
+
+const ItemModel* DefaultContentManager::getKeyItemForKeyId(uint16_t usKeyItem) const
+{
+	for (auto item : m_items) {
+		if (item->getItemClass() == IC_KEY && item->getClassIndex() == usKeyItem) {
+			return item;
+		}
+	}
+	return NULL;
 }
 
 std::vector<ST::string> DefaultContentManager::getAllSmallInventoryGraphicPaths() const

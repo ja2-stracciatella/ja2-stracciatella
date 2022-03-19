@@ -4085,7 +4085,13 @@ void RenderKeyRingPopup(const BOOLEAN fFullRender)
 		if (key->ubKeyID == INVALID_KEY_NUMBER || key->ubNumber == 0) continue;
 
 		o.ubNumberOfObjects = key->ubNumber;
-		o.usItem            = FIRST_KEY + LockTable[key->ubKeyID].usKeyItem;
+
+		auto keyId = LockTable[key->ubKeyID].usKeyItem;
+		auto item = GCM->getKeyItemForKeyId(keyId);
+		if (item == NULL) {
+			throw std::runtime_error(ST::format("Could not find key item for key id `{}` when rendering key popup", keyId).to_std_string());
+		}
+		o.usItem            = item->getItemIndex();
 
 		DrawItemUIBarEx(o, 0, x + 7, y + 24, ITEM_BAR_HEIGHT, Get16BPPColor(STATUS_BAR), Get16BPPColor(STATUS_BAR_SHADOW), FRAME_BUFFER);
 		INVRenderItem(FRAME_BUFFER, NULL, o, x + 8, y, box_w - 8, box_h - 2, DIRTYLEVEL2, 0, SGP_TRANSPARENT);

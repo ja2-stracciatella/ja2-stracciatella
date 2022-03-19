@@ -20,4 +20,7 @@ public:
 
 	// Returns item replacements for maps
 	virtual const std::map<uint16_t, uint16_t> getMapItemReplacements() const = 0;
+
+	// Returns a key for
+	virtual const ItemModel* getKeyItemForKeyId(uint16_t usKeyItem) const = 0;
 };

@@ -88,6 +88,7 @@ public:
 
 	virtual const ItemModel* getItem(uint16_t index) const override;
 	virtual const ItemModel* getItemByName(const ST::string &internalName) const override;
+	virtual const ItemModel* getKeyItemForKeyId(uint16_t usKeyItem) const override;
 	virtual std::vector<ST::string> getAllSmallInventoryGraphicPaths() const override;
 	virtual const std::map<uint16_t, uint16_t> getMapItemReplacements() const override;
 
