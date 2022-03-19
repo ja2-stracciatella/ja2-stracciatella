@@ -52,6 +52,7 @@ struct SAVED_GAME_HEADER
 	GAME_OPTIONS	sInitialGameOptions;	//need these in the header so we can get the info from it on the save load screen.
 
 	UINT32	uiRandom;
+	UINT32  uiSaveStateSize;
 
 	/* (vanilla) UINT8		ubFiller[110]; */
 };
@@ -71,16 +72,28 @@ extern bool isValidSavedGameHeader(SAVED_GAME_HEADER& h);
  * Return \a stracLinuxFormat = true, when the file is in "Stracciatella Linux" format. */
 void ExtractSavedGameHeaderFromFile(HWFILE, SAVED_GAME_HEADER&, bool *stracLinuxFormat);
 
+/** @brief Extract saved game header from a save name. Uses GCM to determine save location
+ * Return \a stracLinuxFormat = true, when the file is in "Stracciatella Linux" format. */
+void ExtractSavedGameHeaderFromSave(const ST::string &saveName, SAVED_GAME_HEADER&, bool *stracLinuxFormat);
+
 
 extern ScreenID guiScreenToGotoAfterLoadingSavedGame;
 
-ST::string CreateSavedGameFileNameFromNumber(UINT8 ubSaveGameID);
+ST::string GetSaveGamePath(const ST::string &saveName);
+BOOLEAN HasSaveGameExtension(const ST::string &fileName);
 
+ST::string GetAutoSaveName(uint32_t index);
+BOOLEAN IsAutoSaveName(const ST::string &saveName);
 
-BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc);
-void    LoadSavedGame(UINT8 save_slot_id);
+ST::string GetQuickSaveName();
+BOOLEAN IsQuickSaveName(const ST::string &saveName);
 
-void BackupSavedGame(UINT8 const ubSaveGameID);
+ST::string GetErrorSaveName();
+BOOLEAN IsErrorSaveName(const ST::string &saveName);
+
+BOOLEAN SaveGame(const ST::string &saveName, const ST::string& gameDesc);
+void    LoadSavedGame(const ST::string &saveName);
+void BackupSavedGame(const ST::string &saveName);
 
 void SaveFilesToSavedGame(char const* pSrcFileName, HWFILE);
 void LoadFilesFromSavedGame(char const* pSrcFileName, HWFILE);
@@ -91,11 +104,9 @@ void SaveMercPath(HWFILE, PathSt const* head);
 void LoadMercPath(HWFILE, PathSt** head);
 
 extern UINT32 guiLastSaveGameNum;
-INT8		GetNumberForAutoSave( BOOLEAN fLatestAutoSave );
+INT8		GetNextIndexForAutoSave();
 
 extern UINT32 guiJA2EncryptionSet;
-
-extern BOOLEAN gfUseConsecutiveQuickSaveSlots;
 
 // IMP save and import profile
 ST::string IMPSavedProfileCreateFilename(const ST::string& nickname);
@@ -103,5 +114,26 @@ bool IMPSavedProfileDoesFileExist(const ST::string& nickname);
 SGPFile* const IMPSavedProfileOpenFileForRead(const ST::string& nickname);
 int IMPSavedProfileLoadMercProfile(const ST::string& nickname);
 void IMPSavedProfileLoadInventory(const ST::string& nickname, SOLDIERTYPE *pSoldier);
+
+class SaveGameInfo {
+	public:
+		SaveGameInfo() {
+			this->savedGameHeader = SAVED_GAME_HEADER{};
+		};
+		SaveGameInfo(ST::string name, HWFILE file);
+		const SAVED_GAME_HEADER& header() const {
+			return savedGameHeader;
+		};
+		const std::vector<std::pair<ST::string, ST::string>>& mods() const {
+			return enabledMods;
+		};
+		const ST::string& name() const {
+			return saveName;
+		}
+	private:
+		ST::string saveName;
+		SAVED_GAME_HEADER savedGameHeader;
+		std::vector<std::pair<ST::string, ST::string>> enabledMods;
+};
 
 #endif

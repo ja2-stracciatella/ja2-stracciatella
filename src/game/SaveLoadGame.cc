@@ -119,11 +119,15 @@
 #include <string_theory/format>
 #include <string_theory/string>
 
+#include <regex>
 #include <algorithm>
 #include <stdexcept>
 
 static const ST::string g_backup_dir     = "Backup";
 static const ST::string g_quicksave_name = "QuickSave";
+static const std::regex g_autosave_regex("^Auto[0-9]+$", std::regex_constants::icase);
+static const ST::string g_autosave_prefix = "Auto";
+static const ST::string g_error_save_name = "Error";
 static const ST::string g_savegame_name  = "SaveGame";
 static const ST::string g_savegame_ext   = "sav";
 
@@ -142,7 +146,6 @@ extern		BOOLEAN				gfCreatureMeanwhileScenePlayed;
 
 static MusicMode gMusicModeToPlay;
 
-BOOLEAN	gfUseConsecutiveQuickSaveSlots = FALSE;
 UINT32	guiLastSaveGameNum;
 
 UINT32	guiJA2EncryptionSet = 0;
@@ -151,6 +154,40 @@ UINT32	guiJA2EncryptionSet = 0;
 ScreenID guiScreenToGotoAfterLoadingSavedGame = ERROR_SCREEN; // XXX TODO001A was not properly initialised (0)
 
 extern		UINT32		guiCurrentUniqueSoldierId;
+
+ST::string GetSaveGamePath(const ST::string &saveName) {
+	auto savegameDir = GCM->getSavedGamesFolder();
+	return ST::format("{}/{}.{}", savegameDir, saveName, g_savegame_ext);
+}
+
+BOOLEAN HasSaveGameExtension(const ST::string &fileName) {
+	return fileName.ends_with(ST::format(".{}", g_savegame_ext), ST::case_insensitive);
+}
+
+ST::string GetAutoSaveName(uint32_t index) {
+	return ST::format("{}{02}", g_autosave_prefix, index);
+};
+
+BOOLEAN IsAutoSaveName(const ST::string &saveName) {
+	return std::regex_match(saveName.c_str(), g_autosave_regex);
+}
+
+ST::string GetQuickSaveName() {
+	return g_quicksave_name;
+};
+
+BOOLEAN IsQuickSaveName(const ST::string &saveName) {
+	return saveName.compare(g_quicksave_name, ST::case_insensitive) == 0;
+};
+
+BOOLEAN IsErrorSaveName(const ST::string &saveName) {
+	return saveName.compare(g_error_save_name, ST::case_insensitive) == 0;
+};
+
+ST::string GetErrorSaveName() {
+	return g_error_save_name;
+};
+
 
 static void ExtractGameOptions(DataReader& d, GAME_OPTIONS& g)
 {
@@ -195,7 +232,7 @@ static void SaveIMPPlayerProfiles();
 Observable<> BeforeGameSaved;
 Observable<> OnGameLoaded;
 
-BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
+BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 {
 	BeforeGameSaved();
 
@@ -246,6 +283,8 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 	// Set the fact that we are saving a game
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
 
+	ST::string savegamePath = GetSaveGamePath(saveName);
+
 	try
 	{
 		//Save the current sectors open temp files to the disk
@@ -254,11 +293,7 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		SAVED_GAME_HEADER header;
 		header = SAVED_GAME_HEADER{};
 
-		if (ubSaveGameID == 0)
-		{ // We are saving the quick save
-			header.sSavedGameDesc = g_quicksave_name;
-		}
-		else if (gameDesc.empty())
+		if (gameDesc.empty())
 		{
 			header.sSavedGameDesc = pMessageStrings[MSG_NODESC];
 		}
@@ -272,9 +307,11 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		// Save IMP merc(s)
 		SaveIMPPlayerProfiles();
 
-		// Create the save game file
-		ST::string savegameName = CreateSavedGameFileNameFromNumber(ubSaveGameID);
-		AutoSGPFile f(GCM->userPrivateFiles()->openForWriting(savegameName));
+		// Create saved games dir in temp dir if it does not exist
+		GCM->tempFiles()->createDir(FileMan::getParentPath(savegamePath, false));
+
+		// Create the save game file in temp dir first, move it to user private files after
+		AutoSGPFile f(GCM->tempFiles()->openForWriting(savegamePath));
 
 		/* If there are no enemy or civilians to save, we have to check BEFORE
 		 * saving the sector info struct because the
@@ -310,6 +347,7 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		}
 
 		header.uiRandom = Random(RAND_MAX);
+		header.uiSaveStateSize = SaveStatesSize();
 
 		// Save the savegame header
 		BYTE  data[432];
@@ -333,7 +371,8 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		InjectGameOptions(d, header.sInitialGameOptions);
 		INJ_SKIP(  d, 1)
 		INJ_U32(   d, header.uiRandom)
-		INJ_SKIP(  d, 112)
+		INJ_U32(   d, header.uiSaveStateSize)
+		INJ_SKIP(  d, 108)
 		Assert(d.getConsumed() == lengthof(data));
 
 		f->write(data, sizeof(data));
@@ -433,6 +472,10 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		NewWayOfSavingBobbyRMailOrdersToSaveGameFile(f);
 
 		SaveStatesToSaveGameFile(f);
+
+		FileMan::moveFile(GCM->tempFiles()->absolutePath(savegamePath), GCM->userPrivateFiles()->absolutePath(savegamePath));
+
+		GCM->tempFiles()->deleteFile(savegamePath);
 	}
 	catch (std::runtime_error const& e)
 	{
@@ -441,7 +484,9 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 		if (fWePausedIt) UnPauseAfterSaveGame();
 
 		// Delete the failed attempt at saving
-		DeleteSaveGameNumber(ubSaveGameID);
+		try {
+			GCM->tempFiles()->deleteFile(savegamePath);
+		} catch (...) {}
 
 		//Put out an error message
 		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, zSaveLoadText[SLG_SAVE_GAME_ERROR]);
@@ -453,15 +498,16 @@ BOOLEAN SaveGame(UINT8 ubSaveGameID, const ST::string& gameDesc)
 	}
 
 	// If we succesfully saved the game, mark this entry as the last saved game file
-	if (ubSaveGameID != SAVE__ERROR_NUM && ubSaveGameID != SAVE__END_TURN_NUM)
+	if (!IsErrorSaveName(saveName) && !IsAutoSaveName(saveName))
 	{
-		gGameSettings.bLastSavedGameSlot = ubSaveGameID;
+		gGameSettings.sCurrentSavedGameName = saveName;
+		gGameSettings.sCurrentSavedGameDescription = gameDesc;
 	}
 
 	SaveGameSettings();
 
 	// Display a screen message that the save was succesful (unless we are in Dead is Dead Mode to prevent message spamming)
-	if (ubSaveGameID != SAVE__END_TURN_NUM && gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD)
+	if (!IsAutoSaveName(saveName) && gGameOptions.ubGameSaveMode != DIF_DEAD_IS_DEAD)
 	{
 		ScreenMsg(FONT_MCOLOR_WHITE, MSG_INTERFACE, pMessageStrings[MSG_SAVESUCCESS]);
 	}
@@ -512,7 +558,12 @@ void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinu
 	ExtractGameOptions(d, h.sInitialGameOptions);
 	EXTR_SKIP(  d, 1)
 	EXTR_U32(   d, h.uiRandom)
-	EXTR_SKIP(  d, 112)
+	if (h.uiSavedGameVersion >= 102) {
+		EXTR_U32(d, h.uiSaveStateSize)
+		EXTR_SKIP(  d, 108)
+	} else {
+		EXTR_SKIP(  d, 112)
+	}
 	// XXX: this assert doesn't work anymore
 	// Assert(d.getConsumed() == lengthof(data));
 }
@@ -573,6 +624,13 @@ void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h, bool *
 	}
 }
 
+void ExtractSavedGameHeaderFromSave(const ST::string &saveName, SAVED_GAME_HEADER& h, bool *stracLinuxFormat)
+{
+	auto savegamePath = GetSaveGamePath(saveName);
+	AutoSGPFile f(GCM->userPrivateFiles()->openForReading(savegamePath));
+	ExtractSavedGameHeaderFromFile(f, h, stracLinuxFormat);
+}
+
 static void HandleOldBobbyRMailOrders(void);
 static void LoadGeneralInfo(HWFILE, UINT32 savegame_version);
 static void LoadMeanwhileDefsFromSaveGameFile(HWFILE, UINT32 savegame_version);
@@ -586,7 +644,7 @@ static void TruncateStrategicGroupSizes(void);
 static void UpdateMercMercContractInfo(void);
 void InitScriptingEngine();
 
-void LoadSavedGame(UINT8 const save_slot_id)
+void LoadSavedGame(const ST::string &saveName)
 {
 	// Save the game before if we are in Dead is Dead Mode
 	if (gGameOptions.ubGameSaveMode == DIF_DEAD_IS_DEAD) {
@@ -625,6 +683,7 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	 * pre-load state. */
 	TrashWorld();
 
+	ResetGameStates();
 	InitScriptingEngine();
 
 	InitTacticalSave();
@@ -632,8 +691,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	// ATE: Added to empty dialogue q
 	EmptyDialogueQueue();
 
-	ST::string savegameName = CreateSavedGameFileNameFromNumber(save_slot_id);
-	AutoSGPFile f(GCM->userPrivateFiles()->openForReading(savegameName));
+	ST::string savegameFilename = GetSaveGamePath(saveName);
+	AutoSGPFile f(GCM->userPrivateFiles()->openForReading(savegameFilename));
 
 	SAVED_GAME_HEADER SaveGameHeader;
 	bool stracLinuxFormat;
@@ -642,8 +701,6 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	CalcJA2EncryptionSet(SaveGameHeader);
 
 	UINT32 const version = SaveGameHeader.uiSavedGameVersion;
-	// Load the savegame name, only relevant for Dead is Dead games
-	gGameSettings.sCurrentSavedGameName = SaveGameHeader.sSavedGameDesc;
 
 	/* If the player is loading up an older version of the game and the person
 	 * DOESN'T have the cheats on. */
@@ -973,7 +1030,8 @@ void LoadSavedGame(UINT8 const save_slot_id)
 
 	if (version >= 101)
 	{
-		LoadStatesFromSaveFile(f);
+		LoadStatesFromSaveFile(f, g_gameStates);
+		AddModInfoToGameStates(g_gameStates);
 	}
 
 	BAR(1, "Final Checks...");
@@ -1013,7 +1071,11 @@ void LoadSavedGame(UINT8 const save_slot_id)
 	}
 
 	// if we succesfully LOADED! the game, mark this entry as the last saved game file
-	gGameSettings.bLastSavedGameSlot = save_slot_id;
+	if (!IsErrorSaveName(saveName) && !IsAutoSaveName(saveName))
+	{
+		gGameSettings.sCurrentSavedGameName = saveName;
+		gGameSettings.sCurrentSavedGameDescription = SaveGameHeader.sSavedGameDesc;
+	}
 
 	//Save the save game settings
 	SaveGameSettings();
@@ -1402,36 +1464,34 @@ static void LoadSoldierStructure(HWFILE const f, UINT32 savegame_version, bool s
 }
 
 
-void BackupSavedGame(UINT8 const ubSaveGameID)
+void BackupSavedGame(const ST::string &saveName)
 {
-	// ensure we have the save game directory
-	ST::string backupdir = FileMan::joinPaths(GCM->getSavedGamesFolder(), g_backup_dir);
-	GCM->userPrivateFiles()->createDir(GCM->getSavedGamesFolder());
-	GCM->userPrivateFiles()->createDir(backupdir);
+	auto sourceSavegamePath = GetSaveGamePath(saveName);
+	auto sourceFilename = FileMan::getFileName(sourceSavegamePath);
+	auto backupDir = FileMan::joinPaths(GCM->getSavedGamesFolder(), g_backup_dir);
 
-	ST::string zSourceSaveGameName;
-	ST::string zSourceBackupSaveGameName;
-	ST::string zTargetSaveGameName;
-	zSourceSaveGameName = ST::format("{}{02d}.{}", g_savegame_name, ubSaveGameID, g_savegame_ext);
+	// ensure we have the save game & backup directory
+	GCM->userPrivateFiles()->createDir(GCM->getSavedGamesFolder());
+	GCM->userPrivateFiles()->createDir(backupDir);
+
+	ST::string savegamePathToBackup;
+	ST::string savegamePathToBackupTo;
 	for (int i = NUM_SAVE_GAME_BACKUPS - 1; i >= 0; i--)
 	{
 		if (i==0)
 		{
-			zSourceBackupSaveGameName = zSourceSaveGameName;
+			savegamePathToBackup = sourceSavegamePath;
 		}
 		else
 		{
-			zSourceBackupSaveGameName = ST::format("{}.{01d}", zSourceSaveGameName, i);
+			savegamePathToBackup = ST::format("{}/{}.{01d}", backupDir, sourceFilename, i);
 		}
-		zTargetSaveGameName = ST::format("{}.{01d}", zSourceSaveGameName, i+1);
+		savegamePathToBackupTo = ST::format("{}/{}.{01d}", backupDir, sourceFilename, i+1);
 		// Only backup existing savegames
-		auto baseDir = i==0 ? GCM->getSavedGamesFolder() : backupdir;
-		if (FileMan::exists(FileMan::joinPaths(baseDir, zSourceBackupSaveGameName)))
+		auto baseDir = i==0 ? GCM->getSavedGamesFolder() : backupDir;
+		if (GCM->userPrivateFiles()->exists(savegamePathToBackup))
 		{
-			FileMan::moveFile(
-				FileMan::joinPaths(baseDir, zSourceBackupSaveGameName),
-				FileMan::joinPaths(backupdir,zTargetSaveGameName)
-			);
+			GCM->userPrivateFiles()->moveFile(savegamePathToBackup, savegamePathToBackupTo);
 		}
 	}
 }
@@ -1446,7 +1506,7 @@ static void SaveFileToSavedGame(SGPFile* fileToSave, HWFILE const hFile)
 
 	if (uiFileSize == 0) return;
 
-	// Read the saource file into the buffer
+	// Read the source file into the buffer
 	SGP::Buffer<UINT8> pData(uiFileSize);
 	fileToSave->read(pData, uiFileSize);
 
@@ -1629,26 +1689,6 @@ static void LoadWatchedLocsFromSavedGame(HWFILE const hFile)
 
 	hFile->read(gfWatchedLocReset, uiLoadSize);
 }
-
-
-ST::string CreateSavedGameFileNameFromNumber(const UINT8 ubSaveGameID)
-{
-	ST::string dir = GCM->getSavedGamesFolder();
-
-	switch (ubSaveGameID)
-	{
-		case 0: // we are creating the QuickSave file
-			return ST::format("{}/{}.{}", dir, g_quicksave_name, g_savegame_ext);
-		case SAVE__END_TURN_NUM:
-			guiLastSaveGameNum = (guiLastSaveGameNum + 1) % 2;
-			return ST::format("{}/Auto{02}.{}", dir, g_quicksave_name, g_savegame_ext);
-		case SAVE__ERROR_NUM:\
-			return ST::format("{}/error.{}", dir, g_savegame_ext);
-		default:
-			return ST::format("{}/{}{02}.{}", dir, g_savegame_name, ubSaveGameID, g_savegame_ext);
-	}
-}
-
 
 void SaveMercPath(HWFILE const f, PathSt const* const head)
 {
@@ -2330,7 +2370,7 @@ static void UpdateMercMercContractInfo(void)
 	}
 }
 
-INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
+INT8 GetNextIndexForAutoSave()
 {
 	BOOLEAN	fFile1Exist, fFile2Exist;
 	double	LastWriteTime1 = 0;
@@ -2340,45 +2380,33 @@ INT8 GetNumberForAutoSave( BOOLEAN fLatestAutoSave )
 	fFile2Exist = FALSE;
 
 	//The name of the file
-	ST::string zFileName1 = ST::format("{}/Auto{02d}.{}", GCM->getSavedGamesFolder(), 0, g_savegame_ext);
-	
-	ST::string zFileName2 = ST::format("{}/Auto{02d}.{}", GCM->getSavedGamesFolder(), 1, g_savegame_ext);
+	ST::string zFileName1 = GCM->userPrivateFiles()->resolveExistingComponents(GetSaveGamePath(GetAutoSaveName(1)));
+	ST::string zFileName2 = GCM->userPrivateFiles()->resolveExistingComponents(GetSaveGamePath(GetAutoSaveName(2)));
 
 	if( GCM->userPrivateFiles()->exists( zFileName1 ) )
 	{
-		LastWriteTime1 = GCM->tempFiles()->getLastModifiedTime( zFileName1 );
+		LastWriteTime1 = GCM->userPrivateFiles()->getLastModifiedTime( zFileName1 );
 		fFile1Exist = TRUE;
 	}
 
 	if( GCM->userPrivateFiles()->exists( zFileName2 ) )
 	{
-		LastWriteTime2 = GCM->tempFiles()->getLastModifiedTime( zFileName2 );
+		LastWriteTime2 = GCM->userPrivateFiles()->getLastModifiedTime( zFileName2 );
 		fFile2Exist = TRUE;
 	}
 
-	if( !fFile1Exist && !fFile2Exist )
-		return( -1 );
-	else if( fFile1Exist && !fFile2Exist )
-	{
-		if( fLatestAutoSave )
-			return( 0 );
-		else
-			return( -1 );
+	if(fFile1Exist && fFile2Exist) {
+		return LastWriteTime1 < LastWriteTime2 ? 1 : 2;
 	}
-	else if( !fFile1Exist && fFile2Exist )
+	else if (fFile1Exist)
 	{
-		if( fLatestAutoSave )
-			return( 1 );
-		else
-			return( -1 );
+		return 2;
 	}
-	else
+	else if (fFile2Exist)
 	{
-		if( LastWriteTime1 > LastWriteTime2 )
-			return( 0 );
-		else
-			return( 1 );
+		return 1;
 	}
+	return 1;
 }
 
 
@@ -2465,4 +2493,26 @@ static void CalcJA2EncryptionSet(SAVED_GAME_HEADER const& h)
 
 	Assert(set < BASE_NUMBER_OF_ROTATION_ARRAYS * 12);
 	guiJA2EncryptionSet = set;
+}
+
+SaveGameInfo::SaveGameInfo(ST::string name_, HWFILE file) : saveName(name_) {
+	bool stracciatellaFormat = false;
+	auto savedGameHeader = SAVED_GAME_HEADER{};
+	file->seek(0, FileSeekMode::FILE_SEEK_FROM_START);
+	ExtractSavedGameHeaderFromFile(file, savedGameHeader, &stracciatellaFormat);
+
+	this->savedGameHeader = savedGameHeader;
+	if (savedGameHeader.uiSavedGameVersion >= 102) {
+		try {
+			if (savedGameHeader.uiSaveStateSize == 0) {
+				throw std::runtime_error("save state size was 0");
+			}
+			file->seek(-savedGameHeader.uiSaveStateSize - sizeof(UINT32), FileSeekMode::FILE_SEEK_FROM_END);
+			SavedGameStates states;
+			LoadStatesFromSaveFile(file, states);
+			this->enabledMods = GetModInfoFromGameStates(states);
+		} catch (const std::runtime_error &ex) {
+			STLOGW("Could not read mods from save game: {}", ex.what());
+		}
+	}
 }

@@ -1,5 +1,5 @@
 use libc::c_char;
-use stracciatella::{config::EngineOptions, get_assets_dir};
+use stracciatella::config::EngineOptions;
 
 pub use stracciatella::mods::{Mod, ModManager};
 
@@ -12,9 +12,8 @@ use super::common::{
 #[no_mangle]
 pub extern "C" fn ModManager_create(engine_options: *const EngineOptions) -> *mut ModManager {
     forget_rust_error();
-    let assets_dir = get_assets_dir();
     let engine_options = unsafe_ref(engine_options);
-    let mod_manager = ModManager::new(&engine_options, &assets_dir);
+    let mod_manager = ModManager::new(&engine_options);
 
     match mod_manager {
         Ok(mod_manager) => into_ptr(mod_manager),
@@ -30,9 +29,8 @@ pub extern "C" fn ModManager_create(engine_options: *const EngineOptions) -> *mu
 pub extern "C" fn ModManager_createUnchecked(
     engine_options: *const EngineOptions,
 ) -> *mut ModManager {
-    let assets_dir = get_assets_dir();
     let engine_options = unsafe_ref(engine_options);
-    let mod_manager = ModManager::new_unchecked(&engine_options, &assets_dir);
+    let mod_manager = ModManager::new_unchecked(&engine_options);
 
     into_ptr(mod_manager)
 }

@@ -1704,3 +1704,18 @@ const std::map<UINT32, UINT16>* DefaultContentManager::getTranslationTable() con
 {
 	return &m_translationTable;
 }
+
+const std::vector<std::pair<ST::string, ST::string>> DefaultContentManager::getEnabledMods() const
+{
+	std::vector<std::pair<ST::string, ST::string>> mods;
+	auto nmods = EngineOptions_getModsLength(this->m_engineOptions.get());
+	for (UINT32 i = 0; i < nmods; i++) {
+		RustPointer<char> modId(EngineOptions_getMod(this->m_engineOptions.get(), i));
+		RustPointer<Mod> mod(ModManager_getAvailableModById(this->m_modManager.get(), modId.get()));
+		RustPointer<char> modVersion(Mod_getVersionString(mod.get()));
+
+		mods.push_back(std::pair(modId.get(), modVersion.get()));
+	}
+
+	return mods;
+}

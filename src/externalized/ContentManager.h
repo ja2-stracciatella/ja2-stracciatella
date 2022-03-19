@@ -168,7 +168,7 @@ public:
 	virtual int16_t getSectorLandType(uint8_t sectorID, uint8_t sectorLevel) const = 0;
 	virtual const std::map<uint8_t, const NpcPlacementModel*>& listNpcPlacements() const = 0;
 	virtual const NpcPlacementModel* getNpcPlacement(uint8_t profileId) const = 0;
-	
+
 	/* Params for the given NPC_ACTION if found, or return an empty instance */
 	virtual const NpcActionParamsModel* getNpcActionParams(uint16_t actionCode) const = 0;
 
@@ -198,4 +198,7 @@ public:
 	virtual const ST::string& getLandTypeString(size_t index) const = 0;
 
 	virtual const std::map<UINT32, UINT16>* getTranslationTable() const = 0;
+
+	/* Gets the enabled mods and their version strings as a map */
+	virtual const std::vector<std::pair<ST::string, ST::string>> getEnabledMods() const = 0;
 };

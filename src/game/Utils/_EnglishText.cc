@@ -2710,19 +2710,15 @@ static const ST::string s_eng_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Loaded the game successfully",
 	"ERROR loading the game: \"%s\"",
 
-	"The game version in the saved game file is different then the current version.  It is most likely safe to continue.  Continue?",
-	"The saved game files may be invalidated.  Do you want them all deleted?",
+	"The game version in the saved game file is different then the current version. It is most likely safe to continue.",
+	"Are you sure you want to delete the saved game named \"%s\"?",
 
-	"Attempting to load an older version save.  Automatically update and load the save?",
+	"Attention:",
+	"Attempting to load save from an older version. Continuing will automatically update the save.",
+	"You have different mods enabled, than the savegame was saved with. The mods might not work correctly.",
+	"Do you want to continue?",
 
-	"Attempting to load an older version save.  Automatically update and load the save?",
-
-	"Are you sure you want to overwrite the saved game in slot #%d?",
-
-
-	//The first %d is a number that contains the amount of free space on the users hard drive,
-	//the second is the recommended amount of free space.
-	"You are running low on disk space.  You only have %d Megs free and Jagged should have at least %d Megs free.",
+	"Are you sure you want to overwrite the saved game named \"%s\"?",
 
 	"Saving...",			//When saving a game, a message box with this string appears on the screen
 
@@ -2730,8 +2726,10 @@ static const ST::string s_eng_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Tons of Guns",
 	"Realistic style",
 	"Sci Fi style",
-
 	"Difficulty",
+
+	"No mods enabled",
+	"Mods:"
 };
 
 
@@ -2955,7 +2953,7 @@ static const ST::string s_eng_pMessageStrings[pMessageStrings_SIZE] =
 	"%s has arrived in sector %s%s",	//Name/Squad has arrived in sector A9.  Order must not
 						//change without notifyingSirTech
 	"Version",
-	"Empty Quick Save Slot",
+	"Create new savegame",
 	"This slot is reserved for Quick Saves made from the tactical and map screens using ALT+S.",
 	"Opened",
 	"Closed",

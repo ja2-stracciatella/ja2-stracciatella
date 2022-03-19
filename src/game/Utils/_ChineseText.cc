@@ -188,7 +188,7 @@ static ST::string s_cn_Message[Message_SIZE] =
 	"无",
 	"退出子弹",
 	"附件",
-	
+
 	//You cannot use "item(s)" and your "other item" at the same time.
 	//Ex:  You cannot use sun goggles and you gas mask at the same time.
 	"您不能同时使用%s和%s.",
@@ -619,7 +619,7 @@ static const ST::string s_cn_gpStrategicString[gpStrategicString_SIZE] =
 	"敌军给您一个投降的机会.",
 	"敌军俘虏了昏迷中的佣兵.",
 
-	//The text that goes on the autoresolve buttons							
+	//The text that goes on the autoresolve buttons
 
 	"撤退",		//The retreat button
 	"完成",		//The done button				//STR_AR_DONE_BUTTON
@@ -657,7 +657,7 @@ static const ST::string s_cn_gpStrategicString[gpStrategicString_SIZE] =
 	"正在撤退",						//STR_AR_MERC_RETREATING,
 	"撤退",						//STR_AR_MERC_RETREAT,
 
-	//PRE BATTLE INTERFACE STRINGS 
+	//PRE BATTLE INTERFACE STRINGS
 	//Goes on the three buttons in the prebattle interface.  The Auto resolve button represents
 	//a system that automatically resolves the combat for the player without having to do anything.
 	//These strings must be short (two lines -- 6-8 chars per line)
@@ -724,7 +724,7 @@ static const ST::string s_cn_gpStrategicString[gpStrategicString_SIZE] =
 	"将小队撤退到先前的区域.(|R)",				//singular version
 	"将所有小队撤退到先前的区域.(|R)", //multiple groups with same previous sector
 
-	//various popup messages for battle conditions.  
+	//various popup messages for battle conditions.
 
 	//%c%d is the sector -- ex:  A9
 	"敌军向您在%c%d区域的民兵发起了攻击.",
@@ -939,11 +939,11 @@ static ST::string s_cn_TacticalStr[TacticalStr_SIZE] =
 
 	"要雇佣%s吗(每日得支付%s)?",
 
-	// This line is used repeatedly to ask player if they wish to participate in a boxing match. 
+	// This line is used repeatedly to ask player if they wish to participate in a boxing match.
 
 	"您要进行拳击比赛吗?",
 
-	// In the next string, the first %s is an item name and the 
+	// In the next string, the first %s is an item name and the
 	// second %s is an amount of money (including $ sign)
 
 	"要买%s吗(得支付%s)?",
@@ -1064,7 +1064,7 @@ static const ST::string s_cn_pExitingSectorHelpText[pExitingSectorHelpText_SIZE]
 	//If you attempt to leave a sector when you have multiple squads in a hostile sector.
 	"该区域被敌军占据.您不能将佣兵留在这里.\n在进入其它区域前, 您必须把这里的问题解决.",
 
-	//Because you only have one squad in the sector, and the "move all" option is checked, the "go to sector" option is locked to on. 
+	//Because you only have one squad in the sector, and the "move all" option is checked, the "go to sector" option is locked to on.
 	//The helptext explains why it is locked.
 	"让留下的佣兵离开本区域, \n将立即进入邻近的区域.",
 	"让留下的佣兵离开本区域, \n您将被立即自动放置在地图屏幕, \n因为您的佣兵要花些时间来行军.",
@@ -1384,12 +1384,12 @@ static const ST::string s_cn_pEmailHeaders[pEmailHeaders_SIZE] =
 };
 
 // email titlebar text
-static const ST::string s_cn_pEmailTitleText = 
+static const ST::string s_cn_pEmailTitleText =
 	"邮箱";
 
 
 // the financial screen strings
-static const ST::string s_cn_pFinanceTitle = 
+static const ST::string s_cn_pFinanceTitle =
 	"Bookkeeper Plus"; // the name we made up for the financial program in the game
 
 static const ST::string s_cn_pFinanceSummary[pFinanceSummary_SIZE] =
@@ -1478,7 +1478,7 @@ static const ST::string s_cn_pMoralStrings[pMoralStrings_SIZE] =
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
-static const ST::string s_cn_str_left_equipment   = 
+static const ST::string s_cn_str_left_equipment   =
 	"%s的装备现在可以在%s (%c%d)获得.";
 
 // Status that appears on the Map Screen
@@ -1500,7 +1500,7 @@ static const ST::string s_cn_pMapScreenPrevNextCharButtonHelpText[pMapScreenPrev
 };
 
 
-static const ST::string s_cn_pEtaString = 
+static const ST::string s_cn_pEtaString =
 	"耗时:"; // eta is an acronym for Estimated Time of Arrival
 
 static const ST::string s_cn_pTrashItemText[pTrashItemText_SIZE] =
@@ -1608,13 +1608,13 @@ static const ST::string s_cn_pMiscMapScreenMouseRegionHelpText[pMiscMapScreenMou
 };
 
 
-static const ST::string s_cn_str_he_leaves_where_drop_equipment  = 
+static const ST::string s_cn_str_he_leaves_where_drop_equipment  =
 	"让%s把装备留在他所在的(%s), 离开Arulco, 或者留在%s (%s), 飞离Arulco?";
-static const ST::string s_cn_str_she_leaves_where_drop_equipment = 
+static const ST::string s_cn_str_she_leaves_where_drop_equipment =
 	"让%s把装备留在她所在的(%s), 离开Arulco, 或者留在%s (%s), 飞离Arulco?";
-static const ST::string s_cn_str_he_leaves_drops_equipment       = 
+static const ST::string s_cn_str_he_leaves_drops_equipment       =
 	"%s要离开了, 他的装备将被留在%s.";
-static const ST::string s_cn_str_she_leaves_drops_equipment      = 
+static const ST::string s_cn_str_she_leaves_drops_equipment      =
 	"%s要离开了, 她的装备将被留在%s.";
 
 
@@ -1693,7 +1693,7 @@ static const ST::string s_cn_gzIMPSkillTraitsText[gzIMPSkillTraitsText_SIZE] =
 		"I.M.P 专长", //"I.M.P. Specialties",
 };
 
-static const ST::string s_cn_pFilesTitle = 
+static const ST::string s_cn_pFilesTitle =
 	"File Viewer";
 
 static const ST::string s_cn_pFilesSenderList[pFilesSenderList_SIZE] =
@@ -1708,7 +1708,7 @@ static const ST::string s_cn_pFilesSenderList[pFilesSenderList_SIZE] =
 };
 
 // Text having to do with the History Log
-static const ST::string s_cn_pHistoryTitle = 
+static const ST::string s_cn_pHistoryTitle =
 	"历史记录";
 
 static const ST::string s_cn_pHistoryHeaders[pHistoryHeaders_SIZE] =
@@ -1823,7 +1823,7 @@ static const ST::string s_cn_pHistoryStrings[pHistoryStrings_SIZE] =
 	"干掉了%s",
 };
 
-static const ST::string s_cn_pHistoryLocations = 
+static const ST::string s_cn_pHistoryLocations =
 	"N/A"; // N/A is an acronym for Not Applicable
 
 // icon text strings that appear on the laptop
@@ -1876,15 +1876,15 @@ static const ST::string s_cn_gsAtmStartButtonText[gsAtmStartButtonText_SIZE] =
 // DNS is the acronym for Domain Name Server
 // URL is the acronym for Uniform Resource Locator
 
-static const ST::string s_cn_pErrorStrings = 
+static const ST::string s_cn_pErrorStrings =
 	"主机连接时断时续.预计需要较长的传输时间.";
 
 
-static const ST::string s_cn_pPersonnelString = 
+static const ST::string s_cn_pPersonnelString =
 	"佣兵:"; // mercs we have
 
 
-static const ST::string s_cn_pWebTitle = 
+static const ST::string s_cn_pWebTitle =
 	"sir-FER 4.0"; // our name for the version of the browser, play on company name
 
 
@@ -2046,7 +2046,7 @@ static const ST::string s_cn_pMapDepthIndex[pMapDepthIndex_SIZE] =
 
 // text that appears on the contract button
 
-static const ST::string s_cn_pContractButtonString = 
+static const ST::string s_cn_pContractButtonString =
 	"合同";
 
 // text that appears on the update panel buttons
@@ -2358,7 +2358,7 @@ static const ST::string s_cn_BobbyRText[BobbyRText_SIZE] =
 // The following line is used on the Ammunition page.  It is used for help text
 // to display how many items the player's merc has that can use this type of
 // ammo.
-static const ST::string s_cn_str_bobbyr_guns_num_guns_that_use_ammo = 
+static const ST::string s_cn_str_bobbyr_guns_num_guns_that_use_ammo =
 	"您的队伍有%d件武器使用此类型弹药";
 
 
@@ -2405,21 +2405,21 @@ static const ST::string s_cn_AimSortText[AimSortText_SIZE] =
 
 
 // text to display how the entries will be sorted
-static const ST::string s_cn_str_aim_sort_price        = 
+static const ST::string s_cn_str_aim_sort_price        =
 	"费用";
-static const ST::string s_cn_str_aim_sort_experience   = 
+static const ST::string s_cn_str_aim_sort_experience   =
 	"级别";
-static const ST::string s_cn_str_aim_sort_marksmanship = 
+static const ST::string s_cn_str_aim_sort_marksmanship =
 	"枪法";
-static const ST::string s_cn_str_aim_sort_medical      = 
+static const ST::string s_cn_str_aim_sort_medical      =
 	"医疗";
-static const ST::string s_cn_str_aim_sort_explosives   = 
+static const ST::string s_cn_str_aim_sort_explosives   =
 	"爆破";
-static const ST::string s_cn_str_aim_sort_mechanical   = 
+static const ST::string s_cn_str_aim_sort_mechanical   =
 	"机械";
-static const ST::string s_cn_str_aim_sort_ascending    = 
+static const ST::string s_cn_str_aim_sort_ascending    =
 	"升序";
-static const ST::string s_cn_str_aim_sort_descending   = 
+static const ST::string s_cn_str_aim_sort_descending   =
 	"降序";
 
 
@@ -2466,7 +2466,7 @@ static const ST::string s_cn_CharacterInfo[CharacterInfo_SIZE] =
 	"一周",	//"one week",
 	"两周",	//"two weeks",
 
-	// text for the buttons that either go to the previous merc, 
+	// text for the buttons that either go to the previous merc,
 	// start talking to the merc, or go to the next merc
 
 	"上一位",	//"Previous",
@@ -2495,7 +2495,7 @@ static const ST::string s_cn_VideoConfercingText[VideoConfercingText_SIZE] =
 	"一周",	//"One Week",
 	"两周",	//"Two Weeks",
 
-	//Text on the buttons to determine if you want the merc to come with the equipment 
+	//Text on the buttons to determine if you want the merc to come with the equipment
 
 	"不买装备",	//"No Equipment",
 	"购买装备",	//"Buy Equipment",
@@ -2547,7 +2547,7 @@ static const ST::string s_cn_AimPopUpText[AimPopUpText_SIZE] =
 
 //AIM Link.c
 
-static const ST::string s_cn_AimLinkText = 
+static const ST::string s_cn_AimLinkText =
 	"A.I.M 链接"; // The title of the AIM links page
 
 
@@ -2730,20 +2730,16 @@ static const ST::string s_cn_zSaveLoadText[zSaveLoadText_SIZE] =
 	"保存游戏错误!",
 	"载入游戏成功",
 	"载入游戏错误!",
- 
-	"存档的游戏版本不同于当前的游戏版本, 读取它游戏很可能可以正常进行.继续吗?",
-	"存档可能已经无效, 您要删除它们吗?",
 
-	"试图载入老版本的存档, 您要自动更新并载入存档吗?",
+	"存档的游戏版本不同于当前的游戏版本, 读取它游戏很可能可以正常进行.",
+	"您确定要删除名为 \"%s\" 的存档吗？",
 
-	"试图载入老版本的存档, 您要自动更新并载入存档吗?",
+	"注意:"
+	"尝试载入旧版本的存档. 存档将会被自动更新.",
+	"您启用了不同的模组, 而不是保存游戏时使用的模组. 模组可能无法正常工作.",
+	"要继续吗?"
 
-	"您确认要覆盖#%d位置的存档吗?",
-
-
-	//The first %d is a number that contains the amount of free space on the users hard drive,
-	//the second is the recommended amount of free space.
-	"您的硬盘空间不够, 您现在只有 %dM 可用空间, JA2需要至少 %dM 可用空间.",
+	"您确认要覆盖名为 \"%s\" 的存档吗?",
 
 	"保存中...",			//When saving a game, a message box with this string appears on the screen
 
@@ -2751,8 +2747,10 @@ static const ST::string s_cn_zSaveLoadText[zSaveLoadText_SIZE] =
 	"大量的武器",
 	"真实风格",
 	"科幻风格",
-
 	"难度",
+
+	"未启用任何MOD",
+	"Mods:"
 };
 
 
@@ -2790,7 +2788,7 @@ static const ST::string s_cn_zMarksMapScreenText[zMarksMapScreenText_SIZE] =
 };
 
 
-static const ST::string s_cn_pLandMarkInSectorString = 
+static const ST::string s_cn_pLandMarkInSectorString =
 	"%d小队在%s地区发现有人";
 
 // confirm the player wants to pay X dollars to build a militia force in town
@@ -2816,7 +2814,7 @@ static const ST::string s_cn_gzMoneyWithdrawMessageText[gzMoneyWithdrawMessageTe
 	"您确认要把%s存入您的帐户吗?",
 };
 
-static const ST::string s_cn_gzCopyrightText = 
+static const ST::string s_cn_gzCopyrightText =
 	"版权所有 (C) 1999 Sir-tech 加拿大 Ltd.  所有权利保留.";
 
 //option Text
@@ -3019,7 +3017,7 @@ static const ST::string s_cn_pMessageStrings[pMessageStrings_SIZE] =
 	"%s进入潜行模式.",	//"%s on stealth mode.",
 	"%s退出潜行模式.",	//"%s off stealth mode.",
 
-	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in 
+	//Wireframes are shown through buildings to reveal doors and windows that can't otherwise be seen in
 	//an isometric engine.  You can toggle this mode freely in the game.
 	"打开显示轮廓",	//"Extra Wireframes On",
 	"关闭显示轮廓",	//"Extra Wireframes Off",
@@ -3072,10 +3070,10 @@ static const ST::string s_cn_pMilitiaButtonsHelpText[pMilitiaButtonsHelpText_SIZ
 };
 
 // to inform the player to hire some mercs to get things going
-static const ST::string s_cn_pMapScreenJustStartedHelpText = 
+static const ST::string s_cn_pMapScreenJustStartedHelpText =
 	"去AIM雇几位佣兵 (*提示* 在笔记本电脑里)";
 
-static const ST::string s_cn_pAntiHackerString = 
+static const ST::string s_cn_pAntiHackerString =
 	"错误. 丢失或损坏文件, 游戏将退出.";
 
 
@@ -3105,7 +3103,7 @@ static const ST::string s_cn_gzLaptopHelpText[gzLaptopHelpText_SIZE] =
 };
 
 
-static const ST::string s_cn_gzHelpScreenText = 
+static const ST::string s_cn_gzHelpScreenText =
 	"退出帮助界面";
 
 static const ST::string s_cn_gzNonPersistantPBIText[gzNonPersistantPBIText_SIZE] =
@@ -3297,7 +3295,7 @@ static const ST::string s_cn_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	"%d vs. %d",
 
 	"%s满了.",
- 
+
 	"%s现在不用包扎, 他 (她) 需要认真的治疗和休息.",
 
 	//20
@@ -3388,33 +3386,33 @@ static const ST::string s_cn_gzLateLocalizedString[gzLateLocalizedString_SIZE] =
 	"开关被激活.",
 };
 
-static const ST::string s_cn_str_ceramic_plates_smashed = 
+static const ST::string s_cn_str_ceramic_plates_smashed =
 	"%s的陶瓷片已经粉碎了!";
 
-static const ST::string s_cn_str_arrival_rerouted = 
+static const ST::string s_cn_str_arrival_rerouted =
 	"援兵的会合地被挪至%s, 因降落地点%s目前由敌人占据.";
 
-static const ST::string s_cn_str_stat_health       = 
+static const ST::string s_cn_str_stat_health       =
 	"生命";
-static const ST::string s_cn_str_stat_agility      = 
+static const ST::string s_cn_str_stat_agility      =
 	"敏捷";
-static const ST::string s_cn_str_stat_dexterity    = 
+static const ST::string s_cn_str_stat_dexterity    =
 	"灵巧";
-static const ST::string s_cn_str_stat_strength     = 
+static const ST::string s_cn_str_stat_strength     =
 	"力量";
-static const ST::string s_cn_str_stat_leadership   = 
+static const ST::string s_cn_str_stat_leadership   =
 	"领导";
-static const ST::string s_cn_str_stat_wisdom       = 
+static const ST::string s_cn_str_stat_wisdom       =
 	"智慧";
-static const ST::string s_cn_str_stat_exp_level    = 
+static const ST::string s_cn_str_stat_exp_level    =
 	"级别";
-static const ST::string s_cn_str_stat_marksmanship = 
+static const ST::string s_cn_str_stat_marksmanship =
 	"枪法";
-static const ST::string s_cn_str_stat_mechanical   = 
+static const ST::string s_cn_str_stat_mechanical   =
 	"机械";
-static const ST::string s_cn_str_stat_explosive    = 
+static const ST::string s_cn_str_stat_explosive    =
 	"爆破";
-static const ST::string s_cn_str_stat_medical      = 
+static const ST::string s_cn_str_stat_medical      =
 	"医疗";
 
 static const ST::string s_cn_str_stat_list[str_stat_list_SIZE] =
@@ -3459,13 +3457,13 @@ const ST::string g_cn_zNewTacticalMessages[] =
 };
 
 //@@@:  New string as of March 3, 2000.
-const ST::string g_cn_str_iron_man_mode_warning = 
+const ST::string g_cn_str_iron_man_mode_warning =
 	"您选择了铁人模式. 此模式使游戏更具挑战性, 例如进入敌占区时不能保存游戏. 设定将在整个游戏进程中生效.  您确定想玩铁人模式吗?";
 
 // Stracciatella: New Dead is Dead game mode warning
-const ST::string g_cn_str_dead_is_dead_mode_warning = 
+const ST::string g_cn_str_dead_is_dead_mode_warning =
 	"您选择了DEAD IS DEAD模式. 此模式使游戏更具挑战性, 例如您不能在犯错后载入之前的存档. 游戏将在安全时自动保存. 设定将在整个游戏进程中生效.  您确定想玩DEAD IS DEAD模式吗?";
-const ST::string g_cn_str_dead_is_dead_mode_enter_name = 
+const ST::string g_cn_str_dead_is_dead_mode_enter_name =
 	"您现在将进入保存界面. 选择一个位置并为您的存档命名. 您的游戏将持续存于此位置, 且无法更改!";
 
 static const ST::string s_cn_gs_dead_is_dead_mode_tab_name[gs_dead_is_dead_mode_tab_name_SIZE] =

@@ -192,7 +192,7 @@ pub struct ModManager {
     available_mods: Vec<Mod>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum ModManagerInitError {
     /// There are some mods enabled that dont exist on disk
     MissingEnabledMods(Vec<String>),
@@ -217,11 +217,8 @@ impl std::error::Error for ModManagerInitError {}
 
 impl ModManager {
     /// Create a mod manager. Might return an error, e.g. when a mod is enabled that does not exist on disk.
-    pub fn new(
-        engine_options: &EngineOptions,
-        assets_dir: &Path,
-    ) -> Result<ModManager, ModManagerInitError> {
-        let mod_manager = Self::new_unchecked(engine_options, assets_dir);
+    pub fn new(engine_options: &EngineOptions) -> Result<ModManager, ModManagerInitError> {
+        let mod_manager = Self::new_unchecked(engine_options);
 
         let missing_mods: Vec<_> = engine_options
             .mods
@@ -238,7 +235,7 @@ impl ModManager {
     }
 
     /// Creates a mod manager without doing any sanity checks
-    pub fn new_unchecked(engine_options: &EngineOptions, assets_dir: &Path) -> ModManager {
+    pub fn new_unchecked(engine_options: &EngineOptions) -> ModManager {
         let mods_dir = Path::new("mods");
         let home_dir = crate::fs::resolve_existing_components(
             mods_dir,
@@ -246,7 +243,11 @@ impl ModManager {
             true,
         );
         #[cfg(not(target_os = "android"))]
-        let assets_dir = crate::fs::resolve_existing_components(mods_dir, Some(assets_dir), true);
+        let assets_dir = crate::fs::resolve_existing_components(
+            mods_dir,
+            Some(&engine_options.assets_dir),
+            true,
+        );
         let mut available_mods = HashMap::new();
 
         #[cfg(target_os = "android")]
@@ -307,5 +308,151 @@ impl ModManager {
 
     pub fn get_mod_by_id(&self, id: &str) -> Option<&Mod> {
         self.available_mods.iter().find(|m| m.id() == id)
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use tempfile::{tempdir, TempDir};
+
+    use crate::{
+        config::EngineOptions,
+        mods::{mod_manifest::ModManifestJson, ModManagerInitError},
+    };
+
+    use super::ModManager;
+
+    #[test]
+    fn missing_mod_should_fail() {
+        let (mut engine_options, _temp_dir) = create_test_engine_options();
+        engine_options.mods = vec!["test-mod".to_owned()];
+        assert_eq!(
+            ModManager::new(&engine_options).unwrap_err(),
+            ModManagerInitError::MissingEnabledMods(vec!["test-mod".to_owned()])
+        );
+    }
+
+    #[test]
+    fn mod_with_invalid_name_should_be_ignored() {
+        let (engine_options, _temp_dir) = create_test_engine_options();
+
+        std::fs::create_dir_all(engine_options.stracciatella_home.join("mods/TEST-MOD-1"))
+            .expect("create dir `mods/TEST-MOD-1`");
+        std::fs::create_dir_all(engine_options.stracciatella_home.join("mods/test-mod-2"))
+            .expect("create dir `mods/test-mod-2`");
+        std::fs::create_dir_all(engine_options.assets_dir.join("mods/test-mod-Ω"))
+            .expect("create dir `mods/test-mod-Ω`");
+
+        let mod_manager = ModManager::new(&engine_options).unwrap();
+        let mod_names: Vec<_> = mod_manager
+            .available_mods()
+            .iter()
+            .map(|m| m.name().to_owned())
+            .collect();
+
+        assert_eq!(mod_names, vec!["test-mod-2".to_owned()]);
+    }
+
+    #[test]
+    fn reading_available_mods_should_be_case_insensitive() {
+        let (engine_options, _temp_dir) = create_test_engine_options();
+
+        std::fs::create_dir_all(engine_options.stracciatella_home.join("mods/test-mod-1"))
+            .expect("create dir `mods/test-mod-1`");
+        std::fs::create_dir_all(engine_options.assets_dir.join("mOdS/test-mod-2"))
+            .expect("create dir `mods/test-mod-2`");
+
+        let mod_manager = ModManager::new(&engine_options).unwrap();
+        let mod_names: Vec<_> = mod_manager
+            .available_mods()
+            .iter()
+            .map(|m| m.name().to_owned())
+            .collect();
+
+        assert_eq!(
+            mod_names,
+            vec!["test-mod-1".to_owned(), "test-mod-2".to_owned()]
+        );
+    }
+
+    #[test]
+    fn mod_without_manifest_should_load() {
+        let (engine_options, _temp_dir) = create_test_engine_options();
+
+        std::fs::create_dir_all(engine_options.stracciatella_home.join("mods/test-mod-1"))
+            .expect("create dir `mods/test-mod-1`");
+
+        let mod_manager = ModManager::new(&engine_options).unwrap();
+        let m = mod_manager.get_mod_by_id("test-mod-1").unwrap();
+
+        assert_eq!(m.name(), "test-mod-1");
+        assert_eq!(m.version(), "unknown");
+        assert_eq!(m.description(), "");
+    }
+
+    #[test]
+    fn mod_with_invalid_manifest_should_load() {
+        let (engine_options, _temp_dir) = create_test_engine_options();
+
+        std::fs::create_dir_all(engine_options.stracciatella_home.join("mods/test-mod-1"))
+            .expect("create dir `mods/test-mod-1`");
+        std::fs::write(
+            engine_options
+                .stracciatella_home
+                .join("mods/test-mod-1/manifest.json"),
+            "foobar",
+        )
+        .expect("write manifest");
+
+        let mod_manager = ModManager::new(&engine_options).unwrap();
+        let m = mod_manager.get_mod_by_id("test-mod-1").unwrap();
+
+        assert_eq!(m.name(), "test-mod-1");
+        assert_eq!(m.version(), "unknown");
+        assert_eq!(m.description(), "");
+    }
+
+    #[test]
+    fn mod_with_manifest_should_load() {
+        let (engine_options, _temp_dir) = create_test_engine_options();
+        let manifest = ModManifestJson {
+            name: "m1".to_owned(),
+            description: Some("test description".to_owned()),
+            version: "1.0.0".to_owned(),
+        };
+        let json = serde_json::to_string(&manifest).expect("serialization");
+
+        std::fs::create_dir_all(engine_options.stracciatella_home.join("mods/test-mod-1"))
+            .expect("create dir `mods/test-mod-1`");
+        std::fs::write(
+            engine_options
+                .stracciatella_home
+                .join("mods/test-mod-1/manifest.json"),
+            &json,
+        )
+        .expect("write manifest");
+
+        let mod_manager = ModManager::new(&engine_options).unwrap();
+        let m = mod_manager.get_mod_by_id("test-mod-1").unwrap();
+
+        assert_eq!(m.name(), "m1");
+        assert_eq!(m.version(), "1.0.0");
+        assert_eq!(m.description(), "test description");
+    }
+
+    fn create_test_engine_options() -> (EngineOptions, TempDir) {
+        let temp_dir = tempdir().expect("temp_dir");
+        let mut engine_options = EngineOptions::default();
+
+        let home_dir = temp_dir.path().join("home");
+        let assets_dir = temp_dir.path().join("assets");
+
+        std::fs::create_dir(&home_dir).expect("home_dir");
+        std::fs::create_dir_all(&assets_dir.join("externalized")).expect("assets_dir");
+
+        engine_options.stracciatella_home = home_dir;
+        engine_options.assets_dir = assets_dir;
+
+        (engine_options, temp_dir)
     }
 }
