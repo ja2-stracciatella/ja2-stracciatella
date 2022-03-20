@@ -1841,7 +1841,7 @@ void AllMercsHaveWalkedOffSector( )
 			//of the tactical placement gui to get into better position.  Additionally, if there are any
 			//enemies in this sector that are part of a movement group, reset that movement group so that they
 			//are "in" the sector rather than 75% of the way to the next sector if that is the case.
-			ResetMovementForEnemyGroupsInLocation( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY );
+			ResetMovementForEnemyGroupsInLocation();
 
 			if( guiAdjacentTraverseTime > 5 )
 			{

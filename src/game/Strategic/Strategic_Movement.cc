@@ -2949,10 +2949,8 @@ WAYPOINT* GetFinalWaypoint(const GROUP* const pGroup)
 
 static void ResetMovementForEnemyGroup(GROUP* pGroup);
 
-
-//The sector supplied resets ALL enemy groups in the sector specified.  See comments in
-//ResetMovementForEnemyGroup() for more details on what the resetting does.
-void ResetMovementForEnemyGroupsInLocation( UINT8 ubSectorX, UINT8 ubSectorY )
+// See comments in ResetMovementForEnemyGroup() for more details on what the resetting does
+void ResetMovementForEnemyGroupsInLocation()
 {
 	SGPSector sSector;
 	GetCurrentBattleSectorXYZ(sSector);

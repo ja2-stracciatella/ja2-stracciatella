@@ -1826,7 +1826,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		}
 		else
 		{ // The enemy won, so repoll movement.
-			ResetMovementForEnemyGroupsInLocation(x, y);
+			ResetMovementForEnemyGroupsInLocation();
 		}
 	}
 
