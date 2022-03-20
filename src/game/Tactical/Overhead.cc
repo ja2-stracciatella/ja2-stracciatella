@@ -933,7 +933,7 @@ void ExecuteOverhead(void)
 												if (EnoughPoints(pSoldier, AP_OPEN_DOOR, BP_OPEN_DOOR, TRUE))
 												{
 													// avoid several problems due to a lack of global action queueing
-													if (DialogueQueueIsEmptyAndNobodyIsTalking() && gCurrentUIMode != LOCKUI_MODE && !soldier->anyoneHasPendingAction(MERC_GIVEITEM))
+													if (DialogueQueueIsEmptyAndNobodyIsTalking() && gCurrentUIMode != LOCKUI_MODE && !soldier->anyoneHasPendingAction(MERC_GIVEITEM) && !gTacticalStatus.fAutoBandageMode && !gTacticalStatus.fAutoBandagePending)
 													{
 														InteractWithOpenableStruct(*pSoldier, *pStructure, pSoldier->bPendingActionData3);
 													}

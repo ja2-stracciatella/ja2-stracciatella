@@ -167,7 +167,7 @@ void HandleAutoBandagePending( )
 		}
 
 		// Do was have any menus up?
-		if ( AreWeInAUIMenu( ) )
+		if (AreWeInAUIMenu() || gCurrentUIMode == LOCKUI_MODE)
 		{
 			return;
 		}
