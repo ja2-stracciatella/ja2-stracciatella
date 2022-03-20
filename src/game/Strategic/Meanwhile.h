@@ -29,8 +29,7 @@ enum
 
 struct MEANWHILE_DEFINITION
 {
-	INT16				sSectorX;
-	INT16				sSectorY;
+	SGPSector				sSector;
 	UINT16			usTriggerEvent;
 
 	UINT8				ubMeanwhileID;
@@ -38,7 +37,7 @@ struct MEANWHILE_DEFINITION
 };
 
 
-void ScheduleMeanwhileEvent(INT16 x, INT16 y, UINT16 trigger_event, UINT8 meanwhile_id, UINT8 npc_profile, UINT32 time);
+void ScheduleMeanwhileEvent(const SGPSector& sector, UINT16 trigger_event, UINT8 meanwhile_id, UINT8 npc_profile, UINT32 time);
 
 void BeginMeanwhile(UINT8 ubMeanwhileID);
 

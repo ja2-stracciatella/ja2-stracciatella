@@ -296,10 +296,11 @@ static void DoneFadeOutKilledQueen()
 	// ATE: Get rid of Elliot in P3
 	GetProfile(ELLIOT).sSectorX = 1;
 
-	ChangeNpcToDifferentSector(GetProfile(DEREK),  3, MAP_ROW_P, 0);
-	ChangeNpcToDifferentSector(GetProfile(OLIVER), 3, MAP_ROW_P, 0);
+	SGPSector upstairs(3, MAP_ROW_P, 0);
+	ChangeNpcToDifferentSector(GetProfile(DEREK), upstairs);
+	ChangeNpcToDifferentSector(GetProfile(OLIVER), upstairs);
 
-	SetCurrentWorldSector(3, MAP_ROW_P, 0);
+	SetCurrentWorldSector(upstairs);
 
 	gfTacticalTraversal              = FALSE;
 	gpTacticalTraversalGroup         = 0;

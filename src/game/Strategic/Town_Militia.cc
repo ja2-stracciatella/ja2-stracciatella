@@ -370,7 +370,7 @@ BOOLEAN SectorOursAndPeaceful( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 		return FALSE;
 	}
 
-	if( NumHostilesInSector( sMapX, sMapY, bMapZ ) )
+	if (NumHostilesInSector(SGPSector(sMapX, sMapY, bMapZ)))
 	{
 		return FALSE;
 	}

@@ -182,7 +182,6 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 {
 	INT32 iCnt,ndx,insertNdx,qNewNdx;
 	INT32 iDestX,iDestY,locX,locY,dx,dy;
-	INT16 sSectorX, sSectorY;
 	UINT16	newLoc,curLoc;
 	TRAILCELLTYPE curCost,newTotCost,nextCost;
 	INT16 sOrigination;
@@ -290,18 +289,17 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 
 			if( gfPlotToAvoidPlayerInfuencedSectors && newLoc != sDestination )
 			{
-				sSectorX = (INT16)( newLoc % MAP_WORLD_X );
-				sSectorY = (INT16)( newLoc / MAP_WORLD_X );
+				SGPSector sSector(newLoc % MAP_WORLD_X, newLoc / MAP_WORLD_X);
 
-				if( IsThereASoldierInThisSector( sSectorX, sSectorY, 0 ) )
+				if (IsThereASoldierInThisSector(sSector))
 				{
 					continue;
 				}
-				if( GetNumberOfMilitiaInSector( sSectorX, sSectorY, 0 ) )
+				if (GetNumberOfMilitiaInSector(sSector))
 				{
 					continue;
 				}
-				if( !OkayForEnemyToMoveThroughSector( (UINT8)SECTOR( sSectorX, sSectorY ) ) )
+				if (!OkayForEnemyToMoveThroughSector(sSector.AsByte()))
 				{
 					continue;
 				}

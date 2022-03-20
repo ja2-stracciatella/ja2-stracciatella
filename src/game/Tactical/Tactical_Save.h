@@ -39,7 +39,7 @@ void InitTacticalSave();
 
 
 //Call this function to set the new sector a NPC will travel to
-void ChangeNpcToDifferentSector(MERCPROFILESTRUCT&, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+void ChangeNpcToDifferentSector(MERCPROFILESTRUCT&, const SGPSector& sSector);
 
 
 // Adds a rotting corpse definition to the end of a sectors rotting corpse temp file

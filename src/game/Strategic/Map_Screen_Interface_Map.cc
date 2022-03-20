@@ -414,7 +414,7 @@ void InitMapScreenInterfaceMap()
 	pTownPoints.push_back(SGPPoint());
 
 	auto towns = GCM->getTowns();
-	for (auto& pair : GCM->getTowns()) 
+	for (auto& pair : GCM->getTowns())
 	{
 		auto town = pair.second;
 		sBaseSectorList.push_back(town->getBaseSector());
@@ -864,10 +864,10 @@ void ShutDownPalettesForMap(void)
 static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* pCharacter);
 
 
-void PlotPathForCharacter(SOLDIERTYPE& s, INT16 const x, INT16 const y, bool const tactical_traversal)
+void PlotPathForCharacter(SOLDIERTYPE& s, const SGPSector& sector, bool const tactical_traversal)
 {
 	// Don't build path, if cursor isn't allowed here
-	if (!IsTheCursorAllowedToHighLightThisSector(x, y)) return;
+	if (!IsTheCursorAllowedToHighLightThisSector(sector.x, sector.y)) return;
 	// Leave if the character is in transit
 	if (s.bAssignment == IN_TRANSIT) return;
 
@@ -887,7 +887,7 @@ void PlotPathForCharacter(SOLDIERTYPE& s, INT16 const x, INT16 const y, bool con
 	/* Plot a path from current position to x, y: Get last sector in characters
 		* list, build new path, remove tail section, and append onto old list */
 	INT16   const start = GetLastSectorIdInCharactersPath(&s);
-	INT16   const end   = x + y * MAP_WORLD_X;
+	INT16   const end   = sector.AsByte();
 	PathSt* const path  = BuildAStrategicPath(start, end, *GetSoldierGroup(s), tactical_traversal);
 	s.pMercPath = AppendStrategicPath(path, s.pMercPath);
 
@@ -902,18 +902,18 @@ void PlotPathForCharacter(SOLDIERTYPE& s, INT16 const x, INT16 const y, bool con
 }
 
 
-void PlotATemporaryPathForCharacter(const SOLDIERTYPE* const pCharacter, const INT16 sX, const INT16 sY)
+void PlotATemporaryPathForCharacter(const SOLDIERTYPE* const pCharacter, const SGPSector& sector)
 {
 	// clear old temp path
 	pTempCharacterPath = ClearStrategicPathList( pTempCharacterPath, -1 );
 
 	// is cursor allowed here?..if not..don't build temp path
-	if( !IsTheCursorAllowedToHighLightThisSector( sX, sY ) )
+	if (!IsTheCursorAllowedToHighLightThisSector(sector.x, sector.y))
 	{
 		return;
 	}
 
-	pTempCharacterPath = BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), sX + sY * MAP_WORLD_X, *GetSoldierGroup(*pCharacter), FALSE);
+	pTempCharacterPath = BuildAStrategicPath(GetLastSectorIdInCharactersPath(pCharacter), sector.AsByte(), *GetSoldierGroup(*pCharacter), FALSE);
 }
 
 
@@ -1102,7 +1102,7 @@ void DisplayHelicopterTempPath( void )
 }
 
 
-void PlotPathForHelicopter(const INT16 sX, const INT16 sY)
+void PlotPathForHelicopter(const SGPSector& sector)
 {
 	// will plot the path for the helicopter
 
@@ -1110,7 +1110,7 @@ void PlotPathForHelicopter(const INT16 sX, const INT16 sY)
 	if (!fShowAircraftFlag || iHelicopterVehicleId == -1) return;
 
 	// is cursor allowed here?..if not..don't build path
-	if (!IsTheCursorAllowedToHighLightThisSector(sX, sY)) return;
+	if (!IsTheCursorAllowedToHighLightThisSector(sector.x, sector.y)) return;
 
 	// set up mvt group for helicopter
 	SetUpHelicopterForMovement();
@@ -1118,25 +1118,25 @@ void PlotPathForHelicopter(const INT16 sX, const INT16 sY)
 	VEHICLETYPE& v = GetHelicopter();
 	// will plot a path from current position to sX, sY
 	// get last sector in helicopters list, build new path, remove tail section, move to beginning of list, and append onto old list
-	v.pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), (INT16)(sX + sY * MAP_WORLD_X), *GetGroup(v.ubMovementGroup), FALSE), v.pMercPath);
+	v.pMercPath = AppendStrategicPath(BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sector.AsByte(), *GetGroup(v.ubMovementGroup), FALSE), v.pMercPath);
 
 	fMapPanelDirty = TRUE;
 }
 
 
-void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY )
+void PlotATemporaryPathForHelicopter(const SGPSector& sector)
 {
 	// clear old temp path
 	pTempHelicopterPath = ClearStrategicPathList(pTempHelicopterPath, 0);
 
 	// is cursor allowed here?..if not..don't build temp path
-	if( !IsTheCursorAllowedToHighLightThisSector( sX, sY ) )
+	if (!IsTheCursorAllowedToHighLightThisSector(sector.x, sector.y))
 	{
 		return;
 	}
 
 	// build path
-	pTempHelicopterPath = BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sX + sY * MAP_WORLD_X, *GetGroup(GetHelicopter().ubMovementGroup), FALSE);
+	pTempHelicopterPath = BuildAStrategicPath(GetLastSectorOfHelicoptersPath(), sector.AsByte(), *GetGroup(GetHelicopter().ubMovementGroup), FALSE);
 }
 
 
@@ -2009,11 +2009,11 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 
 
 // display potential path, yes or no?
-void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
+void DisplayThePotentialPathForHelicopter(const SGPSector& sMap)
 {
 	// simply check if we want to refresh the screen to display path
 	static BOOLEAN fOldShowAirCraft = FALSE;
-	static INT16  sOldMapX, sOldMapY;
+	static SGPSector sOldMap;
 	INT32 iDifference = 0;
 
 
@@ -2022,19 +2022,16 @@ void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 		fOldShowAirCraft = fShowAircraftFlag;
 		guiPotHeliPathBaseTime = GetJA2Clock( );
 
-		sOldMapX = sMapX;
-		sOldMapY = sMapY;
+		sOldMap = sMap;
 		fTempPathAlreadyDrawn = FALSE;
 		fDrawTempHeliPath = FALSE;
 
 	}
 
-	if( ( sMapX != sOldMapX) || ( sMapY != sOldMapY ) )
+	if (sMap != sOldMap)
 	{
 		guiPotHeliPathBaseTime = GetJA2Clock( );
-
-		sOldMapX = sMapX;
-		sOldMapY = sMapY;
+		sOldMap = sMap;
 
 		// path was plotted and we moved, re draw map..to clean up mess
 		if( fTempPathAlreadyDrawn )
@@ -2569,7 +2566,7 @@ static void DrawSite(const INT16 sector_x, const INT16 sector_y, const SGPVObjec
 	UINT16 max_w;
 	UINT16 max_h;
 	UINT8  vo_idx;
-	
+
 	GetScreenXYFromMapXY(sector_x, sector_y, &x, &y);
 	++x;
 	max_w = MAP_GRID_X - 1;
@@ -3391,7 +3388,7 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 	{
 		UINT8 const sector = i->sector;
 		if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].fEnemyControlled) continue;
-		if (NumHostilesInSector(SECTORX(sector), SECTORY(sector), 0) != 0)         continue;
+		if (NumHostilesInSector(SGPSector(SECTORX(sector), SECTORY(sector), 0)) != 0) continue;
 
 		SECTORINFO& si = SectorInfo[sector];
 
@@ -3515,7 +3512,7 @@ static void RenderShadingForUnControlledSectors(void)
 
 			StrategicMapElement const& e = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)];
 			if (e.bNameId == BLANK_SECTOR) continue;
-			if (!e.fEnemyControlled && NumHostilesInSector(x, y, 0) == 0) continue;
+			if (!e.fEnemyControlled && NumHostilesInSector(SGPSector(x, y, 0)) == 0) continue;
 
 			// shade this sector, not under our control
 			INT16 const sX = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + dx * MILITIA_BOX_BOX_WIDTH;
@@ -3633,15 +3630,16 @@ static void HandleLowerLevelMapBlit(void)
 }
 
 
-INT32 GetNumberOfMilitiaInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+INT32 GetNumberOfMilitiaInSector(const SGPSector& sSector)
 {
 	INT32 iNumberInSector = 0;
 
-	if( !bSectorZ )
+	if (!sSector.z)
 	{
-		iNumberInSector = SectorInfo[ SECTOR( sSectorX, sSectorY )].ubNumberOfCivsAtLevel[ GREEN_MILITIA ]
-			+  SectorInfo[ SECTOR( sSectorX, sSectorY )].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ]
-			+  SectorInfo[ SECTOR( sSectorX, sSectorY )].ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
+		auto sector = sSector.AsByte();
+		iNumberInSector = SectorInfo[sector].ubNumberOfCivsAtLevel[ GREEN_MILITIA ]
+			+  SectorInfo[sector].ubNumberOfCivsAtLevel[ REGULAR_MILITIA ]
+			+  SectorInfo[sector].ubNumberOfCivsAtLevel[ ELITE_MILITIA ];
 	}
 
 	return( iNumberInSector );
@@ -3682,7 +3680,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 		( uiSectorFlags & SF_PLAYER_KNOWS_ENEMIES_ARE_HERE ) )
 	{
 		// if the enemies are stationary (i.e. mercs attacking a garrison)
-		if ( NumStationaryEnemiesInSector( sSectorX, sSectorY ) > 0 )
+		if (NumStationaryEnemiesInSector(SGPSector(sSectorX, sSectorY)) > 0)
 		{
 			// inside a garrison - hide their # (show question mark) to match what the PBI is showing
 			return KNOWS_THEYRE_THERE;

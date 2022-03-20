@@ -366,7 +366,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 			if (gubEnemyEncounterCode != BLOODCAT_AMBUSH_CODE &&
 					gubEnemyEncounterCode != ENTERING_BLOODCAT_LAIR_CODE)
 			{
-				UINT8 const n_stationary_enemies = NumStationaryEnemiesInSector(x, y);
+				UINT8 const n_stationary_enemies = NumStationaryEnemiesInSector(SGPSector(x, y));
 				if (n_stationary_enemies != 0)
 				{
 					gubEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
@@ -382,7 +382,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 					}
 					else
 					{
-						UINT8 const n_mobile_enemies = NumMobileEnemiesInSector(x, y);
+						UINT8 const n_mobile_enemies = NumMobileEnemiesInSector(SGPSector(x, y));
 						UINT8 const n_mercs          = PlayerMercsInSector(     x, y, z);
 						if (gfAutoAmbush && n_mobile_enemies > n_mercs)
 						{
@@ -1075,7 +1075,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 			}
 
 			// must come AFTER anything that needs gpBattleGroup, as it wipes it out
-			SetCurrentWorldSector( gubPBSectorX, gubPBSectorY, gubPBSectorZ );
+			SetCurrentWorldSector(SGPSector(gubPBSectorX, gubPBSectorY, gubPBSectorZ));
 
 			KillPreBattleInterface();
 		}
@@ -1366,7 +1366,7 @@ void RetreatAllInvolvedPlayerGroups( void )
 }
 
 
-static BOOLEAN CurrentBattleSectorIs(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ);
+static BOOLEAN CurrentBattleSectorIs(const SGPSector& sSector);
 
 
 bool PlayerMercInvolvedInThisCombat(SOLDIERTYPE const& s)
@@ -1381,7 +1381,7 @@ bool PlayerMercInvolvedInThisCombat(SOLDIERTYPE const& s)
 		// Robot is involved iff it has a valid controller with it
 		(!AM_A_ROBOT(&s) || s.robot_remote_holder) &&
 		!SoldierAboardAirborneHeli(s)              &&
-		CurrentBattleSectorIs(s.sSectorX, s.sSectorY, s.bSectorZ);
+		CurrentBattleSectorIs(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ));
 }
 
 
@@ -1396,30 +1396,19 @@ bool PlayerGroupInvolvedInThisCombat(GROUP const& g)
 		!g.fBetweenSectors                                        &&
 		!GroupHasInTransitDeadOrPOWMercs(g)                       &&
 		(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne) &&
-		CurrentBattleSectorIs(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
+		CurrentBattleSectorIs(SGPSector(g.ubSectorX, g.ubSectorY, g.ubSectorZ));
 }
 
-
-static BOOLEAN CurrentBattleSectorIs(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ)
+static BOOLEAN CurrentBattleSectorIs(const SGPSector& sSector)
 {
-	INT16 sBattleSectorX, sBattleSectorY, sBattleSectorZ;
+	SGPSector sBattleSector;
 	BOOLEAN fSuccess;
 
-	fSuccess = GetCurrentBattleSectorXYZ( &sBattleSectorX, &sBattleSectorY, &sBattleSectorZ );
+	fSuccess = GetCurrentBattleSectorXYZ(sBattleSector);
 	Assert( fSuccess );
 
-	if ( ( sSectorX == sBattleSectorX ) && ( sSectorY == sBattleSectorY ) && ( sSectorZ == sBattleSectorZ ) )
-	{
-		// yup!
-		return( TRUE );
-	}
-	else
-	{
-		// wrong sector, no battle here
-		return( FALSE );
-	}
+	return sSector == sBattleSector;
 }
-
 
 static void CheckForRobotAndIfItsControlled(void)
 {
@@ -1445,10 +1434,8 @@ static void CheckForRobotAndIfItsControlled(void)
 
 void LogBattleResults(const UINT8 ubVictoryCode)
 {
-	INT16 sSectorX;
-	INT16 sSectorY;
-	INT16 sSectorZ;
-	GetCurrentBattleSectorXYZ(&sSectorX, &sSectorY, &sSectorZ);
+	SGPSector sSector;
+	GetCurrentBattleSectorXYZ(sSector);
 	UINT8 code;
 	if (ubVictoryCode == LOG_VICTORY)
 	{
@@ -1478,7 +1465,7 @@ void LogBattleResults(const UINT8 ubVictoryCode)
 			default:                          return;
 		}
 	}
-	AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(), sSectorX, sSectorY);
+	AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(), sSector.x, sSector.y);
 }
 
 

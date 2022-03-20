@@ -773,20 +773,19 @@ static void SaveNPCInformationToProfileStruct(void)
 }
 
 
-void ChangeNpcToDifferentSector(MERCPROFILESTRUCT& p, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+void ChangeNpcToDifferentSector(MERCPROFILESTRUCT& p, const SGPSector& sSector)
 {
+	SGPSector nextSector = sSector;
 	if (p.ubMiscFlags2 & PROFILE_MISC_FLAG2_LEFT_COUNTRY)
 	{
 		// override location, this person is OUTTA here
-		sSectorX = 0;
-		sSectorY = 0;
-		bSectorZ = 0;
+		nextSector = SGPSector();
 	}
 	// Carmen no longer traverses out, he is temporarily removed instead
 
-	p.sSectorX = sSectorX;
-	p.sSectorY = sSectorY;
-	p.bSectorZ = bSectorZ;
+	p.sSectorX = nextSector.x;
+	p.sSectorY = nextSector.y;
+	p.bSectorZ = nextSector.z;
 	p.fUseProfileInsertionInfo = FALSE;
 }
 
@@ -1066,7 +1065,7 @@ ST::string GetMapTempFileName(SectorFlags const uiType, INT16 const sMapX, INT16
 {
 	// Convert the current sector location into a file name
 	char zTempName[512];
-	GetMapFileName(sMapX, sMapY, bMapZ, zTempName, FALSE);
+	GetMapFileName(SGPSector(sMapX, sMapY, bMapZ), zTempName, FALSE);
 
 	const char* prefix;
 	switch (uiType)

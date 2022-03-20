@@ -879,8 +879,7 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 	GROUP  *pGroup = NULL;
 	UINT32 uiTimeToNextSector;
 	UINT32 uiTimeToLastSector;
-	INT16  sPrevX, sPrevY, sNextX, sNextY;
-
+	SGPSector sPrev, sNext;
 
 	pGroup = GetGroup( ubGroupID );
 	Assert( pGroup );
@@ -896,27 +895,27 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 	if ( uiTimeToNextSector >= uiTimeToLastSector )
 	{
 		// go to the last sector
-		sPrevX = pGroup->ubNextX;
-		sPrevY = pGroup->ubNextY;
+		sPrev.x = pGroup->ubNextX;
+		sPrev.y = pGroup->ubNextY;
 
-		sNextX = pGroup->ubSectorX;
-		sNextY = pGroup->ubSectorY;
+		sNext.x = pGroup->ubSectorX;
+		sNext.y = pGroup->ubSectorY;
 	}
 	else
 	{
 		// go to the next sector
-		sPrevX = pGroup->ubSectorX;
-		sPrevY = pGroup->ubSectorY;
+		sPrev.x = pGroup->ubSectorX;
+		sPrev.y = pGroup->ubSectorY;
 
-		sNextX = pGroup->ubNextX;
-		sNextY = pGroup->ubNextY;
+		sNext.x = pGroup->ubNextX;
+		sNext.y = pGroup->ubNextY;
 	}
 
 	// make it arrive immediately, not eventually (it's driverless)
 	pGroup->setArrivalTime(GetWorldTotalMin());
 
 	// change where it is and where it's going, then make it arrive there.  Don't check for battle
-	PlaceGroupInSector(*pGroup, sPrevX, sPrevY, sNextX, sNextY, 0, false);
+	PlaceGroupInSector(*pGroup, sPrev, sNext, false);
 }
 
 

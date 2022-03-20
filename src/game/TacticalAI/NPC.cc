@@ -2662,7 +2662,7 @@ void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s)
 	}
 
 	// Call to change the NPC's Sector Location
-	ChangeNpcToDifferentSector(p, p.sSectorX, p.sSectorY, p.bSectorZ);
+	ChangeNpcToDifferentSector(p, SGPSector(p.sSectorX, p.sSectorY, p.bSectorZ));
 }
 
 

@@ -571,7 +571,7 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 	}
 
 	//Now that the sector has been chosen, attack it!
-	if( PlayerGroupsInSector( ubSectorX, ubSectorY, 0 ) )
+	if (PlayerGroupsInSector(SGPSector(ubSectorX, ubSectorY, 0)))
 	{ //we have players in the sector
 		if( ubSectorX == gWorldSectorX && ubSectorY == gWorldSectorY && !gbWorldSectorZ )
 		{ //This is the currently loaded sector.  All we have to do is change the music and insert
@@ -1090,7 +1090,7 @@ BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 }
 
 
-bool GetWarpOutOfMineCodes(INT16* const sector_x, INT16* const sector_y, INT8* const sector_z, INT16* const insertion_grid_no)
+bool GetWarpOutOfMineCodes(SGPSector& sector, INT16* const insertion_grid_no)
 {
 	if (!gfWorldLoaded)      return false;
 	if (gbWorldSectorZ == 0) return false;
@@ -1105,9 +1105,9 @@ bool GetWarpOutOfMineCodes(INT16* const sector_x, INT16* const sector_y, INT8* c
 	// Now make sure the mercs are in the previously infested mine
 	if (lair != NULL && lair->isSectorInLair(gWorldSectorX, gWorldSectorY, gbWorldSectorZ))
 	{
-		*sector_x = SECTORX(lair->warpExitSector);
-		*sector_y = SECTORY(lair->warpExitSector);
-		*sector_z = 0;
+		sector.x = SECTORX(lair->warpExitSector);
+		sector.y = SECTORY(lair->warpExitSector);
+		sector.z = 0;
 		*insertion_grid_no = lair->warpExitGridNo;
 
 		return true;

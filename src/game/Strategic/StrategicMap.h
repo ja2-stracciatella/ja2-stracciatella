@@ -67,7 +67,7 @@ extern Observable<> BeforePrepareSector;
 // grab the town id value
 UINT8 GetTownIdForSector(UINT8 sector);
 
-void SetCurrentWorldSector(INT16 x, INT16 y, INT8 z);
+void SetCurrentWorldSector(const SGPSector& sector);
 
 void UpdateMercsInSector();
 void UpdateMercInSector(SOLDIERTYPE&, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
@@ -81,7 +81,7 @@ ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed);
 // Returns a sector description string based on the sector land type
 ST::string GetSectorLandTypeString(UINT8 ubSectorID, UINT8 ubSectorZ, bool fDetailed);
 
-void GetMapFileName(INT16 x, INT16 y, INT8 z, char* buf, BOOLEAN add_alternate_map_letter);
+void GetMapFileName(const SGPSector& sector, char* buf, BOOLEAN add_alternate_map_letter);
 
 // Called from within tactical.....
 void JumpIntoAdjacentSector( UINT8 ubDirection, UINT8 ubJumpCode, INT16 sAdditionalData );
@@ -114,7 +114,7 @@ void PrepareLoadedSector(void);
 void HandleSlayDailyEvent( void );
 
 
-void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bNewSectorZ );
+void HandleQuestCodeOnSectorEntry(const SGPSector& sector);
 
 // handle a soldier leaving thier squad behind, this sets them up for mvt and potential rejoining of group
 void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier );

@@ -1638,8 +1638,9 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 
 				// MOVE NPCS!
-				ChangeNpcToDifferentSector(GetProfile(FATIMA),  10, 1, 1);
-				ChangeNpcToDifferentSector(GetProfile(DIMITRI), 10, 1, 1);
+				SGPSector basement(10, 1, 1);
+				ChangeNpcToDifferentSector(GetProfile(FATIMA), basement);
+				ChangeNpcToDifferentSector(GetProfile(DIMITRI), basement);
 
 				gFadeOutDoneCallback = DoneFadeOutActionBasement;
 
@@ -4519,7 +4520,7 @@ static void DoneFadeInActionBasement(void);
 static void DoneFadeOutActionBasement(void)
 {
 	// OK, insertion data found, enter sector!
-	SetCurrentWorldSector( 10, 1, 1 );
+	SetCurrentWorldSector(SGPSector(10, 1, 1));
 
 	// OK, once down here, adjust the above map with crate info....
 	gfTacticalTraversal = FALSE;
@@ -4571,7 +4572,7 @@ static void DoneFadeInActionLeaveBasement(void);
 static void DoneFadeOutActionLeaveBasement(void)
 {
 	// OK, insertion data found, enter sector!
-	SetCurrentWorldSector( 10, 1, 0 );
+	SetCurrentWorldSector(SGPSector(10, 1, 0));
 
 	gfTacticalTraversal = FALSE;
 	gpTacticalTraversalGroup = NULL;

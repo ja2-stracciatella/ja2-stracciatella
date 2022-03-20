@@ -734,18 +734,16 @@ void LoadSavedGame(const ST::string &saveName)
 	if (SaveGameHeader.fWorldLoaded || version < 50)
 	{
 		//Get the current world sector coordinates
-		INT16 const sLoadSectorX = gWorldSectorX;
-		INT16 const sLoadSectorY = gWorldSectorY;
-		INT8  const bLoadSectorZ = gbWorldSectorZ;
+		SGPSector sLoadSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 
 		// This will guarantee that the sector will be loaded
 		SetWorldSectorInvalid();
 
 		//if we should load a sector (if the person didnt just start the game game)
-		if (sLoadSectorX != 0 && sLoadSectorY != 0)
+		if (sLoadSector.x != 0 && sLoadSector.y != 0)
 		{
 			//Load the sector
-			SetCurrentWorldSector(sLoadSectorX, sLoadSectorY, bLoadSectorZ);
+			SetCurrentWorldSector(sLoadSector);
 		}
 	}
 	else
@@ -1749,8 +1747,8 @@ void LoadMercPath(HWFILE const hFile, PathSt** const head)
 static void InjectMeanwhileDefinition(DataWriter& d, MEANWHILE_DEFINITION const& m)
 {
 	size_t start = d.getConsumed();
-	INJ_I16(d, m.sSectorX)
-	INJ_I16(d, m.sSectorY)
+	INJ_I16(d, (INT16) m.sSector.x)
+	INJ_I16(d, (INT16) m.sSector.y)
 	INJ_U16(d, m.usTriggerEvent)
 	INJ_U8( d, m.ubMeanwhileID)
 	INJ_U8( d, m.ubNPCNumber)
@@ -1761,12 +1759,15 @@ static void InjectMeanwhileDefinition(DataWriter& d, MEANWHILE_DEFINITION const&
 static void ExtractMeanwhileDefinition(DataReader& d, MEANWHILE_DEFINITION& m)
 {
 	size_t start = d.getConsumed();
-	EXTR_I16(d, m.sSectorX)
-	EXTR_I16(d, m.sSectorY)
+	INT16 a, b;
+	EXTR_I16(d, a)
+	EXTR_I16(d, b)
 	EXTR_U16(d, m.usTriggerEvent)
 	EXTR_U8( d, m.ubMeanwhileID)
 	EXTR_U8( d, m.ubNPCNumber)
 	Assert(d.getConsumed() == start + 8);
+	m.sSector.x = a;
+	m.sSector.y = b;
 }
 
 
