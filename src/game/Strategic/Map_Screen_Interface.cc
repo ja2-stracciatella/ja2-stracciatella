@@ -3679,23 +3679,22 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 	// make sure the game just started
 	if (!DidGameJustStart()) return FALSE;
 
-	UINT8 usStartSectorX = SECTORX(gamepolicy(start_sector));
-	UINT8 usStartSectorY = SECTORY(gamepolicy(start_sector));
+	static const SGPSector usStartSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)));
 
 	// Select starting sector.
-	ChangeSelectedMapSector(usStartSectorX, usStartSectorY, 0);
+	ChangeSelectedMapSector(usStartSector);
 
 	// load starting sector
 	try
 	{
-		SetCurrentWorldSector(usStartSectorX, usStartSectorY, 0);
+		SetCurrentWorldSector(usStartSector);
 	}
 	catch (...) /* XXX exception should probably propagate; caller ignores return value */
 	{
 		return FALSE;
 	}
 
-	if (NumEnemiesInSector(usStartSectorX, usStartSectorY) > 0)
+	if (NumEnemiesInSector(usStartSector) > 0)
 	{
 		//Setup variables in the PBI for this first battle.  We need to support the
 		//non-persistant PBI in case the user goes to mapscreen.
@@ -3853,7 +3852,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 		}
 
 		// Not necessarily loaded - if there are any hostiles there
-		if (NumHostilesInSector(s.sSectorX, s.sSectorY, s.bSectorZ) > 0) return ME_ENEMY;
+		if (NumHostilesInSector(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ)) > 0) return ME_ENEMY;
 	}
 
 	// If in L12 museum, and the museum alarm went off, and Eldin still around

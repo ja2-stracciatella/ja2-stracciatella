@@ -225,7 +225,7 @@ void RenderMapScreenInterfaceBottom( void )
 
 		if (GetSectorFlagStatus(sSelMapX, sSelMapY, iCurrentMapSectorZ, SF_ALREADY_VISITED))
 		{
-			GetMapFileName(sSelMapX, sSelMapY, iCurrentMapSectorZ, bFilename, TRUE);
+			GetMapFileName(SGPSector(sSelMapX, sSelMapY, iCurrentMapSectorZ), bFilename, TRUE);
 			LoadRadarScreenBitmap( bFilename );
 		}
 		else
@@ -1186,7 +1186,7 @@ void HandleExitsFromMapScreen( void )
 				break;
 
 			case MAP_EXIT_TO_TACTICAL:
-				SetCurrentWorldSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ );
+				SetCurrentWorldSector(SGPSector(sSelMapX, sSelMapY, iCurrentMapSectorZ));
 				break;
 
 			case MAP_EXIT_TO_OPTIONS:

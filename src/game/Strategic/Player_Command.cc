@@ -79,7 +79,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 			StrategicMap[ usMapSector ].fLostControlAtSomeTime = TRUE;
 		}
 */
-		if( NumHostilesInSector( sMapX, sMapY, bMapZ ) )
+		if (NumHostilesInSector(SGPSector(sMapX, sMapY, bMapZ)))
 		{ //too premature:  enemies still in sector.
 			return FALSE;
 		}

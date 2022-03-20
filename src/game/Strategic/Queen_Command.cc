@@ -54,18 +54,15 @@ extern std::vector<GARRISON_GROUP> gGarrisonGroup;
 INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 
 //Counts enemies and crepitus, but not bloodcats.
-UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
+UINT8 NumHostilesInSector(const SGPSector& sSector)
 {
+	Assert(sSector.IsValid());
 	UINT8 ubNumHostiles = 0;
 
-	Assert( sSectorX >= 1 && sSectorX <= 16 );
-	Assert( sSectorY >= 1 && sSectorY <= 16 );
-	Assert( sSectorZ >= 0 && sSectorZ <= 3 );
-
-	if( sSectorZ )
+	if (sSector.z)
 	{
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector( sSectorX, sSectorY, (UINT8)sSectorZ );
+		pSector = FindUnderGroundSector(sSector.x, sSector.y, sSector.z);
 		if( pSector )
 		{
 			ubNumHostiles = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures);
@@ -76,15 +73,15 @@ UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		SECTORINFO *pSector;
 
 		//Count stationary hostiles
-		pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
+		pSector = &SectorInfo[sSector.AsByte()];
 		ubNumHostiles = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures);
 
 		//Count mobile enemies
 		CFOR_EACH_ENEMY_GROUP(pGroup)
 		{
 			if (!pGroup->fVehicle             &&
-					pGroup->ubSectorX == sSectorX &&
-					pGroup->ubSectorY == sSectorY)
+					pGroup->ubSectorX == sSector.x &&
+					pGroup->ubSectorY == sSector.y)
 			{
 				ubNumHostiles += pGroup->ubGroupSize;
 			}
@@ -96,16 +93,14 @@ UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 
 UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
+	SGPSector sSector(sSectorX, sSectorY, sSectorZ);
+	Assert(sSector.IsValid());
 	UINT8 ubNumEnemies = 0;
 
-	Assert( sSectorX >= 1 && sSectorX <= 16 );
-	Assert( sSectorY >= 1 && sSectorY <= 16 );
-	Assert( sSectorZ >= 0 && sSectorZ <= 3 );
-
-	if( sSectorZ )
+	if (sSector.z)
 	{
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector( sSectorX, sSectorY, (UINT8)sSectorZ );
+		pSector = FindUnderGroundSector(sSector.x, sSector.y, sSector.z);
 		if( pSector )
 		{
 			ubNumEnemies = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
@@ -116,15 +111,15 @@ UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 		SECTORINFO *pSector;
 
 		//Count stationary enemies
-		pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
+		pSector = &SectorInfo[sSector.AsByte()];
 		ubNumEnemies = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
 
 		//Count mobile enemies
 		CFOR_EACH_ENEMY_GROUP(pGroup)
 		{
 			if (!pGroup->fVehicle             &&
-					pGroup->ubSectorX == sSectorX &&
-					pGroup->ubSectorY == sSectorY)
+					pGroup->ubSectorX == sSector.x &&
+					pGroup->ubSectorY == sSector.y)
 			{
 				ubNumEnemies += pGroup->ubGroupSize;
 			}
@@ -134,14 +129,18 @@ UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 	return ubNumEnemies;
 }
 
+UINT8 NumEnemiesInSector(const SGPSector& sector)
+{
+	return NumEnemiesInSector(sector.x, sector.y);
+}
+
 UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
-	SECTORINFO *pSector;
-	UINT8 ubNumTroops;
-	Assert( sSectorX >= 1 && sSectorX <= 16 );
-	Assert( sSectorY >= 1 && sSectorY <= 16 );
-	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
-	ubNumTroops = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
+	SGPSector sSector(sSectorX, sSectorY);
+	Assert(sSector.IsValid());
+
+	SECTORINFO *pSector = &SectorInfo[sSector.AsByte()];
+	UINT8 ubNumTroops = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
 
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
@@ -155,13 +154,11 @@ UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	return ubNumTroops;
 }
 
-UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
+UINT8 NumStationaryEnemiesInSector(const SGPSector& sSector)
 {
-	SECTORINFO *pSector;
-	Assert( sSectorX >= 1 && sSectorX <= 16 );
-	Assert( sSectorY >= 1 && sSectorY <= 16 );
-	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
+	Assert(sSector.IsValid());
 
+	SECTORINFO* pSector = &SectorInfo[sSector.AsByte()];
 	if( pSector->ubGarrisonID == NO_GARRISON )
 	{ //If no garrison, no stationary.
 		return( 0 );
@@ -177,25 +174,24 @@ UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	return (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
 }
 
-UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
+UINT8 NumMobileEnemiesInSector(const SGPSector& sSector)
 {
+	Assert(sSector.IsValid());
 	SECTORINFO *pSector;
 	UINT8 ubNumTroops;
-	Assert( sSectorX >= 1 && sSectorX <= 16 );
-	Assert( sSectorY >= 1 && sSectorY <= 16 );
 
 	ubNumTroops = 0;
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
 		if (!pGroup->fVehicle             &&
-				pGroup->ubSectorX == sSectorX &&
-				pGroup->ubSectorY == sSectorY)
+				pGroup->ubSectorX == sSector.x &&
+				pGroup->ubSectorY == sSector.y)
 		{
 			ubNumTroops += pGroup->ubGroupSize;
 		}
 	}
 
-	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
+	pSector = &SectorInfo[sSector.AsByte()];
 	if( pSector->ubGarrisonID == ROADBLOCK )
 	{ //consider these troops as mobile troops even though they are in a garrison
 		ubNumTroops += (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
@@ -205,19 +201,18 @@ UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 }
 
 
-static void GetNumberOfMobileEnemiesInSector(INT16 sSectorX, INT16 sSectorY, UINT8* pubNumAdmins, UINT8* pubNumTroops, UINT8* pubNumElites)
+static void GetNumberOfMobileEnemiesInSector(const SGPSector& sSector, UINT8* pubNumAdmins, UINT8* pubNumTroops, UINT8* pubNumElites)
 {
+	Assert(sSector.IsValid());
 	SECTORINFO *pSector;
-	Assert( sSectorX >= 1 && sSectorX <= 16 );
-	Assert( sSectorY >= 1 && sSectorY <= 16 );
 
 	//Now count the number of mobile groups in the sector.
 	*pubNumTroops = *pubNumElites = *pubNumAdmins = 0;
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
 		if (!pGroup->fVehicle             &&
-				pGroup->ubSectorX == sSectorX &&
-				pGroup->ubSectorY == sSectorY)
+				pGroup->ubSectorX == sSector.x &&
+				pGroup->ubSectorY == sSector.y)
 		{
 			*pubNumTroops += pGroup->pEnemyGroup->ubNumTroops;
 			*pubNumElites += pGroup->pEnemyGroup->ubNumElites;
@@ -225,7 +220,7 @@ static void GetNumberOfMobileEnemiesInSector(INT16 sSectorX, INT16 sSectorY, UIN
 		}
 	}
 
-	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
+	pSector = &SectorInfo[sSector.AsByte()];
 	if( pSector->ubGarrisonID == ROADBLOCK )
 	{ //consider these troops as mobile troops even though they are in a garrison
 		*pubNumAdmins += pSector->ubNumAdmins;
@@ -236,12 +231,10 @@ static void GetNumberOfMobileEnemiesInSector(INT16 sSectorX, INT16 sSectorY, UIN
 }
 
 
-static void GetNumberOfStationaryEnemiesInSector(INT16 sSectorX, INT16 sSectorY, UINT8* pubNumAdmins, UINT8* pubNumTroops, UINT8* pubNumElites)
+static void GetNumberOfStationaryEnemiesInSector(const SGPSector& sSector, UINT8* pubNumAdmins, UINT8* pubNumTroops, UINT8* pubNumElites)
 {
-	SECTORINFO *pSector;
-	Assert( sSectorX >= 1 && sSectorX <= 16 );
-	Assert( sSectorY >= 1 && sSectorY <= 16 );
-	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
+	Assert(sSector.IsValid());
+	SECTORINFO* pSector = &SectorInfo[sSector.AsByte()];
 
 	//grab the number of each type in the stationary sector
 	*pubNumAdmins = pSector->ubNumAdmins;
@@ -252,16 +245,15 @@ static void GetNumberOfStationaryEnemiesInSector(INT16 sSectorX, INT16 sSectorY,
 void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
+	SGPSector sSector(sSectorX, sSectorY);
 
-	GetNumberOfStationaryEnemiesInSector( sSectorX, sSectorY, pubNumAdmins, pubNumTroops, pubNumElites );
-
-	GetNumberOfMobileEnemiesInSector( sSectorX, sSectorY, &ubNumAdmins, &ubNumTroops, &ubNumElites );
+	GetNumberOfStationaryEnemiesInSector(sSector, pubNumAdmins, pubNumTroops, pubNumElites);
+	GetNumberOfMobileEnemiesInSector(sSector, &ubNumAdmins, &ubNumTroops, &ubNumElites);
 
 	*pubNumAdmins += ubNumAdmins;
 	*pubNumTroops += ubNumTroops;
 	*pubNumElites += ubNumElites;
 }
-
 
 static bool IsAnyOfTeamOKInSector(INT8 const team)
 {
@@ -1178,7 +1170,7 @@ void EndCaptureSequence( )
 			// CJC Dec 1 2002: fixing multiple captures:
 			gStrategicStatus.uiFlags |= STRATEGIC_PLAYER_CAPTURED_FOR_ESCAPE;
 
-			ScheduleMeanwhileEvent(7, 14, 0, INTERROGATION, QUEEN, 10);
+			ScheduleMeanwhileEvent(SGPSector(7, 14), 0, INTERROGATION, QUEEN, 10);
 		}
 		// CJC Dec 1 2002: fixing multiple captures
 		else

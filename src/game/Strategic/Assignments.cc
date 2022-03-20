@@ -6221,9 +6221,9 @@ BOOLEAN PutMercInAwakeState( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN IsThereASoldierInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+BOOLEAN IsThereASoldierInThisSector(const SGPSector& sSector)
 {
-	return fSectorsWithSoldiers[sSectorX + sSectorY * MAP_WORLD_X][bSectorZ];
+	return fSectorsWithSoldiers[sSector.AsByte()][sSector.z];
 }
 
 

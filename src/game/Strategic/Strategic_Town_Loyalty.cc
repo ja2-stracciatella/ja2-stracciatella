@@ -1193,6 +1193,11 @@ static UINT32 EnemyStrength(void)
 //Function assumes that mercs have retreated already.  Handles two cases, one for general merc retreat
 //which slightly demoralizes the mercs, the other handles abandonment of militia forces which poses
 //as a serious loyalty penalty.
+void HandleLoyaltyImplicationsOfMercRetreat(INT8 bRetreatCode, const SGPSector& sSector)
+{
+	HandleLoyaltyImplicationsOfMercRetreat(bRetreatCode, sSector.x, sSector.y, sSector.z);
+}
+
 void HandleLoyaltyImplicationsOfMercRetreat( INT8 bRetreatCode, INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
 	if( CountAllMilitiaInSector( sSectorX, sSectorY ) )

@@ -180,7 +180,8 @@ void InitStrategicLayer( void )
 	SetGameTimeCompressionLevel( TIME_COMPRESS_X0 );
 
 	// Select the start sector as the initial selected sector
-	ChangeSelectedMapSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
+	static const SGPSector startSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)));
+	ChangeSelectedMapSector(startSector);
 
 	// Reset these flags or mapscreen could be disabled and cause major headache.
 	fDisableDueToBattleRoster = FALSE;

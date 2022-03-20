@@ -365,6 +365,11 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup);
 
 /* Appends a waypoint to the end of the list. Waypoint MUST be on the same
  * horizontal or vertical level as the last waypoint added. */
+BOOLEAN AddWaypointToPGroup(GROUP *pGroup, const SGPSector& ubSector)
+{
+	return AddWaypointToPGroup(pGroup, ubSector.x, ubSector.y);
+}
+
 BOOLEAN AddWaypointToPGroup(GROUP* const g, UINT8 const x, UINT8 const y) // Same, but overloaded
 {
 	AssertMsg(1 <= x && x <= 16, String("AddWaypointToPGroup with out of range sectorX value of %d", x));
@@ -1856,15 +1861,6 @@ void RemoveGroupWaypoints(GROUP& g)
 	g.pWaypoints       = 0;
 }
 
-
-// Set this groups previous sector values
-static void SetGroupPrevSectors(GROUP& g, UINT8 const x, UINT8 const y)
-{
-	g.ubPrevX = x;
-	g.ubPrevY = y;
-}
-
-
 static BOOLEAN gfRemovingAllGroups = FALSE;
 
 
@@ -1918,6 +1914,10 @@ void RemoveAllGroups()
 	gfRemovingAllGroups = FALSE;
 }
 
+void SetGroupSectorValue(const SGPSector& sector, GROUP& g)
+{
+	SetGroupSectorValue(sector.x, sector.y, sector.z, g);
+}
 
 void SetGroupSectorValue(INT16 const x, INT16 const y, INT16 const z, GROUP& g)
 {
@@ -1964,12 +1964,12 @@ void SetEnemyGroupSector(GROUP& g, UINT8 const sector_id)
 
 
 // Set groups next sector x,y value, used ONLY for teleporting groups
-static void SetGroupNextSectorValue(INT16 const x, INT16 const y, GROUP& g)
+static void SetGroupNextSectorValue(const SGPSector& sector, GROUP& g)
 {
 	RemoveGroupWaypoints(g);
 	// Set sector x and y to passed values
-	g.ubNextX         = x;
-	g.ubNextY         = y;
+	g.ubNextX         = sector.x;
+	g.ubNextY         = sector.y;
 	g.fBetweenSectors = FALSE;
 	// Set next sectors same as current
 	g.ubOriginalSector = SECTOR(g.ubSectorX, g.ubSectorY);
@@ -2245,6 +2245,10 @@ INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const direction, GROU
 	return best_traverse_time;
 }
 
+UINT8 PlayerMercsInSector(const SGPSector& sector)
+{
+	return PlayerMercsInSector(sector.x, sector.y, sector.z);
+}
 
 // Counts the number of live mercs in any given sector.
 UINT8 PlayerMercsInSector(UINT8 const x, UINT8 const y, UINT8 const z)
@@ -2268,14 +2272,13 @@ UINT8 PlayerMercsInSector(UINT8 const x, UINT8 const y, UINT8 const z)
 	return n_mercs;
 }
 
-
-UINT8 PlayerGroupsInSector(UINT8 const x, UINT8 const y, UINT8 const z)
+UINT8 PlayerGroupsInSector(const SGPSector& sector)
 {
 	UINT8 n_groups = 0;
 	CFOR_EACH_PLAYER_GROUP(g)
 	{
 		if (g->fBetweenSectors) continue;
-		if (g->ubSectorX != x || g->ubSectorY != y || g->ubSectorZ != z) continue;
+		if (g->ubSectorX != sector.x || g->ubSectorY != sector.y || g->ubSectorZ != sector.z) continue;
 		/* We have a group, make sure that it isn't a group containing only dead
 		 * members. */
 		CFOR_EACH_PLAYER_IN_GROUP(p, g)
@@ -2951,14 +2954,14 @@ static void ResetMovementForEnemyGroup(GROUP* pGroup);
 //ResetMovementForEnemyGroup() for more details on what the resetting does.
 void ResetMovementForEnemyGroupsInLocation( UINT8 ubSectorX, UINT8 ubSectorY )
 {
-	INT16 sSectorX, sSectorY, sSectorZ;
+	SGPSector sSector;
+	GetCurrentBattleSectorXYZ(sSector);
 
-	GetCurrentBattleSectorXYZ( &sSectorX, &sSectorY, &sSectorZ );
 	FOR_EACH_GROUP_SAFE(pGroup)
 	{
 		if( !pGroup->fPlayer )
 		{
-			if( pGroup->ubSectorX == sSectorX && pGroup->ubSectorY == sSectorY )
+			if (pGroup->ubSectorX == sSector.x && pGroup->ubSectorY == sSector.y)
 			{
 				ResetMovementForEnemyGroup( pGroup );
 			}
@@ -3438,13 +3441,14 @@ static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY)
 }
 
 
-void PlaceGroupInSector(GROUP& g, INT16 const prev_x, INT16 const prev_y, INT16 const next_x, INT16 const next_y, INT8 const z, bool const check_for_battle)
+void PlaceGroupInSector(GROUP& g, const SGPSector& prev, const SGPSector& next, bool check_for_battle)
 {
 	ClearMercPathsAndWaypointsForAllInGroup(g);
 	// Change where they are and where they're going
-	SetGroupPrevSectors(g, prev_x, prev_y);
-	SetGroupSectorValue(prev_x, prev_y, z, g);
-	SetGroupNextSectorValue(next_x, next_y, g);
+	g.ubPrevX = prev.x;
+	g.ubPrevY = prev.y;
+	SetGroupSectorValue(prev.x, prev.y, next.z, g); // only one user cares about Z this way
+	SetGroupNextSectorValue(next, g);
 	// Call arrive event
 	GroupArrivedAtSector(g, check_for_battle, FALSE);
 }

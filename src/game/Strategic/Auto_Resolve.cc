@@ -3906,34 +3906,26 @@ UINT8 GetAutoResolveSectorID()
 }
 
 //Returns TRUE if a battle is happening or sector is loaded
-BOOLEAN GetCurrentBattleSectorXYZ( INT16 *psSectorX, INT16 *psSectorY, INT16 *psSectorZ )
+BOOLEAN GetCurrentBattleSectorXYZ(SGPSector& psSector)
 {
 	if( gpAR )
 	{
-		*psSectorX = gpAR->ubSectorX;
-		*psSectorY = gpAR->ubSectorY;
-		*psSectorZ = 0;
+		psSector = SGPSector(gpAR->ubSectorX, gpAR->ubSectorY, 0);
 		return TRUE;
 	}
 	else if( gfPreBattleInterfaceActive )
 	{
-		*psSectorX = gubPBSectorX;
-		*psSectorY = gubPBSectorY;
-		*psSectorZ = gubPBSectorZ;
+		psSector = SGPSector(gubPBSectorX, gubPBSectorY, gubPBSectorZ);
 		return TRUE;
 	}
 	else if( gfWorldLoaded )
 	{
-		*psSectorX = gWorldSectorX;
-		*psSectorY = gWorldSectorY;
-		*psSectorZ = gbWorldSectorZ;
+		psSector = SGPSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		return TRUE;
 	}
 	else
 	{
-		*psSectorX = 0;
-		*psSectorY = 0;
-		*psSectorZ = -1;
+		psSector = SGPSector(0, 0, -1);
 		return FALSE;
 	}
 }

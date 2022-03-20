@@ -1387,6 +1387,7 @@ try
 {
 	UINT32 uiNewScreen;
 	INT32 iCounter = 0;
+	static const SGPSector startSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)));
 
 	//DO NOT MOVE THIS FUNCTION CALL!!!
 	//This determines if the help screen should be active
@@ -1459,7 +1460,7 @@ try
 		if (!AnyMercsHired())
 		{
 			// Select starting sector.
-			ChangeSelectedMapSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
+			ChangeSelectedMapSector(startSector);
 		}
 		else if( ( gWorldSectorX > 0 ) && ( gWorldSectorY > 0 ) && ( gbWorldSectorZ != -1 ) )
 		{
@@ -1471,7 +1472,7 @@ try
 			// Only select start sector, if there is no current selection, otherwise leave it as is.
 			if ( ( sSelMapX == 0 ) || ( sSelMapY == 0 ) || ( iCurrentMapSectorZ == -1 ) )
 			{
-				ChangeSelectedMapSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
+				ChangeSelectedMapSector(startSector);
 			}
 		}
 
@@ -2120,7 +2121,7 @@ void DrawStringRight(const ST::string& str, UINT16 x, UINT16 y, UINT16 w, UINT16
 }
 
 
-static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOOLEAN fStationary);
+static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor, BOOLEAN fStationary);
 static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY);
 
 
@@ -2160,7 +2161,7 @@ static void RenderMapCursorsIndexesAnims(void)
 			}
 
 			// draw WHITE highlight rectangle
-			RenderMapHighlight( gsHighlightSectorX, gsHighlightSectorY, Get16BPPColor( RGB_WHITE ), FALSE );
+			RenderMapHighlight(SGPSector(gsHighlightSectorX, gsHighlightSectorY), Get16BPPColor( RGB_WHITE ), FALSE );
 
 			sPrevHighlightedMapX = gsHighlightSectorX;
 			sPrevHighlightedMapY = gsHighlightSectorY;
@@ -2220,7 +2221,7 @@ static void RenderMapCursorsIndexesAnims(void)
 		}
 
 		// always render this one, it's too much of a pain detecting overlaps with the white cursor otherwise
-		RenderMapHighlight( sSelMapX, sSelMapY, usCursorColor, TRUE );
+		RenderMapHighlight(SGPSector(sSelMapX, sSelMapY), usCursorColor, TRUE);
 
 		if ( ( sPrevSelectedMapX != sSelMapX ) || ( sPrevSelectedMapY != sSelMapY ) )
 		{
@@ -2316,7 +2317,7 @@ static UINT32 HandleMapUI(void)
 			// plotting for the chopper?
 			if (fPlotForHelicopter)
 			{
-					PlotPathForHelicopter( sMapX, sMapY );
+					PlotPathForHelicopter(SGPSector(sMapX, sMapY));
 					fTeamPanelDirty = TRUE;
 			}
 			else
@@ -2344,7 +2345,7 @@ static UINT32 HandleMapUI(void)
 					// Can we get go there?  (NULL temp character path)
 					if ( GetLengthOfPath( pTempCharacterPath ) > 0 )
 					{
-						PlotPathForCharacter(*s, sMapX, sMapY, false);
+						PlotPathForCharacter(*s, SGPSector(sMapX, sMapY), false);
 
 						// copy the path to every other selected character
 						CopyPathToAllSelectedCharacters(GetSoldierMercPathPtr(s));
@@ -2710,14 +2711,14 @@ static void Teleport()
 	if (fPlotForHelicopter)      return;
 	if (iCurrentMapSectorZ != 0) return;
 
-	INT16 sMapX;
-	INT16 sMapY;
-	if (!GetMouseMapXY(&sMapX, &sMapY)) return;
+	INT16 a, b;
+	if (!GetMouseMapXY(&a, &b)) return;
+	SGPSector sMap(a, b);
 
 	SOLDIERTYPE& s = *gCharactersList[bSelectedDestChar].merc;
 
 	// can't teleport to where we already are
-	if (sMapX == s.sSectorX && sMapY == s.sSectorY) return;
+	if (sMap.x == s.sSectorX && sMap.y == s.sSectorY) return;
 
 	// cancel movement plotting
 	AbortMovementPlottingMode();
@@ -2729,7 +2730,7 @@ static void Teleport()
 	ClearMvtForThisSoldierAndGang(&s);
 
 	// select this sector
-	ChangeSelectedMapSector(sMapX, sMapY, 0);
+	ChangeSelectedMapSector(sMap);
 
 	// check to see if this person is moving, if not...then assign them to mvt group
 	if (s.ubGroupID  == 0)
@@ -2739,24 +2740,21 @@ static void Teleport()
 	}
 
 	// figure out where they would've come from
-	INT16 const sDeltaX = sMapX - s.sSectorX;
-	INT16 const sDeltaY = sMapY - s.sSectorY;
-	INT16       sPrevX;
-	INT16       sPrevY;
+	INT16 const sDeltaX = sMap.x - s.sSectorX;
+	INT16 const sDeltaY = sMap.y - s.sSectorY;
+	SGPSector sPrev = sMap;
 	if (ABS(sDeltaX) >= ABS(sDeltaY))
 	{
 		// use East or West
 		if (sDeltaX > 0)
 		{
 			// came in from the West
-			sPrevX = sMapX - 1;
-			sPrevY = sMapY;
+			sPrev.x--;
 		}
 		else
 		{
 			// came in from the East
-			sPrevX = sMapX + 1;
-			sPrevY = sMapY;
+			sPrev.x++;
 		}
 	}
 	else
@@ -2765,19 +2763,17 @@ static void Teleport()
 		if (sDeltaY > 0)
 		{
 			// came in from the North
-			sPrevX = sMapX;
-			sPrevY = sMapY - 1;
+			sPrev.y--;
 		}
 		else
 		{
 			// came in from the South
-			sPrevX = sMapX;
-			sPrevY = sMapY + 1;
+			sPrev.y++;
 		}
 	}
 
 	// set where they are, were/are going, then make them arrive there and check for battle
-	PlaceGroupInSector(*GetGroup(s.ubGroupID), sPrevX, sPrevY, sMapX, sMapY, 0, true);
+	PlaceGroupInSector(*GetGroup(s.ubGroupID), sPrev, sMap, true);
 
 	// unload the sector they teleported out of
 	CheckAndHandleUnloadingOfCurrentWorld();
@@ -3365,20 +3361,20 @@ static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorl
 }
 
 
-static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOOLEAN fStationary)
+static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor, BOOLEAN fStationary)
 {
-	INT16												sScreenX, sScreenY;
+	INT16 sScreenX, sScreenY;
 
-	Assert( ( sMapX >= 1 ) && ( sMapX <= 16 ) );
-	Assert( ( sMapY >= 1 ) && ( sMapY <= 16 ) );
+	Assert(sMap.x >= 1 && sMap.x <= 16);
+	Assert(sMap.y >= 1 && sMap.y <= 16);
 
 	// if we are not allowed to highlight, leave
-	if (!IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY))
+	if (!IsTheCursorAllowedToHighLightThisSector(sMap.x, sMap.y))
 	{
 		return;
 	}
 
-	GetScreenXYFromMapXY( sMapX, sMapY, &sScreenX, &sScreenY );
+	GetScreenXYFromMapXY(sMap.x, sMap.y, &sScreenX, &sScreenY);
 
 	// blit in the highlighted sector
 	SGPVSurface::Lock l(FRAME_BUFFER);
@@ -3396,14 +3392,13 @@ static void RenderMapHighlight(INT16 sMapX, INT16 sMapY, UINT16 usLineColor, BOO
 }
 
 
-static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY);
+static BOOLEAN CheckIfClickOnLastSectorInPath(const SGPSector& sector);
 static void DestinationPlottingCompleted(void);
 
 
 static void PollLeftButtonInMapView(MapEvent& new_event)
 {
 	static BOOLEAN	fLBBeenPressedInMapView = FALSE;
-	INT16 sMapX, sMapY;
 
 	// if the mouse is currently over the MAP area
 	if ( gMapViewRegion.uiFlags & MSYS_MOUSE_IN_AREA )
@@ -3455,10 +3450,12 @@ static void PollLeftButtonInMapView(MapEvent& new_event)
 				{
 					fEndPlotting = FALSE;
 
-					GetMouseMapXY(&sMapX, &sMapY);
+					INT16 a, b;
+					GetMouseMapXY(&a, &b);
+					SGPSector sMap(a, b);
 
 					// if he clicked on the last sector in his current path
-					if( CheckIfClickOnLastSectorInPath( sMapX, sMapY ) )
+					if (CheckIfClickOnLastSectorInPath(sMap))
 					{
 						DestinationPlottingCompleted();
 					}
@@ -3496,7 +3493,6 @@ static void HandleMilitiaRedistributionClick(void);
 static void PollRightButtonInMapView(MapEvent& new_event)
 {
 	static BOOLEAN	fRBBeenPressedInMapView = FALSE;
-	INT16 sMapX, sMapY;
 
 	// if the mouse is currently over the MAP area
 	if ( gMapViewRegion.uiFlags & MSYS_MOUSE_IN_AREA )
@@ -3555,11 +3551,12 @@ static void PollRightButtonInMapView(MapEvent& new_event)
 				}
 				else
 				{
+					INT16 sMapX, sMapY;
 					if ( GetMouseMapXY( &sMapX, &sMapY ) )
 					{
 						if( ( sSelMapX != sMapX ) || ( sSelMapY != sMapY ) )
 						{
-							ChangeSelectedMapSector( sMapX, sMapY, ( INT8 )iCurrentMapSectorZ );
+							ChangeSelectedMapSector(SGPSector(sMapX, sMapY, (INT8) iCurrentMapSectorZ));
 						}
 					}
 
@@ -4128,30 +4125,26 @@ static void RenderAttributeStringsForUpperLeftHandCorner(SGPVSurface* const uiBu
 }
 
 
-static void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface(INT16 sMapX, INT16 sMapY)
+static void DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface(const SGPSector& sMap)
 {
 	// simply check if we want to refresh the screen to display path
 	static INT8 bOldDestChar = -1;
-	static INT16  sPrevMapX, sPrevMapY;
+	static SGPSector sPrevMap;
 
 	if( bOldDestChar != bSelectedDestChar )
 	{
 		bOldDestChar = bSelectedDestChar;
 		guiPotCharPathBaseTime = GetJA2Clock( );
 
-		sPrevMapX = sMapX;
-		sPrevMapY = sMapY;
+		sPrevMap = sMap;
 		fTempPathAlreadyDrawn = FALSE;
 		fDrawTempPath = FALSE;
-
 	}
 
-	if( ( sMapX != sPrevMapX) || ( sMapY != sPrevMapY ) )
+	if (sMap != sPrevMap)
 	{
 		guiPotCharPathBaseTime = GetJA2Clock( );
-
-		sPrevMapX = sMapX;
-		sPrevMapY = sMapY;
+		sPrevMap = sMap;
 
 		// path was plotted and we moved, re draw map..to clean up mess
 		if (fTempPathAlreadyDrawn) fMapPanelDirty = TRUE;
@@ -5083,51 +5076,48 @@ static void PlotPermanentPaths(void)
 
 static void PlotTemporaryPaths(void)
 {
-	INT16 sMapX, sMapY;
-
+	INT16 a, b;
 
 	// check to see if we have in fact moved are are plotting a path?
-	if ( GetMouseMapXY( &sMapX, &sMapY ) )
+	if (!GetMouseMapXY(&a, &b)) return;
+	SGPSector sMap(a, b);
+
+	if (fPlotForHelicopter)
 	{
-		if (fPlotForHelicopter)
+		Assert(fShowAircraftFlag);
+
+		// plot temp path
+		PlotATemporaryPathForHelicopter(sMap);
+
+		// check if potential path is allowed
+		DisplayThePotentialPathForHelicopter(sMap);
+
+		if (fDrawTempHeliPath)
 		{
-			Assert(fShowAircraftFlag);
-
-			// plot temp path
-			PlotATemporaryPathForHelicopter( sMapX, sMapY);
-
-			// check if potential path is allowed
-			DisplayThePotentialPathForHelicopter( sMapX, sMapY );
-
-			if (fDrawTempHeliPath)
-			{
-				// clip region
-				ClipBlitsToMapViewRegion( );
-				// display heli temp path
-				DisplayHelicopterTempPath( );
-				//restore
-				RestoreClipRegionToFullScreen( );
-			}
+			// clip region
+			ClipBlitsToMapViewRegion();
+			// display heli temp path
+			DisplayHelicopterTempPath();
+			//restore
+			RestoreClipRegionToFullScreen();
 		}
-		else
-		// dest char has been selected,
-		if( bSelectedDestChar != -1 )
+	}
+	else if (bSelectedDestChar != -1) // dest char has been selected
+	{
+		PlotATemporaryPathForCharacter(gCharactersList[bSelectedDestChar].merc, sMap);
+
+		// check to see if we are drawing path
+		DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface(sMap);
+
+		// if we need to draw path, do it
+		if (fDrawTempPath)
 		{
-			PlotATemporaryPathForCharacter(gCharactersList[bSelectedDestChar].merc, sMapX, sMapY);
-
-			// check to see if we are drawing path
-			DisplayThePotentialPathForCurrentDestinationCharacterForMapScreenInterface( sMapX, sMapY );
-
-			// if we need to draw path, do it
-			if (fDrawTempPath)
-			{
-				// clip region
-				ClipBlitsToMapViewRegion( );
-				// blit
-				DisplaySoldierTempPath();
-				// restore
-				RestoreClipRegionToFullScreen( );
-			}
+			// clip region
+			ClipBlitsToMapViewRegion();
+			// blit
+			DisplaySoldierTempPath();
+			// restore
+			RestoreClipRegionToFullScreen();
 		}
 	}
 }
@@ -5685,11 +5675,11 @@ static void HandleSpontanousTalking(void)
 }
 
 
-static void HandleNewDestConfirmation(INT16 sMapX, INT16 sMapY);
+static void HandleNewDestConfirmation(const SGPSector& sMap);
 static void RebuildWayPointsForAllSelectedCharsGroups(void);
 
 
-static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
+static BOOLEAN CheckIfClickOnLastSectorInPath(const SGPSector& sector)
 {
 	PathSt*const* ppMovePath = NULL;
 	BOOLEAN fLastSectorInPath = FALSE;
@@ -5700,7 +5690,7 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 	// check if helicopter
 	if (fPlotForHelicopter)
 	{
-		if( sX + ( sY * MAP_WORLD_X ) == GetLastSectorOfHelicoptersPath( ) )
+		if (sector.AsStrategicIndex() == GetLastSectorOfHelicoptersPath())
 		{
 			// helicopter route confirmed - take off
 			TakeOffHelicopter( );
@@ -5731,7 +5721,7 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 			return( FALSE );
 		}
 
-		if (sX + sY * MAP_WORLD_X == GetLastSectorIdInCharactersPath(s))
+		if (sector.AsStrategicIndex() == GetLastSectorIdInCharactersPath(s))
 		{
 			// clicked on last sector, reset plotting mode
 
@@ -5775,7 +5765,7 @@ static BOOLEAN CheckIfClickOnLastSectorInPath(INT16 sX, INT16 sY)
 		if ( GetLengthOfPath( *ppMovePath ) > 0 )
 		{
 			// then verbally confirm this destination!
-			HandleNewDestConfirmation( sX, sY );
+			HandleNewDestConfirmation(sector);
 		}
 		else	// NULL path confirmed
 		{
@@ -6952,6 +6942,10 @@ static void CheckForInventoryModeCancellation(void)
 	}
 }
 
+void ChangeSelectedMapSector(const SGPSector& sector)
+{
+	ChangeSelectedMapSector(sector.x, sector.y, sector.z);
+}
 
 void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
@@ -7566,7 +7560,7 @@ static void RandomAwakeSelectedMercConfirmsStrategicMove(void);
 static void WakeUpAnySleepingSelectedMercsOnFootOrDriving();
 
 
-static void HandleNewDestConfirmation(INT16 sMapX, INT16 sMapY)
+static void HandleNewDestConfirmation(const SGPSector& sMap)
 {
 	UINT8 ubCurrentProgress;
 
@@ -7575,8 +7569,8 @@ static void HandleNewDestConfirmation(INT16 sMapX, INT16 sMapY)
 	if( fPlotForHelicopter )
 	{
 		// if there are no enemies in destination sector, or we don't know
-		if ( ( NumEnemiesInSector( sMapX, sMapY ) == 0 ) ||
-			(	WhatPlayerKnowsAboutEnemiesInSector( sMapX, sMapY ) == KNOWS_NOTHING ) )
+		if (NumEnemiesInSector(sMap) == 0 ||
+			WhatPlayerKnowsAboutEnemiesInSector(sMap.x, sMap.y) == KNOWS_NOTHING)
 		{
 			// no problem
 
