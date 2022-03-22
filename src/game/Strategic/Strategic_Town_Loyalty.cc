@@ -1037,18 +1037,18 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 
 
 // to be called whenever player gains control of a sector in any way
-void CheckIfEntireTownHasBeenLiberated( INT8 bTownId, INT16 sSectorX, INT16 sSectorY )
+void CheckIfEntireTownHasBeenLiberated(INT8 bTownId, const SGPSector& sSector)
 {
 	// the whole town is under our control, check if we never libed this town before
 	if ( !gTownLoyalty[ bTownId ].fLiberatedAlready && IsTownUnderCompleteControlByPlayer ( bTownId ) )
 	{
-		if ( MilitiaTrainingAllowedInSector( sSectorX, sSectorY, 0 ) )
+		if (MilitiaTrainingAllowedInSector(sSector.x, sSector.y, 0))
 		{
 			// give a loyalty bonus
-			HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_LIBERATE_WHOLE_TOWN, sSectorX, sSectorY, 0 );
+			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LIBERATE_WHOLE_TOWN, sSector.x, sSector.y, 0);
 
 			// set fact is has been lib'ed and set history event
-			AddHistoryToPlayersLog(HISTORY_LIBERATED_TOWN, bTownId, GetWorldTotalMin(), SGPSector(sSectorX, sSectorY));
+			AddHistoryToPlayersLog(HISTORY_LIBERATED_TOWN, bTownId, GetWorldTotalMin(), sSector);
 
 			HandleMeanWhileEventPostingForTownLiberation( bTownId );
 		}
