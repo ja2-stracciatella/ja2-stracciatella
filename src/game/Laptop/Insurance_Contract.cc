@@ -984,7 +984,7 @@ void InsuranceContractPayLifeInsuranceForDeadMerc( UINT8 ubPayoutID )
 	AddTransactionToPlayersBook(INSURANCE_PAYOUT, lip->ubMercID, GetWorldTotalMin(), lip->iPayOutPrice);
 
 	//add to the history log the fact that the we paid the insurance claim
-	AddHistoryToPlayersLog(HISTORY_INSURANCE_CLAIM_PAYOUT, lip->ubMercID, GetWorldTotalMin(), -1, -1);
+	AddHistoryToPlayersLog(HISTORY_INSURANCE_CLAIM_PAYOUT, lip->ubMercID, GetWorldTotalMin(), SGPSector(-1, -1));
 
 	//if there WASNT an investigation
 	if (GetProfile(lip->ubMercID).ubSuspiciousDeath == 0)
@@ -1134,7 +1134,7 @@ void PurchaseOrExtendInsuranceForSoldier( SOLDIERTYPE *pSoldier, UINT32 uiInsura
 			AddTransactionToPlayersBook(	PURCHASED_INSURANCE, pSoldier->ubProfile, GetWorldTotalMin(), -( iAmountOfMoneyTransfer ) );
 
 			//add an entry in the history page for the purchasing of life insurance
-			AddHistoryToPlayersLog(HISTORY_PURCHASED_INSURANCE, pSoldier->ubProfile, GetWorldTotalMin(), -1, -1 );
+			AddHistoryToPlayersLog(HISTORY_PURCHASED_INSURANCE, pSoldier->ubProfile, GetWorldTotalMin(), SGPSector(-1, -1));
 
 			//Set that we have life insurance
 			pSoldier->usLifeInsurance = 1;

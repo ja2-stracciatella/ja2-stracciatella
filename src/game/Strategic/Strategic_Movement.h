@@ -227,7 +227,7 @@ bool PlayerIDGroupInMotion(UINT8 id);
 // get number of mercs between sectors
 BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnter, INT32 *iCountExit, BOOLEAN *fAboutToArriveEnter );
 
-void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
+void MoveAllGroupsInCurrentSectorToSector(const SGPSector& sector);
 
 //Save the strategic movemnet Group paths to the saved game file
 void SaveStrategicMovementGroupsToSaveGameFile(HWFILE);

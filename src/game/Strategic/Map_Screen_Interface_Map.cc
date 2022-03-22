@@ -2777,7 +2777,7 @@ static void PickUpATownPersonFromSector(UINT8 const type, UINT8 const sector)
 	// Are they in the same town as they were picked up from?
 	if (GetTownIdForSector(sector) != sSelectedMilitiaTown) return;
 
-	if (!SectorOursAndPeaceful(SECTORX(sector), SECTORY(sector), 0)) return;
+	if (!SectorOursAndPeaceful(SGPSector(sector))) return;
 
 	UINT8& n_type = SectorInfo[sector].ubNumberOfCivsAtLevel[type];
 	// See if there are any militia of this type in this sector
@@ -2795,7 +2795,7 @@ static void DropAPersonInASector(UINT8 const type, UINT8 const sector)
 	// Are they in the same town as they were picked up from?
 	if (GetTownIdForSector(sector) != sSelectedMilitiaTown) return;
 
-	if (!SectorOursAndPeaceful(SECTORX(sector), SECTORY(sector), 0)) return;
+	if (!SectorOursAndPeaceful(SGPSector(sector))) return;
 
 	UINT8 (&n_milita)[MAX_MILITIA_LEVELS] = SectorInfo[sector].ubNumberOfCivsAtLevel;
 	if (n_milita[GREEN_MILITIA] + n_milita[REGULAR_MILITIA] + n_milita[ELITE_MILITIA] >= MAX_ALLOWABLE_MILITIA_PER_SECTOR) return;
@@ -3258,11 +3258,9 @@ static bool IsThisMilitiaTownSectorAllowable(INT16 const sSectorIndexValue)
 {
 	INT16 const base_sector = GetBaseSectorForCurrentTown();
 	INT16 const sector      = base_sector + sSectorIndexValue % MILITIA_BOX_ROWS + sSectorIndexValue / MILITIA_BOX_ROWS * 16;
-	INT16 const x           = SECTORX(sector);
-	INT16 const y           = SECTORY(sector);
-	return
-		StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId != BLANK_SECTOR &&
-		SectorOursAndPeaceful(x, y, 0);
+	SGPSector sec(sector);
+	return StrategicMap[sec.AsStrategicIndex()].bNameId != BLANK_SECTOR &&
+		SectorOursAndPeaceful(sec);
 }
 
 
@@ -3296,7 +3294,7 @@ static void HandleShutDownOfMilitiaPanelIfPeopleOnTheCursor(INT16 const town)
 	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
 		UINT8 const sector    = i->sector;
-		if (!SectorOursAndPeaceful(SECTORX(sector), SECTORY(sector), 0)) continue;
+		if (!SectorOursAndPeaceful(SGPSector(sector))) continue;
 		SECTORINFO& si        = SectorInfo[sector];
 		UINT8&      n_green   = si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
 		UINT8&      n_regular = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA];
@@ -3384,8 +3382,9 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
 		UINT8 const sector = i->sector;
-		if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].fEnemyControlled) continue;
-		if (NumHostilesInSector(SGPSector(SECTORX(sector), SECTORY(sector), 0)) != 0) continue;
+		SGPSector iSector(sector);
+		if (StrategicMap[iSector.AsStrategicIndex()].fEnemyControlled) continue;
+		if (NumHostilesInSector(iSector) != 0) continue;
 
 		SECTORINFO& si = SectorInfo[sector];
 
@@ -3992,7 +3991,7 @@ BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSect
 	}
 
 	// if the fight is underground
-	if ( gbWorldSectorZ != 0 )
+	if (gWorldSector.z != 0)
 	{
 		// ok to redistribute
 		return( TRUE );
@@ -4009,18 +4008,16 @@ BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSect
 	{
 		// grab current sector value
 		sCurrentSectorValue = sBaseSectorValue + ( ( iCounter % MILITIA_BOX_ROWS ) + ( iCounter / MILITIA_BOX_ROWS ) * ( 16 ) );
-
-		sSectorX = SECTORX( sCurrentSectorValue );
-		sSectorY = SECTORY( sCurrentSectorValue );
+		SGPSector sSector(sCurrentSectorValue);
 
 		// not in the same town?
-		if( StrategicMap[ CALCULATE_STRATEGIC_INDEX( sSectorX, sSectorY ) ].bNameId != bClickedTownId )
+		if (StrategicMap[sSector.AsStrategicIndex()].bNameId != bClickedTownId)
 		{
 			continue;
 		}
 
 		// if this is the loaded sector that is currently hostile
-		if ( ( sSectorX == gWorldSectorX ) && ( sSectorY == gWorldSectorY ) )
+		if (sSector == gWorldSector)
 		{
 			// the fight is within this town!  Can't redistribute.
 			return( FALSE );

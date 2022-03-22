@@ -2394,9 +2394,9 @@ static void AddNPCToGridNo(INT32 iGridNo)
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam				= CIV_TEAM;
 	MercCreateStruct.ubProfile		= (UINT8)gpActiveListBox->sCurSelectedItem;
-	MercCreateStruct.sSectorX			= gWorldSectorX;
-	MercCreateStruct.sSectorY			= gWorldSectorY;
-	MercCreateStruct.bSectorZ			= gbWorldSectorZ;
+	MercCreateStruct.sSectorX			= gWorldSector.x;
+	MercCreateStruct.sSectorY			= gWorldSector.y;
+	MercCreateStruct.bSectorZ			= gWorldSector.z;
 	MercCreateStruct.sInsertionGridNo		= (UINT16) iGridNo;
 
 //	RandomizeNewSoldierStats( &MercCreateStruct );

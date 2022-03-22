@@ -364,6 +364,6 @@ void MakeCharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE&, GridNo locat
 
 void HandleThePlayerBeNotifiedOfSomeoneElseInSector(void);
 
-bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 const x, INT16 const y, INT8 const z);
+bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(const SGPSector& sector);
 
 #endif

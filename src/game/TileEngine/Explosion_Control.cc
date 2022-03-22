@@ -360,7 +360,7 @@ static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags,
 static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTURE** const ppNextCurrent, INT16 const grid_no, INT16 const wound_amt, UINT32 const uiDist, BOOLEAN* const pfRecompileMovementCosts, BOOLEAN const only_walls, SOLDIERTYPE* const owner, INT8 const level)
 {
 	BOOLEAN_S skipDamage = false;
-	BeforeStructureDamaged(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, grid_no, pCurrent, uiDist, &skipDamage);
+	BeforeStructureDamaged(gWorldSector.x, gWorldSector.y, gWorldSector.z, grid_no, pCurrent, uiDist, &skipDamage);
 	if (skipDamage)
 	{
 		return true;
@@ -389,7 +389,7 @@ static bool ExplosiveDamageStructureAtGridNo(STRUCTURE* const pCurrent, STRUCTUR
 		if (bDamageReturnVal == STRUCTURE_NOT_DAMAGED) return true;
 
 		BOOLEAN fDestroyed = (bDamageReturnVal == STRUCTURE_DESTROYED);
-		OnStructureDamaged(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, grid_no, pCurrent, wound_amt, fDestroyed);
+		OnStructureDamaged(gWorldSector.x, gWorldSector.y, gWorldSector.z, grid_no, pCurrent, wound_amt, fDestroyed);
 
 		STRUCTURE* const base         = FindBaseStructure(pCurrent);
 		GridNo     const base_grid_no = base->sGridNo;
@@ -1694,7 +1694,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 
 		// if anything has been done to change movement costs and this is a potential POW situation, check
 		// paths for POWs
-		if ( gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_I )
+		if (gWorldSector.x == 13 && gWorldSector.y == MAP_ROW_I)
 		{
 			DoPOWPathChecks();
 		}
@@ -2130,7 +2130,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 									ChangeSoldierState(tgt, STANDING, 0, TRUE);
 									TeleportSoldier(*tgt, sTeleportSpot, false);
 
-									HandleMoraleEvent(tgt, MORALE_SEX, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+									HandleMoraleEvent(tgt, MORALE_SEX, gWorldSector.x, gWorldSector.y, gWorldSector.z);
 									FatigueCharacter(*tgt);
 									FatigueCharacter(*tgt);
 									FatigueCharacter(*tgt);

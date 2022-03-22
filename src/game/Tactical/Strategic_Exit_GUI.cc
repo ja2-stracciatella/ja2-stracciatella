@@ -218,9 +218,9 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	{
 		if (pSoldier == sel) continue;
 		if( !pSoldier->fBetweenSectors &&
-			pSoldier->sSectorX == gWorldSectorX &&
-			pSoldier->sSectorY == gWorldSectorY &&
-			pSoldier->bSectorZ == gbWorldSectorZ &&
+			pSoldier->sSectorX == gWorldSector.x &&
+			pSoldier->sSectorY == gWorldSector.y &&
+			pSoldier->bSectorZ == gWorldSector.z &&
 			pSoldier->bLife >= OKLIFE &&
 			pSoldier->bAssignment != sel->bAssignment &&
 			pSoldier->bAssignment != ASSIGNMENT_POW &&
@@ -298,7 +298,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 			gExitDialog.fGotoSectorDisabled = TRUE;
 			gExitDialog.fGotoSector = FALSE;
 		}
-		else if (GetNumberOfMilitiaInSector(SGPSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ)))
+		else if (GetNumberOfMilitiaInSector(gWorldSector))
 		{
 			//Leaving this sector will result in militia being forced to fight the battle, can't load adjacent sector.
 			gExitDialog.fGotoSectorDisabled = TRUE;
@@ -448,7 +448,7 @@ void InitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdditionalData)
 	gubExitGUIDirection     = ubDirection;
 	gsExitGUIAdditionalData = sAdditionalData;
 
-	if ( gbWorldSectorZ >= 2 && gubQuest[ QUEST_CREATURES ] == QUESTDONE )
+	if (gWorldSector.z >= 2 && gubQuest[ QUEST_CREATURES ] == QUESTDONE)
 	{
 		if (GetWarpOutOfMineCodes(gsWarpWorld, &gsWarpGridNo))
 		{

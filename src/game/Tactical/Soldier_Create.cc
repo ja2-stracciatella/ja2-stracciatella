@@ -1135,9 +1135,9 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	pp->ubSoldierClass = bp->ubSoldierClass;
 	pp->ubCivilianGroup = bp->ubCivilianGroup;
 	pp->ubScheduleID = 0;
-	pp->sSectorX = gWorldSectorX;
-	pp->sSectorY = gWorldSectorY;
-	pp->bSectorZ = gbWorldSectorZ;
+	pp->sSectorX = gWorldSector.x;
+	pp->sSectorY = gWorldSector.y;
+	pp->bSectorZ = gWorldSector.z;
 	pp->fHasKeys = bp->fHasKeys;
 
 	//Choose a body type randomly if none specified.
@@ -1316,7 +1316,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 
 				case BLOODCAT:
 					pp->bExpLevel = 5 + bExpLevelModifier;
-					auto spawns = GCM->getBloodCatSpawnsOfSector( SECTOR( gWorldSectorX, gWorldSectorY ));
+					auto spawns = GCM->getBloodCatSpawnsOfSector(gWorldSector.AsByte());
 					if (spawns && spawns->isLair)
 					{
 						pp->bExpLevel += gGameOptions.ubDifficultyLevel;
@@ -1412,9 +1412,9 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	spp->ubSoldierClass = bp->ubSoldierClass;
 	spp->ubCivilianGroup = bp->ubCivilianGroup;
 	spp->ubScheduleID = 0;
-	spp->sSectorX = gWorldSectorX;
-	spp->sSectorY = gWorldSectorY;
-	spp->bSectorZ = gbWorldSectorZ;
+	spp->sSectorX = gWorldSector.x;
+	spp->sSectorY = gWorldSector.y;
+	spp->bSectorZ = gWorldSector.z;
 	spp->fHasKeys = bp->fHasKeys;
 
 	//Pass over mandatory information specified from the basic placement
@@ -1954,9 +1954,9 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam            = bTeam;
 	MercCreateStruct.ubProfile        = ubProfileID;
-	MercCreateStruct.sSectorX         = gWorldSectorX;
-	MercCreateStruct.sSectorY         = gWorldSectorY;
-	MercCreateStruct.bSectorZ         = gbWorldSectorZ;
+	MercCreateStruct.sSectorX         = gWorldSector.x;
+	MercCreateStruct.sSectorY         = gWorldSector.y;
+	MercCreateStruct.bSectorZ         = gWorldSector.z;
 	MercCreateStruct.sInsertionGridNo = pos;
 
 	RandomizeNewSoldierStats(&MercCreateStruct);

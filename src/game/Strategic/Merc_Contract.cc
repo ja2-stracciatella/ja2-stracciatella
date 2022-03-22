@@ -339,7 +339,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 	 * merc's contract */
 	UINT32 const now = GetWorldTotalMin();
 	AddTransactionToPlayersBook(finances_contract_type, s->ubProfile, now, -contract_charge);
-	AddHistoryToPlayersLog(history_contract_type, s->ubProfile, now, s->sSectorX, s->sSectorY);
+	AddHistoryToPlayersLog(history_contract_type, s->ubProfile, now, SGPSector(s->sSectorX, s->sSectorY));
 
 	return TRUE;
 }
@@ -684,7 +684,7 @@ void StrategicRemoveMerc(SOLDIERTYPE& s)
 	// ATE: Don't do this if they are already dead!
 	if (!(s.uiStatusFlags & SOLDIER_DEAD))
 	{
-		AddHistoryToPlayersLog(ubHistoryCode, s.ubProfile, GetWorldTotalMin(), s.sSectorX, s.sSectorY);
+		AddHistoryToPlayersLog(ubHistoryCode, s.ubProfile, GetWorldTotalMin(), SGPSector(s.sSectorX, s.sSectorY));
 	}
 
 	//if the merc was a POW, remember it becuase the merc cant show up in AIM or MERC anymore

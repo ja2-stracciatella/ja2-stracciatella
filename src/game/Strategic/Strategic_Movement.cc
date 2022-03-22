@@ -658,8 +658,8 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 
 	if( (gfTacticalTraversal && pInitiatingBattleGroup == gpTacticalTraversalGroup) ||
 		(pInitiatingBattleGroup && !pInitiatingBattleGroup->fPlayer &&
-		pInitiatingBattleGroup->ubSectorX == gWorldSectorX &&
-		pInitiatingBattleGroup->ubSectorY == gWorldSectorY && !gbWorldSectorZ) )
+		pInitiatingBattleGroup->ubSectorX == gWorldSector.x &&
+		pInitiatingBattleGroup->ubSectorY == gWorldSector.y && !gWorldSector.z))
 	{	// At least say quote....
 		if ( ubNumMercs > 0 )
 		{
@@ -732,9 +732,9 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 	if( gfWorldLoaded )
 	{ //look for people arriving in the currently loaded sector.  This handles reinforcements.
-		const GROUP* const curr = FindPlayerMovementGroupInSector(gWorldSectorX, gWorldSectorY);
-		if( !gbWorldSectorZ && PlayerMercsInSector( (UINT8)gWorldSectorX, (UINT8)gWorldSectorY, gbWorldSectorZ ) &&
-			pGroup->ubSectorX == gWorldSectorX && pGroup->ubSectorY == gWorldSectorY &&
+		const GROUP* const curr = FindPlayerMovementGroupInSector(gWorldSector.x, gWorldSector.y);
+		if (!gWorldSector.z && PlayerMercsInSector(gWorldSector) &&
+			pGroup->ubSectorX == gWorldSector.x && pGroup->ubSectorY == gWorldSector.y &&
 			curr )
 		{ //Reinforcements have arrived!
 			if( gTacticalStatus.fEnemyInSector )
@@ -882,7 +882,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 			gfUsePersistantPBI = TRUE;
 			if( fMilitiaPresent )
 			{
-				NotifyPlayerOfInvasionByEnemyForces( pGroup->ubSectorX, pGroup->ubSectorY, 0, TriggerPrebattleInterface );
+				NotifyPlayerOfInvasionByEnemyForces(SGPSector(pGroup->ubSectorX, pGroup->ubSectorY, 0), TriggerPrebattleInterface);
 			}
 			else
 			{
@@ -1140,7 +1140,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 	/* First check if the group arriving is going to queue another battle.
 	 * NOTE: We can't have more than one battle ongoing at a time. */
 	if (exception_queue ||
-		(check_for_battle && gTacticalStatus.fEnemyInSector && FindPlayerMovementGroupInSector(gWorldSectorX, gWorldSectorY) && (x != gWorldSectorX || y != gWorldSectorY || gbWorldSectorZ > 0)) ||
+		(check_for_battle && gTacticalStatus.fEnemyInSector && FindPlayerMovementGroupInSector(gWorldSector.x, gWorldSector.y) && (x != gWorldSector.x || y != gWorldSector.y || gWorldSector.z > 0)) ||
 		AreInMeanwhile() ||
 		/* KM: Aug 11, 1999 -- Patch fix: Added additional checks to prevent a 2nd
 			* battle in the case where the player is involved in a potential battle
@@ -1254,7 +1254,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			return;
 		}
 
-		bool    const  here = x == gWorldSectorX && y == gWorldSectorY && z == gbWorldSectorZ;
+		bool    const  here = x == gWorldSector.x && y == gWorldSector.y && z == gWorldSector.z;
 		ST::string who;
 		if (!g.fVehicle)
 		{
@@ -1281,7 +1281,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 
 				/* ATE: Check if this sector is currently loaded, if so, add them to the
 				 * tactical engine */
-				if (here) UpdateMercInSector(s, x, y, z);
+				if (here) UpdateMercInSector(s, gWorldSector);
 			}
 
 			// If there's anybody in the group
@@ -1314,7 +1314,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 				vs.ubStrategicInsertionCode = strategic_insertion_code;
 
 				// If this sector is currently loaded, add vehicle to the tactical engine
-				if (here) UpdateMercInSector(vs, x, y, z);
+				if (here) UpdateMercInSector(vs, gWorldSector);
 
 				// Set directions of insertion
 				CFOR_EACH_PLAYER_IN_GROUP(i, &g)
@@ -1328,7 +1328,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 					s.ubStrategicInsertionCode = strategic_insertion_code;
 
 					// If this sector is currently loaded, add passenger to the tactical engine
-					if (here) UpdateMercInSector(s, x, y, z);
+					if (here) UpdateMercInSector(s, gWorldSector);
 				}
 			}
 			else
@@ -2322,6 +2322,7 @@ void HandleArrivalOfReinforcements(GROUP const* const g)
 		 * of the group */
 		UINT8         const x = g->ubSectorX;
 		UINT8         const y = g->ubSectorY;
+		SGPSector insertion(x, y, 0);
 		InsertionCode const strategic_insertion_code =
 			x < g->ubPrevX ? INSERTION_CODE_EAST  :
 			x > g->ubPrevX ? INSERTION_CODE_WEST  :
@@ -2334,7 +2335,7 @@ void HandleArrivalOfReinforcements(GROUP const* const g)
 		{
 			SOLDIERTYPE& s = *p->pSoldier;
 			s.ubStrategicInsertionCode = strategic_insertion_code;
-			UpdateMercInSector(s, x, y, 0);
+			UpdateMercInSector(s, insertion);
 
 			// Do arrives quote
 			if (first) TacticalCharacterDialogue(&s, QUOTE_MERC_REACHED_DESTINATION);
@@ -2428,24 +2429,24 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 }
 
 
-void MoveAllGroupsInCurrentSectorToSector(UINT8 const x, UINT8 const y, UINT8 const z)
+void MoveAllGroupsInCurrentSectorToSector(const SGPSector& sector)
 {
 	FOR_EACH_PLAYER_GROUP(g)
 	{
-		if (g->ubSectorX != gWorldSectorX)  continue;
-		if (g->ubSectorY != gWorldSectorY)  continue;
-		if (g->ubSectorZ != gbWorldSectorZ) continue;
+		if (g->ubSectorX != gWorldSector.x) continue;
+		if (g->ubSectorY != gWorldSector.y) continue;
+		if (g->ubSectorZ != gWorldSector.z) continue;
 		if (g->fBetweenSectors)             continue;
 
 		// This player group is in the currently loaded sector
-		g->ubSectorX = x;
-		g->ubSectorY = y;
-		g->ubSectorZ = z;
+		g->ubSectorX = sector.x;
+		g->ubSectorY = sector.y;
+		g->ubSectorZ = sector.z;
 		CFOR_EACH_PLAYER_IN_GROUP(p, g)
 		{
-			p->pSoldier->sSectorX        = x;
-			p->pSoldier->sSectorY        = y;
-			p->pSoldier->bSectorZ        = z;
+			p->pSoldier->sSectorX        = sector.x;
+			p->pSoldier->sSectorY        = sector.y;
+			p->pSoldier->bSectorZ        = sector.z;
 			p->pSoldier->fBetweenSectors = FALSE;
 		}
 	}
@@ -3573,18 +3574,16 @@ static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
 	 * group arrivals!), don't try to prompt again. */
 	if (gpGroupPrompting) return false;
 
-	INT16 const x = g.ubSectorX;
-	INT16 const y = g.ubSectorY;
-	INT8  const z = g.ubSectorZ;
+	SGPSector sector(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
 
 	// Check for profiled NPCs in sector.
-	if (!WildernessSectorWithAllProfiledNPCsNotSpokenWith(x, y, z)) return false;
+	if (!WildernessSectorWithAllProfiledNPCsNotSpokenWith(sector)) return false;
 
 	// Store the group pointer for use by the callback function.
 	gpGroupPrompting = &g;
 
 	// Build string for squad.
-	ST::string sector_name = GetSectorIDString(x, y, z, FALSE);
+	ST::string sector_name = GetSectorIDString(sector, FALSE);
 	ST::string msg = st_format_printf(pLandMarkInSectorString, g.pPlayerList->pSoldier->bAssignment + 1, sector_name);
 
 	MessageBoxFlags const flags =
@@ -3596,18 +3595,18 @@ static bool HandlePlayerGroupEnteringSectorToCheckForNPCsOfNote(GROUP& g)
 }
 
 
-bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 const x, INT16 const y, INT8 const z)
+bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(const SGPSector& sector)
 {
 	bool found_somebody = false;
 
 	// Don't do this for underground sectors.
-	if (z != 0) return false;
+	if (sector.z != 0) return false;
 
 	// Skip towns/pseudo-towns (anything that shows up on the map as being special).
-	if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId != BLANK_SECTOR) return false;
+	if (StrategicMap[sector.AsStrategicIndex()].bNameId != BLANK_SECTOR) return false;
 
 	// Skip SAM sites.
-	if (IsThisSectorASAMSector(x, y, z)) return false;
+	if (IsThisSectorASAMSector(sector)) return false;
 
 	for (const MercProfile* profile : GCM->listMercProfiles())
 	{
@@ -3623,7 +3622,7 @@ bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 const x, INT16 const
 		if (profile->isVehicle()) continue;
 
 		// In this sector?
-		if (p.sSectorX != x || p.sSectorY != y || p.bSectorZ != z) continue;
+		if (p.sSectorX != sector.x || p.sSectorY != sector.y || p.bSectorZ != sector.z) continue;
 
 		if (p.ubLastDateSpokenTo != 0 ||
 				p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE))

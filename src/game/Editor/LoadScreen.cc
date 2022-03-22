@@ -830,9 +830,7 @@ static void SetGlobalSectorValues(const ST::string& filename)
 			z = f[2] - '0';
 		}
 
-		gWorldSectorX  = x;
-		gWorldSectorY  = y;
-		gbWorldSectorZ = z;
+		gWorldSector = SGPSector(x, y, z);
 		return;
 	}
 invalid:

@@ -1387,7 +1387,7 @@ try
 {
 	UINT32 uiNewScreen;
 	INT32 iCounter = 0;
-	static const SGPSector startSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)));
+	static const SGPSector startSector(gamepolicy(start_sector));
 
 	//DO NOT MOVE THIS FUNCTION CALL!!!
 	//This determines if the help screen should be active
@@ -1462,10 +1462,10 @@ try
 			// Select starting sector.
 			ChangeSelectedMapSector(startSector);
 		}
-		else if( ( gWorldSectorX > 0 ) && ( gWorldSectorY > 0 ) && ( gbWorldSectorZ != -1 ) )
+		else if (gWorldSector.IsValid())
 		{
 			// select currently loaded sector as the map sector
-			ChangeSelectedMapSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+			ChangeSelectedMapSector(gWorldSector);
 		}
 		else	// no loaded sector
 		{
@@ -6353,9 +6353,9 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 static BOOLEAN CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed(const SOLDIERTYPE* const s)
 {
 	// char is in loaded sector
-	if (s->sSectorX != gWorldSectorX ||
-			s->sSectorY != gWorldSectorY ||
-			s->bSectorZ != gbWorldSectorZ)
+	if (s->sSectorX != gWorldSector.x ||
+			s->sSectorY != gWorldSector.y ||
+			s->bSectorZ != gWorldSector.z)
 	{
 		return( FALSE );
 	}
@@ -6510,7 +6510,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 		{
 			ST::string str;
 			ST::string pSectorString;
-			pSectorString = GetSectorIDString(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE);
+			pSectorString = GetSectorIDString(gWorldSector, TRUE);
 			str = st_format_printf(gzLateLocalizedString[STR_LATE_27], pSectorString);
 			DoMapMessageBox( MSG_BOX_BASIC_STYLE, str, MAP_SCREEN, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 		}
@@ -7841,7 +7841,7 @@ static void HandlePostAutoresolveMessages(void)
 	}
 	else if( gsEnemyGainedControlOfSectorID >= 0 )
 	{ //bring up the dialog box
-		SetThisSectorAsEnemyControlled(SECTORX(gsEnemyGainedControlOfSectorID), SECTORY(gsEnemyGainedControlOfSectorID), 0);
+		SetThisSectorAsEnemyControlled(SGPSector(gsEnemyGainedControlOfSectorID));
 		gsEnemyGainedControlOfSectorID = -2;
 	}
 	else if( gsEnemyGainedControlOfSectorID == -2 )

@@ -384,7 +384,7 @@ void GenerateBuildings( void )
 	std::fill_n(gBuildings, MAX_BUILDINGS, BUILDING{});
 	gubNumberOfBuildings = 0;
 
-	if ( (gbWorldSectorZ > 0) || gfEditMode)
+	if (gWorldSector.z > 0 || gfEditMode)
 	{
 		return;
 	}

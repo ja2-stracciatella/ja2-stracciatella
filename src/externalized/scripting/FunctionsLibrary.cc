@@ -13,10 +13,9 @@
 
 std::string GetCurrentSector()
 {
-	ST::string str = (gbWorldSectorZ > 0) ?
-		ST::format("{c}{}-{}", (gWorldSectorY + 'A' - 1), gWorldSectorX, gbWorldSectorZ) :
-		ST::format("{c}{}", (gWorldSectorY + 'A' - 1), gWorldSectorX)
-	;
+	ST::string str = (gWorldSector.z > 0) ?
+		gWorldSector.AsLongString() :
+		gWorldSector.AsShortString();
 	return str.to_std_string();
 }
 

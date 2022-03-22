@@ -219,9 +219,8 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 
 
 // ALL changes of control to enemy must be funneled through here!
-BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
+BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 {
-	UINT16 usMapSector = 0;
 	BOOLEAN fWasPlayerControlled = FALSE;
 	INT8 bTownId = 0;
 	UINT8 ubTheftChance;
@@ -234,9 +233,9 @@ BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT
 		return( FALSE );
 	}
 
-	if( bMapZ == 0 )
+	if (sec.z == 0)
 	{
-		usMapSector = sMapX + ( sMapY * MAP_WORLD_X );
+		UINT16 usMapSector = sec.AsStrategicIndex();
 
 		fWasPlayerControlled = !StrategicMap[ usMapSector ].fEnemyControlled;
 
@@ -245,24 +244,24 @@ BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT
 		// if player lost control to the enemy
 		if ( fWasPlayerControlled )
 		{
-			if( PlayerMercsInSector( (UINT8)sMapX, (UINT8)sMapY, (UINT8)bMapZ ) )
+			if (PlayerMercsInSector(sec))
 			{ //too premature:  Player mercs still in sector.
 				return FALSE;
 			}
 
-			UINT8 const sector = SECTOR(sMapX, sMapY);
+			UINT8 const sector = sec.AsByte();
 			// check if there's a town in the sector
 			bTownId = StrategicMap[ usMapSector ].bNameId;
 
 			// and it's a town
 			if ((bTownId >= FIRST_TOWN) && (bTownId < NUM_TOWNS))
 			{
-				if (bMapZ == 0 && sector != SEC_J9 && sector != SEC_K4)
+				if (sec.z == 0 && sector != SEC_J9 && sector != SEC_K4)
 				{
-					HandleMoraleEvent( NULL, MORALE_TOWN_LOST, sMapX, sMapY, bMapZ );
-					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_LOSE_TOWN_SECTOR, sMapX, sMapY, bMapZ );
+					HandleMoraleEvent(nullptr, MORALE_TOWN_LOST, sec.x, sec.y, sec.z);
+					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_TOWN_SECTOR, sec.x, sec.y, sec.z);
 
-					CheckIfEntireTownHasBeenLost( bTownId, sMapX, sMapY );
+					CheckIfEntireTownHasBeenLost(bTownId, sec.x, sec.y);
 				}
 			}
 
@@ -271,15 +270,15 @@ BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT
 			if (mine_id != -1 && GetTotalLeftInMine(mine_id) > 0)
 			{
 				QueenHasRegainedMineSector(mine_id);
-				HandleMoraleEvent(NULL, MORALE_MINE_LOST, sMapX, sMapY, bMapZ);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_MINE, sMapX, sMapY, bMapZ);
+				HandleMoraleEvent(nullptr, MORALE_MINE_LOST, sec.x, sec.y, sec.z);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_MINE, sec.x, sec.y, sec.z);
 			}
 
 			// if it's a SAM site sector
-			if( IsThisSectorASAMSector( sMapX, sMapY, bMapZ ) )
+			if (IsThisSectorASAMSector(sec))
 			{
-				HandleMoraleEvent( NULL, MORALE_SAM_SITE_LOST, sMapX, sMapY, bMapZ );
-				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_LOSE_SAM, sMapX, sMapY, bMapZ );
+				HandleMoraleEvent(nullptr, MORALE_SAM_SITE_LOST, sec.x, sec.y, sec.z);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_SAM, sec.x, sec.y, sec.z);
 			}
 
 			// if it's a helicopter refueling site sector
@@ -289,23 +288,23 @@ BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT
 			}
 
 			// ARM: this must be AFTER all resulting loyalty effects are resolved, or reduced mine income shown won't be accurate
-			NotifyPlayerWhenEnemyTakesControlOfImportantSector(sMapX, sMapY, 0);
+			NotifyPlayerWhenEnemyTakesControlOfImportantSector(sec);
 		}
 
 		// NOTE: Stealing is intentionally OUTSIDE the fWasPlayerControlled branch.  This function gets called if new
 		// enemy reinforcements arrive, and they deserve another crack at stealing what the first group missed! :-)
 
 		// stealing should fail anyway 'cause there shouldn't be a temp file for unvisited sectors, but let's check anyway
-		if (GetSectorFlagStatus(sMapX, sMapY, bMapZ, SF_ALREADY_VISITED))
+		if (GetSectorFlagStatus(sec, SF_ALREADY_VISITED))
 		{
 			// enemies can steal items left lying about (random chance).  The more there are, the more they take!
-			ubTheftChance = 5 * NumEnemiesInAnySector( sMapX, sMapY, bMapZ );
+			ubTheftChance = 5 * NumEnemiesInAnySector(sec);
 			// max 90%, some stuff may just simply not get found
 			if (ubTheftChance > 90 )
 			{
 				ubTheftChance = 90;
 			}
-			RemoveRandomItemsInSector( sMapX, sMapY, bMapZ, ubTheftChance );
+			RemoveRandomItemsInSector(sec, ubTheftChance);
 		}
 
 		// don't touch fPlayer flag for a surface sector lost to the enemies!

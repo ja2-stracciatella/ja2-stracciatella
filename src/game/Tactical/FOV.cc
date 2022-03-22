@@ -717,7 +717,8 @@ void RevealRoofsAndItems(SOLDIERTYPE* const pSoldier, const BOOLEAN fShowLocator
 							if ( InAHiddenRoom( (INT16)marker, &ubRoomNo ) )
 							{
 								RemoveRoomRoof( (INT16)marker, ubRoomNo, pSoldier );
-								if ( ubRoomNo == ROOM_SURROUNDING_BOXING_RING && gWorldSectorX == BOXING_SECTOR_X && gWorldSectorY == BOXING_SECTOR_Y && gbWorldSectorZ == BOXING_SECTOR_Z )
+								static const SGPSector ringSector(BOXING_SECTOR_X, BOXING_SECTOR_Y, BOXING_SECTOR_Z);
+								if (ubRoomNo == ROOM_SURROUNDING_BOXING_RING && gWorldSector == ringSector)
 								{
 									// reveal boxing ring at same time
 									RemoveRoomRoof( (INT16)marker, BOXING_RING, pSoldier );

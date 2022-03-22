@@ -2575,10 +2575,8 @@ static void StartBombMessageBox(SOLDIERTYPE* const s, INT16 const gridno)
 		PlayJA2Sample(USE_STATUE_REMOTE, HIGHVOLUME, 1, MIDDLEPAN);
 
 		// Check what sector we are in....
-		if (gWorldSectorX == 3 &&
-			gWorldSectorY == MAP_ROW_O &&
-			gbWorldSectorZ == 0 &&
-			GetRoom(s->sGridNo) == 4)
+		const SGPSector sectorO3(3, MAP_ROW_O);
+		if (gWorldSector == sectorO3 && GetRoom(s->sGridNo) == 4)
 		{
 			ChangeO3SectorStatue(FALSE); // Open statue
 			DoMercBattleSound(s, BATTLE_SOUND_OK1);

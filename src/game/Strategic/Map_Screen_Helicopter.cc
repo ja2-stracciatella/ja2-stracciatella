@@ -975,13 +975,13 @@ void HandleAnimationOfSectors( void )
 void HandleHelicopterOnGround(BOOLEAN handleGraphicToo)
 {
 	// No worries if underground
-	if (gbWorldSectorZ != 0) return;
+	if (gWorldSector.z != 0) return;
 
 	for (UINT8 site = 0; site != NUMBER_OF_REFUEL_SITES; ++site)
 	{
 		RefuelSite const& r = g_refuel_site[site];
 		// Is this refueling site sector the loaded sector?
-		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) != r.sector) continue;
+		if (gWorldSector.AsStrategicIndex() != r.sector) continue;
 
 		// YES, so find out if the chopper is landed here
 		if (IsHelicopterOnGroundAtRefuelingSite(r))
@@ -995,8 +995,8 @@ void HandleHelicopterOnGround(BOOLEAN handleGraphicToo)
 			if (iHelicopterVehicleId != -1)
 			{
 				MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
-				p.sSectorX = gWorldSectorX;
-				p.sSectorY = gWorldSectorY;
+				p.sSectorX = gWorldSector.x;
+				p.sSectorY = gWorldSector.y;
 			}
 		}
 		else

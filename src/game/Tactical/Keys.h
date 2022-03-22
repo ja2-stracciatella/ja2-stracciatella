@@ -178,7 +178,7 @@ void UpdateDoorPerceivedValue( DOOR *pDoor );
 
 
 //Saves the Door Table array to the temp file
-void SaveDoorTableToDoorTableTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+void SaveDoorTableToDoorTableTempFile(const SGPSector& sector);
 
 //Load the door table from the temp file
 void LoadDoorTableFromDoorTableTempFile(void);
@@ -194,7 +194,7 @@ bool ModifyDoorStatus(GridNo, BOOLEAN is_open, BOOLEAN perceived_open);
 void TrashDoorStatusArray(void);
 
 // Saves the Door Status array to the MapTempfile
-void SaveDoorStatusArrayToDoorStatusTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+void SaveDoorStatusArrayToDoorStatusTempFile(const SGPSector& sector);
 
 //Load the door status from the door status temp file
 void LoadDoorStatusArrayFromDoorStatusTempFile();

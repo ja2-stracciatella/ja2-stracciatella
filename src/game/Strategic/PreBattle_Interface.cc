@@ -205,7 +205,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 			return;
 		}
 
-		if (gfTacticalTraversal && (battle_group == gpTacticalTraversalGroup || gbWorldSectorZ > 0))
+		if (gfTacticalTraversal && (battle_group == gpTacticalTraversalGroup || gWorldSector.z > 0))
 		{
 			return;
 		}
@@ -250,7 +250,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		{ // There are bloodcats in the sector, so no autoresolve allowed
 			gubExplicitEnemyEncounterCode = HOSTILE_BLOODCATS_CODE;
 		}
-		else if (gbWorldSectorZ != 0)
+		else if (gWorldSector.z != 0)
 		{ // We are underground, so no autoresolve allowed
 			SECTORINFO const& sector = SectorInfo[SECTOR(x, y)]; // XXX Why check surface info when underground?
 			if (sector.ubCreaturesInBattle != 0)
@@ -1055,7 +1055,11 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender( );
 			RefreshScreen();
-			if( gubPBSectorX == gWorldSectorX && gubPBSectorY == gWorldSectorY && !gbWorldSectorZ )
+			SGPSector sector(gubPBSectorX, gubPBSectorY, gubPBSectorZ);
+			// FIXME: suspicious, this ensures gfGotoSectorTransition is set only if the world is not underground — but why would it matter?
+			SGPSector sector2(sector);
+			sector2.z = 0;
+			if (sector2 == gWorldSector)
 			{
 				gfGotoSectorTransition = TRUE;
 			}
@@ -1075,7 +1079,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 			}
 
 			// must come AFTER anything that needs gpBattleGroup, as it wipes it out
-			SetCurrentWorldSector(SGPSector(gubPBSectorX, gubPBSectorY, gubPBSectorZ));
+			SetCurrentWorldSector(sector);
 
 			KillPreBattleInterface();
 		}
@@ -1186,8 +1190,8 @@ static void ActivateAutomaticAutoResolveStart()
 void CalculateNonPersistantPBIInfo(void)
 {
 	//We need to set up the non-persistant PBI
-	if( !gfBlitBattleSectorLocator ||
-			gubPBSectorX != gWorldSectorX || gubPBSectorY != gWorldSectorY || gubPBSectorZ != gbWorldSectorZ )
+	SGPSector sector(gubPBSectorX, gubPBSectorY, gubPBSectorZ);
+	if (!gfBlitBattleSectorLocator || sector != gWorldSector)
 	{ //Either the locator isn't on or the locator info is in a different sector
 
 		//Calculated the encounter type
@@ -1201,9 +1205,9 @@ void CalculateNonPersistantPBIInfo(void)
 		{ //There are bloodcats in the sector, so no autoresolve allowed
 			gubExplicitEnemyEncounterCode = HOSTILE_BLOODCATS_CODE;
 		}
-		else if( gbWorldSectorZ )
+		else if (gWorldSector.z)
 		{
-			UNDERGROUND_SECTORINFO *pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+			UNDERGROUND_SECTORINFO *pSector = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
 			Assert( pSector );
 			if( pSector->ubCreaturesInBattle )
 			{
@@ -1217,7 +1221,7 @@ void CalculateNonPersistantPBIInfo(void)
 		}
 		else
 		{
-			SECTORINFO *pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
+			SECTORINFO *pSector = &SectorInfo[gWorldSector.AsByte()];
 			Assert( pSector );
 			if( pSector->ubCreaturesInBattle )
 			{
@@ -1231,9 +1235,9 @@ void CalculateNonPersistantPBIInfo(void)
 		}
 		if( gubExplicitEnemyEncounterCode != NO_ENCOUNTER_CODE )
 		{	//Set up the location as well as turning on the blit flag.
-			gubPBSectorX = (UINT8)gWorldSectorX;
-			gubPBSectorY = (UINT8)gWorldSectorY;
-			gubPBSectorZ = (UINT8)gbWorldSectorZ;
+			gubPBSectorX = (UINT8) gWorldSector.x;
+			gubPBSectorY = (UINT8) gWorldSector.y;
+			gubPBSectorZ = (UINT8) gWorldSector.z;
 			gfBlitBattleSectorLocator = TRUE;
 		}
 	}
@@ -1465,7 +1469,7 @@ void LogBattleResults(const UINT8 ubVictoryCode)
 			default:                          return;
 		}
 	}
-	AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(), sSector.x, sSector.y);
+	AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(), SGPSector(sSector.x, sSector.y));
 }
 
 

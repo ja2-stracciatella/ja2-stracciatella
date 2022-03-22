@@ -529,7 +529,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 	bool const fHasGasMask = IsWearingHeadGear(*pSoldier, GASMASK);
 
-	if ( gbWorldSectorZ > 0 )
+	if (gWorldSector.z > 0)
 	{
 		fNight = FALSE;
 	}

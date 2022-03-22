@@ -30,17 +30,17 @@ UINT8 SGPSector::AsByte() const
 
 UINT16 SGPSector::AsStrategicIndex() const
 {
-	return x + y * MAP_WORLD_X; // same as CALCULATE_STRATEGIC_INDEX
+	return x + y * 18; // 18 == MAP_WORLD_X
 }
 
-ST::string AsShortString() const
+ST::string SGPSector::AsShortString() const
 {
 	// return a string id like J11
 	return ST::format("{c}{}", 'A' - 1 + y, x);
 }
 
-ST::string AsLongString() const
+ST::string SGPSector::AsLongString() const
 {
 	// return a string id like J11_B0
-	return ST::format("{c}{}_b{}", y + 'A' - 1, x, z)
+	return ST::format("{c}{}_b{}", y + 'A' - 1, x, z);
 }

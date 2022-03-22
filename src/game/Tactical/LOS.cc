@@ -1506,7 +1506,7 @@ INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* const pStartSoldier, co
 	fOk = CalculateSoldierZPos( pStartSoldier, LOS_POS, &dStartZPos );
 	CHECKF( fOk );
 
-	if ( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_N )
+	if (gWorldSector.x == 5 && gWorldSector.y == MAP_ROW_N)
 	{
 		// in the bloodcat arena sector, skip sight between army & bloodcats
 		if ( pStartSoldier->bTeam == ENEMY_TEAM && pEndSoldier->bTeam == CREATURE_TEAM )

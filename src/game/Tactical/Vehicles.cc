@@ -346,11 +346,11 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		SetSoldierExitHelicopterInsertionData(&s);
 
 		// Update in sector if this is the current sector
-		if (s.sSectorX == gWorldSectorX &&
-			s.sSectorY == gWorldSectorY &&
-			s.bSectorZ == gbWorldSectorZ)
+		if (s.sSectorX == gWorldSector.x &&
+			s.sSectorY == gWorldSector.y &&
+			s.bSectorZ == gWorldSector.z)
 		{
-			UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+			UpdateMercInSector(s, gWorldSector);
 		}
 	}
 	else
@@ -529,8 +529,8 @@ BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 	// if not in vehicle, don't take out, not much point, now is there?
 	if (s->bAssignment != VEHICLE) return FALSE;
 
-	if (s->sSectorX == gWorldSectorX &&
-		s->sSectorY == gWorldSectorY &&
+	if (s->sSectorX == gWorldSector.x &&
+		s->sSectorY == gWorldSector.y &&
 		s->bSectorZ == 0 &&
 		s->bInSector &&
 		!InHelicopter(*s)) // helicopter isn't a soldiertype instance
@@ -548,8 +548,8 @@ bool PutSoldierInVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 {
 	if (!AddSoldierToVehicle(s, v)) return false;
 
-	if (s.sSectorX == gWorldSectorX &&
-		s.sSectorY == gWorldSectorY &&
+	if (s.sSectorX == gWorldSector.x &&
+		s.sSectorY == gWorldSector.y &&
 		s.bSectorZ == 0 &&
 		!IsHelicopter(v) &&
 		guiCurrentScreen == GAME_SCREEN)

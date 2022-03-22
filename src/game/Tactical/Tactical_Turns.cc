@@ -67,7 +67,7 @@ void HandleRPCDescription()
 		if (s->bLife < OKLIFE)                          continue;
 		if (s->sSectorX != ts.bGuideDescriptionSectorX) continue;
 		if (s->sSectorY != ts.bGuideDescriptionSectorY) continue;
-		if (s->bSectorZ != gbWorldSectorZ)              continue;
+		if (s->bSectorZ != gWorldSector.z)              continue;
 		if (s->fBetweenSectors)                         continue;
 
 		if (s->ubProfile == IRA    ||

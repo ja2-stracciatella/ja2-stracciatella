@@ -298,7 +298,7 @@ static void StartMeanwhile(void)
 	// OK, save old position...
 	if ( gfWorldLoaded )
 	{
-		gsOldSector = SGPSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		gsOldSector = gWorldSector;
 	}
 	gsOldSelectedSector = SGPSector(sSelMapX, sSelMapY, iCurrentMapSectorZ);
 
@@ -470,7 +470,7 @@ static void ProcessImplicationsOfMeanwhile()
 			{
 				INT16	sSectorX = 0, sSectorY = 0;
 
-				StartQuest( QUEST_FIND_SCIENTIST, -1, -1 );
+				StartQuest(QUEST_FIND_SCIENTIST, SGPSector(-1, -1));
 				// place Madlab and robot!
 				auto placement = GCM->getNpcPlacement(MADLAB);
 				for (UINT8 s : placement->sectorIds)
@@ -782,10 +782,9 @@ static void HandleDelayedFirstBattleVictory(void)
 }
 
 
-void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 bSectorZ, BOOLEAN fFromAutoResolve )
+void HandleFirstBattleEndingWhileInTown(const SGPSector& sector, BOOLEAN fFromAutoResolve)
 {
 	INT8 bTownId = 0;
-	INT16 sSector = 0;
 
 	if ( GetMeanWhileFlag( END_OF_PLAYERS_FIRST_BATTLE ) )
 	{
@@ -796,11 +795,8 @@ void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 b
 	// if  is true then this is the end of the second battle, post the first meanwhile OR, on call to trash world, that
 	// means player is leaving sector
 
-	// grab sector value
-	sSector = sSectorX + sSectorY * MAP_WORLD_X;
-
 	// get town name id
-	bTownId = StrategicMap[ sSector ].bNameId;
+	bTownId = StrategicMap[sector.AsStrategicIndex()].bNameId;
 
 	if ( bTownId == BLANK_SECTOR )
 	{

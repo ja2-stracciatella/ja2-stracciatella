@@ -59,15 +59,15 @@ void StrategicHandlePlayerTeamMercDeath(SOLDIERTYPE& s)
 		// CJC Nov 11, 2002: Use the soldier's sector location unless impossible
 		INT16 x = s.sSectorX;
 		INT16 y = s.sSectorY;
-		if (s.sSectorX == 0 || s.sSectorY == 0)
+		if (!x || !y)
 		{
-			x = gWorldSectorX;
-			y = gWorldSectorY;
+			x = gWorldSector.x;
+			y = gWorldSector.y;
 		}
 
 		SOLDIERTYPE const* const killer = s.attacker;
 		UINT8              const code   = killer && killer->bTeam == OUR_TEAM ? HISTORY_MERC_KILLED_CHARACTER : HISTORY_MERC_KILLED;
-		AddHistoryToPlayersLog(code, s.ubProfile, now, x, y);
+		AddHistoryToPlayersLog(code, s.ubProfile, now, SGPSector(x, y));
 	}
 
 	if (guiCurrentScreen != GAME_SCREEN)

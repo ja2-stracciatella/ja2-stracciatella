@@ -259,8 +259,8 @@ void CreateSummaryWindow()
 	DisableEditorTaskbar();
 	DisableAllTextFields();
 
-	gsSector = SGPSector(gWorldSectorX, gWorldSectorY);
-	gsSelSector = gsSector;
+	gsSector = gWorldSector;
+	gsSelSector = gWorldSector;
 	gfSummaryWindowActive = TRUE;
 	gfPersistantSummary = FALSE;
 	guiInitTimer = GetJA2Clock();

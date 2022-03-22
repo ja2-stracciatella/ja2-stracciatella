@@ -268,7 +268,7 @@ static void UpdateHelpTextForInvnentoryStashSlots(void)
 }
 
 
-static void BuildStashForSelectedSector(INT16 sMapX, INT16 sMapY, INT16 sMapZ);
+static void BuildStashForSelectedSector(const SGPSector& sector);
 static void CreateMapInventoryButtons(void);
 static void CreateMapInventoryPoolDoneButton(void);
 static void CreateMapInventoryPoolSlots(void);
@@ -291,13 +291,13 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 		fShowMapInventoryPool = FALSE;
 	}
 */
-
+	SGPSector sector(sSelMapX, sSelMapY, iCurrentMapSectorZ);
 	if (fShowMapInventoryPool && !fCreated)
 	{
-		if( ( gWorldSectorX == sSelMapX ) && ( gWorldSectorY == sSelMapY ) && ( gbWorldSectorZ == iCurrentMapSectorZ ) )
+		if (gWorldSector == sector)
 		{
 			// handle all reachable before save
-			HandleAllReachAbleItemsInTheSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+			HandleAllReachAbleItemsInTheSector(gWorldSector);
 		}
 
 		// destroy buttons for map border
@@ -312,7 +312,7 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 		CreateMapInventoryButtons( );
 
 		// build stash
-		BuildStashForSelectedSector( sSelMapX, sSelMapY, ( INT16 )( iCurrentMapSectorZ ) );
+		BuildStashForSelectedSector(sector);
 
 		CreateMapInventoryPoolDoneButton( );
 
@@ -405,9 +405,8 @@ static void SaveSeenAndUnseenItems(void)
 	}
 
 	// if this is the loaded sector handle here
-	if (gWorldSectorX  == sSelMapX &&
-			gWorldSectorY  == sSelMapY &&
-			gbWorldSectorZ == (INT8)iCurrentMapSectorZ)
+	SGPSector sector(sSelMapX, sSelMapY, iCurrentMapSectorZ);
+	if (gWorldSector == sector)
 	{
 		ReBuildWorldItemStashForLoadedSector(pSeenItemsList, pUnSeenItems);
 	}
@@ -660,19 +659,17 @@ static void CheckGridNoOfItemsInMapScreenMapInventory(void);
 static void SortSectorInventory(WORLDITEM* pInventory, size_t sizeOfArray);
 
 
-static void BuildStashForSelectedSector(const INT16 sMapX, const INT16 sMapY, const INT16 sMapZ)
+static void BuildStashForSelectedSector(const SGPSector& sector)
 {
 	std::vector<WORLDITEM> temp;
 	std::vector<WORLDITEM>* items = nullptr;
-	if (sMapX == gWorldSectorX &&
-			sMapY == gWorldSectorY &&
-			sMapZ == gbWorldSectorZ)
+	if (sector == gWorldSector)
 	{
 		items = &gWorldItems;
 	}
 	else
 	{
-		temp = LoadWorldItemsFromTempItemFile(sMapX, sMapY, sMapZ);
+		temp = LoadWorldItemsFromTempItemFile(sector.x, sector.y, sector.z);
 		items = &temp;
 	}
 
@@ -726,7 +723,7 @@ static void ReBuildWorldItemStashForLoadedSector(const std::vector<WORLDITEM>& p
 	}
 
 	//reset the visible item count in the sector info struct
-	SetNumberOfVisibleWorldItemsInSectorStructureForSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, uiTotalNumberOfVisibleItems);
+	SetNumberOfVisibleWorldItemsInSectorStructureForSector(gWorldSector.x, gWorldSector.y, gWorldSector.z, uiTotalNumberOfVisibleItems);
 }
 
 
@@ -1403,12 +1400,10 @@ static INT32 MapScreenSectorInventoryCompare(const void* pNum1, const void* pNum
 
 static BOOLEAN CanPlayerUseSectorInventory(void)
 {
-	INT16 x;
-	INT16 y;
-	INT16 z;
+	SGPSector sector;
 	return
-		!GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(&x, &y, &z) ||
-		sSelMapX           != x ||
-		sSelMapY           != y ||
-		iCurrentMapSectorZ != z;
+		!GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(sector) ||
+		sSelMapX           != sector.x ||
+		sSelMapY           != sector.y ||
+		iCurrentMapSectorZ != sector.z;
 }

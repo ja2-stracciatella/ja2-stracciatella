@@ -299,7 +299,7 @@ void HandleEnricoEmail(void)
 
 				}
 
-				AddHistoryToPlayersLog( HISTORY_ENRICO_COMPLAINED, 0, GetWorldTotalMin(), -1, -1 );
+				AddHistoryToPlayersLog(HISTORY_ENRICO_COMPLAINED, 0, GetWorldTotalMin(), SGPSector(-1, -1));
 			}
 
 			// penalize loyalty!

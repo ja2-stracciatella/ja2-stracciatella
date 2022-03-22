@@ -315,8 +315,8 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		 * saving the sector info struct because the
 		 * NewWayOfSavingEnemyAndCivliansToTempFile() will RESET the civ or enemy
 		 * flag AFTER they have been saved. */
-		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE,  TRUE);
-		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, FALSE, TRUE);
+		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, TRUE,  TRUE);
+		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, FALSE, TRUE);
 
 		// Setup the save game header
 		header.uiSavedGameVersion = guiSavedGameVersion;
@@ -331,12 +331,12 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		header.ubNumOfMercsOnPlayersTeam = NumberOfMercsOnPlayerTeam();
 		header.iCurrentBalance           = LaptopSaveInfo.iCurrentBalance;
 		header.uiCurrentScreen           = guiPreviousOptionScreen;
-		header.fAlternateSector          = GetSectorFlagStatus(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_USE_ALTERNATE_MAP);
+		header.fAlternateSector          = GetSectorFlagStatus(gWorldSector, SF_USE_ALTERNATE_MAP);
 
 		if (gfWorldLoaded)
 		{
 			header.fWorldLoaded   = TRUE;
-			header.ubLoadScreenID = GetLoadScreenID(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+			header.ubLoadScreenID = GetLoadScreenID(gWorldSector);
 		}
 		else
 		{
@@ -724,7 +724,7 @@ void LoadSavedGame(const ST::string &saveName)
 	//if we are suppose to use the alternate sector
 	if (SaveGameHeader.fAlternateSector)
 	{
-		SetSectorFlag(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_USE_ALTERNATE_MAP);
+		SetSectorFlag(gWorldSector, SF_USE_ALTERNATE_MAP);
 		gfUseAlternateMap = TRUE;
 	}
 
@@ -732,13 +732,13 @@ void LoadSavedGame(const ST::string &saveName)
 	if (SaveGameHeader.fWorldLoaded || version < 50)
 	{
 		//Get the current world sector coordinates
-		SGPSector sLoadSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		SGPSector sLoadSector = gWorldSector;
 
 		// This will guarantee that the sector will be loaded
 		SetWorldSectorInvalid();
 
 		//if we should load a sector (if the person didnt just start the game game)
-		if (sLoadSector.x != 0 && sLoadSector.y != 0)
+		if (sLoadSector.IsValid())
 		{
 			//Load the sector
 			SetCurrentWorldSector(sLoadSector);
@@ -748,11 +748,8 @@ void LoadSavedGame(const ST::string &saveName)
 	{ //By clearing these values, we can avoid "in sector" checks -- at least, that's the theory.
 		SetWorldSectorInvalid();
 
-		INT16 const x = SaveGameHeader.sSectorX;
-		INT16 const y = SaveGameHeader.sSectorY;
-		INT8  const z = SaveGameHeader.bSectorZ;
-		gubLastLoadingScreenID = x == -1 || y == -1 || z == -1 ?
-			LOADINGSCREEN_HELI : GetLoadScreenID(x, y, z);
+		SGPSector sector(SaveGameHeader.sSectorX, SaveGameHeader.sSectorY, SaveGameHeader.bSectorZ);
+		gubLastLoadingScreenID = sector.IsValid() ? GetLoadScreenID(sector) : LOADINGSCREEN_HELI;
 
 		BeginLoadScreen();
 	}
@@ -1042,11 +1039,11 @@ void LoadSavedGame(const ST::string &saveName)
 	BAR(1, "Final Checks...");
 
 	// Reset the lighting level if we are outside
-	if (gbWorldSectorZ == 0)
+	if (gWorldSector.z == 0)
 		LightSetBaseLevel(GetTimeOfDayAmbientLightLevel());
 
 	//if we have been to this sector before
-//	if (SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)].uiFlags & SF_ALREADY_VISITED)
+//	if (SectorInfo[gWorldSector.AsByte()].uiFlags & SF_ALREADY_VISITED)
 	{
 		//Reset the fact that we are loading a saved game
 		gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
@@ -1543,9 +1540,9 @@ static void SaveTacticalStatusToSavedGame(HWFILE const f)
 	// Save the current sector location
 	BYTE  data[5];
 	DataWriter d{data};
-	INJ_I16(d, gWorldSectorX)
-	INJ_I16(d, gWorldSectorY)
-	INJ_I8( d, gbWorldSectorZ)
+	INJ_I16(d, (INT16) gWorldSector.x)
+	INJ_I16(d, (INT16) gWorldSector.y)
+	INJ_I8( d, gWorldSector.z)
 	Assert(d.getConsumed() == lengthof(data));
 
 	f->write(data, sizeof(data));
@@ -1561,9 +1558,9 @@ static void LoadTacticalStatusFromSavedGame(HWFILE const f, bool stracLinuxForma
 	f->read(data, sizeof(data));
 
 	DataReader d{data};
-	EXTR_I16(d, gWorldSectorX)
-	EXTR_I16(d, gWorldSectorY)
-	EXTR_I8( d, gbWorldSectorZ)
+	EXTR_I16(d, gWorldSector.x)
+	EXTR_I16(d, gWorldSector.y)
+	EXTR_I8( d, gWorldSector.z)
 	Assert(d.getConsumed() == lengthof(data));
 }
 
@@ -2115,9 +2112,9 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 	//if the current sector is valid
 	if (gfWorldLoaded)
 	{
-		*psSectorX = gWorldSectorX;
-		*psSectorY = gWorldSectorY;
-		*pbSectorZ = gbWorldSectorZ;
+		*psSectorX = gWorldSector.x;
+		*psSectorY = gWorldSector.y;
+		*pbSectorZ = gWorldSector.z;
 		return;
 	}
 
@@ -2157,9 +2154,9 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 	}
 
 	// if we STILL havent found a merc, give up and use the -1, -1, -1
-	*psSectorX = gWorldSectorX;
-	*psSectorY = gWorldSectorY;
-	*pbSectorZ = gbWorldSectorZ;
+	*psSectorX = gWorldSector.x;
+	*psSectorY = gWorldSector.y;
+	*pbSectorZ = gWorldSector.z;
 }
 
 

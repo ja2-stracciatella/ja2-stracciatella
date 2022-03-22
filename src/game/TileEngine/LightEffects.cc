@@ -195,14 +195,12 @@ void LoadLightEffectsFromLoadGameFile(HWFILE const hFile)
 }
 
 
-void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
+void SaveLightEffectsToMapTempFile(const SGPSector& sMap)
 {
 	UINT32	uiNumLightEffects=0;
 
 	//get the name of the map
-	ST::string const zMapName = GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
-
-	//delete file the file.
+	ST::string const zMapName = GetMapTempFileName(SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, sMap);
 	GCM->tempFiles()->deleteFile( zMapName );
 
 	//loop through and count the number of Light effects
@@ -215,7 +213,7 @@ void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 	if( uiNumLightEffects == 0 )
 	{
 		//set the fact that there are no Light effects for this sector
-		ReSetSectorFlag( sMapX, sMapY, bMapZ, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS );
+		ReSetSectorFlag(sMap, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS);
 		return;
 	}
 
@@ -230,16 +228,15 @@ void SaveLightEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 co
 		InjectLightEffectIntoFile(hFile, l);
 	}
 
-	SetSectorFlag( sMapX, sMapY, bMapZ, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS );
+	SetSectorFlag(sMap, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS);
 }
 
 
-void LoadLightEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
+void LoadLightEffectsFromMapTempFile(const SGPSector& sMap)
 {
 	UINT32	uiCnt=0;
 
-	ST::string const zMapName = GetMapTempFileName( SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
-
+	ST::string const zMapName = GetMapTempFileName(SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS, sMap);
 	AutoSGPFile hFile(GCM->tempFiles()->openForReading(zMapName));
 
 	//Clear out the old list

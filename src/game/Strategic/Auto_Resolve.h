@@ -26,7 +26,7 @@ BOOLEAN GetCurrentBattleSectorXYZ(SGPSector& psSector);
 UINT32 VirtualSoldierDressWound(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVictim, OBJECTTYPE* pKit, INT16 sKitPts, INT16 sStatus);
 
 //Returns TRUE if a battle is happening ONLY
-BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(INT16* psSectorX, INT16* psSectorY, INT16* psSectorZ);
+BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(SGPSector& psSector);
 
 ScreenID AutoResolveScreenHandle(void);
 
