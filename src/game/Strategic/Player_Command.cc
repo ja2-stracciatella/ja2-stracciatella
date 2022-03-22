@@ -30,10 +30,10 @@
 #include <string_theory/string>
 
 
-ST::string GetSectorFacilitiesFlags(INT16 x, INT16 y)
+ST::string GetSectorFacilitiesFlags(const SGPSector& sector)
 {
 	// Build a string stating current facilities present in sector
-	UINT32 const facilities = SectorInfo[SECTOR(x, y)].uiFacilitiesFlags;
+	UINT32 const facilities = SectorInfo[sector.AsByte()].uiFacilitiesFlags;
 	if (facilities == 0)
 	{
 		return sFacilitiesStrings[0];
