@@ -119,7 +119,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	}
 
 	const BOOLEAN fSectorLoaded =
-		CloseCrate(SGPSector(dest->deliverySectorX, dest->deliverySectorY, dest->deliverySectorZ), dest->deliverySectorGridNo);
+		CloseCrate(SGPSector(dest->deliverySector.x, dest->deliverySector.y, dest->deliverySector.z), dest->deliverySectorGridNo);
 
 	OBJECTTYPE* pObject       = NULL;
 	OBJECTTYPE* pStolenObject = NULL;
@@ -276,10 +276,10 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	{
 		//add all the items from the array that was built above
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		AddItemsToUnLoadedSector(dest->deliverySectorX, dest->deliverySectorY, dest->deliverySectorZ, usStandardMapPos, uiCount, pObject, 0, 0, 0, INVISIBLE);
+		AddItemsToUnLoadedSector(dest->deliverySector.x, dest->deliverySector.y, dest->deliverySector.z, usStandardMapPos, uiCount, pObject, 0, 0, 0, INVISIBLE);
 		if (uiStolenCount > 0)
 		{
-			AddItemsToUnLoadedSector(dest->deliverySectorX, dest->deliverySectorY, dest->deliverySectorZ, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, INVISIBLE);
+			AddItemsToUnLoadedSector(dest->deliverySector.x, dest->deliverySector.y, dest->deliverySector.z, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, INVISIBLE);
 		}
 		delete[] pObject;
 		delete[] pStolenObject;
@@ -356,7 +356,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	UINT8			ubLoop;
 	OBJECTTYPE Object;
 	auto shippingDest = GCM->getPrimaryShippingDestination();
-	SGPSector shippingSector(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ);
+	SGPSector shippingSector(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z);
 
 	if (uiReason == NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_RETURN_STOLEN_SHIPMENT_ITEMS )
 	{
@@ -447,9 +447,9 @@ void AddSecondAirportAttendant( void )
 	MERCPROFILESTRUCT& sal = GetProfile(SAL);
 	auto shippingDest = GCM->getPrimaryShippingDestination();
 
-	sal.sSectorX = shippingDest->deliverySectorX;
-	sal.sSectorY = shippingDest->deliverySectorY;
-	sal.bSectorZ = shippingDest->deliverySectorZ;
+	sal.sSectorX = shippingDest->deliverySector.x;
+	sal.sSectorY = shippingDest->deliverySector.y;
+	sal.bSectorZ = shippingDest->deliverySector.z;
 }
 
 
@@ -987,7 +987,7 @@ static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinatio
 	}
 
 	const BOOLEAN fSectorLoaded =
-		CloseCrate(SGPSector(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ), shippingDest->deliverySectorGridNo);
+		CloseCrate(SGPSector(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z), shippingDest->deliverySectorGridNo);
 
 	for(i=0; i<gpNewBobbyrShipments[ ubOrderNum ].ubNumberPurchases; i++)
 	{
@@ -1038,7 +1038,7 @@ static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinatio
 		//add all the items from the array that was built above
 
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		AddItemsToUnLoadedSector(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ, shippingDest->deliverySectorGridNo, uiCount, pObject, 0, 0, 0, INVISIBLE);
+		AddItemsToUnLoadedSector(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z, shippingDest->deliverySectorGridNo, uiCount, pObject, 0, 0, 0, INVISIBLE);
 		delete[] pObject;
 		pObject = NULL;
 	}
