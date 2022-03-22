@@ -357,7 +357,7 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 	UINT8 ubNumEnemies;
 
 	UINT8 ubSectorID = bCurrentTownMineSector.AsByte();
-	INT8 bSamSiteID = GetSAMIdFromSector(bCurrentTownMineSector.x, bCurrentTownMineSector.y, 0);
+	INT8 bSamSiteID = GetSAMIdFromSector(bCurrentTownMineSector);
 	if (bSamSiteID > 0 && IsSecretFoundAt(ubSectorID))
 	{
 		fUnknownSAMSite = TRUE;
