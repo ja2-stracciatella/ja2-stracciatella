@@ -136,6 +136,7 @@ public:
 	SGPSector(UINT16 a, UINT16 b, INT8 c = 0) noexcept : x(a), y(b), z(c) {};
 	SGPSector(const SGPSector&) noexcept = default;
 	SGPSector(UINT32 s) noexcept;
+	SGPSector(UINT32 s, INT8 h, const ST::string a) noexcept;
 
 	bool operator==(const SGPSector&) const noexcept;
 	bool operator!=(const SGPSector&) const noexcept;
