@@ -7,12 +7,12 @@ struct OBJECTTYPE;
 struct SOLDIERTYPE;
 
 
-void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY );
+void EnterAutoResolveMode(const SGPSector& ubSector);
 
 // is the autoresolve active?
 BOOLEAN IsAutoResolveActive( void );
 
-void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY );
+void EliminateAllEnemies(const SGPSector& ubSector);
 
 void ConvertTacticalBattleIntoStrategicAutoResolveBattle(void);
 

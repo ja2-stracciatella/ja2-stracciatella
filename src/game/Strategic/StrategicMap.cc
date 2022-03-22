@@ -3241,9 +3241,7 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 					gfEnteringMapScreenToEnterPreBattleInterface = TRUE;
 					gfAutomaticallyStartAutoResolve = TRUE;
 					gfUsePersistantPBI = FALSE;
-					gubPBSector.x = (UINT8)gWorldSector.x;
-					gubPBSector.y = (UINT8)gWorldSector.y;
-					gubPBSector.z = (UINT8)gWorldSector.z;
+					gubPBSector = gWorldSector;
 					gfBlitBattleSectorLocator = TRUE;
 					gfTransferTacticalOppositionToAutoResolve = TRUE;
 					if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )

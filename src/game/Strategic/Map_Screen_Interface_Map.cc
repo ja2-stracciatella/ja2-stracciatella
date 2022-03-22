@@ -3974,7 +3974,6 @@ BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSect
 {
 	INT32 iCounter = 0;
 	INT16 sBaseSectorValue = 0, sCurrentSectorValue = 0;
-	INT16 sSectorX = 0, sSectorY = 0;
 
 	// if no world is loaded, we can't be in combat (PBI/Auto-resolve locks out normal mapscreen interface for this)
 	if( !gfWorldLoaded )
