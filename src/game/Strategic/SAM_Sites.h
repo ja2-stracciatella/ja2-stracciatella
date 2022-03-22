@@ -25,4 +25,4 @@ INT32 GetNumberOfSAMSitesUnderPlayerControl();
 
 bool IsThereAFunctionalSAMSiteInSector(const SGPSector& sector);
 
-INT8 GetSAMIdFromSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+INT8 GetSAMIdFromSector(const SGPSector& sector);

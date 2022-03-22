@@ -119,16 +119,16 @@ bool IsThisSectorASAMSector(const SGPSector& sector)
 
 
 // a -1 will be returned upon failure
-INT8 GetSAMIdFromSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+INT8 GetSAMIdFromSector(const SGPSector& sector)
 {
 	// check if valid sector
-	if (bSectorZ != 0)
+	if (sector.z != 0)
 	{
 		return(-1);
 	}
 
 	// get the sector value
-	INT16 sSectorValue = SECTOR(sSectorX, sSectorY);
+	INT16 sSectorValue = sector.AsByte();
 	return GCM->findSamIDBySector(sSectorValue);
 }
 

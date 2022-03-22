@@ -66,10 +66,11 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 		return FALSE;
 	}
 
-	UINT8 const sector = SECTOR(sMapX, sMapY);
-	if( bMapZ == 0 )
+	SGPSector sMap(sMapX, sMapY, bMapZ);
+	UINT8 const sector = sMap.AsByte();
+	if (sMap.z == 0)
 	{
-		usMapSector = sMapX + ( sMapY * MAP_WORLD_X );
+		usMapSector = sMap.AsStrategicIndex();
 
 /*
 		// if enemies formerly controlled this sector
@@ -79,7 +80,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 			StrategicMap[ usMapSector ].fLostControlAtSomeTime = TRUE;
 		}
 */
-		if (NumHostilesInSector(SGPSector(sMapX, sMapY, bMapZ)))
+		if (NumHostilesInSector(sMap))
 		{ //too premature:  enemies still in sector.
 			return FALSE;
 		}
@@ -123,11 +124,11 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 				{
 					if (bMapZ == 0 && sector != SEC_J9 && sector != SEC_K4)
 					{
-						HandleMoraleEvent( NULL, MORALE_TOWN_LIBERATED, sMapX, sMapY, bMapZ );
-						HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_GAIN_TOWN_SECTOR, sMapX, sMapY, bMapZ );
+						HandleMoraleEvent(nullptr, MORALE_TOWN_LIBERATED, sMap.x, sMap.y, sMap.z);
+						HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_TOWN_SECTOR, sMap.x, sMap.y, sMap.z);
 
 						// liberation by definition requires that the place was enemy controlled in the first place
-						CheckIfEntireTownHasBeenLiberated( bTownId, sMapX, sMapY );
+						CheckIfEntireTownHasBeenLiberated(bTownId, sMap.x, sMap.y);
 					}
 				}
 			}
@@ -136,12 +137,12 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 			INT8 const mine_id = GetMineIndexForSector(sector);
 			if (mine_id != -1 && GetTotalLeftInMine(mine_id) > 0)
 			{
-				HandleMoraleEvent(NULL, MORALE_MINE_LIBERATED, sMapX, sMapY, bMapZ);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_MINE, sMapX, sMapY, bMapZ);
+				HandleMoraleEvent(NULL, MORALE_MINE_LIBERATED, sMap.x, sMap.y, sMap.z);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_MINE, sMap.x, sMap.y, sMap.z);
 			}
 
 			// if it's a SAM site sector
-			INT8 const sam_id = GetSAMIdFromSector(sMapX, sMapY, bMapZ);
+			INT8 const sam_id = GetSAMIdFromSector(sMap);
 			if (sam_id != -1)
 			{
 				if ( 1 /*!GetSectorFlagStatus( sMapX, sMapY, bMapZ, SF_SECTOR_HAS_BEEN_LIBERATED_ONCE ) */)
@@ -150,8 +151,8 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 					HandleMeanWhileEventPostingForSAMLiberation(sam_id);
 				}
 
-				HandleMoraleEvent( NULL, MORALE_SAM_SITE_LIBERATED, sMapX, sMapY, bMapZ );
-				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_GAIN_SAM, sMapX, sMapY, bMapZ );
+				HandleMoraleEvent(nullptr, MORALE_SAM_SITE_LIBERATED, sMap.x, sMap.y, sMap.z);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_SAM, sMap.x, sMap.y, sMap.z);
 
 				// if Skyrider has been delivered to chopper, and already mentioned Drassen SAM site, but not used this quote yet
 				if ( IsHelicopterPilotAvailable() && ( guiHelicopterSkyriderTalkState >= 1 ) && ( !gfSkyriderSaidCongratsOnTakingSAM ) )
@@ -181,7 +182,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 			}
 
 //			SetSectorFlag(sMap, SF_SECTOR_HAS_BEEN_LIBERATED_ONCE);
-			if ( bMapZ == 0 && ( ( sMapY == MAP_ROW_M && (sMapX >= 2 && sMapX <= 6) ) || (sMapY == MAP_ROW_N && sMapX == 6)) )
+			if (sMap.z == 0 && ((sMap.y == MAP_ROW_M && (sMap.x >= 2 && sMap.x <= 6)) || (sMap.y == MAP_ROW_N && sMap.x == 6)))
 			{
 				HandleOutskirtsOfMedunaMeanwhileScene();
 			}
@@ -189,18 +190,18 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 
 		if( fContested )
 		{
-			StrategicHandleQueenLosingControlOfSector( (UINT8)sMapX, (UINT8)sMapY, (UINT8)bMapZ );
+			StrategicHandleQueenLosingControlOfSector( (UINT8) sMap.x, (UINT8) sMap.y, (UINT8) sMap.z);
 		}
 	}
 	else
 	{
-		if (sector == SEC_P3 && bMapZ == 1)
+		if (sector == SEC_P3 && sMap.z == 1)
 		{ //Basement sector (P3_b1)
 			gfUseAlternateQueenPosition = TRUE;
 		}
 	}
 
-	if ( bMapZ == 0 )
+	if (sMap.z == 0)
 	{
 		SectorInfo[sector].fSurfaceWasEverPlayerControlled = TRUE;
 	}

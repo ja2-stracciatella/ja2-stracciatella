@@ -187,6 +187,6 @@ extern UINT16	sSelMapY;
 
 
 void    CreateDestroyMilitiaSectorButtons(void);
-BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId);
+BOOLEAN CanRedistributeMilitiaInSector(const SGPSector& sClickedSector, INT8 bClickedTownId);
 
 #endif

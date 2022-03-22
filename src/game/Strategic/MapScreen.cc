@@ -7683,23 +7683,23 @@ static void DestinationPlottingCompleted(void)
 static void HandleMilitiaRedistributionClick(void)
 {
 	ST::string sString;
-
+	SGPSector sector(sSelMapX, sSelMapY, iCurrentMapSectorZ);
 
 	// if on the surface
-	if ( iCurrentMapSectorZ == 0 )
+	if (sector.z == 0)
 	{
-		INT8 const bTownId = GetTownIdForSector(SECTOR(sSelMapX, sSelMapY));
+		INT8 const bTownId = GetTownIdForSector(sector.AsByte());
 		BOOLEAN fTownStillHidden = !IsTownFound(bTownId);
 
 		if( ( bTownId != BLANK_SECTOR ) && !fTownStillHidden )
 		{
-			if ( MilitiaTrainingAllowedInSector( sSelMapX, sSelMapY, ( INT8 )iCurrentMapSectorZ ) )
+			if (MilitiaTrainingAllowedInSector(sector.x, sector.y, sector.z))
 			{
 				fShowTownInfo  = FALSE;
 				fMapPanelDirty = TRUE;
 
 				// check if there's combat in any of the town's sectors
-				if ( CanRedistributeMilitiaInSector( sSelMapX, sSelMapY, bTownId ) )
+				if (CanRedistributeMilitiaInSector(sector, bTownId))
 				{
 					// Nope, ok, set selected militia town
 					sSelectedMilitiaTown = bTownId;
@@ -7719,8 +7719,8 @@ static void HandleMilitiaRedistributionClick(void)
 		}
 		else
 		{
-			INT8 const sam_id = GetSAMIdFromSector(sSelMapX, sSelMapY, 0);
-			if (sam_id != -1 && IsSecretFoundAt(SECTOR(sSelMapX, sSelMapY)))
+			INT8 const sam_id = GetSAMIdFromSector(sector);
+			if (sam_id != -1 && IsSecretFoundAt(sector.AsByte()))
 			{ // Cannot move militia around sam sites.
 				DoScreenIndependantMessageBox(pMapErrorString[30], MSG_BOX_FLAG_OK, NULL);
 			}

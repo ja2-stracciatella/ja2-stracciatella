@@ -3971,7 +3971,7 @@ static void HideExistenceOfUndergroundMapSector(UINT8 ubSectorX, UINT8 ubSectorY
 }
 
 
-BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId)
+BOOLEAN CanRedistributeMilitiaInSector(const SGPSector& sClickedSector, INT8 bClickedTownId)
 {
 	INT32 iCounter = 0;
 	INT16 sBaseSectorValue = 0, sCurrentSectorValue = 0;
