@@ -986,7 +986,7 @@ static ScreenID UIHandleNewBadMerc(UI_EVENT*)
 	}
 	else
 	{
-		if (UNDERGROUND_SECTORINFO* const sector = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z))
+		if (UNDERGROUND_SECTORINFO* const sector = FindUnderGroundSector(gWorldSector))
 		{
 			switch (s->ubSoldierClass)
 			{

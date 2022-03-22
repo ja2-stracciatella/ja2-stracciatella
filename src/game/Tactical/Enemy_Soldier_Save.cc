@@ -125,7 +125,7 @@ void LoadEnemySoldiersFromTempFile()
 	UINT8 ubStrategicCreatures;
 	if (gWorldSector.z != 0)
 	{
-		UNDERGROUND_SECTORINFO const* const pSector = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		UNDERGROUND_SECTORINFO const* const pSector = FindUnderGroundSector(gWorldSector);
 		if (!pSector)
 		{
 			throw std::runtime_error("Missing underground sector info");
@@ -270,7 +270,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	UINT8                         ubNumCreatures   = 0;
 	if (gWorldSector.z != 0)
 	{
-		underground_info = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		underground_info = FindUnderGroundSector(gWorldSector);
 		if (!underground_info)
 		{
 			throw std::runtime_error("Missing underground sector info");

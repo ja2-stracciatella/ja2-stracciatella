@@ -1272,21 +1272,22 @@ ST::string GetSectorIDString(const SGPSector& sector, BOOLEAN detailed)
 
 ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)
 {
-	if (x <= 0 || y <= 0 || z < 0) /* Empty? */
+	SGPSector sector(x, y, z);
+	if (!sector.IsValid())
 	{
 		return ST::null;
 	}
 
-	if (z != 0)
+	if (sector.z != 0)
 	{
-		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(x, y, z);
+		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(sector);
 		if (!u || (!(u->uiFlags & SF_ALREADY_VISITED) && !gfGettingNameFromSaveLoadScreen))
 		{ // Display nothing
 			return ST::null;
 		}
 	}
 
-	INT8    const  mine_index = GetIdOfMineForSector(SGPSector(x, y, z));
+	INT8    const  mine_index = GetIdOfMineForSector(sector);
 	ST::string add;
 	if (mine_index != -1)
 	{
@@ -1299,11 +1300,11 @@ ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)
 
 	if (add.empty())
 	{
-		UINT8 const sector_id = SECTOR(x, y);
-		add = GetSectorLandTypeString(sector_id, z, detailed);
+		UINT8 const sector_id = sector.AsByte();
+		add = GetSectorLandTypeString(sector_id, sector.z, detailed);
 	}
 
-	return ST::format("{c}{}: {}", 'A' + y - 1, x, add);
+	return ST::format("{c}{}: {}", 'A' + sector.y - 1, sector.x, add);
 }
 
 

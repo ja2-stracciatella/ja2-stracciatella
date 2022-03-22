@@ -1199,7 +1199,7 @@ void CalculateNonPersistantPBIInfo(void)
 		}
 		else if (gWorldSector.z)
 		{
-			UNDERGROUND_SECTORINFO *pSector = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
+			UNDERGROUND_SECTORINFO *pSector = FindUnderGroundSector(gWorldSector);
 			Assert( pSector );
 			if( pSector->ubCreaturesInBattle )
 			{

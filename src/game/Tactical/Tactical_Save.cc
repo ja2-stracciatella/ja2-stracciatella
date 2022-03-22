@@ -445,7 +445,7 @@ static UINT32 GetSectorFlags(const SGPSector& sector)
 	}
 	else
 	{
-		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(sector.x, sector.y, sector.z);
+		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(sector);
 		return u ? u->uiFlags : 0;
 	}
 }
@@ -559,7 +559,7 @@ static void SetLastTimePlayerWasInSector(void)
 	}
 	else if (gWorldSector.z > 0)
 	{
-		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(gWorldSector);
 		if (!u)
 		{
 			SLOGW("Failed to Set the 'uiTimeCurrentSectorWasLastLoaded' for an underground sector");
@@ -578,7 +578,7 @@ static UINT32 GetLastTimePlayerWasInSector(void)
 	}
 	else if (gWorldSector.z > 0)
 	{
-		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(gWorldSector);
 		if (!u)
 		{
 			SLOGW("Failed to Get the 'uiTimeCurrentSectorWasLastLoaded' from an underground sector");
@@ -815,15 +815,18 @@ void SetSectorFlag(const SGPSector& sMap, SectorFlags const flag_to_set)
 
 void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags const flag_to_set)
 {
+	SGPSector sector(x, y, z);
+	static const SGPSector tixa(TIXA_SECTOR_X, TIXA_SECTOR_Y);
+	static const SGPSector gunrange(GUN_RANGE_X, GUN_RANGE_Y, GUN_RANGE_Z);
 	if (flag_to_set == SF_ALREADY_VISITED)
 	{
 		// Do certain things when particular sectors are visited
-		if (x == TIXA_SECTOR_X && y == TIXA_SECTOR_Y)
+		if (sector == tixa)
 		{
 			// Tixa prison (not seen until Tixa visited)
 			SectorInfo[SEC_J9].uiFacilitiesFlags |= SFCF_PRISON;
 		}
-		else if (x == GUN_RANGE_X && y == GUN_RANGE_Y && z == GUN_RANGE_Z)
+		else if (sector == gunrange)
 		{
 			// Alma shooting range (not seen until sector visited)
 			SectorInfo[SEC_H13].uiFacilitiesFlags |= SFCF_GUN_RANGE;
@@ -833,7 +836,7 @@ void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags cons
 		}
 
 		// Increment daily counter of sectors visited
-		if (!GetSectorFlagStatus(x, y, z, SF_ALREADY_VISITED) &&
+		if (!GetSectorFlagStatus(sector, SF_ALREADY_VISITED) &&
 			++gStrategicStatus.ubNumNewSectorsVisitedToday == NEW_SECTORS_EQUAL_TO_ACTIVITY)
 		{
 			// Visited enough to count as an active day
@@ -843,11 +846,11 @@ void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags cons
 
 	if (z == 0)
 	{
-		SectorInfo[SECTOR(x, y)].uiFlags |= flag_to_set;
+		SectorInfo[sector.AsByte()].uiFlags |= flag_to_set;
 	}
 	else
 	{
-		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(x, y, z);
+		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(sector);
 		if (u) u->uiFlags |= flag_to_set;
 	}
 }
@@ -859,13 +862,14 @@ void ReSetSectorFlag(const SGPSector& sMap, SectorFlags const flag_to_clear)
 
 void ReSetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags const flag_to_clear)
 {
-	if (z == 0)
+	SGPSector sector(x, y, z);
+	if (sector.z == 0)
 	{
-		SectorInfo[SECTOR(x, y)].uiFlags &= ~flag_to_clear;
+		SectorInfo[sector.AsByte()].uiFlags &= ~flag_to_clear;
 	}
 	else
 	{
-		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(x, y, z);
+		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(sector);
 		if (u) u->uiFlags &= ~flag_to_clear;
 	}
 }
@@ -1113,7 +1117,7 @@ UINT32 GetNumberOfVisibleWorldItemsFromSectorStructureForSector(INT16 const x, I
 	else
 	{
 		//find the underground sector
-		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(sMap.x, sMap.y, sMap.z);
+		UNDERGROUND_SECTORINFO const* const u = FindUnderGroundSector(sMap);
 		n_items = u ? u->uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer : 0;
 	}
 
@@ -1130,13 +1134,14 @@ UINT32 GetNumberOfVisibleWorldItemsFromSectorStructureForSector(INT16 const x, I
 
 void SetNumberOfVisibleWorldItemsInSectorStructureForSector(INT16 const x, INT16 const y, INT8 const z, UINT32 const n_items)
 {
+	SGPSector sector(x, y, z);
 	if (z == 0)
 	{
-		SectorInfo[SECTOR(x, y)].uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer = n_items;
+		SectorInfo[sector.AsByte()].uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer = n_items;
 	}
 	else
 	{
-		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(x, y, z);
+		UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(sector);
 		if (u) u->uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer = n_items;
 	}
 }
