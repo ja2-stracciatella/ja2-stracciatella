@@ -119,7 +119,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	}
 
 	const BOOLEAN fSectorLoaded =
-		CloseCrate(SGPSector(dest->deliverySector.x, dest->deliverySector.y, dest->deliverySector.z), dest->deliverySectorGridNo);
+		CloseCrate(dest->deliverySector, dest->deliverySectorGridNo);
 
 	OBJECTTYPE* pObject       = NULL;
 	OBJECTTYPE* pStolenObject = NULL;
@@ -356,7 +356,6 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	UINT8			ubLoop;
 	OBJECTTYPE Object;
 	auto shippingDest = GCM->getPrimaryShippingDestination();
-	SGPSector shippingSector(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z);
 
 	if (uiReason == NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_RETURN_STOLEN_SHIPMENT_ITEMS )
 	{
@@ -398,13 +397,13 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 					CreateItems( SW38, (INT8) (90 + Random( 10 )), 2, &Object );
 					break;
 			}
-			if (gWorldSector == shippingSector)
+			if (gWorldSector == shippingDest->deliverySector)
 			{
 				AddItemToPool(shippingDest->deliverySectorGridNo, &Object, INVISIBLE, 0, 0, 0);
 			}
 			else
 			{
-				AddItemsToUnLoadedSector(shippingSector.x, shippingSector.y, shippingSector.z, shippingDest->deliverySectorGridNo, 1, &Object, 0, 0, 0, INVISIBLE);
+				AddItemsToUnLoadedSector(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z, shippingDest->deliverySectorGridNo, 1, &Object, 0, 0, 0, INVISIBLE);
 			}
 		}
 	}
@@ -418,7 +417,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	}
 
 	// If the Drassen airport sector is already loaded, move the item pools...
-	if (gWorldSector == shippingSector)
+	if (gWorldSector == shippingDest->deliverySector)
 	{
 		// sector is loaded!
 		// just move the hidden item pool
@@ -427,7 +426,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	else
 	{
 		// otherwise load the saved items from the item file and change the records of their locations
-		std::vector<WORLDITEM> pTemp = LoadWorldItemsFromTempItemFile(shippingSector.x, shippingSector.y, shippingSector.z);
+		std::vector<WORLDITEM> pTemp = LoadWorldItemsFromTempItemFile(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z);
 
 		for (WORLDITEM& wi : pTemp)
 		{
@@ -436,7 +435,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 				wi.sGridNo = shippingDest->deliverySectorGridNo;
 			}
 		}
-		SaveWorldItemsToTempItemFile(shippingSector.x, shippingSector.y, shippingSector.z, pTemp);
+		SaveWorldItemsToTempItemFile(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z, pTemp);
 	}
 }
 
@@ -987,7 +986,7 @@ static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinatio
 	}
 
 	const BOOLEAN fSectorLoaded =
-		CloseCrate(SGPSector(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z), shippingDest->deliverySectorGridNo);
+		CloseCrate(shippingDest->deliverySector, shippingDest->deliverySectorGridNo);
 
 	for(i=0; i<gpNewBobbyrShipments[ ubOrderNum ].ubNumberPurchases; i++)
 	{

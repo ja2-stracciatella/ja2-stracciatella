@@ -64,9 +64,7 @@ void SetFactFalse(Fact const usFact)
 static bool CheckForNewShipment(void)
 {
 	auto shippingDest = GCM->getPrimaryShippingDestination();
-	if (gWorldSector.x != shippingDest->deliverySector.x) return false;
-	if (gWorldSector.y != shippingDest->deliverySector.y) return false;
-	if (gWorldSector.z != shippingDest->deliverySector.z) return false;
+	if (gWorldSector != shippingDest->deliverySector) return false;
 
 	ITEM_POOL const* const ip = GetItemPool(shippingDest->deliverySectorGridNo, 0);
 	return ip && !IsItemPoolVisible(ip);
