@@ -120,7 +120,7 @@ static void RetrieveTempFileFromSavedGame(HWFILE const f, UINT32 const flags, Se
 }
 
 
-static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 sMapX, INT16 sMapY, INT8 bMapZ, bool check_consistency);
+static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const SGPSector& sMap, bool check_consistency);
 
 
 static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 const x, INT16 const y, INT8 const z, UINT32 const savegame_version)
@@ -139,7 +139,7 @@ static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 
 
 	if (flags & SF_ITEM_TEMP_FILE_EXISTS)
 	{
-		SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(x, y, z, savegame_version >= 86);
+		SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sector, savegame_version >= 86);
 	}
 
 	if (flags & SF_CIV_PRESERVED_TEMP_FILE_EXISTS && savegame_version < 78)
@@ -224,7 +224,7 @@ void SaveWorldItemsToTempItemFile(const SGPSector& sMap, const std::vector<WORLD
 	}
 
 	SetSectorFlag(sMap, SF_ITEM_TEMP_FILE_EXISTS);
-	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sMap.x, sMap.y, sMap.z, false);
+	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sMap, false);
 }
 
 
@@ -1135,9 +1135,8 @@ void SetNumberOfVisibleWorldItemsInSectorStructureForSector(const SGPSector& sec
 }
 
 
-static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, bool const check_consistency)
+static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const SGPSector& sMap, bool const check_consistency)
 {
-	SGPSector sMap(sMapX, sMapY, bMapZ);
 	std::vector<WORLDITEM> pTotalSectorList = LoadWorldItemsFromTempItemFile(sMap.x, sMap.y, sMap.z);
 
 	UINT32 uiItemCount = 0;
