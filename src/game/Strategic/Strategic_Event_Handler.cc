@@ -435,7 +435,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 				wi.sGridNo = shippingDest->deliverySectorGridNo;
 			}
 		}
-		SaveWorldItemsToTempItemFile(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z, pTemp);
+		SaveWorldItemsToTempItemFile(shippingDest->deliverySector, pTemp);
 	}
 }
 

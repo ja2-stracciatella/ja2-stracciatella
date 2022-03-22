@@ -97,6 +97,6 @@ void	SetNumberOfVisibleWorldItemsInSectorStructureForSector(const SGPSector& sMa
 #define BASE_NUMBER_OF_ROTATION_ARRAYS			19
 
 
-void SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, const std::vector<WORLDITEM>& items);
+void SaveWorldItemsToTempItemFile(const SGPSector& sMap, const std::vector<WORLDITEM>& items);
 
 #endif

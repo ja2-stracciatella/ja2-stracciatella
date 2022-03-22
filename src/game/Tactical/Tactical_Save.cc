@@ -211,10 +211,10 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_ver
 }
 
 
-void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, const std::vector<WORLDITEM>& items)
+void SaveWorldItemsToTempItemFile(const SGPSector& sMap, const std::vector<WORLDITEM>& items)
 {
 	{
-		AutoSGPFile f(GCM->tempFiles()->openForWriting(GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ), true));
+		AutoSGPFile f(GCM->tempFiles()->openForWriting(GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, sMap), true));
 		Assert(items.size() <= UINT32_MAX);
 		UINT32 numItems = static_cast<UINT32>(items.size());
 		f->writeArray(numItems, items.data());
@@ -222,8 +222,8 @@ void SaveWorldItemsToTempItemFile(INT16 const sMapX, INT16 const sMapY, INT8 con
 		// SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems() reads it
 	}
 
-	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ITEM_TEMP_FILE_EXISTS);
-	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sMapX, sMapY, bMapZ, false);
+	SetSectorFlag(sMap.x, sMap.y, sMap.z, SF_ITEM_TEMP_FILE_EXISTS);
+	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sMap.x, sMap.y, sMap.z, false);
 }
 
 
@@ -288,7 +288,7 @@ void AddItemsToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, INT8 const b
 		}
 	}
 
-	SaveWorldItemsToTempItemFile(sMapX, sMapY, bMapZ, wis);
+	SaveWorldItemsToTempItemFile(SGPSector(sMapX, sMapY, bMapZ), wis);
 }
 
 
@@ -324,7 +324,7 @@ void SaveCurrentSectorsInformationToTempItemFile()
 	// handle all reachable before save
 	HandleAllReachAbleItemsInTheSector(gWorldSector);
 
-	SaveWorldItemsToTempItemFile(gWorldSector.x, gWorldSector.y, gWorldSector.z, gWorldItems);
+	SaveWorldItemsToTempItemFile(gWorldSector, gWorldItems);
 	SaveRottingCorpsesToTempCorpseFile(gWorldSector);
 	SaveDoorTableToDoorTableTempFile(gWorldSector);
 	SaveRevealedStatusArrayToRevealedTempFile(gWorldSector);
