@@ -8,6 +8,13 @@ SGPSector::SGPSector(UINT32 s) noexcept
 	y = SECTORY(s);
 }
 
+SGPSector::SGPSector(UINT32 s, INT8 h, const ST::string /*hack*/) noexcept
+{
+	x = SECTORX(s);
+	y = SECTORY(s);
+	z = h;
+}
+
 bool SGPSector::operator==(const SGPSector& sector) const noexcept
 {
 	return x == sector.x && y == sector.y && z == sector.z;
