@@ -1106,11 +1106,10 @@ ST::string GetMapTempFileName(SectorFlags const uiType, INT16 const sMapX, INT16
 static UINT32 UpdateLoadedSectorsItemInventory(const SGPSector& sector, UINT32 n_items);
 
 
-UINT32 GetNumberOfVisibleWorldItemsFromSectorStructureForSector(INT16 const x, INT16 const y, INT8 const z)
+UINT32 GetNumberOfVisibleWorldItemsFromSectorStructureForSector(const SGPSector& sMap)
 {
 	UINT32 n_items;
-	SGPSector sMap(x, y, z);
-	if (z == 0)
+	if (sMap.z == 0)
 	{
 		n_items = SectorInfo[sMap.AsByte()].uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer;
 	}
@@ -1132,10 +1131,9 @@ UINT32 GetNumberOfVisibleWorldItemsFromSectorStructureForSector(INT16 const x, I
 }
 
 
-void SetNumberOfVisibleWorldItemsInSectorStructureForSector(INT16 const x, INT16 const y, INT8 const z, UINT32 const n_items)
+void SetNumberOfVisibleWorldItemsInSectorStructureForSector(const SGPSector& sector, UINT32 const n_items)
 {
-	SGPSector sector(x, y, z);
-	if (z == 0)
+	if (sector.z == 0)
 	{
 		SectorInfo[sector.AsByte()].uiNumberOfWorldItemsInTempFileThatCanBeSeenByPlayer = n_items;
 	}
@@ -1149,7 +1147,8 @@ void SetNumberOfVisibleWorldItemsInSectorStructureForSector(INT16 const x, INT16
 
 static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, bool const check_consistency)
 {
-	std::vector<WORLDITEM> pTotalSectorList = LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ);
+	SGPSector sMap(sMapX, sMapY, bMapZ);
+	std::vector<WORLDITEM> pTotalSectorList = LoadWorldItemsFromTempItemFile(sMap.x, sMap.y, sMap.z);
 
 	UINT32 uiItemCount = 0;
 	if (pTotalSectorList.size() > 0)
@@ -1164,13 +1163,13 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(INT16 cons
 
 	if (check_consistency)
 	{
-		const UINT32 uiReported = GetNumberOfVisibleWorldItemsFromSectorStructureForSector(sMapX, sMapY, bMapZ);
+		const UINT32 uiReported = GetNumberOfVisibleWorldItemsFromSectorStructureForSector(sMap);
 		if (uiItemCount != uiReported)
 		{
 			SLOGW("SynchronizeItemTempFile() Reported %d, should be %d", uiReported, uiItemCount);
 		}
 	}
-	SetNumberOfVisibleWorldItemsInSectorStructureForSector(sMapX, sMapY, bMapZ, uiItemCount);
+	SetNumberOfVisibleWorldItemsInSectorStructureForSector(sMap, uiItemCount);
 }
 
 
@@ -1186,7 +1185,7 @@ static UINT32 UpdateLoadedSectorsItemInventory(const SGPSector& sector, UINT32 c
 	// Update the value in the sector info struct, if the item count is different
 	if (n != n_items)
 	{
-		SetNumberOfVisibleWorldItemsInSectorStructureForSector(sector.x, sector.y, sector.z, n);
+		SetNumberOfVisibleWorldItemsInSectorStructureForSector(sector, n);
 	}
 
 	return n;
