@@ -67,8 +67,6 @@ BOOLEAN GetSectorFlagStatus(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
 void    SetSectorFlag(const SGPSector& sMap, SectorFlags);
 void    SetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
 void    ReSetSectorFlag(const SGPSector& sMap, SectorFlags);
-void    ReSetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
-
 
 //Saves the NPC temp Quote file to the saved game file
 void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE);
