@@ -18,7 +18,7 @@ void UpdateAirspaceControl();
 
 bool IsThisSectorASAMSector(const SGPSector& sector);
 
-bool DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const gridno);
+bool DoesSAMExistHere(const SGPSector& sector, GridNo const gridno);
 
 // number of SAM sites under player control
 INT32 GetNumberOfSAMSitesUnderPlayerControl();

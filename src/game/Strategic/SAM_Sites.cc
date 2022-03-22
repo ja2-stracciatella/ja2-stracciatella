@@ -132,14 +132,14 @@ INT8 GetSAMIdFromSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 	return GCM->findSamIDBySector(sSectorValue);
 }
 
-bool DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const gridno)
+bool DoesSAMExistHere(const SGPSector& sector, GridNo const gridno)
 {
 	// ATE: If we are below, return right away
-	if (z != 0) return false;
+	if (sector.z != 0) return false;
 
 	for (auto s : GCM->getSamSites())
 	{
-		if (s->doesSamExistHere(x, y, gridno))
+		if (s->doesSamExistHere(sector, gridno))
 		{
 			return true;
 		}
@@ -151,7 +151,7 @@ bool DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const 
 static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, void*, UINT8 ubDamage, BOOLEAN fIsDestroyed)
 {
 	// OK, First check if SAM exists, and if not, return
-	if (!DoesSAMExistHere(sSectorX, sSectorY, sSectorZ, sGridNo))
+	if (!DoesSAMExistHere(SGPSector(sSectorX, sSectorY, sSectorZ), sGridNo))
 	{
 		return;
 	}
