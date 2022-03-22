@@ -1365,7 +1365,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 				}
 
 				// Mark the sector as visited already
-				SetSectorFlag(x, y, z, SF_ALREADY_VISITED);
+				SetSectorFlag(SGPSector(x, y, z), SF_ALREADY_VISITED);
 			}
 		}
 

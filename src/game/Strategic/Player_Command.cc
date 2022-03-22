@@ -180,7 +180,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 				UpdateRefuelSiteAvailability( );
 			}
 
-//			SetSectorFlag( sMapX, sMapY, bMapZ, SF_SECTOR_HAS_BEEN_LIBERATED_ONCE );
+//			SetSectorFlag(sMap, SF_SECTOR_HAS_BEEN_LIBERATED_ONCE);
 			if ( bMapZ == 0 && ( ( sMapY == MAP_ROW_M && (sMapX >= 2 && sMapX <= 6) ) || (sMapY == MAP_ROW_N && sMapX == 6)) )
 			{
 				HandleOutskirtsOfMedunaMeanwhileScene();
