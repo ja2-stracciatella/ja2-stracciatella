@@ -62,7 +62,7 @@ UINT8 NumHostilesInSector(const SGPSector& sSector)
 	if (sSector.z)
 	{
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector(sSector.x, sSector.y, sSector.z);
+		pSector = FindUnderGroundSector(sSector);
 		if( pSector )
 		{
 			ubNumHostiles = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures);
@@ -99,7 +99,7 @@ UINT8 NumEnemiesInAnySector(const SGPSector& sSector)
 	if (sSector.z)
 	{
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector(sSector.x, sSector.y, sSector.z);
+		pSector = FindUnderGroundSector(sSector);
 		if( pSector )
 		{
 			ubNumEnemies = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
@@ -279,7 +279,7 @@ void EndTacticalBattleForEnemy()
 	}
 	else if (gWorldSector.z > 0)
 	{
-		UNDERGROUND_SECTORINFO& sector = *FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		UNDERGROUND_SECTORINFO& sector = *FindUnderGroundSector(gWorldSector);
 		sector.ubAdminsInBattle = 0;
 		sector.ubTroopsInBattle = 0;
 		sector.ubElitesInBattle = 0;
@@ -561,7 +561,7 @@ void PrepareEnemyForSectorBattle()
 static void PrepareEnemyForUndergroundBattle()
 {
 	// This is the sector we are going to be fighting in.
-	UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
+	UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(gWorldSector);
 	Assert(u);
 	if (!u) return;
 
@@ -605,7 +605,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			else
 			{
 				UNDERGROUND_SECTORINFO *pUnderground;
-				pUnderground = FindUnderGroundSector( (UINT8)pSoldier->sSectorX, (UINT8)pSoldier->sSectorY, (UINT8)pSoldier->bSectorZ );
+				pUnderground = FindUnderGroundSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
 				Assert( pUnderground );
 				if( pUnderground->ubNumElites )
 				{
@@ -834,7 +834,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		}
 		else
 		{ //basement level (UNDERGROUND_SECTORINFO)
-			UNDERGROUND_SECTORINFO* pSector = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
+			UNDERGROUND_SECTORINFO* pSector = FindUnderGroundSector(gWorldSector);
 			UINT32 ubTotalEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 			if( pSector )
 			{
@@ -1119,14 +1119,14 @@ void LoadUnderGroundSectorInfoFromSavedGame(HWFILE const f)
 }
 
 
-UNDERGROUND_SECTORINFO* FindUnderGroundSector(INT16 const x, INT16 const y, UINT8 const z)
+UNDERGROUND_SECTORINFO* FindUnderGroundSector(const SGPSector& sector)
 {
 	UNDERGROUND_SECTORINFO* i = gpUndergroundSectorInfoHead;
 	for (; i; i = i->next)
 	{
-		if (i->ubSectorX != x) continue;
-		if (i->ubSectorY != y) continue;
-		if (i->ubSectorZ != z) continue;
+		if (i->ubSectorX != sector.x) continue;
+		if (i->ubSectorY != sector.y) continue;
+		if (i->ubSectorZ != sector.z) continue;
 		break;
 	}
 	return i;

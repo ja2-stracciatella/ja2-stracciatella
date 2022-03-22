@@ -2312,12 +2312,12 @@ void LoadStrategicAI(HWFILE const hFile)
 	if( ubSAIVersion < 14 )
 	{
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector( 4, 11, 1 );
+		pSector = FindUnderGroundSector(SGPSector(4, 11, 1));
 		if( pSector->ubNumTroops + pSector->ubNumElites > 20 )
 		{
 			pSector->ubNumTroops -= 2;
 		}
-		pSector = FindUnderGroundSector( 3, 15, 1 );
+		pSector = FindUnderGroundSector(SGPSector(3, 15, 1));
 		if( pSector->ubNumTroops + pSector->ubNumElites > 20 )
 		{
 			pSector->ubNumTroops -= 2;
@@ -2326,12 +2326,12 @@ void LoadStrategicAI(HWFILE const hFile)
 	if( ubSAIVersion < 16 )
 	{
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector( 3, 15, 1 );
+		pSector = FindUnderGroundSector(SGPSector(3, 15, 1));
 		if( pSector )
 		{
 			pSector->ubAdjacentSectors |= SOUTH_ADJACENT_SECTOR;
 		}
-		pSector = FindUnderGroundSector( 3, 16, 1 );
+		pSector = FindUnderGroundSector(SGPSector(3, 16, 1));
 		if( pSector )
 		{
 			pSector->ubAdjacentSectors |= NORTH_ADJACENT_SECTOR;

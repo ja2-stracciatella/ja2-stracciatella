@@ -42,8 +42,8 @@ UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(const std::string sectorID)
 		throw std::runtime_error("Invalid underground sectorID");
 	}
 
-	UINT8 ubSector = SECTOR_FROM_SECTOR_SHORT_STRING(stSector.c_str());
-	return FindUnderGroundSector(SECTORX(ubSector), SECTORY(ubSector), ubSectorZ);
+	UINT32 ubSector = SECTOR_FROM_SECTOR_SHORT_STRING(stSector.c_str());
+	return FindUnderGroundSector(SGPSector(ubSector, ubSectorZ, ""));
 }
 
 OBJECTTYPE* CreateItem(const UINT16 usItem, const INT8 bStatus)

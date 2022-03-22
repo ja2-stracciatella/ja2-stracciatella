@@ -481,7 +481,8 @@ INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier )
 {
 	UNDERGROUND_SECTORINFO * pBasementInfo;
 
-	pBasementInfo = FindUnderGroundSector( 3, MAP_ROW_P, 1 );
+
+	pBasementInfo = FindUnderGroundSector(SGPSector(3, MAP_ROW_P, 1));
 	if ( pBasementInfo && pBasementInfo->uiTimeCurrentSectorWasLastLoaded != 0 && ( pBasementInfo->ubNumElites + pBasementInfo->ubNumTroops + pBasementInfo->ubNumAdmins ) < 5 )
 	{
 		return( AI_ACTION_NONE );

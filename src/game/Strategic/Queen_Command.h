@@ -32,7 +32,7 @@ void SaveUnderGroundSectorInfoToSaveGame(HWFILE);
 void LoadUnderGroundSectorInfoFromSavedGame(HWFILE);
 
 //Finds and returns the specified underground structure ( DONT MODIFY IT ).  Else returns NULL
-UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ );
+UNDERGROUND_SECTORINFO* FindUnderGroundSector(const SGPSector& sector);
 
 void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier );
 void BeginCaptureSquence(void);

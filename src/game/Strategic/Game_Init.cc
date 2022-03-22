@@ -100,7 +100,7 @@ static void InitNPCs()
 	if (!gGameOptions.fSciFi)
 	{ //not scifi, so use alternate map in Tixa's b1 level that doesn't have the stairs going down to the caves.
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector( TIXA_SECTOR_X, TIXA_SECTOR_Y, 1 ); //j9_b1
+		pSector = FindUnderGroundSector(SGPSector(TIXA_SECTOR_X, TIXA_SECTOR_Y, 1)); //j9_b1
 		if( pSector )
 		{
 			pSector->uiFlags |= SF_USE_ALTERNATE_MAP;

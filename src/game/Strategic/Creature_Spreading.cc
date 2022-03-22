@@ -126,15 +126,13 @@ UINT8 gubSectorIDOfCreatureAttack = 0;
 
 static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8 ubCreatureHabitat)
 {
-	UINT8 ubSectorX, ubSectorY;
 	CREATURE_DIRECTIVE* const curr = new CREATURE_DIRECTIVE{};
-	ubSectorX = (UINT8)((ubSectorID % 16) + 1);
-	ubSectorY = (UINT8)((ubSectorID / 16) + 1);
-	curr->pLevel = FindUnderGroundSector( ubSectorX, ubSectorY, ubSectorZ );
+	SGPSector ubSector((ubSectorID % 16) + 1, (ubSectorID / 16) + 1, ubSectorZ);
+	curr->pLevel = FindUnderGroundSector(ubSector);
 	if( !curr->pLevel )
 	{
-		SLOGA("Could not find underground sector node (%c%db_%d) that should exist.",
-			ubSectorY + 'A' - 1, ubSectorX, ubSectorZ);
+		SLOGA(ST::format("Could not find underground sector node ({}) that should exist.",
+			ubSector.AsLongString()));
 		delete curr;
 		return 0;
 	}
@@ -244,7 +242,7 @@ void InitCreatureQuest()
 
 	// enable the lair entrance
 	UINT8 entranceSector = lairModel->entranceSector;
-	UNDERGROUND_SECTORINFO* lairEntrance = FindUnderGroundSector(SECTORX(entranceSector), SECTORY(entranceSector), lairModel->entranceSectorLevel);
+	UNDERGROUND_SECTORINFO* lairEntrance = FindUnderGroundSector(SGPSector(entranceSector, lairModel->entranceSectorLevel, ""));
 	if (lairEntrance == NULL)
 	{
 		throw std::runtime_error("Lair entrance sector is not defined as an underground sector");
@@ -527,7 +525,6 @@ static void ChooseTownSectorToAttack(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 { //This is the launching point of the creature attack.
 	UNDERGROUND_SECTORINFO *pSector;
-	UINT8 ubSectorX, ubSectorY;
 
 	if( gfWorldLoaded && gTacticalStatus.fEnemyInSector )
 	{ //Battle currently in progress, repost the event
@@ -536,14 +533,12 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 	}
 
 	gubCreatureBattleCode = CREATURE_BATTLE_CODE_NONE;
-
-	ubSectorX = SECTORX(ubSectorID);
-	ubSectorY = SECTORY(ubSectorID);
+	SGPSector ubSector(ubSectorID, 1);
 
 	if (!fSpecificSector)
 	{
 		//Record the number of creatures in the sector.
-		pSector = FindUnderGroundSector( ubSectorX, ubSectorY, 1 );
+		pSector = FindUnderGroundSector(ubSector);
 		if( !pSector )
 		{
 			CreatureAttackTown(ubSectorID, TRUE);
@@ -561,8 +556,7 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 		//Choose one of the town sectors to attack.  Sectors closer to
 		//the mine entrance have a greater chance of being chosen.
 		ChooseTownSectorToAttack( ubSectorID, FALSE );
-		ubSectorX = SECTORX(gubSectorIDOfCreatureAttack);
-		ubSectorY = SECTORY(gubSectorIDOfCreatureAttack);
+		ubSector = SGPSector(gubSectorIDOfCreatureAttack, 1);
 	}
 	else
 	{
@@ -571,7 +565,7 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 	}
 
 	//Now that the sector has been chosen, attack it!
-	SGPSector sector(ubSectorX, ubSectorY, 0);
+	SGPSector sector(ubSector.x, ubSector.y, 0);
 	if (PlayerGroupsInSector(sector))
 	{ //we have players in the sector
 		if (sector == gWorldSector)
@@ -591,13 +585,13 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 			gubCreatureBattleCode = CREATURE_BATTLE_CODE_PREBATTLEINTERFACE;
 		}
 	}
-	else if( CountAllMilitiaInSector( ubSectorX, ubSectorY ) )
+	else if (CountAllMilitiaInSector(sector.x, sector.y))
 	{ //we have militia in the sector
 		gubCreatureBattleCode = CREATURE_BATTLE_CODE_AUTORESOLVE;
 	}
-	else if( !StrategicMap[ ubSectorX + MAP_WORLD_X * ubSectorY ].fEnemyControlled )
+	else if (!StrategicMap[sector.AsStrategicIndex()].fEnemyControlled)
 	{ //player controlled sector -- eat some civilians
-		AdjustLoyaltyForCivsEatenByMonsters( ubSectorX, ubSectorY, gubNumCreaturesAttackingTown );
+		AdjustLoyaltyForCivsEatenByMonsters(sector.x, sector.y, gubNumCreaturesAttackingTown);
 		SectorInfo[ ubSectorID ].ubDayOfLastCreatureAttack = (UINT8)GetWorldDay();
 		return;
 	}
@@ -666,7 +660,7 @@ void EndCreatureQuest()
 	}
 
 	//Remove the creatures that are trapped underneath Tixa
-	pSector = FindUnderGroundSector( 9, 10, 2 );
+	pSector = FindUnderGroundSector(SGPSector(9, 10, 2));
 	if( pSector )
 	{
 		pSector->ubNumCreatures = 0;
@@ -685,10 +679,8 @@ void EndCreatureQuest()
 static UINT8 CreaturesInUndergroundSector(UINT8 ubSectorID, UINT8 ubSectorZ)
 {
 	UNDERGROUND_SECTORINFO *pSector;
-	UINT8 ubSectorX, ubSectorY;
-	ubSectorX = (UINT8)SECTORX( ubSectorID );
-	ubSectorY = (UINT8)SECTORY( ubSectorID );
-	pSector = FindUnderGroundSector( ubSectorX, ubSectorY, ubSectorZ );
+	SGPSector ubSector(ubSectorID, ubSectorZ, "");
+	pSector = FindUnderGroundSector(ubSector);
 	if( pSector )
 		return pSector->ubNumCreatures;
 	return 0;
@@ -826,7 +818,7 @@ BOOLEAN PrepareCreaturesForBattle()
 
 		if (!gWorldSector.z)
 			return FALSE;  //Creatures don't attack overworld with this battle code.
-		pSector = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		pSector = FindUnderGroundSector(gWorldSector);
 		if( !pSector )
 		{
 			return FALSE;
@@ -936,7 +928,7 @@ BOOLEAN PrepareCreaturesForBattle()
 	if (gWorldSector.z)
 	{
 		UNDERGROUND_SECTORINFO *pUndergroundSector;
-		pUndergroundSector = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		pUndergroundSector = FindUnderGroundSector(gWorldSector);
 		if( !pUndergroundSector )
 		{ //No info?!!!!!
 			SLOGA("Please report underground sector you are in or going to and send save if possible." );
