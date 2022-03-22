@@ -855,14 +855,8 @@ void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags cons
 	}
 }
 
-void ReSetSectorFlag(const SGPSector& sMap, SectorFlags const flag_to_clear)
+void ReSetSectorFlag(const SGPSector& sector, SectorFlags const flag_to_clear)
 {
-	ReSetSectorFlag(sMap.x, sMap.y, sMap.z, flag_to_clear);
-}
-
-void ReSetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags const flag_to_clear)
-{
-	SGPSector sector(x, y, z);
 	if (sector.z == 0)
 	{
 		SectorInfo[sector.AsByte()].uiFlags &= ~flag_to_clear;
