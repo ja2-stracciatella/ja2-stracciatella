@@ -3914,7 +3914,7 @@ BOOLEAN GetCurrentBattleSectorXYZ(SGPSector& psSector)
 	}
 	else if( gfPreBattleInterfaceActive )
 	{
-		psSector = SGPSector(gubPBSectorX, gubPBSectorY, gubPBSectorZ);
+		psSector = SGPSector(gubPBSector.x, gubPBSector.y, gubPBSector.z);
 		return TRUE;
 	}
 	else if( gfWorldLoaded )
@@ -3941,9 +3941,9 @@ BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(SGPSector& psSect
 	}
 	else if( gfPreBattleInterfaceActive )
 	{
-		psSector.x = gubPBSectorX;
-		psSector.y = gubPBSectorY;
-		psSector.z = gubPBSectorZ;
+		psSector.x = gubPBSector.x;
+		psSector.y = gubPBSector.y;
+		psSector.z = gubPBSector.z;
 		return TRUE;
 	}
 	else if( gfWorldLoaded )

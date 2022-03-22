@@ -3699,9 +3699,9 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 		//Setup variables in the PBI for this first battle.  We need to support the
 		//non-persistant PBI in case the user goes to mapscreen.
 		gfBlitBattleSectorLocator = TRUE;
-		gubPBSectorX = SECTORX(gamepolicy(start_sector));
-		gubPBSectorY = SECTORY(gamepolicy(start_sector));
-		gubPBSectorZ = 0;
+		gubPBSector.x = SECTORX(gamepolicy(start_sector));
+		gubPBSector.y = SECTORY(gamepolicy(start_sector));
+		gubPBSector.z = 0;
 
 		gubEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
 	}
