@@ -1876,7 +1876,7 @@ try
 
 
 	// display town info
-	DisplayTownInfo( sSelMapX, sSelMapY, ( INT8 ) iCurrentMapSectorZ );
+	DisplayTownInfo(SGPSector(sSelMapX, sSelMapY, iCurrentMapSectorZ));
 
 	if (fShowTownInfo)
 	{
