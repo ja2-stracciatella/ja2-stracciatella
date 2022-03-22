@@ -3896,20 +3896,21 @@ static void ShowItemsOnMap(void)
 	SetFontAttributes(MAP_FONT, FONT_MCOLOR_LTGREEN);
 
 	// run through sectors
-	for (INT16 x = 1; x < MAP_WORLD_X - 1; ++x)
+	SGPSector sector(1, 1, iCurrentMapSectorZ);
+	for (sector.x = 1; sector.x < MAP_WORLD_X - 1; ++sector.x)
 	{
-		for (INT16 y = 1; y < MAP_WORLD_Y - 1; ++y)
+		for (sector.y = 1; sector.y < MAP_WORLD_Y - 1; ++sector.y)
 		{
 			// to speed this up, only look at sector that player has visited
-			if (!GetSectorFlagStatus(x, y, iCurrentMapSectorZ, SF_ALREADY_VISITED)) continue;
+			if (!GetSectorFlagStatus(sector, SF_ALREADY_VISITED)) continue;
 
-			UINT32 const n_items = GetNumberOfVisibleWorldItemsFromSectorStructureForSector(x, y, iCurrentMapSectorZ);
+			UINT32 const n_items = GetNumberOfVisibleWorldItemsFromSectorStructureForSector(sector);
 			if (n_items == 0) continue;
 
 			INT16       usXPos;
 			INT16       usYPos;
-			INT16 const sXCorner = MAP_VIEW_START_X + x * MAP_GRID_X;
-			INT16 const sYCorner = MAP_VIEW_START_Y + y * MAP_GRID_Y;
+			INT16 const sXCorner = MAP_VIEW_START_X + sector.x * MAP_GRID_X;
+			INT16 const sYCorner = MAP_VIEW_START_Y + sector.y * MAP_GRID_Y;
 			ST::string sString = ST::format("{}", n_items);
 			FindFontCenterCoordinates(sXCorner, sYCorner, MAP_GRID_X, MAP_GRID_Y, sString, MAP_FONT, &usXPos, &usYPos);
 			GDirtyPrint(usXPos, usYPos, sString);

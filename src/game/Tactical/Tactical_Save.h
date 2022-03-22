@@ -92,8 +92,8 @@ ST::string GetMapTempFileName(SectorFlags uiType, const SGPSector& sector);
 ST::string GetMapTempFileName(SectorFlags uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
-UINT32	GetNumberOfVisibleWorldItemsFromSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
-void		SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems );
+UINT32	GetNumberOfVisibleWorldItemsFromSectorStructureForSector(const SGPSector& sMap);
+void	SetNumberOfVisibleWorldItemsInSectorStructureForSector(const SGPSector& sMap, UINT32 uiNumberOfItems);
 
 #define NEW_ROTATION_ARRAY_SIZE			49
 #define BASE_NUMBER_OF_ROTATION_ARRAYS			19

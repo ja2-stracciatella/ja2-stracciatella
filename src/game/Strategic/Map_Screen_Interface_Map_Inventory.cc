@@ -723,7 +723,7 @@ static void ReBuildWorldItemStashForLoadedSector(const std::vector<WORLDITEM>& p
 	}
 
 	//reset the visible item count in the sector info struct
-	SetNumberOfVisibleWorldItemsInSectorStructureForSector(gWorldSector.x, gWorldSector.y, gWorldSector.z, uiTotalNumberOfVisibleItems);
+	SetNumberOfVisibleWorldItemsInSectorStructureForSector(gWorldSector, uiTotalNumberOfVisibleItems);
 }
 
 

@@ -454,7 +454,7 @@ static void AddItemsInSectorToBox(PopUpBox* const box)
 	wString = ST::format("{}:", pwMiscSectorStrings[ 2 ]);
 	AddMonoString(box, wString);
 
-	wString = ST::format("{}", GetNumberOfVisibleWorldItemsFromSectorStructureForSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, bCurrentTownMineSectorZ ));
+	wString = ST::format("{}", GetNumberOfVisibleWorldItemsFromSectorStructureForSector(SGPSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY, bCurrentTownMineSectorZ)));
 	AddSecondColumnMonoString(box, wString);
 }
 
