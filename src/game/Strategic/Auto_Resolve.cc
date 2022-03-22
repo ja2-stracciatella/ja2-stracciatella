@@ -289,7 +289,7 @@ static void PlayAutoResolveSample(const ST::string &sample, UINT32 const ubVolum
 	}
 }
 
-void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
+void EliminateAllEnemies(const SGPSector& ubSector)
 {
 	SECTORINFO *pSector;
 	UINT8 ubNumEnemies[ NUM_ENEMY_RANKS ];
@@ -298,25 +298,25 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 	//Clear any possible battle locator
 	gfBlitBattleSectorLocator = FALSE;
 
-	pSector = &SectorInfo[ SECTOR( ubSectorX, ubSectorY ) ];
+	pSector = &SectorInfo[ubSector.AsByte()];
 
 
 	// if we're doing this from the Pre-Battle interface, gpAR is NULL, and RemoveAutoResolveInterface(0 won't happen, so
 	// we must process the enemies killed right here & give out loyalty bonuses as if the battle had been fought & won
 	if( !gpAR )
 	{
-		GetNumberOfEnemiesInSector( ubSectorX, ubSectorY, &ubNumEnemies[ 0 ], &ubNumEnemies[ 1 ], &ubNumEnemies[ 2 ] );
+		GetNumberOfEnemiesInSector(ubSector.x, ubSector.y, &ubNumEnemies[0], &ubNumEnemies[1], &ubNumEnemies[2]);
 
 		for ( ubRankIndex = 0; ubRankIndex < NUM_ENEMY_RANKS; ubRankIndex++ )
 		{
 			for (INT32 i = 0; i < ubNumEnemies[ubRankIndex]; ++i)
 			{
-				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ENEMY_KILLED, ubSectorX, ubSectorY, 0 );
+				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ENEMY_KILLED, ubSector.x, ubSector.y, 0 );
 				TrackEnemiesKilled( ENEMY_KILLED_IN_AUTO_RESOLVE, RankIndexToSoldierClass( ubRankIndex ) );
 			}
 		}
 
-		HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_WON, ubSectorX, ubSectorY, 0 );
+		HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_WON, ubSector.x, ubSector.y, 0 );
 	}
 
 	if( !gpAR || gpAR->ubBattleStatus != BATTLE_IN_PROGRESS )
@@ -331,8 +331,8 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 		{
 			GROUP& g = *i;
 			if (g.fPlayer)                continue;
-			if (g.ubSectorX != ubSectorX) continue;
-			if (g.ubSectorY != ubSectorY) continue;
+			if (g.ubSectorX != ubSector.x) continue;
+			if (g.ubSectorY != ubSector.y) continue;
 			RemoveGroupFromStrategicAILists(g);
 			RemoveGroup(g);
 		}
@@ -341,8 +341,8 @@ void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 			CalculateNextMoveIntention( gpBattleGroup );
 		}
 		// set this sector as taken over
-		SetThisSectorAsPlayerControlled( ubSectorX, ubSectorY, 0, TRUE );
-		RecalculateSectorWeight( (UINT8)SECTOR( ubSectorX, ubSectorY ) );
+		SetThisSectorAsPlayerControlled(ubSector.x, ubSector.y, 0, TRUE);
+		RecalculateSectorWeight(ubSector.AsByte());
 
 		// dirty map panel
 		fMapPanelDirty = TRUE;
@@ -411,7 +411,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	}
 }
 
-void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
+void EnterAutoResolveMode(const SGPSector& ubSector)
 {
 	//Set up mapscreen for removal
 	SetPendingNewScreen( AUTORESOLVE_SCREEN );
@@ -429,8 +429,8 @@ void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 
 	//Set up autoresolve
 	gpAR->fEnteringAutoResolve = TRUE;
-	gpAR->ubSectorX = ubSectorX;
-	gpAR->ubSectorY = ubSectorY;
+	gpAR->ubSectorX = ubSector.x;
+	gpAR->ubSectorY = ubSector.y;
 	gpAR->ubBattleStatus = BATTLE_IN_PROGRESS;
 	gpAR->uiTimeSlice = 1000;
 	gpAR->uiTotalElapsedBattleTimeInMilliseconds = 0;
@@ -1820,7 +1820,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			if (NumEnemiesInSector(arSector))
 			{
 				SLOGI("Eliminating remaining enemies after Autoresolve in (%d,%d)", arSector.x, arSector.y);
-				EliminateAllEnemies(arSector.x, arSector.y);
+				EliminateAllEnemies(arSector);
 			}
 		}
 		else
@@ -3914,7 +3914,7 @@ BOOLEAN GetCurrentBattleSectorXYZ(SGPSector& psSector)
 	}
 	else if( gfPreBattleInterfaceActive )
 	{
-		psSector = SGPSector(gubPBSector.x, gubPBSector.y, gubPBSector.z);
+		psSector = gubPBSector;
 		return TRUE;
 	}
 	else if( gfWorldLoaded )
@@ -3941,9 +3941,7 @@ BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(SGPSector& psSect
 	}
 	else if( gfPreBattleInterfaceActive )
 	{
-		psSector.x = gubPBSector.x;
-		psSector.y = gubPBSector.y;
-		psSector.z = gubPBSector.z;
+		psSector = gubPBSector;
 		return TRUE;
 	}
 	else if( gfWorldLoaded )

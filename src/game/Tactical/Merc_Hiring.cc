@@ -247,7 +247,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 		// for the beginning), we will nuke any enemies in this sector first.
 		if (gWorldSector != start)
 		{
-			EliminateAllEnemies(arrival.x, arrival.y);
+			EliminateAllEnemies(arrival);
 		}
 	}
 
