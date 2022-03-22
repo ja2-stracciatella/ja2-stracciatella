@@ -234,7 +234,7 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason)
 
 		// charge the player
 		AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin(), -COST_OF_PROFILE);
-		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), -1, -1);
+		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), SGPSector(-1, -1));
 
 		fButtonPendingFlag = TRUE;
 		iCurrentImpPage = IMP_HOME_PAGE;

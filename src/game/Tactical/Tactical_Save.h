@@ -62,8 +62,11 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 sMapX, INT16 sMapY
 void AddDeadSoldierToUnLoadedSector(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT32 uiFlags);
 
 
+BOOLEAN GetSectorFlagStatus(const SGPSector& sMap, SectorFlags);
 BOOLEAN GetSectorFlagStatus(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
+void    SetSectorFlag(const SGPSector& sMap, SectorFlags);
 void    SetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
+void    ReSetSectorFlag(const SGPSector& sMap, SectorFlags);
 void    ReSetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
 
 
@@ -83,8 +86,9 @@ void NewJA2EncryptedFileWrite(HWFILE, BYTE const* data, UINT32 uiBytesToWrite);
 //If hacker's mess with our save/temp files, this is our final line of defence.
 void InitExitGameDialogBecauseFileHackDetected(void);
 
-void HandleAllReachAbleItemsInTheSector(INT16 x, INT16 y, INT8 z);
+void HandleAllReachAbleItemsInTheSector(const SGPSector& sector);
 
+ST::string GetMapTempFileName(SectorFlags uiType, const SGPSector& sector);
 ST::string GetMapTempFileName(SectorFlags uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 

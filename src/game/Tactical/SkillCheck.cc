@@ -102,7 +102,7 @@ INT8 EffectiveExpLevel(const SOLDIERTYPE* s)
 
 	if (s->ubProfile != NO_PROFILE)
 	{
-		if ( (gMercProfiles[s->ubProfile].bPersonalityTrait == CLAUSTROPHOBIC) && s->bActive && s->bInSector && gbWorldSectorZ > 0)
+		if ((gMercProfiles[s->ubProfile].bPersonalityTrait == CLAUSTROPHOBIC) && s->bActive && s->bInSector && gWorldSector.z > 0)
 		{
 			// claustrophobic!
 			iEffExpLevel--;

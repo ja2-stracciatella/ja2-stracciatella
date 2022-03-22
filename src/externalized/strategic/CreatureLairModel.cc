@@ -94,12 +94,12 @@ std::vector<CreatureAttackSector> readAttackSectors(const rapidjson::Value& json
 	return attacks;
 }
 
-bool CreatureLairModel::isSectorInLair(uint8_t sectorX, uint8_t sectorY, uint8_t sectorZ) const
+bool CreatureLairModel::isSectorInLair(const SGPSector& sector) const
 {
-	uint8_t sectorId = SECTOR(sectorX, sectorY);
+	uint8_t sectorId = sector.AsByte();
 	for (auto sec : lairSectors)
 	{
-		if (sec.sectorId == sectorId && sec.sectorLevel == sectorZ)
+		if (sec.sectorId == sectorId && sec.sectorLevel == sector.z)
 		{
 			return true;
 		}

@@ -277,7 +277,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 			if (itemReplacements.find(o.usItem) != itemReplacements.end())
 			{
 				auto item = itemReplacements.at(o.usItem);
-				if (item == 0) 
+				if (item == 0)
 				{
 					STLOGW("Map item #{} removed", o.usItem);
 					continue;
@@ -364,7 +364,8 @@ void LoadWorldItemsFromMap(HWFILE const f)
 	if (!gfEditMode)
 	{
 		DeleteWorldItemsBelongingToTerroristsWhoAreNotThere();
-		if (gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_P && gbWorldSectorZ == 1)
+		static const SGPSector medunaBasement(3, MAP_ROW_P, 1);
+		if (gWorldSector == medunaBasement)
 		{
 			DeleteWorldItemsBelongingToQueenIfThere();
 		}
@@ -388,7 +389,7 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 
 			MERCPROFILESTRUCT const& p = GetProfile(pid);
 			// and they were not set in the current sector
-			if (p.sSectorX == gWorldSectorX && p.sSectorY == gWorldSectorY) continue;
+			if (p.sSectorX == gWorldSector.x && p.sSectorY == gWorldSector.y) continue;
 
 			// then all items in this location should be deleted
 			const INT16 sGridNo = wi.sGridNo;
@@ -410,9 +411,9 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 {
 	MERCPROFILESTRUCT& q = GetProfile(QUEEN);
 
-	if (q.sSectorX != gWorldSectorX ||
-			q.sSectorY != gWorldSectorY ||
-			q.bSectorZ != gbWorldSectorZ)
+	if (q.sSectorX != gWorldSector.x ||
+			q.sSectorY != gWorldSector.y ||
+			q.bSectorZ != gWorldSector.z)
 	{
 		return;
 	}

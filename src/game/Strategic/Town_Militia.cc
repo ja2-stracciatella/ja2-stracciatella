@@ -40,8 +40,7 @@
 
 // temporary local global variables
 UINT8 gubTownSectorServerTownId = BLANK_SECTOR;
-INT16 gsTownSectorServerSkipX = -1;
-INT16 gsTownSectorServerSkipY = -1;
+SGPSector gsTownSectorServerSkip(-1, -1);
 UINT8 gubTownSectorServerIndex = 0;
 BOOLEAN gfYesNoPromptIsForContinue = FALSE; // this flag remembers whether we're starting new training, or continuing
 INT32 giTotalCostOfTraining = 0;
@@ -57,25 +56,24 @@ static INT16 gsUnpaidStrategicSector[MAX_CHARACTER_COUNT];
 
 static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrainer);
 static void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSkipSectorY);
-static bool ServeNextFriendlySectorInTown(INT16* neighbour_x, INT16* neighbour_y);
+static bool ServeNextFriendlySectorInTown(SGPSector& neighbour);
 static void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany);
-static void StrategicPromoteMilitiaInSector(INT16 x, INT16 y, UINT8 current_rank, UINT8 n);
+static void StrategicPromoteMilitiaInSector(const SGPSector& sMap, UINT8 current_rank, UINT8 n);
 
 
-void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY )
+void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector)
 {
 	UINT8 ubMilitiaTrained = 0;
 	BOOLEAN fFoundOne;
-	INT16 sNeighbourX, sNeighbourY;
 	UINT8 ubTownId;
 
 
 	// get town index
-	ubTownId = StrategicMap[ sMapX + sMapY * MAP_WORLD_X ].bNameId;
+	ubTownId = StrategicMap[sector.AsStrategicIndex()].bNameId;
 
 	if( ubTownId == BLANK_SECTOR )
 	{
-		Assert( IsThisSectorASAMSector( sMapX, sMapY, 0 ) );
+		Assert(IsThisSectorASAMSector(sector));
 	}
 
 
@@ -89,13 +87,14 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 	// 4) If not enough GREENS there to promote, promote GREENs in other sectors.
 	// 5) If all friendly sectors of this town are completely filled with REGULAR militia, then training effect is wasted
 
+	SGPSector sNeighbour;
 	while (ubMilitiaTrained < MILITIA_TRAINING_SQUAD_SIZE)
 	{
 		// is there room for another militia in the training sector itself?
-		if (CountAllMilitiaInSector(sMapX, sMapY) < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
+		if (CountAllMilitiaInSector(sector.x, sector.y) < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
 		{
 			// great! Create a new GREEN militia guy in the training sector
-			StrategicAddMilitiaToSector(sMapX, sMapY, GREEN_MILITIA, 1);
+			StrategicAddMilitiaToSector(sector.x, sector.y, GREEN_MILITIA, 1);
 		}
 		else
 		{
@@ -103,16 +102,16 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 
 			if( ubTownId != BLANK_SECTOR )
 			{
-				InitFriendlyTownSectorServer(ubTownId, sMapX, sMapY);
+				InitFriendlyTownSectorServer(ubTownId, sector.x, sector.y);
 
 				// check other eligible sectors in this town for room for another militia
-				while( ServeNextFriendlySectorInTown( &sNeighbourX, &sNeighbourY ) )
+				while (ServeNextFriendlySectorInTown(sNeighbour))
 				{
 					// is there room for another militia in this neighbouring sector ?
-					if (CountAllMilitiaInSector(sNeighbourX, sNeighbourY) < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
+					if (CountAllMilitiaInSector(sNeighbour.x, sNeighbour.y) < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
 					{
 						// great! Create a new GREEN militia guy in the neighbouring sector
-						StrategicAddMilitiaToSector(sNeighbourX, sNeighbourY, GREEN_MILITIA, 1);
+						StrategicAddMilitiaToSector(sNeighbour.x, sNeighbour.y, GREEN_MILITIA, 1);
 
 						fFoundOne = TRUE;
 						break;
@@ -126,26 +125,26 @@ void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMa
 				// alrighty, then.  We'll have to *promote* guys instead.
 
 				// are there any GREEN militia men in the training sector itself?
-				if (MilitiaInSectorOfRank(sMapX, sMapY, GREEN_MILITIA) > 0)
+				if (MilitiaInSectorOfRank(sector.x, sector.y, GREEN_MILITIA) > 0)
 				{
 					// great! Promote a GREEN militia guy in the training sector to a REGULAR
-					StrategicPromoteMilitiaInSector(sMapX, sMapY, GREEN_MILITIA, 1);
+					StrategicPromoteMilitiaInSector(sector, GREEN_MILITIA, 1);
 				}
 				else
 				{
 					if( ubTownId != BLANK_SECTOR )
 					{
 						// dammit! Last chance - try to find other eligible sectors in the same town with a Green guy to be promoted
-						InitFriendlyTownSectorServer(ubTownId, sMapX, sMapY);
+						InitFriendlyTownSectorServer(ubTownId, sector.x, sector.y);
 
 						// check other eligible sectors in this town for room for another militia
-						while( ServeNextFriendlySectorInTown( &sNeighbourX, &sNeighbourY ) )
+						while (ServeNextFriendlySectorInTown(sNeighbour))
 						{
 							// are there any GREEN militia men in the neighbouring sector ?
-							if (MilitiaInSectorOfRank(sNeighbourX, sNeighbourY, GREEN_MILITIA) > 0)
+							if (MilitiaInSectorOfRank(sNeighbour.x, sNeighbour.y, GREEN_MILITIA) > 0)
 							{
 								// great! Promote a GREEN militia guy in the neighbouring sector to a REGULAR
-								StrategicPromoteMilitiaInSector(sNeighbourX, sNeighbourY, GREEN_MILITIA, 1);
+								StrategicPromoteMilitiaInSector(sNeighbour, GREEN_MILITIA, 1);
 
 								fFoundOne = TRUE;
 								break;
@@ -218,9 +217,9 @@ static void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, 
 
 
 // Promote militias of a certain rank
-static void StrategicPromoteMilitiaInSector(INT16 const x, INT16 const y, UINT8 const current_rank, UINT8 const n)
+static void StrategicPromoteMilitiaInSector(const SGPSector& sMap, UINT8 const current_rank, UINT8 const n)
 {
-	SECTORINFO& si = SectorInfo[SECTOR(x, y)];
+	SECTORINFO& si = SectorInfo[sMap.AsByte()];
 
 	Assert(si.ubNumberOfCivsAtLevel[current_rank] >= n);
 	//KM : July 21, 1999 patch fix
@@ -233,9 +232,9 @@ static void StrategicPromoteMilitiaInSector(INT16 const x, INT16 const y, UINT8 
 }
 
 
-void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany)
+void StrategicRemoveMilitiaFromSector(const SGPSector& sMap, UINT8 ubRank, UINT8 ubHowMany)
 {
-	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
+	SECTORINFO *pSectorInfo = &(SectorInfo[sMap.AsByte()]);
 
 	// damn well better have that many around to remove!
 	Assert(pSectorInfo->ubNumberOfCivsAtLevel[ ubRank ] >= ubHowMany);
@@ -254,12 +253,12 @@ void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UI
 
 
 // kill pts are (2 * kills) + assists
-UINT8 CheckOneMilitiaForPromotion(INT16 const x, INT16 const y, UINT8 &current_rank, UINT8 kill_points)
+UINT8 CheckOneMilitiaForPromotion(const SGPSector& sMap, UINT8 &current_rank, UINT8 kill_points)
 {
 	// since the awarding is potentially significantly delayed, make sure they
 	// weren't all promoted already by regular training or killed;
 	// if we can't find them, we try higher ranks and make sure the caller follows up
-	SECTORINFO& si = SectorInfo[SECTOR(x, y)];
+	SECTORINFO& si = SectorInfo[sMap.AsByte()];
 	while (si.ubNumberOfCivsAtLevel[current_rank] == 0) {
 		if (current_rank == ELITE_MILITIA) return 0;
 		current_rank++;
@@ -272,7 +271,7 @@ UINT8 CheckOneMilitiaForPromotion(INT16 const x, INT16 const y, UINT8 &current_r
 			// 2 kill points minimum, 25% chance per kill point
 			if (kill_points < 2)           break;
 			if (!Chance(25 * kill_points)) break;
-			StrategicPromoteMilitiaInSector(x, y, GREEN_MILITIA, 1);
+			StrategicPromoteMilitiaInSector(sMap, GREEN_MILITIA, 1);
 			++n_promotions;
 			// Attempt another level up
 			kill_points -= 2;
@@ -281,7 +280,7 @@ UINT8 CheckOneMilitiaForPromotion(INT16 const x, INT16 const y, UINT8 &current_r
 			// 5 kill points minimum, 10% chance per kill point
 			if (kill_points < 5)           break;
 			if (!Chance(10 * kill_points)) break;
-			StrategicPromoteMilitiaInSector(x, y, REGULAR_MILITIA, 1);
+			StrategicPromoteMilitiaInSector(sMap, REGULAR_MILITIA, 1);
 			++n_promotions;
 			break;
 	}
@@ -290,7 +289,7 @@ UINT8 CheckOneMilitiaForPromotion(INT16 const x, INT16 const y, UINT8 &current_r
 
 
 // call this if the player attacks his own militia
-static void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
+static void HandleMilitiaDefections(const SGPSector& sMap)
 {
 	UINT8 ubRank;
 	UINT8 ubMilitiaCnt;
@@ -299,7 +298,7 @@ static void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
 
 	for( ubRank = 0; ubRank < MAX_MILITIA_LEVELS; ubRank++ )
 	{
-		ubMilitiaCnt = MilitiaInSectorOfRank(sMapX, sMapY, ubRank);
+		ubMilitiaCnt = MilitiaInSectorOfRank(sMap.x, sMap.y, ubRank);
 
 		// check each guy at each rank to see if he defects
 		for (ubCount = 0; ubCount < ubMilitiaCnt; ubCount++)
@@ -324,7 +323,7 @@ static void HandleMilitiaDefections(INT16 sMapX, INT16 sMapY)
 			if (Random(100) < uiChanceToDefect)
 			{
 				//B'bye!  (for you SNL fans out there)
-				StrategicRemoveMilitiaFromSector(sMapX, sMapY, ubRank, 1);
+				StrategicRemoveMilitiaFromSector(sMap, ubRank, 1);
 			}
 		}
 	}
@@ -352,10 +351,10 @@ UINT8 MilitiaInSectorOfRank(INT16 sMapX, INT16 sMapY, UINT8 ubRank)
 }
 
 
-BOOLEAN SectorOursAndPeaceful( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
+BOOLEAN SectorOursAndPeaceful(const SGPSector& sector)
 {
 	// if this sector is currently loaded
-	if ( ( sMapX == gWorldSectorX ) && ( sMapY == gWorldSectorY ) && ( bMapZ == gbWorldSectorZ ) )
+	if (sector == gWorldSector)
 	{
 		// and either there are enemies prowling this sector, or combat is in progress
 		if ( gTacticalStatus.fEnemyInSector || ( gTacticalStatus.uiFlags & INCOMBAT ) )
@@ -365,12 +364,12 @@ BOOLEAN SectorOursAndPeaceful( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	}
 
 	// if sector is controlled by enemies, it's not ours (duh!)
-	if (!bMapZ && StrategicMap[sMapX + sMapY * MAP_WORLD_X].fEnemyControlled)
+	if (!sector.z && StrategicMap[sector.AsStrategicIndex()].fEnemyControlled)
 	{
 		return FALSE;
 	}
 
-	if (NumHostilesInSector(SGPSector(sMapX, sMapY, bMapZ)))
+	if (NumHostilesInSector(sector))
 	{
 		return FALSE;
 	}
@@ -384,8 +383,8 @@ static void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT
 {
 	// reset globals
 	gubTownSectorServerTownId = ubTownId;
-	gsTownSectorServerSkipX = sSkipSectorX;
-	gsTownSectorServerSkipY = sSkipSectorY;
+	gsTownSectorServerSkip.x = sSkipSectorX;
+	gsTownSectorServerSkip.y = sSkipSectorY;
 
 	gubTownSectorServerIndex = 0;
 }
@@ -395,7 +394,7 @@ static void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT
  * at initialization. It will skip an entry that matches the skip X/Y value, if
  * one was specified at initialization.
  * MUST CALL InitFriendlyTownSectorServer() before using! */
-static bool ServeNextFriendlySectorInTown(INT16* const neighbour_x, INT16* const neighbour_y)
+static bool ServeNextFriendlySectorInTown(SGPSector& neighbour)
 {
 	while (gubTownSectorServerIndex < g_town_sectors.size() && g_town_sectors[gubTownSectorServerIndex].town != BLANK_SECTOR)
 	{
@@ -404,17 +403,14 @@ static bool ServeNextFriendlySectorInTown(INT16* const neighbour_x, INT16* const
 		// if this sector is in the town we're looking for
 		if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].bNameId != gubTownSectorServerTownId) continue;
 
-		INT16 const x = SECTORX(sector);
-		INT16 const y = SECTORY(sector);
-
+		SGPSector sec(sector);
 		// Make sure we're not supposed to skip it
-		if (x == gsTownSectorServerSkipX && y == gsTownSectorServerSkipY) continue;
+		if (sec == gsTownSectorServerSkip) continue;
 
 		// check if it's "friendly" - not enemy controlled, no enemies in it, no combat in progress
-		if (!SectorOursAndPeaceful(x, y, 0)) continue;
+		if (!SectorOursAndPeaceful(sec)) continue;
 
-		*neighbour_x = x;
-		*neighbour_y = y;
+		neighbour = sec;
 		return true;
 	}
 	return false;
@@ -478,12 +474,10 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier )
 static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* const pSoldier)
 {
 	ST::string sString;
-	INT16 sSectorX = 0, sSectorY = 0;
 	ST::string sStringB;
 
-	sSectorX = pSoldier->sSectorX;
-	sSectorY = pSoldier->sSectorY;
-	UINT8 const sector = SECTOR(sSectorX, sSectorY);
+	SGPSector sSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+	UINT8 const sector = sSector.AsByte();
 
 	Assert(!SectorInfo[sector].fMilitiaTrainingPaid);
 
@@ -500,14 +494,14 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 		return;
 	}
 
-	if (IsAreaFullOfMilitia(sSectorX, sSectorY, pSoldier->bSectorZ))
+	if (IsAreaFullOfMilitia(sSector))
 	{
 		// we're full!!! go home!
 		UINT8 const bTownId = GetTownIdForSector(sector);
 		if ( bTownId == BLANK_SECTOR )
 		{
 			// wilderness SAM site
-			sStringB = GetSectorIDString(sSectorX, sSectorY, 0, TRUE);
+			sStringB = GetSectorIDString(sector, TRUE);
 			sString = st_format_printf(pMilitiaConfirmStrings[9], sStringB);
 		}
 		else
@@ -533,7 +527,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 
 	// ok to continue, ask player
 
-	sStringB = GetSectorIDString(sSectorX, sSectorY, 0, TRUE);
+	sStringB = GetSectorIDString(sector, TRUE);
 	sString = st_format_printf(pMilitiaConfirmStrings[ 3 ], sStringB, pMilitiaConfirmStrings[ 4 ], giTotalCostOfTraining);
 
 	// ask player whether he'd like to continue training
@@ -618,7 +612,7 @@ void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void )
 	if ( gTacticalStatus.Team[ MILITIA_TEAM ].bSide != 0 )
 	{
 		// handle militia defections and reset team to friendly
-		HandleMilitiaDefections( gWorldSectorX, gWorldSectorY );
+		HandleMilitiaDefections(gWorldSector);
 		gTacticalStatus.Team[ MILITIA_TEAM ].bSide = 0;
 	}
 	else if( !gfAutomaticallyStartAutoResolve )
@@ -647,34 +641,33 @@ bool CanNearbyMilitiaScoutThisSector(INT16 const sec_x, INT16 const sec_y)
 }
 
 
-BOOLEAN IsAreaFullOfMilitia(const INT16 sector_x, const INT16 sector_y, const INT8 sector_z)
+BOOLEAN IsAreaFullOfMilitia(const SGPSector& sector)
 {
-	if (sector_z != 0) return TRUE;
+	if (sector.z != 0) return TRUE;
 
 	UINT32 count_milita = 0;
 	UINT32 max_milita   = 0;
 
-	INT8 const town_id = GetTownIdForSector(SECTOR(sector_x, sector_y));
+	INT8 const town_id = GetTownIdForSector(sector.AsByte());
 	if (town_id != BLANK_SECTOR)
 	{
 		FOR_EACH_SECTOR_IN_TOWN(i, town_id)
 		{
-			INT16 const town_x = SECTORX(i->sector);
-			INT16 const town_y = SECTORY(i->sector);
-			if (SectorOursAndPeaceful(town_x, town_y, 0))
+			SGPSector town(i->sector);
+			if (SectorOursAndPeaceful(town))
 			{
 				// don't count GREEN militia, they can be trained into regulars first
-				count_milita += MilitiaInSectorOfRank(town_x, town_y, REGULAR_MILITIA);
-				count_milita += MilitiaInSectorOfRank(town_x, town_y, ELITE_MILITIA);
+				count_milita += MilitiaInSectorOfRank(town.x, town.y, REGULAR_MILITIA);
+				count_milita += MilitiaInSectorOfRank(town.x, town.y, ELITE_MILITIA);
 				max_milita   += MAX_ALLOWABLE_MILITIA_PER_SECTOR;
 			}
 		}
 	}
-	else if (IsThisSectorASAMSector(sector_x, sector_y, 0))
+	else if (IsThisSectorASAMSector(sector))
 	{
 		// don't count GREEN militia, they can be trained into regulars first
-		count_milita += MilitiaInSectorOfRank(sector_x, sector_y, REGULAR_MILITIA);
-		count_milita += MilitiaInSectorOfRank(sector_x, sector_y, ELITE_MILITIA);
+		count_milita += MilitiaInSectorOfRank(sector.x, sector.y, REGULAR_MILITIA);
+		count_milita += MilitiaInSectorOfRank(sector.x, sector.y, ELITE_MILITIA);
 		max_milita   += MAX_ALLOWABLE_MILITIA_PER_SECTOR;
 	}
 
@@ -915,13 +908,13 @@ BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSe
 {
 	BOOLEAN fSamSitePresent = FALSE;
 
-
-	if( bSectorZ != 0 )
+	SGPSector sector(sSectorX, sSectorY, bSectorZ);
+	if (sector.z != 0)
 	{
 		return( FALSE );
 	}
 
-	fSamSitePresent = IsThisSectorASAMSector( sSectorX, sSectorY, bSectorZ );
+	fSamSitePresent = IsThisSectorASAMSector(sector);
 
 	if( fSamSitePresent )
 	{
@@ -929,7 +922,7 @@ BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSe
 		return(TRUE);
 	}
 
-	UINT8 const bTownId = GetTownIdForSector(SECTOR(sSectorX, sSectorY));
+	UINT8 const bTownId = GetTownIdForSector(sector.AsByte());
 	return( MilitiaTrainingAllowedInTown( bTownId ) );
 }
 

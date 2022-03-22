@@ -55,7 +55,7 @@ public:
         const uint16_t warpExitGridNo;
 
         // returns if the given sector is part of the lair
-        bool isSectorInLair(uint8_t sectorX, uint8_t sectorY, uint8_t sectorZ) const;
+        bool isSectorInLair(const SGPSector& sector) const;
 
         // randomly choose a town sector to attack, returns the placement details of the attack
         const CreatureAttackSector* chooseTownSectorToAttack() const;

@@ -705,8 +705,9 @@ static void PostSchedule(SOLDIERTYPE* pSoldier)
 	SCHEDULENODE *pSchedule;
 	UINT8	ubTempAction;
 	UINT16	usTemp;
+	static const SGPSector kingpin(5, MAP_ROW_C);
 
-	if ( (pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP) && ( gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] || ( (gubQuest[ QUEST_KINGPIN_MONEY ] == QUESTINPROGRESS) && (CheckFact( FACT_KINGPIN_CAN_SEND_ASSASSINS, KINGPIN )) ) ) && (gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C) && (pSoldier->ubProfile == NO_PROFILE) )
+	if ((pSoldier->ubCivilianGroup == KINGPIN_CIV_GROUP) && (gTacticalStatus.fCivGroupHostile[KINGPIN_CIV_GROUP] || ((gubQuest[QUEST_KINGPIN_MONEY] == QUESTINPROGRESS) && (CheckFact(FACT_KINGPIN_CAN_SEND_ASSASSINS, KINGPIN)))) && (gWorldSector == kingpin) && (pSoldier->ubProfile == NO_PROFILE))
 	{
 		// no schedules for people guarding Tony's!
 		return;
@@ -882,7 +883,7 @@ static void PostDefaultSchedule(SOLDIERTYPE* pSoldier)
 	INT32 i;
 	SCHEDULENODE *curr;
 
-	if( gbWorldSectorZ )
+	if (gWorldSector.z)
 	{ //People in underground sectors don't get schedules.
 		return;
 	}

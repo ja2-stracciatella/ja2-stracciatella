@@ -1001,7 +1001,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 
 			}
 			// UV goggles only function above ground... ditto for bloodcats
-			else if ( gbWorldSectorZ == 0 )
+			else if (gWorldSector.z == 0)
 			{
 				sDistVisible += UVGOGGLES_BONUS;
 			}
@@ -3696,7 +3696,7 @@ static void ProcessNoise(SOLDIERTYPE* const noise_maker, INT16 const sGridNo, IN
 						break;
 				}
 
-				if ( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_N )
+				if (gWorldSector.x == 5 && gWorldSector.y == MAP_ROW_N)
 				{
 					// in the bloodcat arena sector, skip noises between army & bloodcats
 					if (pSoldier->bTeam == ENEMY_TEAM && noise_maker->bTeam == CREATURE_TEAM)

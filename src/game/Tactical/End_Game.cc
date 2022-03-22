@@ -54,7 +54,8 @@ static BOOLEAN DoesO3SectorStatueExistHere( INT16 sGridNo )
 	EXITGRID ExitGrid;
 
 	// First check current sector......
-	if ( gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_O && gbWorldSectorZ == 0 )
+	static const SGPSector sectorO3(3, MAP_ROW_O);
+	if (gWorldSector == sectorO3)
 	{
 		// Check for exitence of and exit grid here...
 		// ( if it doesn't then the change has already taken place )
@@ -279,10 +280,10 @@ static void DoneFadeOutKilledQueen()
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
-	SetThisSectorAsPlayerControlled(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE);
+	SetThisSectorAsPlayerControlled(gWorldSector.x, gWorldSector.y, gWorldSector.z, TRUE);
 
 	// ATE: Force change of level set z to 1
-	gbWorldSectorZ = 1;
+	gWorldSector.z = 1;
 
 	// Clear out dudes
 	SECTORINFO& sector = SectorInfo[SEC_P3];

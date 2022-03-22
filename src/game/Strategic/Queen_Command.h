@@ -11,9 +11,7 @@ extern BOOLEAN gfPendingEnemies;
 
 //Counts enemies and crepitus, but not bloodcats.
 UINT8 NumHostilesInSector(const SGPSector& sSector);
-
-UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
-
+UINT8 NumEnemiesInAnySector(const SGPSector& sSector);
 UINT8 NumEnemiesInSector(const SGPSector& sector);
 UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
 UINT8 NumStationaryEnemiesInSector(const SGPSector& sSector);
@@ -22,7 +20,7 @@ void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAd
 
 /* Called when entering a sector so the campaign AI can automatically insert the
  * correct number of troops of each type based on the current number in the
- * sector in global focus (gWorldSectorX/Y) */
+ * sector in global focus (gWorldSector) */
 void PrepareEnemyForSectorBattle();
 
 void AddPossiblePendingEnemiesToBattle(void);

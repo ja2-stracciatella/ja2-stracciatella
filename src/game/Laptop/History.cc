@@ -106,14 +106,14 @@ void ClearHistoryList( void );
 
 static void AppendHistoryToEndOfFile(void);
 static BOOLEAN LoadInHistoryRecords(const UINT32 uiPage);
-static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+static void ProcessAndEnterAHistoryRecord(UINT8 ubCode, UINT32 uiDate, UINT8 ubSecondCode, const SGPSector& sSector);
 
 
-void AddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSecondCode, const UINT32 uiDate, const INT16 sSectorX, const INT16 sSectorY)
+void AddHistoryToPlayersLog(const UINT8 ubCode, const UINT8 ubSecondCode, const UINT32 uiDate, const SGPSector& sSector)
 {
 	ClearHistoryList();
 
-	ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, 0);
+	ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSector);
 	ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[MSG_HISTORY_UPDATED]);
 
 	AppendHistoryToEndOfFile();
@@ -326,16 +326,16 @@ static void BtnHistoryDisplayNextPageCallBack(GUI_BUTTON* btn, INT32 reason)
 }
 
 
-static void ProcessAndEnterAHistoryRecord(const UINT8 ubCode, const UINT32 uiDate, const UINT8 ubSecondCode, const INT16 sSectorX, const INT16 sSectorY, const INT8 bSectorZ)
+static void ProcessAndEnterAHistoryRecord(const UINT8 ubCode, const UINT32 uiDate, const UINT8 ubSecondCode, const SGPSector& sSector)
 {
 	HistoryUnit* const h = new HistoryUnit{};
 	h->Next         = NULL;
 	h->ubCode       = ubCode;
 	h->ubSecondCode = ubSecondCode;
 	h->uiDate       = uiDate;
-	h->sSectorX     = sSectorX;
-	h->sSectorY     = sSectorY;
-	h->bSectorZ     = bSectorZ;
+	h->sSectorX     = sSector.x;
+	h->sSectorY     = sSector.y;
+	h->bSectorZ     = sSector.z;
 
 	// Append node to list
 	HistoryUnit** anchor = &pHistoryListHead;
@@ -356,19 +356,17 @@ static void OpenAndReadHistoryFile(void)
 		UINT8  ubCode;
 		UINT8  ubSecondCode;
 		UINT32 uiDate;
-		INT16  sSectorX;
-		INT16  sSectorY;
-		INT8   bSectorZ;
+		SGPSector sSector;
 
 		f->read(&ubCode,       sizeof(UINT8));
 		f->read(&ubSecondCode, sizeof(UINT8));
 		f->read(&uiDate,       sizeof(UINT32));
-		f->read(&sSectorX,     sizeof(INT16));
-		f->read(&sSectorY,     sizeof(INT16));
-		f->read(&bSectorZ,     sizeof(INT8));
+		f->read(&sSector.x,    sizeof(INT16));
+		f->read(&sSector.y,    sizeof(INT16));
+		f->read(&sSector.z,    sizeof(INT8));
 		f->seek(1, FILE_SEEK_FROM_CURRENT);
 
-		ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSectorX, sSectorY, bSectorZ);
+		ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSector);
 	}
 }
 
@@ -700,19 +698,17 @@ try
 		UINT8  ubCode;
 		UINT8  ubSecondCode;
 		UINT32 uiDate;
-		INT16  sSectorX;
-		INT16  sSectorY;
-		INT8   bSectorZ;
+		SGPSector sSector;
 
 		f->read(&ubCode,       sizeof(UINT8));
 		f->read(&ubSecondCode, sizeof(UINT8));
 		f->read(&uiDate,       sizeof(UINT32));
-		f->read(&sSectorX,     sizeof(INT16));
-		f->read(&sSectorY,     sizeof(INT16));
-		f->read(&bSectorZ,     sizeof(INT8));
+		f->read(&sSector.x,    sizeof(INT16));
+		f->read(&sSector.y,    sizeof(INT16));
+		f->read(&sSector.z,    sizeof(INT8));
 		f->seek(1, FILE_SEEK_FROM_CURRENT);
 
-		ProcessAndEnterAHistoryRecord(ubCode, uiDate,  ubSecondCode, sSectorX, sSectorY, bSectorZ);
+		ProcessAndEnterAHistoryRecord(ubCode, uiDate, ubSecondCode, sSector);
 	}
 
 	return TRUE;

@@ -202,10 +202,10 @@ enum Quests
 #define START_SECTOR_LEAVE_EQUIP_GRIDNO	4868
 
 // NB brothel rooms 88-90 removed because they are the antechamber
-#define IN_BROTHEL( room )		(gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && (room) >= 91 && (room) <= 119)
+#define IN_BROTHEL(room)	(gWorldSector.x == 5 && gWorldSector.y == MAP_ROW_C && (room) >= 91 && (room) <= 119)
 #define IN_BROTHEL_GUARD_ROOM( room )	( room == 110 )
 
-#define IN_KINGPIN_HOUSE( room )	( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_D && (room) >= 30 && (room) <= 39 )
+#define IN_KINGPIN_HOUSE(room)	(gWorldSector.x == 5 && gWorldSector.x == MAP_ROW_D && (room) >= 30 && (room) <= 39)
 
 #define LOYALTY_LOW_THRESHOLD		30
 #define LOYALTY_OK_THRESHOLD		50
@@ -218,11 +218,11 @@ extern void    SetFactTrue(Fact);
 extern void    SetFactFalse(Fact);
 extern BOOLEAN CheckFact(Fact, UINT8 ubProfileID);
 
-extern void StartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY );
-extern void EndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY );
+extern void StartQuest(UINT8 ubQuest, const SGPSector& sector);
+extern void EndQuest(UINT8 ubQuest, const SGPSector& sector);
 
-extern void InternalStartQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fUpdateHistory );
-extern void InternalEndQuest( UINT8 ubQuest, INT16 sSectorX, INT16 sSectorY, BOOLEAN fUpdateHistory );
+extern void InternalStartQuest(UINT8 ubQuest, const SGPSector& sector, BOOLEAN fUpdateHistory);
+extern void InternalEndQuest(UINT8 ubQuest, const SGPSector& sector, BOOLEAN fUpdateHistory);
 
 
 extern void CheckForQuests( UINT32 uiDay );

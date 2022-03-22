@@ -998,19 +998,19 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 	{
 		case INSERTION_CODE_NORTH:
 			pEdgepoints = &gps1stNorthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any north mapedgepoints. LC:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
+			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any north mapedgepoints. LC:1", gWorldSector.y + 'A' - 1, gWorldSector.x, gWorldSector.z));
 			break;
 		case INSERTION_CODE_EAST:
 			pEdgepoints = &gps1stEastEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any east mapedgepoints. LC:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
+			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any east mapedgepoints. LC:1", gWorldSector.y + 'A' - 1, gWorldSector.x, gWorldSector.z));
 			break;
 		case INSERTION_CODE_SOUTH:
 			pEdgepoints = &gps1stSouthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any south mapedgepoints. LC:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
+			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any south mapedgepoints. LC:1", gWorldSector.y + 'A' - 1, gWorldSector.x, gWorldSector.z));
 			break;
 		case INSERTION_CODE_WEST:
 			pEdgepoints = &gps1stWestEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any west mapedgepoints. LC:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
+			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any west mapedgepoints. LC:1", gWorldSector.y + 'A' - 1, gWorldSector.x, gWorldSector.z));
 			break;
 	}
 	if (!pEdgepoints || pEdgepoints->size() == 0)
@@ -1050,7 +1050,7 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 	sRadius = 1;
 	sDirection = WORLD_COLS;
 	sOriginalGridNo = sGridNo;
-	while( sRadius < (INT16)(gbWorldSectorZ ? 30 : 10) )
+	while (sRadius < (INT16)(gWorldSector.z ? 30 : 10))
 	{
 		sGridNo = sOriginalGridNo + (-1 - WORLD_COLS)*sRadius; //start at the TOP-LEFT gridno
 		for( iDirectionLoop = 0; iDirectionLoop < 4; iDirectionLoop++ )
@@ -1112,19 +1112,19 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 	{
 		case INSERTION_CODE_NORTH:
 			pEdgepoints = &gps2ndNorthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any isolated north mapedgepoints. KM:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
+			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any isolated north mapedgepoints. KM:1", gWorldSector.y + 'A' - 1, gWorldSector.x, gWorldSector.z));
 			break;
 		case INSERTION_CODE_EAST:
 			pEdgepoints = &gps2ndEastEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any isolated east mapedgepoints. KM:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
+			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any isolated east mapedgepoints. KM:1", gWorldSector.y + 'A' - 1, gWorldSector.x, gWorldSector.z));
 			break;
 		case INSERTION_CODE_SOUTH:
 			pEdgepoints = &gps2ndSouthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any isolated south mapedgepoints. KM:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
+			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any isolated south mapedgepoints. KM:1", gWorldSector.y + 'A' - 1, gWorldSector.x, gWorldSector.z));
 			break;
 		case INSERTION_CODE_WEST:
 			pEdgepoints = &gps2ndWestEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any isolated west mapedgepoints. KM:1", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ));
+			AssertMsg(pEdgepoints->size() != 0, String("Sector %c%d level %d doesn't have any isolated west mapedgepoints. KM:1", gWorldSector.y + 'A' - 1, gWorldSector.x, gWorldSector.z));
 			break;
 	}
 	if (!pEdgepoints || pEdgepoints->size() == 0)
@@ -1164,7 +1164,7 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 	sRadius = 1;
 	sDirection = WORLD_COLS;
 	sOriginalGridNo = sGridNo;
-	while( sRadius < (INT16)(gbWorldSectorZ ? 30 : 10) )
+	while( sRadius < (INT16)(gWorldSector.z ? 30 : 10) )
 	{
 		sGridNo = sOriginalGridNo + (-1 - WORLD_COLS)*sRadius; //start at the TOP-LEFT gridno
 		for( iDirectionLoop = 0; iDirectionLoop < 4; iDirectionLoop++ )
@@ -1290,7 +1290,7 @@ static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 s
 
 	pSoldier->sGridNo = sEdgepoint1;
 
-	if( gWorldSectorX == 14 && gWorldSectorY == 9 && !gbWorldSectorZ )
+	if( gWorldSector.x == 14 && gWorldSector.y == 9 && !gWorldSector.z )
 	{ //BRUTAL CODE  -- special case map.
 		iSearchRange = 250;
 	}

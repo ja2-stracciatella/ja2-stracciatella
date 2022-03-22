@@ -1516,15 +1516,15 @@ const CreatureLairModel* DefaultContentManager::getCreatureLairByMineId(uint8_t 
 	return NULL;
 }
 
-const MineModel* DefaultContentManager::getMineForSector(uint8_t sectorX, uint8_t sectorY, uint8_t sectorZ) const
+const MineModel* DefaultContentManager::getMineForSector(const SGPSector& sector) const
 {
-	auto sectorId = SECTOR(sectorX, sectorY);
+	auto sectorId = sector.AsByte();
 	for (auto m : m_mines)
 	{
-		if (sectorZ == 0 && sectorId == m->entranceSector) return m;
+		if (sector.z == 0 && sectorId == m->entranceSector) return m;
 		for (auto s : m->mineSectors)
 		{
-			if (s[0] == sectorId && s[1] == sectorZ) return m;
+			if (s[0] == sectorId && s[1] == sector.z) return m;
 		}
 	}
 

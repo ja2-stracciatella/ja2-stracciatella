@@ -241,7 +241,7 @@ void InitCreatureQuest()
 	//Now, choose a start location for the queen.
 	auto lairModel = GCM->getCreatureLairByMineId(ubChosenMineId);
 	InitCreatureLair(lairModel);
-	
+
 	// enable the lair entrance
 	UINT8 entranceSector = lairModel->entranceSector;
 	UNDERGROUND_SECTORINFO* lairEntrance = FindUnderGroundSector(SECTORX(entranceSector), SECTORY(entranceSector), lairModel->entranceSectorLevel);
@@ -479,7 +479,7 @@ static void AddCreaturesToBattle(UINT8 n_young_males, UINT8 n_young_females, UIN
 		{ // No edgepoints left, so put him at the entrypoint
 			s->ubStrategicInsertionCode = insertion_code;
 		}
-		UpdateMercInSector(*s, gWorldSectorX, gWorldSectorY, 0);
+		UpdateMercInSector(*s, gWorldSector);
 	}
 
 	gsCreatureInsertionCode      = 0;
@@ -571,9 +571,10 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 	}
 
 	//Now that the sector has been chosen, attack it!
-	if (PlayerGroupsInSector(SGPSector(ubSectorX, ubSectorY, 0)))
+	SGPSector sector(ubSectorX, ubSectorY, 0);
+	if (PlayerGroupsInSector(sector))
 	{ //we have players in the sector
-		if( ubSectorX == gWorldSectorX && ubSectorY == gWorldSectorY && !gbWorldSectorZ )
+		if (sector == gWorldSector)
 		{ //This is the currently loaded sector.  All we have to do is change the music and insert
 			//the creatures tactically.
 			if( guiCurrentScreen == GAME_SCREEN )
@@ -763,7 +764,7 @@ void DetermineCreatureTownCompositionBasedOnTacticalInformation(UINT8 *pubNumCre
 {
 	SECTORINFO *pSector;
 
-	pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
+	pSector = &SectorInfo[gWorldSector.AsByte()];
 	*pubNumCreatures = 0;
 	pSector->ubNumCreatures = 0;
 	pSector->ubCreaturesInBattle = 0;
@@ -823,9 +824,9 @@ BOOLEAN PrepareCreaturesForBattle()
 		//when creatures are in the level.
 		gfUseCreatureMusic = LightGetColor()->b != 0;
 
-		if( !gbWorldSectorZ )
+		if (!gWorldSector.z)
 			return FALSE;  //Creatures don't attack overworld with this battle code.
-		pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+		pSector = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
 		if( !pSector )
 		{
 			return FALSE;
@@ -932,10 +933,10 @@ BOOLEAN PrepareCreaturesForBattle()
 			ubNumAdultFemales++;
 	}
 
-	if( gbWorldSectorZ )
+	if (gWorldSector.z)
 	{
 		UNDERGROUND_SECTORINFO *pUndergroundSector;
-		pUndergroundSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+		pUndergroundSector = FindUnderGroundSector(gWorldSector.x, gWorldSector.y, gWorldSector.z);
 		if( !pUndergroundSector )
 		{ //No info?!!!!!
 			SLOGA("Please report underground sector you are in or going to and send save if possible." );
@@ -946,7 +947,7 @@ BOOLEAN PrepareCreaturesForBattle()
 	else
 	{
 		SECTORINFO *pSector;
-		pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
+		pSector = &SectorInfo[gWorldSector.AsByte()];
 		pSector->ubNumCreatures = ubNumCreatures;
 		pSector->ubCreaturesInBattle = ubNumCreatures;
 	}
@@ -1037,7 +1038,7 @@ void LoadCreatureDirectives(HWFILE const hFile, UINT32 const uiSavedGameVersion)
 	{
 	case -1: //creature quest finished -- it's okay
 	case 0:  //lair doesn't exist yet -- it's okay
-		break; 
+		break;
 	default:
 		auto lair = GCM->getCreatureLair(giLairID);
 		if (!lair)
@@ -1093,7 +1094,7 @@ BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 bool GetWarpOutOfMineCodes(SGPSector& sector, INT16* const insertion_grid_no)
 {
 	if (!gfWorldLoaded)      return false;
-	if (gbWorldSectorZ == 0) return false;
+	if (gWorldSector.z == 0) return false;
 
 	auto lair = gLairModel;
 	if (lair == NULL && giLairID == -1)
@@ -1103,7 +1104,7 @@ bool GetWarpOutOfMineCodes(SGPSector& sector, INT16* const insertion_grid_no)
 	}
 
 	// Now make sure the mercs are in the previously infested mine
-	if (lair != NULL && lair->isSectorInLair(gWorldSectorX, gWorldSectorY, gbWorldSectorZ))
+	if (lair && lair->isSectorInLair(gWorldSector))
 	{
 		sector.x = SECTORX(lair->warpExitSector);
 		sector.y = SECTORY(lair->warpExitSector);

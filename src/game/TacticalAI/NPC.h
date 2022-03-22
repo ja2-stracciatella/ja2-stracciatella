@@ -87,7 +87,7 @@ extern void ReplaceLocationInNPCDataFromProfileID( UINT8 ubNPC, INT16 sOldGridNo
 extern UINT8 ActionIDForMovementRecord( UINT8 ubNPC, UINT8 ubRecord );
 
 // given a victory in this sector, handle specific facts
-void HandleVictoryInNPCSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
+void HandleVictoryInNPCSector(const SGPSector& sector);
 
 // check if this shopkeep has been shutdown, if so do soething and return the fact
 BOOLEAN HandleShopKeepHasBeenShutDown( UINT8 ubCharNum );
@@ -105,7 +105,7 @@ BOOLEAN GetInfoForAbandoningEPC(UINT8 ubNPC, UINT16* pusQuoteNum, Fact* fact_to_
 
 BOOLEAN RecordHasDialogue( UINT8 ubNPC, UINT8 ubRecord );
 
-INT8 ConsiderCivilianQuotes( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ,  BOOLEAN fSetAsUsed );
+INT8 ConsiderCivilianQuotes(const SGPSector& sector, BOOLEAN fSetAsUsed);
 
 void ResetOncePerConvoRecordsForNPC( UINT8 ubNPC );
 

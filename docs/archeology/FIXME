@@ -34,7 +34,7 @@ Filler, Padding, Unused, filler: remove, partially bogus
 FindCacheStructDataIndex(): should return pointer instead of index
 FindValidInsertionCode(): MARK_DIRTY necessary?
 GetDialogueDataFilename(): checking for MANNY does nothing
-GetLoadedSectorString(): gbWorldSectorZ <-> !gbWorldSectorZ
+GetLoadedSectorString(): gWorldSector.z <-> !gWorldSector.z
 GetNumberOfPastMercsOnPlayersTeam(): callers
 GetSectorIDString(): complicated
 GetTimeRemainingOnSoldiersContract(): callers

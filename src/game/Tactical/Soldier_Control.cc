@@ -414,7 +414,7 @@ INT8 CalcActionPoints(const SOLDIERTYPE* const pSold)
 	if ( pSold->ubProfile != NO_PROFILE )
 	{
 		if ((gMercProfiles[ pSold->ubProfile ].bPersonalityTrait == CLAUSTROPHOBIC) &&
-			(gbWorldSectorZ > 0))
+			gWorldSector.z > 0)
 		{
 			ubPoints = (ubPoints * AP_CLAUSTROPHOBE) / 10;
 		}
@@ -4138,7 +4138,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE& s)
 					break;
 
 				case CLAUSTROPHOBIC:
-					if (gbWorldSectorZ > 0 && Random(6 - gbWorldSectorZ) == 0)
+					if (gWorldSector.z > 0 && Random(6 - gWorldSector.z) == 0)
 					{
 						HandleMoraleEvent(&s, MORALE_CLAUSTROPHOBE_UNDERGROUND, s.sSectorX, s.sSectorY, s.bSectorZ);
 						goto say_personality_quote;
@@ -5473,8 +5473,8 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 	{
 		case ENEMY_TEAM:
 			// if we're in the wilderness this always counts
-			if (StrategicMap[CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY)].fEnemyControlled ||
-				SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)].ubTraversability[THROUGH_STRATEGIC_MOVE] != TOWN)
+			if (StrategicMap[gWorldSector.AsStrategicIndex()].fEnemyControlled ||
+				SectorInfo[gWorldSector.AsByte()].ubTraversability[THROUGH_STRATEGIC_MOVE] != TOWN)
 			{
 				// update current day of activity!
 				UpdateLastDayOfPlayerActivity( (UINT16) GetWorldDay() );

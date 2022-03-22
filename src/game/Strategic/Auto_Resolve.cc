@@ -1303,7 +1303,7 @@ static void RenderAutoResolve(void)
 					SetFactTrue( FACT_FIRST_BATTLE_WON );
 				}
 				SetTheFirstBattleSector( ( INT16 ) (gpAR->ubSectorX + gpAR->ubSectorY * MAP_WORLD_X ) );
-				HandleFirstBattleEndingWhileInTown( gpAR->ubSectorX, gpAR->ubSectorY, 0, TRUE );
+				HandleFirstBattleEndingWhileInTown(SGPSector(gpAR->ubSectorX, gpAR->ubSectorY, 0), TRUE );
 			}
 
 			switch( gpAR->ubBattleStatus )
@@ -1598,9 +1598,9 @@ static void CreateAutoResolveInterface(void)
 		cell = MakeCreatures(cell, ar->ubYMCreatures, ar, YAM_MONSTER,        YM_CREATURE_FACE);
 	}
 
-	if (ar->ubSectorX  == gWorldSectorX &&
-			ar->ubSectorY  == gWorldSectorY &&
-			gbWorldSectorZ == 0)
+	if (ar->ubSectorX  == gWorldSector.x &&
+			ar->ubSectorY  == gWorldSector.y &&
+			gWorldSector.z == 0)
 	{
 		CheckAndHandleUnloadingOfCurrentWorld();
 	}
@@ -1746,8 +1746,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		r = 0;
 	}
 
-	UINT8 const x = ar.ubSectorX;
-	UINT8 const y = ar.ubSectorY;
+	const SGPSector arSector(ar.ubSectorX, ar.ubSectorY);
 
 	// Delete all militia
 	gbGreenToElitePromotions = 0;
@@ -1766,13 +1765,13 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		{
 			if (s.bLife < OKLIFE / 2)
 			{
-				AddDeadSoldierToUnLoadedSector(x, y, 0, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
-				StrategicRemoveMilitiaFromSector(x, y, current_rank, 1);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, x, y, 0);
+				AddDeadSoldierToUnLoadedSector(arSector.x, arSector.y, arSector.z, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
+				StrategicRemoveMilitiaFromSector(arSector, current_rank, 1);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, arSector.x, arSector.y, 0);
 			}
 			else
 			{ // This will check for promotions
-				UINT8 const promotions = CheckOneMilitiaForPromotion(x, y, current_rank, s.ubMilitiaKills);
+				UINT8 const promotions = CheckOneMilitiaForPromotion(arSector, current_rank, s.ubMilitiaKills);
 				if (promotions == 1)
 				{
 					if (current_rank == GREEN_MILITIA)
@@ -1806,9 +1805,9 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			SOLDIERTYPE& s = *gpEnemies[i].pSoldier;
 			if (s.bLife >= OKLIFE) continue;
 			TrackEnemiesKilled(ENEMY_KILLED_IN_AUTO_RESOLVE, s.ubSoldierClass);
-			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, x, y, 0);
+			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, arSector.x, arSector.y, arSector.z);
 			ProcessQueenCmdImplicationsOfDeath(&s);
-			AddDeadSoldierToUnLoadedSector(x, y, 0, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
+			AddDeadSoldierToUnLoadedSector(arSector.x, arSector.y, arSector.z, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 		}
 
 		/* Eliminate all excess soldiers (as more than 32 can exist in the same
@@ -1818,10 +1817,10 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		{	/* Get rid of any extra enemies that could be here. It is possible for the
 			 * number of total enemies to exceed 32, but autoresolve can only process
 			 * 32. We basically cheat by eliminating the rest of them. */
-			if(NumEnemiesInSector(x , y))
+			if (NumEnemiesInSector(arSector))
 			{
-				SLOGI("Eliminating remaining enemies after Autoresolve in (%d,%d)", x, y);
-				EliminateAllEnemies(x, y);
+				SLOGI("Eliminating remaining enemies after Autoresolve in (%d,%d)", arSector.x, arSector.y);
+				EliminateAllEnemies(arSector.x, arSector.y);
 			}
 		}
 		else
@@ -3920,7 +3919,7 @@ BOOLEAN GetCurrentBattleSectorXYZ(SGPSector& psSector)
 	}
 	else if( gfWorldLoaded )
 	{
-		psSector = SGPSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		psSector = gWorldSector;
 		return TRUE;
 	}
 	else
@@ -3931,38 +3930,32 @@ BOOLEAN GetCurrentBattleSectorXYZ(SGPSector& psSector)
 }
 
 
-BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(INT16* psSectorX, INT16* psSectorY, INT16* psSectorZ)
+BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(SGPSector& psSector)
 {
 	if( gpAR )
 	{
-		*psSectorX = gpAR->ubSectorX;
-		*psSectorY = gpAR->ubSectorY;
-		*psSectorZ = 0;
+		psSector.x = gpAR->ubSectorX;
+		psSector.y = gpAR->ubSectorY;
+		psSector.z = 0;
 		return TRUE;
 	}
 	else if( gfPreBattleInterfaceActive )
 	{
-		*psSectorX = gubPBSectorX;
-		*psSectorY = gubPBSectorY;
-		*psSectorZ = gubPBSectorZ;
+		psSector.x = gubPBSectorX;
+		psSector.y = gubPBSectorY;
+		psSector.z = gubPBSectorZ;
 		return TRUE;
 	}
 	else if( gfWorldLoaded )
 	{
-		*psSectorX = gWorldSectorX;
-		*psSectorY = gWorldSectorY;
-		*psSectorZ = gbWorldSectorZ;
-		if( gTacticalStatus.fEnemyInSector )
-		{
-			return TRUE;
-		}
-		return FALSE;
+		psSector = gWorldSector;
+		return gTacticalStatus.fEnemyInSector;
 	}
 	else
 	{
-		*psSectorX = 0;
-		*psSectorY = 0;
-		*psSectorZ = -1;
+		psSector.x = 0;
+		psSector.y = 0;
+		psSector.z = -1;
 		return FALSE;
 	}
 }

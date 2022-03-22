@@ -32,23 +32,23 @@ void InitializeSAMSites()
 	UpdateAirspaceControl();
 }
 
-void UpdateSAMDoneRepair(INT16 const x, INT16 const y, INT16 const z)
+void UpdateSAMDoneRepair(const SGPSector& sec)
 {
 	// ATE: If we are below, return right away
-	if (z != 0) return;
+	if (sec.z != 0) return;
 
-	UINT8 const sector = SECTOR(x, y);
+	UINT8 const sector = sec.AsByte();
 	auto samSite = GCM->findSamSiteBySector(sector);
 	if (samSite == NULL)
 	{
-		STLOGW("There is no SAM site at sector {}", GetShortSectorString(x, y));
+		STLOGW("There is no SAM site at sector {}", sec.AsShortString());
 		return;
 	}
 
 	UINT16 const good_graphic = GetTileIndexFromTypeSubIndex(EIGHTISTRUCT, samSite->graphicIndex);
 	UINT16 const damaged_graphic = good_graphic - 2; // Damaged one (current) is 2 less
 	GridNo const gridno = samSite->gridNos[0];
-	if (x == gWorldSectorX && y == gWorldSectorY && z == gbWorldSectorZ)
+	if (sec == gWorldSector)
 	{ // Sector loaded, update graphic
 		ApplyMapChangesToMapTempFile app;
 		RemoveStruct(gridno, damaged_graphic);
@@ -56,8 +56,8 @@ void UpdateSAMDoneRepair(INT16 const x, INT16 const y, INT16 const z)
 	}
 	else
 	{ // We add temp changes to map not loaded
-		RemoveStructFromUnLoadedMapTempFile(gridno, damaged_graphic, x, y, z);
-		AddStructToUnLoadedMapTempFile(gridno, good_graphic, x, y, z);
+		RemoveStructFromUnLoadedMapTempFile(gridno, damaged_graphic, sec.x, sec.y, sec.z);
+		AddStructToUnLoadedMapTempFile(gridno, good_graphic, sec.x, sec.y, sec.z);
 	}
 
 	// SAM site may have been put back into working order
@@ -103,19 +103,17 @@ INT32 GetNumberOfSAMSitesUnderPlayerControl()
 	return n;
 }
 
-bool IsThereAFunctionalSAMSiteInSector(INT16 const x, INT16 const y, INT8 const z)
+bool IsThereAFunctionalSAMSiteInSector(const SGPSector& sector)
 {
-	return
-		IsThisSectorASAMSector(x, y, z) &&
-		StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bSAMCondition >= MIN_CONDITION_FOR_SAM_SITE_TO_WORK;
+	return IsThisSectorASAMSector(sector) &&
+		StrategicMap[sector.AsStrategicIndex()].bSAMCondition >= MIN_CONDITION_FOR_SAM_SITE_TO_WORK;
 }
 
-
-bool IsThisSectorASAMSector(INT16 const x, INT16 const y, INT8 const z)
+bool IsThisSectorASAMSector(const SGPSector& sector)
 {
-	if (z != 0) return false;
+	if (sector.z != 0) return false;
 
-	UINT8 ubSector = SECTOR(x, y);
+	UINT8 ubSector = sector.AsByte();
 	return (GCM->findSamIDBySector(ubSector) > -1);
 }
 

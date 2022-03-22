@@ -967,7 +967,7 @@ void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE& s)
 {
 	// Just drop the stuff in the current sector
 	GridNo gridno;
-	bool const here = s.sSectorX == gWorldSectorX && s.sSectorY == gWorldSectorY && s.bSectorZ == gbWorldSectorZ;
+	bool const here = s.sSectorX == gWorldSector.x && s.sSectorY == gWorldSector.y && s.bSectorZ == gWorldSector.z;
 	if (here)
 	{
 		// ATE: Mercs can have a gridno of NOWHERE
@@ -1055,7 +1055,7 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, INT const sector, GridNo 
 		}
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString);
 
-		bool const is_sector_loaded = gWorldSectorX == SECTORX(sector) && gWorldSectorY == SECTORY(sector) && gbWorldSectorZ == 0;
+		bool const is_sector_loaded = gWorldSector == SGPSector(sector);
 		for (; i; i = i->pNext)
 		{
 			if (is_sector_loaded)
@@ -3679,7 +3679,7 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 	// make sure the game just started
 	if (!DidGameJustStart()) return FALSE;
 
-	static const SGPSector usStartSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)));
+	static const SGPSector usStartSector(gamepolicy(start_sector));
 
 	// Select starting sector.
 	ChangeSelectedMapSector(usStartSector);
@@ -3720,21 +3720,21 @@ BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void )
 }
 
 
-void NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 const y, INT8 const z)
+void NotifyPlayerWhenEnemyTakesControlOfImportantSector(const SGPSector& sec)
 {
 	// There is nothing important to player below ground
-	if (z != 0) return;
+	if (sec.z != 0) return;
 
-	ST::string sector_desc = GetSectorIDString(x, y, z, TRUE);
+	ST::string sector_desc = GetSectorIDString(sec, TRUE);
 
 	ST::string buf;
-	if (IsThisSectorASAMSector(x, y, z))
+	if (IsThisSectorASAMSector(sec))
 	{
 		buf = st_format_printf(pMapErrorString[15], sector_desc);
 	}
 	else
 	{
-		UINT8 const sector  = SECTOR(x, y);
+		UINT8 const sector  = sec.AsByte();
 		INT8  const mine_id = GetMineIndexForSector(sector);
 		if (mine_id != -1                           &&
 				GetMaxDailyRemovalFromMine(mine_id) > 0 &&
@@ -3759,32 +3759,32 @@ void NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 const x, INT16 con
 }
 
 
-void NotifyPlayerOfInvasionByEnemyForces(INT16 const x, INT16 const y, INT8 const z, MSGBOX_CALLBACK const return_callback)
+void NotifyPlayerOfInvasionByEnemyForces(const SGPSector& sector, MSGBOX_CALLBACK const return_callback)
 {
-	if (z != 0) return;
+	if (sector.z != 0) return;
 
 	// If enemy controlled anyways, leave
-	if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].fEnemyControlled) return;
+	if (StrategicMap[sector.AsStrategicIndex()].fEnemyControlled) return;
 
 	ST::string buf;
 	ST::string sector_desc;
 
 	// check if SAM site here
-	if (IsThisSectorASAMSector(x, y, z))
+	if (IsThisSectorASAMSector(sector))
 	{
-		sector_desc = GetShortSectorString(x, y);
+		sector_desc = sector.AsShortString();
 		buf = st_format_printf(pMapErrorString[22], sector_desc);
 		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, return_callback);
 	}
-	else if (GetTownIdForSector(SECTOR(x, y)) != BLANK_SECTOR)
+	else if (GetTownIdForSector(sector.AsByte()) != BLANK_SECTOR)
 	{
-		sector_desc = GetSectorIDString(x, y, z, TRUE);
+		sector_desc = GetSectorIDString(sector, TRUE);
 		buf = st_format_printf(pMapErrorString[23], sector_desc);
 		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, return_callback);
 	}
 	else
 	{
-		sector_desc = GetShortSectorString(x, y);
+		sector_desc = sector.AsShortString();
 		buf = st_format_printf(pMapErrorString[24], sector_desc);
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, buf);
 	}
@@ -3839,9 +3839,9 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 	if (!s.fBetweenSectors && !SoldierAboardAirborneHeli(s))
 	{
 		// And that sector is loaded
-		if (s.sSectorX == gWorldSectorX &&
-				s.sSectorY == gWorldSectorY &&
-				s.bSectorZ == gbWorldSectorZ)
+		if (s.sSectorX == gWorldSector.x &&
+				s.sSectorY == gWorldSector.y &&
+				s.bSectorZ == gWorldSector.z)
 		{
 			// In combat?
 			if (gTacticalStatus.uiFlags & INCOMBAT) return ME_COMBAT;

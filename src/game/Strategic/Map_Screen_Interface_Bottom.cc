@@ -1133,15 +1133,16 @@ BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere const bExitToWhere)
 	if ( bExitToWhere == MAP_EXIT_TO_TACTICAL )
 	{
 		// if in battle or bloodcat ambush, the ONLY sector we can go tactical in is the one that's loaded
+		SGPSector sector(sSelMapX, sSelMapY, iCurrentMapSectorZ);
 		BOOLEAN fBattleGoingOn = gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fEnemyInSector || (gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE && HostileBloodcatsPresent());
-		BOOLEAN fCurrentSectorSelected = sSelMapX == gWorldSectorX && sSelMapY == gWorldSectorY && ((UINT8)iCurrentMapSectorZ) == gbWorldSectorZ;
+		BOOLEAN fCurrentSectorSelected = sector == gWorldSector;
 		if (fBattleGoingOn && !fCurrentSectorSelected)
 		{
 			return( FALSE );
 		}
 
 		// must have some mercs there
-		if( !CanGoToTacticalInSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ ) )
+		if (!CanGoToTacticalInSector(sector))
 		{
 			return( FALSE );
 		}

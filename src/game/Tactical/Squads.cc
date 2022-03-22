@@ -585,9 +585,9 @@ BOOLEAN IsSquadOnCurrentTacticalMap( INT32 iCurrentSquad )
 	{
 		SOLDIERTYPE const* const s = *i;
 		// ATE; Added more checks here for being in sector ( fBetweenSectors and SectorZ )
-		if (s->sSectorX == gWorldSectorX  &&
-				s->sSectorY == gWorldSectorY  &&
-				s->bSectorZ == gbWorldSectorZ &&
+		if (s->sSectorX == gWorldSector.x  &&
+				s->sSectorY == gWorldSector.y  &&
+				s->bSectorZ == gWorldSector.z &&
 				!s->fBetweenSectors)
 		{
 			return( TRUE );
