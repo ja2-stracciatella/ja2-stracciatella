@@ -222,7 +222,7 @@ void SaveWorldItemsToTempItemFile(const SGPSector& sMap, const std::vector<WORLD
 		// SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems() reads it
 	}
 
-	SetSectorFlag(sMap.x, sMap.y, sMap.z, SF_ITEM_TEMP_FILE_EXISTS);
+	SetSectorFlag(sMap, SF_ITEM_TEMP_FILE_EXISTS);
 	SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(sMap.x, sMap.y, sMap.z, false);
 }
 
@@ -785,7 +785,8 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT& p, const SGPSector& sSector)
 
 void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, ROTTING_CORPSE_DEFINITION const* const corpse_def)
 {
-	AutoSGPFile f(GCM->tempFiles()->openForReadWrite(GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ)));
+	SGPSector sMap(sMapX, sMapY, bMapZ);
+	AutoSGPFile f(GCM->tempFiles()->openForReadWrite(GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, sMap)));
 
 	UINT32 corpse_count;
 	if (f->size() != 0)
@@ -804,18 +805,12 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16
 	f->seek(0, FILE_SEEK_FROM_END);
 	InjectRottingCorpseIntoFile(f, corpse_def);
 
-	SetSectorFlag(sMapX, sMapY, bMapZ, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS);
+	SetSectorFlag(sMap, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS);
 }
 
 
-void SetSectorFlag(const SGPSector& sMap, SectorFlags const flag_to_set)
+void SetSectorFlag(const SGPSector& sector, SectorFlags const flag_to_set)
 {
-	SetSectorFlag(sMap.x, sMap.y, sMap.z, flag_to_set);
-}
-
-void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags const flag_to_set)
-{
-	SGPSector sector(x, y, z);
 	static const SGPSector tixa(TIXA_SECTOR_X, TIXA_SECTOR_Y);
 	static const SGPSector gunrange(GUN_RANGE_X, GUN_RANGE_Y, GUN_RANGE_Z);
 	if (flag_to_set == SF_ALREADY_VISITED)
@@ -844,7 +839,7 @@ void SetSectorFlag(INT16 const x, INT16 const y, UINT8 const z, SectorFlags cons
 		}
 	}
 
-	if (z == 0)
+	if (sector.z == 0)
 	{
 		SectorInfo[sector.AsByte()].uiFlags |= flag_to_set;
 	}

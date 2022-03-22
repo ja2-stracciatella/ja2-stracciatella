@@ -340,7 +340,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		{
 			// Mark the sector as visited (flying around in the chopper doesn't, so
 			// this does it as soon as we get off it)
-			SetSectorFlag(s.sSectorX, s.sSectorY, s.bSectorZ, SF_ALREADY_VISITED);
+			SetSectorFlag(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ), SF_ALREADY_VISITED);
 		}
 
 		SetSoldierExitHelicopterInsertionData(&s);

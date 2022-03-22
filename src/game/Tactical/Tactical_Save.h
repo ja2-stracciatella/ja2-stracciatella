@@ -65,7 +65,6 @@ void AddDeadSoldierToUnLoadedSector(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SOLDI
 BOOLEAN GetSectorFlagStatus(const SGPSector& sMap, SectorFlags);
 BOOLEAN GetSectorFlagStatus(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
 void    SetSectorFlag(const SGPSector& sMap, SectorFlags);
-void    SetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
 void    ReSetSectorFlag(const SGPSector& sMap, SectorFlags);
 
 //Saves the NPC temp Quote file to the saved game file
