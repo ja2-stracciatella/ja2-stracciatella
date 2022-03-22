@@ -290,9 +290,9 @@ void SetSoldierExitHelicopterInsertionData(SOLDIERTYPE* const s)
 	if (s->bInSector) return;
 
 	auto shippingDest = GCM->getPrimaryShippingDestination();
-	if (s->sSectorX == shippingDest->deliverySectorX &&
-		s->sSectorY == shippingDest->deliverySectorY &&
-		s->bSectorZ == shippingDest->deliverySectorZ)
+	if (s->sSectorX == shippingDest->deliverySector.x &&
+		s->sSectorY == shippingDest->deliverySector.y &&
+		s->bSectorZ == shippingDest->deliverySector.z)
 	{
 		// This is Drassen, make insertion gridno specific
 		s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
