@@ -128,7 +128,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 						HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_TOWN_SECTOR, sMap.x, sMap.y, sMap.z);
 
 						// liberation by definition requires that the place was enemy controlled in the first place
-						CheckIfEntireTownHasBeenLiberated(bTownId, sMap.x, sMap.y);
+						CheckIfEntireTownHasBeenLiberated(bTownId, sMap);
 					}
 				}
 			}
