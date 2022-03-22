@@ -656,7 +656,7 @@ void RemoveRandomItemsInSector(const SGPSector& sSector, UINT8 const ubChance)
 		// only save if something was stolen
 		if (somethingWasStolen)
 		{
-			SaveWorldItemsToTempItemFile(sSector.x, sSector.y, sSector.z, pItemList);
+			SaveWorldItemsToTempItemFile(sSector, pItemList);
 		}
 	}
 	else	// handle a loaded sector

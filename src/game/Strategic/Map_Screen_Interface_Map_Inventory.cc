@@ -413,8 +413,8 @@ static void SaveSeenAndUnseenItems(void)
 	else
 	{
 		// now copy over unseen and seen
-		SaveWorldItemsToTempItemFile( sSelMapX, sSelMapY, iCurrentMapSectorZ, pUnSeenItems);
-		AddWorldItemsToUnLoadedSector(sSelMapX, sSelMapY, iCurrentMapSectorZ, pSeenItemsList);
+		SaveWorldItemsToTempItemFile(sector, pUnSeenItems);
+		AddWorldItemsToUnLoadedSector(sector.x, sector.y, sector.z, pSeenItemsList);
 	}
 }
 
