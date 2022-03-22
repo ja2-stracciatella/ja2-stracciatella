@@ -963,10 +963,10 @@ void HandleAnimationOfSectors( void )
 		switch( gubBlitSectorLocatorCode )
 		{
 			case LOCATOR_COLOR_RED: // normal one used for mines (will now be overriden with yellow)
-				HandleBlitOfSectorLocatorIcon( gsSectorLocatorX, gsSectorLocatorY, 0, LOCATOR_COLOR_RED );
+				HandleBlitOfSectorLocatorIcon(gsSectorLocator.x, gsSectorLocator.y, 0, LOCATOR_COLOR_RED);
 				break;
 			case LOCATOR_COLOR_YELLOW: // used for all other dialogues
-				HandleBlitOfSectorLocatorIcon( gsSectorLocatorX, gsSectorLocatorY, 0, LOCATOR_COLOR_YELLOW );
+				HandleBlitOfSectorLocatorIcon(gsSectorLocator.y, gsSectorLocator.z, 0, LOCATOR_COLOR_YELLOW);
 				break;
 		}
 	}

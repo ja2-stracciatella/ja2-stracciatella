@@ -357,8 +357,7 @@ void HandleMinerEvent(ProfileID ubMinerProfileID, INT16 sQuoteNumber, BOOLEAN fF
 void TurnOnSectorLocator( UINT8 ubProfileID );
 void TurnOffSectorLocator(void);
 
-extern INT16 gsSectorLocatorX;
-extern INT16 gsSectorLocatorY;
+extern SGPSector gsSectorLocator;
 extern UINT8 gubBlitSectorLocatorCode;
 
 enum

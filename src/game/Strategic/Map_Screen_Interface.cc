@@ -133,8 +133,7 @@ BOOLEAN fReBuildCharacterList = FALSE;
 static INT32 giSizeOfInterfaceFastHelpTextList = 0;
 
 //Animated sector locator icon variables.
-INT16 gsSectorLocatorX;
-INT16 gsSectorLocatorY;
+SGPSector gsSectorLocator;
 UINT8 gubBlitSectorLocatorCode; //color
 static SGPVObject* guiSectorLocatorGraphicID;
 // the animate time per frame in milliseconds
@@ -4190,8 +4189,7 @@ void TurnOnSectorLocator( UINT8 ubProfileID )
 	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfileID);
 	if( pSoldier )
 	{
-		gsSectorLocatorX = pSoldier->sSectorX;
-		gsSectorLocatorY = pSoldier->sSectorY;
+		gsSectorLocator = SGPSector(pSoldier->sSectorX, pSoldier->sSectorY);
 	}
 	else
 	{
@@ -4204,8 +4202,7 @@ void TurnOnSectorLocator( UINT8 ubProfileID )
 			{
 				// can't use his profile, he's where his chopper is
 				VEHICLETYPE const& v = GetHelicopter();
-				gsSectorLocatorX = v.sSectorX;
-				gsSectorLocatorY = v.sSectorY;
+				gsSectorLocator = SGPSector(v.sSectorX, v.sSectorY);
 			}
 			else
 			{
@@ -4214,8 +4211,7 @@ void TurnOnSectorLocator( UINT8 ubProfileID )
 		}
 		else
 		{
-			gsSectorLocatorX = gMercProfiles[ ubProfileID ].sSectorX;
-			gsSectorLocatorY = gMercProfiles[ ubProfileID ].sSectorY;
+			gsSectorLocator = SGPSector(gMercProfiles[ubProfileID].sSectorX, gMercProfiles[ubProfileID].sSectorY);
 		}
 	}
 	gubBlitSectorLocatorCode = LOCATOR_COLOR_YELLOW;
