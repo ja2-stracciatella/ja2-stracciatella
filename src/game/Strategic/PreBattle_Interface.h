@@ -72,9 +72,7 @@ extern BOOLEAN gubExplicitEnemyEncounterCode;
 //icon is to be blitted.
 extern BOOLEAN gfBlitBattleSectorLocator;
 
-extern UINT8 gubPBSectorX;
-extern UINT8 gubPBSectorY;
-extern UINT8 gubPBSectorZ;
+extern SGPSector gubPBSector;
 
 extern BOOLEAN gfCantRetreatInPBI;
 //SAVE END

@@ -2142,7 +2142,7 @@ static void RenderMapCursorsIndexesAnims(void)
 
 	if( gfBlitBattleSectorLocator )
 	{
-		HandleBlitOfSectorLocatorIcon( gubPBSectorX, gubPBSectorY, gubPBSectorZ, LOCATOR_COLOR_RED );
+		HandleBlitOfSectorLocatorIcon( gubPBSector.x, gubPBSector.y, gubPBSector.z, LOCATOR_COLOR_RED );
 	}
 
 	fDrawCursors = CanDrawSectorCursor( );
@@ -2513,7 +2513,7 @@ static UINT32 HandleMapUI(void)
 
 
 				if( gfBlitBattleSectorLocator &&
-						sMapX == gubPBSectorX && sMapY == gubPBSectorY && iCurrentMapSectorZ == gubPBSectorZ )
+						sMapX == gubPBSector.x && sMapY == gubPBSector.y && iCurrentMapSectorZ == gubPBSector.z )
 				{ //Bring up a non-persistant version of mapscreen if the user clicks on the sector where a
 					//battle is taking place.
 					InitPreBattleInterface(0, false);

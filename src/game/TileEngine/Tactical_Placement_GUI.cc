@@ -286,7 +286,7 @@ static void RenderTacticalPlacementGUI()
 		}
 
 		SetFontAttributes(BLOCKFONT, FONT_BEIGE);
-		ST::string str = GetSectorIDString(gubPBSectorX, gubPBSectorY, gubPBSectorZ, TRUE);
+		ST::string str = GetSectorIDString(gubPBSector.x, gubPBSector.y, gubPBSector.z, TRUE);
 		MPrint(STD_SCREEN_X + 120, STD_SCREEN_Y + 335, ST::format("{} {} -- {}...", gpStrategicString[STR_TP_SECTOR], str, gpStrategicString[STR_TP_CHOOSEENTRYPOSITIONS]));
 
 		// Shade out the part of the tactical map that isn't considered placable.

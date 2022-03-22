@@ -136,9 +136,7 @@ BOOLEAN gubExplicitEnemyEncounterCode = NO_ENCOUNTER_CODE;
 //icon is to be blitted.
 BOOLEAN gfBlitBattleSectorLocator = FALSE;
 
-UINT8 gubPBSectorX = 0;
-UINT8 gubPBSectorY = 0;
-UINT8 gubPBSectorZ = 0;
+SGPSector gubPBSector;
 
 BOOLEAN gfCantRetreatInPBI = FALSE;
 //SAVE END
@@ -231,16 +229,16 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 			y = SECTORY(gubSectorIDOfCreatureAttack);
 			z = 0;
 		}
-		gubPBSectorX = x;
-		gubPBSectorY = y;
-		gubPBSectorZ = z;
+		gubPBSector.x = x;
+		gubPBSector.y = y;
+		gubPBSector.z = z;
 	}
 	else
 	{ // Calculate the non-persistent situation
 		gfBlinkHeader = TRUE;
-		x = gubPBSectorX;
-		y = gubPBSectorY;
-		z = gubPBSectorZ;
+		x = gubPBSector.x;
+		y = gubPBSector.y;
+		z = gubPBSector.z;
 
 		if (HostileCiviliansPresent())
 		{ // There are hostile civilians, so no autoresolve allowed.
@@ -574,7 +572,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 	iPercentage = 0;
 	uiStartTime = GetClock();
 
-	GetScreenXYFromMapXY( gubPBSectorX, gubPBSectorY, &sStartLeft, &sStartTop );
+	GetScreenXYFromMapXY( gubPBSector.x, gubPBSector.y, &sStartLeft, &sStartTop );
 	sStartLeft += MAP_GRID_X / 2;
 	sStartTop += MAP_GRID_Y / 2;
 	sEndLeft = STD_SCREEN_X + 131;
@@ -859,9 +857,9 @@ void RenderPreBattleInterface()
 			BltVideoObject(dst, vo, TOP_COLUMN, STD_SCREEN_X + 186, y);
 		}
 
-		UINT8 const sec_x = gubPBSectorX;
-		UINT8 const sec_y = gubPBSectorY;
-		UINT8 const sec_z = gubPBSectorZ;
+		UINT8 const sec_x = gubPBSector.x;
+		UINT8 const sec_y = gubPBSector.y;
+		UINT8 const sec_z = gubPBSector.z;
 
 		// Location
 		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
@@ -971,7 +969,7 @@ void RenderPreBattleInterface()
 	if (gfEnterAutoResolveMode)
 	{
 		gfEnterAutoResolveMode = FALSE;
-		EnterAutoResolveMode(gubPBSectorX, gubPBSectorY);
+		EnterAutoResolveMode(gubPBSector.x, gubPBSector.y);
 	}
 
 	gfIgnoreAllInput = FALSE;
@@ -991,8 +989,8 @@ static void AutoResolveBattleCallback(GUI_BUTTON* btn, INT32 reason)
 						return;
 					}
 					PlayJA2Sample(EXPLOSION_1, HIGHVOLUME, 1, MIDDLEPAN);
-					gStrategicStatus.usPlayerKills += NumEnemiesInSector( gubPBSectorX, gubPBSectorY );
-					EliminateAllEnemies( gubPBSectorX, gubPBSectorY );
+					gStrategicStatus.usPlayerKills += NumEnemiesInSector( gubPBSector.x, gubPBSector.y );
+					EliminateAllEnemies( gubPBSector.x, gubPBSector.y );
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					btn->Draw();
@@ -1028,8 +1026,8 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 						return;
 					}
 					PlayJA2Sample(EXPLOSION_1, HIGHVOLUME, 1, MIDDLEPAN);
-					gStrategicStatus.usPlayerKills += NumEnemiesInSector( gubPBSectorX, gubPBSectorY );
-					EliminateAllEnemies( gubPBSectorX, gubPBSectorY );
+					gStrategicStatus.usPlayerKills += NumEnemiesInSector( gubPBSector.x, gubPBSector.y );
+					EliminateAllEnemies( gubPBSector.x, gubPBSector.y );
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					btn->Draw();
@@ -1055,7 +1053,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender( );
 			RefreshScreen();
-			SGPSector sector(gubPBSectorX, gubPBSectorY, gubPBSectorZ);
+			SGPSector sector(gubPBSector.x, gubPBSector.y, gubPBSector.z);
 			// FIXME: suspicious, this ensures gfGotoSectorTransition is set only if the world is not underground — but why would it matter?
 			SGPSector sector2(sector);
 			sector2.z = 0;
@@ -1097,8 +1095,8 @@ static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason)
 			RetreatAllInvolvedPlayerGroups();
 
 			// NOTE: this code assumes you can never retreat while underground
-			HandleLoyaltyImplicationsOfMercRetreat( RETREAT_PBI, gubPBSectorX, gubPBSectorY, 0 );
-			if( CountAllMilitiaInSector( gubPBSectorX, gubPBSectorY ) )
+			HandleLoyaltyImplicationsOfMercRetreat( RETREAT_PBI, gubPBSector.x, gubPBSector.y, 0 );
+			if( CountAllMilitiaInSector( gubPBSector.x, gubPBSector.y ) )
 			{ //Mercs retreat, but enemies still need to fight the militia
 				gfEnterAutoResolveMode = TRUE;
 				return;
@@ -1190,7 +1188,7 @@ static void ActivateAutomaticAutoResolveStart()
 void CalculateNonPersistantPBIInfo(void)
 {
 	//We need to set up the non-persistant PBI
-	SGPSector sector(gubPBSectorX, gubPBSectorY, gubPBSectorZ);
+	SGPSector sector(gubPBSector.x, gubPBSector.y, gubPBSector.z);
 	if (!gfBlitBattleSectorLocator || sector != gWorldSector)
 	{ //Either the locator isn't on or the locator info is in a different sector
 
@@ -1235,9 +1233,9 @@ void CalculateNonPersistantPBIInfo(void)
 		}
 		if( gubExplicitEnemyEncounterCode != NO_ENCOUNTER_CODE )
 		{	//Set up the location as well as turning on the blit flag.
-			gubPBSectorX = (UINT8) gWorldSector.x;
-			gubPBSectorY = (UINT8) gWorldSector.y;
-			gubPBSectorZ = (UINT8) gWorldSector.z;
+			gubPBSector.x = (UINT8) gWorldSector.x;
+			gubPBSector.y = (UINT8) gWorldSector.y;
+			gubPBSector.z = (UINT8) gWorldSector.z;
 			gfBlitBattleSectorLocator = TRUE;
 		}
 	}
