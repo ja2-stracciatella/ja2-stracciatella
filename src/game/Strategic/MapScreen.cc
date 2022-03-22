@@ -7699,7 +7699,7 @@ static void HandleMilitiaRedistributionClick(void)
 				fMapPanelDirty = TRUE;
 
 				// check if there's combat in any of the town's sectors
-				if (CanRedistributeMilitiaInSector(sector, bTownId))
+				if (CanRedistributeMilitiaInSector(bTownId))
 				{
 					// Nope, ok, set selected militia town
 					sSelectedMilitiaTown = bTownId;
