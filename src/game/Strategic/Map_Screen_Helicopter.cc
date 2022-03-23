@@ -221,7 +221,7 @@ BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap)
 	if( ubNumEnemies > 0 )
 	{
 		// if the player didn't know about these prior to the chopper's arrival
-		if (WhatPlayerKnowsAboutEnemiesInSector(sMap.x, sMap.y) == KNOWS_NOTHING)
+		if (WhatPlayerKnowsAboutEnemiesInSector(sMap) == KNOWS_NOTHING)
 		{
 			// but Skyrider notices them
 			if (DoesSkyriderNoticeEnemiesInSector(ubNumEnemies))

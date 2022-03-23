@@ -49,7 +49,7 @@ void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier );
 void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void );
 
 // Is there a town with militia here or nearby?
-bool CanNearbyMilitiaScoutThisSector(INT16 x, INT16 y);
+bool CanNearbyMilitiaScoutThisSector(const SGPSector& sMap);
 
 // Is the town or SAM site here full of milita?
 BOOLEAN IsAreaFullOfMilitia(const SGPSector& sector);

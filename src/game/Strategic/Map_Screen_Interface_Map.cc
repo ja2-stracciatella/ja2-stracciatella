@@ -3659,24 +3659,23 @@ void ClearAnySectorsFlashingNumberOfEnemies()
 }
 
 
-static BOOLEAN CanMercsScoutThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+static BOOLEAN CanMercsScoutThisSector(const SGPSector& sSector);
 
 
-UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
+UINT32 WhatPlayerKnowsAboutEnemiesInSector(const SGPSector& sSector)
 {
-	UINT32 uiSectorFlags = SectorInfo[ SECTOR( sSectorX, sSectorY ) ].uiFlags;
-
+	UINT32 uiSectorFlags = SectorInfo[sSector.AsByte()].uiFlags;
 
 	// if player has militia close enough to scout this sector out, if there are mercs who can scout here, OR
 	//Special case flag used when players encounter enemies in a sector, then retreat.  The number of enemies
 	//will display on mapscreen until time is compressed.  When time is compressed, the flag is cleared, and
 	//a question mark is displayed to reflect that the player no longer knows.
-	if ( CanMercsScoutThisSector( sSectorX, sSectorY, 0 ) ||
-		CanNearbyMilitiaScoutThisSector( sSectorX, sSectorY ) ||
+	if (CanMercsScoutThisSector(sSector) ||
+		CanNearbyMilitiaScoutThisSector(sSector) ||
 		( uiSectorFlags & SF_PLAYER_KNOWS_ENEMIES_ARE_HERE ) )
 	{
 		// if the enemies are stationary (i.e. mercs attacking a garrison)
-		if (NumStationaryEnemiesInSector(SGPSector(sSectorX, sSectorY)) > 0)
+		if (NumStationaryEnemiesInSector(sSector) > 0)
 		{
 			// inside a garrison - hide their # (show question mark) to match what the PBI is showing
 			return KNOWS_THEYRE_THERE;
@@ -3689,7 +3688,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	}
 
 	// if the player has visited the sector during this game
-	if (GetSectorFlagStatus(sSectorX, sSectorY, 0, SF_ALREADY_VISITED))
+	if (GetSectorFlagStatus(sSector, SF_ALREADY_VISITED))
 	{
 		// then he always knows about any enemy presence for the remainder of the game, but not exact numbers
 		return KNOWS_THEYRE_THERE;
@@ -3699,7 +3698,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	if ( uiSectorFlags & SF_SKYRIDER_NOTICED_ENEMIES_HERE )
 	{
 		// and Skyrider is still in this sector, flying
-		if( IsSkyriderFlyingInSector( sSectorX, sSectorY ) )
+		if (IsSkyriderFlyingInSector(sSector.x, sSector.y))
 		{
 			// player remains aware of them as long as Skyrider remains in the sector
 			return KNOWS_THEYRE_THERE;
@@ -3707,7 +3706,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 		else
 		{
 			// Skyrider is gone, reset the flag that he noticed enemies here
-			SectorInfo[ SECTOR( sSectorX, sSectorY ) ].uiFlags &= ~SF_SKYRIDER_NOTICED_ENEMIES_HERE;
+			SectorInfo[sSector.AsByte()].uiFlags &= ~SF_SKYRIDER_NOTICED_ENEMIES_HERE;
 		}
 	}
 
@@ -3717,7 +3716,7 @@ UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 }
 
 
-static BOOLEAN CanMercsScoutThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+static BOOLEAN CanMercsScoutThisSector(const SGPSector& sSector)
 {
 	CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
@@ -3747,7 +3746,8 @@ static BOOLEAN CanMercsScoutThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSec
 		}
 
 		// is he here?
-		if( ( pSoldier->sSectorX == sSectorX ) && ( pSoldier->sSectorY == sSectorY ) && ( pSoldier->bSectorZ == bSectorZ ) )
+		SGPSector sMap(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+		if (sMap == sSector)
 		{
 			return( TRUE );
 		}
@@ -3770,7 +3770,7 @@ static void HandleShowingOfEnemyForcesInSector(INT16 const x, INT16 const y, INT
 	INT16 const n_enemies = NumEnemiesInSector(sSector);
 	if (n_enemies == 0) return; // No enemies here, display nothing
 
-	switch (WhatPlayerKnowsAboutEnemiesInSector(sSector.x, sSector.y))
+	switch (WhatPlayerKnowsAboutEnemiesInSector(sSector))
 	{
 		case KNOWS_NOTHING: // Display nothing
 			break;

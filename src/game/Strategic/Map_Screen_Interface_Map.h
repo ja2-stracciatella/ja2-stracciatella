@@ -99,7 +99,7 @@ void DrawMilitiaPopUpBox();
 
 //Returns true if the player knows how many enemies are in the sector if that number is greater than 0.
 //Returns false for all other cases.
-UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
+UINT32 WhatPlayerKnowsAboutEnemiesInSector(const SGPSector& sSector);
 
 //There is a special case flag used when players encounter enemies in a sector, then retreat.  The number of enemies
 //will display on mapscreen until time is compressed.  When time is compressed, the flag is cleared, and

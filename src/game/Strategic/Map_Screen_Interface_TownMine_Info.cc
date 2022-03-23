@@ -410,7 +410,7 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 	// how many are there, really?
 	ubNumEnemies = NumEnemiesInSector(bCurrentTownMineSector);
 
-	switch (WhatPlayerKnowsAboutEnemiesInSector(bCurrentTownMineSector.x, bCurrentTownMineSector.y))
+	switch (WhatPlayerKnowsAboutEnemiesInSector(bCurrentTownMineSector))
 	{
 		case KNOWS_NOTHING:
 			// show "Unknown"

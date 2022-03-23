@@ -7570,7 +7570,7 @@ static void HandleNewDestConfirmation(const SGPSector& sMap)
 	{
 		// if there are no enemies in destination sector, or we don't know
 		if (NumEnemiesInSector(sMap) == 0 ||
-			WhatPlayerKnowsAboutEnemiesInSector(sMap.x, sMap.y) == KNOWS_NOTHING)
+			WhatPlayerKnowsAboutEnemiesInSector(sMap) == KNOWS_NOTHING)
 		{
 			// no problem
 

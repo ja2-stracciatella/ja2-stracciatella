@@ -353,6 +353,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		}
 	}
 
+	SGPSector sSector(x, y);
 	if (gfPersistantPBI)
 	{
 		if (!battle_group)
@@ -364,7 +365,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 			if (gubEnemyEncounterCode != BLOODCAT_AMBUSH_CODE &&
 					gubEnemyEncounterCode != ENTERING_BLOODCAT_LAIR_CODE)
 			{
-				UINT8 const n_stationary_enemies = NumStationaryEnemiesInSector(SGPSector(x, y));
+				UINT8 const n_stationary_enemies = NumStationaryEnemiesInSector(sSector);
 				if (n_stationary_enemies != 0)
 				{
 					gubEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
@@ -380,19 +381,19 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 					}
 					else
 					{
-						UINT8 const n_mobile_enemies = NumMobileEnemiesInSector(SGPSector(x, y));
-						UINT8 const n_mercs          = PlayerMercsInSector(     x, y, z);
+						UINT8 const n_mobile_enemies = NumMobileEnemiesInSector(sSector);
+						UINT8 const n_mercs          = PlayerMercsInSector(sSector.x, sSector.y, sSector.z);
 						if (gfAutoAmbush && n_mobile_enemies > n_mercs)
 						{
 							gubEnemyEncounterCode = ENEMY_AMBUSH_CODE;
 						}
-						else if (WhatPlayerKnowsAboutEnemiesInSector(x, y) == KNOWS_NOTHING &&
+						else if (WhatPlayerKnowsAboutEnemiesInSector(sSector) == KNOWS_NOTHING &&
 								CurrentPlayerProgressPercentage() >= 30 - gGameOptions.ubDifficultyLevel * 5)
 						{ /* If the enemy outnumbers the players, then there is a small chance
 							 * of the enemies ambushing the group */
 							if (n_mobile_enemies > n_mercs)
 							{
-								SECTORINFO const& sector = SectorInfo[SECTOR(x, y)];
+								SECTORINFO const& sector = SectorInfo[sSector.AsByte()];
 								if (!(sector.uiFlags & SF_ALREADY_VISITED))
 								{
 									INT32 chance = (UINT8)(4 - best_exp_level + 2 * gGameOptions.ubDifficultyLevel + CurrentPlayerProgressPercentage() / 10);
@@ -411,7 +412,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		}
 		else
 		{ // Are enemies invading a town, or just encountered the player.
-			UINT8 const sector = SECTOR(x, y);
+			UINT8 const sector = sSector.AsByte();
 			if (GetTownIdForSector(sector))
 			{
 				gubEnemyEncounterCode = ENEMY_INVASION_CODE;
@@ -459,7 +460,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 	{ /* We know how many enemies are here, so until we leave the sector, we will
 		 * continue to display the value. The flag will get cleared when time
 		 * advances after the fEnemyInSector flag is clear. */
-		SECTORINFO& sector = SectorInfo[SECTOR(x, y)];
+		SECTORINFO& sector = SectorInfo[sSector.AsByte()];
 
 		/* Always use these 2 statements together. Without setting the boolean, the
 		 * flag will never be cleaned up */
@@ -868,7 +869,7 @@ void RenderPreBattleInterface()
 		if (gubEnemyEncounterCode == CREATURE_ATTACK_CODE        ||
 			gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE        ||
 			gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ||
-			WhatPlayerKnowsAboutEnemiesInSector(gubPBSector.x, gubPBSector.y) != KNOWS_HOW_MANY)
+			WhatPlayerKnowsAboutEnemiesInSector(gubPBSector) != KNOWS_HOW_MANY)
 		{ // Don't know how many
 			enemies = "?";
 		}
