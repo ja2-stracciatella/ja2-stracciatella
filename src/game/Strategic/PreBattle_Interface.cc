@@ -174,9 +174,6 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 
 	if (gfPreBattleInterfaceActive) return;
 
-	UINT8 x;
-	UINT8 y;
-	UINT8 z;
 	gfPersistantPBI = persistent_pbi;
 	if (persistent_pbi)
 	{
@@ -216,6 +213,9 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		gpBattleGroup = battle_group;
 
 		// Calc sector values
+		UINT8 x;
+		UINT8 y;
+		UINT8 z;
 		if (battle_group)
 		{
 			x = battle_group->ubSectorX;
@@ -236,9 +236,6 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 	else
 	{ // Calculate the non-persistent situation
 		gfBlinkHeader = TRUE;
-		x = gubPBSector.x;
-		y = gubPBSector.y;
-		z = gubPBSector.z;
 
 		if (HostileCiviliansPresent())
 		{ // There are hostile civilians, so no autoresolve allowed.
@@ -250,7 +247,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		}
 		else if (gWorldSector.z != 0)
 		{ // We are underground, so no autoresolve allowed
-			SECTORINFO const& sector = SectorInfo[SECTOR(x, y)]; // XXX Why check surface info when underground?
+			SECTORINFO const& sector = SectorInfo[gubPBSector.AsByte()]; // XXX Why check surface info when underground?
 			if (sector.ubCreaturesInBattle != 0)
 			{
 				gubExplicitEnemyEncounterCode = FIGHTING_CREATURES_CODE;
@@ -278,7 +275,8 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 	}
 
 	fMapScreenBottomDirty = TRUE;
-	ChangeSelectedMapSector(x, y, z);
+	SGPSector sSector = gubPBSector;
+	ChangeSelectedMapSector(sSector);
 	RenderMapScreenInterfaceBottom();
 
 	/* If we are currently in tactical, then set the flag to automatically bring
@@ -353,7 +351,6 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		}
 	}
 
-	SGPSector sSector(x, y);
 	if (gfPersistantPBI)
 	{
 		if (!battle_group)
