@@ -162,7 +162,6 @@ INT32 GetNumberOfWholeTownsUnderControlButExcludeCity( INT8 bCityToExclude );
 #define RETREAT_PBI 1
 #define RETREAT_AUTORESOLVE 2
 void HandleLoyaltyImplicationsOfMercRetreat(INT8 bRetreatCode, const SGPSector& sSector);
-void HandleLoyaltyImplicationsOfMercRetreat( INT8 bRetreatCode, INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 
 void MaximizeLoyaltyForDeidrannaKilled( void );
 

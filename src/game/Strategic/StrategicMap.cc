@@ -1802,7 +1802,7 @@ void AllMercsHaveWalkedOffSector( )
 
 	if (fEnemiesInLoadedSector)
 	{
-		HandleLoyaltyImplicationsOfMercRetreat(RETREAT_TACTICAL_TRAVERSAL, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		HandleLoyaltyImplicationsOfMercRetreat(RETREAT_TACTICAL_TRAVERSAL, gWorldSector);
 	}
 
 	//Setup strategic traversal information
