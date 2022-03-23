@@ -125,7 +125,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 				// alrighty, then.  We'll have to *promote* guys instead.
 
 				// are there any GREEN militia men in the training sector itself?
-				if (MilitiaInSectorOfRank(sector.x, sector.y, GREEN_MILITIA) > 0)
+				if (MilitiaInSectorOfRank(sector, GREEN_MILITIA) > 0)
 				{
 					// great! Promote a GREEN militia guy in the training sector to a REGULAR
 					StrategicPromoteMilitiaInSector(sector, GREEN_MILITIA, 1);
@@ -141,7 +141,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 						while (ServeNextFriendlySectorInTown(sNeighbour))
 						{
 							// are there any GREEN militia men in the neighbouring sector ?
-							if (MilitiaInSectorOfRank(sNeighbour.x, sNeighbour.y, GREEN_MILITIA) > 0)
+							if (MilitiaInSectorOfRank(sNeighbour, GREEN_MILITIA) > 0)
 							{
 								// great! Promote a GREEN militia guy in the neighbouring sector to a REGULAR
 								StrategicPromoteMilitiaInSector(sNeighbour, GREEN_MILITIA, 1);
@@ -298,7 +298,7 @@ static void HandleMilitiaDefections(const SGPSector& sMap)
 
 	for( ubRank = 0; ubRank < MAX_MILITIA_LEVELS; ubRank++ )
 	{
-		ubMilitiaCnt = MilitiaInSectorOfRank(sMap.x, sMap.y, ubRank);
+		ubMilitiaCnt = MilitiaInSectorOfRank(sMap, ubRank);
 
 		// check each guy at each rank to see if he defects
 		for (ubCount = 0; ubCount < ubMilitiaCnt; ubCount++)
@@ -332,22 +332,23 @@ static void HandleMilitiaDefections(const SGPSector& sMap)
 
 UINT8 CountAllMilitiaInSector(INT16 sMapX, INT16 sMapY)
 {
+	SGPSector sMap(sMapX, sMapY);
 	UINT8 ubMilitiaTotal = 0;
 	UINT8 ubRank;
 
 	// find out if there are any town militia in this SECTOR (don't care about other sectors in same town)
 	for( ubRank = 0; ubRank < MAX_MILITIA_LEVELS; ubRank++ )
 	{
-		ubMilitiaTotal += MilitiaInSectorOfRank(sMapX, sMapY, ubRank);
+		ubMilitiaTotal += MilitiaInSectorOfRank(sMap, ubRank);
 	}
 
 	return(ubMilitiaTotal);
 }
 
 
-UINT8 MilitiaInSectorOfRank(INT16 sMapX, INT16 sMapY, UINT8 ubRank)
+UINT8 MilitiaInSectorOfRank(const SGPSector& sMap, UINT8 ubRank)
 {
-	return( SectorInfo[ SECTOR( sMapX, sMapY ) ].ubNumberOfCivsAtLevel[ ubRank ] );
+	return SectorInfo[sMap.AsByte()].ubNumberOfCivsAtLevel[ubRank];
 }
 
 
@@ -657,8 +658,8 @@ BOOLEAN IsAreaFullOfMilitia(const SGPSector& sector)
 			if (SectorOursAndPeaceful(town))
 			{
 				// don't count GREEN militia, they can be trained into regulars first
-				count_milita += MilitiaInSectorOfRank(town.x, town.y, REGULAR_MILITIA);
-				count_milita += MilitiaInSectorOfRank(town.x, town.y, ELITE_MILITIA);
+				count_milita += MilitiaInSectorOfRank(town, REGULAR_MILITIA);
+				count_milita += MilitiaInSectorOfRank(town, ELITE_MILITIA);
 				max_milita   += MAX_ALLOWABLE_MILITIA_PER_SECTOR;
 			}
 		}
@@ -666,8 +667,8 @@ BOOLEAN IsAreaFullOfMilitia(const SGPSector& sector)
 	else if (IsThisSectorASAMSector(sector))
 	{
 		// don't count GREEN militia, they can be trained into regulars first
-		count_milita += MilitiaInSectorOfRank(sector.x, sector.y, REGULAR_MILITIA);
-		count_milita += MilitiaInSectorOfRank(sector.x, sector.y, ELITE_MILITIA);
+		count_milita += MilitiaInSectorOfRank(sector, REGULAR_MILITIA);
+		count_milita += MilitiaInSectorOfRank(sector, ELITE_MILITIA);
 		max_milita   += MAX_ALLOWABLE_MILITIA_PER_SECTOR;
 	}
 

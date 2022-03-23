@@ -37,7 +37,7 @@ UINT8 CheckOneMilitiaForPromotion(const SGPSector& sMap, UINT8 &current_rank, UI
 ST::string BuildMilitiaPromotionsString();
 
 UINT8 CountAllMilitiaInSector(INT16 sMapX, INT16 sMapY);
-UINT8 MilitiaInSectorOfRank(INT16 sMapX, INT16 sMapY, UINT8 ubRank);
+UINT8 MilitiaInSectorOfRank(const SGPSector& sMap, UINT8 ubRank);
 
 // Returns TRUE if sector is under player control, has no enemies in it, and isn't currently in combat mode
 BOOLEAN SectorOursAndPeaceful(const SGPSector& sector);

@@ -1527,9 +1527,9 @@ static void CreateAutoResolveInterface(void)
 		face->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
 	}
 
-	UINT8 n_militia_elite = MilitiaInSectorOfRank(ar->ubSectorX, ar->ubSectorY, ELITE_MILITIA);
-	UINT8 n_militia_reg   = MilitiaInSectorOfRank(ar->ubSectorX, ar->ubSectorY, REGULAR_MILITIA);
-	UINT8 n_militia_green = MilitiaInSectorOfRank(ar->ubSectorX, ar->ubSectorY, GREEN_MILITIA);
+	UINT8 n_militia_elite = MilitiaInSectorOfRank(SGPSector(ar->ubSectorX, ar->ubSectorY), ELITE_MILITIA);
+	UINT8 n_militia_reg   = MilitiaInSectorOfRank(SGPSector(ar->ubSectorX, ar->ubSectorY), REGULAR_MILITIA);
+	UINT8 n_militia_green = MilitiaInSectorOfRank(SGPSector(ar->ubSectorX, ar->ubSectorY), GREEN_MILITIA);
 	while (n_militia_elite + n_militia_reg + n_militia_green < ar->ubCivs)
 	{
 		switch (PreRandom(3))
