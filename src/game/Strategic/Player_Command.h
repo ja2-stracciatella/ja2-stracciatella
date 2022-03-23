@@ -14,6 +14,6 @@ ST::string GetSectorFacilitiesFlags(const SGPSector& sector);
 BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sector);
 
 // set sector as player controlled
-BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fContested );
+BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sector, BOOLEAN fContested);
 
 #endif

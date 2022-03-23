@@ -1425,7 +1425,7 @@ static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool co
 		bool const is_heli_group = g.fVehicle && IsGroupTheHelicopterGroup(g);
 		if (!is_heli_group)
 		{ // Take control of sector
-			SetThisSectorAsPlayerControlled(g.ubSectorX, g.ubSectorY, g.ubSectorZ, FALSE);
+			SetThisSectorAsPlayerControlled(SGPSector(g.ubSectorX, g.ubSectorY, g.ubSectorZ), FALSE);
 		}
 
 		// If this is the last sector along their movement path (no more waypoints)
