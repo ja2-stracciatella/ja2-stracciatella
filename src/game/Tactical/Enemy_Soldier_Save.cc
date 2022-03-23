@@ -139,7 +139,7 @@ void LoadEnemySoldiersFromTempFile()
 	{
 		SECTORINFO const* const pSector = &SectorInfo[gWorldSector.AsByte()];
 		ubStrategicCreatures = pSector->ubNumCreatures;
-		GetNumberOfEnemiesInSector(gWorldSector.x, gWorldSector.y, &ubStrategicAdmins, &ubStrategicTroops, &ubStrategicElites);
+		GetNumberOfEnemiesInSector(gWorldSector, &ubStrategicAdmins, &ubStrategicTroops, &ubStrategicElites);
 	}
 
 	UINT8 ubNumElites    = 0;
@@ -392,7 +392,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	{
 		SECTORINFO const* const sector_info = &SectorInfo[gWorldSector.AsByte()];
 		ubStrategicCreatures = sector_info->ubNumCreatures;
-		GetNumberOfEnemiesInSector(gWorldSector.x, gWorldSector.y, &ubStrategicAdmins, &ubStrategicTroops, &ubStrategicElites);
+		GetNumberOfEnemiesInSector(gWorldSector, &ubStrategicAdmins, &ubStrategicTroops, &ubStrategicElites);
 	}
 
 	for (INT32 i = 0; i != slots; ++i)

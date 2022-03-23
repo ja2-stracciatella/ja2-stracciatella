@@ -235,10 +235,9 @@ static void GetNumberOfStationaryEnemiesInSector(const SGPSector& sSector, UINT8
 	*pubNumElites = pSector->ubNumElites;
 }
 
-void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
+void GetNumberOfEnemiesInSector(const SGPSector& sSector, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
-	SGPSector sSector(sSectorX, sSectorY);
 
 	GetNumberOfStationaryEnemiesInSector(sSector, pubNumAdmins, pubNumTroops, pubNumElites);
 	GetNumberOfMobileEnemiesInSector(sSector, &ubNumAdmins, &ubNumTroops, &ubNumElites);

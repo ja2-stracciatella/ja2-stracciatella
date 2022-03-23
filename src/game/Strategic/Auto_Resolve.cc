@@ -305,7 +305,7 @@ void EliminateAllEnemies(const SGPSector& ubSector)
 	// we must process the enemies killed right here & give out loyalty bonuses as if the battle had been fought & won
 	if( !gpAR )
 	{
-		GetNumberOfEnemiesInSector(ubSector.x, ubSector.y, &ubNumEnemies[0], &ubNumEnemies[1], &ubNumEnemies[2]);
+		GetNumberOfEnemiesInSector(ubSector, &ubNumEnemies[0], &ubNumEnemies[1], &ubNumEnemies[2]);
 
 		for ( ubRankIndex = 0; ubRankIndex < NUM_ENEMY_RANKS; ubRankIndex++ )
 		{
@@ -2115,13 +2115,12 @@ static void CalculateRowsAndColumns(void);
 //to figure out how many rows and columns we can use.  The will effect the size of the panel.
 static void CalculateAutoResolveInfo(void)
 {
-	Assert( gpAR->ubSectorX >= 1 && gpAR->ubSectorX <= 16 );
-	Assert( gpAR->ubSectorY >= 1 && gpAR->ubSectorY <= 16 );
+	SGPSector sSector(gpAR->ubSectorX, gpAR->ubSectorY);
+	Assert(sSector.IsValid());
 
 	if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 	{
-		GetNumberOfEnemiesInSector( gpAR->ubSectorX, gpAR->ubSectorY,
-																&gpAR->ubAdmins, &gpAR->ubTroops, &gpAR->ubElites );
+		GetNumberOfEnemiesInSector(sSector, &gpAR->ubAdmins, &gpAR->ubTroops, &gpAR->ubElites);
 		gpAR->ubEnemies = (UINT8)MIN( gpAR->ubAdmins + gpAR->ubTroops + gpAR->ubElites, 32 );
 	}
 	else
@@ -2141,7 +2140,7 @@ static void CalculateAutoResolveInfo(void)
 		gpAR->ubEnemies = (UINT8)MIN( gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, 32 );
 	}
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
-	gpAR->ubCivs = CountAllMilitiaInSector( gpAR->ubSectorX, gpAR->ubSectorY );
+	gpAR->ubCivs = CountAllMilitiaInSector(sSector.x, sSector.y);
 	gpAR->ubMercs = 0;
 	CFOR_EACH_GROUP(i)
 	{
