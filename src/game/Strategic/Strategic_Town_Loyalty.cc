@@ -854,15 +854,15 @@ void DecrementTownLoyaltyEverywhere( UINT32 uiLoyaltyDecrease )
 	}
 }
 // this applies the change to every town differently, depending on the distance from the event
-void HandleGlobalLoyaltyEvent( UINT8 ubEventType, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+void HandleGlobalLoyaltyEvent(UINT8 ubEventType, const SGPSector& sSector)
 {
 	INT32 iLoyaltyChange;
 	INT8 bTownId = 0;
 
-	if( bSectorZ == 0 )
+	if (sSector.z == 0)
 	{
 		// grab town id, if this event occured within one
-		bTownId = GetTownIdForSector(SECTOR(sSectorX, sSectorY));
+		bTownId = GetTownIdForSector(sSector.AsByte());
 	}
 
 	// should other towns ignore events occuring in this town?
@@ -877,11 +877,11 @@ void HandleGlobalLoyaltyEvent( UINT8 ubEventType, INT16 sSectorX, INT16 sSectorY
 	switch (ubEventType)
 	{
 		case GLOBAL_LOYALTY_BATTLE_WON:
-			CheckConditionsForTriggeringCreatureQuest( sSectorX, sSectorY, bSectorZ );
+			CheckConditionsForTriggeringCreatureQuest(sSector.x, sSector.y, sSector.z);
 			iLoyaltyChange = 500;
 			break;
 		case GLOBAL_LOYALTY_QUEEN_BATTLE_WON:
-			CheckConditionsForTriggeringCreatureQuest( sSectorX, sSectorY, bSectorZ );
+			CheckConditionsForTriggeringCreatureQuest(sSector.x, sSector.y, sSector.z);
 			iLoyaltyChange = 1000;
 			break;
 		case GLOBAL_LOYALTY_BATTLE_LOST:
@@ -926,7 +926,7 @@ void HandleGlobalLoyaltyEvent( UINT8 ubEventType, INT16 sSectorX, INT16 sSectorY
 			return;
 	}
 
-	AffectAllTownsLoyaltyByDistanceFrom( iLoyaltyChange, sSectorX, sSectorY, bSectorZ);
+	AffectAllTownsLoyaltyByDistanceFrom(iLoyaltyChange, sSector.x, sSector.y, sSector.z);
 }
 
 
@@ -1045,7 +1045,7 @@ void CheckIfEntireTownHasBeenLiberated(INT8 bTownId, const SGPSector& sSector)
 		if (MilitiaTrainingAllowedInSector(sSector.x, sSector.y, 0))
 		{
 			// give a loyalty bonus
-			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LIBERATE_WHOLE_TOWN, sSector.x, sSector.y, 0);
+			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LIBERATE_WHOLE_TOWN, sSector);
 
 			// set fact is has been lib'ed and set history event
 			AddHistoryToPlayersLog(HISTORY_LIBERATED_TOWN, bTownId, GetWorldTotalMin(), sSector);
@@ -1198,9 +1198,10 @@ void HandleLoyaltyImplicationsOfMercRetreat(INT8 bRetreatCode, const SGPSector& 
 
 void HandleLoyaltyImplicationsOfMercRetreat( INT8 bRetreatCode, INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
-	if( CountAllMilitiaInSector( sSectorX, sSectorY ) )
+	SGPSector sSector(sSectorX, sSectorY, sSectorZ);
+	if (CountAllMilitiaInSector(sSector.x, sSector.y))
 	{ //Big morale penalty!
-		HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ABANDON_MILITIA, sSectorX, sSectorY, (INT8)sSectorZ );
+		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ABANDON_MILITIA, sSector);
 	}
 
 	//Standard retreat penalty
@@ -1209,12 +1210,12 @@ void HandleLoyaltyImplicationsOfMercRetreat( INT8 bRetreatCode, INT16 sSectorX, 
 		// if not worse than 2:1 odds, then penalize morale
 		if ( gTacticalStatus.fEnemyInSector && ( PlayerStrength() * 2 >= EnemyStrength() ) )
 		{
-			HandleMoraleEvent( NULL, MORALE_RAN_AWAY, sSectorX, sSectorY, (INT8)sSectorZ );
+			HandleMoraleEvent(nullptr, MORALE_RAN_AWAY, sSector.x, sSector.y, sSector.z);
 		}
 	}
 	else
 	{
-		HandleMoraleEvent( NULL, MORALE_RAN_AWAY, sSectorX, sSectorY, (INT8)sSectorZ );
+		HandleMoraleEvent(nullptr, MORALE_RAN_AWAY, sSector.x, sSector.y, sSector.z);
 	}
 }
 

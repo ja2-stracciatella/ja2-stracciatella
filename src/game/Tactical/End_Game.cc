@@ -275,8 +275,9 @@ static void DoneFadeOutKilledQueen()
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
-	HandleMoraleEvent(0, MORALE_QUEEN_BATTLE_WON, 3, MAP_ROW_P, 0);
-	HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_QUEEN_BATTLE_WON, 3, MAP_ROW_P, 0);
+	const SGPSector upstairs(3, MAP_ROW_P, 0);
+	HandleMoraleEvent(0, MORALE_QUEEN_BATTLE_WON, upstairs.x, upstairs.y, upstairs.z);
+	HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_QUEEN_BATTLE_WON, upstairs);
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
@@ -297,7 +298,6 @@ static void DoneFadeOutKilledQueen()
 	// ATE: Get rid of Elliot in P3
 	GetProfile(ELLIOT).sSectorX = 1;
 
-	SGPSector upstairs(3, MAP_ROW_P, 0);
 	ChangeNpcToDifferentSector(GetProfile(DEREK), upstairs);
 	ChangeNpcToDifferentSector(GetProfile(OLIVER), upstairs);
 

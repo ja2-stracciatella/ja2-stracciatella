@@ -140,7 +140,7 @@ void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 
 // these are used to handle global loyalty events (ones that effect EVERY town on the map)
 void IncrementTownLoyaltyEverywhere( UINT32 uiLoyaltyIncrease );
 void DecrementTownLoyaltyEverywhere( UINT32 uiLoyaltyDecrease );
-void HandleGlobalLoyaltyEvent( UINT8 ubEventType, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+void HandleGlobalLoyaltyEvent(UINT8 ubEventType, const SGPSector& sSector);
 
 // handle a town being liberated for the first time
 void CheckIfEntireTownHasBeenLiberated(INT8 bTownId, const SGPSector& sSector);

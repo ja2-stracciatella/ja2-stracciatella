@@ -312,7 +312,7 @@ void EndTacticalBattleForEnemy()
 	if (IsAnyOfTeamOKInSector(MILITIA_TEAM) &&
 			(IsAnyOfTeamOKInSector(ENEMY_TEAM) || IsAnyOfTeamOKInSector(CREATURE_TEAM)))
 	{
-		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ABANDON_MILITIA, gWorldSector.x, gWorldSector.y, 0);
+		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ABANDON_MILITIA, gWorldSector);
 	}
 }
 

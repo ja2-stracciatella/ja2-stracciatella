@@ -2564,7 +2564,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 		// also treat this as murder - but player will never be blamed for militia death he didn't cause
 		HandleMurderOfCivilian(pSoldierOld);
 
-		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, gWorldSector);
 	}
 	else // enemies and creatures... should any of this stuff not be called if a creature dies?
 	{
@@ -2584,7 +2584,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 			HandleMoraleEvent(killer, MORALE_KILLED_ENEMY, gWorldSector.x, gWorldSector.y, gWorldSector.z);
 		}
 
-		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, gWorldSector);
 
 		CheckForAlertWhenEnemyDies(pSoldierOld);
 
@@ -4502,7 +4502,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		}
 
 		HandleMoraleEvent(NULL, MORALE_HEARD_BATTLE_LOST, gWorldSector.x, gWorldSector.y, gWorldSector.z);
-		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_LOST, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_LOST, gWorldSector);
 
 		// Play death music
 		SetMusicMode( MUSIC_TACTICAL_DEFEAT );
@@ -4621,7 +4621,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 				}
 
 				HandleMoraleEvent(nullptr, MORALE_BATTLE_WON, gWorldSector.x, gWorldSector.y, gWorldSector.z);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_WON, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_WON, gWorldSector);
 
 				// Change music modes
 				if (gLastMercTalkedAboutKilling == NULL ||
