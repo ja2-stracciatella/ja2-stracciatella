@@ -341,7 +341,7 @@ void EliminateAllEnemies(const SGPSector& ubSector)
 			CalculateNextMoveIntention( gpBattleGroup );
 		}
 		// set this sector as taken over
-		SetThisSectorAsPlayerControlled(ubSector.x, ubSector.y, 0, TRUE);
+		SetThisSectorAsPlayerControlled(ubSector, TRUE);
 		RecalculateSectorWeight(ubSector.AsByte());
 
 		// dirty map panel
@@ -1313,7 +1313,7 @@ static void RenderAutoResolve(void)
 					HandleMoraleEvent(nullptr, MORALE_BATTLE_WON, arSector.x, arSector.y, arSector.z);
 					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_WON, arSector);
 
-					SetThisSectorAsPlayerControlled(arSector.x, arSector.y, arSector.z, TRUE);
+					SetThisSectorAsPlayerControlled(arSector, TRUE);
 
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					LogBattleResults( LOG_VICTORY );

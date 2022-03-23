@@ -281,7 +281,7 @@ static void DoneFadeOutKilledQueen()
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
-	SetThisSectorAsPlayerControlled(gWorldSector.x, gWorldSector.y, gWorldSector.z, TRUE);
+	SetThisSectorAsPlayerControlled(gWorldSector, TRUE);
 
 	// ATE: Force change of level set z to 1
 	gWorldSector.z = 1;

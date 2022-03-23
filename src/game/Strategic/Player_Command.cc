@@ -54,7 +54,7 @@ ST::string GetSectorFacilitiesFlags(const SGPSector& sector)
 
 
 // ALL changes of control to player must be funneled through here!
-BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fContested )
+BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fContested)
 {
 	// NOTE: MapSector must be 16-bit, cause MAX_WORLD_X is actually 18, so the sector numbers exceed 256 although we use only 16x16
 	UINT16 usMapSector = 0;
@@ -66,7 +66,6 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 		return FALSE;
 	}
 
-	SGPSector sMap(sMapX, sMapY, bMapZ);
 	UINT8 const sector = sMap.AsByte();
 	if (sMap.z == 0)
 	{
@@ -122,7 +121,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 				// don't do these for takeovers of Omerta sectors at the beginning of the game
 				if ((bTownId != OMERTA) || (GetWorldDay() != 1))
 				{
-					if (bMapZ == 0 && sector != SEC_J9 && sector != SEC_K4)
+					if (sMap.z == 0 && sector != SEC_J9 && sector != SEC_K4)
 					{
 						HandleMoraleEvent(nullptr, MORALE_TOWN_LIBERATED, sMap.x, sMap.y, sMap.z);
 						HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_TOWN_SECTOR, sMap);

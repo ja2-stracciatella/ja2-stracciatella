@@ -4706,7 +4706,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 		{
 			LogBattleResults( LOG_VICTORY );
 
-			SetThisSectorAsPlayerControlled(gWorldSector.x, gWorldSector.y, gWorldSector.z, TRUE);
+			SetThisSectorAsPlayerControlled(gWorldSector, TRUE);
 			HandleVictoryInNPCSector(gWorldSector);
 			if ( CheckFact( FACT_FIRST_BATTLE_BEING_FOUGHT, 0 ) )
 			{
