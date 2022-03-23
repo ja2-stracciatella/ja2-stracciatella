@@ -125,7 +125,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 					if (bMapZ == 0 && sector != SEC_J9 && sector != SEC_K4)
 					{
 						HandleMoraleEvent(nullptr, MORALE_TOWN_LIBERATED, sMap.x, sMap.y, sMap.z);
-						HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_TOWN_SECTOR, sMap.x, sMap.y, sMap.z);
+						HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_TOWN_SECTOR, sMap);
 
 						// liberation by definition requires that the place was enemy controlled in the first place
 						CheckIfEntireTownHasBeenLiberated(bTownId, sMap);
@@ -138,7 +138,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 			if (mine_id != -1 && GetTotalLeftInMine(mine_id) > 0)
 			{
 				HandleMoraleEvent(NULL, MORALE_MINE_LIBERATED, sMap.x, sMap.y, sMap.z);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_MINE, sMap.x, sMap.y, sMap.z);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_MINE, sMap);
 			}
 
 			// if it's a SAM site sector
@@ -152,7 +152,7 @@ BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, B
 				}
 
 				HandleMoraleEvent(nullptr, MORALE_SAM_SITE_LIBERATED, sMap.x, sMap.y, sMap.z);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_SAM, sMap.x, sMap.y, sMap.z);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_SAM, sMap);
 
 				// if Skyrider has been delivered to chopper, and already mentioned Drassen SAM site, but not used this quote yet
 				if ( IsHelicopterPilotAvailable() && ( guiHelicopterSkyriderTalkState >= 1 ) && ( !gfSkyriderSaidCongratsOnTakingSAM ) )
@@ -260,7 +260,7 @@ BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 				if (sec.z == 0 && sector != SEC_J9 && sector != SEC_K4)
 				{
 					HandleMoraleEvent(nullptr, MORALE_TOWN_LOST, sec.x, sec.y, sec.z);
-					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_TOWN_SECTOR, sec.x, sec.y, sec.z);
+					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_TOWN_SECTOR, sec);
 
 					CheckIfEntireTownHasBeenLost(bTownId, sec.x, sec.y);
 				}
@@ -272,14 +272,14 @@ BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 			{
 				QueenHasRegainedMineSector(mine_id);
 				HandleMoraleEvent(nullptr, MORALE_MINE_LOST, sec.x, sec.y, sec.z);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_MINE, sec.x, sec.y, sec.z);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_MINE, sec);
 			}
 
 			// if it's a SAM site sector
 			if (IsThisSectorASAMSector(sec))
 			{
 				HandleMoraleEvent(nullptr, MORALE_SAM_SITE_LOST, sec.x, sec.y, sec.z);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_SAM, sec.x, sec.y, sec.z);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_SAM, sec);
 			}
 
 			// if it's a helicopter refueling site sector

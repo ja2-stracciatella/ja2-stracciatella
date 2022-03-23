@@ -311,12 +311,12 @@ void EliminateAllEnemies(const SGPSector& ubSector)
 		{
 			for (INT32 i = 0; i < ubNumEnemies[ubRankIndex]; ++i)
 			{
-				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ENEMY_KILLED, ubSector.x, ubSector.y, 0 );
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, ubSector);
 				TrackEnemiesKilled( ENEMY_KILLED_IN_AUTO_RESOLVE, RankIndexToSoldierClass( ubRankIndex ) );
 			}
 		}
 
-		HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_WON, ubSector.x, ubSector.y, 0 );
+		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_WON, ubSector);
 	}
 
 	if( !gpAR || gpAR->ubBattleStatus != BATTLE_IN_PROGRESS )
@@ -1174,6 +1174,7 @@ static void RenderAutoResolve(void)
 	INT32 xp, yp;
 	ST::string str;
 	UINT8 ubGood, ubBad;
+	SGPSector arSector(gpAR->ubSectorX, gpAR->ubSectorY, 0);
 
 	if (gpAR->fShowInterface)
 	{ //After expanding the window, we now show the interface
@@ -1254,7 +1255,7 @@ static void RenderAutoResolve(void)
 
 	SetFontAttributes(FONT10ARIAL, FONT_GRAY2);
 
-	str = GetSectorIDString(gpAR->ubSectorX, gpAR->ubSectorY, 0, TRUE);
+	str = GetSectorIDString(arSector, TRUE);
 	xp = gpAR->sCenterStartX + 70 - StringPixLength( str, FONT10ARIAL )/2;
 	yp += 11;
 	MPrint(xp, yp, str);
@@ -1302,17 +1303,17 @@ static void RenderAutoResolve(void)
 				{
 					SetFactTrue( FACT_FIRST_BATTLE_WON );
 				}
-				SetTheFirstBattleSector( ( INT16 ) (gpAR->ubSectorX + gpAR->ubSectorY * MAP_WORLD_X ) );
-				HandleFirstBattleEndingWhileInTown(SGPSector(gpAR->ubSectorX, gpAR->ubSectorY, 0), TRUE );
+				SetTheFirstBattleSector(arSector.AsStrategicIndex());
+				HandleFirstBattleEndingWhileInTown(arSector, TRUE);
 			}
 
 			switch( gpAR->ubBattleStatus )
 			{
 				case BATTLE_VICTORY:
-					HandleMoraleEvent( NULL, MORALE_BATTLE_WON, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
-					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_WON, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
+					HandleMoraleEvent(nullptr, MORALE_BATTLE_WON, arSector.x, arSector.y, arSector.z);
+					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_WON, arSector);
 
-					SetThisSectorAsPlayerControlled( gpAR->ubSectorX, gpAR->ubSectorY, 0, TRUE );
+					SetThisSectorAsPlayerControlled(arSector.x, arSector.y, arSector.z, TRUE);
 
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					LogBattleResults( LOG_VICTORY );
@@ -1328,26 +1329,22 @@ static void RenderAutoResolve(void)
 							if (PlayerMercInvolvedInThisCombat(s))
 							{
 								// This morale event is PER INDIVIDUAL SOLDIER
-								HandleMoraleEvent(&s, MORALE_MERC_CAPTURED, gpAR->ubSectorX, gpAR->ubSectorY, 0);
+								HandleMoraleEvent(&s, MORALE_MERC_CAPTURED, arSector.x, arSector.y, arSector.z);
 							}
 						}
 					}
-					HandleMoraleEvent( NULL, MORALE_HEARD_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
-					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
+					HandleMoraleEvent(nullptr, MORALE_HEARD_BATTLE_LOST, arSector.x, arSector.y, arSector.z);
+					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_LOST, arSector);
 
 					SetMusicMode( MUSIC_TACTICAL_DEFEAT );
-					gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
+					gsEnemyGainedControlOfSectorID = arSector.AsByte();
 					break;
 				case BATTLE_DEFEAT:
-					HandleMoraleEvent( NULL, MORALE_HEARD_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
-					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
-					if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
+					HandleMoraleEvent(nullptr, MORALE_HEARD_BATTLE_LOST, arSector.x, arSector.y, arSector.z);
+					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_LOST, arSector);
+					gsEnemyGainedControlOfSectorID = arSector.AsByte();
+					if (gubEnemyEncounterCode == CREATURE_ATTACK_CODE)
 					{
-						gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
-					}
-					else
-					{
-						gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
 						gsCiviliansEatenByMonsters = gpAR->ubAliveEnemies;
 					}
 					SetMusicMode( MUSIC_TACTICAL_DEFEAT );
@@ -1359,14 +1356,14 @@ static void RenderAutoResolve(void)
 					//Tack on 5 minutes for retreat.
 					gpAR->uiTotalElapsedBattleTimeInMilliseconds += 300000;
 
-					HandleLoyaltyImplicationsOfMercRetreat( RETREAT_AUTORESOLVE, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
+					HandleLoyaltyImplicationsOfMercRetreat(RETREAT_AUTORESOLVE, arSector.x, arSector.y, arSector.z);
 					if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 					{
-						gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
+						gsEnemyGainedControlOfSectorID = arSector.AsByte();
 					}
 					else if( gpAR->ubAliveEnemies )
 					{
-						gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
+						gsEnemyGainedControlOfSectorID = arSector.AsByte();
 						gsCiviliansEatenByMonsters = gpAR->ubAliveEnemies;
 					}
 					break;
@@ -1767,7 +1764,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			{
 				AddDeadSoldierToUnLoadedSector(arSector.x, arSector.y, arSector.z, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 				StrategicRemoveMilitiaFromSector(arSector, current_rank, 1);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, arSector.x, arSector.y, 0);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, arSector);
 			}
 			else
 			{ // This will check for promotions
@@ -1805,7 +1802,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			SOLDIERTYPE& s = *gpEnemies[i].pSoldier;
 			if (s.bLife >= OKLIFE) continue;
 			TrackEnemiesKilled(ENEMY_KILLED_IN_AUTO_RESOLVE, s.ubSoldierClass);
-			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, arSector.x, arSector.y, arSector.z);
+			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, arSector);
 			ProcessQueenCmdImplicationsOfDeath(&s);
 			AddDeadSoldierToUnLoadedSector(arSector.x, arSector.y, arSector.z, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 		}
