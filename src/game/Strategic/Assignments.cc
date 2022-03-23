@@ -589,11 +589,12 @@ static INT8 CountMilitiaTrainersInSoldiersSector(const SOLDIERTYPE* s);
 
 BOOLEAN CanCharacterTrainMilitia(const SOLDIERTYPE* const s)
 {
+	SGPSector sSector(s->sSectorX, s->sSectorY, s->bSectorZ);
 	return
 		BasicCanCharacterTrainMilitia(s)                                      &&
-		MilitiaTrainingAllowedInSector(s->sSectorX, s->sSectorY, s->bSectorZ) &&
+		MilitiaTrainingAllowedInSector(sSector) &&
 		DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(s)              &&
-		!IsAreaFullOfMilitia(SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ)) &&
+		!IsAreaFullOfMilitia(sSector) &&
 		CountMilitiaTrainersInSoldiersSector(s) < MAX_MILITIA_TRAINERS_PER_SECTOR;
 }
 
@@ -4548,12 +4549,11 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 {
 	// btn callback handler for assignment region
 	INT32 iValue = -1;
-	SOLDIERTYPE * pSoldier = NULL;
 	ST::string sString;
-	ST::string sStringA;
 
-
-	pSoldier = GetSelectedAssignSoldier( FALSE );
+	SOLDIERTYPE* pSoldier = GetSelectedAssignSoldier( FALSE );
+	SGPSector sSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+	INT8 const bTownId = GetTownIdForSector(sSector.AsByte());
 
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
 
@@ -4592,13 +4592,11 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			case( TRAIN_MENU_TOWN):
 				if( BasicCanCharacterTrainMilitia(pSoldier) )
 				{
-					INT8 const bTownId = GetTownIdForSector(SECTOR(pSoldier->sSectorX, pSoldier->sSectorY));
-
 					// if it's a town sector (the following 2 errors can't happen at non-town SAM sites)
 					if( bTownId != BLANK_SECTOR )
 					{
 						// can we keep militia in this town?
-						if (!MilitiaTrainingAllowedInSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ))
+						if (!MilitiaTrainingAllowedInSector(sSector))
 						{
 							sString = st_format_printf(pMapErrorString[ 31 ], GCM->getTownName(bTownId));
 							DoScreenIndependantMessageBox( sString, MSG_BOX_FLAG_OK, NULL );
@@ -4613,13 +4611,12 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						}
 					}
 
-					if (IsAreaFullOfMilitia(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ)))
+					if (IsAreaFullOfMilitia(sSector))
 					{
 						if( bTownId == BLANK_SECTOR )
 						{
 							// SAM site
-							sStringA = GetShortSectorString(pSoldier->sSectorX, pSoldier->sSectorY);
-							sString = st_format_printf(zMarksMapScreenText[20], sStringA);
+							sString = st_format_printf(zMarksMapScreenText[20], sSector.AsShortString());
 						}
 						else
 						{
@@ -4657,7 +4654,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 					// assign to a movement group
 					AssignMercToAMovementGroup(*pSoldier);
-					if (!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
+					if (!SectorInfo[sSector.AsByte()].fMilitiaTrainingPaid)
 					{
 						// show a message to confirm player wants to charge cost
 						HandleInterfaceMessageForCostOfTrainingMilitia( pSoldier );

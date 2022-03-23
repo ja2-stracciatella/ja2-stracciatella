@@ -60,7 +60,7 @@ void HandleContinueOfTownTraining( void );
 // clear the list of training completed sectors
 void ClearSectorListForCompletedTrainingOfMilitia();
 
-BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+BOOLEAN MilitiaTrainingAllowedInSector(const SGPSector& sMap);
 BOOLEAN MilitiaTrainingAllowedInTown( INT8 bTownId );
 
 void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining(SOLDIERTYPE* pSoldier);

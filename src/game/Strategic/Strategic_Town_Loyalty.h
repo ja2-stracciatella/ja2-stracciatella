@@ -144,7 +144,7 @@ void HandleGlobalLoyaltyEvent(UINT8 ubEventType, const SGPSector& sSector);
 
 // handle a town being liberated for the first time
 void CheckIfEntireTownHasBeenLiberated(INT8 bTownId, const SGPSector& sSector);
-void CheckIfEntireTownHasBeenLost( INT8 bTownId, INT16 sSectorX, INT16 sSectorY );
+void CheckIfEntireTownHasBeenLost(INT8 bTownId, const SGPSector& sSector);
 
 void HandleLoyaltyChangeForNPCAction( UINT8 ubNPCProfileId );
 

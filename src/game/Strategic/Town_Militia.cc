@@ -905,11 +905,10 @@ static void ResetDoneFlagForAllMilitiaTrainersInSector(UINT8 ubSector)
 }
 
 
-BOOLEAN MilitiaTrainingAllowedInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+BOOLEAN MilitiaTrainingAllowedInSector(const SGPSector& sector)
 {
 	BOOLEAN fSamSitePresent = FALSE;
 
-	SGPSector sector(sSectorX, sSectorY, bSectorZ);
 	if (sector.z != 0)
 	{
 		return( FALSE );

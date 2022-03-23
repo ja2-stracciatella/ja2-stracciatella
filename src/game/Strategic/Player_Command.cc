@@ -261,7 +261,7 @@ BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 					HandleMoraleEvent(nullptr, MORALE_TOWN_LOST, sec);
 					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_TOWN_SECTOR, sec);
 
-					CheckIfEntireTownHasBeenLost(bTownId, sec.x, sec.y);
+					CheckIfEntireTownHasBeenLost(bTownId, sec);
 				}
 			}
 

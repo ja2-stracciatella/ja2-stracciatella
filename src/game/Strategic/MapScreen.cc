@@ -7693,7 +7693,7 @@ static void HandleMilitiaRedistributionClick(void)
 
 		if( ( bTownId != BLANK_SECTOR ) && !fTownStillHidden )
 		{
-			if (MilitiaTrainingAllowedInSector(sector.x, sector.y, sector.z))
+			if (MilitiaTrainingAllowedInSector(sector))
 			{
 				fShowTownInfo  = FALSE;
 				fMapPanelDirty = TRUE;

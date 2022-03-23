@@ -1407,7 +1407,7 @@ static UINT8 CalcImportantSectorControl(void)
 			if (!StrategicMap[sector.AsStrategicIndex()].fEnemyControlled)
 			{
 				// towns where militia can be trained and SAM sites are important sectors
-				if (MilitiaTrainingAllowedInSector(sector.x, sector.y, 0))
+				if (MilitiaTrainingAllowedInSector(sector))
 				{
 					ubSectorControlPts++;
 

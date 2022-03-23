@@ -201,7 +201,7 @@ static void AddTextToTownBox(PopUpBox* const box)
 	AddSecondColumnMonoString(box, wString);
 
 	// the concept of control is only meaningful in sectors where militia can be trained
-	if (MilitiaTrainingAllowedInSector(bCurrentTownMineSector.x, bCurrentTownMineSector.y, 0))
+	if (MilitiaTrainingAllowedInSector(bCurrentTownMineSector))
 	{
 		// town control
 		wString = ST::format("{}:", pwTownInfoStrings[1]);
@@ -365,7 +365,7 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 
 	// in sector where militia can be trained,
 	// control of the sector matters, display who controls this sector.  Map brightness no longer gives this!
-	if (MilitiaTrainingAllowedInSector(bCurrentTownMineSector.x, bCurrentTownMineSector.y, 0) && !fUnknownSAMSite)
+	if (MilitiaTrainingAllowedInSector(bCurrentTownMineSector) && !fUnknownSAMSite)
 	{
 		// controlled:
 		wString = ST::format("{}:", pwMiscSectorStrings[ 4 ]);

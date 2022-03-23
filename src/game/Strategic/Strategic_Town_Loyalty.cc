@@ -1042,7 +1042,7 @@ void CheckIfEntireTownHasBeenLiberated(INT8 bTownId, const SGPSector& sSector)
 	// the whole town is under our control, check if we never libed this town before
 	if ( !gTownLoyalty[ bTownId ].fLiberatedAlready && IsTownUnderCompleteControlByPlayer ( bTownId ) )
 	{
-		if (MilitiaTrainingAllowedInSector(sSector.x, sSector.y, 0))
+		if (MilitiaTrainingAllowedInSector(sSector))
 		{
 			// give a loyalty bonus
 			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LIBERATE_WHOLE_TOWN, sSector);
@@ -1068,11 +1068,11 @@ void CheckIfEntireTownHasBeenLiberated(INT8 bTownId, const SGPSector& sSector)
 	}
 }
 
-void CheckIfEntireTownHasBeenLost( INT8 bTownId, INT16 sSectorX, INT16 sSectorY )
+void CheckIfEntireTownHasBeenLost(INT8 bTownId, const SGPSector& sSector)
 {
 	// NOTE:  only towns which allow you to train militia are important enough to get
 	// reported here (and they're the only ones you can protect)
-	if ( MilitiaTrainingAllowedInSector( sSectorX, sSectorY, 0 ) && IsTownUnderCompleteControlByEnemy(bTownId) )
+	if (MilitiaTrainingAllowedInSector(sSector) && IsTownUnderCompleteControlByEnemy(bTownId))
 	{
 		// the whole town is under enemy control, check if we libed this town before
 		if ( gTownLoyalty[ bTownId ].fLiberatedAlready )
