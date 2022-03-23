@@ -1090,7 +1090,7 @@ static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason)
 			RetreatAllInvolvedPlayerGroups();
 
 			// NOTE: this code assumes you can never retreat while underground
-			HandleLoyaltyImplicationsOfMercRetreat( RETREAT_PBI, gubPBSector.x, gubPBSector.y, 0 );
+			HandleLoyaltyImplicationsOfMercRetreat(RETREAT_PBI, gubPBSector);
 			if( CountAllMilitiaInSector( gubPBSector.x, gubPBSector.y ) )
 			{ //Mercs retreat, but enemies still need to fight the militia
 				gfEnterAutoResolveMode = TRUE;

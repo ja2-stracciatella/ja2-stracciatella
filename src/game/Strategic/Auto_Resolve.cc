@@ -1356,7 +1356,7 @@ static void RenderAutoResolve(void)
 					//Tack on 5 minutes for retreat.
 					gpAR->uiTotalElapsedBattleTimeInMilliseconds += 300000;
 
-					HandleLoyaltyImplicationsOfMercRetreat(RETREAT_AUTORESOLVE, arSector.x, arSector.y, arSector.z);
+					HandleLoyaltyImplicationsOfMercRetreat(RETREAT_AUTORESOLVE, arSector);
 					if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 					{
 						gsEnemyGainedControlOfSectorID = arSector.AsByte();
