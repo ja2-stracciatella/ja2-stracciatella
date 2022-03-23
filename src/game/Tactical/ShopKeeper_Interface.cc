@@ -4999,26 +4999,24 @@ static void CrossOutUnwantedItems(void)
 
 static void HandleCheckIfEnoughOnTheTable(void)
 {
-	static INT32 iLastTime = 0;
-	INT32  iDifference = 0, iRand = 0;
+	static UINT32 uiLastTime = 0;
 	UINT32 uiPlayersOfferAreaValue = CalculateTotalPlayersValue();
 	UINT32 uiArmsDealersItemsCost = CalculateTotalArmsDealerCost();
 
-	if( ( iLastTime == 0 ) || gfResetShopKeepIdleQuote )
+	if (uiLastTime == 0 || gfResetShopKeepIdleQuote)
 	{
-		iLastTime = GetJA2Clock();
+		uiLastTime = GetJA2Clock();
 		gfResetShopKeepIdleQuote = FALSE;
 	}
 
-	iDifference = GetJA2Clock() - iLastTime;
-
-	iRand = Random( 100 );
+	UINT32 uiDifference = GetJA2Clock() - uiLastTime;
+	UINT32 uiRand = Random(100);
 
 	// delay for shopkeeper passed?
-	if( iDifference > DELAY_FOR_SHOPKEEPER_IDLE_QUOTE )
+	if (uiDifference > DELAY_FOR_SHOPKEEPER_IDLE_QUOTE)
 	{
 		// random chance enough?
-		if( iRand > CHANCE_FOR_SHOPKEEPER_IDLE_QUOTE )
+		if (uiRand > CHANCE_FOR_SHOPKEEPER_IDLE_QUOTE)
 		{
 			// is there enough on the table
 			if( ( uiArmsDealersItemsCost > uiPlayersOfferAreaValue ) && ( uiPlayersOfferAreaValue ) )

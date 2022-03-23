@@ -414,7 +414,7 @@ void InitMapScreenInterfaceMap()
 	pTownPoints.push_back(SGPPoint());
 
 	auto towns = GCM->getTowns();
-	for (auto& pair : GCM->getTowns()) 
+	for (auto& pair : GCM->getTowns())
 	{
 		auto town = pair.second;
 		sBaseSectorList.push_back(town->getBaseSector());
@@ -1486,7 +1486,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	static BOOLEAN fPauseFlag=TRUE;
 	static UINT8 ubCounter=1;
 
-	INT32 iDifference=0;
 	INT32 iArrow=-1;
 	INT32 iX = 0, iY = 0;
 	INT32 iPastX, iPastY;
@@ -1536,12 +1535,12 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	}
 
 	// check difference in time
-	iDifference=GetJA2Clock()-guiAnimateRouteBaseTime;
+	UINT32 uiDifference = GetJA2Clock() - guiAnimateRouteBaseTime;
 
 	// if pause flag, check time, if time passed, reset, continue on, else return
 	if(fPauseFlag)
 	{
-		if(iDifference < PAUSE_DELAY)
+		if (uiDifference < PAUSE_DELAY)
 		{
 			return FALSE;
 		}
@@ -1556,7 +1555,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	// if is checkflag and change in status, return TRUE;
 	if(!fForceUpDate)
 	{
-		if(iDifference < ARROW_DELAY)
+		if (uiDifference < ARROW_DELAY)
 		{
 			if (!fUpDateFlag)
 				return FALSE;
@@ -2014,8 +2013,6 @@ void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 	// simply check if we want to refresh the screen to display path
 	static BOOLEAN fOldShowAirCraft = FALSE;
 	static INT16  sOldMapX, sOldMapY;
-	INT32 iDifference = 0;
-
 
 	if( fOldShowAirCraft != fShowAircraftFlag )
 	{
@@ -2046,14 +2043,14 @@ void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY )
 		fDrawTempHeliPath = FALSE;
 	}
 
-	iDifference = GetJA2Clock( ) - guiPotHeliPathBaseTime ;
+	UINT32 uiDifference = GetJA2Clock() - guiPotHeliPathBaseTime;
 
 	if( fTempPathAlreadyDrawn )
 	{
 		return;
 	}
 
-	if( iDifference > MIN_WAIT_TIME_FOR_TEMP_PATH )
+	if (uiDifference > MIN_WAIT_TIME_FOR_TEMP_PATH)
 	{
 		fDrawTempHeliPath = TRUE;
 		guiPotHeliPathBaseTime = GetJA2Clock( );
@@ -2569,7 +2566,7 @@ static void DrawSite(const INT16 sector_x, const INT16 sector_y, const SGPVObjec
 	UINT16 max_w;
 	UINT16 max_h;
 	UINT8  vo_idx;
-	
+
 	GetScreenXYFromMapXY(sector_x, sector_y, &x, &y);
 	++x;
 	max_w = MAP_GRID_X - 1;

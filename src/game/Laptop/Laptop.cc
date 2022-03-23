@@ -1888,46 +1888,43 @@ static void LoadLoadPending(void)
 	guiGRAPHBAR    = AddVideoObjectFromFile(LAPTOPDIR "/graphsegment.sti");
 }
 
-
-static INT32 WWaitDelayIncreasedIfRaining(INT32 iUnitTime);
-
-
 static void DisplayLoadPending(void)
 {
 	// this function will display the load pending and return if the load is done
-	static INT32 iBaseTime  = 0;
-	static INT32 iTotalTime = 0;
+	static UINT32 uiBaseTime  = 0;
+	static UINT32 uiTotalTime = 0;
 
 	// if merc webpage, make it longer
-	// TEMP disables the loadpending
-	INT32 iLoadTime;
-	INT32 iUnitTime;
-
+	UINT32 uiUnitTime = UNIT_TIME;
 	if (fFastLoadFlag)
 	{
-		iUnitTime = (fConnectingToSubPage ? FASTEST_UNIT_TIME : FAST_UNIT_TIME);
+		uiUnitTime = fConnectingToSubPage ? FASTEST_UNIT_TIME : FAST_UNIT_TIME;
 	}
 	else if (fConnectingToSubPage)
 	{
-		iUnitTime = ALMOST_FAST_UNIT_TIME;
+		uiUnitTime = ALMOST_FAST_UNIT_TIME;
 	}
 	else if (guiCurrentLaptopMode == LAPTOP_MODE_MERC && !LaptopSaveInfo.fMercSiteHasGoneDownYet)
 	{
 		// if we are connecting the MERC site, and the MERC site hasnt yet moved
 		// to their new site, have the sloooww wait
-		iUnitTime = LONG_UNIT_TIME;
-	}
-	else
-	{
-		iUnitTime = UNIT_TIME;
+		uiUnitTime = LONG_UNIT_TIME;
 	}
 
-	iUnitTime += WWaitDelayIncreasedIfRaining(iUnitTime);
+	// increase delay if it's raining
+	if (guiEnvWeather & WEATHER_FORECAST_THUNDERSHOWERS)
+	{
+		uiUnitTime += uiUnitTime * 0.8f;
+	}
+	else if (guiEnvWeather & WEATHER_FORECAST_SHOWERS)
+	{
+		uiUnitTime += uiUnitTime * 0.6f;
+	}
 
 	// Adjust loading time based on config var
-	iUnitTime *= gamepolicy(website_loading_time_scale);
+	uiUnitTime *= gamepolicy(website_loading_time_scale);
 
-	iLoadTime  = iUnitTime * 30;
+	UINT32 uiLoadTime = uiUnitTime * 30;
 
 	// we are now waiting on a web page to download, reset counter
 	if (!fLoadPendingFlag)
@@ -1935,34 +1932,34 @@ static void DisplayLoadPending(void)
 		fDoneLoadPending     = FALSE;
 		fFastLoadFlag        = FALSE;
 		fConnectingToSubPage = FALSE;
-		iBaseTime            = 0;
-		iTotalTime           = 0;
+		uiBaseTime           = 0;
+		uiTotalTime          = 0;
 		return;
 	}
-	if (iBaseTime == 0) iBaseTime = GetJA2Clock();
+	if (uiBaseTime == 0) uiBaseTime = GetJA2Clock();
 
 	// if total time is exceeded, return
-	if (iTotalTime >= iLoadTime)
+	if (uiTotalTime >= uiLoadTime)
 	{
 		// done loading, redraw screen
 		fLoadPendingFlag        = FALSE;
 		fFastLoadFlag           = FALSE;
-		iTotalTime              = 0;
-		iBaseTime               = 0;
+		uiTotalTime             = 0;
+		uiBaseTime              = 0;
 		fDoneLoadPending        = TRUE;
 		fConnectingToSubPage    = FALSE;
 		fPausedReDrawScreenFlag = TRUE;
 		return;
 	}
 
-	const INT32 iDifference = GetJA2Clock() - iBaseTime;
+	const UINT32 uiDifference = GetJA2Clock() - uiBaseTime;
 
 	// difference has been long enough or we are redrawing the screen
-	if (iDifference > iUnitTime)
+	if (uiDifference > uiUnitTime)
 	{
 		// LONG ENOUGH TIME PASSED
-		iBaseTime   = GetJA2Clock();
-		iTotalTime += iDifference;
+		uiBaseTime   = GetJA2Clock();
+		uiTotalTime += uiDifference;
 	}
 
 	// new mail, don't redraw
@@ -1990,9 +1987,10 @@ static void DisplayLoadPending(void)
 	// check to see if we are only updating screen, but not passed a new element in the load pending display
 
 	// decide how many time units are to be displayed, based on amount of time passed
-	for (INT32 i = 0, iTempTime = iTotalTime; i <= 30 && iTempTime > 0; ++i, iTempTime -= iUnitTime)
+	for (UINT32 i = 0, uiTempTime = uiTotalTime; i <= 30 && uiTempTime > 0; ++i, uiTempTime -= uiUnitTime)
 	{
 		BltVideoObject(FRAME_BUFFER, guiGRAPHBAR, 0, LAPTOP_BAR_X + UNIT_WIDTH * i, LAPTOP_BAR_Y);
+		if (uiUnitTime > uiTempTime) break; // prevent underflow
 	}
 
 	InvalidateRegion(DOWNLOAD_X, DOWNLOAD_Y, DOWNLOAD_X + 150, DOWNLOAD_Y + 100);
@@ -2437,31 +2435,31 @@ static void ShowLights(void)
 static void FlickerHDLight(void)
 {
 	static UINT32 uiBaseTime       = 0;
-	static INT32  iTotalDifference = 0;
+	static UINT32 uiTotalDifference = 0;
 
 	if (fLoadPendingFlag) fFlickerHD = TRUE;
 	if (!fFlickerHD) return;
 
 	if (uiBaseTime == 0) uiBaseTime = GetJA2Clock();
 
-	const INT32 iDifference = GetJA2Clock() - uiBaseTime;
+	const UINT32 uiDifference = GetJA2Clock() - uiBaseTime;
 
-	if (iTotalDifference > HD_FLICKER_TIME && !fLoadPendingFlag)
+	if (uiTotalDifference > HD_FLICKER_TIME && !fLoadPendingFlag)
 	{
 		uiBaseTime         = GetJA2Clock();
 		fHardDriveLightOn = FALSE;
 		uiBaseTime         = 0;
-		iTotalDifference  = 0;
+		uiTotalDifference  = 0;
 		fFlickerHD        = FALSE;
 		InvalidateRegion(88, 466, 102, 477);
 		return;
 	}
 
-	if (iDifference > FLICKER_TIME)
+	if (uiDifference > FLICKER_TIME)
 	{
-		iTotalDifference += iDifference;
+		uiTotalDifference += uiDifference;
 
-		if (fLoadPendingFlag) iTotalDifference = 0;
+		if (fLoadPendingFlag) uiTotalDifference = 0;
 
 		fHardDriveLightOn = (Random(2) == 0);
 		InvalidateRegion(88, 466, 102, 477);
@@ -2485,7 +2483,7 @@ static BOOLEAN ExitLaptopDone(void)
 
 	InvalidateRegion(44, 466, 58, 477);
 	// get the current difference
-	const INT32 iDifference = GetJA2Clock() - uiBaseTime;
+	const UINT32 iDifference = GetJA2Clock() - uiBaseTime;
 
 	// did we wait long enough?
 	if (iDifference > EXIT_LAPTOP_DELAY_TIME)
@@ -3255,11 +3253,11 @@ static void HandleWebBookMarkNotifyTimer(void)
 		return;
 	}
 
-	const INT32 iDifference = GetJA2Clock() - uiBaseTime;
+	const UINT32 uiDifference = GetJA2Clock() - uiBaseTime;
 
 	fReDrawBookMarkInfo = TRUE;
 
-	if (iDifference > DISPLAY_TIME_FOR_WEB_BOOKMARK_NOTIFY)
+	if (uiDifference > DISPLAY_TIME_FOR_WEB_BOOKMARK_NOTIFY)
 	{
 		// waited long enough, stop showing
 		uiBaseTime = 0;
@@ -3480,22 +3478,6 @@ void LoadLaptopInfoFromSavedGame(HWFILE const f)
 		l.pLifeInsurancePayouts.clear();
 	}
 }
-
-
-static INT32 WWaitDelayIncreasedIfRaining(INT32 iUnitTime)
-{
-	INT32 iRetVal = 0;
-	if (guiEnvWeather & WEATHER_FORECAST_THUNDERSHOWERS)
-	{
-		iRetVal = iUnitTime * 0.8f;
-	}
-	else if (guiEnvWeather & WEATHER_FORECAST_SHOWERS)
-	{
-		iRetVal = iUnitTime * 0.6f;
-	}
-	return iRetVal;
-}
-
 
 // Used to determine delay if its raining
 static BOOLEAN IsItRaining(void)
