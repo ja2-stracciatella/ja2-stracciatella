@@ -147,13 +147,7 @@ void HandleAutoBandagePending( )
 	{
 		// All dailogue done, music, etc...
 		//if ( gubMusicMode != MUSIC_TACTICAL_VICTORY && DialogueQueueIsEmpty( ) )
-		if ( !DialogueQueueIsEmpty( ) )
-		{
-			return;
-		}
-
-		// If there is no actively talking guy...
-		if ( gpCurrentTalkingFace != NULL )
+		if (!DialogueQueueIsEmptyAndNobodyIsTalking())
 		{
 			return;
 		}
@@ -173,7 +167,7 @@ void HandleAutoBandagePending( )
 		}
 
 		// Do was have any menus up?
-		if ( AreWeInAUIMenu( ) )
+		if (AreWeInAUIMenu() || gCurrentUIMode == LOCKUI_MODE)
 		{
 			return;
 		}
