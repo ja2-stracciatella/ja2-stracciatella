@@ -877,11 +877,11 @@ void HandleGlobalLoyaltyEvent(UINT8 ubEventType, const SGPSector& sSector)
 	switch (ubEventType)
 	{
 		case GLOBAL_LOYALTY_BATTLE_WON:
-			CheckConditionsForTriggeringCreatureQuest(sSector.x, sSector.y, sSector.z);
+			CheckConditionsForTriggeringCreatureQuest();
 			iLoyaltyChange = 500;
 			break;
 		case GLOBAL_LOYALTY_QUEEN_BATTLE_WON:
-			CheckConditionsForTriggeringCreatureQuest(sSector.x, sSector.y, sSector.z);
+			CheckConditionsForTriggeringCreatureQuest();
 			iLoyaltyChange = 1000;
 			break;
 		case GLOBAL_LOYALTY_BATTLE_LOST:

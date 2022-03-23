@@ -974,7 +974,7 @@ void CreatureNightPlanning()
 }
 
 
-void CheckConditionsForTriggeringCreatureQuest( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
+void CheckConditionsForTriggeringCreatureQuest()
 {
 	UINT8 ubValidMines = 0;
 	if( !gGameOptions.fSciFi )
