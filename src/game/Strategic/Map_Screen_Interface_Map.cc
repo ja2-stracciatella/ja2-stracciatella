@@ -3760,28 +3760,29 @@ static BOOLEAN CanMercsScoutThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSec
 
 static void HandleShowingOfEnemyForcesInSector(INT16 const x, INT16 const y, INT8 const z, UINT8 const icon_pos)
 {
+	SGPSector sSector(x, y, z);
 	// ATE: If game has just started, don't do it
 	if (DidGameJustStart()) return;
 
 	// Never display enemies underground - sector info doesn't have support for it
-	if (z != 0) return;
+	if (sSector.z != 0) return;
 
-	INT16 const n_enemies = NumEnemiesInSector(x, y);
+	INT16 const n_enemies = NumEnemiesInSector(sSector);
 	if (n_enemies == 0) return; // No enemies here, display nothing
 
-	switch (WhatPlayerKnowsAboutEnemiesInSector(x, y))
+	switch (WhatPlayerKnowsAboutEnemiesInSector(sSector.x, sSector.y))
 	{
 		case KNOWS_NOTHING: // Display nothing
 			break;
 
 		case KNOWS_THEYRE_THERE: // Display a question mark
-			ShowUncertainNumberEnemiesInSector(x, y);
+			ShowUncertainNumberEnemiesInSector(sSector.x, sSector.y);
 			break;
 
 		case KNOWS_HOW_MANY:
 			/* Display individual icons for each enemy, starting at the received icon
 				* position index */
-			ShowEnemiesInSector(x, y, n_enemies, icon_pos);
+			ShowEnemiesInSector(sSector.x, sSector.y, n_enemies, icon_pos);
 			break;
 	}
 }

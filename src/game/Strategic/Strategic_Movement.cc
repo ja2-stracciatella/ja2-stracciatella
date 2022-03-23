@@ -729,13 +729,13 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 	BOOLEAN fMilitiaPresent = FALSE;
 	BOOLEAN fCombatAbleMerc = FALSE;
 	BOOLEAN fBloodCatAmbush = FALSE;
+	SGPSector gSector(pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ);
+	SGPSector gSector0(gSector.x, gSector.y, 0);
 
 	if( gfWorldLoaded )
 	{ //look for people arriving in the currently loaded sector.  This handles reinforcements.
 		const GROUP* const curr = FindPlayerMovementGroupInSector(gWorldSector.x, gWorldSector.y);
-		if (!gWorldSector.z && PlayerMercsInSector(gWorldSector) &&
-			pGroup->ubSectorX == gWorldSector.x && pGroup->ubSectorY == gWorldSector.y &&
-			curr )
+		if (gWorldSector == gSector0 && curr && PlayerMercsInSector(gWorldSector))
 		{ //Reinforcements have arrived!
 			if( gTacticalStatus.fEnemyInSector )
 			{
@@ -750,7 +750,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 		gubEnemyEncounterCode = NO_ENCOUNTER_CODE;
 	}
 
-	HandleOtherGroupsArrivingSimultaneously( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ );
+	HandleOtherGroupsArrivingSimultaneously(gSector.x, gSector.y, gSector.z);
 
 	FOR_EACH_PLAYER_GROUP(i)
 	{
@@ -759,7 +759,8 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 		{
 			if (!g.fBetweenSectors)
 			{
-				if (g.ubSectorX == pGroup->ubSectorX && g.ubSectorY == pGroup->ubSectorY && !g.ubSectorZ)
+				SGPSector sSector(g.ubSectorX, g.ubSectorY);
+				if (sSector == gSector0)
 				{
 					if (!GroupHasInTransitDeadOrPOWMercs(g) &&
 						(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne) &&
@@ -802,7 +803,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 	{
 		pPlayerDialogGroup = pGroup;
 
-		if( NumEnemiesInSector( pGroup->ubSectorX, pGroup->ubSectorY ) )
+		if (NumEnemiesInSector(gSector))
 		{
 			fBattlePending = TRUE;
 		}
@@ -831,7 +832,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 	}
 	else
 	{
-		if( CountAllMilitiaInSector( pGroup->ubSectorX, pGroup->ubSectorY ) )
+		if (CountAllMilitiaInSector(gSector.x, gSector.y))
 		{
 			fMilitiaPresent = TRUE;
 			fBattlePending = TRUE;
@@ -872,7 +873,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 		if( gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE || gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
 		{
-			NotifyPlayerOfBloodcatBattle( pGroup->ubSectorX, pGroup->ubSectorY );
+			NotifyPlayerOfBloodcatBattle(gSector.x, gSector.y);
 			return TRUE;
 		}
 
@@ -882,11 +883,11 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 			gfUsePersistantPBI = TRUE;
 			if( fMilitiaPresent )
 			{
-				NotifyPlayerOfInvasionByEnemyForces(SGPSector(pGroup->ubSectorX, pGroup->ubSectorY, 0), TriggerPrebattleInterface);
+				NotifyPlayerOfInvasionByEnemyForces(gSector, TriggerPrebattleInterface);
 			}
 			else
 			{
-				ST::string pSectorStr = GetSectorIDString(pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, TRUE);
+				ST::string pSectorStr = GetSectorIDString(gSector.x, gSector.y, gSector.z, TRUE);
 				ST::string str = st_format_printf(gpStrategicString[ STR_DIALOG_ENEMIES_ATTACK_UNCONCIOUSMERCS ], pSectorStr);
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, TriggerPrebattleInterface );
 			}
@@ -1333,7 +1334,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			}
 			else
 			{
-				if (HandleHeliEnteringSector(v.sSectorX, v.sSectorY))
+				if (HandleHeliEnteringSector(SGPSector(v.sSectorX, v.sSectorY)))
 				{ // Helicopter destroyed
 					group_destroyed = true;
 				}
@@ -3325,12 +3326,13 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 	INT8 bNumMercMaxCats;
 	BOOLEAN fAlreadyAmbushed = FALSE;
 
-	if( pGroup->ubSectorZ )
+	SGPSector gSector(pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ);
+	if (gSector.z)
 	{ //no ambushes underground (no bloodcats either)
 		return FALSE;
 	}
 
-	ubSectorID = (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY );
+	ubSectorID = gSector.AsByte();
 	pSector = &SectorInfo[ ubSectorID ];
 
 	ubChance = 5 * gGameOptions.ubDifficultyLevel;
@@ -3369,7 +3371,7 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 			bProgressMaxCats = (INT8)MAX( CurrentPlayerProgressPercentage() / (7 - gGameOptions.ubDifficultyLevel), 3 );
 
 			//make sure bloodcats don't outnumber mercs by a factor greater than 2
-			bNumMercMaxCats = (INT8)(PlayerMercsInSector( pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ ) * 2);
+			bNumMercMaxCats = (INT8) (PlayerMercsInSector(gSector.x, gSector.y, gSector.z) * 2);
 
 			//choose the lowest number of cats calculated by difficulty and progress.
 			pSector->bBloodCats = (INT8)MIN( bDifficultyMaxCats, bProgressMaxCats );
@@ -3393,7 +3395,7 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 	}
 
 	if( !fAlreadyAmbushed && !bIsArena && pSector->bBloodCats > 0 &&
-			!pGroup->fVehicle && !NumEnemiesInSector( pGroup->ubSectorX, pGroup->ubSectorY ) )
+			!pGroup->fVehicle && !NumEnemiesInSector(gSector))
 	{
 		if( !bIsLair || !gubFact[ FACT_PLAYER_KNOWS_ABOUT_BLOODCAT_LAIR ] )
 		{

@@ -13,7 +13,6 @@ extern BOOLEAN gfPendingEnemies;
 UINT8 NumHostilesInSector(const SGPSector& sSector);
 UINT8 NumEnemiesInAnySector(const SGPSector& sSector);
 UINT8 NumEnemiesInSector(const SGPSector& sector);
-UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
 UINT8 NumStationaryEnemiesInSector(const SGPSector& sSector);
 UINT8 NumMobileEnemiesInSector(const SGPSector& sSector);
 void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites );

@@ -128,14 +128,8 @@ UINT8 NumEnemiesInAnySector(const SGPSector& sSector)
 	return ubNumEnemies;
 }
 
-UINT8 NumEnemiesInSector(const SGPSector& sector)
+UINT8 NumEnemiesInSector(const SGPSector& sSector)
 {
-	return NumEnemiesInSector(sector.x, sector.y);
-}
-
-UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
-{
-	SGPSector sSector(sSectorX, sSectorY);
 	Assert(sSector.IsValid());
 
 	SECTORINFO *pSector = &SectorInfo[sSector.AsByte()];
@@ -144,8 +138,8 @@ UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
 		if (!pGroup->fVehicle             &&
-				pGroup->ubSectorX == sSectorX &&
-				pGroup->ubSectorY == sSectorY)
+				pGroup->ubSectorX == sSector.x &&
+				pGroup->ubSectorY == sSector.y)
 		{
 			ubNumTroops += pGroup->ubGroupSize;
 		}
@@ -1242,7 +1236,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 
 
 	// Are there anemies in ALMA? ( I13 )
-	iNumEnemiesInSector = NumEnemiesInSector( 13, 9 );
+	iNumEnemiesInSector = NumEnemiesInSector(SGPSector(13, 9));
 
 	// IF there are no enemies, and we need to do alma, skip!
 	if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTNOTSTARTED && iNumEnemiesInSector == 0 )

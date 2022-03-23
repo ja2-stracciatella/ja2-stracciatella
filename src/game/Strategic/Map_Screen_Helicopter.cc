@@ -199,7 +199,7 @@ BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier )
 	return( TakeSoldierOutOfVehicle( pSoldier ) );
 }
 
-BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
+BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap)
 {
 	UINT8 ubNumEnemies;
 	BOOLEAN endOfHelicoptersPath;
@@ -208,20 +208,20 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 	endOfHelicoptersPath = (!v.pMercPath || !v.pMercPath->pNext);
 
 	// check for SAM attack upon the chopper.  If it's destroyed by the attack, do nothing else here
-	if (HandleSAMSiteAttackOfHelicopterInSector(sX, sY))
+	if (HandleSAMSiteAttackOfHelicopterInSector(sMap.x, sMap.y))
 	{
 		// destroyed
 		return( TRUE );
 	}
 
 	// count how many enemies are camped there or passing through
-	ubNumEnemies = NumEnemiesInSector( sX, sY );
+	ubNumEnemies = NumEnemiesInSector(sMap);
 
 	// any baddies?
 	if( ubNumEnemies > 0 )
 	{
 		// if the player didn't know about these prior to the chopper's arrival
-		if( WhatPlayerKnowsAboutEnemiesInSector( sX, sY ) == KNOWS_NOTHING )
+		if (WhatPlayerKnowsAboutEnemiesInSector(sMap.x, sMap.y) == KNOWS_NOTHING)
 		{
 			// but Skyrider notices them
 			if (DoesSkyriderNoticeEnemiesInSector(ubNumEnemies))
@@ -242,7 +242,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 					}
 				}
 				// make their presence appear on the map while Skyrider remains in the sector
-				SectorInfo[ SECTOR( sX, sY ) ].uiFlags |= SF_SKYRIDER_NOTICED_ENEMIES_HERE;
+				SectorInfo[sMap.AsByte()].uiFlags |= SF_SKYRIDER_NOTICED_ENEMIES_HERE;
 			}
 		}
 	}
@@ -252,7 +252,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 	{
 		// charge cost for flying another sector
 		INT32 iCost;
-		if( !StrategicMap[CALCULATE_STRATEGIC_INDEX(sX, sY)].fEnemyAirControlled)
+		if( !StrategicMap[sMap.AsStrategicIndex()].fEnemyAirControlled)
 			iCost = COST_AIRSPACE_SAFE;
 		else
 			iCost = COST_AIRSPACE_UNSAFE;
@@ -287,7 +287,7 @@ BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY )
 			StopTimeCompression();
 		}
 
-		if (IsRefuelAvailableInSector(CALCULATE_STRATEGIC_INDEX(sX, sY)))
+		if (IsRefuelAvailableInSector(sMap.AsStrategicIndex()))
 		{
 			LandHelicopter();
 		}
@@ -476,7 +476,7 @@ void HandleHeliHoverTooLong( void )
 	HeliCharacterDialogue(RETURN_TO_BASE);
 	VEHICLETYPE const& v = GetHelicopter();
 	// If the sector is safe
-	if (NumEnemiesInSector(v.sSectorX, v.sSectorY) == 0)
+	if (NumEnemiesInSector(SGPSector(v.sSectorX, v.sSectorY)) == 0)
 	{
 		// kick everyone out!
 		MoveAllInHelicopterToFootMovementGroup( );

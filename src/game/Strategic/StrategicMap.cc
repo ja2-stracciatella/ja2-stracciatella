@@ -311,10 +311,9 @@ UINT8 GetTownSectorsUnderControl(INT8 const town_id)
 	UINT8 n = 0;
 	FOR_EACH_SECTOR_IN_TOWN(i, town_id)
 	{
-		UINT32 const x = SECTORX(i->sector);
-		UINT32 const y = SECTORY(i->sector);
-		if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].fEnemyControlled) continue;
-		if (NumEnemiesInSector(x, y) != 0)                                  continue;
+		SGPSector sSector(i->sector);
+		if (StrategicMap[sSector.AsStrategicIndex()].fEnemyControlled) continue;
+		if (NumEnemiesInSector(sSector) != 0)                          continue;
 		++n;
 	}
 	return n;

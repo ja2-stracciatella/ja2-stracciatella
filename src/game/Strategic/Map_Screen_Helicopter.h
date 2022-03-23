@@ -152,7 +152,7 @@ void HandleHeliHoverTooLong( void );
 void DropOffEveryOneInHelicopter( void );
 
 // handle heli entering this sector
-BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY );
+BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap);
 
 // set up helic, if it doesn't have a mvt group
 void SetUpHelicopterForMovement( void );

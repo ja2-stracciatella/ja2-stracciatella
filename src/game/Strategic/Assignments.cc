@@ -294,7 +294,7 @@ void ChangeSoldiersAssignment( SOLDIERTYPE *pSoldier, INT8 bAssignment )
 
 static BOOLEAN IsSoldierInHelicopterInHostileSector(SOLDIERTYPE const& s)
 {
-	return InHelicopter(s) && NumEnemiesInSector(s.sSectorX, s.sSectorY) > 0;
+	return InHelicopter(s) && NumEnemiesInSector(SGPSector(s.sSectorX, s.sSectorY)) > 0;
 }
 
 

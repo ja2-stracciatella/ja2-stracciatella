@@ -2773,6 +2773,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 	SECTORINFO *pSector;
 	UINT8 ubSectorID;
 	UINT8 ubNumSoldiers;
+	SGPSector sSector;
 	switch( usActionCode )
 	{
 		case STRATEGIC_AI_ACTION_WAKE_QUEEN:
@@ -2841,6 +2842,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			//those troops will get reassigned.
 			ubSectorID = (UINT8)STRATEGIC_INDEX_TO_SECTOR_INFO( sWorldSectorLocationOfFirstBattle );
 			pSector = &SectorInfo[ ubSectorID ];
+			sSector = SGPSector(ubSectorID);
 			ubNumSoldiers = (UINT8)(gGameOptions.ubDifficultyLevel * 4);
 			pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, ubNumSoldiers, 0 );
 			giReinforcementPool -= ubNumSoldiers;
@@ -2851,7 +2853,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			//enemies will simply check it out, then leave.
 			if( pSector->ubGarrisonID != NO_GARRISON )
 			{ //sector has a garrison
-				if( !NumEnemiesInSector( (INT16)SECTORX( ubSectorID ), (INT16)SECTORY( ubSectorID ) ) )
+				if (!NumEnemiesInSector(sSector))
 				{ //no enemies are here
 					if( gArmyComp[ !gGarrisonGroup[ pSector->ubGarrisonID ].ubComposition ].bPriority )
 					{ //the garrison is important
