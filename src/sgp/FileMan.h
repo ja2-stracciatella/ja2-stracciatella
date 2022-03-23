@@ -12,6 +12,10 @@
  */
 namespace FileMan
 {
+	/** Cleans a filename from special characters, so it can be used safely for the filesystem
+	 * Note that the filename should not contain the extension */
+	ST::string cleanBasename(const ST::string& pathSegment);
+
 	/** Open file for writing.
 	 * If file is missing it will be created.
 	 * If file exists, it's content will be removed. */

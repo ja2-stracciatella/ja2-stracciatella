@@ -17,7 +17,6 @@ ModPackContentManager::ModPackContentManager(RustPointer<EngineOptions> engineOp
 		modNames.emplace_back(modName.get());
 	}
 	m_modNames = modNames;
-	m_userPrivateFiles->createDir(getSavedGamesFolder());
 }
 
 ModPackContentManager::~ModPackContentManager()

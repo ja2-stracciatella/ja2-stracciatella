@@ -1,8 +1,10 @@
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 use crate::config::{Resolution, ScalingQuality, VanillaVersion};
 use crate::fs::resolve_existing_components;
 use crate::{ensure_json_config_existence, get_assets_dir, parse_args, parse_json_config};
+
+pub const SAVED_GAME_DIR: &str = "SavedGames";
 
 /// Struct that is used to store the engines configuration parameters
 #[derive(Debug, PartialEq)]
@@ -13,6 +15,8 @@ pub struct EngineOptions {
     pub vanilla_game_dir: PathBuf,
     /// Path to the assets directory included with Stracciatella
     pub assets_dir: PathBuf,
+    /// Path to the save game directory (usually within stracciatella_home)
+    pub save_game_dir: PathBuf,
     /// List of enabled mods
     pub mods: Vec<String>,
     /// Resolution the game will start in
@@ -45,6 +49,7 @@ impl Default for EngineOptions {
             stracciatella_home: PathBuf::from(""),
             vanilla_game_dir: PathBuf::from(""),
             assets_dir: PathBuf::from(""),
+            save_game_dir: PathBuf::from(""),
             mods: vec![],
             resolution: Resolution::default(),
             brightness: -1.0,
@@ -89,7 +94,37 @@ impl EngineOptions {
         engine_options.vanilla_game_dir =
             resolve_existing_components(&engine_options.vanilla_game_dir, None, true);
 
+        engine_options.ensure_save_game_directory()?;
+
         Ok(engine_options)
+    }
+
+    /// Sets the save game folder to default if it is not set and ensures it exists
+    fn ensure_save_game_directory(&mut self) -> Result<(), String> {
+        let default_save_game_dir = resolve_existing_components(
+            &Path::new(SAVED_GAME_DIR),
+            Some(&self.stracciatella_home),
+            true,
+        );
+
+        if self.save_game_dir == Path::new("") && self.stracciatella_home != Path::new("") {
+            self.save_game_dir = default_save_game_dir.clone()
+        }
+
+        if self.save_game_dir == default_save_game_dir {
+            if !self.save_game_dir.exists() {
+                std::fs::create_dir(&self.save_game_dir).map_err(|e| {
+                    format!(
+                        "Error creating default save game dir `{:?}`: {}",
+                        &default_save_game_dir, e
+                    )
+                })?;
+            }
+        } else {
+            self.save_game_dir = resolve_existing_components(&self.save_game_dir, None, true);
+        }
+
+        Ok(())
     }
 
     /// Checks whether a specific mod is enabled

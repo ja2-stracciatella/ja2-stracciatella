@@ -31,6 +31,7 @@ dunce = "1"
 regex = "1.5"
 remove_dir_all = "0.7"
 tempfile = "3.2"
+slug = "0.1.4"
 
 [target.'cfg(not(target_os = "android"))'.dependencies.simplelog]
 version = "0.10"

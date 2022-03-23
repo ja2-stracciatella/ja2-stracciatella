@@ -156,8 +156,7 @@ ScreenID guiScreenToGotoAfterLoadingSavedGame = ERROR_SCREEN; // XXX TODO001A wa
 extern		UINT32		guiCurrentUniqueSoldierId;
 
 ST::string GetSaveGamePath(const ST::string &saveName) {
-	auto savegameDir = GCM->getSavedGamesFolder();
-	return ST::format("{}/{}.{}", savegameDir, saveName, g_savegame_ext);
+	return ST::format("{}.{}", saveName, g_savegame_ext);
 }
 
 BOOLEAN HasSaveGameExtension(const ST::string &fileName) {
@@ -284,6 +283,7 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 	gTacticalStatus.uiFlags |= LOADING_SAVED_GAME;
 
 	ST::string savegamePath = GetSaveGamePath(saveName);
+	ST::string savegameTempPath = FileMan::joinPaths("save", savegamePath);
 
 	try
 	{
@@ -302,16 +302,14 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 			header.sSavedGameDesc = gameDesc;
 		}
 
-		GCM->userPrivateFiles()->createDir(GCM->getSavedGamesFolder());
-
 		// Save IMP merc(s)
 		SaveIMPPlayerProfiles();
 
 		// Create saved games dir in temp dir if it does not exist
-		GCM->tempFiles()->createDir(FileMan::getParentPath(savegamePath, false));
+		GCM->tempFiles()->createDir(FileMan::getParentPath(savegameTempPath, false));
 
 		// Create the save game file in temp dir first, move it to user private files after
-		AutoSGPFile f(GCM->tempFiles()->openForWriting(savegamePath));
+		AutoSGPFile f(GCM->tempFiles()->openForWriting(savegameTempPath));
 
 		/* If there are no enemy or civilians to save, we have to check BEFORE
 		 * saving the sector info struct because the
@@ -473,9 +471,9 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 
 		SaveStatesToSaveGameFile(f);
 
-		FileMan::moveFile(GCM->tempFiles()->absolutePath(savegamePath), GCM->userPrivateFiles()->absolutePath(savegamePath));
+		FileMan::moveFile(GCM->tempFiles()->absolutePath(savegameTempPath), GCM->saveGameFiles()->absolutePath(savegamePath));
 
-		GCM->tempFiles()->deleteFile(savegamePath);
+		GCM->tempFiles()->deleteFile(savegameTempPath);
 	}
 	catch (std::runtime_error const& e)
 	{
@@ -485,7 +483,7 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 
 		// Delete the failed attempt at saving
 		try {
-			GCM->tempFiles()->deleteFile(savegamePath);
+			GCM->tempFiles()->deleteFile(savegameTempPath);
 		} catch (...) {}
 
 		//Put out an error message
@@ -627,7 +625,7 @@ void ExtractSavedGameHeaderFromFile(HWFILE const f, SAVED_GAME_HEADER& h, bool *
 void ExtractSavedGameHeaderFromSave(const ST::string &saveName, SAVED_GAME_HEADER& h, bool *stracLinuxFormat)
 {
 	auto savegamePath = GetSaveGamePath(saveName);
-	AutoSGPFile f(GCM->userPrivateFiles()->openForReading(savegamePath));
+	AutoSGPFile f(GCM->saveGameFiles()->openForReading(savegamePath));
 	ExtractSavedGameHeaderFromFile(f, h, stracLinuxFormat);
 }
 
@@ -692,7 +690,7 @@ void LoadSavedGame(const ST::string &saveName)
 	EmptyDialogueQueue();
 
 	ST::string savegameFilename = GetSaveGamePath(saveName);
-	AutoSGPFile f(GCM->userPrivateFiles()->openForReading(savegameFilename));
+	AutoSGPFile f(GCM->saveGameFiles()->openForReading(savegameFilename));
 
 	SAVED_GAME_HEADER SaveGameHeader;
 	bool stracLinuxFormat;
@@ -1221,13 +1219,13 @@ static void SaveMercProfiles(HWFILE const f)
 
 ST::string IMPSavedProfileCreateFilename(const ST::string& nickname)
 {
-	return GCM->getSavedGamesFolder() + "/mercprofile." + nickname;;
+	return ST::format("mercprofile.{}", nickname);
 }
 
 bool IMPSavedProfileDoesFileExist(const ST::string& nickname)
 {
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
-	bool fexists = GCM->userPrivateFiles()->exists(profile_filename);
+	bool fexists = GCM->saveGameFiles()->exists(profile_filename);
 	return fexists;
 }
 
@@ -1236,14 +1234,14 @@ SGPFile* const IMPSavedProfileOpenFileForRead(const ST::string& nickname)
 	if (!IMPSavedProfileDoesFileExist(nickname)) {
 		throw std::runtime_error(ST::format("Lost IMP with nickname '{}'!", nickname).to_std_string());
 	}
-	SGPFile *f = GCM->userPrivateFiles()->openForReading(IMPSavedProfileCreateFilename(nickname));
+	SGPFile *f = GCM->saveGameFiles()->openForReading(IMPSavedProfileCreateFilename(nickname));
 	return f;
 }
 
 SGPFile* const IMPSavedProfileOpenFileForWrite(const ST::string& nickname)
 {
 	ST::string profile_filename = IMPSavedProfileCreateFilename(nickname);
-	SGPFile *f = GCM->userPrivateFiles()->openForWriting(profile_filename, true);
+	SGPFile *f = GCM->saveGameFiles()->openForWriting(profile_filename, true);
 	return f;
 }
 
@@ -1468,11 +1466,9 @@ void BackupSavedGame(const ST::string &saveName)
 {
 	auto sourceSavegamePath = GetSaveGamePath(saveName);
 	auto sourceFilename = FileMan::getFileName(sourceSavegamePath);
-	auto backupDir = FileMan::joinPaths(GCM->getSavedGamesFolder(), g_backup_dir);
 
-	// ensure we have the save game & backup directory
-	GCM->userPrivateFiles()->createDir(GCM->getSavedGamesFolder());
-	GCM->userPrivateFiles()->createDir(backupDir);
+	// ensure we have a backup directory
+	GCM->saveGameFiles()->createDir(g_backup_dir);
 
 	ST::string savegamePathToBackup;
 	ST::string savegamePathToBackupTo;
@@ -1484,14 +1480,13 @@ void BackupSavedGame(const ST::string &saveName)
 		}
 		else
 		{
-			savegamePathToBackup = ST::format("{}/{}.{01d}", backupDir, sourceFilename, i);
+			savegamePathToBackup = ST::format("{}/{}.{01d}", g_backup_dir, sourceFilename, i);
 		}
-		savegamePathToBackupTo = ST::format("{}/{}.{01d}", backupDir, sourceFilename, i+1);
+		savegamePathToBackupTo = ST::format("{}/{}.{01d}", g_backup_dir, sourceFilename, i+1);
 		// Only backup existing savegames
-		auto baseDir = i==0 ? GCM->getSavedGamesFolder() : backupDir;
-		if (GCM->userPrivateFiles()->exists(savegamePathToBackup))
+		if (GCM->saveGameFiles()->exists(savegamePathToBackup))
 		{
-			GCM->userPrivateFiles()->moveFile(savegamePathToBackup, savegamePathToBackupTo);
+			GCM->saveGameFiles()->moveFile(savegamePathToBackup, savegamePathToBackupTo);
 		}
 	}
 }
@@ -2380,18 +2375,18 @@ INT8 GetNextIndexForAutoSave()
 	fFile2Exist = FALSE;
 
 	//The name of the file
-	ST::string zFileName1 = GCM->userPrivateFiles()->resolveExistingComponents(GetSaveGamePath(GetAutoSaveName(1)));
-	ST::string zFileName2 = GCM->userPrivateFiles()->resolveExistingComponents(GetSaveGamePath(GetAutoSaveName(2)));
+	ST::string zFileName1 = GCM->saveGameFiles()->resolveExistingComponents(GetSaveGamePath(GetAutoSaveName(1)));
+	ST::string zFileName2 = GCM->saveGameFiles()->resolveExistingComponents(GetSaveGamePath(GetAutoSaveName(2)));
 
-	if( GCM->userPrivateFiles()->exists( zFileName1 ) )
+	if( GCM->saveGameFiles()->exists( zFileName1 ) )
 	{
-		LastWriteTime1 = GCM->userPrivateFiles()->getLastModifiedTime( zFileName1 );
+		LastWriteTime1 = GCM->saveGameFiles()->getLastModifiedTime( zFileName1 );
 		fFile1Exist = TRUE;
 	}
 
-	if( GCM->userPrivateFiles()->exists( zFileName2 ) )
+	if( GCM->saveGameFiles()->exists( zFileName2 ) )
 	{
-		LastWriteTime2 = GCM->userPrivateFiles()->getLastModifiedTime( zFileName2 );
+		LastWriteTime2 = GCM->saveGameFiles()->getLastModifiedTime( zFileName2 );
 		fFile2Exist = TRUE;
 	}
 

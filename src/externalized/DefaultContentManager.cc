@@ -183,8 +183,10 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 	RustPointer<char> vanillaGameDir{EngineOptions_getVanillaGameDir(m_engineOptions.get())};
 
 	RustPointer<char> stracciatellaHome{EngineOptions_getStracciatellaHome()};
+	RustPointer<char> saveGameDir{EngineOptions_getSaveGameDir(m_engineOptions.get())};
 
 	m_userPrivateFiles = std::make_unique<DirFs>(stracciatellaHome.get());
+	m_saveGameFiles = std::make_unique<DirFs>(saveGameDir.get());
 
 	m_gameVersion = EngineOptions_getResourceVersion(m_engineOptions.get());
 
@@ -217,8 +219,6 @@ DefaultContentManager::DefaultContentManager(RustPointer<EngineOptions> engineOp
 		auto error = ST::format("Failed to build virtual file system (VFS): {}", err.get());
 		throw std::runtime_error(error.c_str());
 	}
-
-	m_userPrivateFiles->createDir(getSavedGamesFolder());
 }
 
 void DefaultContentManager::logConfiguration() const {
@@ -228,7 +228,7 @@ void DefaultContentManager::logConfiguration() const {
 	STLOGI("JA2 Home Dir:                  '{}'", m_userPrivateFiles.get()->basePath());
 	STLOGI("Root game resources directory: '{}'", vanillaGameDir.get());
 	STLOGI("Extra data directory:          '{}'", assetsDir.get());
-	STLOGI("Saved games directory:         '{}'", getSavedGamesFolder());
+	STLOGI("Saved games directory:         '{}'", m_saveGameFiles.get()->basePath());
 	STLOGI("Temporary directory:           '{}'", m_tempFiles.get()->basePath());
 }
 
@@ -501,11 +501,9 @@ DirFs *DefaultContentManager::userPrivateFiles() const
 	return m_userPrivateFiles.get();
 }
 
-
-/** Get folder for saved games. */
-ST::string DefaultContentManager::getSavedGamesFolder() const
+DirFs *DefaultContentManager::saveGameFiles() const
 {
-	return "SavedGames";
+	return m_saveGameFiles.get();
 }
 
 /** Load encrypted string from game resource file. */

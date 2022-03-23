@@ -1,5 +1,5 @@
 # data file for the Fltk User Interface Designer (fluid)
-version 1.0307
+version 1.0308
 header_name {.h}
 code_name {.cc}
 class StracciatellaLauncher {open
@@ -58,6 +58,18 @@ class StracciatellaLauncher {open
             label resizable
             xywh {10 265 500 25} labeltype NO_LABEL align 17 resizable
           } {}
+          Fl_Group {} {
+            xywh {10 170 500 50}
+          } {
+            Fl_Input saveGameDirectoryInput {
+              label {Save Game Directory:}
+              xywh {20 185 440 30} align 5 resizable
+            }
+            Fl_Button browseSaveGameDirectoryButton {
+              label {@fileopen}
+              tooltip {Choose JA2 game directory.} xywh {470 185 30 30}
+            }
+          }
         }
         Fl_Group {} {
           label {@-> Mods } open
@@ -143,7 +155,7 @@ class StracciatellaLauncher {open
             }
           }
           Fl_Group {} {open
-            xywh {10 225 500 60}
+            xywh {10 220 500 65}
           } {
             Fl_Check_Button fullscreenCheckbox {
               label Fullscreen

@@ -241,3 +241,9 @@ pub fn free_space(path: &Path) -> io::Result<u64> {
     }
     Err(io::Error::new(io::ErrorKind::Other, "not implemented"))
 }
+
+/// Cleans a filename from special characters, so it can be used safely for the filesystem
+/// Note that the filename should not contain the extension
+pub fn clean_basename<T: AsRef<Path>>(basename: T) -> PathBuf {
+    PathBuf::from(slug::slugify(&basename.as_ref().to_string_lossy()))
+}

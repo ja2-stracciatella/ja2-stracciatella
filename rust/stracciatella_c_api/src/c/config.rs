@@ -110,6 +110,26 @@ pub extern "C" fn EngineOptions_setVanillaGameDir(
     engine_options.vanilla_game_dir = vanilla_game_dir;
 }
 
+/// Gets the `EngineOptions.save_game_dir` path.
+/// The caller is responsible for the returned memory.
+#[no_mangle]
+pub extern "C" fn EngineOptions_getSaveGameDir(ptr: *const EngineOptions) -> *mut c_char {
+    let engine_options = unsafe_ref(ptr);
+    let save_game_dir = c_string_from_path_or_panic(&engine_options.save_game_dir);
+    save_game_dir.into_raw()
+}
+
+/// Sets the `EngineOptions.save_game_dir` path.
+#[no_mangle]
+pub extern "C" fn EngineOptions_setSaveGameDir(
+    ptr: *mut EngineOptions,
+    save_game_dir_ptr: *const c_char,
+) {
+    let engine_options = unsafe_mut(ptr);
+    let save_game_dir = path_buf_from_c_str_or_panic(unsafe_c_str(save_game_dir_ptr));
+    engine_options.save_game_dir = save_game_dir;
+}
+
 /// Checks if mod is enabled
 #[no_mangle]
 pub extern "C" fn EngineOptions_isModEnabled(ptr: *mut EngineOptions, name: *const c_char) -> bool {
@@ -359,6 +379,7 @@ mod tests {
             config_file_contents,
             r##"{
   "game_dir": "",
+  "save_game_dir": "",
   "mods": [],
   "res": "100x100",
   "brightness": -1.0,

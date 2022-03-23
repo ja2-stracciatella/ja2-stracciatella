@@ -40,6 +40,7 @@ private:
 	void showModDetails(const ST::string& modName);
 	void hideModDetails();
 	static void openGameDirectorySelector(Fl_Widget *btn, void *userdata);
+	static void openSaveGameDirectorySelector(Fl_Widget *btn, void *userdata);
 	static void startGame(Fl_Widget* btn, void* userdata);
 	static void startEditor(Fl_Widget* btn, void* userdata);
 	static void guessVersion(Fl_Widget* btn, void* userdata);

@@ -49,6 +49,9 @@ public:
 	/** User private file (e.g. settings) */
 	virtual DirFs* userPrivateFiles() const override;
 
+	/** Save game files */
+	virtual DirFs* saveGameFiles() const override;
+
 	/** Temp files */
 	virtual DirFs* tempFiles() const override;
 
@@ -57,9 +60,6 @@ public:
 
 	/* Checks if a game resource exists. */
 	virtual bool doesGameResExists(const ST::string& filename) const override;
-
-	/** Get folder for saved games. */
-	virtual ST::string getSavedGamesFolder() const override;
 
 	/** Load encrypted string from game resource file. */
 	virtual ST::string loadEncryptedString(const ST::string& fileName, uint32_t seek_chars, uint32_t read_chars) const override;
@@ -170,6 +170,7 @@ protected:
 	std::unique_ptr<DirFs> m_tempFiles;
 
 	std::unique_ptr<DirFs> m_userPrivateFiles;
+	std::unique_ptr<DirFs> m_saveGameFiles;
 
 	GameVersion m_gameVersion;
 

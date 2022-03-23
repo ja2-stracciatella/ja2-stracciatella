@@ -239,3 +239,11 @@ pub extern "C" fn Fs_setReadOnly(path: *const c_char, readonly: bool) -> bool {
     }
     no_rust_error()
 }
+
+/// Cleans a filename from special characters, so it can be used safely for the filesystem
+/// Note that the filename should not contain the extension
+#[no_mangle]
+pub extern "C" fn Fs_cleanBasename(basename: *const c_char) -> *mut c_char {
+    let basename = path_buf_from_c_str_or_panic(unsafe_c_str(basename));
+    c_string_from_path_or_panic(&fs::clean_basename(basename)).into_raw()
+}

@@ -31,6 +31,7 @@ class LauncherActivity : AppCompatActivity() {
     }
     private val ja2JsonFilename = ".ja2/ja2.json"
     private val gameDirKey = "game_dir"
+    private val saveGameDirKey = "save_game_dir"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -136,6 +137,12 @@ class LauncherActivity : AppCompatActivity() {
             } else {
                 throw SerializationException("$gameDirKey is not a string")
             }
+            val saveGameDir = jsonMap[saveGameDirKey];
+            if (saveGameDir is JsonPrimitive && saveGameDir.isString) {
+                configurationModel.setSaveGameDir(saveGameDir.content);
+            } else {
+                throw SerializationException("$saveGameDirKey is not a string")
+            }
         } catch (e: SerializationException) {
             Log.w(activityLogTag, "Could not decode ja2.json: ${e.message}")
         } catch (e: IOException) {
@@ -155,7 +162,8 @@ class LauncherActivity : AppCompatActivity() {
         } catch (e: IOException) {
             Log.w(activityLogTag, "Could not read ${ja2JsonPath}: ${e.message}")
         }
-        jsonMap["game_dir"] = JsonPrimitive(configurationModel.vanillaGameDir.value)
+        jsonMap[gameDirKey] = JsonPrimitive(configurationModel.vanillaGameDir.value)
+        jsonMap[saveGameDirKey] = JsonPrimitive(configurationModel.saveGameDir.value)
         Log.i(activityLogTag, "Starting with ja2.json: $jsonMap")
         val parentDir = File(ja2JsonPath).parentFile;
         if (parentDir?.exists() != true) {

@@ -16,6 +16,7 @@ pub struct Ja2JsonContent {
     #[serde(skip_serializing)]
     data_dir: Option<PathBuf>,
     game_dir: Option<PathBuf>,
+    save_game_dir: Option<PathBuf>,
     mods: Option<Vec<String>>,
     res: Option<Resolution>,
     brightness: Option<f32>,
@@ -69,8 +70,7 @@ impl Ja2Json {
         }
 
         copy_to!(content.game_dir, engine_options.vanilla_game_dir);
-        engine_options.vanilla_game_dir =
-            resolve_existing_components(&engine_options.vanilla_game_dir, None, true);
+        copy_to!(content.save_game_dir, engine_options.save_game_dir);
         copy_to!(
             content
                 .mods
@@ -99,6 +99,7 @@ impl Ja2Json {
         let mut content = Ja2JsonContent {
             data_dir: None,
             game_dir: None,
+            save_game_dir: None,
             mods: None,
             res: None,
             brightness: None,
@@ -110,6 +111,7 @@ impl Ja2Json {
         };
 
         copy_to!(engine_options.vanilla_game_dir, content.game_dir);
+        copy_to!(engine_options.save_game_dir, content.save_game_dir);
         copy_to!(engine_options.mods, content.mods);
         copy_to!(engine_options.resolution, content.res);
         copy_to!(engine_options.brightness, content.brightness);
