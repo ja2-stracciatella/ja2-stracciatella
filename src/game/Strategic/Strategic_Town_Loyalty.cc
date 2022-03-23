@@ -349,7 +349,7 @@ static void UpdateTownLoyaltyRating(INT8 bTownId)
 }
 
 
-static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, const SGPSector& sSector);
 
 
 void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
@@ -591,7 +591,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 	iLoyaltyChange *= 100;
 	iLoyaltyChange /= (100 + ( 25 * LOYALTY_EVENT_DISTANCE_THRESHOLD ) );
 
-	AffectAllTownsLoyaltyByDistanceFrom( iLoyaltyChange, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
+	AffectAllTownsLoyaltyByDistanceFrom(iLoyaltyChange, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
 }
 
 
@@ -926,11 +926,11 @@ void HandleGlobalLoyaltyEvent(UINT8 ubEventType, const SGPSector& sSector)
 			return;
 	}
 
-	AffectAllTownsLoyaltyByDistanceFrom(iLoyaltyChange, sSector.x, sSector.y, sSector.z);
+	AffectAllTownsLoyaltyByDistanceFrom(iLoyaltyChange, sSector);
 }
 
 
-static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, const SGPSector& sSector)
 {
 	INT16 sEventSector;
 	INT8 bTownId;
@@ -946,10 +946,10 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 		iShortestDistance[ bTownId ] = 999999;
 	}
 
-	sEventSector = sSectorX + ( MAP_WORLD_X * sSectorY );
+	sEventSector = sSector.AsStrategicIndex();
 
 	// need a temporary group create to use for laying down distance paths
-	GROUP& g = *CreateNewPlayerGroupDepartingFromSector(sSectorX, sSectorY);
+	GROUP& g = *CreateNewPlayerGroupDepartingFromSector(sSector.x, sSector.y);
 
 	// calc distance to the event sector from EACH SECTOR of each town, keeping only the shortest one for every town
 	FOR_EACH_TOWN_SECTOR(i)
@@ -981,7 +981,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 		}
 
 		// if event was underground, double effective distance
-		if (bSectorZ != 0)
+		if (sSector.z != 0)
 		{
 			iShortestDistance[ bTownId ] *= 2;
 		}
