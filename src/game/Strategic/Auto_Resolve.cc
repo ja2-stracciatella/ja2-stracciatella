@@ -1310,7 +1310,7 @@ static void RenderAutoResolve(void)
 			switch( gpAR->ubBattleStatus )
 			{
 				case BATTLE_VICTORY:
-					HandleMoraleEvent(nullptr, MORALE_BATTLE_WON, arSector.x, arSector.y, arSector.z);
+					HandleMoraleEvent(nullptr, MORALE_BATTLE_WON, arSector);
 					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_WON, arSector);
 
 					SetThisSectorAsPlayerControlled(arSector, TRUE);
@@ -1329,18 +1329,18 @@ static void RenderAutoResolve(void)
 							if (PlayerMercInvolvedInThisCombat(s))
 							{
 								// This morale event is PER INDIVIDUAL SOLDIER
-								HandleMoraleEvent(&s, MORALE_MERC_CAPTURED, arSector.x, arSector.y, arSector.z);
+								HandleMoraleEvent(&s, MORALE_MERC_CAPTURED, arSector);
 							}
 						}
 					}
-					HandleMoraleEvent(nullptr, MORALE_HEARD_BATTLE_LOST, arSector.x, arSector.y, arSector.z);
+					HandleMoraleEvent(nullptr, MORALE_HEARD_BATTLE_LOST, arSector);
 					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_LOST, arSector);
 
 					SetMusicMode( MUSIC_TACTICAL_DEFEAT );
 					gsEnemyGainedControlOfSectorID = arSector.AsByte();
 					break;
 				case BATTLE_DEFEAT:
-					HandleMoraleEvent(nullptr, MORALE_HEARD_BATTLE_LOST, arSector.x, arSector.y, arSector.z);
+					HandleMoraleEvent(nullptr, MORALE_HEARD_BATTLE_LOST, arSector);
 					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_LOST, arSector);
 					gsEnemyGainedControlOfSectorID = arSector.AsByte();
 					if (gubEnemyEncounterCode == CREATURE_ATTACK_CODE)
@@ -3326,7 +3326,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 					gStrategicStatus.usPlayerKills++;
 					// EXPERIENCE CLASS GAIN:  Earned a kill
 					StatChange(*pKiller->pSoldier, EXPERAMT, 10 * pTarget->pSoldier->bLevel, FROM_SUCCESS);
-					HandleMoraleEvent( pKiller->pSoldier, MORALE_KILLED_ENEMY, gpAR->ubSectorX, gpAR->ubSectorY, 0  );
+					HandleMoraleEvent(pKiller->pSoldier, MORALE_KILLED_ENEMY, SGPSector(gpAR->ubSectorX, gpAR->ubSectorY, 0));
 				}
 				else if( pKiller->uiFlags & CELL_MILITIA )
 					pKiller->pSoldier->ubMilitiaKills += 2;

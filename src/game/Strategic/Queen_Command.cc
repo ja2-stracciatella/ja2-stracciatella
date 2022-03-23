@@ -1251,7 +1251,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		InternalEndQuest(QUEST_HELD_IN_ALMA, gWorldSector, FALSE);
 	}
 
-	HandleMoraleEvent( pSoldier, MORALE_MERC_CAPTURED, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
+	HandleMoraleEvent(pSoldier, MORALE_MERC_CAPTURED, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
 
 	// Change to POW....
 	//-add him to a POW assignment/group

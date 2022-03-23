@@ -2458,7 +2458,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					SetFactTrue( FACT_PC_MARRYING_DARYL_IS_FLO );
 				}
 
-				HandleMoraleEvent(pSoldier, MORALE_MERC_MARRIED, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+				HandleMoraleEvent(pSoldier, MORALE_MERC_MARRIED, gWorldSector);
 
 				UpdateDarrelScriptToGoTo( pSoldier );
 				TriggerNPCRecord( DARREL, 10 );

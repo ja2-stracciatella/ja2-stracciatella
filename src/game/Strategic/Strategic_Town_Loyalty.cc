@@ -402,7 +402,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 	if( bKillerTeam == OUR_TEAM )
 	{
 		// apply morale penalty for killing a civilian!
-		HandleMoraleEvent(killer, MORALE_KILLED_CIVILIAN, killer->sSectorX, killer->sSectorY, killer->bSectorZ);
+		HandleMoraleEvent(killer, MORALE_KILLED_CIVILIAN, SGPSector(killer->sSectorX, killer->sSectorY, killer->bSectorZ));
 	}
 
 	UINT8 const bTownId = GetTownIdForSector(SECTOR(pSoldier->sSectorX, pSoldier->sSectorY));
@@ -1204,12 +1204,12 @@ void HandleLoyaltyImplicationsOfMercRetreat(INT8 bRetreatCode, const SGPSector& 
 		// if not worse than 2:1 odds, then penalize morale
 		if ( gTacticalStatus.fEnemyInSector && ( PlayerStrength() * 2 >= EnemyStrength() ) )
 		{
-			HandleMoraleEvent(nullptr, MORALE_RAN_AWAY, sSector.x, sSector.y, sSector.z);
+			HandleMoraleEvent(nullptr, MORALE_RAN_AWAY, sSector);
 		}
 	}
 	else
 	{
-		HandleMoraleEvent(nullptr, MORALE_RAN_AWAY, sSector.x, sSector.y, sSector.z);
+		HandleMoraleEvent(nullptr, MORALE_RAN_AWAY, sSector);
 	}
 }
 

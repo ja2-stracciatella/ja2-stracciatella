@@ -2130,7 +2130,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 									ChangeSoldierState(tgt, STANDING, 0, TRUE);
 									TeleportSoldier(*tgt, sTeleportSpot, false);
 
-									HandleMoraleEvent(tgt, MORALE_SEX, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+									HandleMoraleEvent(tgt, MORALE_SEX, gWorldSector);
 									FatigueCharacter(*tgt);
 									FatigueCharacter(*tgt);
 									FatigueCharacter(*tgt);

@@ -2714,13 +2714,13 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 			if (att->bTeam == OUR_TEAM)
 			{
 				HandleMoraleEvent(att, MORALE_DID_LOTS_OF_DAMAGE,
-							att->sSectorX, att->sSectorY, att->bSectorZ);
+							SGPSector(att->sSectorX, att->sSectorY, att->bSectorZ));
 			}
 		}
 		if (pSoldier->bTeam == OUR_TEAM)
 		{
 			HandleMoraleEvent(pSoldier, MORALE_TOOK_LOTS_OF_DAMAGE,
-						pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+						SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
 		}
 	}
 
@@ -4132,7 +4132,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE& s)
 				case FEAR_OF_INSECTS:
 					if (MercSeesCreature(s))
 					{
-						HandleMoraleEvent(&s, MORALE_INSECT_PHOBIC_SEES_CREATURE, s.sSectorX, s.sSectorY, s.bSectorZ);
+						HandleMoraleEvent(&s, MORALE_INSECT_PHOBIC_SEES_CREATURE, SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ));
 						goto say_personality_quote;
 					}
 					break;
@@ -4140,7 +4140,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE& s)
 				case CLAUSTROPHOBIC:
 					if (gWorldSector.z > 0 && Random(6 - gWorldSector.z) == 0)
 					{
-						HandleMoraleEvent(&s, MORALE_CLAUSTROPHOBE_UNDERGROUND, s.sSectorX, s.sSectorY, s.bSectorZ);
+						HandleMoraleEvent(&s, MORALE_CLAUSTROPHOBE_UNDERGROUND, SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ));
 						goto say_personality_quote;
 					}
 					break;
@@ -4150,7 +4150,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE& s)
 					{
 						if (s.bMorale < 50)
 						{
-							HandleMoraleEvent(&s, MORALE_NERVOUS_ALONE, s.sSectorX, s.sSectorY, s.bSectorZ);
+							HandleMoraleEvent(&s, MORALE_NERVOUS_ALONE, SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ));
 							goto say_personality_quote;
 						}
 					}

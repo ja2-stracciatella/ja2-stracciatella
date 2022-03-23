@@ -117,7 +117,7 @@ void StrategicHandlePlayerTeamMercDeath(SOLDIERTYPE& s)
 	 * machines and the lives of locals much */
 	if (!AM_AN_EPC(&s) && !AM_A_ROBOT(&s))
 	{ // Change morale of others based on this
-		HandleMoraleEvent(&s, MORALE_TEAMMATE_DIED, s.sSectorX, s.sSectorY, s.bSectorZ);
+		HandleMoraleEvent(&s, MORALE_TEAMMATE_DIED, SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ));
 	}
 
 	if (s.ubWhatKindOfMercAmI == MERC_TYPE__MERC)
@@ -145,7 +145,8 @@ void MercDailyUpdate()
 	if (CalcDeathRate() < 5)
 	{
 		// everyone gets a morale bonus, which also gets player a reputation bonus.
-		HandleMoraleEvent(NULL, MORALE_LOW_DEATHRATE, -1, -1, -1);
+		static const SGPSector nowhere(-1, -1, -1);
+		HandleMoraleEvent(nullptr, MORALE_LOW_DEATHRATE, nowhere);
 	}
 
 	/* add an event so the merc will say the departing warning (2 hours prior to

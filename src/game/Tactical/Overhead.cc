@@ -2581,7 +2581,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 		// If enemy guy was killed by the player, give morale boost to player's team!
 		if (killer != NULL && killer->bTeam == OUR_TEAM)
 		{
-			HandleMoraleEvent(killer, MORALE_KILLED_ENEMY, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+			HandleMoraleEvent(killer, MORALE_KILLED_ENEMY, gWorldSector);
 		}
 
 		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, gWorldSector);
@@ -2596,12 +2596,12 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 
 		if (pSoldierOld->ubProfile == QUEEN)
 		{
-			HandleMoraleEvent(NULL, MORALE_DEIDRANNA_KILLED, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+			HandleMoraleEvent(NULL, MORALE_DEIDRANNA_KILLED, gWorldSector);
 			MaximizeLoyaltyForDeidrannaKilled();
 		}
 		else if (pSoldierOld->ubBodyType == QUEENMONSTER)
 		{
-			HandleMoraleEvent(NULL, MORALE_MONSTER_QUEEN_KILLED, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+			HandleMoraleEvent(NULL, MORALE_MONSTER_QUEEN_KILLED, gWorldSector);
 			IncrementTownLoyaltyEverywhere(LOYALTY_BONUS_KILL_QUEEN_MONSTER);
 
 			// Grant experience gain.....
@@ -4501,7 +4501,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 			ExitCombatMode();
 		}
 
-		HandleMoraleEvent(NULL, MORALE_HEARD_BATTLE_LOST, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+		HandleMoraleEvent(NULL, MORALE_HEARD_BATTLE_LOST, gWorldSector);
 		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_LOST, gWorldSector);
 
 		// Play death music
@@ -4620,7 +4620,7 @@ BOOLEAN CheckForEndOfBattle( BOOLEAN fAnEnemyRetreated )
 					}
 				}
 
-				HandleMoraleEvent(nullptr, MORALE_BATTLE_WON, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+				HandleMoraleEvent(nullptr, MORALE_BATTLE_WON, gWorldSector);
 				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_WON, gWorldSector);
 
 				// Change music modes
@@ -5242,7 +5242,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 			{
 				for ( ubLoop2 = 0; ubLoop2 < (ubTotalPointsLost / 2) - (pSoldier->ubAPsLostToSuppression / 2); ubLoop2++ )
 				{
-					HandleMoraleEvent( pSoldier, MORALE_SUPPRESSED, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
+					HandleMoraleEvent(pSoldier, MORALE_SUPPRESSED, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
 				}
 			}
 

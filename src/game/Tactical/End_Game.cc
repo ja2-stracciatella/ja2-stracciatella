@@ -276,7 +276,7 @@ static void DoneFadeOutKilledQueen()
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
 	const SGPSector upstairs(3, MAP_ROW_P, 0);
-	HandleMoraleEvent(0, MORALE_QUEEN_BATTLE_WON, upstairs.x, upstairs.y, upstairs.z);
+	HandleMoraleEvent(0, MORALE_QUEEN_BATTLE_WON, upstairs);
 	HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_QUEEN_BATTLE_WON, upstairs);
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
