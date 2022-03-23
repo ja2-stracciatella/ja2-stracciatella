@@ -317,8 +317,8 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		 * saving the sector info struct because the
 		 * NewWayOfSavingEnemyAndCivliansToTempFile() will RESET the civ or enemy
 		 * flag AFTER they have been saved. */
-		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, TRUE,  TRUE);
-		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSector, FALSE, TRUE);
+		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE,  TRUE);
+		NewWayOfSavingEnemyAndCivliansToTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, FALSE, TRUE);
 
 		// Setup the save game header
 		header.uiSavedGameVersion = guiSavedGameVersion;
@@ -333,12 +333,12 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		header.ubNumOfMercsOnPlayersTeam = NumberOfMercsOnPlayerTeam();
 		header.iCurrentBalance           = LaptopSaveInfo.iCurrentBalance;
 		header.uiCurrentScreen           = guiPreviousOptionScreen;
-		header.fAlternateSector          = GetSectorFlagStatus(gWorldSector, SF_USE_ALTERNATE_MAP);
+		header.fAlternateSector          = GetSectorFlagStatus(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_USE_ALTERNATE_MAP);
 
 		if (gfWorldLoaded)
 		{
 			header.fWorldLoaded   = TRUE;
-			header.ubLoadScreenID = GetLoadScreenID(gWorldSector);
+			header.ubLoadScreenID = GetLoadScreenID(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		}
 		else
 		{
@@ -726,7 +726,7 @@ void LoadSavedGame(const ST::string &saveName)
 	//if we are suppose to use the alternate sector
 	if (SaveGameHeader.fAlternateSector)
 	{
-		SetSectorFlag(gWorldSector, SF_USE_ALTERNATE_MAP);
+		SetSectorFlag(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_USE_ALTERNATE_MAP);
 		gfUseAlternateMap = TRUE;
 	}
 
@@ -734,24 +734,29 @@ void LoadSavedGame(const ST::string &saveName)
 	if (SaveGameHeader.fWorldLoaded || version < 50)
 	{
 		//Get the current world sector coordinates
-		SGPSector sLoadSector = gWorldSector;
+		INT16 const sLoadSectorX = gWorldSectorX;
+		INT16 const sLoadSectorY = gWorldSectorY;
+		INT8  const bLoadSectorZ = gbWorldSectorZ;
 
 		// This will guarantee that the sector will be loaded
 		SetWorldSectorInvalid();
 
 		//if we should load a sector (if the person didnt just start the game game)
-		if (sLoadSector.IsValid())
+		if (sLoadSectorX != 0 && sLoadSectorY != 0)
 		{
 			//Load the sector
-			SetCurrentWorldSector(sLoadSector);
+			SetCurrentWorldSector(sLoadSectorX, sLoadSectorY, bLoadSectorZ);
 		}
 	}
 	else
 	{ //By clearing these values, we can avoid "in sector" checks -- at least, that's the theory.
 		SetWorldSectorInvalid();
 
-		SGPSector sector(SaveGameHeader.sSectorX, SaveGameHeader.sSectorY, SaveGameHeader.bSectorZ);
-		gubLastLoadingScreenID = sector.IsValid() ? GetLoadScreenID(sector) : LOADINGSCREEN_HELI;
+		INT16 const x = SaveGameHeader.sSectorX;
+		INT16 const y = SaveGameHeader.sSectorY;
+		INT8  const z = SaveGameHeader.bSectorZ;
+		gubLastLoadingScreenID = x == -1 || y == -1 || z == -1 ?
+			LOADINGSCREEN_HELI : GetLoadScreenID(x, y, z);
 
 		BeginLoadScreen();
 	}
@@ -1041,11 +1046,11 @@ void LoadSavedGame(const ST::string &saveName)
 	BAR(1, "Final Checks...");
 
 	// Reset the lighting level if we are outside
-	if (gWorldSector.z == 0)
+	if (gbWorldSectorZ == 0)
 		LightSetBaseLevel(GetTimeOfDayAmbientLightLevel());
 
 	//if we have been to this sector before
-//	if (SectorInfo[gWorldSector.AsByte()].uiFlags & SF_ALREADY_VISITED)
+//	if (SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)].uiFlags & SF_ALREADY_VISITED)
 	{
 		//Reset the fact that we are loading a saved game
 		gTacticalStatus.uiFlags &= ~LOADING_SAVED_GAME;
@@ -1545,9 +1550,9 @@ static void SaveTacticalStatusToSavedGame(HWFILE const f)
 	// Save the current sector location
 	BYTE  data[5];
 	DataWriter d{data};
-	INJ_I16(d, (INT16) gWorldSector.x)
-	INJ_I16(d, (INT16) gWorldSector.y)
-	INJ_I8( d, gWorldSector.z)
+	INJ_I16(d, gWorldSectorX)
+	INJ_I16(d, gWorldSectorY)
+	INJ_I8( d, gbWorldSectorZ)
 	Assert(d.getConsumed() == lengthof(data));
 
 	f->write(data, sizeof(data));
@@ -1563,9 +1568,9 @@ static void LoadTacticalStatusFromSavedGame(HWFILE const f, bool stracLinuxForma
 	f->read(data, sizeof(data));
 
 	DataReader d{data};
-	EXTR_I16(d, gWorldSector.x)
-	EXTR_I16(d, gWorldSector.y)
-	EXTR_I8( d, gWorldSector.z)
+	EXTR_I16(d, gWorldSectorX)
+	EXTR_I16(d, gWorldSectorY)
+	EXTR_I8( d, gbWorldSectorZ)
 	Assert(d.getConsumed() == lengthof(data));
 }
 
@@ -1744,8 +1749,8 @@ void LoadMercPath(HWFILE const hFile, PathSt** const head)
 static void InjectMeanwhileDefinition(DataWriter& d, MEANWHILE_DEFINITION const& m)
 {
 	size_t start = d.getConsumed();
-	INJ_I16(d, (INT16) m.sSector.x)
-	INJ_I16(d, (INT16) m.sSector.y)
+	INJ_I16(d, m.sSectorX)
+	INJ_I16(d, m.sSectorY)
 	INJ_U16(d, m.usTriggerEvent)
 	INJ_U8( d, m.ubMeanwhileID)
 	INJ_U8( d, m.ubNPCNumber)
@@ -1756,15 +1761,12 @@ static void InjectMeanwhileDefinition(DataWriter& d, MEANWHILE_DEFINITION const&
 static void ExtractMeanwhileDefinition(DataReader& d, MEANWHILE_DEFINITION& m)
 {
 	size_t start = d.getConsumed();
-	INT16 a, b;
-	EXTR_I16(d, a)
-	EXTR_I16(d, b)
+	EXTR_I16(d, m.sSectorX)
+	EXTR_I16(d, m.sSectorY)
 	EXTR_U16(d, m.usTriggerEvent)
 	EXTR_U8( d, m.ubMeanwhileID)
 	EXTR_U8( d, m.ubNPCNumber)
 	Assert(d.getConsumed() == start + 8);
-	m.sSector.x = a;
-	m.sSector.y = b;
 }
 
 
@@ -1878,9 +1880,9 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_U8(   d, gubEnemyEncounterCode)
 	INJ_BOOL( d, gubExplicitEnemyEncounterCode)
 	INJ_BOOL( d, gfBlitBattleSectorLocator)
-	INJ_U8(   d, gubPBSector.x)
-	INJ_U8(   d, gubPBSector.y)
-	INJ_U8(   d, gubPBSector.z)
+	INJ_U8(   d, gubPBSectorX)
+	INJ_U8(   d, gubPBSectorY)
+	INJ_U8(   d, gubPBSectorZ)
 	INJ_BOOL( d, gfCantRetreatInPBI)
 	INJ_BOOL( d, gfExplosionQueueActive)
 	INJ_SKIP( d, 1)
@@ -2036,9 +2038,9 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_U8(   d, gubEnemyEncounterCode)
 	EXTR_BOOL( d, gubExplicitEnemyEncounterCode)
 	EXTR_BOOL( d, gfBlitBattleSectorLocator)
-	EXTR_U8(   d, gubPBSector.x)
-	EXTR_U8(   d, gubPBSector.y)
-	EXTR_U8(   d, gubPBSector.z)
+	EXTR_U8(   d, gubPBSectorX)
+	EXTR_U8(   d, gubPBSectorY)
+	EXTR_U8(   d, gubPBSectorZ)
 	EXTR_BOOL( d, gfCantRetreatInPBI)
 	EXTR_BOOL( d, gfExplosionQueueActive)
 	EXTR_SKIP( d, 1)
@@ -2117,9 +2119,9 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 	//if the current sector is valid
 	if (gfWorldLoaded)
 	{
-		*psSectorX = gWorldSector.x;
-		*psSectorY = gWorldSector.y;
-		*pbSectorZ = gWorldSector.z;
+		*psSectorX = gWorldSectorX;
+		*psSectorY = gWorldSectorY;
+		*pbSectorZ = gbWorldSectorZ;
 		return;
 	}
 
@@ -2159,9 +2161,9 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 	}
 
 	// if we STILL havent found a merc, give up and use the -1, -1, -1
-	*psSectorX = gWorldSector.x;
-	*psSectorY = gWorldSector.y;
-	*pbSectorZ = gWorldSector.z;
+	*psSectorX = gWorldSectorX;
+	*psSectorY = gWorldSectorY;
+	*pbSectorZ = gbWorldSectorZ;
 }
 
 

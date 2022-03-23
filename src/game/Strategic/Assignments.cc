@@ -563,11 +563,11 @@ static BOOLEAN CanCharacterPatient(const SOLDIERTYPE* const s)
 }
 
 
-static BOOLEAN CanSectorContainMilita(const SGPSector& sector)
+static BOOLEAN CanSectorContainMilita(const INT16 x, const INT16 y, const INT16 z)
 {
 	return
-		(sector.z == 0 && StrategicMap[sector.AsStrategicIndex()].bNameId != BLANK_SECTOR) || // is there a town?
-		IsThisSectorASAMSector(sector);
+		(z == 0 && StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId != BLANK_SECTOR) || // is there a town?
+		IsThisSectorASAMSector(x, y, z);
 }
 
 
@@ -578,8 +578,8 @@ static BOOLEAN BasicCanCharacterTrainMilitia(const SOLDIERTYPE* const s)
 	// they must be alive/conscious and in the sector with the town
 	return
 		s->bLeadership > 0 &&
-		CanSectorContainMilita(SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ)) &&
-		NumEnemiesInAnySector(SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ)) == 0 &&
+		CanSectorContainMilita(s->sSectorX, s->sSectorY, s->bSectorZ) &&
+		NumEnemiesInAnySector(s->sSectorX, s->sSectorY, s->bSectorZ) == 0 &&
 		AreAssignmentConditionsMet(*s, AC_NONE);
 }
 
@@ -593,7 +593,7 @@ BOOLEAN CanCharacterTrainMilitia(const SOLDIERTYPE* const s)
 		BasicCanCharacterTrainMilitia(s)                                      &&
 		MilitiaTrainingAllowedInSector(s->sSectorX, s->sSectorY, s->bSectorZ) &&
 		DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(s)              &&
-		!IsAreaFullOfMilitia(SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ)) &&
+		!IsAreaFullOfMilitia(s->sSectorX, s->sSectorY, s->bSectorZ)           &&
 		CountMilitiaTrainersInSoldiersSector(s) < MAX_MILITIA_TRAINERS_PER_SECTOR;
 }
 
@@ -611,7 +611,7 @@ BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE*
 	}
 	else
 	{
-		return IsThisSectorASAMSector(SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ));
+		return IsThisSectorASAMSector(s->sSectorX, s->sSectorY, s->bSectorZ);
 	}
 }
 
@@ -758,7 +758,7 @@ static bool CanCharacterSleep(SOLDIERTYPE const& s, bool const explain_why_not)
 			}
 
 			// on surface, and enemies are in the sector
-			if (s.bSectorZ == 0 && NumEnemiesInAnySector(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ)) > 0)
+			if (s.bSectorZ == 0 && NumEnemiesInAnySector(s.sSectorX, s.sSectorY, s.bSectorZ) > 0)
 			{
 				why = g_langRes->Message[STR_SECTOR_NOT_CLEARED];
 				goto cannot_sleep;
@@ -815,13 +815,14 @@ static BOOLEAN CanCharacterBeAwakened(SOLDIERTYPE* pSoldier, BOOLEAN fExplainWhy
 // put character in vehicle?
 static bool CanCharacterVehicle(SOLDIERTYPE const& s)
 { // Can character enter/leave vehicle?
-	SGPSector sSector(s.sSectorX, s.sSectorY, s.bSectorZ);
 	return
 		fInMapMode && // Strictly for visual reasons - we don't want them just vanishing if in tactical
 		AnyAccessibleVehiclesInSoldiersSector(s) &&
 		( // If we're in battle in the current sector, disallow
 			!gTacticalStatus.fEnemyInSector ||
-			sSector != gWorldSector
+			s.sSectorX != gWorldSectorX     ||
+			s.sSectorY != gWorldSectorY     ||
+			s.bSectorZ != gbWorldSectorZ
 		) &&
 		AreAssignmentConditionsMet(s, AC_EPC | AC_MECHANICAL);
 }
@@ -895,17 +896,19 @@ bool IsCharacterInTransit(SOLDIERTYPE const& s)
 
 
 static void CheckForAndHandleHospitalPatients(void);
-static void HandleDoctorsInSector(const SGPSector& sector);
+static void HandleDoctorsInSector(INT16 x, INT16 y, INT8 z);
 static void HandleNaturalHealing(void);
-static void HandleRepairmenInSector(const SGPSector& sector);
+static void HandleRepairmenInSector(INT16 sX, INT16 sY, INT8 bZ);
 static void HandleRestFatigueAndSleepStatus();
-static void HandleTrainingInSector(const SGPSector& sector);
+static void HandleTrainingInSector(INT16 sMapX, INT16 sMapY, INT8 bZ);
 static void ReportTrainersTraineesWithoutPartners(void);
 static void UpdatePatientsWhoAreDoneHealing();
 
 
 void UpdateAssignments()
 {
+	INT8 sX,sY, bZ;
+
 	// init sectors with soldiers list
 	InitSectorsWithSoldiersList( );
 
@@ -929,25 +932,24 @@ void UpdateAssignments()
 	// check for mercs tired enough go to sleep, and wake up well-rested mercs
 	HandleRestFatigueAndSleepStatus( );
 
-	SGPSector sector;
 	// run through sectors and handle each type in sector
-	for (sector.x = 0; sector.x < MAP_WORLD_X; sector.x++)
+	for(sX = 0 ; sX < MAP_WORLD_X; sX++ )
 	{
-		for (sector.y = 0; sector.y < MAP_WORLD_X; sector.y++)
+		for( sY =0; sY < MAP_WORLD_X; sY++ )
 		{
-			for (sector.z = 0; sector.z < 4; sector.z++)
+			for( bZ = 0; bZ < 4; bZ++)
 			{
 				// is there anyone in this sector?
-				if (fSectorsWithSoldiers[sector.AsStrategicIndex()][sector.z])
+				if (fSectorsWithSoldiers[sX + sY * MAP_WORLD_X][bZ])
 				{
 					// handle any doctors
-					HandleDoctorsInSector(sector);
+					HandleDoctorsInSector( sX, sY, bZ );
 
 					// handle any repairmen
-					HandleRepairmenInSector(sector);
+					HandleRepairmenInSector( sX, sY, bZ );
 
 					// handle any training
-					HandleTrainingInSector(sector);
+					HandleTrainingInSector( sX, sY, bZ );
 				}
 			}
 		}
@@ -1168,7 +1170,7 @@ static void HealCharacters(SOLDIERTYPE* pDoctor);
 
 
 // handle doctor in this sector
-static void HandleDoctorsInSector(const SGPSector& sector)
+static void HandleDoctorsInSector(INT16 const x, INT16 const y, INT8 const z)
 {
 	// will handle doctor/patient relationship in sector
 
@@ -1176,9 +1178,9 @@ static void HandleDoctorsInSector(const SGPSector& sector)
 	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
-		if (s.sSectorX != sector.x) continue;
-		if (s.sSectorY != sector.y) continue;
-		if (s.bSectorZ != sector.z) continue;
+		if (s.sSectorX != x)         continue;
+		if (s.sSectorY != y)         continue;
+		if (s.bSectorZ != z)         continue;
 		if (s.bAssignment != DOCTOR) continue;
 		if (s.fMercAsleep)           continue;
 		MakeSureMedKitIsInHand(&s);
@@ -1577,14 +1579,14 @@ static void HandleRepairBySoldier(SOLDIERTYPE&);
 
 
 // handle any repair man in sector
-static void HandleRepairmenInSector(const SGPSector& sector)
+static void HandleRepairmenInSector(INT16 const x, INT16 const y, INT8 const z)
 {
 	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
-		if (s.sSectorX    != sector.x) continue;
-		if (s.sSectorY    != sector.y) continue;
-		if (s.bSectorZ    != sector.z) continue;
+		if (s.sSectorX    != x)      continue;
+		if (s.sSectorY    != y)      continue;
+		if (s.bSectorZ    != z)      continue;
 		if (s.bAssignment != REPAIR) continue;
 		if (s.fMercAsleep)           continue;
 
@@ -1980,11 +1982,11 @@ void FatigueCharacter(SOLDIERTYPE& s)
 
 static int TownTrainerQsortCompare(const void* pArg1, const void* pArg2);
 static void TrainSoldierWithPts(SOLDIERTYPE* pSoldier, INT16 sTrainPts);
-static BOOLEAN TrainTownInSector(SOLDIERTYPE* pTrainer, const SGPSector& sector, INT16 sTrainingPts);
+static BOOLEAN TrainTownInSector(SOLDIERTYPE* pTrainer, INT16 sMapX, INT16 sMapY, INT16 sTrainingPts);
 
 
 // ONCE PER HOUR, will handle ALL kinds of training (self, teaching, and town) in this sector
-static void HandleTrainingInSector(const SGPSector& sector)
+static void HandleTrainingInSector(const INT16 sMapX, const INT16 sMapY, const INT8 bZ)
 {
 	UINT8 ubStat;
 	BOOLEAN fAtGunRange = FALSE;
@@ -1998,13 +2000,13 @@ static void HandleTrainingInSector(const SGPSector& sector)
 	BOOLEAN fTrainingCompleted = FALSE;
 
 	// Training in underground sectors is disallowed by the interface code, so there should never be any
-	if (sector.z != 0)
+	if (bZ != 0)
 	{
 		return;
 	}
 
 	// if sector not under our control, has enemies in it, or is currently in combat mode
-	if (!SectorOursAndPeaceful(sector))
+	if (!SectorOursAndPeaceful( sMapX, sMapY, bZ ))
 	{
 		// then training is canceled for this hour.
 		// This is partly logical, but largely to prevent newly trained militia from appearing in mid-battle
@@ -2012,8 +2014,7 @@ static void HandleTrainingInSector(const SGPSector& sector)
 	}
 
 	// are we training in the sector with gun range in Alma?
-	static const SGPSector gunRange(GUN_RANGE_X, GUN_RANGE_Y, GUN_RANGE_Z);
-	if (sector == gunRange)
+	if ( (sMapX == GUN_RANGE_X) && (sMapY == GUN_RANGE_Y) && (bZ == GUN_RANGE_Z) )
 	{
 		fAtGunRange = TRUE;
 	}
@@ -2035,7 +2036,7 @@ static void HandleTrainingInSector(const SGPSector& sector)
 		// search team for active instructors in this sector
 		CFOR_EACH_IN_TEAM(pTrainer, OUR_TEAM)
 		{
-			if (pTrainer->sSectorX == sector.x && pTrainer->sSectorY == sector.y && pTrainer->bSectorZ == sector.z)
+			if (pTrainer->sSectorX == sMapX && pTrainer->sSectorY == sMapY && pTrainer->bSectorZ == bZ)
 			{
 				// if he's training teammates in this stat
 				if (pTrainer->bAssignment == TRAIN_TEAMMATE &&
@@ -2062,7 +2063,7 @@ static void HandleTrainingInSector(const SGPSector& sector)
 	FOR_EACH_IN_TEAM(pStudent, OUR_TEAM)
 	{
 		// see if this merc is active and in the same sector
-		if (pStudent->sSectorX == sector.x && pStudent->sSectorY == sector.y && pStudent->bSectorZ == sector.z)
+		if (pStudent->sSectorX == sMapX && pStudent->sSectorY == sMapY && pStudent->bSectorZ == bZ)
 		{
 			// if he's training himself (alone, or by others), then he's a student
 			if ( ( pStudent -> bAssignment == TRAIN_SELF ) || ( pStudent -> bAssignment == TRAIN_BY_OTHER ) )
@@ -2083,7 +2084,7 @@ static void HandleTrainingInSector(const SGPSector& sector)
 						{
 /* Assignment distance limits removed.  Sep/11/98.  ARM
 							// if this sector either ISN'T currently loaded, or it is but the trainer is close enough to the student
-							if (sector != gWorldSector || pStudent->bSectorZ != gWorldSector.z ||
+							if ( ( sMapX != gWorldSectorX ) || ( sMapY != gWorldSectorY ) || ( pStudent -> bSectorZ != gbWorldSectorZ ) ||
 									PythSpacesAway(pStudent->sGridNo, pTrainer->sGridNo) < MAX_DISTANCE_FOR_TRAINING &&
 									EnoughTimeOnAssignment(*pTrainer))
 */
@@ -2107,7 +2108,7 @@ static void HandleTrainingInSector(const SGPSector& sector)
 	}
 
 	// check if we're doing a sector where militia can be trained
-	if (CanSectorContainMilita(sector))
+	if (CanSectorContainMilita(sMapX, sMapY, bZ))
 	{
 		// init town trainer list
 		std::fill(std::begin(TownTrainer), std::end(TownTrainer), TOWN_TRAINER_TYPE{});
@@ -2116,7 +2117,7 @@ static void HandleTrainingInSector(const SGPSector& sector)
 		// build list of all the town trainers in this sector and their training pts
 		FOR_EACH_IN_TEAM(pTrainer, OUR_TEAM)
 		{
-			if (pTrainer->sSectorX == sector.x && pTrainer->sSectorY == sector.y && pTrainer->bSectorZ == sector.z)
+			if (pTrainer->sSectorX == sMapX && pTrainer->sSectorY == sMapY && pTrainer->bSectorZ == bZ)
 			{
 				if (pTrainer->bAssignment == TRAIN_TOWN &&
 						EnoughTimeOnAssignment(*pTrainer)   &&
@@ -2154,7 +2155,7 @@ static void HandleTrainingInSector(const SGPSector& sector)
 
 			if (sTownTrainingPts > 0)
 			{
-				fTrainingCompleted = TrainTownInSector(TownTrainer[ uiCnt ].pSoldier, sector, sTownTrainingPts);
+				fTrainingCompleted = TrainTownInSector( TownTrainer[ uiCnt ].pSoldier, sMapX, sMapY, sTownTrainingPts );
 
 				if ( fTrainingCompleted )
 				{
@@ -2475,11 +2476,11 @@ static void TrainSoldierWithPts(SOLDIERTYPE* const s, const INT16 train_pts)
 
 
 // train militia in this sector with this soldier
-static BOOLEAN TrainTownInSector(SOLDIERTYPE* pTrainer, const SGPSector& sector, INT16 sTrainingPts)
+static BOOLEAN TrainTownInSector(SOLDIERTYPE* pTrainer, INT16 sMapX, INT16 sMapY, INT16 sTrainingPts)
 {
-	Assert(CanSectorContainMilita(SGPSector(pTrainer->sSectorX, pTrainer->sSectorY, pTrainer->bSectorZ)));
+	Assert(CanSectorContainMilita(pTrainer->sSectorX, pTrainer->sSectorY, pTrainer->bSectorZ));
 
-	SECTORINFO *pSectorInfo = &(SectorInfo[sector.AsByte()]);
+	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
 
 	// trainer gains leadership - training argument is FROM_SUCCESS, because the trainer is not the one training!
 	StatChange(*pTrainer, LDRAMT, 1 + sTrainingPts / 200, FROM_SUCCESS);
@@ -2504,7 +2505,7 @@ static BOOLEAN TrainTownInSector(SOLDIERTYPE* pTrainer, const SGPSector& sector,
 		// make the player pay again next time he wants to train here
 		pSectorInfo -> fMilitiaTrainingPaid = FALSE;
 
-		TownMilitiaTrainingCompleted(pTrainer, sector);
+		TownMilitiaTrainingCompleted( pTrainer, sMapX, sMapY );
 
 		// training done
 		return( TRUE );
@@ -4613,7 +4614,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 						}
 					}
 
-					if (IsAreaFullOfMilitia(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ)))
+					if (IsAreaFullOfMilitia(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ))
 					{
 						if( bTownId == BLANK_SECTOR )
 						{
@@ -5722,6 +5723,17 @@ static bool CanCharacterRepairVehicle(SOLDIERTYPE const& s, VEHICLETYPE const& v
 	// same sector, neither is between sectors, and OK To Use (player owns it) ?
 	if (!IsThisVehicleAccessibleToSoldier(s, v)) return false;
 
+#if 0 // Assignment distance limits removed.  Sep/11/98.  ARM
+	// If currently loaded sector, are we close enough?
+	if (s.sSectorX == gWorldSectorX  &&
+			s.sSectorY == gWorldSectorY  &&
+			s.bSectorZ == gbWorldSectorZ &&
+			PythSpacesAway(s.sGridNo, v.sGridNo) > MAX_DISTANCE_FOR_REPAIR)
+	{
+		return false;
+	}
+#endif
+
 	return true;
 }
 
@@ -5774,6 +5786,17 @@ static BOOLEAN CanCharacterRepairRobot(SOLDIERTYPE const* const pSoldier)
 	{
 		return( FALSE );
 	}
+
+/* Assignment distance limits removed.  Sep/11/98.  ARM
+	// if that sector is currently loaded, check distance to robot
+	if( ( pSoldier -> sSectorX == gWorldSectorX ) && ( pSoldier -> sSectorY == gWorldSectorY ) && ( pSoldier -> bSectorZ == gbWorldSectorZ ) )
+	{
+		if( PythSpacesAway( pSoldier -> sGridNo, pRobot -> sGridNo ) > MAX_DISTANCE_FOR_REPAIR )
+		{
+			return FALSE;
+		}
+	}
+*/
 
 	return( TRUE );
 }
@@ -6198,9 +6221,9 @@ BOOLEAN PutMercInAwakeState( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN IsThereASoldierInThisSector(const SGPSector& sSector)
+BOOLEAN IsThereASoldierInThisSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	return fSectorsWithSoldiers[sSector.AsByte()][sSector.z];
+	return fSectorsWithSoldiers[sSectorX + sSectorY * MAP_WORLD_X][bSectorZ];
 }
 
 

@@ -485,12 +485,12 @@ void LoadSmokeEffectsFromLoadGameFile(HWFILE const hFile, UINT32 const savegame_
 }
 
 
-void SaveSmokeEffectsToMapTempFile(const SGPSector& sMap)
+void SaveSmokeEffectsToMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	UINT32	uiNumSmokeEffects=0;
 
 	//get the name of the map
-	ST::string const zMapName = GetMapTempFileName(SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, sMap);
+	ST::string const zMapName = GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
 
 	//delete file the file.
 	GCM->tempFiles()->deleteFile( zMapName );
@@ -502,7 +502,7 @@ void SaveSmokeEffectsToMapTempFile(const SGPSector& sMap)
 	if( uiNumSmokeEffects == 0 )
 	{
 		//set the fact that there are no smoke effects for this sector
-		ReSetSectorFlag(sMap, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS);
+		ReSetSectorFlag( sMapX, sMapY, bMapZ, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS );
 		return;
 	}
 
@@ -516,15 +516,15 @@ void SaveSmokeEffectsToMapTempFile(const SGPSector& sMap)
 		InjectSmokeEffectIntoFile(hFile, s);
 	}
 
-	SetSectorFlag(sMap, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS);
+	SetSectorFlag( sMapX, sMapY, bMapZ, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS );
 }
 
 
-void LoadSmokeEffectsFromMapTempFile(const SGPSector& sMap)
+void LoadSmokeEffectsFromMapTempFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
 	UINT32	uiCnt=0;
 
-	ST::string const zMapName = GetMapTempFileName(SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, sMap);
+	ST::string const zMapName = GetMapTempFileName( SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, sMapX, sMapY, bMapZ );
 
 	AutoSGPFile hFile(GCM->tempFiles()->openForReading(zMapName));
 

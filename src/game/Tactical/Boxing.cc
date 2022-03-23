@@ -128,16 +128,16 @@ void TriggerEndOfBoxingRecord( SOLDIERTYPE * pSoldier )
 		switch( gTacticalStatus.bBoxingState )
 		{
 			case WON_ROUND:
-				AddHistoryToPlayersLog(HISTORY_WON_BOXING, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSector);
+				AddHistoryToPlayersLog( HISTORY_WON_BOXING, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				TriggerNPCRecord( DARREN, 23 );
 				break;
 			case LOST_ROUND:
 				// log as lost
-				AddHistoryToPlayersLog(HISTORY_LOST_BOXING, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSector);
+				AddHistoryToPlayersLog( HISTORY_LOST_BOXING, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				TriggerNPCRecord( DARREN, 24 );
 				break;
 			case DISQUALIFIED:
-				AddHistoryToPlayersLog(HISTORY_DISQUALIFIED_BOXING, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSector);
+				AddHistoryToPlayersLog( HISTORY_DISQUALIFIED_BOXING, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				break;
 		}
 	}
@@ -386,7 +386,7 @@ void BoxingMovementCheck( SOLDIERTYPE * pSoldier )
 		// boxer stepped out of the ring!
 		BoxingPlayerDisqualified( pSoldier, BOXER_OUT_OF_RING );
 		// add the history record here.
-		AddHistoryToPlayersLog(HISTORY_DISQUALIFIED_BOXING, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSector);
+		AddHistoryToPlayersLog( HISTORY_DISQUALIFIED_BOXING, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 		// make not a boxer any more
 		pSoldier->uiStatusFlags &= ~(SOLDIER_BOXER);
 		pSoldier->uiStatusFlags &= (~SOLDIER_PCUNDERAICONTROL);

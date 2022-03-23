@@ -342,7 +342,7 @@ void InitStrategicAI()
 	gubMinEnemyGroupSize  = saipolicy_by_diff(min_enemy_group_size);
 	gubHoursGracePeriod   = saipolicy_by_diff(grace_period_in_hours);
 	evaluate_time        += saipolicy_by_diff(time_evaluate_in_minutes) + Random(saipolicy_by_diff(time_evaluate_variance));
-
+	
 	AddStrategicEvent(EVENT_EVALUATE_QUEEN_SITUATION, evaluate_time, 0);
 
 	//Initialize the sectorinfo structure so all sectors don't point to a garrisonID.
@@ -376,7 +376,7 @@ void InitStrategicAI()
 	auto origGarrisonGroups = GCM->getGarrisonGroups();
 	size_t uiGarrisonArraySize = origGarrisonGroups.size();
 	gGarrisonGroup = origGarrisonGroups;
-
+	
 	gubGarrisonReinforcementsDenied = new UINT8[uiGarrisonArraySize]{};
 
 	// Modify initial force sizes?
@@ -1017,13 +1017,12 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 	else if( pGroup->pEnemyGroup->ubIntention == REINFORCEMENTS )
 	{ //The group has arrived at the location where he is supposed to reinforce.
 		//Step 1 -- Check for matching garrison location
-		SGPSector sec(pGroup->ubSectorX, pGroup->ubSectorY);
 		for( i = 0; i < gGarrisonGroup.size(); i++ )
 		{
-			if (gGarrisonGroup[i].ubSectorID == sec.AsByte() &&
+			if( gGarrisonGroup[ i ].ubSectorID == SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) &&
 					gGarrisonGroup[ i ].ubPendingGroupID == pGroup->ubGroupID )
 			{
-				pSector = &SectorInfo[sec.AsByte()];
+				pSector = &SectorInfo[ SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) ];
 
 				if( gGarrisonGroup[ i ].ubSectorID != SEC_P3 )
 				{
@@ -1032,13 +1031,13 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 					pSector->ubNumTroops = (UINT8)(pSector->ubNumTroops + pGroup->pEnemyGroup->ubNumTroops);
 					pSector->ubNumElites = (UINT8)(pSector->ubNumElites + pGroup->pEnemyGroup->ubNumElites);
 
-					SLOGD(ST::format("{} reinforcements have arrived to garrison sector {}",
+					SLOGD("%d reinforcements have arrived to garrison sector %c%d",
 							pGroup->pEnemyGroup->ubNumAdmins + pGroup->pEnemyGroup->ubNumTroops +
-							pGroup->pEnemyGroup->ubNumElites, sec.AsShortString()));
-					if (IsThisSectorASAMSector(sec))
+							pGroup->pEnemyGroup->ubNumElites, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX );
+					if( IsThisSectorASAMSector( pGroup->ubSectorX, pGroup->ubSectorY, 0 ) )
 					{
-						StrategicMap[sec.AsStrategicIndex()].bSAMCondition = 100;
-						UpdateSAMDoneRepair(sec);
+						StrategicMap[ pGroup->ubSectorX + pGroup->ubSectorY * MAP_WORLD_X ].bSAMCondition = 100;
+						UpdateSAMDoneRepair( pGroup->ubSectorX, pGroup->ubSectorY, 0 );
 					}
 				}
 				else
@@ -1058,19 +1057,19 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 						else
 						{ //Add all the troops to the queen's guard.
 							pSector->ubNumElites += pGroup->ubGroupSize;
-							SLOGD(ST::format("{} reinforcements have arrived to garrison queen's sector ({}).",
-									pGroup->ubGroupSize, sec.AsShortString()));
+							SLOGD(ST::format("{} reinforcements have arrived to garrison queen's sector ({}{}).",
+									pGroup->ubGroupSize, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX));
 						}
 					}
 					else
 					{ //Add all the troops to the reinforcement pool as the queen's guard is at full strength.
 						giReinforcementPool += pGroup->ubGroupSize;
-						SLOGD(ST::format("{} reinforcements have arrived at queen's sector ({}) and have been added to the reinforcement pool.",
-								pGroup->ubGroupSize, sec.AsShortString()));
+						SLOGD(ST::format("{} reinforcements have arrived at queen's sector ({}{}) and have been added to the reinforcement pool.",
+								pGroup->ubGroupSize, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX));
 					}
 				}
 
-				SetThisSectorAsEnemyControlled(sec);
+				SetThisSectorAsEnemyControlled(pGroup->ubSectorX, pGroup->ubSectorY, 0);
 				RemoveGroup(*pGroup);
 				RecalculateGarrisonWeight( i );
 
@@ -1080,7 +1079,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 		//Step 2 -- Check for Patrol groups matching waypoint index.
 		for( i = 0; i < gPatrolGroup.size(); i++ )
 		{
-			if( gPatrolGroup[i].ubSectorID[1] == sec.AsByte() &&
+			if( gPatrolGroup[ i ].ubSectorID[ 1 ] == SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ) &&
 					gPatrolGroup[ i ].ubPendingGroupID == pGroup->ubGroupID )
 			{
 				gPatrolGroup[ i ].ubPendingGroupID = 0;
@@ -1097,11 +1096,11 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 					if( pPatrolGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE )
 					{
 						UINT8 ubCut;
-						SLOGE(ST::format("Patrol group #{} in {} received too many reinforcements from group #{} that was created in {}{}.  Size truncated from {} to {}.\n\
+						SLOGE( "Patrol group #%d in %c%d received too many reinforcements from group #%d that was created in %c%d.  Size truncated from %d to %d.\n\
 							Please send Strategic Decisions.txt and PRIOR save.",
-							pPatrolGroup->ubGroupID, sec.AsShortString(),
+							pPatrolGroup->ubGroupID, pPatrolGroup->ubSectorY + 'A' - 1, pPatrolGroup->ubSectorX,
 							pGroup->ubGroupID, SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ),
-							pPatrolGroup->ubGroupSize, MAX_STRATEGIC_TEAM_SIZE));
+							pPatrolGroup->ubGroupSize, MAX_STRATEGIC_TEAM_SIZE );
 						//truncate the group size.
 						ubCut = pPatrolGroup->ubGroupSize - MAX_STRATEGIC_TEAM_SIZE;
 						while( ubCut-- )
@@ -1145,8 +1144,9 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 						if( gPatrolGroup[ i ].ubSectorID[ 3 ] )
 							AddWaypointIDToPGroup( pGroup, gPatrolGroup[ i ].ubSectorID[ 3 ] );
 					}
-					SLOGD(ST::format("{} soldiers have arrived to patrol area near sector {}",
-							pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins, sec.AsShortString()));
+					SLOGD("%d soldiers have arrived to patrol area near sector %c%d",
+							pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
+							pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX );
 					RecalculatePatrolWeight(gPatrolGroup[i]);
 				}
 				return TRUE;
@@ -1708,6 +1708,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 	INT32 iChance, iRandom, iSrcGarrisonID;
 	INT32 iMaxReinforcementsAllowed, iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
 	GROUP *pGroup;
+	UINT8 ubSrcSectorX, ubSrcSectorY, ubDstSectorX, ubDstSectorY;
 	UINT8 ubNumExtraReinforcements;
 	UINT8 ubGroupSize;
 	BOOLEAN fLimitMaxTroopsAllowable = FALSE;
@@ -1735,18 +1736,17 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 		return;
 	}
 
-	UINT8 ubDstSectorX = (UINT8)SECTORX( gGarrisonGroup[ iDstGarrisonID ].ubSectorID );
-	UINT8 ubDstSectorY = (UINT8)SECTORY( gGarrisonGroup[ iDstGarrisonID ].ubSectorID );
-	SGPSector dstSector(ubDstSectorX, ubDstSectorY);
+	ubDstSectorX = (UINT8)SECTORX( gGarrisonGroup[ iDstGarrisonID ].ubSectorID );
+	ubDstSectorY = (UINT8)SECTORY( gGarrisonGroup[ iDstGarrisonID ].ubSectorID );
 
 	if( pOptionalGroup && *pOptionalGroup )
 	{ //This group will provide the reinforcements
 		pGroup = *pOptionalGroup;
 
-		SLOGD(ST::format("{} troops have been reassigned from {c}{} to garrison sector {}",
+		SLOGD("%d troops have been reassigned from %c%d to garrison sector %c%d",
 				pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
 				pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
-				dstSector.AsShortString()));
+				ubDstSectorY + 'A' - 1, ubDstSectorX );
 
 		gGarrisonGroup[ iDstGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
 		ConvertGroupTroopsToComposition( pGroup, gGarrisonGroup[ iDstGarrisonID ].ubComposition );
@@ -1798,7 +1798,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 
 		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, (UINT8)iReinforcementsApproved, 0 );
 		ConvertGroupTroopsToComposition( pGroup, gGarrisonGroup[ iDstGarrisonID ].ubComposition );
-		pGroup->ubOriginalSector = dstSector.AsByte();
+		pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 		giReinforcementPool -= iReinforcementsApproved;
 		pGroup->ubMoveType = ONE_WAY;
 		gGarrisonGroup[ iDstGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
@@ -1807,14 +1807,14 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 
 		if( ubNumExtraReinforcements )
 		{
-			SLOGD(ST::format("{} troops have been sent from palace to stage assault near sector {}",
-				  ubGroupSize, dstSector.AsShortString()));
+			SLOGD("%d troops have been sent from palace to stage assault near sector %c%d",
+					ubGroupSize, ubDstSectorY + 'A' - 1, ubDstSectorX );
 			MoveSAIGroupToSector( &pGroup, gGarrisonGroup[ iDstGarrisonID ].ubSectorID, STAGE, STAGING );
 		}
 		else
 		{
-			SLOGD(ST::format("{} troops have been sent from palace to garrison sector {}",
-					ubGroupSize, dstSector.AsShortString()));
+			SLOGD("%d troops have been sent from palace to garrison sector %c%d",
+					ubGroupSize, ubDstSectorY + 'A' - 1, ubDstSectorX );
 			MoveSAIGroupToSector( &pGroup, gGarrisonGroup[ iDstGarrisonID ].ubSectorID, STAGE, REINFORCEMENTS );
 		}
 		return;
@@ -1827,10 +1827,9 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 			goto QUEEN_POOL;
 		}
 
-		UINT8 ubSrcSectorX = (gGarrisonGroup[ iSrcGarrisonID ].ubSectorID % 16) + 1;
-		UINT8 ubSrcSectorY = (gGarrisonGroup[ iSrcGarrisonID ].ubSectorID / 16) + 1;
-		SGPSector srcSector(ubSrcSectorX, ubSrcSectorY);
-		if (srcSector != gWorldSector)
+		ubSrcSectorX = (gGarrisonGroup[ iSrcGarrisonID ].ubSectorID % 16) + 1;
+		ubSrcSectorY = (gGarrisonGroup[ iSrcGarrisonID ].ubSectorID / 16) + 1;
+		if( ubSrcSectorX != gWorldSectorX || ubSrcSectorY != gWorldSectorY || gbWorldSectorZ > 0 )
 		{ //The reinforcements aren't coming from the currently loaded sector!
 			iReinforcementsAvailable = ReinforcementsAvailable( iSrcGarrisonID );
 			if( iReinforcementsAvailable <= 0)
@@ -1870,7 +1869,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 			pGroup = CreateNewEnemyGroupDepartingFromSector( gGarrisonGroup[ iSrcGarrisonID ].ubSectorID, 0, (UINT8)iReinforcementsApproved, 0 );
 			ConvertGroupTroopsToComposition( pGroup, gGarrisonGroup[ iDstGarrisonID ].ubComposition );
 			RemoveSoldiersFromGarrisonBasedOnComposition( iSrcGarrisonID, pGroup->ubGroupSize );
-			pGroup->ubOriginalSector = dstSector.AsByte();
+			pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 			pGroup->ubMoveType = ONE_WAY;
 			gGarrisonGroup[ iDstGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
 			ubGroupSize = (UINT8)( pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins );
@@ -1878,20 +1877,20 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 			if( ubNumExtraReinforcements )
 			{
 				pGroup->pEnemyGroup->ubPendingReinforcements = ubNumExtraReinforcements;
-				SLOGD(ST::format("{} troops have been sent from sector {c}{} to stage assault near sector {}",
-						ubGroupSize, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, dstSector.AsShortString()));
+				SLOGD("%d troops have been sent from sector %c%d to stage assault near sector %c%d",
+						ubGroupSize, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, ubDstSectorY + 'A' - 1, ubDstSectorX );
 
 				MoveSAIGroupToSector( &pGroup, gGarrisonGroup[ iDstGarrisonID ].ubSectorID, STAGE, STAGING );
 			}
 			else
 			{
-				SLOGD(ST::format("{} troops have been sent from sector {c}{} to garrison sector {}",
-						ubGroupSize, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, dstSector.AsShortString()));
+				SLOGD("%d troops have been sent from sector %c%d to garrison sector %c%d",
+						ubGroupSize, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, ubDstSectorY + 'A' - 1, ubDstSectorX );
 
 				MoveSAIGroupToSector( &pGroup, gGarrisonGroup[ iDstGarrisonID ].ubSectorID, STAGE, REINFORCEMENTS );
 			}
-			SLOGD(ST::format("{} troops have been sent from garrison sector {} to patrol area near sector {}",
-					ubGroupSize, srcSector.AsShortString(), dstSector.AsShortString()));
+			SLOGD("%d troops have been sent from garrison sector %c%d to patrol area near sector %c%d",
+					ubGroupSize, ubSrcSectorY + 'A' - 1, ubSrcSectorX, ubDstSectorY + 'A' - 1, ubDstSectorX );
 
 			return;
 		}
@@ -1905,6 +1904,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 	INT32 iRandom, iWeight;
 	UINT32 uiSrcGarrisonID;
 	INT32 iReinforcementsAvailable, iReinforcementsRequested, iReinforcementsApproved;
+	UINT8 ubSrcSectorX, ubSrcSectorY;
 
 	PATROL_GROUP* const pg = &gPatrolGroup[iPatrolID];
 
@@ -1914,17 +1914,18 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 	if( iReinforcementsRequested <= 0)
 		return;
 
-	SGPSector dstSector((pg->ubSectorID[1] % 16) + 1, (pg->ubSectorID[1] / 16) + 1);
+	UINT8 const ubDstSectorX = (pg->ubSectorID[1] % 16) + 1;
+	UINT8 const ubDstSectorY = (pg->ubSectorID[1] / 16) + 1;
 
 	if( pOptionalGroup && *pOptionalGroup )
 	{ //This group will provide the reinforcements
 		pGroup = *pOptionalGroup;
 		pg->ubPendingGroupID = pGroup->ubGroupID;
 
-		SLOGD(ST::format("{} troops have been reassigned from {c}{} to reinforce patrol group covering sector {}",
+		SLOGD("%d troops have been reassigned from %c%d to reinforce patrol group covering sector %c%d",
 				pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
 				pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX,
-				dstSector.AsShortString()));
+				ubDstSectorY + 'A' - 1, ubDstSectorX );
 
 		MoveSAIGroupToSector(pOptionalGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
 		return;
@@ -1939,12 +1940,13 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 			return;
 		}
 		pGroup = CreateNewEnemyGroupDepartingFromSector( SEC_P3, 0, (UINT8)iReinforcementsApproved, 0 );
-		pGroup->ubOriginalSector = dstSector.AsByte();
+		pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 		giReinforcementPool -= iReinforcementsApproved;
 		pg->ubPendingGroupID = pGroup->ubGroupID;
 
-		SLOGD(ST::format("{} troops have been sent from palace to patrol area near sector {}",
-				pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins, dstSector.AsShortString()));
+		SLOGD("%d troops have been sent from palace to patrol area near sector %c%d",
+				pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
+				ubDstSectorY + 'A' - 1, ubDstSectorX );
 
 		MoveSAIGroupToSector(&pGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
 		return;
@@ -1960,23 +1962,23 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 			{ //if group is able to provide reinforcements.
 				if( iRandom < iWeight )
 				{ //This is the group that gets the reinforcements!
-					UINT8 ubSrcSectorX = (UINT8) SECTORX(gGarrisonGroup[uiSrcGarrisonID].ubSectorID);
-					UINT8 ubSrcSectorY = (UINT8) SECTORY(gGarrisonGroup[uiSrcGarrisonID].ubSectorID);
-					SGPSector srcSector(ubSrcSectorX, ubSrcSectorY);
-					if (srcSector != gWorldSector)
+					ubSrcSectorX = (UINT8)SECTORX(gGarrisonGroup[ uiSrcGarrisonID ].ubSectorID );
+					ubSrcSectorY = (UINT8)SECTORY(gGarrisonGroup[ uiSrcGarrisonID ].ubSectorID );
+					if( ubSrcSectorX != gWorldSectorX || ubSrcSectorY != gWorldSectorY || gbWorldSectorZ > 0 )
 					{ //The reinforcements aren't coming from the currently loaded sector!
 						iReinforcementsAvailable = ReinforcementsAvailable( uiSrcGarrisonID );
 						//Send the lowest of the two:  number requested or number available
 						iReinforcementsApproved = MIN( iReinforcementsRequested, iReinforcementsAvailable );
 						pGroup = CreateNewEnemyGroupDepartingFromSector( gGarrisonGroup[ uiSrcGarrisonID ].ubSectorID, 0, (UINT8)iReinforcementsApproved, 0 );
-						pGroup->ubOriginalSector = dstSector.AsByte();
+						pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
 						pg->ubPendingGroupID = pGroup->ubGroupID;
 
 						RemoveSoldiersFromGarrisonBasedOnComposition( uiSrcGarrisonID, pGroup->ubGroupSize );
 
-						SLOGD(ST::format("{} troops have been sent from garrison sector {} to patrol area near sector {}",
+						SLOGD("%d troops have been sent from garrison sector %c%d to patrol area near sector %c%d",
 								pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
-								srcSector.AsShortString(), dstSector.AsShortString()));
+								ubSrcSectorY + 'A' - 1, ubSrcSectorX,
+								ubDstSectorY + 'A' - 1, ubDstSectorX );
 
 						MoveSAIGroupToSector(&pGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
 						return;
@@ -2278,7 +2280,7 @@ void LoadStrategicAI(HWFILE const hFile)
 			if (pGroup->ubGroupSize >= 16)
 			{ //accident in patrol groups being too large
 				UINT8	ubGetRidOfXTroops = pGroup->ubGroupSize - 10;
-				if (gWorldSector.z || pGroup->ubSectorX != gWorldSector.x || pGroup->ubSectorY != gWorldSector.y)
+				if( gbWorldSectorZ || pGroup->ubSectorX != gWorldSectorX || pGroup->ubSectorY != gWorldSectorY )
 				{ //don't modify groups in the currently loaded sector.
 					if( pGroup->pEnemyGroup->ubNumTroops >= ubGetRidOfXTroops )
 					{
@@ -2312,12 +2314,12 @@ void LoadStrategicAI(HWFILE const hFile)
 	if( ubSAIVersion < 14 )
 	{
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector(SGPSector(4, 11, 1));
+		pSector = FindUnderGroundSector( 4, 11, 1 );
 		if( pSector->ubNumTroops + pSector->ubNumElites > 20 )
 		{
 			pSector->ubNumTroops -= 2;
 		}
-		pSector = FindUnderGroundSector(SGPSector(3, 15, 1));
+		pSector = FindUnderGroundSector( 3, 15, 1 );
 		if( pSector->ubNumTroops + pSector->ubNumElites > 20 )
 		{
 			pSector->ubNumTroops -= 2;
@@ -2326,12 +2328,12 @@ void LoadStrategicAI(HWFILE const hFile)
 	if( ubSAIVersion < 16 )
 	{
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector(SGPSector(3, 15, 1));
+		pSector = FindUnderGroundSector( 3, 15, 1 );
 		if( pSector )
 		{
 			pSector->ubAdjacentSectors |= SOUTH_ADJACENT_SECTOR;
 		}
-		pSector = FindUnderGroundSector(SGPSector(3, 16, 1));
+		pSector = FindUnderGroundSector( 3, 16, 1 );
 		if( pSector )
 		{
 			pSector->ubAdjacentSectors |= NORTH_ADJACENT_SECTOR;
@@ -2409,7 +2411,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	}
 	if( ubSAIVersion < 23 )
 	{
-		if (gWorldSector.x != 3 || gWorldSector.y != 16 || !gWorldSector.z)
+		if( gWorldSectorX != 3 || gWorldSectorY != 16 || !gbWorldSectorZ )
 		{
 			SectorInfo[ SEC_P3 ].ubNumElites = 32;
 		}
@@ -2421,7 +2423,7 @@ void LoadStrategicAI(HWFILE const hFile)
 		//the walls.
 		if( !gubFact[ FACT_QUEEN_DEAD ] && gMercProfiles[ QUEEN ].bSectorZ == 1 )
 				{
-		if (gWorldSector.z != 1 || gWorldSector.x != 16 || gWorldSector.y != 3)
+		if( gbWorldSectorZ != 1 || gWorldSectorX != 16 || gWorldSectorY != 3 )
 		{ //We aren't in the basement sector
 			gMercProfiles[ QUEEN ].fUseProfileInsertionInfo = FALSE;
 		}
@@ -2472,7 +2474,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	{
 		if( gGameOptions.ubDifficultyLevel == DIF_LEVEL_EASY )
 		{
-			if (gWorldSector.x != 7 || gWorldSector.y != 14 || gWorldSector.z)
+			if( gWorldSectorX != 7 || gWorldSectorY != 14 || gbWorldSectorZ )
 			{
 				INT32 cnt, iRandom;
 				INT32 iEliteChance, iTroopChance, iAdminChance;
@@ -2560,9 +2562,9 @@ void LoadStrategicAI(HWFILE const hFile)
 		{
 			if( !pGroup->fBetweenSectors )
 			{
-				if (pGroup->ubSectorX != gWorldSector.x ||
-						pGroup->ubSectorY != gWorldSector.y ||
-						gWorldSector.z)
+				if( pGroup->ubSectorX != gWorldSectorX ||
+						pGroup->ubSectorY != gWorldSectorY ||
+						gbWorldSectorZ )
 				{
 					RepollSAIGroup( pGroup );
 					ValidateGroup( pGroup );
@@ -2726,8 +2728,9 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 			}
 			if( iFactor >= 15 )
 			{ //Make the actual elites in sector match the new garrison percentage
-				SGPSector garrisonSector(gGarrisonGroup[i].ubSectorID);
-				if (!gfWorldLoaded || gWorldSector != garrisonSector)
+				if( !gfWorldLoaded || gbWorldSectorZ ||
+						gWorldSectorX != SECTORX( gGarrisonGroup[ i ].ubSectorID ) ||
+						gWorldSectorY != SECTORY( gGarrisonGroup[ i ].ubSectorID ) )
 				{ //Also make sure the sector isn't currently loaded!
 					iNumSoldiers = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 					iNumPromotions = gArmyComp[ index ].bElitePercentage * iNumSoldiers / 100 - pSector->ubNumElites;
@@ -3427,7 +3430,7 @@ static void UpgradeAdminsToTroops()
 		if (g.fVehicle)         continue;
 
 		// Skip sector if it's currently loaded, we'll never upgrade guys in those.
-		if (g.ubSectorX == gWorldSector.x && g.ubSectorY == gWorldSector.y) continue;
+		if (g.ubSectorX == gWorldSectorX && g.ubSectorY == gWorldSectorY) continue;
 
 		Assert(g.pEnemyGroup);
 		ENEMYGROUP& eg = *g.pEnemyGroup;

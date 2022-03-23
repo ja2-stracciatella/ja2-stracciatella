@@ -136,7 +136,9 @@ BOOLEAN gubExplicitEnemyEncounterCode = NO_ENCOUNTER_CODE;
 //icon is to be blitted.
 BOOLEAN gfBlitBattleSectorLocator = FALSE;
 
-SGPSector gubPBSector;
+UINT8 gubPBSectorX = 0;
+UINT8 gubPBSectorY = 0;
+UINT8 gubPBSectorZ = 0;
 
 BOOLEAN gfCantRetreatInPBI = FALSE;
 //SAVE END
@@ -203,7 +205,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 			return;
 		}
 
-		if (gfTacticalTraversal && (battle_group == gpTacticalTraversalGroup || gWorldSector.z > 0))
+		if (gfTacticalTraversal && (battle_group == gpTacticalTraversalGroup || gbWorldSectorZ > 0))
 		{
 			return;
 		}
@@ -229,16 +231,16 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 			y = SECTORY(gubSectorIDOfCreatureAttack);
 			z = 0;
 		}
-		gubPBSector.x = x;
-		gubPBSector.y = y;
-		gubPBSector.z = z;
+		gubPBSectorX = x;
+		gubPBSectorY = y;
+		gubPBSectorZ = z;
 	}
 	else
 	{ // Calculate the non-persistent situation
 		gfBlinkHeader = TRUE;
-		x = gubPBSector.x;
-		y = gubPBSector.y;
-		z = gubPBSector.z;
+		x = gubPBSectorX;
+		y = gubPBSectorY;
+		z = gubPBSectorZ;
 
 		if (HostileCiviliansPresent())
 		{ // There are hostile civilians, so no autoresolve allowed.
@@ -248,7 +250,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		{ // There are bloodcats in the sector, so no autoresolve allowed
 			gubExplicitEnemyEncounterCode = HOSTILE_BLOODCATS_CODE;
 		}
-		else if (gWorldSector.z != 0)
+		else if (gbWorldSectorZ != 0)
 		{ // We are underground, so no autoresolve allowed
 			SECTORINFO const& sector = SectorInfo[SECTOR(x, y)]; // XXX Why check surface info when underground?
 			if (sector.ubCreaturesInBattle != 0)
@@ -364,7 +366,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 			if (gubEnemyEncounterCode != BLOODCAT_AMBUSH_CODE &&
 					gubEnemyEncounterCode != ENTERING_BLOODCAT_LAIR_CODE)
 			{
-				UINT8 const n_stationary_enemies = NumStationaryEnemiesInSector(SGPSector(x, y));
+				UINT8 const n_stationary_enemies = NumStationaryEnemiesInSector(x, y);
 				if (n_stationary_enemies != 0)
 				{
 					gubEnemyEncounterCode = ENTERING_ENEMY_SECTOR_CODE;
@@ -380,7 +382,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 					}
 					else
 					{
-						UINT8 const n_mobile_enemies = NumMobileEnemiesInSector(SGPSector(x, y));
+						UINT8 const n_mobile_enemies = NumMobileEnemiesInSector(x, y);
 						UINT8 const n_mercs          = PlayerMercsInSector(     x, y, z);
 						if (gfAutoAmbush && n_mobile_enemies > n_mercs)
 						{
@@ -572,7 +574,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 	iPercentage = 0;
 	uiStartTime = GetClock();
 
-	GetScreenXYFromMapXY( gubPBSector.x, gubPBSector.y, &sStartLeft, &sStartTop );
+	GetScreenXYFromMapXY( gubPBSectorX, gubPBSectorY, &sStartLeft, &sStartTop );
 	sStartLeft += MAP_GRID_X / 2;
 	sStartTop += MAP_GRID_Y / 2;
 	sEndLeft = STD_SCREEN_X + 131;
@@ -857,9 +859,13 @@ void RenderPreBattleInterface()
 			BltVideoObject(dst, vo, TOP_COLUMN, STD_SCREEN_X + 186, y);
 		}
 
+		UINT8 const sec_x = gubPBSectorX;
+		UINT8 const sec_y = gubPBSectorY;
+		UINT8 const sec_z = gubPBSectorZ;
+
 		// Location
 		SetFontAttributes(FONT10ARIAL, FONT_YELLOW);
-		ST::string sector_name = GetSectorIDString(gubPBSector, TRUE);
+		ST::string sector_name = GetSectorIDString(sec_x, sec_y, sec_z, TRUE);
 		MPrint(STD_SCREEN_X + 70, STD_SCREEN_Y + 17, ST::format("{} {}", gpStrategicString[STR_PB_SECTOR], sector_name));
 
 		SetFont(FONT14ARIAL);
@@ -868,13 +874,13 @@ void RenderPreBattleInterface()
 		if (gubEnemyEncounterCode == CREATURE_ATTACK_CODE        ||
 			gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE        ||
 			gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE ||
-			WhatPlayerKnowsAboutEnemiesInSector(gubPBSector.x, gubPBSector.y) != KNOWS_HOW_MANY)
+			WhatPlayerKnowsAboutEnemiesInSector(sec_x, sec_y) != KNOWS_HOW_MANY)
 		{ // Don't know how many
 			enemies = "?";
 		}
 		else
 		{ // Know exactly how many
-			INT32 const n = NumEnemiesInSector(gubPBSector);
+			INT32 const n = NumEnemiesInSector(sec_x, sec_y);
 			str = ST::format("{}", n);
 			enemies = str;
 		}
@@ -883,7 +889,7 @@ void RenderPreBattleInterface()
 		str = ST::format("{}", guiNumInvolved);
 		MPrintCentered(142, 36, 27, str);
 		// Militia
-		str = ST::format("{}", CountAllMilitiaInSector(gubPBSector.x, gubPBSector.y));
+		str = ST::format("{}", CountAllMilitiaInSector(sec_x, sec_y));
 		MPrintCentered(227, 36, 27, str);
 		SetFontShadow(FONT_NEARBLACK);
 
@@ -965,7 +971,7 @@ void RenderPreBattleInterface()
 	if (gfEnterAutoResolveMode)
 	{
 		gfEnterAutoResolveMode = FALSE;
-		EnterAutoResolveMode(gubPBSector);
+		EnterAutoResolveMode(gubPBSectorX, gubPBSectorY);
 	}
 
 	gfIgnoreAllInput = FALSE;
@@ -985,8 +991,8 @@ static void AutoResolveBattleCallback(GUI_BUTTON* btn, INT32 reason)
 						return;
 					}
 					PlayJA2Sample(EXPLOSION_1, HIGHVOLUME, 1, MIDDLEPAN);
-					gStrategicStatus.usPlayerKills += NumEnemiesInSector(gubPBSector);
-					EliminateAllEnemies(gubPBSector);
+					gStrategicStatus.usPlayerKills += NumEnemiesInSector( gubPBSectorX, gubPBSectorY );
+					EliminateAllEnemies( gubPBSectorX, gubPBSectorY );
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					btn->Draw();
@@ -1022,8 +1028,8 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 						return;
 					}
 					PlayJA2Sample(EXPLOSION_1, HIGHVOLUME, 1, MIDDLEPAN);
-					gStrategicStatus.usPlayerKills += NumEnemiesInSector(gubPBSector);
-					EliminateAllEnemies(gubPBSector);
+					gStrategicStatus.usPlayerKills += NumEnemiesInSector( gubPBSectorX, gubPBSectorY );
+					EliminateAllEnemies( gubPBSectorX, gubPBSectorY );
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					btn->uiFlags &= ~BUTTON_CLICKED_ON;
 					btn->Draw();
@@ -1049,10 +1055,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 			ExecuteBaseDirtyRectQueue();
 			EndFrameBufferRender( );
 			RefreshScreen();
-			SGPSector sector = gubPBSector;
-			// FIXME: suspicious, this ensures gfGotoSectorTransition is set only if the world is not underground — but why would it matter?
-			sector.z = 0;
-			if (sector == gWorldSector)
+			if( gubPBSectorX == gWorldSectorX && gubPBSectorY == gWorldSectorY && !gbWorldSectorZ )
 			{
 				gfGotoSectorTransition = TRUE;
 			}
@@ -1072,7 +1075,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 			}
 
 			// must come AFTER anything that needs gpBattleGroup, as it wipes it out
-			SetCurrentWorldSector(gubPBSector);
+			SetCurrentWorldSector( gubPBSectorX, gubPBSectorY, gubPBSectorZ );
 
 			KillPreBattleInterface();
 		}
@@ -1090,8 +1093,8 @@ static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason)
 			RetreatAllInvolvedPlayerGroups();
 
 			// NOTE: this code assumes you can never retreat while underground
-			HandleLoyaltyImplicationsOfMercRetreat(RETREAT_PBI, gubPBSector);
-			if( CountAllMilitiaInSector( gubPBSector.x, gubPBSector.y ) )
+			HandleLoyaltyImplicationsOfMercRetreat( RETREAT_PBI, gubPBSectorX, gubPBSectorY, 0 );
+			if( CountAllMilitiaInSector( gubPBSectorX, gubPBSectorY ) )
 			{ //Mercs retreat, but enemies still need to fight the militia
 				gfEnterAutoResolveMode = TRUE;
 				return;
@@ -1099,7 +1102,7 @@ static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason)
 
 			//Warp time by 5 minutes so that player can't just go back into the sector he left.
 			WarpGameTime( 300, WARPTIME_NO_PROCESSING_OF_EVENTS );
-			ResetMovementForEnemyGroupsInLocation();
+			ResetMovementForEnemyGroupsInLocation( gubPBSectorX, gubPBSectorY );
 
 			btn->uiFlags &= ~BUTTON_CLICKED_ON;
 			btn->Draw();
@@ -1183,7 +1186,8 @@ static void ActivateAutomaticAutoResolveStart()
 void CalculateNonPersistantPBIInfo(void)
 {
 	//We need to set up the non-persistant PBI
-	if (!gfBlitBattleSectorLocator || gubPBSector != gWorldSector)
+	if( !gfBlitBattleSectorLocator ||
+			gubPBSectorX != gWorldSectorX || gubPBSectorY != gWorldSectorY || gubPBSectorZ != gbWorldSectorZ )
 	{ //Either the locator isn't on or the locator info is in a different sector
 
 		//Calculated the encounter type
@@ -1197,9 +1201,9 @@ void CalculateNonPersistantPBIInfo(void)
 		{ //There are bloodcats in the sector, so no autoresolve allowed
 			gubExplicitEnemyEncounterCode = HOSTILE_BLOODCATS_CODE;
 		}
-		else if (gWorldSector.z)
+		else if( gbWorldSectorZ )
 		{
-			UNDERGROUND_SECTORINFO *pSector = FindUnderGroundSector(gWorldSector);
+			UNDERGROUND_SECTORINFO *pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 			Assert( pSector );
 			if( pSector->ubCreaturesInBattle )
 			{
@@ -1213,7 +1217,7 @@ void CalculateNonPersistantPBIInfo(void)
 		}
 		else
 		{
-			SECTORINFO *pSector = &SectorInfo[gWorldSector.AsByte()];
+			SECTORINFO *pSector = &SectorInfo[ SECTOR( gWorldSectorX, gWorldSectorY ) ];
 			Assert( pSector );
 			if( pSector->ubCreaturesInBattle )
 			{
@@ -1227,7 +1231,9 @@ void CalculateNonPersistantPBIInfo(void)
 		}
 		if( gubExplicitEnemyEncounterCode != NO_ENCOUNTER_CODE )
 		{	//Set up the location as well as turning on the blit flag.
-			gubPBSector = gWorldSector;
+			gubPBSectorX = (UINT8)gWorldSectorX;
+			gubPBSectorY = (UINT8)gWorldSectorY;
+			gubPBSectorZ = (UINT8)gbWorldSectorZ;
 			gfBlitBattleSectorLocator = TRUE;
 		}
 	}
@@ -1360,7 +1366,7 @@ void RetreatAllInvolvedPlayerGroups( void )
 }
 
 
-static BOOLEAN CurrentBattleSectorIs(const SGPSector& sSector);
+static BOOLEAN CurrentBattleSectorIs(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ);
 
 
 bool PlayerMercInvolvedInThisCombat(SOLDIERTYPE const& s)
@@ -1375,7 +1381,7 @@ bool PlayerMercInvolvedInThisCombat(SOLDIERTYPE const& s)
 		// Robot is involved iff it has a valid controller with it
 		(!AM_A_ROBOT(&s) || s.robot_remote_holder) &&
 		!SoldierAboardAirborneHeli(s)              &&
-		CurrentBattleSectorIs(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ));
+		CurrentBattleSectorIs(s.sSectorX, s.sSectorY, s.bSectorZ);
 }
 
 
@@ -1390,19 +1396,30 @@ bool PlayerGroupInvolvedInThisCombat(GROUP const& g)
 		!g.fBetweenSectors                                        &&
 		!GroupHasInTransitDeadOrPOWMercs(g)                       &&
 		(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne) &&
-		CurrentBattleSectorIs(SGPSector(g.ubSectorX, g.ubSectorY, g.ubSectorZ));
+		CurrentBattleSectorIs(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
 }
 
-static BOOLEAN CurrentBattleSectorIs(const SGPSector& sSector)
+
+static BOOLEAN CurrentBattleSectorIs(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ)
 {
-	SGPSector sBattleSector;
+	INT16 sBattleSectorX, sBattleSectorY, sBattleSectorZ;
 	BOOLEAN fSuccess;
 
-	fSuccess = GetCurrentBattleSectorXYZ(sBattleSector);
+	fSuccess = GetCurrentBattleSectorXYZ( &sBattleSectorX, &sBattleSectorY, &sBattleSectorZ );
 	Assert( fSuccess );
 
-	return sSector == sBattleSector;
+	if ( ( sSectorX == sBattleSectorX ) && ( sSectorY == sBattleSectorY ) && ( sSectorZ == sBattleSectorZ ) )
+	{
+		// yup!
+		return( TRUE );
+	}
+	else
+	{
+		// wrong sector, no battle here
+		return( FALSE );
+	}
 }
+
 
 static void CheckForRobotAndIfItsControlled(void)
 {
@@ -1428,8 +1445,10 @@ static void CheckForRobotAndIfItsControlled(void)
 
 void LogBattleResults(const UINT8 ubVictoryCode)
 {
-	SGPSector sSector;
-	GetCurrentBattleSectorXYZ(sSector);
+	INT16 sSectorX;
+	INT16 sSectorY;
+	INT16 sSectorZ;
+	GetCurrentBattleSectorXYZ(&sSectorX, &sSectorY, &sSectorZ);
 	UINT8 code;
 	if (ubVictoryCode == LOG_VICTORY)
 	{
@@ -1459,7 +1478,7 @@ void LogBattleResults(const UINT8 ubVictoryCode)
 			default:                          return;
 		}
 	}
-	AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(), SGPSector(sSector.x, sSector.y));
+	AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(), sSectorX, sSectorY);
 }
 
 

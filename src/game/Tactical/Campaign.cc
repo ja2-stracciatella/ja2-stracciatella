@@ -1396,24 +1396,25 @@ ST::string BuildStatChangeString(const ST::string& name, BOOLEAN fIncrease, INT1
 
 static UINT8 CalcImportantSectorControl(void)
 {
+	UINT8 ubMapX, ubMapY;
 	UINT8 ubSectorControlPts = 0;
 
-	SGPSector sector;
-	for (sector.x = 1; sector.x < MAP_WORLD_X - 1; sector.x++)
+
+	for ( ubMapX = 1; ubMapX < MAP_WORLD_X - 1; ubMapX++ )
 	{
-		for (sector.y = 1; sector.y < MAP_WORLD_Y - 1; sector.y++)
+		for ( ubMapY = 1; ubMapY < MAP_WORLD_Y - 1; ubMapY++ )
 		{
 			// if player controlled
-			if (!StrategicMap[sector.AsStrategicIndex()].fEnemyControlled)
+			if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(ubMapX, ubMapY)].fEnemyControlled)
 			{
 				// towns where militia can be trained and SAM sites are important sectors
-				if (MilitiaTrainingAllowedInSector(sector.x, sector.y, 0))
+				if ( MilitiaTrainingAllowedInSector( ubMapX, ubMapY, 0 ) )
 				{
 					ubSectorControlPts++;
 
 					// SAM sites count double - they have no income, but have significant
 					// air control value
-					if (IsThisSectorASAMSector(sector))
+					if ( IsThisSectorASAMSector( ubMapX, ubMapY, 0 ) )
 					{
 						ubSectorControlPts++;
 					}

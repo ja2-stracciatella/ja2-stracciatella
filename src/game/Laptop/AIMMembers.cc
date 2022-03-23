@@ -1264,7 +1264,7 @@ static INT8 AimMemberHireMerc(void)
 		}
 
 		// Add an entry in the history page for the hiring of the merc
-		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, GetWorldTotalMin(), SGPSector(-1, -1));
+		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, GetWorldTotalMin(), -1, -1);
 		return TRUE;
 	}
 	else if (ret == MERC_HIRE_OVER_20_MERCS_HIRED)

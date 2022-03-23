@@ -27,7 +27,9 @@ enum{
 };
 
 // For speed, etc lets make these globals, forget the functions if you want
-extern SGPSector gWorldSector;
+extern INT16 gWorldSectorX;
+extern INT16 gWorldSectorY;
+extern INT8  gbWorldSectorZ;
 
 #define NO_SECTOR ((UINT)-1)
 
@@ -35,7 +37,9 @@ UINT GetWorldSector();
 
 static inline void SetWorldSectorInvalid()
 {
-	gWorldSector = SGPSector(0, 0, -1);
+	gWorldSectorX  =  0;
+	gWorldSectorY  =  0;
+	gbWorldSectorZ = -1;
 }
 
 extern	BOOLEAN		gfUseAlternateMap;
@@ -63,28 +67,27 @@ extern Observable<> BeforePrepareSector;
 // grab the town id value
 UINT8 GetTownIdForSector(UINT8 sector);
 
-void SetCurrentWorldSector(const SGPSector& sector);
+void SetCurrentWorldSector(INT16 x, INT16 y, INT8 z);
 
 void UpdateMercsInSector();
-void UpdateMercInSector(SOLDIERTYPE&, const SGPSector& sector);
+void UpdateMercInSector(SOLDIERTYPE&, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 // get short sector name without town name
 ST::string GetShortSectorString(INT16 sMapX, INT16 sMapY);
 
 // Return a string like 'A9: Omerta'
-ST::string GetSectorIDString(const SGPSector& sector, BOOLEAN detailed);
 ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed);
 
 // Returns a sector description string based on the sector land type
 ST::string GetSectorLandTypeString(UINT8 ubSectorID, UINT8 ubSectorZ, bool fDetailed);
 
-void GetMapFileName(const SGPSector& sector, char* buf, BOOLEAN add_alternate_map_letter);
+void GetMapFileName(INT16 x, INT16 y, INT8 z, char* buf, BOOLEAN add_alternate_map_letter);
 
 // Called from within tactical.....
 void JumpIntoAdjacentSector( UINT8 ubDirection, UINT8 ubJumpCode, INT16 sAdditionalData );
 
 
-bool CanGoToTacticalInSector(const SGPSector& sector);
+bool CanGoToTacticalInSector(INT16 x, INT16 y, UINT8 z);
 
 // Number of sectors this town takes up
 UINT8 GetTownSectorSize(INT8 town_id);
@@ -111,14 +114,14 @@ void PrepareLoadedSector(void);
 void HandleSlayDailyEvent( void );
 
 
-void HandleQuestCodeOnSectorEntry(const SGPSector& sector);
+void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bNewSectorZ );
 
 // handle a soldier leaving thier squad behind, this sets them up for mvt and potential rejoining of group
 void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier );
 
 BOOLEAN CheckAndHandleUnloadingOfCurrentWorld(void);
 
-bool IsSectorDesert(const SGPSector& sector);
+bool IsSectorDesert(INT16 x, INT16 y);
 
 void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* s);
 

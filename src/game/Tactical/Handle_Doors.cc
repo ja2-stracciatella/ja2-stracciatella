@@ -263,10 +263,11 @@ void InteractWithOpenableStruct(SOLDIERTYPE& s, STRUCTURE& structure, UINT8 cons
 static void ProcessImplicationsOfPCMessingWithDoor(SOLDIERTYPE* pSoldier)
 {
 	// if player is hacking at a door in the brothel and a kingpin guy can see him
-	const SGPSector brothel(5, MAP_ROW_D);
 	UINT8 const room = GetRoom(pSoldier->sGridNo);
 	if (IN_BROTHEL(room) ||
-		(gWorldSector == brothel &&
+		(gWorldSectorX == 5 &&
+		gWorldSectorY == MAP_ROW_D &&
+		gbWorldSectorZ == 0 &&
 		(pSoldier->sGridNo == 11010 ||
 		pSoldier->sGridNo == 11177 ||
 		pSoldier->sGridNo == 11176)))
@@ -288,8 +289,7 @@ static void ProcessImplicationsOfPCMessingWithDoor(SOLDIERTYPE* pSoldier)
 		}
 	}
 
-	const SGPSector tixa(TIXA_SECTOR_X, TIXA_SECTOR_Y);
-	if (gWorldSector == tixa)
+	if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y )
 	{
 		SOLDIERTYPE* const pGoon = FindSoldierByProfileID(WARDEN);
 		if ( pGoon && pGoon->bAlertStatus < STATUS_RED && PythSpacesAway( pSoldier->sGridNo, pGoon->sGridNo ) <= 5 )
@@ -845,7 +845,7 @@ try
 		//ModifyDoorStatus( INT16 sGridNo, BOOLEAN fOpen, BOOLEAN fPercievedOpen )
 		ModifyDoorStatus(sGridNo, TRUE, DONTSETDOORSTATUS);
 
-		if (gWorldSector.x == 13 && gWorldSector.y == MAP_ROW_I)
+		if ( gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_I )
 		{
 			DoPOWPathChecks();
 		}

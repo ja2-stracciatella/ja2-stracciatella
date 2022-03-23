@@ -30,10 +30,10 @@
 #include <string_theory/string>
 
 
-ST::string GetSectorFacilitiesFlags(const SGPSector& sector)
+ST::string GetSectorFacilitiesFlags(INT16 x, INT16 y)
 {
 	// Build a string stating current facilities present in sector
-	UINT32 const facilities = SectorInfo[sector.AsByte()].uiFacilitiesFlags;
+	UINT32 const facilities = SectorInfo[SECTOR(x, y)].uiFacilitiesFlags;
 	if (facilities == 0)
 	{
 		return sFacilitiesStrings[0];
@@ -54,7 +54,7 @@ ST::string GetSectorFacilitiesFlags(const SGPSector& sector)
 
 
 // ALL changes of control to player must be funneled through here!
-BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fContested)
+BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fContested )
 {
 	// NOTE: MapSector must be 16-bit, cause MAX_WORLD_X is actually 18, so the sector numbers exceed 256 although we use only 16x16
 	UINT16 usMapSector = 0;
@@ -66,10 +66,10 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 		return FALSE;
 	}
 
-	UINT8 const sector = sMap.AsByte();
-	if (sMap.z == 0)
+	UINT8 const sector = SECTOR(sMapX, sMapY);
+	if( bMapZ == 0 )
 	{
-		usMapSector = sMap.AsStrategicIndex();
+		usMapSector = sMapX + ( sMapY * MAP_WORLD_X );
 
 /*
 		// if enemies formerly controlled this sector
@@ -79,7 +79,7 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 			StrategicMap[ usMapSector ].fLostControlAtSomeTime = TRUE;
 		}
 */
-		if (NumHostilesInSector(sMap))
+		if( NumHostilesInSector( sMapX, sMapY, bMapZ ) )
 		{ //too premature:  enemies still in sector.
 			return FALSE;
 		}
@@ -121,13 +121,13 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 				// don't do these for takeovers of Omerta sectors at the beginning of the game
 				if ((bTownId != OMERTA) || (GetWorldDay() != 1))
 				{
-					if (sMap.z == 0 && sector != SEC_J9 && sector != SEC_K4)
+					if (bMapZ == 0 && sector != SEC_J9 && sector != SEC_K4)
 					{
-						HandleMoraleEvent(nullptr, MORALE_TOWN_LIBERATED, sMap.x, sMap.y, sMap.z);
-						HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_TOWN_SECTOR, sMap);
+						HandleMoraleEvent( NULL, MORALE_TOWN_LIBERATED, sMapX, sMapY, bMapZ );
+						HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_GAIN_TOWN_SECTOR, sMapX, sMapY, bMapZ );
 
 						// liberation by definition requires that the place was enemy controlled in the first place
-						CheckIfEntireTownHasBeenLiberated(bTownId, sMap);
+						CheckIfEntireTownHasBeenLiberated( bTownId, sMapX, sMapY );
 					}
 				}
 			}
@@ -136,12 +136,12 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 			INT8 const mine_id = GetMineIndexForSector(sector);
 			if (mine_id != -1 && GetTotalLeftInMine(mine_id) > 0)
 			{
-				HandleMoraleEvent(NULL, MORALE_MINE_LIBERATED, sMap.x, sMap.y, sMap.z);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_MINE, sMap);
+				HandleMoraleEvent(NULL, MORALE_MINE_LIBERATED, sMapX, sMapY, bMapZ);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_MINE, sMapX, sMapY, bMapZ);
 			}
 
 			// if it's a SAM site sector
-			INT8 const sam_id = GetSAMIdFromSector(sMap);
+			INT8 const sam_id = GetSAMIdFromSector(sMapX, sMapY, bMapZ);
 			if (sam_id != -1)
 			{
 				if ( 1 /*!GetSectorFlagStatus( sMapX, sMapY, bMapZ, SF_SECTOR_HAS_BEEN_LIBERATED_ONCE ) */)
@@ -150,8 +150,8 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 					HandleMeanWhileEventPostingForSAMLiberation(sam_id);
 				}
 
-				HandleMoraleEvent(nullptr, MORALE_SAM_SITE_LIBERATED, sMap.x, sMap.y, sMap.z);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_GAIN_SAM, sMap);
+				HandleMoraleEvent( NULL, MORALE_SAM_SITE_LIBERATED, sMapX, sMapY, bMapZ );
+				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_GAIN_SAM, sMapX, sMapY, bMapZ );
 
 				// if Skyrider has been delivered to chopper, and already mentioned Drassen SAM site, but not used this quote yet
 				if ( IsHelicopterPilotAvailable() && ( guiHelicopterSkyriderTalkState >= 1 ) && ( !gfSkyriderSaidCongratsOnTakingSAM ) )
@@ -180,8 +180,8 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 				UpdateRefuelSiteAvailability( );
 			}
 
-//			SetSectorFlag(sMap, SF_SECTOR_HAS_BEEN_LIBERATED_ONCE);
-			if (sMap.z == 0 && ((sMap.y == MAP_ROW_M && (sMap.x >= 2 && sMap.x <= 6)) || (sMap.y == MAP_ROW_N && sMap.x == 6)))
+//			SetSectorFlag( sMapX, sMapY, bMapZ, SF_SECTOR_HAS_BEEN_LIBERATED_ONCE );
+			if ( bMapZ == 0 && ( ( sMapY == MAP_ROW_M && (sMapX >= 2 && sMapX <= 6) ) || (sMapY == MAP_ROW_N && sMapX == 6)) )
 			{
 				HandleOutskirtsOfMedunaMeanwhileScene();
 			}
@@ -189,18 +189,18 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 
 		if( fContested )
 		{
-			StrategicHandleQueenLosingControlOfSector( (UINT8) sMap.x, (UINT8) sMap.y, (UINT8) sMap.z);
+			StrategicHandleQueenLosingControlOfSector( (UINT8)sMapX, (UINT8)sMapY, (UINT8)bMapZ );
 		}
 	}
 	else
 	{
-		if (sector == SEC_P3 && sMap.z == 1)
+		if (sector == SEC_P3 && bMapZ == 1)
 		{ //Basement sector (P3_b1)
 			gfUseAlternateQueenPosition = TRUE;
 		}
 	}
 
-	if (sMap.z == 0)
+	if ( bMapZ == 0 )
 	{
 		SectorInfo[sector].fSurfaceWasEverPlayerControlled = TRUE;
 	}
@@ -219,8 +219,9 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 
 
 // ALL changes of control to enemy must be funneled through here!
-BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
+BOOLEAN SetThisSectorAsEnemyControlled(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
 {
+	UINT16 usMapSector = 0;
 	BOOLEAN fWasPlayerControlled = FALSE;
 	INT8 bTownId = 0;
 	UINT8 ubTheftChance;
@@ -233,9 +234,9 @@ BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 		return( FALSE );
 	}
 
-	if (sec.z == 0)
+	if( bMapZ == 0 )
 	{
-		UINT16 usMapSector = sec.AsStrategicIndex();
+		usMapSector = sMapX + ( sMapY * MAP_WORLD_X );
 
 		fWasPlayerControlled = !StrategicMap[ usMapSector ].fEnemyControlled;
 
@@ -244,24 +245,24 @@ BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 		// if player lost control to the enemy
 		if ( fWasPlayerControlled )
 		{
-			if (PlayerMercsInSector(sec))
+			if( PlayerMercsInSector( (UINT8)sMapX, (UINT8)sMapY, (UINT8)bMapZ ) )
 			{ //too premature:  Player mercs still in sector.
 				return FALSE;
 			}
 
-			UINT8 const sector = sec.AsByte();
+			UINT8 const sector = SECTOR(sMapX, sMapY);
 			// check if there's a town in the sector
 			bTownId = StrategicMap[ usMapSector ].bNameId;
 
 			// and it's a town
 			if ((bTownId >= FIRST_TOWN) && (bTownId < NUM_TOWNS))
 			{
-				if (sec.z == 0 && sector != SEC_J9 && sector != SEC_K4)
+				if (bMapZ == 0 && sector != SEC_J9 && sector != SEC_K4)
 				{
-					HandleMoraleEvent(nullptr, MORALE_TOWN_LOST, sec.x, sec.y, sec.z);
-					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_TOWN_SECTOR, sec);
+					HandleMoraleEvent( NULL, MORALE_TOWN_LOST, sMapX, sMapY, bMapZ );
+					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_LOSE_TOWN_SECTOR, sMapX, sMapY, bMapZ );
 
-					CheckIfEntireTownHasBeenLost(bTownId, sec.x, sec.y);
+					CheckIfEntireTownHasBeenLost( bTownId, sMapX, sMapY );
 				}
 			}
 
@@ -270,15 +271,15 @@ BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 			if (mine_id != -1 && GetTotalLeftInMine(mine_id) > 0)
 			{
 				QueenHasRegainedMineSector(mine_id);
-				HandleMoraleEvent(nullptr, MORALE_MINE_LOST, sec.x, sec.y, sec.z);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_MINE, sec);
+				HandleMoraleEvent(NULL, MORALE_MINE_LOST, sMapX, sMapY, bMapZ);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_MINE, sMapX, sMapY, bMapZ);
 			}
 
 			// if it's a SAM site sector
-			if (IsThisSectorASAMSector(sec))
+			if( IsThisSectorASAMSector( sMapX, sMapY, bMapZ ) )
 			{
-				HandleMoraleEvent(nullptr, MORALE_SAM_SITE_LOST, sec.x, sec.y, sec.z);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LOSE_SAM, sec);
+				HandleMoraleEvent( NULL, MORALE_SAM_SITE_LOST, sMapX, sMapY, bMapZ );
+				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_LOSE_SAM, sMapX, sMapY, bMapZ );
 			}
 
 			// if it's a helicopter refueling site sector
@@ -288,23 +289,23 @@ BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sec)
 			}
 
 			// ARM: this must be AFTER all resulting loyalty effects are resolved, or reduced mine income shown won't be accurate
-			NotifyPlayerWhenEnemyTakesControlOfImportantSector(sec);
+			NotifyPlayerWhenEnemyTakesControlOfImportantSector(sMapX, sMapY, 0);
 		}
 
 		// NOTE: Stealing is intentionally OUTSIDE the fWasPlayerControlled branch.  This function gets called if new
 		// enemy reinforcements arrive, and they deserve another crack at stealing what the first group missed! :-)
 
 		// stealing should fail anyway 'cause there shouldn't be a temp file for unvisited sectors, but let's check anyway
-		if (GetSectorFlagStatus(sec, SF_ALREADY_VISITED))
+		if (GetSectorFlagStatus(sMapX, sMapY, bMapZ, SF_ALREADY_VISITED))
 		{
 			// enemies can steal items left lying about (random chance).  The more there are, the more they take!
-			ubTheftChance = 5 * NumEnemiesInAnySector(sec);
+			ubTheftChance = 5 * NumEnemiesInAnySector( sMapX, sMapY, bMapZ );
 			// max 90%, some stuff may just simply not get found
 			if (ubTheftChance > 90 )
 			{
 				ubTheftChance = 90;
 			}
-			RemoveRandomItemsInSector(sec, ubTheftChance);
+			RemoveRandomItemsInSector( sMapX, sMapY, bMapZ, ubTheftChance );
 		}
 
 		// don't touch fPlayer flag for a surface sector lost to the enemies!

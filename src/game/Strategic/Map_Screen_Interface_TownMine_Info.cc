@@ -45,7 +45,9 @@ BOOLEAN fShowTownInfo = FALSE;
 PopUpBox* ghTownMineBox;
 SGPPoint TownMinePosition ={ 300, 150 };
 
-SGPSector bCurrentTownMineSector;
+INT8 bCurrentTownMineSectorX = 0;
+INT8 bCurrentTownMineSectorY = 0;
+INT8 bCurrentTownMineSectorZ = 0;
 
 // inventory button
 static BUTTON_PICS* guiMapButtonInventoryImage[2];
@@ -59,14 +61,16 @@ static void MapTownMineInventoryButtonCallBack(GUI_BUTTON *btn, INT32 reason);
 static void MapTownMineExitButtonCallBack(GUI_BUTTON *btn, INT32 reason);
 
 
-void DisplayTownInfo(const SGPSector& sMap)
+void DisplayTownInfo( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
 	// will display town info for a particular town
 
 	// set current sector
-	if (bCurrentTownMineSector != sMap)
+	if( ( bCurrentTownMineSectorX != sMapX ) || ( bCurrentTownMineSectorY != sMapY ) || ( bCurrentTownMineSectorZ != bMapZ ) )
 	{
-		bCurrentTownMineSector = sMap;
+		bCurrentTownMineSectorX = ( INT8 )sMapX;
+		bCurrentTownMineSectorY = ( INT8 )sMapY;
+		bCurrentTownMineSectorZ = bMapZ;
 	}
 
 	//create destroy the box
@@ -96,9 +100,9 @@ void CreateDestroyTownInfoBox(void)
 		ghTownMineBox = box;
 
 		// decide what kind of text to add to display
-		if (bCurrentTownMineSector.z == 0)
+		if (bCurrentTownMineSectorZ == 0)
 		{
-			UINT8 const sector = bCurrentTownMineSector.AsByte();
+			UINT8 const sector = SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
 			// only show the mine info when mines button is selected, otherwise we need to see the sector's regular town info
 			if (fShowMineFlag)
 			{
@@ -176,7 +180,7 @@ static void AddTextToTownBox(PopUpBox* const box)
 	ST::string wString;
 	INT16 sMineSector = 0;
 
-	UINT8 const sector   = bCurrentTownMineSector.AsByte();
+	UINT8 const sector   = SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
 	UINT8 const ubTownId = GetTownIdForSector(sector);
 	Assert((ubTownId >= FIRST_TOWN) && (ubTownId < NUM_TOWNS));
 
@@ -197,11 +201,11 @@ static void AddTextToTownBox(PopUpBox* const box)
 	// main facilities
 	wString = ST::format("{}:", pwTownInfoStrings[4]);
 	AddMonoString(box, wString);
-	wString = GetSectorFacilitiesFlags(bCurrentTownMineSector);
+	wString = GetSectorFacilitiesFlags(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
 	AddSecondColumnMonoString(box, wString);
 
 	// the concept of control is only meaningful in sectors where militia can be trained
-	if (MilitiaTrainingAllowedInSector(bCurrentTownMineSector.x, bCurrentTownMineSector.y, 0))
+	if ( MilitiaTrainingAllowedInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, 0 ) )
 	{
 		// town control
 		wString = ST::format("{}:", pwTownInfoStrings[1]);
@@ -315,7 +319,7 @@ static void AddTextToBlankSectorBox(PopUpBox* const box)
 	UINT16 usSectorValue = 0;
 
 	// get the sector value
-	usSectorValue = bCurrentTownMineSector.AsByte();
+	usSectorValue = SECTOR( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
 
 	ST::string title = GetSectorLandTypeString(usSectorValue, 0, true);
 
@@ -338,10 +342,10 @@ static void AddSectorToBox(PopUpBox* const box)
 	wString = ST::format("{}:", pwMiscSectorStrings[ 1 ]);
 	AddMonoString(box, wString);
 
-	wString = bCurrentTownMineSector.AsShortString();
-	if (bCurrentTownMineSector.z != 0)
+	wString = GetShortSectorString(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
+	if (bCurrentTownMineSectorZ != 0 )
 	{
-		wString2 = ST::format("-{}", bCurrentTownMineSector.z); // not the same as AsLongString
+		wString2 = ST::format("-{}", bCurrentTownMineSectorZ);
 		wString += wString2;
 	}
 
@@ -356,8 +360,8 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 	UINT8 ubMilitiaTotal = 0;
 	UINT8 ubNumEnemies;
 
-	UINT8 ubSectorID = bCurrentTownMineSector.AsByte();
-	INT8 bSamSiteID = GetSAMIdFromSector(bCurrentTownMineSector);
+	UINT8 ubSectorID = SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
+	INT8 bSamSiteID = GetSAMIdFromSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY, 0);
 	if (bSamSiteID > 0 && IsSecretFoundAt(ubSectorID))
 	{
 		fUnknownSAMSite = TRUE;
@@ -365,27 +369,27 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 
 	// in sector where militia can be trained,
 	// control of the sector matters, display who controls this sector.  Map brightness no longer gives this!
-	if (MilitiaTrainingAllowedInSector(bCurrentTownMineSector.x, bCurrentTownMineSector.y, 0) && !fUnknownSAMSite)
+	if ( MilitiaTrainingAllowedInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, 0 ) && !fUnknownSAMSite )
 	{
 		// controlled:
 		wString = ST::format("{}:", pwMiscSectorStrings[ 4 ]);
 		AddMonoString(box, wString);
 
 		// No/Yes
-		AddSecondColumnMonoString(box, pwMiscSectorStrings[StrategicMap[bCurrentTownMineSector.AsStrategicIndex()].fEnemyControlled ? 6 : 5]);
+		AddSecondColumnMonoString(box, pwMiscSectorStrings[StrategicMap[CALCULATE_STRATEGIC_INDEX(bCurrentTownMineSectorX, bCurrentTownMineSectorY)].fEnemyControlled ? 6 : 5]);
 
 		// militia - is there any?
 		wString = ST::format("{}:", pwTownInfoStrings[6]);
 		AddMonoString(box, wString);
 
-		ubMilitiaTotal = CountAllMilitiaInSector(bCurrentTownMineSector.x, bCurrentTownMineSector.y);
+		ubMilitiaTotal = CountAllMilitiaInSector(bCurrentTownMineSectorX, bCurrentTownMineSectorY);
 		if (ubMilitiaTotal > 0)
 		{
 			// some militia, show total & their breakdown by level
 			wString = ST::format("{}  ({}/{}/{})", ubMilitiaTotal,
-					MilitiaInSectorOfRank(bCurrentTownMineSector.x, bCurrentTownMineSector.y, GREEN_MILITIA),
-					MilitiaInSectorOfRank(bCurrentTownMineSector.x, bCurrentTownMineSector.y, REGULAR_MILITIA),
-					MilitiaInSectorOfRank(bCurrentTownMineSector.x, bCurrentTownMineSector.y, ELITE_MILITIA));
+					MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, GREEN_MILITIA),
+					MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, REGULAR_MILITIA),
+					MilitiaInSectorOfRank(bCurrentTownMineSectorX, bCurrentTownMineSectorY, ELITE_MILITIA));
 			AddSecondColumnMonoString(box, wString);
 		}
 		else
@@ -398,7 +402,7 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 		// percentage of current militia squad training completed
 		wString = ST::format("{}:", pwTownInfoStrings[5]);
 		AddMonoString(box, wString);
-		wString = ST::format("{}%", SectorInfo[bCurrentTownMineSector.AsByte()].ubMilitiaTrainingPercentDone);
+		wString = ST::format("{}%", SectorInfo[SECTOR(bCurrentTownMineSectorX, bCurrentTownMineSectorY)].ubMilitiaTrainingPercentDone);
 		AddSecondColumnMonoString(box, wString);
 	}
 
@@ -408,9 +412,9 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 	AddMonoString(box, wString);
 
 	// how many are there, really?
-	ubNumEnemies = NumEnemiesInSector(bCurrentTownMineSector);
+	ubNumEnemies = NumEnemiesInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY );
 
-	switch (WhatPlayerKnowsAboutEnemiesInSector(bCurrentTownMineSector.x, bCurrentTownMineSector.y))
+	switch ( WhatPlayerKnowsAboutEnemiesInSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY ) )
 	{
 		case KNOWS_NOTHING:
 			// show "Unknown"
@@ -450,7 +454,7 @@ static void AddItemsInSectorToBox(PopUpBox* const box)
 	wString = ST::format("{}:", pwMiscSectorStrings[ 2 ]);
 	AddMonoString(box, wString);
 
-	wString = ST::format("{}", GetNumberOfVisibleWorldItemsFromSectorStructureForSector(bCurrentTownMineSector));
+	wString = ST::format("{}", GetNumberOfVisibleWorldItemsFromSectorStructureForSector( bCurrentTownMineSectorX, bCurrentTownMineSectorY, bCurrentTownMineSectorZ ));
 	AddSecondColumnMonoString(box, wString);
 }
 
@@ -461,7 +465,7 @@ static void PositionTownMineInfoBox(PopUpBox* const box)
 	// position the box based on x and y of the selected sector
 	INT16 sX = 0;
 	INT16 sY = 0;
-	GetScreenXYFromMapXY(bCurrentTownMineSector.x, bCurrentTownMineSector.y, &sX, &sY);
+	GetScreenXYFromMapXY(bCurrentTownMineSectorX, bCurrentTownMineSectorY, &sX, &sY);
 	SGPBox const& area = GetBoxArea(box);
 
 	// now position box - the x axis

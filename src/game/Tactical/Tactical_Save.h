@@ -39,7 +39,7 @@ void InitTacticalSave();
 
 
 //Call this function to set the new sector a NPC will travel to
-void ChangeNpcToDifferentSector(MERCPROFILESTRUCT&, const SGPSector& sSector);
+void ChangeNpcToDifferentSector(MERCPROFILESTRUCT&, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 
 // Adds a rotting corpse definition to the end of a sectors rotting corpse temp file
@@ -62,10 +62,10 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 sMapX, INT16 sMapY
 void AddDeadSoldierToUnLoadedSector(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT32 uiFlags);
 
 
-BOOLEAN GetSectorFlagStatus(const SGPSector& sMap, SectorFlags);
 BOOLEAN GetSectorFlagStatus(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
-void    SetSectorFlag(const SGPSector& sMap, SectorFlags);
-void    ReSetSectorFlag(const SGPSector& sMap, SectorFlags);
+void    SetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
+void    ReSetSectorFlag(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
+
 
 //Saves the NPC temp Quote file to the saved game file
 void LoadTempNpcQuoteArrayToSaveGameFile(HWFILE);
@@ -83,19 +83,18 @@ void NewJA2EncryptedFileWrite(HWFILE, BYTE const* data, UINT32 uiBytesToWrite);
 //If hacker's mess with our save/temp files, this is our final line of defence.
 void InitExitGameDialogBecauseFileHackDetected(void);
 
-void HandleAllReachAbleItemsInTheSector(const SGPSector& sector);
+void HandleAllReachAbleItemsInTheSector(INT16 x, INT16 y, INT8 z);
 
-ST::string GetMapTempFileName(SectorFlags uiType, const SGPSector& sector);
 ST::string GetMapTempFileName(SectorFlags uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
-UINT32	GetNumberOfVisibleWorldItemsFromSectorStructureForSector(const SGPSector& sMap);
-void	SetNumberOfVisibleWorldItemsInSectorStructureForSector(const SGPSector& sMap, UINT32 uiNumberOfItems);
+UINT32	GetNumberOfVisibleWorldItemsFromSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
+void		SetNumberOfVisibleWorldItemsInSectorStructureForSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ, UINT32 uiNumberOfItems );
 
 #define NEW_ROTATION_ARRAY_SIZE			49
 #define BASE_NUMBER_OF_ROTATION_ARRAYS			19
 
 
-void SaveWorldItemsToTempItemFile(const SGPSector& sMap, const std::vector<WORLDITEM>& items);
+void SaveWorldItemsToTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, const std::vector<WORLDITEM>& items);
 
 #endif

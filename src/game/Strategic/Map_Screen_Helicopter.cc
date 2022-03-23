@@ -963,10 +963,10 @@ void HandleAnimationOfSectors( void )
 		switch( gubBlitSectorLocatorCode )
 		{
 			case LOCATOR_COLOR_RED: // normal one used for mines (will now be overriden with yellow)
-				HandleBlitOfSectorLocatorIcon(gsSectorLocator.x, gsSectorLocator.y, 0, LOCATOR_COLOR_RED);
+				HandleBlitOfSectorLocatorIcon( gsSectorLocatorX, gsSectorLocatorY, 0, LOCATOR_COLOR_RED );
 				break;
 			case LOCATOR_COLOR_YELLOW: // used for all other dialogues
-				HandleBlitOfSectorLocatorIcon(gsSectorLocator.y, gsSectorLocator.z, 0, LOCATOR_COLOR_YELLOW);
+				HandleBlitOfSectorLocatorIcon( gsSectorLocatorX, gsSectorLocatorY, 0, LOCATOR_COLOR_YELLOW );
 				break;
 		}
 	}
@@ -975,13 +975,13 @@ void HandleAnimationOfSectors( void )
 void HandleHelicopterOnGround(BOOLEAN handleGraphicToo)
 {
 	// No worries if underground
-	if (gWorldSector.z != 0) return;
+	if (gbWorldSectorZ != 0) return;
 
 	for (UINT8 site = 0; site != NUMBER_OF_REFUEL_SITES; ++site)
 	{
 		RefuelSite const& r = g_refuel_site[site];
 		// Is this refueling site sector the loaded sector?
-		if (gWorldSector.AsStrategicIndex() != r.sector) continue;
+		if (CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY) != r.sector) continue;
 
 		// YES, so find out if the chopper is landed here
 		if (IsHelicopterOnGroundAtRefuelingSite(r))
@@ -995,8 +995,8 @@ void HandleHelicopterOnGround(BOOLEAN handleGraphicToo)
 			if (iHelicopterVehicleId != -1)
 			{
 				MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
-				p.sSectorX = gWorldSector.x;
-				p.sSectorY = gWorldSector.y;
+				p.sSectorX = gWorldSectorX;
+				p.sSectorY = gWorldSectorY;
 			}
 		}
 		else

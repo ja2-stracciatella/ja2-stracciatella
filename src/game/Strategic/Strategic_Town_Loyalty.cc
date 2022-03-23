@@ -617,22 +617,24 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 	}
 }
 
-void RemoveRandomItemsInSector(const SGPSector& sSector, UINT8 const ubChance)
+void RemoveRandomItemsInSector(INT16 const sSectorX, INT16 const sSectorY, INT16 const sSectorZ, UINT8 const ubChance)
 {
 	/* Stealing should fail anyway 'cause there shouldn't be a temp file for
 	 * unvisited sectors, but let's check anyway */
-	Assert(GetSectorFlagStatus(sSector, SF_ALREADY_VISITED));
+	Assert(GetSectorFlagStatus(sSectorX, sSectorY, sSectorZ, SF_ALREADY_VISITED));
 
-	ST::string wSectorName = GetSectorIDString(sSector, TRUE);
+	ST::string wSectorName = GetSectorIDString(sSectorX, sSectorY, sSectorZ, TRUE);
 
 	// go through list of items in sector and randomly remove them
 
 	// if unloaded sector
-	if (gWorldSector != sSector)
+	if (gWorldSectorX  != sSectorX ||
+			gWorldSectorY  != sSectorY ||
+			gbWorldSectorZ != sSectorZ)
 	{
 		/* if the player has never been there, there's no temp file, and 0 items
 		 * will get returned, preventing any stealing */
-		std::vector<WORLDITEM> pItemList = LoadWorldItemsFromTempItemFile(sSector.x, sSector.y, sSector.z);
+		std::vector<WORLDITEM> pItemList = LoadWorldItemsFromTempItemFile(sSectorX, sSectorY, sSectorZ);
 		if (pItemList.size() == 0) return;
 
 		bool somethingWasStolen = false;
@@ -656,7 +658,7 @@ void RemoveRandomItemsInSector(const SGPSector& sSector, UINT8 const ubChance)
 		// only save if something was stolen
 		if (somethingWasStolen)
 		{
-			SaveWorldItemsToTempItemFile(sSector, pItemList);
+			SaveWorldItemsToTempItemFile(sSectorX, sSectorY, sSectorZ, pItemList);
 		}
 	}
 	else	// handle a loaded sector
@@ -854,15 +856,15 @@ void DecrementTownLoyaltyEverywhere( UINT32 uiLoyaltyDecrease )
 	}
 }
 // this applies the change to every town differently, depending on the distance from the event
-void HandleGlobalLoyaltyEvent(UINT8 ubEventType, const SGPSector& sSector)
+void HandleGlobalLoyaltyEvent( UINT8 ubEventType, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
 {
 	INT32 iLoyaltyChange;
 	INT8 bTownId = 0;
 
-	if (sSector.z == 0)
+	if( bSectorZ == 0 )
 	{
 		// grab town id, if this event occured within one
-		bTownId = GetTownIdForSector(sSector.AsByte());
+		bTownId = GetTownIdForSector(SECTOR(sSectorX, sSectorY));
 	}
 
 	// should other towns ignore events occuring in this town?
@@ -877,11 +879,11 @@ void HandleGlobalLoyaltyEvent(UINT8 ubEventType, const SGPSector& sSector)
 	switch (ubEventType)
 	{
 		case GLOBAL_LOYALTY_BATTLE_WON:
-			CheckConditionsForTriggeringCreatureQuest();
+			CheckConditionsForTriggeringCreatureQuest( sSectorX, sSectorY, bSectorZ );
 			iLoyaltyChange = 500;
 			break;
 		case GLOBAL_LOYALTY_QUEEN_BATTLE_WON:
-			CheckConditionsForTriggeringCreatureQuest();
+			CheckConditionsForTriggeringCreatureQuest( sSectorX, sSectorY, bSectorZ );
 			iLoyaltyChange = 1000;
 			break;
 		case GLOBAL_LOYALTY_BATTLE_LOST:
@@ -926,7 +928,7 @@ void HandleGlobalLoyaltyEvent(UINT8 ubEventType, const SGPSector& sSector)
 			return;
 	}
 
-	AffectAllTownsLoyaltyByDistanceFrom(iLoyaltyChange, sSector.x, sSector.y, sSector.z);
+	AffectAllTownsLoyaltyByDistanceFrom( iLoyaltyChange, sSectorX, sSectorY, bSectorZ);
 }
 
 
@@ -1037,18 +1039,18 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, INT16 sSec
 
 
 // to be called whenever player gains control of a sector in any way
-void CheckIfEntireTownHasBeenLiberated(INT8 bTownId, const SGPSector& sSector)
+void CheckIfEntireTownHasBeenLiberated( INT8 bTownId, INT16 sSectorX, INT16 sSectorY )
 {
 	// the whole town is under our control, check if we never libed this town before
 	if ( !gTownLoyalty[ bTownId ].fLiberatedAlready && IsTownUnderCompleteControlByPlayer ( bTownId ) )
 	{
-		if (MilitiaTrainingAllowedInSector(sSector.x, sSector.y, 0))
+		if ( MilitiaTrainingAllowedInSector( sSectorX, sSectorY, 0 ) )
 		{
 			// give a loyalty bonus
-			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_LIBERATE_WHOLE_TOWN, sSector);
+			HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_LIBERATE_WHOLE_TOWN, sSectorX, sSectorY, 0 );
 
 			// set fact is has been lib'ed and set history event
-			AddHistoryToPlayersLog(HISTORY_LIBERATED_TOWN, bTownId, GetWorldTotalMin(), sSector);
+			AddHistoryToPlayersLog( HISTORY_LIBERATED_TOWN, bTownId, GetWorldTotalMin(), sSectorX, sSectorY );
 
 			HandleMeanWhileEventPostingForTownLiberation( bTownId );
 		}
@@ -1160,9 +1162,9 @@ static UINT32 PlayerStrength(void)
 		if (s->bInSector ||
 			(
 				s->fBetweenSectors &&
-				s->ubPrevSectorID % 16 + 1 == gWorldSector.x &&
-				s->ubPrevSectorID / 16 + 1 == gWorldSector.y &&
-				s->bSectorZ == gWorldSector.z
+				s->ubPrevSectorID % 16 + 1 == gWorldSectorX &&
+				s->ubPrevSectorID / 16 + 1 == gWorldSectorY &&
+				s->bSectorZ == gbWorldSectorZ
 			))
 		{
 			// count this person's strength (condition), calculated as life reduced up to half according to maxbreath
@@ -1191,11 +1193,11 @@ static UINT32 EnemyStrength(void)
 //Function assumes that mercs have retreated already.  Handles two cases, one for general merc retreat
 //which slightly demoralizes the mercs, the other handles abandonment of militia forces which poses
 //as a serious loyalty penalty.
-void HandleLoyaltyImplicationsOfMercRetreat(INT8 bRetreatCode, const SGPSector& sSector)
+void HandleLoyaltyImplicationsOfMercRetreat( INT8 bRetreatCode, INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
-	if (CountAllMilitiaInSector(sSector.x, sSector.y))
+	if( CountAllMilitiaInSector( sSectorX, sSectorY ) )
 	{ //Big morale penalty!
-		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ABANDON_MILITIA, sSector);
+		HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ABANDON_MILITIA, sSectorX, sSectorY, (INT8)sSectorZ );
 	}
 
 	//Standard retreat penalty
@@ -1204,12 +1206,12 @@ void HandleLoyaltyImplicationsOfMercRetreat(INT8 bRetreatCode, const SGPSector& 
 		// if not worse than 2:1 odds, then penalize morale
 		if ( gTacticalStatus.fEnemyInSector && ( PlayerStrength() * 2 >= EnemyStrength() ) )
 		{
-			HandleMoraleEvent(nullptr, MORALE_RAN_AWAY, sSector.x, sSector.y, sSector.z);
+			HandleMoraleEvent( NULL, MORALE_RAN_AWAY, sSectorX, sSectorY, (INT8)sSectorZ );
 		}
 	}
 	else
 	{
-		HandleMoraleEvent(nullptr, MORALE_RAN_AWAY, sSector.x, sSector.y, sSector.z);
+		HandleMoraleEvent( NULL, MORALE_RAN_AWAY, sSectorX, sSectorY, (INT8)sSectorZ );
 	}
 }
 

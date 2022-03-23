@@ -315,7 +315,7 @@ static void StartMusicBasedOnMode(void)
 	switch (gubMusicMode) {
 		case MUSIC_TACTICAL_VICTORY:
 			gbVictorySongCount++;
-			if (gfUseCreatureMusic && !gWorldSector.z) {
+			if( gfUseCreatureMusic && !gbWorldSectorZ ) {
 				//We just killed all the creatures that just attacked the town.
 				gfUseCreatureMusic = FALSE;
 			}

@@ -128,7 +128,9 @@ void HandleStructChangeFromGridNo(SOLDIERTYPE* const s, GridNo const grid_no)
 		{
 			auto primaryDest = GCM->getPrimaryShippingDestination();
 			if (grid_no        == primaryDest->deliverySectorGridNo  &&
-			    gWorldSector == primaryDest->deliverySector &&
+			    gWorldSectorX  == primaryDest->deliverySectorX       &&
+			    gWorldSectorY  == primaryDest->deliverySectorY       &&
+			    gbWorldSectorZ == primaryDest->deliverySectorZ       &&
 					CheckFact(FACT_PABLOS_STOLE_FROM_LATEST_SHIPMENT, 0) &&
 					!CheckFact(FACT_PLAYER_FOUND_ITEMS_MISSING, 0))
 			{

@@ -225,7 +225,7 @@ void RenderMapScreenInterfaceBottom( void )
 
 		if (GetSectorFlagStatus(sSelMapX, sSelMapY, iCurrentMapSectorZ, SF_ALREADY_VISITED))
 		{
-			GetMapFileName(SGPSector(sSelMapX, sSelMapY, iCurrentMapSectorZ), bFilename, TRUE);
+			GetMapFileName(sSelMapX, sSelMapY, iCurrentMapSectorZ, bFilename, TRUE);
 			LoadRadarScreenBitmap( bFilename );
 		}
 		else
@@ -1133,16 +1133,15 @@ BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere const bExitToWhere)
 	if ( bExitToWhere == MAP_EXIT_TO_TACTICAL )
 	{
 		// if in battle or bloodcat ambush, the ONLY sector we can go tactical in is the one that's loaded
-		SGPSector sector(sSelMapX, sSelMapY, iCurrentMapSectorZ);
 		BOOLEAN fBattleGoingOn = gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fEnemyInSector || (gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE && HostileBloodcatsPresent());
-		BOOLEAN fCurrentSectorSelected = sector == gWorldSector;
+		BOOLEAN fCurrentSectorSelected = sSelMapX == gWorldSectorX && sSelMapY == gWorldSectorY && ((UINT8)iCurrentMapSectorZ) == gbWorldSectorZ;
 		if (fBattleGoingOn && !fCurrentSectorSelected)
 		{
 			return( FALSE );
 		}
 
 		// must have some mercs there
-		if (!CanGoToTacticalInSector(sector))
+		if( !CanGoToTacticalInSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ ) )
 		{
 			return( FALSE );
 		}
@@ -1187,7 +1186,7 @@ void HandleExitsFromMapScreen( void )
 				break;
 
 			case MAP_EXIT_TO_TACTICAL:
-				SetCurrentWorldSector(SGPSector(sSelMapX, sSelMapY, iCurrentMapSectorZ));
+				SetCurrentWorldSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ );
 				break;
 
 			case MAP_EXIT_TO_OPTIONS:

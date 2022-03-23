@@ -34,7 +34,9 @@ public:
 	const bool canDeliver;
 	const bool isPrimary;
 
-	const SGPSector deliverySector;
+	const uint8_t deliverySectorX;
+	const uint8_t deliverySectorY;
+	const uint8_t deliverySectorZ;
 	const int16_t deliverySectorGridNo;
 	const int32_t emailOffset;
 	const int32_t emailLength;

@@ -79,6 +79,9 @@ void SetOffPanicBombs(SOLDIERTYPE* s, INT8 bPanicTrigger);
 void UpdateExplosionFrame(EXPLOSIONTYPE* e, INT16 sCurrentFrame);
 void RemoveExplosionData(EXPLOSIONTYPE* e);
 
+void UpdateSAMDoneRepair(INT16 x, INT16 y, INT16 z);
+
+
 void SaveExplosionTableToSaveGameFile(HWFILE);
 void LoadExplosionTableFromSavedGameFile(HWFILE);
 

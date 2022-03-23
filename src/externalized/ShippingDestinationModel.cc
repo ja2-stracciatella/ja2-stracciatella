@@ -10,12 +10,13 @@ ShippingDestinationModel::ShippingDestinationModel(uint8_t locationId_,
 		chargeRateOverNight(chargeRateOverNight_), chargeRate2Days(chargeRate2Days_), chargeRateStandard(chargeRateStandard_),
 		flowersNextDayDeliveryCost(flowersNextDayDeliveryCost_), flowersWhenItGetsThereCost(flowersWhenItGetsThereCost_),
 		canDeliver(canDeliver_), isPrimary(isPrimary_),
-		deliverySector(SECTORX(deliverySectorId_), SECTORY(deliverySectorId_), deliverySectorZ_),
-		deliverySectorGridNo(deliverySectorGridNo_), emailOffset(emailOffset_), emailLength(emailLength_) {}
+		deliverySectorX(SECTORX(deliverySectorId_)), deliverySectorY(SECTORY(deliverySectorId_)),
+		deliverySectorZ(deliverySectorZ_), deliverySectorGridNo(deliverySectorGridNo_),
+		emailOffset(emailOffset_), emailLength(emailLength_) {}
 
 uint8_t ShippingDestinationModel::getDeliverySector() const
 {
-	return deliverySector.AsByte();
+	return SECTOR(deliverySectorX, deliverySectorY);
 }
 
 ShippingDestinationModel* ShippingDestinationModel::deserialize(JsonObjectReader& obj)

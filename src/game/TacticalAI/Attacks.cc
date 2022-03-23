@@ -844,7 +844,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 					}
 
 					//Only use it if we are in a surface sector ( basement will be hard enough, plus more chances of mercs being clumped together )
-					else if (gWorldSector.z > 0 && fSkipLocation)
+					else if( gbWorldSectorZ > 0 && fSkipLocation )
 					{
 						continue;
 					}

@@ -54,15 +54,18 @@ extern std::vector<GARRISON_GROUP> gGarrisonGroup;
 INT16 gsInterrogationGridNo[3] = { 7756, 7757, 7758 };
 
 //Counts enemies and crepitus, but not bloodcats.
-UINT8 NumHostilesInSector(const SGPSector& sSector)
+UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
-	Assert(sSector.IsValid());
 	UINT8 ubNumHostiles = 0;
 
-	if (sSector.z)
+	Assert( sSectorX >= 1 && sSectorX <= 16 );
+	Assert( sSectorY >= 1 && sSectorY <= 16 );
+	Assert( sSectorZ >= 0 && sSectorZ <= 3 );
+
+	if( sSectorZ )
 	{
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector(sSector);
+		pSector = FindUnderGroundSector( sSectorX, sSectorY, (UINT8)sSectorZ );
 		if( pSector )
 		{
 			ubNumHostiles = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures);
@@ -73,15 +76,15 @@ UINT8 NumHostilesInSector(const SGPSector& sSector)
 		SECTORINFO *pSector;
 
 		//Count stationary hostiles
-		pSector = &SectorInfo[sSector.AsByte()];
+		pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 		ubNumHostiles = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumCreatures);
 
 		//Count mobile enemies
 		CFOR_EACH_ENEMY_GROUP(pGroup)
 		{
 			if (!pGroup->fVehicle             &&
-					pGroup->ubSectorX == sSector.x &&
-					pGroup->ubSectorY == sSector.y)
+					pGroup->ubSectorX == sSectorX &&
+					pGroup->ubSectorY == sSectorY)
 			{
 				ubNumHostiles += pGroup->ubGroupSize;
 			}
@@ -91,15 +94,18 @@ UINT8 NumHostilesInSector(const SGPSector& sSector)
 	return ubNumHostiles;
 }
 
-UINT8 NumEnemiesInAnySector(const SGPSector& sSector)
+UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 {
-	Assert(sSector.IsValid());
 	UINT8 ubNumEnemies = 0;
 
-	if (sSector.z)
+	Assert( sSectorX >= 1 && sSectorX <= 16 );
+	Assert( sSectorY >= 1 && sSectorY <= 16 );
+	Assert( sSectorZ >= 0 && sSectorZ <= 3 );
+
+	if( sSectorZ )
 	{
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector(sSector);
+		pSector = FindUnderGroundSector( sSectorX, sSectorY, (UINT8)sSectorZ );
 		if( pSector )
 		{
 			ubNumEnemies = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
@@ -110,15 +116,15 @@ UINT8 NumEnemiesInAnySector(const SGPSector& sSector)
 		SECTORINFO *pSector;
 
 		//Count stationary enemies
-		pSector = &SectorInfo[sSector.AsByte()];
+		pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 		ubNumEnemies = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
 
 		//Count mobile enemies
 		CFOR_EACH_ENEMY_GROUP(pGroup)
 		{
 			if (!pGroup->fVehicle             &&
-					pGroup->ubSectorX == sSector.x &&
-					pGroup->ubSectorY == sSector.y)
+					pGroup->ubSectorX == sSectorX &&
+					pGroup->ubSectorY == sSectorY)
 			{
 				ubNumEnemies += pGroup->ubGroupSize;
 			}
@@ -128,18 +134,14 @@ UINT8 NumEnemiesInAnySector(const SGPSector& sSector)
 	return ubNumEnemies;
 }
 
-UINT8 NumEnemiesInSector(const SGPSector& sector)
-{
-	return NumEnemiesInSector(sector.x, sector.y);
-}
-
 UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
-	SGPSector sSector(sSectorX, sSectorY);
-	Assert(sSector.IsValid());
-
-	SECTORINFO *pSector = &SectorInfo[sSector.AsByte()];
-	UINT8 ubNumTroops = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
+	SECTORINFO *pSector;
+	UINT8 ubNumTroops;
+	Assert( sSectorX >= 1 && sSectorX <= 16 );
+	Assert( sSectorY >= 1 && sSectorY <= 16 );
+	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
+	ubNumTroops = (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
 
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
@@ -153,11 +155,13 @@ UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 	return ubNumTroops;
 }
 
-UINT8 NumStationaryEnemiesInSector(const SGPSector& sSector)
+UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
-	Assert(sSector.IsValid());
+	SECTORINFO *pSector;
+	Assert( sSectorX >= 1 && sSectorX <= 16 );
+	Assert( sSectorY >= 1 && sSectorY <= 16 );
+	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 
-	SECTORINFO* pSector = &SectorInfo[sSector.AsByte()];
 	if( pSector->ubGarrisonID == NO_GARRISON )
 	{ //If no garrison, no stationary.
 		return( 0 );
@@ -173,24 +177,25 @@ UINT8 NumStationaryEnemiesInSector(const SGPSector& sSector)
 	return (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
 }
 
-UINT8 NumMobileEnemiesInSector(const SGPSector& sSector)
+UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY )
 {
-	Assert(sSector.IsValid());
 	SECTORINFO *pSector;
 	UINT8 ubNumTroops;
+	Assert( sSectorX >= 1 && sSectorX <= 16 );
+	Assert( sSectorY >= 1 && sSectorY <= 16 );
 
 	ubNumTroops = 0;
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
 		if (!pGroup->fVehicle             &&
-				pGroup->ubSectorX == sSector.x &&
-				pGroup->ubSectorY == sSector.y)
+				pGroup->ubSectorX == sSectorX &&
+				pGroup->ubSectorY == sSectorY)
 		{
 			ubNumTroops += pGroup->ubGroupSize;
 		}
 	}
 
-	pSector = &SectorInfo[sSector.AsByte()];
+	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 	if( pSector->ubGarrisonID == ROADBLOCK )
 	{ //consider these troops as mobile troops even though they are in a garrison
 		ubNumTroops += (UINT8)(pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites);
@@ -200,18 +205,19 @@ UINT8 NumMobileEnemiesInSector(const SGPSector& sSector)
 }
 
 
-static void GetNumberOfMobileEnemiesInSector(const SGPSector& sSector, UINT8* pubNumAdmins, UINT8* pubNumTroops, UINT8* pubNumElites)
+static void GetNumberOfMobileEnemiesInSector(INT16 sSectorX, INT16 sSectorY, UINT8* pubNumAdmins, UINT8* pubNumTroops, UINT8* pubNumElites)
 {
-	Assert(sSector.IsValid());
 	SECTORINFO *pSector;
+	Assert( sSectorX >= 1 && sSectorX <= 16 );
+	Assert( sSectorY >= 1 && sSectorY <= 16 );
 
 	//Now count the number of mobile groups in the sector.
 	*pubNumTroops = *pubNumElites = *pubNumAdmins = 0;
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
 		if (!pGroup->fVehicle             &&
-				pGroup->ubSectorX == sSector.x &&
-				pGroup->ubSectorY == sSector.y)
+				pGroup->ubSectorX == sSectorX &&
+				pGroup->ubSectorY == sSectorY)
 		{
 			*pubNumTroops += pGroup->pEnemyGroup->ubNumTroops;
 			*pubNumElites += pGroup->pEnemyGroup->ubNumElites;
@@ -219,7 +225,7 @@ static void GetNumberOfMobileEnemiesInSector(const SGPSector& sSector, UINT8* pu
 		}
 	}
 
-	pSector = &SectorInfo[sSector.AsByte()];
+	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 	if( pSector->ubGarrisonID == ROADBLOCK )
 	{ //consider these troops as mobile troops even though they are in a garrison
 		*pubNumAdmins += pSector->ubNumAdmins;
@@ -230,10 +236,12 @@ static void GetNumberOfMobileEnemiesInSector(const SGPSector& sSector, UINT8* pu
 }
 
 
-static void GetNumberOfStationaryEnemiesInSector(const SGPSector& sSector, UINT8* pubNumAdmins, UINT8* pubNumTroops, UINT8* pubNumElites)
+static void GetNumberOfStationaryEnemiesInSector(INT16 sSectorX, INT16 sSectorY, UINT8* pubNumAdmins, UINT8* pubNumTroops, UINT8* pubNumElites)
 {
-	Assert(sSector.IsValid());
-	SECTORINFO* pSector = &SectorInfo[sSector.AsByte()];
+	SECTORINFO *pSector;
+	Assert( sSectorX >= 1 && sSectorX <= 16 );
+	Assert( sSectorY >= 1 && sSectorY <= 16 );
+	pSector = &SectorInfo[ SECTOR( sSectorX, sSectorY ) ];
 
 	//grab the number of each type in the stationary sector
 	*pubNumAdmins = pSector->ubNumAdmins;
@@ -244,15 +252,16 @@ static void GetNumberOfStationaryEnemiesInSector(const SGPSector& sSector, UINT8
 void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites )
 {
 	UINT8 ubNumAdmins, ubNumTroops, ubNumElites;
-	SGPSector sSector(sSectorX, sSectorY);
 
-	GetNumberOfStationaryEnemiesInSector(sSector, pubNumAdmins, pubNumTroops, pubNumElites);
-	GetNumberOfMobileEnemiesInSector(sSector, &ubNumAdmins, &ubNumTroops, &ubNumElites);
+	GetNumberOfStationaryEnemiesInSector( sSectorX, sSectorY, pubNumAdmins, pubNumTroops, pubNumElites );
+
+	GetNumberOfMobileEnemiesInSector( sSectorX, sSectorY, &ubNumAdmins, &ubNumTroops, &ubNumElites );
 
 	*pubNumAdmins += ubNumAdmins;
 	*pubNumTroops += ubNumTroops;
 	*pubNumElites += ubNumElites;
 }
+
 
 static bool IsAnyOfTeamOKInSector(INT8 const team)
 {
@@ -267,19 +276,22 @@ static bool IsAnyOfTeamOKInSector(INT8 const team)
 
 void EndTacticalBattleForEnemy()
 {
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+	INT8  const z = gbWorldSectorZ;
 	// Clear enemies in battle for all stationary groups in the sector
-	if (gWorldSector.z == 0)
+	if (z == 0)
 	{
-		SECTORINFO& sector = SectorInfo[gWorldSector.AsByte()];
+		SECTORINFO& sector = SectorInfo[SECTOR(x, y)];
 		sector.ubAdminsInBattle    = 0;
 		sector.ubTroopsInBattle    = 0;
 		sector.ubElitesInBattle    = 0;
 		sector.ubNumCreatures      = 0;
 		sector.ubCreaturesInBattle = 0;
 	}
-	else if (gWorldSector.z > 0)
+	else if (z > 0)
 	{
-		UNDERGROUND_SECTORINFO& sector = *FindUnderGroundSector(gWorldSector);
+		UNDERGROUND_SECTORINFO& sector = *FindUnderGroundSector(x, y, z);
 		sector.ubAdminsInBattle = 0;
 		sector.ubTroopsInBattle = 0;
 		sector.ubElitesInBattle = 0;
@@ -298,8 +310,8 @@ void EndTacticalBattleForEnemy()
 	{
 		GROUP const& g = *i;
 		if (g.fVehicle)       continue;
-		if (g.ubSectorX != gWorldSector.x) continue;
-		if (g.ubSectorY != gWorldSector.y) continue;
+		if (g.ubSectorX != x) continue;
+		if (g.ubSectorY != y) continue;
 		// XXX test for z missing?
 		ENEMYGROUP& eg = *g.pEnemyGroup;
 		eg.ubTroopsInBattle = 0;
@@ -312,7 +324,7 @@ void EndTacticalBattleForEnemy()
 	if (IsAnyOfTeamOKInSector(MILITIA_TEAM) &&
 			(IsAnyOfTeamOKInSector(ENEMY_TEAM) || IsAnyOfTeamOKInSector(CREATURE_TEAM)))
 	{
-		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ABANDON_MILITIA, gWorldSector);
+		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ABANDON_MILITIA, x, y, 0);
 	}
 }
 
@@ -337,7 +349,7 @@ void PrepareEnemyForSectorBattle()
 {
 	gfPendingEnemies = FALSE;
 
-	if (gWorldSector.z > 0)
+	if (gbWorldSectorZ > 0)
 	{
 		PrepareEnemyForUndergroundBattle();
 		return;
@@ -365,7 +377,10 @@ void PrepareEnemyForSectorBattle()
 		return;
 	}
 
-	if (gWorldSector.z == 0 && NumEnemiesInSector(gWorldSector) > 32)
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+
+	if (gbWorldSectorZ == 0 && NumEnemiesInSector(x, y) > 32)
 	{
 		gfPendingEnemies = TRUE;
 	}
@@ -373,7 +388,7 @@ void PrepareEnemyForSectorBattle()
 	UINT8       total_admins;
 	UINT8       total_troops;
 	UINT8       total_elites;
-	SECTORINFO& sector = SectorInfo[gWorldSector.AsByte()];
+	SECTORINFO& sector = SectorInfo[SECTOR(x, y)];
 	if (sector.uiFlags & SF_USE_MAP_SETTINGS)
 	{ // Count the number of enemy placements in a map and use those
 		total_admins = 0;
@@ -407,8 +422,8 @@ void PrepareEnemyForSectorBattle()
 	UINT8 const n_stationary_enemies = total_admins + total_troops + total_elites;
 	if (n_stationary_enemies > 32)
 	{
-		SLOGE(ST::format("The total stationary enemy forces in sector {} is {}. (max {})",
-			  gWorldSector.AsShortString(), total_admins + total_troops + total_elites, 32));
+		SLOGE("The total stationary enemy forces in sector %c%d is %d. (max %d)",
+					y + 'A' - 1, x, total_admins + total_troops + total_elites, 32);
 		total_admins = MIN(total_admins, 32);
 		total_troops = MIN(total_troops, 32 - total_admins);
 		total_elites = MIN(total_elites, 32 - total_admins + total_troops);
@@ -441,9 +456,9 @@ void PrepareEnemyForSectorBattle()
 		if (n_slots == 0) break;
 
 		if (g->fVehicle)         continue;
-		if (g->ubSectorX   != gWorldSector.x) continue;
-		if (g->ubSectorY   != gWorldSector.y) continue;
-		if (gWorldSector.z != 0) continue;
+		if (g->ubSectorX   != x) continue;
+		if (g->ubSectorY   != y) continue;
+		if (gbWorldSectorZ != 0) continue;
 
 		if (!g->fPlayer)
 		{ // Process enemy group in sector
@@ -515,9 +530,9 @@ void PrepareEnemyForSectorBattle()
 		if (n_slots == 0) break;
 
 		if (g->fVehicle) continue;
-		if (g->ubSectorX   != gWorldSector.x) continue;
-		if (g->ubSectorY   != gWorldSector.y) continue;
-		if (gWorldSector.z != 0) continue;
+		if (g->ubSectorX   != x) continue;
+		if (g->ubSectorY   != y) continue;
+		if (gbWorldSectorZ != 0) continue;
 
 		INT32 n        = g->ubGroupSize;
 		UINT8 n_admins = g->pEnemyGroup->ubAdminsInBattle;
@@ -561,7 +576,7 @@ void PrepareEnemyForSectorBattle()
 static void PrepareEnemyForUndergroundBattle()
 {
 	// This is the sector we are going to be fighting in.
-	UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(gWorldSector);
+	UNDERGROUND_SECTORINFO* const u = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 	Assert(u);
 	if (!u) return;
 
@@ -605,7 +620,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			else
 			{
 				UNDERGROUND_SECTORINFO *pUnderground;
-				pUnderground = FindUnderGroundSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+				pUnderground = FindUnderGroundSector( (UINT8)pSoldier->sSectorX, (UINT8)pSoldier->sSectorY, (UINT8)pSoldier->bSectorZ );
 				Assert( pUnderground );
 				if( pUnderground->ubNumElites )
 				{
@@ -720,7 +735,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 	}
 	else
 	{ //The enemy was in a stationary defence group
-		if (!gWorldSector.z || IsAutoResolveActive())
+		if( !gbWorldSectorZ || IsAutoResolveActive() )
 		{ //ground level (SECTORINFO)
 			SECTORINFO *pSector;
 			UINT32 ubTotalEnemies;
@@ -834,7 +849,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		}
 		else
 		{ //basement level (UNDERGROUND_SECTORINFO)
-			UNDERGROUND_SECTORINFO* pSector = FindUnderGroundSector(gWorldSector);
+			UNDERGROUND_SECTORINFO *pSector = FindUnderGroundSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 			UINT32 ubTotalEnemies = pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites;
 			if( pSector )
 			{
@@ -908,8 +923,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 							pSector->ubCreaturesInBattle--;
 						}
 
-						const SGPSector sectorJ9(9, 10);
-						if (!pSector->ubNumCreatures && gWorldSector != sectorJ9)
+						if( !pSector->ubNumCreatures && gWorldSectorX != 9 && gWorldSectorY != 10 )
 						{ //If the player has successfully killed all creatures in ANY underground sector except J9
 							//then cancel any pending creature town attack.
 							DeleteAllStrategicEventsOfType( EVENT_CREATURE_ATTACK );
@@ -925,7 +939,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 							InvalidateWorldRedundency();
 							//Now that the queen is dead, turn off the creature quest.
 							EndCreatureQuest();
-							EndQuest(QUEST_CREATURES, gWorldSector);
+							EndQuest( QUEST_CREATURES, gWorldSectorX, gWorldSectorY );
 						}
 						break;
 				}
@@ -960,9 +974,9 @@ void AddPossiblePendingEnemiesToBattle()
 
 		GROUP const& g = *i;
 		if (g.fVehicle)                   continue;
-		if (g.ubSectorX != gWorldSector.x) continue;
-		if (g.ubSectorY != gWorldSector.y) continue;
-		if (gWorldSector.z != 0)          continue;
+		if (g.ubSectorX != gWorldSectorX) continue;
+		if (g.ubSectorY != gWorldSectorY) continue;
+		if (gbWorldSectorZ != 0)          continue;
 		// This enemy group is currently in the sector.
 		ENEMYGROUP& eg          = *g.pEnemyGroup;
 		UINT8       n_elites    = 0;
@@ -1072,7 +1086,7 @@ static void AddEnemiesToBattle(GROUP const& g, UINT8 const strategic_insertion_c
 		{ // No edgepoints left, so put him at the entrypoint
 			s.ubStrategicInsertionCode = strategic_insertion_code;
 		}
-		UpdateMercInSector(s, gWorldSector);
+		UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, 0);
 	}
 	Assert(n_admins == 0);
 	Assert(n_troops == 0);
@@ -1119,14 +1133,14 @@ void LoadUnderGroundSectorInfoFromSavedGame(HWFILE const f)
 }
 
 
-UNDERGROUND_SECTORINFO* FindUnderGroundSector(const SGPSector& sector)
+UNDERGROUND_SECTORINFO* FindUnderGroundSector(INT16 const x, INT16 const y, UINT8 const z)
 {
 	UNDERGROUND_SECTORINFO* i = gpUndergroundSectorInfoHead;
 	for (; i; i = i->next)
 	{
-		if (i->ubSectorX != sector.x) continue;
-		if (i->ubSectorY != sector.y) continue;
-		if (i->ubSectorZ != sector.z) continue;
+		if (i->ubSectorX != x) continue;
+		if (i->ubSectorY != y) continue;
+		if (i->ubSectorZ != z) continue;
 		break;
 	}
 	return i;
@@ -1154,17 +1168,17 @@ void EndCaptureSequence( )
 		{
 			// CJC Dec 1 2002: fixing multiple captures:
 			gStrategicStatus.uiFlags |= STRATEGIC_PLAYER_CAPTURED_FOR_RESCUE;
-			StartQuest(QUEST_HELD_IN_ALMA, gWorldSector);
+			StartQuest( QUEST_HELD_IN_ALMA, gWorldSectorX, gWorldSectorY );
 		}
 		// CJC Dec 1 2002: fixing multiple captures:
 		//else if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTDONE )
 		else if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTDONE && gubQuest[ QUEST_INTERROGATION ] == QUESTNOTSTARTED )
 		{
-			StartQuest(QUEST_INTERROGATION, gWorldSector);
+			StartQuest( QUEST_INTERROGATION, gWorldSectorX, gWorldSectorY );
 			// CJC Dec 1 2002: fixing multiple captures:
 			gStrategicStatus.uiFlags |= STRATEGIC_PLAYER_CAPTURED_FOR_ESCAPE;
 
-			ScheduleMeanwhileEvent(SGPSector(7, 14), 0, INTERROGATION, QUEEN, 10);
+			ScheduleMeanwhileEvent(7, 14, 0, INTERROGATION, QUEEN, 10);
 		}
 		// CJC Dec 1 2002: fixing multiple captures
 		else
@@ -1247,8 +1261,8 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	// IF there are no enemies, and we need to do alma, skip!
 	if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTNOTSTARTED && iNumEnemiesInSector == 0 )
 	{
-		InternalStartQuest(QUEST_HELD_IN_ALMA, gWorldSector, FALSE);
-		InternalEndQuest(QUEST_HELD_IN_ALMA, gWorldSector, FALSE);
+		InternalStartQuest( QUEST_HELD_IN_ALMA, gWorldSectorX, gWorldSectorY, FALSE );
+		InternalEndQuest( QUEST_HELD_IN_ALMA, gWorldSectorX, gWorldSectorY, FALSE );
 	}
 
 	HandleMoraleEvent( pSoldier, MORALE_MERC_CAPTURED, pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );

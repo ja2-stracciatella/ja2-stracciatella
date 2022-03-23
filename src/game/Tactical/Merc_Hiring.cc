@@ -212,7 +212,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 		// Set starting conditions for the merc
 		s->iStartContractTime = GetWorldDay();
 
-		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_MERC, pid, GetWorldTotalMin(), SGPSector(-1, -1));
+		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_MERC, pid, GetWorldTotalMin(), -1, -1);
 	}
 	else if (h.bWhatKindOfMerc == MERC_TYPE__PLAYER_CHARACTER)
 	{
@@ -237,17 +237,17 @@ static void CheckForValidArrivalSector(void);
 void MercArrivesCallback(SOLDIERTYPE& s)
 {
 	UINT32 uiTimeOfPost;
-	static const SGPSector start(gamepolicy(start_sector));
-	SGPSector arrival(g_merc_arrive_sector);
 
-	if (!DidGameJustStart() && arrival == start)
+	if (!DidGameJustStart() && g_merc_arrive_sector == gamepolicy(start_sector))
 	{
 		// Mercs arriving in start sector. This sector has been deemed as the always
 		// safe sector. Seeing we don't support entry into a hostile sector (except
 		// for the beginning), we will nuke any enemies in this sector first.
-		if (gWorldSector != start)
+		if (gWorldSectorX != SECTORX(gamepolicy(start_sector)) ||
+			gWorldSectorY != SECTORY(gamepolicy(start_sector)) ||
+			gbWorldSectorZ != 0)
 		{
-			EliminateAllEnemies(arrival);
+			EliminateAllEnemies(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector));
 		}
 	}
 
@@ -265,13 +265,13 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 	// ATE: Make sure we use global.....
 	if (s.fUseLandingZoneForArrival)
 	{
-		s.sSectorX = arrival.x;
-		s.sSectorY = arrival.y;
+		s.sSectorX = SECTORX(g_merc_arrive_sector);
+		s.sSectorY = SECTORY(g_merc_arrive_sector);
 		s.bSectorZ = 0;
 	}
 
 	// Add merc to sector ( if it's the current one )
-	if (gWorldSector.x == s.sSectorX && gWorldSector.y == s.sSectorY && s.bSectorZ == gWorldSector.z)
+	if (gWorldSectorX == s.sSectorX && gWorldSectorY == s.sSectorY && s.bSectorZ == gbWorldSectorZ)
 	{
 		// OK, If this sector is currently loaded, and guy does not have CHOPPER insertion code....
 		// ( which means we are at beginning of game if so )
@@ -285,7 +285,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 			if ( guiCurrentScreen == MAP_SCREEN )
 			{
 				// ATE: Make sure the current one is selected!
-				ChangeSelectedMapSector(gWorldSector);
+				ChangeSelectedMapSector( gWorldSectorX, gWorldSectorY, 0 );
 
 				RequestTriggerExitFromMapscreen( MAP_EXIT_TO_TACTICAL );
 			}
@@ -293,7 +293,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 			s.ubStrategicInsertionCode = INSERTION_CODE_CHOPPER;
 		}
 
-		UpdateMercInSector(s, SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ));
+		UpdateMercInSector(s, s.sSectorX, s.sSectorY, s.bSectorZ);
 	}
 	else
 	{
@@ -357,7 +357,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 	fTeamPanelDirty = TRUE;
 
 	// if the currently selected sector has no one in it, select this one instead
-	if (!CanGoToTacticalInSector(SGPSector(sSelMapX, sSelMapY, iCurrentMapSectorZ)))
+	if ( !CanGoToTacticalInSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ ) )
 	{
 		ChangeSelectedMapSector(s.sSectorX, s.sSectorY, 0);
 	}

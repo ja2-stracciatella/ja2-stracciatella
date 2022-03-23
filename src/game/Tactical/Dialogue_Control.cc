@@ -1290,10 +1290,10 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* const blt)
 		MPrint(sFontX, sFontY, s->name);
 
 		// What sector are we in, (and is it the same as ours?)
-		SGPSector sSector(s->sSectorX, s->sSectorY, s->bSectorZ);
-		if (sSector != gWorldSector || s->fBetweenSectors)
+		if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY ||
+			s->bSectorZ != gbWorldSectorZ || s->fBetweenSectors)
 		{
-			ST::string sector_id = GetSectorIDString(sSector, FALSE);
+			ST::string sector_id = GetSectorIDString(s->sSectorX, s->sSectorY, s->bSectorZ, FALSE);
 			sector_id = ReduceStringLength(sector_id, 64, BLOCKFONT2);
 			FindFontCenterCoordinates(x + 12, y + 68, 73, 9, sector_id, BLOCKFONT2, &sFontX, &sFontY);
 			MPrint(sFontX, sFontY, sector_id);

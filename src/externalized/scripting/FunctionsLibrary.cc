@@ -13,9 +13,10 @@
 
 std::string GetCurrentSector()
 {
-	ST::string str = (gWorldSector.z > 0) ?
-		gWorldSector.AsLongString() :
-		gWorldSector.AsShortString();
+	ST::string str = (gbWorldSectorZ > 0) ?
+		ST::format("{c}{}-{}", (gWorldSectorY + 'A' - 1), gWorldSectorX, gbWorldSectorZ) :
+		ST::format("{c}{}", (gWorldSectorY + 'A' - 1), gWorldSectorX)
+	;
 	return str.to_std_string();
 }
 
@@ -42,8 +43,8 @@ UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(const std::string sectorID)
 		throw std::runtime_error("Invalid underground sectorID");
 	}
 
-	UINT32 ubSector = SECTOR_FROM_SECTOR_SHORT_STRING(stSector.c_str());
-	return FindUnderGroundSector(SGPSector(ubSector, ubSectorZ, ""));
+	UINT8 ubSector = SECTOR_FROM_SECTOR_SHORT_STRING(stSector.c_str());
+	return FindUnderGroundSector(SECTORX(ubSector), SECTORY(ubSector), ubSectorZ);
 }
 
 OBJECTTYPE* CreateItem(const UINT16 usItem, const INT8 bStatus)

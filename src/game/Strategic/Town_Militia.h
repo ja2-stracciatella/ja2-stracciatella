@@ -23,16 +23,16 @@
 
 
 // this handles what happens when a new militia unit is finishes getting trained
-void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector);
+void TownMilitiaTrainingCompleted( SOLDIERTYPE *pTrainer, INT16 sMapX, INT16 sMapY );
 
 // Given a SOLDIER_CLASS_ returns a _MITILIA rank or -1 if it is not militia
 INT8 SoldierClassToMilitiaRank(UINT8 soldier_class);
 
 // remove militias of a certain rank
-void StrategicRemoveMilitiaFromSector(const SGPSector& sMap, UINT8 ubRank, UINT8 ubHowMany);
+void StrategicRemoveMilitiaFromSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany);
 
 // Check for promotions and handle them
-UINT8 CheckOneMilitiaForPromotion(const SGPSector& sMap, UINT8 &current_rank, UINT8 kill_points);
+UINT8 CheckOneMilitiaForPromotion(INT16 x, INT16 y, UINT8 &current_rank, UINT8 kill_points);
 
 ST::string BuildMilitiaPromotionsString();
 
@@ -40,7 +40,7 @@ UINT8 CountAllMilitiaInSector(INT16 sMapX, INT16 sMapY);
 UINT8 MilitiaInSectorOfRank(INT16 sMapX, INT16 sMapY, UINT8 ubRank);
 
 // Returns TRUE if sector is under player control, has no enemies in it, and isn't currently in combat mode
-BOOLEAN SectorOursAndPeaceful(const SGPSector& sector);
+BOOLEAN SectorOursAndPeaceful( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 
 // tell player how much it will cost
 void HandleInterfaceMessageForCostOfTrainingMilitia( SOLDIERTYPE *pSoldier );
@@ -52,7 +52,7 @@ void HandleMilitiaStatusInCurrentMapBeforeLoadingNewMap( void );
 bool CanNearbyMilitiaScoutThisSector(INT16 x, INT16 y);
 
 // Is the town or SAM site here full of milita?
-BOOLEAN IsAreaFullOfMilitia(const SGPSector& sector);
+BOOLEAN IsAreaFullOfMilitia(const INT16 sector_x, const INT16 sector_y, const INT8 sector_z);
 
 // now that town training is complete, handle the continue boxes
 void HandleContinueOfTownTraining( void );

@@ -170,7 +170,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 				if (pGroup)
 				{
 					// set where it is and where it's going, then make it arrive there.  Don't check for battle
-					PlaceGroupInSector(g, SGPSector(pGroup->ubPrevX, pGroup->ubPrevY), SGPSector(pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ), false); // XXX TODO001D
+					PlaceGroupInSector(g, pGroup->ubPrevX, pGroup->ubPrevY, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ, false); // XXX TODO001D
 				}
 			}
 		}
@@ -585,9 +585,9 @@ BOOLEAN IsSquadOnCurrentTacticalMap( INT32 iCurrentSquad )
 	{
 		SOLDIERTYPE const* const s = *i;
 		// ATE; Added more checks here for being in sector ( fBetweenSectors and SectorZ )
-		if (s->sSectorX == gWorldSector.x  &&
-				s->sSectorY == gWorldSector.y  &&
-				s->bSectorZ == gWorldSector.z &&
+		if (s->sSectorX == gWorldSectorX  &&
+				s->sSectorY == gWorldSectorY  &&
+				s->bSectorZ == gbWorldSectorZ &&
 				!s->fBetweenSectors)
 		{
 			return( TRUE );

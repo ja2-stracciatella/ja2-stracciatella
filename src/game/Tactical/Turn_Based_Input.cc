@@ -1897,7 +1897,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 		case 'o':
 			if (CHEATER_CHEAT_LEVEL())
 			{
-				gStrategicStatus.usPlayerKills += NumEnemiesInAnySector(gWorldSector);
+				gStrategicStatus.usPlayerKills += NumEnemiesInAnySector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 				ObliterateSector();
 			}
 			break;
@@ -2306,7 +2306,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 						if (++gubCheatLevel == strlen(getCheatCode()))
 						{
 							ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, pMessageStrings[MSG_CHEAT_LEVEL_TWO]);
-							AddHistoryToPlayersLog(HISTORY_CHEAT_ENABLED, 0, GetWorldTotalMin(), SGPSector(-1, -1));
+							AddHistoryToPlayersLog(HISTORY_CHEAT_ENABLED, 0, GetWorldTotalMin(), -1, -1);
 						}
 						continue;
 					}
@@ -2820,9 +2820,9 @@ static void CreateNextCivType(void)
 	SOLDIERCREATE_STRUCT MercCreateStruct;
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile  = NO_PROFILE;
-	MercCreateStruct.sSectorX   = gWorldSector.x;
-	MercCreateStruct.sSectorY   = gWorldSector.y;
-	MercCreateStruct.bSectorZ   = gWorldSector.z;
+	MercCreateStruct.sSectorX   = gWorldSectorX;
+	MercCreateStruct.sSectorY   = gWorldSectorY;
+	MercCreateStruct.bSectorZ   = gbWorldSectorZ;
 	MercCreateStruct.bBodyType  = bBodyType;
 	MercCreateStruct.bDirection = SOUTH;
 
@@ -2898,9 +2898,9 @@ static void CreatePlayerControlledMonster(void)
 	SOLDIERCREATE_STRUCT MercCreateStruct;
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile        = NO_PROFILE;
-	MercCreateStruct.sSectorX         = gWorldSector.x;
-	MercCreateStruct.sSectorY         = gWorldSector.y;
-	MercCreateStruct.bSectorZ         = gWorldSector.z;
+	MercCreateStruct.sSectorX         = gWorldSectorX;
+	MercCreateStruct.sSectorY         = gWorldSectorY;
+	MercCreateStruct.bSectorZ         = gbWorldSectorZ;
 	//Note:  only gets called if Alt and/or Ctrl isn't pressed!
 	MercCreateStruct.bBodyType        = (_KeyDown(SDLK_INSERT) ? QUEENMONSTER : ADULTFEMALEMONSTER);
 	MercCreateStruct.bTeam            = CREATURE_TEAM;

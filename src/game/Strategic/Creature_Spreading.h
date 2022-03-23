@@ -16,14 +16,14 @@ BOOLEAN PrepareCreaturesForBattle(void);
 void CreatureNightPlanning(void);
 void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector);
 
-void CheckConditionsForTriggeringCreatureQuest();
+void CheckConditionsForTriggeringCreatureQuest( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
 
 extern BOOLEAN gfUseCreatureMusic;
 
 BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex );
 
 // Returns true if valid and creature quest over, false if creature quest active or not yet started
-bool GetWarpOutOfMineCodes(SGPSector& sector, GridNo* insertion_grid_no);
+bool GetWarpOutOfMineCodes(INT16* sector_x, INT16* sector_y, INT8* sector_z, GridNo* insertion_grid_no);
 
 extern INT16 gsCreatureInsertionCode;
 extern INT16 gsCreatureInsertionGridNo;

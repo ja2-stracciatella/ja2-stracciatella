@@ -117,7 +117,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* pSoldier);
 void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier );
 
 // remove random item from this sector
-void RemoveRandomItemsInSector(const SGPSector& sector, UINT8 ubChance );
+void RemoveRandomItemsInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubChance );
 
 // build list of town sectors
 void BuildListOfTownSectors( void );
@@ -140,10 +140,10 @@ void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 
 // these are used to handle global loyalty events (ones that effect EVERY town on the map)
 void IncrementTownLoyaltyEverywhere( UINT32 uiLoyaltyIncrease );
 void DecrementTownLoyaltyEverywhere( UINT32 uiLoyaltyDecrease );
-void HandleGlobalLoyaltyEvent(UINT8 ubEventType, const SGPSector& sSector);
+void HandleGlobalLoyaltyEvent( UINT8 ubEventType, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
 
 // handle a town being liberated for the first time
-void CheckIfEntireTownHasBeenLiberated(INT8 bTownId, const SGPSector& sSector);
+void CheckIfEntireTownHasBeenLiberated( INT8 bTownId, INT16 sSectorX, INT16 sSectorY );
 void CheckIfEntireTownHasBeenLost( INT8 bTownId, INT16 sSectorX, INT16 sSectorY );
 
 void HandleLoyaltyChangeForNPCAction( UINT8 ubNPCProfileId );
@@ -161,7 +161,7 @@ INT32 GetNumberOfWholeTownsUnderControlButExcludeCity( INT8 bCityToExclude );
 #define RETREAT_TACTICAL_TRAVERSAL 0
 #define RETREAT_PBI 1
 #define RETREAT_AUTORESOLVE 2
-void HandleLoyaltyImplicationsOfMercRetreat(INT8 bRetreatCode, const SGPSector& sSector);
+void HandleLoyaltyImplicationsOfMercRetreat( INT8 bRetreatCode, INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
 
 void MaximizeLoyaltyForDeidrannaKilled( void );
 

@@ -128,7 +128,7 @@ public:
 	virtual const std::vector<const CreatureLairModel*>& getCreatureLairs() const override;
 	virtual const CreatureLairModel* getCreatureLair(uint8_t lairId) const override;
 	virtual const CreatureLairModel* getCreatureLairByMineId(uint8_t mineId) const override;
-	virtual const MineModel* getMineForSector(const SGPSector& sector) const override;
+	virtual const MineModel* getMineForSector(uint8_t sectorX, uint8_t sectorY, uint8_t sectorZ) const override;
 	virtual const MineModel* getMine(uint8_t mineId) const override;
 	virtual const std::vector<const MineModel*>& getMines() const override;
 	virtual const std::vector<const SamSiteModel*>& getSamSites() const override;

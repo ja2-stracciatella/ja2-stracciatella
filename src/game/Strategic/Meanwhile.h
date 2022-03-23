@@ -29,7 +29,8 @@ enum
 
 struct MEANWHILE_DEFINITION
 {
-	SGPSector				sSector;
+	INT16				sSectorX;
+	INT16				sSectorY;
 	UINT16			usTriggerEvent;
 
 	UINT8				ubMeanwhileID;
@@ -37,7 +38,7 @@ struct MEANWHILE_DEFINITION
 };
 
 
-void ScheduleMeanwhileEvent(const SGPSector& sector, UINT16 trigger_event, UINT8 meanwhile_id, UINT8 npc_profile, UINT32 time);
+void ScheduleMeanwhileEvent(INT16 x, INT16 y, UINT16 trigger_event, UINT8 meanwhile_id, UINT8 npc_profile, UINT32 time);
 
 void BeginMeanwhile(UINT8 ubMeanwhileID);
 
@@ -62,7 +63,7 @@ void HandleMeanWhileEventPostingForSAMLiberation( INT8 bSAMId );
 void HandleFirstMeanWhileSetUpWithTrashWorld( void );
 
 // battle ended, check if we should set up a meanwhile?
-void HandleFirstBattleEndingWhileInTown(const SGPSector& sector, BOOLEAN fFromAutoResolve);
+void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 bSectorZ, BOOLEAN fFromAutoResolve );
 
 // lost an entire town to the enemy!
 void HandleMeanWhileEventPostingForTownLoss();

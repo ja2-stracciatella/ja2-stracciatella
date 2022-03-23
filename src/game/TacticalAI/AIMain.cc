@@ -1926,8 +1926,7 @@ void HandleInitialRedAlert(INT8 bTeam)
 		MakeClosestEnemyChosenOne();
 	}
 
-	static const SGPSector meduna(3, MAP_ROW_P);
-	if (bTeam == ENEMY_TEAM && gWorldSector == meduna)
+	if ( bTeam == ENEMY_TEAM && gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_P && gbWorldSectorZ == 0 )
 	{
 		// alert Queen and Joe if they are around
 		SOLDIERTYPE *			pSoldier;

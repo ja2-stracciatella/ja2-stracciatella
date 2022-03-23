@@ -334,13 +334,13 @@ static void UpdateOldVersionMap(void)
 		}
 		else
 		{
-			if (gWorldSector.z)
+			if( gbWorldSectorZ )
 			{
-				SLOGA(ST::format("Currently loaded map ({}.dat) is invalid -- less than the minimum supported version.", gWorldSector.AsLongString()));
+				SLOGA("Currently loaded map (%c%d_b%d.dat) is invalid -- less than the minimum supported version.", gWorldSectorY + 'A' - 1, gWorldSectorX, gbWorldSectorZ);
 			}
-			else if (!gWorldSector.z)
+			else if( !gbWorldSectorZ )
 			{
-				SLOGA(ST::format("Currently loaded map (%c%d.dat) is invalid -- less than the minimum supported version.", gWorldSector.AsShortString()));
+				SLOGA("Currently loaded map (%c%d.dat) is invalid -- less than the minimum supported version.", gWorldSectorY + 'A' - 1, gWorldSectorX);
 			}
 		}
 	}

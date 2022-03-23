@@ -471,7 +471,7 @@ void HandleHeliDrop( )
 				// Add merc to sector
 				SOLDIERTYPE& s = *gHeliSeats[cnt];
 				s.ubStrategicInsertionCode = INSERTION_CODE_NORTH;
-				UpdateMercInSector(s, SGPSector(gamepolicy(start_sector)));
+				UpdateMercInSector(s, SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
 
 				// Check for merc arrives quotes...
 				HandleMercArrivesQuotes(s);
@@ -604,7 +604,7 @@ void HandleHeliDrop( )
 						// Change insertion code
 						s.ubStrategicInsertionCode = INSERTION_CODE_NORTH;
 
-						UpdateMercInSector(s, SGPSector(gamepolicy(start_sector)));
+						UpdateMercInSector(s, SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
 
 						// IF the first guy down, set squad!
 						if ( gfFirstGuyDown )

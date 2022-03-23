@@ -91,7 +91,9 @@ EXIT_DIALOG_STRUCT gExitDialog;
 
 UINT8   gubExitGUIDirection;
 INT16   gsExitGUIAdditionalData;
-SGPSector gsWarpWorld;
+INT16   gsWarpWorldX;
+INT16   gsWarpWorldY;
+INT8    gbWarpWorldZ;
 INT16   gsWarpGridNo;
 
 
@@ -218,9 +220,9 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	{
 		if (pSoldier == sel) continue;
 		if( !pSoldier->fBetweenSectors &&
-			pSoldier->sSectorX == gWorldSector.x &&
-			pSoldier->sSectorY == gWorldSector.y &&
-			pSoldier->bSectorZ == gWorldSector.z &&
+			pSoldier->sSectorX == gWorldSectorX &&
+			pSoldier->sSectorY == gWorldSectorY &&
+			pSoldier->bSectorZ == gbWorldSectorZ &&
 			pSoldier->bLife >= OKLIFE &&
 			pSoldier->bAssignment != sel->bAssignment &&
 			pSoldier->bAssignment != ASSIGNMENT_POW &&
@@ -298,7 +300,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 			gExitDialog.fGotoSectorDisabled = TRUE;
 			gExitDialog.fGotoSector = FALSE;
 		}
-		else if (GetNumberOfMilitiaInSector(gWorldSector))
+		else if( GetNumberOfMilitiaInSector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) )
 		{
 			//Leaving this sector will result in militia being forced to fight the battle, can't load adjacent sector.
 			gExitDialog.fGotoSectorDisabled = TRUE;
@@ -398,12 +400,12 @@ static void DoneFadeOutWarpCallback(void)
 		if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector)
 		{
 			gfTacticalTraversal = TRUE;
-			SetGroupSectorValue(gsWarpWorld, *GetGroup(pSoldier->ubGroupID));
+			SetGroupSectorValue(gsWarpWorldX, gsWarpWorldY, gbWarpWorldZ, *GetGroup(pSoldier->ubGroupID));
 
 			// Set next sectore
-			pSoldier->sSectorX = gsWarpWorld.x;
-			pSoldier->sSectorY = gsWarpWorld.y;
-			pSoldier->bSectorZ = gsWarpWorld.z;
+			pSoldier->sSectorX = gsWarpWorldX;
+			pSoldier->sSectorY = gsWarpWorldY;
+			pSoldier->bSectorZ = gbWarpWorldZ;
 
 			// Set gridno
 			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
@@ -415,7 +417,7 @@ static void DoneFadeOutWarpCallback(void)
 
 
 	// OK, insertion data found, enter sector!
-	SetCurrentWorldSector(gsWarpWorld);
+	SetCurrentWorldSector( gsWarpWorldX, gsWarpWorldY, gbWarpWorldZ );
 
 	// OK, once down here, adjust the above map with crate info....
 	gfTacticalTraversal = FALSE;
@@ -448,9 +450,9 @@ void InitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdditionalData)
 	gubExitGUIDirection     = ubDirection;
 	gsExitGUIAdditionalData = sAdditionalData;
 
-	if (gWorldSector.z >= 2 && gubQuest[ QUEST_CREATURES ] == QUESTDONE)
+	if ( gbWorldSectorZ >= 2 && gubQuest[ QUEST_CREATURES ] == QUESTDONE )
 	{
-		if (GetWarpOutOfMineCodes(gsWarpWorld, &gsWarpGridNo))
+		if ( GetWarpOutOfMineCodes( &gsWarpWorldX, &gsWarpWorldY, &gbWarpWorldZ, &gsWarpGridNo ) )
 		{
 			// ATE: Check if we are in a creature lair and bring up box if so....
 			DoMessageBox(MSG_BOX_BASIC_STYLE, gzLateLocalizedString[STR_LATE_33], GAME_SCREEN,

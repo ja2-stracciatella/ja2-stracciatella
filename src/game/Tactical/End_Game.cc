@@ -54,8 +54,7 @@ static BOOLEAN DoesO3SectorStatueExistHere( INT16 sGridNo )
 	EXITGRID ExitGrid;
 
 	// First check current sector......
-	static const SGPSector sectorO3(3, MAP_ROW_O);
-	if (gWorldSector == sectorO3)
+	if ( gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_O && gbWorldSectorZ == 0 )
 	{
 		// Check for exitence of and exit grid here...
 		// ( if it doesn't then the change has already taken place )
@@ -275,16 +274,15 @@ static void DoneFadeOutKilledQueen()
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
-	const SGPSector upstairs(3, MAP_ROW_P, 0);
-	HandleMoraleEvent(0, MORALE_QUEEN_BATTLE_WON, upstairs.x, upstairs.y, upstairs.z);
-	HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_QUEEN_BATTLE_WON, upstairs);
+	HandleMoraleEvent(0, MORALE_QUEEN_BATTLE_WON, 3, MAP_ROW_P, 0);
+	HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_QUEEN_BATTLE_WON, 3, MAP_ROW_P, 0);
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
-	SetThisSectorAsPlayerControlled(gWorldSector, TRUE);
+	SetThisSectorAsPlayerControlled(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE);
 
 	// ATE: Force change of level set z to 1
-	gWorldSector.z = 1;
+	gbWorldSectorZ = 1;
 
 	// Clear out dudes
 	SECTORINFO& sector = SectorInfo[SEC_P3];
@@ -298,10 +296,10 @@ static void DoneFadeOutKilledQueen()
 	// ATE: Get rid of Elliot in P3
 	GetProfile(ELLIOT).sSectorX = 1;
 
-	ChangeNpcToDifferentSector(GetProfile(DEREK), upstairs);
-	ChangeNpcToDifferentSector(GetProfile(OLIVER), upstairs);
+	ChangeNpcToDifferentSector(GetProfile(DEREK),  3, MAP_ROW_P, 0);
+	ChangeNpcToDifferentSector(GetProfile(OLIVER), 3, MAP_ROW_P, 0);
 
-	SetCurrentWorldSector(upstairs);
+	SetCurrentWorldSector(3, MAP_ROW_P, 0);
 
 	gfTacticalTraversal              = FALSE;
 	gpTacticalTraversalGroup         = 0;

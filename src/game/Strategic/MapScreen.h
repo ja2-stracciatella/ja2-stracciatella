@@ -53,7 +53,6 @@ void ReBuildCharactersList( void );
 void HandlePreloadOfMapGraphics(void);
 void HandleRemovalOfPreLoadedMapGraphics( void );
 
-void ChangeSelectedMapSector(const SGPSector& sector);
 void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
 
 BOOLEAN CanExtendContractForSoldier(const SOLDIERTYPE* s);

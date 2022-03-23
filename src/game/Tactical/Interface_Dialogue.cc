@@ -98,7 +98,7 @@
 
 static const INT16 sBasementEnterGridNos[] = { 13362, 13363, 13364, 13365, 13525, 13524 };
 static const INT16 sBasementExitGridNos[] = { 8047, 8207, 8208, 8048, 7888, 7728, 7727, 7567 };
-static const SGPSector carmenSector(13, MAP_ROW_C);
+
 
 #define TALK_PANEL_FACE_X			6
 #define TALK_PANEL_FACE_Y			9
@@ -1515,7 +1515,7 @@ static void HandleStuffForNPCEscorted(UINT8 ubNPC)
 			SetFactTrue( FACT_SKYRIDER_EVER_ESCORTED );
 			if ( gubQuest[ QUEST_ESCORT_SKYRIDER ] == QUESTNOTSTARTED )
 			{
-				StartQuest(QUEST_ESCORT_SKYRIDER, gWorldSector);
+				StartQuest( QUEST_ESCORT_SKYRIDER, gWorldSectorX, gWorldSectorY );
 			}
 			break;
 		case JOHN:
@@ -1531,7 +1531,7 @@ static void HandleStuffForNPCEscorted(UINT8 ubNPC)
 
 			if ( gubQuest[ QUEST_ESCORT_TOURISTS ] == QUESTNOTSTARTED )
 			{
-				StartQuest(QUEST_ESCORT_TOURISTS, gWorldSector);
+				StartQuest( QUEST_ESCORT_TOURISTS, gWorldSectorX, gWorldSectorY );
 			}
 			break;
 		}
@@ -1549,7 +1549,7 @@ static void HandleStuffForNPCEscorted(UINT8 ubNPC)
 
 			if ( gubQuest[ QUEST_ESCORT_TOURISTS ] == QUESTNOTSTARTED )
 			{
-				StartQuest(QUEST_ESCORT_TOURISTS, gWorldSector);
+				StartQuest( QUEST_ESCORT_TOURISTS, gWorldSectorX, gWorldSectorY );
 			}
 			break;
 		}
@@ -1638,9 +1638,8 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 
 				// MOVE NPCS!
-				SGPSector basement(10, 1, 1);
-				ChangeNpcToDifferentSector(GetProfile(FATIMA), basement);
-				ChangeNpcToDifferentSector(GetProfile(DIMITRI), basement);
+				ChangeNpcToDifferentSector(GetProfile(FATIMA),  10, 1, 1);
+				ChangeNpcToDifferentSector(GetProfile(DIMITRI), 10, 1, 1);
 
 				gFadeOutDoneCallback = DoneFadeOutActionBasement;
 
@@ -2133,7 +2132,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 			}
 
 			case NPC_ACTION_TRIGGER_END_OF_FOOD_QUEST:
-				AddHistoryToPlayersLog(HISTORY_TALKED_TO_FATHER_WALKER, 0, GetWorldTotalMin(), gWorldSector);
+				AddHistoryToPlayersLog( HISTORY_TALKED_TO_FATHER_WALKER, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, GetWorldMinutesInDay(), NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_TRIGGER_END_OF_FOOD_QUEST, 1 );
 				break;
 
@@ -2274,10 +2273,10 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			{
-			case NPC_ACTION_OPEN_CARLAS_DOOR:
-			case NPC_ACTION_OPEN_CINDYS_DOOR:
-			case NPC_ACTION_OPEN_BAMBIS_DOOR:
-			case NPC_ACTION_OPEN_MARIAS_DOOR:
+			case NPC_ACTION_OPEN_CARLAS_DOOR: 
+			case NPC_ACTION_OPEN_CINDYS_DOOR: 
+			case NPC_ACTION_OPEN_BAMBIS_DOOR: 
+			case NPC_ACTION_OPEN_MARIAS_DOOR: 
 				INT16 sGridNo = params->getGridNo(10852);
 
 				// JA3Gold: unlock the doors instead of opening them
@@ -2450,7 +2449,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				//set the fact that the merc is being married ( used in the personnel screen )
 				gMercProfiles[ pSoldier->ubProfile ].ubMiscFlags2 |= PROFILE_MISC_FLAG2_MARRIED_TO_HICKS;
 
-				AddHistoryToPlayersLog(HISTORY_MERC_MARRIED_OFF, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSector);
+				AddHistoryToPlayersLog( HISTORY_MERC_MARRIED_OFF, pSoldier->ubProfile, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 
 				// if Flo is going off with Daryl, then set that fact true
 				if (pSoldier->ubProfile == FLO)
@@ -2458,7 +2457,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					SetFactTrue( FACT_PC_MARRYING_DARYL_IS_FLO );
 				}
 
-				HandleMoraleEvent(pSoldier, MORALE_MERC_MARRIED, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+				HandleMoraleEvent( pSoldier, MORALE_MERC_MARRIED, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
 
 				UpdateDarrelScriptToGoTo( pSoldier );
 				TriggerNPCRecord( DARREL, 10 );
@@ -2673,7 +2672,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				--carmen.bNPCData;  // decrement head count
 				++carmen.bNPCData2; // increment number of heads on hand
 
-				if (gWorldSector == carmenSector)
+				if (gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0)
 				{
 					TriggerNPCRecord(CARMEN, 20);
 				}
@@ -2682,7 +2681,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					TriggerNPCRecord(CARMEN, 21);
 				}
 				// CJC Nov 28 2002 - fixed history record which didn't have location specified
-				AddHistoryToPlayersLog(HISTORY_GAVE_CARMEN_HEAD, 0, GetWorldTotalMin(), gWorldSector);
+				AddHistoryToPlayersLog( HISTORY_GAVE_CARMEN_HEAD, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				break;
 			}
 
@@ -2767,7 +2766,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_START_BLOODCAT_QUEST:
-				StartQuest(QUEST_BLOODCATS, gWorldSector);
+				StartQuest( QUEST_BLOODCATS, gWorldSectorX, gWorldSectorY );
 				break;
 
 			case NPC_ACTION_START_MINE:
@@ -2990,11 +2989,11 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_SHOW_TIXA:
 				SetTownAsFound(TIXA);
-				AddHistoryToPlayersLog(HISTORY_DISCOVERED_TIXA, 0, GetWorldTotalMin(), gWorldSector);
+				AddHistoryToPlayersLog( HISTORY_DISCOVERED_TIXA, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				break;
 			case NPC_ACTION_SHOW_ORTA:
 				SetTownAsFound(ORTA);
-				AddHistoryToPlayersLog(HISTORY_DISCOVERED_ORTA, 0, GetWorldTotalMin(), gWorldSector);
+				AddHistoryToPlayersLog( HISTORY_DISCOVERED_ORTA, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
 				break;
 
 			case NPC_ACTION_SLAP:
@@ -3244,7 +3243,7 @@ action_punch_pc:
 				break;
 
 			case NPC_ACTION_TRIGGER_ELLIOT_BY_SAM_DISABLED:
-				if (IsThereAFunctionalSAMSiteInSector(SGPSector(gTacticalStatus.ubLastBattleSectorX, gTacticalStatus.ubLastBattleSectorY, 0)))
+				if ( IsThereAFunctionalSAMSiteInSector( gTacticalStatus.ubLastBattleSectorX, gTacticalStatus.ubLastBattleSectorY, 0 ) )
 				{
 					TriggerNPCRecord( QUEEN, 6 );
 				}
@@ -3838,7 +3837,7 @@ action_punch_pc:
 				break;
 
 			case NPC_ACTION_TRIGGER_JOE_32_OR_33:
-				if (gWorldSector.z > 0)
+				if ( gbWorldSectorZ > 0 )
 				{
 					TriggerNPCRecord( JOE, 32 );
 				}
@@ -3946,7 +3945,8 @@ action_punch_pc:
 					code = HISTORY_KINGPIN_MONEY;
 					goto add_log;
 add_log:
-					AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(), gWorldSector);
+					AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(),
+								gWorldSectorX, gWorldSectorY);
 					break;
 			}
 
@@ -3958,7 +3958,8 @@ add_log:
 				gMercProfiles[ PACOS ].bSectorZ = 0;
 				break;
 			case NPC_ACTION_HISTORY_ASSASSIN:
-				AddHistoryToPlayersLog(HISTORY_ASSASSIN, 0, GetWorldTotalMin(), gWorldSector);
+				AddHistoryToPlayersLog(HISTORY_ASSASSIN, 0, GetWorldTotalMin(),
+							gWorldSectorX, gWorldSectorY);
 				break;
 			case NPC_ACTION_TRIGGER_HANS_BY_ROOM:
 				{
@@ -4518,7 +4519,7 @@ static void DoneFadeInActionBasement(void);
 static void DoneFadeOutActionBasement(void)
 {
 	// OK, insertion data found, enter sector!
-	SetCurrentWorldSector(SGPSector(10, 1, 1));
+	SetCurrentWorldSector( 10, 1, 1 );
 
 	// OK, once down here, adjust the above map with crate info....
 	gfTacticalTraversal = FALSE;
@@ -4570,7 +4571,7 @@ static void DoneFadeInActionLeaveBasement(void);
 static void DoneFadeOutActionLeaveBasement(void)
 {
 	// OK, insertion data found, enter sector!
-	SetCurrentWorldSector(SGPSector(10, 1, 0));
+	SetCurrentWorldSector( 10, 1, 0 );
 
 	gfTacticalTraversal = FALSE;
 	gpTacticalTraversalGroup = NULL;
@@ -4700,17 +4701,15 @@ static void TextRegionClickCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 static void CarmenLeavesSectorCallback(void)
 {
-	const SGPSector carmenSector2(9, MAP_ROW_G);
-	const SGPSector carmenSector3(5, MAP_ROW_C);
-	if (gWorldSector == carmenSector)
+	if (gWorldSectorX == 13 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0)
 	{
 		TriggerNPCRecord(CARMEN, 34);
 	}
-	else if (gWorldSector == carmenSector2)
+	else if (gWorldSectorX == 9 && gWorldSectorY == MAP_ROW_G && gbWorldSectorZ == 0)
 	{
 		TriggerNPCRecord(CARMEN, 35);
 	}
-	else if (gWorldSector == carmenSector3)
+	else if (gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0)
 	{
 		TriggerNPCRecord(CARMEN, 36);
 	}

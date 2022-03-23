@@ -52,8 +52,8 @@ void NewSmokeEffect(INT16 sGridNo, UINT16 usItem, INT8 bLevel, SOLDIERTYPE* owne
 void LoadSmokeEffectsFromLoadGameFile(HWFILE, UINT32 savegame_version);
 
 
-void SaveSmokeEffectsToMapTempFile(const SGPSector& sector);
-void LoadSmokeEffectsFromMapTempFile(const SGPSector& sector);
+void SaveSmokeEffectsToMapTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+void LoadSmokeEffectsFromMapTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 void ResetSmokeEffects(void);
 

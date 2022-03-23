@@ -106,7 +106,7 @@ void AddExitGridToWorld(INT32 const map_idx, EXITGRID* const xg)
 	// Add the exit grid to the sector, only if ApplyMapChangesToMapTempFile is held.
 	if (!gfEditMode && !gfLoadingExitGrids)
 	{
-		AddExitGridToMapTempFile(map_idx, xg, gWorldSector);
+		AddExitGridToMapTempFile(map_idx, xg, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 	}
 }
 
@@ -159,7 +159,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 {
 	if (relative_z_level == -1)
 	{
-		if (gWorldSector.z == 0)
+		if (gbWorldSectorZ == 0)
 		{ // on ground level -- can't go up!
 			ScreenMsg(FONT_DKYELLOW, MSG_INTERFACE, pMessageStrings[MSG_CANT_GO_UP]);
 			return;
@@ -167,7 +167,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 	}
 	else if (relative_z_level == 1)
 	{
-		if (gWorldSector.z == 3)
+		if (gbWorldSectorZ == 3)
 		{ // on bottom level -- can't go down!
 			ScreenMsg(FONT_DKYELLOW, MSG_INTERFACE, pMessageStrings[MSG_CANT_GO_DOWN]);
 			return;
@@ -178,7 +178,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 		return;
 	}
 
-	UINT8 const look_for_level = gWorldSector.z + relative_z_level;
+	UINT8 const look_for_level = gbWorldSectorZ + relative_z_level;
 	for (UINT16 i = 0; i != WORLD_MAX; ++i)
 	{
 		if (!GetExitGrid(i, &gExitGrid))               continue;
@@ -188,9 +188,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 		gfOverrideInsertionWithExitGrid = TRUE;
 		/* change all current mercs in the loaded sector, and move them to the new
 		 * sector. */
-		SGPSector adjustedSector = gWorldSector;
-		gWorldSector.z = look_for_level;
-		MoveAllGroupsInCurrentSectorToSector(adjustedSector);
+		MoveAllGroupsInCurrentSectorToSector(gWorldSectorX, gWorldSectorY, look_for_level);
 		if (look_for_level)
 		{
 			ScreenMsg(FONT_YELLOW, MSG_INTERFACE, st_format_printf(pMessageStrings[MSG_ENTERING_LEVEL], look_for_level));
@@ -199,7 +197,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 		{
 			ScreenMsg(FONT_YELLOW, MSG_INTERFACE, pMessageStrings[MSG_LEAVING_BASEMENT]);
 		}
-		SetCurrentWorldSector(adjustedSector);
+		SetCurrentWorldSector(gWorldSectorX, gWorldSectorY, look_for_level);
 		gfOverrideInsertionWithExitGrid = FALSE;
 	}
 }

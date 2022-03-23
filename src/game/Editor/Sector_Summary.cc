@@ -172,13 +172,16 @@ static BOOLEAN gfOverrideDirty;
 static BOOLEAN gfOverride;
 
 //The sector coordinates of the map currently loaded in memory (blue)
-static SGPSector gsSector;
+static INT16 gsSectorX;
+static INT16 gsSectorY;
 //The layer of the sector that is currently loaded in memory.
 static INT32 gsSectorLayer;
 //The sector coordinates of the mouse position (yellow)
-static SGPSector gsHiSector;
+static INT16 gsHiSectorX;
+static INT16 gsHiSectorY;
 //The sector coordinates of the selected sector (red)
-static SGPSector gsSelSector;
+static INT16 gsSelSectorX;
+static INT16 gsSelSectorY;
 
 //Used to determine how long the F5 key has been held down for to determine whether or not the
 //summary is going to be persistant or not.
@@ -259,8 +262,10 @@ void CreateSummaryWindow()
 	DisableEditorTaskbar();
 	DisableAllTextFields();
 
-	gsSector = gWorldSector;
-	gsSelSector = gWorldSector;
+	gsSectorX    = gWorldSectorX;
+	gsSectorY    = gWorldSectorY;
+	gsSelSectorX = gWorldSectorX;
+	gsSelSectorY = gWorldSectorY;
 	gfSummaryWindowActive = TRUE;
 	gfPersistantSummary = FALSE;
 	guiInitTimer = GetJA2Clock();
@@ -342,7 +347,8 @@ void CreateSummaryWindow()
 	if( gfAutoLoadA9 )
 	{
 		gfAutoLoadA9++;
-		gsSelSector = SGPSector(9, 1);
+		gsSelSectorX = 9;
+		gsSelSectorY = 1;
 		gpCurrentSectorSummary = gpSectorSummary[ 8 ][ 0 ][ 0 ];
 		iSummaryButton[SUMMARY_LOAD]->uiFlags |= BUTTON_CLICKED_ON;
 	}
@@ -934,7 +940,7 @@ void RenderSummaryWindow()
 				SetFontForeground( FONT_LTRED );
 				MPrint( 10, 65, "Do you wish to regenerate info for ALL these maps at this time (y/n)?" );
 			}
-			else if ((!gsSelSector.x && !gsSector.x) || gfTempFile)
+			else if( (!gsSelSectorX && !gsSectorX) || gfTempFile )
 			{
 				DisableButton( iSummaryButton[ SUMMARY_LOAD ] );
 				SetFontForeground( FONT_LTRED );
@@ -955,10 +961,10 @@ void RenderSummaryWindow()
 			else
 			{
 				//Build sector string
-				if (gsSelSector.x)
-					x = gsSelSector.x - 1, y = gsSelSector.y - 1;
+				if( gsSelSectorX )
+					x = gsSelSectorX - 1, y = gsSelSectorY - 1;
 				else
-					x = gsSector.x - 1, y = gsSector.y - 1;
+					x = gsSectorX - 1, y = gsSectorY - 1;
 				str = ST::format("{c}{}", y + 'A', x + 1);
 				gszFilename = str;
 				giCurrLevel = giCurrentViewLevel;
@@ -1362,26 +1368,26 @@ void RenderSummaryWindow()
 		UINT16* const pDestBuf = l.Buffer<UINT16>();
 		SetClippingRegionAndImageWidth(l.Pitch(), 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		//Render the grid for the map currently residing in memory (blue).
-		if (gfWorldLoaded && !gfTempFile && gsSector.x)
+		if( gfWorldLoaded && !gfTempFile && gsSectorX )
 		{
-			x = MAP_LEFT + (gsSector.x - 1) * 13 + 1;
-			y = MAP_TOP + (gsSector.y - 1) * 13 + 1;
+			x = MAP_LEFT + (gsSectorX-1) * 13 + 1;
+			y = MAP_TOP + (gsSectorY-1) * 13 + 1;
 			RectangleDraw( TRUE, x, y, x+11, y+11, Get16BPPColor( FROMRGB( 50, 50, 200 ) ), pDestBuf );
 		}
 
 		//Render the grid for the sector currently in focus (red).
-		if (gsSelSector.x > 0 && !gfTempFile)
+		if( gsSelSectorX > 0 && !gfTempFile )
 		{
-			x = MAP_LEFT + (gsSelSector.x - 1) * 13;
-			y = MAP_TOP + (gsSelSector.y - 1) * 13;
+			x = MAP_LEFT + (gsSelSectorX-1) * 13 ;
+			y = MAP_TOP + (gsSelSectorY-1) * 13 ;
 			RectangleDraw( TRUE, x, y, x+13, y+13, Get16BPPColor( FROMRGB( 200, 50, 50 ) ), pDestBuf );
 		}
 
 		//Render the grid for the sector if the mouse is over it (yellow).
-		if (gsHiSector.x > 0)
+		if( gsHiSectorX > 0 )
 		{
-			x = MAP_LEFT + (gsHiSector.x - 1) * 13 - 1;
-			y = MAP_TOP + (gsHiSector.y - 1) * 13 - 1;
+			x = MAP_LEFT + (gsHiSectorX-1) * 13 - 1;
+			y = MAP_TOP + (gsHiSectorY-1) * 13 - 1;
 			RectangleDraw( TRUE, x, y, x+15, y+15, Get16BPPColor( FROMRGB( 200, 200, 50 ) ), pDestBuf );
 		}
 	}
@@ -1430,8 +1436,8 @@ void UpdateSectorSummary(const ST::string& gszFilename, BOOLEAN fUpdate)
 	//Validate that the values extracted are in fact a sector
 	if( x < 1 || x > 16 || y < 1 || y > 16 )
 		return;
-	gsSector.x = gsSelSector.x = x;
-	gsSector.y = gsSelSector.y = y;
+	gsSectorX = gsSelSectorX = x;
+	gsSectorY = gsSelSectorY = y;
 
 	//The idea here is to get a pointer to the filename's period, then
 	//focus on the character previous to it.  If it is a 1, 2, or 3, then
@@ -1492,10 +1498,10 @@ void UpdateSectorSummary(const ST::string& gszFilename, BOOLEAN fUpdate)
 	}
 
 	giCurrentViewLevel = gsSectorLayer;
-	if (!(gbSectorLevels[gsSector.x - 1][gsSector.y - 1] & gsSectorLayer))
+	if( !(gbSectorLevels[gsSectorX-1][gsSectorY-1] & gsSectorLayer) )
 	{
 		//new sector map saved, so update the global file.
-		gbSectorLevels[gsSector.x - 1][gsSector.y - 1] |= gsSectorLayer;
+		gbSectorLevels[gsSectorX-1][gsSectorY-1] |= gsSectorLayer;
 	}
 
 	if( fUpdate )
@@ -1517,7 +1523,7 @@ void UpdateSectorSummary(const ST::string& gszFilename, BOOLEAN fUpdate)
 		}
 
 		ST::string szCoord = ST::format("{}", gszFilename);
-		if (gsSector.x > 9)
+		if( gsSectorX > 9 )
 			szCoord = szCoord.left(3);
 		else
 			szCoord = szCoord.left(2);
@@ -1689,38 +1695,38 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 
 			case SDLK_RIGHT:
 				gfRenderSummary = TRUE;
-				if (!gsSelSector.y)
-					gsSelSector.y = 1;
-				gsSelSector.x++;
-				if (gsSelSector.x > 16)
-					gsSelSector.x = 1;
+				if( !gsSelSectorY )
+					gsSelSectorY = 1;
+				gsSelSectorX++;
+				if( gsSelSectorX > 16 )
+					gsSelSectorX = 1;
 				break;
 
 			case SDLK_LEFT:
 				gfRenderSummary = TRUE;
-				if (!gsSelSector.y)
-					gsSelSector.y = 1;
-				gsSelSector.x--;
-				if (gsSelSector.x < 1)
-					gsSelSector.x = 16;
+				if( !gsSelSectorY )
+					gsSelSectorY = 1;
+				gsSelSectorX--;
+				if( gsSelSectorX < 1 )
+					gsSelSectorX = 16;
 				break;
 
 			case SDLK_UP:
 				gfRenderSummary = TRUE;
-				if (!gsSelSector.x)
-					gsSelSector.x = 1;
-				gsSelSector.y--;
-				if (gsSelSector.y < 1)
-					gsSelSector.y = 16;
+				if( !gsSelSectorX )
+					gsSelSectorX = 1;
+				gsSelSectorY--;
+				if( gsSelSectorY < 1 )
+					gsSelSectorY = 16;
 				break;
 
 			case SDLK_DOWN:
 				gfRenderSummary = TRUE;
-				if (!gsSelSector.x)
-					gsSelSector.x = 1;
-				gsSelSector.y++;
-				if (gsSelSector.y > 16)
-					gsSelSector.y = 1;
+				if( !gsSelSectorX )
+					gsSelSectorX = 1;
+				gsSelSectorY++;
+				if( gsSelSectorY > 16 )
+					gsSelSectorY = 1;
 				break;
 		}
 	}
@@ -1763,20 +1769,21 @@ static void CreateGlobalSummary(void)
 
 static void MapMoveCallback(MOUSE_REGION* reg, INT32 reason)
 {
-	static SGPSector gsPrev;
+	static INT16 gsPrevX = 0, gsPrevY = 0;
 	//calc current sector highlighted.
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		gsPrev.x = gsHiSector.x = 0;
-		gsPrev.y = gsHiSector.y = 0;
+		gsPrevX = gsHiSectorX = 0;
+		gsPrevY = gsHiSectorY = 0;
 		gfRenderMap = TRUE;
 		return;
 	}
-	gsHiSector.x = MIN((reg->RelativeXPos / 13) + 1, 16);
-	gsHiSector.y = MIN((reg->RelativeYPos / 13) + 1, 16);
-	if (gsPrev != gsHiSector)
+	gsHiSectorX = MIN( (reg->RelativeXPos / 13) + 1, 16 );
+	gsHiSectorY = MIN( (reg->RelativeYPos / 13) + 1, 16 );
+	if( gsPrevX != gsHiSectorX || gsPrevY != gsHiSectorY )
 	{
-		gsPrev = gsHiSector;
+		gsPrevX = gsHiSectorX;
+		gsPrevY = gsHiSectorY;
 		gfRenderMap = TRUE;
 	}
 }
@@ -1784,71 +1791,71 @@ static void MapMoveCallback(MOUSE_REGION* reg, INT32 reason)
 
 static void MapClickCallback(MOUSE_REGION* reg, INT32 reason)
 {
-	static SGPSector sLast(-1, -1);
+	static INT16 sLastX = -1, sLastY = -1;
 	//calc current sector selected.
 	if( reason & MSYS_CALLBACK_REASON_LBUTTON_UP )
 	{
 		if( GetActiveFieldID() == 1 )
 		{
-			gsSelSector.x = 0;
+			gsSelSectorX = 0;
 			SelectNextField();
 		}
-		gsSelSector.x = MIN( (reg->RelativeXPos / 13) + 1, 16 );
-		gsSelSector.y = MIN( (reg->RelativeYPos / 13) + 1, 16 );
-		if (gsSelSector != sLast)
+		gsSelSectorX = MIN( (reg->RelativeXPos / 13) + 1, 16 );
+		gsSelSectorY = MIN( (reg->RelativeYPos / 13) + 1, 16 );
+		if( gsSelSectorX != sLastX || gsSelSectorY != sLastY )
 		{ //clicked in a new sector
 			gfOverrideDirty = TRUE;
-			sLast = gsSelSector;
-			auto sectorSummary = gpSectorSummary[gsSelSector.x - 1][gsSelSector.y - 1];
+			sLastX = gsSelSectorX;
+			sLastY = gsSelSectorY;
 			switch( giCurrentViewLevel )
 			{
 				case ALL_LEVELS_MASK:
-					if (sectorSummary[0])
-						gpCurrentSectorSummary = sectorSummary[0];
-					else if (sectorSummary[1])
-						gpCurrentSectorSummary = sectorSummary[1];
-					else if (sectorSummary[2])
-						gpCurrentSectorSummary = sectorSummary[2];
-					else if (sectorSummary[3])
-						gpCurrentSectorSummary = sectorSummary[3];
+					if( gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 0 ] )
+						gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 0 ];
+					else if( gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 1 ] )
+						gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 1 ];
+					else if( gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 2 ] )
+						gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 2 ];
+					else if( gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 3 ] )
+						gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 3 ];
 					else
 						gpCurrentSectorSummary = NULL;
 					break;
 				case GROUND_LEVEL_MASK: //already pointing to the correct level
-					gpCurrentSectorSummary = sectorSummary[0];
+					gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 0 ];
 					break;
 				case BASEMENT1_LEVEL_MASK:
-					gpCurrentSectorSummary = sectorSummary[1];
+					gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 1 ];
 					break;
 				case BASEMENT2_LEVEL_MASK:
-					gpCurrentSectorSummary = sectorSummary[2];
+					gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 2 ];
 					break;
 				case BASEMENT3_LEVEL_MASK:
-					gpCurrentSectorSummary = sectorSummary[3];
+					gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 3 ];
 					break;
 				case ALTERNATE_LEVELS_MASK:
-					if (sectorSummary[4])
-						gpCurrentSectorSummary = sectorSummary[4];
-					else if(sectorSummary[5])
-						gpCurrentSectorSummary = sectorSummary[5];
-					else if(sectorSummary[6])
-						gpCurrentSectorSummary = sectorSummary[6];
-					else if(sectorSummary[7])
-						gpCurrentSectorSummary = sectorSummary[7];
+					if( gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 4 ] )
+						gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 4 ];
+					else if( gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 5 ] )
+						gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 5 ];
+					else if( gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 6 ] )
+						gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 6 ];
+					else if( gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 7 ] )
+						gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 7 ];
 					else
 						gpCurrentSectorSummary = NULL;
 					break;
 				case ALTERNATE_GROUND_MASK: //already pointing to the correct level
-					gpCurrentSectorSummary = sectorSummary[4];
+					gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 4 ];
 					break;
 				case ALTERNATE_B1_MASK:
-					gpCurrentSectorSummary = sectorSummary[5];
+					gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 5 ];
 					break;
 				case ALTERNATE_B2_MASK:
-					gpCurrentSectorSummary = sectorSummary[6];
+					gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 6 ];
 					break;
 				case ALTERNATE_B3_MASK:
-					gpCurrentSectorSummary = sectorSummary[7];
+					gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ 7 ];
 					break;
 			}
 			gpWorldItemsSummaryArray.clear();
@@ -1929,7 +1936,8 @@ static void SummaryLoadMapCallback(GUI_BUTTON* btn, INT32 reason)
 		if(	ExternalLoadMap( gszDisplayName ) )
 		{
 			EnableButton( iSummaryButton[ SUMMARY_OKAY ] );
-			gsSector = gsSelSector;
+			gsSectorX = gsSelSectorX;
+			gsSectorY = gsSelSectorY;
 			gfOverrideDirty = TRUE;
 		}
 		RemoveProgressBar( 0 );
@@ -2135,7 +2143,7 @@ void WriteSectorSummaryUpdate(const ST::string &filename, const UINT8 ubLevel, S
 	AssertMsg(ext, "Illegal sector summary filename.");
 
 	ST::string summary_filename = ST::format("{}/{}.sum", DEVINFO_DIR, FileMan::getFileNameWithoutExt(filename));
-
+	
 	AutoSGPFile file{GCM->userPrivateFiles()->openForWriting(summary_filename, true)};
 
 	file->write(sf, sizeof(*sf));
@@ -2298,10 +2306,10 @@ static void SummaryUpdateCallback(GUI_BUTTON* btn, INT32 reason)
 		}
 
 		char str[40];
-		sprintf(str, "%c%d", gsSelSector.y + 'A' - 1, gsSelSector.x);
+		sprintf( str, "%c%d", gsSelSectorY + 'A' - 1, gsSelSectorX );
 		EvaluateWorld( str, (UINT8)giCurrLevel );
 
-		gpSectorSummary[gsSelSector.x][gsSelSector.y][ giCurrLevel ] = gpCurrentSectorSummary;
+		gpSectorSummary[ gsSelSectorX ][ gsSelSectorY ][ giCurrLevel ] = gpCurrentSectorSummary;
 
 		gfRenderSummary = TRUE;
 
@@ -2480,7 +2488,7 @@ static void SetupItemDetailsMode(BOOLEAN fAllowRecursion)
 		if( gpCurrentSectorSummary->ubSummaryVersion == GLOBAL_SUMMARY_VERSION )
 			gusNumEntriesWithOutdatedOrNoSummaryInfo++;
 		SummaryUpdateCallback(iSummaryButton[SUMMARY_UPDATE], MSYS_CALLBACK_REASON_LBUTTON_UP);
-		gpCurrentSectorSummary = gpSectorSummary[gsSelSector.x - 1][gsSelSector.y - 1][ giCurrLevel ];
+		gpCurrentSectorSummary = gpSectorSummary[ gsSelSectorX - 1 ][ gsSelSectorY - 1 ][ giCurrLevel ];
 	}
 	//Open the original map for the sector
 	AutoSGPFile hfile(GCM->openMapForReading(gszFilename));

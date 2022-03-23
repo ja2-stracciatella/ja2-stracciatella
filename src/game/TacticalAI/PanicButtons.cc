@@ -18,7 +18,6 @@ Who can use the panic button?
  * in other places only the army
 
 */
-static const SGPSector tixa(TIXA_SECTOR_X, TIXA_SECTOR_Y);
 
 static UINT32 PercentEnemiesKilled()
 {
@@ -67,7 +66,7 @@ void MakeClosestEnemyChosenOne()
 			continue;  // next soldier
 		}
 
-		if (gWorldSector == tixa)
+		if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y )
 		{
 			if ( pSoldier->ubProfile != WARDEN )
 			{
@@ -384,7 +383,7 @@ INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier )
 	INT8		bClosestTrigger = -1;
 	UINT32	uiPercentEnemiesKilled;
 
-	if (gWorldSector == tixa)
+	if (gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y)
 	{
 		if (pSoldier->ubProfile != WARDEN)
 		{
@@ -413,7 +412,7 @@ INT8 ClosestPanicTrigger( SOLDIERTYPE * pSoldier )
 			}
 
 			// in Tixa
-			if (gWorldSector == tixa)
+			if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y )
 			{
 				// screen out the second/later panic trigger if the first one hasn't been triggered
 				if ( bLoop > 0 && gTacticalStatus.sPanicTriggerGridNo[ bLoop - 1 ] != NOWHERE )
@@ -446,7 +445,7 @@ BOOLEAN NeedToRadioAboutPanicTrigger( void )
 		return( FALSE );
 	}
 
-	if (gWorldSector == tixa)
+	if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y )
 	{
 		const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(WARDEN);
 		if (!pSoldier || pSoldier == gTacticalStatus.the_chosen_one)
@@ -481,8 +480,7 @@ INT8 HeadForTheStairCase( SOLDIERTYPE * pSoldier )
 {
 	UNDERGROUND_SECTORINFO * pBasementInfo;
 
-
-	pBasementInfo = FindUnderGroundSector(SGPSector(3, MAP_ROW_P, 1));
+	pBasementInfo = FindUnderGroundSector( 3, MAP_ROW_P, 1 );
 	if ( pBasementInfo && pBasementInfo->uiTimeCurrentSectorWasLastLoaded != 0 && ( pBasementInfo->ubNumElites + pBasementInfo->ubNumTroops + pBasementInfo->ubNumAdmins ) < 5 )
 	{
 		return( AI_ACTION_NONE );

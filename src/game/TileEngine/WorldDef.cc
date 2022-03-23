@@ -1672,7 +1672,7 @@ static void SetBlueFlagFlags(void)
 void InitLoadedWorld(void)
 {
 	//if the current sector is not valid, dont init the world
-	if (!gWorldSector.IsValid())
+	if( gWorldSectorX == 0 || gWorldSectorY == 0 )
 	{
 		return;
 	}

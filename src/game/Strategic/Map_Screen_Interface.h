@@ -357,7 +357,8 @@ void HandleMinerEvent(ProfileID ubMinerProfileID, INT16 sQuoteNumber, BOOLEAN fF
 void TurnOnSectorLocator( UINT8 ubProfileID );
 void TurnOffSectorLocator(void);
 
-extern SGPSector gsSectorLocator;
+extern INT16 gsSectorLocatorX;
+extern INT16 gsSectorLocatorY;
 extern UINT8 gubBlitSectorLocatorCode;
 
 enum
@@ -420,10 +421,10 @@ void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate );
 BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void );
 
 // handle sector being taken over uncontested
-void NotifyPlayerWhenEnemyTakesControlOfImportantSector(const SGPSector& sector);
+void NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 x, INT16 y, INT8 z);
 
 // handle notifying player of invasion by enemy
-void NotifyPlayerOfInvasionByEnemyForces(const SGPSector& sector, MSGBOX_CALLBACK ReturnCallback);
+void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, MSGBOX_CALLBACK ReturnCallback );
 
 void ShutDownUserDefineHelpTextRegions( void );
 

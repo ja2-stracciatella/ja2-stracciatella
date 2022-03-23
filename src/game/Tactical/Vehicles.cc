@@ -290,9 +290,9 @@ void SetSoldierExitHelicopterInsertionData(SOLDIERTYPE* const s)
 	if (s->bInSector) return;
 
 	auto shippingDest = GCM->getPrimaryShippingDestination();
-	if (s->sSectorX == shippingDest->deliverySector.x &&
-		s->sSectorY == shippingDest->deliverySector.y &&
-		s->bSectorZ == shippingDest->deliverySector.z)
+	if (s->sSectorX == shippingDest->deliverySectorX &&
+		s->sSectorY == shippingDest->deliverySectorY &&
+		s->bSectorZ == shippingDest->deliverySectorZ)
 	{
 		// This is Drassen, make insertion gridno specific
 		s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
@@ -340,17 +340,17 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		{
 			// Mark the sector as visited (flying around in the chopper doesn't, so
 			// this does it as soon as we get off it)
-			SetSectorFlag(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ), SF_ALREADY_VISITED);
+			SetSectorFlag(s.sSectorX, s.sSectorY, s.bSectorZ, SF_ALREADY_VISITED);
 		}
 
 		SetSoldierExitHelicopterInsertionData(&s);
 
 		// Update in sector if this is the current sector
-		if (s.sSectorX == gWorldSector.x &&
-			s.sSectorY == gWorldSector.y &&
-			s.bSectorZ == gWorldSector.z)
+		if (s.sSectorX == gWorldSectorX &&
+			s.sSectorY == gWorldSectorY &&
+			s.bSectorZ == gbWorldSectorZ)
 		{
-			UpdateMercInSector(s, gWorldSector);
+			UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
 		}
 	}
 	else
@@ -529,8 +529,8 @@ BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 	// if not in vehicle, don't take out, not much point, now is there?
 	if (s->bAssignment != VEHICLE) return FALSE;
 
-	if (s->sSectorX == gWorldSector.x &&
-		s->sSectorY == gWorldSector.y &&
+	if (s->sSectorX == gWorldSectorX &&
+		s->sSectorY == gWorldSectorY &&
 		s->bSectorZ == 0 &&
 		s->bInSector &&
 		!InHelicopter(*s)) // helicopter isn't a soldiertype instance
@@ -548,8 +548,8 @@ bool PutSoldierInVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 {
 	if (!AddSoldierToVehicle(s, v)) return false;
 
-	if (s.sSectorX == gWorldSector.x &&
-		s.sSectorY == gWorldSector.y &&
+	if (s.sSectorX == gWorldSectorX &&
+		s.sSectorY == gWorldSectorY &&
 		s.bSectorZ == 0 &&
 		!IsHelicopter(v) &&
 		guiCurrentScreen == GAME_SCREEN)
@@ -879,7 +879,8 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 	GROUP  *pGroup = NULL;
 	UINT32 uiTimeToNextSector;
 	UINT32 uiTimeToLastSector;
-	SGPSector sPrev, sNext;
+	INT16  sPrevX, sPrevY, sNextX, sNextY;
+
 
 	pGroup = GetGroup( ubGroupID );
 	Assert( pGroup );
@@ -895,27 +896,27 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 	if ( uiTimeToNextSector >= uiTimeToLastSector )
 	{
 		// go to the last sector
-		sPrev.x = pGroup->ubNextX;
-		sPrev.y = pGroup->ubNextY;
+		sPrevX = pGroup->ubNextX;
+		sPrevY = pGroup->ubNextY;
 
-		sNext.x = pGroup->ubSectorX;
-		sNext.y = pGroup->ubSectorY;
+		sNextX = pGroup->ubSectorX;
+		sNextY = pGroup->ubSectorY;
 	}
 	else
 	{
 		// go to the next sector
-		sPrev.x = pGroup->ubSectorX;
-		sPrev.y = pGroup->ubSectorY;
+		sPrevX = pGroup->ubSectorX;
+		sPrevY = pGroup->ubSectorY;
 
-		sNext.x = pGroup->ubNextX;
-		sNext.y = pGroup->ubNextY;
+		sNextX = pGroup->ubNextX;
+		sNextY = pGroup->ubNextY;
 	}
 
 	// make it arrive immediately, not eventually (it's driverless)
 	pGroup->setArrivalTime(GetWorldTotalMin());
 
 	// change where it is and where it's going, then make it arrive there.  Don't check for battle
-	PlaceGroupInSector(*pGroup, sPrev, sNext, false);
+	PlaceGroupInSector(*pGroup, sPrevX, sPrevY, sNextX, sNextY, 0, false);
 }
 
 

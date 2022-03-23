@@ -369,7 +369,7 @@ void DecideOnAssassin()
 {
 	ProfileID   assassins[lengthof(g_assassin_info)];
 	UINT8       n    = 0;
-	UINT8 const town = GetTownIdForSector(gWorldSector.AsByte());
+	UINT8 const town = GetTownIdForSector(SECTOR(gWorldSectorX, gWorldSectorY));
 	FOR_EACH(AssassinInfo const, i, g_assassin_info)
 	{
 		AssassinInfo      const  a = *i;
@@ -389,8 +389,8 @@ void DecideOnAssassin()
 	if (n == 0) return;
 	ProfileID const    pid = assassins[Random(n)];
 	MERCPROFILESTRUCT& p   = GetProfile(pid);
-	p.sSectorX             = gWorldSector.x;
-	p.sSectorY             = gWorldSector.y;
+	p.sSectorX             = gWorldSectorX;
+	p.sSectorY             = gWorldSectorY;
 	AddStrategicEvent(EVENT_REMOVE_ASSASSIN, GetWorldTotalMin() + 60 * (3 + Random(3)), pid);
 }
 
@@ -692,7 +692,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	}
 	else if ( ubCharNum == DYNAMO && gubQuest[ QUEST_FREE_DYNAMO ] == QUESTINPROGRESS )
 	{
-		EndQuest(QUEST_FREE_DYNAMO, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY));
+		EndQuest( QUEST_FREE_DYNAMO, pSoldier->sSectorX, pSoldier->sSectorY );
 	}
 	// handle town loyalty adjustment
 	HandleTownLoyaltyForNPCRecruitment( pNewSoldier );
@@ -742,7 +742,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	//add a history log that tells the user that a npc has joined the team
 	//
 	// ( pass in pNewSoldier->sSectorX cause if its invalid, -1, n/a will appear as the sector in the history log )
-	AddHistoryToPlayersLog(HISTORY_RPC_JOINED_TEAM, pNewSoldier->ubProfile, GetWorldTotalMin(), SGPSector(pNewSoldier->sSectorX, pNewSoldier->sSectorY));
+	AddHistoryToPlayersLog( HISTORY_RPC_JOINED_TEAM, pNewSoldier->ubProfile, GetWorldTotalMin(), pNewSoldier->sSectorX, pNewSoldier->sSectorY );
 
 
 	//remove the merc from the Personnel screens departed list ( if they have never been hired before, its ok to call it )

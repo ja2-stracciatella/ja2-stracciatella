@@ -21,19 +21,19 @@ void InitializePalettesForMap(void);
 void ShutDownPalettesForMap( void );
 
 // plot path for helicopter
-void PlotPathForHelicopter(const SGPSector& sector);
+void PlotPathForHelicopter( INT16 sX, INT16 sY );
 
 // the temp path, where the helicopter could go
-void PlotATemporaryPathForHelicopter(const SGPSector& sector);
+void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY );
 
 // show arrows for this char
 void DisplayPathArrows(UINT16 usCharNum, HVOBJECT hMapHandle);
 
 // build path for character
-void PlotPathForCharacter(SOLDIERTYPE&, const SGPSector& sector, bool tactical_traversal);
+void PlotPathForCharacter(SOLDIERTYPE&, INT16 x, INT16 y, bool tactical_traversal);
 
 // build temp path for character
-void PlotATemporaryPathForCharacter(const SOLDIERTYPE* s, const SGPSector& sector);
+void PlotATemporaryPathForCharacter(const SOLDIERTYPE* s, INT16 sX, INT16 sY);
 
 
 // display current/temp paths
@@ -51,7 +51,7 @@ void CancelPathForCharacter( SOLDIERTYPE *pCharacter );
 void CancelPathForVehicle(VEHICLETYPE&, BOOLEAN fAlreadyReversed);
 
 // check if we have waited long enought o update temp path
-void DisplayThePotentialPathForHelicopter(const SGPSector& sector);
+void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY );
 
 // clear out helicopter list after this sector
 UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY );
@@ -88,7 +88,8 @@ void DeleteMapScreenInterfaceMapGraphics();
 
 
 // grab the total number of militia in sector
-INT32 GetNumberOfMilitiaInSector(const SGPSector& sector);
+INT32 GetNumberOfMilitiaInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+
 
 // create destroy
 void CreateDestroyMilitiaPopUPRegions( void );
@@ -187,6 +188,6 @@ extern UINT16	sSelMapY;
 
 
 void    CreateDestroyMilitiaSectorButtons(void);
-BOOLEAN CanRedistributeMilitiaInSector(INT8 bClickedTownId);
+BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId);
 
 #endif

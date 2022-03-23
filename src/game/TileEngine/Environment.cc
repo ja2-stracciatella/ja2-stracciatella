@@ -380,7 +380,7 @@ void ForecastDayEvents( )
 
 UINT8 GetTimeOfDayAmbientLightLevel()
 {
-	if (SectorTemperature(GetWorldMinutesInDay(), gWorldSector) == HOT)
+	if ( SectorTemperature( GetWorldMinutesInDay(), gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) == HOT )
 	{
 		return( HOT_DAY_LIGHTLEVEL );
 	}
@@ -500,14 +500,14 @@ void UpdateTemperature( UINT8 ubTemperatureCode )
 	gfDoLighting = TRUE;
 }
 
-INT8 SectorTemperature(UINT32 uiTime, const SGPSector& sector)
+INT8 SectorTemperature( UINT32 uiTime, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ )
 {
-	if (sector.z > 0)
+	if (bSectorZ > 0)
 	{
 		// cool underground
 		return( 0 );
 	}
-	else if (IsSectorDesert(sector))
+	else if ( IsSectorDesert( sSectorX, sSectorY ) ) // is desert
 	{
 		return( gubDesertTemperature );
 	}

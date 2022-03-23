@@ -542,13 +542,13 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSea
 			//is there a roof above this gridno
 			if( FlatRoofAboveGridNo( sGridNo ) )
 			{
-				if (IsTheRoofVisible(sGridNo) && gWorldSector.z == 0)
+				if( IsTheRoofVisible( sGridNo ) && gbWorldSectorZ == 0 )
 				{
 					fRoof = TRUE;
 				}
 
 				//if wer havent explored the area yet and we are underground, dont show cover
-				else if (!(gpWorldLevelData[sGridNo].uiFlags & MAPELEMENT_REVEALED) && gWorldSector.z != 0)
+				else if( !( gpWorldLevelData[ sGridNo ].uiFlags & MAPELEMENT_REVEALED ) && gbWorldSectorZ != 0 )
 				{
 					continue;
 				}

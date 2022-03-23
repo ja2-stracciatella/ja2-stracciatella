@@ -212,7 +212,7 @@ void RenderRadarScreen()
 			NightTime() &&
 			(
 				(guiCurrentScreen == MAP_SCREEN  && iCurrentMapSectorZ == 0) ||
-				(guiCurrentScreen == GAME_SCREEN && gWorldSector.z     == 0)
+				(guiCurrentScreen == GAME_SCREEN && gbWorldSectorZ     == 0)
 			) ? 1 : 0;
 		gusRadarImage->CurrentShade(shade);
 		BltVideoObject(guiSAVEBUFFER, gusRadarImage, 0, RADAR_WINDOW_X, RADAR_WINDOW_TM_Y);

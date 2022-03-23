@@ -289,7 +289,7 @@ static void PlayAutoResolveSample(const ST::string &sample, UINT32 const ubVolum
 	}
 }
 
-void EliminateAllEnemies(const SGPSector& ubSector)
+void EliminateAllEnemies( UINT8 ubSectorX, UINT8 ubSectorY )
 {
 	SECTORINFO *pSector;
 	UINT8 ubNumEnemies[ NUM_ENEMY_RANKS ];
@@ -298,25 +298,25 @@ void EliminateAllEnemies(const SGPSector& ubSector)
 	//Clear any possible battle locator
 	gfBlitBattleSectorLocator = FALSE;
 
-	pSector = &SectorInfo[ubSector.AsByte()];
+	pSector = &SectorInfo[ SECTOR( ubSectorX, ubSectorY ) ];
 
 
 	// if we're doing this from the Pre-Battle interface, gpAR is NULL, and RemoveAutoResolveInterface(0 won't happen, so
 	// we must process the enemies killed right here & give out loyalty bonuses as if the battle had been fought & won
 	if( !gpAR )
 	{
-		GetNumberOfEnemiesInSector(ubSector.x, ubSector.y, &ubNumEnemies[0], &ubNumEnemies[1], &ubNumEnemies[2]);
+		GetNumberOfEnemiesInSector( ubSectorX, ubSectorY, &ubNumEnemies[ 0 ], &ubNumEnemies[ 1 ], &ubNumEnemies[ 2 ] );
 
 		for ( ubRankIndex = 0; ubRankIndex < NUM_ENEMY_RANKS; ubRankIndex++ )
 		{
 			for (INT32 i = 0; i < ubNumEnemies[ubRankIndex]; ++i)
 			{
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, ubSector);
+				HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_ENEMY_KILLED, ubSectorX, ubSectorY, 0 );
 				TrackEnemiesKilled( ENEMY_KILLED_IN_AUTO_RESOLVE, RankIndexToSoldierClass( ubRankIndex ) );
 			}
 		}
 
-		HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_WON, ubSector);
+		HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_WON, ubSectorX, ubSectorY, 0 );
 	}
 
 	if( !gpAR || gpAR->ubBattleStatus != BATTLE_IN_PROGRESS )
@@ -331,8 +331,8 @@ void EliminateAllEnemies(const SGPSector& ubSector)
 		{
 			GROUP& g = *i;
 			if (g.fPlayer)                continue;
-			if (g.ubSectorX != ubSector.x) continue;
-			if (g.ubSectorY != ubSector.y) continue;
+			if (g.ubSectorX != ubSectorX) continue;
+			if (g.ubSectorY != ubSectorY) continue;
 			RemoveGroupFromStrategicAILists(g);
 			RemoveGroup(g);
 		}
@@ -341,8 +341,8 @@ void EliminateAllEnemies(const SGPSector& ubSector)
 			CalculateNextMoveIntention( gpBattleGroup );
 		}
 		// set this sector as taken over
-		SetThisSectorAsPlayerControlled(ubSector, TRUE);
-		RecalculateSectorWeight(ubSector.AsByte());
+		SetThisSectorAsPlayerControlled( ubSectorX, ubSectorY, 0, TRUE );
+		RecalculateSectorWeight( (UINT8)SECTOR( ubSectorX, ubSectorY ) );
 
 		// dirty map panel
 		fMapPanelDirty = TRUE;
@@ -411,7 +411,7 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	}
 }
 
-void EnterAutoResolveMode(const SGPSector& ubSector)
+void EnterAutoResolveMode( UINT8 ubSectorX, UINT8 ubSectorY )
 {
 	//Set up mapscreen for removal
 	SetPendingNewScreen( AUTORESOLVE_SCREEN );
@@ -429,8 +429,8 @@ void EnterAutoResolveMode(const SGPSector& ubSector)
 
 	//Set up autoresolve
 	gpAR->fEnteringAutoResolve = TRUE;
-	gpAR->ubSectorX = ubSector.x;
-	gpAR->ubSectorY = ubSector.y;
+	gpAR->ubSectorX = ubSectorX;
+	gpAR->ubSectorY = ubSectorY;
 	gpAR->ubBattleStatus = BATTLE_IN_PROGRESS;
 	gpAR->uiTimeSlice = 1000;
 	gpAR->uiTotalElapsedBattleTimeInMilliseconds = 0;
@@ -1174,7 +1174,6 @@ static void RenderAutoResolve(void)
 	INT32 xp, yp;
 	ST::string str;
 	UINT8 ubGood, ubBad;
-	SGPSector arSector(gpAR->ubSectorX, gpAR->ubSectorY, 0);
 
 	if (gpAR->fShowInterface)
 	{ //After expanding the window, we now show the interface
@@ -1255,7 +1254,7 @@ static void RenderAutoResolve(void)
 
 	SetFontAttributes(FONT10ARIAL, FONT_GRAY2);
 
-	str = GetSectorIDString(arSector, TRUE);
+	str = GetSectorIDString(gpAR->ubSectorX, gpAR->ubSectorY, 0, TRUE);
 	xp = gpAR->sCenterStartX + 70 - StringPixLength( str, FONT10ARIAL )/2;
 	yp += 11;
 	MPrint(xp, yp, str);
@@ -1303,17 +1302,17 @@ static void RenderAutoResolve(void)
 				{
 					SetFactTrue( FACT_FIRST_BATTLE_WON );
 				}
-				SetTheFirstBattleSector(arSector.AsStrategicIndex());
-				HandleFirstBattleEndingWhileInTown(arSector, TRUE);
+				SetTheFirstBattleSector( ( INT16 ) (gpAR->ubSectorX + gpAR->ubSectorY * MAP_WORLD_X ) );
+				HandleFirstBattleEndingWhileInTown( gpAR->ubSectorX, gpAR->ubSectorY, 0, TRUE );
 			}
 
 			switch( gpAR->ubBattleStatus )
 			{
 				case BATTLE_VICTORY:
-					HandleMoraleEvent(nullptr, MORALE_BATTLE_WON, arSector.x, arSector.y, arSector.z);
-					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_WON, arSector);
+					HandleMoraleEvent( NULL, MORALE_BATTLE_WON, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
+					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_WON, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
 
-					SetThisSectorAsPlayerControlled(arSector, TRUE);
+					SetThisSectorAsPlayerControlled( gpAR->ubSectorX, gpAR->ubSectorY, 0, TRUE );
 
 					SetMusicMode( MUSIC_TACTICAL_VICTORY );
 					LogBattleResults( LOG_VICTORY );
@@ -1329,22 +1328,26 @@ static void RenderAutoResolve(void)
 							if (PlayerMercInvolvedInThisCombat(s))
 							{
 								// This morale event is PER INDIVIDUAL SOLDIER
-								HandleMoraleEvent(&s, MORALE_MERC_CAPTURED, arSector.x, arSector.y, arSector.z);
+								HandleMoraleEvent(&s, MORALE_MERC_CAPTURED, gpAR->ubSectorX, gpAR->ubSectorY, 0);
 							}
 						}
 					}
-					HandleMoraleEvent(nullptr, MORALE_HEARD_BATTLE_LOST, arSector.x, arSector.y, arSector.z);
-					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_LOST, arSector);
+					HandleMoraleEvent( NULL, MORALE_HEARD_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
+					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
 
 					SetMusicMode( MUSIC_TACTICAL_DEFEAT );
-					gsEnemyGainedControlOfSectorID = arSector.AsByte();
+					gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
 					break;
 				case BATTLE_DEFEAT:
-					HandleMoraleEvent(nullptr, MORALE_HEARD_BATTLE_LOST, arSector.x, arSector.y, arSector.z);
-					HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_BATTLE_LOST, arSector);
-					gsEnemyGainedControlOfSectorID = arSector.AsByte();
-					if (gubEnemyEncounterCode == CREATURE_ATTACK_CODE)
+					HandleMoraleEvent( NULL, MORALE_HEARD_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
+					HandleGlobalLoyaltyEvent( GLOBAL_LOYALTY_BATTLE_LOST, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
+					if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 					{
+						gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
+					}
+					else
+					{
+						gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
 						gsCiviliansEatenByMonsters = gpAR->ubAliveEnemies;
 					}
 					SetMusicMode( MUSIC_TACTICAL_DEFEAT );
@@ -1356,14 +1359,14 @@ static void RenderAutoResolve(void)
 					//Tack on 5 minutes for retreat.
 					gpAR->uiTotalElapsedBattleTimeInMilliseconds += 300000;
 
-					HandleLoyaltyImplicationsOfMercRetreat(RETREAT_AUTORESOLVE, arSector);
+					HandleLoyaltyImplicationsOfMercRetreat( RETREAT_AUTORESOLVE, gpAR->ubSectorX, gpAR->ubSectorY, 0 );
 					if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 					{
-						gsEnemyGainedControlOfSectorID = arSector.AsByte();
+						gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
 					}
 					else if( gpAR->ubAliveEnemies )
 					{
-						gsEnemyGainedControlOfSectorID = arSector.AsByte();
+						gsEnemyGainedControlOfSectorID = (INT16)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
 						gsCiviliansEatenByMonsters = gpAR->ubAliveEnemies;
 					}
 					break;
@@ -1595,9 +1598,9 @@ static void CreateAutoResolveInterface(void)
 		cell = MakeCreatures(cell, ar->ubYMCreatures, ar, YAM_MONSTER,        YM_CREATURE_FACE);
 	}
 
-	if (ar->ubSectorX  == gWorldSector.x &&
-			ar->ubSectorY  == gWorldSector.y &&
-			gWorldSector.z == 0)
+	if (ar->ubSectorX  == gWorldSectorX &&
+			ar->ubSectorY  == gWorldSectorY &&
+			gbWorldSectorZ == 0)
 	{
 		CheckAndHandleUnloadingOfCurrentWorld();
 	}
@@ -1743,7 +1746,8 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		r = 0;
 	}
 
-	const SGPSector arSector(ar.ubSectorX, ar.ubSectorY);
+	UINT8 const x = ar.ubSectorX;
+	UINT8 const y = ar.ubSectorY;
 
 	// Delete all militia
 	gbGreenToElitePromotions = 0;
@@ -1762,13 +1766,13 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		{
 			if (s.bLife < OKLIFE / 2)
 			{
-				AddDeadSoldierToUnLoadedSector(arSector.x, arSector.y, arSector.z, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
-				StrategicRemoveMilitiaFromSector(arSector, current_rank, 1);
-				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, arSector);
+				AddDeadSoldierToUnLoadedSector(x, y, 0, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
+				StrategicRemoveMilitiaFromSector(x, y, current_rank, 1);
+				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, x, y, 0);
 			}
 			else
 			{ // This will check for promotions
-				UINT8 const promotions = CheckOneMilitiaForPromotion(arSector, current_rank, s.ubMilitiaKills);
+				UINT8 const promotions = CheckOneMilitiaForPromotion(x, y, current_rank, s.ubMilitiaKills);
 				if (promotions == 1)
 				{
 					if (current_rank == GREEN_MILITIA)
@@ -1802,9 +1806,9 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			SOLDIERTYPE& s = *gpEnemies[i].pSoldier;
 			if (s.bLife >= OKLIFE) continue;
 			TrackEnemiesKilled(ENEMY_KILLED_IN_AUTO_RESOLVE, s.ubSoldierClass);
-			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, arSector);
+			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, x, y, 0);
 			ProcessQueenCmdImplicationsOfDeath(&s);
-			AddDeadSoldierToUnLoadedSector(arSector.x, arSector.y, arSector.z, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
+			AddDeadSoldierToUnLoadedSector(x, y, 0, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 		}
 
 		/* Eliminate all excess soldiers (as more than 32 can exist in the same
@@ -1814,15 +1818,15 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		{	/* Get rid of any extra enemies that could be here. It is possible for the
 			 * number of total enemies to exceed 32, but autoresolve can only process
 			 * 32. We basically cheat by eliminating the rest of them. */
-			if (NumEnemiesInSector(arSector))
+			if(NumEnemiesInSector(x , y))
 			{
-				SLOGI("Eliminating remaining enemies after Autoresolve in (%d,%d)", arSector.x, arSector.y);
-				EliminateAllEnemies(arSector);
+				SLOGI("Eliminating remaining enemies after Autoresolve in (%d,%d)", x, y);
+				EliminateAllEnemies(x, y);
 			}
 		}
 		else
 		{ // The enemy won, so repoll movement.
-			ResetMovementForEnemyGroupsInLocation();
+			ResetMovementForEnemyGroupsInLocation(x, y);
 		}
 	}
 
@@ -3902,55 +3906,71 @@ UINT8 GetAutoResolveSectorID()
 }
 
 //Returns TRUE if a battle is happening or sector is loaded
-BOOLEAN GetCurrentBattleSectorXYZ(SGPSector& psSector)
+BOOLEAN GetCurrentBattleSectorXYZ( INT16 *psSectorX, INT16 *psSectorY, INT16 *psSectorZ )
 {
 	if( gpAR )
 	{
-		psSector = SGPSector(gpAR->ubSectorX, gpAR->ubSectorY, 0);
+		*psSectorX = gpAR->ubSectorX;
+		*psSectorY = gpAR->ubSectorY;
+		*psSectorZ = 0;
 		return TRUE;
 	}
 	else if( gfPreBattleInterfaceActive )
 	{
-		psSector = gubPBSector;
+		*psSectorX = gubPBSectorX;
+		*psSectorY = gubPBSectorY;
+		*psSectorZ = gubPBSectorZ;
 		return TRUE;
 	}
 	else if( gfWorldLoaded )
 	{
-		psSector = gWorldSector;
+		*psSectorX = gWorldSectorX;
+		*psSectorY = gWorldSectorY;
+		*psSectorZ = gbWorldSectorZ;
 		return TRUE;
 	}
 	else
 	{
-		psSector = SGPSector(0, 0, -1);
+		*psSectorX = 0;
+		*psSectorY = 0;
+		*psSectorZ = -1;
 		return FALSE;
 	}
 }
 
 
-BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(SGPSector& psSector)
+BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(INT16* psSectorX, INT16* psSectorY, INT16* psSectorZ)
 {
 	if( gpAR )
 	{
-		psSector.x = gpAR->ubSectorX;
-		psSector.y = gpAR->ubSectorY;
-		psSector.z = 0;
+		*psSectorX = gpAR->ubSectorX;
+		*psSectorY = gpAR->ubSectorY;
+		*psSectorZ = 0;
 		return TRUE;
 	}
 	else if( gfPreBattleInterfaceActive )
 	{
-		psSector = gubPBSector;
+		*psSectorX = gubPBSectorX;
+		*psSectorY = gubPBSectorY;
+		*psSectorZ = gubPBSectorZ;
 		return TRUE;
 	}
 	else if( gfWorldLoaded )
 	{
-		psSector = gWorldSector;
-		return gTacticalStatus.fEnemyInSector;
+		*psSectorX = gWorldSectorX;
+		*psSectorY = gWorldSectorY;
+		*psSectorZ = gbWorldSectorZ;
+		if( gTacticalStatus.fEnemyInSector )
+		{
+			return TRUE;
+		}
+		return FALSE;
 	}
 	else
 	{
-		psSector.x = 0;
-		psSector.y = 0;
-		psSector.z = -1;
+		*psSectorX = 0;
+		*psSectorY = 0;
+		*psSectorZ = -1;
 		return FALSE;
 	}
 }

@@ -305,7 +305,7 @@ static void SettleMercAccounts(void)
 
 	// add the transaction to the finance page
 	AddTransactionToPlayersBook( PAY_SPECK_FOR_MERC, GetProfileIDFromMERCListingIndex( gubCurMercIndex ), GetWorldTotalMin(), -iPartialPayment );
-	AddHistoryToPlayersLog(HISTORY_SETTLED_ACCOUNTS_AT_MERC, GetProfileIDFromMERCListingIndex( gubCurMercIndex ), GetWorldTotalMin(), SGPSector(-1, -1));
+	AddHistoryToPlayersLog( HISTORY_SETTLED_ACCOUNTS_AT_MERC, GetProfileIDFromMERCListingIndex( gubCurMercIndex ), GetWorldTotalMin(), -1, -1 );
 
 	//Increment the amount of money paid to speck
 	LaptopSaveInfo.uiTotalMoneyPaidToSpeck += iPartialPayment;
@@ -371,7 +371,7 @@ static void SettleMercAccounts(void)
 		{
 			// add the transaction to the finance page
 			AddTransactionToPlayersBook( PAY_SPECK_FOR_MERC, GetMercIDFromMERCArray( gubCurMercIndex ), GetWorldTotalMin(), -iPartialPayment );
-			AddHistoryToPlayersLog(HISTORY_SETTLED_ACCOUNTS_AT_MERC, GetMercIDFromMERCArray( gubCurMercIndex ), GetWorldTotalMin(), SGPSector(-1, -1));
+			AddHistoryToPlayersLog( HISTORY_SETTLED_ACCOUNTS_AT_MERC, GetMercIDFromMERCArray( gubCurMercIndex ), GetWorldTotalMin(), -1, -1 );
 		}
 
 
@@ -387,7 +387,7 @@ static void SettleMercAccounts(void)
 
 	// add the transaction to the finance page
 	AddTransactionToPlayersBook( PAY_SPECK_FOR_MERC, GetMercIDFromMERCArray( gubCurMercIndex ), GetWorldTotalMin(), -giMercTotalContractCharge);
-	AddHistoryToPlayersLog(HISTORY_SETTLED_ACCOUNTS_AT_MERC, GetMercIDFromMERCArray( gubCurMercIndex ), GetWorldTotalMin(), SGPSector(-1, -1));
+	AddHistoryToPlayersLog( HISTORY_SETTLED_ACCOUNTS_AT_MERC, GetMercIDFromMERCArray( gubCurMercIndex ), GetWorldTotalMin(), -1, -1 );
 
 	//reset all the mercs time
 	for(i=0; i<NUMBER_OF_MERCS; i++)

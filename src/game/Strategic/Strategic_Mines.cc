@@ -223,7 +223,7 @@ void HourlyMinesUpdate(void)
 						{
 							// start it now!
 							UINT8 const sector = GCM->getMine(ubMineIndex)->entranceSector;
-							StartQuest(QUEST_CREATURES, SGPSector(sector));
+							StartQuest(QUEST_CREATURES, SECTORX(sector), SECTORY(sector));
 						}
 					}
 
@@ -288,7 +288,7 @@ INT8 GetTownAssociatedWithMine( UINT8 ubMineIndex )
 static void AddMineHistoryEvent(UINT8 const event, UINT const mine_id)
 {
 	auto m = GCM->getMine(mine_id);
-	AddHistoryToPlayersLog(event, m->associatedTownId, GetWorldTotalMin(), SGPSector(m->entranceSector));
+	AddHistoryToPlayersLog(event, m->associatedTownId, GetWorldTotalMin(), SECTORX(m->entranceSector), SECTORY(m->entranceSector));
 }
 
 
@@ -593,7 +593,7 @@ INT32 CalcMaxPlayerIncomeFromMines()
 
 INT8 GetMineIndexForSector(UINT8 const sector)
 {
-	return GetIdOfMineForSector(SGPSector(sector));
+	return GetIdOfMineForSector(SECTORX(sector), SECTORY(sector), 0);
 }
 
 
@@ -991,9 +991,9 @@ BOOLEAN HasHisMineBeenProducingForPlayerForSomeTime( UINT8 ubMinerProfileId )
 }
 
 
-INT8 GetIdOfMineForSector(const SGPSector& sector)
+INT8 GetIdOfMineForSector(INT16 const x, INT16 const y, INT8 const z)
 {
-	auto mine = GCM->getMineForSector(sector);
+	auto mine = GCM->getMineForSector(x, y, z);
 	if (mine != NULL)
 	{
 		return mine->mineId;

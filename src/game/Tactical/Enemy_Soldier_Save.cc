@@ -28,13 +28,13 @@
 BOOLEAN gfRestoringEnemySoldiersFromTempFile = FALSE;
 BOOLEAN gfRestoringCiviliansFromTempFile = FALSE;
 
-static void RemoveTempFile(SectorFlags const file_flag, const SGPSector& sector)
+static void RemoveTempFile(SectorFlags const file_flag, INT16 const x, INT16 const y, INT8 const z)
 {
-	if (!GetSectorFlagStatus(sector, file_flag)) return;
+	if (!GetSectorFlagStatus(x, y, z, file_flag)) return;
 
 	// Delete any temp file that is here and toast the flag that says one exists.
-	ReSetSectorFlag(sector, file_flag);
-	GCM->tempFiles()->deleteFile(GetMapTempFileName(file_flag, sector));
+	ReSetSectorFlag(x, y, z, file_flag);
+	GCM->tempFiles()->deleteFile(GetMapTempFileName(file_flag, x, y, z));
 }
 
 // OLD SAVE METHOD:  This is the old way of loading the enemies and civilians
@@ -42,7 +42,11 @@ void LoadEnemySoldiersFromTempFile()
 {
 	gfRestoringEnemySoldiersFromTempFile = TRUE;
 
-	auto mapFileName = GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSector);
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+	INT8  const z = gbWorldSectorZ;
+
+	auto mapFileName = GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z);
 	// STEP ONE: Set up the temp file to read from.
 	AutoSGPFile f(GCM->tempFiles()->openForReading(mapFileName));
 
@@ -51,7 +55,7 @@ void LoadEnemySoldiersFromTempFile()
 
 	INT16 saved_y;
 	f->read(&saved_y, 2);
-	if (gWorldSector.y != saved_y)
+	if (y != saved_y)
 	{
 		throw std::runtime_error("Sector Y mismatch");
 	}
@@ -62,7 +66,7 @@ void LoadEnemySoldiersFromTempFile()
 
 	INT16 saved_x;
 	f->read(&saved_x, 2);
-	if (gWorldSector.x != saved_x)
+	if (x != saved_x)
 	{
 		throw std::runtime_error("Sector X mismatch");
 	}
@@ -76,7 +80,7 @@ void LoadEnemySoldiersFromTempFile()
 
 	INT8 saved_z;
 	f->read(&saved_z, 1);
-	if (gWorldSector.z != saved_z)
+	if (z != saved_z)
 	{
 		throw std::runtime_error("Sector Z mismatch");
 	}
@@ -85,7 +89,7 @@ void LoadEnemySoldiersFromTempFile()
 	{
 		// The file has aged.  Use the regular method for adding soldiers.
 		f.Deallocate(); // Close the file before deleting it
-		RemoveTempFile(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSector);
+		RemoveTempFile(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z);
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		return;
 	}
@@ -123,9 +127,9 @@ void LoadEnemySoldiersFromTempFile()
 	UINT8 ubStrategicTroops;
 	UINT8 ubStrategicAdmins;
 	UINT8 ubStrategicCreatures;
-	if (gWorldSector.z != 0)
+	if (z != 0)
 	{
-		UNDERGROUND_SECTORINFO const* const pSector = FindUnderGroundSector(gWorldSector);
+		UNDERGROUND_SECTORINFO const* const pSector = FindUnderGroundSector(x, y, z);
 		if (!pSector)
 		{
 			throw std::runtime_error("Missing underground sector info");
@@ -137,9 +141,9 @@ void LoadEnemySoldiersFromTempFile()
 	}
 	else
 	{
-		SECTORINFO const* const pSector = &SectorInfo[gWorldSector.AsByte()];
+		SECTORINFO const* const pSector = &SectorInfo[SECTOR(x, y)];
 		ubStrategicCreatures = pSector->ubNumCreatures;
-		GetNumberOfEnemiesInSector(gWorldSector.x, gWorldSector.y, &ubStrategicAdmins, &ubStrategicTroops, &ubStrategicElites);
+		GetNumberOfEnemiesInSector(x, y, &ubStrategicAdmins, &ubStrategicTroops, &ubStrategicElites);
 	}
 
 	UINT8 ubNumElites    = 0;
@@ -230,7 +234,7 @@ no_add:
 
 	UINT8 saved_sector_id;
 	f->read(&saved_sector_id, 1);
-	if (saved_sector_id != gWorldSector.AsByte())
+	if (saved_sector_id != SECTOR(x, y))
 	{
 		throw std::runtime_error("Sector ID mismatch");
 	}
@@ -259,7 +263,11 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	UINT8 ubStrategicCreatures;
 
 	gfRestoringEnemySoldiersFromTempFile = TRUE;
-	auto mapFileName = GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSector);
+
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+	INT8  const z = gbWorldSectorZ;
+	auto mapFileName = GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z);
 
 	// Count the number of enemies (elites, regulars, admins and creatures) that
 	// are in the temp file.
@@ -268,9 +276,9 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	UINT8                         ubNumTroops      = 0;
 	UINT8                         ubNumAdmins      = 0;
 	UINT8                         ubNumCreatures   = 0;
-	if (gWorldSector.z != 0)
+	if (z != 0)
 	{
-		underground_info = FindUnderGroundSector(gWorldSector);
+		underground_info = FindUnderGroundSector(x, y, z);
 		if (!underground_info)
 		{
 			throw std::runtime_error("Missing underground sector info");
@@ -278,7 +286,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	}
 	else
 	{
-		SECTORINFO const* const sector_info = &SectorInfo[gWorldSector.AsByte()];
+		SECTORINFO const* const sector_info = &SectorInfo[SECTOR(x, y)];
 		ubNumElites    = sector_info->ubNumElites;
 		ubNumTroops    = sector_info->ubNumTroops;
 		ubNumAdmins    = sector_info->ubNumAdmins;
@@ -295,7 +303,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 			ubStrategicAdmins != ubNumAdmins ||
 			ubStrategicCreatures != ubNumCreatures)
 		{
-			RemoveTempFile(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSector);
+			RemoveTempFile(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z);
 			return;
 		}
 	}
@@ -314,7 +322,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	INT16 saved_y;
 	f->read(&saved_y, 2);
-	if (gWorldSector.y != saved_y)
+	if (y != saved_y)
 	{
 		throw std::runtime_error("Sector Y mismatch");
 	}
@@ -325,7 +333,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	INT16 saved_x;
 	f->read(&saved_x, 2);
-	if (gWorldSector.x != saved_x)
+	if (x != saved_x)
 	{
 		throw std::runtime_error("Sector X mismatch");
 	}
@@ -339,7 +347,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	INT8 saved_z;
 	f->read(&saved_z, 1);
-	if (gWorldSector.z != saved_z)
+	if (z != saved_z)
 	{
 		throw std::runtime_error("Sector Z mismatch");
 	}
@@ -348,7 +356,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	{
 		// The file has aged.  Use the regular method for adding soldiers.
 		f.Deallocate(); // Close the file before deleting it
-		RemoveTempFile(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSector);
+		RemoveTempFile(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z);
 		gfRestoringEnemySoldiersFromTempFile = FALSE;
 		return;
 	}
@@ -381,7 +389,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	}
 
 	// Get the number of enemies in this sector.
-	if (gWorldSector.z != 0)
+	if (z != 0)
 	{
 		ubStrategicElites = underground_info->ubNumElites;
 		ubStrategicTroops = underground_info->ubNumTroops;
@@ -390,9 +398,9 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 	}
 	else
 	{
-		SECTORINFO const* const sector_info = &SectorInfo[gWorldSector.AsByte()];
+		SECTORINFO const* const sector_info = &SectorInfo[SECTOR(x, y)];
 		ubStrategicCreatures = sector_info->ubNumCreatures;
-		GetNumberOfEnemiesInSector(gWorldSector.x, gWorldSector.y, &ubStrategicAdmins, &ubStrategicTroops, &ubStrategicElites);
+		GetNumberOfEnemiesInSector(x, y, &ubStrategicAdmins, &ubStrategicTroops, &ubStrategicElites);
 	}
 
 	for (INT32 i = 0; i != slots; ++i)
@@ -464,7 +472,7 @@ void NewWayOfLoadingEnemySoldiersFromTempFile()
 
 	UINT8 saved_sector_id;
 	f->read(&saved_sector_id, 1);
-	if (saved_sector_id != gWorldSector.AsByte())
+	if (saved_sector_id != SECTOR(x, y))
 	{
 		throw std::runtime_error("Sector ID mismatch");
 	}
@@ -486,15 +494,19 @@ void NewWayOfLoadingCiviliansFromTempFile()
 {
 	gfRestoringCiviliansFromTempFile = TRUE;
 
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+	INT8  const z = gbWorldSectorZ;
+
 	// STEP ONE: Set up the temp file to read from.
-	AutoSGPFile f(GCM->tempFiles()->openForReading(GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, gWorldSector)));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(GetMapTempFileName(SF_CIV_PRESERVED_TEMP_FILE_EXISTS, x, y, z)));
 
 	// STEP TWO:  Determine whether or not we should use this data.  Because it
 	// is the demo, it is automatically used.
 
 	INT16 saved_y;
 	f->read(&saved_y, 2);
-	if (gWorldSector.y != saved_y)
+	if (y != saved_y)
 	{
 		throw std::runtime_error("Sector Y mismatch");
 	}
@@ -505,7 +517,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 
 	INT16 saved_x;
 	f->read(&saved_x, 2);
-	if (gWorldSector.x != saved_x)
+	if (x != saved_x)
 	{
 		throw std::runtime_error("Sector X mismatch");
 	}
@@ -520,7 +532,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 
 	INT8 saved_z;
 	f->read(&saved_z, 1);
-	if (gWorldSector.z != saved_z)
+	if (z != saved_z)
 	{
 		throw std::runtime_error("Sector Z mismatch");
 	}
@@ -639,7 +651,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 // If we are saving a game and we are in the sector, we will need to preserve
 // the links between the soldiers and the soldier init list.  Otherwise, the
 // temp file will be deleted.
-void NewWayOfSavingEnemyAndCivliansToTempFile(const SGPSector& sSector, BOOLEAN const fEnemy, BOOLEAN const fValidateOnly)
+void NewWayOfSavingEnemyAndCivliansToTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ, BOOLEAN const fEnemy, BOOLEAN const fValidateOnly)
 {
 	//if we are saving the enemy info to the enemy temp file
 	UINT8       first_team;
@@ -757,11 +769,11 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(const SGPSector& sSector, BOOLEAN 
 		memcpy(dp->Inv, s.inv, sizeof(dp->Inv));
 	}
 
-	auto mapFileName = GetMapTempFileName(file_flag, sSector);
+	auto mapFileName = GetMapTempFileName(file_flag, sSectorX, sSectorY, bSectorZ);
 	if (slots == 0)
 	{
 		// No need to save anything, so return successfully
-		RemoveTempFile(file_flag, sSector);
+		RemoveTempFile(file_flag, sSectorX, sSectorY, bSectorZ);
 		return;
 	}
 
@@ -771,14 +783,14 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(const SGPSector& sSector, BOOLEAN 
 
 	AutoSGPFile f(GCM->tempFiles()->openForWriting(mapFileName, true));
 
-	f->write(&sSector.y, 2);
+	f->write(&sSectorY, 2);
 
 	// STEP THREE:  Save the data
 
 	// This works for both civs and enemies
 	SaveSoldierInitListLinks(f);
 
-	f->write(&sSector.x, 2);
+	f->write(&sSectorX, 2);
 
 	// This check may appear confusing.  It is intended to abort if the player is
 	// saving the game.  It is only supposed to preserve the links to the
@@ -795,7 +807,7 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(const SGPSector& sSector, BOOLEAN 
 	UINT32 const timestamp = GetWorldTotalMin();
 	f->write(&timestamp, 4);
 
-	f->write(&sSector.z, 1);
+	f->write(&bSectorZ, 1);
 
 	// If we are saving the game, we don't need to preserve the soldier
 	// information, just preserve the links to the placement list.
@@ -820,11 +832,11 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(const SGPSector& sSector, BOOLEAN 
 			f->write(&checksum, 2);
 		}
 
-		UINT8 const sector_id = sSector.AsByte();
+		UINT8 const sector_id = SECTOR(sSectorX, sSectorY);
 		f->write(&sector_id, 1);
 	}
 
-	SetSectorFlag(sSector, file_flag);
+	SetSectorFlag(sSectorX, sSectorY, bSectorZ, file_flag);
 }
 
 
@@ -836,15 +848,19 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 	*n_admins    = 0;
 	*n_creatures = 0;
 
+	INT16 const x = gWorldSectorX;
+	INT16 const y = gWorldSectorY;
+	INT8  const z = gbWorldSectorZ;
+
 	// STEP ONE: Set up the temp file to read from.
-	AutoSGPFile f(GCM->tempFiles()->openForReading(GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, gWorldSector)));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(GetMapTempFileName(SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, x, y, z)));
 
 	// STEP TWO: Determine whether or not we should use this data.  Because it
 	// is the demo, it is automatically used.
 
 	INT16 saved_y;
 	f->read(&saved_y, 2);
-	if (gWorldSector.y != saved_y)
+	if (y != saved_y)
 	{
 		throw std::runtime_error("Sector Y mismatch");
 	}
@@ -855,7 +871,7 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 
 	INT16 saved_x;
 	f->read(&saved_x, 2);
-	if (gWorldSector.x != saved_x)
+	if (x != saved_x)
 	{
 		throw std::runtime_error("Sector X mismatch");
 	}
@@ -869,7 +885,7 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 
 	INT8 saved_z;
 	f->read(&saved_z, 1);
-	if (gWorldSector.z != saved_z)
+	if (z != saved_z)
 	{
 		throw std::runtime_error("Sector Z mismatch");
 	}
@@ -912,7 +928,7 @@ static void CountNumberOfElitesRegularsAdminsAndCreaturesFromEnemySoldiersTempFi
 
 	UINT8 saved_sector_id;
 	f->read(&saved_sector_id, 1);
-	if (saved_sector_id != gWorldSector.AsByte())
+	if (saved_sector_id != SECTOR(x, y))
 	{
 		throw std::runtime_error("Sector ID mismatch");
 	}

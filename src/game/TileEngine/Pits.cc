@@ -36,9 +36,9 @@ void Add3X3Pit( INT32 iMapIndex )
 	AddObjectToTail( iMapIndex - 159, REGWATERTEXTURE9 );
 	if( !gfEditMode )
 	{ //Add the exitgrids associated with the pit.
-		ExitGrid.ubGotoSectorX = (UINT8) gWorldSector.x;
-		ExitGrid.ubGotoSectorY = (UINT8) gWorldSector.y;
-		ExitGrid.ubGotoSectorZ = (UINT8) (gWorldSector.z + 1);
+		ExitGrid.ubGotoSectorX = (UINT8)gWorldSectorX;
+		ExitGrid.ubGotoSectorY = (UINT8)gWorldSectorY;
+		ExitGrid.ubGotoSectorZ = (UINT8)(gbWorldSectorZ+1);
 		ExitGrid.usGridNo = (UINT16)iMapIndex;
 		AddExitGridToWorld( iMapIndex + 159, &ExitGrid );
 		AddExitGridToWorld( iMapIndex -   1, &ExitGrid );
@@ -87,9 +87,9 @@ void Add5X5Pit( INT32 iMapIndex )
 	AddObjectToTail( iMapIndex - 318, REGWATERTEXTURE34 );
 	if( !gfEditMode )
 	{ //Add the exitgrids associated with the pit.
-		ExitGrid.ubGotoSectorX = (UINT8) gWorldSector.x;
-		ExitGrid.ubGotoSectorY = (UINT8) gWorldSector.y;
-		ExitGrid.ubGotoSectorZ = (UINT8) (gWorldSector.z + 1);
+		ExitGrid.ubGotoSectorX = (UINT8)gWorldSectorX;
+		ExitGrid.ubGotoSectorY = (UINT8)gWorldSectorY;
+		ExitGrid.ubGotoSectorZ = (UINT8)(gbWorldSectorZ+1);
 		ExitGrid.usGridNo = (UINT16)iMapIndex;
 		AddExitGridToWorld( iMapIndex + 318, &ExitGrid );
 		AddExitGridToWorld( iMapIndex + 158, &ExitGrid );
