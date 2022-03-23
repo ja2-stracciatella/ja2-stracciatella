@@ -16,7 +16,7 @@ BOOLEAN PrepareCreaturesForBattle(void);
 void CreatureNightPlanning(void);
 void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector);
 
-void CheckConditionsForTriggeringCreatureQuest( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
+void CheckConditionsForTriggeringCreatureQuest();
 
 extern BOOLEAN gfUseCreatureMusic;
 
