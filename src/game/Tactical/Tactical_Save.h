@@ -59,7 +59,7 @@ void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(const SGPSector& sMap, R
 //The gridno if you are passing in either of the flags ADD_DEAD_SOLDIER_USE_GRIDNO, or the ADD_DEAD_SOLDIER_TO_SWEETSPOT
 //
 // This function DOES NOT remove the soldier from the soldier struct.  YOU must do it.
-void AddDeadSoldierToUnLoadedSector(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT32 uiFlags);
+void AddDeadSoldierToUnLoadedSector(const SGPSector& sMap, SOLDIERTYPE* pSoldier, INT16 sGridNo, UINT32 uiFlags);
 
 
 BOOLEAN GetSectorFlagStatus(const SGPSector& sMap, SectorFlags);

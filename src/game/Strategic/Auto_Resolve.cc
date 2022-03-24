@@ -1762,7 +1762,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		{
 			if (s.bLife < OKLIFE / 2)
 			{
-				AddDeadSoldierToUnLoadedSector(arSector.x, arSector.y, arSector.z, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
+				AddDeadSoldierToUnLoadedSector(arSector, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 				StrategicRemoveMilitiaFromSector(arSector, current_rank, 1);
 				HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_NATIVE_KILLED, arSector);
 			}
@@ -1804,7 +1804,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			TrackEnemiesKilled(ENEMY_KILLED_IN_AUTO_RESOLVE, s.ubSoldierClass);
 			HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_ENEMY_KILLED, arSector);
 			ProcessQueenCmdImplicationsOfDeath(&s);
-			AddDeadSoldierToUnLoadedSector(arSector.x, arSector.y, arSector.z, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
+			AddDeadSoldierToUnLoadedSector(arSector, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 		}
 
 		/* Eliminate all excess soldiers (as more than 32 can exist in the same

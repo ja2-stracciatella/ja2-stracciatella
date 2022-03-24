@@ -870,9 +870,8 @@ BOOLEAN GetSectorFlagStatus(const SGPSector& sSector, SectorFlags const flag_to_
 }
 
 
-void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z, SOLDIERTYPE* const s, INT16 const grid_no, UINT32 const flags)
+void AddDeadSoldierToUnLoadedSector(const SGPSector& sMap, SOLDIERTYPE* const s, INT16 const grid_no, UINT32 const flags)
 {
-	SGPSector sMap(x, y, z);
 	// Setup the flags for the items and the rotting corpses
 	UINT16 flags_for_world_items    = 0;
 	UINT16 flags_for_rotting_corpse = 0;
