@@ -948,16 +948,13 @@ static BOOLEAN ReinforcementsApproved(INT32 iGarrisonID, UINT16* pusDefencePoint
 {
 	SECTORINFO *pSector;
 	UINT16 usOffensePoints;
-	UINT8 ubSectorX, ubSectorY;
-
+	SGPSector sSector(gGarrisonGroup[iGarrisonID].ubSectorID);
 	pSector = &SectorInfo[ gGarrisonGroup[ iGarrisonID ].ubSectorID ];
-	ubSectorX = (UINT8)SECTORX( gGarrisonGroup[ iGarrisonID ].ubSectorID );
-	ubSectorY = (UINT8)SECTORY( gGarrisonGroup[ iGarrisonID ].ubSectorID );
 
 	*pusDefencePoints = pSector->ubNumberOfCivsAtLevel[ GREEN_MILITIA ]		* 1 +
 										pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] * 2 +
 										pSector->ubNumberOfCivsAtLevel[ ELITE_MILITIA ]		* 3 +
-										PlayerMercsInSector( ubSectorX, ubSectorY, 0 )		* 4;
+										PlayerMercsInSector(sSector) * 4;
 	usOffensePoints = gArmyComp[ gGarrisonGroup[ iGarrisonID ].ubComposition ].bAdminPercentage * 2 +
 										gArmyComp[ gGarrisonGroup[ iGarrisonID ].ubComposition ].bTroopPercentage * 3 +
 										gArmyComp[ gGarrisonGroup[ iGarrisonID ].ubComposition ].bElitePercentage * 4 +
@@ -972,8 +969,8 @@ static BOOLEAN ReinforcementsApproved(INT32 iGarrisonID, UINT16* pusDefencePoint
 	//we might send an augmented force to take it back.
 	if( gubGarrisonReinforcementsDenied[ iGarrisonID ] + usOffensePoints > *pusDefencePoints )
 	{
-		SLOGD("Sector %c%d will now recieve an %d extra troops due to multiple denials for reinforcements in the past for strong player presence.",
-				ubSectorY + 'A' - 1, ubSectorX, gubGarrisonReinforcementsDenied[ iGarrisonID ] / 3 );
+		STLOGD("Sector {} will now recieve an {} extra troops due to multiple denials for reinforcements in the past for strong player presence.",
+				sSector.AsShortString(), gubGarrisonReinforcementsDenied[iGarrisonID] / 3);
 		return TRUE;
 	}
 	//Reinforcements will have to wait.  For now, increase the reinforcements denied.  The amount increase is 20 percent
