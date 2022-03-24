@@ -258,7 +258,7 @@ void ResetMovementForEnemyGroupsInLocation();
 //Determines if any particular group WILL be moving through a given sector given it's current
 //position in the route and TREATS the pGroup->ubMoveType as ONE_WAY EVEN IF IT ISN'T.  If the
 //group is currently IN the sector, or just left the sector, it will return FALSE.
-BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
+BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector);
 
 void RandomizePatrolGroupLocation( GROUP *pGroup );
 

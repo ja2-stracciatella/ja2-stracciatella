@@ -3043,7 +3043,7 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 //Determines if any particular group WILL be moving through a given sector given it's current
 //position in the route and the pGroup->ubMoveType must be ONE_WAY.  If the group is currently
 //IN the sector, or just left the sector, it will return FALSE.
-BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY )
+BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 {
 	WAYPOINT *wp;
 	INT32 i, dx, dy;
@@ -3118,7 +3118,7 @@ BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSect
 			pGroup->ubSector.x = (UINT8)( dx + pGroup->ubSector.x );
 			pGroup->ubSector.y = (UINT8)( dy + pGroup->ubSector.y );
 			//Check to see if it the sector we are checking to see if this group will be moving through.
-			if (pGroup->ubSector.x == ubSectorX && pGroup->ubSector.y == ubSectorY)
+			if (pGroup->ubSector == sSector)
 			{
 				pGroup->ubSector.x = ubOrigX;
 				pGroup->ubSector.y = ubOrigY;

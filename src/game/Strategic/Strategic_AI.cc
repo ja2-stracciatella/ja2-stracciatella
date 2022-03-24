@@ -3854,7 +3854,7 @@ static UINT8 RedirectEnemyGroupsMovingThroughSector(const SGPSector& sSector)
 	{
 		if (pGroup->ubMoveType == ONE_WAY)
 		{ //check the waypoint list
-			if (GroupWillMoveThroughSector(pGroup, sSector.x, sSector.y))
+			if (GroupWillMoveThroughSector(pGroup, sSector))
 			{
 				//extract the group's destination.
 				pWaypoint = GetFinalWaypoint( pGroup );
