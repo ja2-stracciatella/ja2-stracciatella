@@ -2122,7 +2122,7 @@ void DrawStringRight(const ST::string& str, UINT16 x, UINT16 y, UINT16 w, UINT16
 
 
 static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor, BOOLEAN fStationary);
-static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY);
+static void RestoreMapSectorCursor(const SGPSector& sMap);
 
 
 static void RenderMapCursorsIndexesAnims(void)
@@ -2132,7 +2132,7 @@ static void RenderMapCursorsIndexesAnims(void)
 	UINT16 usCursorColor;
 	UINT32 uiDeltaTime;
 	static SGPSector sPrevHighlightedMap(-1, -1);
-	static INT16 sPrevSelectedMapX = -1, sPrevSelectedMapY = -1;
+	static SGPSector sPrevSelectedMap(-1, -1);
 	static BOOLEAN fFlashCursorIsYellow = FALSE;
 	BOOLEAN fDrawCursors;
 	BOOLEAN fHighlightChanged = FALSE;
@@ -2157,7 +2157,7 @@ static void RenderMapCursorsIndexesAnims(void)
 		{
 			if (sPrevHighlightedMap.IsValid())
 			{
-				RestoreMapSectorCursor(sPrevHighlightedMap.x, sPrevHighlightedMap.y);
+				RestoreMapSectorCursor(sPrevHighlightedMap);
 			}
 
 			// draw WHITE highlight rectangle
@@ -2175,7 +2175,7 @@ static void RenderMapCursorsIndexesAnims(void)
 
 		if (sPrevHighlightedMap.IsValid())
 		{
-			RestoreMapSectorCursor(sPrevHighlightedMap.x, sPrevHighlightedMap.y);
+			RestoreMapSectorCursor(sPrevHighlightedMap);
 			fHighlightChanged = TRUE;
 		}
 
@@ -2221,25 +2221,24 @@ static void RenderMapCursorsIndexesAnims(void)
 		// always render this one, it's too much of a pain detecting overlaps with the white cursor otherwise
 		RenderMapHighlight(SGPSector(sSelMapX, sSelMapY), usCursorColor, TRUE);
 
-		if ( ( sPrevSelectedMapX != sSelMapX ) || ( sPrevSelectedMapY != sSelMapY ) )
+		SGPSector sSelMap(sSelMapX, sSelMapY);
+		if (sPrevSelectedMap != sSelMap)
 		{
-			sPrevSelectedMapX = sSelMapX;
-			sPrevSelectedMapY = sSelMapY;
-
+			sPrevSelectedMap = sSelMap;
 			fHighlightChanged = TRUE;
 		}
 	}
 	else
 	{
 		// erase yellow highlight cursor
-		if ( sPrevSelectedMapX != -1 && sPrevSelectedMapY != -1 )
+		if (sPrevSelectedMap.IsValid())
 		{
-			RestoreMapSectorCursor( sPrevSelectedMapX, sPrevSelectedMapY );
+			RestoreMapSectorCursor(sPrevSelectedMap);
 			fHighlightChanged = TRUE;
 		}
 
-		sPrevSelectedMapX = -1;
-		sPrevSelectedMapY = -1;
+		sPrevSelectedMap.x = -1;
+		sPrevSelectedMap.y = -1;
 	}
 
 
@@ -8099,10 +8098,9 @@ BOOLEAN CanDrawSectorCursor(void)
 }
 
 
-static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY)
+static void RestoreMapSectorCursor(const SGPSector& sMap)
 {
 	INT16 sScreenX, sScreenY;
-	SGPSector sMap(sMapX, sMapY);
 	Assert(sMap.IsValid());
 
 	GetScreenXYFromMapXY(sMap, &sScreenX, &sScreenY);
