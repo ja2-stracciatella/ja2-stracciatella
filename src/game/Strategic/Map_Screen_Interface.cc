@@ -854,7 +854,7 @@ void JumpToLevel( INT32 iLevel )
 	}
 
 	// set current sector Z to level passed
-	ChangeSelectedMapSector( sSelMapX, sSelMapY, ( INT8 )iLevel );
+	ChangeSelectedMapSector( sSelMap.x, sSelMap.y, ( INT8 )iLevel );
 }
 
 
@@ -1464,8 +1464,8 @@ BOOLEAN MapscreenCanPassItemToChar(const SOLDIERTYPE* const pNewSoldier)
 	if ( fShowMapInventoryPool && !gpItemPointerSoldier && fMapInventoryItem )
 	{
 		// disallow passing items to anyone not in that sector
-		if ( pNewSoldier->sSectorX != sSelMapX ||
-			pNewSoldier->sSectorY != sSelMapY ||
+		if ( pNewSoldier->sSectorX != sSelMap.x ||
+			pNewSoldier->sSectorY != sSelMap.y ||
 			pNewSoldier->bSectorZ != ( INT8 )( iCurrentMapSectorZ ) )
 		{
 			return( FALSE );
@@ -1654,7 +1654,7 @@ void HandleMinerEvent(ProfileID const ubMinerProfileID, INT16 const sQuoteNumber
 		if ( iCurrentMapSectorZ != 0 )
 		{
 			// switch to it, because the miner locators wouldn't show up if we're underground while they speak
-			ChangeSelectedMapSector( sSelMapX, sSelMapY, 0 );
+			ChangeSelectedMapSector( sSelMap.x, sSelMap.y, 0 );
 		}
 
 		fMapPanelDirty = TRUE;
@@ -2329,8 +2329,7 @@ static void AddStringsToMoveBox(PopUpBox* const box)
 	RemoveAllBoxStrings(box);
 
 	// add title
-	ST::string sStringB = GetShortSectorString(sSelMapX, sSelMapY);
-	ST::string sString = st_format_printf(pMovementMenuStrings[0], sStringB);
+	ST::string sString = st_format_printf(pMovementMenuStrings[0], sSelMap.AsShortString());
 	AddMonoString(box, sString);
 
 
@@ -3040,11 +3039,11 @@ void ReBuildMoveBox( void )
 
 	// stop showing the box
 	fShowMapScreenMovementList = FALSE;
-	CreateDestroyMovementBox( sSelMapX, sSelMapY, ( INT16 )iCurrentMapSectorZ );
+	CreateDestroyMovementBox( sSelMap.x, sSelMap.y, ( INT16 )iCurrentMapSectorZ );
 
 	// show the box
 	fShowMapScreenMovementList = TRUE;
-	CreateDestroyMovementBox( sSelMapX, sSelMapY, ( INT16 )iCurrentMapSectorZ );
+	CreateDestroyMovementBox( sSelMap.x, sSelMap.y, ( INT16 )iCurrentMapSectorZ );
 	ShowBox( ghMoveBox );
 	MarkAllBoxesAsAltered( );
 }

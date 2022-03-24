@@ -220,8 +220,8 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	const SOLDIERTYPE* const s = GetSelectedInfoChar();
 	if (!(item.usFlags & WORLD_ITEM_REACHABLE) ||
 			s           == NULL     ||
-			s->sSectorX != sSelMapX ||
-			s->sSectorY != sSelMapY ||
+			s->sSectorX != sSelMap.x ||
+			s->sSectorY != sSelMap.y ||
 			s->bSectorZ != iCurrentMapSectorZ)
 	{
 		//Shade the item
@@ -291,7 +291,7 @@ void CreateDestroyMapInventoryPoolButtons( BOOLEAN fExitFromMapScreen )
 		fShowMapInventoryPool = FALSE;
 	}
 */
-	SGPSector sector(sSelMapX, sSelMapY, iCurrentMapSectorZ);
+	SGPSector sector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
 	if (fShowMapInventoryPool && !fCreated)
 	{
 		if (gWorldSector == sector)
@@ -405,7 +405,7 @@ static void SaveSeenAndUnseenItems(void)
 	}
 
 	// if this is the loaded sector handle here
-	SGPSector sector(sSelMapX, sSelMapY, iCurrentMapSectorZ);
+	SGPSector sector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
 	if (gWorldSector == sector)
 	{
 		ReBuildWorldItemStashForLoadedSector(pSeenItemsList, pUnSeenItems);
@@ -560,8 +560,8 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 		}
 
 		// Check if selected merc is in this sector, if not, warn them and leave
-		if (s->sSectorX != sSelMapX           ||
-				s->sSectorY != sSelMapY           ||
+		if (s->sSectorX != sSelMap.x           ||
+				s->sSectorY != sSelMap.y           ||
 				s->bSectorZ != iCurrentMapSectorZ ||
 				s->fBetweenSectors)
 		{
@@ -1078,7 +1078,7 @@ static void DisplayCurrentSector(void)
 	INT16 sX, sY;
 
 
-	sString = ST::format("{}{}{}", pMapVertIndex[ sSelMapY ], pMapHortIndex[ sSelMapX ], pMapDepthIndex[ iCurrentMapSectorZ ]);
+	sString = ST::format("{}{}{}", pMapVertIndex[ sSelMap.y ], pMapHortIndex[ sSelMap.x ], pMapDepthIndex[ iCurrentMapSectorZ ]);
 
 	SetFontAttributes(COMPFONT, 183);
 	SetFontDestBuffer(guiSAVEBUFFER);
@@ -1403,7 +1403,7 @@ static BOOLEAN CanPlayerUseSectorInventory(void)
 	SGPSector sector;
 	return
 		!GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(sector) ||
-		sSelMapX           != sector.x ||
-		sSelMapY           != sector.y ||
+		sSelMap.x           != sector.x ||
+		sSelMap.y           != sector.y ||
 		iCurrentMapSectorZ != sector.z;
 }

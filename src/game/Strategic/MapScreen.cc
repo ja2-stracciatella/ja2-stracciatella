@@ -1247,8 +1247,8 @@ static void DisplayCharacterList(void)
 			s.bLife == 0                     ? FONT_METALGRAY :
 			CharacterIsGettingPathPlotted(i) ? FONT_LTBLUE    :
 			/* Not in current sector? */
-			s.sSectorX != sSelMapX ||
-			s.sSectorY != sSelMapY ||
+			s.sSectorX != sSelMap.x ||
+			s.sSectorY != sSelMap.y ||
 			s.bSectorZ != iCurrentMapSectorZ ? 5              :
 			/* Mobile? */
 			s.bAssignment < ON_DUTY ||
@@ -1470,7 +1470,7 @@ try
 		else	// no loaded sector
 		{
 			// Only select start sector, if there is no current selection, otherwise leave it as is.
-			if ( ( sSelMapX == 0 ) || ( sSelMapY == 0 ) || ( iCurrentMapSectorZ == -1 ) )
+			if (!sSelMap.IsValid() || iCurrentMapSectorZ == -1)
 			{
 				ChangeSelectedMapSector(startSector);
 			}
@@ -1876,7 +1876,7 @@ try
 
 
 	// display town info
-	DisplayTownInfo(SGPSector(sSelMapX, sSelMapY, iCurrentMapSectorZ));
+	DisplayTownInfo(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ));
 
 	if (fShowTownInfo)
 	{
@@ -2188,7 +2188,7 @@ static void RenderMapCursorsIndexesAnims(void)
 	if (fDrawCursors && bSelectedDestChar == -1 && !fPlotForHelicopter)
 	{
 		// if mouse cursor is over the currently selected sector
-		if ((gsHighlightSector.x == sSelMapX) && (gsHighlightSector.y == sSelMapY))
+		if (gsHighlightSector == sSelMap)
 		{
 			fSelectedSectorHighlighted = TRUE;
 
@@ -2219,9 +2219,8 @@ static void RenderMapCursorsIndexesAnims(void)
 		}
 
 		// always render this one, it's too much of a pain detecting overlaps with the white cursor otherwise
-		RenderMapHighlight(SGPSector(sSelMapX, sSelMapY), usCursorColor, TRUE);
+		RenderMapHighlight(sSelMap, usCursorColor, TRUE);
 
-		SGPSector sSelMap(sSelMapX, sSelMapY);
 		if (sPrevSelectedMap != sSelMap)
 		{
 			sPrevSelectedMap = sSelMap;
@@ -2398,8 +2397,8 @@ static UINT32 HandleMapUI(void)
 					if ( gpItemPointerSoldier != NULL )
 					{
 						// make sure it's the owner's sector that's selected
-						if ( ( gpItemPointerSoldier->sSectorX != sSelMapX ) ||
-							( gpItemPointerSoldier->sSectorY != sSelMapY ) ||
+						if ( ( gpItemPointerSoldier->sSectorX != sSelMap.x ) ||
+							( gpItemPointerSoldier->sSectorY != sSelMap.y ) ||
 							( gpItemPointerSoldier->bSectorZ != iCurrentMapSectorZ ) )
 						{
 							ChangeSelectedMapSector( gpItemPointerSoldier->sSectorX, gpItemPointerSoldier->sSectorY, gpItemPointerSoldier->bSectorZ );
@@ -2484,7 +2483,7 @@ static UINT32 HandleMapUI(void)
 
 				sMap.z = iCurrentMapSectorZ;
 				// if new map sector was clicked on
-				if ((sSelMapX != sMap.x) || (sSelMapY != sMap.y))
+				if (sSelMap != sMap)
 				{
 					fWasAlreadySelected = FALSE;
 
@@ -3543,7 +3542,6 @@ static void PollRightButtonInMapView(MapEvent& new_event)
 				else
 				{
 					SGPSector sMap(1, 1, iCurrentMapSectorZ);
-					SGPSector sSelMap(sSelMapX, sSelMapY);
 					if (GetMouseMapXY(sMap))
 					{
 						if (sSelMap != sMap)
@@ -6878,8 +6876,8 @@ static bool CanToggleSelectedCharInventory()
 			( gpItemPointerSoldier == NULL ) )
 	{
 		// make sure he's in that sector
-		if ( ( pSoldier->sSectorX != sSelMapX ) ||
-			( pSoldier->sSectorY != sSelMapY ) ||
+		if ( ( pSoldier->sSectorX != sSelMap.x ) ||
+			( pSoldier->sSectorY != sSelMap.y ) ||
 			( pSoldier->bSectorZ != iCurrentMapSectorZ ) ||
 			pSoldier->fBetweenSectors )
 		{
@@ -6952,9 +6950,7 @@ void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	if (sMap.z != 0 && (bSelectedDestChar != -1 || fPlotForHelicopter))
 		return;
 
-
-	sSelMapX = sMap.x;
-	sSelMapY = sMap.y;
+	sSelMap = sMap;
 	iCurrentMapSectorZ = sMap.z;
 
 	// if going underground while in airspace mode
@@ -7670,7 +7666,7 @@ static void DestinationPlottingCompleted(void)
 static void HandleMilitiaRedistributionClick(void)
 {
 	ST::string sString;
-	SGPSector sector(sSelMapX, sSelMapY, iCurrentMapSectorZ);
+	SGPSector sector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
 
 	// if on the surface
 	if (sector.z == 0)

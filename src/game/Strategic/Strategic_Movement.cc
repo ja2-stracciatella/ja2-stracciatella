@@ -1432,7 +1432,7 @@ static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool co
 		if (GroupAtFinalDestination(&g))
 		{
 			// If currently selected sector has nobody in it
-			if (PlayerMercsInSector(sSelMapX, sSelMapY, iCurrentMapSectorZ) == 0)
+			if (PlayerMercsInSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ) == 0)
 			{ // Make this sector strategically selected
 				ChangeSelectedMapSector(g.ubSectorX, g.ubSectorY, g.ubSectorZ);
 			}

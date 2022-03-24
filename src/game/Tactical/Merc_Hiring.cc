@@ -357,7 +357,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 	fTeamPanelDirty = TRUE;
 
 	// if the currently selected sector has no one in it, select this one instead
-	if (!CanGoToTacticalInSector(SGPSector(sSelMapX, sSelMapY, iCurrentMapSectorZ)))
+	if (!CanGoToTacticalInSector(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ)))
 	{
 		ChangeSelectedMapSector(s.sSectorX, s.sSectorY, 0);
 	}

@@ -311,8 +311,7 @@ static SGPVObject* guiCHARBETWEENSECTORICONS;
 static SGPVObject* guiCHARBETWEENSECTORICONSCLOSE;
 
 // selected sector
-UINT16 sSelMapX = 9;
-UINT16 sSelMapY = 1;
+SGPSector sSelMap(9, 1);
 
 // highlighted sector
 SGPSector gsHighlightSector(-1, -1);
@@ -441,7 +440,7 @@ void DrawMapIndexBigMap(BOOLEAN fSelectedCursorIsYellow)
 
 		UINT8 const colour_x =
 			!draw_cursors                  ? MAP_INDEX_COLOR :
-			i == sSelMapX && sel_candidate ? sel_colour      :
+			i == sSelMap.x && sel_candidate ? sel_colour      :
 			i == gsHighlightSector.x       ? FONT_WHITE      :
 			MAP_INDEX_COLOR;
 		SetFontForeground(colour_x);
@@ -450,7 +449,7 @@ void DrawMapIndexBigMap(BOOLEAN fSelectedCursorIsYellow)
 
 		UINT8 const colour_y =
 			!draw_cursors                  ? MAP_INDEX_COLOR :
-			i == sSelMapY && sel_candidate ? sel_colour      :
+			i == sSelMap.y && sel_candidate ? sel_colour      :
 			i == gsHighlightSector.y       ? FONT_WHITE      :
 			MAP_INDEX_COLOR;
 		SetFontForeground(colour_y);

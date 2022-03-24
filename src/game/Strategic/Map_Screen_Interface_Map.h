@@ -181,8 +181,7 @@ extern BOOLEAN  fTempPathAlreadyDrawn;
 extern INT16 sSelectedMilitiaTown;
 
 // the selected sectors
-extern UINT16	sSelMapX;
-extern UINT16	sSelMapY;
+extern SGPSector sSelMap;
 
 
 void    CreateDestroyMilitiaSectorButtons(void);
