@@ -137,7 +137,7 @@ bool IsRefuelAvailableInSector(INT16 const sector);
 void UpdateRefuelSiteAvailability( void );
 
 // setup helicopter for player
-void SetUpHelicopterForPlayer( INT16 sX, INT16 sY );
+void SetUpHelicopterForPlayer(const SGPSector& sMap);
 
 // the intended path of the helicopter
 INT32 DistanceOfIntendedHelicopterPath( void );

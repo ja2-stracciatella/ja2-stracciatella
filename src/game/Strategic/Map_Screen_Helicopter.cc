@@ -639,11 +639,11 @@ void UpdateRefuelSiteAvailability( void )
 	}
 }
 
-void SetUpHelicopterForPlayer( INT16 sX, INT16 sY )
+void SetUpHelicopterForPlayer(const SGPSector& sMap)
 {
 	if (!fSkyRiderSetUp)
 	{
-		iHelicopterVehicleId = AddVehicleToList( sX, sY, 0, HELICOPTER );
+		iHelicopterVehicleId = AddVehicleToList(sMap.x, sMap.y, 0, HELICOPTER);
 
 		// set up for movement
 		SetUpHelicopterForMovement( );

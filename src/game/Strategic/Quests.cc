@@ -622,7 +622,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 			/*
 		case FACT_SKYRIDER_CLOSE_TO_CHOPPER:
-			SetUpHelicopterForPlayer( 13, MAP_ROW_B );
+			SetUpHelicopterForPlayer(SGPSector(13, MAP_ROW_B));
 			break;
 			*/
 		case FACT_SPIKE_AT_DOOR:

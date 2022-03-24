@@ -1995,7 +1995,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 							EVENT_StopMerc(pSoldier);
 							SetFactTrue(FACT_SKYRIDER_CLOSE_TO_CHOPPER);
 							TriggerNPCRecord(SKYRIDER, 15);
-							SetUpHelicopterForPlayer(13, MAP_ROW_B);
+							SetUpHelicopterForPlayer(SGPSector(13, MAP_ROW_B));
 						}
 						break;
 
