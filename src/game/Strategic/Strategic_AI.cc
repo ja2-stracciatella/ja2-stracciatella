@@ -784,10 +784,10 @@ static void HandlePlayerGroupNoticedByGarrison(const GROUP* const pPlayerGroup, 
 static BOOLEAN HandleMilitiaNoticedByPatrolGroup(UINT8 ubSectorID, GROUP* pEnemyGroup)
 {
 	//For now, automatically attack.
-	UINT16 usOffensePoints, usDefencePoints;
-	UINT8 ubSectorX = (UINT8)(ubSectorID % 16) + 1;
-	UINT8 ubSectorY = (UINT8)(ubSectorID / 16) + 1;
-	usOffensePoints = pEnemyGroup->pEnemyGroup->ubNumAdmins * 2 +
+	UINT16 usDefencePoints;
+
+	SGPSector sSector((ubSectorID % 16) + 1, (ubSectorID / 16) + 1);
+	UINT16 usOffensePoints = pEnemyGroup->pEnemyGroup->ubNumAdmins * 2 +
 										pEnemyGroup->pEnemyGroup->ubNumTroops * 4 +
 										pEnemyGroup->pEnemyGroup->ubNumElites * 6;
 	if( PlayerForceTooStrong( ubSectorID, usOffensePoints, &usDefencePoints ) )
@@ -796,10 +796,9 @@ static BOOLEAN HandleMilitiaNoticedByPatrolGroup(UINT8 ubSectorID, GROUP* pEnemy
 		return FALSE;
 	}
 
-	MoveSAIGroupToSector( &pEnemyGroup, (UINT8)SECTOR( ubSectorX, ubSectorY ), DIRECT, REINFORCEMENTS );
+	MoveSAIGroupToSector(&pEnemyGroup, sSector.AsByte(), DIRECT, REINFORCEMENTS);
 	STLOGD("Enemy group at {} detected militia at {}{} and is moving to attack them.",
-			pEnemyGroup->ubSector.AsShortString(),
-			ubSectorY + 'A' - 1, ubSectorX );
+			pEnemyGroup->ubSector.AsShortString(), sSector.AsShortString());
 	return FALSE;
 }
 
@@ -878,11 +877,8 @@ static BOOLEAN AttemptToNoticeAdjacentGroupSucceeds(void)
 
 static BOOLEAN HandleEmptySectorNoticedByPatrolGroup(GROUP* pGroup, UINT8 ubEmptySectorID)
 {
-	UINT8 ubGarrisonID;
-	UINT8 ubSectorX = (UINT8)(ubEmptySectorID % 16) + 1;
-	UINT8 ubSectorY = (UINT8)(ubEmptySectorID / 16) + 1;
-
-	ubGarrisonID = SectorInfo[ ubEmptySectorID ].ubGarrisonID;
+	SGPSector sSector((ubEmptySectorID % 16) + 1, (ubEmptySectorID / 16) + 1);
+	UINT8 ubGarrisonID = SectorInfo[ubEmptySectorID].ubGarrisonID;
 	if( ubGarrisonID != NO_GARRISON )
 	{
 		if( gGarrisonGroup[ ubGarrisonID ].ubPendingGroupID )
@@ -899,9 +895,9 @@ static BOOLEAN HandleEmptySectorNoticedByPatrolGroup(GROUP* pGroup, UINT8 ubEmpt
 	RemoveGroupFromStrategicAILists(*pGroup);
 
 	gGarrisonGroup[ ubGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
-	MoveSAIGroupToSector( &pGroup, (UINT8)SECTOR( ubSectorX, ubSectorY ), DIRECT, REINFORCEMENTS );
+	MoveSAIGroupToSector(&pGroup, sSector.AsByte(), DIRECT, REINFORCEMENTS);
 	STLOGD("Enemy group at {} detected undefended sector at {}{} and is moving to retake it.",
-			pGroup->ubSector.AsShortString(), ubSectorY + 'A' - 1, ubSectorX);
+			pGroup->ubSector.AsShortString(), sSector.AsShortString());
 	return TRUE;
 }
 
