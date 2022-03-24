@@ -4226,18 +4226,16 @@ void TurnOffSectorLocator()
 
 void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubLocatorID )
 {
+	SGPSector sSector(sSectorX, sSectorY, sSectorZ);
 	static UINT8  ubFrame = 0;
 	UINT8 ubBaseFrame = 0;
 	UINT32 uiTimer = 0;
 	INT16 sScreenX, sScreenY;
 
-
 	// blits at 0,0 had been observerd...
-	Assert( ( sSectorX >= 1 ) && ( sSectorX <= 16 ) );
-	Assert( ( sSectorY >= 1 ) && ( sSectorY <= 16 ) );
-	Assert( ( sSectorZ >= 0 ) && ( sSectorZ <=  3 ) );
+	Assert(sSector.IsValid());
 
-	if( sSectorZ != iCurrentMapSectorZ )
+	if (sSector.z != iCurrentMapSectorZ)
 	{ //if the z level of the map screen renderer is different than the
 		//sector z that we wish to locate, then don't render it
 		return;
@@ -4266,7 +4264,7 @@ void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSecto
 	}
 
 	//Convert the sector value into screen values.
-	GetScreenXYFromMapXY( sSectorX, sSectorY, &sScreenX, &sScreenY );
+	GetScreenXYFromMapXY(sSector, &sScreenX, &sScreenY);
 	// make sure we are on the border
 	if( sScreenX < MAP_GRID_X )
 	{

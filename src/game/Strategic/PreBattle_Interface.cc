@@ -570,7 +570,7 @@ static void DoTransitionFromMapscreenToPreBattleInterface(void)
 	iPercentage = 0;
 	uiStartTime = GetClock();
 
-	GetScreenXYFromMapXY( gubPBSector.x, gubPBSector.y, &sStartLeft, &sStartTop );
+	GetScreenXYFromMapXY(gubPBSector, &sStartLeft, &sStartTop);
 	sStartLeft += MAP_GRID_X / 2;
 	sStartTop += MAP_GRID_Y / 2;
 	sEndLeft = STD_SCREEN_X + 131;

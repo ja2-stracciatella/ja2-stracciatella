@@ -3374,7 +3374,7 @@ static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor, BOOLEA
 		return;
 	}
 
-	GetScreenXYFromMapXY(sMap.x, sMap.y, &sScreenX, &sScreenY);
+	GetScreenXYFromMapXY(sMap, &sScreenX, &sScreenY);
 
 	// blit in the highlighted sector
 	SGPVSurface::Lock l(FRAME_BUFFER);
@@ -8118,13 +8118,10 @@ BOOLEAN CanDrawSectorCursor(void)
 static void RestoreMapSectorCursor(INT16 sMapX, INT16 sMapY)
 {
 	INT16 sScreenX, sScreenY;
+	SGPSector sMap(sMapX, sMapY);
+	Assert(sMap.IsValid());
 
-
-	Assert( ( sMapX >= 1 ) && ( sMapX <= 16 ) );
-	Assert( ( sMapY >= 1 ) && ( sMapY <= 16 ) );
-
-	GetScreenXYFromMapXY( sMapX, sMapY, &sScreenX, &sScreenY );
-
+	GetScreenXYFromMapXY(sMap, &sScreenX, &sScreenY);
 	sScreenY -= 1;
 
 	RestoreExternBackgroundRect( sScreenX, sScreenY, DMAP_GRID_X, DMAP_GRID_Y );

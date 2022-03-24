@@ -480,8 +480,8 @@ static void HandleShowingOfEnemiesWithMilitiaOn(void)
 
 
 static void BlitMineGridMarkers(void);
-static void BlitMineIcon(INT16 sMapX, INT16 sMapY);
-static void BlitMineText(UINT8 mine_idx, INT16 sMapX, INT16 sMapY);
+static void BlitMineIcon(const SGPSector& sMap);
+static void BlitMineText(UINT8 mine_idx, const SGPSector& sMap);
 static void BlitTownGridMarkers(void);
 static void DisplayLevelString(void);
 static void DrawBullseye(void);
@@ -572,12 +572,10 @@ void DrawMap(void)
 		auto mines = GCM->getMines();
 		for (UINT32 i = 0; i < mines.size(); ++i)
 		{
-			UINT8 const sector = mines[i]->entranceSector;
-			INT16 const x      = SECTORX(sector);
-			INT16 const y      = SECTORY(sector);
-			BlitMineIcon(x, y);
+			SGPSector sMap(mines[i]->entranceSector);
+			BlitMineIcon(sMap);
 			// show mine name/production text
-			if (fShowMineFlag) BlitMineText(i, x, y);
+			if (fShowMineFlag) BlitMineText(i, sMap);
 		}
 
 		// draw towns names & loyalty ratings, and grey town limit borders
@@ -615,10 +613,10 @@ void DrawMap(void)
 }
 
 
-void GetScreenXYFromMapXY( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16 *psY )
+void GetScreenXYFromMapXY(const SGPSector& sMap, INT16 *psX, INT16 *psY)
 {
-	*psX = ( sMapX * MAP_GRID_X ) + MAP_VIEW_START_X;
-	*psY = ( sMapY * MAP_GRID_Y ) + MAP_VIEW_START_Y;
+	*psX = (sMap.x * MAP_GRID_X) + MAP_VIEW_START_X;
+	*psY = (sMap.y * MAP_GRID_Y) + MAP_VIEW_START_Y;
 }
 
 // display the town names and loyalty on the screen
@@ -792,7 +790,7 @@ static void ShadeMapElem(const SGPSector& sMap, const INT32 iColor)
 {
 	INT16 sScreenX;
 	INT16 sScreenY;
-	GetScreenXYFromMapXY(sMap.x, sMap.y, &sScreenX, &sScreenY);
+	GetScreenXYFromMapXY(sMap, &sScreenX, &sScreenY);
 
 	// compensate for original BIG_MAP blit being done at MAP_VIEW_START_X + 1
 	sScreenX += 1;
@@ -2553,7 +2551,7 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 }
 
 
-static void DrawSite(const INT16 sector_x, const INT16 sector_y, const SGPVObject* const icon)
+static void DrawSite(const SGPSector& sMap, const SGPVObject* const icon)
 {
 	INT16  x;
 	INT16  y;
@@ -2561,7 +2559,7 @@ static void DrawSite(const INT16 sector_x, const INT16 sector_y, const SGPVObjec
 	UINT16 max_h;
 	UINT8  vo_idx;
 
-	GetScreenXYFromMapXY(sector_x, sector_y, &x, &y);
+	GetScreenXYFromMapXY(sMap, &x, &y);
 	++x;
 	max_w = MAP_GRID_X - 1;
 	max_h = MAP_GRID_Y - 1;
@@ -2578,9 +2576,9 @@ static void DrawSite(const INT16 sector_x, const INT16 sector_y, const SGPVObjec
 }
 
 
-static void BlitMineIcon(INT16 sMapX, INT16 sMapY)
+static void BlitMineIcon(const SGPSector& sMap)
 {
-	DrawSite(sMapX, sMapY, guiMINEICON);
+	DrawSite(sMap, guiMINEICON);
 }
 
 
@@ -2593,13 +2591,13 @@ static void PrintStringCenteredBoxed(INT32 x, INT32 y, const ST::string& string)
 }
 
 
-static void BlitMineText(UINT8 const mine_idx, INT16 const sMapX, INT16 const sMapY)
+static void BlitMineText(UINT8 const mine_idx, const SGPSector& sMap)
 {
 	// set coordinates for start of mine text
 	INT16 sScreenX;
 	INT16 sScreenY;
 
-	GetScreenXYFromMapXY(sMapX, sMapY, &sScreenX, &sScreenY);
+	GetScreenXYFromMapXY(sMap, &sScreenX, &sScreenY);
 	sScreenX += MAP_GRID_X / 2; // centered around middle of mine square
 	sScreenY += MAP_GRID_Y + 1; // slightly below
 
@@ -2671,18 +2669,18 @@ static void BlitTownGridMarkers(void)
 		// skip Orta/Tixa until found
 		if (!IsTownFound(i->town)) continue;
 
-		INT32 const sector = i->sector;
 		INT16       x;
 		INT16       y;
 		INT16       w;
 		INT16       h;
 		// Get location on screen
-		GetScreenXYFromMapXY(SECTORX(sector), SECTORY(sector), &x, &y);
+		SGPSector sMap(i->sector);
+		GetScreenXYFromMapXY(sMap, &x, &y);
 		w  = MAP_GRID_X - 1;
 		h  = MAP_GRID_Y;
 		x += 2;
 
-		INT32 const loc = SECTOR_INFO_TO_STRATEGIC_INDEX(sector);
+		INT32 const loc = sMap.AsStrategicIndex();
 		if (StrategicMap[loc - MAP_WORLD_X].bNameId == BLANK_SECTOR)
 		{
 			LineDraw(TRUE, x - 1, y - 1, x + w - 1, y - 1, color, buf);
@@ -2722,11 +2720,10 @@ static void BlitMineGridMarkers(void)
 		INT16                     y;
 		INT16                     w;
 		INT16                     h;
-		INT16              const  mx = SECTORX(m->entranceSector);
-		INT16              const  my = SECTORY(m->entranceSector);
+		SGPSector sMap(m->entranceSector);
 
 		// Get location on screen
-		GetScreenXYFromMapXY(mx, my, &x, &y);
+		GetScreenXYFromMapXY(sMap, &x, &y);
 		w = MAP_GRID_X;
 		h = MAP_GRID_Y;
 
@@ -3582,7 +3579,7 @@ static void CheckAndUpdateStatesOfSelectedMilitiaSectorButtons()
 }
 
 
-static void HideExistenceOfUndergroundMapSector(UINT8 ubSectorX, UINT8 ubSectorY);
+static void HideExistenceOfUndergroundMapSector(const SGPSector& sSector);
 
 
 static void ShadeSubLevelsNotVisited(void)
@@ -3597,7 +3594,7 @@ static void ShadeSubLevelsNotVisited(void)
 		if (i->uiFlags & SF_ALREADY_VISITED)           continue;
 		/* The sector is on the currently displayed sublevel and has never been
 			* visited.  Remove that portion of the "mine" graphics from view. */
-		HideExistenceOfUndergroundMapSector(i->ubSectorX, i->ubSectorY);
+		HideExistenceOfUndergroundMapSector(SGPSector(i->ubSectorX, i->ubSectorY));
 	}
 }
 
@@ -3794,20 +3791,19 @@ static void ShowSAMSitesOnStrategicMap()
 	for (auto s : GCM->getSamSites())
 	{
 		INT16 const sector = s->sectorId;
-		INT16 const sec_x  = SECTORX(sector);
-		INT16 const sec_y  = SECTORY(sector);
+		SGPSector sMap(s->sectorId);
 
 		// Has the sam site here been found?
-		auto secret = GetMapSecretBySectorID(sector);
+		auto secret = GetMapSecretBySectorID(s->sectorId);
 		if (secret && !IsSecretFoundAt(s->sectorId)) continue;
 
-		DrawSite(sec_x, sec_y, guiSAMICON);
+		DrawSite(sMap, guiSAMICON);
 
 		if (fShowAircraftFlag)
 		{ // write "SAM Site" centered underneath
 			INT16 x;
 			INT16 y;
-			GetScreenXYFromMapXY(sec_x, sec_y, &x, &y);
+			GetScreenXYFromMapXY(sMap, &x, &y);
 			x += 11;
 			y += 19;
 
@@ -3852,9 +3848,9 @@ static void BlitSAMGridMarkers()
 		INT16 y;
 		INT16 w;
 		INT16 h;
-		INT16 const sector = s->sectorId;
+		SGPSector sMap(s->sectorId);
 
-		GetScreenXYFromMapXY(SECTORX(sector), SECTORY(sector), &x, &y);
+		GetScreenXYFromMapXY(sMap, &x, &y);
 		w = MAP_GRID_X;
 		h = MAP_GRID_Y;
 
@@ -3938,9 +3934,7 @@ void DrawSecretSite(const StrategicMapSecretModel* secret)
 	if (!secret->secretMapIcon.empty())
 	{
 		const SGPVObject *const icon = gSecretSiteIcons.at(secret->secretMapIcon);
-		const INT16 x = SECTORX(secret->sectorID);
-		const INT16 y = SECTORY(secret->sectorID);
-		DrawSite(x, y, icon);
+		DrawSite(SGPSector(secret->sectorID), icon);
 	}
 }
 
@@ -3948,20 +3942,21 @@ void DrawSecretSite(const StrategicMapSecretModel* secret)
 static void DrawBullseye(void)
 {
 	INT16 sX, sY;
+	SGPSector sMap(g_merc_arrive_sector);
 
-	GetScreenXYFromMapXY(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), &sX, &sY);
+	GetScreenXYFromMapXY(sMap, &sX, &sY);
 	sY -= 2;
 
 	BltVideoObject(guiSAVEBUFFER, guiBULLSEYE, 0, sX, sY);
 }
 
 
-static void HideExistenceOfUndergroundMapSector(UINT8 ubSectorX, UINT8 ubSectorY)
+static void HideExistenceOfUndergroundMapSector(const SGPSector& sSector)
 {
 	INT16 sScreenX;
 	INT16 sScreenY;
 
-	GetScreenXYFromMapXY( ubSectorX, ubSectorY, &sScreenX, &sScreenY );
+	GetScreenXYFromMapXY(sSector, &sScreenX, &sScreenY);
 
 	// fill it with near black
 	ColorFillVideoSurfaceArea( guiSAVEBUFFER, sScreenX + 1, sScreenY, sScreenX + MAP_GRID_X,	sScreenY + MAP_GRID_Y - 1, gusUndergroundNearBlack );

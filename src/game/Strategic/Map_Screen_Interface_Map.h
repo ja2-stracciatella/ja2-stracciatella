@@ -15,7 +15,7 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow );
 
 void DrawMap(void);
 
-void GetScreenXYFromMapXY( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16 *psY );
+void GetScreenXYFromMapXY(const SGPSector& sMap, INT16 *psX, INT16 *psY);
 
 void InitializePalettesForMap(void);
 void ShutDownPalettesForMap( void );

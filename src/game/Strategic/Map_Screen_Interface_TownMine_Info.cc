@@ -461,7 +461,7 @@ static void PositionTownMineInfoBox(PopUpBox* const box)
 	// position the box based on x and y of the selected sector
 	INT16 sX = 0;
 	INT16 sY = 0;
-	GetScreenXYFromMapXY(bCurrentTownMineSector.x, bCurrentTownMineSector.y, &sX, &sY);
+	GetScreenXYFromMapXY(bCurrentTownMineSector, &sX, &sY);
 	SGPBox const& area = GetBoxArea(box);
 
 	// now position box - the x axis
