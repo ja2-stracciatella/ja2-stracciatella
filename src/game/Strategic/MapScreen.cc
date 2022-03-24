@@ -7096,7 +7096,7 @@ static void CancelOrShortenPlottedPath(void)
 
 
 		// try to delete portion of path AFTER the current sector for the helicopter
-		uiReturnValue = ClearPathAfterThisSectorForHelicopter(sMap.x, sMap.y);
+		uiReturnValue = ClearPathAfterThisSectorForHelicopter(sMap);
 	}
 	else
 	{

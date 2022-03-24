@@ -961,14 +961,14 @@ UINT32 ClearPathAfterThisSectorForCharacter(SOLDIERTYPE *pCharacter, const SGPSe
 		else
 		{
 			// foot soldier
-			pCharacter->pMercPath = ClearStrategicPathListAfterThisSector(pCharacter->pMercPath, sMap.x, sMap.y, pCharacter->ubGroupID);
+			pCharacter->pMercPath = ClearStrategicPathListAfterThisSector(pCharacter->pMercPath, sMap, pCharacter->ubGroupID);
 		}
 
 		// if there's an associated vehicle structure
 		if ( pVehicle != NULL )
 		{
 			// do it for the vehicle, too
-			pVehicle->pMercPath = ClearStrategicPathListAfterThisSector(pVehicle->pMercPath, sMap.x, sMap.y, pVehicle->ubMovementGroup);
+			pVehicle->pMercPath = ClearStrategicPathListAfterThisSector(pVehicle->pMercPath, sMap, pVehicle->ubMovementGroup);
 		}
 
 		if( GetLengthOfMercPath( pCharacter ) < iOrigLength )
@@ -1140,7 +1140,7 @@ void PlotATemporaryPathForHelicopter(const SGPSector& sector)
 
 
 // clear out helicopter path list, after and including this sector
-UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY )
+UINT32 ClearPathAfterThisSectorForHelicopter(const SGPSector& sMap)
 {
 	INT32 iOrigLength = 0;
 
@@ -1162,7 +1162,7 @@ UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY )
 
 
 	// are we clearing everything beyond the helicopter's CURRENT sector?
-	if (sX == v.sSector.x && sY == v.sSector.y)
+	if (sMap == v.sSector)
 	{
 		// if we're in confirm map move mode, cancel that (before new UI messages are issued)
 		EndConfirmMapMoveMode( );
@@ -1174,7 +1174,7 @@ UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY )
 	{
 		// if the clicked sector is along current route, this will repath only as far as it.  If not, the entire path will
 		// be canceled.
-		v.pMercPath = ClearStrategicPathListAfterThisSector(v.pMercPath, sX, sY, v.ubMovementGroup);
+		v.pMercPath = ClearStrategicPathListAfterThisSector(v.pMercPath, sMap, v.ubMovementGroup);
 
 		if (GetLengthOfPath(v.pMercPath) < iOrigLength)
 		{

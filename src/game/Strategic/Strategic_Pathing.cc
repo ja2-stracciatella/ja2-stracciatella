@@ -554,15 +554,12 @@ PathSt* ClearStrategicPathList(PathSt* const pHeadOfPath, const INT16 sMvtGroup)
 static PathSt* MoveToEndOfPathList(PathSt* pList);
 
 
-PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup)
+PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, const SGPSector& sMap, INT16 sMvtGroup)
 {
 	// will clear out a strategic path and return head of list as NULL
 	PathSt* pNode = pHeadOfPath;
 	PathSt* pDeleteNode = pHeadOfPath;
-	INT16 sSector = 0;
 	INT16 sCurrentSector = -1;
-
-
 
 	// is there in fact a path?
 	if( pNode == NULL )
@@ -571,9 +568,8 @@ PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT
 		return ( pNode );
 	}
 
-
 	// get sector value
-	sSector = sX + ( sY * MAP_WORLD_X );
+	INT16 sSector = sMap.AsStrategicIndex();
 
 	// go to end of list
 	pNode = MoveToEndOfPathList( pNode );

@@ -43,7 +43,7 @@ PathSt* ClearStrategicPathList(PathSt* pHeadOfPath, INT16 sMvtGroup);
 PathSt* RemoveHeadFromStrategicPath(PathSt* pList);
 
 // clear out path list after/including this sector sX, sY..will start at end of path and work it's way back till sector is found...removes most recent sectors first
-PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup);
+PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, const SGPSector& sMap, INT16 sMvtGroup);
 
 // get id of last sector in mercs path list
 INT16 GetLastSectorIdInCharactersPath(const SOLDIERTYPE* pCharacter);

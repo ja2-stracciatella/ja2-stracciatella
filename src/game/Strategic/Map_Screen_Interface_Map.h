@@ -54,7 +54,7 @@ void CancelPathForVehicle(VEHICLETYPE&, BOOLEAN fAlreadyReversed);
 void DisplayThePotentialPathForHelicopter(const SGPSector& sector);
 
 // clear out helicopter list after this sector
-UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY );
+UINT32 ClearPathAfterThisSectorForHelicopter(const SGPSector& sMap);
 
 
 // check to see if sector is highlightable
