@@ -2140,7 +2140,7 @@ static void CalculateAutoResolveInfo(void)
 		gpAR->ubEnemies = (UINT8)MIN( gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, 32 );
 	}
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
-	gpAR->ubCivs = CountAllMilitiaInSector(sSector.x, sSector.y);
+	gpAR->ubCivs = CountAllMilitiaInSector(sSector);
 	gpAR->ubMercs = 0;
 	CFOR_EACH_GROUP(i)
 	{

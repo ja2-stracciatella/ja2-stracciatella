@@ -832,7 +832,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 	}
 	else
 	{
-		if (CountAllMilitiaInSector(gSector.x, gSector.y))
+		if (CountAllMilitiaInSector(gSector))
 		{
 			fMilitiaPresent = TRUE;
 			fBattlePending = TRUE;

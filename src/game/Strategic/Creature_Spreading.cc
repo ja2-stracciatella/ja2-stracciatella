@@ -585,7 +585,7 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 			gubCreatureBattleCode = CREATURE_BATTLE_CODE_PREBATTLEINTERFACE;
 		}
 	}
-	else if (CountAllMilitiaInSector(sector.x, sector.y))
+	else if (CountAllMilitiaInSector(sector))
 	{ //we have militia in the sector
 		gubCreatureBattleCode = CREATURE_BATTLE_CODE_AUTORESOLVE;
 	}

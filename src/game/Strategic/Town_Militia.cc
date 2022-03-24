@@ -91,7 +91,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 	while (ubMilitiaTrained < MILITIA_TRAINING_SQUAD_SIZE)
 	{
 		// is there room for another militia in the training sector itself?
-		if (CountAllMilitiaInSector(sector.x, sector.y) < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
+		if (CountAllMilitiaInSector(sector) < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
 		{
 			// great! Create a new GREEN militia guy in the training sector
 			StrategicAddMilitiaToSector(sector.x, sector.y, GREEN_MILITIA, 1);
@@ -108,7 +108,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 				while (ServeNextFriendlySectorInTown(sNeighbour))
 				{
 					// is there room for another militia in this neighbouring sector ?
-					if (CountAllMilitiaInSector(sNeighbour.x, sNeighbour.y) < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
+					if (CountAllMilitiaInSector(sNeighbour) < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
 					{
 						// great! Create a new GREEN militia guy in the neighbouring sector
 						StrategicAddMilitiaToSector(sNeighbour.x, sNeighbour.y, GREEN_MILITIA, 1);
@@ -330,9 +330,8 @@ static void HandleMilitiaDefections(const SGPSector& sMap)
 }
 
 
-UINT8 CountAllMilitiaInSector(INT16 sMapX, INT16 sMapY)
+UINT8 CountAllMilitiaInSector(const SGPSector& sMap)
 {
-	SGPSector sMap(sMapX, sMapY);
 	UINT8 ubMilitiaTotal = 0;
 	UINT8 ubRank;
 

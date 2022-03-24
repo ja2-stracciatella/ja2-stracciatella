@@ -378,7 +378,7 @@ static void AddCommonInfoToBox(PopUpBox* const box)
 		wString = ST::format("{}:", pwTownInfoStrings[6]);
 		AddMonoString(box, wString);
 
-		ubMilitiaTotal = CountAllMilitiaInSector(bCurrentTownMineSector.x, bCurrentTownMineSector.y);
+		ubMilitiaTotal = CountAllMilitiaInSector(bCurrentTownMineSector);
 		if (ubMilitiaTotal > 0)
 		{
 			// some militia, show total & their breakdown by level

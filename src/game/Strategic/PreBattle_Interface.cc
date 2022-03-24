@@ -881,7 +881,7 @@ void RenderPreBattleInterface()
 		str = ST::format("{}", guiNumInvolved);
 		MPrintCentered(142, 36, 27, str);
 		// Militia
-		str = ST::format("{}", CountAllMilitiaInSector(gubPBSector.x, gubPBSector.y));
+		str = ST::format("{}", CountAllMilitiaInSector(gubPBSector));
 		MPrintCentered(227, 36, 27, str);
 		SetFontShadow(FONT_NEARBLACK);
 
@@ -1089,7 +1089,7 @@ static void RetreatMercsCallback(GUI_BUTTON* btn, INT32 reason)
 
 			// NOTE: this code assumes you can never retreat while underground
 			HandleLoyaltyImplicationsOfMercRetreat(RETREAT_PBI, gubPBSector);
-			if( CountAllMilitiaInSector( gubPBSector.x, gubPBSector.y ) )
+			if (CountAllMilitiaInSector(gubPBSector))
 			{ //Mercs retreat, but enemies still need to fight the militia
 				gfEnterAutoResolveMode = TRUE;
 				return;

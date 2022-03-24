@@ -473,7 +473,7 @@ static void HandleShowingOfEnemiesWithMilitiaOn(void)
 	{
 		for (sSector.y = 1; sSector.y < MAP_WORLD_Y - 1; ++sSector.y)
 		{
-			HandleShowingOfEnemyForcesInSector(sSector, CountAllMilitiaInSector(sSector.x, sSector.y));
+			HandleShowingOfEnemyForcesInSector(sSector, CountAllMilitiaInSector(sSector));
 		}
 	}
 }
