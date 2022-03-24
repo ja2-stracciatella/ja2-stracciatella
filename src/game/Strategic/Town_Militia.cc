@@ -57,7 +57,7 @@ static INT16 gsUnpaidStrategicSector[MAX_CHARACTER_COUNT];
 static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrainer);
 static void InitFriendlyTownSectorServer(UINT8 ubTownId, INT16 sSkipSectorX, INT16 sSkipSectorY);
 static bool ServeNextFriendlySectorInTown(SGPSector& neighbour);
-static void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany);
+static void StrategicAddMilitiaToSector(const SGPSector& sMap, UINT8 ubRank, UINT8 ubHowMany);
 static void StrategicPromoteMilitiaInSector(const SGPSector& sMap, UINT8 current_rank, UINT8 n);
 
 
@@ -94,7 +94,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 		if (CountAllMilitiaInSector(sector) < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
 		{
 			// great! Create a new GREEN militia guy in the training sector
-			StrategicAddMilitiaToSector(sector.x, sector.y, GREEN_MILITIA, 1);
+			StrategicAddMilitiaToSector(sector, GREEN_MILITIA, 1);
 		}
 		else
 		{
@@ -111,7 +111,7 @@ void TownMilitiaTrainingCompleted(SOLDIERTYPE *pTrainer, const SGPSector& sector
 					if (CountAllMilitiaInSector(sNeighbour) < MAX_ALLOWABLE_MILITIA_PER_SECTOR)
 					{
 						// great! Create a new GREEN militia guy in the neighbouring sector
-						StrategicAddMilitiaToSector(sNeighbour.x, sNeighbour.y, GREEN_MILITIA, 1);
+						StrategicAddMilitiaToSector(sNeighbour, GREEN_MILITIA, 1);
 
 						fFoundOne = TRUE;
 						break;
@@ -205,9 +205,9 @@ INT8 SoldierClassToMilitiaRank(UINT8 const soldier_class)
 
 
 // add militias of a certain rank
-static void StrategicAddMilitiaToSector(INT16 sMapX, INT16 sMapY, UINT8 ubRank, UINT8 ubHowMany)
+static void StrategicAddMilitiaToSector(const SGPSector& sMap, UINT8 ubRank, UINT8 ubHowMany)
 {
-	SECTORINFO *pSectorInfo = &( SectorInfo[ SECTOR( sMapX, sMapY ) ] );
+	SECTORINFO *pSectorInfo = &(SectorInfo[sMap.AsByte()]);
 
 	pSectorInfo->ubNumberOfCivsAtLevel[ ubRank ] += ubHowMany;
 
