@@ -1204,9 +1204,8 @@ static void AddHelicopterToMaps(bool const add, RefuelSite const& r)
 	SetRenderFlags(RENDER_FLAG_FULL);
 }
 
-bool IsSkyriderFlyingInSector(INT16 const x, INT16 const y)
+bool IsSkyriderFlyingInSector(const SGPSector& sMap)
 {
-	SGPSector sMap(x, y);
 	// up and about?
 	if (iHelicopterVehicleId == -1) return false;
 	if (!CanHelicopterFly())        return false;
