@@ -93,7 +93,7 @@ struct GROUP
 	UINT8 ubGroupSize;						//total number of individuals in the group.
 	UINT8 ubSectorX, ubSectorY;		//last/curr sector occupied
 	UINT8 ubSectorZ;
-	UINT8 ubNextX, ubNextY;				//next sector destination
+	SGPSector ubNext;				//next sector destination
 	UINT8 ubPrevX, ubPrevY;				//prev sector occupied (could be same as ubSectorX/Y)
 	UINT8 ubOriginalSector;				//sector where group was created.
 	BOOLEAN fBetweenSectors;			//set only if a group is between sector.

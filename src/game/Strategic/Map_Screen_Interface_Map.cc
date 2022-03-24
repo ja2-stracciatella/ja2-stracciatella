@@ -2403,9 +2403,9 @@ void DisplayPositionOfHelicopter( void )
 
 			// grab min and max locations to interpolate sub sector position
 			minX = MAP_VIEW_START_X + MAP_GRID_X * ( pGroup->ubSectorX );
-			maxX = MAP_VIEW_START_X + MAP_GRID_X * ( pGroup->ubNextX );
+			maxX = MAP_VIEW_START_X + MAP_GRID_X * pGroup->ubNext.x;
 			minY = MAP_VIEW_START_Y + MAP_GRID_Y * ( pGroup->ubSectorY );
-			maxY = MAP_VIEW_START_Y + MAP_GRID_Y * ( pGroup->ubNextY );
+			maxY = MAP_VIEW_START_Y + MAP_GRID_Y * pGroup->ubNext.y;
 
 			AssertMsg(minX < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid minX = %d", minX));
 			AssertMsg(maxX < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid maxX = %d", maxX));
@@ -2419,10 +2419,10 @@ void DisplayPositionOfHelicopter( void )
 			y += 3;
 
 			AssertMsg(x < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid x = %d.  At %d,%d.  Next %d,%d.  Min/Max X = %d/%d",
-					x, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNextX, pGroup->ubNextY, minX, maxX ) );
+					x, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNext.x, pGroup->ubNext.y, minX, maxX));
 
 			AssertMsg(y < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid y = %d.  At %d,%d.  Next %d,%d.  Min/Max Y = %d/%d",
-					y, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNextX, pGroup->ubNextY, minY, maxY ) );
+					y, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNext.x, pGroup->ubNext.y, minY, maxY));
 
 
 			// clip blits to mapscreen region
@@ -2525,15 +2525,14 @@ BOOLEAN CheckForClickOverHelicopterIcon(const SGPSector& sClicked)
 	if ( fHelicopterOverNextSector )
 	{
 		// use the next sector's coordinates
-		sSector.x = pGroup->ubNextX;
-		sSector.y = pGroup->ubNextY;
+		sSector = pGroup->ubNext;
 	}
 	else
 	{
 		// use current sector's coordinates
-		sSector.x = v.sSector.x;
-		sSector.y = v.sSector.y;
+		sSector = v.sSector;
 	}
+	sSector.z = 0;
 
 	// check if helicopter appears where he clicked
 	return sSector == sClicked;

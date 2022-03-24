@@ -276,13 +276,13 @@ static void ValidateGroup(GROUP* pGroup)
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
 			SLOGE( "Internal error (invalid enemy group #%d location at %c%d, destination %c%d).  Please send PRIOR save file and Debug Log.",
-				pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, pGroup->ubNextY + 'A' - 1, pGroup->ubNextX );
+				pGroup->ubGroupID, pGroup->ubSectorY + 'A' - 1, pGroup->ubSectorX, pGroup->ubNext.y + 'A' - 1, pGroup->ubNext.x);
 			RemoveGroupFromStrategicAILists(*pGroup);
 			RemoveGroup(*pGroup);
 			return;
 		}
 	}
-	if( !pGroup->ubNextX || !pGroup->ubNextY )
+	if (!pGroup->ubNext.IsValid())
 	{
 		if( !pGroup->fPlayer && pGroup->pEnemyGroup->ubIntention != STAGING
 			&& pGroup->pEnemyGroup->ubIntention != REINFORCEMENTS )
@@ -694,8 +694,8 @@ static BOOLEAN HandlePlayerGroupNoticedByPatrolGroup(const GROUP* const pPlayerG
 										pEnemyGroup->pEnemyGroup->ubNumTroops * 4 +
 										pEnemyGroup->pEnemyGroup->ubNumElites * 6;
 
-	const UINT8 playerSector = pPlayerGroup->ubNextX
-			? SECTOR(pPlayerGroup->ubNextX, pPlayerGroup->ubNextY)
+	const UINT8 playerSector = pPlayerGroup->ubNext.x
+			? pPlayerGroup->ubNext.AsByte()
 			: SECTOR(pPlayerGroup->ubSectorX, pPlayerGroup->ubSectorY);
 
 	if(PlayerForceTooStrong(ubSectorID, usOffensePoints, &usDefencePoints)
@@ -705,14 +705,14 @@ static BOOLEAN HandlePlayerGroupNoticedByPatrolGroup(const GROUP* const pPlayerG
 		return FALSE;
 	}
 	//For now, automatically attack.
-	if( pPlayerGroup->ubNextX )
+	if (pPlayerGroup->ubNext.x)
 	{
 		MoveSAIGroupToSector( &pEnemyGroup, playerSector, DIRECT, PURSUIT );
 
 		SLOGD("Enemy group at %c%d detected player group at %c%d and is moving to intercept them at %c%d.",
 					pEnemyGroup->ubSectorY + 'A' - 1, pEnemyGroup->ubSectorX,
 					pPlayerGroup->ubSectorY + 'A' - 1, pPlayerGroup->ubSectorX,
-					pPlayerGroup->ubNextY + 'A' - 1, pPlayerGroup->ubNextX );
+					pPlayerGroup->ubNext.y + 'A' - 1, pPlayerGroup->ubNext.x);
 	}
 	else
 	{

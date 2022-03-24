@@ -113,9 +113,8 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 	// ARM: setup group movement defaults
 	g->ubTransportationMask = GCM->getVehicle(ubType)->movement_type;
 	g->ubSectorX            = sMap.x;
-	g->ubNextX              = sMap.x;
+	g->ubNext               = sMap;
 	g->ubSectorY            = sMap.y;
-	g->ubNextY              = sMap.y;
 	g->uiTraverseTime       = 0;
 	g->uiArrivalTime        = 0;
 
@@ -893,8 +892,7 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 	if ( uiTimeToNextSector >= uiTimeToLastSector )
 	{
 		// go to the last sector
-		sPrev.x = pGroup->ubNextX;
-		sPrev.y = pGroup->ubNextY;
+		sPrev = pGroup->ubNext;
 
 		sNext.x = pGroup->ubSectorX;
 		sNext.y = pGroup->ubSectorY;
@@ -905,8 +903,7 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 		sPrev.x = pGroup->ubSectorX;
 		sPrev.y = pGroup->ubSectorY;
 
-		sNext.x = pGroup->ubNextX;
-		sNext.y = pGroup->ubNextY;
+		sNext = pGroup->ubNext;
 	}
 
 	// make it arrive immediately, not eventually (it's driverless)

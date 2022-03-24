@@ -1001,13 +1001,13 @@ void AddPossiblePendingEnemiesToBattle()
 					g.ubSectorY > g.ubPrevY ? INSERTION_CODE_NORTH :
 					0; // XXX exception?
 			}
-			else if (g.ubNextX != 0 && g.ubNextY != 0)
+			else if (g.ubNext.IsValid())
 			{
 				strategic_insertion_code =
-					g.ubSectorX < g.ubNextX ? INSERTION_CODE_EAST  :
-					g.ubSectorX > g.ubNextX ? INSERTION_CODE_WEST  :
-					g.ubSectorY < g.ubNextY ? INSERTION_CODE_SOUTH :
-					g.ubSectorY > g.ubNextY ? INSERTION_CODE_NORTH :
+					g.ubSectorX < g.ubNext.x ? INSERTION_CODE_EAST  :
+					g.ubSectorX > g.ubNext.x ? INSERTION_CODE_WEST  :
+					g.ubSectorY < g.ubNext.y ? INSERTION_CODE_SOUTH :
+					g.ubSectorY > g.ubNext.y ? INSERTION_CODE_NORTH :
 					0; // XXX exception?
 			} // XXX else exception?
 			/* Add the number of each type of troop and place them in the appropriate

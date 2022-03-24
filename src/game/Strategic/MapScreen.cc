@@ -7893,8 +7893,8 @@ ST::string GetMapscreenMercDestinationString(SOLDIERTYPE const& s)
 			 * store previous/next sector coordinates, must go to his group for that
 			 */
 			GROUP const& g = *GetSoldierGroup(s);
-			x = g.ubNextX;
-			y = g.ubNextY;
+			x = g.ubNext.x;
+			y = g.ubNext.y;
 		}
 		return ST::format("{}{}", pMapVertIndex[y], pMapHortIndex[x]);
 	}
