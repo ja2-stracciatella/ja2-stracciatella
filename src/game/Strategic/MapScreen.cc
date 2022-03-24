@@ -2147,9 +2147,11 @@ static void RenderMapCursorsIndexesAnims(void)
 
 	fDrawCursors = CanDrawSectorCursor( );
 
+	SGPSector tmp;
 	// if mouse cursor is over a map sector
-	if ( fDrawCursors && ( GetMouseMapXY( &gsHighlightSectorX, &gsHighlightSectorY ) ) )
+	if (fDrawCursors && GetMouseMapXY(tmp))
 	{
+		gsHighlightSectorX = tmp.x; gsHighlightSectorY = tmp.y;
 		// handle highlighting of sector pointed at ( WHITE )
 
 		// if we're over a different sector than when we previously blitted this
@@ -2290,7 +2292,6 @@ static void ToggleSectorInventory()
 static UINT32 HandleMapUI(void)
 {
 	MapEvent new_event = MAP_EVENT_NONE;
-	INT16 a = 0, b = 0;
 	SGPSector sSector, sMap;
 	UINT32 uiNewScreen = MAP_SCREEN;
 	BOOLEAN fWasAlreadySelected;
@@ -2313,8 +2314,7 @@ static UINT32 HandleMapUI(void)
 			break;
 
 		case MAP_EVENT_PLOT_PATH:
-			GetMouseMapXY(&a, &b);
-			sMap.x = a; sMap.y = b;
+			GetMouseMapXY(sMap);
 			// plotting for the chopper?
 			if (fPlotForHelicopter)
 			{
@@ -2372,9 +2372,8 @@ static UINT32 HandleMapUI(void)
 		case MAP_EVENT_CLICK_SECTOR:
 
 			// Get Current mouse position
-			if (GetMouseMapXY(&a, &b))
+			if (GetMouseMapXY(sMap))
 			{
-				sMap.x = a; sMap.y = b;
 				// make sure this is a valid sector
 				if (!IsTheCursorAllowedToHighLightThisSector(sMap.x, sMap.y))
 				{
@@ -2712,9 +2711,8 @@ static void Teleport()
 	if (fPlotForHelicopter)      return;
 	if (iCurrentMapSectorZ != 0) return;
 
-	INT16 a, b;
-	if (!GetMouseMapXY(&a, &b)) return;
-	SGPSector sMap(a, b);
+	SGPSector sMap;
+	if (!GetMouseMapXY(sMap)) return;
 
 	SOLDIERTYPE& s = *gCharactersList[bSelectedDestChar].merc;
 
@@ -3316,25 +3314,23 @@ void EndMapScreen( BOOLEAN fDuringFade )
 }
 
 
-static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorldY);
+static BOOLEAN GetMapXY(INT16 sX, INT16 sY, SGPSector& sMap);
 
 
-BOOLEAN GetMouseMapXY(INT16* psMapWorldX, INT16* psMapWorldY)
+BOOLEAN GetMouseMapXY(SGPSector& sMap)
 {
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
 
-	return GetMapXY(MousePos.iX, MousePos.iY, psMapWorldX, psMapWorldY);
+	return GetMapXY(MousePos.iX, MousePos.iY, sMap);
 }
 
 
-static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorldY)
+static BOOLEAN GetMapXY(INT16 sX, INT16 sY, SGPSector& sMap)
 {
-	INT16 sMapX, sMapY;
-
 	// Subtract start of map view
-	sMapX = sX - MAP_VIEW_START_X;//+2*MAP_GRID_X;
-	sMapY = sY - MAP_VIEW_START_Y;
+	INT16 sMapX = sX - MAP_VIEW_START_X;//+2*MAP_GRID_X;
+	INT16 sMapY = sY - MAP_VIEW_START_Y;
 
 	if ( sMapX < MAP_GRID_X || sMapY < MAP_GRID_Y )
 	{
@@ -3355,8 +3351,8 @@ static BOOLEAN GetMapXY(INT16 sX, INT16 sY, INT16* psMapWorldX, INT16* psMapWorl
 		return (FALSE);
 	}
 
-	*psMapWorldX = ( sMapX / MAP_GRID_X );
-	*psMapWorldY = ( sMapY / MAP_GRID_Y );
+	sMap.x = sMapX / MAP_GRID_X;
+	sMap.y = sMapY / MAP_GRID_Y;
 
 	return( TRUE );
 }
@@ -3451,9 +3447,8 @@ static void PollLeftButtonInMapView(MapEvent& new_event)
 				{
 					fEndPlotting = FALSE;
 
-					INT16 a, b;
-					GetMouseMapXY(&a, &b);
-					SGPSector sMap(a, b);
+					SGPSector sMap;
+					GetMouseMapXY(sMap);
 
 					// if he clicked on the last sector in his current path
 					if (CheckIfClickOnLastSectorInPath(sMap))
@@ -3552,12 +3547,10 @@ static void PollRightButtonInMapView(MapEvent& new_event)
 				}
 				else
 				{
-					INT16 a, b;
 					SGPSector sMap(1, 1, iCurrentMapSectorZ);
 					SGPSector sSelMap(sSelMapX, sSelMapY);
-					if (GetMouseMapXY(&a, &b))
+					if (GetMouseMapXY(sMap))
 					{
-						sMap.x = a; sMap.y = b;
 						if (sSelMap != sMap)
 						{
 							ChangeSelectedMapSector(sMap);
@@ -5079,11 +5072,9 @@ static void PlotPermanentPaths(void)
 
 static void PlotTemporaryPaths(void)
 {
-	INT16 a, b;
-
+	SGPSector sMap;
 	// check to see if we have in fact moved are are plotting a path?
-	if (!GetMouseMapXY(&a, &b)) return;
-	SGPSector sMap(a, b);
+	if (!GetMouseMapXY(sMap)) return;
 
 	if (fPlotForHelicopter)
 	{
@@ -5849,20 +5840,18 @@ static void RebuildWayPointsForAllSelectedCharsGroups(void)
 // check if cursor needs to be set to checkmark or to the walking guy?
 static void UpdateCursorIfInLastSector(void)
 {
-
-	INT16 sMapX = 0, sMapY = 0;
-
 	// check to see if we are plotting a path, if so, see if we are highlighting the last sector int he path, if so, change the cursor
 	if (bSelectedDestChar != -1 || fPlotForHelicopter)
 	{
-		GetMouseMapXY(&sMapX, &sMapY);
+		SGPSector sMap;
+		GetMouseMapXY(sMap);
 
 		if (!fShowAircraftFlag)
 		{
 			if( bSelectedDestChar != -1 )
 			{
 				//c heck if we are in the last sector of the characters path?
-				if (sMapX + sMapY * MAP_WORLD_X == GetLastSectorIdInCharactersPath(gCharactersList[bSelectedDestChar].merc))
+				if (sMap.AsStrategicIndex() == GetLastSectorIdInCharactersPath(gCharactersList[bSelectedDestChar].merc))
 				{
 					// set cursor to checkmark
 					ChangeMapScreenMaskCursor( CURSOR_CHECKMARK );
@@ -5879,7 +5868,7 @@ static void UpdateCursorIfInLastSector(void)
 			// check for helicopter
 			if( fPlotForHelicopter )
 			{
-				if( sMapX + ( sMapY * MAP_WORLD_X ) == GetLastSectorOfHelicoptersPath( ) )
+				if (sMap.AsStrategicIndex() == GetLastSectorOfHelicoptersPath())
 				{
 					// set cursor to checkmark
 					ChangeMapScreenMaskCursor( CURSOR_CHECKMARK );
@@ -7074,11 +7063,10 @@ static void ExplainWhySkyriderCantFly(void);
 
 static void CancelOrShortenPlottedPath(void)
 {
-	INT16 a, b;
 	UINT32 uiReturnValue;
 
-	GetMouseMapXY(&a, &b);
-	SGPSector sMap(a, b);
+	SGPSector sMap;
+	GetMouseMapXY(sMap);
 
 	// check if we are in aircraft mode
 	if (fShowAircraftFlag)

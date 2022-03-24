@@ -92,7 +92,7 @@ void RebuildContractBoxForMerc(const SOLDIERTYPE* s);
 
 void    InternalMAPBeginItemPointer(SOLDIERTYPE* pSoldier);
 BOOLEAN ContinueDialogue(SOLDIERTYPE* pSoldier, BOOLEAN fDone);
-BOOLEAN GetMouseMapXY(INT16* psMapWorldX, INT16* psMapWorldY);
+BOOLEAN GetMouseMapXY(SGPSector& sMap);
 void    EndConfirmMapMoveMode(void);
 BOOLEAN CanDrawSectorCursor(void);
 void    RememberPreviousPathForAllSelectedChars(void);

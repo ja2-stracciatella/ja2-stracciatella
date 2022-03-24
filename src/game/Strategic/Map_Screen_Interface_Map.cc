@@ -2280,9 +2280,8 @@ void DisplayDistancesForHelicopter()
 {
 	static INT16 sOldYPosition = 0;
 
-	INT16 sMapX;
-	INT16 sMapY;
-	INT16 const sYPosition = GetMouseMapXY(&sMapX, &sMapY) && sMapY >= 13 ?
+	SGPSector sMap;
+	INT16 const sYPosition = GetMouseMapXY(sMap) && sMap.y >= 13 ?
 			MAP_HELICOPTER_UPPER_ETA_POPUP_Y : MAP_HELICOPTER_ETA_POPUP_Y;
 
 	if (sOldYPosition != 0 && sOldYPosition != sYPosition)
