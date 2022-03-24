@@ -2985,13 +2985,13 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 }
 
 
-static UINT8 SectorDistance(UINT8 ubSectorID1, UINT8 ubSectorID2)
+static UINT8 SectorDistance(const SGPSector& sSector, UINT8 ubSectorID2)
 {
 	UINT8 ubSectorX1, ubSectorX2, ubSectorY1, ubSectorY2;
 	UINT8 ubDist;
-	ubSectorX1 = (UINT8)SECTORX( ubSectorID1 );
+	ubSectorX1 = sSector.x;
 	ubSectorX2 = (UINT8)SECTORX( ubSectorID2 );
-	ubSectorY1 = (UINT8)SECTORY( ubSectorID1 );
+	ubSectorY1 = sSector.y;
 	ubSectorY2 = (UINT8)SECTORY( ubSectorID2 );
 
 	ubDist = (UINT8)( ABS( ubSectorX1 - ubSectorX2 ) + ABS( ubSectorY1 - ubSectorY2 ) );
