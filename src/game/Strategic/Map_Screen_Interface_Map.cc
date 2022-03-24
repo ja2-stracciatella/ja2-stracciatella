@@ -863,7 +863,7 @@ static void CopyPathToCharactersSquadIfInOne(SOLDIERTYPE* pCharacter);
 void PlotPathForCharacter(SOLDIERTYPE& s, const SGPSector& sector, bool const tactical_traversal)
 {
 	// Don't build path, if cursor isn't allowed here
-	if (!IsTheCursorAllowedToHighLightThisSector(sector.x, sector.y)) return;
+	if (!IsTheCursorAllowedToHighLightThisSector(sector)) return;
 	// Leave if the character is in transit
 	if (s.bAssignment == IN_TRANSIT) return;
 
@@ -904,7 +904,7 @@ void PlotATemporaryPathForCharacter(const SOLDIERTYPE* const pCharacter, const S
 	pTempCharacterPath = ClearStrategicPathList( pTempCharacterPath, -1 );
 
 	// is cursor allowed here?..if not..don't build temp path
-	if (!IsTheCursorAllowedToHighLightThisSector(sector.x, sector.y))
+	if (!IsTheCursorAllowedToHighLightThisSector(sector))
 	{
 		return;
 	}
@@ -1106,7 +1106,7 @@ void PlotPathForHelicopter(const SGPSector& sector)
 	if (!fShowAircraftFlag || iHelicopterVehicleId == -1) return;
 
 	// is cursor allowed here?..if not..don't build path
-	if (!IsTheCursorAllowedToHighLightThisSector(sector.x, sector.y)) return;
+	if (!IsTheCursorAllowedToHighLightThisSector(sector)) return;
 
 	// set up mvt group for helicopter
 	SetUpHelicopterForMovement();
@@ -1126,7 +1126,7 @@ void PlotATemporaryPathForHelicopter(const SGPSector& sector)
 	pTempHelicopterPath = ClearStrategicPathList(pTempHelicopterPath, 0);
 
 	// is cursor allowed here?..if not..don't build temp path
-	if (!IsTheCursorAllowedToHighLightThisSector(sector.x, sector.y))
+	if (!IsTheCursorAllowedToHighLightThisSector(sector))
 	{
 		return;
 	}
@@ -2052,9 +2052,9 @@ void DisplayThePotentialPathForHelicopter(const SGPSector& sMap)
 }
 
 
-bool IsTheCursorAllowedToHighLightThisSector(INT16 const x, INT16 const y)
+bool IsTheCursorAllowedToHighLightThisSector(const SGPSector& sMap)
 {
-	return SectorInfo[SECTOR(x, y)].ubTraversability[THROUGH_STRATEGIC_MOVE] != EDGEOFWORLD;
+	return SectorInfo[sMap.AsByte()].ubTraversability[THROUGH_STRATEGIC_MOVE] != EDGEOFWORLD;
 }
 
 

@@ -2370,7 +2370,7 @@ static UINT32 HandleMapUI(void)
 			if (GetMouseMapXY(sMap))
 			{
 				// make sure this is a valid sector
-				if (!IsTheCursorAllowedToHighLightThisSector(sMap.x, sMap.y))
+				if (!IsTheCursorAllowedToHighLightThisSector(sMap))
 				{
 					// if we are in the change drop off sector mode
 					if (gfInChangeArrivalSectorMode)
@@ -3361,7 +3361,7 @@ static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor, BOOLEA
 	Assert(sMap.y >= 1 && sMap.y <= 16);
 
 	// if we are not allowed to highlight, leave
-	if (!IsTheCursorAllowedToHighLightThisSector(sMap.x, sMap.y))
+	if (!IsTheCursorAllowedToHighLightThisSector(sMap))
 	{
 		return;
 	}
@@ -6936,6 +6936,7 @@ void ChangeSelectedMapSector(const SGPSector& sector)
 
 void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 {
+	SGPSector sMap(sMapX, sMapY, bMapZ);
 	// ignore while map inventory pool is showing, or else items can be replicated, since sector inventory always applies
 	// only to the currently selected sector!!!
 	if( fShowMapInventoryPool )
@@ -6944,20 +6945,20 @@ void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
 	if ( gfPreBattleInterfaceActive )
 		return;
 
-	if( !IsTheCursorAllowedToHighLightThisSector( sMapX, sMapY ) )
+	if (!IsTheCursorAllowedToHighLightThisSector(sMap))
 		return;
 
 	// disallow going underground while plotting (surface) movement
-	if ( ( bMapZ != 0 ) && ( ( bSelectedDestChar != -1 ) || fPlotForHelicopter ) )
+	if (sMap.z != 0 && (bSelectedDestChar != -1 || fPlotForHelicopter))
 		return;
 
 
-	sSelMapX = sMapX;
-	sSelMapY = sMapY;
-	iCurrentMapSectorZ = bMapZ;
+	sSelMapX = sMap.x;
+	sSelMapY = sMap.y;
+	iCurrentMapSectorZ = sMap.z;
 
 	// if going underground while in airspace mode
-	if (bMapZ > 0 && fShowAircraftFlag)
+	if (sMap.z > 0 && fShowAircraftFlag)
 	{
 		// turn off airspace mode
 		ToggleAirspaceMode( );

@@ -58,7 +58,7 @@ UINT32 ClearPathAfterThisSectorForHelicopter(const SGPSector& sMap);
 
 
 // check to see if sector is highlightable
-bool IsTheCursorAllowedToHighLightThisSector(INT16 x, INT16 y);
+bool IsTheCursorAllowedToHighLightThisSector(const SGPSector& sMap);
 
 // restore background for map grids
 void RestoreBackgroundForMapGrid(const SGPSector& sMap);
