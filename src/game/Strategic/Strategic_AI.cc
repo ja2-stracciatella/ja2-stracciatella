@@ -1331,7 +1331,6 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 void CheckEnemyControlledSector( UINT8 ubSectorID )
 {
 	SECTORINFO *pSector;
-	UINT8 ubSectorX, ubSectorY;
 	if( !gfQueenAIAwake )
 	{
 		return;
@@ -1376,16 +1375,15 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 			}
 		}
 	}
+
 	if( pSector->ubNumAdmins + pSector->ubNumTroops + pSector->ubNumElites )
 	{
-
 		//The sector is still controlled, so look around to see if there are any players nearby.
-		ubSectorX = (UINT8)SECTORX( ubSectorID );
-		ubSectorY = (UINT8)SECTORY( ubSectorID );
-		if( ubSectorY > 1 && EnemyPermittedToAttackSector( NULL, (UINT8)(ubSectorID - 16) ) )
+		SGPSector sSector(ubSectorID);
+		if (sSector.y > 1 && EnemyPermittedToAttackSector(NULL, (UINT8)(ubSectorID - 16)))
 		{
 			/*
-			pPlayerGroup = FindPlayerMovementGroupInSector(bSectorX, ubSectorY - 1);
+			pPlayerGroup = FindPlayerMovementGroupInSector(bSectorX, sSector.y - 1);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, ubSectorID );
@@ -1399,10 +1397,10 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 				return;
 			}
 		}
-		if( ubSectorX < 16 && EnemyPermittedToAttackSector( NULL, (UINT8)(ubSectorID + 1) ) )
+		if( sSector.x < 16 && EnemyPermittedToAttackSector( NULL, (UINT8)(ubSectorID + 1) ) )
 		{
 			/*
-			pPlayerGroup = FindPlayerMovementGroupInSector(ubSectorX + 1, ubSectorY);
+			pPlayerGroup = FindPlayerMovementGroupInSector(sSector.x + 1, sSector.y);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, ubSectorID );
@@ -1416,10 +1414,10 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 				return;
 			}
 		}
-		if( ubSectorY < 16 && EnemyPermittedToAttackSector( NULL, (UINT8)(ubSectorID + 16) ) )
+		if( sSector.y < 16 && EnemyPermittedToAttackSector( NULL, (UINT8)(ubSectorID + 16) ) )
 		{
 			/*
-			pPlayerGroup = FindPlayerMovementGroupInSector(ubSectorX, ubSectorY + 1);
+			pPlayerGroup = FindPlayerMovementGroupInSector(sSector.x, sSector.y + 1);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, ubSectorID );
@@ -1433,10 +1431,10 @@ void CheckEnemyControlledSector( UINT8 ubSectorID )
 				return;
 			}
 		}
-		if( ubSectorX > 1 && EnemyPermittedToAttackSector( NULL, (UINT8)(ubSectorID - 1) ) )
+		if( sSector.x > 1 && EnemyPermittedToAttackSector( NULL, (UINT8)(ubSectorID - 1) ) )
 		{
 			/*
-			pPlayerGroup = FindPlayerMovementGroupInSector(ubSectorX - 1, ubSectorY);
+			pPlayerGroup = FindPlayerMovementGroupInSector(sSector.x - 1, sSector.y);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				HandlePlayerGroupNoticedByGarrison( pPlayerGroup, ubSectorID );
