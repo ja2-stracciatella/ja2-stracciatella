@@ -3802,9 +3802,8 @@ static void RemoveSoldiersFromGarrisonBasedOnComposition(INT32 iGarrisonID, UINT
 
 static void MoveSAIGroupToSector(GROUP** const pGroup, UINT8 const sector, SAIMOVECODE const move_code, UINT8 const intention)
 {
-	UINT8 const dst_x = SECTORX(sector);
-	UINT8 const dst_y = SECTORY(sector);
-	GROUP&      g     = **pGroup;
+	SGPSector sSector(sector);
+	GROUP& g = **pGroup;
 
 	if (g.fBetweenSectors) SetEnemyGroupSector(g, g.ubSector.AsByte());
 
@@ -3817,19 +3816,17 @@ static void MoveSAIGroupToSector(GROUP** const pGroup, UINT8 const sector, SAIMO
 
 	/* If the destination sector is the current location. Instead of causing code
 	 * logic problems, simply process them as if they just arrived. */
-	if (g.ubSector.x == dst_x && g.ubSector.y == dst_y && EvaluateGroupSituation(&g))
+	if (g.ubSector == sSector && EvaluateGroupSituation(&g))
 	{ // The group was deleted.
 		*pGroup = 0;
 		return;
 	}
 
-	UINT8 const x = g.ubSector.x;
-	UINT8 const y = g.ubSector.y;
 	switch (move_code)
 	{
-		case STAGE:   MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(g, x, y, dst_x, dst_y); break;
-		case EVASIVE: MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(                         g, x, y, dst_x, dst_y); break;
-		case DIRECT:  MoveGroupFromSectorToSector(                                                        g, x, y, dst_x, dst_y); break;
+		case STAGE:   MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(g, g.ubSector, sSector); break;
+		case EVASIVE: MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(                         g, g.ubSector, sSector); break;
+		case DIRECT:  MoveGroupFromSectorToSector(                                                        g, g.ubSector, sSector); break;
 	}
 	/* Make sure that the group is moving. If this fails, then the pathing may
 	 * have failed for some reason. */

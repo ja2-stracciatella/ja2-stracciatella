@@ -935,9 +935,9 @@ void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN MoveGroupFromSectorToSector(GROUP& g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
+BOOLEAN MoveGroupFromSectorToSector(GROUP& g, const SGPSector& sStart, const SGPSector& sDest)
 {
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
 
 	if( pNode == NULL )
 	{
@@ -954,9 +954,9 @@ BOOLEAN MoveGroupFromSectorToSector(GROUP& g, INT16 const sStartX, INT16 const s
 }
 
 
-static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP& g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
+static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP& g, const SGPSector& sStart, const SGPSector& sDest)
 {
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
 
 	if( pNode == NULL )
 	{
@@ -976,7 +976,7 @@ static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP& g, INT16 con
 }
 
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, const SGPSector& sStart, const SGPSector& sDest)
 {
 	// init sectors with soldiers in them
 	InitSectorsWithSoldiersList( );
@@ -987,14 +987,14 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, INT
 	// turn on the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = TRUE;
 
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
 
 	// turn off the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = FALSE;
 
 	if( pNode == NULL )
 	{
-		return MoveGroupFromSectorToSector(g, sStartX, sStartY, sDestX, sDestY);
+		return MoveGroupFromSectorToSector(g, sStart, sDest);
 	}
 
 	// start movement to next sector
@@ -1007,7 +1007,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, INT
 }
 
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(GROUP& g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(GROUP& g, const SGPSector& sStart, const SGPSector& sDest)
 {
 	// init sectors with soldiers in them
 	InitSectorsWithSoldiersList( );
@@ -1018,14 +1018,14 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 	// turn on the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = TRUE;
 
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
 
 	// turn off the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = FALSE;
 
 	if( pNode == NULL )
 	{
-		return MoveGroupFromSectorToSectorButAvoidLastSector(g, sStartX, sStartY, sDestX, sDestY);
+		return MoveGroupFromSectorToSectorButAvoidLastSector(g, sStart, sDest);
 	}
 
 	// remove tail from path
