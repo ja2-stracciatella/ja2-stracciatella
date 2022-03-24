@@ -2291,7 +2291,7 @@ static UINT32 HandleMapUI(void)
 {
 	MapEvent new_event = MAP_EVENT_NONE;
 	INT16 sMapX = 0, sMapY = 0;
-	INT16 sX, sY;
+	SGPSector sSector;
 	UINT32 uiNewScreen = MAP_SCREEN;
 	BOOLEAN fWasAlreadySelected;
 
@@ -2334,9 +2334,9 @@ static UINT32 HandleMapUI(void)
 				const INT16 dst_sector = GetLastSectorIdInCharactersPath(s);
 				if (dst_sector != sMapX + sMapY * MAP_WORLD_X)
 				{
-					sX = dst_sector % MAP_WORLD_X;
-					sY = dst_sector / MAP_WORLD_X;
-					RestoreBackgroundForMapGrid( sX, sY );
+					sSector.x = dst_sector % MAP_WORLD_X;
+					sSector.y = dst_sector / MAP_WORLD_X;
+					RestoreBackgroundForMapGrid(sSector);
 					// fMapPanelDirty = TRUE;
 				}
 

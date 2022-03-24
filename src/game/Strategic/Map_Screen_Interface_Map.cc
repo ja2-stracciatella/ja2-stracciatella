@@ -2059,16 +2059,14 @@ bool IsTheCursorAllowedToHighLightThisSector(INT16 const x, INT16 const y)
 }
 
 
-void RestoreBackgroundForMapGrid( INT16 sMapX, INT16 sMapY )
+void RestoreBackgroundForMapGrid(const SGPSector& sMap)
 {
-	INT16 sX, sY;
-
 	// screen values
-	sX=(sMapX * MAP_GRID_X ) + MAP_VIEW_START_X;
-	sY=(sMapY * MAP_GRID_Y ) + MAP_VIEW_START_Y;
+	INT16 sX = (sMap.x * MAP_GRID_X) + MAP_VIEW_START_X;
+	INT16 sY = (sMap.y * MAP_GRID_Y) + MAP_VIEW_START_Y;
 
 	// restore background
-	RestoreExternBackgroundRect( sX, sY ,DMAP_GRID_X ,DMAP_GRID_Y );
+	RestoreExternBackgroundRect(sX, sY, DMAP_GRID_X, DMAP_GRID_Y);
 }
 
 
@@ -3790,7 +3788,6 @@ static void ShowSAMSitesOnStrategicMap()
 
 	for (auto s : GCM->getSamSites())
 	{
-		INT16 const sector = s->sectorId;
 		SGPSector sMap(s->sectorId);
 
 		// Has the sam site here been found?

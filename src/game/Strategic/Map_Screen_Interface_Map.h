@@ -61,7 +61,7 @@ UINT32 ClearPathAfterThisSectorForHelicopter(const SGPSector& sMap);
 bool IsTheCursorAllowedToHighLightThisSector(INT16 x, INT16 y);
 
 // restore background for map grids
-void RestoreBackgroundForMapGrid( INT16 sMapX, INT16 sMapY );
+void RestoreBackgroundForMapGrid(const SGPSector& sMap);
 
 // clip blits to map view region
 void ClipBlitsToMapViewRegion( void );
