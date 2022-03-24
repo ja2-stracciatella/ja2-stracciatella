@@ -38,9 +38,7 @@ struct HistoryUnit
 	UINT8 ubCode; // the code index in the finance code table
 	UINT8 ubSecondCode; // secondary code
 	UINT32 uiDate; // time in the world in global time
-	INT16 sSectorX; // sector X this took place in
-	INT16 sSectorY; // sector Y this took place in
-	INT8 bSectorZ;
+	SGPSector sSector; // sector this took place in
 	HistoryUnit* Next; // next unit in the list
 };
 
@@ -333,9 +331,7 @@ static void ProcessAndEnterAHistoryRecord(const UINT8 ubCode, const UINT32 uiDat
 	h->ubCode       = ubCode;
 	h->ubSecondCode = ubSecondCode;
 	h->uiDate       = uiDate;
-	h->sSectorX     = sSector.x;
-	h->sSectorY     = sSector.y;
-	h->bSectorZ     = sSector.z;
+	h->sSector      = sSector;
 
 	// Append node to list
 	HistoryUnit** anchor = &pHistoryListHead;
@@ -457,7 +453,7 @@ static void DrawHistoryRecordsText(void)
 		FindFontCenterCoordinates(RECORD_DATE_X + 5, 0, RECORD_DATE_WIDTH, 0, sString, HISTORY_TEXT_FONT, &usX, &usY);
 		MPrint(usX, y, sString);
 
-		if (h->sSectorX == -1 || h->sSectorY == -1)
+		if (!h->sSector.IsValid())
 		{
 			// no location
 			FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0, pHistoryLocations, HISTORY_TEXT_FONT, &sX, &sY);
@@ -465,7 +461,7 @@ static void DrawHistoryRecordsText(void)
 		}
 		else
 		{
-			sString = GetSectorIDString(SGPSector(h->sSectorX, h->sSectorY, h->bSectorZ), TRUE);
+			sString = GetSectorIDString(h->sSector, TRUE);
 			FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0,  sString, HISTORY_TEXT_FONT, &sX, &sY);
 			sString = ReduceStringLength(sString, RECORD_LOCATION_WIDTH + 10, HISTORY_TEXT_FONT);
 			MPrint(sX, y, sString);
@@ -754,9 +750,9 @@ static void AppendHistoryToEndOfFile(void)
 	INJ_U8(d, h->ubCode)
 	INJ_U8(d, h->ubSecondCode)
 	INJ_U32(d, h->uiDate)
-	INJ_I16(d, h->sSectorX)
-	INJ_I16(d, h->sSectorY)
-	INJ_I8(d, h->bSectorZ)
+	INJ_I16(d, h->sSector.x)
+	INJ_I16(d, h->sSector.y)
+	INJ_I8(d, h->sSector.z)
 	INJ_SKIP(d, 1)
 	Assert(d.getConsumed() == lengthof(data));
 
