@@ -7073,11 +7073,11 @@ static void ExplainWhySkyriderCantFly(void);
 
 static void CancelOrShortenPlottedPath(void)
 {
-	INT16 sMapX, sMapY;
+	INT16 a, b;
 	UINT32 uiReturnValue;
 
-
-	GetMouseMapXY(&sMapX, &sMapY);
+	GetMouseMapXY(&a, &b);
+	SGPSector sMap(a, b);
 
 	// check if we are in aircraft mode
 	if (fShowAircraftFlag)
@@ -7096,7 +7096,7 @@ static void CancelOrShortenPlottedPath(void)
 
 
 		// try to delete portion of path AFTER the current sector for the helicopter
-		uiReturnValue = ClearPathAfterThisSectorForHelicopter( sMapX, sMapY );
+		uiReturnValue = ClearPathAfterThisSectorForHelicopter(sMap.x, sMap.y);
 	}
 	else
 	{
@@ -7105,7 +7105,7 @@ static void CancelOrShortenPlottedPath(void)
 			return;
 
 		// try to delete portion of path AFTER the current sector for the helicopter
-		uiReturnValue = ClearPathAfterThisSectorForCharacter(gCharactersList[bSelectedDestChar].merc, sMapX, sMapY);
+		uiReturnValue = ClearPathAfterThisSectorForCharacter(gCharactersList[bSelectedDestChar].merc, sMap);
 	}
 
 

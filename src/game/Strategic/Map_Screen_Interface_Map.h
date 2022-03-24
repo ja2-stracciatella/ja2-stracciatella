@@ -44,7 +44,7 @@ void DisplayHelicopterTempPath( void );
 
 
 // clear path after this sector
-UINT32 ClearPathAfterThisSectorForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY );
+UINT32 ClearPathAfterThisSectorForCharacter(SOLDIERTYPE *pCharacter, const SGPSector& sMap);
 
 // cancel path : clear the path completely and gives player feedback message that the route was canceled
 void CancelPathForCharacter( SOLDIERTYPE *pCharacter );

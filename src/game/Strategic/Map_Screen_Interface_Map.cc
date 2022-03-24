@@ -918,7 +918,7 @@ void PlotATemporaryPathForCharacter(const SOLDIERTYPE* const pCharacter, const S
 
 
 // clear out character path list, after and including this sector
-UINT32 ClearPathAfterThisSectorForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY )
+UINT32 ClearPathAfterThisSectorForCharacter(SOLDIERTYPE *pCharacter, const SGPSector& sMap)
 {
 	INT32 iOrigLength = 0;
 	VEHICLETYPE *pVehicle = NULL;
@@ -935,7 +935,7 @@ UINT32 ClearPathAfterThisSectorForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, 
 
 	// if we're clearing everything beyond the current sector, that's quite different.  Since we're basically cancelling
 	// his movement completely, we must also make sure his next X,Y are changed and he officially "returns" to his sector
-	if ( ( sX == pCharacter->sSectorX ) && ( sY == pCharacter->sSectorY ) )
+	if (sMap == SGPSector(pCharacter->sSectorX, pCharacter->sSectorY))
 	{
 		// if we're in confirm map move mode, cancel that (before new UI messages are issued)
 		EndConfirmMapMoveMode( );
@@ -961,14 +961,14 @@ UINT32 ClearPathAfterThisSectorForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, 
 		else
 		{
 			// foot soldier
-			pCharacter->pMercPath = ClearStrategicPathListAfterThisSector( pCharacter->pMercPath, sX, sY, pCharacter->ubGroupID );
+			pCharacter->pMercPath = ClearStrategicPathListAfterThisSector(pCharacter->pMercPath, sMap.x, sMap.y, pCharacter->ubGroupID);
 		}
 
 		// if there's an associated vehicle structure
 		if ( pVehicle != NULL )
 		{
 			// do it for the vehicle, too
-			pVehicle->pMercPath = ClearStrategicPathListAfterThisSector( pVehicle->pMercPath, sX, sY, pVehicle->ubMovementGroup );
+			pVehicle->pMercPath = ClearStrategicPathListAfterThisSector(pVehicle->pMercPath, sMap.x, sMap.y, pVehicle->ubMovementGroup);
 		}
 
 		if( GetLengthOfMercPath( pCharacter ) < iOrigLength )
