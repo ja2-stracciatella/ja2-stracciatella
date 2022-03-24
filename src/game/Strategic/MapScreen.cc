@@ -2131,7 +2131,7 @@ static void RenderMapCursorsIndexesAnims(void)
 	BOOLEAN fSelectedCursorIsYellow = TRUE;
 	UINT16 usCursorColor;
 	UINT32 uiDeltaTime;
-	static INT16 sPrevHighlightedMapX = -1, sPrevHighlightedMapY = -1;
+	static SGPSector sPrevHighlightedMap(-1, -1);
 	static INT16 sPrevSelectedMapX = -1, sPrevSelectedMapY = -1;
 	static BOOLEAN fFlashCursorIsYellow = FALSE;
 	BOOLEAN fDrawCursors;
@@ -2147,44 +2147,40 @@ static void RenderMapCursorsIndexesAnims(void)
 
 	fDrawCursors = CanDrawSectorCursor( );
 
-	SGPSector tmp;
 	// if mouse cursor is over a map sector
-	if (fDrawCursors && GetMouseMapXY(tmp))
+	if (fDrawCursors && GetMouseMapXY(gsHighlightSector))
 	{
-		gsHighlightSectorX = tmp.x; gsHighlightSectorY = tmp.y;
 		// handle highlighting of sector pointed at ( WHITE )
 
 		// if we're over a different sector than when we previously blitted this
-		if ( ( gsHighlightSectorX != sPrevHighlightedMapX ) || ( gsHighlightSectorY != sPrevHighlightedMapY ) || gfMapPanelWasRedrawn )
+		if (gsHighlightSector != sPrevHighlightedMap || gfMapPanelWasRedrawn)
 		{
-			if ( sPrevHighlightedMapX != -1 && sPrevHighlightedMapY != -1 )
+			if (sPrevHighlightedMap.IsValid())
 			{
-				RestoreMapSectorCursor( sPrevHighlightedMapX, sPrevHighlightedMapY );
+				RestoreMapSectorCursor(sPrevHighlightedMap.x, sPrevHighlightedMap.y);
 			}
 
 			// draw WHITE highlight rectangle
-			RenderMapHighlight(SGPSector(gsHighlightSectorX, gsHighlightSectorY), Get16BPPColor( RGB_WHITE ), FALSE );
+			RenderMapHighlight(gsHighlightSector, Get16BPPColor(RGB_WHITE), FALSE);
 
-			sPrevHighlightedMapX = gsHighlightSectorX;
-			sPrevHighlightedMapY = gsHighlightSectorY;
-
+			sPrevHighlightedMap = gsHighlightSector;
 			fHighlightChanged = TRUE;
 		}
 	}
 	else
 	{
 		// nothing now highlighted
-		gsHighlightSectorX = -1;
-		gsHighlightSectorY = -1;
+		gsHighlightSector.x = -1;
+		gsHighlightSector.y = -1;
 
-		if ( sPrevHighlightedMapX != -1 && sPrevHighlightedMapY != -1 )
+		if (sPrevHighlightedMap.IsValid())
 		{
-			RestoreMapSectorCursor( sPrevHighlightedMapX, sPrevHighlightedMapY );
+			RestoreMapSectorCursor(sPrevHighlightedMap.x, sPrevHighlightedMap.y);
 			fHighlightChanged = TRUE;
 		}
 
-		sPrevHighlightedMapX = -1;
-		sPrevHighlightedMapY = -1;
+		sPrevHighlightedMap.x = -1;
+		sPrevHighlightedMap.y = -1;
 	}
 
 
@@ -2192,7 +2188,7 @@ static void RenderMapCursorsIndexesAnims(void)
 	if (fDrawCursors && bSelectedDestChar == -1 && !fPlotForHelicopter)
 	{
 		// if mouse cursor is over the currently selected sector
-		if( ( gsHighlightSectorX == sSelMapX ) && ( gsHighlightSectorY == sSelMapY ) )
+		if ((gsHighlightSector.x == sSelMapX) && (gsHighlightSector.y == sSelMapY))
 		{
 			fSelectedSectorHighlighted = TRUE;
 

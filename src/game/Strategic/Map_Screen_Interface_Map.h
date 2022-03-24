@@ -157,8 +157,7 @@ extern INT16 sRegularsOnCursor;
 extern INT16 sElitesOnCursor;
 
 // highlighted sectors
-extern INT16 gsHighlightSectorX;
-extern INT16 gsHighlightSectorY;
+extern SGPSector gsHighlightSector;
 
 // the viewable map bound region
 extern SGPRect MapScreenRect;

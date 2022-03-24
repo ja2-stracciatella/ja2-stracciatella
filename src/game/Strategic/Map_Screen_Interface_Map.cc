@@ -315,8 +315,7 @@ UINT16 sSelMapX = 9;
 UINT16 sSelMapY = 1;
 
 // highlighted sector
-INT16 gsHighlightSectorX=-1;
-INT16 gsHighlightSectorY=-1;
+SGPSector gsHighlightSector(-1, -1);
 
 // the current sector Z value of the map being displayed
 INT32 iCurrentMapSectorZ = 0;
@@ -443,7 +442,7 @@ void DrawMapIndexBigMap(BOOLEAN fSelectedCursorIsYellow)
 		UINT8 const colour_x =
 			!draw_cursors                  ? MAP_INDEX_COLOR :
 			i == sSelMapX && sel_candidate ? sel_colour      :
-			i == gsHighlightSectorX        ? FONT_WHITE      :
+			i == gsHighlightSector.x       ? FONT_WHITE      :
 			MAP_INDEX_COLOR;
 		SetFontForeground(colour_x);
 		FindFontCenterCoordinates(MAP_HORT_INDEX_X + (i - 1) * MAP_GRID_X, MAP_HORT_INDEX_Y, MAP_GRID_X, MAP_HORT_HEIGHT, pMapHortIndex[i], MAP_FONT, &usX, &usY);
@@ -452,7 +451,7 @@ void DrawMapIndexBigMap(BOOLEAN fSelectedCursorIsYellow)
 		UINT8 const colour_y =
 			!draw_cursors                  ? MAP_INDEX_COLOR :
 			i == sSelMapY && sel_candidate ? sel_colour      :
-			i == gsHighlightSectorY        ? FONT_WHITE      :
+			i == gsHighlightSector.y       ? FONT_WHITE      :
 			MAP_INDEX_COLOR;
 		SetFontForeground(colour_y);
 		FindFontCenterCoordinates(MAP_VERT_INDEX_X, MAP_VERT_INDEX_Y + (i - 1) * MAP_GRID_Y, MAP_HORT_HEIGHT, MAP_GRID_Y, pMapVertIndex[i], MAP_FONT, &usX, &usY);
