@@ -784,9 +784,8 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT& p, const SGPSector& sSector)
 }
 
 
-void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, ROTTING_CORPSE_DEFINITION const* const corpse_def)
+void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(const SGPSector& sMap, ROTTING_CORPSE_DEFINITION const* const corpse_def)
 {
-	SGPSector sMap(sMapX, sMapY, bMapZ);
 	AutoSGPFile f(GCM->tempFiles()->openForReadWrite(GetMapTempFileName(SF_ROTTING_CORPSE_TEMP_FILE_EXISTS, sMap)));
 
 	UINT32 corpse_count;
@@ -867,18 +866,13 @@ void ReSetSectorFlag(const SGPSector& sector, SectorFlags const flag_to_clear)
 
 BOOLEAN GetSectorFlagStatus(const SGPSector& sSector, SectorFlags const flag_to_check)
 {
-	return GetSectorFlagStatus(sSector.x, sSector.y, sSector.z, flag_to_check);
-}
-
-BOOLEAN GetSectorFlagStatus(INT16 const x, INT16 const y, UINT8 const z, SectorFlags const flag_to_check)
-{
-	SGPSector tmp(x, y, z);
-	return (GetSectorFlags(tmp) & flag_to_check) != 0;
+	return (GetSectorFlags(sSector) & flag_to_check) != 0;
 }
 
 
 void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z, SOLDIERTYPE* const s, INT16 const grid_no, UINT32 const flags)
 {
+	SGPSector sMap(x, y, z);
 	// Setup the flags for the items and the rotting corpses
 	UINT16 flags_for_world_items    = 0;
 	UINT16 flags_for_rotting_corpse = 0;
@@ -921,7 +915,7 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 			}
 
 			ReduceAmmoDroppedByNonPlayerSoldiers(*s, o);
-			AddItemsToUnLoadedSector(x, y, z, grid_no, 1, &o, s->bLevel, flags_for_world_items, 0, VISIBLE);
+			AddItemsToUnLoadedSector(sMap.x, sMap.y, sMap.z, grid_no, 1, &o, s->bLevel, flags_for_world_items, 0, VISIBLE);
 		}
 	}
 
@@ -955,7 +949,7 @@ void AddDeadSoldierToUnLoadedSector(INT16 const x, INT16 const y, UINT8 const z,
 					possible_death_anims[Random(lengthof(possible_death_anims))];
 	c.ubType = gubAnimSurfaceCorpseID[s->ubBodyType][death_anim];
 
-	AddRottingCorpseToUnloadedSectorsRottingCorpseFile(x, y, z, &c);
+	AddRottingCorpseToUnloadedSectorsRottingCorpseFile(sMap, &c);
 }
 
 

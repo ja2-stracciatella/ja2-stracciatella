@@ -488,7 +488,7 @@ static void DrawBullseye(void);
 static void DrawSecretSite(const StrategicMapSecretModel*);
 static void DrawTownMilitiaForcesOnMap();
 static void HandleLowerLevelMapBlit(void);
-static void ShadeMapElem(INT16 sMapX, INT16 sMapY, INT32 iColor);
+static void ShadeMapElem(const SGPSector& sMap, INT32 iColor);
 static void ShowItemsOnMap(void);
 static void ShowSAMSitesOnStrategicMap();
 static void ShowTeamAndVehicles();
@@ -502,16 +502,17 @@ void DrawMap(void)
 		BltVideoSurfaceHalf(guiSAVEBUFFER, guiBIGMAP, MAP_VIEW_START_X + 1, MAP_VIEW_START_Y, NULL);
 
 		// shade map sectors (must be done after Tixa/Orta/Mine icons have been blitted, but before icons!)
-		for (INT16 cnt = 1; cnt < MAP_WORLD_X - 1; ++cnt)
+		SGPSector sSector(1, 1, iCurrentMapSectorZ);
+		for (sSector.x = 1; sSector.x < MAP_WORLD_X - 1; ++sSector.x)
 		{
-			for (INT16 cnt2 = 1; cnt2 < MAP_WORLD_Y - 1; ++cnt2)
+			for (sSector.y = 1; sSector.y < MAP_WORLD_Y - 1; ++sSector.y)
 			{
-				if (!GetSectorFlagStatus(cnt, cnt2, iCurrentMapSectorZ, SF_ALREADY_VISITED))
+				if (!GetSectorFlagStatus(sSector, SF_ALREADY_VISITED))
 				{
 					INT32 color;
 					if (fShowAircraftFlag)
 					{
-						if (!StrategicMap[cnt + cnt2 * WORLD_MAP_X].fEnemyAirControlled)
+						if (!StrategicMap[sSector.AsStrategicIndex()].fEnemyAirControlled)
 						{
 							// sector not visited, not air controlled
 							color = MAP_SHADE_DK_GREEN;
@@ -527,14 +528,14 @@ void DrawMap(void)
 						// not visited
 						color = MAP_SHADE_BLACK;
 					}
-					ShadeMapElem(cnt, cnt2, color);
+					ShadeMapElem(sSector, color);
 				}
 				else
 				{
 					if (fShowAircraftFlag)
 					{
 						INT32 color;
-						if (!StrategicMap[cnt + cnt2 * WORLD_MAP_X].fEnemyAirControlled)
+						if (!StrategicMap[sSector.AsStrategicIndex()].fEnemyAirControlled)
 						{
 							// sector visited and air controlled
 							color = MAP_SHADE_LT_GREEN;
@@ -544,7 +545,7 @@ void DrawMap(void)
 							// sector visited but not air controlled
 							color = MAP_SHADE_LT_RED;
 						}
-						ShadeMapElem(cnt, cnt2, color);
+						ShadeMapElem(sSector, color);
 					}
 				}
 			}
@@ -788,11 +789,11 @@ static void ShowTeamAndVehicles()
 }
 
 
-static void ShadeMapElem(const INT16 sMapX, const INT16 sMapY, const INT32 iColor)
+static void ShadeMapElem(const SGPSector& sMap, const INT32 iColor)
 {
 	INT16 sScreenX;
 	INT16 sScreenY;
-	GetScreenXYFromMapXY(sMapX, sMapY, &sScreenX, &sScreenY);
+	GetScreenXYFromMapXY(sMap.x, sMap.y, &sScreenX, &sScreenY);
 
 	// compensate for original BIG_MAP blit being done at MAP_VIEW_START_X + 1
 	sScreenX += 1;

@@ -222,10 +222,11 @@ void RenderMapScreenInterfaceBottom( void )
 	if (fMapScreenBottomDirty)
 	{
 		BltVideoObject(guiSAVEBUFFER, guiMAPBOTTOMPANEL, 0, MAP_BOTTOM_X, MAP_BOTTOM_Y);
+		SGPSector sSelMap(sSelMapX, sSelMapY, iCurrentMapSectorZ);
 
-		if (GetSectorFlagStatus(sSelMapX, sSelMapY, iCurrentMapSectorZ, SF_ALREADY_VISITED))
+		if (GetSectorFlagStatus(sSelMap, SF_ALREADY_VISITED))
 		{
-			GetMapFileName(SGPSector(sSelMapX, sSelMapY, iCurrentMapSectorZ), bFilename, TRUE);
+			GetMapFileName(sSelMap, bFilename, TRUE);
 			LoadRadarScreenBitmap( bFilename );
 		}
 		else

@@ -3551,17 +3551,20 @@ static void PollRightButtonInMapView(MapEvent& new_event)
 				}
 				else
 				{
-					INT16 sMapX, sMapY;
-					if ( GetMouseMapXY( &sMapX, &sMapY ) )
+					INT16 a, b;
+					SGPSector sMap(1, 1, iCurrentMapSectorZ);
+					SGPSector sSelMap(sSelMapX, sSelMapY);
+					if (GetMouseMapXY(&a, &b))
 					{
-						if( ( sSelMapX != sMapX ) || ( sSelMapY != sMapY ) )
+						sMap.x = a; sMap.y = b;
+						if (sSelMap != sMap)
 						{
-							ChangeSelectedMapSector(SGPSector(sMapX, sMapY, (INT8) iCurrentMapSectorZ));
+							ChangeSelectedMapSector(sMap);
 						}
 					}
 
 					// sector must be selected to bring up militia or town info boxes for it
-					if ( ( sMapX == sSelMapX ) && ( sSelMapY == sMapY ) )
+					if (sMap == sSelMap)
 					{
 						if (fShowMilitia)
 						{
@@ -3570,8 +3573,7 @@ static void PollRightButtonInMapView(MapEvent& new_event)
 						else // show militia is OFF
 						{
 							// if on the surface, or a real underground sector (we've visited it)
-							if ( ( iCurrentMapSectorZ == 0 ) ||
-									GetSectorFlagStatus(sMapX, sMapY, iCurrentMapSectorZ, SF_ALREADY_VISITED))
+							if (sMap.z == 0 || GetSectorFlagStatus(sMap, SF_ALREADY_VISITED))
 							{
 								// toggle sector info for this sector
 								fShowTownInfo = !fShowTownInfo;

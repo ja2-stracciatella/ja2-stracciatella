@@ -125,7 +125,7 @@ BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier );
 
 bool PutSoldierInVehicle(SOLDIERTYPE&, VEHICLETYPE&);
 
-void SetVehicleSectorValues(VEHICLETYPE&, UINT8 x, UINT8 y);
+void SetVehicleSectorValues(VEHICLETYPE&, const SGPSector& sMap);
 
 void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier );
 

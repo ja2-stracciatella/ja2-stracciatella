@@ -144,7 +144,7 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 			INT8 const sam_id = GetSAMIdFromSector(sMap);
 			if (sam_id != -1)
 			{
-				if ( 1 /*!GetSectorFlagStatus( sMapX, sMapY, bMapZ, SF_SECTOR_HAS_BEEN_LIBERATED_ONCE ) */)
+				if ( 1 /*!GetSectorFlagStatus(sMap, SF_SECTOR_HAS_BEEN_LIBERATED_ONCE) */)
 				{
 					// SAM site liberated for first time, schedule meanwhile
 					HandleMeanWhileEventPostingForSAMLiberation(sam_id);

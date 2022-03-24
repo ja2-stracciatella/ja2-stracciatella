@@ -788,7 +788,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_PLAYER_BEEN_TO_K4:
-			gubFact[usFact] = GetSectorFlagStatus(4, MAP_ROW_K, 1, SF_ALREADY_VISITED);
+			gubFact[usFact] = GetSectorFlagStatus(SGPSector(4, MAP_ROW_K, 1), SF_ALREADY_VISITED);
 			break;
 
 		case FACT_WARDEN_DEAD:

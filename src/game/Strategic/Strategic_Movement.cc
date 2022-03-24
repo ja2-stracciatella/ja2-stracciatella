@@ -1046,7 +1046,7 @@ static void AwardExperienceForTravelling(GROUP& g)
 }
 
 
-static void AddCorpsesToBloodcatLair(INT16 sSectorX, INT16 sSectorY)
+static void AddCorpsesToBloodcatLair(const SGPSector& sSector)
 {
 	ROTTING_CORPSE_DEFINITION		Corpse;
 	Corpse = ROTTING_CORPSE_DEFINITION{};
@@ -1074,23 +1074,23 @@ static void AddCorpsesToBloodcatLair(INT16 sSectorX, INT16 sSectorY)
 	// 1st gridno
 	Corpse.sGridNo 	= 14319;
 	//Add the rotting corpse info to the sectors unloaded rotting corpse file
-	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sSectorX, sSectorY, 0, &Corpse);
+	AddRottingCorpseToUnloadedSectorsRottingCorpseFile(sSector, &Corpse);
 
 	// 2nd gridno
 	Corpse.sGridNo = 9835;
 	//Add the rotting corpse info to the sectors unloaded rotting corpse file
-	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sSectorX, sSectorY, 0, &Corpse);
+	AddRottingCorpseToUnloadedSectorsRottingCorpseFile(sSector, &Corpse);
 
 
 	// 3rd gridno
 	Corpse.sGridNo = 11262;
 	//Add the rotting corpse info to the sectors unloaded rotting corpse file
-	AddRottingCorpseToUnloadedSectorsRottingCorpseFile( sSectorX, sSectorY, 0, &Corpse);
+	AddRottingCorpseToUnloadedSectorsRottingCorpseFile(sSector, &Corpse);
 }
 
 
 static void HandleNonCombatGroupArrival(GROUP&, bool main_group, bool never_left);
-static void ReportVehicleOutOfGas(VEHICLETYPE const&, UINT8 x, UINT8 y);
+static void ReportVehicleOutOfGas(VEHICLETYPE const&, const SGPSector& sMap);
 static void SpendVehicleFuel(SOLDIERTYPE&, INT16 fuel_spent);
 static INT16 VehicleFuelRemaining(SOLDIERTYPE const&);
 
@@ -1128,20 +1128,19 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		}
 	}
 
-	UINT8 const x = g.ubNextX;
-	UINT8 const y = g.ubNextY;
-	UINT8 const z = g.ubSectorZ;
+	SGPSector cSector(g.ubNextX, g.ubNextY, g.ubSectorZ);
+	static const SGPSector sanMona(5, 4);
 
 	// Check for exception cases which
 	bool const exception_queue =
 		gTacticalStatus.bBoxingState != NOT_BOXING &&
 		!g.fPlayer                                 &&
-		x == 5 && y == 4 && z == 0;
+		cSector == sanMona;
 
 	/* First check if the group arriving is going to queue another battle.
 	 * NOTE: We can't have more than one battle ongoing at a time. */
 	if (exception_queue ||
-		(check_for_battle && gTacticalStatus.fEnemyInSector && FindPlayerMovementGroupInSector(gWorldSector.x, gWorldSector.y) && (x != gWorldSector.x || y != gWorldSector.y || gWorldSector.z > 0)) ||
+		(check_for_battle && gTacticalStatus.fEnemyInSector && FindPlayerMovementGroupInSector(gWorldSector.x, gWorldSector.y) && (cSector != gWorldSector || gWorldSector.z > 0)) ||
 		AreInMeanwhile() ||
 		/* KM: Aug 11, 1999 -- Patch fix: Added additional checks to prevent a 2nd
 			* battle in the case where the player is involved in a potential battle
@@ -1174,8 +1173,8 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 	// Update the position of the group
 	g.ubPrevX   = g.ubSectorX;
 	g.ubPrevY   = g.ubSectorY;
-	g.ubSectorX = x;
-	g.ubSectorY = y;
+	g.ubSectorX = cSector.x;
+	g.ubSectorY = cSector.y;
 	g.ubNextX   = 0;
 	g.ubNextY   = 0;
 
@@ -1195,7 +1194,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 
 			if (VehicleFuelRemaining(vs) == 0)
 			{
-				ReportVehicleOutOfGas(v, x, y);
+				ReportVehicleOutOfGas(v, cSector);
 				// Nuke the group's path, so they don't continue moving.
 				ClearMercPathsAndWaypointsForAllInGroup(g);
 			}
@@ -1218,33 +1217,33 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		}
 
 		// If on surface
-		if (z == 0)
+		if (cSector.z == 0)
 		{
 			// check for discovering secret locations
-			if (GetMapSecretBySectorID(SECTOR(x, y)))
+			if (GetMapSecretBySectorID(cSector.AsByte()))
 			{
-				SetSectorSecretAsFound(SECTOR(x, y));
+				SetSectorSecretAsFound(cSector.AsByte());
 			}
 		}
 
 		UINT8 insertion_direction;
 		UINT8 strategic_insertion_code;
-		if (x < g.ubPrevX)
+		if (cSector.x < g.ubPrevX)
 		{
 			insertion_direction      = SOUTHWEST;
 			strategic_insertion_code = INSERTION_CODE_EAST;
 		}
-		else if (x > g.ubPrevX)
+		else if (cSector.x > g.ubPrevX)
 		{
 			insertion_direction      = NORTHEAST;
 			strategic_insertion_code = INSERTION_CODE_WEST;
 		}
-		else if (y < g.ubPrevY)
+		else if (cSector.y < g.ubPrevY)
 		{
 			insertion_direction      = NORTHWEST;
 			strategic_insertion_code = INSERTION_CODE_SOUTH;
 		}
-		else if (y > g.ubPrevY)
+		else if (cSector.y > g.ubPrevY)
 		{
 			insertion_direction      = SOUTHEAST;
 			strategic_insertion_code = INSERTION_CODE_NORTH;
@@ -1255,7 +1254,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			return;
 		}
 
-		bool    const  here = x == gWorldSector.x && y == gWorldSector.y && z == gWorldSector.z;
+		bool    const  here = cSector == gWorldSector;
 		ST::string who;
 		if (!g.fVehicle)
 		{
@@ -1264,9 +1263,9 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			{
 				SOLDIERTYPE& s = *i->pSoldier;
 				s.fBetweenSectors      = FALSE;
-				s.sSectorX             = x;
-				s.sSectorY             = y;
-				s.bSectorZ             = z;
+				s.sSectorX             = cSector.x;
+				s.sSectorY             = cSector.y;
+				s.bSectorZ             = cSector.z;
 				s.ubPrevSectorID       = SECTOR(g.ubPrevX, g.ubPrevY);
 				s.ubInsertionDirection = insertion_direction;
 
@@ -1301,16 +1300,16 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			if (v.pMercPath) v.pMercPath = RemoveHeadFromStrategicPath(v.pMercPath);
 
 			// Update vehicle position
-			SetVehicleSectorValues(v, x, y);
+			SetVehicleSectorValues(v, cSector);
 			v.fBetweenSectors = FALSE;
 
 			if (!IsHelicopter(v))
 			{
 				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 				vs.fBetweenSectors          = FALSE;
-				vs.sSectorX                 = x;
-				vs.sSectorY                 = y;
-				vs.bSectorZ                 = z;
+				vs.sSectorX                 = cSector.x;
+				vs.sSectorY                 = cSector.y;
+				vs.bSectorZ                 = cSector.z;
 				vs.ubInsertionDirection     = insertion_direction;
 				vs.ubStrategicInsertionCode = strategic_insertion_code;
 
@@ -1322,9 +1321,9 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 				{
 					SOLDIERTYPE& s = *i->pSoldier;
 					s.fBetweenSectors = FALSE;
-					s.sSectorX = x;
-					s.sSectorY = y;
-					s.bSectorZ = z;
+					s.sSectorX = cSector.x;
+					s.sSectorY = cSector.y;
+					s.bSectorZ = cSector.z;
 					s.ubInsertionDirection = insertion_direction;
 					s.ubStrategicInsertionCode = strategic_insertion_code;
 
@@ -1346,9 +1345,9 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		if (!who.empty())
 		{ /* Don't print any messages when arriving underground (there's no delay
 			 * involved) or if we never left (cancel) */
-			if (GroupAtFinalDestination(&g) && z == 0 && !never_left)
+			if (GroupAtFinalDestination(&g) && cSector.z == 0 && !never_left)
 			{
-				ScreenMsg(FONT_MCOLOR_DKRED, MSG_INTERFACE, st_format_printf(pMessageStrings[MSG_ARRIVE], who, pMapVertIndex[y], pMapHortIndex[x]));
+				ScreenMsg(FONT_MCOLOR_DKRED, MSG_INTERFACE, st_format_printf(pMessageStrings[MSG_ARRIVE], who, pMapVertIndex[cSector.y], pMapHortIndex[cSector.x]));
 			}
 		}
 
@@ -1358,15 +1357,15 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			if (!g.fVehicle || !IsGroupTheHelicopterGroup(g))
 			{
 				// ATE: Add a few corpse to the bloodcat lair
-				auto spawns = GCM->getBloodCatSpawnsOfSector( SECTOR(x, y) );
+				auto spawns = GCM->getBloodCatSpawnsOfSector(cSector.AsByte());
 				if ( spawns != NULL && spawns->isLair &&
-					!GetSectorFlagStatus(x, y, z, SF_ALREADY_VISITED))
+					!GetSectorFlagStatus(cSector, SF_ALREADY_VISITED))
 				{
-					AddCorpsesToBloodcatLair(x, y);
+					AddCorpsesToBloodcatLair(cSector);
 				}
 
 				// Mark the sector as visited already
-				SetSectorFlag(SGPSector(x, y, z), SF_ALREADY_VISITED);
+				SetSectorFlag(cSector, SF_ALREADY_VISITED);
 			}
 		}
 
@@ -3199,10 +3198,10 @@ void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle)
 }
 
 
-static void ReportVehicleOutOfGas(VEHICLETYPE const& v, UINT8 const x, UINT8 const y)
+static void ReportVehicleOutOfGas(VEHICLETYPE const& v, const SGPSector& sMap)
 {
 	// Report that the vehicle that just arrived is out of gas
-	ST::string str = st_format_printf(gzLateLocalizedString[STR_LATE_05], pVehicleStrings[v.ubVehicleType], y + 'A' - 1, x);
+	ST::string str = st_format_printf(gzLateLocalizedString[STR_LATE_05], pVehicleStrings[v.ubVehicleType], sMap.AsShortString());
 	DoScreenIndependantMessageBox(str, MSG_BOX_FLAG_OK, 0);
 }
 

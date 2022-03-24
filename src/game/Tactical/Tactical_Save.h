@@ -43,7 +43,7 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT&, const SGPSector& sSector);
 
 
 // Adds a rotting corpse definition to the end of a sectors rotting corpse temp file
-void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ, ROTTING_CORPSE_DEFINITION const*);
+void AddRottingCorpseToUnloadedSectorsRottingCorpseFile(const SGPSector& sMap, ROTTING_CORPSE_DEFINITION const*);
 
 
 
@@ -63,7 +63,6 @@ void AddDeadSoldierToUnLoadedSector(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SOLDI
 
 
 BOOLEAN GetSectorFlagStatus(const SGPSector& sMap, SectorFlags);
-BOOLEAN GetSectorFlagStatus(INT16 sMapX, INT16 sMapY, UINT8 bMapZ, SectorFlags);
 void    SetSectorFlag(const SGPSector& sMap, SectorFlags);
 void    ReSetSectorFlag(const SGPSector& sMap, SectorFlags);
 

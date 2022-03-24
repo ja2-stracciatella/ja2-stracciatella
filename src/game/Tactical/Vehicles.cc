@@ -786,22 +786,22 @@ void LoadVehicleInformationFromSavedGameFile(HWFILE const hFile, UINT32 const ui
 }
 
 
-void SetVehicleSectorValues(VEHICLETYPE& v, UINT8 const x, UINT8 const y)
+void SetVehicleSectorValues(VEHICLETYPE& v, const SGPSector& sMap)
 {
-	v.sSectorX = x;
-	v.sSectorY = y;
+	v.sSectorX = sMap.x;
+	v.sSectorY = sMap.y;
 
 	ProfileID vehicleProfile = GCM->getVehicle(v.ubVehicleType)->profile;
 	MERCPROFILESTRUCT& p = GetProfile(vehicleProfile);
-	p.sSectorX = x;
-	p.sSectorY = y;
+	p.sSectorX = sMap.x;
+	p.sSectorY = sMap.y;
 
 	// Go through list of mercs in vehicle and set all their states as arrived
 	CFOR_EACH_PASSENGER(v, i)
 	{
 		SOLDIERTYPE& s = **i;
-		s.sSectorX        = x;
-		s.sSectorY        = y;
+		s.sSectorX        = sMap.x;
+		s.sSectorY        = sMap.y;
 		s.fBetweenSectors = FALSE;
 	}
 }
