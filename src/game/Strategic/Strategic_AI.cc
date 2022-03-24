@@ -2921,7 +2921,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 	}
 }
 
-static UINT8 RedirectEnemyGroupsMovingThroughSector(UINT8 ubSectorX, UINT8 ubSectorY);
+static UINT8 RedirectEnemyGroupsMovingThroughSector(const SGPSector& sSector);
 
 
 void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
@@ -2979,7 +2979,7 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 
 	//If there are any enemy groups that will be moving through this sector due, they will have to repath which
 	//will cause them to avoid the sector.  Returns the number of redirected groups.
-	RedirectEnemyGroupsMovingThroughSector( (UINT8)sSectorX, (UINT8)sSectorY );
+	RedirectEnemyGroupsMovingThroughSector(SGPSector(sSectorX, sSectorY));
 }
 
 
@@ -3845,7 +3845,7 @@ static void MoveSAIGroupToSector(GROUP** const pGroup, UINT8 const sector, SAIMO
 
 //If there are any enemy groups that will be moving through this sector due, they will have to repath which
 //will cause them to avoid the sector.  Returns the number of redirected groups.
-static UINT8 RedirectEnemyGroupsMovingThroughSector(UINT8 ubSectorX, UINT8 ubSectorY)
+static UINT8 RedirectEnemyGroupsMovingThroughSector(const SGPSector& sSector)
 {
 	UINT8 ubNumGroupsRedirected = 0;
 	WAYPOINT *pWaypoint;
@@ -3854,7 +3854,7 @@ static UINT8 RedirectEnemyGroupsMovingThroughSector(UINT8 ubSectorX, UINT8 ubSec
 	{
 		if (pGroup->ubMoveType == ONE_WAY)
 		{ //check the waypoint list
-			if( GroupWillMoveThroughSector( pGroup, ubSectorX, ubSectorY ) )
+			if (GroupWillMoveThroughSector(pGroup, sSector.x, sSector.y))
 			{
 				//extract the group's destination.
 				pWaypoint = GetFinalWaypoint( pGroup );
@@ -3868,8 +3868,8 @@ static UINT8 RedirectEnemyGroupsMovingThroughSector(UINT8 ubSectorX, UINT8 ubSec
 	}
 	if( ubNumGroupsRedirected )
 	{
-		SLOGD("Test message for new feature:  %d enemy groups were redirected away from moving through sector %c%d.  Please don't report unless this number is greater than 5.",
-			ubNumGroupsRedirected, ubSectorY + 'A' - 1, ubSectorX );
+		STLOGD("Test message for new feature: {} enemy groups were redirected away from moving through sector {}.  Please don't report unless this number is greater than 5.",
+			ubNumGroupsRedirected, sSector.AsShortString());
 	}
 	return ubNumGroupsRedirected;
 }
