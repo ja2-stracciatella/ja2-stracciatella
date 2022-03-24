@@ -1333,7 +1333,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			}
 			else
 			{
-				if (HandleHeliEnteringSector(SGPSector(v.sSectorX, v.sSectorY)))
+				if (HandleHeliEnteringSector(v.sSector))
 				{ // Helicopter destroyed
 					group_destroyed = true;
 				}
@@ -3208,30 +3208,29 @@ static void ReportVehicleOutOfGas(VEHICLETYPE const& v, const SGPSector& sMap)
 
 static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const& g, INT16 const x, INT16 const y, INT8 const z)
 {
+	SGPSector sSector(x, y, z);
 	CFOR_EACH_PLAYER_IN_GROUP(i, &g)
 	{
 		if (!i->pSoldier) continue;
 		SOLDIERTYPE& s = *i->pSoldier;
-		s.sSectorX = x;
-		s.sSectorY = y;
-		s.bSectorZ = z;
+		s.sSectorX = sSector.x;
+		s.sSectorY = sSector.y;
+		s.bSectorZ = sSector.z;
 	}
 
 	if (g.fVehicle)
 	{
 		VEHICLETYPE& v = GetVehicleFromMvtGroup(g);
-		v.sSectorX = x;
-		v.sSectorY = y;
-		v.sSectorZ = z;
+		v.sSector = sSector;
 
 		if (!IsHelicopter(v))
 		{
 			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 			/* These are apparently unnecessary, since vehicles are part of the
 				* pPlayerList in a vehicle group. Oh well. */
-			vs.sSectorX = x;
-			vs.sSectorY = y;
-			vs.bSectorZ = z;
+			vs.sSectorX = sSector.x;
+			vs.sSectorY = sSector.y;
+			vs.bSectorZ = sSector.z;
 		}
 	}
 }

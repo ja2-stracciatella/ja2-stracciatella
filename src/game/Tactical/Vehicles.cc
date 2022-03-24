@@ -79,6 +79,7 @@ void SetVehicleValuesIntoSoldierType(SOLDIERTYPE* const vs)
 
 INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo, const UINT8 ubType)
 {
+	SGPSector sMap(sMapX, sMapY);
 	INT32 vid;
 	for (vid = 0;; ++vid)
 	{
@@ -95,9 +96,7 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 	// found a slot
 	*v = VEHICLETYPE{};
 	v->ubMovementGroup = 0;
-	v->sSectorX        = sMapX;
-	v->sSectorY        = sMapY;
-	v->sSectorZ        = 0;
+	v->sSector         = sMap;
 	v->sGridNo         = sGridNo;
 	v->fValid          = TRUE;
 	v->ubVehicleType   = ubType;
@@ -113,10 +112,10 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 
 	// ARM: setup group movement defaults
 	g->ubTransportationMask = GCM->getVehicle(ubType)->movement_type;
-	g->ubSectorX            = sMapX;
-	g->ubNextX              = sMapX;
-	g->ubSectorY            = sMapY;
-	g->ubNextY              = sMapY;
+	g->ubSectorX            = sMap.x;
+	g->ubNextX              = sMap.x;
+	g->ubSectorY            = sMap.y;
+	g->ubNextY              = sMap.y;
 	g->uiTraverseTime       = 0;
 	g->uiArrivalTime        = 0;
 
@@ -148,9 +147,9 @@ bool IsThisVehicleAccessibleToSoldier(SOLDIERTYPE const& s, VEHICLETYPE const& v
 {
 	return !s.fBetweenSectors &&
 		!v.fBetweenSectors &&
-		s.sSectorX == v.sSectorX &&
-		s.sSectorY == v.sSectorY &&
-		s.bSectorZ == v.sSectorZ &&
+		s.sSectorX == v.sSector.x &&
+		s.sSectorY == v.sSector.y &&
+		s.bSectorZ == v.sSector.z &&
 		OKUseVehicle(GCM->getVehicle(v.ubVehicleType)->profile);
 }
 
@@ -327,9 +326,9 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 	RemovePlayerFromGroup(s);
 
 	s.ubGroupID      = 0;
-	s.sSectorY       = v.sSectorY;
-	s.sSectorX       = v.sSectorX;
-	s.bSectorZ       = v.sSectorZ;
+	s.sSectorY       = v.sSector.y;
+	s.sSectorX       = v.sSector.x;
+	s.bSectorZ       = v.sSector.z;
 	s.uiStatusFlags &= ~(SOLDIER_DRIVER | SOLDIER_PASSENGER);
 
 	if (IsHelicopter(v))
@@ -788,8 +787,7 @@ void LoadVehicleInformationFromSavedGameFile(HWFILE const hFile, UINT32 const ui
 
 void SetVehicleSectorValues(VEHICLETYPE& v, const SGPSector& sMap)
 {
-	v.sSectorX = sMap.x;
-	v.sSectorY = sMap.y;
+	v.sSector = sMap;
 
 	ProfileID vehicleProfile = GCM->getVehicle(v.ubVehicleType)->profile;
 	MERCPROFILESTRUCT& p = GetProfile(vehicleProfile);

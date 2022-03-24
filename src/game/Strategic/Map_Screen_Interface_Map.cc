@@ -729,8 +729,7 @@ static INT32 ShowVehicles(const SGPSector& sSector, INT32 icon_pos)
 	{
 		// skip the chopper, it has its own icon and displays in airspace mode
 		if (IsHelicopter(v))                          continue;
-		SGPSector sMap(v.sSectorX, v.sSectorY, v.sSectorZ);
-		if (sMap != sSector)                          continue;
+		if (v.sSector != sSector)                     continue;
 		if (PlayerIDGroupInMotion(v.ubMovementGroup)) continue;
 
 		SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(v);
@@ -1163,7 +1162,7 @@ UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY )
 
 
 	// are we clearing everything beyond the helicopter's CURRENT sector?
-	if (sX == v.sSectorX && sY == v.sSectorY)
+	if (sX == v.sSector.x && sY == v.sSector.y)
 	{
 		// if we're in confirm map move mode, cancel that (before new UI messages are issued)
 		EndConfirmMapMoveMode( );
@@ -1196,7 +1195,7 @@ INT16 GetLastSectorOfHelicoptersPath( void )
 {
 	VEHICLETYPE const& v = GetHelicopter();
 	// will return the last sector of the helicopter's current path
-	INT16 sLastSector = v.sSectorX + v.sSectorY * MAP_WORLD_X;
+	INT16 sLastSector = v.sSector.AsStrategicIndex();
 	PathSt* pNode = v.pMercPath;
 
 	while( pNode )
@@ -2540,8 +2539,8 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 	else
 	{
 		// use current sector's coordinates
-		sSectorX = v.sSectorX;
-		sSectorY = v.sSectorY;
+		sSectorX = v.sSector.x;
+		sSectorY = v.sSector.y;
 	}
 
 	// check if helicopter appears where he clicked

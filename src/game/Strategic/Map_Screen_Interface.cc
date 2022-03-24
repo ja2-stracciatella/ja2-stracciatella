@@ -4077,9 +4077,7 @@ static BOOLEAN CanSoldierMoveWithVehicleId(const SOLDIERTYPE* const pSoldier, co
 		pVehicle2 = &( pVehicleList[ iVehicle2Id ] );
 
 		// as long as they're in the same location, amd neither is between sectors, different vehicles is also ok
-		if( ( pVehicle1->sSectorX == pVehicle2->sSectorX ) &&
-			( pVehicle1->sSectorY == pVehicle2->sSectorY ) &&
-			( pVehicle1->sSectorZ == pVehicle2->sSectorZ ) &&
+		if (pVehicle1->sSector == pVehicle2->sSector &&
 			!pVehicle1->fBetweenSectors &&
 			!pVehicle2->fBetweenSectors )
 		{
@@ -4202,7 +4200,7 @@ void TurnOnSectorLocator( UINT8 ubProfileID )
 			{
 				// can't use his profile, he's where his chopper is
 				VEHICLETYPE const& v = GetHelicopter();
-				gsSectorLocator = SGPSector(v.sSectorX, v.sSectorY);
+				gsSectorLocator = v.sSector;
 			}
 			else
 			{
