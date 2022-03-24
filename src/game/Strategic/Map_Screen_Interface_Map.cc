@@ -463,16 +463,17 @@ void DrawMapIndexBigMap(BOOLEAN fSelectedCursorIsYellow)
 	InvalidateRegion(MAP_HORT_INDEX_X, MAP_HORT_INDEX_Y, MAP_HORT_INDEX_X + MAX_VIEW_SECTORS * MAP_GRID_X, MAP_HORT_INDEX_Y + MAP_HORT_HEIGHT);
 }
 
-static void HandleShowingOfEnemyForcesInSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, UINT8 ubIconPosition);
+static void HandleShowingOfEnemyForcesInSector(const SGPSector& sSector, UINT8 ubIconPosition);
 
 
 static void HandleShowingOfEnemiesWithMilitiaOn(void)
 {
-	for (INT16 sX = 1; sX < MAP_WORLD_X - 1; ++sX)
+	SGPSector sSector(1, 1, iCurrentMapSectorZ);
+	for (sSector.x = 1; sSector.x < MAP_WORLD_X - 1; ++sSector.x)
 	{
-		for (INT16 sY = 1; sY < MAP_WORLD_Y - 1; ++sY)
+		for (sSector.y = 1; sSector.y < MAP_WORLD_Y - 1; ++sSector.y)
 		{
-			HandleShowingOfEnemyForcesInSector(sX, sY, iCurrentMapSectorZ, CountAllMilitiaInSector(sX, sY));
+			HandleShowingOfEnemyForcesInSector(sSector, CountAllMilitiaInSector(sSector.x, sSector.y));
 		}
 	}
 }
@@ -679,37 +680,35 @@ static void DrawMapBoxIcon(HVOBJECT, UINT16 icon, INT16 sec_x, INT16 sec_y, UINT
 
 
 // "on duty" includes mercs inside vehicles
-static INT32 ShowOnDutyTeam(INT16 const x, INT16 const y)
+static INT32 ShowOnDutyTeam(const SGPSector& sSector)
 {
 	UINT8 icon_pos = 0;
 	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE const& s = *c->merc;
+		SGPSector sMap(s.sSectorX, s.sSectorY, s.bSectorZ);
 		if (s.uiStatusFlags & SOLDIER_VEHICLE)                    continue;
-		if (s.sSectorX != x)                                      continue;
-		if (s.sSectorY != y)                                      continue;
-		if (s.bSectorZ != iCurrentMapSectorZ)                     continue;
+		if (sMap != sSector)                                      continue;
 		if (s.bLife    <= 0)                                      continue;
 		if (s.bAssignment >= ON_DUTY && s.bAssignment != VEHICLE) continue;
 		if (InHelicopter(s))                                      continue;
 		if (PlayerIDGroupInMotion(s.ubGroupID))                   continue;
-		DrawMapBoxIcon(guiCHARICONS, SMALL_YELLOW_BOX, x, y, icon_pos++);
+		DrawMapBoxIcon(guiCHARICONS, SMALL_YELLOW_BOX, sSector.x, sSector.y, icon_pos++);
 	}
 	return icon_pos;
 }
 
 
-static INT32 ShowAssignedTeam(INT16 const x, INT16 const y, INT32 icon_pos)
+static INT32 ShowAssignedTeam(const SGPSector& sSector, INT32 icon_pos)
 {
 	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE const& s = *c->merc;
+		SGPSector sMap(s.sSectorX, s.sSectorY, s.bSectorZ);
 		// given number of on duty members, find number of assigned chars
 		// start at beginning of list, look for people who are in sector and assigned
 		if (s.uiStatusFlags & SOLDIER_VEHICLE)  continue;
-		if (s.sSectorX != x)                    continue;
-		if (s.sSectorY != y)                    continue;
-		if (s.bSectorZ != iCurrentMapSectorZ)   continue;
+		if (sMap != sSector)                    continue;
 		if (s.bAssignment <  ON_DUTY)           continue;
 		if (s.bAssignment == VEHICLE)           continue;
 		if (s.bAssignment == IN_TRANSIT)        continue;
@@ -717,27 +716,26 @@ static INT32 ShowAssignedTeam(INT16 const x, INT16 const y, INT32 icon_pos)
 		if (s.bLife       <= 0)                 continue;
 		if (PlayerIDGroupInMotion(s.ubGroupID)) continue;
 
-		DrawMapBoxIcon(guiCHARICONS, SMALL_DULL_YELLOW_BOX, x, y, icon_pos++);
+		DrawMapBoxIcon(guiCHARICONS, SMALL_DULL_YELLOW_BOX, sSector.x, sSector.y, icon_pos++);
 	}
 	return icon_pos;
 }
 
 
-static INT32 ShowVehicles(INT16 const x, INT16 const y, INT32 icon_pos)
+static INT32 ShowVehicles(const SGPSector& sSector, INT32 icon_pos)
 {
 	CFOR_EACH_VEHICLE(v)
 	{
 		// skip the chopper, it has its own icon and displays in airspace mode
 		if (IsHelicopter(v))                          continue;
-		if (v.sSectorX != x)                          continue;
-		if (v.sSectorY != y)                          continue;
-		if (v.sSectorZ != iCurrentMapSectorZ)         continue;
+		SGPSector sMap(v.sSectorX, v.sSectorY, v.sSectorZ);
+		if (sMap != sSector)                          continue;
 		if (PlayerIDGroupInMotion(v.ubMovementGroup)) continue;
 
 		SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(v);
 		if (vs.bTeam != OUR_TEAM) continue;
 
-		DrawMapBoxIcon(guiCHARICONS, SMALL_WHITE_BOX, x, y, icon_pos++);
+		DrawMapBoxIcon(guiCHARICONS, SMALL_WHITE_BOX, sSector.x, sSector.y, icon_pos++);
 	}
 	return icon_pos;
 }
@@ -761,7 +759,7 @@ static void ShowUncertainNumberEnemiesInSector(INT16 const sec_x, INT16 const se
 }
 
 
-static void ShowPeopleInMotion(INT16 sX, INT16 sY);
+static void ShowPeopleInMotion(const SGPSector& sSector);
 
 
 static void ShowTeamAndVehicles()
@@ -769,21 +767,22 @@ static void ShowTeamAndVehicles()
 	// Go through each sector, display the on duty, assigned, and vehicles
 	INT32              icon_pos = 0;
 	GROUP const* const g        = gfDisplayPotentialRetreatPaths ? gpBattleGroup : 0;
-	for (INT16 x = 1; x != MAP_WORLD_X - 1; ++x)
+	SGPSector sector(1, 1, iCurrentMapSectorZ);
+	for (sector.x = 1; sector.x != MAP_WORLD_X - 1; ++sector.x)
 	{
-		for (INT16 y = 1; y != MAP_WORLD_Y - 1; ++y)
+		for (sector.y = 1; sector.y != MAP_WORLD_Y - 1; ++sector.y)
 		{
 			/* Don't show mercs/vehicles currently in this sector if player is
 				* contemplating retreating from THIS sector */
-			if (!g || x != g->ubSectorX || y != g->ubSectorY)
+			if (!g || sector.x != g->ubSectorX || sector.y != g->ubSectorY)
 			{
-				icon_pos = ShowOnDutyTeam(x, y);
-				icon_pos = ShowAssignedTeam(x, y, icon_pos);
-				icon_pos = ShowVehicles(x, y, icon_pos);
+				icon_pos = ShowOnDutyTeam(sector);
+				icon_pos = ShowAssignedTeam(sector, icon_pos);
+				icon_pos = ShowVehicles(sector, icon_pos);
 			}
 
-			HandleShowingOfEnemyForcesInSector(x, y, iCurrentMapSectorZ, icon_pos);
-			ShowPeopleInMotion(x, y);
+			HandleShowingOfEnemyForcesInSector(sector, icon_pos);
+			ShowPeopleInMotion(sector);
 		}
 	}
 }
@@ -2135,21 +2134,22 @@ void RestoreClipRegionToFullScreenForRectangle( UINT32 uiDestPitchBYTES )
 
 
 // show the icons for people in motion
-static void ShowPeopleInMotion(INT16 const sX, INT16 const sY)
+static void ShowPeopleInMotion(const SGPSector& sSector)
 {
-	if (iCurrentMapSectorZ != 0) return;
+	if (sSector.z != 0) return;
 
 	// show the icons for people in motion from this sector to the next guy over
-	INT16 const sSource = CALCULATE_STRATEGIC_INDEX(sX, sY);
+	INT16 const sSource = sSector.AsStrategicIndex();
 	for (INT32 dir = 0; dir != 4; ++dir)
 	{ // find how many people are coming and going in this sector
 		INT16 sDest = sSource;
 		switch (dir)
 		{
-			case 0: if (sY <= 1)               continue; sDest += NORTH_MOVE; break;
-			case 1: if (sX >= MAP_WORLD_X - 2) continue; sDest += EAST_MOVE;  break;
-			case 2: if (sY >= MAP_WORLD_Y - 2) continue; sDest += SOUTH_MOVE; break;
-			case 3: if (sX <= 1)               continue; sDest += WEST_MOVE;  break;
+			// note that these limit tests are 1 sector stricter than sSector.IsValid()
+			case 0: if (sSector.y <= 1)               continue; sDest += NORTH_MOVE; break;
+			case 1: if (sSector.x >= MAP_WORLD_X - 2) continue; sDest += EAST_MOVE;  break;
+			case 2: if (sSector.y >= MAP_WORLD_Y - 2) continue; sDest += SOUTH_MOVE; break;
+			case 3: if (sSector.x <= 1)               continue; sDest += WEST_MOVE;  break;
 
 			default: abort();
 		}
@@ -2225,11 +2225,8 @@ static void ShowPeopleInMotion(INT16 const sX, INT16 const sY)
 		// if about to enter, draw yellow arrows, blue otherwise
 		SGPVObject const* const hIconHandle = fAboutToEnter ? guiCHARBETWEENSECTORICONSCLOSE : guiCHARBETWEENSECTORICONS;
 
-		INT16 iX;
-		INT16 iY;
-
-		iX = MAP_VIEW_START_X                     + sX * MAP_GRID_X + sOffsetX;
-		iY = MAP_Y_ICON_OFFSET + MAP_VIEW_START_Y + sY * MAP_GRID_Y + sOffsetY;
+		INT16 iX = MAP_VIEW_START_X                     + sSector.x * MAP_GRID_X + sOffsetX;
+		INT16 iY = MAP_Y_ICON_OFFSET + MAP_VIEW_START_Y + sSector.y * MAP_GRID_Y + sOffsetY;
 		BltVideoObject(guiSAVEBUFFER, hIconHandle, dir, iX, iY);
 
 		// blit the text
@@ -3758,9 +3755,8 @@ static BOOLEAN CanMercsScoutThisSector(const SGPSector& sSector)
 }
 
 
-static void HandleShowingOfEnemyForcesInSector(INT16 const x, INT16 const y, INT8 const z, UINT8 const icon_pos)
+static void HandleShowingOfEnemyForcesInSector(const SGPSector& sSector, UINT8 const icon_pos)
 {
-	SGPSector sSector(x, y, z);
 	// ATE: If game has just started, don't do it
 	if (DidGameJustStart()) return;
 
