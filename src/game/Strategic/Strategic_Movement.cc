@@ -387,7 +387,7 @@ BOOLEAN AddWaypointToPGroup(GROUP* const g, UINT8 const x, UINT8 const y) // Sam
 			if (g->fPlayer)
 			{ /* Because we reversed, we must add the new current sector back at the
 				 * head of everyone's mercpath */
-				AddSectorToFrontOfMercPathForAllSoldiersInGroup(g, g->ubSector.x, g->ubSector.y);
+				AddSectorToFrontOfMercPathForAllSoldiersInGroup(g, g->ubSector);
 			}
 
 			/* Very special case that requiring specific coding. Check out the

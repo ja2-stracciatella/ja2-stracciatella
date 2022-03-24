@@ -1171,10 +1171,10 @@ static void ClearPathForSoldier(SOLDIERTYPE* pSoldier)
 }
 
 
-static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY);
+static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, const SGPSector& sMap);
 
 
-void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY )
+void AddSectorToFrontOfMercPathForAllSoldiersInGroup(GROUP *pGroup, const SGPSector& sMap)
 {
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -1184,7 +1184,7 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 
 		if ( pSoldier != NULL )
 		{
-			AddSectorToFrontOfMercPath( &(pSoldier->pMercPath), ubSectorX, ubSectorY );
+			AddSectorToFrontOfMercPath(&(pSoldier->pMercPath), sMap);
 		}
 	}
 
@@ -1193,16 +1193,16 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 	{
 		VEHICLETYPE& v = GetVehicleFromMvtGroup(*pGroup);
 		// add it to that vehicle's path
-		AddSectorToFrontOfMercPath(&v.pMercPath, ubSectorX, ubSectorY);
+		AddSectorToFrontOfMercPath(&v.pMercPath, sMap);
 	}
 }
 
 
-static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY)
+static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, const SGPSector& sMap)
 {
 	// allocate and hang a new node at the front of the path list
 	PathSt* const pNode = new PathSt{};
-	pNode->uiSectorId = CALCULATE_STRATEGIC_INDEX( ubSectorX, ubSectorY );
+	pNode->uiSectorId = sMap.AsStrategicIndex();
 	pNode->pNext = *ppMercPath;
 	pNode->pPrev = NULL;
 
