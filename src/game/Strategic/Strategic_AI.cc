@@ -210,16 +210,13 @@ static INT32 ReinforcementsAvailable(INT32 iGarrisonID)
 static BOOLEAN PlayerForceTooStrong(UINT8 ubSectorID, UINT16 usOffensePoints, UINT16* pusDefencePoints)
 {
 	SECTORINFO *pSector;
-	UINT8 ubSectorX, ubSectorY;
-
-	ubSectorX = (UINT8)SECTORX( ubSectorID );
-	ubSectorY = (UINT8)SECTORY( ubSectorID );
+	SGPSector sSector(ubSectorID);
 	pSector = &SectorInfo[ ubSectorID ];
 
 	*pusDefencePoints = pSector->ubNumberOfCivsAtLevel[ GREEN_MILITIA ]		* 1 +
 											pSector->ubNumberOfCivsAtLevel[ REGULAR_MILITIA ] * 2 +
 											pSector->ubNumberOfCivsAtLevel[ ELITE_MILITIA ]		* 3 +
-											PlayerMercsInSector( ubSectorX, ubSectorY, 0 )		* 5;
+											PlayerMercsInSector(sSector) * 5;
 	if( *pusDefencePoints > usOffensePoints )
 	{
 		return TRUE;
