@@ -992,13 +992,13 @@ void AddPossiblePendingEnemiesToBattle()
 			 * groups appear on different sides of the map. */
 			UINT8 strategic_insertion_code = 0;
 			//First, determine which entrypoint to use, based on the travel direction of the group.
-			if (g.ubPrevX != 0 && g.ubPrevY != 0)
+			if (g.ubPrev.IsValid())
 			{
 				strategic_insertion_code =
-					g.ubSectorX < g.ubPrevX ? INSERTION_CODE_EAST  :
-					g.ubSectorX > g.ubPrevX ? INSERTION_CODE_WEST  :
-					g.ubSectorY < g.ubPrevY ? INSERTION_CODE_SOUTH :
-					g.ubSectorY > g.ubPrevY ? INSERTION_CODE_NORTH :
+					g.ubSectorX < g.ubPrev.x ? INSERTION_CODE_EAST  :
+					g.ubSectorX > g.ubPrev.x ? INSERTION_CODE_WEST  :
+					g.ubSectorY < g.ubPrev.y ? INSERTION_CODE_SOUTH :
+					g.ubSectorY > g.ubPrev.y ? INSERTION_CODE_NORTH :
 					0; // XXX exception?
 			}
 			else if (g.ubNext.IsValid())

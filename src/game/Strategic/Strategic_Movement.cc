@@ -168,8 +168,8 @@ void AddPlayerToGroup(GROUP& g, SOLDIERTYPE& s)
 	{
 		g.pPlayerList = p;
 		g.ubGroupSize = 1;
-		g.ubPrevX     = s.ubPrevSectorID % 16 + 1;
-		g.ubPrevY     = s.ubPrevSectorID / 16 + 1;
+		g.ubPrev.x    = s.ubPrevSectorID % 16 + 1;
+		g.ubPrev.y    = s.ubPrevSectorID / 16 + 1;
 		g.ubSectorX   = s.sSectorX;
 		g.ubSectorY   = s.sSectorY;
 		g.ubSectorZ   = s.bSectorZ;
@@ -202,7 +202,7 @@ void RemovePlayerFromPGroup(GROUP& g, SOLDIERTYPE& s)
 		*i = p->next;
 		delete p;
 
-		s.ubPrevSectorID = SECTOR(g.ubPrevX, g.ubPrevY);
+		s.ubPrevSectorID = g.ubPrev.AsByte();
 		s.ubGroupID      = 0;
 
 		if (--g.ubGroupSize == 0)
@@ -255,12 +255,11 @@ BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, 
 	DeleteStrategicEvent( EVENT_GROUP_ARRIVAL, pGroup->ubGroupID );
 
 	//Adjust the information in the group to reflect the new movement.
-	pGroup->ubPrevX = pGroup->ubNext.x;
-	pGroup->ubPrevY = pGroup->ubNext.y;
+	pGroup->ubPrev = pGroup->ubNext;
 	pGroup->ubNext.x = pGroup->ubSectorX;
 	pGroup->ubNext.y = pGroup->ubSectorY;
-	pGroup->ubSectorX = pGroup->ubPrevX;
-	pGroup->ubSectorY = pGroup->ubPrevY;
+	pGroup->ubSectorX = pGroup->ubPrev.x;
+	pGroup->ubSectorY = pGroup->ubPrev.y;
 
 	if( pGroup->fPlayer )
 	{
@@ -1171,8 +1170,8 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 	}
 
 	// Update the position of the group
-	g.ubPrevX   = g.ubSectorX;
-	g.ubPrevY   = g.ubSectorY;
+	g.ubPrev.x  = g.ubSectorX;
+	g.ubPrev.y  = g.ubSectorY;
 	g.ubSectorX = cSector.x;
 	g.ubSectorY = cSector.y;
 	g.ubNext.x   = 0;
@@ -1228,22 +1227,22 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 
 		UINT8 insertion_direction;
 		UINT8 strategic_insertion_code;
-		if (cSector.x < g.ubPrevX)
+		if (cSector.x < g.ubPrev.x)
 		{
 			insertion_direction      = SOUTHWEST;
 			strategic_insertion_code = INSERTION_CODE_EAST;
 		}
-		else if (cSector.x > g.ubPrevX)
+		else if (cSector.x > g.ubPrev.x)
 		{
 			insertion_direction      = NORTHEAST;
 			strategic_insertion_code = INSERTION_CODE_WEST;
 		}
-		else if (cSector.y < g.ubPrevY)
+		else if (cSector.y < g.ubPrev.y)
 		{
 			insertion_direction      = NORTHWEST;
 			strategic_insertion_code = INSERTION_CODE_SOUTH;
 		}
-		else if (cSector.y > g.ubPrevY)
+		else if (cSector.y > g.ubPrev.y)
 		{
 			insertion_direction      = SOUTHEAST;
 			strategic_insertion_code = INSERTION_CODE_NORTH;
@@ -1266,7 +1265,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 				s.sSectorX             = cSector.x;
 				s.sSectorY             = cSector.y;
 				s.bSectorZ             = cSector.z;
-				s.ubPrevSectorID       = SECTOR(g.ubPrevX, g.ubPrevY);
+				s.ubPrevSectorID       = g.ubPrev.AsByte();
 				s.ubInsertionDirection = insertion_direction;
 
 				// don't override if a tactical traversal
@@ -1551,8 +1550,8 @@ static void PrepareGroupsForSimultaneousArrival()
 	 * and also setup a new arrival time for them. */
 	first_group.ubNext.x         = first_group.ubSectorX;
 	first_group.ubNext.y         = first_group.ubSectorY;
-	first_group.ubSectorX       = first_group.ubPrevX;
-	first_group.ubSectorY       = first_group.ubPrevY;
+	first_group.ubSectorX       = first_group.ubPrev.x;
+	first_group.ubSectorY       = first_group.ubPrev.y;
 	first_group.setArrivalTime(latest_arrival_time);
 	first_group.fBetweenSectors = TRUE;
 
@@ -2324,10 +2323,10 @@ void HandleArrivalOfReinforcements(GROUP const* const g)
 		UINT8         const y = g->ubSectorY;
 		SGPSector insertion(x, y, 0);
 		InsertionCode const strategic_insertion_code =
-			x < g->ubPrevX ? INSERTION_CODE_EAST  :
-			x > g->ubPrevX ? INSERTION_CODE_WEST  :
-			y < g->ubPrevY ? INSERTION_CODE_SOUTH :
-			y > g->ubPrevY ? INSERTION_CODE_NORTH :
+			x < g->ubPrev.x ? INSERTION_CODE_EAST  :
+			x > g->ubPrev.x ? INSERTION_CODE_WEST  :
+			y < g->ubPrev.y ? INSERTION_CODE_SOUTH :
+			y > g->ubPrev.y ? INSERTION_CODE_NORTH :
 			throw std::logic_error("reinforcements come from same sector");
 
 		bool first = true;
@@ -2386,7 +2385,7 @@ BOOLEAN PlayersBetweenTheseSectors(INT16 const sec_src, INT16 const sec_dst, INT
 			continue;
 		}
 
-		INT16 const sec_prev = IS_VALID_SECTOR(g.ubPrevX, g.ubPrevY) ? SECTOR(g.ubPrevX,   g.ubPrevY) : -1;
+		INT16 const sec_prev = g.ubPrev.IsValid() ? g.ubPrev.AsByte() : -1;
 		INT16 const sec_cur  = SECTOR(g.ubSectorX, g.ubSectorY);
 		INT16 const sec_next = g.ubNext.IsValid() ? g.ubNext.AsByte() : -1;
 
@@ -2481,8 +2480,8 @@ void SaveStrategicMovementGroupsToSaveGameFile(HWFILE const f)
 		INJ_U8(d, g->ubSectorZ)
 		INJ_U8(d, g->ubNext.x)
 		INJ_U8(d, g->ubNext.y)
-		INJ_U8(d, g->ubPrevX)
-		INJ_U8(d, g->ubPrevY)
+		INJ_U8(d, g->ubPrev.x)
+		INJ_U8(d, g->ubPrev.y)
 		INJ_U8(d, g->ubOriginalSector)
 		INJ_BOOL(d, g->fBetweenSectors)
 		INJ_U8(d, g->ubMoveType)
@@ -2553,8 +2552,8 @@ void LoadStrategicMovementGroupsFromSavedGameFile(HWFILE const f)
 		EXTR_U8(d, g->ubSectorZ)
 		EXTR_U8(d, g->ubNext.x)
 		EXTR_U8(d, g->ubNext.y)
-		EXTR_U8(d, g->ubPrevX)
-		EXTR_U8(d, g->ubPrevY)
+		EXTR_U8(d, g->ubPrev.x)
+		EXTR_U8(d, g->ubPrev.y)
 		EXTR_U8(d, g->ubOriginalSector)
 		EXTR_BOOL(d, g->fBetweenSectors)
 		EXTR_U8(d, g->ubMoveType)
@@ -2758,26 +2757,26 @@ void CalculateGroupRetreatSector( GROUP *pGroup )
 	if( pSector->ubTraversability[ NORTH_STRATEGIC_MOVE ] != GROUNDBARRIER &&
 			pSector->ubTraversability[ NORTH_STRATEGIC_MOVE ] != EDGEOFWORLD )
 	{
-		pGroup->ubPrevX = pGroup->ubSectorX;
-		pGroup->ubPrevY = pGroup->ubSectorY - 1;
+		pGroup->ubPrev.x = pGroup->ubSectorX;
+		pGroup->ubPrev.y = pGroup->ubSectorY - 1;
 	}
 	else if( pSector->ubTraversability[ EAST_STRATEGIC_MOVE ] != GROUNDBARRIER &&
 			pSector->ubTraversability[ EAST_STRATEGIC_MOVE ] != EDGEOFWORLD )
 	{
-		pGroup->ubPrevX = pGroup->ubSectorX + 1;
-		pGroup->ubPrevY = pGroup->ubSectorY;
+		pGroup->ubPrev.x = pGroup->ubSectorX + 1;
+		pGroup->ubPrev.y = pGroup->ubSectorY;
 	}
 	else if( pSector->ubTraversability[ WEST_STRATEGIC_MOVE ] != GROUNDBARRIER &&
 			pSector->ubTraversability[ WEST_STRATEGIC_MOVE ] != EDGEOFWORLD )
 	{
-		pGroup->ubPrevX = pGroup->ubSectorX - 1;
-		pGroup->ubPrevY = pGroup->ubSectorY;
+		pGroup->ubPrev.x = pGroup->ubSectorX - 1;
+		pGroup->ubPrev.y = pGroup->ubSectorY;
 	}
 	else if( pSector->ubTraversability[ SOUTH_STRATEGIC_MOVE ] != GROUNDBARRIER &&
 			pSector->ubTraversability[ SOUTH_STRATEGIC_MOVE ] != EDGEOFWORLD )
 	{
-		pGroup->ubPrevX = pGroup->ubSectorX;
-		pGroup->ubPrevY = pGroup->ubSectorY + 1;
+		pGroup->ubPrev.x = pGroup->ubSectorX;
+		pGroup->ubPrev.y = pGroup->ubSectorY + 1;
 	}
 	else
 	{
@@ -2788,7 +2787,7 @@ void CalculateGroupRetreatSector( GROUP *pGroup )
 	{ //update the previous sector for the mercs
 		CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pGroup)
 		{
-			pPlayer->pSoldier->ubPrevSectorID = (UINT8)SECTOR( pGroup->ubPrevX, pGroup->ubPrevY );
+			pPlayer->pSoldier->ubPrevSectorID = pGroup->ubPrev.AsByte();
 		}
 	}
 }
@@ -2800,10 +2799,9 @@ void RetreatGroupToPreviousSector(GROUP& g)
 	AssertMsg(!g.fBetweenSectors, "Can't retreat a group when between sectors!");
 
 	UINT8 direction = 255;
-	if (g.ubPrevX != 16 || g.ubPrevY != 16)
+	if (g.ubPrev.x != 16 || g.ubPrev.y != 16)
 	{ // Group has a previous sector
-		g.ubNext.x = g.ubPrevX;
-		g.ubNext.y = g.ubPrevY;
+		g.ubNext = g.ubPrev;
 
 		// Determine the correct direction
 		INT32 const dx = g.ubNext.x - g.ubSectorX;
@@ -3443,8 +3441,7 @@ void PlaceGroupInSector(GROUP& g, const SGPSector& prev, const SGPSector& next, 
 {
 	ClearMercPathsAndWaypointsForAllInGroup(g);
 	// Change where they are and where they're going
-	g.ubPrevX = prev.x;
-	g.ubPrevY = prev.y;
+	g.ubPrev = prev;
 	SetGroupSectorValue(prev.x, prev.y, next.z, g); // only one user cares about Z this way
 	SetGroupNextSectorValue(next, g);
 	// Call arrive event
@@ -3500,8 +3497,8 @@ static void CancelEmptyPersistentGroupMovement(GROUP& g)
 	g.uiTraverseTime  = 0;
 	g.setArrivalTime(0);
 	g.fBetweenSectors = FALSE;
-	g.ubPrevX         = 0;
-	g.ubPrevY         = 0;
+	g.ubPrev.x        = 0;
+	g.ubPrev.y        = 0;
 	g.ubSectorX       = 0;
 	g.ubSectorY       = 0;
 	g.ubNext.x        = 0;

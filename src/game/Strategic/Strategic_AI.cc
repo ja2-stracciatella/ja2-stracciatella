@@ -2534,8 +2534,8 @@ void LoadStrategicAI(HWFILE const hFile)
 				if (g.fPlayer)         continue;
 				if (g.ubSectorX !=  3) continue;
 				if (g.ubSectorY != 16) continue;
-				if (g.ubPrevX   !=  0) continue;
-				if (g.ubPrevY   !=  0) continue;
+				if (g.ubPrev.y  !=  0) continue;
+				if (g.ubPrev.y  !=  0) continue;
 				RemoveGroupFromStrategicAILists(g);
 				RemoveGroup(g);
 			}

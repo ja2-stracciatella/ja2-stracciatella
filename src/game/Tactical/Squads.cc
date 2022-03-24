@@ -170,7 +170,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 				if (pGroup)
 				{
 					// set where it is and where it's going, then make it arrive there.  Don't check for battle
-					PlaceGroupInSector(g, SGPSector(pGroup->ubPrevX, pGroup->ubPrevY), SGPSector(pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ), false); // XXX TODO001D
+					PlaceGroupInSector(g, pGroup->ubPrev, SGPSector(pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubSectorZ), false); // XXX TODO001D
 				}
 			}
 		}

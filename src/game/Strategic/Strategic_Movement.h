@@ -94,7 +94,7 @@ struct GROUP
 	UINT8 ubSectorX, ubSectorY;		//last/curr sector occupied
 	UINT8 ubSectorZ;
 	SGPSector ubNext;				//next sector destination
-	UINT8 ubPrevX, ubPrevY;				//prev sector occupied (could be same as ubSectorX/Y)
+	SGPSector ubPrev;				//prev sector occupied (could be same as ubSectorX/Y)
 	UINT8 ubOriginalSector;				//sector where group was created.
 	BOOLEAN fBetweenSectors;			//set only if a group is between sector.
 	UINT8 ubMoveType;							//determines the type of movement (ONE_WAY, CIRCULAR, ENDTOEND, etc.)
