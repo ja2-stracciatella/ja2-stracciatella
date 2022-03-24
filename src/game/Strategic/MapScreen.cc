@@ -2254,7 +2254,7 @@ static void RenderMapCursorsIndexesAnims(void)
 
 
 static BOOLEAN AnyMovableCharsInOrBetweenThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
-static BOOLEAN CanMoveBullseyeAndClickedOnIt(INT16 sMapX, INT16 sMapY);
+static BOOLEAN CanMoveBullseyeAndClickedOnIt(const SGPSector& sMap);
 static void CancelChangeArrivalSectorMode(void);
 static void CancelOrShortenPlottedPath(void);
 static void CreateBullsEyeOrChopperSelectionPopup(void);
@@ -2290,8 +2290,8 @@ static void ToggleSectorInventory()
 static UINT32 HandleMapUI(void)
 {
 	MapEvent new_event = MAP_EVENT_NONE;
-	INT16 sMapX = 0, sMapY = 0;
-	SGPSector sSector;
+	INT16 a = 0, b = 0;
+	SGPSector sSector, sMap;
 	UINT32 uiNewScreen = MAP_SCREEN;
 	BOOLEAN fWasAlreadySelected;
 
@@ -2313,11 +2313,12 @@ static UINT32 HandleMapUI(void)
 			break;
 
 		case MAP_EVENT_PLOT_PATH:
-			GetMouseMapXY(&sMapX, &sMapY);
+			GetMouseMapXY(&a, &b);
+			sMap.x = a; sMap.y = b;
 			// plotting for the chopper?
 			if (fPlotForHelicopter)
 			{
-					PlotPathForHelicopter(SGPSector(sMapX, sMapY));
+					PlotPathForHelicopter(sMap);
 					fTeamPanelDirty = TRUE;
 			}
 			else
@@ -2332,7 +2333,7 @@ static UINT32 HandleMapUI(void)
 				// check if last sector in character's path is same as where mouse is
 				SOLDIERTYPE* const s = gCharactersList[bSelectedDestChar].merc;
 				const INT16 dst_sector = GetLastSectorIdInCharactersPath(s);
-				if (dst_sector != sMapX + sMapY * MAP_WORLD_X)
+				if (dst_sector != sMap.AsStrategicIndex())
 				{
 					sSector.x = dst_sector % MAP_WORLD_X;
 					sSector.y = dst_sector / MAP_WORLD_X;
@@ -2340,12 +2341,12 @@ static UINT32 HandleMapUI(void)
 					// fMapPanelDirty = TRUE;
 				}
 
-				if (SectorIsPassable(SECTOR(sMapX, sMapY)))
+				if (SectorIsPassable(sMap.AsByte()))
 				{
 					// Can we get go there?  (NULL temp character path)
 					if ( GetLengthOfPath( pTempCharacterPath ) > 0 )
 					{
-						PlotPathForCharacter(*s, SGPSector(sMapX, sMapY), false);
+						PlotPathForCharacter(*s, sMap, false);
 
 						// copy the path to every other selected character
 						CopyPathToAllSelectedCharacters(GetSoldierMercPathPtr(s));
@@ -2371,10 +2372,11 @@ static UINT32 HandleMapUI(void)
 		case MAP_EVENT_CLICK_SECTOR:
 
 			// Get Current mouse position
-			if ( GetMouseMapXY( &sMapX, &sMapY) )
+			if (GetMouseMapXY(&a, &b))
 			{
+				sMap.x = a; sMap.y = b;
 				// make sure this is a valid sector
-				if (!IsTheCursorAllowedToHighLightThisSector(sMapX, sMapY))
+				if (!IsTheCursorAllowedToHighLightThisSector(sMap.x, sMap.y))
 				{
 					// if we are in the change drop off sector mode
 					if (gfInChangeArrivalSectorMode)
@@ -2428,16 +2430,16 @@ static UINT32 HandleMapUI(void)
 				// this doesn't change selected sector
 				if ( gfInChangeArrivalSectorMode )
 				{
-					if( SectorInfo[ ( SECTOR( sMapX, sMapY ) ) ].ubTraversability[ THROUGH_STRATEGIC_MOVE ] != GROUNDBARRIER )
+					if (SectorInfo[sMap.AsByte()].ubTraversability[ THROUGH_STRATEGIC_MOVE ] != GROUNDBARRIER)
 					{
 						// if it's not enemy air controlled
-						if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(sMapX, sMapY)].fEnemyAirControlled)
+						if (!StrategicMap[sMap.AsStrategicIndex()].fEnemyAirControlled)
 						{
 							ST::string sMsgString;
 							ST::string sMsgSubString;
 
 							// move the landing zone over here
-							g_merc_arrive_sector = SECTOR(sMapX, sMapY);
+							g_merc_arrive_sector = sMap.AsByte();
 
 							// change arrival sector for all mercs currently in transit who are showing up at the landing zone
 							UpdateAnyInTransitMercsWithGlobalArrivalSector();
@@ -2446,7 +2448,7 @@ static UINT32 HandleMapUI(void)
 							CancelChangeArrivalSectorMode();
 
 							// get the name of the sector
-							sMsgSubString = GetSectorIDString(sMapX, sMapY, 0, FALSE);
+							sMsgSubString = GetSectorIDString(sMap, FALSE);
 
 							// now build the string
 							sMsgString = st_format_printf(pBullseyeStrings[ 1 ], sMsgSubString);
@@ -2468,11 +2470,11 @@ static UINT32 HandleMapUI(void)
 				}
 				else	// not already changing arrival sector
 				{
-					if ( CanMoveBullseyeAndClickedOnIt( sMapX, sMapY ) )
+					if (CanMoveBullseyeAndClickedOnIt(sMap))
 					{
 						// if the click is ALSO over the helicopter icon
 						// NOTE: The helicopter icon is NOT necessarily directly over the helicopter's current sector!!!
-						if (CheckForClickOverHelicopterIcon(sMapX, sMapY))
+						if (CheckForClickOverHelicopterIcon(sMap))
 						{
 							CreateBullsEyeOrChopperSelectionPopup();
 						}
@@ -2486,25 +2488,25 @@ static UINT32 HandleMapUI(void)
 				}
 
 
+				sMap.z = iCurrentMapSectorZ;
 				// if new map sector was clicked on
-				if( ( sSelMapX != sMapX ) || ( sSelMapY != sMapY ) )
+				if ((sSelMapX != sMap.x) || (sSelMapY != sMap.y))
 				{
 					fWasAlreadySelected = FALSE;
 
 					// select the clicked sector, retaining the same sublevel depth
-					ChangeSelectedMapSector( sMapX, sMapY, ( INT8 )iCurrentMapSectorZ );
+					ChangeSelectedMapSector(sMap);
 				}
 				else
 				{
 					fWasAlreadySelected = TRUE;
 				}
 
-
 				// if showing item counts on the map, and not already in sector inventory
 				if ( fShowItemsFlag && !fShowMapInventoryPool )
 				{
 					// show sector inventory for this clicked sector
-					ChangeSelectedMapSector( sMapX, sMapY, ( INT8 ) iCurrentMapSectorZ );
+					ChangeSelectedMapSector(sMap);
 
 					OpenSectorInventory();
 
@@ -2512,8 +2514,7 @@ static UINT32 HandleMapUI(void)
 				}
 
 
-				if( gfBlitBattleSectorLocator &&
-						sMapX == gubPBSector.x && sMapY == gubPBSector.y && iCurrentMapSectorZ == gubPBSector.z )
+				if (gfBlitBattleSectorLocator && sMap == gubPBSector)
 				{ //Bring up a non-persistant version of mapscreen if the user clicks on the sector where a
 					//battle is taking place.
 					InitPreBattleInterface(0, false);
@@ -2529,7 +2530,7 @@ static UINT32 HandleMapUI(void)
 					{
 						// if we're on the surface level, and the click is over the helicopter icon
 						// NOTE: The helicopter icon is NOT necessarily directly over the helicopter's current sector!!!
-						if (iCurrentMapSectorZ == 0 && CheckForClickOverHelicopterIcon(sMapX, sMapY))
+						if (iCurrentMapSectorZ == 0 && CheckForClickOverHelicopterIcon(sMap))
 						{
 							RequestGiveSkyriderNewDestination( );
 							return( MAP_SCREEN );
@@ -2543,7 +2544,7 @@ static UINT32 HandleMapUI(void)
 					if( fWasAlreadySelected )
 					{
 						// if there are any movable characters here
-						if ( AnyMovableCharsInOrBetweenThisSector( sMapX, sMapY, ( INT8 )iCurrentMapSectorZ ) )
+						if (AnyMovableCharsInOrBetweenThisSector(sMap))
 						{
 							// if showing the surface level map
 							if( iCurrentMapSectorZ == 0 )
@@ -7746,7 +7747,7 @@ static void StartChangeSectorArrivalMode(void)
 }
 
 
-static BOOLEAN CanMoveBullseyeAndClickedOnIt(INT16 sMapX, INT16 sMapY)
+static BOOLEAN CanMoveBullseyeAndClickedOnIt(const SGPSector& sMap)
 {
 	// if in airspace mode, and not plotting paths
 	if (fShowAircraftFlag       &&
@@ -7757,7 +7758,7 @@ static BOOLEAN CanMoveBullseyeAndClickedOnIt(INT16 sMapX, INT16 sMapY)
 		if (!DidGameJustStart())
 		{
 			// if he clicked on the bullseye, and we're on the surface level
-			if (g_merc_arrive_sector == SECTOR(sMapX, sMapY) && iCurrentMapSectorZ == 0)
+			if (g_merc_arrive_sector == sMap.AsByte() && iCurrentMapSectorZ == 0)
 			{
 				return( TRUE );
 			}

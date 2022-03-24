@@ -81,7 +81,7 @@ void DisplayDistancesForHelicopter( void );
 void DisplayPositionOfHelicopter( void );
 
 // check for click
-BOOLEAN CheckForClickOverHelicopterIcon( INT16 sX, INT16 sY );
+BOOLEAN CheckForClickOverHelicopterIcon(const SGPSector& sMap);
 
 void LoadMapScreenInterfaceMapGraphics();
 void DeleteMapScreenInterfaceMapGraphics();

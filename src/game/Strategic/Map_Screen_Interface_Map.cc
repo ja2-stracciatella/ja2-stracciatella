@@ -2494,12 +2494,10 @@ static void DisplayDestinationOfHelicopter(void)
 
 
 
-BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSectorY )
+BOOLEAN CheckForClickOverHelicopterIcon(const SGPSector& sClicked)
 {
 	BOOLEAN fHelicopterOverNextSector = FALSE;
 	FLOAT flRatio = 0.0;
-	INT16 sSectorX;
-	INT16 sSectorY;
 
 	if (!fShowAircraftFlag)         return FALSE;
 	if (iHelicopterVehicleId == -1) return FALSE;
@@ -2526,26 +2524,22 @@ BOOLEAN CheckForClickOverHelicopterIcon( INT16 sClickedSectorX, INT16 sClickedSe
 	}
 
 
+	SGPSector sSector;
 	if ( fHelicopterOverNextSector )
 	{
 		// use the next sector's coordinates
-		sSectorX = pGroup->ubNextX;
-		sSectorY = pGroup->ubNextY;
+		sSector.x = pGroup->ubNextX;
+		sSector.y = pGroup->ubNextY;
 	}
 	else
 	{
 		// use current sector's coordinates
-		sSectorX = v.sSector.x;
-		sSectorY = v.sSector.y;
+		sSector.x = v.sSector.x;
+		sSector.y = v.sSector.y;
 	}
 
 	// check if helicopter appears where he clicked
-	if( ( sSectorX != sClickedSectorX ) || ( sSectorY != sClickedSectorY ) )
-	{
-		return( FALSE );
-	}
-
-	return( TRUE );
+	return sSector == sClicked;
 }
 
 
