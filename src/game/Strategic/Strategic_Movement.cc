@@ -237,7 +237,7 @@ void RemovePlayerFromGroup(SOLDIERTYPE& s)
 }
 
 
-static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const&, INT16 x, INT16 y, INT8 z);
+static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const&, const SGPSector& sSector);
 
 
 BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fBuildingWaypoints )
@@ -267,7 +267,7 @@ BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, 
 		// ARM: because we've changed the group's ubSectoryX and ubSectorY, we must now also go and change the sSectorX and
 		// sSectorY of all the soldiers in this group so that they stay in synch.  Otherwise pathing and movement problems
 		// will result since the group is in one place while the merc is in another...
-		SetLocationOfAllPlayerSoldiersInGroup(*pGroup, pGroup->ubSectorX, pGroup->ubSectorY, 0);
+		SetLocationOfAllPlayerSoldiersInGroup(*pGroup, SGPSector(pGroup->ubSectorX, pGroup->ubSectorY, 0));
 	}
 
 
@@ -3206,9 +3206,8 @@ static void ReportVehicleOutOfGas(VEHICLETYPE const& v, const SGPSector& sMap)
 }
 
 
-static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const& g, INT16 const x, INT16 const y, INT8 const z)
+static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const& g, const SGPSector& sSector)
 {
-	SGPSector sSector(x, y, z);
 	CFOR_EACH_PLAYER_IN_GROUP(i, &g)
 	{
 		if (!i->pSoldier) continue;
