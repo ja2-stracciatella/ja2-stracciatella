@@ -138,7 +138,7 @@ struct AUTORESOLVE_STRUCT
 	UINT8 ubEnemyCols, ubEnemyRows;
 	UINT8 ubCivCols, ubCivRows;
 	UINT8 ubTimeModifierPercentage;
-	UINT8 ubSectorX, ubSectorY;
+	SGPSector ubSector;
 	INT8 bVerticalOffset;
 
 	BOOLEAN fRenderAutoResolve;
@@ -429,8 +429,7 @@ void EnterAutoResolveMode(const SGPSector& ubSector)
 
 	//Set up autoresolve
 	gpAR->fEnteringAutoResolve = TRUE;
-	gpAR->ubSectorX = ubSector.x;
-	gpAR->ubSectorY = ubSector.y;
+	gpAR->ubSector = ubSector;
 	gpAR->ubBattleStatus = BATTLE_IN_PROGRESS;
 	gpAR->uiTimeSlice = 1000;
 	gpAR->uiTotalElapsedBattleTimeInMilliseconds = 0;
@@ -546,7 +545,7 @@ static void AssociateEnemiesWithStrategicGroups(void)
 	if( gubEnemyEncounterCode == CREATURE_ATTACK_CODE )
 		return;
 
-	pSector = &SectorInfo[ SECTOR( gpAR->ubSectorX, gpAR->ubSectorY ) ];
+	pSector = &SectorInfo[gpAR->ubSector.AsByte()];
 
 	//grab the number of each type in the stationary sector
 	ubNumAdmins = pSector->ubNumAdmins;
@@ -589,8 +588,8 @@ static void AssociateEnemiesWithStrategicGroups(void)
 	//Now assign the rest of the soldiers to groups
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
-		if (pGroup->ubSectorX == gpAR->ubSectorX &&
-				pGroup->ubSectorY == gpAR->ubSectorY)
+		if (pGroup->ubSectorX == gpAR->ubSector.x &&
+				pGroup->ubSectorY == gpAR->ubSector.y)
 		{
 			ubNumElitesInGroup = pGroup->pEnemyGroup->ubNumElites;
 			ubNumTroopsInGroup = pGroup->pEnemyGroup->ubNumTroops;
@@ -1174,7 +1173,7 @@ static void RenderAutoResolve(void)
 	INT32 xp, yp;
 	ST::string str;
 	UINT8 ubGood, ubBad;
-	SGPSector arSector(gpAR->ubSectorX, gpAR->ubSectorY, 0);
+	SGPSector arSector(gpAR->ubSector.x, gpAR->ubSector.y, 0); // NOTE: ignoring Z!
 
 	if (gpAR->fShowInterface)
 	{ //After expanding the window, we now show the interface
@@ -1445,8 +1444,8 @@ static SOLDIERCELL* MakeEnemyTroops(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STR
 		cell->uiVObjectID    = ar->iFaces;
 		// Only elite troops have women
 		cell->usIndex        = s->ubBodyType == REGFEMALE ? ELITEF_FACE : face;
-		s->sSectorX          = ar->ubSectorX;
-		s->sSectorY          = ar->ubSectorY;
+		s->sSectorX          = ar->ubSector.x;
+		s->sSectorY          = ar->ubSector.y;
 		s->name              = name;
 	}
 	return cell;
@@ -1461,8 +1460,8 @@ static SOLDIERCELL* MakeCreatures(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STRUC
 		cell->pSoldier       = s;
 		cell->uiVObjectID    = ar->iFaces;
 		cell->usIndex        = face;
-		s->sSectorX          = ar->ubSectorX;
-		s->sSectorY          = ar->ubSectorY;
+		s->sSectorX          = ar->ubSector.x;
+		s->sSectorY          = ar->ubSector.y;
 		s->name              = gpStrategicString[STR_AR_CREATURE_NAME];
 	}
 	return cell;
@@ -1527,9 +1526,9 @@ static void CreateAutoResolveInterface(void)
 		face->pShades[1] = Create16BPPPaletteShaded(pal, 250,  25,  25, TRUE);
 	}
 
-	UINT8 n_militia_elite = MilitiaInSectorOfRank(SGPSector(ar->ubSectorX, ar->ubSectorY), ELITE_MILITIA);
-	UINT8 n_militia_reg   = MilitiaInSectorOfRank(SGPSector(ar->ubSectorX, ar->ubSectorY), REGULAR_MILITIA);
-	UINT8 n_militia_green = MilitiaInSectorOfRank(SGPSector(ar->ubSectorX, ar->ubSectorY), GREEN_MILITIA);
+	UINT8 n_militia_elite = MilitiaInSectorOfRank(ar->ubSector, ELITE_MILITIA);
+	UINT8 n_militia_reg   = MilitiaInSectorOfRank(ar->ubSector, REGULAR_MILITIA);
+	UINT8 n_militia_green = MilitiaInSectorOfRank(ar->ubSector, GREEN_MILITIA);
 	while (n_militia_elite + n_militia_reg + n_militia_green < ar->ubCivs)
 	{
 		switch (PreRandom(3))
@@ -1573,8 +1572,8 @@ static void CreateAutoResolveInterface(void)
 		cell->uiVObjectID = ar->iFaces;
 
 		AssertMsg(s, "Failed to create militia soldier for autoresolve.");
-		s->sSectorX = ar->ubSectorX;
-		s->sSectorY = ar->ubSectorY;
+		s->sSectorX = ar->ubSector.x;
+		s->sSectorY = ar->ubSector.y;
 		s->name = gpStrategicString[STR_AR_MILITIA_NAME];
 	}
 
@@ -1595,9 +1594,7 @@ static void CreateAutoResolveInterface(void)
 		cell = MakeCreatures(cell, ar->ubYMCreatures, ar, YAM_MONSTER,        YM_CREATURE_FACE);
 	}
 
-	if (ar->ubSectorX  == gWorldSector.x &&
-			ar->ubSectorY  == gWorldSector.y &&
-			gWorldSector.z == 0)
+	if (ar->ubSector == gWorldSector && gWorldSector.z == 0)
 	{
 		CheckAndHandleUnloadingOfCurrentWorld();
 	}
@@ -1743,7 +1740,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 		r = 0;
 	}
 
-	const SGPSector arSector(ar.ubSectorX, ar.ubSectorY);
+	const SGPSector arSector(ar.ubSector.x, ar.ubSector.y);
 
 	// Delete all militia
 	gbGreenToElitePromotions = 0;
@@ -2115,7 +2112,7 @@ static void CalculateRowsAndColumns(void);
 //to figure out how many rows and columns we can use.  The will effect the size of the panel.
 static void CalculateAutoResolveInfo(void)
 {
-	SGPSector sSector(gpAR->ubSectorX, gpAR->ubSectorY);
+	SGPSector sSector(gpAR->ubSector.x, gpAR->ubSector.y);
 	Assert(sSector.IsValid());
 
 	if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
@@ -2552,8 +2549,8 @@ static void CreateTempPlayerMerc(void)
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam									= OUR_TEAM;
 	MercCreateStruct.ubProfile							= GetUnusedMercProfileID();
-	MercCreateStruct.sSectorX								= gpAR->ubSectorX;
-	MercCreateStruct.sSectorY								= gpAR->ubSectorY;
+	MercCreateStruct.sSectorX								= gpAR->ubSector.x;
+	MercCreateStruct.sSectorY								= gpAR->ubSector.y;
 	MercCreateStruct.bSectorZ								= 0;
 	MercCreateStruct.fCopyProfileItemsOver	= TRUE;
 
@@ -3325,7 +3322,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 					gStrategicStatus.usPlayerKills++;
 					// EXPERIENCE CLASS GAIN:  Earned a kill
 					StatChange(*pKiller->pSoldier, EXPERAMT, 10 * pTarget->pSoldier->bLevel, FROM_SUCCESS);
-					HandleMoraleEvent(pKiller->pSoldier, MORALE_KILLED_ENEMY, SGPSector(gpAR->ubSectorX, gpAR->ubSectorY, 0));
+					HandleMoraleEvent(pKiller->pSoldier, MORALE_KILLED_ENEMY, SGPSector(gpAR->ubSector.x, gpAR->ubSector.y, 0));
 				}
 				else if( pKiller->uiFlags & CELL_MILITIA )
 					pKiller->pSoldier->ubMilitiaKills += 2;
@@ -3895,7 +3892,7 @@ UINT8 GetAutoResolveSectorID()
 {
 	if( gpAR )
 	{
-		return (UINT8)SECTOR( gpAR->ubSectorX, gpAR->ubSectorY );
+		return gpAR->ubSector.AsByte();
 	}
 	return 0xff;
 }
@@ -3905,7 +3902,7 @@ BOOLEAN GetCurrentBattleSectorXYZ(SGPSector& psSector)
 {
 	if( gpAR )
 	{
-		psSector = SGPSector(gpAR->ubSectorX, gpAR->ubSectorY, 0);
+		psSector = SGPSector(gpAR->ubSector.x, gpAR->ubSector.y, 0);
 		return TRUE;
 	}
 	else if( gfPreBattleInterfaceActive )
@@ -3930,8 +3927,7 @@ BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(SGPSector& psSect
 {
 	if( gpAR )
 	{
-		psSector.x = gpAR->ubSectorX;
-		psSector.y = gpAR->ubSectorY;
+		psSector = gpAR->ubSector;
 		psSector.z = 0;
 		return TRUE;
 	}
