@@ -860,7 +860,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 		if (g.fPlayer && g.fBetweenSectors)
 		{
 			// send the group right back to its current sector by reversing directions
-			GroupReversingDirectionsBetweenSectors(&g, g.ubSectorX, g.ubSectorY, FALSE);
+			GroupReversingDirectionsBetweenSectors(&g, g.ubSector.x, g.ubSector.y, FALSE);
 		}
 
 		return;
@@ -871,7 +871,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 	if (g.fBetweenSectors)
 	{
 		// figure out which direction we're already going in  (Otherwise iOldDelta starts at 0)
-		iOldDelta = g.ubNext.AsStrategicIndex() - CALCULATE_STRATEGIC_INDEX(g.ubSectorX, g.ubSectorY);
+		iOldDelta = g.ubNext.AsStrategicIndex() - g.ubSector.AsStrategicIndex();
 	}
 
 	// build a brand new list of waypoints, one for initial direction, and another for every "direction change" thereafter

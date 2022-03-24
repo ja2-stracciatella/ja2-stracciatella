@@ -7535,7 +7535,7 @@ static UINT8 PlayerMercsInHelicopterSector()
 {
 	GROUP& g = *GetGroup(GetHelicopter().ubMovementGroup);
 	if (g.fBetweenSectors) return 0;
-	return PlayerMercsInSector(g.ubSectorX, g.ubSectorY, 0);
+	return PlayerMercsInSector(g.ubSector);
 }
 
 

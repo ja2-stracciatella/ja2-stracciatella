@@ -1401,7 +1401,7 @@ void RandomMercInGroupSaysQuote(GROUP const& g, UINT16 const quote_num)
 {
 	/* If traversing tactically, don't do this, unless time compression was
 	 * required for some reason (don't go to sector) */
-	if ((gfTacticalTraversal || g.ubSectorZ > 0) && !IsTimeBeingCompressed())
+	if ((gfTacticalTraversal || g.ubSector.z > 0) && !IsTimeBeingCompressed())
 	{
 		return;
 	}

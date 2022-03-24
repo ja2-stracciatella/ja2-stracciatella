@@ -112,9 +112,8 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 
 	// ARM: setup group movement defaults
 	g->ubTransportationMask = GCM->getVehicle(ubType)->movement_type;
-	g->ubSectorX            = sMap.x;
+	g->ubSector             = sMap;
 	g->ubNext               = sMap;
-	g->ubSectorY            = sMap.y;
 	g->uiTraverseTime       = 0;
 	g->uiArrivalTime        = 0;
 
@@ -893,16 +892,12 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 	{
 		// go to the last sector
 		sPrev = pGroup->ubNext;
-
-		sNext.x = pGroup->ubSectorX;
-		sNext.y = pGroup->ubSectorY;
+		sNext = pGroup->ubSector;
 	}
 	else
 	{
 		// go to the next sector
-		sPrev.x = pGroup->ubSectorX;
-		sPrev.y = pGroup->ubSectorY;
-
+		sPrev = pGroup->ubSector;
 		sNext = pGroup->ubNext;
 	}
 

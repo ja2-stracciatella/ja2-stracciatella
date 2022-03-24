@@ -1476,7 +1476,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	{
 		if (!gWorldSector.z)
 		{
-			uiTraverseTime = GetSectorMvtTimeForGroup( (UINT8)SECTOR( pGroup->ubSectorX, pGroup->ubSectorY ), ubDirection, pGroup );
+			uiTraverseTime = GetSectorMvtTimeForGroup(pGroup->ubSector.AsByte(), ubDirection, pGroup);
 		}
 		else if (gWorldSector.z > 0)
 		{ //We are attempting to traverse in an underground environment.  We need to use a complete different
@@ -2153,7 +2153,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 					UINT32 traverse_time = TRAVERSE_TIME_IMPOSSIBLE;
 					if (!gWorldSector.z)
 					{
-						traverse_time = GetSectorMvtTimeForGroup((UINT8)SECTOR(pGroup->ubSectorX, pGroup->ubSectorY), bExitDirection, pGroup);
+						traverse_time = GetSectorMvtTimeForGroup(pGroup->ubSector.AsByte(), bExitDirection, pGroup);
 					}
 					else if (gWorldSector.z > 1)
 					{ //We are attempting to traverse in an underground environment.  We need to use a complete different
@@ -2211,7 +2211,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 			UINT32 traverse_time = TRAVERSE_TIME_IMPOSSIBLE; // -XXX Wmaybe-uninitialized : valid default?
 			if (!gWorldSector.z)
 			{
-				traverse_time = GetSectorMvtTimeForGroup((UINT8)SECTOR(pGroup->ubSectorX, pGroup->ubSectorY), bExitDirection, pGroup);
+				traverse_time = GetSectorMvtTimeForGroup(pGroup->ubSector.AsByte(), bExitDirection, pGroup);
 			}
 			else if (gWorldSector.z > 0)
 			{ //We are attempting to traverse in an underground environment.  We need to use a complete different

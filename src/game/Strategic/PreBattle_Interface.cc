@@ -213,25 +213,15 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 		gpBattleGroup = battle_group;
 
 		// Calc sector values
-		UINT8 x;
-		UINT8 y;
-		UINT8 z;
 		if (battle_group)
 		{
-			x = battle_group->ubSectorX;
-			y = battle_group->ubSectorY;
-			z = battle_group->ubSectorZ;
+			gubPBSector = battle_group->ubSector;
 			fMapPanelDirty = TRUE;
 		}
 		else
 		{
-			x = SECTORX(gubSectorIDOfCreatureAttack);
-			y = SECTORY(gubSectorIDOfCreatureAttack);
-			z = 0;
+			gubPBSector = SGPSector(gubSectorIDOfCreatureAttack);
 		}
-		gubPBSector.x = x;
-		gubPBSector.y = y;
-		gubPBSector.z = z;
 	}
 	else
 	{ // Calculate the non-persistent situation
@@ -1388,7 +1378,7 @@ bool PlayerGroupInvolvedInThisCombat(GROUP const& g)
 		!g.fBetweenSectors                                        &&
 		!GroupHasInTransitDeadOrPOWMercs(g)                       &&
 		(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne) &&
-		CurrentBattleSectorIs(SGPSector(g.ubSectorX, g.ubSectorY, g.ubSectorZ));
+		CurrentBattleSectorIs(g.ubSector);
 }
 
 static BOOLEAN CurrentBattleSectorIs(const SGPSector& sSector)

@@ -79,9 +79,7 @@ UINT8 NumHostilesInSector(const SGPSector& sSector)
 		//Count mobile enemies
 		CFOR_EACH_ENEMY_GROUP(pGroup)
 		{
-			if (!pGroup->fVehicle             &&
-					pGroup->ubSectorX == sSector.x &&
-					pGroup->ubSectorY == sSector.y)
+			if (!pGroup->fVehicle && pGroup->ubSector == sSector)
 			{
 				ubNumHostiles += pGroup->ubGroupSize;
 			}
@@ -116,9 +114,7 @@ UINT8 NumEnemiesInAnySector(const SGPSector& sSector)
 		//Count mobile enemies
 		CFOR_EACH_ENEMY_GROUP(pGroup)
 		{
-			if (!pGroup->fVehicle             &&
-					pGroup->ubSectorX == sSector.x &&
-					pGroup->ubSectorY == sSector.y)
+			if (!pGroup->fVehicle && pGroup->ubSector == sSector)
 			{
 				ubNumEnemies += pGroup->ubGroupSize;
 			}
@@ -137,9 +133,7 @@ UINT8 NumEnemiesInSector(const SGPSector& sSector)
 
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
-		if (!pGroup->fVehicle             &&
-				pGroup->ubSectorX == sSector.x &&
-				pGroup->ubSectorY == sSector.y)
+		if (!pGroup->fVehicle && pGroup->ubSector == sSector)
 		{
 			ubNumTroops += pGroup->ubGroupSize;
 		}
@@ -176,9 +170,7 @@ UINT8 NumMobileEnemiesInSector(const SGPSector& sSector)
 	ubNumTroops = 0;
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
-		if (!pGroup->fVehicle             &&
-				pGroup->ubSectorX == sSector.x &&
-				pGroup->ubSectorY == sSector.y)
+		if (!pGroup->fVehicle && pGroup->ubSector == sSector)
 		{
 			ubNumTroops += pGroup->ubGroupSize;
 		}
@@ -203,9 +195,7 @@ static void GetNumberOfMobileEnemiesInSector(const SGPSector& sSector, UINT8* pu
 	*pubNumTroops = *pubNumElites = *pubNumAdmins = 0;
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
-		if (!pGroup->fVehicle             &&
-				pGroup->ubSectorX == sSector.x &&
-				pGroup->ubSectorY == sSector.y)
+		if (!pGroup->fVehicle && pGroup->ubSector == sSector)
 		{
 			*pubNumTroops += pGroup->pEnemyGroup->ubNumTroops;
 			*pubNumElites += pGroup->pEnemyGroup->ubNumElites;
@@ -291,9 +281,8 @@ void EndTacticalBattleForEnemy()
 	{
 		GROUP const& g = *i;
 		if (g.fVehicle)       continue;
-		if (g.ubSectorX != gWorldSector.x) continue;
-		if (g.ubSectorY != gWorldSector.y) continue;
-		// XXX test for z missing?
+		if (g.ubSector != gWorldSector) continue;
+
 		ENEMYGROUP& eg = *g.pEnemyGroup;
 		eg.ubTroopsInBattle = 0;
 		eg.ubElitesInBattle = 0;
@@ -348,8 +337,7 @@ void PrepareEnemyForSectorBattle()
 		{
 			if (g == bg)                               continue;
 			if (g->fVehicle)                           continue;
-			if (g->ubSectorX != bg->ubSectorX)         continue;
-			if (g->ubSectorY != bg->ubSectorY)         continue;
+			if (g->ubSector != bg->ubSector)           continue;
 			if (g->pEnemyGroup->ubAdminsInBattle != 0) continue;
 			if (g->pEnemyGroup->ubTroopsInBattle != 0) continue;
 			if (g->pEnemyGroup->ubElitesInBattle != 0) continue;
@@ -434,9 +422,8 @@ void PrepareEnemyForSectorBattle()
 		if (n_slots == 0) break;
 
 		if (g->fVehicle)         continue;
-		if (g->ubSectorX   != gWorldSector.x) continue;
-		if (g->ubSectorY   != gWorldSector.y) continue;
 		if (gWorldSector.z != 0) continue;
+		if (g->ubSector != gWorldSector) continue;
 
 		if (!g->fPlayer)
 		{ // Process enemy group in sector
@@ -508,9 +495,8 @@ void PrepareEnemyForSectorBattle()
 		if (n_slots == 0) break;
 
 		if (g->fVehicle) continue;
-		if (g->ubSectorX   != gWorldSector.x) continue;
-		if (g->ubSectorY   != gWorldSector.y) continue;
 		if (gWorldSector.z != 0) continue;
+		if (g->ubSector != gWorldSector) continue;
 
 		INT32 n        = g->ubGroupSize;
 		UINT8 n_admins = g->pEnemyGroup->ubAdminsInBattle;
@@ -953,9 +939,9 @@ void AddPossiblePendingEnemiesToBattle()
 
 		GROUP const& g = *i;
 		if (g.fVehicle)                   continue;
-		if (g.ubSectorX != gWorldSector.x) continue;
-		if (g.ubSectorY != gWorldSector.y) continue;
 		if (gWorldSector.z != 0)          continue;
+		if (g.ubSector != gWorldSector) continue;
+
 		// This enemy group is currently in the sector.
 		ENEMYGROUP& eg          = *g.pEnemyGroup;
 		UINT8       n_elites    = 0;
@@ -995,19 +981,19 @@ void AddPossiblePendingEnemiesToBattle()
 			if (g.ubPrev.IsValid())
 			{
 				strategic_insertion_code =
-					g.ubSectorX < g.ubPrev.x ? INSERTION_CODE_EAST  :
-					g.ubSectorX > g.ubPrev.x ? INSERTION_CODE_WEST  :
-					g.ubSectorY < g.ubPrev.y ? INSERTION_CODE_SOUTH :
-					g.ubSectorY > g.ubPrev.y ? INSERTION_CODE_NORTH :
+					g.ubSector.x < g.ubPrev.x ? INSERTION_CODE_EAST  :
+					g.ubSector.x > g.ubPrev.x ? INSERTION_CODE_WEST  :
+					g.ubSector.y < g.ubPrev.y ? INSERTION_CODE_SOUTH :
+					g.ubSector.y > g.ubPrev.y ? INSERTION_CODE_NORTH :
 					0; // XXX exception?
 			}
 			else if (g.ubNext.IsValid())
 			{
 				strategic_insertion_code =
-					g.ubSectorX < g.ubNext.x ? INSERTION_CODE_EAST  :
-					g.ubSectorX > g.ubNext.x ? INSERTION_CODE_WEST  :
-					g.ubSectorY < g.ubNext.y ? INSERTION_CODE_SOUTH :
-					g.ubSectorY > g.ubNext.y ? INSERTION_CODE_NORTH :
+					g.ubSector.x < g.ubNext.x ? INSERTION_CODE_EAST  :
+					g.ubSector.x > g.ubNext.x ? INSERTION_CODE_WEST  :
+					g.ubSector.y < g.ubNext.y ? INSERTION_CODE_SOUTH :
+					g.ubSector.y > g.ubNext.y ? INSERTION_CODE_NORTH :
 					0; // XXX exception?
 			} // XXX else exception?
 			/* Add the number of each type of troop and place them in the appropriate

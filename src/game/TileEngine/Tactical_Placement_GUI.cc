@@ -153,8 +153,8 @@ void InitTacticalPlacementGUI()
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->fBetweenSectors)                 continue;
-		if (s->sSectorX != bg.ubSectorX)        continue;
-		if (s->sSectorY != bg.ubSectorY)        continue;
+		if (s->sSectorX != bg.ubSector.x)       continue;
+		if (s->sSectorY != bg.ubSector.y)       continue;
 		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue; // ATE Ignore vehicles
 		if (s->bAssignment == ASSIGNMENT_POW)   continue;
 		if (s->bAssignment == IN_TRANSIT)       continue;
@@ -174,8 +174,8 @@ void InitTacticalPlacementGUI()
 	{
 		if (s->bLife == 0)                      continue;
 		if (s->fBetweenSectors)                 continue;
-		if (s->sSectorX != bg.ubSectorX)        continue;
-		if (s->sSectorY != bg.ubSectorY)        continue;
+		if (s->sSectorX != bg.ubSector.x)       continue;
+		if (s->sSectorY != bg.ubSector.y)       continue;
 		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue; // ATE Ignore vehicles
 		if (s->bAssignment == ASSIGNMENT_POW)   continue;
 		if (s->bAssignment == IN_TRANSIT)       continue;

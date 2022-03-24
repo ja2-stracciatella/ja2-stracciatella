@@ -770,7 +770,7 @@ static void ShowTeamAndVehicles()
 		{
 			/* Don't show mercs/vehicles currently in this sector if player is
 				* contemplating retreating from THIS sector */
-			if (!g || sector.x != g->ubSectorX || sector.y != g->ubSectorY)
+			if (!g || sector != g->ubSector)
 			{
 				icon_pos = ShowOnDutyTeam(sector);
 				icon_pos = ShowAssignedTeam(sector, icon_pos);
@@ -2402,9 +2402,9 @@ void DisplayPositionOfHelicopter( void )
 			}
 
 			// grab min and max locations to interpolate sub sector position
-			minX = MAP_VIEW_START_X + MAP_GRID_X * ( pGroup->ubSectorX );
+			minX = MAP_VIEW_START_X + MAP_GRID_X * pGroup->ubSector.x;
 			maxX = MAP_VIEW_START_X + MAP_GRID_X * pGroup->ubNext.x;
-			minY = MAP_VIEW_START_Y + MAP_GRID_Y * ( pGroup->ubSectorY );
+			minY = MAP_VIEW_START_Y + MAP_GRID_Y * pGroup->ubSector.y;
 			maxY = MAP_VIEW_START_Y + MAP_GRID_Y * pGroup->ubNext.y;
 
 			AssertMsg(minX < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid minX = %d", minX));
@@ -2419,10 +2419,10 @@ void DisplayPositionOfHelicopter( void )
 			y += 3;
 
 			AssertMsg(x < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid x = %d.  At %d,%d.  Next %d,%d.  Min/Max X = %d/%d",
-					x, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNext.x, pGroup->ubNext.y, minX, maxX));
+					x, pGroup->ubSector.x, pGroup->ubSector.y, pGroup->ubNext.x, pGroup->ubNext.y, minX, maxX));
 
 			AssertMsg(y < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid y = %d.  At %d,%d.  Next %d,%d.  Min/Max Y = %d/%d",
-					y, pGroup->ubSectorX, pGroup->ubSectorY, pGroup->ubNext.x, pGroup->ubNext.y, minY, maxY));
+					y, pGroup->ubSector.x, pGroup->ubSector.y, pGroup->ubNext.x, pGroup->ubNext.y, minY, maxY));
 
 
 			// clip blits to mapscreen region

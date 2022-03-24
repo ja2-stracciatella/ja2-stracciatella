@@ -331,8 +331,7 @@ void EliminateAllEnemies(const SGPSector& ubSector)
 		{
 			GROUP& g = *i;
 			if (g.fPlayer)                continue;
-			if (g.ubSectorX != ubSector.x) continue;
-			if (g.ubSectorY != ubSector.y) continue;
+			if (g.ubSector != ubSector) continue;
 			RemoveGroupFromStrategicAILists(g);
 			RemoveGroup(g);
 		}
@@ -588,8 +587,7 @@ static void AssociateEnemiesWithStrategicGroups(void)
 	//Now assign the rest of the soldiers to groups
 	CFOR_EACH_ENEMY_GROUP(pGroup)
 	{
-		if (pGroup->ubSectorX == gpAR->ubSector.x &&
-				pGroup->ubSectorY == gpAR->ubSector.y)
+		if (pGroup->ubSector == gpAR->ubSector)
 		{
 			ubNumElitesInGroup = pGroup->pEnemyGroup->ubNumElites;
 			ubNumTroopsInGroup = pGroup->pEnemyGroup->ubNumTroops;
