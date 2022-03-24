@@ -2913,7 +2913,7 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime()
 	UINT32 const hour = h.uiArrivalTime % 1440 / 60;
 	time_string = ST::format("{02d}:00", hour);
 
-	ST::string sector_string = GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, FALSE);
+	ST::string sector_string = GetSectorIDString(SGPSector(g_merc_arrive_sector), FALSE);
 
 	ST::string msg;
 	ST::string nickname = GetProfile(h.iIdOfMerc).zNickname;

@@ -73,7 +73,6 @@ ST::string GetShortSectorString(INT16 sMapX, INT16 sMapY);
 
 // Return a string like 'A9: Omerta'
 ST::string GetSectorIDString(const SGPSector& sector, BOOLEAN detailed);
-ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed);
 
 // Returns a sector description string based on the sector land type
 ST::string GetSectorLandTypeString(UINT8 ubSectorID, UINT8 ubSectorZ, bool fDetailed);

@@ -714,7 +714,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 
 
 static void HandleOtherGroupsArrivingSimultaneously(UINT8 x, UINT8 y, UINT8 z);
-static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY);
+static void NotifyPlayerOfBloodcatBattle(const SGPSector& ubSector);
 static BOOLEAN TestForBloodcatAmbush(GROUP const*);
 static void TriggerPrebattleInterface(MessageBoxReturnValue);
 static BOOLEAN PossibleToCoordinateSimultaneousGroupArrivals(GROUP* pFirstGroup);
@@ -873,7 +873,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 		if( gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE || gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )
 		{
-			NotifyPlayerOfBloodcatBattle(gSector.x, gSector.y);
+			NotifyPlayerOfBloodcatBattle(gSector);
 			return TRUE;
 		}
 
@@ -887,7 +887,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 			}
 			else
 			{
-				ST::string pSectorStr = GetSectorIDString(gSector.x, gSector.y, gSector.z, TRUE);
+				ST::string pSectorStr = GetSectorIDString(gSector, TRUE);
 				ST::string str = st_format_printf(gpStrategicString[ STR_DIALOG_ENEMIES_ATTACK_UNCONCIOUSMERCS ], pSectorStr);
 				DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, TriggerPrebattleInterface );
 			}
@@ -3412,13 +3412,13 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 }
 
 
-static void NotifyPlayerOfBloodcatBattle(UINT8 ubSectorX, UINT8 ubSectorY)
+static void NotifyPlayerOfBloodcatBattle(const SGPSector& ubSector)
 {
 	ST::string str;
 	ST::string zTempString;
 	if( gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE )
 	{
-		zTempString = GetSectorIDString(ubSectorX, ubSectorY, 0, TRUE);
+		zTempString = GetSectorIDString(ubSector, TRUE);
 		str = st_format_printf(pMapErrorString[ 12 ], zTempString);
 	}
 	else if( gubEnemyEncounterCode == ENTERING_BLOODCAT_LAIR_CODE )

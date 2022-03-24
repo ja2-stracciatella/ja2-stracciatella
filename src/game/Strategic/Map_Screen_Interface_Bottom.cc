@@ -367,7 +367,7 @@ static void DrawNameOfLoadedSector()
 	SGPFont const font = COMPFONT;
 	SetFontAttributes(font, 183);
 
-	ST::string buf = GetSectorIDString(sSelMapX, sSelMapY, iCurrentMapSectorZ, TRUE);
+	ST::string buf = GetSectorIDString(SGPSector(sSelMapX, sSelMapY, iCurrentMapSectorZ), TRUE);
 	buf = ReduceStringLength(buf, 80, font);
 
 	INT16 x;

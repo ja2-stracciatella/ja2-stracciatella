@@ -808,13 +808,13 @@ static INT32 IsTownUnderCompleteControlByEnemy(INT8 bTownId)
 	return GetTownSectorsUnderControl(bTownId) == 0;
 }
 
-void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 ubHowMany)
+void AdjustLoyaltyForCivsEatenByMonsters(const SGPSector& sSector, UINT8 ubHowMany)
 {
 	UINT32 uiLoyaltyChange = 0;
 	ST::string str;
 	ST::string pSectorString;
 
-	UINT8 const bTownId = GetTownIdForSector(SECTOR(sSectorX, sSectorY));
+	UINT8 const bTownId = GetTownIdForSector(sSector.AsByte());
 
 	// if NOT in a town
 	if( bTownId == BLANK_SECTOR )
@@ -823,7 +823,7 @@ void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 
 	}
 
 	//Report this to player
-	pSectorString = GetSectorIDString(sSectorX, sSectorY, 0, TRUE);
+	pSectorString = GetSectorIDString(sSector, TRUE);
 	str = st_format_printf(gpStrategicString[ STR_DIALOG_CREATURES_KILL_CIVILIANS ], ubHowMany, pSectorString);
 	DoScreenIndependantMessageBox( str, MSG_BOX_FLAG_OK, MapScreenDefaultOkBoxCallback );
 

@@ -1266,12 +1266,6 @@ ST::string GetSectorLandTypeString(UINT8 const ubSectorID, UINT8 const ubSectorZ
 
 ST::string GetSectorIDString(const SGPSector& sector, BOOLEAN detailed)
 {
-	return GetSectorIDString(sector.x, sector.y, sector.z, detailed);
-}
-
-ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed)
-{
-	SGPSector sector(x, y, z);
 	if (!sector.IsValid())
 	{
 		return ST::null;

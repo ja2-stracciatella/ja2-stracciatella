@@ -135,7 +135,7 @@ INT32 GetNumberOfWholeTownsUnderControl( void );
 INT32 IsTownUnderCompleteControlByPlayer( INT8 bTownId );
 
 // used when monsters attack a town sector without going through tactical and they win
-void AdjustLoyaltyForCivsEatenByMonsters( INT16 sSectorX, INT16 sSectorY, UINT8 ubHowMany);
+void AdjustLoyaltyForCivsEatenByMonsters(const SGPSector& sSector, UINT8 ubHowMany);
 
 // these are used to handle global loyalty events (ones that effect EVERY town on the map)
 void IncrementTownLoyaltyEverywhere( UINT32 uiLoyaltyIncrease );

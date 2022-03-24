@@ -465,7 +465,7 @@ static void DrawHistoryRecordsText(void)
 		}
 		else
 		{
-			sString = GetSectorIDString(h->sSectorX, h->sSectorY, h->bSectorZ, TRUE);
+			sString = GetSectorIDString(SGPSector(h->sSectorX, h->sSectorY, h->bSectorZ), TRUE);
 			FindFontCenterCoordinates(RECORD_DATE_X + RECORD_DATE_WIDTH, 0, RECORD_LOCATION_WIDTH + 10, 0,  sString, HISTORY_TEXT_FONT, &sX, &sY);
 			sString = ReduceStringLength(sString, RECORD_LOCATION_WIDTH + 10, HISTORY_TEXT_FONT);
 			MPrint(sX, y, sString);

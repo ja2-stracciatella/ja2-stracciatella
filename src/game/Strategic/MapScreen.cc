@@ -7819,9 +7819,8 @@ static void HandlePostAutoresolveMessages(void)
 	//are "virtually" murdered and loyalty hits will be processed.
 	if( gsCiviliansEatenByMonsters >= 1 )
 	{
-		AdjustLoyaltyForCivsEatenByMonsters( (UINT8)SECTORX( gsEnemyGainedControlOfSectorID ),
-							(UINT8)SECTORY( gsEnemyGainedControlOfSectorID ),
-							(UINT8)gsCiviliansEatenByMonsters );
+		SGPSector sSector(gsEnemyGainedControlOfSectorID);
+		AdjustLoyaltyForCivsEatenByMonsters(sSector, gsCiviliansEatenByMonsters);
 		gsCiviliansEatenByMonsters = -2;
 	}
 	else if( gsCiviliansEatenByMonsters == -2 )

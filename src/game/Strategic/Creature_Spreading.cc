@@ -591,7 +591,7 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 	}
 	else if (!StrategicMap[sector.AsStrategicIndex()].fEnemyControlled)
 	{ //player controlled sector -- eat some civilians
-		AdjustLoyaltyForCivsEatenByMonsters(sector.x, sector.y, gubNumCreaturesAttackingTown);
+		AdjustLoyaltyForCivsEatenByMonsters(sector, gubNumCreaturesAttackingTown);
 		SectorInfo[ ubSectorID ].ubDayOfLastCreatureAttack = (UINT8)GetWorldDay();
 		return;
 	}
