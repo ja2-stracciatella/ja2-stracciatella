@@ -2142,7 +2142,7 @@ static void RenderMapCursorsIndexesAnims(void)
 
 	if( gfBlitBattleSectorLocator )
 	{
-		HandleBlitOfSectorLocatorIcon( gubPBSector.x, gubPBSector.y, gubPBSector.z, LOCATOR_COLOR_RED );
+		HandleBlitOfSectorLocatorIcon(gubPBSector, LOCATOR_COLOR_RED);
 	}
 
 	fDrawCursors = CanDrawSectorCursor( );

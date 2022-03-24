@@ -4224,9 +4224,8 @@ void TurnOffSectorLocator()
 
 
 
-void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubLocatorID )
+void HandleBlitOfSectorLocatorIcon(const SGPSector& sSector, UINT8 ubLocatorID)
 {
-	SGPSector sSector(sSectorX, sSectorY, sSectorZ);
 	static UINT8  ubFrame = 0;
 	UINT8 ubBaseFrame = 0;
 	UINT32 uiTimer = 0;

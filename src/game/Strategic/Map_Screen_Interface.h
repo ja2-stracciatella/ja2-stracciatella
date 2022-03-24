@@ -367,7 +367,7 @@ enum
 	LOCATOR_COLOR_YELLOW
 };
 
-void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubLocatorID );
+void HandleBlitOfSectorLocatorIcon(const SGPSector& sSector, UINT8 ubLocatorID);
 
 
 // the tactical version

@@ -884,7 +884,7 @@ void CheckAndHandleSkyriderMonologues( void )
 
 static void HandleBlitOfSectorLocatorIcon(UINT8 const sector, UINT8 const locator)
 {
-	HandleBlitOfSectorLocatorIcon(SECTORX(sector), SECTORY(sector), 0, locator);
+	HandleBlitOfSectorLocatorIcon(SGPSector(sector), locator);
 }
 
 
@@ -919,7 +919,7 @@ void HandleAnimationOfSectors( void )
 	if( fShowCambriaHospitalHighLight )
 	{
 		fOldShowCambriaHospitalHighLight = TRUE;
-		HandleBlitOfSectorLocatorIcon( HOSPITAL_SECTOR_X, HOSPITAL_SECTOR_Y, 0, LOCATOR_COLOR_RED );
+		HandleBlitOfSectorLocatorIcon(SGPSector(HOSPITAL_SECTOR_X, HOSPITAL_SECTOR_Y, 0), LOCATOR_COLOR_RED );
 		fSkipSpeakersLocator = TRUE;
 	}
 	else if( fOldShowCambriaHospitalHighLight )
@@ -948,7 +948,7 @@ void HandleAnimationOfSectors( void )
 	{
 		fOldShowEstoniRefuelHighLight = TRUE;
 		INT16 const sec = g_refuel_site[ESTONI_REFUELING_SITE].sector;
-		HandleBlitOfSectorLocatorIcon(GET_X_FROM_STRATEGIC_INDEX(sec), GET_Y_FROM_STRATEGIC_INDEX(sec), 0, LOCATOR_COLOR_RED);
+		HandleBlitOfSectorLocatorIcon(SGPSector(GET_X_FROM_STRATEGIC_INDEX(sec), GET_Y_FROM_STRATEGIC_INDEX(sec), 0), LOCATOR_COLOR_RED);
 		fSkipSpeakersLocator = TRUE;
 	}
 	else if( fOldShowEstoniRefuelHighLight )
@@ -963,10 +963,10 @@ void HandleAnimationOfSectors( void )
 		switch( gubBlitSectorLocatorCode )
 		{
 			case LOCATOR_COLOR_RED: // normal one used for mines (will now be overriden with yellow)
-				HandleBlitOfSectorLocatorIcon(gsSectorLocator.x, gsSectorLocator.y, 0, LOCATOR_COLOR_RED);
+				HandleBlitOfSectorLocatorIcon(gsSectorLocator, LOCATOR_COLOR_RED);
 				break;
 			case LOCATOR_COLOR_YELLOW: // used for all other dialogues
-				HandleBlitOfSectorLocatorIcon(gsSectorLocator.y, gsSectorLocator.z, 0, LOCATOR_COLOR_YELLOW);
+				HandleBlitOfSectorLocatorIcon(gsSectorLocator, LOCATOR_COLOR_YELLOW);
 				break;
 		}
 	}
