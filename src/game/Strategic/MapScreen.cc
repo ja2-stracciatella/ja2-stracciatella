@@ -2253,7 +2253,7 @@ static void RenderMapCursorsIndexesAnims(void)
 }
 
 
-static BOOLEAN AnyMovableCharsInOrBetweenThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+static BOOLEAN AnyMovableCharsInOrBetweenThisSector(const SGPSector& sSector);
 static BOOLEAN CanMoveBullseyeAndClickedOnIt(const SGPSector& sMap);
 static void CancelChangeArrivalSectorMode(void);
 static void CancelOrShortenPlottedPath(void);
@@ -2351,7 +2351,7 @@ static UINT32 HandleMapUI(void)
 						// copy the path to every other selected character
 						CopyPathToAllSelectedCharacters(GetSoldierMercPathPtr(s));
 
-						StartConfirmMapMoveMode( sMapY );
+						StartConfirmMapMoveMode(sMap.y);
 						fMapPanelDirty = TRUE;
 						fTeamPanelDirty = TRUE;	// update team panel desinations
 					}
@@ -2556,7 +2556,7 @@ static UINT32 HandleMapUI(void)
 								// This also allows all strategic movement error handling to be centralized in CanCharacterMoveInStrategic()
 
 								// start the move box menu
-								SetUpMovingListsForSector( sMapX, sMapY, ( INT16 )iCurrentMapSectorZ );
+								SetUpMovingListsForSector(sMap);
 							}
 							else
 							{
@@ -7432,7 +7432,7 @@ static void MakeMapModesSuitableForDestPlotting(const SOLDIERTYPE* const pSoldie
 }
 
 
-static BOOLEAN AnyMovableCharsInOrBetweenThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+static BOOLEAN AnyMovableCharsInOrBetweenThisSector(const SGPSector& sSector)
 {
 	CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
@@ -7456,7 +7456,7 @@ static BOOLEAN AnyMovableCharsInOrBetweenThisSector(INT16 sSectorX, INT16 sSecto
 
 
 		// is he here?
-		if( ( pSoldier->sSectorX == sSectorX ) && ( pSoldier->sSectorY == sSectorY ) && ( pSoldier->bSectorZ == bSectorZ ) )
+		if (SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ) == sSector)
 		{
 			// NOTE that we consider mercs between sectors, mercs < OKLIFE, and sleeping mercs to be "movable".
 			// This lets CanCharacterMoveInStrategic() itself report the appropriate error message when character is clicked

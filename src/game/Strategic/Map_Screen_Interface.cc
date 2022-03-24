@@ -2234,10 +2234,10 @@ void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
 }
 
 
-void SetUpMovingListsForSector(INT16 const x, INT16 const y, INT16 const z)
+void SetUpMovingListsForSector(const SGPSector& sSector)
 {
 	// Not allowed for underground movement
-	Assert(z == 0);
+	Assert(sSector.z == 0);
 
 	InitializeMovingLists();
 
@@ -2248,7 +2248,7 @@ void SetUpMovingListsForSector(INT16 const x, INT16 const y, INT16 const z)
 		SOLDIERTYPE& s = *i->merc;
 		if (s.bAssignment == IN_TRANSIT)     continue;
 		if (s.bAssignment == ASSIGNMENT_POW) continue;
-		if (s.sSectorX != x || s.sSectorY != y || s.bSectorZ != z) continue;
+		if (s.sSectorX != sSector.x || s.sSectorY != sSector.y || s.bSectorZ != sSector.z) continue;
 
 		if (s.uiStatusFlags & SOLDIER_VEHICLE)
 		{
@@ -2271,7 +2271,7 @@ void SetUpMovingListsForSector(INT16 const x, INT16 const y, INT16 const z)
 	}
 
 	fShowMapScreenMovementList = TRUE;
-	CreateDestroyMovementBox(x, y, z);
+	CreateDestroyMovementBox(sSector.x, sSector.y, sSector.z);
 }
 
 

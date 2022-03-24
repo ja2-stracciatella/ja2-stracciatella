@@ -393,7 +393,7 @@ void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector( INT16 sSectorX, 
 
 // the sector move box
 void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
-void SetUpMovingListsForSector(INT16 x, INT16 y, INT16 z);
+void SetUpMovingListsForSector(const SGPSector& sSector);
 void ReBuildMoveBox( void );
 BOOLEAN IsCharacterSelectedForAssignment( INT16 sCharNumber );
 BOOLEAN IsCharacterSelectedForSleep( INT16 sCharNumber );
