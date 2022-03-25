@@ -53,9 +53,9 @@ static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, Aut
 }
 
 // Opens the map temp file, writes the modification, then close the file
-static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
+static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, const SGPSector& sSector)
 {
-	std::unique_ptr<AutoSGPFile> hFile = OpenMapModificationTempFile(SGPSector(sSectorX, sSectorY, bSectorZ));
+	std::unique_ptr<AutoSGPFile> hFile = OpenMapModificationTempFile(sSector);
 	SaveModifiedMapStructToMapTempFile(pMap, *hFile);
 }
 
@@ -258,7 +258,7 @@ static void AddToMapTempFile(UINT32 const uiMapIndex, UINT16 const usIndex, UINT
 	m.usImageType     = uiType;
 	m.usSubImageIndex = usSubIndex;
 	m.ubType          = type;
-	SaveModifiedMapStructToMapTempFile(&m, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+	SaveModifiedMapStructToMapTempFile(&m, gWorldSector);
 }
 
 
@@ -538,6 +538,7 @@ static void DamageStructsFromMapTempFile(MODIFY_MAP* pMap)
 
 void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
 {
+	SGPSector sSector(sSectorX, sSectorY, ubSectorZ);
 	MODIFY_MAP Map;
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
@@ -556,12 +557,13 @@ void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 
 	Map.ubType		= SLM_STRUCT;
 
-	SaveModifiedMapStructToMapTempFile( &Map, sSectorX, sSectorY, ubSectorZ );
+	SaveModifiedMapStructToMapTempFile(&Map, sSector);
 }
 
 
 void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
 {
+	SGPSector sSector(sSectorX, sSectorY, ubSectorZ);
 	MODIFY_MAP Map;
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
@@ -579,7 +581,7 @@ void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT
 
 	Map.ubType			= SLM_REMOVE_STRUCT;
 
-	SaveModifiedMapStructToMapTempFile( &Map, sSectorX, sSectorY, ubSectorZ );
+	SaveModifiedMapStructToMapTempFile(&Map, sSector);
 }
 
 
@@ -607,7 +609,7 @@ void AddExitGridToMapTempFile(UINT16 usGridNo, EXITGRID *pExitGrid, const SGPSec
 	Map.ubExtra		= pExitGrid->ubGotoSectorZ;
 	Map.ubType		= SLM_EXIT_GRIDS;
 
-	SaveModifiedMapStructToMapTempFile(&Map, sector.x, sector.y, sector.z);
+	SaveModifiedMapStructToMapTempFile(&Map, sector);
 }
 
 BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ )
@@ -617,7 +619,8 @@ try
 	BOOLEAN	fRetVal=FALSE;
 	UINT32	cnt;
 
-	ST::string const zMapName = GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSectorX, sSectorY, ubSectorZ );
+	SGPSector sSector(sSectorX, sSectorY, ubSectorZ);
+	ST::string const zMapName = GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSector);
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
@@ -652,7 +655,7 @@ try
 		else
 		{
 			//save the struct back to the temp file
-			SaveModifiedMapStructToMapTempFile( pMap, sSectorX, sSectorY, ubSectorZ );
+			SaveModifiedMapStructToMapTempFile(pMap, sSector);
 		}
 	}
 
@@ -684,7 +687,7 @@ void AddWindowHitToMapTempFile( UINT32 uiMapIndex )
 	Map.usGridNo = (UINT16)uiMapIndex;
 	Map.ubType = SLM_WINDOW_HIT;
 
-	SaveModifiedMapStructToMapTempFile(&Map, gWorldSector.x, gWorldSector.y, gWorldSector.z);
+	SaveModifiedMapStructToMapTempFile(&Map, gWorldSector);
 }
 
 

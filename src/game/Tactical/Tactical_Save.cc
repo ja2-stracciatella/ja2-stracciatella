@@ -64,7 +64,8 @@ static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, SectorFla
 {
 	if (!(flags & type)) return;
 
-	ST::string const map_name = GetMapTempFileName(type, x, y, z);
+	SGPSector sMap(x, y, z);
+	ST::string const map_name = GetMapTempFileName(type, sMap);
 	SaveFilesToSavedGame(map_name.c_str(), f);
 }
 
@@ -1057,14 +1058,9 @@ void JA2EncryptedFileWrite(HWFILE const hFile, BYTE const* const data, UINT32 co
 
 ST::string GetMapTempFileName(SectorFlags uiType, const SGPSector& sector)
 {
-	return GetMapTempFileName(uiType, sector.x, sector.y, sector.z);
-}
-
-ST::string GetMapTempFileName(SectorFlags const uiType, INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ)
-{
 	// Convert the current sector location into a file name
 	char zTempName[512];
-	GetMapFileName(SGPSector(sMapX, sMapY, bMapZ), zTempName, FALSE);
+	GetMapFileName(sector, zTempName, FALSE);
 
 	const char* prefix;
 	switch (uiType)

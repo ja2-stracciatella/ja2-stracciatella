@@ -85,7 +85,6 @@ void InitExitGameDialogBecauseFileHackDetected(void);
 void HandleAllReachAbleItemsInTheSector(const SGPSector& sector);
 
 ST::string GetMapTempFileName(SectorFlags uiType, const SGPSector& sector);
-ST::string GetMapTempFileName(SectorFlags uiType, INT16 sMapX, INT16 sMapY, INT8 bMapZ);
 
 
 UINT32	GetNumberOfVisibleWorldItemsFromSectorStructureForSector(const SGPSector& sMap);
