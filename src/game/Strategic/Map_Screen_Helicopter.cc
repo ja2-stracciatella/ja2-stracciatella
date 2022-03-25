@@ -643,7 +643,7 @@ void SetUpHelicopterForPlayer(const SGPSector& sMap)
 {
 	if (!fSkyRiderSetUp)
 	{
-		iHelicopterVehicleId = AddVehicleToList(sMap.x, sMap.y, 0, HELICOPTER);
+		iHelicopterVehicleId = AddVehicleToList(sMap, 0, HELICOPTER);
 
 		// set up for movement
 		SetUpHelicopterForMovement( );

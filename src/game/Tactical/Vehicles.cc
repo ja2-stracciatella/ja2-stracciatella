@@ -77,9 +77,8 @@ void SetVehicleValuesIntoSoldierType(SOLDIERTYPE* const vs)
 }
 
 
-INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo, const UINT8 ubType)
+INT32 AddVehicleToList(const SGPSector& sMap, const INT16 sGridNo, const UINT8 ubType)
 {
-	SGPSector sMap(sMapX, sMapY);
 	INT32 vid;
 	for (vid = 0;; ++vid)
 	{

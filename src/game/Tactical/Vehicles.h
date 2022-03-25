@@ -60,7 +60,7 @@ extern std::vector<VEHICLETYPE> pVehicleList;
 void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle );
 
 // add vehicle to list and return id value
-INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType );
+INT32 AddVehicleToList(const SGPSector& sMap, INT16 sGridNo, UINT8 ubType);
 
 // remove this vehicle from the list
 void RemoveVehicleFromList(VEHICLETYPE&);
