@@ -69,9 +69,9 @@ void SetupTextInputForMapInfo()
 	AddTextInputField( 210, EDITOR_TASKBAR_POS_Y + 60, 30, 20, MSYS_PRIORITY_NORMAL, str, 2, INPUTTYPE_NUMERICSTRICT );
 
 	//exit grid input fields
-	str = ST::format("{c}{}", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX);
+	str = ST::format("{}", gExitGrid.ubGotoSector.AsShortString());
 	AddTextInputField(338, EDITOR_TASKBAR_POS_Y +  3, 30, 18, MSYS_PRIORITY_NORMAL, str, 3, INPUTTYPE_COORDINATE);
-	str = ST::format("{}", gExitGrid.ubGotoSectorZ);
+	str = ST::format("{}", gExitGrid.ubGotoSector.z);
 	AddTextInputField( 338, EDITOR_TASKBAR_POS_Y + 23, 30, 18, MSYS_PRIORITY_NORMAL, str, 1, INPUTTYPE_NUMERICSTRICT );
 	str = ST::format("{}", gExitGrid.usGridNo);
 	AddTextInputField( 338, EDITOR_TASKBAR_POS_Y + 43, 40, 18, MSYS_PRIORITY_NORMAL, str, 5, INPUTTYPE_NUMERICSTRICT );
@@ -196,14 +196,14 @@ void ExtractAndUpdateMapInfo()
 	if ('a' <= row && row <= 'z' ) row -= 32; //uppercase it!
 	if ('A' <= row && row <= 'Z' && '0' <= str[1] && str[1] <= '9')
 	{ //only update, if coordinate is valid.
-		gExitGrid.ubGotoSectorY = (UINT8)(row    - 'A' + 1);
-		gExitGrid.ubGotoSectorX = (UINT8)(str[1] - '0');
+		gExitGrid.ubGotoSector.y = (UINT8)(row    - 'A' + 1);
+		gExitGrid.ubGotoSector.x = (UINT8)(str[1] - '0');
 		if( str[2] >= '0' && str[2] <= '9' )
-			gExitGrid.ubGotoSectorX = (UINT8)(gExitGrid.ubGotoSectorX * 10 + str[2] - '0' );
-		gExitGrid.ubGotoSectorX = (UINT8)MAX( MIN( gExitGrid.ubGotoSectorX, 16 ), 1 );
-		gExitGrid.ubGotoSectorY = (UINT8)MAX( MIN( gExitGrid.ubGotoSectorY, 16 ), 1 );
+			gExitGrid.ubGotoSector.x = (UINT8)(gExitGrid.ubGotoSector.x * 10 + str[2] - '0' );
+		gExitGrid.ubGotoSector.x = (UINT8)MAX( MIN( gExitGrid.ubGotoSector.x, 16 ), 1 );
+		gExitGrid.ubGotoSector.y = (UINT8)MAX( MIN( gExitGrid.ubGotoSector.y, 16 ), 1 );
 	}
-	gExitGrid.ubGotoSectorZ = (UINT8)MAX( MIN( GetNumericStrictValueFromField( 8 ), 3 ), 0 );
+	gExitGrid.ubGotoSector.z = (UINT8)MAX( MIN( GetNumericStrictValueFromField( 8 ), 3 ), 0 );
 	gExitGrid.usGridNo      = (UINT16)MAX( MIN( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
 
 	UpdateMapInfoFields();
@@ -215,9 +215,9 @@ BOOLEAN ApplyNewExitGridValuesToTextFields()
 	//exit grid input fields
 	if( iCurrentTaskbar != TASK_MAPINFO )
 		return FALSE;
-	str = ST::format("{c}{}", gExitGrid.ubGotoSectorY + 'A' - 1, gExitGrid.ubGotoSectorX);
+	str = ST::format("{}", gExitGrid.ubGotoSector.AsShortString());
 	SetInputFieldString( 7, str );
-	str = ST::format("{}", gExitGrid.ubGotoSectorZ);
+	str = ST::format("{}", gExitGrid.ubGotoSector.z);
 	SetInputFieldString( 8, str );
 	str = ST::format("{}", gExitGrid.usGridNo);
 	SetInputFieldString( 9, str );

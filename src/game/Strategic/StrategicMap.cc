@@ -1303,12 +1303,12 @@ ST::string GetSectorIDString(const SGPSector& sector, BOOLEAN detailed)
 
 static void SetInsertionDataFromAdjacentMoveDirection(SOLDIERTYPE& s, UINT8 const tactical_direction, INT16 const additional_data)
 {
+	EXITGRID ExitGrid;
 	// Set insertion code
 	switch (tactical_direction)
 	{
 		case 255:
 			// We are using an exit grid, set insertion values
-			EXITGRID ExitGrid;
 			if (!GetExitGrid(additional_data, &ExitGrid))
 			{
 				SLOGA("No valid Exit grid can be found when one was expected: SetInsertionDataFromAdjacentMoveDirection.");
@@ -1515,9 +1515,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 			SLOGA("Told to use exit grid at %d but one does not exist", sAdditionalData);
 		}
 
-		gsAdjacentSector.x = ExitGrid.ubGotoSectorX;
-		gsAdjacentSector.y = ExitGrid.ubGotoSectorY;
-		gsAdjacentSector.z = ExitGrid.ubGotoSectorZ;
+		gsAdjacentSector = ExitGrid.ubGotoSector;
 	}
 
 	// Give guy(s) orders to walk off sector...

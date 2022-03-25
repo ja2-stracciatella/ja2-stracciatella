@@ -1599,9 +1599,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 				//DEF: First thing, Add the exit grid to the map temps file
 				EXITGRID ExitGrid;
-				ExitGrid.ubGotoSectorX = 10;
-				ExitGrid.ubGotoSectorY = 1;
-				ExitGrid.ubGotoSectorZ = 1;
+				ExitGrid.ubGotoSector = SGPSector(10, 1, 1);
 				ExitGrid.usGridNo = 12722;
 
 				{ ApplyMapChangesToMapTempFile app;

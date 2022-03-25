@@ -24,7 +24,7 @@
 BOOLEAN gfLoadingExitGrids = FALSE;
 
 //used by editor.
-EXITGRID		gExitGrid	= {0,1,1,0};
+EXITGRID gExitGrid = {0, {1, 1, 0}};
 
 BOOLEAN gfOverrideInsertionWithExitGrid = FALSE;
 
@@ -32,9 +32,9 @@ BOOLEAN gfOverrideInsertionWithExitGrid = FALSE;
 static INT32 ConvertExitGridToINT32(EXITGRID* pExitGrid)
 {
 	INT32 iExitGridInfo;
-	iExitGridInfo  = (pExitGrid->ubGotoSectorX-1)<< 28;
-	iExitGridInfo += (pExitGrid->ubGotoSectorY-1)<< 24;
-	iExitGridInfo += pExitGrid->ubGotoSectorZ    << 20;
+	iExitGridInfo  = ((UINT8) pExitGrid->ubGotoSector.x - 1) << 28;
+	iExitGridInfo += ((UINT8) pExitGrid->ubGotoSector.y - 1) << 24;
+	iExitGridInfo += (UINT8) pExitGrid->ubGotoSector.z    << 20;
 	iExitGridInfo += pExitGrid->usGridNo & 0x0000ffff;
 	return iExitGridInfo;
 }
@@ -43,9 +43,9 @@ static INT32 ConvertExitGridToINT32(EXITGRID* pExitGrid)
 static void ConvertINT32ToExitGrid(INT32 iExitGridInfo, EXITGRID* pExitGrid)
 {
 	//convert the int into 4 unsigned bytes.
-	pExitGrid->ubGotoSectorX		= (UINT8)(((iExitGridInfo & 0xf0000000)>>28)+1);
-	pExitGrid->ubGotoSectorY		= (UINT8)(((iExitGridInfo & 0x0f000000)>>24)+1);
-	pExitGrid->ubGotoSectorZ		= (UINT8)((iExitGridInfo & 0x00f00000)>>20);
+	pExitGrid->ubGotoSector.x = (UINT8) (((iExitGridInfo & 0xf0000000) >> 28) + 1);
+	pExitGrid->ubGotoSector.y = (UINT8) (((iExitGridInfo & 0x0f000000) >> 24) + 1);
+	pExitGrid->ubGotoSector.z = (UINT8) ((iExitGridInfo & 0x00f00000) >> 20);
 	pExitGrid->usGridNo					= (UINT16)(iExitGridInfo & 0x0000ffff);
 }
 
@@ -63,9 +63,7 @@ BOOLEAN	GetExitGrid( UINT16 usMapIndex, EXITGRID *pExitGrid )
 		}
 		pShadow = pShadow->pNext;
 	}
-	pExitGrid->ubGotoSectorX = 0;
-	pExitGrid->ubGotoSectorY = 0;
-	pExitGrid->ubGotoSectorZ = 0;
+	pExitGrid->ubGotoSector = SGPSector(0, 0, 0);
 	pExitGrid->usGridNo = 0;
 	return FALSE;
 }
@@ -121,14 +119,16 @@ void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 {
 	EXITGRID exitGrid;
 	UINT16 usNumSaved = 0;
-	UINT16 x;
 	fp->write(&usNumExitGrids, 2);
-	for( x = 0; x < WORLD_MAX; x++ )
+	for (UINT16 x = 0; x < WORLD_MAX; x++)
 	{
 		if( GetExitGrid( x, &exitGrid ) )
 		{
 			fp->write(&x, 2);
-			fp->write(&exitGrid, 5);
+			fp->write(&exitGrid.usGridNo, 2);
+			fp->write(&exitGrid.ubGotoSector.x, 1);
+			fp->write(&exitGrid.ubGotoSector.y, 1);
+			fp->write(&exitGrid.ubGotoSector.z, 1);
 			usNumSaved++;
 		}
 	}
@@ -140,15 +140,17 @@ void SaveExitGrids( HWFILE fp, UINT16 usNumExitGrids )
 void LoadExitGrids(HWFILE const f)
 {
 	EXITGRID exitGrid;
-	UINT16 x;
 	UINT16 usNumSaved;
 	UINT16 usMapIndex;
 	gfLoadingExitGrids = TRUE;
 	f->read(&usNumSaved, sizeof(usNumSaved));
-	for( x = 0; x < usNumSaved; x++ )
+	for (UINT16 x = 0; x < usNumSaved; x++)
 	{
 		f->read(&usMapIndex, sizeof(usMapIndex));
-		f->read(&exitGrid,   5);
+		f->read(&exitGrid.usGridNo, 2);
+		f->read(&exitGrid.ubGotoSector.x, 1);
+		f->read(&exitGrid.ubGotoSector.y, 1);
+		f->read(&exitGrid.ubGotoSector.z, 1);
 		AddExitGridToWorld( usMapIndex, &exitGrid );
 	}
 	gfLoadingExitGrids = FALSE;
@@ -182,7 +184,7 @@ void AttemptToChangeFloorLevel(INT8 const relative_z_level)
 	for (UINT16 i = 0; i != WORLD_MAX; ++i)
 	{
 		if (!GetExitGrid(i, &gExitGrid))               continue;
-		if (gExitGrid.ubGotoSectorZ != look_for_level) continue;
+		if (gExitGrid.ubGotoSector.z != look_for_level) continue;
 		// found an exit grid leading to the goal sector!
 
 		gfOverrideInsertionWithExitGrid = TRUE;
@@ -217,7 +219,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid(const SOLDIERTYPE* const pSoldier,
 	UINT8 ubSaveNPCAPBudget;
 	UINT8 ubSaveNPCDistLimit;
 	EXITGRID	ExitGrid;
-	UINT8	ubGotoSectorX, ubGotoSectorY, ubGotoSectorZ;
+	SGPSector ubGotoSector;
 
 	// Turn off at end of function...
 	gfPlotPathToExitGrid = TRUE;
@@ -243,10 +245,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid(const SOLDIERTYPE* const pSoldier,
 	}
 
 	// Copy our dest values.....
-	ubGotoSectorX = ExitGrid.ubGotoSectorX;
-	ubGotoSectorY = ExitGrid.ubGotoSectorY;
-	ubGotoSectorZ = ExitGrid.ubGotoSectorZ;
-
+	ubGotoSector = ExitGrid.ubGotoSector;
 
 	sTop		= ubRadius;
 	sBottom = -ubRadius;
@@ -292,7 +291,7 @@ UINT16 FindGridNoFromSweetSpotCloseToExitGrid(const SOLDIERTYPE* const pSoldier,
 					if ( GetExitGrid( sGridNo, &ExitGrid ) )
 					{
 						// Is it the same exitgrid?
-						if ( ExitGrid.ubGotoSectorX == ubGotoSectorX && ExitGrid.ubGotoSectorY == ubGotoSectorY && ExitGrid.ubGotoSectorZ == ubGotoSectorZ )
+						if (ExitGrid.ubGotoSector == ubGotoSector)
 						{
 							uiRange = GetRangeInCellCoordsFromGridNoDiff( pSoldier->sGridNo, sGridNo );
 
@@ -368,7 +367,7 @@ UINT16 FindClosestExitGrid( SOLDIERTYPE *pSoldier, INT16 sSrcGridNo, INT8 ubRadi
 
 TEST(ExitGrids, asserts)
 {
-	EXPECT_EQ(sizeof(EXITGRID), 6u);
+	EXPECT_EQ(sizeof(EXITGRID), 8u);
 }
 
 #endif

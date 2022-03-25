@@ -105,9 +105,7 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 		AddStructToHead( 13830, usTileIndex );
 
 		// Add exit grid
-		ExitGrid.ubGotoSectorX = 3;
-		ExitGrid.ubGotoSectorY = MAP_ROW_O;
-		ExitGrid.ubGotoSectorZ = 1;
+		ExitGrid.ubGotoSector = SGPSector(3, MAP_ROW_O, 1);
 		ExitGrid.usGridNo = 13037;
 
 		AddExitGridToWorld( 13669, &ExitGrid );

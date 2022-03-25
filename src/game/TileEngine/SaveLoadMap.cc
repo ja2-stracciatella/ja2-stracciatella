@@ -199,9 +199,9 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 					EXITGRID ExitGrid;
 					gfLoadingExitGrids = TRUE;
 					ExitGrid.usGridNo = pMap->usSubImageIndex;
-					ExitGrid.ubGotoSectorX = (UINT8) pMap->usImageType;
-					ExitGrid.ubGotoSectorY = (UINT8) ( pMap->usImageType >> 8 ) ;
-					ExitGrid.ubGotoSectorZ = pMap->ubExtra;
+					ExitGrid.ubGotoSector.x = (UINT8) pMap->usImageType;
+					ExitGrid.ubGotoSector.y = (UINT8) ( pMap->usImageType >> 8 ) ;
+					ExitGrid.ubGotoSector.z = pMap->ubExtra;
 
 					AddExitGridToWorld( pMap->usGridNo, &ExitGrid );
 					gfLoadingExitGrids = FALSE;
@@ -599,12 +599,12 @@ void AddExitGridToMapTempFile(UINT16 usGridNo, EXITGRID *pExitGrid, const SGPSec
 	Map = MODIFY_MAP{};
 
 	Map.usGridNo = usGridNo;
-//	Map.usIndex		= pExitGrid->ubGotoSectorX;
+//	Map.usIndex		= pExitGrid->ubGotoSector.x;
 
-	Map.usImageType = pExitGrid->ubGotoSectorX | ( pExitGrid->ubGotoSectorY << 8 );
+	Map.usImageType = (UINT8) pExitGrid->ubGotoSector.x | ( (UINT8) pExitGrid->ubGotoSector.y << 8 );
 	Map.usSubImageIndex = pExitGrid->usGridNo;
 
-	Map.ubExtra		= pExitGrid->ubGotoSectorZ;
+	Map.ubExtra		= pExitGrid->ubGotoSector.z;
 	Map.ubType		= SLM_EXIT_GRIDS;
 
 	SaveModifiedMapStructToMapTempFile(&Map, sector);

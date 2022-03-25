@@ -1988,11 +1988,9 @@ try
 						++pSummary->usExitGridSize[loop];
 						EXITGRID* const eg = &pSummary->ExitGrid[loop];
 						eg->usGridNo      = exitGrid.usGridNo;
-						eg->ubGotoSectorX = exitGrid.ubGotoSectorX;
-						eg->ubGotoSectorY = exitGrid.ubGotoSectorY;
-						eg->ubGotoSectorZ = exitGrid.ubGotoSectorZ;
-						if (eg->ubGotoSectorX != exitGrid.ubGotoSectorX ||
-								eg->ubGotoSectorY != exitGrid.ubGotoSectorY)
+						eg->ubGotoSector = exitGrid.ubGotoSector;
+						// FIXME: useless check, always false
+						if (eg->ubGotoSector != exitGrid.ubGotoSector)
 						{
 							pSummary->fInvalidDest[loop] = TRUE;
 						}
@@ -2002,9 +2000,7 @@ try
 
 				const EXITGRID* const eg = &pSummary->ExitGrid[loop];
 				if (eg->usGridNo      == exitGrid.usGridNo      &&
-						eg->ubGotoSectorX == exitGrid.ubGotoSectorX &&
-						eg->ubGotoSectorY == exitGrid.ubGotoSectorY &&
-						eg->ubGotoSectorZ == exitGrid.ubGotoSectorZ)
+						eg->ubGotoSector == exitGrid.ubGotoSector)
 				{ //same destination.
 					++pSummary->usExitGridSize[loop];
 					break;
