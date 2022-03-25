@@ -669,7 +669,7 @@ static void BuildStashForSelectedSector(const SGPSector& sector)
 	}
 	else
 	{
-		temp = LoadWorldItemsFromTempItemFile(sector.x, sector.y, sector.z);
+		temp = LoadWorldItemsFromTempItemFile(sector);
 		items = &temp;
 	}
 

@@ -426,7 +426,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	else
 	{
 		// otherwise load the saved items from the item file and change the records of their locations
-		std::vector<WORLDITEM> pTemp = LoadWorldItemsFromTempItemFile(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z);
+		std::vector<WORLDITEM> pTemp = LoadWorldItemsFromTempItemFile(shippingDest->deliverySector);
 
 		for (WORLDITEM& wi : pTemp)
 		{

@@ -25,7 +25,7 @@ void SaveCurrentSectorsInformationToTempItemFile(void);
 void LoadCurrentSectorsInformationFromTempItemsFile();
 
 // Loads a World Item array from that sectors temp item file
-std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(const SGPSector& sMap);
 
 //  Adds an array of Item Objects to the specified location on a unloaded map.
 //  If you want to overwrite all the items in the array set fReplaceEntireFile to TRUE.

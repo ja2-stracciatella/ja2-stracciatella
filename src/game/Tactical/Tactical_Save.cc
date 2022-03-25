@@ -228,9 +228,9 @@ void SaveWorldItemsToTempItemFile(const SGPSector& sMap, const std::vector<WORLD
 }
 
 
-std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const y, INT8 const z)
+std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(const SGPSector& sMap)
 {
-	ST::string const filename = GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, x, y, z);
+	ST::string const filename = GetMapTempFileName(SF_ITEM_TEMP_FILE_EXISTS, sMap);
 
 	std::vector<WORLDITEM> l_items;
 	// If the file doesn't exists, it's no problem
@@ -252,7 +252,7 @@ std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(INT16 const x, INT16 const
 
 void AddItemsToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, INT16 const sGridNo, UINT32 const uiNumberOfItemsToAdd, OBJECTTYPE const* const pObject, UINT8 const ubLevel, UINT16 const usFlags, INT8 const bRenderZHeightAboveLevel, Visibility const bVisible)
 {
-	std::vector<WORLDITEM> wis = LoadWorldItemsFromTempItemFile(sMapX, sMapY, bMapZ);
+	std::vector<WORLDITEM> wis = LoadWorldItemsFromTempItemFile(SGPSector(sMapX, sMapY, bMapZ));
 
 	//loop through all the objects to add
 	for (UINT32 uiLoop1 = 0; uiLoop1 < uiNumberOfItemsToAdd; ++uiLoop1)
@@ -593,7 +593,7 @@ static UINT32 GetLastTimePlayerWasInSector(void)
 
 static void LoadAndAddWorldItemsFromTempFile(const SGPSector& sMap)
 {
-	std::vector<WORLDITEM> items = LoadWorldItemsFromTempItemFile(sMap.x, sMap.y, sMap.z);
+	std::vector<WORLDITEM> items = LoadWorldItemsFromTempItemFile(sMap);
 
 	// Have we already been to the sector?
 	if (GetSectorFlagStatus(sMap, SF_ALREADY_LOADED))
@@ -1130,7 +1130,7 @@ void SetNumberOfVisibleWorldItemsInSectorStructureForSector(const SGPSector& sec
 
 static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const SGPSector& sMap, bool const check_consistency)
 {
-	std::vector<WORLDITEM> pTotalSectorList = LoadWorldItemsFromTempItemFile(sMap.x, sMap.y, sMap.z);
+	std::vector<WORLDITEM> pTotalSectorList = LoadWorldItemsFromTempItemFile(sMap);
 
 	UINT32 uiItemCount = 0;
 	if (pTotalSectorList.size() > 0)

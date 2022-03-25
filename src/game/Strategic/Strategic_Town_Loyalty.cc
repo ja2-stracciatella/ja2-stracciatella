@@ -632,7 +632,7 @@ void RemoveRandomItemsInSector(const SGPSector& sSector, UINT8 const ubChance)
 	{
 		/* if the player has never been there, there's no temp file, and 0 items
 		 * will get returned, preventing any stealing */
-		std::vector<WORLDITEM> pItemList = LoadWorldItemsFromTempItemFile(sSector.x, sSector.y, sSector.z);
+		std::vector<WORLDITEM> pItemList = LoadWorldItemsFromTempItemFile(sSector);
 		if (pItemList.size() == 0) return;
 
 		bool somethingWasStolen = false;
