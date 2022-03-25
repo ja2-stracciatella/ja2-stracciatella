@@ -359,7 +359,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 	// if the currently selected sector has no one in it, select this one instead
 	if (!CanGoToTacticalInSector(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ)))
 	{
-		ChangeSelectedMapSector(s.sSectorX, s.sSectorY, 0);
+		ChangeSelectedMapSector(SGPSector(s.sSectorX, s.sSectorY, 0));
 	}
 }
 

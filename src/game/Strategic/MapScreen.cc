@@ -2401,7 +2401,7 @@ static UINT32 HandleMapUI(void)
 							( gpItemPointerSoldier->sSectorY != sSelMap.y ) ||
 							( gpItemPointerSoldier->bSectorZ != iCurrentMapSectorZ ) )
 						{
-							ChangeSelectedMapSector( gpItemPointerSoldier->sSectorX, gpItemPointerSoldier->sSectorY, gpItemPointerSoldier->bSectorZ );
+							ChangeSelectedMapSector(SGPSector(gpItemPointerSoldier->sSectorX, gpItemPointerSoldier->sSectorY, gpItemPointerSoldier->bSectorZ));
 						}
 					}
 
@@ -4459,7 +4459,7 @@ static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			// if not dead or POW, select his sector
 			if( ( pSoldier->bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
 			{
-				ChangeSelectedMapSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
+				ChangeSelectedMapSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
 			}
 
 			// unhilight contract line
@@ -4497,7 +4497,7 @@ static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			// if not dead or POW, select his sector
 			if( ( pSoldier->bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
 			{
-				ChangeSelectedMapSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ );
+				ChangeSelectedMapSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
 			}
 		}
 	}
@@ -6927,14 +6927,8 @@ static void CheckForInventoryModeCancellation(void)
 	}
 }
 
-void ChangeSelectedMapSector(const SGPSector& sector)
+void ChangeSelectedMapSector(const SGPSector& sMap)
 {
-	ChangeSelectedMapSector(sector.x, sector.y, sector.z);
-}
-
-void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ )
-{
-	SGPSector sMap(sMapX, sMapY, bMapZ);
 	// ignore while map inventory pool is showing, or else items can be replicated, since sector inventory always applies
 	// only to the currently selected sector!!!
 	if( fShowMapInventoryPool )
@@ -8067,7 +8061,7 @@ static void SelectAllCharactersInSquad(INT8 bSquadNumber)
 				ChangeSelectedInfoChar(bCounter, FALSE);
 
 				// select his sector
-				ChangeSelectedMapSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+				ChangeSelectedMapSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
 
 				fFirstOne = FALSE;
 			}

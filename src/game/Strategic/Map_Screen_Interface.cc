@@ -854,7 +854,7 @@ void JumpToLevel( INT32 iLevel )
 	}
 
 	// set current sector Z to level passed
-	ChangeSelectedMapSector( sSelMap.x, sSelMap.y, ( INT8 )iLevel );
+	ChangeSelectedMapSector(SGPSector(sSelMap.x, sSelMap.y, iLevel));
 }
 
 
@@ -1654,7 +1654,7 @@ void HandleMinerEvent(ProfileID const ubMinerProfileID, INT16 const sQuoteNumber
 		if ( iCurrentMapSectorZ != 0 )
 		{
 			// switch to it, because the miner locators wouldn't show up if we're underground while they speak
-			ChangeSelectedMapSector( sSelMap.x, sSelMap.y, 0 );
+			ChangeSelectedMapSector( sSelMap );
 		}
 
 		fMapPanelDirty = TRUE;
