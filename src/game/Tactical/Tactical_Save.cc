@@ -71,16 +71,16 @@ static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, SectorFla
 
 static void AddTempFilesToSavedGame(HWFILE const f, UINT32 const flags, const SGPSector& sMap)
 {
-	AddTempFileToSavedGame(f, flags, SF_ITEM_TEMP_FILE_EXISTS,              sMap);
-	AddTempFileToSavedGame(f, flags, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS,    sMap);
-	AddTempFileToSavedGame(f, flags, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sMap);
-	AddTempFileToSavedGame(f, flags, SF_DOOR_TABLE_TEMP_FILES_EXISTS,       sMap);
-	AddTempFileToSavedGame(f, flags, SF_REVEALED_STATUS_TEMP_FILE_EXISTS,   sMap);
-	AddTempFileToSavedGame(f, flags, SF_DOOR_STATUS_TEMP_FILE_EXISTS,       sMap);
-	AddTempFileToSavedGame(f, flags, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS,   sMap);
-	AddTempFileToSavedGame(f, flags, SF_CIV_PRESERVED_TEMP_FILE_EXISTS,     sMap);
-	AddTempFileToSavedGame(f, flags, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS,     sMap);
-	AddTempFileToSavedGame(f, flags, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS,  sMap);
+	SectorFlags bits[] = { SF_ITEM_TEMP_FILE_EXISTS, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS,
+		SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, SF_DOOR_TABLE_TEMP_FILES_EXISTS,
+		SF_REVEALED_STATUS_TEMP_FILE_EXISTS, SF_DOOR_STATUS_TEMP_FILE_EXISTS,
+		SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, SF_CIV_PRESERVED_TEMP_FILE_EXISTS,
+		SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS };
+
+	for (auto bit : bits)
+	{
+		AddTempFileToSavedGame(f, flags, bit, sMap);
+	}
 }
 
 
