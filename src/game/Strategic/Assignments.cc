@@ -697,7 +697,7 @@ static BOOLEAN CanCharacterTrainTeammates(SOLDIERTYPE const* const pSoldier)
 	if (!CanCharacterPractise(pSoldier)) return FALSE;
 
 	// if alone in sector, can't enter the attributes submenu at all
-	if ( PlayerMercsInSector( ( UINT8 ) pSoldier->sSectorX, ( UINT8 ) pSoldier->sSectorY, pSoldier->bSectorZ ) == 0 )
+	if (PlayerMercsInSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ)) == 0)
 	{
 		return( FALSE );
 	}
@@ -713,7 +713,7 @@ static BOOLEAN CanCharacterBeTrainedByOther(SOLDIERTYPE const* const pSoldier)
 	if (!CanCharacterPractise(pSoldier)) return FALSE;
 
 	// if alone in sector, can't enter the attributes submenu at all
-	if ( PlayerMercsInSector( ( UINT8 ) pSoldier->sSectorX, ( UINT8 ) pSoldier->sSectorY, pSoldier->bSectorZ ) == 0 )
+	if (PlayerMercsInSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ)) == 0)
 	{
 		return( FALSE );
 	}

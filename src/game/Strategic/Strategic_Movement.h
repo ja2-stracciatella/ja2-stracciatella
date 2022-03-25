@@ -214,7 +214,6 @@ static UINT32 const TRAVERSE_TIME_IMPOSSIBLE = 0xFFFFFFFF;
 INT32 GetSectorMvtTimeForGroup(UINT8 ubSector, UINT8 ubDirection, GROUP const*);
 
 UINT8 PlayerMercsInSector(const SGPSector& sector);
-UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
 UINT8 PlayerGroupsInSector(const SGPSector& sector);
 
 // Is this player group in motion?

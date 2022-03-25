@@ -1425,7 +1425,7 @@ static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool co
 		if (GroupAtFinalDestination(&g))
 		{
 			// If currently selected sector has nobody in it
-			if (PlayerMercsInSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ) == 0)
+			if (PlayerMercsInSector(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ)) == 0)
 			{ // Make this sector strategically selected
 				ChangeSelectedMapSector(g.ubSector);
 			}
@@ -2231,19 +2231,14 @@ INT32 GetSectorMvtTimeForGroup(UINT8 const ubSector, UINT8 const direction, GROU
 	return best_traverse_time;
 }
 
-UINT8 PlayerMercsInSector(const SGPSector& sector)
-{
-	return PlayerMercsInSector(sector.x, sector.y, sector.z);
-}
-
 // Counts the number of live mercs in any given sector.
-UINT8 PlayerMercsInSector(UINT8 const x, UINT8 const y, UINT8 const z)
+UINT8 PlayerMercsInSector(const SGPSector& sector)
 {
 	UINT8 n_mercs = 0;
 	CFOR_EACH_PLAYER_GROUP(g)
 	{
 		if (g->fBetweenSectors) continue;
-		if (g->ubSector.x != x || g->ubSector.y != y || g->ubSector.z != z) continue;
+		if (g->ubSector != sector) continue;
 		/* We have a group, make sure that it isn't a group containing only dead
 		 * members. */
 		CFOR_EACH_PLAYER_IN_GROUP(p, g)
@@ -3350,7 +3345,7 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 			bProgressMaxCats = (INT8)MAX( CurrentPlayerProgressPercentage() / (7 - gGameOptions.ubDifficultyLevel), 3 );
 
 			//make sure bloodcats don't outnumber mercs by a factor greater than 2
-			bNumMercMaxCats = (INT8) (PlayerMercsInSector(gSector.x, gSector.y, gSector.z) * 2);
+			bNumMercMaxCats = (INT8) (PlayerMercsInSector(gSector) * 2);
 
 			//choose the lowest number of cats calculated by difficulty and progress.
 			pSector->bBloodCats = (INT8)MIN( bDifficultyMaxCats, bProgressMaxCats );

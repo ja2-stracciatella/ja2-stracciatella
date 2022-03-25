@@ -314,7 +314,7 @@ static void HourlyCheckIfSlayAloneSoHeCanLeave(void)
 		return;
 	}
 	if (pSoldier->bLife == 0) return;
-	if( PlayerMercsInSector( (UINT8)pSoldier->sSectorX, (UINT8)pSoldier->sSectorY, pSoldier->bSectorZ ) == 1 )
+	if (PlayerMercsInSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ)) == 1)
 	{
 		if( Chance( 15 ) )
 		{

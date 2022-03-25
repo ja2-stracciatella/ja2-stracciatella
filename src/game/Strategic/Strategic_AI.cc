@@ -2860,7 +2860,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			ubNumSoldiers = (UINT8)(ubNumSoldiers + ubNumSoldiers / 7);
 			giReinforcementPool -= ubNumSoldiers;
 			giReinforcementPool = MAX( giReinforcementPool, 0 );
-			if( PlayerMercsInSector( 9, 1, 1 ) && !PlayerMercsInSector( 10, 1, 1 ) && !PlayerMercsInSector( 10, 1, 2 ) )
+			if (PlayerMercsInSector(SGPSector(9, 1, 1)) && !PlayerMercsInSector(SGPSector(10, 1, 1)) && !PlayerMercsInSector(SGPSector(10, 1, 2)))
 			{ //send to A9 (if mercs in A9, but not in A10 or A10 basement)
 				ubSectorID = SEC_A9;
 			}
@@ -3202,7 +3202,7 @@ static BOOLEAN GarrisonCanProvideMinimumReinforcements(INT32 iGarrisonID)
 		//Do a more expensive check first to determine if there is a player presence here (combat in progress)
 		//If so, do not provide reinforcements from here.
 		SGPSector ubSector(gGarrisonGroup[iGarrisonID].ubSectorID);
-		if (PlayerMercsInSector(ubSector.x, ubSector.y, ubSector.z) || CountAllMilitiaInSector(ubSector))
+		if (PlayerMercsInSector(ubSector) || CountAllMilitiaInSector(ubSector))
 		{
 			return FALSE;
 		}

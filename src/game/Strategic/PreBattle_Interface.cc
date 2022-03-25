@@ -369,7 +369,7 @@ void InitPreBattleInterface(GROUP* const battle_group, bool const persistent_pbi
 					else
 					{
 						UINT8 const n_mobile_enemies = NumMobileEnemiesInSector(sSector);
-						UINT8 const n_mercs          = PlayerMercsInSector(sSector.x, sSector.y, sSector.z);
+						UINT8 const n_mercs          = PlayerMercsInSector(sSector);
 						if (gfAutoAmbush && n_mobile_enemies > n_mercs)
 						{
 							gubEnemyEncounterCode = ENEMY_AMBUSH_CODE;
