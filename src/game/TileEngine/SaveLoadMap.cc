@@ -536,9 +536,8 @@ static void DamageStructsFromMapTempFile(MODIFY_MAP* pMap)
 }
 
 
-void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
+void AddStructToUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector)
 {
-	SGPSector sSector(sSectorX, sSectorY, ubSectorZ);
 	MODIFY_MAP Map;
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
@@ -561,9 +560,8 @@ void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 }
 
 
-void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
+void RemoveStructFromUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector)
 {
-	SGPSector sSector(sSectorX, sSectorY, ubSectorZ);
 	MODIFY_MAP Map;
 
 	if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )

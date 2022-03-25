@@ -56,8 +56,8 @@ void UpdateSAMDoneRepair(const SGPSector& sec)
 	}
 	else
 	{ // We add temp changes to map not loaded
-		RemoveStructFromUnLoadedMapTempFile(gridno, damaged_graphic, sec.x, sec.y, sec.z);
-		AddStructToUnLoadedMapTempFile(gridno, good_graphic, sec.x, sec.y, sec.z);
+		RemoveStructFromUnLoadedMapTempFile(gridno, damaged_graphic, sec);
+		AddStructToUnLoadedMapTempFile(gridno, good_graphic, sec);
 	}
 
 	// SAM site may have been put back into working order

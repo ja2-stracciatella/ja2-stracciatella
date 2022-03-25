@@ -97,8 +97,8 @@ void SaveRevealedStatusArrayToRevealedTempFile(const SGPSector& sector);
 void LoadRevealedStatusArrayFromRevealedTempFile(void);
 
 
-void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
-void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
+void RemoveStructFromUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector);
+void AddStructToUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector);
 
 //Adds the exit grid to
 void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, const SGPSector& sector);

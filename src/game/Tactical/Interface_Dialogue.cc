@@ -4526,12 +4526,13 @@ static void DoneFadeOutActionBasement(void)
 	gpTacticalTraversalChosenSoldier = NULL;
 
 	// Remove crate
-	RemoveStructFromUnLoadedMapTempFile( 7887, SECONDOSTRUCT1, 10, 1, 0 );
+	SGPSector upstairs(10, 1);
+	RemoveStructFromUnLoadedMapTempFile(7887, SECONDOSTRUCT1, upstairs);
 	// Add crate
-	AddStructToUnLoadedMapTempFile( 8207, SECONDOSTRUCT1, 10, 1, 0 );
+	AddStructToUnLoadedMapTempFile(8207, SECONDOSTRUCT1, upstairs);
 
 	// Add trapdoor
-	AddStructToUnLoadedMapTempFile( 7887, DEBRIS2MISC1, 10, 1, 0 );
+	AddStructToUnLoadedMapTempFile(7887, DEBRIS2MISC1, upstairs);
 
 
 	gFadeInDoneCallback = DoneFadeInActionBasement;
