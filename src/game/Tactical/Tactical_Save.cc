@@ -60,28 +60,27 @@
 static BOOLEAN gfWasInMeanwhile = FALSE;
 
 
-static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, SectorFlags const type, INT16 const x, INT16 const y, INT8 const z)
+static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, SectorFlags const type, const SGPSector& sMap)
 {
 	if (!(flags & type)) return;
 
-	SGPSector sMap(x, y, z);
 	ST::string const map_name = GetMapTempFileName(type, sMap);
 	SaveFilesToSavedGame(map_name.c_str(), f);
 }
 
 
-static void AddTempFilesToSavedGame(HWFILE const f, UINT32 const flags, INT16 const x, INT16 const y, INT8 const z)
+static void AddTempFilesToSavedGame(HWFILE const f, UINT32 const flags, const SGPSector& sMap)
 {
-	AddTempFileToSavedGame(f, flags, SF_ITEM_TEMP_FILE_EXISTS,              x, y, z);
-	AddTempFileToSavedGame(f, flags, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS,    x, y, z);
-	AddTempFileToSavedGame(f, flags, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, x, y, z);
-	AddTempFileToSavedGame(f, flags, SF_DOOR_TABLE_TEMP_FILES_EXISTS,       x, y, z);
-	AddTempFileToSavedGame(f, flags, SF_REVEALED_STATUS_TEMP_FILE_EXISTS,   x, y, z);
-	AddTempFileToSavedGame(f, flags, SF_DOOR_STATUS_TEMP_FILE_EXISTS,       x, y, z);
-	AddTempFileToSavedGame(f, flags, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS,   x, y, z);
-	AddTempFileToSavedGame(f, flags, SF_CIV_PRESERVED_TEMP_FILE_EXISTS,     x, y, z);
-	AddTempFileToSavedGame(f, flags, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS,     x, y, z);
-	AddTempFileToSavedGame(f, flags, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS,  x, y, z);
+	AddTempFileToSavedGame(f, flags, SF_ITEM_TEMP_FILE_EXISTS,              sMap);
+	AddTempFileToSavedGame(f, flags, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS,    sMap);
+	AddTempFileToSavedGame(f, flags, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sMap);
+	AddTempFileToSavedGame(f, flags, SF_DOOR_TABLE_TEMP_FILES_EXISTS,       sMap);
+	AddTempFileToSavedGame(f, flags, SF_REVEALED_STATUS_TEMP_FILE_EXISTS,   sMap);
+	AddTempFileToSavedGame(f, flags, SF_DOOR_STATUS_TEMP_FILE_EXISTS,       sMap);
+	AddTempFileToSavedGame(f, flags, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS,   sMap);
+	AddTempFileToSavedGame(f, flags, SF_CIV_PRESERVED_TEMP_FILE_EXISTS,     sMap);
+	AddTempFileToSavedGame(f, flags, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS,     sMap);
+	AddTempFileToSavedGame(f, flags, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS,  sMap);
 }
 
 
@@ -91,23 +90,21 @@ void SaveMapTempFilesToSavedGameFile(HWFILE const f)
 	//Loop though all the array elements to see if there is a data file to be saved
 
 	//First look through the above ground sectors
-	for (INT16 y = 1; y <= 16; ++y)
+	SGPSector sSector;
+	for (sSector.y = 1; sSector.y <= 16; ++sSector.y)
 	{
-		for (INT16 x = 1; x <= 16; ++x)
+		for (sSector.x = 1; sSector.x <= 16; ++sSector.x)
 		{
-			UINT32 const flags = SectorInfo[SECTOR(x, y)].uiFlags;
-			AddTempFilesToSavedGame(f, flags, x, y, 0);
+			UINT32 const flags = SectorInfo[sSector.AsByte()].uiFlags;
+			AddTempFilesToSavedGame(f, flags, sSector);
 		}
 	}
 
 	//then look throught all the underground sectors
 	for (UNDERGROUND_SECTORINFO const* u = gpUndergroundSectorInfoHead; u; u = u->next)
 	{
-		INT16  const x     = u->ubSectorX;
-		INT16  const y     = u->ubSectorY;
-		INT8   const z     = u->ubSectorZ;
 		UINT32 const flags = u->uiFlags;
-		AddTempFilesToSavedGame(f, flags, x, y, z);
+		AddTempFilesToSavedGame(f, flags, SGPSector(u->ubSectorX, u->ubSectorY, u->ubSectorZ));
 	}
 }
 
