@@ -105,7 +105,7 @@ void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, const SGPSe
 
 
 //This function removes a struct with the same MapIndex and graphic index from the given sectors temp file
-BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ );
+BOOLEAN RemoveGraphicFromTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector);
 
 
 void AddWindowHitToMapTempFile( UINT32 uiMapIndex );

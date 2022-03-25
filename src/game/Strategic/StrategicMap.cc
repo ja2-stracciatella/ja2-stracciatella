@@ -773,7 +773,7 @@ void HandleQuestCodeOnSectorEntry(const SGPSector& sNewSector)
 		{
 			// robot is on our team and we have changed sectors, so we can
 			// replace the robot-under-construction in Madlab's sector
-			RemoveGraphicFromTempFile( gsRobotGridNo, SEVENTHISTRUCT1, gMercProfiles[MADLAB].sSectorX, gMercProfiles[MADLAB].sSectorY, gMercProfiles[MADLAB].bSectorZ );
+			RemoveGraphicFromTempFile( gsRobotGridNo, SEVENTHISTRUCT1, SGPSector(gMercProfiles[MADLAB].sSectorX, gMercProfiles[MADLAB].sSectorY, gMercProfiles[MADLAB].bSectorZ));
 			SetFactTrue( FACT_ROBOT_RECRUITED_AND_MOVED );
 		}
 	}

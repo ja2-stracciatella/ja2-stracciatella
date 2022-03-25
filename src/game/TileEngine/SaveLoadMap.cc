@@ -610,14 +610,13 @@ void AddExitGridToMapTempFile(UINT16 usGridNo, EXITGRID *pExitGrid, const SGPSec
 	SaveModifiedMapStructToMapTempFile(&Map, sector);
 }
 
-BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ )
+BOOLEAN RemoveGraphicFromTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector)
 try
 {
 	MODIFY_MAP *pMap;
 	BOOLEAN	fRetVal=FALSE;
 	UINT32	cnt;
 
-	SGPSector sSector(sSectorX, sSectorY, ubSectorZ);
 	ST::string const zMapName = GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSector);
 
 	UINT32                  uiNumberOfElements;
