@@ -846,9 +846,7 @@ static JoinSquadResult CanCharacterSquad(SOLDIERTYPE const& s, INT8 const squad_
 {
 	Assert(squad_no < ON_DUTY);
 
-	INT16 x;
-	INT16 y;
-	INT8  z;
+	SGPSector sMap;
 	if (s.bAssignment == squad_no)
 	{
 		return CHARACTER_CANT_JOIN_SQUAD_ALREADY_IN_IT;
@@ -865,8 +863,8 @@ static JoinSquadResult CanCharacterSquad(SOLDIERTYPE const& s, INT8 const squad_
 	{
 		return CHARACTER_CANT_JOIN_SQUAD;
 	}
-	else if (SectorSquadIsIn(squad_no, &x, &y, &z) &&
-			(x != s.sSectorX || y != s.sSectorY || z != s.bSectorZ))
+	else if (SectorSquadIsIn(squad_no, sMap) &&
+		(sMap != SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ)))
 	{
 		return CHARACTER_CANT_JOIN_SQUAD_TOO_FAR;
 	}

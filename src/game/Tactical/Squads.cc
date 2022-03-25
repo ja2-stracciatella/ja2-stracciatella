@@ -116,11 +116,9 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 		// free slot, add here
 
 		// check if squad empty, if not check sector x,y,z are the same as this guys
-		INT16 sX;
-		INT16 sY;
-		INT8  bZ;
-		if (SectorSquadIsIn(bSquadValue, &sX, &sY, &bZ) &&
-			(s->sSectorX != sX || s->sSectorY != sY || s->bSectorZ != bZ))
+		SGPSector sMap;
+		if (SectorSquadIsIn(bSquadValue, sMap) &&
+			(sMap != SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ)))
 		{
 			return FALSE;
 		}
@@ -384,7 +382,7 @@ BOOLEAN IsRobotControllerInSquad( INT8 bSquadValue )
 }
 
 
-BOOLEAN SectorSquadIsIn(const INT8 bSquadValue, INT16* const sMapX, INT16* const sMapY, INT8* const sMapZ)
+BOOLEAN SectorSquadIsIn(const INT8 bSquadValue, SGPSector& sMap)
 {
 	// returns if there is anyone on the squad and what sector ( strategic ) they are in
 	Assert( bSquadValue < ON_DUTY );
@@ -393,9 +391,7 @@ BOOLEAN SectorSquadIsIn(const INT8 bSquadValue, INT16* const sMapX, INT16* const
 	{
 		SOLDIERTYPE const* const s = *i;
 		// if valid soldier, get current sector and return
-		*sMapX = s->sSectorX;
-		*sMapY = s->sSectorY;
-		*sMapZ = s->bSectorZ;
+		sMap = SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ);
 		return TRUE;
 	}
 

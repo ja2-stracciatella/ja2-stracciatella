@@ -2985,16 +2985,10 @@ static BOOLEAN AllOtherSoldiersInListAreSelected(void)
 }
 
 
-static BOOLEAN IsThisSquadInThisSector(const INT16 sSectorX, const INT16 sSectorY, const INT8 bSectorZ, const INT8 bSquadValue)
+static BOOLEAN IsThisSquadInThisSector(const SGPSector& sSector, const INT8 bSquadValue)
 {
-	INT16 sX;
-	INT16 sY;
-	INT8  bZ;
-	return
-		SectorSquadIsIn(bSquadValue, &sX, &sY, &bZ) &&
-		sSectorX == sX                              &&
-		sSectorY == sY                              &&
-		bSectorZ == bZ                              &&
+	SGPSector sMap;
+	return SectorSquadIsIn(bSquadValue, sMap) && sMap == sSector &&
 		!IsThisSquadOnTheMove(bSquadValue);
 }
 
@@ -3008,7 +3002,7 @@ static INT8 FindSquadThatSoldierCanJoin(SOLDIERTYPE* pSoldier)
 	for( bCounter = 0; bCounter < NUMBER_OF_SQUADS; bCounter++ )
 	{
 		// is this squad in this sector
-		if( IsThisSquadInThisSector( pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ, bCounter ) )
+		if (IsThisSquadInThisSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ), bCounter))
 		{
 			// does it have room?
 			if (!IsThisSquadFull(bCounter))
