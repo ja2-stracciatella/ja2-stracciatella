@@ -3056,7 +3056,7 @@ static bool IsRoofVisibleForWireframe(GridNo const sMapPos)
 TEST(WorldDef, asserts)
 {
 	EXPECT_EQ(sizeof(TEAMSUMMARY), 15u);
-	EXPECT_EQ(sizeof(SUMMARYFILE), 408u);
+	EXPECT_EQ(sizeof(SUMMARYFILE), 416u);
 }
 
 #endif
