@@ -32,7 +32,7 @@ std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(const SGPSector& sMap);
 void AddItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItems, OBJECTTYPE const* pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, Visibility);
 
 
-void AddWorldItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, const std::vector<WORLDITEM>& wis);
+void AddWorldItemsToUnLoadedSector(const SGPSector& sMap, const std::vector<WORLDITEM>& wis);
 
 // Delete all the files in the temp directory.
 void InitTacticalSave();

@@ -414,7 +414,7 @@ static void SaveSeenAndUnseenItems(void)
 	{
 		// now copy over unseen and seen
 		SaveWorldItemsToTempItemFile(sector, pUnSeenItems);
-		AddWorldItemsToUnLoadedSector(sector.x, sector.y, sector.z, pSeenItemsList);
+		AddWorldItemsToUnLoadedSector(sector, pSeenItemsList);
 	}
 }
 

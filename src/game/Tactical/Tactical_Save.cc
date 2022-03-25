@@ -730,12 +730,12 @@ static void LoadRottingCorpsesFromTempCorpseFile(const SGPSector& sMap)
 }
 
 
-void AddWorldItemsToUnLoadedSector(const INT16 sMapX, const INT16 sMapY, const INT8 bMapZ, const std::vector<WORLDITEM>& wis)
+void AddWorldItemsToUnLoadedSector(const SGPSector& sMap, const std::vector<WORLDITEM>& wis)
 {
 	for (const WORLDITEM& wi : wis)
 	{
 		if (!wi.fExists) continue;
-		AddItemsToUnLoadedSector(sMapX, sMapY, bMapZ, wi.sGridNo, 1, &wi.o, wi.ubLevel, wi.usFlags, wi.bRenderZHeightAboveLevel, static_cast<Visibility>(wi.bVisible));
+		AddItemsToUnLoadedSector(sMap.x, sMap.y, sMap.z, wi.sGridNo, 1, &wi.o, wi.ubLevel, wi.usFlags, wi.bRenderZHeightAboveLevel, static_cast<Visibility>(wi.bVisible));
 	}
 }
 
