@@ -248,9 +248,9 @@ std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(const SGPSector& sMap)
 }
 
 
-void AddItemsToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, INT8 const bMapZ, INT16 const sGridNo, UINT32 const uiNumberOfItemsToAdd, OBJECTTYPE const* const pObject, UINT8 const ubLevel, UINT16 const usFlags, INT8 const bRenderZHeightAboveLevel, Visibility const bVisible)
+void AddItemsToUnLoadedSector(const SGPSector& sMap, INT16 const sGridNo, UINT32 const uiNumberOfItemsToAdd, OBJECTTYPE const* const pObject, UINT8 const ubLevel, UINT16 const usFlags, INT8 const bRenderZHeightAboveLevel, Visibility const bVisible)
 {
-	std::vector<WORLDITEM> wis = LoadWorldItemsFromTempItemFile(SGPSector(sMapX, sMapY, bMapZ));
+	std::vector<WORLDITEM> wis = LoadWorldItemsFromTempItemFile(sMap);
 
 	//loop through all the objects to add
 	for (UINT32 uiLoop1 = 0; uiLoop1 < uiNumberOfItemsToAdd; ++uiLoop1)
@@ -287,7 +287,7 @@ void AddItemsToUnLoadedSector(INT16 const sMapX, INT16 const sMapY, INT8 const b
 		}
 	}
 
-	SaveWorldItemsToTempItemFile(SGPSector(sMapX, sMapY, bMapZ), wis);
+	SaveWorldItemsToTempItemFile(sMap, wis);
 }
 
 
@@ -733,7 +733,7 @@ void AddWorldItemsToUnLoadedSector(const SGPSector& sMap, const std::vector<WORL
 	for (const WORLDITEM& wi : wis)
 	{
 		if (!wi.fExists) continue;
-		AddItemsToUnLoadedSector(sMap.x, sMap.y, sMap.z, wi.sGridNo, 1, &wi.o, wi.ubLevel, wi.usFlags, wi.bRenderZHeightAboveLevel, static_cast<Visibility>(wi.bVisible));
+		AddItemsToUnLoadedSector(sMap, wi.sGridNo, 1, &wi.o, wi.ubLevel, wi.usFlags, wi.bRenderZHeightAboveLevel, static_cast<Visibility>(wi.bVisible));
 	}
 }
 
@@ -912,7 +912,7 @@ void AddDeadSoldierToUnLoadedSector(const SGPSector& sMap, SOLDIERTYPE* const s,
 			}
 
 			ReduceAmmoDroppedByNonPlayerSoldiers(*s, o);
-			AddItemsToUnLoadedSector(sMap.x, sMap.y, sMap.z, grid_no, 1, &o, s->bLevel, flags_for_world_items, 0, VISIBLE);
+			AddItemsToUnLoadedSector(sMap, grid_no, 1, &o, s->bLevel, flags_for_world_items, 0, VISIBLE);
 		}
 	}
 

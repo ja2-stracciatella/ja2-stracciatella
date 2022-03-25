@@ -1003,7 +1003,7 @@ void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE& s)
 		}
 		else
 		{
-			AddItemsToUnLoadedSector(s.sSectorX, s.sSectorY, s.bSectorZ, gridno, 1, i, s.bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, VISIBLE);
+			AddItemsToUnLoadedSector(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ), gridno, 1, i, s.bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, VISIBLE);
 		}
 	}
 
@@ -1063,7 +1063,7 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, INT const sector, GridNo 
 			}
 			else
 			{ // Given this slot value, add to sector item list
-				AddItemsToUnLoadedSector(SECTORX(sector), SECTORY(sector), 0, grid, 1, &i->o, 0, WORLD_ITEM_REACHABLE, 0, VISIBLE);
+				AddItemsToUnLoadedSector(SGPSector(sector), grid, 1, &i->o, 0, WORLD_ITEM_REACHABLE, 0, VISIBLE);
 			}
 		}
 	}

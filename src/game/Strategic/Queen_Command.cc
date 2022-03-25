@@ -1157,10 +1157,10 @@ void EndCaptureSequence( )
 }
 
 
-static void CaptureSoldier(SOLDIERTYPE* const s, INT16 const x, INT16 const y, GridNo const soldier_pos, GridNo const item_pos)
+static void CaptureSoldier(SOLDIERTYPE* const s, const SGPSector& sMap, GridNo const soldier_pos, GridNo const item_pos)
 {
-	s->sSectorX                 = x;
-	s->sSectorY                 = y;
+	s->sSectorX                 = sMap.x;
+	s->sSectorY                 = sMap.y;
 	s->bSectorZ                 = 0;
 	s->bLevel                   = 0; // put him on the floor
 	s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
@@ -1172,7 +1172,7 @@ static void CaptureSoldier(SOLDIERTYPE* const s, INT16 const x, INT16 const y, G
 		OBJECTTYPE& o = *i;
 		if (o.usItem == NOTHING) continue;
 
-		AddItemsToUnLoadedSector(x, y, 0, item_pos, 1, &o, 0, 0, 0, VISIBILITY_0);
+		AddItemsToUnLoadedSector(sMap, item_pos, 1, &o, 0, 0, 0, VISIBILITY_0);
 		DeleteObj(&o);
 	}
 }
@@ -1253,14 +1253,14 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 	{
 		UINT8& idx = gStrategicStatus.ubNumCapturedForRescue;
 		// Teleport him to NE Alma sector (not Tixa as originally planned)
-		CaptureSoldier(pSoldier, 13, 9, sAlmaCaptureGridNos[idx], sAlmaCaptureItemsGridNo[idx]);
+		CaptureSoldier(pSoldier, SGPSector(13, 9), sAlmaCaptureGridNos[idx], sAlmaCaptureItemsGridNo[idx]);
 		++idx;
 	}
 	else if ( gubQuest[ QUEST_HELD_IN_ALMA ] == QUESTDONE )
 	{
 		// Teleport him to N7
 		UINT8& idx = gStrategicStatus.ubNumCapturedForRescue;
-		CaptureSoldier(pSoldier, 7, 14, gsInterrogationGridNo[idx], sInterrogationItemGridNo[idx]);
+		CaptureSoldier(pSoldier, SGPSector(7, 14), gsInterrogationGridNo[idx], sInterrogationItemGridNo[idx]);
 		++idx;
 	}
 

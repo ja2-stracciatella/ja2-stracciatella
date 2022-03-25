@@ -29,7 +29,7 @@ std::vector<WORLDITEM> LoadWorldItemsFromTempItemFile(const SGPSector& sMap);
 
 //  Adds an array of Item Objects to the specified location on a unloaded map.
 //  If you want to overwrite all the items in the array set fReplaceEntireFile to TRUE.
-void AddItemsToUnLoadedSector(INT16 sMapX, INT16 sMapY, INT8 bMapZ, INT16 sGridNo, UINT32 uiNumberOfItems, OBJECTTYPE const* pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, Visibility);
+void AddItemsToUnLoadedSector(const SGPSector& sMap, INT16 sGridNo, UINT32 uiNumberOfItems, OBJECTTYPE const* pObject, UINT8 ubLevel, UINT16 usFlags, INT8 bRenderZHeightAboveLevel, Visibility);
 
 
 void AddWorldItemsToUnLoadedSector(const SGPSector& sMap, const std::vector<WORLDITEM>& wis);

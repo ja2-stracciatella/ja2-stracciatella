@@ -276,10 +276,10 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	{
 		//add all the items from the array that was built above
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		AddItemsToUnLoadedSector(dest->deliverySector.x, dest->deliverySector.y, dest->deliverySector.z, usStandardMapPos, uiCount, pObject, 0, 0, 0, INVISIBLE);
+		AddItemsToUnLoadedSector(dest->deliverySector, usStandardMapPos, uiCount, pObject, 0, 0, 0, INVISIBLE);
 		if (uiStolenCount > 0)
 		{
-			AddItemsToUnLoadedSector(dest->deliverySector.x, dest->deliverySector.y, dest->deliverySector.z, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, INVISIBLE);
+			AddItemsToUnLoadedSector(dest->deliverySector, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, INVISIBLE);
 		}
 		delete[] pObject;
 		delete[] pStolenObject;
@@ -403,7 +403,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 			}
 			else
 			{
-				AddItemsToUnLoadedSector(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z, shippingDest->deliverySectorGridNo, 1, &Object, 0, 0, 0, INVISIBLE);
+				AddItemsToUnLoadedSector(shippingDest->deliverySector, shippingDest->deliverySectorGridNo, 1, &Object, 0, 0, 0, INVISIBLE);
 			}
 		}
 	}
@@ -1037,7 +1037,7 @@ static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinatio
 		//add all the items from the array that was built above
 
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		AddItemsToUnLoadedSector(shippingDest->deliverySector.x, shippingDest->deliverySector.y, shippingDest->deliverySector.z, shippingDest->deliverySectorGridNo, uiCount, pObject, 0, 0, 0, INVISIBLE);
+		AddItemsToUnLoadedSector(shippingDest->deliverySector, shippingDest->deliverySectorGridNo, uiCount, pObject, 0, 0, 0, INVISIBLE);
 		delete[] pObject;
 		pObject = NULL;
 	}

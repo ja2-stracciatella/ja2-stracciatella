@@ -1270,7 +1270,7 @@ void DropKeysInKeyRing(SOLDIERTYPE& s, GridNo const gridno, INT8 const level, Vi
 		}
 		else
 		{
-			AddItemsToUnLoadedSector(s.sSectorX, s.sSectorY, s.bSectorZ, gridno, 1, &o, level, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, visible);
+			AddItemsToUnLoadedSector(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ), gridno, 1, &o, level, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, visible);
 		}
 	}
 }
