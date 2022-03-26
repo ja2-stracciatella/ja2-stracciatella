@@ -59,7 +59,7 @@ void InitVehicles(void)
 	for( cnt = 0; cnt <  MAX_VEHICLES; cnt++ )
 	{
 		// create mvt groups
-		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(1, 1);
+		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(SGPSector(1, 1));
 		g->fPersistant = TRUE;
 		gubVehicleMovementGroups[cnt] = g->ubGroupID;
 	}
@@ -826,7 +826,7 @@ void LoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 	for( cnt = 5; cnt <  MAX_VEHICLES; cnt++ )
 	{
 		// create mvt groups
-		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(1, 1);
+		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(SGPSector(1, 1));
 		g->fPersistant = TRUE;
 		gubVehicleMovementGroups[cnt] = g->ubGroupID;
 	}

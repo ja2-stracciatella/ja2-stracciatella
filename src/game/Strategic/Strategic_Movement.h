@@ -174,7 +174,7 @@ void RemovePlayerFromGroup(SOLDIERTYPE&);
 void RemovePlayerFromPGroup(GROUP&, SOLDIERTYPE&);
 
 // create a vehicle group, it is by itself,
-GROUP* CreateNewVehicleGroupDepartingFromSector(UINT8 ubSectorX, UINT8 ubSectorY);
+GROUP* CreateNewVehicleGroupDepartingFromSector(const SGPSector& sMap);
 
 
 //Appends a waypoint to the end of the list.  Waypoint MUST be on the

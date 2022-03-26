@@ -553,7 +553,7 @@ void SetUpHelicopterForMovement( void )
 	if (v.ubMovementGroup == 0)
 	{
 		// get the vehicle a mvt group
-		GROUP& g = *CreateNewVehicleGroupDepartingFromSector(v.sSector.x, v.sSector.y);
+		GROUP& g = *CreateNewVehicleGroupDepartingFromSector(v.sSector);
 		v.ubMovementGroup = g.ubGroupID;
 
 		// add everyone in vehicle to this mvt group

@@ -126,15 +126,13 @@ GROUP* CreateNewPlayerGroupDepartingFromSector(const SGPSector& sMap)
 }
 
 
-GROUP* CreateNewVehicleGroupDepartingFromSector(UINT8 const ubSectorX, UINT8 const ubSectorY)
+GROUP* CreateNewVehicleGroupDepartingFromSector(const SGPSector& sMap)
 {
-	AssertMsg( ubSectorX >= 1 && ubSectorX <= 16, String( "CreateNewVehicleGroup with out of range sectorX value of %d", ubSectorX ) );
-	AssertMsg( ubSectorY >= 1 && ubSectorY <= 16, String( "CreateNewVehicleGroup with out of range sectorY value of %d", ubSectorY ) );
+	AssertMsg(sMap.IsValid(), String("CreateNewVehicleGroupDepartingFromSector with out of range sector values of %d %d", sMap.x, sMap.y));
 	GROUP* const pNew = new GROUP{};
 	pNew->pWaypoints = NULL;
-	pNew->ubSector.x = pNew->ubNext.x = ubSectorX;
-	pNew->ubSector.y = pNew->ubNext.y = ubSectorY;
-	pNew->ubOriginalSector = (UINT8)SECTOR( ubSectorX, ubSectorY );
+	pNew->ubSector = pNew->ubNext = sMap;
+	pNew->ubOriginalSector = sMap.AsByte();
 	pNew->ubMoveType = ONE_WAY;
 	pNew->ubNextWaypointID = 0;
 	pNew->fVehicle = TRUE;
