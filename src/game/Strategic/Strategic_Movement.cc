@@ -358,16 +358,9 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup);
 
 /* Appends a waypoint to the end of the list. Waypoint MUST be on the same
  * horizontal or vertical level as the last waypoint added. */
-BOOLEAN AddWaypointToPGroup(GROUP *pGroup, const SGPSector& ubSector)
+BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 {
-	return AddWaypointToPGroup(pGroup, ubSector.x, ubSector.y);
-}
-
-BOOLEAN AddWaypointToPGroup(GROUP* const g, UINT8 const x, UINT8 const y) // Same, but overloaded
-{
-	AssertMsg(1 <= x && x <= 16, String("AddWaypointToPGroup with out of range sectorX value of %d", x));
-	AssertMsg(1 <= y && y <= 16, String("AddWaypointToPGroup with out of range sectorY value of %d", y));
-
+	AssertMsg(sMap.IsValid(), String("AddWaypointToPGroup with out of range sector values of %d %d", sMap.x, sMap.y));
 	if (!g) return FALSE;
 
 	/* At this point, we have the group, and a valid coordinate. Now we must
@@ -378,7 +371,7 @@ BOOLEAN AddWaypointToPGroup(GROUP* const g, UINT8 const x, UINT8 const y) // Sam
 	WAYPOINT* wp                  = g->pWaypoints;
 	if (!wp)
 	{
-		if (GroupReversingDirectionsBetweenSectors(g, x, y, TRUE))
+		if (GroupReversingDirectionsBetweenSectors(g, sMap.x, sMap.y, TRUE))
 		{
 			if (g->fPlayer)
 			{ /* Because we reversed, we must add the new current sector back at the
@@ -393,8 +386,8 @@ BOOLEAN AddWaypointToPGroup(GROUP* const g, UINT8 const x, UINT8 const y) // Sam
 		}
 		else
 		{ // No waypoints, so compare against the current location.
-			if (g->ubSector.x == x) ++n_aligned_axes;
-			if (g->ubSector.y == y) ++n_aligned_axes;
+			if (g->ubSector.x == sMap.x) ++n_aligned_axes;
+			if (g->ubSector.y == sMap.y) ++n_aligned_axes;
 		}
 	}
 	else
@@ -404,8 +397,8 @@ BOOLEAN AddWaypointToPGroup(GROUP* const g, UINT8 const x, UINT8 const y) // Sam
 			wp = wp->next;
 		}
 		// Now, we are pointing to the last waypoint in the list
-		if (wp->x == x) ++n_aligned_axes;
-		if (wp->y == y) ++n_aligned_axes;
+		if (wp->x == sMap.x) ++n_aligned_axes;
+		if (wp->y == sMap.y) ++n_aligned_axes;
 	}
 
 	if (!reversing_direction)
@@ -427,8 +420,8 @@ BOOLEAN AddWaypointToPGroup(GROUP* const g, UINT8 const x, UINT8 const y) // Sam
 	}
 
 	WAYPOINT* const new_wp = new WAYPOINT{};
-	new_wp->x    = x;
-	new_wp->y    = y;
+	new_wp->x    = sMap.x;
+	new_wp->y    = sMap.y;
 	new_wp->next = 0;
 
 	if (wp)
@@ -465,10 +458,7 @@ BOOLEAN AddWaypointToPGroup(GROUP* const g, UINT8 const x, UINT8 const y) // Sam
 // NOTE: This does NOT expect a strategic sector ID
 BOOLEAN AddWaypointIDToPGroup( GROUP *pGroup, UINT8 ubSectorID )
 {
-	UINT8 ubSectorX, ubSectorY;
-	ubSectorX = SECTORX( ubSectorID );
-	ubSectorY = SECTORY( ubSectorID );
-	return AddWaypointToPGroup( pGroup, ubSectorX, ubSectorY );
+	return AddWaypointToPGroup(pGroup, SGPSector(ubSectorID));
 }
 
 
@@ -477,7 +467,7 @@ BOOLEAN AddWaypointStrategicIDToPGroup( GROUP *pGroup, UINT32 uiSectorID )
 	UINT8 ubSectorX, ubSectorY;
 	ubSectorX = ( UINT8 ) GET_X_FROM_STRATEGIC_INDEX( uiSectorID );
 	ubSectorY = ( UINT8 ) GET_Y_FROM_STRATEGIC_INDEX( uiSectorID );
-	return AddWaypointToPGroup( pGroup, ubSectorX, ubSectorY );
+	return AddWaypointToPGroup(pGroup, SGPSector(ubSectorX, ubSectorY));
 }
 
 

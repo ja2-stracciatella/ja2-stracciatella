@@ -180,7 +180,6 @@ GROUP* CreateNewVehicleGroupDepartingFromSector(const SGPSector& sMap);
 //Appends a waypoint to the end of the list.  Waypoint MUST be on the
 //same horizontal xor vertical level as the last waypoint added.
 BOOLEAN AddWaypointToPGroup(GROUP *pGroup, const SGPSector& ubSector);
-BOOLEAN AddWaypointToPGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
 //Same, but uses a plain sectorID (0-255)
 BOOLEAN AddWaypointIDToPGroup( GROUP *pGroup, UINT8 ubSectorID );
 //Same, but uses a strategic sectorID
