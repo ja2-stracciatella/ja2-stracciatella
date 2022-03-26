@@ -991,7 +991,7 @@ void CancelPathForCharacter( SOLDIERTYPE *pCharacter )
 	// This causes the group to effectively reverse directions (even if they've never actually left), so handle that.
 	// They are going to return to their current X,Y sector.
 	RebuildWayPointsForGroupPath(pCharacter->pMercPath, *GetGroup(pCharacter->ubGroupID));
-//	GroupReversingDirectionsBetweenSectors( GetGroup( pCharacter->ubGroupID ), ( UINT8 )( pCharacter->sSectorX ), ( UINT8 )( pCharacter->sSectorY ), FALSE );
+//	GroupReversingDirectionsBetweenSectors(GetGroup(pCharacter->ubGroupID), SGPSector(pCharacter->sSectorX, pCharacter->sSectorY), FALSE);
 
 
 	// if he's in a vehicle, clear out the vehicle, too

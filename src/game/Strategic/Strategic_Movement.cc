@@ -236,10 +236,10 @@ void RemovePlayerFromGroup(SOLDIERTYPE& s)
 static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const&, const SGPSector& sSector);
 
 
-BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fBuildingWaypoints )
+BOOLEAN GroupReversingDirectionsBetweenSectors(GROUP *pGroup, const SGPSector& sMap, BOOLEAN fBuildingWaypoints)
 {
 	// if we're not between sectors, or we are but we're continuing in the same direction as before
-	if ( !GroupBetweenSectorsAndSectorXYIsInDifferentDirection( pGroup, ubSectorX, ubSectorY ) )
+	if (!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(pGroup, sMap.x, sMap.y))
 	{
 		// then there's no need to reverse directions
 		return FALSE;
@@ -371,7 +371,7 @@ BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 	WAYPOINT* wp                  = g->pWaypoints;
 	if (!wp)
 	{
-		if (GroupReversingDirectionsBetweenSectors(g, sMap.x, sMap.y, TRUE))
+		if (GroupReversingDirectionsBetweenSectors(g, sMap, TRUE))
 		{
 			if (g->fPlayer)
 			{ /* Because we reversed, we must add the new current sector back at the

@@ -860,7 +860,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 		if (g.fPlayer && g.fBetweenSectors)
 		{
 			// send the group right back to its current sector by reversing directions
-			GroupReversingDirectionsBetweenSectors(&g, g.ubSector.x, g.ubSector.y, FALSE);
+			GroupReversingDirectionsBetweenSectors(&g, g.ubSector, FALSE);
 		}
 
 		return;
