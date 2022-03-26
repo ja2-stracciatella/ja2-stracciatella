@@ -2728,7 +2728,7 @@ static void Teleport()
 	// check to see if this person is moving, if not...then assign them to mvt group
 	if (s.ubGroupID  == 0)
 	{
-		GROUP& g = *CreateNewPlayerGroupDepartingFromSector(s.sSectorX, s.sSectorY);
+		GROUP& g = *CreateNewPlayerGroupDepartingFromSector(SGPSector(s.sSectorX, s.sSectorY));
 		AddPlayerToGroup(g, s);
 	}
 

@@ -1639,7 +1639,7 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier )
 	if( pSoldier->ubGroupID == 0 )
 	{
 		// create independant group
-		GROUP& g = *CreateNewPlayerGroupDepartingFromSector(pSoldier->sSectorX, pSoldier->sSectorY);
+		GROUP& g = *CreateNewPlayerGroupDepartingFromSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY));
 		AddPlayerToGroup(g, *pSoldier);
 	}
 }

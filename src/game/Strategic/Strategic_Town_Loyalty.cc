@@ -949,7 +949,7 @@ static void AffectAllTownsLoyaltyByDistanceFrom(INT32 iLoyaltyChange, const SGPS
 	sEventSector = sSector.AsStrategicIndex();
 
 	// need a temporary group create to use for laying down distance paths
-	GROUP& g = *CreateNewPlayerGroupDepartingFromSector(sSector.x, sSector.y);
+	GROUP& g = *CreateNewPlayerGroupDepartingFromSector(sSector);
 
 	// calc distance to the event sector from EACH SECTOR of each town, keeping only the shortest one for every town
 	FOR_EACH_TOWN_SECTOR(i)

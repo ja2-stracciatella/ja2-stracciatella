@@ -165,7 +165,7 @@ void RemoveGroupWaypoints(GROUP&);
 
 /* Create a new player group.  This is the first step before adding waypoints
  * and members to the player group. */
-GROUP* CreateNewPlayerGroupDepartingFromSector(UINT8 ubSectorX, UINT8 ubSectorY);
+GROUP* CreateNewPlayerGroupDepartingFromSector(const SGPSector& sMap);
 
 //Allows you to add or remove players from the group.
 void AddPlayerToGroup(GROUP&, SOLDIERTYPE&);

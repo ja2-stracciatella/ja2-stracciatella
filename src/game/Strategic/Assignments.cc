@@ -6275,7 +6275,7 @@ static bool AssignMercToAMovementGroup(SOLDIERTYPE& s)
 	if (s.bAssignment == IN_TRANSIT) return false; // In transit
 	if (s.ubGroupID != 0)            return false; // In a movement group
 
-	GROUP& g = *CreateNewPlayerGroupDepartingFromSector(s.sSectorX, s.sSectorY);
+	GROUP& g = *CreateNewPlayerGroupDepartingFromSector(SGPSector(s.sSectorX, s.sSectorY));
 	AddPlayerToGroup(g, s);
 	return true;
 }

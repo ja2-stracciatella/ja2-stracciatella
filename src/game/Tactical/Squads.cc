@@ -47,7 +47,7 @@ void InitSquads()
 		std::fill_n(Squad[iCounter].begin(), gamepolicy(squad_size), nullptr);
 
 		// create mvt groups
-		GROUP* const g = CreateNewPlayerGroupDepartingFromSector(1, 1);
+		GROUP* const g = CreateNewPlayerGroupDepartingFromSector(SGPSector(1, 1));
 		g->fPersistant = TRUE;
 		SquadMovementGroups[iCounter] = g->ubGroupID;
 
@@ -299,7 +299,7 @@ BOOLEAN RemoveCharacterFromSquads(SOLDIERTYPE* const s)
 
 			if (s->fBetweenSectors && s->uiStatusFlags & SOLDIER_VEHICLE)
 			{
-				GROUP& g = *CreateNewPlayerGroupDepartingFromSector(s->sSectorX, s->sSectorY);
+				GROUP& g = *CreateNewPlayerGroupDepartingFromSector(SGPSector(s->sSectorX, s->sSectorY));
 				AddPlayerToGroup(g, *s);
 			}
 
@@ -910,7 +910,7 @@ void CheckSquadMovementGroups()
 		if (GetGroup(*i)) continue;
 
 		// recreate group
-		GROUP* const g = CreateNewPlayerGroupDepartingFromSector(1, 1);
+		GROUP* const g = CreateNewPlayerGroupDepartingFromSector(SGPSector(1, 1));
 		g->fPersistant = TRUE;
 		*i = g->ubGroupID;
 	}
