@@ -121,9 +121,8 @@ static void RetrieveTempFileFromSavedGame(HWFILE const f, UINT32 const flags, Se
 static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const SGPSector& sMap, bool check_consistency);
 
 
-static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, INT16 const x, INT16 const y, INT8 const z, UINT32 const savegame_version)
+static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, const SGPSector& sector, UINT32 const savegame_version)
 {
-	SGPSector sector(x, y, z);
 	RetrieveTempFileFromSavedGame(f, flags, SF_ITEM_TEMP_FILE_EXISTS,              sector);
 	RetrieveTempFileFromSavedGame(f, flags, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS,    sector);
 	RetrieveTempFileFromSavedGame(f, flags, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sector);
@@ -186,12 +185,13 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_ver
 
 	//First look through the above ground sectors
 	UINT32 counter = 0;
-	for (INT16 y = 1; y <= 16; ++y)
+	SGPSector sMap;
+	for (sMap.y = 1; sMap.y <= 16; ++sMap.y)
 	{
-		for (INT16 x = 1; x <= 16; ++x)
+		for (sMap.x = 1; sMap.x <= 16; ++sMap.x)
 		{
-			UINT32& flags = SectorInfo[SECTOR(x, y)].uiFlags;
-			RetrieveTempFilesFromSavedGame(f, flags, x, y, 0, savegame_version);
+			UINT32& flags = SectorInfo[sMap.AsByte()].uiFlags;
+			RetrieveTempFilesFromSavedGame(f, flags, sMap, savegame_version);
 
 			UINT32 const percentage = ++counter * 100 / 255;
 			RenderProgressBar(0, percentage);
@@ -202,7 +202,7 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_ver
 	for (UNDERGROUND_SECTORINFO* u = gpUndergroundSectorInfoHead; u; u = u->next)
 	{
 		UINT32&      flags = u->uiFlags;
-		RetrieveTempFilesFromSavedGame(f, flags, u->ubSector.x, u->ubSector.y, u->ubSector.z, savegame_version);
+		RetrieveTempFilesFromSavedGame(f, flags, u->ubSector, savegame_version);
 	}
 }
 
