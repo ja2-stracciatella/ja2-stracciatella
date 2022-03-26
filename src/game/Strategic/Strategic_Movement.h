@@ -239,7 +239,7 @@ void HandleArrivalOfReinforcements(GROUP const*);
 //blindly determines where to move the group.
 void RetreatGroupToPreviousSector(GROUP&);
 
-GROUP* FindEnemyMovementGroupInSector(UINT8 x, UINT8 y);
+GROUP* FindEnemyMovementGroupInSector(const SGPSector& sMap);
 GROUP* FindPlayerMovementGroupInSector(UINT8 x, UINT8 y);
 
 BOOLEAN GroupAtFinalDestination(const GROUP*);

@@ -2840,13 +2840,11 @@ void RetreatGroupToPreviousSector(GROUP& g)
 }
 
 
-GROUP* FindEnemyMovementGroupInSector(const UINT8 ubSectorX, const UINT8 ubSectorY)
+GROUP* FindEnemyMovementGroupInSector(const SGPSector& sMap)
 {
 	FOR_EACH_ENEMY_GROUP(g)
 	{
-		if (g->ubSector.x == ubSectorX &&
-				g->ubSector.y == ubSectorY &&
-				g->ubSector.z == 0)
+		if (g->ubSector == sMap)
 		{
 			return g;
 		}

@@ -1156,18 +1156,19 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 
 static bool EnemyNoticesPlayerArrival(GROUP const& pg, UINT8 const x, UINT8 const y)
 {
-	GROUP* const eg = FindEnemyMovementGroupInSector(x, y);
+	SGPSector sMap(x, y);
+	GROUP* const eg = FindEnemyMovementGroupInSector(sMap);
 	if (eg && AttemptToNoticeAdjacentGroupSucceeds())
 	{
 		HandlePlayerGroupNoticedByPatrolGroup(&pg, eg);
 		return true;
 	}
 
-	SECTORINFO const& s         = SectorInfo[SECTOR(x, y)];
+	SECTORINFO const& s         = SectorInfo[sMap.AsByte()];
 	UINT8      const  n_enemies = s.ubNumAdmins + s.ubNumTroops + s.ubNumElites;
 	if (n_enemies && s.ubGarrisonID != NO_GARRISON && AttemptToNoticeAdjacentGroupSucceeds())
 	{
-		HandlePlayerGroupNoticedByGarrison(&pg, SECTOR(x, y));
+		HandlePlayerGroupNoticedByGarrison(&pg, sMap.AsByte());
 		return true;
 	}
 
