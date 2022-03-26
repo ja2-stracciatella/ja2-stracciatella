@@ -1103,9 +1103,7 @@ UNDERGROUND_SECTORINFO* FindUnderGroundSector(const SGPSector& sector)
 	UNDERGROUND_SECTORINFO* i = gpUndergroundSectorInfoHead;
 	for (; i; i = i->next)
 	{
-		if (i->ubSectorX != sector.x) continue;
-		if (i->ubSectorY != sector.y) continue;
-		if (i->ubSectorZ != sector.z) continue;
+		if (i->ubSector != sector) continue;
 		break;
 	}
 	return i;

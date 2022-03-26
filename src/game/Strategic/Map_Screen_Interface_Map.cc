@@ -3578,11 +3578,11 @@ static void ShadeSubLevelsNotVisited(void)
 	// Run through all (real & possible) underground sectors
 	for (UNDERGROUND_SECTORINFO const* i = gpUndergroundSectorInfoHead; i; i = i->next)
 	{
-		if (i->ubSectorZ != (UINT8)iCurrentMapSectorZ) continue;
+		if (i->ubSector.z != (UINT8)iCurrentMapSectorZ) continue;
 		if (i->uiFlags & SF_ALREADY_VISITED)           continue;
 		/* The sector is on the currently displayed sublevel and has never been
 			* visited.  Remove that portion of the "mine" graphics from view. */
-		HideExistenceOfUndergroundMapSector(SGPSector(i->ubSectorX, i->ubSectorY));
+		HideExistenceOfUndergroundMapSector(i->ubSector);
 	}
 }
 

@@ -11,9 +11,9 @@ void ExtractUndergroundSectorInfoFromFile(HWFILE const file, UNDERGROUND_SECTORI
 
 	DataReader d{data};
 	EXTR_U32(d, u->uiFlags)
-	EXTR_U8(d, u->ubSectorX)
-	EXTR_U8(d, u->ubSectorY)
-	EXTR_U8(d, u->ubSectorZ)
+	EXTR_U8(d, u->ubSector.x)
+	EXTR_U8(d, u->ubSector.y)
+	EXTR_U8(d, u->ubSector.z)
 	EXTR_U8(d, u->ubNumElites)
 	EXTR_U8(d, u->ubNumTroops)
 	EXTR_U8(d, u->ubNumAdmins)
@@ -39,9 +39,9 @@ void InjectUndergroundSectorInfoIntoFile(HWFILE const file, UNDERGROUND_SECTORIN
 	BYTE data[72];
 	DataWriter d{data};
 	INJ_U32(d, u->uiFlags)
-	INJ_U8(d, u->ubSectorX)
-	INJ_U8(d, u->ubSectorY)
-	INJ_U8(d, u->ubSectorZ)
+	INJ_U8(d, u->ubSector.x)
+	INJ_U8(d, u->ubSector.y)
+	INJ_U8(d, u->ubSector.z)
 	INJ_U8(d, u->ubNumElites)
 	INJ_U8(d, u->ubNumTroops)
 	INJ_U8(d, u->ubNumAdmins)

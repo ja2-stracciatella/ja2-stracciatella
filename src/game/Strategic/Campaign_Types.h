@@ -246,7 +246,7 @@ struct SECTORINFO
 struct UNDERGROUND_SECTORINFO
 {
 	UINT32 uiFlags;
-	UINT8 ubSectorX, ubSectorY, ubSectorZ;
+	SGPSector ubSector;
 	UINT8 ubNumElites, ubNumTroops, ubNumAdmins, ubNumCreatures;
 	UINT32	uiTimeCurrentSectorWasLastLoaded;		//Specifies the last time the player was in the sector
 	UNDERGROUND_SECTORINFO* next;

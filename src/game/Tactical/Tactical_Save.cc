@@ -104,7 +104,7 @@ void SaveMapTempFilesToSavedGameFile(HWFILE const f)
 	for (UNDERGROUND_SECTORINFO const* u = gpUndergroundSectorInfoHead; u; u = u->next)
 	{
 		UINT32 const flags = u->uiFlags;
-		AddTempFilesToSavedGame(f, flags, SGPSector(u->ubSectorX, u->ubSectorY, u->ubSectorZ));
+		AddTempFilesToSavedGame(f, flags, u->ubSector);
 	}
 }
 
@@ -201,11 +201,8 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_ver
 	//then look throught all the underground sectors
 	for (UNDERGROUND_SECTORINFO* u = gpUndergroundSectorInfoHead; u; u = u->next)
 	{
-		INT16  const x     = u->ubSectorX;
-		INT16  const y     = u->ubSectorY;
-		INT8   const z     = u->ubSectorZ;
 		UINT32&      flags = u->uiFlags;
-		RetrieveTempFilesFromSavedGame(f, flags, x, y, z, savegame_version);
+		RetrieveTempFilesFromSavedGame(f, flags, u->ubSector.x, u->ubSector.y, u->ubSector.z, savegame_version);
 	}
 }
 

@@ -1059,9 +1059,9 @@ BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 	curr = gLair;
 	while( curr )
 	{
-		sSectorX = curr->pLevel->ubSectorX;
-		sSectorY = curr->pLevel->ubSectorY;
-		bSectorZ = (INT8)curr->pLevel->ubSectorZ;
+		sSectorX = curr->pLevel->ubSector.x;
+		sSectorY = curr->pLevel->ubSector.y;
+		bSectorZ = curr->pLevel->ubSector.z;
 		//Loop through all the creature directives (mine sectors that are infectible) and
 		//see if players are there.
 		CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
