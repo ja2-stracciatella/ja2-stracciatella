@@ -189,7 +189,7 @@ BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sMap, BOOLEAN fConteste
 
 		if( fContested )
 		{
-			StrategicHandleQueenLosingControlOfSector( (UINT8) sMap.x, (UINT8) sMap.y, (UINT8) sMap.z);
+			StrategicHandleQueenLosingControlOfSector(sMap);
 		}
 	}
 	else

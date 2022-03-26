@@ -2915,22 +2915,22 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 static UINT8 RedirectEnemyGroupsMovingThroughSector(const SGPSector& sSector);
 
 
-void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ )
+void StrategicHandleQueenLosingControlOfSector(const SGPSector& sSector)
 {
 	SECTORINFO *pSector;
 	UINT8 ubSectorID;
-	if( sSectorZ )
+	if (sSector.z)
 	{ //The queen doesn't care about anything happening under the ground.
 		return;
 	}
 
-	if( StrategicMap[ sSectorX + sSectorY * MAP_WORLD_X ].fEnemyControlled )
+	if (StrategicMap[sSector.AsStrategicIndex()].fEnemyControlled)
 	{ //If the sector doesn't belong to the player, then we shouldn't be calling this function!
 		SLOGE( "StrategicHandleQueenLosingControlOfSector() was called for a sector that is internally considered to be enemy controlled." );
 		return;
 	}
 
-	ubSectorID = SECTOR( sSectorX, sSectorY );
+	ubSectorID = sSector.AsByte();
 	pSector = &SectorInfo[ ubSectorID ];
 
 	//Keep track of victories and wake up the queen after x number of battles.
@@ -2970,7 +2970,7 @@ void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, 
 
 	//If there are any enemy groups that will be moving through this sector due, they will have to repath which
 	//will cause them to avoid the sector.  Returns the number of redirected groups.
-	RedirectEnemyGroupsMovingThroughSector(SGPSector(sSectorX, sSectorY));
+	RedirectEnemyGroupsMovingThroughSector(sSector);
 }
 
 

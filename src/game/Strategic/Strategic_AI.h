@@ -39,7 +39,7 @@ void RecalculateGroupWeight(GROUP const&);
 
 BOOLEAN OkayForEnemyToMoveThroughSector( UINT8 ubSectorID );
 
-void StrategicHandleQueenLosingControlOfSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
+void StrategicHandleQueenLosingControlOfSector(const SGPSector& sSector);
 
 void WakeUpQueen(void);
 
