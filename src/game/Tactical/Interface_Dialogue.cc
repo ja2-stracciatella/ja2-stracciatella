@@ -1617,7 +1617,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad())
 					{
 						gfTacticalTraversal = TRUE;
-						SetGroupSectorValue(10, 1, 1, *GetGroup(pSoldier->ubGroupID));
+						SetGroupSectorValue(SGPSector(10, 1, 1), *GetGroup(pSoldier->ubGroupID));
 
 						// Set insertion gridno
 						if ( bNumDone < 6 )
@@ -1903,7 +1903,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector)
 					{
 						gfTacticalTraversal = TRUE;
-						SetGroupSectorValue(10, 1, 0, *GetGroup(pSoldier->ubGroupID));
+						SetGroupSectorValue(SGPSector(10, 1, 0), *GetGroup(pSoldier->ubGroupID));
 
 						// Set insertion gridno
 						if ( bNumDone < 8 )

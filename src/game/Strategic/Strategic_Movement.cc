@@ -1889,32 +1889,24 @@ void RemoveAllGroups()
 
 void SetGroupSectorValue(const SGPSector& sector, GROUP& g)
 {
-	SetGroupSectorValue(sector.x, sector.y, sector.z, g);
-}
-
-void SetGroupSectorValue(INT16 const x, INT16 const y, INT16 const z, GROUP& g)
-{
 	RemoveGroupWaypoints(g);
 
 	// Set sector x and y to passed values
-	g.ubSector.x       = x;
-	g.ubSector.y       = y;
-	g.ubNext.x         = x;
-	g.ubNext.y         = y;
-	g.ubSector.z       = z;
+	g.ubSector        = sector;
+	g.ubNext          = sector;
 	g.fBetweenSectors = FALSE;
 
 	// Set next sectors same as current
-	g.ubOriginalSector = SECTOR(x, y);
+	g.ubOriginalSector = sector.AsByte();
 	DeleteStrategicEvent(EVENT_GROUP_ARRIVAL, g.ubGroupID);
 
 	// Set all of the mercs in the group so that they are in the new sector, too.
 	CFOR_EACH_PLAYER_IN_GROUP(i, &g)
 	{
 		SOLDIERTYPE& s = *i->pSoldier;
-		s.sSectorX        = x;
-		s.sSectorY        = y;
-		s.bSectorZ        = z;
+		s.sSectorX        = sector.x;
+		s.sSectorY        = sector.y;
+		s.bSectorZ        = sector.z;
 		s.fBetweenSectors = FALSE;
 	}
 
@@ -3405,7 +3397,7 @@ void PlaceGroupInSector(GROUP& g, const SGPSector& prev, const SGPSector& next, 
 	ClearMercPathsAndWaypointsForAllInGroup(g);
 	// Change where they are and where they're going
 	g.ubPrev = prev;
-	SetGroupSectorValue(prev.x, prev.y, next.z, g); // only one user cares about Z this way
+	SetGroupSectorValue(SGPSector(prev.x, prev.y, next.z), g); // only one user cares about Z this way
 	SetGroupNextSectorValue(next, g);
 	// Call arrive event
 	GroupArrivedAtSector(g, check_for_battle, FALSE);

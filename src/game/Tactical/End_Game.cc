@@ -231,6 +231,7 @@ static void DoneFadeInKilledQueen(void)
 static void DoneFadeOutKilledQueen()
 {
 	// Move current squad over
+	const SGPSector upstairs(3, MAP_ROW_P, 0);
 	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
@@ -240,12 +241,12 @@ static void DoneFadeOutKilledQueen()
 		if (s.bAssignment != CurrentSquad()) continue;
 
 		gfTacticalTraversal = TRUE;
-		SetGroupSectorValue(3, MAP_ROW_P, 0, *GetGroup(s.ubGroupID));
+		SetGroupSectorValue(upstairs, *GetGroup(s.ubGroupID));
 
 		// XXX redundant, SetGroupSectorValue() handles this
-		s.sSectorX                 = 3;
-		s.sSectorY                 = MAP_ROW_P;
-		s.bSectorZ                 = 0;
+		s.sSectorX                 = upstairs.x;
+		s.sSectorY                 = upstairs.y;
+		s.bSectorZ                 = upstairs.z;
 		// Set gridno
 		s.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 		s.usStrategicInsertionData = 5687;
@@ -273,7 +274,6 @@ static void DoneFadeOutKilledQueen()
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
-	const SGPSector upstairs(3, MAP_ROW_P, 0);
 	HandleMoraleEvent(0, MORALE_QUEEN_BATTLE_WON, upstairs);
 	HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_QUEEN_BATTLE_WON, upstairs);
 
