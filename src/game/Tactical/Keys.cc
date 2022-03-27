@@ -1221,7 +1221,7 @@ void LoadKeyTableFromSaveedGameFile(HWFILE const f)
 void ExamineDoorsOnEnteringSector()
 {
 	// If this is Omerta, don't do it
-	if (GetTownIdForSector(gWorldSector.AsByte()) == OMERTA) return;
+	if (GetTownIdForSector(gWorldSector) == OMERTA) return;
 
 	// Check time
 	if (GetWorldTotalMin() - gTacticalStatus.uiTimeSinceLastInTactical < 30) return;

@@ -603,7 +603,7 @@ BOOLEAN DoesSectorMercIsInHaveSufficientLoyaltyToTrainMilitia(const SOLDIERTYPE*
 	// underground training is not allowed (code doesn't support and it's a reasonable enough limitation)
 	if (s->sSector.z != 0) return FALSE;
 
-	INT8 const bTownId = GetTownIdForSector(s->sSector.AsByte());
+	INT8 const bTownId = GetTownIdForSector(s->sSector);
 	if (bTownId != BLANK_SECTOR)
 	{
 		// Does this town have sufficient loyalty to train militia?
@@ -4537,7 +4537,7 @@ static void TrainingMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 
 	SOLDIERTYPE* pSoldier = GetSelectedAssignSoldier( FALSE );
 	const SGPSector& sSector = pSoldier->sSector;
-	INT8 const bTownId = GetTownIdForSector(sSector.AsByte());
+	INT8 const bTownId = GetTownIdForSector(sSector);
 
 	iValue = MSYS_GetRegionUserData( pRegion, 0 );
 

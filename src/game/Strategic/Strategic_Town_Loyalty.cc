@@ -405,7 +405,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 		HandleMoraleEvent(killer, MORALE_KILLED_CIVILIAN, killer->sSector);
 	}
 
-	UINT8 const bTownId = GetTownIdForSector(pSoldier->sSector.AsByte());
+	UINT8 const bTownId = GetTownIdForSector(pSoldier->sSector);
 
 	// if civilian is NOT in a town
 	if( bTownId == BLANK_SECTOR )
@@ -601,7 +601,7 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 {
 	UINT32 uiLoyaltyValue = 0;
 
-	UINT8 const bTownId = GetTownIdForSector(pSoldier->sSector.AsByte());
+	UINT8 const bTownId = GetTownIdForSector(pSoldier->sSector);
 
 	// is the merc currently in their home town?
 	if( bTownId == gMercProfiles[ pSoldier->ubProfile ].bTown )
@@ -815,7 +815,7 @@ void AdjustLoyaltyForCivsEatenByMonsters(const SGPSector& sSector, UINT8 ubHowMa
 	ST::string str;
 	ST::string pSectorString;
 
-	UINT8 const bTownId = GetTownIdForSector(sSector.AsByte());
+	UINT8 const bTownId = GetTownIdForSector(sSector);
 
 	// if NOT in a town
 	if( bTownId == BLANK_SECTOR )
@@ -863,7 +863,7 @@ void HandleGlobalLoyaltyEvent(UINT8 ubEventType, const SGPSector& sSector)
 	if (sSector.z == 0)
 	{
 		// grab town id, if this event occured within one
-		bTownId = GetTownIdForSector(sSector.AsByte());
+		bTownId = GetTownIdForSector(sSector);
 	}
 
 	// should other towns ignore events occuring in this town?
@@ -1148,7 +1148,7 @@ void SetTheFirstBattleSector( INT16 sSectorValue )
 // Did first battle take place here?
 bool DidFirstBattleTakePlaceInThisTown(INT8 const town)
 {
-	return GetTownIdForSector(SGPSector::FromStrategicIndex(sWorldSectorLocationOfFirstBattle).AsByte()) == town;
+	return GetTownIdForSector(SGPSector::FromStrategicIndex(sWorldSectorLocationOfFirstBattle)) == town;
 }
 
 

@@ -647,7 +647,7 @@ BOOLEAN IsAreaFullOfMilitia(const SGPSector& sector)
 	UINT32 count_milita = 0;
 	UINT32 max_milita   = 0;
 
-	INT8 const town_id = GetTownIdForSector(sector.AsByte());
+	INT8 const town_id = GetTownIdForSector(sector);
 	if (town_id != BLANK_SECTOR)
 	{
 		FOR_EACH_SECTOR_IN_TOWN(i, town_id)
@@ -914,7 +914,7 @@ BOOLEAN MilitiaTrainingAllowedInSector(const SGPSector& sector)
 		return(TRUE);
 	}
 
-	UINT8 const bTownId = GetTownIdForSector(sector.AsByte());
+	UINT8 const bTownId = GetTownIdForSector(sector);
 	return( MilitiaTrainingAllowedInTown( bTownId ) );
 }
 

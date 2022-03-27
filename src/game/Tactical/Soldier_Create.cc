@@ -2102,7 +2102,7 @@ static UINT8 GetLocationModifier(UINT8 ubSoldierClass)
 	Assert( fSuccess );
 
 	// ignore sSector.z - treat any underground enemies as if they were on the surface!
-	switch (GetTownIdForSector(sSector.AsByte()))
+	switch (GetTownIdForSector(sSector))
 	{
 		case ORTA:
 		case TIXA:

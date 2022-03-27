@@ -665,7 +665,7 @@ static void LoadRottingCorpsesFromTempCorpseFile(const SGPSector& sMap)
 	f->read(&n_corpses, sizeof(UINT32));
 
 	bool const maybe_dont_add = !(gTacticalStatus.uiFlags & LOADING_SAVED_GAME) &&
-					sMap.z == 0 && GetTownIdForSector(sMap.AsByte()) != BLANK_SECTOR; // In town?
+					sMap.z == 0 && GetTownIdForSector(sMap) != BLANK_SECTOR; // In town?
 	for (UINT32 n = n_corpses; n != 0; --n)
 	{
 		ROTTING_CORPSE_DEFINITION def;

@@ -432,7 +432,7 @@ static UINT8 DetermineCivQuoteEntry(SOLDIERTYPE* pCiv, UINT8* pubCivHintToUse, B
 	}
 
 	// Are we in a town sector?
-	UINT8 const bTownId = GetTownIdForSector(gWorldSector.AsByte());
+	UINT8 const bTownId = GetTownIdForSector(gWorldSector);
 
 	// If a married PC...
 	if ( ubCivType == CIV_TYPE_MARRIED_PC )

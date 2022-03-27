@@ -7659,7 +7659,7 @@ static void HandleMilitiaRedistributionClick(void)
 	// if on the surface
 	if (sector.z == 0)
 	{
-		INT8 const bTownId = GetTownIdForSector(sector.AsByte());
+		INT8 const bTownId = GetTownIdForSector(sector);
 		BOOLEAN fTownStillHidden = !IsTownFound(bTownId);
 
 		if( ( bTownId != BLANK_SECTOR ) && !fTownStillHidden )

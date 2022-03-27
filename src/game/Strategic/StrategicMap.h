@@ -52,6 +52,7 @@ extern Observable<> BeforePrepareSector;
 
 // grab the town id value
 UINT8 GetTownIdForSector(UINT8 sector);
+UINT8 GetTownIdForSector(const SGPSector& sSector);
 
 void SetCurrentWorldSector(const SGPSector& sector);
 

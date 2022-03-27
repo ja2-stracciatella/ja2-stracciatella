@@ -297,6 +297,10 @@ UINT8 GetTownIdForSector(UINT8 const sector)
 	return StrategicMap[SGPSector(sector).AsStrategicIndex()].bNameId;
 }
 
+UINT8 GetTownIdForSector(const SGPSector& sSector)
+{
+	return StrategicMap[sSector.AsStrategicIndex()].bNameId;
+}
 
 UINT8 GetTownSectorSize(INT8 const town_id)
 {

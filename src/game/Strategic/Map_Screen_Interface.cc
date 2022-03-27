@@ -3761,7 +3761,7 @@ void NotifyPlayerOfInvasionByEnemyForces(const SGPSector& sector, MSGBOX_CALLBAC
 		buf = st_format_printf(pMapErrorString[22], sector_desc);
 		DoScreenIndependantMessageBox(buf, MSG_BOX_FLAG_OK, return_callback);
 	}
-	else if (GetTownIdForSector(sector.AsByte()) != BLANK_SECTOR)
+	else if (GetTownIdForSector(sector) != BLANK_SECTOR)
 	{
 		sector_desc = GetSectorIDString(sector, TRUE);
 		buf = st_format_printf(pMapErrorString[23], sector_desc);
