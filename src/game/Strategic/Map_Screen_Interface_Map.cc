@@ -1455,7 +1455,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	static UINT8 ubCounter=1;
 
 	INT32 iArrow=-1;
-	INT32 iPastX, iPastY;
 	SGPSector iSector;
 	SGPSector iArrowSector;
 	INT32 iDeltaA, iDeltaB, iDeltaB1;
@@ -1807,14 +1806,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	}
 	else
 	{
-		if(pPastNode)
-		{
-			iPastX=(pPastNode->uiSectorId%MAP_WORLD_X);
-			iPastY=(pPastNode->uiSectorId/MAP_WORLD_X);
-			iPastX=(iPastX*MAP_GRID_X)+MAP_VIEW_START_X;
-			iPastY=(iPastY*MAP_GRID_Y)+MAP_VIEW_START_Y;
-		}
-
 		// display enter and exit 'X's
 		if (pPastNode)
 		{
