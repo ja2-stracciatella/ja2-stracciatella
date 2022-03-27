@@ -607,7 +607,7 @@ static void LoadAndAddWorldItemsFromTempFile(const SGPSector& sMap)
 			// The item has an invalid gridno, use the maps entry point
 			pos = gMapInformation.sCenterGridNo;
 		}
-		else if (wi.usFlags & WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO)
+		else if (wi.usFlags & WORLD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO)
 		{
 			// Find a gridno to place the item at
 			GridNo new_pos = FindNearestAvailableGridNoForItem(pos, 5);
@@ -871,7 +871,7 @@ void AddDeadSoldierToUnLoadedSector(const SGPSector& sMap, SOLDIERTYPE* const s,
 	}
 	else if (flags & ADD_DEAD_SOLDIER_TO_SWEETSPOT)
 	{
-		flags_for_world_items    = WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE;
+		flags_for_world_items    = WORLD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE;
 		flags_for_rotting_corpse = ROTTING_CORPSE_FIND_SWEETSPOT_FROM_GRIDNO;
 	}
 	else
