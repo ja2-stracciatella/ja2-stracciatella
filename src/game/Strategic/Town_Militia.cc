@@ -847,7 +847,7 @@ static void StartTrainingInAllUnpaidTrainableSectors()
 	FOR_EACH(INT16 const, i, gsUnpaidStrategicSector)
 	{
 		if (*i == 0) continue;
-		PayForTrainingInSector(STRATEGIC_INDEX_TO_SECTOR_INFO(*i));
+		PayForTrainingInSector(SGPSector::FromStrategicIndex(*i).AsByte());
 	}
 }
 

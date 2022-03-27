@@ -1148,7 +1148,7 @@ void SetTheFirstBattleSector( INT16 sSectorValue )
 // Did first battle take place here?
 bool DidFirstBattleTakePlaceInThisTown(INT8 const town)
 {
-	return GetTownIdForSector(STRATEGIC_INDEX_TO_SECTOR_INFO(sWorldSectorLocationOfFirstBattle)) == town;
+	return GetTownIdForSector(SGPSector::FromStrategicIndex(sWorldSectorLocationOfFirstBattle).AsByte()) == town;
 }
 
 

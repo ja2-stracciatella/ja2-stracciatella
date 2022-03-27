@@ -2825,7 +2825,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 
 			//Send 4, 8, or 12 troops (based on difficulty) to the location of the first battle.  If nobody is there when they arrive,
 			//those troops will get reassigned.
-			ubSectorID = (UINT8)STRATEGIC_INDEX_TO_SECTOR_INFO( sWorldSectorLocationOfFirstBattle );
+			ubSectorID = SGPSector::FromStrategicIndex(sWorldSectorLocationOfFirstBattle).AsByte();
 			pSector = &SectorInfo[ ubSectorID ];
 			sSector = SGPSector(ubSectorID);
 			ubNumSoldiers = (UINT8)(gGameOptions.ubDifficultyLevel * 4);

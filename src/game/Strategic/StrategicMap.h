@@ -50,10 +50,6 @@ extern Observable<> BeforePrepareSector;
 #define MAP_WORLD_X				18
 #define MAP_WORLD_Y				18
 
-// macros to convert between the 2 different sector numbering systems
-#define STRATEGIC_INDEX_TO_SECTOR_INFO( i )	( SGPSector::FromStrategicIndex(i).AsByte() )
-
-
 // grab the town id value
 UINT8 GetTownIdForSector(UINT8 sector);
 
