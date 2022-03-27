@@ -35,9 +35,7 @@ struct SAVED_GAME_HEADER
 	UINT32	uiDay;
 	UINT8		ubHour;
 	UINT8		ubMin;
-	INT16		sSectorX;
-	INT16		sSectorY;
-	INT8		bSectorZ;
+	SGPSector	sSector;
 	UINT8		ubNumOfMercsOnPlayersTeam;
 	INT32		iCurrentBalance;
 
@@ -98,7 +96,7 @@ void BackupSavedGame(const ST::string &saveName);
 void SaveFilesToSavedGame(char const* pSrcFileName, HWFILE);
 void LoadFilesFromSavedGame(char const* pSrcFileName, HWFILE);
 
-void GetBestPossibleSectorXYZValues(INT16* psSectorX, INT16* psSectorY, INT8* pbSectorZ);
+void GetBestPossibleSectorXYZValues(SGPSector& sSector);
 
 void SaveMercPath(HWFILE, PathSt const* head);
 void LoadMercPath(HWFILE, PathSt** head);

@@ -327,7 +327,7 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		header.ubHour                    = (UINT8)GetWorldHour();
 		header.ubMin                     = (UINT8)guiMin;
 		header.sInitialGameOptions       = gGameOptions;
-		GetBestPossibleSectorXYZValues(&header.sSectorX, &header.sSectorY, &header.bSectorZ);
+		GetBestPossibleSectorXYZValues(header.sSector);
 		header.ubNumOfMercsOnPlayersTeam = NumberOfMercsOnPlayerTeam();
 		header.iCurrentBalance           = LaptopSaveInfo.iCurrentBalance;
 		header.uiCurrentScreen           = guiPreviousOptionScreen;
@@ -357,9 +357,9 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 		INJ_U32(   d, header.uiDay)
 		INJ_U8(    d, header.ubHour)
 		INJ_U8(    d, header.ubMin)
-		INJ_I16(   d, header.sSectorX)
-		INJ_I16(   d, header.sSectorY)
-		INJ_I8(    d, header.bSectorZ)
+		INJ_I16(   d, header.sSector.x)
+		INJ_I16(   d, header.sSector.y)
+		INJ_I8(    d, header.sSector.z)
 		INJ_U8(    d, header.ubNumOfMercsOnPlayersTeam)
 		INJ_I32(   d, header.iCurrentBalance)
 		INJ_U32(   d, header.uiCurrentScreen)
@@ -544,9 +544,9 @@ void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinu
 	EXTR_U32(   d, h.uiDay)
 	EXTR_U8(    d, h.ubHour)
 	EXTR_U8(    d, h.ubMin)
-	EXTR_I16(   d, h.sSectorX)
-	EXTR_I16(   d, h.sSectorY)
-	EXTR_I8(    d, h.bSectorZ)
+	EXTR_I16(   d, h.sSector.x)
+	EXTR_I16(   d, h.sSector.y)
+	EXTR_I8(    d, h.sSector.z)
 	EXTR_U8(    d, h.ubNumOfMercsOnPlayersTeam)
 	EXTR_I32(   d, h.iCurrentBalance)
 	EXTR_U32(   d, h.uiCurrentScreen)
@@ -570,7 +570,7 @@ void ParseSavedGameHeader(const BYTE *data, SAVED_GAME_HEADER& h, bool stracLinu
  * This function does only a basic check.  It might not detect all problems. */
 bool isValidSavedGameHeader(SAVED_GAME_HEADER& h)
 {
-	if((h.sSectorX == 0) && (h.sSectorY == 0) && (h.bSectorZ == -1))
+	if (!h.sSector.IsValid())
 	{
 		// Special case: sector N/A at the game start
 		if((h.uiDay == 0)
@@ -582,11 +582,7 @@ bool isValidSavedGameHeader(SAVED_GAME_HEADER& h)
 	}
 	else
 	{
-		if((h.uiDay == 0)
-			|| (h.sSectorX <= 0) || (h.sSectorX > 16)
-			|| (h.sSectorY <= 0) || (h.sSectorY > 16)
-			|| (h.bSectorZ  < 0) || (h.bSectorZ > 3)
-			|| (h.iCurrentBalance < 0))
+		if (h.uiDay == 0 || !h.sSector.IsValid() || h.iCurrentBalance < 0)
 		{
 			// invalid for sure
 			return false;
@@ -748,7 +744,7 @@ void LoadSavedGame(const ST::string &saveName)
 	{ //By clearing these values, we can avoid "in sector" checks -- at least, that's the theory.
 		SetWorldSectorInvalid();
 
-		SGPSector sector(SaveGameHeader.sSectorX, SaveGameHeader.sSectorY, SaveGameHeader.bSectorZ);
+		SGPSector sector = SaveGameHeader.sSector;
 		gubLastLoadingScreenID = sector.IsValid() ? GetLoadScreenID(sector) : LOADINGSCREEN_HELI;
 
 		BeginLoadScreen();
@@ -2104,14 +2100,12 @@ static void SaveMeanwhileDefsToSaveGameFile(HWFILE const f)
 }
 
 
-void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSectorY, INT8* const pbSectorZ)
+void GetBestPossibleSectorXYZValues(SGPSector& sSector)
 {
 	//if the current sector is valid
 	if (gfWorldLoaded)
 	{
-		*psSectorX = gWorldSector.x;
-		*psSectorY = gWorldSector.y;
-		*pbSectorZ = gWorldSector.z;
+		sSector = gWorldSector;
 		return;
 	}
 
@@ -2120,9 +2114,7 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 		const SOLDIERTYPE* const s = Squad[iCurrentTacticalSquad][0];
 		if (s != NULL && s->bAssignment != IN_TRANSIT)
 		{
-			*psSectorX = s->sSector.x;
-			*psSectorY = s->sSector.y;
-			*pbSectorZ = s->sSector.z;
+			sSector = s->sSector;
 			return;
 		}
 	}
@@ -2133,9 +2125,7 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 		if (s->bAssignment != IN_TRANSIT && !s->fBetweenSectors)
 		{
 			//we found an alive, merc that is not moving
-			*psSectorX = s->sSector.x;
-			*psSectorY = s->sSector.y;
-			*pbSectorZ = s->sSector.z;
+			sSector = s->sSector;
 			return;
 		}
 	}
@@ -2144,16 +2134,12 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		//we found an alive, merc that is not moving
-		*psSectorX = s->sSector.x;
-		*psSectorY = s->sSector.y;
-		*pbSectorZ = s->sSector.z;
+		sSector = s->sSector;
 		return;
 	}
 
 	// if we STILL havent found a merc, give up and use the -1, -1, -1
-	*psSectorX = gWorldSector.x;
-	*psSectorY = gWorldSector.y;
-	*pbSectorZ = gWorldSector.z;
+	sSector = gWorldSector;
 }
 
 
@@ -2444,7 +2430,7 @@ static void CalcJA2EncryptionSet(SAVED_GAME_HEADER const& h)
 
 	set  = h.iCurrentBalance;
 	set *= h.ubNumOfMercsOnPlayersTeam + 1;
-	set += h.bSectorZ * 3;
+	set += h.sSector.z * 3;
 	set += h.ubLoadScreenID;
 
 	if (h.fAlternateSector) set += 7;
