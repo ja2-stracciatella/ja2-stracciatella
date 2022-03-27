@@ -3847,7 +3847,7 @@ static UINT8 RedirectEnemyGroupsMovingThroughSector(const SGPSector& sSector)
 				//extract the group's destination.
 				pWaypoint = GetFinalWaypoint( pGroup );
 				Assert( pWaypoint );
-				ubDestSectorID = (UINT8)SECTOR( pWaypoint->x, pWaypoint->y );
+				ubDestSectorID = pWaypoint->sSector.AsByte();
 				SetEnemyGroupSector(*pGroup, pGroup->ubSector.AsByte());
 				MoveSAIGroupToSector( &pGroup, ubDestSectorID, EVASIVE, pGroup->pEnemyGroup->ubIntention );
 				ubNumGroupsRedirected++;

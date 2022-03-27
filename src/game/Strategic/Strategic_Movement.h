@@ -41,8 +41,7 @@ enum
 //NOTE:  This is used for groups that are initiating a movement to another sector.
 struct WAYPOINT
 {
-	UINT8 x;											//sector x position of waypoint
-	UINT8 y;											//sector y position of waypoint
+	SGPSector sSector; //sector position of waypoint
 	WAYPOINT* next; //next waypoint in list
 };
 

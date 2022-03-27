@@ -906,7 +906,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 	// at this point, the final sector in the path must be identical to this group's last waypoint
 	wp = GetFinalWaypoint(&g);
 	AssertMsg( wp, "Path exists, but no waypoints were added!  AM-0" );
-	AssertMsg( pNode->uiSectorId == ( UINT32 ) CALCULATE_STRATEGIC_INDEX( wp->x, wp->y ), "Last waypoint differs from final path sector!  AM-0" );
+	AssertMsg(pNode->uiSectorId == (UINT32) wp->sSector.AsStrategicIndex(), "Last waypoint differs from final path sector!  AM-0");
 
 
 	// see if we've already reached the first sector in the path (we never actually left the sector and reversed back to it)

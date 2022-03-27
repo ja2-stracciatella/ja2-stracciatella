@@ -1027,12 +1027,12 @@ INT32 GetPathTravelTimeDuringPlotting(PathSt* pPath)
 		if ( !fSkipFirstNode )
 		{
 			// grab the current location
-			pCurrent.x = ( UINT8 )( pPath->uiSectorId % MAP_WORLD_X );
-			pCurrent.y = ( UINT8 )( pPath->uiSectorId / MAP_WORLD_X );
+			pCurrent.sSector.x = GET_X_FROM_STRATEGIC_INDEX(pPath->uiSectorId);
+			pCurrent.sSector.y = GET_Y_FROM_STRATEGIC_INDEX(pPath->uiSectorId);
 
 			// grab the next location
-			pNext.x = ( UINT8 )( pPath->pNext->uiSectorId % MAP_WORLD_X );
-			pNext.y = ( UINT8 )( pPath->pNext->uiSectorId / MAP_WORLD_X );
+			pNext.sSector.x = GET_X_FROM_STRATEGIC_INDEX(pPath->pNext->uiSectorId);
+			pNext.sSector.y = GET_Y_FROM_STRATEGIC_INDEX(pPath->pNext->uiSectorId);
 
 			iTravelTime += FindTravelTimeBetweenWaypoints( &pCurrent, &pNext, pGroup );
 		}

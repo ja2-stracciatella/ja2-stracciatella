@@ -395,8 +395,8 @@ BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 			wp = wp->next;
 		}
 		// Now, we are pointing to the last waypoint in the list
-		if (wp->x == sMap.x) ++n_aligned_axes;
-		if (wp->y == sMap.y) ++n_aligned_axes;
+		if (wp->sSector.x == sMap.x) ++n_aligned_axes;
+		if (wp->sSector.y == sMap.y) ++n_aligned_axes;
 	}
 
 	if (!reversing_direction)
@@ -418,8 +418,7 @@ BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 	}
 
 	WAYPOINT* const new_wp = new WAYPOINT{};
-	new_wp->x    = sMap.x;
-	new_wp->y    = sMap.y;
+	new_wp->sSector = sMap;
 	new_wp->next = 0;
 
 	if (wp)
@@ -942,7 +941,7 @@ void CalculateNextMoveIntention( GROUP *pGroup )
 	Assert( wp );
 
 	//We have the next waypoint, now check if we are actually there.
-	if (pGroup->ubSector.x == wp->x && pGroup->ubSector.y == wp->y)
+	if (pGroup->ubSector == wp->sSector)
 	{ //We have reached the next waypoint, so now determine what the next waypoint is.
 		switch( pGroup->ubMoveType )
 		{
@@ -1661,12 +1660,12 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	Assert( wp );
 	//We now have the correct waypoint.
 	//Analyse the group and determine which direction it will move from the current sector.
-	dx = wp->x - pGroup->ubSector.x;
-	dy = wp->y - pGroup->ubSector.y;
+	dx = wp->sSector.x - pGroup->ubSector.x;
+	dy = wp->sSector.y - pGroup->ubSector.y;
 	if( dx && dy )
 	{ //Can't move diagonally!
 		SLOGA("Attempting to move to waypoint in a diagonal direction from sector %d,%d to sector %d,%d",
-			pGroup->ubSector.x, pGroup->ubSector.y, wp->x, wp->y );
+			pGroup->ubSector.x, pGroup->ubSector.y, wp->sSector.x, wp->sSector.y);
 	}
 	//Clip dx/dy value so that the move is for only one sector.
 	if( dx >= 1 )
@@ -1691,7 +1690,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	}
 	else
 	{
-		SLOGA("InitiateGroupMovementToNextSector: Attempting to move to waypoint %d, %d that you are already at!", wp->x, wp->y);
+		SLOGA("InitiateGroupMovementToNextSector: Attempting to move to waypoint %d, %d that you are already at!", wp->sSector.x, wp->sSector.y);
 		return;
 	}
 	//All conditions for moving to the next waypoint are now good.
@@ -1967,26 +1966,22 @@ INT32 CalculateTravelTimeOfGroup(GROUP const* const pGroup)
 		}
 
 		// first waypoint is NEXT sector
-		pCurrent.x = pGroup->ubNext.x;
-		pCurrent.y = pGroup->ubNext.y;
+		pCurrent.sSector = pGroup->ubNext;
 	}
 	else
 	{
 		// first waypoint is CURRENT sector
-		pCurrent.x = pGroup->ubSector.x;
-		pCurrent.y = pGroup->ubSector.y;
+		pCurrent.sSector = pGroup->ubSector;
 	}
 
 	while( pNode )
 	{
-		pDest.x = pNode->x;
-		pDest.y = pNode->y;
+		pDest.sSector = pNode->sSector;
 
 		// update eta time by the path between these 2 waypts
 		uiEtaTime += FindTravelTimeBetweenWaypoints( &pCurrent, &pDest, pGroup );
 
-		pCurrent.x = pNode->x;
-		pCurrent.y = pNode->y;
+		pCurrent.sSector = pNode->sSector;
 
 		// next waypt
 		pNode = pNode->next;
@@ -2014,8 +2009,8 @@ INT32 FindTravelTimeBetweenWaypoints(WAYPOINT const* const pSource, WAYPOINT con
 	}
 
 	// get start and end setor values
-	ubStart = SECTOR( pSource->x, pSource->y );
-	ubEnd   = SECTOR( pDest->x,   pDest->y );
+	ubStart = pSource->sSector.AsByte();
+	ubEnd   = pDest->sSector.AsByte();
 
 	// are we in fact moving?
 	if( ubStart == ubEnd )
@@ -2653,8 +2648,8 @@ static void SaveWayPointList(HWFILE const f, GROUP const* const g)
 	{
 		BYTE  data[8];
 		DataWriter d{data};
-		INJ_U8(  d, w->x)
-		INJ_U8(  d, w->y)
+		INJ_U8(  d, w->sSector.x)
+		INJ_U8(  d, w->sSector.y)
 		INJ_SKIP(d, 6)
 		Assert(d.getConsumed() == lengthof(data));
 
@@ -2678,8 +2673,8 @@ static void LoadWayPointList(HWFILE const f, GROUP* const g)
 		f->read(data, sizeof(data));
 
 		DataReader d{data};
-		EXTR_U8(  d, w->x)
-		EXTR_U8(  d, w->y)
+		EXTR_U8(  d, w->sSector.x)
+		EXTR_U8(  d, w->sSector.y)
 		EXTR_SKIP(d, 6)
 		Assert(d.getConsumed() == lengthof(data));
 
@@ -2858,7 +2853,7 @@ BOOLEAN GroupAtFinalDestination(const GROUP* const pGroup)
 	}
 
 	// if we're there
-	if (pGroup->ubSector.x == wp->x && pGroup->ubSector.y == wp->y)
+	if (pGroup->ubSector == wp->sSector)
 	{
 		return TRUE;
 	}
@@ -3034,24 +3029,24 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 
 	while( wp )
 	{
-		while (pGroup->ubSector.x != wp->x || pGroup->ubSector.y != wp->y)
+		while (pGroup->ubSector != wp->sSector)
 		{
 			//We now have the correct waypoint.
 			//Analyse the group and determine which direction it will move from the current sector.
-			dx = wp->x - pGroup->ubSector.x;
-			dy = wp->y - pGroup->ubSector.y;
+			dx = wp->sSector.x - pGroup->ubSector.x;
+			dy = wp->sSector.y - pGroup->ubSector.y;
 			if( dx && dy )
 			{ //Can't move diagonally!
-				SLOGA("GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector %c%d to sector %c%d for group at sector %c%d",
-					pGroup->ubSector.y + 'A', pGroup->ubSector.x, wp->y + 'A' - 1, wp->x, ubOrigY + 'A' - 1, ubOrigX);
+				STLOGA("GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector {} to sector {} for group at sector {c}{}",
+					pGroup->ubSector.AsShortString(), wp->sSector.AsShortString(), ubOrigY + 'A' - 1, ubOrigX);
 				pGroup->ubSector.x = ubOrigX;
 				pGroup->ubSector.y = ubOrigY;
 				return TRUE;
 			}
 			if( !dx && !dy ) //Can't move to position currently at!
 			{
-				SLOGA("GroupWillMoveThroughSector() -- Attempting to process same waypoint at %c%d for group at %c%d",
-					wp->y + 'A' - 1, wp->x, ubOrigY + 'A' - 1, ubOrigX);
+				STLOGA("GroupWillMoveThroughSector() -- Attempting to process same waypoint at {} for group at {c}{}",
+					wp->sSector.AsShortString(), ubOrigY + 'A' - 1, ubOrigX);
 				pGroup->ubSector.x = ubOrigX;
 				pGroup->ubSector.y = ubOrigY;
 				return TRUE;
@@ -3232,7 +3227,7 @@ void RandomizePatrolGroupLocation( GROUP *pGroup )
 	Assert( wp );
 
 	//Move the group to the location of this chosen waypoint.
-	ubSectorID = (UINT8)SECTOR( wp->x, wp->y );
+	ubSectorID = wp->sSector.AsByte();
 
 	//Set up this global var to randomize the arrival time of the group from
 	//1 minute to actual traverse time between the sectors.
