@@ -55,7 +55,7 @@ extern Observable<> BeforePrepareSector;
 #define GET_Y_FROM_STRATEGIC_INDEX( i )		( i / MAP_WORLD_X )
 
 // macros to convert between the 2 different sector numbering systems
-#define STRATEGIC_INDEX_TO_SECTOR_INFO( i )	( SECTOR(  GET_X_FROM_STRATEGIC_INDEX( i ), GET_Y_FROM_STRATEGIC_INDEX( i ) ) )
+#define STRATEGIC_INDEX_TO_SECTOR_INFO( i )	( SGPSector::FromStrategicIndex(i).AsByte() )
 
 
 // grab the town id value

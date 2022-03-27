@@ -948,7 +948,7 @@ void HandleAnimationOfSectors( void )
 	{
 		fOldShowEstoniRefuelHighLight = TRUE;
 		INT16 const sec = g_refuel_site[ESTONI_REFUELING_SITE].sector;
-		HandleBlitOfSectorLocatorIcon(SGPSector(GET_X_FROM_STRATEGIC_INDEX(sec), GET_Y_FROM_STRATEGIC_INDEX(sec), 0), LOCATOR_COLOR_RED);
+		HandleBlitOfSectorLocatorIcon(SGPSector::FromStrategicIndex(sec), LOCATOR_COLOR_RED);
 		fSkipSpeakersLocator = TRUE;
 	}
 	else if( fOldShowEstoniRefuelHighLight )
@@ -1238,7 +1238,7 @@ INT16 GetNumSafeSectorsInPath()
 		 * waypoints are rebuilt AFTER plotting is done) */
 		if ((INT32)i->uiSectorId == sector &&
 				i->pNext &&
-				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(g, GET_X_FROM_STRATEGIC_INDEX(i->pNext->uiSectorId), GET_Y_FROM_STRATEGIC_INDEX(i->pNext->uiSectorId)))
+				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(g, SGPSector::FromStrategicIndex(i->pNext->uiSectorId)))
 		{
 			i = i->pNext;
 		}
@@ -1260,7 +1260,7 @@ INT16 GetNumSafeSectorsInPath()
 		if ((
 					(INT32)i->uiSectorId == sector &&
 					i->pNext &&
-					!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(g, GET_X_FROM_STRATEGIC_INDEX(i->pNext->uiSectorId), GET_Y_FROM_STRATEGIC_INDEX(i->pNext->uiSectorId))
+					!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(g, SGPSector::FromStrategicIndex(i->pNext->uiSectorId))
 				) ||
 				GetLengthOfPath(v.pMercPath) > 0)
 		{
@@ -1300,7 +1300,7 @@ INT16 GetNumUnSafeSectorsInPath( void )
 		// first node: skip it if that's the sector the chopper is currently in, AND
 		// we're NOT gonna be changing directions (not actually performed until waypoints are rebuilt AFTER plotting is done)
 		if ( ( ( INT32 ) pNode->uiSectorId == iHeliSector ) && ( pNode->pNext != NULL ) &&
-				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection( pGroup, ( UINT8 ) GET_X_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ), ( UINT8 ) GET_Y_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ) ) )
+				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(pGroup, SGPSector::FromStrategicIndex(pNode->pNext->uiSectorId)))
 		{
 			pNode = pNode->pNext;
 		}
@@ -1326,7 +1326,7 @@ INT16 GetNumUnSafeSectorsInPath( void )
 		// we're NOT gonna be changing directions (not actually performed until waypoints are rebuilt AFTER plotting is done)
 		// OR if the chopper has a mercpath, in which case this a continuation of it that would count the sector twice
 		if ( ( ( ( INT32 ) pNode->uiSectorId == iHeliSector ) && ( pNode->pNext != NULL ) &&
-				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection( pGroup, ( UINT8 ) GET_X_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ), ( UINT8 ) GET_Y_FROM_STRATEGIC_INDEX( pNode->pNext->uiSectorId ) ) ) ||
+				!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(pGroup, SGPSector::FromStrategicIndex(pNode->pNext->uiSectorId))) ||
 				GetLengthOfPath(v.pMercPath) > 0)
 		{
 			pNode = pNode->pNext;

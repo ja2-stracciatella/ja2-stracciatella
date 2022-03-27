@@ -137,6 +137,7 @@ public:
 	SGPSector(const SGPSector&) noexcept = default;
 	SGPSector(UINT32 s) noexcept;
 	SGPSector(UINT32 s, INT8 h, const ST::string a) noexcept;
+	static SGPSector FromStrategicIndex(UINT16 idx);
 
 	bool operator==(const SGPSector&) const noexcept;
 	bool operator!=(const SGPSector&) const noexcept;

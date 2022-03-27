@@ -237,7 +237,7 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const&, const SGPSector&
 BOOLEAN GroupReversingDirectionsBetweenSectors(GROUP *pGroup, const SGPSector& sMap, BOOLEAN fBuildingWaypoints)
 {
 	// if we're not between sectors, or we are but we're continuing in the same direction as before
-	if (!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(pGroup, sMap.x, sMap.y))
+	if (!GroupBetweenSectorsAndSectorXYIsInDifferentDirection(pGroup, sMap))
 	{
 		// then there's no need to reverse directions
 		return FALSE;
@@ -301,7 +301,7 @@ BOOLEAN GroupReversingDirectionsBetweenSectors(GROUP *pGroup, const SGPSector& s
 
 
 
-BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY )
+BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection(GROUP *pGroup, const SGPSector& sSector)
 {
 	INT32 currDX, currDY, newDX, newDY;
 	UINT8 ubNumUnalignedAxes = 0;
@@ -316,8 +316,8 @@ BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection( GROUP *pGroup, UIN
 	currDY = pGroup->ubNext.y - pGroup->ubSector.y;
 
 	//Determine the direction the group would need to travel in to reach the given sector
-	newDX = ubSectorX - pGroup->ubSector.x;
-	newDY = ubSectorY - pGroup->ubSector.y;
+	newDX = sSector.x - pGroup->ubSector.x;
+	newDY = sSector.y - pGroup->ubSector.y;
 
 	// clip the new dx/dy values to +/- 1
 	if( newDX )

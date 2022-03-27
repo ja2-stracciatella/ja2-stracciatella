@@ -15,6 +15,21 @@ SGPSector::SGPSector(UINT32 s, INT8 h, const ST::string /*hack*/) noexcept
 	z = h;
 }
 
+static UINT16 getXfromStrategicIndex(UINT16 idx)
+{
+	return idx % 18; // MAP_WORLD_X
+}
+
+static UINT16 getYfromStrategicIndex(UINT16 idx)
+{
+	return idx / 18; // MAP_WORLD_X
+}
+
+SGPSector SGPSector::FromStrategicIndex(UINT16 idx)
+{
+	return SGPSector(getXfromStrategicIndex(idx), getYfromStrategicIndex(idx));
+}
+
 bool SGPSector::operator==(const SGPSector& sector) const noexcept
 {
 	return x == sector.x && y == sector.y && z == sector.z;
