@@ -1055,7 +1055,7 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 										// don't bother checking GRENADES/KNIVES, he can't have conscious targets
 										// then make decision as if at alert status RED, but make sure
 										// we don't try to SEEK OPPONENT the unconscious guy!
-										return(DecideActionRed(pSoldier,FALSE));
+										return CreatureDecideActionRed(pSoldier, FALSE);
 									}
 									// else kill the guy, he could be the last opponent alive in this sector
 								}
