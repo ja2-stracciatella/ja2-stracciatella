@@ -2021,15 +2021,15 @@ static void CalculateOverrideStatus(void)
 }
 
 
-static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, const char* const suffix)
+static BOOLEAN LoadSummary(const SGPSector& sMap, const UINT8 level, const char* const suffix)
 {
 	char summary_filename[40];
-	sprintf(summary_filename, DEVINFO_DIR "/%c%d%s.sum", 'A' + y, x + 1, suffix);
+	sprintf(summary_filename, DEVINFO_DIR "/%s%s.sum", sMap.AsShortString().c_str(), suffix);
 
 	FLOAT dMajorMapVersion;
 	{
 		char filename[40];
-		sprintf(filename, "%c%d%s.dat", 'A' + y, x + 1, suffix);
+		sprintf(filename, "%s%s.dat", sMap.AsShortString().c_str(), suffix);
 
 		AutoSGPFile f_map;
 		try
@@ -2066,7 +2066,7 @@ static BOOLEAN LoadSummary(const INT32 x, const INT32 y, const UINT8 level, cons
 		sum->dMajorMapVersion = dMajorMapVersion;
 		UpdateSummaryInfo(sum);
 
-		SUMMARYFILE** const anchor = &gpSectorSummary[x][y][level];
+		SUMMARYFILE** const anchor = &gpSectorSummary[sMap.x - 1][sMap.y - 1][level];
 		if (*anchor) delete *anchor;
 		*anchor = sum;
 
@@ -2099,22 +2099,23 @@ static void LoadGlobalSummary(void)
 	 * to load summaries for those maps.  If the summary information isn't found,
 	 * then the occurrences are recorded and reported to the user when finished to
 	 * give the option to generate them. */
-	for (INT32 y = 0; y < 16; ++y)
+	SGPSector sMap;
+	for (sMap.y = 1; sMap.y <= 16; ++sMap.y)
 	{
-		for (INT32 x = 0; x < 16; ++x)
+		for (sMap.x = 1; sMap.x <= 16; ++sMap.x)
 		{
 			BOOLEAN sector_levels = 0;
-			if (LoadSummary(x, y, 0, ""))       sector_levels |= GROUND_LEVEL_MASK;     // main ground level
-			if (LoadSummary(x, y, 1, "_b1"))    sector_levels |= BASEMENT1_LEVEL_MASK;  // main B1 level
-			if (LoadSummary(x, y, 2, "_b2"))    sector_levels |= BASEMENT2_LEVEL_MASK;  // main B2 level
-			if (LoadSummary(x, y, 3, "_b3"))    sector_levels |= BASEMENT3_LEVEL_MASK;  // main B3 level
-			if (LoadSummary(x, y, 4, "_a"))     sector_levels |= ALTERNATE_GROUND_MASK; // alternate ground level
-			if (LoadSummary(x, y, 5, "_b1_a"))  sector_levels |= ALTERNATE_B1_MASK;     // alternate B1 level
-			if (LoadSummary(x, y, 6, "_b2_a"))  sector_levels |= ALTERNATE_B2_MASK;     // alternate B2 level
-			if (LoadSummary(x, y, 7, "_b3_a"))  sector_levels |= ALTERNATE_B3_MASK;     // alternate B2 level
-			gbSectorLevels[x][y] = sector_levels;
+			if (LoadSummary(sMap, 0, ""))       sector_levels |= GROUND_LEVEL_MASK;     // main ground level
+			if (LoadSummary(sMap, 1, "_b1"))    sector_levels |= BASEMENT1_LEVEL_MASK;  // main B1 level
+			if (LoadSummary(sMap, 2, "_b2"))    sector_levels |= BASEMENT2_LEVEL_MASK;  // main B2 level
+			if (LoadSummary(sMap, 3, "_b3"))    sector_levels |= BASEMENT3_LEVEL_MASK;  // main B3 level
+			if (LoadSummary(sMap, 4, "_a"))     sector_levels |= ALTERNATE_GROUND_MASK; // alternate ground level
+			if (LoadSummary(sMap, 5, "_b1_a"))  sector_levels |= ALTERNATE_B1_MASK;     // alternate B1 level
+			if (LoadSummary(sMap, 6, "_b2_a"))  sector_levels |= ALTERNATE_B2_MASK;     // alternate B2 level
+			if (LoadSummary(sMap, 7, "_b3_a"))  sector_levels |= ALTERNATE_B3_MASK;     // alternate B2 level
+			gbSectorLevels[sMap.x - 1][sMap.y - 1] = sector_levels;
 		}
-		SLOGD("Sector Row %c complete...", y + 'A');
+		STLOGD("Sector Row {c} complete...", sMap.y - 1 + 'A');
 	}
 
 	if (gfMustForceUpdateAllMaps)
