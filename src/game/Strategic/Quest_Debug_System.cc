@@ -3161,12 +3161,12 @@ static ST::string GetDebugLocationString(UINT16 usProfileID)
 	//the soldier is in this sector
 	else if( pSoldier != NULL )
 	{
-		return GetShortSectorString(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY));
+		return SGPSector(pSoldier->sSectorX, pSoldier->sSectorY).AsShortString();
 	}
 
 	//else the soldier is in a different map
 	else
 	{
-		return GetShortSectorString(SGPSector(gMercProfiles[ usProfileID ].sSectorX, gMercProfiles[ usProfileID ].sSectorY));
+		return SGPSector(gMercProfiles[ usProfileID ].sSectorX, gMercProfiles[ usProfileID ].sSectorY).AsShortString();
 	}
 }

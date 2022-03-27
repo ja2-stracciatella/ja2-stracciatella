@@ -767,7 +767,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 	}
 
 	SGPSector sSector(s.sSectorX, s.sSectorY, s.bSectorZ);
-	ST::string town_sector = GetShortSectorString(sSector);
+	ST::string town_sector = sSector.AsShortString();
 
 	ST::string msg;
 	MessageBoxFlags flags;
@@ -782,7 +782,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 
 		// Set strings for generic buttons
 		gzUserDefinedButton1 = town_sector;
-		gzUserDefinedButton2 = GetShortSectorString(SGPSector(elsewhere));
+		gzUserDefinedButton2 = SGPSector(elsewhere).AsShortString();
 
 		ST::string town = GCM->getTownLocative(GetTownIdForSector(elsewhere));
 		ST::string text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;

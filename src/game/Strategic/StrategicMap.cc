@@ -330,14 +330,6 @@ static void InitializeMapStructure(void)
 	InitializeStrategicMapSectorTownNames( );
 }
 
-// get short sector name without town name
-ST::string GetShortSectorString(const SGPSector& sMap)
-{
-	// OK, build string id like J11
-	return sMap.AsShortString();
-}
-
-
 void GetMapFileName(const SGPSector& sector, char* const buf, BOOLEAN const add_alternate_map_letter)
 {
 	size_t n = sprintf(buf, "%c%d", 'A' - 1 + sector.y, sector.x);

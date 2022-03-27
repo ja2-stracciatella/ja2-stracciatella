@@ -68,9 +68,6 @@ void SetCurrentWorldSector(const SGPSector& sector);
 void UpdateMercsInSector();
 void UpdateMercInSector(SOLDIERTYPE&, const SGPSector& sector);
 
-// get short sector name without town name
-ST::string GetShortSectorString(const SGPSector& sMap);
-
 // Return a string like 'A9: Omerta'
 ST::string GetSectorIDString(const SGPSector& sector, BOOLEAN detailed);
 

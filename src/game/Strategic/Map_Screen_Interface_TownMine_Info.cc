@@ -228,7 +228,7 @@ static void AddTextToTownBox(PopUpBox* const box)
 		wString = ST::format("{}:",  pwTownInfoStrings[2]);
 		AddMonoString(box, wString);
 		SGPSector sMap(GET_X_FROM_STRATEGIC_INDEX(sMineSector), GET_Y_FROM_STRATEGIC_INDEX(sMineSector));
-		wString = GetShortSectorString(sMap);
+		wString = sMap.AsShortString();
 		AddSecondColumnMonoString(box, wString);
 	}
 }
