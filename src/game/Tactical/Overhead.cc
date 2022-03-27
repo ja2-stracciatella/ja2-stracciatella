@@ -1981,10 +1981,14 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 
 	if (pSoldier->bTeam == OUR_TEAM)
 	{
+		static const SGPSector drassen(13, MAP_ROW_B);
 		if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC)
 		{
 			// are we there yet?
-			if (pSoldier->sSectorX == 13 && pSoldier->sSectorY == MAP_ROW_B && pSoldier->bSectorZ == 0)
+			static const SGPSector sMap(13, MAP_ROW_B);
+			static const SGPSector sanMona(6, MAP_ROW_C);
+			static const SGPSector cambria(8, MAP_ROW_G);
+			if (pSoldier->sSector == sMap)
 			{
 				switch (pSoldier->ubProfile)
 				{
@@ -1995,7 +1999,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 							EVENT_StopMerc(pSoldier);
 							SetFactTrue(FACT_SKYRIDER_CLOSE_TO_CHOPPER);
 							TriggerNPCRecord(SKYRIDER, 15);
-							SetUpHelicopterForPlayer(SGPSector(13, MAP_ROW_B));
+							SetUpHelicopterForPlayer(sMap);
 						}
 						break;
 
@@ -2004,9 +2008,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 				}
 			}
 			else if (pSoldier->ubProfile == MARIA &&
-				pSoldier->sSectorX == 6 &&
-				pSoldier->sSectorY == MAP_ROW_C &&
-				pSoldier->bSectorZ == 0 &&
+				pSoldier->sSector == sanMona &&
 				CheckFact(FACT_MARIA_ESCORTED_AT_LEATHER_SHOP, MARIA) == TRUE)
 			{
 				// check that Angel is there!
@@ -2016,10 +2018,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 					TriggerNPCRecord(ANGEL, 12);
 				}
 			}
-			else if (pSoldier->ubProfile == JOEY &&
-				pSoldier->sSectorX == 8 &&
-				pSoldier->sSectorY == MAP_ROW_G &&
-				pSoldier->bSectorZ == 0)
+			else if (pSoldier->ubProfile == JOEY && pSoldier->sSector == cambria)
 			{
 				// if Joey walks near Martha then trigger Martha record 7
 				if (CheckFact(FACT_JOEY_NEAR_MARTHA, 0))
@@ -2032,9 +2031,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 		}
 		// Drassen stuff for John & Mary
 		else if (gubQuest[QUEST_ESCORT_TOURISTS] == QUESTINPROGRESS &&
-			pSoldier->sSectorX == 13 &&
-			pSoldier->sSectorY == MAP_ROW_B &&
-			pSoldier->bSectorZ == 0)
+			pSoldier->sSector == drassen)
 		{
 			if (CheckFact(FACT_JOHN_ALIVE, 0))
 			{
@@ -2505,7 +2502,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 				// check to see if dynamo quest is on
 				if (gubQuest[QUEST_FREE_DYNAMO] == QUESTINPROGRESS)
 				{
-					EndQuest(QUEST_FREE_DYNAMO, SGPSector(pSoldierOld->sSectorX, pSoldierOld->sSectorY));
+					EndQuest(QUEST_FREE_DYNAMO, pSoldierOld->sSector);
 				}
 				break;
 
@@ -2513,7 +2510,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 				// check to see if Kingpin money quest is on
 				if (gubQuest[QUEST_KINGPIN_MONEY] == QUESTINPROGRESS)
 				{
-					EndQuest(QUEST_KINGPIN_MONEY, SGPSector(pSoldierOld->sSectorX, pSoldierOld->sSectorY));
+					EndQuest(QUEST_KINGPIN_MONEY, pSoldierOld->sSector);
 					HandleNPCDoAction(KINGPIN, NPC_ACTION_GRANT_EXPERIENCE_3, 0);
 				}
 				SetFactTrue(FACT_KINGPIN_DEAD);
@@ -5241,7 +5238,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 			{
 				for ( ubLoop2 = 0; ubLoop2 < (ubTotalPointsLost / 2) - (pSoldier->ubAPsLostToSuppression / 2); ubLoop2++ )
 				{
-					HandleMoraleEvent(pSoldier, MORALE_SUPPRESSED, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+					HandleMoraleEvent(pSoldier, MORALE_SUPPRESSED, pSoldier->sSector);
 				}
 			}
 

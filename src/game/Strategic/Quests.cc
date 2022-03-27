@@ -391,16 +391,12 @@ static BOOLEAN CheckNPCSector(UINT8 ubProfileID, const SGPSector& sector)
 	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileIDOnPlayerTeam(ubProfileID);
 	if( pSoldier )
 	{
-		if (pSoldier->sSectorX == sector.x &&
-			pSoldier->sSectorY == sector.y &&
-			pSoldier->bSectorZ == sector.z )
+		if (pSoldier->sSector == sector)
 		{
 			return( TRUE );
 		}
 	}
-	else if (gMercProfiles[ubProfileID].sSectorX == sector.x &&
-		gMercProfiles[ubProfileID].sSectorY == sector.y &&
-		gMercProfiles[ubProfileID].bSectorZ == sector.z )
+	else if (gMercProfiles[ubProfileID].sSector == sector)
 	{
 		return( TRUE );
 	}
@@ -703,7 +699,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			gubFact[usFact] = (GetProfile(CARMEN).uiMoney >= 10000);
 			break;
 		case FACT_SLAY_IN_SECTOR:
-			gubFact[usFact] = gMercProfiles[SLAY].sSectorX == gWorldSector.x && gMercProfiles[SLAY].sSectorY == gWorldSector.y && gMercProfiles[SLAY].bSectorZ == gWorldSector.z;
+			gubFact[usFact] = gMercProfiles[SLAY].sSector == gWorldSector;
 			break;
 		case FACT_SLAY_HIRED_AND_WORKED_FOR_48_HOURS:
 			gubFact[usFact] = ( ( gMercProfiles[ SLAY ].ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED ) && ( gMercProfiles[ SLAY ].usTotalDaysServed > 1 ) );
@@ -1039,7 +1035,7 @@ BOOLEAN CheckFact(Fact const usFact, UINT8 const ubProfileID)
 			break;
 
 		case FACT_WALKER_AT_BAR:
-			gubFact[usFact] = (gMercProfiles[ FATHER ].sSectorX == 13 && gMercProfiles[ FATHER ].sSectorY == MAP_ROW_C);
+			gubFact[usFact] = (gMercProfiles[ FATHER ].sSector.x == 13 && gMercProfiles[ FATHER ].sSector.y == MAP_ROW_C);
 			break;
 
 		case FACT_JOEY_ALIVE:

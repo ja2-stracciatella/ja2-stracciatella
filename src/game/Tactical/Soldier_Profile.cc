@@ -253,7 +253,7 @@ static void DecideActiveTerrorists()
 			TerroristInfo const& t = *i;
 			MERCPROFILESTRUCT&   p = GetProfile(t.profile);
 			// Random 40% chance of adding this terrorist if not yet placed.
-			if (p.sSectorX != 0)   continue;
+			if (p.sSector.x != 0)  continue;
 			if (Random(100) >= 40) continue;
 
 			// Since there are 5 spots per terrorist and a maximum of 5 terrorists, we
@@ -269,9 +269,7 @@ pick_sector:
 			}
 
 			// Place terrorist.
-			p.sSectorX = SECTORX(sector);
-			p.sSectorY = SECTORY(sector);
-			p.bSectorZ = 0;
+			p.sSector = SGPSector(sector);
 			terrorist_placement[n_terrorists_added++] = sector;
 		}
 	}
@@ -290,7 +288,7 @@ void MakeRemainingTerroristsTougher()
 	{
 		ProfileID         const  pid = i->profile;
 		MERCPROFILESTRUCT const& p   = GetProfile(pid);
-		if (p.bMercStatus == MERC_IS_DEAD || p.sSectorX == 0 || p.sSectorY == 0) continue;
+		if (p.bMercStatus == MERC_IS_DEAD || !p.sSector.IsValid()) continue;
 		// Slay on player's team, doesn't count towards remaining terrorists
 		if (pid == SLAY && FindSoldierByProfileIDOnPlayerTeam(SLAY)) continue;
 		++n_remaining_terrorists;
@@ -352,7 +350,7 @@ void MakeRemainingTerroristsTougher()
 	{
 		ProfileID         const  pid = i->profile;
 		MERCPROFILESTRUCT const& p   = GetProfile(pid);
-		if (p.bMercStatus == MERC_IS_DEAD || p.sSectorX == 0 || p.sSectorY == 0) continue;
+		if (p.bMercStatus == MERC_IS_DEAD || !p.sSector.IsValid()) continue;
 		// Slay on player's team, doesn't count towards remaining terrorists
 		if (pid == SLAY && FindSoldierByProfileIDOnPlayerTeam(SLAY)) continue;
 
@@ -376,7 +374,7 @@ void DecideOnAssassin()
 		MERCPROFILESTRUCT const& p = GetProfile(a.profile);
 		// Make sure alive and not placed already.
 		if (p.bMercStatus == MERC_IS_DEAD)      continue;
-		if (p.sSectorX != 0 || p.sSectorY != 0) continue;
+		if (p.sSector.IsValid()) continue;
 		// Check this merc to see if the town is a possibility.
 		FOR_EACH(UINT8 const, k, a.towns)
 		{
@@ -389,8 +387,7 @@ void DecideOnAssassin()
 	if (n == 0) return;
 	ProfileID const    pid = assassins[Random(n)];
 	MERCPROFILESTRUCT& p   = GetProfile(pid);
-	p.sSectorX             = gWorldSector.x;
-	p.sSectorY             = gWorldSector.y;
+	p.sSector              = gWorldSector;
 	AddStrategicEvent(EVENT_REMOVE_ASSASSIN, GetWorldTotalMin() + 60 * (3 + Random(3)), pid);
 }
 
@@ -593,9 +590,7 @@ SOLDIERTYPE* ChangeSoldierTeam(SOLDIERTYPE* const old_s, UINT8 const team)
 	c.bTeam            = team;
 	c.ubProfile        = old_s->ubProfile;
 	c.bBodyType        = old_s->ubBodyType;
-	c.sSectorX         = old_s->sSectorX;
-	c.sSectorY         = old_s->sSectorY;
-	c.bSectorZ         = old_s->bSectorZ;
+	c.sSector          = old_s->sSector;
 	c.sInsertionGridNo = old_s->sGridNo; // XXX always NOWHERE due to InternalTacticalRemoveSoldier() above
 	c.bDirection       = old_s->bDirection;
 	if (old_s->uiStatusFlags & SOLDIER_VEHICLE)
@@ -692,7 +687,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	}
 	else if ( ubCharNum == DYNAMO && gubQuest[ QUEST_FREE_DYNAMO ] == QUESTINPROGRESS )
 	{
-		EndQuest(QUEST_FREE_DYNAMO, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY));
+		EndQuest(QUEST_FREE_DYNAMO, pSoldier->sSector);
 	}
 	// handle town loyalty adjustment
 	HandleTownLoyaltyForNPCRecruitment( pNewSoldier );
@@ -742,7 +737,7 @@ BOOLEAN RecruitRPC( UINT8 ubCharNum )
 	//add a history log that tells the user that a npc has joined the team
 	//
 	// ( pass in pNewSoldier->sSectorX cause if its invalid, -1, n/a will appear as the sector in the history log )
-	AddHistoryToPlayersLog(HISTORY_RPC_JOINED_TEAM, pNewSoldier->ubProfile, GetWorldTotalMin(), SGPSector(pNewSoldier->sSectorX, pNewSoldier->sSectorY));
+	AddHistoryToPlayersLog(HISTORY_RPC_JOINED_TEAM, pNewSoldier->ubProfile, GetWorldTotalMin(), pNewSoldier->sSector);
 
 
 	//remove the merc from the Personnel screens departed list ( if they have never been hired before, its ok to call it )
@@ -814,19 +809,15 @@ BOOLEAN UnRecruitEPC(ProfileID const pid)
 
 	// check to see if this person should disappear from the map after this
 	if ((pid == JOHN || pid == MARY) &&
-			s->sSectorX == 13            &&
-			s->sSectorY == MAP_ROW_B     &&
-			s->bSectorZ == 0)
+			s->sSector.x == 13            &&
+			s->sSector.y == MAP_ROW_B     &&
+			s->sSector.z == 0)
 	{
-		p.sSectorX = 0;
-		p.sSectorY = 0;
-		p.bSectorZ = 0;
+		p.sSector = SGPSector();
 	}
 	else
 	{
-		p.sSectorX = s->sSectorX;
-		p.sSectorY = s->sSectorY;
-		p.bSectorZ = s->bSectorZ;
+		p.sSector = s->sSector;
 	}
 
 	// how do we decide whether or not to set this?
@@ -953,8 +944,7 @@ SOLDIERTYPE* SwapLarrysProfiles(SOLDIERTYPE* const s)
 
 	dst.ubMiscFlags2                = src.ubMiscFlags2;
 	dst.ubMiscFlags                 = src.ubMiscFlags;
-	dst.sSectorX                    = src.sSectorX;
-	dst.sSectorY                    = src.sSectorY;
+	dst.sSector                     = src.sSector;
 	dst.uiDayBecomesAvailable       = src.uiDayBecomesAvailable;
 	dst.usKills                     = src.usKills;
 	dst.usAssists                   = src.usAssists;

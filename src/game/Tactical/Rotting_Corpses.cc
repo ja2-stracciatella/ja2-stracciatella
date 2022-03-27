@@ -813,9 +813,7 @@ static void AddCrowToCorpse(ROTTING_CORPSE* pCorpse)
 	// Put him flying over corpse pisition
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile = NO_PROFILE;
-	MercCreateStruct.sSectorX = gWorldSector.x;
-	MercCreateStruct.sSectorY = gWorldSector.y;
-	MercCreateStruct.bSectorZ = gWorldSector.z;
+	MercCreateStruct.sSector = gWorldSector;
 	MercCreateStruct.bBodyType = bBodyType;
 	MercCreateStruct.bDirection = SOUTH;
 	MercCreateStruct.bTeam = CIV_TEAM;

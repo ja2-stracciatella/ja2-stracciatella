@@ -1247,7 +1247,7 @@ void DropKeysInKeyRing(SOLDIERTYPE& s, GridNo const gridno, INT8 const level, Vi
 	KEY_ON_RING* const key_ring = s.pKeyRing;
 	if (!key_ring) return; // No key ring
 
-	bool const here = !use_unloaded && s.sSectorX == gWorldSector.x && s.sSectorY == gWorldSector.y && s.bSectorZ == gWorldSector.z;
+	bool const here = !use_unloaded && s.sSector == gWorldSector;
 	for (KEY_ON_RING* i = key_ring; i != key_ring + NUM_KEYS; ++i)
 	{
 		KEY_ON_RING& k = *i;
@@ -1270,7 +1270,7 @@ void DropKeysInKeyRing(SOLDIERTYPE& s, GridNo const gridno, INT8 const level, Vi
 		}
 		else
 		{
-			AddItemsToUnLoadedSector(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ), gridno, 1, &o, level, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, visible);
+			AddItemsToUnLoadedSector(s.sSector, gridno, 1, &o, level, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, visible);
 		}
 	}
 }

@@ -476,8 +476,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 	ST::string sString;
 	ST::string sStringB;
 
-	SGPSector sSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
-	UINT8 const sector = sSector.AsByte();
+	UINT8 const sector = pSoldier->sSector.AsByte();
 
 	Assert(!SectorInfo[sector].fMilitiaTrainingPaid);
 
@@ -494,7 +493,7 @@ static void HandleInterfaceMessageForContinuingTrainingMilitia(SOLDIERTYPE* cons
 		return;
 	}
 
-	if (IsAreaFullOfMilitia(sSector))
+	if (IsAreaFullOfMilitia(pSoldier->sSector))
 	{
 		// we're full!!! go home!
 		UINT8 const bTownId = GetTownIdForSector(sector);
@@ -593,7 +592,7 @@ static void MilitiaTrainingRejected(void)
 	if( gfYesNoPromptIsForContinue )
 	{
 		// take all mercs in that sector off militia training
-		ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector( pMilitiaTrainerSoldier->sSectorX, pMilitiaTrainerSoldier->sSectorY );
+		ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector(pMilitiaTrainerSoldier->sSector.x, pMilitiaTrainerSoldier->sSector.y);
 	}
 	else
 	{
@@ -678,19 +677,13 @@ BOOLEAN IsAreaFullOfMilitia(const SGPSector& sector)
 // handle completion of assignment by this soldier too and inform the player
 static void HandleCompletionOfTownTrainingByGroupWithTrainer(SOLDIERTYPE* pTrainer)
 {
-
-	INT16 sSectorX = 0, sSectorY = 0;
-	INT8 bSectorZ = 0;
-
 	// get the sector values
-	sSectorX = pTrainer->sSectorX;
-	sSectorY = pTrainer->sSectorY;
-	bSectorZ = pTrainer->bSectorZ;
+	SGPSector sSector = pTrainer->sSector;
 
 	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE* const pSoldier = c->merc;
-		if( ( pSoldier->bAssignment == TRAIN_TOWN ) && ( pSoldier->sSectorX == sSectorX )&&( pSoldier->sSectorY == sSectorY )&&( pSoldier->bSectorZ == bSectorZ ) )
+		if (pSoldier->bAssignment == TRAIN_TOWN && pSoldier->sSector == sSector)
 		{
 			// done assignment
 			AssignmentDone( pSoldier, FALSE, FALSE );
@@ -705,7 +698,7 @@ void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining(SOLDIERTYPE*
 	INT16 sSector = 0, sCurrentSector = 0;
 
 	// get the sector value
-	sSector = pSoldier->sSectorX + pSoldier->sSectorY * MAP_WORLD_X;
+	sSector = pSoldier->sSector.AsStrategicIndex();
 
 	while (g_list_of_merc_in_sectors_completed_militia_training[iCounter] != NULL)
 	{
@@ -713,7 +706,7 @@ void AddSectorForSoldierToListOfSectorsThatCompletedMilitiaTraining(SOLDIERTYPE*
 		const SOLDIERTYPE* const pCurrentSoldier = g_list_of_merc_in_sectors_completed_militia_training[iCounter];
 
 		// get the current sector value
-		sCurrentSector = pCurrentSoldier->sSectorX + pCurrentSoldier->sSectorY * MAP_WORLD_X;
+		sCurrentSector = pCurrentSoldier->sSector.AsStrategicIndex();
 
 		// is the merc's sector already in the list?
 		if( sCurrentSector == sSector )
@@ -796,8 +789,8 @@ static void AddIfTrainingUnpaidSector(SOLDIERTYPE const& s)
 {
 	if (!CanCharacterTrainMilitia(&s)) return;
 	// Check if this sector is a town and needs equipment.
-	if (SectorInfo[SECTOR(s.sSectorX, s.sSectorY)].fMilitiaTrainingPaid) return;
-	INT16 const sector = CALCULATE_STRATEGIC_INDEX(s.sSectorX, s.sSectorY);
+	if (SectorInfo[s.sSector.AsByte()].fMilitiaTrainingPaid) return;
+	INT16 const sector = s.sSector.AsStrategicIndex();
 	for (INT16* i = gsUnpaidStrategicSector;; ++i)
 	{
 		if (*i == 0)
@@ -866,7 +859,7 @@ static void ContinueTrainingInThisSector(void)
 	Assert( pMilitiaTrainerSoldier );
 
 	// pay up in the sector where pMilitiaTrainerSoldier is
-	ubSector = SECTOR( pMilitiaTrainerSoldier->sSectorX, pMilitiaTrainerSoldier->sSectorY );
+	ubSector = pMilitiaTrainerSoldier->sSector.AsByte();
 	PayForTrainingInSector( ubSector );
 }
 
@@ -894,8 +887,8 @@ static void ResetDoneFlagForAllMilitiaTrainersInSector(UINT8 ubSector)
 	FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 	{
 		if (pSoldier->bAssignment == TRAIN_TOWN &&
-				SECTOR(pSoldier->sSectorX, pSoldier->sSectorY) == ubSector &&
-				pSoldier->bSectorZ == 0)
+				pSoldier->sSector.AsByte() == ubSector &&
+				pSoldier->sSector.z == 0)
 		{
 			pSoldier->fDoneAssignmentAndNothingToDoFlag = FALSE;
 			pSoldier->usQuoteSaidExtFlags &= ~SOLDIER_QUOTE_SAID_DONE_ASSIGNMENT;

@@ -260,11 +260,11 @@ void HandleEndTurnDrugAdjustments( SOLDIERTYPE *pSoldier )
 					// OK, give a much BIGGER morale downer
 					if ( cnt == DRUG_TYPE_ALCOHOL )
 					{
-						HandleMoraleEvent(pSoldier, MORALE_ALCOHOL_CRASH, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+						HandleMoraleEvent(pSoldier, MORALE_ALCOHOL_CRASH, pSoldier->sSector);
 					}
 					else
 					{
-						HandleMoraleEvent(pSoldier, MORALE_DRUGS_CRASH, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+						HandleMoraleEvent(pSoldier, MORALE_DRUGS_CRASH, pSoldier->sSector);
 					}
 				}
 			}

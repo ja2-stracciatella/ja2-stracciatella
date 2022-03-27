@@ -27,12 +27,6 @@
 
 #define PHOBIC_LIMIT				-20
 
-
-// macros
-#define SOLDIER_IN_SECTOR(s, x, y, z)		(!(s)->fBetweenSectors && (s)->sSectorX == (x) && (s)->sSectorY == (y) && (s)->bSectorZ == (z))
-
-
-
 MoraleEvent gbMoraleEvent[NUM_MORALE_EVENTS] =
 {
 	// TACTICAL = Short Term Effect, STRATEGIC = Long Term Effect
@@ -160,12 +154,12 @@ void DecayTacticalMoraleModifiers(void)
 		switch (GetProfile(s->ubProfile).bPersonalityTrait)
 		{
 			case CLAUSTROPHOBIC:
-				if (s->bSectorZ > 0)
+				if (s->sSector.z > 0)
 				{
 					// underground, no recovery... in fact, if tact morale is high, decay
 					if (s->bTacticalMoraleMod > PHOBIC_LIMIT)
 					{
-						HandleMoraleEvent(s, MORALE_CLAUSTROPHOBE_UNDERGROUND, SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ));
+						HandleMoraleEvent(s, MORALE_CLAUSTROPHOBE_UNDERGROUND, s->sSector);
 					}
 					continue;
 				}
@@ -190,9 +184,7 @@ void DecayTacticalMoraleModifiers(void)
 						CFOR_EACH_IN_TEAM(other, OUR_TEAM)
 						{
 							if (other != s &&
-									other->sSectorX == s->sSectorX &&
-									other->sSectorY == s->sSectorY &&
-									other->bSectorZ == s->bSectorZ)
+									other->sSector == s->sSector)
 							{
 								// found someone!
 								handle_nervous = FALSE;
@@ -215,7 +207,7 @@ void DecayTacticalMoraleModifiers(void)
 							TacticalCharacterDialogue(s, QUOTE_PERSONALITY_TRAIT);
 							s->usQuoteSaidFlags |= SOLDIER_QUOTE_SAID_PERSONALITY;
 						}
-						HandleMoraleEvent(s, MORALE_NERVOUS_ALONE, SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ));
+						HandleMoraleEvent(s, MORALE_NERVOUS_ALONE, s->sSector);
 						continue;
 					}
 				}
@@ -461,7 +453,7 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 			// affects everyone to varying degrees
 			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
-				if (SOLDIER_IN_SECTOR(s, sMap.x, sMap.y, sMap.z))
+				if (!s->fBetweenSectors && s->sSector == sMap)
 				{
 					HandleMoraleEventForSoldier(s, MORALE_BATTLE_WON);
 				}
@@ -477,14 +469,13 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 			FOR_EACH_IN_TEAM(i, OUR_TEAM)
 			{
 				SOLDIERTYPE& s = *i;
-				// CJC: adding to SOLDIER_IN_SECTOR check special stuff because the old
-				// sector values might be appropriate (because in transit going out of
+				// the old sector values might be appropriate (because in transit going out of
 				// that sector!)
-				if (SOLDIER_IN_SECTOR(&s, sMap.x, sMap.y, sMap.z) ||
+				if ((!s.fBetweenSectors && s.sSector == sMap) ||
 					(s.fBetweenSectors &&
 					s.ubPrevSectorID % 16 + 1 == sMap.x &&
 					s.ubPrevSectorID / 16 + 1 == sMap.y &&
-					s.bSectorZ == sMap.z))
+					s.sSector.z == sMap.z))
 				{
 					switch (GetProfile(s.ubProfile).bAttitude)
 					{
@@ -533,7 +524,7 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 			// affects every in sector
 			FOR_EACH_IN_TEAM(s, OUR_TEAM)
 			{
-				if (SOLDIER_IN_SECTOR(s, sMap.x, sMap.y, sMap.z))
+				if (!s->fBetweenSectors && s->sSector == sMap)
 				{
 					HandleMoraleEventForSoldier(s, bMoraleEvent);
 				}
@@ -569,7 +560,7 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 				}
 				else
 				{
-					if (SOLDIER_IN_SECTOR(&other, sMap.x, sMap.x, sMap.z))
+					if (!other.fBetweenSectors && other.sSector == sMap)
 					{
 						// Mate died in my sector! tactical morale mod
 						HandleMoraleEventForSoldier(&other, MORALE_SQUADMATE_DIED);
@@ -730,9 +721,7 @@ void HourlyMoraleUpdate()
 			else
 			{
 				// Check to see if the location is the same
-				if (other->sSectorX != s->sSectorX) continue;
-				if (other->sSectorY != s->sSectorY) continue;
-				if (other->bSectorZ != s->bSectorZ) continue;
+				if (other->sSector != s->sSector) continue;
 
 				// If the OTHER soldier is in motion then we don't do anything!
 				if (other->ubGroupID != 0 && PlayerIDGroupInMotion(other->ubGroupID)) continue;
@@ -851,19 +840,19 @@ void DailyMoraleUpdate(SOLDIERTYPE *pSoldier)
 	if (MercThinksDeathRateTooHigh(GetProfile(pSoldier->ubProfile)))
 	{
 		// too high, morale takes a hit
-		HandleMoraleEvent(pSoldier, MORALE_HIGH_DEATHRATE, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+		HandleMoraleEvent(pSoldier, MORALE_HIGH_DEATHRATE, pSoldier->sSector);
 	}
 
 	// check his morale vs. his morale tolerance once/day (ignores buddies!)
 	if ( MercThinksHisMoraleIsTooLow( pSoldier ) )
 	{
 		// too low, morale sinks further (merc's in a funk and things aren't getting better)
-		HandleMoraleEvent(pSoldier, MORALE_POOR_MORALE, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+		HandleMoraleEvent(pSoldier, MORALE_POOR_MORALE, pSoldier->sSector);
 	}
 	else if ( pSoldier->bMorale >= 75 )
 	{
 		// very high morale, merc is cheerleading others
-		HandleMoraleEvent(pSoldier, MORALE_GREAT_MORALE, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+		HandleMoraleEvent(pSoldier, MORALE_GREAT_MORALE, pSoldier->sSector);
 	}
 
 }

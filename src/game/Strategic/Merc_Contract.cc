@@ -339,7 +339,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 	 * merc's contract */
 	UINT32 const now = GetWorldTotalMin();
 	AddTransactionToPlayersBook(finances_contract_type, s->ubProfile, now, -contract_charge);
-	AddHistoryToPlayersLog(history_contract_type, s->ubProfile, now, SGPSector(s->sSectorX, s->sSectorY));
+	AddHistoryToPlayersLog(history_contract_type, s->ubProfile, now, s->sSector);
 
 	return TRUE;
 }
@@ -363,9 +363,7 @@ static UINT16 FindRefusalReason(SOLDIERTYPE const* const s)
 		{ // tolerance is > 0, only gripe if in same sector
 			SOLDIERTYPE const* const hated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
 			if (!hated)                         continue;
-			if (hated->sSectorX != s->sSectorX) continue;
-			if (hated->sSectorY != s->sSectorY) continue;
-			if (hated->bSectorZ != s->bSectorZ) continue;
+			if (hated->sSector != s->sSector) continue;
 		}
 
 		// our tolerance has run out!
@@ -387,10 +385,7 @@ static UINT16 FindRefusalReason(SOLDIERTYPE const* const s)
 		else if (p.bLearnToHateCount <= p.bLearnToHateTime / 2)
 		{
 			const SOLDIERTYPE* const pHated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
-			if (pHated &&
-					pHated->sSectorX == s->sSectorX &&
-					pHated->sSectorY == s->sSectorY &&
-					pHated->bSectorZ == s->bSectorZ)
+			if (pHated && pHated->sSector == s->sSector)
 			{
 				return QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW;
 			}
@@ -684,7 +679,7 @@ void StrategicRemoveMerc(SOLDIERTYPE& s)
 	// ATE: Don't do this if they are already dead!
 	if (!(s.uiStatusFlags & SOLDIER_DEAD))
 	{
-		AddHistoryToPlayersLog(ubHistoryCode, s.ubProfile, GetWorldTotalMin(), SGPSector(s.sSectorX, s.sSectorY));
+		AddHistoryToPlayersLog(ubHistoryCode, s.ubProfile, GetWorldTotalMin(), s.sSector);
 	}
 
 	//if the merc was a POW, remember it becuase the merc cant show up in AIM or MERC anymore
@@ -766,7 +761,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 		add_rehire_button = false;
 	}
 
-	SGPSector sSector(s.sSectorX, s.sSectorY, s.bSectorZ);
+	const SGPSector& sSector = s.sSector;
 	ST::string town_sector = sSector.AsShortString();
 
 	ST::string msg;

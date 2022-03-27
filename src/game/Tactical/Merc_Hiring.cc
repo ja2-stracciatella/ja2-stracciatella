@@ -101,9 +101,9 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 	SOLDIERCREATE_STRUCT MercCreateStruct;
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile             = pid;
-	MercCreateStruct.sSectorX              = h.sSectorX;
-	MercCreateStruct.sSectorY              = h.sSectorY;
-	MercCreateStruct.bSectorZ              = h.bSectorZ;
+	MercCreateStruct.sSector.x             = h.sSectorX;
+	MercCreateStruct.sSector.y             = h.sSectorY;
+	MercCreateStruct.sSector.z             = h.bSectorZ;
 	MercCreateStruct.bTeam                 = OUR_TEAM;
 	MercCreateStruct.fCopyProfileItemsOver = h.fCopyProfileItemsOver;
 	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);
@@ -265,19 +265,17 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 	// ATE: Make sure we use global.....
 	if (s.fUseLandingZoneForArrival)
 	{
-		s.sSectorX = arrival.x;
-		s.sSectorY = arrival.y;
-		s.bSectorZ = 0;
+		s.sSector = arrival;
 	}
 
 	// Add merc to sector ( if it's the current one )
-	if (gWorldSector.x == s.sSectorX && gWorldSector.y == s.sSectorY && s.bSectorZ == gWorldSector.z)
+	if (gWorldSector == s.sSector)
 	{
 		// OK, If this sector is currently loaded, and guy does not have CHOPPER insertion code....
 		// ( which means we are at beginning of game if so )
 		// Setup chopper....
 		if (s.ubStrategicInsertionCode != INSERTION_CODE_CHOPPER &&
-				SECTOR(s.sSectorX, s.sSectorY) == gamepolicy(start_sector))
+				s.sSector.AsByte() == gamepolicy(start_sector))
 		{
 			gfTacticalDoHeliRun = TRUE;
 
@@ -293,7 +291,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 			s.ubStrategicInsertionCode = INSERTION_CODE_CHOPPER;
 		}
 
-		UpdateMercInSector(s, SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ));
+		UpdateMercInSector(s, s.sSector);
 	}
 	else
 	{
@@ -359,7 +357,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 	// if the currently selected sector has no one in it, select this one instead
 	if (!CanGoToTacticalInSector(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ)))
 	{
-		ChangeSelectedMapSector(SGPSector(s.sSectorX, s.sSectorY, 0));
+		ChangeSelectedMapSector(s.sSector);
 	}
 }
 
@@ -457,9 +455,7 @@ void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 	{
 		if (s->bAssignment == IN_TRANSIT && s->fUseLandingZoneForArrival)
 		{
-			s->sSectorX = SECTORX(g_merc_arrive_sector);
-			s->sSectorY = SECTORY(g_merc_arrive_sector);
-			s->bSectorZ = 0;
+			s->sSector = SGPSector(g_merc_arrive_sector);
 		}
 	}
 }

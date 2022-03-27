@@ -282,7 +282,7 @@ static void SetNPCMeanwhile(const ProfileID pid, const SGPSector& sector)
 
 	MERCPROFILESTRUCT& p = GetProfile(pid);
 	si->ubProfile = pid;
-	si->sector    = SGPSector(p.sSectorX, p.sSectorY, p.bSectorZ);
+	si->sector    = p.sSector;
 	si->sGridNo   = p.sGridNo;
 
 	ReloadQuoteFile(pid);
@@ -468,7 +468,7 @@ static void ProcessImplicationsOfMeanwhile()
 			break;
 		case AWOL_SCIENTIST:
 			{
-				INT16	sSectorX = 0, sSectorY = 0;
+				SGPSector sSector;
 
 				StartQuest(QUEST_FIND_SCIENTIST, SGPSector(-1, -1));
 				// place Madlab and robot!
@@ -478,22 +478,16 @@ static void ProcessImplicationsOfMeanwhile()
 					// the sector was already determined at game init, find it...
 					if (SectorInfo[s].uiFlags & SF_USE_ALTERNATE_MAP)
 					{
-						sSectorX = SECTORX(s);
-						sSectorY = SECTORY(s);
+						sSector = SGPSector(s);
 					}
 				}
 
-				if (!sSectorX && !sSectorY)
+				if (!sSector.IsValid())
 				{
 					SLOGE("unable to find Madlab's sector");
 				}
-				gMercProfiles[ MADLAB ].sSectorX = sSectorX;
-				gMercProfiles[ MADLAB ].sSectorY = sSectorY;
-				gMercProfiles[ MADLAB ].bSectorZ = 0;
-
-				gMercProfiles[ ROBOT ].sSectorX = sSectorX;
-				gMercProfiles[ ROBOT ].sSectorY = sSectorY;
-				gMercProfiles[ ROBOT ].bSectorZ = 0;
+				gMercProfiles[ MADLAB ].sSector = sSector;
+				gMercProfiles[ ROBOT ].sSector = sSector;
 			}
 			break;
 
@@ -523,9 +517,7 @@ static void RestoreNPCMeanwhile(void)
 		if (pid == NO_PROFILE) continue;
 
 		MERCPROFILESTRUCT& p = GetProfile(pid);
-		p.sSectorX = si->sector.x;
-		p.sSectorY = si->sector.y;
-		p.bSectorZ = si->sector.y;
+		p.sSector = si->sector;
 		p.sGridNo  = (INT8)si->sGridNo;
 
 		// Ensure NPC files loaded...

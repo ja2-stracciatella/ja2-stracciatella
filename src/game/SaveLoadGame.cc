@@ -1116,20 +1116,17 @@ void LoadSavedGame(const ST::string &saveName)
 		if (s) TacticalRemoveSoldier(*s);
 
 		// add the pilot at a random location!
-		INT16 x = 0, y = 0;
+		SGPSector sMap;
 		auto placement = GCM->getNpcPlacement(SKYRIDER);
 		if (placement)
 		{
 			auto sector = placement->pickPlacementSector();
 
 			if (placement->useAlternateMap) SectorInfo[sector].uiFlags |= SF_USE_ALTERNATE_MAP;
-			x = SECTORX(sector);
-			y = SECTORY(sector);
+			sMap = SGPSector(sector);
 		}
 		MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
-		p.sSectorX = x;
-		p.sSectorY = y;
-		p.bSectorZ = 0;
+		p.sSector = sMap;
 	}
 
 	if (version < 68)
@@ -2123,9 +2120,9 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 		const SOLDIERTYPE* const s = Squad[iCurrentTacticalSquad][0];
 		if (s != NULL && s->bAssignment != IN_TRANSIT)
 		{
-			*psSectorX = s->sSectorX;
-			*psSectorY = s->sSectorY;
-			*pbSectorZ = s->bSectorZ;
+			*psSectorX = s->sSector.x;
+			*psSectorY = s->sSector.y;
+			*pbSectorZ = s->sSector.z;
 			return;
 		}
 	}
@@ -2136,9 +2133,9 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 		if (s->bAssignment != IN_TRANSIT && !s->fBetweenSectors)
 		{
 			//we found an alive, merc that is not moving
-			*psSectorX = s->sSectorX;
-			*psSectorY = s->sSectorY;
-			*pbSectorZ = s->bSectorZ;
+			*psSectorX = s->sSector.x;
+			*psSectorY = s->sSector.y;
+			*pbSectorZ = s->sSector.z;
 			return;
 		}
 	}
@@ -2147,9 +2144,9 @@ void GetBestPossibleSectorXYZValues(INT16* const psSectorX, INT16* const psSecto
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		//we found an alive, merc that is not moving
-		*psSectorX = s->sSectorX;
-		*psSectorY = s->sSectorY;
-		*pbSectorZ = s->bSectorZ;
+		*psSectorX = s->sSector.x;
+		*psSectorY = s->sSector.y;
+		*pbSectorZ = s->sSector.z;
 		return;
 	}
 

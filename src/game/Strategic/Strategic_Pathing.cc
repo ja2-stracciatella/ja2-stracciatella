@@ -747,7 +747,7 @@ PathSt* RemoveHeadFromStrategicPath(PathSt* pList)
 INT16 GetLastSectorIdInCharactersPath(const SOLDIERTYPE* pCharacter)
 {
 	// will return the last sector of the current path, or the current sector if there's no path
-	INT16 sLastSector = ( pCharacter -> sSectorX ) + ( pCharacter ->sSectorY ) * ( MAP_WORLD_X );
+	INT16 sLastSector = pCharacter->sSector.AsStrategicIndex();
 	PathSt* pNode = NULL;
 
 	pNode = GetSoldierMercPathPtr( pCharacter );

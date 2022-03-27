@@ -153,12 +153,11 @@ void InitTacticalPlacementGUI()
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->fBetweenSectors)                 continue;
-		if (s->sSectorX != bg.ubSector.x)       continue;
-		if (s->sSectorY != bg.ubSector.y)       continue;
+		if (s->sSector != bg.ubSector)          continue;
 		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue; // ATE Ignore vehicles
 		if (s->bAssignment == ASSIGNMENT_POW)   continue;
 		if (s->bAssignment == IN_TRANSIT)       continue;
-		if (s->bSectorZ != 0)                   continue;
+		if (s->sSector.z != 0)                   continue;
 		++n;
 	}
 	// Allocate the array based on how many mercs there are.
@@ -174,12 +173,11 @@ void InitTacticalPlacementGUI()
 	{
 		if (s->bLife == 0)                      continue;
 		if (s->fBetweenSectors)                 continue;
-		if (s->sSectorX != bg.ubSector.x)       continue;
-		if (s->sSectorY != bg.ubSector.y)       continue;
+		if (s->sSector != bg.ubSector)          continue;
 		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue; // ATE Ignore vehicles
 		if (s->bAssignment == ASSIGNMENT_POW)   continue;
 		if (s->bAssignment == IN_TRANSIT)       continue;
-		if (s->bSectorZ != 0)                   continue;
+		if (s->sSector.z != 0)                   continue;
 
 		if (s->ubStrategicInsertionCode == INSERTION_CODE_PRIMARY_EDGEINDEX ||
 				s->ubStrategicInsertionCode == INSERTION_CODE_SECONDARY_EDGEINDEX)

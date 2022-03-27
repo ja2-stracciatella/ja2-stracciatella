@@ -3239,8 +3239,7 @@ void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* const s)
 	if (s->bTeam != OUR_TEAM) return;
 
 	// Are we in the loaded sector?
-	SGPSector sSector(s->sSectorX, s->sSectorY, s->bSectorZ);
-	if (sSector == gWorldSector && !s->fBetweenSectors && s->bInSector)
+	if (s->sSector == gWorldSector && !s->fBetweenSectors && s->bInSector)
 	{
 		// IF on duty....
 		INT32 const cur_squad = CurrentSquad();

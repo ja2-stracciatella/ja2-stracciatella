@@ -244,9 +244,7 @@ static void DoneFadeOutKilledQueen()
 		SetGroupSectorValue(upstairs, *GetGroup(s.ubGroupID));
 
 		// XXX redundant, SetGroupSectorValue() handles this
-		s.sSectorX                 = upstairs.x;
-		s.sSectorY                 = upstairs.y;
-		s.bSectorZ                 = upstairs.z;
+		s.sSector                  = upstairs;
 		// Set gridno
 		s.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 		s.usStrategicInsertionData = 5687;
@@ -294,7 +292,7 @@ static void DoneFadeOutKilledQueen()
 	sector.ubElitesInBattle = 0;
 
 	// ATE: Get rid of Elliot in P3
-	GetProfile(ELLIOT).sSectorX = 1;
+	GetProfile(ELLIOT).sSector.x = 1;
 
 	ChangeNpcToDifferentSector(GetProfile(DEREK), upstairs);
 	ChangeNpcToDifferentSector(GetProfile(OLIVER), upstairs);

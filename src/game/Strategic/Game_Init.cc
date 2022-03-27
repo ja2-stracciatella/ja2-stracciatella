@@ -79,19 +79,17 @@ static void InitNPCs()
 			continue;
 		}
 
-		UINT8 sector = placement->pickPlacementSector();
+		SGPSector sMap(placement->pickPlacementSector());
 		if (placement->useAlternateMap)
 		{
-			SectorInfo[sector].uiFlags |= SF_USE_ALTERNATE_MAP;
-			STLOGD("Alternate map in {}", SECTOR_SHORT_STRING(sector));
+			SectorInfo[sMap.AsByte()].uiFlags |= SF_USE_ALTERNATE_MAP;
+			STLOGD("Alternate map in {}", sMap.AsShortString());
 		}
 		if (placement->isPlacedAtStart)
 		{
 			MERCPROFILESTRUCT& merc = GetProfile(placement->profileId);
-			merc.sSectorX = SECTORX(sector);
-			merc.sSectorY = SECTORY(sector);
-			merc.bSectorZ = 0;
-			STLOGD("{} in {}", merc.zNickname, SECTOR_SHORT_STRING(sector));
+			merc.sSector = sMap;
+			STLOGD("{} in {}", merc.zNickname, sMap.AsShortString());
 		}
 	}
 

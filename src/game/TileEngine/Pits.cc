@@ -227,9 +227,7 @@ void HandleFallIntoPitFromAnimation(SOLDIERTYPE& s)
 	// Given exit grid, move buddy to next sector
 	s.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 	s.usStrategicInsertionData = exit_grid.usGridNo;
-	s.sSectorX                 = exit_grid.ubGotoSector.x;
-	s.sSectorY                 = exit_grid.ubGotoSector.y;
-	s.bSectorZ                 = exit_grid.ubGotoSector.z;
+	s.sSector                  = exit_grid.ubGotoSector;
 	RemoveSoldierFromTacticalSector(s);
 	HandleSoldierLeavingSectorByThemSelf(&s);
 	SetSoldierHeight(&s, 0);

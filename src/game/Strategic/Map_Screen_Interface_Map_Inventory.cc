@@ -220,9 +220,9 @@ static BOOLEAN RenderItemInPoolSlot(INT32 iCurrentSlot, INT32 iFirstSlotOnPage)
 	const SOLDIERTYPE* const s = GetSelectedInfoChar();
 	if (!(item.usFlags & WORLD_ITEM_REACHABLE) ||
 			s           == NULL     ||
-			s->sSectorX != sSelMap.x ||
-			s->sSectorY != sSelMap.y ||
-			s->bSectorZ != iCurrentMapSectorZ)
+			s->sSector.x != sSelMap.x ||
+			s->sSector.y != sSelMap.y ||
+			s->sSector.z != iCurrentMapSectorZ)
 	{
 		//Shade the item
 		DrawHatchOnInventory(guiSAVEBUFFER, dx + item_box->x, dy + item_box->y, item_box->w, item_box->h);
@@ -560,9 +560,9 @@ static void MapInvenPoolSlots(MOUSE_REGION* const pRegion, const INT32 iReason)
 		}
 
 		// Check if selected merc is in this sector, if not, warn them and leave
-		if (s->sSectorX != sSelMap.x           ||
-				s->sSectorY != sSelMap.y           ||
-				s->bSectorZ != iCurrentMapSectorZ ||
+		if (s->sSector.x != sSelMap.x           ||
+				s->sSector.y != sSelMap.y           ||
+				s->sSector.z != iCurrentMapSectorZ ||
 				s->fBetweenSectors)
 		{
 			ST::string msg = (gpItemPointer == NULL ? pMapInventoryErrorString[1] : pMapInventoryErrorString[4]);

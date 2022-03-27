@@ -1442,8 +1442,7 @@ static SOLDIERCELL* MakeEnemyTroops(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STR
 		cell->uiVObjectID    = ar->iFaces;
 		// Only elite troops have women
 		cell->usIndex        = s->ubBodyType == REGFEMALE ? ELITEF_FACE : face;
-		s->sSectorX          = ar->ubSector.x;
-		s->sSectorY          = ar->ubSector.y;
+		s->sSector           = ar->ubSector;
 		s->name              = name;
 	}
 	return cell;
@@ -1458,8 +1457,7 @@ static SOLDIERCELL* MakeCreatures(SOLDIERCELL* cell, size_t n, AUTORESOLVE_STRUC
 		cell->pSoldier       = s;
 		cell->uiVObjectID    = ar->iFaces;
 		cell->usIndex        = face;
-		s->sSectorX          = ar->ubSector.x;
-		s->sSectorY          = ar->ubSector.y;
+		s->sSector           = ar->ubSector;
 		s->name              = gpStrategicString[STR_AR_CREATURE_NAME];
 	}
 	return cell;
@@ -1570,8 +1568,7 @@ static void CreateAutoResolveInterface(void)
 		cell->uiVObjectID = ar->iFaces;
 
 		AssertMsg(s, "Failed to create militia soldier for autoresolve.");
-		s->sSectorX = ar->ubSector.x;
-		s->sSectorY = ar->ubSector.y;
+		s->sSector = ar->ubSector;
 		s->name = gpStrategicString[STR_AR_MILITIA_NAME];
 	}
 
@@ -2547,9 +2544,7 @@ static void CreateTempPlayerMerc(void)
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam									= OUR_TEAM;
 	MercCreateStruct.ubProfile							= GetUnusedMercProfileID();
-	MercCreateStruct.sSectorX								= gpAR->ubSector.x;
-	MercCreateStruct.sSectorY								= gpAR->ubSector.y;
-	MercCreateStruct.bSectorZ								= 0;
+	MercCreateStruct.sSector								= gpAR->ubSector;
 	MercCreateStruct.fCopyProfileItemsOver	= TRUE;
 
 	//Create the player soldier

@@ -166,9 +166,7 @@ void AddPlayerToGroup(GROUP& g, SOLDIERTYPE& s)
 		g.ubGroupSize = 1;
 		g.ubPrev.x    = s.ubPrevSectorID % 16 + 1;
 		g.ubPrev.y    = s.ubPrevSectorID / 16 + 1;
-		g.ubSector.x   = s.sSectorX;
-		g.ubSector.y   = s.sSectorY;
-		g.ubSector.z   = s.bSectorZ;
+		g.ubSector   = s.sSector;
 	}
 	else
 	{
@@ -1242,9 +1240,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			{
 				SOLDIERTYPE& s = *i->pSoldier;
 				s.fBetweenSectors      = FALSE;
-				s.sSectorX             = cSector.x;
-				s.sSectorY             = cSector.y;
-				s.bSectorZ             = cSector.z;
+				s.sSector              = cSector;
 				s.ubPrevSectorID       = g.ubPrev.AsByte();
 				s.ubInsertionDirection = insertion_direction;
 
@@ -1286,9 +1282,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 			{
 				SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 				vs.fBetweenSectors          = FALSE;
-				vs.sSectorX                 = cSector.x;
-				vs.sSectorY                 = cSector.y;
-				vs.bSectorZ                 = cSector.z;
+				vs.sSector                  = cSector;
 				vs.ubInsertionDirection     = insertion_direction;
 				vs.ubStrategicInsertionCode = strategic_insertion_code;
 
@@ -1300,9 +1294,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 				{
 					SOLDIERTYPE& s = *i->pSoldier;
 					s.fBetweenSectors = FALSE;
-					s.sSectorX = cSector.x;
-					s.sSectorY = cSector.y;
-					s.bSectorZ = cSector.z;
+					s.sSector = cSector;
 					s.ubInsertionDirection = insertion_direction;
 					s.ubStrategicInsertionCode = strategic_insertion_code;
 
@@ -1904,9 +1896,7 @@ void SetGroupSectorValue(const SGPSector& sector, GROUP& g)
 	CFOR_EACH_PLAYER_IN_GROUP(i, &g)
 	{
 		SOLDIERTYPE& s = *i->pSoldier;
-		s.sSectorX        = sector.x;
-		s.sSectorY        = sector.y;
-		s.bSectorZ        = sector.z;
+		s.sSector = sector;
 		s.fBetweenSectors = FALSE;
 	}
 
@@ -2400,9 +2390,7 @@ void MoveAllGroupsInCurrentSectorToSector(const SGPSector& sector)
 		g->ubSector = sector;
 		CFOR_EACH_PLAYER_IN_GROUP(p, g)
 		{
-			p->pSoldier->sSectorX        = sector.x;
-			p->pSoldier->sSectorY        = sector.y;
-			p->pSoldier->bSectorZ        = sector.z;
+			p->pSoldier->sSector         = sector;
 			p->pSoldier->fBetweenSectors = FALSE;
 		}
 	}
@@ -3165,9 +3153,7 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const& g, const SGPSecto
 	{
 		if (!i->pSoldier) continue;
 		SOLDIERTYPE& s = *i->pSoldier;
-		s.sSectorX = sSector.x;
-		s.sSectorY = sSector.y;
-		s.bSectorZ = sSector.z;
+		s.sSector = sSector;
 	}
 
 	if (g.fVehicle)
@@ -3180,9 +3166,7 @@ static void SetLocationOfAllPlayerSoldiersInGroup(GROUP const& g, const SGPSecto
 			SOLDIERTYPE& vs = GetSoldierStructureForVehicle(v);
 			/* These are apparently unnecessary, since vehicles are part of the
 				* pPlayerList in a vehicle group. Oh well. */
-			vs.sSectorX = sSector.x;
-			vs.sSectorY = sSector.y;
-			vs.bSectorZ = sSector.z;
+			vs.sSector = sSector;
 		}
 	}
 }
@@ -3573,7 +3557,7 @@ bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(const SGPSector& sector)
 		if (profile->isVehicle()) continue;
 
 		// In this sector?
-		if (p.sSectorX != sector.x || p.sSectorY != sector.y || p.bSectorZ != sector.z) continue;
+		if (p.sSector != sector) continue;
 
 		if (p.ubLastDateSpokenTo != 0 ||
 				p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE))

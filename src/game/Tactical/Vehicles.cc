@@ -144,9 +144,7 @@ bool IsThisVehicleAccessibleToSoldier(SOLDIERTYPE const& s, VEHICLETYPE const& v
 {
 	return !s.fBetweenSectors &&
 		!v.fBetweenSectors &&
-		s.sSectorX == v.sSector.x &&
-		s.sSectorY == v.sSector.y &&
-		s.bSectorZ == v.sSector.z &&
+		s.sSector == v.sSector &&
 		OKUseVehicle(GCM->getVehicle(v.ubVehicleType)->profile);
 }
 
@@ -286,9 +284,7 @@ void SetSoldierExitHelicopterInsertionData(SOLDIERTYPE* const s)
 	if (s->bInSector) return;
 
 	auto shippingDest = GCM->getPrimaryShippingDestination();
-	if (s->sSectorX == shippingDest->deliverySector.x &&
-		s->sSectorY == shippingDest->deliverySector.y &&
-		s->bSectorZ == shippingDest->deliverySector.z)
+	if (s->sSector == shippingDest->deliverySector)
 	{
 		// This is Drassen, make insertion gridno specific
 		s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
@@ -323,9 +319,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 	RemovePlayerFromGroup(s);
 
 	s.ubGroupID      = 0;
-	s.sSectorY       = v.sSector.y;
-	s.sSectorX       = v.sSector.x;
-	s.bSectorZ       = v.sSector.z;
+	s.sSector        = v.sSector;
 	s.uiStatusFlags &= ~(SOLDIER_DRIVER | SOLDIER_PASSENGER);
 
 	if (IsHelicopter(v))
@@ -336,15 +330,13 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		{
 			// Mark the sector as visited (flying around in the chopper doesn't, so
 			// this does it as soon as we get off it)
-			SetSectorFlag(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ), SF_ALREADY_VISITED);
+			SetSectorFlag(s.sSector, SF_ALREADY_VISITED);
 		}
 
 		SetSoldierExitHelicopterInsertionData(&s);
 
 		// Update in sector if this is the current sector
-		if (s.sSectorX == gWorldSector.x &&
-			s.sSectorY == gWorldSector.y &&
-			s.bSectorZ == gWorldSector.z)
+		if (s.sSector == gWorldSector)
 		{
 			UpdateMercInSector(s, gWorldSector);
 		}
@@ -525,9 +517,7 @@ BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 	// if not in vehicle, don't take out, not much point, now is there?
 	if (s->bAssignment != VEHICLE) return FALSE;
 
-	if (s->sSectorX == gWorldSector.x &&
-		s->sSectorY == gWorldSector.y &&
-		s->bSectorZ == 0 &&
+	if (s->sSector == gWorldSector &&
 		s->bInSector &&
 		!InHelicopter(*s)) // helicopter isn't a soldiertype instance
 	{
@@ -544,9 +534,7 @@ bool PutSoldierInVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 {
 	if (!AddSoldierToVehicle(s, v)) return false;
 
-	if (s.sSectorX == gWorldSector.x &&
-		s.sSectorY == gWorldSector.y &&
-		s.bSectorZ == 0 &&
+	if (s.sSector == gWorldSector &&
 		!IsHelicopter(v) &&
 		guiCurrentScreen == GAME_SCREEN)
 	{
@@ -788,15 +776,13 @@ void SetVehicleSectorValues(VEHICLETYPE& v, const SGPSector& sMap)
 
 	ProfileID vehicleProfile = GCM->getVehicle(v.ubVehicleType)->profile;
 	MERCPROFILESTRUCT& p = GetProfile(vehicleProfile);
-	p.sSectorX = sMap.x;
-	p.sSectorY = sMap.y;
+	p.sSector = sMap;
 
 	// Go through list of mercs in vehicle and set all their states as arrived
 	CFOR_EACH_PASSENGER(v, i)
 	{
 		SOLDIERTYPE& s = **i;
-		s.sSectorX        = sMap.x;
-		s.sSectorY        = sMap.y;
+		s.sSector        = sMap;
 		s.fBetweenSectors = FALSE;
 	}
 }

@@ -200,8 +200,7 @@ struct MERCPROFILESTRUCT
 	UINT16 usMouthY;
 	UINT32 uiBlinkFrequency;
 	UINT32 uiExpressionFrequency;
-	UINT16 sSectorX;
-	UINT16 sSectorY;
+	SGPSector sSector;
 
 	UINT32 uiDayBecomesAvailable; //day the merc will be available. used with the bMercStatus
 

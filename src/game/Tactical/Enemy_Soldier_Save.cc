@@ -718,9 +718,7 @@ void NewWayOfSavingEnemyAndCivliansToTempFile(const SGPSector& sSector, BOOLEAN 
 		dp->ubCivilianGroup = s.ubCivilianGroup;
 		dp->ubScheduleID    = s.ubScheduleID;
 		dp->fHasKeys        = s.bHasKeys;
-		dp->sSectorX        = s.sSectorX;
-		dp->sSectorY        = s.sSectorY;
-		dp->bSectorZ        = s.bSectorZ;
+		dp->sSector         = s.sSector;
 		dp->ubSoldierClass  = s.ubSoldierClass;
 		dp->bTeam           = s.bTeam;
 		dp->bDirection      = s.bDirection;

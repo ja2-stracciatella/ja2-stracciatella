@@ -1369,9 +1369,7 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 		if (!p->isNPCorRPC()) continue;
 
 		ProfileID ubMercID = p->getID();
-		if (gMercProfiles[ubMercID].sSectorX == gWorldSector.x &&
-				gMercProfiles[ubMercID].sSectorY == gWorldSector.y &&
-				gMercProfiles[ubMercID].bSectorZ == gWorldSector.z &&
+		if (gMercProfiles[ubMercID].sSector == gWorldSector &&
 				gpNPCQuoteInfoArray[ubMercID] != NULL )
 		{
 			ResetOncePerConvoRecordsForNPC(ubMercID);
@@ -2650,15 +2648,15 @@ void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s)
 	MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 	switch (s->ubQuoteActionID)
 	{
-		case QUOTE_ACTION_ID_TRAVERSE_EAST:  p.sSectorX++; break;
-		case QUOTE_ACTION_ID_TRAVERSE_SOUTH: p.sSectorY++; break;
-		case QUOTE_ACTION_ID_TRAVERSE_WEST:  p.sSectorX--; break;
-		case QUOTE_ACTION_ID_TRAVERSE_NORTH: p.sSectorY--; break;
+		case QUOTE_ACTION_ID_TRAVERSE_EAST:  p.sSector.x++; break;
+		case QUOTE_ACTION_ID_TRAVERSE_SOUTH: p.sSector.y++; break;
+		case QUOTE_ACTION_ID_TRAVERSE_WEST:  p.sSector.x--; break;
+		case QUOTE_ACTION_ID_TRAVERSE_NORTH: p.sSector.y--; break;
 		default: return;
 	}
 
 	// Call to change the NPC's Sector Location
-	ChangeNpcToDifferentSector(p, SGPSector(p.sSectorX, p.sSectorY, p.bSectorZ));
+	ChangeNpcToDifferentSector(p, p.sSector);
 }
 
 

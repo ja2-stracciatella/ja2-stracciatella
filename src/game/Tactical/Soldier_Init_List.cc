@@ -439,9 +439,7 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 			if (pid != NO_PROFILE)
 			{
 				MERCPROFILESTRUCT& p = GetProfile(pid);
-				if (p.sSectorX != gWorldSector.x)  return false;
-				if (p.sSectorY != gWorldSector.y)  return false;
-				if (p.bSectorZ != gWorldSector.z) return false;
+				if (p.sSector != gWorldSector)  return false;
 				if (p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)) return false;
 				if (p.bLife == 0)                 return false;
 				if (p.fUseProfileInsertionInfo)   return false;
@@ -455,9 +453,7 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 				// Check to see if Hamous is here and not recruited. If so, add truck
 				MERCPROFILESTRUCT& hamous = GetProfile(HAMOUS);
 				// If not here, do not add
-				if (hamous.sSectorX != gWorldSector.x) return true;
-				if (hamous.sSectorY != gWorldSector.y) return true;
-				if (hamous.bSectorZ != 0)             return true;
+				if (hamous.sSector != gWorldSector) return true;
 				// Check to make sure he isn't recruited.
 				if (hamous.ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED) return true;
 			}
@@ -1717,9 +1713,7 @@ void AddProfilesUsingProfileInsertionData()
 		// insertion data must be set.
 		ProfileID                i = prof->getID();
 		MERCPROFILESTRUCT const& p = prof->getStruct();
-		if (p.sSectorX != gWorldSector.x)                 continue;
-		if (p.sSectorY != gWorldSector.y)                 continue;
-		if (p.bSectorZ != gWorldSector.z)                continue;
+		if (p.sSector != gWorldSector)                   continue;
 		if (p.ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED) continue;
 		if (p.ubMiscFlags & PROFILE_MISC_FLAG_EPCACTIVE) continue;
 		if (p.bLife == 0)                                continue;
@@ -1733,9 +1727,7 @@ void AddProfilesUsingProfileInsertionData()
 			c = SOLDIERCREATE_STRUCT{};
 			c.bTeam     = CIV_TEAM;
 			c.ubProfile = i;
-			c.sSectorX  = gWorldSector.x;
-			c.sSectorY  = gWorldSector.y;
-			c.bSectorZ  = gWorldSector.z;
+			c.sSector  = gWorldSector;
 			ps = TacticalCreateSoldier(c);
 			if (!ps) continue; // XXX exception?
 		}

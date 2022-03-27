@@ -188,9 +188,7 @@ BOOLEAN RemoveSoldierFromHelicopter( SOLDIERTYPE *pSoldier )
 	if (fHeliReturnStraightToBase) return FALSE;
 
 	VEHICLETYPE const& v = GetHelicopter();
-	pSoldier->sSectorX = v.sSector.x;
-	pSoldier->sSectorY = v.sSector.y;
-	pSoldier->bSectorZ = 0;
+	pSoldier->sSector = v.sSector;
 
 	// reset between sectors
 	pSoldier->fBetweenSectors = FALSE;
@@ -995,8 +993,7 @@ void HandleHelicopterOnGround(BOOLEAN handleGraphicToo)
 			if (iHelicopterVehicleId != -1)
 			{
 				MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
-				p.sSectorX = gWorldSector.x;
-				p.sSectorY = gWorldSector.y;
+				p.sSector = gWorldSector;
 			}
 		}
 		else
@@ -1009,8 +1006,7 @@ void HandleHelicopterOnGround(BOOLEAN handleGraphicToo)
 			if (iHelicopterVehicleId != -1)
 			{
 				MERCPROFILESTRUCT& p = GetProfile(SKYRIDER);
-				p.sSectorX = 0;
-				p.sSectorY = 0;
+				p.sSector.x = p.sSector.y = 0;
 
 				// See if we can find him and remove him if so
 				// ATE: Don't do this if buddy is on our team!

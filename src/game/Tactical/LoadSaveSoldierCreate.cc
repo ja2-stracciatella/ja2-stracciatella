@@ -28,7 +28,7 @@ UINT16 CalcSoldierCreateCheckSum(const SOLDIERCREATE_STRUCT* const s)
 		s->bAIMorale        *  3 -
 		s->bBodyType        *  7 +
 		4                   *  6 +
-		s->sSectorX         *  7 -
+		s->sSector.x        *  7 -
 		s->ubSoldierClass   *  4 +
 		s->bTeam            *  7 +
 		s->bDirection       *  5 +
@@ -46,8 +46,8 @@ static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* c
 	EXTR_SKIP(d, 2)
 	EXTR_BOOL(d, c->fCopyProfileItemsOver)
 	EXTR_SKIP(d, 1)
-	EXTR_I16(d, c->sSectorX)
-	EXTR_I16(d, c->sSectorY)
+	EXTR_I16(d, c->sSector.x)
+	EXTR_I16(d, c->sSector.y)
 	EXTR_I8(d, c->bDirection)
 	EXTR_SKIP(d, 1)
 	EXTR_I16(d, c->sInsertionGridNo)
@@ -91,7 +91,7 @@ static void ExtractSoldierCreate(const BYTE* const data, SOLDIERCREATE_STRUCT* c
 	}
 	EXTR_U8(d, c->ubSoldierClass)
 	EXTR_BOOL(d, c->fOnRoof)
-	EXTR_I8(d, c->bSectorZ)
+	EXTR_I8(d, c->sSector.z)
 	EXTR_SKIP(d, 6)
 	EXTR_U8(d, c->ubCivilianGroup)
 	EXTR_SKIP(d, 1)
@@ -160,8 +160,8 @@ static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* co
 	INJ_SKIP(d, 2)
 	INJ_BOOL(d, c->fCopyProfileItemsOver)
 	INJ_SKIP(d, 1)
-	INJ_I16(d, c->sSectorX)
-	INJ_I16(d, c->sSectorY)
+	INJ_I16(d, c->sSector.x)
+	INJ_I16(d, c->sSector.y)
 	INJ_I8(d, c->bDirection)
 	INJ_SKIP(d, 1)
 	INJ_I16(d, c->sInsertionGridNo)
@@ -198,7 +198,7 @@ static void InjectSoldierCreate(BYTE* const data, const SOLDIERCREATE_STRUCT* co
 	d.writeUTF16(c->name, SOLDIERTYPE_NAME_LENGTH);
 	INJ_U8(d, c->ubSoldierClass)
 	INJ_BOOL(d, c->fOnRoof)
-	INJ_I8(d, c->bSectorZ)
+	INJ_I8(d, c->sSector.z)
 	INJ_SKIP(d, 6)
 	INJ_U8(d, c->ubCivilianGroup)
 	INJ_SKIP(d, 1)

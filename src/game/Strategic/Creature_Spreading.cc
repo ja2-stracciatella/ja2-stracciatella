@@ -1046,30 +1046,21 @@ void LoadCreatureDirectives(HWFILE const hFile, UINT32 const uiSavedGameVersion)
 
 BOOLEAN PlayerGroupIsInACreatureInfestedMine()
 {
-	CREATURE_DIRECTIVE *curr;
-	INT16 sSectorX, sSectorY;
-	INT8 bSectorZ;
-
 	if( giLairID <= 0 )
 	{ //Creature quest inactive
 		return FALSE;
 	}
 
 	//Lair is active, so look for live soldier in any creature level
-	curr = gLair;
+	CREATURE_DIRECTIVE *curr = gLair;
 	while( curr )
 	{
-		sSectorX = curr->pLevel->ubSector.x;
-		sSectorY = curr->pLevel->ubSector.y;
-		bSectorZ = curr->pLevel->ubSector.z;
 		//Loop through all the creature directives (mine sectors that are infectible) and
 		//see if players are there.
 		CFOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 		{
 			if (pSoldier->bLife    != 0 &&
-					pSoldier->sSectorX == sSectorX &&
-					pSoldier->sSectorY == sSectorY &&
-					pSoldier->bSectorZ == bSectorZ &&
+					pSoldier->sSector == curr->pLevel->ubSector &&
 					!pSoldier->fBetweenSectors )
 			{
 				return TRUE;

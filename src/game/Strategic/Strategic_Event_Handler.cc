@@ -446,9 +446,7 @@ void AddSecondAirportAttendant( void )
 	MERCPROFILESTRUCT& sal = GetProfile(SAL);
 	auto shippingDest = GCM->getPrimaryShippingDestination();
 
-	sal.sSectorX = shippingDest->deliverySector.x;
-	sal.sSectorY = shippingDest->deliverySector.y;
-	sal.bSectorZ = shippingDest->deliverySector.z;
+	sal.sSector = shippingDest->deliverySector;
 }
 
 
@@ -606,8 +604,8 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 						// knows money gone, quest is still in progress
 						// event indicates Kingpin can start to send terrorists
 						SetFactTrue( FACT_KINGPIN_CAN_SEND_ASSASSINS );
-						gMercProfiles[ SPIKE ].sSectorX = 5;
-						gMercProfiles[ SPIKE ].sSectorY = MAP_ROW_C;
+						gMercProfiles[ SPIKE ].sSector.x = 5;
+						gMercProfiles[ SPIKE ].sSector.y = MAP_ROW_C;
 						gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] = CIV_GROUP_WILL_BECOME_HOSTILE;
 					}
 				}
@@ -659,20 +657,16 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 						SetFactTrue( FACT_ROBOT_READY );
 					}
 
-					gMercProfiles[ ROBOT ].sSectorX = gMercProfiles[ MADLAB ].sSectorX;
-					gMercProfiles[ ROBOT ].sSectorY = gMercProfiles[ MADLAB ].sSectorY;
-					gMercProfiles[ ROBOT ].bSectorZ = gMercProfiles[ MADLAB ].bSectorZ;
-
-
+					gMercProfiles[ ROBOT ].sSector = gMercProfiles[ MADLAB ].sSector;
 				}
 				break;
 
 			case NPC_ACTION_ADD_JOEY_TO_WORLD:
 				// If Joey is not dead, escorted, or already delivered
 				if ( gMercProfiles[ JOEY ].bMercStatus != MERC_IS_DEAD && !CheckFact( FACT_JOEY_ESCORTED, 0 ) &&
-					gMercProfiles[ JOEY ].sSectorX == 4 &&
-					gMercProfiles[ JOEY ].sSectorY == MAP_ROW_D &&
-					gMercProfiles[ JOEY ].bSectorZ == 1 )
+					gMercProfiles[ JOEY ].sSector.x == 4 &&
+					gMercProfiles[ JOEY ].sSector.y == MAP_ROW_D &&
+					gMercProfiles[ JOEY ].sSector.z == 1 )
 				{
 					const SOLDIERTYPE* const pJoey = FindSoldierByProfileID(JOEY);
 					if (pJoey )
@@ -683,9 +677,9 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 					else
 					{
 						// move Joey from caves to San Mona
-						gMercProfiles[ JOEY ].sSectorX = 5;
-						gMercProfiles[ JOEY ].sSectorY = MAP_ROW_C;
-						gMercProfiles[ JOEY ].bSectorZ = 0;
+						gMercProfiles[ JOEY ].sSector.x = 5;
+						gMercProfiles[ JOEY ].sSector.y = MAP_ROW_C;
+						gMercProfiles[ JOEY ].sSector.z = 0;
 					}
 				}
 				break;
@@ -727,22 +721,22 @@ void HandleEarlyMorningEvents( void )
 	// reset Father Walker's drunkenness level!
 	gMercProfiles[ FATHER ].bNPCData = (INT8) Random( 4 );
 	// set Walker's location
+	static const SGPSector swapSector1(13, MAP_ROW_C);
 	if ( Random( 2 ) )
 	{
 		// move the father to the other sector, provided neither are loaded
-		static const SGPSector swapSector1(13, MAP_ROW_C);
 		static const SGPSector swapSector2(13, MAP_ROW_D);
 		if (gWorldSector != swapSector1 && gWorldSector != swapSector2)
 		{
-			gMercProfiles[ FATHER ].sSectorX = 13;
+			gMercProfiles[ FATHER ].sSector.x = 13;
 			// swap his location
-			if (gMercProfiles[ FATHER ].sSectorY == MAP_ROW_C)
+			if (gMercProfiles[ FATHER ].sSector.y == MAP_ROW_C)
 			{
-				gMercProfiles[ FATHER ].sSectorY = MAP_ROW_D;
+				gMercProfiles[ FATHER ].sSector.y = MAP_ROW_D;
 			}
 			else
 			{
-				gMercProfiles[ FATHER ].sSectorY = MAP_ROW_C;
+				gMercProfiles[ FATHER ].sSector.y = MAP_ROW_C;
 			}
 		}
 	}
@@ -755,15 +749,13 @@ void HandleEarlyMorningEvents( void )
 		{
 			// Tony IS available
 			SetFactFalse( FACT_TONY_NOT_AVAILABLE );
-			gMercProfiles[ TONY ].sSectorX = 5;
-			gMercProfiles[ TONY ].sSectorY = MAP_ROW_C;
+			gMercProfiles[ TONY ].sSector = swapSector3;
 		}
 		else
 		{
 			// Tony is NOT available
 			SetFactTrue( FACT_TONY_NOT_AVAILABLE );
-			gMercProfiles[ TONY ].sSectorX = 0;
-			gMercProfiles[ TONY ].sSectorY = 0;
+			gMercProfiles[ TONY ].sSector = SGPSector();
 		}
 	}
 
@@ -774,15 +766,13 @@ void HandleEarlyMorningEvents( void )
 		gMercProfiles[ DEVIN ].bNPCData++;
 		if ( gMercProfiles[ DEVIN ].bNPCData > 3 )
 		{
-			SGPSector swapSector4(gMercProfiles[DEVIN].sSectorX, gMercProfiles[DEVIN].sSectorY);
-			if (gWorldSector != swapSector4)
+			if (gWorldSector != gMercProfiles[DEVIN].sSector)
 			{
 				// ok, Devin's sector not loaded, so time to move!
 				// might be same sector as before, if so, oh well!
 				auto placement = GCM->getNpcPlacement(DEVIN);
 				UINT8 sector   = placement->pickPlacementSector();
-				gMercProfiles[DEVIN].sSectorX = SECTORX(sector);
-				gMercProfiles[DEVIN].sSectorY = SECTORY(sector);
+				gMercProfiles[DEVIN].sSector = SGPSector(sector);
 			}
 		}
 	}
@@ -791,28 +781,23 @@ void HandleEarlyMorningEvents( void )
 
 	// stop moving the truck if Hamous is dead!!
 	// stop moving them if the player has the truck or Hamous is hired!
-	SGPSector swapSector5(gMercProfiles[HAMOUS].sSectorX, gMercProfiles[HAMOUS].sSectorY);
 	if (gMercProfiles[HAMOUS].bLife > 0 &&
 			FindSoldierByProfileIDOnPlayerTeam(HAMOUS)        == NULL &&
 			FindSoldierByProfileIDOnPlayerTeam(PROF_ICECREAM) == NULL &&
-			gWorldSector != swapSector5)
+			gWorldSector != gMercProfiles[HAMOUS].sSector)
 	{
 		// ok, HAMOUS's sector not loaded, so time to move!
 		// might be same sector as before, if so, oh well!
 		auto placement = GCM->getNpcPlacement(HAMOUS);
 		UINT8 sector   = placement->pickPlacementSector();
-		gMercProfiles[HAMOUS].sSectorX = SECTORX(sector);
-		gMercProfiles[HAMOUS].sSectorY = SECTORY(sector);
-		gMercProfiles[PROF_ICECREAM].sSectorX = SECTORX(sector);
-		gMercProfiles[PROF_ICECREAM].sSectorY = SECTORY(sector);
+		gMercProfiles[HAMOUS].sSector = SGPSector(sector);
+		gMercProfiles[PROF_ICECREAM].sSector = SGPSector(sector);
 	}
 
 	// Does Rat take off?
 	if ( gMercProfiles[ RAT ].bNPCData != 0 )
 	{
-		gMercProfiles[ RAT ].sSectorX = 0;
-		gMercProfiles[ RAT ].sSectorY = 0;
-		gMercProfiles[ RAT ].bSectorZ = 0;
+		gMercProfiles[ RAT ].sSector = SGPSector();
 	}
 
 
@@ -833,9 +818,7 @@ void HandleEarlyMorningEvents( void )
 	{
 		gMercProfiles[ CARMEN ].ubMiscFlags2 &= ~(PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR);
 		// move Carmen to C13
-		gMercProfiles[ CARMEN ].sSectorX = 13;
-		gMercProfiles[ CARMEN ].sSectorY = MAP_ROW_C;
-		gMercProfiles[ CARMEN ].bSectorZ = 0;
+		gMercProfiles[ CARMEN ].sSector = swapSector1;
 
 		// we should also reset # of terrorist heads and give him cash
 		if (gMercProfiles[ CARMEN ].bNPCData2 > 0)
@@ -862,13 +845,11 @@ void HandleEarlyMorningEvents( void )
 	else
 	{
 		// randomize where he'll be today... so long as his sector's not loaded
-		SGPSector swapSector6(gMercProfiles[CARMEN].sSectorX, gMercProfiles[CARMEN].sSectorY);
-		if (gWorldSector != swapSector6)
+		if (gWorldSector != gMercProfiles[CARMEN].sSector)
 		{
 			auto placement = GCM->getNpcPlacement(CARMEN);
 			UINT8 sector   = placement->pickPlacementSector();
-			gMercProfiles[CARMEN].sSectorX = SECTORX(sector);
-			gMercProfiles[CARMEN].sSectorY = SECTORY(sector);
+			gMercProfiles[CARMEN].sSector = SGPSector(sector);
 
 			// he should have $5000... unless the player forgot to meet him
 			if (gMercProfiles[ CARMEN ].uiMoney < 5000)
@@ -908,8 +889,7 @@ void MakeCivGroupHostileOnNextSectorEntrance( UINT8 ubCivGroup )
 
 void RemoveAssassin( UINT8 ubProfile )
 {
-	gMercProfiles[ ubProfile ].sSectorX = 0;
-	gMercProfiles[ ubProfile ].sSectorY = 0;
+	gMercProfiles[ ubProfile ].sSector = SGPSector();
 	gMercProfiles[ ubProfile ].bLife = gMercProfiles[ ubProfile ].bLifeMax;
 }
 

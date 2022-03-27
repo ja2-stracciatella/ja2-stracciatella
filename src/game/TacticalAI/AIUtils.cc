@@ -1491,9 +1491,7 @@ INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 		else
 		{
 			// compare sector #s
-			if ( (pSoldier->sSectorX != pTargetSoldier->sSectorX) ||
-				(pSoldier->sSectorY != pTargetSoldier->sSectorY) ||
-				(pSoldier->bSectorZ != pTargetSoldier->bSectorZ) )
+			if (pSoldier->sSector != pTargetSoldier->sSector)
 			{
 				continue;
 			}

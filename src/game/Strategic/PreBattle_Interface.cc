@@ -1363,7 +1363,7 @@ bool PlayerMercInvolvedInThisCombat(SOLDIERTYPE const& s)
 		// Robot is involved iff it has a valid controller with it
 		(!AM_A_ROBOT(&s) || s.robot_remote_holder) &&
 		!SoldierAboardAirborneHeli(s)              &&
-		CurrentBattleSectorIs(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ));
+		CurrentBattleSectorIs(s.sSector);
 }
 
 

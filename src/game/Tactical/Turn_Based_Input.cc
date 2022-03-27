@@ -2694,7 +2694,7 @@ static void ChangeSoldiersBodyType(SoldierBodyType const ubBodyType, BOOLEAN con
 				//sel->inv[HANDPOS].usItem = TANK_CANNON;
 				sel->inv[HANDPOS].usItem = MINIMI;
 				// TODO: verify, it's suspicious we pass a z coord instead of gridno
-				sel->bVehicleID = AddVehicleToList(SGPSector(sel->sSectorX, sel->sSectorY), sel->bSectorZ, HUMMER);
+				sel->bVehicleID = AddVehicleToList(sel->sSector, sel->sSector.z, HUMMER);
 				break;
 			default:
 				break;
@@ -2821,9 +2821,7 @@ static void CreateNextCivType(void)
 	SOLDIERCREATE_STRUCT MercCreateStruct;
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile  = NO_PROFILE;
-	MercCreateStruct.sSectorX   = gWorldSector.x;
-	MercCreateStruct.sSectorY   = gWorldSector.y;
-	MercCreateStruct.bSectorZ   = gWorldSector.z;
+	MercCreateStruct.sSector    = gWorldSector;
 	MercCreateStruct.bBodyType  = bBodyType;
 	MercCreateStruct.bDirection = SOUTH;
 
@@ -2899,9 +2897,7 @@ static void CreatePlayerControlledMonster(void)
 	SOLDIERCREATE_STRUCT MercCreateStruct;
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile        = NO_PROFILE;
-	MercCreateStruct.sSectorX         = gWorldSector.x;
-	MercCreateStruct.sSectorY         = gWorldSector.y;
-	MercCreateStruct.bSectorZ         = gWorldSector.z;
+	MercCreateStruct.sSector          = gWorldSector;
 	//Note:  only gets called if Alt and/or Ctrl isn't pressed!
 	MercCreateStruct.bBodyType        = (_KeyDown(SDLK_INSERT) ? QUEENMONSTER : ADULTFEMALEMONSTER);
 	MercCreateStruct.bTeam            = CREATURE_TEAM;

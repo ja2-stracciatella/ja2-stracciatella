@@ -209,21 +209,25 @@ static void HourlyLarryUpdate(void)
 
 		// check to see if we're in a bar sector, if we are, we have access to alcohol
 		// which may be better than anything we've got...
+		static const SGPSector bars[] = {
+			{13, MAP_ROW_D},
+			{13, MAP_ROW_C},
+			{5, MAP_ROW_C},
+			{5, MAP_ROW_D},
+			{6, MAP_ROW_C},
+			{2, MAP_ROW_H}
+		};
 		if ( usTemptation < BAR_TEMPTATION && GetCurrentBalance() >= GCM->getItem(ALCOHOL)->getPrice() )
 		{
-			if ( pSoldier->bSectorZ == 0 &&
-						( ( pSoldier->sSectorX == 13 && pSoldier->sSectorY == MAP_ROW_D) ||
-							( pSoldier->sSectorX == 13 && pSoldier->sSectorY == MAP_ROW_C) ||
-							( pSoldier->sSectorX == 5 && pSoldier->sSectorY == MAP_ROW_C) ||
-							( pSoldier->sSectorX == 6 && pSoldier->sSectorY == MAP_ROW_C) ||
-							( pSoldier->sSectorX == 5 && pSoldier->sSectorY == MAP_ROW_D) ||
-							( pSoldier->sSectorX == 2 && pSoldier->sSectorY == MAP_ROW_H)
-						)
-				)
+			for (const auto& bar : bars)
 			{
-				// in a bar!
-				fBar = TRUE;
-				usTemptation = BAR_TEMPTATION;
+				if (pSoldier->sSector == bar)
+				{
+					// in a bar!
+					fBar = TRUE;
+					usTemptation = BAR_TEMPTATION;
+					break;
+				}
 			}
 		}
 
@@ -314,7 +318,7 @@ static void HourlyCheckIfSlayAloneSoHeCanLeave(void)
 		return;
 	}
 	if (pSoldier->bLife == 0) return;
-	if (PlayerMercsInSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ)) == 1)
+	if (PlayerMercsInSector(pSoldier->sSector) == 1)
 	{
 		if( Chance( 15 ) )
 		{

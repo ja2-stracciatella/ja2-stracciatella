@@ -357,7 +357,7 @@ void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList()
 		SOLDIERTYPE* const pSoldier = c->merc;
 		if( pSoldier->bAssignment == TRAIN_TOWN )
 		{
-			if (!SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)].fMilitiaTrainingPaid)
+			if (!SectorInfo[pSoldier->sSector.AsByte()].fMilitiaTrainingPaid)
 			{
 				ResumeOldAssignment( pSoldier );
 			}
@@ -368,12 +368,13 @@ void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList()
 
 void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector( INT16 sSectorX, INT16 sSectorY )
 {
+	SGPSector sSector(sSectorX, sSectorY);
 	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE* const pSoldier = c->merc;
 		if( pSoldier->bAssignment == TRAIN_TOWN )
 		{
-			if( ( pSoldier->sSectorX == sSectorX ) && ( pSoldier->sSectorY == sSectorY ) && ( pSoldier->bSectorZ == 0 ) )
+			if (pSoldier->sSector == sSector)
 			{
 				ResumeOldAssignment( pSoldier );
 			}
@@ -451,9 +452,7 @@ void DeselectSelectedListMercsWhoCantMoveWithThisGuy(const SOLDIERTYPE* const pS
 		else
 		{
 			// reject those not in the same sector
-			if( ( pSoldier->sSectorX != pSoldier2->sSectorX ) ||
-					( pSoldier->sSectorY != pSoldier2->sSectorY ) ||
-					( pSoldier->bSectorZ != pSoldier2->bSectorZ ) )
+			if (pSoldier->sSector != pSoldier2->sSector)
 			{
 				ResetEntryForSelectedList( ( INT8 )iCounter );
 			}
@@ -966,7 +965,7 @@ void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE& s)
 {
 	// Just drop the stuff in the current sector
 	GridNo gridno;
-	bool const here = s.sSectorX == gWorldSector.x && s.sSectorY == gWorldSector.y && s.bSectorZ == gWorldSector.z;
+	bool const here = s.sSector == gWorldSector;
 	if (here)
 	{
 		// ATE: Mercs can have a gridno of NOWHERE
@@ -1003,7 +1002,7 @@ void HandleLeavingOfEquipmentInCurrentSector(SOLDIERTYPE& s)
 		}
 		else
 		{
-			AddItemsToUnLoadedSector(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ), gridno, 1, i, s.bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, VISIBLE);
+			AddItemsToUnLoadedSector(s.sSector, gridno, 1, i, s.bLevel, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, VISIBLE);
 		}
 	}
 
@@ -1464,9 +1463,9 @@ BOOLEAN MapscreenCanPassItemToChar(const SOLDIERTYPE* const pNewSoldier)
 	if ( fShowMapInventoryPool && !gpItemPointerSoldier && fMapInventoryItem )
 	{
 		// disallow passing items to anyone not in that sector
-		if ( pNewSoldier->sSectorX != sSelMap.x ||
-			pNewSoldier->sSectorY != sSelMap.y ||
-			pNewSoldier->bSectorZ != ( INT8 )( iCurrentMapSectorZ ) )
+		if (pNewSoldier->sSector.x != sSelMap.x ||
+			pNewSoldier->sSector.y != sSelMap.y ||
+			pNewSoldier->sSector.z != ( INT8 )( iCurrentMapSectorZ ) )
 		{
 			return( FALSE );
 		}
@@ -1501,9 +1500,7 @@ BOOLEAN MapscreenCanPassItemToChar(const SOLDIERTYPE* const pNewSoldier)
 	if ( pOldSoldier != NULL )
 	{
 		// disallow passing items to a merc not in the same sector
-		if ( pNewSoldier->sSectorX != pOldSoldier->sSectorX ||
-			pNewSoldier->sSectorY != pOldSoldier->sSectorY ||
-			pNewSoldier->bSectorZ != pOldSoldier->bSectorZ )
+		if (pNewSoldier->sSector != pOldSoldier->sSector)
 		{
 			return( FALSE );
 		}
@@ -2248,7 +2245,7 @@ void SetUpMovingListsForSector(const SGPSector& sSector)
 		SOLDIERTYPE& s = *i->merc;
 		if (s.bAssignment == IN_TRANSIT)     continue;
 		if (s.bAssignment == ASSIGNMENT_POW) continue;
-		if (s.sSectorX != sSector.x || s.sSectorY != sSector.y || s.bSectorZ != sSector.z) continue;
+		if (s.sSector != sSector) continue;
 
 		if (s.uiStatusFlags & SOLDIER_VEHICLE)
 		{
@@ -3002,7 +2999,7 @@ static INT8 FindSquadThatSoldierCanJoin(SOLDIERTYPE* pSoldier)
 	for( bCounter = 0; bCounter < NUMBER_OF_SQUADS; bCounter++ )
 	{
 		// is this squad in this sector
-		if (IsThisSquadInThisSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ), bCounter))
+		if (IsThisSquadInThisSector(pSoldier->sSector, bCounter))
 		{
 			// does it have room?
 			if (!IsThisSquadFull(bCounter))
@@ -3794,7 +3791,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 	// A POW?
 	if (s.bAssignment == ASSIGNMENT_POW) return ME_POW;
 	// Underground? (can't move strategically, must use tactical traversal)
-	if (s.bSectorZ != 0) return ME_UNDERGROUND;
+	if (s.sSector.z != 0) return ME_UNDERGROUND;
 
 	// Vehicle checks
 	if (s.uiStatusFlags & SOLDIER_VEHICLE)
@@ -3829,9 +3826,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 	if (!s.fBetweenSectors && !SoldierAboardAirborneHeli(s))
 	{
 		// And that sector is loaded
-		if (s.sSectorX == gWorldSector.x &&
-				s.sSectorY == gWorldSector.y &&
-				s.bSectorZ == gWorldSector.z)
+		if (s.sSector == gWorldSector)
 		{
 			// In combat?
 			if (gTacticalStatus.uiFlags & INCOMBAT) return ME_COMBAT;
@@ -3842,13 +3837,12 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 		}
 
 		// Not necessarily loaded - if there are any hostiles there
-		if (NumHostilesInSector(SGPSector(s.sSectorX, s.sSectorY, s.bSectorZ)) > 0) return ME_ENEMY;
+		if (NumHostilesInSector(s.sSector) > 0) return ME_ENEMY;
 	}
 
 	// If in L12 museum, and the museum alarm went off, and Eldin still around
-	if (s.sSectorX == 12        &&
-			s.sSectorY == MAP_ROW_L &&
-			s.bSectorZ == 0         &&
+	static const SGPSector museum(12, MAP_ROW_L);
+	if (s.sSector == museum &&
 			!s.fBetweenSectors && GetProfile(ELDIN).bMercStatus != MERC_IS_DEAD)
 	{
 		UINT8	const room = GetRoom(s.sGridNo);
@@ -3899,7 +3893,7 @@ static MoveError CanCharacterMoveInStrategic(SOLDIERTYPE& s)
 	{
 		case MARIA:
 			// Maria can't move if she's in sector C5
-			if (SECTOR(s.sSectorX, s.sSectorY) == SEC_C5) problem_exists = true;
+			if (s.sSector.AsByte() == SEC_C5) problem_exists = true;
 			break;
 	}
 
@@ -4180,7 +4174,7 @@ void TurnOnSectorLocator( UINT8 ubProfileID )
 	const SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubProfileID);
 	if( pSoldier )
 	{
-		gsSectorLocator = SGPSector(pSoldier->sSectorX, pSoldier->sSectorY);
+		gsSectorLocator = pSoldier->sSector;
 	}
 	else
 	{
@@ -4202,7 +4196,7 @@ void TurnOnSectorLocator( UINT8 ubProfileID )
 		}
 		else
 		{
-			gsSectorLocator = SGPSector(gMercProfiles[ubProfileID].sSectorX, gMercProfiles[ubProfileID].sSectorY);
+			gsSectorLocator = gMercProfiles[ubProfileID].sSector;
 		}
 	}
 	gubBlitSectorLocatorCode = LOCATOR_COLOR_YELLOW;

@@ -217,9 +217,7 @@ try
 	s->bActionPoints        = CalcActionPoints(s);
 	s->bInitialActionPoints = s->bActionPoints;
 	s->bSide                = gTacticalStatus.Team[team_id].bSide;
-	s->sSectorX             = c.sSectorX;
-	s->sSectorY             = c.sSectorY;
-	s->bSectorZ             = c.bSectorZ;
+	s->sSector              = c.sSector;
 	s->ubInsertionDirection = c.bDirection;
 	s->bDesiredDirection    = c.bDirection;
 	s->bDominantDir         = c.bDirection;
@@ -431,7 +429,7 @@ try
 			s->bVehicleID =
 				c.fUseGivenVehicle ? c.bUseGivenVehicleID :
 				// TODO: verify, it's suspicious we pass a z coord instead of gridno
-				(INT8)AddVehicleToList(SGPSector(s->sSectorX, s->sSectorY), s->bSectorZ, ubVehicleID);
+				(INT8) AddVehicleToList(s->sSector, s->sSector.z, ubVehicleID);
 			SetVehicleValuesIntoSoldierType(s);
 			break;
 		}
@@ -443,10 +441,7 @@ try
 
 	if (guiCurrentScreen == AUTORESOLVE_SCREEN)
 	{
-		UINT8 const sector_id = GetAutoResolveSectorID();
-		s->sSectorX = SECTORX(sector_id);
-		s->sSectorY = SECTORY(sector_id);
-		s->bSectorZ = 0;
+		s->sSector = SGPSector(GetAutoResolveSectorID());
 		return s;
 	}
 
@@ -1136,9 +1131,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	pp->ubSoldierClass = bp->ubSoldierClass;
 	pp->ubCivilianGroup = bp->ubCivilianGroup;
 	pp->ubScheduleID = 0;
-	pp->sSectorX = gWorldSector.x;
-	pp->sSectorY = gWorldSector.y;
-	pp->bSectorZ = gWorldSector.z;
+	pp->sSector = gWorldSector;
 	pp->fHasKeys = bp->fHasKeys;
 
 	//Choose a body type randomly if none specified.
@@ -1413,9 +1406,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	spp->ubSoldierClass = bp->ubSoldierClass;
 	spp->ubCivilianGroup = bp->ubCivilianGroup;
 	spp->ubScheduleID = 0;
-	spp->sSectorX = gWorldSector.x;
-	spp->sSectorY = gWorldSector.y;
-	spp->bSectorZ = gWorldSector.z;
+	spp->sSector = gWorldSector;
 	spp->fHasKeys = bp->fHasKeys;
 
 	//Pass over mandatory information specified from the basic placement
@@ -1483,9 +1474,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 		pp->sInsertionGridNo = bp->usStartingGridNo;
 
 		//ATE: Copy over sector coordinates from profile to create struct
-		pp->sSectorX = gMercProfiles[ pp->ubProfile ].sSectorX;
-		pp->sSectorY = gMercProfiles[ pp->ubProfile ].sSectorY;
-		pp->bSectorZ = gMercProfiles[ pp->ubProfile ].bSectorZ;
+		pp->sSector = gMercProfiles[ pp->ubProfile ].sSector;
 
 		pp->ubScheduleID = spp->ubScheduleID;
 
@@ -1955,9 +1944,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam            = bTeam;
 	MercCreateStruct.ubProfile        = ubProfileID;
-	MercCreateStruct.sSectorX         = gWorldSector.x;
-	MercCreateStruct.sSectorY         = gWorldSector.y;
-	MercCreateStruct.bSectorZ         = gWorldSector.z;
+	MercCreateStruct.sSector          = gWorldSector;
 	MercCreateStruct.sInsertionGridNo = pos;
 
 	RandomizeNewSoldierStats(&MercCreateStruct);

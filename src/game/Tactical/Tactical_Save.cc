@@ -163,21 +163,19 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_ver
 			SectorInfo[SECTOR(14, MAP_ROW_L)].uiFlags &= ~SF_USE_ALTERNATE_MAP;
 			SectorInfo[SECTOR( 8, MAP_ROW_L)].uiFlags &= ~SF_USE_ALTERNATE_MAP;
 
-			INT16 x;
-			INT16 y;
+			SGPSector sMap;
 			if (Random(2))
 			{
-				x = 11;
-				y = MAP_ROW_H;
+				sMap.x = 11;
+				sMap.y = MAP_ROW_H;
 			}
 			else
 			{
-				x = 4;
-				y = MAP_ROW_I;
+				sMap.x = 4;
+				sMap.y = MAP_ROW_I;
 			}
-			SectorInfo[SECTOR(x, y)].uiFlags |= SF_USE_ALTERNATE_MAP;
-			gabby.sSectorX = x;
-			gabby.sSectorY = y;
+			SectorInfo[sMap.AsByte()].uiFlags |= SF_USE_ALTERNATE_MAP;
+			gabby.sSector = sMap;
 		}
 	}
 
@@ -360,9 +358,7 @@ void HandleAllReachAbleItemsInTheSector(const SGPSector& sector)
 		FOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			if (s->bLife <= 0) continue;
-			if (s->sSectorX != sector.x) continue;
-			if (s->sSectorY != sector.y) continue;
-			if (s->bSectorZ != sector.z) continue;
+			if (s->sSector != sector) continue;
 			if (!FindBestPath(s, isolated, s->bLevel, WALKING, NO_COPYROUTE, 0)) continue;
 			grid_no2 = isolated;
 			break;
@@ -772,9 +768,7 @@ void ChangeNpcToDifferentSector(MERCPROFILESTRUCT& p, const SGPSector& sSector)
 	}
 	// Carmen no longer traverses out, he is temporarily removed instead
 
-	p.sSectorX = nextSector.x;
-	p.sSectorY = nextSector.y;
-	p.bSectorZ = nextSector.z;
+	p.sSector = nextSector;
 	p.fUseProfileInsertionInfo = FALSE;
 }
 

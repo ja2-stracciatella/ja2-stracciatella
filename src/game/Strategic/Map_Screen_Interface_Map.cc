@@ -683,9 +683,8 @@ static INT32 ShowOnDutyTeam(const SGPSector& sSector)
 	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE const& s = *c->merc;
-		SGPSector sMap(s.sSectorX, s.sSectorY, s.bSectorZ);
 		if (s.uiStatusFlags & SOLDIER_VEHICLE)                    continue;
-		if (sMap != sSector)                                      continue;
+		if (s.sSector != sSector)                                 continue;
 		if (s.bLife    <= 0)                                      continue;
 		if (s.bAssignment >= ON_DUTY && s.bAssignment != VEHICLE) continue;
 		if (InHelicopter(s))                                      continue;
@@ -701,11 +700,10 @@ static INT32 ShowAssignedTeam(const SGPSector& sSector, INT32 icon_pos)
 	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE const& s = *c->merc;
-		SGPSector sMap(s.sSectorX, s.sSectorY, s.bSectorZ);
 		// given number of on duty members, find number of assigned chars
 		// start at beginning of list, look for people who are in sector and assigned
 		if (s.uiStatusFlags & SOLDIER_VEHICLE)  continue;
-		if (sMap != sSector)                    continue;
+		if (s.sSector != sSector)               continue;
 		if (s.bAssignment <  ON_DUTY)           continue;
 		if (s.bAssignment == VEHICLE)           continue;
 		if (s.bAssignment == IN_TRANSIT)        continue;
@@ -866,7 +864,7 @@ void PlotPathForCharacter(SOLDIERTYPE& s, const SGPSector& sector, bool const ta
 	// Leave if the character is in transit
 	if (s.bAssignment == IN_TRANSIT) return;
 
-	if (s.bSectorZ != 0)
+	if (s.sSector.z != 0)
 	{ /* Not on the surface, character won't move until they reach surface, inform
 		* player of this fact */
 		ST::string who =
@@ -931,7 +929,7 @@ UINT32 ClearPathAfterThisSectorForCharacter(SOLDIERTYPE *pCharacter, const SGPSe
 
 	// if we're clearing everything beyond the current sector, that's quite different.  Since we're basically cancelling
 	// his movement completely, we must also make sure his next X,Y are changed and he officially "returns" to his sector
-	if (sMap == SGPSector(pCharacter->sSectorX, pCharacter->sSectorY))
+	if (sMap == pCharacter->sSector)
 	{
 		// if we're in confirm map move mode, cancel that (before new UI messages are issued)
 		EndConfirmMapMoveMode( );
@@ -991,7 +989,7 @@ void CancelPathForCharacter( SOLDIERTYPE *pCharacter )
 	// This causes the group to effectively reverse directions (even if they've never actually left), so handle that.
 	// They are going to return to their current X,Y sector.
 	RebuildWayPointsForGroupPath(pCharacter->pMercPath, *GetGroup(pCharacter->ubGroupID));
-//	GroupReversingDirectionsBetweenSectors(GetGroup(pCharacter->ubGroupID), SGPSector(pCharacter->sSectorX, pCharacter->sSectorY), FALSE);
+//	GroupReversingDirectionsBetweenSectors(GetGroup(pCharacter->ubGroupID), pCharacter->sSector, FALSE);
 
 
 	// if he's in a vehicle, clear out the vehicle, too
@@ -3728,8 +3726,7 @@ static BOOLEAN CanMercsScoutThisSector(const SGPSector& sSector)
 		}
 
 		// is he here?
-		SGPSector sMap(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
-		if (sMap == sSector)
+		if (pSoldier->sSector == sSector)
 		{
 			return( TRUE );
 		}

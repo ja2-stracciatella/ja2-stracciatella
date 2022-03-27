@@ -569,9 +569,9 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			{ //Iggy is on our team!
 				break;
 			}
-			if( !pSoldier->bSectorZ )
+			if (!pSoldier->sSector.z)
 			{
-				SECTORINFO* pSector = &SectorInfo[SECTOR(pSoldier->sSectorX, pSoldier->sSectorY)];
+				SECTORINFO* pSector = &SectorInfo[pSoldier->sSector.AsByte()];
 				if( pSector->ubNumElites )
 				{
 					pSector->ubNumElites--;
@@ -584,7 +584,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			else
 			{
 				UNDERGROUND_SECTORINFO *pUnderground;
-				pUnderground = FindUnderGroundSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+				pUnderground = FindUnderGroundSector(pSoldier->sSector);
 				Assert( pUnderground );
 				if( pUnderground->ubNumElites )
 				{
@@ -706,7 +706,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 
 			if( !IsAutoResolveActive() )
 			{
-				pSector = &SectorInfo[ SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) ];
+				pSector = &SectorInfo[pSoldier->sSector.AsByte()];
 			}
 			else
 			{
@@ -809,7 +809,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 
 					break;
 			}
-			RecalculateSectorWeight( (UINT8)SECTOR( pSoldier->sSectorX, pSoldier->sSectorY ) );
+			RecalculateSectorWeight(pSoldier->sSector.AsByte());
 		}
 		else
 		{ //basement level (UNDERGROUND_SECTORINFO)
@@ -1157,9 +1157,7 @@ void EndCaptureSequence( )
 
 static void CaptureSoldier(SOLDIERTYPE* const s, const SGPSector& sMap, GridNo const soldier_pos, GridNo const item_pos)
 {
-	s->sSectorX                 = sMap.x;
-	s->sSectorY                 = sMap.y;
-	s->bSectorZ                 = 0;
+	s->sSector                  = sMap;
 	s->bLevel                   = 0; // put him on the floor
 	s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 	s->usStrategicInsertionData = soldier_pos;
@@ -1228,7 +1226,7 @@ void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier )
 		InternalEndQuest(QUEST_HELD_IN_ALMA, gWorldSector, FALSE);
 	}
 
-	HandleMoraleEvent(pSoldier, MORALE_MERC_CAPTURED, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+	HandleMoraleEvent(pSoldier, MORALE_MERC_CAPTURED, pSoldier->sSector);
 
 	// Change to POW....
 	//-add him to a POW assignment/group

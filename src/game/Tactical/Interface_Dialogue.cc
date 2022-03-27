@@ -1611,21 +1611,20 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// Squad here to search for...
 
 				INT8 bNumDone = 0;
+				static const SGPSector basement(10, 1, 1);
 				FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 				{
 					// Are we in this sector, On the current squad?
 					if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector && pSoldier->bAssignment == CurrentSquad())
 					{
 						gfTacticalTraversal = TRUE;
-						SetGroupSectorValue(SGPSector(10, 1, 1), *GetGroup(pSoldier->ubGroupID));
+						SetGroupSectorValue(basement, *GetGroup(pSoldier->ubGroupID));
 
 						// Set insertion gridno
 						if ( bNumDone < 6 )
 						{
 							// Set next sectore
-							pSoldier->sSectorX = 10;
-							pSoldier->sSectorY = 1;
-							pSoldier->bSectorZ = 1;
+							pSoldier->sSector = basement;
 
 							// Set gridno
 							pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
@@ -1636,7 +1635,6 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				}
 
 				// MOVE NPCS!
-				SGPSector basement(10, 1, 1);
 				ChangeNpcToDifferentSector(GetProfile(FATIMA), basement);
 				ChangeNpcToDifferentSector(GetProfile(DIMITRI), basement);
 
@@ -1897,21 +1895,20 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// OK, we want to goto the basement level!
 				// For one, loop through our current squad and move them over
 				INT8 bNumDone = 0;
+				static const SGPSector upstairs(10, 1);
 				FOR_EACH_IN_TEAM(pSoldier, OUR_TEAM)
 				{
 					// Are we in this sector, On the current squad?
 					if (pSoldier->bLife >= OKLIFE && pSoldier->bInSector)
 					{
 						gfTacticalTraversal = TRUE;
-						SetGroupSectorValue(SGPSector(10, 1, 0), *GetGroup(pSoldier->ubGroupID));
+						SetGroupSectorValue(upstairs, *GetGroup(pSoldier->ubGroupID));
 
 						// Set insertion gridno
 						if ( bNumDone < 8 )
 						{
 							// Set next sectore
-							pSoldier->sSectorX = 10;
-							pSoldier->sSectorY = 1;
-							pSoldier->bSectorZ = 0;
+							pSoldier->sSector = upstairs;
 
 							// Set gridno
 							pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
@@ -2245,9 +2242,9 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_ADD_JOEY_TO_WORLD:
-				gMercProfiles[ JOEY ].sSectorX = 4;
-				gMercProfiles[ JOEY ].sSectorY = MAP_ROW_D;
-				gMercProfiles[ JOEY ].bSectorZ = 1;
+				gMercProfiles[ JOEY ].sSector.x = 4;
+				gMercProfiles[ JOEY ].sSector.y = MAP_ROW_D;
+				gMercProfiles[ JOEY ].sSector.z = 1;
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, GetWorldMinutesInDay(), NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_ADD_JOEY_TO_WORLD, 3 );
 				break;
 
@@ -2603,9 +2600,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 
 			case NPC_ACTION_REMOVE_DOREEN:
 				// make Doreen disappear next time we do a sector traversal
-				gMercProfiles[ DOREEN ].sSectorX = 0;
-				gMercProfiles[ DOREEN ].sSectorY = 0;
-				gMercProfiles[ DOREEN ].bSectorZ = 0;
+				gMercProfiles[ DOREEN ].sSector = SGPSector();
 				break;
 
 			case NPC_ACTION_FREE_KIDS:
@@ -3769,9 +3764,9 @@ action_punch_pc:
 
 			case NPC_ACTION_ADD_RAT:
 				// add Rat
-				gMercProfiles[ RAT ].sSectorX = 9;
-				gMercProfiles[ RAT ].sSectorY = MAP_ROW_G;
-				gMercProfiles[ RAT ].bSectorZ = 0;
+				gMercProfiles[ RAT ].sSector.x = 9;
+				gMercProfiles[ RAT ].sSector.y = MAP_ROW_G;
+				gMercProfiles[ RAT ].sSector.z = 0;
 				break;
 
 			case NPC_ACTION_ENDGAME_STATE_1:
@@ -3820,8 +3815,7 @@ action_punch_pc:
 					pSoldier = ChangeSoldierTeam( pSoldier, CIV_TEAM );
 				}
 				// remove profile from map
-				gMercProfiles[ pSoldier->ubProfile ].sSectorX = 0;
-				gMercProfiles[ pSoldier->ubProfile ].sSectorY = 0;
+				gMercProfiles[ pSoldier->ubProfile ].sSector = SGPSector();
 				pSoldier->ubProfile = NO_PROFILE;
 				// set to 0 civ group
 				pSoldier->ubCivilianGroup = 0;
@@ -3853,8 +3847,7 @@ action_punch_pc:
 					EndAIGuysTurn(*pSoldier);
 					RemoveManAsTarget( pSoldier );
 					TacticalRemoveSoldier(*pSoldier);
-					gMercProfiles[ ubTargetNPC ].sSectorX = 0;
-					gMercProfiles[ ubTargetNPC ].sSectorY = 0;
+					gMercProfiles[ ubTargetNPC ].sSector = SGPSector();
 					CheckForEndOfBattle( TRUE );
 				}
 				break;
@@ -3951,9 +3944,9 @@ add_log:
 			case NPC_ACTION_SEND_TROOPS_TO_SAM:
 				break;
 			case NPC_ACTION_PUT_PACOS_IN_BASEMENT:
-				gMercProfiles[ PACOS ].sSectorX = 10;
-				gMercProfiles[ PACOS ].sSectorY = MAP_ROW_A;
-				gMercProfiles[ PACOS ].bSectorZ = 0;
+				gMercProfiles[ PACOS ].sSector.x = 10;
+				gMercProfiles[ PACOS ].sSector.y = MAP_ROW_A;
+				gMercProfiles[ PACOS ].sSector.z = 0;
 				break;
 			case NPC_ACTION_HISTORY_ASSASSIN:
 				AddHistoryToPlayersLog(HISTORY_ASSASSIN, 0, GetWorldTotalMin(), gWorldSector);

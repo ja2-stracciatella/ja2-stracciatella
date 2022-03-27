@@ -389,7 +389,7 @@ static void DeleteWorldItemsBelongingToTerroristsWhoAreNotThere(void)
 
 			MERCPROFILESTRUCT const& p = GetProfile(pid);
 			// and they were not set in the current sector
-			if (p.sSectorX == gWorldSector.x && p.sSectorY == gWorldSector.y) continue;
+			if (p.sSector == gWorldSector) continue;
 
 			// then all items in this location should be deleted
 			const INT16 sGridNo = wi.sGridNo;
@@ -411,9 +411,7 @@ static void DeleteWorldItemsBelongingToQueenIfThere(void)
 {
 	MERCPROFILESTRUCT& q = GetProfile(QUEEN);
 
-	if (q.sSectorX != gWorldSector.x ||
-			q.sSectorY != gWorldSector.y ||
-			q.bSectorZ != gWorldSector.z)
+	if (q.sSector != gWorldSector)
 	{
 		return;
 	}

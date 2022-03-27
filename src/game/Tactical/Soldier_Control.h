@@ -642,9 +642,7 @@ struct SOLDIERTYPE
 	INT8 bAssignment; // soldiers current assignment
 	BOOLEAN fForcedToStayAwake; // forced by player to stay awake, reset to false, the moment they are set to rest or sleep
 	INT8 bTrainStat; // current stat soldier is training
-	INT16 sSectorX; // X position on the Stategic Map
-	INT16 sSectorY; // Y position on the Stategic Map
-	INT8 bSectorZ; // Z sector location
+	SGPSector sSector; // position on the Stategic Map
 	INT32 iVehicleId; // the id of the vehicle the char is in
 	PathSt* pMercPath; // Path Structure
 	UINT8 fHitByGasFlags; // flags

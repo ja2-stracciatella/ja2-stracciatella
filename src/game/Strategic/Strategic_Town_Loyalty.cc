@@ -402,10 +402,10 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 	if( bKillerTeam == OUR_TEAM )
 	{
 		// apply morale penalty for killing a civilian!
-		HandleMoraleEvent(killer, MORALE_KILLED_CIVILIAN, SGPSector(killer->sSectorX, killer->sSectorY, killer->bSectorZ));
+		HandleMoraleEvent(killer, MORALE_KILLED_CIVILIAN, killer->sSector);
 	}
 
-	UINT8 const bTownId = GetTownIdForSector(SECTOR(pSoldier->sSectorX, pSoldier->sSectorY));
+	UINT8 const bTownId = GetTownIdForSector(pSoldier->sSector.AsByte());
 
 	// if civilian is NOT in a town
 	if( bTownId == BLANK_SECTOR )
@@ -516,7 +516,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 
 		case ENEMY_TEAM:
 			// check whose sector this is
-			if (StrategicMap[pSoldier->sSectorX + MAP_WORLD_X * pSoldier->sSectorY].fEnemyControlled)
+			if (StrategicMap[pSoldier->sSector.AsStrategicIndex()].fEnemyControlled)
 			{
 				// enemy soldiers... in enemy controlled sector.  Gain loyalty
 				fIncrement = TRUE;
@@ -562,7 +562,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 				iLoyaltyChange *= MULTIPLIER_FOR_MURDER_BY_MONSTER;
 
 				// check whose sector this is
-				if (StrategicMap[pSoldier->sSectorX + MAP_WORLD_X * pSoldier->sSectorY].fEnemyControlled)
+				if (StrategicMap[pSoldier->sSector.AsStrategicIndex()].fEnemyControlled)
 				{
 					// enemy controlled sector - gain loyalty
 					fIncrement = TRUE;
@@ -591,7 +591,7 @@ void HandleMurderOfCivilian(const SOLDIERTYPE* const pSoldier)
 	iLoyaltyChange *= 100;
 	iLoyaltyChange /= (100 + ( 25 * LOYALTY_EVENT_DISTANCE_THRESHOLD ) );
 
-	AffectAllTownsLoyaltyByDistanceFrom(iLoyaltyChange, SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+	AffectAllTownsLoyaltyByDistanceFrom(iLoyaltyChange, pSoldier->sSector);
 }
 
 
@@ -601,7 +601,7 @@ void HandleTownLoyaltyForNPCRecruitment( SOLDIERTYPE *pSoldier )
 {
 	UINT32 uiLoyaltyValue = 0;
 
-	UINT8 const bTownId = GetTownIdForSector(SECTOR(pSoldier->sSectorX, pSoldier->sSectorY));
+	UINT8 const bTownId = GetTownIdForSector(pSoldier->sSector.AsByte());
 
 	// is the merc currently in their home town?
 	if( bTownId == gMercProfiles[ pSoldier->ubProfile ].bTown )
@@ -1162,7 +1162,7 @@ static UINT32 PlayerStrength(void)
 				s->fBetweenSectors &&
 				s->ubPrevSectorID % 16 + 1 == gWorldSector.x &&
 				s->ubPrevSectorID / 16 + 1 == gWorldSector.y &&
-				s->bSectorZ == gWorldSector.z
+				s->sSector.z == gWorldSector.z
 			))
 		{
 			// count this person's strength (condition), calculated as life reduced up to half according to maxbreath

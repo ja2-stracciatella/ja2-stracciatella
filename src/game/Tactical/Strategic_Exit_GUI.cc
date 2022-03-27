@@ -218,9 +218,7 @@ static void InternalInitSectorExitMenu(UINT8 const ubDirection, INT16 const sAdd
 	{
 		if (pSoldier == sel) continue;
 		if( !pSoldier->fBetweenSectors &&
-			pSoldier->sSectorX == gWorldSector.x &&
-			pSoldier->sSectorY == gWorldSector.y &&
-			pSoldier->bSectorZ == gWorldSector.z &&
+			pSoldier->sSector == gWorldSector &&
 			pSoldier->bLife >= OKLIFE &&
 			pSoldier->bAssignment != sel->bAssignment &&
 			pSoldier->bAssignment != ASSIGNMENT_POW &&
@@ -401,9 +399,7 @@ static void DoneFadeOutWarpCallback(void)
 			SetGroupSectorValue(gsWarpWorld, *GetGroup(pSoldier->ubGroupID));
 
 			// Set next sectore
-			pSoldier->sSectorX = gsWarpWorld.x;
-			pSoldier->sSectorY = gsWarpWorld.y;
-			pSoldier->bSectorZ = gsWarpWorld.z;
+			pSoldier->sSector = gsWarpWorld;
 
 			// Set gridno
 			pSoldier->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;

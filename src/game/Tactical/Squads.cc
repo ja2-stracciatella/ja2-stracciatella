@@ -118,7 +118,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 		// check if squad empty, if not check sector x,y,z are the same as this guys
 		SGPSector sMap;
 		if (SectorSquadIsIn(bSquadValue, sMap) &&
-			(sMap != SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ)))
+			(sMap != s->sSector))
 		{
 			return FALSE;
 		}
@@ -147,7 +147,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 		if (s->bAssignment != VEHICLE || s->iVehicleId == -1)
 		{
 			AddPlayerToGroup(g, *s);
-			SetGroupSectorValue(SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ), g);
+			SetGroupSectorValue(s->sSector, g);
 		}
 		else if (InHelicopter(*s))
 		{
@@ -157,7 +157,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 			RemoveSoldierFromHelicopter(s);
 
 			AddPlayerToGroup(g, *s);
-			SetGroupSectorValue(SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ), g);
+			SetGroupSectorValue(s->sSector, g);
 
 			// if we've just started a new squad
 			if (fNewSquad)
@@ -180,7 +180,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 			fExitingVehicleToSquad = FALSE;
 
 			AddPlayerToGroup(g, *s);
-			SetGroupSectorValue(SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ), g);
+			SetGroupSectorValue(s->sSector, g);
 		}
 
 		*i = s;
@@ -299,7 +299,7 @@ BOOLEAN RemoveCharacterFromSquads(SOLDIERTYPE* const s)
 
 			if (s->fBetweenSectors && s->uiStatusFlags & SOLDIER_VEHICLE)
 			{
-				GROUP& g = *CreateNewPlayerGroupDepartingFromSector(SGPSector(s->sSectorX, s->sSectorY));
+				GROUP& g = *CreateNewPlayerGroupDepartingFromSector(s->sSector);
 				AddPlayerToGroup(g, *s);
 			}
 
@@ -391,7 +391,7 @@ BOOLEAN SectorSquadIsIn(const INT8 bSquadValue, SGPSector& sMap)
 	{
 		SOLDIERTYPE const* const s = *i;
 		// if valid soldier, get current sector and return
-		sMap = SGPSector(s->sSectorX, s->sSectorY, s->bSectorZ);
+		sMap = s->sSector;
 		return TRUE;
 	}
 
@@ -580,11 +580,7 @@ BOOLEAN IsSquadOnCurrentTacticalMap( INT32 iCurrentSquad )
 	FOR_EACH_IN_SQUAD(i, iCurrentSquad)
 	{
 		SOLDIERTYPE const* const s = *i;
-		// ATE; Added more checks here for being in sector ( fBetweenSectors and SectorZ )
-		if (s->sSectorX == gWorldSector.x  &&
-				s->sSectorY == gWorldSector.y  &&
-				s->bSectorZ == gWorldSector.z &&
-				!s->fBetweenSectors)
+		if (s->sSector == gWorldSector && !s->fBetweenSectors)
 		{
 			return( TRUE );
 		}

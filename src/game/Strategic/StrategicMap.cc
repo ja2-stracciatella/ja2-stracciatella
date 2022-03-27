@@ -686,11 +686,9 @@ void HandleQuestCodeOnSectorEntry(const SGPSector& sNewSector)
 	if ( CheckFact( FACT_ALL_TERRORISTS_KILLED, 0 ) )
 	{
 		// end terrorist quest
-		EndQuest(QUEST_KILL_TERRORISTS, SGPSector(gMercProfiles[CARMEN].sSectorX, gMercProfiles[CARMEN].sSectorY));
+		EndQuest(QUEST_KILL_TERRORISTS, gMercProfiles[CARMEN].sSector);
 		// remove Carmen
-		gMercProfiles[ CARMEN ].sSectorX = 0;
-		gMercProfiles[ CARMEN ].sSectorY = 0;
-		gMercProfiles[ CARMEN ].bSectorZ = 0;
+		gMercProfiles[ CARMEN ].sSector = SGPSector();
 	}
 
 	UINT8 const sector = sNewSector.AsByte();
@@ -710,9 +708,7 @@ void HandleQuestCodeOnSectorEntry(const SGPSector& sNewSector)
 				{
 					// Fred Morris is always in the first mine sector we enter, unless head miner here has been pre-determined (then he's randomized, too)
 					MERCPROFILESTRUCT& fred = GetProfile(FRED);
-					fred.sSectorX = sNewSector.x;
-					fred.sSectorY = sNewSector.y;
-					fred.bSectorZ = 0;
+					fred.sSector  = sNewSector;
 					fred.bTown    = thisMine->associatedTownId;
 
 					// mark miner as placed
@@ -738,9 +734,7 @@ void HandleQuestCodeOnSectorEntry(const SGPSector& sNewSector)
 
 					MERCPROFILESTRUCT& p      = GetProfile(ubRandomMiner[ubMiner]);
 					UINT8 const        sector = ubMine->entranceSector;
-					p.sSectorX = SECTORX(sector);
-					p.sSectorY = SECTORY(sector);
-					p.bSectorZ = 0;
+					p.sSector = SGPSector(sector);
 					p.bTown = ubMine->associatedTownId;
 
 					// mark miner as placed
@@ -765,7 +759,7 @@ void HandleQuestCodeOnSectorEntry(const SGPSector& sNewSector)
 		{
 			// robot is on our team and we have changed sectors, so we can
 			// replace the robot-under-construction in Madlab's sector
-			RemoveGraphicFromTempFile( gsRobotGridNo, SEVENTHISTRUCT1, SGPSector(gMercProfiles[MADLAB].sSectorX, gMercProfiles[MADLAB].sSectorY, gMercProfiles[MADLAB].bSectorZ));
+			RemoveGraphicFromTempFile( gsRobotGridNo, SEVENTHISTRUCT1, gMercProfiles[MADLAB].sSector);
 			SetFactTrue( FACT_ROBOT_RECRUITED_AND_MOVED );
 		}
 	}
@@ -800,10 +794,8 @@ void HandleQuestCodeOnSectorEntry(const SGPSector& sNewSector)
 	if (sector == SEC_C6 && gubQuest[QUEST_RESCUE_MARIA] == QUESTDONE)
 	{
 		// make sure Maria and Angel are gone
-		gMercProfiles[ MARIA ].sSectorX = 0;
-		gMercProfiles[ MARIA ].sSectorY = 0;
-		gMercProfiles[ ANGEL ].sSectorX = 0;
-		gMercProfiles[ ANGEL ].sSectorY = 0;
+		gMercProfiles[ MARIA ].sSector = SGPSector();
+		gMercProfiles[ ANGEL ].sSector = SGPSector();
 	}
 
 	if (sector == SEC_D5)
@@ -838,8 +830,7 @@ static void HandleQuestCodeOnSectorExit(const SGPSector& oldSector)
 	if (oldSector == sector && CheckFact(FACT_CONRAD_SHOULD_GO, 0))
 	{
 		// remove Conrad from the map
-		gMercProfiles[ CONRAD ].sSectorX = 0;
-		gMercProfiles[ CONRAD ].sSectorY = 0;
+		gMercProfiles[ CONRAD ].sSector = SGPSector();
 	}
 
 	sector = SGPSector(HOSPITAL_SECTOR_X, HOSPITAL_SECTOR_Y, HOSPITAL_SECTOR_Z);
@@ -975,9 +966,8 @@ void UpdateMercsInSector()
 
 		s.bInSector = FALSE;
 
-		SGPSector sSector(s.sSectorX, s.sSectorY, s.bSectorZ);
 		if (!s.bActive)             continue;
-		if (sSector != gWorldSector) continue;
+		if (s.sSector != gWorldSector) continue;
 		if (s.fBetweenSectors)      continue;
 
 		if (!(gTacticalStatus.uiFlags & LOADING_SAVED_GAME))
@@ -1504,7 +1494,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	{
 		gsAdjacentSector.x = (INT16)(gWorldSector.x + DirXIncrementer[ubTacticalDirection]);
 		gsAdjacentSector.y = (INT16)(gWorldSector.y + DirYIncrementer[ubTacticalDirection]);
-		gsAdjacentSector.z = pValidSoldier->bSectorZ;
+		gsAdjacentSector.z = pValidSoldier->sSector.z;
 	}
 	else
 	{
@@ -1638,7 +1628,7 @@ void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier )
 	if( pSoldier->ubGroupID == 0 )
 	{
 		// create independant group
-		GROUP& g = *CreateNewPlayerGroupDepartingFromSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY));
+		GROUP& g = *CreateNewPlayerGroupDepartingFromSector(pSoldier->sSector);
 		AddPlayerToGroup(g, *pSoldier);
 	}
 }
@@ -2321,9 +2311,7 @@ bool CanGoToTacticalInSector(const SGPSector& sector)
 		if (s.bAssignment == ASSIGNMENT_DEAD)  continue;
 		if (SoldierAboardAirborneHeli(s))      continue;
 		if (s.fBetweenSectors)                 continue;
-		if (s.sSectorX != sector.x)            continue;
-		if (s.sSectorY != sector.y)            continue;
-		if (s.bSectorZ != sector.z)            continue;
+		if (s.sSector != sector)               continue;
 		return true;
 	}
 
@@ -3191,9 +3179,7 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 		SOLDIERTYPE const& creature = GetMan(i);
 		if (creature.bActive &&
 				creature.bLife != 0 &&
-				creature.sSectorX == gWorldSector.x &&
-				creature.sSectorY == gWorldSector.y &&
-				creature.bSectorZ == gWorldSector.z)
+				creature.sSector == gWorldSector)
 		{ //We have enemies, now look for militia!
 			for( i = gTacticalStatus.Team[ MILITIA_TEAM ].bFirstID; i <= gTacticalStatus.Team[ MILITIA_TEAM ].bLastID; i++ )
 			{
@@ -3201,9 +3187,7 @@ BOOLEAN HandlePotentialBringUpAutoresolveToFinishBattle( )
 				if (milita.bActive &&
 						milita.bLife != 0 &&
 						milita.bSide    == OUR_TEAM &&
-						milita.sSectorX == gWorldSector.x &&
-						milita.sSectorY == gWorldSector.y &&
-						milita.bSectorZ == gWorldSector.z)
+						milita.sSector == gWorldSector)
 				{ //We have militia and enemies and no mercs!  Let's finish this battle in autoresolve.
 					gfEnteringMapScreen = TRUE;
 					gfEnteringMapScreenToEnterPreBattleInterface = TRUE;
@@ -3259,9 +3243,7 @@ try
 				if (s.fBetweenSectors)            continue;
 				if (IsMechanical(s))              continue;
 				if (AM_AN_EPC(&s))                continue;
-				if (s.sSectorX != gWorldSector.x)  continue;
-				if (s.sSectorY != gWorldSector.y)  continue;
-				if (s.bSectorZ != gWorldSector.z) continue;
+				if (s.sSector != gWorldSector)    continue;
 				RemoveSoldierFromGridNo(s);
 				InitSoldierOppList(s);
 			}
@@ -3275,9 +3257,7 @@ try
 					!s->fBetweenSectors &&
 					!IsMechanical(*s) &&
 					!AM_AN_EPC(s) &&
-					s->sSectorX == gWorldSector.x &&
-					s->sSectorY == gWorldSector.y &&
-					s->bSectorZ == gWorldSector.z)
+					s->sSector == gWorldSector)
 			{
 				return FALSE;
 			}

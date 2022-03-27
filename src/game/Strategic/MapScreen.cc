@@ -790,7 +790,7 @@ static void DrawCharacterInfo(SOLDIERTYPE const& s)
 			break;
 
 		case TRAIN_TOWN:
-			assignment2 = GCM->getTownName(GetTownIdForSector(SECTOR(s.sSectorX, s.sSectorY)));
+			assignment2 = GCM->getTownName(GetTownIdForSector(s.sSector.AsByte()));
 			break;
 
 		case REPAIR:
@@ -1247,9 +1247,9 @@ static void DisplayCharacterList(void)
 			s.bLife == 0                     ? FONT_METALGRAY :
 			CharacterIsGettingPathPlotted(i) ? FONT_LTBLUE    :
 			/* Not in current sector? */
-			s.sSectorX != sSelMap.x ||
-			s.sSectorY != sSelMap.y ||
-			s.bSectorZ != iCurrentMapSectorZ ? 5              :
+			s.sSector.x != sSelMap.x ||
+			s.sSector.x != sSelMap.y ||
+			s.sSector.z != iCurrentMapSectorZ ? 5              :
 			/* Mobile? */
 			s.bAssignment < ON_DUTY ||
 			s.bAssignment == VEHICLE         ? FONT_YELLOW    :
@@ -2397,11 +2397,11 @@ static UINT32 HandleMapUI(void)
 					if ( gpItemPointerSoldier != NULL )
 					{
 						// make sure it's the owner's sector that's selected
-						if ( ( gpItemPointerSoldier->sSectorX != sSelMap.x ) ||
-							( gpItemPointerSoldier->sSectorY != sSelMap.y ) ||
-							( gpItemPointerSoldier->bSectorZ != iCurrentMapSectorZ ) )
+						if ( (gpItemPointerSoldier->sSector.x != sSelMap.x ) ||
+							( gpItemPointerSoldier->sSector.y != sSelMap.y ) ||
+							( gpItemPointerSoldier->sSector.z != iCurrentMapSectorZ ) )
 						{
-							ChangeSelectedMapSector(SGPSector(gpItemPointerSoldier->sSectorX, gpItemPointerSoldier->sSectorY, gpItemPointerSoldier->bSectorZ));
+							ChangeSelectedMapSector(gpItemPointerSoldier->sSector);
 						}
 					}
 
@@ -2711,7 +2711,7 @@ static void Teleport()
 	SOLDIERTYPE& s = *gCharactersList[bSelectedDestChar].merc;
 
 	// can't teleport to where we already are
-	if (sMap.x == s.sSectorX && sMap.y == s.sSectorY) return;
+	if (sMap == s.sSector) return;
 
 	// cancel movement plotting
 	AbortMovementPlottingMode();
@@ -2728,13 +2728,13 @@ static void Teleport()
 	// check to see if this person is moving, if not...then assign them to mvt group
 	if (s.ubGroupID  == 0)
 	{
-		GROUP& g = *CreateNewPlayerGroupDepartingFromSector(SGPSector(s.sSectorX, s.sSectorY));
+		GROUP& g = *CreateNewPlayerGroupDepartingFromSector(s.sSector);
 		AddPlayerToGroup(g, s);
 	}
 
 	// figure out where they would've come from
-	INT16 const sDeltaX = sMap.x - s.sSectorX;
-	INT16 const sDeltaY = sMap.y - s.sSectorY;
+	INT16 const sDeltaX = sMap.x - s.sSector.x;
+	INT16 const sDeltaY = sMap.y - s.sSector.y;
 	SGPSector sPrev = sMap;
 	if (ABS(sDeltaX) >= ABS(sDeltaY))
 	{
@@ -4459,7 +4459,7 @@ static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			// if not dead or POW, select his sector
 			if( ( pSoldier->bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
 			{
-				ChangeSelectedMapSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+				ChangeSelectedMapSector(pSoldier->sSector);
 			}
 
 			// unhilight contract line
@@ -4497,7 +4497,7 @@ static void TeamListInfoRegionBtnCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 			// if not dead or POW, select his sector
 			if( ( pSoldier->bLife > 0 ) && ( pSoldier->bAssignment != ASSIGNMENT_POW ) )
 			{
-				ChangeSelectedMapSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+				ChangeSelectedMapSector(pSoldier->sSector);
 			}
 		}
 	}
@@ -6338,9 +6338,7 @@ void HandleRemovalOfPreLoadedMapGraphics( void )
 static BOOLEAN CharacterIsInLoadedSectorAndWantsToMoveInventoryButIsNotAllowed(const SOLDIERTYPE* const s)
 {
 	// char is in loaded sector
-	if (s->sSectorX != gWorldSector.x ||
-			s->sSectorY != gWorldSector.y ||
-			s->bSectorZ != gWorldSector.z)
+	if (s->sSector != gWorldSector)
 	{
 		return( FALSE );
 	}
@@ -6876,9 +6874,9 @@ static bool CanToggleSelectedCharInventory()
 			( gpItemPointerSoldier == NULL ) )
 	{
 		// make sure he's in that sector
-		if ( ( pSoldier->sSectorX != sSelMap.x ) ||
-			( pSoldier->sSectorY != sSelMap.y ) ||
-			( pSoldier->bSectorZ != iCurrentMapSectorZ ) ||
+		if ( (pSoldier->sSector.x != sSelMap.x ) ||
+			( pSoldier->sSector.y != sSelMap.y ) ||
+			( pSoldier->sSector.z != iCurrentMapSectorZ ) ||
 			pSoldier->fBetweenSectors )
 		{
 			return(FALSE);
@@ -7356,9 +7354,7 @@ static INT16 CalcLocationValueForChar(const SOLDIERTYPE* const s)
 	// don't reveal location of POWs!
 	if (s->bAssignment == ASSIGNMENT_POW) return 0;
 
-	return
-		SECTOR(s->sSectorX, s->sSectorY) +
-		s->bSectorZ * 1000; // underground: add 1000 per sublevel
+	return s->sSector.AsByte() + s->sSector.z * 1000; // underground: add 1000 per sublevel
 }
 
 
@@ -7398,10 +7394,10 @@ static void MakeMapModesSuitableForDestPlotting(const SOLDIERTYPE* const pSoldie
 	}
 
 	// if viewing a different sublevel
-	if (iCurrentMapSectorZ != pSoldier->bSectorZ)
+	if (iCurrentMapSectorZ != pSoldier->sSector.z)
 	{
 		// switch to that merc's sublevel
-		JumpToLevel(pSoldier->bSectorZ);
+		JumpToLevel(pSoldier->sSector.z);
 	}
 }
 
@@ -7430,7 +7426,7 @@ static BOOLEAN AnyMovableCharsInOrBetweenThisSector(const SGPSector& sSector)
 
 
 		// is he here?
-		if (SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ) == sSector)
+		if (pSoldier->sSector == sSector)
 		{
 			// NOTE that we consider mercs between sectors, mercs < OKLIFE, and sleeping mercs to be "movable".
 			// This lets CanCharacterMoveInStrategic() itself report the appropriate error message when character is clicked
@@ -7853,7 +7849,7 @@ ST::string GetMapscreenMercLocationString(SOLDIERTYPE const& s)
 	}
 	else
 	{ // Put parentheses around it when he's between sectors
-		return ST::format(s.fBetweenSectors ? "({}{}{})" : "{}{}{}", pMapVertIndex[s.sSectorY], pMapHortIndex[s.sSectorX], pMapDepthIndex[s.bSectorZ]);
+		return ST::format(s.fBetweenSectors ? "({}{}{})" : "{}{}{}", pMapVertIndex[s.sSector.y], pMapHortIndex[s.sSector.x], pMapDepthIndex[s.sSector.z]);
 	}
 }
 
@@ -8061,7 +8057,7 @@ static void SelectAllCharactersInSquad(INT8 bSquadNumber)
 				ChangeSelectedInfoChar(bCounter, FALSE);
 
 				// select his sector
-				ChangeSelectedMapSector(SGPSector(pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ));
+				ChangeSelectedMapSector(pSoldier->sSector);
 
 				fFirstOne = FALSE;
 			}
