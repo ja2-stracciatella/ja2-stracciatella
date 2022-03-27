@@ -2542,7 +2542,7 @@ INT16 GetTownTrainPtsForCharacter(const SOLDIERTYPE* pTrainer, UINT16* pusMaxPts
 
 /* ARM: Decided this didn't make much sense - the guys I'm training damn well BETTER be loyal - and screw the rest!
 	// get town index
-	ubTownId = StrategicMap[ pTrainer -> sSectorX + pTrainer -> sSectorY * MAP_WORLD_X ].bNameId;
+	ubTownId = StrategicMap[pTrainer->sSector.AsStrategicIndex()].bNameId;
 	Assert(ubTownId != BLANK_SECTOR);
 
 	// adjust for town loyalty

@@ -404,6 +404,10 @@ static SGPVObject* guiHelicopterIcon;
 // map secret icons
 static std::map<ST::string, SGPVObject*> gSecretSiteIcons;
 
+static const SGPSector northOffset(NORTH_OFFSET_X, NORTH_OFFSET_Y);
+static const SGPSector eastOffset(EAST_OFFSET_X, EAST_OFFSET_Y);
+static const SGPSector southOffset(SOUTH_OFFSET_X, SOUTH_OFFSET_Y);
+static const SGPSector westOffset(WEST_OFFSET_X, WEST_OFFSET_Y);
 
 void InitMapScreenInterfaceMap()
 {
@@ -1217,23 +1221,19 @@ static void TracePathRoute(PathSt* const pPath)
 		next = node->pNext;
 
 		BOOLEAN fUTurnFlag = FALSE;
-		INT32   iArrowX;
-		INT32   iArrowY;
-		INT32   iX;
-		INT32   iY;
+
+		SGPSector iSector;
+		iSector = SGPSector::FromStrategicIndex(node->uiSectorId);
+		iSector.x = iSector.x * MAP_GRID_X + MAP_VIEW_START_X;
+		iSector.y = iSector.y * MAP_GRID_Y + MAP_VIEW_START_Y;
+		SGPSector iArrowSector = iSector;
+
 		if (prev && next)
 		{
 			const INT32 iDeltaA = (INT16)node->uiSectorId - (INT16)prev->uiSectorId;
 			const INT32 iDeltaB = (INT16)node->uiSectorId - (INT16)next->uiSectorId;
 			if (iDeltaA == 0) return;
 
-			iX = node->uiSectorId % MAP_WORLD_X;
-			iY = node->uiSectorId / MAP_WORLD_X;
-			iX = iX * MAP_GRID_X + MAP_VIEW_START_X;
-			iY = iY * MAP_GRID_Y + MAP_VIEW_START_Y;
-
-			iArrowX = iX;
-			iArrowY = iY;
 			if (prev->pPrev && next->pNext)
 			{
 				// check to see if out-of sector U-turn
@@ -1256,29 +1256,25 @@ static void TracePathRoute(PathSt* const pPath)
 				{
 					iDirection = S_TO_N_LINE;
 					iArrow = NORTH_ARROW;
-					iArrowX += NORTH_OFFSET_X;
-					iArrowY += NORTH_OFFSET_Y;
+					iArrowSector += northOffset;
 				}
 				else if (prev->uiSectorId - WORLD_MAP_X == node->uiSectorId)
 				{
 					iDirection = N_TO_S_LINE;
 					iArrow = SOUTH_ARROW;
-					iArrowX += SOUTH_OFFSET_X;
-					iArrowY += SOUTH_OFFSET_Y;
+					iArrowSector += southOffset;
 				}
 				else if (prev->uiSectorId + 1 == node->uiSectorId)
 				{
 					iDirection = E_TO_W_LINE;
 					iArrow = WEST_ARROW;
-					iArrowX += WEST_OFFSET_X;
-					iArrowY += WEST_OFFSET_Y;
+					iArrowSector += westOffset;
 				}
 				else
 				{
 					iDirection = W_TO_E_LINE;
 					iArrow = EAST_ARROW;
-					iArrowX += EAST_OFFSET_X;
-					iArrowY += EAST_OFFSET_Y;
+					iArrowSector += eastOffset;
 				}
 			}
 			else
@@ -1287,97 +1283,80 @@ static void TracePathRoute(PathSt* const pPath)
 				{
 					iDirection = WEST_LINE;
 					iArrow = WEST_ARROW;
-					iArrowX += WEST_OFFSET_X;
-					iArrowY += WEST_OFFSET_Y;
+					iArrowSector += westOffset;
 				}
 				else if (iDeltaA == 1 && iDeltaB == -1)
 				{
 					iDirection = EAST_LINE;
 					iArrow = EAST_ARROW;
-					iArrowX += EAST_OFFSET_X;
-					iArrowY += EAST_OFFSET_Y;
+					iArrowSector += eastOffset;
 				}
 				else if (iDeltaA == -WORLD_MAP_X && iDeltaB == WORLD_MAP_X)
 				{
 					iDirection = NORTH_LINE;
 					iArrow = NORTH_ARROW;
-					iArrowX += NORTH_OFFSET_X;
-					iArrowY += NORTH_OFFSET_Y;
+					iArrowSector += northOffset;
 				}
 				else if (iDeltaA == WORLD_MAP_X && iDeltaB == -WORLD_MAP_X)
 				{
 					iDirection = SOUTH_LINE;
 					iArrow = SOUTH_ARROW;
-					iArrowX += SOUTH_OFFSET_X;
-					iArrowY += SOUTH_OFFSET_Y;
+					iArrowSector += southOffset;
 				}
 				else if (iDeltaA == -WORLD_MAP_X && iDeltaB == -1)
 				{
 					iDirection = N_TO_E_LINE;
 					iArrow = EAST_ARROW;
-					iArrowX += EAST_OFFSET_X;
-					iArrowY += EAST_OFFSET_Y;
+					iArrowSector += eastOffset;
 				}
 				else if (iDeltaA == WORLD_MAP_X && iDeltaB == 1)
 				{
 					iDirection = S_TO_W_LINE;
 					iArrow = WEST_ARROW;
-					iArrowX += WEST_OFFSET_X;
-					iArrowY += WEST_OFFSET_Y;
+					iArrowSector += westOffset;
 				}
 				else if (iDeltaA == 1 && iDeltaB == -WORLD_MAP_X)
 				{
 					iDirection = E_TO_S_LINE;
 					iArrow = SOUTH_ARROW;
-					iArrowX += SOUTH_OFFSET_X;
-					iArrowY += SOUTH_OFFSET_Y;
+					iArrowSector += southOffset;
 				}
 				else if (iDeltaA == -1 && iDeltaB == WORLD_MAP_X)
 				{
 					iDirection = W_TO_N_LINE;
 					iArrow = NORTH_ARROW;
-					iArrowX += NORTH_OFFSET_X;
-					iArrowY += NORTH_OFFSET_Y;
+					iArrowSector += northOffset;
 				}
 				else if (iDeltaA == -1 && iDeltaB == -WORLD_MAP_X)
 				{
 					iDirection = W_TO_S_LINE;
 					iArrow = SOUTH_ARROW;
-					iArrowX += SOUTH_OFFSET_X;
-					iArrowY += SOUTH_OFFSET_Y + WEST_TO_SOUTH_OFFSET_Y;
+					iArrowSector += southOffset;
+					iArrowSector.y += WEST_TO_SOUTH_OFFSET_Y;
 				}
 				else if (iDeltaA == -WORLD_MAP_X && iDeltaB == 1)
 				{
 					iDirection = N_TO_W_LINE;
 					iArrow = WEST_ARROW;
-					iArrowX += WEST_OFFSET_X;
-					iArrowY += WEST_OFFSET_Y;
+					iArrowSector += westOffset;
 				}
 				else if (iDeltaA == WORLD_MAP_X && iDeltaB == -1)
 				{
 					iDirection  = S_TO_E_LINE;
 					iArrow      = EAST_ARROW;
-					iArrowX    += EAST_OFFSET_X;
-					iArrowY    += EAST_OFFSET_Y;
+					iArrowSector += eastOffset;
 				}
 				else if (iDeltaA == 1 && iDeltaB == WORLD_MAP_X)
 				{
 					iDirection  = E_TO_N_LINE;
 					iArrow      = NORTH_ARROW;
-					iArrowX    += NORTH_OFFSET_X;
-					iArrowY    += NORTH_OFFSET_Y + EAST_TO_NORTH_OFFSET_Y;
+					iArrowSector += northOffset;
+					iArrowSector.y += EAST_TO_NORTH_OFFSET_Y;
 				}
 			}
 		}
 		else
 		{
-			iX = node->uiSectorId % MAP_WORLD_X;
-			iY = node->uiSectorId / MAP_WORLD_X;
-			iX = iX * MAP_GRID_X + MAP_VIEW_START_X;
-			iY = iY * MAP_GRID_Y + MAP_VIEW_START_Y;
-
-			iArrowX = iX;
-			iArrowY = iY;
 			// display enter and exit 'X's
 			if (prev)
 			{
@@ -1408,48 +1387,44 @@ static void TracePathRoute(PathSt* const pPath)
 				{
 					iDirection  = GREEN_X_EAST;
 					iArrow      = EAST_ARROW;
-					iArrowX    += EAST_OFFSET_X;
-					iArrowY    += EAST_OFFSET_Y;
+					iArrowSector += eastOffset;
 				}
 				else if (iDeltaB == 1)
 				{
 					iDirection  = GREEN_X_WEST;
 					iArrow      = WEST_ARROW;
-					iArrowX    += WEST_OFFSET_X;
-					iArrowY    += WEST_OFFSET_Y;
+					iArrowSector += westOffset;
 				}
 				else if (iDeltaB == WORLD_MAP_X)
 				{
 					iDirection  = GREEN_X_NORTH;
 					iArrow      = NORTH_ARROW;
-					iArrowX    += NORTH_OFFSET_X;
-					iArrowY    += NORTH_OFFSET_Y;
+					iArrowSector += northOffset;
 				}
 				else
 				{
 					iDirection  = GREEN_X_SOUTH;
 					iArrow      = SOUTH_ARROW;
-					iArrowX    += SOUTH_OFFSET_X;
-					iArrowY    += SOUTH_OFFSET_Y;
+					iArrowSector += southOffset;
 				}
 			}
 		}
 
 		if (iDirection == -1) continue;
 
-		if (MAP_VIEW_START_X < iX && iX < SCREEN_WIDTH     - MAP_GRID_X * 2 &&
-			MAP_VIEW_START_Y < iY && iY < MAP_VIEW_START_Y + MAP_VIEW_HEIGHT
+		if (MAP_VIEW_START_X < iSector.x && iSector.x < SCREEN_WIDTH     - MAP_GRID_X * 2 &&
+			MAP_VIEW_START_Y < iSector.y && iSector.y < MAP_VIEW_START_Y + MAP_VIEW_HEIGHT
 			)
 		{
-			BltVideoObject(FRAME_BUFFER, guiMAPCURSORS, iDirection, iX, iY);
+			BltVideoObject(FRAME_BUFFER, guiMAPCURSORS, iDirection, iSector.x, iSector.y);
 
 			if (!fUTurnFlag)
 			{
-				BltVideoObject(FRAME_BUFFER, guiMAPCURSORS, (UINT16)iArrow, iArrowX, iArrowY);
-				InvalidateRegion(iArrowX, iArrowY, iArrowX + 2 * MAP_GRID_X, iArrowY + 2 * MAP_GRID_Y);
+				BltVideoObject(FRAME_BUFFER, guiMAPCURSORS, (UINT16)iArrow, iArrowSector.x, iArrowSector.y);
+				InvalidateRegion(iArrowSector.x, iArrowSector.y, iArrowSector.x + 2 * MAP_GRID_X, iArrowSector.y + 2 * MAP_GRID_Y);
 			}
 
-			InvalidateRegion(iX, iY, iX + 2 * MAP_GRID_X, iY + 2 * MAP_GRID_Y);
+			InvalidateRegion(iSector.x, iSector.y, iSector.x + 2 * MAP_GRID_X, iSector.y + 2 * MAP_GRID_Y);
 		}
 	}
 }
@@ -1480,9 +1455,9 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 	static UINT8 ubCounter=1;
 
 	INT32 iArrow=-1;
-	INT32 iX = 0, iY = 0;
 	INT32 iPastX, iPastY;
-	INT32 iArrowX, iArrowY;
+	SGPSector iSector;
+	SGPSector iArrowSector;
 	INT32 iDeltaA, iDeltaB, iDeltaB1;
 	INT32 iDirection = -1;
 	BOOLEAN fUTurnFlag=FALSE;
@@ -1611,6 +1586,10 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 		pPastNode=NULL;
 
 	// go through characters list and display arrows for path
+	iSector = SGPSector::FromStrategicIndex(pNode->uiSectorId);
+	iSector.x = iSector.x * MAP_GRID_X + MAP_VIEW_START_X;
+	iSector.y = iSector.y * MAP_GRID_Y + MAP_VIEW_START_Y;
+	iArrowSector = iSector;
 	fUTurnFlag=FALSE;
 	if ((pPastNode)&&(pNextNode))
 	{
@@ -1619,13 +1598,6 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 		if (iDeltaA ==0)
 			return FALSE;
 
-		iX=(pNode->uiSectorId%MAP_WORLD_X);
-		iY=(pNode->uiSectorId/MAP_WORLD_X);
-		iX=(iX*MAP_GRID_X)+MAP_VIEW_START_X;
-		iY=(iY*MAP_GRID_Y)+MAP_VIEW_START_Y;
-
-		iArrowX=iX;
-		iArrowY=iY;
 		if ((pPastNode->pPrev)&&(pNextNode->pNext))
 		{
 			fUTurnFlag=FALSE;
@@ -1679,8 +1651,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 				else
 					iArrow = NORTH_ARROW;
 
-				iArrowX += NORTH_OFFSET_X;
-				iArrowY += NORTH_OFFSET_Y;
+				iArrowSector += northOffset;
 			}
 			else if(pPastNode->uiSectorId-WORLD_MAP_X==pNode->uiSectorId)
 			{
@@ -1689,8 +1660,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_SOUTH_ARROW;
 				else
 					iArrow=SOUTH_ARROW;
-				iArrowX+=SOUTH_OFFSET_X;
-				iArrowY+=SOUTH_OFFSET_Y;
+				iArrowSector += southOffset;
 			}
 			else if (pPastNode->uiSectorId+1==pNode->uiSectorId)
 			{
@@ -1699,8 +1669,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_WEST_ARROW;
 				else
 					iArrow=WEST_ARROW;
-				iArrowX+=WEST_OFFSET_X;
-				iArrowY+=WEST_OFFSET_Y;
+				iArrowSector += westOffset;
 			}
 			else
 			{
@@ -1709,8 +1678,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_EAST_ARROW;
 				else
 					iArrow=EAST_ARROW;
-				iArrowX+=EAST_OFFSET_X;
-				iArrowY+=EAST_OFFSET_Y;
+				iArrowSector += eastOffset;
 			}
 		}
 		else
@@ -1722,10 +1690,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow = W_WEST_ARROW;
 				else
 					iArrow = WEST_ARROW;
-
-
-				iArrowX += WEST_OFFSET_X;
-				iArrowY += WEST_OFFSET_Y;
+				iArrowSector += westOffset;
 			}
 			else if((iDeltaA==1)&&(iDeltaB==-1))
 			{
@@ -1734,9 +1699,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow = W_EAST_ARROW;
 				else
 					iArrow = EAST_ARROW;
-
-				iArrowX += EAST_OFFSET_X;
-				iArrowY += EAST_OFFSET_Y;
+				iArrowSector += eastOffset;
 			}
 			else if((iDeltaA==1)&&(iDeltaB==-1))
 			{
@@ -1745,9 +1708,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_EAST_ARROW;
 				else
 					iArrow=EAST_ARROW;
-
-				iArrowX+=EAST_OFFSET_X;
-				iArrowY+=EAST_OFFSET_Y;
+				iArrowSector += eastOffset;
 			}
 			else if((iDeltaA==-WORLD_MAP_X)&&(iDeltaB==WORLD_MAP_X))
 			{
@@ -1756,9 +1717,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_NORTH_ARROW;
 				else
 					iArrow=NORTH_ARROW;
-
-				iArrowX+=NORTH_OFFSET_X;
-				iArrowY+=NORTH_OFFSET_Y;
+				iArrowSector += northOffset;
 			}
 			else if((iDeltaA==WORLD_MAP_X)&&(iDeltaB==-WORLD_MAP_X))
 			{
@@ -1768,8 +1727,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 				else
 					iArrow=SOUTH_ARROW;
 
-				iArrowX+=SOUTH_OFFSET_X;
-				iArrowY+=SOUTH_OFFSET_Y;
+				iArrowSector += southOffset;
 			}
 			else if((iDeltaA==-WORLD_MAP_X)&&(iDeltaB==-1))
 			{
@@ -1778,9 +1736,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_EAST_ARROW;
 				else
 				iArrow=EAST_ARROW;
-
-				iArrowX+=EAST_OFFSET_X;
-				iArrowY+=EAST_OFFSET_Y;
+				iArrowSector += eastOffset;
 			}
 			else if((iDeltaA==WORLD_MAP_X)&&(iDeltaB==1))
 			{
@@ -1789,10 +1745,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_WEST_ARROW;
 				else
 				iArrow=WEST_ARROW;
-
-
-				iArrowX+=WEST_OFFSET_X;
-				iArrowY+=WEST_OFFSET_Y;
+				iArrowSector += westOffset;
 			}
 			else if((iDeltaA==1)&&(iDeltaB==-WORLD_MAP_X))
 			{
@@ -1801,9 +1754,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_SOUTH_ARROW;
 				else
 				iArrow=SOUTH_ARROW;
-
-				iArrowX+=SOUTH_OFFSET_X;
-				iArrowY+=SOUTH_OFFSET_Y;
+				iArrowSector += southOffset;
 			}
 			else if ((iDeltaA==-1)&&(iDeltaB==WORLD_MAP_X))
 			{
@@ -1812,9 +1763,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_NORTH_ARROW;
 				else
 					iArrow=NORTH_ARROW;
-
-				iArrowX+=NORTH_OFFSET_X;
-				iArrowY+=NORTH_OFFSET_Y;
+				iArrowSector += northOffset;
 			}
 			else if ((iDeltaA==-1)&&(iDeltaB==-WORLD_MAP_X))
 			{
@@ -1823,8 +1772,8 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_SOUTH_ARROW;
 				else
 					iArrow=SOUTH_ARROW;
-				iArrowX+=SOUTH_OFFSET_X;
-				iArrowY+=(SOUTH_OFFSET_Y+WEST_TO_SOUTH_OFFSET_Y);
+				iArrowSector += southOffset;
+				iArrowSector.y += WEST_TO_SOUTH_OFFSET_Y;
 			}
 			else if ((iDeltaA==-WORLD_MAP_X)&&(iDeltaB==1))
 			{
@@ -1833,9 +1782,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_WEST_ARROW;
 				else
 					iArrow=WEST_ARROW;
-
-				iArrowX+=WEST_OFFSET_X;
-				iArrowY+=WEST_OFFSET_Y;
+				iArrowSector += westOffset;
 			}
 			else if ((iDeltaA==WORLD_MAP_X)&&(iDeltaB==-1))
 			{
@@ -1844,8 +1791,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_EAST_ARROW;
 				else
 					iArrow=EAST_ARROW;
-				iArrowX+=EAST_OFFSET_X;
-				iArrowY+=EAST_OFFSET_Y;
+				iArrowSector += eastOffset;
 			}
 			else if ((iDeltaA==1)&&(iDeltaB==WORLD_MAP_X))
 			{
@@ -1854,18 +1800,13 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_NORTH_ARROW;
 				else
 					iArrow=NORTH_ARROW;
-
-				iArrowX+=NORTH_OFFSET_X;
-				iArrowY+=NORTH_OFFSET_Y+EAST_TO_NORTH_OFFSET_Y;
+				iArrowSector += northOffset;
+				iArrowSector.y += EAST_TO_NORTH_OFFSET_Y;
 			}
 		}
 	}
 	else
 	{
-		iX=(pNode->uiSectorId%MAP_WORLD_X);
-		iY=(pNode->uiSectorId/MAP_WORLD_X);
-		iX=(iX*MAP_GRID_X)+MAP_VIEW_START_X;
-		iY=(iY*MAP_GRID_Y)+MAP_VIEW_START_Y;
 		if(pPastNode)
 		{
 			iPastX=(pPastNode->uiSectorId%MAP_WORLD_X);
@@ -1873,8 +1814,7 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 			iPastX=(iPastX*MAP_GRID_X)+MAP_VIEW_START_X;
 			iPastY=(iPastY*MAP_GRID_Y)+MAP_VIEW_START_Y;
 		}
-		iArrowX=iX;
-		iArrowY=iY;
+
 		// display enter and exit 'X's
 		if (pPastNode)
 		{
@@ -1884,22 +1824,22 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 			if (iDeltaA==-1)
 			{
 				iDirection=RED_X_WEST;
-				//iX+=RED_WEST_OFF_X;
+				//iSector.x+=RED_WEST_OFF_X;
 			}
 			else if (iDeltaA==1)
 			{
 				iDirection=RED_X_EAST;
-				//iX+=RED_EAST_OFF_X;
+				//iSector.x+=RED_EAST_OFF_X;
 			}
 			else if(iDeltaA==-WORLD_MAP_X)
 			{
 				iDirection=RED_X_NORTH;
-				//iY+=RED_NORTH_OFF_Y;
+				//iSector.y+=RED_NORTH_OFF_Y;
 			}
 			else
 			{
 				iDirection=RED_X_SOUTH;
-				//iY+=RED_SOUTH_OFF_Y;
+				//iSector.y+=RED_SOUTH_OFF_Y;
 			}
 		}
 		if (pNextNode)
@@ -1913,10 +1853,8 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_EAST_ARROW;
 				else
 					iArrow=EAST_ARROW;
-
-				iArrowX+=EAST_OFFSET_X;
-				iArrowY+=EAST_OFFSET_Y;
-				//iX+=RED_EAST_OFF_X;
+				iArrowSector += eastOffset;
+				//iSector.x+=RED_EAST_OFF_X;
 			}
 			else if (iDeltaB==1)
 			{
@@ -1925,10 +1863,8 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_WEST_ARROW;
 				else
 					iArrow=WEST_ARROW;
-
-				iArrowX+=WEST_OFFSET_X;
-				iArrowY+=WEST_OFFSET_Y;
-				//iX+=RED_WEST_OFF_X;
+				iArrowSector += westOffset;
+				//iSector.x+=RED_WEST_OFF_X;
 			}
 			else if(iDeltaB==WORLD_MAP_X)
 			{
@@ -1937,10 +1873,8 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_NORTH_ARROW;
 				else
 					iArrow=NORTH_ARROW;
-
-				iArrowX+=NORTH_OFFSET_X;
-				iArrowY+=NORTH_OFFSET_Y;
-				//iY+=RED_NORTH_OFF_Y;
+				iArrowSector += northOffset;
+				//iSector.y+=RED_NORTH_OFF_Y;
 			}
 			else
 			{
@@ -1949,9 +1883,8 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 					iArrow=W_SOUTH_ARROW;
 				else
 					iArrow=SOUTH_ARROW;
-				iArrowX+=SOUTH_OFFSET_X;
-				iArrowY+=SOUTH_OFFSET_Y;
-				//iY+=RED_SOUTH_OFF_Y;
+				iArrowSector += southOffset;
+				//iSector.y+=RED_SOUTH_OFF_Y;
 			}
 
 
@@ -1971,12 +1904,12 @@ static BOOLEAN TraceCharAnimatedRoute(PathSt* const pPath, const BOOLEAN fForceU
 
 		if(!fUTurnFlag)
 		{
-			if ((MAP_VIEW_START_X < iX && iX < SCREEN_WIDTH - MAP_GRID_X * 2 && MAP_VIEW_START_Y < iY && iY < MAP_VIEW_START_Y + MAP_VIEW_HEIGHT))
+			if ((MAP_VIEW_START_X < iSector.x && iSector.x < SCREEN_WIDTH - MAP_GRID_X * 2 && MAP_VIEW_START_Y < iSector.y && iSector.y < MAP_VIEW_START_Y + MAP_VIEW_HEIGHT))
 			{
 				if( pNode != pPath )
 				{
-					BltVideoObject(FRAME_BUFFER, guiMAPCURSORS, (UINT16)iArrow, iArrowX, iArrowY);
-					InvalidateRegion( iArrowX, iArrowY, iArrowX + 2 * MAP_GRID_X, iArrowY + 2 * MAP_GRID_Y );
+					BltVideoObject(FRAME_BUFFER, guiMAPCURSORS, (UINT16)iArrow, iArrowSector.x, iArrowSector.y);
+					InvalidateRegion( iArrowSector.x, iArrowSector.y, iArrowSector.x + 2 * MAP_GRID_X, iArrowSector.y + 2 * MAP_GRID_Y );
 				}
 			}
 			if(ubCounter==1)
@@ -2446,8 +2379,6 @@ void DisplayPositionOfHelicopter( void )
 static void DisplayDestinationOfHelicopter(void)
 {
 	static INT16 sOldMapX = 0, sOldMapY = 0;
-	INT16 sMapX, sMapY;
-	UINT32 x,y;
 
 	AssertMsg(0 <= sOldMapX && sOldMapX < SCREEN_WIDTH, String("DisplayDestinationOfHelicopter: Invalid sOldMapX = %d", sOldMapX));
 	AssertMsg(0 <= sOldMapY && sOldMapY < SCREEN_HEIGHT, String("DisplayDestinationOfHelicopter: Invalid sOldMapY = %d", sOldMapY));
@@ -2464,14 +2395,13 @@ static void DisplayDestinationOfHelicopter(void)
 	{
 		// get destination
 		const INT16 sSector = GetLastSectorOfHelicoptersPath();
-		sMapX = sSector % MAP_WORLD_X;
-		sMapY = sSector / MAP_WORLD_X;
+		SGPSector sMap = SGPSector::FromStrategicIndex(sSector);
 
-		x = MAP_VIEW_START_X + ( MAP_GRID_X * sMapX ) + 1;
-		y = MAP_VIEW_START_Y + ( MAP_GRID_Y * sMapY ) + 3;
+		UINT32 x = MAP_VIEW_START_X + ( MAP_GRID_X * sMap.x ) + 1;
+		UINT32 y = MAP_VIEW_START_Y + ( MAP_GRID_Y * sMap.y ) + 3;
 
-		AssertMsg( x < SCREEN_WIDTH, String("DisplayDestinationOfHelicopter: Invalid x = %d.  Dest %d,%d", x, sMapX, sMapY));
-		AssertMsg( y < SCREEN_HEIGHT, String("DisplayDestinationOfHelicopter: Invalid y = %d.  Dest %d,%d", y, sMapX, sMapY));
+		AssertMsg( x < SCREEN_WIDTH, String("DisplayDestinationOfHelicopter: Invalid x = %d.  Dest %d,%d", x, sMap.x, sMap.y));
+		AssertMsg( y < SCREEN_HEIGHT, String("DisplayDestinationOfHelicopter: Invalid y = %d.  Dest %d,%d", y, sMap.x, sMap.y));
 
 		// clip blits to mapscreen region
 		ClipBlitsToMapViewRegion( );

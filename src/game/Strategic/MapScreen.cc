@@ -2327,8 +2327,7 @@ static UINT32 HandleMapUI(void)
 				const INT16 dst_sector = GetLastSectorIdInCharactersPath(s);
 				if (dst_sector != sMap.AsStrategicIndex())
 				{
-					sSector.x = dst_sector % MAP_WORLD_X;
-					sSector.y = dst_sector / MAP_WORLD_X;
+					sSector = SGPSector::FromStrategicIndex(dst_sector);
 					RestoreBackgroundForMapGrid(sSector);
 					// fMapPanelDirty = TRUE;
 				}
@@ -7860,18 +7859,15 @@ ST::string GetMapscreenMercDestinationString(SOLDIERTYPE const& s)
 			s.bAssignment != ASSIGNMENT_POW  &&
 			s.bLife != 0)
 	{
-		INT32 x;
-		INT32 y;
+		SGPSector sSector;
 		if (s.bAssignment == IN_TRANSIT)
 		{ // Show the sector he'll be arriving in
-			x = SECTORX(g_merc_arrive_sector);
-			y = SECTORY(g_merc_arrive_sector);
+			sSector = SGPSector(g_merc_arrive_sector);
 		}
 		else if (GetLengthOfMercPath(&s) > 0)
 		{ // He's going somewhere
 			INT16 const sector = GetLastSectorIdInCharactersPath(&s);
-			x = sector % MAP_WORLD_X;
-			y = sector / MAP_WORLD_Y;
+			sSector = SGPSector::FromStrategicIndex(sector);
 		}
 		else // no movement path is set
 		{
@@ -7881,10 +7877,9 @@ ST::string GetMapscreenMercDestinationString(SOLDIERTYPE const& s)
 			 * store previous/next sector coordinates, must go to his group for that
 			 */
 			GROUP const& g = *GetSoldierGroup(s);
-			x = g.ubNext.x;
-			y = g.ubNext.y;
+			sSector = g.ubNext;
 		}
-		return ST::format("{}{}", pMapVertIndex[y], pMapHortIndex[x]);
+		return ST::format("{}{}", pMapVertIndex[sSector.y], pMapHortIndex[sSector.x]);
 	}
 	else
 	{

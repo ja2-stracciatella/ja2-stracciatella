@@ -40,6 +40,20 @@ bool SGPSector::operator!=(const SGPSector& sector) const noexcept
 	return !(*this == sector);
 }
 
+SGPSector& SGPSector::operator+=(const SGPSector& rhs) noexcept
+{
+	x += rhs.x;
+	y += rhs.y;
+	return *this;
+}
+
+SGPSector& SGPSector::operator-=(const SGPSector& rhs) noexcept
+{
+	x -= rhs.x;
+	y -= rhs.y;
+	return *this;
+}
+
 bool SGPSector::IsValid() const noexcept
 {
 	return (x >= 1 && x <= 16) && (y >= 1 && y <= 16) && (z >= 0 && z <= 3);
