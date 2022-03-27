@@ -2201,7 +2201,6 @@ static void ReportError(const char* pSector, UINT8 ubLevel)
 
 static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 {
-	INT32 x, y;
 	SUMMARYFILE *pSF;
 	//CreateProgressBar(0, 20, 120, 280, 12); //slave (individual)
 	//CreateProgressBar(1, 20, 100, 280, 12); //master (total)
@@ -2216,10 +2215,12 @@ static void RegenerateSummaryInfoForAllOutdatedMaps(void)
 	gusTotal = gusNumEntriesWithOutdatedOrNoSummaryInfo;
 	UpdateMasterProgress();
 
-	for( y = 0; y < 16; y++ ) for( x = 0; x < 16; x++ )
+	SGPSector sMap;
+	for (sMap.y = 1; sMap.y <= 16; sMap.y++) for(sMap.x = 1; sMap.x <= 16; sMap.x++)
 	{
+		INT32 x = sMap.x - 1, y = sMap.y - 1;
 		char str[40];
-		sprintf( str, "%c%d", y + 'A', x + 1 );
+		sprintf(str, "%s", sMap.AsShortString().c_str());
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][0];
@@ -2324,7 +2325,6 @@ static void ExtractTempFilename(void)
 
 void ApologizeOverrideAndForceUpdateEverything()
 {
-	INT32 x, y;
 	ST::string str;
 	SUMMARYFILE *pSF;
 	//Create one huge assed button
@@ -2351,10 +2351,12 @@ void ApologizeOverrideAndForceUpdateEverything()
 	gfUpdatingNow = TRUE;
 	UpdateMasterProgress();
 
-	for( y = 0; y < 16; y++ ) for( x = 0; x < 16; x++ )
+	SGPSector sMap;
+	for (sMap.y = 1; sMap.y <= 16; sMap.y++) for(sMap.x = 1; sMap.x <= 16; sMap.x++)
 	{
+		INT32 x = sMap.x - 1, y = sMap.y - 1;
 		char name[50];
-		sprintf( name, "%c%d", y + 'A', x + 1 );
+		sprintf(name, "%s", sMap.AsShortString().c_str());
 		if( gbSectorLevels[x][y] & GROUND_LEVEL_MASK )
 		{
 			pSF = gpSectorSummary[x][y][0];
