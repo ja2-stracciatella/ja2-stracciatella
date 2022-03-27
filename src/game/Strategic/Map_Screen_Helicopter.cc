@@ -123,7 +123,7 @@ BOOLEAN gfSkyriderSaidCongratsOnTakingSAM = FALSE;
 UINT8 gubPlayerProgressSkyriderLastCommentedOn = 0;
 
 static BOOLEAN DoesSkyriderNoticeEnemiesInSector(UINT8 ubNumEnemies);
-static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSectorY);
+static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(const SGPSector& sSector);
 static void HeliCharacterDialogue(UINT16 usQuoteNum);
 static void PaySkyriderBill(void);
 static void StartHoverTime(void);
@@ -208,7 +208,7 @@ BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap)
 	endOfHelicoptersPath = (!v.pMercPath || !v.pMercPath->pNext);
 
 	// check for SAM attack upon the chopper.  If it's destroyed by the attack, do nothing else here
-	if (HandleSAMSiteAttackOfHelicopterInSector(sMap.x, sMap.y))
+	if (HandleSAMSiteAttackOfHelicopterInSector(sMap))
 	{
 		// destroyed
 		return( TRUE );
@@ -1045,21 +1045,21 @@ static void HeliCrashSoundStopCallback(void* pData)
 	SkyriderDestroyed( );
 }
 
-static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSectorY)
+static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(const SGPSector& sSector)
 {
 	INT8 bSamSiteID = -1;
 	INT8 bSAMCondition;
 	UINT8 ubChance;
 
 	// if this sector is in friendly airspace, we're safe
-	if (!StrategicMap[SGPSector(sSectorX, sSectorY).AsStrategicIndex()].fEnemyAirControlled)
+	if (!StrategicMap[sSector.AsStrategicIndex()].fEnemyAirControlled)
 	{
 		// no problem, friendly airspace
 		return( FALSE );
 	}
 
 	// which SAM controls this sector?
-	bSamSiteID = GCM->getControllingSamSite(SECTOR(sSectorX, sSectorY));
+	bSamSiteID = GCM->getControllingSamSite(sSector.AsByte());
 
 	// if none of them (-1 means the sector is not covered by a SAM)
 	if (bSamSiteID < 0)
