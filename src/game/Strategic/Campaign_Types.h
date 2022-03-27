@@ -48,7 +48,7 @@ static inline UINT8 SECTOR_FROM_SECTOR_SHORT_STRING(const char* coordinates)
 // short string representation of the sector, e.g. A1, P16
 static inline ST::string SECTOR_SHORT_STRING(UINT8 sector)
 {
-	return ST::format("{c}{}", SECTORY(sector) + 'A' - 1, SECTORX(sector));
+	return SGPSector(sector).AsShortString();
 }
 
 //Sector enumerations

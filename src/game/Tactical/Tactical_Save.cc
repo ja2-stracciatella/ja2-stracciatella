@@ -348,7 +348,7 @@ void HandleAllReachAbleItemsInTheSector(const SGPSector& sector)
 	if (grid_no == -1) grid_no = m.sEastGridNo;
 	if (grid_no == -1) grid_no = m.sSouthGridNo;
 	if (grid_no == -1) grid_no = m.sWestGridNo;
-	AssertMsg(grid_no != -1, String("Map %c%d_b%d does not have any entry points!", 'A' + sector.y - 1, sector.x, sector.z));
+	AssertMsg(grid_no != -1, String("Map %s does not have any entry points!", sector.AsLongString().c_str()));
 	if (grid_no == -1) return;
 
 	GridNo       grid_no2 = NOWHERE;

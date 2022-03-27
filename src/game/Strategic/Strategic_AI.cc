@@ -231,12 +231,12 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 static void RequestAttackOnSector(UINT8 ubSectorID, UINT16 usDefencePoints)
 {
 	UINT32 i;
+	const SGPSector sMap(ubSectorID);
 	for( i = 0; i < gGarrisonGroup.size(); i++ )
 	{
 		if( gGarrisonGroup[ i ].ubSectorID == ubSectorID && !gGarrisonGroup[ i ].ubPendingGroupID )
 		{
-			SLOGD("An attack has been requested in sector %c%d.",
-					SECTORY( ubSectorID ) + 'A' - 1, SECTORX( ubSectorID ) );
+			STLOGD("An attack has been requested in sector {}.", sMap.AsShortString());
 			SendReinforcementsForGarrison( i, usDefencePoints, NULL );
 			return;
 		}
@@ -1067,6 +1067,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 			}
 		}
 		//Step 2 -- Check for Patrol groups matching waypoint index.
+		SGPSector cSector(pGroup->ubCreatedSectorID);
 		for( i = 0; i < gPatrolGroup.size(); i++ )
 		{
 			if( gPatrolGroup[i].ubSectorID[1] == sec.AsByte() &&
@@ -1086,11 +1087,11 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 					if( pPatrolGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE )
 					{
 						UINT8 ubCut;
-						SLOGE(ST::format("Patrol group #{} in {} received too many reinforcements from group #{} that was created in {}{}.  Size truncated from {} to {}.\n\
+						STLOGE("Patrol group #{} in {} received too many reinforcements from group #{} that was created in {}.  Size truncated from {} to {}.\n\
 							Please send Strategic Decisions.txt and PRIOR save.",
 							pPatrolGroup->ubGroupID, sec.AsShortString(),
-							pGroup->ubGroupID, SECTORY( pGroup->ubCreatedSectorID ) + 'A' - 1, SECTORX( pGroup->ubCreatedSectorID ),
-							pPatrolGroup->ubGroupSize, MAX_STRATEGIC_TEAM_SIZE));
+							pGroup->ubGroupID, cSector.AsShortString(),
+							pPatrolGroup->ubGroupSize, MAX_STRATEGIC_TEAM_SIZE);
 						//truncate the group size.
 						ubCut = pPatrolGroup->ubGroupSize - MAX_STRATEGIC_TEAM_SIZE;
 						while( ubCut-- )
@@ -2051,8 +2052,9 @@ void EvaluateQueenSituation()
 				}
 				else
 				{
-					SLOGD("Reinforcements were denied to go to %c%d because player forces too strong.",
-							SECTORY( gGarrisonGroup[ i ].ubSectorID ) + 'A' - 1, SECTORX( gGarrisonGroup[ i ].ubSectorID ) );
+					SGPSector sMap(gGarrisonGroup[i].ubSectorID);
+					STLOGD("Reinforcements were denied to go to {} because player forces too strong.",
+							sMap.AsShortString());
 				}
 				return;
 			}

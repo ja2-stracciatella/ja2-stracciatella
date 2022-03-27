@@ -2297,9 +2297,7 @@ static void SummaryUpdateCallback(GUI_BUTTON* btn, INT32 reason)
 			gpCurrentSectorSummary = NULL;
 		}
 
-		char str[40];
-		sprintf(str, "%c%d", gsSelSector.y + 'A' - 1, gsSelSector.x);
-		EvaluateWorld( str, (UINT8)giCurrLevel );
+		EvaluateWorld(gsSelSector.AsShortString().c_str(), (UINT8) giCurrLevel);
 
 		gpSectorSummary[gsSelSector.x][gsSelSector.y][ giCurrLevel ] = gpCurrentSectorSummary;
 
