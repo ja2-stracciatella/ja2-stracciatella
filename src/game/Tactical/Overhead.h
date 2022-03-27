@@ -52,8 +52,7 @@ struct TacticalStatusType
 	UINT32           uiTimeOfLastInput;
 	UINT32           uiTimeSinceDemoOn;
 	BOOLEAN          fCivGroupHostile[ NUM_CIV_GROUPS ];
-	UINT8            ubLastBattleSectorX;
-	UINT8            ubLastBattleSectorY;
+	SGPSector        ubLastBattleSector;
 	BOOLEAN          fLastBattleWon;
 	BOOLEAN          fVirginSector;
 	BOOLEAN          fEnemyInSector;

@@ -3922,8 +3922,7 @@ void CommonEnterCombatModeCode( )
 
 	// Reset num enemies fought flag...
 	std::fill_n(gTacticalStatus.bNumFoughtInBattle, MAXTEAMS, 0);
-	gTacticalStatus.ubLastBattleSectorX = (UINT8) gWorldSector.x;
-	gTacticalStatus.ubLastBattleSectorY = (UINT8) gWorldSector.y;
+	gTacticalStatus.ubLastBattleSector = gWorldSector;
 	gTacticalStatus.fLastBattleWon      = FALSE;
 	gTacticalStatus.fItemsSeenOnAttack  = FALSE;
 
