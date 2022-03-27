@@ -264,9 +264,10 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 
 	do
 	{
-		//remove the first and best path so far from the que
+		//remove the first and best path so far from the queue
 		ndx				= pathQB[QHEADNDX].nextLink;
 		curLoc		= pathQB[ndx].location;
+		const SGPSector& sCurrent = SGPSector::FromStrategicIndex(curLoc);
 		curCost		= pathQB[ndx].costSoFar;
 		DELQUENODE( (INT16)ndx );
 
@@ -278,10 +279,10 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 		for (iCnt=0; iCnt < 8; iCnt+=2)
 		{
 			newLoc = curLoc + diStratDelta[iCnt];
+			const SGPSector& sSector = SGPSector::FromStrategicIndex(newLoc);
 
-
-				// are we going off the map?
-			if( ( newLoc % MAP_WORLD_X == 0 )||( newLoc%MAP_WORLD_X == MAP_WORLD_X -1 ) || ( newLoc / MAP_WORLD_X == 0 ) || ( newLoc / MAP_WORLD_X == MAP_WORLD_X - 1 ) )
+			// are we going off the map?
+			if (!sSector.IsValid())
 			{
 				// yeppers
 				continue;
@@ -289,8 +290,6 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 
 			if( gfPlotToAvoidPlayerInfuencedSectors && newLoc != sDestination )
 			{
-				SGPSector sSector(newLoc % MAP_WORLD_X, newLoc / MAP_WORLD_X);
-
 				if (IsThereASoldierInThisSector(sSector))
 				{
 					continue;
@@ -306,7 +305,7 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 			}
 
 			// are we plotting path or checking for existance of one?
-			nextCost = GetSectorMvtTimeForGroup(SECTOR(curLoc % MAP_WORLD_X, curLoc / MAP_WORLD_X), iCnt / 2, &g);
+			nextCost = GetSectorMvtTimeForGroup(sCurrent.AsByte(), iCnt / 2, &g);
 			if (nextCost == TRAVERSE_TIME_IMPOSSIBLE) continue;
 
 			if (&g == heli_group)
@@ -331,7 +330,7 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 				// if it's the first sector only (no cost yet)
 				if( curCost == 0 && ( newLoc == sDestination ) )
 				{
-					if( GetTraversability( ( INT16 )( SECTOR( curLoc % 18, curLoc / 18 ) ), ( INT16 ) ( SECTOR( newLoc %18,  newLoc / 18 ) ) ) != GROUNDBARRIER )
+					if (GetTraversability((INT16) sCurrent.AsByte(), (INT16) sSector.AsByte()) != GROUNDBARRIER)
 					{
 						nextCost = 0;
 					}
@@ -352,7 +351,7 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 			//make the destination look very attractive
 			if( ( newLoc == sDestination ) )
 			{
-				if( GetTraversability( ( INT16 )( SECTOR( curLoc % 18, curLoc / 18 ) ), ( INT16 ) ( SECTOR( newLoc %18,  newLoc / 18 ) ) ) != GROUNDBARRIER )
+				if( GetTraversability( ( INT16 ) sCurrent.AsByte() ), ( INT16 ) sSector.AsByte() ) != GROUNDBARRIER )
 				{
 					nextCost = 0;
 				}

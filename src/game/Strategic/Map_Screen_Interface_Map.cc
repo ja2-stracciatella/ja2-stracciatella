@@ -2149,8 +2149,8 @@ static void ShowPeopleInMotion(const SGPSector& sSector)
 		INT32       sExiting;
 		INT32       sEntering;
 		BOOLEAN     fAboutToEnter;
-		INT16 const sec_src = SECTOR(sSource % MAP_WORLD_X, sSource / MAP_WORLD_X);
-		INT16 const sec_dst = SECTOR(sDest   % MAP_WORLD_X, sDest   / MAP_WORLD_X);
+		INT16 const sec_src = SGPSector::FromStrategicIndex(sSource).AsByte();
+		INT16 const sec_dst = SGPSector::FromStrategicIndex(sDest).AsByte();
 		if (!PlayersBetweenTheseSectors(sec_src, sec_dst, &sExiting, &sEntering, &fAboutToEnter)) continue;
 		// someone is leaving
 
