@@ -331,10 +331,10 @@ static void InitializeMapStructure(void)
 }
 
 // get short sector name without town name
-ST::string GetShortSectorString(INT16 sMapX, INT16 sMapY)
+ST::string GetShortSectorString(const SGPSector& sMap)
 {
 	// OK, build string id like J11
-	return ST::format("{c}{}", 'A' - 1 + sMapY, sMapX);
+	return sMap.AsShortString();
 }
 
 

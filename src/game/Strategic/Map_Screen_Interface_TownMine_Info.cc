@@ -227,7 +227,8 @@ static void AddTextToTownBox(PopUpBox* const box)
 		// Associated Mine: Sector
 		wString = ST::format("{}:",  pwTownInfoStrings[2]);
 		AddMonoString(box, wString);
-		wString = GetShortSectorString(( INT16 )( sMineSector % MAP_WORLD_X ), ( INT16 )( sMineSector / MAP_WORLD_X ));
+		SGPSector sMap(GET_X_FROM_STRATEGIC_INDEX(sMineSector), GET_Y_FROM_STRATEGIC_INDEX(sMineSector));
+		wString = GetShortSectorString(sMap);
 		AddSecondColumnMonoString(box, wString);
 	}
 }

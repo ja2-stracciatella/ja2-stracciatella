@@ -507,8 +507,7 @@ static void CheckForValidArrivalSector(void)
 		return;
 	}
 
-	zShortTownIDString1 = GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector));
-
+	zShortTownIDString1 = SGPSector(g_merc_arrive_sector).AsShortString();
 
 	// If here - we need to do a search!
 	sTop    = ubRadius;
@@ -550,8 +549,7 @@ static void CheckForValidArrivalSector(void)
 
 		UpdateAnyInTransitMercsWithGlobalArrivalSector( );
 
-		zShortTownIDString2 = GetShortSectorString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector));
-
+		zShortTownIDString2 = SGPSector(g_merc_arrive_sector).AsShortString();
 		sString = st_format_printf(str_arrival_rerouted, zShortTownIDString2, zShortTownIDString1);
 
 		DoScreenIndependantMessageBox(  sString, MSG_BOX_FLAG_OK, NULL );

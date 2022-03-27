@@ -766,11 +766,8 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 		add_rehire_button = false;
 	}
 
-	INT16 const  x = s.sSectorX;
-	INT16 const  y = s.sSectorY;
-	INT8  const  z = s.bSectorZ;
-
-	ST::string town_sector = GetShortSectorString(x, y);
+	SGPSector sSector(s.sSectorX, s.sSectorY, s.bSectorZ);
+	ST::string town_sector = GetShortSectorString(sSector);
 
 	ST::string msg;
 	MessageBoxFlags flags;
@@ -781,11 +778,11 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 		INT16 const elsewhere =
 			!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(AIRPORT_SECTOR)].fEnemyControlled ? AIRPORT_SECTOR :
 			gamepolicy(start_sector);
-		if (elsewhere == SECTOR(x, y) && z == 0) goto no_choice;
+		if (elsewhere == sSector.AsByte() && sSector.z == 0) goto no_choice;
 
 		// Set strings for generic buttons
 		gzUserDefinedButton1 = town_sector;
-		gzUserDefinedButton2 = GetShortSectorString(SECTORX(elsewhere), SECTORY(elsewhere));
+		gzUserDefinedButton2 = GetShortSectorString(SGPSector(elsewhere));
 
 		ST::string town = GCM->getTownLocative(GetTownIdForSector(elsewhere));
 		ST::string text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;
