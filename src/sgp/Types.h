@@ -141,6 +141,7 @@ public:
 	bool operator==(const SGPSector&) const noexcept;
 	bool operator!=(const SGPSector&) const noexcept;
 	bool IsValid() const noexcept;
+	bool IsValid(ST::string shortString) const noexcept;
 	UINT8 AsByte() const;
 	UINT16 AsStrategicIndex() const;
 	ST::string AsShortString() const;

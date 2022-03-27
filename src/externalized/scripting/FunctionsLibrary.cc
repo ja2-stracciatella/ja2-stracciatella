@@ -21,7 +21,7 @@ std::string GetCurrentSector()
 
 SECTORINFO* GetSectorInfo(const std::string sectorID)
 {
-	if (!IS_VALID_SECTOR_SHORT_STRING(sectorID.c_str()))
+	if (!SGPSector().IsValid(sectorID.c_str()))
 	{
 		ST::string err = ST::format("The given sectorID ('{}') is invalid", sectorID);
 		throw std::runtime_error(err.to_std_string());
@@ -37,7 +37,7 @@ UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(const std::string sectorID)
 
 	std::string stSector = sectorID.substr(0, pos);
 	UINT8 ubSectorZ = std::stoi(sectorID.substr(pos + 1));
-	if (!IS_VALID_SECTOR_SHORT_STRING(stSector.c_str()) || ubSectorZ == 0 || ubSectorZ > 3)
+	if (!SGPSector().IsValid(stSector.c_str()) || ubSectorZ == 0 || ubSectorZ > 3)
 	{
 		throw std::runtime_error("Invalid underground sectorID");
 	}

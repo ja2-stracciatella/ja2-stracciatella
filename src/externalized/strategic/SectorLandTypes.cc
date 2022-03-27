@@ -10,7 +10,7 @@ std::map<SectorKey, LandType> SectorLandTypes::deserialize(const rapidjson::Docu
 	{
 		JsonObjectReader reader(el);
 		auto sector = reader.GetString("sector");
-		if (!IS_VALID_SECTOR_SHORT_STRING(sector))
+		if (!SGPSector().IsValid(sector))
 		{
 			ST::string err = ST::format("{} is not a valid sector string", sector);
 			throw std::runtime_error(err.to_std_string());

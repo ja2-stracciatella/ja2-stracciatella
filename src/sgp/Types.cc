@@ -30,6 +30,23 @@ bool SGPSector::IsValid() const noexcept
 	return (x >= 1 && x <= 16) && (y >= 1 && y <= 16) && (z >= 0 && z <= 3);
 }
 
+bool SGPSector::IsValid(ST::string shortString) const noexcept
+{
+	size_t len = shortString.size();
+	if (len < 2 || len > 3) return false;
+
+	char y = shortString[0], x = shortString[1];
+	if (y < 'A' || y > 'P' || x < '1' || x > '9') return false;
+
+	if (len == 3)
+	{
+		char x2 = shortString[2];
+		if (x != '1' || x2 < '0' || x2 > '6') return false;
+	}
+
+	return true;
+}
+
 UINT8 SGPSector::AsByte() const
 {
 	return SECTOR(x, y);
