@@ -764,7 +764,7 @@ static void HandleSkyRiderMonologueAboutDrassenSAMSite(UINT32 const uiSpecialCod
 			SkyriderDialogueWithSpecialEvent(SKYRIDER_MONOLOGUE_EVENT_DRASSEN_SAM_SITE, 1);
 
 			auto samList = GCM->getSamSites();
-			if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(samList[SAM_SITE_TWO]->sectorId)].fEnemyControlled)
+			if (StrategicMap[SGPSector(samList[SAM_SITE_TWO]->sectorId).AsStrategicIndex()].fEnemyControlled)
 			{
 				SkyriderDialogue(SECOND_HALF_OF_MENTION_DRASSEN_SAM_SITE);
 			}
@@ -1070,7 +1070,7 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(const SGPSector& sSector)
 	// get the condition of that SAM site (NOTE: SAM IDs are 0-3)
 	Assert(bSamSiteID < NUMBER_OF_SAMS );
 	UINT8 ubSAMSectorID = GCM->getSamSites()[bSamSiteID]->sectorId;
-	bSAMCondition = StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX(ubSAMSectorID) ].bSAMCondition;
+	bSAMCondition = StrategicMap[ SGPSector(ubSAMSectorID).AsStrategicIndex() ].bSAMCondition;
 
 	// if the SAM site is too damaged to be a threat
 	if( bSAMCondition < MIN_CONDITION_FOR_SAM_SITE_TO_WORK )

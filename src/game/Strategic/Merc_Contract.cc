@@ -771,7 +771,7 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 	if (!profile.isRPC())
 	{ // The character is not an RPC
 		INT16 const elsewhere =
-			!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(AIRPORT_SECTOR)].fEnemyControlled ? AIRPORT_SECTOR :
+			!StrategicMap[SGPSector(AIRPORT_SECTOR).AsStrategicIndex()].fEnemyControlled ? AIRPORT_SECTOR :
 			gamepolicy(start_sector);
 		if (elsewhere == sSector.AsByte() && sSector.z == 0) goto no_choice;
 
@@ -825,7 +825,7 @@ static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue const exit_valu
 		default:
 		{
 			auto primaryAirport = GCM->getPrimaryShippingDestination();
-			auto airportSectorIndex = SECTOR_INFO_TO_STRATEGIC_INDEX(primaryAirport->getDeliverySector());
+			auto airportSectorIndex = SGPSector(primaryAirport->getDeliverySector()).AsStrategicIndex();
 			bool const in_drassen = !StrategicMap[airportSectorIndex].fEnemyControlled;
 			HandleMercLeavingEquipment(s, in_drassen);
 			break;

@@ -491,7 +491,7 @@ static void CheckForValidArrivalSector(void)
 	ST::string zShortTownIDString1;
 	ST::string zShortTownIDString2;
 
-	sSectorGridNo = SECTOR_INFO_TO_STRATEGIC_INDEX(g_merc_arrive_sector);
+	sSectorGridNo = SGPSector(g_merc_arrive_sector).AsStrategicIndex();
 
 	// Check if valid...
 	if ( !StrategicMap[ sSectorGridNo ].fEnemyControlled )

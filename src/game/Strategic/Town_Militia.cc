@@ -401,7 +401,7 @@ static bool ServeNextFriendlySectorInTown(SGPSector& neighbour)
 		INT32 const sector = g_town_sectors[gubTownSectorServerIndex++].sector;
 
 		// if this sector is in the town we're looking for
-		if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].bNameId != gubTownSectorServerTownId) continue;
+		if (StrategicMap[SGPSector(sector).AsStrategicIndex()].bNameId != gubTownSectorServerTownId) continue;
 
 		SGPSector sec(sector);
 		// Make sure we're not supposed to skip it

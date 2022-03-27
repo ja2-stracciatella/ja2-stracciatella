@@ -2979,7 +2979,7 @@ static void RenderIconsPerSectorForSelectedTown(void)
 		INT32      const  n_elites   = si.ubNumberOfCivsAtLevel[ELITE_MILITIA];
 		INT32      const  n_total    = n_greens + n_regulars + n_elites;
 
-		StrategicMapElement const& e = StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)];
+		StrategicMapElement const& e = StrategicMap[SGPSector(sector).AsStrategicIndex()];
 		if (e.bNameId != BLANK_SECTOR && !e.fEnemyControlled)
 		{
 			// print number of troops
@@ -3335,7 +3335,7 @@ static void HandleEveningOutOfTroopsAmongstSectors()
 		// Skip sectors not in the selected town (nearby other towns or wilderness SAM Sites)
 		if (GetTownIdForSector(sector) != town) continue;
 
-		if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].fEnemyControlled) continue;
+		if (StrategicMap[SGPSector(sector).AsStrategicIndex()].fEnemyControlled) continue;
 
 		SECTORINFO const& si = SectorInfo[sector];
 		n_green   += si.ubNumberOfCivsAtLevel[GREEN_MILITIA];
@@ -3853,7 +3853,7 @@ static bool CanMilitiaAutoDistribute()
 	FOR_EACH_SECTOR_IN_TOWN(i, town)
 	{
 		INT16 const sector = i->sector;
-		if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].fEnemyControlled) continue;
+		if (StrategicMap[SGPSector(sector).AsStrategicIndex()].fEnemyControlled) continue;
 
 		UINT8 const (&n_milita)[MAX_MILITIA_LEVELS] = SectorInfo[sector].ubNumberOfCivsAtLevel;
 		if (n_milita[GREEN_MILITIA] + n_milita[REGULAR_MILITIA] + n_milita[ELITE_MILITIA] != 0) return true;

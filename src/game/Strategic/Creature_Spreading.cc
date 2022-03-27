@@ -176,7 +176,7 @@ static bool IsMineInfestible(const MineModel* mine)
 	MINE_STATUS_TYPE const& m = gMineStatus[id];
 	return  !m.fAttackedHeadMiner       &&
 		m.uiOreRunningOutPoint == 0 &&
-		!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(mine->entranceSector)].fEnemyControlled;
+		!StrategicMap[SGPSector(mine->entranceSector).AsStrategicIndex()].fEnemyControlled;
 }
 
 
@@ -986,7 +986,7 @@ void CheckConditionsForTriggeringCreatureQuest()
 	for (auto lair : GCM->getCreatureLairs())
 	{
 		auto mine = GCM->getMine(lair->associatedMineId);
-		auto sectorIndex = SECTOR_INFO_TO_STRATEGIC_INDEX(mine->entranceSector);
+		auto sectorIndex = SGPSector(mine->entranceSector).AsStrategicIndex();
 		if (!StrategicMap[sectorIndex].fEnemyControlled)
 		{
 			ubValidMines++;

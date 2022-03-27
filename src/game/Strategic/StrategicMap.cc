@@ -294,7 +294,7 @@ void InitStrategicEngine()
 UINT8 GetTownIdForSector(UINT8 const sector)
 {
 	// return the name value of the town in this sector
-	return StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector)].bNameId;
+	return StrategicMap[SGPSector(sector).AsStrategicIndex()].bNameId;
 }
 
 
@@ -1213,7 +1213,7 @@ static void InitializeStrategicMapSectorTownNames(void)
 		auto town = element.second;
 		for (auto sector : town->sectorIDs)
 		{
-			StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX(sector) ].bNameId = town->townId;
+			StrategicMap[ SGPSector(sector).AsStrategicIndex() ].bNameId = town->townId;
 		}
 	}
 }
@@ -1243,7 +1243,7 @@ ST::string GetSectorLandTypeString(UINT8 const ubSectorID, UINT8 const ubSectorZ
 		}
 	}
 
-	INT8 const town_name_id = StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(ubSectorID)].bNameId;
+	INT8 const town_name_id = StrategicMap[SGPSector(ubSectorID).AsStrategicIndex()].bNameId;
 	if (town_name_id != BLANK_SECTOR)
 	{	// show town name
 		return GCM->getTownName(town_name_id);
@@ -2329,7 +2329,7 @@ static void HandleAirspaceControlUpdated()
 	// check if currently selected arrival sector still has secure airspace
 
 	// if it's not enemy air controlled
-	if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(g_merc_arrive_sector)].fEnemyAirControlled)
+	if (StrategicMap[SGPSector(g_merc_arrive_sector).AsStrategicIndex()].fEnemyAirControlled)
 	{
 		// get the name of the old sector
 		ST::string sMsgSubString1 = GetSectorIDString(SGPSector(g_merc_arrive_sector), FALSE);

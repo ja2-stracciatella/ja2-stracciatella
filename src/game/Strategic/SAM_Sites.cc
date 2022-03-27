@@ -26,7 +26,7 @@ void InitializeSAMSites()
 	for (auto samSite : GCM->getSamSites())
 	{
 		UINT8 ubSectorID = samSite->sectorId;
-		StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(ubSectorID)].bSAMCondition = 100;
+		StrategicMap[SGPSector(ubSectorID).AsStrategicIndex()].bSAMCondition = 100;
 	}
 
 	UpdateAirspaceControl();
@@ -77,7 +77,7 @@ void UpdateAirspaceControl()
 			if (bControllingSAM >= 0 && (UINT8)bControllingSAM < samList.size())
 			{
 				UINT8 ubSector = samList[bControllingSAM]->sectorId;
-				StrategicMapElement* pSAMStrategicMap = &(StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(ubSector)]);
+				StrategicMapElement* pSAMStrategicMap = &(StrategicMap[SGPSector(ubSector).AsStrategicIndex()]);
 
 				// if the enemies own the controlling SAM site, and it's in working condition
 				if ((pSAMStrategicMap->fEnemyControlled) && (pSAMStrategicMap->bSAMCondition >= MIN_CONDITION_FOR_SAM_SITE_TO_WORK))
@@ -99,7 +99,7 @@ INT32 GetNumberOfSAMSitesUnderPlayerControl()
 	for (auto samSite : GCM->getSamSites())
 	{
 		UINT8 ubSectorID = samSite->sectorId;
-		if (!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(ubSectorID)].fEnemyControlled) ++n;
+		if (!StrategicMap[SGPSector(ubSectorID).AsStrategicIndex()].fEnemyControlled) ++n;
 	}
 	return n;
 }

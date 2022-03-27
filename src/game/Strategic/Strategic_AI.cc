@@ -246,7 +246,7 @@ static void RequestAttackOnSector(UINT8 ubSectorID, UINT16 usDefencePoints)
 
 static bool AdjacentSectorIsImportantAndUndefended(UINT8 const sector_id)
 {
-	switch (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(sector_id)].bNameId)
+	switch (StrategicMap[SGPSector(sector_id).AsStrategicIndex()].bNameId)
 	{
 		case OMERTA:
 		case SAN_MONA:
@@ -2610,7 +2610,7 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 	for( size_t i = 0; i < gGarrisonGroup.size(); i++ )
 	{
 		index = gGarrisonGroup[ i ].ubComposition;
-		if( StrategicMap[ SECTOR_INFO_TO_STRATEGIC_INDEX( gGarrisonGroup[ i ].ubSectorID ) ].fEnemyControlled )
+		if (StrategicMap[SGPSector(gGarrisonGroup[i].ubSectorID).AsStrategicIndex()].fEnemyControlled)
 		{
 			ubOwned[ index ]++;
 		}

@@ -610,7 +610,7 @@ INT16 GetMineSectorForTown(INT8 const town_id)
 	for (auto m : GCM->getMines())
 	{
 		if (m->associatedTownId != town_id) continue;
-		return SECTOR_INFO_TO_STRATEGIC_INDEX(m->entranceSector);
+		return SGPSector(m->entranceSector).AsStrategicIndex();
 	}
 	return -1;
 }
@@ -620,7 +620,7 @@ bool PlayerControlsMine(INT8 const mine_id)
 {
 	auto mine = GCM->getMine(mine_id);
 	return
-		!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(mine->entranceSector)].fEnemyControlled &&
+		!StrategicMap[SGPSector(mine->entranceSector).AsStrategicIndex()].fEnemyControlled &&
 		/* Player only controls the actual mine after he has made arrangements to do
 		 * so with the head miner there. */
 		gMineStatus[mine_id].fSpokeToHeadMiner;

@@ -639,7 +639,7 @@ static void BtnBobbyRAcceptOrderCallback(GUI_BUTTON* btn, INT32 reason)
 				ST::string zTemp;
 
 				auto dest = GCM->getPrimaryShippingDestination();
-				auto destSectorIndex = SECTOR_INFO_TO_STRATEGIC_INDEX(dest->getDeliverySector());
+				auto destSectorIndex = SGPSector(dest->getDeliverySector()).AsStrategicIndex();
 				//if the city is Drassen, and the airport sector is player controlled
 				if( gbSelectedCity == dest->locationId && !StrategicMap[destSectorIndex].fEnemyControlled )
 				{

@@ -43,7 +43,7 @@ static inline UINT8 SECTOR_FROM_SECTOR_SHORT_STRING(const char* coordinates)
 //Sector enumerations
 //
 //NOTE: These use the 0-255 SectorInfo[] numbering system, and CAN'T be used as indexes into the StrategicMap[] array
-//Use SECTOR_INFO_TO_STRATEGIC_INDEX() macro to convert...
+//Use SGPSector::AsStrategicIndex() to convert
 enum
 {
 	SEC_A1,	SEC_A2,	SEC_A3, SEC_A4,	SEC_A5, SEC_A6,	SEC_A7,	SEC_A8,	SEC_A9, SEC_A10, SEC_A11, SEC_A12, SEC_A13, SEC_A14, SEC_A15, SEC_A16,
