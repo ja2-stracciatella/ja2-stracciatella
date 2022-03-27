@@ -330,11 +330,17 @@ static void InitializeMapStructure(void)
 	InitializeStrategicMapSectorTownNames( );
 }
 
-void GetMapFileName(const SGPSector& sector, char* const buf, BOOLEAN const add_alternate_map_letter)
+ST::string GetMapFileName(const SGPSector& sector, BOOLEAN const add_alternate_map_letter)
 {
-	size_t n = sprintf(buf, "%c%d", 'A' - 1 + sector.y, sector.x);
-
-	if (sector.z != 0) n += sprintf(buf + n, "_b%d", sector.z);
+	ST::string fileName;
+	if (sector.z == 0)
+	{
+		fileName = sector.AsShortString();
+	}
+	else
+	{
+		fileName = sector.AsLongString();
+	}
 
 	/* The gfUseAlternateMap flag is set while loading saved games. When starting
 	 * a new game the underground sector info has not been initialized, so we need
@@ -342,16 +348,17 @@ void GetMapFileName(const SGPSector& sector, char* const buf, BOOLEAN const add_
 	if (GetSectorFlagStatus(sector, SF_USE_ALTERNATE_MAP) || gfUseAlternateMap)
 	{
 		gfUseAlternateMap = FALSE;
-		if (add_alternate_map_letter) n += sprintf(buf + n, "_a");
+		if (add_alternate_map_letter) fileName += "_a";
 	}
 
 	static const SGPSector MedunaHQ(3, 16, 0);
 	if (AreInMeanwhile() && sector == MedunaHQ)
 	{
-		if (add_alternate_map_letter) n += sprintf(buf + n, "_m");
+		if (add_alternate_map_letter) fileName += "_m";
 	}
 
-	sprintf(buf + n, ".dat");
+	fileName += ".dat";
+	return fileName;
 }
 
 
@@ -883,8 +890,7 @@ static void EnterSector(const SGPSector& sector)
 
 	CreateLoadingScreenProgressBar();
 
-	char filename[50];
-	GetMapFileName(sector, filename, TRUE);
+	ST::string filename = GetMapFileName(sector, TRUE);
 	LoadWorld(filename);
 	LoadRadarScreenBitmap(filename);
 	// We have to add the helicopter after the sector is fully loaded

@@ -1047,8 +1047,7 @@ void JA2EncryptedFileWrite(HWFILE const hFile, BYTE const* const data, UINT32 co
 ST::string GetMapTempFileName(SectorFlags uiType, const SGPSector& sector)
 {
 	// Convert the current sector location into a file name
-	char zTempName[512];
-	GetMapFileName(sector, zTempName, FALSE);
+	ST::string zTempName = GetMapFileName(sector, FALSE);
 
 	const char* prefix;
 	switch (uiType)
@@ -1066,7 +1065,7 @@ ST::string GetMapTempFileName(SectorFlags uiType, const SGPSector& sector)
 
 		default: SLOGA("GetMapTempFileName: invalid Type"); return "";
 	}
-	return ST::format(TACTICAL_SAVE_TEMPDIR "/{}_{}", prefix, static_cast<char const*>(zTempName));
+	return ST::format(TACTICAL_SAVE_TEMPDIR "/{}_{}", prefix, zTempName);
 }
 
 

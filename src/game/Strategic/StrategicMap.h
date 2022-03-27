@@ -73,7 +73,7 @@ ST::string GetSectorIDString(const SGPSector& sector, BOOLEAN detailed);
 // Returns a sector description string based on the sector land type
 ST::string GetSectorLandTypeString(UINT8 ubSectorID, UINT8 ubSectorZ, bool fDetailed);
 
-void GetMapFileName(const SGPSector& sector, char* buf, BOOLEAN add_alternate_map_letter);
+ST::string GetMapFileName(const SGPSector& sector, BOOLEAN add_alternate_map_letter);
 
 // Called from within tactical.....
 void JumpIntoAdjacentSector( UINT8 ubDirection, UINT8 ubJumpCode, INT16 sAdditionalData );

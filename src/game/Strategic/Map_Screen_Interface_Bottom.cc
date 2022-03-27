@@ -211,13 +211,9 @@ static void DrawNameOfLoadedSector();
 static void EnableDisableBottomButtonsAndRegions(void);
 static void EnableDisableMessageScrollButtonsAndRegions(void);
 
-
+// will render the map screen bottom interface
 void RenderMapScreenInterfaceBottom( void )
 {
-	// will render the map screen bottom interface
-	CHAR8 bFilename[ 32 ];
-
-
 	// render whole panel
 	if (fMapScreenBottomDirty)
 	{
@@ -226,8 +222,7 @@ void RenderMapScreenInterfaceBottom( void )
 
 		if (GetSectorFlagStatus(sMap, SF_ALREADY_VISITED))
 		{
-			GetMapFileName(sMap, bFilename, TRUE);
-			LoadRadarScreenBitmap( bFilename );
+			LoadRadarScreenBitmap(GetMapFileName(sMap, TRUE));
 		}
 		else
 		{
