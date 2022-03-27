@@ -45,12 +45,6 @@ static inline UINT8 SECTOR_FROM_SECTOR_SHORT_STRING(const char* coordinates)
 #define SECTORX(SectorID) ((SectorID % 16) + 1)
 #define SECTORY(SectorID) ((SectorID / 16) + 1)
 
-// short string representation of the sector, e.g. A1, P16
-static inline ST::string SECTOR_SHORT_STRING(UINT8 sector)
-{
-	return SGPSector(sector).AsShortString();
-}
-
 //Sector enumerations
 //
 //NOTE: These use the 0-255 SectorInfo[] numbering system, and CAN'T be used as indexes into the StrategicMap[] array

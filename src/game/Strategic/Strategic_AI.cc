@@ -561,7 +561,7 @@ void InitStrategicAI()
 		SECTORINFO &si = SectorInfo[sSectorID];
 		si.uiFlags |= SF_USE_ALTERNATE_MAP;
 		si.ubNumTroops = model->getNumTroops(difficulty);
-		STLOGD("Weapon cache is at {}", SECTOR_SHORT_STRING(sSectorID));
+		STLOGD("Weapon cache is at {}", SGPSector(sSectorID).AsShortString());
 	}
 }
 
