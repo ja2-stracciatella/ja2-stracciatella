@@ -1479,7 +1479,7 @@ static const ST::string s_pl_pMoralStrings[pMoralStrings_SIZE] =
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
-static const ST::string s_pl_str_left_equipment   = "%s - jego/jej sprzęt jest już w %s (%c%d).";
+static const ST::string s_pl_str_left_equipment   = "%s - jego/jej sprzęt jest już w %s (%s).";
 
 // Status that appears on the Map Screen
 

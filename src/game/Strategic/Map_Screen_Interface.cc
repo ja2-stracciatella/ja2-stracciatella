@@ -1039,20 +1039,19 @@ static void HandleEquipmentLeft(UINT32 const slot_idx, INT const sector, GridNo 
 	{
 		ST::string sString;
 		ST::string town = GCM->getTownLocative(GetTownIdForSector(sector));
-		int            const x    = SECTORX(sector);
-		char           const y    = SECTORY(sector) - 1 + 'A';
+		SGPSector sMap(sector);
 		ProfileID      const id   = guiLeaveListOwnerProfileId[slot_idx];
 		if (id != NO_PROFILE)
 		{
-			sString = st_format_printf(str_left_equipment, GetProfile(id).zNickname, town, y, x);
+			sString = st_format_printf(str_left_equipment, GetProfile(id).zNickname, town, sMap.AsShortString());
 		}
 		else
 		{
-			sString = ST::format("A departing merc has left their equipment in {} ({c}{}).", town, y, x);
+			sString = ST::format("A departing merc has left their equipment in {} ({}).", town, sMap.AsShortString());
 		}
 		ScreenMsg(FONT_MCOLOR_LTYELLOW, MSG_INTERFACE, sString);
 
-		bool const is_sector_loaded = gWorldSector == SGPSector(sector);
+		bool const is_sector_loaded = gWorldSector == sMap;
 		for (; i; i = i->pNext)
 		{
 			if (is_sector_loaded)

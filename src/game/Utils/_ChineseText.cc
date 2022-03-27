@@ -1479,7 +1479,7 @@ static const ST::string s_cn_pMoralStrings[pMoralStrings_SIZE] =
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
 static const ST::string s_cn_str_left_equipment   =
-	"%s的装备现在可以在%s (%c%d)获得.";
+	"%s的装备现在可以在%s (%s)获得.";
 
 // Status that appears on the Map Screen
 
