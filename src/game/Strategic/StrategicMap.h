@@ -50,10 +50,6 @@ extern Observable<> BeforePrepareSector;
 #define MAP_WORLD_X				18
 #define MAP_WORLD_Y				18
 
-// get index into aray
-#define GET_X_FROM_STRATEGIC_INDEX( i )		( i % MAP_WORLD_X )
-#define GET_Y_FROM_STRATEGIC_INDEX( i )		( i / MAP_WORLD_X )
-
 // macros to convert between the 2 different sector numbering systems
 #define STRATEGIC_INDEX_TO_SECTOR_INFO( i )	( SGPSector::FromStrategicIndex(i).AsByte() )
 
