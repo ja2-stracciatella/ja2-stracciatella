@@ -3001,16 +3001,17 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 {
 	WAYPOINT *wp;
 	INT32 i, dx, dy;
-	UINT8 ubOrigX, ubOrigY;
 
 	Assert( pGroup );
-	AssertMsg( pGroup->ubMoveType == ONE_WAY, String( "GroupWillMoveThroughSector() -- Attempting to test group with an invalid move type.  ubGroupID: %d, ubMoveType: %d, sector: %c%d -- KM:0",
-			pGroup->ubGroupID, pGroup->ubMoveType, pGroup->ubSector.y + 'A' - 1, pGroup->ubSector.x ) );
+	if (pGroup->ubMoveType != ONE_WAY)
+	{
+		STLOGA("GroupWillMoveThroughSector() -- Attempting to test group with an invalid move type.  ubGroupID: {}, ubMoveType: {}, sector: {} -- KM:0",
+			pGroup->ubGroupID, pGroup->ubMoveType, pGroup->ubSector.AsShortString());
+	}
 
 	//Preserve the original sector values, as we will be temporarily modifying the group's ubSectorX/Y values
 	//as we traverse the waypoints.
-	ubOrigX = pGroup->ubSector.x;
-	ubOrigY = pGroup->ubSector.y;
+	SGPSector ubOrig = pGroup->ubSector;
 
 	i = pGroup->ubNextWaypointID;
 	wp = pGroup->pWaypoints;
@@ -3037,18 +3038,16 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 			dy = wp->sSector.y - pGroup->ubSector.y;
 			if( dx && dy )
 			{ //Can't move diagonally!
-				STLOGA("GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector {} to sector {} for group at sector {c}{}",
-					pGroup->ubSector.AsShortString(), wp->sSector.AsShortString(), ubOrigY + 'A' - 1, ubOrigX);
-				pGroup->ubSector.x = ubOrigX;
-				pGroup->ubSector.y = ubOrigY;
+				STLOGA("GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector {} to sector {} for group at sector {}",
+					   pGroup->ubSector.AsShortString(), wp->sSector.AsShortString(), ubOrig.AsShortString());
+				pGroup->ubSector = ubOrig;
 				return TRUE;
 			}
 			if( !dx && !dy ) //Can't move to position currently at!
 			{
-				STLOGA("GroupWillMoveThroughSector() -- Attempting to process same waypoint at {} for group at {c}{}",
-					wp->sSector.AsShortString(), ubOrigY + 'A' - 1, ubOrigX);
-				pGroup->ubSector.x = ubOrigX;
-				pGroup->ubSector.y = ubOrigY;
+				STLOGA("GroupWillMoveThroughSector() -- Attempting to process same waypoint at {} for group at {}",
+					wp->sSector.AsShortString(), ubOrig.AsShortString());
+				pGroup->ubSector = ubOrig;
 				return TRUE;
 			}
 			//Clip dx/dy value so that the move is for only one sector.
@@ -3074,16 +3073,14 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 			//Check to see if it the sector we are checking to see if this group will be moving through.
 			if (pGroup->ubSector == sSector)
 			{
-				pGroup->ubSector.x = ubOrigX;
-				pGroup->ubSector.y = ubOrigY;
+				pGroup->ubSector = ubOrig;
 				return TRUE;
 			}
 		}
 		//Advance to the next waypoint.
 		wp = wp->next;
 	}
-	pGroup->ubSector.x = ubOrigX;
-	pGroup->ubSector.y = ubOrigY;
+	pGroup->ubSector = ubOrig;
 	return FALSE;
 }
 
