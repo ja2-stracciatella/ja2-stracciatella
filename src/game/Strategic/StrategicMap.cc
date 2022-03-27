@@ -1043,10 +1043,6 @@ void UpdateMercsInSector()
 	}
 }
 
-
-static ST::string GetLoadedSectorString();
-
-
 void UpdateMercInSector(SOLDIERTYPE& s, const SGPSector& sSector)
 {
 	// Determine entrance direction and get sweetspot
@@ -1086,7 +1082,18 @@ check_entry:
 			{ /* Strategic insertion failed because it expected to find an entry
 				 * point. This is likely a missing part of the map or possible fault in
 				 * strategic movement costs, traversal logic, etc. */
-				ST::string sector = GetLoadedSectorString();
+				ST::string sector = ST::null;
+				if (gfWorldLoaded)
+				{
+					if (gWorldSector.z == 0)
+					{
+						 sector = gWorldSector.AsShortString();
+					}
+					else
+					{
+						 sector = gWorldSector.AsLongString();
+					}
+				}
 
 				ST::string entry;
 				if (gMapInformation.sNorthGridNo != -1)
@@ -3086,29 +3093,6 @@ static INT16 PickGridNoToWalkIn(SOLDIERTYPE* pSoldier, UINT8 ubInsertionDirectio
 
 	return( NOWHERE );
 }
-
-
-//NEW!
-//Calculates the name of the sector based on the loaded sector values.
-//Examples:		A9
-//						A10_B1
-//						J9_B2_A ( >= BETAVERSION ) else J9_B2 (release equivalent)
-static ST::string GetLoadedSectorString()
-{
-	if (!gfWorldLoaded)
-	{
-		return ST::null;
-	}
-	else if (gWorldSector.z == 0)
-	{
-		return gWorldSector.AsShortString();
-	}
-	else
-	{
-		return gWorldSector.AsLongString();
-	}
-}
-
 
 void HandleSlayDailyEvent( void )
 {
