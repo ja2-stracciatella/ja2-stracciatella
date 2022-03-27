@@ -67,12 +67,13 @@ void UpdateSAMDoneRepair(const SGPSector& sec)
 void UpdateAirspaceControl()
 {
 	auto samList = GCM->getSamSites();
-	for (int x = 1; x < (MAP_WORLD_X - 1); x++)
+	SGPSector sMap;
+	for (sMap.x = 1; sMap.x < (MAP_WORLD_X - 1); sMap.x++)
 	{
-		for (int y = 1; y < (MAP_WORLD_Y - 1); y++)
+		for (sMap.y = 1; sMap.y < (MAP_WORLD_Y - 1); sMap.y++)
 		{
 			BOOLEAN fEnemyControlsAir = FALSE;
-			INT8 bControllingSAM = GCM->getControllingSamSite(SECTOR(x, y));
+			INT8 bControllingSAM = GCM->getControllingSamSite(sMap.AsByte());
 			if (bControllingSAM >= 0 && (UINT8)bControllingSAM < samList.size())
 			{
 				UINT8 ubSector = samList[bControllingSAM]->sectorId;
@@ -85,7 +86,7 @@ void UpdateAirspaceControl()
 				}
 			}
 
-			StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].fEnemyAirControlled = fEnemyControlsAir;
+			StrategicMap[sMap.AsStrategicIndex()].fEnemyAirControlled = fEnemyControlsAir;
 		}
 	}
 
@@ -150,14 +151,15 @@ bool DoesSAMExistHere(const SGPSector& sector, GridNo const gridno)
 // Look for a SAM site, update
 static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, void*, UINT8 ubDamage, BOOLEAN fIsDestroyed)
 {
+	SGPSector sMap(sSectorX, sSectorY, sSectorZ);
 	// OK, First check if SAM exists, and if not, return
-	if (!DoesSAMExistHere(SGPSector(sSectorX, sSectorY, sSectorZ), sGridNo))
+	if (!DoesSAMExistHere(sMap, sGridNo))
 	{
 		return;
 	}
 
 	// Damage.....
-	INT16 sSectorNo = CALCULATE_STRATEGIC_INDEX(sSectorX, sSectorY);
+	INT16 sSectorNo = sMap.AsStrategicIndex();
 	STLOGD("SAM site at sector #{} is damaged by {} points", sSectorNo, ubDamage);
 	if (StrategicMap[sSectorNo].bSAMCondition >= ubDamage)
 	{

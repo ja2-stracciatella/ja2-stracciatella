@@ -1750,7 +1750,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 		//KM : Sep 9, 1999
 		//If the player owns sector P3, any troops that spawned there were causing serious problems, seeing battle checks
 		//were not performed!
-		if( !StrategicMap[ CALCULATE_STRATEGIC_INDEX( 3, 16 ) ].fEnemyControlled )
+		if( !StrategicMap[ SGPSector( 3, 16 ).AsStrategicIndex() ].fEnemyControlled )
 		{ //Queen can no longer send reinforcements from the palace if she doesn't control it!
 			return;
 		}

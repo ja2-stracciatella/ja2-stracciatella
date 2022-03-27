@@ -676,14 +676,15 @@ void RemoveRandomItemsInSector(const SGPSector& sSector, UINT8 const ubChance)
 
 void BuildListOfTownSectors()
 {
-	for (INT32 x = 1; x != MAP_WORLD_X - 1; ++x)
+	SGPSector sMap;
+	for (sMap.x = 1; sMap.x != MAP_WORLD_X - 1; ++sMap.x)
 	{
-		for (INT32 y = 1; y != MAP_WORLD_Y - 1; ++y)
+		for (sMap.y = 1; sMap.y != MAP_WORLD_Y - 1; ++sMap.y)
 		{
-			INT8 const town = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bNameId;
+			INT8 const town = StrategicMap[sMap.AsStrategicIndex()].bNameId;
 			if (town < FIRST_TOWN || NUM_TOWNS <= town) continue;
 			g_town_sectors.push_back(
-				TownSectorInfo{ (UINT8)town, SECTOR(x, y) }
+				TownSectorInfo{ (UINT8)town, sMap.AsByte() }
 			);
 		}
 	}

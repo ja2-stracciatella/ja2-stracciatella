@@ -3486,7 +3486,7 @@ static void RenderShadingForUnControlledSectors(void)
 			INT32 const x = SECTORX(sBaseSectorValue) + dx;
 			INT32 const y = SECTORY(sBaseSectorValue) + dy;
 
-			StrategicMapElement const& e = StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)];
+			StrategicMapElement const& e = StrategicMap[SGPSector(x, y).AsStrategicIndex()];
 			if (e.bNameId == BLANK_SECTOR) continue;
 			if (!e.fEnemyControlled && NumHostilesInSector(SGPSector(x, y, 0)) == 0) continue;
 
@@ -3501,10 +3501,8 @@ static void RenderShadingForUnControlledSectors(void)
 
 static void DrawMilitiaForcesForSector(INT32 const sector)
 {
-	INT16 const x = SECTORX(sector);
-	INT16 const y = SECTORY(sector);
-
-	if (StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].fEnemyControlled) return;
+	SGPSector sMap(sector);
+	if (StrategicMap[sMap.AsStrategicIndex()].fEnemyControlled) return;
 
 	/* Large/small icon offset in the .sti */
 	INT32      const  icon = 5;
@@ -3512,15 +3510,15 @@ static void DrawMilitiaForcesForSector(INT32 const sector)
 	SECTORINFO const& si   = SectorInfo[sector];
 	for (INT32 i = si.ubNumberOfCivsAtLevel[GREEN_MILITIA]; i != 0; --i)
 	{
-		DrawMapBoxIcon(guiMilitia, icon, x, y, pos++);
+		DrawMapBoxIcon(guiMilitia, icon, sMap.x, sMap.y, pos++);
 	}
 	for (INT32 i = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA]; i != 0; --i)
 	{
-		DrawMapBoxIcon(guiMilitia, icon + 1, x, y, pos++);
+		DrawMapBoxIcon(guiMilitia, icon + 1, sMap.x, sMap.y, pos++);
 	}
 	for (INT32 i = si.ubNumberOfCivsAtLevel[ELITE_MILITIA]; i != 0; --i)
 	{
-		DrawMapBoxIcon(guiMilitia, icon + 2, x, y, pos++);
+		DrawMapBoxIcon(guiMilitia, icon + 2, sMap.x, sMap.y, pos++);
 	}
 }
 

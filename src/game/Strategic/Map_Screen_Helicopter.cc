@@ -70,6 +70,8 @@ INT32 iTotalAccumulatedCostByPlayer = 0;
 // helicopter destroyed
 BOOLEAN fHelicopterDestroyed = FALSE;
 
+static const SGPSector hospital(HOSPITAL_SECTOR_X, HOSPITAL_SECTOR_Y);
+
 struct RefuelSite
 {
 	INT16  sector;
@@ -80,8 +82,8 @@ struct RefuelSite
 // list of sector locations where SkyRider can be refueled
 static RefuelSite const g_refuel_site[] =
 {
-	{ CALCULATE_STRATEGIC_INDEX(13, 2),  9001, FIRSTOSTRUCT1  }, // Drassen airport
-	{ CALCULATE_STRATEGIC_INDEX(6,  9), 13067, FOURTHOSTRUCT1 }  // Estoni
+	{ (INT16) SGPSector(13, 2).AsStrategicIndex(),  9001, FIRSTOSTRUCT1  }, // Drassen airport
+	{ (INT16) SGPSector(6,  9).AsStrategicIndex(), 13067, FOURTHOSTRUCT1 }  // Estoni
 };
 
 enum SkyriderMonologueEvent
@@ -851,7 +853,7 @@ void CheckAndHandleSkyriderMonologues( void )
 		else if( guiHelicopterSkyriderTalkState == 1 )
 		{
 			// if enemy still controls the Cambria hospital sector
-			if( StrategicMap[ CALCULATE_STRATEGIC_INDEX( HOSPITAL_SECTOR_X, HOSPITAL_SECTOR_Y ) ].fEnemyControlled )
+			if (StrategicMap[hospital.AsStrategicIndex()].fEnemyControlled)
 			{
 				HandleSkyRiderMonologueEvent( SKYRIDER_MONOLOGUE_EVENT_CAMBRIA_HOSPITAL, 0 );
 			}
@@ -917,7 +919,7 @@ void HandleAnimationOfSectors( void )
 	if( fShowCambriaHospitalHighLight )
 	{
 		fOldShowCambriaHospitalHighLight = TRUE;
-		HandleBlitOfSectorLocatorIcon(SGPSector(HOSPITAL_SECTOR_X, HOSPITAL_SECTOR_Y, 0), LOCATOR_COLOR_RED );
+		HandleBlitOfSectorLocatorIcon(hospital, LOCATOR_COLOR_RED);
 		fSkipSpeakersLocator = TRUE;
 	}
 	else if( fOldShowCambriaHospitalHighLight )
@@ -1050,7 +1052,7 @@ static BOOLEAN HandleSAMSiteAttackOfHelicopterInSector(INT16 sSectorX, INT16 sSe
 	UINT8 ubChance;
 
 	// if this sector is in friendly airspace, we're safe
-	if (!StrategicMap[CALCULATE_STRATEGIC_INDEX(sSectorX, sSectorY)].fEnemyAirControlled)
+	if (!StrategicMap[SGPSector(sSectorX, sSectorY).AsStrategicIndex()].fEnemyAirControlled)
 	{
 		// no problem, friendly airspace
 		return( FALSE );
