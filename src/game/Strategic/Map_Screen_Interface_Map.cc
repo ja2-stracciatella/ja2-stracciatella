@@ -673,7 +673,7 @@ static void ShowTownText(void)
 }
 
 
-static void DrawMapBoxIcon(HVOBJECT, UINT16 icon, INT16 sec_x, INT16 sec_y, UINT8 icon_pos);
+static void DrawMapBoxIcon(HVOBJECT, UINT16 icon, const SGPSector& sMap, UINT8 icon_pos);
 
 
 // "on duty" includes mercs inside vehicles
@@ -689,7 +689,7 @@ static INT32 ShowOnDutyTeam(const SGPSector& sSector)
 		if (s.bAssignment >= ON_DUTY && s.bAssignment != VEHICLE) continue;
 		if (InHelicopter(s))                                      continue;
 		if (PlayerIDGroupInMotion(s.ubGroupID))                   continue;
-		DrawMapBoxIcon(guiCHARICONS, SMALL_YELLOW_BOX, sSector.x, sSector.y, icon_pos++);
+		DrawMapBoxIcon(guiCHARICONS, SMALL_YELLOW_BOX, sSector, icon_pos++);
 	}
 	return icon_pos;
 }
@@ -711,7 +711,7 @@ static INT32 ShowAssignedTeam(const SGPSector& sSector, INT32 icon_pos)
 		if (s.bLife       <= 0)                 continue;
 		if (PlayerIDGroupInMotion(s.ubGroupID)) continue;
 
-		DrawMapBoxIcon(guiCHARICONS, SMALL_DULL_YELLOW_BOX, sSector.x, sSector.y, icon_pos++);
+		DrawMapBoxIcon(guiCHARICONS, SMALL_DULL_YELLOW_BOX, sSector, icon_pos++);
 	}
 	return icon_pos;
 }
@@ -729,17 +729,17 @@ static INT32 ShowVehicles(const SGPSector& sSector, INT32 icon_pos)
 		SOLDIERTYPE const& vs = GetSoldierStructureForVehicle(v);
 		if (vs.bTeam != OUR_TEAM) continue;
 
-		DrawMapBoxIcon(guiCHARICONS, SMALL_WHITE_BOX, sSector.x, sSector.y, icon_pos++);
+		DrawMapBoxIcon(guiCHARICONS, SMALL_WHITE_BOX, sSector, icon_pos++);
 	}
 	return icon_pos;
 }
 
 
-static void ShowEnemiesInSector(INT16 const x, INT16 const y, INT16 n_enemies, UINT8 icon_pos)
+static void ShowEnemiesInSector(const SGPSector& sMap, INT16 n_enemies, UINT8 icon_pos)
 {
 	while (n_enemies-- != 0)
 	{
-		DrawMapBoxIcon(guiCHARICONS, SMALL_RED_BOX, x, y, icon_pos++);
+		DrawMapBoxIcon(guiCHARICONS, SMALL_RED_BOX, sMap, icon_pos++);
 	}
 }
 
@@ -3510,15 +3510,15 @@ static void DrawMilitiaForcesForSector(INT32 const sector)
 	SECTORINFO const& si   = SectorInfo[sector];
 	for (INT32 i = si.ubNumberOfCivsAtLevel[GREEN_MILITIA]; i != 0; --i)
 	{
-		DrawMapBoxIcon(guiMilitia, icon, sMap.x, sMap.y, pos++);
+		DrawMapBoxIcon(guiMilitia, icon, sMap, pos++);
 	}
 	for (INT32 i = si.ubNumberOfCivsAtLevel[REGULAR_MILITIA]; i != 0; --i)
 	{
-		DrawMapBoxIcon(guiMilitia, icon + 1, sMap.x, sMap.y, pos++);
+		DrawMapBoxIcon(guiMilitia, icon + 1, sMap, pos++);
 	}
 	for (INT32 i = si.ubNumberOfCivsAtLevel[ELITE_MILITIA]; i != 0; --i)
 	{
-		DrawMapBoxIcon(guiMilitia, icon + 2, sMap.x, sMap.y, pos++);
+		DrawMapBoxIcon(guiMilitia, icon + 2, sMap, pos++);
 	}
 }
 
@@ -3758,7 +3758,7 @@ static void HandleShowingOfEnemyForcesInSector(const SGPSector& sSector, UINT8 c
 		case KNOWS_HOW_MANY:
 			/* Display individual icons for each enemy, starting at the received icon
 				* position index */
-			ShowEnemiesInSector(sSector.x, sSector.y, n_enemies, icon_pos);
+			ShowEnemiesInSector(sSector, n_enemies, icon_pos);
 			break;
 	}
 }
@@ -3896,7 +3896,7 @@ static void ShowItemsOnMap(void)
 }
 
 
-static void DrawMapBoxIcon(HVOBJECT const vo, UINT16 const icon, INT16 const sec_x, INT16 const sec_y, UINT8 const icon_pos)
+static void DrawMapBoxIcon(HVOBJECT const vo, UINT16 const icon, const SGPSector& sMap, UINT8 const icon_pos)
 {
 	/* Don't show any more icons than will fit into one sector, to keep them from
 		* spilling into sector(s) beneath */
@@ -3905,8 +3905,8 @@ static void DrawMapBoxIcon(HVOBJECT const vo, UINT16 const icon, INT16 const sec
 	INT32 const col = icon_pos % MERC_ICONS_PER_LINE;
 	INT32 const row = icon_pos / MERC_ICONS_PER_LINE;
 
-	INT32 const x = MAP_VIEW_START_X + sec_x * MAP_GRID_X + MAP_X_ICON_OFFSET + 3 * col;
-	INT32 const y = MAP_VIEW_START_Y + sec_y * MAP_GRID_Y + MAP_Y_ICON_OFFSET + 3 * row;
+	INT32 const x = MAP_VIEW_START_X + sMap.x * MAP_GRID_X + MAP_X_ICON_OFFSET + 3 * col;
+	INT32 const y = MAP_VIEW_START_Y + sMap.y * MAP_GRID_Y + MAP_Y_ICON_OFFSET + 3 * row;
 	BltVideoObject(guiSAVEBUFFER, vo, icon, x, y);
 	InvalidateRegion(x, y, x + DMAP_GRID_X, y + DMAP_GRID_Y);
 }
