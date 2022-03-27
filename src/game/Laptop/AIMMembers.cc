@@ -1213,8 +1213,7 @@ static INT8 AimMemberHireMerc(void)
 	MERC_HIRE_STRUCT h;
 	h = MERC_HIRE_STRUCT{};
 	h.ubProfileID               = pid;
-	h.sSectorX                  = SECTORX(g_merc_arrive_sector);
-	h.sSectorY                  = SECTORY(g_merc_arrive_sector);
+	h.sSector                   = SGPSector(g_merc_arrive_sector);
 	h.fUseLandingZoneForArrival = TRUE;
 	h.ubInsertionCode           = INSERTION_CODE_ARRIVING_GAME;
 	h.fCopyProfileItemsOver     = gfBuyEquipment;

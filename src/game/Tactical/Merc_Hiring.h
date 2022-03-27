@@ -24,9 +24,7 @@
 struct MERC_HIRE_STRUCT
 {
 	UINT8   ubProfileID;
-	INT16   sSectorX;
-	INT16   sSectorY;
-	INT8    bSectorZ;
+	SGPSector sSector;
 	INT16   iTotalContractLength;
 	BOOLEAN fCopyProfileItemsOver;
 	UINT32  uiTimeTillMercArrives;

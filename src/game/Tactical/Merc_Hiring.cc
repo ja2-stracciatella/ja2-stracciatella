@@ -93,17 +93,13 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 	// they will be updated again just before arrival...
 	if (h.fUseLandingZoneForArrival)
 	{
-		h.sSectorX = SECTORX(g_merc_arrive_sector);
-		h.sSectorY = SECTORY(g_merc_arrive_sector);
-		h.bSectorZ = 0;
+		h.sSector = SGPSector(g_merc_arrive_sector);
 	}
 
 	SOLDIERCREATE_STRUCT MercCreateStruct;
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.ubProfile             = pid;
-	MercCreateStruct.sSector.x             = h.sSectorX;
-	MercCreateStruct.sSector.y             = h.sSectorY;
-	MercCreateStruct.sSector.z             = h.bSectorZ;
+	MercCreateStruct.sSector               = h.sSector;
 	MercCreateStruct.bTeam                 = OUR_TEAM;
 	MercCreateStruct.fCopyProfileItemsOver = h.fCopyProfileItemsOver;
 	SOLDIERTYPE* const s = TacticalCreateSoldier(MercCreateStruct);

@@ -174,8 +174,7 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 
 	HireMercStruct.bWhatKindOfMerc = MERC_TYPE__PLAYER_CHARACTER;
 
-	HireMercStruct.sSectorX = SECTORX(g_merc_arrive_sector);
-	HireMercStruct.sSectorY = SECTORY(g_merc_arrive_sector);
+	HireMercStruct.sSector = SGPSector(g_merc_arrive_sector);
 	HireMercStruct.fUseLandingZoneForArrival = TRUE;
 
 	HireMercStruct.fCopyProfileItemsOver = TRUE;

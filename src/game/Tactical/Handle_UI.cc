@@ -913,9 +913,7 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 		HireMercStruct.ubProfileID = ubTemp;
 
 		//DEF: temp
-		HireMercStruct.sSectorX = gWorldSector.x;
-		HireMercStruct.sSectorY = gWorldSector.y;
-		HireMercStruct.bSectorZ = gWorldSector.z;
+		HireMercStruct.sSector = gWorldSector;
 		HireMercStruct.ubInsertionCode	= INSERTION_CODE_GRIDNO;
 		HireMercStruct.usInsertionData	= usMapPos;
 		HireMercStruct.fCopyProfileItemsOver = TRUE;
