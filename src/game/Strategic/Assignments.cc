@@ -3041,7 +3041,7 @@ static void SetBoxTextAttrs(PopUpBox* const box)
 
 
 static PopUpBox* CreateRepairBox(void);
-static BOOLEAN IsRobotInThisSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+static BOOLEAN IsRobotInThisSector(const SGPSector& sSector);
 
 
 static void DisplayRepairMenu(SOLDIERTYPE const& s)
@@ -3066,7 +3066,7 @@ static void DisplayRepairMenu(SOLDIERTYPE const& s)
 		}
 	}
 
-	if (IsRobotInThisSector(s.sSector.x, s.sSector.y, s.sSector.z))
+	if (IsRobotInThisSector(s.sSector))
 	{ // Robot
 		AddMonoString(box, pRepairStrings[3]);
 	}
@@ -3105,7 +3105,7 @@ static void HandleShadingOfLinesForRepairMenu()
 		}
 	}
 
-	if (IsRobotInThisSector(s.sSector.x, s.sSector.y, s.sSector.z))
+	if (IsRobotInThisSector(s.sSector))
 	{
 		// handle shading of repair robot option
 		ShadeStringInBox(box, line++, !CanCharacterRepairRobot(&s));
@@ -3167,7 +3167,7 @@ static void CreateDestroyMouseRegionForRepairMenu(void)
 		}
 
 		// robot
-		if (IsRobotInThisSector(s.sSector.x, s.sSector.y, s.sSector.z))
+		if (IsRobotInThisSector(s.sSector))
 		{
 			MakeRepairRegion(idx++, x, y, w, h, REPAIR_MENU_ROBOT);
 			y += h;
@@ -5710,9 +5710,8 @@ static bool CanCharacterRepairVehicle(SOLDIERTYPE const& s, VEHICLETYPE const& v
 static SOLDIERTYPE* GetRobotSoldier(void);
 
 
-static BOOLEAN IsRobotInThisSector(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
+static BOOLEAN IsRobotInThisSector(const SGPSector& sSector)
 {
-	SGPSector sSector(sSectorX, sSectorY);
 	SOLDIERTYPE const* const s = GetRobotSoldier();
 	return s && s->sSector == sSector && !s->fBetweenSectors;
 }
@@ -5747,7 +5746,7 @@ static BOOLEAN CanCharacterRepairRobot(SOLDIERTYPE const* const pSoldier)
 	}
 
 	// is the robot in the same sector
-	if (!IsRobotInThisSector(pSoldier->sSector.x, pSoldier->sSector.y, pSoldier->sSector.z))
+	if (!IsRobotInThisSector(pSoldier->sSector))
 	{
 		return( FALSE );
 	}
