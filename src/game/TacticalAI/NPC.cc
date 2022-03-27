@@ -43,7 +43,7 @@
 #define NUM_CIVQUOTE_SECTORS   20
 #define MINERS_CIV_QUOTE_INDEX 16
 
-static const INT16 gsCivQuoteSector[NUM_CIVQUOTE_SECTORS][2] =
+static const SGPSector gsCivQuoteSector[NUM_CIVQUOTE_SECTORS] =
 {
 	{  2, MAP_ROW_A },
 	{  2, MAP_ROW_B },
@@ -447,7 +447,7 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 const idx)
 	}
 	else
 	{
-		sprintf(buf, NPCDATADIR "/%c%d.npc", 'A' + gsCivQuoteSector[idx][1] - 1, gsCivQuoteSector[idx][0]);
+		sprintf(buf, NPCDATADIR "/%s.npc", gsCivQuoteSector[idx].AsShortString().c_str());
 		filename = buf;
 	}
 	AutoSGPFile f(GCM->openGameResForReading(filename));
@@ -2765,8 +2765,7 @@ static INT8 FindCivQuoteFileIndex(const SGPSector& sector)
 
 	for (UINT8 i = 0; i != NUM_CIVQUOTE_SECTORS; ++i)
 	{
-		if (gsCivQuoteSector[i][0] != sector.x) continue;
-		if (gsCivQuoteSector[i][1] != sector.y) continue;
+		if (gsCivQuoteSector[i] != sector) continue;
 		return i;
 	}
 	return -1;
