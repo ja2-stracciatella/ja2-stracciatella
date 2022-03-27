@@ -4,15 +4,10 @@
 #include "Debug.h"
 #include "Types.h"
 
-static inline bool IS_VALID_SECTOR(UINT8 const x, UINT8 const y)
-{
-	return 1 <= x && x <= 16 && 1 <= y && y <= 16;
-}
-
 //Macro to convert sector coordinates (1-16,1-16) to 0-255
 static inline UINT8 SECTOR(UINT8 const x, UINT8 const y)
 {
-	Assert(IS_VALID_SECTOR(x, y));
+	Assert(1 <= x && x <= 16 && 1 <= y && y <= 16);
 	return (y - 1) * 16 + x - 1;
 }
 
