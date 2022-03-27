@@ -1402,34 +1402,6 @@ void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 	ChooseRedIfPresentAndAirRaid(mercs_in_sector, n_mercs, quote_id);
 }
 
-
-void SayQuoteFromAnyBodyInThisSector(INT16 const x, INT16 const y, INT8 const z, UINT16 const quote_id)
-{
-	SGPSector sMap(x, y, z);
-	// Loop through all our guys and randomly say one from someone in our sector
-	INT32       n_mercs = 0;
-	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_EACH_IN_TEAM(i, OUR_TEAM)
-	{
-		// Add guy if he's a candidate
-		SOLDIERTYPE& s = *i;
-		if (s.sSector != sMap)
-			continue;
-		if (AM_AN_EPC(&s))
-			continue;
-		if (s.uiStatusFlags & SOLDIER_GASSED)
-			continue;
-		if (AM_A_ROBOT(&s))
-			continue;
-		if (s.fMercAsleep)
-			continue;
-		mercs_in_sector[n_mercs++] = &s;
-	}
-
-	ChooseRedIfPresentAndAirRaid(mercs_in_sector, n_mercs, quote_id);
-}
-
-
 void SayQuoteFromNearbyMercInSector(GridNo const gridno, INT8 const distance, UINT16 const quote_id)
 {
 	// Loop through all our guys and randomly say one from someone in our sector
