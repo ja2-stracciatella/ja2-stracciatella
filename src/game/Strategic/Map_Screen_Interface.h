@@ -388,8 +388,7 @@ void SetUpFastHelpRegion(INT32 x, INT32 y, INT32 width, const ST::string& str);
 
 
 // reset assignment for mercs trainign militia in this sector
-void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector( INT16 sSectorX, INT16 sSectorY );
-
+void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector(const SGPSector& sSector);
 
 // the sector move box
 void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );

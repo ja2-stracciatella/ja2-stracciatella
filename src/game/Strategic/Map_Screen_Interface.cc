@@ -366,9 +366,8 @@ void ResetAssignmentsForMercsTrainingUnpaidSectorsInSelectedList()
 }
 
 
-void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector( INT16 sSectorX, INT16 sSectorY )
+void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector(const SGPSector& sSector)
 {
-	SGPSector sSector(sSectorX, sSectorY);
 	CFOR_EACH_IN_CHAR_LIST(c)
 	{
 		SOLDIERTYPE* const pSoldier = c->merc;

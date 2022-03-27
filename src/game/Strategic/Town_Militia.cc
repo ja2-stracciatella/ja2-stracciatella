@@ -592,7 +592,7 @@ static void MilitiaTrainingRejected(void)
 	if( gfYesNoPromptIsForContinue )
 	{
 		// take all mercs in that sector off militia training
-		ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector(pMilitiaTrainerSoldier->sSector.x, pMilitiaTrainerSoldier->sSector.y);
+		ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector(pMilitiaTrainerSoldier->sSector);
 	}
 	else
 	{
