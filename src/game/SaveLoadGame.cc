@@ -2014,10 +2014,8 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	INT16 merc_arrive_y;
 	EXTR_I16(  d, merc_arrive_x)
 	EXTR_I16(  d, merc_arrive_y)
-	g_merc_arrive_sector =
-		1 <= merc_arrive_x && merc_arrive_x <= 16 &&
-		1 <= merc_arrive_y && merc_arrive_y <= 16 ? SECTOR(merc_arrive_x, merc_arrive_y) :
-		gamepolicy(start_sector);
+	SGPSector arrival(merc_arrive_x, merc_arrive_y);
+	g_merc_arrive_sector = arrival.IsValid() ? arrival.AsByte() : gamepolicy(start_sector);
 	EXTR_BOOL( d, gfCreatureMeanwhileScenePlayed)
 	EXTR_SKIP_U8(d)
 	EXTR_BOOL( d, gfPersistantPBI)
