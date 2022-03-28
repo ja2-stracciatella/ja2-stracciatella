@@ -627,12 +627,6 @@ void NewWayOfLoadingCiviliansFromTempFile()
 
 	UINT8 saved_sector_id;
 	f->read(&saved_sector_id, 1);
-#if 0 // XXX was commented out
-	if (saved_sector_id != SECTOR(sSectorX, sSectorY))
-	{
-		throw std::runtime_error("Sector ID mismatch");
-	}
-#endif
 }
 
 
