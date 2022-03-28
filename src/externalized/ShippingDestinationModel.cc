@@ -10,7 +10,7 @@ ShippingDestinationModel::ShippingDestinationModel(uint8_t locationId_,
 		chargeRateOverNight(chargeRateOverNight_), chargeRate2Days(chargeRate2Days_), chargeRateStandard(chargeRateStandard_),
 		flowersNextDayDeliveryCost(flowersNextDayDeliveryCost_), flowersWhenItGetsThereCost(flowersWhenItGetsThereCost_),
 		canDeliver(canDeliver_), isPrimary(isPrimary_),
-		deliverySector(deliverySectorId_, deliverySectorZ_, ""),
+		deliverySector(SGPSector::FromSectorID(deliverySectorId_, deliverySectorZ_)),
 		deliverySectorGridNo(deliverySectorGridNo_), emailOffset(emailOffset_), emailLength(emailLength_) {}
 
 uint8_t ShippingDestinationModel::getDeliverySector() const

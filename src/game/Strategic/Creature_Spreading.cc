@@ -242,7 +242,7 @@ void InitCreatureQuest()
 
 	// enable the lair entrance
 	UINT8 entranceSector = lairModel->entranceSector;
-	UNDERGROUND_SECTORINFO* lairEntrance = FindUnderGroundSector(SGPSector(entranceSector, lairModel->entranceSectorLevel, ""));
+	UNDERGROUND_SECTORINFO* lairEntrance = FindUnderGroundSector(SGPSector::FromSectorID(entranceSector, lairModel->entranceSectorLevel));
 	if (lairEntrance == NULL)
 	{
 		throw std::runtime_error("Lair entrance sector is not defined as an underground sector");
@@ -679,7 +679,7 @@ void EndCreatureQuest()
 static UINT8 CreaturesInUndergroundSector(UINT8 ubSectorID, UINT8 ubSectorZ)
 {
 	UNDERGROUND_SECTORINFO *pSector;
-	SGPSector ubSector(ubSectorID, ubSectorZ, "");
+	SGPSector ubSector = SGPSector::FromSectorID(ubSectorID, ubSectorZ);
 	pSector = FindUnderGroundSector(ubSector);
 	if( pSector )
 		return pSector->ubNumCreatures;

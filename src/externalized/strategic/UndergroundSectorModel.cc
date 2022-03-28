@@ -14,7 +14,7 @@ UNDERGROUND_SECTORINFO* UndergroundSectorModel::createUndergroundSectorInfo(uint
 {
 	UNDERGROUND_SECTORINFO* const u = new UNDERGROUND_SECTORINFO{};
 
-	u->ubSector = SGPSector(sectorId, sectorZ, "");
+	u->ubSector = SGPSector::FromSectorID(sectorId, sectorZ);
 	u->ubAdjacentSectors = adjacentSectors;
 
 	u->ubNumTroops    = numTroops[difficultyLevel - 1]    + Random(numTroopsVariance[difficultyLevel - 1]   );

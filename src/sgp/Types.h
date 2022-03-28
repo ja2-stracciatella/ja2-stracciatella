@@ -135,11 +135,11 @@ public:
 	SGPSector() noexcept = default;
 	SGPSector(UINT16 a, UINT16 b, INT8 c = 0) noexcept : x(a), y(b), z(c) {};
 	SGPSector(const SGPSector&) noexcept = default;
-	SGPSector(UINT32 s) noexcept;
-	SGPSector(UINT32 s, INT8 h, const ST::string a) noexcept;
+	SGPSector(UINT32 s) noexcept; // normal FromSectorID
 	static SGPSector FromStrategicIndex(UINT16 idx);
 	static SGPSector FromShortString(const ST::string coordinates, INT8 h = 0);
 	static SGPSector FromSectorID(UINT16 sectorId, UINT8 dx, UINT8 dy);
+	static SGPSector FromSectorID(UINT32 s, INT8 h);
 
 	bool operator==(const SGPSector&) const noexcept;
 	bool operator!=(const SGPSector&) const noexcept;

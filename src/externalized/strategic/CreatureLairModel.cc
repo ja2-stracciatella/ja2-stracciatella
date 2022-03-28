@@ -203,7 +203,7 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 		SGPSector curr;
 		for (auto sec : lair->lairSectors)
 		{
-			curr = SGPSector(sec.sectorId, sec.sectorLevel, "");
+			curr = SGPSector::FromSectorID(sec.sectorId, sec.sectorLevel);
 			if (prev.z != -1)
 			{
 				int distance = abs(curr.x - prev.x) + abs(curr.y - prev.y) + abs(curr.z - prev.z);
