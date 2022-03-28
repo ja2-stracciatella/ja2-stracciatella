@@ -1414,10 +1414,10 @@ void RenderSummaryWindow()
 void UpdateSectorSummary(const ST::string& gszFilename, BOOLEAN fUpdate)
 {
 	ST::string str;
-	INT16 x, y;
 
 	gfRenderSummary = TRUE;
 	//Extract the sector
+	SGPSector tmp = SGPSector::FromShortString(gszFilename);
 	if( gszFilename[2] < '0' || gszFilename[2] > '9' )
 		x = gszFilename[1] - '0';
 	else

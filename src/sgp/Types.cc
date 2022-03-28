@@ -36,7 +36,7 @@ SGPSector SGPSector::FromStrategicIndex(UINT16 idx)
 SGPSector SGPSector::FromShortString(const ST::string coordinates, INT8 h)
 {
 	Assert(coordinates.size() > 1);
-	UINT8 y = coordinates[0] - 'A' + 1;
+	UINT8 y = coordinates[0] - (coordinates[0] >= 'a' ? 'a' : 'A') + 1;
 	UINT8 x = coordinates.substr(1).to_int();
 	return SGPSector(x, y, h);
 }
