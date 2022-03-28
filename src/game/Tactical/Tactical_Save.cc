@@ -160,8 +160,8 @@ void LoadMapTempFilesFromSavedGameFile(HWFILE const f, UINT32 const savegame_ver
 		{
 			// turn off alternate flags for the sectors he could be in
 			// randomly place him in one of the two possible sectors
-			SectorInfo[SECTOR(14, MAP_ROW_L)].uiFlags &= ~SF_USE_ALTERNATE_MAP;
-			SectorInfo[SECTOR( 8, MAP_ROW_L)].uiFlags &= ~SF_USE_ALTERNATE_MAP;
+			SectorInfo[SGPSector(14, MAP_ROW_L).AsByte()].uiFlags &= ~SF_USE_ALTERNATE_MAP;
+			SectorInfo[SGPSector(8, MAP_ROW_L).AsByte()].uiFlags &= ~SF_USE_ALTERNATE_MAP;
 
 			SGPSector sMap;
 			if (Random(2))

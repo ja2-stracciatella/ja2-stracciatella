@@ -107,9 +107,11 @@ bool SGPSector::IsValid(ST::string shortString) const noexcept
 	return true;
 }
 
+// convert sector coordinates (1-16,1-16) to 0-255 sector ID
 UINT8 SGPSector::AsByte() const
 {
-	return SECTOR(x, y);
+	Assert(1 <= x && x <= 16 && 1 <= y && y <= 16);
+	return (y - 1) * 16 + x - 1;
 }
 
 UINT16 SGPSector::AsStrategicIndex() const

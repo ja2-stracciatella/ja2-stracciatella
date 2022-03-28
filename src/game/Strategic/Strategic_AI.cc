@@ -1226,15 +1226,16 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		ubSectorID = pEnemyGroup->ubSector.AsByte();
 		if (pEnemyGroup && pEnemyGroup->ubSector.y > 1 && EnemyPermittedToAttackSector(&pEnemyGroup, (UINT8)(ubSectorID - 16)))
 		{
+			SGPSector up(pEnemyGroup->ubSector.x, pEnemyGroup->ubSector.y - 1);
 			GROUP* const pPlayerGroup = FindPlayerMovementGroupInSector(pEnemyGroup->ubSector.x, pEnemyGroup->ubSector.y - 1);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				return HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
 			}
-			else if (CountAllMilitiaInSector(SGPSector(pEnemyGroup->ubSector.x, pEnemyGroup->ubSector.y - 1)) &&
+			else if (CountAllMilitiaInSector(up) &&
 							AttemptToNoticeAdjacentGroupSucceeds() )
 			{
-				return HandleMilitiaNoticedByPatrolGroup(SECTOR(pEnemyGroup->ubSector.x, pEnemyGroup->ubSector.y - 1), pEnemyGroup);
+				return HandleMilitiaNoticedByPatrolGroup(up.AsByte(), pEnemyGroup);
 			}
 			else if( AdjacentSectorIsImportantAndUndefended( (UINT8)(ubSectorID-16) ) && AttemptToNoticeEmptySectorSucceeds() )
 			{
@@ -1243,15 +1244,16 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 		if (pEnemyGroup && pEnemyGroup->ubSector.x > 1 && EnemyPermittedToAttackSector(&pEnemyGroup, (UINT8)(ubSectorID - 1)))
 		{
+			SGPSector left(pEnemyGroup->ubSector.x - 1, pEnemyGroup->ubSector.y);
 			GROUP* const pPlayerGroup = FindPlayerMovementGroupInSector(pEnemyGroup->ubSector.x - 1, pEnemyGroup->ubSector.y);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				return HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
 			}
-			else if (CountAllMilitiaInSector(SGPSector(pEnemyGroup->ubSector.x - 1, pEnemyGroup->ubSector.y)) &&
+			else if (CountAllMilitiaInSector(left) &&
 							AttemptToNoticeAdjacentGroupSucceeds() )
 			{
-				return HandleMilitiaNoticedByPatrolGroup(SECTOR(pEnemyGroup->ubSector.x - 1, pEnemyGroup->ubSector.y), pEnemyGroup);
+				return HandleMilitiaNoticedByPatrolGroup(left.AsByte(), pEnemyGroup);
 			}
 			else if( AdjacentSectorIsImportantAndUndefended( (UINT8)(ubSectorID-1) ) && AttemptToNoticeEmptySectorSucceeds() )
 			{
@@ -1260,15 +1262,16 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 		if( pEnemyGroup && pEnemyGroup->ubSector.y < 16 && EnemyPermittedToAttackSector( &pEnemyGroup, (UINT8)(ubSectorID + 16) ) )
 		{
+			SGPSector down(pEnemyGroup->ubSector.x, pEnemyGroup->ubSector.y + 1);
 			GROUP* const pPlayerGroup = FindPlayerMovementGroupInSector(pEnemyGroup->ubSector.x, pEnemyGroup->ubSector.y + 1);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				return HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
 			}
-			else if (CountAllMilitiaInSector(SGPSector(pEnemyGroup->ubSector.x, pEnemyGroup->ubSector.y + 1)) &&
+			else if (CountAllMilitiaInSector(down) &&
 							AttemptToNoticeAdjacentGroupSucceeds() )
 			{
-				return HandleMilitiaNoticedByPatrolGroup((UINT8)SECTOR(pEnemyGroup->ubSector.x, pEnemyGroup->ubSector.y + 1), pEnemyGroup);
+				return HandleMilitiaNoticedByPatrolGroup(down.AsByte(), pEnemyGroup);
 			}
 			else if( AdjacentSectorIsImportantAndUndefended( (UINT8)(ubSectorID+16) ) && AttemptToNoticeEmptySectorSucceeds() )
 			{
@@ -1277,15 +1280,16 @@ BOOLEAN StrategicAILookForAdjacentGroups( GROUP *pGroup )
 		}
 		if( pEnemyGroup && pEnemyGroup->ubSector.x < 16 && EnemyPermittedToAttackSector( &pEnemyGroup, (UINT8)(ubSectorID + 1) ) )
 		{
+			SGPSector right(pEnemyGroup->ubSector.x + 1, pEnemyGroup->ubSector.y);
 			GROUP* const pPlayerGroup = FindPlayerMovementGroupInSector(pEnemyGroup->ubSector.x + 1, pEnemyGroup->ubSector.y);
 			if( pPlayerGroup && AttemptToNoticeAdjacentGroupSucceeds() )
 			{
 				return HandlePlayerGroupNoticedByPatrolGroup( pPlayerGroup, pEnemyGroup );
 			}
-			else if (CountAllMilitiaInSector(SGPSector(pEnemyGroup->ubSector.x + 1, pEnemyGroup->ubSector.y)) &&
+			else if (CountAllMilitiaInSector(right) &&
 							AttemptToNoticeAdjacentGroupSucceeds() )
 			{
-				return HandleMilitiaNoticedByPatrolGroup(SECTOR(pEnemyGroup->ubSector.x + 1, pEnemyGroup->ubSector.y), pEnemyGroup);
+				return HandleMilitiaNoticedByPatrolGroup(right.AsByte(), pEnemyGroup);
 			}
 			else if( AdjacentSectorIsImportantAndUndefended( (UINT8)(ubSectorID+1) ) && AttemptToNoticeEmptySectorSucceeds() )
 			{

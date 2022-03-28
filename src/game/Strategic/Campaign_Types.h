@@ -4,13 +4,6 @@
 #include "Debug.h"
 #include "Types.h"
 
-//Macro to convert sector coordinates (1-16,1-16) to 0-255
-static inline UINT8 SECTOR(UINT8 const x, UINT8 const y)
-{
-	Assert(1 <= x && x <= 16 && 1 <= y && y <= 16);
-	return (y - 1) * 16 + x - 1;
-}
-
 //Sector enumerations
 //
 //NOTE: These use the 0-255 SectorInfo[] numbering system, and CAN'T be used as indexes into the StrategicMap[] array
