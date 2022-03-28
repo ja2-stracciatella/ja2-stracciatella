@@ -1417,21 +1417,15 @@ void UpdateSectorSummary(const ST::string& gszFilename, BOOLEAN fUpdate)
 
 	gfRenderSummary = TRUE;
 	//Extract the sector
-	SGPSector tmp = SGPSector::FromShortString(gszFilename);
+	SGPSector tmp;
 	if( gszFilename[2] < '0' || gszFilename[2] > '9' )
-		x = gszFilename[1] - '0';
+		tmp = SGPSector::FromShortString(gszFilename.left(2));
 	else
-		x = (gszFilename[1] - '0') * 10 + gszFilename[2] - '0';
-	if( gszFilename[0] >= 'a' )
-		y = gszFilename[0] - 'a' + 1;
-	else
-		y = gszFilename[0] - 'A' + 1;
+		tmp = SGPSector::FromShortString(gszFilename.left(3));
 
 	//Validate that the values extracted are in fact a sector
-	if( x < 1 || x > 16 || y < 1 || y > 16 )
-		return;
-	gsSector.x = gsSelSector.x = x;
-	gsSector.y = gsSelSector.y = y;
+	if (!tmp.IsValid()) return;
+	gsSector = gsSelSector = tmp;
 
 	//The idea here is to get a pointer to the filename's period, then
 	//focus on the character previous to it.  If it is a 1, 2, or 3, then
