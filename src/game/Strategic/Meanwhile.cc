@@ -447,7 +447,7 @@ static void ProcessImplicationsOfMeanwhile()
 		case END_OF_PLAYERS_FIRST_BATTLE:
 			if( gGameOptions.ubDifficultyLevel == DIF_LEVEL_HARD )
 			{ //Wake up the queen earlier to punish the good players!
-				ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_WAKE_QUEEN, 0, 0 );
+				ExecuteStrategicAIAction(STRATEGIC_AI_ACTION_WAKE_QUEEN, nullptr);
 			}
 			HandleNPCDoAction( QUEEN, NPC_ACTION_SEND_SOLDIERS_TO_BATTLE_LOCATION, 0 );
 			break;
@@ -456,10 +456,10 @@ static void ProcessImplicationsOfMeanwhile()
 		case GRUMM_LIBERATED:
 		case CHITZENA_LIBERATED:
 		case BALIME_LIBERATED:
-			ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_WAKE_QUEEN, 0, 0 );
+			ExecuteStrategicAIAction(STRATEGIC_AI_ACTION_WAKE_QUEEN, nullptr);
 			break;
 		case DRASSEN_LIBERATED:
-			ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_WAKE_QUEEN, 0, 0 );
+			ExecuteStrategicAIAction(STRATEGIC_AI_ACTION_WAKE_QUEEN, nullptr);
 			HandleNPCDoAction( QUEEN, NPC_ACTION_SEND_SOLDIERS_TO_DRASSEN, 0 );
 			break;
 		case CREATURES:
@@ -497,7 +497,8 @@ static void ProcessImplicationsOfMeanwhile()
 		case NE_SAM:      sector = samList[SAM_SITE_TWO]->sectorId; goto send_troops_to_sam;
 		case CENTRAL_SAM: sector = samList[SAM_SITE_THREE]->sectorId; goto send_troops_to_sam;
 send_troops_to_sam:
-			ExecuteStrategicAIAction(NPC_ACTION_SEND_TROOPS_TO_SAM, SECTORX(sector), SECTORY(sector));
+			SGPSector sec = SGPSector(sector);
+			ExecuteStrategicAIAction(NPC_ACTION_SEND_TROOPS_TO_SAM, &sec);
 			break;
 		}
 

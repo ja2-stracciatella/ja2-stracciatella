@@ -24,7 +24,7 @@ enum
 };
 
 
-void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSectorY );
+void ExecuteStrategicAIAction(UINT16 usActionCode, const SGPSector* sMap);
 
 void CheckEnemyControlledSector( UINT8 ubSectorID );
 void EvaluateQueenSituation(void);

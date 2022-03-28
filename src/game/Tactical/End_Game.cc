@@ -196,7 +196,7 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 	// Set fact that she is dead!
 	SetFactTrue( FACT_QUEEN_DEAD );
 
-	ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_QUEEN_DEAD, 0, 0 );
+	ExecuteStrategicAIAction(STRATEGIC_AI_ACTION_QUEEN_DEAD, nullptr);
 
 	class DialogueEventDoneKillingDeidranna : public DialogueEvent
 	{

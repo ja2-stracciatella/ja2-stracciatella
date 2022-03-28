@@ -2514,7 +2514,7 @@ void HandleNPCTeamMemberDeath(SOLDIERTYPE* const pSoldierOld)
 					HandleNPCDoAction(KINGPIN, NPC_ACTION_GRANT_EXPERIENCE_3, 0);
 				}
 				SetFactTrue(FACT_KINGPIN_DEAD);
-				ExecuteStrategicAIAction(STRATEGIC_AI_ACTION_KINGPIN_DEAD, 0, 0);
+				ExecuteStrategicAIAction(STRATEGIC_AI_ACTION_KINGPIN_DEAD, nullptr);
 				break;
 
 			case DOREEN:

@@ -2752,7 +2752,7 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 static void RequestHighPriorityGarrisonReinforcements(INT32 iGarrisonID, UINT8 ubSoldiersRequested);
 
 
-void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSectorY )
+void ExecuteStrategicAIAction(UINT16 usActionCode, const SGPSector* sMap)
 {
 	GROUP *pGroup, *pPendingGroup = NULL;
 	SECTORINFO *pSector;
@@ -2877,7 +2877,7 @@ void ExecuteStrategicAIAction( UINT16 usActionCode, INT16 sSectorX, INT16 sSecto
 			ValidateGroup( pGroup );
 			break;
 		case NPC_ACTION_SEND_TROOPS_TO_SAM:
-			ubSectorID = (UINT8)SECTOR( sSectorX, sSectorY );
+			ubSectorID = sMap ? sMap->AsByte() : 0;
 			ubNumSoldiers = (UINT8)( 3 + gGameOptions.ubDifficultyLevel + HighestPlayerProgressPercentage() / 15 );
 			giReinforcementPool -= ubNumSoldiers;
 			giReinforcementPool = MAX( giReinforcementPool, 0 );
