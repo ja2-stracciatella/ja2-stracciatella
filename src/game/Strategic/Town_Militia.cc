@@ -628,11 +628,12 @@ bool CanNearbyMilitiaScoutThisSector(const SGPSector& sMap)
 	INT16 const ystart      = sMap.y >      scout_range ? sMap.y - scout_range :  1;
 	INT16 const xend        = sMap.x < 16 - scout_range ? sMap.x + scout_range : 16;
 	INT16 const yend        = sMap.y < 16 - scout_range ? sMap.y + scout_range : 16;
-	for (INT16 y = ystart; y <= yend; ++y)
+	SGPSector sSector;
+	for (sSector.y = ystart; sSector.y <= yend; ++sSector.y)
 	{
-		for (INT16 x = xstart; x <= xend; ++x)
+		for (sSector.x = xstart; sSector.x <= xend; ++sSector.x)
 		{
-			UINT8 (&n_milita)[MAX_MILITIA_LEVELS] = SectorInfo[SECTOR(x, y)].ubNumberOfCivsAtLevel;
+			UINT8 (&n_milita)[MAX_MILITIA_LEVELS] = SectorInfo[sSector.AsByte()].ubNumberOfCivsAtLevel;
 			if (n_milita[GREEN_MILITIA] + n_milita[REGULAR_MILITIA] + n_milita[ELITE_MILITIA] != 0) return true;
 		}
 	}
