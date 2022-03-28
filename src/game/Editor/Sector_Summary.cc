@@ -1628,6 +1628,8 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 		return FALSE;
 	if( (!HandleTextInput( pEvent ) && pEvent->usEvent == KEY_DOWN) || pEvent->usEvent == KEY_REPEAT )
 	{
+		if (!gsSelSector.x) gsSelSector.x = 1;
+		if (!gsSelSector.y) gsSelSector.y = 1;
 		switch( pEvent->usParam )
 		{
 			case SDLK_ESCAPE:
@@ -1683,8 +1685,6 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 
 			case SDLK_RIGHT:
 				gfRenderSummary = TRUE;
-				if (!gsSelSector.y)
-					gsSelSector.y = 1;
 				gsSelSector.x++;
 				if (gsSelSector.x > 16)
 					gsSelSector.x = 1;
@@ -1692,8 +1692,6 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 
 			case SDLK_LEFT:
 				gfRenderSummary = TRUE;
-				if (!gsSelSector.y)
-					gsSelSector.y = 1;
 				gsSelSector.x--;
 				if (gsSelSector.x < 1)
 					gsSelSector.x = 16;
@@ -1701,8 +1699,6 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 
 			case SDLK_UP:
 				gfRenderSummary = TRUE;
-				if (!gsSelSector.x)
-					gsSelSector.x = 1;
 				gsSelSector.y--;
 				if (gsSelSector.y < 1)
 					gsSelSector.y = 16;
@@ -1710,8 +1706,6 @@ BOOLEAN HandleSummaryInput( InputAtom *pEvent )
 
 			case SDLK_DOWN:
 				gfRenderSummary = TRUE;
-				if (!gsSelSector.x)
-					gsSelSector.x = 1;
 				gsSelSector.y++;
 				if (gsSelSector.y > 16)
 					gsSelSector.y = 1;
