@@ -9,13 +9,12 @@ TownModel::TownModel(int8_t townId_, std::vector<uint8_t> sectorIDs_, SGPPoint t
 
 const SGPSector TownModel::getBaseSector() const
 {
-	int8_t minX = 99, minY = 99;
+	SGPSector min(99, 99);
 	for ( auto sectorID : sectorIDs ) {
 		SGPSector sector(sectorID);
-		if (sector.x < minX) minX = sector.x;
-		if (sector.y < minY) minY = sector.y;
+		if (sector < min) min = sector;
 	}
-	return SGPSector(minX, minY);
+	return min;
 }
 
 TownModel* TownModel::deserialize(const rapidjson::Value& obj)
