@@ -11,9 +11,6 @@ static inline UINT8 SECTOR(UINT8 const x, UINT8 const y)
 	return (y - 1) * 16 + x - 1;
 }
 
-#define SECTORX(SectorID) ((SectorID % 16) + 1)
-#define SECTORY(SectorID) ((SectorID / 16) + 1)
-
 //Sector enumerations
 //
 //NOTE: These use the 0-255 SectorInfo[] numbering system, and CAN'T be used as indexes into the StrategicMap[] array

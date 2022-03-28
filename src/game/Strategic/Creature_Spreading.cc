@@ -1089,9 +1089,7 @@ bool GetWarpOutOfMineCodes(SGPSector& sector, INT16* const insertion_grid_no)
 	// Now make sure the mercs are in the previously infested mine
 	if (lair && lair->isSectorInLair(gWorldSector))
 	{
-		sector.x = SECTORX(lair->warpExitSector);
-		sector.y = SECTORY(lair->warpExitSector);
-		sector.z = 0;
+		sector = SGPSector(lair->warpExitSector);
 		*insertion_grid_no = lair->warpExitGridNo;
 
 		return true;

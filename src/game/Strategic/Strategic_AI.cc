@@ -1946,9 +1946,7 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 			{ //if group is able to provide reinforcements.
 				if( iRandom < iWeight )
 				{ //This is the group that gets the reinforcements!
-					UINT8 ubSrcSectorX = (UINT8) SECTORX(gGarrisonGroup[uiSrcGarrisonID].ubSectorID);
-					UINT8 ubSrcSectorY = (UINT8) SECTORY(gGarrisonGroup[uiSrcGarrisonID].ubSectorID);
-					SGPSector srcSector(ubSrcSectorX, ubSrcSectorY);
+					SGPSector srcSector(gGarrisonGroup[uiSrcGarrisonID].ubSectorID);
 					if (srcSector != gWorldSector)
 					{ //The reinforcements aren't coming from the currently loaded sector!
 						iReinforcementsAvailable = ReinforcementsAvailable( uiSrcGarrisonID );
@@ -2973,21 +2971,12 @@ void StrategicHandleQueenLosingControlOfSector(const SGPSector& sSector)
 	RedirectEnemyGroupsMovingThroughSector(sSector);
 }
 
-
 static UINT8 SectorDistance(const SGPSector& sSector, UINT8 ubSectorID2)
 {
-	UINT8 ubSectorX1, ubSectorX2, ubSectorY1, ubSectorY2;
-	UINT8 ubDist;
-	ubSectorX1 = sSector.x;
-	ubSectorX2 = (UINT8)SECTORX( ubSectorID2 );
-	ubSectorY1 = sSector.y;
-	ubSectorY2 = (UINT8)SECTORY( ubSectorID2 );
-
-	ubDist = (UINT8)( ABS( ubSectorX1 - ubSectorX2 ) + ABS( ubSectorY1 - ubSectorY2 ) );
-
+	SGPSector sSector2(ubSectorID2);
+	UINT8 ubDist = (UINT8) (ABS(sSector.x - sSector2.x) + ABS(sSector.y - sSector2.y));
 	return ubDist;
 }
-
 
 static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 ubSoldiersRequested)
 {
