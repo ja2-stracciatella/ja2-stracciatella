@@ -221,7 +221,7 @@ protected:
 	const CacheSectorsModel* m_cacheSectors;
 	const LoadingScreenModel* m_loadingScreenModel;
 	const MovementCostsModel* m_movementCosts;
-	std::map<std::tuple<uint8_t, uint8_t>, uint8_t> m_sectorLandTypes;
+	std::map<SGPSector, uint8_t> m_sectorLandTypes;
 
 	std::vector<const BloodCatPlacementsModel*> m_bloodCatPlacements;
 	std::vector<const BloodCatSpawnsModel*> m_bloodCatSpawns;

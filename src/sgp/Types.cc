@@ -30,6 +30,14 @@ SGPSector SGPSector::FromStrategicIndex(UINT16 idx)
 	return SGPSector(getXfromStrategicIndex(idx), getYfromStrategicIndex(idx));
 }
 
+SGPSector SGPSector::FromShortString(const ST::string coordinates, INT8 h)
+{
+	Assert(coordinates.size() > 1);
+	UINT8 y = coordinates[0] - 'A' + 1;
+	UINT8 x = coordinates.substr(1).to_int();
+	return SGPSector(x, y, h);
+}
+
 bool SGPSector::operator==(const SGPSector& sector) const noexcept
 {
 	return x == sector.x && y == sector.y && z == sector.z;
@@ -38,6 +46,11 @@ bool SGPSector::operator==(const SGPSector& sector) const noexcept
 bool SGPSector::operator!=(const SGPSector& sector) const noexcept
 {
 	return !(*this == sector);
+}
+
+bool SGPSector::operator<(const SGPSector& rhs) const noexcept
+{
+	return x < rhs.x || y < rhs.y;
 }
 
 SGPSector& SGPSector::operator+=(const SGPSector& rhs) noexcept

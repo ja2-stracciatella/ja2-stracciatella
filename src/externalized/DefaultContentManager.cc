@@ -1611,7 +1611,7 @@ const MovementCostsModel* DefaultContentManager::getMovementCosts() const
 
 int16_t DefaultContentManager::getSectorLandType(uint8_t const sectorID, uint8_t const sectorLevel) const
 {
-	SectorKey key(sectorID, sectorLevel);
+	SGPSector key(sectorID, sectorLevel, "");
 	if (m_sectorLandTypes.find(key) == m_sectorLandTypes.end())
 	{
 		return -1;

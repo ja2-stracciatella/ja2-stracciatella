@@ -138,9 +138,11 @@ public:
 	SGPSector(UINT32 s) noexcept;
 	SGPSector(UINT32 s, INT8 h, const ST::string a) noexcept;
 	static SGPSector FromStrategicIndex(UINT16 idx);
+	static SGPSector FromShortString(const ST::string coordinates, INT8 h = 0);
 
 	bool operator==(const SGPSector&) const noexcept;
 	bool operator!=(const SGPSector&) const noexcept;
+	bool operator<(const SGPSector&) const noexcept;
 	SGPSector& operator+=(const SGPSector&) noexcept;
 	SGPSector& operator-=(const SGPSector&) noexcept;
 
