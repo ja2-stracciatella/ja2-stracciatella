@@ -330,7 +330,7 @@ static UINT16* pMapDKGreenPalette;
 static SGPVObject* guiMapBorderHeliSectors;
 
 // base sectors (sector value for the upper left corner) of towns. List start at zero, indexed by (townId - 1)
-static std::vector<INT16> sBaseSectorList;
+static std::vector<SGPSector> sBaseSectorList;
 
 // position of town names on the map (list by townId, starting at 1)
 // these are no longer PIXELS, but 10 * the X,Y position in SECTORS (fractions possible) to the X-CENTER of the town
@@ -2952,7 +2952,7 @@ static INT16 GetBaseSectorForCurrentTown(void)
 	// is the current town
 	if( sSelectedMilitiaTown != 0 )
 	{
-		sBaseSector = sBaseSectorList[ ( INT16 )( sSelectedMilitiaTown - 1 ) ];
+		sBaseSector = sBaseSectorList[sSelectedMilitiaTown - 1].AsByte();
 	}
 
 	// return the current sector value
@@ -3895,7 +3895,7 @@ BOOLEAN CanRedistributeMilitiaInSector(INT8 bClickedTownId)
 	// currently loaded surface sector IS hostile - so we must check if it's also one of the sectors in this "militia map"
 
 	// get the sector value for the upper left corner
-	sBaseSectorValue = sBaseSectorList[ bClickedTownId - 1 ];
+	sBaseSectorValue = sBaseSectorList[bClickedTownId - 1].AsByte();
 
 	// render icons for map
 	for( iCounter = 0; iCounter < 9; iCounter++ )

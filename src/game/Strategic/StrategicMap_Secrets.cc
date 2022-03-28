@@ -29,13 +29,13 @@ BOOLEAN IsTownFound(INT8 const bTownID)
 		return FALSE;
 	}
 
-	if (isSecretFound.find(town->getBaseSector()) == isSecretFound.end())
+	if (isSecretFound.find(town->getBaseSector().AsByte()) == isSecretFound.end())
 	{
 		// town is always known to the player
 		return TRUE;
 	}
 
-	return IsSecretFoundAt(town->getBaseSector());
+	return IsSecretFoundAt(town->getBaseSector().AsByte());
 }
 
 BOOLEAN IsSecretFoundAt(UINT8 const sectorID)
@@ -63,7 +63,7 @@ void SetTownAsFound(INT8 const bTownID, BOOLEAN const fFound)
 		return;
 	}
 
-	SetSectorSecretAsFound(town->getBaseSector(), fFound);
+	SetSectorSecretAsFound(town->getBaseSector().AsByte(), fFound);
 }
 
 void SetSAMSiteAsFound( UINT8 uiSamIndex )

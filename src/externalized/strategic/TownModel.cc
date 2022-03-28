@@ -7,15 +7,15 @@
 TownModel::TownModel(int8_t townId_, std::vector<uint8_t> sectorIDs_, SGPPoint townPoint_, bool isMilitiaTrainingAllowed_)
 		: townId(townId_), sectorIDs(std::move(sectorIDs_)), townPoint(townPoint_), isMilitiaTrainingAllowed(isMilitiaTrainingAllowed_) {}
 
-const uint8_t TownModel::getBaseSector() const
+const SGPSector TownModel::getBaseSector() const
 {
 	int8_t minX = 99, minY = 99;
 	for ( auto sectorID : sectorIDs ) {
-		int8_t x = SECTORX(sectorID), y = SECTORY(sectorID);
-		if ( x < minX ) minX = x;
-		if ( y < minY ) minY = y;
+		SGPSector sector(sectorID);
+		if (sector.x < minX) minX = sector.x;
+		if (sector.y < minY) minY = sector.y;
 	}
-	return SECTOR( minX, minY );
+	return SGPSector(minX, minY);
 }
 
 TownModel* TownModel::deserialize(const rapidjson::Value& obj)
