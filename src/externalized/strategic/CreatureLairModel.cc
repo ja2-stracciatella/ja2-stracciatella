@@ -199,20 +199,20 @@ void CreatureLairModel::validateData(const std::vector<const CreatureLairModel*>
 		}
 
 		// all lair sectors should be adjacent and defined as underground sector
-		int8_t x = 0, y = 0, z = -1;
+		SGPSector prev(0, 0, -1);
+		SGPSector curr;
 		for (auto sec : lair->lairSectors)
 		{
-			if (z != -1)
+			curr = SGPSector(sec.sectorId, sec.sectorLevel, "");
+			if (prev.z != -1)
 			{
-				int distance = abs(SECTORX(sec.sectorId) - x) + abs(SECTORY(sec.sectorId) - y) + abs(sec.sectorLevel - z);
+				int distance = abs(curr.x - prev.x) + abs(curr.y - prev.y) + abs(curr.z - prev.z);
 				if (distance != 1)
 				{
 					STLOGW("The current lair sector ({},{}) is not adjacent to the previous. This may indicate data issues", sec.sectorId, sec.sectorLevel);
 				}
 			}
-			x = SECTORX(sec.sectorId);
-			y = SECTORY(sec.sectorId);
-			z = sec.sectorLevel;
+			prev = curr;
 		}
 
 		// all underground sectors must also be defined with UndergroundSectorModel
