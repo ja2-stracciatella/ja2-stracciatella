@@ -15,28 +15,28 @@ void readIntIntoVector(const rapidjson::Value& jsonArray, IntIntVector& vec, siz
 MovementCostsModel::MovementCostsModel(IntIntVector traverseWE_, IntIntVector traverseNS_, IntIntVector traverseThrough_, IntIntVector travelRatings_)
 	:traverseWE(traverseWE_), traverseNS(traverseNS_), traverseThrough(traverseThrough_), travelRatings(travelRatings_) {}
 
-const uint8_t MovementCostsModel::getTraversibilityWestEast(uint8_t x, uint8_t y) const
+const uint8_t MovementCostsModel::getTraversibilityWestEast(const SGPSector& sSector) const
 {
-	Assert(y < 16 && x <= 16);
-	return traverseWE[y][x];
+	Assert(sSector.x == 17 || sSector.IsValid());
+	return traverseWE[sSector.y - 1][sSector.x - 1];
 }
 
-const uint8_t MovementCostsModel::getTraversibilityNorthSouth(uint8_t x, uint8_t y) const
+const uint8_t MovementCostsModel::getTraversibilityNorthSouth(const SGPSector& sSector) const
 {
-	Assert(y <= 16 && x < 16);
-	return traverseNS[y][x];
+	Assert(sSector.y == 17 || sSector.IsValid());
+	return traverseNS[sSector.y - 1][sSector.x - 1];
 }
 
-const uint8_t MovementCostsModel::getTraversibilityThrough(uint8_t x, uint8_t y) const
+const uint8_t MovementCostsModel::getTraversibilityThrough(const SGPSector& sSector) const
 {
-	Assert(y < 16 && x < 16);
-	return traverseThrough[y][x];
+	Assert(sSector.IsValid());
+	return traverseThrough[sSector.y - 1][sSector.x - 1];
 }
 
-const uint8_t MovementCostsModel::getTravelRating(uint8_t x, uint8_t y) const
+const uint8_t MovementCostsModel::getTravelRating(const SGPSector& sSector) const
 {
-	Assert(y < 16 && x < 16);
-	return travelRatings[y][x];
+	Assert(sSector.IsValid());
+	return travelRatings[sSector.y - 1][sSector.x - 1];
 }
 
 MovementCostsModel* MovementCostsModel::deserialize(const rapidjson::Document& root, const TraversibilityMap& mapToEnum)
@@ -74,7 +74,7 @@ void readTraversibiltyIntoVector(const rapidjson::Value& jsonArray, IntIntVector
 		{
 			row.push_back(mapping.at(ST::string(c.GetString())));
 		}
-		
+
 		if (row.size() != expectedCols) {
 			SLOGE("num of columns is different from expected");
 			throw std::runtime_error("num of columns is different from expected");

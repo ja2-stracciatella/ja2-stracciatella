@@ -2,6 +2,7 @@
 
 #include "JsonObject.h"
 #include "TraversibilityMapping.h"
+#include "Types.h"
 #include <vector>
 
 typedef std::vector<std::vector<uint8_t>> IntIntVector;
@@ -11,10 +12,10 @@ class MovementCostsModel
 public:
 	MovementCostsModel(IntIntVector traverseWE_, IntIntVector traverseNS_, IntIntVector traverseThrough_, IntIntVector travelRatings_);
 
-	const uint8_t getTraversibilityWestEast(uint8_t x, uint8_t y) const;
-	const uint8_t getTraversibilityNorthSouth(uint8_t x, uint8_t y) const;
-	const uint8_t getTraversibilityThrough(uint8_t x, uint8_t y) const;
-	const uint8_t getTravelRating(uint8_t x, uint8_t y) const;
+	const uint8_t getTraversibilityWestEast(const SGPSector& sSector) const;
+	const uint8_t getTraversibilityNorthSouth(const SGPSector& sSector) const;
+	const uint8_t getTraversibilityThrough(const SGPSector& sSector) const;
+	const uint8_t getTravelRating(const SGPSector& sSector) const;
 	static MovementCostsModel* deserialize(const rapidjson::Document& root, const TraversibilityMap& mapping);
 
 protected:

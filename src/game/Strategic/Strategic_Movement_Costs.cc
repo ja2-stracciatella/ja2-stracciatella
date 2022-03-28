@@ -14,14 +14,17 @@ void InitStrategicMovementCosts()
 	{
 		for (sMap.x = 1; sMap.x <= 16; ++sMap.x)
 		{
-			INT32 x = sMap.x -1, y = sMap.y -1;
 			SECTORINFO& s = SectorInfo[sMap.AsByte()];
-			s.ubTravelRating                           = movementCosts->getTravelRating(x, y);
-			s.ubTraversability[WEST_STRATEGIC_MOVE]    = movementCosts->getTraversibilityWestEast(x, y);
-			s.ubTraversability[EAST_STRATEGIC_MOVE]    = movementCosts->getTraversibilityWestEast(x + 1, y);
-			s.ubTraversability[NORTH_STRATEGIC_MOVE]   = movementCosts->getTraversibilityNorthSouth(x, y);
-			s.ubTraversability[SOUTH_STRATEGIC_MOVE]   = movementCosts->getTraversibilityNorthSouth(x, y + 1);
-			s.ubTraversability[THROUGH_STRATEGIC_MOVE] = movementCosts->getTraversibilityThrough(x, y);
+			s.ubTravelRating                           = movementCosts->getTravelRating(sMap);
+			s.ubTraversability[WEST_STRATEGIC_MOVE]    = movementCosts->getTraversibilityWestEast(sMap);
+			++sMap.x;
+			s.ubTraversability[EAST_STRATEGIC_MOVE]    = movementCosts->getTraversibilityWestEast(sMap);
+			--sMap.x;
+			s.ubTraversability[NORTH_STRATEGIC_MOVE]   = movementCosts->getTraversibilityNorthSouth(sMap);
+			++sMap.y;
+			s.ubTraversability[SOUTH_STRATEGIC_MOVE]   = movementCosts->getTraversibilityNorthSouth(sMap);
+			--sMap.y;
+			s.ubTraversability[THROUGH_STRATEGIC_MOVE] = movementCosts->getTraversibilityThrough(sMap);
 		}
 	}
 }
