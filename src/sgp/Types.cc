@@ -2,16 +2,26 @@
 
 #include "Campaign_Types.h"
 
+static UINT8 getXfromSectorID(UINT32 sectorId)
+{
+	return sectorId % 16 + 1;
+}
+
+static UINT8 getYfromSectorID(UINT32 sectorId)
+{
+	return sectorId / 16 + 1;
+}
+
 SGPSector::SGPSector(UINT32 s) noexcept
 {
-	x = SECTORX(s);
-	y = SECTORY(s);
+	x = getXfromSectorID(s);
+	y = getYfromSectorID(s);
 }
 
 SGPSector::SGPSector(UINT32 s, INT8 h, const ST::string /*hack*/) noexcept
 {
-	x = SECTORX(s);
-	y = SECTORY(s);
+	x = getXfromSectorID(s);
+	y = getYfromSectorID(s);
 	z = h;
 }
 
