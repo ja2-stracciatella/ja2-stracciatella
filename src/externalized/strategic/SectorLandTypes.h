@@ -2,7 +2,6 @@
 #include "TraversibilityMapping.h"
 #include "Types.h"
 #include <map>
-#include <tuple>
 #include <rapidjson/document.h>
 
 typedef uint8_t LandType;
