@@ -13,9 +13,12 @@
 
 std::string GetCurrentSector()
 {
-	ST::string str = (gWorldSector.z > 0) ?
-		gWorldSector.AsLongString() :
-		gWorldSector.AsShortString();
+	ST::string str = gWorldSector.AsShortString();
+	// not the same as AsLongString
+	if (gWorldSector.z > 0)
+	{
+		str += ST::format("-{}", gWorldSector.z);
+	}
 	return str.to_std_string();
 }
 
