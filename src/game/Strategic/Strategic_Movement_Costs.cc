@@ -9,11 +9,13 @@
 void InitStrategicMovementCosts()
 {
 	auto movementCosts = GCM->getMovementCosts();
-	for (INT32 y = 0; y < 16; ++y)
+	SGPSector sMap;
+	for (sMap.y = 1; sMap.y <= 16; ++sMap.y)
 	{
-		for (INT32 x = 0; x < 16; ++x)
+		for (sMap.x = 1; sMap.x <= 16; ++sMap.x)
 		{
-			SECTORINFO& s = SectorInfo[SECTOR(x + 1, y + 1)];
+			INT32 x = sMap.x -1, y = sMap.y -1;
+			SECTORINFO& s = SectorInfo[sMap.AsByte()];
 			s.ubTravelRating                           = movementCosts->getTravelRating(x, y);
 			s.ubTraversability[WEST_STRATEGIC_MOVE]    = movementCosts->getTraversibilityWestEast(x, y);
 			s.ubTraversability[EAST_STRATEGIC_MOVE]    = movementCosts->getTraversibilityWestEast(x + 1, y);
