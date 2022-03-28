@@ -1724,9 +1724,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 		return;
 	}
 
-	UINT8 ubDstSectorX = (UINT8)SECTORX( gGarrisonGroup[ iDstGarrisonID ].ubSectorID );
-	UINT8 ubDstSectorY = (UINT8)SECTORY( gGarrisonGroup[ iDstGarrisonID ].ubSectorID );
-	SGPSector dstSector(ubDstSectorX, ubDstSectorY);
+	SGPSector dstSector(gGarrisonGroup[iDstGarrisonID].ubSectorID);
 
 	if( pOptionalGroup && *pOptionalGroup )
 	{ //This group will provide the reinforcements
