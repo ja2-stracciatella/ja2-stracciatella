@@ -11,15 +11,6 @@ static inline UINT8 SECTOR(UINT8 const x, UINT8 const y)
 	return (y - 1) * 16 + x - 1;
 }
 
-//Macro to convert sector short strings such as A1 and P16, to the 0-255 SectorInfo[] index 
-static inline UINT8 SECTOR_FROM_SECTOR_SHORT_STRING(const char* coordinates)
-{
-	Assert(strlen(coordinates) > 1);
-	UINT8 y = coordinates[0] - 'A' + 1;
-	UINT8 x = atoi(coordinates + 1);
-	return SECTOR(x, y);
-}
-
 #define SECTORX(SectorID) ((SectorID % 16) + 1)
 #define SECTORY(SectorID) ((SectorID / 16) + 1)
 

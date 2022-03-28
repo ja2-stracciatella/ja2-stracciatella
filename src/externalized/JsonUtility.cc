@@ -69,7 +69,7 @@ uint8_t JsonUtility::parseSectorID(const ST::string& sectorString)
 		ST::string err = ST::format("{} is not a valid sector", sectorString);
 		throw std::runtime_error(err.to_std_string());
 	}
-	return SECTOR_FROM_SECTOR_SHORT_STRING(sectorString.c_str());
+	return SGPSector::FromShortString(sectorString).AsByte();
 }
 
 uint8_t JsonUtility::parseSectorID(const rapidjson::Value& json, const char* fieldName)

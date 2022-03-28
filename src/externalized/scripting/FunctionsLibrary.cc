@@ -26,12 +26,12 @@ SECTORINFO* GetSectorInfo(const std::string sectorID)
 		ST::string err = ST::format("The given sectorID ('{}') is invalid", sectorID);
 		throw std::runtime_error(err.to_std_string());
 	}
-	UINT8 ubSector = SECTOR_FROM_SECTOR_SHORT_STRING(sectorID.c_str());
+	UINT8 ubSector = SGPSector::FromShortString(sectorID).AsByte();
 	return &(SectorInfo[ubSector]);
 }
 
 UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(const std::string sectorID)
-{ 
+{
 	auto pos = sectorID.find('-');
 	if (pos == std::string::npos) throw std::runtime_error("Invalid underground sectorID format");
 
@@ -42,8 +42,8 @@ UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(const std::string sectorID)
 		throw std::runtime_error("Invalid underground sectorID");
 	}
 
-	UINT32 ubSector = SECTOR_FROM_SECTOR_SHORT_STRING(stSector.c_str());
-	return FindUnderGroundSector(SGPSector(ubSector, ubSectorZ, ""));
+	const SGPSector& ubSector = SGPSector::FromShortString(stSector, ubSectorZ);
+	return FindUnderGroundSector(ubSector);
 }
 
 OBJECTTYPE* CreateItem(const UINT16 usItem, const INT8 bStatus)

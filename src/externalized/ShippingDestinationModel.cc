@@ -25,7 +25,7 @@ ShippingDestinationModel* ShippingDestinationModel::deserialize(JsonObjectReader
 	bool isPrimary = false;
 	bool canDeliver = obj.getOptionalBool("canDeliver");
 	if (canDeliver) {
-		destSectorId = SECTOR_FROM_SECTOR_SHORT_STRING(obj.GetString("deliverySector"));
+		destSectorId = SGPSector::FromShortString(obj.GetString("deliverySector")).AsByte();
 		destSectorZ = obj.GetInt("deliverySectorZ");
 		destGridNo = obj.GetInt("deliverySectorGridNo");
 		isPrimary = obj.getOptionalBool("isPrimary");

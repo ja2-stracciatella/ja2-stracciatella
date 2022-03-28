@@ -96,13 +96,13 @@ LoadingScreenModel* LoadingScreenModel::deserialize(const rapidjson::Value& scre
 		std::string name = screens[index].internalName.to_std_string();
 		namesMapping[name] = static_cast<uint8_t>(index);
 	}
-	
+
 
 	std::vector<LoadingScreenMapping> mappings;
 	for (auto& item : screensMapping.GetArray())
 	{
 		JsonObjectReader r(item);
-		uint8_t sectorId = SECTOR_FROM_SECTOR_SHORT_STRING(r.GetString("sector"));
+		uint8_t sectorId = SGPSector::FromShortString(r.GetString("sector")).AsByte();
 		mappings.push_back(LoadingScreenMapping{
 			sectorId,
 			(UINT8)r.getOptionalInt("sectorLevel", 0),
