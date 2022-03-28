@@ -2996,7 +2996,6 @@ static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 
 	size_t i, uiBestIndex;
 	GROUP *pGroup;
 	UINT8 ubBestDist, ubDist;
-	UINT8 ubDstSectorX, ubDstSectorY;
 	//AssertMsg( gPatrolGroup.size() == GCM->getPatrolGroups().size(), "Strategic AI -- Patrol group definition mismatch." );
 	ubBestDist = 255;
 	uiBestIndex = -1;
@@ -3016,8 +3015,7 @@ static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 
 			}
 		}
 	}
-	ubDstSectorX = (UINT8)SECTORX( gGarrisonGroup[ iGarrisonID ].ubSectorID );
-	ubDstSectorY = (UINT8)SECTORY( gGarrisonGroup[ iGarrisonID ].ubSectorID );
+	SGPSector dstSector = SGPSector(gGarrisonGroup[iGarrisonID].ubSectorID);
 	if( uiBestIndex != (size_t)-1 )
 	{ //Send the group to the garrison
 		pGroup = GetGroup( gPatrolGroup[ uiBestIndex ].ubGroupID );
@@ -3073,7 +3071,7 @@ static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 
 					return;
 				}
 			}
-			pNewGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
+			pNewGroup->ubOriginalSector = dstSector.AsByte();
 			gGarrisonGroup[ iGarrisonID ].ubPendingGroupID = pNewGroup->ubGroupID;
 			RecalculatePatrolWeight(gPatrolGroup[uiBestIndex]);
 
@@ -3083,7 +3081,7 @@ static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 
 		{ //Send the whole group and kill it's patrol assignment.
 			gPatrolGroup[ uiBestIndex ].ubGroupID = 0;
 			gGarrisonGroup[ iGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
-			pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
+			pGroup->ubOriginalSector = dstSector.AsByte();
 			RecalculatePatrolWeight(gPatrolGroup[uiBestIndex]);
 			//The ONLY case where the group is told to move somewhere else when they could be BETWEEN sectors.  The movegroup functions
 			//don't work if this is the case.  Teleporting them to their previous sector is the best and easiest way to deal with this.
@@ -3099,7 +3097,7 @@ static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 
 		pGroup->ubMoveType = ONE_WAY;
 		pGroup->pEnemyGroup->ubIntention = REINFORCEMENTS;
 		gGarrisonGroup[ iGarrisonID ].ubPendingGroupID = pGroup->ubGroupID;
-		pGroup->ubOriginalSector = (UINT8)SECTOR( ubDstSectorX, ubDstSectorY );
+		pGroup->ubOriginalSector = dstSector.AsByte();
 		giReinforcementPool -= (INT32)ubSoldiersRequested;
 
 		MoveSAIGroupToSector( &pGroup, gGarrisonGroup[ iGarrisonID ].ubSectorID, EVASIVE, REINFORCEMENTS );
