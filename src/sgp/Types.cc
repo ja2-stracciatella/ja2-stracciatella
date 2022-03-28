@@ -48,6 +48,14 @@ SGPSector SGPSector::FromShortString(const ST::string coordinates, INT8 h)
 	return SGPSector(x, y, h);
 }
 
+// takes offsets, not all coordinates like the normal constructor
+SGPSector SGPSector::FromSectorID(UINT16 sectorId, UINT8 dx, UINT8 dy)
+{
+	UINT8 x = getXfromSectorID(sectorId) + dx;
+	UINT8 y = getYfromSectorID(sectorId) + dy;
+	return SGPSector(x, y);
+}
+
 bool SGPSector::operator==(const SGPSector& sector) const noexcept
 {
 	return x == sector.x && y == sector.y && z == sector.z;

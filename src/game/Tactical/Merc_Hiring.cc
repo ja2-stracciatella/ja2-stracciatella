@@ -534,11 +534,12 @@ static void CheckForValidArrivalSector(void)
 
 	if ( fFound )
 	{
-		g_merc_arrive_sector = SECTOR(SECTORX(g_merc_arrive_sector) + sGoodX, SECTORY(g_merc_arrive_sector) + sGoodY);
+		SGPSector arrival = SGPSector::FromSectorID(g_merc_arrive_sector, sGoodX, sGoodY);
+		g_merc_arrive_sector = arrival.AsByte();
 
 		UpdateAnyInTransitMercsWithGlobalArrivalSector( );
 
-		zShortTownIDString2 = SGPSector(g_merc_arrive_sector).AsShortString();
+		zShortTownIDString2 = arrival.AsShortString();
 		sString = st_format_printf(str_arrival_rerouted, zShortTownIDString2, zShortTownIDString1);
 
 		DoScreenIndependantMessageBox(  sString, MSG_BOX_FLAG_OK, NULL );

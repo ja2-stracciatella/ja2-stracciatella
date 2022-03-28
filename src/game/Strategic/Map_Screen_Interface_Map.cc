@@ -3404,8 +3404,7 @@ static void RenderShadingForUnControlledSectors(void)
 	{
 		for (INT32 dx = 0; dx != 3; ++dx)
 		{
-			SGPSector sMap(SECTORX(sBaseSectorValue) + dx, SECTORY(sBaseSectorValue) + dy);
-
+			SGPSector sMap = SGPSector::FromSectorID(sBaseSectorValue, dx, dy);
 			StrategicMapElement const& e = StrategicMap[sMap.AsStrategicIndex()];
 			if (e.bNameId == BLANK_SECTOR) continue;
 			if (!e.fEnemyControlled && NumHostilesInSector(sMap) == 0) continue;
