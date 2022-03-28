@@ -710,7 +710,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 
 	if( gfWorldLoaded )
 	{ //look for people arriving in the currently loaded sector.  This handles reinforcements.
-		const GROUP* const curr = FindPlayerMovementGroupInSector(gWorldSector.x, gWorldSector.y);
+		const GROUP* const curr = FindPlayerMovementGroupInSector(gWorldSector);
 		if (gWorldSector == gSector0 && curr && PlayerMercsInSector(gWorldSector))
 		{ //Reinforcements have arrived!
 			if( gTacticalStatus.fEnemyInSector )
@@ -1116,7 +1116,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 	/* First check if the group arriving is going to queue another battle.
 	 * NOTE: We can't have more than one battle ongoing at a time. */
 	if (exception_queue ||
-		(check_for_battle && gTacticalStatus.fEnemyInSector && FindPlayerMovementGroupInSector(gWorldSector.x, gWorldSector.y) && (cSector != gWorldSector || gWorldSector.z > 0)) ||
+		(check_for_battle && gTacticalStatus.fEnemyInSector && FindPlayerMovementGroupInSector(gWorldSector) && (cSector != gWorldSector || gWorldSector.z > 0)) ||
 		AreInMeanwhile() ||
 		/* KM: Aug 11, 1999 -- Patch fix: Added additional checks to prevent a 2nd
 			* battle in the case where the player is involved in a potential battle
@@ -2811,6 +2811,11 @@ GROUP* FindEnemyMovementGroupInSector(const SGPSector& sMap)
 	return NULL;
 }
 
+
+GROUP* FindPlayerMovementGroupInSector(const SGPSector& sMap)
+{
+	return FindPlayerMovementGroupInSector(sMap.x, sMap.y);
+}
 
 GROUP* FindPlayerMovementGroupInSector(const UINT8 x, const UINT8 y)
 {

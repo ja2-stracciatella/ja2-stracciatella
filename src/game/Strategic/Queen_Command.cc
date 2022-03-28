@@ -1299,7 +1299,7 @@ BOOLEAN PlayerSectorDefended( UINT8 ubSectorID )
 		return TRUE;
 	}
 	// Player in sector?
-	return FindPlayerMovementGroupInSector(SECTORX(ubSectorID), SECTORY(ubSectorID)) != NULL;
+	return FindPlayerMovementGroupInSector(SGPSector(ubSectorID)) != nullptr;
 }
 
 
