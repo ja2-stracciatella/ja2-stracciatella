@@ -3404,12 +3404,11 @@ static void RenderShadingForUnControlledSectors(void)
 	{
 		for (INT32 dx = 0; dx != 3; ++dx)
 		{
-			INT32 const x = SECTORX(sBaseSectorValue) + dx;
-			INT32 const y = SECTORY(sBaseSectorValue) + dy;
+			SGPSector sMap(SECTORX(sBaseSectorValue) + dx, SECTORY(sBaseSectorValue) + dy);
 
-			StrategicMapElement const& e = StrategicMap[SGPSector(x, y).AsStrategicIndex()];
+			StrategicMapElement const& e = StrategicMap[sMap.AsStrategicIndex()];
 			if (e.bNameId == BLANK_SECTOR) continue;
-			if (!e.fEnemyControlled && NumHostilesInSector(SGPSector(x, y, 0)) == 0) continue;
+			if (!e.fEnemyControlled && NumHostilesInSector(sMap) == 0) continue;
 
 			// shade this sector, not under our control
 			INT16 const sX = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + dx * MILITIA_BOX_BOX_WIDTH;
