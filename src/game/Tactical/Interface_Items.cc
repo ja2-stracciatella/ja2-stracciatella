@@ -3711,7 +3711,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 			SLOGD("INcremtning ABC: Throw item to %d", gTacticalStatus.ubAttackBusyCount);
 
 			// Given our gridno, throw grenate!
-			CalculateLaunchItemParamsForThrow(gpItemPointerSoldier, sGridNo, gpItemPointerSoldier->bLevel, gsInterfaceLevel * 256 + sEndZ, gpItemPointer, 0, ubThrowActionCode, target);
+			CalculateLaunchItemParamsForThrow(gpItemPointerSoldier, sGridNo, gsInterfaceLevel, gsInterfaceLevel * 256 + sEndZ, gpItemPointer, 0, ubThrowActionCode, target);
 
 			// OK, goto throw animation
 			HandleSoldierThrowItem( gpItemPointerSoldier, usMapPos );
