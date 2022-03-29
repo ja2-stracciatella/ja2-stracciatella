@@ -1428,7 +1428,7 @@ void DefaultContentManager::loadTranslationTable()
 {
 	m_translationTable.clear();
 	ST::string name = "translation_tables/translation-table";
-	ST::string suffix = "eng";
+	ST::string suffix;
 	switch (m_gameVersion)
 	{
 	case GameVersion::FRENCH:
@@ -1445,6 +1445,9 @@ void DefaultContentManager::loadTranslationTable()
 
 	case GameVersion::SIMPLIFIED_CHINESE:
 		suffix = "chs";
+		break;
+	default:
+		suffix = "eng";
 		break;
 	}
 
