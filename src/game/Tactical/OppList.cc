@@ -1194,6 +1194,7 @@ void AllTeamsLookForAll(UINT8 ubAllowInterrupts)
 	FOR_EACH_MERC(i)
 	{
 		SOLDIERTYPE& s = **i;
+		if (s.sGridNo == NOWHERE) continue;
 		if (s.bLife >= OKLIFE) HandleSight(s, SIGHT_LOOK); // no radio or interrupts yet
 	}
 
