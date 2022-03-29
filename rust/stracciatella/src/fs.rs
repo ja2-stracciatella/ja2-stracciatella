@@ -55,17 +55,15 @@ pub fn remove_file<P: AsRef<Path>>(path: P) -> Result<(), io::Error> {
     std::fs::remove_file(path)
 }
 
-/// An implementation of `std::fs::rename` that handles files on separate file systems
+/// An implementation of `std::fs::rename` that handles files on different file systems
 pub fn rename<P: AsRef<Path>>(from: P, to: P) -> Result<(), io::Error> {
-    if let Err(err) = std::fs::rename(&from, &to) {
-        if err.kind() == std::io::ErrorKind::Other {
-            // Fallback in case files are on separate filesystems on linux
+    match std::fs::rename(&from, &to) {
+        Ok(()) => Ok(()),
+        #[cfg(target_os = "linux")]
+        Err(e) if e.raw_os_error() == Some(libc::EXDEV) => {
             std::fs::copy(&from, &to).and_then(|_| remove_file(&from))
-        } else {
-            Err(err)
         }
-    } else {
-        Ok(())
+        Err(e) => Err(e),
     }
 }
 
