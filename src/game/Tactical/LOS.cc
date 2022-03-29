@@ -1249,9 +1249,11 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 		} while( (iCurrTileX == iOldTileX) && (iCurrTileY == iOldTileY) && (iLoop < iDistance));
 
 		// leaving a tile, check to see if it had gas in it
-		if ( pMapElement->ubExtFlags[0] & (MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS) )
+		INT32 iCubesZ = CONVERT_HEIGHTUNITS_TO_INDEX(FIXEDPT_TO_INT32(qCurrZ));
+		UINT8 bTileLevel = iCubesZ > 3 ? 1 : 0;
+		if (pMapElement->ubExtFlags[bTileLevel] & (MAPELEMENT_EXT_SMOKE | MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS))
 		{
-			if ( (pMapElement->ubExtFlags[0] & MAPELEMENT_EXT_SMOKE) && !fSmell )
+			if ((pMapElement->ubExtFlags[bTileLevel] & MAPELEMENT_EXT_SMOKE) && !fSmell)
 			{
 				bSmoke++;
 
