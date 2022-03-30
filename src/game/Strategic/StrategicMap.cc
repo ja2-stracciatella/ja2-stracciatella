@@ -683,7 +683,7 @@ void PrepareLoadedSector()
 		CalculateNonPersistantPBIInfo();
 	}
 
-	SLOGD("Current Time is: %d", GetWorldTotalMin() );
+	STLOGD("Current Time is: {}", GetWorldTotalMin());
 
 	AllTeamsLookForAll( TRUE );
 }
@@ -1123,7 +1123,7 @@ check_entry:
 				}
 				else
 				{
-					SLOGD("Sector %s has NO entrypoints -- using precise center of map for %s.", sector.c_str(), s.name.c_str());
+					STLOGD("Sector {} has NO entrypoints -- using precise center of map for {}.", sector, s.name);
 					goto place_in_center;
 				}
 				ST::string no_entry;
@@ -1137,7 +1137,7 @@ check_entry:
 				}
 				if (!no_entry.empty())
 				{
-					SLOGD("Sector %s doesn't have a %s entrypoint -- substituting %s entrypoint for %s.", sector.c_str(), no_entry.c_str(), entry.c_str(), s.name.c_str());
+					STLOGD("Sector {} doesn't have a {} entrypoint -- substituting {} entrypoint for {}.", sector, no_entry, entry, s.name);
 				}
 			}
 			break;
@@ -1149,11 +1149,11 @@ check_entry:
 		case INSERTION_CODE_PRIMARY_EDGEINDEX:
 		{
 			gridno = SearchForClosestPrimaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
-			SLOGD("%s's primary insertion gridno is %d using %d as initial search gridno and %d insertion code.",
-						s.name.c_str(), gridno, s.sPendingActionData2, s.usStrategicInsertionData);
+			STLOGD("{}'s primary insertion gridno is {} using {} as initial search gridno and {} insertion code.",
+						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
-				SLOGE("Main edgepoint search failed for %s -- substituting entrypoint.", s.name.c_str());
+				STLOGE("Main edgepoint search failed for {} -- substituting entrypoint.", s.name);
 				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}
@@ -1163,11 +1163,11 @@ check_entry:
 		case INSERTION_CODE_SECONDARY_EDGEINDEX:
 		{
 			gridno = SearchForClosestSecondaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
-			SLOGD("%s's isolated insertion gridno is %d using %d as initial search gridno and %d insertion code.",
-						s.name.c_str(), gridno, s.sPendingActionData2, s.usStrategicInsertionData);
+			STLOGD("{}'s isolated insertion gridno is {} using {} as initial search gridno and {} insertion code.",
+						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
-				SLOGE("Isolated edgepoint search failed for %s -- substituting entrypoint.", s.name.c_str());
+				STLOGE("Isolated edgepoint search failed for {} -- substituting entrypoint.", s.name);
 				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}
@@ -1192,15 +1192,14 @@ check_entry:
 			return;
 
 		default:
-			SLOGD("Improper insertion code %d given to UpdateMercsInSector", s.ubStrategicInsertionCode);
+			STLOGD("Improper insertion code {} given to UpdateMercsInSector", s.ubStrategicInsertionCode);
 			goto place_in_center;
 	}
 
 	// If no insertion direction exists, this is bad!
 	if (gridno == -1)
 	{
-		// TODO: this is the only real use of sSector — consider removing the parameter
-		SLOGW("Insertion gridno for direction %d not added to map sector %d %d", s.ubStrategicInsertionCode, sSector.x, sSector.y);
+		STLOGW("Insertion gridno for direction {} not added to map sector {}", s.ubStrategicInsertionCode, sSector.AsShortString());
 place_in_center:
 		gridno = WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2;
 	}
@@ -1323,7 +1322,7 @@ static void SetInsertionDataFromAdjacentMoveDirection(SOLDIERTYPE& s, UINT8 cons
 		case WEST:  s.ubStrategicInsertionCode = INSERTION_CODE_EAST;  break;
 
 		default: // Wrong direction given
-			SLOGD("Improper insertion direction %d given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction);
+			STLOGD("Improper insertion direction {} given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction);
 			s.ubStrategicInsertionCode = INSERTION_CODE_WEST;
 			break;
 	}
@@ -1359,7 +1358,7 @@ static UINT8 GetInsertionDataFromAdjacentMoveDirection(UINT8 ubTacticalDirection
 			break;
 		default:
 			// Wrong direction given!
-			SLOGD("Improper insertion direction %d given to GetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
+			STLOGD("Improper insertion direction {} given to GetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
 			ubDirection = EAST_STRATEGIC_MOVE;
 	}
 
@@ -1397,7 +1396,7 @@ static UINT8 GetStrategicInsertionDataFromAdjacentMoveDirection(UINT8 ubTactical
 			break;
 		default:
 			// Wrong direction given!
-			SLOGD("Improper insertion direction %d given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
+			STLOGD("Improper insertion direction {} given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
 			ubDirection = EAST_STRATEGIC_MOVE;
 	}
 	return( ubDirection );
@@ -1461,7 +1460,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	else
 	{
 		// OK, no jump code here given...
-		SLOGD("Improper jump code %d given to JumpIntoAdjacentSector", ubJumpCode);
+		STLOGD("Improper jump code {} given to JumpIntoAdjacentSector", ubJumpCode);
 	}
 
 	Assert( pValidSoldier );
@@ -1511,7 +1510,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 		// Take directions from exit grid info!
 		if ( !GetExitGrid( sAdditionalData, &ExitGrid ) )
 		{
-			SLOGA("Told to use exit grid at %d but one does not exist", sAdditionalData);
+			STLOGA("Told to use exit grid at {} but one does not exist", sAdditionalData);
 		}
 
 		gsAdjacentSector = ExitGrid.ubGotoSector;
@@ -1959,7 +1958,7 @@ static void DoneFadeOutAdjacentSector(void)
 			}
 			else
 			{
-				SLOGW("%s's gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name.c_str());
+				STLOGW("{}'s gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name);
 			}
 		}
 		SetActionToDoOnceMercsGetToLocation(WAIT_FOR_MERCS_TO_WALKON_SCREEN, ubNum);
