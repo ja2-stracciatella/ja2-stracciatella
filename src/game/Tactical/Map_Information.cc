@@ -336,7 +336,7 @@ static void UpdateOldVersionMap(void)
 		{
 			if (gWorldSector.z)
 			{
-				STLOGA("Currently loaded map ({}.dat) is invalid -- less than the minimum supported version.", gWorldSector.AsLongString());
+				STLOGA("Currently loaded map ({}.dat) is invalid -- less than the minimum supported version.", gWorldSector.AsLongString(true));
 			}
 			else if (!gWorldSector.z)
 			{

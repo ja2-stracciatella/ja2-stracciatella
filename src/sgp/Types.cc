@@ -130,8 +130,9 @@ ST::string SGPSector::AsShortString() const
 	return ST::format("{c}{}", 'A' - 1 + y, x);
 }
 
-ST::string SGPSector::AsLongString() const
+ST::string SGPSector::AsLongString(bool file) const
 {
-	// return a string id like J11_B0
-	return ST::format("{c}{}_b{}", y + 'A' - 1, x, z);
+	// return a string id like J11_B0 or J11-0
+	if (file) return ST::format("{c}{}_b{}", y + 'A' - 1, x, z);
+	return ST::format("{c}{}-{}", y + 'A' - 1, x, z);
 }

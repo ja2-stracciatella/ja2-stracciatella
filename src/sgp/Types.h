@@ -152,7 +152,7 @@ public:
 	UINT8 AsByte() const;
 	UINT16 AsStrategicIndex() const;
 	ST::string AsShortString() const;
-	ST::string AsLongString() const;
+	ST::string AsLongString(bool file = false) const;
 };
 
 struct SDL_Color;

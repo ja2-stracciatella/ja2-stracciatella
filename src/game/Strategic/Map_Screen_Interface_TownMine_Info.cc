@@ -342,8 +342,7 @@ static void AddSectorToBox(PopUpBox* const box)
 	wString = bCurrentTownMineSector.AsShortString();
 	if (bCurrentTownMineSector.z != 0)
 	{
-		wString2 = ST::format("-{}", bCurrentTownMineSector.z); // not the same as AsLongString
-		wString += wString2;
+		wString = bCurrentTownMineSector.AsLongString();
 	}
 
 	AddSecondColumnMonoString(box, wString);

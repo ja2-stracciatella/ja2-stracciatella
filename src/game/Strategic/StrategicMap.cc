@@ -343,7 +343,7 @@ ST::string GetMapFileName(const SGPSector& sector, BOOLEAN const add_alternate_m
 	}
 	else
 	{
-		fileName = sector.AsLongString();
+		fileName = sector.AsLongString(true);
 	}
 
 	/* The gfUseAlternateMap flag is set while loading saved games. When starting
