@@ -2,14 +2,18 @@
 
 #include "Campaign_Types.h"
 
+#define MAX_SECTOR 16
+#define MAX_Z 3
+#define MAP_WORLD_X 18 // redefine to avoid needing to include StrategicMap.h
+
 static UINT8 getXfromSectorID(UINT32 sectorId)
 {
-	return sectorId % 16 + 1;
+	return sectorId % MAX_SECTOR + 1;
 }
 
 static UINT8 getYfromSectorID(UINT32 sectorId)
 {
-	return sectorId / 16 + 1;
+	return sectorId / MAX_SECTOR + 1;
 }
 
 SGPSector::SGPSector(UINT32 s) noexcept
@@ -20,12 +24,12 @@ SGPSector::SGPSector(UINT32 s) noexcept
 
 static UINT16 getXfromStrategicIndex(UINT16 idx)
 {
-	return idx % 18; // MAP_WORLD_X
+	return idx % MAP_WORLD_X;
 }
 
 static UINT16 getYfromStrategicIndex(UINT16 idx)
 {
-	return idx / 18; // MAP_WORLD_X
+	return idx / MAP_WORLD_X;
 }
 
 SGPSector SGPSector::FromStrategicIndex(UINT16 idx)
@@ -87,9 +91,10 @@ SGPSector& SGPSector::operator-=(const SGPSector& rhs) noexcept
 
 bool SGPSector::IsValid() const noexcept
 {
-	return (x >= 1 && x <= 16) && (y >= 1 && y <= 16) && (z >= 0 && z <= 3);
+	return (x >= 1 && x <= MAX_SECTOR) && (y >= 1 && y <= MAX_SECTOR) && (z >= 0 && z <= MAX_Z);
 }
 
+// NOTE: adapt tests if MAX_SECTOR ever changes
 bool SGPSector::IsValid(ST::string shortString) const noexcept
 {
 	size_t len = shortString.size();
@@ -110,13 +115,13 @@ bool SGPSector::IsValid(ST::string shortString) const noexcept
 // convert sector coordinates (1-16,1-16) to 0-255 sector ID
 UINT8 SGPSector::AsByte() const
 {
-	Assert(1 <= x && x <= 16 && 1 <= y && y <= 16);
-	return (y - 1) * 16 + x - 1;
+	Assert(1 <= x && x <= MAX_SECTOR && 1 <= y && y <= MAX_SECTOR);
+	return (y - 1) * MAX_SECTOR + x - 1;
 }
 
 UINT16 SGPSector::AsStrategicIndex() const
 {
-	return x + y * 18; // 18 == MAP_WORLD_X
+	return x + y * MAP_WORLD_X;
 }
 
 ST::string SGPSector::AsShortString() const
