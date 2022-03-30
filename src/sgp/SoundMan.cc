@@ -106,7 +106,7 @@ struct SAMPLETAG
 	UINT32 uiBufferSize; // The size of the in-memory buffer
 	ma_format eInMemoryFormat;
 	UINT32 uiInMemoryChannels;
-	
+
 	ma_data_converter* pDataConverter; // pointer to a data converter that decodes the data from pData
 
 	SGPFile* pFile;  // pointer to a SDL_RWops representing the file that we stream from
@@ -498,7 +498,7 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			// We might not have as many bytes available
 			auto availableFrames = MIN(requiredInputFrameCount * bytesPerFrame, sample->uiBufferSize - posInBytes) / bytesPerFrame;
 			auto expectedOutputFrameCount = ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableFrames);
-			
+
 			auto result = ma_data_converter_process_pcm_frames(
 				sample->pDataConverter,
 				sample->pInMemoryBuffer + posInBytes,
@@ -529,11 +529,8 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			}
 		}
 	} catch (const std::runtime_error& err) {
-		SLOGE(ST::format(
-			"Error processing audio stream for channel {}, sample {}, file \"{}\": {}",
-			channel - pSoundList, sample - pSampleList, sample->pName,
-			err.what()
-		).c_str());
+		STLOGE("Error processing audio stream for channel {}, sample {}, file \"{}\": {}",
+			channel - pSoundList, sample - pSampleList, sample->pName, err.what());
 	}
 }
 
@@ -733,7 +730,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 	{
 		auto isStreamed = TRUE;
 		SAMPLETAG* s = SoundGetEmptySample();
-		
+
 		// if we don't have a sample slot
 		if (s == NULL)
 		{
@@ -1027,12 +1024,9 @@ static BOOLEAN SoundInitHardware(void)
 
 		SDL_PauseAudio(0);
 		return TRUE;
-		
+
 	} catch (const std::runtime_error& err) {
-		SLOGE(ST::format(
-			"SoundInitHardware: {}",
-			err.what()
-		).c_str());
+		STLOGE("SoundInitHardware: {}", err.what());
 		SoundShutdownHardware();
 		return FALSE;
 	}

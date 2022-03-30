@@ -1325,13 +1325,13 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 	if (gfTurnBasedAI || gTacticalStatus.fAutoBandageMode)
 	{
-		SLOGD(ST::format("{} does {} (a.d. {}) in {} with {} APs left",
+		STLOGD("{} does {} (a.d. {}) in {} with {} APs left",
 			pSoldier->ubID, gzActionStr[pSoldier->bAction], pSoldier->usActionData,
-			pSoldier->sGridNo, pSoldier->bActionPoints));
+			pSoldier->sGridNo, pSoldier->bActionPoints);
 	}
 
-	SLOGD(ST::format("{} does {} (a.d. {}) at time {}", pSoldier->ubID,
-		gzActionStr[pSoldier->bAction], pSoldier->usActionData, GetJA2Clock()));
+	STLOGD("{} does {} (a.d. {}) at time {}", pSoldier->ubID,
+		gzActionStr[pSoldier->bAction], pSoldier->usActionData, GetJA2Clock());
 
 	switch (pSoldier->bAction)
 	{

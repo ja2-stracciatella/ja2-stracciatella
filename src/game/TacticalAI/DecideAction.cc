@@ -3135,8 +3135,8 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			case AGGRESSIVE:		iOffense += 20; break;
 			case ATTACKSLAYONLY:iOffense += 30; break;
 		}
-		SLOGD(ST::format("{} - CHOICE: iOffense = {}, iDefense = {}\n",
-			pSoldier->name, iOffense,iDefense));
+		STLOGD("{} - CHOICE: iOffense = {}, iDefense = {}\n",
+			pSoldier->name, iOffense,iDefense);
 
 		// if his defensive instincts win out, forget all about the attack
 		if (iDefense > iOffense)
@@ -3337,10 +3337,9 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			pSoldier->usActionData = BestAttack.sTarget;
 			pSoldier->bTargetLevel = BestAttack.bTargetLevel;
 
-			SLOGD(ST::format("{}({}) {} {}({})",
-				pSoldier->ubID, pSoldier->name,
+			STLOGD("{}({}) {} {}({})", pSoldier->ubID, pSoldier->name,
 				ubBestAttackAction == AI_ACTION_FIRE_GUN ? "SHOOTS" : (ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE ? "TOSSES AT" : "STABS"),
-				BestAttack.opponent->ubID, BestAttack.opponent->name));
+				BestAttack.opponent->ubID, BestAttack.opponent->name);
 			return(ubBestAttackAction);
 		}
 
@@ -3385,8 +3384,8 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 
 	if (sBestCover != NOWHERE)
 	{
-		SLOGD(ST::format("{} - taking cover at gridno {} ({}% better)",
-			pSoldier->name, sBestCover, iCoverPercentBetter));
+		STLOGD("{} - taking cover at gridno {} ({}% better)",
+			pSoldier->name, sBestCover, iCoverPercentBetter);
 		pSoldier->usActionData = sBestCover;
 		return(AI_ACTION_TAKE_COVER);
 	}
@@ -3687,8 +3686,8 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 				break;
 		}
 	}
-	SLOGD(ST::format("DecideAction: selected action {}, actionData {}\n\n",
-		bAction, pSoldier->usActionData));
+	STLOGD("DecideAction: selected action {}, actionData {}\n\n",
+		bAction, pSoldier->usActionData);
 	return(bAction);
 }
 

@@ -476,15 +476,15 @@ static BOOLEAN PhysicsIntegrate(REAL_OBJECT* pObject, float DeltaTime)
 
 	if ( pObject->fPotentialForDebug )
 	{
-		SLOGD(ST::format("Object {}: Force     {} {} {}", REALOBJ2ID(pObject),
-			pObject->Force.x, pObject->Force.y, pObject->Force.z));
-		SLOGD(ST::format("Object {}: Velocity  {} {} {}", REALOBJ2ID(pObject),
-			pObject->Velocity.x, pObject->Velocity.y, pObject->Velocity.z));
-		SLOGD(ST::format("Object {}: Position  {} {} {}", REALOBJ2ID(pObject),
-			pObject->Position.x, pObject->Position.y, pObject->Position.z));
-		SLOGD(ST::format("Object {}: Delta Pos {} {} {}", REALOBJ2ID(pObject),
+		STLOGD("Object {}: Force     {} {} {}", REALOBJ2ID(pObject),
+			pObject->Force.x, pObject->Force.y, pObject->Force.z);
+		STLOGD("Object {}: Velocity  {} {} {}", REALOBJ2ID(pObject),
+			pObject->Velocity.x, pObject->Velocity.y, pObject->Velocity.z);
+		STLOGD("Object {}: Position  {} {} {}", REALOBJ2ID(pObject),
+			pObject->Position.x, pObject->Position.y, pObject->Position.z);
+		STLOGD("Object {}: Delta Pos {} {} {}", REALOBJ2ID(pObject),
 			pObject->OldPosition.x - pObject->Position.x, pObject->OldPosition.y - pObject->Position.y,
-			pObject->OldPosition.z - pObject->Position.z));
+			pObject->OldPosition.z - pObject->Position.z);
 	}
 
 	if ( pObject->Obj.usItem == MORTAR_SHELL && !pObject->fTestObject && pObject->ubActionCode == THROW_ARM_ITEM )
@@ -1035,12 +1035,12 @@ static BOOLEAN PhysicsCheckForCollisions(REAL_OBJECT* pObject, INT32* piCollisio
 			if ( pObject->fPotentialForDebug )
 			{
 				STLOGD("Object {}: Collision {}", REALOBJ2ID(pObject), iCollisionCode);
-				SLOGD(ST::format("Object {}: Collision Normal {} {} {}", REALOBJ2ID(pObject),
-					vTemp.x, vTemp.y, vTemp.z));
-				SLOGD(ST::format("Object {}: Collision OldPos {} {} {}", REALOBJ2ID(pObject),
-					pObject->Position.x, pObject->Position.y, pObject->Position.z));
-				SLOGD(ST::format("Object {}: Collision Velocity {} {} {}", REALOBJ2ID(pObject),
-					pObject->CollisionVelocity.x, pObject->CollisionVelocity.y, pObject->CollisionVelocity.z));
+				STLOGD("Object {}: Collision Normal {} {} {}", REALOBJ2ID(pObject),
+					vTemp.x, vTemp.y, vTemp.z);
+				STLOGD("Object {}: Collision OldPos {} {} {}", REALOBJ2ID(pObject),
+					pObject->Position.x, pObject->Position.y, pObject->Position.z);
+				STLOGD("Object {}: Collision Velocity {} {} {}", REALOBJ2ID(pObject),
+					pObject->CollisionVelocity.x, pObject->CollisionVelocity.y, pObject->CollisionVelocity.z);
 			}
 		}
 		else
