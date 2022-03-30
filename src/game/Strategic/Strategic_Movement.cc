@@ -2805,20 +2805,14 @@ GROUP* FindEnemyMovementGroupInSector(const SGPSector& sMap)
 
 GROUP* FindPlayerMovementGroupInSector(const SGPSector& sMap)
 {
-	return FindPlayerMovementGroupInSector(sMap.x, sMap.y);
-}
-
-GROUP* FindPlayerMovementGroupInSector(const UINT8 x, const UINT8 y)
-{
 	FOR_EACH_PLAYER_GROUP(i)
 	{
 		GROUP& g = *i;
 		// NOTE: These checks must always match the INVOLVED group checks in PBI!!!
 		if (g.ubGroupSize != 0 &&
 			!g.fBetweenSectors &&
-			g.ubSector.x   == x &&
-			g.ubSector.y   == y &&
-			g.ubSector.z   == 0 &&
+			g.ubSector == sMap &&
+			g.ubSector.z == 0 &&
 			!GroupHasInTransitDeadOrPOWMercs(g) &&
 			(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne))
 		{

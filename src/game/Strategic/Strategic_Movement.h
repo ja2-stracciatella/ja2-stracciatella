@@ -238,7 +238,6 @@ void RetreatGroupToPreviousSector(GROUP&);
 
 GROUP* FindEnemyMovementGroupInSector(const SGPSector& sMap);
 GROUP* FindPlayerMovementGroupInSector(const SGPSector& sMap);
-GROUP* FindPlayerMovementGroupInSector(UINT8 x, UINT8 y);
 
 BOOLEAN GroupAtFinalDestination(const GROUP*);
 
