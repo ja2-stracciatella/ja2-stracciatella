@@ -688,7 +688,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 }
 
 
-static void HandleOtherGroupsArrivingSimultaneously(UINT8 x, UINT8 y, UINT8 z);
+static void HandleOtherGroupsArrivingSimultaneously(const SGPSector& sSector);
 static void NotifyPlayerOfBloodcatBattle(const SGPSector& ubSector);
 static BOOLEAN TestForBloodcatAmbush(GROUP const*);
 static void TriggerPrebattleInterface(MessageBoxReturnValue);
@@ -725,7 +725,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 		gubEnemyEncounterCode = NO_ENCOUNTER_CODE;
 	}
 
-	HandleOtherGroupsArrivingSimultaneously(gSector.x, gSector.y, gSector.z);
+	HandleOtherGroupsArrivingSimultaneously(gSector);
 
 	FOR_EACH_PLAYER_GROUP(i)
 	{
@@ -1440,7 +1440,7 @@ static void HandleNonCombatGroupArrival(GROUP& g, bool const main_group, bool co
  * look for other groups that may arrive at the same time -- enemies or players,
  * and blindly add them to the sector without checking for battle conditions, as
  * it has already determined that a new battle is about to start. */
-static void HandleOtherGroupsArrivingSimultaneously(UINT8 const x, UINT8 const y, UINT8 const z)
+static void HandleOtherGroupsArrivingSimultaneously(const SGPSector& sSector)
 {
 	UINT32 const now = GetWorldTotalSeconds();
 	gubNumGroupsArrivedSimultaneously = 0;
@@ -1451,7 +1451,7 @@ restart:
 		if (i->ubFlags & SEF_DELETION_PENDING)      continue;
 
 		GROUP& g = *GetGroup((UINT8)i->uiParam);
-		if (g.ubNext.x != x || g.ubNext.x != y || g.ubSector.z != z) continue;
+		if (g.ubNext != sSector) continue;
 		if (!g.fBetweenSectors) continue;
 
 		GroupArrivedAtSector(g, FALSE, FALSE);
