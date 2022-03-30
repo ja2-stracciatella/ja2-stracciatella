@@ -257,7 +257,7 @@ BOOLEAN GroupReversingDirectionsBetweenSectors(GROUP *pGroup, const SGPSector& s
 		// ARM: because we've changed the group's ubSectoryX and ubSectorY, we must now also go and change the sSectorX and
 		// sSectorY of all the soldiers in this group so that they stay in synch.  Otherwise pathing and movement problems
 		// will result since the group is in one place while the merc is in another...
-		SetLocationOfAllPlayerSoldiersInGroup(*pGroup, SGPSector(pGroup->ubSector.x, pGroup->ubSector.y, 0));
+		SetLocationOfAllPlayerSoldiersInGroup(*pGroup, pGroup->ubSector);
 	}
 
 
