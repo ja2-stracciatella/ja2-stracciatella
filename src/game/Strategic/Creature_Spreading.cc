@@ -533,7 +533,7 @@ void CreatureAttackTown(UINT8 ubSectorID, BOOLEAN fSpecificSector)
 	}
 
 	gubCreatureBattleCode = CREATURE_BATTLE_CODE_NONE;
-	SGPSector ubSector(ubSectorID, 1);
+	SGPSector ubSector = SGPSector::FromSectorID(ubSectorID, 1);
 
 	if (!fSpecificSector)
 	{
