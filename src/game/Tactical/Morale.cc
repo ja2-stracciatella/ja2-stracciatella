@@ -472,10 +472,8 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 				// the old sector values might be appropriate (because in transit going out of
 				// that sector!)
 				if ((!s.fBetweenSectors && s.sSector == sMap) ||
-					(s.fBetweenSectors &&
-					s.ubPrevSectorID % 16 + 1 == sMap.x &&
-					s.ubPrevSectorID / 16 + 1 == sMap.y &&
-					s.sSector.z == sMap.z))
+					(s.fBetweenSectors && s.sSector.z == sMap.z &&
+					SGPSector(s.ubPrevSectorID) == sMap))
 				{
 					switch (GetProfile(s.ubProfile).bAttitude)
 					{

@@ -786,7 +786,7 @@ static BOOLEAN HandleMilitiaNoticedByPatrolGroup(UINT8 ubSectorID, GROUP* pEnemy
 	//For now, automatically attack.
 	UINT16 usDefencePoints;
 
-	SGPSector sSector((ubSectorID % 16) + 1, (ubSectorID / 16) + 1);
+	SGPSector sSector(ubSectorID);
 	UINT16 usOffensePoints = pEnemyGroup->pEnemyGroup->ubNumAdmins * 2 +
 										pEnemyGroup->pEnemyGroup->ubNumTroops * 4 +
 										pEnemyGroup->pEnemyGroup->ubNumElites * 6;
@@ -877,7 +877,7 @@ static BOOLEAN AttemptToNoticeAdjacentGroupSucceeds(void)
 
 static BOOLEAN HandleEmptySectorNoticedByPatrolGroup(GROUP* pGroup, UINT8 ubEmptySectorID)
 {
-	SGPSector sSector((ubEmptySectorID % 16) + 1, (ubEmptySectorID / 16) + 1);
+	SGPSector sSector(ubEmptySectorID);
 	UINT8 ubGarrisonID = SectorInfo[ubEmptySectorID].ubGarrisonID;
 	if( ubGarrisonID != NO_GARRISON )
 	{
@@ -1021,9 +1021,9 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 					pSector->ubNumTroops = (UINT8)(pSector->ubNumTroops + pGroup->pEnemyGroup->ubNumTroops);
 					pSector->ubNumElites = (UINT8)(pSector->ubNumElites + pGroup->pEnemyGroup->ubNumElites);
 
-					SLOGD(ST::format("{} reinforcements have arrived to garrison sector {}",
+					STLOGD("{} reinforcements have arrived to garrison sector {}",
 							pGroup->pEnemyGroup->ubNumAdmins + pGroup->pEnemyGroup->ubNumTroops +
-							pGroup->pEnemyGroup->ubNumElites, sec.AsShortString()));
+							pGroup->pEnemyGroup->ubNumElites, sec.AsShortString());
 					if (IsThisSectorASAMSector(sec))
 					{
 						StrategicMap[sec.AsStrategicIndex()].bSAMCondition = 100;
@@ -1047,15 +1047,15 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 						else
 						{ //Add all the troops to the queen's guard.
 							pSector->ubNumElites += pGroup->ubGroupSize;
-							SLOGD(ST::format("{} reinforcements have arrived to garrison queen's sector ({}).",
-									pGroup->ubGroupSize, sec.AsShortString()));
+							STLOGD("{} reinforcements have arrived to garrison queen's sector ({}).",
+									pGroup->ubGroupSize, sec.AsShortString());
 						}
 					}
 					else
 					{ //Add all the troops to the reinforcement pool as the queen's guard is at full strength.
 						giReinforcementPool += pGroup->ubGroupSize;
-						SLOGD(ST::format("{} reinforcements have arrived at queen's sector ({}) and have been added to the reinforcement pool.",
-								pGroup->ubGroupSize, sec.AsShortString()));
+						STLOGD("{} reinforcements have arrived at queen's sector ({}) and have been added to the reinforcement pool.",
+								pGroup->ubGroupSize, sec.AsShortString());
 					}
 				}
 
@@ -1135,8 +1135,8 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 						if( gPatrolGroup[ i ].ubSectorID[ 3 ] )
 							AddWaypointIDToPGroup( pGroup, gPatrolGroup[ i ].ubSectorID[ 3 ] );
 					}
-					SLOGD(ST::format("{} soldiers have arrived to patrol area near sector {}",
-							pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins, sec.AsShortString()));
+					STLOGD("{} soldiers have arrived to patrol area near sector {}",
+							pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins, sec.AsShortString());
 					RecalculatePatrolWeight(gPatrolGroup[i]);
 				}
 				return TRUE;
@@ -1798,14 +1798,14 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 
 		if( ubNumExtraReinforcements )
 		{
-			SLOGD(ST::format("{} troops have been sent from palace to stage assault near sector {}",
-				  ubGroupSize, dstSector.AsShortString()));
+			STLOGD("{} troops have been sent from palace to stage assault near sector {}",
+				  ubGroupSize, dstSector.AsShortString());
 			MoveSAIGroupToSector( &pGroup, gGarrisonGroup[ iDstGarrisonID ].ubSectorID, STAGE, STAGING );
 		}
 		else
 		{
-			SLOGD(ST::format("{} troops have been sent from palace to garrison sector {}",
-					ubGroupSize, dstSector.AsShortString()));
+			STLOGD("{} troops have been sent from palace to garrison sector {}",
+					ubGroupSize, dstSector.AsShortString());
 			MoveSAIGroupToSector( &pGroup, gGarrisonGroup[ iDstGarrisonID ].ubSectorID, STAGE, REINFORCEMENTS );
 		}
 		return;
@@ -1818,9 +1818,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 			goto QUEEN_POOL;
 		}
 
-		UINT8 ubSrcSectorX = (gGarrisonGroup[ iSrcGarrisonID ].ubSectorID % 16) + 1;
-		UINT8 ubSrcSectorY = (gGarrisonGroup[ iSrcGarrisonID ].ubSectorID / 16) + 1;
-		SGPSector srcSector(ubSrcSectorX, ubSrcSectorY);
+		SGPSector srcSector(gGarrisonGroup[iSrcGarrisonID].ubSectorID);
 		if (srcSector != gWorldSector)
 		{ //The reinforcements aren't coming from the currently loaded sector!
 			iReinforcementsAvailable = ReinforcementsAvailable( iSrcGarrisonID );
@@ -1881,8 +1879,8 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 
 				MoveSAIGroupToSector( &pGroup, gGarrisonGroup[ iDstGarrisonID ].ubSectorID, STAGE, REINFORCEMENTS );
 			}
-			SLOGD(ST::format("{} troops have been sent from garrison sector {} to patrol area near sector {}",
-					ubGroupSize, srcSector.AsShortString(), dstSector.AsShortString()));
+			STLOGD("{} troops have been sent from garrison sector {} to patrol area near sector {}",
+					ubGroupSize, srcSector.AsShortString(), dstSector.AsShortString());
 
 			return;
 		}
@@ -1905,14 +1903,13 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 	if( iReinforcementsRequested <= 0)
 		return;
 
-	SGPSector dstSector((pg->ubSectorID[1] % 16) + 1, (pg->ubSectorID[1] / 16) + 1);
-
+	SGPSector dstSector(pg->ubSectorID[1]);
 	if( pOptionalGroup && *pOptionalGroup )
 	{ //This group will provide the reinforcements
 		pGroup = *pOptionalGroup;
 		pg->ubPendingGroupID = pGroup->ubGroupID;
 
-		STLOGD("{} troops have been reassigned from {c}{} to reinforce patrol group covering sector {}",
+		STLOGD("{} troops have been reassigned from {} to reinforce patrol group covering sector {}",
 				pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
 				pGroup->ubSector.AsShortString(), dstSector.AsShortString());
 
@@ -1933,8 +1930,8 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 		giReinforcementPool -= iReinforcementsApproved;
 		pg->ubPendingGroupID = pGroup->ubGroupID;
 
-		SLOGD(ST::format("{} troops have been sent from palace to patrol area near sector {}",
-				pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins, dstSector.AsShortString()));
+		STLOGD("{} troops have been sent from palace to patrol area near sector {}",
+				pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins, dstSector.AsShortString());
 
 		MoveSAIGroupToSector(&pGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
 		return;
@@ -1962,9 +1959,9 @@ static void SendReinforcementsForPatrol(INT32 iPatrolID, GROUP** pOptionalGroup)
 
 						RemoveSoldiersFromGarrisonBasedOnComposition( uiSrcGarrisonID, pGroup->ubGroupSize );
 
-						SLOGD(ST::format("{} troops have been sent from garrison sector {} to patrol area near sector {}",
+						STLOGD("{} troops have been sent from garrison sector {} to patrol area near sector {}",
 								pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites + pGroup->pEnemyGroup->ubNumAdmins,
-								srcSector.AsShortString(), dstSector.AsShortString()));
+								srcSector.AsShortString(), dstSector.AsShortString());
 
 						MoveSAIGroupToSector(&pGroup, pg->ubSectorID[1], EVASIVE, REINFORCEMENTS);
 						return;

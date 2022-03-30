@@ -164,8 +164,7 @@ void AddPlayerToGroup(GROUP& g, SOLDIERTYPE& s)
 	{
 		g.pPlayerList = p;
 		g.ubGroupSize = 1;
-		g.ubPrev.x    = s.ubPrevSectorID % 16 + 1;
-		g.ubPrev.y    = s.ubPrevSectorID / 16 + 1;
+		g.ubPrev      = SGPSector(s.ubPrevSectorID);
 		g.ubSector   = s.sSector;
 	}
 	else
@@ -735,8 +734,7 @@ static BOOLEAN CheckConditionsForBattle(GROUP* pGroup)
 		{
 			if (!g.fBetweenSectors)
 			{
-				SGPSector sSector(g.ubSector.x, g.ubSector.y);
-				if (sSector == gSector0)
+				if (g.ubSector == gSector0)
 				{
 					if (!GroupHasInTransitDeadOrPOWMercs(g) &&
 						(!IsGroupTheHelicopterGroup(g) || !fHelicopterIsAirBorne) &&
@@ -1909,7 +1907,6 @@ void SetEnemyGroupSector(GROUP& g, UINT8 const sector_id)
 	if (!gfRandomizingPatrolGroup) RemoveGroupWaypoints(g);
 
 	g.ubSector = g.ubNext = SGPSector(sector_id);
-	g.ubSector.z = 0;
 	g.fBetweenSectors = FALSE;
 }
 
@@ -1919,8 +1916,7 @@ static void SetGroupNextSectorValue(const SGPSector& sector, GROUP& g)
 {
 	RemoveGroupWaypoints(g);
 	// Set sector x and y to passed values
-	g.ubNext.x         = sector.x;
-	g.ubNext.y         = sector.y;
+	g.ubNext          = sector;
 	g.fBetweenSectors = FALSE;
 	// Set next sectors same as current
 	g.ubOriginalSector = g.ubSector.AsByte();
@@ -2262,15 +2258,13 @@ void HandleArrivalOfReinforcements(GROUP const* const g)
 
 		/* First, determine which entrypoint to use, based on the travel direction
 		 * of the group */
-		UINT8 const x = g->ubSector.x;
-		UINT8 const y = g->ubSector.y;
 		SGPSector insertion = g->ubSector;
 		insertion.z = 0;
 		InsertionCode const strategic_insertion_code =
-			x < g->ubPrev.x ? INSERTION_CODE_EAST  :
-			x > g->ubPrev.x ? INSERTION_CODE_WEST  :
-			y < g->ubPrev.y ? INSERTION_CODE_SOUTH :
-			y > g->ubPrev.y ? INSERTION_CODE_NORTH :
+			g->ubSector.x < g->ubPrev.x ? INSERTION_CODE_EAST  :
+			g->ubSector.x > g->ubPrev.x ? INSERTION_CODE_WEST  :
+			g->ubSector.y < g->ubPrev.y ? INSERTION_CODE_SOUTH :
+			g->ubSector.y > g->ubPrev.y ? INSERTION_CODE_NORTH :
 			throw std::logic_error("reinforcements come from same sector");
 
 		bool first = true;
@@ -2692,29 +2686,26 @@ void CalculateGroupRetreatSector( GROUP *pGroup )
 	uiSectorID = pGroup->ubSector.AsByte();
 	pSector = &SectorInfo[ uiSectorID ];
 
+	pGroup->ubPrev = pGroup->ubSector;
 	if( pSector->ubTraversability[ NORTH_STRATEGIC_MOVE ] != GROUNDBARRIER &&
 			pSector->ubTraversability[ NORTH_STRATEGIC_MOVE ] != EDGEOFWORLD )
 	{
-		pGroup->ubPrev.x = pGroup->ubSector.x;
-		pGroup->ubPrev.y = pGroup->ubSector.y - 1;
+		pGroup->ubPrev.y--;
 	}
 	else if( pSector->ubTraversability[ EAST_STRATEGIC_MOVE ] != GROUNDBARRIER &&
 			pSector->ubTraversability[ EAST_STRATEGIC_MOVE ] != EDGEOFWORLD )
 	{
-		pGroup->ubPrev.x = pGroup->ubSector.x + 1;
-		pGroup->ubPrev.y = pGroup->ubSector.y;
+		pGroup->ubPrev.x++;
 	}
 	else if( pSector->ubTraversability[ WEST_STRATEGIC_MOVE ] != GROUNDBARRIER &&
 			pSector->ubTraversability[ WEST_STRATEGIC_MOVE ] != EDGEOFWORLD )
 	{
-		pGroup->ubPrev.x = pGroup->ubSector.x - 1;
-		pGroup->ubPrev.y = pGroup->ubSector.y;
+		pGroup->ubPrev.x--;
 	}
 	else if( pSector->ubTraversability[ SOUTH_STRATEGIC_MOVE ] != GROUNDBARRIER &&
 			pSector->ubTraversability[ SOUTH_STRATEGIC_MOVE ] != EDGEOFWORLD )
 	{
-		pGroup->ubPrev.x = pGroup->ubSector.x;
-		pGroup->ubPrev.y = pGroup->ubSector.y + 1;
+		pGroup->ubPrev.y++;
 	}
 	else
 	{
@@ -3431,12 +3422,7 @@ static void CancelEmptyPersistentGroupMovement(GROUP& g)
 	g.uiTraverseTime  = 0;
 	g.setArrivalTime(0);
 	g.fBetweenSectors = FALSE;
-	g.ubPrev.x        = 0;
-	g.ubPrev.y        = 0;
-	g.ubSector.x       = 0;
-	g.ubSector.y       = 0;
-	g.ubNext.x        = 0;
-	g.ubNext.y        = 0;
+	g.ubPrev = g.ubSector = g.ubNext = SGPSector();
 }
 
 

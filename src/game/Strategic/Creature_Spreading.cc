@@ -127,12 +127,12 @@ UINT8 gubSectorIDOfCreatureAttack = 0;
 static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8 ubCreatureHabitat)
 {
 	CREATURE_DIRECTIVE* const curr = new CREATURE_DIRECTIVE{};
-	SGPSector ubSector((ubSectorID % 16) + 1, (ubSectorID / 16) + 1, ubSectorZ);
+	SGPSector ubSector = SGPSector::FromSectorID(ubSectorID, ubSectorZ);
 	curr->pLevel = FindUnderGroundSector(ubSector);
 	if( !curr->pLevel )
 	{
-		SLOGA(ST::format("Could not find underground sector node ({}) that should exist.",
-			ubSector.AsLongString()));
+		STLOGA("Could not find underground sector node ({}) that should exist.",
+			ubSector.AsLongString());
 		delete curr;
 		return 0;
 	}

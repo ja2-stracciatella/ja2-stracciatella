@@ -2107,12 +2107,11 @@ static void CalculateRowsAndColumns(void);
 //to figure out how many rows and columns we can use.  The will effect the size of the panel.
 static void CalculateAutoResolveInfo(void)
 {
-	SGPSector sSector(gpAR->ubSector.x, gpAR->ubSector.y);
-	Assert(sSector.IsValid());
+	Assert(gpAR->ubSector.IsValid());
 
 	if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 	{
-		GetNumberOfEnemiesInSector(sSector, &gpAR->ubAdmins, &gpAR->ubTroops, &gpAR->ubElites);
+		GetNumberOfEnemiesInSector(gpAR->ubSector, &gpAR->ubAdmins, &gpAR->ubTroops, &gpAR->ubElites);
 		gpAR->ubEnemies = (UINT8)MIN( gpAR->ubAdmins + gpAR->ubTroops + gpAR->ubElites, 32 );
 	}
 	else
@@ -2132,7 +2131,7 @@ static void CalculateAutoResolveInfo(void)
 		gpAR->ubEnemies = (UINT8)MIN( gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, 32 );
 	}
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
-	gpAR->ubCivs = CountAllMilitiaInSector(sSector);
+	gpAR->ubCivs = CountAllMilitiaInSector(gpAR->ubSector);
 	gpAR->ubMercs = 0;
 	CFOR_EACH_GROUP(i)
 	{
@@ -3315,7 +3314,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 					gStrategicStatus.usPlayerKills++;
 					// EXPERIENCE CLASS GAIN:  Earned a kill
 					StatChange(*pKiller->pSoldier, EXPERAMT, 10 * pTarget->pSoldier->bLevel, FROM_SUCCESS);
-					HandleMoraleEvent(pKiller->pSoldier, MORALE_KILLED_ENEMY, SGPSector(gpAR->ubSector.x, gpAR->ubSector.y, 0));
+					HandleMoraleEvent(pKiller->pSoldier, MORALE_KILLED_ENEMY, gpAR->ubSector);
 				}
 				else if( pKiller->uiFlags & CELL_MILITIA )
 					pKiller->pSoldier->ubMilitiaKills += 2;
@@ -3895,7 +3894,7 @@ BOOLEAN GetCurrentBattleSectorXYZ(SGPSector& psSector)
 {
 	if( gpAR )
 	{
-		psSector = SGPSector(gpAR->ubSector.x, gpAR->ubSector.y, 0);
+		psSector = gpAR->ubSector;
 		return TRUE;
 	}
 	else if( gfPreBattleInterfaceActive )
@@ -3936,9 +3935,7 @@ BOOLEAN GetCurrentBattleSectorXYZAndReturnTRUEIfThereIsABattle(SGPSector& psSect
 	}
 	else
 	{
-		psSector.x = 0;
-		psSector.y = 0;
-		psSector.z = -1;
+		psSector = SGPSector(0, 0, -1);
 		return FALSE;
 	}
 }

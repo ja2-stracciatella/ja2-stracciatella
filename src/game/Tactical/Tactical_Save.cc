@@ -59,6 +59,11 @@
 
 static BOOLEAN gfWasInMeanwhile = FALSE;
 
+static const SectorFlags sectorFlagBits[] = { SF_ITEM_TEMP_FILE_EXISTS, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS,
+	SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, SF_DOOR_TABLE_TEMP_FILES_EXISTS,
+	SF_REVEALED_STATUS_TEMP_FILE_EXISTS, SF_DOOR_STATUS_TEMP_FILE_EXISTS,
+	SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, SF_CIV_PRESERVED_TEMP_FILE_EXISTS,
+	SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS };
 
 static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, SectorFlags const type, const SGPSector& sMap)
 {
@@ -71,13 +76,7 @@ static void AddTempFileToSavedGame(HWFILE const f, UINT32 const flags, SectorFla
 
 static void AddTempFilesToSavedGame(HWFILE const f, UINT32 const flags, const SGPSector& sMap)
 {
-	SectorFlags bits[] = { SF_ITEM_TEMP_FILE_EXISTS, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS,
-		SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, SF_DOOR_TABLE_TEMP_FILES_EXISTS,
-		SF_REVEALED_STATUS_TEMP_FILE_EXISTS, SF_DOOR_STATUS_TEMP_FILE_EXISTS,
-		SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS, SF_CIV_PRESERVED_TEMP_FILE_EXISTS,
-		SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS };
-
-	for (auto bit : bits)
+	for (auto bit : sectorFlagBits)
 	{
 		AddTempFileToSavedGame(f, flags, bit, sMap);
 	}
@@ -123,16 +122,10 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const SGPS
 
 static void RetrieveTempFilesFromSavedGame(HWFILE const f, UINT32& flags, const SGPSector& sector, UINT32 const savegame_version)
 {
-	RetrieveTempFileFromSavedGame(f, flags, SF_ITEM_TEMP_FILE_EXISTS,              sector);
-	RetrieveTempFileFromSavedGame(f, flags, SF_ROTTING_CORPSE_TEMP_FILE_EXISTS,    sector);
-	RetrieveTempFileFromSavedGame(f, flags, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sector);
-	RetrieveTempFileFromSavedGame(f, flags, SF_DOOR_TABLE_TEMP_FILES_EXISTS,       sector);
-	RetrieveTempFileFromSavedGame(f, flags, SF_REVEALED_STATUS_TEMP_FILE_EXISTS,   sector);
-	RetrieveTempFileFromSavedGame(f, flags, SF_DOOR_STATUS_TEMP_FILE_EXISTS,       sector);
-	RetrieveTempFileFromSavedGame(f, flags, SF_ENEMY_PRESERVED_TEMP_FILE_EXISTS,   sector);
-	RetrieveTempFileFromSavedGame(f, flags, SF_CIV_PRESERVED_TEMP_FILE_EXISTS,     sector);
-	RetrieveTempFileFromSavedGame(f, flags, SF_SMOKE_EFFECTS_TEMP_FILE_EXISTS,     sector);
-	RetrieveTempFileFromSavedGame(f, flags, SF_LIGHTING_EFFECTS_TEMP_FILE_EXISTS,  sector);
+	for (auto bit : sectorFlagBits)
+	{
+		RetrieveTempFileFromSavedGame(f, flags, bit, sector);
+	}
 
 	if (flags & SF_ITEM_TEMP_FILE_EXISTS)
 	{

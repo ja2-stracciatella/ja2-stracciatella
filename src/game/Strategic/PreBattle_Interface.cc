@@ -1447,7 +1447,7 @@ void LogBattleResults(const UINT8 ubVictoryCode)
 			default:                          return;
 		}
 	}
-	AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(), SGPSector(sSector.x, sSector.y));
+	AddHistoryToPlayersLog(code, 0, GetWorldTotalMin(), sSector);
 }
 
 

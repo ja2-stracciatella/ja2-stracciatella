@@ -3351,10 +3351,7 @@ static BOOLEAN GetMapXY(INT16 sX, INT16 sY, SGPSector& sMap)
 
 static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor, BOOLEAN fStationary)
 {
-	INT16 sScreenX, sScreenY;
-
-	Assert(sMap.x >= 1 && sMap.x <= 16);
-	Assert(sMap.y >= 1 && sMap.y <= 16);
+	Assert(sMap.IsValid());
 
 	// if we are not allowed to highlight, leave
 	if (!IsTheCursorAllowedToHighLightThisSector(sMap))
@@ -3362,6 +3359,7 @@ static void RenderMapHighlight(const SGPSector& sMap, UINT16 usLineColor, BOOLEA
 		return;
 	}
 
+	INT16 sScreenX, sScreenY;
 	GetScreenXYFromMapXY(sMap, &sScreenX, &sScreenY);
 
 	// blit in the highlighted sector

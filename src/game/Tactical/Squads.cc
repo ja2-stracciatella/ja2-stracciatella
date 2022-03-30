@@ -117,8 +117,7 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 
 		// check if squad empty, if not check sector x,y,z are the same as this guys
 		SGPSector sMap;
-		if (SectorSquadIsIn(bSquadValue, sMap) &&
-			(sMap != s->sSector))
+		if (SectorSquadIsIn(bSquadValue, sMap) && sMap != s->sSector)
 		{
 			return FALSE;
 		}

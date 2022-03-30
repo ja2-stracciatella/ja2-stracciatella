@@ -1308,8 +1308,7 @@ void HourlyProgressUpdate(void)
 		// at 70% add Iggy to the world
 		if (first_event_trigger(gamepolicy(progress_event_iggy_min)))
 		{
-			gMercProfiles[ IGGY ].sSector.x = 5;
-			gMercProfiles[ IGGY ].sSector.y = MAP_ROW_C;
+			gMercProfiles[ IGGY ].sSector = SGPSector(5, MAP_ROW_C);
 		}
 		#undef first_event_trigger
 

@@ -1755,8 +1755,7 @@ static void MapMoveCallback(MOUSE_REGION* reg, INT32 reason)
 	//calc current sector highlighted.
 	if( reason & MSYS_CALLBACK_REASON_LOST_MOUSE )
 	{
-		gsPrev.x = gsHiSector.x = 0;
-		gsPrev.y = gsHiSector.y = 0;
+		gsPrev = gsHiSector = SGPSector();
 		gfRenderMap = TRUE;
 		return;
 	}

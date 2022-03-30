@@ -2242,9 +2242,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				break;
 
 			case NPC_ACTION_ADD_JOEY_TO_WORLD:
-				gMercProfiles[ JOEY ].sSector.x = 4;
-				gMercProfiles[ JOEY ].sSector.y = MAP_ROW_D;
-				gMercProfiles[ JOEY ].sSector.z = 1;
+				gMercProfiles[ JOEY ].sSector = SGPSector(4, MAP_ROW_D, 1);
 				AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, GetWorldMinutesInDay(), NPC_SYSTEM_EVENT_ACTION_PARAM_BONUS + NPC_ACTION_ADD_JOEY_TO_WORLD, 3 );
 				break;
 
@@ -3764,9 +3762,7 @@ action_punch_pc:
 
 			case NPC_ACTION_ADD_RAT:
 				// add Rat
-				gMercProfiles[ RAT ].sSector.x = 9;
-				gMercProfiles[ RAT ].sSector.y = MAP_ROW_G;
-				gMercProfiles[ RAT ].sSector.z = 0;
+				gMercProfiles[ RAT ].sSector = SGPSector(9, MAP_ROW_G);
 				break;
 
 			case NPC_ACTION_ENDGAME_STATE_1:
@@ -3944,9 +3940,7 @@ add_log:
 			case NPC_ACTION_SEND_TROOPS_TO_SAM:
 				break;
 			case NPC_ACTION_PUT_PACOS_IN_BASEMENT:
-				gMercProfiles[ PACOS ].sSector.x = 10;
-				gMercProfiles[ PACOS ].sSector.y = MAP_ROW_A;
-				gMercProfiles[ PACOS ].sSector.z = 0;
+				gMercProfiles[ PACOS ].sSector = SGPSector(10, MAP_ROW_A);
 				break;
 			case NPC_ACTION_HISTORY_ASSASSIN:
 				AddHistoryToPlayersLog(HISTORY_ASSASSIN, 0, GetWorldTotalMin(), gWorldSector);
