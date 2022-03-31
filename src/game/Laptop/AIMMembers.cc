@@ -1213,7 +1213,7 @@ static INT8 AimMemberHireMerc(void)
 	MERC_HIRE_STRUCT h;
 	h = MERC_HIRE_STRUCT{};
 	h.ubProfileID               = pid;
-	h.sSector                   = SGPSector(g_merc_arrive_sector);
+	h.sSector                   = g_merc_arrive_sector;
 	h.fUseLandingZoneForArrival = TRUE;
 	h.ubInsertionCode           = INSERTION_CODE_ARRIVING_GAME;
 	h.fCopyProfileItemsOver     = gfBuyEquipment;
@@ -2912,7 +2912,7 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime()
 	UINT32 const hour = h.uiArrivalTime % 1440 / 60;
 	time_string = ST::format("{02d}:00", hour);
 
-	ST::string sector_string = GetSectorIDString(SGPSector(g_merc_arrive_sector), FALSE);
+	ST::string sector_string = GetSectorIDString(g_merc_arrive_sector, FALSE);
 
 	ST::string msg;
 	ST::string nickname = GetProfile(h.iIdOfMerc).zNickname;

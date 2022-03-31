@@ -2429,7 +2429,7 @@ static UINT32 HandleMapUI(void)
 							ST::string sMsgSubString;
 
 							// move the landing zone over here
-							g_merc_arrive_sector = sMap.AsByte();
+							g_merc_arrive_sector = sMap;
 
 							// change arrival sector for all mercs currently in transit who are showing up at the landing zone
 							UpdateAnyInTransitMercsWithGlobalArrivalSector();
@@ -7723,7 +7723,7 @@ static BOOLEAN CanMoveBullseyeAndClickedOnIt(const SGPSector& sMap)
 		if (!DidGameJustStart())
 		{
 			// if he clicked on the bullseye, and we're on the surface level
-			if (g_merc_arrive_sector == sMap.AsByte() && iCurrentMapSectorZ == 0)
+			if (g_merc_arrive_sector == sMap && iCurrentMapSectorZ == 0)
 			{
 				return( TRUE );
 			}
@@ -7860,7 +7860,7 @@ ST::string GetMapscreenMercDestinationString(SOLDIERTYPE const& s)
 		SGPSector sSector;
 		if (s.bAssignment == IN_TRANSIT)
 		{ // Show the sector he'll be arriving in
-			sSector = SGPSector(g_merc_arrive_sector);
+			sSector = g_merc_arrive_sector;
 		}
 		else if (GetLengthOfMercPath(&s) > 0)
 		{ // He's going somewhere

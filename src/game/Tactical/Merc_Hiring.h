@@ -35,7 +35,9 @@ struct MERC_HIRE_STRUCT
 };
 
 // ATE: Global that dictates where the mercs will land once being hired
-extern INT16 g_merc_arrive_sector;
+// Default to start sector
+// Saved in general saved game structure
+extern SGPSector g_merc_arrive_sector;
 
 
 void CreateSpecialItem(SOLDIERTYPE* const, UINT16);

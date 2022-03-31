@@ -1858,9 +1858,8 @@ static void SaveGeneralInfo(HWFILE const f)
 	INJ_BOOL( d, gfBoxersResting)
 	INJ_U8(   d, gubDesertTemperature)
 	INJ_U8(   d, gubGlobalTemperature)
-	SGPSector arrival(g_merc_arrive_sector);
-	INJ_I16(  d, arrival.x)
-	INJ_I16(  d, arrival.y)
+	INJ_I16(  d, g_merc_arrive_sector.x)
+	INJ_I16(  d, g_merc_arrive_sector.y)
 	INJ_BOOL( d, gfCreatureMeanwhileScenePlayed)
 	INJ_SKIP_U8(d)
 	INJ_BOOL( d, gfPersistantPBI)
@@ -2016,7 +2015,7 @@ static void LoadGeneralInfo(HWFILE const f, UINT32 const savegame_version)
 	EXTR_I16(  d, merc_arrive_x)
 	EXTR_I16(  d, merc_arrive_y)
 	SGPSector arrival(merc_arrive_x, merc_arrive_y);
-	g_merc_arrive_sector = arrival.IsValid() ? arrival.AsByte() : gamepolicy(start_sector);
+	g_merc_arrive_sector = arrival.IsValid() ? arrival : SGPSector(gamepolicy(start_sector));
 	EXTR_BOOL( d, gfCreatureMeanwhileScenePlayed)
 	EXTR_SKIP_U8(d)
 	EXTR_BOOL( d, gfPersistantPBI)

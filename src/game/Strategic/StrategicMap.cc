@@ -2297,7 +2297,7 @@ void SetupNewStrategicGame()
 	StrategicTurnsNewGame();
 
 	// Move the landing zone over to the start sector.
-	g_merc_arrive_sector = gamepolicy(start_sector);
+	g_merc_arrive_sector = SGPSector(gamepolicy(start_sector));
 }
 
 
@@ -2332,16 +2332,16 @@ static void HandleAirspaceControlUpdated()
 	// check if currently selected arrival sector still has secure airspace
 
 	// if it's not enemy air controlled
-	if (StrategicMap[SGPSector(g_merc_arrive_sector).AsStrategicIndex()].fEnemyAirControlled)
+	if (StrategicMap[g_merc_arrive_sector.AsStrategicIndex()].fEnemyAirControlled)
 	{
 		// get the name of the old sector
-		ST::string sMsgSubString1 = GetSectorIDString(SGPSector(g_merc_arrive_sector), FALSE);
+		ST::string sMsgSubString1 = GetSectorIDString(g_merc_arrive_sector, FALSE);
 
 		// Move the landing zone over to the start sector.
-		g_merc_arrive_sector = gamepolicy(start_sector);
+		g_merc_arrive_sector = SGPSector(gamepolicy(start_sector));
 
 		// get the name of the new sector
-		ST::string sMsgSubString2 = GetSectorIDString(SGPSector(g_merc_arrive_sector), FALSE);
+		ST::string sMsgSubString2 = GetSectorIDString(g_merc_arrive_sector, FALSE);
 
 		// now build the string
 		ST::string sMsgString = st_format_printf(pBullseyeStrings[ 4 ], sMsgSubString1, sMsgSubString2);

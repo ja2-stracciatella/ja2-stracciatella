@@ -449,7 +449,7 @@ static BOOLEAN MercFilesHireMerc(UINT8 ubMercID)
 	HireMercStruct.iTotalContractLength = 1;
 
 	//Specify where the merc is to appear
-	HireMercStruct.sSector                   = SGPSector(g_merc_arrive_sector);
+	HireMercStruct.sSector                   = g_merc_arrive_sector;
 	HireMercStruct.fUseLandingZoneForArrival = TRUE;
 
 	HireMercStruct.uiTimeTillMercArrives = GetMercArrivalTimeOfDay( );// + ubMercID

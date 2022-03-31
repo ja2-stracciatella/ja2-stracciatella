@@ -53,11 +53,7 @@
 
 extern BOOLEAN gfTacticalDoHeliRun;
 extern BOOLEAN gfFirstHeliRun;
-
-// ATE: Globals that dictate where the mercs will land once being hired
-// Default to start sector
-// Saved in general saved game structure
-INT16 g_merc_arrive_sector = 0;
+SGPSector g_merc_arrive_sector;
 
 void CreateSpecialItem(SOLDIERTYPE* const s, UINT16 item)
 {
@@ -93,7 +89,7 @@ INT8 HireMerc(MERC_HIRE_STRUCT& h)
 	// they will be updated again just before arrival...
 	if (h.fUseLandingZoneForArrival)
 	{
-		h.sSector = SGPSector(g_merc_arrive_sector);
+		h.sSector = g_merc_arrive_sector;
 	}
 
 	SOLDIERCREATE_STRUCT MercCreateStruct;
@@ -234,16 +230,15 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 {
 	UINT32 uiTimeOfPost;
 	static const SGPSector start(gamepolicy(start_sector));
-	SGPSector arrival(g_merc_arrive_sector);
 
-	if (!DidGameJustStart() && arrival == start)
+	if (!DidGameJustStart() && g_merc_arrive_sector == start)
 	{
 		// Mercs arriving in start sector. This sector has been deemed as the always
 		// safe sector. Seeing we don't support entry into a hostile sector (except
 		// for the beginning), we will nuke any enemies in this sector first.
 		if (gWorldSector != start)
 		{
-			EliminateAllEnemies(arrival);
+			EliminateAllEnemies(g_merc_arrive_sector);
 		}
 	}
 
@@ -261,7 +256,7 @@ void MercArrivesCallback(SOLDIERTYPE& s)
 	// ATE: Make sure we use global.....
 	if (s.fUseLandingZoneForArrival)
 	{
-		s.sSector = arrival;
+		s.sSector = g_merc_arrive_sector;
 	}
 
 	// Add merc to sector ( if it's the current one )
@@ -451,7 +446,7 @@ void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 	{
 		if (s->bAssignment == IN_TRANSIT && s->fUseLandingZoneForArrival)
 		{
-			s->sSector = SGPSector(g_merc_arrive_sector);
+			s->sSector = g_merc_arrive_sector;
 		}
 	}
 }
@@ -486,9 +481,8 @@ static void CheckForValidArrivalSector(void)
 	BOOLEAN fFound = FALSE;
 	ST::string sString;
 	ST::string zShortTownIDString1;
-	ST::string zShortTownIDString2;
 
-	sSectorGridNo = SGPSector(g_merc_arrive_sector).AsStrategicIndex();
+	sSectorGridNo = g_merc_arrive_sector.AsStrategicIndex();
 
 	// Check if valid...
 	if ( !StrategicMap[ sSectorGridNo ].fEnemyControlled )
@@ -496,7 +490,7 @@ static void CheckForValidArrivalSector(void)
 		return;
 	}
 
-	zShortTownIDString1 = SGPSector(g_merc_arrive_sector).AsShortString();
+	zShortTownIDString1 = g_merc_arrive_sector.AsShortString();
 
 	// If here - we need to do a search!
 	sTop    = ubRadius;
@@ -504,8 +498,7 @@ static void CheckForValidArrivalSector(void)
 	sLeft   = - ubRadius;
 	sRight  = ubRadius;
 
-	INT16 sGoodX = 0; // XXX HACK000E
-	INT16 sGoodY = 0; // XXX HACK000E
+	SGPSector sGood; // XXX HACK000E
 	for( cnt1 = sBottom; cnt1 <= sTop; cnt1++ )
 	{
 		leftmost = ( ( sSectorGridNo + ( MAP_WORLD_X * cnt1 ) )/ MAP_WORLD_X ) * MAP_WORLD_X;
@@ -522,8 +515,8 @@ static void CheckForValidArrivalSector(void)
 
 					if ( uiRange < uiLowestRange )
 					{
-						sGoodY = cnt1;
-						sGoodX = cnt2;
+						sGood.y = cnt1;
+						sGood.x = cnt2;
 						uiLowestRange = uiRange;
 						fFound = TRUE;
 					}
@@ -534,13 +527,10 @@ static void CheckForValidArrivalSector(void)
 
 	if ( fFound )
 	{
-		SGPSector arrival = SGPSector::FromSectorID(g_merc_arrive_sector, sGoodX, sGoodY);
-		g_merc_arrive_sector = arrival.AsByte();
-
+		g_merc_arrive_sector += sGood;
 		UpdateAnyInTransitMercsWithGlobalArrivalSector( );
 
-		zShortTownIDString2 = arrival.AsShortString();
-		sString = st_format_printf(str_arrival_rerouted, zShortTownIDString2, zShortTownIDString1);
+		sString = st_format_printf(str_arrival_rerouted, g_merc_arrive_sector.AsShortString(), zShortTownIDString1);
 
 		DoScreenIndependantMessageBox(  sString, MSG_BOX_FLAG_OK, NULL );
 

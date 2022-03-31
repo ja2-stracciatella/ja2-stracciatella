@@ -3843,9 +3843,8 @@ void DrawSecretSite(const StrategicMapSecretModel* secret)
 static void DrawBullseye(void)
 {
 	INT16 sX, sY;
-	SGPSector sMap(g_merc_arrive_sector);
 
-	GetScreenXYFromMapXY(sMap, &sX, &sY);
+	GetScreenXYFromMapXY(g_merc_arrive_sector, &sX, &sY);
 	sY -= 2;
 
 	BltVideoObject(guiSAVEBUFFER, guiBULLSEYE, 0, sX, sY);
