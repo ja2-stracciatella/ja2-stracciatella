@@ -454,14 +454,13 @@ void UpdateAnyInTransitMercsWithGlobalArrivalSector( )
 
 static INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
-	SGPSector origin = SGPSector::FromStrategicIndex(sOrigin);
-	SGPSector dest = SGPSector::FromStrategicIndex(sDest);
+	SGPSector delta = SGPSector::FromStrategicIndex(sOrigin) - SGPSector::FromStrategicIndex(sDest);
 
-	INT16 sRows = ABS(origin.y - dest.y);
-	INT16 sCols = ABS(origin.x - dest.x);
+	delta.x = ABS(delta.x);
+	delta.y = ABS(delta.y);
 
 	// apply Pythagoras's theorem for right-handed triangle:
-	return (INT16) sqrt((double) (sRows * sRows + sCols * sCols));
+	return (INT16) sqrt((double) (delta.x * delta.x + delta.y * delta.y));
 }
 
 

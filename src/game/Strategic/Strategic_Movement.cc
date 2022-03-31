@@ -302,32 +302,28 @@ BOOLEAN GroupReversingDirectionsBetweenSectors(GROUP *pGroup, const SGPSector& s
 
 BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection(GROUP *pGroup, const SGPSector& sSector)
 {
-	INT32 currDX, currDY, newDX, newDY;
 	UINT8 ubNumUnalignedAxes = 0;
-
 
 	if( !pGroup->fBetweenSectors )
 		return( FALSE );
 
 
 	// Determine the direction the group is currently traveling in
-	currDX = pGroup->ubNext.x - pGroup->ubSector.x;
-	currDY = pGroup->ubNext.y - pGroup->ubSector.y;
+	SGPSector currD = pGroup->ubNext - pGroup->ubSector;
 
 	//Determine the direction the group would need to travel in to reach the given sector
-	newDX = sSector.x - pGroup->ubSector.x;
-	newDY = sSector.y - pGroup->ubSector.y;
+	SGPSector newD = sSector - pGroup->ubSector;
 
 	// clip the new dx/dy values to +/- 1
-	if( newDX )
+	if (newD.x)
 	{
 		ubNumUnalignedAxes++;
-		newDX /= ABS( newDX );
+		newD.x /= ABS(newD.x);
 	}
-	if( newDY )
+	if (newD.y)
 	{
 		ubNumUnalignedAxes++;
-		newDY /= ABS( newDY );
+		newD.y /= ABS(newD.y);
 	}
 
 	// error checking
@@ -341,7 +337,7 @@ BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection(GROUP *pGroup, cons
 	// changing directions.
 	// Note that 90-degree orthogonal changes are considered changing direction, as well as the full 180-degree reversal.
 	// That's because the party must return to the previous sector in each of those cases, too.
-	if( currDX == newDX && currDY == newDY )
+	if (currD == newD)
 		return( FALSE );
 
 
@@ -1638,7 +1634,6 @@ static void DelayEnemyGroupsIfPathsCross(GROUP& player_group)
 //Calculates and posts an event to move the group to the next sector.
 static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 {
-	INT32 dx, dy;
 	INT32 i;
 	UINT8 ubDirection;
 	UINT8 ubSector;
@@ -1656,33 +1651,32 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	Assert( wp );
 	//We now have the correct waypoint.
 	//Analyse the group and determine which direction it will move from the current sector.
-	dx = wp->sSector.x - pGroup->ubSector.x;
-	dy = wp->sSector.y - pGroup->ubSector.y;
-	if( dx && dy )
+	SGPSector delta = wp->sSector - pGroup->ubSector;
+	if (delta.x && delta.y)
 	{ //Can't move diagonally!
 		SLOGA("Attempting to move to waypoint in a diagonal direction from sector %d,%d to sector %d,%d",
 			pGroup->ubSector.x, pGroup->ubSector.y, wp->sSector.x, wp->sSector.y);
 	}
 	//Clip dx/dy value so that the move is for only one sector.
-	if( dx >= 1 )
+	if (delta.x >= 1)
 	{
 		ubDirection = EAST_STRATEGIC_MOVE;
-		dx = 1;
+		delta.x = 1;
 	}
-	else if( dy >= 1 )
+	else if (delta.y >= 1)
 	{
 		ubDirection = SOUTH_STRATEGIC_MOVE;
-		dy = 1;
+		delta.y = 1;
 	}
-	else if( dx <= -1 )
+	else if (delta.x <= -1)
 	{
 		ubDirection = WEST_STRATEGIC_MOVE;
-		dx = -1;
+		delta.x = -1;
 	}
-	else if( dy <= -1 )
+	else if (delta.y <= -1)
 	{
 		ubDirection = NORTH_STRATEGIC_MOVE;
-		dy = -1;
+		delta.y = -1;
 	}
 	else
 	{
@@ -1690,8 +1684,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 		return;
 	}
 	//All conditions for moving to the next waypoint are now good.
-	pGroup->ubNext.x = (UINT8)( dx + pGroup->ubSector.x );
-	pGroup->ubNext.y = (UINT8)( dy + pGroup->ubSector.y );
+	pGroup->ubNext = delta + pGroup->ubSector;
 	//Calc time to get to next waypoint...
 	ubSector = pGroup->ubSector.AsByte();
 	if (!pGroup->ubSector.z)
@@ -2733,12 +2726,11 @@ void RetreatGroupToPreviousSector(GROUP& g)
 		g.ubNext = g.ubPrev;
 
 		// Determine the correct direction
-		INT32 const dx = g.ubNext.x - g.ubSector.x;
-		INT32 const dy = g.ubNext.y - g.ubSector.y;
-		if      (dx ==  0 && dy == -1) direction = NORTH_STRATEGIC_MOVE;
-		else if (dx ==  1 && dy ==  0) direction = EAST_STRATEGIC_MOVE;
-		else if (dx ==  0 && dy ==  1) direction = SOUTH_STRATEGIC_MOVE;
-		else if (dx == -1 && dy ==  0) direction = WEST_STRATEGIC_MOVE;
+		const SGPSector delta = g.ubNext - g.ubSector;
+		if      (delta.x ==  0 && delta.y == -1) direction = NORTH_STRATEGIC_MOVE;
+		else if (delta.x ==  1 && delta.y ==  0) direction = EAST_STRATEGIC_MOVE;
+		else if (delta.x ==  0 && delta.y ==  1) direction = SOUTH_STRATEGIC_MOVE;
+		else if (delta.x == -1 && delta.y ==  0) direction = WEST_STRATEGIC_MOVE;
 		else
 		{
 			throw std::runtime_error(ST::format("Player group attempting illegal retreat from {} to {}.", g.ubSector.AsShortString(), g.ubNext.AsShortString()).to_std_string());
@@ -2987,9 +2979,6 @@ void UpdatePersistantGroupsFromOldSave( UINT32 uiSavedGameVersion )
 //IN the sector, or just left the sector, it will return FALSE.
 BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 {
-	WAYPOINT *wp;
-	INT32 i, dx, dy;
-
 	Assert( pGroup );
 	if (pGroup->ubMoveType != ONE_WAY)
 	{
@@ -3001,8 +2990,8 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 	//as we traverse the waypoints.
 	SGPSector ubOrig = pGroup->ubSector;
 
-	i = pGroup->ubNextWaypointID;
-	wp = pGroup->pWaypoints;
+	INT32 i = pGroup->ubNextWaypointID;
+	WAYPOINT *wp = pGroup->pWaypoints;
 
 	if( !wp )
 	{ //This is a floating group!?
@@ -3022,16 +3011,15 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 		{
 			//We now have the correct waypoint.
 			//Analyse the group and determine which direction it will move from the current sector.
-			dx = wp->sSector.x - pGroup->ubSector.x;
-			dy = wp->sSector.y - pGroup->ubSector.y;
-			if( dx && dy )
+			SGPSector delta = wp->sSector - pGroup->ubSector;
+			if (delta.x && delta.y)
 			{ //Can't move diagonally!
 				STLOGA("GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector {} to sector {} for group at sector {}",
 					   pGroup->ubSector.AsShortString(), wp->sSector.AsShortString(), ubOrig.AsShortString());
 				pGroup->ubSector = ubOrig;
 				return TRUE;
 			}
-			if( !dx && !dy ) //Can't move to position currently at!
+			if (!delta.x && !delta.y) //Can't move to position currently at!
 			{
 				STLOGA("GroupWillMoveThroughSector() -- Attempting to process same waypoint at {} for group at {}",
 					wp->sSector.AsShortString(), ubOrig.AsShortString());
@@ -3039,25 +3027,24 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 				return TRUE;
 			}
 			//Clip dx/dy value so that the move is for only one sector.
-			if( dx >= 1 )
+			if (delta.x >= 1)
 			{
-				dx = 1;
+				delta.x = 1;
 			}
-			else if( dy >= 1 )
+			else if (delta.y >= 1)
 			{
-				dy = 1;
+				delta.y = 1;
 			}
-			else if( dx <= -1 )
+			else if (delta.x <= -1)
 			{
-				dx = -1;
+				delta.x = -1;
 			}
-			else if( dy <= -1 )
+			else if (delta.y <= -1)
 			{
-				dy = -1;
+				delta.y = -1;
 			}
 			//Advance the sector value
-			pGroup->ubSector.x = (UINT8)( dx + pGroup->ubSector.x );
-			pGroup->ubSector.y = (UINT8)( dy + pGroup->ubSector.y );
+			pGroup->ubSector += delta;
 			//Check to see if it the sector we are checking to see if this group will be moving through.
 			if (pGroup->ubSector == sSector)
 			{

@@ -2730,13 +2730,12 @@ static void Teleport()
 	}
 
 	// figure out where they would've come from
-	INT16 const sDeltaX = sMap.x - s.sSector.x;
-	INT16 const sDeltaY = sMap.y - s.sSector.y;
+	const SGPSector sDelta = sMap - s.sSector;
 	SGPSector sPrev = sMap;
-	if (ABS(sDeltaX) >= ABS(sDeltaY))
+	if (ABS(sDelta.x) >= ABS(sDelta.y))
 	{
 		// use East or West
-		if (sDeltaX > 0)
+		if (sDelta.x > 0)
 		{
 			// came in from the West
 			sPrev.x--;
@@ -2750,7 +2749,7 @@ static void Teleport()
 	else
 	{
 		// use North or South
-		if (sDeltaY > 0)
+		if (sDelta.y > 0)
 		{
 			// came in from the North
 			sPrev.y--;

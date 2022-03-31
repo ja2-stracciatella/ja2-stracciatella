@@ -2938,9 +2938,8 @@ void StrategicHandleQueenLosingControlOfSector(const SGPSector& sSector)
 
 static UINT8 SectorDistance(const SGPSector& sSector, UINT8 ubSectorID2)
 {
-	SGPSector sSector2(ubSectorID2);
-	UINT8 ubDist = (UINT8) (ABS(sSector.x - sSector2.x) + ABS(sSector.y - sSector2.y));
-	return ubDist;
+	SGPSector delta = sSector - SGPSector(ubSectorID2);
+	return (UINT8) (ABS(delta.x) + ABS(delta.y));
 }
 
 static void RequestHighPriorityGarrisonReinforcements(size_t iGarrisonID, UINT8 ubSoldiersRequested)
