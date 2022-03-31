@@ -45,14 +45,6 @@ SGPSector SGPSector::FromShortString(const ST::string coordinates, INT8 h)
 	return SGPSector(x, y, h);
 }
 
-// takes offsets, not all coordinates like the normal constructor
-SGPSector SGPSector::FromSectorID(UINT16 sectorId, UINT8 dx, UINT8 dy)
-{
-	UINT8 x = getXfromSectorID(sectorId) + dx;
-	UINT8 y = getYfromSectorID(sectorId) + dy;
-	return SGPSector(x, y);
-}
-
 SGPSector SGPSector::FromSectorID(UINT32 s, INT8 h)
 {
 	UINT8 x = getXfromSectorID(s);
@@ -73,6 +65,16 @@ bool SGPSector::operator!=(const SGPSector& sector) const noexcept
 bool SGPSector::operator<(const SGPSector& rhs) const noexcept
 {
 	return x < rhs.x || y < rhs.y;
+}
+
+SGPSector SGPSector::operator+(const SGPSector& rhs) const noexcept
+{
+	return SGPSector(x + rhs.x, y + rhs.y);
+}
+
+SGPSector SGPSector::operator-(const SGPSector& rhs) const noexcept
+{
+	return SGPSector(x - rhs.x, y - rhs.y);
 }
 
 SGPSector& SGPSector::operator+=(const SGPSector& rhs) noexcept

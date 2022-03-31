@@ -3400,18 +3400,20 @@ static void RenderShadingForUnControlledSectors(void)
 {
 	// now render shading over any uncontrolled sectors
 	INT16 const sBaseSectorValue = GetBaseSectorForCurrentTown();
-	for (INT32 dy = 0; dy != 3; ++dy)
+	SGPSector sBase(sBaseSectorValue);
+	SGPSector delta;
+	for (delta.y = 0; delta.y != 3; ++delta.y)
 	{
-		for (INT32 dx = 0; dx != 3; ++dx)
+		for (delta.x = 0; delta.x != 3; ++delta.x)
 		{
-			SGPSector sMap = SGPSector::FromSectorID(sBaseSectorValue, dx, dy);
+			SGPSector sMap = sBase + delta;
 			StrategicMapElement const& e = StrategicMap[sMap.AsStrategicIndex()];
 			if (e.bNameId == BLANK_SECTOR) continue;
 			if (!e.fEnemyControlled && NumHostilesInSector(sMap) == 0) continue;
 
 			// shade this sector, not under our control
-			INT16 const sX = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + dx * MILITIA_BOX_BOX_WIDTH;
-			INT16 const sY = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + dy * MILITIA_BOX_BOX_HEIGHT;
+			INT16 const sX = MAP_MILITIA_BOX_POS_X + MAP_MILITIA_MAP_X + delta.x * MILITIA_BOX_BOX_WIDTH;
+			INT16 const sY = MAP_MILITIA_BOX_POS_Y + MAP_MILITIA_MAP_Y + delta.y * MILITIA_BOX_BOX_HEIGHT;
 			FRAME_BUFFER->ShadowRect(sX, sY, sX + MILITIA_BOX_BOX_WIDTH - 1, sY + MILITIA_BOX_BOX_HEIGHT - 1);
 		}
 	}
