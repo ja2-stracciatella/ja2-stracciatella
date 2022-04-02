@@ -128,12 +128,12 @@ struct SGPPoint
 class SGPSector
 {
 public:
-	UINT16 x = 0;
-	UINT16 y = 0;
+	INT16 x = 0;
+	INT16 y = 0;
 	INT8 z = 0;
 
 	SGPSector() noexcept = default;
-	SGPSector(UINT16 a, UINT16 b, INT8 c = 0) noexcept : x(a), y(b), z(c) {};
+	SGPSector(INT16 a, INT16 b, INT8 c = 0) noexcept : x(a), y(b), z(c) {};
 	SGPSector(const SGPSector&) noexcept = default;
 	SGPSector(UINT32 s) noexcept; // normal FromSectorID
 	static SGPSector FromStrategicIndex(UINT16 idx);
