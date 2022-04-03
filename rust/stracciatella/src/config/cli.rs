@@ -79,7 +79,7 @@ impl Cli {
         opts.optflag("", "nosound", "Turn the sound and music off");
         opts.optflag("", "window", "Start the game in a window");
         opts.optflag("", "debug", "Enable Debug Mode");
-        opts.optflag("", "help", "print this help menu");
+        opts.optflag("h", "help", "print this help menu");
 
         Cli {
             args: args.to_vec(),
