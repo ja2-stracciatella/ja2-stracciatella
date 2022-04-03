@@ -45,7 +45,7 @@ impl Cli {
         opts.optmulti(
             "",
             "mod",
-            "Start one of the game modifications. MOD_NAME is the name of modification, e.g. 'from-russia-with-love. See mods folder for possible options'.",
+            "Start one of the game modifications. MOD_NAME is the name of modification, e.g. 'from-russia-with-love'. See mods folder for possible options.",
             "MOD_NAME"
         );
         opts.optopt(
