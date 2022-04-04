@@ -399,9 +399,12 @@ void DisplayHiddenInterrupt( SOLDIERTYPE * pSoldier )
 
 	// Stop our guy....
 	SOLDIERTYPE* const latest = LatestInterruptGuy();
-	AdjustNoAPToFinishMove(latest, TRUE);
-	// Stop him from going to prone position if doing a turn while prone
-	latest->fTurningFromPronePosition = FALSE;
+	if (latest)
+	{
+		AdjustNoAPToFinishMove(latest, TRUE);
+		// Stop him from going to prone position if doing a turn while prone
+		latest->fTurningFromPronePosition = FALSE;
+	}
 
 	// get rid of any old overlay message
 	const MESSAGE_TYPES msg =
