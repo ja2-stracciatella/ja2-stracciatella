@@ -45,7 +45,7 @@ impl Cli {
         opts.optmulti(
             "",
             "mod",
-            "Start one of the game modifications. MOD_NAME is the name of modification, e.g. 'from-russia-with-love. See mods folder for possible options'.",
+            "Start one of the game modifications. MOD_NAME is the name of modification, e.g. 'from-russia-with-love'. See mods folder for possible options.",
             "MOD_NAME"
         );
         opts.optopt(
@@ -79,7 +79,7 @@ impl Cli {
         opts.optflag("", "nosound", "Turn the sound and music off");
         opts.optflag("", "window", "Start the game in a window");
         opts.optflag("", "debug", "Enable Debug Mode");
-        opts.optflag("", "help", "print this help menu");
+        opts.optflag("h", "help", "print this help menu");
 
         Cli {
             args: args.to_vec(),
