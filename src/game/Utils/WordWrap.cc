@@ -333,7 +333,7 @@ UINT16 IanDisplayWrappedString(UINT16 sx, UINT16 sy, UINT16 max_w, UINT8 gap, SG
 						&& *i != U'\0');
 
 				// can we fit it onto the length of our "line"?
-				if (line_w + word_w >= max_w)
+				if (line_w + word_w > max_w)
 				{ // can't fit this word!
 					// Display what we have up to now
 					IanDrawTextToScreen(line_buf, x, y, cur_max_w, cur_font, cur_foreground, background, justification, flags);
