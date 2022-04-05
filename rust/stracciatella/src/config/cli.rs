@@ -180,7 +180,7 @@ impl Cli {
 
                 Ok(())
             }
-            Err(f) => Err(format!("{}\n{}", f.to_string(), &Cli::usage())),
+            Err(f) => Err(format!("Could not parse command line arguments: {}", f.to_string())),
         }
     }
 

@@ -35,6 +35,7 @@ pub extern "C" fn EngineOptions_create(
             into_ptr(engine_options)
         }
         Err(msg) => {
+            log::info!("{}", Cli::usage());
             remember_rust_error(format!("EngineOptions_create: {}", msg));
             ptr::null_mut()
         }
