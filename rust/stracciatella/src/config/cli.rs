@@ -190,3 +190,208 @@ impl Cli {
         cli.options.usage("Usage: ja2 [options]")
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use tempfile::TempDir;
+
+    use crate::config::VanillaVersion;
+    use crate::fs;
+    use super::*;
+
+    #[test]
+    fn apply_to_engine_options_should_abort_on_unknown_arguments() {
+        let mut engine_options = EngineOptions::default();
+        let input = Cli::from_args(&vec![String::from("ja2"), String::from("testunknown")]);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err().unwrap(),
+            "Unknown arguments: 'testunknown'."
+        );
+    }
+
+    #[test]
+    fn apply_to_engine_options_should_abort_on_unknown_switch() {
+        let mut engine_options = EngineOptions::default();
+        let input = Cli::from_args(&vec![String::from("ja2"), String::from("--testunknown")]);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err().unwrap(),
+            format!(
+                "{}\n{}",
+                "Unrecognized option: 'testunknown'",
+                &Cli::usage()
+            )
+        );
+    }
+
+    #[test]
+    fn apply_to_engine_options_should_have_correct_fullscreen_default_value() {
+        let mut engine_options = EngineOptions::default();
+        let input = Cli::from_args(&vec![String::from("ja2")]);
+        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(engine_options.start_in_fullscreen, false);
+    }
+
+    #[test]
+    fn apply_to_engine_options_should_be_able_to_change_fullscreen_value() {
+        let mut engine_options = EngineOptions::default();
+        let input = Cli::from_args(&vec![String::from("ja2"), String::from("-fullscreen")]);
+        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(engine_options.start_in_fullscreen, true);
+    }
+
+    #[test]
+    fn apply_to_engine_options_should_be_able_to_show_help() {
+        let mut engine_options = EngineOptions::default();
+        let input = Cli::from_args(&vec![String::from("ja2"), String::from("-help")]);
+        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(engine_options.show_help, true);
+    }
+
+    #[test]
+    fn apply_to_engine_options_should_continue_with_multiple_known_switches() {
+        let mut engine_options = EngineOptions::default();
+        let input = Cli::from_args(&vec![
+            String::from("ja2"),
+            String::from("-debug"),
+            String::from("-mod"),
+            String::from("a"),
+            String::from("--mod"),
+            String::from("ö"),
+        ]);
+        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(engine_options.start_in_debug_mode, true);
+        assert_eq!(engine_options.mods.len(), 2);
+        assert_eq!(engine_options.mods[0], "a");
+        assert_eq!(engine_options.mods[1], "ö");
+    }
+
+    #[test]
+    fn apply_to_engine_options_should_fail_with_unknown_resversion() {
+        let mut engine_options = EngineOptions::default();
+        let input = Cli::from_args(&vec![
+            String::from("ja2"),
+            String::from("--resversion"),
+            String::from("TESTUNKNOWN"),
+        ]);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err().unwrap(),
+            "Resource version TESTUNKNOWN is unknown"
+        );
+    }
+
+    #[test]
+    fn apply_to_engine_options_should_return_the_correct_resversion_for_russian() {
+        let mut engine_options = EngineOptions::default();
+        let input = Cli::from_args(&vec![
+            String::from("ja2"),
+            String::from("-resversion"),
+            String::from("RUSSIAN"),
+        ]);
+        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(engine_options.resource_version, VanillaVersion::RUSSIAN);
+    }
+
+    #[test]
+    fn apply_to_engine_options_should_return_the_correct_resversion_for_italian() {
+        let mut engine_options = EngineOptions::default();
+        let input = Cli::from_args(&vec![
+            String::from("ja2"),
+            String::from("-resversion"),
+            String::from("ITALIAN"),
+        ]);
+        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(engine_options.resource_version, VanillaVersion::ITALIAN);
+    }
+
+    #[test]
+    fn apply_to_engine_options_should_return_the_correct_resolution() {
+        let mut engine_options = EngineOptions::default();
+        let input = Cli::from_args(&vec![
+            String::from("ja2"),
+            String::from("--res"),
+            String::from("1120x960"),
+        ]);
+        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(engine_options.resolution.0, 1120);
+        assert_eq!(engine_options.resolution.1, 960);
+    }
+
+    #[test]
+    #[cfg(target_os = "macos")]
+    fn apply_to_engine_options_should_return_the_correct_canonical_game_dir_on_mac() {
+        let mut engine_options = EngineOptions::default();
+        let temp_dir = TempDir::new().unwrap();
+        let dir_path = temp_dir.path().join("foo");
+
+        fs::create_dir_all(dir_path).unwrap();
+
+        let input = Cli::from_args(&vec![
+            String::from("ja2"),
+            String::from("--gamedir"),
+            String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()),
+        ]);
+
+        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        let comp = engine_options.vanilla_game_dir;
+        let base =
+            canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
+
+        assert_eq!(comp, base);
+    }
+
+    #[test]
+    #[cfg(all(not(windows), not(target_os = "macos")))]
+    fn apply_to_engine_options_should_return_the_correct_canonical_game_dir_on_linux() {
+        let mut engine_options = EngineOptions::default();
+        let temp_dir = TempDir::new().unwrap();
+        let dir_path = temp_dir.path().join("foo");
+
+        fs::create_dir_all(dir_path).unwrap();
+
+        let input = Cli::from_args(&vec![
+            String::from("ja2"),
+            String::from("--gamedir"),
+            String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()),
+        ]);
+
+        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(engine_options.vanilla_game_dir, temp_dir.path());
+    }
+
+    #[test]
+    #[cfg(windows)]
+    fn apply_to_engine_options_should_return_the_correct_canonical_game_dir_on_windows() {
+        let mut engine_options = EngineOptions::default();
+        let temp_dir = TempDir::new().unwrap();
+        let dir_path = temp_dir.path().join("foo");
+
+        fs::create_dir_all(dir_path).unwrap();
+
+        let input = Cli::from_args(&vec![
+            String::from("ja2"),
+            String::from("--gamedir"),
+            String::from(temp_dir.path().to_str().unwrap()),
+        ]);
+
+        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(
+            engine_options.vanilla_game_dir,
+            fs::canonicalize(temp_dir.path()).unwrap()
+        );
+    }
+
+    #[test]
+    fn apply_to_engine_options_should_fail_with_non_existing_directory() {
+        let mut engine_options: super::EngineOptions = Default::default();
+        let input = Cli::from_args(&vec![
+            String::from("ja2"),
+            String::from("--gamedir"),
+            String::from("somethingelse"),
+        ]);
+
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err().unwrap(),
+            "Please specify an existing gamedir."
+        );
+    }
+}

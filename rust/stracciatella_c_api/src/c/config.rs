@@ -327,7 +327,6 @@ mod tests {
     use std::fs;
 
     use stracciatella::config::{EngineOptions, Resolution};
-    use stracciatella::parse_json_config;
     use tempfile::TempDir;
 
     use crate::c::common::*;
@@ -356,7 +355,8 @@ mod tests {
 
         assert_eq!(EngineOptions_write(&mut engine_options), true);
 
-        let got_engine_options = parse_json_config(&stracciatella_home).unwrap();
+        let mut got_engine_options = EngineOptions::default();
+        Ja2Json::from_stracciatella_home(&engine_options.stracciatella_home).apply_to_engine_options(&mut got_engine_options).unwrap();
 
         assert_eq!(got_engine_options.resolution, engine_options.resolution);
     }
