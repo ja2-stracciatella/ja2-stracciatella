@@ -2,9 +2,47 @@ use std::path::{Path, PathBuf};
 
 use crate::config::{Resolution, ScalingQuality, VanillaVersion};
 use crate::fs::resolve_existing_components;
-use crate::{ensure_json_config_existence, get_assets_dir, parse_args, parse_json_config};
+use crate::get_assets_dir;
+
+use super::{Cli, CliError, Ja2Json, Ja2JsonError};
 
 pub const SAVED_GAME_DIR: &str = "SavedGames";
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum EngineOptionsError {
+    Cli(CliError),
+    Ja2Json(Ja2JsonError),
+    MissingGameDir,
+    CreatingDefaultSaveGameDirFailed(PathBuf, String),
+}
+
+impl std::fmt::Display for EngineOptionsError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            EngineOptionsError::Cli(e) => write!(f, "Error evaluating CLI arguments: {}", e),
+            EngineOptionsError::Ja2Json(e) => write!(f, "Error loading JSON configuration: {}", e),
+            EngineOptionsError::MissingGameDir => write!(f, "Vanilla game directory has to be set either in config file or per command line switch"),
+            EngineOptionsError::CreatingDefaultSaveGameDirFailed(path, e) => write!(f,
+                "Error creating default save game dir `{:?}`: {}",
+                path, e
+            )
+        }
+    }
+}
+
+impl std::error::Error for EngineOptionsError {}
+
+impl From<CliError> for EngineOptionsError {
+    fn from(c: CliError) -> Self {
+        EngineOptionsError::Cli(c)
+    }
+}
+
+impl From<Ja2JsonError> for EngineOptionsError {
+    fn from(c: Ja2JsonError) -> Self {
+        EngineOptionsError::Ja2Json(c)
+    }
+}
 
 /// Struct that is used to store the engines configuration parameters
 #[derive(Debug, PartialEq)]
@@ -74,18 +112,17 @@ impl EngineOptions {
     pub fn from_home_and_args(
         stracciatella_home: &PathBuf,
         args: &[String],
-    ) -> Result<EngineOptions, String> {
-        ensure_json_config_existence(stracciatella_home)?;
+    ) -> Result<EngineOptions, EngineOptionsError> {
+        let mut engine_options = EngineOptions::default();
+        let cli = Cli::from_args(args);
+        let ja2_json = Ja2Json::from_stracciatella_home(stracciatella_home);
 
-        let mut engine_options = parse_json_config(&stracciatella_home)?;
-
-        match parse_args(&mut engine_options, args) {
-            None => Ok(()),
-            Some(str) => Err(str),
-        }?;
+        ja2_json.ensure_existence()?;
+        ja2_json.apply_to_engine_options(&mut engine_options)?;
+        cli.apply_to_engine_options(&mut engine_options)?;
 
         if engine_options.vanilla_game_dir == PathBuf::from("") {
-            return Err(String::from("Vanilla data directory has to be set either in config file or per command line switch"));
+            return Err(EngineOptionsError::MissingGameDir);
         }
 
         engine_options.stracciatella_home =
@@ -100,7 +137,7 @@ impl EngineOptions {
     }
 
     /// Sets the save game folder to default if it is not set and ensures it exists
-    fn ensure_save_game_directory(&mut self) -> Result<(), String> {
+    fn ensure_save_game_directory(&mut self) -> Result<(), EngineOptionsError> {
         let default_save_game_dir = resolve_existing_components(
             &Path::new(SAVED_GAME_DIR),
             Some(&self.stracciatella_home),
@@ -114,9 +151,9 @@ impl EngineOptions {
         if self.save_game_dir == default_save_game_dir {
             if !self.save_game_dir.exists() {
                 std::fs::create_dir(&self.save_game_dir).map_err(|e| {
-                    format!(
-                        "Error creating default save game dir `{:?}`: {}",
-                        &default_save_game_dir, e
+                    EngineOptionsError::CreatingDefaultSaveGameDirFailed(
+                        self.save_game_dir.clone(),
+                        e.to_string(),
                     )
                 })?;
             }
@@ -130,5 +167,96 @@ impl EngineOptions {
     /// Checks whether a specific mod is enabled
     pub fn is_mod_enabled(&self, name: &str) -> bool {
         self.mods.contains(&name.to_lowercase())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::io::prelude::*;
+
+    use tempfile::TempDir;
+
+    use super::*;
+    use crate::fs;
+    use crate::fs::File;
+
+    pub fn write_temp_folder_with_ja2_json(contents: &[u8]) -> TempDir {
+        let dir = TempDir::new().unwrap();
+        let ja2_home_dir = dir.path().join(".ja2");
+        let file_path = ja2_home_dir.join("ja2.json");
+
+        fs::create_dir(ja2_home_dir).unwrap();
+        let mut f = File::create(file_path).unwrap();
+        f.write_all(contents).unwrap();
+        f.sync_all().unwrap();
+
+        dir
+    }
+
+    #[test]
+    fn build_engine_options_from_home_and_args_should_overwrite_json_with_command_line_args() {
+        let temp_dir = write_temp_folder_with_ja2_json(b"{ \"game_dir\": \"/some/place/where/the/data/is\", \"res\": \"1024x768\", \"fullscreen\": true }");
+        let args = vec![
+            String::from("ja2"),
+            String::from("--res"),
+            String::from("1100x480"),
+        ];
+        let home = temp_dir.path().join(".ja2");
+
+        let engine_options = EngineOptions::from_home_and_args(&home, &args).unwrap();
+
+        assert_eq!(engine_options.resolution.0, 1100);
+        assert_eq!(engine_options.resolution.1, 480);
+        assert_eq!(engine_options.start_in_fullscreen, true);
+    }
+
+    #[test]
+    fn build_engine_options_from_home_and_args_should_return_an_error_if_datadir_is_not_set() {
+        let temp_dir =
+            write_temp_folder_with_ja2_json(b"{ \"res\": \"1024x768\", \"fullscreen\": true }");
+        let args = vec![
+            String::from("ja2"),
+            String::from("--res"),
+            String::from("1100x480"),
+        ];
+        let home = temp_dir.path().join(".ja2");
+        let engine_options_res = EngineOptions::from_home_and_args(&home, &args);
+
+        assert_eq!(engine_options_res, Err(EngineOptionsError::MissingGameDir));
+    }
+
+    #[test]
+    fn build_engine_options_from_home_and_args_should_ensure_default_save_game_dir() {
+        let temp_dir =
+            write_temp_folder_with_ja2_json(b"{ \"game_dir\": \"/some/place/where/the/data/is\", \"res\": \"1024x768\", \"fullscreen\": true }");
+        let args = vec![String::from("ja2")];
+        let home = temp_dir.path().join(".ja2");
+
+        let engine_options = EngineOptions::from_home_and_args(&home, &args).unwrap();
+        let expected_save_game_dir = temp_dir.path().join(".ja2/SavedGames");
+
+        assert!(expected_save_game_dir.is_dir());
+        assert_eq!(engine_options.save_game_dir, expected_save_game_dir);
+    }
+
+    #[test]
+    fn build_engine_options_from_home_and_args_should_use_custom_save_game_dir() {
+        let save_temp_dir = TempDir::new().unwrap();
+        let ja2_json = format!(
+            "{{ \"save_game_dir\": {}, \"game_dir\": \"/some/place/where/the/data/is\", \"res\": \"1024x768\", \"fullscreen\": true }}",
+            serde_json::to_string(&save_temp_dir.path().join("saves").to_string_lossy()).unwrap()
+        );
+        let temp_dir = write_temp_folder_with_ja2_json(ja2_json.as_bytes());
+        let args = vec![String::from("ja2")];
+        let home = temp_dir.path().join(".ja2");
+        let save_dir = save_temp_dir.path().join("Saves");
+
+        std::fs::create_dir(&save_dir).unwrap();
+        std::fs::write(save_dir.join("testfile"), "").unwrap();
+
+        let engine_options = EngineOptions::from_home_and_args(&home, &args).unwrap();
+
+        assert!(engine_options.save_game_dir.is_dir());
+        assert!(engine_options.save_game_dir.join("testfile").exists())
     }
 }
