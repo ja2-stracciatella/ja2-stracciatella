@@ -78,10 +78,6 @@ static const INT16 gsCivQuoteSector[NUM_CIVQUOTE_SECTORS][2] =
 #define NO_MOVE                 65535
 #define INITIATING_FACTOR       30
 
-#define TURN_FLAG_ON(a, b)  ((a) |= (b))
-#define TURN_FLAG_OFF(a, b) ((a) &= ~(b))
-#define CHECK_FLAG(a, b)    ((a) & (b))
-
 #define QUOTE_FLAG_SAID               0x0001
 #define QUOTE_FLAG_ERASE_ONCE_SAID    0x0002
 #define QUOTE_FLAG_SAY_ONCE_PER_CONVO 0x0004
@@ -428,7 +424,7 @@ static void RefreshNPCScriptRecord(UINT8 const ubNPC, UINT8 const record)
 
 	NPCQuoteInfo& q = quotes[record];
 	// already used? so we don't have to refresh!
-	if (CHECK_FLAG(q.fFlags, QUOTE_FLAG_SAID)) return;
+	if (q.fFlags & QUOTE_FLAG_SAID) return;
 
 	SGP::Buffer<NPCQuoteInfo> new_quotes(LoadQuoteFile(ubNPC));
 	if (!new_quotes) return;
@@ -1144,7 +1140,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 					ubNPC, GetProfile(ubNPC).zNickname.c_str(), ubMerc, GetProfile(ubMerc).zNickname.c_str(), ubQuoteNum);
 	}
 
-	if (CHECK_FLAG( pNPCQuoteInfo->fFlags, QUOTE_FLAG_SAID ))
+	if (pNPCQuoteInfo->fFlags & QUOTE_FLAG_SAID)
 	{
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
@@ -1344,9 +1340,9 @@ static void ResetOncePerConvoRecords(NPCQuoteInfo* pNPCQuoteInfoArray)
 
 	for ( ubLoop = 0; ubLoop < NUM_NPC_QUOTE_RECORDS; ubLoop++ )
 	{
-		if ( CHECK_FLAG(pNPCQuoteInfoArray[ubLoop].fFlags, QUOTE_FLAG_SAY_ONCE_PER_CONVO) )
+		if (pNPCQuoteInfoArray[ubLoop].fFlags & QUOTE_FLAG_SAY_ONCE_PER_CONVO)
 		{
-			TURN_FLAG_OFF( pNPCQuoteInfoArray[ubLoop].fFlags, QUOTE_FLAG_SAID );
+			pNPCQuoteInfoArray[ubLoop].fFlags &= ~QUOTE_FLAG_SAID;
 		}
 	}
 }
@@ -1487,7 +1483,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 			// NB fact 281 is 'Darren has explained boxing rules'
 			if (ubNPC == DARREN && !CheckFact(FACT_281, DARREN))
 			{
-				TURN_FLAG_OFF( pNPCQuoteInfoArray[11].fFlags, QUOTE_FLAG_SAID );
+				pNPCQuoteInfoArray[11].fFlags &= ~QUOTE_FLAG_SAID;
 			}
 
 			// turn the NPC to face us
@@ -1748,7 +1744,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				// set to "said" if we should do so
 				if (pQuotePtr->fFlags & QUOTE_FLAG_ERASE_ONCE_SAID || pQuotePtr->fFlags & QUOTE_FLAG_SAY_ONCE_PER_CONVO)
 				{
-					TURN_FLAG_ON( pQuotePtr->fFlags, QUOTE_FLAG_SAID );
+					pQuotePtr->fFlags |= QUOTE_FLAG_SAID;
 				}
 
 				// Carry out implications (actions) of this record
@@ -2794,7 +2790,7 @@ INT8 ConsiderCivilianQuotes(INT16 const x, INT16 const y, INT16 const z, BOOLEAN
 
 		if (set_as_used)
 		{
-			TURN_FLAG_ON(q.fFlags, QUOTE_FLAG_SAID);
+			q.fFlags |= QUOTE_FLAG_SAID;
 		}
 
 		if (q.ubStartQuest != NO_QUEST)
