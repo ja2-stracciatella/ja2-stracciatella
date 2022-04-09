@@ -8,6 +8,7 @@ Contributors (sorted alphabetically)
 
 Agatae (https://bitbucket.org/Agatae)
 akdjka
+Aleh Filipovich
 Alex Ellwein
 Alexander 'z33ky' Hirsch
 Alexander Gordeev
@@ -20,6 +21,7 @@ Derek Chan
 Dmitry Marakasov
 Edwin Buck
 Felix Zürker
+FluffyQuack
 Flávio J. Saraiva
 Gennady Trafimenkov
 Greg Kennedy
@@ -34,10 +36,13 @@ Michał Janiszewski
 Mladen Milinkovic
 Momoko Hanasaki
 Nils Reuße
+noword
 oldlaptop
 Oliver Jankowski
 Peinthor Rene
+Peter Piwowarski
 Poncho
+rebb
 Rebekka Bais (Logo Design)
 Richard Fröhning
 Rinne
