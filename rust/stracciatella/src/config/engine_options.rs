@@ -4,9 +4,45 @@ use crate::config::{Resolution, ScalingQuality, VanillaVersion};
 use crate::fs::resolve_existing_components;
 use crate::get_assets_dir;
 
-use super::{Ja2Json, Cli};
+use super::{Cli, CliError, Ja2Json, Ja2JsonError};
 
 pub const SAVED_GAME_DIR: &str = "SavedGames";
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum EngineOptionsError {
+    Cli(CliError),
+    Ja2Json(Ja2JsonError),
+    MissingGameDir,
+    CreatingDefaultSaveGameDirFailed(PathBuf, String),
+}
+
+impl std::fmt::Display for EngineOptionsError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            EngineOptionsError::Cli(e) => write!(f, "Error evaluating CLI arguments: {}", e),
+            EngineOptionsError::Ja2Json(e) => write!(f, "Error loading JSON configuration: {}", e),
+            EngineOptionsError::MissingGameDir => write!(f, "Vanilla game directory has to be set either in config file or per command line switch"),
+            EngineOptionsError::CreatingDefaultSaveGameDirFailed(path, e) => write!(f,
+                "Error creating default save game dir `{:?}`: {}",
+                path, e
+            )
+        }
+    }
+}
+
+impl std::error::Error for EngineOptionsError {}
+
+impl From<CliError> for EngineOptionsError {
+    fn from(c: CliError) -> Self {
+        EngineOptionsError::Cli(c)
+    }
+}
+
+impl From<Ja2JsonError> for EngineOptionsError {
+    fn from(c: Ja2JsonError) -> Self {
+        EngineOptionsError::Ja2Json(c)
+    }
+}
 
 /// Struct that is used to store the engines configuration parameters
 #[derive(Debug, PartialEq)]
@@ -76,7 +112,7 @@ impl EngineOptions {
     pub fn from_home_and_args(
         stracciatella_home: &PathBuf,
         args: &[String],
-    ) -> Result<EngineOptions, String> {
+    ) -> Result<EngineOptions, EngineOptionsError> {
         let mut engine_options = EngineOptions::default();
         let cli = Cli::from_args(args);
         let ja2_json = Ja2Json::from_stracciatella_home(stracciatella_home);
@@ -86,7 +122,7 @@ impl EngineOptions {
         cli.apply_to_engine_options(&mut engine_options)?;
 
         if engine_options.vanilla_game_dir == PathBuf::from("") {
-            return Err(String::from("Vanilla data directory has to be set either in config file or per command line switch"));
+            return Err(EngineOptionsError::MissingGameDir);
         }
 
         engine_options.stracciatella_home =
@@ -101,7 +137,7 @@ impl EngineOptions {
     }
 
     /// Sets the save game folder to default if it is not set and ensures it exists
-    fn ensure_save_game_directory(&mut self) -> Result<(), String> {
+    fn ensure_save_game_directory(&mut self) -> Result<(), EngineOptionsError> {
         let default_save_game_dir = resolve_existing_components(
             &Path::new(SAVED_GAME_DIR),
             Some(&self.stracciatella_home),
@@ -115,9 +151,9 @@ impl EngineOptions {
         if self.save_game_dir == default_save_game_dir {
             if !self.save_game_dir.exists() {
                 std::fs::create_dir(&self.save_game_dir).map_err(|e| {
-                    format!(
-                        "Error creating default save game dir `{:?}`: {}",
-                        &default_save_game_dir, e
+                    EngineOptionsError::CreatingDefaultSaveGameDirFailed(
+                        self.save_game_dir.clone(),
+                        e.to_string(),
                     )
                 })?;
             }
@@ -140,9 +176,9 @@ mod tests {
 
     use tempfile::TempDir;
 
+    use super::*;
     use crate::fs;
     use crate::fs::File;
-    use super::*;
 
     pub fn write_temp_folder_with_ja2_json(contents: &[u8]) -> TempDir {
         let dir = TempDir::new().unwrap();
@@ -184,15 +220,9 @@ mod tests {
             String::from("1100x480"),
         ];
         let home = temp_dir.path().join(".ja2");
-        let expected_error_message =
-            "Vanilla data directory has to be set either in config file or per command line switch";
-
         let engine_options_res = EngineOptions::from_home_and_args(&home, &args);
 
-        assert_eq!(
-            engine_options_res,
-            Err(String::from(expected_error_message))
-        );
+        assert_eq!(engine_options_res, Err(EngineOptionsError::MissingGameDir));
     }
 
     #[test]

@@ -5,14 +5,15 @@
 use std::ptr;
 
 use stracciatella::config::{
-    find_stracciatella_home, Cli, EngineOptions, Ja2Json, Resolution, ScalingQuality,
-    VanillaVersion,
+    find_stracciatella_home, Cli, EngineOptions, EngineOptionsError, Ja2Json, Resolution,
+    ScalingQuality, VanillaVersion,
 };
 
 use crate::c::common::*;
 
 /// Creates `EngineOptions` with the provided command line arguments.
 /// Loads values from `(stracciatella_home)/ja2.json`, creating it if it does not exist.
+/// Logs relevant information when creating failed
 /// The caller is responsible for the returned memory.
 #[no_mangle]
 pub extern "C" fn EngineOptions_create(
@@ -34,8 +35,12 @@ pub extern "C" fn EngineOptions_create(
             no_rust_error();
             into_ptr(engine_options)
         }
-        Err(msg) => {
-            remember_rust_error(format!("EngineOptions_create: {}", msg));
+        Err(err) => {
+            if let EngineOptionsError::Cli(_) = err {
+                log::info!("{}", Cli::usage())
+            }
+            log::error!("{}", err);
+            remember_rust_error(err.to_string());
             ptr::null_mut()
         }
     }
@@ -350,13 +355,15 @@ mod tests {
         let temp_dir = write_temp_folder_with_ja2_json(b"Invalid JSON");
         let stracciatella_home = temp_dir.path().join(".ja2");
 
-        engine_options.stracciatella_home = stracciatella_home.clone();
+        engine_options.stracciatella_home = stracciatella_home;
         engine_options.resolution = Resolution(100, 100);
 
         assert_eq!(EngineOptions_write(&mut engine_options), true);
 
         let mut got_engine_options = EngineOptions::default();
-        Ja2Json::from_stracciatella_home(&engine_options.stracciatella_home).apply_to_engine_options(&mut got_engine_options).unwrap();
+        Ja2Json::from_stracciatella_home(&engine_options.stracciatella_home)
+            .apply_to_engine_options(&mut got_engine_options)
+            .unwrap();
 
         assert_eq!(got_engine_options.resolution, engine_options.resolution);
     }

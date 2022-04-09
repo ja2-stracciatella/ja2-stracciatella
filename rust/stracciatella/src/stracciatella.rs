@@ -25,7 +25,7 @@ use std::path::PathBuf;
 
 use log::warn;
 
-use crate::config::{EngineOptions};
+use crate::config::EngineOptions;
 use crate::fs::canonicalize;
 
 /// Returns the path to the assets directory.

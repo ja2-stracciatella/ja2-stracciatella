@@ -15,9 +15,37 @@ static GAME_DIR_OPTION_EXAMPLE: &str = "/opt/ja2";
 #[cfg(windows)]
 static GAME_DIR_OPTION_EXAMPLE: &str = "C:\\JA2";
 
+#[derive(Debug, Clone, PartialEq, Eq)]
+/// An error that can occur when parsing and evaluating CLI arguments
+pub enum CliError {
+    // Unknown arguments were passed to the CLI
+    UnknownArguments(Vec<String>),
+    // Missing game dir
+    GameDirDoesNotExist(String),
+    // Invalid arguments were passed to the CLI
+    InvalidValue(String, String),
+    // Parsing CLI arguments failed
+    ParsingFailed(String),
+}
+
+impl std::fmt::Display for CliError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::UnknownArguments(args) => write!(f, "Unknown arguments: `{}`.", args.join(" ")),
+            Self::GameDirDoesNotExist(dir) => write!(f, "The gamedir `{}` does not exist.", dir),
+            Self::InvalidValue(name, message) => {
+                write!(f, "Invalid value for argument `{}`: {}.", name, message)
+            }
+            Self::ParsingFailed(e) => write!(f, "Parsing CLI arguments failed: {}", e),
+        }
+    }
+}
+
+impl std::error::Error for CliError {}
+
 /// Handles command line parameters for executables
 ///
-/// Encapsulates the Cli arguments definition and the actual Cli arguments
+/// Encapsulates the Cli arguments definition and the actual CLI arguments
 /// passed to the executable
 pub struct Cli {
     args: Vec<String>,
@@ -63,7 +91,7 @@ impl Cli {
         opts.optopt(
             "",
             "resversion",
-            "Version of the game resources. Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD. Default value is ENGLISH. RUSSIAN is for BUKA Agonia Vlasty release. RUSSIAN_GOLD is for Gold release",
+            "Version of the game resources. Possible values: DUTCH, ENGLISH, FRENCH, GERMAN, ITALIAN, POLISH, RUSSIAN, RUSSIAN_GOLD, SIMPLIFIED_CHINESE. Default value is ENGLISH. RUSSIAN is for BUKA Agonia Vlasty release. RUSSIAN_GOLD is for Gold release",
             "RUSSIAN_GOLD"
         );
         opts.optflag(
@@ -91,11 +119,11 @@ impl Cli {
     pub fn apply_to_engine_options(
         &self,
         engine_options: &mut EngineOptions,
-    ) -> Result<(), String> {
+    ) -> Result<(), CliError> {
         match self.options.parse(&self.args[1..]) {
             Ok(m) => {
                 if !m.free.is_empty() {
-                    return Err(format!("Unknown arguments: '{}'.", m.free.join(" ")));
+                    return Err(CliError::UnknownArguments(m.free));
                 }
 
                 if m.opt_str("datadir").is_some() {
@@ -105,7 +133,7 @@ impl Cli {
                 }
 
                 if let Some(s) = m.opts_str(&["gamedir".to_owned(), "datadir".to_owned()]) {
-                    match canonicalize(PathBuf::from(s)) {
+                    match canonicalize(PathBuf::from(s.as_str())) {
                         Ok(s) => {
                             let mut temp = String::from(s.to_str().expect("Should not happen"));
                             // remove UNC path prefix (Windows)
@@ -116,7 +144,7 @@ impl Cli {
                             }
                             engine_options.vanilla_game_dir = PathBuf::from(temp)
                         }
-                        Err(_) => return Err(String::from("Please specify an existing gamedir.")),
+                        Err(_) => return Err(CliError::GameDirDoesNotExist(s)),
                     };
                 }
 
@@ -130,7 +158,7 @@ impl Cli {
                         Ok(res) => {
                             engine_options.resolution = res;
                         }
-                        Err(s) => return Err(s),
+                        Err(s) => return Err(CliError::InvalidValue("res".to_string(), s)),
                     }
                 }
 
@@ -139,14 +167,19 @@ impl Cli {
                         Ok(val) => {
                             engine_options.brightness = val;
                         }
-                        Err(_e) => return Err(String::from("Incorrect brightness value.")),
+                        Err(_e) => {
+                            return Err(CliError::InvalidValue(
+                                "brighness".to_owned(),
+                                "Should be a floating point value.".to_owned(),
+                            ))
+                        }
                     }
                 }
 
                 if let Some(s) = m.opt_str("resversion") {
                     match VanillaVersion::from_str(&s) {
                         Ok(resource_version) => engine_options.resource_version = resource_version,
-                        Err(s) => return Err(s),
+                        Err(s) => return Err(CliError::InvalidValue("resversion".to_owned(), s)),
                     }
                 }
 
@@ -180,7 +213,7 @@ impl Cli {
 
                 Ok(())
             }
-            Err(f) => Err(format!("{}\n{}", f.to_string(), &Cli::usage())),
+            Err(f) => Err(CliError::ParsingFailed(f.to_string())),
         }
     }
 
@@ -195,62 +228,73 @@ impl Cli {
 mod tests {
     use tempfile::TempDir;
 
+    use super::*;
     use crate::config::VanillaVersion;
     use crate::fs;
-    use super::*;
 
     #[test]
     fn apply_to_engine_options_should_abort_on_unknown_arguments() {
         let mut engine_options = EngineOptions::default();
-        let input = Cli::from_args(&vec![String::from("ja2"), String::from("testunknown")]);
+        let input = Cli::from_args(&[String::from("ja2"), String::from("testunknown")]);
         assert_eq!(
-            input.apply_to_engine_options(&mut engine_options).err().unwrap(),
-            "Unknown arguments: 'testunknown'."
+            input
+                .apply_to_engine_options(&mut engine_options)
+                .err()
+                .unwrap(),
+            CliError::UnknownArguments(vec!["testunknown".to_owned()])
         );
     }
 
     #[test]
     fn apply_to_engine_options_should_abort_on_unknown_switch() {
         let mut engine_options = EngineOptions::default();
-        let input = Cli::from_args(&vec![String::from("ja2"), String::from("--testunknown")]);
+        let input = Cli::from_args(&[String::from("ja2"), String::from("--testunknown")]);
         assert_eq!(
-            input.apply_to_engine_options(&mut engine_options).err().unwrap(),
-            format!(
-                "{}\n{}",
-                "Unrecognized option: 'testunknown'",
-                &Cli::usage()
-            )
+            input
+                .apply_to_engine_options(&mut engine_options)
+                .err()
+                .unwrap(),
+            CliError::ParsingFailed("Unrecognized option: 'testunknown'".to_owned())
         );
     }
 
     #[test]
     fn apply_to_engine_options_should_have_correct_fullscreen_default_value() {
         let mut engine_options = EngineOptions::default();
-        let input = Cli::from_args(&vec![String::from("ja2")]);
-        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        let input = Cli::from_args(&[String::from("ja2")]);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err(),
+            None
+        );
         assert_eq!(engine_options.start_in_fullscreen, false);
     }
 
     #[test]
     fn apply_to_engine_options_should_be_able_to_change_fullscreen_value() {
         let mut engine_options = EngineOptions::default();
-        let input = Cli::from_args(&vec![String::from("ja2"), String::from("-fullscreen")]);
-        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        let input = Cli::from_args(&[String::from("ja2"), String::from("-fullscreen")]);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err(),
+            None
+        );
         assert_eq!(engine_options.start_in_fullscreen, true);
     }
 
     #[test]
     fn apply_to_engine_options_should_be_able_to_show_help() {
         let mut engine_options = EngineOptions::default();
-        let input = Cli::from_args(&vec![String::from("ja2"), String::from("-help")]);
-        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        let input = Cli::from_args(&[String::from("ja2"), String::from("-help")]);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err(),
+            None
+        );
         assert_eq!(engine_options.show_help, true);
     }
 
     #[test]
     fn apply_to_engine_options_should_continue_with_multiple_known_switches() {
         let mut engine_options = EngineOptions::default();
-        let input = Cli::from_args(&vec![
+        let input = Cli::from_args(&[
             String::from("ja2"),
             String::from("-debug"),
             String::from("-mod"),
@@ -258,7 +302,10 @@ mod tests {
             String::from("--mod"),
             String::from("ö"),
         ]);
-        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err(),
+            None
+        );
         assert_eq!(engine_options.start_in_debug_mode, true);
         assert_eq!(engine_options.mods.len(), 2);
         assert_eq!(engine_options.mods[0], "a");
@@ -268,50 +315,65 @@ mod tests {
     #[test]
     fn apply_to_engine_options_should_fail_with_unknown_resversion() {
         let mut engine_options = EngineOptions::default();
-        let input = Cli::from_args(&vec![
+        let input = Cli::from_args(&[
             String::from("ja2"),
             String::from("--resversion"),
             String::from("TESTUNKNOWN"),
         ]);
         assert_eq!(
-            input.apply_to_engine_options(&mut engine_options).err().unwrap(),
-            "Resource version TESTUNKNOWN is unknown"
+            input
+                .apply_to_engine_options(&mut engine_options)
+                .err()
+                .unwrap(),
+            CliError::InvalidValue(
+                "resversion".to_owned(),
+                "Resource version TESTUNKNOWN is unknown".to_owned()
+            )
         );
     }
 
     #[test]
     fn apply_to_engine_options_should_return_the_correct_resversion_for_russian() {
         let mut engine_options = EngineOptions::default();
-        let input = Cli::from_args(&vec![
+        let input = Cli::from_args(&[
             String::from("ja2"),
             String::from("-resversion"),
             String::from("RUSSIAN"),
         ]);
-        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err(),
+            None
+        );
         assert_eq!(engine_options.resource_version, VanillaVersion::RUSSIAN);
     }
 
     #[test]
     fn apply_to_engine_options_should_return_the_correct_resversion_for_italian() {
         let mut engine_options = EngineOptions::default();
-        let input = Cli::from_args(&vec![
+        let input = Cli::from_args(&[
             String::from("ja2"),
             String::from("-resversion"),
             String::from("ITALIAN"),
         ]);
-        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err(),
+            None
+        );
         assert_eq!(engine_options.resource_version, VanillaVersion::ITALIAN);
     }
 
     #[test]
     fn apply_to_engine_options_should_return_the_correct_resolution() {
         let mut engine_options = EngineOptions::default();
-        let input = Cli::from_args(&vec![
+        let input = Cli::from_args(&[
             String::from("ja2"),
             String::from("--res"),
             String::from("1120x960"),
         ]);
-        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err(),
+            None
+        );
         assert_eq!(engine_options.resolution.0, 1120);
         assert_eq!(engine_options.resolution.1, 960);
     }
@@ -325,13 +387,16 @@ mod tests {
 
         fs::create_dir_all(dir_path).unwrap();
 
-        let input = Cli::from_args(&vec![
+        let input = Cli::from_args(&[
             String::from("ja2"),
             String::from("--gamedir"),
             String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()),
         ]);
 
-        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err(),
+            None
+        );
         let comp = engine_options.vanilla_game_dir;
         let base =
             canonicalize(temp_dir.path()).expect("Problem during building of reference value.");
@@ -348,13 +413,16 @@ mod tests {
 
         fs::create_dir_all(dir_path).unwrap();
 
-        let input = Cli::from_args(&vec![
+        let input = Cli::from_args(&[
             String::from("ja2"),
             String::from("--gamedir"),
             String::from(temp_dir.path().join("foo/../foo/../").to_str().unwrap()),
         ]);
 
-        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err(),
+            None
+        );
         assert_eq!(engine_options.vanilla_game_dir, temp_dir.path());
     }
 
@@ -367,13 +435,16 @@ mod tests {
 
         fs::create_dir_all(dir_path).unwrap();
 
-        let input = Cli::from_args(&vec![
+        let input = Cli::from_args(&[
             String::from("ja2"),
             String::from("--gamedir"),
             String::from(temp_dir.path().to_str().unwrap()),
         ]);
 
-        assert_eq!(input.apply_to_engine_options(&mut engine_options).err(), None);
+        assert_eq!(
+            input.apply_to_engine_options(&mut engine_options).err(),
+            None
+        );
         assert_eq!(
             engine_options.vanilla_game_dir,
             fs::canonicalize(temp_dir.path()).unwrap()
@@ -383,15 +454,18 @@ mod tests {
     #[test]
     fn apply_to_engine_options_should_fail_with_non_existing_directory() {
         let mut engine_options: super::EngineOptions = Default::default();
-        let input = Cli::from_args(&vec![
+        let input = Cli::from_args(&[
             String::from("ja2"),
             String::from("--gamedir"),
             String::from("somethingelse"),
         ]);
 
         assert_eq!(
-            input.apply_to_engine_options(&mut engine_options).err().unwrap(),
-            "Please specify an existing gamedir."
+            input
+                .apply_to_engine_options(&mut engine_options)
+                .err()
+                .unwrap(),
+            CliError::GameDirDoesNotExist("somethingelse".to_owned())
         );
     }
 }
