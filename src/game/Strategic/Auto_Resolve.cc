@@ -637,7 +637,7 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 	gpAR->ubAliveCivs = gpAR->ubCivs;
 	gpAR->ubAliveEnemies = gpAR->ubEnemies;
 
-	iMaxTeamSize = MAX( gpAR->ubMercs + gpAR->ubCivs, gpAR->ubEnemies );
+	iMaxTeamSize = std::max(gpAR->ubMercs + gpAR->ubCivs, int(gpAR->ubEnemies));
 
 	if( iMaxTeamSize > 12 )
 	{
@@ -2368,12 +2368,12 @@ static void CalculateRowsAndColumns(void)
 	if( gpAR->ubMercCols + gpAR->ubEnemyCols == 9 )
 		gpAR->rect.w = SCREEN_WIDTH;
 	else
-		gpAR->rect.w = 146 + 55 * (MAX(MAX(gpAR->ubMercCols, gpAR->ubCivCols), 2) + MAX(gpAR->ubEnemyCols, 2));
+		gpAR->rect.w = 146 + 55 * (std::max(int(std::max(gpAR->ubMercCols, gpAR->ubCivCols)), 2) + std::max(int(gpAR->ubEnemyCols), 2));
 
-	gpAR->sCenterStartX = STD_SCREEN_X + 323 - gpAR->rect.w / 2 + MAX(MAX(gpAR->ubMercCols, 2), MAX(gpAR->ubCivCols, 2)) * 55;
+	gpAR->sCenterStartX = STD_SCREEN_X + 323 - gpAR->rect.w / 2 + std::max(std::max(int(gpAR->ubMercCols), 2), std::max(int(gpAR->ubCivCols), 2)) * 55;
 
 	//Anywhere from 48*3 to 48*10
-	gpAR->rect.h = 48 * MAX(3, MAX(gpAR->ubMercRows + gpAR->ubCivRows, gpAR->ubEnemyRows));
+	gpAR->rect.h = 48 * std::max(3, std::max(gpAR->ubMercRows + gpAR->ubCivRows, int(gpAR->ubEnemyRows)));
 	//Make it an even multiple of 40 (rounding up).
 	gpAR->rect.h += 39;
 	gpAR->rect.h /= 40;
@@ -3176,7 +3176,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 			}
 		}
 		//Adjust the soldiers stats based on the damage.
-		pTarget->pSoldier->bLife = (INT8)MAX( iNewLife, 0 );
+		pTarget->pSoldier->bLife = (INT8)std::max(iNewLife, 0);
 		if( pTarget->uiFlags & CELL_MERC && gpAR->pRobotCell)
 		{
 			UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
@@ -3370,7 +3370,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 		#endif
 	}
 	//Adjust the soldiers stats based on the damage.
-	pTarget->pSoldier->bLife = (INT8)MAX( iNewLife, 0 );
+	pTarget->pSoldier->bLife = (INT8)std::max(iNewLife, 0);
 	if( pTarget->uiFlags & CELL_MERC && gpAR->pRobotCell)
 	{
 		UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );

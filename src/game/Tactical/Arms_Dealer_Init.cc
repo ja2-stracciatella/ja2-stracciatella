@@ -1465,7 +1465,7 @@ static void AddItemToArmsDealerInventory(ArmsDealerID const ubArmsDealer, UINT16
 			if (!fFoundOne)
 			{
 				// then we're going to have to allocate some more space...
-				ubElementsToAdd = MAX( SPECIAL_ITEMS_ALLOCED_AT_ONCE, ubHowMany);
+				ubElementsToAdd = std::max(SPECIAL_ITEMS_ALLOCED_AT_ONCE, int(ubHowMany));
 
 				Assert(gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem.size() + ubElementsToAdd <= UINT8_MAX);
 				ResizeSpecialItemArray(&gArmsDealersInventory[ubArmsDealer][usItemIndex], static_cast<UINT8>(gArmsDealersInventory[ubArmsDealer][usItemIndex].SpecialItem.size() + ubElementsToAdd));
@@ -2481,7 +2481,7 @@ UINT32 CalculateMinutesClosedBetween(ArmsDealerID const ubArmsDealer, UINT32 uiS
 		if ( uiEndTime > uiClosingTime )
 		{
 			// add how many minutes in the time range AFTER the store closed that day
-			uiMinutesClosed += ( uiEndTime - MAX( uiClosingTime, uiStartTime ) );
+			uiMinutesClosed += ( uiEndTime - std::max(uiClosingTime, uiStartTime ));
 		}
 	}
 	else

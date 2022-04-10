@@ -1479,7 +1479,7 @@ static void PrepareGroupsForSimultaneousArrival()
 		if (!g.fBetweenSectors)                 continue;
 		if (g.ubNext != first_group.ubSector) continue;
 		if (IsGroupTheHelicopterGroup(g))       continue;
-		latest_arrival_time = MAX(g.uiArrivalTime, latest_arrival_time);
+		latest_arrival_time = std::max(g.uiArrivalTime, latest_arrival_time);
 		g.uiFlags |= GROUPFLAG_SIMULTANEOUSARRIVAL_APPROVED | GROUPFLAG_MARKER;
 	}
 
@@ -3069,7 +3069,7 @@ static INT16 VehicleFuelRemaining(SOLDIERTYPE const& vs)
 static void SpendVehicleFuel(SOLDIERTYPE& vs, INT16 const fuel_spent)
 {
 	Assert(vs.uiStatusFlags & SOLDIER_VEHICLE);
-	vs.sBreathRed  = MAX(0, vs.sBreathRed - fuel_spent);
+	vs.sBreathRed  = std::max(0, vs.sBreathRed - fuel_spent);
 	vs.bBreath     = (vs.sBreathRed + 99) / 100;
 }
 
@@ -3269,7 +3269,7 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 			bDifficultyMaxCats = (INT8)( Random( 4 ) + gGameOptions.ubDifficultyLevel*2 + 3 );
 
 			//maximum of 3 bloodcats or 1 for every 6%, 5%, 4% progress based on easy, normal, and hard, respectively
-			bProgressMaxCats = (INT8)MAX( CurrentPlayerProgressPercentage() / (7 - gGameOptions.ubDifficultyLevel), 3 );
+			bProgressMaxCats = (INT8)std::max(CurrentPlayerProgressPercentage() / (7 - gGameOptions.ubDifficultyLevel), 3);
 
 			//make sure bloodcats don't outnumber mercs by a factor greater than 2
 			bNumMercMaxCats = (INT8) (PlayerMercsInSector(gSector) * 2);
@@ -3280,7 +3280,7 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 			if( gGameOptions.ubDifficultyLevel != DIF_LEVEL_HARD )
 			{ //if not hard difficulty, ensure cats never outnumber mercs by a factor of 2 (min 3 bloodcats)
 				pSector->bBloodCats = (INT8)MIN( pSector->bBloodCats, bNumMercMaxCats );
-				pSector->bBloodCats = (INT8)MAX( pSector->bBloodCats, 3 );
+				pSector->bBloodCats = (INT8) std::max(int(pSector->bBloodCats), 3);
 			}
 
 			//ensure that there aren't more bloodcats than placements

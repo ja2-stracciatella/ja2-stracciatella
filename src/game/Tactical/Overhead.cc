@@ -667,7 +667,7 @@ void ExecuteOverhead(void)
 					{
 						INT8 bShadeLevel = pSoldier->ubFadeLevel & 0x0f;
 						//ubShadeLevel = std::max(ubShadeLevel-1, gpWorldLevelData[ pSoldier->sGridNo ].pLandHead->ubShadeLevel );
-						bShadeLevel = MAX(0, bShadeLevel - 1);
+						bShadeLevel = std::max(0, bShadeLevel - 1);
 
 						if (bShadeLevel <= gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubShadeLevel)
 						{

@@ -330,7 +330,7 @@ static void SelectedSliderButtonCallBack(MOUSE_REGION* r, INT32 iReason)
 		SLIDER* const s = r->GetUserPtr<SLIDER>();
 		const INT32 step = (s->usNumberOfIncrements + WHEEL_MOVE_FRACTION - 1) / WHEEL_MOVE_FRACTION;
 		INT32 pos = s->usCurrentIncrement - step;
-		pos = MAX(0, pos);
+		pos = std::max(0, pos);
 		SetSliderPos(s, pos);
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_WHEEL_DOWN)

@@ -1266,7 +1266,7 @@ void MoveToEndOfMapScreenMessageList( void )
 
 void ChangeCurrentMapscreenMessageIndex( UINT8 ubNewMessageIndex )
 {
-	Assert( ubNewMessageIndex + MAX_MESSAGES_ON_MAP_BOTTOM <= MAX( MAX_MESSAGES_ON_MAP_BOTTOM, GetRangeOfMapScreenMessages() ) );
+	Assert(ubNewMessageIndex + MAX_MESSAGES_ON_MAP_BOTTOM <= std::max(MAX_MESSAGES_ON_MAP_BOTTOM, int(GetRangeOfMapScreenMessages())));
 
 	gubFirstMapscreenMessageIndex = ubNewMessageIndex;
 	gubCurrentMapMessageString = ( gubStartOfMapScreenMessageList + gubFirstMapscreenMessageIndex ) % 256;

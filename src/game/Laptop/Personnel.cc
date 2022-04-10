@@ -814,7 +814,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 				if (sX <= iMinimumX)
 				{
 					FindFontRightCoordinates(pers_stat_x + TEXT_BOX_WIDTH - 20 + TEXT_DELTA_OFFSET, 0, 30, 0, sString, PERS_FONT, &sX, &sY);
-					sX = MAX(sX, iMinimumX);
+					sX = std::max(int(sX), iMinimumX);
 				}
 
 				MPrint(sX, STD_SCREEN_Y + pers_stat_y[19], sString);
@@ -827,7 +827,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 
 				//KM: April 16, 1999
 				//Perform the potential overrun check
-				sX = MAX(sX, iMinimumX);
+				sX = std::max(int(sX), iMinimumX);
 
 				MPrint(sX, STD_SCREEN_Y + pers_stat_y[19], Skill);
 
@@ -839,7 +839,7 @@ static void DisplayCharStats(SOLDIERTYPE const& s)
 
 					//KM: April 16, 1999
 					//Perform the potential overrun check
-					sX = MAX(sX, iMinimumX);
+					sX = std::max(int(sX), iMinimumX);
 
 					MPrint(sX, STD_SCREEN_Y + pers_stat_y[20], Skill);
 				}

@@ -2205,7 +2205,7 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	else if( rHeightScalar == 1.0 )
 		rScalar = rWidthScalar ;
 	else
-		rScalar = MAX( rWidthScalar, rHeightScalar );
+		rScalar = std::max(rWidthScalar, rHeightScalar);
 
 	//apply the scalar to the destination width and height
 	uDstWidth = (UINT16)( uSrcWidth * rScalar );

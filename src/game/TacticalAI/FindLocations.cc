@@ -448,7 +448,7 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 				MAX_THREAT_RANGE;
 
 	// divide by a 100 to make the numbers more managable and avoid 32-bit limit
-	iThisScale = MAX( iMyPosValue, iHisPosValue) / 100;
+	iThisScale = std::max(iMyPosValue, iHisPosValue) / 100;
 	iThisScale = (iThisScale * iReductionFactor) / 100;
 	*iTotalScale += iThisScale;
 	// this helps to decide the percent improvement later

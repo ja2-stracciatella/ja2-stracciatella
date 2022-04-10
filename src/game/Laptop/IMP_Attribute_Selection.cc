@@ -443,7 +443,7 @@ void RenderAttributeBoxes(void)
 		INT32 val = GetCurrentAttributeValue(i);
 
 		// Compensate for zeroed skills: x pos is at least 0
-		INT16 sX = MAX(0, val - MIN_ATTRIBUTE_POINTS) * BASE_SKILL_PIXEL_UNIT_SIZE / (MAX_ATTRIBUTE_POINTS-MIN_ATTRIBUTE_POINTS);
+		INT16 sX = std::max(0, val - MIN_ATTRIBUTE_POINTS) * BASE_SKILL_PIXEL_UNIT_SIZE / (MAX_ATTRIBUTE_POINTS-MIN_ATTRIBUTE_POINTS);
 		INT16 sY = SKILL_SLIDE_START_Y + SKILL_SLIDE_HEIGHT * i;
 
 		sX += SKILL_SLIDE_START_X;

@@ -237,10 +237,10 @@ void RenderRadarScreen()
 		if (!fInMapMode)
 		{
 			RectangleDraw(TRUE,
-				RADAR_WINDOW_X + MAX(0, round((gsTopLeftWorldX - SCROLL_LEFT_PADDING) * gdScaleX)),
-				RADAR_WINDOW_TM_Y + MAX(0, round((gsTopLeftWorldY - SCROLL_TOP_PADDING) * gdScaleY)),
-				RADAR_WINDOW_X + MIN(round((gsBottomRightWorldX - SCROLL_RIGHT_PADDING - SCROLL_LEFT_PADDING) * gdScaleX - 1.0), RADAR_WINDOW_WIDTH - 1),
-				RADAR_WINDOW_TM_Y + MIN(round((gsBottomRightWorldY - SCROLL_BOTTOM_PADDING - SCROLL_TOP_PADDING) * gdScaleY - 1.0), RADAR_WINDOW_HEIGHT - 1),
+				RADAR_WINDOW_X + std::max(double(0), round((gsTopLeftWorldX - SCROLL_LEFT_PADDING) * gdScaleX)),
+				RADAR_WINDOW_TM_Y + std::max(double(0), round((gsTopLeftWorldY - SCROLL_TOP_PADDING) * gdScaleY)),
+				RADAR_WINDOW_X + MIN(round((gsBottomRightWorldX - SCROLL_RIGHT_PADDING - SCROLL_LEFT_PADDING) * gdScaleX - 1.0), double(RADAR_WINDOW_WIDTH - 1)),
+				RADAR_WINDOW_TM_Y + MIN(round((gsBottomRightWorldY - SCROLL_BOTTOM_PADDING - SCROLL_TOP_PADDING) * gdScaleY - 1.0), double(RADAR_WINDOW_HEIGHT - 1)),
 				Get16BPPColor(FROMRGB(0, 255, 0)), pDestBuf);
 
 			// Re-render radar

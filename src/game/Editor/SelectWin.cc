@@ -703,9 +703,9 @@ void RenderSelectionWindow( void )
 			if (iEY < iSY) Swap(iEY, iSY);
 
 			iEX = MIN( iEX, 600 );
-			iSY = MAX(g_sel_win_box.y, iSY);
+			iSY = std::max(INT32(g_sel_win_box.y), iSY);
 			iEY = MIN( 359, iEY );
-			iEY = MAX(g_sel_win_box.y, iEY);
+			iEY = std::max(INT32(g_sel_win_box.y), iEY);
 
 			usFillColor = Get16BPPColor(FROMRGB(255, usFillGreen, 0));
 			usFillGreen += usDir;

@@ -667,9 +667,9 @@ static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bW
 				break;
 		}
 		// don't allow it to be lower than marksmanship, we don't want it to affect their chances of hitting
-		bStatus = (INT8)MAX( pp->bMarksmanship, bStatus );
+		bStatus = (INT8)std::max(pp->bMarksmanship, bStatus);
 
-		bStatus = (INT8)MAX( bStatus, gamepolicy(enemy_weapon_minimal_status));
+		bStatus = (INT8)std::max(bStatus, gamepolicy(enemy_weapon_minimal_status));
 
 		CreateItem( usGunIndex, bStatus, &(pp->Inv[ HANDPOS ]) );
 		pp->Inv[ HANDPOS ].fFlags |= OBJECT_UNDROPPABLE;

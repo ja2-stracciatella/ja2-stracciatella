@@ -474,7 +474,7 @@ static void SetClockResolutionToCompressMode(INT32 iCompressMode)
 	}
 	else
 	{
-		SetClockResolutionPerSecond( (UINT8) MAX( 1, (UINT8)(guiGameSecondsPerRealSecond / 60) ) );
+		SetClockResolutionPerSecond((UINT8) std::max(1U, guiGameSecondsPerRealSecond / 60));
 	}
 
 	// if the compress mode is X0 or X1
@@ -663,7 +663,7 @@ void UpdateClock()
 	//Because we debug so much, breakpoints tend to break the game, and cause unnecessary headaches.
 	//This line ensures that no more than 1 real-second passes between frames.  This otherwise has
 	//no effect on anything else.
-	uiLastSecondTime = MAX( uiNewTime - 1000, uiLastSecondTime );
+	uiLastSecondTime = std::max(uiNewTime - 1000, uiLastSecondTime);
 
 	//1000's of a second difference since last second.
 	uiThousandthsOfThisSecondProcessed = uiNewTime - uiLastSecondTime;
@@ -689,7 +689,7 @@ void UpdateClock()
 			guiTimesThisSecondProcessed = uiThousandthsOfThisSecondProcessed*1000 / uiTimeSlice;
 			uiNewTimeProcessed = guiGameSecondsPerRealSecond * guiTimesThisSecondProcessed / gubClockResolution;
 
-			uiNewTimeProcessed = MAX( uiNewTimeProcessed, uiLastTimeProcessed );
+			uiNewTimeProcessed = std::max(uiNewTimeProcessed, uiLastTimeProcessed);
 
 			#ifdef DEBUG_GAME_CLOCK
 			uiAmountToAdvanceTime = uiNewTimeProcessed - uiLastTimeProcessed;
