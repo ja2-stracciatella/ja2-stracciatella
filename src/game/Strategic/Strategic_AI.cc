@@ -404,7 +404,7 @@ void InitStrategicAI()
 		for (size_t i = 0; i != gPatrolGroup.size(); ++i)
 		{ // Force modified range within 1 - MAX_STRATEGIC_TEAM_SIZE.
 			INT8& size = gPatrolGroup[i].bSize;
-			size = MAX(gubMinEnemyGroupSize, MIN(MAX_STRATEGIC_TEAM_SIZE, size * force_percentage / 100));
+			size = std::clamp(size * force_percentage / 100, int(gubMinEnemyGroupSize), MAX_STRATEGIC_TEAM_SIZE);
 		}
 	}
 
@@ -445,8 +445,7 @@ void InitStrategicAI()
 					// then vary it a bit (+/- 25%)
 					start_pop = start_pop * (100 + Random(51) - 25) / 100;
 				}
-
-				start_pop = MAX(gubMinEnemyGroupSize, MIN(MAX_STRATEGIC_TEAM_SIZE, start_pop));
+				start_pop = std::clamp(start_pop, int(gubMinEnemyGroupSize), MAX_STRATEGIC_TEAM_SIZE);
 			}
 
 			if (admin_chance != 0)
@@ -524,8 +523,8 @@ void InitStrategicAI()
 	for (size_t i = 0; i != gPatrolGroup.size(); ++i)
 	{
 		PATROL_GROUP& pg = gPatrolGroup[i];
-		UINT8 n_troops = pg.bSize + Random(3) - 1;
-		n_troops = MAX(gubMinEnemyGroupSize, MIN(MAX_STRATEGIC_TEAM_SIZE, n_troops));
+		int n_troops = pg.bSize + Random(3) - 1;
+		n_troops = std::clamp(n_troops, int(gubMinEnemyGroupSize), MAX_STRATEGIC_TEAM_SIZE);
 		/* Note on adding patrol groups: The patrol group can't actually start on
 		 * the first waypoint, so we set it to the second way point for
 		 * initialization, and then add the waypoints from 0 up */
@@ -2446,8 +2445,7 @@ void LoadStrategicAI(HWFILE const hFile)
 						// then vary it a bit (+/- 25%)
 						iStartPop = iStartPop * ( 100 + ( Random ( 51 ) - 25 ) ) / 100;
 					}
-
-					iStartPop = MAX( gubMinEnemyGroupSize, MIN( MAX_STRATEGIC_TEAM_SIZE, iStartPop ) );
+					iStartPop = std::clamp(iStartPop, int(gubMinEnemyGroupSize), MAX_STRATEGIC_TEAM_SIZE);
 					cnt = iStartPop;
 
 					if( iAdminChance )
@@ -2612,13 +2610,13 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 		if( gArmyComp[ i ].bPriority )
 		{
 			num = origArmyComp[ i ].bPriority+ iFactor / 2;
-			num = MIN( MAX( 0, num ), 100 );
+			num = std::clamp(num, 0, 100);
 			gArmyComp[ i ].bPriority = (INT8)num;
 		}
 
 		//modify desired population by + or - 50% of original population
 		num = origArmyComp[ i ].bDesiredPopulation * (100 + iFactor) / 100;
-		num = MIN( MAX( 6, num ), MAX_STRATEGIC_TEAM_SIZE );
+		num = std::clamp(num, 6, MAX_STRATEGIC_TEAM_SIZE);
 		gArmyComp[ i ].bDesiredPopulation = (INT8)num;
 
 		//if gfExtraElites is set, then augment the composition sizes
@@ -3861,8 +3859,7 @@ static void ReinitializeUnvisitedGarrisons(void)
 				pGroup = GetGroup( gGarrisonGroup[ i ].ubPendingGroupID );
 				if( pGroup )
 				{
-					cnt -= pGroup->ubGroupSize;
-					cnt = MAX( cnt, 0 );
+					cnt = std::max(cnt - pGroup->ubGroupSize, 0U);
 				}
 			}
 

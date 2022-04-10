@@ -2056,7 +2056,7 @@ UINT8 GetTraversalQuoteActionID( INT8 bDirection )
 UINT8 SoldierDifficultyLevel( const SOLDIERTYPE * pSoldier )
 {
 	INT8 bDifficultyBase;
-	INT8 bDifficulty;
+	int bDifficulty;
 
 	// difficulty modifier ranges from 0 to 100
 	// and we want to end up with a number between 0 and 4 (4=hardest)
@@ -2102,9 +2102,7 @@ UINT8 SoldierDifficultyLevel( const SOLDIERTYPE * pSoldier )
 			break;
 
 	}
-
-	bDifficulty = __max( bDifficulty, 0 );
-	bDifficulty = __min( bDifficulty, 4 );
+	bDifficulty = std::clamp(bDifficulty, 0, 4);
 
 	return( (UINT8) bDifficulty );
 }

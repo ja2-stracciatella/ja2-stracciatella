@@ -553,13 +553,13 @@ void ExtractAndUpdateDoorInfo()
 	if( num >= 0 )
 		fCursor = TRUE;
 
-	num = MIN( MAX( GetNumericStrictValueFromField( 1 ), 0 ), 10 );
+	num = std::clamp(GetNumericStrictValueFromField(1), 0, 10);
 	door.ubTrapID = (UINT8)num;
 	SetInputFieldStringWithNumericStrictValue( 1, num );
 	if( num )
 		fCursor = TRUE;
 
-	num = MIN( MAX( GetNumericStrictValueFromField( 2 ), 0 ), 20 );
+	num = std::clamp(GetNumericStrictValueFromField(2), 0, 20);
 	if( door.ubTrapID && !num )
 		num = 1;  //Can't have a trap without a traplevel!
 	door.ubTrapLevel = (UINT8)num;

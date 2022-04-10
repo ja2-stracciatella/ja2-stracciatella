@@ -430,9 +430,9 @@ void ShutDownPathAI( void )
 static void ReconfigurePathAI(INT32 iNewMaxSkipListLevel, INT32 iNewMaxTrailTree, INT32 iNewMaxPathQ)
 {
 	// make sure the specified parameters are reasonable
-	iNewMaxSkipListLevel = __max( 0, __min( iNewMaxSkipListLevel, ABSMAX_SKIPLIST_LEVEL ) );
-	iNewMaxTrailTree = __max( 0, __min( iNewMaxTrailTree, ABSMAX_TRAIL_TREE ) );
-	iNewMaxPathQ = __max( 0, __min( iNewMaxPathQ, ABSMAX_PATHQ ) );
+	iNewMaxSkipListLevel = std::clamp(iNewMaxSkipListLevel, 0, ABSMAX_SKIPLIST_LEVEL);
+	iNewMaxTrailTree = std::clamp(iNewMaxTrailTree, 0, ABSMAX_TRAIL_TREE);
+	iNewMaxPathQ = std::clamp(iNewMaxPathQ, 0, ABSMAX_PATHQ);
 	// assign them
 	iMaxSkipListLevel = iNewMaxSkipListLevel;
 	iMaxTrailTree = iNewMaxTrailTree;

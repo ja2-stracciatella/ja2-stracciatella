@@ -591,9 +591,7 @@ static void RenderScrollBar(void) {
 	auto currentTop = gCurrentScrollTop;
 	auto maxYPos = SLG_SCROLLBAR_INNER_HEIGHT - SLG_SCROLLBAR_INDICATOR_HEIGHT - 2;
 	auto indicatorPosition = int(round(double_t(maxYPos) * double_t(currentTop) / double_t(maxTop)));
-
-	indicatorPosition = MAX(0, indicatorPosition);
-	indicatorPosition = MIN(indicatorPosition, maxYPos);
+	indicatorPosition = std::clamp(indicatorPosition, 0, maxYPos);
 
 	BltVideoObject(FRAME_BUFFER, guiSlgScrollbarStracciatella, SLG_SCROLL_BAR_INDICATOR_GRAPHICS_NUMBER, SLG_SCROLLBAR_POS_X + 2, SLG_SCROLLBAR_INNER_POS_Y + indicatorPosition + 1);
 }

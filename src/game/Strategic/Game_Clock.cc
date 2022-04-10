@@ -596,7 +596,7 @@ void PauseTimeForInterupt()
 //Valid range is 0 - 60 times per second.
 static void SetClockResolutionPerSecond(UINT8 ubNumTimesPerSecond)
 {
-	ubNumTimesPerSecond = (UINT8)(MAX( 0, MIN( 60, ubNumTimesPerSecond ) ));
+	ubNumTimesPerSecond = (UINT8) std::clamp(int(ubNumTimesPerSecond), 0, 60);
 	gubClockResolution = ubNumTimesPerSecond;
 }
 

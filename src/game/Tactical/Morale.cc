@@ -261,9 +261,7 @@ void RefreshSoldierMorale( SOLDIERTYPE * pSoldier )
 	iActualMorale  += ( ( pSoldier->bDrugEffect[ DRUG_TYPE_ADRENALINE ] * DRUG_EFFECT_MORALE_MOD ) / 100 );
 	iActualMorale  += ( ( pSoldier->bDrugEffect[ DRUG_TYPE_ALCOHOL ] * ALCOHOL_EFFECT_MORALE_MOD ) / 100 );
 
-	iActualMorale = __min( 100, iActualMorale );
-	iActualMorale = __max( 0, iActualMorale );
-	pSoldier->bMorale = (INT8) iActualMorale;
+	pSoldier->bMorale = (INT8) std::clamp(iActualMorale, 0, 100);
 
 	// update mapscreen as needed
 	fCharacterInfoPanelDirty = TRUE;
@@ -272,7 +270,7 @@ void RefreshSoldierMorale( SOLDIERTYPE * pSoldier )
 
 static void UpdateSoldierMorale(SOLDIERTYPE* pSoldier, UINT8 ubType, INT8 bMoraleMod)
 {
-	INT32 iMoraleModTotal;
+	int iMoraleModTotal;
 
 	if (!pSoldier->bActive)              return;
 	if (pSoldier->bLife < CONSCIOUSNESS) return;
@@ -347,22 +345,19 @@ static void UpdateSoldierMorale(SOLDIERTYPE* pSoldier, UINT8 ubType, INT8 bMoral
 	if (ubType == TACTICAL_MORALE_EVENT)
 	{
 		iMoraleModTotal = (INT32) pSoldier->bTacticalMoraleMod + (INT32) bMoraleMod;
-		iMoraleModTotal = __min( iMoraleModTotal, MORALE_MOD_MAX );
-		iMoraleModTotal = __max( iMoraleModTotal, -MORALE_MOD_MAX );
+		iMoraleModTotal = std::clamp(iMoraleModTotal, -MORALE_MOD_MAX, MORALE_MOD_MAX);
 		pSoldier->bTacticalMoraleMod = (INT8) iMoraleModTotal;
 	}
 	else if ( gTacticalStatus.fEnemyInSector && !pSoldier->bInSector ) // delayed strategic
 	{
 		iMoraleModTotal = (INT32) pSoldier->bDelayedStrategicMoraleMod + (INT32) bMoraleMod;
-		iMoraleModTotal = __min( iMoraleModTotal, MORALE_MOD_MAX );
-		iMoraleModTotal = __max( iMoraleModTotal, -MORALE_MOD_MAX );
+		iMoraleModTotal = std::clamp(iMoraleModTotal, -MORALE_MOD_MAX, MORALE_MOD_MAX);
 		pSoldier->bDelayedStrategicMoraleMod = (INT8) iMoraleModTotal;
 	}
 	else // strategic
 	{
 		iMoraleModTotal = (INT32) pSoldier->bStrategicMoraleMod + (INT32) bMoraleMod;
-		iMoraleModTotal = __min( iMoraleModTotal, MORALE_MOD_MAX );
-		iMoraleModTotal = __max( iMoraleModTotal, -MORALE_MOD_MAX );
+		iMoraleModTotal = std::clamp(iMoraleModTotal, -MORALE_MOD_MAX, MORALE_MOD_MAX);
 		pSoldier->bStrategicMoraleMod = (INT8) iMoraleModTotal;
 	}
 
@@ -789,16 +784,14 @@ void HourlyMoraleUpdate()
 			team_morale_mod_diff < 0 ? -1 + team_morale_mod_diff / 10 :
 			0;
 		s->bTeamMoraleMod += team_morale_mod_change;
-		s->bTeamMoraleMod = __min(s->bTeamMoraleMod,  MORALE_MOD_MAX);
-		s->bTeamMoraleMod = __max(s->bTeamMoraleMod, -MORALE_MOD_MAX);
+		s->bTeamMoraleMod = std::clamp(int(s->bTeamMoraleMod), -MORALE_MOD_MAX, MORALE_MOD_MAX);
 
 		// New, December 3rd, 1998, by CJC --
 		// If delayed strategic modifier exists then incorporate it in strategic mod
 		if (s->bDelayedStrategicMoraleMod != 0)
 		{
 			s->bStrategicMoraleMod       += s->bDelayedStrategicMoraleMod;
-			s->bStrategicMoraleMod        = __min(s->bStrategicMoraleMod,  MORALE_MOD_MAX);
-			s->bStrategicMoraleMod        = __max(s->bStrategicMoraleMod, -MORALE_MOD_MAX);
+			s->bStrategicMoraleMod        = std::clamp(int(s->bStrategicMoraleMod), -MORALE_MOD_MAX, MORALE_MOD_MAX);
 			s->bDelayedStrategicMoraleMod = 0;
 		}
 

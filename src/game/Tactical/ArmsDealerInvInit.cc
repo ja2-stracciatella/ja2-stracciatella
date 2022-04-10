@@ -161,10 +161,8 @@ static UINT8 GetCurrentSuitabilityForItem(ArmsDealerID const bArmsDealer, UINT16
 		}
 	}
 
-
-	ubMinCoolness = MAX( 1, MIN( 9, ubMinCoolness ) );
-	ubMaxCoolness = MAX( 2, MIN( 10, ubMaxCoolness ) );
-
+	ubMinCoolness = std::clamp(int(ubMinCoolness), 1, 9);
+	ubMaxCoolness = std::clamp(int(ubMaxCoolness), 2, 10);
 
 	// if item is too cool for current level of progress
 	if (ubItemCoolness > ubMaxCoolness)

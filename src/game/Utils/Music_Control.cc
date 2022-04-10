@@ -190,9 +190,7 @@ void MusicPoll(void)
 			if(uiMusicHandle!=NO_SAMPLE)
 			{
 				iVol=SoundGetVolume(uiMusicHandle);
-				iVol=(iVol >=1)? iVol-gbFadeSpeed : 0;
-
-				iVol=__max( (INT32)iVol, 0 );
+				iVol = __max(iVol - gbFadeSpeed, 0);
 
 				SoundSetVolume(uiMusicHandle, iVol);
 				if(iVol==0)

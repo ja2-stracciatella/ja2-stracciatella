@@ -2627,7 +2627,7 @@ static void CalculateAttackValues(void)
 	//	//bonus equals 20 if good guys outnumber bad guys 2 to 1.
 	//	const INT16 sMaxBonus = 20;
 	//	sOutnumberBonus = (INT16)(gpAR->ubMercs + gpAR->ubCivs) * sMaxBonus / gpAR->ubEnemies - sMaxBonus;
-	//	sOutnumberBonus = (INT16)MIN( sOutnumberBonus, MAX( sMaxBonus, 0 ) );
+	//	sOutnumberBonus = (INT16) std::clamp(sOutnumberBonus, 0, sMaxBonus);
 	//}
 
 	for (INT32 i = 0; i < gpAR->ubMercs; i++)
@@ -2728,7 +2728,7 @@ static void CalculateAttackValues(void)
 	//	//bonus equals 20 if good guys outnumber bad guys 2 to 1.
 	//	const INT16 sMaxBonus = 20;
 	//	sOutnumberBonus = (INT16)gpAR->ubEnemies * sMaxBonus / (gpAR->ubMercs + gpAR->ubCivs) - sMaxBonus;
-	//	sOutnumberBonus = (INT16)MIN( sOutnumberBonus, MAX( sMaxBonus, 0 ) );
+	//	sOutnumberBonus = (INT16) std::clamp(sOutnumberBonus, 0, sMaxBonus);
 	//}
 
 	for (INT32 i = 0; i < gpAR->ubEnemies; i++)

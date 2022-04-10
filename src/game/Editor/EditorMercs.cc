@@ -1190,7 +1190,7 @@ static void ExtractAndUpdateMercAttributes(void)
 
 	//make sure that experience level ranges between 1 and 9
 	if( gpSelected->pDetailedPlacement->bExpLevel != -1 )
-		gpSelected->pDetailedPlacement->bExpLevel = MAX( MIN( gpSelected->pDetailedPlacement->bExpLevel , 9 ), 1 );
+		gpSelected->pDetailedPlacement->bExpLevel = std::clamp(int(gpSelected->pDetailedPlacement->bExpLevel), 1, 9);
 
 	//no such thing as a life max of 0
 	if( !gpSelected->pDetailedPlacement->bLifeMax )

@@ -2480,8 +2480,8 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDest
 	// Calculate rows hanging off each side of the screen
 	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
 	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
-	const INT32 RightSkip  = __min(  MAX(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
-	const INT32 BottomSkip = __min(__max(ClipY2, iTempY + usHeight) - ClipY2, usHeight);
+	const INT32 RightSkip  = std::clamp(iTempX + usWidth - ClipX2, 0, usWidth);
+	const INT32 BottomSkip = std::clamp(iTempY + usHeight - ClipY2, 0, usHeight);
 
 	// calculate the remaining rows and columns to blit
 	const INT32 BlitLength = usWidth  - LeftSkip - RightSkip;
@@ -2743,8 +2743,8 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuf
 	// Calculate rows hanging off each side of the screen
 	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
 	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
-	const INT32 RightSkip  = __min(  MAX(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
-	const INT32 BottomSkip = __min(__max(ClipY2, iTempY + usHeight) - ClipY2, usHeight);
+	const INT32 RightSkip  = std::clamp(iTempX + usWidth - ClipX2, 0, usWidth);
+	const INT32 BottomSkip = std::clamp(iTempY + usHeight - ClipY2, 0, usHeight);
 
 	// calculate the remaining rows and columns to blit
 	const INT32 BlitLength = usWidth  - LeftSkip - RightSkip;
@@ -3008,8 +3008,8 @@ static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32
 	// Calculate rows hanging off each side of the screen
 	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
 	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
-	const INT32 RightSkip  = __min(  MAX(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
-	const INT32 BottomSkip = __min(__max(ClipY2, iTempY + usHeight) - ClipY2, usHeight);
+	const INT32 RightSkip  = std::clamp(iTempX + usWidth - ClipX2, 0, usWidth);
+	const INT32 BottomSkip = std::clamp(iTempY + usHeight - ClipY2, 0, usHeight);
 
 	UINT32 uiLineFlag = iTempY & 1;
 
@@ -3271,8 +3271,8 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuf
 	// Calculate rows hanging off each side of the screen
 	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
 	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
-	const INT32 RightSkip  = __min(  MAX(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
-	const INT32 BottomSkip = __min(__max(ClipY2, iTempY + usHeight) - ClipY2, usHeight);
+	const INT32 RightSkip  = std::clamp(iTempX + usWidth - ClipX2, 0, usWidth);
+	const INT32 BottomSkip = std::clamp(iTempY + usHeight - ClipY2, 0, usHeight);
 
 	UINT32 uiLineFlag = iTempY & 1;
 
@@ -3539,8 +3539,8 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UI
 	// Calculate rows hanging off each side of the screen
 	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
 	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
-	const INT32 RightSkip  = __min(  MAX(ClipX2, iTempX + usWidth)  - ClipX2, usWidth);
-	const INT32 BottomSkip = __min(__max(ClipY2, iTempY + usHeight) - ClipY2, usHeight);
+	const INT32 RightSkip  = std::clamp(iTempX + usWidth - ClipX2, 0, usWidth);
+	const INT32 BottomSkip = std::clamp(iTempY + usHeight - ClipY2, 0, usHeight);
 
 	// calculate the remaining rows and columns to blit
 	const INT32 BlitLength = usWidth  - LeftSkip - RightSkip;

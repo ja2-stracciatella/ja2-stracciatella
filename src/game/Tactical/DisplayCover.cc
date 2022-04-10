@@ -309,7 +309,7 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 										pSoldier->bLevel, bStance, NULL);
 		UINT16 const usMaxRange = WeaponInHand(pOpponent) ? GunRange(pOpponent->inv[HANDPOS]) :
 						GCM->getWeapon(GLOCK_18)->usRange;
-		INT32  const iBulletGetThrough = __min(__max((INT32)(((usMaxRange - usRange) / (FLOAT)usMaxRange + .3) * 100), 0), 100);
+		INT32  const iBulletGetThrough = std::clamp(int(((usMaxRange - usRange) / (FLOAT)usMaxRange + .3) * 100), 0, 100);
 		if (iBulletGetThrough > 5 && iGetThrough > 0)
 		{
 			INT32 const iCover = iGetThrough * iBulletGetThrough / 100;

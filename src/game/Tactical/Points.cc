@@ -1076,7 +1076,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 	BOOLEAN	adding_raise_gun_cost;
 	GetAPChargeForShootOrStabWRTGunRaises(&s, gridno, add_turning_cost, &adding_turning_cost, &adding_raise_gun_cost);
 
-	UINT8	ap_cost = AP_MIN_AIM_ATTACK;
+	int	ap_cost = AP_MIN_AIM_ATTACK;
 
 	if (GCM->getItem(item)->getItemClass() == IC_THROWING_KNIFE ||
 		item == ROCKET_LAUNCHER)
@@ -1158,10 +1158,8 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 	}
 
 	// The minimum AP cost of ANY shot can NEVER be more than merc's maximum APs
-	if (ap_cost > full_aps) ap_cost = full_aps;
-
-	// this SHOULD be impossible, but nevertheless
-	if (ap_cost < 1) ap_cost = 1;
+	// nor it SHOULDN'T be 0, but nevertheless
+	ap_cost = std::clamp(ap_cost, 1, full_aps > 0 ? int(full_aps) : 1);
 
 	return ap_cost;
 }

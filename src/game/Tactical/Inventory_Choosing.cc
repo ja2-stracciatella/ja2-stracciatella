@@ -117,7 +117,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 {
 	OBJECTTYPE *pItem;
 	//general rating information
-	INT8 bRating = 0;
+	int bRating = 0;
 	//numbers of items
 	INT8 bAmmoClips = 0;
 	INT8 bGrenades = 0;
@@ -178,7 +178,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 		case SOLDIER_CLASS_ADMINISTRATOR:
 		case SOLDIER_CLASS_GREEN_MILITIA:
 			bRating = BAD_ADMINISTRATOR_EQUIPMENT_RATING + bEquipmentModifier;
-			bRating = (INT8)MAX( MIN_EQUIPMENT_CLASS, MIN( MAX_EQUIPMENT_CLASS, bRating ) );
+			bRating = (INT8) std::clamp(bRating, MIN_EQUIPMENT_CLASS, MAX_EQUIPMENT_CLASS);
 
 			bWeaponClass = bRating;
 
@@ -225,7 +225,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 		case SOLDIER_CLASS_REG_MILITIA:
 			//army guys tend to have a broad range of equipment
 			bRating = BAD_ARMY_EQUIPMENT_RATING + bEquipmentModifier;
-			bRating = (INT8)MAX( MIN_EQUIPMENT_CLASS, MIN( MAX_EQUIPMENT_CLASS, bRating ) );
+			bRating = (INT8) std::clamp(bRating, MIN_EQUIPMENT_CLASS, MAX_EQUIPMENT_CLASS);
 
 			bWeaponClass = bRating;
 			bVestClass = bRating;
@@ -334,7 +334,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 		case SOLDIER_CLASS_ELITE:
 		case SOLDIER_CLASS_ELITE_MILITIA:
 			bRating = BAD_ELITE_EQUIPMENT_RATING + bEquipmentModifier;
-			bRating = (INT8)MAX( MIN_EQUIPMENT_CLASS, MIN( MAX_EQUIPMENT_CLASS, bRating ) );
+			bRating = (INT8) std::clamp(bRating, MIN_EQUIPMENT_CLASS, MAX_EQUIPMENT_CLASS);
 
 			bWeaponClass = bRating;
 			bHelmetClass = bRating;

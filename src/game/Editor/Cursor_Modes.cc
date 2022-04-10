@@ -345,10 +345,10 @@ static BOOLEAN HandleAreaSelection(const INT16 sGridX, const INT16 sGridY)
 
 static void ValidateSelectionRegionBoundaries(void)
 {
-	gSelectRegion.iLeft   = MAX( MIN( 159, gSelectRegion.iLeft   ), 0 );
-	gSelectRegion.iRight  = MAX( MIN( 159, gSelectRegion.iRight  ), 0 );
-	gSelectRegion.iTop    = MAX( MIN( 159, gSelectRegion.iTop    ), 0 );
-	gSelectRegion.iBottom = MAX( MIN( 159, gSelectRegion.iBottom ), 0 );
+	gSelectRegion.iLeft   = std::clamp(int(gSelectRegion.iLeft), 0, 159);
+	gSelectRegion.iRight  = std::clamp(int(gSelectRegion.iRight), 0, 159);
+	gSelectRegion.iTop    = std::clamp(int(gSelectRegion.iTop), 0, 159);
+	gSelectRegion.iBottom = std::clamp(int(gSelectRegion.iBottom), 0, 159);
 }
 
 
