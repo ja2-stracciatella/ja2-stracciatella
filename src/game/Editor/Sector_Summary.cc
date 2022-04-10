@@ -1759,8 +1759,8 @@ static void MapMoveCallback(MOUSE_REGION* reg, INT32 reason)
 		gfRenderMap = TRUE;
 		return;
 	}
-	gsHiSector.x = MIN((reg->RelativeXPos / 13) + 1, 16);
-	gsHiSector.y = MIN((reg->RelativeYPos / 13) + 1, 16);
+	gsHiSector.x = std::min((reg->RelativeXPos / 13) + 1, 16);
+	gsHiSector.y = std::min((reg->RelativeYPos / 13) + 1, 16);
 	if (gsPrev != gsHiSector)
 	{
 		gsPrev = gsHiSector;
@@ -1780,8 +1780,8 @@ static void MapClickCallback(MOUSE_REGION* reg, INT32 reason)
 			gsSelSector.x = 0;
 			SelectNextField();
 		}
-		gsSelSector.x = MIN( (reg->RelativeXPos / 13) + 1, 16 );
-		gsSelSector.y = MIN( (reg->RelativeYPos / 13) + 1, 16 );
+		gsSelSector.x = std::min((reg->RelativeXPos / 13) + 1, 16);
+		gsSelSector.y = std::min((reg->RelativeYPos / 13) + 1, 16);
 		if (gsSelSector != sLast)
 		{ //clicked in a new sector
 			gfOverrideDirty = TRUE;

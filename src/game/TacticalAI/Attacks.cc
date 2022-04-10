@@ -221,7 +221,7 @@ void CalcBestShot(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestShot)
 		}
 		else
 		{
-			ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
+			ubMaxPossibleAimTime = std::min(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
 		}
 
 		// consider the various aiming times
@@ -674,9 +674,9 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 		ubSearchRange = MAX_TOSS_SEARCH_DIST;
 
 		// determine maximum horizontal limits
-		//bMaxLeft  = MIN(ubSearchRange,(sOpponentTile[ubLoop] % MAXCOL));
+		//bMaxLeft  = std::min(ubSearchRange,(sOpponentTile[ubLoop] % MAXCOL));
 		bMaxLeft = ubSearchRange;
-		//bMaxRight = MIN(ubSearchRange,MAXCOL - ((sOpponentTile[ubLoop] % MAXCOL) + 1));
+		//bMaxRight = std::min(ubSearchRange,MAXCOL - ((sOpponentTile[ubLoop] % MAXCOL) + 1));
 		bMaxRight = ubSearchRange;
 
 		// determine maximum vertical limits
@@ -907,7 +907,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				}
 
 				// calculate the maximum possible aiming time
-				ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
+				ubMaxPossibleAimTime = std::min(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPcost);
 
 				// calc next attack's minimum AP cost (excludes readying & turning)
 
@@ -1096,7 +1096,7 @@ void CalcBestStab(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab, BOOLEAN fBladeAt
 		iBestHitRate = 0;                     // reset best hit rate to minimum
 
 		// calculate the maximum possible aiming time
-		ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPCost);
+		ubMaxPossibleAimTime = std::min(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPCost);
 
 		// consider the various aiming times
 		for (ubAimTime = AP_MIN_AIM_ATTACK; ubAimTime <= ubMaxPossibleAimTime; ubAimTime++)
@@ -1250,7 +1250,7 @@ void CalcTentacleAttack(SOLDIERTYPE *pSoldier, ATTACKTYPE *pBestStab )
 
 		// calculate the maximum possible aiming time
 
-		//ubMaxPossibleAimTime = MIN(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPCost);
+		//ubMaxPossibleAimTime = std::min(AP_MAX_AIM_ATTACK,pSoldier->bActionPoints - ubMinAPCost);
 		ubMaxPossibleAimTime = 0;
 
 		// consider the various aiming times

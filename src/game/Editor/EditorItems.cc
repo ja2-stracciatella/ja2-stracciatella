@@ -521,7 +521,7 @@ void RenderEditorItemsInfo()
 	/* Calculate the min and max index that is currently shown.  This determines
 	 * if the highlighted and/or selected items are drawn with the outlines. */
 	INT16 const min_idx = scroll_idx * 2;
-	INT16 const end_idx = MIN(min_idx + 12, eInfo.sNumItems);
+	INT16 const end_idx = std::min(min_idx + 12, int(eInfo.sNumItems));
 
 	// Draw the hilighted and selected items if applicable.
 	if (eInfo.pusItemIndex)

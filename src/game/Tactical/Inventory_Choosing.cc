@@ -532,7 +532,7 @@ static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bW
 	UINT16 usAmmoIndex = 0;
 	UINT16 usAttachIndex = 0;
 	UINT8 ubChanceStandardAmmo;
-	INT8 bStatus;
+	int bStatus;
 
 	// Choose weapon:
 	// WEAPONS are very important, and are therefore handled differently using special pre-generated tables.
@@ -651,25 +651,24 @@ static void ChooseWeaponForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 bW
 			case SOLDIER_CLASS_GREEN_MILITIA:
 			case SOLDIER_CLASS_REG_MILITIA:
 				//Admins/Troops: 60-75% + 1% every 4% progress
-				bStatus = (INT8)(60 + Random( 16 ));
-				bStatus += (INT8)(HighestPlayerProgressPercentage() / 4);
-				bStatus = (INT8)MIN( 100, bStatus );
+				bStatus = 60 + Random(16);
+				bStatus += HighestPlayerProgressPercentage() / 4;
+				bStatus = std::min(100, bStatus);
 				break;
 			case SOLDIER_CLASS_ELITE:
 			case SOLDIER_CLASS_ELITE_MILITIA:
 				//85-90% +  1% every 10% progress
-				bStatus = (INT8)(85 + Random( 6 ));
-				bStatus += (INT8)(HighestPlayerProgressPercentage() / 10);
-				bStatus = (INT8)MIN( 100, bStatus );
+				bStatus = 85 + Random(6);
+				bStatus += HighestPlayerProgressPercentage() / 10;
+				bStatus = std::min(100, bStatus);
 				break;
 			default:
-				bStatus = (INT8)(50 + Random( 51 ) );
+				bStatus = 50 + Random(51);
 				break;
 		}
 		// don't allow it to be lower than marksmanship, we don't want it to affect their chances of hitting
-		bStatus = (INT8)std::max(pp->bMarksmanship, bStatus);
-
-		bStatus = (INT8)std::max(bStatus, gamepolicy(enemy_weapon_minimal_status));
+		bStatus = std::max(int(pp->bMarksmanship), bStatus);
+		bStatus = std::max(bStatus, (int) gamepolicy(enemy_weapon_minimal_status));
 
 		CreateItem( usGunIndex, bStatus, &(pp->Inv[ HANDPOS ]) );
 		pp->Inv[ HANDPOS ].fFlags |= OBJECT_UNDROPPABLE;
@@ -737,7 +736,7 @@ static void ChooseGrenadesForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, INT8 
 
 	//determine the quality of grenades.  The elite guys get the best quality, while the others
 	//get progressively worse.
-	ubBaseQuality = (UINT8)MIN( 45 + bGrenadeClass * 5, 90 );
+	ubBaseQuality = (UINT8) std::min(45 + bGrenadeClass * 5, 90);
 	ubQualityVariation = 101 - ubBaseQuality;
 
 
@@ -1494,7 +1493,7 @@ static BOOLEAN PlaceObjectInSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp, OBJECT
 	}
 	else
 	{
-		pObject->ubNumberOfObjects = (UINT8)MIN( GCM->getItem(pObject->usItem )->getPerPocket(), pObject->ubNumberOfObjects );
+		pObject->ubNumberOfObjects = (UINT8) std::min(GCM->getItem(pObject->usItem )->getPerPocket(), pObject->ubNumberOfObjects);
 		//try to get it into a small pocket first
 		for( i = SMALLPOCK1POS; i <= SMALLPOCK8POS; i++ )
 		{

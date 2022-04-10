@@ -148,19 +148,19 @@ void ExtractAndUpdateMapInfo()
 	INT32 temp;
 	BOOLEAN fUpdateLight1 = FALSE;
 	//extract light1 colors
-	temp = MIN( GetNumericStrictValueFromField( 1 ), 255 );
+	temp = std::min(GetNumericStrictValueFromField( 1 ), 255);
 	if (temp != -1 && temp != gEditorLightColor.r)
 	{
 		fUpdateLight1 = TRUE;
 		gEditorLightColor.r = (UINT8)temp;
 	}
-	temp = MIN( GetNumericStrictValueFromField( 2 ), 255 );
+	temp = std::min(GetNumericStrictValueFromField( 2 ), 255);
 	if (temp != -1 && temp != gEditorLightColor.g)
 	{
 		fUpdateLight1 = TRUE;
 		gEditorLightColor.g = (UINT8)temp;
 	}
-	temp = MIN( GetNumericStrictValueFromField( 3 ), 255 );
+	temp = std::min(GetNumericStrictValueFromField( 3 ), 255);
 	if (temp != -1 && temp != gEditorLightColor.b)
 	{
 		fUpdateLight1 = TRUE;

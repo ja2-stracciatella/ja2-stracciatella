@@ -684,7 +684,7 @@ static void ExtractAndUpdateGunGUI(void)
 	if( i == -1 )
 		i = 20 + Random( 81 );
 	else
-		i = MIN( i, 100 );
+		i = std::min(i, 100);
 	gpItem->bGunStatus = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the ammo
@@ -692,12 +692,12 @@ static void ExtractAndUpdateGunGUI(void)
 	if( i == -1 )
 		i = Random( 1 + GCM->getWeapon( gpItem->usItem )->ubMagSize );
 	else
-		i = MIN( i, GCM->getWeapon( gpItem->usItem )->ubMagSize );
+		i = std::min(i, int(GCM->getWeapon(gpItem->usItem)->ubMagSize));
 	gpItem->ubGunShotsLeft = (UINT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 3 );
-	i = ( i == -1 ) ? 0 : MIN( i, 20 );
+	i = ( i == -1 ) ? 0 : std::min(i, 20);
 	gpItem->bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 3, i );
 	if( gpEditingItemPool )
@@ -745,7 +745,7 @@ static void ExtractAndUpdateAmmoGUI(void)
 	CreateItems( gpItem->usItem, 100, gpItem->ubNumberOfObjects, gpItem );
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
-	i = ( i == -1 ) ? 0 : MIN( i, 20 );
+	i = ( i == -1 ) ? 0 : std::min(i, 20);
 	gpItem->bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	if( gpEditingItemPool )
@@ -817,12 +817,12 @@ static void ExtractAndUpdateArmourGUI(void)
 	if( i == -1 )
 		i = 20 + Random( 81 );
 	else
-		i = MIN( i, 100 );
+		i = std::min(i, 100);
 	gpItem->bStatus[0] = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
-	i = ( i == -1 ) ? 0 : MIN( i, 20 );
+	i = ( i == -1 ) ? 0 : std::min(i, 20);
 	gpItem->bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	if( gpEditingItemPool )
@@ -863,12 +863,12 @@ static void ExtractAndUpdateEquipGUI(void)
 	if( i == -1 )
 		i = 20 + Random( 81 );
 	else
-		i = MIN( i, 100 );
+		i = std::min(i, 100);
 	gpItem->bStatus[0] = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
-	i = ( i == -1 ) ? 0 : MIN( i, 20 );
+	i = ( i == -1 ) ? 0 : std::min(i, 20);
 	gpItem->bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 2, i );
 	if( gpEditingItemPool )
@@ -916,7 +916,7 @@ static void ExtractAndUpdateExplosivesGUI(void)
 	if( i == -1 )
 		i = 20 + Random( 81 );
 	else
-		i = MIN( i, 100 );
+		i = std::min(i, 100);
 	gpItem->bStatus[0] = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the quantity
@@ -934,7 +934,7 @@ static void ExtractAndUpdateExplosivesGUI(void)
 	}
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 3 );
-	i = ( i == -1 ) ? 0 : MIN( i, 20 );
+	i = ( i == -1 ) ? 0 : std::min(i, 20);
 	gpItem->bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 3, i );
 	if( gpEditingItemPool )
@@ -1085,12 +1085,12 @@ static void ExtractAndUpdateActionItemsGUI(void)
 	if( i == -1 )
 		i = 20 + Random( 81 );
 	else
-		i = MIN( i, 100 );
+		i = std::min(i, 100);
 	gpItem->bStatus[0] = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 2 );
-	i = ( i == -1 ) ? 0 : MIN( i, 20 );
+	i = ( i == -1 ) ? 0 : std::min(i, 20);
 	if( i != gpItem->bTrap )
 		gbDefaultBombTrapLevel = (INT8)i;
 	gpItem->bTrap = (INT8)i;
@@ -1150,7 +1150,7 @@ static void ExtractAndUpdateTriggersGUI(void)
 	INT32 i;
 	//Update the trap level
 	i = GetNumericStrictValueFromField( 1 );
-	i = ( i == -1 ) ? 0 : MIN( i, 20 );
+	i = ( i == -1 ) ? 0 : std::min(i, 20);
 	gpItem->bTrap = (INT8)i;
 	SetInputFieldStringWithNumericStrictValue( 1, i );
 

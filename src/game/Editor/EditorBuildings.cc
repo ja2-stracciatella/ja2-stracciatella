@@ -547,7 +547,7 @@ void ExtractAndUpdateDoorInfo()
 
 	door.sGridNo = (INT16)iDoorMapIndex;
 
-	num = MIN( GetNumericStrictValueFromField( 0 ), NUM_LOCKS-1 );
+	num = std::min(GetNumericStrictValueFromField( 0 ), NUM_LOCKS-1);
 	door.ubLockID = (UINT8)num;
 	SetInputFieldStringWithNumericStrictValue( 0, num );
 	if( num >= 0 )
@@ -709,7 +709,7 @@ void ExtractAndUpdateBuildingInfo()
 	ST::string str;
 	INT32 temp;
 	//extract light1 colors
-	temp = MIN( GetNumericStrictValueFromField( 1 ), 255 );
+	temp = std::min(GetNumericStrictValueFromField( 1 ), 255);
 	if( temp != -1 )
 	{
 		gubCurrRoomNumber = (UINT8)temp;

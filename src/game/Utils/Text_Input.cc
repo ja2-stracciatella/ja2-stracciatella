@@ -1225,7 +1225,7 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 		SetInputFieldString(ubField, ST::null);
 		return;
 	}
-	usTime = MIN( 1439, usTime );
+	usTime = std::min(1439, int(usTime));
 
 	TEXTINPUTNODE* const curr = GetTextInputField(ubField);
 	if (!curr) return;

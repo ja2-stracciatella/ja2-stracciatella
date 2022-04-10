@@ -1331,7 +1331,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	}
 
 	ubStatsLevel = pp->bExpLevel + bStatsModifier;
-	ubStatsLevel = MIN( 9, ubStatsLevel );	//maximum stats level of 9
+	ubStatsLevel = std::min(9, int(ubStatsLevel));	//maximum stats level of 9
 
 	//Set the minimum base attribute
 	bBaseAttribute = 49 + ( 4 * ubStatsLevel );
@@ -2025,7 +2025,7 @@ static void CopyProfileItems(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 			OBJECTTYPE* const slot = &s.inv[slot_id];
 
 			UINT32 const slot_limit  = MoneySlotLimit(slot_id);
-			UINT32 const slot_amount = MIN(money_left, slot_limit);
+			UINT32 const slot_amount = std::min(money_left, slot_limit);
 			CreateMoney(slot_amount, slot);
 			money_left -= slot_amount;
 		}

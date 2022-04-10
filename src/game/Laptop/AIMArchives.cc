@@ -239,7 +239,7 @@ void RenderAimArchives()
 
 	// Draw the mug shot border and face
 	INT32 const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
-	INT32 const n_faces  = MIN(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
+	INT32 const n_faces  = std::min(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
 	INT32       face_idx = start;
 	for (INT32 i = 0; i != n_faces; ++i, ++face_idx)
 	{
@@ -381,7 +381,7 @@ static void InitAlumniFaceRegions(void)
 	gfFaceMouseRegionsActive = TRUE;
 
 	INT32 const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
-	INT32 const n_faces  = MIN(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
+	INT32 const n_faces  = std::min(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
 	INT32       face_idx = start;
 	UINT16 const w        = AIM_ALUMNI_ALUMNI_FACE_WIDTH;
 	UINT16 const h        = AIM_ALUMNI_ALUMNI_FACE_HEIGHT;

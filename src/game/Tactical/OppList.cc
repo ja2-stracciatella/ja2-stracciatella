@@ -883,7 +883,6 @@ INT16 MaxDistanceVisible( void )
 INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel)
 {
 	int sDistVisible;
-	INT8  bLightLevel;
 
 	// IMPORTANT! WhoIsThere2 can return a null-pointer for grid calcs
 	const SOLDIERTYPE* const pSubject = WhoIsThere2(sSubjectGridNo, bLevel);
@@ -957,10 +956,10 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 
 	// now reduce based on light level; SHADE_MIN is the define for the
 	// highest number the light can be
-	bLightLevel = LightTrueLevel(sSubjectGridNo, bLevel);
+	int bLightLevel = LightTrueLevel(sSubjectGridNo, bLevel);
 
 	if (hasMuzzleFlash)
-		bLightLevel = MIN(bLightLevel, NORMAL_LIGHTLEVEL_DAY);
+		bLightLevel = std::min(bLightLevel, NORMAL_LIGHTLEVEL_DAY);
 	sDistVisible = AdjustMaxSightRangeForEnvEffects(bLightLevel, sDistVisible);
 
 	// if we wanted to simulate desert-blindness, we'd bump up the light level

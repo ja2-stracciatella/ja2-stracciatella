@@ -3093,7 +3093,7 @@ void AddFuelToVehicle(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pVehicle)
 	//Fill 'er up.
 	sFuelNeeded = 10000 - pVehicle->sBreathRed;
 	sFuelAvailable = pItem->bStatus[0] * 50;
-	sFuelAdded = MIN( sFuelNeeded, sFuelAvailable );
+	sFuelAdded = std::min(sFuelNeeded, sFuelAvailable);
 	//Add to vehicle
 	pVehicle->sBreathRed += sFuelAdded;
 	pVehicle->bBreath = (INT8)(pVehicle->sBreathRed / 100);
@@ -3257,7 +3257,7 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 			//come back up to the maximum if left long enough.
 			INT32 iBloodCatDiff;
 			iBloodCatDiff = pSector->bBloodCatPlacements - pSector->bBloodCats;
-			pSector->bBloodCats += (INT8)MIN( iHoursElapsed / 18, iBloodCatDiff );
+			pSector->bBloodCats += (INT8)std::min(iHoursElapsed / 18, iBloodCatDiff);
 		}
 		//Once 0, the bloodcats will never recupe.
 	}
@@ -3275,16 +3275,16 @@ static BOOLEAN TestForBloodcatAmbush(GROUP const* const pGroup)
 			bNumMercMaxCats = (INT8) (PlayerMercsInSector(gSector) * 2);
 
 			//choose the lowest number of cats calculated by difficulty and progress.
-			pSector->bBloodCats = (INT8)MIN( bDifficultyMaxCats, bProgressMaxCats );
+			pSector->bBloodCats = (INT8)std::min(bDifficultyMaxCats, bProgressMaxCats);
 
 			if( gGameOptions.ubDifficultyLevel != DIF_LEVEL_HARD )
 			{ //if not hard difficulty, ensure cats never outnumber mercs by a factor of 2 (min 3 bloodcats)
-				pSector->bBloodCats = (INT8)MIN( pSector->bBloodCats, bNumMercMaxCats );
+				pSector->bBloodCats = (INT8)std::min(pSector->bBloodCats, bNumMercMaxCats);
 				pSector->bBloodCats = (INT8) std::max(int(pSector->bBloodCats), 3);
 			}
 
 			//ensure that there aren't more bloodcats than placements
-			pSector->bBloodCats = (INT8)MIN( pSector->bBloodCats, pSector->bBloodCatPlacements );
+			pSector->bBloodCats = (INT8)std::min(pSector->bBloodCats, pSector->bBloodCatPlacements);
 		}
 	}
 	else if( !bIsLair )

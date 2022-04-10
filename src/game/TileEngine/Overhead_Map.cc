@@ -121,7 +121,7 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 		SGPVObject* const vo = gSmTileSurf[i].vo;
 
 		// Get number of regions and check for overflow
-		UINT32 const NumRegions = MIN(vo->SubregionCount(), gNumTilesPerType[i]);
+		UINT32 const NumRegions = std::min(vo->SubregionCount(), gNumTilesPerType[i]);
 
 		UINT32 k = 0;
 		for (; k < NumRegions; ++k)

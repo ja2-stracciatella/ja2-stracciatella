@@ -25,7 +25,6 @@
 
 
 #define ABS(a) (UINT16)abs(int(a))
-#define MIN(a, b) std::min((int)a, (int)b)
 
 #define FOR_EACHX(type, iter, array, x) for (type* iter = (array); iter != endof((array)); (x), ++iter)
 #define FOR_EACH(type, iter, array)     FOR_EACHX(type, iter, (array), (void)0)

@@ -1936,7 +1936,7 @@ void FatigueCharacter(SOLDIERTYPE& s)
 		if (percent_encumbrance > 100)
 		{
 			INT32 const breath_loss = max_breath_loss * percent_encumbrance / 100;
-			max_breath_loss = MIN(breath_loss, 127);
+			max_breath_loss = std::min(breath_loss, 127);
 		}
 	}
 

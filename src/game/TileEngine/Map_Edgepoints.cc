@@ -1227,12 +1227,12 @@ static BOOLEAN VerifyEdgepoint(SOLDIERTYPE* pSoldier, INT16 sEdgepoint)
 	iSearchRange = EDGE_OF_MAP_SEARCH;
 
 	// determine maximum horizontal limits
-	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+	sMaxLeft  = std::min(iSearchRange, (pSoldier->sGridNo % MAXCOL));
+	sMaxRight = std::min(iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 
 	// determine maximum vertical limits
-	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+	sMaxUp   = std::min(iSearchRange, (pSoldier->sGridNo / MAXROW));
+	sMaxDown = std::min(iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	// Call FindBestPath to set flags in all locations that we can
 	// walk into within range.  We have to set some things up first...
@@ -1300,12 +1300,12 @@ static BOOLEAN EdgepointsClose(SOLDIERTYPE* pSoldier, INT16 sEdgepoint1, INT16 s
 	}
 
 	// determine maximum horizontal limits
-	sMaxLeft  = MIN( iSearchRange, (pSoldier->sGridNo % MAXCOL));
-	sMaxRight = MIN( iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
+	sMaxLeft  = std::min(iSearchRange, (pSoldier->sGridNo % MAXCOL));
+	sMaxRight = std::min(iSearchRange, MAXCOL - ((pSoldier->sGridNo % MAXCOL) + 1));
 
 	// determine maximum vertical limits
-	sMaxUp   = MIN( iSearchRange, (pSoldier->sGridNo / MAXROW));
-	sMaxDown = MIN( iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
+	sMaxUp   = std::min(iSearchRange, (pSoldier->sGridNo / MAXROW));
+	sMaxDown = std::min(iSearchRange, MAXROW - ((pSoldier->sGridNo / MAXROW) + 1));
 
 	// Call FindBestPath to set flags in all locations that we can
 	// walk into within range.  We have to set some things up first...

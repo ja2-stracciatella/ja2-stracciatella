@@ -1062,7 +1062,7 @@ void CleanUpStack(OBJECTTYPE* const o, OBJECTTYPE* const cursor_o)
 				INT8& dst_status = o->bStatus[k];
 				if (dst_status >= max_points) continue;
 
-				INT8 const points_to_move = MIN(max_points - dst_status, src_status);
+				INT8 const points_to_move = std::min(max_points - dst_status, int(src_status));
 				dst_status += points_to_move;
 				src_status -= points_to_move;
 				if (src_status != 0) continue;
@@ -1085,7 +1085,7 @@ void CleanUpStack(OBJECTTYPE* const o, OBJECTTYPE* const cursor_o)
 			INT8& dst_status = o->bStatus[k];
 			if (dst_status >= max_points) continue;
 
-			INT8 const points_to_move = MIN(max_points - dst_status, src_status);
+			INT8 const points_to_move = std::min(max_points - dst_status, int(src_status));
 			dst_status += points_to_move;
 			src_status -= points_to_move;
 			if (src_status != 0) continue;
@@ -2423,7 +2423,7 @@ UINT8 AddKeysToSlot(SOLDIERTYPE& s, INT8 const key_ring_pos, OBJECTTYPE const& k
 	KEY_ON_RING& keyring = s.pKeyRing[key_ring_pos];
 	if (keyring.ubNumber == 0) keyring.ubKeyID = key.ubKeyID;
 	// Only take what we can
-	UINT8 const n_added = MIN(key.ubNumberOfObjects, GCM->getItem(key.usItem)->getPerPocket() - keyring.ubNumber);
+	UINT8 const n_added = std::min(int(key.ubNumberOfObjects), GCM->getItem(key.usItem)->getPerPocket() - keyring.ubNumber);
 	keyring.ubNumber += n_added;
 	return n_added;
 }

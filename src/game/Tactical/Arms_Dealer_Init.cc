@@ -1697,7 +1697,7 @@ BOOLEAN AddDeadArmsDealerItemsToWorld(SOLDIERTYPE const* const pSoldier)
 				// function is called, there are times when we're not guarenteed that sGridNo is good
 				while ( ubLeftToDrop > 0)
 				{
-					ubNowDropping = MIN( ubLeftToDrop, ubHowManyMaxAtATime );
+					ubNowDropping = std::min(ubLeftToDrop, ubHowManyMaxAtATime);
 
 					MakeObjectOutOfDealerItems( usItemIndex, &SpclItemInfo, &TempObject, ubNowDropping );
 					AddItemToPool( pSoldier->sInitialGridNo, &TempObject, INVISIBLE, 0, 0, 0 );
@@ -2475,7 +2475,7 @@ UINT32 CalculateMinutesClosedBetween(ArmsDealerID const ubArmsDealer, UINT32 uiS
 		if ( uiStartTime < uiOpeningTime )
 		{
 			// add how many minutes in the time range BEFORE the store opened that day
-			uiMinutesClosed += ( MIN( uiOpeningTime, uiEndTime ) - uiStartTime );
+			uiMinutesClosed += ( std::min(uiOpeningTime, uiEndTime ) - uiStartTime);
 		}
 
 		if ( uiEndTime > uiClosingTime )

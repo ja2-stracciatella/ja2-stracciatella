@@ -1187,7 +1187,7 @@ zlevel_topmost:
 								sXPos += pTrav.sOffsetX;
 								sYPos += pTrav.sOffsetY;
 
-								INT16 const h = MIN((INT16)uiBrushHeight, gsVIEWPORT_WINDOW_END_Y - sYPos);
+								INT16 const h = std::min((int) uiBrushHeight, gsVIEWPORT_WINDOW_END_Y - sYPos);
 								RegisterBackgroundRect(uiDirtyFlags, sXPos, sYPos, uiBrushWidth, h);
 								if (fSaveZ)
 								{
@@ -1588,7 +1588,7 @@ next_node:
 						 * taskbar. */
 						if (iTempPosY_S < 360)
 						{
-							ColorFillVideoSurfaceArea(FRAME_BUFFER, iTempPosX_S, iTempPosY_S, iTempPosX_S + 40, MIN(iTempPosY_S + 20, 360), Get16BPPColor(FROMRGB(0, 0, 0)));
+							ColorFillVideoSurfaceArea(FRAME_BUFFER, iTempPosX_S, iTempPosY_S, iTempPosX_S + 40, std::min(iTempPosY_S + 20, 360), Get16BPPColor(FROMRGB(0, 0, 0)));
 						}
 					}
 				}

@@ -2112,7 +2112,7 @@ static void CalculateAutoResolveInfo(void)
 	if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 	{
 		GetNumberOfEnemiesInSector(gpAR->ubSector, &gpAR->ubAdmins, &gpAR->ubTroops, &gpAR->ubElites);
-		gpAR->ubEnemies = (UINT8)MIN( gpAR->ubAdmins + gpAR->ubTroops + gpAR->ubElites, 32 );
+		gpAR->ubEnemies = (UINT8)std::min(gpAR->ubAdmins + gpAR->ubTroops + gpAR->ubElites, 32);
 	}
 	else
 	{
@@ -2128,7 +2128,7 @@ static void CalculateAutoResolveInfo(void)
 																				&gpAR->ubYMCreatures, &gpAR->ubYFCreatures,
 																				&gpAR->ubAMCreatures, &gpAR->ubAFCreatures );
 		}
-		gpAR->ubEnemies = (UINT8)MIN( gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, 32 );
+		gpAR->ubEnemies = (UINT8)std::min(gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, 32);
 	}
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
 	gpAR->ubCivs = CountAllMilitiaInSector(gpAR->ubSector);
@@ -2601,7 +2601,7 @@ static void DetermineTeamLeader(BOOLEAN fFriendlyTeam)
 
 static void ResetNextAttackCounter(SOLDIERCELL* pCell)
 {
-	pCell->usNextAttack = MIN( 1000 - pCell->usAttack, 800 );
+	pCell->usNextAttack = std::min(1000 - pCell->usAttack, 800);
 	pCell->usNextAttack = (UINT16)(1000 + pCell->usNextAttack * 5 + PreRandom( 2000 - pCell->usAttack ) );
 	if( pCell->uiFlags & CELL_CREATURE )
 	{
@@ -2670,8 +2670,8 @@ static void CalculateAttackValues(void)
 			pCell->usDefence = 1000;
 		}
 
-		pCell->usAttack = MIN( pCell->usAttack, 1000 );
-		pCell->usDefence = MIN( pCell->usDefence, 1000 );
+		pCell->usAttack = std::min(int(pCell->usAttack), 1000);
+		pCell->usDefence = std::min(int(pCell->usDefence), 1000);
 
 		gpAR->usPlayerAttack += pCell->usAttack;
 		gpAR->usPlayerDefence += pCell->usDefence;
@@ -2707,8 +2707,8 @@ static void CalculateAttackValues(void)
 		pCell->usAttack = pCell->usAttack * usBonus / 100;
 		pCell->usDefence = pCell->usDefence * usBonus / 100;
 
-		pCell->usAttack = MIN( pCell->usAttack, 1000 );
-		pCell->usDefence = MIN( pCell->usDefence, 1000 );
+		pCell->usAttack = std::min(int(pCell->usAttack), 1000);
+		pCell->usDefence = std::min(int(pCell->usDefence), 1000);
 
 		gpAR->usPlayerAttack += pCell->usAttack;
 		gpAR->usPlayerDefence += pCell->usDefence;
@@ -2754,8 +2754,8 @@ static void CalculateAttackValues(void)
 		pCell->usAttack = pCell->usAttack * usBonus / 100;
 		pCell->usDefence = pCell->usDefence * usBonus / 100;
 
-		pCell->usAttack = MIN( pCell->usAttack, 1000 );
-		pCell->usDefence = MIN( pCell->usDefence, 1000 );
+		pCell->usAttack = std::min(int(pCell->usAttack), 1000);
+		pCell->usDefence = std::min(int(pCell->usDefence), 1000);
 
 		gpAR->usEnemyAttack += pCell->usAttack;
 		gpAR->usEnemyDefence += pCell->usDefence;
@@ -3719,7 +3719,7 @@ static void ProcessBattleFrame(void)
 
 	while( iTimeSlice > 0 )
 	{
-		uiSlice = MIN( iTimeSlice, 1000 );
+		uiSlice = std::min(iTimeSlice, 1000);
 		if( gpAR->ubBattleStatus == BATTLE_IN_PROGRESS )
 			gpAR->uiTotalElapsedBattleTimeInMilliseconds += uiSlice;
 
