@@ -643,7 +643,7 @@ void ExecuteOverhead(void)
 					if (pSoldier->fBeginFade == 1)
 					{
 						INT8 bShadeLevel = pSoldier->ubFadeLevel & 0x0f;
-						bShadeLevel = __min(bShadeLevel + 1, SHADE_MIN);
+						bShadeLevel = std::min(bShadeLevel + 1, SHADE_MIN);
 
 						if (bShadeLevel >= SHADE_MIN - 3)
 						{
@@ -666,7 +666,7 @@ void ExecuteOverhead(void)
 					else if (pSoldier->fBeginFade == 2)
 					{
 						INT8 bShadeLevel = pSoldier->ubFadeLevel & 0x0f;
-						//ubShadeLevel =__max(ubShadeLevel-1, gpWorldLevelData[ pSoldier->sGridNo ].pLandHead->ubShadeLevel );
+						//ubShadeLevel = std::max(ubShadeLevel-1, gpWorldLevelData[ pSoldier->sGridNo ].pLandHead->ubShadeLevel );
 						bShadeLevel = MAX(0, bShadeLevel - 1);
 
 						if (bShadeLevel <= gpWorldLevelData[pSoldier->sGridNo].pLandHead->ubShadeLevel)
@@ -4127,7 +4127,7 @@ void ExitCombatMode( )
 
 	// Make sure next opplist decay DOES happen right after we go to RT
 	// since this would be the same as what would happen at the end of the turn
-	gTacticalStatus.uiTimeSinceLastOpplistDecay = __max( 0, GetWorldTotalSeconds() - TIME_BETWEEN_RT_OPPLIST_DECAYS );
+	gTacticalStatus.uiTimeSinceLastOpplistDecay = std::max(UINT32(0), GetWorldTotalSeconds() - TIME_BETWEEN_RT_OPPLIST_DECAYS);
 	NonCombatDecayPublicOpplist( GetWorldTotalSeconds() );
 }
 

@@ -315,7 +315,7 @@ void HandleEnricoEmail(void)
 	// reset # of new sectors visited 'today'
 	// grant some leeway for the next day, could have started moving
 	// at night...
-	gStrategicStatus.ubNumNewSectorsVisitedToday = __min( gStrategicStatus.ubNumNewSectorsVisitedToday, NEW_SECTORS_EQUAL_TO_ACTIVITY ) / 3;
+	gStrategicStatus.ubNumNewSectorsVisitedToday = std::min( gStrategicStatus.ubNumNewSectorsVisitedToday, UINT8(NEW_SECTORS_EQUAL_TO_ACTIVITY)) / 3;
 }
 
 

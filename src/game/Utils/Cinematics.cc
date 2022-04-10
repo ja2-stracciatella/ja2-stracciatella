@@ -306,8 +306,8 @@ static void SmkBlitVideoFrame(SMKFLIC* const sf, SGPVSurface* surface)
 	UINT16 dst_height = surface->Height();
 
 	// blit the intersection
-	unsigned long y_end = sf->top >= dst_height ? 0 : MIN(src_height, dst_height - sf->top);
-	unsigned long x_end = sf->left >= dst_pitch ? 0 : MIN(src_width, dst_pitch - sf->left);
+	unsigned long y_end = sf->top >= dst_height ? 0 : std::min(src_height, (unsigned long) (dst_height - sf->top));
+	unsigned long x_end = sf->left >= dst_pitch ? 0 : std::min(src_width, (unsigned long) (dst_pitch - sf->left));
 	dst += sf->left + sf->top * dst_pitch;
 	for (unsigned long y = 0; y < y_end; y++)
 	{

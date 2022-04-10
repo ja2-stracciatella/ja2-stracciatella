@@ -1224,7 +1224,7 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize - pGun->ubGunShotsLeft );
+				ubBulletsToMove = std::min(int(pAmmo->ubShotsLeft[0]), GCM->getWeapon(pGun->usItem)->ubMagSize - pGun->ubGunShotsLeft);
 			}
 			else
 			{
@@ -1237,11 +1237,11 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			usNewAmmoItem = pAmmo->usItem - 1;
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize - pGun->ubGunShotsLeft );
+				ubBulletsToMove = std::min(int(pAmmo->ubShotsLeft[0]), GCM->getWeapon(pGun->usItem)->ubMagSize - pGun->ubGunShotsLeft);
 			}
 			else
 			{
-				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize );
+				ubBulletsToMove = std::min(pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize);
 			}
 		}
 		else // mag is smaller than weapon mag
@@ -1249,11 +1249,11 @@ BOOLEAN ReloadGun( SOLDIERTYPE * pSoldier, OBJECTTYPE * pGun, OBJECTTYPE * pAmmo
 			usNewAmmoItem = pAmmo->usItem + 1;
 			if (bReloadType == RELOAD_TOPOFF)
 			{
-				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize - pGun->ubGunShotsLeft );
+				ubBulletsToMove = std::min(int(pAmmo->ubShotsLeft[0]), GCM->getWeapon(pGun->usItem)->ubMagSize - pGun->ubGunShotsLeft);
 			}
 			else
 			{
-				ubBulletsToMove = __min( pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize );
+				ubBulletsToMove = std::min(pAmmo->ubShotsLeft[0], GCM->getWeapon(pGun->usItem)->ubMagSize);
 			}
 		}
 
@@ -1900,7 +1900,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 	// returns object to have in hand after placement... same as original in the
 	// case of error
 
-	UINT8 ubSlotLimit, ubNumberToDrop, ubLoop;
+	UINT8 ubNumberToDrop, ubLoop;
 	OBJECTTYPE *pInSlot;
 	BOOLEAN fObjectWasRobotRemote = FALSE;
 
@@ -1937,7 +1937,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 
 	if (GCM->getItem(pObj->usItem)->getItemClass() == IC_KEY) CollectKey(*pSoldier, *pObj);
 
-	ubSlotLimit = ItemSlotLimit( pObj->usItem, bPos );
+	int ubSlotLimit = ItemSlotLimit(pObj->usItem, bPos);
 
 	pInSlot = &(pSoldier->inv[bPos]);
 
@@ -1946,10 +1946,10 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 		// placement in an empty slot
 		ubNumberToDrop = pObj->ubNumberOfObjects;
 
-		if (ubNumberToDrop > __max( ubSlotLimit, 1 ) )
+		if (ubNumberToDrop > std::max(ubSlotLimit, 1))
 		{
 			// drop as many as possible into pocket
-			ubNumberToDrop = __max( ubSlotLimit, 1 );
+			ubNumberToDrop = std::max(ubSlotLimit, 1);
 		}
 
 		// could be wrong type of object for slot... need to check...
@@ -2081,7 +2081,7 @@ BOOLEAN PlaceObject( SOLDIERTYPE * pSoldier, INT8 bPos, OBJECTTYPE * pObj )
 					SwapObjs( pObj, pInSlot );
 				}
 			}
-			else if (pObj->ubNumberOfObjects <= __max( ubSlotLimit, 1 ) )
+			else if (pObj->ubNumberOfObjects <= std::max(ubSlotLimit, 1))
 			{
 				// swapping
 				SwapObjs( pObj, pInSlot );
@@ -3405,11 +3405,11 @@ void WaterDamage(SOLDIERTYPE& s)
 		// and 1% for medium water
 		if (s.bOverTerrainType == DEEP_WATER )
 		{
-			s.bCamo = __max(0, s.bCamo - 2);
+			s.bCamo = std::max(0, s.bCamo - 2);
 		}
 		else
 		{
-			s.bCamo = __max(0, s.bCamo - 1);
+			s.bCamo = std::max(0, s.bCamo - 1);
 		}
 		if (s.bCamo == 0)
 		{
@@ -3440,9 +3440,6 @@ void WaterDamage(SOLDIERTYPE& s)
 
 BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* const pfGoodAPs)
 {
-	INT8   bPointsToUse;
-	UINT16 usTotalKitPoints;
-
 	(*pfGoodAPs) = TRUE;
 
 	if (pObj->usItem != CAMOUFLAGEKIT)
@@ -3456,7 +3453,7 @@ BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* 
 		return( TRUE );
 	}
 
-	usTotalKitPoints = TotalPoints( pObj );
+	int usTotalKitPoints = TotalPoints(pObj);
 	if (usTotalKitPoints == 0)
 	{
 		// HUH???
@@ -3471,9 +3468,9 @@ BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* 
 
 	// points are used up at a rate of 50% kit = 100% camo on guy
 	// add 1 to round off
-	bPointsToUse = (100 - pSoldier->bCamo + 1 ) / 2;
-	bPointsToUse = __min( bPointsToUse, usTotalKitPoints );
-	pSoldier->bCamo = __min( 100, pSoldier->bCamo + bPointsToUse * 2);
+	int bPointsToUse = (100 - pSoldier->bCamo + 1 ) / 2;
+	bPointsToUse = std::min(bPointsToUse, usTotalKitPoints);
+	pSoldier->bCamo = std::min(pSoldier->bCamo + bPointsToUse * 2, 100);
 
 	UseKitPoints(*pObj, bPointsToUse, *pSoldier);
 
@@ -3490,9 +3487,6 @@ BOOLEAN ApplyCamo(SOLDIERTYPE* const pSoldier, OBJECTTYPE* const pObj, BOOLEAN* 
 
 BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs )
 {
-	INT16  sPointsToUse;
-	UINT16 usTotalKitPoints;
-
 	(*pfGoodAPs) = TRUE;
 
 	if (pObj->usItem != CANTEEN)
@@ -3500,7 +3494,7 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
 		return( FALSE );
 	}
 
-	usTotalKitPoints = TotalPoints( pObj );
+	int usTotalKitPoints = TotalPoints(pObj);
 	if (usTotalKitPoints == 0)
 	{
 		// HUH???
@@ -3525,7 +3519,7 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
 		}
 	}
 
-	sPointsToUse = __min( 20, usTotalKitPoints );
+	int sPointsToUse = std::min(20, usTotalKitPoints);
 
 	// CJC Feb 9.  Canteens don't seem effective enough, so doubled return from them
 	DeductPoints( pSoldier, AP_DRINK, (INT16) (2 * sPointsToUse * -(100 - pSoldier->bBreath) ) );
@@ -3539,9 +3533,6 @@ BOOLEAN ApplyCanteen( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGood
 
 BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodAPs )
 {
-	INT16  sPointsToUse;
-	UINT16 usTotalKitPoints;
-
 	(*pfGoodAPs) = TRUE;
 
 	if (pObj->usItem != JAR_ELIXIR )
@@ -3549,7 +3540,7 @@ BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodA
 		return( FALSE );
 	}
 
-	usTotalKitPoints = TotalPoints( pObj );
+	int usTotalKitPoints = TotalPoints(pObj);
 	if (usTotalKitPoints == 0)
 	{
 		// HUH???
@@ -3564,8 +3555,8 @@ BOOLEAN ApplyElixir( SOLDIERTYPE * pSoldier, OBJECTTYPE * pObj, BOOLEAN *pfGoodA
 
 	DeductPoints( pSoldier, AP_CAMOFLAGE, 0 );
 
-	sPointsToUse = ( MAX_HUMAN_CREATURE_SMELL - pSoldier->bMonsterSmell ) * 2;
-	sPointsToUse = __min( sPointsToUse, usTotalKitPoints );
+	int sPointsToUse = (MAX_HUMAN_CREATURE_SMELL - pSoldier->bMonsterSmell) * 2;
+	sPointsToUse = std::min(sPointsToUse, usTotalKitPoints);
 
 	UseKitPoints(*pObj, sPointsToUse, *pSoldier);
 

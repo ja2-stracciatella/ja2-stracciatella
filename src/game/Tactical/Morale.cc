@@ -114,11 +114,11 @@ static void DecayTacticalMorale(SOLDIERTYPE* pSoldier)
 		// decay the modifier!
 		if (pSoldier->bTacticalMoraleMod > 0)
 		{
-			pSoldier->bTacticalMoraleMod = __max( 0, pSoldier->bTacticalMoraleMod - (8 - pSoldier->bTacticalMoraleMod / 10) );
+			pSoldier->bTacticalMoraleMod = std::max(0, pSoldier->bTacticalMoraleMod - (8 - pSoldier->bTacticalMoraleMod / 10));
 		}
 		else
 		{
-			pSoldier->bTacticalMoraleMod = __min( 0, pSoldier->bTacticalMoraleMod + (6 + pSoldier->bTacticalMoraleMod / 10) );
+			pSoldier->bTacticalMoraleMod = std::min(0, pSoldier->bTacticalMoraleMod + (6 + pSoldier->bTacticalMoraleMod / 10));
 		}
 	}
 }
@@ -129,11 +129,11 @@ static void DecayStrategicMorale(SOLDIERTYPE* pSoldier)
 	// decay the modifier!
 	if (pSoldier->bStrategicMoraleMod > 0)
 	{
-		pSoldier->bStrategicMoraleMod = __max( 0, pSoldier->bStrategicMoraleMod - (8 - pSoldier->bStrategicMoraleMod / 10) );
+		pSoldier->bStrategicMoraleMod = std::max(0, pSoldier->bStrategicMoraleMod - (8 - pSoldier->bStrategicMoraleMod / 10));
 	}
 	else
 	{
-		pSoldier->bStrategicMoraleMod = __min( 0, pSoldier->bStrategicMoraleMod + (6 + pSoldier->bStrategicMoraleMod / 10) );
+		pSoldier->bStrategicMoraleMod = std::min(0, pSoldier->bStrategicMoraleMod + (6 + pSoldier->bStrategicMoraleMod / 10));
 	}
 }
 

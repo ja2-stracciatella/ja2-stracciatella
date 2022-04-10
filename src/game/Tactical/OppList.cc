@@ -692,7 +692,7 @@ void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 	{
 		HaultSoldierFromSighting(&s, TRUE);
 	}
-	s.bNewSituation = __max(s.bNewSituation, temp_new_situation);
+	s.bNewSituation = std::max(s.bNewSituation, temp_new_situation);
 
 	// If we've been told to radio the results
 	if (sight_flags & SIGHT_RADIO)
@@ -882,7 +882,7 @@ INT16 MaxDistanceVisible( void )
 
 INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel)
 {
-	INT16 sDistVisible;
+	int sDistVisible;
 	INT8  bLightLevel;
 
 	// IMPORTANT! WhoIsThere2 can return a null-pointer for grid calcs
@@ -1016,7 +1016,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 	// let tanks see and be seen further (at night)
 	if ( (TANK( pSoldier ) && sDistVisible > 0) || (pSubject && TANK( pSubject ) ) )
 	{
-		sDistVisible = __max( sDistVisible + 5, MaxDistanceVisible() );
+		sDistVisible = std::max(sDistVisible + 5, int(MaxDistanceVisible()));
 	}
 
 	if ( gpWorldLevelData[ pSoldier->sGridNo ].ubExtFlags[ bLevel ] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS) )
@@ -1024,7 +1024,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 		if (!IsWearingHeadGear(*pSoldier, GASMASK))
 		{
 			// in gas without a gas mask; reduce max distance visible to 2 tiles at most
-			sDistVisible = __min( sDistVisible, 2 );
+			sDistVisible = std::min(2, sDistVisible);
 		}
 	}
 
@@ -5043,7 +5043,7 @@ static void CommunicateWatchedLoc(const SOLDIERTYPE* const watcher, const INT16 
 		else
 		{
 			// increment to max
-			gubWatchedLocPoints[ ubLoop ][ bLoopPoint ] = __max( gubWatchedLocPoints[ ubLoop ][ bLoopPoint ], ubPoints );
+			gubWatchedLocPoints[ ubLoop ][ bLoopPoint ] = std::max(gubWatchedLocPoints[ ubLoop ][ bLoopPoint ], ubPoints);
 
 			gfWatchedLocReset[ ubLoop ][ bLoopPoint ] = FALSE;
 			gfWatchedLocHasBeenIncremented[ ubLoop ][ bLoopPoint ] = TRUE;

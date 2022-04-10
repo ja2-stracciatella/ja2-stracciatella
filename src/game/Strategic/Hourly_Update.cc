@@ -265,10 +265,10 @@ static void HourlyLarryUpdate(void)
 			{
 				// NB store all drunkenness info in LARRY_NORMAL profile (to use same values)
 				// so long as he keeps consuming, keep number above level at which he cracked
-				gMercProfiles[ LARRY_NORMAL ].bNPCData = __max( gMercProfiles[ LARRY_NORMAL ].bNPCData, LARRY_FALLS_OFF_WAGON );
+				gMercProfiles[ LARRY_NORMAL ].bNPCData = std::max(int(gMercProfiles[LARRY_NORMAL].bNPCData), LARRY_FALLS_OFF_WAGON);
 				gMercProfiles[ LARRY_NORMAL ].bNPCData += (INT8) Random( usTemptation );
 				// allow value to keep going up to 24 (about 2 days since we subtract Random( 2 ) when he has no access )
-				gMercProfiles[ LARRY_NORMAL ].bNPCData = __min( gMercProfiles[ LARRY_NORMAL ].bNPCData, 24 );
+				gMercProfiles[ LARRY_NORMAL ].bNPCData = std::min(int(gMercProfiles[LARRY_NORMAL].bNPCData), 24);
 				if ( fBar )
 				{
 					// take $ from player's account

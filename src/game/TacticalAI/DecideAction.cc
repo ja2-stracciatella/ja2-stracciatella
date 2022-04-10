@@ -2369,7 +2369,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 		if ( pSoldier->bBleeding > MIN_BLEEDING_THRESHOLD )
 		{
 			// reduce bleeding by 1 point per AP (in RT, APs will get recalculated so it's okay)
-			pSoldier->bBleeding = __max( 0, pSoldier->bBleeding - pSoldier->bActionPoints );
+			pSoldier->bBleeding = std::max(0, pSoldier->bBleeding - pSoldier->bActionPoints);
 			return( AI_ACTION_NONE ); // will end-turn/wait depending on whether we're in TB or realtime
 		}
 

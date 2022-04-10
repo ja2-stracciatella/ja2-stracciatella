@@ -473,7 +473,7 @@ INT16 SpacesAway(INT16 sOrigin, INT16 sDest)
 	sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
 	sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
 
-	return( __max( sRows, sCols ) );
+	return( std::max(sRows, sCols ));
 }
 
 INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest)

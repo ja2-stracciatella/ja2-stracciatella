@@ -1042,7 +1042,7 @@ static UINT8 HandleNPCBeingGivenMoneyByPlayer(UINT8 const ubNPC, UINT32 const ui
 
 					if ( giHospitalRefund > 0 )
 					{
-						giHospitalRefund = __max( 0, giHospitalRefund - iCost + uiMoneyAmount );
+						giHospitalRefund = std::max(0U, giHospitalRefund - iCost + uiMoneyAmount);
 					}
 					giHospitalTempBalance = 0;
 				}

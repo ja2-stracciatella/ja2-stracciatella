@@ -97,10 +97,10 @@ void DisplayFrameRate( )
 	if ( gbFPSDisplay == SHOW_FULL_FPS )
 	{
 		// FRAME RATE
-		SetVideoOverlayText(g_fps_overlay, ST::format("FPS: {}", __min(uiFPS, 1000)));
+		SetVideoOverlayText(g_fps_overlay, ST::format("FPS: {}", std::min(uiFPS, 1000U)));
 
 		// TIMER COUNTER
-		SetVideoOverlayText(g_counter_period_overlay, ST::format("Game Loop Time: {}", __min(guiTimerDiag, 1000)));
+		SetVideoOverlayText(g_counter_period_overlay, ST::format("Game Loop Time: {}", std::min(guiTimerDiag, 1000U)));
 	}
 }
 

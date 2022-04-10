@@ -290,7 +290,7 @@ static void SimulateArmsDealerCustomer(void)
 				if ( usItemIndex == JAR_ELIXIR )
 				{
 					// only allow selling of standard # of items so those converted from blood given by player will be available
-					ubItemsSold = HowManyItemsAreSold( ubArmsDealer, usItemIndex, (UINT8) __min( 3, gArmsDealersInventory[ ubArmsDealer ][ usItemIndex ].ubPerfectItems), FALSE);
+					ubItemsSold = HowManyItemsAreSold(ubArmsDealer, usItemIndex, (UINT8) std::min(UINT8(3), gArmsDealersInventory[ubArmsDealer][usItemIndex].ubPerfectItems), FALSE);
 				}
 				else
 				{
@@ -430,7 +430,7 @@ static void ConvertCreatureBloodToElixir(void)
 	if ( ubBloodAvailable )
 	{
 		// start converting blood into elixir!
-		//ubAmountToConvert = (UINT8) __min( 5 + Random( 3 ), ubBloodAvailable );
+		//ubAmountToConvert = (UINT8) std::min(5 + Random( 3 ), ubBloodAvailable);
 		ubAmountToConvert = ubBloodAvailable;
 
 		// create item info describing a perfect item

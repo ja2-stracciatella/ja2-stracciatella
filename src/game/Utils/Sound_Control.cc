@@ -442,7 +442,7 @@ UINT32 PlaySoldierJA2Sample(SOLDIERTYPE const* const s, SoundID const usNum, UIN
 
 void SetSpeechVolume(UINT32 uiNewVolume)
 {
-	guiSpeechVolume = __min(uiNewVolume, MAXVOLUME);
+	guiSpeechVolume = std::min(uiNewVolume, UINT32(MAXVOLUME));
 }
 
 
@@ -454,7 +454,7 @@ UINT32 GetSpeechVolume(void)
 
 void SetSoundEffectsVolume(UINT32 uiNewVolume)
 {
-	guiSoundEffectsVolume = __min(uiNewVolume, MAXVOLUME);
+	guiSoundEffectsVolume = std::min(uiNewVolume, UINT32(MAXVOLUME));
 }
 
 
@@ -601,7 +601,7 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 		if ( sAbsDifX > ( ( gsBottomRightWorldX - gsTopLeftWorldX ) / 2 ) ||
 			sAbsDifY > ( ( gsBottomRightWorldY - gsTopLeftWorldY ) / 2 ) )
 		{
-			return( __max( LOWVOLUME, ( bInitialVolume - SOUND_FAR_VOLUME_MOD ) ) );
+			return( std::max(LOWVOLUME, ( bInitialVolume - SOUND_FAR_VOLUME_MOD ) ));
 		}
 	}
 

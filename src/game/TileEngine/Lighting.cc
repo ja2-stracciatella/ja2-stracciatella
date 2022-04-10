@@ -545,7 +545,7 @@ static void LightAddTileNode(LEVELNODE* const pNode, const UINT8 ubShadeAdd, con
 	}
 
 	// Now set max
-	pNode->ubMaxLights = __max( pNode->ubMaxLights, ubShadeAdd );
+	pNode->ubMaxLights = std::max(pNode->ubMaxLights, ubShadeAdd);
 
 	int sSum = pNode->ubNaturalShadeLevel - pNode->ubMaxLights;
 	sSum = std::clamp(sSum, SHADE_MAX, SHADE_MIN);
@@ -578,7 +578,7 @@ static void LightSubtractTileNode(LEVELNODE* const pNode, const UINT8 ubShadeSub
 	}
 
 	// Now set max
-	pNode->ubMaxLights = __min( pNode->ubMaxLights, pNode->ubSumLights );
+	pNode->ubMaxLights = std::min(pNode->ubMaxLights, pNode->ubSumLights);
 
 	int sSum = pNode->ubNaturalShadeLevel - pNode->ubMaxLights;
 	sSum = std::clamp(sSum, SHADE_MAX, SHADE_MIN);
@@ -643,7 +643,7 @@ static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX
 						// ATE: Limit shade for walls if in caves
 						if ( fLitWall && gfCaves )
 						{
-							LightAddTileNode(pStruct, __min(ubShadeAdd, SHADE_MAX + 5), FALSE);
+							LightAddTileNode(pStruct, std::min(ubShadeAdd, UINT8(SHADE_MAX + 5)), FALSE);
 						}
 						else if ( fLitWall )
 						{
@@ -778,7 +778,7 @@ static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT
 						// ATE: Limit shade for walls if in caves
 						if ( fLitWall && gfCaves )
 						{
-							LightSubtractTileNode(pStruct, __max(ubShadeSubtract - 5, 0), FALSE);
+							LightSubtractTileNode(pStruct, std::max(ubShadeSubtract - 5, 0), FALSE);
 						}
 						else if ( fLitWall )
 						{
@@ -1452,7 +1452,7 @@ void LightAddBaseLevel(const UINT8 iIntensity)
 {
 	INT16 iCountY, iCountX;
 
-	ubAmbientLightLevel=__max(SHADE_MAX, ubAmbientLightLevel-iIntensity);
+	ubAmbientLightLevel = std::max(SHADE_MAX, ubAmbientLightLevel - iIntensity);
 
 	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
 		for(iCountX=0; iCountX < WORLD_COLS; iCountX++)
@@ -1469,7 +1469,7 @@ void LightSubtractBaseLevel(const UINT8 iIntensity)
 {
 	INT16 iCountY, iCountX;
 
-	ubAmbientLightLevel=__min(SHADE_MIN, ubAmbientLightLevel+iIntensity);
+	ubAmbientLightLevel = std::min(SHADE_MIN, ubAmbientLightLevel + iIntensity);
 
 	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
 		for(iCountX=0; iCountX < WORLD_COLS; iCountX++)
@@ -2075,9 +2075,9 @@ static void AddSaturatePalette(SGPPaletteEntry Dst[256], const SGPPaletteEntry S
 	UINT8 b = Bias->b;
 	for (UINT i = 0; i < 256; i++)
 	{
-		Dst[i].r = __min(Src[i].r + r, 255);
-		Dst[i].g = __min(Src[i].g + g, 255);
-		Dst[i].b = __min(Src[i].b + b, 255);
+		Dst[i].r = std::min(Src[i].r + r, 255);
+		Dst[i].g = std::min(Src[i].g + g, 255);
+		Dst[i].b = std::min(Src[i].b + b, 255);
 	}
 }
 

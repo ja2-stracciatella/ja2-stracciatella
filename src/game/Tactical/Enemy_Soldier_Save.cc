@@ -602,7 +602,7 @@ void NewWayOfLoadingCiviliansFromTempFile()
 			if (dp->bLife < dp->bLifeMax)
 			{
 				// Add 4 life for every hour that passes.
-				INT32 const new_life = MIN(dp->bLife + time_since_last_loaded / 15, (unsigned int)dp->bLifeMax);
+				INT32 const new_life = std::min(dp->bLife + time_since_last_loaded / 15, (unsigned int) dp->bLifeMax);
 				dp->bLife = (INT8)new_life;
 			}
 

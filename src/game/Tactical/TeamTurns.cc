@@ -1143,7 +1143,7 @@ INT8 CalcInterruptDuelPts(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* 
 		{
 			// modify by the difficulty level setting
 			bPoints += gbDiff[ DIFF_ENEMY_INTERRUPT_MOD ][ SoldierDifficultyLevel( pSoldier ) ];
-			bPoints = __max( bPoints, 9 );
+			bPoints = std::max(bPoints, 9);
 		}
 		*/
 

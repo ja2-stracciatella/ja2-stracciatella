@@ -971,8 +971,8 @@ void HandleSoldierDropBomb(SOLDIERTYPE* const s, INT16 const sGridNo)
 		// EXPLOSIVES GAIN (25):  Place a bomb, or buried and armed a mine
 		StatChange(*s, EXPLODEAMT, 25, FROM_SUCCESS);
 
-		INT8 const trap_lvl = EffectiveExplosive(s) / 20 + EffectiveExpLevel(s) / 3;
-		o.bTrap       = __min(trap_lvl, 10);
+		int trap_lvl = EffectiveExplosive(s) / 20 + EffectiveExpLevel(s) / 3;
+		o.bTrap       = std::min(trap_lvl, 10);
 		o.ubBombOwner = s->ubID + 2;
 
 		// we now know there is something nasty here
@@ -2656,7 +2656,7 @@ static void BombMessageBoxCallBack(MessageBoxReturnValue const ubExitValue)
 
 			if (ArmBomb(&gpTempSoldier->inv[HANDPOS], timer))
 			{
-				gpTempSoldier->inv[ HANDPOS ].bTrap = __min( 10, ( EffectiveExplosive( gpTempSoldier ) / 20) + (EffectiveExpLevel( gpTempSoldier ) / 3) );
+				gpTempSoldier->inv[ HANDPOS ].bTrap = std::min(10, ( EffectiveExplosive( gpTempSoldier ) / 20) + (EffectiveExpLevel( gpTempSoldier ) / 3));
 				// HACK IMMINENT!
 				// value of 1 is stored in maps for SIDE of bomb owner... when we want to use IDs!
 				// so we add 2 to all owner IDs passed through here and subtract 2 later

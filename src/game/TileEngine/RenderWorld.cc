@@ -809,7 +809,7 @@ zlevel_objects:
 								uiDirtyFlags = BGND_FLAG_SINGLE | BGND_FLAG_ANIMATED;
 zlevel_shadows:
 								INT16 const world_y = GetMapXYWorldY(iTempPosX_M, iTempPosY_M);
-								sZLevel = __max(((world_y - 80) * Z_SUBLAYERS) + SHADOW_Z_LEVEL, 0);
+								sZLevel = std::max(((world_y - 80) * Z_SUBLAYERS) + SHADOW_Z_LEVEL, 0);
 								break;
 							}
 
@@ -989,7 +989,7 @@ zlevel_topmost:
 								else
 								{
 									ubShadeLevel  = pNode->ubShadeLevel & 0x0f;
-									ubShadeLevel  = __max(ubShadeLevel - 2, DEFAULT_SHADE_LEVEL);
+									ubShadeLevel  = std::max(ubShadeLevel - 2, DEFAULT_SHADE_LEVEL);
 									ubShadeLevel |= pNode->ubShadeLevel & 0x30;
 								}
 								pShadeTable = s.pShades[ubShadeLevel];
@@ -2478,8 +2478,8 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClip(UINT16* pBuffer, UINT32 uiDest
 	}
 
 	// Calculate rows hanging off each side of the screen
-	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
-	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
+	const INT32 LeftSkip   = std::min(ClipX1 - std::min(ClipX1, iTempX), usWidth);
+	INT32       TopSkip    = std::min(ClipY1 - std::min(ClipY1, iTempY), usHeight);
 	const INT32 RightSkip  = std::clamp(iTempX + usWidth - ClipX2, 0, usWidth);
 	const INT32 BottomSkip = std::clamp(iTempY + usHeight - ClipY2, 0, usHeight);
 
@@ -2741,8 +2741,8 @@ static void Blt8BPPDataTo16BPPBufferTransZIncClipZSameZBurnsThrough(UINT16* pBuf
 	}
 
 	// Calculate rows hanging off each side of the screen
-	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
-	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
+	const INT32 LeftSkip   = std::min(ClipX1 - std::min(ClipX1, iTempX), usWidth);
+	INT32       TopSkip    = std::min(ClipY1 - std::min(ClipY1, iTempY), usHeight);
 	const INT32 RightSkip  = std::clamp(iTempX + usWidth - ClipX2, 0, usWidth);
 	const INT32 BottomSkip = std::clamp(iTempY + usHeight - ClipY2, 0, usHeight);
 
@@ -3006,8 +3006,8 @@ static void Blt8BPPDataTo16BPPBufferTransZIncObscureClip(UINT16* pBuffer, UINT32
 	}
 
 	// Calculate rows hanging off each side of the screen
-	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
-	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
+	const INT32 LeftSkip   = std::min(ClipX1 - std::min(ClipX1, iTempX), usWidth);
+	INT32       TopSkip    = std::min(ClipY1 - std::min(ClipY1, iTempY), usHeight);
 	const INT32 RightSkip  = std::clamp(iTempX + usWidth - ClipX2, 0, usWidth);
 	const INT32 BottomSkip = std::clamp(iTempY + usHeight - ClipY2, 0, usHeight);
 
@@ -3269,8 +3269,8 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncObscureClip(UINT16* pBuf
 	}
 
 	// Calculate rows hanging off each side of the screen
-	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
-	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
+	const INT32 LeftSkip   = std::min(ClipX1 - std::min(ClipX1, iTempX), usWidth);
+	INT32       TopSkip    = std::min(ClipY1 - std::min(ClipY1, iTempY), usHeight);
 	const INT32 RightSkip  = std::clamp(iTempX + usWidth - ClipX2, 0, usWidth);
 	const INT32 BottomSkip = std::clamp(iTempY + usHeight - ClipY2, 0, usHeight);
 
@@ -3537,8 +3537,8 @@ static void Blt8BPPDataTo16BPPBufferTransZTransShadowIncClip(UINT16* pBuffer, UI
 	}
 
 	// Calculate rows hanging off each side of the screen
-	const INT32 LeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX), usWidth);
-	INT32       TopSkip    = __min(ClipY1 - __min(ClipY1, iTempY), usHeight);
+	const INT32 LeftSkip   = std::min(ClipX1 - std::min(ClipX1, iTempX), usWidth);
+	INT32       TopSkip    = std::min(ClipY1 - std::min(ClipY1, iTempY), usHeight);
 	const INT32 RightSkip  = std::clamp(iTempX + usWidth - ClipX2, 0, usWidth);
 	const INT32 BottomSkip = std::clamp(iTempY + usHeight - ClipY2, 0, usHeight);
 
@@ -4170,10 +4170,10 @@ static void CalcRenderParameters(INT16 sLeft, INT16 sTop, INT16 sRight, INT16 sB
 	gOldClipRect = gClippingRect;
 
 	// Set new clipped rect
-	gClippingRect.iLeft   = __max(gsVIEWPORT_START_X,        sLeft);
-	gClippingRect.iRight  = __min(gsVIEWPORT_END_X,          sRight);
-	gClippingRect.iTop    = __max(gsVIEWPORT_WINDOW_START_Y, sTop);
-	gClippingRect.iBottom = __min(gsVIEWPORT_WINDOW_END_Y,   sBottom);
+	gClippingRect.iLeft   = std::max((int) gsVIEWPORT_START_X, (int) sLeft);
+	gClippingRect.iRight  = std::min((int) gsVIEWPORT_END_X, (int) sRight);
+	gClippingRect.iTop    = std::max((int) gsVIEWPORT_WINDOW_START_Y, (int) sTop);
+	gClippingRect.iBottom = std::min((int) gsVIEWPORT_WINDOW_END_Y, (int) sBottom);
 
 	gsEndXS = sRight  + VIEWPORT_XOFFSET_S;
 	gsEndYS = sBottom + VIEWPORT_YOFFSET_S;

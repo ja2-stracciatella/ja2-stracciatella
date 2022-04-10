@@ -468,7 +468,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 			break;
 
 		case AI_ACTION_PICKUP_ITEM:           // grab things lying on the ground
-			bMinPointsNeeded = __max( MinPtsToMove( pSoldier ), AP_PICKUP_ITEM );
+			bMinPointsNeeded = std::max(MinPtsToMove(pSoldier), INT8(AP_PICKUP_ITEM));
 			break;
 
 		case AI_ACTION_OPEN_OR_CLOSE_DOOR:

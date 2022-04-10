@@ -280,7 +280,7 @@ static path_t *pClosedHead;
 #define SkipListRemoveHead()\
 {\
 	pDel = pQueueHead->pNext[0];\
-	for (iLoop = 0; iLoop < __min( bSkipListLevel, pDel->bLevel ); iLoop++)\
+	for (iLoop = 0; iLoop < std::min(bSkipListLevel, pDel->bLevel); iLoop++)\
 	{\
 		pQueueHead->pNext[iLoop] = pDel->pNext[iLoop];\
 	}\
@@ -570,7 +570,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	fCloseGoodEnough = ( (fFlags & PATH_CLOSE_GOOD_ENOUGH) != 0);
 	if ( fCloseGoodEnough )
 	{
-		sClosePathLimit = __min( PythSpacesAway( (INT16)s->sGridNo, sDestination ) - 1,  PATH_CLOSE_RADIUS );
+		sClosePathLimit = std::min(PythSpacesAway( (INT16)s->sGridNo, sDestination ) - 1,  PATH_CLOSE_RADIUS);
 		if ( sClosePathLimit <= 0 )
 		{
 			return( 0 );

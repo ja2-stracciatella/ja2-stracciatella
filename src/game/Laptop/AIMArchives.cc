@@ -402,7 +402,7 @@ static void RemoveAimAlumniFaceRegion(void)
 	gfFaceMouseRegionsActive = FALSE;
 
 	size_t const start    = gubPageNum * MAX_NUMBER_OLD_MERCS_ON_PAGE;
-	size_t const n_faces  = MIN(OLD_MERCS_COUNT - start, MAX_NUMBER_OLD_MERCS_ON_PAGE);
+	size_t const n_faces  = std::min(OLD_MERCS_COUNT - start, size_t(MAX_NUMBER_OLD_MERCS_ON_PAGE));
 	for (size_t i = 0; i < n_faces; ++i)
 	{
 		MSYS_RemoveRegion(&gMercAlumniFaceMouseRegions[i]);

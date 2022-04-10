@@ -391,14 +391,14 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	PlayJA2SampleFromFile(SOUNDSDIR "/laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	while( GetClock() <= uiEndTime )
 	{
-		FLOAT fEasingProgress = EaseInCubic(uiStartTime, uiEndTime, GetClock());
+		double fEasingProgress = EaseInCubic(uiStartTime, uiEndTime, GetClock());
 
 		SGPBox const DstRect =
 		{
 			(UINT16)(x * fEasingProgress),
 			(UINT16)(y * fEasingProgress),
-			(UINT16)(MAX(w * fEasingProgress, 1)),
-			(UINT16)(MAX(h * fEasingProgress, 1))
+			(UINT16)(std::max(w * fEasingProgress, 1.0)),
+			(UINT16)(std::max(h * fEasingProgress, 1.0))
 		};
 
 		BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &gpAR->rect, &DstRect);
