@@ -360,7 +360,7 @@ static void ProcessStatChange(MERCPROFILESTRUCT& p, StatKind const ubStat, UINT1
 	{
 		// increment counters that track how often stat changes are being awarded
 		p.usStatChangeChances[ubStat]   += usNumChances;
-		p.usStatChangeSuccesses[ubStat] += ABS(sSubPointChange);
+		p.usStatChangeSuccesses[ubStat] += std::abs(sSubPointChange);
 	}
 }
 
@@ -1361,7 +1361,7 @@ void AwardExperienceBonusToActiveSquad( UINT8 ubExpBonusType )
 ST::string BuildStatChangeString(const ST::string& name, BOOLEAN fIncrease, INT16 sPtsChanged, StatKind ubStat)
 {
 	UINT8 ubStringIndex;
-	UINT16 absPointsChanged = ABS( (int)sPtsChanged );
+	UINT16 absPointsChanged = std::abs((int)sPtsChanged);
 
 
 	Assert( sPtsChanged != 0 );

@@ -128,8 +128,8 @@ static short         trailStratTreedxB = 0;
 (								\
 	(locY = pathQB[ndx].location/MAP_WIDTH),			\
 	(locX = pathQB[ndx].location%MAP_WIDTH),			\
-	(dy = ABS(iDestY-locY)),					\
-	(dx = ABS(iDestX-locX)),					\
+	(dy = std::abs(iDestY-locY)),					\
+	(dx = std::abs(iDestX-locX)),					\
 	ESTIMATE						\
 )
 
@@ -138,7 +138,7 @@ static short         trailStratTreedxB = 0;
 #define TOTALCOST(ndx) (pathQB[ndx].costSoFar + pathQB[ndx].costToGo)
 #define XLOC(a) (a%MAP_WIDTH)
 #define YLOC(a) (a/MAP_WIDTH)
-#define LEGDISTANCE(a,b) ( ABS( XLOC(b)-XLOC(a) ) + ABS( YLOC(b)-YLOC(a) ) )
+#define LEGDISTANCE(a,b) (std::abs(XLOC(b) - XLOC(a)) + std::abs(YLOC(b) - YLOC(a)))
 #define FARTHER(ndx,NDX) ( LEGDISTANCE(pathQB[ndx].location,sDestination) > LEGDISTANCE(pathQB[NDX].location,sDestination) )
 
 #define FLAT_STRATEGIC_TRAVEL_TIME		60

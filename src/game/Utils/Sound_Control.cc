@@ -531,7 +531,7 @@ INT8 SoundDir( INT16 sGridNo )
 
 	sDif = sMiddleX - sScreenX;
 
-	if ( ( sAbsDif = ABS( sDif ) ) > 64 )
+	if ((sAbsDif = std::abs(sDif)) > 64)
 	{
 		// OK, NOT the middle.
 
@@ -590,8 +590,8 @@ INT8 SoundVolume( INT8 bInitialVolume, INT16 sGridNo )
 	sDifX = sMiddleX - sScreenX;
 	sDifY = sMiddleY - sScreenY;
 
-	sAbsDifX = ABS( sDifX );
-	sAbsDifY = ABS( sDifY );
+	sAbsDifX = std::abs(sDifX);
+	sAbsDifY = std::abs(sDifY);
 
 	if ( sAbsDifX  > 64 || sAbsDifY > 64 )
 	{
@@ -771,7 +771,7 @@ static INT8 PositionSoundDir(INT16 sGridNo)
 
 	sDif = sMiddleX - sScreenX;
 
-	if ( ( sAbsDif = ABS( sDif ) ) > 64 )
+	if ((sAbsDif = std::abs(sDif)) > 64)
 	{
 		// OK, NOT the middle.
 

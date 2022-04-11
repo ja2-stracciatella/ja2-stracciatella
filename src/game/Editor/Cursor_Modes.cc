@@ -250,7 +250,7 @@ static void ForceAreaSelectionWidth(const INT16 sGridX, const INT16 sGridY)
 
 	//compare the region with the anchor and determine if we are going to force size via
 	//height or width depending on the cursor distance from the anchor.
-	if( ABS( sGridX - gSelectAnchor.iX ) < ABS( sGridY - gSelectAnchor.iY ) )
+	if (std::abs(sGridX - gSelectAnchor.iX) < std::abs(sGridY - gSelectAnchor.iY))
 	{ //restrict the x axis
 		if( sGridX < gSelectAnchor.iX )
 		{ //to the left

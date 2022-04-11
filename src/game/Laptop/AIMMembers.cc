@@ -885,8 +885,8 @@ static void DisplayMercsInventory(MERCPROFILESTRUCT const& p)
 		auto item_vo  = graphic.first;
 		auto index = graphic.second;
 		ETRLEObject const& e        = item_vo->SubregionProperties(index);
-		INT16       const  sCenX    = x + ABS(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
-		INT16       const  sCenY    = y + ABS(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
+		INT16       const  sCenX    = x + std::abs(WEAPONBOX_SIZE_X - 3 - e.usWidth)  / 2 - e.sOffsetX;
+		INT16       const  sCenY    = y + std::abs(WEAPONBOX_SIZE_Y     - e.usHeight) / 2 - e.sOffsetY;
 
 		if (gamepolicy(f_draw_item_shadow))
 		{

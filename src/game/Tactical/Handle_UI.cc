@@ -1904,7 +1904,7 @@ static ScreenID UIHandleMAdjustStanceMode(UI_EVENT* pUIEvent)
 	}
 
 	// Check if delta X has changed alot since last time
-	iPosDiff = ABS( (INT32)( usOldMouseY - gusMouseYPos) );
+	iPosDiff = std::abs((INT32)(usOldMouseY - gusMouseYPos));
 
 	//guiShowUPDownArrows = ARROWS_SHOW_DOWN_BESIDE | ARROWS_SHOW_UP_BESIDE;
 	guiShowUPDownArrows = uiOldShowUPDownArrows;

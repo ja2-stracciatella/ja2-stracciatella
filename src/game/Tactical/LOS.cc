@@ -3955,7 +3955,7 @@ void MoveBullet(BULLET* const pBullet)
 				// bullets hitting the ground
 				if (pBullet->qCurrZ + pBullet->qIncrZ * iStepsToTravel < qLandHeight)
 				{
-					iStepsToTravel = std::min(iStepsToTravel, INT32(ABS((pBullet->qCurrZ - qLandHeight) / pBullet->qIncrZ)));
+					iStepsToTravel = std::min(iStepsToTravel, INT32(std::abs((pBullet->qCurrZ - qLandHeight) / pBullet->qIncrZ)));
 					pBullet->qCurrX += pBullet->qIncrX * iStepsToTravel;
 					pBullet->qCurrY += pBullet->qIncrY * iStepsToTravel;
 					pBullet->qCurrZ += pBullet->qIncrZ * iStepsToTravel;

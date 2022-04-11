@@ -318,12 +318,12 @@ BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection(GROUP *pGroup, cons
 	if (newD.x)
 	{
 		ubNumUnalignedAxes++;
-		newD.x /= ABS(newD.x);
+		newD.x /= std::abs(newD.x);
 	}
 	if (newD.y)
 	{
 		ubNumUnalignedAxes++;
-		newD.y /= ABS(newD.y);
+		newD.y /= std::abs(newD.y);
 	}
 
 	// error checking

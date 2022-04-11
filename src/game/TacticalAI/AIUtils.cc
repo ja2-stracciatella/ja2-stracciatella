@@ -212,7 +212,7 @@ UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 b
 	}
 	for (bLoop = 0; bLoop < 3; bLoop++)
 	{
-		bStanceDiff = ABS( bLoop - bStanceNum );
+		bStanceDiff = std::abs(bLoop - bStanceNum);
 		if (bStanceDiff == 2 && bAPsAfterAttack < AP_CROUCH + AP_PRONE)
 		{
 			// can't consider this!

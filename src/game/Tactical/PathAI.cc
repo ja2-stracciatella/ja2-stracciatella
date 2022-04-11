@@ -139,7 +139,7 @@ static INT32  iSkipListLevelLimit[9] = {0, 4, 16, 64, 256, 1024, 4096, 16384, 65
 #define XLOC(a)				(a%MAPWIDTH)
 #define YLOC(a)				(a/MAPWIDTH)
 //#define LEGDISTANCE(a,b)			( abs( XLOC(b)-XLOC(a) ) + abs( YLOC(b)-YLOC(a) ) )
-#define LEGDISTANCE( x1, y1, x2, y2 )		( ABS( x2 - x1 ) + ABS( y2 - y1 ) )
+#define LEGDISTANCE(x1, y1, x2, y2)		(std::abs(x2 - x1) + std::abs(y2 - y1))
 //#define FARTHER(ndx,NDX)			( LEGDISTANCE( ndx->sLocation,sDestination) > LEGDISTANCE(NDX->sLocation,sDestination) )
 #define FARTHER(ndx,NDX)			( ndx->ubLegDistance > NDX->ubLegDistance )
 
@@ -345,8 +345,8 @@ static path_t *pClosedHead;
 
 #define REMAININGCOST(ptr)\
 (\
-	(dy = ABS(iDestY-iLocY)),\
-	(dx = ABS(iDestX-iLocX)),\
+	(dy = std::abs(iDestY-iLocY)),\
+	(dx = std::abs(iDestX-iLocX)),\
 	ESTIMATE\
 )
 /*
@@ -354,8 +354,8 @@ static path_t *pClosedHead;
 (\
 	(locY = (ptr)->iLocation/MAPWIDTH),\
 	(locX = (ptr)->iLocation%MAPWIDTH),\
-	(dy = ABS(iDestY-locY)),\
-	(dx = ABS(iDestX-locX)),\
+	(dy = std::abs(iDestY-locY)),\
+	(dx = std::abs(iDestX-locX)),\
 	ESTIMATE\
 )*/
 

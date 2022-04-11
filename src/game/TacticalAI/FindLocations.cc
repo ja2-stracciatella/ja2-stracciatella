@@ -1959,7 +1959,7 @@ INT16 FindClosestBoxingRingSpot( SOLDIERTYPE * pSoldier, BOOLEAN fInRing )
 			if ((fInRing  && room == BOXING_RING) ||
 				((!fInRing && room != BOXING_RING) && LegalNPCDestination(pSoldier, sGridNo, IGNORE_PATH, NOWATER, 0)))
 			{
-				iDistance = ABS( sXOffset ) + ABS( sYOffset );
+				iDistance = std::abs(sXOffset) + std::abs(sYOffset);
 				if (iDistance < iClosestDistance && WhoIsThere2(sGridNo, 0) == NULL)
 				{
 					sClosestSpot = sGridNo;

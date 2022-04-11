@@ -2026,8 +2026,8 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 		auto item_vo = graphic.first;
 		auto index = graphic.second;
 		ETRLEObject const& e       = item_vo->SubregionProperties(index);
-		INT16              cen_x   = x + 7 + ABS(SKI_INV_WIDTH - 3 - e.usWidth)  / 2 - e.sOffsetX;
-		INT16              cen_y   = y +     ABS(SKI_INV_HEIGHT    - e.usHeight) / 2 - e.sOffsetY;
+		INT16              cen_x   = x + 7 + std::abs(SKI_INV_WIDTH - 3 - e.usWidth)  / 2 - e.sOffsetX;
+		INT16              cen_y   = y +     std::abs(SKI_INV_HEIGHT    - e.usHeight) / 2 - e.sOffsetY;
 		if (gamepolicy(f_draw_item_shadow))
 		{
 			BltVideoObjectOutlineShadow(FRAME_BUFFER, item_vo, index, cen_x - 2, cen_y + 2);
