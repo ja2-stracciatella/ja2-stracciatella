@@ -72,10 +72,6 @@ typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];
 
 #define PI 3.1415926
 
-#ifndef NULL
-#define NULL 0
-#endif
-
 struct SGPBox
 {
 	UINT16 x;
