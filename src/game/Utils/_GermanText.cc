@@ -2550,7 +2550,7 @@ static const ST::string s_ger_zSaveLoadText[zSaveLoadText_SIZE] =
 	"Achtung:",
 	"Versuche, älteren Spielstand zu laden. Das Laden wird den Spielstand automatisch aktualisieren.",
 	"Der Spielstand wurde mit anderen Mods geschrieben as aktuell aktiviert sind.",
-	"Möchten Sie fortfahren?"
+	"Möchten Sie fortfahren?",
 
 	"Spielstand mit Namen \"%s\" wirklich überschreiben?",
 
