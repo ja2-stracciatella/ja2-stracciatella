@@ -1055,25 +1055,32 @@ static void RedrawSaveLoadScreenAfterMessageBox(MessageBoxReturnValue);
 
 static void SelectedSaveRegionCallBack(MOUSE_REGION* pRegion, INT32 iReason)
 {
+	INT32	bSelected = gCurrentScrollTop + MSYS_GetRegionUserData( pRegion, 0 );
+	if (bSelected >= INT32(gSavedGamesList.size())) {
+		bSelected = -1;
+	}
+
 	if (iReason & MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK) {
-		INT32	bSelected = gCurrentScrollTop + MSYS_GetRegionUserData( pRegion, 0 );
-		if (gbSelectedSaveLocation == bSelected && !gfUserInTextInputMode) {
+		if (bSelected == -1) {
+			DisableButton(guiSlgSaveLoadBtn);
+		} else if (gbSelectedSaveLocation == bSelected && !gfUserInTextInputMode) {
 			SaveLoadSelectedSave();
 		}
 	}
 	else if (iReason & MSYS_CALLBACK_REASON_LBUTTON_UP)
 	{
-		INT32	bSelected = gCurrentScrollTop + MSYS_GetRegionUserData( pRegion, 0 );
-
-		if( gbSelectedSaveLocation != bSelected ) {
+		if(gbSelectedSaveLocation != bSelected ) {
 			gbSelectedSaveLocation = bSelected;
 
-			EnableButton(guiSlgSaveLoadBtn);
-
 			DestroySaveLoadTextInputBoxes();
-			if (gfSaveGame && gbSelectedSaveLocation == 0) {
-				// If the first entry is selected we need to input a new name
-				InitSaveLoadScreenTextInputBoxes();
+			if (bSelected != -1) {
+				EnableButton(guiSlgSaveLoadBtn);
+				if (gfSaveGame && gbSelectedSaveLocation == 0) {
+					// If the first entry is selected we need to input a new name
+					InitSaveLoadScreenTextInputBoxes();
+				}
+			} else {
+				DisableButton(guiSlgSaveLoadBtn);
 			}
 
 			gfRedrawSaveLoadScreen = TRUE;
