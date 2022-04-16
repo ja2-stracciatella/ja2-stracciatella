@@ -120,7 +120,7 @@ static short         trailStratTreedxB = 0;
 #define ESTIMATE0	((dx>dy) ?       (dx)      :       (dy))
 #define ESTIMATE1	((dx<dy) ? ((dx*14)/10+dy) : ((dy*14)/10+dx) )
 #define ESTIMATE2	FLATCOST*( (dx<dy) ? ((dx*14)/10+dy) : ((dy*14)/10+dx) )
-#define ESTIMATEn	((int)(FLATCOST*sqrt(dx*dx+dy*dy)))
+#define ESTIMATEn	((int)(FLATCOST * std::hypot(dx, dy)))
 #define ESTIMATE ESTIMATE1
 
 

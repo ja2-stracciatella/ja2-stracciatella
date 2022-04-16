@@ -1,4 +1,5 @@
-#include <math.h>
+#include <cmath>
+
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Structure.h"
@@ -206,14 +207,13 @@ static FLOAT FixedToFloat(FIXEDPT qN)
 
 static FLOAT Distance3D(FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ)
 {
-	return ((FLOAT) sqrt( (DOUBLE)(dDeltaX * dDeltaX) +
-			(DOUBLE)(dDeltaY * dDeltaY) + (DOUBLE)(dDeltaZ * dDeltaZ)));
+	return (FLOAT) std::hypot(dDeltaX, dDeltaY, dDeltaZ);
 }
 
 
 static FLOAT Distance2D(FLOAT dDeltaX, FLOAT dDeltaY)
 {
-	return( (FLOAT) sqrt( (DOUBLE)(dDeltaX * dDeltaX) + (DOUBLE)(dDeltaY * dDeltaY) ));
+	return (FLOAT) std::hypot(dDeltaX, dDeltaY);
 }
 
 enum LocationCode

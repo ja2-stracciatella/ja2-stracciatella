@@ -460,7 +460,7 @@ static INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 	delta.y = std::abs(delta.y);
 
 	// apply Pythagoras's theorem for right-handed triangle:
-	return (INT16) sqrt((double) (delta.x * delta.x + delta.y * delta.y));
+	return (INT16) std::hypot(delta.x, delta.y);
 }
 
 

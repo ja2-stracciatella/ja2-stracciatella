@@ -128,7 +128,7 @@ static INT32  iSkipListLevelLimit[9] = {0, 4, 16, 64, 256, 1024, 4096, 16384, 65
 #define ESTIMATE0				( (dx>dy) ?       (dx)      :       (dy) )
 #define ESTIMATE1				( (dx<dy) ? (dx+(dy*10)/14) : (dy+(dx*10)/14) )
 #define ESTIMATE2				LOWESTCOST*( (dx<dy) ? (dx+(dy*10)/14) : (dy+(dx*10)/14) )
-#define ESTIMATEn				((int)(LOWESTCOST*sqrt(dx*dx+dy*dy)))
+#define ESTIMATEn				((int)(LOWESTCOST * std::hypot(dx, dy)))
 #define ESTIMATEC				( (dx<dy) ? (LOWESTCOST * (dx * 14 + dy * 10) / 14) : (LOWESTCOST * (dy * 14 + dx * 10) / 14) )
 #define ESTIMATE				ESTIMATEC
 

@@ -827,8 +827,8 @@ static INT8 PositionSoundVolume(INT8 const initial_volume, GridNo const grid_no)
 	INT16 const sMaxDistX = (gsBottomRightWorldX - gsTopLeftWorldX) * 3 / 2;
 	INT16 const sMaxDistY = (gsBottomRightWorldY - gsTopLeftWorldY) * 3 / 2;
 
-	double const sMaxSoundDist = sqrt((double)(sMaxDistX * sMaxDistX) + (sMaxDistY * sMaxDistY));
-	double       sSoundDist    = sqrt((double)(sDifX * sDifX)  + (sDifY * sDifY));
+	double const sMaxSoundDist = std::hypot(sMaxDistX, sMaxDistY);
+	double       sSoundDist    = std::hypot(sDifX, sDifY);
 
 	if (sSoundDist == 0) return initial_volume;
 

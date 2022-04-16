@@ -2133,9 +2133,7 @@ UINT8 GetPythDistanceFromPalace(const SGPSector& sSector)
 	sCols =(INT16)(std::abs(sSector.y - PALACE_SECTOR_Y));
 
 	// apply Pythagoras's theorem for right-handed triangle:
-	// dist^2 = rows^2 + cols^2, so use the square root to get the distance
-	fValue = ( float )sqrt(( float )(sRows * sRows) + ( float )(sCols * sCols));
-
+	fValue = (float) std::hypot(sRows, sCols);
 	if(  fmod( fValue, 1.0f ) >= 0.50 )
 	{
 		ubDistance = (UINT8)( 1 + fValue );
