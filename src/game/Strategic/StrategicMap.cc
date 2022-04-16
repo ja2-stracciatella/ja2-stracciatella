@@ -161,28 +161,16 @@ INT8 gbMilitiaPromotions = 0;
 
 BOOLEAN		gfUseAlternateMap = FALSE;
 
-static INT16 const DirXIncrementer[8] =
+static const SGPSector SectorIncrementer[8] =
 {
-	0,        //N
-	1,        //NE
-	1,        //E
-	1,        //SE
-	0,         //S
-	-1,       //SW
-	-1,       //W
-	-1       //NW
-};
-
-static INT16 const DirYIncrementer[8] =
-{
-	-1,        //N
-	-1,        //NE
-	0,        //E
-	1,        //SE
-	1,         //S
-	1,       //SW
-	0,       //W
-	-1       //NW
+	{ 0, -1 }, // N
+	{ 1, -1 }, // NE
+	{ 1, 0 },  // E
+	{ 1, 1 },  // SE
+	{ 0, 1 },  // S
+	{ -1, 1 }, // SW
+	{ -1, 0 }, // W
+	{ -1, -1 } // NW
 };
 
 Observable<> BeforePrepareSector = {};
@@ -1501,8 +1489,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	// If normal direction, use it!
 	if ( ubTacticalDirection != 255 )
 	{
-		gsAdjacentSector.x = (INT16)(gWorldSector.x + DirXIncrementer[ubTacticalDirection]);
-		gsAdjacentSector.y = (INT16)(gWorldSector.y + DirYIncrementer[ubTacticalDirection]);
+		gsAdjacentSector = gWorldSector + SectorIncrementer[ubTacticalDirection];
 		gsAdjacentSector.z = pValidSoldier->sSector.z;
 	}
 	else
