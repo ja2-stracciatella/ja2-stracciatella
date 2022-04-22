@@ -1,6 +1,6 @@
 ## Dependencies
 
-- SDL2 >= `2.0.4` (version `2.0.8` is included in this repo for Windows and macOS).
+- SDL2 >= `2.0.4` (version `2.0.20` is included in this repo for Windows and macOS).
   __WARNING__: There is an issue with SDL in version `2.0.6` that causes segfaults when playing sounds.
   Please ensure that you run the game with a different version of the SDL2 library otherwise sound will be
   disabled.
