@@ -599,7 +599,7 @@ static void DisplayCompressMode(void)
 
 static void CreateCompressModePause(void)
 {
-	MSYS_DefineRegion( &gMapPauseRegion, 487, 456, 522, 467, MSYS_PRIORITY_HIGH,
+	MSYS_DefineRegion( &gMapPauseRegion, STD_SCREEN_X + 487, STD_SCREEN_Y + 456, STD_SCREEN_X + 522, STD_SCREEN_Y + 467, MSYS_PRIORITY_HIGH,
 							MSYS_NO_CURSOR, MSYS_NO_CALLBACK, CompressModeClickCallback );
 	gMapPauseRegion.SetFastHelpText(pMapScreenBottomFastHelp[7]);
 }
