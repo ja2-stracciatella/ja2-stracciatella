@@ -13,15 +13,6 @@ execute_process(
 string(REPLACE "\n" "@" UNIQUE_CONTRIBUTORS ${UNIQUE_CONTRIBUTORS})
 string(REGEX REPLACE "[\t ]+[0-9]+[\t ]+([^@]*)@" "\\1;" UNIQUE_CONTRIBUTORS ${UNIQUE_CONTRIBUTORS})
 
-# and add some non-git contributors
-list(APPEND UNIQUE_CONTRIBUTORS
-    "Oliver Jankowski"
-    "mgl from The Bear's Pit Forum"
-    "sunshine from The Bear's Pit Forum"
-    "Rebekka Bais (Logo Design)"
-    "Agatae (https://bitbucket.org/Agatae)"
-)
-
 # Cmake can only do case-sensitive sorting
 foreach(CONTRIBUTOR ${UNIQUE_CONTRIBUTORS})
     string(TOLOWER ${CONTRIBUTOR} LOWER)
