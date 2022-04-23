@@ -194,7 +194,8 @@ BOOLEAN AddCharacterToSquad(SOLDIERTYPE* const s, INT8 const bSquadValue)
 		// set squad value
 		ChangeSoldiersAssignment(s, bSquadValue);
 
-		if (SquadIsEmpty(iCurrentTacticalSquad)) SetCurrentSquad(bSquadValue, TRUE);
+		// update selected squad if the old one is emptied
+		if (iCurrentTacticalSquad == NO_CURRENT_SQUAD || SquadIsEmpty(iCurrentTacticalSquad)) SetCurrentSquad(bSquadValue, TRUE);
 
 		if (bSquadValue == iCurrentTacticalSquad) CheckForAndAddMercToTeamPanel(s);
 
@@ -262,8 +263,13 @@ INT8 AddCharacterToUniqueSquad(SOLDIERTYPE* const s)
 }
 
 
-BOOLEAN SquadIsEmpty( INT8 bSquadValue )
+BOOLEAN SquadIsEmpty(INT8 bSquadValue)
 {
+	if (bSquadValue < 0 || bSquadValue >= NUMBER_OF_SQUADS)
+	{
+		throw std::logic_error("invalid squad number");
+	}
+
 	// run through this squad's slots and find if they ALL are empty
 	FOR_EACH_IN_SQUAD(i, bSquadValue)
 	{

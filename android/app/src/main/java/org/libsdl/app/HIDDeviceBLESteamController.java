@@ -429,7 +429,7 @@ class HIDDeviceBLESteamController extends BluetoothGattCallback implements HIDDe
                     }
                 });
             }
-        } 
+        }
         else if (newState == 0) {
             mIsConnected = false;
         }
@@ -564,10 +564,10 @@ class HIDDeviceBLESteamController extends BluetoothGattCallback implements HIDDe
         return "Steam Controller";
     }
 
-	@Override
+    @Override
     public UsbDevice getDevice() {
-		return null;
-	}
+        return null;
+    }
 
     @Override
     public boolean open() {

@@ -6,7 +6,6 @@ import org.libsdl.app.SDLActivity
 open class StracciatellaActivity : SDLActivity() {
     override fun getLibraries(): Array<String?>? {
         return arrayOf(
-            "hidapi",
             "SDL2",
             "ja2"
         );

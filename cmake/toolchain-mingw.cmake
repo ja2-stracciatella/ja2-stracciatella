@@ -13,7 +13,7 @@ set(CMAKE_FIND_ROOT_PATH_MODE_INCLUDE ONLY)
 
 set(CARGO_BUILD_TARGET "x86_64-pc-windows-gnu" CACHE STRING "" FORCE)
 
-set(LOCAL_SDL_LIB "dependencies/lib-SDL2-2.0.8-mingw/x86_64-w64-mingw32" CACHE STRING "" FORCE)
+set(LOCAL_SDL_LIB "dependencies/lib-SDL2-2.0.20-mingw/x86_64-w64-mingw32" CACHE STRING "" FORCE)
 set(LOCAL_FLTK_LIB ON CACHE BOOL "" FORCE)
 set(LOCAL_GTEST_LIB ON CACHE BOOL "" FORCE)
 set(CFLAGS "${CFLAGS} -mwindows -mconsole" CACHE BOOL "" FORCE)

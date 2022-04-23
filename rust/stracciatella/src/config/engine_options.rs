@@ -79,6 +79,8 @@ pub struct EngineOptions {
     pub start_in_debug_mode: bool,
     /// Whether to enable sound
     pub start_without_sound: bool,
+    /// Whether to enum-gen for Lua
+    pub run_enum_gen: bool,
 }
 
 impl Default for EngineOptions {
@@ -100,6 +102,7 @@ impl Default for EngineOptions {
             scaling_quality: ScalingQuality::default(),
             start_in_debug_mode: false,
             start_without_sound: false,
+            run_enum_gen: false,
         }
     }
 }

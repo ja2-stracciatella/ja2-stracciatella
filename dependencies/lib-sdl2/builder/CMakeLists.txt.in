@@ -12,8 +12,8 @@ project(builder NONE)
 
 include(ExternalProject)
 externalproject_add(sdl2
-    URL "https://libsdl.org/release/SDL2-2.0.12.zip"
-    URL_MD5 "4c48ae7867281b30459a38a969c5fbbb"
+    URL "https://libsdl.org/release/SDL2-2.0.20.zip"
+    URL_MD5 "e371cd64e8dd12407c9ecf9861e4874f"
     CMAKE_ARGS
         "-G@CMAKE_GENERATOR@"
         "-C@CACHE_FILE@"
@@ -24,8 +24,6 @@ externalproject_add(sdl2
         "-DANDROID_APP_PLATFORM=@ANDROID_APP_PLATFORM@"
         -DCMAKE_BUILD_TYPE=RelWithDebInfo
         -DSDL_SHARED=ON
-    # Apply Patch for SDL2 2.0.12 to build for armv7, see https://bugzilla.libsdl.org/show_bug.cgi?id=5100
-    PATCH_COMMAND patch -p1 < ${CMAKE_CURRENT_SOURCE_DIR}/Bug5100.patch
     BUILD_COMMAND ${CMAKE_COMMAND} --build . --config RelWithDebInfo
     INSTALL_COMMAND ${CMAKE_COMMAND} --build . --config RelWithDebInfo --target install
     BUILD_ALWAYS 1
