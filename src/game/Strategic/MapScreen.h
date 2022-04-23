@@ -53,7 +53,7 @@ void ReBuildCharactersList( void );
 void HandlePreloadOfMapGraphics(void);
 void HandleRemovalOfPreLoadedMapGraphics( void );
 
-void ChangeSelectedMapSector( INT16 sMapX, INT16 sMapY, INT8 bMapZ );
+void ChangeSelectedMapSector(const SGPSector& sector);
 
 BOOLEAN CanExtendContractForSoldier(const SOLDIERTYPE* s);
 
@@ -91,7 +91,7 @@ void RebuildContractBoxForMerc(const SOLDIERTYPE* s);
 
 void    InternalMAPBeginItemPointer(SOLDIERTYPE* pSoldier);
 BOOLEAN ContinueDialogue(SOLDIERTYPE* pSoldier, BOOLEAN fDone);
-BOOLEAN GetMouseMapXY(INT16* psMapWorldX, INT16* psMapWorldY);
+BOOLEAN GetMouseMapXY(SGPSector& sMap);
 void    EndConfirmMapMoveMode(void);
 BOOLEAN CanDrawSectorCursor(void);
 void    RememberPreviousPathForAllSelectedChars(void);

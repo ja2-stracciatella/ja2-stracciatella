@@ -1536,7 +1536,7 @@ static const ST::string s_rus_pMoralStrings[pMoralStrings_SIZE] =
 };
 
 // Mercs equipment has now arrived and is now available in Omerta or Drassen.
-static const ST::string s_rus_str_left_equipment   = "%s оставляет снаряжение в %s (%c%d).";
+static const ST::string s_rus_str_left_equipment   = "%s оставляет снаряжение в %s (%s).";
 
 // Status that appears on the Map Screen
 

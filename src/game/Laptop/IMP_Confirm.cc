@@ -174,8 +174,7 @@ static BOOLEAN AddCharacterToPlayersTeam(void)
 
 	HireMercStruct.bWhatKindOfMerc = MERC_TYPE__PLAYER_CHARACTER;
 
-	HireMercStruct.sSectorX = SECTORX(g_merc_arrive_sector);
-	HireMercStruct.sSectorY = SECTORY(g_merc_arrive_sector);
+	HireMercStruct.sSector = g_merc_arrive_sector;
 	HireMercStruct.fUseLandingZoneForArrival = TRUE;
 
 	HireMercStruct.fCopyProfileItemsOver = TRUE;
@@ -234,7 +233,7 @@ static void BtnIMPConfirmYes(GUI_BUTTON *btn, INT32 reason)
 
 		// charge the player
 		AddTransactionToPlayersBook(IMP_PROFILE, (UINT8)(PLAYER_GENERATED_CHARACTER_ID + LaptopSaveInfo.iVoiceId), GetWorldTotalMin(), -COST_OF_PROFILE);
-		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), -1, -1);
+		AddHistoryToPlayersLog(HISTORY_CHARACTER_GENERATED, 0, GetWorldTotalMin(), SGPSector(-1, -1));
 
 		fButtonPendingFlag = TRUE;
 		iCurrentImpPage = IMP_HOME_PAGE;

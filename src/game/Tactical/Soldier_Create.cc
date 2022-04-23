@@ -217,9 +217,7 @@ try
 	s->bActionPoints        = CalcActionPoints(s);
 	s->bInitialActionPoints = s->bActionPoints;
 	s->bSide                = gTacticalStatus.Team[team_id].bSide;
-	s->sSectorX             = c.sSectorX;
-	s->sSectorY             = c.sSectorY;
-	s->bSectorZ             = c.bSectorZ;
+	s->sSector              = c.sSector;
 	s->ubInsertionDirection = c.bDirection;
 	s->bDesiredDirection    = c.bDirection;
 	s->bDominantDir         = c.bDirection;
@@ -430,7 +428,8 @@ try
 
 			s->bVehicleID =
 				c.fUseGivenVehicle ? c.bUseGivenVehicleID :
-				(INT8)AddVehicleToList(s->sSectorX, s->sSectorY, s->bSectorZ, ubVehicleID);
+				// TODO: verify, it's suspicious we pass a z coord instead of gridno
+				(INT8) AddVehicleToList(s->sSector, s->sSector.z, ubVehicleID);
 			SetVehicleValuesIntoSoldierType(s);
 			break;
 		}
@@ -442,10 +441,7 @@ try
 
 	if (guiCurrentScreen == AUTORESOLVE_SCREEN)
 	{
-		UINT8 const sector_id = GetAutoResolveSectorID();
-		s->sSectorX = SECTORX(sector_id);
-		s->sSectorY = SECTORY(sector_id);
-		s->bSectorZ = 0;
+		s->sSector = SGPSector(GetAutoResolveSectorID());
 		return s;
 	}
 
@@ -1135,9 +1131,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	pp->ubSoldierClass = bp->ubSoldierClass;
 	pp->ubCivilianGroup = bp->ubCivilianGroup;
 	pp->ubScheduleID = 0;
-	pp->sSectorX = gWorldSectorX;
-	pp->sSectorY = gWorldSectorY;
-	pp->bSectorZ = gbWorldSectorZ;
+	pp->sSector = gWorldSector;
 	pp->fHasKeys = bp->fHasKeys;
 
 	//Choose a body type randomly if none specified.
@@ -1316,8 +1310,8 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 
 				case BLOODCAT:
 					pp->bExpLevel = 5 + bExpLevelModifier;
-					auto spawns = GCM->getBloodCatSpawnsOfSector( SECTOR( gWorldSectorX, gWorldSectorY ));
-					if( spawns != NULL && spawns->isLair )  
+					auto spawns = GCM->getBloodCatSpawnsOfSector(gWorldSector.AsByte());
+					if (spawns && spawns->isLair)
 					{
 						pp->bExpLevel += gGameOptions.ubDifficultyLevel;
 					}
@@ -1412,9 +1406,7 @@ void CreateStaticDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT 
 	spp->ubSoldierClass = bp->ubSoldierClass;
 	spp->ubCivilianGroup = bp->ubCivilianGroup;
 	spp->ubScheduleID = 0;
-	spp->sSectorX = gWorldSectorX;
-	spp->sSectorY = gWorldSectorY;
-	spp->bSectorZ = gbWorldSectorZ;
+	spp->sSector = gWorldSector;
 	spp->fHasKeys = bp->fHasKeys;
 
 	//Pass over mandatory information specified from the basic placement
@@ -1482,9 +1474,7 @@ void CreateDetailedPlacementGivenStaticDetailedPlacementAndBasicPlacementInfo(
 		pp->sInsertionGridNo = bp->usStartingGridNo;
 
 		//ATE: Copy over sector coordinates from profile to create struct
-		pp->sSectorX = gMercProfiles[ pp->ubProfile ].sSectorX;
-		pp->sSectorY = gMercProfiles[ pp->ubProfile ].sSectorY;
-		pp->bSectorZ = gMercProfiles[ pp->ubProfile ].bSectorZ;
+		pp->sSector = gMercProfiles[ pp->ubProfile ].sSector;
 
 		pp->ubScheduleID = spp->ubScheduleID;
 
@@ -1954,9 +1944,7 @@ void QuickCreateProfileMerc( INT8 bTeam, UINT8 ubProfileID )
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam            = bTeam;
 	MercCreateStruct.ubProfile        = ubProfileID;
-	MercCreateStruct.sSectorX         = gWorldSectorX;
-	MercCreateStruct.sSectorY         = gWorldSectorY;
-	MercCreateStruct.bSectorZ         = gbWorldSectorZ;
+	MercCreateStruct.sSector          = gWorldSector;
 	MercCreateStruct.sInsertionGridNo = pos;
 
 	RandomizeNewSoldierStats(&MercCreateStruct);
@@ -2107,15 +2095,14 @@ static UINT8 GetLocationModifier(UINT8 ubSoldierClass)
 {
 	UINT8 ubLocationModifier;
 	UINT8 ubPalaceDistance;
-	INT16 sSectorX, sSectorY, sSectorZ;
-	BOOLEAN fSuccess;
 
 	// where is all this taking place?
-	fSuccess = GetCurrentBattleSectorXYZ( &sSectorX, &sSectorY, &sSectorZ );
+	SGPSector sSector;
+	BOOLEAN fSuccess = GetCurrentBattleSectorXYZ(sSector);
 	Assert( fSuccess );
 
-	// ignore sSectorZ - treat any underground enemies as if they were on the surface!
-	switch (GetTownIdForSector(SECTOR(sSectorX, sSectorY)))
+	// ignore sSector.z - treat any underground enemies as if they were on the surface!
+	switch (GetTownIdForSector(sSector))
 	{
 		case ORTA:
 		case TIXA:
@@ -2131,7 +2118,7 @@ static UINT8 GetLocationModifier(UINT8 ubSoldierClass)
 		default:
 			// how far is this sector from the palace ?
 			// the distance returned is in sectors, and the possible range is about 0-20
-			ubPalaceDistance = GetPythDistanceFromPalace( sSectorX, sSectorY );
+			ubPalaceDistance = GetPythDistanceFromPalace(sSector);
 			if ( ubPalaceDistance > MAX_PALACE_DISTANCE )
 			{
 				ubPalaceDistance = MAX_PALACE_DISTANCE;
@@ -2147,16 +2134,15 @@ static UINT8 GetLocationModifier(UINT8 ubSoldierClass)
 
 
 // grab the distance from the palace
-UINT8 GetPythDistanceFromPalace( INT16 sSectorX, INT16 sSectorY )
+UINT8 GetPythDistanceFromPalace(const SGPSector& sSector)
 {
 	UINT8 ubDistance = 0;
 	INT16 sRows = 0, sCols = 0;
 	float fValue = 0.0;
 
 	// grab number of rows and cols
-	sRows = (INT16)(ABS((sSectorX) - ( PALACE_SECTOR_X )));
-	sCols = (INT16)(ABS((sSectorY) - ( PALACE_SECTOR_Y )));
-
+	sRows = (INT16) (ABS(sSector.x - PALACE_SECTOR_X));
+	sCols = (INT16) (ABS(sSector.y - PALACE_SECTOR_Y));
 
 	// apply Pythagoras's theorem for right-handed triangle:
 	// dist^2 = rows^2 + cols^2, so use the square root to get the distance

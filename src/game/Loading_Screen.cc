@@ -24,23 +24,23 @@
 UINT8 gubLastLoadingScreenID = LOADINGSCREEN_NOTHING;
 
 
-UINT8 GetLoadScreenID(INT16 const x, INT16 const y, INT8 const z)
+UINT8 GetLoadScreenID(const SGPSector& sector)
 {
 	bool  const night     = NightTime();
-	UINT8 const sector_id = SECTOR(x, y);
+	UINT8 const sector_id = sector.AsByte();
 	
 	if (DidGameJustStart()) return LOADINGSCREEN_HELI;
 
-	const LoadingScreen* screen = GCM->getLoadingScreenForSector(sector_id, z, night);
+	const LoadingScreen* screen = GCM->getLoadingScreenForSector(sector_id, sector.z, night);
 	if (screen != NULL)
 	{
 		return screen->index;
 	}
 
-	switch (z)
+	switch (sector.z)
 	{
 		case 0:
-			if (IsThisSectorASAMSector(x, y, z))
+			if (IsThisSectorASAMSector(sector))
 			{
 				return night ? LOADINGSCREEN_NIGHTSAM : LOADINGSCREEN_DAYSAM;
 			}

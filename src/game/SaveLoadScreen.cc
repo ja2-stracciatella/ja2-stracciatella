@@ -933,10 +933,10 @@ static BOOLEAN DisplaySaveGameEntry(const std::vector<SaveGameInfo>::iterator& e
 
 		// The sector
 		ST::string location;
-		if (header.sSectorX != -1 && header.sSectorY != -1 && header.bSectorZ >= 0)
+		if (header.sSector.IsValid())
 		{
 			gfGettingNameFromSaveLoadScreen = TRUE;
-			location = GetSectorIDString(header.sSectorX, header.sSectorY, header.bSectorZ, FALSE);
+			location = GetSectorIDString(header.sSector, FALSE);
 			gfGettingNameFromSaveLoadScreen = FALSE;
 		}
 		else if (header.uiDay * NUM_SEC_IN_DAY + header.ubHour * NUM_SEC_IN_HOUR + header.ubMin * NUM_SEC_IN_MIN <= STARTING_TIME)

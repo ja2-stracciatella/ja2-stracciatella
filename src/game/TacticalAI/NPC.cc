@@ -43,7 +43,7 @@
 #define NUM_CIVQUOTE_SECTORS   20
 #define MINERS_CIV_QUOTE_INDEX 16
 
-static const INT16 gsCivQuoteSector[NUM_CIVQUOTE_SECTORS][2] =
+static const SGPSector gsCivQuoteSector[NUM_CIVQUOTE_SECTORS] =
 {
 	{  2, MAP_ROW_A },
 	{  2, MAP_ROW_B },
@@ -447,7 +447,7 @@ static NPCQuoteInfo* LoadCivQuoteFile(UINT8 const idx)
 	}
 	else
 	{
-		sprintf(buf, NPCDATADIR "/%c%d.npc", 'A' + gsCivQuoteSector[idx][1] - 1, gsCivQuoteSector[idx][0]);
+		sprintf(buf, NPCDATADIR "/%s.npc", gsCivQuoteSector[idx].AsShortString().c_str());
 		filename = buf;
 	}
 	AutoSGPFile f(GCM->openGameResForReading(filename));
@@ -1358,7 +1358,7 @@ void ResetOncePerConvoRecordsForNPC( UINT8 ubNPC )
 
 void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 {
-	if ( gWorldSectorX == 0 || gWorldSectorY == 0 )
+	if (!gWorldSector.IsValid())
 	{
 		return;
 	}
@@ -1369,9 +1369,7 @@ void ResetOncePerConvoRecordsForAllNPCsInLoadedSector( void )
 		if (!p->isNPCorRPC()) continue;
 
 		ProfileID ubMercID = p->getID();
-		if ( gMercProfiles[ubMercID].sSectorX == gWorldSectorX &&
-				gMercProfiles[ubMercID].sSectorY == gWorldSectorY &&
-				gMercProfiles[ubMercID].bSectorZ == gbWorldSectorZ &&
+		if (gMercProfiles[ubMercID].sSector == gWorldSector &&
 				gpNPCQuoteInfoArray[ubMercID] != NULL )
 		{
 			ResetOncePerConvoRecordsForNPC(ubMercID);
@@ -1805,11 +1803,11 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 				}
 				if (pQuotePtr->ubEndQuest != NO_QUEST)
 				{
-					EndQuest( pQuotePtr->ubEndQuest, gWorldSectorX, gWorldSectorY );
+					EndQuest(pQuotePtr->ubEndQuest, gWorldSector);
 				}
 				if (pQuotePtr->ubStartQuest != NO_QUEST)
 				{
-					StartQuest( pQuotePtr->ubStartQuest, gWorldSectorX, gWorldSectorY );
+					StartQuest(pQuotePtr->ubStartQuest, gWorldSector);
 				}
 
 				// Give item to merc?
@@ -2650,26 +2648,26 @@ void HandleNPCChangesForTacticalTraversal(const SOLDIERTYPE* s)
 	MERCPROFILESTRUCT& p = GetProfile(s->ubProfile);
 	switch (s->ubQuoteActionID)
 	{
-		case QUOTE_ACTION_ID_TRAVERSE_EAST:  p.sSectorX++; break;
-		case QUOTE_ACTION_ID_TRAVERSE_SOUTH: p.sSectorY++; break;
-		case QUOTE_ACTION_ID_TRAVERSE_WEST:  p.sSectorX--; break;
-		case QUOTE_ACTION_ID_TRAVERSE_NORTH: p.sSectorY--; break;
+		case QUOTE_ACTION_ID_TRAVERSE_EAST:  p.sSector.x++; break;
+		case QUOTE_ACTION_ID_TRAVERSE_SOUTH: p.sSector.y++; break;
+		case QUOTE_ACTION_ID_TRAVERSE_WEST:  p.sSector.x--; break;
+		case QUOTE_ACTION_ID_TRAVERSE_NORTH: p.sSector.y--; break;
 		default: return;
 	}
 
 	// Call to change the NPC's Sector Location
-	ChangeNpcToDifferentSector(p, p.sSectorX, p.sSectorY, p.bSectorZ);
+	ChangeNpcToDifferentSector(p, p.sSector);
 }
 
 
-void HandleVictoryInNPCSector(INT16 const x, INT16 const y, INT16 const z)
+void HandleVictoryInNPCSector(const SGPSector& sector)
 {
 	// handle special cases of victory in certain sector
 
 	// not the surface?..leave
-	if (z != 0) return;
+	if (sector.z != 0) return;
 
-	switch (SECTOR(x, y))
+	switch (sector.AsByte())
 	{
 		case SEC_F10:
 			FOR_EACH_IN_TEAM(s, CIV_TEAM)
@@ -2761,23 +2759,22 @@ BOOLEAN RecordHasDialogue(UINT8 const ubNPC, UINT8 const ubRecord)
 }
 
 
-static INT8 FindCivQuoteFileIndex(INT16 const x, INT16 const y, INT16 const z)
+static INT8 FindCivQuoteFileIndex(const SGPSector& sector)
 {
-	if (z > 0) return MINERS_CIV_QUOTE_INDEX;
+	if (sector.z > 0) return MINERS_CIV_QUOTE_INDEX;
 
 	for (UINT8 i = 0; i != NUM_CIVQUOTE_SECTORS; ++i)
 	{
-		if (gsCivQuoteSector[i][0] != x) continue;
-		if (gsCivQuoteSector[i][1] != y) continue;
+		if (gsCivQuoteSector[i] != sector) continue;
 		return i;
 	}
 	return -1;
 }
 
 
-INT8 ConsiderCivilianQuotes(INT16 const x, INT16 const y, INT16 const z, BOOLEAN const set_as_used)
+INT8 ConsiderCivilianQuotes(const SGPSector& sector, BOOLEAN const set_as_used)
 {
-	INT8 const quote_file_idx = FindCivQuoteFileIndex(x, y, z);
+	INT8 const quote_file_idx = FindCivQuoteFileIndex(sector);
 	if (quote_file_idx == -1) return -1; // no hints for this sector
 
 	NPCQuoteInfo* const quotes = EnsureCivQuoteFileLoaded(quote_file_idx);
@@ -2795,7 +2792,7 @@ INT8 ConsiderCivilianQuotes(INT16 const x, INT16 const y, INT16 const z, BOOLEAN
 
 		if (q.ubStartQuest != NO_QUEST)
 		{
-			StartQuest(q.ubStartQuest, gWorldSectorX, gWorldSectorY);
+			StartQuest(q.ubStartQuest, gWorldSector);
 		}
 
 		return q.ubQuoteNum;

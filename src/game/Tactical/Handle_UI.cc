@@ -913,9 +913,7 @@ static ScreenID UIHandleNewMerc(UI_EVENT* pUIEvent)
 		HireMercStruct.ubProfileID = ubTemp;
 
 		//DEF: temp
-		HireMercStruct.sSectorX = gWorldSectorX;
-		HireMercStruct.sSectorY = gWorldSectorY;
-		HireMercStruct.bSectorZ = gbWorldSectorZ;
+		HireMercStruct.sSector = gWorldSector;
 		HireMercStruct.ubInsertionCode	= INSERTION_CODE_GRIDNO;
 		HireMercStruct.usInsertionData	= usMapPos;
 		HireMercStruct.fCopyProfileItemsOver = TRUE;
@@ -965,9 +963,9 @@ static ScreenID UIHandleNewBadMerc(UI_EVENT*)
 	if (!s) return GAME_SCREEN;
 
 	// Add soldier strategic info, so it doesn't break the counters
-	if (gbWorldSectorZ == 0)
+	if (gWorldSector.z == 0)
 	{
-		SECTORINFO& sector = SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)];
+		SECTORINFO& sector = SectorInfo[gWorldSector.AsByte()];
 		switch (s->ubSoldierClass)
 		{
 			case SOLDIER_CLASS_ADMINISTRATOR:
@@ -986,7 +984,7 @@ static ScreenID UIHandleNewBadMerc(UI_EVENT*)
 	}
 	else
 	{
-		if (UNDERGROUND_SECTORINFO* const sector = FindUnderGroundSector(gWorldSectorX, gWorldSectorY, gbWorldSectorZ))
+		if (UNDERGROUND_SECTORINFO* const sector = FindUnderGroundSector(gWorldSector))
 		{
 			switch (s->ubSoldierClass)
 			{
@@ -1008,7 +1006,7 @@ static ScreenID UIHandleNewBadMerc(UI_EVENT*)
 
 	s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 	s->usStrategicInsertionData = map_pos;
-	UpdateMercInSector(*s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	UpdateMercInSector(*s, gWorldSector);
 	AllTeamsLookForAll(NO_INTERRUPTS);
 
 	return GAME_SCREEN;

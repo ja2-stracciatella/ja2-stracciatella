@@ -79,19 +79,17 @@ static void InitNPCs()
 			continue;
 		}
 
-		UINT8 sector = placement->pickPlacementSector();
+		SGPSector sMap(placement->pickPlacementSector());
 		if (placement->useAlternateMap)
 		{
-			SectorInfo[sector].uiFlags |= SF_USE_ALTERNATE_MAP;
-			STLOGD("Alternate map in {}", SECTOR_SHORT_STRING(sector));
+			SectorInfo[sMap.AsByte()].uiFlags |= SF_USE_ALTERNATE_MAP;
+			STLOGD("Alternate map in {}", sMap.AsShortString());
 		}
 		if (placement->isPlacedAtStart)
 		{
 			MERCPROFILESTRUCT& merc = GetProfile(placement->profileId);
-			merc.sSectorX = SECTORX(sector);
-			merc.sSectorY = SECTORY(sector);
-			merc.bSectorZ = 0;
-			STLOGD("{} in {}", merc.zNickname, SECTOR_SHORT_STRING(sector));
+			merc.sSector = sMap;
+			STLOGD("{} in {}", merc.zNickname, sMap.AsShortString());
 		}
 	}
 
@@ -100,7 +98,7 @@ static void InitNPCs()
 	if (!gGameOptions.fSciFi)
 	{ //not scifi, so use alternate map in Tixa's b1 level that doesn't have the stairs going down to the caves.
 		UNDERGROUND_SECTORINFO *pSector;
-		pSector = FindUnderGroundSector( TIXA_SECTOR_X, TIXA_SECTOR_Y, 1 ); //j9_b1
+		pSector = FindUnderGroundSector(SGPSector(TIXA_SECTOR_X, TIXA_SECTOR_Y, 1)); //j9_b1
 		if( pSector )
 		{
 			pSector->uiFlags |= SF_USE_ALTERNATE_MAP;
@@ -180,7 +178,8 @@ void InitStrategicLayer( void )
 	SetGameTimeCompressionLevel( TIME_COMPRESS_X0 );
 
 	// Select the start sector as the initial selected sector
-	ChangeSelectedMapSector(SECTORX(gamepolicy(start_sector)), SECTORY(gamepolicy(start_sector)), 0);
+	static const SGPSector startSector(gamepolicy(start_sector));
+	ChangeSelectedMapSector(startSector);
 
 	// Reset these flags or mapscreen could be disabled and cause major headache.
 	fDisableDueToBattleRoster = FALSE;

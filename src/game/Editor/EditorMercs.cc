@@ -375,8 +375,7 @@ void AddMercToWorld( INT32 iMapIndex )
 		CreateDetailedPlacementGivenBasicPlacementInfo( &gTempDetailedPlacement, &gTempBasicPlacement );
 
 		//Set the sector information -- probably unnecessary.
-		gTempDetailedPlacement.sSectorX = gWorldSectorX;
-		gTempDetailedPlacement.sSectorY = gWorldSectorY;
+		gTempDetailedPlacement.sSector = gWorldSector;
 
 		//Create the soldier, but don't place it yet.
 		SOLDIERTYPE* const pSoldier = TacticalCreateSoldier(gTempDetailedPlacement);
@@ -2975,8 +2974,7 @@ void PasteMercPlacement( INT32 iMapIndex )
 		}
 
 		//Set the sector information -- probably unnecessary.
-		gTempDetailedPlacement.sSectorX = gWorldSectorX;
-		gTempDetailedPlacement.sSectorY = gWorldSectorY;
+		gTempDetailedPlacement.sSector = gWorldSector;
 
 		if( gTempBasicPlacement.fDetailedPlacement )
 		{

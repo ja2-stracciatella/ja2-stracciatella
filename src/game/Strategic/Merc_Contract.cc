@@ -339,7 +339,7 @@ BOOLEAN MercContractHandling(SOLDIERTYPE* const s, UINT8 const ubDesiredAction)
 	 * merc's contract */
 	UINT32 const now = GetWorldTotalMin();
 	AddTransactionToPlayersBook(finances_contract_type, s->ubProfile, now, -contract_charge);
-	AddHistoryToPlayersLog(history_contract_type, s->ubProfile, now, s->sSectorX, s->sSectorY);
+	AddHistoryToPlayersLog(history_contract_type, s->ubProfile, now, s->sSector);
 
 	return TRUE;
 }
@@ -363,9 +363,7 @@ static UINT16 FindRefusalReason(SOLDIERTYPE const* const s)
 		{ // tolerance is > 0, only gripe if in same sector
 			SOLDIERTYPE const* const hated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
 			if (!hated)                         continue;
-			if (hated->sSectorX != s->sSectorX) continue;
-			if (hated->sSectorY != s->sSectorY) continue;
-			if (hated->bSectorZ != s->bSectorZ) continue;
+			if (hated->sSector != s->sSector) continue;
 		}
 
 		// our tolerance has run out!
@@ -387,10 +385,7 @@ static UINT16 FindRefusalReason(SOLDIERTYPE const* const s)
 		else if (p.bLearnToHateCount <= p.bLearnToHateTime / 2)
 		{
 			const SOLDIERTYPE* const pHated = FindSoldierByProfileIDOnPlayerTeam(bMercID);
-			if (pHated &&
-					pHated->sSectorX == s->sSectorX &&
-					pHated->sSectorY == s->sSectorY &&
-					pHated->bSectorZ == s->bSectorZ)
+			if (pHated && pHated->sSector == s->sSector)
 			{
 				return QUOTE_LEARNED_TO_HATE_MERC_1_ON_TEAM_WONT_RENEW;
 			}
@@ -684,7 +679,7 @@ void StrategicRemoveMerc(SOLDIERTYPE& s)
 	// ATE: Don't do this if they are already dead!
 	if (!(s.uiStatusFlags & SOLDIER_DEAD))
 	{
-		AddHistoryToPlayersLog(ubHistoryCode, s.ubProfile, GetWorldTotalMin(), s.sSectorX, s.sSectorY);
+		AddHistoryToPlayersLog(ubHistoryCode, s.ubProfile, GetWorldTotalMin(), s.sSector);
 	}
 
 	//if the merc was a POW, remember it becuase the merc cant show up in AIM or MERC anymore
@@ -766,11 +761,8 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 		add_rehire_button = false;
 	}
 
-	INT16 const  x = s.sSectorX;
-	INT16 const  y = s.sSectorY;
-	INT8  const  z = s.bSectorZ;
-
-	ST::string town_sector = GetShortSectorString(x, y);
+	const SGPSector& sSector = s.sSector;
+	ST::string town_sector = sSector.AsShortString();
 
 	ST::string msg;
 	MessageBoxFlags flags;
@@ -779,13 +771,13 @@ static void NotifyPlayerOfMercDepartureAndPromptEquipmentPlacement(SOLDIERTYPE& 
 	if (!profile.isRPC())
 	{ // The character is not an RPC
 		INT16 const elsewhere =
-			!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(AIRPORT_SECTOR)].fEnemyControlled ? AIRPORT_SECTOR :
+			!StrategicMap[SGPSector(AIRPORT_SECTOR).AsStrategicIndex()].fEnemyControlled ? AIRPORT_SECTOR :
 			gamepolicy(start_sector);
-		if (elsewhere == SECTOR(x, y) && z == 0) goto no_choice;
+		if (elsewhere == sSector.AsByte() && sSector.z == 0) goto no_choice;
 
 		// Set strings for generic buttons
 		gzUserDefinedButton1 = town_sector;
-		gzUserDefinedButton2 = GetShortSectorString(SECTORX(elsewhere), SECTORY(elsewhere));
+		gzUserDefinedButton2 = SGPSector(elsewhere).AsShortString();
 
 		ST::string town = GCM->getTownLocative(GetTownIdForSector(elsewhere));
 		ST::string text = sex == MALE ? str_he_leaves_where_drop_equipment : str_she_leaves_where_drop_equipment;
@@ -833,7 +825,7 @@ static void MercDepartEquipmentBoxCallBack(MessageBoxReturnValue const exit_valu
 		default:
 		{
 			auto primaryAirport = GCM->getPrimaryShippingDestination();
-			auto airportSectorIndex = SECTOR_INFO_TO_STRATEGIC_INDEX(primaryAirport->getDeliverySector());
+			auto airportSectorIndex = SGPSector(primaryAirport->getDeliverySector()).AsStrategicIndex();
 			bool const in_drassen = !StrategicMap[airportSectorIndex].fEnemyControlled;
 			HandleMercLeavingEquipment(s, in_drassen);
 			break;

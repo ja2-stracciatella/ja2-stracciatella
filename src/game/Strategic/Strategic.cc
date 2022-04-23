@@ -35,7 +35,7 @@ void HandleStrategicDeath(SOLDIERTYPE& s)
 		ReBuildCharactersList();
 
 		HandleSoldierDeadComments(&s);
-		AddDeadSoldierToUnLoadedSector(s.sSectorX, s.sSectorY, s.bSectorZ, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
+		AddDeadSoldierToUnLoadedSector(s.sSector, &s, RandomGridNo(), ADD_DEAD_SOLDIER_TO_SWEETSPOT);
 
 		fReDrawFace = TRUE;
 

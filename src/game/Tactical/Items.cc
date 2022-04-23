@@ -1891,7 +1891,7 @@ static void CollectKey(SOLDIERTYPE const& s, OBJECTTYPE const& o)
 	KEY& k = KeyTable[o.ubKeyID];
 	if (k.usDateFound != 0) return;
 	k.usDateFound   = GetWorldDay();
-	k.usSectorFound = SECTOR(s.sSectorX, s.sSectorY);
+	k.usSectorFound = s.sSector.AsByte();
 }
 
 

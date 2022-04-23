@@ -182,7 +182,6 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 {
 	INT32 iCnt,ndx,insertNdx,qNewNdx;
 	INT32 iDestX,iDestY,locX,locY,dx,dy;
-	INT16 sSectorX, sSectorY;
 	UINT16	newLoc,curLoc;
 	TRAILCELLTYPE curCost,newTotCost,nextCost;
 	INT16 sOrigination;
@@ -265,9 +264,10 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 
 	do
 	{
-		//remove the first and best path so far from the que
+		//remove the first and best path so far from the queue
 		ndx				= pathQB[QHEADNDX].nextLink;
 		curLoc		= pathQB[ndx].location;
+		const SGPSector& sCurrent = SGPSector::FromStrategicIndex(curLoc);
 		curCost		= pathQB[ndx].costSoFar;
 		DELQUENODE( (INT16)ndx );
 
@@ -279,10 +279,10 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 		for (iCnt=0; iCnt < 8; iCnt+=2)
 		{
 			newLoc = curLoc + diStratDelta[iCnt];
+			const SGPSector& sSector = SGPSector::FromStrategicIndex(newLoc);
 
-
-				// are we going off the map?
-			if( ( newLoc % MAP_WORLD_X == 0 )||( newLoc%MAP_WORLD_X == MAP_WORLD_X -1 ) || ( newLoc / MAP_WORLD_X == 0 ) || ( newLoc / MAP_WORLD_X == MAP_WORLD_X - 1 ) )
+			// are we going off the map?
+			if (!sSector.IsValid())
 			{
 				// yeppers
 				continue;
@@ -290,25 +290,22 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 
 			if( gfPlotToAvoidPlayerInfuencedSectors && newLoc != sDestination )
 			{
-				sSectorX = (INT16)( newLoc % MAP_WORLD_X );
-				sSectorY = (INT16)( newLoc / MAP_WORLD_X );
-
-				if( IsThereASoldierInThisSector( sSectorX, sSectorY, 0 ) )
+				if (IsThereASoldierInThisSector(sSector))
 				{
 					continue;
 				}
-				if( GetNumberOfMilitiaInSector( sSectorX, sSectorY, 0 ) )
+				if (GetNumberOfMilitiaInSector(sSector))
 				{
 					continue;
 				}
-				if( !OkayForEnemyToMoveThroughSector( (UINT8)SECTOR( sSectorX, sSectorY ) ) )
+				if (!OkayForEnemyToMoveThroughSector(sSector.AsByte()))
 				{
 					continue;
 				}
 			}
 
 			// are we plotting path or checking for existance of one?
-			nextCost = GetSectorMvtTimeForGroup(SECTOR(curLoc % MAP_WORLD_X, curLoc / MAP_WORLD_X), iCnt / 2, &g);
+			nextCost = GetSectorMvtTimeForGroup(sCurrent.AsByte(), iCnt / 2, &g);
 			if (nextCost == TRAVERSE_TIME_IMPOSSIBLE) continue;
 
 			if (&g == heli_group)
@@ -333,7 +330,7 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 				// if it's the first sector only (no cost yet)
 				if( curCost == 0 && ( newLoc == sDestination ) )
 				{
-					if( GetTraversability( ( INT16 )( SECTOR( curLoc % 18, curLoc / 18 ) ), ( INT16 ) ( SECTOR( newLoc %18,  newLoc / 18 ) ) ) != GROUNDBARRIER )
+					if (GetTraversability((INT16) sCurrent.AsByte(), (INT16) sSector.AsByte()) != GROUNDBARRIER)
 					{
 						nextCost = 0;
 					}
@@ -354,7 +351,7 @@ INT32 FindStratPath(INT16 const sStart, INT16 const sDestination, GROUP const& g
 			//make the destination look very attractive
 			if( ( newLoc == sDestination ) )
 			{
-				if( GetTraversability( ( INT16 )( SECTOR( curLoc % 18, curLoc / 18 ) ), ( INT16 ) ( SECTOR( newLoc %18,  newLoc / 18 ) ) ) != GROUNDBARRIER )
+				if( GetTraversability( ( INT16 ) sCurrent.AsByte() ), ( INT16 ) sSector.AsByte() ) != GROUNDBARRIER )
 				{
 					nextCost = 0;
 				}
@@ -556,15 +553,12 @@ PathSt* ClearStrategicPathList(PathSt* const pHeadOfPath, const INT16 sMvtGroup)
 static PathSt* MoveToEndOfPathList(PathSt* pList);
 
 
-PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup)
+PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, const SGPSector& sMap, INT16 sMvtGroup)
 {
 	// will clear out a strategic path and return head of list as NULL
 	PathSt* pNode = pHeadOfPath;
 	PathSt* pDeleteNode = pHeadOfPath;
-	INT16 sSector = 0;
 	INT16 sCurrentSector = -1;
-
-
 
 	// is there in fact a path?
 	if( pNode == NULL )
@@ -573,9 +567,8 @@ PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT
 		return ( pNode );
 	}
 
-
 	// get sector value
-	sSector = sX + ( sY * MAP_WORLD_X );
+	INT16 sSector = sMap.AsStrategicIndex();
 
 	// go to end of list
 	pNode = MoveToEndOfPathList( pNode );
@@ -753,7 +746,7 @@ PathSt* RemoveHeadFromStrategicPath(PathSt* pList)
 INT16 GetLastSectorIdInCharactersPath(const SOLDIERTYPE* pCharacter)
 {
 	// will return the last sector of the current path, or the current sector if there's no path
-	INT16 sLastSector = ( pCharacter -> sSectorX ) + ( pCharacter ->sSectorY ) * ( MAP_WORLD_X );
+	INT16 sLastSector = pCharacter->sSector.AsStrategicIndex();
 	PathSt* pNode = NULL;
 
 	pNode = GetSoldierMercPathPtr( pCharacter );
@@ -866,7 +859,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 		if (g.fPlayer && g.fBetweenSectors)
 		{
 			// send the group right back to its current sector by reversing directions
-			GroupReversingDirectionsBetweenSectors(&g, g.ubSectorX, g.ubSectorY, FALSE);
+			GroupReversingDirectionsBetweenSectors(&g, g.ubSector, FALSE);
 		}
 
 		return;
@@ -877,7 +870,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 	if (g.fBetweenSectors)
 	{
 		// figure out which direction we're already going in  (Otherwise iOldDelta starts at 0)
-		iOldDelta = CALCULATE_STRATEGIC_INDEX(g.ubNextX, g.ubNextY) - CALCULATE_STRATEGIC_INDEX(g.ubSectorX, g.ubSectorY);
+		iOldDelta = g.ubNext.AsStrategicIndex() - g.ubSector.AsStrategicIndex();
 	}
 
 	// build a brand new list of waypoints, one for initial direction, and another for every "direction change" thereafter
@@ -912,7 +905,7 @@ void RebuildWayPointsForGroupPath(PathSt* const pHeadOfPath, GROUP& g)
 	// at this point, the final sector in the path must be identical to this group's last waypoint
 	wp = GetFinalWaypoint(&g);
 	AssertMsg( wp, "Path exists, but no waypoints were added!  AM-0" );
-	AssertMsg( pNode->uiSectorId == ( UINT32 ) CALCULATE_STRATEGIC_INDEX( wp->x, wp->y ), "Last waypoint differs from final path sector!  AM-0" );
+	AssertMsg(pNode->uiSectorId == (UINT32) wp->sSector.AsStrategicIndex(), "Last waypoint differs from final path sector!  AM-0");
 
 
 	// see if we've already reached the first sector in the path (we never actually left the sector and reversed back to it)
@@ -941,9 +934,9 @@ void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier )
 }
 
 
-BOOLEAN MoveGroupFromSectorToSector(GROUP& g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
+BOOLEAN MoveGroupFromSectorToSector(GROUP& g, const SGPSector& sStart, const SGPSector& sDest)
 {
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
 
 	if( pNode == NULL )
 	{
@@ -960,9 +953,9 @@ BOOLEAN MoveGroupFromSectorToSector(GROUP& g, INT16 const sStartX, INT16 const s
 }
 
 
-static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP& g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
+static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP& g, const SGPSector& sStart, const SGPSector& sDest)
 {
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
 
 	if( pNode == NULL )
 	{
@@ -982,7 +975,7 @@ static BOOLEAN MoveGroupFromSectorToSectorButAvoidLastSector(GROUP& g, INT16 con
 }
 
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, const SGPSector& sStart, const SGPSector& sDest)
 {
 	// init sectors with soldiers in them
 	InitSectorsWithSoldiersList( );
@@ -993,14 +986,14 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, INT
 	// turn on the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = TRUE;
 
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
 
 	// turn off the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = FALSE;
 
 	if( pNode == NULL )
 	{
-		return MoveGroupFromSectorToSector(g, sStartX, sStartY, sDestX, sDestY);
+		return MoveGroupFromSectorToSector(g, sStart, sDest);
 	}
 
 	// start movement to next sector
@@ -1013,7 +1006,7 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP& g, INT
 }
 
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(GROUP& g, INT16 const sStartX, INT16 const sStartY, INT16 const sDestX, INT16 const sDestY)
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(GROUP& g, const SGPSector& sStart, const SGPSector& sDest)
 {
 	// init sectors with soldiers in them
 	InitSectorsWithSoldiersList( );
@@ -1024,14 +1017,14 @@ BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSect
 	// turn on the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = TRUE;
 
-	PathSt* pNode = BuildAStrategicPath((INT16)CALCULATE_STRATEGIC_INDEX(sStartX, sStartY), (INT16)CALCULATE_STRATEGIC_INDEX(sDestX, sDestY), g, FALSE);
+	PathSt* pNode = BuildAStrategicPath(sStart.AsStrategicIndex(), sDest.AsStrategicIndex(), g, FALSE);
 
 	// turn off the avoid flag
 	gfPlotToAvoidPlayerInfuencedSectors = FALSE;
 
 	if( pNode == NULL )
 	{
-		return MoveGroupFromSectorToSectorButAvoidLastSector(g, sStartX, sStartY, sDestX, sDestY);
+		return MoveGroupFromSectorToSectorButAvoidLastSector(g, sStart, sDest);
 	}
 
 	// remove tail from path
@@ -1177,10 +1170,10 @@ static void ClearPathForSoldier(SOLDIERTYPE* pSoldier)
 }
 
 
-static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY);
+static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, const SGPSector& sMap);
 
 
-void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY )
+void AddSectorToFrontOfMercPathForAllSoldiersInGroup(GROUP *pGroup, const SGPSector& sMap)
 {
 	SOLDIERTYPE *pSoldier = NULL;
 
@@ -1190,7 +1183,7 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 
 		if ( pSoldier != NULL )
 		{
-			AddSectorToFrontOfMercPath( &(pSoldier->pMercPath), ubSectorX, ubSectorY );
+			AddSectorToFrontOfMercPath(&(pSoldier->pMercPath), sMap);
 		}
 	}
 
@@ -1199,16 +1192,16 @@ void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSec
 	{
 		VEHICLETYPE& v = GetVehicleFromMvtGroup(*pGroup);
 		// add it to that vehicle's path
-		AddSectorToFrontOfMercPath(&v.pMercPath, ubSectorX, ubSectorY);
+		AddSectorToFrontOfMercPath(&v.pMercPath, sMap);
 	}
 }
 
 
-static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, UINT8 ubSectorX, UINT8 ubSectorY)
+static void AddSectorToFrontOfMercPath(PathSt** ppMercPath, const SGPSector& sMap)
 {
 	// allocate and hang a new node at the front of the path list
 	PathSt* const pNode = new PathSt{};
-	pNode->uiSectorId = CALCULATE_STRATEGIC_INDEX( ubSectorX, ubSectorY );
+	pNode->uiSectorId = sMap.AsStrategicIndex();
 	pNode->pNext = *ppMercPath;
 	pNode->pPrev = NULL;
 

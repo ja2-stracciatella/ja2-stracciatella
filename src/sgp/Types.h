@@ -125,6 +125,36 @@ struct SGPPoint
 	}
 };
 
+class SGPSector
+{
+public:
+	INT16 x = 0;
+	INT16 y = 0;
+	INT8 z = 0;
+
+	SGPSector() noexcept = default;
+	SGPSector(INT16 a, INT16 b, INT8 c = 0) noexcept : x(a), y(b), z(c) {};
+	SGPSector(const SGPSector&) noexcept = default;
+	SGPSector(UINT32 s) noexcept; // normal FromSectorID
+	static SGPSector FromStrategicIndex(UINT16 idx);
+	static SGPSector FromShortString(const ST::string coordinates, INT8 h = 0);
+	static SGPSector FromSectorID(UINT32 s, INT8 h);
+
+	bool operator==(const SGPSector&) const noexcept;
+	bool operator!=(const SGPSector&) const noexcept;
+	bool operator<(const SGPSector&) const noexcept;
+	SGPSector operator+(const SGPSector&) const noexcept;
+	SGPSector operator-(const SGPSector&) const noexcept;
+	SGPSector& operator+=(const SGPSector&) noexcept;
+	SGPSector& operator-=(const SGPSector&) noexcept;
+
+	bool IsValid() const noexcept;
+	bool IsValid(ST::string shortString) const noexcept;
+	UINT8 AsByte() const;
+	UINT16 AsStrategicIndex() const;
+	ST::string AsShortString() const;
+	ST::string AsLongString(bool file = false) const;
+};
 
 struct SDL_Color;
 typedef SDL_Color SGPPaletteEntry;

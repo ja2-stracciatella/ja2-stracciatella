@@ -34,8 +34,8 @@ LIGHTEFFECT* NewLightEffect(INT16 sGridNo, INT8 bType);
 
 void LoadLightEffectsFromLoadGameFile(HWFILE);
 
-void SaveLightEffectsToMapTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
-void LoadLightEffectsFromMapTempFile(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+void SaveLightEffectsToMapTempFile(const SGPSector& sector);
+void LoadLightEffectsFromMapTempFile(const SGPSector& sector);
 void ResetLightEffects(void);
 
 #endif

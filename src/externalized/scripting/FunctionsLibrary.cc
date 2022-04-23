@@ -13,38 +13,39 @@
 
 std::string GetCurrentSector()
 {
-	ST::string str = (gbWorldSectorZ > 0) ?
-		ST::format("{c}{}-{}", (gWorldSectorY + 'A' - 1), gWorldSectorX, gbWorldSectorZ) :
-		ST::format("{c}{}", (gWorldSectorY + 'A' - 1), gWorldSectorX)
-	;
+	ST::string str = gWorldSector.AsShortString();
+	if (gWorldSector.z > 0)
+	{
+		str = gWorldSector.AsLongString();
+	}
 	return str.to_std_string();
 }
 
 SECTORINFO* GetSectorInfo(const std::string sectorID)
 {
-	if (!IS_VALID_SECTOR_SHORT_STRING(sectorID.c_str()))
+	if (!SGPSector().IsValid(sectorID.c_str()))
 	{
 		ST::string err = ST::format("The given sectorID ('{}') is invalid", sectorID);
 		throw std::runtime_error(err.to_std_string());
 	}
-	UINT8 ubSector = SECTOR_FROM_SECTOR_SHORT_STRING(sectorID.c_str());
+	UINT8 ubSector = SGPSector::FromShortString(sectorID).AsByte();
 	return &(SectorInfo[ubSector]);
 }
 
 UNDERGROUND_SECTORINFO* GetUndergroundSectorInfo(const std::string sectorID)
-{ 
+{
 	auto pos = sectorID.find('-');
 	if (pos == std::string::npos) throw std::runtime_error("Invalid underground sectorID format");
 
 	std::string stSector = sectorID.substr(0, pos);
 	UINT8 ubSectorZ = std::stoi(sectorID.substr(pos + 1));
-	if (!IS_VALID_SECTOR_SHORT_STRING(stSector.c_str()) || ubSectorZ == 0 || ubSectorZ > 3)
+	if (!SGPSector().IsValid(stSector.c_str()) || ubSectorZ == 0 || ubSectorZ > 3)
 	{
 		throw std::runtime_error("Invalid underground sectorID");
 	}
 
-	UINT8 ubSector = SECTOR_FROM_SECTOR_SHORT_STRING(stSector.c_str());
-	return FindUnderGroundSector(SECTORX(ubSector), SECTORY(ubSector), ubSectorZ);
+	const SGPSector& ubSector = SGPSector::FromShortString(stSector, ubSectorZ);
+	return FindUnderGroundSector(ubSector);
 }
 
 OBJECTTYPE* CreateItem(const UINT16 usItem, const INT8 bStatus)

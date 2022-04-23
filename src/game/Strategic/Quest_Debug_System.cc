@@ -2394,9 +2394,7 @@ static void AddNPCToGridNo(INT32 iGridNo)
 	MercCreateStruct = SOLDIERCREATE_STRUCT{};
 	MercCreateStruct.bTeam				= CIV_TEAM;
 	MercCreateStruct.ubProfile		= (UINT8)gpActiveListBox->sCurSelectedItem;
-	MercCreateStruct.sSectorX			= gWorldSectorX;
-	MercCreateStruct.sSectorY			= gWorldSectorY;
-	MercCreateStruct.bSectorZ			= gbWorldSectorZ;
+	MercCreateStruct.sSector			= gWorldSector;
 	MercCreateStruct.sInsertionGridNo		= (UINT16) iGridNo;
 
 //	RandomizeNewSoldierStats( &MercCreateStruct );
@@ -3161,12 +3159,12 @@ static ST::string GetDebugLocationString(UINT16 usProfileID)
 	//the soldier is in this sector
 	else if( pSoldier != NULL )
 	{
-		return GetShortSectorString(pSoldier->sSectorX, pSoldier->sSectorY);
+		return pSoldier->sSector.AsShortString();
 	}
 
 	//else the soldier is in a different map
 	else
 	{
-		return GetShortSectorString(gMercProfiles[ usProfileID ].sSectorX, gMercProfiles[ usProfileID ].sSectorY);
+		return gMercProfiles[usProfileID].sSector.AsShortString();
 	}
 }

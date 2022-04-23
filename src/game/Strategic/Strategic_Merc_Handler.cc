@@ -57,17 +57,15 @@ void StrategicHandlePlayerTeamMercDeath(SOLDIERTYPE& s)
 	{ // Add to the history log the fact that the merc died and the circumstances
 
 		// CJC Nov 11, 2002: Use the soldier's sector location unless impossible
-		INT16 x = s.sSectorX;
-		INT16 y = s.sSectorY;
-		if (s.sSectorX == 0 || s.sSectorY == 0)
+		SGPSector sMap = s.sSector;
+		if (!sMap.IsValid())
 		{
-			x = gWorldSectorX;
-			y = gWorldSectorY;
+			sMap = gWorldSector;
 		}
 
 		SOLDIERTYPE const* const killer = s.attacker;
 		UINT8              const code   = killer && killer->bTeam == OUR_TEAM ? HISTORY_MERC_KILLED_CHARACTER : HISTORY_MERC_KILLED;
-		AddHistoryToPlayersLog(code, s.ubProfile, now, x, y);
+		AddHistoryToPlayersLog(code, s.ubProfile, now, sMap);
 	}
 
 	if (guiCurrentScreen != GAME_SCREEN)
@@ -117,7 +115,7 @@ void StrategicHandlePlayerTeamMercDeath(SOLDIERTYPE& s)
 	 * machines and the lives of locals much */
 	if (!AM_AN_EPC(&s) && !AM_A_ROBOT(&s))
 	{ // Change morale of others based on this
-		HandleMoraleEvent(&s, MORALE_TEAMMATE_DIED, s.sSectorX, s.sSectorY, s.bSectorZ);
+		HandleMoraleEvent(&s, MORALE_TEAMMATE_DIED, s.sSector);
 	}
 
 	if (s.ubWhatKindOfMercAmI == MERC_TYPE__MERC)
@@ -145,7 +143,8 @@ void MercDailyUpdate()
 	if (CalcDeathRate() < 5)
 	{
 		// everyone gets a morale bonus, which also gets player a reputation bonus.
-		HandleMoraleEvent(NULL, MORALE_LOW_DEATHRATE, -1, -1, -1);
+		static const SGPSector nowhere(-1, -1, -1);
+		HandleMoraleEvent(nullptr, MORALE_LOW_DEATHRATE, nowhere);
 	}
 
 	/* add an event so the merc will say the departing warning (2 hours prior to
@@ -548,9 +547,7 @@ void UpdateBuddyAndHatedCounters(void)
 				}
 				else
 				{ // Check to see if the location is the same
-					if (other->sSectorX != s->sSectorX) continue;
-					if (other->sSectorY != s->sSectorY) continue;
-					if (other->bSectorZ != s->bSectorZ) continue;
+					if (other->sSector != s->sSector) continue;
 
 					// if the OTHER soldier is in motion then we don't do anything!
 					if (other->ubGroupID != 0 && PlayerIDGroupInMotion(other->ubGroupID))

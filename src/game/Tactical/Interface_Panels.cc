@@ -3226,7 +3226,7 @@ void RenderTownIDString(void)
 
 	// Render town, position
 	SetFontAttributes(COMPFONT, 183);
-	ST::string zTownIDString = GetSectorIDString(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE);
+	ST::string zTownIDString = GetSectorIDString(gWorldSector, TRUE);
 	zTownIDString = ReduceStringLength(zTownIDString, 80, COMPFONT);
 	FindFontCenterCoordinates(INTERFACE_START_X + g_ui.m_teamPanelSlotsTotalWidth + 50, SCREEN_HEIGHT - 55, 80, 16, zTownIDString, COMPFONT, &sFontX, &sFontY);
 	MPrint(sFontX, sFontY, zTownIDString);
@@ -3239,11 +3239,7 @@ void CheckForAndAddMercToTeamPanel(SOLDIERTYPE* const s)
 	if (s->bTeam != OUR_TEAM) return;
 
 	// Are we in the loaded sector?
-	if (s->sSectorX == gWorldSectorX &&
-		s->sSectorY == gWorldSectorY &&
-		s->bSectorZ == gbWorldSectorZ &&
-		!s->fBetweenSectors &&
-		s->bInSector)
+	if (s->sSector == gWorldSector && !s->fBetweenSectors && s->bInSector)
 	{
 		// IF on duty....
 		INT32 const cur_squad = CurrentSquad();

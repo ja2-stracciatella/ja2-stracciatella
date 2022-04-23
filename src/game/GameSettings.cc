@@ -250,9 +250,7 @@ BOOLEAN	CanGameBeSaved()
 		}
 
 		//if there are enemies in the current sector
-		if( gWorldSectorX != -1 && gWorldSectorY != -1 &&
-				gWorldSectorX != 0 && gWorldSectorY != 0 &&
-				NumEnemiesInAnySector( gWorldSectorX, gWorldSectorY, gbWorldSectorZ ) > 0 )
+		if (gWorldSector.IsValid() && NumEnemiesInAnySector(gWorldSector) > 0)
 		{
 			//no save for you
 			return( FALSE );

@@ -8,12 +8,12 @@
 
 
 // build main facilities strings for sector
-ST::string GetSectorFacilitiesFlags(INT16 sMapX, INT16 sMapY);
+ST::string GetSectorFacilitiesFlags(const SGPSector& sector);
 
 // set sector as enemy controlled
-BOOLEAN SetThisSectorAsEnemyControlled(INT16 sMapX, INT16 sMapY, INT8 bMapZ);
+BOOLEAN SetThisSectorAsEnemyControlled(const SGPSector& sector);
 
 // set sector as player controlled
-BOOLEAN SetThisSectorAsPlayerControlled( INT16 sMapX, INT16 sMapY, INT8 bMapZ, BOOLEAN fContested );
+BOOLEAN SetThisSectorAsPlayerControlled(const SGPSector& sector, BOOLEAN fContested);
 
 #endif

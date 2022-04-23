@@ -12,18 +12,17 @@ extern Observable<> OnAirspaceControlUpdated;
 
 void InitializeSAMSites();
 
-void UpdateSAMDoneRepair(INT16 const x, INT16 const y, INT16 const z);
+void UpdateSAMDoneRepair(const SGPSector& sector);
 
 void UpdateAirspaceControl();
 
-bool IsThisSectorASAMSector(INT16 x, INT16 y, INT8 z);
+bool IsThisSectorASAMSector(const SGPSector& sector);
 
-bool DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const gridno);
+bool DoesSAMExistHere(const SGPSector& sector, GridNo const gridno);
 
 // number of SAM sites under player control
 INT32 GetNumberOfSAMSitesUnderPlayerControl();
 
-// is there a FUNCTIONAL SAM site in this sector?
-bool IsThereAFunctionalSAMSiteInSector(INT16 x, INT16 y, INT8 z);
+bool IsThereAFunctionalSAMSiteInSector(const SGPSector& sector);
 
-INT8 GetSAMIdFromSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+INT8 GetSAMIdFromSector(const SGPSector& sector);

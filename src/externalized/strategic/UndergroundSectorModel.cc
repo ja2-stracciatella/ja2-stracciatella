@@ -14,9 +14,7 @@ UNDERGROUND_SECTORINFO* UndergroundSectorModel::createUndergroundSectorInfo(uint
 {
 	UNDERGROUND_SECTORINFO* const u = new UNDERGROUND_SECTORINFO{};
 
-	u->ubSectorX = SECTORX(sectorId);
-	u->ubSectorY = SECTORY(sectorId);
-	u->ubSectorZ = sectorZ;
+	u->ubSector = SGPSector::FromSectorID(sectorId, sectorZ);
 	u->ubAdjacentSectors = adjacentSectors;
 
 	u->ubNumTroops    = numTroops[difficultyLevel - 1]    + Random(numTroopsVariance[difficultyLevel - 1]   );
@@ -84,20 +82,20 @@ void UndergroundSectorModel::validateData(const std::vector<const UndergroundSec
 {
 	// check for existence of hard-coded references
 	// the list below is based on the occurrences of FindUnderGroundSector in codebase
-	std::array<uint8_t, 3> basementSectors[] = {
+	SGPSector basementSectors[] = {
 		{ 13, 5,  1 },  // Draassen mine
 		{ 9,  8,  1 },  // Cambria mine
 		{ 14, 10, 1 },  // Alma mine
 		{ 4,  8,  2 }   // Grumm mine
 	};
-	for (auto basementLoc : basementSectors)
+	for (const auto& basement : basementSectors)
 	{
-		uint8_t sectorId = SECTOR(basementLoc[0], basementLoc[1]);
-		uint8_t sectorZ = basementLoc[2];
+		uint8_t sectorId = basement.AsByte();
+		uint8_t sectorZ = basement.z;
 		auto iter = std::find_if(ugSectors.begin(), ugSectors.end(), [sectorId, sectorZ](const UndergroundSectorModel* s) { return (s->sectorId == sectorId && s->sectorZ == sectorZ); });
 		if (iter == ugSectors.end())
 		{
-			ST::string err = ST::format("An underground sector is expected at ({},{},{}), but is not defined.", basementLoc[0], basementLoc[1], basementLoc[2]);
+			ST::string err = ST::format("An underground sector is expected at ({}), but is not defined.", basement.AsLongString());
 			throw std::runtime_error(err.to_std_string());
 		}
 	}

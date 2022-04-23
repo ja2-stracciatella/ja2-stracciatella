@@ -54,8 +54,8 @@ TEST(LoadSaveMercProfileTest, vanillaProfile)
 	// UINT16 usMouthY;
 	// UINT32 uiBlinkFrequency;
 	// UINT32 uiExpressionFrequency;
-	EXPECT_EQ(p.sSectorX,  0);
-	EXPECT_EQ(p.sSectorY,  0);
+	EXPECT_EQ(p.sSector.x,  0);
+	EXPECT_EQ(p.sSector.y,  0);
 	// UINT32 uiDayBecomesAvailable;
 	EXPECT_EQ(p.bStrength,  55);
 	EXPECT_EQ(p.bLifeMax,  55);
@@ -206,8 +206,8 @@ TEST(LoadSaveMercProfileTest, stracLinuxProfile)
 	// UINT16 usMouthY;
 	// UINT32 uiBlinkFrequency;
 	// UINT32 uiExpressionFrequency;
-	EXPECT_EQ(p.sSectorX,  0);
-	EXPECT_EQ(p.sSectorY,  0);
+	EXPECT_EQ(p.sSector.x,  0);
+	EXPECT_EQ(p.sSector.y,  0);
 	// UINT32 uiDayBecomesAvailable;
 	EXPECT_EQ(p.bStrength,  55);
 	EXPECT_EQ(p.bLifeMax,  55);

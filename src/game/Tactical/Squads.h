@@ -83,7 +83,7 @@ BOOLEAN IsRobotControllerInSquad( INT8 bSquadValue );
 INT8 NumberOfPlayerControllableMercsInSquad( INT8 bSquadValue );
 
 // what sector is the squad currently in?..return if anyone in squad
-BOOLEAN SectorSquadIsIn(INT8 bSquadValue, INT16* sMapX, INT16* sMapY, INT8* sMapZ);
+BOOLEAN SectorSquadIsIn(INT8 bSquadValue, SGPSector& sMap);
 
 // rebuild current squad list
 void RebuildCurrentSquad( void );

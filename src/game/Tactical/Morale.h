@@ -58,7 +58,7 @@ struct MoraleEvent
 	INT8  bChange;
 };
 
-extern void HandleMoraleEvent( SOLDIERTYPE * pSoldier, INT8 bMoraleEvent, INT16 sMapX, INT16 sMapY, INT8 bMapZ );
+extern void HandleMoraleEvent(SOLDIERTYPE* pSoldier, INT8 bMoraleEvent, const SGPSector& sMap);
 extern void RefreshSoldierMorale( SOLDIERTYPE * pSoldier );
 extern INT8 GetMoraleModifier( const SOLDIERTYPE * pSoldier );
 

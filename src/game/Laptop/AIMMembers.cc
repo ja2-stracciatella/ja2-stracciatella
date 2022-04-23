@@ -1213,8 +1213,7 @@ static INT8 AimMemberHireMerc(void)
 	MERC_HIRE_STRUCT h;
 	h = MERC_HIRE_STRUCT{};
 	h.ubProfileID               = pid;
-	h.sSectorX                  = SECTORX(g_merc_arrive_sector);
-	h.sSectorY                  = SECTORY(g_merc_arrive_sector);
+	h.sSector                   = g_merc_arrive_sector;
 	h.fUseLandingZoneForArrival = TRUE;
 	h.ubInsertionCode           = INSERTION_CODE_ARRIVING_GAME;
 	h.fCopyProfileItemsOver     = gfBuyEquipment;
@@ -1264,7 +1263,7 @@ static INT8 AimMemberHireMerc(void)
 		}
 
 		// Add an entry in the history page for the hiring of the merc
-		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, GetWorldTotalMin(), -1, -1);
+		AddHistoryToPlayersLog(HISTORY_HIRED_MERC_FROM_AIM, pid, GetWorldTotalMin(), SGPSector(-1, -1));
 		return TRUE;
 	}
 	else if (ret == MERC_HIRE_OVER_20_MERCS_HIRED)
@@ -2913,7 +2912,7 @@ void DisplayPopUpBoxExplainingMercArrivalLocationAndTime()
 	UINT32 const hour = h.uiArrivalTime % 1440 / 60;
 	time_string = ST::format("{02d}:00", hour);
 
-	ST::string sector_string = GetSectorIDString(SECTORX(g_merc_arrive_sector), SECTORY(g_merc_arrive_sector), 0, FALSE);
+	ST::string sector_string = GetSectorIDString(g_merc_arrive_sector, FALSE);
 
 	ST::string msg;
 	ST::string nickname = GetProfile(h.iIdOfMerc).zNickname;

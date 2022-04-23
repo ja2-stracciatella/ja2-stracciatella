@@ -357,8 +357,7 @@ void HandleMinerEvent(ProfileID ubMinerProfileID, INT16 sQuoteNumber, BOOLEAN fF
 void TurnOnSectorLocator( UINT8 ubProfileID );
 void TurnOffSectorLocator(void);
 
-extern INT16 gsSectorLocatorX;
-extern INT16 gsSectorLocatorY;
+extern SGPSector gsSectorLocator;
 extern UINT8 gubBlitSectorLocatorCode;
 
 enum
@@ -368,7 +367,7 @@ enum
 	LOCATOR_COLOR_YELLOW
 };
 
-void HandleBlitOfSectorLocatorIcon( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, UINT8 ubLocatorID );
+void HandleBlitOfSectorLocatorIcon(const SGPSector& sSector, UINT8 ubLocatorID);
 
 
 // the tactical version
@@ -389,12 +388,11 @@ void SetUpFastHelpRegion(INT32 x, INT32 y, INT32 width, const ST::string& str);
 
 
 // reset assignment for mercs trainign militia in this sector
-void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector( INT16 sSectorX, INT16 sSectorY );
-
+void ResetAssignmentOfMercsThatWereTrainingMilitiaInThisSector(const SGPSector& sSector);
 
 // the sector move box
 void CreateDestroyMovementBox( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
-void SetUpMovingListsForSector(INT16 x, INT16 y, INT16 z);
+void SetUpMovingListsForSector(const SGPSector& sSector);
 void ReBuildMoveBox( void );
 BOOLEAN IsCharacterSelectedForAssignment( INT16 sCharNumber );
 BOOLEAN IsCharacterSelectedForSleep( INT16 sCharNumber );
@@ -421,10 +419,10 @@ void CreateDestroyInsuranceMouseRegionForMercs( BOOLEAN fCreate );
 BOOLEAN HandleTimeCompressWithTeamJackedInAndGearedToGo( void );
 
 // handle sector being taken over uncontested
-void NotifyPlayerWhenEnemyTakesControlOfImportantSector(INT16 x, INT16 y, INT8 z);
+void NotifyPlayerWhenEnemyTakesControlOfImportantSector(const SGPSector& sector);
 
 // handle notifying player of invasion by enemy
-void NotifyPlayerOfInvasionByEnemyForces( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ, MSGBOX_CALLBACK ReturnCallback );
+void NotifyPlayerOfInvasionByEnemyForces(const SGPSector& sector, MSGBOX_CALLBACK ReturnCallback);
 
 void ShutDownUserDefineHelpTextRegions( void );
 

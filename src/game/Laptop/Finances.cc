@@ -814,6 +814,7 @@ static void DestroyFinanceButtons(void)
 static ST::string ProcessTransactionString(const FinanceUnit* f)
 {
 	UINT8 code = f->ubCode;
+	SGPSector ubSector(code);
 	switch (code)
 	{
 		case DEPOSIT_FROM_SILVER_MINE:
@@ -852,9 +853,7 @@ static ST::string ProcessTransactionString(const FinanceUnit* f)
 
 		case TRAIN_TOWN_MILITIA:
 		{
-			const UINT8 ubSectorX = SECTORX(f->ubSecondCode);
-			const UINT8 ubSectorY = SECTORY(f->ubSecondCode);
-			return st_format_printf(pTransactionText[TRAIN_TOWN_MILITIA], GetSectorIDString(ubSectorX, ubSectorY, 0, TRUE));
+			return st_format_printf(pTransactionText[TRAIN_TOWN_MILITIA], GetSectorIDString(ubSector, TRUE));
 		}
 
 		default:
@@ -880,7 +879,7 @@ static void WriteBalanceToDisk(void)
 
 
 // will grab the current blanace from disk
-// this procedure will open and read in data to the finance list	
+// this procedure will open and read in data to the finance list
 static void GetBalanceFromDisk(void)
 {
 	if (!GCM->tempFiles()->exists(FINANCES_DATA_FILE)) {

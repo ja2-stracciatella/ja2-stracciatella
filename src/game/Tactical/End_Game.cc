@@ -54,7 +54,8 @@ static BOOLEAN DoesO3SectorStatueExistHere( INT16 sGridNo )
 	EXITGRID ExitGrid;
 
 	// First check current sector......
-	if ( gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_O && gbWorldSectorZ == 0 )
+	static const SGPSector sectorO3(3, MAP_ROW_O);
+	if (gWorldSector == sectorO3)
 	{
 		// Check for exitence of and exit grid here...
 		// ( if it doesn't then the change has already taken place )
@@ -104,9 +105,7 @@ void ChangeO3SectorStatue( BOOLEAN fFromExplosion )
 		AddStructToHead( 13830, usTileIndex );
 
 		// Add exit grid
-		ExitGrid.ubGotoSectorX = 3;
-		ExitGrid.ubGotoSectorY = MAP_ROW_O;
-		ExitGrid.ubGotoSectorZ = 1;
+		ExitGrid.ubGotoSector = SGPSector(3, MAP_ROW_O, 1);
 		ExitGrid.usGridNo = 13037;
 
 		AddExitGridToWorld( 13669, &ExitGrid );
@@ -197,7 +196,7 @@ static void HandleDeidrannaDeath(SOLDIERTYPE* const pKillerSoldier, const INT16 
 	// Set fact that she is dead!
 	SetFactTrue( FACT_QUEEN_DEAD );
 
-	ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_QUEEN_DEAD, 0, 0 );
+	ExecuteStrategicAIAction(STRATEGIC_AI_ACTION_QUEEN_DEAD, nullptr);
 
 	class DialogueEventDoneKillingDeidranna : public DialogueEvent
 	{
@@ -232,6 +231,7 @@ static void DoneFadeInKilledQueen(void)
 static void DoneFadeOutKilledQueen()
 {
 	// Move current squad over
+	const SGPSector upstairs(3, MAP_ROW_P, 0);
 	FOR_EACH_IN_TEAM(i, OUR_TEAM)
 	{
 		SOLDIERTYPE& s = *i;
@@ -241,12 +241,10 @@ static void DoneFadeOutKilledQueen()
 		if (s.bAssignment != CurrentSquad()) continue;
 
 		gfTacticalTraversal = TRUE;
-		SetGroupSectorValue(3, MAP_ROW_P, 0, *GetGroup(s.ubGroupID));
+		SetGroupSectorValue(upstairs, *GetGroup(s.ubGroupID));
 
 		// XXX redundant, SetGroupSectorValue() handles this
-		s.sSectorX                 = 3;
-		s.sSectorY                 = MAP_ROW_P;
-		s.bSectorZ                 = 0;
+		s.sSector                  = upstairs;
 		// Set gridno
 		s.ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
 		s.usStrategicInsertionData = 5687;
@@ -274,15 +272,15 @@ static void DoneFadeOutKilledQueen()
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
-	HandleMoraleEvent(0, MORALE_QUEEN_BATTLE_WON, 3, MAP_ROW_P, 0);
-	HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_QUEEN_BATTLE_WON, 3, MAP_ROW_P, 0);
+	HandleMoraleEvent(0, MORALE_QUEEN_BATTLE_WON, upstairs);
+	HandleGlobalLoyaltyEvent(GLOBAL_LOYALTY_QUEEN_BATTLE_WON, upstairs);
 
 	SetMusicMode(MUSIC_TACTICAL_VICTORY);
 
-	SetThisSectorAsPlayerControlled(gWorldSectorX, gWorldSectorY, gbWorldSectorZ, TRUE);
+	SetThisSectorAsPlayerControlled(gWorldSector, TRUE);
 
 	// ATE: Force change of level set z to 1
-	gbWorldSectorZ = 1;
+	gWorldSector.z = 1;
 
 	// Clear out dudes
 	SECTORINFO& sector = SectorInfo[SEC_P3];
@@ -294,12 +292,12 @@ static void DoneFadeOutKilledQueen()
 	sector.ubElitesInBattle = 0;
 
 	// ATE: Get rid of Elliot in P3
-	GetProfile(ELLIOT).sSectorX = 1;
+	GetProfile(ELLIOT).sSector.x = 1;
 
-	ChangeNpcToDifferentSector(GetProfile(DEREK),  3, MAP_ROW_P, 0);
-	ChangeNpcToDifferentSector(GetProfile(OLIVER), 3, MAP_ROW_P, 0);
+	ChangeNpcToDifferentSector(GetProfile(DEREK), upstairs);
+	ChangeNpcToDifferentSector(GetProfile(OLIVER), upstairs);
 
-	SetCurrentWorldSector(3, MAP_ROW_P, 0);
+	SetCurrentWorldSector(upstairs);
 
 	gfTacticalTraversal              = FALSE;
 	gpTacticalTraversalGroup         = 0;

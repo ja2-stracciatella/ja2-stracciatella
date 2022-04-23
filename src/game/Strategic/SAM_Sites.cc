@@ -26,29 +26,29 @@ void InitializeSAMSites()
 	for (auto samSite : GCM->getSamSites())
 	{
 		UINT8 ubSectorID = samSite->sectorId;
-		StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(ubSectorID)].bSAMCondition = 100;
+		StrategicMap[SGPSector(ubSectorID).AsStrategicIndex()].bSAMCondition = 100;
 	}
 
 	UpdateAirspaceControl();
 }
 
-void UpdateSAMDoneRepair(INT16 const x, INT16 const y, INT16 const z)
+void UpdateSAMDoneRepair(const SGPSector& sec)
 {
 	// ATE: If we are below, return right away
-	if (z != 0) return;
+	if (sec.z != 0) return;
 
-	UINT8 const sector = SECTOR(x, y);
+	UINT8 const sector = sec.AsByte();
 	auto samSite = GCM->findSamSiteBySector(sector);
 	if (samSite == NULL)
 	{
-		STLOGW("There is no SAM site at sector {}", GetShortSectorString(x, y));
+		STLOGW("There is no SAM site at sector {}", sec.AsShortString());
 		return;
 	}
 
 	UINT16 const good_graphic = GetTileIndexFromTypeSubIndex(EIGHTISTRUCT, samSite->graphicIndex);
 	UINT16 const damaged_graphic = good_graphic - 2; // Damaged one (current) is 2 less
 	GridNo const gridno = samSite->gridNos[0];
-	if (x == gWorldSectorX && y == gWorldSectorY && z == gbWorldSectorZ)
+	if (sec == gWorldSector)
 	{ // Sector loaded, update graphic
 		ApplyMapChangesToMapTempFile app;
 		RemoveStruct(gridno, damaged_graphic);
@@ -56,8 +56,8 @@ void UpdateSAMDoneRepair(INT16 const x, INT16 const y, INT16 const z)
 	}
 	else
 	{ // We add temp changes to map not loaded
-		RemoveStructFromUnLoadedMapTempFile(gridno, damaged_graphic, x, y, z);
-		AddStructToUnLoadedMapTempFile(gridno, good_graphic, x, y, z);
+		RemoveStructFromUnLoadedMapTempFile(gridno, damaged_graphic, sec);
+		AddStructToUnLoadedMapTempFile(gridno, good_graphic, sec);
 	}
 
 	// SAM site may have been put back into working order
@@ -67,16 +67,17 @@ void UpdateSAMDoneRepair(INT16 const x, INT16 const y, INT16 const z)
 void UpdateAirspaceControl()
 {
 	auto samList = GCM->getSamSites();
-	for (int x = 1; x < (MAP_WORLD_X - 1); x++)
+	SGPSector sMap;
+	for (sMap.x = 1; sMap.x < (MAP_WORLD_X - 1); sMap.x++)
 	{
-		for (int y = 1; y < (MAP_WORLD_Y - 1); y++)
+		for (sMap.y = 1; sMap.y < (MAP_WORLD_Y - 1); sMap.y++)
 		{
 			BOOLEAN fEnemyControlsAir = FALSE;
-			INT8 bControllingSAM = GCM->getControllingSamSite(SECTOR(x, y));
+			INT8 bControllingSAM = GCM->getControllingSamSite(sMap.AsByte());
 			if (bControllingSAM >= 0 && (UINT8)bControllingSAM < samList.size())
 			{
 				UINT8 ubSector = samList[bControllingSAM]->sectorId;
-				StrategicMapElement* pSAMStrategicMap = &(StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(ubSector)]);
+				StrategicMapElement* pSAMStrategicMap = &(StrategicMap[SGPSector(ubSector).AsStrategicIndex()]);
 
 				// if the enemies own the controlling SAM site, and it's in working condition
 				if ((pSAMStrategicMap->fEnemyControlled) && (pSAMStrategicMap->bSAMCondition >= MIN_CONDITION_FOR_SAM_SITE_TO_WORK))
@@ -85,7 +86,7 @@ void UpdateAirspaceControl()
 				}
 			}
 
-			StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].fEnemyAirControlled = fEnemyControlsAir;
+			StrategicMap[sMap.AsStrategicIndex()].fEnemyAirControlled = fEnemyControlsAir;
 		}
 	}
 
@@ -98,50 +99,48 @@ INT32 GetNumberOfSAMSitesUnderPlayerControl()
 	for (auto samSite : GCM->getSamSites())
 	{
 		UINT8 ubSectorID = samSite->sectorId;
-		if (!StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(ubSectorID)].fEnemyControlled) ++n;
+		if (!StrategicMap[SGPSector(ubSectorID).AsStrategicIndex()].fEnemyControlled) ++n;
 	}
 	return n;
 }
 
-bool IsThereAFunctionalSAMSiteInSector(INT16 const x, INT16 const y, INT8 const z)
+bool IsThereAFunctionalSAMSiteInSector(const SGPSector& sector)
 {
-	return
-		IsThisSectorASAMSector(x, y, z) &&
-		StrategicMap[CALCULATE_STRATEGIC_INDEX(x, y)].bSAMCondition >= MIN_CONDITION_FOR_SAM_SITE_TO_WORK;
+	return IsThisSectorASAMSector(sector) &&
+		StrategicMap[sector.AsStrategicIndex()].bSAMCondition >= MIN_CONDITION_FOR_SAM_SITE_TO_WORK;
 }
 
-
-bool IsThisSectorASAMSector(INT16 const x, INT16 const y, INT8 const z)
+bool IsThisSectorASAMSector(const SGPSector& sector)
 {
-	if (z != 0) return false;
+	if (sector.z != 0) return false;
 
-	UINT8 ubSector = SECTOR(x, y);
+	UINT8 ubSector = sector.AsByte();
 	return (GCM->findSamIDBySector(ubSector) > -1);
 }
 
 
 // a -1 will be returned upon failure
-INT8 GetSAMIdFromSector(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ)
+INT8 GetSAMIdFromSector(const SGPSector& sector)
 {
 	// check if valid sector
-	if (bSectorZ != 0)
+	if (sector.z != 0)
 	{
 		return(-1);
 	}
 
 	// get the sector value
-	INT16 sSectorValue = SECTOR(sSectorX, sSectorY);
+	INT16 sSectorValue = sector.AsByte();
 	return GCM->findSamIDBySector(sSectorValue);
 }
 
-bool DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const gridno)
+bool DoesSAMExistHere(const SGPSector& sector, GridNo const gridno)
 {
 	// ATE: If we are below, return right away
-	if (z != 0) return false;
+	if (sector.z != 0) return false;
 
 	for (auto s : GCM->getSamSites())
 	{
-		if (s->doesSamExistHere(x, y, gridno))
+		if (s->doesSamExistHere(sector, gridno))
 		{
 			return true;
 		}
@@ -152,14 +151,15 @@ bool DoesSAMExistHere(INT16 const x, INT16 const y, INT16 const z, GridNo const 
 // Look for a SAM site, update
 static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ, INT16 sGridNo, void*, UINT8 ubDamage, BOOLEAN fIsDestroyed)
 {
+	SGPSector sMap(sSectorX, sSectorY, sSectorZ);
 	// OK, First check if SAM exists, and if not, return
-	if (!DoesSAMExistHere(sSectorX, sSectorY, sSectorZ, sGridNo))
+	if (!DoesSAMExistHere(sMap, sGridNo))
 	{
 		return;
 	}
 
 	// Damage.....
-	INT16 sSectorNo = CALCULATE_STRATEGIC_INDEX(sSectorX, sSectorY);
+	INT16 sSectorNo = sMap.AsStrategicIndex();
 	STLOGD("SAM site at sector #{} is damaged by {} points", sSectorNo, ubDamage);
 	if (StrategicMap[sSectorNo].bSAMCondition >= ubDamage)
 	{

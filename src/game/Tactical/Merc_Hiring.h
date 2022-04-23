@@ -24,9 +24,7 @@
 struct MERC_HIRE_STRUCT
 {
 	UINT8   ubProfileID;
-	INT16   sSectorX;
-	INT16   sSectorY;
-	INT8    bSectorZ;
+	SGPSector sSector;
 	INT16   iTotalContractLength;
 	BOOLEAN fCopyProfileItemsOver;
 	UINT32  uiTimeTillMercArrives;
@@ -37,7 +35,9 @@ struct MERC_HIRE_STRUCT
 };
 
 // ATE: Global that dictates where the mercs will land once being hired
-extern INT16 g_merc_arrive_sector;
+// Default to start sector
+// Saved in general saved game structure
+extern SGPSector g_merc_arrive_sector;
 
 
 void CreateSpecialItem(SOLDIERTYPE* const, UINT16);

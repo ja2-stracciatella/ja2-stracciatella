@@ -15,25 +15,25 @@ void DrawMapIndexBigMap( BOOLEAN fSelectedCursorIsYellow );
 
 void DrawMap(void);
 
-void GetScreenXYFromMapXY( INT16 sMapX, INT16 sMapY, INT16 *psX, INT16 *psY );
+void GetScreenXYFromMapXY(const SGPSector& sMap, INT16 *psX, INT16 *psY);
 
 void InitializePalettesForMap(void);
 void ShutDownPalettesForMap( void );
 
 // plot path for helicopter
-void PlotPathForHelicopter( INT16 sX, INT16 sY );
+void PlotPathForHelicopter(const SGPSector& sector);
 
 // the temp path, where the helicopter could go
-void PlotATemporaryPathForHelicopter( INT16 sX, INT16 sY );
+void PlotATemporaryPathForHelicopter(const SGPSector& sector);
 
 // show arrows for this char
 void DisplayPathArrows(UINT16 usCharNum, HVOBJECT hMapHandle);
 
 // build path for character
-void PlotPathForCharacter(SOLDIERTYPE&, INT16 x, INT16 y, bool tactical_traversal);
+void PlotPathForCharacter(SOLDIERTYPE&, const SGPSector& sector, bool tactical_traversal);
 
 // build temp path for character
-void PlotATemporaryPathForCharacter(const SOLDIERTYPE* s, INT16 sX, INT16 sY);
+void PlotATemporaryPathForCharacter(const SOLDIERTYPE* s, const SGPSector& sector);
 
 
 // display current/temp paths
@@ -44,24 +44,24 @@ void DisplayHelicopterTempPath( void );
 
 
 // clear path after this sector
-UINT32 ClearPathAfterThisSectorForCharacter( SOLDIERTYPE *pCharacter, INT16 sX, INT16 sY );
+UINT32 ClearPathAfterThisSectorForCharacter(SOLDIERTYPE *pCharacter, const SGPSector& sMap);
 
 // cancel path : clear the path completely and gives player feedback message that the route was canceled
 void CancelPathForCharacter( SOLDIERTYPE *pCharacter );
 void CancelPathForVehicle(VEHICLETYPE&, BOOLEAN fAlreadyReversed);
 
 // check if we have waited long enought o update temp path
-void DisplayThePotentialPathForHelicopter(INT16 sMapX, INT16 sMapY );
+void DisplayThePotentialPathForHelicopter(const SGPSector& sector);
 
 // clear out helicopter list after this sector
-UINT32 ClearPathAfterThisSectorForHelicopter( INT16 sX, INT16 sY );
+UINT32 ClearPathAfterThisSectorForHelicopter(const SGPSector& sMap);
 
 
 // check to see if sector is highlightable
-bool IsTheCursorAllowedToHighLightThisSector(INT16 x, INT16 y);
+bool IsTheCursorAllowedToHighLightThisSector(const SGPSector& sMap);
 
 // restore background for map grids
-void RestoreBackgroundForMapGrid( INT16 sMapX, INT16 sMapY );
+void RestoreBackgroundForMapGrid(const SGPSector& sMap);
 
 // clip blits to map view region
 void ClipBlitsToMapViewRegion( void );
@@ -81,15 +81,14 @@ void DisplayDistancesForHelicopter( void );
 void DisplayPositionOfHelicopter( void );
 
 // check for click
-BOOLEAN CheckForClickOverHelicopterIcon( INT16 sX, INT16 sY );
+BOOLEAN CheckForClickOverHelicopterIcon(const SGPSector& sMap);
 
 void LoadMapScreenInterfaceMapGraphics();
 void DeleteMapScreenInterfaceMapGraphics();
 
 
 // grab the total number of militia in sector
-INT32 GetNumberOfMilitiaInSector( INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ );
-
+INT32 GetNumberOfMilitiaInSector(const SGPSector& sector);
 
 // create destroy
 void CreateDestroyMilitiaPopUPRegions( void );
@@ -100,7 +99,7 @@ void DrawMilitiaPopUpBox();
 
 //Returns true if the player knows how many enemies are in the sector if that number is greater than 0.
 //Returns false for all other cases.
-UINT32 WhatPlayerKnowsAboutEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
+UINT32 WhatPlayerKnowsAboutEnemiesInSector(const SGPSector& sSector);
 
 //There is a special case flag used when players encounter enemies in a sector, then retreat.  The number of enemies
 //will display on mapscreen until time is compressed.  When time is compressed, the flag is cleared, and
@@ -158,8 +157,7 @@ extern INT16 sRegularsOnCursor;
 extern INT16 sElitesOnCursor;
 
 // highlighted sectors
-extern INT16 gsHighlightSectorX;
-extern INT16 gsHighlightSectorY;
+extern SGPSector gsHighlightSector;
 
 // the viewable map bound region
 extern SGPRect MapScreenRect;
@@ -183,11 +181,10 @@ extern BOOLEAN  fTempPathAlreadyDrawn;
 extern INT16 sSelectedMilitiaTown;
 
 // the selected sectors
-extern UINT16	sSelMapX;
-extern UINT16	sSelMapY;
+extern SGPSector sSelMap;
 
 
 void    CreateDestroyMilitiaSectorButtons(void);
-BOOLEAN CanRedistributeMilitiaInSector(INT16 sClickedSectorX, INT16 sClickedSectorY, INT8 bClickedTownId);
+BOOLEAN CanRedistributeMilitiaInSector(INT8 bClickedTownId);
 
 #endif

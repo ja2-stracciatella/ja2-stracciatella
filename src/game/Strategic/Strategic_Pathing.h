@@ -43,7 +43,7 @@ PathSt* ClearStrategicPathList(PathSt* pHeadOfPath, INT16 sMvtGroup);
 PathSt* RemoveHeadFromStrategicPath(PathSt* pList);
 
 // clear out path list after/including this sector sX, sY..will start at end of path and work it's way back till sector is found...removes most recent sectors first
-PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, INT16 sX, INT16 sY, INT16 sMvtGroup);
+PathSt* ClearStrategicPathListAfterThisSector(PathSt* pHeadOfPath, const SGPSector& sMap, INT16 sMvtGroup);
 
 // get id of last sector in mercs path list
 INT16 GetLastSectorIdInCharactersPath(const SOLDIERTYPE* pCharacter);
@@ -58,10 +58,10 @@ void RebuildWayPointsForGroupPath(PathSt* pHeadOfPath, GROUP&);
 void ClearMvtForThisSoldierAndGang( SOLDIERTYPE *pSoldier );
 
 // start movement of this group to this sector...not to be used by the player merc groups.
-BOOLEAN MoveGroupFromSectorToSector(GROUP&, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY);
+BOOLEAN MoveGroupFromSectorToSector(GROUP&, const SGPSector& sStart, const SGPSector& sDest);
 
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP&, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY);
-BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(GROUP&, INT16 sStartX, INT16 sStartY, INT16 sDestX, INT16 sDestY);
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectors(GROUP&, const SGPSector& sStart, const SGPSector& sDest);
+BOOLEAN MoveGroupFromSectorToSectorButAvoidPlayerInfluencedSectorsAndStopOneSectorBeforeEnd(GROUP&, const SGPSector& sStart, const SGPSector& sDest);
 
 
 // get length of path
@@ -76,6 +76,6 @@ GROUP* GetSoldierGroup(SOLDIERTYPE const&);
 // clears this groups strategic movement (mercpaths and waypoints), include those in the vehicle structs(!)
 void ClearMercPathsAndWaypointsForAllInGroup(GROUP&);
 
-void AddSectorToFrontOfMercPathForAllSoldiersInGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
+void AddSectorToFrontOfMercPathForAllSoldiersInGroup(GROUP *pGroup, const SGPSector& sMap);
 
 #endif

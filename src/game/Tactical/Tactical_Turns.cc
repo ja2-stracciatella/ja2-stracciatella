@@ -65,9 +65,9 @@ void HandleRPCDescription()
 		// Add guy if he's a candidate
 		if (!RPC_RECRUITED(s))                          continue;
 		if (s->bLife < OKLIFE)                          continue;
-		if (s->sSectorX != ts.bGuideDescriptionSectorX) continue;
-		if (s->sSectorY != ts.bGuideDescriptionSectorY) continue;
-		if (s->bSectorZ != gbWorldSectorZ)              continue;
+		if (s->sSector.x != ts.bGuideDescriptionSectorX) continue;
+		if (s->sSector.y != ts.bGuideDescriptionSectorY) continue;
+		if (s->sSector.z != gWorldSector.z)              continue;
 		if (s->fBetweenSectors)                         continue;
 
 		if (s->ubProfile == IRA    ||

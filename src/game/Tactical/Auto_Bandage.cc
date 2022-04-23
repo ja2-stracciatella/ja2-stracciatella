@@ -156,9 +156,7 @@ void HandleAutoBandagePending( )
 		CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 		{
 			std::shared_ptr<const Soldier> soldier = GetSoldier(s);
-			if (s->sSectorX == gWorldSectorX &&
-				s->sSectorY == gWorldSectorY &&
-				s->bSectorZ == gbWorldSectorZ &&
+			if (s->sSector == gWorldSector &&
 				!s->fBetweenSectors &&
 				soldier->hasPendingAction())
 			{

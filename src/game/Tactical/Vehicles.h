@@ -28,9 +28,7 @@ struct VEHICLETYPE
 	PathSt  *pMercPath; // vehicle's stategic path list
 	UINT8   ubMovementGroup; // the movement group this vehicle belongs to
 	UINT8   ubVehicleType; // type of vehicle
-	INT16   sSectorX; // X position on the Stategic Map
-	INT16   sSectorY; // Y position on the Stategic Map
-	INT16   sSectorZ;
+	SGPSector sSector; // position on the Stategic Map
 	BOOLEAN fBetweenSectors; // between sectors?
 	INT16   sGridNo; // location in tactical
 	SOLDIERTYPE *pPassengers[MAX_PASSENGERS_IN_VEHICLE];
@@ -62,7 +60,7 @@ extern std::vector<VEHICLETYPE> pVehicleList;
 void SetVehicleValuesIntoSoldierType( SOLDIERTYPE *pVehicle );
 
 // add vehicle to list and return id value
-INT32 AddVehicleToList( INT16 sMapX, INT16 sMapY, INT16 sGridNo, UINT8 ubType );
+INT32 AddVehicleToList(const SGPSector& sMap, INT16 sGridNo, UINT8 ubType);
 
 // remove this vehicle from the list
 void RemoveVehicleFromList(VEHICLETYPE&);
@@ -125,7 +123,7 @@ BOOLEAN TakeSoldierOutOfVehicle( SOLDIERTYPE *pSoldier );
 
 bool PutSoldierInVehicle(SOLDIERTYPE&, VEHICLETYPE&);
 
-void SetVehicleSectorValues(VEHICLETYPE&, UINT8 x, UINT8 y);
+void SetVehicleSectorValues(VEHICLETYPE&, const SGPSector& sMap);
 
 void UpdateAllVehiclePassengersGridNo( SOLDIERTYPE *pSoldier );
 

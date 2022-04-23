@@ -1491,9 +1491,7 @@ INT16 DistanceToClosestFriend( SOLDIERTYPE * pSoldier )
 		else
 		{
 			// compare sector #s
-			if ( (pSoldier->sSectorX != pTargetSoldier->sSectorX) ||
-				(pSoldier->sSectorY != pTargetSoldier->sSectorY) ||
-				(pSoldier->bSectorZ != pTargetSoldier->bSectorZ) )
+			if (pSoldier->sSector != pTargetSoldier->sSector)
 			{
 				continue;
 			}
@@ -1572,7 +1570,7 @@ BOOLEAN InLightAtNight( INT16 sGridNo, INT8 bLevel )
 	UINT8 ubBackgroundLightLevel;
 
 	// do not consider us to be "in light" if we're in an underground sector
-	if ( gbWorldSectorZ > 0 )
+	if (gWorldSector.z > 0)
 	{
 		return( FALSE );
 	}

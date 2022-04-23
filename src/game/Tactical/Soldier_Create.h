@@ -51,8 +51,7 @@ struct SOLDIERCREATE_STRUCT
 	BOOLEAN fCopyProfileItemsOver;
 
 	//Location information
-	INT16   sSectorX;
-	INT16   sSectorY;
+	SGPSector sSector;
 	INT8    bDirection;
 	INT16   sInsertionGridNo;
 
@@ -101,8 +100,6 @@ struct SOLDIERCREATE_STRUCT
 
 	BOOLEAN fOnRoof;
 
-	INT8    bSectorZ;
-
 	UINT8   ubCivilianGroup;
 
 	UINT8   ubScheduleID;
@@ -135,7 +132,7 @@ SOLDIERTYPE* TacticalCreateCreature( INT8 bCreatureBodyType );
 void RandomizeRelativeLevel( INT8 *pbRelLevel, UINT8 ubSoldierClass );
 
 // get the pythag. distance from the passed sector to the palace..
-UINT8 GetPythDistanceFromPalace( INT16 sSectorX, INT16 sSectorY );
+UINT8 GetPythDistanceFromPalace(const SGPSector& sSector);
 
 
 //These following functions are currently used exclusively by the editor.

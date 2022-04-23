@@ -52,8 +52,7 @@ struct TacticalStatusType
 	UINT32           uiTimeOfLastInput;
 	UINT32           uiTimeSinceDemoOn;
 	BOOLEAN          fCivGroupHostile[ NUM_CIV_GROUPS ];
-	UINT8            ubLastBattleSectorX;
-	UINT8            ubLastBattleSectorY;
+	SGPSector        ubLastBattleSector;
 	BOOLEAN          fLastBattleWon;
 	BOOLEAN          fVirginSector;
 	BOOLEAN          fEnemyInSector;
@@ -364,6 +363,6 @@ void MakeCharacterDialogueEventSignalItemLocatorStart(SOLDIERTYPE&, GridNo locat
 
 void HandleThePlayerBeNotifiedOfSomeoneElseInSector(void);
 
-bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(INT16 const x, INT16 const y, INT8 const z);
+bool WildernessSectorWithAllProfiledNPCsNotSpokenWith(const SGPSector& sector);
 
 #endif

@@ -211,22 +211,18 @@ static void DrawNameOfLoadedSector();
 static void EnableDisableBottomButtonsAndRegions(void);
 static void EnableDisableMessageScrollButtonsAndRegions(void);
 
-
+// will render the map screen bottom interface
 void RenderMapScreenInterfaceBottom( void )
 {
-	// will render the map screen bottom interface
-	CHAR8 bFilename[ 32 ];
-
-
 	// render whole panel
 	if (fMapScreenBottomDirty)
 	{
 		BltVideoObject(guiSAVEBUFFER, guiMAPBOTTOMPANEL, 0, MAP_BOTTOM_X, MAP_BOTTOM_Y);
+		SGPSector sMap(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
 
-		if (GetSectorFlagStatus(sSelMapX, sSelMapY, iCurrentMapSectorZ, SF_ALREADY_VISITED))
+		if (GetSectorFlagStatus(sMap, SF_ALREADY_VISITED))
 		{
-			GetMapFileName(sSelMapX, sSelMapY, iCurrentMapSectorZ, bFilename, TRUE);
-			LoadRadarScreenBitmap( bFilename );
+			LoadRadarScreenBitmap(GetMapFileName(sMap, TRUE));
 		}
 		else
 		{
@@ -366,7 +362,7 @@ static void DrawNameOfLoadedSector()
 	SGPFont const font = COMPFONT;
 	SetFontAttributes(font, 183);
 
-	ST::string buf = GetSectorIDString(sSelMapX, sSelMapY, iCurrentMapSectorZ, TRUE);
+	ST::string buf = GetSectorIDString(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ), TRUE);
 	buf = ReduceStringLength(buf, 80, font);
 
 	INT16 x;
@@ -1133,15 +1129,16 @@ BOOLEAN AllowedToExitFromMapscreenTo(ExitToWhere const bExitToWhere)
 	if ( bExitToWhere == MAP_EXIT_TO_TACTICAL )
 	{
 		// if in battle or bloodcat ambush, the ONLY sector we can go tactical in is the one that's loaded
+		SGPSector sector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
 		BOOLEAN fBattleGoingOn = gTacticalStatus.uiFlags & INCOMBAT || gTacticalStatus.fEnemyInSector || (gubEnemyEncounterCode == BLOODCAT_AMBUSH_CODE && HostileBloodcatsPresent());
-		BOOLEAN fCurrentSectorSelected = sSelMapX == gWorldSectorX && sSelMapY == gWorldSectorY && ((UINT8)iCurrentMapSectorZ) == gbWorldSectorZ;
+		BOOLEAN fCurrentSectorSelected = sector == gWorldSector;
 		if (fBattleGoingOn && !fCurrentSectorSelected)
 		{
 			return( FALSE );
 		}
 
 		// must have some mercs there
-		if( !CanGoToTacticalInSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ ) )
+		if (!CanGoToTacticalInSector(sector))
 		{
 			return( FALSE );
 		}
@@ -1186,7 +1183,7 @@ void HandleExitsFromMapScreen( void )
 				break;
 
 			case MAP_EXIT_TO_TACTICAL:
-				SetCurrentWorldSector( sSelMapX, sSelMapY, ( UINT8 )iCurrentMapSectorZ );
+				SetCurrentWorldSector(SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ));
 				break;
 
 			case MAP_EXIT_TO_OPTIONS:

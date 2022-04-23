@@ -1290,10 +1290,9 @@ static void RenderFaceOverlay(VIDEO_OVERLAY* const blt)
 		MPrint(sFontX, sFontY, s->name);
 
 		// What sector are we in, (and is it the same as ours?)
-		if (s->sSectorX != gWorldSectorX || s->sSectorY != gWorldSectorY ||
-			s->bSectorZ != gbWorldSectorZ || s->fBetweenSectors)
+		if (s->sSector != gWorldSector || s->fBetweenSectors)
 		{
-			ST::string sector_id = GetSectorIDString(s->sSectorX, s->sSectorY, s->bSectorZ, FALSE);
+			ST::string sector_id = GetSectorIDString(s->sSector, FALSE);
 			sector_id = ReduceStringLength(sector_id, 64, BLOCKFONT2);
 			FindFontCenterCoordinates(x + 12, y + 68, 73, 9, sector_id, BLOCKFONT2, &sFontX, &sFontY);
 			MPrint(sFontX, sFontY, sector_id);
@@ -1402,37 +1401,6 @@ void SayQuoteFromAnyBodyInSector(UINT16 const quote_id)
 
 	ChooseRedIfPresentAndAirRaid(mercs_in_sector, n_mercs, quote_id);
 }
-
-
-void SayQuoteFromAnyBodyInThisSector(INT16 const x, INT16 const y, INT8 const z, UINT16 const quote_id)
-{
-	// Loop through all our guys and randomly say one from someone in our sector
-	INT32       n_mercs = 0;
-	SOLDIERTYPE* mercs_in_sector[20];
-	FOR_EACH_IN_TEAM(i, OUR_TEAM)
-	{
-		// Add guy if he's a candidate
-		SOLDIERTYPE& s = *i;
-		if (s.sSectorX != x)
-			continue;
-		if (s.sSectorY != y)
-			continue;
-		if (s.bSectorZ != z)
-			continue;
-		if (AM_AN_EPC(&s))
-			continue;
-		if (s.uiStatusFlags & SOLDIER_GASSED)
-			continue;
-		if (AM_A_ROBOT(&s))
-			continue;
-		if (s.fMercAsleep)
-			continue;
-		mercs_in_sector[n_mercs++] = &s;
-	}
-
-	ChooseRedIfPresentAndAirRaid(mercs_in_sector, n_mercs, quote_id);
-}
-
 
 void SayQuoteFromNearbyMercInSector(GridNo const gridno, INT8 const distance, UINT16 const quote_id)
 {

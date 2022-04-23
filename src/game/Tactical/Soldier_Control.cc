@@ -414,7 +414,7 @@ INT8 CalcActionPoints(const SOLDIERTYPE* const pSold)
 	if ( pSold->ubProfile != NO_PROFILE )
 	{
 		if ((gMercProfiles[ pSold->ubProfile ].bPersonalityTrait == CLAUSTROPHOBIC) &&
-			(gbWorldSectorZ > 0))
+			gWorldSector.z > 0)
 		{
 			ubPoints = (ubPoints * AP_CLAUSTROPHOBE) / 10;
 		}
@@ -2713,14 +2713,12 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		{
 			if (att->bTeam == OUR_TEAM)
 			{
-				HandleMoraleEvent(att, MORALE_DID_LOTS_OF_DAMAGE,
-							att->sSectorX, att->sSectorY, att->bSectorZ);
+				HandleMoraleEvent(att, MORALE_DID_LOTS_OF_DAMAGE, att->sSector);
 			}
 		}
 		if (pSoldier->bTeam == OUR_TEAM)
 		{
-			HandleMoraleEvent(pSoldier, MORALE_TOOK_LOTS_OF_DAMAGE,
-						pSoldier->sSectorX, pSoldier->sSectorY, pSoldier->bSectorZ);
+			HandleMoraleEvent(pSoldier, MORALE_TOOK_LOTS_OF_DAMAGE, pSoldier->sSector);
 		}
 	}
 
@@ -4132,15 +4130,15 @@ void EVENT_BeginMercTurn(SOLDIERTYPE& s)
 				case FEAR_OF_INSECTS:
 					if (MercSeesCreature(s))
 					{
-						HandleMoraleEvent(&s, MORALE_INSECT_PHOBIC_SEES_CREATURE, s.sSectorX, s.sSectorY, s.bSectorZ);
+						HandleMoraleEvent(&s, MORALE_INSECT_PHOBIC_SEES_CREATURE, s.sSector);
 						goto say_personality_quote;
 					}
 					break;
 
 				case CLAUSTROPHOBIC:
-					if (gbWorldSectorZ > 0 && Random(6 - gbWorldSectorZ) == 0)
+					if (gWorldSector.z > 0 && Random(6 - gWorldSector.z) == 0)
 					{
-						HandleMoraleEvent(&s, MORALE_CLAUSTROPHOBE_UNDERGROUND, s.sSectorX, s.sSectorY, s.bSectorZ);
+						HandleMoraleEvent(&s, MORALE_CLAUSTROPHOBE_UNDERGROUND, s.sSector);
 						goto say_personality_quote;
 					}
 					break;
@@ -4150,7 +4148,7 @@ void EVENT_BeginMercTurn(SOLDIERTYPE& s)
 					{
 						if (s.bMorale < 50)
 						{
-							HandleMoraleEvent(&s, MORALE_NERVOUS_ALONE, s.sSectorX, s.sSectorY, s.bSectorZ);
+							HandleMoraleEvent(&s, MORALE_NERVOUS_ALONE, s.sSector);
 							goto say_personality_quote;
 						}
 					}
@@ -5473,8 +5471,8 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 	{
 		case ENEMY_TEAM:
 			// if we're in the wilderness this always counts
-			if (StrategicMap[CALCULATE_STRATEGIC_INDEX(gWorldSectorX, gWorldSectorY)].fEnemyControlled ||
-				SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)].ubTraversability[THROUGH_STRATEGIC_MOVE] != TOWN)
+			if (StrategicMap[gWorldSector.AsStrategicIndex()].fEnemyControlled ||
+				SectorInfo[gWorldSector.AsByte()].ubTraversability[THROUGH_STRATEGIC_MOVE] != TOWN)
 			{
 				// update current day of activity!
 				UpdateLastDayOfPlayerActivity( (UINT16) GetWorldDay() );
@@ -8797,9 +8795,7 @@ BOOLEAN ControllingRobot(const SOLDIERTYPE* s)
 
 	// Are we in the same sector....?
 	// ARM: CHANGED TO WORK IN MAPSCREEN, DON'T USE WorldSector HERE
-	if (pRobot->sSectorX == s->sSectorX &&
-		pRobot->sSectorY == s->sSectorY &&
-		pRobot->bSectorZ == s->bSectorZ)
+	if (pRobot->sSector == s->sSector)
 	{
 		// they have to be either both in sector, or both on the road
 		if (pRobot->fBetweenSectors == s->fBetweenSectors)

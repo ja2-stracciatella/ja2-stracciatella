@@ -1672,7 +1672,7 @@ static void SetBlueFlagFlags(void)
 void InitLoadedWorld(void)
 {
 	//if the current sector is not valid, dont init the world
-	if( gWorldSectorX == 0 || gWorldSectorY == 0 )
+	if (!gWorldSector.IsValid())
 	{
 		return;
 	}
@@ -1988,11 +1988,9 @@ try
 						++pSummary->usExitGridSize[loop];
 						EXITGRID* const eg = &pSummary->ExitGrid[loop];
 						eg->usGridNo      = exitGrid.usGridNo;
-						eg->ubGotoSectorX = exitGrid.ubGotoSectorX;
-						eg->ubGotoSectorY = exitGrid.ubGotoSectorY;
-						eg->ubGotoSectorZ = exitGrid.ubGotoSectorZ;
-						if (eg->ubGotoSectorX != exitGrid.ubGotoSectorX ||
-								eg->ubGotoSectorY != exitGrid.ubGotoSectorY)
+						eg->ubGotoSector = exitGrid.ubGotoSector;
+						// FIXME: useless check, always false
+						if (eg->ubGotoSector != exitGrid.ubGotoSector)
 						{
 							pSummary->fInvalidDest[loop] = TRUE;
 						}
@@ -2002,9 +2000,7 @@ try
 
 				const EXITGRID* const eg = &pSummary->ExitGrid[loop];
 				if (eg->usGridNo      == exitGrid.usGridNo      &&
-						eg->ubGotoSectorX == exitGrid.ubGotoSectorX &&
-						eg->ubGotoSectorY == exitGrid.ubGotoSectorY &&
-						eg->ubGotoSectorZ == exitGrid.ubGotoSectorZ)
+						eg->ubGotoSector == exitGrid.ubGotoSector)
 				{ //same destination.
 					++pSummary->usExitGridSize[loop];
 					break;
@@ -3060,7 +3056,7 @@ static bool IsRoofVisibleForWireframe(GridNo const sMapPos)
 TEST(WorldDef, asserts)
 {
 	EXPECT_EQ(sizeof(TEAMSUMMARY), 15u);
-	EXPECT_EQ(sizeof(SUMMARYFILE), 408u);
+	EXPECT_EQ(sizeof(SUMMARYFILE), 416u);
 }
 
 #endif

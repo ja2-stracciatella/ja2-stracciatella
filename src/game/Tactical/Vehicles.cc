@@ -59,7 +59,7 @@ void InitVehicles(void)
 	for( cnt = 0; cnt <  MAX_VEHICLES; cnt++ )
 	{
 		// create mvt groups
-		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(1, 1);
+		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(SGPSector(1, 1));
 		g->fPersistant = TRUE;
 		gubVehicleMovementGroups[cnt] = g->ubGroupID;
 	}
@@ -77,7 +77,7 @@ void SetVehicleValuesIntoSoldierType(SOLDIERTYPE* const vs)
 }
 
 
-INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo, const UINT8 ubType)
+INT32 AddVehicleToList(const SGPSector& sMap, const INT16 sGridNo, const UINT8 ubType)
 {
 	INT32 vid;
 	for (vid = 0;; ++vid)
@@ -95,9 +95,7 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 	// found a slot
 	*v = VEHICLETYPE{};
 	v->ubMovementGroup = 0;
-	v->sSectorX        = sMapX;
-	v->sSectorY        = sMapY;
-	v->sSectorZ        = 0;
+	v->sSector         = sMap;
 	v->sGridNo         = sGridNo;
 	v->fValid          = TRUE;
 	v->ubVehicleType   = ubType;
@@ -113,10 +111,8 @@ INT32 AddVehicleToList(const INT16 sMapX, const INT16 sMapY, const INT16 sGridNo
 
 	// ARM: setup group movement defaults
 	g->ubTransportationMask = GCM->getVehicle(ubType)->movement_type;
-	g->ubSectorX            = sMapX;
-	g->ubNextX              = sMapX;
-	g->ubSectorY            = sMapY;
-	g->ubNextY              = sMapY;
+	g->ubSector             = sMap;
+	g->ubNext               = sMap;
 	g->uiTraverseTime       = 0;
 	g->uiArrivalTime        = 0;
 
@@ -148,9 +144,7 @@ bool IsThisVehicleAccessibleToSoldier(SOLDIERTYPE const& s, VEHICLETYPE const& v
 {
 	return !s.fBetweenSectors &&
 		!v.fBetweenSectors &&
-		s.sSectorX == v.sSectorX &&
-		s.sSectorY == v.sSectorY &&
-		s.bSectorZ == v.sSectorZ &&
+		s.sSector == v.sSector &&
 		OKUseVehicle(GCM->getVehicle(v.ubVehicleType)->profile);
 }
 
@@ -290,9 +284,7 @@ void SetSoldierExitHelicopterInsertionData(SOLDIERTYPE* const s)
 	if (s->bInSector) return;
 
 	auto shippingDest = GCM->getPrimaryShippingDestination();
-	if (s->sSectorX == shippingDest->deliverySectorX &&
-		s->sSectorY == shippingDest->deliverySectorY &&
-		s->bSectorZ == shippingDest->deliverySectorZ)
+	if (s->sSector == shippingDest->deliverySector)
 	{
 		// This is Drassen, make insertion gridno specific
 		s->ubStrategicInsertionCode = INSERTION_CODE_GRIDNO;
@@ -327,9 +319,7 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 	RemovePlayerFromGroup(s);
 
 	s.ubGroupID      = 0;
-	s.sSectorY       = v.sSectorY;
-	s.sSectorX       = v.sSectorX;
-	s.bSectorZ       = v.sSectorZ;
+	s.sSector        = v.sSector;
 	s.uiStatusFlags &= ~(SOLDIER_DRIVER | SOLDIER_PASSENGER);
 
 	if (IsHelicopter(v))
@@ -340,17 +330,15 @@ static bool RemoveSoldierFromVehicle(SOLDIERTYPE& s)
 		{
 			// Mark the sector as visited (flying around in the chopper doesn't, so
 			// this does it as soon as we get off it)
-			SetSectorFlag(s.sSectorX, s.sSectorY, s.bSectorZ, SF_ALREADY_VISITED);
+			SetSectorFlag(s.sSector, SF_ALREADY_VISITED);
 		}
 
 		SetSoldierExitHelicopterInsertionData(&s);
 
 		// Update in sector if this is the current sector
-		if (s.sSectorX == gWorldSectorX &&
-			s.sSectorY == gWorldSectorY &&
-			s.bSectorZ == gbWorldSectorZ)
+		if (s.sSector == gWorldSector)
 		{
-			UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+			UpdateMercInSector(s, gWorldSector);
 		}
 	}
 	else
@@ -529,9 +517,7 @@ BOOLEAN TakeSoldierOutOfVehicle(SOLDIERTYPE* const s)
 	// if not in vehicle, don't take out, not much point, now is there?
 	if (s->bAssignment != VEHICLE) return FALSE;
 
-	if (s->sSectorX == gWorldSectorX &&
-		s->sSectorY == gWorldSectorY &&
-		s->bSectorZ == 0 &&
+	if (s->sSector == gWorldSector &&
 		s->bInSector &&
 		!InHelicopter(*s)) // helicopter isn't a soldiertype instance
 	{
@@ -548,9 +534,7 @@ bool PutSoldierInVehicle(SOLDIERTYPE& s, VEHICLETYPE& v)
 {
 	if (!AddSoldierToVehicle(s, v)) return false;
 
-	if (s.sSectorX == gWorldSectorX &&
-		s.sSectorY == gWorldSectorY &&
-		s.bSectorZ == 0 &&
+	if (s.sSector == gWorldSector &&
 		!IsHelicopter(v) &&
 		guiCurrentScreen == GAME_SCREEN)
 	{
@@ -786,22 +770,19 @@ void LoadVehicleInformationFromSavedGameFile(HWFILE const hFile, UINT32 const ui
 }
 
 
-void SetVehicleSectorValues(VEHICLETYPE& v, UINT8 const x, UINT8 const y)
+void SetVehicleSectorValues(VEHICLETYPE& v, const SGPSector& sMap)
 {
-	v.sSectorX = x;
-	v.sSectorY = y;
+	v.sSector = sMap;
 
 	ProfileID vehicleProfile = GCM->getVehicle(v.ubVehicleType)->profile;
 	MERCPROFILESTRUCT& p = GetProfile(vehicleProfile);
-	p.sSectorX = x;
-	p.sSectorY = y;
+	p.sSector = sMap;
 
 	// Go through list of mercs in vehicle and set all their states as arrived
 	CFOR_EACH_PASSENGER(v, i)
 	{
 		SOLDIERTYPE& s = **i;
-		s.sSectorX        = x;
-		s.sSectorY        = y;
+		s.sSector        = sMap;
 		s.fBetweenSectors = FALSE;
 	}
 }
@@ -831,7 +812,7 @@ void LoadVehicleMovementInfoFromSavedGameFile(HWFILE const hFile)
 	for( cnt = 5; cnt <  MAX_VEHICLES; cnt++ )
 	{
 		// create mvt groups
-		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(1, 1);
+		GROUP* const g = CreateNewVehicleGroupDepartingFromSector(SGPSector(1, 1));
 		g->fPersistant = TRUE;
 		gubVehicleMovementGroups[cnt] = g->ubGroupID;
 	}
@@ -879,8 +860,7 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 	GROUP  *pGroup = NULL;
 	UINT32 uiTimeToNextSector;
 	UINT32 uiTimeToLastSector;
-	INT16  sPrevX, sPrevY, sNextX, sNextY;
-
+	SGPSector sPrev, sNext;
 
 	pGroup = GetGroup( ubGroupID );
 	Assert( pGroup );
@@ -896,27 +876,21 @@ static void TeleportVehicleToItsClosestSector(const UINT8 ubGroupID)
 	if ( uiTimeToNextSector >= uiTimeToLastSector )
 	{
 		// go to the last sector
-		sPrevX = pGroup->ubNextX;
-		sPrevY = pGroup->ubNextY;
-
-		sNextX = pGroup->ubSectorX;
-		sNextY = pGroup->ubSectorY;
+		sPrev = pGroup->ubNext;
+		sNext = pGroup->ubSector;
 	}
 	else
 	{
 		// go to the next sector
-		sPrevX = pGroup->ubSectorX;
-		sPrevY = pGroup->ubSectorY;
-
-		sNextX = pGroup->ubNextX;
-		sNextY = pGroup->ubNextY;
+		sPrev = pGroup->ubSector;
+		sNext = pGroup->ubNext;
 	}
 
 	// make it arrive immediately, not eventually (it's driverless)
 	pGroup->setArrivalTime(GetWorldTotalMin());
 
 	// change where it is and where it's going, then make it arrive there.  Don't check for battle
-	PlaceGroupInSector(*pGroup, sPrevX, sPrevY, sNextX, sNextY, 0, false);
+	PlaceGroupInSector(*pGroup, sPrev, sNext, false);
 }
 
 

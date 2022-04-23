@@ -782,20 +782,20 @@ void UpdateDoorPerceivedValue( DOOR *pDoor )
 }
 
 
-void SaveDoorTableToDoorTableTempFile(INT16 const x, INT16 const y, INT8 const z)
+void SaveDoorTableToDoorTableTempFile(const SGPSector& sector)
 {
-	AutoSGPFile f(GCM->tempFiles()->openForWriting(GetMapTempFileName(SF_DOOR_TABLE_TEMP_FILES_EXISTS, x, y, z), true));
+	AutoSGPFile f(GCM->tempFiles()->openForWriting(GetMapTempFileName(SF_DOOR_TABLE_TEMP_FILES_EXISTS, sector), true));
 	Assert(DoorTable.size() <= UINT8_MAX);
 	UINT8 numDoors = static_cast<UINT8>(DoorTable.size());
 	f->writeArray(numDoors, DoorTable.data());
 	// Set the sector flag indicating that there is a Door table temp file present
-	SetSectorFlag(x, y, z, SF_DOOR_TABLE_TEMP_FILES_EXISTS);
+	SetSectorFlag(sector, SF_DOOR_TABLE_TEMP_FILES_EXISTS);
 }
 
 
 void LoadDoorTableFromDoorTableTempFile()
 {
-	ST::string const zMapName = GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	ST::string const zMapName = GetMapTempFileName( SF_DOOR_TABLE_TEMP_FILES_EXISTS, gWorldSector);
 
 	//If the file doesnt exists, its no problem.
 	if (!GCM->tempFiles()->exists(zMapName)) return;
@@ -1146,18 +1146,18 @@ static void InternalUpdateDoorsPerceivedValue(DOOR_STATUS& d)
 }
 
 
-void SaveDoorStatusArrayToDoorStatusTempFile(INT16 const x, INT16 const y, INT8 const z)
+void SaveDoorStatusArrayToDoorStatusTempFile(const SGPSector& sector)
 {
 	// Turn off any door busy flags
 	FOR_EACH_DOOR_STATUS(d) d.ubFlags &= ~DOOR_BUSY;
 
-	AutoSGPFile f(GCM->tempFiles()->openForWriting(GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, x, y, z), true));
+	AutoSGPFile f(GCM->tempFiles()->openForWriting(GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, sector), true));
 	Assert(gpDoorStatus.size() <= UINT8_MAX);
 	UINT8 numDoorStatus = static_cast<UINT8>(gpDoorStatus.size());
 	f->writeArray(numDoorStatus, gpDoorStatus.data());
 
 	// Set the flag indicating that there is a door status array
-	SetSectorFlag(x, y, z, SF_DOOR_STATUS_TEMP_FILE_EXISTS);
+	SetSectorFlag(sector, SF_DOOR_STATUS_TEMP_FILE_EXISTS);
 }
 
 
@@ -1165,7 +1165,7 @@ void LoadDoorStatusArrayFromDoorStatusTempFile()
 {
 	TrashDoorStatusArray();
 
-	AutoSGPFile f(GCM->tempFiles()->openForReading(GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ)));
+	AutoSGPFile f(GCM->tempFiles()->openForReading(GetMapTempFileName(SF_DOOR_STATUS_TEMP_FILE_EXISTS, gWorldSector)));
 
 	// Load the number of elements in the door status array
 	UINT8 numDoorStatus = 0;
@@ -1221,7 +1221,7 @@ void LoadKeyTableFromSaveedGameFile(HWFILE const f)
 void ExamineDoorsOnEnteringSector()
 {
 	// If this is Omerta, don't do it
-	if (GetTownIdForSector(SECTOR(gWorldSectorX, gWorldSectorY)) == OMERTA) return;
+	if (GetTownIdForSector(gWorldSector) == OMERTA) return;
 
 	// Check time
 	if (GetWorldTotalMin() - gTacticalStatus.uiTimeSinceLastInTactical < 30) return;
@@ -1247,7 +1247,7 @@ void DropKeysInKeyRing(SOLDIERTYPE& s, GridNo const gridno, INT8 const level, Vi
 	KEY_ON_RING* const key_ring = s.pKeyRing;
 	if (!key_ring) return; // No key ring
 
-	bool const here = !use_unloaded && s.sSectorX == gWorldSectorX && s.sSectorY == gWorldSectorY && s.bSectorZ == gbWorldSectorZ;
+	bool const here = !use_unloaded && s.sSector == gWorldSector;
 	for (KEY_ON_RING* i = key_ring; i != key_ring + NUM_KEYS; ++i)
 	{
 		KEY_ON_RING& k = *i;
@@ -1270,7 +1270,7 @@ void DropKeysInKeyRing(SOLDIERTYPE& s, GridNo const gridno, INT8 const level, Vi
 		}
 		else
 		{
-			AddItemsToUnLoadedSector(s.sSectorX, s.sSectorY, s.bSectorZ, gridno, 1, &o, level, WOLRD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, visible);
+			AddItemsToUnLoadedSector(s.sSector, gridno, 1, &o, level, WORLD_ITEM_FIND_SWEETSPOT_FROM_GRIDNO | WORLD_ITEM_REACHABLE, 0, visible);
 		}
 	}
 }

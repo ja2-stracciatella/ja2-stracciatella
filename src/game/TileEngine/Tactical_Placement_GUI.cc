@@ -153,12 +153,11 @@ void InitTacticalPlacementGUI()
 	CFOR_EACH_IN_TEAM(s, OUR_TEAM)
 	{
 		if (s->fBetweenSectors)                 continue;
-		if (s->sSectorX != bg.ubSectorX)        continue;
-		if (s->sSectorY != bg.ubSectorY)        continue;
+		if (s->sSector != bg.ubSector)          continue;
 		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue; // ATE Ignore vehicles
 		if (s->bAssignment == ASSIGNMENT_POW)   continue;
 		if (s->bAssignment == IN_TRANSIT)       continue;
-		if (s->bSectorZ != 0)                   continue;
+		if (s->sSector.z != 0)                   continue;
 		++n;
 	}
 	// Allocate the array based on how many mercs there are.
@@ -174,12 +173,11 @@ void InitTacticalPlacementGUI()
 	{
 		if (s->bLife == 0)                      continue;
 		if (s->fBetweenSectors)                 continue;
-		if (s->sSectorX != bg.ubSectorX)        continue;
-		if (s->sSectorY != bg.ubSectorY)        continue;
+		if (s->sSector != bg.ubSector)          continue;
 		if (s->uiStatusFlags & SOLDIER_VEHICLE) continue; // ATE Ignore vehicles
 		if (s->bAssignment == ASSIGNMENT_POW)   continue;
 		if (s->bAssignment == IN_TRANSIT)       continue;
-		if (s->bSectorZ != 0)                   continue;
+		if (s->sSector.z != 0)                   continue;
 
 		if (s->ubStrategicInsertionCode == INSERTION_CODE_PRIMARY_EDGEINDEX ||
 				s->ubStrategicInsertionCode == INSERTION_CODE_SECONDARY_EDGEINDEX)
@@ -286,7 +284,7 @@ static void RenderTacticalPlacementGUI()
 		}
 
 		SetFontAttributes(BLOCKFONT, FONT_BEIGE);
-		ST::string str = GetSectorIDString(gubPBSectorX, gubPBSectorY, gubPBSectorZ, TRUE);
+		ST::string str = GetSectorIDString(gubPBSector, TRUE);
 		MPrint(STD_SCREEN_X + 120, STD_SCREEN_Y + 335, ST::format("{} {} -- {}...", gpStrategicString[STR_TP_SECTOR], str, gpStrategicString[STR_TP_CHOOSEENTRYPOSITIONS]));
 
 		// Shade out the part of the tactical map that isn't considered placable.

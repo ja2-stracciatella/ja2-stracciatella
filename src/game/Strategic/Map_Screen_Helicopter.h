@@ -137,7 +137,7 @@ bool IsRefuelAvailableInSector(INT16 const sector);
 void UpdateRefuelSiteAvailability( void );
 
 // setup helicopter for player
-void SetUpHelicopterForPlayer( INT16 sX, INT16 sY );
+void SetUpHelicopterForPlayer(const SGPSector& sMap);
 
 // the intended path of the helicopter
 INT32 DistanceOfIntendedHelicopterPath( void );
@@ -152,7 +152,7 @@ void HandleHeliHoverTooLong( void );
 void DropOffEveryOneInHelicopter( void );
 
 // handle heli entering this sector
-BOOLEAN HandleHeliEnteringSector( INT16 sX, INT16 sY );
+BOOLEAN HandleHeliEnteringSector(const SGPSector& sMap);
 
 // set up helic, if it doesn't have a mvt group
 void SetUpHelicopterForMovement( void );
@@ -173,7 +173,7 @@ BOOLEAN CanHelicopterTakeOff( void );
 
 void InitializeHelicopter( void );
 
-bool IsSkyriderFlyingInSector(INT16 x, INT16 y);
+bool IsSkyriderFlyingInSector(const SGPSector& sMap);
 
 bool IsGroupTheHelicopterGroup(GROUP const&);
 

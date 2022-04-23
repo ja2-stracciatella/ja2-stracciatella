@@ -70,9 +70,7 @@ static const UINT16 gusMeanWhileGridNo[] =
 struct NPC_SAVE_INFO
 {
 	UINT8 ubProfile;
-	INT16 sX;
-	INT16 sY;
-	INT16 sZ;
+	SGPSector sector;
 	INT16 sGridNo;
 };
 
@@ -83,12 +81,8 @@ MEANWHILE_DEFINITION gMeanwhileDef[NUM_MEANWHILES];
 BOOLEAN              gfMeanwhileTryingToStart = FALSE;
 BOOLEAN              gfInMeanwhile = FALSE;
 // END SERIALIZATION
-static INT16 gsOldSectorX;
-static INT16 gsOldSectorY;
-static INT16 gsOldSectorZ;
-static INT16 gsOldSelectedSectorX;
-static INT16 gsOldSelectedSectorY;
-static INT16 gsOldSelectedSectorZ;
+static SGPSector gsOldSector;
+static SGPSector gsOldSelectedSector;
 
 static UINT32        guiOldScreen;
 static NPC_SAVE_INFO gNPCSaveData[MAX_MEANWHILE_PROFILES];
@@ -96,6 +90,7 @@ static UINT32        guiNumNPCSaves = 0;
 static BOOLEAN       gfReloadingScreenFromMeanwhile = FALSE;
 static BOOLEAN       gfWorldWasLoaded = FALSE;
 static UINT8         ubCurrentMeanWhileId = 0;
+static const SGPSector MedunaQueenSector(3, 16);
 
 UINT32 uiMeanWhileFlags = 0;
 
@@ -173,7 +168,7 @@ static NPC_SAVE_INFO* GetFreeNPCSave(void)
 }
 
 
-void ScheduleMeanwhileEvent(INT16 const x, INT16 const y, UINT16 const trigger_event, UINT8 const meanwhile_id, UINT8 const npc, UINT32 const time)
+void ScheduleMeanwhileEvent(const SGPSector& sector, UINT16 const trigger_event, UINT8 const meanwhile_id, UINT8 const npc, UINT32 const time)
 {
 	// event scheduled to happen before, ignore
 	if (GetMeanWhileFlag(meanwhile_id)) return;
@@ -186,8 +181,7 @@ void ScheduleMeanwhileEvent(INT16 const x, INT16 const y, UINT16 const trigger_e
 
 	// Copy definiaiotn structure into position in global array....
 	MEANWHILE_DEFINITION& m = gMeanwhileDef[meanwhile_id];
-	m.sSectorX       = x;
-	m.sSectorY       = y;
+	m.sSector        = sector;
 	m.usTriggerEvent = trigger_event;
 	m.ubMeanwhileID  = meanwhile_id;
 	m.ubNPCNumber    = npc;
@@ -281,20 +275,18 @@ void CheckForMeanwhileOKStart( )
 }
 
 
-static void SetNPCMeanwhile(const ProfileID pid, const INT16 sector_x, const INT16 sector_y)
+static void SetNPCMeanwhile(const ProfileID pid, const SGPSector& sector)
 {
 	NPC_SAVE_INFO* const si = GetFreeNPCSave();
 	if (si == NULL) return;
 
 	MERCPROFILESTRUCT& p = GetProfile(pid);
 	si->ubProfile = pid;
-	si->sX        = p.sSectorX;
-	si->sY        = p.sSectorY;
-	si->sZ        = p.bSectorZ;
+	si->sector    = p.sSector;
 	si->sGridNo   = p.sGridNo;
 
 	ReloadQuoteFile(pid);
-	ChangeNpcToDifferentSector(p, sector_x, sector_y, 0);
+	ChangeNpcToDifferentSector(p, sector);
 }
 
 
@@ -306,14 +298,9 @@ static void StartMeanwhile(void)
 	// OK, save old position...
 	if ( gfWorldLoaded )
 	{
-		gsOldSectorX = gWorldSectorX;
-		gsOldSectorY = gWorldSectorY;
-		gsOldSectorZ = gbWorldSectorZ;
+		gsOldSector = gWorldSector;
 	}
-
-	gsOldSelectedSectorX = sSelMapX;
-	gsOldSelectedSectorY = sSelMapY;
-	gsOldSelectedSectorZ = (INT16) iCurrentMapSectorZ;
+	gsOldSelectedSector = SGPSector(sSelMap.x, sSelMap.y, iCurrentMapSectorZ);
 
 	gfInMeanwhile = TRUE;
 
@@ -324,6 +311,7 @@ static void StartMeanwhile(void)
 	gfWorldWasLoaded = gfWorldLoaded;
 
 	// Setup NPC locations, depending on meanwhile type...
+	SGPSector nextSector;
 	switch( gCurrentMeanwhileDef.ubMeanwhileID )
 	{
 		case	END_OF_PLAYERS_FIRST_BATTLE:
@@ -342,18 +330,19 @@ static void StartMeanwhile(void)
 		case	KILL_CHOPPER:
 		case	AWOL_SCIENTIST:
 		case	OUTSKIRTS_MEDUNA:
-			SetNPCMeanwhile(QUEEN,  3, 16);
-			SetNPCMeanwhile(ELLIOT, 3, 16);
+			SetNPCMeanwhile(QUEEN, MedunaQueenSector);
+			SetNPCMeanwhile(ELLIOT, MedunaQueenSector);
 			if (gCurrentMeanwhileDef.ubMeanwhileID == OUTSKIRTS_MEDUNA)
 			{
-				SetNPCMeanwhile(JOE, 3, 16);
+				SetNPCMeanwhile(JOE, MedunaQueenSector);
 			}
 			break;
 
 		case	INTERROGATION:
-			SetNPCMeanwhile(QUEEN,  7, 14);
-			SetNPCMeanwhile(ELLIOT, 7, 14);
-			SetNPCMeanwhile(JOE,    7, 14);
+			nextSector = SGPSector(7, 14);
+			SetNPCMeanwhile(QUEEN, nextSector);
+			SetNPCMeanwhile(ELLIOT, nextSector);
+			SetNPCMeanwhile(JOE, nextSector);
 			break;
 	}
 
@@ -374,8 +363,7 @@ static void LocateMeanWhileGrid(void);
 static void DoneFadeOutMeanwhile(void)
 {
 	// OK, insertion data found, enter sector!
-
-	SetCurrentWorldSector( gCurrentMeanwhileDef.sSectorX, gCurrentMeanwhileDef.sSectorY, 0 );
+	SetCurrentWorldSector(gCurrentMeanwhileDef.sSector);
 
 	//LocateToMeanwhileCharacter( );
 	LocateMeanWhileGrid( );
@@ -459,7 +447,7 @@ static void ProcessImplicationsOfMeanwhile()
 		case END_OF_PLAYERS_FIRST_BATTLE:
 			if( gGameOptions.ubDifficultyLevel == DIF_LEVEL_HARD )
 			{ //Wake up the queen earlier to punish the good players!
-				ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_WAKE_QUEEN, 0, 0 );
+				ExecuteStrategicAIAction(STRATEGIC_AI_ACTION_WAKE_QUEEN, nullptr);
 			}
 			HandleNPCDoAction( QUEEN, NPC_ACTION_SEND_SOLDIERS_TO_BATTLE_LOCATION, 0 );
 			break;
@@ -468,10 +456,10 @@ static void ProcessImplicationsOfMeanwhile()
 		case GRUMM_LIBERATED:
 		case CHITZENA_LIBERATED:
 		case BALIME_LIBERATED:
-			ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_WAKE_QUEEN, 0, 0 );
+			ExecuteStrategicAIAction(STRATEGIC_AI_ACTION_WAKE_QUEEN, nullptr);
 			break;
 		case DRASSEN_LIBERATED:
-			ExecuteStrategicAIAction( STRATEGIC_AI_ACTION_WAKE_QUEEN, 0, 0 );
+			ExecuteStrategicAIAction(STRATEGIC_AI_ACTION_WAKE_QUEEN, nullptr);
 			HandleNPCDoAction( QUEEN, NPC_ACTION_SEND_SOLDIERS_TO_DRASSEN, 0 );
 			break;
 		case CREATURES:
@@ -480,9 +468,9 @@ static void ProcessImplicationsOfMeanwhile()
 			break;
 		case AWOL_SCIENTIST:
 			{
-				INT16	sSectorX = 0, sSectorY = 0;
+				SGPSector sSector;
 
-				StartQuest( QUEST_FIND_SCIENTIST, -1, -1 );
+				StartQuest(QUEST_FIND_SCIENTIST, SGPSector(-1, -1));
 				// place Madlab and robot!
 				auto placement = GCM->getNpcPlacement(MADLAB);
 				for (UINT8 s : placement->sectorIds)
@@ -490,22 +478,16 @@ static void ProcessImplicationsOfMeanwhile()
 					// the sector was already determined at game init, find it...
 					if (SectorInfo[s].uiFlags & SF_USE_ALTERNATE_MAP)
 					{
-						sSectorX = SECTORX(s);
-						sSectorY = SECTORY(s);
+						sSector = SGPSector(s);
 					}
 				}
 
-				if (!sSectorX && !sSectorY)
+				if (!sSector.IsValid())
 				{
 					SLOGE("unable to find Madlab's sector");
 				}
-				gMercProfiles[ MADLAB ].sSectorX = sSectorX;
-				gMercProfiles[ MADLAB ].sSectorY = sSectorY;
-				gMercProfiles[ MADLAB ].bSectorZ = 0;
-
-				gMercProfiles[ ROBOT ].sSectorX = sSectorX;
-				gMercProfiles[ ROBOT ].sSectorY = sSectorY;
-				gMercProfiles[ ROBOT ].bSectorZ = 0;
+				gMercProfiles[ MADLAB ].sSector = sSector;
+				gMercProfiles[ ROBOT ].sSector = sSector;
 			}
 			break;
 
@@ -515,7 +497,8 @@ static void ProcessImplicationsOfMeanwhile()
 		case NE_SAM:      sector = samList[SAM_SITE_TWO]->sectorId; goto send_troops_to_sam;
 		case CENTRAL_SAM: sector = samList[SAM_SITE_THREE]->sectorId; goto send_troops_to_sam;
 send_troops_to_sam:
-			ExecuteStrategicAIAction(NPC_ACTION_SEND_TROOPS_TO_SAM, SECTORX(sector), SECTORY(sector));
+			SGPSector sec = SGPSector(sector);
+			ExecuteStrategicAIAction(NPC_ACTION_SEND_TROOPS_TO_SAM, &sec);
 			break;
 		}
 
@@ -535,9 +518,7 @@ static void RestoreNPCMeanwhile(void)
 		if (pid == NO_PROFILE) continue;
 
 		MERCPROFILESTRUCT& p = GetProfile(pid);
-		p.sSectorX = si->sX;
-		p.sSectorY = si->sY;
-		p.bSectorZ = (INT8)si->sZ;
+		p.sSector = si->sector;
 		p.sGridNo  = (INT8)si->sGridNo;
 
 		// Ensure NPC files loaded...
@@ -598,7 +579,7 @@ static void DoneFadeOutMeanwhileOnceDone(void)
 
 	if( gfWorldWasLoaded )
 	{
-		SetCurrentWorldSector( gsOldSectorX, gsOldSectorY, (INT8)gsOldSectorZ );
+		SetCurrentWorldSector(gsOldSector);
 
 		ExamineCurrentSquadLights( );
 	}
@@ -609,7 +590,7 @@ static void DoneFadeOutMeanwhileOnceDone(void)
 		SetWorldSectorInvalid();
 	}
 
-	ChangeSelectedMapSector( gsOldSelectedSectorX, gsOldSelectedSectorY, (INT8) gsOldSelectedSectorZ );
+	ChangeSelectedMapSector(gsOldSelectedSector);
 
 	gfReloadingScreenFromMeanwhile = FALSE;
 
@@ -676,7 +657,7 @@ UINT8 GetMeanwhileID( )
 void HandleCreatureRelease( void )
 {
 	UINT32 const uiTime = GetWorldTotalMin() + 5;
-	ScheduleMeanwhileEvent(3, 16, 0, CREATURES, QUEEN, uiTime);
+	ScheduleMeanwhileEvent(MedunaQueenSector, 0, CREATURES, QUEEN, uiTime);
 }
 
 
@@ -695,14 +676,14 @@ void HandleMeanWhileEventPostingForTownLiberation( UINT8 bTownId )
 		case BALIME:   ubId = BALIME_LIBERATED;   break;
 		default: return;
 	}
-	ScheduleMeanwhileEvent(3, 16, 0, ubId, QUEEN, uiTime);
+	ScheduleMeanwhileEvent(MedunaQueenSector, 0, ubId, QUEEN, uiTime);
 }
 
 
 void HandleMeanWhileEventPostingForTownLoss()
 {
 	UINT32 const uiTime = GetWorldTotalMin() + 5;
-	ScheduleMeanwhileEvent(3, 16, 0, LOST_TOWN, QUEEN, uiTime);
+	ScheduleMeanwhileEvent(MedunaQueenSector, 0, LOST_TOWN, QUEEN, uiTime);
 }
 
 
@@ -718,7 +699,7 @@ void HandleMeanWhileEventPostingForSAMLiberation( INT8 bSamId )
 		default: return; // invalid parameter
 	}
 	UINT32 const uiTime = GetWorldTotalMin() + 5;
-	ScheduleMeanwhileEvent(3, 16, 0, ubId, QUEEN, uiTime);
+	ScheduleMeanwhileEvent(MedunaQueenSector, 0, ubId, QUEEN, uiTime);
 }
 
 
@@ -744,14 +725,14 @@ void HandleFlowersMeanwhileScene( INT8 bTimeCode )
 		uiTime = GetWorldTotalMin() + 60 * ( 24 + Random( 48 ) );
 	}
 
-	ScheduleMeanwhileEvent(3, 16, 0, FLOWERS, QUEEN, uiTime);
+	ScheduleMeanwhileEvent(MedunaQueenSector, 0, FLOWERS, QUEEN, uiTime);
 }
 
 
 void HandleOutskirtsOfMedunaMeanwhileScene( void )
 {
 	UINT32 const uiTime = GetWorldTotalMin() + 5;
-	ScheduleMeanwhileEvent(3, 16, 0, OUTSKIRTS_MEDUNA, QUEEN, uiTime);
+	ScheduleMeanwhileEvent(MedunaQueenSector, 0, OUTSKIRTS_MEDUNA, QUEEN, uiTime);
 }
 
 
@@ -764,21 +745,21 @@ void HandleKillChopperMeanwhileScene( void )
 	}
 
 	UINT32 const uiTime = GetWorldTotalMin() + 55 + Random(10);
-	ScheduleMeanwhileEvent(3, 16, 0, KILL_CHOPPER, QUEEN, uiTime);
+	ScheduleMeanwhileEvent(MedunaQueenSector, 0, KILL_CHOPPER, QUEEN, uiTime);
 }
 
 
 void HandleScientistAWOLMeanwhileScene( void )
 {
 	UINT32 const uiTime = GetWorldTotalMin() + 5;
-	ScheduleMeanwhileEvent(3, 16, 0, AWOL_SCIENTIST, QUEEN, uiTime);
+	ScheduleMeanwhileEvent(MedunaQueenSector, 0, AWOL_SCIENTIST, QUEEN, uiTime);
 }
 
 
 static void HandleFirstBattleVictory(void)
 {
 	UINT32 const uiTime = GetWorldTotalMin() + 5;
-	ScheduleMeanwhileEvent(3, 16, 0, END_OF_PLAYERS_FIRST_BATTLE, QUEEN, uiTime);
+	ScheduleMeanwhileEvent(MedunaQueenSector, 0, END_OF_PLAYERS_FIRST_BATTLE, QUEEN, uiTime);
 }
 
 
@@ -790,14 +771,13 @@ static void HandleDelayedFirstBattleVictory(void)
 	UINT32 const uiTime = GetWorldTotalMin() + 60;
 	*/
 	UINT32 const uiTime = GetWorldTotalMin() + 5;
-	ScheduleMeanwhileEvent(3, 16, 0, END_OF_PLAYERS_FIRST_BATTLE, QUEEN, uiTime);
+	ScheduleMeanwhileEvent(MedunaQueenSector, 0, END_OF_PLAYERS_FIRST_BATTLE, QUEEN, uiTime);
 }
 
 
-void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 bSectorZ, BOOLEAN fFromAutoResolve )
+void HandleFirstBattleEndingWhileInTown(const SGPSector& sector, BOOLEAN fFromAutoResolve)
 {
 	INT8 bTownId = 0;
-	INT16 sSector = 0;
 
 	if ( GetMeanWhileFlag( END_OF_PLAYERS_FIRST_BATTLE ) )
 	{
@@ -808,11 +788,8 @@ void HandleFirstBattleEndingWhileInTown( INT16 sSectorX, INT16 sSectorY, INT16 b
 	// if  is true then this is the end of the second battle, post the first meanwhile OR, on call to trash world, that
 	// means player is leaving sector
 
-	// grab sector value
-	sSector = sSectorX + sSectorY * MAP_WORLD_X;
-
 	// get town name id
-	bTownId = StrategicMap[ sSector ].bNameId;
+	bTownId = StrategicMap[sector.AsStrategicIndex()].bNameId;
 
 	if ( bTownId == BLANK_SECTOR )
 	{
@@ -850,7 +827,7 @@ void HandleFirstMeanWhileSetUpWithTrashWorld( void )
 
 TEST(Meanwhile, asserts)
 {
-	EXPECT_EQ(sizeof(MEANWHILE_DEFINITION), 8u);
+	EXPECT_EQ(sizeof(MEANWHILE_DEFINITION), 10u);
 }
 
 #endif

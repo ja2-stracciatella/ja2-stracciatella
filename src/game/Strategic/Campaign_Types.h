@@ -4,57 +4,10 @@
 #include "Debug.h"
 #include "Types.h"
 
-static inline bool IS_VALID_SECTOR(UINT8 const x, UINT8 const y)
-{
-	return 1 <= x && x <= 16 && 1 <= y && y <= 16;
-}
-
-//Macro to convert sector coordinates (1-16,1-16) to 0-255
-static inline UINT8 SECTOR(UINT8 const x, UINT8 const y)
-{
-	Assert(IS_VALID_SECTOR(x, y));
-	return (y - 1) * 16 + x - 1;
-}
-
-static inline bool IS_VALID_SECTOR_SHORT_STRING(ST::string shortString)
-{
-	size_t len = shortString.size();
-	if (len < 2 || len > 3) return false;
-
-	char y = shortString[0], x = shortString[1];
-	if (y < 'A' || y > 'P' || x < '1' || x > '9') return false;
-
-	if (len == 3) 
-	{
-		char x2 = shortString[2];
-		if (x != '1' || x2 < '0' || x2 > '6') return false;
-	}
-
-	return true;
-}
-
-//Macro to convert sector short strings such as A1 and P16, to the 0-255 SectorInfo[] index 
-static inline UINT8 SECTOR_FROM_SECTOR_SHORT_STRING(const char* coordinates)
-{
-	Assert(strlen(coordinates) > 1);
-	UINT8 y = coordinates[0] - 'A' + 1;
-	UINT8 x = atoi(coordinates + 1);
-	return SECTOR(x, y);
-}
-
-#define SECTORX(SectorID) ((SectorID % 16) + 1)
-#define SECTORY(SectorID) ((SectorID / 16) + 1)
-
-// short string representation of the sector, e.g. A1, P16
-static inline ST::string SECTOR_SHORT_STRING(UINT8 sector)
-{
-	return ST::format("{c}{}", SECTORY(sector) + 'A' - 1, SECTORX(sector));
-}
-
 //Sector enumerations
 //
 //NOTE: These use the 0-255 SectorInfo[] numbering system, and CAN'T be used as indexes into the StrategicMap[] array
-//Use SECTOR_INFO_TO_STRATEGIC_INDEX() macro to convert...
+//Use SGPSector::AsStrategicIndex() to convert
 enum SectorIndex
 {
 	SEC_A1,	SEC_A2,	SEC_A3, SEC_A4,	SEC_A5, SEC_A6,	SEC_A7,	SEC_A8,	SEC_A9, SEC_A10, SEC_A11, SEC_A12, SEC_A13, SEC_A14, SEC_A15, SEC_A16,
@@ -246,7 +199,7 @@ struct SECTORINFO
 struct UNDERGROUND_SECTORINFO
 {
 	UINT32 uiFlags;
-	UINT8 ubSectorX, ubSectorY, ubSectorZ;
+	SGPSector ubSector;
 	UINT8 ubNumElites, ubNumTroops, ubNumAdmins, ubNumCreatures;
 	UINT32	uiTimeCurrentSectorWasLastLoaded;		//Specifies the last time the player was in the sector
 	UNDERGROUND_SECTORINFO* next;

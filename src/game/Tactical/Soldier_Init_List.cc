@@ -439,9 +439,7 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 			if (pid != NO_PROFILE)
 			{
 				MERCPROFILESTRUCT& p = GetProfile(pid);
-				if (p.sSectorX != gWorldSectorX)  return false;
-				if (p.sSectorY != gWorldSectorY)  return false;
-				if (p.bSectorZ != gbWorldSectorZ) return false;
+				if (p.sSector != gWorldSector)  return false;
 				if (p.ubMiscFlags & (PROFILE_MISC_FLAG_RECRUITED | PROFILE_MISC_FLAG_EPCACTIVE)) return false;
 				if (p.bLife == 0)                 return false;
 				if (p.fUseProfileInsertionInfo)   return false;
@@ -455,9 +453,7 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 				// Check to see if Hamous is here and not recruited. If so, add truck
 				MERCPROFILESTRUCT& hamous = GetProfile(HAMOUS);
 				// If not here, do not add
-				if (hamous.sSectorX != gWorldSectorX) return true;
-				if (hamous.sSectorY != gWorldSectorY) return true;
-				if (hamous.bSectorZ != 0)             return true;
+				if (hamous.sSector != gWorldSector) return true;
 				// Check to make sure he isn't recruited.
 				if (hamous.ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED) return true;
 			}
@@ -474,10 +470,11 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 		if (dp.bTeam == CIV_TEAM)
 		{
 			// Quest-related overrides
-			INT16 const x = gWorldSectorX;
-			INT16 const y = gWorldSectorY;
-			INT8  const z = gbWorldSectorZ;
-			if (x == 5 && y == MAP_ROW_C)
+			static const SGPSector kingpin(5, MAP_ROW_C);
+			static const SGPSector queen(3, MAP_ROW_P);
+			static const SGPSector tixa(TIXA_SECTOR_X, TIXA_SECTOR_Y);
+			static const SGPSector kids(13, MAP_ROW_C);
+			if (gWorldSector == kingpin)
 			{
 				// Kinpin guys might be guarding Tony
 				if (dp.ubCivilianGroup == KINGPIN_CIV_GROUP && (
@@ -524,7 +521,7 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 					}
 				}
 			}
-			else if (x == 3 && y == MAP_ROW_P && z == 0 && !gfInMeanwhile)
+			else if (gWorldSector == queen && !gfInMeanwhile)
 			{
 				// Special civilian setup for queen's palace
 				if (gubFact[FACT_QUEEN_DEAD])
@@ -545,11 +542,11 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 					}
 				}
 			}
-			else if (x == TIXA_SECTOR_X && y == TIXA_SECTOR_Y && z == 0)
+			else if (gWorldSector == tixa)
 			{
 				// Tixa prison, once liberated, should not have any civs without
 				// profiles unless they are kids
-				if (!StrategicMap[TIXA_SECTOR_X + TIXA_SECTOR_Y * MAP_WORLD_X].fEnemyControlled &&
+				if (!StrategicMap[tixa.AsStrategicIndex()].fEnemyControlled &&
 					dp.ubProfile == NO_PROFILE &&
 					dp.bBodyType != HATKIDCIV &&
 					dp.bBodyType != KIDCIV)
@@ -558,7 +555,7 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 					return true;
 				}
 			}
-			else if (x == 13 && y == MAP_ROW_C && z == 0)
+			else if (gWorldSector == kids)
 			{
 				if (CheckFact(FACT_KIDS_ARE_FREE, 0) &&
 					(dp.bBodyType == HATKIDCIV || dp.bBodyType == KIDCIV))
@@ -1558,12 +1555,12 @@ void AddSoldierInitListBloodcats()
 	SECTORINFO *pSector;
 	UINT8 ubSectorID;
 
-	if( gbWorldSectorZ )
+	if (gWorldSector.z)
 	{
 		return; //no bloodcats underground.
 	}
 
-	ubSectorID = (UINT8)SECTOR( gWorldSectorX, gWorldSectorY );
+	ubSectorID = gWorldSector.AsByte();
 	pSector = &SectorInfo[ ubSectorID ];
 
 	if( !pSector->bBloodCatPlacements )
@@ -1716,9 +1713,7 @@ void AddProfilesUsingProfileInsertionData()
 		// insertion data must be set.
 		ProfileID                i = prof->getID();
 		MERCPROFILESTRUCT const& p = prof->getStruct();
-		if (p.sSectorX != gWorldSectorX)                 continue;
-		if (p.sSectorY != gWorldSectorY)                 continue;
-		if (p.bSectorZ != gbWorldSectorZ)                continue;
+		if (p.sSector != gWorldSector)                   continue;
 		if (p.ubMiscFlags & PROFILE_MISC_FLAG_RECRUITED) continue;
 		if (p.ubMiscFlags & PROFILE_MISC_FLAG_EPCACTIVE) continue;
 		if (p.bLife == 0)                                continue;
@@ -1732,9 +1727,7 @@ void AddProfilesUsingProfileInsertionData()
 			c = SOLDIERCREATE_STRUCT{};
 			c.bTeam     = CIV_TEAM;
 			c.ubProfile = i;
-			c.sSectorX  = gWorldSectorX;
-			c.sSectorY  = gWorldSectorY;
-			c.bSectorZ  = gbWorldSectorZ;
+			c.sSector  = gWorldSector;
 			ps = TacticalCreateSoldier(c);
 			if (!ps) continue; // XXX exception?
 		}
@@ -1743,7 +1736,7 @@ void AddProfilesUsingProfileInsertionData()
 		// Insert the soldier
 		s.ubStrategicInsertionCode = p.ubStrategicInsertionCode;
 		s.usStrategicInsertionData = p.usStrategicInsertionData;
-		UpdateMercInSector(s, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+		UpdateMercInSector(s, gWorldSector);
 
 		// check action ID values
 		if (p.ubQuoteRecord != 0)
@@ -1851,14 +1844,14 @@ void NewWayOfLoadingCivilianInitListLinks(HWFILE const f)
 
 void StripEnemyDetailedPlacementsIfSectorWasPlayerLiberated()
 {
-	if (!gfWorldLoaded || gbWorldSectorZ != 0)
+	if (!gfWorldLoaded || gWorldSector.z != 0)
 	{
 		// No world loaded or underground.  Underground sectors don't matter seeing
 		// enemies (not creatures) never rejuvenate underground.
 		return;
 	}
 
-	SECTORINFO const& sector = SectorInfo[SECTOR(gWorldSectorX, gWorldSectorY)];
+	SECTORINFO const& sector = SectorInfo[gWorldSector.AsByte()];
 	if (sector.uiTimeLastPlayerLiberated == 0)
 	{
 		// The player has never owned the sector.

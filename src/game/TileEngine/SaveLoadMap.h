@@ -92,24 +92,24 @@ void AddRemoveObjectToMapTempFile( UINT32 uiMapIndex, UINT16 usIndex );
 void SaveBloodSmellAndRevealedStatesFromMapToTempFile(void);
 
 
-void SaveRevealedStatusArrayToRevealedTempFile(INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
+void SaveRevealedStatusArrayToRevealedTempFile(const SGPSector& sector);
 
 void LoadRevealedStatusArrayFromRevealedTempFile(void);
 
 
-void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
-void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  );
+void RemoveStructFromUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector);
+void AddStructToUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector);
 
 //Adds the exit grid to
-void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ );
+void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, const SGPSector& sector);
 
 
 //This function removes a struct with the same MapIndex and graphic index from the given sectors temp file
-BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ );
+BOOLEAN RemoveGraphicFromTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector);
 
 
 void AddWindowHitToMapTempFile( UINT32 uiMapIndex );
 
-void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 usSectorX, UINT16 usSectorY, INT8 bSectorZ, UINT16 usGridNo, BOOLEAN fChangeToOpen);
+void ChangeStatusOfOpenableStructInUnloadedSector(const SGPSector& sector, UINT16 usGridNo, BOOLEAN fChangeToOpen);
 
 #endif

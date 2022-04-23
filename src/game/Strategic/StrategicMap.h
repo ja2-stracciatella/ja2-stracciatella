@@ -27,9 +27,7 @@ enum{
 };
 
 // For speed, etc lets make these globals, forget the functions if you want
-extern INT16 gWorldSectorX;
-extern INT16 gWorldSectorY;
-extern INT8  gbWorldSectorZ;
+extern SGPSector gWorldSector;
 
 #define NO_SECTOR ((UINT)-1)
 
@@ -37,9 +35,7 @@ UINT GetWorldSector();
 
 static inline void SetWorldSectorInvalid()
 {
-	gWorldSectorX  =  0;
-	gWorldSectorY  =  0;
-	gbWorldSectorZ = -1;
+	gWorldSector = SGPSector(0, 0, -1);
 }
 
 extern	BOOLEAN		gfUseAlternateMap;
@@ -54,40 +50,28 @@ extern Observable<> BeforePrepareSector;
 #define MAP_WORLD_X				18
 #define MAP_WORLD_Y				18
 
-// get index into aray
-#define CALCULATE_STRATEGIC_INDEX( x, y )	( x + ( y * MAP_WORLD_X ) )
-#define GET_X_FROM_STRATEGIC_INDEX( i )		( i % MAP_WORLD_X )
-#define GET_Y_FROM_STRATEGIC_INDEX( i )		( i / MAP_WORLD_X )
-
-// macros to convert between the 2 different sector numbering systems
-#define SECTOR_INFO_TO_STRATEGIC_INDEX( i )	( CALCULATE_STRATEGIC_INDEX ( SECTORX( i ), SECTORY( i ) ) )
-#define STRATEGIC_INDEX_TO_SECTOR_INFO( i )	( SECTOR(  GET_X_FROM_STRATEGIC_INDEX( i ), GET_Y_FROM_STRATEGIC_INDEX( i ) ) )
-
-
 // grab the town id value
 UINT8 GetTownIdForSector(UINT8 sector);
+UINT8 GetTownIdForSector(const SGPSector& sSector);
 
-void SetCurrentWorldSector(INT16 x, INT16 y, INT8 z);
+void SetCurrentWorldSector(const SGPSector& sector);
 
 void UpdateMercsInSector();
-void UpdateMercInSector(SOLDIERTYPE&, INT16 sSectorX, INT16 sSectorY, INT8 bSectorZ);
-
-// get short sector name without town name
-ST::string GetShortSectorString(INT16 sMapX, INT16 sMapY);
+void UpdateMercInSector(SOLDIERTYPE&, const SGPSector& sector);
 
 // Return a string like 'A9: Omerta'
-ST::string GetSectorIDString(INT16 x, INT16 y, INT8 z, BOOLEAN detailed);
+ST::string GetSectorIDString(const SGPSector& sector, BOOLEAN detailed);
 
 // Returns a sector description string based on the sector land type
 ST::string GetSectorLandTypeString(UINT8 ubSectorID, UINT8 ubSectorZ, bool fDetailed);
 
-void GetMapFileName(INT16 x, INT16 y, INT8 z, char* buf, BOOLEAN add_alternate_map_letter);
+ST::string GetMapFileName(const SGPSector& sector, BOOLEAN add_alternate_map_letter);
 
 // Called from within tactical.....
 void JumpIntoAdjacentSector( UINT8 ubDirection, UINT8 ubJumpCode, INT16 sAdditionalData );
 
 
-bool CanGoToTacticalInSector(INT16 x, INT16 y, UINT8 z);
+bool CanGoToTacticalInSector(const SGPSector& sector);
 
 // Number of sectors this town takes up
 UINT8 GetTownSectorSize(INT8 town_id);
@@ -114,14 +98,14 @@ void PrepareLoadedSector(void);
 void HandleSlayDailyEvent( void );
 
 
-void HandleQuestCodeOnSectorEntry( INT16 sNewSectorX, INT16 sNewSectorY, INT8 bNewSectorZ );
+void HandleQuestCodeOnSectorEntry(const SGPSector& sector);
 
 // handle a soldier leaving thier squad behind, this sets them up for mvt and potential rejoining of group
 void HandleSoldierLeavingSectorByThemSelf( SOLDIERTYPE *pSoldier );
 
 BOOLEAN CheckAndHandleUnloadingOfCurrentWorld(void);
 
-bool IsSectorDesert(INT16 x, INT16 y);
+bool IsSectorDesert(const SGPSector& sector);
 
 void SetupProfileInsertionDataForSoldier(const SOLDIERTYPE* s);
 

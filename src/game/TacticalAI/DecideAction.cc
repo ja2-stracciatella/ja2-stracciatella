@@ -46,7 +46,7 @@ static UINT32 guiRedSeekCounter = 0, guiRedHelpCounter = 0; guiRedHideCounter = 
 #endif
 
 #define CENTER_OF_RING 11237
-
+static const SGPSector meduna(3, MAP_ROW_P);
 
 static void DoneScheduleAction(SOLDIERTYPE* pSoldier)
 {
@@ -1507,7 +1507,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	{
 		if ( (pSoldier->ubProfile == QUEEN || pSoldier->ubProfile == JOE) && ubCanMove )
 		{
-			if ( gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_P && gbWorldSectorZ == 0 && !gfUseAlternateQueenPosition )
+			if (gWorldSector == meduna && !gfUseAlternateQueenPosition)
 			{
 				bActionReturned = HeadForTheStairCase( pSoldier );
 				if ( bActionReturned != AI_ACTION_NONE )
@@ -1530,7 +1530,7 @@ INT8 DecideActionRed(SOLDIERTYPE *pSoldier, UINT8 ubUnconsciousOK)
 	// WHEN LEFT IN GAS, WEAR GAS MASK IF AVAILABLE AND NOT WORN
 	////////////////////////////////////////////////////////////////////////////
 
-	if ( !bInGas && (gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y) )
+	if (!bInGas && (gWorldSector.x == TIXA_SECTOR_X && gWorldSector.y == TIXA_SECTOR_Y))
 	{
 		// only chance if we happen to be caught with our gas mask off
 		if ( PreRandom( 10 ) == 0 && WearGasMaskIfAvailable( pSoldier ) )
@@ -2504,7 +2504,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 		// if they see enemies, the Queen will keep going to the staircase, but Joe will fight
 		if ( (pSoldier->ubProfile == QUEEN) && ubCanMove )
 		{
-			if ( gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_P && gbWorldSectorZ == 0 && !gfUseAlternateQueenPosition )
+			if (gWorldSector == meduna && !gfUseAlternateQueenPosition)
 			{
 				bActionReturned = HeadForTheStairCase( pSoldier );
 				if ( bActionReturned != AI_ACTION_NONE )
@@ -2551,7 +2551,7 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 		// WHEN LEFT IN GAS, WEAR GAS MASK IF AVAILABLE AND NOT WORN
 		////////////////////////////////////////////////////////////////////////////
 
-		if ( !bInGas && (gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y) )
+		if (!bInGas && (gWorldSector.x == TIXA_SECTOR_X && gWorldSector.y == TIXA_SECTOR_Y))
 		{
 			// only chance if we happen to be caught with our gas mask off
 			if ( PreRandom( 10 ) == 0 && WearGasMaskIfAvailable( pSoldier ) )
@@ -3135,8 +3135,8 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			case AGGRESSIVE:		iOffense += 20; break;
 			case ATTACKSLAYONLY:iOffense += 30; break;
 		}
-		SLOGD(ST::format("{} - CHOICE: iOffense = {}, iDefense = {}\n",
-			pSoldier->name, iOffense,iDefense));
+		STLOGD("{} - CHOICE: iOffense = {}, iDefense = {}\n",
+			pSoldier->name, iOffense,iDefense);
 
 		// if his defensive instincts win out, forget all about the attack
 		if (iDefense > iOffense)
@@ -3337,10 +3337,9 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 			pSoldier->usActionData = BestAttack.sTarget;
 			pSoldier->bTargetLevel = BestAttack.bTargetLevel;
 
-			SLOGD(ST::format("{}({}) {} {}({})",
-				pSoldier->ubID, pSoldier->name,
+			STLOGD("{}({}) {} {}({})", pSoldier->ubID, pSoldier->name,
 				ubBestAttackAction == AI_ACTION_FIRE_GUN ? "SHOOTS" : (ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE ? "TOSSES AT" : "STABS"),
-				BestAttack.opponent->ubID, BestAttack.opponent->name));
+				BestAttack.opponent->ubID, BestAttack.opponent->name);
 			return(ubBestAttackAction);
 		}
 
@@ -3385,8 +3384,8 @@ static INT8 DecideActionBlack(SOLDIERTYPE* pSoldier)
 
 	if (sBestCover != NOWHERE)
 	{
-		SLOGD(ST::format("{} - taking cover at gridno {} ({}% better)",
-			pSoldier->name, sBestCover, iCoverPercentBetter));
+		STLOGD("{} - taking cover at gridno {} ({}% better)",
+			pSoldier->name, sBestCover, iCoverPercentBetter);
 		pSoldier->usActionData = sBestCover;
 		return(AI_ACTION_TAKE_COVER);
 	}
@@ -3687,8 +3686,8 @@ INT8 DecideAction(SOLDIERTYPE *pSoldier)
 				break;
 		}
 	}
-	SLOGD(ST::format("DecideAction: selected action {}, actionData {}\n\n",
-		bAction, pSoldier->usActionData));
+	STLOGD("DecideAction: selected action {}, actionData {}\n\n",
+		bAction, pSoldier->usActionData);
 	return(bAction);
 }
 

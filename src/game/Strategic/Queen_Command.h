@@ -10,18 +10,16 @@ extern BOOLEAN gfPendingEnemies;
 
 
 //Counts enemies and crepitus, but not bloodcats.
-UINT8 NumHostilesInSector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
-
-UINT8 NumEnemiesInAnySector( INT16 sSectorX, INT16 sSectorY, INT16 sSectorZ );
-
-UINT8 NumEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
-UINT8 NumStationaryEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
-UINT8 NumMobileEnemiesInSector( INT16 sSectorX, INT16 sSectorY );
-void GetNumberOfEnemiesInSector( INT16 sSectorX, INT16 sSectorY, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites );
+UINT8 NumHostilesInSector(const SGPSector& sSector);
+UINT8 NumEnemiesInAnySector(const SGPSector& sSector);
+UINT8 NumEnemiesInSector(const SGPSector& sector);
+UINT8 NumStationaryEnemiesInSector(const SGPSector& sSector);
+UINT8 NumMobileEnemiesInSector(const SGPSector& sSector);
+void GetNumberOfEnemiesInSector(const SGPSector& sSector, UINT8 *pubNumAdmins, UINT8 *pubNumTroops, UINT8 *pubNumElites);
 
 /* Called when entering a sector so the campaign AI can automatically insert the
  * correct number of troops of each type based on the current number in the
- * sector in global focus (gWorldSectorX/Y) */
+ * sector in global focus (gWorldSector) */
 void PrepareEnemyForSectorBattle();
 
 void AddPossiblePendingEnemiesToBattle(void);
@@ -33,7 +31,7 @@ void SaveUnderGroundSectorInfoToSaveGame(HWFILE);
 void LoadUnderGroundSectorInfoFromSavedGame(HWFILE);
 
 //Finds and returns the specified underground structure ( DONT MODIFY IT ).  Else returns NULL
-UNDERGROUND_SECTORINFO* FindUnderGroundSector( INT16 sMapX, INT16 sMapY, UINT8 bMapZ );
+UNDERGROUND_SECTORINFO* FindUnderGroundSector(const SGPSector& sector);
 
 void EnemyCapturesPlayerSoldier( SOLDIERTYPE *pSoldier );
 void BeginCaptureSquence(void);

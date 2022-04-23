@@ -91,7 +91,7 @@ enum{
 	HISTORY_MERC_KILLED_CHARACTER,
 };
 
-void AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, INT16 sSectorX, INT16 sSectorY);
+void AddHistoryToPlayersLog(UINT8 ubCode, UINT8 ubSecondCode, UINT32 uiDate, const SGPSector& sector);
 UINT32 GetTimeQuestWasStarted( UINT8 ubCode );
 
 #endif

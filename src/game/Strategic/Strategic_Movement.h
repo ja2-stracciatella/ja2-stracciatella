@@ -41,8 +41,7 @@ enum
 //NOTE:  This is used for groups that are initiating a movement to another sector.
 struct WAYPOINT
 {
-	UINT8 x;											//sector x position of waypoint
-	UINT8 y;											//sector y position of waypoint
+	SGPSector sSector; //sector position of waypoint
 	WAYPOINT* next; //next waypoint in list
 };
 
@@ -91,10 +90,9 @@ struct GROUP
 	BOOLEAN fPersistant;					//This flag when set prevents the group from being automatically deleted when it becomes empty.
 	UINT8 ubGroupID;							//the unique ID of the group (used for hooking into events and SOLDIERTYPE)
 	UINT8 ubGroupSize;						//total number of individuals in the group.
-	UINT8 ubSectorX, ubSectorY;		//last/curr sector occupied
-	UINT8 ubSectorZ;
-	UINT8 ubNextX, ubNextY;				//next sector destination
-	UINT8 ubPrevX, ubPrevY;				//prev sector occupied (could be same as ubSectorX/Y)
+	SGPSector ubSector;             //last/curr sector occupied
+	SGPSector ubNext;				//next sector destination
+	SGPSector ubPrev;				//prev sector occupied (could be same as ubSector)
 	UINT8 ubOriginalSector;				//sector where group was created.
 	BOOLEAN fBetweenSectors;			//set only if a group is between sector.
 	UINT8 ubMoveType;							//determines the type of movement (ONE_WAY, CIRCULAR, ENDTOEND, etc.)
@@ -166,7 +164,7 @@ void RemoveGroupWaypoints(GROUP&);
 
 /* Create a new player group.  This is the first step before adding waypoints
  * and members to the player group. */
-GROUP* CreateNewPlayerGroupDepartingFromSector(UINT8 ubSectorX, UINT8 ubSectorY);
+GROUP* CreateNewPlayerGroupDepartingFromSector(const SGPSector& sMap);
 
 //Allows you to add or remove players from the group.
 void AddPlayerToGroup(GROUP&, SOLDIERTYPE&);
@@ -175,12 +173,12 @@ void RemovePlayerFromGroup(SOLDIERTYPE&);
 void RemovePlayerFromPGroup(GROUP&, SOLDIERTYPE&);
 
 // create a vehicle group, it is by itself,
-GROUP* CreateNewVehicleGroupDepartingFromSector(UINT8 ubSectorX, UINT8 ubSectorY);
+GROUP* CreateNewVehicleGroupDepartingFromSector(const SGPSector& sMap);
 
 
 //Appends a waypoint to the end of the list.  Waypoint MUST be on the
 //same horizontal xor vertical level as the last waypoint added.
-BOOLEAN AddWaypointToPGroup( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
+BOOLEAN AddWaypointToPGroup(GROUP *pGroup, const SGPSector& ubSector);
 //Same, but uses a plain sectorID (0-255)
 BOOLEAN AddWaypointIDToPGroup( GROUP *pGroup, UINT8 ubSectorID );
 //Same, but uses a strategic sectorID
@@ -199,7 +197,7 @@ void CalculateNextMoveIntention( GROUP *pGroup );
 
 
 // Set current sector of the group, used for player controlled mercs
-void SetGroupSectorValue(INT16 x, INT16 y, INT16 z, GROUP&);
+void SetGroupSectorValue(const SGPSector& sector, GROUP& g);
 
 void SetEnemyGroupSector(GROUP&, UINT8 sector_id);
 
@@ -212,8 +210,8 @@ static UINT32 const TRAVERSE_TIME_IMPOSSIBLE = 0xFFFFFFFF;
 // Get travel time for this group
 INT32 GetSectorMvtTimeForGroup(UINT8 ubSector, UINT8 ubDirection, GROUP const*);
 
-UINT8 PlayerMercsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
-UINT8 PlayerGroupsInSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
+UINT8 PlayerMercsInSector(const SGPSector& sector);
+UINT8 PlayerGroupsInSector(const SGPSector& sector);
 
 // Is this player group in motion?
 BOOLEAN PlayerGroupInMotion(GROUP const*);
@@ -224,7 +222,7 @@ bool PlayerIDGroupInMotion(UINT8 id);
 // get number of mercs between sectors
 BOOLEAN PlayersBetweenTheseSectors( INT16 sSource, INT16 sDest, INT32 *iCountEnter, INT32 *iCountExit, BOOLEAN *fAboutToArriveEnter );
 
-void MoveAllGroupsInCurrentSectorToSector( UINT8 ubSectorX, UINT8 ubSectorY, UINT8 ubSectorZ );
+void MoveAllGroupsInCurrentSectorToSector(const SGPSector& sector);
 
 //Save the strategic movemnet Group paths to the saved game file
 void SaveStrategicMovementGroupsToSaveGameFile(HWFILE);
@@ -238,29 +236,29 @@ void HandleArrivalOfReinforcements(GROUP const*);
 //blindly determines where to move the group.
 void RetreatGroupToPreviousSector(GROUP&);
 
-GROUP* FindEnemyMovementGroupInSector(UINT8 x, UINT8 y);
-GROUP* FindPlayerMovementGroupInSector(UINT8 x, UINT8 y);
+GROUP* FindEnemyMovementGroupInSector(const SGPSector& sMap);
+GROUP* FindPlayerMovementGroupInSector(const SGPSector& sMap);
 
 BOOLEAN GroupAtFinalDestination(const GROUP*);
 
 // find the travel time between waypts for this group
 INT32 FindTravelTimeBetweenWaypoints(WAYPOINT const* pSource, WAYPOINT const* pDest,  GROUP const*);
 
-BOOLEAN GroupReversingDirectionsBetweenSectors( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY, BOOLEAN fBuildingWaypoints );
-BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
+BOOLEAN GroupReversingDirectionsBetweenSectors(GROUP *pGroup, const SGPSector& sMap, BOOLEAN fBuildingWaypoints);
+BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection(GROUP *pGroup, const SGPSector& sSector);
 
 WAYPOINT* GetFinalWaypoint(const GROUP*);
 
-void ResetMovementForEnemyGroupsInLocation( UINT8 ubSectorX, UINT8 ubSectorY );
+void ResetMovementForEnemyGroupsInLocation();
 
 //Determines if any particular group WILL be moving through a given sector given it's current
 //position in the route and TREATS the pGroup->ubMoveType as ONE_WAY EVEN IF IT ISN'T.  If the
 //group is currently IN the sector, or just left the sector, it will return FALSE.
-BOOLEAN GroupWillMoveThroughSector( GROUP *pGroup, UINT8 ubSectorX, UINT8 ubSectorY );
+BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector);
 
 void RandomizePatrolGroupLocation( GROUP *pGroup );
 
-void PlaceGroupInSector(GROUP&, INT16 prev_x, INT16 prev_y, INT16 next_x, INT16 next_y, INT8 z, bool check_for_battle);
+void PlaceGroupInSector(GROUP&, const SGPSector& prev, const SGPSector& next, bool check_for_battle);
 
 void PlayerGroupArrivedSafelyInSector(GROUP&, BOOLEAN fCheckForNPCs);
 

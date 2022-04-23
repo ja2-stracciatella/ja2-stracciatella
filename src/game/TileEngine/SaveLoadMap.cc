@@ -39,11 +39,11 @@ UINT8				*gpRevealedMap;
 
 
 // Opens the map modification temp file (m_*) of the given sector for append, and marks it in the sector flag.
-static std::unique_ptr<AutoSGPFile> OpenMapModificationTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
+static std::unique_ptr<AutoSGPFile> OpenMapModificationTempFile(const SGPSector& sector)
 {
-	SetSectorFlag(sSectorX, sSectorY, bSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS);
+	SetSectorFlag(sector, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS);
 
-	return std::make_unique<AutoSGPFile>(GCM->tempFiles()->openForAppend(GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ)));
+	return std::make_unique<AutoSGPFile>(GCM->tempFiles()->openForAppend(GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sector)));
 }
 
 // Writes map modification to the open temp file
@@ -53,9 +53,9 @@ static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, Aut
 }
 
 // Opens the map temp file, writes the modification, then close the file
-static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
+static void SaveModifiedMapStructToMapTempFile(MODIFY_MAP const* const pMap, const SGPSector& sSector)
 {
-	std::unique_ptr<AutoSGPFile> hFile = OpenMapModificationTempFile(sSectorX, sSectorY, bSectorZ);
+	std::unique_ptr<AutoSGPFile> hFile = OpenMapModificationTempFile(sSector);
 	SaveModifiedMapStructToMapTempFile(pMap, *hFile);
 }
 
@@ -74,7 +74,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 	UINT32     cnt;
 	MODIFY_MAP *pMap;
 
-	ST::string const zMapName = GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	ST::string const zMapName = GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, gWorldSector);
 
 	//If the file doesnt exists, its no problem.
 	if (!GCM->tempFiles()->exists(zMapName)) return;
@@ -94,7 +94,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 
 	//Delete the file
 	GCM->tempFiles()->deleteFile( zMapName );
-	std::unique_ptr<AutoSGPFile> tempMapFile = OpenMapModificationTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	std::unique_ptr<AutoSGPFile> tempMapFile = OpenMapModificationTempFile(gWorldSector);
 
 	for( cnt=0; cnt< uiNumberOfElements; cnt++ )
 	{
@@ -199,9 +199,9 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 					EXITGRID ExitGrid;
 					gfLoadingExitGrids = TRUE;
 					ExitGrid.usGridNo = pMap->usSubImageIndex;
-					ExitGrid.ubGotoSectorX = (UINT8) pMap->usImageType;
-					ExitGrid.ubGotoSectorY = (UINT8) ( pMap->usImageType >> 8 ) ;
-					ExitGrid.ubGotoSectorZ = pMap->ubExtra;
+					ExitGrid.ubGotoSector.x = (UINT8) pMap->usImageType;
+					ExitGrid.ubGotoSector.y = (UINT8) ( pMap->usImageType >> 8 ) ;
+					ExitGrid.ubGotoSector.z = pMap->ubExtra;
 
 					AddExitGridToWorld( pMap->usGridNo, &ExitGrid );
 					gfLoadingExitGrids = FALSE;
@@ -239,7 +239,7 @@ void LoadAllMapChangesFromMapTempFileAndApplyThem()
 	//if no elements are saved back to the file, remove the flag indicating that there is a temp file
 	if( uiNumberOfElementsSavedBackToFile == 0 )
 	{
-		ReSetSectorFlag( gWorldSectorX, gWorldSectorY, gbWorldSectorZ, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS );
+		ReSetSectorFlag(gWorldSector, SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS);
 	}
 }
 
@@ -258,7 +258,7 @@ static void AddToMapTempFile(UINT32 const uiMapIndex, UINT16 const usIndex, UINT
 	m.usImageType     = uiType;
 	m.usSubImageIndex = usSubIndex;
 	m.ubType          = type;
-	SaveModifiedMapStructToMapTempFile(&m, gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	SaveModifiedMapStructToMapTempFile(&m, gWorldSector);
 }
 
 
@@ -310,7 +310,7 @@ void SaveBloodSmellAndRevealedStatesFromMapToTempFile()
 
 	gpRevealedMap = new UINT8[NUM_REVEALED_BYTES]{};
 
-	std::unique_ptr<AutoSGPFile> tempFile = OpenMapModificationTempFile(gWorldSectorX, gWorldSectorY, gbWorldSectorZ);
+	std::unique_ptr<AutoSGPFile> tempFile = OpenMapModificationTempFile(gWorldSector);
 
 	//Loop though all the map elements
 	for ( cnt = 0; cnt < WORLD_MAX; cnt++ )
@@ -412,16 +412,16 @@ static void AddBloodOrSmellFromMapTempFileToMap(MODIFY_MAP* pMap)
 }
 
 
-void SaveRevealedStatusArrayToRevealedTempFile(INT16 const sSectorX, INT16 const sSectorY, INT8 const bSectorZ)
+void SaveRevealedStatusArrayToRevealedTempFile(const SGPSector& sSector)
 {
 	Assert( gpRevealedMap != NULL );
 
-	AutoSGPFile hFile(GCM->tempFiles()->openForWriting(GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, sSectorX, sSectorY, bSectorZ ), true));
+	AutoSGPFile hFile(GCM->tempFiles()->openForWriting(GetMapTempFileName(SF_REVEALED_STATUS_TEMP_FILE_EXISTS, sSector), true));
 
 	//Write the revealed array to the Revealed temp file
 	hFile->write(gpRevealedMap, NUM_REVEALED_BYTES);
 
-	SetSectorFlag( sSectorX, sSectorY, bSectorZ, SF_REVEALED_STATUS_TEMP_FILE_EXISTS );
+	SetSectorFlag(sSector, SF_REVEALED_STATUS_TEMP_FILE_EXISTS);
 
 	delete[] gpRevealedMap;
 	gpRevealedMap = NULL;
@@ -433,7 +433,7 @@ static void SetMapRevealedStatus(void);
 
 void LoadRevealedStatusArrayFromRevealedTempFile()
 {
-	ST::string const zMapName = GetMapTempFileName( SF_REVEALED_STATUS_TEMP_FILE_EXISTS, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	ST::string const zMapName = GetMapTempFileName(SF_REVEALED_STATUS_TEMP_FILE_EXISTS, gWorldSector);
 
 	//If the file doesnt exists, its no problem.
 	if (!GCM->tempFiles()->exists(zMapName)) return;
@@ -536,7 +536,7 @@ static void DamageStructsFromMapTempFile(MODIFY_MAP* pMap)
 }
 
 
-void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
+void AddStructToUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector)
 {
 	MODIFY_MAP Map;
 
@@ -556,11 +556,11 @@ void AddStructToUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sS
 
 	Map.ubType		= SLM_STRUCT;
 
-	SaveModifiedMapStructToMapTempFile( &Map, sSectorX, sSectorY, ubSectorZ );
+	SaveModifiedMapStructToMapTempFile(&Map, sSector);
 }
 
 
-void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ  )
+void RemoveStructFromUnLoadedMapTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector)
 {
 	MODIFY_MAP Map;
 
@@ -579,11 +579,11 @@ void RemoveStructFromUnLoadedMapTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT
 
 	Map.ubType			= SLM_REMOVE_STRUCT;
 
-	SaveModifiedMapStructToMapTempFile( &Map, sSectorX, sSectorY, ubSectorZ );
+	SaveModifiedMapStructToMapTempFile(&Map, sSector);
 }
 
 
-void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ )
+void AddExitGridToMapTempFile(UINT16 usGridNo, EXITGRID *pExitGrid, const SGPSector& sector)
 {
 	MODIFY_MAP Map;
 
@@ -599,25 +599,25 @@ void AddExitGridToMapTempFile( UINT16 usGridNo, EXITGRID *pExitGrid, INT16 sSect
 	Map = MODIFY_MAP{};
 
 	Map.usGridNo = usGridNo;
-//	Map.usIndex		= pExitGrid->ubGotoSectorX;
+//	Map.usIndex		= pExitGrid->ubGotoSector.x;
 
-	Map.usImageType = pExitGrid->ubGotoSectorX | ( pExitGrid->ubGotoSectorY << 8 );
+	Map.usImageType = (UINT8) pExitGrid->ubGotoSector.x | ( (UINT8) pExitGrid->ubGotoSector.y << 8 );
 	Map.usSubImageIndex = pExitGrid->usGridNo;
 
-	Map.ubExtra		= pExitGrid->ubGotoSectorZ;
+	Map.ubExtra		= pExitGrid->ubGotoSector.z;
 	Map.ubType		= SLM_EXIT_GRIDS;
 
-	SaveModifiedMapStructToMapTempFile( &Map, sSectorX, sSectorY, ubSectorZ );
+	SaveModifiedMapStructToMapTempFile(&Map, sector);
 }
 
-BOOLEAN RemoveGraphicFromTempFile( UINT32 uiMapIndex, UINT16 usIndex, INT16 sSectorX, INT16 sSectorY, UINT8 ubSectorZ )
+BOOLEAN RemoveGraphicFromTempFile(UINT32 uiMapIndex, UINT16 usIndex, const SGPSector& sSector)
 try
 {
 	MODIFY_MAP *pMap;
 	BOOLEAN	fRetVal=FALSE;
 	UINT32	cnt;
 
-	ST::string const zMapName = GetMapTempFileName( SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSectorX, sSectorY, ubSectorZ );
+	ST::string const zMapName = GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sSector);
 
 	UINT32                  uiNumberOfElements;
 	SGP::Buffer<MODIFY_MAP> pTempArrayOfMaps;
@@ -652,7 +652,7 @@ try
 		else
 		{
 			//save the struct back to the temp file
-			SaveModifiedMapStructToMapTempFile( pMap, sSectorX, sSectorY, ubSectorZ );
+			SaveModifiedMapStructToMapTempFile(pMap, sSector);
 		}
 	}
 
@@ -684,7 +684,7 @@ void AddWindowHitToMapTempFile( UINT32 uiMapIndex )
 	Map.usGridNo = (UINT16)uiMapIndex;
 	Map.ubType = SLM_WINDOW_HIT;
 
-	SaveModifiedMapStructToMapTempFile( &Map, gWorldSectorX, gWorldSectorY, gbWorldSectorZ );
+	SaveModifiedMapStructToMapTempFile(&Map, gWorldSector);
 }
 
 
@@ -747,9 +747,9 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 }
 
 
-void ChangeStatusOfOpenableStructInUnloadedSector(UINT16 const usSectorX, UINT16 const usSectorY, INT8 const bSectorZ, UINT16 const usGridNo, BOOLEAN const fChangeToOpen)
+void ChangeStatusOfOpenableStructInUnloadedSector(const SGPSector& sector, UINT16 const usGridNo, BOOLEAN const fChangeToOpen)
 {
-	ST::string const map_name = GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, usSectorX, usSectorY, bSectorZ);
+	ST::string const map_name = GetMapTempFileName(SF_MAP_MODIFICATIONS_TEMP_FILE_EXISTS, sector);
 
 	// If the file doesn't exists, it's no problem.
 	if (!GCM->tempFiles()->exists(map_name)) return;

@@ -1506,7 +1506,7 @@ INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* const pStartSoldier, co
 	fOk = CalculateSoldierZPos( pStartSoldier, LOS_POS, &dStartZPos );
 	CHECKF( fOk );
 
-	if ( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_N )
+	if (gWorldSector.x == 5 && gWorldSector.y == MAP_ROW_N)
 	{
 		// in the bloodcat arena sector, skip sight between army & bloodcats
 		if ( pStartSoldier->bTeam == ENEMY_TEAM && pEndSoldier->bTeam == CREATURE_TEAM )
@@ -2713,8 +2713,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 				pBullet->bLOSIndexX = FIXEDPT_TO_LOS_INDEX( pBullet->qCurrX );
 				pBullet->bLOSIndexY = FIXEDPT_TO_LOS_INDEX( pBullet->qCurrY );
 
-				SLOGD(ST::format("CTGT at {} {} after traversing empty tile",
-					pBullet->bLOSIndexX, pBullet->bLOSIndexY));
+				STLOGD("CTGT at {} {} after traversing empty tile", pBullet->bLOSIndexX, pBullet->bLOSIndexY);
 			}
 			else
 			{
@@ -2827,9 +2826,9 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 				}
 				while( (pBullet->bLOSIndexX == bOldLOSIndexX) && (pBullet->bLOSIndexY == bOldLOSIndexY) && (pBullet->iCurrCubesZ == iOldCubesZ));
 
-				SLOGD(ST::format("CTGT at {} {} {} after moving in nonempty tile from {} {} {}",
+				STLOGD("CTGT at {} {} {} after moving in nonempty tile from {} {} {}",
 					pBullet->bLOSIndexX, pBullet->bLOSIndexY, pBullet->iCurrCubesZ,
-					bOldLOSIndexX, bOldLOSIndexY, iOldCubesZ));
+					bOldLOSIndexX, bOldLOSIndexY, iOldCubesZ);
 				pBullet->iCurrTileX = FIXEDPT_TO_INT32( pBullet->qCurrX ) / CELL_X_SIZE;
 				pBullet->iCurrTileY = FIXEDPT_TO_INT32( pBullet->qCurrY ) / CELL_Y_SIZE;
 			}

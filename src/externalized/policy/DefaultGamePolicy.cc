@@ -84,7 +84,7 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 
 	JsonObjectReader campaign = JsonObjectReader(gp.GetValue("campaign"));
 	const char* sector_string = campaign.getOptionalString("start_sector");
-	start_sector = SECTOR_FROM_SECTOR_SHORT_STRING(sector_string != NULL ? sector_string : "A9");
+	start_sector = SGPSector::FromShortString(sector_string != nullptr ? sector_string : "A9").AsByte();
 	reveal_start_sector = campaign.getOptionalBool("start_sector_revealed", false);
 }
 

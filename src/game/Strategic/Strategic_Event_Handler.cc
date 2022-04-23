@@ -38,17 +38,17 @@ UINT32 guiPabloExtraDaysBribed = 0;
 UINT8		gubCambriaMedicalObjects;
 
 
-static BOOLEAN CloseCrate(const INT16 x, const INT16 y, const INT8 z, const GridNo grid_no)
+static BOOLEAN CloseCrate(const SGPSector& sector, const GridNo grid_no)
 {
 	// Determine if the sector is loaded
-	if (gWorldSectorX == x && gWorldSectorY == y && gbWorldSectorZ == z)
+	if (gWorldSector == sector)
 	{
 		SetOpenableStructureToClosed(grid_no, 0);
 		return TRUE;
 	}
 	else
 	{
-		ChangeStatusOfOpenableStructInUnloadedSector(x, y, z, grid_no, FALSE);
+		ChangeStatusOfOpenableStructInUnloadedSector(sector, grid_no, FALSE);
 		return FALSE;
 	}
 }
@@ -72,7 +72,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	}
 
 	UINT16 usStandardMapPos = dest->deliverySectorGridNo;
-	auto destSector = StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(dest->getDeliverySector())];
+	auto destSector = StrategicMap[SGPSector(dest->getDeliverySector()).AsStrategicIndex()];
 	if (CheckFact(FACT_NEXT_PACKAGE_CAN_BE_LOST, 0))
 	{
 		SetFactFalse(FACT_NEXT_PACKAGE_CAN_BE_LOST);
@@ -119,7 +119,7 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	}
 
 	const BOOLEAN fSectorLoaded =
-		CloseCrate(dest->deliverySectorX, dest->deliverySectorY, dest->deliverySectorZ, dest->deliverySectorGridNo);
+		CloseCrate(dest->deliverySector, dest->deliverySectorGridNo);
 
 	OBJECTTYPE* pObject       = NULL;
 	OBJECTTYPE* pStolenObject = NULL;
@@ -276,10 +276,10 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 	{
 		//add all the items from the array that was built above
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		AddItemsToUnLoadedSector(dest->deliverySectorX, dest->deliverySectorY, dest->deliverySectorZ, usStandardMapPos, uiCount, pObject, 0, 0, 0, INVISIBLE);
+		AddItemsToUnLoadedSector(dest->deliverySector, usStandardMapPos, uiCount, pObject, 0, 0, 0, INVISIBLE);
 		if (uiStolenCount > 0)
 		{
-			AddItemsToUnLoadedSector(dest->deliverySectorX, dest->deliverySectorY, dest->deliverySectorZ, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, INVISIBLE);
+			AddItemsToUnLoadedSector(dest->deliverySector, PABLOS_STOLEN_DEST_GRIDNO, uiStolenCount, pStolenObject, 0, 0, 0, INVISIBLE);
 		}
 		delete[] pObject;
 		delete[] pStolenObject;
@@ -370,7 +370,6 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 		sStartGridNo = PABLOS_STOLEN_DEST_GRIDNO;
 
 		// add random items
-
 		for (ubLoop = 0; ubLoop < 2; ubLoop++)
 		{
 			switch( Random( 10 ) )
@@ -398,13 +397,13 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 					CreateItems( SW38, (INT8) (90 + Random( 10 )), 2, &Object );
 					break;
 			}
-			if ( ( gWorldSectorX == shippingDest->deliverySectorX) && ( gWorldSectorY == shippingDest->deliverySectorY) && ( gbWorldSectorZ == shippingDest->deliverySectorZ ) )
+			if (gWorldSector == shippingDest->deliverySector)
 			{
 				AddItemToPool(shippingDest->deliverySectorGridNo, &Object, INVISIBLE, 0, 0, 0);
 			}
 			else
 			{
-				AddItemsToUnLoadedSector(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ, shippingDest->deliverySectorGridNo, 1, &Object, 0, 0, 0, INVISIBLE);
+				AddItemsToUnLoadedSector(shippingDest->deliverySector, shippingDest->deliverySectorGridNo, 1, &Object, 0, 0, 0, INVISIBLE);
 			}
 		}
 	}
@@ -418,7 +417,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	}
 
 	// If the Drassen airport sector is already loaded, move the item pools...
-	if ( ( gWorldSectorX == shippingDest->deliverySectorX ) && ( gWorldSectorY == shippingDest->deliverySectorY ) && ( gbWorldSectorZ == shippingDest->deliverySectorZ ) )
+	if (gWorldSector == shippingDest->deliverySector)
 	{
 		// sector is loaded!
 		// just move the hidden item pool
@@ -427,7 +426,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 	else
 	{
 		// otherwise load the saved items from the item file and change the records of their locations
-		std::vector<WORLDITEM> pTemp = LoadWorldItemsFromTempItemFile(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ);
+		std::vector<WORLDITEM> pTemp = LoadWorldItemsFromTempItemFile(shippingDest->deliverySector);
 
 		for (WORLDITEM& wi : pTemp)
 		{
@@ -436,7 +435,7 @@ static void HandleDelayedItemsArrival(UINT32 uiReason)
 				wi.sGridNo = shippingDest->deliverySectorGridNo;
 			}
 		}
-		SaveWorldItemsToTempItemFile(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ, pTemp);
+		SaveWorldItemsToTempItemFile(shippingDest->deliverySector, pTemp);
 	}
 }
 
@@ -447,9 +446,7 @@ void AddSecondAirportAttendant( void )
 	MERCPROFILESTRUCT& sal = GetProfile(SAL);
 	auto shippingDest = GCM->getPrimaryShippingDestination();
 
-	sal.sSectorX = shippingDest->deliverySectorX;
-	sal.sSectorY = shippingDest->deliverySectorY;
-	sal.bSectorZ = shippingDest->deliverySectorZ;
+	sal.sSector = shippingDest->deliverySector;
 }
 
 
@@ -508,7 +505,7 @@ void CheckForKingpinsMoneyMissing( BOOLEAN fFirstCheck )
 		if ( uiTotalCash < 30000 )
 		{
 			// add history log here
-			AddHistoryToPlayersLog( HISTORY_FOUND_MONEY, 0, GetWorldTotalMin(), gWorldSectorX, gWorldSectorY );
+			AddHistoryToPlayersLog(HISTORY_FOUND_MONEY, 0, GetWorldTotalMin(), gWorldSector);
 
 			SetFactTrue( FACT_KINGPIN_WILL_LEARN_OF_MONEY_GONE );
 		}
@@ -598,7 +595,7 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 						// KP knows money is gone, hasn't told player, if this event is called then the 2
 						// days are up... send email
 						AddEmail( KING_PIN_LETTER, KING_PIN_LETTER_LENGTH, KING_PIN, GetWorldTotalMin() );
-						StartQuest( QUEST_KINGPIN_MONEY, 5, MAP_ROW_D );
+						StartQuest(QUEST_KINGPIN_MONEY, SGPSector(5, MAP_ROW_D));
 						// add event to send terrorists two days from now
 						AddFutureDayStrategicEvent( EVENT_SET_BY_NPC_SYSTEM, Random( 120 ), FACT_KINGPIN_KNOWS_MONEY_GONE, 2 );
 					}
@@ -607,8 +604,8 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 						// knows money gone, quest is still in progress
 						// event indicates Kingpin can start to send terrorists
 						SetFactTrue( FACT_KINGPIN_CAN_SEND_ASSASSINS );
-						gMercProfiles[ SPIKE ].sSectorX = 5;
-						gMercProfiles[ SPIKE ].sSectorY = MAP_ROW_C;
+						gMercProfiles[ SPIKE ].sSector.x = 5;
+						gMercProfiles[ SPIKE ].sSector.y = MAP_ROW_C;
 						gTacticalStatus.fCivGroupHostile[ KINGPIN_CIV_GROUP ] = CIV_GROUP_WILL_BECOME_HOSTILE;
 					}
 				}
@@ -631,7 +628,7 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 			case NPC_ACTION_TRIGGER_END_OF_FOOD_QUEST:
 				if ( gMercProfiles[ FATHER ].bMercStatus != MERC_IS_DEAD )
 				{
-					EndQuest( QUEST_FOOD_ROUTE, 10, MAP_ROW_A );
+					EndQuest(QUEST_FOOD_ROUTE, SGPSector(10, MAP_ROW_A));
 					SetFactTrue( FACT_FOOD_QUEST_OVER );
 				}
 				break;
@@ -660,20 +657,16 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 						SetFactTrue( FACT_ROBOT_READY );
 					}
 
-					gMercProfiles[ ROBOT ].sSectorX = gMercProfiles[ MADLAB ].sSectorX;
-					gMercProfiles[ ROBOT ].sSectorY = gMercProfiles[ MADLAB ].sSectorY;
-					gMercProfiles[ ROBOT ].bSectorZ = gMercProfiles[ MADLAB ].bSectorZ;
-
-
+					gMercProfiles[ ROBOT ].sSector = gMercProfiles[ MADLAB ].sSector;
 				}
 				break;
 
 			case NPC_ACTION_ADD_JOEY_TO_WORLD:
 				// If Joey is not dead, escorted, or already delivered
 				if ( gMercProfiles[ JOEY ].bMercStatus != MERC_IS_DEAD && !CheckFact( FACT_JOEY_ESCORTED, 0 ) &&
-					gMercProfiles[ JOEY ].sSectorX == 4 &&
-					gMercProfiles[ JOEY ].sSectorY == MAP_ROW_D &&
-					gMercProfiles[ JOEY ].bSectorZ == 1 )
+					gMercProfiles[ JOEY ].sSector.x == 4 &&
+					gMercProfiles[ JOEY ].sSector.y == MAP_ROW_D &&
+					gMercProfiles[ JOEY ].sSector.z == 1 )
 				{
 					const SOLDIERTYPE* const pJoey = FindSoldierByProfileID(JOEY);
 					if (pJoey )
@@ -684,9 +677,9 @@ void HandleNPCSystemEvent( UINT32 uiEvent )
 					else
 					{
 						// move Joey from caves to San Mona
-						gMercProfiles[ JOEY ].sSectorX = 5;
-						gMercProfiles[ JOEY ].sSectorY = MAP_ROW_C;
-						gMercProfiles[ JOEY ].bSectorZ = 0;
+						gMercProfiles[ JOEY ].sSector.x = 5;
+						gMercProfiles[ JOEY ].sSector.y = MAP_ROW_C;
+						gMercProfiles[ JOEY ].sSector.z = 0;
 					}
 				}
 				break;
@@ -728,41 +721,41 @@ void HandleEarlyMorningEvents( void )
 	// reset Father Walker's drunkenness level!
 	gMercProfiles[ FATHER ].bNPCData = (INT8) Random( 4 );
 	// set Walker's location
+	static const SGPSector swapSector1(13, MAP_ROW_C);
 	if ( Random( 2 ) )
 	{
 		// move the father to the other sector, provided neither are loaded
-		if ( ! ( ( gWorldSectorX == 13) && ( ( gWorldSectorY == MAP_ROW_C) || gWorldSectorY == MAP_ROW_D ) && ( gbWorldSectorZ == 0 ) ) )
+		static const SGPSector swapSector2(13, MAP_ROW_D);
+		if (gWorldSector != swapSector1 && gWorldSector != swapSector2)
 		{
-			gMercProfiles[ FATHER ].sSectorX = 13;
+			gMercProfiles[ FATHER ].sSector.x = 13;
 			// swap his location
-			if (gMercProfiles[ FATHER ].sSectorY == MAP_ROW_C)
+			if (gMercProfiles[ FATHER ].sSector.y == MAP_ROW_C)
 			{
-				gMercProfiles[ FATHER ].sSectorY = MAP_ROW_D;
+				gMercProfiles[ FATHER ].sSector.y = MAP_ROW_D;
 			}
 			else
 			{
-				gMercProfiles[ FATHER ].sSectorY = MAP_ROW_C;
+				gMercProfiles[ FATHER ].sSector.y = MAP_ROW_C;
 			}
 		}
 	}
 
-
-	if( gMercProfiles[ TONY ].ubLastDateSpokenTo > 0 && !( gWorldSectorX == 5 && gWorldSectorY == MAP_ROW_C && gbWorldSectorZ == 0 ) )
+	static const SGPSector swapSector3(5, MAP_ROW_C);
+	if (gMercProfiles[TONY].ubLastDateSpokenTo > 0 && gWorldSector != swapSector3)
 	{
 		// San Mona C5 is not loaded so make Tony possibly not available
 		if (Random( 4 ))
 		{
 			// Tony IS available
 			SetFactFalse( FACT_TONY_NOT_AVAILABLE );
-			gMercProfiles[ TONY ].sSectorX = 5;
-			gMercProfiles[ TONY ].sSectorY = MAP_ROW_C;
+			gMercProfiles[ TONY ].sSector = swapSector3;
 		}
 		else
 		{
 			// Tony is NOT available
 			SetFactTrue( FACT_TONY_NOT_AVAILABLE );
-			gMercProfiles[ TONY ].sSectorX = 0;
-			gMercProfiles[ TONY ].sSectorY = 0;
+			gMercProfiles[ TONY ].sSector = SGPSector();
 		}
 	}
 
@@ -773,14 +766,13 @@ void HandleEarlyMorningEvents( void )
 		gMercProfiles[ DEVIN ].bNPCData++;
 		if ( gMercProfiles[ DEVIN ].bNPCData > 3 )
 		{
-			if ( ! ( (gWorldSectorX == gMercProfiles[ DEVIN ].sSectorX) && (gWorldSectorY == gMercProfiles[DEVIN].sSectorY) && (gbWorldSectorZ == 0) ) )
+			if (gWorldSector != gMercProfiles[DEVIN].sSector)
 			{
 				// ok, Devin's sector not loaded, so time to move!
 				// might be same sector as before, if so, oh well!
 				auto placement = GCM->getNpcPlacement(DEVIN);
 				UINT8 sector   = placement->pickPlacementSector();
-				gMercProfiles[DEVIN].sSectorX = SECTORX(sector);
-				gMercProfiles[DEVIN].sSectorY = SECTORY(sector);
+				gMercProfiles[DEVIN].sSector = SGPSector(sector);
 			}
 		}
 	}
@@ -792,24 +784,20 @@ void HandleEarlyMorningEvents( void )
 	if (gMercProfiles[HAMOUS].bLife > 0 &&
 			FindSoldierByProfileIDOnPlayerTeam(HAMOUS)        == NULL &&
 			FindSoldierByProfileIDOnPlayerTeam(PROF_ICECREAM) == NULL &&
-			(gWorldSectorX != gMercProfiles[HAMOUS].sSectorX || gWorldSectorY != gMercProfiles[HAMOUS].sSectorY || gbWorldSectorZ != 0))
+			gWorldSector != gMercProfiles[HAMOUS].sSector)
 	{
 		// ok, HAMOUS's sector not loaded, so time to move!
 		// might be same sector as before, if so, oh well!
 		auto placement = GCM->getNpcPlacement(HAMOUS);
 		UINT8 sector   = placement->pickPlacementSector();
-		gMercProfiles[HAMOUS].sSectorX = SECTORX(sector);
-		gMercProfiles[HAMOUS].sSectorY = SECTORY(sector);
-		gMercProfiles[PROF_ICECREAM].sSectorX = SECTORX(sector);
-		gMercProfiles[PROF_ICECREAM].sSectorY = SECTORY(sector);
+		gMercProfiles[HAMOUS].sSector = SGPSector(sector);
+		gMercProfiles[PROF_ICECREAM].sSector = SGPSector(sector);
 	}
 
 	// Does Rat take off?
 	if ( gMercProfiles[ RAT ].bNPCData != 0 )
 	{
-		gMercProfiles[ RAT ].sSectorX = 0;
-		gMercProfiles[ RAT ].sSectorY = 0;
-		gMercProfiles[ RAT ].bSectorZ = 0;
+		gMercProfiles[ RAT ].sSector = SGPSector();
 	}
 
 
@@ -830,9 +818,7 @@ void HandleEarlyMorningEvents( void )
 	{
 		gMercProfiles[ CARMEN ].ubMiscFlags2 &= ~(PROFILE_MISC_FLAG2_DONT_ADD_TO_SECTOR);
 		// move Carmen to C13
-		gMercProfiles[ CARMEN ].sSectorX = 13;
-		gMercProfiles[ CARMEN ].sSectorY = MAP_ROW_C;
-		gMercProfiles[ CARMEN ].bSectorZ = 0;
+		gMercProfiles[ CARMEN ].sSector = swapSector1;
 
 		// we should also reset # of terrorist heads and give him cash
 		if (gMercProfiles[ CARMEN ].bNPCData2 > 0)
@@ -859,13 +845,11 @@ void HandleEarlyMorningEvents( void )
 	else
 	{
 		// randomize where he'll be today... so long as his sector's not loaded
-
-		if ( gMercProfiles[ CARMEN ].sSectorX != gWorldSectorX || gMercProfiles[ CARMEN ].sSectorY != gWorldSectorY )
+		if (gWorldSector != gMercProfiles[CARMEN].sSector)
 		{
 			auto placement = GCM->getNpcPlacement(CARMEN);
 			UINT8 sector   = placement->pickPlacementSector();
-			gMercProfiles[CARMEN].sSectorX = SECTORX(sector);
-			gMercProfiles[CARMEN].sSectorY = SECTORY(sector);
+			gMercProfiles[CARMEN].sSector = SGPSector(sector);
 
 			// he should have $5000... unless the player forgot to meet him
 			if (gMercProfiles[ CARMEN ].uiMoney < 5000)
@@ -884,7 +868,8 @@ void HandleEarlyMorningEvents( void )
 		SetFactFalse( FACT_DAVE_HAS_GAS );
 	}
 
-	if ( gWorldSectorX == HOSPITAL_SECTOR_X && gWorldSectorY == HOSPITAL_SECTOR_Y && gbWorldSectorZ == HOSPITAL_SECTOR_Z )
+	static const SGPSector hospital(HOSPITAL_SECTOR_X, HOSPITAL_SECTOR_Y, HOSPITAL_SECTOR_Z);
+	if (gWorldSector == hospital)
 	{
 		CheckForMissingHospitalSupplies();
 	}
@@ -904,8 +889,7 @@ void MakeCivGroupHostileOnNextSectorEntrance( UINT8 ubCivGroup )
 
 void RemoveAssassin( UINT8 ubProfile )
 {
-	gMercProfiles[ ubProfile ].sSectorX = 0;
-	gMercProfiles[ ubProfile ].sSectorY = 0;
+	gMercProfiles[ ubProfile ].sSector = SGPSector();
 	gMercProfiles[ ubProfile ].bLife = gMercProfiles[ ubProfile ].bLifeMax;
 }
 
@@ -974,7 +958,7 @@ static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinatio
 	UINT32	i;
 
 	//if the player doesnt "own" the sector,
-	if (StrategicMap[SECTOR_INFO_TO_STRATEGIC_INDEX(shippingDest->getDeliverySector())].fEnemyControlled)
+	if (StrategicMap[SGPSector(shippingDest->getDeliverySector()).AsStrategicIndex()].fEnemyControlled)
 	{
 		//the items disappear
 		gpNewBobbyrShipments[ ubOrderNum ].fActive = FALSE;
@@ -982,7 +966,7 @@ static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinatio
 	}
 
 	const BOOLEAN fSectorLoaded =
-		CloseCrate(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ, shippingDest->deliverySectorGridNo);
+		CloseCrate(shippingDest->deliverySector, shippingDest->deliverySectorGridNo);
 
 	for(i=0; i<gpNewBobbyrShipments[ ubOrderNum ].ubNumberPurchases; i++)
 	{
@@ -1033,7 +1017,7 @@ static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinatio
 		//add all the items from the array that was built above
 
 		//The item are to be added to the Top part of Drassen, grid loc's  10112, 9950
-		AddItemsToUnLoadedSector(shippingDest->deliverySectorX, shippingDest->deliverySectorY, shippingDest->deliverySectorZ, shippingDest->deliverySectorGridNo, uiCount, pObject, 0, 0, 0, INVISIBLE);
+		AddItemsToUnLoadedSector(shippingDest->deliverySector, shippingDest->deliverySectorGridNo, uiCount, pObject, 0, 0, 0, INVISIBLE);
 		delete[] pObject;
 		pObject = NULL;
 	}

@@ -1325,13 +1325,13 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 
 	if (gfTurnBasedAI || gTacticalStatus.fAutoBandageMode)
 	{
-		SLOGD(ST::format("{} does {} (a.d. {}) in {} with {} APs left",
+		STLOGD("{} does {} (a.d. {}) in {} with {} APs left",
 			pSoldier->ubID, gzActionStr[pSoldier->bAction], pSoldier->usActionData,
-			pSoldier->sGridNo, pSoldier->bActionPoints));
+			pSoldier->sGridNo, pSoldier->bActionPoints);
 	}
 
-	SLOGD(ST::format("{} does {} (a.d. {}) at time {}", pSoldier->ubID,
-		gzActionStr[pSoldier->bAction], pSoldier->usActionData, GetJA2Clock()));
+	STLOGD("{} does {} (a.d. {}) at time {}", pSoldier->ubID,
+		gzActionStr[pSoldier->bAction], pSoldier->usActionData, GetJA2Clock());
 
 	switch (pSoldier->bAction)
 	{
@@ -1926,7 +1926,8 @@ void HandleInitialRedAlert(INT8 bTeam)
 		MakeClosestEnemyChosenOne();
 	}
 
-	if ( bTeam == ENEMY_TEAM && gWorldSectorX == 3 && gWorldSectorY == MAP_ROW_P && gbWorldSectorZ == 0 )
+	static const SGPSector meduna(3, MAP_ROW_P);
+	if (bTeam == ENEMY_TEAM && gWorldSector == meduna)
 	{
 		// alert Queen and Joe if they are around
 		SOLDIERTYPE *			pSoldier;

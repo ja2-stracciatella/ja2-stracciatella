@@ -31,7 +31,7 @@
 
 
 UINT32 guiMortarsRolledByTeam = 0;
-
+static const SGPSector tixa(TIXA_SECTOR_X, TIXA_SECTOR_Y);
 
 static void MarkAllWeaponsOfSameGunClassAsDropped(UINT16 usWeapon);
 
@@ -290,7 +290,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			if( ( bRating >= GREAT_ARMY_EQUIPMENT_RATING ) && ( Random( 100 ) < 20 ) )
 			{
 				//give this man a special weapon!  No mortars if underground, however
-				ubMaxSpecialWeaponRoll = ( !IsAutoResolveActive() && ( gbWorldSectorZ != 0 ) ) ? 6 : 7;
+				ubMaxSpecialWeaponRoll = (!IsAutoResolveActive() && gWorldSector.z != 0) ? 6 : 7;
 				switch ( Random ( ubMaxSpecialWeaponRoll ) )
 				{
 					case 0:
@@ -394,7 +394,7 @@ void GenerateRandomEquipment( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass, INT8
 			if( ( bRating >= GOOD_ELITE_EQUIPMENT_RATING ) && ( Random( 100 ) < 33 ) )
 			{
 				//give this man a special weapon!  No mortars if underground, however
-				ubMaxSpecialWeaponRoll = ( !IsAutoResolveActive() && ( gbWorldSectorZ != 0 ) ) ? 6 : 7;
+				ubMaxSpecialWeaponRoll = (!IsAutoResolveActive() && gWorldSector.z != 0) ? 6 : 7;
 				switch ( Random ( ubMaxSpecialWeaponRoll ) )
 				{
 					case 0:
@@ -1202,7 +1202,7 @@ static void ChooseSpecialWeaponsForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp,
 	if (fMortar)
 	{
 		// make sure we're not distributing them underground!
-		Assert( IsAutoResolveActive() || ( gbWorldSectorZ == 0 ) );
+		Assert(IsAutoResolveActive() || gWorldSector.z == 0);
 
 		// give mortar
 		CreateItem( MORTAR, (INT8)(50 + Random( 51 )), &Object );
@@ -1217,9 +1217,7 @@ static void ChooseFaceGearForSoldierCreateStruct(SOLDIERCREATE_STRUCT* pp)
 	INT32 i;
 	INT8 bDifficultyRating = CalcDifficultyModifier( pp->ubSoldierClass );
 
-
-	if (gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y &&
-		StrategicMap[TIXA_SECTOR_X + TIXA_SECTOR_Y * MAP_WORLD_X].fEnemyControlled)
+	if (gWorldSector == tixa && StrategicMap[tixa.AsStrategicIndex()].fEnemyControlled)
 	{
 		//Tixa is a special case that is handled differently.
 		return;
@@ -1469,7 +1467,7 @@ static void ChooseLocationSpecificGearForSoldierCreateStruct(SOLDIERCREATE_STRUC
 
 	// If this is Tixa and the player doesn't control Tixa then give all enemies gas masks,
 	// but somewhere on their person, not in their face positions
-	if ( gWorldSectorX == TIXA_SECTOR_X && gWorldSectorY == TIXA_SECTOR_Y && StrategicMap[ TIXA_SECTOR_X + TIXA_SECTOR_Y * MAP_WORLD_X ].fEnemyControlled )
+	if (gWorldSector == tixa && StrategicMap[tixa.AsStrategicIndex()].fEnemyControlled)
 	{
 		CreateItem( GASMASK, (INT8) (95+Random(6)), &Object );
 		PlaceObjectInSoldierCreateStruct( pp, &Object );
