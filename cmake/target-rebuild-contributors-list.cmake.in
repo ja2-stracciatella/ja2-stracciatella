@@ -1,76 +1,28 @@
 find_package(Git)
 
-function(get_contributors WITH_EMAIL OUTPUT_VARIABLE)
-    set(FORMAT "%an")
-    if (WITH_EMAIL)
-        set(FORMAT "${FORMAT} <%ae>")
-    endif()
-
+function(get_contributors OUTPUT_VARIABLE)
     execute_process(
-            COMMAND ${GIT_EXECUTABLE} "log" "--pretty=format:${FORMAT}"
+            COMMAND ${GIT_EXECUTABLE} "shortlog" "--summary" "--group=author" "--group=trailer:co-authored-by"
             WORKING_DIRECTORY "@CMAKE_SOURCE_DIR@"
             OUTPUT_VARIABLE GIT_CONTRIBUTORS
     )
-    string(REPLACE "\n" ";" GIT_CONTRIBUTORS ${GIT_CONTRIBUTORS})
-    list(REMOVE_DUPLICATES GIT_CONTRIBUTORS)
+    # cmake has very basic regex support, so we need two steps to remove the commit count
+    string(REPLACE "\n" "@" GIT_CONTRIBUTORS ${GIT_CONTRIBUTORS})
+    string(REGEX REPLACE "[\t ]+[0-9]+[\t ]+([^@]*)@" "\\1;" GIT_CONTRIBUTORS ${GIT_CONTRIBUTORS})
     set(${OUTPUT_VARIABLE} ${GIT_CONTRIBUTORS} PARENT_SCOPE)
 endfunction(get_contributors)
 
 if(GIT_FOUND)
-    get_contributors(ON GIT_CONTRIBUTORS_WITH_EMAIL)
-    get_contributors(OFF GIT_CONTRIBUTORS_WITHOUT_EMAIL)
+    get_contributors(UNIQUE_CONTRIBUTORS)
 
-    foreach(CONTRIBUTOR ${GIT_CONTRIBUTORS_WITHOUT_EMAIL})
-        foreach(CANDIDATE ${GIT_CONTRIBUTORS_WITH_EMAIL})
-            if("${CANDIDATE}" MATCHES "^${CONTRIBUTOR} <")
-                list(APPEND CONTRIBUTORS_WITH_UNIQUE_NAMES ${CANDIDATE})
-                break()
-            endif()
-        endforeach()
-    endforeach()
-
-    foreach(CONTRIBUTOR ${CONTRIBUTORS_WITH_UNIQUE_NAMES})
-        string(REGEX REPLACE "^(.*) <(.*)>$" "\\1" CONTRIBUTOR_EMAIL ${CONTRIBUTOR})
-
-        foreach(CANDIDATE ${GIT_CONTRIBUTORS_WITH_EMAIL})
-            string(REGEX REPLACE "^(.*) <(.*)>$" "\\1" CANDIDATE_EMAIL ${CANDIDATE})
-            if(CANDIDATE_EMAIL STREQUAL CONTRIBUTOR_EMAIL)
-                list(APPEND UNIQUE_CONTRIBUTORS ${CANDIDATE})
-                break()
-            endif()
-        endforeach()
-    endforeach()
-
-
-    # Remove some duplicates and svn references and add some non-git contributors
-    list(REMOVE_ITEM UNIQUE_CONTRIBUTORS
-        "stefan <stefan@stefan.wg>"
-        "Gennady <gennady@aspire.(none)>"
-        "Nils R <ml@hxgn.net>"
-        "wolf <wolf@5e31c081-6ce3-0310-bb30-f584a8092234>"
-        "tron <tron@5e31c081-6ce3-0310-bb30-f584a8092234>"
-        "Czcibor <foo@foo.com>"
-        "vxx <no@e.mail>"
-        "Gregor Z <ketchupy@gmail.com>"
-        "Misanthropos <misanthropos@gmx.de>"
-        "RinneT <thomas.rinsch@arcor.de>"
-        "derSteFfi <der_steffi@gmx.de>"
-        "ja2-derek <sfod_csy@hotmail.com>"
-        "Stefan Lau <selaux@users.noreply.github.com>"
-        "Peinthor Rene <rp@regalis.localdomain>"
-    )
+    # and add some non-git contributors
     list(APPEND UNIQUE_CONTRIBUTORS
         "Oliver Jankowski"
         "mgl from The Bear's Pit Forum"
         "sunshine from The Bear's Pit Forum"
         "Rebekka Bais (Logo Design)"
-        "wolf (committer to the original Tron's svn repository)"
         "Agatae (https://bitbucket.org/Agatae)"
-        "Richard Fröhning <misanthropos@gmx.de>"
-        "Stefan Lau <github@stefanlau.com>"
-        "Peinthor Rene <peinthor@gmail.com>"
     )
-    list(REMOVE_DUPLICATES UNIQUE_CONTRIBUTORS)
 
     # Cmake can only do case-sensitive sorting
     foreach(CONTRIBUTOR ${UNIQUE_CONTRIBUTORS})

@@ -13,6 +13,7 @@ Alex Ellwein
 Alexander 'z33ky' Hirsch
 Alexander Gordeev
 Alexander von Gernler
+Alexandru Pinca
 Czcibór
 Darius Kazemi
 David Krawiec
@@ -45,14 +46,17 @@ Poncho
 rebb
 Rebekka Bais (Logo Design)
 Richard Fröhning
-Rinne
+RinneT
 rk
 RoddyAtHat
 sam
+Seven
 Simon Bitschnau
+stefan
 Stefan Lau
 Stephan Bauroth
 sunshine from The Bear's Pit Forum
+tron
 vancv
-wolf (committer to the original Tron's svn repository)
-wvx
+vxx
+wolf
