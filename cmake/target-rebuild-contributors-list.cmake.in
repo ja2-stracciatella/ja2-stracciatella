@@ -1,5 +1,9 @@
 find_package(Git)
 
+if(NOT GIT_FOUND)
+    message(FATAL_ERROR "No git executable found, aborting.")
+endif()
+
 function(get_contributors OUTPUT_VARIABLE)
     execute_process(
             COMMAND ${GIT_EXECUTABLE} "shortlog" "--summary" "--group=author" "--group=trailer:co-authored-by"
@@ -12,46 +16,42 @@ function(get_contributors OUTPUT_VARIABLE)
     set(${OUTPUT_VARIABLE} ${GIT_CONTRIBUTORS} PARENT_SCOPE)
 endfunction(get_contributors)
 
-if(GIT_FOUND)
-    get_contributors(UNIQUE_CONTRIBUTORS)
+get_contributors(UNIQUE_CONTRIBUTORS)
 
-    # and add some non-git contributors
-    list(APPEND UNIQUE_CONTRIBUTORS
-        "Oliver Jankowski"
-        "mgl from The Bear's Pit Forum"
-        "sunshine from The Bear's Pit Forum"
-        "Rebekka Bais (Logo Design)"
-        "Agatae (https://bitbucket.org/Agatae)"
-    )
+# and add some non-git contributors
+list(APPEND UNIQUE_CONTRIBUTORS
+    "Oliver Jankowski"
+    "mgl from The Bear's Pit Forum"
+    "sunshine from The Bear's Pit Forum"
+    "Rebekka Bais (Logo Design)"
+    "Agatae (https://bitbucket.org/Agatae)"
+)
 
-    # Cmake can only do case-sensitive sorting
-    foreach(CONTRIBUTOR ${UNIQUE_CONTRIBUTORS})
-        string(TOLOWER ${CONTRIBUTOR} LOWER)
-        list(APPEND UNIQUE_CONTRIBUTORS_LOWERCASE ${LOWER})
+# Cmake can only do case-sensitive sorting
+foreach(CONTRIBUTOR ${UNIQUE_CONTRIBUTORS})
+    string(TOLOWER ${CONTRIBUTOR} LOWER)
+    list(APPEND UNIQUE_CONTRIBUTORS_LOWERCASE ${LOWER})
+endforeach()
+list(SORT UNIQUE_CONTRIBUTORS_LOWERCASE)
+foreach(CONTRIBUTOR ${UNIQUE_CONTRIBUTORS_LOWERCASE})
+    foreach(CANDIDATE ${UNIQUE_CONTRIBUTORS})
+        string(TOLOWER ${CANDIDATE} LOWER)
+        string(REGEX REPLACE " <[^>]+>" "" CANDIDATE ${CANDIDATE})
+        if(CONTRIBUTOR STREQUAL LOWER)
+            list(APPEND SORTED_CONTRIBUTORS ${CANDIDATE})
+            break()
+        endif()
     endforeach()
-    list(SORT UNIQUE_CONTRIBUTORS_LOWERCASE)
-    foreach(CONTRIBUTOR ${UNIQUE_CONTRIBUTORS_LOWERCASE})
-        foreach(CANDIDATE ${UNIQUE_CONTRIBUTORS})
-            string(TOLOWER ${CANDIDATE} LOWER)
-            string(REGEX REPLACE " <[^>]+>" "" CANDIDATE ${CANDIDATE})
-            if(CONTRIBUTOR STREQUAL LOWER)
-                list(APPEND SORTED_CONTRIBUTORS ${CANDIDATE})
-                break()
-            endif()
-        endforeach()
-    endforeach()
+endforeach()
 
-    set(filename "@CMAKE_SOURCE_DIR@/contributors.txt")
-    file(WRITE ${filename} "Founder of the project\n" )
-    file(APPEND ${filename} "----------------------\n\n")
-    file(APPEND ${filename} "Tron\n\n")
-    file(APPEND ${filename} "Contributors (sorted alphabetically)\n")
-    file(APPEND ${filename} "------------------------------------\n\n")
-    foreach(CONTRIBUTOR ${SORTED_CONTRIBUTORS})
-        file(APPEND ${filename} "${CONTRIBUTOR}\n")
-    endforeach()
+set(filename "@CMAKE_SOURCE_DIR@/contributors.txt")
+file(WRITE ${filename} "Founder of the project\n" )
+file(APPEND ${filename} "----------------------\n\n")
+file(APPEND ${filename} "Tron\n\n")
+file(APPEND ${filename} "Contributors (sorted alphabetically)\n")
+file(APPEND ${filename} "------------------------------------\n\n")
+foreach(CONTRIBUTOR ${SORTED_CONTRIBUTORS})
+    file(APPEND ${filename} "${CONTRIBUTOR}\n")
+endforeach()
 
-    message("Contributors updated in ${filename}")
-else()
-    message(FATAL_ERROR "No git executable found, aborting.")
-endif()
+message("Contributors updated in ${filename}")
