@@ -4,19 +4,14 @@ if(NOT GIT_FOUND)
     message(FATAL_ERROR "No git executable found, aborting.")
 endif()
 
-function(get_contributors OUTPUT_VARIABLE)
-    execute_process(
-            COMMAND ${GIT_EXECUTABLE} "shortlog" "--summary" "--group=author" "--group=trailer:co-authored-by"
-            WORKING_DIRECTORY "@CMAKE_SOURCE_DIR@"
-            OUTPUT_VARIABLE GIT_CONTRIBUTORS
-    )
-    # cmake has very basic regex support, so we need two steps to remove the commit count
-    string(REPLACE "\n" "@" GIT_CONTRIBUTORS ${GIT_CONTRIBUTORS})
-    string(REGEX REPLACE "[\t ]+[0-9]+[\t ]+([^@]*)@" "\\1;" GIT_CONTRIBUTORS ${GIT_CONTRIBUTORS})
-    set(${OUTPUT_VARIABLE} ${GIT_CONTRIBUTORS} PARENT_SCOPE)
-endfunction(get_contributors)
-
-get_contributors(UNIQUE_CONTRIBUTORS)
+execute_process(
+    COMMAND ${GIT_EXECUTABLE} "shortlog" "--summary" "--group=author" "--group=trailer:co-authored-by"
+    WORKING_DIRECTORY "@CMAKE_SOURCE_DIR@"
+    OUTPUT_VARIABLE UNIQUE_CONTRIBUTORS
+)
+# cmake has very basic regex support, so we need two steps to remove the commit count
+string(REPLACE "\n" "@" UNIQUE_CONTRIBUTORS ${UNIQUE_CONTRIBUTORS})
+string(REGEX REPLACE "[\t ]+[0-9]+[\t ]+([^@]*)@" "\\1;" UNIQUE_CONTRIBUTORS ${UNIQUE_CONTRIBUTORS})
 
 # and add some non-git contributors
 list(APPEND UNIQUE_CONTRIBUTORS
