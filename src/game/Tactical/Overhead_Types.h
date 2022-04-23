@@ -227,13 +227,15 @@ enum WorldDirections
 #define TOTAL_SOLDIERS					( NUM_PLANNING_MERCS + MAX_NUM_SOLDIERS )
 
 // DEFINE TEAMS
-#define OUR_TEAM					0
-#define ENEMY_TEAM					1
-#define CREATURE_TEAM					2
-#define MILITIA_TEAM					3
-#define CIV_TEAM					4
-#define LAST_TEAM					CIV_TEAM
-
+enum Team
+{
+	OUR_TEAM = 0,
+	ENEMY_TEAM = 1,
+	CREATURE_TEAM = 2,
+	MILITIA_TEAM = 3,
+	CIV_TEAM = 4,
+	LAST_TEAM = CIV_TEAM
+};
 
 //-----------------------------------------------
 //NOTE:  The editor uses these enumerations, so please update the text as well if you modify or
@@ -241,7 +243,7 @@ enum WorldDirections
 //       EditorMercs.c
 //
 // civilian "sub teams":
-enum
+enum CivilianGroup
 {
 	NON_CIV_GROUP = 0,
 	REBEL_CIV_GROUP,
