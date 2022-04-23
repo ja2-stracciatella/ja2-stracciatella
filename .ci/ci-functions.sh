@@ -60,6 +60,12 @@ linux-set-gcc-version () {
     sudo update-alternatives --set g++ "/usr/bin/g++-$1"
 }
 
+linux-setup-android-signing-keys () {
+    mkdir $HOME/.stracciatella-android-signing-keys
+
+    echo -n "$ANDROID_KEYSTORE_FILE" | base64 -d > $HOME/.stracciatella-android-signing-keys/keystore.jks
+}
+
 macOS-install-via-brew () {
     brew install $@
 }

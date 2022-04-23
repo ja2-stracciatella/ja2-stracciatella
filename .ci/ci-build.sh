@@ -59,7 +59,7 @@ elif [[ "$CI_TARGET" == "mac" ]]; then
 elif [[ "$CI_TARGET" == "android" ]]; then
   export CONFIGURE_CMD="true"
   export BUILD_CMD="../android/gradlew"
-  export BUILD_TOOL_ARGS="-p ../android assembleDebug -PbuildDir=$(pwd)/ci-build"
+  export BUILD_TOOL_ARGS="-p ../android assembleRelease -PbuildDir=$(pwd)/ci-build"
   export RUN_TESTS=false
   export PACKAGE_NAME="ja2-stracciatella_$(./android/gradlew -q -p ./android projectVersion)-$VERSION_TAG+$(git rev-parse --short HEAD)_android.apk"
 else
@@ -105,7 +105,7 @@ fi
 if [[ "$CI_TARGET" == "linux" ]]; then
   $BUILD_CMD --target package-appimage
 elif [[ "$CI_TARGET" == "android" ]]; then
-  cp ./outputs/apk/debug/app-debug.apk "./$PACKAGE_NAME"
+  cp ./outputs/apk/release/app-release.apk "./$PACKAGE_NAME"
 else
   $BUILD_CMD --target package
 fi

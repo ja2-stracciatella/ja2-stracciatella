@@ -88,6 +88,7 @@ jobs:
         echo "PATH=$PATH" >> $GITHUB_ENV
       env:
         CI_TARGET: ${{ matrix.cfg.target }}
+        ANDROID_KEYSTORE_FILE: ${{ secrets.ANDROID_KEYSTORE_FILE }}
 
     - name: Build and run tests
       shell: bash
@@ -98,6 +99,7 @@ jobs:
         CI_TARGET: ${{ matrix.cfg.target }}
         CI_REF: ${{ github.ref }}
         GITHUB_ACCESS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
 
     - name: Publish packages
       shell: bash
