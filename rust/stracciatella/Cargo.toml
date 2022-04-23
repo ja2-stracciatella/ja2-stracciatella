@@ -48,11 +48,13 @@ version = "0.10"
 [target.'cfg(target_os = "android")'.dependencies.lazy_static]
 version = "1.4"
 [target.'cfg(target_os = "android")'.dependencies.jni]
-version = "0.14"
+version = "0.18"
+[target.'cfg(target_os = "android")'.dependencies.jni-sys]
+version = "0.3"
 [target.'cfg(target_os = "android")'.dependencies.ndk]
-git = "https://github.com/selaux/android-ndk-rs"
+version = "0.6"
 [target.'cfg(target_os = "android")'.dependencies.ndk-sys]
-git = "https://github.com/selaux/android-ndk-rs"
+version = "0.3"
 
 [build-dependencies]
 serde = "1.0"

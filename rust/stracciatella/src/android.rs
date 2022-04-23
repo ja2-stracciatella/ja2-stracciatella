@@ -2,7 +2,7 @@ use std::path::{Path, PathBuf};
 use std::sync::RwLock;
 
 use jni::{
-    errors::{ErrorKind, Result},
+    errors::{Error, Result},
     objects::{JObject, JString, JValue},
     JNIEnv,
 };
@@ -30,16 +30,16 @@ lazy_static! {
 /// This should be called with the SDL JNI env
 pub fn set_global_jni_env(jni_env: *mut jni::sys::JNIEnv) -> Result<()> {
     if jni_env.is_null() {
-        return Err(ErrorKind::NullPtr("jni_env").into());
+        return Err(Error::NullPtr("jni_env").into());
     }
-    let mut global_jni_env = GLOBAL_JNI_ENV.try_write().map_err(|_| ErrorKind::TryLock)?;
+    let mut global_jni_env = GLOBAL_JNI_ENV.try_write().map_err(|_| Error::TryLock)?;
     global_jni_env.0 = jni_env;
     Ok(())
 }
 
 /// Gets the rust version of the current global jni env
 pub fn get_global_jni_env() -> Result<jni::JNIEnv<'static>> {
-    let global_jni_env = GLOBAL_JNI_ENV.try_read().map_err(|_| ErrorKind::TryLock)?;
+    let global_jni_env = GLOBAL_JNI_ENV.try_read().map_err(|_| Error::TryLock)?;
     unsafe { JNIEnv::from_raw(global_jni_env.0) }
 }
 
@@ -122,9 +122,9 @@ pub fn get_asset_manager() -> Result<AssetManager> {
     Ok(unsafe {
         // This is the cast of death
         let ptr = ndk_sys::AAssetManager_fromJava(
-            (jni_env.get_native_interface() as *const ndk_sys::JNINativeInterface)
-                as *mut *const ndk_sys::JNINativeInterface,
-            asset_manager.into_inner() as *mut std::ffi::c_void,
+            (jni_env.get_native_interface() as *const jni_sys::JNINativeInterface_)
+                as *mut *const jni_sys::JNINativeInterface_,
+            asset_manager.into_inner() as *mut jni_sys::_jobject,
         );
         AssetManager::from_ptr(std::ptr::NonNull::new(ptr).unwrap())
     })
@@ -145,9 +145,10 @@ pub fn list_asset_dir(dir: &Path) -> Result<Vec<PathBuf>> {
                 &[],
             )?
             .l()?;
-        let path = dir.to_str().map(String::from).ok_or_else(|| {
-            ErrorKind::Msg("Error casting path to string for list_asset_dir".to_owned())
-        })?;
+        let path = dir
+            .to_str()
+            .map(String::from)
+            .ok_or_else(|| Error::WrongJValueType("string", "list_asset_dir"))?;
         let path_obj = jni_env.new_string(&path)?.into();
         let path = JValue::Object(path_obj);
         let list_contents_obj = jni_env
