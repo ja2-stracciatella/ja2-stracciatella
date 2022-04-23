@@ -215,7 +215,7 @@ BOOLEAN ApplyNewExitGridValuesToTextFields()
 	//exit grid input fields
 	if( iCurrentTaskbar != TASK_MAPINFO )
 		return FALSE;
-	str = ST::format("{}", gExitGrid.ubGotoSector.AsShortString());
+	str = gExitGrid.ubGotoSector.AsShortString();
 	SetInputFieldString( 7, str );
 	str = ST::format("{}", gExitGrid.ubGotoSector.z);
 	SetInputFieldString( 8, str );

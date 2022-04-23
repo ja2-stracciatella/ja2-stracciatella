@@ -79,7 +79,7 @@ void InitRadarScreen()
 }
 
 
-void LoadRadarScreenBitmap(ST::string filename)
+void LoadRadarScreenBitmap(const ST::string& filename)
 {
 	ClearOutRadarMapImage();
 

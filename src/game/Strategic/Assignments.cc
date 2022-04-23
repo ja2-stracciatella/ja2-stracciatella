@@ -927,7 +927,7 @@ void UpdateAssignments()
 	// run through sectors and handle each type in sector
 	for (sector.x = 0; sector.x < MAP_WORLD_X; sector.x++)
 	{
-		for (sector.y = 0; sector.y < MAP_WORLD_X; sector.y++)
+		for (sector.y = 0; sector.y < MAP_WORLD_Y; sector.y++)
 		{
 			for (sector.z = 0; sector.z < 4; sector.z++)
 			{

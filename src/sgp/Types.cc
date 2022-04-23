@@ -62,6 +62,7 @@ bool SGPSector::operator!=(const SGPSector& sector) const noexcept
 	return !(*this == sector);
 }
 
+// true if the rhs sector is to the left or to the top of this sector
 bool SGPSector::operator<(const SGPSector& rhs) const noexcept
 {
 	return x < rhs.x || y < rhs.y;
@@ -69,18 +70,19 @@ bool SGPSector::operator<(const SGPSector& rhs) const noexcept
 
 SGPSector SGPSector::operator+(const SGPSector& rhs) const noexcept
 {
-	return SGPSector(x + rhs.x, y + rhs.y);
+	return SGPSector(x + rhs.x, y + rhs.y, z + rhs.z);
 }
 
 SGPSector SGPSector::operator-(const SGPSector& rhs) const noexcept
 {
-	return SGPSector(x - rhs.x, y - rhs.y);
+	return SGPSector(x - rhs.x, y - rhs.y, z - rhs.z);
 }
 
 SGPSector& SGPSector::operator+=(const SGPSector& rhs) noexcept
 {
 	x += rhs.x;
 	y += rhs.y;
+	z += rhs.z;
 	return *this;
 }
 
@@ -88,6 +90,7 @@ SGPSector& SGPSector::operator-=(const SGPSector& rhs) noexcept
 {
 	x -= rhs.x;
 	y -= rhs.y;
+	z -= rhs.z;
 	return *this;
 }
 

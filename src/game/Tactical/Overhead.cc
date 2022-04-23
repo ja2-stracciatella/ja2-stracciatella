@@ -1985,10 +1985,10 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 		if (pSoldier->ubWhatKindOfMercAmI == MERC_TYPE__EPC)
 		{
 			// are we there yet?
-			static const SGPSector sMap(13, MAP_ROW_B);
+			static const SGPSector drassenAirport(13, MAP_ROW_B);
 			static const SGPSector sanMona(6, MAP_ROW_C);
 			static const SGPSector cambria(8, MAP_ROW_G);
-			if (pSoldier->sSector == sMap)
+			if (pSoldier->sSector == drassenAirport)
 			{
 				switch (pSoldier->ubProfile)
 				{
@@ -1999,7 +1999,7 @@ static BOOLEAN HandleAtNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving)
 							EVENT_StopMerc(pSoldier);
 							SetFactTrue(FACT_SKYRIDER_CLOSE_TO_CHOPPER);
 							TriggerNPCRecord(SKYRIDER, 15);
-							SetUpHelicopterForPlayer(sMap);
+							SetUpHelicopterForPlayer(drassenAirport);
 						}
 						break;
 
