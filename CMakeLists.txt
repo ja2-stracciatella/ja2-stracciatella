@@ -279,6 +279,9 @@ set(
 if (MINGW)
     LIST(APPEND JA2_LIBRARIES mingw_stdthreads)
 endif()
+if (ANDROID)
+    LIST(APPEND JA2_LIBRARIES android log)
+endif()
 
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     LIST(APPEND JA2_LIBRARIES stdc++fs)
@@ -472,7 +475,7 @@ if(MSVC OR MINGW)
     include(InstallRequiredSystemLibraries)
 
     file(GLOB WIN_DIST_FILES "${CMAKE_CURRENT_SOURCE_DIR}/assets/distr-files-win/*.txt")
-    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.8-mingw/README-SDL.txt DESTINATION .)
+    install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/dependencies/lib-SDL2-2.0.20-mingw/README-SDL.txt DESTINATION .)
     install(FILES ${WIN_DIST_FILES} DESTINATION .)
     install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/assets/icons/logo.ico DESTINATION .)
 endif()
