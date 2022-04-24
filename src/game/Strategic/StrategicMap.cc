@@ -1455,7 +1455,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 
 	//Now, determine the traversal time.
 	GROUP* const pGroup = GetGroup(pValidSoldier->ubGroupID);
-	AssertMsg( pGroup, String( "%s is not in a valid group (pSoldier->ubGroupID is %d)", pValidSoldier->name.c_str(), pValidSoldier->ubGroupID) );
+	AssertMsg(pGroup, ST::format("{} is not in a valid group(pSoldier->ubGroupID is {})", pValidSoldier->name, pValidSoldier->ubGroupID));
 
 	// If we are going through an exit grid, don't get traversal direction!
 	if ( ubTacticalDirection != 255 )
@@ -2132,7 +2132,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 				{
 					//Now, determine if this is a valid path.
 					pGroup = GetGroup( pValidSoldier->ubGroupID );
-					AssertMsg( pGroup, String( "%s is not in a valid group (pSoldier->ubGroupID is %d)", pValidSoldier->name.c_str(), pValidSoldier->ubGroupID) );
+					AssertMsg(pGroup, ST::format("{} is not in a valid group (pSoldier->ubGroupID is {})", pValidSoldier->name, pValidSoldier->ubGroupID));
 					UINT32 traverse_time = TRAVERSE_TIME_IMPOSSIBLE;
 					if (!gWorldSector.z)
 					{
@@ -2190,7 +2190,7 @@ BOOLEAN OKForSectorExit( INT8 bExitDirection, UINT16 usAdditionalData, UINT32 *p
 			GROUP *pGroup;
 			//Now, determine if this is a valid path.
 			pGroup = GetGroup( pValidSoldier->ubGroupID );
-			AssertMsg( pGroup, String( "%s is not in a valid group (pSoldier->ubGroupID is %d)", pValidSoldier->name.c_str(), pValidSoldier->ubGroupID) );
+			AssertMsg(pGroup, ST::format("{} is not in a valid group (pSoldier->ubGroupID is {})", pValidSoldier->name, pValidSoldier->ubGroupID));
 			UINT32 traverse_time = TRAVERSE_TIME_IMPOSSIBLE; // -XXX Wmaybe-uninitialized : valid default?
 			if (!gWorldSector.z)
 			{

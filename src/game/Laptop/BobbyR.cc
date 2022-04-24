@@ -706,7 +706,7 @@ void AddFreshBobbyRayInventory( UINT16 usItemIndex )
 	sInventorySlot = GetInventorySlotForItem(pInventoryArray, usItemIndex, fUsed);
 	if (sInventorySlot == -1)
 	{
-		AssertMsg( FALSE, String( "AddFreshBobbyRayInventory(), Item %d not found.  AM-0.", usItemIndex ) );
+		AssertMsg(FALSE, ST::format("AddFreshBobbyRayInventory(), Item {} not found. AM-0.", usItemIndex));
 		return;
 	}
 

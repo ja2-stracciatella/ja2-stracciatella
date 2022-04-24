@@ -378,7 +378,7 @@ INT16 LoadGenericButtonIcon(const char* filename)
 
 void UnloadGenericButtonIcon(INT16 GenImg)
 {
-	AssertMsg(0 <= GenImg && GenImg < MAX_BUTTON_ICONS, String("Attempting to UnloadGenericButtonIcon with out of range index %d.", GenImg));
+	AssertMsg(0 <= GenImg && GenImg < MAX_BUTTON_ICONS, ST::format("Attempting to UnloadGenericButtonIcon with out of range index {}.", GenImg));
 
 #if defined BUTTONSYSTEM_DEBUGGING
 	AssertMsg(GenericButtonIcons[GenImg], "Attempting to UnloadGenericButtonIcon that has no icon (already deleted).");
@@ -469,10 +469,10 @@ void RemoveButton(GUIButtonRef& btn)
 	btn.Reset();
 
 	CHECKV(0 < btn_id && btn_id < MAX_BUTTONS); // XXX HACK000C
-	AssertMsg(0 < btn_id && btn_id < MAX_BUTTONS, String("ButtonID %d is out of range.", btn_id));
+	AssertMsg(0 < btn_id && btn_id < MAX_BUTTONS, ST::format("ButtonID {} is out of range.", btn_id));
 	GUI_BUTTON* const b = ButtonList[btn_id];
 	CHECKV(b); // XXX HACK000C
-	AssertMsg(b, String("Accessing non-existent button %d.", btn_id));
+	AssertMsg(b, ST::format("Accessing non-existent button {}.", btn_id));
 
 	/* If we happen to be in the middle of a callback, and attempt to delete a
 	 * button, like deleting a node during list processing, then we delay it till
@@ -537,7 +537,7 @@ GUI_BUTTON::GUI_BUTTON(UINT32 const flags, INT16 const left, INT16 const top, IN
 	ubToggleButtonActivated(FALSE),
 	ubSoundSchemeID(BUTTON_SOUND_SCHEME_NONE)
 {
-	AssertMsg(left >= 0 && top >= 0 && width >= 0 && height >= 0, String("Attempting to create button with invalid coordinates %dx%d+%dx%d", left, top, width, height));
+	AssertMsg(left >= 0 && top >= 0 && width >= 0 && height >= 0, ST::format("Attempting to create button with invalid coordinates {}{}+{}{}", left, top, width, height));
 
 	Area.SetUserPtr(this);
 

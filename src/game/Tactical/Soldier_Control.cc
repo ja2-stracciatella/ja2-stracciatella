@@ -2433,7 +2433,7 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 			}
 
 		default:
-			AssertMsg( FALSE, String( "SelectFireAnimation: ERROR - Invalid height %d", ubHeight ) );
+			AssertMsg(FALSE, ST::format("SelectFireAnimation: ERROR - Invalid height {}", ubHeight));
 			break;
 	}
 
@@ -2456,7 +2456,7 @@ UINT16 GetMoveStateBasedOnStance(const SOLDIERTYPE* const s, const UINT8 ubStanc
 		case ANIM_CROUCH: return SWATTING;
 
 		default:
-			AssertMsg(FALSE, String("GetMoveStateBasedOnStance: ERROR - Invalid height %d",
+			AssertMsg(FALSE, ST::format("GetMoveStateBasedOnStance: ERROR - Invalid height {}",
 					ubStanceHeight));
 			return 0;
 	}

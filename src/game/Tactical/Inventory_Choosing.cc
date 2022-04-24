@@ -1856,7 +1856,7 @@ void AssignCreatureInventory( SOLDIERTYPE *pSoldier )
 			break;
 
 		default:
-			AssertMsg(FALSE, String("Invalid creature bodytype %d", pSoldier->ubBodyType));
+			AssertMsg(FALSE, ST::format("Invalid creature bodytype {}", pSoldier->ubBodyType));
 			return;
 	}
 
@@ -1906,7 +1906,7 @@ void ReplaceExtendedGuns( SOLDIERCREATE_STRUCT *pp, INT8 bSoldierClass )
 			else
 			{
 				bWeaponClass = GetWeaponClass( usItem );
-				AssertMsg( bWeaponClass != -1, String( "Gun %d does not have a match in the extended gun array", usItem ) );
+				AssertMsg(bWeaponClass != -1, ST::format("Gun {} does not have a match in the extended gun array", usItem));
 				usNewGun = SelectStandardArmyGun( bWeaponClass );
 			}
 

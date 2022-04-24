@@ -1252,7 +1252,7 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 		case 4:	bExpLevelModifier += +1; bStatsModifier += +1; break;
 
 		default:
-			AssertMsg(FALSE, String("Invalid bRelativeAttributeLevel = %d", bp->bRelativeAttributeLevel));
+			AssertMsg(FALSE, ST::format("Invalid bRelativeAttributeLevel = {}", bp->bRelativeAttributeLevel));
 			break;
 	}
 

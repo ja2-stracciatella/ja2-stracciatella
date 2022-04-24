@@ -366,7 +366,7 @@ void SetInputFieldStringWithNumericStrictValue( UINT8 ubField, INT32 iNumber )
 	TEXTINPUTNODE* const curr = GetTextInputField(ubField);
 	if (!curr) return;
 
-	AssertMsg(!curr->fUserField, String("Attempting to illegally set text into user field %d", curr->ubID));
+	AssertMsg(!curr->fUserField, ST::format("Attempting to illegally set text into user field {}", curr->ubID));
 	if (iNumber < 0) //negative number converts to blank string
 	{
 		curr->str = ST::null;
@@ -1189,7 +1189,7 @@ void SetTextInputCursor(UINT16 const new_cursor)
 UINT16 GetExclusive24HourTimeValueFromField( UINT8 ubField )
 {
 	TEXTINPUTNODE const* const curr = GetTextInputField(ubField);
-	AssertMsg(curr, String("GetExclusive24HourTimeValueFromField: Invalid field %d", ubField));
+	AssertMsg(curr, ST::format("GetExclusive24HourTimeValueFromField: Invalid field {}", ubField));
 	if (!curr) return 0xffff;
 
 	UINT16 usTime;
@@ -1230,7 +1230,7 @@ void SetExclusive24HourTimeValue( UINT8 ubField, UINT16 usTime )
 	TEXTINPUTNODE* const curr = GetTextInputField(ubField);
 	if (!curr) return;
 
-	AssertMsg(!curr->fUserField, String("Attempting to illegally set text into user field %d", curr->ubID));
+	AssertMsg(!curr->fUserField, ST::format("Attempting to illegally set text into user field {}", curr->ubID));
 	curr->str = ST::null;
 	curr->str += static_cast<char>((usTime / 600) + 0x30); //10 hours
 	curr->str += static_cast<char>((usTime / 60 % 10) + 0x30); //1 hour
