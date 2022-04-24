@@ -500,7 +500,7 @@ static void HandleBestSightingPositionInTurnbased(void)
 		FOR_EACH_MERC(i)
 		{
 			SOLDIERTYPE* const s = *i;
-			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, String("%s (%d) still has interrupt pts!", s->name.c_str(), s->ubID));
+			AssertMsg(s->bInterruptDuelPts == NO_INTERRUPT, ST::format("{} ({}) still has interrupt pts!", s->name, s->ubID));
 		}
 #endif
 	}

@@ -2283,8 +2283,8 @@ void DisplayPositionOfHelicopter( void )
 	UINT32 x,y;
 	UINT16 minX, minY, maxX, maxY;
 
-	AssertMsg(0 <= sOldMapX && sOldMapX < SCREEN_WIDTH,  String("DisplayPositionOfHelicopter: Invalid sOldMapX = %d", sOldMapX));
-	AssertMsg(0 <= sOldMapY && sOldMapY < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid sOldMapY = %d", sOldMapY));
+	AssertMsg(0 <= sOldMapX && sOldMapX < SCREEN_WIDTH,  ST::format("DisplayPositionOfHelicopter: Invalid sOldMapX = {}", sOldMapX));
+	AssertMsg(0 <= sOldMapY && sOldMapY < SCREEN_HEIGHT, ST::format("DisplayPositionOfHelicopter: Invalid sOldMapY = {}", sOldMapY));
 
 	// restore background on map where it is
 	if( sOldMapX != 0 )
@@ -2311,7 +2311,7 @@ void DisplayPositionOfHelicopter( void )
 			}
 
 			/*
-			AssertMsg( ( flRatio >= 0 ) && ( flRatio <= 100 ), String( "DisplayPositionOfHelicopter: Invalid flRatio = %6.2f, trav %d, arr %d, time %d",
+			AssertMsg((flRatio >= 0) && (flRatio <= 100), ST::format("DisplayPositionOfHelicopter: Invalid flRatio = {}.2f, trav {}, arr {}, time {}",
 					flRatio, pGroup->uiTraverseTime, pGroup->uiArrivalTime, GetWorldTotalMin() ) );*/
 
 			if ( flRatio < 0 )
@@ -2329,10 +2329,10 @@ void DisplayPositionOfHelicopter( void )
 			minY = MAP_VIEW_START_Y + MAP_GRID_Y * pGroup->ubSector.y;
 			maxY = MAP_VIEW_START_Y + MAP_GRID_Y * pGroup->ubNext.y;
 
-			AssertMsg(minX < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid minX = %d", minX));
-			AssertMsg(maxX < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid maxX = %d", maxX));
-			AssertMsg(minY < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid minY = %d", minY));
-			AssertMsg(maxY < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid maxY = %d", maxY));
+			AssertMsg(minX < SCREEN_WIDTH, ST::format("DisplayPositionOfHelicopter: Invalid minX = {}", minX));
+			AssertMsg(maxX < SCREEN_WIDTH, ST::format("DisplayPositionOfHelicopter: Invalid maxX = {}", maxX));
+			AssertMsg(minY < SCREEN_HEIGHT, ST::format("DisplayPositionOfHelicopter: Invalid minY = {}", minY));
+			AssertMsg(maxY < SCREEN_HEIGHT, ST::format("DisplayPositionOfHelicopter: Invalid maxY = {}", maxY));
 
 			// IMPORTANT: Since min can easily be larger than max, we gotta cast to as signed value
 			x = ( UINT32 )( minX + flRatio * ( ( INT16 ) maxX - ( INT16 ) minX ) );
@@ -2340,10 +2340,10 @@ void DisplayPositionOfHelicopter( void )
 			x += 1;
 			y += 3;
 
-			AssertMsg(x < SCREEN_WIDTH, String("DisplayPositionOfHelicopter: Invalid x = %d.  At %d,%d.  Next %d,%d.  Min/Max X = %d/%d",
+			AssertMsg(x < SCREEN_WIDTH, ST::format("DisplayPositionOfHelicopter: Invalid x = {}.  At {},{}.  Next {},{}.  Min/Max X = {}/{}",
 					x, pGroup->ubSector.x, pGroup->ubSector.y, pGroup->ubNext.x, pGroup->ubNext.y, minX, maxX));
 
-			AssertMsg(y < SCREEN_HEIGHT, String("DisplayPositionOfHelicopter: Invalid y = %d.  At %d,%d.  Next %d,%d.  Min/Max Y = %d/%d",
+			AssertMsg(y < SCREEN_HEIGHT, ST::format("DisplayPositionOfHelicopter: Invalid y = {}.  At {},{}.  Next {},{}.  Min/Max Y = {}/{}",
 					y, pGroup->ubSector.x, pGroup->ubSector.y, pGroup->ubNext.x, pGroup->ubNext.y, minY, maxY));
 
 
@@ -2371,8 +2371,8 @@ static void DisplayDestinationOfHelicopter(void)
 {
 	static INT16 sOldMapX = 0, sOldMapY = 0;
 
-	AssertMsg(0 <= sOldMapX && sOldMapX < SCREEN_WIDTH, String("DisplayDestinationOfHelicopter: Invalid sOldMapX = %d", sOldMapX));
-	AssertMsg(0 <= sOldMapY && sOldMapY < SCREEN_HEIGHT, String("DisplayDestinationOfHelicopter: Invalid sOldMapY = %d", sOldMapY));
+	AssertMsg(0 <= sOldMapX && sOldMapX < SCREEN_WIDTH, ST::format("DisplayDestinationOfHelicopter: Invalid sOldMapX = {}", sOldMapX));
+	AssertMsg(0 <= sOldMapY && sOldMapY < SCREEN_HEIGHT, ST::format("DisplayDestinationOfHelicopter: Invalid sOldMapY = {}", sOldMapY));
 
 	// restore background on map where it is
 	if( sOldMapX != 0 )
@@ -2391,8 +2391,8 @@ static void DisplayDestinationOfHelicopter(void)
 		UINT32 x = MAP_VIEW_START_X + ( MAP_GRID_X * sMap.x ) + 1;
 		UINT32 y = MAP_VIEW_START_Y + ( MAP_GRID_Y * sMap.y ) + 3;
 
-		AssertMsg( x < SCREEN_WIDTH, String("DisplayDestinationOfHelicopter: Invalid x = %d.  Dest %d,%d", x, sMap.x, sMap.y));
-		AssertMsg( y < SCREEN_HEIGHT, String("DisplayDestinationOfHelicopter: Invalid y = %d.  Dest %d,%d", y, sMap.x, sMap.y));
+		AssertMsg(x < SCREEN_WIDTH, ST::format("DisplayDestinationOfHelicopter: Invalid x = {}.  Dest {}", x, sMap.AsShortString()));
+		AssertMsg(y < SCREEN_HEIGHT, ST::format("DisplayDestinationOfHelicopter: Invalid y = {}.  Dest {}", y, sMap.AsShortString()));
 
 		// clip blits to mapscreen region
 		ClipBlitsToMapViewRegion( );

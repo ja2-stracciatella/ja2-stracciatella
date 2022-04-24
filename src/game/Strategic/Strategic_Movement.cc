@@ -107,7 +107,7 @@ static UINT8 AddGroupToList(GROUP* pGroup);
 //step before adding waypoints and members to the player group.
 GROUP* CreateNewPlayerGroupDepartingFromSector(const SGPSector& sMap)
 {
-	AssertMsg(sMap.IsValid(), String("CreateNewPlayerGroup with out of range sector values of %d %d", sMap.x, sMap.y));
+	AssertMsg(sMap.IsValid(), ST::format("CreateNewPlayerGroup with out of range sector values of {}", sMap.AsShortString()));
 	GROUP* const pNew = new GROUP{};
 	pNew->pPlayerList = NULL;
 	pNew->pWaypoints = NULL;
@@ -128,7 +128,7 @@ GROUP* CreateNewPlayerGroupDepartingFromSector(const SGPSector& sMap)
 
 GROUP* CreateNewVehicleGroupDepartingFromSector(const SGPSector& sMap)
 {
-	AssertMsg(sMap.IsValid(), String("CreateNewVehicleGroupDepartingFromSector with out of range sector values of %d %d", sMap.x, sMap.y));
+	AssertMsg(sMap.IsValid(), ST::format("CreateNewVehicleGroupDepartingFromSector with out of range sector values of {}", sMap.AsShortString()));
 	GROUP* const pNew = new GROUP{};
 	pNew->pWaypoints = NULL;
 	pNew->ubSector = pNew->ubNext = sMap;
@@ -171,7 +171,7 @@ void AddPlayerToGroup(GROUP& g, SOLDIERTYPE& s)
 	{
 		for (; i->next; i = i->next)
 		{
-			AssertMsg(i->pSoldier->ubProfile != s.ubProfile, String("Attempting to add an already existing merc to group (ubProfile=%d).", s.ubProfile));
+			AssertMsg(i->pSoldier->ubProfile != s.ubProfile, ST::format("Attempting to add an already existing merc to group (ubProfile={}).", s.ubProfile));
 		}
 		i->next = p;
 
@@ -224,7 +224,7 @@ void RemovePlayerFromGroup(SOLDIERTYPE& s)
 	if (!pGroup) return;
 	//end
 
-	AssertMsg(pGroup, String("Attempting to RemovePlayerFromGroup( %d, %d ) from non-existant group", s.ubGroupID, s.ubProfile));
+	AssertMsg(pGroup, ST::format("Attempting to RemovePlayerFromGroup({}, {}) from non-existant group", s.ubGroupID, s.ubProfile));
 
 	RemovePlayerFromPGroup(*pGroup, s);
 }
@@ -329,7 +329,7 @@ BOOLEAN GroupBetweenSectorsAndSectorXYIsInDifferentDirection(GROUP *pGroup, cons
 	// error checking
 	if( ubNumUnalignedAxes > 1 )
 	{
-		AssertMsg( FALSE, String( "Checking a diagonal move for direction change, groupID %d. AM-0", pGroup->ubGroupID ) );
+		AssertMsg(FALSE, ST::format("Checking a diagonal move for direction change, groupID {}. AM-0", pGroup->ubGroupID));
 		return FALSE;
 	}
 
@@ -353,7 +353,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup);
  * horizontal or vertical level as the last waypoint added. */
 BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 {
-	AssertMsg(sMap.IsValid(), String("AddWaypointToPGroup with out of range sector values of %d %d", sMap.x, sMap.y));
+	AssertMsg(sMap.IsValid(), ST::format("AddWaypointToPGroup with out of range sector values of {}", sMap.AsShortString()));
 	if (!g) return FALSE;
 
 	/* At this point, we have the group, and a valid coordinate. Now we must
@@ -398,13 +398,13 @@ BOOLEAN AddWaypointToPGroup(GROUP *g, const SGPSector& sMap)
 	{
 		if (n_aligned_axes == 0)
 		{
-			AssertMsg(FALSE, String("Invalid DIAGONAL waypoint being added for groupID %d. AM-0", g->ubGroupID));
+			AssertMsg(FALSE, ST::format("Invalid DIAGONAL waypoint being added for groupID {}. AM-0", g->ubGroupID));
 			return FALSE;
 		}
 
 		if (n_aligned_axes >= 2)
 		{
-			AssertMsg(FALSE, String("Invalid IDENTICAL waypoint being added for groupID %d. AM-0", g->ubGroupID));
+			AssertMsg(FALSE, ST::format("Invalid IDENTICAL waypoint being added for groupID {}. AM-0", g->ubGroupID));
 			return FALSE;
 		}
 
@@ -465,7 +465,7 @@ BOOLEAN AddWaypointStrategicIDToPGroup( GROUP *pGroup, UINT32 uiSectorID )
 //............................................................
 GROUP* CreateNewEnemyGroupDepartingFromSector( UINT32 uiSector, UINT8 ubNumAdmins, UINT8 ubNumTroops, UINT8 ubNumElites )
 {
-	AssertMsg( uiSector <= 255, String( "CreateNewEnemyGroup with out of range value of %d", uiSector ) );
+	AssertMsg(uiSector <= 255, ST::format("CreateNewEnemyGroup with out of range value of {}", uiSector));
 	GROUP* const pNew = new GROUP{};
 	pNew->pEnemyGroup = new ENEMYGROUP{};
 	pNew->pWaypoints = NULL;
@@ -612,7 +612,7 @@ static void PrepareForPreBattleInterface(GROUP* pPlayerDialogGroup, GROUP* pInit
 	// Pipe up with quote...
 	AssertMsg( pPlayerDialogGroup, "Didn't get a player dialog group for prebattle interface." );
 
-	AssertMsg(pPlayerDialogGroup->pPlayerList, String( "Player group %d doesn't have *any* players in it!  (Finding dialog group)", pPlayerDialogGroup->ubGroupID));
+	AssertMsg(pPlayerDialogGroup->pPlayerList, ST::format("Player group {} doesn't have *any* players in it!  (Finding dialog group)", pPlayerDialogGroup->ubGroupID));
 
 	SOLDIERTYPE* mercs_in_group[20];
 	CFOR_EACH_PLAYER_IN_GROUP(pPlayer, pPlayerDialogGroup)
@@ -1713,9 +1713,9 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 		pGroup->uiTraverseTime = 1;
 	}
 
-	AssertMsg(pGroup->uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, String("Group %d (%s) attempting illegal move from %c%d to %c%d (%s).",
+	AssertMsg(pGroup->uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, ST::format("Group {} ({}) attempting illegal move from {} to {} ({}).",
 			pGroup->ubGroupID, ( pGroup->fPlayer ) ? "Player" : "AI",
-			pGroup->ubSector.y+'A', pGroup->ubSector.x, pGroup->ubNext.y + 'A', pGroup->ubNext.x,
+			pGroup->ubSector.AsShortString(), pGroup->ubNext.AsShortString(),
 			gszTerrain[SectorInfo[ubSector].ubTraversability[ubDirection]] ) );
 
 	// add sleep, if any
@@ -2041,7 +2041,7 @@ INT32 FindTravelTimeBetweenWaypoints(WAYPOINT const* const pSource, WAYPOINT con
 		// find diff between current and next
 		iThisCostInTime = GetSectorMvtTimeForGroup( ubCurrentSector, ubDirection, pGroup );
 
-		AssertMsg(iThisCostInTime != static_cast<INT32>(TRAVERSE_TIME_IMPOSSIBLE), String("Group %d (%s) attempting illegal move from sector %d, dir %d (%s).",
+		AssertMsg(iThisCostInTime != static_cast<INT32>(TRAVERSE_TIME_IMPOSSIBLE), ST::format("Group {} ({}) attempting illegal move from sector {}, dir {} ({}).",
 					pGroup->ubGroupID, ( pGroup->fPlayer ) ? "Player" : "AI",
 					ubCurrentSector, ubDirection,
 					gszTerrain[SectorInfo[ubCurrentSector].ubTraversability[ubDirection]] ) );
@@ -2746,7 +2746,7 @@ void RetreatGroupToPreviousSector(GROUP& g)
 	// Calc time to get to next waypoint
 	UINT8 const sector = g.ubSector.AsByte();
 	g.uiTraverseTime = GetSectorMvtTimeForGroup(sector, direction, &g);
-	AssertMsg(g.uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, String("Group %d (%s) attempting illegal move from %c%d to %c%d (%s).", g.ubGroupID, g.fPlayer ? "Player" : "AI", g.ubSector.y + 'A', g.ubSector.x, g.ubNext.y + 'A', g.ubNext.x, gszTerrain[SectorInfo[sector].ubTraversability[direction]]));
+	AssertMsg(g.uiTraverseTime != TRAVERSE_TIME_IMPOSSIBLE, ST::format("Group {} ({}) attempting illegal move from {} to {} ({}).", g.ubGroupID, g.fPlayer ? "Player" : "AI", g.ubSector.AsShortString(), g.ubNext.AsShortString(), gszTerrain[SectorInfo[sector].ubTraversability[direction]]));
 
 	// Because we are in the strategic layer, don't make the arrival instantaneous (towns)
 	if (g.uiTraverseTime == 0) g.uiTraverseTime = 5;
@@ -3376,7 +3376,7 @@ void GROUP::setArrivalTime(UINT32 arrival_time)
 		UINT32 const now = GetWorldTotalMin();
 		if (arrival_time > now + this->uiTraverseTime)
 		{
-			AssertMsg(FALSE, String( "setArrivalTime: Setting invalid arrival time %d for group %d, WorldTime = %d, TraverseTime = %d", arrival_time, this->ubGroupID, now, this->uiTraverseTime));
+			AssertMsg(FALSE, ST::format("setArrivalTime: Setting invalid arrival time {} for group {}, WorldTime = {}, TraverseTime = {}", arrival_time, this->ubGroupID, now, this->uiTraverseTime));
 			// Fix it if assertions are disabled
 			arrival_time = now + this->uiTraverseTime;
 		}

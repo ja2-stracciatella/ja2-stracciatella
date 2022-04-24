@@ -871,7 +871,7 @@ UINT16 ChooseMapEdgepoint( UINT8 ubStrategicInsertionCode )
 
 void ChooseMapEdgepoints(MAPEDGEPOINTINFO* const pMapEdgepointInfo, const UINT8 ubStrategicInsertionCode, UINT8 ubNumDesiredPoints)
 {
-	AssertMsg(ubNumDesiredPoints > 0 && ubNumDesiredPoints <= 32, String("ChooseMapEdgepoints:  Desired points = %d, valid range is 1-32", ubNumDesiredPoints));
+	AssertMsg(ubNumDesiredPoints > 0 && ubNumDesiredPoints <= 32, ST::format("ChooseMapEdgepoints:  Desired points = {}, valid range is 1-32", ubNumDesiredPoints));
 
 	/* First validate and get access to the correct array based on strategic
 	 * direction.  We will use the selected array to choose insertion gridno's. */
@@ -998,19 +998,19 @@ INT16 SearchForClosestPrimaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCode 
 	{
 		case INSERTION_CODE_NORTH:
 			pEdgepoints = &gps1stNorthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %s doesn't have any north mapedgepoints. LC:1", gWorldSector.AsLongString().c_str()));
+			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any north mapedgepoints. LC:1", gWorldSector.AsLongString()));
 			break;
 		case INSERTION_CODE_EAST:
 			pEdgepoints = &gps1stEastEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %s doesn't have any east mapedgepoints. LC:1", gWorldSector.AsLongString().c_str()));
+			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any east mapedgepoints. LC:1", gWorldSector.AsLongString()));
 			break;
 		case INSERTION_CODE_SOUTH:
 			pEdgepoints = &gps1stSouthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %s doesn't have any south mapedgepoints. LC:1", gWorldSector.AsLongString().c_str()));
+			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any south mapedgepoints. LC:1", gWorldSector.AsLongString()));
 			break;
 		case INSERTION_CODE_WEST:
 			pEdgepoints = &gps1stWestEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %s doesn't have any west mapedgepoints. LC:1", gWorldSector.AsLongString().c_str()));
+			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any west mapedgepoints. LC:1", gWorldSector.AsLongString()));
 			break;
 	}
 	if (!pEdgepoints || pEdgepoints->size() == 0)
@@ -1112,19 +1112,19 @@ INT16 SearchForClosestSecondaryMapEdgepoint( INT16 sGridNo, UINT8 ubInsertionCod
 	{
 		case INSERTION_CODE_NORTH:
 			pEdgepoints = &gps2ndNorthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %s doesn't have any isolated north mapedgepoints. KM:1", gWorldSector.AsLongString().c_str()));
+			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any isolated north mapedgepoints. KM:1", gWorldSector.AsLongString()));
 			break;
 		case INSERTION_CODE_EAST:
 			pEdgepoints = &gps2ndEastEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %s doesn't have any isolated east mapedgepoints. KM:1", gWorldSector.AsLongString().c_str()));
+			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any isolated east mapedgepoints. KM:1", gWorldSector.AsLongString()));
 			break;
 		case INSERTION_CODE_SOUTH:
 			pEdgepoints = &gps2ndSouthEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %s doesn't have any isolated south mapedgepoints. KM:1", gWorldSector.AsLongString().c_str()));
+			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any isolated south mapedgepoints. KM:1", gWorldSector.AsLongString()));
 			break;
 		case INSERTION_CODE_WEST:
 			pEdgepoints = &gps2ndWestEdgepointArray;
-			AssertMsg(pEdgepoints->size() != 0, String("Sector %s doesn't have any isolated west mapedgepoints. KM:1", gWorldSector.AsLongString().c_str()));
+			AssertMsg(pEdgepoints->size() != 0, ST::format("Sector {} doesn't have any isolated west mapedgepoints. KM:1", gWorldSector.AsLongString()));
 			break;
 	}
 	if (!pEdgepoints || pEdgepoints->size() == 0)

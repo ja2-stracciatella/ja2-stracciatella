@@ -847,7 +847,7 @@ static UINT32 GetArmsDealerItemTypeFromItemNumber(UINT16 usItem)
 			return( 0 );
 
 		default:
-			AssertMsg(FALSE, String("GetArmsDealerItemTypeFromItemNumber(), invalid class %d for item %d.  DF 0.",
+			AssertMsg(FALSE, ST::format("GetArmsDealerItemTypeFromItemNumber(), invalid class {} for item {}. DF 0.",
 						GCM->getItem(usItem)->getItemClass(), usItem));
 			break;
 	}
@@ -997,7 +997,7 @@ BOOLEAN CanDealerTransactItem(ArmsDealerID const ubArmsDealer, UINT16 const usIt
 			return( CanDealerRepairItem( ubArmsDealer, usItemIndex ) );
 
 		default:
-			AssertMsg( FALSE, String( "CanDealerTransactItem(), type of dealer %d.  AM 0.", GetDealer(ubArmsDealer)->type) );
+			AssertMsg(FALSE, ST::format("CanDealerTransactItem(), type of dealer {}. AM 0.", GetDealer(ubArmsDealer)->type));
 			return(FALSE);
 	}
 
@@ -1033,7 +1033,7 @@ BOOLEAN CanDealerRepairItem(ArmsDealerID const ubArmsDealer, UINT16 const usItem
 	}
 	else
 	{
-		AssertMsg(FALSE, String("CanDealerRepairItem(), Arms Dealer %d is not a recognized repairman!.  AM 1.", ubArmsDealer));
+		AssertMsg(FALSE, ST::format("CanDealerRepairItem(), Arms Dealer {} is not a recognized repairman!.  AM 1.", ubArmsDealer));
 	}
 
 	// can't repair this...

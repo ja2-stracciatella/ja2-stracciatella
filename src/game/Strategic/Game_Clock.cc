@@ -208,7 +208,7 @@ static void AdvanceClock(UINT8 ubWarpCode)
 
 	if ( guiGameClock < guiPreviousGameClock )
 	{
-		AssertMsg( FALSE, String( "AdvanceClock: TIME FLOWING BACKWARDS!!! guiPreviousGameClock %d, now %d", guiPreviousGameClock, guiGameClock ) );
+		AssertMsg(FALSE, ST::format("AdvanceClock: TIME FLOWING BACKWARDS!!! guiPreviousGameClock {}, now {}", guiPreviousGameClock, guiGameClock));
 
 		// fix it if assertions are disabled
 		guiGameClock = guiPreviousGameClock;
