@@ -177,7 +177,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 							}
 							else
 							{
-								STLOGW("Schedule involved locked door at {} but there's no lock there!", usGridNo1);
+								SLOGW("Schedule involved locked door at {} but there's no lock there!", usGridNo1);
 								fDoUseDoor = FALSE;
 							}
 						}
@@ -297,7 +297,7 @@ static INT8 DecideActionSchedule(SOLDIERTYPE* pSoldier)
 									else
 									{
 										// WTF?  Warning time!
-										STLOGW("Schedule involved locked door at {} but there's no lock there!", usGridNo1);
+										SLOGW("Schedule involved locked door at {} but there's no lock there!", usGridNo1);
 										fDoUseDoor = FALSE;
 									}
 								}

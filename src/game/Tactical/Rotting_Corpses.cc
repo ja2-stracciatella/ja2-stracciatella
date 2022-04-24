@@ -1040,7 +1040,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 
 	if ( pCorpse == NULL )
 	{
-		SLOGW("Vaporize corpse but corpse cannot be found at: %d", sBaseGridNo );
+		SLOGW("Vaporize corpse but corpse cannot be found at: {}", sBaseGridNo);
 		return;
 	}
 

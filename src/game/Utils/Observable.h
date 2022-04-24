@@ -51,7 +51,7 @@ public:
 	{
 		if (listeners.find(key) == listeners.end())
 		{
-			STLOGW("There is no listener for key '{}'", key);
+			SLOGW("There is no listener for key '{}'", key);
 			return *this;
 		}
 

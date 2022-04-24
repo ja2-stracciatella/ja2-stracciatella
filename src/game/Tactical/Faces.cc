@@ -1048,7 +1048,7 @@ static void NewEye(FACETYPE& f)
 			break;
 
 		default:
-			SLOGW("unexpected eye frame (%d)", f.sEyeFrame);
+			SLOGW("unexpected eye frame ({})", f.sEyeFrame);
 			f.sEyeFrame = 0;
 			break;
 	}

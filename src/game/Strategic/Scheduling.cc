@@ -67,7 +67,7 @@ void CopyScheduleToList( SCHEDULENODE *pSchedule, SOLDIERINITNODE *pNode )
 		OptimizeSchedules();
 		if( gubScheduleID > 32 )
 		{
-			SLOGW("too many Schedules posted." );
+			SLOGW("too many Schedules posted.");
 		}
 	}
 }
@@ -166,7 +166,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 	pSchedule = GetSchedule( ubScheduleID );
 	if( !pSchedule )
 	{
-		SLOGW("Schedule callback:  Schedule ID of %d not found.", ubScheduleID );
+		SLOGW("Schedule callback:  Schedule ID of {} not found.", ubScheduleID);
 		return;
 	}
 	//Attempt to access the soldier involved
@@ -186,7 +186,7 @@ void ProcessTacticalSchedule( UINT8 ubScheduleID )
 
 	if ( !pSoldier->bActive )
 	{
-		SLOGW("Schedule callback:  Soldier isn't active.  Name is %s.", pSoldier->name.c_str());
+		SLOGW("Schedule callback:  Soldier isn't active.  Name is {}.", pSoldier->name);
 	}
 
 	//Okay, now we have good pointers to the soldier and the schedule.

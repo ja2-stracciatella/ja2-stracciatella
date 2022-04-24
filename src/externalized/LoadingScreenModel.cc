@@ -68,7 +68,7 @@ void LoadingScreenModel::validateData(ContentManager* cm) const
 	{
 		if (cm->doesGameResExists(screensList[i].filename))
 		{
-			STLOGW("Load Screen image '{}' cannot be opened", screensList[i].filename);
+			SLOGW("Load Screen image '{}' cannot be opened", screensList[i].filename);
 		}
 		if (screensList[i].index != i)
 		{

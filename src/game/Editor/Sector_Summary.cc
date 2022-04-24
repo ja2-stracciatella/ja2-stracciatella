@@ -2107,7 +2107,7 @@ static void LoadGlobalSummary(void)
 
 	if (gfMustForceUpdateAllMaps)
 	{
-		SLOGW("A MAJOR MAP UPDATE EVENT HAS BEEN DETECTED FOR %d MAPS!", gusNumberOfMapsToBeForceUpdated);
+		SLOGW("A MAJOR MAP UPDATE EVENT HAS BEEN DETECTED FOR {} MAPS!", gusNumberOfMapsToBeForceUpdated);
 	}
 
 	SLOGD("LoadGlobalSummary() finished...");

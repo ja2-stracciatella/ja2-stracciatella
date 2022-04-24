@@ -1124,7 +1124,7 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const SGPS
 		const UINT32 uiReported = GetNumberOfVisibleWorldItemsFromSectorStructureForSector(sMap);
 		if (uiItemCount != uiReported)
 		{
-			SLOGW("SynchronizeItemTempFile() Reported %d, should be %d", uiReported, uiItemCount);
+			SLOGW("SynchronizeItemTempFile() Reported {}, should be {}", uiReported, uiItemCount);
 		}
 	}
 	SetNumberOfVisibleWorldItemsInSectorStructureForSector(sMap, uiItemCount);

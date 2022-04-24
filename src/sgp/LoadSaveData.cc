@@ -22,7 +22,7 @@ void DataWriter::writeUTF8(const ST::string& str, size_t numChars)
 	size_t n = std::min<size_t>(str.size() + 1, numChars);
 	if (str.size() > n)
 	{
-		STLOGW("DataWriter::writeUTF8: truncating '{}' {}->{}", str, str.size(), n);
+		SLOGW("DataWriter::writeUTF8: truncating '{}' {}->{}", str, str.size(), n);
 	}
 	writeArray(str.c_str(), n);
 	skip(sizeof(char) * (numChars - n));
@@ -34,7 +34,7 @@ void DataWriter::writeUTF16(const ST::string& str, size_t numChars)
 	size_t n = std::min<size_t>(buf.size() + 1, numChars);
 	if (buf.size() > n)
 	{
-		STLOGW("DataWriter::writeUTF16: truncating '{}' {}->{}", str, buf.size(), n);
+		SLOGW("DataWriter::writeUTF16: truncating '{}' {}->{}", str, buf.size(), n);
 	}
 	writeArray(buf.c_str(), n);
 	skip(sizeof(char16_t) * (numChars - n));
@@ -46,7 +46,7 @@ void DataWriter::writeUTF32(const ST::string& str, size_t numChars)
 	size_t n = std::min<size_t>(buf.size() + 1, numChars);
 	if (buf.size() > n)
 	{
-		STLOGW("DataWriter::writeUTF32: truncating '{}' {}->{}", str, buf.size(), n);
+		SLOGW("DataWriter::writeUTF32: truncating '{}' {}->{}", str, buf.size(), n);
 	}
 	writeArray(buf.c_str(), n);
 	skip(sizeof(char32_t) * (numChars - n));

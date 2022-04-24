@@ -237,7 +237,7 @@ static ScreenID ProcessLoadSaveScreenMessageBoxResult(void)
 					if( iTopFileShown < 0 )
 						iTopFileShown = 0;
 				} catch (const std::runtime_error& err) {
-					STLOGW("Could not remove file: {}", err.what());
+					SLOGW("Could not remove file: {}", err.what());
 				}
 			}
 		}

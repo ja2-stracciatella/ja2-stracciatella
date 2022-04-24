@@ -694,7 +694,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 			// Determine if we have a problem with #frames + directions ( ie mismatch )
 			if (a->uiNumDirections * a->uiNumFramesPerDir != a->hVideoObject->SubregionCount())
 			{
-				SLOGW("Surface Database: Surface %d has #frames mismatch.", usSurfaceIndex);
+				SLOGW("Surface Database: Surface {} has #frames mismatch.", usSurfaceIndex);
 			}
 		}
 		catch (...)

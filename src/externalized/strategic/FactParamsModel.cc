@@ -10,7 +10,7 @@ int16_t FactParamsModel::getGridNo(const int16_t defaultValue) const
 {
 	if (gridNo <= 0) 
 	{
-		STLOGW("Falling back to default gridNo for FACT #{}. Param values should always be defined in JSON.", fact);
+		SLOGW("Falling back to default gridNo for FACT #{}. Param values should always be defined in JSON.", fact);
 		return defaultValue;
 	}
 	return gridNo;

@@ -607,12 +607,12 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		pGroup = GetGroup( pSoldier->ubGroupID );
 		if( !pGroup )
 		{
-			SLOGW("Enemy soldier killed with ubGroupID of %d, and the group doesn't exist!", pSoldier->ubGroupID);
+			SLOGW("Enemy soldier killed with ubGroupID of {}, and the group doesn't exist!", pSoldier->ubGroupID);
 			return;
 		}
 		if( pGroup->fPlayer )
 		{
-			STLOGW("Attempting to process player group thinking it's an enemy group (#{}) in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID);
+			SLOGW("Attempting to process player group thinking it's an enemy group (#{}) in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID);
 			return;
 		}
 		switch( pSoldier->ubSoldierClass )
@@ -620,7 +620,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			case SOLDIER_CLASS_ELITE:
 				if( !pGroup->pEnemyGroup->ubNumElites )
 				{
-					SLOGW("Enemy elite killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID);
+					SLOGW("Enemy elite killed with ubGroupID of {}, but the group doesn't contain elites!", pGroup->ubGroupID);
 					break;
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
@@ -644,7 +644,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			case SOLDIER_CLASS_ARMY:
 				if( !pGroup->pEnemyGroup->ubNumTroops )
 				{
-					SLOGW("Enemy troop killed with ubGroupID of %d, but the group doesn't contain troops!", pGroup->ubGroupID);
+					SLOGW("Enemy troop killed with ubGroupID of {}, but the group doesn't contain troops!", pGroup->ubGroupID);
 					break;
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
@@ -668,7 +668,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			case SOLDIER_CLASS_ADMINISTRATOR:
 				if( !pGroup->pEnemyGroup->ubNumAdmins )
 				{
-					SLOGW("Enemy administrator killed with ubGroupID of %d, but the group doesn't contain administrators!", pGroup->ubGroupID);
+					SLOGW("Enemy administrator killed with ubGroupID of {}, but the group doesn't contain administrators!", pGroup->ubGroupID);
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
 				{

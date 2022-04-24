@@ -57,7 +57,7 @@ uint64_t FileMan::getFreeSpace(const ST::string& path)
 	if (!Fs_freeSpace(path.c_str(), &bytes))
 	{
 		RustPointer<char> err(getRustError());
-		STLOGW("FileMan::getFreeSpace('{}') failed: %s", path, err.get());
+		SLOGW("FileMan::getFreeSpace('{}') failed: %s", path, err.get());
 		return 0;
 	}
 	return bytes;
@@ -205,7 +205,7 @@ FileMan::findAllFilesInDir(const ST::string& dirPath, bool sortResults, bool rec
 	if (!vec)
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGW("FileMan::findAllFilesInDir({}) failed: {}", dirPath, err.get());
+		SLOGW("FileMan::findAllFilesInDir({}) failed: {}", dirPath, err.get());
 		return paths;
 	}
 	size_t len = VecCString_len(vec.get());
@@ -230,7 +230,7 @@ FileMan::findAllDirsInDir(const ST::string& dirPath, bool sortResults, bool recu
 	if (!vec)
 	{
 		RustPointer<char> err{getRustError()};
-		STLOGW("FileMan::findAllDirsInDir({}) failed: {}", dirPath, err.get());
+		SLOGW("FileMan::findAllDirsInDir({}) failed: {}", dirPath, err.get());
 		return paths;
 	}
 	size_t len = VecCString_len(vec.get());

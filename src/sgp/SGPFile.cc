@@ -177,7 +177,7 @@ INT32 SGPFile::pos() const
     }
     if (position > INT32_MAX)
     {
-        STLOGW("SGPFile::pos truncating from {} to {}", position, INT32_MAX);
+        SLOGW("SGPFile::pos truncating from {} to {}", position, INT32_MAX);
         position = INT32_MAX;
     }
     return static_cast<INT32>(position);
@@ -196,7 +196,7 @@ UINT32 SGPFile::size() const
     }
     if (len > UINT32_MAX)
     {
-        STLOGW("SGPFile::size truncating from {} to {}", len, UINT32_MAX);
+        SLOGW("SGPFile::size truncating from {} to {}", len, UINT32_MAX);
         len = UINT32_MAX;
     }
     return static_cast<UINT32>(len);

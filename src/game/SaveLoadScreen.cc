@@ -786,7 +786,7 @@ std::vector<SaveGameInfo> GetValidSaveGames()
 		try {
 			validSaves.push_back(SaveGameInfo(saveName, file));
 		} catch (const std::runtime_error &ex) {
-			STLOGW("Could not read save game info for file `{}`: {}", *i, ex.what());
+			SLOGW("Could not read save game info for file `{}`: {}", *i, ex.what());
 			continue;
 		}
 	}

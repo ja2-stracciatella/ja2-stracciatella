@@ -2463,7 +2463,7 @@ try
 		if (!l)
 		{
 			// Can't create sprite
-			SLOGW("PlaceLight: Can't create light sprite of radius %d", radius);
+			SLOGW("PlaceLight: Can't create light sprite of radius {}", radius);
 			return FALSE;
 		}
 	}

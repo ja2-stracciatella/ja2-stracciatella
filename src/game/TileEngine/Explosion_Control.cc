@@ -340,7 +340,7 @@ static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags,
 		STRUCTURE* const base = FindBaseStructure(attached);
 		if (!base)
 		{ // Error!
-			SLOGW("Problems removing structure attached to wall at %d", grid_no);
+			SLOGW("Problems removing structure attached to wall at {}", grid_no);
 			break;
 		}
 
@@ -1831,7 +1831,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			else
 			{
 				// error message here
-				SLOGW("Action item to open door in gridno %d but there is none!", sGridNo );
+				SLOGW("Action item to open door in gridno {} but there is none!", sGridNo);
 			}
 			break;
 		case ACTION_ITEM_CLOSE_DOOR:
@@ -1859,7 +1859,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			else
 			{
 				// error message here
-				SLOGW("Action item to close door in gridno %d but there is none!", sGridNo );
+				SLOGW("Action item to close door in gridno {} but there is none!", sGridNo);
 			}
 			break;
 		case ACTION_ITEM_TOGGLE_DOOR:
@@ -1879,7 +1879,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			else
 			{
 				// error message here
-				SLOGW("Action item to toggle door in gridno %d but there is none!", sGridNo );
+				SLOGW("Action item to toggle door in gridno {} but there is none!", sGridNo);
 			}
 			break;
 		case ACTION_ITEM_UNLOCK_DOOR:
@@ -2171,7 +2171,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			break;
 		default:
 			// error message here
-			SLOGW("Action item with invalid action in gridno %d!", sGridNo );
+			SLOGW("Action item with invalid action in gridno {}!", sGridNo);
 			break;
 	}
 }

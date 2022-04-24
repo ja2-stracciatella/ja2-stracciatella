@@ -417,7 +417,7 @@ static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF const* const pDBStructu
 	pStructure->pDBStructureRef = pDBStructureRef;
 	if (pTile->sPosRelToBase != 0 && ubTileNum == 0)
 	{
-		STLOGW("Possible bad structure {}", pDBStructureRef->pDBStructure->usStructureNumber);
+		SLOGW("Possible bad structure {}", pDBStructureRef->pDBStructure->usStructureNumber);
 	}
 	if (pTile->sPosRelToBase == 0)
 	{	// base tile

@@ -2179,7 +2179,7 @@ void TriggerNPCRecord(UINT8 const ubTriggerNPC, UINT8 const record)
 	}
 	else
 	{ // don't do anything
-		SLOGW("trigger of %d, record %d cannot proceed, possible error", ubTriggerNPC, record);
+		SLOGW("trigger of {}, record {} cannot proceed, possible error", ubTriggerNPC, record);
 	}
 }
 
@@ -2199,7 +2199,7 @@ void TriggerNPCRecordImmediately(UINT8 const ubTriggerNPC, UINT8 const record)
 	}
 	else
 	{ // don't do anything
-		SLOGW("trigger of %d, record %d cannot proceed, possible error", ubTriggerNPC, record);
+		SLOGW("trigger of {}, record {} cannot proceed, possible error", ubTriggerNPC, record);
 	}
 }
 

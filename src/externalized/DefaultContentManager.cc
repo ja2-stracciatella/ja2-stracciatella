@@ -514,7 +514,7 @@ ST::string DefaultContentManager::loadEncryptedString(const ST::string& fileName
 	ST::string str = LoadEncryptedData(err_msg, getStringEncType(), File, seek_chars, read_chars);
 	if (!err_msg.empty())
 	{
-		STLOGW("DefaultContentManager::loadEncryptedString '{}' {} {}: {}", fileName, seek_chars, read_chars, err_msg);
+		SLOGW("DefaultContentManager::loadEncryptedString '{}' {} {}: {}", fileName, seek_chars, read_chars, err_msg);
 	}
 	return str;
 }
@@ -525,7 +525,7 @@ ST::string DefaultContentManager::loadEncryptedString(SGPFile* File, uint32_t se
 	ST::string str = LoadEncryptedData(err_msg, getStringEncType(), File, seek_chars, read_chars);
 	if (!err_msg.empty())
 	{
-		STLOGW("DefaultContentManager::loadEncryptedString ? {} {}: {}", seek_chars, read_chars, err_msg);
+		SLOGW("DefaultContentManager::loadEncryptedString ? {} {}: {}", seek_chars, read_chars, err_msg);
 	}
 	return str;
 }
@@ -539,7 +539,7 @@ ST::string* DefaultContentManager::loadDialogQuoteFromFile(const ST::string& fil
 	ST::string quote = LoadEncryptedData(err_msg, getStringEncType(), File, quote_number * DIALOGUESIZE, DIALOGUESIZE);
 	if (!err_msg.empty())
 	{
-		STLOGW("DefaultContentManager::loadDialogQuoteFromFile '{}' {}: {}", fileName, quote_number, err_msg);
+		SLOGW("DefaultContentManager::loadDialogQuoteFromFile '{}' {}: {}", fileName, quote_number, err_msg);
 	}
 	return new ST::string(quote);
 }
@@ -557,7 +557,7 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const S
 		ST::string quote = LoadEncryptedData(err, encType, File, i * DIALOGUESIZE, DIALOGUESIZE);
 		if (!err.empty())
 		{
-			STLOGW("DefaultContentManager::loadAllDialogQuotes '{}' {}: {}", fileName, i, err);
+			SLOGW("DefaultContentManager::loadAllDialogQuotes '{}' {}: {}", fileName, i, err);
 		}
 		quotes.push_back(new ST::string(quote));
 	}
@@ -1672,7 +1672,7 @@ const MercProfileInfo* DefaultContentManager::getMercProfileInfoByName(const ST:
 		}
 	}
 
-	STLOGW("MercProfileInfo is not defined for {}", name);
+	SLOGW("MercProfileInfo is not defined for {}", name);
 	return NULL;
 }
 

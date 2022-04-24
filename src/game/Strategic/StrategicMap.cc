@@ -1187,7 +1187,7 @@ check_entry:
 	// If no insertion direction exists, this is bad!
 	if (gridno == -1)
 	{
-		STLOGW("Insertion gridno for direction {} not added to map sector {}", s.ubStrategicInsertionCode, sSector.AsShortString());
+		SLOGW("Insertion gridno for direction {} not added to map sector {}", s.ubStrategicInsertionCode, sSector.AsShortString());
 place_in_center:
 		gridno = WORLD_ROWS / 2 * WORLD_COLS + WORLD_COLS / 2;
 	}
@@ -1945,7 +1945,7 @@ static void DoneFadeOutAdjacentSector(void)
 			}
 			else
 			{
-				STLOGW("{}'s gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name);
+				SLOGW("{}'s gridno is NOWHERE, and is attempting to walk into sector.", curr->pSoldier->name);
 			}
 		}
 		SetActionToDoOnceMercsGetToLocation(WAIT_FOR_MERCS_TO_WALKON_SCREEN, ubNum);

@@ -12,7 +12,7 @@ static void ReplaceInvalidItem(UINT16 & usItem)
 	const ItemModel* item = GCM->getItem(usItem);
 	if (!item)
 	{
-		STLOGW("Item (index {}) is not defined and will be ignored. Maybe the file was saved for a different game version", usItem);
+		SLOGW("Item (index {}) is not defined and will be ignored. Maybe the file was saved for a different game version", usItem);
 		usItem = NONE;
 	}
 }

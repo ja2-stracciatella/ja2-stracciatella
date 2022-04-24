@@ -3050,7 +3050,7 @@ void CheckForAndHandleSoldierDeath(SOLDIERTYPE* pSoldier, BOOLEAN* pfMadeCorpse)
 
 		default:
 			// IF we are here - something is wrong - we should have an animation stop here
-			SLOGW("CODE 440 Error, Death STOP not handled" );
+			SLOGW("CODE 440 Error, Death STOP not handled");
 			return;
 	}
 	ChangeSoldierState(pSoldier, state, 0, FALSE);

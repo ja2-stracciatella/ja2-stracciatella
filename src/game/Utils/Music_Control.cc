@@ -125,7 +125,7 @@ static void MusicStop(void)
 	}
 	else if(!gfMusicEnded)
 	{
-		SLOGW("expected either music data or the end of the music (mode=%d, handle=%d, ended=%d)", gubMusicMode, uiMusicHandle, gfMusicEnded);
+		SLOGW("expected either music data or the end of the music (mode={}, handle={}, ended={})", gubMusicMode, uiMusicHandle, gfMusicEnded);
 	}
 	fMusicPlaying = FALSE;
 }

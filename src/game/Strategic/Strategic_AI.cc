@@ -306,7 +306,7 @@ static void ValidateLargeGroup(GROUP* pGroup)
 {
 		if( pGroup->ubGroupSize > 25 )
 		{
-			STLOGW("warning:  Enemy group containing {} soldiers\n\
+			SLOGW("warning:  Enemy group containing {} soldiers\n\
 				({} admins, {} troops, {} elites) in sector {}.  This message is a temporary test message\n\
 				to evaluate a potential problems with very large enemy groups.",
 				pGroup->ubGroupSize, pGroup->pEnemyGroup->ubNumAdmins, pGroup->pEnemyGroup->ubNumTroops, pGroup->pEnemyGroup->ubNumElites,
@@ -2142,7 +2142,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	//Restore the patrol group definitions
 	if (GCM->getPatrolGroups().size() != (size_t)iPatrolArraySize)
 	{
-		STLOGW("Number of Patrol Groups in save ({}) is different from definition ({}). Save might not work properly.", iPatrolArraySize, GCM->getPatrolGroups().size());
+		SLOGW("Number of Patrol Groups in save ({}) is different from definition ({}). Save might not work properly.", iPatrolArraySize, GCM->getPatrolGroups().size());
 	}
 	auto buffPG = new PATROL_GROUP[SAVED_PATROL_GROUPS]{};
 	hFile->read(buffPG, SAVED_PATROL_GROUPS * sizeof(PATROL_GROUP));
@@ -2153,7 +2153,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	//Load the garrison information!
 	if (GCM->getGarrisonGroups().size() != (size_t)iGarrisonArraySize)
 	{
-		STLOGW("Number of Garrison Groups in save ({}) is different from definition ({}). Save might not work properly.", iGarrisonArraySize, GCM->getGarrisonGroups().size());
+		SLOGW("Number of Garrison Groups in save ({}) is different from definition ({}). Save might not work properly.", iGarrisonArraySize, GCM->getGarrisonGroups().size());
 	}
 	auto buffGG = new GARRISON_GROUP[SAVED_GARRISON_GROUPS]{};
 	hFile->read(buffGG, SAVED_GARRISON_GROUPS * sizeof(GARRISON_GROUP));
@@ -2169,7 +2169,7 @@ void LoadStrategicAI(HWFILE const hFile)
 	gArmyComp.resize(numArmyCompositions);
 	if (gArmyComp.size() != GCM->getArmyCompositions().size())
 	{
-		STLOGW("Number of Army Compositions in save ({}) is different from definition ({}). Save might not work properly.", gArmyComp.size(), GCM->getArmyCompositions().size());
+		SLOGW("Number of Army Compositions in save ({}) is different from definition ({}). Save might not work properly.", gArmyComp.size(), GCM->getArmyCompositions().size());
 	}
 	ArmyCompositionModel::validateLoadedData(gArmyComp);
 

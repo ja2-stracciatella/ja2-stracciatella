@@ -925,7 +925,7 @@ void ExecuteOverhead(void)
 											STRUCTURE* const pStructure = FindStructure(sGridNo, STRUCTURE_OPENABLE);
 											if (pStructure == NULL)
 											{
-												SLOGW("Told to open struct at %d and none was found", sGridNo);
+												SLOGW("Told to open struct at {} and none was found", sGridNo);
 												fKeepMoving = FALSE;
 											}
 											else

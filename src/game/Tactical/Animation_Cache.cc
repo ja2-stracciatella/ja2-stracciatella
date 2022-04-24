@@ -112,7 +112,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 
 		if (ubLowestIndex == UINT8_MAX)
 		{
-			STLOGW("Anim Cache: No preferred cache slot for eviction ( Soldier {} )", usSoldierID);
+			SLOGW("Anim Cache: No preferred cache slot for eviction ( Soldier {} )", usSoldierID);
 			ubLowestIndex = 0;
 		}
 		
@@ -145,7 +145,7 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 		}
 	}
 
-	STLOGW("Anim Cache: Failed to find slot to load surface ( Soldier {} )", usSoldierID);
+	SLOGW("Anim Cache: Failed to find slot to load surface ( Soldier {} )", usSoldierID);
 }
 
 

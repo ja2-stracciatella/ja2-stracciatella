@@ -34,9 +34,6 @@ template <size_t p> constexpr const char* ToRelativePath(const char* filename)
 /** Print debug message macro. */
 #define SLOGD(FORMAT, ...) LogMessage(false, LogLevel::Debug, __FILENAME__, FORMAT, ##__VA_ARGS__)
 
-/** Print warning message macro. */
-#define SLOGW(FORMAT, ...) LogMessage(false, LogLevel::Warn, __FILENAME__, FORMAT, ##__VA_ARGS__)
-
 /** Print error message macro. */
 #define SLOGE(FORMAT, ...) LogMessage(false, LogLevel::Error, __FILENAME__, FORMAT, ##__VA_ARGS__)
 
@@ -61,7 +58,7 @@ constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Arg
 #define SLOGI(...) LogMessageST(false, LogLevel::Info,  __FILENAME__, ##__VA_ARGS__)
 
 /** Print warning message macro. */
-#define STLOGW(...) LogMessageST(false, LogLevel::Warn, __FILENAME__, ##__VA_ARGS__)
+#define SLOGW(...) LogMessageST(false, LogLevel::Warn, __FILENAME__, ##__VA_ARGS__)
 
 /** Print error message macro. */
 #define STLOGE(...) LogMessageST(false, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)

@@ -2486,7 +2486,7 @@ SaveGameInfo::SaveGameInfo(ST::string name_, HWFILE file) : saveName(name_) {
 			LoadStatesFromSaveFile(file, states);
 			this->enabledMods = GetModInfoFromGameStates(states);
 		} catch (const std::runtime_error &ex) {
-			STLOGW("Could not read mods from save game: {}", ex.what());
+			SLOGW("Could not read mods from save game: {}", ex.what());
 		}
 	}
 }

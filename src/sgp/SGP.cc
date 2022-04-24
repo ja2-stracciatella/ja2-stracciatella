@@ -374,7 +374,7 @@ int main(int argc, char* argv[])
 			Logger_initialize(tempFilename.c_str());
 			for (const ST::string& msg : problems)
 			{
-				SLOGW("%s", msg.c_str());
+				SLOGW("{}", msg);
 			}
 		}
 

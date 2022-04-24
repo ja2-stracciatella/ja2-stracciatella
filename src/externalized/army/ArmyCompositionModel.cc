@@ -45,7 +45,7 @@ std::vector<const ArmyCompositionModel*> ArmyCompositionModel::deserialize(const
 }
 
 #define EXPECTS_STR(s) \
-	if (comp->name != s) STLOGW("Army Composition has an unexpected name. We recommend leaving the default army compositions unchanged. Expected: {}; Actual: {}", comp->name, s);
+	if (comp->name != s) SLOGW("Army Composition has an unexpected name. We recommend leaving the default army compositions unchanged. Expected: {}; Actual: {}", comp->name, s);
 
 void ArmyCompositionModel::validateData(const std::vector<const ArmyCompositionModel*> compositions)
 {
@@ -61,7 +61,7 @@ void ArmyCompositionModel::validateData(const std::vector<const ArmyCompositionM
 		auto comp = compositions[i];
 		if (comp->compositionId != i)
 		{
-			STLOGW("Army Composition has incorrect ID. Expected: {}; Actual: {}", i, comp->compositionId);
+			SLOGW("Army Composition has incorrect ID. Expected: {}; Actual: {}", i, comp->compositionId);
 		}
 
 		switch (comp->compositionId) // these army-comps are referenced in code
@@ -93,7 +93,7 @@ void ArmyCompositionModel::validateLoadedData(const std::vector<ARMY_COMPOSITION
 {
 	if (armyCompositions.size() < NUM_ARMY_COMPOSITIONS)
 	{
-		STLOGW("There are too few loaded Army Compositions. Expected: {}; Actual: {}", NUM_ARMY_COMPOSITIONS, armyCompositions.size());
+		SLOGW("There are too few loaded Army Compositions. Expected: {}; Actual: {}", NUM_ARMY_COMPOSITIONS, armyCompositions.size());
 	}
 	for (size_t i = 0; i < armyCompositions.size(); i++)
 	{
@@ -101,7 +101,7 @@ void ArmyCompositionModel::validateLoadedData(const std::vector<ARMY_COMPOSITION
 		auto comp = armyCompositions[i];
 		if (comp.iReadability != static_cast<int32_t>(i))
 		{
-			STLOGW("Army Composition has incorrect ID. The save might be corrupted. Expected: {}; Actual: {}", i, comp.iReadability);
+			SLOGW("Army Composition has incorrect ID. The save might be corrupted. Expected: {}; Actual: {}", i, comp.iReadability);
 		}
 	}
 }

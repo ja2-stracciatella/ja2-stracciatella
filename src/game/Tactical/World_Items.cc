@@ -173,7 +173,7 @@ INT32 AddItemToWorld(INT16 sGridNo, const OBJECTTYPE* const pObject, const UINT8
 	if (sGridNo == NOWHERE)
 	{
 		// Display warning.....
-		SLOGW("Item %d was given invalid grid location %d. Please report", pObject->usItem, sGridNo);
+		SLOGW("Item {} was given invalid grid location {}. Please report", pObject->usItem, sGridNo);
 		return -1;
 	}
 
@@ -279,7 +279,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 				auto item = itemReplacements.at(o.usItem);
 				if (item == 0)
 				{
-					STLOGW("Map item #{} removed", o.usItem);
+					SLOGW("Map item #{} removed", o.usItem);
 					continue;
 				}
 
@@ -290,7 +290,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 			const ItemModel* item = GCM->getItem(o.usItem);
 			if (item->getFlags() & ITEM_NOT_EDITOR) {
 				// This item is not placable by Editor. Maybe the map was created for a different item set.
-				STLOGW("Skipping non-Editor item #{}({}) at gridNo {}", item->getItemIndex(), item->getInternalName(), wi.sGridNo);
+				SLOGW("Skipping non-Editor item #{}({}) at gridNo {}", item->getItemIndex(), item->getInternalName(), wi.sGridNo);
 				continue;
 			}
 

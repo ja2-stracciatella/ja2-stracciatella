@@ -1565,7 +1565,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				// temporarily black list this gridno to stop enemy from going there
 				pSoldier->sBlackList = (INT16) pSoldier->usActionData;
 
-				SLOGW("Setting blacklist for %d to %d",
+				SLOGW("Setting blacklist for {} to {}",
 							pSoldier->ubID, pSoldier->sBlackList);
 
 				CancelAIAction(pSoldier);
@@ -1623,7 +1623,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			{
 				if ( iRetCode != ITEM_HANDLE_BROKEN ) // if the item broke, this is 'legal' and doesn't need reporting
 				{
-					SLOGW("AI %d got error code %d from HandleItem, doing action %d, has %d APs... aborting deadlock!",
+					SLOGW("AI {} got error code {} from HandleItem, doing action {}, has {} APs... aborting deadlock!",
 								pSoldier->ubID, iRetCode, pSoldier->bAction, pSoldier->bActionPoints);
 				}
 				CancelAIAction(pSoldier);
@@ -1752,7 +1752,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 			ItemHandleResult const iRetCode = HandleItem(pSoldier, pSoldier->usActionData, 0, pSoldier->inv[HANDPOS].usItem, FALSE);
 			if ( iRetCode != ITEM_HANDLE_OK)
 			{
-				SLOGW("AI %d got error code %d from HandleItem, doing action %d... aborting deadlock!",
+				SLOGW("AI {} got error code {} from HandleItem, doing action {}... aborting deadlock!",
 							pSoldier->ubID, iRetCode, pSoldier->bAction);
 				CancelAIAction(pSoldier);
 				EndAIGuysTurn(*pSoldier);

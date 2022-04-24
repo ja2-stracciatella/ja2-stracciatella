@@ -2801,7 +2801,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	}
 	else
 	{
-		SLOGW("Soldier Control: Weapon class not handled in SoldierGotHit( ) %d",
+		SLOGW("Soldier Control: Weapon class not handled in SoldierGotHit( ) {}",
 			usWeaponIndex);
 	}
 
@@ -7788,7 +7788,7 @@ BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8
 
 			// Something gone funny here....
 			usAnimState = pSoldier->usAnimState;
-			SLOGW("Wrong desired stance given: %d, %d.",
+			SLOGW("Wrong desired stance given: {}, {}.",
 				bNewStance, pSoldier->usAnimState );
 	}
 
