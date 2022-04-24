@@ -1989,11 +1989,6 @@ try
 						EXITGRID* const eg = &pSummary->ExitGrid[loop];
 						eg->usGridNo      = exitGrid.usGridNo;
 						eg->ubGotoSector = exitGrid.ubGotoSector;
-						// FIXME: useless check, always false
-						if (eg->ubGotoSector != exitGrid.ubGotoSector)
-						{
-							pSummary->fInvalidDest[loop] = TRUE;
-						}
 					}
 					break;
 				}
