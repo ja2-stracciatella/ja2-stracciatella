@@ -217,7 +217,7 @@ static SMKFLIC* SmkOpenFlic(const char* const filename)
 	catch (const std::runtime_error& ex)
 	{
 
-		SLOGE("Failed to open '%s': %s", filename, ex.what());
+		SLOGE("Failed to open '{}': {}", filename, ex.what());
 		if (sf != nullptr) SmkCloseFlic(sf);
 		return nullptr;
 	}

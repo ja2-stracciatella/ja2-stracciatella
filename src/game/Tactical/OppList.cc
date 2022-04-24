@@ -4283,7 +4283,7 @@ static void TellPlayerAboutNoise(SOLDIERTYPE* const s, SOLDIERTYPE const* const 
 
 	if (noise_maker && s->bTeam == OUR_TEAM && s->bTeam == noise_maker->bTeam)
 	{
-		SLOGE("%s (%d) heard noise from %s (%d), noise at %dL%d, type %d",
+		SLOGE("{} ({}) heard noise from {} ({}), noise at {}L{}, type {}",
 			s->name.c_str(), s->ubID, noise_maker->name.c_str(), noise_maker->ubID, sGridNo, level, noise_type);
 	}
 

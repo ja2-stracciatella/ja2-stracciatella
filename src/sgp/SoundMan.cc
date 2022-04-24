@@ -775,7 +775,7 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 	}
 	catch (const std::runtime_error& err)
 	{
-		SLOGE("SoundLoadDisk Error for \"%s\": %s", pFilename, err.what());
+		SLOGE("SoundLoadDisk Error for \"{}\": {}", pFilename, err.what());
 		// Clean up possible allocations
 		if (hFile != NULL) {
 			delete hFile;
@@ -931,7 +931,7 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 				const INT16* src;
 				auto rbResult = ma_pcm_rb_acquire_read(Sound->pRingBuffer, &samples, (void**)&src);
 				if (rbResult != MA_SUCCESS) {
-					SLOGE("Could not aquire read pointer for channel %d: %s", Sound - pSoundList, ma_result_description(rbResult));
+					SLOGE("Could not aquire read pointer for channel {}: {}", Sound - pSoundList, ma_result_description(rbResult));
 					continue;
 				}
 
@@ -947,7 +947,7 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 
 				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples, (void**)src);
 				if (rbResult != MA_SUCCESS) {
-					SLOGE("Could not commit read pointer for channel %d: %s", Sound - pSoundList, ma_result_description(rbResult));
+					SLOGE("Could not commit read pointer for channel {}: {}", Sound - pSoundList, ma_result_description(rbResult));
 				} else {
 					ringBuffersNeedService |= DoesChannelRingBufferNeedService(Sound);
 				}
@@ -1047,7 +1047,7 @@ static void SoundShutdownHardware(void)
 		int returnValue = 1;
 		SDL_WaitThread(bufferServiceThread, &returnValue);
 		if (returnValue != 0) {
-			SLOGE("SoundManBufferServiceThread exited with code: %d", returnValue);
+			SLOGE("SoundManBufferServiceThread exited with code: {}", returnValue);
 		}
 	}
 	for(auto channel = std::begin(pSoundList); channel != std::end(pSoundList); ++channel) {

@@ -450,7 +450,7 @@ void EnterAutoResolveMode(const SGPSector& ubSector)
 			break;
 		default:
 			//shouldn't happen
-			SLOGE("Autoresolving with entering enemy sector code %d -- illegal", gubEnemyEncounterCode );
+			SLOGE("Autoresolving with entering enemy sector code {} -- illegal", gubEnemyEncounterCode);
 			break;
 	}
 }

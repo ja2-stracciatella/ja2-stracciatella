@@ -699,7 +699,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 		}
 		catch (...)
 		{
-			SLOGE("Could not load animation file: %s", a->Filename);
+			SLOGE("Could not load animation file: {}", a->Filename);
 			throw;
 		}
 	}

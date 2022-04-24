@@ -9,7 +9,6 @@
 #include <stracciatella.h>
 
 void LogMessage(bool isAssert, LogLevel level, const char* file, const ST::string& str);
-void LogMessage(bool isAssert, LogLevel level, const char *file, const char *format, ...);
 
 /** Get filename relative to src directory */
 constexpr size_t GetSourcePathSize(const char* filename)
@@ -31,15 +30,6 @@ template <size_t p> constexpr const char* ToRelativePath(const char* filename)
 #define SOURCE_PATH_SIZE (GetSourcePathSize(__FILE__))
 #define __FILENAME__ (ToRelativePath<SOURCE_PATH_SIZE>(__FILE__))
 
-/** Print error message macro. */
-#define SLOGE(FORMAT, ...) LogMessage(false, LogLevel::Error, __FILENAME__, FORMAT, ##__VA_ARGS__)
-
-/*
-
-   As above, but for string_theory style formatted strings.
-
-*/
-
 template<typename... Args>
 constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Args... args)
 {
@@ -55,6 +45,7 @@ constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Arg
 #define SLOGW(...) LogMessageST(false, LogLevel::Warn, __FILENAME__, ##__VA_ARGS__)
 
 /** Print error message macro. */
+#define SLOGE(...) LogMessageST(false, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
 #define STLOGE(...) LogMessageST(false, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
 
 /** Print error message macro and assert if ENABLE_ASSERTS is defined. */

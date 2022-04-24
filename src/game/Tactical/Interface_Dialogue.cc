@@ -2155,7 +2155,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// Vince or Willis asks about payment? for medical attention
 				if (ubTargetNPC != gpDestSoldier->ubProfile)
 				{
-					SLOGE("Inconsistency between HandleNPCDoAction and target profile IDs" );
+					SLOGE("Inconsistency between HandleNPCDoAction and target profile IDs");
 				}
 				else
 				{

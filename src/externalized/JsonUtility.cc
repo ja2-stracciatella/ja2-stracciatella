@@ -30,7 +30,7 @@ bool JsonUtility::writeToFile(const ST::string &name, const std::vector<ST::stri
 
 		file->write(buf.c_str(), buf.size());
 	} catch (const std::runtime_error& ex) {
-		SLOGE("JsonUtility::writeToFile: %s", ex.what());
+		SLOGE("JsonUtility::writeToFile: {}", ex.what());
 		return false;
 	}
 	return true;

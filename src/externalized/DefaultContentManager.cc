@@ -1245,7 +1245,7 @@ const ST::string* DefaultContentManager::getNewString(size_t stringId) const
 	if(stringId >= m_newStrings.size())
 	{
 		ST::string message = ST::format("new string {} is not found", stringId);
-		SLOGE(message.c_str());
+		SLOGE("{}", message);
 		throw std::runtime_error(message.c_str());
 	}
 	else

@@ -285,7 +285,7 @@ static void ValidateGroup(GROUP* pGroup)
 		if( !pGroup->fPlayer && pGroup->pEnemyGroup->ubIntention != STAGING
 			&& pGroup->pEnemyGroup->ubIntention != REINFORCEMENTS )
 		{
-			SLOGE( "Internal error (floating group).  Please send PRIOR save file and Debug Log." );
+			SLOGE("Internal error (floating group).  Please send PRIOR save file and Debug Log.");
 			if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 			{
 				RemoveGroupFromStrategicAILists(*pGroup);
@@ -297,7 +297,7 @@ static void ValidateGroup(GROUP* pGroup)
 	if( pGroup->pEnemyGroup->ubNumAdmins + pGroup->pEnemyGroup->ubNumTroops + pGroup->pEnemyGroup->ubNumElites != pGroup->ubGroupSize ||
 			pGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE )
 		{
-			SLOGE( "Internal error (bad group populations).  Please send PRIOR save file and Debug Log." );
+			SLOGE("Internal error (bad group populations).  Please send PRIOR save file and Debug Log.");
 		}
 }
 
@@ -766,9 +766,9 @@ static void HandlePlayerGroupNoticedByGarrison(const GROUP* const pPlayerGroup, 
 
 			if( pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins > MAX_STRATEGIC_TEAM_SIZE )
 			{
-				SLOGE("Sector %c%d now has %d enemies (max %d).",
-						gGarrisonGroup[ pSector->ubGarrisonID ].ubSectorID / 16 + 'A' , gGarrisonGroup[ pSector->ubGarrisonID ].ubSectorID % 16,
-						pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins, MAX_STRATEGIC_TEAM_SIZE );
+				SLOGE("Sector {} now has {} enemies (max {}).",
+					SGPSector::FromSectorID(gGarrisonGroup[pSector->ubGarrisonID].ubSectorID, 0).AsShortString(),
+					pSector->ubNumTroops + pSector->ubNumElites + pSector->ubNumAdmins, MAX_STRATEGIC_TEAM_SIZE);
 			}
 
 			SLOGD("Enemy garrison at {}{} detected stopped player group at {} and is sending {} troops to attack.",
@@ -1787,7 +1787,7 @@ static void SendReinforcementsForGarrison(INT32 iDstGarrisonID, UINT16 usDefence
 			iReinforcementsAvailable = ReinforcementsAvailable( iSrcGarrisonID );
 			if( iReinforcementsAvailable <= 0)
 			{
-				SLOGE( "Attempting to send reinforcements from a garrison that doesn't have any! -- KM:0 (with prior saved game and Debug Log)" );
+				SLOGE("Attempting to send reinforcements from a garrison that doesn't have any! -- KM:0 (with prior saved game and Debug Log)");
 				return;
 			}
 			//Send the lowest of the two:  number requested or number available
@@ -2887,7 +2887,7 @@ void StrategicHandleQueenLosingControlOfSector(const SGPSector& sSector)
 
 	if (StrategicMap[sSector.AsStrategicIndex()].fEnemyControlled)
 	{ //If the sector doesn't belong to the player, then we shouldn't be calling this function!
-		SLOGE( "StrategicHandleQueenLosingControlOfSector() was called for a sector that is internally considered to be enemy controlled." );
+		SLOGE("StrategicHandleQueenLosingControlOfSector() was called for a sector that is internally considered to be enemy controlled.");
 		return;
 	}
 

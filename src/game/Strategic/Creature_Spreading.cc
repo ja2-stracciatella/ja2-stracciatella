@@ -695,7 +695,7 @@ BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex )
 		auto mine = GCM->getMine(ubMineIndex);
 		if (mine == NULL)
 		{
-			SLOGE("Attempting to check if mine is clear but mine index is invalid (%d).", ubMineIndex);
+			SLOGE("Attempting to check if mine is clear but mine index is invalid ({}).", ubMineIndex);
 			return true;
 		}
 		for (auto sector : mine->mineSectors)
@@ -888,7 +888,7 @@ BOOLEAN PrepareCreaturesForBattle()
 			ubAdultFemalePercentage = 20;
 			break;
 		default:
-			SLOGE("Invalid creature habitat ID of %d for PrepareCreaturesForBattle.  Ignoring...", ubCreatureHabitat );
+			SLOGE("Invalid creature habitat ID of {} for PrepareCreaturesForBattle.  Ignoring...", ubCreatureHabitat);
 			return FALSE;
 	}
 

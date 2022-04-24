@@ -173,7 +173,7 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 	);
 
 	if (ScreenBuffer == NULL) {
-		SLOGE("SDL_CreateRGBSurface for ScreenBuffer failed: %s\n", SDL_GetError());
+		SLOGE("SDL_CreateRGBSurface for ScreenBuffer failed: {}\n", SDL_GetError());
 	}
 
 
@@ -206,7 +206,7 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 
 		if (ScaledScreenTexture == NULL) 
 		{
-			SLOGE("SDL_CreateTexture for ScaledScreenTexture failed: %s\n", SDL_GetError());
+			SLOGE("SDL_CreateTexture for ScaledScreenTexture failed: {}\n", SDL_GetError());
 		}
 
 		SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "nearest");
@@ -222,7 +222,7 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 					SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	if (ScreenTexture == NULL) {
-		SLOGE("SDL_CreateTexture for ScreenTexture failed: %s\n", SDL_GetError());
+		SLOGE("SDL_CreateTexture for ScreenTexture failed: {}\n", SDL_GetError());
 	}
 
 	FrameBuffer = SDL_CreateRGBSurface(
@@ -232,7 +232,7 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 
 	if (FrameBuffer == NULL)
 	{
-		SLOGE("SDL_CreateRGBSurface for FrameBuffer failed: %s\n", SDL_GetError());
+		SLOGE("SDL_CreateRGBSurface for FrameBuffer failed: {}\n", SDL_GetError());
 	}
 
 	MouseCursor = SDL_CreateRGBSurface(
@@ -243,7 +243,7 @@ void InitializeVideoManager(const VideoScaleQuality quality)
 
 	if (MouseCursor == NULL)
 	{
-		SLOGE("SDL_CreateRGBSurface for MouseCursor failed: %s\n", SDL_GetError());
+		SLOGE("SDL_CreateRGBSurface for MouseCursor failed: {}\n", SDL_GetError());
 	}
 
 	SDL_ShowCursor(SDL_DISABLE);

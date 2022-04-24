@@ -57,7 +57,7 @@ void MusicPlay(const ST::string* pFilename)
 		return;
 	}
 
-	SLOGE("Music Play Error %d %d", uiMusicHandle, gubMusicMode);
+	SLOGE("Music Play Error {} {}", uiMusicHandle, gubMusicMode);
 }
 
 

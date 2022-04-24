@@ -145,7 +145,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 
 		if ( pSoldier->bTeam != gTacticalStatus.ubCurrentTeam )
 		{
-			SLOGE("Turning off AI flag for %d because trying to act out of turn", pSoldier->ubID );
+			SLOGE("Turning off AI flag for {} because trying to act out of turn", pSoldier->ubID);
 			pSoldier->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
 			return;
 		}
@@ -380,7 +380,7 @@ void HandleSoldierAI( SOLDIERTYPE *pSoldier )
 			// ATE: Display message that deadlock occured...
 			SLOGI("Breaking Deadlock");
 			// If we are in beta version, also report message!
-			SLOGE("Aborting AI deadlock for %d. Please sent LOG file and SAVE.", pSoldier->ubID );
+			SLOGE("Aborting AI deadlock for {}. Please sent LOG file and SAVE.", pSoldier->ubID);
 			// just abort
 			EndAIDeadlock();
 			if ( !(pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL) )
@@ -1495,7 +1495,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 					// Check if we were told to move by NPC stuff
 					if ( pSoldier->sAbsoluteFinalDestination != NOWHERE && !(gTacticalStatus.uiFlags & INCOMBAT) )
 					{
-						SLOGE("AI %s failed to get path for dialogue-related move!", pSoldier->name.c_str());
+						SLOGE("AI {} failed to get path for dialogue-related move!", pSoldier->name);
 
 						// Are we close enough?
 						if ( !ACTING_ON_SCHEDULE( pSoldier ) && SpacesAway( pSoldier->sGridNo, pSoldier->sAbsoluteFinalDestination ) < 4 )

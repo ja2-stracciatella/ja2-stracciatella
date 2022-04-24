@@ -374,7 +374,7 @@ static NPCQuoteInfo* EnsureQuoteFileLoaded(UINT8 const ubNPC)
 		{
 			if (!gfTriedToLoadQuoteInfoArray[ubNPC]) // don't report the error a second time
 			{
-				SLOGE("NPC needs NPC file: %d.", ubNPC );
+				SLOGE("NPC needs NPC file: {}.", ubNPC);
 				gfTriedToLoadQuoteInfoArray[ubNPC] = TRUE;
 			}
 			// error message at this point!

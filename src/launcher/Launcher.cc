@@ -54,7 +54,7 @@ const std::vector<VideoScaleQuality> scalingModes = {
 void showRustError() {
 	RustPointer<char> err(getRustError());
 	if (err) {
-		SLOGE("%s", err.get());
+		SLOGE("{}", err.get());
 		fl_message_title("Rust error");
 		fl_alert("%s", err.get());
 	} else {
@@ -99,7 +99,7 @@ void Launcher::loadJa2Json() {
 	if (configFolderPath.get() == NULL) {
 		auto rustError = getRustError();
 		if (rustError != NULL) {
-			SLOGE("Failed to find home directory: %s", rustError);
+			SLOGE("Failed to find home directory: {}", rustError);
 		}
 	}
 
