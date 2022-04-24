@@ -494,7 +494,7 @@ static INT32 MineAMine(UINT8 ubMineIndex)
 		if( iAmtExtracted > 0 )
 		{
 			// debug message
-			STLOGD("{} - Mine income from {} = ${}", WORLDTIMESTR, GCM->getTownName(GetTownAssociatedWithMine(ubMineIndex)), iAmtExtracted);
+			SLOGD("{} - Mine income from {} = ${}", WORLDTIMESTR, GCM->getTownName(GetTownAssociatedWithMine(ubMineIndex)), iAmtExtracted);
 
 			// if this is the first time this mine has produced income for the player in the game
 			if ( !gMineStatus[ ubMineIndex ].fMineHasProducedForPlayer )

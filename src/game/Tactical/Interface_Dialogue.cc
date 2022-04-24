@@ -4048,7 +4048,7 @@ add_log:
 				}
 				break;
 			default:
-				STLOGD("No code support for NPC action {}", usActionCode);
+				SLOGD("No code support for NPC action {}", usActionCode);
 				break;
 		}
 	}

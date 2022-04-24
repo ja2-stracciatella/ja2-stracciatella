@@ -283,7 +283,7 @@ void LoadWorldItemsFromMap(HWFILE const f)
 					continue;
 				}
 
-				STLOGD("Map item #{} replaced by #{}", o.usItem, item);
+				SLOGD("Map item #{} replaced by #{}", o.usItem, item);
 				o.usItem = item;
 			}
 

@@ -59,7 +59,7 @@ void CreateTileDatabase()
 			NumRegions = gNumTilesPerType[cnt1];
 		}
 
-		STLOGD("Type: {} Size: {} Index: {}", gTileSurfaceName[cnt1], gNumTilesPerType[cnt1], gTileDatabaseSize);
+		SLOGD("Type: {} Size: {} Index: {}", gTileSurfaceName[cnt1], gNumTilesPerType[cnt1], gTileDatabaseSize);
 
 		UINT32 cnt2;
 		for (cnt2 = 0; cnt2 < NumRegions; ++cnt2)
@@ -138,9 +138,9 @@ void CreateTileDatabase()
 	}
 
 	//Calculate mem usgae
-	STLOGD("Database Sizes: {} vs {}", gTileDatabaseSize, NUMBEROFTILES);
-	STLOGD("Database Types: {}", NUMBEROFTILETYPES);
-	STLOGD("Database Item Mem: {}", gTileDatabaseSize * sizeof(TILE_ELEMENT));
+	SLOGD("Database Sizes: {} vs {}", gTileDatabaseSize, NUMBEROFTILES);
+	SLOGD("Database Types: {}", NUMBEROFTILETYPES);
+	SLOGD("Database Item Mem: {}", gTileDatabaseSize * sizeof(TILE_ELEMENT));
 }
 
 

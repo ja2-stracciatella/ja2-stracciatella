@@ -1364,7 +1364,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 
 	if (pSoldier == pOpponent)
 	{
-		STLOGD("ManLooksForMan - Looking for self - ID {}({})", pSoldier->ubID, pSoldier->name);
+		SLOGD("ManLooksForMan - Looking for self - ID {}({})", pSoldier->ubID, pSoldier->name);
 		return(FALSE);
 	}
 

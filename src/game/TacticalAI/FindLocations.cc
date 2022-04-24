@@ -69,7 +69,7 @@ static INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale
 		return(NOWHERE);
 	}
 	iPercentBetter = (iValueChange * 100) / iScaleSum;
-	STLOGD("CalcPercentBetter: %Better {}, old {}, new {}, change {}\noldScale {}, newScale {}, scaleSum {}",
+	SLOGD("CalcPercentBetter: %Better {}, old {}, new {}, change {}\noldScale {}, newScale {}, scaleSum {}",
 		iPercentBetter, iOldValue, iNewValue, iValueChange, iOldScale, iNewScale, iScaleSum);
 	return(iPercentBetter);
 }
@@ -975,7 +975,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		// if best cover value found was at least 5% better than our current cover
 		if (*piPercentBetter >= MIN_PERCENT_BETTER)
 		{
-			STLOGD("Found Cover: current {}, best {}, %Better {}",
+			SLOGD("Found Cover: current {}, best {}, %Better {}",
 				iCurrentCoverValue, iBestCoverValue, *piPercentBetter);
 			return((INT16)sBestCover);       // return the gridno of that cover
 		}

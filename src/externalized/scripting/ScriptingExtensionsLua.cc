@@ -53,7 +53,7 @@ static void UnregisterListener(std::string observable, std::string key);
 int StracciatellaLoadFileRequire(lua_State* L)
 {
 	ST::string path = sol::stack::get<std::string>(L);
-	STLOGD("Loading LUA script file: {}", path);
+	SLOGD("Loading LUA script file: {}", path);
 
 	try {
 		AutoSGPFile file(GCM->openGameResForReading(SCRIPTS_DIR "/" + path));
@@ -73,7 +73,7 @@ void RunEntryPoint()
 	auto luaName = ENTRYPOINT_SCRIPT;
 	auto fileName = SCRIPTS_DIR "/" ENTRYPOINT_SCRIPT;
 	
-	STLOGD("Loading LUA script file: {}", luaName);
+	SLOGD("Loading LUA script file: {}", luaName);
 	AutoSGPFile f{GCM->openGameResForReading(fileName)};
 	std::string scriptbody = f->readStringToEnd().to_std_string();
 	auto result = lua.safe_script(scriptbody, ST::format("@{}", luaName).to_std_string());

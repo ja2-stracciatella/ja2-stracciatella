@@ -1608,7 +1608,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 					break;
 				case TRIGGER_NPC:
 					// if triggering, pass in the approach data as the record to consider
-					STLOGD("Handling trigger {}/{} at {}", gMercProfiles[ubNPC].zNickname.c_str(), approach_record, GetJA2Clock());
+					SLOGD("Handling trigger {}/{} at {}", gMercProfiles[ubNPC].zNickname.c_str(), approach_record, GetJA2Clock());
 					NPCConsiderTalking(ubNPC, ubMerc, bApproach, approach_record, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum);
 					break;
 				default:

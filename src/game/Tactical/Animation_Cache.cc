@@ -91,14 +91,14 @@ void GetCachedAnimationSurface(UINT16 const usSoldierID, AnimationSurfaceCacheTy
 
 			if ( pAnimCache->usCachedSurfaces[ cnt ] == usCurrentAnimSurface )
 			{
-				STLOGD("Anim Cache: REJECTING Slot {} EXISTING ANIM SURFACE ( Soldier {}, Surface {} )", cnt, usSoldierID, usCurrentAnimSurface);
+				SLOGD("Anim Cache: REJECTING Slot {} EXISTING ANIM SURFACE ( Soldier {}, Surface {} )", cnt, usSoldierID, usCurrentAnimSurface);
 			}
 			else if (pAnimCache->usCachedSurfaces[cnt] == pSoldier->usAnimSurface)
 			{
 				// The result of DetermineSoldierAnimationSurface may be inconsistent
 				// with the actual usAnimSurface, for example when player is re-assigning
 				// mercs in strategic view.
-				STLOGD("Anim Cache: REJECTING Slot {} IN-USE ANIM SURFACE ( Soldier {}, Surface {} )", cnt, usSoldierID, pSoldier->usAnimSurface);
+				SLOGD("Anim Cache: REJECTING Slot {} IN-USE ANIM SURFACE ( Soldier {}, Surface {} )", cnt, usSoldierID, pSoldier->usAnimSurface);
 			}
 			else
 			{

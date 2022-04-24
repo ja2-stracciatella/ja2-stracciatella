@@ -412,7 +412,7 @@ ST::string DefaultContentManager::getMapPath(const ST::string& mapName) const
 	result += '/';
 	result += mapName.c_str();
 
-	STLOGD("map file {}", result);
+	SLOGD("map file {}", result);
 
 	return result;
 }
@@ -424,7 +424,7 @@ ST::string DefaultContentManager::getRadarMapResourceName(const ST::string &mapN
 	result += "/";
 	result += mapName;
 
-	STLOGD("map file {}", result);
+	SLOGD("map file {}", result);
 
 	return result;
 }
@@ -480,7 +480,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename
 		RustPointer<char> err{getRustError()};
 		throw std::runtime_error(ST::format("openGameResForReading: {}", err.get()).to_std_string());
 	}
-	STLOGD("Opened resource file from VFS: '{}'", filename);
+	SLOGD("Opened resource file from VFS: '{}'", filename);
 	return new SGPFile(vfile.release());
 }
 
@@ -630,7 +630,7 @@ bool DefaultContentManager::loadWeapons()
 		{
 			JsonObjectReader obj(a[i]);
 			WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap);
-			STLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
+			SLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
 
 			if (w->getItemIndex() > MAX_WEAPONS)
 			{
@@ -675,7 +675,7 @@ bool DefaultContentManager::loadMagazines()
 		{
 			JsonObjectReader obj(a[i]);
 			MagazineModel *mag = MagazineModel::deserialize(obj, m_calibreMap, m_ammoTypeMap);
-			STLOGD("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName());
+			SLOGD("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName());
 
 			m_magazines.push_back(mag);
 			m_items[mag->getItemIndex()] = mag;
@@ -695,7 +695,7 @@ bool DefaultContentManager::loadCalibres()
 		{
 			JsonObjectReader obj(a[i]);
 			CalibreModel *calibre = CalibreModel::deserialize(obj);
-			STLOGD("Loaded calibre {} {}", calibre->index, calibre->internalName);
+			SLOGD("Loaded calibre {} {}", calibre->index, calibre->internalName);
 
 			if(m_calibres.size() <= calibre->index)
 			{
@@ -723,7 +723,7 @@ bool DefaultContentManager::loadAmmoTypes()
 		{
 			JsonObjectReader obj(a[i]);
 			AmmoTypeModel *ammoType = AmmoTypeModel::deserialize(obj);
-			STLOGD("Loaded ammo type {} {}", ammoType->index, ammoType->internalName);
+			SLOGD("Loaded ammo type {} {}", ammoType->index, ammoType->internalName);
 
 			if(m_ammoTypes.size() <= ammoType->index)
 			{
@@ -751,7 +751,7 @@ bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::V
 	for (const ST::string &str : utf8_encoded)
 	{
 		musicModeList->push_back(new ST::string(str));
-		STLOGD("Loaded music {}", str);
+		SLOGD("Loaded music {}", str);
 	}
 
 	m_musicMap[mode] = musicModeList;
@@ -1221,7 +1221,7 @@ const ST::string* DefaultContentManager::getMusicForMode(MusicMode mode) const {
 	const uint32_t index = Random((uint32_t)m_musicMap.find(mode)->second->size());
 	const ST::string* chosen = m_musicMap.find(mode)->second->at(index);
 
-	STLOGD("Choosing music index {} of {} for: '{}'", index, m_musicMap.find(mode)->second->size(), chosen);
+	SLOGD("Choosing music index {} of {} for: '{}'", index, m_musicMap.find(mode)->second->size(), chosen);
 	return chosen;
 }
 
@@ -1584,7 +1584,7 @@ const std::map<int8_t, const TownModel*>& DefaultContentManager::getTowns() cons
 const ST::string DefaultContentManager::getTownName(uint8_t townId) const
 {
 	if (townId >= m_townNames.size()) {
-		STLOGD("Town name not defined for index {}", townId);
+		SLOGD("Town name not defined for index {}", townId);
 		return ST::null;
 	}
 	return *m_townNames[townId];
@@ -1593,7 +1593,7 @@ const ST::string DefaultContentManager::getTownName(uint8_t townId) const
 const ST::string DefaultContentManager::getTownLocative(uint8_t townId) const
 {
 	if (townId >= m_townNameLocatives.size()) {
-		STLOGD("Town name locative not defined for index {}", townId);
+		SLOGD("Town name locative not defined for index {}", townId);
 		return ST::null;
 	}
 	return *m_townNameLocatives[townId];
@@ -1660,7 +1660,7 @@ const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t const p
 		return m_mercProfileInfo.at(profileID);
 	}
 
-	STLOGD("MercProfileInfo is not defined at {}", profileID);
+	SLOGD("MercProfileInfo is not defined at {}", profileID);
 	return &EMPTY_MERC_PROFILE_INFO;
 }
 

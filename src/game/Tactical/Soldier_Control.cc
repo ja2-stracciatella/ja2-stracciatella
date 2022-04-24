@@ -7404,7 +7404,7 @@ void HaultSoldierFromSighting( SOLDIERTYPE *pSoldier, BOOLEAN fFromSightingEnemy
 	if ((fIsThrowing && fFromSightingEnemy) || fIsAttacking)
 	{
 		// Decrement attack counter...
-		STLOGD("Reducing attacker busy count..., ending attack ({}) because saw something", Internals::getAnimationName(pSoldier->usPendingAnimation));
+		SLOGD("Reducing attacker busy count..., ending attack ({}) because saw something", Internals::getAnimationName(pSoldier->usPendingAnimation));
 		ReduceAttackBusyCount(pSoldier, FALSE);
 
 		// ATE: Goto stationary stance......

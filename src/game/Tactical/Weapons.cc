@@ -976,7 +976,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			{
 				// Increment attack counter...
 				gTacticalStatus.ubAttackBusyCount++;
-				STLOGD("Incrementing Attack: Exhaust from LAW ({})", gTacticalStatus.ubAttackBusyCount);
+				SLOGD("Incrementing Attack: Exhaust from LAW ({})", gTacticalStatus.ubAttackBusyCount);
 				EVENT_SoldierGotHit(tgt, MINI_GRENADE, 10, 200, pSoldier->bDirection, 0, pSoldier, 0, ANIM_CROUCH, sNewGridNo);
 			}
 		}

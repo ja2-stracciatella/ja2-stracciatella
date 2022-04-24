@@ -671,7 +671,7 @@ void PrepareLoadedSector()
 		CalculateNonPersistantPBIInfo();
 	}
 
-	STLOGD("Current Time is: {}", GetWorldTotalMin());
+	SLOGD("Current Time is: {}", GetWorldTotalMin());
 
 	AllTeamsLookForAll( TRUE );
 }
@@ -1111,7 +1111,7 @@ check_entry:
 				}
 				else
 				{
-					STLOGD("Sector {} has NO entrypoints -- using precise center of map for {}.", sector, s.name);
+					SLOGD("Sector {} has NO entrypoints -- using precise center of map for {}.", sector, s.name);
 					goto place_in_center;
 				}
 				ST::string no_entry;
@@ -1125,7 +1125,7 @@ check_entry:
 				}
 				if (!no_entry.empty())
 				{
-					STLOGD("Sector {} doesn't have a {} entrypoint -- substituting {} entrypoint for {}.", sector, no_entry, entry, s.name);
+					SLOGD("Sector {} doesn't have a {} entrypoint -- substituting {} entrypoint for {}.", sector, no_entry, entry, s.name);
 				}
 			}
 			break;
@@ -1137,7 +1137,7 @@ check_entry:
 		case INSERTION_CODE_PRIMARY_EDGEINDEX:
 		{
 			gridno = SearchForClosestPrimaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
-			STLOGD("{}'s primary insertion gridno is {} using {} as initial search gridno and {} insertion code.",
+			SLOGD("{}'s primary insertion gridno is {} using {} as initial search gridno and {} insertion code.",
 						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
@@ -1151,7 +1151,7 @@ check_entry:
 		case INSERTION_CODE_SECONDARY_EDGEINDEX:
 		{
 			gridno = SearchForClosestSecondaryMapEdgepoint(s.sPendingActionData2, (UINT8)s.usStrategicInsertionData);
-			STLOGD("{}'s isolated insertion gridno is {} using {} as initial search gridno and {} insertion code.",
+			SLOGD("{}'s isolated insertion gridno is {} using {} as initial search gridno and {} insertion code.",
 						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
@@ -1180,7 +1180,7 @@ check_entry:
 			return;
 
 		default:
-			STLOGD("Improper insertion code {} given to UpdateMercsInSector", s.ubStrategicInsertionCode);
+			SLOGD("Improper insertion code {} given to UpdateMercsInSector", s.ubStrategicInsertionCode);
 			goto place_in_center;
 	}
 
@@ -1310,7 +1310,7 @@ static void SetInsertionDataFromAdjacentMoveDirection(SOLDIERTYPE& s, UINT8 cons
 		case WEST:  s.ubStrategicInsertionCode = INSERTION_CODE_EAST;  break;
 
 		default: // Wrong direction given
-			STLOGD("Improper insertion direction {} given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction);
+			SLOGD("Improper insertion direction {} given to SetInsertionDataFromAdjacentMoveDirection", tactical_direction);
 			s.ubStrategicInsertionCode = INSERTION_CODE_WEST;
 			break;
 	}
@@ -1346,7 +1346,7 @@ static UINT8 GetInsertionDataFromAdjacentMoveDirection(UINT8 ubTacticalDirection
 			break;
 		default:
 			// Wrong direction given!
-			STLOGD("Improper insertion direction {} given to GetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
+			SLOGD("Improper insertion direction {} given to GetInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
 			ubDirection = EAST_STRATEGIC_MOVE;
 	}
 
@@ -1384,7 +1384,7 @@ static UINT8 GetStrategicInsertionDataFromAdjacentMoveDirection(UINT8 ubTactical
 			break;
 		default:
 			// Wrong direction given!
-			STLOGD("Improper insertion direction {} given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
+			SLOGD("Improper insertion direction {} given to GetStrategicInsertionDataFromAdjacentMoveDirection", ubTacticalDirection);
 			ubDirection = EAST_STRATEGIC_MOVE;
 	}
 	return( ubDirection );
@@ -1448,7 +1448,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 	else
 	{
 		// OK, no jump code here given...
-		STLOGD("Improper jump code {} given to JumpIntoAdjacentSector", ubJumpCode);
+		SLOGD("Improper jump code {} given to JumpIntoAdjacentSector", ubJumpCode);
 	}
 
 	Assert( pValidSoldier );

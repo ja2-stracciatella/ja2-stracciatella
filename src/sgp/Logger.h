@@ -49,7 +49,6 @@ constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Arg
 	LogMessage(isAssert, level, file, ST::format(args...));
 }
 /** Print debug message macro. */
-#define STLOGD(...) LogMessageST(false, LogLevel::Debug, __FILENAME__, ##__VA_ARGS__)
 #define SLOGD(...) LogMessageST(false, LogLevel::Debug, __FILENAME__, ##__VA_ARGS__)
 
 /** Print info message macro. */

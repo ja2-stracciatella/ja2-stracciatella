@@ -569,7 +569,7 @@ void SoundServiceStreams(void)
 		SOUNDTAG* Sound = &pSoundList[i];
 		if (Sound->State == CHANNEL_DEAD)
 		{
-			STLOGD("DEAD channel {} file \"{}\" (refcount {})", i, Sound->pSample->pName, Sound->pSample->uiInstances);
+			SLOGD("DEAD channel {} file \"{}\" (refcount {})", i, Sound->pSample->pName, Sound->pSample->uiInstances);
 			if (Sound->EOSCallback != NULL) Sound->EOSCallback(Sound->pCallbackData);
 			assert(Sound->pSample->uiInstances != 0);
 			Sound->pSample->uiInstances--;
@@ -817,7 +817,7 @@ static BOOLEAN SoundCleanCache(void)
 
 	if (candidate != NULL)
 	{
-		STLOGD("freeing sample {} \"{}\" with {} hits", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
+		SLOGD("freeing sample {} \"{}\" with {} hits", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
 		SoundFreeSample(candidate);
 		return TRUE;
 	}
@@ -1086,7 +1086,7 @@ static UINT32 SoundGetUniqueID(void);
  * Returns: Unique sound ID if successful, SOUND_ERROR if not. */
 static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
-	STLOGD("playing channel {} sample {} file \"{}\"", channel - pSoundList, sample - pSampleList, sample->pName);
+	SLOGD("playing channel {} sample {} file \"{}\"", channel - pSoundList, sample - pSampleList, sample->pName);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
@@ -1139,7 +1139,7 @@ static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 
 	if (channel->pSample == NULL) return FALSE;
 
-	STLOGD("stopping channel channel {}", (channel - pSoundList));
+	SLOGD("stopping channel channel {}", (channel - pSoundList));
 	channel->State = CHANNEL_STOP;
 	return TRUE;
 }

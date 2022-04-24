@@ -83,13 +83,13 @@ static void InitNPCs()
 		if (placement->useAlternateMap)
 		{
 			SectorInfo[sMap.AsByte()].uiFlags |= SF_USE_ALTERNATE_MAP;
-			STLOGD("Alternate map in {}", sMap.AsShortString());
+			SLOGD("Alternate map in {}", sMap.AsShortString());
 		}
 		if (placement->isPlacedAtStart)
 		{
 			MERCPROFILESTRUCT& merc = GetProfile(placement->profileId);
 			merc.sSector = sMap;
-			STLOGD("{} in {}", merc.zNickname, sMap.AsShortString());
+			SLOGD("{} in {}", merc.zNickname, sMap.AsShortString());
 		}
 	}
 

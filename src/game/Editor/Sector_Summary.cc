@@ -2102,7 +2102,7 @@ static void LoadGlobalSummary(void)
 			if (LoadSummary(sMap, 7, "_b3_a"))  sector_levels |= ALTERNATE_B3_MASK;     // alternate B2 level
 			gbSectorLevels[sMap.x - 1][sMap.y - 1] = sector_levels;
 		}
-		STLOGD("Sector Row {c} complete...", sMap.y - 1 + 'A');
+		SLOGD("Sector Row {c} complete...", sMap.y - 1 + 'A');
 	}
 
 	if (gfMustForceUpdateAllMaps)
