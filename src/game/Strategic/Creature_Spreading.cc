@@ -131,7 +131,7 @@ static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8
 	curr->pLevel = FindUnderGroundSector(ubSector);
 	if( !curr->pLevel )
 	{
-		STLOGA("Could not find underground sector node ({}) that should exist.",
+		SLOGA("Could not find underground sector node ({}) that should exist.",
 			ubSector.AsLongString());
 		delete curr;
 		return 0;

@@ -1497,7 +1497,7 @@ void JumpIntoAdjacentSector( UINT8 ubTacticalDirection, UINT8 ubJumpCode, INT16 
 		// Take directions from exit grid info!
 		if ( !GetExitGrid( sAdditionalData, &ExitGrid ) )
 		{
-			STLOGA("Told to use exit grid at {} but one does not exist", sAdditionalData);
+			SLOGA("Told to use exit grid at {} but one does not exist", sAdditionalData);
 		}
 
 		gsAdjacentSector = ExitGrid.ubGotoSector;

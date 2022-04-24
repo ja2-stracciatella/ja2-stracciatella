@@ -59,6 +59,5 @@ constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Arg
 
 /** Print error message macro and assert if ENABLE_ASSERTS is defined. */
 #define SLOGA(...) LogMessageST(true, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
-#define STLOGA(...) LogMessageST(true,  LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
 
 #endif//SGP_LOGGER_H_
