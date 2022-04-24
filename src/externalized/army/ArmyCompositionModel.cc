@@ -52,7 +52,7 @@ void ArmyCompositionModel::validateData(const std::vector<const ArmyCompositionM
 	if (compositions.size() < NUM_ARMY_COMPOSITIONS || compositions.size() > SAVED_ARMY_COMPOSITIONS)
 	{
 		// Invalid data will crash the game
-		STLOGE("Number of Army Composition must be between {} and {}. Got {}.", NUM_ARMY_COMPOSITIONS, SAVED_ARMY_COMPOSITIONS, compositions.size());
+		SLOGE("Number of Army Composition must be between {} and {}. Got {}.", NUM_ARMY_COMPOSITIONS, SAVED_ARMY_COMPOSITIONS, compositions.size());
 		throw std::runtime_error("Too many or too few Army Compositions");
 	}
 	for (size_t i = 0; i < compositions.size(); i++)

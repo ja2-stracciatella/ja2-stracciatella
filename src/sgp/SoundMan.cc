@@ -529,7 +529,7 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			}
 		}
 	} catch (const std::runtime_error& err) {
-		STLOGE("Error processing audio stream for channel {}, sample {}, file \"{}\": {}",
+		SLOGE("Error processing audio stream for channel {}, sample {}, file \"{}\": {}",
 			channel - pSoundList, sample - pSampleList, sample->pName, err.what());
 	}
 }
@@ -1026,7 +1026,7 @@ static BOOLEAN SoundInitHardware(void)
 		return TRUE;
 
 	} catch (const std::runtime_error& err) {
-		STLOGE("SoundInitHardware: {}", err.what());
+		SLOGE("SoundInitHardware: {}", err.what());
 		SoundShutdownHardware();
 		return FALSE;
 	}

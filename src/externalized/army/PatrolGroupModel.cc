@@ -35,7 +35,7 @@ void PatrolGroupModel::validateData(const std::vector<PATROL_GROUP>& patrolGroup
 {
 	if (patrolGroups.size() > SAVED_PATROL_GROUPS)
 	{
-		STLOGE("There cannot be more than {} Patrol Groups", SAVED_PATROL_GROUPS);
+		SLOGE("There cannot be more than {} Patrol Groups", SAVED_PATROL_GROUPS);
 		throw std::runtime_error("Too many Patrol Groups");
 	}
 }

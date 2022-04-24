@@ -46,7 +46,6 @@ constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Arg
 
 /** Print error message macro. */
 #define SLOGE(...) LogMessageST(false, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
-#define STLOGE(...) LogMessageST(false, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
 
 /** Print error message macro and assert if ENABLE_ASSERTS is defined. */
 #define SLOGA(...) LogMessageST(true, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)

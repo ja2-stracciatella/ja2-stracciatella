@@ -1141,7 +1141,7 @@ check_entry:
 						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
-				STLOGE("Main edgepoint search failed for {} -- substituting entrypoint.", s.name);
+				SLOGE("Main edgepoint search failed for {} -- substituting entrypoint.", s.name);
 				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}
@@ -1155,7 +1155,7 @@ check_entry:
 						s.name, gridno, s.sPendingActionData2, s.usStrategicInsertionData);
 			if (gridno == NOWHERE)
 			{
-				STLOGE("Isolated edgepoint search failed for {} -- substituting entrypoint.", s.name);
+				SLOGE("Isolated edgepoint search failed for {} -- substituting entrypoint.", s.name);
 				s.ubStrategicInsertionCode = (UINT8)s.usStrategicInsertionData;
 				goto MAPEDGEPOINT_SEARCH_FAILED;
 			}

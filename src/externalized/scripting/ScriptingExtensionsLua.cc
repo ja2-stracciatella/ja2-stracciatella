@@ -123,7 +123,7 @@ void InitScriptingEngine()
 	} 
 	catch (const std::exception &ex)
 	{
-		STLOGE("Lua script engine has failed to initialize:\n {}", ex.what());
+		SLOGE("Lua script engine has failed to initialize:\n {}", ex.what());
 		ST::string err = "The game cannot be started due to an error in the mod scripts. Check the logs for more details.";
 		std::throw_with_nested(std::runtime_error(err.to_std_string()));
 	}
@@ -290,7 +290,7 @@ static void InvokeFunction(ST::string functionName, A... args)
 	if (!func.valid())
 	{
 		SLOGE("Lua script had an error. Scripting engine is now DISABLED. The error was:");
-		STLOGE("Function {} is not defined", functionName);
+		SLOGE("Function {} is not defined", functionName);
 		isLuaDisabled = true;
 		return;
 	}

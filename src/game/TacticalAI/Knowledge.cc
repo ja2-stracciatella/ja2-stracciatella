@@ -52,7 +52,7 @@ void CallAvailableTeamEnemiesToAmbush(GridNo const grid_no){
 		}
 		else
 		{
-			STLOGE("Ambush aborted in sector {} -- no center point in map.", gWorldSector.AsShortString());
+			SLOGE("Ambush aborted in sector {} -- no center point in map.", gWorldSector.AsShortString());
 		}
 	}
 }

@@ -380,7 +380,7 @@ ScreenID LoadSaveScreenHandle(void)
 			try {
 				readonly = FileMan::isReadOnly(absolutePath);
 			} catch (const std::runtime_error& ex) {
-				STLOGE("Error determining readonly status for file {}: {}", absolutePath, ex.what());
+				SLOGE("Error determining readonly status for file {}: {}", absolutePath, ex.what());
 			}
 			ST::string str;
 			if (readonly)
@@ -423,7 +423,7 @@ ScreenID LoadSaveScreenHandle(void)
 				try {
 					gfReadOnly = FileMan::isReadOnly(absolutePath);
 				} catch (const std::runtime_error& ex) {
-					STLOGE("Error determining readonly status for file {}: {}", absolutePath, ex.what());
+					SLOGE("Error determining readonly status for file {}: {}", absolutePath, ex.what());
 				}
 				if( gfReadOnly )
 					CreateMessageBox( " File is read only!  Choose a different name? " );

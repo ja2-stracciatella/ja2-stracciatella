@@ -477,7 +477,7 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 	}
 	catch (std::runtime_error const& e)
 	{
-		STLOGE("Error saving game: {}", e.what());
+		SLOGE("Error saving game: {}", e.what());
 
 		if (fWePausedIt) UnPauseAfterSaveGame();
 

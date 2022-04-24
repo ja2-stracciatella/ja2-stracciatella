@@ -273,7 +273,7 @@ static void ValidateGroup(GROUP* pGroup)
 	{
 		if( gTacticalStatus.uiFlags & LOADING_SAVED_GAME )
 		{
-			STLOGE("Internal error (invalid enemy group #{} location at {}, destination {}).  Please send PRIOR save file and Debug Log.",
+			SLOGE("Internal error (invalid enemy group #{} location at {}, destination {}).  Please send PRIOR save file and Debug Log.",
 				pGroup->ubGroupID, pGroup->ubSector.AsShortString(), pGroup->ubNext.AsShortString());
 			RemoveGroupFromStrategicAILists(*pGroup);
 			RemoveGroup(*pGroup);
@@ -1086,7 +1086,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 					if( pPatrolGroup->ubGroupSize > MAX_STRATEGIC_TEAM_SIZE )
 					{
 						UINT8 ubCut;
-						STLOGE("Patrol group #{} in {} received too many reinforcements from group #{} that was created in {}.  Size truncated from {} to {}.\n\
+						SLOGE("Patrol group #{} in {} received too many reinforcements from group #{} that was created in {}.  Size truncated from {} to {}.\n\
 							Please send Strategic Decisions.txt and PRIOR save.",
 							pPatrolGroup->ubGroupID, sec.AsShortString(),
 							pGroup->ubGroupID, cSector.AsShortString(),

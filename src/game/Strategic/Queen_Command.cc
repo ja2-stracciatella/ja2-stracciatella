@@ -388,7 +388,7 @@ void PrepareEnemyForSectorBattle()
 	UINT8 const n_stationary_enemies = total_admins + total_troops + total_elites;
 	if (n_stationary_enemies > 32)
 	{
-		STLOGE("The total stationary enemy forces in sector {} is {}. (max {})",
+		SLOGE("The total stationary enemy forces in sector {} is {}. (max {})",
 			  gWorldSector.AsShortString(), total_admins + total_troops + total_elites, 32);
 		total_admins = std::min(total_admins, 32);
 		total_troops = std::min(total_troops, 32 - total_admins);

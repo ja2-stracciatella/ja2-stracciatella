@@ -56,7 +56,7 @@ void SamSiteModel::validateData(const std::vector<const SamSiteModel*>& models)
 	if (models.size() != NUMBER_OF_SAMS)
 	{
 		// Game saves, Skyrider and Meanwhile dialogues all assume 4 SAM sites
-		STLOGE("There must be exactly {} SAM sites defined", NUMBER_OF_SAMS);
+		SLOGE("There must be exactly {} SAM sites defined", NUMBER_OF_SAMS);
 		throw std::runtime_error("Unexpected number of SAM sites");
 	}
 }

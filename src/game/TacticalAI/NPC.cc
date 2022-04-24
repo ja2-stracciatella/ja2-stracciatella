@@ -312,7 +312,7 @@ try
 }
 catch (const std::exception& e)
 {
-	STLOGE("caught exception: {}", e.what());
+	SLOGE("caught exception: {}", e.what());
 	return 0;
 }
 catch (...) { return 0; }

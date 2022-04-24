@@ -574,7 +574,7 @@ const WeaponModel* DefaultContentManager::getWeaponByName(const ST::string &inte
 	std::map<ST::string, const WeaponModel*>::const_iterator it = m_weaponMap.find(internalName);
 	if(it == m_weaponMap.end())
 	{
-		STLOGE("weapon '{}' is not found", internalName);
+		SLOGE("weapon '{}' is not found", internalName);
 		throw std::runtime_error(ST::format("weapon '{}' is not found", internalName).to_std_string());
 	}
 	return it->second;//m_weaponMap[internalName];
@@ -584,7 +584,7 @@ const MagazineModel* DefaultContentManager::getMagazineByName(const ST::string &
 {
 	if(m_magazineMap.find(internalName) == m_magazineMap.end())
 	{
-		STLOGE("magazine '{}' is not found", internalName);
+		SLOGE("magazine '{}' is not found", internalName);
 		throw std::runtime_error(ST::format("magazine '{}' is not found", internalName).to_std_string());
 	}
 	return m_magazineMap[internalName];
@@ -634,7 +634,7 @@ bool DefaultContentManager::loadWeapons()
 
 			if (w->getItemIndex() > MAX_WEAPONS)
 			{
-				STLOGE("Weapon index must be in the interval 0 - {}", MAX_WEAPONS);
+				SLOGE("Weapon index must be in the interval 0 - {}", MAX_WEAPONS);
 				return false;
 			}
 
@@ -1176,7 +1176,7 @@ const ItemModel* DefaultContentManager::getItemByName(const ST::string &internal
 	std::map<ST::string, const ItemModel*>::const_iterator it = m_itemMap.find(internalName);
 	if(it == m_itemMap.end())
 	{
-		STLOGE("item '{}' is not found", internalName);
+		SLOGE("item '{}' is not found", internalName);
 		throw std::runtime_error(ST::format("item '{}' is not found", internalName).to_std_string());
 	}
 	return it->second;
