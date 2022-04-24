@@ -2693,8 +2693,7 @@ static void ChangeSoldiersBodyType(SoldierBodyType const ubBodyType, BOOLEAN con
 				sel->uiStatusFlags |= SOLDIER_VEHICLE;
 				//sel->inv[HANDPOS].usItem = TANK_CANNON;
 				sel->inv[HANDPOS].usItem = MINIMI;
-				// TODO: verify, it's suspicious we pass a z coord instead of gridno
-				sel->bVehicleID = AddVehicleToList(sel->sSector, sel->sSector.z, HUMMER);
+				sel->bVehicleID = AddVehicleToList(sel->sSector, sel->sGridNo, HUMMER);
 				break;
 			default:
 				break;
