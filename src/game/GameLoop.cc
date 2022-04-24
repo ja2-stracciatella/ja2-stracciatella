@@ -62,8 +62,8 @@ void InitializeGame(void)
 
 	InitTacticalSave();
 
-	SLOGI("Version Label: %s", g_version_label);
-	SLOGI("Version #:     %s", g_version_number);
+	SLOGI("Version Label: {}", g_version_label);
+	SLOGI("Version #:     {}", g_version_number);
 
 	// Initialize Game Screens.
 	for (uiIndex = 0; uiIndex < MAX_SCREENS; uiIndex++)

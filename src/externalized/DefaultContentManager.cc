@@ -225,11 +225,11 @@ void DefaultContentManager::logConfiguration() const {
 	RustPointer<char> vanillaGameDir{EngineOptions_getVanillaGameDir(m_engineOptions.get())};
 	RustPointer<char> assetsDir{EngineOptions_getAssetsDir(m_engineOptions.get())};
 
-	STLOGI("JA2 Home Dir:                  '{}'", m_userPrivateFiles.get()->basePath());
-	STLOGI("Root game resources directory: '{}'", vanillaGameDir.get());
-	STLOGI("Extra data directory:          '{}'", assetsDir.get());
-	STLOGI("Saved games directory:         '{}'", m_saveGameFiles.get()->basePath());
-	STLOGI("Temporary directory:           '{}'", m_tempFiles.get()->basePath());
+	SLOGI("JA2 Home Dir:                  '{}'", m_userPrivateFiles.get()->basePath());
+	SLOGI("Root game resources directory: '{}'", vanillaGameDir.get());
+	SLOGI("Extra data directory:          '{}'", assetsDir.get());
+	SLOGI("Saved games directory:         '{}'", m_saveGameFiles.get()->basePath());
+	SLOGI("Temporary directory:           '{}'", m_tempFiles.get()->basePath());
 }
 
 template <class T>

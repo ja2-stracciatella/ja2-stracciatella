@@ -2191,7 +2191,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					OBJECTTYPE Object;
 					INT16      sGridNo  = params->getGridNo(14952);
 					UINT32     uiAmount = params->getAmount(10000);
-					STLOGI("add a money item with ${} to tile {} in front of Kyle", uiAmount, sGridNo);
+					SLOGI("add a money item with ${} to tile {} in front of Kyle", uiAmount, sGridNo);
 
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 					if (pSoldier)

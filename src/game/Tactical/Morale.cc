@@ -609,7 +609,7 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 
 		default:
 			// debug message
-			SLOGI("Invalid morale event type = %d.", bMoraleEvent);
+			SLOGI("Invalid morale event type = {}.", bMoraleEvent);
 			break;
 	}
 

@@ -1808,7 +1808,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			 * 32. We basically cheat by eliminating the rest of them. */
 			if (NumEnemiesInSector(arSector))
 			{
-				SLOGI("Eliminating remaining enemies after Autoresolve in (%d,%d)", arSector.x, arSector.y);
+				SLOGI("Eliminating remaining enemies after Autoresolve in ({})", arSector.AsShortString());
 				EliminateAllEnemies(arSector);
 			}
 		}

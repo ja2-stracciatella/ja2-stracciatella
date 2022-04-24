@@ -31,7 +31,7 @@ void ModPackContentManager::logConfiguration() const {
         joinedModList += s;
     }
 	DefaultContentManager::logConfiguration();
-	STLOGI("Enabled mods                    '{}'", joinedModList);
+	SLOGI("Enabled mods                    '{}'", joinedModList);
 }
 
 /** Load dialogue quote from file. */
