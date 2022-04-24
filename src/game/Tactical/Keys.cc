@@ -214,9 +214,8 @@ BOOLEAN AttemptToLockDoor(const SOLDIERTYPE* pSoldier, DOOR* pDoor)
 BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 {
 	INT32 iResult;
-	INT8  bStress, bSlot;
 
-	bSlot = FindUsableObj( pSoldier, CROWBAR );
+	INT8 bSlot = FindUsableObj(pSoldier, CROWBAR);
 	if ( bSlot == ITEM_NOT_FOUND )
 	{
 		// error!
@@ -247,7 +246,7 @@ BOOLEAN AttemptToCrowbarLock( SOLDIERTYPE * pSoldier, DOOR * pDoor )
 	}
 
 	// possibly damage crowbar
-	bStress = __min( EffectiveStrength( pSoldier ), LockTable[pDoor->ubLockID].ubSmashDifficulty + 30 );
+	int bStress = std::min(int(EffectiveStrength(pSoldier)), LockTable[pDoor->ubLockID].ubSmashDifficulty + 30);
 	// reduce crowbar status by random % between 0 and 5%
 	DamageObj( &(pSoldier->inv[ bSlot ]), (INT8) PreRandom( bStress / 20 ) );
 

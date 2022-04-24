@@ -692,7 +692,7 @@ void HandleSight(SOLDIERTYPE& s, SightFlags const sight_flags)
 	{
 		HaultSoldierFromSighting(&s, TRUE);
 	}
-	s.bNewSituation = __max(s.bNewSituation, temp_new_situation);
+	s.bNewSituation = std::max(s.bNewSituation, temp_new_situation);
 
 	// If we've been told to radio the results
 	if (sight_flags & SIGHT_RADIO)
@@ -882,8 +882,7 @@ INT16 MaxDistanceVisible( void )
 
 INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjectDir, INT16 sSubjectGridNo, INT8 bLevel)
 {
-	INT16 sDistVisible;
-	INT8  bLightLevel;
+	int sDistVisible;
 
 	// IMPORTANT! WhoIsThere2 can return a null-pointer for grid calcs
 	const SOLDIERTYPE* const pSubject = WhoIsThere2(sSubjectGridNo, bLevel);
@@ -957,10 +956,10 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 
 	// now reduce based on light level; SHADE_MIN is the define for the
 	// highest number the light can be
-	bLightLevel = LightTrueLevel(sSubjectGridNo, bLevel);
+	int bLightLevel = LightTrueLevel(sSubjectGridNo, bLevel);
 
 	if (hasMuzzleFlash)
-		bLightLevel = MIN(bLightLevel, NORMAL_LIGHTLEVEL_DAY);
+		bLightLevel = std::min(bLightLevel, NORMAL_LIGHTLEVEL_DAY);
 	sDistVisible = AdjustMaxSightRangeForEnvEffects(bLightLevel, sDistVisible);
 
 	// if we wanted to simulate desert-blindness, we'd bump up the light level
@@ -1016,7 +1015,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 	// let tanks see and be seen further (at night)
 	if ( (TANK( pSoldier ) && sDistVisible > 0) || (pSubject && TANK( pSubject ) ) )
 	{
-		sDistVisible = __max( sDistVisible + 5, MaxDistanceVisible() );
+		sDistVisible = std::max(sDistVisible + 5, int(MaxDistanceVisible()));
 	}
 
 	if ( gpWorldLevelData[ pSoldier->sGridNo ].ubExtFlags[ bLevel ] & (MAPELEMENT_EXT_TEARGAS | MAPELEMENT_EXT_MUSTARDGAS) )
@@ -1024,7 +1023,7 @@ INT16 DistanceVisible(const SOLDIERTYPE* pSoldier, INT8 bFacingDir, INT8 bSubjec
 		if (!IsWearingHeadGear(*pSoldier, GASMASK))
 		{
 			// in gas without a gas mask; reduce max distance visible to 2 tiles at most
-			sDistVisible = __min( sDistVisible, 2 );
+			sDistVisible = std::min(2, sDistVisible);
 		}
 	}
 
@@ -5043,7 +5042,7 @@ static void CommunicateWatchedLoc(const SOLDIERTYPE* const watcher, const INT16 
 		else
 		{
 			// increment to max
-			gubWatchedLocPoints[ ubLoop ][ bLoopPoint ] = __max( gubWatchedLocPoints[ ubLoop ][ bLoopPoint ], ubPoints );
+			gubWatchedLocPoints[ ubLoop ][ bLoopPoint ] = std::max(gubWatchedLocPoints[ ubLoop ][ bLoopPoint ], ubPoints);
 
 			gfWatchedLocReset[ ubLoop ][ bLoopPoint ] = FALSE;
 			gfWatchedLocHasBeenIncremented[ ubLoop ][ bLoopPoint ] = TRUE;

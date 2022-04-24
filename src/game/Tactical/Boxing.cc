@@ -66,7 +66,7 @@ void ExitBoxing(void)
 			// if necessary, revive boxer so he can leave ring
 			if (s->bLife > 0 && (s->bLife < OKLIFE || s->bBreath < OKBREATH))
 			{
-				s->bLife = __max(OKLIFE * 2, s->bLife);
+				s->bLife = std::max(OKLIFE * 2, int(s->bLife));
 				if (s->bBreath < 100)
 				{
 					// deduct -ve BPs to grant some BPs back (properly)
@@ -304,10 +304,10 @@ static void PickABoxer()
 			RESETTIMECOUNTER(boxer->AICounter, 0);
 			gfBoxerFought[i] = TRUE;
 			// Improve stats based on the # of rests these guys have had
-			boxer->bStrength  = __min(100, boxer->bStrength  + gubBoxersRests * 5);
-			boxer->bDexterity = __min(100, boxer->bDexterity + gubBoxersRests * 5);
-			boxer->bAgility   = __min(100, boxer->bAgility   + gubBoxersRests * 5);
-			boxer->bLifeMax   = __min(100, boxer->bLifeMax   + gubBoxersRests * 5);
+			boxer->bStrength  = std::min(100, boxer->bStrength  + gubBoxersRests * 5);
+			boxer->bDexterity = std::min(100, boxer->bDexterity + gubBoxersRests * 5);
+			boxer->bAgility   = std::min(100, boxer->bAgility   + gubBoxersRests * 5);
+			boxer->bLifeMax   = std::min(100, boxer->bLifeMax   + gubBoxersRests * 5);
 			// Give the 3rd boxer martial arts
 			if (i == NUM_BOXERS - 1 && boxer->ubBodyType == REGMALE)
 			{

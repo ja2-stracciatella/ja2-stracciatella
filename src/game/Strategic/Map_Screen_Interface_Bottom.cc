@@ -1225,7 +1225,7 @@ void MapScreenMsgScrollDown( UINT8 ubLinesDown )
 	// check if we can go that far, only go as far as we can
 	if ( ( gubFirstMapscreenMessageIndex + MAX_MESSAGES_ON_MAP_BOTTOM + ubLinesDown ) > ubNumMessages )
 	{
-		ubLinesDown = ubNumMessages - gubFirstMapscreenMessageIndex - MIN( ubNumMessages, MAX_MESSAGES_ON_MAP_BOTTOM );
+		ubLinesDown = ubNumMessages - gubFirstMapscreenMessageIndex - std::min(int(ubNumMessages), MAX_MESSAGES_ON_MAP_BOTTOM);
 	}
 
 	if ( ubLinesDown > 0 )
@@ -1258,7 +1258,7 @@ void MoveToEndOfMapScreenMessageList( void )
 
 	ubNumMessages = GetRangeOfMapScreenMessages();
 
-	ubDesiredMessageIndex = ubNumMessages - MIN( ubNumMessages, MAX_MESSAGES_ON_MAP_BOTTOM );
+	ubDesiredMessageIndex = ubNumMessages - std::min(int(ubNumMessages), MAX_MESSAGES_ON_MAP_BOTTOM);
 	ChangeCurrentMapscreenMessageIndex( ubDesiredMessageIndex );
 }
 
@@ -1266,7 +1266,7 @@ void MoveToEndOfMapScreenMessageList( void )
 
 void ChangeCurrentMapscreenMessageIndex( UINT8 ubNewMessageIndex )
 {
-	Assert( ubNewMessageIndex + MAX_MESSAGES_ON_MAP_BOTTOM <= MAX( MAX_MESSAGES_ON_MAP_BOTTOM, GetRangeOfMapScreenMessages() ) );
+	Assert(ubNewMessageIndex + MAX_MESSAGES_ON_MAP_BOTTOM <= std::max(MAX_MESSAGES_ON_MAP_BOTTOM, int(GetRangeOfMapScreenMessages())));
 
 	gubFirstMapscreenMessageIndex = ubNewMessageIndex;
 	gubCurrentMapMessageString = ( gubStartOfMapScreenMessageList + gubFirstMapscreenMessageIndex ) % 256;

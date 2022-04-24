@@ -217,7 +217,7 @@
 #define DELAY_FOR_SHOPKEEPER_IDLE_QUOTE		20000
 #define CHANCE_FOR_SHOPKEEPER_IDLE_QUOTE		40
 
-#define MAX_SUBOBJECTS_PER_OBJECT			MAX(MAX_OBJECTS_PER_SLOT, (2 + MAX_ATTACHMENTS)) // (2nd part is main item, ammo/payload, and 4 attachments)
+#define MAX_SUBOBJECTS_PER_OBJECT			std::max(MAX_OBJECTS_PER_SLOT, (2 + MAX_ATTACHMENTS)) // (2nd part is main item, ammo/payload, and 4 attachments)
 
 #define REALLY_BADLY_DAMAGED_THRESHOLD			30
 
@@ -2026,8 +2026,8 @@ static UINT32 DisplayInvSlot(UINT8 const slot_num, UINT16 const item_idx, UINT16
 		auto item_vo = graphic.first;
 		auto index = graphic.second;
 		ETRLEObject const& e       = item_vo->SubregionProperties(index);
-		INT16              cen_x   = x + 7 + ABS(SKI_INV_WIDTH - 3 - e.usWidth)  / 2 - e.sOffsetX;
-		INT16              cen_y   = y +     ABS(SKI_INV_HEIGHT    - e.usHeight) / 2 - e.sOffsetY;
+		INT16              cen_x   = x + 7 + std::abs(SKI_INV_WIDTH - 3 - e.usWidth)  / 2 - e.sOffsetX;
+		INT16              cen_y   = y +     std::abs(SKI_INV_HEIGHT    - e.usHeight) / 2 - e.sOffsetY;
 		if (gamepolicy(f_draw_item_shadow))
 		{
 			BltVideoObjectOutlineShadow(FRAME_BUFFER, item_vo, index, cen_x - 2, cen_y + 2);
@@ -2333,7 +2333,7 @@ static void StoreObjectsInNextFreeDealerInvSlot(UINT16 usItemIndex, SPECIAL_ITEM
 
 	// Create the item object ( with no more than MAX_OBJECTS_PER_SLOT )
 	// can't use the real #, because CreateItems() will blindly set the bStatus for however many we tell it, beyond 8
-	MakeObjectOutOfDealerItems( usItemIndex, pSpclItemInfo, &(pDealerInvSlot->ItemObject), ( UINT8 ) MIN( ubHowMany, MAX_OBJECTS_PER_SLOT ) );
+	MakeObjectOutOfDealerItems(usItemIndex, pSpclItemInfo, &(pDealerInvSlot->ItemObject), (UINT8) std::min(int(ubHowMany), MAX_OBJECTS_PER_SLOT));
 
 	if ( ubHowMany > MAX_OBJECTS_PER_SLOT )
 	{
@@ -5518,7 +5518,7 @@ static BOOLEAN ShopkeeperAutoPlaceObject(SOLDIERTYPE* pSoldier, OBJECTTYPE* pObj
 	while ( ubObjectsLeftToPlace > 0 )
 	{
 		// figure out how many to place during this loop iteration.  Can't do more than MAX_OBJECTS_PER_SLOT at a time
-		pObject->ubNumberOfObjects = MIN( MAX_OBJECTS_PER_SLOT, ubObjectsLeftToPlace);
+		pObject->ubNumberOfObjects = std::min(MAX_OBJECTS_PER_SLOT, int(ubObjectsLeftToPlace));
 		ubObjectsLeftToPlace -= pObject->ubNumberOfObjects;
 
 		if (!AutoPlaceObject( pSoldier, pObject, fNewItem ))
@@ -5552,7 +5552,7 @@ static void ShopkeeperAddItemToPool(INT16 const sGridNo, OBJECTTYPE* const pObje
 	while ( ubObjectsLeftToPlace > 0 )
 	{
 		// figure out how many to place during this loop iteration.  Can't do more than MAX_OBJECTS_PER_SLOT at a time
-		pObject->ubNumberOfObjects = MIN( MAX_OBJECTS_PER_SLOT, ubObjectsLeftToPlace);
+		pObject->ubNumberOfObjects = std::min(MAX_OBJECTS_PER_SLOT, int(ubObjectsLeftToPlace));
 		ubObjectsLeftToPlace -= pObject->ubNumberOfObjects;
 
 		AddItemToPool(sGridNo, pObject, VISIBLE, ubLevel, 0, 0);

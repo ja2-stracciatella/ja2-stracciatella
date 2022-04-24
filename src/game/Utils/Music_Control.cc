@@ -68,7 +68,7 @@ void MusicSetVolume(UINT32 uiVolume)
 {
 	INT32 uiOldMusicVolume = uiMusicVolume;
 
-	uiMusicVolume = __min(uiVolume, MAXVOLUME);
+	uiMusicVolume = std::min(uiVolume, UINT32(MAXVOLUME));
 
 	if(uiMusicHandle!=NO_SAMPLE)
 	{
@@ -176,7 +176,7 @@ void MusicPoll(void)
 			if(uiMusicHandle!=NO_SAMPLE)
 			{
 				iVol=SoundGetVolume(uiMusicHandle);
-				iVol=__min( (INT32)uiMusicVolume, iVol+gbFadeSpeed );
+				iVol = std::min((INT32) uiMusicVolume, iVol + gbFadeSpeed);
 				SoundSetVolume(uiMusicHandle, iVol);
 				if(iVol==(INT32)uiMusicVolume)
 				{
@@ -190,9 +190,7 @@ void MusicPoll(void)
 			if(uiMusicHandle!=NO_SAMPLE)
 			{
 				iVol=SoundGetVolume(uiMusicHandle);
-				iVol=(iVol >=1)? iVol-gbFadeSpeed : 0;
-
-				iVol=__max( (INT32)iVol, 0 );
+				iVol = std::max(iVol - gbFadeSpeed, 0);
 
 				SoundSetVolume(uiMusicHandle, iVol);
 				if(iVol==0)

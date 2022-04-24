@@ -148,19 +148,19 @@ void ExtractAndUpdateMapInfo()
 	INT32 temp;
 	BOOLEAN fUpdateLight1 = FALSE;
 	//extract light1 colors
-	temp = MIN( GetNumericStrictValueFromField( 1 ), 255 );
+	temp = std::min(GetNumericStrictValueFromField( 1 ), 255);
 	if (temp != -1 && temp != gEditorLightColor.r)
 	{
 		fUpdateLight1 = TRUE;
 		gEditorLightColor.r = (UINT8)temp;
 	}
-	temp = MIN( GetNumericStrictValueFromField( 2 ), 255 );
+	temp = std::min(GetNumericStrictValueFromField( 2 ), 255);
 	if (temp != -1 && temp != gEditorLightColor.g)
 	{
 		fUpdateLight1 = TRUE;
 		gEditorLightColor.g = (UINT8)temp;
 	}
-	temp = MIN( GetNumericStrictValueFromField( 3 ), 255 );
+	temp = std::min(GetNumericStrictValueFromField( 3 ), 255);
 	if (temp != -1 && temp != gEditorLightColor.b)
 	{
 		fUpdateLight1 = TRUE;
@@ -174,10 +174,10 @@ void ExtractAndUpdateMapInfo()
 	}
 
 	//extract radius
-	temp = MAX( MIN( GetNumericStrictValueFromField( 4 ), 8 ), 1 );
+	temp = std::clamp(GetNumericStrictValueFromField( 4 ), 1, 8);
 	if( temp != -1 )
 		gsLightRadius = (INT16)temp;
-	temp = MAX( MIN( GetNumericStrictValueFromField( 5 ), 15 ), 1 );
+	temp = std::clamp(GetNumericStrictValueFromField( 5 ), 1, 15);
 	if( temp != -1 && temp != gusLightLevel )
 	{
 		gusLightLevel = (UINT16)temp;
@@ -200,11 +200,11 @@ void ExtractAndUpdateMapInfo()
 		gExitGrid.ubGotoSector.x = (UINT8)(str[1] - '0');
 		if( str[2] >= '0' && str[2] <= '9' )
 			gExitGrid.ubGotoSector.x = (UINT8)(gExitGrid.ubGotoSector.x * 10 + str[2] - '0' );
-		gExitGrid.ubGotoSector.x = (UINT8)MAX( MIN( gExitGrid.ubGotoSector.x, 16 ), 1 );
-		gExitGrid.ubGotoSector.y = (UINT8)MAX( MIN( gExitGrid.ubGotoSector.y, 16 ), 1 );
+		gExitGrid.ubGotoSector.x = (UINT8)std::clamp(int(gExitGrid.ubGotoSector.x), 1, 16);
+		gExitGrid.ubGotoSector.y = (UINT8)std::clamp(int(gExitGrid.ubGotoSector.y), 1, 16);
 	}
-	gExitGrid.ubGotoSector.z = (UINT8)MAX( MIN( GetNumericStrictValueFromField( 8 ), 3 ), 0 );
-	gExitGrid.usGridNo      = (UINT16)MAX( MIN( GetNumericStrictValueFromField( 9 ), 25600 ), 0 );
+	gExitGrid.ubGotoSector.z = (UINT8)std::clamp(GetNumericStrictValueFromField(8), 0, 3);
+	gExitGrid.usGridNo      = (UINT16)std::clamp(GetNumericStrictValueFromField(9), 0, 25600);
 
 	UpdateMapInfoFields();
 }

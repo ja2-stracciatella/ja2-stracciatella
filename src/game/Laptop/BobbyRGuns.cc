@@ -719,7 +719,7 @@ static void DisplayBigItemImage(const ItemModel* item, const UINT16 PosY)
 	//center picture in frame
 	ETRLEObject const& pTrav   = uiImage->SubregionProperties(subImageIndex);
 	UINT32      const  usWidth = pTrav.usWidth;
-	INT16       const  sCenX   = PosX + ABS(BOBBYR_GRID_PIC_WIDTH - usWidth) / 2 - pTrav.sOffsetX;
+	INT16       const  sCenX   = PosX + std::abs(int(BOBBYR_GRID_PIC_WIDTH - usWidth)) / 2 - pTrav.sOffsetX;
 	INT16       const  sCenY   = PosY + 8;
 
 	if (gamepolicy(f_draw_item_shadow))

@@ -128,7 +128,7 @@ static INT32  iSkipListLevelLimit[9] = {0, 4, 16, 64, 256, 1024, 4096, 16384, 65
 #define ESTIMATE0				( (dx>dy) ?       (dx)      :       (dy) )
 #define ESTIMATE1				( (dx<dy) ? (dx+(dy*10)/14) : (dy+(dx*10)/14) )
 #define ESTIMATE2				LOWESTCOST*( (dx<dy) ? (dx+(dy*10)/14) : (dy+(dx*10)/14) )
-#define ESTIMATEn				((int)(LOWESTCOST*sqrt(dx*dx+dy*dy)))
+#define ESTIMATEn				((int)(LOWESTCOST * std::hypot(dx, dy)))
 #define ESTIMATEC				( (dx<dy) ? (LOWESTCOST * (dx * 14 + dy * 10) / 14) : (LOWESTCOST * (dy * 14 + dx * 10) / 14) )
 #define ESTIMATE				ESTIMATEC
 
@@ -139,7 +139,7 @@ static INT32  iSkipListLevelLimit[9] = {0, 4, 16, 64, 256, 1024, 4096, 16384, 65
 #define XLOC(a)				(a%MAPWIDTH)
 #define YLOC(a)				(a/MAPWIDTH)
 //#define LEGDISTANCE(a,b)			( abs( XLOC(b)-XLOC(a) ) + abs( YLOC(b)-YLOC(a) ) )
-#define LEGDISTANCE( x1, y1, x2, y2 )		( ABS( x2 - x1 ) + ABS( y2 - y1 ) )
+#define LEGDISTANCE(x1, y1, x2, y2)		(std::abs(x2 - x1) + std::abs(y2 - y1))
 //#define FARTHER(ndx,NDX)			( LEGDISTANCE( ndx->sLocation,sDestination) > LEGDISTANCE(NDX->sLocation,sDestination) )
 #define FARTHER(ndx,NDX)			( ndx->ubLegDistance > NDX->ubLegDistance )
 
@@ -280,7 +280,7 @@ static path_t *pClosedHead;
 #define SkipListRemoveHead()\
 {\
 	pDel = pQueueHead->pNext[0];\
-	for (iLoop = 0; iLoop < __min( bSkipListLevel, pDel->bLevel ); iLoop++)\
+	for (iLoop = 0; iLoop < std::min(bSkipListLevel, pDel->bLevel); iLoop++)\
 	{\
 		pQueueHead->pNext[iLoop] = pDel->pNext[iLoop];\
 	}\
@@ -345,8 +345,8 @@ static path_t *pClosedHead;
 
 #define REMAININGCOST(ptr)\
 (\
-	(dy = ABS(iDestY-iLocY)),\
-	(dx = ABS(iDestX-iLocX)),\
+	(dy = std::abs(iDestY-iLocY)),\
+	(dx = std::abs(iDestX-iLocX)),\
 	ESTIMATE\
 )
 /*
@@ -354,8 +354,8 @@ static path_t *pClosedHead;
 (\
 	(locY = (ptr)->iLocation/MAPWIDTH),\
 	(locX = (ptr)->iLocation%MAPWIDTH),\
-	(dy = ABS(iDestY-locY)),\
-	(dx = ABS(iDestX-locX)),\
+	(dy = std::abs(iDestY-locY)),\
+	(dx = std::abs(iDestX-locX)),\
 	ESTIMATE\
 )*/
 
@@ -430,9 +430,9 @@ void ShutDownPathAI( void )
 static void ReconfigurePathAI(INT32 iNewMaxSkipListLevel, INT32 iNewMaxTrailTree, INT32 iNewMaxPathQ)
 {
 	// make sure the specified parameters are reasonable
-	iNewMaxSkipListLevel = __max( 0, __min( iNewMaxSkipListLevel, ABSMAX_SKIPLIST_LEVEL ) );
-	iNewMaxTrailTree = __max( 0, __min( iNewMaxTrailTree, ABSMAX_TRAIL_TREE ) );
-	iNewMaxPathQ = __max( 0, __min( iNewMaxPathQ, ABSMAX_PATHQ ) );
+	iNewMaxSkipListLevel = std::clamp(iNewMaxSkipListLevel, 0, ABSMAX_SKIPLIST_LEVEL);
+	iNewMaxTrailTree = std::clamp(iNewMaxTrailTree, 0, ABSMAX_TRAIL_TREE);
+	iNewMaxPathQ = std::clamp(iNewMaxPathQ, 0, ABSMAX_PATHQ);
 	// assign them
 	iMaxSkipListLevel = iNewMaxSkipListLevel;
 	iMaxTrailTree = iNewMaxTrailTree;
@@ -570,7 +570,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 	fCloseGoodEnough = ( (fFlags & PATH_CLOSE_GOOD_ENOUGH) != 0);
 	if ( fCloseGoodEnough )
 	{
-		sClosePathLimit = __min( PythSpacesAway( (INT16)s->sGridNo, sDestination ) - 1,  PATH_CLOSE_RADIUS );
+		sClosePathLimit = std::min(PythSpacesAway( (INT16)s->sGridNo, sDestination ) - 1,  PATH_CLOSE_RADIUS);
 		if ( sClosePathLimit <= 0 )
 		{
 			return( 0 );

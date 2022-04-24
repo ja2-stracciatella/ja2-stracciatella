@@ -481,7 +481,7 @@ void DetermineItemsScrolling()
 	//Right most scroll position.  Calculated by taking every pair of numItems rounded up,
 	//and subtracting 7 (because a scroll index 0 is disabled if there are <=12 items,
 	//index 1 for <=14 items, index 2 for <=16 items...
-	if( eInfo.sScrollIndex == MAX( ((eInfo.sNumItems+1)/2)-6, 0 ) )
+	if (eInfo.sScrollIndex == std::max((eInfo.sNumItems + 1) / 2 - 6, 0))
 		DisableEditorButton( ITEMS_RIGHTSCROLL );
 	else
 		EnableEditorButton( ITEMS_RIGHTSCROLL );
@@ -521,7 +521,7 @@ void RenderEditorItemsInfo()
 	/* Calculate the min and max index that is currently shown.  This determines
 	 * if the highlighted and/or selected items are drawn with the outlines. */
 	INT16 const min_idx = scroll_idx * 2;
-	INT16 const end_idx = MIN(min_idx + 12, eInfo.sNumItems);
+	INT16 const end_idx = std::min(min_idx + 12, int(eInfo.sNumItems));
 
 	// Draw the hilighted and selected items if applicable.
 	if (eInfo.pusItemIndex)

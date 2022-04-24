@@ -676,8 +676,8 @@ UINT16 FindGridNoFromSweetSpotWithStructDataFromSoldier(const SOLDIERTYPE* const
 						else
 						{
 							//uiRange = GetRangeInCellCoordsFromGridNoDiff( sSweetGridNo, sGridNo );
-							uiRange = ABS((sSweetGridNo / MAXCOL) - (sGridNo / MAXCOL)) +
-								ABS((sSweetGridNo % MAXROW) - (sGridNo % MAXROW));
+							uiRange = std::abs((sSweetGridNo / MAXCOL) - (sGridNo / MAXCOL)) +
+								std::abs((sSweetGridNo % MAXROW) - (sGridNo % MAXROW));
 						}
 
 						if ( uiRange < uiLowestRange || (uiRange == uiLowestRange && PythSpacesAway( pSoldier->sGridNo, sGridNo ) < PythSpacesAway( pSoldier->sGridNo, sLowestGridNo ) ) )

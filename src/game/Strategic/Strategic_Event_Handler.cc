@@ -195,8 +195,8 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						const INT8 status = (70 + Random(11)) * (INT32)Object.bStatus[0] / 100;
-						Object.bStatus[0] = MAX(1, status);
+						const int status = (70 + Random(11)) * (INT32)Object.bStatus[0] / 100;
+						Object.bStatus[0] = std::max(1, status);
 						AddItemToPool(usStandardMapPos, &Object, INVISIBLE, 0, 0, 0);
 					}
 					else
@@ -224,8 +224,8 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 					if (usStandardMapPos == LOST_SHIPMENT_GRIDNO)
 					{
 						// damage the item a random amount!
-						const INT8 status = (70 + Random(11)) * (INT32)Object.bStatus[0] / 100;
-						Object.bStatus[0] = MAX(1, status);
+						const int status = (70 + Random(11)) * (INT32)Object.bStatus[0] / 100;
+						Object.bStatus[0] = std::max(1, status);
 						pObject[uiCount++] = Object;
 					}
 					else
@@ -250,10 +250,11 @@ void BobbyRayPurchaseEventCallback(const UINT8 ubOrderID)
 		}
 		else
 		{
+			UINT8 perPocket = GCM->getItem(usItem)->getPerPocket();
 			while (ubItemsDelivered)
 			{
 				// treat 0s as 1s :-)
-				const UINT8 ubTempNumItems = __min(ubItemsDelivered, __max(1, GCM->getItem(usItem)->getPerPocket()));
+				const UINT8 ubTempNumItems = perPocket > 1 ? std::clamp(ubItemsDelivered, (UINT8) 1, perPocket) : (UINT8) 1;
 				CreateItems(usItem, purchase->bItemQuality, ubTempNumItems, &Object);
 
 				// stack as many as possible
@@ -989,11 +990,12 @@ static void DropOffItemsInDestination(UINT8 ubOrderNum, const ShippingDestinatio
 	{
 		ubItemsDelivered = gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].ubNumberPurchased;
 		usItem = gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].usItemIndex;
+		uint8_t perPocket = GCM->getItem(usItem)->getPerPocket();
 
 		while ( ubItemsDelivered )
 		{
 			// treat 0s as 1s :-)
-			ubTempNumItems = __min( ubItemsDelivered, __max( 1, GCM->getItem(usItem )->getPerPocket() ) );
+			ubTempNumItems = perPocket > 1 ? std::clamp(ubItemsDelivered, (uint8_t) 1, perPocket) : (uint8_t) 1;
 			CreateItems( usItem, gpNewBobbyrShipments[ ubOrderNum ].BobbyRayPurchase[i].bItemQuality, ubTempNumItems, &Object );
 
 			// stack as many as possible

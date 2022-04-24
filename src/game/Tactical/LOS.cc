@@ -1,4 +1,5 @@
-#include <math.h>
+#include <cmath>
+
 #include "Font_Control.h"
 #include "Handle_Items.h"
 #include "Structure.h"
@@ -206,14 +207,13 @@ static FLOAT FixedToFloat(FIXEDPT qN)
 
 static FLOAT Distance3D(FLOAT dDeltaX, FLOAT dDeltaY, FLOAT dDeltaZ)
 {
-	return ((FLOAT) sqrt( (DOUBLE)(dDeltaX * dDeltaX) +
-			(DOUBLE)(dDeltaY * dDeltaY) + (DOUBLE)(dDeltaZ * dDeltaZ)));
+	return (FLOAT) std::hypot(dDeltaX, dDeltaY, dDeltaZ);
 }
 
 
 static FLOAT Distance2D(FLOAT dDeltaX, FLOAT dDeltaY)
 {
-	return( (FLOAT) sqrt( (DOUBLE)(dDeltaX * dDeltaX) + (DOUBLE)(dDeltaY * dDeltaY) ));
+	return (FLOAT) std::hypot(dDeltaX, dDeltaY);
 }
 
 enum LocationCode
@@ -919,7 +919,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 					iStepsToTravelY = 1000000;
 				}
 
-				iStepsToTravel = __min( iStepsToTravelX, iStepsToTravelY ) + 1;
+				iStepsToTravel = std::min( iStepsToTravelX, iStepsToTravelY ) + 1;
 
 				/*
 				if (qIncrX > 0)
@@ -955,7 +955,7 @@ static INT32 LineOfSightTest(GridNo start_pos, FLOAT dStartZ, GridNo end_pos, FL
 				}
 
 				// add 1 to the # of steps to travel to go INTO the next tile
-				iStepsToTravel = __min( iStepsToTravelX, iStepsToTravelY ) + 1;
+				iStepsToTravel = std::min( iStepsToTravelX, iStepsToTravelY ) + 1;
 				//iStepsToTravel = 1;*/
 
 				qCurrX += qIncrX * iStepsToTravel;
@@ -1496,7 +1496,7 @@ INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* const pStartSoldier, co
 	FLOAT dStartZPos, dEndZPos;
 	BOOLEAN fOk;
 	BOOLEAN fSmell;
-	INT8 bEffectiveCamo;
+	int bEffectiveCamo;
 	UINT8 ubTreeReduction;
 
 	// TO ADD: if target is camouflaged and in cover, reduce sight distance by 30%
@@ -1573,7 +1573,7 @@ INT32 SoldierToSoldierLineOfSightTest(const SOLDIERTYPE* const pStartSoldier, co
 		{
 			bEffectiveCamo = pEndSoldier->bCamo * (100 - pEndSoldier->bTilesMoved * 5) / 100;
 		}
-		bEffectiveCamo = __max( bEffectiveCamo, 0 );
+		bEffectiveCamo = std::max(bEffectiveCamo, 0);
 
 		if ( gAnimControl[ pEndSoldier->usAnimState ].ubEndHeight < ANIM_STAND )
 		{
@@ -1775,7 +1775,7 @@ INT32 BulletImpactReducedByRange( INT32 iImpact, INT32 iDistanceTravelled, INT32
 	return( iImpact );
 
 	// only start reducing impact at distances greater than one range
-	//return( __max( 1, iImpact * ( 100 - ( PERCENT_BULLET_SLOWED_BY_RANGE * iDistanceTravelled ) / iRange ) / 100 ) );
+	//return( std::max(1, iImpact * ( 100 - ( PERCENT_BULLET_SLOWED_BY_RANGE * iDistanceTravelled ) / iRange ) / 100 ));
 
 }*/
 
@@ -2113,7 +2113,7 @@ static BOOLEAN BulletHitMerc(BULLET* pBullet, STRUCTURE* pStructure, BOOLEAN fIn
 		{
 			iImpact = iDamage;
 		}
-		uiChanceThrough = (UINT8) __max( 0, ( iImpact - 20 ) );
+		uiChanceThrough = (UINT8) std::max(0, ( iImpact - 20 ));
 		if (PreRandom( 100 ) < uiChanceThrough )
 		{
 			// bullet MAY go through
@@ -2692,7 +2692,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 				}
 
 				// add 1 to the # of steps to travel to go INTO the next tile
-				iStepsToTravel = __min( iStepsToTravelX, iStepsToTravelY ) + 1;
+				iStepsToTravel = std::min( iStepsToTravelX, iStepsToTravelY ) + 1;
 
 				pBullet->qCurrX += pBullet->qIncrX * iStepsToTravel;
 				pBullet->qCurrY += pBullet->qIncrY * iStepsToTravel;
@@ -2860,7 +2860,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 					iTotalStructureImpact = CTGTHandleBulletStructureInteraction( pBullet, gpLocalStructure[iStructureLoop] ) * gubLocalStructureNumTimesHit[iStructureLoop];
 
 					// reduce the impact reduction of a structure tile to that of the bullet, since it can't do MORE than stop it.
-					iTotalStructureImpact = __min( iTotalStructureImpact, pBullet->iImpact );
+					iTotalStructureImpact = std::min(iTotalStructureImpact, pBullet->iImpact);
 
 					// add to "impact reduction" based on strength of structure weighted by probability of hitting it
 					pBullet->iImpactReduction += (iTotalStructureImpact * guiLocalStructureCTH[iStructureLoop]) / 100;
@@ -3949,13 +3949,13 @@ void MoveBullet(BULLET* const pBullet)
 				}
 
 				// add 1 to the # of steps to travel to go INTO the next tile
-				iStepsToTravel = __min( iStepsToTravelX, iStepsToTravelY ) + 1;
+				iStepsToTravel = std::min( iStepsToTravelX, iStepsToTravelY ) + 1;
 
 				// special coding (compared with other versions above) to deal with
 				// bullets hitting the ground
 				if (pBullet->qCurrZ + pBullet->qIncrZ * iStepsToTravel < qLandHeight)
 				{
-					iStepsToTravel = __min( iStepsToTravel, ABS( (pBullet->qCurrZ - qLandHeight) / pBullet->qIncrZ ) );
+					iStepsToTravel = std::min(iStepsToTravel, INT32(std::abs((pBullet->qCurrZ - qLandHeight) / pBullet->qIncrZ)));
 					pBullet->qCurrX += pBullet->qIncrX * iStepsToTravel;
 					pBullet->qCurrY += pBullet->qIncrY * iStepsToTravel;
 					pBullet->qCurrZ += pBullet->qIncrZ * iStepsToTravel;

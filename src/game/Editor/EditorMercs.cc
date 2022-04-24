@@ -1174,23 +1174,23 @@ static void ExtractAndUpdateMercAttributes(void)
 	//-1 values in the detailed placement work nicely, because that signifies that specific
 	//field isn't static.  Any other value becomes static, and static values override any
 	//generated values.
-	gpSelected->pDetailedPlacement->bExpLevel			= (INT8)MIN( GetNumericStrictValueFromField( 0 ), 100 );
-	gpSelected->pDetailedPlacement->bLife					= (INT8)MIN( GetNumericStrictValueFromField( 1 ), 100 );
-	gpSelected->pDetailedPlacement->bLifeMax			= (INT8)MIN( GetNumericStrictValueFromField( 2 ), 100 );
-	gpSelected->pDetailedPlacement->bMarksmanship	= (INT8)MIN( GetNumericStrictValueFromField( 3 ), 100 );
-	gpSelected->pDetailedPlacement->bStrength			= (INT8)MIN( GetNumericStrictValueFromField( 4 ), 100 );
-	gpSelected->pDetailedPlacement->bAgility			= (INT8)MIN( GetNumericStrictValueFromField( 5 ), 100 );
-	gpSelected->pDetailedPlacement->bDexterity		= (INT8)MIN( GetNumericStrictValueFromField( 6 ), 100 );
-	gpSelected->pDetailedPlacement->bWisdom				= (INT8)MIN( GetNumericStrictValueFromField( 7 ), 100 );
-	gpSelected->pDetailedPlacement->bLeadership		= (INT8)MIN( GetNumericStrictValueFromField( 8 ), 100 );
-	gpSelected->pDetailedPlacement->bExplosive		= (INT8)MIN( GetNumericStrictValueFromField( 9 ), 100 );
-	gpSelected->pDetailedPlacement->bMedical			= (INT8)MIN( GetNumericStrictValueFromField( 10 ), 100 );
-	gpSelected->pDetailedPlacement->bMechanical		= (INT8)MIN( GetNumericStrictValueFromField( 11 ), 100 );
-	gpSelected->pDetailedPlacement->bMorale				= (INT8)MIN( GetNumericStrictValueFromField( 11 ), 100 );
+	gpSelected->pDetailedPlacement->bExpLevel			= (INT8)std::min(GetNumericStrictValueFromField( 0 ), 100);
+	gpSelected->pDetailedPlacement->bLife					= (INT8)std::min(GetNumericStrictValueFromField( 1 ), 100);
+	gpSelected->pDetailedPlacement->bLifeMax			= (INT8)std::min(GetNumericStrictValueFromField( 2 ), 100);
+	gpSelected->pDetailedPlacement->bMarksmanship	= (INT8)std::min(GetNumericStrictValueFromField( 3 ), 100);
+	gpSelected->pDetailedPlacement->bStrength			= (INT8)std::min(GetNumericStrictValueFromField( 4 ), 100);
+	gpSelected->pDetailedPlacement->bAgility			= (INT8)std::min(GetNumericStrictValueFromField( 5 ), 100);
+	gpSelected->pDetailedPlacement->bDexterity		= (INT8)std::min(GetNumericStrictValueFromField( 6 ), 100);
+	gpSelected->pDetailedPlacement->bWisdom				= (INT8)std::min(GetNumericStrictValueFromField( 7 ), 100);
+	gpSelected->pDetailedPlacement->bLeadership		= (INT8)std::min(GetNumericStrictValueFromField( 8 ), 100);
+	gpSelected->pDetailedPlacement->bExplosive		= (INT8)std::min(GetNumericStrictValueFromField( 9 ), 100);
+	gpSelected->pDetailedPlacement->bMedical			= (INT8)std::min(GetNumericStrictValueFromField( 10 ), 100);
+	gpSelected->pDetailedPlacement->bMechanical		= (INT8)std::min(GetNumericStrictValueFromField( 11 ), 100);
+	gpSelected->pDetailedPlacement->bMorale				= (INT8)std::min(GetNumericStrictValueFromField( 11 ), 100);
 
 	//make sure that experience level ranges between 1 and 9
 	if( gpSelected->pDetailedPlacement->bExpLevel != -1 )
-		gpSelected->pDetailedPlacement->bExpLevel = MAX( MIN( gpSelected->pDetailedPlacement->bExpLevel , 9 ), 1 );
+		gpSelected->pDetailedPlacement->bExpLevel = std::clamp(int(gpSelected->pDetailedPlacement->bExpLevel), 1, 9);
 
 	//no such thing as a life max of 0
 	if( !gpSelected->pDetailedPlacement->bLifeMax )
@@ -1220,7 +1220,7 @@ static void ExtractAndUpdateMercProfile(void)
 
 	//if the string is blank, returning -1, then set the value to NO_PROFILE
 	//because ubProfile is unsigned.
-	sNum = (INT16)MIN( GetNumericStrictValueFromField( 0 ), NUM_PROFILES );
+	sNum = (INT16)std::min(GetNumericStrictValueFromField( 0 ), NUM_PROFILES);
 	if( sNum == -1 )
 	{
 		gpSelected->pDetailedPlacement->ubProfile = NO_PROFILE;
@@ -2205,7 +2205,7 @@ static void AddNewItemToSelectedMercsInventory(BOOLEAN fCreate)
 	else if( rHeightScalar == 1.0 )
 		rScalar = rWidthScalar ;
 	else
-		rScalar = MAX( rWidthScalar, rHeightScalar );
+		rScalar = std::max(rWidthScalar, rHeightScalar);
 
 	//apply the scalar to the destination width and height
 	uDstWidth = (UINT16)( uSrcWidth * rScalar );

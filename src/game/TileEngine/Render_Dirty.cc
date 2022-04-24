@@ -138,10 +138,10 @@ BACKGROUND_SAVE* RegisterBackgroundRect(BackgroundFlags const uiFlags, INT16 sLe
 	const INT32 iTempY = sTop;
 
 	// Clip to rect
-	const INT32 uiLeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX),                   (INT32)usWidth);
-	const INT32 uiTopSkip    = __min(ClipY1 - __min(ClipY1, iTempY),                   (INT32)usHeight);
-	const INT32 uiRightSkip  = __min(  MAX(ClipX2, iTempX + (INT32)usWidth)  - ClipX2, (INT32)usWidth);
-	const INT32 uiBottomSkip = __min(__max(ClipY2, iTempY + (INT32)usHeight) - ClipY2, (INT32)usHeight);
+	const INT32 uiLeftSkip   = std::min(ClipX1 - std::min(ClipX1, iTempX), (INT32)usWidth);
+	const INT32 uiTopSkip    = std::min(ClipY1 - std::min(ClipY1, iTempY), (INT32)usHeight);
+	const INT32 uiRightSkip  = std::clamp(iTempX + (INT32)usWidth  - ClipX2, 0, (INT32)usWidth);
+	const INT32 uiBottomSkip = std::clamp(iTempY + (INT32)usHeight - ClipY2, 0, (INT32)usHeight);
 
 	// check if whole thing is clipped
 	if (uiLeftSkip >= (INT32)usWidth  || uiRightSkip  >= (INT32)usWidth)  return NO_BGND_RECT;
@@ -604,10 +604,10 @@ void RestoreShiftedVideoOverlays(const INT16 sShiftX, const INT16 sShiftY)
 		const INT32 iTempY = sTop  - sShiftY;
 
 		// Clip to rect
-		const INT32 uiLeftSkip   = __min(ClipX1 -   MIN(ClipX1, iTempX),                   (INT32)usWidth);
-		const INT32 uiTopSkip    = __min(ClipY1 - __min(ClipY1, iTempY),                   (INT32)usHeight);
-		const INT32 uiRightSkip  = __min(  MAX(ClipX2, iTempX + (INT32)usWidth)  - ClipX2, (INT32)usWidth);
-		const INT32 uiBottomSkip = __min(__max(ClipY2, iTempY + (INT32)usHeight) - ClipY2, (INT32)usHeight);
+		const INT32 uiLeftSkip   = std::min(ClipX1 - std::min(ClipX1, iTempX), (INT32)usWidth);
+		const INT32 uiTopSkip    = std::min(ClipY1 - std::min(ClipY1, iTempY), (INT32)usHeight);
+		const INT32 uiRightSkip  = std::clamp(iTempX + (INT32)usWidth  - ClipX2, 0, (INT32)usWidth);
+		const INT32 uiBottomSkip = std::clamp(iTempY + (INT32)usHeight - ClipY2, 0, (INT32)usHeight);
 
 		// check if whole thing is clipped
 		if (uiLeftSkip >= (INT32)usWidth  || uiRightSkip  >= (INT32)usWidth)  continue;

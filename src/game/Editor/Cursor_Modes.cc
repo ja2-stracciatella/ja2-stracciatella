@@ -250,7 +250,7 @@ static void ForceAreaSelectionWidth(const INT16 sGridX, const INT16 sGridY)
 
 	//compare the region with the anchor and determine if we are going to force size via
 	//height or width depending on the cursor distance from the anchor.
-	if( ABS( sGridX - gSelectAnchor.iX ) < ABS( sGridY - gSelectAnchor.iY ) )
+	if (std::abs(sGridX - gSelectAnchor.iX) < std::abs(sGridY - gSelectAnchor.iY))
 	{ //restrict the x axis
 		if( sGridX < gSelectAnchor.iX )
 		{ //to the left
@@ -345,10 +345,10 @@ static BOOLEAN HandleAreaSelection(const INT16 sGridX, const INT16 sGridY)
 
 static void ValidateSelectionRegionBoundaries(void)
 {
-	gSelectRegion.iLeft   = MAX( MIN( 159, gSelectRegion.iLeft   ), 0 );
-	gSelectRegion.iRight  = MAX( MIN( 159, gSelectRegion.iRight  ), 0 );
-	gSelectRegion.iTop    = MAX( MIN( 159, gSelectRegion.iTop    ), 0 );
-	gSelectRegion.iBottom = MAX( MIN( 159, gSelectRegion.iBottom ), 0 );
+	gSelectRegion.iLeft   = std::clamp(int(gSelectRegion.iLeft), 0, 159);
+	gSelectRegion.iRight  = std::clamp(int(gSelectRegion.iRight), 0, 159);
+	gSelectRegion.iTop    = std::clamp(int(gSelectRegion.iTop), 0, 159);
+	gSelectRegion.iBottom = std::clamp(int(gSelectRegion.iBottom), 0, 159);
 }
 
 

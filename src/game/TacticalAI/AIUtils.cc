@@ -212,7 +212,7 @@ UINT8 ShootingStanceChange( SOLDIERTYPE * pSoldier, ATTACKTYPE * pAttack, INT8 b
 	}
 	for (bLoop = 0; bLoop < 3; bLoop++)
 	{
-		bStanceDiff = ABS( bLoop - bStanceNum );
+		bStanceDiff = std::abs(bLoop - bStanceNum);
 		if (bStanceDiff == 2 && bAPsAfterAttack < AP_CROUCH + AP_PRONE)
 		{
 			// can't consider this!
@@ -468,7 +468,7 @@ BOOLEAN IsActionAffordable(SOLDIERTYPE *pSoldier)
 			break;
 
 		case AI_ACTION_PICKUP_ITEM:           // grab things lying on the ground
-			bMinPointsNeeded = __max( MinPtsToMove( pSoldier ), AP_PICKUP_ITEM );
+			bMinPointsNeeded = std::max(MinPtsToMove(pSoldier), INT8(AP_PICKUP_ITEM));
 			break;
 
 		case AI_ACTION_OPEN_OR_CLOSE_DOOR:
@@ -679,12 +679,12 @@ INT16 RandDestWithinRange(SOLDIERTYPE *pSoldier)
 		sOrigX = usOrigin % MAXCOL;
 		sOrigY = usOrigin / MAXCOL;
 
-		sMaxLeft  = MIN(usMaxDist, sOrigX);
-		sMaxRight = MIN(usMaxDist,MAXCOL - (sOrigX + 1));
+		sMaxLeft  = std::min(int(usMaxDist), int(sOrigX));
+		sMaxRight = std::min(int(usMaxDist), MAXCOL - (sOrigX + 1));
 
 		// determine maximum vertical limits
-		sMaxUp   = MIN(usMaxDist, sOrigY);
-		sMaxDown = MIN(usMaxDist,MAXROW - (sOrigY + 1));
+		sMaxUp   = std::min(int(usMaxDist), int(sOrigY));
+		sMaxDown = std::min(int(usMaxDist), MAXROW - (sOrigY + 1));
 
 		sXRange = sMaxLeft + sMaxRight + 1;
 		sYRange = sMaxUp + sMaxDown + 1;
@@ -2056,7 +2056,7 @@ UINT8 GetTraversalQuoteActionID( INT8 bDirection )
 UINT8 SoldierDifficultyLevel( const SOLDIERTYPE * pSoldier )
 {
 	INT8 bDifficultyBase;
-	INT8 bDifficulty;
+	int bDifficulty;
 
 	// difficulty modifier ranges from 0 to 100
 	// and we want to end up with a number between 0 and 4 (4=hardest)
@@ -2102,9 +2102,7 @@ UINT8 SoldierDifficultyLevel( const SOLDIERTYPE * pSoldier )
 			break;
 
 	}
-
-	bDifficulty = __max( bDifficulty, 0 );
-	bDifficulty = __min( bDifficulty, 4 );
+	bDifficulty = std::clamp(bDifficulty, 0, 4);
 
 	return( (UINT8) bDifficulty );
 }

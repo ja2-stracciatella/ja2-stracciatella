@@ -220,7 +220,7 @@ void BeginLoadScreen( )
 		{
 			uiCurrTime = GetClock();
 			iPercentage = (uiCurrTime-uiStartTime) * 100 / uiTimeRange;
-			iPercentage = MIN( iPercentage, 100 );
+			iPercentage = std::min(iPercentage, 100);
 
 			//Factor the percentage so that it is modified by a gravity falling acceleration effect.
 			iFactor = (iPercentage - 50) * 2;

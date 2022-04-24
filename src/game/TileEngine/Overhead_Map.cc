@@ -121,7 +121,7 @@ void InitNewOverheadDB(TileSetID const ubTilesetID)
 		SGPVObject* const vo = gSmTileSurf[i].vo;
 
 		// Get number of regions and check for overflow
-		UINT32 const NumRegions = MIN(vo->SubregionCount(), gNumTilesPerType[i]);
+		UINT32 const NumRegions = std::min(vo->SubregionCount(), gNumTilesPerType[i]);
 
 		UINT32 k = 0;
 		for (; k < NumRegions; ++k)
@@ -913,13 +913,13 @@ void CalculateRestrictedMapCoords( INT8 bDirection, INT16 *psX1, INT16 *psY1, IN
 			*psX1 = 0;
 			*psX2 = sEndXS;
 			*psY1 = 0;
-			*psY2 = ( ABS( NORMAL_MAP_SCREEN_TY - gsTopY ) / 5 );
+			*psY2 = std::abs(NORMAL_MAP_SCREEN_TY - gsTopY) / 5;
 			break;
 
 		case WEST:
 
 			*psX1 = 0;
-			*psX2 = ( ABS( -NORMAL_MAP_SCREEN_X - gsLeftX ) / 5 );
+			*psX2 = std::abs(-NORMAL_MAP_SCREEN_X - gsLeftX) / 5;
 			*psY1 = 0;
 			*psY2 = sEndYS;
 			break;
@@ -928,13 +928,13 @@ void CalculateRestrictedMapCoords( INT8 bDirection, INT16 *psX1, INT16 *psY1, IN
 
 			*psX1 = 0;
 			*psX2 = sEndXS;
-			*psY1 = ( NORMAL_MAP_SCREEN_HEIGHT - ABS( NORMAL_MAP_SCREEN_BY - gsBottomY ) ) / 5;
+			*psY1 = (NORMAL_MAP_SCREEN_HEIGHT - std::abs(NORMAL_MAP_SCREEN_BY - gsBottomY)) / 5;
 			*psY2 = sEndYS;
 			break;
 
 		case EAST:
 
-			*psX1 = ( NORMAL_MAP_SCREEN_WIDTH - ABS( NORMAL_MAP_SCREEN_X - gsRightX ) ) / 5;
+			*psX1 = (NORMAL_MAP_SCREEN_WIDTH - std::abs(NORMAL_MAP_SCREEN_X - gsRightX)) / 5;
 			*psX2 = sEndXS;
 			*psY1 = 0;
 			*psY2 = sEndYS;

@@ -1491,7 +1491,7 @@ static FLOAT CalculateObjectTrajectory(INT16 sTargetZ, const OBJECTTYPE* pItem, 
 		(*psFinalGridNo) = sGridNo;
 	}
 
-	return( (FLOAT)sqrt( ( dDiffX * dDiffX ) + ( dDiffY * dDiffY ) ) );
+	return (FLOAT) std::hypot(dDiffX, dDiffY);
 
 }
 

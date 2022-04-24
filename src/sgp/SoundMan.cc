@@ -360,7 +360,7 @@ BOOLEAN SoundSetVolume(UINT32 uiSoundID, UINT32 uiVolume)
 	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
 	if (channel == NULL) return FALSE;
 
-	channel->uiFadeVolume = __min(uiVolume, MAXVOLUME);
+	channel->uiFadeVolume = std::min(uiVolume, UINT32(MAXVOLUME));
 	return TRUE;
 }
 
@@ -372,7 +372,7 @@ BOOLEAN SoundSetPan(UINT32 uiSoundID, UINT32 uiPan)
 	SOUNDTAG* const channel = SoundGetChannelByID(uiSoundID);
 	if (channel == NULL) return FALSE;
 
-	channel->Pan = __min(uiPan, 127);
+	channel->Pan = std::min(uiPan, 127U);
 	return TRUE;
 }
 
@@ -496,7 +496,7 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			auto posInBytes = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, channel->Pos) * bytesPerFrame;
 			auto requiredInputFrameCount = ma_data_converter_get_required_input_frame_count(sample->pDataConverter, bytesToWrite);
 			// We might not have as many bytes available
-			auto availableFrames = MIN(requiredInputFrameCount * bytesPerFrame, sample->uiBufferSize - posInBytes) / bytesPerFrame;
+			auto availableFrames = std::min(requiredInputFrameCount * bytesPerFrame, sample->uiBufferSize - posInBytes) / bytesPerFrame;
 			auto expectedOutputFrameCount = ma_data_converter_get_expected_output_frame_count(sample->pDataConverter, availableFrames);
 
 			auto result = ma_data_converter_process_pcm_frames(

@@ -860,11 +860,11 @@ UINT8 CalcAPsToBurst(INT8 const bBaseActionPoints, OBJECTTYPE const& o)
 		INT8 const bAttachPos = FindAttachment(&o, SPRING_AND_BOLT_UPGRADE );
 		if ( bAttachPos != -1 )
 		{
-			return (__max(3, (AP_BURST * bBaseActionPoints + (AP_MAXIMUM - 1)) / AP_MAXIMUM) * 100) / (100 + o.bAttachStatus[bAttachPos] / 5);
+			return (std::max(3, (AP_BURST * bBaseActionPoints + (AP_MAXIMUM - 1)) / AP_MAXIMUM) * 100) / (100 + o.bAttachStatus[bAttachPos] / 5);
 		}
 		else
 		{
-			return __max(3, (AP_BURST * bBaseActionPoints + (AP_MAXIMUM - 1)) / AP_MAXIMUM);
+			return std::max(3, (AP_BURST * bBaseActionPoints + (AP_MAXIMUM - 1)) / AP_MAXIMUM);
 		}
 	}
 }
@@ -1076,7 +1076,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 	BOOLEAN	adding_raise_gun_cost;
 	GetAPChargeForShootOrStabWRTGunRaises(&s, gridno, add_turning_cost, &adding_turning_cost, &adding_raise_gun_cost);
 
-	UINT8	ap_cost = AP_MIN_AIM_ATTACK;
+	int	ap_cost = AP_MIN_AIM_ATTACK;
 
 	if (GCM->getItem(item)->getItemClass() == IC_THROWING_KNIFE ||
 		item == ROCKET_LAUNCHER)
@@ -1150,7 +1150,7 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 		// Charge the maximum of the two
 		UINT8 const ap_1st = BaseAPsToShootOrStab(full_aps, aim_skill, in_hand);
 		UINT8 const ap_2nd = BaseAPsToShootOrStab(full_aps, aim_skill, s.inv[SECONDHANDPOS]);
-		ap_cost += __max(ap_1st, ap_2nd);
+		ap_cost += std::max(ap_1st, ap_2nd);
 	}
 	else
 	{
@@ -1158,10 +1158,8 @@ UINT8 MinAPsToShootOrStab(SOLDIERTYPE& s, GridNo gridno, bool const add_turning_
 	}
 
 	// The minimum AP cost of ANY shot can NEVER be more than merc's maximum APs
-	if (ap_cost > full_aps) ap_cost = full_aps;
-
-	// this SHOULD be impossible, but nevertheless
-	if (ap_cost < 1) ap_cost = 1;
+	// nor it SHOULDN'T be 0, but nevertheless
+	ap_cost = std::clamp(ap_cost, 1, full_aps > 0 ? int(full_aps) : 1);
 
 	return ap_cost;
 }

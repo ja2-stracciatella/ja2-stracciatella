@@ -2732,7 +2732,7 @@ static void Teleport()
 	// figure out where they would've come from
 	const SGPSector sDelta = sMap - s.sSector;
 	SGPSector sPrev = sMap;
-	if (ABS(sDelta.x) >= ABS(sDelta.y))
+	if (std::abs(sDelta.x) >= std::abs(sDelta.y))
 	{
 		// use East or West
 		if (sDelta.x > 0)

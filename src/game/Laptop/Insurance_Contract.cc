@@ -149,7 +149,7 @@ static InsuranceInfo insurance_info[3];
 
 static void SetNumberOfDisplayedInsuranceMercs(void)
 {
-	gubNumberofDisplayedInsuranceGrids = MIN(g_n_insurable_mercs - gusCurrentInsuranceMercIndex, 3);
+	gubNumberofDisplayedInsuranceGrids = std::min(g_n_insurable_mercs - gusCurrentInsuranceMercIndex, 3U);
 }
 
 

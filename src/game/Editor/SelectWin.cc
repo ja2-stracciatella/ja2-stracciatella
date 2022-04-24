@@ -685,8 +685,8 @@ void RenderSelectionWindow( void )
 		GUIButtonRef const button = iSelectWin;
 		if (!button) return;
 
-		if (ABS(iStartClickX - button->MouseX()) > 9 ||
-				ABS(iStartClickY - (button->MouseY() + iTopWinCutOff - (INT16)g_sel_win_box.y)) > 9)
+		if (std::abs(iStartClickX - button->MouseX()) > 9 ||
+				std::abs(iStartClickY - (button->MouseY() + iTopWinCutOff - (INT16)g_sel_win_box.y)) > 9)
 		{
 //			iSX = (INT32)iStartClickX;
 //			iEX = (INT32)button->MouseX();
@@ -702,10 +702,10 @@ void RenderSelectionWindow( void )
 			if (iEX < iSX) Swap(iEX, iSX);
 			if (iEY < iSY) Swap(iEY, iSY);
 
-			iEX = MIN( iEX, 600 );
-			iSY = MAX(g_sel_win_box.y, iSY);
-			iEY = MIN( 359, iEY );
-			iEY = MAX(g_sel_win_box.y, iEY);
+			iEX = std::min(iEX, 600);
+			iSY = std::max(INT32(g_sel_win_box.y), iSY);
+			iEY = std::min(359, iEY);
+			iEY = std::max(INT32(g_sel_win_box.y), iEY);
 
 			usFillColor = Get16BPPColor(FROMRGB(255, usFillGreen, 0));
 			usFillGreen += usDir;

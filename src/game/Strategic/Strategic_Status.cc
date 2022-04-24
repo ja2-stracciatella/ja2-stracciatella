@@ -56,14 +56,11 @@ UINT8 CalcDeathRate(void)
 
 void ModifyPlayerReputation(INT8 bRepChange)
 {
-	INT32 iNewBadRep;
-
 	// subtract, so that a negative reputation change results in an increase in bad reputation
-	iNewBadRep = (INT32) gStrategicStatus.ubBadReputation - bRepChange;
+	int iNewBadRep = (INT32) gStrategicStatus.ubBadReputation - bRepChange;
 
 	// keep within a 0-100 range (0 = Saint, 100 = Satan)
-	iNewBadRep = __max(   0, iNewBadRep );
-	iNewBadRep = __min( 100, iNewBadRep );
+	iNewBadRep = std::clamp(iNewBadRep, 0, 100);
 
 	gStrategicStatus.ubBadReputation = (UINT8) iNewBadRep;
 }
@@ -318,7 +315,7 @@ void HandleEnricoEmail(void)
 	// reset # of new sectors visited 'today'
 	// grant some leeway for the next day, could have started moving
 	// at night...
-	gStrategicStatus.ubNumNewSectorsVisitedToday = __min( gStrategicStatus.ubNumNewSectorsVisitedToday, NEW_SECTORS_EQUAL_TO_ACTIVITY ) / 3;
+	gStrategicStatus.ubNumNewSectorsVisitedToday = std::min( gStrategicStatus.ubNumNewSectorsVisitedToday, UINT8(NEW_SECTORS_EQUAL_TO_ACTIVITY)) / 3;
 }
 
 

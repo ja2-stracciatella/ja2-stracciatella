@@ -865,7 +865,7 @@ static void DrawFillerOnSurface(SGPVSurface* vsSurface, SGPBox const &dest)
 	SGPVSurfaceAuto* vsFiller = CreateVideoSurfaceFromObjectFile(INTERFACEDIR "/overheadinterface.sti", 0);
 
 	// clip and blit the big panel from the overheadinterface graphics
-	SGPBox const src  = {80, 42, (UINT16)MIN(dest.w, 560), (UINT16)MIN(dest.h, 112)};
+	SGPBox const src  = {80, 42, (UINT16) std::min(int(dest.w), 560), (UINT16) std::min(int(dest.h), 112)};
 	BltStretchVideoSurface(vsSurface, vsFiller, &src, &dest);
 
 	delete vsFiller;

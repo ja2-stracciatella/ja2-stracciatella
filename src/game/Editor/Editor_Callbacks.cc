@@ -671,7 +671,7 @@ static void ItemsScrollLeft()
 
 static void ItemsScrollRight()
 {
-	INT16 const max_col = MAX(((eInfo.sNumItems + 1) / 2) - 6, 0);
+	INT16 const max_col = std::max(((eInfo.sNumItems + 1) / 2) - 6, 0);
 	if (eInfo.sScrollIndex >= max_col) return;
 	gfRenderTaskbar = TRUE;
 	EnableButton(iEditorButton[ITEMS_LEFTSCROLL]);

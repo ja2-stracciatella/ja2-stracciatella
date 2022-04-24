@@ -409,7 +409,7 @@ INT32 GetRangeFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 	// Convert our grid-not into an XY
 	ConvertGridNoToXY( sGridNo2, &sXPos2, &sYPos2 );
 
-	uiDist = (INT16)sqrt(double(( sXPos2 - sXPos )*( sXPos2 - sXPos ) + ( sYPos2 - sYPos ) * ( sYPos2 - sYPos )));
+	uiDist = (INT16) std::hypot(sXPos2 - sXPos, sYPos2 - sYPos);
 
 	return( uiDist );
 }
@@ -424,7 +424,7 @@ INT32 GetRangeInCellCoordsFromGridNoDiff( INT16 sGridNo1, INT16 sGridNo2 )
 	// Convert our grid-not into an XY
 	ConvertGridNoToXY( sGridNo2, &sXPos2, &sYPos2 );
 
-	return( (INT32)( sqrt(double(( sXPos2 - sXPos ) * ( sXPos2 - sXPos ) + ( sYPos2 - sYPos ) * ( sYPos2 - sYPos ) )) ) * CELL_X_SIZE );
+	return (INT32) (std::hypot(sXPos2 - sXPos, sYPos2 - sYPos) * CELL_X_SIZE);
 }
 
 
@@ -452,17 +452,11 @@ BOOLEAN IsPointInScreenRectWithRelative( INT16 sXPos, INT16 sYPos, SGPRect *pRec
 
 INT16 PythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
-	INT16 sRows,sCols,sResult;
-
-	sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
-	sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
-
+	INT16 sRows = std::abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
+	INT16 sCols = std::abs((sOrigin % MAXROW) - (sDest % MAXROW));
 
 	// apply Pythagoras's theorem for right-handed triangle:
-	// dist^2 = rows^2 + cols^2, so use the square root to get the distance
-	sResult = (INT16)sqrt(double((sRows * sRows) + (sCols * sCols)));
-
-	return(sResult);
+	return (INT16) std::hypot(sRows, sCols);
 }
 
 
@@ -470,10 +464,10 @@ INT16 SpacesAway(INT16 sOrigin, INT16 sDest)
 {
 	INT16 sRows,sCols;
 
-	sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
-	sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
+	sRows = std::abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
+	sCols = std::abs((sOrigin % MAXROW) - (sDest % MAXROW));
 
-	return( __max( sRows, sCols ) );
+	return( std::max(sRows, sCols ));
 }
 
 INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest)
@@ -481,8 +475,8 @@ INT16 CardinalSpacesAway(INT16 sOrigin, INT16 sDest)
 {
 	INT16 sRows,sCols;
 
-	sRows = ABS((sOrigin / MAXCOL) - (sDest / MAXCOL));
-	sCols = ABS((sOrigin % MAXROW) - (sDest % MAXROW));
+	sRows = std::abs((sOrigin / MAXCOL) - (sDest / MAXCOL));
+	sCols = std::abs((sOrigin % MAXROW) - (sDest % MAXROW));
 
 	return( (INT16)( sRows + sCols ) );
 }
@@ -606,7 +600,7 @@ INT16 QuickestDirection(INT16 origin, INT16 dest)
 	if (origin==dest)
 		return(0);
 
-	if ((ABS(origin - dest)) == 4)
+	if ((std::abs(origin - dest)) == 4)
 	{
 		return(1);		// this could be made random
 	}
@@ -614,7 +608,7 @@ INT16 QuickestDirection(INT16 origin, INT16 dest)
 	{
 		if (origin > dest)
 		{
-			v1 = ABS(origin - dest);
+			v1 = std::abs(origin - dest);
 			v2 = (8 - origin) + dest;
 			if (v1 > v2)
 				return(1);
@@ -623,7 +617,7 @@ INT16 QuickestDirection(INT16 origin, INT16 dest)
 		}
 		else
 		{
-			v1 = ABS(origin - dest);
+			v1 = std::abs(origin - dest);
 			v2 = (8 - dest) + origin;
 			if (v1 > v2)
 				return(-1);
@@ -641,7 +635,7 @@ INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
 	if (origin==dest)
 		return(0);
 
-	if ((ABS(origin - dest)) == 16)
+	if ((std::abs(origin - dest)) == 16)
 	{
 		return(1);		// this could be made random
 	}
@@ -649,7 +643,7 @@ INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
 	{
 		if (origin > dest)
 		{
-			v1 = ABS(origin - dest);
+			v1 = std::abs(origin - dest);
 			v2 = (32 - origin) + dest;
 			if (v1 > v2)
 				return(1);
@@ -658,7 +652,7 @@ INT16 ExtQuickestDirection(INT16 origin, INT16 dest)
 		}
 		else
 		{
-			v1 = ABS(origin - dest);
+			v1 = std::abs(origin - dest);
 			v2 = (32 - dest) + origin;
 			if (v1 > v2)
 				return(-1);

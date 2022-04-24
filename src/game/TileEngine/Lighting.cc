@@ -495,9 +495,9 @@ static DOUBLE LinearDistanceDouble(INT16 iX1, INT16 iY1, INT16 iX2, INT16 iY2)
 {
 	INT32 iDx, iDy;
 
-	iDx=ABS(iX1-iX2);
+	iDx = std::abs(iX1 - iX2);
 	iDx*=iDx;
-	iDy=ABS(iY1-iY2);
+	iDy = std::abs(iY1 - iY2);
 	iDy*=iDy;
 
 	return(sqrt((DOUBLE)(iDx+iDy)));
@@ -512,7 +512,6 @@ LightTrueLevel
 UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel )
 {
 	LEVELNODE * pNode;
-	INT32 iSum;
 
 	if (bLevel == 0)
 	{
@@ -529,10 +528,8 @@ UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel )
 	}
 	else
 	{
-		iSum=pNode->ubNaturalShadeLevel - (pNode->ubSumLights - pNode->ubFakeShadeLevel );
-
-		iSum=__min(SHADE_MIN, iSum);
-		iSum=__max(SHADE_MAX, iSum);
+		int iSum = pNode->ubNaturalShadeLevel - (pNode->ubSumLights - pNode->ubFakeShadeLevel);
+		iSum = std::clamp(iSum, SHADE_MAX, SHADE_MIN); // looks wrong because min and max have inverted values
 		return( (UINT8) iSum );
 	}
 }
@@ -541,8 +538,6 @@ UINT8 LightTrueLevel( INT16 sGridNo, INT8 bLevel )
 // Does the addition of light values to individual LEVELNODEs in the world tile list.
 static void LightAddTileNode(LEVELNODE* const pNode, const UINT8 ubShadeAdd, const BOOLEAN fFake)
 {
-	INT16 sSum;
-
 	pNode->ubSumLights += ubShadeAdd;
 	if (fFake)
 	{
@@ -550,12 +545,10 @@ static void LightAddTileNode(LEVELNODE* const pNode, const UINT8 ubShadeAdd, con
 	}
 
 	// Now set max
-	pNode->ubMaxLights = __max( pNode->ubMaxLights, ubShadeAdd );
+	pNode->ubMaxLights = std::max(pNode->ubMaxLights, ubShadeAdd);
 
-	sSum=pNode->ubNaturalShadeLevel - pNode->ubMaxLights;
-
-	sSum=__min(SHADE_MIN, sSum);
-	sSum=__max(SHADE_MAX, sSum);
+	int sSum = pNode->ubNaturalShadeLevel - pNode->ubMaxLights;
+	sSum = std::clamp(sSum, SHADE_MAX, SHADE_MIN);
 
 	pNode->ubShadeLevel=(UINT8)sSum;
 }
@@ -564,8 +557,6 @@ static void LightAddTileNode(LEVELNODE* const pNode, const UINT8 ubShadeAdd, con
 // Does the subtraction of light values to individual LEVELNODEs in the world tile list.
 static void LightSubtractTileNode(LEVELNODE* const pNode, const UINT8 ubShadeSubtract, const BOOLEAN fFake)
 {
-	INT16 sSum;
-
 	if (ubShadeSubtract > pNode->ubSumLights )
 	{
 		pNode->ubSumLights = 0;
@@ -587,14 +578,10 @@ static void LightSubtractTileNode(LEVELNODE* const pNode, const UINT8 ubShadeSub
 	}
 
 	// Now set max
-	pNode->ubMaxLights = __min( pNode->ubMaxLights, pNode->ubSumLights );
+	pNode->ubMaxLights = std::min(pNode->ubMaxLights, pNode->ubSumLights);
 
-
-	sSum=pNode->ubNaturalShadeLevel - pNode->ubMaxLights;
-
-	sSum=__min(SHADE_MIN, sSum);
-	sSum=__max(SHADE_MAX, sSum);
-
+	int sSum = pNode->ubNaturalShadeLevel - pNode->ubMaxLights;
+	sSum = std::clamp(sSum, SHADE_MAX, SHADE_MIN);
 	pNode->ubShadeLevel=(UINT8)sSum;
 }
 
@@ -656,7 +643,7 @@ static BOOLEAN LightAddTile(const INT16 iSrcX, const INT16 iSrcY, const INT16 iX
 						// ATE: Limit shade for walls if in caves
 						if ( fLitWall && gfCaves )
 						{
-							LightAddTileNode(pStruct, __min(ubShadeAdd, SHADE_MAX + 5), FALSE);
+							LightAddTileNode(pStruct, std::min(ubShadeAdd, UINT8(SHADE_MAX + 5)), FALSE);
 						}
 						else if ( fLitWall )
 						{
@@ -791,7 +778,7 @@ static BOOLEAN LightSubtractTile(const INT16 iSrcX, const INT16 iSrcY, const INT
 						// ATE: Limit shade for walls if in caves
 						if ( fLitWall && gfCaves )
 						{
-							LightSubtractTileNode(pStruct, __max(ubShadeSubtract - 5, 0), FALSE);
+							LightSubtractTileNode(pStruct, std::max(ubShadeSubtract - 5, 0), FALSE);
 						}
 						else if ( fLitWall )
 						{
@@ -1446,9 +1433,7 @@ void LightSetBaseLevel(UINT8 iIntensity)
 		}
 	}
 
-	UINT16 shade = iIntensity;
-	shade = __max(SHADE_MAX, shade);
-	shade = __min(SHADE_MIN, shade);
+	UINT16 shade = std::clamp(int(iIntensity), SHADE_MAX, SHADE_MIN);
 	FOR_EACH_WORLD_TILE(i)
 	{
 		LightSetNaturalTile(*i, shade);
@@ -1467,7 +1452,7 @@ void LightAddBaseLevel(const UINT8 iIntensity)
 {
 	INT16 iCountY, iCountX;
 
-	ubAmbientLightLevel=__max(SHADE_MAX, ubAmbientLightLevel-iIntensity);
+	ubAmbientLightLevel = std::max(SHADE_MAX, ubAmbientLightLevel - iIntensity);
 
 	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
 		for(iCountX=0; iCountX < WORLD_COLS; iCountX++)
@@ -1484,7 +1469,7 @@ void LightSubtractBaseLevel(const UINT8 iIntensity)
 {
 	INT16 iCountY, iCountX;
 
-	ubAmbientLightLevel=__min(SHADE_MIN, ubAmbientLightLevel+iIntensity);
+	ubAmbientLightLevel = std::min(SHADE_MIN, ubAmbientLightLevel + iIntensity);
 
 	for(iCountY=0; iCountY < WORLD_ROWS; iCountY++)
 		for(iCountX=0; iCountX < WORLD_COLS; iCountX++)
@@ -1701,10 +1686,10 @@ BOOLEAN ApplyTranslucencyToWalls(INT16 iX, INT16 iY)
 			const LIGHT_NODE* const pLight = &t->lights[usNodeIndex & ~LIGHT_BACKLIGHT];
 			//Kris:  added map boundary checking!!!
 			if(LightHideWall(
-				(INT16)MIN(MAX((iX+pLight->iDX),0),WORLD_COLS-1),
-				(INT16)MIN(MAX((iY+pLight->iDY),0),WORLD_ROWS-1),
-				(INT16)MIN(MAX(iX,0),WORLD_COLS-1),
-				(INT16)MIN(MAX(iY,0),WORLD_ROWS-1)
+				(INT16) std::clamp(int(iX + pLight->iDX), 0, WORLD_COLS - 1),
+				(INT16) std::clamp(int(iY + pLight->iDY), 0, WORLD_ROWS - 1),
+				(INT16) std::clamp(int(iX), 0, WORLD_COLS - 1),
+				(INT16) std::clamp(int(iY), 0, WORLD_ROWS - 1)
 			))
 			{
 				uiCount = LightFindNextRay(t, uiCount);
@@ -2090,9 +2075,9 @@ static void AddSaturatePalette(SGPPaletteEntry Dst[256], const SGPPaletteEntry S
 	UINT8 b = Bias->b;
 	for (UINT i = 0; i < 256; i++)
 	{
-		Dst[i].r = __min(Src[i].r + r, 255);
-		Dst[i].g = __min(Src[i].g + g, 255);
-		Dst[i].b = __min(Src[i].b + b, 255);
+		Dst[i].r = std::min(Src[i].r + r, 255);
+		Dst[i].g = std::min(Src[i].g + g, 255);
+		Dst[i].b = std::min(Src[i].b + b, 255);
 	}
 }
 

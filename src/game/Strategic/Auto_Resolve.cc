@@ -391,14 +391,14 @@ static void DoTransitionFromPreBattleInterfaceToAutoResolve(void)
 	PlayJA2SampleFromFile(SOUNDSDIR "/laptop power up (8-11).wav", HIGHVOLUME, 1, MIDDLEPAN);
 	while( GetClock() <= uiEndTime )
 	{
-		FLOAT fEasingProgress = EaseInCubic(uiStartTime, uiEndTime, GetClock());
+		double fEasingProgress = EaseInCubic(uiStartTime, uiEndTime, GetClock());
 
 		SGPBox const DstRect =
 		{
 			(UINT16)(x * fEasingProgress),
 			(UINT16)(y * fEasingProgress),
-			(UINT16)(MAX(w * fEasingProgress, 1)),
-			(UINT16)(MAX(h * fEasingProgress, 1))
+			(UINT16)(std::max(w * fEasingProgress, 1.0)),
+			(UINT16)(std::max(h * fEasingProgress, 1.0))
 		};
 
 		BltStretchVideoSurface(FRAME_BUFFER, guiSAVEBUFFER, &gpAR->rect, &DstRect);
@@ -637,7 +637,7 @@ static void CalculateSoldierCells(BOOLEAN fReset)
 	gpAR->ubAliveCivs = gpAR->ubCivs;
 	gpAR->ubAliveEnemies = gpAR->ubEnemies;
 
-	iMaxTeamSize = MAX( gpAR->ubMercs + gpAR->ubCivs, gpAR->ubEnemies );
+	iMaxTeamSize = std::max(gpAR->ubMercs + gpAR->ubCivs, int(gpAR->ubEnemies));
 
 	if( iMaxTeamSize > 12 )
 	{
@@ -2112,7 +2112,7 @@ static void CalculateAutoResolveInfo(void)
 	if( gubEnemyEncounterCode != CREATURE_ATTACK_CODE )
 	{
 		GetNumberOfEnemiesInSector(gpAR->ubSector, &gpAR->ubAdmins, &gpAR->ubTroops, &gpAR->ubElites);
-		gpAR->ubEnemies = (UINT8)MIN( gpAR->ubAdmins + gpAR->ubTroops + gpAR->ubElites, 32 );
+		gpAR->ubEnemies = (UINT8)std::min(gpAR->ubAdmins + gpAR->ubTroops + gpAR->ubElites, 32);
 	}
 	else
 	{
@@ -2128,7 +2128,7 @@ static void CalculateAutoResolveInfo(void)
 																				&gpAR->ubYMCreatures, &gpAR->ubYFCreatures,
 																				&gpAR->ubAMCreatures, &gpAR->ubAFCreatures );
 		}
-		gpAR->ubEnemies = (UINT8)MIN( gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, 32 );
+		gpAR->ubEnemies = (UINT8)std::min(gpAR->ubYMCreatures + gpAR->ubYFCreatures + gpAR->ubAMCreatures + gpAR->ubAFCreatures, 32);
 	}
 	gfTransferTacticalOppositionToAutoResolve = FALSE;
 	gpAR->ubCivs = CountAllMilitiaInSector(gpAR->ubSector);
@@ -2368,12 +2368,12 @@ static void CalculateRowsAndColumns(void)
 	if( gpAR->ubMercCols + gpAR->ubEnemyCols == 9 )
 		gpAR->rect.w = SCREEN_WIDTH;
 	else
-		gpAR->rect.w = 146 + 55 * (MAX(MAX(gpAR->ubMercCols, gpAR->ubCivCols), 2) + MAX(gpAR->ubEnemyCols, 2));
+		gpAR->rect.w = 146 + 55 * (std::max(int(std::max(gpAR->ubMercCols, gpAR->ubCivCols)), 2) + std::max(int(gpAR->ubEnemyCols), 2));
 
-	gpAR->sCenterStartX = STD_SCREEN_X + 323 - gpAR->rect.w / 2 + MAX(MAX(gpAR->ubMercCols, 2), MAX(gpAR->ubCivCols, 2)) * 55;
+	gpAR->sCenterStartX = STD_SCREEN_X + 323 - gpAR->rect.w / 2 + std::max(std::max(int(gpAR->ubMercCols), 2), std::max(int(gpAR->ubCivCols), 2)) * 55;
 
 	//Anywhere from 48*3 to 48*10
-	gpAR->rect.h = 48 * MAX(3, MAX(gpAR->ubMercRows + gpAR->ubCivRows, gpAR->ubEnemyRows));
+	gpAR->rect.h = 48 * std::max(3, std::max(gpAR->ubMercRows + gpAR->ubCivRows, int(gpAR->ubEnemyRows)));
 	//Make it an even multiple of 40 (rounding up).
 	gpAR->rect.h += 39;
 	gpAR->rect.h /= 40;
@@ -2601,7 +2601,7 @@ static void DetermineTeamLeader(BOOLEAN fFriendlyTeam)
 
 static void ResetNextAttackCounter(SOLDIERCELL* pCell)
 {
-	pCell->usNextAttack = MIN( 1000 - pCell->usAttack, 800 );
+	pCell->usNextAttack = std::min(1000 - pCell->usAttack, 800);
 	pCell->usNextAttack = (UINT16)(1000 + pCell->usNextAttack * 5 + PreRandom( 2000 - pCell->usAttack ) );
 	if( pCell->uiFlags & CELL_CREATURE )
 	{
@@ -2627,7 +2627,7 @@ static void CalculateAttackValues(void)
 	//	//bonus equals 20 if good guys outnumber bad guys 2 to 1.
 	//	const INT16 sMaxBonus = 20;
 	//	sOutnumberBonus = (INT16)(gpAR->ubMercs + gpAR->ubCivs) * sMaxBonus / gpAR->ubEnemies - sMaxBonus;
-	//	sOutnumberBonus = (INT16)MIN( sOutnumberBonus, MAX( sMaxBonus, 0 ) );
+	//	sOutnumberBonus = (INT16) std::clamp(sOutnumberBonus, 0, sMaxBonus);
 	//}
 
 	for (INT32 i = 0; i < gpAR->ubMercs; i++)
@@ -2670,8 +2670,8 @@ static void CalculateAttackValues(void)
 			pCell->usDefence = 1000;
 		}
 
-		pCell->usAttack = MIN( pCell->usAttack, 1000 );
-		pCell->usDefence = MIN( pCell->usDefence, 1000 );
+		pCell->usAttack = std::min(int(pCell->usAttack), 1000);
+		pCell->usDefence = std::min(int(pCell->usDefence), 1000);
 
 		gpAR->usPlayerAttack += pCell->usAttack;
 		gpAR->usPlayerDefence += pCell->usDefence;
@@ -2707,8 +2707,8 @@ static void CalculateAttackValues(void)
 		pCell->usAttack = pCell->usAttack * usBonus / 100;
 		pCell->usDefence = pCell->usDefence * usBonus / 100;
 
-		pCell->usAttack = MIN( pCell->usAttack, 1000 );
-		pCell->usDefence = MIN( pCell->usDefence, 1000 );
+		pCell->usAttack = std::min(int(pCell->usAttack), 1000);
+		pCell->usDefence = std::min(int(pCell->usDefence), 1000);
 
 		gpAR->usPlayerAttack += pCell->usAttack;
 		gpAR->usPlayerDefence += pCell->usDefence;
@@ -2728,7 +2728,7 @@ static void CalculateAttackValues(void)
 	//	//bonus equals 20 if good guys outnumber bad guys 2 to 1.
 	//	const INT16 sMaxBonus = 20;
 	//	sOutnumberBonus = (INT16)gpAR->ubEnemies * sMaxBonus / (gpAR->ubMercs + gpAR->ubCivs) - sMaxBonus;
-	//	sOutnumberBonus = (INT16)MIN( sOutnumberBonus, MAX( sMaxBonus, 0 ) );
+	//	sOutnumberBonus = (INT16) std::clamp(sOutnumberBonus, 0, sMaxBonus);
 	//}
 
 	for (INT32 i = 0; i < gpAR->ubEnemies; i++)
@@ -2754,8 +2754,8 @@ static void CalculateAttackValues(void)
 		pCell->usAttack = pCell->usAttack * usBonus / 100;
 		pCell->usDefence = pCell->usDefence * usBonus / 100;
 
-		pCell->usAttack = MIN( pCell->usAttack, 1000 );
-		pCell->usDefence = MIN( pCell->usDefence, 1000 );
+		pCell->usAttack = std::min(int(pCell->usAttack), 1000);
+		pCell->usDefence = std::min(int(pCell->usDefence), 1000);
 
 		gpAR->usEnemyAttack += pCell->usAttack;
 		gpAR->usEnemyDefence += pCell->usDefence;
@@ -3176,7 +3176,7 @@ static void AttackTarget(SOLDIERCELL* pAttacker, SOLDIERCELL* pTarget)
 			}
 		}
 		//Adjust the soldiers stats based on the damage.
-		pTarget->pSoldier->bLife = (INT8)MAX( iNewLife, 0 );
+		pTarget->pSoldier->bLife = (INT8)std::max(iNewLife, 0);
 		if( pTarget->uiFlags & CELL_MERC && gpAR->pRobotCell)
 		{
 			UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
@@ -3370,7 +3370,7 @@ static void TargetHitCallback(SOLDIERCELL* pTarget, INT32 index)
 		#endif
 	}
 	//Adjust the soldiers stats based on the damage.
-	pTarget->pSoldier->bLife = (INT8)MAX( iNewLife, 0 );
+	pTarget->pSoldier->bLife = (INT8)std::max(iNewLife, 0);
 	if( pTarget->uiFlags & CELL_MERC && gpAR->pRobotCell)
 	{
 		UpdateRobotControllerGivenRobot( gpAR->pRobotCell->pSoldier );
@@ -3719,7 +3719,7 @@ static void ProcessBattleFrame(void)
 
 	while( iTimeSlice > 0 )
 	{
-		uiSlice = MIN( iTimeSlice, 1000 );
+		uiSlice = std::min(iTimeSlice, 1000);
 		if( gpAR->ubBattleStatus == BATTLE_IN_PROGRESS )
 			gpAR->uiTotalElapsedBattleTimeInMilliseconds += uiSlice;
 

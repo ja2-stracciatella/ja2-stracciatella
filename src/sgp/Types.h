@@ -23,11 +23,6 @@
 #define lengthof(a) (sizeof(a) / sizeof(a[0]))
 #define endof(a) ((a) + lengthof(a))
 
-
-#define ABS(a) (UINT16)abs(int(a))
-#define MAX(a, b) __max(a, b)
-#define MIN(a, b) __min(a, b)
-
 #define FOR_EACHX(type, iter, array, x) for (type* iter = (array); iter != endof((array)); (x), ++iter)
 #define FOR_EACH(type, iter, array)     FOR_EACHX(type, iter, (array), (void)0)
 
@@ -76,10 +71,6 @@ typedef CHAR8 SGPFILENAME[SGPFILENAME_LEN];
 #define BAD_INDEX -1
 
 #define PI 3.1415926
-
-#ifndef NULL
-#define NULL 0
-#endif
 
 struct SGPBox
 {

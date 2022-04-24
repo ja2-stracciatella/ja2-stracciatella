@@ -284,7 +284,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iVest = ExplosiveEffectiveArmour( &(pSoldier->inv[VESTPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iVest = __min( 65, 65 * iVest / ( Armour[ GCM->getItem(SPECTRA_VEST_18)->getClassIndex() ].ubProtection + Armour[ GCM->getItem(CERAMIC_PLATES)->getClassIndex() ].ubProtection) );
+		iVest = std::min(65, 65 * iVest / ( Armour[ GCM->getItem(SPECTRA_VEST_18)->getClassIndex() ].ubProtection + Armour[ GCM->getItem(CERAMIC_PLATES)->getClassIndex() ].ubProtection));
 	}
 	else
 	{
@@ -295,7 +295,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iHelmet = ExplosiveEffectiveArmour( &(pSoldier->inv[HELMETPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iHelmet = __min( 15, 15 * iHelmet / Armour[ GCM->getItem(SPECTRA_HELMET_18)->getClassIndex() ].ubProtection );
+		iHelmet = std::min(15, 15 * iHelmet / Armour[ GCM->getItem(SPECTRA_HELMET_18)->getClassIndex() ].ubProtection);
 	}
 	else
 	{
@@ -306,7 +306,7 @@ INT8 ArmourVersusExplosivesPercent( SOLDIERTYPE * pSoldier )
 	{
 		iLeg = ExplosiveEffectiveArmour( &(pSoldier->inv[LEGPOS]) );
 		// convert to % of best; ignoring bug-treated stuff
-		iLeg = __min( 25, 25 * iLeg / Armour[ GCM->getItem(SPECTRA_LEGGINGS_18)->getClassIndex() ].ubProtection );
+		iLeg = std::min(25, 25 * iLeg / Armour[ GCM->getItem(SPECTRA_LEGGINGS_18)->getClassIndex() ].ubProtection);
 	}
 	else
 	{
@@ -767,7 +767,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				if (!weapon->silencedSound.empty()) {
 					PlayLocationJA2Sample(pSoldier->sGridNo, weapon->silencedSound, HIGHVOLUME, 1);
 				}
-				
+
 			}
 			else
 			{
@@ -838,7 +838,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 					{
 						// gain extra exp for aiming, up to the amount from
 						// the difficulty of the shot
-						usExpGain += __min( pSoldier->bAimTime, usExpGain );
+						usExpGain += std::min(int(pSoldier->bAimTime), int(usExpGain));
 					}
 
 					// base pts extra for hitting
@@ -898,7 +898,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 				{
 					// gain extra exp for aiming, up to the amount from
 					// the difficulty of the throw
-					usExpGain += ( 2 * __min( pSoldier->bAimTime, usExpGain ) );
+					usExpGain += 2 * std::min(int(pSoldier->bAimTime), int(usExpGain));
 				}
 
 				// base pts extra for hitting
@@ -1037,7 +1037,7 @@ static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 	INT32          iImpact, iImpactForCrits;
 	BOOLEAN        fGonnaHit = FALSE;
 	UINT16         usExpGain = 0;
-	INT8           bMaxDrop;
+	int            bMaxDrop;
 	BOOLEAN        fSurpriseAttack;
 
 	// Deduct points!
@@ -1100,12 +1100,11 @@ static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 			if ( pSoldier->inv[ pSoldier->ubAttackingHand ].bStatus[ 0 ] > USABLE )
 			{
 				bMaxDrop = (iImpact / 20);
+				int adjStatus = pSoldier->inv[pSoldier->ubAttackingHand].bStatus[0] / 10;
 
 				// the duller they get, the slower they get any worse...
-				bMaxDrop = __min( bMaxDrop, pSoldier->inv[ pSoldier->ubAttackingHand ].bStatus[ 0 ] / 10 );
-
 				// as long as its still > USABLE, it drops another point 1/2 the time
-				bMaxDrop = __max( bMaxDrop, 2 );
+				bMaxDrop = adjStatus > 2 ? std::clamp(bMaxDrop, 2, adjStatus) : 2;
 
 				pSoldier->inv[ pSoldier->ubAttackingHand ].bStatus[ 0 ] -= (INT8) Random( bMaxDrop );     // 0 to (maxDrop - 1)
 			}
@@ -1143,7 +1142,7 @@ static void UseBlade(SOLDIERTYPE* const pSoldier, INT16 const sTargetGridNo)
 				{
 					// gain extra exp for aiming, up to the amount from
 					// the difficulty of the attack
-					usExpGain += ( 2 * __min( pSoldier->bAimTime, usExpGain ) );
+					usExpGain += 2 * std::min(int(pSoldier->bAimTime), int(usExpGain));
 				}
 
 				// base pts extra for hitting
@@ -1611,7 +1610,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 	else if (ubAmmoType == AMMO_MONSTER)
 	{
 		UINT16 gas = GCM->getWeapon(usItem)->usSmokeEffect;
-		if (gas == NONE) 
+		if (gas == NONE)
 		{
 			return FALSE;
 		}
@@ -2097,7 +2096,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 			pSoldier2 = GetRobotController( pSoldier );
 			if ( pSoldier2 )
 			{
-				iMarksmanship = __max( iMarksmanship, EffectiveMarksmanship( pSoldier2 ) );
+				iMarksmanship = std::max(iMarksmanship, int(EffectiveMarksmanship(pSoldier2)));
 			}
 		}
 	}
@@ -2256,7 +2255,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 			// max with 0 to prevent this being a bonus, for JA2 it's just a penalty to make early enemies easy
 			// CJC note: IDIOT!  This should have been a min.  It's kind of too late now...
 			// CJC 2002-05-17: changed the max to a min to make this work.
-			iChance += __min( 0, gbDiff[ DIFF_ENEMY_TO_HIT_MOD ][ SoldierDifficultyLevel( pSoldier ) ] );
+			iChance += std::min(INT8(0), gbDiff[DIFF_ENEMY_TO_HIT_MOD][SoldierDifficultyLevel(pSoldier)]);
 		}
 	}
 
@@ -2338,11 +2337,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 			iScopeBonus = (iScopeBonus * WEAPON_STATUS_MOD(pInHand->bAttachStatus[bAttachPos])) / 100;
 
 			// reduce effective range by the bonus obtained from the scope
-			iSightRange -= iScopeBonus;
-			if (iSightRange < 1)
-			{
-				iSightRange = 1;
-			}
+			iSightRange = std::max(iSightRange - iScopeBonus, 1);
 		}
 
 		bAttachPos = FindAttachment( pInHand, LASERSCOPE );
@@ -2498,7 +2493,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 					{
 						// reduce chance to hit with distance to the prone/immersed target
 						iPenalty = 3 * ((iRange - POINT_BLANK_RANGE) / CELL_X_SIZE); // penalty -3%/tile
-						iPenalty = __min( iPenalty, AIM_PENALTY_TARGET_PRONE );
+						iPenalty = std::min(iPenalty, AIM_PENALTY_TARGET_PRONE);
 
 						iChance -= iPenalty;
 					}
@@ -2528,7 +2523,7 @@ UINT32 CalcChanceToHitGun(SOLDIERTYPE *pSoldier, UINT16 sGridNo, UINT8 ubAimTime
 		}
 
 		// penalty for amount that enemy has moved
-		iPenalty = __min( ((pTarget->bTilesMoved * 3) / 2), 30 );
+		iPenalty = std::min(((pTarget->bTilesMoved * 3) / 2), 30);
 		iChance -= iPenalty;
 
 		// if target sees us, he may have a chance to dodge before the gun goes off
@@ -3633,7 +3628,7 @@ INT32 CalcMaxTossRange(const SOLDIERTYPE* pSoldier, UINT16 usItem, BOOLEAN fArme
 		{
 			// start with the range based on the soldier's strength and the item's weight
 			INT32 iThrowingStrength = ( EffectiveStrength( pSoldier ) * 2 + 100 ) / 3;
-			iRange = 2 + ( iThrowingStrength / __min( ( 3 + (GCM->getItem(usItem)->getWeight()) / 3 ), 4 ) );
+			iRange = 2 + ( iThrowingStrength / std::min(( 3 + (GCM->getItem(usItem)->getWeight()) / 3 ), 4 ));
 		}
 		else
 		{	// not as aerodynamic!

@@ -1022,7 +1022,7 @@ static UINT8 GetLocationModifier(UINT8 ubSoldierClass);
 // income, and playing difficulty level.  Used for generating soldier stats, equipment, and AI skill level.
 INT8 CalcDifficultyModifier( UINT8 ubSoldierClass )
 {
-	INT8 bDiffModifier = 0;
+	int bDiffModifier = 0;
 	UINT8 ubProgress;
 	UINT8 ubProgressModifier;
 
@@ -1088,13 +1088,9 @@ INT8 CalcDifficultyModifier( UINT8 ubSoldierClass )
 	// adjust for map location
 	bDiffModifier += GetLocationModifier( ubSoldierClass );
 
-
 	// should be no way to go over 100, although it's possible to go below 0 when just starting on easy
-	// Assert( bDiffModifier <= 100 );
-
 	// limit the range of the combined factors to between 0 and 100
-	bDiffModifier = __max(   0, bDiffModifier );
-	bDiffModifier = __min( 100, bDiffModifier );
+	bDiffModifier = std::clamp(bDiffModifier, 0, 100);
 
 	// DON'T change this function without carefully considering the impact on GenerateRandomEquipment(),
 	// CreateDetailedPlacementGivenBasicPlacementInfo(), and SoldierDifficultyLevel().
@@ -1329,15 +1325,13 @@ void CreateDetailedPlacementGivenBasicPlacementInfo( SOLDIERCREATE_STRUCT *pp, B
 	// clamp experience level to 1-9 or the externalised values (elites only)
 	if (ubSoldierClass == SOLDIER_CLASS_ELITE)
 	{
-		pp->bExpLevel = MAX(gamepolicy(enemy_elite_minimum_level), pp->bExpLevel);
-		pp->bExpLevel = MIN(gamepolicy(enemy_elite_maximum_level), pp->bExpLevel);
+		pp->bExpLevel = std::clamp(pp->bExpLevel, gamepolicy(enemy_elite_minimum_level), gamepolicy(enemy_elite_maximum_level));
 	} else {
-		pp->bExpLevel = MAX(1, pp->bExpLevel); //minimum exp. level of 1
-		pp->bExpLevel = MIN(9, pp->bExpLevel); //maximum exp. level of 9
+		pp->bExpLevel = std::clamp(int(pp->bExpLevel), 1, 9); //minimum level of 1, maximum of 9
 	}
 
 	ubStatsLevel = pp->bExpLevel + bStatsModifier;
-	ubStatsLevel = MIN( 9, ubStatsLevel );	//maximum stats level of 9
+	ubStatsLevel = std::min(9, int(ubStatsLevel));	//maximum stats level of 9
 
 	//Set the minimum base attribute
 	bBaseAttribute = 49 + ( 4 * ubStatsLevel );
@@ -1665,9 +1659,7 @@ void ModifySoldierAttributesWithNewRelativeLevel( SOLDIERTYPE *s, INT8 bRelative
 
 	// Rel level 0: Lvl 1, 1: Lvl 2-3, 2: Lvl 4-5, 3: Lvl 6-7, 4: Lvl 8-9
 	s->bExpLevel = (INT8)(2 * bRelativeAttributeLevel + Random(2));
-
-	s->bExpLevel = MAX( 1, s->bExpLevel ); //minimum level of 1
-	s->bExpLevel = MIN( 9, s->bExpLevel ); //maximum level of 9
+	s->bExpLevel = std::clamp(int(s->bExpLevel), 1, 9); //minimum level of 1, maximum of 9
 
 	//Set the minimum base attribute
 	bBaseAttribute = 49 + ( 4 * s->bExpLevel );
@@ -1839,8 +1831,6 @@ void RandomizeRelativeLevel( INT8 *pbRelLevel, UINT8 ubSoldierClass )
 {
 	UINT8 ubLocationModifier;
 	INT8 bRollModifier;
-	INT8 bRoll, bAdjustedRoll;
-
 
 	// We now adjust the relative level by location on the map, so enemies in NE corner will be generally very
 	// crappy (lots of bad and poor, with avg about best), while enemies in the SW will have lots of great and
@@ -1854,16 +1844,15 @@ void RandomizeRelativeLevel( INT8 *pbRelLevel, UINT8 ubSoldierClass )
 	bRollModifier = ( INT8 ) ( ubLocationModifier / ( DIFF_FACTOR_PALACE_DISTANCE / 10 ) ) - 5;
 
 	// roll a number from 0 to 9
-	bRoll = ( INT8 ) Random( 10 );
+	INT8 bRoll = ( INT8 ) Random( 10 );
 
 	// adjust by the modifier (giving -5 to +14)
-	bAdjustedRoll = bRoll + bRollModifier;
+	int bAdjustedRoll = bRoll + bRollModifier;
 
 	if ( SOLDIER_CLASS_MILITIA( ubSoldierClass ) )
 	{
 		// Militia never get to roll bad/great results at all (to avoid great equipment drops from them if killed)
-		bAdjustedRoll = __max( 1, bAdjustedRoll );
-		bAdjustedRoll = __min( 8, bAdjustedRoll );
+		bAdjustedRoll = std::clamp(bAdjustedRoll, 1, 8);
 		if( IsAutoResolveActive() )
 		{
 			//Artificially strengthen militia strength for sake of gameplay
@@ -1873,8 +1862,7 @@ void RandomizeRelativeLevel( INT8 *pbRelLevel, UINT8 ubSoldierClass )
 	else
 	{
 		// max-min this to a range of 0-9
-		bAdjustedRoll = __max( 0, bAdjustedRoll );
-		bAdjustedRoll = __min( 9, bAdjustedRoll );
+		bAdjustedRoll = std::clamp(bAdjustedRoll, 0, 9);
 		if( IsAutoResolveActive() )
 		{
 			//Artificially weaken enemy/creature strength for sake of gameplay
@@ -2037,7 +2025,7 @@ static void CopyProfileItems(SOLDIERTYPE& s, SOLDIERCREATE_STRUCT const& c)
 			OBJECTTYPE* const slot = &s.inv[slot_id];
 
 			UINT32 const slot_limit  = MoneySlotLimit(slot_id);
-			UINT32 const slot_amount = MIN(money_left, slot_limit);
+			UINT32 const slot_amount = std::min(money_left, slot_limit);
 			CreateMoney(slot_amount, slot);
 			money_left -= slot_amount;
 		}
@@ -2141,13 +2129,11 @@ UINT8 GetPythDistanceFromPalace(const SGPSector& sSector)
 	float fValue = 0.0;
 
 	// grab number of rows and cols
-	sRows = (INT16) (ABS(sSector.x - PALACE_SECTOR_X));
-	sCols = (INT16) (ABS(sSector.y - PALACE_SECTOR_Y));
+	sRows =(INT16)(std::abs(sSector.x - PALACE_SECTOR_X));
+	sCols =(INT16)(std::abs(sSector.y - PALACE_SECTOR_Y));
 
 	// apply Pythagoras's theorem for right-handed triangle:
-	// dist^2 = rows^2 + cols^2, so use the square root to get the distance
-	fValue = ( float )sqrt(( float )(sRows * sRows) + ( float )(sCols * sCols));
-
+	fValue = (float) std::hypot(sRows, sCols);
 	if(  fmod( fValue, 1.0f ) >= 0.50 )
 	{
 		ubDistance = (UINT8)( 1 + fValue );

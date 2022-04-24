@@ -351,9 +351,9 @@ void PrepareEnemyForSectorBattle()
 		gfPendingEnemies = TRUE;
 	}
 
-	UINT8       total_admins;
-	UINT8       total_troops;
-	UINT8       total_elites;
+	int total_admins;
+	int total_troops;
+	int total_elites;
 	SECTORINFO& sector = SectorInfo[gWorldSector.AsByte()];
 	if (sector.uiFlags & SF_USE_MAP_SETTINGS)
 	{ // Count the number of enemy placements in a map and use those
@@ -390,9 +390,9 @@ void PrepareEnemyForSectorBattle()
 	{
 		STLOGE("The total stationary enemy forces in sector {} is {}. (max {})",
 			  gWorldSector.AsShortString(), total_admins + total_troops + total_elites, 32);
-		total_admins = MIN(total_admins, 32);
-		total_troops = MIN(total_troops, 32 - total_admins);
-		total_elites = MIN(total_elites, 32 - total_admins + total_troops);
+		total_admins = std::min(total_admins, 32);
+		total_troops = std::min(total_troops, 32 - total_admins);
+		total_elites = std::min(total_elites, 32 - total_admins + total_troops);
 	}
 
 	sector.ubAdminsInBattle += total_admins;

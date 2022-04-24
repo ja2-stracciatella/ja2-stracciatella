@@ -300,8 +300,8 @@ void DropSmell(SOLDIERTYPE& s)
 			{
 				// same smell; increase the strength to the bigger of the two strengths,
 				// plus 1/5 of the smaller
-				ubStrength = __max( ubStrength, ubOldStrength ) + __min( ubStrength, ubOldStrength ) / 5;
-				ubStrength = __max( ubStrength, SMELL_STRENGTH_MAX );
+				ubStrength = std::max( ubStrength, ubOldStrength ) + std::min( ubStrength, ubOldStrength ) / 5;
+				ubStrength = std::max(ubStrength, UINT8(SMELL_STRENGTH_MAX));
 			}
 			else
 			{
@@ -351,7 +351,7 @@ void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const bl
 	if (Water(gridno)) return;
 
 	// Ensure max strength is okay
-	strength = __min(strength, BLOOD_STRENGTH_MAX);
+	strength = std::min(strength, UINT8(BLOOD_STRENGTH_MAX));
 
 	UINT8 new_strength = 0;
 	MAP_ELEMENT& me = gpWorldLevelData[gridno];
@@ -363,7 +363,7 @@ void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const bl
 			// blood already there... we'll leave the decay time as it is
 			if (BLOOD_FLOOR_TYPE(me.ubBloodInfo) == blood_kind)
 			{ // Combine blood strengths
-				new_strength = __min(old_strength + strength, BLOOD_STRENGTH_MAX);
+				new_strength = std::min(old_strength + strength, BLOOD_STRENGTH_MAX);
 				SET_BLOOD_FLOOR_STRENGTH(me.ubBloodInfo, new_strength);
 			}
 			else
@@ -393,9 +393,9 @@ void InternalDropBlood(GridNo const gridno, INT8 const level, BloodKind const bl
 			// Blood already there, we'll leave the decay time as it is
 			if (BLOOD_ROOF_TYPE(me.ubSmellInfo) == blood_kind)
 			{ // Combine blood strengths
-				new_strength = __max(old_strength, strength) + 1;
+				new_strength = std::max(old_strength, strength) + 1;
 				// make sure the strength is legal
-				new_strength = __max(new_strength, BLOOD_STRENGTH_MAX);
+				new_strength = std::max(new_strength, UINT8(BLOOD_STRENGTH_MAX));
 				SET_BLOOD_ROOF_STRENGTH(me.ubBloodInfo, new_strength);
 			}
 			else

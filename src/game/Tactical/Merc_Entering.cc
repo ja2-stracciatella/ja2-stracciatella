@@ -522,7 +522,7 @@ void HandleHeliDrop( )
 				if( uiSoundSample!=NO_SAMPLE )
 				{
 					iVol=SoundGetVolume( uiSoundSample );
-					iVol=__min( HIGHVOLUME, iVol+5);
+					iVol = std::min(HIGHVOLUME, iVol + 5);
 					SoundSetVolume(uiSoundSample, iVol);
 					if(iVol==HIGHVOLUME)
 							fFadingHeliIn=FALSE;
@@ -537,8 +537,7 @@ void HandleHeliDrop( )
 				if( uiSoundSample!=NO_SAMPLE )
 				{
 					iVol=SoundGetVolume(uiSoundSample);
-
-					iVol=__max( 0, iVol-5);
+					iVol = std::max(0, iVol - 5);
 
 					SoundSetVolume(uiSoundSample, iVol);
 					if(iVol==0)

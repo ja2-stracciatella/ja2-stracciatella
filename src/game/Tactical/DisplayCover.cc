@@ -70,7 +70,7 @@ static INT16                     gsLastVisibleToSoldierGridNo = NOWHERE;
 
 
 static void AddCoverTileToEachGridNo(void);
-static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, INT8 bSearchRange);
+static void CalculateCoverInRadiusAroundGridno(INT16 sTargetGridNo, int bSearchRange);
 static INT8 GetCurrentMercForDisplayCoverStance(void);
 
 
@@ -192,7 +192,7 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(const SOLDIERTYPE* pSoldie
 static SOLDIERTYPE* GetCurrentMercForDisplayCover(void);
 
 
-static void CalculateCoverInRadiusAroundGridno(INT16 const sTargetGridNo, INT8 search_range)
+static void CalculateCoverInRadiusAroundGridno(INT16 const sTargetGridNo, int search_range)
 {
 	//clear out the array first
 	for (INT16 y = 0; y < DC_MAX_COVER_RANGE; ++y)
@@ -208,10 +208,10 @@ static void CalculateCoverInRadiusAroundGridno(INT16 const sTargetGridNo, INT8 s
 	if (search_range > DC_MAX_COVER_RANGE / 2) search_range = DC_MAX_COVER_RANGE / 2;
 
 	// Determine maximum horizontal and vertical limits
-	INT16 const max_left  = MIN(search_range,              sTargetGridNo % MAXCOL);
-	INT16 const max_right = MIN(search_range, MAXCOL - 1 - sTargetGridNo % MAXCOL);
-	INT16 const max_up    = MIN(search_range,              sTargetGridNo / MAXROW);
-	INT16 const max_down  = MIN(search_range, MAXROW - 1 - sTargetGridNo / MAXROW);
+	INT16 const max_left  = std::min(search_range,              sTargetGridNo % MAXCOL);
+	INT16 const max_right = std::min(search_range, MAXCOL - 1 - sTargetGridNo % MAXCOL);
+	INT16 const max_up    = std::min(search_range,              sTargetGridNo / MAXROW);
+	INT16 const max_down  = std::min(search_range, MAXROW - 1 - sTargetGridNo / MAXROW);
 
 	// Find out which tiles around the location are reachable
 	LocalReachableTest(sTargetGridNo, search_range);
@@ -309,7 +309,7 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 										pSoldier->bLevel, bStance, NULL);
 		UINT16 const usMaxRange = WeaponInHand(pOpponent) ? GunRange(pOpponent->inv[HANDPOS]) :
 						GCM->getWeapon(GLOCK_18)->usRange;
-		INT32  const iBulletGetThrough = __min(__max((INT32)(((usMaxRange - usRange) / (FLOAT)usMaxRange + .3) * 100), 0), 100);
+		INT32  const iBulletGetThrough = std::clamp(int(((usMaxRange - usRange) / (FLOAT)usMaxRange + .3) * 100), 0, 100);
 		if (iBulletGetThrough > 5 && iGetThrough > 0)
 		{
 			INT32 const iCover = iGetThrough * iBulletGetThrough / 100;
@@ -329,7 +329,7 @@ static INT8 CalcCoverForGridNoBasedOnTeamKnownEnemies(SOLDIERTYPE const* const p
 	{
 		bPercentCoverForGridno = iTotalCoverPoints / bNumEnemies;
 		INT32 const iTemp = bPercentCoverForGridno - (iHighestValue / bNumEnemies) + iHighestValue;
-		bPercentCoverForGridno = 100 - __min(iTemp, 100);
+		bPercentCoverForGridno = std::min(0, 100 - iTemp);
 	}
 	return bPercentCoverForGridno;
 }
@@ -437,7 +437,7 @@ void DisplayRangeToTarget(SOLDIERTYPE* s, INT16 const sTargetGridNo)
 }
 
 static void AddVisibleToSoldierToEachGridNo(void);
-static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSearchRange);
+static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, int bSearchRange);
 
 
 void DisplayGridNoVisibleToSoldierGrid( )
@@ -491,7 +491,7 @@ static INT8 CalcIfSoldierCanSeeGridNo(const SOLDIERTYPE* pSoldier, INT16 sTarget
 static BOOLEAN IsTheRoofVisible(INT16 sGridNo);
 
 
-static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSearchRange)
+static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, int bSearchRange)
 {
 	INT16   sMaxLeft, sMaxRight, sMaxUp, sMaxDown, sXOffset, sYOffset;
 	INT16   sGridNo;
@@ -509,12 +509,12 @@ static void CalculateVisibleToSoldierAroundGridno(INT16 sTargetGridNo, INT8 bSea
 
 
 	// determine maximum horizontal limits
-	sMaxLeft  = MIN( bSearchRange,( sTargetGridNo % MAXCOL ));
-	sMaxRight = MIN( bSearchRange,MAXCOL - (( sTargetGridNo % MAXCOL ) + 1));
+	sMaxLeft  = std::min(bSearchRange, sTargetGridNo % MAXCOL);
+	sMaxRight = std::min(bSearchRange, MAXCOL - ((sTargetGridNo % MAXCOL) + 1));
 
 	// determine maximum vertical limits
-	sMaxUp   = MIN( bSearchRange,( sTargetGridNo / MAXROW ));
-	sMaxDown = MIN( bSearchRange,MAXROW - (( sTargetGridNo / MAXROW ) + 1));
+	sMaxUp   = std::min(bSearchRange, (sTargetGridNo / MAXROW));
+	sMaxDown = std::min(bSearchRange, MAXROW - ((sTargetGridNo / MAXROW) + 1));
 
 	const SOLDIERTYPE* const pSoldier = GetCurrentMercForDisplayCover();
 

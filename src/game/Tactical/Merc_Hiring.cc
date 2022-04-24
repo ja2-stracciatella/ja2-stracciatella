@@ -456,11 +456,11 @@ static INT16 StrategicPythSpacesAway(INT16 sOrigin, INT16 sDest)
 {
 	SGPSector delta = SGPSector::FromStrategicIndex(sOrigin) - SGPSector::FromStrategicIndex(sDest);
 
-	delta.x = ABS(delta.x);
-	delta.y = ABS(delta.y);
+	delta.x = std::abs(delta.x);
+	delta.y = std::abs(delta.y);
 
 	// apply Pythagoras's theorem for right-handed triangle:
-	return (INT16) sqrt((double) (delta.x * delta.x + delta.y * delta.y));
+	return (INT16) std::hypot(delta.x, delta.y);
 }
 
 
