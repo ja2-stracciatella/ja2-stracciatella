@@ -15,7 +15,7 @@ static inline MERCPROFILESTRUCT& GetProfile(ProfileID const id)
 {
 	if (id < lengthof(gMercProfiles))
 		return gMercProfiles[id];
-	SLOGA("invalid profile id %d", id);
+	SLOGA("invalid profile id {}", id);
 	abort();
 }
 

@@ -8003,7 +8003,7 @@ static void RestorePreviousPaths(void)
 			else
 			{
 				// invalid pSoldier - that guy can't possibly be moving, he's on a non-vehicle assignment!
-				SLOGA("RestorePreviousPaths: invalid pSoldier: %d", pSoldier->ubID);
+				SLOGA("RestorePreviousPaths: invalid pSoldier: {}", pSoldier->ubID);
 				continue;
 			}
 

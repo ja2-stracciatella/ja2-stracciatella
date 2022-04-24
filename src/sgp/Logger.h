@@ -34,9 +34,6 @@ template <size_t p> constexpr const char* ToRelativePath(const char* filename)
 /** Print error message macro. */
 #define SLOGE(FORMAT, ...) LogMessage(false, LogLevel::Error, __FILENAME__, FORMAT, ##__VA_ARGS__)
 
-/** Print error message macro and assert if ENABLE_ASSERTS is defined. */
-#define SLOGA(FORMAT, ...) LogMessage(true, LogLevel::Error, __FILENAME__, FORMAT, ##__VA_ARGS__)
-
 /*
 
    As above, but for string_theory style formatted strings.
@@ -61,6 +58,7 @@ constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Arg
 #define STLOGE(...) LogMessageST(false, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
 
 /** Print error message macro and assert if ENABLE_ASSERTS is defined. */
+#define SLOGA(...) LogMessageST(true, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
 #define STLOGA(...) LogMessageST(true,  LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
 
 #endif//SGP_LOGGER_H_

@@ -2872,7 +2872,7 @@ static SOLDIERCELL* ChooseTarget(SOLDIERCELL* pAttacker)
 		}
 		if( !IsBattleOver() )
 		{
-			SLOGA("Please send PRIOR save and screenshot of this message. iAvailableTargets %d, index %d, iRandom %d, defence %d. ",
+			SLOGA("Please send PRIOR save and screenshot of this message. iAvailableTargets {}, index {}, iRandom {}, defence {}. ",
 				iAvailableTargets, index, iRandom, gpAR->usPlayerDefence);
 		}
 	}

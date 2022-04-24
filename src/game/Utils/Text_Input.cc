@@ -331,7 +331,7 @@ void SetInputFieldString(UINT8 ubField, const ST::string& str)
 	}
 	else
 	{
-		SLOGA("Attempting to illegally set text into user field %d", curr->ubID);
+		SLOGA("Attempting to illegally set text into user field {}", curr->ubID);
 	}
 }
 

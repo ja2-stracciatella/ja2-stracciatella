@@ -1092,7 +1092,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		{
 			if (!g.pPlayerList)
 			{ // Nobody here, better just get out now
-				SLOGA("Player group %d arrived in sector empty.", g.ubGroupID);
+				SLOGA("Player group {} arrived in sector empty.", g.ubGroupID);
 				return;
 			}
 		}
@@ -1654,7 +1654,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	SGPSector delta = wp->sSector - pGroup->ubSector;
 	if (delta.x && delta.y)
 	{ //Can't move diagonally!
-		SLOGA("Attempting to move to waypoint in a diagonal direction from sector %d,%d to sector %d,%d",
+		SLOGA("Attempting to move to waypoint in a diagonal direction from sector {},{} to sector {},{}",
 			pGroup->ubSector.x, pGroup->ubSector.y, wp->sSector.x, wp->sSector.y);
 	}
 	//Clip dx/dy value so that the move is for only one sector.
@@ -1680,7 +1680,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	}
 	else
 	{
-		SLOGA("InitiateGroupMovementToNextSector: Attempting to move to waypoint %d, %d that you are already at!", wp->sSector.x, wp->sSector.y);
+		SLOGA("InitiateGroupMovementToNextSector: Attempting to move to waypoint {}, {} that you are already at!", wp->sSector.x, wp->sSector.y);
 		return;
 	}
 	//All conditions for moving to the next waypoint are now good.

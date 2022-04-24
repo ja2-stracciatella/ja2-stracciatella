@@ -894,7 +894,7 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 {
 	if (len < 0)
 	{
-		SLOGA("SoundCallback: unexpected negative len %d", len);
+		SLOGA("SoundCallback: unexpected negative len {}", len);
 		return;
 	}
 

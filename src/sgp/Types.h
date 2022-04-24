@@ -10,7 +10,7 @@
 #include "Logger.h"
 
 #define UNIMPLEMENTED \
-	SLOGA("===> %s:%d: %s() is not implemented", __FILE__, __LINE__, __func__);
+	SLOGA("===> {}:{}: {}() is not implemented", __FILE__, __LINE__, __func__);
 
 #ifdef WITH_FIXMES
 	#define FIXME \

@@ -327,7 +327,7 @@ static void IncrementStat(INT32 iStatToIncrement)
 		case MEDICAL_SKILL:        val = &iCurrentMedical;     break;
 		case MECHANICAL_SKILL:     val = &iCurrentMechanical;  break;
 		case EXPLOSIVE_SKILL:      val = &iCurrentExplosives;  break;
-		default:                   SLOGA("unexpected stat %d", iStatToIncrement); return;
+		default:                   SLOGA("unexpected stat {}", iStatToIncrement); return;
 	}
 
 	if (*val == 0)
@@ -369,7 +369,7 @@ static void DecrementStat(INT32 iStatToDecrement)
 		case MEDICAL_SKILL:        val = &iCurrentMedical;     may_be_zero = TRUE; break;
 		case MECHANICAL_SKILL:     val = &iCurrentMechanical;  may_be_zero = TRUE; break;
 		case EXPLOSIVE_SKILL:      val = &iCurrentExplosives;  may_be_zero = TRUE; break;
-		default:                   SLOGA("unexpected stat %d", iStatToDecrement); return;
+		default:                   SLOGA("unexpected stat {}", iStatToDecrement); return;
 	}
 
 	if (*val > MIN_ATTRIBUTE_POINTS)

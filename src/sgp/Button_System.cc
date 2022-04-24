@@ -77,7 +77,7 @@ static void AssertFailIfIdenticalButtonAttributesFound(const GUI_BUTTON* b)
 		 * created button already exists.  Placing a break point on the following
 		 * assert will allow the coder to easily isolate the case!
 		 */
-		SLOGA("Attempting to create a button that has already been created (existing buttonID %d).", c->IDNum);
+		SLOGA("Attempting to create a button that has already been created (existing buttonID {}).", c->IDNum);
 	}
 }
 
