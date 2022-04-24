@@ -1458,9 +1458,9 @@ void ShowMapEdgepoints()
 	}
 	else
 	{
-		SLOGD("Showing display of map edgepoints (%d illegal primary, %d illegal secondary)", n_illegal1, n_illegal2);
+		SLOGD("Showing display of map edgepoints ({} illegal primary, {} illegal secondary)", n_illegal1, n_illegal2);
 	}
-	SLOGD("N:%d:%d E:%d:%d S:%d:%d W:%d:%d",
+	SLOGD("N:{}:{} E:{}:{} S:{}:{} W:{}:{}",
 		static_cast<int>(gps1stNorthEdgepointArray.size()), static_cast<int>(gps2ndNorthEdgepointArray.size()),
 		static_cast<int>(gps1stEastEdgepointArray.size()),  static_cast<int>(gps2ndEastEdgepointArray.size()),
 		static_cast<int>(gps1stSouthEdgepointArray.size()), static_cast<int>(gps2ndSouthEdgepointArray.size()),

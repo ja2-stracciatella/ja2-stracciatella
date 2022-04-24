@@ -3708,7 +3708,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 			// Increment attacker count...
 			gTacticalStatus.ubAttackBusyCount++;
-			SLOGD("INcremtning ABC: Throw item to %d", gTacticalStatus.ubAttackBusyCount);
+			SLOGD("INcremtning ABC: Throw item to {}", gTacticalStatus.ubAttackBusyCount);
 
 			// Given our gridno, throw grenate!
 			CalculateLaunchItemParamsForThrow(gpItemPointerSoldier, sGridNo, gsInterfaceLevel, gsInterfaceLevel * 256 + sEndZ, gpItemPointer, 0, ubThrowActionCode, target);

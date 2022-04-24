@@ -186,7 +186,7 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 			gsCoverValue[sCurrGridNo]++;
 		}
 
-		SLOGD("Roof code visits %d", sCurrGridNo);
+		SLOGD("Roof code visits {}", sCurrGridNo);
 #endif
 		if (sCurrGridNo == sPrevGridNo)
 		{

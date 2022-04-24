@@ -588,29 +588,17 @@ static void AutoProcessSchedule(SCHEDULENODE* pSchedule, INT32 index)
 
 	if(GameMode::getInstance()->isEditorMode())
 	{
+		ST::string maybeName = "civ";
 		if ( pSoldier->ubProfile != NO_PROFILE )
 		{
-				SLOGD("Autoprocessing schedule action %s for %s (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
-				gszScheduleActions[ pSchedule->ubAction[ index ] ].c_str(),
-				pSoldier->name.c_str(),
-				pSoldier->ubID,
-				GetWorldHour(),
-				guiMin,
-				pSchedule->usTime[ index ] / 60,
-				pSchedule->usTime[ index ] % 60,
-				pSchedule->usData1[ index ]);
+			maybeName = pSoldier->name;
 		}
-		else
-		{
-			SLOGD("Autoprocessing schedule action %s for civ (%d) at time %02ld:%02ld (set for %02d:%02d), data1 = %d",
-				gszScheduleActions[ pSchedule->ubAction[ index ] ].c_str(),
-				pSoldier->ubID,
-				GetWorldHour(),
-				guiMin,
-				pSchedule->usTime[ index ] / 60,
-				pSchedule->usTime[ index ] % 60,
-				pSchedule->usData1[ index ]);
-		}
+		SLOGD("Autoprocessing schedule action {} for {} ({}) at time {02d}:{02d} (set for {02d}:{02d}), data1 = {}",
+			gszScheduleActions[pSchedule->ubAction[index]],
+			maybeName, pSoldier->ubID,
+			GetWorldHour(), guiMin,
+			pSchedule->usTime[index] / 60, pSchedule->usTime[index] % 60,
+			pSchedule->usData1[index]);
 	}
 
 	// always assume the merc is going to wake, unless the event is a sleep

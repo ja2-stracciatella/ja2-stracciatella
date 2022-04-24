@@ -1040,7 +1040,7 @@ static BOOLEAN EvaluateGroupSituation(GROUP* pGroup)
 						{ //Fill up the queen's guards, then apply the rest to the reinforcement pool
 							giReinforcementPool += MAX_STRATEGIC_TEAM_SIZE - pSector->ubNumElites;
 							pSector->ubNumElites = MAX_STRATEGIC_TEAM_SIZE;
-							SLOGD("%d reinforcements have arrived to garrison queen's sector.  The excess troops will be relocated to the reinforcement pool.",
+							SLOGD("{} reinforcements have arrived to garrison queen's sector.  The excess troops will be relocated to the reinforcement pool.",
 									pGroup->ubGroupSize );
 						}
 						else
@@ -2514,7 +2514,7 @@ void LoadStrategicAI(HWFILE const hFile)
 			}
 		}
 	}
-	SLOGD("Restoring saved game at Day %02d, %02d:%02d ", GetWorldDay(), GetWorldHour(), GetWorldMinutesInDay()%60 );
+	SLOGD("Restoring saved game at Day {02d}, {02d}:{02d} ", GetWorldDay(), GetWorldHour(), GetWorldMinutesInDay());
 
 	//Update the version number to the most current.
 	gubSAIVersion = SAI_VERSION;
@@ -2544,15 +2544,15 @@ static void EvolveQueenPriorityPhase(BOOLEAN fForceChange)
 
 	if( gubQueenPriorityPhase > ubNewPhase )
 	{
-		SLOGD("The queen's defence priority has decreased from %d0%% to %d0%%.", gubQueenPriorityPhase, ubNewPhase );
+		SLOGD("The queen's defence priority has decreased from {}0% to {}0%.", gubQueenPriorityPhase, ubNewPhase);
 	}
 	else if( gubQueenPriorityPhase < ubNewPhase )
 	{
-		SLOGD("The queen's defence priority has increased from %d0%% to %d0%%.", gubQueenPriorityPhase, ubNewPhase );
+		SLOGD("The queen's defence priority has increased from {}0% to {}0%.", gubQueenPriorityPhase, ubNewPhase);
 	}
 	else
 	{
-		SLOGD("The queen's defence priority is the same (%d0%%), but has been forced to update.", gubQueenPriorityPhase );
+		SLOGD("The queen's defence priority is the same ({}0%), but has been forced to update.", gubQueenPriorityPhase);
 	}
 
 	gubQueenPriorityPhase = ubNewPhase;
@@ -2868,7 +2868,7 @@ void ExecuteStrategicAIAction(UINT16 usActionCode, const SGPSector* sMap)
 			gubNumAwareBattles = saipolicy_by_diff(num_aware_battles);
 			break;
 		default:
-			SLOGD("QueenAI failed to handle action code %d.", usActionCode );
+			SLOGD("QueenAI failed to handle action code {}.", usActionCode);
 			break;
 	}
 }

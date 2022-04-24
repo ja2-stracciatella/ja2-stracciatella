@@ -1013,7 +1013,7 @@ void AddPossiblePendingEnemiesToBattle()
 
 static void AddEnemiesToBattle(GROUP const& g, UINT8 const strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites)
 {
-	SLOGD("Enemy reinforcements have arrived! (%d admins, %d troops, %d elite)",
+	SLOGD("Enemy reinforcements have arrived! ({} admins, {} troops, {} elite)",
 				n_admins, n_troops, n_elites);
 
 	UINT8 desired_direction;

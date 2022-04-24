@@ -874,10 +874,10 @@ void RaiseWorldLand( )
 			if (pTileElement->fType==FIRSTCLIFF)
 			{
 				fSomethingRaised = TRUE;
-				SLOGD("Cliff found at count=%d", cnt);
+				SLOGD("Cliff found at count={}", cnt);
 				if( pTileElement->ubNumberOfTiles > 1 )
 				{
-					SLOGD("Cliff has %d children", pTileElement->ubNumberOfTiles);
+					SLOGD("Cliff has {} children", pTileElement->ubNumberOfTiles);
 					for (ubLoop = 0; ubLoop < pTileElement->ubNumberOfTiles; ubLoop++)
 					{
 						usIndex=pStruct->usIndex;
@@ -1000,7 +1000,7 @@ void RaiseWorldLand( )
 			gpWorldLevelData[cnt+((WORLD_ROWS-1)-(cnt%WORLD_ROWS))].uiFlags|=MAPELEMENT_RAISE_LAND_START;
 			//gpWorldLevelData[cnt].uiFlags|=MAPELEMENT_RAISE_LAND_START;
 			//gpWorldLevelData[cnt-1].uiFlags|=MAPELEMENT_RAISE_LAND_START;
-			SLOGD("Land Raise start at count: %d is raised (maybe count : %d)", cnt, cnt - 1 );
+			SLOGD("Land Raise start at count: {} is raised (maybe count : {})", cnt, cnt - 1);
 		}
 	}
 
@@ -1057,7 +1057,7 @@ void RaiseWorldLand( )
 
 		if( iNumberOfRaises >= 0 )
 		{
-			SLOGD("Land Raise start at count: %d is raised", cnt );
+			SLOGD("Land Raise start at count: {} is raised", cnt);
 			gpWorldLevelData[cnt].sHeight=iNumberOfRaises * WORLD_CLIFF_HEIGHT;
 		}
 	}

@@ -136,7 +136,7 @@ void MercDailyUpdate()
 	// if its the first day, leave
 	if (GetWorldDay() == 1) return;
 
-	SLOGD("%s - Doing MercDailyUpdate", WORLDTIMESTR.c_str());
+	SLOGD("{} - Doing MercDailyUpdate", WORLDTIMESTR);
 
 	/* if the death rate is very low (this is independent of mercs' personal
 	 * deathrate tolerances) */

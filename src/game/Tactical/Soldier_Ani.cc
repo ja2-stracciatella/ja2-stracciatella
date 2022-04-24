@@ -1673,7 +1673,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 
 								default:
 									// IF we are here - something is wrong - we should have a death animation here
-									SLOGD("Death sequence needed for animation %d",
+									SLOGD("Death sequence needed for animation {}",
 										pSoldier->usAnimState);
 									return TRUE;
 							}
@@ -3235,7 +3235,7 @@ BOOLEAN CheckForAndHandleSoldierDyingNotFromHit( SOLDIERTYPE *pSoldier )
 			case BLOODCAT_HIT:               state = BLOODCAT_DYING;        break;
 
 			default:
-				SLOGD("Death state %d has no death hit", pSoldier->usAnimState);
+				SLOGD("Death state {} has no death hit", pSoldier->usAnimState);
 			{
 				BOOLEAN fMadeCorpse;
 				CheckForAndHandleSoldierDeath( pSoldier, &fMadeCorpse );
@@ -3420,7 +3420,7 @@ void HandleCheckForDeathCommonCode(SOLDIERTYPE* const pSoldier)
 
 		default:
 			// IF we are here - something is wrong - we should have a death animation here
-			SLOGD("unconscious hit sequence needed for animation %d", pSoldier->usAnimState);
+			SLOGD("unconscious hit sequence needed for animation {}", pSoldier->usAnimState);
 
 	}
 	// OTHERWISE, GOTO APPROPRIATE STOPANIMATION!
@@ -3452,7 +3452,7 @@ void HandleCheckForDeathCommonCode(SOLDIERTYPE* const pSoldier)
 
 		default:
 			// IF we are here - something is wrong - we should have a death animation here
-			SLOGD("unconscious hit sequence needed for animation %d", pSoldier->usAnimState);
+			SLOGD("unconscious hit sequence needed for animation {}", pSoldier->usAnimState);
 			return;
 	}
 	ChangeSoldierState(pSoldier, state, 0, FALSE);

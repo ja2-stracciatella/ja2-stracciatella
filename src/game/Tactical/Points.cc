@@ -524,7 +524,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 
 	pSoldier->bActionPoints = (INT8)sNewAP;
 
-	SLOGD("Deduct Points (%d at %d) %d %d",
+	SLOGD("Deduct Points ({} at {}) {} {}",
 				pSoldier->ubID, pSoldier->sGridNo, sAPCost, sBPCost);
 
 	if ( AM_A_ROBOT( pSoldier ) )
@@ -839,7 +839,7 @@ static INT16 GetBreathPerAP(SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 
 	if ( !fAnimTypeFound )
 	{
-		SLOGD("Unknown end-of-turn breath anim: %s",
+		SLOGD("Unknown end-of-turn breath anim: {}",
 			gAnimControl[usAnimState].zAnimStr);
 	}
 

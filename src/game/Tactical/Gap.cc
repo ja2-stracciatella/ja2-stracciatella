@@ -18,7 +18,7 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 	// will then allocate and load in the AUDIO_GAP information, while counting
 	// the number of elements loaded
 
-	SLOGD("File is %s", zSoundFile);
+	SLOGD("File is {}", zSoundFile);
 
 	// strip .wav and change to .gap
 	ST::string sFileName(FileMan::replaceExtension(zSoundFile, "gap"));
@@ -54,11 +54,11 @@ static void AudioGapListInit(const char* zSoundFile, AudioGapList* pGapList)
 				gaps[i].start = start;
 				gaps[i].end   = end;
 
-				SLOGD("Gap Start %d and Ends %d", start, end);
+				SLOGD("Gap Start {} and Ends {}", start, end);
 			}
 			Assert(d.getConsumed() == size);
 
-			SLOGD("gap list started from file %s", sFileName.c_str());
+			SLOGD("gap list started from file {}", sFileName);
 
 			delete[] data;
 			return;
@@ -101,7 +101,7 @@ BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	if (i == NULL) return FALSE;
 
 	const UINT32 time = SoundGetPosition(uiSampleNum);
-	SLOGD("Sound Sample Time is %d", time);
+	SLOGD("Sound Sample Time is {}", time);
 
 	// Check to see if we have fallen behind.  If so, catch up
 	const AUDIO_GAP* const end = pGapList->end;
@@ -114,7 +114,7 @@ BOOLEAN PollAudioGap(UINT32 uiSampleNum, AudioGapList* pGapList)
 	if (i->start < time && time < i->end)
 	{
 		// we are within the time frame
-		SLOGD("Gap Started at %d", time);
+		SLOGD("Gap Started at {}", time);
 		return TRUE;
 	}
 	else

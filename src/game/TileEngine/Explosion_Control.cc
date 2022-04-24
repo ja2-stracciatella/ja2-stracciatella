@@ -138,7 +138,7 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 
 
 	gTacticalStatus.ubAttackBusyCount++;
-	SLOGD("Incrementing Attack: Explosion gone off, Count now %d", gTacticalStatus.ubAttackBusyCount);
+	SLOGD("Incrementing Attack: Explosion gone off, Count now {}", gTacticalStatus.ubAttackBusyCount);
 
 	EXPLOSIONTYPE* const e = GetFreeExplosion();
 	if (e == NULL) return;
@@ -765,7 +765,7 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 
 	// Increment attack counter...
 	gTacticalStatus.ubAttackBusyCount++;
-	SLOGD("Incrementing Attack: Explosion dishing out damage, Count now %d", gTacticalStatus.ubAttackBusyCount);
+	SLOGD("Incrementing Attack: Explosion dishing out damage, Count now {}", gTacticalStatus.ubAttackBusyCount);
 
 	sNewWoundAmt = sWoundAmt - std::min(int(sWoundAmt), 35) * ArmourVersusExplosivesPercent(pSoldier) / 100;
 	if ( sNewWoundAmt < 0 )
@@ -1593,7 +1593,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 			{
 				uiTempSpot = uiNewSpot;
 
-				SLOGD("Explosion affects %d", uiNewSpot);
+				SLOGD("Explosion affects {}", uiNewSpot);
 				// ok, do what we do here...
 				if (ExpAffect(sGridNo, uiNewSpot, cnt / 2, usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 				{
@@ -1633,7 +1633,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 							if ( ubKeepGoing )
 							{
 								// ok, do what we do here
-								SLOGD("Explosion affects %d", uiNewSpot);
+								SLOGD("Explosion affects {}", uiNewSpot);
 								if (ExpAffect(sGridNo, uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 								{
 									fRecompileMovement = TRUE;

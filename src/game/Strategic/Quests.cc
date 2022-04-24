@@ -1190,7 +1190,7 @@ void CheckForQuests( UINT32 uiDay )
 {
 	// This function gets called at 8:00 AM time of the day
 
-	SLOGD("Checking For Quests, Day %d", uiDay );
+	SLOGD("Checking For Quests, Day {}", uiDay);
 
 	// -------------------------------------------------------------------------------
 	// QUEST 0 : DELIVER LETTER

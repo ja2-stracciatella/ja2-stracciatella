@@ -2651,7 +2651,7 @@ void LoadMapTileset(TileSetID const id)
 	}
 	else
 	{
-		SLOGD("Tileset %d has no callback function for movement costs. Using default.", id);
+		SLOGD("Tileset {} has no callback function for movement costs. Using default.", id);
 		SetTilesetOneTerrainValues();
 	}
 

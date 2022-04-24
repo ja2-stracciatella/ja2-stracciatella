@@ -1269,7 +1269,7 @@ void EVENT_InitNewSoldierAnim(SOLDIERTYPE* const pSoldier, UINT16 usNewState, UI
 			{
 				if ( usNewState != SWATTING  )
 				{
-					SLOGD("Handling New gridNo for %d: Old %s, New %s",
+					SLOGD("Handling New gridNo for {}: Old {}, New {}",
 						pSoldier->ubID, gAnimControl[pSoldier->usAnimState].zAnimStr,
 						gAnimControl[usNewState].zAnimStr);
 
@@ -2153,7 +2153,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
-		SLOGD("Starting attack, attack count now %d",
+		SLOGD("Starting attack, attack count now {}",
 			gTacticalStatus.ubAttackBusyCount);
 	//}
 
@@ -2186,7 +2186,7 @@ void EVENT_FireSoldierWeapon( SOLDIERTYPE *pSoldier, INT16 sTargetGridNo )
 			pSoldier->bBulletsLeft *= NUM_BUCKSHOT_PELLETS;
 		}
 	}
-	SLOGD("Starting attack, bullets left %d", pSoldier->bBulletsLeft);
+	SLOGD("Starting attack, bullets left {}", pSoldier->bBulletsLeft);
 
 	// Change to fire animation
 	SoldierReadyWeapon(pSoldier, sTargetGridNo, FALSE);
@@ -2334,7 +2334,7 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 			{
 				// Increment the number of people busy doing stuff because of an attack
 				//gTacticalStatus.ubAttackBusyCount++;
-				//SLOGD("Starting attack with 2 guns, attack count now %d", gTacticalStatus.ubAttackBusyCount);
+				//SLOGD("Starting attack with 2 guns, attack count now {}", gTacticalStatus.ubAttackBusyCount);
 
 				return( SHOOT_DUAL_STAND );
 			}
@@ -2415,7 +2415,7 @@ static UINT16 SelectFireAnimation(SOLDIERTYPE* pSoldier, UINT8 ubHeight)
 			{
 				// Increment the number of people busy doing stuff because of an attack
 				//gTacticalStatus.ubAttackBusyCount++;
-				//SLOGD("Starting attack with 2 guns, attack count now %d", gTacticalStatus.ubAttackBusyCount);
+				//SLOGD("Starting attack with 2 guns, attack count now {}", gTacticalStatus.ubAttackBusyCount);
 
 				return( SHOOT_DUAL_CROUCH );
 			}
@@ -2699,7 +2699,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	{
 		// Increment the number of people busy doing stuff because of an attack (busy doing hit anim!)
 		gTacticalStatus.ubAttackBusyCount++;
-		SLOGD("Person got hit, attack count now %d",
+		SLOGD("Person got hit, attack count now {}",
 			gTacticalStatus.ubAttackBusyCount);
 	}
 
@@ -2827,7 +2827,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		{
 			pSoldier = pNewSoldier;
 		}
-		SLOGD("Tried to free up attacker, attack count now %d",
+		SLOGD("Tried to free up attacker, attack count now {}",
 			gTacticalStatus.ubAttackBusyCount);
 	}
 
@@ -2934,7 +2934,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 			case FALLOFF_FORWARD_STOP:       state = FALLOFF_FORWARD_TWITCHNB;   break;
 
 			default:
-				SLOGD("Death state %d has no death hit",
+				SLOGD("Death state {} has no death hit",
 					pSoldier->usAnimState);
 				return;
 		}
@@ -3574,7 +3574,7 @@ BOOLEAN EVENT_InternalGetNewSoldierPath( SOLDIERTYPE *pSoldier, UINT16 sDestGrid
 	if ( fContinue )
 	{
 		// Debug messages
-		SLOGD("Soldier %d: Get new path", pSoldier->ubID);
+		SLOGD("Soldier {}: Get new path", pSoldier->ubID);
 
 		// Set final destination
 		pSoldier->sFinalDestination = sDestGridNo;
@@ -6552,7 +6552,7 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 
 			for ( cnt = 0; cnt < ubNumToFree; cnt++ )
 			{
-				SLOGD("Freeing up attacker of %d (attacker is %d)\n\
+				SLOGD("Freeing up attacker of {} (attacker is {})\n\
 					releasesoldierattacker num to free is %d",
 					pSoldier->ubID, SOLDIER2ID(pSoldier->attacker), ubNumToFree);
 				ReduceAttackBusyCount(pSoldier->attacker, FALSE);
@@ -6680,7 +6680,7 @@ void EVENT_SoldierBeginBladeAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
-		SLOGD("Begin blade attack: ATB  %d", gTacticalStatus.ubAttackBusyCount);
+		SLOGD("Begin blade attack: ATB  {}", gTacticalStatus.ubAttackBusyCount);
 
 	//}
 
@@ -6832,7 +6832,7 @@ void EVENT_SoldierBeginPunchAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, UINT8 
 	//if (gTacticalStatus.uiFlags & INCOMBAT)
 	//{
 		gTacticalStatus.ubAttackBusyCount++;
-		SLOGD("Begin HTH attack: ATB  %d", gTacticalStatus.ubAttackBusyCount);
+		SLOGD("Begin HTH attack: ATB  {}", gTacticalStatus.ubAttackBusyCount);
 
 	//}
 
@@ -6944,7 +6944,7 @@ void EVENT_SoldierBeginKnifeThrowAttack( SOLDIERTYPE *pSoldier, INT16 sGridNo, U
 		gTacticalStatus.ubAttackBusyCount++;
 	//}
 	pSoldier->bBulletsLeft = 1;
-	SLOGD("Starting knifethrow attack, bullets left %d", pSoldier->bBulletsLeft);
+	SLOGD("Starting knifethrow attack, bullets left {}", pSoldier->bBulletsLeft);
 
 	EVENT_InitNewSoldierAnim( pSoldier, THROW_KNIFE, 0 , FALSE );
 
@@ -8131,7 +8131,7 @@ void SoldierCollapse( SOLDIERTYPE *pSoldier )
 
 		if ((gTacticalStatus.uiFlags & INCOMBAT) && (pSoldier->uiStatusFlags & SOLDIER_UNDERAICONTROL))
 		{
-			SLOGD("Ending turn for %d because of error from HandleItem", pSoldier->ubID);
+			SLOGD("Ending turn for {} because of error from HandleItem", pSoldier->ubID);
 			EndAIGuysTurn(*pSoldier);
 		}
 	}
@@ -8630,7 +8630,7 @@ void MercStealFromMerc(SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* const pTa
 		gTacticalStatus.ubAttackBusyCount++;
 		// reset attacking item (hand)
 		pSoldier->usAttackingWeapon = 0;
-		SLOGD("Starting STEAL attack, attack count now %d",
+		SLOGD("Starting STEAL attack, attack count now {}",
 			gTacticalStatus.ubAttackBusyCount);
 
 		SetUIBusy(pSoldier);

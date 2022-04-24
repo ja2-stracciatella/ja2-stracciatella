@@ -138,7 +138,7 @@ void RemoveBullet(BULLET* b)
 
 		// decrement reference to bullet in the firer
 		b->pFirer->bBulletsLeft--;
-		SLOGD("Ending bullet, bullets left %d", b->pFirer->bBulletsLeft);
+		SLOGD("Ending bullet, bullets left {}", b->pFirer->bBulletsLeft);
 
 		if (b->usFlags & BULLET_FLAG_KNIFE)
 		{

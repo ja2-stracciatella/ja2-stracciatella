@@ -705,7 +705,7 @@ static void LoadRottingCorpsesFromTempCorpseFile(const SGPSector& sMap)
 		}
 		if (!AddRottingCorpse(&def))
 		{
-			SLOGD("Failed to add a corpse to GridNo # %d", def.sGridNo);
+			SLOGD("Failed to add a corpse to GridNo # {}", def.sGridNo);
 		}
 	}
 

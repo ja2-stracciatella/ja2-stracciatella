@@ -41,7 +41,7 @@ ST::string* ModPackContentManager::loadDialogQuoteFromFile(const ST::string& fil
 	std::map<ST::string, std::vector<ST::string> >::iterator it = m_dialogQuotesMap.find(jsonFileName);
 	if(it != m_dialogQuotesMap.end())
 	{
-		SLOGD("cached quote %d %s", quote_number, jsonFileName.c_str());
+		SLOGD("cached quote {} {}", quote_number, jsonFileName);
 		return new ST::string(it->second[quote_number].c_str());
 	}
 	else

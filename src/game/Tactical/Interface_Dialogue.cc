@@ -281,7 +281,7 @@ static void InternalInitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIE
 		{
 			gTacticalStatus.uiFlags &= (~ENGAGED_IN_CONV);
 		}
-		SLOGD("Cannot initiate conversation menu.. check for face file for ID: %d.", pDestSoldier->ubProfile );
+		SLOGD("Cannot initiate conversation menu.. check for face file for ID: {}.", pDestSoldier->ubProfile);
 		throw;
 	}
 

@@ -280,7 +280,7 @@ UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UIN
 
 UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max, UINT32 max_instances)
 {
-	SLOGD("playing random Sound: \"%s\"", pFilename);
+	SLOGD("playing random Sound: \"{}\"", pFilename);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
@@ -767,9 +767,9 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		s->uiFlags |= SAMPLE_ALLOCATED;
 
 		if (isStreamed) {
-			SLOGD("SoundLoadDisk success creating file stream for \"%s\"", pFilename);
+			SLOGD("SoundLoadDisk success creating file stream for \"{}\"", pFilename);
 		} else {
-			SLOGD("SoundLoadDisk success creating in-memory stream for \"%s\"", pFilename);
+			SLOGD("SoundLoadDisk success creating in-memory stream for \"{}\"", pFilename);
 		}
 		return s;
 	}
@@ -852,7 +852,7 @@ static void SoundFreeSample(SAMPLETAG* s)
 {
 	if (!(s->uiFlags & SAMPLE_ALLOCATED)) return;
 
-	SLOGD("SoundFreeSample: Freeing sample %d", s - pSampleList);
+	SLOGD("SoundFreeSample: Freeing sample {}", s - pSampleList);
 
 	assert(s->uiInstances == 0);
 

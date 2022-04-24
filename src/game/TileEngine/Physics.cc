@@ -1865,7 +1865,7 @@ void CalculateLaunchItemParamsForThrow(SOLDIERTYPE* const pSoldier, INT16 sGridN
 		}
 
 		// Adjust position, force, angle
-		SLOGD("Throw miss by: %d", bMissBy );
+		SLOGD("Throw miss by: {}", bMissBy);
 
 		// Default to max radius...
 		bMaxRadius = 5;
@@ -2056,7 +2056,7 @@ static BOOLEAN AttemptToCatchObject(REAL_OBJECT* pObject)
 	// base it on...? CC? Dexterity?
 	ubChanceToCatch = 50 + EffectiveDexterity(pObject->target) / 2;
 
-	SLOGD("Chance To Catch: %d", ubChanceToCatch );
+	SLOGD("Chance To Catch: {}", ubChanceToCatch);
 
 	pObject->fCatchCheckDone = TRUE;
 

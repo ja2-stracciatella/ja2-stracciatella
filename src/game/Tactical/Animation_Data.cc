@@ -649,14 +649,14 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 	if (a->hVideoObject != NULL)
 	{
 		// just increment usage counter ( below )
-		SLOGD("Surface Database: Hit %d", usSurfaceIndex);
+		SLOGD("Surface Database: Hit {}", usSurfaceIndex);
 	}
 	else
 	{
 		try
 		{
 			// Load into memory
-			SLOGD("Surface Database: Loading %d", usSurfaceIndex);
+			SLOGD("Surface Database: Loading {}", usSurfaceIndex);
 
 			AutoSGPImage   hImage(CreateImage(a->Filename, IMAGE_ALLDATA));
 			AutoSGPVObject hVObject(AddVideoObjectFromHImage(hImage.get()));
@@ -707,7 +707,7 @@ void LoadAnimationSurface(UINT16 const usSoldierID, UINT16 const usSurfaceIndex,
 	// Increment usage count only if history for soldier is not yet set
 	if (gbAnimUsageHistory[usSurfaceIndex][usSoldierID] == 0)
 	{
-		SLOGD("Surface Database: Incrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
+		SLOGD("Surface Database: Incrementing Usage {} ( Soldier {} )", usSurfaceIndex, usSoldierID);
 		// Increment usage count
 		++a->bUsageCount;
 		// Set history for particular sodlier
@@ -728,13 +728,13 @@ void UnLoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInde
 	}
 	*in_use = 0; // Set history for particular sodlier
 
-	SLOGD("Surface Database: Decrementing Usage %d ( Soldier %d )", usSurfaceIndex, usSoldierID);
+	SLOGD("Surface Database: Decrementing Usage {} ( Soldier {} )", usSurfaceIndex, usSoldierID);
 
 	AnimationSurfaceType* const a         = &gAnimSurfaceDatabase[usSurfaceIndex];
 	INT8*                 const use_count = &a->bUsageCount;
 	--*use_count;
 
-	SLOGD("Surface Database: MercUsage: %d, Global Uasage: %d", *in_use, *use_count);
+	SLOGD("Surface Database: MercUsage: {}, Global Usage: {}", *in_use, *use_count);
 
 	Assert(*use_count >= 0);
 	if (*use_count < 0) *use_count = 0;
@@ -742,7 +742,7 @@ void UnLoadAnimationSurface(const UINT16 usSoldierID, const UINT16 usSurfaceInde
 	// Delete if count reched zero
 	if (*use_count == 0)
 	{
-		SLOGD("Surface Database: Unloading Surface: %d", usSurfaceIndex);
+		SLOGD("Surface Database: Unloading Surface: {}", usSurfaceIndex);
 		SGPVObject** const vo = &a->hVideoObject;
 		CHECKV(*vo != NULL);
 		DeleteVideoObject(*vo);

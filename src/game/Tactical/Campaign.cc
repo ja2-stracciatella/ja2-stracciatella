@@ -1315,7 +1315,7 @@ void HourlyProgressUpdate(void)
 		gStrategicStatus.ubHighestProgress = ubCurrentProgress;
 
 		// debug message
-		SLOGD("New player progress record: %d%%", gStrategicStatus.ubHighestProgress );
+		SLOGD("New player progress record: {}%", gStrategicStatus.ubHighestProgress);
 	}
 }
 

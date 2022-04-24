@@ -773,7 +773,7 @@ void IssueHeadMinerQuote(UINT8 const mine_idx, HeadMinerQuote const quote_type)
 	MERCPROFILESTRUCT const& p = GetProfile(miner_data.usProfileId);
 	if (p.bLife < OKLIFE)
 	{
-		SLOGD("Head Miner #%s can't talk (quote #%d)", p.zNickname.c_str(), quote_type);
+		SLOGD("Head Miner #{} can't talk (quote #{})", p.zNickname, quote_type);
 		return;
 	}
 

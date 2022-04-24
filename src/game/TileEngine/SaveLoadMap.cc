@@ -708,7 +708,7 @@ static void SetOpenableStructStatusFromMapTempFile(UINT32 uiMapIndex, BOOLEAN fO
 
 	if( pStructure == NULL )
 	{
-		SLOGD("SetOpenableStructStatusFromMapTempFile( %d, %d ) failed to find the openable struct.", uiMapIndex, fOpened );
+		SLOGD("SetOpenableStructStatusFromMapTempFile( {}, {} ) failed to find the openable struct.", uiMapIndex, fOpened);
 		return;
 	}
 

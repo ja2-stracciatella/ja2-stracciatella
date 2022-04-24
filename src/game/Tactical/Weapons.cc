@@ -1617,7 +1617,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 
 		// Increment attack busy...
 		// gTacticalStatus.ubAttackBusyCount++;
-		// SLOGD("Incrementing Attack: Explosion gone off, COunt now %d", gTacticalStatus.ubAttackBusyCount);
+		// SLOGD("Incrementing Attack: Explosion gone off, COunt now {}", gTacticalStatus.ubAttackBusyCount);
 
 		PlayLocationJA2Sample(sGridNo, CREATURE_GAS_NOISE, HIGHVOLUME, 1);
 
@@ -1661,7 +1661,7 @@ void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, co
 	{
 		// Buddy had died from additional dammage - free up attacker here...
 		ReduceAttackBusyCount(pTargetSoldier->attacker, FALSE);
-		SLOGD("Special effect killed before bullet impact, attack count now %d",
+		SLOGD("Special effect killed before bullet impact, attack count now {}",
 			gTacticalStatus.ubAttackBusyCount);
 	}
 }
