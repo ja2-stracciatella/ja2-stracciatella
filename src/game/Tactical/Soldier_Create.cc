@@ -428,8 +428,7 @@ try
 
 			s->bVehicleID =
 				c.fUseGivenVehicle ? c.bUseGivenVehicleID :
-				// TODO: verify, it's suspicious we pass a z coord instead of gridno
-				(INT8) AddVehicleToList(s->sSector, s->sSector.z, ubVehicleID);
+				(INT8) AddVehicleToList(s->sSector, s->sGridNo, ubVehicleID);
 			SetVehicleValuesIntoSoldierType(s);
 			break;
 		}

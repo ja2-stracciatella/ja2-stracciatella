@@ -1038,7 +1038,7 @@ static void GoToSectorCallback(GUI_BUTTON* btn, INT32 reason)
 			EndFrameBufferRender( );
 			RefreshScreen();
 			SGPSector sector = gubPBSector;
-			// FIXME: suspicious, this ensures gfGotoSectorTransition is set only if the world is not underground — but why would it matter?
+			// NOTE: remove this zeroing if we ever want to support underground auto battle resolution
 			sector.z = 0;
 			if (sector == gWorldSector)
 			{
