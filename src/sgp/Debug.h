@@ -10,6 +10,4 @@
 #define Assert(a)       (a) ? (void)0 : SLOGA("Assertion failed in %s, line %d", __FILE__, __LINE__)
 #define AssertMsg(a, b) (a) ? (void)0 : STLOGA("Assertion failed in {}, line {}:\n{}", __FILE__, __LINE__, b)
 
-const char* String(const char* fmt, ...);
-
 #endif
