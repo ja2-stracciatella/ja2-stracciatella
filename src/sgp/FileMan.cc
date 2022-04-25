@@ -57,7 +57,7 @@ uint64_t FileMan::getFreeSpace(const ST::string& path)
 	if (!Fs_freeSpace(path.c_str(), &bytes))
 	{
 		RustPointer<char> err(getRustError());
-		SLOGW("FileMan::getFreeSpace('{}') failed: %s", path, err.get());
+		SLOGW("FileMan::getFreeSpace('{}') failed: {}", path, err.get());
 		return 0;
 	}
 	return bytes;
