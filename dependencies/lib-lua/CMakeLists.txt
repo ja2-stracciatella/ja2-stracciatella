@@ -1,4 +1,21 @@
 # \file dependencies/lib-lua/CMakeLists.txt
+
+option(LOCAL_LUA_LIB "Download and build Lua instead of searching the system" ON)
+if (NOT LOCAL_LUA_LIB)
+    message(STATUS "Using system Lua")
+    find_package(Lua "5.3" REQUIRED)
+    if (NOT LUA_FOUND)
+        message(FATAL_ERROR "Lua 5.3 not found")
+    endif()
+
+    set(LUA_INCLUDE_DIRS "${LUA_INCLUDE_DIR}" PARENT_SCOPE)
+
+    add_library(lua INTERFACE)
+    target_link_libraries(lua INTERFACE "${LUA_LIBRARY}")
+
+    return()
+endif()
+
 message(STATUS "<lua>")
 
 CMAKE_MINIMUM_REQUIRED(VERSION 3.1)
