@@ -25,6 +25,7 @@ branches:
   only:
     - master
     - nightly
+    - 0.19.x
 
 matrix:
   fast_finish: true
