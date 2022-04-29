@@ -1454,7 +1454,6 @@ void DefaultContentManager::loadTranslationTable()
 	auto fullName = ST::format("{}-{}.json", name, suffix);
 
 	auto json = readJsonDataFileWithSchema(fullName);
-	int count = 0;
 	for (auto& element : json->GetObject())
 	{
 		ST::string c = element.name.GetString();
