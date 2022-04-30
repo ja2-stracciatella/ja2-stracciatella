@@ -4,6 +4,10 @@ option(LOCAL_MINIAUDIO_LIB "Download and build miniaudio instead of searching th
 if (NOT LOCAL_MINIAUDIO_LIB)
     message(STATUS "Using system miniaudio")
 
+    if (NOT DEFINED MINIAUDIO_INCLUDE_DIR)
+        message(FATAL_ERROR "MINIAUDIO_INCLUDE_DIR var not set")
+    endif()
+
     include(CheckIncludeFileCXX)
     set (CMAKE_REQUIRED_INCLUDES "${MINIAUDIO_INCLUDE_DIR}")
 
