@@ -30,6 +30,7 @@ struct RustDelete
 	void operator()(ModManager* ptr) const { ModManager_destroy(ptr); }
 	void operator()(Mod* ptr) const { Mod_destroy(ptr); }
 	void operator()(SchemaManager* ptr) const { SchemaManager_destroy(ptr); }
+	void operator()(SubProcess* ptr) const { SubProcess_destroy(ptr); }
 };
 
 /// Alias to a std::unique_ptr that deletes with RustDelete.

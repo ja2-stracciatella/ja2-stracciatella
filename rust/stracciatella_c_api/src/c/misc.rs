@@ -4,7 +4,6 @@
 
 use std::env;
 use std::ffi::CString;
-use std::process::Command;
 use std::ptr;
 
 use stracciatella::config::EngineOptions;
@@ -13,7 +12,6 @@ use stracciatella::get_assets_dir;
 use stracciatella::guess::guess_vanilla_version;
 
 use crate::c::common::*;
-use crate::c::vec::VecCString;
 
 /// Sets the global JNI env for Android
 #[no_mangle]
@@ -153,41 +151,6 @@ pub extern "C" fn checkIfRelativePathExists(
     path.exists()
 }
 
-/// Executes a command.
-/// Sets the rust error.
-#[no_mangle]
-pub extern "C" fn Command_execute(program: *const c_char, args: *mut VecCString) -> bool {
-    forget_rust_error();
-    let program = path_buf_from_c_str_or_panic(unsafe_c_str(program));
-    let args: Vec<_> = unsafe_ref(args)
-        .inner
-        .iter()
-        .map(|x| path_buf_from_c_str_or_panic(x))
-        .collect();
-    let status_result = Command::new(&program).args(&args).status();
-    match status_result {
-        Err(err) => remember_rust_error(format!(
-            "Command_execute {:?} {:?}: failed to execute: {}",
-            program, args, err
-        )),
-        Ok(status) => match status.code() {
-            None => remember_rust_error(format!(
-                "Command_execute {:?} {:?}: terminated by a signal",
-                program, args
-            )),
-            Some(code) => {
-                if code != 0 {
-                    remember_rust_error(format!(
-                        "Command_execute {:?} {:?}: exited with status code {}",
-                        program, args, code
-                    ))
-                }
-            }
-        },
-    }
-    no_rust_error()
-}
-
 /// Gets the path to the assets dir.
 /// Can be set via EXTRA_DATA_DIR env variable at compilation time
 #[no_mangle]
@@ -211,18 +174,6 @@ pub extern "C" fn Env_currentDir() -> *mut c_char {
             ptr::null_mut()
         }
     }
-}
-
-/// Sets the path to the current directory.
-/// Sets the rust error.
-#[no_mangle]
-pub extern "C" fn Env_setCurrentDir(path: *const c_char) -> bool {
-    forget_rust_error();
-    let path = path_buf_from_c_str_or_panic(unsafe_c_str(path));
-    if let Err(err) = env::set_current_dir(&path) {
-        remember_rust_error(format!("Env_setCurrentDir {:?}: {}", path, err));
-    }
-    no_rust_error()
 }
 
 /// Gets the path to the current executable.

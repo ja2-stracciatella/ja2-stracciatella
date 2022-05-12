@@ -21,6 +21,7 @@ class StracciatellaLauncher {
 public:
   StracciatellaLauncher();
   Fl_Double_Window *stracciatellaLauncher;
+  Fl_Tabs *tabs;
   Fl_Button *editorButton;
   Fl_Button *playButton;
   Fl_Input *gameDirectoryInput;
@@ -44,6 +45,8 @@ public:
   Fl_Box *invalidResolutionLabel;
   Fl_Check_Button *fullscreenCheckbox;
   Fl_Check_Button *playSoundsCheckbox;
+  Fl_Group *logsTab;
+  Fl_Text_Display *logsDisplay;
   Fl_Output *ja2JsonPathOutput;
   Fl_Button *ja2JsonReloadBtn;
   Fl_Button *ja2JsonSaveBtn;

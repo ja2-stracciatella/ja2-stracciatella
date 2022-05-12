@@ -15,8 +15,11 @@
 
 #include <algorithm>
 #include <vector>
+#include <limits>
 
 #define RESOLUTION_SEPARATOR "x"
+
+const double checkGameRunningIntervalSeconds = 1.0;
 
 const Fl_Text_Display::Style_Table_Entry styleTable[] = {
 	{  FL_BLACK,		FL_COURIER_BOLD,	14 }, // A - Header
@@ -51,17 +54,18 @@ const std::vector<VideoScaleQuality> scalingModes = {
 	VideoScaleQuality::PERFECT,
 };
 
+void showError(const ST::string& error) {
+	fl_message_title("Error");
+	fl_alert("%s", error.c_str());
+}
+
 void showRustError() {
 	RustPointer<char> err(getRustError());
 	if (err) {
-		SLOGE("%s", err.get());
-		fl_message_title("Rust error");
-		fl_alert("%s", err.get());
+		STLOGE("{}", err.get());
+		showError(err.get());
 	} else {
-		RustPointer<char> err(getRustError());
-		SLOGE("showRustError: no rust error");
-		fl_message_title("showRustError");
-		fl_alert("no rust error");
+		showError("showRustError called but no rust error is present");
 	}
 }
 
@@ -99,7 +103,7 @@ void Launcher::loadJa2Json() {
 	if (configFolderPath.get() == NULL) {
 		auto rustError = getRustError();
 		if (rustError != NULL) {
-			SLOGE("Failed to find home directory: %s", rustError);
+			STLOGE("Failed to find home directory: {}", rustError);
 		}
 	}
 
@@ -161,6 +165,9 @@ void Launcher::show() {
 	const Fl_PNG_Image icon("logo32.png", logo32_png, 1374);
 	stracciatellaLauncher->icon(&icon);
 	stracciatellaLauncher->show();
+
+	logsDisplay->buffer(logsBuffer);
+	updateLogs();
 }
 
 void Launcher::initializeInputsFromDefaults() {
@@ -227,7 +234,7 @@ void Launcher::initializeInputsFromDefaults() {
 
 	fullscreenCheckbox->value(EngineOptions_shouldStartInFullscreen(this->engineOptions.get()) ? 1 : 0);
 	playSoundsCheckbox->value(EngineOptions_shouldStartWithoutSound(this->engineOptions.get()) ? 0 : 1);
-	update(false, nullptr);
+	update(false);
 }
 
 int Launcher::writeJsonFile() {
@@ -259,11 +266,11 @@ int Launcher::writeJsonFile() {
 	bool success = EngineOptions_write(this->engineOptions.get());
 
 	if (success) {
-		update(false, nullptr);
-		SLOGD("Succeeded writing config file");
+		update(false);
+		STLOGD("Succeeded writing config file");
 		return 0;
 	}
-	SLOGD("Failed writing config file");
+	STLOGD("Failed writing config file");
 	return 1;
 }
 
@@ -301,7 +308,7 @@ void Launcher::openGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 		{
 			ST::string encoded = encodePath(fnfc.filename());
 			window->gameDirectoryInput->value(encoded.c_str());
-			window->update(true, window->gameDirectoryInput);
+			window->update(true);
 			break; // FILE CHOSEN
 		}
 	}
@@ -324,13 +331,16 @@ void Launcher::openSaveGameDirectorySelector(Fl_Widget *btn, void *userdata) {
 		{
 			ST::string encoded = encodePath(fnfc.filename());
 			window->saveGameDirectoryInput->value(encoded.c_str());
-			window->update(true, window->saveGameDirectoryInput);
+			window->update(true);
 			break; // FILE CHOSEN
 		}
 	}
 }
 
 void Launcher::startExecutable(bool asEditor) {
+	if (gameIsRunning()) {
+		return;
+	}
 	// check minimal resolution:
 	if (resolutionIsInvalid()) {
 		fl_message_title("Invalid resolution");
@@ -392,9 +402,56 @@ void Launcher::startExecutable(bool asEditor) {
 	if (asEditor) {
 		VecCString_push(args.get(), "-editor");
 	}
-	bool ok = Command_execute(exePath.get(), args.get());
-	if (!ok) {
-		showRustError();
+	subProcess = std::make_optional(RustPointer<SubProcess>(Subprocess_new(exePath.get(), args.get())));
+	update(false);
+	Launcher::maintainSubProcessState(this);
+}
+
+// Writes logs into log tab
+void Launcher::updateLogs() {
+	RustPointer<char> logPath(Logger_getFilePath("ja2.log"));
+	try {
+		auto logsFd = FileMan::openForReading(logPath.get());
+		auto logs = logsFd->readStringToEnd();
+
+		logsDisplay->buffer()->text(logs.c_str());
+		logsDisplay->scroll(logsBuffer.count_lines(0, logsBuffer.length()) - 1, 0);
+	} catch (const std::runtime_error &ex) {
+		STLOGW("Error reading logs: {}", ex.what());
+	}
+}
+
+void Launcher::maintainSubProcessState(void* userdata) {
+	Launcher* window = static_cast< Launcher* >( userdata );
+	if (window->subProcess) {
+		Subprocess_process(window->subProcess.value().get());
+		if (!Subprocess_isDone(window->subProcess.value().get())) {
+			Fl::add_timeout(checkGameRunningIntervalSeconds, Launcher::maintainSubProcessState, window);
+		} else {
+			auto exitCode = Subprocess_getExitCode(window->subProcess.value().get());
+			if (exitCode != 0) {
+				ST::string error = "JA2 Stracciatella crashed with an unknown error.";
+				if (exitCode == std::numeric_limits<std::int32_t>::min()) {
+					RustPointer<char> err(getRustError());
+					if (err.get() != NULL) {
+						error = ST::format("JA2 Stracciatella crashed with error: {}", err.get());
+					}
+				} else {
+					error = ST::format("JA2 Stracciatella crashed with exit code: {}", exitCode);
+				}
+
+				STLOGE("{}", error);
+				error = ST::format("{}\n\nYou will be taken to the logs tab, where you can investigate the error.", error);
+
+				showError(error);
+
+				window->tabs->value(window->logsTab);
+			}
+
+			window->subProcess = std::nullopt;
+			window->updateLogs();
+			window->update(false);
+		}
 	}
 }
 
@@ -402,7 +459,11 @@ bool Launcher::resolutionIsInvalid() {
 	return resolutionXInput->value() < 640 || resolutionYInput->value() < 480;
 }
 
-void Launcher::update(bool changed, Fl_Widget *widget) {
+bool Launcher::gameIsRunning() {
+	return subProcess ? !Subprocess_isDone(subProcess.value().get()) : false;
+}
+
+void Launcher::update(bool changed) {
 	// invalid resolution warning
 	if (resolutionIsInvalid()) {
 		invalidResolutionLabel->show();
@@ -418,6 +479,20 @@ void Launcher::update(bool changed, Fl_Widget *widget) {
 	} else if (!changed && ja2JsonPathOutput->value()[0] == '*') {
 		ST::string tmp(ja2JsonPathOutput->value() + 1); // remove '*'
 		ja2JsonPathOutput->value(tmp.c_str());
+	}
+
+	if (gameIsRunning()) {
+		tabs->deactivate();
+		playButton->deactivate();
+		editorButton->deactivate();
+		ja2JsonReloadBtn->deactivate();
+		ja2JsonSaveBtn->deactivate();
+	} else {
+		tabs->activate();
+		playButton->activate();
+		editorButton->activate();
+		ja2JsonReloadBtn->activate();
+		ja2JsonSaveBtn->activate();
 	}
 }
 
@@ -476,7 +551,7 @@ void Launcher::guessVersion(Fl_Widget* btn, void* userdata) {
 			resourceVersionIndex += 1;
 		}
 		window->gameVersionInput->value(resourceVersionIndex);
-		window->update(true, window->gameVersionInput);
+		window->update(true);
 		fl_message_title(window->guessVersionButton->label());
 		fl_message("Success!");
 	} else {
@@ -494,12 +569,12 @@ void Launcher::setPredefinedResolution(Fl_Widget* btn, void* userdata) {
 	(void)sscanf(res.c_str(), "%d" RESOLUTION_SEPARATOR "%d", &x, &y);
 	window->resolutionXInput->value(x);
 	window->resolutionYInput->value(y);
-	window->update(true, btn);
+	window->update(true);
 }
 
 void Launcher::widgetChanged(Fl_Widget* widget, void* userdata) {
 	Launcher* window = static_cast< Launcher* >( userdata );
-	window->update(true, widget);
+	window->update(true);
 }
 
 void Launcher::reloadJa2Json(Fl_Widget* widget, void* userdata) {
@@ -632,7 +707,7 @@ void Launcher::enableMods(Fl_Widget* widget, void* userdata) {
 		window->selectEnabledMods(widget, userdata);
 		window->enabledModsBrowser->redraw();
 		window->availableModsBrowser->redraw();
-		window->update(true, widget);
+		window->update(true);
 	}
 }
 
@@ -660,7 +735,7 @@ void Launcher::disableMods(Fl_Widget* widget, void* userdata) {
 		window->selectAvailableMods(widget, userdata);
 		window->enabledModsBrowser->redraw();
 		window->availableModsBrowser->redraw();
-		window->update(true, widget);
+		window->update(true);
 	}
 }
 
@@ -680,7 +755,7 @@ void Launcher::moveUpMods(Fl_Widget* widget, void* userdata) {
 	}
 
 	window->enabledModsBrowser->redraw();
-	window->update(true, widget);
+	window->update(true);
 }
 
 void Launcher::moveDownMods(Fl_Widget* widget, void* userdata) {
@@ -699,7 +774,7 @@ void Launcher::moveDownMods(Fl_Widget* widget, void* userdata) {
 	}
 
 	window->enabledModsBrowser->redraw();
-	window->update(true, widget);
+	window->update(true);
 }
 
 void Launcher::selectGameVersion(Fl_Widget* widget, void* userdata)
@@ -728,5 +803,5 @@ void Launcher::selectGameVersion(Fl_Widget* widget, void* userdata)
 		disableMods(window->disableModsButton, userdata);
 	}
 
-	window->update(true, widget);
+	window->update(true);
 }

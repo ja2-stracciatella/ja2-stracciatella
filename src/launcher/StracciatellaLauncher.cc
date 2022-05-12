@@ -5,8 +5,8 @@
 StracciatellaLauncher::StracciatellaLauncher() {
   { stracciatellaLauncher = new Fl_Double_Window(520, 380, "JA2 Stracciatella Launcher");
     stracciatellaLauncher->user_data((void*)(this));
-    { Fl_Tabs* o = new Fl_Tabs(0, 0, 520, 350);
-      o->align(Fl_Align(FL_ALIGN_TOP_RIGHT));
+    { tabs = new Fl_Tabs(0, 0, 520, 350);
+      tabs->align(Fl_Align(FL_ALIGN_TOP_RIGHT));
       { Fl_Group* o = new Fl_Group(0, 50, 520, 300, "@> Play  ");
         o->labelsize(16);
         o->labelcolor((Fl_Color)24);
@@ -170,9 +170,20 @@ le from the mod with the highest priority is used.");
         } // Fl_Group* o
         o->end();
       } // Fl_Group* o
-      o->end();
-      Fl_Group::current()->resizable(o);
-    } // Fl_Tabs* o
+      { logsTab = new Fl_Group(0, 50, 520, 300, "@square Logs");
+        logsTab->labelcolor((Fl_Color)24);
+        logsTab->hide();
+        { logsDisplay = new Fl_Text_Display(20, 95, 480, 250, "You can view the logs of the latest JA2 Stracciatella execution here. If you \
+want to report a bug, please include them in your bug report.");
+          logsDisplay->box(FL_DOWN_BOX);
+          logsDisplay->align(Fl_Align(133));
+          Fl_Group::current()->resizable(logsDisplay);
+        } // Fl_Text_Display* logsDisplay
+        logsTab->end();
+      } // Fl_Group* logsTab
+      tabs->end();
+      Fl_Group::current()->resizable(tabs);
+    } // Fl_Tabs* tabs
     { Fl_Group* o = new Fl_Group(0, 350, 465520, 30);
       { ja2JsonPathOutput = new Fl_Output(0, 350, 460, 30);
         ja2JsonPathOutput->tooltip("Path to stracciatella engine options");
