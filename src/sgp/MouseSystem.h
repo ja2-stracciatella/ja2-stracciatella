@@ -10,8 +10,7 @@
 //
 // *****************************************************************************
 
-#ifndef _MOUSE_SYSTEM_H_
-#define _MOUSE_SYSTEM_H_
+#pragma once
 
 #include "JA2Types.h"
 #include "Types.h"
@@ -87,68 +86,69 @@ struct MOUSE_REGION
 };
 
 // Mouse region priorities
-#define MSYS_PRIORITY_LOWEST				0
+#define MSYS_PRIORITY_LOWEST			0
 #define MSYS_PRIORITY_LOW				15
-#define MSYS_PRIORITY_NORMAL				31
+#define MSYS_PRIORITY_NORMAL			31
 #define MSYS_PRIORITY_HIGH				63
-#define MSYS_PRIORITY_HIGHEST				127
+#define MSYS_PRIORITY_HIGHEST			127
 
 // Mouse system defines used during updates
 #define MSYS_NO_ACTION					0
-#define MSYS_DO_MOVE					1
-#define MSYS_DO_LBUTTON_DWN				2
-#define MSYS_DO_LBUTTON_UP				4
-#define MSYS_DO_RBUTTON_DWN				8
-#define MSYS_DO_RBUTTON_UP				16
-#define MSYS_DO_LBUTTON_REPEAT				32
-#define MSYS_DO_RBUTTON_REPEAT				64
-#define MSYS_DO_WHEEL_UP       				0x0080
-#define MSYS_DO_WHEEL_DOWN     				0x0100
-#define MSYS_DO_MBUTTON_DWN				0x0200
-#define MSYS_DO_MBUTTON_UP				0x0400
-#define MSYS_DO_MBUTTON_REPEAT				0x0800
+#define MSYS_DO_MOVE					(1 << 0)
+#define MSYS_DO_LBUTTON_DWN				(1 << 1)
+#define MSYS_DO_LBUTTON_UP				(1 << 2)
+#define MSYS_DO_LBUTTON_REPEAT			(1 << 3)
+#define MSYS_DO_RBUTTON_DWN				(1 << 4)
+#define MSYS_DO_RBUTTON_UP				(1 << 5)
+#define MSYS_DO_RBUTTON_REPEAT			(1 << 6)
+#define MSYS_DO_MBUTTON_DWN				(1 << 7)
+#define MSYS_DO_MBUTTON_UP				(1 << 8)
+#define MSYS_DO_MBUTTON_REPEAT			(1 << 9)
+#define MSYS_DO_X1BUTTON_DWN			(1 << 10)
+#define MSYS_DO_X1BUTTON_UP				(1 << 11)
+#define MSYS_DO_X1BUTTON_REPEAT			(1 << 12)
+#define MSYS_DO_X2BUTTON_DWN			(1 << 13)
+#define MSYS_DO_X2BUTTON_UP				(1 << 14)
+#define MSYS_DO_X2BUTTON_REPEAT			(1 << 15)
+#define MSYS_DO_WHEEL_UP       			(1 << 16)
+#define MSYS_DO_WHEEL_DOWN     			(1 << 17)
 
-
-#define MSYS_DO_BUTTONS					(MSYS_DO_LBUTTON_DWN | MSYS_DO_LBUTTON_UP | MSYS_DO_RBUTTON_DWN | MSYS_DO_RBUTTON_UP | MSYS_DO_RBUTTON_REPEAT | MSYS_DO_LBUTTON_REPEAT | MSYS_DO_WHEEL_UP | MSYS_DO_WHEEL_DOWN | MSYS_DO_MBUTTON_DWN | MSYS_DO_MBUTTON_UP | MSYS_DO_MBUTTON_REPEAT)
+#define MSYS_DO_BUTTONS					(MSYS_DO_LBUTTON_DWN | MSYS_DO_LBUTTON_UP | MSYS_DO_RBUTTON_DWN | MSYS_DO_RBUTTON_UP | MSYS_DO_RBUTTON_REPEAT | MSYS_DO_LBUTTON_REPEAT | MSYS_DO_WHEEL_UP | MSYS_DO_WHEEL_DOWN | MSYS_DO_MBUTTON_DWN | MSYS_DO_MBUTTON_UP | MSYS_DO_MBUTTON_REPEAT | MSYS_DO_X1BUTTON_DWN | MSYS_DO_X1BUTTON_UP | MSYS_DO_X1BUTTON_REPEAT | MSYS_DO_X2BUTTON_DWN | MSYS_DO_X2BUTTON_UP | MSYS_DO_X2BUTTON_REPEAT)
 
 // Mouse system button masks
-#define MSYS_LEFT_BUTTON				1
-#define MSYS_RIGHT_BUTTON				2
-#define MSYS_MIDDLE_BUTTON				0x04
+#define MSYS_LEFT_BUTTON			(1 << 0)
+#define MSYS_RIGHT_BUTTON			(1 << 1)
+#define MSYS_MIDDLE_BUTTON			(1 << 2)
+#define MSYS_X1_BUTTON				(1 << 3)
+#define MSYS_X2_BUTTON				(1 << 4)
 
 // Mouse system special values
 #define MSYS_NO_CALLBACK				NULL
 #define MSYS_NO_CURSOR					65534
 
 // Mouse system callback reasons
-#define MSYS_CALLBACK_REASON_NONE			0
-#define MSYS_CALLBACK_REASON_MOVE			2
-#define MSYS_CALLBACK_REASON_LBUTTON_DWN		4
-#define MSYS_CALLBACK_REASON_LBUTTON_UP			8
-#define MSYS_CALLBACK_REASON_RBUTTON_DWN		16
-#define MSYS_CALLBACK_REASON_RBUTTON_UP			32
-#define MSYS_CALLBACK_REASON_BUTTONS			(MSYS_CALLBACK_REASON_LBUTTON_DWN|MSYS_CALLBACK_REASON_LBUTTON_UP|MSYS_CALLBACK_REASON_RBUTTON_DWN|MSYS_CALLBACK_REASON_RBUTTON_UP|MSYS_CALLBACK_REASON_MBUTTON_DWN|MSYS_CALLBACK_REASON_MBUTTON_UP)
-#define MSYS_CALLBACK_REASON_LOST_MOUSE			64
-#define MSYS_CALLBACK_REASON_GAIN_MOUSE			128
-
-#define MSYS_CALLBACK_REASON_LBUTTON_REPEAT		256
-#define MSYS_CALLBACK_REASON_RBUTTON_REPEAT		512
-
-#define MSYS_CALLBACK_REASON_MBUTTON_DWN		0x2000
-#define MSYS_CALLBACK_REASON_MBUTTON_UP			0x4000
-#define MSYS_CALLBACK_REASON_MBUTTON_REPEAT		0x8000
-
-//Kris:  Nov 31, 1999
-//Added support for double clicks.  The DOUBLECLICK event is passed combined with
-//the LBUTTON_DWN event if two LBUTTON_DWN events are detected on the same button/region
-//within the delay defined by MSYS_DOUBLECLICK_DELAY (in milliseconds).  If your button/region
-//supports double clicks and single clicks, make sure the DOUBLECLICK event is checked first (rejecting
-//the LBUTTON_DWN event if detected)
-#define MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK	1024
-
-#define MSYS_CALLBACK_REASON_WHEEL_UP			0x0800
-#define MSYS_CALLBACK_REASON_WHEEL_DOWN			0x1000
-
+#define MSYS_CALLBACK_REASON_NONE					0
+#define MSYS_CALLBACK_REASON_MOVE					(1 << 0)
+#define MSYS_CALLBACK_REASON_LBUTTON_DWN			(1 << 1)
+#define MSYS_CALLBACK_REASON_LBUTTON_UP				(1 << 2)
+#define MSYS_CALLBACK_REASON_LBUTTON_REPEAT			(1 << 3)
+#define MSYS_CALLBACK_REASON_LBUTTON_DOUBLECLICK	(1 << 4)
+#define MSYS_CALLBACK_REASON_RBUTTON_DWN			(1 << 5)
+#define MSYS_CALLBACK_REASON_RBUTTON_UP				(1 << 6)
+#define MSYS_CALLBACK_REASON_RBUTTON_REPEAT			(1 << 7)
+#define MSYS_CALLBACK_REASON_MBUTTON_DWN			(1 << 8)
+#define MSYS_CALLBACK_REASON_MBUTTON_UP				(1 << 9)
+#define MSYS_CALLBACK_REASON_MBUTTON_REPEAT			(1 << 10)
+#define MSYS_CALLBACK_REASON_X1BUTTON_DWN			(1 << 11)
+#define MSYS_CALLBACK_REASON_X1BUTTON_UP			(1 << 12)
+#define MSYS_CALLBACK_REASON_X1BUTTON_REPEAT		(1 << 13)
+#define MSYS_CALLBACK_REASON_X2BUTTON_DWN			(1 << 14)
+#define MSYS_CALLBACK_REASON_X2BUTTON_UP			(1 << 15)
+#define MSYS_CALLBACK_REASON_X2BUTTON_REPEAT		(1 << 16)
+#define MSYS_CALLBACK_REASON_LOST_MOUSE				(1 << 17)
+#define MSYS_CALLBACK_REASON_GAIN_MOUSE				(1 << 18)
+#define MSYS_CALLBACK_REASON_WHEEL_UP				(1 << 19)
+#define MSYS_CALLBACK_REASON_WHEEL_DOWN				(1 << 20)
 
 // Internal Functions
 void MSYS_SetCurrentCursor(UINT16 Cursor);
@@ -174,7 +174,7 @@ void RefreshMouseRegions(void);
 void RenderFastHelp(void);
 
 // Hook to the SGP's mouse handler
-void MouseSystemHook(UINT16 Type, UINT16 Xcoord, UINT16 Ycoord);
+void MouseSystemHook(UINT16 type, UINT32 button, UINT16 x, UINT16 y);
 
 class MouseRegion : private MOUSE_REGION
 {
@@ -209,5 +209,3 @@ class MouseRegion : private MOUSE_REGION
 		using MOUSE_REGION::SetUserPtr;
 		using MOUSE_REGION::uiFlags;
 };
-
-#endif

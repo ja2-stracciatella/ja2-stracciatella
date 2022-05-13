@@ -624,7 +624,7 @@ static void GetSaveLoadScreenUserInput(void)
 	InputAtom e;
 	while (DequeueEvent(&e))
 	{
-		MouseSystemHook(e.usEvent, mouse_pos.iX, mouse_pos.iY);
+		MouseSystemHook(e.usEvent, e.usParam, mouse_pos.iX, mouse_pos.iY);
 		if (HandleTextInput(&e)) continue;
 
 		if (e.usEvent == KEY_REPEAT || e.usEvent == KEY_DOWN) {

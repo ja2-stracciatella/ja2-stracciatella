@@ -3067,7 +3067,7 @@ static void GetMapKeyboardInput(MapEvent& new_event)
 	{
 		SGPPoint MousePos;
 		GetMousePos(&MousePos);
-		MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
+		MouseSystemHook(InputEvent.usEvent, InputEvent.usParam, MousePos.iX, MousePos.iY);
 
 		if (InputEvent.usEvent == KEY_DOWN)
 		{

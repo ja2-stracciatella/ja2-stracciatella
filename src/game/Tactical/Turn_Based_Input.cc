@@ -2019,7 +2019,7 @@ void GetKeyboardInput(UIEventKind* const puiNewEvent)
 
 	while (DequeueEvent(&InputEvent))
 	{
-		MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
+		MouseSystemHook(InputEvent.usEvent, InputEvent.usParam, MousePos.iX, MousePos.iY);
 
 		// handle for fast help text for interface stuff
 		if( IsTheInterfaceFastHelpTextActive() )

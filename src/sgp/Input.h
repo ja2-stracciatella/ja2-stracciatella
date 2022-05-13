@@ -7,26 +7,24 @@
 
 #include <string_theory/string>
 
+#define KEY_DOWN						1 << 0
+#define KEY_UP							1 << 1
+#define KEY_REPEAT						1 << 2
+#define TEXT_INPUT						1 << 3
+#define MOUSE_BUTTON_DOWN				1 << 4
+#define MOUSE_BUTTON_UP					1 << 5
+#define MOUSE_BUTTON_REPEAT				1 << 7
+#define MOUSE_POS						1 << 8
+#define MOUSE_WHEEL_UP      			1 << 9
+#define MOUSE_WHEEL_DOWN    			1 << 10
 
-#define KEY_DOWN									0x0001
-#define KEY_UP										0x0002
-#define KEY_REPEAT								0x0004
-#define TEXT_INPUT								0x0006
-#define LEFT_BUTTON_DOWN					0x0008
-#define LEFT_BUTTON_UP						0x0010
-#define LEFT_BUTTON_DBL_CLK				0x0020
-#define LEFT_BUTTON_REPEAT				0x0040
-#define RIGHT_BUTTON_DOWN					0x0080
-#define RIGHT_BUTTON_UP						0x0100
-#define RIGHT_BUTTON_REPEAT				0x0200
-#define MOUSE_POS									0x0400
-#define MOUSE_WHEEL_UP      0x0800
-#define MOUSE_WHEEL_DOWN    0x1000
-#define MOUSE_EVENTS        0xFFF8
+#define MOUSE_EVENTS        			(MOUSE_BUTTON_DOWN | MOUSE_BUTTON_UP | MOUSE_BUTTON_REPEAT | MOUSE_POS | MOUSE_WHEEL_UP | MOUSE_WHEEL_DOWN)
 
-#define MIDDLE_BUTTON_DOWN		0x2000
-#define MIDDLE_BUTTON_UP		0x4000
-#define MIDDLE_BUTTON_REPEAT	0x8000
+#define MOUSE_BUTTON_LEFT SDL_BUTTON_LEFT
+#define MOUSE_BUTTON_MIDDLE SDL_BUTTON_MIDDLE
+#define MOUSE_BUTTON_RIGHT SDL_BUTTON_RIGHT
+#define MOUSE_BUTTON_X1 SDL_BUTTON_X1
+#define MOUSE_BUTTON_X2 SDL_BUTTON_X2
 
 #define SHIFT_DOWN								0x01
 #define CTRL_DOWN									0x02
@@ -76,11 +74,10 @@ extern UINT16    gusMouseXPos;       // X position of the mouse on screen
 extern UINT16    gusMouseYPos;       // y position of the mouse on screen
 extern BOOLEAN   gfLeftButtonState;  // TRUE = Pressed, FALSE = Not Pressed
 extern BOOLEAN   gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
-extern BOOLEAN   gfMiddleButtonState;
+extern BOOLEAN   gfMiddleButtonState; // TRUE = Pressed, FALSE = Not Pressed
+extern BOOLEAN   gfX1ButtonState; // TRUE = Pressed, FALSE = Not Pressed
+extern BOOLEAN   gfX2ButtonState; // TRUE = Pressed, FALSE = Not Pressed
 
 bool _KeyDown(SDL_Keycode);
-#define _LeftButtonDown    gfLeftButtonState
-#define _RightButtonDown   gfRightButtonState
-#define _MiddleButtonDown   gfMiddleButtonState
 
 #endif

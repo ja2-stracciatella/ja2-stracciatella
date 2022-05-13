@@ -349,7 +349,7 @@ static void GetLaptopKeyboardInput(void)
 	InputAtom InputEvent;
 	while (DequeueEvent(&InputEvent))
 	{
-		MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
+		MouseSystemHook(InputEvent.usEvent, InputEvent.usParam, MousePos.iX, MousePos.iY);
 		HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
 	}
 }

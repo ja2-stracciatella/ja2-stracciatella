@@ -2372,7 +2372,7 @@ static ScreenID WaitForHelpScreenResponse(void)
 	}
 
 
-	if ( (_LeftButtonDown) || (_RightButtonDown) || fLeaveScreen )
+	if ( (gfLeftButtonState) || (gfRightButtonState) || fLeaveScreen )
 	{
 		fHelpScreen = FALSE;
 
@@ -2765,7 +2765,7 @@ static void HandleMouseClicksInGameScreen()
 
 	BOOLEAN const prev_state = gfRenderWorld;
 
-	if (_LeftButtonDown)
+	if (gfLeftButtonState)
 	{
 		gfRenderWorld = TRUE;
 		// Are we trying to erase something?
@@ -2920,7 +2920,7 @@ static void HandleMouseClicksInGameScreen()
 				break;
 		}
 	}
-	else if (_RightButtonDown)
+	else if (gfRightButtonState)
 	{
 		gfRenderWorld = TRUE;
 		switch (iDrawMode)
@@ -3302,7 +3302,7 @@ ScreenID EditScreenHandle(void)
 	//If we are copying or moving a building, we process, then delete the building layout immediately
 	//after releasing the mouse button.  If released in the world, then the building would have been
 	//processed in above function, HandleMouseClicksInGameScreen().
-	if( !_LeftButtonDown && gpBuildingLayoutList )
+	if( !gfLeftButtonState && gpBuildingLayoutList )
 		DeleteBuildingLayout();
 
 	fShowingCursor = DoIRenderASpecialMouseCursor();

@@ -119,12 +119,12 @@ try
 	SGPPoint MousePos;
 	GetMousePos(&MousePos);
 	// Hook into mouse stuff for MOVEMENT MESSAGES
-	MouseSystemHook(MOUSE_POS, MousePos.iX, MousePos.iY);
+	MouseSystemHook(MOUSE_POS, 0, MousePos.iX, MousePos.iY);
 	MusicPoll();
 
 	while (DequeueSpecificEvent(&InputEvent, MOUSE_EVENTS))
 	{
-		MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
+		MouseSystemHook(InputEvent.usEvent, InputEvent.usParam, MousePos.iX, MousePos.iY);
 	}
 
 

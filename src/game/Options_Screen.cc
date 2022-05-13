@@ -519,7 +519,7 @@ static void GetOptionsScreenUserInput(void)
 	InputAtom Event;
 	while( DequeueEvent( &Event ) )
 	{
-		MouseSystemHook(Event.usEvent, MousePos.iX, MousePos.iY);
+		MouseSystemHook(Event.usEvent, Event.usParam, MousePos.iX, MousePos.iY);
 
 		if( !HandleTextInput( &Event ) && Event.usEvent == KEY_DOWN )
 		{

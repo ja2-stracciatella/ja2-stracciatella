@@ -847,7 +847,7 @@ static void HandleIMPQuizKeyBoard(void)
 		}
 		else*/
 		{
-			MouseSystemHook(InputEvent.usEvent, MousePos.iX, MousePos.iY);
+			MouseSystemHook(InputEvent.usEvent, InputEvent.usParam, MousePos.iX, MousePos.iY);
 			HandleKeyBoardShortCutsForLapTop(InputEvent.usEvent, InputEvent.usParam, InputEvent.usKeyState);
 		}
 	}

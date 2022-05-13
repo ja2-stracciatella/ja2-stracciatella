@@ -18,17 +18,19 @@ static BOOLEAN fCursorWasClipped = FALSE;
 static SGPRect gCursorClipRect;
 
 
-// These data structure are used to track the mouse while polling
-
-static UINT32 guiSingleClickTimer;
-
+// These data structures are used to track the mouse while polling
 static UINT32 guiLeftButtonRepeatTimer;
 static UINT32 guiRightButtonRepeatTimer;
 static UINT32 guiMiddleButtonRepeatTimer;
+static UINT32 guiX1ButtonRepeatTimer;
+static UINT32 guiX2ButtonRepeatTimer;
 
 BOOLEAN gfLeftButtonState;  // TRUE = Pressed, FALSE = Not Pressed
 BOOLEAN gfRightButtonState; // TRUE = Pressed, FALSE = Not Pressed
 BOOLEAN gfMiddleButtonState;// TRUE = Pressed, FALSE = Not Pressed
+BOOLEAN gfX1ButtonState;// TRUE = Pressed, FALSE = Not Pressed
+BOOLEAN gfX2ButtonState;// TRUE = Pressed, FALSE = Not Pressed
+
 UINT16  gusMouseXPos;       // X position of the mouse on screen
 UINT16  gusMouseYPos;       // y position of the mouse on screen
 
@@ -40,12 +42,13 @@ static UINT16    gusHeadIndex;
 static UINT16    gusTailIndex;
 
 
-static void QueueMouseEvent(UINT16 ubInputEvent)
+static void QueueMouseEvent(UINT16 eventType, UINT32 param)
 {
 	// Can we queue up one more event, if not, the event is lost forever
 	if (gusQueueCount == lengthof(gEventQueue)) return;
 
-	gEventQueue[gusTailIndex].usEvent = ubInputEvent;
+	gEventQueue[gusTailIndex].usEvent = eventType;
+	gEventQueue[gusTailIndex].usParam = param;
 
 	gusQueueCount++;
 
@@ -147,7 +150,7 @@ void MouseButtonDown(const SDL_MouseButtonEvent* BtnEv)
 #endif
 			guiLeftButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
 			gfLeftButtonState = TRUE;
-			QueueMouseEvent(LEFT_BUTTON_DOWN);
+			QueueMouseEvent(MOUSE_BUTTON_DOWN, MOUSE_BUTTON_LEFT);
 			break;
 		}
 
@@ -157,14 +160,24 @@ right_button:
 #endif
 			guiRightButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
 			gfRightButtonState = TRUE;
-			QueueMouseEvent(RIGHT_BUTTON_DOWN);
+			QueueMouseEvent(MOUSE_BUTTON_DOWN, MOUSE_BUTTON_RIGHT);
 			break;
 
 		case SDL_BUTTON_MIDDLE:
 			guiMiddleButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
 			gfMiddleButtonState = TRUE;
-			QueueMouseEvent(MIDDLE_BUTTON_DOWN);
+			QueueMouseEvent(MOUSE_BUTTON_DOWN, MOUSE_BUTTON_MIDDLE);
 			break;
+
+		case SDL_BUTTON_X1:
+			guiX1ButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
+			gfX1ButtonState = TRUE;
+			QueueMouseEvent(MOUSE_BUTTON_DOWN, MOUSE_BUTTON_X1);
+
+		case SDL_BUTTON_X2:
+			guiX2ButtonRepeatTimer = GetClock() + BUTTON_REPEAT_TIMEOUT;
+			gfX2ButtonState = TRUE;
+			QueueMouseEvent(MOUSE_BUTTON_DOWN, MOUSE_BUTTON_X2);
 	}
 }
 
@@ -172,6 +185,7 @@ right_button:
 void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 {
 	UpdateMousePos(BtnEv);
+	UINT32 uiTimer = GetClock();
 	switch (BtnEv->button)
 	{
 		case SDL_BUTTON_LEFT:
@@ -181,16 +195,7 @@ void MouseButtonUp(const SDL_MouseButtonEvent* BtnEv)
 #endif
 			guiLeftButtonRepeatTimer = 0;
 			gfLeftButtonState = FALSE;
-			QueueMouseEvent(LEFT_BUTTON_UP);
-			UINT32 uiTimer = GetClock();
-			if (uiTimer - guiSingleClickTimer < DBL_CLK_TIME)
-			{
-				QueueMouseEvent(LEFT_BUTTON_DBL_CLK);
-			}
-			else
-			{
-				guiSingleClickTimer = uiTimer;
-			}
+			QueueMouseEvent(MOUSE_BUTTON_UP, MOUSE_BUTTON_LEFT);
 			break;
 		}
 
@@ -200,13 +205,25 @@ right_button:
 #endif
 			guiRightButtonRepeatTimer = 0;
 			gfRightButtonState = FALSE;
-			QueueMouseEvent(RIGHT_BUTTON_UP);
+			QueueMouseEvent(MOUSE_BUTTON_UP, MOUSE_BUTTON_RIGHT);
 			break;
 
 		case SDL_BUTTON_MIDDLE:
 			guiMiddleButtonRepeatTimer = 0;
 			gfMiddleButtonState = FALSE;
-			QueueMouseEvent(MIDDLE_BUTTON_UP);
+			QueueMouseEvent(MOUSE_BUTTON_UP, MOUSE_BUTTON_MIDDLE);
+			break;
+
+		case SDL_BUTTON_X1:
+			guiX1ButtonRepeatTimer = 0;
+			gfX1ButtonState = FALSE;
+			QueueMouseEvent(MOUSE_BUTTON_UP, MOUSE_BUTTON_X1);
+			break;
+
+		case SDL_BUTTON_X2:
+			guiX2ButtonRepeatTimer = 0;
+			gfX2ButtonState = FALSE;
+			QueueMouseEvent(MOUSE_BUTTON_UP, MOUSE_BUTTON_X2);
 			break;
 	}
 }
@@ -215,11 +232,11 @@ void MouseWheelScroll(const SDL_MouseWheelEvent* WheelEv)
 {
 	if (WheelEv->y > 0)
 	{
-		QueueMouseEvent(MOUSE_WHEEL_UP);
+		QueueMouseEvent(MOUSE_WHEEL_UP, 0);
 	}
 	else
 	{
-		QueueMouseEvent(MOUSE_WHEEL_DOWN);
+		QueueMouseEvent(MOUSE_WHEEL_DOWN, 0);
 	}
 }
 
@@ -495,7 +512,7 @@ static void HandleSingleClicksAndButtonRepeats(void)
 	{
 		if ((guiLeftButtonRepeatTimer > 0)&&(guiLeftButtonRepeatTimer <= uiTimer))
 		{
-			QueueMouseEvent(LEFT_BUTTON_REPEAT);
+			QueueMouseEvent(MOUSE_BUTTON_REPEAT, MOUSE_BUTTON_LEFT);
 			guiLeftButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
 		}
 	}
@@ -510,7 +527,7 @@ static void HandleSingleClicksAndButtonRepeats(void)
 	{
 		if ((guiRightButtonRepeatTimer > 0)&&(guiRightButtonRepeatTimer <= uiTimer))
 		{
-			QueueMouseEvent(RIGHT_BUTTON_REPEAT);
+			QueueMouseEvent(MOUSE_BUTTON_REPEAT, MOUSE_BUTTON_RIGHT);
 			guiRightButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
 		}
 	}
@@ -524,12 +541,40 @@ static void HandleSingleClicksAndButtonRepeats(void)
 	{
 		if ((guiMiddleButtonRepeatTimer > 0)&&(guiMiddleButtonRepeatTimer <= uiTimer))
 		{
-			QueueMouseEvent(MIDDLE_BUTTON_REPEAT);
+			QueueMouseEvent(MOUSE_BUTTON_REPEAT, MOUSE_BUTTON_MIDDLE);
 			guiMiddleButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
 		}
 	}
 	else
 	{
 		guiMiddleButtonRepeatTimer = 0;
+	}
+
+	// Is there a X1 mouse button repeat
+	if (gfX1ButtonState)
+	{
+		if ((guiX1ButtonRepeatTimer > 0)&&(guiX1ButtonRepeatTimer <= uiTimer))
+		{
+			QueueMouseEvent(MOUSE_BUTTON_REPEAT, MOUSE_BUTTON_X1);
+			guiX1ButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
+		}
+	}
+	else
+	{
+		guiX1ButtonRepeatTimer = 0;
+	}
+
+	// Is there a X2 mouse button repeat
+	if (gfX2ButtonState)
+	{
+		if ((guiX2ButtonRepeatTimer > 0)&&(guiX2ButtonRepeatTimer <= uiTimer))
+		{
+			QueueMouseEvent(MOUSE_BUTTON_REPEAT, MOUSE_BUTTON_X2);
+			guiX2ButtonRepeatTimer = uiTimer + BUTTON_REPEAT_TIME;
+		}
+	}
+	else
+	{
+		guiX2ButtonRepeatTimer = 0;
 	}
 }

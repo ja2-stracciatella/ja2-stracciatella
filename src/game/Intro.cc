@@ -208,7 +208,7 @@ static void GetIntroScreenUserInput(void)
 	InputAtom Event;
 	while( DequeueEvent( &Event ) )
 	{
-		MouseSystemHook(Event.usEvent, MousePos.iX, MousePos.iY);
+		MouseSystemHook(Event.usEvent, Event.usParam, MousePos.iX, MousePos.iY);
 
 		if( Event.usEvent == KEY_UP )
 		{
