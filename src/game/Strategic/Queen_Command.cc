@@ -405,7 +405,7 @@ void PrepareEnemyForSectorBattle()
 	if (n_slots != gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1)
 	{
 		SLOGE("All enemy slots should be free at this point.  Only {} of {} are available.\n\
-			Trying to add %d admins, %d troops, and %d elites.",
+			Trying to add {} admins, {} troops, and {} elites.",
 			n_slots, gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1,
 			total_admins, total_troops, total_elites);
 	}

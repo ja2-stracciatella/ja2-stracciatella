@@ -4143,8 +4143,7 @@ std::pair<const SGPVObject*, UINT8> GetSmallInventoryGraphicForItem(const ItemMo
 		return GetFallbackSmallInventoryGraphicForItem(item);
 	}
 	if (subImageIndex >= i->second->SubregionCount()) {
-		SLOGE(
-			"subImageIndex out of range for small inventory graphic `{}` for item `{}`: subregion count is `{}`, subImageIndex is `{}`",
+		SLOGE("subImageIndex out of range for small inventory graphic `{}` for item `{}`: subregion count is `{}`, subImageIndex is `{}`",
 			path,
 			item->getInternalName(),
 			i->second->SubregionCount(),
@@ -4179,8 +4178,7 @@ std::pair<SGPVObject*, UINT8> GetBigInventoryGraphicForItem(const ItemModel * it
 		return GetFallbackBigInventoryGraphic();
 	}
 	if (subImageIndex >= vObject->SubregionCount()) {
-		SLOGE(
-			"subImageIndex out of range for big inventory graphic `{}` for item `{}`: subregion count is `{}`, subImageIndex is `{}`",
+		SLOGE("subImageIndex out of range for big inventory graphic `{}` for item `{}`: subregion count is `{}`, subImageIndex is `{}`",
 			path,
 			item->getInternalName(),
 			vObject->SubregionCount(),

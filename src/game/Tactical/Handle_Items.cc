@@ -864,9 +864,7 @@ ItemHandleResult HandleItem(SOLDIERTYPE* const s, INT16 usGridNo, const INT8 bLe
 	if (item->getItemClass() == IC_TENTACLES)
 	{
 		gTacticalStatus.ubAttackBusyCount++;
-		SLOGD(
-			"Starting swipe attack, incrementing a.b.c in HandleItems to %d",
-			gTacticalStatus.ubAttackBusyCount);
+		SLOGD("Starting swipe attack, incrementing a.b.c in HandleItems to {}", gTacticalStatus.ubAttackBusyCount);
 		const INT16 sAPCost = CalcTotalAPsToAttack(s, sGridNo, FALSE, s->bAimTime);
 		DeductPoints(s, sAPCost, 0);
 		EVENT_InitNewSoldierAnim(s, QUEEN_SWIPE, 0, FALSE);
@@ -1476,8 +1474,7 @@ INT32 InternalAddItemToPool(INT16* const psGridNo, OBJECTTYPE* const pObject, Vi
 	if (*psGridNo == NOWHERE)
 	{
 		// Display warning.....
-		SLOGE(
-			"Item %d was given invalid grid location %d for item pool. Please Report.",
+		SLOGE("Item {} was given invalid grid location {} for item pool. Please Report.",
 			pObject->usItem, *psGridNo);
 		*psGridNo = gMapInformation.sCenterGridNo;
 		//return -1;

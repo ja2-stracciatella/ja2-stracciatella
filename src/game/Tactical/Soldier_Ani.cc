@@ -1700,8 +1700,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 								gfPotentialTeamChangeDuringDeath = TRUE;
 
 								// Release attacker
-								SLOGD(
-									"Releasesoldierattacker, code 497 = check for death");
+								SLOGD("Releasesoldierattacker, code 497 = check for death");
 								ReleaseSoldiersAttacker( pSoldier );
 
 								// ATE: OK - the above call can potentially
@@ -1927,8 +1926,7 @@ BOOLEAN AdjustToNextAnimationFrame( SOLDIERTYPE *pSoldier )
 						else
 						{
 							// IF we are here - something is wrong - we should have a death animation here
-							SLOGD(
-								"Soldier Ani: GOTO Stance not chained properly: %d %d %d",
+							SLOGD("Soldier Ani: GOTO Stance not chained properly: {} {} {}",
 								ubDesiredHeight, ubCurrentHeight, pSoldier->usAnimState);
 							SoldierGotoStationaryStance(pSoldier);
 							return TRUE;
@@ -2231,16 +2229,14 @@ no_cry:
 				case 753:
 
 					// code: freeup attcker
-					SLOGD(
-						"Reducing attacker busy count..., CODE FROM ANIMATION %s ( %d )",
+					SLOGD("Reducing attacker busy count..., CODE FROM ANIMATION {} ( {} )",
 						gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState);
 					ReduceAttackBusyCount(pSoldier, FALSE);
 
 					// ATE: Here, reduce again if creaturequeen tentical attack...
 					if ( pSoldier->usAnimState == QUEEN_SWIPE )
 					{
-						SLOGD(
-							"Reducing attacker busy count for end of queen swipe");
+						SLOGD("Reducing attacker busy count for end of queen swipe");
 						ReduceAttackBusyCount(pSoldier, FALSE);
 					}
 					break;
@@ -2280,8 +2276,7 @@ no_cry:
 
 					// INcrement attacker busy count....
 					gTacticalStatus.ubAttackBusyCount++;
-					SLOGD(
-						"Incrementing attacker busy count..., CODE FROM ANIMATION %s ( %d ) : Count now %d",
+					SLOGD("Incrementing attacker busy count..., CODE FROM ANIMATION {} ( {} ) : Count now {}",
 						gAnimControl[pSoldier->usAnimState].zAnimStr, pSoldier->usAnimState,
 						gTacticalStatus.ubAttackBusyCount);
 					break;

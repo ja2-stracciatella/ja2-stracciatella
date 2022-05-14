@@ -1017,9 +1017,8 @@ void ExecuteOverhead(void)
 										// ATE: Pop up warning....
 										if (pSoldier->ubPathDataSize != MAX_PATH_LIST_SIZE)
 										{
-											SLOGD(
-												"Path for %s ( %d ) did not make merc get to dest.",
-												pSoldier->name.c_str(), pSoldier->ubID);
+											SLOGD("Path for {} ( {} ) did not make merc get to dest.",
+												pSoldier->name, pSoldier->ubID);
 										}
 
 										// In case this is an AI person with the path-stored flag set,
@@ -5578,8 +5577,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		// But for all means.... DON'T wrap!
 		if ( (gTacticalStatus.uiFlags & INCOMBAT) )
 		{
-			SLOGD(
-				"Problem with attacker busy count decrementing past 0.... preventing wrap-around.");
+			SLOGD("Problem with attacker busy count decrementing past 0.... preventing wrap-around.");
 		}
 	}
 	else
@@ -5587,9 +5585,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		gTacticalStatus.ubAttackBusyCount--;
 	}
 
-	SLOGD(
-		"Ending attack, attack count now %d",
-		gTacticalStatus.ubAttackBusyCount);
+	SLOGD("Ending attack, attack count now {}", gTacticalStatus.ubAttackBusyCount);
 	//}
 
 	if (gTacticalStatus.ubAttackBusyCount > 0)

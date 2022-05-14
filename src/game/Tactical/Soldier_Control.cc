@@ -854,7 +854,7 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 	{
 		// Release attacker
 		SLOGD("Releasesoldierattacker, normal hit animation ended\n\
-			NEW: %s ( %d ) OLD: %s ( %d )",
+			NEW: {} ( {} ) OLD: {} ( {} )",
 			gAnimControl[usNewState].zAnimStr, usNewState,
 			gAnimControl[usOldAniState].zAnimStr, pSoldier->usOldAniState);
 		ReleaseSoldiersAttacker( pSoldier );
@@ -878,8 +878,7 @@ static void CheckForFreeupFromHit(SOLDIERTYPE* pSoldier, UINT32 uiOldAnimFlags, 
 		|| pSoldier->bLife != 0))
 	{
 		// Release attacker
-		SLOGD(
-			"Releasesoldierattacker, animation of kill on the ground ended");
+		SLOGD("Releasesoldierattacker, animation of kill on the ground ended");
 		ReleaseSoldiersAttacker( pSoldier );
 
 		//FREEUP GETTING HIT FLAG
@@ -2676,8 +2675,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 		case SHOOT_MORTAR:
 		case THROW_ITEM:
 		case LOB_ITEM:
-			SLOGD(
-				"Freeing up attacker - ATTACK ANIMATION %s ENDED BY HIT ANIMATION, Now %d",
+			SLOGD("Freeing up attacker - ATTACK ANIMATION {} ENDED BY HIT ANIMATION, Now {}",
 				gAnimControl[pSoldier->usAnimState].zAnimStr, gTacticalStatus.ubAttackBusyCount);
 			ReduceAttackBusyCount(pSoldier, FALSE);
 			break;
@@ -2699,8 +2697,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 	{
 		// Increment the number of people busy doing stuff because of an attack (busy doing hit anim!)
 		gTacticalStatus.ubAttackBusyCount++;
-		SLOGD("Person got hit, attack count now {}",
-			gTacticalStatus.ubAttackBusyCount);
+		SLOGD("Person got hit, attack count now {}", gTacticalStatus.ubAttackBusyCount);
 	}
 
 	// ATE; Save hit location info...( for later anim determination stuff )
@@ -2934,8 +2931,7 @@ void EVENT_SoldierGotHit(SOLDIERTYPE* pSoldier, const UINT16 usWeaponIndex, INT1
 			case FALLOFF_FORWARD_STOP:       state = FALLOFF_FORWARD_TWITCHNB;   break;
 
 			default:
-				SLOGD("Death state {} has no death hit",
-					pSoldier->usAnimState);
+				SLOGD("Death state {} has no death hit", pSoldier->usAnimState);
 				return;
 		}
 		ChangeSoldierState(pSoldier, state, 0, FALSE);
@@ -4237,8 +4233,7 @@ BOOLEAN ConvertAniCodeToAniFrame(SOLDIERTYPE* const s, UINT16 ani_frame)
 		if (ani_frame >= as.hVideoObject->SubregionCount())
 		{
 			// Debug msg here....
-			SLOGW(
-				"Wrong Number of frames per number of objects: %d vs %d, %s",
+			SLOGW("Wrong Number of frames per number of objects: {} vs {}, {}",
 				as.uiNumFramesPerDir, as.hVideoObject->SubregionCount(),
 				gAnimControl[s->usAnimState].zAnimStr);
 			ani_frame = 0;
@@ -5145,8 +5140,7 @@ static UINT16 GetNewSoldierStateFromNewStance(SOLDIERTYPE* pSoldier, UINT8 ubDes
 		default:
 
 			// Cannot get here unless ub desired stance is bogus
-			SLOGD(
-				"GetNewSoldierStateFromNewStance bogus ubDesiredStance value %d",
+			SLOGD("GetNewSoldierStateFromNewStance bogus ubDesiredStance value {}",
 				ubDesiredStance);
 			usNewState = pSoldier->usAnimState;
 	}
@@ -5759,8 +5753,7 @@ UINT8 SoldierTakeDamage(SOLDIERTYPE* const pSoldier, INT16 sLifeDeduct, INT16 sB
 		{
 			sChanceToDrop -= 30;
 		}
-		SLOGD(
-			"Chance To Drop Weapon: str: %d Dam: %d Chance: %d",
+		SLOGD("Chance To Drop Weapon: str: {} Dam: {} Chance: {}",
 			sTestOne, sTestTwo, sChanceToDrop );
 
 		if ( Random( 100 ) < (UINT16) sChanceToDrop )
@@ -6553,7 +6546,7 @@ void ReleaseSoldiersAttacker( SOLDIERTYPE *pSoldier )
 			for ( cnt = 0; cnt < ubNumToFree; cnt++ )
 			{
 				SLOGD("Freeing up attacker of {} (attacker is {})\n\
-					releasesoldierattacker num to free is %d",
+					releasesoldierattacker num to free is {}",
 					pSoldier->ubID, SOLDIER2ID(pSoldier->attacker), ubNumToFree);
 				ReduceAttackBusyCount(pSoldier->attacker, FALSE);
 			}
@@ -7788,8 +7781,7 @@ BOOLEAN InternalIsValidStance(const SOLDIERTYPE* pSoldier, INT8 bDirection, INT8
 
 			// Something gone funny here....
 			usAnimState = pSoldier->usAnimState;
-			SLOGW("Wrong desired stance given: {}, {}.",
-				bNewStance, pSoldier->usAnimState );
+			SLOGW("Wrong desired stance given: {}, {}.", bNewStance, pSoldier->usAnimState);
 	}
 
 	usAnimSurface = DetermineSoldierAnimationSurface( pSoldier,  usAnimState );
@@ -8903,8 +8895,7 @@ void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 					// things that can happen - 1 of them is that sLastTarget will get unset
 					// after turn is done - so set flag here to tell it not to...
 					pSoldier->fDontUnsetLastTargetFromTurn = TRUE;
-					SLOGD(
-						"Reducing attacker busy count..., ending fire because saw something: DONE IN SYSTEM NEW SITUATION");
+					SLOGD("Reducing attacker busy count..., ending fire because saw something: DONE IN SYSTEM NEW SITUATION");
 						ReduceAttackBusyCount(pSoldier, FALSE);
 				}
 
@@ -8917,8 +8908,7 @@ void HandleSystemNewAISituation(SOLDIERTYPE* const pSoldier)
 					pSoldier->usPendingAnimation = NO_PENDING_ANIMATION;
 
 					// Decrement attack counter...
-					SLOGD(
-						"Reducing attacker busy count..., ending throw because saw something: DONE IN SYSTEM NEW SITUATION");
+					SLOGD("Reducing attacker busy count..., ending throw because saw something: DONE IN SYSTEM NEW SITUATION");
 						ReduceAttackBusyCount(pSoldier, FALSE);
 				}
 			}

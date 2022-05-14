@@ -269,9 +269,8 @@ void AddItemsToUnLoadedSector(const SGPSector& sMap, INT16 const sGridNo, UINT32
 		{
 			wi.usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 			// Display warning.....
-			SLOGW(
-				"Trying to add item ( %d: %s ) to invalid gridno in unloaded sector. Please Report.",
-				wi.o.usItem, ItemNames[wi.o.usItem].c_str());
+			SLOGW("Trying to add item ( {}: {} ) to invalid gridno in unloaded sector. Please Report.",
+				wi.o.usItem, ItemNames[wi.o.usItem]);
 		}
 	}
 
