@@ -1235,7 +1235,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 static void ManLooksForOtherTeams(SOLDIERTYPE* pSoldier)
 {
 	SLOGD("MANLOOKSFOROTHERTEAMS ID {}({}) team {} side {}",
-		pSoldier->ubID, pSoldier->name.c_str(), pSoldier->bTeam, pSoldier->bSide);
+		pSoldier->ubID, pSoldier->name, pSoldier->bTeam, pSoldier->bSide);
 
 	// one soldier (pSoldier) looks for every soldier on another team (pOpponent)
 	FOR_EACH_MERC(i)
@@ -1308,8 +1308,7 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 		// THIS MUST HAPPEN EVEN FOR ENEMIES, TO MAKE THEIR PUBLIC opplist DECAY!
 		if (TeamNoLongerSeesMan(pSoldier->bTeam, pOpponent, pSoldier, 0))
 		{
-			SLOGD("TeamNoLongerSeesMan: ID {}({}) to ID {}",
-				pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID);
+			SLOGD("TeamNoLongerSeesMan: ID {}({}) to ID {}", pSoldier->ubID, pSoldier->name, pOpponent->ubID);
 
 			// don't use UpdatePublic() here, because we're changing to a *lower*
 			// opplist value (which UpdatePublic ignores) and we're not updating
@@ -1329,7 +1328,7 @@ static void HandleManNoLongerSeen(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent,
 	}
 	else
 		SLOGD("ManLooksForMan: ID {}({}) to ID {} Personally seen, public {}",
-			pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID, *pbPublOL);
+			pSoldier->ubID, pSoldier->name, pOpponent->ubID, *pbPublOL);
 
 	// if we had only seen the guy for an instant and now lost sight of him
 	if (gbSeenOpponents[pSoldier->ubID][pOpponent->ubID] == -1)
@@ -1372,7 +1371,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 	if (!pSoldier->bActive || !pSoldier->bInSector || (pSoldier->bLife < OKLIFE))
 	{
 		SLOGD("ManLooksForMan - WE are inactive/dead etc ID {}({})to ID {}",
-			pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID);
+			pSoldier->ubID, pSoldier->name, pOpponent->ubID);
 		return(FALSE);
 	}
 
@@ -1390,7 +1389,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 	if (pSoldier->bTeam == pOpponent->bTeam)
 	{
 		SLOGD("ManLooksForMan - SAME TEAM ID {}({})to ID {}",
-			pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID);
+			pSoldier->ubID, pSoldier->name, pOpponent->ubID);
 		return(FALSE);
 	}
 
@@ -1472,7 +1471,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 	// calculate how many spaces away soldier is (using Pythagoras' theorem)
 	sDistAway = PythSpacesAway(pSoldier->sGridNo,pOpponent->sGridNo);
 	SLOGD("MANLOOKSFORMAN: ID {}({}) to ID {}: sDistAway {} sDistVisible {}",
-		pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID, sDistAway, sDistVisible);
+		pSoldier->ubID, pSoldier->name, pOpponent->ubID, sDistAway, sDistVisible);
 
 	// if we see close enough to see the soldier
 	if (sDistAway <= sDistVisible)
@@ -1487,7 +1486,7 @@ static INT16 ManLooksForMan(SOLDIERTYPE* pSoldier, SOLDIERTYPE* pOpponent, UINT8
 		else
 		{
 			SLOGD("FAILED LINEOFSIGHT: ID {} ({})to ID {} Personally {}, public {}",
-				pSoldier->ubID, pSoldier->name.c_str(), pOpponent->ubID, *pPersOL, *pbPublOL);
+				pSoldier->ubID, pSoldier->name, pOpponent->ubID, *pPersOL, *pbPublOL);
 		}
 	}
 
@@ -1797,8 +1796,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 			s.bSide != opponent.bSide)
 		{
 			AddOneOpponent(&s);
-			SLOGD("ManSeesMan: ID {}({}) to ID {} NEW TO ME",
-				s.ubID, s.name.c_str(), opponent.ubID);
+			SLOGD("ManSeesMan: ID {}({}) to ID {} NEW TO ME", s.ubID, s.name, opponent.ubID);
 
 			// if we also haven't seen him earlier this turn
 			if (s.bOppList[opponent.ubID] != SEEN_THIS_TURN)
@@ -1852,8 +1850,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 	}
 	else
 	{
-		SLOGD("ManSeesMan: ID {}({}) to ID {} ALREADYSEENCURRENTLY",
-			s.ubID, s.name.c_str(), opponent.ubID);
+		SLOGD("ManSeesMan: ID {}({}) to ID {} ALREADYSEENCURRENTLY", s.ubID, s.name, opponent.ubID);
 	}
 	// Remember that the soldier is currently seen and his new location
 	UpdatePersonal(&s, opponent.ubID, SEEN_CURRENTLY, opp_gridno, opp_level);
@@ -1930,8 +1927,7 @@ static void ManSeesMan(SOLDIERTYPE& s, SOLDIERTYPE& opponent, UINT8 const caller
 				opponent.pLevelNode->ubShadeLevel = opponent.ubFadeLevel;
 			}
 		}
-		SLOGD("ID {} ({}) MAKING {} VISIBLE",
-			s.ubID, s.name.c_str(), opponent.ubID);
+		SLOGD("ID {} ({}) MAKING {} VISIBLE", s.ubID, s.name, opponent.ubID);
 
 		if (do_locate)
 		{
@@ -1985,7 +1981,7 @@ static void OtherTeamsLookForMan(SOLDIERTYPE* pOpponent)
 		pOpponent->bVisible = 0;
 	}
 		SLOGD("OTHERTEAMSLOOKFORMAN ID {}({}) team {} side {}",
-			pOpponent->ubID, pOpponent->name.c_str(), pOpponent->bTeam, pOpponent->bSide);
+			pOpponent->ubID, pOpponent->name, pOpponent->bTeam, pOpponent->bSide);
 
 	// all soldiers not on oppPtr's team now look for him
 	FOR_EACH_MERC(i)
@@ -2089,8 +2085,7 @@ static void RemoveOneOpponent(SOLDIERTYPE* pSoldier)
 
 	if ( pSoldier->bOppCnt < 0 )
 	{
-		SLOGD("Oppcnt for {} ({}) tried to go below 0",
-			pSoldier->ubID, pSoldier->name.c_str());
+		SLOGD("Oppcnt for {} ({}) tried to go below 0", pSoldier->ubID, pSoldier->name);
 		pSoldier->bOppCnt = 0;
 	}
 
@@ -4284,7 +4279,7 @@ static void TellPlayerAboutNoise(SOLDIERTYPE* const s, SOLDIERTYPE const* const 
 	if (noise_maker && s->bTeam == OUR_TEAM && s->bTeam == noise_maker->bTeam)
 	{
 		SLOGE("{} ({}) heard noise from {} ({}), noise at {}L{}, type {}",
-			s->name.c_str(), s->ubID, noise_maker->name.c_str(), noise_maker->ubID, sGridNo, level, noise_type);
+			s->name, s->ubID, noise_maker->name, noise_maker->ubID, sGridNo, level, noise_type);
 	}
 
 	// display a message about a noise, e.g. Sidney hears a loud splash from/to?

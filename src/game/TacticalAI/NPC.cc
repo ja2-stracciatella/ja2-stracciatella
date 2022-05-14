@@ -1136,8 +1136,8 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 	if (ubApproach != NPC_INITIATING_CONV && ubMerc != NO_PROFILE)
 	{
 		SLOGD("New Approach for NPC ID: {} '{}' against Merc: {} '{}'\n\
-														\tTesting Record #: %d",
-					ubNPC, GetProfile(ubNPC).zNickname.c_str(), ubMerc, GetProfile(ubMerc).zNickname.c_str(), ubQuoteNum);
+														\tTesting Record #: {}",
+			ubNPC, GetProfile(ubNPC).zNickname, ubMerc, GetProfile(ubMerc).zNickname, ubQuoteNum);
 	}
 
 	if (pNPCQuoteInfo->fFlags & QUOTE_FLAG_SAID)
@@ -1188,7 +1188,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
 			SLOGD("Fact ({}:'{}') Must be True, status is {}",
-						pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue].c_str(),
+						pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue],
 						fTrue ? "True" : "False, returning");
 		}
 		if (!fTrue) return FALSE;
@@ -1200,7 +1200,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
 			SLOGD("Fact({}:'{}') Must be False status is  {}",
-						pNPCQuoteInfo->usFactMustBeFalse, FactDescText[pNPCQuoteInfo->usFactMustBeFalse].c_str(),
+						pNPCQuoteInfo->usFactMustBeFalse, FactDescText[pNPCQuoteInfo->usFactMustBeFalse],
 						(fTrue == TRUE) ? "True, return" : "FALSE" );
 		}
 		if (fTrue)	return( FALSE );
@@ -1608,7 +1608,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 					break;
 				case TRIGGER_NPC:
 					// if triggering, pass in the approach data as the record to consider
-					SLOGD("Handling trigger {}/{} at {}", gMercProfiles[ubNPC].zNickname.c_str(), approach_record, GetJA2Clock());
+					SLOGD("Handling trigger {}/{} at {}", gMercProfiles[ubNPC].zNickname, approach_record, GetJA2Clock());
 					NPCConsiderTalking(ubNPC, ubMerc, bApproach, approach_record, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum);
 					break;
 				default:

@@ -1127,7 +1127,7 @@ BOOLEAN AddMercStructureInfoFromAnimSurface(const INT16 sGridNo, SOLDIERTYPE* co
 	if (!success)
 	{
 		SLOGD("add struct info for merc {} ({}), at {} direction {} failed",
-					s->ubID, s->name.c_str(), sGridNo, s->bDirection);
+					s->ubID, s->name, sGridNo, s->bDirection);
 	}
 
 	// Turn on if we are multi-tiled

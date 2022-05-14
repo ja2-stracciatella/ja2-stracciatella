@@ -410,9 +410,7 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 	}
 	else
 	{
-		SLOGD("Handling morale event {} for {} at {}",
-						 bMoraleEvent, pSoldier->name.c_str(), sMap.AsLongString());
-
+		SLOGD("Handling morale event {} for {} at {}", bMoraleEvent, pSoldier->name, sMap.AsLongString());
 	}
 
 

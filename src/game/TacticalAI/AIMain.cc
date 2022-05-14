@@ -1079,7 +1079,7 @@ static void TurnBasedHandleNPCAI(SOLDIERTYPE* pSoldier)
 
 
 	SLOGD("HandleManAI - DECIDING for guynum {}({}) at gridno {}, APs {}",
-		pSoldier->ubID, pSoldier->name.c_str(), pSoldier->sGridNo, pSoldier->bActionPoints);
+		pSoldier->ubID, pSoldier->name, pSoldier->sGridNo, pSoldier->bActionPoints);
 
 
 	// if man has nothing to do
@@ -1350,8 +1350,7 @@ INT8 ExecuteAction(SOLDIERTYPE *pSoldier)
 				RESETTIMECOUNTER( pSoldier->AICounter, pSoldier->usActionData );
 				if (pSoldier->ubProfile != NO_PROFILE)
 				{
-					SLOGD("{} waiting {} from {}",
-								pSoldier->name.c_str(), pSoldier->AICounter, GetJA2Clock());
+					SLOGD("{} waiting {} from {}", pSoldier->name, pSoldier->AICounter, GetJA2Clock());
 				}
 			}
 			ActionDone( pSoldier );

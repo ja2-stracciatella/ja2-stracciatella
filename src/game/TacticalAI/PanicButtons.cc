@@ -319,8 +319,7 @@ INT8 PanicAI(SOLDIERTYPE *pSoldier, UINT8 ubCanMove)
 					{
 						// blow up the all the PANIC bombs (or just the journal)
 						pSoldier->usActionData = sPanicTriggerGridNo;
-						SLOGD("{} pulls panic trigger at grid {}",
-									pSoldier->name.c_str(), pSoldier->usActionData);
+						SLOGD("{} pulls panic trigger at grid {}", pSoldier->name, pSoldier->usActionData);
 						return(AI_ACTION_PULL_TRIGGER);
 					}
 					else       // otherwise, wait a turn

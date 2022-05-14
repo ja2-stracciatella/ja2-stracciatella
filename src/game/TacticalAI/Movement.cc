@@ -290,8 +290,7 @@ INT8 RandomPointPatrolAI(SOLDIERTYPE *pSoldier)
 
 
 	// passed all tests - start moving towards next patrol point
-	SLOGD("{} - POINT PATROL to grid {}",
-		pSoldier->name.c_str(), pSoldier->usActionData);
+	SLOGD("{} - POINT PATROL to grid {}", pSoldier->name, pSoldier->usActionData);
 	return(TRUE);
 }
 
