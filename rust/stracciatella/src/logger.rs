@@ -6,7 +6,7 @@
 //!
 //! [`stracciatella_c_api::c::logger`]: ../../stracciatella_c_api/c/logger/index.html
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicUsize, Ordering};
 
 use log::{
@@ -103,11 +103,21 @@ impl Log for RuntimeLevelFilter {
 pub struct Logger;
 
 impl Logger {
+    /// Gets the path to the current
+    pub fn get_log_file_path<P: AsRef<Path>>(log_file_name: P) -> PathBuf {
+        #[cfg(not(target_os = "android"))]
+        let dir = std::env::temp_dir();
+        #[cfg(target_os = "android")]
+        let dir = PathBuf::default();
+
+        dir.join(log_file_name)
+    }
+
     /// Initializes the logging system
     ///
     /// Needs to be called once at start of the game engine. Any log messages send
     /// before will be discarded.
-    pub fn init(log_file: &Path) {
+    pub fn init(log_file_name: &str) {
         #[cfg(not(target_os = "android"))]
         {
             use log::warn;
@@ -117,6 +127,7 @@ impl Logger {
             };
             use std::fs::File;
 
+            let log_file = Self::get_log_file_path(log_file_name);
             let mut config = ConfigBuilder::default();
             config.set_target_level(LevelFilter::Error);
             config.set_thread_mode(ThreadLogMode::IDs);
@@ -130,10 +141,13 @@ impl Logger {
             );
 
             match File::create(&log_file) {
-                Ok(f) => RuntimeLevelFilter::init(CombinedLogger::new(vec![
-                    logger,
-                    WriteLogger::new(LevelFilter::max(), config, f),
-                ])),
+                Ok(f) => {
+                    RuntimeLevelFilter::init(CombinedLogger::new(vec![
+                        logger,
+                        WriteLogger::new(LevelFilter::max(), config, f),
+                    ]));
+                    log::info!("Logging to file {:?}", &log_file);
+                }
                 Err(err) => {
                     RuntimeLevelFilter::init(CombinedLogger::new(vec![logger]));
                     warn!("Failed to log to {:?}: {}", &log_file, err);

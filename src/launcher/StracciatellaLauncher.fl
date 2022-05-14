@@ -8,9 +8,9 @@ class StracciatellaLauncher {open
   } {
     Fl_Window stracciatellaLauncher {
       label {JA2 Stracciatella Launcher} open
-      xywh {659 182 520 380} type Double resizable size_range {520 390 0 0} visible
+      xywh {555 168 520 380} type Double resizable size_range {520 390 0 0} visible
     } {
-      Fl_Tabs {} {open
+      Fl_Tabs tabs {open
         xywh {0 0 520 350} align 9 resizable
       } {
         Fl_Group {} {
@@ -27,7 +27,7 @@ class StracciatellaLauncher {open
           }
         }
         Fl_Group {} {
-          label {@filenew Data } open
+          label {@filenew Data }
           xywh {0 50 520 300} labelcolor 24 hide
         } {
           Fl_Group {} {
@@ -72,7 +72,7 @@ class StracciatellaLauncher {open
           }
         }
         Fl_Group {} {
-          label {@-> Mods } open
+          label {@-> Mods }
           xywh {0 50 520 300} labelcolor 24 hide
         } {
           Fl_Group {} {
@@ -108,7 +108,7 @@ class StracciatellaLauncher {open
           }
         }
         Fl_Group {} {
-          label {@menu Settings } open
+          label {@menu Settings }
           xywh {0 50 520 300} labelcolor 24 hide
         } {
           Fl_Group {} {open
@@ -175,8 +175,17 @@ class StracciatellaLauncher {open
             xywh {10 285 445 30} labeltype NO_LABEL align 17 resizable
           } {}
         }
+        Fl_Group logsTab {
+          label {@square Logs} open
+          xywh {0 50 520 300} labelcolor 24 hide
+        } {
+          Fl_Text_Display logsDisplay {
+            label {You can view the logs of the latest JA2 Stracciatella execution here. If you want to report a bug, please include them in your bug report.}
+            xywh {20 95 480 250} box DOWN_BOX align 133 resizable
+          }
+        }
       }
-      Fl_Group {} {
+      Fl_Group {} {open
         xywh {0 350 465520 30}
       } {
         Fl_Output ja2JsonPathOutput {

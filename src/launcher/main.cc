@@ -3,18 +3,9 @@
 #include <FL/Fl.H>
 #include <string_theory/string>
 
-#if defined(__GNUC__) && __GNUC__ < 8
-	#include <experimental/filesystem>
-	namespace fs = std::experimental::filesystem;
-#else
-	#include <filesystem>
-	namespace fs = std::filesystem;
-#endif
-
-int main(int argc, char* argv[]) 
+int main(int argc, char* argv[])
 {
-	ST::string logPath { fs::temp_directory_path().append("ja2-launcher.log") };
-	Logger_initialize(logPath.c_str());
+	Logger_initialize("ja2-launcher.log");
 
 #ifdef _WIN32
 	// Ensure quick-edit mode is off, or else it will block execution

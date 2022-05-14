@@ -12,9 +12,10 @@ project(getter NONE)
 
 include(ExternalProject)
 externalproject_add(get-miniaudio
-    # This is version 0.10.20
-    URL "https://github.com/mackron/miniaudio/archive/634cdb028f340075ae8e8a1126620695688d2ac3.zip"
-    URL_MD5 "b30045e95cec65bfe1d9fe3639f480a2"
+    # Need miniaudio>=0.10.36<0.11
+    # This is version 0.10.43
+    URL "https://github.com/mackron/miniaudio/archive/8686f52e6625e562f4756b946696692c016324ab.zip"
+    URL_MD5 "7e682c814564dd64ee05dc34130a0e15"
     CMAKE_ARGS
         "-G@CMAKE_GENERATOR@"
         SOURCE_DIR          "@SRC_DIR@"

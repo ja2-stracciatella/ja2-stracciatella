@@ -94,6 +94,9 @@ option(WITH_MAEMO "Build with right click mapped to F4 (menu button)" OFF)
 option(BUILD_LAUNCHER "Build the ja2 launcher application" ON)
 option(WITH_EDITOR_SLF "Include the latest free editor.slf" OFF)
 option(WITH_RUST_BINARIES "Include rust binaries in build" ON)
+# @see LOCAL_LUA_LIB in dependencies/lib-lua/CMakeLists.txt
+# @see LOCAL_SOL_LIB in dependencies/lib-sol2/CMakeLists.txt
+# @see LOCAL_MINIAUDIO_LIB in dependencies/lib-miniaudio/CMakeLists.txt
 set(WITH_CUSTOM_LOCALE "" CACHE STRING "Set a custom locale at the start, leave empty to disable")
 
 if(MSVC)
@@ -283,11 +286,6 @@ if (MINGW)
 endif()
 if (ANDROID)
     LIST(APPEND JA2_LIBRARIES android log)
-endif()
-
-if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    LIST(APPEND JA2_LIBRARIES stdc++fs)
-    LIST(APPEND LAUNCHER_LIBRARIES stdc++fs)
 endif()
 
 if(ANDROID)

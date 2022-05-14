@@ -25,6 +25,7 @@ branches:
   only:
     - master
     - nightly
+    - /\d+\.\d+\.[\dx]+/
 
 matrix:
   fast_finish: true

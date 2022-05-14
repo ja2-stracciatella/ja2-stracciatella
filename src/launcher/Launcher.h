@@ -9,6 +9,7 @@
 #include <iostream>
 #include <iterator>
 #include <set>
+#include <optional>
 
 struct sortMods {
     bool operator() (ST::string a, ST::string b) const {
@@ -32,11 +33,15 @@ private:
 	char** argv;
 	RustPointer<EngineOptions> engineOptions;
 	RustPointer<ModManager> modManager;
+	std::optional<RustPointer<SubProcess>> subProcess;
+	Fl_Text_Buffer logsBuffer;
 
 	void populateChoices();
 	void startExecutable(bool asEditor);
 	bool resolutionIsInvalid();
-	void update(bool changed, Fl_Widget *widget);
+	bool gameIsRunning();
+	void update(bool changed);
+	void updateLogs();
 	void showModDetails(const ST::string& modName);
 	void hideModDetails();
 	static void openGameDirectorySelector(Fl_Widget *btn, void *userdata);
@@ -55,6 +60,7 @@ private:
 	static void moveUpMods(Fl_Widget* widget, void* userdata);
 	static void moveDownMods(Fl_Widget* widget, void* userdata);
 	static void selectGameVersion(Fl_Widget* widget, void* userdata);
+	static void maintainSubProcessState(void*);
 };
 
 #endif //JA2_LAUNCHER_H_H
