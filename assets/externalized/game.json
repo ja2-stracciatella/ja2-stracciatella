@@ -125,6 +125,17 @@
   "tactical_head_damage_multiplier": 1.5,
   "tactical_legs_damage_multiplier": 0.5,
 
+  //  Aim bonus per spent AP and for using scopes
+  //  vanilla setting (%): 10, 20, 20
+  "aim_bonus_per_std_ap": 10,
+  "aim_bonus_sniperscope": 20,
+  "aim_bonus_laserscope": 20,
+
+  //  Range bonuses and penalties. 10 per 1 tile.
+  //  vanilla setting: 0, 100
+  "range_penalty_silencer": 0,
+  "range_bonus_barrel_extender": 100,
+
   //  Always show mouse cursor during tactical view (if false, no mourse cursor is shown when moving in real-time mode, selecting a merc, etc)
   //  vanilla setting: false
   "always_show_cursor_in_tactical": false,

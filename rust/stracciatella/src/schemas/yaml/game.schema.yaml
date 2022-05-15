@@ -241,6 +241,41 @@ properties:
       Multiplier for damage that is inflicted on the legs
 
       Vanilla setting: `0.5`
+  aim_bonus_per_std_ap:
+    $ref: types/int8.schema.yaml
+    title: Aim bonus per spent AP
+    description: |
+      How much (in percent) does the to-hit chance increase per spent AP?
+
+      Vanilla setting: `10`
+  aim_bonus_sniperscope:
+    $ref: types/int8.schema.yaml
+    title: Aim bonus from sniper scope
+    description: |
+      How much (in percent) does the to-hit chance increase if using a sniper scope?
+
+      Vanilla setting: `20`
+  aim_bonus_laserscope:
+    $ref: types/int8.schema.yaml
+    title: Aim bonus from laser scope
+    description: |
+      How much (in percent) does the to-hit chance increase if using a laser scope?
+
+      Vanilla setting: `20`
+  range_penalty_silencer:
+    $ref: types/int16.schema.yaml
+    title: Range penalty from silencer
+    description: |
+      Range penalty for having a silencer attached. 10 per 1 tile.
+
+      Vanilla setting: `0`
+  range_bonus_barrel_extender:
+    $ref: types/int16.schema.yaml
+    title: Range bonus from extender
+    description: |
+      Range bonus for having a barrel extender attached. 10 per 1 tile.
+
+      Vanilla setting: `100`
   always_show_cursor_in_tactical:
     type: boolean
     title: Always show cursor in tactical
@@ -483,6 +518,11 @@ required:
   - chance_to_hit_maximum
   - tactical_head_damage_multiplier
   - tactical_legs_damage_multiplier
+  - aim_bonus_per_std_ap
+  - aim_bonus_sniperscope
+  - aim_bonus_laserscope
+  - range_penalty_silencer
+  - range_bonus_barrel_extender
   - always_show_cursor_in_tactical
   - show_hit_chance
   - website_loading_time_scale
