@@ -189,6 +189,13 @@ properties:
       - Progress bars for the mercs stats in tactical mode.
 
       Vanilla setting: `false`
+  skip_sleep_explanation:
+    type: boolean
+    title: Skip sleep explanation
+    description: |
+      Skips the `cannot sleep` popup when driving or when the merc is already rested.
+
+      Vanilla setting: `false`
   extra_attachments:
     type: boolean
     title: Extra attachments
@@ -469,6 +476,7 @@ required:
   - enemy_elite_minimum_level
   - enemy_elite_maximum_level
   - gui_extras
+  - skip_sleep_explanation
   - extra_attachments
   - pablo_wont_steal
   - chance_to_hit_minimum

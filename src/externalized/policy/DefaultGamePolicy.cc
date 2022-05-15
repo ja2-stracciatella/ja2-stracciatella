@@ -41,6 +41,7 @@ DefaultGamePolicy::DefaultGamePolicy(rapidjson::Document *json)
 
 	gui_extras = gp.getOptionalBool("gui_extras", true);
 	extra_attachments = gp.getOptionalBool("extra_attachments");
+	skip_sleep_explanation = gp.getOptionalBool("skip_sleep_explanation");
 
 	pablo_wont_steal = gp.getOptionalBool("pablo_wont_steal");
 

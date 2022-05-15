@@ -48,6 +48,7 @@ public:
 
 	bool gui_extras;                      /* graphical user interface cosmetic mod */
 	bool extra_attachments;               // allow more item attachments options
+	bool skip_sleep_explanation;          // skip annoying popups
 
 	bool middle_mouse_look;               // Look cursor with middle mouse button
 	bool can_enter_turnbased;             // 'd' can start turnbased if in real-time
