@@ -3327,18 +3327,9 @@ static BOOLEAN GetMapXY(INT16 sX, INT16 sY, SGPSector& sMap)
 		return( FALSE );
 	}
 
-	if ( sMapX < 0 || sMapY < 0 )
-	{
-		return( FALSE );
-	}
-
 	if ( sMapX > MAP_VIEW_WIDTH+MAP_GRID_X-1 || sMapY > MAP_VIEW_HEIGHT+7/* +MAP_VIEW_HEIGHT */ )
 	{
 		return( FALSE );
-	}
-	if(sMapX < 1 || sMapY <1)
-	{
-		return (FALSE);
 	}
 
 	sMap.x = sMapX / MAP_GRID_X;
