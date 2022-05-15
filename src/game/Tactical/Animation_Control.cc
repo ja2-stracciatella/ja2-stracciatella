@@ -2615,7 +2615,7 @@ UINT16 DetermineSoldierAnimationSurface(const SOLDIERTYPE* pSoldier, UINT16 usAn
 	if ( usAnimSurface == INVALID_ANIMATION	)
 	{
 		// WE SHOULD NOT BE USING THIS ANIMATION
-		SLOGW( "Invalid Animation File for Body %d, animation %s.", pSoldier->ubBodyType, gAnimControl[usAnimState].zAnimStr);
+		SLOGW("Invalid Animation File for Body {}, animation {}.", pSoldier->ubBodyType, gAnimControl[usAnimState].zAnimStr);
 		// Set index to FOUND_INVALID_ANIMATION
 		gubAnimSurfaceIndex[pSoldier->ubBodyType][usAnimState] = FOUND_INVALID_ANIMATION;
 		return( INVALID_ANIMATION_SURFACE );
@@ -2836,7 +2836,7 @@ UINT16 GetSoldierAnimationSurface(SOLDIERTYPE const* const pSoldier)
 		// Ensure that it's loaded!
 		if ( gAnimSurfaceDatabase[usAnimSurface].hVideoObject == NULL )
 		{
-			SLOGW("Animation Surface for Body %d, animation %s, surface %d not loaded.",
+			SLOGW("Animation Surface for Body {}, animation {}, surface {} not loaded.",
 				pSoldier->ubBodyType, gAnimControl[pSoldier->usAnimState].zAnimStr, usAnimSurface);
 			usAnimSurface = INVALID_ANIMATION_SURFACE;
 		}

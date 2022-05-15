@@ -586,8 +586,7 @@ bool AddPlacementToWorld(SOLDIERINITNODE* const init)
 	}
 	else
 	{
-		SLOGD(
-			"Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
+		SLOGD("Failed to create soldier using TacticalCreateSoldier within AddPlacementToWorld");
 		return false;
 	}
 }
@@ -1257,8 +1256,7 @@ void AddSoldierInitListMilitia( UINT8 ubNumGreen, UINT8 ubNumRegs, UINT8 ubNumEl
 					ubNumGreen--;
 				}
 				else
-					SLOGE(
-						"AddSoldierInitListMilitia: something wrong with random");
+					SLOGE("AddSoldierInitListMilitia: something wrong with random");
 				curr->pBasicPlacement->bTeam = MILITIA_TEAM;
 				curr->pBasicPlacement->bOrders = STATIONARY;
 				curr->pBasicPlacement->bAttitude = (INT8) Random( MAXATTITUDES );

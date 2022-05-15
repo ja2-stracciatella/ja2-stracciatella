@@ -912,7 +912,7 @@ void ExecuteOverhead(void)
 									}
 									else if (soldier->hasPendingAction())
 									{
-										SLOGD("We are inside the IF PENDING Animation with soldier #%d", pSoldier->ubID);
+										SLOGD("We are inside the IF PENDING Animation with soldier #{}", pSoldier->ubID);
 
 										if (pSoldier->ubPendingAction == MERC_OPENDOOR ||
 											pSoldier->ubPendingAction == MERC_OPENSTRUCT)
@@ -925,7 +925,7 @@ void ExecuteOverhead(void)
 											STRUCTURE* const pStructure = FindStructure(sGridNo, STRUCTURE_OPENABLE);
 											if (pStructure == NULL)
 											{
-												SLOGW("Told to open struct at %d and none was found", sGridNo);
+												SLOGW("Told to open struct at {} and none was found", sGridNo);
 												fKeepMoving = FALSE;
 											}
 											else
@@ -1017,9 +1017,8 @@ void ExecuteOverhead(void)
 										// ATE: Pop up warning....
 										if (pSoldier->ubPathDataSize != MAX_PATH_LIST_SIZE)
 										{
-											SLOGD(
-												"Path for %s ( %d ) did not make merc get to dest.",
-												pSoldier->name.c_str(), pSoldier->ubID);
+											SLOGD("Path for {} ( {} ) did not make merc get to dest.",
+												pSoldier->name, pSoldier->ubID);
 										}
 
 										// In case this is an AI person with the path-stored flag set,
@@ -1490,7 +1489,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 	// CHECK IF THIS TILE IS A GOOD ONE!
 	if (!HandleNextTile(pSoldier, (INT8)pSoldier->ubPathingData[pSoldier->ubPathIndex], usNewGridNo, pSoldier->sFinalDestination))
 	{
-		SLOGD("HandleGotoNewGridNo() Failed: Tile %d Was blocked", usNewGridNo);
+		SLOGD("HandleGotoNewGridNo() Failed: Tile {} Was blocked", usNewGridNo);
 
 		// ATE: If our own guy and an initial move.. display message
 		//if ( fInitialMove && pSoldier->bTeam == OUR_TEAM  )
@@ -1734,7 +1733,7 @@ BOOLEAN HandleGotoNewGridNo(SOLDIERTYPE* pSoldier, BOOLEAN* pfKeepMoving, BOOLEA
 	else
 	{
 		// HALT GUY HERE
-		SLOGD("HandleGotoNewGridNo() Failed: No APs %d %d", sAPCost, pSoldier->bActionPoints);
+		SLOGD("HandleGotoNewGridNo() Failed: No APs {} {}", sAPCost, pSoldier->bActionPoints);
 		HaltGuyFromNewGridNoBecauseOfNoAPs(*pSoldier);
 		pSoldier->bEndDoorOpenCode = FALSE;
 		*pfKeepMoving = FALSE;
@@ -5338,7 +5337,7 @@ static void HandleSuppressionFire(const SOLDIERTYPE* const targeted_merc, SOLDIE
 				// This person will be busy while they crouch or go prone
 				if (gTacticalStatus.uiFlags & INCOMBAT)
 				{
-					SLOGD("Starting suppression, on %d", pSoldier->ubID);
+					SLOGD("Starting suppression, on {}", pSoldier->ubID);
 
 					gTacticalStatus.ubAttackBusyCount++;
 
@@ -5471,7 +5470,7 @@ BOOLEAN ProcessImplicationsOfPCAttack(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 		{
 			if (pTarget->uiStatusFlags & SOLDIER_PC)
 			{
-				SLOGD("%s is changing teams", pTarget->name.c_str());
+				SLOGD("{} is changing teams", pTarget->name);
 			}
 			// member of a civ group, either recruited or neutral, so should
 			// change sides individually or all together
@@ -5578,8 +5577,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		// But for all means.... DON'T wrap!
 		if ( (gTacticalStatus.uiFlags & INCOMBAT) )
 		{
-			SLOGD(
-				"Problem with attacker busy count decrementing past 0.... preventing wrap-around.");
+			SLOGD("Problem with attacker busy count decrementing past 0.... preventing wrap-around.");
 		}
 	}
 	else
@@ -5587,9 +5585,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		gTacticalStatus.ubAttackBusyCount--;
 	}
 
-	SLOGD(
-		"Ending attack, attack count now %d",
-		gTacticalStatus.ubAttackBusyCount);
+	SLOGD("Ending attack, attack count now {}", gTacticalStatus.ubAttackBusyCount);
 	//}
 
 	if (gTacticalStatus.ubAttackBusyCount > 0)
@@ -5608,7 +5604,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 		// suppression fire might cause the count to be increased, so check it again
 		if (gTacticalStatus.ubAttackBusyCount > 0)
 		{
-			SLOGD("Starting suppression, attack count now %d", gTacticalStatus.ubAttackBusyCount);
+			SLOGD("Starting suppression, attack count now {}", gTacticalStatus.ubAttackBusyCount);
 			return( pTarget );
 		}
 	}
@@ -5825,7 +5821,7 @@ static SOLDIERTYPE* InternalReduceAttackBusyCount(SOLDIERTYPE* const pSoldier, c
 SOLDIERTYPE* ReduceAttackBusyCount(SOLDIERTYPE* const attacker, const BOOLEAN fCalledByAttacker)
 {
 	SOLDIERTYPE* const target = (attacker == NULL ? NULL : attacker->target);
-	SLOGD("Reducing Attack Busy Count of %d", attacker != NULL ? attacker->ubID : -1);
+	SLOGD("Reducing Attack Busy Count of {}", attacker != NULL ? attacker->ubID : -1);
 	return InternalReduceAttackBusyCount(attacker, fCalledByAttacker, target);
 }
 
@@ -5930,7 +5926,7 @@ void RemoveManFromTeam(const INT8 bTeam)
 	if (gTacticalStatus.uiFlags & LOADING_SAVED_GAME) return;
 	if (!IsTeamActive(bTeam))
 	{
-		SLOGD("Number of people on team %d dropped to %d", bTeam, gTacticalStatus.Team[bTeam].bMenInSector);
+		SLOGD("Number of people on team {} dropped to {}", bTeam, gTacticalStatus.Team[bTeam].bMenInSector);
 		return;
 	}
 	--gTacticalStatus.Team[bTeam].bMenInSector;

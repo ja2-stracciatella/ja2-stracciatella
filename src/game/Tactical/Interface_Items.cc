@@ -3708,7 +3708,7 @@ BOOLEAN HandleItemPointerClick( UINT16 usMapPos )
 
 			// Increment attacker count...
 			gTacticalStatus.ubAttackBusyCount++;
-			SLOGD("INcremtning ABC: Throw item to %d", gTacticalStatus.ubAttackBusyCount);
+			SLOGD("INcremtning ABC: Throw item to {}", gTacticalStatus.ubAttackBusyCount);
 
 			// Given our gridno, throw grenate!
 			CalculateLaunchItemParamsForThrow(gpItemPointerSoldier, sGridNo, gsInterfaceLevel, gsInterfaceLevel * 256 + sEndZ, gpItemPointer, 0, ubThrowActionCode, target);
@@ -4139,12 +4139,11 @@ std::pair<const SGPVObject*, UINT8> GetSmallInventoryGraphicForItem(const ItemMo
 	auto subImageIndex = item->getInventoryGraphicSmall().getSubImageIndex();
 	auto i = allInventoryGraphics.find(path);
 	if (i == allInventoryGraphics.end()) {
-		STLOGE("Could not find small inventory graphic for item `{}`", item->getInternalName());
+		SLOGE("Could not find small inventory graphic for item `{}`", item->getInternalName());
 		return GetFallbackSmallInventoryGraphicForItem(item);
 	}
 	if (subImageIndex >= i->second->SubregionCount()) {
-		STLOGE(
-			"subImageIndex out of range for small inventory graphic `{}` for item `{}`: subregion count is `{}`, subImageIndex is `{}`",
+		SLOGE("subImageIndex out of range for small inventory graphic `{}` for item `{}`: subregion count is `{}`, subImageIndex is `{}`",
 			path,
 			item->getInternalName(),
 			i->second->SubregionCount(),
@@ -4173,14 +4172,13 @@ std::pair<SGPVObject*, UINT8> GetBigInventoryGraphicForItem(const ItemModel * it
 	try {
 		vObject = AddVideoObjectFromFile(path);
 	} catch (const std::runtime_error &ex) {
-		STLOGE("Error loading big inventory graphic for item `{}`", item->getInternalName());
+		SLOGE("Error loading big inventory graphic for item `{}`", item->getInternalName());
 	}
 	if (vObject == NULL) {
 		return GetFallbackBigInventoryGraphic();
 	}
 	if (subImageIndex >= vObject->SubregionCount()) {
-		STLOGE(
-			"subImageIndex out of range for big inventory graphic `{}` for item `{}`: subregion count is `{}`, subImageIndex is `{}`",
+		SLOGE("subImageIndex out of range for big inventory graphic `{}` for item `{}`: subregion count is `{}`, subImageIndex is `{}`",
 			path,
 			item->getInternalName(),
 			vObject->SubregionCount(),
@@ -5436,7 +5434,7 @@ void LoadInterfaceItemsGraphics()
 				auto vObject = AddVideoObjectFromFile(item.c_str());
 				allInventoryGraphics.insert_or_assign(path, vObject);
 			} catch (const std::runtime_error &ex) {
-				STLOGE("Error loading small inventory graphic `{}`: {}", item, ex.what());
+				SLOGE("Error loading small inventory graphic `{}`: {}", item, ex.what());
 			}
 		}
 	}

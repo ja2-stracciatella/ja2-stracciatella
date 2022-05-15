@@ -6440,7 +6440,7 @@ void TellPlayerWhyHeCantCompressTime( void )
 	// if we're locked into paused time compression by some event that enforces that
 	if ( PauseStateLocked() )
 	{
-		SLOGD("Can't compress time, pause state locked (reason %d). OK unless permanent.\n\
+		SLOGD("Can't compress time, pause state locked (reason {}). OK unless permanent.\n\
 			If permanent, take screenshot now, send with *previous* save & describe what happened since.",
 			guiLockPauseStateLastReasonId);
 	}
@@ -8003,7 +8003,7 @@ static void RestorePreviousPaths(void)
 			else
 			{
 				// invalid pSoldier - that guy can't possibly be moving, he's on a non-vehicle assignment!
-				SLOGA("RestorePreviousPaths: invalid pSoldier: %d", pSoldier->ubID);
+				SLOGA("RestorePreviousPaths: invalid pSoldier: {}", pSoldier->ubID);
 				continue;
 			}
 

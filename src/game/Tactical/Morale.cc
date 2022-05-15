@@ -406,13 +406,11 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 	// Those that do need it have Asserts on a case by case basis below
 	if (pSoldier == NULL)
 	{
-		STLOGD("Handling morale event {} at {}", bMoraleEvent, sMap.AsLongString());
+		SLOGD("Handling morale event {} at {}", bMoraleEvent, sMap.AsLongString());
 	}
 	else
 	{
-		STLOGD("Handling morale event {} for {} at {}",
-						 bMoraleEvent, pSoldier->name.c_str(), sMap.AsLongString());
-
+		SLOGD("Handling morale event {} for {} at {}", bMoraleEvent, pSoldier->name, sMap.AsLongString());
 	}
 
 
@@ -609,7 +607,7 @@ void HandleMoraleEvent(SOLDIERTYPE *pSoldier, INT8 bMoraleEvent, const SGPSector
 
 		default:
 			// debug message
-			SLOGI("Invalid morale event type = %d.", bMoraleEvent);
+			SLOGI("Invalid morale event type = {}.", bMoraleEvent);
 			break;
 	}
 

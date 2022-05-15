@@ -2454,7 +2454,7 @@ void LoadWorldFromSGPFile(SGPFile *f)
 	else
 	{
 		// ja2 demo has 3.13
-		SLOGW("Map has an unexpected version (%f %u), expect problems", dMajorMapVersion, gMapInformation.ubMapVersion);
+		SLOGW("Map has an unexpected version ({} {}), expect problems", dMajorMapVersion, gMapInformation.ubMapVersion);
 	}
 
 	ValidateAndUpdateMapVersionIfNecessary();
@@ -2651,7 +2651,7 @@ void LoadMapTileset(TileSetID const id)
 	}
 	else
 	{
-		SLOGD("Tileset %d has no callback function for movement costs. Using default.", id);
+		SLOGD("Tileset {} has no callback function for movement costs. Using default.", id);
 		SetTilesetOneTerrainValues();
 	}
 

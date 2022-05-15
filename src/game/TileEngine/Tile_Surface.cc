@@ -34,7 +34,7 @@ try
 	AutoStructureFileRef pStructureFileRef;
 	if (GCM->doesGameResExists( cStructureFilename ))
 	{
-		SLOGD("loading tile %s", cStructureFilename.c_str());
+		SLOGD("loading tile {}", cStructureFilename);
 
 		pStructureFileRef = LoadStructureFile( cStructureFilename.c_str() );
 

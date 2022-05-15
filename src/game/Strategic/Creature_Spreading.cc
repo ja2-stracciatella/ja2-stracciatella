@@ -131,7 +131,7 @@ static CREATURE_DIRECTIVE* NewDirective(UINT8 ubSectorID, UINT8 ubSectorZ, UINT8
 	curr->pLevel = FindUnderGroundSector(ubSector);
 	if( !curr->pLevel )
 	{
-		STLOGA("Could not find underground sector node ({}) that should exist.",
+		SLOGA("Could not find underground sector node ({}) that should exist.",
 			ubSector.AsLongString());
 		delete curr;
 		return 0;
@@ -695,7 +695,7 @@ BOOLEAN MineClearOfMonsters( UINT8 ubMineIndex )
 		auto mine = GCM->getMine(ubMineIndex);
 		if (mine == NULL)
 		{
-			SLOGE("Attempting to check if mine is clear but mine index is invalid (%d).", ubMineIndex);
+			SLOGE("Attempting to check if mine is clear but mine index is invalid ({}).", ubMineIndex);
 			return true;
 		}
 		for (auto sector : mine->mineSectors)
@@ -888,7 +888,7 @@ BOOLEAN PrepareCreaturesForBattle()
 			ubAdultFemalePercentage = 20;
 			break;
 		default:
-			SLOGE("Invalid creature habitat ID of %d for PrepareCreaturesForBattle.  Ignoring...", ubCreatureHabitat );
+			SLOGE("Invalid creature habitat ID of {} for PrepareCreaturesForBattle.  Ignoring...", ubCreatureHabitat);
 			return FALSE;
 	}
 
@@ -1035,7 +1035,7 @@ void LoadCreatureDirectives(HWFILE const hFile, UINT32 const uiSavedGameVersion)
 		auto lair = GCM->getCreatureLair(giLairID);
 		if (!lair)
 		{
-			STLOGE("Invalid restoration of creature lair ID of {}.  Save game potentially hosed.", giLairID);
+			SLOGE("Invalid restoration of creature lair ID of {}.  Save game potentially hosed.", giLairID);
 			break;
 		}
 		InitCreatureLair(lair);

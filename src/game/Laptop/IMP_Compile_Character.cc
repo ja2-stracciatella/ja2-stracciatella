@@ -221,7 +221,7 @@ static void CreatePlayerSkills(void)
 		else if (iLastElementInSkillsList > 2)
 		{
 			// This should be impossible
-			STLOGA("Invalid number ({}) of skills selected", iLastElementInSkillsList);
+			SLOGA("Invalid number ({}) of skills selected", iLastElementInSkillsList);
 		}
 	
 		return;

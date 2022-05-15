@@ -1203,7 +1203,7 @@ static INT16 FindClosestClimbPointAvailableToAI(SOLDIERTYPE* pSoldier, INT16 sSt
 		if (pSoldier->bOrders == ONGUARD || pSoldier->bOrders == CLOSEPATROL)
 		{
 			//Make it so he cant climb down off the roof
-			STLOGD("TacticalAI: soldier #{} is on guard ({}) and not allowed to climb down", pSoldier->ubID, pSoldier->bOrders);
+			SLOGD("TacticalAI: soldier #{} is on guard ({}) and not allowed to climb down", pSoldier->ubID, pSoldier->bOrders);
 			return NOWHERE;
 		}
 	}
@@ -1807,7 +1807,7 @@ INT8 CalcMorale(SOLDIERTYPE *pSoldier)
 		(pSoldier->bAttitude == BRAVESOLO || pSoldier->bAttitude == BRAVEAID))
 		bMoraleCategory = MORALE_WORRIED;
 
-	SLOGD("Morale = %d (category %d), iOurTotalThreat %d, iTheirTotalThreat %d",
+	SLOGD("Morale = {} (category {}), iOurTotalThreat {}, iTheirTotalThreat {}",
 				sMorale, bMoraleCategory, iOurTotalThreat, iTheirTotalThreat);
 
 	return(bMoraleCategory);

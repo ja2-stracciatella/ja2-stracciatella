@@ -548,7 +548,7 @@ WeaponModel* WeaponModel::deserialize(JsonObjectReader &obj,
 
 	if(!wep)
 	{
-		STLOGE("Weapon type '{}' is not found", internalType);
+		SLOGE("Weapon type '{}' is not found", internalType);
 		return wep;
 	}
 

@@ -958,7 +958,7 @@ static void CalcBestThrow(SOLDIERTYPE* pSoldier, ATTACKTYPE* pBestThrow)
 				// unlike SHOOTing and STABbing, find strictly the highest attackValue
 				if (iAttackValue > pBestThrow->iAttackValue)
 				{
-					SLOGD("CalcBestThrow: new best attackValue vs %d = %d\n", opponents[ubLoop]->ubID, iAttackValue);
+					SLOGD("CalcBestThrow: new best attackValue vs {} = {}\n", opponents[ubLoop]->ubID, iAttackValue);
 
 					// OOOF!  That was a lot of work!  But we've got a new best target!
 					pBestThrow->ubPossible           = TRUE;

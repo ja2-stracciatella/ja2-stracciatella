@@ -388,7 +388,7 @@ void PrepareEnemyForSectorBattle()
 	UINT8 const n_stationary_enemies = total_admins + total_troops + total_elites;
 	if (n_stationary_enemies > 32)
 	{
-		STLOGE("The total stationary enemy forces in sector {} is {}. (max {})",
+		SLOGE("The total stationary enemy forces in sector {} is {}. (max {})",
 			  gWorldSector.AsShortString(), total_admins + total_troops + total_elites, 32);
 		total_admins = std::min(total_admins, 32);
 		total_troops = std::min(total_troops, 32 - total_admins);
@@ -404,8 +404,8 @@ void PrepareEnemyForSectorBattle()
 	//Test:  All slots should be free at this point!
 	if (n_slots != gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1)
 	{
-		SLOGE("All enemy slots should be free at this point.  Only %d of %d are available.\n\
-			Trying to add %d admins, %d troops, and %d elites.",
+		SLOGE("All enemy slots should be free at this point.  Only {} of {} are available.\n\
+			Trying to add {} admins, {} troops, and {} elites.",
 			n_slots, gTacticalStatus.Team[ENEMY_TEAM].bLastID - gTacticalStatus.Team[ENEMY_TEAM].bFirstID + 1,
 			total_admins, total_troops, total_elites);
 	}
@@ -607,12 +607,12 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 		pGroup = GetGroup( pSoldier->ubGroupID );
 		if( !pGroup )
 		{
-			SLOGW("Enemy soldier killed with ubGroupID of %d, and the group doesn't exist!", pSoldier->ubGroupID);
+			SLOGW("Enemy soldier killed with ubGroupID of {}, and the group doesn't exist!", pSoldier->ubGroupID);
 			return;
 		}
 		if( pGroup->fPlayer )
 		{
-			STLOGW("Attempting to process player group thinking it's an enemy group (#{}) in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID);
+			SLOGW("Attempting to process player group thinking it's an enemy group (#{}) in ProcessQueenCmdImplicationsOfDeath()", pSoldier->ubGroupID);
 			return;
 		}
 		switch( pSoldier->ubSoldierClass )
@@ -620,7 +620,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			case SOLDIER_CLASS_ELITE:
 				if( !pGroup->pEnemyGroup->ubNumElites )
 				{
-					SLOGW("Enemy elite killed with ubGroupID of %d, but the group doesn't contain elites!", pGroup->ubGroupID);
+					SLOGW("Enemy elite killed with ubGroupID of {}, but the group doesn't contain elites!", pGroup->ubGroupID);
 					break;
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
@@ -644,7 +644,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			case SOLDIER_CLASS_ARMY:
 				if( !pGroup->pEnemyGroup->ubNumTroops )
 				{
-					SLOGW("Enemy troop killed with ubGroupID of %d, but the group doesn't contain troops!", pGroup->ubGroupID);
+					SLOGW("Enemy troop killed with ubGroupID of {}, but the group doesn't contain troops!", pGroup->ubGroupID);
 					break;
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
@@ -668,7 +668,7 @@ void ProcessQueenCmdImplicationsOfDeath(const SOLDIERTYPE* const pSoldier)
 			case SOLDIER_CLASS_ADMINISTRATOR:
 				if( !pGroup->pEnemyGroup->ubNumAdmins )
 				{
-					SLOGW("Enemy administrator killed with ubGroupID of %d, but the group doesn't contain administrators!", pGroup->ubGroupID);
+					SLOGW("Enemy administrator killed with ubGroupID of {}, but the group doesn't contain administrators!", pGroup->ubGroupID);
 				}
 				if( guiCurrentScreen == GAME_SCREEN )
 				{
@@ -1013,7 +1013,7 @@ void AddPossiblePendingEnemiesToBattle()
 
 static void AddEnemiesToBattle(GROUP const& g, UINT8 const strategic_insertion_code, UINT8 n_admins, UINT8 n_troops, UINT8 n_elites)
 {
-	SLOGD("Enemy reinforcements have arrived! (%d admins, %d troops, %d elite)",
+	SLOGD("Enemy reinforcements have arrived! ({} admins, {} troops, {} elite)",
 				n_admins, n_troops, n_elites);
 
 	UINT8 desired_direction;

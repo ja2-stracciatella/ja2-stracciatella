@@ -1031,7 +1031,7 @@ static BOOLEAN LightCastRay(LightTemplate* const t, const INT16 iStartX, const I
 	if((XDelta==0) && (YDelta==0))
 		return(FALSE);
 
-	SLOGD("Drawing (%d,%d) to (%d,%d)", iXPos, iYPos, iEndX, iEndY);
+	SLOGD("Drawing ({},{}) to ({},{})", iXPos, iYPos, iEndX, iEndY);
 	LightAddNode(t, 32767, 32767, 32767, 32767, 0, LIGHT_NEW_RAY);
 	Assert(t->rays.size() <= UINT16_MAX);
 	if (fInsertNodes) usCurNode = static_cast<UINT16>(t->rays.size());

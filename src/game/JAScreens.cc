@@ -118,7 +118,7 @@ ScreenID ErrorScreenHandle(void)
 
 	if ( !fFirstTime )
 	{
-		STLOGE("Runtime Error: {} ", gubErrorText);
+		SLOGE("Runtime Error: {} ", gubErrorText);
 		fFirstTime = TRUE;
 	}
 

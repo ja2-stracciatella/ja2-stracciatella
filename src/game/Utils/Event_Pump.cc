@@ -209,7 +209,7 @@ static void ExecuteGameEvent(EVENT* pEvent)
 			}
 
 			// Call soldier function
-			SLOGD("SetDesiredDirection: Dir( %d )", SSetDesiredDirection.usDesiredDirection);
+			SLOGD("SetDesiredDirection: Dir( {} )", SSetDesiredDirection.usDesiredDirection);
 			EVENT_SetSoldierDesiredDirection(pSoldier, SSetDesiredDirection.usDesiredDirection);
 		},
 		[](EV_S_BEGINFIREWEAPON const& SBeginFireWeapon)
@@ -261,12 +261,12 @@ static void ExecuteGameEvent(EVENT* pEvent)
 		},
 		[](EV_S_WEAPONHIT const& SWeaponHit)
 		{
-			SLOGD("WeaponHit %d Damage", SWeaponHit.sDamage);
+			SLOGD("WeaponHit {} Damage", SWeaponHit.sDamage);
 			WeaponHit(&GetMan(SWeaponHit.usSoldierID), SWeaponHit.usWeaponIndex, SWeaponHit.sDamage, SWeaponHit.sBreathLoss, SWeaponHit.usDirection, SWeaponHit.sXPos, SWeaponHit.sYPos, SWeaponHit.sZPos, SWeaponHit.sRange, &GetMan(SWeaponHit.ubAttackerID), SWeaponHit.ubSpecial, SWeaponHit.ubLocation);
 		},
 		[](EV_S_NOISE const& SNoise)
 		{
-			SLOGD("Noise from %d at %d/%d, type %d volume %d",
+			SLOGD("Noise from {} at {}/{}, type {} volume {}",
 						SNoise.ubNoiseMaker, SNoise.sGridNo, SNoise.bLevel,
 						SNoise.ubNoiseType, SNoise.ubVolume);
 			OurNoise(ID2SOLDIER(SNoise.ubNoiseMaker), SNoise.sGridNo, SNoise.bLevel, SNoise.ubVolume, static_cast<NoiseKind>(SNoise.ubNoiseType));

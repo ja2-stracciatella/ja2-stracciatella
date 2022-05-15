@@ -450,7 +450,7 @@ void EnterAutoResolveMode(const SGPSector& ubSector)
 			break;
 		default:
 			//shouldn't happen
-			SLOGE("Autoresolving with entering enemy sector code %d -- illegal", gubEnemyEncounterCode );
+			SLOGE("Autoresolving with entering enemy sector code {} -- illegal", gubEnemyEncounterCode);
 			break;
 	}
 }
@@ -1808,7 +1808,7 @@ static void RemoveAutoResolveInterface(bool const delete_for_good)
 			 * 32. We basically cheat by eliminating the rest of them. */
 			if (NumEnemiesInSector(arSector))
 			{
-				SLOGI("Eliminating remaining enemies after Autoresolve in (%d,%d)", arSector.x, arSector.y);
+				SLOGI("Eliminating remaining enemies after Autoresolve in ({})", arSector.AsShortString());
 				EliminateAllEnemies(arSector);
 			}
 		}
@@ -2872,7 +2872,7 @@ static SOLDIERCELL* ChooseTarget(SOLDIERCELL* pAttacker)
 		}
 		if( !IsBattleOver() )
 		{
-			SLOGA("Please send PRIOR save and screenshot of this message. iAvailableTargets %d, index %d, iRandom %d, defence %d. ",
+			SLOGA("Please send PRIOR save and screenshot of this message. iAvailableTargets {}, index {}, iRandom {}, defence {}. ",
 				iAvailableTargets, index, iRandom, gpAR->usPlayerDefence);
 		}
 	}

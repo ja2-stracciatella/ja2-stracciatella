@@ -786,7 +786,7 @@ std::vector<SaveGameInfo> GetValidSaveGames()
 		try {
 			validSaves.push_back(SaveGameInfo(saveName, file));
 		} catch (const std::runtime_error &ex) {
-			STLOGW("Could not read save game info for file `{}`: {}", *i, ex.what());
+			SLOGW("Could not read save game info for file `{}`: {}", *i, ex.what());
 			continue;
 		}
 	}
@@ -1221,7 +1221,7 @@ static void DoneFadeOutForSaveLoadScreen(void)
 	}
 	catch (std::runtime_error const& e)
 	{
-		STLOGE("Error loading game: {}", e.what());
+		SLOGE("Error loading game: {}", e.what());
 		ST::string msg = st_format_printf(zSaveLoadText[SLG_LOAD_GAME_ERROR], e.what());
 		DoSaveLoadMessageBox(msg, SAVE_LOAD_SCREEN, MSG_BOX_FLAG_OK, FailedLoadingGameCallBack);
 		NextLoopCheckForEnoughFreeHardDriveSpace();
@@ -1307,7 +1307,7 @@ static void ConfirmDeleteSavedGameCallBack(MessageBoxReturnValue const bExitValu
 			GCM->saveGameFiles()->deleteFile(GetSaveGamePath(save.name()));
 			gSavedGamesList.erase(gSavedGamesList.begin() + gbSelectedSaveLocation);
 		} catch (const std::runtime_error& err) {
-			STLOGE("Error deleting save game {}: {}", save.name(), err.what());
+			SLOGE("Error deleting save game {}: {}", save.name(), err.what());
 		}
 		gbSelectedSaveLocation = -1;
 		gfRedrawSaveLoadScreen = true;

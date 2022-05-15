@@ -9,7 +9,6 @@
 #include <stracciatella.h>
 
 void LogMessage(bool isAssert, LogLevel level, const char* file, const ST::string& str);
-void LogMessage(bool isAssert, LogLevel level, const char *file, const char *format, ...);
 
 /** Get filename relative to src directory */
 constexpr size_t GetSourcePathSize(const char* filename)
@@ -31,45 +30,24 @@ template <size_t p> constexpr const char* ToRelativePath(const char* filename)
 #define SOURCE_PATH_SIZE (GetSourcePathSize(__FILE__))
 #define __FILENAME__ (ToRelativePath<SOURCE_PATH_SIZE>(__FILE__))
 
-/** Print debug message macro. */
-#define SLOGD(FORMAT, ...) LogMessage(false, LogLevel::Debug, __FILENAME__, FORMAT, ##__VA_ARGS__)
-
-/** Print info message macro. */
-#define SLOGI(FORMAT, ...) LogMessage(false, LogLevel::Info,  __FILENAME__, FORMAT, ##__VA_ARGS__)
-
-/** Print warning message macro. */
-#define SLOGW(FORMAT, ...) LogMessage(false, LogLevel::Warn, __FILENAME__, FORMAT, ##__VA_ARGS__)
-
-/** Print error message macro. */
-#define SLOGE(FORMAT, ...) LogMessage(false, LogLevel::Error, __FILENAME__, FORMAT, ##__VA_ARGS__)
-
-/** Print error message macro and assert if ENABLE_ASSERTS is defined. */
-#define SLOGA(FORMAT, ...) LogMessage(true, LogLevel::Error, __FILENAME__, FORMAT, ##__VA_ARGS__)
-
-/*
-
-   As above, but for string_theory style formatted strings.
-
-*/
-
 template<typename... Args>
 constexpr void LogMessageST(bool isAssert, LogLevel level, const char* file, Args... args)
 {
 	LogMessage(isAssert, level, file, ST::format(args...));
 }
 /** Print debug message macro. */
-#define STLOGD(...) LogMessageST(false, LogLevel::Debug, __FILENAME__, ##__VA_ARGS__)
+#define SLOGD(...) LogMessageST(false, LogLevel::Debug, __FILENAME__, ##__VA_ARGS__)
 
 /** Print info message macro. */
-#define STLOGI(...) LogMessageST(false, LogLevel::Info,  __FILENAME__, ##__VA_ARGS__)
+#define SLOGI(...) LogMessageST(false, LogLevel::Info,  __FILENAME__, ##__VA_ARGS__)
 
 /** Print warning message macro. */
-#define STLOGW(...) LogMessageST(false, LogLevel::Warn, __FILENAME__, ##__VA_ARGS__)
+#define SLOGW(...) LogMessageST(false, LogLevel::Warn, __FILENAME__, ##__VA_ARGS__)
 
 /** Print error message macro. */
-#define STLOGE(...) LogMessageST(false, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
+#define SLOGE(...) LogMessageST(false, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
 
 /** Print error message macro and assert if ENABLE_ASSERTS is defined. */
-#define STLOGA(...) LogMessageST(true,  LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
+#define SLOGA(...) LogMessageST(true, LogLevel::Error, __FILENAME__, ##__VA_ARGS__)
 
 #endif//SGP_LOGGER_H_

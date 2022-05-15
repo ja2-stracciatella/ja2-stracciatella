@@ -1761,7 +1761,7 @@ void EnterShopKeeperInterfaceScreen( UINT8 ubArmsDealer )
 
 	if( gbSelectedArmsDealerID == -1 )
 	{
-		SLOGW("Failed to find Arms Dealer ID From Merc ID #%d", ubArmsDealer );
+		SLOGW("Failed to find Arms Dealer ID From Merc ID #{}", ubArmsDealer);
 		gfSKIScreenExit = TRUE;
 	}
 
@@ -4807,7 +4807,7 @@ static void EvaluateItemAddedToPlayersOfferArea(INT8 bSlotID, BOOLEAN fFirstOne)
 				break;
 
 			default:
-				SLOGW("Invalid evaluation result of %d.", uiEvalResult );
+				SLOGW("Invalid evaluation result of {}.", uiEvalResult);
 				break;
 		}
 

@@ -533,13 +533,13 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 	if (iOrigination < 0 || iOrigination > WORLD_MAX)
 	{
-		SLOGE("Trying to calculate path from off-world gridno %d to %d",
+		SLOGE("Trying to calculate path from off-world gridno {} to {}",
 			iOrigination, sDestination );
 		return( 0 );
 	}
 	else if (!GridNoOnVisibleWorldTile( (INT16) iOrigination ) )
 	{
-		SLOGE("Trying to calculate path from non-visible gridno %d to %d",
+		SLOGE("Trying to calculate path from non-visible gridno {} to {}",
 			iOrigination, sDestination );
 		return( 0 );
 	}
@@ -982,7 +982,7 @@ INT32 FindBestPath(SOLDIERTYPE* s, INT16 sDestination, INT8 ubLevel, INT16 usMov
 
 			if ( newLoc < 0 || newLoc >= GRIDSIZE )
 			{
-				STLOGW("Path Finding algorithm tried to go out of bounds at {}, in an attempt to find path from {} to {}", newLoc, iOrigination, iDestination);
+				SLOGW("Path Finding algorithm tried to go out of bounds at {}, in an attempt to find path from {} to {}", newLoc, iOrigination, iDestination);
 				goto NEXTDIR;
 			}
 

@@ -2471,7 +2471,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 		// check a particular tile
 		// retrieve values from world for this particular tile
 		iGridNo = pBullet->iCurrTileX + pBullet->iCurrTileY * WORLD_COLS;
-		STLOGD("CTGT now at {}", iGridNo);
+		SLOGD("CTGT now at {}", iGridNo);
 		pMapElement = &(gpWorldLevelData[ iGridNo ] );
 		qLandHeight = INT32_TO_FIXEDPT( CONVERT_PIXELS_TO_HEIGHTUNITS( pMapElement->sHeight ) );
 		qWallHeight = gqStandardWallHeight + qLandHeight;
@@ -2713,7 +2713,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 				pBullet->bLOSIndexX = FIXEDPT_TO_LOS_INDEX( pBullet->qCurrX );
 				pBullet->bLOSIndexY = FIXEDPT_TO_LOS_INDEX( pBullet->qCurrY );
 
-				STLOGD("CTGT at {} {} after traversing empty tile", pBullet->bLOSIndexX, pBullet->bLOSIndexY);
+				SLOGD("CTGT at {} {} after traversing empty tile", pBullet->bLOSIndexX, pBullet->bLOSIndexY);
 			}
 			else
 			{
@@ -2826,7 +2826,7 @@ static UINT8 CalcChanceToGetThrough(BULLET* pBullet)
 				}
 				while( (pBullet->bLOSIndexX == bOldLOSIndexX) && (pBullet->bLOSIndexY == bOldLOSIndexY) && (pBullet->iCurrCubesZ == iOldCubesZ));
 
-				STLOGD("CTGT at {} {} {} after moving in nonempty tile from {} {} {}",
+				SLOGD("CTGT at {} {} {} after moving in nonempty tile from {} {} {}",
 					pBullet->bLOSIndexX, pBullet->bLOSIndexY, pBullet->iCurrCubesZ,
 					bOldLOSIndexX, bOldLOSIndexY, iOldCubesZ);
 				pBullet->iCurrTileX = FIXEDPT_TO_INT32( pBullet->qCurrX ) / CELL_X_SIZE;

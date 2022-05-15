@@ -928,8 +928,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 
 			// Reduce again for attack end 'cause it has been incremented for a normal attack
 			//
-			SLOGD(
-				"Freeing up attacker - ATTACK ANIMATION %s ENDED BY BAD EXPLOSIVE CHECK, Now %d",
+			SLOGD("Freeing up attacker - ATTACK ANIMATION {} ENDED BY BAD EXPLOSIVE CHECK, Now {}",
 				gAnimControl[pSoldier->usAnimState].zAnimStr, gTacticalStatus.ubAttackBusyCount);
 			ReduceAttackBusyCount(pSoldier, FALSE);
 
@@ -976,7 +975,7 @@ static BOOLEAN UseGun(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 			{
 				// Increment attack counter...
 				gTacticalStatus.ubAttackBusyCount++;
-				STLOGD("Incrementing Attack: Exhaust from LAW ({})", gTacticalStatus.ubAttackBusyCount);
+				SLOGD("Incrementing Attack: Exhaust from LAW ({})", gTacticalStatus.ubAttackBusyCount);
 				EVENT_SoldierGotHit(tgt, MINI_GRENADE, 10, 200, pSoldier->bDirection, 0, pSoldier, 0, ANIM_CROUCH, sNewGridNo);
 			}
 		}
@@ -1514,8 +1513,7 @@ static BOOLEAN UseLauncher(SOLDIERTYPE* pSoldier, INT16 sTargetGridNo)
 		IgniteExplosion(pSoldier, 0, pSoldier->sGridNo, Launchable.usItem, pSoldier->bLevel);
 
 		// Reduce again for attack end 'cause it has been incremented for a normal attack
-		SLOGD(
-			"Freeing up attacker - ATTACK ANIMATION %s ENDED BY BAD EXPLOSIVE CHECK, Now %d",
+		SLOGD("Freeing up attacker - ATTACK ANIMATION {} ENDED BY BAD EXPLOSIVE CHECK, Now {}",
 			gAnimControl[pSoldier->usAnimState].zAnimStr, gTacticalStatus.ubAttackBusyCount);
 		ReduceAttackBusyCount(pSoldier, FALSE);
 
@@ -1617,7 +1615,7 @@ static BOOLEAN DoSpecialEffectAmmoMiss(SOLDIERTYPE* const attacker, const INT16 
 
 		// Increment attack busy...
 		// gTacticalStatus.ubAttackBusyCount++;
-		// SLOGD("Incrementing Attack: Explosion gone off, COunt now %d", gTacticalStatus.ubAttackBusyCount);
+		// SLOGD("Incrementing Attack: Explosion gone off, COunt now {}", gTacticalStatus.ubAttackBusyCount);
 
 		PlayLocationJA2Sample(sGridNo, CREATURE_GAS_NOISE, HIGHVOLUME, 1);
 
@@ -1661,7 +1659,7 @@ void WeaponHit(SOLDIERTYPE* const pTargetSoldier, const UINT16 usWeaponIndex, co
 	{
 		// Buddy had died from additional dammage - free up attacker here...
 		ReduceAttackBusyCount(pTargetSoldier->attacker, FALSE);
-		SLOGD("Special effect killed before bullet impact, attack count now %d",
+		SLOGD("Special effect killed before bullet impact, attack count now {}",
 			gTacticalStatus.ubAttackBusyCount);
 	}
 }

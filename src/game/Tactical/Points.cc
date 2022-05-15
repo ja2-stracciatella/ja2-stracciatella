@@ -101,8 +101,7 @@ INT16 TerrainActionPoints(const SOLDIERTYPE* const pSoldier, const INT16 sGridno
 			return( 0 );
 
 		default:
-			SLOGD(
-				"Calc AP: Unrecongnized MP type %d in %d, direction %d",
+			SLOGD("Calc AP: Unrecongnized MP type {} in {}, direction {}",
 				sSwitchValue, sGridno, bDir);
 			break;
 	}
@@ -307,9 +306,7 @@ INT16 ActionPointCost(const SOLDIERTYPE* const pSoldier, const INT16 sGridNo, co
 			default:
 
 				// Invalid movement mode
-				SLOGW(
-					"Invalid movement mode %d used in ActionPointCost",
-					usMovementMode);
+				SLOGW("Invalid movement mode {} used in ActionPointCost", usMovementMode);
 				sPoints = 1;
 		}
 	}
@@ -381,9 +378,7 @@ INT16 EstimateActionPointCost( SOLDIERTYPE *pSoldier, INT16 sGridNo, INT8 bDir, 
 			default:
 
 				// Invalid movement mode
-				SLOGW(
-					"Invalid movement mode %d used in EstimateActionPointCost",
-					usMovementMode);
+				SLOGW("Invalid movement mode {} used in EstimateActionPointCost", usMovementMode);
 				sPoints = 1;
 		}
 	}
@@ -524,7 +519,7 @@ void DeductPoints( SOLDIERTYPE *pSoldier, INT16 sAPCost, INT16 sBPCost )
 
 	pSoldier->bActionPoints = (INT8)sNewAP;
 
-	SLOGD("Deduct Points (%d at %d) %d %d",
+	SLOGD("Deduct Points ({} at {}) {} {}",
 				pSoldier->ubID, pSoldier->sGridNo, sAPCost, sBPCost);
 
 	if ( AM_A_ROBOT( pSoldier ) )
@@ -839,7 +834,7 @@ static INT16 GetBreathPerAP(SOLDIERTYPE* pSoldier, UINT16 usAnimState)
 
 	if ( !fAnimTypeFound )
 	{
-		SLOGD("Unknown end-of-turn breath anim: %s",
+		SLOGD("Unknown end-of-turn breath anim: {}",
 			gAnimControl[usAnimState].zAnimStr);
 	}
 
@@ -1692,7 +1687,7 @@ INT16 MinAPsToThrow(SOLDIERTYPE const& s, GridNo gridno, bool const add_turning_
 	}
 	else if (!(item->getItemClass() & (IC_GRENADE | IC_THROWN))) // match MinAPsToAttack
 	{
-		SLOGW("MinAPsToThrow - in-hand item '%s' has unexpected item class 0x%x", item->getInternalName().c_str(), item->getItemClass());
+		SLOGW("MinAPsToThrow - in-hand item '{}' has unexpected item class 0x{x}", item->getInternalName(), item->getItemClass());
 	}
 
 	if (gridno != NOWHERE)

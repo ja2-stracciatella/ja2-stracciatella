@@ -994,7 +994,7 @@ void CorpseHit( INT16 sGridNo, UINT16 usStructureID )
 
 	if ( pCorpse == NULL )
 	{
-		SLOGD("Bullet hit corpse but corpse cannot be found at: %d", sBaseGridNo );
+		SLOGD("Bullet hit corpse but corpse cannot be found at: {}", sBaseGridNo);
 		return;
 	}
 
@@ -1040,7 +1040,7 @@ void VaporizeCorpse( INT16 sGridNo, UINT16 usStructureID )
 
 	if ( pCorpse == NULL )
 	{
-		SLOGW("Vaporize corpse but corpse cannot be found at: %d", sBaseGridNo );
+		SLOGW("Vaporize corpse but corpse cannot be found at: {}", sBaseGridNo);
 		return;
 	}
 

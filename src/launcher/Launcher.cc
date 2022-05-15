@@ -62,7 +62,7 @@ void showError(const ST::string& error) {
 void showRustError() {
 	RustPointer<char> err(getRustError());
 	if (err) {
-		STLOGE("{}", err.get());
+		SLOGE("{}", err.get());
 		showError(err.get());
 	} else {
 		showError("showRustError called but no rust error is present");
@@ -103,7 +103,7 @@ void Launcher::loadJa2Json() {
 	if (configFolderPath.get() == NULL) {
 		auto rustError = getRustError();
 		if (rustError != NULL) {
-			STLOGE("Failed to find home directory: {}", rustError);
+			SLOGE("Failed to find home directory: {}", rustError);
 		}
 	}
 
@@ -267,10 +267,10 @@ int Launcher::writeJsonFile() {
 
 	if (success) {
 		update(false);
-		STLOGD("Succeeded writing config file");
+		SLOGD("Succeeded writing config file");
 		return 0;
 	}
-	STLOGD("Failed writing config file");
+	SLOGD("Failed writing config file");
 	return 1;
 }
 
@@ -417,7 +417,7 @@ void Launcher::updateLogs() {
 		logsDisplay->buffer()->text(logs.c_str());
 		logsDisplay->scroll(logsBuffer.count_lines(0, logsBuffer.length()) - 1, 0);
 	} catch (const std::runtime_error &ex) {
-		STLOGW("Error reading logs: {}", ex.what());
+		SLOGW("Error reading logs: {}", ex.what());
 	}
 }
 
@@ -440,7 +440,7 @@ void Launcher::maintainSubProcessState(void* userdata) {
 					error = ST::format("JA2 Stracciatella crashed with exit code: {}", exitCode);
 				}
 
-				STLOGE("{}", error);
+				SLOGE("{}", error);
 				error = ST::format("{}\n\nYou will be taken to the logs tab, where you can investigate the error.", error);
 
 				showError(error);

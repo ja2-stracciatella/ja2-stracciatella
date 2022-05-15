@@ -1889,7 +1889,7 @@ static void HandleModAlt(UINT32 const key, UIEventKind* const new_event)
 			if (INFORMATION_CHEAT_LEVEL() && gUIFullTarget)
 			{
 				static UINT16 gQuoteNum = 0;
-				SLOGD("Playing Quote %d", gQuoteNum);
+				SLOGD("Playing Quote {}", gQuoteNum);
 				TacticalCharacterDialogue(gUIFullTarget, gQuoteNum++);
 			}
 			break;

@@ -2238,7 +2238,7 @@ void InitRenderParams(UINT8 ubRestrictionID)
 	gsTopY += ROOF_LEVEL_HEIGHT;
 	gsCY  += ROOF_LEVEL_HEIGHT / 2;
 
-	SLOGD("World Screen Width %d Height %d", gsRightX - gsLeftX, gsBottomY - gsTopY);
+	SLOGD("World Screen Width {} Height {}", gsRightX - gsLeftX, gsBottomY - gsTopY);
 
 	// Determine scale factors
 	// First scale world screen coords for VIEWPORT ratio

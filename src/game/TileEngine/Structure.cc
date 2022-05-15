@@ -324,7 +324,7 @@ void NormalizeStructureTiles(DB_STRUCTURE_TILE** pTiles, UINT8 ubNumTiles)
 		return;
 	}
 
-	STLOGD("Adjusting tiles relative positions by {}", -minDistFromBase);
+	SLOGD("Adjusting tiles relative positions by {}", -minDistFromBase);
 	int xDist = minDistFromBase % WORLD_COLS;
 	int yDist = minDistFromBase / WORLD_COLS;
 	for (UINT8 i = 0; i < ubNumTiles; i++)
@@ -417,7 +417,7 @@ static STRUCTURE* CreateStructureFromDB(DB_STRUCTURE_REF const* const pDBStructu
 	pStructure->pDBStructureRef = pDBStructureRef;
 	if (pTile->sPosRelToBase != 0 && ubTileNum == 0)
 	{
-		STLOGW("Possible bad structure {}", pDBStructureRef->pDBStructure->usStructureNumber);
+		SLOGW("Possible bad structure {}", pDBStructureRef->pDBStructure->usStructureNumber);
 	}
 	if (pTile->sPosRelToBase == 0)
 	{	// base tile

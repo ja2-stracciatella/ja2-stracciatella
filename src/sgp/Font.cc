@@ -179,7 +179,7 @@ static GlyphIdx GetGlyphIndex(char32_t c)
 	if (result != translationTable->end()) {
 		return result->second;
 	}
-	SLOGE("Invalid character given U+%04X", c);
+	SLOGE("Invalid character given U+{04x}", c);
 	auto questionMark = translationTable->find(L'?')->second;
 	return questionMark;
 }

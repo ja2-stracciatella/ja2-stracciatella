@@ -2728,7 +2728,7 @@ static void MoveMenuBtnCallback(MOUSE_REGION* pRegion, INT32 iReason)
 			}
 			else
 			{
-				SLOGA("MoveMenuBtnCallback: Invalid regionType %d, moveBoxLine %d", iRegionType, iMoveBoxLine);
+				SLOGA("MoveMenuBtnCallback: Invalid regionType {}, moveBoxLine {}", iRegionType, iMoveBoxLine);
 				return;
 			}
 
@@ -2863,7 +2863,7 @@ static void HandleMoveoutOfSectorMovementTroops(void)
 			{
 				if ( !AddCharacterToSquad( pSoldier, ( INT8 )( iSquadNumber ) ) )
 				{
-					SLOGA("HandleMoveoutOfSectorMovementTroops: AddCharacterToSquad %d failed, iCounter %d", iSquadNumber, iCounter);
+					SLOGA("HandleMoveoutOfSectorMovementTroops: AddCharacterToSquad {} failed, iCounter {}", iSquadNumber, iCounter);
 					// toggle whether he's going or not to try and recover somewhat gracefully
 					fSoldierIsMoving[ iCounter ] = !fSoldierIsMoving[ iCounter ];
 				}

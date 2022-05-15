@@ -225,11 +225,11 @@ void DefaultContentManager::logConfiguration() const {
 	RustPointer<char> vanillaGameDir{EngineOptions_getVanillaGameDir(m_engineOptions.get())};
 	RustPointer<char> assetsDir{EngineOptions_getAssetsDir(m_engineOptions.get())};
 
-	STLOGI("JA2 Home Dir:                  '{}'", m_userPrivateFiles.get()->basePath());
-	STLOGI("Root game resources directory: '{}'", vanillaGameDir.get());
-	STLOGI("Extra data directory:          '{}'", assetsDir.get());
-	STLOGI("Saved games directory:         '{}'", m_saveGameFiles.get()->basePath());
-	STLOGI("Temporary directory:           '{}'", m_tempFiles.get()->basePath());
+	SLOGI("JA2 Home Dir:                  '{}'", m_userPrivateFiles.get()->basePath());
+	SLOGI("Root game resources directory: '{}'", vanillaGameDir.get());
+	SLOGI("Extra data directory:          '{}'", assetsDir.get());
+	SLOGI("Saved games directory:         '{}'", m_saveGameFiles.get()->basePath());
+	SLOGI("Temporary directory:           '{}'", m_tempFiles.get()->basePath());
 }
 
 template <class T>
@@ -412,7 +412,7 @@ ST::string DefaultContentManager::getMapPath(const ST::string& mapName) const
 	result += '/';
 	result += mapName.c_str();
 
-	STLOGD("map file {}", result);
+	SLOGD("map file {}", result);
 
 	return result;
 }
@@ -424,7 +424,7 @@ ST::string DefaultContentManager::getRadarMapResourceName(const ST::string &mapN
 	result += "/";
 	result += mapName;
 
-	STLOGD("map file {}", result);
+	SLOGD("map file {}", result);
 
 	return result;
 }
@@ -480,7 +480,7 @@ SGPFile* DefaultContentManager::openGameResForReading(const ST::string& filename
 		RustPointer<char> err{getRustError()};
 		throw std::runtime_error(ST::format("openGameResForReading: {}", err.get()).to_std_string());
 	}
-	STLOGD("Opened resource file from VFS: '{}'", filename);
+	SLOGD("Opened resource file from VFS: '{}'", filename);
 	return new SGPFile(vfile.release());
 }
 
@@ -514,7 +514,7 @@ ST::string DefaultContentManager::loadEncryptedString(const ST::string& fileName
 	ST::string str = LoadEncryptedData(err_msg, getStringEncType(), File, seek_chars, read_chars);
 	if (!err_msg.empty())
 	{
-		STLOGW("DefaultContentManager::loadEncryptedString '{}' {} {}: {}", fileName, seek_chars, read_chars, err_msg);
+		SLOGW("DefaultContentManager::loadEncryptedString '{}' {} {}: {}", fileName, seek_chars, read_chars, err_msg);
 	}
 	return str;
 }
@@ -525,7 +525,7 @@ ST::string DefaultContentManager::loadEncryptedString(SGPFile* File, uint32_t se
 	ST::string str = LoadEncryptedData(err_msg, getStringEncType(), File, seek_chars, read_chars);
 	if (!err_msg.empty())
 	{
-		STLOGW("DefaultContentManager::loadEncryptedString ? {} {}: {}", seek_chars, read_chars, err_msg);
+		SLOGW("DefaultContentManager::loadEncryptedString ? {} {}: {}", seek_chars, read_chars, err_msg);
 	}
 	return str;
 }
@@ -539,7 +539,7 @@ ST::string* DefaultContentManager::loadDialogQuoteFromFile(const ST::string& fil
 	ST::string quote = LoadEncryptedData(err_msg, getStringEncType(), File, quote_number * DIALOGUESIZE, DIALOGUESIZE);
 	if (!err_msg.empty())
 	{
-		STLOGW("DefaultContentManager::loadDialogQuoteFromFile '{}' {}: {}", fileName, quote_number, err_msg);
+		SLOGW("DefaultContentManager::loadDialogQuoteFromFile '{}' {}: {}", fileName, quote_number, err_msg);
 	}
 	return new ST::string(quote);
 }
@@ -557,7 +557,7 @@ void DefaultContentManager::loadAllDialogQuotes(STRING_ENC_TYPE encType, const S
 		ST::string quote = LoadEncryptedData(err, encType, File, i * DIALOGUESIZE, DIALOGUESIZE);
 		if (!err.empty())
 		{
-			STLOGW("DefaultContentManager::loadAllDialogQuotes '{}' {}: {}", fileName, i, err);
+			SLOGW("DefaultContentManager::loadAllDialogQuotes '{}' {}: {}", fileName, i, err);
 		}
 		quotes.push_back(new ST::string(quote));
 	}
@@ -574,7 +574,7 @@ const WeaponModel* DefaultContentManager::getWeaponByName(const ST::string &inte
 	std::map<ST::string, const WeaponModel*>::const_iterator it = m_weaponMap.find(internalName);
 	if(it == m_weaponMap.end())
 	{
-		STLOGE("weapon '{}' is not found", internalName);
+		SLOGE("weapon '{}' is not found", internalName);
 		throw std::runtime_error(ST::format("weapon '{}' is not found", internalName).to_std_string());
 	}
 	return it->second;//m_weaponMap[internalName];
@@ -584,7 +584,7 @@ const MagazineModel* DefaultContentManager::getMagazineByName(const ST::string &
 {
 	if(m_magazineMap.find(internalName) == m_magazineMap.end())
 	{
-		STLOGE("magazine '{}' is not found", internalName);
+		SLOGE("magazine '{}' is not found", internalName);
 		throw std::runtime_error(ST::format("magazine '{}' is not found", internalName).to_std_string());
 	}
 	return m_magazineMap[internalName];
@@ -630,11 +630,11 @@ bool DefaultContentManager::loadWeapons()
 		{
 			JsonObjectReader obj(a[i]);
 			WeaponModel *w = WeaponModel::deserialize(obj, m_calibreMap);
-			STLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
+			SLOGD("Loaded weapon {} {}", w->getItemIndex(), w->getInternalName());
 
 			if (w->getItemIndex() > MAX_WEAPONS)
 			{
-				STLOGE("Weapon index must be in the interval 0 - {}", MAX_WEAPONS);
+				SLOGE("Weapon index must be in the interval 0 - {}", MAX_WEAPONS);
 				return false;
 			}
 
@@ -675,7 +675,7 @@ bool DefaultContentManager::loadMagazines()
 		{
 			JsonObjectReader obj(a[i]);
 			MagazineModel *mag = MagazineModel::deserialize(obj, m_calibreMap, m_ammoTypeMap);
-			STLOGD("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName());
+			SLOGD("Loaded magazine {} {}", mag->getItemIndex(), mag->getInternalName());
 
 			m_magazines.push_back(mag);
 			m_items[mag->getItemIndex()] = mag;
@@ -695,7 +695,7 @@ bool DefaultContentManager::loadCalibres()
 		{
 			JsonObjectReader obj(a[i]);
 			CalibreModel *calibre = CalibreModel::deserialize(obj);
-			STLOGD("Loaded calibre {} {}", calibre->index, calibre->internalName);
+			SLOGD("Loaded calibre {} {}", calibre->index, calibre->internalName);
 
 			if(m_calibres.size() <= calibre->index)
 			{
@@ -723,7 +723,7 @@ bool DefaultContentManager::loadAmmoTypes()
 		{
 			JsonObjectReader obj(a[i]);
 			AmmoTypeModel *ammoType = AmmoTypeModel::deserialize(obj);
-			STLOGD("Loaded ammo type {} {}", ammoType->index, ammoType->internalName);
+			SLOGD("Loaded ammo type {} {}", ammoType->index, ammoType->internalName);
 
 			if(m_ammoTypes.size() <= ammoType->index)
 			{
@@ -751,7 +751,7 @@ bool DefaultContentManager::loadMusicModeList(const MusicMode mode, rapidjson::V
 	for (const ST::string &str : utf8_encoded)
 	{
 		musicModeList->push_back(new ST::string(str));
-		STLOGD("Loaded music {}", str);
+		SLOGD("Loaded music {}", str);
 	}
 
 	m_musicMap[mode] = musicModeList;
@@ -1176,7 +1176,7 @@ const ItemModel* DefaultContentManager::getItemByName(const ST::string &internal
 	std::map<ST::string, const ItemModel*>::const_iterator it = m_itemMap.find(internalName);
 	if(it == m_itemMap.end())
 	{
-		STLOGE("item '{}' is not found", internalName);
+		SLOGE("item '{}' is not found", internalName);
 		throw std::runtime_error(ST::format("item '{}' is not found", internalName).to_std_string());
 	}
 	return it->second;
@@ -1221,7 +1221,7 @@ const ST::string* DefaultContentManager::getMusicForMode(MusicMode mode) const {
 	const uint32_t index = Random((uint32_t)m_musicMap.find(mode)->second->size());
 	const ST::string* chosen = m_musicMap.find(mode)->second->at(index);
 
-	STLOGD("Choosing music index {} of {} for: '{}'", index, m_musicMap.find(mode)->second->size(), chosen);
+	SLOGD("Choosing music index {} of {} for: '{}'", index, m_musicMap.find(mode)->second->size(), chosen);
 	return chosen;
 }
 
@@ -1245,7 +1245,7 @@ const ST::string* DefaultContentManager::getNewString(size_t stringId) const
 	if(stringId >= m_newStrings.size())
 	{
 		ST::string message = ST::format("new string {} is not found", stringId);
-		SLOGE(message.c_str());
+		SLOGE("{}", message);
 		throw std::runtime_error(message.c_str());
 	}
 	else
@@ -1583,7 +1583,7 @@ const std::map<int8_t, const TownModel*>& DefaultContentManager::getTowns() cons
 const ST::string DefaultContentManager::getTownName(uint8_t townId) const
 {
 	if (townId >= m_townNames.size()) {
-		STLOGD("Town name not defined for index {}", townId);
+		SLOGD("Town name not defined for index {}", townId);
 		return ST::null;
 	}
 	return *m_townNames[townId];
@@ -1592,7 +1592,7 @@ const ST::string DefaultContentManager::getTownName(uint8_t townId) const
 const ST::string DefaultContentManager::getTownLocative(uint8_t townId) const
 {
 	if (townId >= m_townNameLocatives.size()) {
-		STLOGD("Town name locative not defined for index {}", townId);
+		SLOGD("Town name locative not defined for index {}", townId);
 		return ST::null;
 	}
 	return *m_townNameLocatives[townId];
@@ -1659,7 +1659,7 @@ const MercProfileInfo* DefaultContentManager::getMercProfileInfo(uint8_t const p
 		return m_mercProfileInfo.at(profileID);
 	}
 
-	STLOGD("MercProfileInfo is not defined at {}", profileID);
+	SLOGD("MercProfileInfo is not defined at {}", profileID);
 	return &EMPTY_MERC_PROFILE_INFO;
 }
 
@@ -1671,7 +1671,7 @@ const MercProfileInfo* DefaultContentManager::getMercProfileInfoByName(const ST:
 		}
 	}
 
-	STLOGW("MercProfileInfo is not defined for {}", name);
+	SLOGW("MercProfileInfo is not defined for {}", name);
 	return NULL;
 }
 

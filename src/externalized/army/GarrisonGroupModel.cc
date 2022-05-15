@@ -18,7 +18,7 @@ void GarrisonGroupModel::validateData(const std::vector<GARRISON_GROUP>& garriso
 {
 	if (garrisonGroups.size() > SAVED_GARRISON_GROUPS)
 	{
-		STLOGE("There cannot be more than {} Garrison Groups", SAVED_GARRISON_GROUPS);
+		SLOGE("There cannot be more than {} Garrison Groups", SAVED_GARRISON_GROUPS);
 		throw std::runtime_error("Too many Garrison Groups");
 	}
 }

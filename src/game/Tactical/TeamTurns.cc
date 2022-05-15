@@ -438,7 +438,7 @@ void DisplayHiddenTurnbased( SOLDIERTYPE * pActingSoldier )
 	CommonEnterCombatModeCode( );
 
 	SetSoldierAsUnderAiControl( pActingSoldier );
-	SLOGD("Giving AI control to %d", pActingSoldier->ubID);
+	SLOGD("Giving AI control to {}", pActingSoldier->ubID);
 	pActingSoldier->fTurnInProgress = TRUE;
 	gTacticalStatus.uiTimeSinceMercAIStart = GetJA2Clock();
 
@@ -509,7 +509,7 @@ static void StartInterrupt(void)
 	// display everyone on int queue!
 	for (INT32 cnt = gubOutOfTurnPersons; cnt > 0; --cnt)
 	{
-		SLOGD("STARTINT: Q position %d: %d", cnt, gOutOfTurnOrder[cnt]->ubID);
+		SLOGD("STARTINT: Q position {}: {}", cnt, gOutOfTurnOrder[cnt]->ubID);
 	}
 
 	gTacticalStatus.fInterruptOccurred = TRUE;
@@ -530,7 +530,7 @@ static void StartInterrupt(void)
 		while( 1 )
 		{
 			Interrupter->bMoved = FALSE;
-			SLOGD("INTERRUPT: popping %d off of the interrupt queue", Interrupter->ubID);
+			SLOGD("INTERRUPT: popping {} off of the interrupt queue", Interrupter->ubID);
 
 			REMOVE_LATEST_INTERRUPT_GUY();
 			// now LatestInterruptGuy() is the guy before the previous
@@ -577,7 +577,7 @@ static void StartInterrupt(void)
 			}
 		}
 
-		SLOGD("INTERRUPT: starting interrupt for %d", first_interrupter->ubID);
+		SLOGD("INTERRUPT: starting interrupt for {}", first_interrupter->ubID);
 
 		// Select guy....
 		SelectSoldier(first_interrupter, SELSOLDIER_ACKNOWLEDGE | SELSOLDIER_FORCE_RESELECT);
@@ -617,7 +617,7 @@ static void StartInterrupt(void)
 		{
 			Interrupter->bMoved = FALSE;
 
-			SLOGD("INTERRUPT: popping %d off of the interrupt queue", Interrupter->ubID);
+			SLOGD("INTERRUPT: popping {} off of the interrupt queue", Interrupter->ubID);
 
 			REMOVE_LATEST_INTERRUPT_GUY();
 			// now LatestInterruptGuy() is the guy before the previous
@@ -678,7 +678,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 
 	for (INT32 cnt = gubOutOfTurnPersons; cnt > 0; --cnt)
 	{
-		SLOGD("ENDINT: Q position %d: %d", cnt, gOutOfTurnOrder[cnt]->ubID);
+		SLOGD("ENDINT: Q position {}: {}", cnt, gOutOfTurnOrder[cnt]->ubID);
 	}
 
 	// ATE: OK, now if this all happended on one frame, we may not have to stop
@@ -716,7 +716,7 @@ static void EndInterrupt(BOOLEAN fMarkInterruptOccurred)
 	else
 	{
 		SOLDIERTYPE* const interrupted = LatestInterruptGuy();
-		SLOGD("INTERRUPT: interrupt over, %d's team regains control", interrupted->ubID);
+		SLOGD("INTERRUPT: interrupt over, {}'s team regains control", interrupted->ubID);
 
 		FOR_EACH_SOLDIER(s)
 		{
@@ -1270,7 +1270,7 @@ INT8 CalcInterruptDuelPts(const SOLDIERTYPE* const pSoldier, const SOLDIERTYPE* 
 	{
 		bPoints = AUTOMATIC_INTERRUPT - 1; // hack it to one less than max so its legal
 	}
-	SLOGD("Calculating int pts for %d vs %d, number is %d",
+	SLOGD("Calculating int pts for {} vs {}, number is {}",
 		pSoldier->ubID, opponent->ubID, bPoints);
 	return( bPoints );
 }
@@ -1310,7 +1310,7 @@ static void DeleteFromIntList(UINT8 ubIndex, BOOLEAN fCommunicate)
 	{
 		return;
 	}
-	SLOGD("INTERRUPT: removing ID %d", gOutOfTurnOrder[ubIndex]->ubID);
+	SLOGD("INTERRUPT: removing ID {}", gOutOfTurnOrder[ubIndex]->ubID);
 
 	// if we're NOT deleting the LAST entry in the int list
 	if (ubIndex < gubOutOfTurnPersons)
@@ -1332,7 +1332,7 @@ void AddToIntList(SOLDIERTYPE* const s, const BOOLEAN fGainControl, const BOOLEA
 {
 	UINT8 ubLoop;
 
-	SLOGD("INTERRUPT: adding ID %d who %s",
+	SLOGD("INTERRUPT: adding ID {} who {}",
 				s->ubID, fGainControl ? "gains control" : "loses control");
 
 	// check whether 'who' is already anywhere on the queue after the first index
@@ -1373,7 +1373,7 @@ void AddToIntList(SOLDIERTYPE* const s, const BOOLEAN fGainControl, const BOOLEA
 		// turn off AI control flag if they lost control
 		if (s->uiStatusFlags & SOLDIER_UNDERAICONTROL)
 		{
-			SLOGD("Taking away AI control from %d", s->ubID);
+			SLOGD("Taking away AI control from {}", s->ubID);
 			s->uiStatusFlags &= ~SOLDIER_UNDERAICONTROL;
 		}
 	}
@@ -1529,7 +1529,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 							if ( PythSpacesAway( pSoldier->sGridNo, pOpponent->sGridNo ) > MaxDistanceVisible() )
 							{
 								pOpponent->bInterruptDuelPts = NO_INTERRUPT;
-								SLOGD("Resetting int pts for %d - NOISE BEYOND SIGHT DISTANCE!?",
+								SLOGD("Resetting int pts for {} - NOISE BEYOND SIGHT DISTANCE!?",
 											pOpponent->ubID);
 								continue;
 							}
@@ -1537,7 +1537,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 						else if ( pOpponent->bOppList[pSoldier->ubID] != SEEN_CURRENTLY )
 						{
 							pOpponent->bInterruptDuelPts = NO_INTERRUPT;
-							SLOGD("Resetting int pts for %d - DOESN'T SEE ON SIGHT INTERRUPT!?",
+							SLOGD("Resetting int pts for {} - DOESN'T SEE ON SIGHT INTERRUPT!?",
 										pOpponent->ubID);
 							continue;
 						}
@@ -1551,7 +1551,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 							case AUTOMATIC_INTERRUPT:	// interrupts occurs automatically
 								pSoldier->bInterruptDuelPts = 0;	// just to have a valid intDiff later
 								fIntOccurs = TRUE;
-								SLOGD("INTERRUPT: automatic interrupt on %d by %d",
+								SLOGD("INTERRUPT: automatic interrupt on {} by {}",
 											pSoldier->ubID, pOpponent->ubID);
 								break;
 
@@ -1561,7 +1561,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 								fIntOccurs = InterruptDuel(pOpponent,pSoldier);
 								if (fIntOccurs)
 								{
-									SLOGD("INTERRUPT: standard interrupt on %d (%d pts) by %d (%d pts)",
+									SLOGD("INTERRUPT: standard interrupt on {} ({} pts) by {} ({} pts)",
 												pSoldier->ubID, pSoldier->bInterruptDuelPts, pOpponent->ubID, pOpponent->bInterruptDuelPts);
 								}
 								break;
@@ -1591,7 +1591,7 @@ void ResolveInterruptsVs( SOLDIERTYPE * pSoldier, UINT8 ubInterruptType)
 						// either way, clear out both sides' bInterruptDuelPts field to prepare next one
 						if (pSoldier->bInterruptDuelPts != NO_INTERRUPT)
 						{
-							SLOGD("Resetting int pts for %d and %d",
+							SLOGD("Resetting int pts for {} and {}",
 										pSoldier->ubID, pOpponent->ubID);
 						}
 						pSoldier->bInterruptDuelPts = NO_INTERRUPT;

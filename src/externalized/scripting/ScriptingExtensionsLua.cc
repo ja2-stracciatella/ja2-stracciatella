@@ -53,7 +53,7 @@ static void UnregisterListener(std::string observable, std::string key);
 int StracciatellaLoadFileRequire(lua_State* L)
 {
 	ST::string path = sol::stack::get<std::string>(L);
-	STLOGD("Loading LUA script file: {}", path);
+	SLOGD("Loading LUA script file: {}", path);
 
 	try {
 		AutoSGPFile file(GCM->openGameResForReading(SCRIPTS_DIR "/" + path));
@@ -73,7 +73,7 @@ void RunEntryPoint()
 	auto luaName = ENTRYPOINT_SCRIPT;
 	auto fileName = SCRIPTS_DIR "/" ENTRYPOINT_SCRIPT;
 	
-	STLOGD("Loading LUA script file: {}", luaName);
+	SLOGD("Loading LUA script file: {}", luaName);
 	AutoSGPFile f{GCM->openGameResForReading(fileName)};
 	std::string scriptbody = f->readStringToEnd().to_std_string();
 	auto result = lua.safe_script(scriptbody, ST::format("@{}", luaName).to_std_string());
@@ -123,7 +123,7 @@ void InitScriptingEngine()
 	} 
 	catch (const std::exception &ex)
 	{
-		STLOGE("Lua script engine has failed to initialize:\n {}", ex.what());
+		SLOGE("Lua script engine has failed to initialize:\n {}", ex.what());
 		ST::string err = "The game cannot be started due to an error in the mod scripts. Check the logs for more details.";
 		std::throw_with_nested(std::runtime_error(err.to_std_string()));
 	}
@@ -290,7 +290,7 @@ static void InvokeFunction(ST::string functionName, A... args)
 	if (!func.valid())
 	{
 		SLOGE("Lua script had an error. Scripting engine is now DISABLED. The error was:");
-		STLOGE("Function {} is not defined", functionName);
+		SLOGE("Function {} is not defined", functionName);
 		isLuaDisabled = true;
 		return;
 	}

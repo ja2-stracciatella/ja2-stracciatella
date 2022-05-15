@@ -281,7 +281,7 @@ static void InternalInitiateConversation(SOLDIERTYPE* const pDestSoldier, SOLDIE
 		{
 			gTacticalStatus.uiFlags &= (~ENGAGED_IN_CONV);
 		}
-		SLOGD("Cannot initiate conversation menu.. check for face file for ID: %d.", pDestSoldier->ubProfile );
+		SLOGD("Cannot initiate conversation menu.. check for face file for ID: {}.", pDestSoldier->ubProfile);
 		throw;
 	}
 
@@ -2155,7 +2155,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 				// Vince or Willis asks about payment? for medical attention
 				if (ubTargetNPC != gpDestSoldier->ubProfile)
 				{
-					SLOGE("Inconsistency between HandleNPCDoAction and target profile IDs" );
+					SLOGE("Inconsistency between HandleNPCDoAction and target profile IDs");
 				}
 				else
 				{
@@ -2191,7 +2191,7 @@ void HandleNPCDoAction( UINT8 ubTargetNPC, UINT16 usActionCode, UINT8 ubQuoteNum
 					OBJECTTYPE Object;
 					INT16      sGridNo  = params->getGridNo(14952);
 					UINT32     uiAmount = params->getAmount(10000);
-					STLOGI("add a money item with ${} to tile {} in front of Kyle", uiAmount, sGridNo);
+					SLOGI("add a money item with ${} to tile {} in front of Kyle", uiAmount, sGridNo);
 
 					SOLDIERTYPE* const pSoldier = FindSoldierByProfileID(ubTargetNPC);
 					if (pSoldier)
@@ -4048,7 +4048,7 @@ add_log:
 				}
 				break;
 			default:
-				STLOGD("No code support for NPC action {}", usActionCode);
+				SLOGD("No code support for NPC action {}", usActionCode);
 				break;
 		}
 	}

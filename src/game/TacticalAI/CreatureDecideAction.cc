@@ -90,7 +90,7 @@ void CreatureCall( SOLDIERTYPE * pCaller )
 	}
 	if (pCaller->usActionData >= NUM_CREATURE_CALLS)
 	{
-		SLOGW("unexpected action data %u, defaulting call priority to 0", pCaller->usActionData);
+		SLOGW("unexpected action data {}, defaulting call priority to 0", pCaller->usActionData);
 		bFullPriority = 0;
 	}
 	else if (pCaller->bHunting) // which should only be set for females outside of the hive
@@ -661,7 +661,7 @@ static INT8 CreatureDecideActionRed(SOLDIERTYPE* pSoldier, UINT8 ubUnconsciousOK
 			{
 				if ((INT16) PreRandom(100) < iChance)
 				{
-					SLOGD("%s decides to call an alert!", pSoldier->name.c_str());
+					SLOGD("{} decides to call an alert!", pSoldier->name);
 					pSoldier->usActionData = CALL_1_PREY;
 					return(AI_ACTION_CREATURE_CALL);
 				}
@@ -1221,10 +1221,10 @@ static INT8 CreatureDecideActionBlack(SOLDIERTYPE* pSoldier)
 			{
 				pSoldier->bAimShotLocation = AIM_SHOT_RANDOM;
 			}
-			SLOGD("%d(%s) %s %d(%s) at gridno %d (%d APs aim)\n",
-				pSoldier->ubID, pSoldier->name.c_str(),
+			SLOGD("{}({}) {} {}({}) at gridno {} ({} APs aim)\n",
+				pSoldier->ubID, pSoldier->name,
 				(ubBestAttackAction == AI_ACTION_FIRE_GUN)?"SHOOTS":((ubBestAttackAction == AI_ACTION_TOSS_PROJECTILE)?"TOSSES AT":"STABS"),
-				BestAttack.opponent, BestAttack.opponent->name.c_str(),
+				BestAttack.opponent, BestAttack.opponent->name,
 				BestAttack.sTarget, BestAttack.ubAimTime);
 			return(ubBestAttackAction);
 		}
@@ -1332,7 +1332,7 @@ INT8 CreatureDecideAction( SOLDIERTYPE *pSoldier )
 			bAction = CreatureDecideActionBlack(pSoldier);
 			break;
 	}
-	SLOGD("DecideAction: selected action %d, actionData %d\n\n",
+	SLOGD("DecideAction: selected action {}, actionData {}\n\n",
 		bAction, pSoldier->usActionData);
 	return(bAction);
 }

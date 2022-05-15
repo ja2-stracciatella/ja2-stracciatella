@@ -49,7 +49,7 @@ void MusicPlay(const ST::string* pFilename)
 
 	if(uiMusicHandle!=SOUND_ERROR)
 	{
-		SLOGD("Music Play %d %d", uiMusicHandle, gubMusicMode);
+		SLOGD("Music Play {} {}", uiMusicHandle, gubMusicMode);
 
 		gfMusicEnded	= FALSE;
 		fMusicPlaying	= TRUE;
@@ -57,7 +57,7 @@ void MusicPlay(const ST::string* pFilename)
 		return;
 	}
 
-	SLOGE("Music Play Error %d %d", uiMusicHandle, gubMusicMode);
+	SLOGE("Music Play Error {} {}", uiMusicHandle, gubMusicMode);
 }
 
 
@@ -112,7 +112,7 @@ UINT32 MusicGetVolume(void)
 //		Stops the currently playing music.
 static void MusicStop(void)
 {
-	SLOGD("Music Stop %d %d %d", fMusicPlaying, uiMusicHandle, gubMusicMode);
+	SLOGD("Music Stop {} {} {}", fMusicPlaying, uiMusicHandle, gubMusicMode);
 	if(!fMusicPlaying)
 	{
 		return;
@@ -125,7 +125,7 @@ static void MusicStop(void)
 	}
 	else if(!gfMusicEnded)
 	{
-		SLOGW("expected either music data or the end of the music (mode=%d, handle=%d, ended=%d)", gubMusicMode, uiMusicHandle, gfMusicEnded);
+		SLOGW("expected either music data or the end of the music (mode={}, handle={}, ended={})", gubMusicMode, uiMusicHandle, gfMusicEnded);
 	}
 	fMusicPlaying = FALSE;
 }
@@ -207,7 +207,7 @@ void MusicPoll(void)
 		if ( gfMusicEnded )
 		{
 			// OK, based on our music mode, play another!
-			SLOGD("Music End Loop %d %d", uiMusicHandle, gubMusicMode);
+			SLOGD("Music End Loop {} {}", uiMusicHandle, gubMusicMode);
 
 			// If we were in victory mode, change!
 			if ( gbVictorySongCount == 1 || gbDeathSongCount == 1 )
@@ -264,7 +264,7 @@ void SetMusicMode(MusicMode ubMusicMode)
 		// Set mode....
 		gubMusicMode = ubMusicMode;
 
-		SLOGD("Music New Mode %d %d", uiMusicHandle, gubMusicMode);
+		SLOGD("Music New Mode {} {}", uiMusicHandle, gubMusicMode);
 
 		gbVictorySongCount = 0;
 		gbDeathSongCount = 0;
@@ -287,7 +287,7 @@ void SetMusicMode(MusicMode ubMusicMode)
 
 static void StartMusicBasedOnMode(void)
 {
-	SLOGD("StartMusicBasedOnMode() %d %d", uiMusicHandle, gubMusicMode);
+	SLOGD("StartMusicBasedOnMode() {} {}", uiMusicHandle, gubMusicMode);
 	MusicMode next = gubMusicMode;
 
 	switch (gubMusicMode) {
@@ -348,7 +348,7 @@ static void StartMusicBasedOnMode(void)
 
 static void MusicStopCallback(void* pData)
 {
-	SLOGD("Music EndCallback %d %d", uiMusicHandle, gubMusicMode);
+	SLOGD("Music EndCallback {} {}", uiMusicHandle, gubMusicMode);
 
 	gfMusicEnded  = TRUE;
 	uiMusicHandle = NO_SAMPLE;

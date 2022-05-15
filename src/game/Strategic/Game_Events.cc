@@ -184,7 +184,7 @@ STRATEGICEVENT* AddAdvancedStrategicEvent(StrategicEventFrequency const event_ty
 	if (gfProcessingGameEvents && timestamp <= guiTimeStampOfCurrentlyExecutingEvent)
 	{ /* Prevent infinite loops of posting events that are the same time or
 		* earlier than the event currently being processed */
-		SLOGD("Event Rejected (id %d): Can't post events <= time while inside an event callback. This is a special case situation that isn't a bug.", callback_id);
+		SLOGD("Event Rejected (id {}): Can't post events <= time while inside an event callback. This is a special case situation that isn't a bug.", callback_id);
 		return 0;
 	}
 

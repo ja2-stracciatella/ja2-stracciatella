@@ -1092,7 +1092,7 @@ void GroupArrivedAtSector(GROUP& g, BOOLEAN const check_for_battle, BOOLEAN cons
 		{
 			if (!g.pPlayerList)
 			{ // Nobody here, better just get out now
-				SLOGA("Player group %d arrived in sector empty.", g.ubGroupID);
+				SLOGA("Player group {} arrived in sector empty.", g.ubGroupID);
 				return;
 			}
 		}
@@ -1654,7 +1654,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	SGPSector delta = wp->sSector - pGroup->ubSector;
 	if (delta.x && delta.y)
 	{ //Can't move diagonally!
-		SLOGA("Attempting to move to waypoint in a diagonal direction from sector %d,%d to sector %d,%d",
+		SLOGA("Attempting to move to waypoint in a diagonal direction from sector {},{} to sector {},{}",
 			pGroup->ubSector.x, pGroup->ubSector.y, wp->sSector.x, wp->sSector.y);
 	}
 	//Clip dx/dy value so that the move is for only one sector.
@@ -1680,7 +1680,7 @@ static void InitiateGroupMovementToNextSector(GROUP* pGroup)
 	}
 	else
 	{
-		SLOGA("InitiateGroupMovementToNextSector: Attempting to move to waypoint %d, %d that you are already at!", wp->sSector.x, wp->sSector.y);
+		SLOGA("InitiateGroupMovementToNextSector: Attempting to move to waypoint {}, {} that you are already at!", wp->sSector.x, wp->sSector.y);
 		return;
 	}
 	//All conditions for moving to the next waypoint are now good.
@@ -2702,7 +2702,7 @@ void CalculateGroupRetreatSector( GROUP *pGroup )
 	}
 	else
 	{
-		STLOGA("Player group cannot retreat from sector {} ", pGroup->ubSector.AsShortString());
+		SLOGA("Player group cannot retreat from sector {} ", pGroup->ubSector.AsShortString());
 		return;
 	}
 	if( pGroup->fPlayer )
@@ -2982,7 +2982,7 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 	Assert( pGroup );
 	if (pGroup->ubMoveType != ONE_WAY)
 	{
-		STLOGA("GroupWillMoveThroughSector() -- Attempting to test group with an invalid move type.  ubGroupID: {}, ubMoveType: {}, sector: {} -- KM:0",
+		SLOGA("GroupWillMoveThroughSector() -- Attempting to test group with an invalid move type.  ubGroupID: {}, ubMoveType: {}, sector: {} -- KM:0",
 			pGroup->ubGroupID, pGroup->ubMoveType, pGroup->ubSector.AsShortString());
 	}
 
@@ -3014,14 +3014,14 @@ BOOLEAN GroupWillMoveThroughSector(GROUP *pGroup, const SGPSector& sSector)
 			SGPSector delta = wp->sSector - pGroup->ubSector;
 			if (delta.x && delta.y)
 			{ //Can't move diagonally!
-				STLOGA("GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector {} to sector {} for group at sector {}",
+				SLOGA("GroupWillMoveThroughSector() -- Attempting to process waypoint in a diagonal direction from sector {} to sector {} for group at sector {}",
 					   pGroup->ubSector.AsShortString(), wp->sSector.AsShortString(), ubOrig.AsShortString());
 				pGroup->ubSector = ubOrig;
 				return TRUE;
 			}
 			if (!delta.x && !delta.y) //Can't move to position currently at!
 			{
-				STLOGA("GroupWillMoveThroughSector() -- Attempting to process same waypoint at {} for group at {}",
+				SLOGA("GroupWillMoveThroughSector() -- Attempting to process same waypoint at {} for group at {}",
 					wp->sSector.AsShortString(), ubOrig.AsShortString());
 				pGroup->ubSector = ubOrig;
 				return TRUE;

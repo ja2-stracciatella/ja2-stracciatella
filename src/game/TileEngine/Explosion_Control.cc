@@ -138,7 +138,7 @@ void InternalIgniteExplosion(SOLDIERTYPE* const owner, const INT16 sX, const INT
 
 
 	gTacticalStatus.ubAttackBusyCount++;
-	SLOGD("Incrementing Attack: Explosion gone off, Count now %d", gTacticalStatus.ubAttackBusyCount);
+	SLOGD("Incrementing Attack: Explosion gone off, Count now {}", gTacticalStatus.ubAttackBusyCount);
 
 	EXPLOSIONTYPE* const e = GetFreeExplosion();
 	if (e == NULL) return;
@@ -340,7 +340,7 @@ static STRUCTURE* RemoveOnWall(GridNo const grid_no, StructureFlags const flags,
 		STRUCTURE* const base = FindBaseStructure(attached);
 		if (!base)
 		{ // Error!
-			SLOGW("Problems removing structure attached to wall at %d", grid_no);
+			SLOGW("Problems removing structure attached to wall at {}", grid_no);
 			break;
 		}
 
@@ -765,7 +765,7 @@ static BOOLEAN DamageSoldierFromBlast(SOLDIERTYPE* const pSoldier, SOLDIERTYPE* 
 
 	// Increment attack counter...
 	gTacticalStatus.ubAttackBusyCount++;
-	SLOGD("Incrementing Attack: Explosion dishing out damage, Count now %d", gTacticalStatus.ubAttackBusyCount);
+	SLOGD("Incrementing Attack: Explosion dishing out damage, Count now {}", gTacticalStatus.ubAttackBusyCount);
 
 	sNewWoundAmt = sWoundAmt - std::min(int(sWoundAmt), 35) * ArmourVersusExplosivesPercent(pSoldier) / 100;
 	if ( sNewWoundAmt < 0 )
@@ -1593,7 +1593,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 			{
 				uiTempSpot = uiNewSpot;
 
-				SLOGD("Explosion affects %d", uiNewSpot);
+				SLOGD("Explosion affects {}", uiNewSpot);
 				// ok, do what we do here...
 				if (ExpAffect(sGridNo, uiNewSpot, cnt / 2, usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 				{
@@ -1633,7 +1633,7 @@ void SpreadEffect(const INT16 sGridNo, const UINT8 ubRadius, const UINT16 usItem
 							if ( ubKeepGoing )
 							{
 								// ok, do what we do here
-								SLOGD("Explosion affects %d", uiNewSpot);
+								SLOGD("Explosion affects {}", uiNewSpot);
 								if (ExpAffect(sGridNo, uiNewSpot, (INT16)((cnt + branchCnt) / 2), usItem, owner, fSubsequent, &fAnyMercHit, bLevel, smoke))
 								{
 									fRecompileMovement = TRUE;
@@ -1831,7 +1831,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			else
 			{
 				// error message here
-				SLOGW("Action item to open door in gridno %d but there is none!", sGridNo );
+				SLOGW("Action item to open door in gridno {} but there is none!", sGridNo);
 			}
 			break;
 		case ACTION_ITEM_CLOSE_DOOR:
@@ -1859,7 +1859,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			else
 			{
 				// error message here
-				SLOGW("Action item to close door in gridno %d but there is none!", sGridNo );
+				SLOGW("Action item to close door in gridno {} but there is none!", sGridNo);
 			}
 			break;
 		case ACTION_ITEM_TOGGLE_DOOR:
@@ -1879,7 +1879,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			else
 			{
 				// error message here
-				SLOGW("Action item to toggle door in gridno %d but there is none!", sGridNo );
+				SLOGW("Action item to toggle door in gridno {} but there is none!", sGridNo);
 			}
 			break;
 		case ACTION_ITEM_UNLOCK_DOOR:
@@ -2171,7 +2171,7 @@ static void PerformItemAction(INT16 sGridNo, OBJECTTYPE* pObj)
 			break;
 		default:
 			// error message here
-			SLOGW("Action item with invalid action in gridno %d!", sGridNo );
+			SLOGW("Action item with invalid action in gridno {}!", sGridNo);
 			break;
 	}
 }

@@ -120,7 +120,7 @@ void SetGridNoRevealedFlag(UINT16 const grid_no)
 		}
 		catch (const std::logic_error& e)
 		{
-			STLOGW("Failed to find LEVELNODE for a structure at grid {}. ({})", grid_no, e.what());
+			SLOGW("Failed to find LEVELNODE for a structure at grid {}. ({})", grid_no, e.what());
 		}
 	}
 

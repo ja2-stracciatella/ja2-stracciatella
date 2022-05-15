@@ -477,7 +477,7 @@ BOOLEAN SaveGame(const ST::string& saveName, const ST::string& gameDesc)
 	}
 	catch (std::runtime_error const& e)
 	{
-		STLOGE("Error saving game: {}", e.what());
+		SLOGE("Error saving game: {}", e.what());
 
 		if (fWePausedIt) UnPauseAfterSaveGame();
 
@@ -2486,7 +2486,7 @@ SaveGameInfo::SaveGameInfo(ST::string name_, HWFILE file) : saveName(name_) {
 			LoadStatesFromSaveFile(file, states);
 			this->enabledMods = GetModInfoFromGameStates(states);
 		} catch (const std::runtime_error &ex) {
-			STLOGW("Could not read mods from save game: {}", ex.what());
+			SLOGW("Could not read mods from save game: {}", ex.what());
 		}
 	}
 }

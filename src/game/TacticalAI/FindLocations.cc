@@ -69,7 +69,7 @@ static INT32 CalcPercentBetter(INT32 iOldValue, INT32 iNewValue, INT32 iOldScale
 		return(NOWHERE);
 	}
 	iPercentBetter = (iValueChange * 100) / iScaleSum;
-	STLOGD("CalcPercentBetter: %Better {}, old {}, new {}, change {}\noldScale {}, newScale {}, scaleSum {}",
+	SLOGD("CalcPercentBetter: %Better {}, old {}, new {}, change {}\noldScale {}, newScale {}, scaleSum {}",
 		iPercentBetter, iOldValue, iNewValue, iValueChange, iOldScale, iNewScale, iScaleSum);
 	return(iPercentBetter);
 }
@@ -420,7 +420,7 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 			{
 				//iRangeFactor = (iRangeChange * (morale - 1)) / 4;
 				iRangeFactor = (iRangeChange * iRangeFactorMultiplier) / 2;
-				SLOGD("CalcCoverValue: iRangeChange %d, iRangeFactor %d\n",
+				SLOGD("CalcCoverValue: iRangeChange {}, iRangeFactor {}\n",
 					iRangeChange, iRangeFactor);
 
 				// aggression booster for stupider enemies
@@ -459,17 +459,17 @@ static INT32 CalcCoverValue(SOLDIERTYPE* pMe, INT16 sMyGridNo, INT32 iMyThreat, 
 	iCoverValue = (iMyPosValue - iHisPosValue) / 100;
 	iCoverValue = (iCoverValue * iReductionFactor) / 100;
 
-	SLOGD("CalcCoverValue: iCoverValue %d, sMyGridNo %d, sHisGrid %d, iRange %d, morale %d",
+	SLOGD("CalcCoverValue: iCoverValue {}, sMyGridNo {}, sHisGrid {}, iRange {}, morale {}",
 		iCoverValue, sMyGridNo, sHisGridNo, iRange, morale);
-	SLOGD("CalcCoverValue: iCertainty %d, his bOppCnt %d, my bOppCnt %d",
+	SLOGD("CalcCoverValue: iCertainty {}, his bOppCnt {}, my bOppCnt {}",
 		Threat[uiThreatIndex].iCertainty, pHim->bOppCnt, pMe->bOppCnt);
-	SLOGD("CalcCoverValue: bHisCTGT = %d, hisThreat = %d, hisFullAPs = %d",
+	SLOGD("CalcCoverValue: bHisCTGT = {}, hisThreat = {}, hisFullAPs = {}",
 		bHisCTGT, Threat[uiThreatIndex].iValue, Threat[uiThreatIndex].iAPs);
-	SLOGD("CalcCoverValue: bMyCTGT = %d,  iMyThreat = %d,  iMyAPsLeft = %d",
+	SLOGD("CalcCoverValue: bMyCTGT = {},  iMyThreat = {},  iMyAPsLeft = {}",
 		bMyCTGT, iMyThreat, iMyAPsLeft);
-	SLOGD("CalcCoverValue: hisPosValue = %d, myPosValue = %d",
+	SLOGD("CalcCoverValue: hisPosValue = {}, myPosValue = {}",
 		iHisPosValue, iMyPosValue);
-	SLOGD("CalcCoverValue: iThisScale = %d, iTotalScale = %d, iReductionFactor %d",
+	SLOGD("CalcCoverValue: iThisScale = {}, iTotalScale = {}, iReductionFactor {}",
 		iThisScale, *iTotalScale, iReductionFactor);
 
 	return( iCoverValue );
@@ -748,12 +748,12 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		// don't care how far from origin we go
 		iDistFromOrigin = -1;
 	}
-	SLOGD("FBNC: iRoamRange %d, sMaxLeft %d, sMaxRight %d, sMaxUp %d, sMaxDown %d",
+	SLOGD("FBNC: iRoamRange {}, sMaxLeft {}, sMaxRight {}, sMaxUp {}, sMaxDown {}",
 		iRoamRange, sMaxLeft, sMaxRight, sMaxUp, sMaxDown);
 
 	// the initial cover value to beat is our current cover value
 	iBestCoverValue = iCurrentCoverValue;
-	SLOGD("FBNC: CURRENT iCoverValue = %d\n",iCurrentCoverValue);
+	SLOGD("FBNC: CURRENT iCoverValue = {}\n",iCurrentCoverValue);
 
 	if (pSoldier->bAlertStatus >= STATUS_RED)          // if already in battle
 	{
@@ -912,7 +912,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 			// if there ARE multiple opponents
 			if (uiThreatCnt > 1)
 			{
-				SLOGD("FBNC: Total iCoverValue at gridno %d is %d",
+				SLOGD("FBNC: Total iCoverValue at gridno {} is {}",
 					sGridNo, iCoverValue);
 			}
 
@@ -927,7 +927,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 
 			if (iCoverValue > iBestCoverValue)
 			{
-				SLOGD("FBNC: NEW BEST iCoverValue at gridno %d is %d",
+				SLOGD("FBNC: NEW BEST iCoverValue at gridno {} is {}",
 					sGridNo, iCoverValue);
 				// remember it instead
 				sBestCover = sGridNo;
@@ -975,7 +975,7 @@ INT16 FindBestNearbyCover(SOLDIERTYPE *pSoldier, INT32 morale, INT32 *piPercentB
 		// if best cover value found was at least 5% better than our current cover
 		if (*piPercentBetter >= MIN_PERCENT_BETTER)
 		{
-			STLOGD("Found Cover: current {}, best {}, %Better {}",
+			SLOGD("Found Cover: current {}, best {}, %Better {}",
 				iCurrentCoverValue, iBestCoverValue, *piPercentBetter);
 			return((INT16)sBestCover);       // return the gridno of that cover
 		}
@@ -1661,7 +1661,7 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 	if (best_spot == NOWHERE) return AI_ACTION_NONE;
 
 	OBJECTTYPE const& o = GetWorldItem(best_item_idx).o;
-	SLOGD("%d decides to pick up %s", s.ubID, ItemNames[o.usItem].c_str());
+	SLOGD("{} decides to pick up {}", s.ubID, ItemNames[o.usItem]);
 	if (GCM->getItem(o.usItem)->getItemClass() == IC_GUN &&
 		!FindBetterSpotForItem(s, HANDPOS))
 	{
@@ -1671,13 +1671,13 @@ INT8 SearchForItems(SOLDIERTYPE& s, ItemSearchReason const reason, UINT16 const 
 		}
 		if (s.inv[HANDPOS].fFlags & OBJECT_UNDROPPABLE)
 		{ // Destroy this item
-			SLOGD("%d decides he must drop %s first so destroys it", s.ubID, ItemNames[s.inv[HANDPOS].usItem].c_str());
+			SLOGD("{} decides he must drop {} first so destroys it", s.ubID, ItemNames[s.inv[HANDPOS].usItem]);
 			DeleteObj(&s.inv[HANDPOS]);
 			DeductPoints(&s, AP_PICKUP_ITEM, 0);
 		}
 		else
 		{ // We want to drop this item
-			SLOGD("%d decides he must drop %s first", s.ubID, ItemNames[s.inv[HANDPOS].usItem].c_str());
+			SLOGD("{} decides he must drop {} first", s.ubID, ItemNames[s.inv[HANDPOS].usItem]);
 			s.bNextAction            = AI_ACTION_PICKUP_ITEM;
 			s.usNextActionData       = best_spot;
 			s.iNextActionSpecialData = best_item_idx;

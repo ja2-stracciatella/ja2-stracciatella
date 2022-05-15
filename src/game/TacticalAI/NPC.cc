@@ -312,7 +312,7 @@ try
 }
 catch (const std::exception& e)
 {
-	STLOGE("caught exception: {}", e.what());
+	SLOGE("caught exception: {}", e.what());
 	return 0;
 }
 catch (...) { return 0; }
@@ -374,7 +374,7 @@ static NPCQuoteInfo* EnsureQuoteFileLoaded(UINT8 const ubNPC)
 		{
 			if (!gfTriedToLoadQuoteInfoArray[ubNPC]) // don't report the error a second time
 			{
-				SLOGE("NPC needs NPC file: %d.", ubNPC );
+				SLOGE("NPC needs NPC file: {}.", ubNPC);
 				gfTriedToLoadQuoteInfoArray[ubNPC] = TRUE;
 			}
 			// error message at this point!
@@ -1135,9 +1135,9 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 
 	if (ubApproach != NPC_INITIATING_CONV && ubMerc != NO_PROFILE)
 	{
-		SLOGD("New Approach for NPC ID: %d '%s' against Merc: %d '%s'\n\
-														\tTesting Record #: %d",
-					ubNPC, GetProfile(ubNPC).zNickname.c_str(), ubMerc, GetProfile(ubMerc).zNickname.c_str(), ubQuoteNum);
+		SLOGD("New Approach for NPC ID: {} '{}' against Merc: {} '{}'\n\
+														\tTesting Record #: {}",
+			ubNPC, GetProfile(ubNPC).zNickname, ubMerc, GetProfile(ubMerc).zNickname, ubQuoteNum);
 	}
 
 	if (pNPCQuoteInfo->fFlags & QUOTE_FLAG_SAID)
@@ -1187,8 +1187,8 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		fTrue = CheckFact((Fact)pNPCQuoteInfo->usFactMustBeTrue, ubNPC);
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
-			SLOGD("Fact (%d:'%s') Must be True, status is %s",
-						pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue].c_str(),
+			SLOGD("Fact ({}:'{}') Must be True, status is {}",
+						pNPCQuoteInfo->usFactMustBeTrue, FactDescText[pNPCQuoteInfo->usFactMustBeTrue],
 						fTrue ? "True" : "False, returning");
 		}
 		if (!fTrue) return FALSE;
@@ -1199,8 +1199,8 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 		fTrue = CheckFact((Fact)pNPCQuoteInfo->usFactMustBeFalse, ubNPC);
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
-			SLOGD("Fact(%d:'%s') Must be False status is  %s",
-						pNPCQuoteInfo->usFactMustBeFalse, FactDescText[pNPCQuoteInfo->usFactMustBeFalse].c_str(),
+			SLOGD("Fact({}:'{}') Must be False status is  {}",
+						pNPCQuoteInfo->usFactMustBeFalse, FactDescText[pNPCQuoteInfo->usFactMustBeFalse],
 						(fTrue == TRUE) ? "True, return" : "FALSE" );
 		}
 		if (fTrue)	return( FALSE );
@@ -1213,7 +1213,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 	{
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
-			SLOGD("Approach Taken(%d) must equal required Approach(%d) = %s",
+			SLOGD("Approach Taken({}) must equal required Approach({}) = {}",
 						ubApproach, pNPCQuoteInfo->ubApproachRequired,
 						(ubApproach != pNPCQuoteInfo->ubApproachRequired) ? "TRUE, return" : "FALSE" );
 		}
@@ -1243,7 +1243,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 	{
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
-			SLOGD("Time constraints. Current Day(%d) must <= Day last spoken too (%d) : %s",
+			SLOGD("Time constraints. Current Day({}) must <= Day last spoken too ({}) : {}",
 						uiDay, pNPCProfile->ubLastDateSpokenTo,
 						(uiDay <= pNPCProfile->ubLastDateSpokenTo) ? "TRUE, return" : "FALSE" );
 		}
@@ -1258,7 +1258,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 	{
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
-			SLOGD("Current Day(%d) is before Required first day(%d) = %s",
+			SLOGD("Current Day({}) is before Required first day({}) = {}",
 						uiDay, pNPCQuoteInfo->ubFirstDay,
 						(uiDay < pNPCQuoteInfo->ubFirstDay) ? "False, returning" : "True" );
 		}
@@ -1270,7 +1270,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 	{
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
-			SLOGD("Current Day(%d) is after Required first day(%d) = %s",
+			SLOGD("Current Day({}) is after Required first day({}) = {}",
 						uiDay, pNPCQuoteInfo->ubFirstDay,
 						(uiDay > pNPCQuoteInfo->ubLastDay) ? "TRUE, returning" : "FALSE" );
 		}
@@ -1283,7 +1283,7 @@ static UINT8 NPCConsiderQuote(UINT8 const ubNPC, UINT8 const ubMerc, Approach co
 	{
 		if (ubApproach != NPC_INITIATING_CONV)
 		{
-			SLOGD("Opinion Required.  Talk Desire (%d), Opinion Required(%d) : %s",
+			SLOGD("Opinion Required.  Talk Desire ({}), Opinion Required({}) : {}",
 						ubTalkDesire, pNPCQuoteInfo->ubOpinionRequired,
 						(ubTalkDesire < pNPCQuoteInfo->ubOpinionRequired) ? "False, return" : "False, continue" );
 		}
@@ -1608,7 +1608,7 @@ void ConverseFull(UINT8 const ubNPC, UINT8 const ubMerc, Approach bApproach, UIN
 					break;
 				case TRIGGER_NPC:
 					// if triggering, pass in the approach data as the record to consider
-					STLOGD("Handling trigger {}/{} at {}", gMercProfiles[ubNPC].zNickname.c_str(), approach_record, GetJA2Clock());
+					SLOGD("Handling trigger {}/{} at {}", gMercProfiles[ubNPC].zNickname, approach_record, GetJA2Clock());
 					NPCConsiderTalking(ubNPC, ubMerc, bApproach, approach_record, pNPCQuoteInfoArray, &pQuotePtr, &ubRecordNum);
 					break;
 				default:
@@ -2179,7 +2179,7 @@ void TriggerNPCRecord(UINT8 const ubTriggerNPC, UINT8 const record)
 	}
 	else
 	{ // don't do anything
-		SLOGW("trigger of %d, record %d cannot proceed, possible error", ubTriggerNPC, record);
+		SLOGW("trigger of {}, record {} cannot proceed, possible error", ubTriggerNPC, record);
 	}
 }
 
@@ -2199,7 +2199,7 @@ void TriggerNPCRecordImmediately(UINT8 const ubTriggerNPC, UINT8 const record)
 	}
 	else
 	{ // don't do anything
-		SLOGW("trigger of %d, record %d cannot proceed, possible error", ubTriggerNPC, record);
+		SLOGW("trigger of {}, record {} cannot proceed, possible error", ubTriggerNPC, record);
 	}
 }
 

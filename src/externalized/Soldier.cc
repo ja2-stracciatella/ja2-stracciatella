@@ -44,8 +44,8 @@ void Soldier::removePendingAction()
 {
 	if(mSoldier->ubPendingAction != NO_PENDING_ACTION)
 	{
-		SLOGD("%s: remove pending action %s",
-			getPofileName().c_str(),
+		SLOGD("{}: remove pending action {}",
+			getPofileName(),
 			Internals::getActionName(mSoldier->ubPendingAction));
 
 		mSoldier->ubPendingAction = NO_PENDING_ACTION;
@@ -90,8 +90,8 @@ bool Soldier::anyoneHasPendingAction(UINT8 action, UINT8 team)
 
 void Soldier::setPendingAction(UINT8 action)
 {
-	SLOGD("%s: set pending action %s (previous %s)",
-		getPofileName().c_str(),
+	SLOGD("{}: set pending action {} (previous {})",
+		getPofileName(),
 		Internals::getActionName(action),
 		Internals::getActionName(mSoldier->ubPendingAction));
 

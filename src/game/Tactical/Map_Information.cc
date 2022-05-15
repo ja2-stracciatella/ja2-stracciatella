@@ -252,7 +252,7 @@ void ValidateAndUpdateMapVersionIfNecessary()
 	else if( gMapInformation.ubMapVersion > MINOR_MAP_VERSION )
 	{
 		//we may have a problem...
-		SLOGW("Map version is greater than the current version (old ja2.exe?)" );
+		SLOGW("Map version is greater than the current version (old ja2.exe?)");
 	}
 	AutoCalculateItemNoOverwriteStatus() ;
 }

@@ -566,7 +566,7 @@ void HandleDoorTrap(SOLDIERTYPE& s, DOOR const& d)
 			s.attacker = &s;
 			s.bBeingAttackedCount++;
 			gTacticalStatus.ubAttackBusyCount++;
-			SLOGD("Trap gone off. Busy count: %d", gTacticalStatus.ubAttackBusyCount);
+			SLOGD("Trap gone off. Busy count: {}", gTacticalStatus.ubAttackBusyCount);
 
 			SoldierTakeDamage(&s, 10 + PreRandom(10), 3 + PreRandom(3) * 1000,
 						TAKE_DAMAGE_ELECTRICITY, NULL);
@@ -579,7 +579,7 @@ void HandleDoorTrap(SOLDIERTYPE& s, DOOR const& d)
 			s.attacker = &s;
 			s.bBeingAttackedCount++;
 			gTacticalStatus.ubAttackBusyCount++;
-			SLOGD("Trap gone off. Busy count: %d", gTacticalStatus.ubAttackBusyCount);
+			SLOGD("Trap gone off. Busy count: {}", gTacticalStatus.ubAttackBusyCount);
 
 			SoldierTakeDamage(&s, 20 + PreRandom(20), 6 + PreRandom(6) * 1000, TAKE_DAMAGE_ELECTRICITY, NULL);
 			break;
@@ -1000,7 +1000,7 @@ static void SynchronizeDoorStatusToStructureData(DOOR_STATUS const& d)
 	STRUCTURE *base = FindBaseStructure(s);
 	if (!base)
 	{
-		STLOGW("Door structure data at {} was not found", d.sGridNo);
+		SLOGW("Door structure data at {} was not found", d.sGridNo);
 		return;
 	}
 	INT16 sBaseGridNo = base->sGridNo;

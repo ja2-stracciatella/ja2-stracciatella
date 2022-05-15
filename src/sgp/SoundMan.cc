@@ -280,7 +280,7 @@ UINT32 SoundPlayFromSmackBuff(const char* name, UINT8 channels, UINT8 depth, UIN
 
 UINT32 SoundPlayRandom(const char* pFilename, UINT32 time_min, UINT32 time_max, UINT32 vol_min, UINT32 vol_max, UINT32 pan_min, UINT32 pan_max, UINT32 max_instances)
 {
-	SLOGD("playing random Sound: \"%s\"", pFilename);
+	SLOGD("playing random Sound: \"{}\"", pFilename);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
@@ -529,7 +529,7 @@ static void FillRingBuffer(SOUNDTAG* channel) {
 			}
 		}
 	} catch (const std::runtime_error& err) {
-		STLOGE("Error processing audio stream for channel {}, sample {}, file \"{}\": {}",
+		SLOGE("Error processing audio stream for channel {}, sample {}, file \"{}\": {}",
 			channel - pSoundList, sample - pSampleList, sample->pName, err.what());
 	}
 }
@@ -569,7 +569,7 @@ void SoundServiceStreams(void)
 		SOUNDTAG* Sound = &pSoundList[i];
 		if (Sound->State == CHANNEL_DEAD)
 		{
-			STLOGD("DEAD channel {} file \"{}\" (refcount {})", i, Sound->pSample->pName, Sound->pSample->uiInstances);
+			SLOGD("DEAD channel {} file \"{}\" (refcount {})", i, Sound->pSample->pName, Sound->pSample->uiInstances);
 			if (Sound->EOSCallback != NULL) Sound->EOSCallback(Sound->pCallbackData);
 			assert(Sound->pSample->uiInstances != 0);
 			Sound->pSample->uiInstances--;
@@ -767,15 +767,15 @@ static SAMPLETAG* SoundLoadDisk(const char* pFilename)
 		s->uiFlags |= SAMPLE_ALLOCATED;
 
 		if (isStreamed) {
-			SLOGD("SoundLoadDisk success creating file stream for \"%s\"", pFilename);
+			SLOGD("SoundLoadDisk success creating file stream for \"{}\"", pFilename);
 		} else {
-			SLOGD("SoundLoadDisk success creating in-memory stream for \"%s\"", pFilename);
+			SLOGD("SoundLoadDisk success creating in-memory stream for \"{}\"", pFilename);
 		}
 		return s;
 	}
 	catch (const std::runtime_error& err)
 	{
-		SLOGE("SoundLoadDisk Error for \"%s\": %s", pFilename, err.what());
+		SLOGE("SoundLoadDisk Error for \"{}\": {}", pFilename, err.what());
 		// Clean up possible allocations
 		if (hFile != NULL) {
 			delete hFile;
@@ -817,7 +817,7 @@ static BOOLEAN SoundCleanCache(void)
 
 	if (candidate != NULL)
 	{
-		STLOGD("freeing sample {} \"{}\" with {} hits", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
+		SLOGD("freeing sample {} \"{}\" with {} hits", candidate - pSampleList, candidate->pName, candidate->uiCacheHits);
 		SoundFreeSample(candidate);
 		return TRUE;
 	}
@@ -852,7 +852,7 @@ static void SoundFreeSample(SAMPLETAG* s)
 {
 	if (!(s->uiFlags & SAMPLE_ALLOCATED)) return;
 
-	SLOGD("SoundFreeSample: Freeing sample %d", s - pSampleList);
+	SLOGD("SoundFreeSample: Freeing sample {}", s - pSampleList);
 
 	assert(s->uiInstances == 0);
 
@@ -894,7 +894,7 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 {
 	if (len < 0)
 	{
-		SLOGA("SoundCallback: unexpected negative len %d", len);
+		SLOGA("SoundCallback: unexpected negative len {}", len);
 		return;
 	}
 
@@ -931,7 +931,7 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 				const INT16* src;
 				auto rbResult = ma_pcm_rb_acquire_read(Sound->pRingBuffer, &samples, (void**)&src);
 				if (rbResult != MA_SUCCESS) {
-					SLOGE("Could not aquire read pointer for channel %d: %s", Sound - pSoundList, ma_result_description(rbResult));
+					SLOGE("Could not aquire read pointer for channel {}: {}", Sound - pSoundList, ma_result_description(rbResult));
 					continue;
 				}
 
@@ -947,7 +947,7 @@ static void SoundCallback(void* userdata, Uint8* stream, int len)
 
 				rbResult = ma_pcm_rb_commit_read(Sound->pRingBuffer, samples, (void**)src);
 				if (rbResult != MA_SUCCESS) {
-					SLOGE("Could not commit read pointer for channel %d: %s", Sound - pSoundList, ma_result_description(rbResult));
+					SLOGE("Could not commit read pointer for channel {}: {}", Sound - pSoundList, ma_result_description(rbResult));
 				} else {
 					ringBuffersNeedService |= DoesChannelRingBufferNeedService(Sound);
 				}
@@ -1026,7 +1026,7 @@ static BOOLEAN SoundInitHardware(void)
 		return TRUE;
 
 	} catch (const std::runtime_error& err) {
-		STLOGE("SoundInitHardware: {}", err.what());
+		SLOGE("SoundInitHardware: {}", err.what());
 		SoundShutdownHardware();
 		return FALSE;
 	}
@@ -1047,7 +1047,7 @@ static void SoundShutdownHardware(void)
 		int returnValue = 1;
 		SDL_WaitThread(bufferServiceThread, &returnValue);
 		if (returnValue != 0) {
-			SLOGE("SoundManBufferServiceThread exited with code: %d", returnValue);
+			SLOGE("SoundManBufferServiceThread exited with code: {}", returnValue);
 		}
 	}
 	for(auto channel = std::begin(pSoundList); channel != std::end(pSoundList); ++channel) {
@@ -1086,7 +1086,7 @@ static UINT32 SoundGetUniqueID(void);
  * Returns: Unique sound ID if successful, SOUND_ERROR if not. */
 static UINT32 SoundStartSample(SAMPLETAG* sample, SOUNDTAG* channel, UINT32 volume, UINT32 pan, UINT32 loop, void (*end_callback)(void*), void* data)
 {
-	STLOGD("playing channel {} sample {} file \"{}\"", channel - pSoundList, sample - pSampleList, sample->pName);
+	SLOGD("playing channel {} sample {} file \"{}\"", channel - pSoundList, sample - pSampleList, sample->pName);
 
 	if (!fSoundSystemInit) return SOUND_ERROR;
 
@@ -1139,7 +1139,7 @@ static BOOLEAN SoundStopChannel(SOUNDTAG* channel)
 
 	if (channel->pSample == NULL) return FALSE;
 
-	STLOGD("stopping channel channel {}", (channel - pSoundList));
+	SLOGD("stopping channel channel {}", (channel - pSoundList));
 	channel->State = CHANNEL_STOP;
 	return TRUE;
 }

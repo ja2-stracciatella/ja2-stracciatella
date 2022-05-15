@@ -186,12 +186,12 @@ static BUILDING* GenerateBuilding(INT16 sDesiredSpot)
 			gsCoverValue[sCurrGridNo]++;
 		}
 
-		SLOGD("Roof code visits %d", sCurrGridNo);
+		SLOGD("Roof code visits {}", sCurrGridNo);
 #endif
 		if (sCurrGridNo == sPrevGridNo)
 		{
 			// not progressing, we are just repeating the same gridNo
-			STLOGW("Dead loop detected in GenerateBuilding. This may indicate a problem with the current map. Probably reached edge of map. (starting GridNo:{})", sStartGridNo);
+			SLOGW("Dead loop detected in GenerateBuilding. This may indicate a problem with the current map. Probably reached edge of map. (starting GridNo:{})", sStartGridNo);
 			break;
 		}
 

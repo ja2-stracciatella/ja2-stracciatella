@@ -41,7 +41,7 @@ void UpdateSAMDoneRepair(const SGPSector& sec)
 	auto samSite = GCM->findSamSiteBySector(sector);
 	if (samSite == NULL)
 	{
-		STLOGW("There is no SAM site at sector {}", sec.AsShortString());
+		SLOGW("There is no SAM site at sector {}", sec.AsShortString());
 		return;
 	}
 
@@ -160,7 +160,7 @@ static void UpdateAndDamageSAMIfFound(INT16 sSectorX, INT16 sSectorY, INT16 sSec
 
 	// Damage.....
 	INT16 sSectorNo = sMap.AsStrategicIndex();
-	STLOGD("SAM site at sector #{} is damaged by {} points", sSectorNo, ubDamage);
+	SLOGD("SAM site at sector #{} is damaged by {} points", sSectorNo, ubDamage);
 	if (StrategicMap[sSectorNo].bSAMCondition >= ubDamage)
 	{
 		StrategicMap[sSectorNo].bSAMCondition -= ubDamage;

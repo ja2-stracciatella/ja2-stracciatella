@@ -269,9 +269,8 @@ void AddItemsToUnLoadedSector(const SGPSector& sMap, INT16 const sGridNo, UINT32
 		{
 			wi.usFlags |= WORLD_ITEM_GRIDNO_NOT_SET_USE_ENTRY_POINT;
 			// Display warning.....
-			SLOGW(
-				"Trying to add item ( %d: %s ) to invalid gridno in unloaded sector. Please Report.",
-				wi.o.usItem, ItemNames[wi.o.usItem].c_str());
+			SLOGW("Trying to add item ( {}: {} ) to invalid gridno in unloaded sector. Please Report.",
+				wi.o.usItem, ItemNames[wi.o.usItem]);
 		}
 	}
 
@@ -705,7 +704,7 @@ static void LoadRottingCorpsesFromTempCorpseFile(const SGPSector& sMap)
 		}
 		if (!AddRottingCorpse(&def))
 		{
-			SLOGD("Failed to add a corpse to GridNo # %d", def.sGridNo);
+			SLOGD("Failed to add a corpse to GridNo # {}", def.sGridNo);
 		}
 	}
 
@@ -1124,7 +1123,7 @@ static void SynchronizeItemTempFileVisbleItemsToSectorInfoVisbleItems(const SGPS
 		const UINT32 uiReported = GetNumberOfVisibleWorldItemsFromSectorStructureForSector(sMap);
 		if (uiItemCount != uiReported)
 		{
-			SLOGW("SynchronizeItemTempFile() Reported %d, should be %d", uiReported, uiItemCount);
+			SLOGW("SynchronizeItemTempFile() Reported {}, should be {}", uiReported, uiItemCount);
 		}
 	}
 	SetNumberOfVisibleWorldItemsInSectorStructureForSector(sMap, uiItemCount);

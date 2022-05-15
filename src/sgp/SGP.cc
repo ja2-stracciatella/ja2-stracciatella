@@ -353,7 +353,7 @@ int main(int argc, char* argv[])
 			Logger_initialize("ja2.log");
 			for (const ST::string& msg : problems)
 			{
-				SLOGW("%s", msg.c_str());
+				SLOGW("{}", msg);
 			}
 		}
 
@@ -363,7 +363,7 @@ int main(int argc, char* argv[])
 		if (setGlobalJniEnv(jniEnv) == FALSE) {
 			auto rustError = getRustError();
 			if (rustError != NULL) {
-				SLOGE("Failed to set global JNI env for Android: %s", rustError);
+				SLOGE("Failed to set global JNI env for Android: {}", rustError);
 			}
 			return EXIT_FAILURE;
 		}
@@ -372,7 +372,7 @@ int main(int argc, char* argv[])
 		if (configFolderPath.get() == NULL) {
 			auto rustError = getRustError();
 			if (rustError != NULL) {
-				SLOGE("Failed to find home directory: %s", rustError);
+				SLOGE("Failed to find home directory: {}", rustError);
 			}
 			return EXIT_FAILURE;
 		}
@@ -549,7 +549,7 @@ void TerminationHandler()
 		{
 		}
 	}
-	STLOGE(errorMessage.c_str());
+	SLOGE(errorMessage.c_str());
 	#ifdef __ANDROID__
 	jniEnv->CallVoidMethod(exceptionContainerSingleton, setAndroidExceptionMethodId,
                                    jniEnv->NewStringUTF(errorMessage.c_str()));

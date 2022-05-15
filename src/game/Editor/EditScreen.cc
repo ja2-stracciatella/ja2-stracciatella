@@ -1410,7 +1410,7 @@ static void HandleKeyboardShortcuts(void)
 
 				case SDLK_F4:
 					MusicPlay( GCM->getMusicForMode(giMusicMode) );
-					STLOGD("Testing music {}", GCM->getMusicForMode(giMusicMode));
+					SLOGD("Testing music {}", GCM->getMusicForMode(giMusicMode));
 					giMusicMode = (MusicMode)(giMusicMode + 1);
 					if( giMusicMode >= MAX_MUSIC_MODES )
 						giMusicMode = MUSIC_MAIN_MENU;
@@ -2463,7 +2463,7 @@ try
 		if (!l)
 		{
 			// Can't create sprite
-			SLOGW("PlaceLight: Can't create light sprite of radius %d", radius);
+			SLOGW("PlaceLight: Can't create light sprite of radius {}", radius);
 			return FALSE;
 		}
 	}
@@ -3223,7 +3223,7 @@ ScreenID EditScreenHandle(void)
 
 	if( gfWorldLoaded && gMapInformation.ubMapVersion <= 7 && !gfCorruptMap )
 	{
-		SLOGE("Map data has just been corrupted. Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
+		SLOGE("Map data has just been corrupted. Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!");
 		gfCorruptMap = TRUE;
 	}
 	if( gfWorldLoaded && gubScheduleID > 40 && !gfCorruptSchedules )
@@ -3231,7 +3231,7 @@ ScreenID EditScreenHandle(void)
 		OptimizeSchedules();
 		if( gubScheduleID > 32 )
 		{
-			SLOGE("Schedule data has just been corrupted. Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!" );
+			SLOGE("Schedule data has just been corrupted. Don't save, don't quit, get Kris!  If he's not here, save the map using a temp filename and document everything you just did, especially your last action!");
 			gfCorruptSchedules = TRUE;
 		}
 	}
