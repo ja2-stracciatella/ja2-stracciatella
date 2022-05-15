@@ -205,7 +205,7 @@ enum Quests
 #define IN_BROTHEL(room)	(gWorldSector.x == 5 && gWorldSector.y == MAP_ROW_C && (room) >= 91 && (room) <= 119)
 #define IN_BROTHEL_GUARD_ROOM( room )	( room == 110 )
 
-#define IN_KINGPIN_HOUSE(room)	(gWorldSector.x == 5 && gWorldSector.x == MAP_ROW_D && (room) >= 30 && (room) <= 39)
+#define IN_KINGPIN_HOUSE(room)	(gWorldSector.x == 5 && gWorldSector.y == MAP_ROW_D && (room) >= 30 && (room) <= 39)
 
 #define LOYALTY_LOW_THRESHOLD		30
 #define LOYALTY_OK_THRESHOLD		50
